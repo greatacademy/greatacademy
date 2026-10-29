@@ -36,7 +36,7 @@ export function frontier(pl: Planner, state: LearnerState): string[] {
     if (!topic.prerequisites.every((pre) => isKnown(pl, state, pre))) return false;
     const failedAt = state.topics[t]?.failedAt;
     if (failedAt === undefined) return true;
-    return (pl.graph.keyPrerequisites.get(t) ?? []).every((k) => pl.scope.assumed.has(k) || (state.topics[k]?.last ?? 0) >= failedAt);
+    return (pl.graph.keyPrerequisites.get(t) ?? []).every((k) => pl.scope.assumed.has(k) || (state.topics[k]?.last ?? 0) > failedAt);
   });
 }
 
