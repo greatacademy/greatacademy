@@ -1,0 +1,20 @@
+# Development services: `docker compose up -d` (OrbStack on macOS).
+name: greatacademy
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: greatacademy
+    ports:
+      - "54329:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d greatacademy"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+volumes:
+  postgres:
