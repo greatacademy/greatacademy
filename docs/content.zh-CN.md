@@ -171,3 +171,17 @@ const prealgebra: CourseDef = {
 ## 9. 提供题目
 
 `generateProblem(subject, ref)` 根据 `ProblemRef`（`{ topic, kp, seed }`，`kp` 是 knowledge point 的下标）重新生成题目。服务器只向客户端发送 `viewOf(problem)`：题面和输入规格。答案、标准答案和解答只在学习者作答之后才公开，作答在服务器上判定。
+
+## 10. 数学
+
+`libs/subject-math` 在精确计算的基础上实现数学判定器：解析数学输入框产生的 LaTeX 子集（数、变量、`+ - \cdot \times \div /`、省略乘号、`\frac`、`^`、`\sqrt`、括号、`= < > \le \ge`），基于 `bigint` 的有理数运算（`Q`），以及多项式标准形式。判定答案的过程不涉及浮点数。解析器保留作答的书写形式（括号、`\frac` 与 `/`、小数），因此判定器既能判断值，也能判断形式。
+
+| 判定器 | `expected` | 接受 |
+| :--- | :--- | :--- |
+| `number` | `{ value, form?, var? }`：`value` 是有理数，例如 `"-3"`、`"3/4"`、`"2.5"` | 等于 `value` 的单个数。`form` 为 `"number"`（默认）：整数、小数、最简分数或带分数；`"integer"`；`"fraction"`（不接受小数）；`"decimal"`。`3+4` 这样的算式会被拒绝并给出反馈。有 `var` 时也接受 `x = 3` 和 `3 = x` |
+| `expression` | `{ expr, form? }`：`expr` 是 LaTeX | 与 `expr` 等价的式子：多项式精确比较；其他式子在若干有理点上精确比较。`form: "simplified"` 时，作答还必须是最简形式的单项式之和：没有同类项、没有括号、没有系数 1、没有连续的符号 |
+| `inequality` | `{ var, op, value }`：`op` 为 `<`、`<=`、`>` 或 `>=` | `x < 3` 或等价的 `3 > x`，其中的数按 `number` 的规则书写 |
+
+`content/math` 用 `numberProblem`、`expressionProblem`、`inequalityProblem` 和 `choiceProblem` 构建题目。它们填写答案规格、标准答案和输入方式，并去掉在某个种子下恰好等于正确答案的错误答案。题面和解答中的 LaTeX 用 `num`、`paren`、`poly`、`linear` 书写，它们不会产生 `+ -`、`1x` 或 `-1x`。
+
+第一门课程**代数基础**（`algebra-foundations`）有 20 个知识点，分为四个单元：整数（相反数与比较大小、绝对值、四则运算、乘方、混合运算），代数式（求值、合并同类项、乘法分配律、化简），一元一次方程（一步、两步、两边都有变量（含无解与无穷多解）、含括号），一元一次不等式（检验与写出解、一步（含改变不等号方向）、多步）。

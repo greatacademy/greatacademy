@@ -1,0 +1,27 @@
+{
+  "name": "@ga/content-math",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "biome check ."
+  },
+  "nx": {
+    "name": "content-math"
+  },
+  "dependencies": {
+    "@ga/content": "workspace:*",
+    "@ga/subject-math": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.3",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}

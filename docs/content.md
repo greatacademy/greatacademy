@@ -171,3 +171,17 @@ It warns when fewer than `minDistinct` distinct prompts appear. Every content pa
 ## 9. Serving Problems
 
 `generateProblem(subject, ref)` regenerates a problem from a `ProblemRef` (`{ topic, kp, seed }`, where `kp` is the knowledge point's index). The server sends the client only `viewOf(problem)`: the prompt and the input specification. The answer, the canonical response and the solution are revealed only after the learner responds, and the response is checked on the server.
+
+## 10. Mathematics
+
+`libs/subject-math` implements the mathematics checkers on an exact core: a parser for the LaTeX subset that the math input produces (numbers, variables, `+ - \cdot \times \div /`, implicit multiplication, `\frac`, `^`, `\sqrt`, parentheses, `= < > \le \ge`), rational arithmetic on `bigint` (`Q`), and polynomial normal forms. No floating point is involved in judging an answer. The parser keeps the form of the response (parentheses, `\frac` versus `/`, decimals), so checkers judge form as well as value.
+
+| Checker | `expected` | Accepts |
+| :--- | :--- | :--- |
+| `number` | `{ value, form?, var? }`: `value` is a rational such as `"-3"`, `"3/4"` or `"2.5"` | A single number equal to `value`. `form` `"number"` (default): integer, decimal, fraction in lowest terms or mixed number; `"integer"`; `"fraction"` (no decimals); `"decimal"`. Arithmetic such as `3+4` is rejected with feedback. With `var`, `x = 3` and `3 = x` are accepted too |
+| `expression` | `{ expr, form? }`: `expr` is LaTeX | An expression equivalent to `expr`: polynomials are compared exactly; other expressions exactly at several rational points. With `form: "simplified"`, the response must be a sum of monomials in simplest form with no like terms, no parentheses, no unit coefficients and no doubled signs |
+| `inequality` | `{ var, op, value }`: `op` is `<`, `<=`, `>` or `>=` | `x < 3` or the equivalent `3 > x`, with the number written as for `number` |
+
+`content/math` builds problems with `numberProblem`, `expressionProblem`, `inequalityProblem` and `choiceProblem`, which fill in the answer specification, the canonical response and the input, and drop listed wrong responses that happen to equal the answer for a given seed. LaTeX for prompts and solutions is written with `num`, `paren`, `poly` and `linear`, which never produce `+ -`, `1x` or `-1x`.
+
+The first course, **Foundations of Algebra** (`algebra-foundations`), has 20 topics in four units: integers (opposites and comparison, absolute value, the four operations, powers, order of operations), algebraic expressions (evaluating, combining like terms, the distributive property, simplifying), linear equations (one-step, two-step, variables on both sides including no solution and infinitely many, parentheses) and linear inequalities (checking and writing solutions, one-step including reversing the symbol, multi-step).
