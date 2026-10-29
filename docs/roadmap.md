@@ -9,7 +9,7 @@ Phases, their completion criteria and the current status. Mathematics is the fir
 | Phase | Scope | Completion criteria | Status |
 | :--- | :--- | :--- | :--- |
 | P0 Foundations | Monorepo (mise, pnpm, Nx, TypeScript, Biome, Vitest), documents | `pnpm nx run-many -t typecheck test lint` passes on a clean checkout | Done |
-| P1 Content model | `libs/content`: topic, KP, course and problem types; compiler and validator; seeded problem runtime; answer checking | The compiler rejects cycles, dangling references, bad weights and non-deterministic generators; tests cover each rule | Planned |
+| P1 Content model | `libs/content`: topic, KP, course and problem types; compiler and validator; seeded problem runtime; answer checking | The compiler rejects cycles, dangling references, bad weights and non-deterministic generators; tests cover each rule | Done |
 | P2 First math slice | `libs/subject-math`, `content/math`: a connected slice from integer arithmetic to linear equations and inequalities, bilingual, with prerequisite and encompassing edges | The slice compiles; every generator is sampled 200 times per KP with correct, self-consistent answers | Planned |
 | P3 Learning engine | `libs/engine`: frontier, FIRe repetition model, task selection with repetition compression, lessons and KP flow, reviews, quizzes, diagnostic, XP; `tools/simulate` | Unit tests for every rule in [Learning Engine](learning-engine.md); simulated students finish the slice with about one explicit review per topic or fewer | Planned |
 | P4 Contracts and storage | `libs/proto`, `libs/db`: services, schema, event log, repositories | Repositories pass integration tests on PGlite; replaying the event log reproduces the stored state | Planned |

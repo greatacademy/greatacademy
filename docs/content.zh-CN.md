@@ -1,0 +1,173 @@
+# 内容
+
+> [English](content.md) | 简体中文
+
+本文规定 Great Academy 的内容模型，以及内容如何编写、校验和提供给学习者。内容模型位于 `libs/content`，不了解任何具体学科；一个学科以 `SubjectDef` 的形式提供它的知识点、课程和答案判定器。
+
+教学法背景见 [The Math Academy Way](the-math-academy-way.zh-CN.md)；引擎如何使用知识图谱见[学习引擎](learning-engine.zh-CN.md)。
+
+---
+
+## 1. 概念
+
+| 概念 | 类型 | 含义 |
+| :--- | :--- | :--- |
+| 学科 | `SubjectDef` | 例如数学：一张知识图谱、它的课程、它的判定器 |
+| 知识点（topic） | `TopicDef` | 一个可教授的概念；知识图谱中的一个节点，也是一节课 |
+| 知识步骤（knowledge point） | `KnowledgePointDef` | 知识点中的一步：讲解、例题、练习题 |
+| 先修边 | `TopicDef.prerequisites` | 必须先学会这些知识点 |
+| 包含边 | `EncompassingDef` | 练习该知识点会隐式地练习一个更简单的知识点的一部分（`weight`） |
+| 关键先修 | `KnowledgePointDef.keyPrerequisites` | 这一步最直接依赖的先前知识点，用于补救 |
+| 课程 | `CourseDef` | 按单元和模块排列的一组有序知识点，以及掌握下限 |
+| 题目 | `Problem` | 一次生成的实例：题面、答案规格、解答、标准答案和错误答案 |
+| 判定器 | `Checker` | 根据题目的期望数据判断作答 |
+
+## 2. 文字与语言
+
+每段用户可见的字符串都是 `Text`：每种语言一段 Markdown。语言为 `en` 和 `zh-CN`；数学用 TeX 写在 `$…$`（行内）或 `$$…$$`（独立显示）之间。
+
+```ts
+import { t, same } from "@ga/content";
+
+t("Add the numbers.", "把这两个数相加。");
+same("$3 + 4$");   // 各语言相同
+```
+
+编译器和生成器抽样都会拒绝在任一语言中为空的文字。
+
+## 3. 知识点
+
+```ts
+const addingIntegers: TopicDef = {
+  id: "adding-integers",
+  title: t("Adding Integers", "整数加法"),
+  summary: t("Add positive and negative integers.", "正负整数相加。"),
+  prerequisites: ["integers-on-the-number-line"],
+  encompasses: [{ topic: "integers-on-the-number-line", weight: 0.5 }],
+  xp: 12,
+  knowledgePoints: [sameSign, differentSigns],
+  standards: ["CCSS.7.NS.A.1"],
+};
+```
+
+规则：
+
+- **Id** 使用 kebab case，在学科内唯一，一经发布不得更改，因为学习者状态引用它们。knowledge point 的 id 在所属知识点内唯一。
+- **粒度。** 知识点是值得单独上一节课的最小概念：两到五个 knowledge point，`xp`（认真学习者预计花费的分钟数）通常在 8 到 25 之间。
+- **先修**只列直接先修。被另一个先修蕴含的先修是多余的，会产生警告。
+- **包含边**指向祖先（直接或间接先修）。不是祖先的等价知识点只有标记 `nonAncestor: true` 才能被包含。`weight` 在 (0, 1] 内：1 表示完整练习了那个更简单的知识点，0.5 表示练习了一半。
+- **诊断 knowledge point。** 诊断对每个知识点只出一道题，取自 `diagnostic` 指定的 knowledge point，默认取最后一个，因为它最完整。
+
+## 4. Knowledge Point 与生成器
+
+knowledge point 是课程流程中的一步：学习者阅读 `explanation`，研究一道例题，然后回答同一生成器产生的练习题，直到通过（见[学习引擎](learning-engine.zh-CN.md)）。
+
+```ts
+const sameSign: KnowledgePointDef = {
+  id: "same-sign",
+  title: t("Same signs", "同号相加"),
+  explanation: t("To add two integers with the same sign, …", "两个同号整数相加，…"),
+  keyPrerequisites: ["integers-on-the-number-line"],
+  generate(rng) {
+    const s = rng.sign();
+    const a = s * rng.int(2, 30);
+    const b = s * rng.int(2, 30);
+    return {
+      prompt: t(`Evaluate $${a} + (${b})$.`, `计算 $${a} + (${b})$。`),
+      answer: { checker: "number", expected: a + b, input: { kind: "math" } },
+      solution: t(…, …),
+      canonical: String(a + b),
+      wrong: [String(Math.abs(a) + Math.abs(b) * -s), String(a - b)],
+    };
+  },
+};
+```
+
+生成器是从带种子的 `Rng` 到 `Problem` 的函数：
+
+- **确定性。** 相同的种子总是产生相同的题目。题目以引用 `{ topic, kp, seed }` 的形式存储，需要时在服务器上重新生成。因此题目本身无需存储，答案在学习者作答之前也无需离开服务器。
+- **不使用外部随机数或时间。** 只用传入的 `Rng`（`int`、`nonZero`、`sign`、`bool`、`pick`、`shuffle`、`sample`）。`createRng` 是经 splitmix32 播种的 sfc32；`hashSeed` 把字符串转为种子。
+- **标准答案。** `canonical` 是判定器必须接受的作答，写成学习者会输入的样子。答错后也会展示它。
+- **错误答案。** `wrong` 列出典型错误产生的作答（符号错误、该减却加、要求化简时给出未化简形式），判定器必须拒绝每一个。它们记录了这一步针对的误解，也防止判定器过于宽松。
+- **多样性。** 生成器必须产生足够多不同的题目，使同一学习者的练习和复习很少重复。
+- **不泄露答案。** 题面绝不包含答案；铺垫应放在讲解、例题和额外的 knowledge point 中。
+
+## 5. 答案与判定器
+
+`AnswerSpec` 告诉服务器如何判定，告诉客户端显示什么：
+
+| `input.kind` | 客户端显示 | 作答内容 |
+| :--- | :--- | :--- |
+| `choice` | 按顺序显示 `options` | 所选选项的下标 |
+| `math` | 数学输入框，可带 `prefix` 和 `suffix`（例如 `x =` 或 `\text{cm}`） | 学习者输入的 LaTeX |
+| `text` | 普通文本框 | 文本 |
+
+`checker` 指定一个已注册的判定器，`expected` 是该判定器的数据。核心注册两个判定器，学科注册自己的判定器（数学有数、分数、表达式、方程等）。
+
+| 判定器 | `expected` | 接受 |
+| :--- | :--- | :--- |
+| `choice` | 正确选项的下标 | 正好是该下标 |
+| `text` | 可接受字符串的数组 | 其中任意一个，忽略大小写、Unicode 全半角和空白 |
+
+判定器返回 `Verdict`：`correct`，以及在拒绝需要解释时可选的 `feedback`（例如"请化简分数"）。`CheckerRegistry`：
+
+- 拒绝 id 重复的判定器；
+- 拒绝超过 2,000 个字符的作答；
+- 判定器抛出异常时视为答错。
+
+判定器对**值**必须严格，对**形式**必须明确：当一个知识点教的是化简时，`expected` 写明要求化简形式，判定器拒绝相等但未化简的答案并给出反馈。
+
+## 6. 课程
+
+```ts
+const prealgebra: CourseDef = {
+  id: "prealgebra",
+  title: t("Prealgebra", "代数预备"),
+  description: t(…, …),
+  masteryFloor: ["counting"],
+  units: [
+    { title: t("Integers", "整数"), modules: [{ title: t("Adding and Subtracting", "加法与减法"), topics: ["adding-integers", …] }] },
+  ],
+};
+```
+
+- 课程按教学顺序列出知识点，单元和模块只用于展示分组。
+- 每个知识点只出现一次，并且排在它在本课程中的所有先修之后。
+- **掌握下限。** 假定该课程的每个学习者都已掌握的知识点。它们及其祖先永远不会被本课程讲授或复习。下限中的知识点不能出现在课程中。
+- **基础**（计算得出）。课程知识点的祖先中，既不在课程中、也不在下限之下的那些。诊断会测定学习者对它们的掌握情况，缺少这些基础的学习者会先学习它们。
+
+## 7. 编译器
+
+`compileSubject(def)` 校验 `SubjectDef` 并构建引擎使用的索引。任何错误都会抛出 `CompileError`，列出全部问题，每个问题带有路径，例如 `topic adding-integers › kp same-sign`；警告通过 `CompiledSubject.warnings` 返回。
+
+| 检查 | 级别 |
+| :--- | :--- |
+| Id 为 kebab case 且唯一；文字在每种语言中非空；`xp > 0`；至少一个 knowledge point；诊断 knowledge point 存在 | 错误 |
+| 先修存在、不是自身、不重复、不成环 | 错误 |
+| 先修被另一个先修蕴含 | 警告 |
+| 被包含的知识点存在、除非标记 `nonAncestor` 否则必须是祖先、权重在 (0, 1] 内、不成环 | 错误 |
+| 关键先修是所属知识点的祖先 | 错误 |
+| 课程中的知识点存在、不重复、排在本课程内先修之后；下限中的知识点不在课程中 | 错误 |
+
+编译后的图谱提供：
+
+- `order`：知识点的拓扑序，在定义顺序上保持稳定；
+- `dependents`：先修边的反向；
+- `encompassedBy`：包含边的反向，带权重；
+- `ancestors`：每个知识点的传递先修，近者在前。
+
+## 8. 生成器抽样
+
+`sampleGenerators(subject, { samples, minDistinct })` 用许多种子（默认 200 个）运行每个生成器。生成器出现以下情况时报告错误：
+
+- 抛出异常，或不确定；
+- 生成的文字在某种语言中为空，或含有 `NaN`、`undefined`、`Infinity`、`[object Object]`；
+- 指定了未知判定器；
+- 选择题：选项少于两个、选项重复，或期望下标越界；
+- 标准答案被判定器拒绝，或某个错误答案被判定器接受。
+
+不同题面少于 `minDistinct` 个时发出警告。每个内容包都在测试中运行 `compileSubject` 和 `sampleGenerators`，因此运行时会拒绝的内容无法合入。
+
+## 9. 提供题目
+
+`generateProblem(subject, ref)` 根据 `ProblemRef`（`{ topic, kp, seed }`，`kp` 是 knowledge point 的下标）重新生成题目。服务器只向客户端发送 `viewOf(problem)`：题面和输入规格。答案、标准答案和解答只在学习者作答之后才公开，作答在服务器上判定。

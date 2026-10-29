@@ -1,0 +1,173 @@
+# Content
+
+> English | [简体中文](content.zh-CN.md)
+
+This document specifies the content model of Great Academy and how content is authored, validated and served. The model lives in `libs/content` and knows nothing about any particular subject; a subject contributes its topics, courses and answer checkers as a `SubjectDef`.
+
+The pedagogical background is in [The Math Academy Way](the-math-academy-way.md); how the engine uses the graph is in [Learning Engine](learning-engine.md).
+
+---
+
+## 1. Concepts
+
+| Concept | Type | Meaning |
+| :--- | :--- | :--- |
+| Subject | `SubjectDef` | A discipline such as mathematics: one knowledge graph, its courses, its checkers |
+| Topic | `TopicDef` | One teachable idea; a node of the knowledge graph and one lesson |
+| Knowledge point | `KnowledgePointDef` | One step of a topic: an explanation, a worked example, practice problems |
+| Prerequisite edge | `TopicDef.prerequisites` | The topic cannot be learned before these |
+| Encompassing edge | `EncompassingDef` | Practicing the topic implicitly practices a fraction (`weight`) of a simpler topic |
+| Key prerequisite | `KnowledgePointDef.keyPrerequisites` | The earlier topics a step depends on most directly; used for remediation |
+| Course | `CourseDef` | An ordered selection of topics in units and modules, plus a mastery floor |
+| Problem | `Problem` | One generated instance: prompt, answer specification, solution, canonical and wrong responses |
+| Checker | `Checker` | Judges a response against a problem's expected data |
+
+## 2. Texts and Locales
+
+Every user-visible string is a `Text`: a record with one Markdown string per locale. The locales are `en` and `zh-CN`; mathematics is written in TeX between `$…$` (inline) or `$$…$$` (display).
+
+```ts
+import { t, same } from "@ga/content";
+
+t("Add the numbers.", "把这两个数相加。");
+same("$3 + 4$");   // identical in every locale
+```
+
+The compiler and the generator sampler reject texts that are empty in any locale.
+
+## 3. Topics
+
+```ts
+const addingIntegers: TopicDef = {
+  id: "adding-integers",
+  title: t("Adding Integers", "整数加法"),
+  summary: t("Add positive and negative integers.", "正负整数相加。"),
+  prerequisites: ["integers-on-the-number-line"],
+  encompasses: [{ topic: "integers-on-the-number-line", weight: 0.5 }],
+  xp: 12,
+  knowledgePoints: [sameSign, differentSigns],
+  standards: ["CCSS.7.NS.A.1"],
+};
+```
+
+Rules:
+
+- **Ids** are kebab case, unique within the subject, and never change once published: learner state refers to them. Knowledge point ids are unique within their topic.
+- **Granularity.** A topic is the smallest idea worth a lesson: two to five knowledge points, `xp` (expected minutes for a serious learner) usually between 8 and 25.
+- **Prerequisites** list only the direct ones. A prerequisite implied by another prerequisite is redundant and produces a warning.
+- **Encompassings** point to ancestors (direct or indirect prerequisites). An equivalent topic that is not an ancestor may be encompassed only with `nonAncestor: true`. `weight` is in (0, 1]: 1 means the whole simpler topic is practiced, 0.5 half of it.
+- **Diagnostic knowledge point.** The diagnostic asks one problem per topic, from the knowledge point named by `diagnostic`, or the last one by default, because it is the most complete.
+
+## 4. Knowledge Points and Generators
+
+A knowledge point is one step of the lesson flow: the learner reads its `explanation`, studies a worked example, then answers practice problems from the same generator until they pass ([Learning Engine](learning-engine.md)).
+
+```ts
+const sameSign: KnowledgePointDef = {
+  id: "same-sign",
+  title: t("Same signs", "同号相加"),
+  explanation: t("To add two integers with the same sign, …", "两个同号整数相加，…"),
+  keyPrerequisites: ["integers-on-the-number-line"],
+  generate(rng) {
+    const s = rng.sign();
+    const a = s * rng.int(2, 30);
+    const b = s * rng.int(2, 30);
+    return {
+      prompt: t(`Evaluate $${a} + (${b})$.`, `计算 $${a} + (${b})$。`),
+      answer: { checker: "number", expected: a + b, input: { kind: "math" } },
+      solution: t(…, …),
+      canonical: String(a + b),
+      wrong: [String(Math.abs(a) + Math.abs(b) * -s), String(a - b)],
+    };
+  },
+};
+```
+
+A generator is a function from a seeded `Rng` to a `Problem`:
+
+- **Deterministic.** The same seed always produces the same problem. A problem is stored as a reference `{ topic, kp, seed }` and regenerated on the server whenever it is needed, so problems never need to be stored, and the answer never needs to leave the server before the learner responds.
+- **No ambient randomness or time.** Use only the `Rng` passed in (`int`, `nonZero`, `sign`, `bool`, `pick`, `shuffle`, `sample`). `createRng` is sfc32 seeded through splitmix32; `hashSeed` turns a string into a seed.
+- **Canonical response.** `canonical` is a response the checker must accept, written as a learner would type it. It is also shown after a wrong attempt.
+- **Wrong responses.** `wrong` lists the responses that typical mistakes produce (sign errors, adding instead of subtracting, an unsimplified form when a simplified one is required). The checker must reject each of them. They document the misconceptions the step targets and guard the checker against being too lenient.
+- **Variety.** A generator must produce enough distinct problems that the practice and reviews of one learner rarely repeat.
+- **No give-aways.** A prompt never contains its answer; scaffolding belongs in the explanation, the worked example and extra knowledge points.
+
+## 5. Answers and Checkers
+
+`AnswerSpec` tells the server how to check and the client what to show:
+
+| `input.kind` | Client shows | Response |
+| :--- | :--- | :--- |
+| `choice` | The `options`, in order | The index of the chosen option |
+| `math` | A math field, with optional `prefix` and `suffix` (such as `x =` or `\text{cm}`) | The LaTeX the learner entered |
+| `text` | A plain text field | The text |
+
+`checker` names a registered checker and `expected` is that checker's data. The core registers two checkers; subjects register their own (for mathematics: numbers, fractions, expressions, equations, and so on).
+
+| Checker | `expected` | Accepts |
+| :--- | :--- | :--- |
+| `choice` | The index of the correct option | Exactly that index |
+| `text` | An array of accepted strings | Any of them, ignoring case, Unicode width and spacing |
+
+A checker returns a `Verdict`: `correct`, and optional `feedback` for a rejection that deserves an explanation (for example "simplify the fraction"). The `CheckerRegistry`:
+
+- rejects two checkers with the same id;
+- rejects responses longer than 2,000 characters;
+- treats a checker that throws as a rejection.
+
+Checkers must be strict about **value** and explicit about **form**: when a topic teaches simplification, `expected` says that the simplified form is required, and the checker rejects equal but unsimplified answers with feedback.
+
+## 6. Courses
+
+```ts
+const prealgebra: CourseDef = {
+  id: "prealgebra",
+  title: t("Prealgebra", "代数预备"),
+  description: t(…, …),
+  masteryFloor: ["counting"],
+  units: [
+    { title: t("Integers", "整数"), modules: [{ title: t("Adding and Subtracting", "加法与减法"), topics: ["adding-integers", …] }] },
+  ],
+};
+```
+
+- A course lists its topics in teaching order, grouped into units and modules for display only.
+- Every topic appears once, and after all of its prerequisites that are in the course.
+- **Mastery floor.** Topics that every learner of the course is assumed to know. They and their ancestors are never taught or reviewed by the course. A floor topic must not be in the course.
+- **Foundations** (computed). Ancestors of course topics that are neither in the course nor below the floor. The diagnostic places the learner on them, and a learner who lacks them is taught them first.
+
+## 7. The Compiler
+
+`compileSubject(def)` validates a `SubjectDef` and builds the indexes the engine uses. Any error throws a `CompileError` listing every issue with a path such as `topic adding-integers › kp same-sign`; warnings are returned in `CompiledSubject.warnings`.
+
+| Checks | Severity |
+| :--- | :--- |
+| Ids are kebab case and unique; texts are non-empty in every locale; `xp > 0`; at least one knowledge point; the diagnostic knowledge point exists | Error |
+| Prerequisites exist, are not the topic itself, are not repeated, and form no cycle | Error |
+| A prerequisite implied by another prerequisite | Warning |
+| Encompassed topics exist, are ancestors unless marked `nonAncestor`, have weights in (0, 1], and form no cycle | Error |
+| Key prerequisites are ancestors of their topic | Error |
+| Course topics exist, are not repeated, follow their in-course prerequisites; floor topics are not in the course | Error |
+
+The compiled graph provides:
+
+- `order`: topics in topological order, stable with respect to definition order;
+- `dependents`: the inverse of the prerequisite edges;
+- `encompassedBy`: the inverse of the encompassing edges, with weights;
+- `ancestors`: the transitive prerequisites of each topic, nearest first.
+
+## 8. Generator Sampling
+
+`sampleGenerators(subject, { samples, minDistinct })` runs every generator over many seeds (200 by default). It reports an error when a generator:
+
+- throws, or is not deterministic;
+- produces a text empty in some locale or containing `NaN`, `undefined`, `Infinity` or `[object Object]`;
+- names an unknown checker;
+- for a choice: has fewer than two options, repeated options, or an expected index out of range;
+- has a canonical response its checker rejects, or a wrong response its checker accepts.
+
+It warns when fewer than `minDistinct` distinct prompts appear. Every content package runs `compileSubject` and `sampleGenerators` in its tests, so content cannot be merged in a state the runtime would reject.
+
+## 9. Serving Problems
+
+`generateProblem(subject, ref)` regenerates a problem from a `ProblemRef` (`{ topic, kp, seed }`, where `kp` is the knowledge point's index). The server sends the client only `viewOf(problem)`: the prompt and the input specification. The answer, the canonical response and the solution are revealed only after the learner responds, and the response is checked on the server.
