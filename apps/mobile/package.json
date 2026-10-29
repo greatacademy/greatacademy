@@ -1,0 +1,37 @@
+{
+  "name": "@ga/mobile",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "main": "expo-router/entry",
+  "scripts": {
+    "dev": "expo start",
+    "ios": "expo start --ios",
+    "android": "expo start --android",
+    "typecheck": "tsc -p tsconfig.json",
+    "lint": "biome check ."
+  },
+  "nx": {
+    "name": "mobile"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "2.16.0",
+    "@connectrpc/connect": "2.3.0",
+    "@connectrpc/connect-web": "2.3.0",
+    "@expo/metro-runtime": "~58.0.15",
+    "@ga/proto": "workspace:*",
+    "expo": "58.0.21",
+    "expo-constants": "~58.0.14",
+    "expo-linking": "~58.0.15",
+    "expo-router": "~58.0.28",
+    "expo-status-bar": "~58.0.4",
+    "react": "19.3.0",
+    "react-native": "0.88.1",
+    "react-native-safe-area-context": "~5.10.1",
+    "react-native-screens": "~4.30.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "typescript": "7.0.2"
+  }
+}

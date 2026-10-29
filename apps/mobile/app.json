@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "Great Academy",
+    "slug": "greatacademy",
+    "scheme": "greatacademy",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "ios": { "bundleIdentifier": "app.greatacademy", "supportsTablet": true },
+    "android": { "package": "app.greatacademy" },
+    "plugins": ["expo-router"],
+    "experiments": { "typedRoutes": true }
+  }
+}
