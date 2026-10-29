@@ -58,9 +58,10 @@ Great Academy 是一个自适应学习平台，基于 [The Math Academy Way](the
 ## 3. 仓库结构
 
 ```text
-apps/web/             TanStack Start on Workers：页面、/api 下的 Connect API、better-auth
+apps/web/             TanStack Start on Workers：页面、better-auth，并把 libs/api 挂载在 /api 下
 apps/mobile/          Expo 应用（iOS、Android）
-libs/proto/           契约：ga/<domain>/v1/*.proto、buf 配置、gen/ts（生成代码，提交入库）
+libs/proto/           契约：proto/ga/<domain>/v1/*.proto、buf 配置、gen/（生成代码，提交入库）
+libs/api/             Connect 服务实现与会话执行器；与传输方式和宿主无关
 libs/engine/          学习引擎：图谱、知识前沿、FIRe、任务选择、诊断、XP、测验（纯函数）
 libs/content/         内容模型：知识点/课程定义、编译器与校验器、题目运行时、答案判定
 libs/subject-math/    数学学科：数学答案判定器、数学题目生成器的辅助函数
@@ -76,10 +77,10 @@ docs/                 文档（英文 + 简体中文）
 ### 3.1 依赖方向
 
 ```text
-apps/web ──► libs/db ──► libs/engine ──► libs/content
-   │            │                           ▲
-   ├──► libs/proto                          │
-   ├──► libs/math-ui ──► libs/design   libs/subject-math ◄── content/math
+apps/web ──► libs/api ──► libs/db ──► libs/engine ──► libs/content
+   │            │                                       ▲
+   │            └──► libs/proto                         │
+   ├──► libs/math-ui ──► libs/design             libs/subject-math ◄── content/math
    └──► content/math
 apps/mobile ──► libs/proto, libs/design, libs/math-ui
 tools/simulate ──► libs/engine, content/math
@@ -89,7 +90,8 @@ tools/simulate ──► libs/engine, content/math
 - `libs/engine` 只依赖 `libs/content` 的类型。它没有 I/O、没有时钟（时间作为参数传入），也没有随机性（种子作为参数传入）。
 - `libs/subject-math` 只依赖 `libs/content`。
 - `content/<subject>` 依赖 `libs/content` 和对应的学科库。
-- 只有 `apps/*` 负责把存储、传输和内容装配到一起。
+- `libs/api` 基于 `libs/db` 和引擎实现服务，但不知道宿主：请求的用户和数据库客户端以 Connect context value 传入，时钟和种子通过注入提供。它的测试在 PGlite 上端到端地运行服务。
+- 只有 `apps/*` 负责把存储、传输、认证和内容装配到一起。
 
 ## 4. 领域模型
 
@@ -120,6 +122,8 @@ tools/simulate ──► libs/engine, content/math
    - 当前时间。
 4. 引擎返回新状态和需要记录的事件。服务在同一个事务中写入两者，然后返回响应。
 
+任务以**会话**的方式进行，每个请求一道题（先 `StartTask`，再反复 `SubmitAnswer` 直到得出结果）。会话执行器（`libs/api/src/runner.ts`）是建立在引擎的课程、复习、测验和诊断规则之上的纯状态机。它的状态只保存题目引用（知识点、学习点、种子），从不保存题目本身。
+
 题目实例在服务端由种子生成，也在服务端判分。答案在提交之前绝不发送给客户端。
 
 ## 6. 部署
@@ -131,3 +135,22 @@ tools/simulate ──► libs/engine, content/math
   - `cf dev` 通过 Vite 在 workerd 中运行 Worker。
   - 它连接 OrbStack 中 `postgres:17-alpine` 容器里的 PostgreSQL，详见[开发指南](development.zh-CN.md)。
 - **移动端：** 用 Expo 构建（EAS），调用同一套 API。
+
+## 7. 存储
+
+| 表 | 内容 |
+| :--- | :--- |
+| `user`、`session`、`account`、`verification` | better-auth 的核心 schema |
+| `learner` | 学习的人；目前每个用户一个 |
+| `enrollment` | 学习者选修某课程 |
+| `event` | 每位学习者每个学科的引擎事件日志，用 `seq` 连续编号；保留 `xp` 用于报表 |
+| `learner_state` | 日志折叠到 `seq` 为止的快照；可通过重放重建 |
+| `task_session` | 会话及其执行器状态；每位学习者每门课程最多一个进行中 |
+| `answer` | 每个判定过的作答：题目引用、作答、判定 |
+
+**一致性。**
+- 完成一个会话时，追加事件、替换快照、关闭会话在同一个事务中完成。
+- 为写入而读取快照行和会话行时会加锁（`SELECT … FOR UPDATE`）；`(learner, subject, seq)` 唯一索引拒绝任何漏网的写入者。
+- `SubmitAnswer` 携带所回答题目的序号，重复的请求会被拒绝，而不是被判两次。
+
+**迁移**由 drizzle-kit 从 `libs/db/src/schema` 生成到 `libs/db/drizzle` 并提交入库。测试把迁移应用到 PGlite；部署时用 `pnpm nx run db:migrate` 应用。

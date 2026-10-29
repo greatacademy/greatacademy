@@ -1,0 +1,33 @@
+{
+  "name": "@ga/api",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "biome check ."
+  },
+  "nx": {
+    "name": "api"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "2.16.0",
+    "@connectrpc/connect": "2.3.0",
+    "@ga/content": "workspace:*",
+    "@ga/db": "workspace:*",
+    "@ga/engine": "workspace:*",
+    "@ga/proto": "workspace:*"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.13",
+    "@ga/content-math": "workspace:*",
+    "@types/node": "26.6.3",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}

@@ -42,6 +42,9 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 | `subject-math` | `libs/subject-math` | 数学判定器：LaTeX 解析、精确有理数、多项式形式（[内容 §10](content.zh-CN.md#10-数学)） |
 | `content-math` | `content/math` | 数学知识点与课程 |
 | `engine` | `libs/engine` | 学习引擎：前沿、FIRe、任务选择、课程、复习、测验、诊断（[学习引擎](learning-engine.zh-CN.md)） |
+| `proto` | `libs/proto` | 契约；修改 `.proto` 文件后执行 `pnpm nx run proto:generate` |
+| `db` | `libs/db` | Drizzle schema、迁移、数据访问；修改 schema 后执行 `pnpm nx run db:generate -- --name <change>` |
+| `api` | `libs/api` | Connect 服务与会话执行器，在 PGlite 上端到端测试 |
 | `simulate` | `tools/simulate` | 用于调校引擎的模拟学生：`pnpm nx run simulate:simulate`（[学习引擎 §8](learning-engine.zh-CN.md#8-参数)） |
 
 此表随仓库增长；[架构 §3](architecture.zh-CN.md#3-仓库结构) 给出目标结构。
