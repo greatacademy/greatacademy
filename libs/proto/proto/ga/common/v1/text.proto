@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package ga.common.v1;
+
+// Text is a user-visible string in every supported locale. Values are Markdown
+// with TeX between $…$ (inline) or $$…$$ (display).
+message Text {
+  // values maps a locale ("en", "zh-CN") to the string in that locale.
+  map<string, string> values = 1;
+}

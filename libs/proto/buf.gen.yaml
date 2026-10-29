@@ -1,0 +1,11 @@
+version: v2
+inputs:
+  - directory: proto
+plugins:
+  # protoc-gen-es from node_modules/.bin; JavaScript with declarations, so that
+  # generated enums do not conflict with erasableSyntaxOnly.
+  - local: protoc-gen-es
+    out: gen
+    opt:
+      - target=js+dts
+      - import_extension=js

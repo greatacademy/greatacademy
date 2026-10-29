@@ -1,0 +1,315 @@
+syntax = "proto3";
+
+package ga.learning.v1;
+
+import "ga/common/v1/text.proto";
+
+// LearningService is the signed-in learner's study: enrollment, the dashboard
+// of tasks, and the sessions that carry out tasks one question at a time.
+// Problems are generated and checked on the server; an answer never reaches
+// the client before the learner responds.
+service LearningService {
+  // GetProfile summarizes the learner: enrollments and XP.
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
+  // Enroll enrolls the learner in a course. Enrolling twice is harmless.
+  rpc Enroll(EnrollRequest) returns (EnrollResponse);
+  // GetDashboard returns the tasks offered in a course now.
+  rpc GetDashboard(GetDashboardRequest) returns (GetDashboardResponse);
+  // GetCourseProgress returns the learner's status on every topic of a course.
+  rpc GetCourseProgress(GetCourseProgressRequest) returns (GetCourseProgressResponse);
+  // StartTask starts one of the offered tasks, or resumes the active session.
+  rpc StartTask(StartTaskRequest) returns (StartTaskResponse);
+  // SkipDiagnostic places the learner at the beginning of the course.
+  rpc SkipDiagnostic(SkipDiagnosticRequest) returns (SkipDiagnosticResponse);
+  // GetSession returns a session as it stands.
+  rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
+  // SubmitAnswer answers the current question of a session.
+  rpc SubmitAnswer(SubmitAnswerRequest) returns (SubmitAnswerResponse);
+}
+
+message GetProfileRequest {
+  // time_zone is an IANA time zone such as "Asia/Shanghai"; days for XP are counted in it.
+  string time_zone = 1;
+}
+
+message GetProfileResponse {
+  repeated Enrollment enrollments = 1;
+  XpSummary xp = 2;
+}
+
+message Enrollment {
+  string course_id = 1;
+  CourseStats stats = 2;
+}
+
+// CourseStats counts course topics: learned (taught or placed), in all, and due for review.
+message CourseStats {
+  int32 learned = 1;
+  int32 total = 2;
+  int32 due = 3;
+}
+
+message XpSummary {
+  int32 total = 1;
+  int32 today = 2;
+  // days is the XP of each of the last 14 days, oldest first, today last.
+  repeated int32 days = 3;
+}
+
+message EnrollRequest {
+  string course_id = 1;
+}
+
+message EnrollResponse {}
+
+message GetDashboardRequest {
+  string course_id = 1;
+  string time_zone = 2;
+}
+
+message GetDashboardResponse {
+  string course_id = 1;
+  // diagnosed is false until the learner took or skipped the diagnostic.
+  bool diagnosed = 2;
+  repeated Task tasks = 3;
+  // active is the session in progress, if any; StartTask resumes it.
+  optional SessionSummary active = 4;
+  CourseStats stats = 5;
+  XpSummary xp = 6;
+  // xp_to_quiz is the XP still to earn before the next quiz.
+  int32 xp_to_quiz = 7;
+}
+
+// Task is a unit of work offered on the dashboard.
+message Task {
+  oneof kind {
+    DiagnosticTask diagnostic = 1;
+    LessonTask lesson = 2;
+    ReviewTask review = 3;
+    QuizTask quiz = 4;
+  }
+}
+
+message DiagnosticTask {
+  // max_questions is the most questions the diagnostic asks.
+  int32 max_questions = 1;
+}
+
+message LessonTask {
+  string topic_id = 1;
+  ga.common.v1.Text title = 2;
+  int32 xp = 3;
+  int32 knowledge_points = 4;
+}
+
+message ReviewTask {
+  string topic_id = 1;
+  ga.common.v1.Text title = 2;
+  int32 xp = 3;
+  // covers are the due topics the review repairs, the reviewed topic included when due.
+  repeated string covers = 4;
+}
+
+message QuizTask {
+  int32 questions = 1;
+  int32 xp = 2;
+}
+
+message SessionSummary {
+  string id = 1;
+  Task task = 2;
+}
+
+message GetCourseProgressRequest {
+  string course_id = 1;
+}
+
+message GetCourseProgressResponse {
+  repeated TopicProgress topics = 1;
+}
+
+// TopicStatus is a learner's standing on a topic.
+enum TopicStatus {
+  TOPIC_STATUS_UNSPECIFIED = 0;
+  // Not learned, and some prerequisite is not known yet.
+  TOPIC_STATUS_LOCKED = 1;
+  // On the frontier: can be learned now.
+  TOPIC_STATUS_AVAILABLE = 2;
+  // The lesson was failed; it waits for its key prerequisites to be reviewed.
+  TOPIC_STATUS_FAILED = 3;
+  // Learned, and not due.
+  TOPIC_STATUS_LEARNED = 4;
+  // Learned, and due for review.
+  TOPIC_STATUS_DUE = 5;
+  // Below the course's mastery floor: assumed known.
+  TOPIC_STATUS_ASSUMED = 6;
+}
+
+message TopicProgress {
+  string topic_id = 1;
+  TopicStatus status = 2;
+  // placed is true when the diagnostic, not a lesson, made the topic learned.
+  bool placed = 3;
+  // memory is the engine's retention estimate in [0, 1]; 0 when not learned.
+  double memory = 4;
+  // foundation is true for a topic outside the course that the course builds on.
+  bool foundation = 5;
+}
+
+message StartTaskRequest {
+  string course_id = 1;
+  // task must be one of the tasks the dashboard offers now.
+  Task task = 2;
+}
+
+message StartTaskResponse {
+  Session session = 1;
+}
+
+message SkipDiagnosticRequest {
+  string course_id = 1;
+}
+
+message SkipDiagnosticResponse {}
+
+message GetSessionRequest {
+  string id = 1;
+}
+
+message GetSessionResponse {
+  Session session = 1;
+}
+
+// Session is a task being carried out.
+message Session {
+  string id = 1;
+  string course_id = 2;
+  Task task = 3;
+  // answered counts the questions answered so far.
+  int32 answered = 4;
+  oneof step {
+    // question is the question to answer next.
+    Question question = 5;
+    // result ends the session.
+    Result result = 6;
+  }
+}
+
+// Question is a question of a session.
+message Question {
+  // index numbers the questions of a session from 0; SubmitAnswer repeats it.
+  int32 index = 1;
+  // intro is set on the first question of each knowledge point of a lesson.
+  optional KnowledgePointIntro intro = 2;
+  ProblemView problem = 3;
+  // feedback is true when each answer is judged at once (lessons, reviews);
+  // false when results come at the end (quizzes, the diagnostic).
+  bool feedback = 4;
+  // can_skip is true where "I don't know" is allowed (the diagnostic only).
+  bool can_skip = 5;
+  // lesson is the lesson's progress, for lessons only.
+  optional LessonProgress lesson = 6;
+  // total is the number of questions, when known in advance (reviews, quizzes);
+  // 0 otherwise.
+  int32 total = 7;
+}
+
+message KnowledgePointIntro {
+  int32 index = 1;
+  int32 count = 2;
+  ga.common.v1.Text title = 3;
+  ga.common.v1.Text explanation = 4;
+  WorkedExample example = 5;
+}
+
+// WorkedExample is a problem shown with its solution.
+message WorkedExample {
+  ProblemView problem = 1;
+  ga.common.v1.Text solution = 2;
+  // answer is the canonical response, as a learner would enter it.
+  string answer = 3;
+}
+
+message LessonProgress {
+  // knowledge_point is the index of the current knowledge point.
+  int32 knowledge_point = 1;
+  int32 knowledge_points = 2;
+  // streak is the current run of correct answers on this knowledge point.
+  int32 streak = 3;
+  // needed is the run that passes a knowledge point.
+  int32 needed = 4;
+}
+
+// ProblemView is what a client may see of a problem before answering.
+message ProblemView {
+  ga.common.v1.Text prompt = 1;
+  Input input = 2;
+}
+
+message Input {
+  oneof kind {
+    ChoiceInput choice = 1;
+    MathInput math = 2;
+    TextInput text = 3;
+  }
+}
+
+// ChoiceInput: the response is the index of the chosen option, in decimal.
+message ChoiceInput {
+  repeated ga.common.v1.Text options = 1;
+}
+
+// MathInput: the response is LaTeX.
+message MathInput {
+  // prefix and suffix are LaTeX shown around the field, such as "x =".
+  string prefix = 1;
+  string suffix = 2;
+}
+
+message TextInput {}
+
+message SubmitAnswerRequest {
+  string session_id = 1;
+  // index is the index of the question answered; a stale index is rejected.
+  int32 index = 2;
+  string response = 3;
+  // skip answers "I don't know" where allowed.
+  bool skip = 4;
+}
+
+message SubmitAnswerResponse {
+  // feedback judges the answer; unset where results come at the end.
+  optional Feedback feedback = 1;
+  Session session = 2;
+}
+
+message Feedback {
+  bool correct = 1;
+  // message explains a rejection that is not simply wrong, such as an unsimplified fraction.
+  optional ga.common.v1.Text message = 2;
+  ga.common.v1.Text solution = 3;
+  // answer is the canonical response.
+  string answer = 4;
+}
+
+// Result ends a session.
+message Result {
+  bool passed = 1;
+  int32 correct = 2;
+  int32 asked = 3;
+  int32 xp = 4;
+  // items are the questions with their outcomes, for quizzes and reviews.
+  repeated ResultItem items = 5;
+  // placed counts the topics the diagnostic placed as known.
+  int32 placed = 6;
+}
+
+message ResultItem {
+  string topic_id = 1;
+  ga.common.v1.Text title = 2;
+  bool correct = 3;
+  ProblemView problem = 4;
+  ga.common.v1.Text solution = 5;
+  string answer = 6;
+  string response = 7;
+}

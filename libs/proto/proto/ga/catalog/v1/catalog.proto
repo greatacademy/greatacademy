@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package ga.catalog.v1;
+
+import "ga/common/v1/text.proto";
+
+// CatalogService describes the subjects and courses on offer. It needs no
+// account.
+service CatalogService {
+  // ListCourses lists every course of every subject, without its outline.
+  rpc ListCourses(ListCoursesRequest) returns (ListCoursesResponse);
+  // GetCourse returns one course with its outline.
+  rpc GetCourse(GetCourseRequest) returns (GetCourseResponse);
+}
+
+message ListCoursesRequest {}
+
+message ListCoursesResponse {
+  repeated Course courses = 1;
+}
+
+message GetCourseRequest {
+  string course_id = 1;
+}
+
+message GetCourseResponse {
+  Course course = 1;
+}
+
+// Course is a course of a subject. Course ids are unique across subjects.
+message Course {
+  string id = 1;
+  string subject_id = 2;
+  ga.common.v1.Text subject_title = 3;
+  ga.common.v1.Text title = 4;
+  ga.common.v1.Text description = 5;
+  // topic_count counts the course's own topics, foundations excluded.
+  int32 topic_count = 6;
+  // xp is the sum of the XP of the course's lessons.
+  int32 xp = 7;
+  // units is the outline; empty in ListCourses.
+  repeated Unit units = 8;
+}
+
+message Unit {
+  ga.common.v1.Text title = 1;
+  repeated Module modules = 2;
+}
+
+message Module {
+  ga.common.v1.Text title = 1;
+  repeated Topic topics = 2;
+}
+
+message Topic {
+  string id = 1;
+  ga.common.v1.Text title = 2;
+  ga.common.v1.Text summary = 3;
+  int32 xp = 4;
+  int32 knowledge_points = 5;
+}
