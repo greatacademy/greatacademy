@@ -1,0 +1,11 @@
+packages:
+  - apps/*
+  - libs/*
+  - content/*
+  - tools/*
+allowBuilds:
+  esbuild: true
+  nx: true
+  workerd: true
+  '@biomejs/biome': true
+savePrefix: ''

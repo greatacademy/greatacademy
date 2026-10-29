@@ -1,0 +1,5 @@
+[tools]
+node = "26.11.1"
+pnpm = "12.11.2"
+# Code generation of libs/proto.
+buf = "1.73.0"

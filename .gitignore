@@ -1,0 +1,27 @@
+# dependencies
+node_modules/
+
+# Nx
+.nx/cache/
+.nx/workspace-data/
+
+# build outputs
+dist/
+coverage/
+*.tsbuildinfo
+
+# Cloudflare Workers (apps/web)
+.cloudflare/
+.env.local
+.wrangler/
+
+# Expo (apps/mobile)
+.expo/
+ios/
+android/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
