@@ -108,7 +108,11 @@ function tokenize(input: string): (Tok & { rel?: RelOp })[] {
 
 class Parser {
   private i = 0;
-  constructor(private readonly toks: (Tok & { rel?: RelOp })[]) {}
+  private readonly toks: (Tok & { rel?: RelOp })[];
+
+  constructor(toks: (Tok & { rel?: RelOp })[]) {
+    this.toks = toks;
+  }
 
   private peek() {
     return this.toks[this.i];

@@ -51,7 +51,7 @@ pnpm format                                # 用 Biome 格式化并修复
 
 ## TypeScript 约定
 
-- 只用 ESM，开启 `strict`、`noUncheckedIndexedAccess`、`verbatimModuleSyntax`；导入本地文件时带 `.ts` 扩展名。
+- 只用 ESM，开启 `strict`、`noUncheckedIndexedAccess`、`verbatimModuleSyntax`、`erasableSyntaxOnly`（不用 enum、namespace 和参数属性，使 Node 能直接运行源码）；导入本地文件时带 `.ts` 扩展名。
 - 库直接导出源码（`"exports": { ".": "./src/index.ts" }`），库没有构建步骤。
 - 依赖版本精确固定（`savePrefix: ''`）。
 - 每个导出的标识符都有以其名称开头的文档注释。

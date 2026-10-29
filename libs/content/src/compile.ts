@@ -70,9 +70,12 @@ export interface CompiledSubject {
 
 /** CompileError reports every error the compiler found. */
 export class CompileError extends Error {
-  constructor(readonly issues: readonly Issue[]) {
+  readonly issues: readonly Issue[];
+
+  constructor(issues: readonly Issue[]) {
     super(`content has ${issues.filter((i) => i.severity === "error").length} error(s):\n${issues.map(formatIssue).join("\n")}`);
     this.name = "CompileError";
+    this.issues = issues;
   }
 }
 

@@ -51,7 +51,7 @@ Every package declares its targets as `package.json` scripts (`typecheck`, `test
 
 ## TypeScript Conventions
 
-- ESM only, `strict`, `noUncheckedIndexedAccess`, `verbatimModuleSyntax`; imports of local files carry the `.ts` extension.
+- ESM only, `strict`, `noUncheckedIndexedAccess`, `verbatimModuleSyntax`, `erasableSyntaxOnly` (no enums, namespaces or parameter properties, so Node runs the sources directly); imports of local files carry the `.ts` extension.
 - Libraries export their source (`"exports": { ".": "./src/index.ts" }`); there is no library build step.
 - Pin exact dependency versions (`savePrefix: ''`).
 - Every exported identifier has a doc comment that starts with its name.
