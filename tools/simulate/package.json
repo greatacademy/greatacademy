@@ -1,0 +1,26 @@
+{
+  "name": "@ga/simulate",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "simulate": "mise exec -- node src/main.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "biome check ."
+  },
+  "nx": {
+    "name": "simulate"
+  },
+  "dependencies": {
+    "@ga/content": "workspace:*",
+    "@ga/content-math": "workspace:*",
+    "@ga/engine": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.3",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}

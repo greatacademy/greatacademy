@@ -41,6 +41,8 @@ Nx caches the results of these targets in `.nx/` (ignored by git); a target reru
 | `content` | `libs/content` | Content model, compiler, problem runtime, core checkers ([Content](content.md)) |
 | `subject-math` | `libs/subject-math` | Mathematics checkers: LaTeX parser, exact rationals, polynomial forms ([Content §10](content.md#10-mathematics)) |
 | `content-math` | `content/math` | Mathematics topics and courses |
+| `engine` | `libs/engine` | Learning engine: frontier, FIRe, task selection, lessons, reviews, quizzes, diagnostic ([Learning Engine](learning-engine.md)) |
+| `simulate` | `tools/simulate` | Simulated students for tuning the engine: `pnpm nx run simulate:simulate` ([Learning Engine §8](learning-engine.md#8-parameters)) |
 
 The table grows with the repository; [Architecture §3](architecture.md#3-repository-structure) shows the target structure.
 
