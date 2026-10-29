@@ -39,6 +39,8 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 | 项目 | 路径 | 用途 |
 | :--- | :--- | :--- |
 | `content` | `libs/content` | 内容模型、编译器、题目运行时、核心判定器（[内容](content.zh-CN.md)） |
+| `subject-math` | `libs/subject-math` | 数学判定器：LaTeX 解析、精确有理数、多项式形式（[内容 §10](content.zh-CN.md#10-数学)） |
+| `content-math` | `content/math` | 数学知识点与课程 |
 
 此表随仓库增长；[架构 §3](architecture.zh-CN.md#3-仓库结构) 给出目标结构。
 

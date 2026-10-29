@@ -176,7 +176,42 @@ importers:
         specifier: 7.0.2
         version: 7.0.2
 
+  content/math:
+    dependencies:
+      '@ga/content':
+        specifier: workspace:*
+        version: link:../../libs/content
+      '@ga/subject-math':
+        specifier: workspace:*
+        version: link:../../libs/subject-math
+    devDependencies:
+      '@types/node':
+        specifier: 26.6.3
+        version: 26.6.3
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: 5.0.3
+        version: 5.0.3(@types/node@26.6.3)(vite@8.3.5(@types/node@26.6.3)(yaml@2.9.0))
+
   libs/content:
+    devDependencies:
+      '@types/node':
+        specifier: 26.6.3
+        version: 26.6.3
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: 5.0.3
+        version: 5.0.3(@types/node@26.6.3)(vite@8.3.5(@types/node@26.6.3)(yaml@2.9.0))
+
+  libs/subject-math:
+    dependencies:
+      '@ga/content':
+        specifier: workspace:*
+        version: link:../content
     devDependencies:
       '@types/node':
         specifier: 26.6.3
