@@ -114,7 +114,7 @@ The full model of content is in [Content](content.md). The derived learner state
 
 ## 5. Request Flow
 
-1. The client calls a Connect service under `/api/ga.<domain>.v1.*` with the session cookie on the web, or a bearer token on mobile.
+1. The client calls a Connect service under `/api/rpc/ga.<domain>.v1.*` with the session cookie on the web, or a bearer token on mobile. better-auth itself is served under `/api/auth/*`.
 2. The Worker authenticates with better-auth and loads the learner's state from PostgreSQL through Hyperdrive. Each request gets its own database client.
 3. The service calls the engine with:
    - the subject graph, compiled content bundled into the Worker and cached per isolate;
@@ -125,6 +125,8 @@ The full model of content is in [Content](content.md). The derived learner state
 A task is carried out as a **session**, one question per request (`StartTask`, then `SubmitAnswer` until a result). The session runner (`libs/api/src/runner.ts`) is a pure state machine over the engine's lesson, review, quiz and diagnostic rules. Its state holds problem references (topic, knowledge point, seed), never problems.
 
 Problem instances are generated on the server from a seed and graded on the server. The answer is never sent to the client before submission.
+
+The web app (`apps/web`) has one catch-all server route, `/api/$`, that hands requests to `src/server/handler.ts`. Pages are rendered on the server without learner data and fetch it in the browser with the Connect client and TanStack Query, so a page never needs the session on the server. The page language is decided on the server (the `ga-locale` cookie, else `Accept-Language`), so the first render is already in it.
 
 ## 6. Deployment
 

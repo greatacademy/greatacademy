@@ -45,6 +45,7 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 | `proto` | `libs/proto` | 契约；修改 `.proto` 文件后执行 `pnpm nx run proto:generate` |
 | `db` | `libs/db` | Drizzle schema、迁移、数据访问；修改 schema 后执行 `pnpm nx run db:generate -- --name <change>` |
 | `api` | `libs/api` | Connect 服务与会话执行器，在 PGlite 上端到端测试 |
+| `web` | `apps/web` | Web 应用：Workers 上的 TanStack Start、better-auth，以及挂在 `/api` 下的 Connect 服务（§5） |
 | `simulate` | `tools/simulate` | 用于调校引擎的模拟学生：`pnpm nx run simulate:simulate`（[学习引擎 §8](learning-engine.zh-CN.md#8-参数)） |
 
 此表随仓库增长；[架构 §3](architecture.zh-CN.md#3-仓库结构) 给出目标结构。
@@ -56,3 +57,21 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 3. 添加继承 `../../tsconfig.base.json` 的 `tsconfig.json`。
 4. 库导出源码：`"exports": { ".": "./src/index.ts" }`。
 5. 执行 `pnpm install`，然后运行检查。
+
+## 5. 运行 Web 应用
+
+Web 应用通过 Vite 在 workerd 中运行（`cf dev`），连接容器中的 PostgreSQL。在 macOS 上用 [OrbStack](https://orbstack.dev) 提供 `docker`。
+
+```bash
+docker compose up -d                  # PostgreSQL 17，localhost:54329（compose.yaml）
+pnpm nx run db:migrate                # 执行 libs/db/drizzle 中的迁移
+cp apps/web/.dev.vars.example apps/web/.dev.vars
+pnpm nx run web:dev                   # http://localhost:5173
+```
+
+- `apps/web/cloudflare.config.ts` 声明 Worker：Hyperdrive 绑定 `HYPERDRIVE`，其 `dev.connectionString` 指向容器；密钥 `BETTER_AUTH_SECRET`，本地从 `.dev.vars` 读取（已被 git 忽略）。
+- `pnpm nx run web:typecheck` 会先运行 `cf workers types`，把 `Env` 类型声明写入 `.cloudflare/types`。
+- `pnpm nx run web:build` 把 Worker 构建到 `.cloudflare/output`；`cf deploy` 负责部署。部署前需创建 Hyperdrive 配置、把它的 id 填进 `cloudflare.config.ts`，并设置密钥。
+
+试用方法：注册账号，打开「代数基础」，选修，然后参加诊断或跳过。学习主页给出接下来的任务；进度图显示每个知识点的状态和估计的记忆程度。
+

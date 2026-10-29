@@ -5,6 +5,7 @@
     "includes": ["**", "!**/gen", "!**/routeTree.gen.ts", "!**/drizzle", "!docs", "!**/*.md", "!**/*.yaml"]
   },
   "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 140 },
+  "css": { "parser": { "tailwindDirectives": true } },
   "javascript": { "formatter": { "quoteStyle": "double", "trailingCommas": "all", "semicolons": "always" } },
   "linter": {
     "enabled": true,

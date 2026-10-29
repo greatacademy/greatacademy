@@ -1,0 +1,2 @@
+# Local secrets for cf dev. Copy to .dev.vars; never commit .dev.vars.
+BETTER_AUTH_SECRET="dev-only-secret-change-me-0123456789abcdef"
