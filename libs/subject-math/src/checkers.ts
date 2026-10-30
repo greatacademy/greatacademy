@@ -2,7 +2,7 @@ import type { Checker, Json, Text, Verdict } from "@ga/content";
 import { t } from "@ga/content";
 
 import { equivalent, evaluate, type Poly, toPoly } from "./algebra.ts";
-import { isSimplifiedPolynomial, isSimplifiedRadical, type NumberLiteral, numberLiteral } from "./forms.ts";
+import { isLowestTerms, isSimplifiedPolynomial, isSimplifiedRadical, type NumberLiteral, numberLiteral } from "./forms.ts";
 import { type ParsedSet, parseInequalities, parseIntervals, setEqual } from "./intervals.ts";
 import { isRelation, type Node, normalizeLatex, ParseError, parseExpression, parseLatex, type RelOp, unwrap } from "./latex.ts";
 import { isPrime, isSquareFree } from "./numbers.ts";
@@ -27,6 +27,10 @@ const feedback = {
     "请化简根式：根号内不含完全平方因数，分母中不含根号，分数化为最简。",
   ),
   expression: t("Write an expression, not an equation.", "请写出表达式，而不是等式。"),
+  lowestTermsExpression: t(
+    "Write the answer as one fraction in lowest terms: cancel every common factor of the numerator and the denominator.",
+    "请写成一个最简分式：约去分子与分母的所有公因式。",
+  ),
   radicalForm: t(
     "Write the answer in simplest radical form: no perfect-square factor or squared variable under a square root, no fraction under a root, no root in a denominator, and like terms combined.",
     "请写成最简根式：平方根内不含完全平方因数或变量的平方，根号内不含分数，分母中不含根号，并合并同类项。",
@@ -158,7 +162,8 @@ export const numberChecker: Checker = {
  * expressionChecker accepts an expression equivalent to expected.expr (LaTeX).
  * With expected.form "simplified", the response must also be a polynomial in
  * simplest form (see isSimplifiedPolynomial); with "radical", an expression in
- * simplest radical form (see isSimplifiedRadical). With expected.positive,
+ * simplest radical form (see isSimplifiedRadical); with "lowest", one fraction
+ * of polynomials in lowest terms (see isLowestTerms). With expected.positive,
  * the variables are taken to be positive, so that \sqrt{x^{2}} equals x.
  */
 export const expressionChecker: Checker = {
@@ -172,6 +177,7 @@ export const expressionChecker: Checker = {
     if (!equivalent(parsed, target, e.positive === true)) return wrong();
     if (e.form === "simplified" && !isSimplifiedPolynomial(parsed)) return wrong(feedback.simplify);
     if (e.form === "radical" && !isSimplifiedRadical(parsed)) return wrong(feedback.radicalForm);
+    if (e.form === "lowest" && !isLowestTerms(parsed)) return wrong(feedback.lowestTermsExpression);
     return { correct: true };
   },
 };

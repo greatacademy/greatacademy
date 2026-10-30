@@ -1,3 +1,4 @@
+import { type Poly, toPoly } from "./algebra.ts";
 import type { Node } from "./latex.ts";
 import { Q } from "./rational.ts";
 
@@ -219,4 +220,95 @@ function isSimplifiedSum(node: Node, radicals: boolean): boolean {
   if (terms.length === 1) return true;
   const keys = new Set(terms.map((m) => m.key));
   return keys.size === terms.length && terms.every((m) => !m.coefficient.isZero());
+}
+
+/** coefficients lists the coefficients of a polynomial in one variable from the constant term up, or returns undefined for a polynomial in several variables. */
+function coefficients(p: Poly, v: string): Q[] | undefined {
+  const out: Q[] = [];
+  for (const [key, c] of p) {
+    const m = key === "" ? ["", "0"] : /^([^*^]+)(?:\^(\d+))?$/.exec(key);
+    if (!m || (key !== "" && m[1] !== v)) return undefined;
+    const e = key === "" ? 0 : Number(m[2] ?? 1);
+    while (out.length <= e) out.push(Q.zero);
+    out[e] = c;
+  }
+  return out;
+}
+
+/** polyGcdDegree is the degree of the greatest common divisor of two nonzero polynomials in one variable (Euclid's algorithm over the rationals). */
+function polyGcdDegree(a: Q[], b: Q[]): number {
+  const trim = (p: Q[]) => {
+    const q = [...p];
+    while (q.length > 0 && q[q.length - 1]!.isZero()) q.pop();
+    return q;
+  };
+  let [x, y] = [trim(a), trim(b)];
+  while (y.length > 0) {
+    const r = [...x];
+    while (r.length >= y.length && r.length > 0) {
+      const f = r[r.length - 1]!.div(y[y.length - 1]!);
+      const shift = r.length - y.length;
+      for (let i = 0; i < y.length; i++) r[i + shift] = r[i + shift]!.sub(f.mul(y[i]!));
+      r.pop();
+      while (r.length > 0 && r[r.length - 1]!.isZero()) r.pop();
+    }
+    [x, y] = [y, r];
+  }
+  return x.length - 1;
+}
+
+/** isSimplifiedProduct tells whether node is a product of simplified polynomials and their powers, such as 3(x-1)^{2}(x+2) or x^{2}-1. */
+function isSimplifiedProduct(node: Node): boolean {
+  return factors(unwrapGroup(node), []).every((f) => {
+    const base = f.k === "pow" && natural(f.b) !== undefined ? f.a : f;
+    return isSimplifiedPolynomial(unwrapGroup(base));
+  });
+}
+
+/** power is the exponent of variable v in a monomial key such as "x^2*y". */
+function power(key: string, v: string): number {
+  for (const f of key.split("*")) {
+    const [name, e] = f.split("^");
+    if (name === v) return Number(e ?? 1);
+  }
+  return 0;
+}
+
+function integerContent(p: Poly): bigint | undefined {
+  let g = 0n;
+  for (const c of p.values()) {
+    if (!c.isInteger()) return undefined;
+    g = gcd(g, c.n);
+  }
+  return g;
+}
+
+/**
+ * isLowestTerms tells whether node is a rational expression in lowest terms:
+ * a polynomial, or one fraction (possibly negated) of two polynomials, each
+ * written expanded or as a product of simplified factors, with integer coefficients and no common
+ * factor, such as \frac{x+1}{x-2} or -\frac{2}{3(x-1)}. In several variables
+ * only common numbers and common monomial factors are detected.
+ */
+export function isLowestTerms(node: Node): boolean {
+  let n = unwrapGroup(node);
+  if (n.k === "neg") n = unwrapGroup(n.a);
+  if (n.k !== "div") return isSimplifiedProduct(n);
+  if (!isSimplifiedProduct(n.a) || !isSimplifiedProduct(n.b)) return false;
+  const top = toPoly(n.a);
+  const bottom = toPoly(n.b);
+  if (!top || !bottom || top.size === 0 || bottom.size === 0) return false;
+  const [ct, cb] = [integerContent(top), integerContent(bottom)];
+  if (ct === undefined || cb === undefined || gcd(ct, cb) !== 1n) return false;
+  if (bottom.size === 1 && bottom.has("")) return !bottom.get("")!.abs().eq(Q.one);
+  const vars = new Set([...top.keys(), ...bottom.keys()].flatMap((k) => (k === "" ? [] : k.split("*").map((f) => f.split("^")[0]!))));
+  const minPower = (p: Poly, v: string) => Math.min(...[...p.keys()].map((k) => power(k, v)));
+  for (const v of vars) if (minPower(top, v) > 0 && minPower(bottom, v) > 0) return false;
+  if (vars.size === 1) {
+    const [v] = vars;
+    const a = coefficients(top, v!);
+    const b = coefficients(bottom, v!);
+    if (a && b && polyGcdDegree(a, b) > 0) return false;
+  }
+  return true;
 }

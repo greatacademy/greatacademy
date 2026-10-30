@@ -554,3 +554,25 @@ describe("radical expressions", () => {
     expect(verdict("expression", { expr: "2\\sqrt{2}", form: "radical" }, "\\sqrt{8}").feedback?.en).toContain("simplest radical form");
   });
 });
+
+describe("rational expressions in lowest terms", () => {
+  it.each([
+    ["x+1", "\\frac{x^{2}-1}{x-1}", false],
+    ["x+1", "x+1", true],
+    ["\\frac{x+1}{x-2}", "\\frac{x+1}{x-2}", true],
+    ["\\frac{x+1}{x-2}", "\\frac{x^{2}+2x+1}{x^{2}-x-2}", false],
+    ["\\frac{x+1}{x-2}", "\\frac{2x+2}{2x-4}", false],
+    ["-\\frac{2}{3(x-1)}", "-\\frac{2}{3x-3}", true],
+    ["-\\frac{2}{3(x-1)}", "\\frac{2}{3-3x}", true],
+    ["\\frac{1}{x}", "\\frac{x}{x^{2}}", false],
+    ["\\frac{x}{3}", "\\frac{x}{3}", true],
+    ["\\frac{x}{3}", "\\frac{2x}{6}", false],
+    ["\\frac{y}{x}", "\\frac{xy}{x^{2}}", false],
+    ["\\frac{x+1}{x-2}", "\\frac{x-2+3}{x-2}", false],
+    ["\\frac{x+1}{(x-2)^{2}}", "\\frac{x+1}{(x-2)^{2}}", true],
+    ["\\frac{x+1}{(x-2)^{2}}", "\\frac{x+1}{x^{2}-4x+4}", true],
+    ["\\frac{x+1}{x-2}", "1+\\frac{3}{x-2}", false],
+  ])("judges %s as %s", (expr, response, lowest) => {
+    expect(accepts("expression", { expr, form: "lowest" }, response)).toBe(lowest);
+  });
+});
