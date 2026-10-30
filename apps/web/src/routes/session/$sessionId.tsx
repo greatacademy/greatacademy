@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
 
+import { FigureView } from "../../components/Figure.tsx";
 import { Markdown, Tex } from "../../components/Markdown.tsx";
 import { MathField } from "../../components/MathField.tsx";
 import { Bar, Button, buttonClass, Card, ErrorNote, Spinner } from "../../components/ui.tsx";
@@ -216,6 +217,7 @@ function IntroView({ intro, onDone }: { intro: NonNullable<Question["intro"]>; o
           <Markdown source={tx(intro.title)} inline />
         </h2>
         <Markdown source={tx(intro.explanation)} />
+        <FigureView figure={intro.figure} />
       </Card>
       {ex && (
         <Card className="space-y-4 border-accent/25 bg-accent-soft/40">
@@ -249,7 +251,12 @@ function IntroView({ intro, onDone }: { intro: NonNullable<Question["intro"]>; o
 
 function ProblemPrompt({ problem }: { problem?: ProblemView }) {
   const { tx } = useI18n();
-  return <Markdown source={tx(problem?.prompt)} className="text-lg" />;
+  return (
+    <div className="space-y-4">
+      <Markdown source={tx(problem?.prompt)} className="text-lg" />
+      <FigureView figure={problem?.figure} />
+    </div>
+  );
 }
 
 /** AnswerText shows an answer as the learner would have given it: an option, math or text. */

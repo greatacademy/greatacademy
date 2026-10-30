@@ -91,6 +91,7 @@ const sameSign: KnowledgePointDef = {
 - **错误答案。** `wrong` 列出典型错误产生的作答（符号错误、该减却加、要求化简时给出未化简形式），判定器必须拒绝每一个。它们记录了这一步针对的误解，也防止判定器过于宽松。
 - **多样性。** 生成器必须产生足够多不同的题目，使同一学习者的练习和复习很少重复。
 - **不泄露答案。** 题面绝不包含答案；铺垫应放在讲解、例题和额外的 knowledge point 中。
+- **图形。** 题目可以带一个题面引用的 `figure`，knowledge point 可以带一个随讲解展示的 `figure`。`Figure` 是 `{ svg, alt }`：带 `viewBox` 的自包含 SVG 图，用 `currentColor` 绘制，从而在浅色和深色主题下都跟随客户端的文字颜色；客户端可用强调色绘制的部分带 class `accent`。图中的文字与语言无关（数字、字母、单位）；`alt` 用每种语言描述图形，供屏幕阅读器使用。客户端直接内嵌 SVG，所以只能使用绘图元素（`svg`、`g`、`line`、`polyline`、`polygon`、`path`、`circle`、`ellipse`、`rect`、`text`、`tspan`、`title`、`defs`、`marker`），不能有事件处理器、`style` 属性、链接或 `url()`。
 
 ## 5. 答案与判定器
 
@@ -147,6 +148,7 @@ const prealgebra: CourseDef = {
 | 先修被另一个先修蕴含 | 警告 |
 | 被包含的知识点存在、除非标记 `nonAncestor` 否则必须是祖先、权重在 (0, 1] 内、不成环 | 错误 |
 | 关键先修是所属知识点的祖先 | 错误 |
+| Knowledge point 的图形合乎规定（§4），且 alt 文字在每种语言中非空 | 错误 |
 | 课程中的知识点存在、不重复、排在本课程内先修之后；下限中的知识点不在课程中 | 错误 |
 
 编译后的图谱提供：
@@ -162,15 +164,16 @@ const prealgebra: CourseDef = {
 
 - 抛出异常，或不确定；
 - 生成的文字在某种语言中为空，或含有 `NaN`、`undefined`、`Infinity`、`[object Object]`；
+- 带有不合规定的图形（§4）；
 - 指定了未知判定器；
 - 选择题：选项少于两个、选项重复，或期望下标越界；
 - 标准答案被判定器拒绝，或某个错误答案被判定器接受。
 
-不同题面少于 `minDistinct` 个时发出警告。每个内容包都在测试中运行 `compileSubject` 和 `sampleGenerators`，因此运行时会拒绝的内容无法合入。
+不同题面少于 `minDistinct` 个时发出警告；图形不同的题面算作不同。每个内容包都在测试中运行 `compileSubject` 和 `sampleGenerators`，因此运行时会拒绝的内容无法合入。
 
 ## 9. 提供题目
 
-`generateProblem(subject, ref)` 根据 `ProblemRef`（`{ topic, kp, seed }`，`kp` 是 knowledge point 的下标）重新生成题目。服务器只向客户端发送 `viewOf(problem)`：题面和输入规格。答案、标准答案和解答只在学习者作答之后才公开，作答在服务器上判定。
+`generateProblem(subject, ref)` 根据 `ProblemRef`（`{ topic, kp, seed }`，`kp` 是 knowledge point 的下标）重新生成题目。服务器只向客户端发送 `viewOf(problem)`：题面、图形和输入规格。答案、标准答案和解答只在学习者作答之后才公开，作答在服务器上判定。
 
 ## 10. 数学
 
@@ -185,7 +188,7 @@ const prealgebra: CourseDef = {
 | `scientific` | `{ value }`：有理数 | 用科学记数法表示的 `value`：`a \times 10^{n}`（或 `\cdot`），其中 `1 ≤ \|a\| < 10` 写成整数或小数，或单独的 `10^{n}`。其他形式的相同值会被拒绝并给出反馈 |
 | `radical` | `{ coef, radicand }`：有理数与不小于 1 的无平方因数整数 | 最简根式形式的 `coef·√radicand`：`6\sqrt{2}`、`-\sqrt{5}`、`\frac{2\sqrt{3}}{3}` 或 `\frac{2}{3}\sqrt{3}`；radicand 为 1 时是有理数。值相同但根号内含平方因数、分母含根式或分数未约分的答案会被拒绝并给出反馈 |
 
-`content/math` 用 `numberProblem`、`expressionProblem`、`inequalityProblem`、`factorizationProblem`、`scientificProblem`、`radicalProblem` 和 `choiceProblem` 构建题目。它们填写答案规格、标准答案和输入方式，并去掉在某个种子下恰好等于正确答案的错误答案。题面和解答中的 LaTeX 用 `num`、`paren`、`poly`、`linear` 书写，它们不会产生 `+ -`、`1x` 或 `-1x`；小数用 `dec`、科学记数法用 `sci`、最简根式用 `radical` 书写。要求小数或带分数的答案，标准答案也写成那种形式。
+`content/math` 用 `numberProblem`、`expressionProblem`、`inequalityProblem`、`factorizationProblem`、`scientificProblem`、`radicalProblem` 和 `choiceProblem` 构建题目。它们填写答案规格、标准答案和输入方式，并去掉在某个种子下恰好等于正确答案的错误答案。题面和解答中的 LaTeX 用 `num`、`paren`、`poly`、`linear` 书写，它们不会产生 `+ -`、`1x` 或 `-1x`；小数用 `dec`、科学记数法用 `sci`、最简根式用 `radical` 书写。图形用 `dotPlot` 和 `boxPlot` 在 `Axis` 上绘制。要求小数或带分数的答案，标准答案也写成那种形式。
 
 第一门课程**代数基础**（`algebra-foundations`）有 20 个知识点，分为四个单元：整数（相反数与比较大小、绝对值、四则运算、乘方、混合运算），代数式（求值、合并同类项、乘法分配律、化简），一元一次方程（一步、两步、两边都有变量（含无解与无穷多解）、含括号），一元一次不等式（检验与写出解、一步（含改变不等号方向）、多步）。
 

@@ -1,4 +1,5 @@
 import { CheckerRegistry } from "./checkers.ts";
+import { figureIssue } from "./figure.ts";
 import type { Text } from "./text.ts";
 import { isText } from "./text.ts";
 import type { CourseDef, KnowledgePointDef, SubjectDef, TopicDef } from "./types.ts";
@@ -127,6 +128,8 @@ export function compileSubject(def: SubjectDef): CompiledSubject {
       kpIds.add(kp.id);
       text(`${kpPath} › title`, kp.title);
       text(`${kpPath} › explanation`, kp.explanation);
+      const figure = kp.figure && figureIssue(kp.figure);
+      if (figure) error(kpPath, figure);
       if (typeof kp.generate !== "function") error(kpPath, "generate must be a function");
     }
     if (topic.diagnostic !== undefined && !kpIds.has(topic.diagnostic))

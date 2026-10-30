@@ -1,3 +1,4 @@
+import type { Figure } from "./figure.ts";
 import type { Rng } from "./rng.ts";
 import type { Text } from "./text.ts";
 
@@ -25,6 +26,8 @@ export interface AnswerSpec {
 /** Problem is one generated problem instance. */
 export interface Problem {
   readonly prompt: Text;
+  /** figure is a drawing the prompt refers to. */
+  readonly figure?: Figure;
   readonly answer: AnswerSpec;
   /** solution is the worked solution, shown after an answer and in worked examples. */
   readonly solution: Text;
@@ -44,6 +47,8 @@ export interface KnowledgePointDef {
   readonly title: Text;
   /** explanation introduces the idea before the worked example. */
   readonly explanation: Text;
+  /** figure is a drawing shown with the explanation. */
+  readonly figure?: Figure;
   /** keyPrerequisites are the earlier topics this step depends on most directly; they drive remediation. */
   readonly keyPrerequisites?: readonly string[];
   /** generate produces the worked example and the practice problems of this step. */

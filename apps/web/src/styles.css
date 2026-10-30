@@ -77,3 +77,22 @@
 .katex {
   font-size: 1.08em;
 }
+.figure-ga {
+  display: flex;
+  justify-content: center;
+}
+.figure-ga svg {
+  width: 100%;
+  max-width: 28rem;
+  height: auto;
+  max-height: 18rem;
+  overflow: visible;
+}
+.figure-ga svg text {
+  fill: currentColor;
+  stroke: none;
+  font-family: inherit;
+}
+.figure-ga .accent {
+  color: var(--color-accent);
+}

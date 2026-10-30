@@ -1,6 +1,7 @@
 import type { MessageInitShape } from "@bufbuild/protobuf";
-import { generateProblem, type InputSpec, type Problem, type Text } from "@ga/content";
+import { type Figure, generateProblem, type InputSpec, type Problem, type Text } from "@ga/content";
 import { diagnosticCandidates, diagnosticLength, type LearnerState, reviewXp, type Task } from "@ga/engine";
+import type { FigureSchema } from "@ga/proto/common/v1/figure_pb";
 import type { TextSchema } from "@ga/proto/common/v1/text_pb";
 import type {
   InputSchema,
@@ -19,6 +20,11 @@ export function text(t: Text): MessageInitShape<typeof TextSchema> {
   return { values: { ...t } };
 }
 
+/** figure converts a content figure to its message. */
+export function figure(f: Figure): MessageInitShape<typeof FigureSchema> {
+  return { svg: f.svg, alt: text(f.alt) };
+}
+
 function input(spec: InputSpec): MessageInitShape<typeof InputSchema> {
   switch (spec.kind) {
     case "choice":
@@ -32,7 +38,7 @@ function input(spec: InputSpec): MessageInitShape<typeof InputSchema> {
 
 /** problemView converts what the learner may see of a problem before answering. */
 export function problemView(p: Problem): MessageInitShape<typeof ProblemViewSchema> {
-  return { prompt: text(p.prompt), input: input(p.answer.input) };
+  return { prompt: text(p.prompt), input: input(p.answer.input), ...(p.figure && { figure: figure(p.figure) }) };
 }
 
 /** taskMessage describes an engine task for the dashboard. */
@@ -83,6 +89,7 @@ function question(c: CourseEntry, run: RunState): MessageInitShape<typeof Questi
       title: text(kp.title),
       explanation: text(kp.explanation),
       example: { problem: problemView(example), solution: text(example.solution), answer: example.canonical },
+      ...(kp.figure && { figure: figure(kp.figure) }),
     },
   };
 }

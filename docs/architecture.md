@@ -53,7 +53,7 @@ This document describes the system as built: technology choices, repository stru
 | Accounts | **better-auth** (email + password, passkeys later), in the Worker | Sessions shared by the web app and the mobile app (bearer tokens) |
 | Database | **PostgreSQL 17**, reached from the Worker through **Hyperdrive**; **Drizzle ORM** + drizzle-kit migrations | **PGlite** in tests; a `postgres:17-alpine` container (OrbStack) in development |
 | Mobile | **Expo** (latest SDK), Expo Router, TanStack Query, **Uniwind** (Tailwind v4 for React Native) | Same contracts and tokens as the web app |
-| Object storage | **R2** | Images and figures of content |
+| Object storage | **R2** | Images of content; generated figures are inline SVG ([Content §4](content.md#4-knowledge-points-and-generators)) |
 
 ## 3. Repository Structure
 

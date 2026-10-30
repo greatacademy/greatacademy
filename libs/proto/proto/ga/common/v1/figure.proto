@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package ga.common.v1;
+
+import "ga/common/v1/text.proto";
+
+// Figure is a static drawing. svg is a self-contained SVG document limited to
+// drawing elements and drawn in currentColor; elements with class "accent" may
+// be drawn in the client's accent color. alt describes it for screen readers.
+message Figure {
+  string svg = 1;
+  Text alt = 2;
+}

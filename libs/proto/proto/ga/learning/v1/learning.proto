@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package ga.learning.v1;
 
+import "ga/common/v1/figure.proto";
 import "ga/common/v1/text.proto";
 
 // LearningService is the signed-in learner's study: enrollment, the dashboard
@@ -220,6 +221,8 @@ message KnowledgePointIntro {
   ga.common.v1.Text title = 3;
   ga.common.v1.Text explanation = 4;
   WorkedExample example = 5;
+  // figure is a drawing shown with the explanation.
+  optional ga.common.v1.Figure figure = 6;
 }
 
 // WorkedExample is a problem shown with its solution.
@@ -244,6 +247,8 @@ message LessonProgress {
 message ProblemView {
   ga.common.v1.Text prompt = 1;
   Input input = 2;
+  // figure is a drawing the prompt refers to.
+  optional ga.common.v1.Figure figure = 3;
 }
 
 message Input {

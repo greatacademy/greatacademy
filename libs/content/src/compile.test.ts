@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { CompileError, compileSubject } from "./compile.ts";
+import { figureIssue } from "./figure.ts";
 import { sampleGenerators } from "./problems.ts";
 import { same, t } from "./text.ts";
 import type { CourseDef, Problem, SubjectDef, TopicDef } from "./types.ts";
@@ -157,6 +158,7 @@ describe("sampleGenerators", () => {
     ["accepted wrong responses", () => ({ ...problem(1), wrong: ["1"] }), "wrong response"],
     ["NaN in texts", () => problem(Number.NaN), "contains NaN"],
     ["unknown checkers", () => ({ ...problem(1), answer: { ...problem(1).answer, checker: "nope" } }), "unknown checker"],
+    ["unsafe figures", () => ({ ...problem(1), figure: { svg: '<svg viewBox="0 0 1 1"><script/></svg>', alt: same("x") } }), "<script>"],
   ] as const)("reports %s", (_, generate, message) => {
     const issues = sampleGenerators(withGenerator(generate as TopicDef["knowledgePoints"][number]["generate"]), { samples: 5 });
     expect(issues.map((i) => i.message).join("\n")).toContain(message);
@@ -168,5 +170,27 @@ describe("sampleGenerators", () => {
       { samples: 20 },
     );
     expect(issues).toEqual([{ severity: "warning", path: "topic a › kp kp", message: "only 1 distinct prompts in 20 samples" }]);
+  });
+});
+
+describe("figureIssue", () => {
+  const alt = t("A triangle", "一个三角形");
+  it("accepts drawings in currentColor", () => {
+    const svg =
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 80"><polygon points="10,70 90,70 50,10" fill="none" stroke="currentColor"/><text x="50" y="78" class="accent">8 cm</text></svg>';
+    expect(figureIssue({ svg, alt })).toBeUndefined();
+  });
+  it.each([
+    ['<svg viewBox="0 0 1 1"><foreignObject/></svg>', "<foreignObject>"],
+    ['<svg viewBox="0 0 1 1"><rect onclick="x()"/></svg>', "onclick"],
+    ['<svg viewBox="0 0 1 1"><path style="fill:red"/></svg>', "style"],
+    ['<svg viewBox="0 0 1 1"><g href="https://example.com"/></svg>', "href"],
+    ['<svg viewBox="0 0 1 1"><rect fill="url(#p)"/></svg>', "url()"],
+    ["<svg><rect/></svg>", "viewBox"],
+  ])("rejects %s", (svg, message) => {
+    expect(figureIssue({ svg, alt })).toContain(message);
+  });
+  it("requires alt text in every locale", () => {
+    expect(figureIssue({ svg: '<svg viewBox="0 0 1 1"></svg>', alt: { en: "x", "zh-CN": "" } })).toContain("alt");
   });
 });

@@ -1,4 +1,5 @@
 import type { CompiledSubject, Issue } from "./compile.ts";
+import { type Figure, figureIssue } from "./figure.ts";
 import { createRng } from "./rng.ts";
 import type { Text } from "./text.ts";
 import { isText } from "./text.ts";
@@ -23,19 +24,20 @@ export function generateProblem(subject: CompiledSubject, ref: ProblemRef): Prob
 /** ProblemView is what a client may see of a problem before answering: no answer, no solution. */
 export interface ProblemView {
   readonly prompt: Text;
+  readonly figure?: Figure;
   readonly input: Problem["answer"]["input"];
 }
 
 /** viewOf strips a problem down to its ProblemView. */
 export function viewOf(problem: Problem): ProblemView {
-  return { prompt: problem.prompt, input: problem.answer.input };
+  return { prompt: problem.prompt, ...(problem.figure && { figure: problem.figure }), input: problem.answer.input };
 }
 
 /** SampleOptions controls sampleGenerators. */
 export interface SampleOptions {
   /** samples is the number of seeds tried per knowledge point. */
   readonly samples?: number;
-  /** minDistinct is the fewest distinct prompts expected among the samples before a warning. */
+  /** minDistinct is the fewest distinct prompts (with their figures) expected among the samples before a warning. */
   readonly minDistinct?: number;
 }
 
@@ -59,7 +61,8 @@ export function sampleGenerators(subject: CompiledSubject, options: SampleOption
           issues.push({ severity: "error", path: `${path} › seed ${seed}`, message: found });
           return;
         }
-        prompts.add(JSON.stringify(generateProblem(subject, { topic: topic.id, kp: index, seed }).prompt));
+        const p = generateProblem(subject, { topic: topic.id, kp: index, seed });
+        prompts.add(JSON.stringify([p.prompt, p.figure?.svg]));
       }
       if (prompts.size < minDistinct)
         issues.push({ severity: "warning", path, message: `only ${prompts.size} distinct prompts in ${samples} samples` });
@@ -86,6 +89,8 @@ function checkSample(subject: CompiledSubject, topic: TopicDef, kp: number, seed
         return `text contains ${s.match(/NaN|undefined|Infinity|\[object Object\]/)![0]}`;
     }
   }
+  const figure = a.figure && figureIssue(a.figure);
+  if (figure) return figure;
   const { answer } = a;
   if (!subject.checkers.has(answer.checker)) return `unknown checker ${answer.checker}`;
   if (answer.input.kind === "choice") {

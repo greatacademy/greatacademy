@@ -5,6 +5,7 @@
 import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { Text } from "../../common/v1/text_pb.js";
+import type { Figure } from "../../common/v1/figure_pb.js";
 
 /**
  * Describes the file ga/learning/v1/learning.proto.
@@ -713,6 +714,13 @@ export declare type KnowledgePointIntro = Message<"ga.learning.v1.KnowledgePoint
    * @generated from field: ga.learning.v1.WorkedExample example = 5;
    */
   example?: WorkedExample | undefined;
+
+  /**
+   * figure is a drawing shown with the explanation.
+   *
+   * @generated from field: optional ga.common.v1.Figure figure = 6;
+   */
+  figure?: Figure | undefined;
 };
 
 /**
@@ -803,6 +811,13 @@ export declare type ProblemView = Message<"ga.learning.v1.ProblemView"> & {
    * @generated from field: ga.learning.v1.Input input = 2;
    */
   input?: Input | undefined;
+
+  /**
+   * figure is a drawing the prompt refers to.
+   *
+   * @generated from field: optional ga.common.v1.Figure figure = 3;
+   */
+  figure?: Figure | undefined;
 };
 
 /**

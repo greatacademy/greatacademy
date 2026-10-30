@@ -91,6 +91,7 @@ A generator is a function from a seeded `Rng` to a `Problem`:
 - **Wrong responses.** `wrong` lists the responses that typical mistakes produce (sign errors, adding instead of subtracting, an unsimplified form when a simplified one is required). The checker must reject each of them. They document the misconceptions the step targets and guard the checker against being too lenient.
 - **Variety.** A generator must produce enough distinct problems that the practice and reviews of one learner rarely repeat.
 - **No give-aways.** A prompt never contains its answer; scaffolding belongs in the explanation, the worked example and extra knowledge points.
+- **Figures.** A problem may carry a `figure` the prompt refers to, and a knowledge point a `figure` shown with its explanation. A `Figure` is `{ svg, alt }`: a self-contained SVG drawing with a `viewBox`, drawn in `currentColor` so that it follows the client's text color in light and dark themes, with class `accent` on the marks the client may draw in its accent color. Text in the drawing is language-neutral (numbers, letters, units); `alt` describes the figure in every locale for screen readers. Clients inline the SVG, so it may use only drawing elements (`svg`, `g`, `line`, `polyline`, `polygon`, `path`, `circle`, `ellipse`, `rect`, `text`, `tspan`, `title`, `defs`, `marker`), with no event handlers, `style` attributes, links or `url()`.
 
 ## 5. Answers and Checkers
 
@@ -147,6 +148,7 @@ const prealgebra: CourseDef = {
 | A prerequisite implied by another prerequisite | Warning |
 | Encompassed topics exist, are ancestors unless marked `nonAncestor`, have weights in (0, 1], and form no cycle | Error |
 | Key prerequisites are ancestors of their topic | Error |
+| Knowledge point figures are well formed (§4) and have alt text in every locale | Error |
 | Course topics exist, are not repeated, follow their in-course prerequisites; floor topics are not in the course | Error |
 
 The compiled graph provides:
@@ -162,15 +164,16 @@ The compiled graph provides:
 
 - throws, or is not deterministic;
 - produces a text empty in some locale or containing `NaN`, `undefined`, `Infinity` or `[object Object]`;
+- carries a figure that is not well formed (§4);
 - names an unknown checker;
 - for a choice: has fewer than two options, repeated options, or an expected index out of range;
 - has a canonical response its checker rejects, or a wrong response its checker accepts.
 
-It warns when fewer than `minDistinct` distinct prompts appear. Every content package runs `compileSubject` and `sampleGenerators` in its tests, so content cannot be merged in a state the runtime would reject.
+It warns when fewer than `minDistinct` distinct prompts appear; prompts with different figures count as distinct. Every content package runs `compileSubject` and `sampleGenerators` in its tests, so content cannot be merged in a state the runtime would reject.
 
 ## 9. Serving Problems
 
-`generateProblem(subject, ref)` regenerates a problem from a `ProblemRef` (`{ topic, kp, seed }`, where `kp` is the knowledge point's index). The server sends the client only `viewOf(problem)`: the prompt and the input specification. The answer, the canonical response and the solution are revealed only after the learner responds, and the response is checked on the server.
+`generateProblem(subject, ref)` regenerates a problem from a `ProblemRef` (`{ topic, kp, seed }`, where `kp` is the knowledge point's index). The server sends the client only `viewOf(problem)`: the prompt, its figure and the input specification. The answer, the canonical response and the solution are revealed only after the learner responds, and the response is checked on the server.
 
 ## 10. Mathematics
 
@@ -185,7 +188,7 @@ It warns when fewer than `minDistinct` distinct prompts appear. Every content pa
 | `scientific` | `{ value }`: a rational | `value` in scientific notation, `a \times 10^{n}` (or `\cdot`) with `1 ≤ \|a\| < 10` written as an integer or decimal, or `10^{n}` alone. The same value in another form is rejected with feedback |
 | `radical` | `{ coef, radicand }`: a rational and a square-free integer ≥ 1 | `coef·√radicand` in simplest radical form: `6\sqrt{2}`, `-\sqrt{5}`, `\frac{2\sqrt{3}}{3}` or `\frac{2}{3}\sqrt{3}`; with radicand 1, a rational. The same value with a square factor under the root, a root in the denominator or a fraction not in lowest terms is rejected with feedback |
 
-`content/math` builds problems with `numberProblem`, `expressionProblem`, `inequalityProblem`, `factorizationProblem`, `scientificProblem`, `radicalProblem` and `choiceProblem`, which fill in the answer specification, the canonical response and the input, and drop listed wrong responses that happen to equal the answer for a given seed. LaTeX for prompts and solutions is written with `num`, `paren`, `poly` and `linear`, which never produce `+ -`, `1x` or `-1x`, with `dec` for decimals, `sci` for scientific notation and `radical` for simplest radical form. The canonical response of a decimal or mixed-number answer is written in that form.
+`content/math` builds problems with `numberProblem`, `expressionProblem`, `inequalityProblem`, `factorizationProblem`, `scientificProblem`, `radicalProblem` and `choiceProblem`, which fill in the answer specification, the canonical response and the input, and drop listed wrong responses that happen to equal the answer for a given seed. LaTeX for prompts and solutions is written with `num`, `paren`, `poly` and `linear`, which never produce `+ -`, `1x` or `-1x`, with `dec` for decimals, `sci` for scientific notation and `radical` for simplest radical form. Figures are drawn with `dotPlot` and `boxPlot` over an `Axis`. The canonical response of a decimal or mixed-number answer is written in that form.
 
 The first course, **Foundations of Algebra** (`algebra-foundations`), has 20 topics in four units: integers (opposites and comparison, absolute value, the four operations, powers, order of operations), algebraic expressions (evaluating, combining like terms, the distributive property, simplifying), linear equations (one-step, two-step, variables on both sides including no solution and infinitely many, parentheses) and linear inequalities (checking and writing solutions, one-step including reversing the symbol, multi-step).
 
