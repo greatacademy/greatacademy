@@ -5,12 +5,16 @@ import {
   dec,
   equivalent,
   factorizationLatex,
+  inequalityLatexOf,
+  intervalLatex,
   parseExpression,
   primeFactors,
   Q,
+  type RealSet,
   radical,
   relSymbol,
   sci,
+  setEqual,
   surdEqual,
   surdValue,
 } from "@ga/subject-math";
@@ -270,6 +274,36 @@ export function solutionsProblem(p: SolutionsProblem): Problem {
     solution: p.solution,
     canonical: solutionsLatex(p.values, variable),
     wrong: [...new Set((p.wrong ?? []).filter((w) => !sameSet(w)).map((w) => solutionsLatex(w, variable)))],
+  };
+}
+
+/** IntervalProblem describes a problem whose answer is a set of real numbers, such as the solutions of a compound inequality. */
+export interface IntervalProblem {
+  readonly prompt: Text;
+  /** set is the answer, built with union, intersect or parseIntervals. */
+  readonly set: RealSet;
+  /** form requires interval notation or inequalities; the canonical response is in that form, in interval notation by default. */
+  readonly form?: "interval" | "inequality";
+  readonly variable?: string;
+  readonly solution: Text;
+  /** wrong are the sets typical mistakes produce; sets equal to the answer are dropped. */
+  readonly wrong?: readonly RealSet[];
+}
+
+/** intervalProblem builds a problem checked by the "interval" checker. */
+export function intervalProblem(p: IntervalProblem): Problem {
+  const variable = p.variable ?? "x";
+  const write = (set: RealSet) => (p.form === "inequality" ? inequalityLatexOf(set, variable) : intervalLatex(set));
+  return {
+    prompt: p.prompt,
+    answer: {
+      checker: "interval",
+      expected: { set: intervalLatex(p.set), var: variable, ...(p.form && { form: p.form }) },
+      input: { kind: "math" },
+    },
+    solution: p.solution,
+    canonical: write(p.set),
+    wrong: [...new Set((p.wrong ?? []).filter((w) => !setEqual(w, p.set)).map(write))],
   };
 }
 

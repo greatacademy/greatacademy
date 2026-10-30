@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 
 import { equivalent, evaluate } from "./algebra.ts";
 import { isSimplifiedPolynomial, type NumberLiteral, numberLiteral } from "./forms.ts";
+import { type ParsedSet, parseInequalities, parseIntervals, setEqual } from "./intervals.ts";
 import { isRelation, type Node, normalizeLatex, ParseError, parseExpression, parseLatex, type RelOp, unwrap } from "./latex.ts";
 import { isPrime, isSquareFree } from "./numbers.ts";
 import { Q } from "./rational.ts";
@@ -28,6 +29,14 @@ const feedback = {
   expression: t("Write an expression, not an equation.", "请写出表达式，而不是等式。"),
   simplify: t("Simplify fully: remove parentheses and combine like terms.", "请完全化简：去掉括号并合并同类项。"),
   inequality: t("Write an inequality such as $x < 3$.", "请写出不等式，例如 $x < 3$。"),
+  interval: t(
+    "Write the set in interval notation, such as $(-2, 5]$ or $(-\\infty, 1) \\cup [3, \\infty)$.",
+    "请用区间记号写出这个集合，例如 $(-2, 5]$ 或 $(-\\infty, 1) \\cup [3, \\infty)$。",
+  ),
+  inequalities: t(
+    "Write the set with inequalities, such as $-2 < x \\le 5$ or $x < 1 \\text{ or } x \\ge 3$.",
+    "请用不等式写出这个集合，例如 $-2 < x \\le 5$ 或 $x < 1 \\text{ or } x \\ge 3$。",
+  ),
   solutions: t(
     "List the solutions separated by commas, such as $x = 2, x = -5$, or enter $\\varnothing$ if there are none.",
     "请用逗号分隔列出所有解，例如 $x = 2, x = -5$；如果无解，请输入 $\\varnothing$。",
@@ -459,7 +468,7 @@ function listItems(response: string): string[] {
 function simplestSurd(node: Node, value: Surd): boolean {
   if (value.m === 1n) {
     const lit = numberLiteral(node);
-    return lit !== undefined && lit.reduced;
+    return lit?.reduced === true;
   }
   const ok = (n: Node): boolean => {
     switch (n.k) {
@@ -541,6 +550,47 @@ export const solutionsChecker: Checker = {
   },
 };
 
+function tryParseSet(f: () => ParsedSet): ParsedSet | undefined {
+  try {
+    return f();
+  } catch (e) {
+    if (e instanceof ParseError) return undefined;
+    throw e;
+  }
+}
+
+/**
+ * intervalChecker accepts a set of real numbers equal to expected.set, which
+ * is written in interval notation. With expected.form "interval" the response
+ * must be in interval notation ("(-2, 5]", "(-\\infty, 1) \\cup [3, \\infty)",
+ * \\mathbb{R}, \\varnothing); with "inequality", inequalities in expected.var
+ * ("-2 < x \\le 5", "x < 1 \\text{ or } x \\ge 3"); without a form, either.
+ * Endpoints must be numbers in simplest form.
+ */
+export const intervalChecker: Checker = {
+  id: "interval",
+  check(expected, response) {
+    const e = obj(expected);
+    const target = parseIntervals(str(e, "set")).set;
+    const variable = typeof e.var === "string" ? e.var : "x";
+    const asInterval = e.form === "inequality" ? undefined : tryParseSet(() => parseIntervals(response));
+    const asInequality = e.form === "interval" ? undefined : tryParseSet(() => parseInequalities(response, variable));
+    const got = asInterval ?? asInequality;
+    if (!got) {
+      const other =
+        e.form === "interval"
+          ? tryParseSet(() => parseInequalities(response, variable))
+          : e.form === "inequality"
+            ? tryParseSet(() => parseIntervals(response))
+            : undefined;
+      if (other) return wrong(e.form === "interval" ? feedback.interval : feedback.inequalities);
+      return wrong(feedback.unreadable);
+    }
+    if (!setEqual(got.set, target)) return wrong();
+    return got.reduced ? { correct: true } : wrong(feedback.lowestTerms);
+  },
+};
+
 /** mathCheckers are the checkers the mathematics subject registers. */
 export const mathCheckers: readonly Checker[] = [
   numberChecker,
@@ -550,4 +600,5 @@ export const mathCheckers: readonly Checker[] = [
   scientificChecker,
   radicalChecker,
   solutionsChecker,
+  intervalChecker,
 ];

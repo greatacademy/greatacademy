@@ -2,6 +2,7 @@ import { CheckerRegistry } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
 import { mathCheckers } from "./checkers.ts";
+import { inequalityLatexOf, intervalLatex, parseInequalities, parseIntervals, setEqual } from "./intervals.ts";
 import { parseExpression } from "./latex.ts";
 import { q } from "./rational.ts";
 import { surd, surdEqual, surdLatex, surdValue } from "./surds.ts";
@@ -291,5 +292,63 @@ describe("surdLatex", () => {
   ])("writes case %# as %s", (s, latex) => {
     expect(surdLatex(s)).toBe(latex);
     expect(surdEqual(surdValue(parseExpression(latex))!, s)).toBe(true);
+  });
+});
+
+describe("interval", () => {
+  const check = (set: string, response: string, form?: string) =>
+    registry.check("interval", { set, var: "x", ...(form && { form }) }, response);
+
+  it.each([
+    ["(-2, 5]", "(-2, 5]", undefined],
+    ["(-2, 5]", "\\left(-2,5\\right]", "interval"],
+    ["(-2, 5]", "-2 < x \\le 5", undefined],
+    ["(-2, 5]", "5 \\ge x > -2", "inequality"],
+    ["(-2, 5]", "x > -2 \\text{ and } x \\le 5", "inequality"],
+    ["(-\\infty, 3)", "(-\\infty, 3)", "interval"],
+    ["(-\\infty, 3)", "x < 3", "inequality"],
+    ["(-\\infty, 3)", "3 > x", "inequality"],
+    ["[1/2, \\infty)", "[\\frac{1}{2}, \\infty)", "interval"],
+    ["[1/2, \\infty)", "[0.5, +\\infty)", "interval"],
+    ["(-\\infty, -1) \\cup [3, \\infty)", "(-\\infty,-1)\\cup[3,\\infty)", "interval"],
+    ["(-\\infty, -1) \\cup [3, \\infty)", "[3, \\infty) \\cup (-\\infty, -1)", "interval"],
+    ["(-\\infty, -1) \\cup [3, \\infty)", "x < -1 \\text{ or } x \\ge 3", "inequality"],
+    ["(-\\infty, -1) \\cup [3, \\infty)", "x<-1orx\\ge3", "inequality"],
+    ["(-\\infty, 2] \\cup (2, 5)", "(-\\infty, 5)", "interval"],
+    ["(-\\infty, \\infty)", "\\mathbb{R}", "interval"],
+    ["(-\\infty, \\infty)", "x < 1 \\text{ or } x > 0", "inequality"],
+    ["\\varnothing", "\\varnothing", undefined],
+    ["\\varnothing", "\\emptyset", "interval"],
+  ])("accepts %s as %s", (set, response, form) => {
+    expect(check(set, response, form).correct).toBe(true);
+  });
+
+  it.each([
+    ["(-2, 5]", "[-2, 5]", undefined, undefined],
+    ["(-2, 5]", "(-2, 5)", undefined, undefined],
+    ["(-2, 5]", "-2 \\le x \\le 5", undefined, undefined],
+    ["(-2, 5]", "(5, -2]", undefined, "could not be read"],
+    ["(-2, 5]", "-2 < x \\le 5", "interval", "interval notation"],
+    ["(-2, 5]", "(-2, 5]", "inequality", "with inequalities"],
+    ["(-\\infty, 3)", "[-\\infty, 3)", "interval", "could not be read"],
+    ["(-\\infty, 3)", "x > 3", "inequality", undefined],
+    ["(-\\infty, -1) \\cup [3, \\infty)", "x < -1 \\text{ and } x \\ge 3", "inequality", undefined],
+    ["(-\\infty, -1) \\cup [3, \\infty)", "(-1, 3]", "interval", undefined],
+    ["[1/2, \\infty)", "[\\frac{2}{4}, \\infty)", "interval", "lowest terms"],
+    ["(-2, 5]", "-2 < x > 5", "inequality", "could not be read"],
+    ["(-2, 5]", "-2 < y \\le 5", "inequality", "could not be read"],
+  ])("rejects %s as %s", (set, response, form, message) => {
+    const v = check(set, response, form);
+    expect(v.correct).toBe(false);
+    if (message) expect(v.feedback?.en).toContain(message);
+    else expect(v.feedback).toBeUndefined();
+  });
+
+  it("writes sets", () => {
+    const set = parseIntervals("(-\\infty, -1) \\cup [\\frac{3}{2}, \\infty)").set;
+    expect(intervalLatex(set)).toBe("(-\\infty, -1) \\cup [\\frac{3}{2}, \\infty)");
+    expect(inequalityLatexOf(set)).toBe("x < -1 \\text{ or } x \\ge \\frac{3}{2}");
+    expect(inequalityLatexOf(parseIntervals("(-2, 5]").set)).toBe("-2 < x \\le 5");
+    expect(setEqual(parseInequalities(inequalityLatexOf(set), "x").set, set)).toBe(true);
   });
 });
