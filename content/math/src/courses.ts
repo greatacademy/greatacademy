@@ -178,12 +178,12 @@ export const algebraI: CourseDef = {
   id: "algebra-i",
   title: t("Algebra I", "代数一"),
   description: t(
-    "Linear equations with parameters, formulas and word problems; units and variation; polynomials and their products; and arithmetic and geometric sequences.",
-    "含参数的一次方程、公式变形与应用题；单位与比例关系；多项式及其乘法；等差数列与等比数列。",
+    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; units and variation; polynomials and their products; and arithmetic and geometric sequences.",
+    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；单位与比例关系；多项式及其乘法；等差数列与等比数列。",
   ),
   units: [
     {
-      title: t("Linear Equations", "一次方程"),
+      title: t("Equations and Inequalities", "方程与不等式"),
       modules: [
         {
           title: t("Linear Equations", "一次方程"),
@@ -206,6 +206,31 @@ export const algebraI: CourseDef = {
             "work-problems",
             "mixture-problems",
           ],
+        },
+        {
+          title: t("Linear Inequalities", "一次不等式"),
+          topics: [
+            "solving-compound-inequalities",
+            "interval-notation",
+            "unbounded-intervals",
+            "unions-of-intervals",
+            "intersections-of-intervals",
+            "compound-or-inequalities",
+            "compound-and-inequalities",
+          ],
+        },
+        {
+          title: t("Modeling With Inequalities", "用不等式建模"),
+          topics: [
+            "introduction-to-modeling-with-inequalities",
+            "modeling-with-one-step-inequalities",
+            "modeling-with-two-step-inequalities",
+            "modeling-with-compound-inequalities",
+          ],
+        },
+        {
+          title: t("Nonlinear Equations", "非线性方程"),
+          topics: ["solving-equations-with-square-roots", "solving-odd-power-equations", "solving-even-power-equations"],
         },
       ],
     },
