@@ -18,7 +18,7 @@ state = replay(ctx, events, initialState);   // applyEvent, one event at a time
 
 | Event | Recorded when | Data |
 | :--- | :--- | :--- |
-| `placed` | The diagnostic ends (or is skipped) | Topics placed as known; which of them were asked directly |
+| `placed` | A course's diagnostic ends (or is skipped) | The course; topics placed as known; which of them were asked directly |
 | `lesson` | A lesson ends | Topic, passed or failed, questions asked and answered correctly |
 | `review` | A review ends | Topic, correct answers, questions |
 | `quiz` | A quiz ends | One result per question, by topic |
@@ -76,7 +76,7 @@ Topics on which the learner is **slow** (speed < 1) receive **no implicit credit
 
 `nextTasks` offers up to six tasks:
 
-1. Until the learner is placed, the **diagnostic**, alone.
+1. Until the learner is placed in the course, the **diagnostic**, alone (§9).
 2. A **quiz**, when one is due (§7).
 3. **Reviews** of due topics and **lessons** from the frontier, alternating, reviews first.
 
@@ -155,7 +155,7 @@ pnpm nx run simulate:simulate -- prealgebra    # Another course
 
 ## 9. Diagnostic
 
-A new learner in a course is placed by an adaptive diagnostic over the course's scope. Every answer resolves more than the topic asked:
+A learner new to a course is placed by an adaptive diagnostic over the topics of the course's scope not yet known. Each course has its own diagnostic, taken or skipped once (the state lists the diagnosed courses); topics learned in another course of the subject are not asked again, and a course with nothing left to place has no diagnostic. Every answer resolves more than the topic asked:
 
 - **correct**: the topic and all its ancestors are known;
 - **wrong** or "I don't know": the topic and all its descendants are not known.

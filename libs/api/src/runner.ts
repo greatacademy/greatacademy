@@ -3,6 +3,7 @@ import {
   answerDiagnostic,
   answerLesson,
   type DiagnosticProgress,
+  diagnosticCandidates,
   type EngineEvent,
   eventXp,
   finishDiagnostic,
@@ -73,11 +74,6 @@ function diagnosticRef(c: CourseEntry, topic: string, rng: Rng): ProblemRef {
   return { topic, kp: c.ctx.graph.graph.topics.get(topic)!.diagnosticKp, seed: newSeed(rng) };
 }
 
-/** diagnosticCandidates are the topics the diagnostic of a course places: its whole scope. */
-export function diagnosticCandidates(c: CourseEntry): readonly string[] {
-  return c.planner.scope.topics;
-}
-
 /** startRun begins a run of a task. */
 export function startRun(c: CourseEntry, task: Task, state: LearnerState, rng: Rng): RunState {
   switch (task.kind) {
@@ -106,7 +102,7 @@ export function startRun(c: CourseEntry, task: Task, state: LearnerState, rng: R
       return { kind: "quiz", topics, asked: [], current: diagnosticRef(c, topics[0]!, rng) };
     }
     case "diagnostic": {
-      const diagnostic = startDiagnostic(diagnosticCandidates(c));
+      const diagnostic = startDiagnostic(diagnosticCandidates(c.planner, state));
       const first = nextDiagnosticTopic(c.ctx.graph, diagnostic);
       if (!first) throw new Error("the course has nothing to diagnose");
       return { kind: "diagnostic", diagnostic, asked: [], current: diagnosticRef(c, first, rng) };
@@ -189,7 +185,7 @@ export function answerRun(c: CourseEntry, run: RunState, response: string, skip:
       const topic = nextDiagnosticTopic(c.ctx.graph, diagnostic);
       if (!topic) {
         const placement = finishDiagnostic(diagnostic);
-        return finish(next, { type: "placed", at: now, ...placement }, true, placement.known.length);
+        return finish(next, { type: "placed", at: now, course: c.id, ...placement }, true, placement.known.length);
       }
       return { run: { ...next, current: diagnosticRef(c, topic, rng) }, problem, verdict, skipped };
     }

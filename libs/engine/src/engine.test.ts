@@ -9,12 +9,16 @@ import { answerLesson, type LessonProgress, lessonSpeed, startLesson } from "./l
 import { DAY, defaultParams as p } from "./params.ts";
 import { reviewPlan, reviewResult } from "./review.ts";
 import { dueAt, initialState, isDue, type LearnerState, memory, newTopicState } from "./state.ts";
-import { compressReviews, dueTopics, frontier, nextTasks, quizDue, quizPlan } from "./tasks.ts";
+import { compressReviews, diagnosticCandidates, diagnosticDue, dueTopics, frontier, nextTasks, quizDue, quizPlan } from "./tasks.ts";
 
 const T0 = Date.UTC(2026, 0, 1);
 
 function learnedState(topics: string[], at = T0, repNum = 0): LearnerState {
-  return { ...initialState, diagnosed: true, topics: Object.fromEntries(topics.map((t) => [t, newTopicState(at, repNum, 1, false)])) };
+  return {
+    ...initialState,
+    diagnosed: ["course"],
+    topics: Object.fromEntries(topics.map((t) => [t, newTopicState(at, repNum, 1, false)])),
+  };
 }
 
 describe("graph closures", () => {
@@ -147,9 +151,9 @@ describe("diagnostic", () => {
 });
 
 describe("events", () => {
-  it("places known topics and marks the learner diagnosed", () => {
-    const s = applyEvent(ctx, initialState, { type: "placed", at: T0, known: ["a", "b"], tested: ["b"] });
-    expect(s.diagnosed).toBe(true);
+  it("places known topics and marks the course diagnosed", () => {
+    const s = applyEvent(ctx, initialState, { type: "placed", at: T0, course: "course", known: ["a", "b"], tested: ["b"] });
+    expect(s.diagnosed).toEqual(["course"]);
     expect(s.topics.a).toMatchObject({ learned: true, placed: true, repNum: 1 });
     expect(s.topics.b!.repNum).toBe(1.5);
   });
@@ -178,7 +182,7 @@ describe("events", () => {
   });
   it("replays to the same state", () => {
     const events: EngineEvent[] = [
-      { type: "placed", at: T0, known: ["a"], tested: ["a"] },
+      { type: "placed", at: T0, course: "course", known: ["a"], tested: ["a"] },
       { type: "lesson", at: T0 + DAY, topic: "b", passed: true, asked: 6, correct: 5 },
       { type: "review", at: T0 + 3 * DAY, topic: "a", correct: 2, total: 3 },
       {
@@ -202,8 +206,15 @@ describe("tasks", () => {
   it("starts with the diagnostic", () => {
     expect(nextTasks(planner, initialState, T0)).toEqual([{ kind: "diagnostic" }]);
   });
+  it("offers each course's diagnostic once, over the topics not yet known", () => {
+    const other = { ...learnedState(["a", "b"]), diagnosed: ["other-course"] };
+    expect(nextTasks(planner, other, T0)).toEqual([{ kind: "diagnostic" }]);
+    expect(diagnosticCandidates(planner, other)).toEqual(planner.scope.topics.filter((t) => t !== "a" && t !== "b"));
+    const all = { ...learnedState(planner.scope.topics.filter((t) => !planner.scope.assumed.has(t))), diagnosed: [] };
+    expect(diagnosticDue(planner, all)).toBe(false);
+  });
   it("offers the frontier, treating the mastery floor as known", () => {
-    const s = { ...initialState, diagnosed: true };
+    const s = { ...initialState, diagnosed: ["course"] };
     expect(frontier(planner, s)).toEqual(["a"]);
     expect(frontier(planner, learnedState(["a"]))).toEqual(["b", "s"]);
   });

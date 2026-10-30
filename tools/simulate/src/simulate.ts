@@ -6,6 +6,7 @@ import {
   courseScope,
   DAY,
   defaultParams,
+  diagnosticCandidates,
   type EngineEvent,
   engineGraph,
   finishDiagnostic,
@@ -87,11 +88,11 @@ export function simulate(
       const task = nextTasks(pl, state, now, 6)[0];
       if (!task) break;
       if (task.kind === "diagnostic") {
-        let d = startDiagnostic(pl.scope.topics);
+        let d = startDiagnostic(diagnosticCandidates(pl, state));
         for (let t = nextDiagnosticTopic(graph, d); t; t = nextDiagnosticTopic(graph, d))
           d = answerDiagnostic(graph, d, t, rng.bool(knows.has(t) ? 0.95 : 0.05));
         const placement = finishDiagnostic(d);
-        record({ type: "placed", at: now, ...placement });
+        record({ type: "placed", at: now, course: courseId, ...placement });
       } else if (task.kind === "lesson") {
         const kpCount = graph.graph.topics.get(task.topic)!.knowledgePoints.length;
         let l = startLesson(task.topic, kpCount);

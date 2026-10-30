@@ -50,6 +50,8 @@ export function engineGraph(graph: Graph): EngineGraph {
 
 /** CourseScope is the part of the graph a course teaches and reviews. */
 export interface CourseScope {
+  /** course is the course's id. */
+  readonly course: string;
   /** topics are the foundations then the course topics, in teaching order. */
   readonly topics: readonly string[];
   readonly inCourse: ReadonlySet<string>;
@@ -64,5 +66,5 @@ export function courseScope(g: EngineGraph, course: CompiledCourse): CourseScope
     assumed.add(f);
     for (const a of g.graph.ancestors.get(f) ?? []) assumed.add(a);
   }
-  return { topics: [...course.foundations, ...course.topics], inCourse: new Set(course.topics), assumed };
+  return { course: course.def.id, topics: [...course.foundations, ...course.topics], inCourse: new Set(course.topics), assumed };
 }

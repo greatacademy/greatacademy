@@ -3,7 +3,7 @@ import { generateProblem } from "@ga/content";
 import { compileMath } from "@ga/content-math";
 import { type Db, events, getSession, learnerFor, loadState } from "@ga/db";
 import { createTestDb, createUser } from "@ga/db/testing";
-import { DAY, initialState, replay } from "@ga/engine";
+import { DAY, diagnosticLength, initialState, replay } from "@ga/engine";
 import { CatalogService } from "@ga/proto/catalog/v1/catalog_pb";
 import { LearningService, type Session, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -155,6 +155,18 @@ describe("LearningService", () => {
     expect(after.stats?.learned).toBe(knows.size);
     const firstLesson = after.tasks.find((t) => t.kind.case === "lesson");
     expect(firstLesson?.kind.case === "lesson" && firstLesson.kind.value.topicId).toBe("one-step-equations-addition");
+
+    // Another course of the subject has its own diagnostic, over the topics not placed yet.
+    await learning.enroll({ courseId: "prealgebra" });
+    const other = await learning.getDashboard({ courseId: "prealgebra" });
+    expect(other.diagnosed).toBe(false);
+    const task = other.tasks[0]?.kind;
+    const { topics, assumed } = registry.courses.get("prealgebra")!.planner.scope;
+    const open = topics.filter((t) => !knows.has(t) && !assumed.has(t));
+    expect(task?.case === "diagnostic" && task.value.maxQuestions).toBe(diagnosticLength(open.length));
+    await learning.skipDiagnostic({ courseId: "prealgebra" });
+    expect((await learning.getDashboard({ courseId: "prealgebra" })).diagnosed).toBe(true);
+    expect((await learning.getDashboard({ courseId: COURSE })).stats?.learned).toBe(knows.size);
   });
 
   it("teaches a lesson knowledge point by knowledge point and awards its XP", async () => {

@@ -97,8 +97,22 @@ export function quizDue(pl: Planner, state: LearnerState): boolean {
 }
 
 /**
+ * diagnosticCandidates are the topics a diagnostic of the course would place:
+ * the topics in scope not yet known. Topics learned in another course of the
+ * subject are not asked again.
+ */
+export function diagnosticCandidates(pl: Planner, state: LearnerState): string[] {
+  return pl.scope.topics.filter((t) => !isKnown(pl, state, t));
+}
+
+/** diagnosticDue tells whether the course's diagnostic is still to be offered: not yet taken or skipped, with topics left to place. */
+export function diagnosticDue(pl: Planner, state: LearnerState): boolean {
+  return !state.diagnosed.includes(pl.scope.course) && diagnosticCandidates(pl, state).length > 0;
+}
+
+/**
  * nextTasks offers the learner's next tasks, at most `limit`:
- * 1. the diagnostic, alone, until the learner is placed;
+ * 1. the diagnostic, alone, until the learner is placed in the course;
  * 2. a quiz when one is due;
  * 3. reviews of due topics, compressed, after removing the due topics the
  *    offered lessons will repair implicitly;
@@ -107,7 +121,7 @@ export function quizDue(pl: Planner, state: LearnerState): boolean {
  * Reviews and lessons alternate, reviews first.
  */
 export function nextTasks(pl: Planner, state: LearnerState, now: number, limit = 6): Task[] {
-  if (!state.diagnosed) return [{ kind: "diagnostic" }];
+  if (diagnosticDue(pl, state)) return [{ kind: "diagnostic" }];
   const tasks: Task[] = [];
   if (quizDue(pl, state)) tasks.push({ kind: "quiz" });
   const room = limit - tasks.length;

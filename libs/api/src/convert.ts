@@ -1,6 +1,6 @@
 import type { MessageInitShape } from "@bufbuild/protobuf";
 import { generateProblem, type InputSpec, type Problem, type Text } from "@ga/content";
-import { diagnosticLength, type LearnerState, reviewXp, type Task } from "@ga/engine";
+import { diagnosticCandidates, diagnosticLength, type LearnerState, reviewXp, type Task } from "@ga/engine";
 import type { TextSchema } from "@ga/proto/common/v1/text_pb";
 import type {
   InputSchema,
@@ -12,7 +12,7 @@ import type {
 } from "@ga/proto/learning/v1/learning_pb";
 
 import type { CourseEntry } from "./registry.ts";
-import { canSkip, diagnosticCandidates, type RunState, runTask } from "./runner.ts";
+import { canSkip, type RunState, runTask } from "./runner.ts";
 
 /** text converts a content text to its message. */
 export function text(t: Text): MessageInitShape<typeof TextSchema> {
@@ -40,7 +40,7 @@ export function taskMessage(c: CourseEntry, task: Task, state: LearnerState): Me
   const topic = (id: string) => c.subject.topics.get(id)!;
   switch (task.kind) {
     case "diagnostic":
-      return { kind: { case: "diagnostic", value: { maxQuestions: diagnosticLength(diagnosticCandidates(c).length) } } };
+      return { kind: { case: "diagnostic", value: { maxQuestions: diagnosticLength(diagnosticCandidates(c.planner, state).length) } } };
     case "lesson": {
       const t = topic(task.topic);
       return {

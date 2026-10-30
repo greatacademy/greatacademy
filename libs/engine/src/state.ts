@@ -23,8 +23,8 @@ export interface TopicState {
 /** LearnerState is everything the engine knows about a learner in one subject. */
 export interface LearnerState {
   readonly topics: Readonly<Record<string, TopicState>>;
-  /** diagnosed is true once the learner was placed (or chose to start from the beginning). */
-  readonly diagnosed: boolean;
+  /** diagnosed lists the courses whose diagnostic the learner took or skipped. */
+  readonly diagnosed: readonly string[];
   readonly xp: number;
   /** xpAtLastQuiz is the XP total when the last quiz was taken. */
   readonly xpAtLastQuiz: number;
@@ -32,7 +32,7 @@ export interface LearnerState {
 }
 
 /** initialState is the state of a new learner. */
-export const initialState: LearnerState = { topics: {}, diagnosed: false, xp: 0, xpAtLastQuiz: 0, quizzes: 0 };
+export const initialState: LearnerState = { topics: {}, diagnosed: [], xp: 0, xpAtLastQuiz: 0, quizzes: 0 };
 
 /** newTopicState is the state of a topic just learned at time at. */
 export function newTopicState(at: number, repNum: number, speed: number, placed: boolean): TopicState {

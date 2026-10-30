@@ -18,7 +18,19 @@ import {
   updateSession,
   xpByDay,
 } from "@ga/db";
-import { applyEvent, courseProgress, DAY, type EngineEvent, frontier, initialState, isDue, memory, nextTasks, type Task } from "@ga/engine";
+import {
+  applyEvent,
+  courseProgress,
+  DAY,
+  diagnosticDue,
+  type EngineEvent,
+  frontier,
+  initialState,
+  isDue,
+  memory,
+  nextTasks,
+  type Task,
+} from "@ga/engine";
 import { type LearningService, type Task as TaskMessage, TopicStatus, type XpSummarySchema } from "@ga/proto/learning/v1/learning_pb";
 
 import { dbKey, userIdKey } from "./context.ts";
@@ -148,7 +160,7 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const run = active?.state as RunState | undefined;
       return {
         courseId: c.id,
-        diagnosed: s.diagnosed,
+        diagnosed: !diagnosticDue(c.planner, s),
         tasks: nextTasks(c.planner, s, now).map((t) => taskMessage(c, t, s)),
         ...(active && run && { active: { id: active.id, task: sessionMessage(c, active.id, run, s).task } }),
         stats: { learned: p.learned, total: p.total, due: p.due },
@@ -216,10 +228,10 @@ export function learningService(deps: LearningDeps): ServiceImpl<typeof Learning
       const now = deps.now();
       await db.transaction(async (tx) => {
         const { state: s } = await state(tx, learnerId, c, true);
-        if (s.diagnosed) return;
+        if (!diagnosticDue(c.planner, s)) return;
         const active = await activeSession(tx, learnerId, c.id);
         if (active) await updateSession(tx, active.id, active.state, "abandoned", new Date(now));
-        await append(tx, learnerId, c, { type: "placed", at: now, known: [], tested: [] });
+        await append(tx, learnerId, c, { type: "placed", at: now, course: c.id, known: [], tested: [] });
       });
       return {};
     },

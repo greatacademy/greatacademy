@@ -68,7 +68,7 @@ async function record(learnerId: string, evs: EngineEvent[]) {
 }
 
 const log: EngineEvent[] = [
-  { type: "placed", at: t0, known: [], tested: [] },
+  { type: "placed", at: t0, course: "course", known: [], tested: [] },
   { type: "lesson", at: t0 + 60_000, topic: "a", passed: true, asked: 2, correct: 2 },
   { type: "lesson", at: t0 + 120_000, topic: "b", passed: false, asked: 4, correct: 2 },
   { type: "review", at: t0 + DAY, topic: "a", correct: 3, total: 3 },

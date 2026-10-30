@@ -11,8 +11,14 @@ import { clampSpeed, type LearnerState, newTopicState, type TopicState } from ".
  * of the engine only requires a replay.
  */
 export type EngineEvent =
-  /** placed ends the diagnostic; skipping it places nothing. */
-  | { readonly type: "placed"; readonly at: number; readonly known: readonly string[]; readonly tested: readonly string[] }
+  /** placed ends the diagnostic of a course; skipping it places nothing. */
+  | {
+      readonly type: "placed";
+      readonly at: number;
+      readonly course: string;
+      readonly known: readonly string[];
+      readonly tested: readonly string[];
+    }
   /** lesson ends a lesson, passed or failed. */
   | {
       readonly type: "lesson";
@@ -67,7 +73,8 @@ export function applyEvent(ctx: EngineContext, state: LearnerState, e: EngineEve
   switch (e.type) {
     case "placed": {
       const tested = new Set(e.tested);
-      let next: LearnerState = { ...state, diagnosed: true };
+      const diagnosed = state.diagnosed.includes(e.course) ? state.diagnosed : [...state.diagnosed, e.course];
+      let next: LearnerState = { ...state, diagnosed };
       for (const t of e.known) {
         if (next.topics[t]?.learned || !g.graph.topics.has(t)) continue;
         next = setTopic(next, t, newTopicState(e.at, p.placedRepNum + (tested.has(t) ? 0.5 : 0), 1, true));
