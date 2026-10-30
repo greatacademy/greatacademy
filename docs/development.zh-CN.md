@@ -46,6 +46,7 @@ Nx 把这些目标的结果缓存在 `.nx/`（被 git 忽略）中；只有输�
 | `db` | `libs/db` | Drizzle schema、迁移、数据访问；修改 schema 后执行 `pnpm nx run db:generate -- --name <change>` |
 | `api` | `libs/api` | Connect 服务与会话执行器，在 PGlite 上端到端测试 |
 | `web` | `apps/web` | Web 应用：Workers 上的 TanStack Start、better-auth，以及挂在 `/api` 下的 Connect 服务（§5） |
+| `mobile` | `apps/mobile` | Expo 应用，目前是骨架：课程列表和课程大纲，数据来自 Web 应用的 API（§6） |
 | `simulate` | `tools/simulate` | 用于调校引擎的模拟学生：`pnpm nx run simulate:simulate`（[学习引擎 §8](learning-engine.zh-CN.md#8-参数)） |
 
 此表随仓库增长；[架构 §3](architecture.zh-CN.md#3-仓库结构) 给出目标结构。
@@ -75,3 +76,14 @@ pnpm nx run web:dev                   # http://localhost:5173
 
 试用方法：注册账号，打开「代数基础」，选修，然后参加诊断或跳过。学习主页给出接下来的任务；进度图显示每个知识点的状态和估计的记忆程度。
 
+## 6. 运行移动应用
+
+Expo 应用调用与 Web 应用相同的 Connect 服务，因此先启动 Web 应用（§5）。
+
+```bash
+pnpm nx run mobile:dev                # Metro；按 i 打开 iOS 模拟器
+```
+
+- API 地址默认为 `http://localhost:5173`，iOS 模拟器可以直接访问。在真机或 Android 模拟器上，把 `EXPO_PUBLIC_API_URL` 设为设备能访问的地址，例如 `http://192.168.1.10:5173`。
+- 应用使用 Expo Router，页面位于 `apps/mobile/src/app`。在 `apps/mobile` 中运行 `npx expo export --platform ios` 可以不启动模拟器而打包应用，用来检查 Metro 能否解析工作区中的包。
+- 应用目前是骨架（路线图 P6）：登录、学习主页和学习播放器暂时只在 Web 应用中提供。

@@ -46,6 +46,7 @@ Nx caches the results of these targets in `.nx/` (ignored by git); a target reru
 | `db` | `libs/db` | Drizzle schema, migrations, data access; `pnpm nx run db:generate -- --name <change>` after editing the schema |
 | `api` | `libs/api` | Connect services and the session runner, tested end to end on PGlite |
 | `web` | `apps/web` | The web app: TanStack Start on Workers, better-auth, the Connect services under `/api` (§5) |
+| `mobile` | `apps/mobile` | The Expo app, a skeleton for now: the course list and outlines, read from the web app's API (§6) |
 | `simulate` | `tools/simulate` | Simulated students for tuning the engine: `pnpm nx run simulate:simulate` ([Learning Engine §8](learning-engine.md#8-parameters)) |
 
 The table grows with the repository; [Architecture §3](architecture.md#3-repository-structure) shows the target structure.
@@ -75,3 +76,14 @@ pnpm nx run web:dev                   # http://localhost:5173
 
 To try it: create an account, open *Foundations of Algebra*, enroll, then take the diagnostic or skip it. The dashboard offers the next tasks; the progress map shows every topic's status and estimated memory.
 
+## 6. Running the Mobile App
+
+The Expo app calls the same Connect services as the web app, so start the web app first (§5).
+
+```bash
+pnpm nx run mobile:dev                # Metro; press i for the iOS simulator
+```
+
+- The API address is `http://localhost:5173` by default, which the iOS simulator reaches directly. On a device or the Android emulator, set `EXPO_PUBLIC_API_URL` to an address the device can reach, for example `http://192.168.1.10:5173`.
+- The app uses Expo Router; screens live in `apps/mobile/src/app`. `npx expo export --platform ios` in `apps/mobile` bundles the app without a simulator, which checks that Metro resolves the workspace packages.
+- The app is a skeleton (roadmap P6): signing in, the dashboard and the session player remain on the web app for now.
