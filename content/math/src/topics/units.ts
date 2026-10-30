@@ -46,8 +46,7 @@ function truncTo(v: Q, p: number): Q {
 
 /** equationProblem builds an expression problem whose field follows "y =": the learner enters the right side of an equation. */
 function equationProblem(variable: string, p: ExpressionProblem): Problem {
-  const base = expressionProblem(p);
-  return { ...base, answer: { ...base.answer, input: { kind: "math", prefix: `${variable} =` } } };
+  return expressionProblem({ ...p, prefix: `${variable} =` });
 }
 
 /** choices builds a choice problem from options whose first is correct, shown in random order. */

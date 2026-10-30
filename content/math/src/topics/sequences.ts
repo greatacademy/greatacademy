@@ -96,8 +96,7 @@ function formulaChoice(rng: Rng, prompt: Text, correct: Formula, distractors: re
 
 /** formulaProblem is an expressionProblem whose answer field is preceded by "a_n =". */
 function formulaProblem(p: ExpressionProblem): Problem {
-  const problem = expressionProblem(p);
-  return { ...problem, answer: { ...problem.answer, input: { kind: "math", prefix: "a_n =" } } };
+  return expressionProblem({ ...p, prefix: "a_n =" });
 }
 
 /** ratios are common ratios with their denominators, for geometric sequences of integers. */

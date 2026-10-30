@@ -24,8 +24,7 @@ const signedOver = (k: number, d: string) => (k < 0 ? `-${over(-k, d)}` : over(k
 
 /** solveFor builds an expression problem whose field is preceded by "v =". */
 function solveFor(variable: string, p: ExpressionProblem): Problem {
-  const problem = expressionProblem(p);
-  return { ...problem, answer: { ...problem.answer, input: { kind: "math", prefix: `${variable} =` } } };
+  return expressionProblem({ ...p, prefix: `${variable} =` });
 }
 
 /** equation writes an equation with its sides in either order. */
