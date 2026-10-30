@@ -11,6 +11,7 @@ import { equationTopics } from "./topics/equations.ts";
 import { exponentTopics } from "./topics/exponents.ts";
 import { expressionTopics } from "./topics/expressions.ts";
 import { fractionTopics } from "./topics/fractions.ts";
+import { functionTopics } from "./topics/functions.ts";
 import { inequalityTopics } from "./topics/inequalities.ts";
 import { integerTopics } from "./topics/integers.ts";
 import { linearEquationTopics } from "./topics/linear-equations.ts";
@@ -44,6 +45,7 @@ export const math: SubjectDef = {
     ...linearEquationTopics,
     ...compoundInequalityTopics,
     ...lineTopics,
+    ...functionTopics,
     ...unitTopics,
     ...polynomialTopics,
     ...sequenceTopics,

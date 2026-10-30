@@ -178,8 +178,8 @@ export const algebraI: CourseDef = {
   id: "algebra-i",
   title: t("Algebra I", "代数一"),
   description: t(
-    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines and systems of linear equations; units and variation; polynomials and their products; and arithmetic and geometric sequences.",
-    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程与二元一次方程组；单位与比例关系；多项式及其乘法；等差数列与等比数列。",
+    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines and systems of linear equations; units and variation; polynomials and their products; functions, their features and their composition; and arithmetic and geometric sequences.",
+    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程与二元一次方程组；单位与比例关系；多项式及其乘法；函数及其性质、运算与复合；等差数列与等比数列。",
   ),
   units: [
     {
@@ -318,6 +318,41 @@ export const algebraI: CourseDef = {
           ],
         },
         { title: t("Factoring Polynomials", "因式分解"), topics: ["greatest-common-factor-of-monomials"] },
+      ],
+    },
+    {
+      title: t("Functions", "函数"),
+      modules: [
+        {
+          title: t("Introduction to Functions", "函数入门"),
+          topics: ["introduction-to-functions", "representations-of-functions", "graphs-of-functions", "vertical-line-test"],
+        },
+        {
+          title: t("Features of Functions", "函数的性质"),
+          topics: [
+            "domain-of-a-function",
+            "global-extrema",
+            "end-behavior",
+            "range-of-a-function",
+            "range-advanced-cases",
+            "roots-of-a-function",
+            "increasing-and-decreasing",
+            "piecewise-functions",
+          ],
+        },
+        {
+          title: t("Linear Functions as Models", "一次函数模型"),
+          topics: ["modeling-with-linear-functions", "constructing-linear-functions"],
+        },
+        {
+          title: t("Combining Functions", "函数的运算与复合"),
+          topics: [
+            "arithmetic-of-functions",
+            "function-composition",
+            "describing-function-composition",
+            "introduction-to-inverse-functions",
+          ],
+        },
       ],
     },
     {
