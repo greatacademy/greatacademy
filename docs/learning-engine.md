@@ -53,7 +53,7 @@ A course is a view over the subject's graph ([Content §6](content.md#6-courses)
 
 The **frontier** is the set of topics the learner can learn next: in scope, not learned, and with every prerequisite known. It is listed in teaching order (foundations first, then the course order).
 
-**Failed lessons.** A topic whose lesson was failed leaves the frontier until each of its key prerequisites has had a repetition (explicit or implicit) after the failure. A failure usually means a weak prerequisite, so the engine repairs it first instead of retrying the same lesson immediately. Key prerequisites are the union of the knowledge points' `keyPrerequisites`, or the direct prerequisites when none are declared.
+**Failed lessons.** A topic whose lesson was failed leaves the frontier until each of its key prerequisites has had a repetition (explicit or implicit) after the failure. A failure usually means a weak prerequisite, so the engine repairs it first instead of retrying the same lesson immediately. Key prerequisites are the union of the knowledge points' `keyPrerequisites`, or the direct prerequisites when none are declared. The engine offers these **remedial reviews** itself, first among the reviews, whether the prerequisites are due or not (§5). Otherwise a learner whose remaining lessons had all failed would have nothing to learn until those prerequisites happened to come due: one simulated struggling learner spent months on due reviews alone.
 
 ## 4. Repetitions and FIRe
 
@@ -78,7 +78,7 @@ Topics on which the learner is **slow** (speed < 1) receive **no implicit credit
 
 1. Until the learner is placed in the course, the **diagnostic**, alone (§9).
 2. A **quiz**, when one is due (§7).
-3. **Reviews** of due topics and **lessons** from the frontier, alternating, reviews first; after four reviews in a row, a lesson first.
+3. **Reviews** and **lessons** from the frontier, alternating, reviews first; after four reviews in a row, a lesson first. The reviews are the remedial reviews that failed lessons wait for (§3), then the compressed reviews of the other due topics.
 
 **Lesson share.** When lessons are available, at least 25% of the offered tasks are lessons. Reviews never crowd out new learning; new learning is also the cheapest way to review, as the next point explains. The order matters too, since many learners take the first task: the state counts the reviews since the last lesson, and after four in a row a lesson comes first. Without this, a learner whose reviews keep failing and coming due could spend weeks on reviews alone.
 
@@ -141,13 +141,13 @@ These values come from the book's description and our judgment, not from data. R
 | Student | Ability, XP/day | Days | Explicit reviews per topic | Failed lessons |
 | :--- | :--- | ---: | ---: | ---: |
 | Strong | 0.95, 40 | 5.7 | 0.24 | 0 |
-| Typical | 0.85, 30 | 9.3 | 0.58 | 1.2 |
-| Struggling | 0.70, 20 | 20.2 | 1.77 | 6.1 |
-| Typical, knows integers | 0.85, 30 | 7.6 | 0.68 | 0.9 |
+| Typical | 0.85, 30 | 7.8 | 0.55 | 1.3 |
+| Struggling | 0.70, 20 | 11.4 | 1.40 | 5.8 |
+| Typical, knows integers | 0.85, 30 | 5.9 | 0.58 | 0.7 |
 
 Typical learners need fewer than one explicit review per topic, because lessons on later topics review earlier ones implicitly. Struggling learners get more explicit practice: their low speeds withhold implicit credit. The simulator's tests keep these properties from regressing.
 
-On Prealgebra (55 topics) the same students need more explicit reviews: typical 30.3 days and 1.75 reviews per topic, strong 1.05, struggling 5.59 over 59 days, since a slower learner also has more time for reviews to come due. Many of the units it adds (number theory, decimals and percents, radicals, ratios, statistics) are broad rather than deep: few later topics in the course practice them, so less of their review comes implicitly. Their encompassing topics come with Algebra I. The weights record what each topic actually practices and are not raised to improve these numbers.
+On Prealgebra (55 topics) the same students need more explicit reviews: typical 24.9 days and 1.73 reviews per topic, strong 1.05, struggling 3.64 over 41 days, since a slower learner also has more time for reviews to come due. Many of the units it adds (number theory, decimals and percents, radicals, ratios, statistics) are broad rather than deep: few later topics in the course practice them, so less of their review comes implicitly. Their encompassing topics come with Algebra I. The weights record what each topic actually practices and are not raised to improve these numbers.
 
 ```bash
 pnpm nx run simulate:simulate                  # Foundations of Algebra

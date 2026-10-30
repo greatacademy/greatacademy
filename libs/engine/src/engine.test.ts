@@ -9,7 +9,17 @@ import { answerLesson, type LessonProgress, lessonSpeed, startLesson } from "./l
 import { DAY, defaultParams as p } from "./params.ts";
 import { reviewPlan, reviewResult } from "./review.ts";
 import { dueAt, initialState, isDue, type LearnerState, memory, newTopicState } from "./state.ts";
-import { compressReviews, diagnosticCandidates, diagnosticDue, dueTopics, frontier, nextTasks, quizDue, quizPlan } from "./tasks.ts";
+import {
+  compressReviews,
+  diagnosticCandidates,
+  diagnosticDue,
+  dueTopics,
+  frontier,
+  nextTasks,
+  quizDue,
+  quizPlan,
+  remedialTopics,
+} from "./tasks.ts";
 
 const T0 = Date.UTC(2026, 0, 1);
 
@@ -170,8 +180,12 @@ describe("events", () => {
     expect(failed.topics.c!.learned).toBe(false);
     expect(failed.xp).toBe(0);
     expect(frontier(planner, failed)).toEqual(["s"]);
+    // The failed lesson waits for its key prerequisite b, so b is reviewed first, due or not.
+    expect(remedialTopics(planner, failed)).toEqual(["b"]);
+    expect(nextTasks(planner, failed, T0 + DAY)[0]).toMatchObject({ kind: "review", topic: "b" });
     const reviewed = applyEvent(ctx, failed, { type: "review", at: T0 + 2 * DAY, topic: "b", correct: 3, total: 3 });
     expect(frontier(planner, reviewed)).toEqual(["c", "s"]);
+    expect(remedialTopics(planner, reviewed)).toEqual([]);
   });
   it("updates speed and counts reviews", () => {
     const s = applyEvent(ctx, learnedState(["a"]), { type: "review", at: T0 + DAY, topic: "a", correct: 1, total: 3 });

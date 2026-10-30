@@ -24,20 +24,45 @@ export function isKnown(pl: Planner, state: LearnerState, topic: string): boolea
   return pl.scope.assumed.has(topic) || state.topics[topic]?.learned === true;
 }
 
+/** unlocked tells whether a topic is not yet known while all its prerequisites are. */
+function unlocked(pl: Planner, state: LearnerState, t: string): boolean {
+  if (isKnown(pl, state, t)) return false;
+  return pl.graph.graph.topics.get(t)!.prerequisites.every((pre) => isKnown(pl, state, pre));
+}
+
+/**
+ * pendingRemedial lists the key prerequisites that a failed lesson on topic t
+ * waits for: those learned (and not assumed) without a repetition since the
+ * failure.
+ */
+function pendingRemedial(pl: Planner, state: LearnerState, t: string): string[] {
+  const failedAt = state.topics[t]?.failedAt;
+  if (failedAt === undefined) return [];
+  return (pl.graph.keyPrerequisites.get(t) ?? []).filter((k) => {
+    const s = state.topics[k];
+    return !pl.scope.assumed.has(k) && s?.learned === true && s.last <= failedAt;
+  });
+}
+
 /**
  * frontier lists the topics the learner can learn next, in teaching order:
  * not yet learned, with every prerequisite known. A topic whose lesson was
  * failed waits until each of its key prerequisites has been reviewed since.
  */
 export function frontier(pl: Planner, state: LearnerState): string[] {
-  return pl.scope.topics.filter((t) => {
-    if (isKnown(pl, state, t)) return false;
-    const topic = pl.graph.graph.topics.get(t)!;
-    if (!topic.prerequisites.every((pre) => isKnown(pl, state, pre))) return false;
-    const failedAt = state.topics[t]?.failedAt;
-    if (failedAt === undefined) return true;
-    return (pl.graph.keyPrerequisites.get(t) ?? []).every((k) => pl.scope.assumed.has(k) || (state.topics[k]?.last ?? 0) > failedAt);
-  });
+  return pl.scope.topics.filter((t) => unlocked(pl, state, t) && pendingRemedial(pl, state, t).length === 0);
+}
+
+/**
+ * remedialTopics lists the key prerequisites that failed lessons wait for, in
+ * teaching order of the failed topics. They are reviewed whether due or not:
+ * otherwise a learner whose lessons all failed could be left with nothing to
+ * learn until those prerequisites happen to come due.
+ */
+export function remedialTopics(pl: Planner, state: LearnerState): string[] {
+  const out = new Set<string>();
+  for (const t of pl.scope.topics) if (unlocked(pl, state, t)) for (const k of pendingRemedial(pl, state, t)) out.add(k);
+  return [...out];
 }
 
 /** dueTopics lists the learned topics in scope due for review at now, most forgotten first. */
@@ -114,8 +139,9 @@ export function diagnosticDue(pl: Planner, state: LearnerState): boolean {
  * nextTasks offers the learner's next tasks, at most `limit`:
  * 1. the diagnostic, alone, until the learner is placed in the course;
  * 2. a quiz when one is due;
- * 3. reviews of due topics, compressed, after removing the due topics the
- *    offered lessons will repair implicitly;
+ * 3. remedial reviews of the key prerequisites that failed lessons wait
+ *    for, then reviews of the other due topics, compressed, after removing
+ *    the due topics the offered lessons and remedial reviews will repair;
  * 4. lessons from the frontier, at least minLessonShare of the tasks when
  *    any are available, so that reviews never crowd out new learning.
  * Reviews and lessons alternate, reviews first, unless the learner has
@@ -133,8 +159,10 @@ export function nextTasks(pl: Planner, state: LearnerState, now: number, limit =
   const minLessons = Math.min(lessonsAvailable.length, Math.ceil(room * pl.params.minLessonShare));
   const lessonsFirst = lessonsAvailable.slice(0, Math.max(minLessons, room));
   const dueSet = new Set(due);
-  const coveredByLessons = new Set(lessonsFirst.slice(0, minLessons).flatMap((t) => coverage(pl, t, dueSet)));
-  const reviews = compressReviews(pl, state, due, coveredByLessons).slice(0, room - minLessons);
+  const remedial = remedialTopics(pl, state);
+  const covered = new Set([...lessonsFirst.slice(0, minLessons), ...remedial].flatMap((t) => coverage(pl, t, dueSet)));
+  const remedialReviews = remedial.map((topic): Task => ({ kind: "review", topic, covers: coverage(pl, topic, dueSet) }));
+  const reviews = [...remedialReviews, ...compressReviews(pl, state, due, covered)].slice(0, room - minLessons);
   const lessons = lessonsFirst.slice(0, room - reviews.length).map((topic): Task => ({ kind: "lesson", topic }));
   const lessonFirst = state.reviewsSinceLesson >= pl.params.maxReviewStreak;
   const [first, second] = lessonFirst ? [lessons, reviews] : [reviews, lessons];
