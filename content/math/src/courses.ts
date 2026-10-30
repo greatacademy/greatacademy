@@ -157,6 +157,17 @@ export const prealgebra: CourseDef = {
             "angles-of-polygons",
           ],
         },
+        {
+          title: t("Perimeter and Area", "周长与面积"),
+          topics: [
+            "perimeter",
+            "area-of-rectangles-and-squares",
+            "area-of-parallelograms",
+            "area-of-triangles",
+            "area-of-trapezoids",
+            "composite-shapes",
+          ],
+        },
       ],
     },
   ],
