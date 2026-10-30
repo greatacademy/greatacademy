@@ -152,10 +152,18 @@ function rootKey(radicand: Node, n: number): string | undefined {
   return p && !hasPowerFactor(p, n) ? `${n}:${nodeKey(u)}` : undefined;
 }
 
-/** absKey describes the contents of an absolute value, which must be a simplified polynomial. */
+/**
+ * absKey describes the contents of an absolute value, which must be a
+ * simplified polynomial with integer coefficients and no common number factor,
+ * and not a negated monomial: |-6x| is 6|x| and |2x+4| is 2|x+2|.
+ */
 function absKey(inner: Node): string | undefined {
   const u = unwrapGroup(inner);
-  return isSimplifiedPolynomial(u) ? nodeKey(u) : undefined;
+  if (!isSimplifiedPolynomial(u) || hasFraction(u)) return undefined;
+  const p = toPoly(u);
+  if (!p || integerContent(p) !== 1n) return undefined;
+  if (p.size === 1 && [...p.values()][0]!.sign() < 0) return undefined;
+  return nodeKey(u);
 }
 
 const nodeKey = (n: Node) => JSON.stringify(n, (_, v) => (typeof v === "bigint" ? String(v) : v));
