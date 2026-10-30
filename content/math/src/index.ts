@@ -7,6 +7,7 @@ import { absoluteValueTopics } from "./topics/absolute-value.ts";
 import { conicTopics } from "./topics/algebra-ii-conics.ts";
 import { algebraIIFactoringTopics } from "./topics/algebra-ii-factoring.ts";
 import { algebraIIFunctionTopics } from "./topics/algebra-ii-functions.ts";
+import { algebraIIGeneralTrianglesTopics } from "./topics/algebra-ii-general-triangles.ts";
 import { algebraIIInverseTopics } from "./topics/algebra-ii-inverses.ts";
 import { logarithmicEquationTopics } from "./topics/algebra-ii-log-equations.ts";
 import { algebraIILogarithmTopics } from "./topics/algebra-ii-logarithms.ts";
@@ -121,6 +122,7 @@ export const math: SubjectDef = {
     ...algebraIIRadicalFunctionsTopics,
     ...algebraIIReciprocalFunctionsTopics,
     ...conicTopics,
+    ...algebraIIGeneralTrianglesTopics,
     ...combinatoricsTopics,
     ...probabilityTopics,
   ],
