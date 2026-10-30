@@ -16,6 +16,10 @@ export type Node =
   | { readonly k: "div"; readonly a: Node; readonly b: Node; readonly frac: boolean }
   | { readonly k: "pow"; readonly a: Node; readonly b: Node }
   | { readonly k: "sqrt"; readonly a: Node }
+  /** root is an nth root with n ≥ 3, written \sqrt[n]{a}. */
+  | { readonly k: "root"; readonly n: number; readonly a: Node }
+  /** abs is an absolute value, written |a|. */
+  | { readonly k: "abs"; readonly a: Node }
   | { readonly k: "group"; readonly a: Node };
 
 /** RelOp is a relation symbol. */
@@ -34,7 +38,7 @@ export class ParseError extends Error {}
 type Tok =
   | { t: "num"; s: string }
   | { t: "var"; s: string }
-  | { t: "op"; s: "+" | "-" | "*" | "/" | "^" | "(" | ")" | "{" | "}" | "rel" }
+  | { t: "op"; s: "+" | "-" | "*" | "/" | "^" | "(" | ")" | "{" | "}" | "|" | "[" | "]" | "rel" }
   | { t: "cmd"; s: string };
 
 const ignored = new Set(["\\,", "\\;", "\\:", "\\!", "\\ ", "\\quad", "\\qquad", "\\left", "\\right", "\\displaystyle"]);
@@ -82,6 +86,7 @@ function tokenize(input: string): (Tok & { rel?: RelOp })[] {
       else if (m === "\\div") out.push({ t: "op", s: "/" });
       else if (m === "\\lbrack") out.push({ t: "op", s: "(" });
       else if (m === "\\rbrack") out.push({ t: "op", s: ")" });
+      else if (m === "\\vert" || m === "\\lvert" || m === "\\rvert" || m === "\\|") out.push({ t: "op", s: "|" });
       else out.push({ t: "cmd", s: m });
     } else if (c === "<" || c === ">") {
       const eq = s[i + 1] === "=";
@@ -91,12 +96,13 @@ function tokenize(input: string): (Tok & { rel?: RelOp })[] {
       out.push({ t: "op", s: "rel", rel: "=" });
       i++;
     } else if (c === "[") {
-      out.push({ t: "op", s: "(" });
+      // A bracket right after \sqrt holds the index of a root; elsewhere it is a parenthesis.
+      out.push({ t: "op", s: out[out.length - 1]?.s === "\\sqrt" ? "[" : "(" });
       i++;
     } else if (c === "]") {
-      out.push({ t: "op", s: ")" });
+      out.push({ t: "op", s: closedIndex(out) ? ")" : "]" });
       i++;
-    } else if ("+-*/^(){}".includes(c)) {
+    } else if ("+-*/^(){}|".includes(c)) {
       out.push({ t: "op", s: c as "+" });
       i++;
     } else {
@@ -106,8 +112,19 @@ function tokenize(input: string): (Tok & { rel?: RelOp })[] {
   return out;
 }
 
+/** closedIndex tells whether every root index opened in toks is already closed. */
+function closedIndex(toks: readonly Tok[]): boolean {
+  for (let j = toks.length - 1; j >= 0; j--) {
+    if (toks[j]!.s === "]") return true;
+    if (toks[j]!.s === "[") return false;
+  }
+  return true;
+}
+
 class Parser {
   private i = 0;
+  /** absDepth counts the absolute value bars currently open, so that a bar inside one closes it rather than starting a product. */
+  private absDepth = 0;
   private readonly toks: (Tok & { rel?: RelOp })[];
 
   constructor(toks: (Tok & { rel?: RelOp })[]) {
@@ -168,7 +185,7 @@ class Parser {
     const tok = this.peek();
     if (!tok) return false;
     if (tok.t === "num" || tok.t === "var") return true;
-    if (tok.t === "op") return tok.s === "(" || tok.s === "{";
+    if (tok.t === "op") return tok.s === "(" || tok.s === "{" || (tok.s === "|" && this.absDepth === 0);
     return fracCommands.has(tok.s) || tok.s === "\\sqrt" || tok.s === "\\pi";
   }
 
@@ -244,6 +261,14 @@ class Parser {
         const a = this.braced();
         return a;
       }
+      if (tok.s === "|") {
+        this.i++;
+        this.absDepth++;
+        const a = this.expr();
+        this.absDepth--;
+        this.expectOp("|");
+        return { k: "abs", a };
+      }
       throw new ParseError(`unexpected "${tok.s === "rel" ? tok.rel : tok.s}"`);
     }
     if (fracCommands.has(tok.s)) {
@@ -254,7 +279,16 @@ class Parser {
     }
     if (tok.s === "\\sqrt") {
       this.i++;
-      return { k: "sqrt", a: this.braced() };
+      if (!this.isOp("[")) return { k: "sqrt", a: this.braced() };
+      this.i++;
+      const index = this.peek();
+      if (index?.t !== "num" || !/^\d+$/.test(index.s) || Number(index.s) < 2)
+        throw new ParseError("the index of a root must be an integer of at least 2");
+      this.i++;
+      this.expectOp("]");
+      const n = Number(index.s);
+      const a = this.braced();
+      return n === 2 ? { k: "sqrt", a } : { k: "root", n, a };
     }
     if (tok.s === "\\pi") {
       this.i++;

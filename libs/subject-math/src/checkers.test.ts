@@ -2,6 +2,7 @@ import { CheckerRegistry } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
 import { mathCheckers } from "./checkers.ts";
+import { isSimplifiedRadical } from "./forms.ts";
 import { inequalityLatexOf, intervalLatex, parseInequalities, parseIntervals, setEqual } from "./intervals.ts";
 import { parseExpression } from "./latex.ts";
 import { q } from "./rational.ts";
@@ -490,5 +491,57 @@ describe("expressions with a variable exponent", () => {
     ["8(\\frac{1}{2})^{t}", "8 \\cdot 2^{-t}", true],
   ])("compares %s with %s", (expr, response, same) => {
     expect(accepts("expression", { expr }, response)).toBe(same);
+  });
+});
+
+describe("radical expressions", () => {
+  it.each([
+    ["2x\\sqrt{3x}", "\\sqrt{12x^{3}}", false, true],
+    ["2x\\sqrt{3x}", "\\sqrt{12x^3}", true, true],
+    ["|x|", "\\sqrt{x^{2}}", false, true],
+    ["x", "\\sqrt{x^{2}}", false, false],
+    ["x", "\\sqrt{x^{2}}", true, true],
+    ["3x", "\\sqrt[3]{27x^{3}}", false, true],
+    ["-2", "\\sqrt[3]{-8}", false, true],
+    ["\\frac{\\sqrt{5}+1}{2}", "\\frac{2}{\\sqrt{5}-1}", false, true],
+    ["\\frac{\\sqrt{x}}{x}", "\\frac{1}{\\sqrt{x}}", true, true],
+    ["\\sqrt{2}+\\sqrt{3}", "\\frac{1}{\\sqrt{3}-\\sqrt{2}}", false, true],
+    ["5\\sqrt{2}", "\\sqrt{8}+\\sqrt{18}", false, true],
+    ["5\\sqrt{2}", "4\\sqrt{2}", false, false],
+    ["x\\sqrt{y}", "\\sqrt{x^{2}y}", true, true],
+    ["2|x|", "|2x|", false, true],
+    ["2|x|+1", "|-2x|+1", false, true],
+  ])("compares %s with %s (positive: %s)", (expr, response, positive, same) => {
+    expect(accepts("expression", { expr, positive }, response)).toBe(same);
+  });
+
+  it.each([
+    ["2x\\sqrt{3x}", true],
+    ["\\sqrt{3}x+2", true],
+    ["\\frac{\\sqrt{6}}{3}", true],
+    ["\\frac{\\sqrt{x}}{x}", true],
+    ["2\\sqrt{3}+5\\sqrt{2}", true],
+    ["4|x|", true],
+    ["\\sqrt{x^{2}+1}", true],
+    ["\\sqrt{12x^{3}}", false],
+    ["x\\sqrt{x^{3}}", false],
+    ["\\frac{1}{\\sqrt{2}}", false],
+    ["\\frac{2\\sqrt{3}}{4}", false],
+    ["\\sqrt{\\frac{x}{2}}", false],
+    ["\\sqrt{2}\\sqrt{3}", false],
+    ["2\\sqrt{3}+5\\sqrt{3}", false],
+    ["\\sqrt[3]{16}", false],
+  ])("judges the form of %s", (response, simplest) => {
+    const expr = response;
+    expect(verdict("expression", { expr, form: "radical", positive: true }, response).correct).toBe(simplest);
+  });
+
+  it("reads roots of other indices in simplest form", () => {
+    expect(isSimplifiedRadical(parseExpression("3\\sqrt[3]{2x^{2}}"))).toBe(true);
+    expect(isSimplifiedRadical(parseExpression("\\sqrt[3]{x^{3}}"))).toBe(false);
+  });
+
+  it("explains the form", () => {
+    expect(verdict("expression", { expr: "2\\sqrt{2}", form: "radical" }, "\\sqrt{8}").feedback?.en).toContain("simplest radical form");
   });
 });

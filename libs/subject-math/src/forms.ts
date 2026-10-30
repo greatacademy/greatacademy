@@ -78,14 +78,25 @@ function factors(node: Node, out: Node[]): Node[] {
   return out;
 }
 
-/** monomialOf recognizes a term written in simplest form: "7", "-\frac{2}{3}", "x", "3xy^{2}", "\frac{x}{2}", "\frac{3x}{4}". */
-function monomialOf(node: Node): Monomial | undefined {
+/**
+ * monomialOf recognizes a term written in simplest form: "7", "-\frac{2}{3}",
+ * "x", "3xy^{2}", "\frac{x}{2}", "\frac{3x}{4}". With radicals, a term may
+ * also have one root in simplest form and absolute values as factors, and a
+ * denominator with variables: "2x\sqrt{3y}", "\frac{\sqrt{x}}{x}", "4|x|".
+ */
+function monomialOf(node: Node, radicals = false): Monomial | undefined {
   if (node.k === "div" && node.frac && node.a.k !== "num") {
+    const top = monomialOf(node.a, radicals);
+    if (!top?.coefficient.isInteger() || top.key === "") return undefined;
     const d = natural(node.b);
-    const top = monomialOf(node.a);
-    if (d === undefined || d < 2n || !top || !top.coefficient.isInteger() || top.key === "") return undefined;
-    if (gcd(top.coefficient.n, d) !== 1n) return undefined;
-    return { key: top.key, coefficient: top.coefficient.div(Q.of(d)) };
+    if (d !== undefined) {
+      if (d < 2n || gcd(top.coefficient.n, d) !== 1n) return undefined;
+      return { key: top.key, coefficient: top.coefficient.div(Q.of(d)) };
+    }
+    const bottom = radicals ? monomialOf(node.b) : undefined;
+    if (!bottom || bottom.key === "" || !bottom.coefficient.isInteger() || bottom.coefficient.sign() < 0) return undefined;
+    if (gcd(top.coefficient.n, bottom.coefficient.n) !== 1n) return undefined;
+    return { key: `${top.key}/${bottom.key}`, coefficient: top.coefficient.div(bottom.coefficient) };
   }
   const fs = factors(node, []);
   let coefficient = Q.one;
@@ -101,7 +112,12 @@ function monomialOf(node: Node): Monomial | undefined {
     }
     let name: string;
     let e = 1;
-    if (f.k === "var") name = f.name;
+    if (radicals && (f.k === "sqrt" || f.k === "root" || f.k === "abs")) {
+      const inner = f.k === "abs" ? absKey(f.a) : rootKey(f.a, f.k === "root" ? f.n : 2);
+      if (inner === undefined) return undefined;
+      name = `${f.k}(${inner})`;
+      if (f.k !== "abs" && [...powers.keys()].some((k) => !k.startsWith("abs(") && k.includes("("))) return undefined;
+    } else if (f.k === "var") name = f.name;
     else if (f.k === "pow" && f.a.k === "var") {
       const n = natural(f.b);
       if (n === undefined || n < 2n) return undefined;
@@ -119,6 +135,35 @@ function monomialOf(node: Node): Monomial | undefined {
   return { key, coefficient };
 }
 
+/** rootKey describes a radicand in simplest form for a root of index n: a monomial with an integer coefficient free of nth powers and every exponent below n, or a polynomial with integer coefficients that has more than one term; it returns undefined otherwise. */
+function rootKey(radicand: Node, n: number): string | undefined {
+  const m = monomialOf(unwrapGroup(radicand));
+  if (m) {
+    const c = m.coefficient;
+    if (!c.isInteger() || c.sign() <= 0 || (c.eq(Q.one) && m.key === "")) return undefined;
+    for (let p = 2n; p ** BigInt(n) <= c.n; p++) if (c.n % p ** BigInt(n) === 0n) return undefined;
+    if (m.key.split("*").some((v) => Number(v.split("^")[1] ?? 1) >= n)) return undefined;
+    return `${n}:${c.n}*${m.key}`;
+  }
+  return isSimplifiedPolynomial(unwrapGroup(radicand)) && !hasFraction(radicand) ? `${n}:${nodeKey(unwrapGroup(radicand))}` : undefined;
+}
+
+/** absKey describes the contents of an absolute value, which must be a simplified polynomial. */
+function absKey(inner: Node): string | undefined {
+  const u = unwrapGroup(inner);
+  return isSimplifiedPolynomial(u) ? nodeKey(u) : undefined;
+}
+
+const nodeKey = (n: Node) => JSON.stringify(n, (_, v) => (typeof v === "bigint" ? String(v) : v));
+
+const unwrapGroup = (n: Node): Node => (n.k === "group" ? unwrapGroup(n.a) : n);
+
+function hasFraction(n: Node): boolean {
+  if (n.k === "div") return true;
+  if (n.k === "num") return !n.v.isInteger();
+  return "a" in n && (hasFraction(n.a) || ("b" in n && hasFraction(n.b)));
+}
+
 /** leadingNeg removes the sign of a term written with a leading minus: "-x" and "-xy", which parses as (−x)·y; it returns undefined for a term without one. */
 function leadingNeg(node: Node): Node | undefined {
   if (node.k === "neg") return node.a;
@@ -133,23 +178,39 @@ function leadingNeg(node: Node): Node | undefined {
  * signs such as "x + -3". The order of the terms does not matter.
  */
 export function isSimplifiedPolynomial(node: Node): boolean {
+  return isSimplifiedSum(node, false);
+}
+
+/**
+ * isSimplifiedRadical tells whether node is in simplest radical form: a sum
+ * of terms as in isSimplifiedPolynomial, where a term may also have one root
+ * whose radicand has no perfect nth-power factor, no fraction and no root
+ * (\sqrt{12x^{3}} becomes 2x\sqrt{3x}), absolute values, and a denominator
+ * that is a monomial with no root, with no two terms alike.
+ */
+export function isSimplifiedRadical(node: Node): boolean {
+  return isSimplifiedSum(node, true);
+}
+
+function isSimplifiedSum(node: Node, radicals: boolean): boolean {
+  const termOf = (n: Node) => monomialOf(n, radicals);
   const terms: Monomial[] = [];
   const collect = (n: Node, first: boolean): boolean => {
     if (n.k === "add" || n.k === "sub") {
       if (!collect(n.a, first)) return false;
-      const m = monomialOf(n.b);
+      const m = termOf(n.b);
       if (!m || m.coefficient.sign() < 0) return false;
       terms.push(n.k === "sub" ? { ...m, coefficient: m.coefficient.neg() } : m);
       return true;
     }
     const negated = first ? leadingNeg(n) : undefined;
     if (negated) {
-      const m = monomialOf(negated);
+      const m = termOf(negated);
       if (!m) return false;
       terms.push({ ...m, coefficient: m.coefficient.neg() });
       return true;
     }
-    const m = monomialOf(n);
+    const m = termOf(n);
     if (!m) return false;
     terms.push(m);
     return true;

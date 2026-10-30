@@ -1,6 +1,6 @@
 import type { Node } from "./latex.ts";
 import { simplifyRadical } from "./numbers.ts";
-import { Q } from "./rational.ts";
+import { Q, rationalRoot } from "./rational.ts";
 
 /**
  * Surd is an exact number a + b√m with rational a and b and a square-free
@@ -103,6 +103,15 @@ export function surdValue(node: Node): Surd | undefined {
     case "sqrt": {
       const v = surdValue(node.a);
       return v && v.m === 1n ? sqrtOf(v.a) : undefined;
+    }
+    case "root": {
+      const v = surdValue(node.a);
+      const r = v && v.m === 1n ? rationalRoot(v.a, node.n) : undefined;
+      return r && surd(r);
+    }
+    case "abs": {
+      const v = surdValue(node.a);
+      return v && (surdCompare(v, surd(Q.zero)) < 0 ? neg(v) : v);
     }
   }
 }

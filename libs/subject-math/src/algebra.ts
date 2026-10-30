@@ -1,8 +1,6 @@
+import { algebraicEqual, algebraicValue, hasRadical, UndefinedValueError, UnknownValueError } from "./algebraic.ts";
 import type { Node } from "./latex.ts";
-import { Q } from "./rational.ts";
-
-/** UndefinedValueError reports an expression that has no exact rational value at a point. */
-export class UndefinedValueError extends Error {}
+import { Q, rationalRoot } from "./rational.ts";
 
 /** evaluate computes the exact value of node with the given variable values. */
 export function evaluate(node: Node, env: ReadonlyMap<string, Q> = new Map()): Q {
@@ -45,6 +43,14 @@ export function evaluate(node: Node, env: ReadonlyMap<string, Q> = new Map()): Q
       if (n * n !== v.n || d * d !== v.d) throw new UndefinedValueError("irrational square root");
       return Q.of(n, d);
     }
+    case "root": {
+      const v = evaluate(node.a, env);
+      const r = rationalRoot(v, node.n);
+      if (!r) throw new UndefinedValueError(v.sign() < 0 && node.n % 2 === 0 ? "even root of a negative number" : "irrational root");
+      return r;
+    }
+    case "abs":
+      return evaluate(node.a, env).abs();
   }
 }
 
@@ -157,6 +163,8 @@ export function toPoly(node: Node): Poly | undefined {
       return out;
     }
     case "sqrt":
+    case "root":
+    case "abs":
       return undefined;
   }
 }
@@ -182,18 +190,35 @@ const samplePoints = ["7/3", "-5/2", "11/7", "3", "-13/5", "17/4", "-2/9", "5/11
  * equivalent tells whether two expressions are equal for all values of their
  * variables. Polynomials are compared exactly; other expressions are compared
  * exactly at several rational points, and must agree at at least three of them
- * where both are defined, with the same definedness at every point.
+ * where both are defined, with the same definedness at every point. Points
+ * where a value is not a sum of square roots of rationals are skipped. With
+ * positive, only positive values are substituted, for expressions whose
+ * variables are known to be positive, such as \sqrt{x^{2}} = x.
  */
-export function equivalent(a: Node, b: Node): boolean {
+export function equivalent(a: Node, b: Node, positive = false): boolean {
   const pa = toPoly(a);
   const pb = toPoly(b);
   if (pa && pb) return polyEqual(pa, pb);
   const vars = [...new Set([...variables(a), ...variables(b)])];
+  const points = positive ? samplePoints.filter((p) => p.sign() > 0) : samplePoints;
+  const radical = hasRadical(a) || hasRadical(b);
   let agreed = 0;
-  for (let i = 0; i < samplePoints.length; i++) {
-    const env = new Map(vars.map((v, j) => [v, samplePoints[(i + j * 3) % samplePoints.length]!]));
-    const va = tryEvaluate(a, env);
-    const vb = tryEvaluate(b, env);
+  for (let i = 0; i < points.length; i++) {
+    const env = new Map(vars.map((v, j) => [v, points[(i + j * 3) % points.length]!]));
+    if (radical) {
+      const va = tryValue(() => algebraicValue(a, env));
+      const vb = tryValue(() => algebraicValue(b, env));
+      if (va === unknown || vb === unknown) continue;
+      if ((va === undefined) !== (vb === undefined)) return false;
+      if (va && vb) {
+        if (!algebraicEqual(va, vb)) return false;
+        agreed++;
+      }
+      continue;
+    }
+    const va = tryValue(() => evaluate(a, env));
+    const vb = tryValue(() => evaluate(b, env));
+    if (va === unknown || vb === unknown) continue;
     if ((va === undefined) !== (vb === undefined)) return false;
     if (va && vb) {
       if (!va.eq(vb)) return false;
@@ -203,10 +228,13 @@ export function equivalent(a: Node, b: Node): boolean {
   return agreed >= 3;
 }
 
-function tryEvaluate(node: Node, env: ReadonlyMap<string, Q>): Q | undefined {
+const unknown = Symbol("unknown");
+
+function tryValue<T>(f: () => T): T | undefined | typeof unknown {
   try {
-    return evaluate(node, env);
+    return f();
   } catch (e) {
+    if (e instanceof UnknownValueError) return unknown;
     if (e instanceof UndefinedValueError || e instanceof RangeError) return undefined;
     throw e;
   }

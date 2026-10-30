@@ -1,4 +1,5 @@
 export * from "./algebra.ts";
+export * from "./algebraic.ts";
 export * from "./checkers.ts";
 export * from "./figures.ts";
 export * from "./format.ts";

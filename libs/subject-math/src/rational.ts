@@ -99,3 +99,22 @@ function gcd(a: bigint, b: bigint): bigint {
 
 /** q is shorthand for Q.of. */
 export const q = (n: bigint | number, d: bigint | number = 1n): Q => Q.of(n, d);
+
+/** rationalRoot is the real nth root of v when it is rational, or undefined (also for an even root of a negative number). */
+export function rationalRoot(v: Q, n: number): Q | undefined {
+  if (v.sign() < 0) {
+    if (n % 2 === 0) return undefined;
+    return rationalRoot(v.neg(), n)?.neg();
+  }
+  const root = (x: bigint): bigint | undefined => {
+    const guess = Number(x) ** (1 / n);
+    if (!Number.isFinite(guess)) return undefined;
+    let r = BigInt(Math.round(guess));
+    while (r > 0n && r ** BigInt(n) > x) r--;
+    while ((r + 1n) ** BigInt(n) <= x) r++;
+    return r ** BigInt(n) === x ? r : undefined;
+  };
+  const a = root(v.n);
+  const b = root(v.d);
+  return a === undefined || b === undefined ? undefined : Q.of(a, b);
+}
