@@ -39,6 +39,8 @@ export interface SampleOptions {
   readonly samples?: number;
   /** minDistinct is the fewest distinct prompts (with their figures) expected among the samples before a warning. */
   readonly minDistinct?: number;
+  /** shard limits sampling to the topics at positions index, index + count, … so that test files can sample in parallel. */
+  readonly shard?: { readonly index: number; readonly count: number };
 }
 
 /**
@@ -51,7 +53,8 @@ export function sampleGenerators(subject: CompiledSubject, options: SampleOption
   const samples = options.samples ?? 200;
   const minDistinct = options.minDistinct ?? Math.min(10, samples);
   const issues: Issue[] = [];
-  for (const topic of subject.topics.values()) {
+  const topics = [...subject.topics.values()].filter((_, i) => !options.shard || i % options.shard.count === options.shard.index);
+  for (const topic of topics) {
     topic.knowledgePoints.forEach((kp, index) => {
       const path = `topic ${topic.id} › kp ${kp.id}`;
       const prompts = new Set<string>();

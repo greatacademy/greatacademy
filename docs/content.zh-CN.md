@@ -169,7 +169,7 @@ const prealgebra: CourseDef = {
 - 选择题：选项少于两个、选项重复，或期望下标越界；
 - 标准答案被判定器拒绝，或某个错误答案被判定器接受。
 
-不同题面少于 `minDistinct` 个时发出警告；图形不同的题面算作不同。每个内容包都在测试中运行 `compileSubject` 和 `sampleGenerators`，因此运行时会拒绝的内容无法合入。
+不同题面少于 `minDistinct` 个时发出警告；图形不同的题面算作不同。每个内容包都在测试中运行 `compileSubject` 和 `sampleGenerators`，因此运行时会拒绝的内容无法合入。选项 `shard: { index, count }` 只抽样从第 `index` 个起每隔 `count` 个的主题，内容包可以借此把抽样分到 Vitest 并行运行的多个测试文件中；`content/math` 分成四份。
 
 ## 9. 提供题目
 

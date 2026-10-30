@@ -164,6 +164,17 @@ describe("sampleGenerators", () => {
     expect(issues.map((i) => i.message).join("\n")).toContain(message);
   });
 
+  it("samples only the topics of a shard", () => {
+    const s = compileSubject(
+      subject([
+        topic("a"),
+        topic("b", { knowledgePoints: [{ id: "kp", title: t("S", "S"), explanation: t("E", "E"), generate: () => problem(1) }] }),
+      ]),
+    );
+    expect(sampleGenerators(s, { samples: 5, shard: { index: 0, count: 2 } })).toEqual([]);
+    expect(sampleGenerators(s, { samples: 5, shard: { index: 1, count: 2 } }).map((i) => i.path)).toEqual(["topic b › kp kp"]);
+  });
+
   it("warns about generators without variety", () => {
     const issues = sampleGenerators(
       withGenerator(() => problem(1)),

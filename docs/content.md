@@ -169,7 +169,7 @@ The compiled graph provides:
 - for a choice: has fewer than two options, repeated options, or an expected index out of range;
 - has a canonical response its checker rejects, or a wrong response its checker accepts.
 
-It warns when fewer than `minDistinct` distinct prompts appear; prompts with different figures count as distinct. Every content package runs `compileSubject` and `sampleGenerators` in its tests, so content cannot be merged in a state the runtime would reject.
+It warns when fewer than `minDistinct` distinct prompts appear; prompts with different figures count as distinct. Every content package runs `compileSubject` and `sampleGenerators` in its tests, so content cannot be merged in a state the runtime would reject. The option `shard: { index, count }` samples only every `count`-th topic starting at `index`, so a package can split sampling across test files that Vitest runs in parallel; `content/math` uses four.
 
 ## 9. Serving Problems
 
