@@ -188,9 +188,29 @@ export function polyEqual(a: Poly, b: Poly): boolean {
 /**
  * samplePoints are the fixed rational values substituted when comparing
  * non-polynomial expressions. The integers among them let expressions with a
- * variable exponent, such as 500(1.03)^t, be evaluated exactly.
+ * variable exponent, such as 500(1.03)^t, be evaluated exactly; the larger
+ * ones reach the domains of expressions such as \sqrt{x - 9} and \sqrt{-9 - x}.
  */
-const samplePoints = ["7/3", "-5/2", "11/7", "3", "-13/5", "17/4", "-2/9", "5/11", "2", "-1", "5", "4"].map((s) => Q.parse(s));
+const samplePoints = [
+  "7/3",
+  "-5/2",
+  "11/7",
+  "3",
+  "-13/5",
+  "17/4",
+  "-2/9",
+  "5/11",
+  "2",
+  "-1",
+  "5",
+  "4",
+  "29/3",
+  "23/2",
+  "13",
+  "-29/3",
+  "-23/2",
+  "-15",
+].map((s) => Q.parse(s));
 
 /**
  * equivalent tells whether two expressions are equal for all values of their
