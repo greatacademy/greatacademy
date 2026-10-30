@@ -1,4 +1,4 @@
-import type { CourseDef } from "@ga/content";
+import type { CourseDef, UnitDef } from "@ga/content";
 import { t } from "@ga/content";
 
 /** algebraFoundations is the first course: integers, expressions, linear equations and inequalities. */
@@ -50,5 +50,58 @@ export const algebraFoundations: CourseDef = {
   ],
 };
 
+const [integers, expressions, equations, inequalities] = algebraFoundations.units as [UnitDef, UnitDef, UnitDef, UnitDef];
+
+/**
+ * prealgebra is the bridge from arithmetic to Algebra I: number theory,
+ * fractions, decimals and percents, then the units of Foundations of Algebra
+ * extended to rational numbers, and ratios and proportions.
+ */
+export const prealgebra: CourseDef = {
+  id: "prealgebra",
+  title: t("Prealgebra", "代数预备"),
+  description: t(
+    "Divisibility, primes and common factors; fractions, decimals and percents; negative and rational numbers; algebraic expressions; linear equations and inequalities; and ratios, rates and proportions.",
+    "整除、质数与公因数；分数、小数与百分数；负数与有理数；代数式；一元一次方程与不等式；比、率与比例。",
+  ),
+  units: [
+    {
+      title: t("Number Theory", "数论初步"),
+      modules: [
+        {
+          title: t("Divisibility and Primes", "整除与质数"),
+          topics: ["divisibility-rules", "prime-and-composite-numbers", "prime-factorization"],
+        },
+        { title: t("Common Factors and Multiples", "公因数与公倍数"), topics: ["greatest-common-factor", "least-common-multiple"] },
+      ],
+    },
+    {
+      title: t("Fractions", "分数"),
+      modules: [
+        { title: t("Equivalent Fractions", "等值分数"), topics: ["equivalent-fractions"] },
+        { title: t("Adding and Subtracting", "加法与减法"), topics: ["adding-and-subtracting-fractions", "mixed-numbers"] },
+        { title: t("Multiplying and Dividing", "乘法与除法"), topics: ["multiplying-fractions", "dividing-fractions"] },
+      ],
+    },
+    {
+      title: t("Decimals and Percents", "小数与百分数"),
+      modules: [
+        { title: t("Decimals", "小数"), topics: ["fractions-and-decimals", "decimal-arithmetic"] },
+        { title: t("Percents", "百分数"), topics: ["percents", "percent-of-a-number", "percent-change"] },
+      ],
+    },
+    {
+      title: t("Integers and Rational Numbers", "整数与有理数"),
+      modules: [...integers.modules, { title: t("Rational Numbers", "有理数"), topics: ["operations-with-rational-numbers"] }],
+    },
+    expressions,
+    { title: t("Equations and Inequalities", "方程与不等式"), modules: [...equations.modules, ...inequalities.modules] },
+    {
+      title: t("Ratios and Proportions", "比与比例"),
+      modules: [{ title: t("Ratios and Rates", "比与率"), topics: ["ratios", "unit-rates", "proportions"] }],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
-export const mathCourses: readonly CourseDef[] = [algebraFoundations];
+export const mathCourses: readonly CourseDef[] = [algebraFoundations, prealgebra];

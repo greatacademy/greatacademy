@@ -1,6 +1,6 @@
 import type { Problem, Text } from "@ga/content";
 import { t } from "@ga/content";
-import { type Coefficient, equivalent, parseExpression, Q, relSymbol } from "@ga/subject-math";
+import { type Coefficient, dec, equivalent, factorizationLatex, parseExpression, primeFactors, Q, relSymbol } from "@ga/subject-math";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -13,7 +13,27 @@ export interface NumberProblem {
   readonly wrong?: readonly Coefficient[];
   /** solveFor shows "x =" before the field and accepts "x = …". */
   readonly solveFor?: string;
-  readonly form?: "number" | "integer" | "fraction" | "decimal";
+  readonly form?: "number" | "integer" | "fraction" | "decimal" | "mixed";
+  /** percent shows a percent sign after the field: the answer is a number of percent. */
+  readonly percent?: boolean;
+}
+
+/** mixedLatex writes a number as an integer or a mixed number: "2\frac{1}{3}", "-\frac{2}{3}". */
+export function mixedLatex(c: Coefficient): string {
+  const v = toQ(c);
+  if (v.isInteger()) return v.toLatex();
+  const a = v.abs();
+  const whole = a.n / a.d;
+  const rest = Q.of(a.n % a.d, a.d);
+  const body = whole === 0n ? rest.toLatex() : `${whole}${rest.toLatex()}`;
+  return v.sign() < 0 ? `-${body}` : body;
+}
+
+/** latexIn writes a number in the form a numeric answer asks for. */
+function latexIn(v: Q, form: NumberProblem["form"]): string {
+  if (form === "decimal") return dec(v);
+  if (form === "mixed") return mixedLatex(v);
+  return v.toLatex();
 }
 
 /** numberProblem builds a problem checked by the "number" checker. */
@@ -24,19 +44,53 @@ export function numberProblem(p: NumberProblem): Problem {
       (p.wrong ?? [])
         .map(toQ)
         .filter((w) => !w.eq(answer))
-        .map((w) => w.toLatex()),
+        .map((w) => (p.form === "decimal" && isTerminating(w) ? dec(w) : w.toLatex())),
     ),
   ];
   return {
     prompt: p.prompt,
     answer: {
       checker: "number",
-      expected: { value: answer.toString(), ...(p.form && { form: p.form }), ...(p.solveFor && { var: p.solveFor }) },
-      input: p.solveFor ? { kind: "math", prefix: `${p.solveFor} =` } : { kind: "math" },
+      expected: {
+        value: answer.toString(),
+        ...(p.form && { form: p.form }),
+        ...(p.solveFor && { var: p.solveFor }),
+        ...(p.percent && { percent: true }),
+      },
+      input: { kind: "math", ...(p.solveFor && { prefix: `${p.solveFor} =` }), ...(p.percent && { suffix: "\\%" }) },
     },
     solution: p.solution,
-    canonical: answer.toLatex(),
+    canonical: latexIn(answer, p.form),
     wrong,
+  };
+}
+
+/** isTerminating tells whether a number has a terminating decimal expansion. */
+export function isTerminating(c: Coefficient): boolean {
+  let d = toQ(c).d;
+  while (d % 2n === 0n) d /= 2n;
+  while (d % 5n === 0n) d /= 5n;
+  return d === 1n;
+}
+
+/** FactorizationProblem describes a problem whose answer is the prime factorization of a number. */
+export interface FactorizationProblem {
+  readonly prompt: Text;
+  readonly value: number;
+  readonly solution: Text;
+  /** wrong are products typical mistakes produce, in LaTeX. */
+  readonly wrong?: readonly string[];
+}
+
+/** factorizationProblem builds a problem checked by the "factorization" checker. */
+export function factorizationProblem(p: FactorizationProblem): Problem {
+  const canonical = factorizationLatex(primeFactors(p.value));
+  return {
+    prompt: p.prompt,
+    answer: { checker: "factorization", expected: { value: String(p.value) }, input: { kind: "math" } },
+    solution: p.solution,
+    canonical,
+    wrong: [...new Set(p.wrong ?? [])].filter((w) => w !== canonical),
   };
 }
 

@@ -178,10 +178,13 @@ const prealgebra: CourseDef = {
 
 | 判定器 | `expected` | 接受 |
 | :--- | :--- | :--- |
-| `number` | `{ value, form?, var? }`：`value` 是有理数，例如 `"-3"`、`"3/4"`、`"2.5"` | 等于 `value` 的单个数。`form` 为 `"number"`（默认）：整数、小数、最简分数或带分数；`"integer"`；`"fraction"`（不接受小数）；`"decimal"`。`3+4` 这样的算式会被拒绝并给出反馈。有 `var` 时也接受 `x = 3` 和 `3 = x` |
+| `number` | `{ value, form?, var?, percent? }`：`value` 是有理数，例如 `"-3"`、`"3/4"`、`"2.5"` | 等于 `value` 的单个数。`form` 为 `"number"`（默认）：整数、小数、最简分数或带分数；`"integer"`；`"fraction"`（不接受小数）；`"decimal"`；`"mixed"`（整数、带分数或真分数）。`3+4` 这样的算式会被拒绝并给出反馈。有 `var` 时也接受 `x = 3` 和 `3 = x`。有 `percent` 时输入框后显示 `%`，学习者自己输入的 `%` 会被忽略 |
 | `expression` | `{ expr, form? }`：`expr` 是 LaTeX | 与 `expr` 等价的式子：多项式精确比较；其他式子在若干有理点上精确比较。`form: "simplified"` 时，作答还必须是最简形式的单项式之和：没有同类项、没有括号、没有系数 1、没有连续的符号 |
 | `inequality` | `{ var, op, value }`：`op` 为 `<`、`<=`、`>` 或 `>=` | `x < 3` 或等价的 `3 > x`，其中的数按 `number` 的规则书写 |
+| `factorization` | `{ value }`：不小于 2 的整数 | 乘积等于 `value` 的质数及质数幂之积，顺序不限：`2^{3} \cdot 3` 或 `2 \cdot 2 \cdot 2 \cdot 3`。含合数因数的乘积，或 `value` 为合数时直接写 `value`，会被拒绝并给出反馈 |
 
-`content/math` 用 `numberProblem`、`expressionProblem`、`inequalityProblem` 和 `choiceProblem` 构建题目。它们填写答案规格、标准答案和输入方式，并去掉在某个种子下恰好等于正确答案的错误答案。题面和解答中的 LaTeX 用 `num`、`paren`、`poly`、`linear` 书写，它们不会产生 `+ -`、`1x` 或 `-1x`。
+`content/math` 用 `numberProblem`、`expressionProblem`、`inequalityProblem`、`factorizationProblem` 和 `choiceProblem` 构建题目。它们填写答案规格、标准答案和输入方式，并去掉在某个种子下恰好等于正确答案的错误答案。题面和解答中的 LaTeX 用 `num`、`paren`、`poly`、`linear` 书写，它们不会产生 `+ -`、`1x` 或 `-1x`；小数用 `dec` 书写。要求小数或带分数的答案，标准答案也写成那种形式。
 
 第一门课程**代数基础**（`algebra-foundations`）有 20 个知识点，分为四个单元：整数（相反数与比较大小、绝对值、四则运算、乘方、混合运算），代数式（求值、合并同类项、乘法分配律、化简），一元一次方程（一步、两步、两边都有变量（含无解与无穷多解）、含括号），一元一次不等式（检验与写出解、一步（含改变不等号方向）、多步）。
+
+**代数预备**（`prealgebra`）有 39 个知识点，分为七个单元。它在代数基础的知识点之外新增 19 个：数论初步（整除的判定、质数与合数、分解质因数、最大公因数、最小公倍数），分数（等值分数、加减、带分数、乘法、除法），小数与百分数（分数与小数互化、小数运算、百分数、求一个数的百分之几、百分比变化），负分数的运算，以及比与比例（比、单位率、比例）。两门课程共享相同的知识点：学习者在某个知识点上的进度在两门课程中都有效。
