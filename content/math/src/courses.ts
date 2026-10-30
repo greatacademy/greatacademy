@@ -178,8 +178,8 @@ export const algebraI: CourseDef = {
   id: "algebra-i",
   title: t("Algebra I", "代数一"),
   description: t(
-    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines and systems of linear equations; units and variation; polynomials, their products and factoring; quadratic equations; radical expressions and equations; rational expressions and equations; functions, their features and their composition; and arithmetic and geometric sequences.",
-    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程与二元一次方程组；单位与比例关系；多项式的乘法与因式分解；一元二次方程；根式及根式方程；分式及分式方程；函数及其性质、运算与复合；等差数列与等比数列。",
+    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines and systems of linear equations; units and variation; polynomials, their products and factoring; quadratic equations; radical expressions and equations; rational expressions and equations; functions, their features and their composition; arithmetic and geometric sequences; and scatter plots, trend lines and correlation.",
+    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程与二元一次方程组；单位与比例关系；多项式的乘法与因式分解；一元二次方程；根式及根式方程；分式及分式方程；函数及其性质、运算与复合；等差数列与等比数列；散点图、趋势线与相关性。",
   ),
   units: [
     {
@@ -480,6 +480,19 @@ export const algebraI: CourseDef = {
             "geometric-sequences-from-two-terms",
             "index-of-a-term-in-a-geometric-sequence",
           ],
+        },
+      ],
+    },
+    {
+      title: t("Bivariate Statistics", "双变量统计"),
+      modules: [
+        {
+          title: t("Scatter Plots and Trend Lines", "散点图与趋势线"),
+          topics: ["scatter-plots", "trend-lines", "predictions-with-trend-lines", "interpreting-trend-line-coefficients"],
+        },
+        {
+          title: t("Correlation and Regression Models", "相关与回归模型"),
+          topics: ["linear-correlation", "correlation-and-causation", "selecting-a-regression-model"],
         },
       ],
     },

@@ -5,6 +5,7 @@ import { mathCheckers } from "@ga/subject-math";
 import { mathCourses } from "./courses.ts";
 import { angleTopics } from "./topics/angles.ts";
 import { areaTopics } from "./topics/area.ts";
+import { bivariateStatisticsTopics } from "./topics/bivariate-statistics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
 import { equationTopics } from "./topics/equations.ts";
@@ -57,6 +58,7 @@ export const math: SubjectDef = {
     ...radicalExpressionTopics,
     ...rationalExpressionTopics,
     ...sequenceTopics,
+    ...bivariateStatisticsTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
