@@ -5,11 +5,13 @@ import { mathCheckers } from "@ga/subject-math";
 import { mathCourses } from "./courses.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
 import { equationTopics } from "./topics/equations.ts";
+import { exponentTopics } from "./topics/exponents.ts";
 import { expressionTopics } from "./topics/expressions.ts";
 import { fractionTopics } from "./topics/fractions.ts";
 import { inequalityTopics } from "./topics/inequalities.ts";
 import { integerTopics } from "./topics/integers.ts";
 import { numberTheoryTopics } from "./topics/number-theory.ts";
+import { radicalTopics } from "./topics/radicals.ts";
 import { ratioTopics } from "./topics/ratios.ts";
 
 /** math is the definition of the mathematics subject. */
@@ -22,6 +24,8 @@ export const math: SubjectDef = {
     ...decimalAndPercentTopics,
     ...integerTopics,
     ...expressionTopics,
+    ...exponentTopics,
+    ...radicalTopics,
     ...equationTopics,
     ...inequalityTopics,
     ...ratioTopics,

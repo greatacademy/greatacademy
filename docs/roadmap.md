@@ -15,7 +15,7 @@ Phases, their completion criteria and the current status. Mathematics is the fir
 | P4 Contracts and storage | `libs/proto`, `libs/db`, `libs/api`: services, schema, event log, repositories, session runner | Repositories and services pass integration tests on PGlite; replaying the event log reproduces the stored state | Done |
 | P5 Web app | `apps/web`: accounts, catalog, enrollment, diagnostic, dashboard, lesson, review and quiz players, progress | A new learner signs up, takes the diagnostic, and completes lessons and reviews end to end in `cf dev` against PostgreSQL | Done |
 | P6 Mobile app | `apps/mobile`: sign in, dashboard, task players with shared math components | The app runs in the iOS simulator against the development server | Skeleton: course list and outline |
-| P7 Content scale-up | The rest of Prealgebra, then Algebra I → Precalculus → Calculus, planned from [Math Curriculum](math-curriculum.md) | Each course compiles and passes generator sampling; edges reviewed | In progress: Prealgebra core (39 topics) |
+| P7 Content scale-up | The rest of Prealgebra, then Algebra I → Precalculus → Calculus, planned from [Math Curriculum](math-curriculum.md) | Each course compiles and passes generator sampling; edges reviewed | In progress: Prealgebra core (49 topics) |
 | P8 Accounts and oversight | Parent and teacher roles, managed learner profiles, reports | — | Planned |
 | P9 Billing | Subscriptions: Stripe on the web, in-app purchases on mobile | — | Planned |
 | P10 Calibration | Fit topic difficulty and engine parameters from real answers; content analytics per question | — | Planned |

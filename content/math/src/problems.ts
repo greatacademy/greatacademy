@@ -1,6 +1,17 @@
 import type { Problem, Text } from "@ga/content";
 import { t } from "@ga/content";
-import { type Coefficient, dec, equivalent, factorizationLatex, parseExpression, primeFactors, Q, relSymbol } from "@ga/subject-math";
+import {
+  type Coefficient,
+  dec,
+  equivalent,
+  factorizationLatex,
+  parseExpression,
+  primeFactors,
+  Q,
+  radical,
+  relSymbol,
+  sci,
+} from "@ga/subject-math";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -88,6 +99,59 @@ export function factorizationProblem(p: FactorizationProblem): Problem {
   return {
     prompt: p.prompt,
     answer: { checker: "factorization", expected: { value: String(p.value) }, input: { kind: "math" } },
+    solution: p.solution,
+    canonical,
+    wrong: [...new Set(p.wrong ?? [])].filter((w) => w !== canonical),
+  };
+}
+
+/** ScientificProblem describes a problem whose answer is a number written in scientific notation. */
+export interface ScientificProblem {
+  readonly prompt: Text;
+  /** answer is a × 10^n with 1 ≤ |a| < 10. */
+  readonly answer: { readonly a: Coefficient; readonly n: number };
+  readonly solution: Text;
+  /** wrong are the a × 10^n pairs typical mistakes produce; any equal to the answer are dropped. */
+  readonly wrong?: readonly (readonly [Coefficient, number])[];
+}
+
+/** scientificValue is a × 10^n as an exact rational. */
+export function scientificValue(a: Coefficient, n: number): Q {
+  const ten = Q.of(10);
+  return toQ(a).mul(n >= 0 ? ten.pow(n) : Q.one.div(ten.pow(-n)));
+}
+
+/** scientificProblem builds a problem checked by the "scientific" checker. */
+export function scientificProblem(p: ScientificProblem): Problem {
+  const value = scientificValue(p.answer.a, p.answer.n);
+  const canonical = sci(p.answer.a, p.answer.n);
+  const wrong = [...new Set((p.wrong ?? []).filter(([a, n]) => !scientificValue(a, n).eq(value)).map(([a, n]) => sci(a, n)))];
+  return {
+    prompt: p.prompt,
+    answer: { checker: "scientific", expected: { value: value.toString() }, input: { kind: "math" } },
+    solution: p.solution,
+    canonical,
+    wrong,
+  };
+}
+
+/** RadicalProblem describes a problem whose answer is c√m in simplest radical form. */
+export interface RadicalProblem {
+  readonly prompt: Text;
+  /** answer is [c, m] with m square-free; m = 1 for a rational answer. */
+  readonly answer: readonly [Coefficient, number];
+  readonly solution: Text;
+  /** wrong are responses typical mistakes produce, in LaTeX. */
+  readonly wrong?: readonly string[];
+}
+
+/** radicalProblem builds a problem checked by the "radical" checker. */
+export function radicalProblem(p: RadicalProblem): Problem {
+  const [c, m] = p.answer;
+  const canonical = radical(c, m);
+  return {
+    prompt: p.prompt,
+    answer: { checker: "radical", expected: { coef: toQ(c).toString(), radicand: String(m) }, input: { kind: "math" } },
     solution: p.solution,
     canonical,
     wrong: [...new Set(p.wrong ?? [])].filter((w) => w !== canonical),

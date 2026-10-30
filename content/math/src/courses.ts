@@ -55,14 +55,15 @@ const [integers, expressions, equations, inequalities] = algebraFoundations.unit
 /**
  * prealgebra is the bridge from arithmetic to Algebra I: number theory,
  * fractions, decimals and percents, then the units of Foundations of Algebra
- * extended to rational numbers, and ratios and proportions.
+ * extended to rational numbers, exponents and radicals, and ratios and
+ * proportions.
  */
 export const prealgebra: CourseDef = {
   id: "prealgebra",
   title: t("Prealgebra", "代数预备"),
   description: t(
-    "Divisibility, primes and common factors; fractions, decimals and percents; negative and rational numbers; algebraic expressions; linear equations and inequalities; and ratios, rates and proportions.",
-    "整除、质数与公因数；分数、小数与百分数；负数与有理数；代数式；一元一次方程与不等式；比、率与比例。",
+    "Divisibility, primes and common factors; fractions, decimals and percents; negative and rational numbers; algebraic expressions; exponents, scientific notation and square roots; linear equations and inequalities; and ratios, rates and proportions.",
+    "整除、质数与公因数；分数、小数与百分数；负数与有理数；代数式；指数、科学记数法与平方根；一元一次方程与不等式；比、率与比例。",
   ),
   units: [
     {
@@ -95,6 +96,23 @@ export const prealgebra: CourseDef = {
       modules: [...integers.modules, { title: t("Rational Numbers", "有理数"), topics: ["operations-with-rational-numbers"] }],
     },
     expressions,
+    {
+      title: t("Exponents and Radicals", "指数与根式"),
+      modules: [
+        { title: t("Exponents", "指数"), topics: ["powers-of-rational-numbers", "zero-and-negative-exponents"] },
+        { title: t("The Rules of Exponents", "指数法则"), topics: ["product-and-quotient-rules", "power-rules"] },
+        { title: t("Scientific Notation", "科学记数法"), topics: ["scientific-notation", "operations-in-scientific-notation"] },
+        {
+          title: t("Radicals", "根式"),
+          topics: [
+            "square-roots-and-cube-roots",
+            "simplifying-square-roots",
+            "adding-and-subtracting-radicals",
+            "rationalizing-denominators",
+          ],
+        },
+      ],
+    },
     { title: t("Equations and Inequalities", "方程与不等式"), modules: [...equations.modules, ...inequalities.modules] },
     {
       title: t("Ratios and Proportions", "比与比例"),
