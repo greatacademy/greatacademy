@@ -27,6 +27,7 @@ import { rationalExpressionTopics } from "./topics/rational-expressions.ts";
 import { ratioTopics } from "./topics/ratios.ts";
 import { sequenceTopics } from "./topics/sequences.ts";
 import { statisticsTopics } from "./topics/statistics.ts";
+import { twoVariableTopics } from "./topics/two-variable-models.ts";
 import { unitTopics } from "./topics/units.ts";
 
 /** math is the definition of the mathematics subject. */
@@ -50,6 +51,7 @@ export const math: SubjectDef = {
     ...linearEquationTopics,
     ...compoundInequalityTopics,
     ...lineTopics,
+    ...twoVariableTopics,
     ...functionTopics,
     ...unitTopics,
     ...polynomialTopics,

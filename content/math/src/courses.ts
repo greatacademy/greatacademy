@@ -178,8 +178,8 @@ export const algebraI: CourseDef = {
   id: "algebra-i",
   title: t("Algebra I", "代数一"),
   description: t(
-    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines and systems of linear equations; units and variation; polynomials, their products and factoring; quadratic equations; radical expressions and equations; rational expressions and equations; functions, their features and their composition; arithmetic and geometric sequences; and scatter plots, trend lines and correlation.",
-    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程与二元一次方程组；单位与比例关系；多项式的乘法与因式分解；一元二次方程；根式及根式方程；分式及分式方程；函数及其性质、运算与复合；等差数列与等比数列；散点图、趋势线与相关性。",
+    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines, linear models and their graphs, systems of linear equations and linear inequalities in two variables; units and variation; polynomials, their products and factoring; quadratic equations; radical expressions and equations; rational expressions and equations; functions, their features and their composition; arithmetic and geometric sequences; and scatter plots, trend lines and correlation.",
+    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程、一次模型及其图像、二元一次方程组与二元一次不等式；单位与比例关系；多项式的乘法与因式分解；一元二次方程；根式及根式方程；分式及分式方程；函数及其性质、运算与复合；等差数列与等比数列；散点图、趋势线与相关性。",
   ),
   units: [
     {
@@ -235,7 +235,7 @@ export const algebraI: CourseDef = {
       ],
     },
     {
-      title: t("Lines and Systems of Equations", "直线与方程组"),
+      title: t("Two-Variable Equations and Inequalities", "二元方程与不等式"),
       modules: [
         { title: t("The Coordinate Plane and Slope", "坐标平面与斜率"), topics: ["the-coordinate-plane", "slope-of-a-line"] },
         {
@@ -248,6 +248,18 @@ export const algebraI: CourseDef = {
             "properties-of-lines-in-standard-form",
             "parallel-lines-in-the-coordinate-plane",
             "perpendicular-lines-in-the-coordinate-plane",
+          ],
+        },
+        {
+          title: t("Modeling With Linear Equations and Graphs", "一次方程与图像建模"),
+          topics: [
+            "modeling-with-two-variable-linear-equations",
+            "modeling-totals-with-two-variable-equations",
+            "analyzing-graphs-of-linear-models",
+            "further-modeling-with-two-variable-equations",
+            "distance-time-graphs",
+            "speed-time-graphs",
+            "distance-from-speed-time-graphs",
           ],
         },
         {
@@ -265,6 +277,17 @@ export const algebraI: CourseDef = {
             "intersection-of-two-lines",
             "modeling-with-systems",
             "coin-problems",
+          ],
+        },
+        {
+          title: t("Two-Variable Linear Inequalities", "二元一次不等式"),
+          topics: [
+            "graphing-strict-linear-inequalities",
+            "graphing-non-strict-linear-inequalities",
+            "further-graphing-linear-inequalities",
+            "systems-of-linear-inequalities",
+            "modeling-with-two-variable-inequalities",
+            "modeling-with-systems-of-inequalities",
           ],
         },
       ],
