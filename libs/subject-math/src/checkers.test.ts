@@ -110,17 +110,28 @@ describe("expression", () => {
     expect(accepts("expression", { expr }, response)).toBe(false);
   });
 
-  it.each(["7x-3", "-3+7x", "-x+4", "x^{2}-x", "\\frac{3}{4}x-1", "\\frac{x}{2}+1", "-\\frac{2x}{3}", "3xy-y", "0"])(
-    "accepts the simplified form %s",
-    (response) => {
-      const v = verdict("expression", { expr: response, form: "simplified" }, response);
-      expect(v).toEqual({ correct: true });
-    },
-  );
+  it.each([
+    "7x-3",
+    "-3+7x",
+    "-x+4",
+    "x^{2}-x",
+    "\\frac{3}{4}x-1",
+    "\\frac{x}{2}+1",
+    "-\\frac{2x}{3}",
+    "3xy-y",
+    "0",
+    "-xy",
+    "-x^{2}y-6xy^{2}",
+    "-3xy+1",
+  ])("accepts the simplified form %s", (response) => {
+    const v = verdict("expression", { expr: response, form: "simplified" }, response);
+    expect(v).toEqual({ correct: true });
+  });
 
   it.each([
     ["7x-3", "2x+5x-3"],
     ["7x-3", "7x+-3"],
+    ["x-yz", "x+-yz"],
     ["7x-3", "7x-3+0"],
     ["7x-3", "(7x-3)"],
     ["2x+2", "2(x+1)"],

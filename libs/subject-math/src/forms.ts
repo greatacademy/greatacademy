@@ -119,6 +119,14 @@ function monomialOf(node: Node): Monomial | undefined {
   return { key, coefficient };
 }
 
+/** leadingNeg removes the sign of a term written with a leading minus: "-x" and "-xy", which parses as (−x)·y; it returns undefined for a term without one. */
+function leadingNeg(node: Node): Node | undefined {
+  if (node.k === "neg") return node.a;
+  if (node.k !== "mul") return undefined;
+  const a = leadingNeg(node.a);
+  return a && { ...node, a };
+}
+
 /**
  * isSimplifiedPolynomial tells whether node is a sum of monomials in simplest
  * form with no two like terms, no zero terms, no parentheses, and no doubled
@@ -134,8 +142,9 @@ export function isSimplifiedPolynomial(node: Node): boolean {
       terms.push(n.k === "sub" ? { ...m, coefficient: m.coefficient.neg() } : m);
       return true;
     }
-    if (first && n.k === "neg") {
-      const m = monomialOf(n.a);
+    const negated = first ? leadingNeg(n) : undefined;
+    if (negated) {
+      const m = monomialOf(negated);
       if (!m) return false;
       terms.push({ ...m, coefficient: m.coefficient.neg() });
       return true;
