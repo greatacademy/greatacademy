@@ -33,6 +33,7 @@ import { congruenceTopics } from "./topics/geometry-congruence.ts";
 import { coordinateGeometryTopics } from "./topics/geometry-coordinate.ts";
 import { coordinateCircleTopics } from "./topics/geometry-coordinate-circles.ts";
 import { proofCongruenceSimilarityTopics } from "./topics/geometry-proof-congruence-similarity.ts";
+import { geometryRadiansTopics } from "./topics/geometry-radians.ts";
 import { similarityTopics } from "./topics/geometry-similarity.ts";
 import { solidGeometryTopics } from "./topics/geometry-solids.ts";
 import { transformationTopics } from "./topics/geometry-transformations.ts";
@@ -102,6 +103,7 @@ export const math: SubjectDef = {
     ...coordinateCircleTopics,
     ...triangleTrigonometryTopics,
     ...trigonometryTopics,
+    ...geometryRadiansTopics,
     ...solidGeometryTopics,
     ...algebraIIFactoringTopics,
     ...polynomialTheoremTopics,
