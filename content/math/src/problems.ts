@@ -5,6 +5,7 @@ import {
   dec,
   equationChecker,
   equivalent,
+  factoredChecker,
   factorizationLatex,
   inequalityLatexOf,
   intervalLatex,
@@ -363,6 +364,28 @@ export function equationProblem(p: EquationProblem): Problem {
     solution: p.solution,
     canonical: p.answer,
     wrong: [...new Set(p.wrong ?? [])].filter((w) => !equationChecker.check(expected, w).correct),
+  };
+}
+
+/** FactoredProblem describes a problem whose answer is a polynomial factored completely over the integers. */
+export interface FactoredProblem {
+  readonly prompt: Text;
+  /** answer is the complete factorization in LaTeX, such as "2(x + 1)(x - 3)". */
+  readonly answer: string;
+  readonly solution: Text;
+  /** wrong are responses typical mistakes produce; those the checker accepts are dropped. */
+  readonly wrong?: readonly string[];
+}
+
+/** factoredProblem builds a problem checked by the "factored" checker. */
+export function factoredProblem(p: FactoredProblem): Problem {
+  const expected = { expr: p.answer };
+  return {
+    prompt: p.prompt,
+    answer: { checker: "factored", expected, input: { kind: "math" } },
+    solution: p.solution,
+    canonical: p.answer,
+    wrong: [...new Set(p.wrong ?? [])].filter((w) => !factoredChecker.check(expected, w).correct),
   };
 }
 

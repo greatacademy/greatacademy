@@ -44,6 +44,8 @@ const feedback = {
     "请把方程写成一般式 $Ax + By = C$，其中 $A$、$B$、$C$ 是没有公因数的整数，且 $A > 0$。",
   ),
   pointSlope: t("Write the equation in point-slope form, $y - y_1 = m(x - x_1)$.", "请把方程写成点斜式 $y - y_1 = m(x - x_1)$。"),
+  factorCompletely: t("Factor completely.", "请彻底分解因式。"),
+  commonFactor: t("Factor out the greatest common factor of the coefficients.", "请提出各项系数的最大公因数。"),
   point: t("Write the ordered pair, such as $(3, -2)$.", "请写出有序数对，例如 $(3, -2)$。"),
   solutions: t(
     "List the solutions separated by commas, such as $x = 2, x = -5$, or enter $\\varnothing$ if there are none.",
@@ -732,6 +734,74 @@ export const equationChecker: Checker = {
   },
 };
 
+/** Factored is an expression read as a product: a constant times nonconstant polynomial factors, repeated for powers. */
+interface Factored {
+  readonly constant: Q;
+  readonly factors: readonly Poly[];
+}
+
+/** factoredForm reads an expression as a product of factors; a sum is one factor. It returns undefined for an expression that is not a polynomial. */
+export function factoredForm(node: Node): Factored | undefined {
+  const n = unwrap(node);
+  if (n.k === "neg") {
+    const f = factoredForm(n.a);
+    return f && { ...f, constant: f.constant.neg() };
+  }
+  if (n.k === "mul") {
+    const a = factoredForm(n.a);
+    const b = factoredForm(n.b);
+    return a && b && { constant: a.constant.mul(b.constant), factors: [...a.factors, ...b.factors] };
+  }
+  if (n.k === "pow") {
+    const e = integerLiteral(n.b);
+    const base = factoredForm(n.a);
+    if (e !== undefined && e >= 1n && e <= 16n && base) {
+      const factors: Poly[] = [];
+      for (let i = 0n; i < e; i++) factors.push(...base.factors);
+      return { constant: base.constant.pow(Number(e)), factors };
+    }
+  }
+  const p = toPoly(n);
+  if (!p) return undefined;
+  if ([...p.keys()].every((k) => k === "")) return { constant: p.get("") ?? Q.zero, factors: [] };
+  return { constant: Q.one, factors: [p] };
+}
+
+/** isPrimitive tells whether a polynomial has integer coefficients with no common factor. */
+function isPrimitive(p: Poly): boolean {
+  let g = 0n;
+  for (const c of p.values()) {
+    if (!c.isInteger()) return false;
+    g = gcdBig(g, c.n < 0n ? -c.n : c.n);
+  }
+  return g === 1n;
+}
+
+/**
+ * factoredChecker accepts a complete factorization of expected.expr, which is
+ * written fully factored over the integers: the response must be equivalent,
+ * with as many nonconstant factors (counted with multiplicity) as
+ * expected.expr, each with integer coefficients that have no common factor,
+ * times an integer. "2(x + 1)(x - 3)" is accepted for 2x² − 4x − 6, while
+ * "(2x + 2)(x - 3)" and "2(x² − 2x − 3)" are rejected with feedback.
+ */
+export const factoredChecker: Checker = {
+  id: "factored",
+  check(expected, response) {
+    const target = parseExpression(str(obj(expected), "expr"));
+    const want = factoredForm(target);
+    if (!want) throw new TypeError("expected.expr must be a polynomial");
+    const parsed = parse(() => parseLatex(response));
+    if (isVerdict(parsed)) return parsed;
+    if (isRelation(parsed)) return wrong(feedback.expression);
+    if (!equivalent(parsed, target)) return wrong();
+    const got = factoredForm(parsed);
+    if (!got || got.factors.length < want.factors.length) return wrong(feedback.factorCompletely);
+    if (!got.factors.every(isPrimitive) || !got.constant.isInteger()) return wrong(feedback.commonFactor);
+    return got.factors.length === want.factors.length ? { correct: true } : wrong(feedback.factorCompletely);
+  },
+};
+
 /** mathCheckers are the checkers the mathematics subject registers. */
 export const mathCheckers: readonly Checker[] = [
   numberChecker,
@@ -744,4 +814,5 @@ export const mathCheckers: readonly Checker[] = [
   intervalChecker,
   pointChecker,
   equationChecker,
+  factoredChecker,
 ];

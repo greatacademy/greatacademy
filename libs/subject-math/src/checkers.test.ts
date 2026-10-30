@@ -429,3 +429,43 @@ describe("equation", () => {
     else expect(v.feedback).toBeUndefined();
   });
 });
+
+describe("factored", () => {
+  const check = (expr: string, response: string) => registry.check("factored", { expr }, response);
+
+  it.each([
+    ["(x + 2)(x + 3)", "(x+2)(x+3)"],
+    ["(x + 2)(x + 3)", "(x+3)(x+2)"],
+    ["2(x + 1)(x - 3)", "2(x+1)(x-3)"],
+    ["2(x + 1)(x - 3)", "-2(-x-1)(x-3)"],
+    ["2(x + 1)(x - 3)", "2(3-x)(-x-1)"],
+    ["(x - 3)^2", "(x-3)^{2}"],
+    ["(x - 3)^2", "(x-3)(x-3)"],
+    ["(x - 3)^2", "(3-x)^2"],
+    ["3x(x + 2)", "3x(x+2)"],
+    ["x^2(x - 1)", "x \\cdot x(x-1)"],
+    ["(2x - 1)(x + 4)", "(x+4)(2x-1)"],
+    ["(3a - 2b)(3a + 2b)", "(3a+2b)(3a-2b)"],
+    ["4xy^2", "4xy^{2}"],
+  ])("accepts %s as %s", (expr, response) => {
+    expect(check(expr, response).correct).toBe(true);
+  });
+
+  it.each([
+    ["(x + 2)(x + 3)", "(x+1)(x+6)", undefined],
+    ["(x + 2)(x + 3)", "x^2+5x+6", "completely"],
+    ["(x + 2)(x + 3)", "x(x+5)+6", "completely"],
+    ["2(x + 1)(x - 3)", "(2x+2)(x-3)", "common factor"],
+    ["2(x + 1)(x - 3)", "2(x^2-2x-3)", "completely"],
+    ["2(x + 1)(x - 3)", "4(\\frac{x}{2}+\\frac{1}{2})(x-3)", "common factor"],
+    ["3x(x + 2)", "x(3x+6)", "common factor"],
+    ["3x(x + 2)", "3(x^2+2x)", "completely"],
+    ["(x - 3)^2", "x^2 - 6x + 9", "completely"],
+    ["(x + 2)(x + 3)", "(x+2)(x+3) = 0", "expression"],
+  ])("rejects %s as %s", (expr, response, message) => {
+    const v = check(expr, response);
+    expect(v.correct).toBe(false);
+    if (message) expect(v.feedback?.en).toContain(message);
+    else expect(v.feedback).toBeUndefined();
+  });
+});
