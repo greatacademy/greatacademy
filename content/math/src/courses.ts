@@ -178,8 +178,8 @@ export const algebraI: CourseDef = {
   id: "algebra-i",
   title: t("Algebra I", "代数一"),
   description: t(
-    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines and systems of linear equations; units and variation; polynomials, their products and factoring; quadratic equations; functions, their features and their composition; and arithmetic and geometric sequences.",
-    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程与二元一次方程组；单位与比例关系；多项式的乘法与因式分解；一元二次方程；函数及其性质、运算与复合；等差数列与等比数列。",
+    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines and systems of linear equations; units and variation; polynomials, their products and factoring; quadratic equations; radical expressions and equations; functions, their features and their composition; and arithmetic and geometric sequences.",
+    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程与二元一次方程组；单位与比例关系；多项式的乘法与因式分解；一元二次方程；根式及根式方程；函数及其性质、运算与复合；等差数列与等比数列。",
   ),
   units: [
     {
@@ -364,6 +364,34 @@ export const algebraI: CourseDef = {
           title: t("Applications of Quadratic Equations", "一元二次方程的应用"),
           topics: ["modeling-with-quadratic-equations", "equating-polynomial-coefficients", "vietas-formulas"],
         },
+      ],
+    },
+    {
+      title: t("Radical Expressions", "根式"),
+      modules: [
+        {
+          title: t("Roots of Algebraic Expressions", "代数式的方根"),
+          topics: [
+            "square-roots-of-algebraic-perfect-squares",
+            "square-roots-with-domain-restrictions",
+            "cube-roots-of-algebraic-perfect-cubes",
+          ],
+        },
+        {
+          title: t("Simplifying and Combining Radicals", "根式的化简与运算"),
+          topics: [
+            "simplifying-square-roots-with-variables",
+            "multiplying-radical-expressions",
+            "quotient-rule-for-square-roots",
+            "evaluating-radical-expressions",
+            "adding-and-subtracting-radical-expressions",
+          ],
+        },
+        {
+          title: t("Rationalizing Denominators", "分母有理化"),
+          topics: ["rationalizing-algebraic-denominators", "rationalizing-two-term-denominators", "further-rationalizing-denominators"],
+        },
+        { title: t("Radical Equations", "根式方程"), topics: ["solving-radical-equations"] },
       ],
     },
     {
