@@ -51,6 +51,7 @@ import { linearEquationTopics } from "./topics/linear-equations.ts";
 import { lineTopics } from "./topics/lines.ts";
 import { numberTheoryTopics } from "./topics/number-theory.ts";
 import { polynomialTopics } from "./topics/polynomials.ts";
+import { precalculusSeriesTopics } from "./topics/precalculus-series.ts";
 import { probabilityTopics } from "./topics/probability.ts";
 import { quadraticEquationTopics } from "./topics/quadratic-equations.ts";
 import { quadraticFunctionTopics } from "./topics/quadratic-functions.ts";
@@ -127,6 +128,7 @@ export const math: SubjectDef = {
     ...algebraIIGeneralTrianglesTopics,
     ...combinatoricsTopics,
     ...probabilityTopics,
+    ...precalculusSeriesTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
