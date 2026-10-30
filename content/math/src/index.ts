@@ -22,6 +22,7 @@ import { polynomialTopics } from "./topics/polynomials.ts";
 import { quadraticEquationTopics } from "./topics/quadratic-equations.ts";
 import { radicalExpressionTopics } from "./topics/radical-expressions.ts";
 import { radicalTopics } from "./topics/radicals.ts";
+import { rationalExpressionTopics } from "./topics/rational-expressions.ts";
 import { ratioTopics } from "./topics/ratios.ts";
 import { sequenceTopics } from "./topics/sequences.ts";
 import { statisticsTopics } from "./topics/statistics.ts";
@@ -54,6 +55,7 @@ export const math: SubjectDef = {
     ...factoringTopics,
     ...quadraticEquationTopics,
     ...radicalExpressionTopics,
+    ...rationalExpressionTopics,
     ...sequenceTopics,
   ],
   courses: mathCourses,
