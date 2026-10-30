@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import {
   type Coefficient,
   dec,
+  equationChecker,
   equivalent,
   factorizationLatex,
   inequalityLatexOf,
@@ -337,6 +338,31 @@ export function pointProblem(p: PointProblem): Problem {
     solution: p.solution,
     canonical: pointLatex(answer),
     wrong: [...new Set((p.wrong ?? []).filter((w) => !same(w)).map(pointLatex))],
+  };
+}
+
+/** EquationProblem describes a problem whose answer is an equation, such as the equation of a line. */
+export interface EquationProblem {
+  readonly prompt: Text;
+  /** answer is the expected equation in LaTeX, in the required form. */
+  readonly answer: string;
+  /** form requires the form of a line: y = mx + b, Ax + By = C or y − k = m(x − h). */
+  readonly form?: "slope-intercept" | "standard" | "point-slope";
+  readonly vars?: readonly [string, string];
+  readonly solution: Text;
+  /** wrong are equations typical mistakes produce; those the checker accepts are dropped. */
+  readonly wrong?: readonly string[];
+}
+
+/** equationProblem builds a problem checked by the "equation" checker. */
+export function equationProblem(p: EquationProblem): Problem {
+  const expected = { eq: p.answer, ...(p.form && { form: p.form }), ...(p.vars && { vars: [...p.vars] }) };
+  return {
+    prompt: p.prompt,
+    answer: { checker: "equation", expected, input: { kind: "math" } },
+    solution: p.solution,
+    canonical: p.answer,
+    wrong: [...new Set(p.wrong ?? [])].filter((w) => !equationChecker.check(expected, w).correct),
   };
 }
 

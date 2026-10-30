@@ -384,3 +384,48 @@ describe("point", () => {
     else expect(v.feedback).toBeUndefined();
   });
 });
+
+describe("equation", () => {
+  const check = (eq: string, response: string, form?: string) => registry.check("equation", { eq, ...(form && { form }) }, response);
+
+  it.each([
+    ["y = 2x + 3", "y = 2x + 3", "slope-intercept"],
+    ["y = 2x + 3", "y = 3 + 2x", "slope-intercept"],
+    ["y = 2x + 3", "2x + 3 = y", "slope-intercept"],
+    ["y = -\\frac{1}{2}x + 3", "y = -\\frac{x}{2} + 3", "slope-intercept"],
+    ["y = 4", "y = 4", "slope-intercept"],
+    ["y = 2x + 3", "2x - y = -3", "standard"],
+    ["y = -\\frac{2}{3}x + 2", "2x + 3y = 6", "standard"],
+    ["y = 5", "y = 5", "standard"],
+    ["x = -2", "x = -2", "standard"],
+    ["y = 2x + 3", "y - 5 = 2(x - 1)", "point-slope"],
+    ["y = 2x + 3", "y - 7 = 2(x - 2)", "point-slope"],
+    ["y = -x + 3", "y - 1 = -(x - 2)", "point-slope"],
+    ["y = x + 3", "y - 4 = (x - 1)", "point-slope"],
+    ["y = 2x + 3", "4x - 2y + 6 = 0", undefined],
+    ["y = 2x + 3", "y = 2(x + 1) + 1", undefined],
+  ])("accepts %s as %s", (eq, response, form) => {
+    expect(check(eq, response, form).correct).toBe(true);
+  });
+
+  it.each([
+    ["y = 2x + 3", "y = 3x + 2", undefined, undefined],
+    ["y = 2x + 3", "y = 2x - 3", "slope-intercept", undefined],
+    ["y = 2x + 3", "2x + 3", undefined, "equation"],
+    ["y = 2x + 3", "y > 2x + 3", undefined, "equation"],
+    ["y = 2x + 3", "2x - y = -3", "slope-intercept", "slope-intercept"],
+    ["y = 2x + 3", "y = 2(x + 1) + 1", "slope-intercept", "slope-intercept"],
+    ["y = 2x + 3", "y - 3 = 2x", "slope-intercept", "slope-intercept"],
+    ["y = 2x + 3", "y = 2x + 3", "standard", "standard"],
+    ["y = 2x + 3", "-2x + y = 3", "standard", "standard"],
+    ["y = 2x + 3", "4x - 2y = -6", "standard", "standard"],
+    ["y = -\\frac{2}{3}x + 2", "\\frac{2}{3}x + y = 2", "standard", "standard"],
+    ["y = 2x + 3", "y = 2x + 3", "point-slope", "point-slope"],
+    ["y = 2x + 3", "y = 2(x - 1) + 5", "point-slope", "point-slope"],
+  ])("rejects %s as %s", (eq, response, form, message) => {
+    const v = check(eq, response, form);
+    expect(v.correct).toBe(false);
+    if (message) expect(v.feedback?.en).toContain(message);
+    else expect(v.feedback).toBeUndefined();
+  });
+});

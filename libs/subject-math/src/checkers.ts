@@ -1,7 +1,7 @@
 import type { Checker, Json, Text, Verdict } from "@ga/content";
 import { t } from "@ga/content";
 
-import { equivalent, evaluate } from "./algebra.ts";
+import { equivalent, evaluate, type Poly, toPoly } from "./algebra.ts";
 import { isSimplifiedPolynomial, type NumberLiteral, numberLiteral } from "./forms.ts";
 import { type ParsedSet, parseInequalities, parseIntervals, setEqual } from "./intervals.ts";
 import { isRelation, type Node, normalizeLatex, ParseError, parseExpression, parseLatex, type RelOp, unwrap } from "./latex.ts";
@@ -37,6 +37,13 @@ const feedback = {
     "Write the set with inequalities, such as $-2 < x \\le 5$ or $x < 1 \\text{ or } x \\ge 3$.",
     "请用不等式写出这个集合，例如 $-2 < x \\le 5$ 或 $x < 1 \\text{ or } x \\ge 3$。",
   ),
+  equation: t("Write an equation.", "请写出一个方程。"),
+  slopeIntercept: t("Write the equation in slope-intercept form, $y = mx + b$.", "请把方程写成斜截式 $y = mx + b$。"),
+  standard: t(
+    "Write the equation in standard form, $Ax + By = C$, with integers $A$, $B$ and $C$ that have no common factor and $A > 0$.",
+    "请把方程写成一般式 $Ax + By = C$，其中 $A$、$B$、$C$ 是没有公因数的整数，且 $A > 0$。",
+  ),
+  pointSlope: t("Write the equation in point-slope form, $y - y_1 = m(x - x_1)$.", "请把方程写成点斜式 $y - y_1 = m(x - x_1)$。"),
   point: t("Write the ordered pair, such as $(3, -2)$.", "请写出有序数对，例如 $(3, -2)$。"),
   solutions: t(
     "List the solutions separated by commas, such as $x = 2, x = -5$, or enter $\\varnothing$ if there are none.",
@@ -637,6 +644,94 @@ export const pointChecker: Checker = {
   },
 };
 
+/** proportional tells whether two polynomials are nonzero multiples of each other. */
+function proportional(a: Poly, b: Poly): boolean {
+  if (a.size === 0 || a.size !== b.size) return false;
+  const [k, c] = [...a][0]!;
+  const o = b.get(k);
+  if (!o) return false;
+  const ratio = o.div(c);
+  return [...a].every(([key, v]) => b.get(key)?.eq(v.mul(ratio)) === true);
+}
+
+const isVar = (n: Node, name: string) => {
+  const u = unwrap(n);
+  return u.k === "var" && u.name === name;
+};
+
+/** onlyKeys tells whether a polynomial has terms only in the given monomials. */
+const onlyKeys = (p: Poly, keys: readonly string[]) => [...p.keys()].every((k) => keys.includes(k));
+
+/** isSlopeIntercept recognizes y = mx + b with the right side simplified, or the sides swapped. */
+function isSlopeIntercept(left: Node, right: Node, x: string, y: string): boolean {
+  const side = isVar(left, y) ? right : isVar(right, y) ? left : undefined;
+  const p = side && toPoly(side);
+  return !!side && !!p && onlyKeys(p, [x, ""]) && isSimplifiedPolynomial(side);
+}
+
+/** isStandard recognizes Ax + By = C with integer A, B, C without a common factor, and A > 0 (or A = 0 and B > 0). */
+function isStandard(left: Node, right: Node, x: string, y: string): boolean {
+  const l = toPoly(left);
+  const lit = numberLiteral(right);
+  if (!l || !lit || lit.kind !== "integer" || !onlyKeys(l, [x, y]) || !isSimplifiedPolynomial(left)) return false;
+  const a = l.get(x) ?? Q.zero;
+  const b = l.get(y) ?? Q.zero;
+  if (!a.isInteger() || !b.isInteger() || (a.isZero() && b.isZero())) return false;
+  if (a.sign() < 0 || (a.isZero() && b.sign() < 0)) return false;
+  let g = 0n;
+  for (const v of [a.n, b.n, lit.value.n]) {
+    let [m, n] = [g, v < 0n ? -v : v];
+    while (n !== 0n) [m, n] = [n, m % n];
+    g = m;
+  }
+  return g === 1n;
+}
+
+/** isPointSlope recognizes y − k = m(x − h): the left side y or y ± k, the right side m(x ± h), (x ± h) or −(x ± h). */
+function isPointSlope(left: Node, right: Node, x: string, y: string): boolean {
+  const shifted = (n: Node, v: string) => {
+    const u = unwrap(n);
+    if (isVar(u, v)) return true;
+    return (u.k === "add" || u.k === "sub") && isVar(u.a, v) && numberLiteral(u.b) !== undefined;
+  };
+  if (!shifted(left, y)) return false;
+  const r = right;
+  const group = (n: Node) => n.k === "group" && shifted(n.a, x);
+  if (group(r)) return true;
+  if (r.k === "neg") return group(r.a) || (r.a.k === "mul" && numberLiteral(r.a.a) !== undefined && group(r.a.b));
+  return r.k === "mul" && numberLiteral(r.a) !== undefined && group(r.b);
+}
+
+/**
+ * equationChecker accepts an equation equivalent to expected.eq, a polynomial
+ * equation such as "y = 2x + 3": the difference of the two sides must be a
+ * nonzero multiple of that of expected.eq. expected.form may require the form
+ * of a line in expected.vars (x and y by default): "slope-intercept"
+ * (y = mx + b), "standard" (Ax + By = C, integers without a common factor,
+ * A > 0) or "point-slope" (y − k = m(x − h)).
+ */
+export const equationChecker: Checker = {
+  id: "equation",
+  check(expected, response) {
+    const e = obj(expected);
+    const target = parseLatex(str(e, "eq"));
+    if (!isRelation(target) || target.op !== "=") throw new TypeError("expected.eq must be an equation");
+    const tp = toPoly({ k: "sub", a: target.left, b: target.right });
+    if (!tp) throw new TypeError("expected.eq must be a polynomial equation");
+    const [x, y] = Array.isArray(e.vars) ? (e.vars as string[]) : ["x", "y"];
+    const parsed = parse(() => parseLatex(response));
+    if (isVerdict(parsed)) return parsed;
+    if (!isRelation(parsed) || parsed.op !== "=") return wrong(feedback.equation);
+    const rp = toPoly({ k: "sub", a: parsed.left, b: parsed.right });
+    if (!rp || !proportional(rp, tp)) return wrong();
+    const [l, r] = [parsed.left, parsed.right];
+    if (e.form === "slope-intercept" && !isSlopeIntercept(l, r, x!, y!)) return wrong(feedback.slopeIntercept);
+    if (e.form === "standard" && !isStandard(l, r, x!, y!)) return wrong(feedback.standard);
+    if (e.form === "point-slope" && !isPointSlope(l, r, x!, y!)) return wrong(feedback.pointSlope);
+    return { correct: true };
+  },
+};
+
 /** mathCheckers are the checkers the mathematics subject registers. */
 export const mathCheckers: readonly Checker[] = [
   numberChecker,
@@ -648,4 +743,5 @@ export const mathCheckers: readonly Checker[] = [
   solutionsChecker,
   intervalChecker,
   pointChecker,
+  equationChecker,
 ];
