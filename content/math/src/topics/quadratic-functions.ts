@@ -198,7 +198,10 @@ export const graphingElementaryQuadraticFunctions: TopicDef = {
     "由函数值表画出 $y = ax^{2}$（$a > 0$）的图象，并了解 $a$ 如何改变抛物线的形状。",
   ),
   prerequisites: ["graphs-of-functions"],
-  encompasses: [{ topic: "graphs-of-functions", weight: 0.3 }],
+  encompasses: [
+    { topic: "graphs-of-functions", weight: 0.3 },
+    { topic: "evaluating-expressions", weight: 0.3 },
+  ],
   xp: 10,
   standards: ["CCSS.HSF.IF.C.7.A"],
   knowledgePoints: [
@@ -466,7 +469,10 @@ export const graphsOfGeneralQuadraticFunctions: TopicDef = {
     "读出 $y = ax^{2} + bx + c$ 的图象的开口方向和 $y$ 轴截距，并检验点是否在图象上。",
   ),
   prerequisites: ["vertical-reflections-of-quadratic-functions"],
-  encompasses: [{ topic: "vertical-reflections-of-quadratic-functions", weight: 0.4 }],
+  encompasses: [
+    { topic: "vertical-reflections-of-quadratic-functions", weight: 0.4 },
+    { topic: "evaluating-expressions", weight: 0.3 },
+  ],
   xp: 12,
   standards: ["CCSS.HSF.IF.C.7.A"],
   knowledgePoints: [
@@ -712,9 +718,10 @@ export const theDiscriminantOfAQuadraticFunction: TopicDef = {
     "Use the discriminant $b^{2} - 4ac$ to tell how many times a parabola meets the $x$-axis.",
     "用判别式 $b^{2} - 4ac$ 判断抛物线与 $x$ 轴有几个交点。",
   ),
-  prerequisites: ["roots-of-quadratic-functions", "the-discriminant-of-a-quadratic-equation"],
+  prerequisites: ["roots-of-quadratic-functions", "quadratic-equations-with-one-real-solution"],
   encompasses: [
     { topic: "the-discriminant-of-a-quadratic-equation", weight: 0.5 },
+    { topic: "quadratic-equations-with-one-real-solution", weight: 0.3 },
     { topic: "roots-of-quadratic-functions", weight: 0.2 },
   ],
   xp: 12,
@@ -1322,6 +1329,7 @@ export const domainAndRangeOfQuadraticFunctions: TopicDef = {
   encompasses: [
     { topic: "range-of-a-function", weight: 0.4 },
     { topic: "the-vertex-form-of-a-parabola", weight: 0.3 },
+    { topic: "the-axis-of-symmetry-of-a-parabola", weight: 0.3 },
     { topic: "domain-of-a-function", weight: 0.2 },
   ],
   xp: 12,
@@ -1557,6 +1565,7 @@ export const findingIntersectionsOfLinesAndQuadraticFunctions: TopicDef = {
   encompasses: [
     { topic: "solving-systems-of-nonlinear-equations", weight: 0.5 },
     { topic: "the-discriminant-of-a-quadratic-function", weight: 0.4 },
+    { topic: "quadratic-equations-with-one-real-solution", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.REI.C.7", "CCSS.HSA.REI.D.11"],

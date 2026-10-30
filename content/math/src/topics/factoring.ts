@@ -385,7 +385,10 @@ export const factoringPerfectSquareTrinomialsWithLeadingCoefficients: TopicDef =
     "分解 $9x^{2} - 12x + 4$ 这类完全平方三项式，包括含公因式的情形。",
   ),
   prerequisites: ["factoring-perfect-square-trinomials"],
-  encompasses: [{ topic: "factoring-perfect-square-trinomials", weight: 0.7 }],
+  encompasses: [
+    { topic: "factoring-perfect-square-trinomials", weight: 0.7 },
+    { topic: "factoring-polynomials-using-gcfs", weight: 0.2 },
+  ],
   xp: 12,
   standards: ["CCSS.HSA.SSE.A.2"],
   knowledgePoints: [
@@ -856,7 +859,11 @@ export const factoringTrinomialsWithLeadingCoefficients: TopicDef = {
   title: t("Factoring Trinomials With Leading Coefficients", "首项系数不为 1 的三项式的因式分解"),
   summary: t("Factor $ax^{2} + bx + c$ by grouping and by the $ac$ method.", "用分组分解法和 $ac$ 法分解 $ax^{2} + bx + c$。"),
   prerequisites: ["factoring-trinomials"],
-  encompasses: [{ topic: "factoring-trinomials", weight: 0.5 }],
+  encompasses: [
+    { topic: "factoring-trinomials", weight: 0.5 },
+    { topic: "factoring-polynomials-using-gcfs", weight: 0.3 },
+    { topic: "multiplying-binomials", weight: 0.3 },
+  ],
   xp: 18,
   standards: ["CCSS.HSA.SSE.A.2"],
   knowledgePoints: [

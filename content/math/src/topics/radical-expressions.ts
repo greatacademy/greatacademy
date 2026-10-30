@@ -1520,9 +1520,10 @@ export const solvingRadicalEquations: TopicDef = {
   ),
   prerequisites: ["solving-equations-with-square-roots", "squaring-binomials", "equations-with-variables-on-both-sides"],
   encompasses: [
-    { topic: "solving-equations-with-square-roots", weight: 0.3 },
     { topic: "equations-with-variables-on-both-sides", weight: 0.4 },
+    { topic: "two-step-equations", weight: 0.4 },
     { topic: "squaring-binomials", weight: 0.2 },
+    { topic: "solving-equations-with-square-roots", weight: 0.2 },
   ],
   xp: 20,
   standards: ["CCSS.HSA.REI.A.2"],

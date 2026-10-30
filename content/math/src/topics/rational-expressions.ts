@@ -259,11 +259,12 @@ export const simplifyingRationalExpressions: TopicDef = {
     "Find the values excluded from a rational expression, and simplify rational expressions by cancelling common monomial and binomial factors.",
     "求分式中要排除的值，并通过约去公共的单项式因式和二项式因式化简分式。",
   ),
-  prerequisites: ["equivalent-expressions-with-fractions", "greatest-common-factor-of-monomials"],
+  prerequisites: ["equivalent-expressions-with-fractions", "greatest-common-factor-of-monomials", "zero-product-rule"],
   encompasses: [
     { topic: "greatest-common-factor-of-monomials", weight: 0.4 },
     { topic: "product-and-quotient-rules", weight: 0.4 },
     { topic: "equivalent-fractions", weight: 0.3 },
+    { topic: "zero-product-rule", weight: 0.2 },
   ],
   xp: 16,
   standards: ["CCSS.HSA.APR.D.6"],
@@ -275,6 +276,7 @@ export const simplifyingRationalExpressions: TopicDef = {
         "A **rational expression** is a fraction of polynomials, such as $\\frac{x + 2}{x - 5}$. Division by zero is not defined, so the values of the variable that make the **denominator** zero are excluded: here $x \\neq 5$. The numerator does not matter: at $x = -2$ the expression is just $0$.\n\nTo find the excluded values, set the denominator equal to zero and solve. A product is zero when one of its factors is:\n\n$$\\frac{3}{x(x + 4)}: \\quad x = 0 \\text{ or } x + 4 = 0, \\text{ so } x \\neq 0 \\text{ and } x \\neq -4$$\n\nSince $x^{2} \\ge 0$, a denominator such as $x^{2} + 9$ is never zero, and no value is excluded.",
         "**分式**是两个多项式之比，例如 $\\frac{x + 2}{x - 5}$。除以零没有意义，所以使**分母**为零的变量值要排除：这里 $x \\neq 5$。分子不影响这一点：$x = -2$ 时分式的值就是 $0$。\n\n求要排除的值，就令分母等于零并解方程。积为零当且仅当某个因式为零：\n\n$$\\frac{3}{x(x + 4)}: \\quad x = 0 \\text{ 或 } x + 4 = 0, \\text{ 所以 } x \\neq 0 \\text{ 且 } x \\neq -4$$\n\n因为 $x^{2} \\ge 0$，像 $x^{2} + 9$ 这样的分母永远不为零，没有要排除的值。",
       ),
+      keyPrerequisites: ["zero-product-rule"],
       generate(rng) {
         const kind = rng.pick(["one", "two", "two", "linear", "linear", "monomial", "none"] as const);
         const a = rng.nonZero(-9, 9);
@@ -499,11 +501,12 @@ export const simplifyingRationalExpressionsByFactoring: TopicDef = {
     "Factor numerators and denominators by taking out common factors, the difference of squares, perfect squares and trinomials, then cancel common factors, opposite binomials included.",
     "用提取公因式、平方差、完全平方和三项式分解分子和分母，再约去公因式，包括互为相反数的二项式。",
   ),
-  prerequisites: ["simplifying-rational-expressions", "difference-of-squares-formula", "factoring-trinomials"],
+  prerequisites: ["simplifying-rational-expressions", "factoring-differences-of-squares", "factoring-trinomials"],
   encompasses: [
     { topic: "simplifying-rational-expressions", weight: 0.6 },
-    { topic: "difference-of-squares-formula", weight: 0.3 },
+    { topic: "factoring-differences-of-squares", weight: 0.3 },
     { topic: "factoring-trinomials", weight: 0.3 },
+    { topic: "factoring-polynomials-using-gcfs", weight: 0.3 },
     { topic: "squaring-binomials", weight: 0.2 },
   ],
   xp: 18,
@@ -516,7 +519,7 @@ export const simplifyingRationalExpressionsByFactoring: TopicDef = {
         "When the numerator or the denominator is a sum, factor it first: take out the greatest common factor of its terms, using the distributive law backwards. Then cancel the common factors.\n\n$$\\frac{4x + 12}{6x^{2} + 18x} = \\frac{4(x + 3)}{6x(x + 3)} = \\frac{2}{3x}, \\quad x \\neq -3$$\n\nNever cancel terms of a sum: $\\frac{4x + 12}{6x^{2} + 18x}$ is not $\\frac{4x}{6x^{2}} + \\frac{12}{18x}$.",
         "当分子或分母是和时，先分解因式：用分配律的逆运算提取各项的最大公因式，再约去公因式。\n\n$$\\frac{4x + 12}{6x^{2} + 18x} = \\frac{4(x + 3)}{6x(x + 3)} = \\frac{2}{3x}, \\quad x \\neq -3$$\n\n不能约去和中的某一项：$\\frac{4x + 12}{6x^{2} + 18x}$ 不等于 $\\frac{4x}{6x^{2}} + \\frac{12}{18x}$。",
       ),
-      keyPrerequisites: ["greatest-common-factor-of-monomials", "distributive-law-for-polynomials"],
+      keyPrerequisites: ["factoring-polynomials-using-gcfs"],
       generate(rng) {
         for (;;) {
           const u = rng.pick([1, 1, 1, 2, 3]);
@@ -562,7 +565,7 @@ export const simplifyingRationalExpressionsByFactoring: TopicDef = {
         "Read the difference of squares formula backwards to factor: $a^{2} - b^{2} = (a + b)(a - b)$.\n\n$$\\frac{x^{2} - 25}{3x - 15} = \\frac{(x + 5)(x - 5)}{3(x - 5)} = \\frac{x + 5}{3}, \\quad x \\neq 5$$\n\nDividing term by term, $\\frac{x^{2}}{x}$ and $\\frac{25}{5}$, is not allowed: only whole factors cancel.",
         "把平方差公式反过来用来分解因式：$a^{2} - b^{2} = (a + b)(a - b)$。\n\n$$\\frac{x^{2} - 25}{3x - 15} = \\frac{(x + 5)(x - 5)}{3(x - 5)} = \\frac{x + 5}{3}, \\quad x \\neq 5$$\n\n不能逐项相除（如 $\\frac{x^{2}}{x}$ 和 $\\frac{25}{5}$）：只有完整的因式才能约去。",
       ),
-      keyPrerequisites: ["difference-of-squares-formula"],
+      keyPrerequisites: ["factoring-differences-of-squares"],
       generate(rng) {
         let u = rng.pick([1, 1, 1, 2, 3]);
         let b = rng.int(1, 9);
@@ -601,7 +604,7 @@ export const simplifyingRationalExpressionsByFactoring: TopicDef = {
         "The binomials $b - x$ and $x - b$ are opposites: $b - x = -(x - b)$. So they cancel to $-1$:\n\n$$\\frac{3 - x}{x - 3} = \\frac{-(x - 3)}{x - 3} = -1 \\qquad \\frac{8 - 2x}{x^{2} - 16} = \\frac{-2(x - 4)}{(x + 4)(x - 4)} = -\\frac{2}{x + 4}$$\n\nTake out a negative factor so that the binomials match, and keep track of the sign.",
         "二项式 $b - x$ 和 $x - b$ 互为相反数：$b - x = -(x - b)$。所以它们约分后得 $-1$：\n\n$$\\frac{3 - x}{x - 3} = \\frac{-(x - 3)}{x - 3} = -1 \\qquad \\frac{8 - 2x}{x^{2} - 16} = \\frac{-2(x - 4)}{(x + 4)(x - 4)} = -\\frac{2}{x + 4}$$\n\n提取一个负的公因数，使两个二项式相同，并注意符号。",
       ),
-      keyPrerequisites: ["difference-of-squares-formula"],
+      keyPrerequisites: ["factoring-differences-of-squares"],
       generate(rng) {
         const b = rng.int(1, 9);
         const k = rng.int(1, 6);
@@ -1034,6 +1037,7 @@ export const rationalEquationsContainingBinomials: TopicDef = {
   encompasses: [
     { topic: "rational-equations-using-cross-multiplication", weight: 0.6 },
     { topic: "multiplying-binomials", weight: 0.4 },
+    { topic: "equations-with-variables-on-both-sides", weight: 0.3 },
     { topic: "solving-equations-with-square-roots", weight: 0.3 },
   ],
   xp: 18,
@@ -1189,6 +1193,7 @@ export const rationalEquationsUsingTheFlipMethod: TopicDef = {
   encompasses: [
     { topic: "rational-equations-using-cross-multiplication", weight: 0.5 },
     { topic: "rational-equations-with-one-fractional-term", weight: 0.4 },
+    { topic: "equivalent-expressions-with-fractions", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSA.REI.A.2"],

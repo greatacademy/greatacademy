@@ -746,7 +746,7 @@ export const predictionsWithTrendLines: TopicDef = {
   prerequisites: ["trend-lines", "two-step-equations"],
   encompasses: [
     { topic: "trend-lines", weight: 0.3 },
-    { topic: "evaluating-expressions", weight: 0.2 },
+    { topic: "evaluating-expressions", weight: 0.3 },
     { topic: "two-step-equations", weight: 0.2 },
   ],
   xp: 15,
@@ -1609,11 +1609,12 @@ export const selectingARegressionModel: TopicDef = {
     "Choose a linear, exponential or quadratic model for data from a table, a scatter plot or a description.",
     "根据表格、散点图或文字描述，为数据选择线性、指数或二次模型。",
   ),
-  prerequisites: ["trend-lines", "geometric-sequences"],
+  prerequisites: ["trend-lines", "geometric-sequences", "linear-vs-exponential-growth-and-decay", "graphs-of-general-quadratic-functions"],
   encompasses: [
-    { topic: "trend-lines", weight: 0.1 },
+    { topic: "linear-vs-exponential-growth-and-decay", weight: 0.4 },
     { topic: "geometric-sequences", weight: 0.2 },
     { topic: "arithmetic-sequences", weight: 0.2 },
+    { topic: "trend-lines", weight: 0.1 },
   ],
   xp: 15,
   standards: ["CCSS.HSS.ID.B.6.A", "CCSS.HSF.LE.A.1"],

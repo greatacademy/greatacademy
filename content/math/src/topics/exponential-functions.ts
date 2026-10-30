@@ -155,7 +155,10 @@ export const writingRadicalsUsingFractionalExponents: TopicDef = {
     "把 $a^{\\frac{1}{n}}$ 理解为 $n$ 次方根，把 $a^{\\frac{m}{n}}$ 理解为方根的乘方，并在根式与分数指数之间互相转换。",
   ),
   prerequisites: ["cube-roots-of-algebraic-perfect-cubes"],
-  encompasses: [{ topic: "square-roots-and-cube-roots", weight: 0.4 }],
+  encompasses: [
+    { topic: "square-roots-and-cube-roots", weight: 0.4 },
+    { topic: "power-rules", weight: 0.2 },
+  ],
   xp: 15,
   standards: ["CCSS.HSN.RN.A.1", "CCSS.HSN.RN.A.2"],
   knowledgePoints: [
@@ -307,7 +310,11 @@ export const productRuleWithAlgebraicExpressions: TopicDef = {
     "当指数为负数、分数或代数式时，计算同底数幂的乘法。",
   ),
   prerequisites: ["writing-radicals-using-fractional-exponents", "combining-like-terms"],
-  encompasses: [{ topic: "product-and-quotient-rules", weight: 0.5 }],
+  encompasses: [
+    { topic: "product-and-quotient-rules", weight: 0.5 },
+    { topic: "zero-and-negative-exponents", weight: 0.3 },
+    { topic: "combining-like-terms", weight: 0.2 },
+  ],
   xp: 12,
   standards: ["CCSS.HSN.RN.A.2", "CCSS.8.EE.A.1"],
   knowledgePoints: [
@@ -441,7 +448,11 @@ export const quotientRuleWithAlgebraicExpressions: TopicDef = {
     "计算同底数幂的除法，结果用正指数表示；指数也可以是代数式。",
   ),
   prerequisites: ["product-rule-with-algebraic-expressions"],
-  encompasses: [{ topic: "product-and-quotient-rules", weight: 0.5 }],
+  encompasses: [
+    { topic: "product-and-quotient-rules", weight: 0.5 },
+    { topic: "zero-and-negative-exponents", weight: 0.4 },
+    { topic: "combining-like-terms", weight: 0.2 },
+  ],
   xp: 12,
   standards: ["CCSS.8.EE.A.1"],
   knowledgePoints: [
@@ -586,7 +597,10 @@ export const powerRuleWithAlgebraicExpressions: TopicDef = {
     "当指数为负数、分数或代数式时，计算幂的乘方。",
   ),
   prerequisites: ["product-rule-with-algebraic-expressions"],
-  encompasses: [{ topic: "power-rules", weight: 0.4 }],
+  encompasses: [
+    { topic: "power-rules", weight: 0.4 },
+    { topic: "zero-and-negative-exponents", weight: 0.3 },
+  ],
   xp: 12,
   standards: ["CCSS.HSN.RN.A.2", "CCSS.8.EE.A.1"],
   knowledgePoints: [
@@ -725,6 +739,8 @@ export const powerOfProductRuleWithAlgebraicExpressions: TopicDef = {
   encompasses: [
     { topic: "power-rule-with-algebraic-expressions", weight: 0.5 },
     { topic: "power-rules", weight: 0.3 },
+    { topic: "zero-and-negative-exponents", weight: 0.3 },
+    { topic: "writing-radicals-using-fractional-exponents", weight: 0.2 },
   ],
   xp: 12,
   standards: ["CCSS.HSN.RN.A.2", "CCSS.8.EE.A.1"],
@@ -871,6 +887,7 @@ export const powerOfQuotientRuleWithAlgebraicExpressions: TopicDef = {
   encompasses: [
     { topic: "power-of-product-rule-with-algebraic-expressions", weight: 0.5 },
     { topic: "quotient-rule-with-algebraic-expressions", weight: 0.2 },
+    { topic: "zero-and-negative-exponents", weight: 0.2 },
   ],
   xp: 12,
   standards: ["CCSS.8.EE.A.1"],
@@ -1222,8 +1239,10 @@ export const solvingExponentialEquations: TopicDef = {
   ),
   prerequisites: ["power-rule-with-algebraic-expressions", "equations-with-parentheses"],
   encompasses: [
+    { topic: "equations-with-variables-on-both-sides", weight: 0.4 },
+    { topic: "power-rule-with-algebraic-expressions", weight: 0.3 },
     { topic: "equations-with-parentheses", weight: 0.3 },
-    { topic: "power-rule-with-algebraic-expressions", weight: 0.2 },
+    { topic: "two-step-equations", weight: 0.3 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.HSA.REI.B.3"],
@@ -1647,7 +1666,7 @@ export const creatingExponentialGrowthExpressions: TopicDef = {
     "为每期按固定百分率或倍数增长的量写出 $500(1.04)^{t}$ 这样的表达式。",
   ),
   prerequisites: ["percent-change", "powers-of-rational-numbers"],
-  encompasses: [{ topic: "percent-change", weight: 0.2 }],
+  encompasses: [{ topic: "percent-change", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.LE.A.2", "CCSS.HSA.SSE.A.1"],
   knowledgePoints: [
@@ -1705,7 +1724,10 @@ export const creatingExponentialDecayExpressions: TopicDef = {
     "为每期按固定百分率或比例减少的量写出 $1000(0.85)^{t}$ 这样的表达式。",
   ),
   prerequisites: ["creating-exponential-growth-expressions"],
-  encompasses: [{ topic: "percent-change", weight: 0.2 }],
+  encompasses: [
+    { topic: "creating-exponential-growth-expressions", weight: 0.4 },
+    { topic: "percent-change", weight: 0.3 },
+  ],
   xp: 12,
   standards: ["CCSS.HSF.LE.A.2", "CCSS.HSA.SSE.A.1"],
   knowledgePoints: [
@@ -2112,7 +2134,11 @@ export const exponentialFunctions: TopicDef = {
     "识别并计算指数函数 $f(x) = a \\cdot b^{x}$ 的值，并能根据数值表求出它。",
   ),
   prerequisites: ["representations-of-functions", "zero-and-negative-exponents"],
-  encompasses: [{ topic: "zero-and-negative-exponents", weight: 0.2 }],
+  encompasses: [
+    { topic: "powers-of-rational-numbers", weight: 0.3 },
+    { topic: "zero-and-negative-exponents", weight: 0.2 },
+    { topic: "introduction-to-functions", weight: 0.2 },
+  ],
   xp: 12,
   standards: ["CCSS.HSF.IF.A.2", "CCSS.HSF.LE.A.2"],
   knowledgePoints: [
@@ -2308,7 +2334,10 @@ export const interpretingExponentialGrowth: TopicDef = {
     "从增长模型中读出起始值、增长因子和增长率，并求若干期内的总增长率。",
   ),
   prerequisites: ["modeling-exponential-growth-with-functions"],
-  encompasses: [{ topic: "percent-change", weight: 0.2 }],
+  encompasses: [
+    { topic: "creating-exponential-growth-expressions", weight: 0.4 },
+    { topic: "percent-change", weight: 0.2 },
+  ],
   xp: 12,
   standards: ["CCSS.HSF.LE.B.5", "CCSS.HSF.IF.C.8.B"],
   knowledgePoints: [
@@ -2388,8 +2417,10 @@ export const solvingExponentialGrowthProblems: TopicDef = {
   ),
   prerequisites: ["interpreting-exponential-growth", "solving-exponential-equations"],
   encompasses: [
-    { topic: "solving-exponential-equations", weight: 0.3 },
     { topic: "modeling-exponential-growth-with-functions", weight: 0.4 },
+    { topic: "solving-exponential-equations", weight: 0.3 },
+    { topic: "interpreting-exponential-growth", weight: 0.2 },
+    { topic: "square-roots-and-cube-roots", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.HSF.LE.A.2"],
@@ -2450,9 +2481,10 @@ export const modelingExponentialDecayWithFunctions: TopicDef = {
     "Write and evaluate functions $A(t) = a(1 - r)^{t}$ and half-life models for quantities that decay exponentially.",
     "为指数衰减的量写出并计算函数 $A(t) = a(1 - r)^{t}$ 以及半衰期模型。",
   ),
-  prerequisites: ["exponential-functions", "creating-exponential-decay-expressions"],
+  prerequisites: ["modeling-exponential-growth-with-functions", "creating-exponential-decay-expressions"],
   encompasses: [
     { topic: "creating-exponential-decay-expressions", weight: 0.5 },
+    { topic: "modeling-exponential-growth-with-functions", weight: 0.5 },
     { topic: "exponential-functions", weight: 0.3 },
   ],
   xp: 15,
@@ -2493,7 +2525,10 @@ export const interpretingExponentialDecay: TopicDef = {
     "读出衰减模型的衰减率，区分增长与衰减，并求若干期内的总减少率。",
   ),
   prerequisites: ["modeling-exponential-decay-with-functions", "interpreting-exponential-growth"],
-  encompasses: [{ topic: "interpreting-exponential-growth", weight: 0.3 }],
+  encompasses: [
+    { topic: "interpreting-exponential-growth", weight: 0.5 },
+    { topic: "creating-exponential-decay-expressions", weight: 0.3 },
+  ],
   xp: 12,
   standards: ["CCSS.HSF.LE.B.5", "CCSS.HSF.IF.C.8.B"],
   knowledgePoints: [
@@ -2584,8 +2619,10 @@ export const solvingExponentialDecayProblems: TopicDef = {
   ),
   prerequisites: ["interpreting-exponential-decay", "solving-exponential-growth-problems"],
   encompasses: [
-    { topic: "solving-exponential-equations", weight: 0.3 },
+    { topic: "solving-exponential-growth-problems", weight: 0.5 },
     { topic: "modeling-exponential-decay-with-functions", weight: 0.4 },
+    { topic: "solving-exponential-equations", weight: 0.3 },
+    { topic: "interpreting-exponential-decay", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.HSF.LE.A.2"],
@@ -2687,12 +2724,12 @@ export const linearVsExponentialGrowthAndDecay: TopicDef = {
     "Tell linear from exponential change in tables and descriptions, and see that exponential growth eventually overtakes linear growth.",
     "从数值表和文字描述中区分线性变化与指数变化，并认识到指数增长终将超过线性增长。",
   ),
-  prerequisites: [
-    "modeling-exponential-growth-with-functions",
-    "modeling-exponential-decay-with-functions",
-    "modeling-with-linear-functions",
+  prerequisites: ["modeling-exponential-decay-with-functions", "modeling-with-linear-functions"],
+  encompasses: [
+    { topic: "exponential-functions", weight: 0.3 },
+    { topic: "modeling-exponential-growth-with-functions", weight: 0.2 },
+    { topic: "modeling-with-linear-functions", weight: 0.2 },
   ],
-  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSF.LE.A.1", "CCSS.HSF.LE.A.3"],
   knowledgePoints: [
@@ -2860,6 +2897,7 @@ export const linearVsExponentialModels: TopicDef = {
   encompasses: [
     { topic: "linear-vs-exponential-growth-and-decay", weight: 0.5 },
     { topic: "modeling-exponential-growth-with-functions", weight: 0.3 },
+    { topic: "modeling-exponential-decay-with-functions", weight: 0.2 },
     { topic: "modeling-with-linear-functions", weight: 0.3 },
   ],
   xp: 15,
@@ -3173,7 +3211,10 @@ export const graphingExponentialGrowthFunctions: TopicDef = {
     "根据图象求指数增长函数，并求它们的水平渐近线和值域。",
   ),
   prerequisites: ["exponential-functions", "range-of-a-function"],
-  encompasses: [{ topic: "exponential-functions", weight: 0.3 }],
+  encompasses: [
+    { topic: "exponential-functions", weight: 0.3 },
+    { topic: "range-of-a-function", weight: 0.3 },
+  ],
   xp: 15,
   standards: ["CCSS.HSF.IF.C.7.E", "CCSS.HSF.LE.A.2"],
   knowledgePoints: [
@@ -3216,7 +3257,7 @@ export const graphingExponentialDecayFunctions: TopicDef = {
     "根据图象求指数衰减函数，并求它们的渐近线和值域（包括翻折后的图象）。",
   ),
   prerequisites: ["graphing-exponential-growth-functions"],
-  encompasses: [{ topic: "graphing-exponential-growth-functions", weight: 0.4 }],
+  encompasses: [{ topic: "graphing-exponential-growth-functions", weight: 0.6 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.C.7.E", "CCSS.HSF.LE.A.2"],
   knowledgePoints: [

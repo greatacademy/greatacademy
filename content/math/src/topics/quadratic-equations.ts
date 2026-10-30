@@ -291,11 +291,8 @@ export const solvingPerfectSquareQuadraticEquations: TopicDef = {
     "Solve $x^{2} = k$ and $(x + h)^{2} = k$ by taking square roots, including equations with one or no solutions.",
     "通过开平方解 $x^{2} = k$ 和 $(x + h)^{2} = k$，包括只有一个解或没有解的方程。",
   ),
-  prerequisites: ["introduction-to-quadratic-equations", "simplifying-square-roots"],
-  encompasses: [
-    { topic: "simplifying-square-roots", weight: 0.3 },
-    { topic: "two-step-equations", weight: 0.3 },
-  ],
+  prerequisites: ["introduction-to-quadratic-equations", "solving-equations-with-square-roots"],
+  encompasses: [{ topic: "solving-equations-with-square-roots", weight: 0.8 }],
   xp: 16,
   standards: ["CCSS.HSA.REI.B.4.B"],
   knowledgePoints: [
@@ -693,7 +690,7 @@ export const solvingQuadraticEquationsWithNoConstantTerm: TopicDef = {
   prerequisites: ["zero-product-rule", "factoring-polynomials-using-gcfs"],
   encompasses: [
     { topic: "zero-product-rule", weight: 0.5 },
-    { topic: "factoring-polynomials-using-gcfs", weight: 0.3 },
+    { topic: "factoring-polynomials-using-gcfs", weight: 0.4 },
   ],
   xp: 10,
   standards: ["CCSS.HSA.REI.B.4.B"],
@@ -821,6 +818,8 @@ export const solvingQuadraticEquationsByFactoring: TopicDef = {
   encompasses: [
     { topic: "zero-product-rule", weight: 0.6 },
     { topic: "factoring-trinomials", weight: 0.6 },
+    { topic: "factoring-trinomials-using-common-factors", weight: 0.3 },
+    { topic: "introduction-to-quadratic-equations", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSA.REI.B.4.B", "CCSS.HSA.SSE.B.3.A"],
@@ -928,6 +927,7 @@ export const solvingQuadraticEquationsWithLeadingCoefficientsByFactoring: TopicD
   encompasses: [
     { topic: "solving-quadratic-equations-by-factoring", weight: 0.5 },
     { topic: "factoring-trinomials-with-leading-coefficients", weight: 0.6 },
+    { topic: "further-factoring-trinomials-with-leading-coefficients", weight: 0.3 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.REI.B.4.B"],
@@ -1496,7 +1496,11 @@ export const theQuadraticFormula: TopicDef = {
     "用 $x = \\frac{-b \\pm \\sqrt{b^{2} - 4ac}}{2a}$ 解任意一元二次方程。",
   ),
   prerequisites: ["solving-quadratic-equations-with-leading-coefficients-by-completing-the-square"],
-  encompasses: [{ topic: "simplifying-square-roots", weight: 0.3 }],
+  encompasses: [
+    { topic: "simplifying-square-roots", weight: 0.3 },
+    { topic: "order-of-operations-with-integers", weight: 0.3 },
+    { topic: "introduction-to-quadratic-equations", weight: 0.2 },
+  ],
   xp: 15,
   standards: ["CCSS.HSA.REI.B.4.A", "CCSS.HSA.REI.B.4.B"],
   knowledgePoints: [
@@ -1626,7 +1630,10 @@ export const theDiscriminantOfAQuadraticEquation: TopicDef = {
     "计算 $b^{2} - 4ac$，并根据它的符号判断方程有几个实数解。",
   ),
   prerequisites: ["the-quadratic-formula"],
-  encompasses: [{ topic: "the-quadratic-formula", weight: 0.3 }],
+  encompasses: [
+    { topic: "the-quadratic-formula", weight: 0.3 },
+    { topic: "order-of-operations-with-integers", weight: 0.3 },
+  ],
   xp: 10,
   standards: ["CCSS.HSA.REI.B.4.B"],
   knowledgePoints: [
@@ -1711,7 +1718,10 @@ export const quadraticEquationsWithOneRealSolution: TopicDef = {
     "令 $b^{2} - 4ac = 0$，求使一元二次方程恰有一个实数解的系数。",
   ),
   prerequisites: ["the-discriminant-of-a-quadratic-equation"],
-  encompasses: [{ topic: "the-discriminant-of-a-quadratic-equation", weight: 0.6 }],
+  encompasses: [
+    { topic: "the-discriminant-of-a-quadratic-equation", weight: 0.6 },
+    { topic: "two-step-equations", weight: 0.3 },
+  ],
   xp: 12,
   standards: ["CCSS.HSA.REI.B.4.B"],
   knowledgePoints: [
@@ -2057,7 +2067,10 @@ export const vietasFormulas: TopicDef = {
     "把 $ax^{2} + bx + c = 0$ 的两根之和与两根之积与系数联系起来：$-\\frac{b}{a}$ 与 $\\frac{c}{a}$。",
   ),
   prerequisites: ["equating-polynomial-coefficients", "solving-quadratic-equations-by-factoring"],
-  encompasses: [{ topic: "equating-polynomial-coefficients", weight: 0.4 }],
+  encompasses: [
+    { topic: "equating-polynomial-coefficients", weight: 0.4 },
+    { topic: "multiplying-binomials", weight: 0.2 },
+  ],
   xp: 12,
   standards: ["CCSS.HSA.APR.B.2"],
   knowledgePoints: [

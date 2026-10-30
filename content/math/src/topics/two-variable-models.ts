@@ -492,6 +492,7 @@ export const modelingTotalsWithTwoVariableEquations: TopicDef = {
   encompasses: [
     { topic: "standard-form", weight: 0.3 },
     { topic: "modeling-with-two-variable-linear-equations", weight: 0.3 },
+    { topic: "two-step-equations", weight: 0.3 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.CED.A.2"],
@@ -895,6 +896,7 @@ export const furtherModelingWithTwoVariableEquations: TopicDef = {
     { topic: "analyzing-graphs-of-linear-models", weight: 0.3 },
     { topic: "point-slope-form", weight: 0.3 },
     { topic: "equations-with-variables-on-both-sides", weight: 0.3 },
+    { topic: "slope-of-a-line", weight: 0.2 },
   ],
   xp: 18,
   standards: ["CCSS.HSA.CED.A.2", "CCSS.HSF.LE.A.2"],
