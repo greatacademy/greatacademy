@@ -58,6 +58,7 @@ pnpm format                                # 用 Biome 格式化并修复
 - `libs/content`、`libs/engine`、`libs/subject-math` 是纯的：不做 I/O，不调用 `Date.now()`，不调用 `Math.random()`。时间和种子都作为参数传入。
 - 核心代码从不提及具体学科。学科专属逻辑放在 `libs/subject-<id>` 和 `content/<id>` 中。
 - 用 Biome（`biome.json`）格式化和 lint，不要引入 Prettier 或 ESLint。
+- 不要把函数命名为 `fit`、`fdescribe` 之类：Biome 的 `noFocusedTests` 会把对它的调用当作聚焦测试报错。
 
 ## 内容约定
 

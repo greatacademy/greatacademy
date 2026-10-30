@@ -58,6 +58,7 @@ Every package declares its targets as `package.json` scripts (`typecheck`, `test
 - `libs/content`, `libs/engine` and `libs/subject-math` are pure: no I/O, no `Date.now()`, no `Math.random()`. Time and seeds are parameters.
 - The core never mentions a subject. Subject-specific logic lives in `libs/subject-<id>` and `content/<id>`.
 - Format and lint with Biome (`biome.json`); do not add Prettier or ESLint.
+- Do not name a function `fit`, `fdescribe` or the like: Biome's `noFocusedTests` reports any call to it as a focused test.
 
 ## Content Conventions
 
