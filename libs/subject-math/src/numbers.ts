@@ -39,3 +39,20 @@ export function gcd(a: number, b: number): number {
 export function lcm(a: number, b: number): number {
   return (a / gcd(a, b)) * b;
 }
+
+/** simplifyRadical writes √n, for an integer n ≥ 1, as k√m with m square-free: simplifyRadical(72) is [6, 2]. */
+export function simplifyRadical(n: number): [number, number] {
+  if (!Number.isInteger(n) || n < 1) throw new RangeError(`no square root to simplify: ${n}`);
+  let k = 1;
+  let m = 1;
+  for (const [p, e] of n === 1 ? [] : primeFactors(n)) {
+    k *= p ** Math.floor(e / 2);
+    if (e % 2 === 1) m *= p;
+  }
+  return [k, m];
+}
+
+/** isSquareFree tells whether an integer n ≥ 1 has no square factor other than 1. */
+export function isSquareFree(n: number): boolean {
+  return simplifyRadical(n)[0] === 1;
+}

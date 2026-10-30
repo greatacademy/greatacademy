@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { dec, linear, num, paren, poly } from "./format.ts";
-import { factorizationLatex, gcd, isPrime, lcm, primeFactors } from "./numbers.ts";
+import { dec, linear, num, paren, poly, radical, sci } from "./format.ts";
+import { factorizationLatex, gcd, isPrime, isSquareFree, lcm, primeFactors, simplifyRadical } from "./numbers.ts";
 import { q } from "./rational.ts";
 
 describe("format", () => {
@@ -35,5 +35,23 @@ describe("numbers", () => {
     expect(factorizationLatex(primeFactors(24))).toBe("2^{3} \\cdot 3");
     expect(gcd(-12, 18)).toBe(6);
     expect(lcm(4, 6)).toBe(12);
+  });
+});
+
+describe("radicals and scientific notation", () => {
+  it("simplifies square roots", () => {
+    expect(simplifyRadical(72)).toEqual([6, 2]);
+    expect(simplifyRadical(1)).toEqual([1, 1]);
+    expect(simplifyRadical(49)).toEqual([7, 1]);
+    expect(isSquareFree(30)).toBe(true);
+    expect(isSquareFree(12)).toBe(false);
+  });
+  it("writes radicals and scientific notation", () => {
+    expect(radical(6, 2)).toBe("6\\sqrt{2}");
+    expect(radical(-1, 5)).toBe("-\\sqrt{5}");
+    expect(radical(q(1, 3), 6)).toBe("\\frac{\\sqrt{6}}{3}");
+    expect(radical(q(-2, 3), 3)).toBe("-\\frac{2\\sqrt{3}}{3}");
+    expect(radical(4, 1)).toBe("4");
+    expect(sci(q(9, 2), 4)).toBe("4.5 \\times 10^{4}");
   });
 });

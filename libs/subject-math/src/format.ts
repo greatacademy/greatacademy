@@ -26,6 +26,24 @@ export function dec(c: Coefficient): string {
   return v.n < 0n ? `-${body}` : body;
 }
 
+/**
+ * radical writes c√m in simplest form, with m a square-free integer: "3\sqrt{2}",
+ * "-\sqrt{5}", "\frac{\sqrt{6}}{3}", "\frac{2\sqrt{3}}{3}"; with m = 1 it is just c.
+ */
+export function radical(c: Coefficient, m: number): string {
+  const v = toQ(c);
+  if (m === 1) return v.toLatex();
+  const n = v.n < 0n ? -v.n : v.n;
+  const top = `${n === 1n ? "" : n}\\sqrt{${m}}`;
+  const body = v.d === 1n ? top : `\\frac{${top}}{${v.d}}`;
+  return v.n < 0n ? `-${body}` : body;
+}
+
+/** sci writes a × 10ⁿ in scientific notation: sci(4.5, 3) is "4.5 \times 10^{3}". */
+export function sci(a: Coefficient, n: number): string {
+  return `${dec(a)} \\times 10^{${n}}`;
+}
+
 /** paren writes a number, in parentheses when negative, for use after an operator: "(-5)". */
 export function paren(c: Coefficient): string {
   const s = num(c);

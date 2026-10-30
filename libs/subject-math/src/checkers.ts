@@ -4,7 +4,7 @@ import { t } from "@ga/content";
 import { equivalent, evaluate } from "./algebra.ts";
 import { isSimplifiedPolynomial, type NumberLiteral, numberLiteral } from "./forms.ts";
 import { isRelation, type Node, ParseError, parseExpression, parseLatex, type RelOp, unwrap } from "./latex.ts";
-import { isPrime } from "./numbers.ts";
+import { isPrime, isSquareFree } from "./numbers.ts";
 import { Q } from "./rational.ts";
 
 const feedback = {
@@ -16,6 +16,14 @@ const feedback = {
   decimal: t("Write the answer as a decimal.", "请把答案写成小数。"),
   mixed: t("Write the answer as a mixed number.", "请把答案写成带分数。"),
   primes: t("Write the number as a product of primes, such as $2^{2} \\cdot 3$.", "请把这个数写成质数的乘积，例如 $2^{2} \\cdot 3$。"),
+  scientific: t(
+    "Write the number in scientific notation, $a \\times 10^{n}$ with $1 \\le a < 10$.",
+    "请用科学记数法写出这个数，即 $a \\times 10^{n}$，其中 $1 \\le a < 10$。",
+  ),
+  radical: t(
+    "Simplify the radical: no perfect-square factor under the root, no root in the denominator, and the fraction in lowest terms.",
+    "请化简根式：根号内不含完全平方因数，分母中不含根号，分数化为最简。",
+  ),
   expression: t("Write an expression, not an equation.", "请写出表达式，而不是等式。"),
   simplify: t("Simplify fully: remove parentheses and combine like terms.", "请完全化简：去掉括号并合并同类项。"),
   inequality: t("Write an inequality such as $x < 3$.", "请写出不等式，例如 $x < 3$。"),
@@ -214,5 +222,154 @@ export const factorizationChecker: Checker = {
   },
 };
 
+/** exactValue is the value of an expression, or undefined when it has none (a variable, an irrational root). */
+function exactValue(node: Node): Q | undefined {
+  try {
+    return evaluate(node);
+  } catch {
+    return undefined;
+  }
+}
+
+function integerLiteral(node: Node): bigint | undefined {
+  const n = unwrap(node);
+  if (n.k === "neg") {
+    const v = integerLiteral(n.a);
+    return v === undefined ? undefined : -v;
+  }
+  return n.k === "num" && !n.decimal && n.v.isInteger() ? n.v.n : undefined;
+}
+
+/** scientificParts reads a × 10ⁿ (a signed integer or decimal, n an integer), or 10ⁿ alone. */
+function scientificParts(node: Node): { a: Q; n: bigint } | undefined {
+  const u = unwrap(node);
+  if (u.k === "neg") {
+    const p = scientificParts(u.a);
+    return p && { a: p.a.neg(), n: p.n };
+  }
+  const power = (x: Node) => {
+    const w = unwrap(x);
+    if (w.k !== "pow") return undefined;
+    const base = unwrap(w.a);
+    if (base.k !== "num" || base.decimal || !base.v.eq(Q.of(10))) return undefined;
+    return integerLiteral(w.b);
+  };
+  const alone = power(u);
+  if (alone !== undefined) return { a: Q.one, n: alone };
+  if (u.k !== "mul") return undefined;
+  const lit = numberLiteral(u.a);
+  const n = power(u.b);
+  if (!lit || (lit.kind !== "integer" && lit.kind !== "decimal") || n === undefined) return undefined;
+  return { a: lit.value, n };
+}
+
+/**
+ * scientificChecker accepts expected.value (a rational) written in scientific
+ * notation: a × 10ⁿ with 1 ≤ |a| < 10 written as an integer or decimal, such
+ * as "4.5 \\times 10^{3}", "4.5 \\cdot 10^{-3}" or "10^{6}".
+ */
+export const scientificChecker: Checker = {
+  id: "scientific",
+  check(expected, response) {
+    const value = Q.parse(str(obj(expected), "value"));
+    const parsed = parse(() => parseLatex(response));
+    if (isVerdict(parsed)) return parsed;
+    if (isRelation(parsed)) return wrong(feedback.scientific);
+    const p = scientificParts(parsed);
+    const ten = Q.of(10);
+    if (p && p.a.abs().cmp(Q.one) >= 0 && p.a.abs().cmp(ten) < 0) {
+      const v = p.a.mul(p.n >= 0n ? ten.pow(Number(p.n)) : Q.one.div(ten.pow(Number(-p.n))));
+      return v.eq(value) ? { correct: true } : wrong();
+    }
+    return wrong(exactValue(parsed)?.eq(value) || p ? feedback.scientific : undefined);
+  },
+};
+
+/** RadicalTerm is c√m, read from a response; simplest tells whether it was written in simplest form. */
+interface RadicalTerm {
+  readonly c: Q;
+  readonly m: bigint;
+  readonly simplest: boolean;
+}
+
+/** radicalTerm reads a rational, √m, c√m, c·√m, or (c√m)/d, with an optional sign. */
+function radicalTerm(node: Node): RadicalTerm | undefined {
+  const u = unwrap(node);
+  if (u.k === "neg") {
+    const t = radicalTerm(u.a);
+    return t && { ...t, c: t.c.neg() };
+  }
+  const root = (x: Node): bigint | undefined => {
+    const w = unwrap(x);
+    if (w.k !== "sqrt") return undefined;
+    const m = integerLiteral(w.a);
+    return m !== undefined && m >= 1n ? m : undefined;
+  };
+  const lit = numberLiteral(u);
+  if (lit) return { c: lit.value, m: 1n, simplest: lit.reduced && lit.kind !== "decimal" };
+  const m = root(u);
+  if (m !== undefined) return { c: Q.one, m, simplest: m > 1n && isSquareFree(Number(m)) };
+  if (u.k === "mul") {
+    const c = numberLiteral(u.a);
+    const r = root(u.b);
+    if (!c || r === undefined || c.kind === "decimal") return undefined;
+    return { c: c.value, m: r, simplest: c.reduced && r > 1n && isSquareFree(Number(r)) && !c.value.abs().eq(Q.one) };
+  }
+  if (u.k === "div") {
+    const top = radicalTerm(u.a);
+    const d = integerLiteral(u.b);
+    if (!top || top.m === 1n || d === undefined || d <= 1n) return undefined;
+    const c = top.c.div(Q.of(d));
+    return { c, m: top.m, simplest: top.simplest && top.c.isInteger() && c.d === d };
+  }
+  return undefined;
+}
+
+/**
+ * radicalChecker accepts expected.coef × √expected.radicand (a rational and a
+ * square-free integer ≥ 1) in simplest radical form: "6\\sqrt{2}",
+ * "-\\sqrt{5}", "\\frac{\\sqrt{6}}{3}" or "\\frac{2\\sqrt{3}}{3}"; with radicand 1
+ * the answer is a rational number. An equal value in another form, such as
+ * "\\sqrt{72}" or "\\frac{2}{\\sqrt{3}}", earns the simplification feedback.
+ */
+export const radicalChecker: Checker = {
+  id: "radical",
+  check(expected, response) {
+    const e = obj(expected);
+    const coef = Q.parse(str(e, "coef"));
+    const radicand = BigInt(str(e, "radicand"));
+    const parsed = parse(() => parseLatex(response));
+    if (isVerdict(parsed)) return parsed;
+    if (isRelation(parsed)) return wrong(feedback.radical);
+    const t = radicalTerm(parsed);
+    // c√m and coef√radicand are equal when they have the same sign and c²m = coef²·radicand.
+    const square = (c: Q, m: bigint) => c.mul(c).mul(Q.of(m));
+    const same = (c: Q, m: bigint) => c.sign() === coef.sign() && square(c, m).eq(square(coef, radicand));
+    if (t) {
+      if (!same(t.c, t.m)) return wrong();
+      return t.simplest ? { correct: true } : wrong(feedback.radical);
+    }
+    // Other forms: a root in the denominator, or a product of roots.
+    const u = unwrap(parsed);
+    if (u.k === "div") {
+      const top = radicalTerm(u.a);
+      const bottom = radicalTerm(u.b);
+      if (top && bottom && !bottom.c.isZero()) {
+        // (a√p)/(b√q) = (a/(bq))·√(pq)
+        const c = top.c.div(bottom.c.mul(Q.of(bottom.m)));
+        if (same(c, top.m * bottom.m)) return wrong(feedback.radical);
+      }
+    }
+    return wrong(exactValue(parsed)?.eq(coef) && radicand === 1n ? feedback.singleNumber : undefined);
+  },
+};
+
 /** mathCheckers are the checkers the mathematics subject registers. */
-export const mathCheckers: readonly Checker[] = [numberChecker, expressionChecker, inequalityChecker, factorizationChecker];
+export const mathCheckers: readonly Checker[] = [
+  numberChecker,
+  expressionChecker,
+  inequalityChecker,
+  factorizationChecker,
+  scientificChecker,
+  radicalChecker,
+];

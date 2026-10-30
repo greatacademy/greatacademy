@@ -146,6 +146,64 @@ describe("factorization", () => {
   });
 });
 
+describe("scientific", () => {
+  it.each([
+    ["45000", "4.5\\times 10^{4}"],
+    ["45000", "4.5\\cdot 10^4"],
+    ["45000", "4.5×10^{4}"],
+    ["3/10000", "3\\times 10^{-4}"],
+    ["-120", "-1.2\\times 10^{2}"],
+    ["1000000", "10^{6}"],
+  ])("accepts %s as %s", (value, response) => {
+    expect(accepts("scientific", { value }, response)).toBe(true);
+  });
+  it.each([
+    ["45000", "Write the number in scientific"],
+    ["45\\times 10^{3}", "Write the number in scientific"],
+    ["0.45\\times 10^{5}", "Write the number in scientific"],
+    ["4.5\\times 10^{3}", undefined],
+    ["4.5\\times 10^{-4}", undefined],
+  ])("rejects %s for 45000", (response, message) => {
+    const v = verdict("scientific", { value: "45000" }, response);
+    expect(v.correct).toBe(false);
+    if (message) expect(v.feedback?.en).toContain(message);
+    else expect(v.feedback).toBeUndefined();
+  });
+});
+
+describe("radical", () => {
+  it.each([
+    [{ coef: "6", radicand: "2" }, "6\\sqrt{2}"],
+    [{ coef: "6", radicand: "2" }, "6\\cdot\\sqrt{2}"],
+    [{ coef: "-1", radicand: "5" }, "-\\sqrt{5}"],
+    [{ coef: "1/3", radicand: "6" }, "\\frac{\\sqrt{6}}{3}"],
+    [{ coef: "1/3", radicand: "6" }, "\\frac{1}{3}\\sqrt{6}"],
+    [{ coef: "2/3", radicand: "3" }, "\\frac{2\\sqrt{3}}{3}"],
+    [{ coef: "-2/3", radicand: "3" }, "-\\frac{2\\sqrt{3}}{3}"],
+    [{ coef: "4", radicand: "1" }, "4"],
+  ])("accepts %o as %s", (expected, response) => {
+    expect(accepts("radical", expected, response)).toBe(true);
+  });
+  it.each([
+    ["\\sqrt{72}", "Simplify the radical"],
+    ["3\\sqrt{8}", "Simplify the radical"],
+    ["2\\sqrt{18}", "Simplify the radical"],
+    ["6\\sqrt{3}", undefined],
+    ["-6\\sqrt{2}", undefined],
+    ["8.49", undefined],
+  ])("rejects %s for 6√2", (response, message) => {
+    const v = verdict("radical", { coef: "6", radicand: "2" }, response);
+    expect(v.correct).toBe(false);
+    if (message) expect(v.feedback?.en).toContain(message);
+    else expect(v.feedback).toBeUndefined();
+  });
+  it("asks to rationalize the denominator", () => {
+    const v = verdict("radical", { coef: "2/3", radicand: "3" }, "\\frac{2}{\\sqrt{3}}");
+    expect(v.feedback?.en).toContain("no root in the denominator");
+    expect(verdict("radical", { coef: "2/3", radicand: "3" }, "\\frac{4\\sqrt{3}}{6}").feedback?.en).toContain("lowest terms");
+  });
+});
+
 describe("inequality", () => {
   const lt = { var: "x", op: "<", value: "2" };
   it.each(["x<2", "2>x", "x\\lt 2", "\\left(x\\right)<2"])("accepts %s", (response) => {
