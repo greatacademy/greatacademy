@@ -187,12 +187,14 @@ export interface ExpressionProblem {
   /** answer is the expected expression in LaTeX, in simplest form. */
   readonly answer: string;
   readonly solution: Text;
-  /** simplified requires the response to be a fully simplified polynomial. */
+  /** simplified requires the response to be fully simplified: a sum of monomials, which may have monomial denominators. */
   readonly simplified?: boolean;
   /** radical requires the response to be in simplest radical form. */
   readonly radical?: boolean;
   /** lowest requires the response to be one fraction of polynomials in lowest terms. */
   readonly lowest?: boolean;
+  /** vertex requires the response to be a quadratic in vertex form, a(x - h)^2 + k. */
+  readonly vertex?: boolean;
   /** positive takes the variables to be positive, as the prompt must then say. */
   readonly positive?: boolean;
   /** prefix is shown before the answer field, such as "y =" or "a_n =". */
@@ -208,6 +210,7 @@ export function expressionProblem(p: ExpressionProblem): Problem {
     ...(p.simplified && { form: "simplified" }),
     ...(p.radical && { form: "radical" }),
     ...(p.lowest && { form: "lowest" }),
+    ...(p.vertex && { form: "vertex" }),
     ...(p.positive && { positive: true }),
   };
   const wrong = [...new Set(p.wrong ?? [])].filter((w) => !expressionChecker.check(expected, w).correct);

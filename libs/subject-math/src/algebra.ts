@@ -1,4 +1,4 @@
-import { algebraicEqual, algebraicValue, hasRadical, UndefinedValueError, UnknownValueError } from "./algebraic.ts";
+import { algebraicEqual, algebraicValue, UndefinedValueError, UnknownValueError } from "./algebraic.ts";
 import type { Node } from "./latex.ts";
 import { Q, rationalRoot } from "./rational.ts";
 
@@ -30,9 +30,15 @@ export function evaluate(node: Node, env: ReadonlyMap<string, Q> = new Map()): Q
     }
     case "pow": {
       const e = evaluate(node.b, env);
-      if (!e.isInteger() || e.abs().cmp(Q.of(64)) > 0) throw new UndefinedValueError("unsupported exponent");
-      const b = evaluate(node.a, env);
+      if (e.abs().cmp(Q.of(64)) > 0 || e.d > 64n) throw new UndefinedValueError("unsupported exponent");
+      let b = evaluate(node.a, env);
       if (b.isZero() && e.sign() < 0) throw new UndefinedValueError("division by zero");
+      if (!e.isInteger()) {
+        // A fractional exponent is a root: b^(p/q) is the qth root of b, to the power p.
+        const r = b.sign() < 0 ? undefined : rationalRoot(b, Number(e.d));
+        if (!r) throw new UndefinedValueError("irrational or negative power");
+        b = r;
+      }
       return b.pow(Number(e.n));
     }
     case "sqrt": {
@@ -190,8 +196,10 @@ const samplePoints = ["7/3", "-5/2", "11/7", "3", "-13/5", "17/4", "-2/9", "5/11
  * equivalent tells whether two expressions are equal for all values of their
  * variables. Polynomials are compared exactly; other expressions are compared
  * exactly at several rational points, and must agree at at least three of them
- * where both are defined, with the same definedness at every point. Points
- * where a value is not a sum of square roots of rationals are skipped. With
+ * where both are defined, with the same definedness at every point. Values are
+ * kept exact as sums of roots of rationals (see algebraicValue), so that roots
+ * and fractional exponents compare exactly; points where a value leaves that
+ * form, such as a fractional power of a negative number, are skipped. With
  * positive, only positive values are substituted, for expressions whose
  * variables are known to be positive, such as \sqrt{x^{2}} = x.
  */
@@ -201,27 +209,15 @@ export function equivalent(a: Node, b: Node, positive = false): boolean {
   if (pa && pb) return polyEqual(pa, pb);
   const vars = [...new Set([...variables(a), ...variables(b)])];
   const points = positive ? samplePoints.filter((p) => p.sign() > 0) : samplePoints;
-  const radical = hasRadical(a) || hasRadical(b);
   let agreed = 0;
   for (let i = 0; i < points.length; i++) {
     const env = new Map(vars.map((v, j) => [v, points[(i + j * 3) % points.length]!]));
-    if (radical) {
-      const va = tryValue(() => algebraicValue(a, env));
-      const vb = tryValue(() => algebraicValue(b, env));
-      if (va === unknown || vb === unknown) continue;
-      if ((va === undefined) !== (vb === undefined)) return false;
-      if (va && vb) {
-        if (!algebraicEqual(va, vb)) return false;
-        agreed++;
-      }
-      continue;
-    }
-    const va = tryValue(() => evaluate(a, env));
-    const vb = tryValue(() => evaluate(b, env));
+    const va = tryValue(() => algebraicValue(a, env));
+    const vb = tryValue(() => algebraicValue(b, env));
     if (va === unknown || vb === unknown) continue;
     if ((va === undefined) !== (vb === undefined)) return false;
     if (va && vb) {
-      if (!va.eq(vb)) return false;
+      if (!algebraicEqual(va, vb)) return false;
       agreed++;
     }
   }

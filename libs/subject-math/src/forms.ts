@@ -81,22 +81,27 @@ function factors(node: Node, out: Node[]): Node[] {
 
 /**
  * monomialOf recognizes a term written in simplest form: "7", "-\frac{2}{3}",
- * "x", "3xy^{2}", "\frac{x}{2}", "\frac{3x}{4}". With radicals, a term may
- * also have one root in simplest form and absolute values as factors, and a
- * denominator with variables: "2x\sqrt{3y}", "\frac{\sqrt{x}}{x}", "4|x|".
+ * "x", "3xy^{2}", "\frac{x}{2}", "\frac{3x}{4}". With quotients, a term may
+ * also have a denominator with variables, sharing no variable and no number
+ * factor with the numerator: "\frac{8x^{6}}{27y^{3}}", "\frac{1}{x^{2}}".
+ * With radicals (which implies quotients), a term may also have one root in
+ * simplest form and absolute values as factors: "2x\sqrt{3y}",
+ * "\frac{\sqrt{x}}{x}", "4|x|".
  */
-function monomialOf(node: Node, radicals = false): Monomial | undefined {
-  if (node.k === "div" && node.frac && node.a.k !== "num") {
+function monomialOf(node: Node, radicals = false, quotients = radicals): Monomial | undefined {
+  const d = node.k === "div" && node.frac ? natural(node.b) : undefined;
+  if (node.k === "div" && node.frac && (node.a.k !== "num" || (quotients && d === undefined))) {
     const top = monomialOf(node.a, radicals);
-    if (!top?.coefficient.isInteger() || top.key === "") return undefined;
-    const d = natural(node.b);
+    if (!top?.coefficient.isInteger() || top.coefficient.isZero()) return undefined;
     if (d !== undefined) {
-      if (d < 2n || gcd(top.coefficient.n, d) !== 1n) return undefined;
+      if (top.key === "" || d < 2n || gcd(top.coefficient.n, d) !== 1n) return undefined;
       return { key: top.key, coefficient: top.coefficient.div(Q.of(d)) };
     }
-    const bottom = radicals ? monomialOf(node.b) : undefined;
+    const bottom = quotients ? monomialOf(node.b) : undefined;
     if (!bottom || bottom.key === "" || !bottom.coefficient.isInteger() || bottom.coefficient.sign() < 0) return undefined;
     if (gcd(top.coefficient.n, bottom.coefficient.n) !== 1n) return undefined;
+    const names = (key: string) => key.split("*").map((f) => f.split("^")[0]!);
+    if (names(top.key).some((v) => /^(?:[a-zA-Z]|\\pi)$/.test(v) && names(bottom.key).includes(v))) return undefined;
     return { key: `${top.key}/${bottom.key}`, coefficient: top.coefficient.div(bottom.coefficient) };
   }
   const fs = factors(node, []);
@@ -194,6 +199,16 @@ export function isSimplifiedPolynomial(node: Node): boolean {
 }
 
 /**
+ * isSimplifiedExpression tells whether node is a sum of terms as in
+ * isSimplifiedPolynomial, where a term may also have a denominator that is a
+ * monomial with no variable and no number factor in common with its
+ * numerator, as in \frac{8x^{6}}{27y^{3}} or 3x+\frac{1}{x}.
+ */
+export function isSimplifiedExpression(node: Node): boolean {
+  return sumTerms(node, false, true) !== undefined;
+}
+
+/**
  * isSimplifiedRadical tells whether node is in simplest radical form: a sum
  * of terms as in isSimplifiedPolynomial, where a term may also have one root
  * whose radicand has no perfect nth-power factor, no fraction and no root
@@ -221,8 +236,8 @@ function isSimplifiedSum(node: Node, radicals: boolean): boolean {
 }
 
 /** sumTerms lists the terms of a sum in simplest form, as in isSimplifiedSum, or returns undefined when it is not one. */
-function sumTerms(node: Node, radicals: boolean): Monomial[] | undefined {
-  const termOf = (n: Node) => monomialOf(n, radicals);
+function sumTerms(node: Node, radicals: boolean, quotients = radicals): Monomial[] | undefined {
+  const termOf = (n: Node) => monomialOf(n, radicals, quotients);
   const terms: Monomial[] = [];
   const collect = (n: Node, first: boolean): boolean => {
     if (n.k === "add" || n.k === "sub") {
@@ -311,11 +326,32 @@ function hasPowerFactor(p: Poly, n: number): boolean {
   return g.length > 1;
 }
 
-/** isSimplifiedProduct tells whether node is a product of simplified polynomials and their powers, such as 3(x-1)^{2}(x+2) or x^{2}-1. */
+/**
+ * isSimplifiedProduct tells whether node is a simplified polynomial, such as
+ * x^{2}-1, or a product of at most one number (first), powers of distinct
+ * variables, and simplified sums in parentheses and their powers, such as
+ * 3x(x-1)^{2}(x+2). A product of numbers (2 \cdot 3x) or a power of a
+ * product ((2x^{2})^{3}) is not simplified.
+ */
 function isSimplifiedProduct(node: Node): boolean {
-  return factors(unwrapGroup(node), []).every((f) => {
-    const base = f.k === "pow" && natural(f.b) !== undefined ? f.a : f;
-    return isSimplifiedPolynomial(unwrapGroup(base));
+  const u = unwrapGroup(node);
+  const fs = factors(u, []);
+  if (fs.length === 1 && isSimplifiedPolynomial(u)) return true;
+  const seen = new Set<string>();
+  return fs.every((factor, i) => {
+    let f = factor;
+    if (i === 0 && f.k === "neg" && f.a.k !== "num") f = f.a;
+    if (f.k === "num" || f.k === "div" || f.k === "neg") {
+      const lit = numberLiteral(f);
+      return i === 0 && lit !== undefined && lit.reduced && lit.kind !== "mixed";
+    }
+    const base = f.k === "pow" && (natural(f.b) ?? 0n) >= 2n ? f.a : f;
+    if (base.k === "var") {
+      if (seen.has(base.name)) return false;
+      seen.add(base.name);
+      return true;
+    }
+    return base.k === "group" && (base.a.k === "add" || base.a.k === "sub") && isSimplifiedPolynomial(base.a);
   });
 }
 
@@ -365,4 +401,40 @@ export function isLowestTerms(node: Node): boolean {
     if (a && b && polyGcd(a, b).length > 1) return false;
   }
   return true;
+}
+
+/**
+ * isVertexForm tells whether node is a quadratic in vertex form,
+ * a(x-h)^{2}+k, with a single squared binomial: a, h and k are numbers in
+ * simplest form, a is omitted when it is 1 (and written - when it is -1), the
+ * binomial is x-h or x+h with h ≠ 0, or x alone when h is 0, and k is omitted
+ * when it is 0: 2(x-3)^{2}+1, -(x+1)^{2}-4, (x-5)^{2}, \frac{1}{2}x^{2}-3.
+ */
+export function isVertexForm(node: Node): boolean {
+  const positiveLiteral = (n: Node) => {
+    if (n.k !== "num" && n.k !== "div") return false;
+    const lit = numberLiteral(n);
+    return !!lit?.reduced && lit.kind !== "mixed" && lit.value.sign() > 0;
+  };
+  let square = node;
+  if (node.k === "add" || node.k === "sub") {
+    if (!positiveLiteral(node.b)) return false;
+    square = node.a;
+  }
+  let negated = false;
+  if (square.k === "neg") {
+    negated = true;
+    square = square.a;
+  }
+  if (square.k === "mul") {
+    let a = square.a;
+    if (a.k === "neg" && !negated) a = a.a;
+    if (!positiveLiteral(a) || numberLiteral(a)!.value.eq(Q.one)) return false;
+    square = square.b;
+  }
+  if (square.k !== "pow" || natural(square.b) !== 2n) return false;
+  const base = square.a;
+  if (base.k === "var") return true;
+  if (base.k !== "group" || (base.a.k !== "add" && base.a.k !== "sub")) return false;
+  return base.a.a.k === "var" && positiveLiteral(base.a.b);
 }

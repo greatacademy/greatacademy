@@ -2,7 +2,15 @@ import type { Checker, Json, Text, Verdict } from "@ga/content";
 import { t } from "@ga/content";
 
 import { equivalent, evaluate, type Poly, toPoly } from "./algebra.ts";
-import { isLowestTerms, isSimplifiedPolynomial, isSimplifiedRadical, type NumberLiteral, numberLiteral } from "./forms.ts";
+import {
+  isLowestTerms,
+  isSimplifiedExpression,
+  isSimplifiedPolynomial,
+  isSimplifiedRadical,
+  isVertexForm,
+  type NumberLiteral,
+  numberLiteral,
+} from "./forms.ts";
 import { type ParsedSet, parseInequalities, parseIntervals, setEqual } from "./intervals.ts";
 import { isRelation, type Node, normalizeLatex, ParseError, parseExpression, parseLatex, type RelOp, unwrap } from "./latex.ts";
 import { isPrime, isSquareFree } from "./numbers.ts";
@@ -36,6 +44,10 @@ const feedback = {
     "请写成最简根式：平方根内不含完全平方因数或变量的平方，根号内不含分数，分母中不含根号，并合并同类项。",
   ),
   simplify: t("Simplify fully: remove parentheses and combine like terms.", "请完全化简：去掉括号并合并同类项。"),
+  vertexForm: t(
+    "Write the answer in vertex form, $a(x - h)^{2} + k$, with a single squared binomial.",
+    "请写成顶点式 $a(x - h)^{2} + k$，只含一个完全平方的二项式。",
+  ),
   inequality: t("Write an inequality such as $x < 3$.", "请写出不等式，例如 $x < 3$。"),
   interval: t(
     "Write the set in interval notation, such as $(-2, 5]$ or $(-\\infty, 1) \\cup [3, \\infty)$.",
@@ -160,10 +172,12 @@ export const numberChecker: Checker = {
 
 /**
  * expressionChecker accepts an expression equivalent to expected.expr (LaTeX).
- * With expected.form "simplified", the response must also be a polynomial in
- * simplest form (see isSimplifiedPolynomial); with "radical", an expression in
- * simplest radical form (see isSimplifiedRadical); with "lowest", one fraction
- * of polynomials in lowest terms (see isLowestTerms). With expected.positive,
+ * With expected.form "simplified", the response must also be a sum of terms in
+ * simplest form, which may have monomial denominators (see
+ * isSimplifiedExpression); with "radical", an expression in simplest radical
+ * form (see isSimplifiedRadical); with "lowest", one fraction of polynomials
+ * in lowest terms (see isLowestTerms); with "vertex", a quadratic in vertex
+ * form a(x-h)^{2}+k (see isVertexForm). With expected.positive,
  * the variables are taken to be positive, so that \sqrt{x^{2}} equals x.
  */
 export const expressionChecker: Checker = {
@@ -175,9 +189,10 @@ export const expressionChecker: Checker = {
     if (isVerdict(parsed)) return parsed;
     if (isRelation(parsed)) return wrong(feedback.expression);
     if (!equivalent(parsed, target, e.positive === true)) return wrong();
-    if (e.form === "simplified" && !isSimplifiedPolynomial(parsed)) return wrong(feedback.simplify);
+    if (e.form === "simplified" && !isSimplifiedExpression(parsed)) return wrong(feedback.simplify);
     if (e.form === "radical" && !isSimplifiedRadical(parsed)) return wrong(feedback.radicalForm);
     if (e.form === "lowest" && !isLowestTerms(parsed)) return wrong(feedback.lowestTermsExpression);
+    if (e.form === "vertex" && !isVertexForm(parsed)) return wrong(feedback.vertexForm);
     return { correct: true };
   },
 };

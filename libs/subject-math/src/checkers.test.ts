@@ -595,3 +595,124 @@ describe("rational expressions in lowest terms", () => {
     expect(accepts("expression", { expr, form: "lowest" }, response)).toBe(lowest);
   });
 });
+
+describe("fractional exponents", () => {
+  it.each([
+    ["x^{\\frac{1}{2}}", "x^{\\frac{1}{2}}", false, true],
+    ["x^{\\frac{1}{2}}", "\\sqrt{x}", true, true],
+    ["\\sqrt{x}", "x^{\\frac{1}{2}}", true, true],
+    ["x^{\\frac{1}{2}}", "x^{\\frac{1}{3}}", true, false],
+    ["x^{\\frac{3}{4}}", "\\sqrt[4]{x^{3}}", true, true],
+    ["x^{\\frac{3}{4}}", "\\sqrt[3]{x^{4}}", true, false],
+    ["x^{\\frac{1}{3}}", "\\sqrt[3]{x}", false, true],
+    ["x^{-\\frac{1}{2}}", "\\frac{1}{\\sqrt{x}}", true, true],
+    ["x^{\\frac{5}{6}}", "x^{\\frac{1}{2}}x^{\\frac{1}{3}}", true, true],
+    ["4", "8^{\\frac{2}{3}}", false, true],
+    ["2", "8^{\\frac{2}{3}}", false, false],
+    ["\\frac{1}{4}", "16^{-\\frac{1}{2}}", false, true],
+    ["200(0.5)^{\\frac{t}{3}}", "200(0.5)^{\\frac{t}{3}}", false, true],
+    ["200(0.5)^{\\frac{t}{3}}", "200 \\cdot 0.5^{t/3}", false, true],
+    ["200(0.5)^{\\frac{t}{3}}", "200(0.5)^{\\frac{1}{3}t}", false, true],
+    ["200(0.5)^{\\frac{t}{3}}", "200(0.5)^{3t}", false, false],
+    ["200(0.5)^{\\frac{t}{3}}", "100(0.5)^{\\frac{t}{3}}", false, false],
+    ["200(0.5)^{\\frac{t}{3}}", "200 \\cdot 2^{-\\frac{t}{3}}", false, true],
+  ])("compares %s with %s (positive: %s)", (expr, response, positive, same) => {
+    expect(accepts("expression", { expr, positive }, response)).toBe(same);
+  });
+});
+
+describe("roots of higher index", () => {
+  it.each([
+    ["\\sqrt[4]{x^{3}}", "\\sqrt[4]{x^{3}}", false, true],
+    ["3\\sqrt[3]{2x^{2}}", "\\sqrt[3]{54x^{2}}", false, true],
+    ["3\\sqrt[3]{2x^{2}}", "\\sqrt[3]{18x^{2}}", false, false],
+    ["2\\sqrt[3]{2}", "\\sqrt[3]{16}", false, true],
+    ["\\sqrt[3]{2}+\\sqrt{2}", "\\sqrt{2}+\\sqrt[3]{2}", false, true],
+    ["\\sqrt[3]{2}", "\\sqrt{2}", false, false],
+    ["\\frac{\\sqrt[3]{4}}{2}", "\\frac{1}{\\sqrt[3]{2}}", false, true],
+    ["\\sqrt[4]{x}", "\\sqrt{\\sqrt{x}}", true, true],
+    ["x\\sqrt[5]{x^{2}}", "\\sqrt[5]{x^{7}}", false, true],
+  ])("compares %s with %s (positive: %s)", (expr, response, positive, same) => {
+    expect(accepts("expression", { expr, positive }, response)).toBe(same);
+  });
+});
+
+describe("variable exponents on variable bases", () => {
+  it.each([
+    ["x^{a+b}", "x^{a}x^{b}", true],
+    ["x^{a+b}", "x^{a}+x^{b}", false],
+    ["x^{ab}", "(x^{a})^{b}", true],
+    ["x^{a-b}", "\\frac{x^{a}}{x^{b}}", true],
+    ["x^{a-b}", "\\frac{x^{b}}{x^{a}}", false],
+  ])("compares %s with %s", (expr, response, same) => {
+    expect(accepts("expression", { expr, positive: true }, response)).toBe(same);
+  });
+});
+
+describe("vertex form", () => {
+  it.each([
+    ["2(x-3)^{2}+1", "2(x-3)^{2}+1"],
+    ["-(x+1)^{2}-4", "-(x+1)^{2}-4"],
+    ["(x-5)^{2}", "(x-5)^{2}"],
+    ["2x^{2}+3", "2x^{2}+3"],
+    ["x^{2}", "x^{2}"],
+    ["-2(x+1)^{2}+5", "-2(x+1)^{2}+5"],
+    ["\\frac{1}{2}(x-4)^{2}-3", "\\frac{1}{2}(x-4)^{2}-3"],
+    ["-\\frac{1}{2}(x+\\frac{3}{2})^{2}+\\frac{1}{4}", "-\\frac{1}{2}(x+\\frac{3}{2})^{2}+\\frac{1}{4}"],
+  ])("accepts %s as %s", (expr, response) => {
+    expect(verdict("expression", { expr, form: "vertex" }, response)).toEqual({ correct: true });
+  });
+
+  it.each([
+    ["2(x-3)^{2}+1", "2x^{2}-12x+19"],
+    ["(x-5)^{2}", "(5-x)^{2}"],
+    ["(x-5)^{2}", "1(x-5)^{2}"],
+    ["(x-5)^{2}", "(x-5)^{2}+0"],
+    ["(x-5)^{2}", "(x-5)(x-5)"],
+    ["2(x-3)^{2}+1", "(x-3)^{2}+(x-3)^{2}+1"],
+    ["2(x-3)^{2}+1", "2(x-3)^{2}+\\frac{2}{2}"],
+    ["2(x-3)^{2}+1", "1+2(x-3)^{2}"],
+    ["(x-5)^{2}-1", "(x-5)^{2}+-1"],
+    ["x^{2}", "(x-0)^{2}"],
+  ])("rejects %s written as %s", (expr, response) => {
+    const v = verdict("expression", { expr, form: "vertex" }, response);
+    expect(v.correct).toBe(false);
+    expect(v.feedback?.en).toContain("vertex form");
+  });
+
+  it("rejects a wrong vertex without form feedback", () => {
+    expect(verdict("expression", { expr: "2(x-3)^{2}+1", form: "vertex" }, "2(x+3)^{2}+1")).toEqual({ correct: false });
+  });
+});
+
+describe("simplified monomial quotients", () => {
+  it.each(["\\frac{8x^{6}}{27y^{3}}", "-\\frac{8x^{6}}{27y^{3}}", "\\frac{1}{x^{2}}", "\\frac{3}{xy}", "3x+\\frac{1}{x}", "\\frac{x}{2y}"])(
+    "accepts the simplified form %s",
+    (response) => {
+      expect(verdict("expression", { expr: response, form: "simplified" }, response)).toEqual({ correct: true });
+    },
+  );
+
+  it.each([
+    ["\\frac{8x^{6}}{27y^{3}}", "\\frac{(2x^{2})^{3}}{27y^{3}}"],
+    ["\\frac{8x^{6}}{27y^{3}}", "\\frac{16x^{6}}{54y^{3}}"],
+    ["\\frac{1}{x}", "\\frac{x}{x^{2}}"],
+    ["\\frac{1}{x^{2}}", "x^{-2}"],
+    ["6x^{5}", "2\\cdot 3x^{5}"],
+  ])("rejects %s written as %s", (expr, response) => {
+    expect(accepts("expression", { expr, form: "simplified" }, response)).toBe(false);
+  });
+
+  it.each([
+    ["\\frac{8x^{6}}{27y^{3}}", "\\frac{8x^{6}}{27y^{3}}", true],
+    ["\\frac{8x^{6}}{27y^{3}}", "\\frac{(2x^{2})^{3}}{27y^{3}}", false],
+    ["\\frac{8x^{6}}{27y^{3}}", "\\frac{(2x^{2})^{3}}{(3y)^{3}}", false],
+    ["6x^{5}", "6x^{5}", true],
+    ["6x^{5}", "2\\cdot 3x^{5}", false],
+    ["x^{2}", "x\\cdot x", false],
+    ["-x(x+1)", "-x(x+1)", true],
+    ["2x(x+1)^{2}", "2x(x+1)^{2}", true],
+  ])("judges %s as %s in lowest terms", (expr, response, lowest) => {
+    expect(accepts("expression", { expr, form: "lowest" }, response)).toBe(lowest);
+  });
+});
