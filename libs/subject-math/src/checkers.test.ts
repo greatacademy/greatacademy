@@ -67,6 +67,16 @@ describe("number", () => {
     expect(accepts("number", { value: "25" }, "25\\%")).toBe(false);
   });
 
+  it("ignores a typed unit when the field has one", () => {
+    for (const r of ["40", "40°", "40^\\circ", "40^{\\circ}", "40\\degree"])
+      expect(accepts("number", { value: "40", unit: "°" }, r)).toBe(true);
+    for (const r of ["12", "12cm^2", "12\\,\\text{cm}^{2}", "12\\mathrm{cm}^2", "12 cm^2"])
+      expect(accepts("number", { value: "12", unit: "cm^2" }, r)).toBe(true);
+    expect(accepts("number", { value: "12", unit: "cm" }, "12\\text{cm}")).toBe(true);
+    expect(accepts("number", { value: "40" }, "40^\\circ")).toBe(false);
+    expect(accepts("number", { value: "12", unit: "cm^2" }, "12m^2")).toBe(false);
+  });
+
   it("accepts the variable when asked to solve", () => {
     expect(accepts("number", { value: "3", var: "x" }, "x=3")).toBe(true);
     expect(accepts("number", { value: "3", var: "x" }, "3=x")).toBe(true);

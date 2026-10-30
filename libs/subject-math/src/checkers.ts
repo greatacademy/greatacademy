@@ -77,6 +77,19 @@ function judgeLiteral(lit: NumberLiteral | undefined, node: Node, value: Q, form
 }
 
 /**
+ * stripUnit removes a unit the learner typed after a number: "°" as °,
+ * ^\circ or \degree; a unit such as "cm^2" as cm, \text{cm} or
+ * \mathrm{cm}, with its exponent, after optional spacing.
+ */
+export function stripUnit(response: string, unit: string): string {
+  if (unit === "°") return response.replace(/\s*(?:°|\^\{?\\circ\}?|\\degree)\s*$/, "");
+  const [name = "", power] = unit.split("^");
+  const exponent = power ? `\\^\\{?${power}\\}?` : "";
+  const pattern = new RegExp(`(?:\\s|\\\\[,;:! ]|~)*(?:\\\\(?:text|mathrm)\\{\\s*${name}\\s*\\}|${name})${exponent}\\s*$`);
+  return response.replace(pattern, "");
+}
+
+/**
  * numberChecker accepts a single number equal to expected.value (a rational
  * such as "-3", "3/4" or "2.5"), written in expected.form:
  * - "number" (default): an integer, decimal, fraction in lowest terms or mixed number;
@@ -86,7 +99,8 @@ function judgeLiteral(lit: NumberLiteral | undefined, node: Node, value: Q, form
  * - "mixed": an integer, mixed number, or fraction less than 1 in absolute value.
  * With expected.var, "x = 3" and "3 = x" are accepted as well as "3". With
  * expected.percent, the field is followed by a percent sign and one typed by
- * the learner as well is ignored.
+ * the learner as well is ignored; likewise with expected.unit, "°" or a unit
+ * such as "cm" or "cm^2" (see stripUnit).
  */
 export const numberChecker: Checker = {
   id: "number",
@@ -95,7 +109,8 @@ export const numberChecker: Checker = {
     const value = Q.parse(str(e, "value"));
     const form = (e.form ?? "number") as NumberForm;
     const variable = typeof e.var === "string" ? e.var : undefined;
-    const text = e.percent === true ? response.replace(/\\?%\s*$/, "") : response;
+    const unit = typeof e.unit === "string" ? e.unit : undefined;
+    const text = e.percent === true ? response.replace(/\\?%\s*$/, "") : unit ? stripUnit(response, unit) : response;
     const parsed = parse(() => parseLatex(text));
     if (isVerdict(parsed)) return parsed;
     let node: Node;
