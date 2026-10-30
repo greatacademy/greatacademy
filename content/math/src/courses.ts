@@ -178,10 +178,37 @@ export const algebraI: CourseDef = {
   id: "algebra-i",
   title: t("Algebra I", "代数一"),
   description: t(
-    "Units and variation, polynomials and their products, and arithmetic and geometric sequences.",
-    "单位与比例关系，多项式及其乘法，等差数列与等比数列。",
+    "Linear equations with parameters, formulas and word problems; units and variation; polynomials and their products; and arithmetic and geometric sequences.",
+    "含参数的一次方程、公式变形与应用题；单位与比例关系；多项式及其乘法；等差数列与等比数列。",
   ),
   units: [
+    {
+      title: t("Linear Equations", "一次方程"),
+      modules: [
+        {
+          title: t("Linear Equations", "一次方程"),
+          topics: [
+            "linear-equations-with-unknown-coefficients",
+            "unknown-coefficients-by-factoring",
+            "linear-inequalities-with-parameters",
+            "many-variable-equations",
+            "rearranging-formulas",
+          ],
+        },
+        {
+          title: t("Modeling With Linear Equations", "用一次方程建模"),
+          topics: [
+            "interpreting-linear-expressions",
+            "modeling-with-linear-equations",
+            "consecutive-integer-problems",
+            "speed-distance-time",
+            "further-speed-distance-time",
+            "work-problems",
+            "mixture-problems",
+          ],
+        },
+      ],
+    },
     {
       title: t("Units", "单位"),
       modules: [
