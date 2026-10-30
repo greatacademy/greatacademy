@@ -149,7 +149,7 @@ Typical learners need fewer than one explicit review per topic, because lessons 
 
 On Prealgebra (72 topics) the same students need more explicit reviews: typical 32.6 days and 2.06 reviews per topic, strong 1.31, struggling 4.12 over 54 days, since a slower learner also has more time for reviews to come due. Many of the units it adds (number theory, decimals and percents, radicals, ratios, statistics, geometry) are broad rather than deep: few later topics in the course practice them, so less of their review comes implicitly. Their encompassing topics come with Algebra I and Geometry. The weights record what each topic actually practices and are not raised to improve these numbers.
 
-On the first four units of Algebra I (53 topics, plus the Prealgebra topics they build on, since the simulated students start from nothing) a typical student needs 53.5 days and 2.67 reviews per topic, a strong one 1.67, and a struggling one 5.18 over 88 days. The units are again largely independent of each other (linear equations, units, polynomials, sequences), so these numbers should fall as the units that tie them together are added.
+On the first four units of Algebra I (67 topics, plus the Prealgebra topics they build on, since the simulated students start from nothing) a typical student needs 63.5 days and 2.74 reviews per topic, a strong one 1.74, and a struggling one 5.33 over 106 days. The units are again largely independent of each other (equations and inequalities, units, polynomials, sequences), so these numbers should fall as the units that tie them together are added.
 
 ```bash
 pnpm nx run simulate:simulate                  # Foundations of Algebra
