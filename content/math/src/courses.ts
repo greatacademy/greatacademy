@@ -178,8 +178,8 @@ export const algebraI: CourseDef = {
   id: "algebra-i",
   title: t("Algebra I", "代数一"),
   description: t(
-    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines and systems of linear equations; units and variation; polynomials and their products; functions, their features and their composition; and arithmetic and geometric sequences.",
-    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程与二元一次方程组；单位与比例关系；多项式及其乘法；函数及其性质、运算与复合；等差数列与等比数列。",
+    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines and systems of linear equations; units and variation; polynomials, their products and factoring; quadratic equations; functions, their features and their composition; and arithmetic and geometric sequences.",
+    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程与二元一次方程组；单位与比例关系；多项式的乘法与因式分解；一元二次方程；函数及其性质、运算与复合；等差数列与等比数列。",
   ),
   units: [
     {
@@ -317,7 +317,53 @@ export const algebraI: CourseDef = {
             "difference-of-squares-formula",
           ],
         },
-        { title: t("Factoring Polynomials", "因式分解"), topics: ["greatest-common-factor-of-monomials"] },
+        {
+          title: t("Factoring Polynomials", "因式分解"),
+          topics: [
+            "greatest-common-factor-of-monomials",
+            "factoring-polynomials-using-gcfs",
+            "factoring-perfect-square-trinomials",
+            "factoring-perfect-square-trinomials-with-leading-coefficients",
+            "factoring-differences-of-squares",
+            "factoring-trinomials",
+            "factoring-trinomials-using-common-factors",
+            "factoring-trinomials-with-leading-coefficients",
+            "further-factoring-trinomials-with-leading-coefficients",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Quadratic Equations", "一元二次方程"),
+      modules: [
+        {
+          title: t("Solving Quadratic Equations by Factoring", "因式分解法解一元二次方程"),
+          topics: [
+            "introduction-to-quadratic-equations",
+            "solving-perfect-square-quadratic-equations",
+            "zero-product-rule",
+            "solving-quadratic-equations-using-a-difference-of-squares",
+            "solving-quadratic-equations-with-no-constant-term",
+            "solving-quadratic-equations-by-factoring",
+            "solving-quadratic-equations-with-leading-coefficients-by-factoring",
+          ],
+        },
+        {
+          title: t("Completing the Square and the Quadratic Formula", "配方法与求根公式"),
+          topics: [
+            "completing-the-square",
+            "completing-the-square-with-leading-coefficients",
+            "solving-quadratic-equations-by-completing-the-square",
+            "solving-quadratic-equations-with-leading-coefficients-by-completing-the-square",
+            "the-quadratic-formula",
+            "the-discriminant-of-a-quadratic-equation",
+            "quadratic-equations-with-one-real-solution",
+          ],
+        },
+        {
+          title: t("Applications of Quadratic Equations", "一元二次方程的应用"),
+          topics: ["modeling-with-quadratic-equations", "equating-polynomial-coefficients", "vietas-formulas"],
+        },
       ],
     },
     {
