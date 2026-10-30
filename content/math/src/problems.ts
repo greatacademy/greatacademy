@@ -189,17 +189,28 @@ export interface ExpressionProblem {
   readonly solution: Text;
   /** simplified requires the response to be a fully simplified polynomial. */
   readonly simplified?: boolean;
-  /** wrong are responses typical mistakes produce; those the checker accepts (equivalent ones, and with simplification required, equivalent simplified ones) are dropped. */
+  /** radical requires the response to be in simplest radical form. */
+  readonly radical?: boolean;
+  /** positive takes the variables to be positive, as the prompt must then say. */
+  readonly positive?: boolean;
+  /** prefix is shown before the answer field, such as "y =" or "a_n =". */
+  readonly prefix?: string;
+  /** wrong are responses typical mistakes produce; those the checker accepts (equivalent ones, and with a form required, equivalent ones in that form) are dropped. */
   readonly wrong?: readonly string[];
 }
 
 /** expressionProblem builds a problem checked by the "expression" checker. */
 export function expressionProblem(p: ExpressionProblem): Problem {
-  const expected = { expr: p.answer, ...(p.simplified && { form: "simplified" }) };
+  const expected = {
+    expr: p.answer,
+    ...(p.simplified && { form: "simplified" }),
+    ...(p.radical && { form: "radical" }),
+    ...(p.positive && { positive: true }),
+  };
   const wrong = [...new Set(p.wrong ?? [])].filter((w) => !expressionChecker.check(expected, w).correct);
   return {
     prompt: p.prompt,
-    answer: { checker: "expression", expected, input: { kind: "math" } },
+    answer: { checker: "expression", expected, input: { kind: "math", ...(p.prefix && { prefix: p.prefix }) } },
     solution: p.solution,
     canonical: p.answer,
     wrong,
