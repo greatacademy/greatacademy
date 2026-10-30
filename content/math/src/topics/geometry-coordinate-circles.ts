@@ -1573,8 +1573,8 @@ export const thalesTheoremInTheCoordinatePlane: TopicDef = {
       id: "circumcircle-of-a-right-triangle",
       title: t("The circle through a right triangle", "直角三角形的外接圆"),
       explanation: t(
-        "By the converse of Thales' theorem, the circle through the three vertices of a right triangle has the **hypotenuse as a diameter**. Its center is the midpoint of the hypotenuse, and $r^{2}$ is the squared distance from the center to any vertex.\n\nTo find the hypotenuse, compare the squared side lengths: the longest side is the hypotenuse, and its square equals the sum of the other two. For $P(1, 7)$, $Q(-3, -1)$ and $R(5, 3)$: $PQ^{2} = 80$, $QR^{2} = 80$, $PR^{2} = 32$... so the right angle is where the two equal... always check which square equals the sum of the other two: here $80 \\ne 80 + 32$, so recompute carefully before deciding.",
-        "由泰勒斯定理的逆定理，过直角三角形三个顶点的圆以**斜边为直径**。圆心是斜边的中点，$r^{2}$ 是圆心到任一顶点距离的平方。\n\n要找斜边，比较三边长的平方：最长的边是斜边，它的平方等于另两边平方之和。",
+        "By the converse of Thales' theorem, the circle through the three vertices of a right triangle has the **hypotenuse as a diameter**. Its center is the midpoint of the hypotenuse, and $r^{2}$ is the squared distance from the center to any vertex.\n\nTo find the hypotenuse, compare the squared side lengths: the longest side is the hypotenuse, and its square equals the sum of the other two. For $A(1, 1)$, $B(5, 3)$ and $C(3, 7)$: $AB^{2} = 20$, $BC^{2} = 20$ and $AC^{2} = 40 = 20 + 20$, so $AC$ is the hypotenuse. The center is its midpoint $(2, 4)$, and $r^{2} = (1 - 2)^{2} + (1 - 4)^{2} = 10$, so the circle is $(x - 2)^{2} + (y - 4)^{2} = 10$.",
+        "由泰勒斯定理的逆定理，过直角三角形三个顶点的圆以**斜边为直径**。圆心是斜边的中点，$r^{2}$ 是圆心到任一顶点距离的平方。\n\n要找斜边，比较三边长的平方：最长的边是斜边，它的平方等于另两边平方之和。例如 $A(1, 1)$、$B(5, 3)$、$C(3, 7)$：$AB^{2} = 20$，$BC^{2} = 20$，$AC^{2} = 40 = 20 + 20$，所以 $AC$ 是斜边。圆心是它的中点 $(2, 4)$，$r^{2} = (1 - 2)^{2} + (1 - 4)^{2} = 10$，所以圆的方程是 $(x - 2)^{2} + (y - 4)^{2} = 10$。",
       ),
       keyPrerequisites: ["the-pythagorean-theorem"],
       generate(rng) {
