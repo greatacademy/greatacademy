@@ -118,7 +118,10 @@ export function diagnosticDue(pl: Planner, state: LearnerState): boolean {
  *    offered lessons will repair implicitly;
  * 4. lessons from the frontier, at least minLessonShare of the tasks when
  *    any are available, so that reviews never crowd out new learning.
- * Reviews and lessons alternate, reviews first.
+ * Reviews and lessons alternate, reviews first, unless the learner has
+ * taken maxReviewStreak reviews since the last lesson: then a lesson comes
+ * first, so that a learner who always takes the first task is not held in
+ * reviews that keep coming due.
  */
 export function nextTasks(pl: Planner, state: LearnerState, now: number, limit = 6): Task[] {
   if (diagnosticDue(pl, state)) return [{ kind: "diagnostic" }];
@@ -133,9 +136,11 @@ export function nextTasks(pl: Planner, state: LearnerState, now: number, limit =
   const coveredByLessons = new Set(lessonsFirst.slice(0, minLessons).flatMap((t) => coverage(pl, t, dueSet)));
   const reviews = compressReviews(pl, state, due, coveredByLessons).slice(0, room - minLessons);
   const lessons = lessonsFirst.slice(0, room - reviews.length).map((topic): Task => ({ kind: "lesson", topic }));
+  const lessonFirst = state.reviewsSinceLesson >= pl.params.maxReviewStreak;
+  const [first, second] = lessonFirst ? [lessons, reviews] : [reviews, lessons];
   for (let i = 0; i < Math.max(reviews.length, lessons.length); i++) {
-    if (reviews[i]) tasks.push(reviews[i]!);
-    if (lessons[i]) tasks.push(lessons[i]!);
+    if (first[i]) tasks.push(first[i]!);
+    if (second[i]) tasks.push(second[i]!);
   }
   return tasks;
 }

@@ -87,14 +87,14 @@ export function applyEvent(ctx: EngineContext, state: LearnerState, e: EngineEve
       if (!topic) return state;
       if (!e.passed) {
         const failed: TopicState = prev ?? { learned: false, repNum: 0, last: e.at, speed: 1, explicitReviews: 0 };
-        return { ...setTopic(state, e.topic, { ...failed, failedAt: e.at }), xp };
+        return { ...setTopic(state, e.topic, { ...failed, failedAt: e.at }), xp, reviewsSinceLesson: 0 };
       }
-      if (prev?.learned) return { ...applyRepetition(p, g, state, e.topic, 1, e.at), xp };
+      if (prev?.learned) return { ...applyRepetition(p, g, state, e.topic, 1, e.at), xp, reviewsSinceLesson: 0 };
       const speed = clampSpeed(p, lessonSpeed(p, topic.knowledgePoints.length, e.asked));
       const learned = setTopic(state, e.topic, newTopicState(e.at, 0, speed, false));
       // A lesson is also a full repetition of the topics it encompasses. The new topic itself starts at repNum 0.
       const after = applyRepetition(p, g, learned, e.topic, 1, e.at);
-      return { ...setTopic(after, e.topic, learned.topics[e.topic]!), xp };
+      return { ...setTopic(after, e.topic, learned.topics[e.topic]!), xp, reviewsSinceLesson: 0 };
     }
     case "review": {
       const prev = state.topics[e.topic];
@@ -103,7 +103,8 @@ export function applyEvent(ctx: EngineContext, state: LearnerState, e: EngineEve
       const after = applyRepetition(p, g, state, e.topic, result, e.at);
       const s = after.topics[e.topic]!;
       const speed = clampSpeed(p, 0.8 * s.speed + 0.2 * (0.5 + e.correct / e.total));
-      return { ...setTopic(after, e.topic, { ...s, speed, explicitReviews: s.explicitReviews + 1 }), xp };
+      const reviewsSinceLesson = state.reviewsSinceLesson + 1;
+      return { ...setTopic(after, e.topic, { ...s, speed, explicitReviews: s.explicitReviews + 1 }), xp, reviewsSinceLesson };
     }
     case "quiz": {
       let next = state;

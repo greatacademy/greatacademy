@@ -78,9 +78,9 @@ Topics on which the learner is **slow** (speed < 1) receive **no implicit credit
 
 1. Until the learner is placed in the course, the **diagnostic**, alone (§9).
 2. A **quiz**, when one is due (§7).
-3. **Reviews** of due topics and **lessons** from the frontier, alternating, reviews first.
+3. **Reviews** of due topics and **lessons** from the frontier, alternating, reviews first; after four reviews in a row, a lesson first.
 
-**Lesson share.** When lessons are available, at least 25% of the offered tasks are lessons. Reviews never crowd out new learning; new learning is also the cheapest way to review, as the next point explains.
+**Lesson share.** When lessons are available, at least 25% of the offered tasks are lessons. Reviews never crowd out new learning; new learning is also the cheapest way to review, as the next point explains. The order matters too, since many learners take the first task: the state counts the reviews since the last lesson, and after four in a row a lesson comes first. Without this, a learner whose reviews keep failing and coming due could spend weeks on reviews alone.
 
 **Repetition compression.** Due topics are not reviewed one by one:
 
@@ -132,6 +132,7 @@ Each correct answer is an explicit repetition with result 0.5, and each wrong an
 | `quizQuestions`, `quizMinTopics` | 8, 4 | Long enough to sample broadly, short enough for one sitting |
 | `quizCredit`, `quizXp` | 0.5, 15 | One question is half a review |
 | `minLessonShare` | 0.25 | At least one task in four is new learning |
+| `maxReviewStreak` | 4 | About half a study day; no day passes on reviews alone. Three slowed typical learners by putting lessons before the reviews of their prerequisites |
 
 These values come from the book's description and our judgment, not from data. Roadmap P10 recalibrates them against real learners' event logs, and replaying makes the change retroactive.
 
@@ -140,13 +141,13 @@ These values come from the book's description and our judgment, not from data. R
 | Student | Ability, XP/day | Days | Explicit reviews per topic | Failed lessons |
 | :--- | :--- | ---: | ---: | ---: |
 | Strong | 0.95, 40 | 5.7 | 0.24 | 0 |
-| Typical | 0.85, 30 | 9.2 | 0.57 | 1.1 |
-| Struggling | 0.70, 20 | 17.4 | 1.41 | 5.2 |
-| Typical, knows integers | 0.85, 30 | 7.6 | 0.68 | 0 |
+| Typical | 0.85, 30 | 9.3 | 0.58 | 1.2 |
+| Struggling | 0.70, 20 | 20.2 | 1.77 | 6.1 |
+| Typical, knows integers | 0.85, 30 | 7.6 | 0.68 | 0.9 |
 
 Typical learners need fewer than one explicit review per topic, because lessons on later topics review earlier ones implicitly. Struggling learners get more explicit practice: their low speeds withhold implicit credit. The simulator's tests keep these properties from regressing.
 
-On Prealgebra (49 topics) the same students need more explicit reviews: typical 24.0 days and 1.70 reviews per topic, strong 0.94, struggling 5.77 over 52 days, since a slower learner also has more time for reviews to come due. Many of the units it adds (number theory, decimals and percents, radicals, ratios) are broad rather than deep: few later topics in the course practice them, so less of their review comes implicitly. Their encompassing topics come with Algebra I. The weights record what each topic actually practices and are not raised to improve these numbers.
+On Prealgebra (49 topics) the same students need more explicit reviews: typical 23.5 days and 1.63 reviews per topic, strong 0.94, struggling 4.47 over 51 days, since a slower learner also has more time for reviews to come due. Many of the units it adds (number theory, decimals and percents, radicals, ratios) are broad rather than deep: few later topics in the course practice them, so less of their review comes implicitly. Their encompassing topics come with Algebra I. The weights record what each topic actually practices and are not raised to improve these numbers.
 
 ```bash
 pnpm nx run simulate:simulate                  # Foundations of Algebra

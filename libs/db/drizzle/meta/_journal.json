@@ -15,6 +15,13 @@
       "when": 1793323009500,
       "tag": "0001_per-course-diagnosis",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793324106063,
+      "tag": "0002_reviews-since-lesson",
+      "breakpoints": true
     }
   ]
 }

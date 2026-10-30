@@ -243,6 +243,17 @@ describe("tasks", () => {
     expect(tasks.filter((t) => t.kind === "lesson").length).toBeGreaterThanOrEqual(1);
     expect(tasks.length).toBeLessThanOrEqual(4);
   });
+  it("puts a lesson first after four reviews in a row", () => {
+    const s = learnedState(["a", "b", "c", "d", "e", "f"]);
+    const now = T0 + 30 * DAY;
+    expect(nextTasks(planner, s, now)[0]?.kind).toBe("review");
+    let after = s;
+    for (let i = 0; i < 4; i++) after = applyEvent(ctx, after, { type: "review", at: now, topic: "a", correct: 1, total: 3 });
+    expect(after.reviewsSinceLesson).toBe(4);
+    expect(nextTasks(planner, after, now)[0]?.kind).toBe("lesson");
+    const lesson = applyEvent(ctx, after, { type: "lesson", at: now, topic: "g", passed: false, asked: 5, correct: 1 });
+    expect(lesson.reviewsSinceLesson).toBe(0);
+  });
   it("offers a quiz every 150 XP once enough topics are learned", () => {
     const s = learnedState(["a", "b", "c", "d"]);
     expect(quizDue(planner, { ...s, xp: 149 })).toBe(false);

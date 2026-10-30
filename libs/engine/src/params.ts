@@ -43,6 +43,8 @@ export interface Params {
   readonly quizXp: number;
   /** minLessonShare is the smallest fraction of offered tasks that are lessons when lessons are available. */
   readonly minLessonShare: number;
+  /** maxReviewStreak is how many reviews in a row put a lesson, when one is available, first among the offered tasks. */
+  readonly maxReviewStreak: number;
 }
 
 /** defaultParams are the engine's parameters until calibration (roadmap P10). */
@@ -67,4 +69,5 @@ export const defaultParams: Params = {
   quizCredit: 0.5,
   quizXp: 15,
   minLessonShare: 0.25,
+  maxReviewStreak: 4,
 };

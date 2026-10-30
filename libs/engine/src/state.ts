@@ -29,10 +29,12 @@ export interface LearnerState {
   /** xpAtLastQuiz is the XP total when the last quiz was taken. */
   readonly xpAtLastQuiz: number;
   readonly quizzes: number;
+  /** reviewsSinceLesson counts the reviews taken since the last lesson, so that reviews never crowd out new learning. */
+  readonly reviewsSinceLesson: number;
 }
 
 /** initialState is the state of a new learner. */
-export const initialState: LearnerState = { topics: {}, diagnosed: [], xp: 0, xpAtLastQuiz: 0, quizzes: 0 };
+export const initialState: LearnerState = { topics: {}, diagnosed: [], xp: 0, xpAtLastQuiz: 0, quizzes: 0, reviewsSinceLesson: 0 };
 
 /** newTopicState is the state of a topic just learned at time at. */
 export function newTopicState(at: number, repNum: number, speed: number, placed: boolean): TopicState {
