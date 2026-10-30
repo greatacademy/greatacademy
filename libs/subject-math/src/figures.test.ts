@@ -2,6 +2,7 @@ import { figureIssue, same } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
 import { boxPlot, dotPlot, sketch } from "./figures.ts";
+import { plane } from "./plane.ts";
 
 const axis = { min: 0, max: 10, step: 1, labelEvery: 2 };
 const alt = same("plot");
@@ -58,6 +59,38 @@ describe("figures", () => {
     ]);
     expect(svg.match(/<polyline/g)).toHaveLength(4);
     expect(svg).toContain(">4 cm</text>");
+    expect(figureIssue({ svg, alt })).toBeUndefined();
+  });
+});
+
+describe("plane", () => {
+  const view = { xMin: -5, xMax: 5, yMin: -5, yMax: 5 };
+
+  it("clip lines and curves to the view", () => {
+    const svg = plane(view, [
+      { kind: "line", a: [0, 0], b: [1, 1] },
+      { kind: "curve", f: (x) => x * x - 6, accent: true },
+    ]);
+    // The line runs corner to corner; the parabola leaves the view at the bottom and comes back in two pieces.
+    expect(svg).toContain('points="22,282 282,22"');
+    expect(svg.match(/<polyline/g)).toHaveLength(3);
+    expect(figureIssue({ svg, alt })).toBeUndefined();
+  });
+
+  it("shade the intersection of half-planes", () => {
+    const svg = plane(view, [
+      {
+        kind: "region",
+        halfPlanes: [
+          [1, 0, 0],
+          [0, 1, 0],
+        ],
+      },
+      { kind: "point", at: [2, 3], label: "(2, 3)" },
+      { kind: "point", at: [-1, 0], open: true },
+    ]);
+    expect(svg).toContain('<polygon class="accent" points="282,152 282,22 152,22 152,152"');
+    expect(svg.match(/<circle/g)).toHaveLength(2);
     expect(figureIssue({ svg, alt })).toBeUndefined();
   });
 });
