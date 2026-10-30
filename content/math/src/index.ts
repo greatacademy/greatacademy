@@ -8,6 +8,7 @@ import { conicTopics } from "./topics/algebra-ii-conics.ts";
 import { algebraIIFactoringTopics } from "./topics/algebra-ii-factoring.ts";
 import { algebraIIFunctionTopics } from "./topics/algebra-ii-functions.ts";
 import { algebraIIInverseTopics } from "./topics/algebra-ii-inverses.ts";
+import { logarithmicEquationTopics } from "./topics/algebra-ii-log-equations.ts";
 import { algebraIILogarithmTopics } from "./topics/algebra-ii-logarithms.ts";
 import { polynomialTheoremTopics } from "./topics/algebra-ii-polynomial-theorems.ts";
 import { algebraIIPolynomialTopics } from "./topics/algebra-ii-polynomials.ts";
@@ -109,6 +110,7 @@ export const math: SubjectDef = {
     ...graphTransformationTopics,
     ...algebraIIInverseTopics,
     ...algebraIILogarithmTopics,
+    ...logarithmicEquationTopics,
     ...algebraIIRationalRadicalTopics,
     ...conicTopics,
     ...combinatoricsTopics,
