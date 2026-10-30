@@ -13,6 +13,7 @@ import { algebraIILogarithmTopics } from "./topics/algebra-ii-logarithms.ts";
 import { polynomialTheoremTopics } from "./topics/algebra-ii-polynomial-theorems.ts";
 import { algebraIIPolynomialTopics } from "./topics/algebra-ii-polynomials.ts";
 import { algebraIIRationalRadicalTopics } from "./topics/algebra-ii-rational-radical.ts";
+import { algebraIIReciprocalFunctionsTopics } from "./topics/algebra-ii-reciprocal-functions.ts";
 import { graphTransformationTopics } from "./topics/algebra-ii-transformations.ts";
 import { angleTopics } from "./topics/angles.ts";
 import { areaTopics } from "./topics/area.ts";
@@ -114,6 +115,7 @@ export const math: SubjectDef = {
     ...algebraIILogarithmTopics,
     ...logarithmicEquationTopics,
     ...algebraIIRationalRadicalTopics,
+    ...algebraIIReciprocalFunctionsTopics,
     ...conicTopics,
     ...combinatoricsTopics,
     ...probabilityTopics,
