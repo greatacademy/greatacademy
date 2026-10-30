@@ -178,8 +178,8 @@ export const algebraI: CourseDef = {
   id: "algebra-i",
   title: t("Algebra I", "代数一"),
   description: t(
-    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines, linear models and their graphs, systems of linear equations and linear inequalities in two variables; units and variation; polynomials, their products and factoring; quadratic equations; radical expressions and equations; rational expressions and equations; functions, their features and their composition; absolute value equations, inequalities and graphs; arithmetic and geometric sequences; and scatter plots, trend lines and correlation.",
-    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程、一次模型及其图像、二元一次方程组与二元一次不等式；单位与比例关系；多项式的乘法与因式分解；一元二次方程；根式及根式方程；分式及分式方程；函数及其性质、运算与复合；绝对值方程、不等式与图像；等差数列与等比数列；散点图、趋势线与相关性。",
+    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines, linear models and their graphs, systems of linear equations and linear inequalities in two variables; units and variation; polynomials, their products and factoring; quadratic equations; radical expressions and equations; rational expressions and equations; functions, their features and their composition; absolute value equations, inequalities and graphs; quadratic functions, parabolas and quadratic models; arithmetic and geometric sequences; and scatter plots, trend lines and correlation.",
+    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程、一次模型及其图像、二元一次方程组与二元一次不等式；单位与比例关系；多项式的乘法与因式分解；一元二次方程；根式及根式方程；分式及分式方程；函数及其性质、运算与复合；绝对值方程、不等式与图像；二次函数、抛物线与二次模型；等差数列与等比数列；散点图、趋势线与相关性。",
   ),
   units: [
     {
@@ -499,6 +499,52 @@ export const algebraI: CourseDef = {
             "combining-transformations-of-absolute-value-graphs",
             "domain-and-range-of-absolute-value-functions",
             "roots-of-absolute-value-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Quadratic Functions", "二次函数"),
+      modules: [
+        {
+          title: t("Graphs of Quadratic Functions", "二次函数的图象"),
+          topics: [
+            "graphing-elementary-quadratic-functions",
+            "vertical-reflections-of-quadratic-functions",
+            "graphs-of-general-quadratic-functions",
+            "roots-of-quadratic-functions",
+            "the-discriminant-of-a-quadratic-function",
+          ],
+        },
+        {
+          title: t("Parabolas and Vertex Form", "抛物线与顶点式"),
+          topics: [
+            "the-axis-of-symmetry-of-a-parabola",
+            "the-average-of-the-roots-formula",
+            "the-vertex-form-of-a-parabola",
+            "writing-the-equation-of-a-parabola-in-vertex-form",
+            "domain-and-range-of-quadratic-functions",
+          ],
+        },
+        {
+          title: t("Nonlinear Systems", "非线性方程组"),
+          topics: ["solving-systems-of-nonlinear-equations", "finding-intersections-of-lines-and-quadratic-functions"],
+        },
+      ],
+    },
+    {
+      title: t("Modeling With Quadratic Functions", "用二次函数建模"),
+      modules: [
+        {
+          title: t("Vertical Motion", "竖直运动"),
+          topics: ["modeling-downwards-vertical-motion", "modeling-upwards-vertical-motion", "vertical-motion"],
+        },
+        {
+          title: t("Revenue, Cost and Profit", "收入、成本与利润"),
+          topics: [
+            "revenue-cost-and-profit-functions",
+            "constructing-revenue-cost-and-profit-functions",
+            "maximizing-profit-and-break-even-points",
           ],
         },
       ],
