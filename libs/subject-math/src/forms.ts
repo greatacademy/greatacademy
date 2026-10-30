@@ -136,7 +136,7 @@ function monomialOf(node: Node, radicals = false): Monomial | undefined {
   return { key, coefficient };
 }
 
-/** rootKey describes a radicand in simplest form for a root of index n: a monomial with an integer coefficient free of nth powers and every exponent below n, or a polynomial with integer coefficients that has more than one term; it returns undefined otherwise. */
+/** rootKey describes a radicand in simplest form for a root of index n: a monomial with an integer coefficient free of nth powers and every exponent below n, or a polynomial with integer coefficients that has more than one term and no perfect nth-power factor; it returns undefined otherwise. */
 function rootKey(radicand: Node, n: number): string | undefined {
   const m = monomialOf(unwrapGroup(radicand));
   if (m) {
@@ -146,7 +146,10 @@ function rootKey(radicand: Node, n: number): string | undefined {
     if (m.key.split("*").some((v) => Number(v.split("^")[1] ?? 1) >= n)) return undefined;
     return `${n}:${c.n}*${m.key}`;
   }
-  return isSimplifiedPolynomial(unwrapGroup(radicand)) && !hasFraction(radicand) ? `${n}:${nodeKey(unwrapGroup(radicand))}` : undefined;
+  const u = unwrapGroup(radicand);
+  if (!isSimplifiedPolynomial(u) || hasFraction(u)) return undefined;
+  const p = toPoly(u);
+  return p && !hasPowerFactor(p, n) ? `${n}:${nodeKey(u)}` : undefined;
 }
 
 /** absKey describes the contents of an absolute value, which must be a simplified polynomial. */
@@ -187,13 +190,30 @@ export function isSimplifiedPolynomial(node: Node): boolean {
  * of terms as in isSimplifiedPolynomial, where a term may also have one root
  * whose radicand has no perfect nth-power factor, no fraction and no root
  * (\sqrt{12x^{3}} becomes 2x\sqrt{3x}), absolute values, and a denominator
- * that is a monomial with no root, with no two terms alike.
+ * that is a monomial with no root, with no two terms alike. A polynomial
+ * radicand must have no perfect nth-power factor (\sqrt{x^{2}-6x+9} is
+ * |x-3|). A sum with integer coefficients may stand over a number that
+ * shares no factor with all of them, as in \frac{3+\sqrt{5}}{2}.
  */
 export function isSimplifiedRadical(node: Node): boolean {
+  let n = unwrapGroup(node);
+  if (n.k === "neg") n = unwrapGroup(n.a);
+  // A sum over a number, such as \frac{3+\sqrt{5}}{2}, with no factor common to the denominator and every coefficient.
+  if (n.k === "div" && n.frac && (n.a.k === "add" || n.a.k === "sub")) {
+    const d = natural(n.b);
+    const terms = d !== undefined && d >= 2n ? sumTerms(n.a, true) : undefined;
+    if (!terms?.every((m) => m.coefficient.isInteger())) return false;
+    return terms.reduce((g, m) => gcd(g, m.coefficient.n), d!) === 1n;
+  }
   return isSimplifiedSum(node, true);
 }
 
 function isSimplifiedSum(node: Node, radicals: boolean): boolean {
+  return sumTerms(node, radicals) !== undefined;
+}
+
+/** sumTerms lists the terms of a sum in simplest form, as in isSimplifiedSum, or returns undefined when it is not one. */
+function sumTerms(node: Node, radicals: boolean): Monomial[] | undefined {
   const termOf = (n: Node) => monomialOf(n, radicals);
   const terms: Monomial[] = [];
   const collect = (n: Node, first: boolean): boolean => {
@@ -216,10 +236,10 @@ function isSimplifiedSum(node: Node, radicals: boolean): boolean {
     terms.push(m);
     return true;
   };
-  if (!collect(node, true)) return false;
-  if (terms.length === 1) return true;
+  if (!collect(node, true)) return undefined;
+  if (terms.length === 1) return terms;
   const keys = new Set(terms.map((m) => m.key));
-  return keys.size === terms.length && terms.every((m) => !m.coefficient.isZero());
+  return keys.size === terms.length && terms.every((m) => !m.coefficient.isZero()) ? terms : undefined;
 }
 
 /** coefficients lists the coefficients of a polynomial in one variable from the constant term up, or returns undefined for a polynomial in several variables. */
@@ -235,8 +255,8 @@ function coefficients(p: Poly, v: string): Q[] | undefined {
   return out;
 }
 
-/** polyGcdDegree is the degree of the greatest common divisor of two nonzero polynomials in one variable (Euclid's algorithm over the rationals). */
-function polyGcdDegree(a: Q[], b: Q[]): number {
+/** polyGcd is the greatest common divisor of two polynomials in one variable, coefficients from the constant term up (Euclid's algorithm over the rationals); the gcd of zero and zero is empty. */
+function polyGcd(a: Q[], b: Q[]): Q[] {
   const trim = (p: Q[]) => {
     const q = [...p];
     while (q.length > 0 && q[q.length - 1]!.isZero()) q.pop();
@@ -254,7 +274,33 @@ function polyGcdDegree(a: Q[], b: Q[]): number {
     }
     [x, y] = [y, r];
   }
-  return x.length - 1;
+  return x;
+}
+
+const derivative = (p: Q[]) => p.slice(1).map((c, i) => c.mul(Q.of(i + 1)));
+
+/**
+ * hasPowerFactor tells whether a polynomial with integer coefficients has a
+ * factor that is a perfect nth power: a number, a power of a variable, or in
+ * one variable a polynomial factor repeated n times, found as a common factor
+ * of the polynomial and its first n − 1 derivatives (x^{2}-6x+9 = (x-3)^{2}).
+ */
+function hasPowerFactor(p: Poly, n: number): boolean {
+  const content = integerContent(p);
+  if (content === undefined) return false;
+  for (let q = 2n; q ** BigInt(n) <= content; q++) if (content % q ** BigInt(n) === 0n) return true;
+  const vars = new Set([...p.keys()].flatMap((k) => (k === "" ? [] : k.split("*").map((f) => f.split("^")[0]!))));
+  for (const v of vars) if (Math.min(...[...p.keys()].map((k) => power(k, v))) >= n) return true;
+  if (vars.size !== 1) return false;
+  const [v] = vars;
+  let d = coefficients(p, v!);
+  if (!d) return false;
+  let g = d;
+  for (let i = 1; i < n && g.length > 1; i++) {
+    d = derivative(d);
+    g = polyGcd(g, d);
+  }
+  return g.length > 1;
 }
 
 /** isSimplifiedProduct tells whether node is a product of simplified polynomials and their powers, such as 3(x-1)^{2}(x+2) or x^{2}-1. */
@@ -308,7 +354,7 @@ export function isLowestTerms(node: Node): boolean {
     const [v] = vars;
     const a = coefficients(top, v!);
     const b = coefficients(bottom, v!);
-    if (a && b && polyGcdDegree(a, b) > 0) return false;
+    if (a && b && polyGcd(a, b).length > 1) return false;
   }
   return true;
 }

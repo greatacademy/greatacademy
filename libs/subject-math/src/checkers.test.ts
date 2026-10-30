@@ -540,6 +540,15 @@ describe("radical expressions", () => {
     ["\\sqrt{2}\\sqrt{3}", false],
     ["2\\sqrt{3}+5\\sqrt{3}", false],
     ["\\sqrt[3]{16}", false],
+    ["\\sqrt{x^{2}-1}", true],
+    ["\\sqrt{x^{2}-6x+9}", false],
+    ["\\sqrt{4x+8}", false],
+    ["\\sqrt{x^{3}+x^{2}}", false],
+    ["\\sqrt{x^{2}y+x^{2}}", false],
+    ["\\frac{3+\\sqrt{5}}{2}", true],
+    ["-\\frac{1-\\sqrt{5}}{2}", true],
+    ["\\frac{2+2\\sqrt{5}}{2}", false],
+    ["\\frac{2+\\sqrt{8}}{3}", false],
   ])("judges the form of %s", (response, simplest) => {
     const expr = response;
     expect(verdict("expression", { expr, form: "radical", positive: true }, response).correct).toBe(simplest);
@@ -548,6 +557,8 @@ describe("radical expressions", () => {
   it("reads roots of other indices in simplest form", () => {
     expect(isSimplifiedRadical(parseExpression("3\\sqrt[3]{2x^{2}}"))).toBe(true);
     expect(isSimplifiedRadical(parseExpression("\\sqrt[3]{x^{3}}"))).toBe(false);
+    expect(isSimplifiedRadical(parseExpression("\\sqrt[3]{x^{2}+2x+1}"))).toBe(true);
+    expect(isSimplifiedRadical(parseExpression("\\sqrt[3]{x^{3}+3x^{2}+3x+1}"))).toBe(false);
   });
 
   it("explains the form", () => {
