@@ -2,6 +2,8 @@ import { compileMath } from "@ga/content-math";
 
 import { simulate } from "./simulate.ts";
 
+// The course to simulate is the first argument: `pnpm nx run simulate:simulate -- prealgebra`.
+const courseId = process.argv[2] ?? "algebra-foundations";
 const subject = compileMath();
 const students = [
   { name: "strong", ability: 0.95, xpPerDay: 40 },
@@ -22,7 +24,7 @@ const students = [
   },
 ];
 const rows = students.map(({ name, ...student }) => {
-  const runs = Array.from({ length: 20 }, (_, i) => simulate(subject, "algebra-foundations", student, i + 1));
+  const runs = Array.from({ length: 20 }, (_, i) => simulate(subject, courseId, student, i + 1));
   const mean = (f: (r: (typeof runs)[number]) => number) => (runs.reduce((s, r) => s + f(r), 0) / runs.length).toFixed(2);
   return {
     student: name,
@@ -35,4 +37,5 @@ const rows = students.map(({ name, ...student }) => {
     quizzes: mean((r) => r.quizzes),
   };
 });
+console.log(courseId);
 console.table(rows);
