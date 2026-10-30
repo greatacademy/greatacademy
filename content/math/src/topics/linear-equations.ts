@@ -1149,7 +1149,10 @@ export const interpretingLinearExpressions: TopicDef = {
     "说明实际情境中一次式的各项和系数的含义，并写出这样的式子。",
   ),
   prerequisites: ["evaluating-expressions", "unit-rates"],
-  encompasses: [{ topic: "evaluating-expressions", weight: 0.3 }],
+  encompasses: [
+    { topic: "evaluating-expressions", weight: 0.3 },
+    { topic: "unit-rates", weight: 0.2 },
+  ],
   xp: 12,
   standards: ["CCSS.HSA.SSE.A.1"],
   knowledgePoints: [
@@ -1255,7 +1258,7 @@ export const modelingWithLinearEquations: TopicDef = {
   encompasses: [
     { topic: "two-step-equations", weight: 0.6 },
     { topic: "interpreting-linear-expressions", weight: 0.4 },
-    { topic: "equations-with-variables-on-both-sides", weight: 0.3 },
+    { topic: "equations-with-variables-on-both-sides", weight: 0.5 },
   ],
   xp: 18,
   standards: ["CCSS.HSA.CED.A.1"],
@@ -1438,6 +1441,7 @@ export const consecutiveIntegerProblems: TopicDef = {
   prerequisites: ["modeling-with-linear-equations"],
   encompasses: [
     { topic: "modeling-with-linear-equations", weight: 0.4 },
+    { topic: "two-step-equations", weight: 0.5 },
     { topic: "combining-like-terms", weight: 0.3 },
   ],
   xp: 15,
@@ -1598,10 +1602,12 @@ export const speedDistanceTime: TopicDef = {
     "Use $d = rt$ with consistent units, trips in two parts and average speed.",
     "使用单位一致的 $d = rt$，解决分两段的行程和平均速度问题。",
   ),
-  prerequisites: ["modeling-with-linear-equations"],
+  prerequisites: ["modeling-with-linear-equations", "adding-and-subtracting-fractions"],
   encompasses: [
     { topic: "unit-rates", weight: 0.4 },
     { topic: "modeling-with-linear-equations", weight: 0.3 },
+    { topic: "equations-with-parentheses", weight: 0.3 },
+    { topic: "adding-and-subtracting-fractions", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.HSN.Q.A.1"],
@@ -1751,7 +1757,11 @@ export const furtherSpeedDistanceTime: TopicDef = {
     "解决两个物体相向而行、追及以及不同速度往返的问题。",
   ),
   prerequisites: ["speed-distance-time"],
-  encompasses: [{ topic: "speed-distance-time", weight: 0.6 }],
+  encompasses: [
+    { topic: "speed-distance-time", weight: 0.6 },
+    { topic: "equations-with-parentheses", weight: 0.3 },
+    { topic: "adding-and-subtracting-fractions", weight: 0.2 },
+  ],
   xp: 18,
   standards: ["CCSS.HSA.CED.A.1"],
   knowledgePoints: [
@@ -1911,7 +1921,7 @@ export const workProblems: TopicDef = {
   ),
   prerequisites: ["modeling-with-linear-equations", "adding-and-subtracting-fractions"],
   encompasses: [
-    { topic: "adding-and-subtracting-fractions", weight: 0.3 },
+    { topic: "adding-and-subtracting-fractions", weight: 0.5 },
     { topic: "modeling-with-linear-equations", weight: 0.3 },
   ],
   xp: 18,
@@ -2101,6 +2111,7 @@ export const mixtureProblems: TopicDef = {
   ),
   prerequisites: ["modeling-with-linear-equations", "percent-of-a-number"],
   encompasses: [
+    { topic: "equations-with-parentheses", weight: 0.5 },
     { topic: "percent-of-a-number", weight: 0.4 },
     { topic: "modeling-with-linear-equations", weight: 0.4 },
   ],

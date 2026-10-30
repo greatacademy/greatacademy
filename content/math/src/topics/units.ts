@@ -710,7 +710,7 @@ export const convertingUnitsOfArea: TopicDef = {
   prerequisites: ["metric-units-of-length", "area-of-rectangles-and-squares"],
   encompasses: [
     { topic: "metric-units-of-length", weight: 0.3 },
-    { topic: "area-of-rectangles-and-squares", weight: 0.2 },
+    { topic: "area-of-rectangles-and-squares", weight: 0.3 },
   ],
   xp: 15,
   knowledgePoints: [
@@ -1143,7 +1143,10 @@ export const unitsOfRatesOfChange: TopicDef = {
   title: t("Selecting Units for Rates of Change", "变化率的单位"),
   summary: t("Find a rate of change between two times and give it the right units.", "求两个时刻之间的变化率，并写出正确的单位。"),
   prerequisites: ["units-in-formulas"],
-  encompasses: [{ topic: "units-in-formulas", weight: 0.3 }],
+  encompasses: [
+    { topic: "units-in-formulas", weight: 0.3 },
+    { topic: "unit-rates", weight: 0.3 },
+  ],
   xp: 10,
   standards: ["CCSS.HSN.Q.A.1", "CCSS.HSF.IF.B.6"],
   knowledgePoints: [
@@ -1277,7 +1280,10 @@ export const degreesOfAccuracy: TopicDef = {
     "按要求的数位取近似值，按测量的精确度给出结果，求测量值的上下界。",
   ),
   prerequisites: ["unit-rates"],
-  encompasses: [{ topic: "decimal-arithmetic", weight: 0.1 }],
+  encompasses: [
+    { topic: "unit-rates", weight: 0.2 },
+    { topic: "decimal-arithmetic", weight: 0.1 },
+  ],
   xp: 12,
   standards: ["CCSS.HSN.Q.A.3"],
   knowledgePoints: [
@@ -1562,7 +1568,8 @@ export const modelingWithDirectVariation: TopicDef = {
   prerequisites: ["direct-variation", "unit-rates"],
   encompasses: [
     { topic: "direct-variation", weight: 0.5 },
-    { topic: "unit-rates", weight: 0.3 },
+    { topic: "unit-rates", weight: 0.5 },
+    { topic: "proportions", weight: 0.3 },
   ],
   xp: 12,
   standards: ["CCSS.7.RP.A.2.C"],
@@ -1663,7 +1670,10 @@ export const inverseVariation: TopicDef = {
     "识别反比例关系，求常数 k = xy，写出 y = k/x 并加以运用。",
   ),
   prerequisites: ["direct-variation"],
-  encompasses: [{ topic: "one-step-equations-multiplication", weight: 0.2 }],
+  encompasses: [
+    { topic: "one-step-equations-multiplication", weight: 0.2 },
+    { topic: "direct-variation", weight: 0.2 },
+  ],
   xp: 15,
   knowledgePoints: [
     {

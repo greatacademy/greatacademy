@@ -1111,7 +1111,10 @@ export const multiplyingPolynomials: TopicDef = {
   title: t("Multiplying Polynomials", "多项式乘多项式"),
   summary: t("Multiply a binomial by a trinomial, and multiply three binomials.", "计算二项式乘三项式，以及三个二项式的积。"),
   prerequisites: ["multiplying-binomials"],
-  encompasses: [{ topic: "multiplying-binomials", weight: 0.7 }],
+  encompasses: [
+    { topic: "multiplying-binomials", weight: 0.7 },
+    { topic: "product-and-quotient-rules", weight: 0.3 },
+  ],
   xp: 14,
   standards: ["CCSS.HSA.APR.A.1"],
   knowledgePoints: [
@@ -1217,7 +1220,7 @@ export const squaringBinomials: TopicDef = {
   prerequisites: ["multiplying-binomials", "power-rules"],
   encompasses: [
     { topic: "multiplying-binomials", weight: 0.6 },
-    { topic: "power-rules", weight: 0.2 },
+    { topic: "power-rules", weight: 0.4 },
   ],
   xp: 12,
   standards: ["CCSS.HSA.APR.A.1", "CCSS.HSA.SSE.A.2"],
@@ -1327,6 +1330,7 @@ export const expandingBinomialsUsingPascalsTriangle: TopicDef = {
   prerequisites: ["squaring-binomials", "multiplying-polynomials"],
   encompasses: [
     { topic: "squaring-binomials", weight: 0.5 },
+    { topic: "power-rules", weight: 0.4 },
     { topic: "multiplying-polynomials", weight: 0.3 },
   ],
   xp: 16,
@@ -1466,7 +1470,10 @@ export const differenceOfSquaresFormula: TopicDef = {
     "用 $(a + b)(a - b) = a^{2} - b^{2}$ 计算乘积，并用于速算。",
   ),
   prerequisites: ["squaring-binomials"],
-  encompasses: [{ topic: "multiplying-binomials", weight: 0.5 }],
+  encompasses: [
+    { topic: "multiplying-binomials", weight: 0.5 },
+    { topic: "power-rules", weight: 0.3 },
+  ],
   xp: 10,
   standards: ["CCSS.HSA.APR.A.1", "CCSS.HSA.SSE.A.2"],
   knowledgePoints: [

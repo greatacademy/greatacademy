@@ -346,6 +346,7 @@ export const slopeOfALine: TopicDef = {
   encompasses: [
     { topic: "the-coordinate-plane", weight: 0.3 },
     { topic: "subtracting-integers", weight: 0.3 },
+    { topic: "operations-with-rational-numbers", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.8.EE.B.6", "CCSS.8.F.B.4"],
@@ -778,6 +779,7 @@ export const pointSlopeForm: TopicDef = {
   encompasses: [
     { topic: "slope-intercept-form", weight: 0.4 },
     { topic: "distributive-property", weight: 0.3 },
+    { topic: "slope-of-a-line", weight: 0.3 },
   ],
   xp: 18,
   standards: ["CCSS.HSA.CED.A.2", "CCSS.8.F.B.4"],
@@ -884,6 +886,7 @@ export const standardForm: TopicDef = {
   encompasses: [
     { topic: "point-slope-form", weight: 0.3 },
     { topic: "equations-with-variables-on-both-sides", weight: 0.3 },
+    { topic: "slope-of-a-line", weight: 0.3 },
   ],
   xp: 18,
   standards: ["CCSS.HSA.CED.A.2", "CCSS.HSA.CED.A.4"],
@@ -1271,7 +1274,10 @@ export const perpendicularLinesInTheCoordinatePlane: TopicDef = {
   title: t("Perpendicular Lines in the Coordinate Plane", "坐标平面中的垂线"),
   summary: t("Use negative reciprocal slopes to recognize and write perpendicular lines.", "用互为负倒数的斜率识别并写出垂线。"),
   prerequisites: ["parallel-lines-in-the-coordinate-plane"],
-  encompasses: [{ topic: "parallel-lines-in-the-coordinate-plane", weight: 0.5 }],
+  encompasses: [
+    { topic: "parallel-lines-in-the-coordinate-plane", weight: 0.5 },
+    { topic: "operations-with-rational-numbers", weight: 0.3 },
+  ],
   xp: 15,
   standards: ["CCSS.HSG.GPE.B.5"],
   knowledgePoints: [
@@ -1650,7 +1656,10 @@ export const eliminationWithTwoTransformations: TopicDef = {
     "两个方程分别乘以适当的数，使某个变量的系数互为相反数。",
   ),
   prerequisites: ["elimination-with-one-transformation"],
-  encompasses: [{ topic: "elimination-with-one-transformation", weight: 0.7 }],
+  encompasses: [
+    { topic: "elimination-with-one-transformation", weight: 0.7 },
+    { topic: "operations-with-rational-numbers", weight: 0.3 },
+  ],
   xp: 18,
   standards: ["CCSS.8.EE.C.8.B", "CCSS.HSA.REI.C.5"],
   knowledgePoints: [
@@ -1773,7 +1782,8 @@ export const systemsWithFractionalCoefficients: TopicDef = {
   prerequisites: ["elimination-with-two-transformations"],
   encompasses: [
     { topic: "elimination-with-two-transformations", weight: 0.6 },
-    { topic: "least-common-multiple", weight: 0.2 },
+    { topic: "operations-with-rational-numbers", weight: 0.3 },
+    { topic: "least-common-multiple", weight: 0.3 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.REI.C.6"],
@@ -2320,6 +2330,8 @@ export const intersectionOfTwoLines: TopicDef = {
   encompasses: [
     { topic: "solving-systems-by-substitution", weight: 0.5 },
     { topic: "elimination-with-two-transformations", weight: 0.3 },
+    { topic: "slope-of-a-line", weight: 0.3 },
+    { topic: "operations-with-rational-numbers", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.REI.C.6", "CCSS.HSA.REI.D.11"],

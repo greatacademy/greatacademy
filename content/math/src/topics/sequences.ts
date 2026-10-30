@@ -1155,7 +1155,7 @@ export const solvingForVariablesInArithmeticSequences: TopicDef = {
   ),
   prerequisites: ["arithmetic-sequences", "equations-with-parentheses"],
   encompasses: [
-    { topic: "equations-with-parentheses", weight: 0.4 },
+    { topic: "equations-with-parentheses", weight: 0.6 },
     { topic: "arithmetic-sequences", weight: 0.3 },
   ],
   xp: 14,
@@ -1406,7 +1406,7 @@ export const geometricSequences: TopicDef = {
   prerequisites: ["arithmetic-sequences", "operations-with-rational-numbers"],
   encompasses: [
     { topic: "arithmetic-sequences", weight: 0.2 },
-    { topic: "operations-with-rational-numbers", weight: 0.2 },
+    { topic: "operations-with-rational-numbers", weight: 0.3 },
   ],
   xp: 12,
   standards: ["CCSS.HSF.IF.A.3", "CCSS.HSF.LE.A.2"],
@@ -1804,7 +1804,7 @@ export const geometricSequencesFromTwoTerms: TopicDef = {
   prerequisites: ["nth-term-of-a-geometric-sequence", "square-roots-and-cube-roots"],
   encompasses: [
     { topic: "nth-term-of-a-geometric-sequence", weight: 0.5 },
-    { topic: "square-roots-and-cube-roots", weight: 0.2 },
+    { topic: "square-roots-and-cube-roots", weight: 0.4 },
   ],
   xp: 15,
   standards: ["CCSS.HSF.LE.A.2"],

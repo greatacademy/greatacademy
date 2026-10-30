@@ -475,6 +475,7 @@ export const graphsOfFunctions: TopicDef = {
   encompasses: [
     { topic: "representations-of-functions", weight: 0.4 },
     { topic: "introduction-to-functions", weight: 0.3 },
+    { topic: "evaluating-expressions", weight: 0.3 },
   ],
   xp: 14,
   standards: ["CCSS.HSF.IF.A.2", "CCSS.HSA.REI.D.10"],
@@ -591,8 +592,11 @@ export const domainOfAFunction: TopicDef = {
     "Find the domain of a function from a set of pairs, a graph or a formula, and write it in interval notation.",
     "由数对集合、图象或公式求函数的定义域，并用区间表示。",
   ),
-  prerequisites: ["graphs-of-functions", "interval-notation", "square-roots-and-cube-roots"],
-  encompasses: [{ topic: "graphs-of-functions", weight: 0.3 }],
+  prerequisites: ["graphs-of-functions", "unions-of-intervals", "square-roots-and-cube-roots"],
+  encompasses: [
+    { topic: "unbounded-intervals", weight: 0.4 },
+    { topic: "graphs-of-functions", weight: 0.3 },
+  ],
   xp: 16,
   standards: ["CCSS.HSF.IF.A.1", "CCSS.HSF.IF.B.5"],
   knowledgePoints: [
@@ -1287,7 +1291,10 @@ export const rangeAdvancedCases: TopicDef = {
     "求由几段组成的图象的值域，以及由平方和平方根构成的函数的值域。",
   ),
   prerequisites: ["range-of-a-function"],
-  encompasses: [{ topic: "range-of-a-function", weight: 0.7 }],
+  encompasses: [
+    { topic: "range-of-a-function", weight: 0.7 },
+    { topic: "unions-of-intervals", weight: 0.3 },
+  ],
   xp: 15,
   standards: ["CCSS.HSF.IF.B.5"],
   knowledgePoints: [
@@ -1379,6 +1386,7 @@ export const rootsOfAFunction: TopicDef = {
   ),
   prerequisites: ["graphs-of-functions", "properties-of-lines-in-slope-intercept-form"],
   encompasses: [
+    { topic: "properties-of-lines-in-slope-intercept-form", weight: 0.4 },
     { topic: "graphs-of-functions", weight: 0.3 },
     { topic: "two-step-equations", weight: 0.3 },
   ],
@@ -1906,10 +1914,11 @@ export const modelingWithLinearFunctions: TopicDef = {
     "Use linear functions that describe real situations: evaluate them, solve for the input, and interpret their numbers.",
     "使用描述实际情境的一次函数：求函数值、反求输入，并解释其中各数的含义。",
   ),
-  prerequisites: ["introduction-to-functions", "slope-intercept-form"],
+  prerequisites: ["introduction-to-functions", "slope-intercept-form", "interpreting-linear-expressions"],
   encompasses: [
-    { topic: "introduction-to-functions", weight: 0.4 },
     { topic: "two-step-equations", weight: 0.5 },
+    { topic: "introduction-to-functions", weight: 0.4 },
+    { topic: "interpreting-linear-expressions", weight: 0.4 },
   ],
   xp: 14,
   standards: ["CCSS.HSF.LE.B.5", "CCSS.HSF.IF.A.2"],
@@ -2012,6 +2021,7 @@ export const constructingLinearFunctions: TopicDef = {
   encompasses: [
     { topic: "modeling-with-linear-functions", weight: 0.5 },
     { topic: "representations-of-functions", weight: 0.3 },
+    { topic: "slope-of-a-line", weight: 0.3 },
   ],
   xp: 16,
   standards: ["CCSS.HSF.LE.A.2", "CCSS.HSF.BF.A.1.A"],
@@ -2593,6 +2603,7 @@ export const introductionToInverseFunctions: TopicDef = {
   encompasses: [
     { topic: "function-composition", weight: 0.4 },
     { topic: "two-step-equations", weight: 0.4 },
+    { topic: "rearranging-formulas", weight: 0.3 },
   ],
   xp: 16,
   standards: ["CCSS.HSF.BF.B.4.A"],

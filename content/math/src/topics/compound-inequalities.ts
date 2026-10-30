@@ -224,7 +224,10 @@ export const solvingCompoundInequalities: TopicDef = {
     "检验并求解形如 $-3 < 2x + 1 \\le 7$ 的连不等式：对三部分同时运算。",
   ),
   prerequisites: ["solving-multi-step-inequalities"],
-  encompasses: [{ topic: "solving-multi-step-inequalities", weight: 0.5 }],
+  encompasses: [
+    { topic: "solving-multi-step-inequalities", weight: 0.5 },
+    { topic: "inequalities-and-solutions", weight: 0.3 },
+  ],
   xp: 15,
   standards: ["CCSS.HSA.REI.B.3"],
   knowledgePoints: [
@@ -852,6 +855,7 @@ export const compoundOrInequalities: TopicDef = {
   encompasses: [
     { topic: "unions-of-intervals", weight: 0.6 },
     { topic: "solving-multi-step-inequalities", weight: 0.5 },
+    { topic: "unbounded-intervals", weight: 0.5 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.REI.B.3"],
@@ -940,6 +944,7 @@ export const compoundAndInequalities: TopicDef = {
   encompasses: [
     { topic: "intersections-of-intervals", weight: 0.6 },
     { topic: "solving-multi-step-inequalities", weight: 0.5 },
+    { topic: "unbounded-intervals", weight: 0.5 },
   ],
   xp: 15,
   standards: ["CCSS.HSA.REI.B.3"],
@@ -1251,7 +1256,7 @@ export const introductionToModelingWithInequalities: TopicDef = {
     "把“至少”“介于……之间”等文字表述的限制翻译成不等式。",
   ),
   prerequisites: ["solving-compound-inequalities"],
-  encompasses: [{ topic: "inequalities-and-solutions", weight: 0.4 }],
+  encompasses: [{ topic: "inequalities-and-solutions", weight: 0.5 }],
   xp: 12,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.HSA.CED.A.3"],
   knowledgePoints: [
@@ -1737,6 +1742,7 @@ export const modelingWithCompoundInequalities: TopicDef = {
   encompasses: [
     { topic: "modeling-with-two-step-inequalities", weight: 0.5 },
     { topic: "solving-compound-inequalities", weight: 0.7 },
+    { topic: "introduction-to-modeling-with-inequalities", weight: 0.3 },
   ],
   xp: 16,
   standards: ["CCSS.HSA.CED.A.1", "CCSS.HSA.CED.A.3"],
