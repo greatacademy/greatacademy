@@ -173,5 +173,100 @@ export const prealgebra: CourseDef = {
   ],
 };
 
+/** algebraI is the first high-school algebra course. */
+export const algebraI: CourseDef = {
+  id: "algebra-i",
+  title: t("Algebra I", "代数一"),
+  description: t(
+    "Units and variation, polynomials and their products, and arithmetic and geometric sequences.",
+    "单位与比例关系，多项式及其乘法，等差数列与等比数列。",
+  ),
+  units: [
+    {
+      title: t("Units", "单位"),
+      modules: [
+        {
+          title: t("Unit Conversions", "单位换算"),
+          topics: [
+            "metric-units-of-mass",
+            "metric-units-of-length",
+            "two-step-unit-conversions",
+            "units-of-time",
+            "mixed-units",
+            "converting-units-of-area",
+          ],
+        },
+        {
+          title: t("Working With Units", "单位的运用"),
+          topics: ["units-in-formulas", "units-of-rates-of-change", "degrees-of-accuracy"],
+        },
+        {
+          title: t("Direct and Inverse Variation", "正比例与反比例"),
+          topics: ["direct-variation", "modeling-with-direct-variation", "inverse-variation", "modeling-with-inverse-variation"],
+        },
+      ],
+    },
+    {
+      title: t("Polynomials", "多项式"),
+      modules: [
+        {
+          title: t("Polynomials", "多项式"),
+          topics: [
+            "introduction-to-polynomials",
+            "degree-of-a-polynomial",
+            "simplifying-polynomials",
+            "distributive-law-for-polynomials",
+            "adding-and-subtracting-polynomials",
+            "monomials-binomials-and-trinomials",
+          ],
+        },
+        {
+          title: t("Multiplying Polynomials", "多项式的乘法"),
+          topics: [
+            "multiplying-binomials",
+            "multiplying-polynomials",
+            "squaring-binomials",
+            "expanding-binomials-using-pascals-triangle",
+            "difference-of-squares-formula",
+          ],
+        },
+        { title: t("Factoring Polynomials", "因式分解"), topics: ["greatest-common-factor-of-monomials"] },
+      ],
+    },
+    {
+      title: t("Sequences", "数列"),
+      modules: [
+        {
+          title: t("Introduction to Sequences", "数列入门"),
+          topics: ["introduction-to-sequences", "recursive-sequences", "fibonacci-sequences"],
+        },
+        {
+          title: t("Arithmetic Sequences", "等差数列"),
+          topics: [
+            "arithmetic-sequences",
+            "recursive-formulas-for-arithmetic-sequences",
+            "nth-term-of-an-arithmetic-sequence",
+            "explicit-and-recursive-arithmetic-formulas",
+            "arithmetic-sequences-from-two-terms",
+            "index-of-a-term-in-an-arithmetic-sequence",
+            "solving-for-variables-in-arithmetic-sequences",
+            "modeling-with-arithmetic-sequences",
+          ],
+        },
+        {
+          title: t("Geometric Sequences", "等比数列"),
+          topics: [
+            "geometric-sequences",
+            "nth-term-of-a-geometric-sequence",
+            "recursive-formulas-for-geometric-sequences",
+            "geometric-sequences-from-two-terms",
+            "index-of-a-term-in-a-geometric-sequence",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
-export const mathCourses: readonly CourseDef[] = [algebraFoundations, prealgebra];
+export const mathCourses: readonly CourseDef[] = [algebraFoundations, prealgebra, algebraI];

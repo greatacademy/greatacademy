@@ -13,9 +13,12 @@ import { fractionTopics } from "./topics/fractions.ts";
 import { inequalityTopics } from "./topics/inequalities.ts";
 import { integerTopics } from "./topics/integers.ts";
 import { numberTheoryTopics } from "./topics/number-theory.ts";
+import { polynomialTopics } from "./topics/polynomials.ts";
 import { radicalTopics } from "./topics/radicals.ts";
 import { ratioTopics } from "./topics/ratios.ts";
+import { sequenceTopics } from "./topics/sequences.ts";
 import { statisticsTopics } from "./topics/statistics.ts";
+import { unitTopics } from "./topics/units.ts";
 
 /** math is the definition of the mathematics subject. */
 export const math: SubjectDef = {
@@ -35,6 +38,9 @@ export const math: SubjectDef = {
     ...statisticsTopics,
     ...angleTopics,
     ...areaTopics,
+    ...unitTopics,
+    ...polynomialTopics,
+    ...sequenceTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,

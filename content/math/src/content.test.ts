@@ -19,5 +19,5 @@ describe("math content", () => {
 
   it("has sound generators", () => {
     expect(sampleGenerators(compile(), { samples: 300, minDistinct: 25 }).map(formatIssue)).toEqual([]);
-  });
+  }, 60_000);
 });
