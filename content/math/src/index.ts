@@ -10,6 +10,7 @@ import { bivariateStatisticsTopics } from "./topics/bivariate-statistics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
 import { equationTopics } from "./topics/equations.ts";
+import { exponentialFunctionTopics } from "./topics/exponential-functions.ts";
 import { exponentTopics } from "./topics/exponents.ts";
 import { expressionTopics } from "./topics/expressions.ts";
 import { factoringTopics } from "./topics/factoring.ts";
@@ -56,6 +57,7 @@ export const math: SubjectDef = {
     ...twoVariableTopics,
     ...functionTopics,
     ...absoluteValueTopics,
+    ...exponentialFunctionTopics,
     ...quadraticFunctionTopics,
     ...unitTopics,
     ...polynomialTopics,

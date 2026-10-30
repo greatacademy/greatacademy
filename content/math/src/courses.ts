@@ -178,8 +178,8 @@ export const algebraI: CourseDef = {
   id: "algebra-i",
   title: t("Algebra I", "代数一"),
   description: t(
-    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines, linear models and their graphs, systems of linear equations and linear inequalities in two variables; units and variation; polynomials, their products and factoring; quadratic equations; radical expressions and equations; rational expressions and equations; functions, their features and their composition; absolute value equations, inequalities and graphs; quadratic functions, parabolas and quadratic models; arithmetic and geometric sequences; and scatter plots, trend lines and correlation.",
-    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程、一次模型及其图像、二元一次方程组与二元一次不等式；单位与比例关系；多项式的乘法与因式分解；一元二次方程；根式及根式方程；分式及分式方程；函数及其性质、运算与复合；绝对值方程、不等式与图像；二次函数、抛物线与二次模型；等差数列与等比数列；散点图、趋势线与相关性。",
+    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines, linear models and their graphs, systems of linear equations and linear inequalities in two variables; units and variation; polynomials, their products and factoring; quadratic equations; radical expressions and equations; rational expressions and equations; functions, their features and their composition; absolute value equations, inequalities and graphs; rules of exponents, exponential equations and exponential growth and decay; quadratic functions, parabolas and quadratic models; arithmetic and geometric sequences; and scatter plots, trend lines and correlation.",
+    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程、一次模型及其图像、二元一次方程组与二元一次不等式；单位与比例关系；多项式的乘法与因式分解；一元二次方程；根式及根式方程；分式及分式方程；函数及其性质、运算与复合；绝对值方程、不等式与图像；指数法则、指数方程与指数增长和衰减；二次函数、抛物线与二次模型；等差数列与等比数列；散点图、趋势线与相关性。",
   ),
   units: [
     {
@@ -499,6 +499,53 @@ export const algebraI: CourseDef = {
             "combining-transformations-of-absolute-value-graphs",
             "domain-and-range-of-absolute-value-functions",
             "roots-of-absolute-value-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Exponential Functions", "指数函数"),
+      modules: [
+        {
+          title: t("Rules of Exponents", "指数法则"),
+          topics: [
+            "writing-radicals-using-fractional-exponents",
+            "product-rule-with-algebraic-expressions",
+            "quotient-rule-with-algebraic-expressions",
+            "power-rule-with-algebraic-expressions",
+            "power-of-product-rule-with-algebraic-expressions",
+            "power-of-quotient-rule-with-algebraic-expressions",
+            "combining-rules-of-exponents-with-algebraic-expressions",
+          ],
+        },
+        {
+          title: t("Exponential Expressions and Equations", "指数式与指数方程"),
+          topics: [
+            "solving-exponential-equations",
+            "solving-exponential-equations-with-fractional-solutions",
+            "creating-exponential-growth-expressions",
+            "creating-exponential-decay-expressions",
+          ],
+        },
+        {
+          title: t("Exponential Growth and Decay", "指数增长与衰减"),
+          topics: [
+            "exponential-functions",
+            "modeling-exponential-growth-with-functions",
+            "interpreting-exponential-growth",
+            "solving-exponential-growth-problems",
+            "modeling-exponential-decay-with-functions",
+            "interpreting-exponential-decay",
+            "solving-exponential-decay-problems",
+          ],
+        },
+        {
+          title: t("Comparing and Graphing Exponential Functions", "指数函数的比较与图象"),
+          topics: [
+            "linear-vs-exponential-growth-and-decay",
+            "linear-vs-exponential-models",
+            "graphing-exponential-growth-functions",
+            "graphing-exponential-decay-functions",
           ],
         },
       ],
