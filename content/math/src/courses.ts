@@ -178,8 +178,8 @@ export const algebraI: CourseDef = {
   id: "algebra-i",
   title: t("Algebra I", "代数一"),
   description: t(
-    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines, linear models and their graphs, systems of linear equations and linear inequalities in two variables; units and variation; polynomials, their products and factoring; quadratic equations; radical expressions and equations; rational expressions and equations; functions, their features and their composition; arithmetic and geometric sequences; and scatter plots, trend lines and correlation.",
-    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程、一次模型及其图像、二元一次方程组与二元一次不等式；单位与比例关系；多项式的乘法与因式分解；一元二次方程；根式及根式方程；分式及分式方程；函数及其性质、运算与复合；等差数列与等比数列；散点图、趋势线与相关性。",
+    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines, linear models and their graphs, systems of linear equations and linear inequalities in two variables; units and variation; polynomials, their products and factoring; quadratic equations; radical expressions and equations; rational expressions and equations; functions, their features and their composition; absolute value equations, inequalities and graphs; arithmetic and geometric sequences; and scatter plots, trend lines and correlation.",
+    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程、一次模型及其图像、二元一次方程组与二元一次不等式；单位与比例关系；多项式的乘法与因式分解；一元二次方程；根式及根式方程；分式及分式方程；函数及其性质、运算与复合；绝对值方程、不等式与图像；等差数列与等比数列；散点图、趋势线与相关性。",
   ),
   units: [
     {
@@ -470,6 +470,35 @@ export const algebraI: CourseDef = {
             "function-composition",
             "describing-function-composition",
             "introduction-to-inverse-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Absolute Value", "绝对值"),
+      modules: [
+        {
+          title: t("Absolute Value Expressions, Equations and Inequalities", "绝对值表达式、方程与不等式"),
+          topics: [
+            "absolute-value-expressions",
+            "rules-of-absolute-value",
+            "further-rules-of-absolute-value",
+            "absolute-value-equations",
+            "further-absolute-value-equations",
+            "equations-connecting-absolute-value-and-linear-functions",
+            "absolute-value-equations-with-extraneous-solutions",
+            "absolute-value-inequalities",
+          ],
+        },
+        {
+          title: t("Absolute Value Functions", "绝对值函数"),
+          topics: [
+            "absolute-value-graphs",
+            "vertical-reflections-of-absolute-value-graphs",
+            "stretches-of-absolute-value-graphs",
+            "combining-transformations-of-absolute-value-graphs",
+            "domain-and-range-of-absolute-value-functions",
+            "roots-of-absolute-value-functions",
           ],
         },
       ],

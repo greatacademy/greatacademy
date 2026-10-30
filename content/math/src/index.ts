@@ -3,6 +3,7 @@ import { compileSubject, t } from "@ga/content";
 import { mathCheckers } from "@ga/subject-math";
 
 import { mathCourses } from "./courses.ts";
+import { absoluteValueTopics } from "./topics/absolute-value.ts";
 import { angleTopics } from "./topics/angles.ts";
 import { areaTopics } from "./topics/area.ts";
 import { bivariateStatisticsTopics } from "./topics/bivariate-statistics.ts";
@@ -53,6 +54,7 @@ export const math: SubjectDef = {
     ...lineTopics,
     ...twoVariableTopics,
     ...functionTopics,
+    ...absoluteValueTopics,
     ...unitTopics,
     ...polynomialTopics,
     ...factoringTopics,
