@@ -9,6 +9,7 @@ import { algebraIIFactoringTopics } from "./topics/algebra-ii-factoring.ts";
 import { algebraIIFunctionTopics } from "./topics/algebra-ii-functions.ts";
 import { algebraIIInverseTopics } from "./topics/algebra-ii-inverses.ts";
 import { algebraIILogarithmTopics } from "./topics/algebra-ii-logarithms.ts";
+import { polynomialTheoremTopics } from "./topics/algebra-ii-polynomial-theorems.ts";
 import { algebraIIPolynomialTopics } from "./topics/algebra-ii-polynomials.ts";
 import { algebraIIRationalRadicalTopics } from "./topics/algebra-ii-rational-radical.ts";
 import { graphTransformationTopics } from "./topics/algebra-ii-transformations.ts";
@@ -100,6 +101,7 @@ export const math: SubjectDef = {
     ...triangleTrigonometryTopics,
     ...solidGeometryTopics,
     ...algebraIIFactoringTopics,
+    ...polynomialTheoremTopics,
     ...algebraIIPolynomialTopics,
     ...algebraIIFunctionTopics,
     ...graphTransformationTopics,
