@@ -428,7 +428,11 @@ export const commonLogarithm: TopicDef = {
     "求以 10 为底的对数，解 $\\log x = c$，并判断 $\\log x$ 在哪两个相邻整数之间。",
   ),
   prerequisites: ["evaluating-logarithms", "scientific-notation"],
-  encompasses: [{ topic: "evaluating-logarithms", weight: 0.3 }],
+  encompasses: [
+    { topic: "evaluating-logarithms", weight: 0.3 },
+    { topic: "scientific-notation", weight: 0.2 },
+    { topic: "two-step-equations", weight: 0.2 },
+  ],
   xp: 12,
   standards: ["CCSS.HSF.LE.A.4"],
   knowledgePoints: [
@@ -834,7 +838,10 @@ export const productRuleForLogarithms: TopicDef = {
     "用 $\\log_{b} (MN) = \\log_{b} M + \\log_{b} N$ 合并、计算和展开对数。",
   ),
   prerequisites: ["simplifying-logarithmic-expressions"],
-  encompasses: [{ topic: "simplifying-logarithmic-expressions", weight: 0.2 }],
+  encompasses: [
+    { topic: "simplifying-logarithmic-expressions", weight: 0.2 },
+    { topic: "evaluating-logarithms", weight: 0.3 },
+  ],
   xp: 13,
   standards: ["CCSS.HSF.LE.A.4"],
   knowledgePoints: [
@@ -936,7 +943,10 @@ export const quotientRuleForLogarithms: TopicDef = {
     "用 $\\log_{b} \\frac{M}{N} = \\log_{b} M - \\log_{b} N$ 合并、计算和展开对数。",
   ),
   prerequisites: ["product-rule-for-logarithms"],
-  encompasses: [{ topic: "product-rule-for-logarithms", weight: 0.3 }],
+  encompasses: [
+    { topic: "product-rule-for-logarithms", weight: 0.3 },
+    { topic: "evaluating-logarithms", weight: 0.3 },
+  ],
   xp: 12,
   standards: ["CCSS.HSF.LE.A.4"],
   knowledgePoints: [
@@ -1045,7 +1055,11 @@ export const powerRuleForLogarithms: TopicDef = {
     "用 $\\log_{b} M^{k} = k \\log_{b} M$ 计算幂和根式的对数，并把系数移到真数里。",
   ),
   prerequisites: ["product-rule-for-logarithms"],
-  encompasses: [{ topic: "product-rule-for-logarithms", weight: 0.2 }],
+  encompasses: [
+    { topic: "product-rule-for-logarithms", weight: 0.2 },
+    { topic: "evaluating-logarithms", weight: 0.3 },
+    { topic: "writing-radicals-using-fractional-exponents", weight: 0.2 },
+  ],
   xp: 13,
   standards: ["CCSS.HSF.LE.A.4"],
   knowledgePoints: [
@@ -1357,7 +1371,10 @@ export const changeOfBaseFormula: TopicDef = {
     "把 $\\log_{a} x$ 写成 $\\frac{\\log_{b} x}{\\log_{b} a}$，计算对数的积，并用自然对数求任意对数的近似值。",
   ),
   prerequisites: ["combining-laws-of-logarithms"],
-  encompasses: [{ topic: "power-rule-for-logarithms", weight: 0.3 }],
+  encompasses: [
+    { topic: "power-rule-for-logarithms", weight: 0.3 },
+    { topic: "evaluating-logarithms", weight: 0.3 },
+  ],
   xp: 15,
   standards: ["CCSS.HSF.LE.A.4"],
   knowledgePoints: [
@@ -1489,7 +1506,8 @@ export const solvingExponentialEquationsUsingLogarithms: TopicDef = {
   prerequisites: ["change-of-base-formula"],
   encompasses: [
     { topic: "converting-between-exponential-and-logarithmic-form", weight: 0.3 },
-    { topic: "change-of-base-formula", weight: 0.2 },
+    { topic: "change-of-base-formula", weight: 0.3 },
+    { topic: "two-step-equations", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSF.LE.A.4", "CCSS.HSA.REI.B.3"],

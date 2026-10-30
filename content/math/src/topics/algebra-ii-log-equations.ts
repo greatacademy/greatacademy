@@ -1839,6 +1839,7 @@ export const graphingLogarithmicFunctions: TopicDef = {
   encompasses: [
     { topic: "evaluating-logarithms", weight: 0.4 },
     { topic: "graphs-of-inverse-functions", weight: 0.3 },
+    { topic: "graphing-exponential-growth-functions", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSF.IF.C.7.E", "CCSS.HSF.BF.B.5"],
@@ -2092,6 +2093,7 @@ export const propertiesOfTransformedLogarithmicFunctions: TopicDef = {
   encompasses: [
     { topic: "combining-graph-transformations-of-logarithmic-functions", weight: 0.5 },
     { topic: "solving-logarithmic-equations", weight: 0.3 },
+    { topic: "solving-multi-step-inequalities", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSF.IF.C.7.E", "CCSS.HSF.IF.B.5"],
@@ -2199,6 +2201,7 @@ export const inversesOfExponentialAndLogarithmicFunctions: TopicDef = {
   encompasses: [
     { topic: "calculating-the-inverse-of-a-function", weight: 0.5 },
     { topic: "converting-between-exponential-and-logarithmic-form", weight: 0.4 },
+    { topic: "solving-exponential-equations", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSF.BF.B.4", "CCSS.HSF.BF.B.5"],

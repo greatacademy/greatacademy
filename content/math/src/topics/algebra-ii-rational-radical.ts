@@ -383,11 +383,12 @@ export const addingAndSubtractingRationalExpressions: TopicDef = {
     "Add and subtract rational expressions with the same denominator, with monomial denominators, and with denominators that share a factor, using the least common denominator.",
     "加减同分母的分式、分母是单项式的分式，以及分母有公因式的分式，使用最简公分母。",
   ),
-  prerequisites: ["simplifying-rational-expressions-by-factoring"],
+  prerequisites: ["simplifying-rational-expressions-by-factoring", "the-least-common-multiple-of-two-polynomials"],
   encompasses: [
     { topic: "simplifying-rational-expressions-by-factoring", weight: 0.3 },
     { topic: "equivalent-expressions-with-fractions", weight: 0.4 },
     { topic: "adding-and-subtracting-fractions", weight: 0.3 },
+    { topic: "the-least-common-multiple-of-two-polynomials", weight: 0.4 },
   ],
   xp: 16,
   standards: ["CCSS.HSA.APR.D.7"],

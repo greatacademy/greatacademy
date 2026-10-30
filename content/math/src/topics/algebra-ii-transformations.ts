@@ -459,7 +459,10 @@ export const horizontalTranslationsOfFunctions: TopicDef = {
     "把任意函数的图象左右平移：y = f(x − h) 把每个点向右移动 h 个单位。",
   ),
   prerequisites: ["vertical-translations-of-functions"],
-  encompasses: [{ topic: "vertical-translations-of-functions", weight: 0.3 }],
+  encompasses: [
+    { topic: "vertical-translations-of-functions", weight: 0.3 },
+    { topic: "squaring-binomials", weight: 0.2 },
+  ],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.3"],
   knowledgePoints: [
@@ -1573,7 +1576,11 @@ export const findingPointsOnTransformedCurves: TopicDef = {
     "求 y = a·f(bx + c) + d 上由 f 的已知点得到的点，以及反过来求原来的点。",
   ),
   prerequisites: ["combining-reflections-with-other-graph-transformations"],
-  encompasses: [{ topic: "combining-reflections-with-other-graph-transformations", weight: 0.5 }],
+  encompasses: [
+    { topic: "combining-reflections-with-other-graph-transformations", weight: 0.5 },
+    { topic: "combining-graph-transformations-three-or-more-operations", weight: 0.3 },
+    { topic: "two-step-equations", weight: 0.2 },
+  ],
   xp: 16,
   standards: ["CCSS.HSF.BF.B.3"],
   knowledgePoints: [

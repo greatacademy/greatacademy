@@ -2183,6 +2183,7 @@ export const theRemainderTheorem: TopicDef = {
   encompasses: [
     { topic: "the-factor-theorem", weight: 0.4 },
     { topic: "dividing-polynomials-using-synthetic-division", weight: 0.3 },
+    { topic: "evaluating-expressions", weight: 0.3 },
   ],
   xp: 12,
   standards: ["CCSS.HSA.APR.B.2"],

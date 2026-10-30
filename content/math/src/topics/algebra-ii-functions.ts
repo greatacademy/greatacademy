@@ -413,7 +413,11 @@ export const oneToOneFunctions: TopicDef = {
     "判断不同的输入是否总有不同的输出：从数值表、用水平线检验、从解析式判断。",
   ),
   prerequisites: ["vertical-line-test", "absolute-value-graphs", "graphing-elementary-quadratic-functions"],
-  encompasses: [{ topic: "vertical-line-test", weight: 0.3 }],
+  encompasses: [
+    { topic: "vertical-line-test", weight: 0.3 },
+    { topic: "absolute-value-graphs", weight: 0.2 },
+    { topic: "graphing-elementary-quadratic-functions", weight: 0.2 },
+  ],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.4.D"],
   knowledgePoints: [
@@ -551,6 +555,7 @@ export const graphsOfInverseFunctions: TopicDef = {
   encompasses: [
     { topic: "introduction-to-inverse-functions", weight: 0.4 },
     { topic: "one-to-one-functions", weight: 0.2 },
+    { topic: "slope-intercept-form", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.4.C"],
@@ -780,6 +785,8 @@ export const invertibleFunctions: TopicDef = {
   encompasses: [
     { topic: "one-to-one-functions", weight: 0.4 },
     { topic: "domain-and-range-of-inverse-functions", weight: 0.3 },
+    { topic: "the-vertex-form-of-a-parabola", weight: 0.3 },
+    { topic: "local-extrema", weight: 0.3 },
   ],
   xp: 15,
   standards: ["CCSS.HSF.BF.B.4.D"],
