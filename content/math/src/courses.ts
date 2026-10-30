@@ -178,8 +178,8 @@ export const algebraI: CourseDef = {
   id: "algebra-i",
   title: t("Algebra I", "代数一"),
   description: t(
-    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; units and variation; polynomials and their products; and arithmetic and geometric sequences.",
-    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；单位与比例关系；多项式及其乘法；等差数列与等比数列。",
+    "Linear equations with parameters, formulas and word problems; compound inequalities and interval notation; equations solved with roots; the coordinate plane, equations of lines and systems of linear equations; units and variation; polynomials and their products; and arithmetic and geometric sequences.",
+    "含参数的一次方程、公式变形与应用题；复合不等式与区间记号；用开方解方程；坐标平面、直线方程与二元一次方程组；单位与比例关系；多项式及其乘法；等差数列与等比数列。",
   ),
   units: [
     {
@@ -231,6 +231,41 @@ export const algebraI: CourseDef = {
         {
           title: t("Nonlinear Equations", "非线性方程"),
           topics: ["solving-equations-with-square-roots", "solving-odd-power-equations", "solving-even-power-equations"],
+        },
+      ],
+    },
+    {
+      title: t("Lines and Systems of Equations", "直线与方程组"),
+      modules: [
+        { title: t("The Coordinate Plane and Slope", "坐标平面与斜率"), topics: ["the-coordinate-plane", "slope-of-a-line"] },
+        {
+          title: t("Equations of Lines", "直线方程"),
+          topics: [
+            "slope-intercept-form",
+            "properties-of-lines-in-slope-intercept-form",
+            "point-slope-form",
+            "standard-form",
+            "properties-of-lines-in-standard-form",
+            "parallel-lines-in-the-coordinate-plane",
+            "perpendicular-lines-in-the-coordinate-plane",
+          ],
+        },
+        {
+          title: t("Systems of Linear Equations", "二元一次方程组"),
+          topics: [
+            "systems-of-linear-equations",
+            "introduction-to-elimination",
+            "elimination-with-one-transformation",
+            "elimination-with-two-transformations",
+            "systems-with-fractional-coefficients",
+            "systems-with-decimal-coefficients",
+            "systems-with-no-solution-or-infinitely-many-solutions",
+            "consistency-and-dependency",
+            "solving-systems-by-substitution",
+            "intersection-of-two-lines",
+            "modeling-with-systems",
+            "coin-problems",
+          ],
         },
       ],
     },
