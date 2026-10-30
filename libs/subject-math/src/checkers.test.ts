@@ -469,3 +469,15 @@ describe("factored", () => {
     else expect(v.feedback).toBeUndefined();
   });
 });
+
+describe("expressions with a variable exponent", () => {
+  it.each([
+    ["500(1.03)^{t}", "500 \\cdot 1.03^{t}", true],
+    ["500(1.03)^{t}", "500(1.3)^{t}", false],
+    ["3 \\cdot 2^{n-1}", "\\frac{3}{2} \\cdot 2^{n}", true],
+    ["3 \\cdot 2^{n-1}", "3 \\cdot 2^{n}", false],
+    ["8(\\frac{1}{2})^{t}", "8 \\cdot 2^{-t}", true],
+  ])("compares %s with %s", (expr, response, same) => {
+    expect(accepts("expression", { expr }, response)).toBe(same);
+  });
+});
