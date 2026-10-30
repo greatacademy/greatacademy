@@ -135,6 +135,30 @@ export const prealgebra: CourseDef = {
         { title: t("Data Displays", "数据的图示"), topics: ["dot-plots", "box-plots"] },
       ],
     },
+    {
+      title: t("Geometry", "几何"),
+      modules: [
+        {
+          title: t("Angles", "角"),
+          topics: [
+            "angles-and-angle-measures",
+            "complementary-and-supplementary-angles",
+            "vertical-angles",
+            "parallel-lines-and-transversals",
+          ],
+        },
+        {
+          title: t("Triangles and Polygons", "三角形与多边形"),
+          topics: [
+            "classifying-triangles",
+            "angles-of-a-triangle",
+            "exterior-angles-of-triangles",
+            "isosceles-triangles",
+            "angles-of-polygons",
+          ],
+        },
+      ],
+    },
   ],
 };
 

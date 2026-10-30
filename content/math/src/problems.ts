@@ -27,6 +27,8 @@ export interface NumberProblem {
   readonly form?: "number" | "integer" | "fraction" | "decimal" | "mixed";
   /** percent shows a percent sign after the field: the answer is a number of percent. */
   readonly percent?: boolean;
+  /** unit shows a unit after the field: "°", or a unit such as "cm" or "cm^2". */
+  readonly unit?: string;
 }
 
 /** mixedLatex writes a number as an integer or a mixed number: "2\frac{1}{3}", "-\frac{2}{3}". */
@@ -67,13 +69,26 @@ export function numberProblem(p: NumberProblem): Problem {
         ...(p.form && { form: p.form }),
         ...(p.solveFor && { var: p.solveFor }),
         ...(p.percent && { percent: true }),
+        ...(p.unit && { unit: p.unit }),
       },
-      input: { kind: "math", ...(p.solveFor && { prefix: `${p.solveFor} =` }), ...(p.percent && { suffix: "\\%" }) },
+      input: {
+        kind: "math",
+        ...(p.solveFor && { prefix: `${p.solveFor} =` }),
+        ...(p.percent && { suffix: "\\%" }),
+        ...(p.unit && { suffix: unitLatex(p.unit) }),
+      },
     },
     solution: p.solution,
     canonical: latexIn(answer, p.form),
     wrong,
   };
+}
+
+/** unitLatex writes a unit after a number: "^{\\circ}" for degrees, "\\text{ cm}^{2}" for "cm^2". */
+export function unitLatex(unit: string): string {
+  if (unit === "°") return "^{\\circ}";
+  const [name, power] = unit.split("^");
+  return `\\text{ ${name}}${power ? `^{${power}}` : ""}`;
 }
 
 /** isTerminating tells whether a number has a terminating decimal expansion. */
