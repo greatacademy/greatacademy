@@ -4,8 +4,10 @@ import { describe, expect, it } from "vitest";
 import { mathCheckers } from "./checkers.ts";
 
 const registry = new CheckerRegistry(mathCheckers);
-const verdict = (checker: string, expected: Record<string, string>, response: string) => registry.check(checker, expected, response);
-const accepts = (checker: string, expected: Record<string, string>, response: string) => verdict(checker, expected, response).correct;
+const verdict = (checker: string, expected: Record<string, string | boolean>, response: string) =>
+  registry.check(checker, expected, response);
+const accepts = (checker: string, expected: Record<string, string | boolean>, response: string) =>
+  verdict(checker, expected, response).correct;
 
 describe("number", () => {
   it.each([
@@ -51,6 +53,18 @@ describe("number", () => {
     expect(verdict("number", { value: "1/2", form: "fraction" }, "0.5").feedback?.en).toContain("fraction");
     expect(verdict("number", { value: "1/2", form: "decimal" }, "\\frac{1}{2}").feedback?.en).toContain("decimal");
     expect(accepts("number", { value: "1/2", form: "decimal" }, ".5")).toBe(true);
+    expect(verdict("number", { value: "7/3", form: "mixed" }, "\\frac{7}{3}").feedback?.en).toContain("mixed");
+    expect(verdict("number", { value: "5/2", form: "mixed" }, "2.5").feedback?.en).toContain("mixed");
+    expect(accepts("number", { value: "7/3", form: "mixed" }, "2\\frac{1}{3}")).toBe(true);
+    expect(accepts("number", { value: "-2/3", form: "mixed" }, "-\\frac{2}{3}")).toBe(true);
+    expect(accepts("number", { value: "3", form: "mixed" }, "3")).toBe(true);
+  });
+
+  it("ignores a typed percent sign when the field has one", () => {
+    expect(accepts("number", { value: "25", percent: true }, "25\\%")).toBe(true);
+    expect(accepts("number", { value: "25", percent: true }, "25%")).toBe(true);
+    expect(accepts("number", { value: "25", percent: true }, "25")).toBe(true);
+    expect(accepts("number", { value: "25" }, "25\\%")).toBe(false);
   });
 
   it("accepts the variable when asked to solve", () => {
@@ -105,6 +119,30 @@ describe("expression", () => {
     const v = verdict("expression", { expr, form: "simplified" }, response);
     expect(v.correct).toBe(false);
     expect(v.feedback?.en).toContain("Simplify");
+  });
+});
+
+describe("factorization", () => {
+  it.each(["2^{3}\\cdot 3", "3\\cdot 2^3", "2\\cdot 2\\cdot 2\\cdot 3", "2\\times 2^{2}\\times 3", "(2^3)(3)"])(
+    "accepts %s as 24",
+    (response) => {
+      expect(accepts("factorization", { value: "24" }, response)).toBe(true);
+    },
+  );
+  it("accepts a prime as its own factorization", () => {
+    expect(accepts("factorization", { value: "13" }, "13")).toBe(true);
+  });
+  it.each([
+    ["24", "Write the number"],
+    ["4\\cdot 6", "Write the number"],
+    ["8\\cdot 3", "Write the number"],
+    ["2^{2}\\cdot 3", undefined],
+    ["2^{3}+3", undefined],
+  ])("rejects %s for 24", (response, message) => {
+    const v = verdict("factorization", { value: "24" }, response);
+    expect(v.correct).toBe(false);
+    if (message) expect(v.feedback?.en).toContain(message);
+    else expect(v.feedback).toBeUndefined();
   });
 });
 

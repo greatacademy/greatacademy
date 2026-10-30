@@ -4,6 +4,7 @@ import { t } from "@ga/content";
 import { equivalent, evaluate } from "./algebra.ts";
 import { isSimplifiedPolynomial, type NumberLiteral, numberLiteral } from "./forms.ts";
 import { isRelation, type Node, ParseError, parseExpression, parseLatex, type RelOp, unwrap } from "./latex.ts";
+import { isPrime } from "./numbers.ts";
 import { Q } from "./rational.ts";
 
 const feedback = {
@@ -13,6 +14,8 @@ const feedback = {
   integer: t("Write the answer as an integer.", "请把答案写成整数。"),
   fraction: t("Write the answer as a fraction, not a decimal.", "请把答案写成分数，而不是小数。"),
   decimal: t("Write the answer as a decimal.", "请把答案写成小数。"),
+  mixed: t("Write the answer as a mixed number.", "请把答案写成带分数。"),
+  primes: t("Write the number as a product of primes, such as $2^{2} \\cdot 3$.", "请把这个数写成质数的乘积，例如 $2^{2} \\cdot 3$。"),
   expression: t("Write an expression, not an equation.", "请写出表达式，而不是等式。"),
   simplify: t("Simplify fully: remove parentheses and combine like terms.", "请完全化简：去掉括号并合并同类项。"),
   inequality: t("Write an inequality such as $x < 3$.", "请写出不等式，例如 $x < 3$。"),
@@ -43,7 +46,7 @@ function str(o: Record<string, Json>, key: string): string {
 }
 
 /** NumberForm is the form a numeric answer must take. */
-export type NumberForm = "number" | "integer" | "fraction" | "decimal";
+export type NumberForm = "number" | "integer" | "fraction" | "decimal" | "mixed";
 
 /** judgeLiteral checks a number literal's value and form. */
 function judgeLiteral(lit: NumberLiteral | undefined, node: Node, value: Q, form: NumberForm): Verdict {
@@ -60,6 +63,7 @@ function judgeLiteral(lit: NumberLiteral | undefined, node: Node, value: Q, form
   if (form === "integer" && lit.kind !== "integer") return wrong(feedback.integer);
   if (form === "decimal" && lit.kind !== "decimal" && lit.kind !== "integer") return wrong(feedback.decimal);
   if (form === "fraction" && lit.kind === "decimal") return wrong(feedback.fraction);
+  if (form === "mixed" && (lit.kind === "decimal" || (lit.kind === "fraction" && value.abs().cmp(Q.one) > 0))) return wrong(feedback.mixed);
   if (!lit.reduced) return wrong(feedback.lowestTerms);
   return { correct: true };
 }
@@ -70,8 +74,11 @@ function judgeLiteral(lit: NumberLiteral | undefined, node: Node, value: Q, form
  * - "number" (default): an integer, decimal, fraction in lowest terms or mixed number;
  * - "integer": an integer;
  * - "fraction": an integer, fraction in lowest terms or mixed number;
- * - "decimal": an integer or decimal.
- * With expected.var, "x = 3" and "3 = x" are accepted as well as "3".
+ * - "decimal": an integer or decimal;
+ * - "mixed": an integer, mixed number, or fraction less than 1 in absolute value.
+ * With expected.var, "x = 3" and "3 = x" are accepted as well as "3". With
+ * expected.percent, the field is followed by a percent sign and one typed by
+ * the learner as well is ignored.
  */
 export const numberChecker: Checker = {
   id: "number",
@@ -80,7 +87,8 @@ export const numberChecker: Checker = {
     const value = Q.parse(str(e, "value"));
     const form = (e.form ?? "number") as NumberForm;
     const variable = typeof e.var === "string" ? e.var : undefined;
-    const parsed = parse(() => parseLatex(response));
+    const text = e.percent === true ? response.replace(/\\?%\s*$/, "") : response;
+    const parsed = parse(() => parseLatex(text));
     if (isVerdict(parsed)) return parsed;
     let node: Node;
     if (isRelation(parsed)) {
@@ -148,5 +156,63 @@ export const inequalityChecker: Checker = {
   },
 };
 
+function primeFactor(node: Node): { p: bigint; e: bigint } | undefined {
+  const n = unwrap(node);
+  const prime = (x: Node) => (x.k === "num" && !x.decimal && x.v.isInteger() && isPrime(Number(x.v.n)) ? x.v.n : undefined);
+  if (n.k === "num") {
+    const p = prime(n);
+    return p === undefined ? undefined : { p, e: 1n };
+  }
+  if (n.k === "pow") {
+    const p = prime(unwrap(n.a));
+    const b = unwrap(n.b);
+    if (p === undefined || b.k !== "num" || b.decimal || !b.v.isInteger() || b.v.n < 1n) return undefined;
+    return { p, e: b.v.n };
+  }
+  return undefined;
+}
+
+/**
+ * factorizationChecker accepts a prime factorization of expected.value, an
+ * integer ≥ 2: a product of primes and powers of primes, in any order, such as
+ * "2^{3} \\cdot 3" or "2 \\cdot 2 \\cdot 2 \\cdot 3".
+ */
+export const factorizationChecker: Checker = {
+  id: "factorization",
+  check(expected, response) {
+    const value = BigInt(str(obj(expected), "value"));
+    const parsed = parse(() => parseLatex(response));
+    if (isVerdict(parsed)) return parsed;
+    if (isRelation(parsed)) return wrong(feedback.primes);
+    const terms: Node[] = [];
+    const collect = (n: Node) => {
+      const u = unwrap(n);
+      if (u.k === "mul") {
+        collect(u.a);
+        collect(u.b);
+      } else terms.push(u);
+    };
+    collect(parsed);
+    let product = 1n;
+    let allPrime = true;
+    for (const term of terms) {
+      const f = primeFactor(term);
+      if (!f) {
+        allPrime = false;
+        break;
+      }
+      product *= f.p ** f.e;
+    }
+    if (allPrime) return product === value ? { correct: true } : wrong();
+    let v: Q | undefined;
+    try {
+      v = evaluate(parsed);
+    } catch {
+      v = undefined;
+    }
+    return wrong(v?.eq(Q.of(value)) ? feedback.primes : undefined);
+  },
+};
+
 /** mathCheckers are the checkers the mathematics subject registers. */
-export const mathCheckers: readonly Checker[] = [numberChecker, expressionChecker, inequalityChecker];
+export const mathCheckers: readonly Checker[] = [numberChecker, expressionChecker, inequalityChecker, factorizationChecker];

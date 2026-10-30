@@ -10,6 +10,22 @@ export function num(c: Coefficient): string {
   return toQ(c).toLatex();
 }
 
+/**
+ * dec writes a number with a terminating decimal expansion as a decimal:
+ * "0.75", "-2.5", "3". It throws for a number such as 1/3.
+ */
+export function dec(c: Coefficient): string {
+  const v = toQ(c);
+  let k = 0;
+  while (10n ** BigInt(k) % v.d !== 0n) {
+    if (++k > 15) throw new RangeError(`no terminating decimal: ${v}`);
+  }
+  const scaled = (v.n < 0n ? -v.n : v.n) * (10n ** BigInt(k) / v.d);
+  const digits = scaled.toString().padStart(k + 1, "0");
+  const body = k === 0 ? digits : `${digits.slice(0, -k)}.${digits.slice(-k)}`;
+  return v.n < 0n ? `-${body}` : body;
+}
+
 /** paren writes a number, in parentheses when negative, for use after an operator: "(-5)". */
 export function paren(c: Coefficient): string {
   const s = num(c);
