@@ -4,9 +4,18 @@ import { mathCheckers } from "@ga/subject-math";
 
 import { mathCourses } from "./courses.ts";
 import { absoluteValueTopics } from "./topics/absolute-value.ts";
+import { conicTopics } from "./topics/algebra-ii-conics.ts";
+import { algebraIIFactoringTopics } from "./topics/algebra-ii-factoring.ts";
+import { algebraIIFunctionTopics } from "./topics/algebra-ii-functions.ts";
+import { algebraIIInverseTopics } from "./topics/algebra-ii-inverses.ts";
+import { algebraIILogarithmTopics } from "./topics/algebra-ii-logarithms.ts";
+import { algebraIIPolynomialTopics } from "./topics/algebra-ii-polynomials.ts";
+import { algebraIIRationalRadicalTopics } from "./topics/algebra-ii-rational-radical.ts";
+import { graphTransformationTopics } from "./topics/algebra-ii-transformations.ts";
 import { angleTopics } from "./topics/angles.ts";
 import { areaTopics } from "./topics/area.ts";
 import { bivariateStatisticsTopics } from "./topics/bivariate-statistics.ts";
+import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
 import { equationTopics } from "./topics/equations.ts";
@@ -16,12 +25,24 @@ import { expressionTopics } from "./topics/expressions.ts";
 import { factoringTopics } from "./topics/factoring.ts";
 import { fractionTopics } from "./topics/fractions.ts";
 import { functionTopics } from "./topics/functions.ts";
+import { circleTheoremTopics } from "./topics/geometry-circle-theorems.ts";
+import { circleTopics } from "./topics/geometry-circles.ts";
+import { congruenceTopics } from "./topics/geometry-congruence.ts";
+import { coordinateGeometryTopics } from "./topics/geometry-coordinate.ts";
+import { coordinateCircleTopics } from "./topics/geometry-coordinate-circles.ts";
+import { proofCongruenceSimilarityTopics } from "./topics/geometry-proof-congruence-similarity.ts";
+import { similarityTopics } from "./topics/geometry-similarity.ts";
+import { solidGeometryTopics } from "./topics/geometry-solids.ts";
+import { transformationTopics } from "./topics/geometry-transformations.ts";
+import { triangleTrigonometryTopics } from "./topics/geometry-triangles-trigonometry.ts";
+import { grade4OperationTopics } from "./topics/grade-4-operations.ts";
 import { inequalityTopics } from "./topics/inequalities.ts";
 import { integerTopics } from "./topics/integers.ts";
 import { linearEquationTopics } from "./topics/linear-equations.ts";
 import { lineTopics } from "./topics/lines.ts";
 import { numberTheoryTopics } from "./topics/number-theory.ts";
 import { polynomialTopics } from "./topics/polynomials.ts";
+import { probabilityTopics } from "./topics/probability.ts";
 import { quadraticEquationTopics } from "./topics/quadratic-equations.ts";
 import { quadraticFunctionTopics } from "./topics/quadratic-functions.ts";
 import { radicalExpressionTopics } from "./topics/radical-expressions.ts";
@@ -38,6 +59,7 @@ export const math: SubjectDef = {
   id: "math",
   title: t("Mathematics", "数学"),
   topics: [
+    ...grade4OperationTopics,
     ...numberTheoryTopics,
     ...fractionTopics,
     ...decimalAndPercentTopics,
@@ -67,6 +89,26 @@ export const math: SubjectDef = {
     ...rationalExpressionTopics,
     ...sequenceTopics,
     ...bivariateStatisticsTopics,
+    ...transformationTopics,
+    ...congruenceTopics,
+    ...proofCongruenceSimilarityTopics,
+    ...similarityTopics,
+    ...coordinateGeometryTopics,
+    ...circleTopics,
+    ...circleTheoremTopics,
+    ...coordinateCircleTopics,
+    ...triangleTrigonometryTopics,
+    ...solidGeometryTopics,
+    ...algebraIIFactoringTopics,
+    ...algebraIIPolynomialTopics,
+    ...algebraIIFunctionTopics,
+    ...graphTransformationTopics,
+    ...algebraIIInverseTopics,
+    ...algebraIILogarithmTopics,
+    ...algebraIIRationalRadicalTopics,
+    ...conicTopics,
+    ...combinatoricsTopics,
+    ...probabilityTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
