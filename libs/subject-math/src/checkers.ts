@@ -37,6 +37,7 @@ const feedback = {
     "Write the set with inequalities, such as $-2 < x \\le 5$ or $x < 1 \\text{ or } x \\ge 3$.",
     "请用不等式写出这个集合，例如 $-2 < x \\le 5$ 或 $x < 1 \\text{ or } x \\ge 3$。",
   ),
+  point: t("Write the ordered pair, such as $(3, -2)$.", "请写出有序数对，例如 $(3, -2)$。"),
   solutions: t(
     "List the solutions separated by commas, such as $x = 2, x = -5$, or enter $\\varnothing$ if there are none.",
     "请用逗号分隔列出所有解，例如 $x = 2, x = -5$；如果无解，请输入 $\\varnothing$。",
@@ -591,6 +592,51 @@ export const intervalChecker: Checker = {
   },
 };
 
+/**
+ * pointChecker accepts an ordered pair (or tuple) of numbers equal to
+ * expected.values, written "(3, -2)", or, when expected.vars names the
+ * coordinates, as "x = 3, y = -2" in any order. Each number must be written
+ * as in numberChecker's default form.
+ */
+export const pointChecker: Checker = {
+  id: "point",
+  check(expected, response) {
+    const e = obj(expected);
+    const values = e.values;
+    if (!Array.isArray(values) || !values.every((v) => typeof v === "string"))
+      throw new TypeError("expected.values must be an array of strings");
+    const target = (values as string[]).map((v) => Q.parse(v));
+    const vars = Array.isArray(e.vars) ? (e.vars as string[]) : undefined;
+    const s = normalizeLatex(response)
+      .replace(/\\left|\\right/g, "")
+      .trim();
+    let parts: string[];
+    if (s.startsWith("(") && s.endsWith(")") && splitTopLevel(s, ",").length === 1) {
+      parts = splitTopLevel(s.slice(1, -1), ",").map((p) => p.trim());
+    } else if (vars) {
+      const byVar = new Map<string, string>();
+      for (const item of listItems(response)) {
+        const m = /^([a-zA-Z])\s*=(.*)$/.exec(item);
+        if (!m || !vars.includes(m[1]!) || byVar.has(m[1]!)) return wrong(feedback.point);
+        byVar.set(m[1]!, m[2]!);
+      }
+      if (byVar.size !== vars.length) return wrong(feedback.point);
+      parts = vars.map((v) => byVar.get(v)!);
+    } else return wrong(feedback.point);
+    if (parts.length !== target.length) return wrong(feedback.point);
+    let verdict: Verdict = { correct: true };
+    for (const [i, part] of parts.entries()) {
+      const parsed = parse(() => parseLatex(part));
+      if (isVerdict(parsed)) return parsed;
+      if (isRelation(parsed)) return wrong(feedback.point);
+      const v = judgeLiteral(numberLiteral(parsed), parsed, target[i]!, "number");
+      if (!v.correct && !v.feedback) return v;
+      if (!v.correct && verdict.correct) verdict = v;
+    }
+    return verdict;
+  },
+};
+
 /** mathCheckers are the checkers the mathematics subject registers. */
 export const mathCheckers: readonly Checker[] = [
   numberChecker,
@@ -601,4 +647,5 @@ export const mathCheckers: readonly Checker[] = [
   radicalChecker,
   solutionsChecker,
   intervalChecker,
+  pointChecker,
 ];

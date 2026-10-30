@@ -307,6 +307,39 @@ export function intervalProblem(p: IntervalProblem): Problem {
   };
 }
 
+/** PointProblem describes a problem whose answer is an ordered pair, such as the solution of a system of equations. */
+export interface PointProblem {
+  readonly prompt: Text;
+  readonly answer: readonly Coefficient[];
+  /** vars name the coordinates, so that "x = 3, y = -2" is accepted too; x and y by default. */
+  readonly vars?: readonly string[];
+  readonly solution: Text;
+  /** wrong are the pairs typical mistakes produce; pairs equal to the answer are dropped. */
+  readonly wrong?: readonly (readonly Coefficient[])[];
+}
+
+/** pointLatex writes an ordered pair: "(3, -\frac{1}{2})". */
+export function pointLatex(values: readonly Coefficient[]): string {
+  return `(${values.map((v) => toQ(v).toLatex()).join(", ")})`;
+}
+
+/** pointProblem builds a problem checked by the "point" checker. */
+export function pointProblem(p: PointProblem): Problem {
+  const answer = p.answer.map(toQ);
+  const same = (w: readonly Coefficient[]) => w.length === answer.length && w.every((v, i) => toQ(v).eq(answer[i]!));
+  return {
+    prompt: p.prompt,
+    answer: {
+      checker: "point",
+      expected: { values: answer.map((v) => v.toString()), vars: [...(p.vars ?? ["x", "y"])] },
+      input: { kind: "math" },
+    },
+    solution: p.solution,
+    canonical: pointLatex(answer),
+    wrong: [...new Set((p.wrong ?? []).filter((w) => !same(w)).map(pointLatex))],
+  };
+}
+
 /** ChoiceProblem describes a multiple-choice problem with options in a fixed order. */
 export interface ChoiceProblem {
   readonly prompt: Text;

@@ -352,3 +352,35 @@ describe("interval", () => {
     expect(setEqual(parseInequalities(inequalityLatexOf(set), "x").set, set)).toBe(true);
   });
 });
+
+describe("point", () => {
+  const check = (values: string[], response: string) => registry.check("point", { values, vars: ["x", "y"] }, response);
+
+  it.each([
+    [["3", "-2"], "(3, -2)"],
+    [["3", "-2"], "\\left(3,-2\\right)"],
+    [["3", "-2"], "x = 3, y = -2"],
+    [["3", "-2"], "y=-2, x=3"],
+    [["1/2", "0"], "(0.5, 0)"],
+    [["1/2", "0"], "(\\frac{1}{2}, 0)"],
+  ])("accepts %j as %s", (values, response) => {
+    expect(check(values, response).correct).toBe(true);
+  });
+
+  it.each([
+    [["3", "-2"], "(-2, 3)", undefined],
+    [["3", "-2"], "(3, 2)", undefined],
+    [["3", "-2"], "x = -2, y = 3", undefined],
+    [["3", "-2"], "3, -2", "ordered pair"],
+    [["3", "-2"], "(3)", "ordered pair"],
+    [["3", "-2"], "(3, -2, 1)", "ordered pair"],
+    [["3", "-2"], "x = 3", "ordered pair"],
+    [["3", "-2"], "(1 + 2, -2)", "single number"],
+    [["1/2", "0"], "(\\frac{2}{4}, 0)", "lowest terms"],
+  ])("rejects %j as %s", (values, response, message) => {
+    const v = check(values, response);
+    expect(v.correct).toBe(false);
+    if (message) expect(v.feedback?.en).toContain(message);
+    else expect(v.feedback).toBeUndefined();
+  });
+});
