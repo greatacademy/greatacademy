@@ -557,7 +557,11 @@ export const furtherProvingPerpendicularLineTheorems: TopicDef = {
     "证明垂直的直线形成四个直角，以及外侧两边互相垂直的相邻角互余，并用这些定理求未知角。",
   ),
   prerequisites: ["proving-perpendicular-line-theorems"],
-  encompasses: [{ topic: "proving-perpendicular-line-theorems", weight: 0.3 }],
+  encompasses: [
+    { topic: "proving-perpendicular-line-theorems", weight: 0.3 },
+    { topic: "identifying-angle-postulates", weight: 0.2 },
+    { topic: "complementary-and-supplementary-angles", weight: 0.2 },
+  ],
   xp: 16,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
@@ -1281,7 +1285,7 @@ export const combiningGeometricTransformations: TopicDef = {
     { topic: "rotation-rules-in-the-coordinate-plane", weight: 0.3 },
     { topic: "reflections-in-the-coordinate-plane", weight: 0.3 },
     { topic: "translations-of-geometric-figures", weight: 0.3 },
-    { topic: "dilations-of-figures-in-the-coordinate-plane", weight: 0.1 },
+    { topic: "dilations-of-figures-in-the-coordinate-plane", weight: 0.2 },
   ],
   xp: 16,
   standards: ["CCSS.HSG.CO.A.2", "CCSS.HSG.CO.A.5"],

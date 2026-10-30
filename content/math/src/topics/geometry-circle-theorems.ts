@@ -391,6 +391,8 @@ export const problemSolvingWithInscribedAngles: TopicDef = {
   prerequisites: ["inscribed-angles", "equations-with-parentheses"],
   encompasses: [
     { topic: "inscribed-angles", weight: 0.6 },
+    { topic: "central-angles-and-arcs", weight: 0.3 },
+    { topic: "isosceles-triangles", weight: 0.2 },
     { topic: "equations-with-parentheses", weight: 0.2 },
   ],
   xp: 15,
@@ -723,7 +725,11 @@ export const anglesInInscribedRightTriangles: TopicDef = {
     "在以直径为斜边的圆内接直角三角形中求角和弧，包括含未知数的情形。",
   ),
   prerequisites: ["thales-theorem"],
-  encompasses: [{ topic: "thales-theorem", weight: 0.5 }],
+  encompasses: [
+    { topic: "thales-theorem", weight: 0.5 },
+    { topic: "inscribed-angles", weight: 0.4 },
+    { topic: "two-step-equations", weight: 0.2 },
+  ],
   xp: 13,
   standards: ["CCSS.HSG.C.A.2"],
   knowledgePoints: [
@@ -857,6 +863,7 @@ export const furtherAnglesInInscribedRightTriangles: TopicDef = {
   prerequisites: ["angles-in-inscribed-right-triangles", "the-exterior-angle-theorem"],
   encompasses: [
     { topic: "angles-in-inscribed-right-triangles", weight: 0.5 },
+    { topic: "isosceles-triangles", weight: 0.3 },
     { topic: "the-exterior-angle-theorem", weight: 0.2 },
   ],
   xp: 15,
@@ -1055,6 +1062,7 @@ export const inscribedQuadrilaterals: TopicDef = {
   prerequisites: ["problem-solving-with-inscribed-angles", "angles-of-polygons"],
   encompasses: [
     { topic: "problem-solving-with-inscribed-angles", weight: 0.4 },
+    { topic: "inscribed-angles", weight: 0.4 },
     { topic: "angles-of-polygons", weight: 0.1 },
   ],
   xp: 14,
@@ -1702,6 +1710,7 @@ export const secantSecantAnglesToCircles: TopicDef = {
   encompasses: [
     { topic: "problem-solving-with-inscribed-angles", weight: 0.3 },
     { topic: "the-exterior-angle-theorem", weight: 0.2 },
+    { topic: "two-step-equations", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSG.C.A.2"],
@@ -2106,6 +2115,7 @@ export const theTangentChordTheorem: TopicDef = {
   prerequisites: ["tangent-lines-to-circles", "problem-solving-with-inscribed-angles"],
   encompasses: [
     { topic: "problem-solving-with-inscribed-angles", weight: 0.3 },
+    { topic: "inscribed-angles", weight: 0.3 },
     { topic: "tangent-lines-to-circles", weight: 0.2 },
   ],
   xp: 14,
@@ -2322,6 +2332,7 @@ export const circleSimilarity: TopicDef = {
   encompasses: [
     { topic: "dilations-of-geometric-figures", weight: 0.3 },
     { topic: "areas-of-circles", weight: 0.2 },
+    { topic: "the-circumference-of-a-circle", weight: 0.2 },
   ],
   xp: 12,
   standards: ["CCSS.HSG.C.A.1"],
@@ -2518,6 +2529,7 @@ export const provingCircleSimilarity: TopicDef = {
   prerequisites: ["circle-similarity", "translations-of-geometric-figures"],
   encompasses: [
     { topic: "circle-similarity", weight: 0.5 },
+    { topic: "dilations-of-geometric-figures", weight: 0.3 },
     { topic: "translations-of-geometric-figures", weight: 0.2 },
   ],
   xp: 14,

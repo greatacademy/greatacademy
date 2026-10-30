@@ -452,7 +452,10 @@ export const theAsaCongruenceCriterion: TopicDef = {
     "读懂全等的表示，并由两角及其夹边证明三角形全等。",
   ),
   prerequisites: ["identifying-angle-theorems", "angles-of-a-triangle"],
-  encompasses: [{ topic: "angles-of-a-triangle", weight: 0.1 }],
+  encompasses: [
+    { topic: "two-step-equations", weight: 0.2 },
+    { topic: "angles-of-a-triangle", weight: 0.1 },
+  ],
   xp: 14,
   standards: ["CCSS.HSG.CO.B.7", "CCSS.HSG.CO.B.8"],
   knowledgePoints: [
@@ -636,6 +639,7 @@ export const theAasCongruenceCriterion: TopicDef = {
   encompasses: [
     { topic: "the-asa-congruence-criterion", weight: 0.4 },
     { topic: "angles-of-a-triangle", weight: 0.2 },
+    { topic: "two-step-equations", weight: 0.2 },
   ],
   xp: 13,
   standards: ["CCSS.HSG.CO.B.8", "CCSS.HSG.SRT.B.5"],
@@ -782,7 +786,10 @@ export const theSasCongruenceCriterion: TopicDef = {
     "由两边及其夹角证明三角形全等，并理解为什么 SSA 不行。",
   ),
   prerequisites: ["the-asa-congruence-criterion"],
-  encompasses: [{ topic: "the-asa-congruence-criterion", weight: 0.2 }],
+  encompasses: [
+    { topic: "the-asa-congruence-criterion", weight: 0.2 },
+    { topic: "two-step-equations", weight: 0.2 },
+  ],
   xp: 13,
   standards: ["CCSS.HSG.CO.B.8", "CCSS.HSG.SRT.B.5"],
   knowledgePoints: [
@@ -968,7 +975,10 @@ export const theSssCongruenceCriterion: TopicDef = {
     "由三组边证明三角形全等，并写出与各边对应的全等式。",
   ),
   prerequisites: ["the-sas-congruence-criterion"],
-  encompasses: [{ topic: "the-sas-congruence-criterion", weight: 0.2 }],
+  encompasses: [
+    { topic: "the-sas-congruence-criterion", weight: 0.2 },
+    { topic: "two-step-equations", weight: 0.2 },
+  ],
   xp: 13,
   standards: ["CCSS.HSG.CO.B.8", "CCSS.HSG.SRT.B.5"],
   knowledgePoints: [
@@ -1152,6 +1162,7 @@ export const theHlCongruenceCriterion: TopicDef = {
   encompasses: [
     { topic: "the-pythagorean-theorem", weight: 0.3 },
     { topic: "the-sss-congruence-criterion", weight: 0.2 },
+    { topic: "two-step-equations", weight: 0.2 },
   ],
   xp: 13,
   standards: ["CCSS.HSG.SRT.B.5"],
@@ -1345,6 +1356,7 @@ export const combiningCongruenceCriteriaForTriangles: TopicDef = {
     { topic: "the-sas-congruence-criterion", weight: 0.3 },
     { topic: "the-sss-congruence-criterion", weight: 0.3 },
     { topic: "the-hl-congruence-criterion", weight: 0.3 },
+    { topic: "vertical-angles", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSG.SRT.B.5"],
@@ -1637,6 +1649,7 @@ export const rigidMotionsAndCongruence: TopicDef = {
     { topic: "translations-of-geometric-figures", weight: 0.2 },
     { topic: "rotation-rules-in-the-coordinate-plane", weight: 0.2 },
     { topic: "reflections-in-the-coordinate-plane", weight: 0.2 },
+    { topic: "two-step-equations", weight: 0.2 },
     { topic: "dilations-of-geometric-figures", weight: 0.1 },
   ],
   xp: 14,
@@ -1840,7 +1853,10 @@ export const propertiesOfCongruence: TopicDef = {
     "运用全等的自反性、对称性和传递性，并改写全等式。",
   ),
   prerequisites: ["the-asa-congruence-criterion"],
-  encompasses: [{ topic: "the-asa-congruence-criterion", weight: 0.1 }],
+  encompasses: [
+    { topic: "equations-with-variables-on-both-sides", weight: 0.2 },
+    { topic: "the-asa-congruence-criterion", weight: 0.1 },
+  ],
   xp: 11,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
@@ -2508,6 +2524,7 @@ export const provingCongruenceStatements: TopicDef = {
     { topic: "combining-congruence-criteria-for-triangles", weight: 0.5 },
     { topic: "properties-of-congruence", weight: 0.3 },
     { topic: "identifying-angle-theorems", weight: 0.2 },
+    { topic: "parallel-lines-and-transversals", weight: 0.2 },
   ],
   xp: 18,
   standards: ["CCSS.HSG.SRT.B.5", "CCSS.HSG.CO.C.10"],

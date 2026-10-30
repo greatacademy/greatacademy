@@ -443,7 +443,11 @@ export const identifyingAnglePostulates: TopicDef = {
     "运用角的加法公设、邻补角公设和同位角公设，并说出一个结论所依据的公设。",
   ),
   prerequisites: ["parallel-lines-and-transversals"],
-  encompasses: [{ topic: "parallel-lines-and-transversals", weight: 0.3 }],
+  encompasses: [
+    { topic: "parallel-lines-and-transversals", weight: 0.3 },
+    { topic: "complementary-and-supplementary-angles", weight: 0.2 },
+    { topic: "equations-with-variables-on-both-sides", weight: 0.2 },
+  ],
   xp: 14,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
@@ -641,7 +645,12 @@ export const identifyingAngleTheorems: TopicDef = {
     "运用对顶角定理、等角的补角（余角）相等定理以及平行线的定理，并说出一个结论所依据的定理。",
   ),
   prerequisites: ["identifying-angle-postulates"],
-  encompasses: [{ topic: "identifying-angle-postulates", weight: 0.3 }],
+  encompasses: [
+    { topic: "identifying-angle-postulates", weight: 0.3 },
+    { topic: "parallel-lines-and-transversals", weight: 0.3 },
+    { topic: "vertical-angles", weight: 0.2 },
+    { topic: "complementary-and-supplementary-angles", weight: 0.2 },
+  ],
   xp: 14,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
@@ -912,7 +921,10 @@ export const provingAlternateAngleTheorems: TopicDef = {
     "补全“两直线平行，内错角全等、外错角全等”的证明。",
   ),
   prerequisites: ["identifying-angle-theorems"],
-  encompasses: [{ topic: "identifying-angle-theorems", weight: 0.4 }],
+  encompasses: [
+    { topic: "identifying-angle-theorems", weight: 0.4 },
+    { topic: "identifying-angle-postulates", weight: 0.3 },
+  ],
   xp: 14,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
@@ -961,7 +973,11 @@ export const provingAlternateAngleConverses: TopicDef = {
     "补全“内错角或外错角全等，则两直线平行”的证明，并运用这些逆定理。",
   ),
   prerequisites: ["proving-alternate-angle-theorems"],
-  encompasses: [{ topic: "proving-alternate-angle-theorems", weight: 0.4 }],
+  encompasses: [
+    { topic: "proving-alternate-angle-theorems", weight: 0.4 },
+    { topic: "identifying-angle-theorems", weight: 0.3 },
+    { topic: "equations-with-variables-on-both-sides", weight: 0.2 },
+  ],
   xp: 14,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
@@ -1047,7 +1063,11 @@ export const provingConsecutiveAngleTheorems: TopicDef = {
     "补全“两直线平行，同旁内角互补”的证明，并运用这个定理。",
   ),
   prerequisites: ["proving-alternate-angle-theorems"],
-  encompasses: [{ topic: "proving-alternate-angle-theorems", weight: 0.3 }],
+  encompasses: [
+    { topic: "proving-alternate-angle-theorems", weight: 0.3 },
+    { topic: "identifying-angle-postulates", weight: 0.3 },
+    { topic: "two-step-equations", weight: 0.2 },
+  ],
   xp: 14,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
@@ -1140,6 +1160,7 @@ export const provingConsecutiveAngleConverse: TopicDef = {
   encompasses: [
     { topic: "proving-consecutive-angle-theorems", weight: 0.3 },
     { topic: "proving-alternate-angle-converses", weight: 0.2 },
+    { topic: "identifying-angle-theorems", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.CO.C.9"],
@@ -1389,7 +1410,10 @@ export const provingPerpendicularLineTheorems: TopicDef = {
     "补全关于垂线的证明：垂直于平行线之一的截线定理、垂直于同一直线的两直线，以及全等的邻补角。",
   ),
   prerequisites: ["proving-alternate-angle-converses"],
-  encompasses: [{ topic: "proving-alternate-angle-converses", weight: 0.2 }],
+  encompasses: [
+    { topic: "identifying-angle-postulates", weight: 0.3 },
+    { topic: "proving-alternate-angle-converses", weight: 0.2 },
+  ],
   xp: 18,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [
@@ -1890,7 +1914,10 @@ export const rotationRulesInTheCoordinatePlane: TopicDef = {
     "把绕原点的旋转表示成坐标的函数，并做复合与求逆。",
   ),
   prerequisites: ["rotations-of-geometric-figures", "introduction-to-functions"],
-  encompasses: [{ topic: "rotations-of-geometric-figures", weight: 0.5 }],
+  encompasses: [
+    { topic: "rotations-of-geometric-figures", weight: 0.5 },
+    { topic: "introduction-to-functions", weight: 0.2 },
+  ],
   xp: 14,
   standards: ["CCSS.HSG.CO.A.2", "CCSS.HSG.CO.A.5"],
   knowledgePoints: [
@@ -1998,7 +2025,10 @@ export const reflectionsInTheCoordinatePlane: TopicDef = {
     "把点关于坐标轴、直线 y = x 与 y = −x 以及水平和竖直直线作轴对称，并判断对称轴。",
   ),
   prerequisites: ["the-coordinate-plane", "subtracting-integers"],
-  encompasses: [{ topic: "the-coordinate-plane", weight: 0.3 }],
+  encompasses: [
+    { topic: "the-coordinate-plane", weight: 0.3 },
+    { topic: "subtracting-integers", weight: 0.2 },
+  ],
   xp: 14,
   standards: ["CCSS.HSG.CO.A.2", "CCSS.HSG.CO.A.4", "CCSS.HSG.CO.A.5"],
   knowledgePoints: [
@@ -2158,6 +2188,7 @@ export const reflectionsAcrossArbitraryLines: TopicDef = {
   encompasses: [
     { topic: "reflections-in-the-coordinate-plane", weight: 0.4 },
     { topic: "perpendicular-lines-in-the-coordinate-plane", weight: 0.3 },
+    { topic: "slope-intercept-form", weight: 0.2 },
   ],
   xp: 18,
   standards: ["CCSS.HSG.CO.A.2", "CCSS.HSG.CO.A.5", "CCSS.HSG.GPE.B.5"],

@@ -466,6 +466,7 @@ export const diagonalsOfSquares: TopicDef = {
   encompasses: [
     { topic: "isosceles-right-triangles", weight: 0.4 },
     { topic: "area-of-rectangles-and-squares", weight: 0.2 },
+    { topic: "rationalizing-denominators", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.CO.C.11", "CCSS.8.G.B.7"],
@@ -1433,6 +1434,8 @@ export const provingCriteriaForParallelogramsAndRectangles: TopicDef = {
   encompasses: [
     { topic: "proving-properties-of-parallelograms", weight: 0.4 },
     { topic: "proving-alternate-angle-converses", weight: 0.3 },
+    { topic: "properties-of-parallelograms", weight: 0.3 },
+    { topic: "equations-with-variables-on-both-sides", weight: 0.2 },
   ],
   xp: 18,
   standards: ["CCSS.HSG.CO.C.11"],
@@ -1540,7 +1543,10 @@ export const anglesAndSidesInRightTriangles: TopicDef = {
     "相对于一个锐角，指出它的对边、邻边和斜边，并运用两锐角互余。",
   ),
   prerequisites: ["the-pythagorean-theorem", "complementary-and-supplementary-angles"],
-  encompasses: [{ topic: "complementary-and-supplementary-angles", weight: 0.3 }],
+  encompasses: [
+    { topic: "complementary-and-supplementary-angles", weight: 0.3 },
+    { topic: "two-step-equations", weight: 0.2 },
+  ],
   xp: 10,
   standards: ["CCSS.HSG.SRT.C.6"],
   knowledgePoints: [
@@ -1853,6 +1859,7 @@ export const calculatingTrigonometricRatiosUsingThePythagoreanTheorem: TopicDef 
   encompasses: [
     { topic: "the-trigonometric-ratios", weight: 0.5 },
     { topic: "the-pythagorean-theorem", weight: 0.3 },
+    { topic: "simplifying-square-roots", weight: 0.3 },
     { topic: "rationalizing-denominators", weight: 0.2 },
   ],
   xp: 15,
@@ -2122,7 +2129,10 @@ export const calculatingAnglesInRightTrianglesUsingTrigonometry: TopicDef = {
     "用反正弦、反余弦和反正切，由直角三角形的两条边求锐角。",
   ),
   prerequisites: ["calculating-side-lengths-of-right-triangles-using-trigonometry"],
-  encompasses: [{ topic: "calculating-side-lengths-of-right-triangles-using-trigonometry", weight: 0.3 }],
+  encompasses: [
+    { topic: "the-trigonometric-ratios", weight: 0.4 },
+    { topic: "calculating-side-lengths-of-right-triangles-using-trigonometry", weight: 0.3 },
+  ],
   xp: 14,
   standards: ["CCSS.HSG.SRT.C.8"],
   knowledgePoints: [
@@ -2508,6 +2518,7 @@ export const theReciprocalTrigonometricRatios: TopicDef = {
   encompasses: [
     { topic: "calculating-trigonometric-ratios-using-the-pythagorean-theorem", weight: 0.4 },
     { topic: "the-trigonometric-ratios", weight: 0.3 },
+    { topic: "rationalizing-denominators", weight: 0.2 },
   ],
   xp: 13,
   standards: ["CCSS.HSF.TF.A.2"],
@@ -2623,6 +2634,7 @@ export const trigonometricRatiosInSimilarRightTriangles: TopicDef = {
   encompasses: [
     { topic: "the-trigonometric-ratios", weight: 0.3 },
     { topic: "side-lengths-and-angle-measures-of-similar-polygons", weight: 0.3 },
+    { topic: "the-aa-similarity-criterion", weight: 0.2 },
   ],
   xp: 13,
   standards: ["CCSS.HSG.SRT.C.6"],
@@ -2752,6 +2764,9 @@ export const trigonometricFunctionsOfComplementaryAngles: TopicDef = {
   encompasses: [
     { topic: "the-trigonometric-ratios", weight: 0.3 },
     { topic: "angles-and-sides-in-right-triangles", weight: 0.3 },
+    { topic: "the-reciprocal-trigonometric-ratios", weight: 0.2 },
+    { topic: "complementary-and-supplementary-angles", weight: 0.2 },
+    { topic: "two-step-equations", weight: 0.2 },
   ],
   xp: 12,
   standards: ["CCSS.HSG.SRT.C.7"],
@@ -2881,6 +2896,7 @@ export const specialTrigonometricRatios: TopicDef = {
   encompasses: [
     { topic: "thirty-sixty-ninety-triangles", weight: 0.3 },
     { topic: "isosceles-right-triangles", weight: 0.3 },
+    { topic: "the-trigonometric-ratios", weight: 0.3 },
     { topic: "the-reciprocal-trigonometric-ratios", weight: 0.2 },
   ],
   xp: 15,

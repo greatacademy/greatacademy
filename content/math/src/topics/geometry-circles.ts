@@ -768,7 +768,11 @@ export const centralAnglesAndArcs: TopicDef = {
     "利用弧的度数等于它所对的圆心角，把相邻的弧相加，并求未知数。",
   ),
   prerequisites: ["arcs-segments-and-sectors-of-circles", "two-step-equations", "combining-like-terms"],
-  encompasses: [{ topic: "arcs-segments-and-sectors-of-circles", weight: 0.5 }],
+  encompasses: [
+    { topic: "arcs-segments-and-sectors-of-circles", weight: 0.5 },
+    { topic: "two-step-equations", weight: 0.2 },
+    { topic: "combining-like-terms", weight: 0.2 },
+  ],
   xp: 12,
   standards: ["CCSS.HSG.C.A.2"],
   knowledgePoints: [
@@ -1590,7 +1594,10 @@ export const circlesInscribedInSquares: TopicDef = {
     "理解正方形与它的内切圆的关系：圆的直径等于正方形的边长。",
   ),
   prerequisites: ["areas-of-circles"],
-  encompasses: [{ topic: "areas-of-circles", weight: 0.5 }],
+  encompasses: [
+    { topic: "areas-of-circles", weight: 0.5 },
+    { topic: "area-of-rectangles-and-squares", weight: 0.2 },
+  ],
   xp: 12,
   standards: ["CCSS.7.G.B.4"],
   knowledgePoints: [
@@ -1783,6 +1790,7 @@ export const squaresInscribedInCircles: TopicDef = {
   encompasses: [
     { topic: "circles-inscribed-in-squares", weight: 0.3 },
     { topic: "simplifying-square-roots", weight: 0.3 },
+    { topic: "areas-of-circles", weight: 0.3 },
     { topic: "area-of-triangles", weight: 0.2 },
   ],
   xp: 14,

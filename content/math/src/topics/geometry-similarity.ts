@@ -234,7 +234,10 @@ export const similarityAndSimilarPolygons: TopicDef = {
     "读出相似式中的对应关系，判断两个矩形是否相似，并求相似比。",
   ),
   prerequisites: ["dilations-of-geometric-figures"],
-  encompasses: [{ topic: "dilations-of-geometric-figures", weight: 0.4 }],
+  encompasses: [
+    { topic: "dilations-of-geometric-figures", weight: 0.4 },
+    { topic: "proportions", weight: 0.2 },
+  ],
   xp: 12,
   standards: ["CCSS.HSG.SRT.A.2"],
   knowledgePoints: [
@@ -433,6 +436,7 @@ export const sideLengthsAndAngleMeasuresOfSimilarPolygons: TopicDef = {
     { topic: "similarity-and-similar-polygons", weight: 0.5 },
     { topic: "proportions", weight: 0.4 },
     { topic: "angles-of-polygons", weight: 0.2 },
+    { topic: "two-step-equations", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.SRT.A.2", "CCSS.HSG.SRT.B.5"],
@@ -592,6 +596,8 @@ export const areasOfSimilarPolygons: TopicDef = {
   prerequisites: ["side-lengths-and-angle-measures-of-similar-polygons", "area-of-triangles"],
   encompasses: [
     { topic: "similarity-and-similar-polygons", weight: 0.3 },
+    { topic: "side-lengths-and-angle-measures-of-similar-polygons", weight: 0.2 },
+    { topic: "multiplying-fractions", weight: 0.2 },
     { topic: "area-of-triangles", weight: 0.1 },
   ],
   xp: 12,
@@ -875,6 +881,7 @@ export const similarityTransformations: TopicDef = {
   prerequisites: ["similarity-and-similar-polygons", "translations-of-geometric-figures", "reflections-in-the-coordinate-plane"],
   encompasses: [
     { topic: "dilations-of-geometric-figures", weight: 0.4 },
+    { topic: "similarity-and-similar-polygons", weight: 0.3 },
     { topic: "translations-of-geometric-figures", weight: 0.3 },
     { topic: "reflections-in-the-coordinate-plane", weight: 0.2 },
   ],
@@ -1273,7 +1280,10 @@ export const theSSSSimilarityCriterion: TopicDef = {
     "由三组对应边成比例判定三角形相似，并用它求相似比和未知数。",
   ),
   prerequisites: ["side-lengths-and-angle-measures-of-similar-polygons"],
-  encompasses: [{ topic: "side-lengths-and-angle-measures-of-similar-polygons", weight: 0.4 }],
+  encompasses: [
+    { topic: "side-lengths-and-angle-measures-of-similar-polygons", weight: 0.4 },
+    { topic: "proportions", weight: 0.3 },
+  ],
   xp: 12,
   standards: ["CCSS.HSG.SRT.B.5"],
   knowledgePoints: [
@@ -1420,6 +1430,7 @@ export const theSASSimilarityCriterion: TopicDef = {
   prerequisites: ["the-aa-similarity-criterion", "the-sss-similarity-criterion"],
   encompasses: [
     { topic: "the-sss-similarity-criterion", weight: 0.3 },
+    { topic: "proportions", weight: 0.3 },
     { topic: "the-aa-similarity-criterion", weight: 0.2 },
   ],
   xp: 13,
@@ -1632,8 +1643,10 @@ export const combiningSimilarityCriteriaForTriangles: TopicDef = {
   prerequisites: ["the-sas-similarity-criterion"],
   encompasses: [
     { topic: "the-aa-similarity-criterion", weight: 0.4 },
-    { topic: "the-sss-similarity-criterion", weight: 0.3 },
     { topic: "the-sas-similarity-criterion", weight: 0.4 },
+    { topic: "the-sss-similarity-criterion", weight: 0.3 },
+    { topic: "proportions", weight: 0.3 },
+    { topic: "parallel-lines-and-transversals", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSG.SRT.B.5"],
@@ -2260,7 +2273,9 @@ export const provingSimilarityStatements: TopicDef = {
   prerequisites: ["combining-similarity-criteria-for-triangles", "proving-triangle-theorems", "proving-alternate-angle-converses"],
   encompasses: [
     { topic: "combining-similarity-criteria-for-triangles", weight: 0.4 },
+    { topic: "the-aa-similarity-criterion", weight: 0.3 },
     { topic: "proving-triangle-theorems", weight: 0.2 },
+    { topic: "proving-alternate-angle-converses", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSG.SRT.B.5"],
@@ -2774,8 +2789,9 @@ export const provingTheMidpointTheorem: TopicDef = {
   ),
   prerequisites: ["the-midpoint-theorem", "proving-similarity-statements", "slope-of-a-line"],
   encompasses: [
-    { topic: "the-midpoint-theorem", weight: 0.3 },
     { topic: "proving-similarity-statements", weight: 0.4 },
+    { topic: "the-midpoint-theorem", weight: 0.3 },
+    { topic: "slope-of-a-line", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.CO.C.10", "CCSS.HSG.GPE.B.4"],
@@ -2860,8 +2876,10 @@ export const theTriangleProportionalityTheorem: TopicDef = {
   ),
   prerequisites: ["the-midpoint-theorem"],
   encompasses: [
+    { topic: "proportions", weight: 0.4 },
     { topic: "the-midpoint-theorem", weight: 0.3 },
     { topic: "the-aa-similarity-criterion", weight: 0.3 },
+    { topic: "equations-with-parentheses", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.SRT.B.4"],

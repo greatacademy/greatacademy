@@ -422,8 +422,11 @@ export const equationsOfCircles: TopicDef = {
     "Use the standard form $(x - h)^{2} + (y - k)^{2} = r^{2}$: read the center and radius, and write the equation from a center and a radius, a point or a diameter.",
     "使用标准方程 $(x - h)^{2} + (y - k)^{2} = r^{2}$：读出圆心和半径，并由圆心与半径、圆上一点或直径写出方程。",
   ),
-  prerequisites: ["equations-of-circles-centered-at-the-origin"],
-  encompasses: [{ topic: "equations-of-circles-centered-at-the-origin", weight: 0.7 }],
+  prerequisites: ["equations-of-circles-centered-at-the-origin", "midpoints-in-the-coordinate-plane"],
+  encompasses: [
+    { topic: "equations-of-circles-centered-at-the-origin", weight: 0.7 },
+    { topic: "midpoints-in-the-coordinate-plane", weight: 0.2 },
+  ],
   xp: 16,
   standards: ["CCSS.HSG.GPE.A.1"],
   knowledgePoints: [
@@ -990,6 +993,7 @@ export const equationsOfTangentLinesToCircles: TopicDef = {
   encompasses: [
     { topic: "perpendicular-lines-in-the-coordinate-plane", weight: 0.6 },
     { topic: "equations-of-circles", weight: 0.4 },
+    { topic: "slope-intercept-form", weight: 0.3 },
   ],
   xp: 15,
   standards: ["CCSS.HSG.C.A.2", "CCSS.HSG.GPE.B.5"],
@@ -1105,6 +1109,7 @@ export const perpendicularBisectorsOfDiametersInTheCoordinatePlane: TopicDef = {
   encompasses: [
     { topic: "perpendicular-lines-in-the-coordinate-plane", weight: 0.5 },
     { topic: "equations-of-circles", weight: 0.4 },
+    { topic: "midpoints-in-the-coordinate-plane", weight: 0.3 },
   ],
   xp: 15,
   standards: ["CCSS.HSG.GPE.B.5", "CCSS.HSG.GPE.B.4"],
@@ -1519,11 +1524,13 @@ export const thalesTheoremInTheCoordinatePlane: TopicDef = {
     "Use Thales' theorem and its converse: an angle subtending a diameter is a right angle, and a right triangle's hypotenuse is a diameter of its circumcircle.",
     "运用泰勒斯定理及其逆定理：直径所对的圆周角是直角，直角三角形的斜边是其外接圆的直径。",
   ),
-  prerequisites: ["perpendicular-bisectors-of-diameters-in-the-coordinate-plane"],
+  prerequisites: ["perpendicular-bisectors-of-diameters-in-the-coordinate-plane", "thales-theorem"],
   encompasses: [
     { topic: "equations-of-circles", weight: 0.5 },
+    { topic: "thales-theorem", weight: 0.4 },
     { topic: "perpendicular-bisectors-of-diameters-in-the-coordinate-plane", weight: 0.4 },
     { topic: "the-pythagorean-theorem", weight: 0.3 },
+    { topic: "midpoints-in-the-coordinate-plane", weight: 0.2 },
   ],
   xp: 15,
   standards: ["CCSS.HSG.C.A.2", "CCSS.HSG.GPE.B.4"],

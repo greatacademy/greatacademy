@@ -582,7 +582,7 @@ export const facesVerticesAndEdgesOfPolyhedrons: TopicDef = {
     "数出棱柱和棱锥的面数、顶点数和棱数，并由这些数确定底面。",
   ),
   prerequisites: ["identifying-three-dimensional-shapes"],
-  encompasses: [],
+  encompasses: [{ topic: "identifying-three-dimensional-shapes", weight: 0.3 }],
   xp: 12,
   knowledgePoints: [
     {
@@ -697,7 +697,10 @@ export const netsOfPolyhedrons: TopicDef = {
     "判断展开图折成的立体图形，由展开图找出正方体的相对面，并判断哪些图形是正方体的展开图。",
   ),
   prerequisites: ["faces-vertices-and-edges-of-polyhedrons"],
-  encompasses: [{ topic: "faces-vertices-and-edges-of-polyhedrons", weight: 0.3 }],
+  encompasses: [
+    { topic: "faces-vertices-and-edges-of-polyhedrons", weight: 0.3 },
+    { topic: "identifying-three-dimensional-shapes", weight: 0.2 },
+  ],
   xp: 12,
   standards: ["CCSS.6.G.A.4"],
   knowledgePoints: [
@@ -1155,7 +1158,7 @@ export const eulersFormulaForPolyhedra: TopicDef = {
     "利用 V − E + F = 2 求未知的计数，判断一组计数是否可能，并由各面数出棱数和顶点数。",
   ),
   prerequisites: ["faces-vertices-and-edges-of-polyhedrons"],
-  encompasses: [],
+  encompasses: [{ topic: "faces-vertices-and-edges-of-polyhedrons", weight: 0.4 }],
   xp: 12,
   knowledgePoints: [
     {
@@ -1310,7 +1313,10 @@ export const theFivePlatonicSolids: TopicDef = {
     "认识五种正多面体（柏拉图立体），数出它们的面、顶点和棱，并理解为什么只有五种。",
   ),
   prerequisites: ["eulers-formula-for-polyhedra"],
-  encompasses: [{ topic: "eulers-formula-for-polyhedra", weight: 0.3 }],
+  encompasses: [
+    { topic: "eulers-formula-for-polyhedra", weight: 0.3 },
+    { topic: "angles-of-polygons", weight: 0.2 },
+  ],
   xp: 14,
   knowledgePoints: [
     {
@@ -1496,7 +1502,10 @@ export const volumesOfCubes: TopicDef = {
     "由棱长求正方体的体积，由体积求棱长，并数出大正方体中小正方体的个数。",
   ),
   prerequisites: ["identifying-three-dimensional-shapes", "square-roots-and-cube-roots"],
-  encompasses: [{ topic: "square-roots-and-cube-roots", weight: 0.2 }],
+  encompasses: [
+    { topic: "square-roots-and-cube-roots", weight: 0.2 },
+    { topic: "powers-of-integers", weight: 0.2 },
+  ],
   xp: 10,
   standards: ["CCSS.6.G.A.2"],
   knowledgePoints: [
@@ -1606,7 +1615,11 @@ export const surfaceAreasOfCubes: TopicDef = {
     "由棱长求正方体的表面积，由表面积求棱长，并在表面积与体积之间换算。",
   ),
   prerequisites: ["finding-surface-areas-using-nets", "volumes-of-cubes"],
-  encompasses: [{ topic: "volumes-of-cubes", weight: 0.3 }],
+  encompasses: [
+    { topic: "volumes-of-cubes", weight: 0.3 },
+    { topic: "finding-surface-areas-using-nets", weight: 0.3 },
+    { topic: "square-roots-and-cube-roots", weight: 0.3 },
+  ],
   xp: 10,
   knowledgePoints: [
     {
@@ -1715,8 +1728,13 @@ export const faceDiagonalsOfCubes: TopicDef = {
     "Find the diagonal of a face of a cube, s√2, and work back from it to the edge.",
     "求正方体一个面的对角线 s√2，并由它反求棱长。",
   ),
-  prerequisites: ["volumes-of-cubes", "rationalizing-denominators"],
-  encompasses: [{ topic: "simplifying-square-roots", weight: 0.3 }],
+  prerequisites: ["volumes-of-cubes", "rationalizing-denominators", "the-pythagorean-theorem"],
+  encompasses: [
+    { topic: "the-pythagorean-theorem", weight: 0.3 },
+    { topic: "simplifying-square-roots", weight: 0.3 },
+    { topic: "rationalizing-denominators", weight: 0.3 },
+    { topic: "volumes-of-cubes", weight: 0.2 },
+  ],
   xp: 12,
   knowledgePoints: [
     {
@@ -1817,7 +1835,11 @@ export const diagonalsOfCubes: TopicDef = {
     "求穿过正方体内部的体对角线 s√3，并由它反求其他量。",
   ),
   prerequisites: ["face-diagonals-of-cubes"],
-  encompasses: [{ topic: "face-diagonals-of-cubes", weight: 0.5 }],
+  encompasses: [
+    { topic: "face-diagonals-of-cubes", weight: 0.5 },
+    { topic: "rationalizing-denominators", weight: 0.3 },
+    { topic: "the-pythagorean-theorem", weight: 0.2 },
+  ],
   xp: 12,
   knowledgePoints: [
     {
@@ -1921,7 +1943,7 @@ export const volumesOfRectangularSolids: TopicDef = {
     "求长方体的体积，由体积求未知的棱长，并求由长方体组成的立体图形的体积。",
   ),
   prerequisites: ["volumes-of-cubes"],
-  encompasses: [],
+  encompasses: [{ topic: "volumes-of-cubes", weight: 0.4 }],
   xp: 10,
   standards: ["CCSS.5.MD.C.5"],
   knowledgePoints: [
@@ -2050,7 +2072,11 @@ export const surfaceAreasOfRectangularSolids: TopicDef = {
     "求长方体的表面积，由表面积求未知棱长，并求无盖盒子和侧面的面积。",
   ),
   prerequisites: ["surface-areas-of-cubes", "volumes-of-rectangular-solids"],
-  encompasses: [{ topic: "finding-surface-areas-using-nets", weight: 0.4 }],
+  encompasses: [
+    { topic: "finding-surface-areas-using-nets", weight: 0.4 },
+    { topic: "surface-areas-of-cubes", weight: 0.3 },
+    { topic: "two-step-equations", weight: 0.2 },
+  ],
   xp: 12,
   knowledgePoints: [
     {
@@ -2161,7 +2187,11 @@ export const diagonalsOfRectangularSolids: TopicDef = {
     "求长方体的面对角线和体对角线 √(l² + w² + h²)，以及未知的棱长。",
   ),
   prerequisites: ["diagonals-of-cubes", "volumes-of-rectangular-solids"],
-  encompasses: [{ topic: "simplifying-square-roots", weight: 0.3 }],
+  encompasses: [
+    { topic: "the-pythagorean-theorem", weight: 0.5 },
+    { topic: "simplifying-square-roots", weight: 0.3 },
+    { topic: "diagonals-of-cubes", weight: 0.2 },
+  ],
   xp: 14,
   knowledgePoints: [
     {
@@ -2268,8 +2298,12 @@ export const theDistanceFormulaInThreeDimensions: TopicDef = {
     "Find the distance between points (x, y, z) in space, and a missing coordinate from a distance.",
     "求空间中点 (x, y, z) 之间的距离，并由距离求未知坐标。",
   ),
-  prerequisites: ["diagonals-of-rectangular-solids", "the-coordinate-plane"],
-  encompasses: [{ topic: "diagonals-of-rectangular-solids", weight: 0.4 }],
+  prerequisites: ["diagonals-of-rectangular-solids", "the-distance-formula"],
+  encompasses: [
+    { topic: "the-distance-formula", weight: 0.5 },
+    { topic: "diagonals-of-rectangular-solids", weight: 0.4 },
+    { topic: "solving-equations-with-square-roots", weight: 0.2 },
+  ],
   xp: 14,
   knowledgePoints: [
     {
@@ -2372,7 +2406,11 @@ export const volumesOfPyramids: TopicDef = {
     "求棱锥的体积（底面积乘高的三分之一），以及未知的高或底边长。",
   ),
   prerequisites: ["volumes-of-rectangular-solids", "area-of-triangles"],
-  encompasses: [{ topic: "area-of-triangles", weight: 0.3 }],
+  encompasses: [
+    { topic: "area-of-triangles", weight: 0.3 },
+    { topic: "area-of-rectangles-and-squares", weight: 0.2 },
+    { topic: "volumes-of-rectangular-solids", weight: 0.2 },
+  ],
   xp: 12,
   standards: ["CCSS.HSG.GMD.A.3"],
   knowledgePoints: [
@@ -2493,8 +2531,12 @@ export const surfaceAreasOfPyramids: TopicDef = {
     "Find the lateral and total surface area of regular pyramids from the slant height, or from the height.",
     "由斜高或高求正棱锥的侧面积和表面积。",
   ),
-  prerequisites: ["finding-surface-areas-using-nets", "volumes-of-pyramids"],
-  encompasses: [{ topic: "finding-surface-areas-using-nets", weight: 0.5 }],
+  prerequisites: ["finding-surface-areas-using-nets", "volumes-of-pyramids", "the-pythagorean-theorem"],
+  encompasses: [
+    { topic: "finding-surface-areas-using-nets", weight: 0.5 },
+    { topic: "area-of-triangles", weight: 0.3 },
+    { topic: "the-pythagorean-theorem", weight: 0.3 },
+  ],
   xp: 14,
   knowledgePoints: [
     {
@@ -2616,7 +2658,10 @@ export const surfaceAreasAndVolumesOfSimilarSolids: TopicDef = {
     "利用相似立体图形长度、面积、体积之比 k、k²、k³ 解题。",
   ),
   prerequisites: ["surface-areas-of-rectangular-solids", "proportions"],
-  encompasses: [{ topic: "proportions", weight: 0.3 }],
+  encompasses: [
+    { topic: "proportions", weight: 0.3 },
+    { topic: "square-roots-and-cube-roots", weight: 0.3 },
+  ],
   xp: 14,
   knowledgePoints: [
     {
@@ -2793,8 +2838,8 @@ export const volumesOfCylinders: TopicDef = {
     "Find the volume of a cylinder, πr²h, exactly and approximately, and a missing radius or height.",
     "求圆柱的体积 πr²h 的精确值和近似值，以及未知的半径或高。",
   ),
-  prerequisites: ["volumes-of-rectangular-solids"],
-  encompasses: [],
+  prerequisites: ["volumes-of-rectangular-solids", "areas-of-circles"],
+  encompasses: [{ topic: "areas-of-circles", weight: 0.5 }],
   xp: 12,
   standards: ["CCSS.8.G.C.9"],
   knowledgePoints: [
@@ -2910,7 +2955,11 @@ export const surfaceAreasOfCylinders: TopicDef = {
     "求圆柱的侧面积和表面积、无盖圆柱的面积，以及未知的高。",
   ),
   prerequisites: ["volumes-of-cylinders", "finding-surface-areas-using-nets"],
-  encompasses: [],
+  encompasses: [
+    { topic: "the-circumference-of-a-circle", weight: 0.4 },
+    { topic: "areas-of-circles", weight: 0.3 },
+    { topic: "finding-surface-areas-using-nets", weight: 0.2 },
+  ],
   xp: 12,
   knowledgePoints: [
     {
@@ -3033,7 +3082,10 @@ export const volumesOfRightCones: TopicDef = {
     "求圆锥的体积（πr²h 的三分之一），与圆柱比较，并求未知的半径或高。",
   ),
   prerequisites: ["volumes-of-cylinders", "volumes-of-pyramids"],
-  encompasses: [{ topic: "volumes-of-cylinders", weight: 0.4 }],
+  encompasses: [
+    { topic: "volumes-of-cylinders", weight: 0.4 },
+    { topic: "volumes-of-pyramids", weight: 0.3 },
+  ],
   xp: 12,
   standards: ["CCSS.8.G.C.9"],
   knowledgePoints: [
@@ -3158,8 +3210,11 @@ export const slantHeightsOfRightCones: TopicDef = {
     "Relate the radius, height and slant height of a right cone with the Pythagorean theorem.",
     "用勾股定理联系圆锥的半径、高和母线长。",
   ),
-  prerequisites: ["volumes-of-right-cones", "simplifying-square-roots"],
-  encompasses: [{ topic: "simplifying-square-roots", weight: 0.3 }],
+  prerequisites: ["volumes-of-right-cones", "the-pythagorean-theorem"],
+  encompasses: [
+    { topic: "the-pythagorean-theorem", weight: 0.6 },
+    { topic: "simplifying-square-roots", weight: 0.3 },
+  ],
   xp: 12,
   knowledgePoints: [
     {
@@ -3279,7 +3334,10 @@ export const surfaceAreasOfRightCones: TopicDef = {
   title: t("Surface Areas of Right Cones", "圆锥的表面积"),
   summary: t("Find the lateral area πrl and the surface area πr² + πrl of a right cone.", "求圆锥的侧面积 πrl 和表面积 πr² + πrl。"),
   prerequisites: ["slant-heights-of-right-cones", "surface-areas-of-cylinders"],
-  encompasses: [{ topic: "slant-heights-of-right-cones", weight: 0.4 }],
+  encompasses: [
+    { topic: "slant-heights-of-right-cones", weight: 0.4 },
+    { topic: "areas-of-circles", weight: 0.2 },
+  ],
   xp: 14,
   knowledgePoints: [
     {
@@ -3395,7 +3453,7 @@ export const volumesOfSpheres: TopicDef = {
     "求球的体积 4/3 πr³ 和半球的体积，并由体积求半径。",
   ),
   prerequisites: ["volumes-of-cylinders"],
-  encompasses: [],
+  encompasses: [{ topic: "square-roots-and-cube-roots", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.8.G.C.9"],
   knowledgePoints: [
@@ -3498,7 +3556,11 @@ export const surfaceAreasOfSpheres: TopicDef = {
     "求球的表面积 4πr² 和半球的表面积，并由表面积求半径。",
   ),
   prerequisites: ["volumes-of-spheres"],
-  encompasses: [{ topic: "volumes-of-spheres", weight: 0.2 }],
+  encompasses: [
+    { topic: "square-roots-and-cube-roots", weight: 0.3 },
+    { topic: "volumes-of-spheres", weight: 0.2 },
+    { topic: "areas-of-circles", weight: 0.2 },
+  ],
   xp: 12,
   knowledgePoints: [
     {
@@ -3777,6 +3839,7 @@ export const volumesOfRevolution: TopicDef = {
   encompasses: [
     { topic: "volumes-of-right-cones", weight: 0.3 },
     { topic: "volumes-of-cylinders", weight: 0.3 },
+    { topic: "the-coordinate-plane", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.GMD.B.4"],

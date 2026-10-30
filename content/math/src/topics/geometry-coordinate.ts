@@ -235,6 +235,7 @@ export const findingEquationsOfParallelLines: TopicDef = {
     { topic: "parallel-lines-in-the-coordinate-plane", weight: 0.5 },
     { topic: "point-slope-form", weight: 0.3 },
     { topic: "standard-form", weight: 0.3 },
+    { topic: "slope-of-a-line", weight: 0.2 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.GPE.B.5"],
@@ -411,6 +412,8 @@ export const findingEquationsOfPerpendicularLines: TopicDef = {
   encompasses: [
     { topic: "perpendicular-lines-in-the-coordinate-plane", weight: 0.5 },
     { topic: "finding-equations-of-parallel-lines", weight: 0.4 },
+    { topic: "point-slope-form", weight: 0.3 },
+    { topic: "standard-form", weight: 0.3 },
   ],
   xp: 14,
   standards: ["CCSS.HSG.GPE.B.5"],
@@ -870,6 +873,7 @@ export const theDistanceFormula: TopicDef = {
   encompasses: [
     { topic: "the-pythagorean-theorem", weight: 0.5 },
     { topic: "simplifying-square-roots", weight: 0.2 },
+    { topic: "solving-equations-with-square-roots", weight: 0.2 },
     { topic: "the-coordinate-plane", weight: 0.2 },
   ],
   xp: 14,
@@ -1224,6 +1228,7 @@ export const calculatingPerimetersInThePlane: TopicDef = {
   encompasses: [
     { topic: "the-distance-formula", weight: 0.6 },
     { topic: "perimeter", weight: 0.3 },
+    { topic: "simplifying-square-roots", weight: 0.3 },
     { topic: "adding-and-subtracting-radicals", weight: 0.2 },
   ],
   xp: 14,
@@ -1509,8 +1514,9 @@ export const calculatingAreasOfTrianglesAndQuadrilateralsInThePlane: TopicDef = 
   ),
   prerequisites: ["calculating-areas-of-rectangles-in-the-plane", "area-of-triangles"],
   encompasses: [
-    { topic: "calculating-areas-of-rectangles-in-the-plane", weight: 0.3 },
     { topic: "area-of-triangles", weight: 0.6 },
+    { topic: "calculating-areas-of-rectangles-in-the-plane", weight: 0.3 },
+    { topic: "area-of-rectangles-and-squares", weight: 0.3 },
   ],
   xp: 16,
   standards: ["CCSS.HSG.GPE.B.7"],
