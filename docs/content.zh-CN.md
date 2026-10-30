@@ -187,8 +187,9 @@ const prealgebra: CourseDef = {
 | `factorization` | `{ value }`：不小于 2 的整数 | 乘积等于 `value` 的质数及质数幂之积，顺序不限：`2^{3} \cdot 3` 或 `2 \cdot 2 \cdot 2 \cdot 3`。含合数因数的乘积，或 `value` 为合数时直接写 `value`，会被拒绝并给出反馈 |
 | `scientific` | `{ value }`：有理数 | 用科学记数法表示的 `value`：`a \times 10^{n}`（或 `\cdot`），其中 `1 ≤ \|a\| < 10` 写成整数或小数，或单独的 `10^{n}`。其他形式的相同值会被拒绝并给出反馈 |
 | `radical` | `{ coef, radicand }`：有理数与不小于 1 的无平方因数整数 | 最简根式形式的 `coef·√radicand`：`6\sqrt{2}`、`-\sqrt{5}`、`\frac{2\sqrt{3}}{3}` 或 `\frac{2}{3}\sqrt{3}`；radicand 为 1 时是有理数。值相同但根号内含平方因数、分母含根式或分数未约分的答案会被拒绝并给出反馈 |
+| `solutions` | `{ var, values }`：用 LaTeX 写出的各个解，可以是有理数，也可以是 `\frac{3+\sqrt{5}}{2}` 这样的数；无解时为空 | 解集：各个解顺序不限，用逗号、分号或“或”分隔，每个解单独写出或写成 `x = …`，可以用 `\pm`（`x = \pm 3`、`\frac{3 \pm \sqrt{5}}{2}`）；无解时写 `\varnothing`、`\emptyset` 或“无解”。重复的解只算一次。每个数都必须是最简形式，否则会被拒绝并给出反馈 |
 
-`content/math` 用 `numberProblem`、`expressionProblem`、`inequalityProblem`、`factorizationProblem`、`scientificProblem`、`radicalProblem` 和 `choiceProblem` 构建题目。它们填写答案规格、标准答案和输入方式，并去掉在某个种子下恰好等于正确答案的错误答案。题面和解答中的 LaTeX 用 `num`、`paren`、`poly`、`linear` 书写，它们不会产生 `+ -`、`1x` 或 `-1x`；小数用 `dec`、科学记数法用 `sci`、最简根式用 `radical` 书写。图形用 `dotPlot` 和 `boxPlot` 在 `Axis` 上绘制；几何图形用 `sketch` 由图形自身坐标中的标记绘制：线段、多边形、角弧、直角记号、标签、边长、表示等长的短线和表示平行的箭头。`sketch` 把每个图形缩放到大致相同的尺寸，使标签大小一致，并让 viewBox 覆盖所画的全部内容，包括标签。要求小数或带分数的答案，标准答案也写成那种形式。
+`content/math` 用 `numberProblem`、`expressionProblem`、`inequalityProblem`、`factorizationProblem`、`scientificProblem`、`radicalProblem`、`solutionsProblem` 和 `choiceProblem` 构建题目。它们填写答案规格、标准答案和输入方式，并去掉在某个种子下恰好等于正确答案的错误答案。题面和解答中的 LaTeX 用 `num`、`paren`、`poly`、`linear` 书写，它们不会产生 `+ -`、`1x` 或 `-1x`；小数用 `dec`、科学记数法用 `sci`、最简根式用 `radical`、形如 $a + b\sqrt{m}$ 的数用 `surdLatex` 书写（`surdValue` 精确计算这类数）。图形用 `dotPlot` 和 `boxPlot` 在 `Axis` 上绘制；几何图形用 `sketch` 由图形自身坐标中的标记绘制：线段、多边形、角弧、直角记号、标签、边长、表示等长的短线和表示平行的箭头。`sketch` 把每个图形缩放到大致相同的尺寸，使标签大小一致，并让 viewBox 覆盖所画的全部内容，包括标签。要求小数或带分数的答案，标准答案也写成那种形式。
 
 第一门课程**代数基础**（`algebra-foundations`）有 20 个知识点，分为四个单元：整数（相反数与比较大小、绝对值、四则运算、乘方、混合运算），代数式（求值、合并同类项、乘法分配律、化简），一元一次方程（一步、两步、两边都有变量（含无解与无穷多解）、含括号），一元一次不等式（检验与写出解、一步（含改变不等号方向）、多步）。
 

@@ -3,9 +3,10 @@ import { t } from "@ga/content";
 
 import { equivalent, evaluate } from "./algebra.ts";
 import { isSimplifiedPolynomial, type NumberLiteral, numberLiteral } from "./forms.ts";
-import { isRelation, type Node, ParseError, parseExpression, parseLatex, type RelOp, unwrap } from "./latex.ts";
+import { isRelation, type Node, normalizeLatex, ParseError, parseExpression, parseLatex, type RelOp, unwrap } from "./latex.ts";
 import { isPrime, isSquareFree } from "./numbers.ts";
 import { Q } from "./rational.ts";
+import { type Surd, surdEqual, surdValue } from "./surds.ts";
 
 const feedback = {
   unreadable: t("This answer could not be read as mathematics.", "无法把这个答案识别为数学表达式。"),
@@ -27,6 +28,10 @@ const feedback = {
   expression: t("Write an expression, not an equation.", "请写出表达式，而不是等式。"),
   simplify: t("Simplify fully: remove parentheses and combine like terms.", "请完全化简：去掉括号并合并同类项。"),
   inequality: t("Write an inequality such as $x < 3$.", "请写出不等式，例如 $x < 3$。"),
+  solutions: t(
+    "List the solutions separated by commas, such as $x = 2, x = -5$, or enter $\\varnothing$ if there are none.",
+    "请用逗号分隔列出所有解，例如 $x = 2, x = -5$；如果无解，请输入 $\\varnothing$。",
+  ),
 } satisfies Record<string, Text>;
 
 const wrong = (fb?: Text): Verdict => (fb ? { correct: false, feedback: fb } : { correct: false });
@@ -379,6 +384,163 @@ export const radicalChecker: Checker = {
   },
 };
 
+const emptySet = new Set([
+  "\\emptyset",
+  "\\varnothing",
+  "∅",
+  "\\{\\}",
+  "{}",
+  "nosolution",
+  "nosolutions",
+  "norealsolution",
+  "norealsolutions",
+  "none",
+  "无解",
+  "没有解",
+  "无实数解",
+]);
+
+/** isEmptySet recognizes ∅ and "no solution" in the forms a learner may type. */
+export function isEmptySet(response: string): boolean {
+  const s = normalizeLatex(response)
+    .replace(/\\(?:text|mathrm|operatorname)\{([^{}]*)\}/g, "$1")
+    .replace(/\\left|\\right|\s|~/g, "")
+    .toLowerCase();
+  return emptySet.has(s);
+}
+
+/** splitTopLevel splits s at the given separator outside parentheses, brackets and braces. */
+export function splitTopLevel(s: string, separator: string): string[] {
+  const out: string[] = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i]!;
+    if (c === "\\" && (s[i + 1] === "{" || s[i + 1] === "}")) {
+      i++;
+      continue;
+    }
+    if ("([{".includes(c)) depth++;
+    else if (")]}".includes(c)) depth--;
+    else if (depth === 0 && s.startsWith(separator, i)) {
+      out.push(s.slice(start, i));
+      start = i + separator.length;
+      i += separator.length - 1;
+    }
+  }
+  out.push(s.slice(start));
+  return out;
+}
+
+/** expandPlusMinus expands each ± (or ∓) into its two cases: "3 \pm \sqrt{2}" gives "3 + \sqrt{2}" and "3 - \sqrt{2}". */
+export function expandPlusMinus(s: string): string[] {
+  const m = /\\pm(?![a-zA-Z])|±|\\mp(?![a-zA-Z])|∓/.exec(s);
+  if (!m) return [s];
+  const minusFirst = m[0].includes("mp") || m[0] === "∓";
+  const before = s.slice(0, m.index);
+  const after = s.slice(m.index + m[0].length);
+  return [`${before}${minusFirst ? "-" : "+"}${after}`, `${before}${minusFirst ? "+" : "-"}${after}`].flatMap(expandPlusMinus);
+}
+
+/** listItems splits a list of answers at commas, semicolons and "or", after removing set braces. */
+function listItems(response: string): string[] {
+  const s = normalizeLatex(response)
+    .replace(/\\(?:text|mathrm|operatorname)\{\s*(?:or|and|或|和|与)\s*\}/g, ",")
+    .replace(/\\(?:lor|vee)(?![a-zA-Z])/g, ",")
+    .replace(/;/g, ",")
+    .replace(/^\\left\\\{|\\right\\\}$/g, "")
+    .replace(/^\\\{|\\\}$/g, "");
+  return splitTopLevel(s, ",")
+    .map((p) => p.trim())
+    .filter((p) => p !== "");
+}
+
+/** simplestSurd tells whether a number is written in simplest form: a reduced number literal for a rational, square-free integer radicands and integer denominators with no common factor otherwise. */
+function simplestSurd(node: Node, value: Surd): boolean {
+  if (value.m === 1n) {
+    const lit = numberLiteral(node);
+    return lit !== undefined && lit.reduced;
+  }
+  const ok = (n: Node): boolean => {
+    switch (n.k) {
+      case "num":
+      case "var":
+        return true;
+      case "sqrt": {
+        const r = integerLiteral(n.a);
+        return r !== undefined && r > 1n && isSquareFree(Number(r));
+      }
+      case "div": {
+        const top = surdValue(n.a);
+        const bottom = integerLiteral(n.b);
+        if (!top || bottom === undefined || bottom < 2n) return false;
+        const parts = [top.a, top.b];
+        if (!parts.every((p) => p.isInteger())) return false;
+        const g = parts.reduce((acc, p) => gcdBig(acc, p.n < 0n ? -p.n : p.n), bottom);
+        return g === 1n && ok(n.a);
+      }
+      case "pow":
+        return false;
+      default:
+        return "b" in n ? ok(n.a) && ok(n.b) : ok(n.a);
+    }
+  };
+  return ok(node);
+}
+
+function gcdBig(a: bigint, b: bigint): bigint {
+  while (b !== 0n) [a, b] = [b, a % b];
+  return a;
+}
+
+/**
+ * solutionsChecker accepts the solution set of an equation: expected.values
+ * lists the solutions in LaTeX (rationals or numbers such as
+ * \frac{3 + \sqrt{5}}{2}), empty when there are none, and expected.var names
+ * the variable. The response lists the solutions in any order, separated by
+ * commas, semicolons or "or", each alone or as "x = …", with ± allowed:
+ * "x = 3, x = -2", "-2, 3", "x = \pm 3", "\frac{3 \pm \sqrt{5}}{2}". No
+ * solution is ∅, \varnothing or "no solution". Each number must be in simplest
+ * form.
+ */
+export const solutionsChecker: Checker = {
+  id: "solutions",
+  check(expected, response) {
+    const e = obj(expected);
+    const variable = typeof e.var === "string" ? e.var : "x";
+    const raw = e.values;
+    if (!Array.isArray(raw) || !raw.every((v) => typeof v === "string")) throw new TypeError("expected.values must be an array of strings");
+    const values = (raw as string[]).map((v) => {
+      const s = surdValue(parseExpression(v));
+      if (!s) throw new TypeError(`expected value is not an exact number: ${v}`);
+      return s;
+    });
+    if (isEmptySet(response)) return values.length === 0 ? { correct: true } : wrong();
+    const items = listItems(response);
+    if (items.length === 0) return wrong(feedback.unreadable);
+    const found: Surd[] = [];
+    let unsimplified: Text | undefined;
+    for (const item of items.flatMap(expandPlusMinus)) {
+      const parsed = parse(() => parseLatex(item));
+      if (isVerdict(parsed)) return parsed;
+      let node: Node;
+      if (isRelation(parsed)) {
+        const l = unwrap(parsed.left);
+        if (parsed.op !== "=" || l.k !== "var" || l.name !== variable) return wrong(feedback.solutions);
+        node = parsed.right;
+      } else node = parsed;
+      const v = surdValue(node);
+      if (!v) return wrong(feedback.solutions);
+      if (!simplestSurd(unwrap(node), v))
+        unsimplified ??= v.m === 1n ? (numberLiteral(node) ? feedback.lowestTerms : feedback.singleNumber) : feedback.radical;
+      if (!found.some((f) => surdEqual(f, v))) found.push(v);
+    }
+    const same = found.length === values.length && found.every((f) => values.some((v) => surdEqual(f, v)));
+    if (!same) return wrong();
+    return unsimplified ? wrong(unsimplified) : { correct: true };
+  },
+};
+
 /** mathCheckers are the checkers the mathematics subject registers. */
 export const mathCheckers: readonly Checker[] = [
   numberChecker,
@@ -387,4 +549,5 @@ export const mathCheckers: readonly Checker[] = [
   factorizationChecker,
   scientificChecker,
   radicalChecker,
+  solutionsChecker,
 ];

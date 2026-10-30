@@ -2,6 +2,9 @@ import { CheckerRegistry } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
 import { mathCheckers } from "./checkers.ts";
+import { parseExpression } from "./latex.ts";
+import { q } from "./rational.ts";
+import { surd, surdEqual, surdLatex, surdValue } from "./surds.ts";
 
 const registry = new CheckerRegistry(mathCheckers);
 const verdict = (checker: string, expected: Record<string, string | boolean>, response: string) =>
@@ -226,5 +229,67 @@ describe("inequality", () => {
     expect(accepts("inequality", { var: "x", op: ">=", value: "-3/2" }, "x\\ge -\\frac{3}{2}")).toBe(true);
     expect(accepts("inequality", { var: "x", op: ">=", value: "-3/2" }, "x≥-1.5")).toBe(true);
     expect(accepts("inequality", { var: "x", op: ">=", value: "-3/2" }, "-\\frac{3}{2}\\le x")).toBe(true);
+  });
+});
+
+describe("solutions", () => {
+  const check = (values: string[], response: string) => registry.check("solutions", { var: "x", values }, response);
+
+  it.each([
+    [["3", "-2"], "x = 3, x = -2"],
+    [["3", "-2"], "-2, 3"],
+    [["3", "-2"], "x=-2 \\text{ or } x=3"],
+    [["3", "-2"], "\\{-2, 3\\}"],
+    [["3", "-3"], "x = \\pm 3"],
+    [["3", "-3"], "±3"],
+    [["5"], "x = 5"],
+    [["5"], "5, 5"],
+    [["1/2", "-4/3"], "\\frac{1}{2}; -\\frac{4}{3}"],
+    [["\\sqrt{5}", "-\\sqrt{5}"], "x=\\pm\\sqrt{5}"],
+    [["\\frac{3+\\sqrt{5}}{2}", "\\frac{3-\\sqrt{5}}{2}"], "x = \\frac{3 \\pm \\sqrt{5}}{2}"],
+    [["\\frac{3+\\sqrt{5}}{2}", "\\frac{3-\\sqrt{5}}{2}"], "\\frac{3}{2} \\pm \\frac{\\sqrt{5}}{2}"],
+    [["-1+2\\sqrt{3}", "-1-2\\sqrt{3}"], "-1 \\pm 2\\sqrt{3}"],
+    [[], "\\varnothing"],
+    [[], "\\emptyset"],
+    [[], "\\text{no solution}"],
+    [[], "无解"],
+  ])("accepts %j as %s", (values, response) => {
+    expect(check(values, response).correct).toBe(true);
+  });
+
+  it.each([
+    [["3", "-2"], "x = 3", undefined],
+    [["3", "-2"], "x = 3, x = -2, x = 1", undefined],
+    [["3", "-3"], "x = 3", undefined],
+    [["3", "-2"], "\\varnothing", undefined],
+    [[], "x = 0", undefined],
+    [["4"], "x = \\frac{8}{2}", "lowest terms"],
+    [["4"], "x = 2 + 2", "single number"],
+    [["\\sqrt{5}", "-\\sqrt{5}"], "\\pm\\sqrt{20}/2", "radical"],
+    [["2\\sqrt{2}", "-2\\sqrt{2}"], "\\pm\\sqrt{8}", "radical"],
+    [["\\frac{3+\\sqrt{5}}{2}", "\\frac{3-\\sqrt{5}}{2}"], "\\frac{6 \\pm 2\\sqrt{5}}{4}", "radical"],
+    [["3"], "y = 3", "separated by commas"],
+    [["3"], "x < 3", "separated by commas"],
+    [["3"], "x = ", "could not be read"],
+  ])("rejects %j as %s", (values, response, message) => {
+    const v = check(values, response);
+    expect(v.correct).toBe(false);
+    if (message) expect(v.feedback?.en).toContain(message);
+    else expect(v.feedback).toBeUndefined();
+  });
+});
+
+describe("surdLatex", () => {
+  it.each([
+    [surd(q(3)), "3"],
+    [surd(q(-2, 3)), "-\\frac{2}{3}"],
+    [surd(q(0), q(2), 3n), "2\\sqrt{3}"],
+    [surd(q(0), q(-1), 3n), "-\\sqrt{3}"],
+    [surd(q(3, 2), q(-1, 2), 5n), "\\frac{3 - \\sqrt{5}}{2}"],
+    [surd(q(-1), q(2), 3n), "-1 + 2\\sqrt{3}"],
+    [surd(q(0), q(-1, 2), 5n), "-\\frac{\\sqrt{5}}{2}"],
+  ])("writes case %# as %s", (s, latex) => {
+    expect(surdLatex(s)).toBe(latex);
+    expect(surdEqual(surdValue(parseExpression(latex))!, s)).toBe(true);
   });
 });

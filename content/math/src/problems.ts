@@ -11,6 +11,8 @@ import {
   radical,
   relSymbol,
   sci,
+  surdEqual,
+  surdValue,
 } from "@ga/subject-math";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
@@ -230,6 +232,44 @@ export function inequalityProblem(p: InequalityProblem): Problem {
     solution: p.solution,
     canonical: inequalityLatex(variable, p.op, value),
     wrong,
+  };
+}
+
+/** SolutionsProblem describes a problem whose answer is the solution set of an equation in one variable. */
+export interface SolutionsProblem {
+  readonly prompt: Text;
+  /** values are the solutions in LaTeX, in simplest form (see surdLatex); empty when there are none. */
+  readonly values: readonly string[];
+  readonly variable?: string;
+  readonly solution: Text;
+  /** wrong are the solution sets typical mistakes produce; sets equal to the answer are dropped. */
+  readonly wrong?: readonly (readonly string[])[];
+}
+
+/** solutionsLatex writes a solution set as a learner would type it: "x = 3, x = -2", or "\varnothing" when it is empty. */
+export function solutionsLatex(values: readonly string[], variable = "x"): string {
+  return values.length === 0 ? "\\varnothing" : values.map((v) => `${variable} = ${v}`).join(", ");
+}
+
+/** solutionsProblem builds a problem checked by the "solutions" checker. */
+export function solutionsProblem(p: SolutionsProblem): Problem {
+  const variable = p.variable ?? "x";
+  const value = (v: string) => {
+    const s = surdValue(parseExpression(v));
+    if (!s) throw new TypeError(`not an exact number: ${v}`);
+    return s;
+  };
+  const answer = p.values.map(value);
+  const sameSet = (vs: readonly string[]) => {
+    const set = vs.map(value).filter((s, i, all) => all.findIndex((o) => surdEqual(o, s)) === i);
+    return set.length === answer.length && set.every((s) => answer.some((a) => surdEqual(a, s)));
+  };
+  return {
+    prompt: p.prompt,
+    answer: { checker: "solutions", expected: { var: variable, values: [...p.values] }, input: { kind: "math" } },
+    solution: p.solution,
+    canonical: solutionsLatex(p.values, variable),
+    wrong: [...new Set((p.wrong ?? []).filter((w) => !sameSet(w)).map((w) => solutionsLatex(w, variable)))],
   };
 }
 
