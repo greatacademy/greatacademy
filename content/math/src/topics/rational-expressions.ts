@@ -1,6 +1,6 @@
 import type { Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
-import { gcd, lcm, linear, num, poly, Q } from "@ga/subject-math";
+import { gcd, lcm, linear, num, paren, poly, Q } from "@ga/subject-math";
 
 import { choiceProblem, expressionProblem, numberProblem, solutionsProblem, steps } from "../problems.ts";
 
@@ -496,13 +496,14 @@ export const simplifyingRationalExpressionsByFactoring: TopicDef = {
   id: "simplifying-rational-expressions-by-factoring",
   title: t("Simplifying Rational Expressions by Factoring", "用因式分解化简分式"),
   summary: t(
-    "Factor numerators and denominators by taking out common factors, the difference of squares and perfect squares, then cancel common factors, opposite binomials included.",
-    "用提取公因式、平方差和完全平方分解分子和分母，再约去公因式，包括互为相反数的二项式。",
+    "Factor numerators and denominators by taking out common factors, the difference of squares, perfect squares and trinomials, then cancel common factors, opposite binomials included.",
+    "用提取公因式、平方差、完全平方和三项式分解分子和分母，再约去公因式，包括互为相反数的二项式。",
   ),
-  prerequisites: ["simplifying-rational-expressions", "difference-of-squares-formula"],
+  prerequisites: ["simplifying-rational-expressions", "difference-of-squares-formula", "factoring-trinomials"],
   encompasses: [
     { topic: "simplifying-rational-expressions", weight: 0.6 },
     { topic: "difference-of-squares-formula", weight: 0.3 },
+    { topic: "factoring-trinomials", weight: 0.3 },
     { topic: "squaring-binomials", weight: 0.2 },
   ],
   xp: 18,
@@ -685,6 +686,55 @@ export const simplifyingRationalExpressionsByFactoring: TopicDef = {
             `$${sq} = ${sqF}$ 是完全平方式。分解因式，再约去公因式 $${P}$：${steps(`${expr} = ${factored} = ${answer}`)}`,
           ),
         });
+      },
+    },
+    {
+      id: "trinomials",
+      title: t("Factoring trinomials", "分解三项式"),
+      explanation: t(
+        "A trinomial $x^{2} + bx + c$ factors as $(x + m)(x + n)$ when $m + n = b$ and $mn = c$. Factor every numerator and denominator completely, then cancel the common factors:\n\n$$\\frac{x^{2} - x - 6}{x^{2} - 9} = \\frac{(x - 3)(x + 2)}{(x - 3)(x + 3)} = \\frac{x + 2}{x + 3}, \\quad x \\neq 3$$\n\nThe terms $x^{2}$ do not cancel: only whole factors do.",
+        "当 $m + n = b$ 且 $mn = c$ 时，三项式 $x^{2} + bx + c$ 可以分解为 $(x + m)(x + n)$。把每个分子和分母都完全分解，再约去公因式：\n\n$$\\frac{x^{2} - x - 6}{x^{2} - 9} = \\frac{(x - 3)(x + 2)}{(x - 3)(x + 3)} = \\frac{x + 2}{x + 3}, \\quad x \\neq 3$$\n\n$x^{2}$ 项不能约去：只有完整的因式才能约去。",
+      ),
+      keyPrerequisites: ["factoring-trinomials"],
+      generate(rng) {
+        for (;;) {
+          const p = rng.nonZero(-9, 9);
+          const q = rng.nonZero(-9, 9);
+          const r = rng.nonZero(-9, 9);
+          const k = rng.int(2, 5);
+          const variant = rng.pick([0, 1, 2, 2, 3, 3]);
+          if (p === q || p + q === 0 || Math.abs(p * q) > 40) continue;
+          if (variant === 2 && (r === p || r === q || p + r === 0 || Math.abs(p * r) > 40)) continue;
+          const tri = (u: number, v: number) => poly([1, "x^{2}"], [u + v, "x"], [u * v, ""]);
+          const [P, Qb] = [bin(p), bin(q)];
+          const triF = `(${P})(${Qb})`;
+          const [other, otherF, keep] =
+            variant === 0
+              ? [P, P, ""]
+              : variant === 1
+                ? [linear(k, k * p), product(k, [P]), ""]
+                : variant === 2
+                  ? [tri(p, r), `(${P})(${bin(r)})`, bin(r)]
+                  : [`x^{2} - ${p * p}`, `(${P})(${bin(-p)})`, bin(-p)];
+          const kk = variant === 1 ? k : 1;
+          const flip = rng.bool(0.35);
+          const expr = flip ? frac(other, tri(p, q)) : frac(tri(p, q), other);
+          const factored = flip ? frac(otherF, triF) : frac(triF, otherF);
+          const answer = flip ? ratio(kk, [keep], 1, [Qb]) : ratio(1, [Qb], kk, [keep]);
+          const wrongQ = bin(-q);
+          return expressionProblem({
+            prompt: simplifyPrompt(expr, [num(-p)]),
+            answer,
+            lowest: true,
+            wrong: flip
+              ? [ratio(kk, [keep], 1, [wrongQ]), ratio(1, [Qb], kk, [keep]), ratio(kk, [keep], 1, [bin(p)])]
+              : [ratio(1, [wrongQ], kk, [keep]), ratio(kk, [keep], 1, [Qb]), ratio(1, [bin(p)], kk, [keep])],
+            solution: t(
+              `$${tri(p, q)} = ${triF}$, since $${p} + ${paren(q)} = ${p + q}$ and $${p} \\cdot ${paren(q)} = ${p * q}$. Factor, then cancel the common factor $${P}$:${steps(`${expr} = ${factored} = ${answer}`)}`,
+              `因为 $${p} + ${paren(q)} = ${p + q}$，$${p} \\cdot ${paren(q)} = ${p * q}$，所以 $${tri(p, q)} = ${triF}$。分解因式，再约去公因式 $${P}$：${steps(`${expr} = ${factored} = ${answer}`)}`,
+            ),
+          });
+        }
       },
     },
   ],
