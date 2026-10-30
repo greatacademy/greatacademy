@@ -147,7 +147,7 @@ These values come from the book's description and our judgment, not from data. R
 
 Typical learners need fewer than one explicit review per topic, because lessons on later topics review earlier ones implicitly. Struggling learners get more explicit practice: their low speeds withhold implicit credit. The simulator's tests keep these properties from regressing.
 
-On Prealgebra (55 topics) the same students need more explicit reviews: typical 24.9 days and 1.73 reviews per topic, strong 1.05, struggling 3.64 over 41 days, since a slower learner also has more time for reviews to come due. Many of the units it adds (number theory, decimals and percents, radicals, ratios, statistics) are broad rather than deep: few later topics in the course practice them, so less of their review comes implicitly. Their encompassing topics come with Algebra I. The weights record what each topic actually practices and are not raised to improve these numbers.
+On Prealgebra (57 topics) the same students need more explicit reviews: typical 25.8 days and 1.72 reviews per topic, strong 1.12, struggling 3.67 over 42 days, since a slower learner also has more time for reviews to come due. Many of the units it adds (number theory, decimals and percents, radicals, ratios, statistics) are broad rather than deep: few later topics in the course practice them, so less of their review comes implicitly. Their encompassing topics come with Algebra I. The weights record what each topic actually practices and are not raised to improve these numbers.
 
 ```bash
 pnpm nx run simulate:simulate                  # Foundations of Algebra

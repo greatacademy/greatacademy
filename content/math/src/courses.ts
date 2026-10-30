@@ -56,7 +56,7 @@ const [integers, expressions, equations, inequalities] = algebraFoundations.unit
  * prealgebra is the bridge from arithmetic to Algebra I: number theory,
  * fractions, decimals and percents, then the units of Foundations of Algebra
  * extended to rational numbers, exponents and radicals, ratios and
- * proportions, and statistics.
+ * proportions, and statistics with dot plots and box plots.
  */
 export const prealgebra: CourseDef = {
   id: "prealgebra",
@@ -132,6 +132,7 @@ export const prealgebra: CourseDef = {
             "outliers",
           ],
         },
+        { title: t("Data Displays", "数据的图示"), topics: ["dot-plots", "box-plots"] },
       ],
     },
   ],

@@ -1,6 +1,6 @@
-import type { Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { dec, Q } from "@ga/subject-math";
+import { type Axis, boxPlot, dec, dotPlot, type FiveNumberSummary, Q } from "@ga/subject-math";
 
 import { choiceProblem, isTerminating, numberProblem, steps } from "../problems.ts";
 
@@ -41,6 +41,30 @@ function terminatingMean(rng: Rng, n: number, lo: number, hi: number): number[] 
     const xs = data(rng, n, lo, hi);
     if (mean(xs).mul(Q.of(100)).isInteger()) return xs;
   }
+}
+
+/** dotPlotFigure draws a data set as a dot plot, with alt text listing how many dots sit at each value. */
+function dotPlotFigure(xs: readonly number[], axis: Axis): Figure {
+  const counts = [...new Set(sorted(xs))].map((v) => [v, xs.filter((x) => x === v).length] as const);
+  return {
+    svg: dotPlot(xs, axis),
+    alt: t(
+      `Dot plot: ${counts.map(([v, n]) => `${n} at ${v}`).join(", ")}.`,
+      `点图：${counts.map(([v, n]) => `${v} 处 ${n} 个点`).join("，")}。`,
+    ),
+  };
+}
+
+/** boxPlotFigure draws a five-number summary as a box plot, with alt text giving the five numbers. */
+function boxPlotFigure(s: FiveNumberSummary, axis: Axis): Figure {
+  const [lo, q1, med, q3, hi] = s;
+  return {
+    svg: boxPlot(s, axis),
+    alt: t(
+      `Box plot: minimum ${lo}, first quartile ${q1}, median ${med}, third quartile ${q3}, maximum ${hi}.`,
+      `箱线图：最小值 ${lo}，第一四分位数 ${q1}，中位数 ${med}，第三四分位数 ${q3}，最大值 ${hi}。`,
+    ),
+  };
 }
 
 /** setOptions are the two data sets of a comparison. */
@@ -454,6 +478,223 @@ export const outliers: TopicDef = {
 };
 
 /** statisticsTopics are the topics on summarizing data. */
+/** dotContexts are what a dot plot counts: [English, Chinese, smallest value]. */
+const dotContexts: readonly (readonly [string, string, number])[] = [
+  ["the number of books each student in a class read last month", "某班每个学生上个月读的书的本数", 0],
+  ["the number of goals a team scored in each game of a season", "一支球队一个赛季每场比赛的进球数", 0],
+  ["the hours of sleep each camper got on the first night", "每个营员第一晚的睡眠小时数", 4],
+  ["the shoe sizes of the players on a team", "一支球队队员的鞋码", 35],
+];
+
+/** dotData draws 9 to 15 values over 7 to 9 consecutive integers from lo. */
+function dotData(rng: Rng, lo: number): { xs: number[]; axis: Axis } {
+  const span = rng.int(6, 8);
+  const xs = data(rng, rng.int(9, 15), lo, lo + span);
+  return { xs, axis: { min: lo, max: lo + span, step: 1 } };
+}
+
+export const dotPlots: TopicDef = {
+  id: "dot-plots",
+  title: t("Dot Plots", "点图"),
+  summary: t("Read a data set from a dot plot, and find its median.", "从点图中读出数据，并求中位数。"),
+  prerequisites: ["median-and-mode"],
+  encompasses: [{ topic: "median-and-mode", weight: 0.5 }],
+  xp: 10,
+  standards: ["CCSS.6.SP.B.4"],
+  knowledgePoints: [
+    {
+      id: "reading-a-dot-plot",
+      title: t("Reading a dot plot", "读点图"),
+      explanation: t(
+        "A **dot plot** shows a data set on a number line: each value is a dot, and equal values stack. The number of dots above a value is how often it occurs, and the number of all the dots is the number of values.\n\nIn the dot plot below, $3$ occurs four times, and $3$ values are at least $6$.",
+        "**点图**在数轴上表示一组数据：每个数据是一个点，相同的值叠在一起。某个值上方的点数就是它出现的次数，所有点的个数就是数据的个数。\n\n在下面的点图中，$3$ 出现了四次，有 $3$ 个数据不小于 $6$。",
+      ),
+      figure: dotPlotFigure([1, 2, 2, 3, 3, 3, 3, 4, 4, 5, 6, 6, 7], { min: 0, max: 8, step: 1 }),
+      generate(rng) {
+        const [en, zh, lo] = rng.pick(dotContexts);
+        for (;;) {
+          const { xs, axis } = dotData(rng, lo);
+          const k = rng.int(axis.min + 2, axis.max - 1);
+          const atLeast = xs.filter((x) => x >= k).length;
+          const exactly = xs.filter((x) => x === k).length;
+          if (atLeast === 0 || exactly === 0 || atLeast === exactly) continue;
+          const counted = sorted(xs.filter((x) => x >= k));
+          return {
+            ...numberProblem({
+              prompt: t(
+                `The dot plot shows ${en}. How many of the values are at least $${k}$?`,
+                `点图表示${zh}。有多少个数据不小于 $${k}$？`,
+              ),
+              answer: atLeast,
+              form: "integer",
+              wrong: [exactly, atLeast - exactly, xs.length - atLeast, xs.filter((x) => x > k).length],
+              solution: t(
+                `"At least $${k}$" includes $${k}$ itself. Count the dots at $${k}$ and above: ${counted.length} dots, for the values $${list(counted)}$.`,
+                `"不小于 $${k}$" 包括 $${k}$ 本身。数 $${k}$ 及其右边的点：共 ${counted.length} 个，即 $${list(counted)}$。`,
+              ),
+            }),
+            figure: dotPlotFigure(xs, axis),
+          };
+        }
+      },
+    },
+    {
+      id: "the-median-from-a-dot-plot",
+      title: t("The median from a dot plot", "从点图求中位数"),
+      explanation: t(
+        "A dot plot already shows the data sorted, from left to right and from the bottom of each stack up. To find the median, count the dots and then count from the left to the middle one, or to the middle two.\n\nThe dot plot above has $13$ dots, so the median is the $7$th from the left: $3$.",
+        "点图中的数据已经从左到右排好了序。求中位数时，先数出点数，再从左数到中间的一个点或中间两个点。\n\n上一步的点图有 $13$ 个点，所以中位数是从左数第 $7$ 个点：$3$。",
+      ),
+      keyPrerequisites: ["median-and-mode"],
+      generate(rng) {
+        const [en, zh, lo] = rng.pick(dotContexts);
+        const { xs, axis } = dotData(rng, lo);
+        const s = sorted(xs);
+        const n = xs.length;
+        const h = Math.floor(n / 2);
+        const m = median(xs);
+        const where =
+          n % 2 === 1
+            ? t(`the dot in position ${h + 1}`, `第 ${h + 1} 个点`)
+            : t(`the mean of the dots in positions ${h} and ${h + 1}`, `第 ${h} 个与第 ${h + 1} 个点的平均数`);
+        return {
+          ...numberProblem({
+            prompt: t(`The dot plot shows ${en}. What is the median?`, `点图表示${zh}。中位数是多少？`),
+            answer: m,
+            form: "decimal",
+            wrong: [
+              Q.of(axis.min + axis.max, 2),
+              ...(isTerminating(mean(xs)) ? [mean(xs)] : []),
+              ...(n % 2 === 0 ? [s[h]!, s[h - 1]!] : [s[h - 1]!, s[h + 1]!]),
+            ],
+            solution: t(
+              `There are ${n} dots. Counting from the left, the sorted values are $${list(s)}$, so the median is ${where.en}: $${dec(m)}$.`,
+              `共有 ${n} 个点。从左往右数，排好序的数据是 $${list(s)}$，所以中位数是${where["zh-CN"]}：$${dec(m)}$。`,
+            ),
+          }),
+          figure: dotPlotFigure(xs, axis),
+        };
+      },
+    },
+  ],
+};
+
+/** boxContexts are what a box plot summarizes: [English, Chinese, axis]. */
+const boxContexts: readonly (readonly [string, string, Axis])[] = [
+  ["the scores of a class on a 20-point quiz", "某班一次 20 分小测验的成绩", { min: 0, max: 20, step: 1, labelEvery: 2 }],
+  ["the number of push-ups each student did in a minute", "每个学生一分钟内做的俯卧撑个数", { min: 0, max: 40, step: 2, labelEvery: 5 }],
+  ["the minutes each student spent on homework last night", "每个学生昨晚做作业的分钟数", { min: 0, max: 100, step: 5, labelEvery: 2 }],
+];
+
+/** summaryOn draws five increasing values on the axis's ticks. */
+function summaryOn(rng: Rng, axis: Axis): FiveNumberSummary {
+  const ticks = Array.from({ length: Math.round((axis.max - axis.min) / axis.step) + 1 }, (_, i) => axis.min + i * axis.step);
+  return sorted(rng.sample(ticks, 5)) as unknown as FiveNumberSummary;
+}
+
+const fiveNames = [
+  t("the minimum", "最小值"),
+  t("the first quartile", "第一四分位数"),
+  t("the median", "中位数"),
+  t("the third quartile", "第三四分位数"),
+  t("the maximum", "最大值"),
+];
+
+export const boxPlots: TopicDef = {
+  id: "box-plots",
+  title: t("Box Plots", "箱线图"),
+  summary: t(
+    "Read the five-number summary, the range and the interquartile range from a box plot, and the share of the data between its marks.",
+    "从箱线图中读出五数概括、极差和四分位距，以及各标记之间的数据所占比例。",
+  ),
+  prerequisites: ["range-and-interquartile-range"],
+  encompasses: [{ topic: "range-and-interquartile-range", weight: 0.5 }],
+  xp: 10,
+  standards: ["CCSS.6.SP.B.4", "CCSS.6.SP.B.5.C"],
+  knowledgePoints: [
+    {
+      id: "reading-a-box-plot",
+      title: t("Reading a box plot", "读箱线图"),
+      explanation: t(
+        "A **box plot** draws a data set's **five-number summary**: the whiskers end at the minimum and the maximum, the box runs from the first quartile $Q_1$ to the third quartile $Q_3$, and the line inside the box is the median. The length of the box is the interquartile range, and the distance between the whisker ends is the range.\n\nIn the box plot below the minimum is $2$, $Q_1 = 6$, the median is $9$, $Q_3 = 12$ and the maximum is $18$. So $\\text{IQR} = 12 - 6 = 6$ and the range is $18 - 2 = 16$.",
+        "**箱线图**画出一组数据的**五数概括**：两条须的端点是最小值和最大值，箱子从第一四分位数 $Q_1$ 延伸到第三四分位数 $Q_3$，箱内的竖线是中位数。箱子的长度是四分位距，两须端点之间的距离是极差。\n\n在下面的箱线图中，最小值是 $2$，$Q_1 = 6$，中位数是 $9$，$Q_3 = 12$，最大值是 $18$。所以 $\\text{IQR} = 12 - 6 = 6$，极差是 $18 - 2 = 16$。",
+      ),
+      figure: boxPlotFigure([2, 6, 9, 12, 18], { min: 0, max: 20, step: 1, labelEvery: 2 }),
+      generate(rng) {
+        const [en, zh, axis] = rng.pick(boxContexts);
+        const s = summaryOn(rng, axis);
+        const [lo, q1, med, q3, hi] = s;
+        const asked = rng.pick(["median", "iqr", "range"] as const);
+        const measure = {
+          median: {
+            name: t("the median", "中位数"),
+            value: med,
+            work: t(`The line inside the box is at $${med}$.`, `箱内竖线在 $${med}$ 处。`),
+          },
+          iqr: {
+            name: t("the interquartile range", "四分位距"),
+            value: q3 - q1,
+            work: t(
+              `The box runs from $Q_1 = ${q1}$ to $Q_3 = ${q3}$:${steps(`\\text{IQR} = ${q3} - ${q1} = ${q3 - q1}`)}`,
+              `箱子从 $Q_1 = ${q1}$ 到 $Q_3 = ${q3}$：${steps(`\\text{IQR} = ${q3} - ${q1} = ${q3 - q1}`)}`,
+            ),
+          },
+          range: {
+            name: t("the range", "极差"),
+            value: hi - lo,
+            work: t(
+              `The whiskers end at $${lo}$ and $${hi}$:${steps(`${hi} - ${lo} = ${hi - lo}`)}`,
+              `两须端点在 $${lo}$ 和 $${hi}$：${steps(`${hi} - ${lo} = ${hi - lo}`)}`,
+            ),
+          },
+        }[asked];
+        return {
+          ...numberProblem({
+            prompt: t(`The box plot summarizes ${en}. What is ${measure.name.en}?`, `箱线图概括了${zh}。${measure.name["zh-CN"]}是多少？`),
+            answer: measure.value,
+            form: "integer",
+            wrong: [med, q3 - q1, hi - lo, q3, q1, Q.of(lo + hi, 2)],
+            solution: measure.work,
+          }),
+          figure: boxPlotFigure(s, axis),
+        };
+      },
+    },
+    {
+      id: "quarters-of-the-data",
+      title: t("Quarters of the data", "四分之一的数据"),
+      explanation: t(
+        "The five marks of a box plot split the data into four parts with about the same number of values in each: about $25\\%$ of the data lie between the minimum and $Q_1$, $25\\%$ between $Q_1$ and the median, and so on. A long part means its quarter of the data is spread out, not that it holds more values.\n\nIn the box plot of the previous step, about $50\\%$ of the values lie between $6$ and $12$, and about $75\\%$ are at least $6$.",
+        "箱线图的五个标记把数据分成四部分，每部分的数据个数大致相同：最小值到 $Q_1$ 之间约有 $25\\%$ 的数据，$Q_1$ 到中位数之间约有 $25\\%$，依此类推。某一部分较长，说明这四分之一的数据较分散，而不是它包含的数据更多。\n\n在上一步的箱线图中，约 $50\\%$ 的数据在 $6$ 和 $12$ 之间，约 $75\\%$ 的数据不小于 $6$。",
+      ),
+      generate(rng) {
+        const [en, zh, axis] = rng.pick(boxContexts);
+        const s = summaryOn(rng, axis);
+        const [i, j] = sorted(rng.sample([0, 1, 2, 3, 4], 2)) as [number, number];
+        const pct = 25 * (j - i);
+        const parts = j - i;
+        return {
+          ...numberProblem({
+            prompt: t(
+              `The box plot summarizes ${en}. About what percent of the values lie between $${s[i]}$ and $${s[j]}$?`,
+              `箱线图概括了${zh}。约百分之几的数据在 $${s[i]}$ 和 $${s[j]}$ 之间？`,
+            ),
+            answer: pct,
+            form: "integer",
+            percent: true,
+            wrong: [25, 50, 75, 100, Math.round((100 * (s[j]! - s[i]!)) / (s[4] - s[0]))],
+            solution: t(
+              `$${s[i]}$ is ${fiveNames[i]!.en} and $${s[j]}$ is ${fiveNames[j]!.en}. Between them lie ${parts} of the four quarters of the data:${steps(`${parts} \\times 25\\% = ${pct}\\%`)}`,
+              `$${s[i]}$ 是${fiveNames[i]!["zh-CN"]}，$${s[j]}$ 是${fiveNames[j]!["zh-CN"]}。它们之间有 ${parts} 个四分之一的数据：${steps(`${parts} \\times 25\\% = ${pct}\\%`)}`,
+            ),
+          }),
+          figure: boxPlotFigure(s, axis),
+        };
+      },
+    },
+  ],
+};
+
 export const statisticsTopics: readonly TopicDef[] = [
   meanOfADataSet,
   medianAndMode,
@@ -461,4 +702,6 @@ export const statisticsTopics: readonly TopicDef[] = [
   meanAbsoluteDeviation,
   comparingDataSets,
   outliers,
+  dotPlots,
+  boxPlots,
 ];
