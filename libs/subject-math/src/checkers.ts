@@ -590,6 +590,7 @@ export const intervalChecker: Checker = {
     const e = obj(expected);
     const target = parseIntervals(str(e, "set")).set;
     const variable = typeof e.var === "string" ? e.var : "x";
+    if (isEmptySet(response)) return target.length === 0 ? { correct: true } : wrong();
     const asInterval = e.form === "inequality" ? undefined : tryParseSet(() => parseIntervals(response));
     const asInequality = e.form === "interval" ? undefined : tryParseSet(() => parseInequalities(response, variable));
     const got = asInterval ?? asInequality;

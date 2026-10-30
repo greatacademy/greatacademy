@@ -96,14 +96,23 @@ const cleanup = (s: string) =>
 const emptyNames = /^(?:\\emptyset|\\varnothing|∅|\\\{\s*\\\}|\{\s*\})$/;
 const realNames = /^(?:\\mathbb\{R\}|ℝ|R|\(-\\infty,\s*\+?\\infty\))$/;
 
-/** parseIntervals reads interval notation: "(-2, 5]", "(-\infty, 3) \cup [5, \infty)", ℝ or ∅. */
+/** parseIntervals reads interval notation: "(-2, 5]", "(-\infty, 3) \cup [5, \infty)", ℝ, ∅, and single points as sets such as "\{3\}" or "\{-1, 4\}". */
 export function parseIntervals(input: string): ParsedSet {
   const s = cleanup(input);
   if (emptyNames.test(s)) return { set: [], reduced: true };
   if (realNames.test(s.replace(/\s/g, ""))) return { set: realLine, reduced: true };
   let reduced = true;
   const parts = s.split(/\\cup(?![a-zA-Z])|∪/).map((p) => p.trim());
-  const intervals = parts.map((p): Interval => {
+  const intervals = parts.flatMap((p): Interval[] => {
+    const points = /^\\\{(.*)\\\}$/.exec(p);
+    if (points) {
+      return points[1]!.split(",").map((x) => {
+        const v = endpoint(x);
+        if (!v.value) throw new ParseError("expected a number");
+        reduced &&= v.reduced;
+        return { lo: v.value, hi: v.value, loClosed: true, hiClosed: true };
+      });
+    }
     const m = /^([([])(.*),(.*)([)\]])$/.exec(p);
     if (!m) throw new ParseError("expected an interval such as (a, b]");
     const lo = endpoint(m[2]!);
@@ -115,7 +124,7 @@ export function parseIntervals(input: string): ParsedSet {
     if ((lo.infinite && loClosed) || (hi.infinite && hiClosed)) throw new ParseError("an infinite endpoint must be open");
     const i: Interval = { lo: lo.value, hi: hi.value, loClosed, hiClosed };
     if (lo.value && hi.value && lo.value.cmp(hi.value) >= 0) throw new ParseError("the endpoints are in the wrong order");
-    return i;
+    return [i];
   });
   return { set: union(...intervals), reduced };
 }
@@ -145,14 +154,22 @@ export function parseInequalities(input: string, variable: string): ParsedSet {
   const atom = (a: string): RealSet => {
     const ops = [...a.matchAll(opPattern)];
     const pieces = a.split(opPattern).map((p) => p.trim());
-    if (ops.length === 0 || ops.length > 2) throw new ParseError("expected an inequality");
+    if (ops.length > 2) throw new ParseError("expected an inequality");
     const read = (p: string) => {
       const e = endpoint(p);
       if (!e.value) throw new ParseError("an endpoint must be a number");
       reduced &&= e.reduced;
       return e.value;
     };
+    const eq = /^(.*?)=(.*)$/.exec(a);
+    if (ops.length === 0 && eq) {
+      const [l, r] = [eq[1]!.trim(), eq[2]!.trim()];
+      if (l !== variable && r !== variable) throw new ParseError("expected an equation in the variable");
+      const v = read(l === variable ? r : l);
+      return [{ lo: v, hi: v, loClosed: true, hiClosed: true }];
+    }
     const o = ops.map((m) => opOf(m[0]));
+    if (ops.length === 0) throw new ParseError("expected an inequality");
     if (ops.length === 1) {
       if (pieces[0] === variable) return union(ray(o[0]!, read(pieces[1]!)));
       if (pieces[1] === variable) return union(ray(reverse[o[0]!], read(pieces[0]!)));
@@ -176,15 +193,19 @@ export function parseInequalities(input: string, variable: string): ParsedSet {
 
 const fmt = (v: Q) => v.toLatex();
 
-/** intervalLatex writes a set in interval notation: "(-\infty, 3) \cup [5, \infty)", "\varnothing". */
+/** intervalLatex writes a set in interval notation: "(-\infty, 3) \cup [5, \infty)", "\varnothing", with a single point as "\{3\}". */
 export function intervalLatex(set: RealSet): string {
   if (set.length === 0) return "\\varnothing";
   return set
-    .map((i) => `${i.loClosed ? "[" : "("}${i.lo ? fmt(i.lo) : "-\\infty"}, ${i.hi ? fmt(i.hi) : "\\infty"}${i.hiClosed ? "]" : ")"}`)
+    .map((i) =>
+      i.lo && i.hi?.eq(i.lo)
+        ? `\\{${fmt(i.lo)}\\}`
+        : `${i.loClosed ? "[" : "("}${i.lo ? fmt(i.lo) : "-\\infty"}, ${i.hi ? fmt(i.hi) : "\\infty"}${i.hiClosed ? "]" : ")"}`,
+    )
     .join(" \\cup ");
 }
 
-/** inequalityLatexOf writes a set as inequalities in a variable: "-2 < x \le 5", "x < -1 \text{ or } x \ge 3". */
+/** inequalityLatexOf writes a set as inequalities in a variable: "-2 < x \le 5", "x < -1 \text{ or } x \ge 3", with a single point as "x = 3". */
 export function inequalityLatexOf(set: RealSet, variable = "x"): string {
   if (set.length === 0) return "\\varnothing";
   return set
@@ -192,7 +213,7 @@ export function inequalityLatexOf(set: RealSet, variable = "x"): string {
       const lo = i.lo && `${fmt(i.lo)} ${i.loClosed ? "\\le" : "<"} `;
       const hi = i.hi && ` ${i.hiClosed ? "\\le" : "<"} ${fmt(i.hi)}`;
       if (!lo && !hi) throw new RangeError("the real line is not an inequality");
-      if (lo && hi && i.lo!.eq(i.hi!)) throw new RangeError("a single point is not an inequality");
+      if (lo && hi && i.lo!.eq(i.hi!)) return `${variable} = ${fmt(i.lo!)}`;
       if (!hi) return `${variable} ${i.loClosed ? "\\ge" : ">"} ${fmt(i.lo!)}`;
       return `${lo ?? ""}${variable}${hi}`;
     })

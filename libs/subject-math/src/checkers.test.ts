@@ -331,6 +331,11 @@ describe("interval", () => {
     ["(-\\infty, \\infty)", "x < 1 \\text{ or } x > 0", "inequality"],
     ["\\varnothing", "\\varnothing", undefined],
     ["\\varnothing", "\\emptyset", "interval"],
+    ["\\varnothing", "\\text{no solution}", "interval"],
+    ["\\{3\\}", "\\{3\\}", "interval"],
+    ["\\{3\\}", "x = 3", "inequality"],
+    ["(-\\infty, 1) \\cup \\{4\\}", "(-\\infty, 1) \\cup \\{4\\}", "interval"],
+    ["\\{-1, 4\\}", "x = -1 \\text{ or } x = 4", undefined],
   ])("accepts %s as %s", (set, response, form) => {
     expect(check(set, response, form).correct).toBe(true);
   });
@@ -349,6 +354,7 @@ describe("interval", () => {
     ["[1/2, \\infty)", "[\\frac{2}{4}, \\infty)", "interval", "lowest terms"],
     ["(-2, 5]", "-2 < x > 5", "inequality", "could not be read"],
     ["(-2, 5]", "-2 < y \\le 5", "inequality", "could not be read"],
+    ["(-2, 5]", "\\text{no solution}", "interval", undefined],
   ])("rejects %s as %s", (set, response, form, message) => {
     const v = check(set, response, form);
     expect(v.correct).toBe(false);
@@ -362,6 +368,9 @@ describe("interval", () => {
     expect(inequalityLatexOf(set)).toBe("x < -1 \\text{ or } x \\ge \\frac{3}{2}");
     expect(inequalityLatexOf(parseIntervals("(-2, 5]").set)).toBe("-2 < x \\le 5");
     expect(setEqual(parseInequalities(inequalityLatexOf(set), "x").set, set)).toBe(true);
+    const point = parseIntervals("(-\\infty, 1) \\cup \\{4\\}").set;
+    expect(intervalLatex(point)).toBe("(-\\infty, 1) \\cup \\{4\\}");
+    expect(inequalityLatexOf(point)).toBe("x < 1 \\text{ or } x = 4");
   });
 });
 
