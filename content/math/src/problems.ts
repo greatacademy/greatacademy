@@ -4,7 +4,7 @@ import {
   type Coefficient,
   dec,
   equationChecker,
-  equivalent,
+  expressionChecker,
   factoredChecker,
   factorizationLatex,
   inequalityLatexOf,
@@ -189,17 +189,17 @@ export interface ExpressionProblem {
   readonly solution: Text;
   /** simplified requires the response to be a fully simplified polynomial. */
   readonly simplified?: boolean;
-  /** wrong are responses typical mistakes produce; expressions equivalent to the answer are dropped unless simplification is required. */
+  /** wrong are responses typical mistakes produce; those the checker accepts (equivalent ones, and with simplification required, equivalent simplified ones) are dropped. */
   readonly wrong?: readonly string[];
 }
 
 /** expressionProblem builds a problem checked by the "expression" checker. */
 export function expressionProblem(p: ExpressionProblem): Problem {
-  const target = parseExpression(p.answer);
-  const wrong = [...new Set(p.wrong ?? [])].filter((w) => w !== p.answer && (p.simplified || !equivalent(parseExpression(w), target)));
+  const expected = { expr: p.answer, ...(p.simplified && { form: "simplified" }) };
+  const wrong = [...new Set(p.wrong ?? [])].filter((w) => !expressionChecker.check(expected, w).correct);
   return {
     prompt: p.prompt,
-    answer: { checker: "expression", expected: { expr: p.answer, ...(p.simplified && { form: "simplified" }) }, input: { kind: "math" } },
+    answer: { checker: "expression", expected, input: { kind: "math" } },
     solution: p.solution,
     canonical: p.answer,
     wrong,
