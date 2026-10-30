@@ -36,6 +36,7 @@ import { similarityTopics } from "./topics/geometry-similarity.ts";
 import { solidGeometryTopics } from "./topics/geometry-solids.ts";
 import { transformationTopics } from "./topics/geometry-transformations.ts";
 import { triangleTrigonometryTopics } from "./topics/geometry-triangles-trigonometry.ts";
+import { trigonometryTopics } from "./topics/geometry-trigonometry.ts";
 import { grade4OperationTopics } from "./topics/grade-4-operations.ts";
 import { inequalityTopics } from "./topics/inequalities.ts";
 import { integerTopics } from "./topics/integers.ts";
@@ -99,6 +100,7 @@ export const math: SubjectDef = {
     ...circleTheoremTopics,
     ...coordinateCircleTopics,
     ...triangleTrigonometryTopics,
+    ...trigonometryTopics,
     ...solidGeometryTopics,
     ...algebraIIFactoringTopics,
     ...polynomialTheoremTopics,
