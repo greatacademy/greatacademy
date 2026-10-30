@@ -18,6 +18,7 @@ import { algebraIIRadicalFunctionsTopics } from "./topics/algebra-ii-radical-fun
 import { algebraIIRationalRadicalTopics } from "./topics/algebra-ii-rational-radical.ts";
 import { algebraIIReciprocalFunctionsTopics } from "./topics/algebra-ii-reciprocal-functions.ts";
 import { graphTransformationTopics } from "./topics/algebra-ii-transformations.ts";
+import { algebraIITrigonometricGraphTopics } from "./topics/algebra-ii-trigonometric-graphs.ts";
 import { algebraIIUnitCircleTopics } from "./topics/algebra-ii-unit-circle.ts";
 import { angleTopics } from "./topics/angles.ts";
 import { areaTopics } from "./topics/area.ts";
@@ -127,6 +128,7 @@ export const math: SubjectDef = {
     ...conicTopics,
     ...algebraIIUnitCircleTopics,
     ...algebraIIGeneralTrianglesTopics,
+    ...algebraIITrigonometricGraphTopics,
     ...combinatoricsTopics,
     ...probabilityTopics,
     ...precalculusSeriesTopics,
