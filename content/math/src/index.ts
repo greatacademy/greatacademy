@@ -13,6 +13,7 @@ import { integerTopics } from "./topics/integers.ts";
 import { numberTheoryTopics } from "./topics/number-theory.ts";
 import { radicalTopics } from "./topics/radicals.ts";
 import { ratioTopics } from "./topics/ratios.ts";
+import { statisticsTopics } from "./topics/statistics.ts";
 
 /** math is the definition of the mathematics subject. */
 export const math: SubjectDef = {
@@ -29,6 +30,7 @@ export const math: SubjectDef = {
     ...equationTopics,
     ...inequalityTopics,
     ...ratioTopics,
+    ...statisticsTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,

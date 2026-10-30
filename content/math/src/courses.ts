@@ -55,15 +55,15 @@ const [integers, expressions, equations, inequalities] = algebraFoundations.unit
 /**
  * prealgebra is the bridge from arithmetic to Algebra I: number theory,
  * fractions, decimals and percents, then the units of Foundations of Algebra
- * extended to rational numbers, exponents and radicals, and ratios and
- * proportions.
+ * extended to rational numbers, exponents and radicals, ratios and
+ * proportions, and statistics.
  */
 export const prealgebra: CourseDef = {
   id: "prealgebra",
   title: t("Prealgebra", "代数预备"),
   description: t(
-    "Divisibility, primes and common factors; fractions, decimals and percents; negative and rational numbers; algebraic expressions; exponents, scientific notation and square roots; linear equations and inequalities; and ratios, rates and proportions.",
-    "整除、质数与公因数；分数、小数与百分数；负数与有理数；代数式；指数、科学记数法与平方根；一元一次方程与不等式；比、率与比例。",
+    "Divisibility, primes and common factors; fractions, decimals and percents; negative and rational numbers; algebraic expressions; exponents, scientific notation and square roots; linear equations and inequalities; ratios, rates and proportions; and summarizing data.",
+    "整除、质数与公因数；分数、小数与百分数；负数与有理数；代数式；指数、科学记数法与平方根；一元一次方程与不等式；比、率与比例；数据的概括。",
   ),
   units: [
     {
@@ -117,6 +117,22 @@ export const prealgebra: CourseDef = {
     {
       title: t("Ratios and Proportions", "比与比例"),
       modules: [{ title: t("Ratios and Rates", "比与率"), topics: ["ratios", "unit-rates", "proportions"] }],
+    },
+    {
+      title: t("Statistics", "统计"),
+      modules: [
+        {
+          title: t("Summarizing Data", "数据的概括"),
+          topics: [
+            "mean-of-a-data-set",
+            "median-and-mode",
+            "range-and-interquartile-range",
+            "mean-absolute-deviation",
+            "comparing-data-sets",
+            "outliers",
+          ],
+        },
+      ],
     },
   ],
 };
