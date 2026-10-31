@@ -37,6 +37,7 @@ import { calculusIImplicitInverseTopics } from "./topics/calculus-i-implicit-inv
 import { calculusILimitTechniqueTopics } from "./topics/calculus-i-limit-techniques.ts";
 import { calculusILimitTopics } from "./topics/calculus-i-limits.ts";
 import { calculusIOptimizationTopics } from "./topics/calculus-i-optimization.ts";
+import { calculusIRiemannTopics } from "./topics/calculus-i-riemann.ts";
 import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
@@ -187,6 +188,7 @@ export const math: SubjectDef = {
     ...calculusICurveTopics,
     ...calculusIOptimizationTopics,
     ...calculusIAntiderivativeTopics,
+    ...calculusIRiemannTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
