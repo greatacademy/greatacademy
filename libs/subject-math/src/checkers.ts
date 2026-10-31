@@ -14,6 +14,7 @@ import {
 import { type ParsedSet, parseInequalities, parseIntervals, setEqual } from "./intervals.ts";
 import { isRelation, type Node, normalizeLatex, ParseError, parseExpression, parseLatex, type RelOp, unwrap } from "./latex.ts";
 import { isPrime, isSquareFree } from "./numbers.ts";
+import { constants, differByConstant, numericallyEquivalent, numericValue } from "./numeric.ts";
 import { Q } from "./rational.ts";
 import { type Surd, surdEqual, surdValue } from "./surds.ts";
 
@@ -35,6 +36,7 @@ const feedback = {
     "请化简根式：根号内不含完全平方因数，分母中不含根号，分数化为最简。",
   ),
   expression: t("Write an expression, not an equation.", "请写出表达式，而不是等式。"),
+  constant: t("Add the constant of integration, $+ C$.", "请加上积分常数 $+ C$。"),
   lowestTermsExpression: t(
     "Write the answer as one fraction in lowest terms: cancel every common factor of the numerator and the denominator.",
     "请写成一个最简分式：约去分子与分母的所有公因式。",
@@ -194,6 +196,59 @@ export const expressionChecker: Checker = {
     if (e.form === "lowest" && !isLowestTerms(parsed)) return wrong(feedback.lowestTermsExpression);
     if (e.form === "vertex" && !isVertexForm(parsed)) return wrong(feedback.vertexForm);
     return { correct: true };
+  },
+};
+
+/**
+ * functionChecker accepts an expression equal, as a function, to expected.expr
+ * (LaTeX), which may use trigonometric, exponential and logarithmic functions
+ * and the constants e and π. The two are compared numerically at fixed sample
+ * points (see numericallyEquivalent); with expected.positive, only at positive
+ * ones. With expected.constant, the name of a constant of integration such as
+ * "C", the response is an antiderivative: it must contain that constant, differ
+ * from expected.expr by a constant, and change when the constant does.
+ * expected.var names the variable (default x).
+ */
+export const functionChecker: Checker = {
+  id: "function",
+  check(expected, response) {
+    const e = obj(expected);
+    const target = parseExpression(str(e, "expr"));
+    const parsed = parse(() => parseLatex(response));
+    if (isVerdict(parsed)) return parsed;
+    if (isRelation(parsed)) return wrong(feedback.expression);
+    if (typeof e.constant !== "string") return numericallyEquivalent(parsed, target, e.positive === true) ? { correct: true } : wrong();
+    const c = e.constant;
+    const x = typeof e.var === "string" ? e.var : "x";
+    const names = new Set<string>();
+    const collect = (n: Node) => {
+      if (n.k === "var") names.add(n.name);
+      for (const child of ["a" in n ? n.a : undefined, "b" in n ? n.b : undefined, n.k === "fn" ? n.base : undefined])
+        if (child) collect(child);
+    };
+    collect(parsed);
+    const stray = [...names].some((n) => n !== x && n !== c && !constants.has(n));
+    if (stray || !differByConstant(parsed, target, x, new Map([[c, 0]]))) return wrong();
+    if (!names.has(c)) return wrong(feedback.constant);
+    const shifts = [0.7, 1.9, -0.6, 3.3].map(
+      (v) =>
+        numericValue(
+          parsed,
+          new Map([
+            [x, v],
+            [c, 1],
+          ]),
+        ) -
+        numericValue(
+          parsed,
+          new Map([
+            [x, v],
+            [c, 0],
+          ]),
+        ),
+    );
+    const shift = shifts.find((d) => Number.isFinite(d));
+    return shift !== undefined && Math.abs(shift) > 1e-9 ? { correct: true } : wrong(feedback.constant);
   },
 };
 
@@ -835,6 +890,7 @@ export const factoredChecker: Checker = {
 export const mathCheckers: readonly Checker[] = [
   numberChecker,
   expressionChecker,
+  functionChecker,
   inequalityChecker,
   factorizationChecker,
   scientificChecker,

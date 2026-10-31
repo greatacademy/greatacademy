@@ -90,6 +90,53 @@ describe("number", () => {
   });
 });
 
+describe("function", () => {
+  it.each([
+    ["\\cos x", "\\cos(x)"],
+    ["\\cos x", "cos x"],
+    ["2\\sin x\\cos x", "\\sin 2x"],
+    ["2\\sin x\\cos x", "\\sin(2x)"],
+    ["\\sin^{2}x", "1-\\cos^{2}x"],
+    ["\\sin^{2}x", "(\\sin x)^2"],
+    ["\\frac{1}{1+x^{2}}", "(x^{2}+1)^{-1}"],
+    ["\\arcsin x", "\\sin^{-1}x"],
+    ["\\sec^{2}x", "1+\\tan^{2}x"],
+    ["e^{2x}", "(e^{x})^{2}"],
+    ["e^{x}", "\\exp(x)"],
+    ["\\frac{1}{x}", "x^{-1}"],
+    ["\\ln x^{2}", "2\\ln|x|"],
+    ["\\log_{2} x", "\\frac{\\ln x}{\\ln 2}"],
+    ["\\log x", "\\frac{\\ln x}{\\ln 10}"],
+    ["x^{\\frac{1}{3}}", "\\sqrt[3]{x}"],
+    ["\\pi x", "x\\pi"],
+    ["x\\sin x+\\cos x", "\\cos x+x\\sin x"],
+    ["\\cosh^{2}x-\\sinh^{2}x", "1"],
+  ])("accepts %s as %s", (expr, response) => {
+    expect(accepts("function", { expr }, response)).toBe(true);
+  });
+
+  it.each([
+    ["\\cos x", "\\sin x"],
+    ["\\cos x", "-\\cos x"],
+    ["\\ln|x|", "\\ln x"],
+    ["\\sin x\\cos x", "\\sin(x\\cos x)"],
+    ["e^{2x}", "2e^{x}"],
+    ["\\cos x", "y=\\cos x"],
+  ])("rejects %s as %s", (expr, response) => {
+    expect(accepts("function", { expr }, response)).toBe(false);
+  });
+
+  it("checks antiderivatives up to a constant", () => {
+    const expected = { expr: "-\\cos x + C", constant: "C" };
+    expect(accepts("function", expected, "-\\cos x+C")).toBe(true);
+    expect(accepts("function", expected, "C-\\cos(x)")).toBe(true);
+    expect(accepts("function", expected, "5-\\cos x+C")).toBe(true);
+    expect(accepts("function", expected, "\\cos x+C")).toBe(false);
+    expect(verdict("function", expected, "-\\cos x").feedback?.en).toContain("constant of integration");
+    expect(accepts("function", expected, "-\\cos x+D")).toBe(false);
+  });
+});
+
 describe("expression", () => {
   it.each([
     ["3x-5", "-5+3x"],

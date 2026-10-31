@@ -7,6 +7,7 @@ import {
   expressionChecker,
   factoredChecker,
   factorizationLatex,
+  functionChecker,
   inequalityLatexOf,
   intervalLatex,
   parseExpression,
@@ -217,6 +218,42 @@ export function expressionProblem(p: ExpressionProblem): Problem {
   return {
     prompt: p.prompt,
     answer: { checker: "expression", expected, input: { kind: "math", ...(p.prefix && { prefix: p.prefix }) } },
+    solution: p.solution,
+    canonical: p.answer,
+    wrong,
+  };
+}
+
+/** FunctionProblem describes a problem whose answer is a function that may involve trigonometric, exponential or logarithmic functions. */
+export interface FunctionProblem {
+  readonly prompt: Text;
+  /** answer is the expected expression in LaTeX; for an antiderivative it ends in "+ C". */
+  readonly answer: string;
+  readonly solution: Text;
+  /** antiderivative asks for an antiderivative with the constant of integration C. */
+  readonly antiderivative?: boolean;
+  /** variable is the variable of the function (default x). */
+  readonly variable?: string;
+  /** positive takes the variable to be positive, as the prompt must then say. */
+  readonly positive?: boolean;
+  /** prefix is shown before the answer field, such as "f'(x) =". */
+  readonly prefix?: string;
+  /** wrong are responses typical mistakes produce; those the checker accepts are dropped. */
+  readonly wrong?: readonly string[];
+}
+
+/** functionProblem builds a problem checked by the "function" checker. */
+export function functionProblem(p: FunctionProblem): Problem {
+  const expected = {
+    expr: p.answer,
+    ...(p.antiderivative && { constant: "C" }),
+    ...(p.variable && { var: p.variable }),
+    ...(p.positive && { positive: true }),
+  };
+  const wrong = [...new Set(p.wrong ?? [])].filter((w) => !functionChecker.check(expected, w).correct);
+  return {
+    prompt: p.prompt,
+    answer: { checker: "function", expected, input: { kind: "math", ...(p.prefix && { prefix: p.prefix }) } },
     solution: p.solution,
     canonical: p.answer,
     wrong,

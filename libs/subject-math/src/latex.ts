@@ -20,7 +20,46 @@ export type Node =
   | { readonly k: "root"; readonly n: number; readonly a: Node }
   /** abs is an absolute value, written |a|. */
   | { readonly k: "abs"; readonly a: Node }
-  | { readonly k: "group"; readonly a: Node };
+  | { readonly k: "group"; readonly a: Node }
+  /** fn applies a named function such as \\sin or \\ln to a; a logarithm may carry a base, written \\log_{b} a. */
+  | { readonly k: "fn"; readonly name: FnName; readonly a: Node; readonly base?: Node };
+
+/** FnName names a function the parser reads: trigonometric, inverse trigonometric, hyperbolic, exponential and logarithmic. */
+export type FnName =
+  | "sin"
+  | "cos"
+  | "tan"
+  | "sec"
+  | "csc"
+  | "cot"
+  | "arcsin"
+  | "arccos"
+  | "arctan"
+  | "sinh"
+  | "cosh"
+  | "tanh"
+  | "exp"
+  | "ln"
+  | "log";
+
+const fnNames: ReadonlySet<string> = new Set<FnName>([
+  "sin",
+  "cos",
+  "tan",
+  "sec",
+  "csc",
+  "cot",
+  "arcsin",
+  "arccos",
+  "arctan",
+  "sinh",
+  "cosh",
+  "tanh",
+  "exp",
+  "ln",
+  "log",
+]);
+const inverses: Partial<Record<FnName, FnName>> = { sin: "arcsin", cos: "arccos", tan: "arctan" };
 
 /** RelOp is a relation symbol. */
 export type RelOp = "=" | "<" | ">" | "<=" | ">=";
@@ -38,7 +77,7 @@ export class ParseError extends Error {}
 type Tok =
   | { t: "num"; s: string }
   | { t: "var"; s: string }
-  | { t: "op"; s: "+" | "-" | "*" | "/" | "^" | "(" | ")" | "{" | "}" | "|" | "[" | "]" | "rel" }
+  | { t: "op"; s: "+" | "-" | "*" | "/" | "^" | "_" | "(" | ")" | "{" | "}" | "|" | "[" | "]" | "rel" }
   | { t: "cmd"; s: string };
 
 const ignored = new Set(["\\,", "\\;", "\\:", "\\!", "\\ ", "\\quad", "\\qquad", "\\left", "\\right", "\\displaystyle"]);
@@ -56,7 +95,9 @@ export function normalizeLatex(s: string): string {
     .replace(/≤/g, "\\le ")
     .replace(/≥/g, "\\ge ")
     .replace(/(\d)\{,\}(?=\d{3})/g, "$1")
+    .replace(/\\(?:mathrm|operatorname)\{(arcsin|arccos|arctan|sinh|cosh|tanh|sin|cos|tan|sec|csc|cot|exp|ln|log)\}/g, "\\$1 ")
     .replace(/\\mathrm\{([^{}]*)\}/g, "$1")
+    .replace(/(?<![\\a-zA-Z])(arcsin|arccos|arctan|sinh|cosh|tanh|sin|cos|tan|sec|csc|cot|exp|ln|log)/g, "\\$1 ")
     .trim();
 }
 
@@ -102,7 +143,7 @@ function tokenize(input: string): (Tok & { rel?: RelOp })[] {
     } else if (c === "]") {
       out.push({ t: "op", s: closedIndex(out) ? ")" : "]" });
       i++;
-    } else if ("+-*/^(){}|".includes(c)) {
+    } else if ("+-*/^_(){}|".includes(c)) {
       out.push({ t: "op", s: c as "+" });
       i++;
     } else {
@@ -186,7 +227,7 @@ class Parser {
     if (!tok) return false;
     if (tok.t === "num" || tok.t === "var") return true;
     if (tok.t === "op") return tok.s === "(" || tok.s === "{" || (tok.s === "|" && this.absDepth === 0);
-    return fracCommands.has(tok.s) || tok.s === "\\sqrt" || tok.s === "\\pi";
+    return fracCommands.has(tok.s) || tok.s === "\\sqrt" || tok.s === "\\pi" || isFn(tok);
   }
 
   private unary(): Node {
@@ -237,6 +278,45 @@ class Parser {
     const node = this.expr();
     this.expectOp("}");
     return node;
+  }
+
+  /**
+   * application reads a function applied to its argument, after the function's
+   * command: \\sin^{2} x is (\\sin x)^{2}, \\sin^{-1} x is \\arcsin x and
+   * \\log_{b} x a logarithm to base b. An argument without parentheses runs
+   * over a product of numbers, letters and \\pi, so \\sin 2x is \\sin(2x)
+   * while \\sin x \\cos x is a product of two functions.
+   */
+  private application(name: FnName): Node {
+    this.i++;
+    let base: Node | undefined;
+    if (name === "log" && this.isOp("_")) {
+      this.i++;
+      base = this.isOp("{") ? this.braced() : this.single();
+    }
+    let exponent: Node | undefined;
+    if (this.isOp("^")) {
+      this.i++;
+      exponent = this.isOp("{") ? this.braced() : this.single();
+      const inverse = inverses[name];
+      const e = unwrap(exponent);
+      if (inverse && e.k === "neg" && e.a.k === "num" && e.a.v.eq(Q.one)) {
+        name = inverse;
+        exponent = undefined;
+      }
+    }
+    let a: Node;
+    if (this.isOp("(")) a = this.primary();
+    else {
+      a = this.power();
+      for (;;) {
+        const tok = this.peek();
+        if (!(tok?.t === "var" || (tok?.t === "num" && a.k !== "num") || (tok?.t === "cmd" && tok.s === "\\pi"))) break;
+        a = { k: "mul", a, b: this.power(), implicit: true };
+      }
+    }
+    const node: Node = base ? { k: "fn", name, a, base } : { k: "fn", name, a };
+    return exponent ? { k: "pow", a: node, b: exponent } : node;
   }
 
   private primary(): Node {
@@ -294,8 +374,13 @@ class Parser {
       this.i++;
       return { k: "var", name: "\\pi" };
     }
+    if (isFn(tok)) return this.application(tok.s.slice(1) as FnName);
     throw new ParseError(`unsupported command ${tok.s}`);
   }
+}
+
+function isFn(tok: Tok | undefined): boolean {
+  return tok?.t === "cmd" && fnNames.has(tok.s.slice(1));
 }
 
 /** parseLatex parses an expression, equation or inequality. */

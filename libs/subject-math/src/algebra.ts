@@ -57,6 +57,8 @@ export function evaluate(node: Node, env: ReadonlyMap<string, Q> = new Map()): Q
     }
     case "abs":
       return evaluate(node.a, env).abs();
+    case "fn":
+      throw new UnknownValueError(`no exact value for ${node.name}`);
   }
 }
 
@@ -171,6 +173,7 @@ export function toPoly(node: Node): Poly | undefined {
     case "sqrt":
     case "root":
     case "abs":
+    case "fn":
       return undefined;
   }
 }

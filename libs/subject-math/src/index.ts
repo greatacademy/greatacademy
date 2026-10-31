@@ -7,6 +7,7 @@ export * from "./forms.ts";
 export * from "./intervals.ts";
 export * from "./latex.ts";
 export * from "./numbers.ts";
+export * from "./numeric.ts";
 export * from "./plane.ts";
 export * from "./rational.ts";
 export * from "./surds.ts";

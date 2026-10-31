@@ -250,6 +250,8 @@ export function algebraicValue(node: Node, env: ReadonlyMap<string, Q>): Algebra
       const v = algebraicValue(node.a, env);
       return approx(v) < 0 ? neg(v) : v;
     }
+    case "fn":
+      throw new UnknownValueError(`no exact value for ${node.name}`);
   }
 }
 
