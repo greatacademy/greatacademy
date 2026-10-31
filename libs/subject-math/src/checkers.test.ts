@@ -111,6 +111,8 @@ describe("function", () => {
     ["\\pi x", "x\\pi"],
     ["x\\sin x+\\cos x", "\\cos x+x\\sin x"],
     ["\\cosh^{2}x-\\sinh^{2}x", "1"],
+    ["-\\operatorname{sech} x\\tanh x", "-\\frac{\\sinh x}{\\cosh^{2}x}"],
+    ["-\\operatorname{csch}^{2}x", "1-\\coth^{2}x"],
   ])("accepts %s as %s", (expr, response) => {
     expect(accepts("function", { expr }, response)).toBe(true);
   });
@@ -122,6 +124,7 @@ describe("function", () => {
     ["\\sin x\\cos x", "\\sin(x\\cos x)"],
     ["e^{2x}", "2e^{x}"],
     ["\\cos x", "y=\\cos x"],
+    ["\\operatorname{sech} x", "\\sec x"],
   ])("rejects %s as %s", (expr, response) => {
     expect(accepts("function", { expr }, response)).toBe(false);
   });
