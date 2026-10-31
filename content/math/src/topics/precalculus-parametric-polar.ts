@@ -1,6 +1,6 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { paren, poly } from "@ga/subject-math";
+import { poly } from "@ga/subject-math";
 
 import { choiceProblem } from "../problems.ts";
 
