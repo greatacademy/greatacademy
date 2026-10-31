@@ -1323,5 +1323,586 @@ export const algebraII: CourseDef = {
   ],
 };
 
+/** precalculus is the high-school Precalculus course. */
+export const precalculus: CourseDef = {
+  id: "precalculus",
+  title: t("Precalculus", "预备微积分"),
+  description: t(
+    "Arithmetic and finite geometric series and the binomial theorem; rational expressions, equations and functions with their asymptotes, holes and limits at infinity; quadratic, polynomial, rational and other nonlinear inequalities; inverse trigonometric functions, trigonometric identities, the sum, difference and double-angle formulas, and trigonometric equations; vectors in two and three dimensions with the dot and cross products; matrices, determinants, inverses and linear transformations; ellipses and hyperbolas; parametric and polar equations; complex numbers in the complex plane and in polar form, De Moivre's theorem, roots of unity and the fundamental theorem of algebra; probability, combinatorics, discrete random variables and the normal distribution; and statistics: variance, covariance, z-scores, correlation and regression.",
+    "等差级数与有限等比级数、二项式定理；有理式、有理方程与有理函数，及其渐近线、洞与无穷远处的极限；二次、多项式、有理与其他非线性不等式；反三角函数、三角恒等式、和差公式与二倍角公式、三角方程；二维与三维向量及点积和叉积；矩阵、行列式、逆矩阵与线性变换；椭圆与双曲线；参数方程与极坐标方程；复平面上与极坐标形式的复数、棣莫弗定理、单位根与代数基本定理；概率、组合、离散随机变量与正态分布；统计：方差、协方差、z 分数、相关与回归。",
+  ),
+  units: [
+    {
+      title: t("Sequences and Series", "数列与级数"),
+      modules: [
+        {
+          title: t("Arithmetic Series", "等差级数"),
+          topics: [
+            "sigma-notation",
+            "properties-of-finite-series",
+            "expressing-an-arithmetic-series-in-sigma-notation",
+            "finding-the-sum-of-an-arithmetic-series",
+            "finding-the-first-term-of-an-arithmetic-series",
+            "calculating-the-number-of-terms-in-an-arithmetic-series",
+            "modeling-with-arithmetic-series",
+          ],
+        },
+        {
+          title: t("Finite Geometric Series", "有限等比级数"),
+          topics: [
+            "the-sum-of-a-finite-geometric-series",
+            "the-sum-of-the-first-n-terms-of-a-geometric-series",
+            "writing-geometric-series-in-sigma-notation",
+            "sums-of-finite-geometric-series-given-in-sigma-notation",
+            "solving-geometric-series-problems-using-exponential-equations-and-inequalities",
+            "modeling-with-geometric-series",
+            "modeling-financial-problems-using-geometric-series",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Rational Functions", "有理函数"),
+      modules: [
+        {
+          title: t("Rational Expressions and Equations", "有理式与有理方程"),
+          topics: [
+            "closure-properties-of-polynomials",
+            "closure-properties-of-rational-expressions",
+            "rational-equations-with-three-terms",
+            "advanced-rational-equations",
+            "further-advanced-rational-equations",
+          ],
+        },
+        {
+          title: t("Rational Functions", "有理函数"),
+          topics: [
+            "roots-of-rational-functions",
+            "vertical-asymptotes-of-rational-functions",
+            "locating-holes-in-rational-functions",
+            "horizontal-asymptotes-of-rational-functions",
+            "end-behavior-of-rational-functions",
+            "infinite-limits-of-rational-functions",
+            "infinite-limits-of-rational-functions-advanced-cases",
+            "the-domain-and-range-of-a-rational-function",
+            "identifying-a-rational-function-from-a-graph",
+            "identifying-a-rational-function-from-a-graph-containing-holes",
+            "identifying-the-graph-of-a-rational-function",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Inequalities", "不等式"),
+      modules: [
+        {
+          title: t("Quadratic Inequalities", "二次不等式"),
+          topics: [
+            "solving-elementary-quadratic-inequalities",
+            "solving-quadratic-inequalities-from-graphs",
+            "solving-quadratic-inequalities-using-the-graphical-method",
+            "solving-quadratic-inequalities-using-the-sign-table-method",
+            "determining-unknown-parameters-in-quadratic-equations-with-real-solutions",
+            "determining-unknown-parameters-in-quadratic-equations-with-no-real-solutions",
+            "determining-unknown-parameters-in-quadratic-equations-advanced-cases",
+          ],
+        },
+        {
+          title: t("Polynomial Inequalities", "多项式不等式"),
+          topics: [
+            "inequalities-involving-powers-of-binomials",
+            "solving-polynomial-inequalities-using-a-graphical-method",
+            "solving-polynomial-inequalities-using-special-factoring-techniques-and-the-graphical-method",
+            "solving-polynomial-inequalities-using-the-sign-table-method",
+          ],
+        },
+        {
+          title: t("Non-Polynomial Inequalities", "非多项式不等式"),
+          topics: [
+            "solving-radical-inequalities",
+            "solving-inequalities-involving-exponential-functions",
+            "solving-inequalities-involving-logarithmic-functions",
+            "solving-inequalities-involving-exponential-functions-and-polynomials",
+            "solving-inequalities-involving-positive-and-negative-factors",
+            "solving-inequalities-involving-geometric-sequences",
+            "solving-rational-inequalities",
+            "further-solving-of-rational-inequalities",
+            "solving-two-variable-nonlinear-inequalities",
+            "further-solving-of-two-variable-nonlinear-inequalities",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Trigonometry", "三角学"),
+      modules: [
+        {
+          title: t("The Inverse Trigonometric Functions", "反三角函数"),
+          topics: [
+            "graphing-the-inverse-sine-function",
+            "graphing-the-inverse-cosine-function",
+            "graphing-the-inverse-tangent-function",
+            "evaluating-expressions-containing-inverse-trigonometric-functions",
+            "further-evaluating-expressions-containing-inverse-trigonometric-functions",
+          ],
+        },
+        {
+          title: t("Trigonometric Identities", "三角恒等式"),
+          topics: [
+            "simplifying-expressions-using-basic-trigonometric-identities",
+            "simplifying-expressions-using-the-pythagorean-identity",
+            "alternate-forms-of-the-pythagorean-identity",
+            "simplifying-expressions-using-the-secant-tangent-identity",
+            "alternate-forms-of-the-secant-tangent-identity",
+            "simplifying-trigonometric-expressions-using-the-cotangent-cosecant-identity",
+            "simplifying-trigonometric-expressions-using-cofunction-identities",
+          ],
+        },
+        {
+          title: t("The Sum and Difference Formulas", "和差公式"),
+          topics: [
+            "converting-between-exponential-and-logarithmic-form",
+            "the-sum-and-difference-formulas-for-tangent",
+            "calculating-trigonometric-ratios-using-the-sum-formula-for-sine",
+            "calculating-trigonometric-ratios-using-the-sum-formula-for-cosine",
+            "calculating-trigonometric-ratios-using-the-sum-formula-for-tangent",
+            "writing-sums-of-trigonometric-functions-in-amplitude-phase-form",
+          ],
+        },
+        {
+          title: t("The Double-Angle Formulas", "二倍角公式"),
+          topics: [
+            "the-double-angle-formula-for-sine",
+            "verifying-trigonometric-identities-using-the-double-angle-formula-for-sine",
+            "using-the-double-angle-formula-for-sine-with-the-pythagorean-theorem",
+            "the-double-angle-formula-for-cosine",
+            "verifying-trigonometric-identities-using-the-double-angle-formulas-for-cosine",
+            "finding-exact-values-of-trigonometric-expressions-using-the-double-angle-formulas-for-cosine",
+            "simplifying-expressions-using-the-double-angle-formula-for-tangent",
+            "verifying-trigonometric-identities-using-the-double-angle-formula-for-tangent",
+          ],
+        },
+        {
+          title: t("Elementary Trigonometric Equations", "基本三角方程"),
+          topics: [
+            "elementary-trigonometric-equations-containing-sine",
+            "elementary-trigonometric-equations-containing-cosine",
+            "solving-exponential-equations-with-different-bases-using-logarithms",
+            "elementary-trigonometric-equations-containing-secant",
+            "elementary-trigonometric-equations-containing-cosecant",
+            "elementary-trigonometric-equations-containing-cotangent",
+            "general-solutions-of-elementary-trigonometric-equations",
+          ],
+        },
+        {
+          title: t("Trigonometric Equations Containing Transformed Functions", "含变换函数的三角方程"),
+          topics: [
+            "general-solutions-of-trigonometric-equations-with-transformed-functions",
+            "trigonometric-equations-containing-transformed-sine-functions",
+            "trigonometric-equations-containing-transformed-cosine-functions",
+            "trigonometric-equations-containing-transformed-tangent-functions",
+          ],
+        },
+        {
+          title: t("Advanced Trigonometric Equations", "高级三角方程"),
+          topics: [
+            "solving-trigonometric-equations-using-the-sin-cos-tan-identity",
+            "solving-trigonometric-equations-using-the-zero-product-property",
+            "quadratic-trigonometric-equations-containing-sine-or-cosine",
+            "quadratic-trigonometric-equations-containing-tangent-or-cotangent",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Vectors", "向量"),
+      modules: [
+        {
+          title: t("Introduction to Vectors", "向量入门"),
+          topics: [
+            "introduction-to-vectors",
+            "the-triangle-law-for-the-addition-of-two-vectors",
+            "the-magnitude-of-a-vector",
+            "problem-solving-using-vector-diagrams",
+            "parallel-vectors",
+            "unit-vectors",
+            "linear-combinations-of-vectors-and-their-properties",
+            "describing-the-position-vector-of-a-point-using-known-vectors",
+          ],
+        },
+        {
+          title: t("Vectors in 2D Cartesian Coordinates", "二维直角坐标中的向量"),
+          topics: [
+            "two-dimensional-vectors-expressed-in-component-form",
+            "addition-and-scalar-multiplication-of-cartesian-vectors-in-2d",
+            "calculating-the-magnitude-of-cartesian-vectors-in-2d",
+            "calculating-the-direction-of-cartesian-vectors-in-2d",
+            "calculating-the-components-of-cartesian-vectors-in-2d",
+            "velocity-and-acceleration-for-plane-motion",
+            "calculating-displacement-for-plane-motion",
+          ],
+        },
+        {
+          title: t("Vectors in 3D Cartesian Coordinates", "三维直角坐标中的向量"),
+          topics: [
+            "three-dimensional-vectors-in-component-form",
+            "addition-and-scalar-multiplication-of-cartesian-vectors-in-3d",
+            "calculating-the-magnitude-of-cartesian-vectors-in-3d",
+          ],
+        },
+        {
+          title: t("The Dot Product", "点积"),
+          topics: [
+            "calculating-the-dot-product-using-angle-and-magnitude",
+            "calculating-the-dot-product-using-components",
+            "the-angle-between-two-vectors",
+            "calculating-a-scalar-projection",
+            "calculating-a-vector-projection",
+          ],
+        },
+        {
+          title: t("The Cross Product", "叉积"),
+          topics: [
+            "the-cross-product-of-two-vectors",
+            "properties-of-the-cross-product",
+            "calculating-the-cross-product-using-determinants",
+            "finding-areas-using-the-cross-product",
+            "the-scalar-triple-product",
+            "volumes-of-parallelepipeds",
+            "finding-volumes-of-tetrahedrons-and-pyramids-using-vector-products",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Matrices", "矩阵"),
+      modules: [
+        {
+          title: t("Introduction to Matrices", "矩阵入门"),
+          topics: [
+            "introduction-to-matrices",
+            "index-notation-for-matrices",
+            "adding-and-subtracting-matrices",
+            "properties-of-matrix-addition",
+            "scalar-multiplication-of-matrices",
+            "zero-square-diagonal-and-identity-matrices",
+            "the-transpose-of-a-matrix",
+          ],
+        },
+        {
+          title: t("Matrix Multiplication", "矩阵乘法"),
+          topics: [
+            "multiplying-a-matrix-by-a-column-vector",
+            "multiplying-square-matrices",
+            "conformability-for-matrix-multiplication",
+            "multiplying-matrices",
+            "powers-of-matrices",
+            "multiplying-a-matrix-by-the-identity-matrix",
+            "properties-of-matrix-multiplication",
+            "representing-2x2-systems-of-equations-using-a-matrix-product",
+            "representing-3x3-systems-of-equations-using-a-matrix-product",
+          ],
+        },
+        {
+          title: t("Determinants", "行列式"),
+          topics: [
+            "the-determinant-of-a-2x2-matrix",
+            "the-geometric-interpretation-of-the-2x2-determinant",
+            "the-minors-of-a-3x3-matrix",
+            "the-determinant-of-a-3x3-matrix",
+          ],
+        },
+        {
+          title: t("The Inverse of a Matrix", "逆矩阵"),
+          topics: [
+            "introduction-to-the-inverse-of-a-matrix",
+            "inverses-of-2x2-matrices",
+            "calculating-the-inverse-of-a-3x3-matrix-using-the-cofactor-method",
+            "solving-2x2-systems-of-equations-using-inverse-matrices",
+            "solving-systems-of-equations-using-inverse-matrices",
+          ],
+        },
+        {
+          title: t("Linear Transformations", "线性变换"),
+          topics: [
+            "introduction-to-linear-transformations",
+            "the-standard-matrix-of-a-linear-transformation",
+            "linear-transformations-of-points-and-lines-in-the-plane",
+            "linear-transformations-of-objects-in-the-plane",
+            "dilations-and-reflections-as-linear-transformations",
+            "shear-and-stretch-as-linear-transformations",
+            "right-angle-rotations-as-linear-transformations",
+            "rotations-as-linear-transformations",
+            "combining-linear-transformations-using-2x2-matrices",
+            "inverting-linear-transformations",
+            "area-scale-factors-of-linear-transformations",
+            "singular-linear-transformations-in-the-plane",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Conic Sections", "圆锥曲线"),
+      modules: [
+        {
+          title: t("Ellipses as Conic Sections", "作为圆锥曲线的椭圆"),
+          topics: [
+            "introduction-to-ellipses",
+            "equations-of-ellipses-centered-at-the-origin",
+            "equations-of-ellipses-centered-at-a-general-point",
+            "finding-the-center-and-axes-of-ellipses-by-completing-the-square",
+            "finding-intercepts-of-ellipses",
+            "finding-intersections-of-ellipses-and-lines",
+            "foci-of-ellipses",
+            "vertices-and-eccentricity-of-ellipses",
+            "directrices-of-ellipses",
+            "the-area-of-an-ellipse",
+          ],
+        },
+        {
+          title: t("Hyperbolas as Conic Sections", "作为圆锥曲线的双曲线"),
+          topics: [
+            "equations-of-hyperbolas-centered-at-the-origin",
+            "equations-of-hyperbolas-centered-at-a-general-point",
+            "asymptotes-of-hyperbolas-centered-at-the-origin",
+            "asymptotes-of-hyperbolas-centered-at-a-general-point",
+            "finding-intercepts-and-intersections-of-hyperbolas",
+            "transverse-axes-of-hyperbolas",
+            "conjugate-axes-of-hyperbolas",
+            "foci-of-hyperbolas",
+            "eccentricity-and-vertices-of-hyperbolas",
+            "directrices-of-hyperbolas",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Parametric Equations", "参数方程"),
+      modules: [
+        {
+          title: t("Parametric Equations", "参数方程"),
+          topics: [
+            "graphing-curves-defined-parametrically",
+            "cartesian-equations-of-parametric-curves",
+            "finding-intercepts-of-curves-defined-parametrically",
+            "finding-intersections-of-parametric-curves-and-lines",
+            "parametric-equations-of-circles",
+            "parametric-equations-of-ellipses",
+            "parametric-equations-of-parabolas",
+            "parametric-equations-of-parabolas-centered-at-hk",
+            "parametric-equations-of-horizontal-hyperbolas",
+            "parametric-equations-of-vertical-hyperbolas",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Polar Equations", "极坐标方程"),
+      modules: [
+        {
+          title: t("Polar Coordinates", "极坐标"),
+          topics: [
+            "introduction-to-polar-coordinates",
+            "converting-from-polar-coordinates-to-cartesian-coordinates",
+            "polar-equations-of-circles-centered-at-the-origin",
+            "polar-equations-of-radial-lines",
+            "polar-equations-of-circles-centered-on-the-coordinate-axes",
+            "finding-intersections-of-polar-curves",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Complex Numbers", "复数"),
+      modules: [
+        {
+          title: t("The Complex Plane", "复平面"),
+          topics: [
+            "the-complex-plane",
+            "the-magnitude-of-a-complex-number",
+            "the-argument-of-a-complex-number",
+            "arithmetic-in-the-complex-plane",
+            "geometry-in-the-complex-plane",
+          ],
+        },
+        {
+          title: t("Further Complex Numbers", "复数进阶"),
+          topics: [
+            "the-complex-conjugate",
+            "special-properties-of-the-complex-conjugate",
+            "the-complex-conjugate-and-the-roots-of-a-quadratic-equation",
+            "dividing-complex-numbers",
+            "solving-equations-by-equating-real-and-imaginary-parts",
+            "extending-polynomial-identities-to-the-complex-numbers",
+          ],
+        },
+        {
+          title: t("Complex Numbers in Polar Form", "复数的极坐标形式"),
+          topics: [
+            "the-polar-form-of-a-complex-number",
+            "products-of-complex-numbers-expressed-in-polar-form",
+            "quotients-of-complex-numbers-expressed-in-polar-form",
+            "the-cis-notation",
+          ],
+        },
+        {
+          title: t("De Moivre's Theorem", "棣莫弗定理"),
+          topics: [
+            "de-moivres-theorem",
+            "finding-powers-of-complex-numbers-using-de-moivres-theorem",
+            "the-power-reducing-formulas-for-sine-and-cosine",
+            "eulers-formula",
+            "the-roots-of-unity",
+            "properties-of-roots-of-unity",
+            "square-roots-of-complex-numbers",
+            "higher-roots-of-complex-numbers",
+          ],
+        },
+        {
+          title: t("The Fundamental Theorem of Algebra", "代数基本定理"),
+          topics: [
+            "the-fundamental-theorem-of-algebra-for-quadratic-equations",
+            "the-fundamental-theorem-of-algebra-with-cubic-equations",
+            "solving-cubic-equations-with-complex-roots",
+            "the-fundamental-theorem-of-algebra-with-quartic-equations",
+            "solving-quartic-equations-with-complex-roots",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Probability & Combinatorics", "概率与组合"),
+      modules: [
+        {
+          title: t("Combinatorics", "组合"),
+          topics: [
+            "the-rules-of-sum-and-product",
+            "factorials",
+            "factorials-in-variable-expressions",
+            "ordering-objects",
+            "permutations",
+            "combinations",
+            "computing-probabilities-using-combinatorics",
+          ],
+        },
+        {
+          title: t("The Binomial Theorem", "二项式定理"),
+          topics: [
+            "pascals-triangle-and-the-binomial-coefficients",
+            "expanding-a-binomial-using-binomial-coefficients",
+            "the-special-case-of-the-binomial-theorem",
+            "approximating-values-using-the-binomial-theorem",
+          ],
+        },
+        {
+          title: t("Introduction to Probability", "概率入门"),
+          topics: [
+            "sets",
+            "experimental-probability",
+            "using-experimental-probability-to-make-predictions",
+            "sample-spaces-and-events-in-probability",
+            "the-likelihood-of-an-event",
+            "single-events-in-probability",
+            "using-probability-to-make-predictions",
+            "the-complement-of-an-event",
+            "venn-diagrams-in-probability",
+            "geometric-probability",
+          ],
+        },
+        {
+          title: t("Compound Events in Probability", "概率中的复合事件"),
+          topics: [
+            "the-union-of-sets",
+            "the-intersection-of-sets",
+            "compound-events-in-probability-from-experimental-data",
+            "computing-probabilities-for-compound-events-using-venn-diagrams",
+            "computing-probabilities-of-events-containing-complements-using-venn-diagrams",
+            "computing-probabilities-for-three-events-using-venn-diagrams",
+            "the-addition-law-of-probability",
+            "applying-the-addition-law-with-event-complements",
+            "mutually-exclusive-events",
+          ],
+        },
+        {
+          title: t("Conditional Probability", "条件概率"),
+          topics: [
+            "conditional-probabilities-from-venn-diagrams",
+            "conditional-probabilities-from-tables",
+            "the-multiplication-law-for-conditional-probability",
+            "the-law-of-total-probability",
+            "tree-diagrams-for-dependent-events",
+            "tree-diagrams-for-dependent-events-applications",
+            "independent-events",
+            "tree-diagrams-for-independent-events",
+          ],
+        },
+        {
+          title: t("Discrete Random Variables", "离散随机变量"),
+          topics: [
+            "probability-mass-functions-of-discrete-random-variables",
+            "cumulative-distribution-functions-for-discrete-random-variables",
+            "expected-values-of-discrete-random-variables",
+            "the-binomial-distribution",
+            "modeling-with-the-binomial-distribution",
+            "the-geometric-distribution",
+            "modeling-with-the-geometric-distribution",
+          ],
+        },
+        {
+          title: t("The Normal Distribution", "正态分布"),
+          topics: [
+            "the-standard-normal-distribution",
+            "symmetry-properties-of-the-standard-normal-distribution",
+            "the-normal-distribution",
+            "mean-and-variance-of-the-normal-distribution",
+            "percentage-points-of-the-standard-normal-distribution",
+            "modeling-with-the-normal-distribution",
+            "the-empirical-rule-for-the-normal-distribution",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Statistics", "统计"),
+      modules: [
+        {
+          title: t("Analyzing Data", "数据分析"),
+          topics: [
+            "sampling",
+            "variance-and-standard-deviation",
+            "estimating-means-and-variances-for-grouped-data",
+            "scatter-plots",
+            "covariance",
+            "sums-of-squares",
+            "the-z-score",
+          ],
+        },
+        {
+          title: t("Correlation", "相关"),
+          topics: [
+            "trend-lines",
+            "predictions-with-trend-lines",
+            "interpreting-trend-line-coefficients",
+            "linear-correlation",
+            "residuals-and-residual-plots",
+            "the-linear-correlation-coefficient",
+            "correlation-and-causation",
+          ],
+        },
+        {
+          title: t("Regression", "回归"),
+          topics: [
+            "selecting-a-regression-model",
+            "linear-regression",
+            "quadratic-regression",
+            "semi-log-scatter-plots",
+            "exponential-regression",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
-export const mathCourses: readonly CourseDef[] = [algebraFoundations, prealgebra, algebraI, geometry, algebraII];
+export const mathCourses: readonly CourseDef[] = [algebraFoundations, prealgebra, algebraI, geometry, algebraII, precalculus];
