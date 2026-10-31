@@ -57,6 +57,8 @@ import { precalculusRationalFunctionTopics } from "./topics/precalculus-rational
 import { precalculusSeriesTopics } from "./topics/precalculus-series.ts";
 import { precalculusTrigonometricEquationTopics } from "./topics/precalculus-trigonometric-equations.ts";
 import { precalculusTrigonometricIdentityTopics } from "./topics/precalculus-trigonometric-identities.ts";
+import { precalculusVector2DTopics } from "./topics/precalculus-vectors-2d.ts";
+import { precalculusVector3DTopics } from "./topics/precalculus-vectors-3d.ts";
 import { probabilityTopics } from "./topics/probability.ts";
 import { quadraticEquationTopics } from "./topics/quadratic-equations.ts";
 import { quadraticFunctionTopics } from "./topics/quadratic-functions.ts";
@@ -139,6 +141,8 @@ export const math: SubjectDef = {
     ...precalculusInequalityTopics,
     ...precalculusTrigonometricIdentityTopics,
     ...precalculusTrigonometricEquationTopics,
+    ...precalculusVector2DTopics,
+    ...precalculusVector3DTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
