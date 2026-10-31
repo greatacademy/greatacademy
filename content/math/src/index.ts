@@ -58,6 +58,7 @@ import { precalculusInequalityTopics } from "./topics/precalculus-inequalities.t
 import { precalculusLinearTransformationTopics } from "./topics/precalculus-linear-transformations.ts";
 import { precalculusMatrixTopics } from "./topics/precalculus-matrices.ts";
 import { precalculusParametricPolarTopics } from "./topics/precalculus-parametric-polar.ts";
+import { precalculusRandomVariableTopics } from "./topics/precalculus-random-variables.ts";
 import { precalculusRationalFunctionTopics } from "./topics/precalculus-rational-functions.ts";
 import { precalculusSeriesTopics } from "./topics/precalculus-series.ts";
 import { precalculusTrigonometricEquationTopics } from "./topics/precalculus-trigonometric-equations.ts";
@@ -153,6 +154,7 @@ export const math: SubjectDef = {
     ...precalculusLinearTransformationTopics,
     ...precalculusParametricPolarTopics,
     ...precalculusComplexNumberTopics,
+    ...precalculusRandomVariableTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
