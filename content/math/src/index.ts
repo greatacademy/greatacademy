@@ -29,6 +29,7 @@ import { calculusIContextualTopics } from "./topics/calculus-i-contextual.ts";
 import { calculusIContinuityTopics } from "./topics/calculus-i-continuity.ts";
 import { calculusIDerivativeRuleTopics } from "./topics/calculus-i-derivative-rules.ts";
 import { calculusIDifferentiationTopics } from "./topics/calculus-i-differentiation.ts";
+import { calculusIExtremaTopics } from "./topics/calculus-i-extrema.ts";
 import { calculusIHyperbolicTopics } from "./topics/calculus-i-hyperbolic.ts";
 import { calculusIImplicitInverseTopics } from "./topics/calculus-i-implicit-inverse.ts";
 import { calculusILimitTechniqueTopics } from "./topics/calculus-i-limit-techniques.ts";
@@ -179,6 +180,7 @@ export const math: SubjectDef = {
     ...calculusIChainRuleTopics,
     ...calculusIImplicitInverseTopics,
     ...calculusIContextualTopics,
+    ...calculusIExtremaTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
