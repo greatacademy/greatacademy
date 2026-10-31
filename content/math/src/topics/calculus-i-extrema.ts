@@ -8,7 +8,7 @@ import { oneOf, type Poly, pAt, par, pDer, pLatex } from "./calculus-common.ts";
 // Calculus I unit 7: Analytical Applications of Differentiation, module 7.18.
 
 /** Cubic is a cubic with integer coefficients whose derivative is g(x − c1)(x − c2), c1 < c2. */
-interface Cubic {
+export interface Cubic {
   readonly p: Poly;
   readonly c1: number;
   readonly c2: number;
@@ -17,7 +17,7 @@ interface Cubic {
 }
 
 /** cubic chooses a cubic with two integer critical points. */
-function cubic(rng: Rng, lo = -4, hi = 4): Cubic {
+export function cubic(rng: Rng, lo = -4, hi = 4): Cubic {
   const c1 = rng.int(lo, hi - 1);
   const c2 = rng.int(c1 + 1, hi);
   const s = c1 + c2;
@@ -28,26 +28,27 @@ function cubic(rng: Rng, lo = -4, hi = 4): Cubic {
 }
 
 /** derivativeFactored writes f'(x) of a cubic in factored form: "6(x - 1)(x + 2)". */
-const derivativeFactored = (c: Cubic) => {
+export const derivativeFactored = (c: Cubic) => {
   const g = 3 * c.p[3]!;
   const lead = g === 1 ? "" : g === -1 ? "-" : String(g);
   return `${lead}${factor(c.c1)}${factor(c.c2)}`;
 };
 
 /** factor writes x − a in parentheses, or x alone when a is 0. */
-const factor = (a: number) => (a === 0 ? "x" : `(${poly([1, "x"], [-a, ""])})`);
+export const factor = (a: number) => (a === 0 ? "x" : `(${poly([1, "x"], [-a, ""])})`);
 
 /** open writes an open interval, with ±∞ for missing ends. */
-const open = (a: number | undefined, b: number | undefined) => `(${a === undefined ? "-\\infty" : a}, ${b === undefined ? "\\infty" : b})`;
+export const open = (a: number | undefined, b: number | undefined) =>
+  `(${a === undefined ? "-\\infty" : a}, ${b === undefined ? "\\infty" : b})`;
 
 /** intervals writes a union of intervals as a choice option. */
-const intervals = (...xs: readonly string[]) => t(xs.map((x) => `$${x}$`).join(" and "), xs.map((x) => `$${x}$`).join(" 和 "));
+export const intervals = (...xs: readonly string[]) => t(xs.map((x) => `$${x}$`).join(" and "), xs.map((x) => `$${x}$`).join(" 和 "));
 
 /** zigzagXs are the x-coordinates of the vertices of zigzag graphs. */
-const zigzagXs = [-6, -4, -2, 0, 2, 4, 6];
+export const zigzagXs = [-6, -4, -2, 0, 2, 4, 6];
 
 /** zigzag chooses the heights of a piecewise linear graph with no flat pieces. */
-function zigzag(rng: Rng, flat = false): number[] {
+export function zigzag(rng: Rng, flat = false): number[] {
   const ys = [rng.int(-4, 4)];
   for (let i = 1; i < zigzagXs.length; i++) {
     let y = ys[i - 1]! + rng.pick(flat ? [-4, -3, -2, -1, 0, 1, 2, 3, 4] : [-4, -3, -2, -1, 1, 2, 3, 4]);
@@ -58,7 +59,7 @@ function zigzag(rng: Rng, flat = false): number[] {
 }
 
 /** zigzagFigure draws a piecewise linear graph of a function named name. */
-function zigzagFigure(ys: readonly number[], name: string): Figure {
+export function zigzagFigure(ys: readonly number[], name: string): Figure {
   const marks: PlaneMark[] = ys.slice(1).map((y, i) => ({
     kind: "segment" as const,
     a: [zigzagXs[i]!, ys[i]!] as const,
@@ -544,7 +545,7 @@ export const usingDifferentiationToCalculateCriticalPoints: TopicDef = {
 };
 
 /** monotonicityOptions are the choices for where a cubic increases or decreases. */
-function monotonicityOptions(c: Cubic, increasing: boolean) {
+export function monotonicityOptions(c: Cubic, increasing: boolean) {
   const middle = intervals(open(c.c1, c.c2));
   const outer = intervals(open(undefined, c.c1), open(c.c2, undefined));
   const rightIsMiddle = increasing !== c.up;

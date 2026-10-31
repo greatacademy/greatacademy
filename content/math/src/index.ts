@@ -27,6 +27,7 @@ import { bivariateStatisticsTopics } from "./topics/bivariate-statistics.ts";
 import { calculusIChainRuleTopics } from "./topics/calculus-i-chain-rule.ts";
 import { calculusIContextualTopics } from "./topics/calculus-i-contextual.ts";
 import { calculusIContinuityTopics } from "./topics/calculus-i-continuity.ts";
+import { calculusICurveTopics } from "./topics/calculus-i-curves.ts";
 import { calculusIDerivativeRuleTopics } from "./topics/calculus-i-derivative-rules.ts";
 import { calculusIDifferentiationTopics } from "./topics/calculus-i-differentiation.ts";
 import { calculusIExtremaTopics } from "./topics/calculus-i-extrema.ts";
@@ -181,6 +182,7 @@ export const math: SubjectDef = {
     ...calculusIImplicitInverseTopics,
     ...calculusIContextualTopics,
     ...calculusIExtremaTopics,
+    ...calculusICurveTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
