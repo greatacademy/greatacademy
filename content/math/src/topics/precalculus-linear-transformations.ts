@@ -1,6 +1,6 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { poly, Q } from "@ga/subject-math";
 
 import { choiceProblem } from "../problems.ts";
 
@@ -588,8 +588,8 @@ export const solving2x2SystemsOfEquationsUsingInverseMatrices: TopicDef = {
         return oneOf(
           rng,
           t(
-            `Which matrix expression gives the solution $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$ to the system $\\begin{cases} ${a}x + ${b}y = ${e} \\\\ ${c}x + ${d}y = ${f} \\end{cases}$?`,
-            `哪一个矩阵表达式给出了方程组 $\\begin{cases} ${a}x + ${b}y = ${e} \\\\ ${c}x + ${d}y = ${f} \\end{cases}$ 的解 $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$？`,
+            `Which matrix expression gives the solution $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$ to the system $\\begin{cases} ${poly([a, "x"], [b, "y"])} = ${e} \\\\ ${poly([c, "x"], [d, "y"])} = ${f} \\end{cases}$?`,
+            `哪一个矩阵表达式给出了方程组 $\\begin{cases} ${poly([a, "x"], [b, "y"])} = ${e} \\\\ ${poly([c, "x"], [d, "y"])} = ${f} \\end{cases}$ 的解 $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$？`,
           ),
           t(`$${ALatex}^{-1} ${bLatex}$`, `$${ALatex}^{-1} ${bLatex}$`),
           [
@@ -689,8 +689,8 @@ export const solving2x2SystemsOfEquationsUsingInverseMatrices: TopicDef = {
         return oneOf(
           rng,
           t(
-            `Use inverse matrices to solve the system of equations:\n\n$$\\begin{cases} ${A[0][0]}x + ${A[0][1]}y = ${e} \\\\ ${A[1][0]}x + ${A[1][1]}y = ${f} \\end{cases}$$`,
-            `利用逆矩阵求解下列方程组：\n\n$$\\begin{cases} ${A[0][0]}x + ${A[0][1]}y = ${e} \\\\ ${A[1][0]}x + ${A[1][1]}y = ${f} \\end{cases}$$`,
+            `Use inverse matrices to solve the system of equations:\n\n$$\\begin{cases} ${poly([A[0][0], "x"], [A[0][1], "y"])} = ${e} \\\\ ${poly([A[1][0], "x"], [A[1][1], "y"])} = ${f} \\end{cases}$$`,
+            `利用逆矩阵求解下列方程组：\n\n$$\\begin{cases} ${poly([A[0][0], "x"], [A[0][1], "y"])} = ${e} \\\\ ${poly([A[1][0], "x"], [A[1][1], "y"])} = ${f} \\end{cases}$$`,
           ),
           t(`$x = ${x0},\\; y = ${y0}$`, `$x = ${x0},\\; y = ${y0}$`),
           [
@@ -904,25 +904,25 @@ export const introductionToLinearTransformations: TopicDef = {
         let reasonZh = "";
 
         if (isLinear) {
-          formula = `(${a}x + ${b}y, \\; ${c}x + ${d}y)`;
+          formula = `(${poly([a, "x"], [b, "y"])}, \\; ${poly([c, "x"], [d, "y"])})`;
           reasonEn = `Each component is a linear combination of $x$ and $y$ with no constants or non-linear terms. It satisfies $T(\\mathbf{u} + \\mathbf{v}) = T(\\mathbf{u}) + T(\\mathbf{v})$ and $T(c\\mathbf{u}) = cT(\\mathbf{u})$.`;
           reasonZh = `每个坐标分量都是 $x$ 与 $y$ 的齐次一次线性组合，满足可加性与齐次性。`;
         } else {
           const nonlinType = rng.pick(["offset", "square", "product", "abs"]);
           if (nonlinType === "offset") {
-            formula = `(${a}x + ${b}y + ${k}, \\; ${c}x + ${d}y)`;
+            formula = `(${poly([a, "x"], [b, "y"], [k, ""])}, \\; ${poly([c, "x"], [d, "y"])})`;
             reasonEn = `It includes a constant offset $+${k}$, so $T(\\mathbf{0}) = (${k}, 0) \\ne \\mathbf{0}$, violating linearity.`;
             reasonZh = `含有非零常数偏移 $+${k}$，导致 $T(\\mathbf{0}) \\ne \\mathbf{0}$，因此不是线性变换。`;
           } else if (nonlinType === "square") {
-            formula = `(x^2 + ${b}y, \\; ${c}x)`;
+            formula = `(${poly([1, "x^2"], [b, "y"])}, \\; ${poly([c, "x"])})`;
             reasonEn = `It contains a quadratic term $x^2$, violating homogeneity: $T(c\\mathbf{u}) \\ne cT(\\mathbf{u})$.`;
             reasonZh = `含有平方项 $x^2$，破坏了齐次性。`;
           } else if (nonlinType === "product") {
-            formula = `(xy, \\; ${c}x + ${d}y)`;
+            formula = `(xy, \\; ${poly([c, "x"], [d, "y"])})`;
             reasonEn = `It contains the product term $xy$, violating additivity.`;
             reasonZh = `含有乘积项 $xy$，不满足可加性。`;
           } else {
-            formula = `(|x|, \\; ${c}y)`;
+            formula = `(|x|, \\; ${poly([c, "y"])})`;
             reasonEn = `It contains an absolute value $|x|$, violating linearity.`;
             reasonZh = `含有绝对值 $|x|$，不是线性变换。`;
           }
@@ -983,8 +983,8 @@ export const introductionToLinearTransformations: TopicDef = {
         return oneOf(
           rng,
           t(
-            `Let $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ be a linear transformation such that $T(\\mathbf{u}) = ${uLatex}$ and $T(\\mathbf{v}) = ${vLatex}$. Find $T(${c1}\\mathbf{u} + ${c2}\\mathbf{v})$.`,
-            `设 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 是线性变换，且 $T(\\mathbf{u}) = ${uLatex}$，$T(\\mathbf{v}) = ${vLatex}$。求 $T(${c1}\\mathbf{u} + ${c2}\\mathbf{v})$ 的值。`,
+            `Let $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ be a linear transformation such that $T(\\mathbf{u}) = ${uLatex}$ and $T(\\mathbf{v}) = ${vLatex}$. Find $T(${poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"])})$.`,
+            `设 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 是线性变换，且 $T(\\mathbf{u}) = ${uLatex}$，$T(\\mathbf{v}) = ${vLatex}$。求 $T(${poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"])})$ 的值。`,
           ),
           t(`$${rightLatex}$`, `$${rightLatex}$`),
           [
@@ -994,8 +994,8 @@ export const introductionToLinearTransformations: TopicDef = {
             t(`$${vec2Latex(w4)}$`, `$${vec2Latex(w4)}$`),
           ],
           t(
-            `By the linearity property:\n\n$$T(${c1}\\mathbf{u} + ${c2}\\mathbf{v}) = ${c1}T(\\mathbf{u}) + ${c2}T(\\mathbf{v}) = ${c1}${uLatex} + ${c2}${vLatex} = ${rightLatex}$$.`,
-            `由线性变换的基本性质：\n\n$$T(${c1}\\mathbf{u} + ${c2}\\mathbf{v}) = ${c1}T(\\mathbf{u}) + ${c2}T(\\mathbf{v}) = ${c1}${uLatex} + ${c2}${vLatex} = ${rightLatex}$$.`,
+            `By the linearity property:\n\n$$T(${poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"])}) = ${poly([c1, "T(\\mathbf{u})"], [c2, "T(\\mathbf{v})"])} = ${poly([c1, uLatex], [c2, vLatex])} = ${rightLatex}$$.`,
+            `由线性变换的基本性质：\n\n$$T(${poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"])}) = ${poly([c1, "T(\\mathbf{u})"], [c2, "T(\\mathbf{v})"])} = ${poly([c1, uLatex], [c2, vLatex])} = ${rightLatex}$$.`,
           ),
         );
       },
@@ -1116,8 +1116,8 @@ export const theStandardMatrixOfALinearTransformation: TopicDef = {
         return oneOf(
           rng,
           t(
-            `Find the standard matrix of the linear transformation defined by $T\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${a}x + ${b}y \\\\ ${c}x + ${d}y \\end{pmatrix}$.`,
-            `求线性变换 $T\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${a}x + ${b}y \\\\ ${c}x + ${d}y \\end{pmatrix}$ 的标准矩阵。`,
+            `Find the standard matrix of the linear transformation defined by $T\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${poly([a, "x"], [b, "y"])} \\\\ ${poly([c, "x"], [d, "y"])} \\end{pmatrix}$.`,
+            `求线性变换 $T\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${poly([a, "x"], [b, "y"])} \\\\ ${poly([c, "x"], [d, "y"])} \\end{pmatrix}$ 的标准矩阵。`,
           ),
           t(`$${rightLatex}$`, `$${rightLatex}$`),
           [
@@ -1221,23 +1221,23 @@ export const linearTransformationsOfPointsAndLinesInThePlane: TopicDef = {
           [c, d],
         ];
         const ALatex = mat2Latex(A);
-        const rightEq = `y = ${slopeQ.toLatex()}x`;
-        const w1 = `y = ${slopeQ.neg().toLatex()}x`;
-        const w2 = `y = ${Q.of(u, v).toLatex()}x`;
-        const w3 = `y = ${m}x`;
-        const w4 = `y = ${slopeQ.add(Q.one).toLatex()}x`;
+        const rightEq = `y = ${poly([slopeQ, "x"])}`;
+        const w1 = `y = ${poly([slopeQ.neg(), "x"])}`;
+        const w2 = `y = ${poly([Q.of(u, v), "x"])}`;
+        const w3 = `y = ${poly([m, "x"])}`;
+        const w4 = `y = ${poly([slopeQ.add(Q.one), "x"])}`;
 
         return oneOf(
           rng,
           t(
-            `Find the equation of the line that is the image of the line $y = ${m}x$ under the linear transformation with standard matrix $A = ${ALatex}$.`,
-            `求直线 $y = ${m}x$ 在标准矩阵为 $A = ${ALatex}$ 的线性变换下的像方程。`,
+            `Find the equation of the line that is the image of the line $y = ${poly([m, "x"])}$ under the linear transformation with standard matrix $A = ${ALatex}$.`,
+            `求直线 $y = ${poly([m, "x"])}$ 在标准矩阵为 $A = ${ALatex}$ 的线性变换下的像方程。`,
           ),
           t(`$${rightEq}$`, `$${rightEq}$`),
           [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
           t(
-            `A point on $y = ${m}x$ has direction vector $\\mathbf{v} = \\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix}$. Applying the matrix transformation:\n\n$$A\\mathbf{v} = ${ALatex}\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix} = \\begin{pmatrix} ${u} \\\\ ${v} \\end{pmatrix}$$.\n\nSince the line passes through the origin $(0, 0)$, its slope is $\\frac{${v}}{${u}} = ${slopeQ.toLatex()}$, giving the equation $${rightEq}$.`,
-            `直线 $y = ${m}x$ 的方向向量为 $\\mathbf{v} = \\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix}$。对方向向量作用矩阵变换：\n\n$$A\\mathbf{v} = ${ALatex}\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix} = \\begin{pmatrix} ${u} \\\\ ${v} \\end{pmatrix}$$.\n\n由于像过原点 $(0, 0)$，斜率为 $\\frac{${v}}{${u}} = ${slopeQ.toLatex()}$，故像方程为 $${rightEq}$。`,
+            `A point on $y = ${poly([m, "x"])}$ has direction vector $\\mathbf{v} = \\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix}$. Applying the matrix transformation:\n\n$$A\\mathbf{v} = ${ALatex}\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix} = \\begin{pmatrix} ${u} \\\\ ${v} \\end{pmatrix}$$.\n\nSince the line passes through the origin $(0, 0)$, its slope is $\\frac{${v}}{${u}} = ${slopeQ.toLatex()}$, giving the equation $${rightEq}$.`,
+            `直线 $y = ${poly([m, "x"])}$ 的方向向量为 $\\mathbf{v} = \\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix}$。对方向向量作用矩阵变换：\n\n$$A\\mathbf{v} = ${ALatex}\\begin{pmatrix} 1 \\\\ ${m} \\end{pmatrix} = \\begin{pmatrix} ${u} \\\\ ${v} \\end{pmatrix}$$.\n\n由于像过原点 $(0, 0)$，斜率为 $\\frac{${v}}{${u}} = ${slopeQ.toLatex()}$，故像方程为 $${rightEq}$。`,
           ),
         );
       },
@@ -3018,11 +3018,11 @@ export const singularLinearTransformationsInThePlane: TopicDef = {
         ];
 
         const slopeQ = Q.of(v, u);
-        const lineEq = `y = ${slopeQ.toLatex()}x`;
+        const lineEq = `y = ${poly([slopeQ, "x"])}`;
         const ALatex = mat2Latex(A);
 
-        const w1 = `y = ${slopeQ.neg().toLatex()}x`;
-        const w2 = `y = ${Q.of(u, v).toLatex()}x`;
+        const w1 = `y = ${poly([slopeQ.neg(), "x"])}`;
+        const w2 = `y = ${poly([Q.of(u, v), "x"])}`;
         const w3 = "The unit circle $x^2 + y^2 = 1$";
         const w4 = "The entire Cartesian plane $\\mathbb{R}^2$";
 

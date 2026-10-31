@@ -1764,10 +1764,8 @@ export const quadraticEquationsWithOneRealSolution: TopicDef = {
         const answer = Q.of(b * b, 4 * c);
         return numberProblem({
           prompt: t(
-            `For what value of $k$ does $kx^{2}${tail(b)
-              .replace(/(\d+)$/, "$1x")
-              .replace(/ ([+-]) $/, " $1 x")} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = 0$ have exactly one real solution?`,
-            `$k$ 取何值时，方程 $kx^{2}${tail(b).replace(/(\d+)$/, "$1x")} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = 0$ 恰有一个实数解？`,
+            `For what value of $k$ does $kx^{2} ${b < 0 ? "-" : "+"} ${poly([Math.abs(b), "x"], [c, ""])} = 0$ have exactly one real solution?`,
+            `$k$ 取何值时，方程 $kx^{2} ${b < 0 ? "-" : "+"} ${poly([Math.abs(b), "x"], [c, ""])} = 0$ 恰有一个实数解？`,
           ),
           answer,
           solveFor: "k",
@@ -2050,8 +2048,8 @@ export const equatingPolynomialCoefficients: TopicDef = {
             [a, b, a * q + p * b],
           ],
           solution: t(
-            `Expand the left side:${steps(`${left} = ${poly([q, "ax^{2}"])} + (ab ${p * q < 0 ? "-" : "+"} ${Math.abs(p * q)})x ${p < 0 ? "-" : "+"} ${Math.abs(p)}b`)}So $${q}a = ${A}$ and $${p}b = ${B}$, which give $a = ${a}$ and $b = ${b}$. Then $c = ab ${p * q < 0 ? "-" : "+"} ${Math.abs(p * q)} = ${c}$.`,
-            `展开左边：${steps(`${left} = ${poly([q, "ax^{2}"])} + (ab ${p * q < 0 ? "-" : "+"} ${Math.abs(p * q)})x ${p < 0 ? "-" : "+"} ${Math.abs(p)}b`)}所以 $${q}a = ${A}$，$${p}b = ${B}$，得 $a = ${a}$，$b = ${b}$。于是 $c = ab ${p * q < 0 ? "-" : "+"} ${Math.abs(p * q)} = ${c}$。`,
+            `Expand the left side:${steps(`${left} = ${poly([q, "ax^{2}"])} + (ab ${p * q < 0 ? "-" : "+"} ${Math.abs(p * q)})x ${p < 0 ? "-" : "+"} ${poly([Math.abs(p), "b"])}`)}So $${q}a = ${A}$ and $${poly([p, "b"])} = ${B}$, which give $a = ${a}$ and $b = ${b}$. Then $c = ab ${p * q < 0 ? "-" : "+"} ${Math.abs(p * q)} = ${c}$.`,
+            `展开左边：${steps(`${left} = ${poly([q, "ax^{2}"])} + (ab ${p * q < 0 ? "-" : "+"} ${Math.abs(p * q)})x ${p < 0 ? "-" : "+"} ${poly([Math.abs(p), "b"])}`)}所以 $${q}a = ${A}$，$${poly([p, "b"])} = ${B}$，得 $a = ${a}$，$b = ${b}$。于是 $c = ab ${p * q < 0 ? "-" : "+"} ${Math.abs(p * q)} = ${c}$。`,
           ),
         });
       },

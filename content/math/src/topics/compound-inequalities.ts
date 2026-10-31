@@ -1814,8 +1814,8 @@ export const modelingWithCompoundInequalities: TopicDef = {
           variable: "t",
           wrong: [union(span(p, lc, q, hc)), union(span(p, !hc, q, !lc))],
           solution: t(
-            `The height is $${H0} - ${r}t$. Dividing by $-${r}$ reverses both symbols:${steps(`${L} ${o1} ${H0} - ${r}t ${o2} ${U}`, `${L - H0} ${o1} -${r}t ${o2} ${U - H0}`, `${q} ${lc ? "\\ge" : ">"} t ${hc ? "\\ge" : ">"} ${p}`, inequalityLatexOf(set, "t"))}`,
-            `高度是 $${H0} - ${r}t$。除以 $-${r}$ 时两个不等号都改变方向：${steps(`${L} ${o1} ${H0} - ${r}t ${o2} ${U}`, `${L - H0} ${o1} -${r}t ${o2} ${U - H0}`, `${q} ${lc ? "\\ge" : ">"} t ${hc ? "\\ge" : ">"} ${p}`, inequalityLatexOf(set, "t"))}`,
+            `The height is $${poly([H0, ""], [-r, "t"])}$. Dividing by $-${r}$ reverses both symbols:${steps(`${L} ${o1} ${poly([H0, ""], [-r, "t"])} ${o2} ${U}`, `${L - H0} ${o1} ${poly([-r, "t"])} ${o2} ${U - H0}`, `${q} ${lc ? "\\ge" : ">"} t ${hc ? "\\ge" : ">"} ${p}`, inequalityLatexOf(set, "t"))}`,
+            `高度是 $${poly([H0, ""], [-r, "t"])}$。除以 $-${r}$ 时两个不等号都改变方向：${steps(`${L} ${o1} ${poly([H0, ""], [-r, "t"])} ${o2} ${U}`, `${L - H0} ${o1} ${poly([-r, "t"])} ${o2} ${U - H0}`, `${q} ${lc ? "\\ge" : ">"} t ${hc ? "\\ge" : ">"} ${p}`, inequalityLatexOf(set, "t"))}`,
           ),
         });
       },

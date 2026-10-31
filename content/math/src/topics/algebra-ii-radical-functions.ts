@@ -443,7 +443,7 @@ export const solvingAdvancedRadicalEquations: TopicDef = {
         const form = rng.int(0, 2);
         let eq: string;
         if (form === 0) eq = `${mx} - ${left} = ${-g.c}`;
-        else if (form === 1) eq = `${left} - ${mx} = ${g.c}`;
+        else if (form === 1) eq = `${left} ${g.m < 0 ? `+ ${linear(-g.m, 0)}` : `- ${mx}`} = ${g.c}`;
         else {
           const p = rng.nonZero(-9, 9);
           eq = `${left}${plus(p)} = ${linear(g.m, g.c + p)}`;

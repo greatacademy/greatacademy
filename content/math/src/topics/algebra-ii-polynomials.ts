@@ -800,8 +800,8 @@ export const imaginaryNumbers: TopicDef = {
             answer: -a * b,
             wrong: [a * b, a + b],
             solution: t(
-              `Multiply, then use $i^{2} = -1$:${steps(`${expr} = ${a * b}i^{2} = ${a * b} \\cdot (-1) = ${-a * b}`)}`,
-              `相乘后利用 $i^{2} = -1$：${steps(`${expr} = ${a * b}i^{2} = ${a * b} \\cdot (-1) = ${-a * b}`)}`,
+              `Multiply, then use $i^{2} = -1$:${steps(`${expr} = ${poly([a * b, "i^{2}"])} = ${a * b} \\cdot (-1) = ${-a * b}`)}`,
+              `相乘后利用 $i^{2} = -1$：${steps(`${expr} = ${poly([a * b, "i^{2}"])} = ${a * b} \\cdot (-1) = ${-a * b}`)}`,
             ),
           });
         }
@@ -1178,7 +1178,7 @@ export const addingAndSubtractingComplexNumbers: TopicDef = {
         const sub = rng.bool();
         const root = rng.bool();
         const e = rng.int(1, 9);
-        const extra = root ? ` + \\sqrt{-${e * e}}` : ` ${rng.bool() ? "+" : "-"} ${e}i`;
+        const extra = root ? ` + \\sqrt{-${e * e}}` : ` ${rng.bool() ? "+" : "-"} ${e === 1 ? "" : e}i`;
         const ex = root ? e : extra.includes("-") ? -e : e;
         const expr = `${k}${cxPar(a, b)} ${sub ? "-" : "+"} ${cxPar(c, d)}${extra}`;
         const s = sub ? -1 : 1;

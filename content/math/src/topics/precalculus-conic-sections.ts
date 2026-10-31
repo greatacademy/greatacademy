@@ -1,12 +1,15 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { paren, Q } from "@ga/subject-math";
 
 import { choiceProblem, steps } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers for Conic Sections
 // ---------------------------------------------------------------------------
+
+/** co writes a coefficient in front of a variable, dropping a 1: "", "\\frac{3}{4}". */
+const co = (c: string) => (c === "1" ? "" : c);
 
 /** Pythagorean triples [b, c, a] for ellipses (a^2 = b^2 + c^2) or [a, b, c] for hyperbolas (c^2 = a^2 + b^2). */
 const pythTriples = [
@@ -233,10 +236,10 @@ export const introductionToEllipses: TopicDef = {
         const distractors = [`(${h + 1}, ${k})`, `(${h}, ${k + 1})`, `(${k}, ${h})`, `(${h - 1}, ${k - 1})`, `(${h + d}, ${k})`];
         const solution = t(
           `The center is the midpoint of the endpoints of the major axis:${steps(
-            `(h, k) = \\left(\\frac{${v1x} + ${v2x}}{2}, \\frac{${v1y} + ${v2y}}{2}\\right) = (${h}, ${k})`,
+            `(h, k) = \\left(\\frac{${v1x} + ${paren(v2x)}}{2}, \\frac{${v1y} + ${paren(v2y)}}{2}\\right) = (${h}, ${k})`,
           )}`,
           `中心是长轴两端点的中点坐标：${steps(
-            `(h, k) = \\left(\\frac{${v1x} + ${v2x}}{2}, \\frac{${v1y} + ${v2y}}{2}\\right) = (${h}, ${k})`,
+            `(h, k) = \\left(\\frac{${v1x} + ${paren(v2x)}}{2}, \\frac{${v1y} + ${paren(v2y)}}{2}\\right) = (${h}, ${k})`,
           )}`,
         );
         return makeChoice(rng, prompt, correct, distractors, solution);
@@ -1290,19 +1293,19 @@ export const asymptotesOfHyperbolasCenteredAtTheOrigin: TopicDef = {
           `求双曲线 $\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${b2}} = 1$ 的渐近线方程。`,
         );
         const slopeLatex = slope.isInteger() ? `${slope.abs().toLatex()}` : slope.abs().toLatex();
-        const correct = `y = \\pm ${slopeLatex}x`;
+        const correct = `y = \\pm ${co(slopeLatex)}x`;
         const distractors = [
-          `y = \\pm ${Q.of(a, b).toLatex()}x`,
-          `y = \\pm ${Q.of(b2, a2).toLatex()}x`,
-          `y = \\pm ${Q.of(a2, b2).toLatex()}x`,
-          `x = \\pm ${slopeLatex}y`,
+          `y = \\pm ${co(Q.of(a, b).toLatex())}x`,
+          `y = \\pm ${co(Q.of(b2, a2).toLatex())}x`,
+          `y = \\pm ${co(Q.of(a2, b2).toLatex())}x`,
+          `x = \\pm ${co(slopeLatex)}y`,
         ];
         const solution = t(
           `For a horizontal hyperbola, the asymptotes are $y = \\pm \\frac{b}{a}x$. Here $a = ${a}$ and $b = ${b}$:${steps(
-            `y = \\pm \\frac{${b}}{${a}}x = \\pm ${slopeLatex}x`,
+            `y = \\pm \\frac{${b}}{${a}}x = \\pm ${co(slopeLatex)}x`,
           )}`,
           `对于水平双曲线，渐近线为 $y = \\pm \\frac{b}{a}x$。此处 $a = ${a}, b = ${b}$：${steps(
-            `y = \\pm \\frac{${b}}{${a}}x = \\pm ${slopeLatex}x`,
+            `y = \\pm \\frac{${b}}{${a}}x = \\pm ${co(slopeLatex)}x`,
           )}`,
         );
         return makeChoice(rng, prompt, correct, distractors, solution);
@@ -1326,19 +1329,19 @@ export const asymptotesOfHyperbolasCenteredAtTheOrigin: TopicDef = {
           `求双曲线 $\\frac{y^{2}}{${a2}} - \\frac{x^{2}}{${b2}} = 1$ 的渐近线方程。`,
         );
         const slopeLatex = slope.isInteger() ? `${slope.abs().toLatex()}` : slope.abs().toLatex();
-        const correct = `y = \\pm ${slopeLatex}x`;
+        const correct = `y = \\pm ${co(slopeLatex)}x`;
         const distractors = [
-          `y = \\pm ${Q.of(b, a).toLatex()}x`,
-          `y = \\pm ${Q.of(a2, b2).toLatex()}x`,
-          `y = \\pm ${Q.of(b2, a2).toLatex()}x`,
-          `x = \\pm ${slopeLatex}y`,
+          `y = \\pm ${co(Q.of(b, a).toLatex())}x`,
+          `y = \\pm ${co(Q.of(a2, b2).toLatex())}x`,
+          `y = \\pm ${co(Q.of(b2, a2).toLatex())}x`,
+          `x = \\pm ${co(slopeLatex)}y`,
         ];
         const solution = t(
           `For a vertical hyperbola, the asymptotes are $y = \\pm \\frac{a}{b}x$. Here $a = ${a}$ and $b = ${b}$:${steps(
-            `y = \\pm \\frac{${a}}{${b}}x = \\pm ${slopeLatex}x`,
+            `y = \\pm \\frac{${a}}{${b}}x = \\pm ${co(slopeLatex)}x`,
           )}`,
           `对于竖直双曲线，渐近线为 $y = \\pm \\frac{a}{b}x$。此处 $a = ${a}, b = ${b}$：${steps(
-            `y = \\pm \\frac{${a}}{${b}}x = \\pm ${slopeLatex}x`,
+            `y = \\pm \\frac{${a}}{${b}}x = \\pm ${co(slopeLatex)}x`,
           )}`,
         );
         return makeChoice(rng, prompt, correct, distractors, solution);

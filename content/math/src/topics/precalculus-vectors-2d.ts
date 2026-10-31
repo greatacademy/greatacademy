@@ -1,5 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { paren, poly } from "@ga/subject-math";
+
 import { choiceProblem } from "../problems.ts";
 
 // Precalculus unit 5: Vectors (modules 5.16 and 5.17: 2D Vectors).
@@ -989,18 +991,12 @@ export const linearCombinationsOfVectorsAndTheirProperties: TopicDef = {
         const resU = c1 * a1 + c2 * a2;
         const resV = c1 * b1 + c2 * b2;
 
-        const fmt = (coeff: number, vec: string) => {
-          if (coeff === 1) return vec;
-          if (coeff === -1) return `-${vec}`;
-          return `${coeff}${vec}`;
-        };
+        const ansStr = poly([resU, u], [resV, v]);
+        const wrong1Str = poly([resU + 2, u], [resV, v]);
+        const wrong2Str = poly([resU, u], [-resV, v]);
+        const wrong3Str = poly([c1 * a1, u], [c2 * b2, v]);
 
-        const ansStr = `${fmt(resU, u)} ${resV >= 0 ? `+ ${fmt(resV, v)}` : `- ${fmt(Math.abs(resV), v)}`}`;
-        const wrong1Str = `${fmt(resU + 2, u)} ${resV >= 0 ? `+ ${fmt(resV, v)}` : `- ${fmt(Math.abs(resV), v)}`}`;
-        const wrong2Str = `${fmt(resU, u)} ${resV >= 0 ? `- ${fmt(resV, v)}` : `+ ${fmt(Math.abs(resV), v)}`}`;
-        const wrong3Str = `${fmt(c1 * a1, u)} + ${fmt(c2 * b2, v)}`;
-
-        const pStr = `${c1}(${a1 === 1 ? "" : a1}${u} ${b1 > 0 ? `+ ${b1}` : `- ${Math.abs(b1)}`}${v}) ${c2 > 0 ? `+ ${c2}` : `- ${Math.abs(c2)}`}(${a2 === 1 ? "" : a2 === -1 ? "-" : a2}${u} ${b2 > 0 ? `+ ${b2}` : `- ${Math.abs(b2)}`}${v})`;
+        const pStr = `${c1}(${poly([a1, u], [b1, v])}) ${c2 > 0 ? "+" : "-"} ${Math.abs(c2)}(${poly([a2, u], [b2, v])})`;
 
         return oneOf(
           rng,
@@ -1008,8 +1004,8 @@ export const linearCombinationsOfVectorsAndTheirProperties: TopicDef = {
           t(`$${ansStr}$`, `$${ansStr}$`),
           [t(`$${wrong1Str}$`, `$${wrong1Str}$`), t(`$${wrong2Str}$`, `$${wrong2Str}$`), t(`$${wrong3Str}$`, `$${wrong3Str}$`)],
           t(
-            `Expand brackets and collect like terms: $(${c1} \\times ${a1} + ${c2} \\times ${a2})${u} + (${c1} \\times (${b1}) + ${c2} \\times (${b2}))${v} = ${ansStr}$.`,
-            `展开括号并合并同类项：$(${c1} \\times ${a1} + ${c2} \\times ${a2})${u} + (${c1} \\times (${b1}) + ${c2} \\times (${b2}))${v} = ${ansStr}$。`,
+            `Expand brackets and collect like terms: $(${c1} \\times ${a1} + ${paren(c2)} \\times ${paren(a2)})${u} + (${c1} \\times ${paren(b1)} + ${paren(c2)} \\times ${paren(b2)})${v} = ${ansStr}$.`,
+            `展开括号并合并同类项：$(${c1} \\times ${a1} + ${paren(c2)} \\times ${paren(a2)})${u} + (${c1} \\times ${paren(b1)} + ${paren(c2)} \\times ${paren(b2)})${v} = ${ansStr}$。`,
           ),
         );
       },
@@ -1223,11 +1219,7 @@ export const twoDimensionalVectorsExpressedInComponentForm: TopicDef = {
         const x = rng.pick([-9, -7, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 7, 9]);
         const y = rng.pick([-8, -6, -5, -3, -2, -1, 1, 2, 3, 5, 6, 8]);
 
-        const fmtBasis = (a: number, b: number) => {
-          const partA = a === 1 ? "\\mathbf{i}" : a === -1 ? "-\\mathbf{i}" : `${a}\\mathbf{i}`;
-          const partB = b === 1 ? "\\mathbf{j}" : b === -1 ? "-\\mathbf{j}" : `${Math.abs(b)}\\mathbf{j}`;
-          return `${partA} ${b > 0 ? "+ " : "- "}${partB}`;
-        };
+        const fmtBasis = (a: number, b: number) => poly([a, "\\mathbf{i}"], [b, "\\mathbf{j}"]);
 
         const ansBasis = fmtBasis(x, y);
         const wrong1 = fmtBasis(x, -y);
@@ -1501,8 +1493,8 @@ export const calculatingTheMagnitudeOfCartesianVectorsIn2d: TopicDef = {
           t(`$${ans}$`, `$${ans}$`),
           [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
           t(
-            `First add the vectors: $\\mathbf{u} + \\mathbf{v} = \\langle ${u1} + ${v1},\\, ${u2} + ${v2} \\rangle = \\langle ${s1}, ${s2} \\rangle$. Then compute magnitude: $\\sqrt{(${s1})^2 + (${s2})^2} = ${ans}$.`,
-            `首先计算向量之和：$\\mathbf{u} + \\mathbf{v} = \\langle ${u1} + ${v1},\\, ${u2} + ${v2} \\rangle = \\langle ${s1}, ${s2} \\rangle$。然后计算模长：$\\sqrt{(${s1})^2 + (${s2})^2} = ${ans}$。`,
+            `First add the vectors: $\\mathbf{u} + \\mathbf{v} = \\langle ${u1} + ${paren(v1)},\\, ${u2} + ${paren(v2)} \\rangle = \\langle ${s1}, ${s2} \\rangle$. Then compute magnitude: $\\sqrt{(${s1})^2 + (${s2})^2} = ${ans}$.`,
+            `首先计算向量之和：$\\mathbf{u} + \\mathbf{v} = \\langle ${u1} + ${paren(v1)},\\, ${u2} + ${paren(v2)} \\rangle = \\langle ${s1}, ${s2} \\rangle$。然后计算模长：$\\sqrt{(${s1})^2 + (${s2})^2} = ${ans}$。`,
           ),
         );
       },
@@ -1698,12 +1690,18 @@ export const calculatingTheComponentsOfCartesianVectorsIn2d: TopicDef = {
         ];
         const item = rng.pick(angleList);
 
-        const xPart = item.x === "1" ? "" : item.x === "-1" ? "-" : item.x;
-        const yPart = item.y.startsWith("-") ? `- ${item.y.slice(1) === "1" ? "" : item.y.slice(1)}` : `+ ${item.y === "1" ? "" : item.y}`;
-        const ans = `${xPart}\\mathbf{i} ${yPart}\\mathbf{j}`;
-        const wrong1 = `${item.y}\\mathbf{i} + ${item.x}\\mathbf{j}`;
-        const wrong2 = `${item.x}\\mathbf{i} ${item.y.startsWith("-") ? `+ ${item.y.slice(1)}` : `- ${item.y}`}\\mathbf{j}`;
-        const wrong3 = `${r}\\mathbf{i} + ${item.deg}\\mathbf{j}`;
+        // ij writes x i + y j from coefficients written in LaTeX, such as "-3\\sqrt{2}".
+        const ij = (x: string, y: string) => {
+          const unit = (c: string) => (c === "1" ? "" : c);
+          const xs = x.startsWith("-") ? `-${unit(x.slice(1))}` : unit(x);
+          const ys = y.startsWith("-") ? `- ${unit(y.slice(1))}` : `+ ${unit(y)}`;
+          return `${xs}\\mathbf{i} ${ys}\\mathbf{j}`;
+        };
+        const neg = (c: string) => (c.startsWith("-") ? c.slice(1) : `-${c}`);
+        const ans = ij(item.x, item.y);
+        const wrong1 = ij(item.y, item.x);
+        const wrong2 = ij(item.x, neg(item.y));
+        const wrong3 = ij(String(r), String(item.deg));
 
         return oneOf(
           rng,
@@ -1943,8 +1941,8 @@ export const calculatingDisplacementForPlaneMotion: TopicDef = {
             t(`$${wrong3}\\text{ km}$`, `$${wrong3}\\text{ km}$`),
           ],
           t(
-            `The total displacement vector is $\\vec{s}_{\\text{net}} = \\langle ${x1} + ${x2},\\, ${y1} + ${y2} \\rangle = \\langle ${tx}, ${ty} \\rangle\\text{ km}$. The straight-line distance is its magnitude: $\\|\\vec{s}_{\\text{net}}\\| = \\sqrt{(${tx})^2 + (${ty})^2} = ${dist}\\text{ km}$.`,
-            `总位移向量为 $\\vec{s}_{\\text{合}} = \\langle ${x1} + ${x2},\\, ${y1} + ${y2} \\rangle = \\langle ${tx}, ${ty} \\rangle\\text{ km}$。直线距离为其模长：$\\|\\vec{s}_{\\text{合}}\\| = \\sqrt{(${tx})^2 + (${ty})^2} = ${dist}\\text{ km}$。`,
+            `The total displacement vector is $\\vec{s}_{\\text{net}} = \\langle ${x1} + ${paren(x2)},\\, ${y1} + ${paren(y2)} \\rangle = \\langle ${tx}, ${ty} \\rangle\\text{ km}$. The straight-line distance is its magnitude: $\\|\\vec{s}_{\\text{net}}\\| = \\sqrt{(${tx})^2 + (${ty})^2} = ${dist}\\text{ km}$.`,
+            `总位移向量为 $\\vec{s}_{\\text{合}} = \\langle ${x1} + ${paren(x2)},\\, ${y1} + ${paren(y2)} \\rangle = \\langle ${tx}, ${ty} \\rangle\\text{ km}$。直线距离为其模长：$\\|\\vec{s}_{\\text{合}}\\| = \\sqrt{(${tx})^2 + (${ty})^2} = ${dist}\\text{ km}$。`,
           ),
         );
       },

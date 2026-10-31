@@ -48,6 +48,12 @@ const paren = (s: string) => (s.startsWith("-") ? `(${s})` : s);
 /** signed writes "+ v" or "- |v|" for a term after the first. */
 const signed = (v: Q) => (v.sign() < 0 ? `- ${dec(v.abs())}` : `+ ${dec(v)}`);
 
+/** coef writes a decimal coefficient in front of a variable, dropping a 1. */
+const coef = (v: Q) => (v.eq(Q.one) ? "" : v.eq(Q.one.neg()) ? "-" : dec(v));
+
+/** signedTerm writes "+ vx" or "- |v|x" for a term after the first, dropping a unit coefficient. */
+const signedTerm = (v: Q, x: string) => `${v.sign() < 0 ? "-" : "+"} ${coef(v.abs())}${x}`;
+
 /** oneOf builds a multiple-choice problem from a right option and up to three distinct wrong ones. */
 function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
   const seen = new Set([right.en]);
@@ -966,7 +972,7 @@ const theZScore: TopicDef = {
 // ─── Module 12.42: Correlation ──────────────────────────────────────────────
 
 /** lineLatex writes y = mx + b with decimal coefficients. */
-const lineLatex = (mm: Q, b: Q, y = "\\hat{y}") => `${y} = ${dec(mm)}x ${signed(b)}`;
+const lineLatex = (mm: Q, b: Q, y = "\\hat{y}") => `${y} = ${coef(mm)}x ${signed(b)}`;
 
 /** residualsAndResidualPlots teaches residuals and how to read residual plots. */
 const residualsAndResidualPlots: TopicDef = {
@@ -1363,7 +1369,7 @@ const quadScenes = [
 ] as const;
 
 /** quadLatex writes y = ax^2 + bx + c with decimal coefficients. */
-const quadLatex = (a: Q, b: Q, c: Q) => `\\hat{y} = ${dec(a)}x^2 ${signed(b)}x ${signed(c)}`;
+const quadLatex = (a: Q, b: Q, c: Q) => `\\hat{y} = ${coef(a)}x^2 ${signedTerm(b, "x")} ${signed(c)}`;
 
 /** quadraticRegression teaches using quadratic regression models. */
 const quadraticRegression: TopicDef = {
@@ -1727,8 +1733,8 @@ const exponentialRegression: TopicDef = {
         const c = Q.of(rng.nonZero(-30, 50), 10);
         const k = Q.of(rng.nonZero(-20, 20), 20);
         const C = dec(c);
-        const K = dec(k);
-        const line = `\\ln \\hat{y} = ${C} ${signed(k)}x`;
+        const K = coef(k);
+        const line = `\\ln \\hat{y} = ${C} ${signedTerm(k, "x")}`;
         const opt = (s: string) => t(`$\\hat{y} = ${s}$`, `$\\hat{y} = ${s}$`);
         const kx = `e^{${K}x}`;
         return oneOf(
@@ -1738,10 +1744,10 @@ const exponentialRegression: TopicDef = {
             `对点 $(x, \\ln y)$ 拟合的最小二乘直线为 $${line}$。它对应哪个指数模型？`,
           ),
           opt(`e^{${C}} \\cdot ${kx}`),
-          [opt(`${C} \\cdot ${kx}`), opt(`e^{${K}} \\cdot e^{${C}x}`), opt(`${C} + ${kx}`)],
+          [opt(`${C} \\cdot ${kx}`), opt(`e^{${K}} \\cdot e^{${coef(c)}x}`), opt(`${C} + ${kx}`)],
           t(
-            `Exponentiate both sides: $\\hat{y} = e^{${C} ${signed(k)}x} = e^{${C}} \\cdot ${kx}$.`,
-            `两边取指数：$\\hat{y} = e^{${C} ${signed(k)}x} = e^{${C}} \\cdot ${kx}$。`,
+            `Exponentiate both sides: $\\hat{y} = e^{${C} ${signedTerm(k, "x")}} = e^{${C}} \\cdot ${kx}$.`,
+            `两边取指数：$\\hat{y} = e^{${C} ${signedTerm(k, "x")}} = e^{${C}} \\cdot ${kx}$。`,
           ),
         );
       },

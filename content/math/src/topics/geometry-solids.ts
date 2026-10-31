@@ -2867,8 +2867,12 @@ export const volumesOfCylinders: TopicDef = {
           }),
           figure: figure(
             cylinderMarks(r, h, { ...sizeLabels(size, u), h: len(h, u) }),
-            `A cylinder with ${sizeText(size, u).en.replace(/\$|\\text\{ ?|\}/g, "")} and height ${h} ${u}.`,
-            `一个${sizeText(size, u)["zh-CN"].replace(/\$|\\text\{ ?|\}/g, "")}、高 ${h} ${u} 的圆柱。`,
+            `A cylinder with ${sizeText(size, u)
+              .en.replace(/\$/g, "")
+              .replace(/\\text\{ ?([^}]*)\}/g, " $1")} and height ${h} ${u}.`,
+            `一个${sizeText(size, u)
+              ["zh-CN"].replace(/\$/g, "")
+              .replace(/\\text\{ ?([^}]*)\}/g, " $1")}、高 ${h} ${u} 的圆柱。`,
           ),
         };
       },
@@ -2924,8 +2928,8 @@ export const volumesOfCylinders: TopicDef = {
             unit: u,
             wrong: [Q.of(v, r), Q.of(v, 2 * r), v],
             solution: t(
-              `${steps(`\\pi \\cdot ${r}^2 \\cdot h = ${piTex(v)}`, `${r * r}h = ${v}`, `h = ${tex(h, u)}`)}`,
-              `${steps(`\\pi \\cdot ${r}^2 \\cdot h = ${piTex(v)}`, `${r * r}h = ${v}`, `h = ${tex(h, u)}`)}`,
+              `${steps(`\\pi \\cdot ${r}^2 \\cdot h = ${piTex(v)}`, ...(r === 1 ? [] : [`${r * r}h = ${v}`]), `h = ${tex(h, u)}`)}`,
+              `${steps(`\\pi \\cdot ${r}^2 \\cdot h = ${piTex(v)}`, ...(r === 1 ? [] : [`${r * r}h = ${v}`]), `h = ${tex(h, u)}`)}`,
             ),
           });
         }
@@ -3180,8 +3184,8 @@ export const volumesOfRightCones: TopicDef = {
             unit: u,
             wrong: [v.div(Q.of(r * r)), v.mul(Q.of(3)).div(Q.of(r)), v.mul(Q.of(3))],
             solution: t(
-              `${steps(`\\frac{1}{3}\\pi \\cdot ${r}^2 \\cdot h = ${piTex(v)}`, `${r * r}h = ${r * r * h}`, `h = ${tex(h, u)}`)}`,
-              `${steps(`\\frac{1}{3}\\pi \\cdot ${r}^2 \\cdot h = ${piTex(v)}`, `${r * r}h = ${r * r * h}`, `h = ${tex(h, u)}`)}`,
+              `${steps(`\\frac{1}{3}\\pi \\cdot ${r}^2 \\cdot h = ${piTex(v)}`, ...(r === 1 ? [] : [`${r * r}h = ${r * r * h}`]), `h = ${tex(h, u)}`)}`,
+              `${steps(`\\frac{1}{3}\\pi \\cdot ${r}^2 \\cdot h = ${piTex(v)}`, ...(r === 1 ? [] : [`${r * r}h = ${r * r * h}`]), `h = ${tex(h, u)}`)}`,
             ),
           });
         }

@@ -2638,8 +2638,8 @@ export const modelingWithSystems: TopicDef = {
           answer: n[ask],
           wrong: [n[1 - ask]!, Q.of(p.total, pa + pb), Q.of(p.total + pb * p.count, pa - pb)],
           solution: t(
-            `${p.vars.en} ${steps(sys)}Multiply the first equation by $${pb}$ and subtract it from the second: $${pa - pb}x = ${p.total - pb * p.count}$, so $x = ${n[0]}$ and $y = ${p.count} - ${n[0]} = ${n[1]}$. There are ${n[ask]} ${p.names[ask][0]}.`,
-            `${p.vars["zh-CN"]}${steps(sys)}第一个方程乘以 $${pb}$，再用第二个方程减去它：$${pa - pb}x = ${p.total - pb * p.count}$，所以 $x = ${n[0]}$，$y = ${p.count} - ${n[0]} = ${n[1]}$。${p.names[ask][1]}有 ${n[ask]} 个。`,
+            `${p.vars.en} ${steps(sys)}Multiply the first equation by $${pb}$ and subtract it from the second: $${poly([pa - pb, "x"])} =${p.total - pb * p.count}$, so $x = ${n[0]}$ and $y = ${p.count} - ${n[0]} = ${n[1]}$. There are ${n[ask]} ${p.names[ask][0]}.`,
+            `${p.vars["zh-CN"]}${steps(sys)}第一个方程乘以 $${pb}$，再用第二个方程减去它：$${poly([pa - pb, "x"])} =${p.total - pb * p.count}$，所以 $x = ${n[0]}$，$y = ${p.count} - ${n[0]} = ${n[1]}$。${p.names[ask][1]}有 ${n[ask]} 个。`,
           ),
         });
       },

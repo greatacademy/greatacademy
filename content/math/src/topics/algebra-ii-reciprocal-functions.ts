@@ -287,7 +287,7 @@ export const graphingReciprocalFunctions: TopicDef = {
           solution: both(
             "Since $xy = k$ on the graph, divide $k$ by the $y$-coordinate:",
             "图象上 $xy = k$，所以用 $k$ 除以纵坐标：",
-            `${given}x = ${k}`,
+            `${poly([given, "x"])} = ${k}`,
             `x = ${num(x)}`,
           ),
         });

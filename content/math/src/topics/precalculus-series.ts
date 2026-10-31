@@ -767,7 +767,7 @@ export const calculatingTheNumberOfTermsInAnArithmeticSeries: TopicDef = {
             solution: both(
               "Solve $S_n = \\frac{n}{2}(a_1 + a_n)$ for $n$:",
               "由 $S_n = \\frac{n}{2}(a_1 + a_n)$ 解出 $n$：",
-              `${S} = \\frac{n}{2}\\left(${a1} ${add(Q.of(last)).trim()}\\right) = ${Q.of(a1 + last, 2).toLatex()}n`,
+              `${S} = \\frac{n}{2}\\left(${a1} ${add(Q.of(last)).trim()}\\right) = ${poly([Q.of(a1 + last, 2), "n"])}`,
               `n = \\frac{${2 * S}}{${a1 + last}} = ${n}`,
             ),
           });
@@ -2154,9 +2154,9 @@ export const expandingABinomialUsingBinomialCoefficients: TopicDef = {
               choose(n, k) * p ** k * q ** j,
             ],
             solution: both(
-              `In the general term $${binom(n, "k")}(${p === 1 ? "x" : `${p}x`})^{${n}-k}(${q})^{k}$ the power of $x$ is $${j}$ when $k = ${k}$:`,
-              `通项 $${binom(n, "k")}(${p === 1 ? "x" : `${p}x`})^{${n}-k}(${q})^{k}$ 中，$k = ${k}$ 时 $x$ 的指数是 $${j}$：`,
-              `${binom(n, k)}(${p === 1 ? "x" : `${p}x`})^{${j}}(${q})^{${k}} = ${choose(n, k)} \\cdot ${p ** j < 0 ? `(${p ** j})` : p ** j} \\cdot ${q ** k < 0 ? `(${q ** k})` : q ** k} \\cdot ${target} = ${monomial(answer, "x", j)}`,
+              `In the general term $${binom(n, "k")}(${poly([p, "x"])})^{${n}-k}(${q})^{k}$ the power of $x$ is $${j}$ when $k = ${k}$:`,
+              `通项 $${binom(n, "k")}(${poly([p, "x"])})^{${n}-k}(${q})^{k}$ 中，$k = ${k}$ 时 $x$ 的指数是 $${j}$：`,
+              `${binom(n, k)}(${poly([p, "x"])})^{${j}}(${q})^{${k}} = ${choose(n, k)} \\cdot ${p ** j < 0 ? `(${p ** j})` : p ** j} \\cdot ${q ** k < 0 ? `(${q ** k})` : q ** k} \\cdot ${target} = ${monomial(answer, "x", j)}`,
             ),
           });
         }
@@ -2196,8 +2196,8 @@ export const expandingABinomialUsingBinomialCoefficients: TopicDef = {
               choose(n, k) * a ** k * b ** (n - k),
             ],
             solution: both(
-              `In the general term the power of $x$ is $${p}(${n} - k) - ${q}k$, which is zero when $k = ${k}$:`,
-              `通项中 $x$ 的指数是 $${p}(${n} - k) - ${q}k$，当 $k = ${k}$ 时为零：`,
+              `In the general term the power of $x$ is $${p === 1 ? `${n} - k` : `${p}(${n} - k)`} - ${poly([q, "k"])}$, which is zero when $k = ${k}$:`,
+              `通项中 $x$ 的指数是 $${p === 1 ? `${n} - k` : `${p}(${n} - k)`} - ${poly([q, "k"])}$，当 $k = ${k}$ 时为零：`,
               `${binom(n, "k")}\\left(${first}\\right)^{${n}-k}\\left(${sec}\\right)^{k}, \\qquad ${p * n} - ${p + q}k = 0 \\implies k = ${k}`,
               `${binom(n, k)} \\cdot ${a}^{${n - k}} \\cdot ${b < 0 ? `(${b})` : b}^{${k}} = ${choose(n, k)} \\cdot ${a ** (n - k)} \\cdot ${b ** k < 0 ? `(${b ** k})` : b ** k} = ${answer}`,
             ),
@@ -2237,7 +2237,7 @@ export const theSpecialCaseOfTheBinomialTheorem: TopicDef = {
         const two = choose(n, 2);
         const answer = poly([1, ""], [n * c, "x"], [two * c * c, "x^{2}"]);
         const inner = poly([1, ""], [c, "x"]);
-        const cx = c === 1 ? "x" : `${c}x`;
+        const cx = poly([c, "x"]);
         return expressionProblem({
           prompt: t(
             `Find the first three terms of the expansion of $(${inner})^{${n}}$ in ascending powers of $x$.`,

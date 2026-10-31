@@ -518,8 +518,8 @@ export const modelingTotalsWithTwoVariableEquations: TopicDef = {
           form: "standard",
           wrong: [`${poly([b, "x"], [a, "y"])} = ${T}`, `x + y = ${T}`, `${poly([a, "x"], [-b, "y"])} = ${T}`],
           solution: t(
-            `The $x$ ${c.names[0].en} contribute $${a}x$ and the $y$ ${c.names[1].en} contribute $${b}y$, which add up to $${T}$: ${steps(answer)}`,
-            `$x$ 份${c.names[0]["zh-CN"]}贡献 $${a}x$，$y$ 份${c.names[1]["zh-CN"]}贡献 $${b}y$，合计 $${T}$：${steps(answer)}`,
+            `The $x$ ${c.names[0].en} contribute $${poly([a, "x"])}$ and the $y$ ${c.names[1].en} contribute $${poly([b, "y"])}$, which add up to $${T}$: ${steps(answer)}`,
+            `$x$ 份${c.names[0]["zh-CN"]}贡献 $${poly([a, "x"])}$，$y$ 份${c.names[1]["zh-CN"]}贡献 $${poly([b, "y"])}$，合计 $${T}$：${steps(answer)}`,
           ),
         });
       },
@@ -546,8 +546,8 @@ export const modelingTotalsWithTwoVariableEquations: TopicDef = {
           answer: y,
           wrong: [Q.of(T - x, b), Q.of(T - b * x, a), T - a * x, Q.of(T, b).sub(Q.of(x))],
           solution: t(
-            `Substitute $x = ${x}$: ${steps(`${a} \\cdot ${x} + ${b}y = ${T}`, `${b}y = ${T - a * x}`, `y = ${y}`)}`,
-            `代入 $x = ${x}$：${steps(`${a} \\cdot ${x} + ${b}y = ${T}`, `${b}y = ${T - a * x}`, `y = ${y}`)}`,
+            `Substitute $x = ${x}$: ${steps(`${a} \\cdot ${x} + ${poly([b, "y"])} = ${T}`, `${poly([b, "y"])} = ${T - a * x}`, `y = ${y}`)}`,
+            `代入 $x = ${x}$：${steps(`${a} \\cdot ${x} + ${poly([b, "y"])} = ${T}`, `${poly([b, "y"])} = ${T - a * x}`, `y = ${y}`)}`,
           ),
         });
       },
@@ -572,7 +572,7 @@ export const modelingTotalsWithTwoVariableEquations: TopicDef = {
           `With no ${c.names[1 - kind]!.en}, there are ${n} ${c.names[kind]!.en}.`,
           `没有${c.names[1 - kind]!["zh-CN"]}时，${c.names[kind]!["zh-CN"]}有 ${n} 份。`,
         );
-        const work = kind === 0 ? `${a}x = ${T}, \\quad x = ${n}` : `${b}y = ${T}, \\quad y = ${n}`;
+        const work = kind === 0 ? `${poly([a, "x"])} = ${T}, \\quad x = ${n}` : `${poly([b, "y"])} = ${T}, \\quad y = ${n}`;
         const intro = t(
           `${c.describe(a, b, T).en} ${c.vars.en} So $${eq}$.`,
           `${c.describe(a, b, T)["zh-CN"]}${c.vars["zh-CN"]}于是 $${eq}$。`,
@@ -964,8 +964,8 @@ export const furtherModelingWithTwoVariableEquations: TopicDef = {
           answer: cross,
           wrong: [Q.of(f1 + f2, r1 + r2), Q.of(f1, r2), f1 - f2, Q.of(f1 - f2, r1)],
           solution: t(
-            `For $x$ ${c.units.en}, set the costs equal: ${steps(`${linear(r1, f1)} = ${linear(r2, f2)}`, `${f1 - f2} = ${d}x`, `x = ${cross}`)}`,
-            `设为 $x$ ${c.units["zh-CN"]}，令两者费用相等：${steps(`${linear(r1, f1)} = ${linear(r2, f2)}`, `${f1 - f2} = ${d}x`, `x = ${cross}`)}`,
+            `For $x$ ${c.units.en}, set the costs equal: ${steps(`${linear(r1, f1)} = ${linear(r2, f2)}`, `${f1 - f2} = ${poly([d, "x"])}`, `x = ${cross}`)}`,
+            `设为 $x$ ${c.units["zh-CN"]}，令两者费用相等：${steps(`${linear(r1, f1)} = ${linear(r2, f2)}`, `${f1 - f2} = ${poly([d, "x"])}`, `x = ${cross}`)}`,
           ),
         });
       },
@@ -1858,8 +1858,8 @@ export const furtherGraphingLinearInequalities: TopicDef = {
           options: descriptions,
           correct: descriptionOf(solved.op),
           solution: t(
-            `Solve for $y$${b < 0 ? `, reversing the inequality when dividing by $${b}$` : ""}: ${steps(`${b}y ${relSymbol(op)} ${linear(-a, c)}`, final)}The boundary is ${isStrict(op) ? "dashed" : "solid"}, and the region ${isAbove(solved.op) ? "above" : "below"} it is shaded.`,
-            `解出 $y$${b < 0 ? `，除以 $${b}$ 时不等号反向` : ""}：${steps(`${b}y ${relSymbol(op)} ${linear(-a, c)}`, final)}边界线是${isStrict(op) ? "虚线" : "实线"}，涂${isAbove(solved.op) ? "上方" : "下方"}的区域。`,
+            `Solve for $y$${b < 0 ? `, reversing the inequality when dividing by $${b}$` : ""}: ${steps(`${poly([b, "y"])} ${relSymbol(op)} ${linear(-a, c)}`, final)}The boundary is ${isStrict(op) ? "dashed" : "solid"}, and the region ${isAbove(solved.op) ? "above" : "below"} it is shaded.`,
+            `解出 $y$${b < 0 ? `，除以 $${b}$ 时不等号反向` : ""}：${steps(`${poly([b, "y"])} ${relSymbol(op)} ${linear(-a, c)}`, final)}边界线是${isStrict(op) ? "虚线" : "实线"}，涂${isAbove(solved.op) ? "上方" : "下方"}的区域。`,
           ),
         });
       },
@@ -2318,8 +2318,8 @@ export const modelingWithTwoVariableInequalities: TopicDef = {
           answer,
           wrong: [other === answer ? answer + (c.op === "<=" ? 1 : -1) : other, Math.floor(L / b), Math.floor((L - b * x) / a)],
           solution: t(
-            `${c.vars.en} Substitute $x = ${x}$: ${steps(`${a} \\cdot ${x} + ${b}y ${relSymbol(c.op)} ${L}`, `${b}y ${relSymbol(c.op)} ${rest}`, `y ${relSymbol(c.op)} ${num(bound)}`)}${bound.isInteger() ? "" : `$y$ is a whole number, so round ${c.op === "<=" ? "down" : "up"}. `}The answer is $${answer}$.`,
-            `${c.vars["zh-CN"]}代入 $x = ${x}$：${steps(`${a} \\cdot ${x} + ${b}y ${relSymbol(c.op)} ${L}`, `${b}y ${relSymbol(c.op)} ${rest}`, `y ${relSymbol(c.op)} ${num(bound)}`)}${bound.isInteger() ? "" : `$y$ 是整数，所以${c.op === "<=" ? "向下" : "向上"}取整。`}答案是 $${answer}$。`,
+            `${c.vars.en} Substitute $x = ${x}$: ${steps(`${a} \\cdot ${x} + ${poly([b, "y"])} ${relSymbol(c.op)} ${L}`, `${poly([b, "y"])} ${relSymbol(c.op)} ${rest}`, `y ${relSymbol(c.op)} ${num(bound)}`)}${bound.isInteger() ? "" : `$y$ is a whole number, so round ${c.op === "<=" ? "down" : "up"}. `}The answer is $${answer}$.`,
+            `${c.vars["zh-CN"]}代入 $x = ${x}$：${steps(`${a} \\cdot ${x} + ${poly([b, "y"])} ${relSymbol(c.op)} ${L}`, `${poly([b, "y"])} ${relSymbol(c.op)} ${rest}`, `y ${relSymbol(c.op)} ${num(bound)}`)}${bound.isInteger() ? "" : `$y$ 是整数，所以${c.op === "<=" ? "向下" : "向上"}取整。`}答案是 $${answer}$。`,
           ),
         });
       },
@@ -2528,8 +2528,8 @@ export const modelingWithSystemsOfInequalities: TopicDef = {
           answer,
           wrong: [fromCount, fromTotal, upper ? Math.max(fromCount, fromTotal) : Math.min(fromCount, fromTotal), Math.floor(r / b)],
           solution: t(
-            `${c.vars.en} With $x = ${x}$, the count gives $y ${relSymbol(op)} ${fromCount}$ and the total gives $${b}y ${relSymbol(op)} ${rest}$, so $y ${relSymbol(op)} ${num(Q.of(rest, b))}$${Q.of(rest, b).isInteger() ? "" : `, that is $y ${relSymbol(op)} ${fromTotal}$ in whole numbers`}. Both must hold, so the answer is the ${upper ? "smaller" : "larger"} bound: $${answer}$.`,
-            `${c.vars["zh-CN"]}当 $x = ${x}$ 时，由数量得 $y ${relSymbol(op)} ${fromCount}$，由总量得 $${b}y ${relSymbol(op)} ${rest}$，即 $y ${relSymbol(op)} ${num(Q.of(rest, b))}$${Q.of(rest, b).isInteger() ? "" : `，取整数即 $y ${relSymbol(op)} ${fromTotal}$`}。两者必须同时满足，所以答案取${upper ? "较小" : "较大"}的界限：$${answer}$。`,
+            `${c.vars.en} With $x = ${x}$, the count gives $y ${relSymbol(op)} ${fromCount}$ and the total gives $${poly([b, "y"])} ${relSymbol(op)} ${rest}$, so $y ${relSymbol(op)} ${num(Q.of(rest, b))}$${Q.of(rest, b).isInteger() ? "" : `, that is $y ${relSymbol(op)} ${fromTotal}$ in whole numbers`}. Both must hold, so the answer is the ${upper ? "smaller" : "larger"} bound: $${answer}$.`,
+            `${c.vars["zh-CN"]}当 $x = ${x}$ 时，由数量得 $y ${relSymbol(op)} ${fromCount}$，由总量得 $${poly([b, "y"])} ${relSymbol(op)} ${rest}$，即 $y ${relSymbol(op)} ${num(Q.of(rest, b))}$${Q.of(rest, b).isInteger() ? "" : `，取整数即 $y ${relSymbol(op)} ${fromTotal}$`}。两者必须同时满足，所以答案取${upper ? "较小" : "较大"}的界限：$${answer}$。`,
           ),
         });
       },

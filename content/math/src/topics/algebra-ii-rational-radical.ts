@@ -440,7 +440,7 @@ export const addingAndSubtractingRationalExpressions: TopicDef = {
           const expr = `${frac(linear(p, r), D)} ${op} ${frac(second, D)}`;
           const answer = v === u * h ? String(u) : frac(linear(u, v), D);
           const combined = minus
-            ? `${linear(p, r)} - ${grp(second)}`
+            ? `${linear(p, r)} - ${second.startsWith("-") ? `(${second})` : grp(second)}`
             : `${linear(p, r)} + ${second.startsWith("-") ? `(${second})` : second}`;
           const wrongSign = minus ? frac(linear(p - q, r + s), D) : frac(linear(p + q, r - s), D);
           return expressionProblem({
@@ -1170,8 +1170,8 @@ export const simplifyingComplexFractions: TopicDef = {
           lowest: true,
           wrong: [ratio(1, [], a, ["x"]), ratio(-1, [], 1, ["x"]), ratio(1, [], a, ["x", bin(-a)])],
           solution: t(
-            `Multiply the numerator and the denominator by $${num(a)}x$. The numerator becomes $${poly([a, ""], [-1, "x"])} = -(${bin(-a)})$:${steps(`${expr} = ${frac(poly([a, ""], [-1, "x"]), `${a}x(${bin(-a)})`)} = ${answer}`)}`,
-            `分子和分母同乘 $${num(a)}x$，分子变为 $${poly([a, ""], [-1, "x"])} = -(${bin(-a)})$：${steps(`${expr} = ${frac(poly([a, ""], [-1, "x"]), `${a}x(${bin(-a)})`)} = ${answer}`)}`,
+            `Multiply the numerator and the denominator by $${poly([a, "x"])}$. The numerator becomes $${poly([a, ""], [-1, "x"])} = -(${bin(-a)})$:${steps(`${expr} = ${frac(poly([a, ""], [-1, "x"]), `${poly([a, "x"])}(${bin(-a)})`)} = ${answer}`)}`,
+            `分子和分母同乘 $${poly([a, "x"])}$，分子变为 $${poly([a, ""], [-1, "x"])} = -(${bin(-a)})$：${steps(`${expr} = ${frac(poly([a, ""], [-1, "x"]), `${poly([a, "x"])}(${bin(-a)})`)} = ${answer}`)}`,
           ),
         });
       },

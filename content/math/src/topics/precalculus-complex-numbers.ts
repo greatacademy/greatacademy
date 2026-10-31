@@ -1,5 +1,6 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { poly } from "@ga/subject-math";
 import { choiceProblem } from "../problems.ts";
 
 // Precalculus Unit 10: Complex Numbers
@@ -99,56 +100,56 @@ function getSpecialPolarItems(): readonly PolarItem[] {
       theta: "\\frac{\\pi}{6}",
       rect: `${kStr}\\sqrt{3} + ${kStr}i`,
       wrongThetas: ["\\frac{\\pi}{3}", "\\frac{5\\pi}{6}", "\\frac{11\\pi}{6}"],
-      wrongRects: [`${kStr} + ${kStr}\\sqrt{3}i`, `-${kStr}\\sqrt{3} + ${kStr}i`, `${kStr}\\sqrt{3} - ${kStr}i`],
+      wrongRects: [`${k} + ${kStr}\\sqrt{3}i`, `-${kStr}\\sqrt{3} + ${kStr}i`, `${kStr}\\sqrt{3} - ${kStr}i`],
     });
     items.push({
       r,
       theta: "\\frac{\\pi}{3}",
-      rect: `${kStr} + ${kStr}\\sqrt{3}i`,
+      rect: `${k} + ${kStr}\\sqrt{3}i`,
       wrongThetas: ["\\frac{\\pi}{6}", "\\frac{2\\pi}{3}", "\\frac{4\\pi}{3}"],
-      wrongRects: [`${kStr}\\sqrt{3} + ${kStr}i`, `-${kStr} + ${kStr}\\sqrt{3}i`, `${kStr} - ${kStr}\\sqrt{3}i`],
+      wrongRects: [`${kStr}\\sqrt{3} + ${kStr}i`, `-${k} + ${kStr}\\sqrt{3}i`, `${k} - ${kStr}\\sqrt{3}i`],
     });
     items.push({
       r,
       theta: "\\frac{2\\pi}{3}",
-      rect: `-${kStr} + ${kStr}\\sqrt{3}i`,
+      rect: `-${k} + ${kStr}\\sqrt{3}i`,
       wrongThetas: ["\\frac{\\pi}{3}", "\\frac{5\\pi}{6}", "\\frac{4\\pi}{3}"],
-      wrongRects: [`${kStr} + ${kStr}\\sqrt{3}i`, `-${kStr} - ${kStr}\\sqrt{3}i`, `-${kStr}\\sqrt{3} + ${kStr}i`],
+      wrongRects: [`${k} + ${kStr}\\sqrt{3}i`, `-${k} - ${kStr}\\sqrt{3}i`, `-${kStr}\\sqrt{3} + ${kStr}i`],
     });
     items.push({
       r,
       theta: "\\frac{5\\pi}{6}",
       rect: `-${kStr}\\sqrt{3} + ${kStr}i`,
       wrongThetas: ["\\frac{\\pi}{6}", "\\frac{2\\pi}{3}", "\\frac{7\\pi}{6}"],
-      wrongRects: [`${kStr}\\sqrt{3} + ${kStr}i`, `-${kStr}\\sqrt{3} - ${kStr}i`, `-${kStr} + ${kStr}\\sqrt{3}i`],
+      wrongRects: [`${kStr}\\sqrt{3} + ${kStr}i`, `-${kStr}\\sqrt{3} - ${kStr}i`, `-${k} + ${kStr}\\sqrt{3}i`],
     });
     items.push({
       r,
       theta: "\\frac{7\\pi}{6}",
       rect: `-${kStr}\\sqrt{3} - ${kStr}i`,
       wrongThetas: ["\\frac{5\\pi}{6}", "\\frac{4\\pi}{3}", "\\frac{11\\pi}{6}"],
-      wrongRects: [`-${kStr}\\sqrt{3} + ${kStr}i`, `${kStr}\\sqrt{3} - ${kStr}i`, `-${kStr} - ${kStr}\\sqrt{3}i`],
+      wrongRects: [`-${kStr}\\sqrt{3} + ${kStr}i`, `${kStr}\\sqrt{3} - ${kStr}i`, `-${k} - ${kStr}\\sqrt{3}i`],
     });
     items.push({
       r,
       theta: "\\frac{4\\pi}{3}",
-      rect: `-${kStr} - ${kStr}\\sqrt{3}i`,
+      rect: `-${k} - ${kStr}\\sqrt{3}i`,
       wrongThetas: ["\\frac{2\\pi}{3}", "\\frac{5\\pi}{3}", "\\frac{7\\pi}{6}"],
-      wrongRects: [`-${kStr} + ${kStr}\\sqrt{3}i`, `${kStr} - ${kStr}\\sqrt{3}i`, `-${kStr}\\sqrt{3} - ${kStr}i`],
+      wrongRects: [`-${k} + ${kStr}\\sqrt{3}i`, `${k} - ${kStr}\\sqrt{3}i`, `-${kStr}\\sqrt{3} - ${kStr}i`],
     });
     items.push({
       r,
       theta: "\\frac{5\\pi}{3}",
-      rect: `${kStr} - ${kStr}\\sqrt{3}i`,
+      rect: `${k} - ${kStr}\\sqrt{3}i`,
       wrongThetas: ["\\frac{4\\pi}{3}", "\\frac{\\pi}{3}", "\\frac{11\\pi}{6}"],
-      wrongRects: [`${kStr} + ${kStr}\\sqrt{3}i`, `-${kStr} - ${kStr}\\sqrt{3}i`, `${kStr}\\sqrt{3} - ${kStr}i`],
+      wrongRects: [`${k} + ${kStr}\\sqrt{3}i`, `-${k} - ${kStr}\\sqrt{3}i`, `${kStr}\\sqrt{3} - ${kStr}i`],
     });
     items.push({
       r,
       theta: "\\frac{11\\pi}{6}",
       rect: `${kStr}\\sqrt{3} - ${kStr}i`,
       wrongThetas: ["\\frac{7\\pi}{6}", "\\frac{5\\pi}{6}", "\\frac{\\pi}{6}"],
-      wrongRects: [`${kStr}\\sqrt{3} + ${kStr}i`, `-${kStr}\\sqrt{3} - ${kStr}i`, `${kStr} - ${kStr}\\sqrt{3}i`],
+      wrongRects: [`${kStr}\\sqrt{3} + ${kStr}i`, `-${kStr}\\sqrt{3} - ${kStr}i`, `${k} - ${kStr}\\sqrt{3}i`],
     });
   }
   for (const r of [2, 3, 4, 5, 6]) {
@@ -203,8 +204,8 @@ export const theComplexPlane: TopicDef = {
       id: "plot-complex-numbers-in-the-complex-plane",
       title: t("Plot complex numbers as coordinates in the complex plane", "在复平面中将复数表示为坐标点"),
       explanation: t(
-        "Every complex number $z = a + bi$ corresponds to a unique point $(a, b)$ in the **complex plane** (or Argand plane).\n\n- The horizontal axis is the **real axis** ($\text{Re}$), representing the real part $a$.\n- The vertical axis is the **imaginary axis** ($\text{Im}$), representing the imaginary part $b$.\n\nFor example, $z = 3 - 4i$ is represented by the point $(3, -4)$.",
-        "每一个复数 $z = a + bi$ 都在**复平面**（阿尔冈平面）中对应唯一的点 $(a, b)$。\n\n- 水平轴为**实轴**（$\text{Re}$），表示实部 $a$。\n- 垂直轴为**虚轴**（$\text{Im}$），表示虚部 $b$。\n\n例如，复数 $z = 3 - 4i$ 对应的点坐标为 $(3, -4)$。",
+        "Every complex number $z = a + bi$ corresponds to a unique point $(a, b)$ in the **complex plane** (or Argand plane).\n\n- The horizontal axis is the **real axis** ($\\text{Re}$), representing the real part $a$.\n- The vertical axis is the **imaginary axis** ($\\text{Im}$), representing the imaginary part $b$.\n\nFor example, $z = 3 - 4i$ is represented by the point $(3, -4)$.",
+        "每一个复数 $z = a + bi$ 都在**复平面**（阿尔冈平面）中对应唯一的点 $(a, b)$。\n\n- 水平轴为**实轴**（$\\text{Re}$），表示实部 $a$。\n- 垂直轴为**虚轴**（$\\text{Im}$），表示虚部 $b$。\n\n例如，复数 $z = 3 - 4i$ 对应的点坐标为 $(3, -4)$。",
       ),
       generate(rng) {
         const a = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -232,8 +233,8 @@ export const theComplexPlane: TopicDef = {
       id: "real-and-imaginary-axes",
       title: t("Identify points on the real and imaginary axes", "识别实轴与虚轴上的点"),
       explanation: t(
-        "In the complex plane:\n\n- A **purely real number** $z = a$ (where $b = 0$) lies on the **real axis** at coordinate $(a, 0)$.\n- A **purely imaginary number** $z = bi$ with $b \neq 0$ (where $a = 0$) lies on the **imaginary axis** at coordinate $(0, b)$.\n- The origin $(0, 0)$ represents $z = 0$.",
-        "在复平面中：\n\n- **纯实数** $z = a$（虚部 $b = 0$）位于**实轴**上，坐标为 $(a, 0)$。\n- **纯虚数** $z = bi$（$b \neq 0$，实部 $a = 0$）位于**虚轴**上，坐标为 $(0, b)$。\n- 原点 $(0, 0)$ 表示复数 $0$。",
+        "In the complex plane:\n\n- A **purely real number** $z = a$ (where $b = 0$) lies on the **real axis** at coordinate $(a, 0)$.\n- A **purely imaginary number** $z = bi$ with $b \\neq 0$ (where $a = 0$) lies on the **imaginary axis** at coordinate $(0, b)$.\n- The origin $(0, 0)$ represents $z = 0$.",
+        "在复平面中：\n\n- **纯实数** $z = a$（虚部 $b = 0$）位于**实轴**上，坐标为 $(a, 0)$。\n- **纯虚数** $z = bi$（$b \\neq 0$，实部 $a = 0$）位于**虚轴**上，坐标为 $(0, b)$。\n- 原点 $(0, 0)$ 表示复数 $0$。",
       ),
       generate(rng) {
         const val = rng.pick([-12, -10, -9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12]);
@@ -268,8 +269,8 @@ export const theComplexPlane: TopicDef = {
           t(`Quadrant II, at $(${val}, ${val})$`, `第二象限，位于 $(${val}, ${val})$`),
         ];
         const solution = t(
-          `Since $z = ${cx(0, val)} = 0 + ${val}i$, its real part is $0$ and imaginary part is $${val}$. It lies on the imaginary axis at $(0, ${val})$.`,
-          `因为 $z = ${cx(0, val)} = 0 + ${val}i$，其实部为 $0$，虚部为 $${val}$。它位于虚轴上的点 $(0, ${val})$。`,
+          `Since $z = ${cx(0, val)} = 0 ${val < 0 ? "-" : "+"} ${Math.abs(val)}i$, its real part is $0$ and imaginary part is $${val}$. It lies on the imaginary axis at $(0, ${val})$.`,
+          `因为 $z = ${cx(0, val)} = 0 ${val < 0 ? "-" : "+"} ${Math.abs(val)}i$，其实部为 $0$，虚部为 $${val}$。它位于虚轴上的点 $(0, ${val})$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -599,8 +600,8 @@ export const arithmeticInTheComplexPlane: TopicDef = {
             t(`$${cx(my, mx)}$`, `$${cx(my, mx)}$`),
           ];
           const solution = t(
-            `$$M = \\frac{z_1 + z_2}{2} = \\frac{(${cx(a1, b1)}) + (${cx(a2, b2)})}{2} = \\frac{${2 * mx} + ${2 * my}i}{2} = ${cx(mx, my)}$$`,
-            `$$M = \\frac{z_1 + z_2}{2} = \\frac{(${cx(a1, b1)}) + (${cx(a2, b2)})}{2} = \\frac{${2 * mx} + ${2 * my}i}{2} = ${cx(mx, my)}$$`,
+            `$$M = \\frac{z_1 + z_2}{2} = \\frac{(${cx(a1, b1)}) + (${cx(a2, b2)})}{2} = \\frac{${cx(2 * mx, 2 * my)}}{2} = ${cx(mx, my)}$$`,
+            `$$M = \\frac{z_1 + z_2}{2} = \\frac{(${cx(a1, b1)}) + (${cx(a2, b2)})}{2} = \\frac{${cx(2 * mx, 2 * my)}}{2} = ${cx(mx, my)}$$`,
           );
           return oneOf(rng, prompt, right, wrong, solution);
         }
@@ -705,8 +706,8 @@ export const geometryInTheComplexPlane: TopicDef = {
             t(`$y = ${y2 - y1}$`, `$y = ${y2 - y1}$`),
           ];
           const solution = t(
-            `Points $z_1 = (${c}, ${y1})$ and $z_2 = (${c}, ${y2})$ have the same $x$-coordinate. The perpendicular bisector of the vertical segment connecting them is the horizontal line $y = \\frac{${y1} + ${y2}}{2} = ${midY}$.`,
-            `两点 $z_1 = (${c}, ${y1})$ 与 $z_2 = (${c}, ${y2})$ 的横坐标相同。连接它们的垂直线段的中垂线是水平直线 $y = \\frac{${y1} + ${y2}}{2} = ${midY}$。`,
+            `Points $z_1 = (${c}, ${y1})$ and $z_2 = (${c}, ${y2})$ have the same $x$-coordinate. The perpendicular bisector of the vertical segment connecting them is the horizontal line $y = \\frac{${poly([y1, ""], [y2, ""])}}{2} = ${midY}$.`,
+            `两点 $z_1 = (${c}, ${y1})$ 与 $z_2 = (${c}, ${y2})$ 的横坐标相同。连接它们的垂直线段的中垂线是水平直线 $y = \\frac{${poly([y1, ""], [y2, ""])}}{2} = ${midY}$。`,
           );
           return oneOf(rng, prompt, right, wrong, solution);
         }
@@ -729,8 +730,8 @@ export const geometryInTheComplexPlane: TopicDef = {
           t(`$x = ${x2 - x1}$`, `$x = ${x2 - x1}$`),
         ];
         const solution = t(
-          `Points $z_1 = (${x1}, ${c})$ and $z_2 = (${x2}, ${c})$ have the same $y$-coordinate. The perpendicular bisector of the horizontal segment connecting them is the vertical line $x = \\frac{${x1} + ${x2}}{2} = ${midX}$.`,
-          `两点 $z_1 = (${x1}, ${c})$ 与 $z_2 = (${x2}, ${c})$ 的纵坐标相同。连接它们的水平线段的中垂线是垂直直线 $x = \\frac{${x1} + ${x2}}{2} = ${midX}$。`,
+          `Points $z_1 = (${x1}, ${c})$ and $z_2 = (${x2}, ${c})$ have the same $y$-coordinate. The perpendicular bisector of the horizontal segment connecting them is the vertical line $x = \\frac{${poly([x1, ""], [x2, ""])}}{2} = ${midX}$.`,
+          `两点 $z_1 = (${x1}, ${c})$ 与 $z_2 = (${x2}, ${c})$ 的纵坐标相同。连接它们的水平线段的中垂线是垂直直线 $x = \\frac{${poly([x1, ""], [x2, ""])}}{2} = ${midX}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -984,19 +985,19 @@ export const theComplexConjugateAndTheRootsOfAQuadraticEquation: TopicDef = {
         const q = rng.pick([1, 2, 3, 4, 5]);
         const sum = 2 * p;
         const prod = p * p + q * q;
-        const linTerm = sum === 0 ? "" : sum > 0 ? `- ${sum}x` : `+ ${-sum}x`;
-        const eqStr = `x^2 ${linTerm} + ${prod} = 0`;
+        const eqStr = `${poly([1, "x^2"], [-sum, "x"], [prod, ""])} = 0`;
         const prompt = t(
           `Find the monic quadratic equation with real coefficients whose roots are $x = ${cx(p, q)}$ and $x = ${cx(p, -q)}$.`,
           `求以 $x = ${cx(p, q)}$ 和 $x = ${cx(p, -q)}$ 为两根且最高次项系数为 $1$ 的实系数一元二次方程。`,
         );
         const right = t(`$${eqStr}$`, `$${eqStr}$`);
-        const wrongLin = sum === 0 ? "" : sum > 0 ? `+ ${sum}x` : `- ${-sum}x`;
         const wrongProdSub = p * p - q * q;
         const wrong = [
-          t(`$x^2 ${wrongLin} + ${prod} = 0$`, `$x^2 ${wrongLin} + ${prod} = 0$`),
-          t(`$x^2 ${linTerm} + ${wrongProdSub} = 0$`, `$x^2 ${linTerm} + ${wrongProdSub} = 0$`),
-          t(`$x^2 ${linTerm} - ${prod} = 0$`, `$x^2 ${linTerm} - ${prod} = 0$`),
+          ...[
+            poly([1, "x^2"], [sum, "x"], [prod, ""]),
+            poly([1, "x^2"], [-sum, "x"], [wrongProdSub, ""]),
+            poly([1, "x^2"], [-sum, "x"], [-prod, ""]),
+          ].map((e) => t(`$${e} = 0$`, `$${e} = 0$`)),
         ];
         const solution = t(
           `Sum of roots $= (${cx(p, q)}) + (${cx(p, -q)}) = ${sum}$.\nProduct of roots $= (${cx(p, q)})(${cx(p, -q)}) = ${p}^2 + ${q}^2 = ${prod}$.\n\nThe equation is $x^2 - (${sum})x + ${prod} = 0$, which is $${eqStr}$.`,
@@ -1086,8 +1087,8 @@ export const dividingComplexNumbers: TopicDef = {
         ];
         const denom = z2.c * z2.c + z2.d * z2.d;
         const solution = t(
-          `Multiply numerator and denominator by the conjugate of the denominator, ${cx(z2.c, -z2.d)}:\n\n$$\\frac{(${cx(numA, numB)})(${cx(z2.c, -z2.d)})}{${denom}} = \\frac{${u * denom} + ${v * denom}i}{${denom}} = ${cx(u, v)}$$`,
-          `分子分母同乘分母的共轭复数 ${cx(z2.c, -z2.d)}：\n\n$$\\frac{(${cx(numA, numB)})(${cx(z2.c, -z2.d)})}{${denom}} = \\frac{${u * denom} + ${v * denom}i}{${denom}} = ${cx(u, v)}$$`,
+          `Multiply numerator and denominator by the conjugate of the denominator, ${cx(z2.c, -z2.d)}:\n\n$$\\frac{(${cx(numA, numB)})(${cx(z2.c, -z2.d)})}{${denom}} = \\frac{${cx(u * denom, v * denom)}}{${denom}} = ${cx(u, v)}$$`,
+          `分子分母同乘分母的共轭复数 ${cx(z2.c, -z2.d)}：\n\n$$\\frac{(${cx(numA, numB)})(${cx(z2.c, -z2.d)})}{${denom}} = \\frac{${cx(u * denom, v * denom)}}{${denom}} = ${cx(u, v)}$$`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -1140,8 +1141,8 @@ export const solvingEquationsByEquatingRealAndImaginaryParts: TopicDef = {
           t(`$x = ${-x}, \\; y = ${-y}$`, `$x = ${-x}, \\; y = ${-y}$`),
         ];
         const solution = t(
-          `Equate real parts: $${a}x ${b >= 0 ? `+ ${b}` : `- ${-b}`} = ${p} \\implies ${a}x = ${p - b} \\implies x = ${x}$.\nEquate imaginary parts: $${c}y ${d >= 0 ? `+ ${d}` : `- ${-d}`} = ${q} \\implies ${c}y = ${q - d} \\implies y = ${y}$.`,
-          `令实部相等：$${a}x ${b >= 0 ? `+ ${b}` : `- ${-b}`} = ${p} \\implies ${a}x = ${p - b} \\implies x = ${x}$。\n令虚部相等：$${c}y ${d >= 0 ? `+ ${d}` : `- ${-d}`} = ${q} \\implies ${c}y = ${q - d} \\implies y = ${y}$。`,
+          `Equate real parts: $${poly([a, "x"], [b, ""])} = ${p} \\implies ${poly([a, "x"])} = ${p - b} \\implies x = ${x}$.\nEquate imaginary parts: $${poly([c, "y"], [d, ""])} = ${q} \\implies ${poly([c, "y"])} = ${q - d} \\implies y = ${y}$.`,
+          `令实部相等：$${poly([a, "x"], [b, ""])} = ${p} \\implies ${poly([a, "x"])} = ${p - b} \\implies x = ${x}$。\n令虚部相等：$${poly([c, "y"], [d, ""])} = ${q} \\implies ${poly([c, "y"])} = ${q - d} \\implies y = ${y}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -1172,8 +1173,8 @@ export const solvingEquationsByEquatingRealAndImaginaryParts: TopicDef = {
           t(`$z = ${cx(-x, -y)}$`, `$z = ${cx(-x, -y)}$`),
         ];
         const solution = t(
-          `Substitute $z = x + yi$ and $\\bar{z} = x - yi$:\n$$${k}(x + yi) + (x - yi) = (${k + m})x + (${k - m})yi = ${cx(bigA, bigB)}$$\nEquating real parts: $${k + m}x = ${bigA} \\implies x = ${x}$.\nEquating imaginary parts: $${k - m}y = ${bigB} \\implies y = ${y}$.\nThus, $z = ${cx(x, y)}$.`,
-          `代入 $z = x + yi$ 与 $\\bar{z} = x - yi$：\n$$${k}(x + yi) + (x - yi) = (${k + m})x + (${k - m})yi = ${cx(bigA, bigB)}$$\n实部相等：$${k + m}x = ${bigA} \\implies x = ${x}$。\n虚部相等：$${k - m}y = ${bigB} \\implies y = ${y}$。\n因此，$z = ${cx(x, y)}$。`,
+          `Substitute $z = x + yi$ and $\\bar{z} = x - yi$:\n$$${k}(x + yi) + (x - yi) = (${k + m})x + (${k - m})yi = ${cx(bigA, bigB)}$$\nEquating real parts: $${poly([k + m, "x"])} = ${bigA} \\implies x = ${x}$.\nEquating imaginary parts: $${poly([k - m, "y"])} = ${bigB} \\implies y = ${y}$.\nThus, $z = ${cx(x, y)}$.`,
+          `代入 $z = x + yi$ 与 $\\bar{z} = x - yi$：\n$$${k}(x + yi) + (x - yi) = (${k + m})x + (${k - m})yi = ${cx(bigA, bigB)}$$\n实部相等：$${poly([k + m, "x"])} = ${bigA} \\implies x = ${x}$。\n虚部相等：$${poly([k - m, "y"])} = ${bigB} \\implies y = ${y}$。\n因此，$z = ${cx(x, y)}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -1251,11 +1252,14 @@ export const extendingPolynomialIdentitiesToTheComplexNumbers: TopicDef = {
         const wrong = [
           t(`$[x + (${z1Str})][x + (${z2Str})]$`, `$[x + (${z1Str})][x + (${z2Str})]$`),
           t(`$[x - (${z1Str})]^2$`, `$[x - (${z1Str})]^2$`),
-          t(`$(x - ${p} - ${q})(x - ${p} + ${q})$`, `$(x - ${p} - ${q})(x - ${p} + ${q})$`),
+          t(
+            `$(${poly([1, "x"], [-p, ""], [-q, ""])})(${poly([1, "x"], [-p, ""], [q, ""])})$`,
+            `$(${poly([1, "x"], [-p, ""], [-q, ""])})(${poly([1, "x"], [-p, ""], [q, ""])})$`,
+          ),
         ];
         const solution = t(
-          `Completing the square gives $(x - ${p})^2 + ${q * q} = (x - ${p})^2 - (${q}i)^2 = [x - (${z1Str})][x - (${z2Str})]$.`,
-          `配方可得 $(x - ${p})^2 + ${q * q} = (x - ${p})^2 - (${q}i)^2 = [x - (${z1Str})][x - (${z2Str})]$。`,
+          `Completing the square gives $(${poly([1, "x"], [-p, ""])})^2 + ${q * q} = (${poly([1, "x"], [-p, ""])})^2 - (${q === 1 ? "" : q}i)^2 = [x - (${z1Str})][x - (${z2Str})]$.`,
+          `配方可得 $(${poly([1, "x"], [-p, ""])})^2 + ${q * q} = (${poly([1, "x"], [-p, ""])})^2 - (${q === 1 ? "" : q}i)^2 = [x - (${z1Str})][x - (${z2Str})]$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -1404,7 +1408,7 @@ export const productsOfComplexNumbersExpressedInPolarForm: TopicDef = {
       id: "geometric-rotation-and-scaling",
       title: t("Geometric interpretation of multiplication as rotation and dilation", "复数乘法的旋转与伸缩几何意义"),
       explanation: t(
-        "Multiplying any complex number $z$ by $w = r(\\cos\\theta + i\\sin\\theta)$:\n\n1. **Scales** the distance from the origin by a factor of $r = |w|$\n2. **Rotates** the point counterclockwise by an angle of $\\theta = \\arg(w)$\n\nIn particular, multiplying by $i = 1(\\cos 90^\\circ + i\\sin 90^\\circ)$ rotates $z = a + bi$ counterclockwise by $90^\\circ$ ($\frac{\\pi}{2}$ radians), producing $i(a + bi) = -b + ai$.",
+        "Multiplying any complex number $z$ by $w = r(\\cos\\theta + i\\sin\\theta)$:\n\n1. **Scales** the distance from the origin by a factor of $r = |w|$\n2. **Rotates** the point counterclockwise by an angle of $\\theta = \\arg(w)$\n\nIn particular, multiplying by $i = 1(\\cos 90^\\circ + i\\sin 90^\\circ)$ rotates $z = a + bi$ counterclockwise by $90^\\circ$ ($\\frac{\\pi}{2}$ radians), producing $i(a + bi) = -b + ai$.",
         "复数 $z$ 乘以 $w = r(\\cos\\theta + i\\sin\\theta)$ 的几何意义为：\n\n1. 到原点的距离**伸缩** $r = |w|$ 倍\n2. 绕原点逆时针**旋转**角度 $\\theta = \\arg(w)$\n\n特别地，乘以 $i = 1(\\cos 90^\\circ + i\\sin 90^\\circ)$ 相当于将复数 $z = a + bi$ 绕原点逆时针旋转 $90^\\circ$（$\\frac{\\pi}{2}$ 弧度），结果为 $i(a + bi) = -b + ai$。",
       ),
       generate(rng) {
@@ -1424,8 +1428,8 @@ export const productsOfComplexNumbersExpressedInPolarForm: TopicDef = {
           t(`$${cx(-a, b)}$`, `$${cx(-a, b)}$`),
         ];
         const solution = t(
-          `Rotating counterclockwise by $90^\\circ$ corresponds to multiplying by $i$:\n$$i(${cx(a, b)}) = ${a}i + (${b})i^2 = -(${b}) + ${a}i = ${cx(rotA, rotB)}$$`,
-          `绕原点逆时针旋转 $90^\\circ$ 等价于乘以虚数单位 $i$：\n$$i(${cx(a, b)}) = ${a}i + (${b})i^2 = -(${b}) + ${a}i = ${cx(rotA, rotB)}$$`,
+          `Rotating counterclockwise by $90^\\circ$ corresponds to multiplying by $i$:\n$$i(${cx(a, b)}) = ${poly([a, "i"], [b, "i^2"])} = ${poly([-b, ""], [a, "i"])} = ${cx(rotA, rotB)}$$`,
+          `绕原点逆时针旋转 $90^\\circ$ 等价于乘以虚数单位 $i$：\n$$i(${cx(a, b)}) = ${poly([a, "i"], [b, "i^2"])} = ${poly([-b, ""], [a, "i"])} = ${cx(rotA, rotB)}$$`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },

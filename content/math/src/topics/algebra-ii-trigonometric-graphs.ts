@@ -7,6 +7,7 @@ import {
   intervalLatex,
   type PlaneMark,
   plane,
+  poly,
   Q,
   q,
   type RealSet,
@@ -1363,6 +1364,10 @@ function domainQuestion(rng: Rng, f: Fn): Problem {
   const k = (u - asym.off) / asym.P;
   const form = familyTex(asym);
   const zv = sTex(f === "tan" || f === "sec" ? cosS(d) : sinS(d));
+  // The member of the family for this k: "\\frac{\\pi}{2} - 3\\pi", not "\\frac{\\pi}{2} + -3\\pi".
+  const c = (k * asym.P) / 2;
+  const at = () =>
+    asym.off === 0 ? poly([c, "\\pi"]) : c === 0 ? uTex(asym.off) : `${uTex(asym.off)} ${c < 0 ? "-" : "+"} ${poly([Math.abs(c), "\\pi"])}`;
   return choiceProblem({
     prompt: t(`Is $\\${f} x$ defined at $x = ${x}$?`, `$\\${f} x$ 在 $x = ${x}$ 处有定义吗？`),
     options: yesNo,
@@ -1373,8 +1378,8 @@ function domainQuestion(rng: Rng, f: Fn): Problem {
           `$\\${f} x$ 只在 $${z} = 0$ 处无定义，即 $x = ${form}$。这里 $${z.replace("x", arg(x))} = ${zv} \\ne 0$，所以 $\\${f} ${arg(x)}$ 有定义。`,
         )
       : t(
-          `The function $\\${f} x$ is not defined where $${z} = 0$, at $x = ${form}$. Here $${x} = ${form.replace("k", k === 1 ? "" : k === -1 ? "-" : String(k))}$ with $k = ${k}$, so $${z.replace("x", arg(x))} = 0$ and $\\${f} ${arg(x)}$ is not defined.`,
-          `$\\${f} x$ 在 $${z} = 0$ 处无定义，即 $x = ${form}$。这里 $${x} = ${form.replace("k", k === 1 ? "" : k === -1 ? "-" : String(k))}$，$k = ${k}$，所以 $${z.replace("x", arg(x))} = 0$，$\\${f} ${arg(x)}$ 无定义。`,
+          `The function $\\${f} x$ is not defined where $${z} = 0$, at $x = ${form}$. Here $${x} = ${at()}$ with $k = ${k}$, so $${z.replace("x", arg(x))} = 0$ and $\\${f} ${arg(x)}$ is not defined.`,
+          `$\\${f} x$ 在 $${z} = 0$ 处无定义，即 $x = ${form}$。这里 $${x} = ${at()}$，$k = ${k}$，所以 $${z.replace("x", arg(x))} = 0$，$\\${f} ${arg(x)}$ 无定义。`,
         ),
   });
 }

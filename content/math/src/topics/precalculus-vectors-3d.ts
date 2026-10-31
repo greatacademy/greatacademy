@@ -1,6 +1,6 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q, radical, simplifyRadical } from "@ga/subject-math";
+import { paren, poly, Q, radical, simplifyRadical } from "@ga/subject-math";
 
 import { choiceProblem } from "../problems.ts";
 
@@ -701,8 +701,8 @@ export const calculatingTheDotProductUsingComponents: TopicDef = {
           t(`$${right}$`, `$${right}$`),
           [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
           t(
-            `Set the dot product to $0$:\n\n$$\\mathbf{u} \\cdot \\mathbf{v} = (${a})(${adjustedX}) + (${b})(${y}) + (${c})k = 0$$\n\n$$${a * adjustedX + b * y} + ${c}k = 0 \\implies k = ${ansK}$$`,
-            `令数量积为 $0$：\n\n$$\\mathbf{u} \\cdot \\mathbf{v} = (${a})(${adjustedX}) + (${b})(${y}) + (${c})k = 0$$\n\n$$${a * adjustedX + b * y} + ${c}k = 0 \\implies k = ${ansK}$$`,
+            `Set the dot product to $0$:\n\n$$\\mathbf{u} \\cdot \\mathbf{v} = (${a})(${adjustedX}) + (${b})(${y}) + (${c})k = 0$$\n\n$$${poly([a * adjustedX + b * y, ""], [c, "k"])} = 0 \\implies k = ${ansK}$$`,
+            `令数量积为 $0$：\n\n$$\\mathbf{u} \\cdot \\mathbf{v} = (${a})(${adjustedX}) + (${b})(${y}) + (${c})k = 0$$\n\n$$${poly([a * adjustedX + b * y, ""], [c, "k"])} = 0 \\implies k = ${ansK}$$`,
           ),
         );
       },
@@ -1285,8 +1285,8 @@ export const propertiesOfTheCrossProduct: TopicDef = {
           t(`$${right}$`, `$${right}$`),
           [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
           t(
-            `Expand using distributivity:\n\n$$(${aStr} ${bStr}) \\times (${cStr} ${dStr}) = (${a})(${c})(\\mathbf{u}\\times\\mathbf{u}) + (${a})(${d})(\\mathbf{u}\\times\\mathbf{v}) + (${b})(${c})(\\mathbf{v}\\times\\mathbf{u}) + (${b})(${d})(\\mathbf{v}\\times\\mathbf{v})$$\n\nSince $\\mathbf{u}\\times\\mathbf{u} = \\mathbf{v}\\times\\mathbf{v} = \\mathbf{0}$ and $\\mathbf{v}\\times\\mathbf{u} = -(\\mathbf{u}\\times\\mathbf{v})$:\n\n$$= (${a * d} - ${b * c})(\\mathbf{u} \\times \\mathbf{v}) = ${right}$$`,
-            `利用分配律展开：\n\n$$(${aStr} ${bStr}) \\times (${cStr} ${dStr}) = (${a})(${c})(\\mathbf{u}\\times\\mathbf{u}) + (${a})(${d})(\\mathbf{u}\\times\\mathbf{v}) + (${b})(${c})(\\mathbf{v}\\times\\mathbf{u}) + (${b})(${d})(\\mathbf{v}\\times\\mathbf{v})$$\n\n由于 $\\mathbf{u}\\times\\mathbf{u} = \\mathbf{v}\\times\\mathbf{v} = \\mathbf{0}$ 且 $\\mathbf{v}\\times\\mathbf{u} = -(\\mathbf{u}\\times\\mathbf{v})$：\n\n$$= (${a * d} - ${b * c})(\\mathbf{u} \\times \\mathbf{v}) = ${right}$$`,
+            `Expand using distributivity:\n\n$$(${aStr} ${bStr}) \\times (${cStr} ${dStr}) = (${a})(${c})(\\mathbf{u}\\times\\mathbf{u}) + (${a})(${d})(\\mathbf{u}\\times\\mathbf{v}) + (${b})(${c})(\\mathbf{v}\\times\\mathbf{u}) + (${b})(${d})(\\mathbf{v}\\times\\mathbf{v})$$\n\nSince $\\mathbf{u}\\times\\mathbf{u} = \\mathbf{v}\\times\\mathbf{v} = \\mathbf{0}$ and $\\mathbf{v}\\times\\mathbf{u} = -(\\mathbf{u}\\times\\mathbf{v})$:\n\n$$= (${a * d} - ${paren(b * c)})(\\mathbf{u} \\times \\mathbf{v}) = ${right}$$`,
+            `利用分配律展开：\n\n$$(${aStr} ${bStr}) \\times (${cStr} ${dStr}) = (${a})(${c})(\\mathbf{u}\\times\\mathbf{u}) + (${a})(${d})(\\mathbf{u}\\times\\mathbf{v}) + (${b})(${c})(\\mathbf{v}\\times\\mathbf{u}) + (${b})(${d})(\\mathbf{v}\\times\\mathbf{v})$$\n\n由于 $\\mathbf{u}\\times\\mathbf{u} = \\mathbf{v}\\times\\mathbf{v} = \\mathbf{0}$ 且 $\\mathbf{v}\\times\\mathbf{u} = -(\\mathbf{u}\\times\\mathbf{v})$：\n\n$$= (${a * d} - ${paren(b * c)})(\\mathbf{u} \\times \\mathbf{v}) = ${right}$$`,
           ),
         );
       },

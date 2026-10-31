@@ -518,7 +518,7 @@ export const closurePropertiesOfRationalExpressions: TopicDef = {
         const m = rng.pick([2, 3, 5, 7]);
         const forms: readonly (readonly string[])[] = [
           [
-            `\\frac{x^{3}}{${c}}${b < 0 ? ` - ${-b}x` : ` + ${b}x`}`,
+            `\\frac{x^{3}}{${c}} ${b < 0 ? "-" : "+"} ${poly([Math.abs(b), "x"])}`,
             `\\sqrt{${m}}x^{2}${plus(b)}`,
             `\\frac{${a}x^{2}${plus(b)}}{${c}}`,
             `(${bare(b)})(x^{2} + ${a})`,
@@ -532,8 +532,8 @@ export const closurePropertiesOfRationalExpressions: TopicDef = {
         const why: Text[][] = [
           [
             t(
-              `It is $\\frac{1}{${c}}x^{3}${b < 0 ? ` - ${-b}x` : ` + ${b}x`}$: dividing by the number $${c}$ only makes a fractional coefficient, so it is a polynomial.`,
-              `它就是 $\\frac{1}{${c}}x^{3}${b < 0 ? ` - ${-b}x` : ` + ${b}x`}$：除以数 $${c}$ 只得到分数系数，所以它是多项式。`,
+              `It is $\\frac{1}{${c}}x^{3} ${b < 0 ? "-" : "+"} ${poly([Math.abs(b), "x"])}$: dividing by the number $${c}$ only makes a fractional coefficient, so it is a polynomial.`,
+              `它就是 $\\frac{1}{${c}}x^{3} ${b < 0 ? "-" : "+"} ${poly([Math.abs(b), "x"])}$：除以数 $${c}$ 只得到分数系数，所以它是多项式。`,
             ),
             t(
               `The coefficient $\\sqrt{${m}}$ is irrational, but $x$ is not under the root and has a whole-number exponent, so it is a polynomial.`,
@@ -618,8 +618,8 @@ export const closurePropertiesOfRationalExpressions: TopicDef = {
             lowest: true,
             wrong: [frac(String(a + bb), pl([-(p + q), 2])), frac(pl([-(a * p + bb * q), a + bb]), den), frac(String(a + bb), den)],
             solution: t(
-              `Use the common denominator $${den}$:${steps(`${frac(`${a}${fac(q)} ${sgn(bb)} ${Math.abs(bb)}${fac(p)}`, den)} = ${answer}`)}`,
-              `通分，公分母为 $${den}$：${steps(`${frac(`${a}${fac(q)} ${sgn(bb)} ${Math.abs(bb)}${fac(p)}`, den)} = ${answer}`)}`,
+              `Use the common denominator $${den}$:${steps(`${frac(`${coefFac(a, q)} ${sgn(bb)} ${coefFac(Math.abs(bb), p)}`, den)} = ${answer}`)}`,
+              `通分，公分母为 $${den}$：${steps(`${frac(`${coefFac(a, q)} ${sgn(bb)} ${coefFac(Math.abs(bb), p)}`, den)} = ${answer}`)}`,
             ),
           });
         }

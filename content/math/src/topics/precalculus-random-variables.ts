@@ -1,6 +1,6 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { dec, Q } from "@ga/subject-math";
+import { dec, poly, Q } from "@ga/subject-math";
 
 import { choiceProblem, numberProblem, steps } from "../problems.ts";
 
@@ -232,7 +232,7 @@ const probabilityMassFunctions: TopicDef = {
           `The random variable $X$ takes the values $${xs.join(", ")}$, with $P(X = x) = ${expr}$ for each of them, where $k$ is a constant.`,
           `随机变量 $X$ 取值 $${xs.join(", ")}$，且对每个值都有 $P(X = x) = ${expr}$，其中 $k$ 为常数。`,
         );
-        const sumLine = `${xs.map((x) => `${term(x)}k`).join(" + ")} = 1`;
+        const sumLine = `${xs.map((x) => `${poly([term(x), "k"])}`).join(" + ")} = 1`;
         const kLines = [sumLine, `${total}k = 1`, `k = ${kq.toLatex()}`];
         if (ask === 0) {
           return numberProblem({
@@ -245,7 +245,9 @@ const probabilityMassFunctions: TopicDef = {
         const ev = ask === 1 ? `X = ${j}` : `X \\ge ${n - 1}`;
         const ans = ask === 1 ? Q.of(term(j), total) : Q.of(term(n - 1) + term(n), total);
         const last =
-          ask === 1 ? `P(X = ${j}) = ${term(j)}k = ${ans.toLatex()}` : `P(${ev}) = ${term(n - 1)}k + ${term(n)}k = ${ans.toLatex()}`;
+          ask === 1
+            ? `P(X = ${j}) = ${poly([term(j), "k"])} = ${ans.toLatex()}`
+            : `P(${ev}) = ${poly([term(n - 1), "k"])} + ${poly([term(n), "k"])} = ${ans.toLatex()}`;
         return numberProblem({
           prompt: t(`${setup.en} Find $P(${ev})$.${simplest.en}`, `${setup["zh-CN"]}求 $P(${ev})$。${simplest["zh-CN"]}`),
           answer: ans,

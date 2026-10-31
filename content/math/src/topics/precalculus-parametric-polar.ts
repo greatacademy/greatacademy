@@ -1,5 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { paren, poly } from "@ga/subject-math";
+
 import { choiceProblem } from "../problems.ts";
 
 // Precalculus units 8 & 9: Parametric Equations and Polar Coordinates
@@ -188,7 +190,7 @@ export const cartesianEquationsOfParametricCurves: TopicDef = {
         const wrong1 = `y = ${aCoeff}${sq("x", -h)} ${sgnTerm(k)}`.trim();
         const wrong2 = `x = ${aCoeff}${sq("y", h)} ${sgnTerm(k)}`.trim();
         const wrong3 = `y = ${aCoeff}${sq("x", h)} ${sgnTerm(-k)}`.trim();
-        const wrong4 = `y = ${a + 1}${sq("x", h)} ${sgnTerm(k)}`.trim();
+        const wrong4 = `y = ${a === -1 ? "" : a + 1 === -1 ? "-" : a + 1}${sq("x", h)} ${sgnTerm(k)}`.trim();
         return oneOf(
           rng,
           t(
@@ -378,7 +380,7 @@ export const findingIntersectionsOfParametricCurvesAndLines: TopicDef = {
         const sum = t1 + t2;
         const prod = t1 * t2;
         const cVal = k - prod;
-        const lineStr = `y ${sgnTerm(-sum)}x = ${cVal}`;
+        const lineStr = `${poly([1, "y"], [-sum, "x"])} = ${cVal}`;
         const p1x = t1;
         const p1y = t1 * t1 + k;
         const p2x = t2;
@@ -397,8 +399,8 @@ export const findingIntersectionsOfParametricCurvesAndLines: TopicDef = {
             t(`$(${p1x}, ${-p1y})$ and $(${p2x}, ${-p2y})$`, `$(${p1x}, ${-p1y})$ 和 $(${p2x}, ${-p2y})$`),
           ],
           t(
-            `Substitute $x = t$ and $y = t^2 ${sgnTerm(k)}$ into $${lineStr}$:\n$$(t^2 ${sgnTerm(k)}) - ${sum}t = ${cVal} \\implies t^2 - ${sum}t + ${prod} = 0$$\nFactoring: $(t - ${t1})(t - ${t2}) = 0 \\implies t = ${t1}, ${t2}$.\n- At $t = ${t1}$: point is $(${p1x}, ${p1y})$\n- At $t = ${t2}$: point is $(${p2x}, ${p2y})$\nThe intersection points are $(${p1x}, ${p1y})$ and $(${p2x}, ${p2y})$.`,
-            `将 $x = t$ 与 $y = t^2 ${sgnTerm(k)}$ 代入直线方程 $${lineStr}$：\n$$(t^2 ${sgnTerm(k)}) - ${sum}t = ${cVal} \\implies t^2 - ${sum}t + ${prod} = 0$$\n因式分解得：$(t - ${t1})(t - ${t2}) = 0 \\implies t = ${t1}, ${t2}$。\n- 当 $t = ${t1}$ 时，交点为 $(${p1x}, ${p1y})$\n- 当 $t = ${t2}$ 时，交点为 $(${p2x}, ${p2y})$\n因此交点为 $(${p1x}, ${p1y})$ 和 $(${p2x}, ${p2y})$。`,
+            `Substitute $x = t$ and $y = t^2 ${sgnTerm(k)}$ into $${lineStr}$:\n$$(${poly([1, "t^2"], [k, ""])})${sum === 0 ? "" : ` ${sum > 0 ? "-" : "+"} ${poly([Math.abs(sum), "t"])}`} = ${cVal} \\implies ${poly([1, "t^2"], [-sum, "t"], [prod, ""])} = 0$$\nFactoring: $${lin("t", t1)}${lin("t", t2)} = 0 \\implies t = ${t1}, ${t2}$.\n- At $t = ${t1}$: point is $(${p1x}, ${p1y})$\n- At $t = ${t2}$: point is $(${p2x}, ${p2y})$\nThe intersection points are $(${p1x}, ${p1y})$ and $(${p2x}, ${p2y})$.`,
+            `将 $x = t$ 与 $y = t^2 ${sgnTerm(k)}$ 代入直线方程 $${lineStr}$：\n$$(${poly([1, "t^2"], [k, ""])})${sum === 0 ? "" : ` ${sum > 0 ? "-" : "+"} ${poly([Math.abs(sum), "t"])}`} = ${cVal} \\implies ${poly([1, "t^2"], [-sum, "t"], [prod, ""])} = 0$$\n因式分解得：$${lin("t", t1)}${lin("t", t2)} = 0 \\implies t = ${t1}, ${t2}$。\n- 当 $t = ${t1}$ 时，交点为 $(${p1x}, ${p1y})$\n- 当 $t = ${t2}$ 时，交点为 $(${p2x}, ${p2y})$\n因此交点为 $(${p1x}, ${p1y})$ 和 $(${p2x}, ${p2y})$。`,
           ),
         );
       },
@@ -442,8 +444,8 @@ export const findingIntersectionsOfParametricCurvesAndLines: TopicDef = {
             t(`$t = ${tStar + 2}$, at $(${xStar}, ${yStar})$`, `$t = ${tStar + 2}$，位于 $(${xStar}, ${yStar})$`),
           ],
           t(
-            `Set the $x$-coordinates equal: $${p1xExpr} = ${p2xExpr} \\implies (${a1 - a2})t = ${b2 - b1} \\implies t = ${tStar}$.\nSubstitute $t = ${tStar}$ into $y_1(t)$ and $y_2(t)$:\n$$y_1(${tStar}) = ${yStar}, \\quad y_2(${tStar}) = ${yStar}$$\nBoth coordinates match at $t = ${tStar}$, giving collision point $(${xStar}, ${yStar})$.`,
-            `令两粒子的 $x$ 坐标相等：$${p1xExpr} = ${p2xExpr} \\implies (${a1 - a2})t = ${b2 - b1} \\implies t = ${tStar}$。\n将 $t = ${tStar}$ 代入 $y$ 坐标验证：\n$$y_1(${tStar}) = ${yStar}, \\quad y_2(${tStar}) = ${yStar}$$\n两坐标在 $t = ${tStar}$ 处完全相同，因此发生碰撞，碰撞点为 $(${xStar}, ${yStar})$。`,
+            `Set the $x$-coordinates equal: $${p1xExpr} = ${p2xExpr} \\implies ${poly([a1 - a2, "t"])} = ${b2 - b1} \\implies t = ${tStar}$.\nSubstitute $t = ${tStar}$ into $y_1(t)$ and $y_2(t)$:\n$$y_1(${tStar}) = ${yStar}, \\quad y_2(${tStar}) = ${yStar}$$\nBoth coordinates match at $t = ${tStar}$, giving collision point $(${xStar}, ${yStar})$.`,
+            `令两粒子的 $x$ 坐标相等：$${p1xExpr} = ${p2xExpr} \\implies ${poly([a1 - a2, "t"])} = ${b2 - b1} \\implies t = ${tStar}$。\n将 $t = ${tStar}$ 代入 $y$ 坐标验证：\n$$y_1(${tStar}) = ${yStar}, \\quad y_2(${tStar}) = ${yStar}$$\n两坐标在 $t = ${tStar}$ 处完全相同，因此发生碰撞，碰撞点为 $(${xStar}, ${yStar})$。`,
           ),
         );
       },
@@ -690,8 +692,8 @@ export const parametricEquationsOfParabolas: TopicDef = {
           return oneOf(
             rng,
             t(
-              `Eliminate the parameter $t$ from $x = ${pCoeff}t^2, y = ${2 * p}t$ ($t \\in \\mathbb{R}$) to find the Cartesian equation of the parabola.`,
-              `消去参数 $t$（$t \\in \\mathbb{R}$），求抛物线 $x = ${pCoeff}t^2, y = ${2 * p}t$ 的直角坐标方程。`,
+              `Eliminate the parameter $t$ from $x = ${pCoeff}t^2, y = ${poly([2 * p, "t"])}$ ($t \\in \\mathbb{R}$) to find the Cartesian equation of the parabola.`,
+              `消去参数 $t$（$t \\in \\mathbb{R}$），求抛物线 $x = ${pCoeff}t^2, y = ${poly([2 * p, "t"])}$ 的直角坐标方程。`,
             ),
             t(`$${rightEq}$`, `$${rightEq}$`),
             [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
@@ -710,8 +712,8 @@ export const parametricEquationsOfParabolas: TopicDef = {
           return oneOf(
             rng,
             t(
-              `For the parabola given parametrically by $x = ${pCoeff}t^2, y = ${2 * p}t$, find the coordinates of its focus and the equation of its directrix.`,
-              `求参数方程为 $x = ${pCoeff}t^2, y = ${2 * p}t$ 的抛物线的焦点坐标与准线方程。`,
+              `For the parabola given parametrically by $x = ${pCoeff}t^2, y = ${poly([2 * p, "t"])}$, find the coordinates of its focus and the equation of its directrix.`,
+              `求参数方程为 $x = ${pCoeff}t^2, y = ${poly([2 * p, "t"])}$ 的抛物线的焦点坐标与准线方程。`,
             ),
             t(rightAns, `焦点 $(${p}, 0)$，准线 $x = ${-p}$`),
             [
@@ -726,10 +728,10 @@ export const parametricEquationsOfParabolas: TopicDef = {
           );
         }
 
-        const rightParam = `x = ${pCoeff}t^2, \\; y = ${2 * p}t`;
-        const wrong1 = `x = ${2 * p}t, \\; y = ${pCoeff}t^2`;
-        const wrong2 = `x = ${fourP}t^2, \\; y = ${2 * p}t`;
-        const wrong3 = `x = ${pCoeff}t^2, \\; y = ${p}t`;
+        const rightParam = `x = ${pCoeff}t^2, \\; y = ${poly([2 * p, "t"])}`;
+        const wrong1 = `x = ${poly([2 * p, "t"])}, \\; y = ${pCoeff}t^2`;
+        const wrong2 = `x = ${poly([fourP, "t^2"])}, \\; y = ${poly([2 * p, "t"])}`;
+        const wrong3 = `x = ${pCoeff}t^2, \\; y = ${poly([p, "t"])}`;
         return oneOf(
           rng,
           t(
@@ -739,8 +741,8 @@ export const parametricEquationsOfParabolas: TopicDef = {
           t(`$${rightParam}$`, `$${rightParam}$`),
           [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
           t(
-            `From $y^2 = 4px$, we have $4p = ${fourP} \\implies p = ${p}$.\nThe standard parametric equations for $y^2 = 4px$ are:\n$$x = pt^2 = ${pCoeff}t^2, \\quad y = 2pt = ${2 * p}t$$`,
-            `由 $y^2 = 4px$ 可知 $4p = ${fourP} implies p = ${p}$。\n水平抛物线 $y^2 = 4px$ 的标准参数方程为：\n$$x = pt^2 = ${pCoeff}t^2, \\quad y = 2pt = ${2 * p}t$$`,
+            `From $y^2 = 4px$, we have $4p = ${fourP} \\implies p = ${p}$.\nThe standard parametric equations for $y^2 = 4px$ are:\n$$x = pt^2 = ${pCoeff}t^2, \\quad y = 2pt = ${poly([2 * p, "t"])}$$`,
+            `由 $y^2 = 4px$ 可知 $4p = ${fourP} \\implies p = ${p}$。\n水平抛物线 $y^2 = 4px$ 的标准参数方程为：\n$$x = pt^2 = ${pCoeff}t^2, \\quad y = 2pt = ${poly([2 * p, "t"])}$$`,
           ),
         );
       },
@@ -766,8 +768,8 @@ export const parametricEquationsOfParabolas: TopicDef = {
           return oneOf(
             rng,
             t(
-              `Eliminate the parameter $t$ from $x = ${2 * p}t, y = ${pCoeff}t^2$ ($t \\in \\mathbb{R}$) to find the Cartesian equation of the parabola.`,
-              `消去参数 $t$（$t \\in \\mathbb{R}$），求抛物线 $x = ${2 * p}t, y = ${pCoeff}t^2$ 的直角坐标方程。`,
+              `Eliminate the parameter $t$ from $x = ${poly([2 * p, "t"])}, y = ${pCoeff}t^2$ ($t \\in \\mathbb{R}$) to find the Cartesian equation of the parabola.`,
+              `消去参数 $t$（$t \\in \\mathbb{R}$），求抛物线 $x = ${poly([2 * p, "t"])}, y = ${pCoeff}t^2$ 的直角坐标方程。`,
             ),
             t(`$${rightEq}$`, `$${rightEq}$`),
             [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
@@ -786,8 +788,8 @@ export const parametricEquationsOfParabolas: TopicDef = {
           return oneOf(
             rng,
             t(
-              `For the parabola given parametrically by $x = ${2 * p}t, y = ${pCoeff}t^2$, find the coordinates of its focus and the equation of its directrix.`,
-              `求参数方程为 $x = ${2 * p}t, y = ${pCoeff}t^2$ 的抛物线的焦点坐标与准线方程。`,
+              `For the parabola given parametrically by $x = ${poly([2 * p, "t"])}, y = ${pCoeff}t^2$, find the coordinates of its focus and the equation of its directrix.`,
+              `求参数方程为 $x = ${poly([2 * p, "t"])}, y = ${pCoeff}t^2$ 的抛物线的焦点坐标与准线方程。`,
             ),
             t(rightAns, `焦点 $(0, ${p})$，准线 $y = ${-p}$`),
             [
@@ -802,10 +804,10 @@ export const parametricEquationsOfParabolas: TopicDef = {
           );
         }
 
-        const rightParam = `x = ${2 * p}t, \\; y = ${pCoeff}t^2`;
-        const wrong1 = `x = ${pCoeff}t^2, \\; y = ${2 * p}t`;
-        const wrong2 = `x = ${2 * p}t, \\; y = ${fourP}t^2`;
-        const wrong3 = `x = ${p}t, \\; y = ${pCoeff}t^2`;
+        const rightParam = `x = ${poly([2 * p, "t"])}, \\; y = ${pCoeff}t^2`;
+        const wrong1 = `x = ${pCoeff}t^2, \\; y = ${poly([2 * p, "t"])}`;
+        const wrong2 = `x = ${poly([2 * p, "t"])}, \\; y = ${poly([fourP, "t^2"])}`;
+        const wrong3 = `x = ${poly([p, "t"])}, \\; y = ${pCoeff}t^2`;
         return oneOf(
           rng,
           t(
@@ -815,8 +817,8 @@ export const parametricEquationsOfParabolas: TopicDef = {
           t(`$${rightParam}$`, `$${rightParam}$`),
           [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
           t(
-            `From $x^2 = 4py$, $4p = ${fourP} \\implies p = ${p}$.\nThe standard parametric equations for $x^2 = 4py$ are:\n$$x = 2pt = ${2 * p}t, \\quad y = pt^2 = ${pCoeff}t^2$$`,
-            `由 $x^2 = 4py$ 得 $4p = ${fourP} implies p = ${p}$。\n铅直抛物线 $x^2 = 4py$ 的标准参数方程为：\n$$x = 2pt = ${2 * p}t, \\quad y = pt^2 = ${pCoeff}t^2$$`,
+            `From $x^2 = 4py$, $4p = ${fourP} \\implies p = ${p}$.\nThe standard parametric equations for $x^2 = 4py$ are:\n$$x = 2pt = ${poly([2 * p, "t"])}, \\quad y = pt^2 = ${pCoeff}t^2$$`,
+            `由 $x^2 = 4py$ 得 $4p = ${fourP} \\implies p = ${p}$。\n铅直抛物线 $x^2 = 4py$ 的标准参数方程为：\n$$x = 2pt = ${poly([2 * p, "t"])}, \\quad y = pt^2 = ${pCoeff}t^2$$`,
           ),
         );
       },
@@ -873,8 +875,8 @@ export const parametricEquationsOfParabolasCenteredAtHk: TopicDef = {
             t(wrong4, `顶点 $(${h}, ${k})$，方程: $${sq("x", h)} = ${2 * p}${lin("y", k)}$`),
           ],
           t(
-            `Setting $t = 0$ gives vertex $(x, y) = (${h}, ${k})$.\nSolve for $t$ from $x$: $t = \\frac{${lin("x", h)}}{${2 * p}}$.\nSubstitute into $y$:\n$$y - ${k} = ${p}\\left(\\frac{${lin("x", h)}}{${2 * p}}\\right)^2 = \\frac{${sq("x", h)}}{${4 * p}} \\implies ${stdEq}$$`,
-            `令 $t = 0$ 得顶点 $(x, y) = (${h}, ${k})$。\n由 $x$ 解得 $t = \\frac{${lin("x", h)}}{${2 * p}}$。\n代入 $y$：\n$$y - ${k} = ${p}\\left(\\frac{${lin("x", h)}}{${2 * p}}\\right)^2 = \\frac{${sq("x", h)}}{${4 * p}} \\implies ${stdEq}$$`,
+            `Setting $t = 0$ gives vertex $(x, y) = (${h}, ${k})$.\nSolve for $t$ from $x$: $t = \\frac{${lin("x", h)}}{${2 * p}}$.\nSubstitute into $y$:\n$$${linExpr(1, -k, "y")} = ${p}\\left(\\frac{${lin("x", h)}}{${2 * p}}\\right)^2 = \\frac{${sq("x", h)}}{${4 * p}} \\implies ${stdEq}$$`,
+            `令 $t = 0$ 得顶点 $(x, y) = (${h}, ${k})$。\n由 $x$ 解得 $t = \\frac{${lin("x", h)}}{${2 * p}}$。\n代入 $y$：\n$$${linExpr(1, -k, "y")} = ${p}\\left(\\frac{${lin("x", h)}}{${2 * p}}\\right)^2 = \\frac{${sq("x", h)}}{${4 * p}} \\implies ${stdEq}$$`,
           ),
         );
       },
@@ -913,8 +915,8 @@ export const parametricEquationsOfParabolasCenteredAtHk: TopicDef = {
             t(wrong4, `顶点 $(${h}, ${k})$，方程: $${sq("y", k)} = ${2 * p}${lin("x", h)}$`),
           ],
           t(
-            `Setting $t = 0$ gives vertex $(x, y) = (${h}, ${k})$.\nSolve for $t$ from $y$: $t = \\frac{${lin("y", k)}}{${2 * p}}$.\nSubstitute into $x$:\n$$x - ${h} = ${p}\\left(\\frac{${lin("y", k)}}{${2 * p}}\\right)^2 = \\frac{${sq("y", k)}}{${4 * p}} \\implies ${stdEq}$$`,
-            `令 $t = 0$ 得顶点 $(x, y) = (${h}, ${k})$。\n由 $y$ 解得 $t = \\frac{${lin("y", k)}}{${2 * p}}$。\n代入 $x$：\n$$x - ${h} = ${p}\\left(\\frac{${lin("y", k)}}{${2 * p}}\\right)^2 = \\frac{${sq("y", k)}}{${4 * p}} \\implies ${stdEq}$$`,
+            `Setting $t = 0$ gives vertex $(x, y) = (${h}, ${k})$.\nSolve for $t$ from $y$: $t = \\frac{${lin("y", k)}}{${2 * p}}$.\nSubstitute into $x$:\n$$${linExpr(1, -h, "x")} = ${p}\\left(\\frac{${lin("y", k)}}{${2 * p}}\\right)^2 = \\frac{${sq("y", k)}}{${4 * p}} \\implies ${stdEq}$$`,
+            `令 $t = 0$ 得顶点 $(x, y) = (${h}, ${k})$。\n由 $y$ 解得 $t = \\frac{${lin("y", k)}}{${2 * p}}$。\n代入 $x$：\n$$${linExpr(1, -h, "x")} = ${p}\\left(\\frac{${lin("y", k)}}{${2 * p}}\\right)^2 = \\frac{${sq("y", k)}}{${4 * p}} \\implies ${stdEq}$$`,
           ),
         );
       },
@@ -1481,7 +1483,7 @@ export const polarEquationsOfCirclesCenteredAtTheOrigin: TopicDef = {
           t(`$x^2 + y^2 = ${a2}$`, `$x^2 + y^2 = ${a2}$`),
           [
             t(`$x^2 + y^2 = ${a}$`, `$x^2 + y^2 = ${a}$`),
-            t(`$(x - ${a})^2 + y^2 = ${a2}$`, `$(x - ${a})^2 + y^2 = ${a2}$`),
+            t(`$${sq("x", a)} + y^2 = ${a2}$`, `$${sq("x", a)} + y^2 = ${a2}$`),
             t(`$x^2 + (y - ${a})^2 = ${a2}$`, `$x^2 + (y - ${a})^2 = ${a2}$`),
           ],
           t(
@@ -1862,8 +1864,8 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
             t(`$${rightEq}$`, `$${rightEq}$`),
             [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
             t(
-              `The standard Cartesian equation is $(x - ${a})^2 + y^2 = ${a2} \\implies x^2 + y^2 = ${twoA}x$.\nSubstitute $r^2 = x^2 + y^2$ and $x = r\\cos\\theta$:\n$$r^2 = ${twoA}r\\cos\\theta \\implies ${rightEq}$$`,
-              `直角坐标方程为 $(x - ${a})^2 + y^2 = ${a2} \\implies x^2 + y^2 = ${twoA}x$。\n代入 $r^2 = x^2 + y^2$ 及 $x = r\\cos\\theta$：\n$$r^2 = ${twoA}r\\cos\\theta \\implies ${rightEq}$$`,
+              `The standard Cartesian equation is $${sq("x", a)} + y^2 = ${a2} \\implies x^2 + y^2 = ${twoA}x$.\nSubstitute $r^2 = x^2 + y^2$ and $x = r\\cos\\theta$:\n$$r^2 = ${twoA}r\\cos\\theta \\implies ${rightEq}$$`,
+              `直角坐标方程为 $${sq("x", a)} + y^2 = ${a2} \\implies x^2 + y^2 = ${twoA}x$。\n代入 $r^2 = x^2 + y^2$ 及 $x = r\\cos\\theta$：\n$$r^2 = ${twoA}r\\cos\\theta \\implies ${rightEq}$$`,
             ),
           );
         }
@@ -1893,8 +1895,8 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
             ),
           ],
           t(
-            `Multiply by $r$: $r^2 = ${twoA}r\\cos\\theta \\implies x^2 + y^2 = ${twoA}x$.\nComplete the square: $x^2 - ${twoA}x + ${a2} + y^2 = ${a2} \\implies ${sq("x", a)} + y^2 = ${a2}$.\nCenter is $(${a}, 0)$ and radius is ${radius}$.`,
-            `两端同乘 $r$ 得 $r^2 = ${twoA}r\\cos\\theta \\implies x^2 + y^2 = ${twoA}x$。\n配方得 $x^2 - ${twoA}x + ${a2} + y^2 = ${a2} \\implies ${sq("x", a)} + y^2 = ${a2}$。\n因此圆心为 $(${a}, 0)$，半径为 ${radius}$。`,
+            `Multiply by $r$: $r^2 = ${twoA}r\\cos\\theta \\implies x^2 + y^2 = ${twoA}x$.\nComplete the square: $${poly([1, "x^2"], [-twoA, "x"], [a2, ""])} + y^2 = ${a2} \\implies ${sq("x", a)} + y^2 = ${a2}$.\nCenter is $(${a}, 0)$ and radius is ${radius}$.`,
+            `两端同乘 $r$ 得 $r^2 = ${twoA}r\\cos\\theta \\implies x^2 + y^2 = ${twoA}x$。\n配方得 $${poly([1, "x^2"], [-twoA, "x"], [a2, ""])} + y^2 = ${a2} \\implies ${sq("x", a)} + y^2 = ${a2}$。\n因此圆心为 $(${a}, 0)$，半径为 ${radius}$。`,
           ),
         );
       },
@@ -1927,8 +1929,8 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
             t(`$${rightEq}$`, `$${rightEq}$`),
             [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
             t(
-              `The standard Cartesian equation is $x^2 + (y - ${b})^2 = ${b2} \\implies x^2 + y^2 = ${twoB}y$.\nSubstitute $r^2 = x^2 + y^2$ and $y = r\\sin\\theta$:\n$$r^2 = ${twoB}r\\sin\\theta \\implies ${rightEq}$$`,
-              `直角坐标方程为 $x^2 + (y - ${b})^2 = ${b2} \\implies x^2 + y^2 = ${twoB}y$。\n代入 $r^2 = x^2 + y^2$ 及 $y = r\\sin\\theta$：\n$$r^2 = ${twoB}r\\sin\\theta \\implies ${rightEq}$$`,
+              `The standard Cartesian equation is $x^2 + ${sq("y", b)} = ${b2} \\implies x^2 + y^2 = ${twoB}y$.\nSubstitute $r^2 = x^2 + y^2$ and $y = r\\sin\\theta$:\n$$r^2 = ${twoB}r\\sin\\theta \\implies ${rightEq}$$`,
+              `直角坐标方程为 $x^2 + ${sq("y", b)} = ${b2} \\implies x^2 + y^2 = ${twoB}y$。\n代入 $r^2 = x^2 + y^2$ 及 $y = r\\sin\\theta$：\n$$r^2 = ${twoB}r\\sin\\theta \\implies ${rightEq}$$`,
             ),
           );
         }
@@ -1958,8 +1960,8 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
             ),
           ],
           t(
-            `Multiply by $r$: $r^2 = ${twoB}r\\sin\\theta \\implies x^2 + y^2 = ${twoB}y$.\nComplete the square: $x^2 + y^2 - ${twoB}y + ${b2} = ${b2} \\implies x^2 + ${sq("y", b)} = ${b2}$.\nCenter is $(0, ${b})$ and radius is ${radius}$.`,
-            `两端同乘 $r$ 得 $r^2 = ${twoB}r\\sin\\theta \\implies x^2 + y^2 = ${twoB}y$。\n配方得 $x^2 + y^2 - ${twoB}y + ${b2} = ${b2} \\implies x^2 + ${sq("y", b)} = ${b2}$。\n因此圆心为 $(0, ${b})$，半径为 ${radius}$。`,
+            `Multiply by $r$: $r^2 = ${twoB}r\\sin\\theta \\implies x^2 + y^2 = ${twoB}y$.\nComplete the square: $x^2 + ${poly([1, "y^2"], [-twoB, "y"], [b2, ""])} = ${b2} \\implies x^2 + ${sq("y", b)} = ${b2}$.\nCenter is $(0, ${b})$ and radius is ${radius}$.`,
+            `两端同乘 $r$ 得 $r^2 = ${twoB}r\\sin\\theta \\implies x^2 + y^2 = ${twoB}y$。\n配方得 $x^2 + ${poly([1, "y^2"], [-twoB, "y"], [b2, ""])} = ${b2} \\implies x^2 + ${sq("y", b)} = ${b2}$。\n因此圆心为 $(0, ${b})$，半径为 ${radius}$。`,
           ),
         );
       },

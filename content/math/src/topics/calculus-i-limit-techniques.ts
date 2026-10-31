@@ -1040,8 +1040,8 @@ export const specialLimitsInvolvingCosine: TopicDef = {
           wrong: [Q.of(a, 2 * b), Q.of(a * a, b), Q.of(1, 2), square ? Q.zero : Q.of(a * a, 2 * b)],
           solution: square
             ? t(
-                `$\\frac{1 - \\cos u}{u^{2}} \\to \\frac{1}{2}$ with $u = ${kx(a)}$, and $u^{2} = ${a * a}x^{2}$. So the limit is $${flip ? "-" : ""}\\frac{${a * a}}{2 \\cdot ${paren(b)}} = ${answer.toLatex()}$.`,
-                `取 $u = ${kx(a)}$，有 $\\frac{1 - \\cos u}{u^{2}} \\to \\frac{1}{2}$，且 $u^{2} = ${a * a}x^{2}$。所以极限为 $${flip ? "-" : ""}\\frac{${a * a}}{2 \\cdot ${paren(b)}} = ${answer.toLatex()}$。`,
+                `$\\frac{1 - \\cos u}{u^{2}} \\to \\frac{1}{2}$ with $u = ${kx(a)}$, and $u^{2} = ${cx(a * a, "x^{2}")}$. So the limit is $${flip ? "-" : ""}\\frac{${a * a}}{2 \\cdot ${paren(b)}} = ${answer.toLatex()}$.`,
+                `取 $u = ${kx(a)}$，有 $\\frac{1 - \\cos u}{u^{2}} \\to \\frac{1}{2}$，且 $u^{2} = ${cx(a * a, "x^{2}")}$。所以极限为 $${flip ? "-" : ""}\\frac{${a * a}}{2 \\cdot ${paren(b)}} = ${answer.toLatex()}$。`,
               )
             : t(
                 `$\\frac{1 - \\cos u}{u} \\to 0$ with $u = ${kx(a)}$, so the limit is $0$.`,
@@ -1180,10 +1180,10 @@ export const furtherLimitsInvolvingTheExponentialFunction: TopicDef = {
           wrong: [Q.zero, Q.one, inv(answer), two ? Q.of(a + b, c) : Q.of(a - 1, c)],
           solution: t(
             two
-              ? `Write the top as $(e^{${kx(a)}} - 1) - (e^{${kx(b)}} - 1) \\approx ${a}x - ${paren(b)}x = ${a - b}x$. Dividing by $${kx(c)}$ gives $${answer.toLatex()}$.`
+              ? `Write the top as $(e^{${kx(a)}} - 1) - (e^{${kx(b)}} - 1) \\approx ${kx(a)} - ${b < 0 ? `(${kx(b)})` : kx(b)} = ${kx(a - b)}$. Dividing by $${kx(c)}$ gives $${answer.toLatex()}$.`
               : `Near $0$, $e^{${kx(a)}} - 1 \\approx ${kx(a)}$, so the limit is $${ratio(a, c)}$.`,
             two
-              ? `把分子写成 $(e^{${kx(a)}} - 1) - (e^{${kx(b)}} - 1) \\approx ${a}x - ${paren(b)}x = ${a - b}x$。除以 $${kx(c)}$ 得 $${answer.toLatex()}$。`
+              ? `把分子写成 $(e^{${kx(a)}} - 1) - (e^{${kx(b)}} - 1) \\approx ${kx(a)} - ${b < 0 ? `(${kx(b)})` : kx(b)} = ${kx(a - b)}$。除以 $${kx(c)}$ 得 $${answer.toLatex()}$。`
               : `在 $0$ 附近 $e^{${kx(a)}} - 1 \\approx ${kx(a)}$，所以极限为 $${ratio(a, c)}$。`,
           ),
         });

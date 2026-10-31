@@ -2439,6 +2439,8 @@ export const modelingWithCompoundInterest: TopicDef = {
             : growth.eq(Q.of(3))
               ? t("triple", "变为原来的 3 倍")
               : t(`grow to $${money(target)}$ dollars`, `增长到 $${money(target)}$ 美元`);
+          const base = `\\left(1 + ${n === 1 ? rateL(R) : `\\frac{${rateL(R)}}{${n}}`}\\right)`;
+          const nt = n === 1 ? "t" : `${n}t`;
           return numberProblem({
             prompt: t(
               `$${P}$ dollars is invested at an annual interest rate of $${R}\\%$, compounded ${name.en}. How many years does it take for the balance to ${goal.en}? Give the answer to the nearest tenth of a year.`,
@@ -2451,9 +2453,9 @@ export const modelingWithCompoundInterest: TopicDef = {
             solution: both(
               "Divide by the principal and take natural logarithms:",
               "两边除以本金，再取自然对数：",
-              `\\left(1 + \\frac{${rateL(R)}}{${n}}\\right)^{${n}t} = ${num(growth)}`,
-              `${n}t \\ln\\left(1 + \\frac{${rateL(R)}}{${n}}\\right) = \\ln ${num(growth)}`,
-              `t = \\frac{\\ln ${num(growth)}}{${n}\\ln\\left(1 + \\frac{${rateL(R)}}{${n}}\\right)} \\approx ${dec(answer)}`,
+              `${base}^{${nt}} = ${num(growth)}`,
+              `${nt} \\ln${base} = \\ln ${num(growth)}`,
+              `t = \\frac{\\ln ${num(growth)}}{${n === 1 ? "" : n}\\ln${base}} \\approx ${dec(answer)}`,
             ),
           });
         }

@@ -1,6 +1,6 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
-import { plane, Q } from "@ga/subject-math";
+import { plane, poly, Q } from "@ga/subject-math";
 
 import { functionProblem, numberProblem } from "../problems.ts";
 import { oneOf, range, sqrtLatex } from "./calculus-common.ts";
@@ -322,8 +322,8 @@ export const solvingEquationsContainingHyperbolicFunctions: TopicDef = {
                 `${a === 1 ? "" : `两边除以 $${a}$：$\\cosh x = ${v.toLatex()}$。`}令 $u = e^{x}$，$\\frac{u + 1/u}{2} = ${v.toLatex()}$ 的根为 $u = ${k}$ 和 $u = \\frac{1}{${k}}$。正解为 $x = \\ln ${k}$。`,
               )
             : t(
-                `${a === 1 ? "" : `Divide by $${a}$: $\\tanh x = ${v.toLatex()}$. `}Then $e^{2x} = \\frac{1 + ${v.toLatex()}}{1 - ${v.toLatex()}} = ${k * k}$, so $e^{x} = ${k}$ and $x = \\ln ${k}$.`,
-                `${a === 1 ? "" : `两边除以 $${a}$：$\\tanh x = ${v.toLatex()}$。`}于是 $e^{2x} = \\frac{1 + ${v.toLatex()}}{1 - ${v.toLatex()}} = ${k * k}$，所以 $e^{x} = ${k}$，$x = \\ln ${k}$。`,
+                `${a === 1 ? "" : `Divide by $${a}$: $\\tanh x = ${v.toLatex()}$. `}Then $e^{2x} = \\frac{${poly([1, ""], [v, ""])}}{${poly([1, ""], [v.neg(), ""])}} = ${k * k}$, so $e^{x} = ${k}$ and $x = \\ln ${k}$.`,
+                `${a === 1 ? "" : `两边除以 $${a}$：$\\tanh x = ${v.toLatex()}$。`}于是 $e^{2x} = \\frac{${poly([1, ""], [v, ""])}}{${poly([1, ""], [v.neg(), ""])}} = ${k * k}$，所以 $e^{x} = ${k}$，$x = \\ln ${k}$。`,
               ),
         });
       },
@@ -576,8 +576,8 @@ export const theInverseHyperbolicFunctions: TopicDef = {
             answer: `\\frac{1}{2}\\ln ${ratio.toLatex()}`,
             wrong: [`\\ln ${ratio.toLatex()}`, `\\frac{1}{2}\\ln ${Q.one.div(ratio).toLatex()}`, `2\\ln ${ratio.toLatex()}`],
             solution: t(
-              `$$\\operatorname{artanh}\\left(${c.toLatex()}\\right) = \\frac{1}{2}\\ln\\frac{1 + ${c.toLatex()}}{1 - ${c.toLatex()}} = \\frac{1}{2}\\ln ${ratio.toLatex()}$$`,
-              `$$\\operatorname{artanh}\\left(${c.toLatex()}\\right) = \\frac{1}{2}\\ln\\frac{1 + ${c.toLatex()}}{1 - ${c.toLatex()}} = \\frac{1}{2}\\ln ${ratio.toLatex()}$$`,
+              `$$\\operatorname{artanh}\\left(${c.toLatex()}\\right) = \\frac{1}{2}\\ln\\frac{${poly([1, ""], [c, ""])}}{${poly([1, ""], [c.neg(), ""])}} = \\frac{1}{2}\\ln ${ratio.toLatex()}$$`,
+              `$$\\operatorname{artanh}\\left(${c.toLatex()}\\right) = \\frac{1}{2}\\ln\\frac{${poly([1, ""], [c, ""])}}{${poly([1, ""], [c.neg(), ""])}} = \\frac{1}{2}\\ln ${ratio.toLatex()}$$`,
             ),
           });
         }
