@@ -24,6 +24,7 @@ import { algebraIIUnitCircleTopics } from "./topics/algebra-ii-unit-circle.ts";
 import { angleTopics } from "./topics/angles.ts";
 import { areaTopics } from "./topics/area.ts";
 import { bivariateStatisticsTopics } from "./topics/bivariate-statistics.ts";
+import { calculusIAntiderivativeTopics } from "./topics/calculus-i-antiderivatives.ts";
 import { calculusIChainRuleTopics } from "./topics/calculus-i-chain-rule.ts";
 import { calculusIContextualTopics } from "./topics/calculus-i-contextual.ts";
 import { calculusIContinuityTopics } from "./topics/calculus-i-continuity.ts";
@@ -185,6 +186,7 @@ export const math: SubjectDef = {
     ...calculusIExtremaTopics,
     ...calculusICurveTopics,
     ...calculusIOptimizationTopics,
+    ...calculusIAntiderivativeTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
