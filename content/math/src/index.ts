@@ -52,6 +52,7 @@ import { linearEquationTopics } from "./topics/linear-equations.ts";
 import { lineTopics } from "./topics/lines.ts";
 import { numberTheoryTopics } from "./topics/number-theory.ts";
 import { polynomialTopics } from "./topics/polynomials.ts";
+import { precalculusConicSectionTopics } from "./topics/precalculus-conic-sections.ts";
 import { precalculusInequalityTopics } from "./topics/precalculus-inequalities.ts";
 import { precalculusRationalFunctionTopics } from "./topics/precalculus-rational-functions.ts";
 import { precalculusSeriesTopics } from "./topics/precalculus-series.ts";
@@ -143,6 +144,7 @@ export const math: SubjectDef = {
     ...precalculusTrigonometricEquationTopics,
     ...precalculusVector2DTopics,
     ...precalculusVector3DTopics,
+    ...precalculusConicSectionTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
