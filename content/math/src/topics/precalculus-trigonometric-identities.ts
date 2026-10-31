@@ -14,8 +14,8 @@ function _piTex(c: Coefficient): string {
   const v = toQ(c);
   if (v.isZero()) return "0";
   const n = v.n < 0n ? -v.n : v.n;
-  const top = n === 1n ? "pi" : `${n}pi`;
-  const body = v.d === 1n ? top : `\frac{${top}}{${v.d}}`;
+  const top = n === 1n ? "\\pi" : `${n}\\pi`;
+  const body = v.d === 1n ? top : `\\frac{${top}}{${v.d}}`;
   return v.sign() < 0 ? `-${body}` : body;
 }
 
@@ -138,28 +138,28 @@ export const graphingTheInverseSineFunction: TopicDef = {
       ),
       generate(rng) {
         const item = rng.pick([
-          { val: "0", ans: "0", wrong: ["\frac{pi}{2}", "-\frac{pi}{2}", "pi"] },
-          { val: "1", ans: "\frac{pi}{2}", wrong: ["pi", "0", "\frac{pi}{4}"] },
-          { val: "-1", ans: "-\frac{pi}{2}", wrong: ["\frac{pi}{2}", "pi", "-pi"] },
-          { val: "\frac{1}{2}", ans: "\frac{pi}{6}", wrong: ["\frac{pi}{3}", "\frac{pi}{4}", "\frac{pi}{2}"] },
-          { val: "-\frac{1}{2}", ans: "-\frac{pi}{6}", wrong: ["\frac{5pi}{6}", "-\frac{pi}{3}", "-\frac{pi}{4}"] },
-          { val: "\frac{sqrt{2}}{2}", ans: "\frac{pi}{4}", wrong: ["\frac{pi}{6}", "\frac{pi}{3}", "\frac{3pi}{4}"] },
-          { val: "-\frac{sqrt{2}}{2}", ans: "-\frac{pi}{4}", wrong: ["\frac{3pi}{4}", "-\frac{pi}{6}", "-\frac{pi}{3}"] },
-          { val: "\frac{sqrt{3}}{2}", ans: "\frac{pi}{3}", wrong: ["\frac{pi}{6}", "\frac{pi}{4}", "\frac{2pi}{3}"] },
-          { val: "-\frac{sqrt{3}}{2}", ans: "-\frac{pi}{3}", wrong: ["\frac{2pi}{3}", "-\frac{pi}{6}", "-\frac{pi}{4}"] },
+          { val: "0", ans: "0", wrong: ["\\frac{\\pi}{2}", "-\\frac{\\pi}{2}", "\\pi"] },
+          { val: "1", ans: "\\frac{\\pi}{2}", wrong: ["\\pi", "0", "\\frac{\\pi}{4}"] },
+          { val: "-1", ans: "-\\frac{\\pi}{2}", wrong: ["\\frac{\\pi}{2}", "\\pi", "-\\pi"] },
+          { val: "\\frac{1}{2}", ans: "\\frac{\\pi}{6}", wrong: ["\\frac{\\pi}{3}", "\\frac{\\pi}{4}", "\\frac{\\pi}{2}"] },
+          { val: "-\\frac{1}{2}", ans: "-\\frac{\\pi}{6}", wrong: ["\\frac{5\\pi}{6}", "-\\frac{\\pi}{3}", "-\\frac{\\pi}{4}"] },
+          { val: "\\frac{\\sqrt{2}}{2}", ans: "\\frac{\\pi}{4}", wrong: ["\\frac{\\pi}{6}", "\\frac{\\pi}{3}", "\\frac{3\\pi}{4}"] },
+          { val: "-\\frac{\\sqrt{2}}{2}", ans: "-\\frac{\\pi}{4}", wrong: ["\\frac{3\\pi}{4}", "-\\frac{\\pi}{6}", "-\\frac{\\pi}{3}"] },
+          { val: "\\frac{\\sqrt{3}}{2}", ans: "\\frac{\\pi}{3}", wrong: ["\\frac{\\pi}{6}", "\\frac{\\pi}{4}", "\\frac{2\\pi}{3}"] },
+          { val: "-\\frac{\\sqrt{3}}{2}", ans: "-\\frac{\\pi}{3}", wrong: ["\\frac{2\\pi}{3}", "-\\frac{\\pi}{6}", "-\\frac{\\pi}{4}"] },
         ]);
         const mult = rng.pick([1, 2, 3, 4, 6]);
-        const promptStr = mult === 1 ? `arcsinleft(${item.val}\right)` : `${mult}arcsinleft(${item.val}\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}cdotleft(${item.ans}\right)`;
-        const wrongStr = item.wrong.map((w) => (mult === 1 ? `$${w}$` : `$${mult}cdotleft(${w}\right)$`));
+        const promptStr = mult === 1 ? `\\arcsin\\left(${item.val}\\right)` : `${mult}\\arcsin\\left(${item.val}\\right)`;
+        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
+        const wrongStr = item.wrong.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
           t(
-            `Since $arcsin(${item.val}) = ${item.ans}$, multiplying by $${mult}$ gives $${ansStr}$.`,
-            `因为 $arcsin(${item.val}) = ${item.ans}$，乘以 $${mult}$ 得 $${ansStr}$。`,
+            `Since $\\arcsin(${item.val}) = ${item.ans}$, multiplying by $${mult}$ gives $${ansStr}$.`,
+            `因为 $\\arcsin(${item.val}) = ${item.ans}$，乘以 $${mult}$ 得 $${ansStr}$。`,
           ),
         );
       },
@@ -262,28 +262,28 @@ export const graphingTheInverseCosineFunction: TopicDef = {
       ),
       generate(rng) {
         const item = rng.pick([
-          { val: "1", ans: "0", wrong: ["pi", "\frac{pi}{2}", "\frac{pi}{4}"] },
-          { val: "0", ans: "\frac{pi}{2}", wrong: ["0", "pi", "-\frac{pi}{2}"] },
-          { val: "-1", ans: "pi", wrong: ["0", "\frac{pi}{2}", "-pi"] },
-          { val: "\frac{1}{2}", ans: "\frac{pi}{3}", wrong: ["\frac{pi}{6}", "\frac{2pi}{3}", "\frac{pi}{4}"] },
-          { val: "-\frac{1}{2}", ans: "\frac{2pi}{3}", wrong: ["-\frac{pi}{3}", "\frac{pi}{3}", "\frac{5pi}{6}"] },
-          { val: "\frac{sqrt{2}}{2}", ans: "\frac{pi}{4}", wrong: ["\frac{pi}{6}", "\frac{pi}{3}", "\frac{3pi}{4}"] },
-          { val: "-\frac{sqrt{2}}{2}", ans: "\frac{3pi}{4}", wrong: ["-\frac{pi}{4}", "\frac{pi}{4}", "\frac{5pi}{4}"] },
-          { val: "\frac{sqrt{3}}{2}", ans: "\frac{pi}{6}", wrong: ["\frac{pi}{3}", "\frac{pi}{4}", "\frac{5pi}{6}"] },
-          { val: "-\frac{sqrt{3}}{2}", ans: "\frac{5pi}{6}", wrong: ["-\frac{pi}{6}", "\frac{pi}{6}", "\frac{2pi}{3}"] },
+          { val: "1", ans: "0", wrong: ["\\pi", "\\frac{\\pi}{2}", "\\frac{\\pi}{4}"] },
+          { val: "0", ans: "\\frac{\\pi}{2}", wrong: ["0", "\\pi", "-\\frac{\\pi}{2}"] },
+          { val: "-1", ans: "\\pi", wrong: ["0", "\\frac{\\pi}{2}", "-\\pi"] },
+          { val: "\\frac{1}{2}", ans: "\\frac{\\pi}{3}", wrong: ["\\frac{\\pi}{6}", "\\frac{2\\pi}{3}", "\\frac{\\pi}{4}"] },
+          { val: "-\\frac{1}{2}", ans: "\\frac{2\\pi}{3}", wrong: ["-\\frac{\\pi}{3}", "\\frac{\\pi}{3}", "\\frac{5\\pi}{6}"] },
+          { val: "\\frac{\\sqrt{2}}{2}", ans: "\\frac{\\pi}{4}", wrong: ["\\frac{\\pi}{6}", "\\frac{\\pi}{3}", "\\frac{3\\pi}{4}"] },
+          { val: "-\\frac{\\sqrt{2}}{2}", ans: "\\frac{3\\pi}{4}", wrong: ["-\\frac{\\pi}{4}", "\\frac{\\pi}{4}", "\\frac{5\\pi}{4}"] },
+          { val: "\\frac{\\sqrt{3}}{2}", ans: "\\frac{\\pi}{6}", wrong: ["\\frac{\\pi}{3}", "\\frac{\\pi}{4}", "\\frac{5\\pi}{6}"] },
+          { val: "-\\frac{\\sqrt{3}}{2}", ans: "\\frac{5\\pi}{6}", wrong: ["-\\frac{\\pi}{6}", "\\frac{\\pi}{6}", "\\frac{2\\pi}{3}"] },
         ]);
         const mult = rng.pick([1, 2, 3, 4, 6]);
-        const promptStr = mult === 1 ? `arccosleft(${item.val}\right)` : `${mult}arccosleft(${item.val}\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}cdotleft(${item.ans}\right)`;
-        const wrongStr = item.wrong.map((w) => (mult === 1 ? `$${w}$` : `$${mult}cdotleft(${w}\right)$`));
+        const promptStr = mult === 1 ? `\\arccos\\left(${item.val}\\right)` : `${mult}\\arccos\\left(${item.val}\\right)`;
+        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
+        const wrongStr = item.wrong.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
           t(
-            `Since $arccos(${item.val}) = ${item.ans}$, multiplying by $${mult}$ gives $${ansStr}$.`,
-            `因为 $arccos(${item.val}) = ${item.ans}$，乘以 $${mult}$ 得 $${ansStr}$。`,
+            `Since $\\arccos(${item.val}) = ${item.ans}$, multiplying by $${mult}$ gives $${ansStr}$.`,
+            `因为 $\\arccos(${item.val}) = ${item.ans}$，乘以 $${mult}$ 得 $${ansStr}$。`,
           ),
         );
       },
@@ -329,14 +329,14 @@ export const graphingTheInverseTangentFunction: TopicDef = {
               t("$[0, \\infty)$", "$[0, \\infty)$"),
             ],
             t(
-              "The inverse tangent function accepts any real number: domain is $(-infty, infty)$.",
-              "反正切函数的定义域是所有实数：$(-infty, infty)$。",
+              "The inverse tangent function accepts any real number: domain is $(-\\infty, \\infty)$.",
+              "反正切函数的定义域是所有实数：$(-\\infty, \\infty)$。",
             ),
           );
         }
         if (type === "range-scaled") {
           const k = rng.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 12]);
-          const ans = k % 2 === 0 ? `(-${k / 2}pi, ${k / 2}pi)` : `left(-\frac{${k}pi}{2}, \frac{${k}pi}{2}\right)`;
+          const ans = k % 2 === 0 ? `(-${k / 2}pi, ${k / 2}pi)` : `\\left(-\\frac{${k}\\pi}{2}, \\frac{${k}\\pi}{2}\\right)`;
           return oneOf(
             rng,
             t(`What is the range of $f(x) = ${k}\\arctan x$?`, `$f(x) = ${k}\\arctan x$ 的值域是什么？`),
@@ -347,8 +347,8 @@ export const graphingTheInverseTangentFunction: TopicDef = {
               t(`$[0, ${k}\\pi]$`, `$[0, ${k}\\pi]$`),
             ],
             t(
-              `Multiply the standard range $(-pi/2, pi/2)$ by $${k}$ to obtain $${ans}$.`,
-              `将标准值域 $(-pi/2, pi/2)$ 乘以 $${k}$ 即得 $${ans}$。`,
+              `Multiply the standard range $(-\\pi/2, \\pi/2)$ by $${k}$ to obtain $${ans}$.`,
+              `将标准值域 $(-\\pi/2, \\pi/2)$ 乘以 $${k}$ 即得 $${ans}$。`,
             ),
           );
         }
@@ -367,8 +367,8 @@ export const graphingTheInverseTangentFunction: TopicDef = {
             t(`$[0, \\pi ${sign}]$`, `$[0, \\pi ${sign}]$`),
           ],
           t(
-            `Shifting the range vertically gives $left(-\frac{pi}{2} ${sign}, \frac{pi}{2} ${sign}\right)$.`,
-            `值域沿纵向平移得到 $left(-\frac{pi}{2} ${sign}, \frac{pi}{2} ${sign}\right)$。`,
+            `Shifting the range vertically gives $\\left(-\\frac{\\pi}{2} ${sign}, \\frac{\\pi}{2} ${sign}\\right)$.`,
+            `值域沿纵向平移得到 $\\left(-\\frac{\\pi}{2} ${sign}, \\frac{\\pi}{2} ${sign}\\right)$。`,
           ),
         );
       },
@@ -385,7 +385,7 @@ export const graphingTheInverseTangentFunction: TopicDef = {
         const askAsymptote = rng.pick(["pos", "neg", "sym"] as const);
         const kTex = k === 1 ? "" : `${k}`;
         if (askAsymptote === "pos") {
-          const ans = k === 1 ? "y = \frac{pi}{2}" : k % 2 === 0 ? `y = ${k / 2}pi` : `y = \frac{${k}pi}{2}`;
+          const ans = k === 1 ? "y = \\frac{\\pi}{2}" : k % 2 === 0 ? `y = ${k / 2}pi` : `y = \\frac{${k}\\pi}{2}`;
           return oneOf(
             rng,
             t(
@@ -401,7 +401,7 @@ export const graphingTheInverseTangentFunction: TopicDef = {
           );
         }
         if (askAsymptote === "neg") {
-          const ans = k === 1 ? "y = -\frac{pi}{2}" : k % 2 === 0 ? `y = -${k / 2}pi` : `y = -\frac{${k}pi}{2}`;
+          const ans = k === 1 ? "y = -\\frac{\\pi}{2}" : k % 2 === 0 ? `y = -${k / 2}pi` : `y = -\\frac{${k}\\pi}{2}`;
           return oneOf(
             rng,
             t(
@@ -462,38 +462,38 @@ export const evaluatingExpressionsContainingInverseTrigonometricFunctions: Topic
       ),
       generate(rng) {
         const item = rng.pick([
-          { fn: "arcsin", val: "\frac{1}{2}", ans: "\frac{pi}{6}" },
-          { fn: "arcsin", val: "\frac{sqrt{2}}{2}", ans: "\frac{pi}{4}" },
-          { fn: "arcsin", val: "\frac{sqrt{3}}{2}", ans: "\frac{pi}{3}" },
-          { fn: "arcsin", val: "-\frac{1}{2}", ans: "-\frac{pi}{6}" },
-          { fn: "arcsin", val: "-\frac{sqrt{2}}{2}", ans: "-\frac{pi}{4}" },
-          { fn: "arcsin", val: "-\frac{sqrt{3}}{2}", ans: "-\frac{pi}{3}" },
-          { fn: "arccos", val: "\frac{1}{2}", ans: "\frac{pi}{3}" },
-          { fn: "arccos", val: "\frac{sqrt{2}}{2}", ans: "\frac{pi}{4}" },
-          { fn: "arccos", val: "\frac{sqrt{3}}{2}", ans: "\frac{pi}{6}" },
-          { fn: "arccos", val: "-\frac{1}{2}", ans: "\frac{2pi}{3}" },
-          { fn: "arccos", val: "-\frac{sqrt{2}}{2}", ans: "\frac{3pi}{4}" },
-          { fn: "arccos", val: "-\frac{sqrt{3}}{2}", ans: "\frac{5pi}{6}" },
-          { fn: "arcsin", val: "1", ans: "\frac{pi}{2}" },
-          { fn: "arcsin", val: "-1", ans: "-\frac{pi}{2}" },
+          { fn: "arcsin", val: "\\frac{1}{2}", ans: "\\frac{\\pi}{6}" },
+          { fn: "arcsin", val: "\\frac{\\sqrt{2}}{2}", ans: "\\frac{\\pi}{4}" },
+          { fn: "arcsin", val: "\\frac{\\sqrt{3}}{2}", ans: "\\frac{\\pi}{3}" },
+          { fn: "arcsin", val: "-\\frac{1}{2}", ans: "-\\frac{\\pi}{6}" },
+          { fn: "arcsin", val: "-\\frac{\\sqrt{2}}{2}", ans: "-\\frac{\\pi}{4}" },
+          { fn: "arcsin", val: "-\\frac{\\sqrt{3}}{2}", ans: "-\\frac{\\pi}{3}" },
+          { fn: "arccos", val: "\\frac{1}{2}", ans: "\\frac{\\pi}{3}" },
+          { fn: "arccos", val: "\\frac{\\sqrt{2}}{2}", ans: "\\frac{\\pi}{4}" },
+          { fn: "arccos", val: "\\frac{\\sqrt{3}}{2}", ans: "\\frac{\\pi}{6}" },
+          { fn: "arccos", val: "-\\frac{1}{2}", ans: "\\frac{2\\pi}{3}" },
+          { fn: "arccos", val: "-\\frac{\\sqrt{2}}{2}", ans: "\\frac{3\\pi}{4}" },
+          { fn: "arccos", val: "-\\frac{\\sqrt{3}}{2}", ans: "\\frac{5\\pi}{6}" },
+          { fn: "arcsin", val: "1", ans: "\\frac{\\pi}{2}" },
+          { fn: "arcsin", val: "-1", ans: "-\\frac{\\pi}{2}" },
           { fn: "arccos", val: "1", ans: "0" },
-          { fn: "arccos", val: "-1", ans: "pi" },
+          { fn: "arccos", val: "-1", ans: "\\pi" },
         ]);
         const mult = rng.pick([1, 2, 3, 4, 6]);
-        const promptStr = mult === 1 ? `${item.fn}left(${item.val}\right)` : `${mult}${item.fn}left(${item.val}\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}cdotleft(${item.ans}\right)`;
+        const promptStr = mult === 1 ? `${item.fn}\\left(${item.val}\\right)` : `${mult}${item.fn}\\left(${item.val}\\right)`;
+        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
         const wrongList = [
-          "\frac{pi}{6}",
-          "\frac{pi}{4}",
-          "\frac{pi}{3}",
-          "\frac{2pi}{3}",
-          "\frac{3pi}{4}",
-          "\frac{5pi}{6}",
-          "-\frac{pi}{6}",
+          "\\frac{\\pi}{6}",
+          "\\frac{\\pi}{4}",
+          "\\frac{\\pi}{3}",
+          "\\frac{2\\pi}{3}",
+          "\\frac{3\\pi}{4}",
+          "\\frac{5\\pi}{6}",
+          "-\\frac{\\pi}{6}",
         ]
           .filter((w) => w !== item.ans)
           .slice(0, 3);
-        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}cdotleft(${w}\right)$`));
+        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
@@ -516,28 +516,36 @@ export const evaluatingExpressionsContainingInverseTrigonometricFunctions: Topic
       generate(rng) {
         const item = rng.pick([
           { val: "0", ans: "0" },
-          { val: "\frac{sqrt{3}}{3}", ans: "\frac{pi}{6}" },
-          { val: "1", ans: "\frac{pi}{4}" },
-          { val: "sqrt{3}", ans: "\frac{pi}{3}" },
-          { val: "-\frac{sqrt{3}}{3}", ans: "-\frac{pi}{6}" },
-          { val: "-1", ans: "-\frac{pi}{4}" },
-          { val: "-sqrt{3}", ans: "-\frac{pi}{3}" },
+          { val: "\\frac{\\sqrt{3}}{3}", ans: "\\frac{\\pi}{6}" },
+          { val: "1", ans: "\\frac{\\pi}{4}" },
+          { val: "\\sqrt{3}", ans: "\\frac{\\pi}{3}" },
+          { val: "-\\frac{\\sqrt{3}}{3}", ans: "-\\frac{\\pi}{6}" },
+          { val: "-1", ans: "-\\frac{\\pi}{4}" },
+          { val: "-\\sqrt{3}", ans: "-\\frac{\\pi}{3}" },
         ]);
         const mult = rng.pick([1, 2, 3, 4, 6]);
-        const promptStr = mult === 1 ? `arctanleft(${item.val}\right)` : `${mult}arctanleft(${item.val}\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}cdotleft(${item.ans}\right)`;
-        const wrongList = ["0", "\frac{pi}{6}", "\frac{pi}{4}", "\frac{pi}{3}", "-\frac{pi}{6}", "-\frac{pi}{4}", "-\frac{pi}{3}"]
+        const promptStr = mult === 1 ? `\\arctan\\left(${item.val}\\right)` : `${mult}\\arctan\\left(${item.val}\\right)`;
+        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
+        const wrongList = [
+          "0",
+          "\\frac{\\pi}{6}",
+          "\\frac{\\pi}{4}",
+          "\\frac{\\pi}{3}",
+          "-\\frac{\\pi}{6}",
+          "-\\frac{\\pi}{4}",
+          "-\\frac{\\pi}{3}",
+        ]
           .filter((w) => w !== item.ans)
           .slice(0, 3);
-        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}cdotleft(${w}\right)$`));
+        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
           t(
-            `Since $arctan(${item.val}) = ${item.ans}$, multiplying gives $${ansStr}$.`,
-            `因为 $arctan(${item.val}) = ${item.ans}$，乘积得 $${ansStr}$。`,
+            `Since $\\arctan(${item.val}) = ${item.ans}$, multiplying gives $${ansStr}$.`,
+            `因为 $\\arctan(${item.val}) = ${item.ans}$，乘积得 $${ansStr}$。`,
           ),
         );
       },
@@ -634,29 +642,36 @@ export const furtherEvaluatingExpressionsContainingInverseTrigonometricFunctions
       ),
       generate(rng) {
         const item = rng.pick([
-          { expr: "arcsinleft(sinleft(\frac{5pi}{6}\right)\right)", ans: "\frac{pi}{6}" },
-          { expr: "arcsinleft(sinleft(\frac{7pi}{6}\right)\right)", ans: "-\frac{pi}{6}" },
-          { expr: "arcsinleft(sinleft(\frac{3pi}{4}\right)\right)", ans: "\frac{pi}{4}" },
-          { expr: "arcsinleft(sinleft(\frac{5pi}{4}\right)\right)", ans: "-\frac{pi}{4}" },
-          { expr: "arcsinleft(sinleft(\frac{2pi}{3}\right)\right)", ans: "\frac{pi}{3}" },
-          { expr: "arcsinleft(sinleft(\frac{4pi}{3}\right)\right)", ans: "-\frac{pi}{3}" },
-          { expr: "arccosleft(cosleft(\frac{4pi}{3}\right)\right)", ans: "\frac{2pi}{3}" },
-          { expr: "arccosleft(cosleft(\frac{5pi}{3}\right)\right)", ans: "\frac{pi}{3}" },
-          { expr: "arccosleft(cosleft(\frac{7pi}{4}\right)\right)", ans: "\frac{pi}{4}" },
-          { expr: "arccosleft(cosleft(-\frac{pi}{6}\right)\right)", ans: "\frac{pi}{6}" },
-          { expr: "arccosleft(cosleft(\frac{7pi}{6}\right)\right)", ans: "\frac{5pi}{6}" },
-          { expr: "arctanleft(\tanleft(\frac{3pi}{4}\right)\right)", ans: "-\frac{pi}{4}" },
-          { expr: "arctanleft(\tanleft(\frac{5pi}{6}\right)\right)", ans: "-\frac{pi}{6}" },
-          { expr: "arctanleft(\tanleft(\frac{4pi}{3}\right)\right)", ans: "\frac{pi}{3}" },
-          { expr: "arctanleft(\tanleft(\frac{7pi}{6}\right)\right)", ans: "\frac{pi}{6}" },
+          { expr: "\\arcsin\\left(\\sin\\left(\\frac{5\\pi}{6}\\right)\\right)", ans: "\\frac{\\pi}{6}" },
+          { expr: "\\arcsin\\left(\\sin\\left(\\frac{7\\pi}{6}\\right)\\right)", ans: "-\\frac{\\pi}{6}" },
+          { expr: "\\arcsin\\left(\\sin\\left(\\frac{3\\pi}{4}\\right)\\right)", ans: "\\frac{\\pi}{4}" },
+          { expr: "\\arcsin\\left(\\sin\\left(\\frac{5\\pi}{4}\\right)\\right)", ans: "-\\frac{\\pi}{4}" },
+          { expr: "\\arcsin\\left(\\sin\\left(\\frac{2\\pi}{3}\\right)\\right)", ans: "\\frac{\\pi}{3}" },
+          { expr: "\\arcsin\\left(\\sin\\left(\\frac{4\\pi}{3}\\right)\\right)", ans: "-\\frac{\\pi}{3}" },
+          { expr: "\\arccos\\left(\\cos\\left(\\frac{4\\pi}{3}\\right)\\right)", ans: "\\frac{2\\pi}{3}" },
+          { expr: "\\arccos\\left(\\cos\\left(\\frac{5\\pi}{3}\\right)\\right)", ans: "\\frac{\\pi}{3}" },
+          { expr: "\\arccos\\left(\\cos\\left(\\frac{7\\pi}{4}\\right)\\right)", ans: "\\frac{\\pi}{4}" },
+          { expr: "\\arccos\\left(\\cos\\left(-\\frac{\\pi}{6}\\right)\\right)", ans: "\\frac{\\pi}{6}" },
+          { expr: "\\arccos\\left(\\cos\\left(\\frac{7\\pi}{6}\\right)\\right)", ans: "\\frac{5\\pi}{6}" },
+          { expr: "\\arctan\\left(\\tan\\left(\\frac{3\\pi}{4}\\right)\\right)", ans: "-\\frac{\\pi}{4}" },
+          { expr: "\\arctan\\left(\\tan\\left(\\frac{5\\pi}{6}\\right)\\right)", ans: "-\\frac{\\pi}{6}" },
+          { expr: "\\arctan\\left(\\tan\\left(\\frac{4\\pi}{3}\\right)\\right)", ans: "\\frac{\\pi}{3}" },
+          { expr: "\\arctan\\left(\\tan\\left(\\frac{7\\pi}{6}\\right)\\right)", ans: "\\frac{\\pi}{6}" },
         ]);
         const mult = rng.pick([1, 2, 3]);
-        const promptStr = mult === 1 ? item.expr : `${mult}left(${item.expr}\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}cdotleft(${item.ans}\right)`;
-        const wrongList = ["\frac{pi}{6}", "\frac{pi}{4}", "\frac{pi}{3}", "-\frac{pi}{6}", "-\frac{pi}{4}", "-\frac{pi}{3}"]
+        const promptStr = mult === 1 ? item.expr : `${mult}\\left(${item.expr}\\right)`;
+        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
+        const wrongList = [
+          "\\frac{\\pi}{6}",
+          "\\frac{\\pi}{4}",
+          "\\frac{\\pi}{3}",
+          "-\\frac{\\pi}{6}",
+          "-\\frac{\\pi}{4}",
+          "-\\frac{\\pi}{3}",
+        ]
           .filter((w) => w !== item.ans)
           .slice(0, 3);
-        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}cdotleft(${w}\right)$`));
+        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
@@ -695,16 +710,20 @@ export const simplifyingExpressionsUsingBasicTrigonometricIdentities: TopicDef =
         "将式子全部化为正弦与余弦进行化简：\\n\\n$$\\\\tan \\\\theta \\\\cos \\\\theta = \\\\left(\\\\frac{\\\\sin \\\\theta}{\\\\cos \\\\theta}\\\\right) \\\\cos \\\\theta = \\\\sin \\\\theta, \\\\quad \\\\sin \\\\theta \\\\csc \\\\theta = \\\\sin \\\\theta \\\\left(\\\\frac{1}{\\\\sin \\\\theta}\\\\right) = 1$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\theta", "t", "alpha", "\beta", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "alpha", "\\beta", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5]);
         const kTex = k === 1 ? "" : `${k}`;
         const item = rng.pick([
-          { expr: `${kTex}\tan(${v})\\cos(${v})`, ans: `${kTex}sin(${v})`, wrong: [`${kTex}cos(${v})`, `${kTex}cot(${v})`, "1"] },
-          { expr: `${kTex}cot(${v})\\sin(${v})`, ans: `${kTex}cos(${v})`, wrong: [`${kTex}sin(${v})`, `${kTex}\tan(${v})`, "1"] },
-          { expr: `${kTex}sin(${v})\\csc(${v})`, ans: `${k}`, wrong: ["0", `${kTex}cos(${v})`, "-1"] },
-          { expr: `${kTex}cos(${v})\\sec(${v})`, ans: `${k}`, wrong: ["0", `${kTex}sin(${v})`, "-1"] },
-          { expr: `${kTex}\tan(${v})\\cot(${v})`, ans: `${k}`, wrong: ["0", `${kTex}sec(${v})`, "-1"] },
-          { expr: `${kTex}\frac{sin(${v})}{\tan(${v})}`, ans: `${kTex}cos(${v})`, wrong: [`${kTex}sin(${v})`, "1", `${kTex}sec(${v})`] },
+          { expr: `${kTex}\\tan(${v})\\cos(${v})`, ans: `${kTex}\\sin(${v})`, wrong: [`${kTex}\\cos(${v})`, `${kTex}\\cot(${v})`, "1"] },
+          { expr: `${kTex}\\cot(${v})\\sin(${v})`, ans: `${kTex}\\cos(${v})`, wrong: [`${kTex}\\sin(${v})`, `${kTex}\\tan(${v})`, "1"] },
+          { expr: `${kTex}\\sin(${v})\\csc(${v})`, ans: `${k}`, wrong: ["0", `${kTex}\\cos(${v})`, "-1"] },
+          { expr: `${kTex}\\cos(${v})\\sec(${v})`, ans: `${k}`, wrong: ["0", `${kTex}\\sin(${v})`, "-1"] },
+          { expr: `${kTex}\\tan(${v})\\cot(${v})`, ans: `${k}`, wrong: ["0", `${kTex}\\sec(${v})`, "-1"] },
+          {
+            expr: `${kTex}\\frac{\\sin(${v})}{\\tan(${v})}`,
+            ans: `${kTex}\\cos(${v})`,
+            wrong: [`${kTex}\\sin(${v})`, "1", `${kTex}\\sec(${v})`],
+          },
         ]);
         return oneOf(
           rng,
@@ -723,16 +742,32 @@ export const simplifyingExpressionsUsingBasicTrigonometricIdentities: TopicDef =
         "通过将正切、余切、正割和余割转化为正弦和余弦来约简分式：\\n\\n$$\\\\frac{\\\\tan \\\\theta}{\\\\sec \\\\theta} = \\\\frac{\\\\sin \\\\theta / \\\\cos \\\\theta}{1 / \\\\cos \\\\theta} = \\\\sin \\\\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\theta", "t", "alpha", "\beta", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "alpha", "\\beta", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5]);
         const kTex = k === 1 ? "" : `${k}`;
         const item = rng.pick([
-          { expr: `${kTex}\frac{sec ${v}}{csc ${v}}`, ans: `${kTex}\tan ${v}`, wrong: [`${kTex}cot ${v}`, "1", `${kTex}cos ${v}`] },
-          { expr: `${kTex}\frac{csc ${v}}{sec ${v}}`, ans: `${kTex}cot ${v}`, wrong: [`${kTex}\tan ${v}`, "1", `${kTex}sin ${v}`] },
-          { expr: `${kTex}\frac{\tan ${v}}{sin ${v}}`, ans: `${kTex}sec ${v}`, wrong: [`${kTex}csc ${v}`, `${kTex}cos ${v}`, "1"] },
-          { expr: `${kTex}\frac{cot ${v}}{cos ${v}}`, ans: `${kTex}csc ${v}`, wrong: [`${kTex}sec ${v}`, `${kTex}sin ${v}`, "1"] },
-          { expr: `${kTex}sin ${v}\\sec ${v}`, ans: `${kTex}\tan ${v}`, wrong: [`${kTex}cot ${v}`, "1", `${kTex}cos ${v}`] },
-          { expr: `${kTex}cos ${v}\\csc ${v}`, ans: `${kTex}cot ${v}`, wrong: [`${kTex}\tan ${v}`, "1", `${kTex}sin ${v}`] },
+          {
+            expr: `${kTex}\\frac{\\sec ${v}}{\\csc ${v}}`,
+            ans: `${kTex}\\tan ${v}`,
+            wrong: [`${kTex}\\cot ${v}`, "1", `${kTex}\\cos ${v}`],
+          },
+          {
+            expr: `${kTex}\\frac{\\csc ${v}}{\\sec ${v}}`,
+            ans: `${kTex}\\cot ${v}`,
+            wrong: [`${kTex}\\tan ${v}`, "1", `${kTex}\\sin ${v}`],
+          },
+          {
+            expr: `${kTex}\\frac{\\tan ${v}}{\\sin ${v}}`,
+            ans: `${kTex}\\sec ${v}`,
+            wrong: [`${kTex}\\csc ${v}`, `${kTex}\\cos ${v}`, "1"],
+          },
+          {
+            expr: `${kTex}\\frac{\\cot ${v}}{\\cos ${v}}`,
+            ans: `${kTex}\\csc ${v}`,
+            wrong: [`${kTex}\\sec ${v}`, `${kTex}\\sin ${v}`, "1"],
+          },
+          { expr: `${kTex}\\sin ${v}\\sec ${v}`, ans: `${kTex}\\tan ${v}`, wrong: [`${kTex}\\cot ${v}`, "1", `${kTex}\\cos ${v}`] },
+          { expr: `${kTex}\\cos ${v}\\csc ${v}`, ans: `${kTex}\\cot ${v}`, wrong: [`${kTex}\\tan ${v}`, "1", `${kTex}\\sin ${v}`] },
         ]);
         return oneOf(
           rng,
@@ -769,23 +804,23 @@ export const simplifyingExpressionsUsingThePythagoreanIdentity: TopicDef = {
         "由 $\\\\sin^{2}\\\\theta + \\\\cos^{2}\\\\theta = 1$ 可得：\\n\\n$$1 - \\\\sin^{2}\\\\theta = \\\\cos^{2}\\\\theta, \\\\quad 1 - \\\\cos^{2}\\\\theta = \\\\sin^{2}\\\\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\theta", "t", "alpha", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
-          { expr: `1 - sin^2(${arg})`, ans: `cos^2(${arg})`, wrong: [`sin^2(${arg})`, `-cos^2(${arg})`, "1"] },
-          { expr: `1 - cos^2(${arg})`, ans: `sin^2(${arg})`, wrong: [`cos^2(${arg})`, `-sin^2(${arg})`, "1"] },
-          { expr: `sin^2(${arg}) + cos^2(${arg})`, ans: "1", wrong: ["0", "-1", `2sin^2(${arg})`] },
-          { expr: `sin^2(${arg}) + cos^2(${arg}) - 1`, ans: "0", wrong: ["1", "-1", `cos^2(${arg})`] },
-          { expr: `\frac{1 - cos^2(${arg})}{sin(${arg})}`, ans: `sin(${arg})`, wrong: [`cos(${arg})`, "1", `sin^2(${arg})`] },
-          { expr: `\frac{1 - sin^2(${arg})}{cos(${arg})}`, ans: `cos(${arg})`, wrong: [`sin(${arg})`, "1", `cos^2(${arg})`] },
+          { expr: `1 - \\sin^2(${arg})`, ans: `\\cos^2(${arg})`, wrong: [`\\sin^2(${arg})`, `-\\cos^2(${arg})`, "1"] },
+          { expr: `1 - \\cos^2(${arg})`, ans: `\\sin^2(${arg})`, wrong: [`\\cos^2(${arg})`, `-\\sin^2(${arg})`, "1"] },
+          { expr: `\\sin^2(${arg}) + \\cos^2(${arg})`, ans: "1", wrong: ["0", "-1", `2\\sin^2(${arg})`] },
+          { expr: `\\sin^2(${arg}) + \\cos^2(${arg}) - 1`, ans: "0", wrong: ["1", "-1", `\\cos^2(${arg})`] },
+          { expr: `\\frac{1 - \\cos^2(${arg})}{\\sin(${arg})}`, ans: `\\sin(${arg})`, wrong: [`\\cos(${arg})`, "1", `\\sin^2(${arg})`] },
+          { expr: `\\frac{1 - \\sin^2(${arg})}{\\cos(${arg})}`, ans: `\\cos(${arg})`, wrong: [`\\sin(${arg})`, "1", `\\cos^2(${arg})`] },
         ]);
         return oneOf(
           rng,
           t(`Simplify $${item.expr}$.`, `化简 $${item.expr}$。`),
           t(`$${item.ans}$`, `$${item.ans}$`),
           item.wrong.map((w) => t(`$${w}$`, `$${w}$`)),
-          t(`Using $sin^2 A + cos^2 A = 1$: the result is $${item.ans}$.`, `利用 $sin^2 A + cos^2 A = 1$：结果为 $${item.ans}$。`),
+          t(`Using $\\sin^2 A + \\cos^2 A = 1$: the result is $${item.ans}$.`, `利用 $\\sin^2 A + \\cos^2 A = 1$：结果为 $${item.ans}$。`),
         );
       },
     },
@@ -797,14 +832,14 @@ export const simplifyingExpressionsUsingThePythagoreanIdentity: TopicDef = {
         "共轭因式相乘形成平方差：\\n\\n$$(1 - \\\\cos\\\\theta)(1 + \\\\cos\\\\theta) = 1 - \\\\cos^{2}\\\\theta = \\\\sin^{2}\\\\theta, \\\\quad (1 - \\\\sin\\\\theta)(1 + \\\\sin\\\\theta) = 1 - \\\\sin^{2}\\\\theta = \\\\cos^{2}\\\\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\theta", "t", "alpha", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
-          { expr: `(1 - sin(${arg}))(1 + sin(${arg}))`, ans: `cos^2(${arg})`, wrong: [`sin^2(${arg})`, "1", `1 - sin(${arg})`] },
-          { expr: `(1 - cos(${arg}))(1 + cos(${arg}))`, ans: `sin^2(${arg})`, wrong: [`cos^2(${arg})`, "1", `1 - cos(${arg})`] },
-          { expr: `(cos(${arg}) - 1)(cos(${arg}) + 1)`, ans: `-sin^2(${arg})`, wrong: [`sin^2(${arg})`, `-1`, `cos^2(${arg})`] },
-          { expr: `(sin(${arg}) - 1)(sin(${arg}) + 1)`, ans: `-cos^2(${arg})`, wrong: [`cos^2(${arg})`, `-1`, `sin^2(${arg})`] },
+          { expr: `(1 - \\sin(${arg}))(1 + \\sin(${arg}))`, ans: `\\cos^2(${arg})`, wrong: [`\\sin^2(${arg})`, "1", `1 - \\sin(${arg})`] },
+          { expr: `(1 - \\cos(${arg}))(1 + \\cos(${arg}))`, ans: `\\sin^2(${arg})`, wrong: [`\\cos^2(${arg})`, "1", `1 - \\cos(${arg})`] },
+          { expr: `(\\cos(${arg}) - 1)(\\cos(${arg}) + 1)`, ans: `-\\sin^2(${arg})`, wrong: [`\\sin^2(${arg})`, `-1`, `\\cos^2(${arg})`] },
+          { expr: `(\\sin(${arg}) - 1)(\\sin(${arg}) + 1)`, ans: `-\\cos^2(${arg})`, wrong: [`\\cos^2(${arg})`, `-1`, `\\sin^2(${arg})`] },
         ]);
         return oneOf(
           rng,
@@ -844,29 +879,40 @@ export const alternateFormsOfThePythagoreanIdentity: TopicDef = {
         "识别高次幂中的平方差公式：\\n\\n$$\\\\sin^{4}\\\\theta - \\\\cos^{4}\\\\theta = (\\\\sin^{2}\\\\theta - \\\\cos^{2}\\\\theta)(\\\\sin^{2}\\\\theta + \\\\cos^{2}\\\\theta) = \\\\sin^{2}\\\\theta - \\\\cos^{2}\\\\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\theta", "t", "alpha", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
           {
-            expr: `cos^4(${arg}) - sin^4(${arg})`,
-            ans: `cos^2(${arg}) - sin^2(${arg})`,
-            wrong: ["1", `sin^2(${arg}) - cos^2(${arg})`, `2cos^2(${arg})`],
+            expr: `\\cos^4(${arg}) - \\sin^4(${arg})`,
+            ans: `\\cos^2(${arg}) - \\sin^2(${arg})`,
+            wrong: ["1", `\\sin^2(${arg}) - \\cos^2(${arg})`, `2\\cos^2(${arg})`],
           },
           {
-            expr: `sin^4(${arg}) - cos^4(${arg})`,
-            ans: `sin^2(${arg}) - cos^2(${arg})`,
-            wrong: ["-1", `cos^2(${arg}) - sin^2(${arg})`, `2sin^2(${arg})`],
+            expr: `\\sin^4(${arg}) - \\cos^4(${arg})`,
+            ans: `\\sin^2(${arg}) - \\cos^2(${arg})`,
+            wrong: ["-1", `\\cos^2(${arg}) - \\sin^2(${arg})`, `2\\sin^2(${arg})`],
           },
-          { expr: `\frac{cos^4(${arg}) - sin^4(${arg})}{cos^2(${arg}) - sin^2(${arg})}`, ans: "1", wrong: ["0", "-1", `cos^2(${arg})`] },
-          { expr: `(1 - sin^2(${arg}))^2 + 2sin^2(${arg})cos^2(${arg}) + sin^4(${arg})`, ans: "1", wrong: ["0", `cos^2(${arg})`, "2"] },
+          {
+            expr: `\\frac{\\cos^4(${arg}) - \\sin^4(${arg})}{\\cos^2(${arg}) - \\sin^2(${arg})}`,
+            ans: "1",
+            wrong: ["0", "-1", `\\cos^2(${arg})`],
+          },
+          {
+            expr: `(1 - \\sin^2(${arg}))^2 + 2\\sin^2(${arg})\\cos^2(${arg}) + \\sin^4(${arg})`,
+            ans: "1",
+            wrong: ["0", `\\cos^2(${arg})`, "2"],
+          },
         ]);
         return oneOf(
           rng,
           t(`Simplify $${item.expr}$.`, `化简 $${item.expr}$。`),
           t(`$${item.ans}$`, `$${item.ans}$`),
           item.wrong.map((w) => t(`$${w}$`, `$${w}$`)),
-          t(`Factor and apply $sin^2 + cos^2 = 1$: result is $${item.ans}$.`, `因式分解并利用 $sin^2 + cos^2 = 1$：结果为 $${item.ans}$。`),
+          t(
+            `Factor and apply $\\sin^2 + \\cos^2 = 1$: result is $${item.ans}$.`,
+            `因式分解并利用 $\\sin^2 + \\cos^2 = 1$：结果为 $${item.ans}$。`,
+          ),
         );
       },
     },
@@ -878,14 +924,22 @@ export const alternateFormsOfThePythagoreanIdentity: TopicDef = {
         "代换 $1 - \\\\cos^{2}\\\\theta = \\\\sin^{2}\\\\theta$ 以约去分式中的公因式：\\n\\n$$\\\\frac{1 - \\\\cos^{2}\\\\theta}{\\\\sin \\\\theta} = \\\\frac{\\\\sin^{2}\\\\theta}{\\\\sin \\\\theta} = \\\\sin \\\\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\theta", "t", "alpha", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
-          { expr: `\frac{1 - sin^2(${arg})}{cos(${arg})}`, ans: `cos(${arg})`, wrong: [`sin(${arg})`, "1", `cos^2(${arg})`] },
-          { expr: `\frac{1 - cos^2(${arg})}{sin(${arg})}`, ans: `sin(${arg})`, wrong: [`cos(${arg})`, "1", `sin^2(${arg})`] },
-          { expr: `\frac{1 - cos^2(${arg})}{1 - sin^2(${arg})}`, ans: `\tan^2(${arg})`, wrong: [`cot^2(${arg})`, "1", `sin^2(${arg})`] },
-          { expr: `\frac{1 - sin^2(${arg})}{1 - cos^2(${arg})}`, ans: `cot^2(${arg})`, wrong: [`\tan^2(${arg})`, "1", `cos^2(${arg})`] },
+          { expr: `\\frac{1 - \\sin^2(${arg})}{\\cos(${arg})}`, ans: `\\cos(${arg})`, wrong: [`\\sin(${arg})`, "1", `\\cos^2(${arg})`] },
+          { expr: `\\frac{1 - \\cos^2(${arg})}{\\sin(${arg})}`, ans: `\\sin(${arg})`, wrong: [`\\cos(${arg})`, "1", `\\sin^2(${arg})`] },
+          {
+            expr: `\\frac{1 - \\cos^2(${arg})}{1 - \\sin^2(${arg})}`,
+            ans: `\\tan^2(${arg})`,
+            wrong: [`\\cot^2(${arg})`, "1", `\\sin^2(${arg})`],
+          },
+          {
+            expr: `\\frac{1 - \\sin^2(${arg})}{1 - \\cos^2(${arg})}`,
+            ans: `\\cot^2(${arg})`,
+            wrong: [`\\tan^2(${arg})`, "1", `\\cos^2(${arg})`],
+          },
         ]);
         return oneOf(
           rng,
@@ -922,14 +976,14 @@ export const simplifyingExpressionsUsingTheSecantTangentIdentity: TopicDef = {
         "将 $\\\\sin^{2}\\\\theta + \\\\cos^{2}\\\\theta = 1$ 两边同除以 $\\\\cos^{2}\\\\theta$ 得 $1 + \\\\tan^{2}\\\\theta = \\\\sec^{2}\\\\theta$。因此：\\n\\n$$\\\\sec^{2}\\\\theta - \\\\tan^{2}\\\\theta = 1, \\\\quad \\\\sec^{2}\\\\theta - 1 = \\\\tan^{2}\\\\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\theta", "t", "alpha", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
-          { expr: `sec^2(${arg}) - \tan^2(${arg})`, ans: "1", wrong: ["-1", "0", `cos^2(${arg})`] },
-          { expr: `\tan^2(${arg}) - sec^2(${arg})`, ans: "-1", wrong: ["1", "0", `-cos^2(${arg})`] },
-          { expr: `1 + \tan^2(${arg})`, ans: `sec^2(${arg})`, wrong: [`csc^2(${arg})`, "1", `sin^2(${arg})`] },
-          { expr: `sec^2(${arg}) - 1`, ans: `\tan^2(${arg})`, wrong: [`cot^2(${arg})`, "1", `cos^2(${arg})`] },
+          { expr: `\\sec^2(${arg}) - \\tan^2(${arg})`, ans: "1", wrong: ["-1", "0", `\\cos^2(${arg})`] },
+          { expr: `\\tan^2(${arg}) - \\sec^2(${arg})`, ans: "-1", wrong: ["1", "0", `-\\cos^2(${arg})`] },
+          { expr: `1 + \\tan^2(${arg})`, ans: `\\sec^2(${arg})`, wrong: [`\\csc^2(${arg})`, "1", `\\sin^2(${arg})`] },
+          { expr: `\\sec^2(${arg}) - 1`, ans: `\\tan^2(${arg})`, wrong: [`\\cot^2(${arg})`, "1", `\\cos^2(${arg})`] },
         ]);
         return oneOf(
           rng,
@@ -937,8 +991,8 @@ export const simplifyingExpressionsUsingTheSecantTangentIdentity: TopicDef = {
           t(`$${item.ans}$`, `$${item.ans}$`),
           item.wrong.map((w) => t(`$${w}$`, `$${w}$`)),
           t(
-            `By the secant-tangent identity $1 + \tan^2 A = sec^2 A$: $${item.ans}$.`,
-            `由正割-正切恒等式 $1 + \tan^2 A = sec^2 A$：$${item.ans}$。`,
+            `By the secant-tangent identity $1 + \\tan^2 A = \\sec^2 A$: $${item.ans}$.`,
+            `由正割-正切恒等式 $1 + \\tan^2 A = \\sec^2 A$：$${item.ans}$。`,
           ),
         );
       },
@@ -951,21 +1005,29 @@ export const simplifyingExpressionsUsingTheSecantTangentIdentity: TopicDef = {
         "含 $\\\\sec^{2}\\\\theta - 1$ 或 $\\\\sec^{2}\\\\theta - \\\\tan^{2}\\\\theta$ 的分式可直接化简：\\n\\n$$\\\\frac{\\\\sec^{2}\\\\theta - 1}{\\\\tan \\\\theta} = \\\\frac{\\\\tan^{2}\\\\theta}{\\\\tan \\\\theta} = \\\\tan \\\\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\theta", "t", "alpha", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
-          { expr: `\frac{sec^2(${arg}) - 1}{\tan(${arg})}`, ans: `\tan(${arg})`, wrong: [`cot(${arg})`, "1", `sec(${arg})`] },
-          { expr: `\frac{sec^2(${arg}) - \tan^2(${arg})}{sec(${arg})}`, ans: `cos(${arg})`, wrong: [`sec(${arg})`, "1", `sin(${arg})`] },
-          { expr: `\frac{sec^2(${arg}) - \tan^2(${arg})}{\tan(${arg})}`, ans: `cot(${arg})`, wrong: [`\tan(${arg})`, "1", `cos(${arg})`] },
-          { expr: `\frac{1 + \tan^2(${arg})}{sec(${arg})}`, ans: `sec(${arg})`, wrong: [`cos(${arg})`, "1", `\tan(${arg})`] },
+          { expr: `\\frac{\\sec^2(${arg}) - 1}{\\tan(${arg})}`, ans: `\\tan(${arg})`, wrong: [`\\cot(${arg})`, "1", `\\sec(${arg})`] },
+          {
+            expr: `\\frac{\\sec^2(${arg}) - \\tan^2(${arg})}{\\sec(${arg})}`,
+            ans: `\\cos(${arg})`,
+            wrong: [`\\sec(${arg})`, "1", `\\sin(${arg})`],
+          },
+          {
+            expr: `\\frac{\\sec^2(${arg}) - \\tan^2(${arg})}{\\tan(${arg})}`,
+            ans: `\\cot(${arg})`,
+            wrong: [`\\tan(${arg})`, "1", `\\cos(${arg})`],
+          },
+          { expr: `\\frac{1 + \\tan^2(${arg})}{\\sec(${arg})}`, ans: `\\sec(${arg})`, wrong: [`\\cos(${arg})`, "1", `\\tan(${arg})`] },
         ]);
         return oneOf(
           rng,
           t(`Simplify $${item.expr}$.`, `化简 $${item.expr}$。`),
           t(`$${item.ans}$`, `$${item.ans}$`),
           item.wrong.map((w) => t(`$${w}$`, `$${w}$`)),
-          t(`Apply $sec^2 A - \tan^2 A = 1$: result is $${item.ans}$.`, `应用 $sec^2 A - \tan^2 A = 1$：结果为 $${item.ans}$。`),
+          t(`Apply $\\sec^2 A - \\tan^2 A = 1$: result is $${item.ans}$.`, `应用 $\\sec^2 A - \\tan^2 A = 1$：结果为 $${item.ans}$。`),
         );
       },
     },
@@ -995,20 +1057,24 @@ export const alternateFormsOfTheSecantTangentIdentity: TopicDef = {
         "应用平方差公式：\\n\\n$$\\\\sec^{4}\\\\theta - \\\\tan^{4}\\\\theta = (\\\\sec^{2}\\\\theta - \\\\tan^{2}\\\\theta)(\\\\sec^{2}\\\\theta + \\\\tan^{2}\\\\theta) = \\\\sec^{2}\\\\theta + \\\\tan^{2}\\\\theta$$",
       ),
       generate(rng) {
-        const v = rng.pick(["x", "\theta", "t", "alpha", "u"]);
+        const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const arg = k === 1 ? v : `${k}${v}`;
         const item = rng.pick([
           {
-            expr: `sec^4(${arg}) - \tan^4(${arg})`,
-            ans: `sec^2(${arg}) + \tan^2(${arg})`,
-            wrong: ["1", `sec^2(${arg}) - \tan^2(${arg})`, "0"],
+            expr: `\\sec^4(${arg}) - \\tan^4(${arg})`,
+            ans: `\\sec^2(${arg}) + \\tan^2(${arg})`,
+            wrong: ["1", `\\sec^2(${arg}) - \\tan^2(${arg})`, "0"],
           },
-          { expr: `\frac{sec^4(${arg}) - \tan^4(${arg})}{sec^2(${arg}) + \tan^2(${arg})}`, ans: "1", wrong: ["-1", "0", `sec^2(${arg})`] },
           {
-            expr: `\tan^4(${arg}) - sec^4(${arg})`,
-            ans: `-(sec^2(${arg}) + \tan^2(${arg}))`,
-            wrong: ["-1", "1", `sec^2(${arg}) + \tan^2(${arg})`],
+            expr: `\\frac{\\sec^4(${arg}) - \\tan^4(${arg})}{\\sec^2(${arg}) + \\tan^2(${arg})}`,
+            ans: "1",
+            wrong: ["-1", "0", `\\sec^2(${arg})`],
+          },
+          {
+            expr: `\\tan^4(${arg}) - \\sec^4(${arg})`,
+            ans: `-(\\sec^2(${arg}) + \\tan^2(${arg}))`,
+            wrong: ["-1", "1", `\\sec^2(${arg}) + \\tan^2(${arg})`],
           },
         ]);
         return oneOf(
@@ -1017,8 +1083,8 @@ export const alternateFormsOfTheSecantTangentIdentity: TopicDef = {
           t(`$${item.ans}$`, `$${item.ans}$`),
           item.wrong.map((w) => t(`$${w}$`, `$${w}$`)),
           t(
-            `Factor as a difference of squares: $(sec^2 A - \tan^2 A)(sec^2 A + \tan^2 A) = ${item.ans}$.`,
-            `分解为平方差：$(sec^2 A - \tan^2 A)(sec^2 A + \tan^2 A) = ${item.ans}$。`,
+            `Factor as a difference of squares: $(\\sec^2 A - \\tan^2 A)(\\sec^2 A + \\tan^2 A) = ${item.ans}$.`,
+            `分解为平方差：$(\\sec^2 A - \\tan^2 A)(\\sec^2 A + \\tan^2 A) = ${item.ans}$。`,
           ),
         );
       },
@@ -1585,33 +1651,33 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
       ),
       generate(rng) {
         const item = rng.pick([
-          { deg: 15, decomp: "45° − 30°", ans: "\frac{sqrt{6} - sqrt{2}}{4}" },
-          { deg: 75, decomp: "45° + 30°", ans: "\frac{sqrt{6} + sqrt{2}}{4}" },
-          { deg: 105, decomp: "60° + 45°", ans: "\frac{sqrt{6} + sqrt{2}}{4}" },
-          { deg: 165, decomp: "180° − 15°", ans: "\frac{sqrt{6} - sqrt{2}}{4}" },
-          { deg: 195, decomp: "180° + 15°", ans: "-\frac{sqrt{6} - sqrt{2}}{4}" },
-          { deg: 255, decomp: "270° − 15°", ans: "-\frac{sqrt{6} + sqrt{2}}{4}" },
-          { deg: 285, decomp: "270° + 15°", ans: "-\frac{sqrt{6} + sqrt{2}}{4}" },
-          { deg: 345, decomp: "360° − 15°", ans: "-\frac{sqrt{6} - sqrt{2}}{4}" },
-          { deg: -15, decomp: "−15°", ans: "-\frac{sqrt{6} - sqrt{2}}{4}" },
-          { deg: -75, decomp: "−75°", ans: "-\frac{sqrt{6} + sqrt{2}}{4}" },
-          { deg: 375, decomp: "360° + 15°", ans: "\frac{sqrt{6} - sqrt{2}}{4}" },
-          { deg: 435, decomp: "360° + 75°", ans: "\frac{sqrt{6} + sqrt{2}}{4}" },
+          { deg: 15, decomp: "45^\\circ - 30^\\circ", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: 75, decomp: "45^\\circ + 30^\\circ", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
+          { deg: 105, decomp: "60^\\circ + 45^\\circ", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
+          { deg: 165, decomp: "180^\\circ - 15^\\circ", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: 195, decomp: "180^\\circ + 15^\\circ", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: 255, decomp: "270^\\circ - 15^\\circ", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
+          { deg: 285, decomp: "270^\\circ + 15^\\circ", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
+          { deg: 345, decomp: "360^\\circ - 15^\\circ", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: -15, decomp: "-15^\\circ", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: -75, decomp: "-75^\\circ", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
+          { deg: 375, decomp: "360^\\circ + 15^\\circ", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: 435, decomp: "360^\\circ + 75^\\circ", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
         ]);
         const mult = rng.pick([1, 2, 4]);
-        const promptStr = mult === 1 ? `sin(${item.deg}^circ)` : `${mult}sin(${item.deg}^circ)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}cdotleft(${item.ans}\right)`;
+        const promptStr = mult === 1 ? `\\sin(${item.deg}^\\circ)` : `${mult}\\sin(${item.deg}^\\circ)`;
+        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
         const wrongList = [
-          "\frac{sqrt{6} + sqrt{2}}{4}",
-          "\frac{sqrt{6} - sqrt{2}}{4}",
-          "-\frac{sqrt{6} + sqrt{2}}{4}",
-          "-\frac{sqrt{6} - sqrt{2}}{4}",
-          "\frac{sqrt{3}}{2}",
-          "\frac{sqrt{2}}{2}",
+          "\\frac{\\sqrt{6} + \\sqrt{2}}{4}",
+          "\\frac{\\sqrt{6} - \\sqrt{2}}{4}",
+          "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}",
+          "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}",
+          "\\frac{\\sqrt{3}}{2}",
+          "\\frac{\\sqrt{2}}{2}",
         ]
           .filter((w) => w !== item.ans)
           .slice(0, 3);
-        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}cdotleft(${w}\right)$`));
+        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
@@ -1633,29 +1699,29 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
       ),
       generate(rng) {
         const item = rng.pick([
-          { frac: "\frac{5pi}{12}", ans: "\frac{sqrt{6} + sqrt{2}}{4}", decomp: "pi/4 + pi/6" },
-          { frac: "\frac{pi}{12}", ans: "\frac{sqrt{6} - sqrt{2}}{4}", decomp: "pi/4 - pi/6" },
-          { frac: "\frac{7pi}{12}", ans: "\frac{sqrt{6} + sqrt{2}}{4}", decomp: "pi/3 + pi/4" },
-          { frac: "\frac{11pi}{12}", ans: "\frac{sqrt{6} - sqrt{2}}{4}", decomp: "pi - pi/12" },
-          { frac: "\frac{13pi}{12}", ans: "-\frac{sqrt{6} + sqrt{2}}{4}", decomp: "pi + pi/12" },
-          { frac: "\frac{17pi}{12}", ans: "-\frac{sqrt{6} + sqrt{2}}{4}", decomp: "pi + 5pi/12" },
-          { frac: "\frac{19pi}{12}", ans: "-\frac{sqrt{6} - sqrt{2}}{4}", decomp: "2pi - 5pi/12" },
-          { frac: "\frac{23pi}{12}", ans: "-\frac{sqrt{6} - sqrt{2}}{4}", decomp: "2pi - pi/12" },
-          { frac: "-\frac{pi}{12}", ans: "-\frac{sqrt{6} - sqrt{2}}{4}", decomp: "-(pi/4 - pi/6)" },
-          { frac: "-\frac{5pi}{12}", ans: "-\frac{sqrt{6} + sqrt{2}}{4}", decomp: "-(pi/4 + pi/6)" },
-          { frac: "\frac{25pi}{12}", ans: "\frac{sqrt{6} + sqrt{2}}{4}", decomp: "2pi + pi/12" },
-          { frac: "\frac{29pi}{12}", ans: "\frac{sqrt{6} - sqrt{2}}{4}", decomp: "2pi + 5pi/12" },
+          { frac: "\\frac{5\\pi}{12}", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}", decomp: "\\frac{\\pi}{4} + \\frac{\\pi}{6}" },
+          { frac: "\\frac{\\pi}{12}", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}", decomp: "\\frac{\\pi}{4} - \\frac{\\pi}{6}" },
+          { frac: "\\frac{7\\pi}{12}", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}", decomp: "\\frac{\\pi}{3} + \\frac{\\pi}{4}" },
+          { frac: "\\frac{11\\pi}{12}", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}", decomp: "\\pi - \\frac{\\pi}{12}" },
+          { frac: "\\frac{13\\pi}{12}", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}", decomp: "\\pi + \\frac{\\pi}{12}" },
+          { frac: "\\frac{17\\pi}{12}", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}", decomp: "\\pi + \\frac{5\\pi}{12}" },
+          { frac: "\\frac{19\\pi}{12}", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}", decomp: "2\\pi - \\frac{5\\pi}{12}" },
+          { frac: "\\frac{23\\pi}{12}", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}", decomp: "2\\pi - \\frac{\\pi}{12}" },
+          { frac: "-\\frac{\\pi}{12}", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}", decomp: "-(\\frac{\\pi}{4} - \\frac{\\pi}{6})" },
+          { frac: "-\\frac{5\\pi}{12}", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}", decomp: "-(\\frac{\\pi}{4} + \\frac{\\pi}{6})" },
+          { frac: "\\frac{25\\pi}{12}", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}", decomp: "2\\pi + \\frac{\\pi}{12}" },
+          { frac: "\\frac{29\\pi}{12}", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}", decomp: "2\\pi + \\frac{5\\pi}{12}" },
         ]);
         const mult = rng.pick([1, 2, 4]);
-        const promptStr = mult === 1 ? `sinleft(${item.frac}\right)` : `${mult}sinleft(${item.frac}\right)`;
-        const ansStr = mult === 1 ? item.ans : `${mult}cdotleft(${item.ans}\right)`;
+        const promptStr = mult === 1 ? `\\sin\\left(${item.frac}\\right)` : `${mult}\\sin\\left(${item.frac}\\right)`;
+        const ansStr = mult === 1 ? item.ans : `${mult}\\cdot\\left(${item.ans}\\right)`;
         const wrongList = [
-          "\frac{sqrt{6} + sqrt{2}}{4}",
-          "\frac{sqrt{6} - sqrt{2}}{4}",
-          "-\frac{sqrt{6} + sqrt{2}}{4}",
-          "-\frac{sqrt{6} - sqrt{2}}{4}",
+          "\\frac{\\sqrt{6} + \\sqrt{2}}{4}",
+          "\\frac{\\sqrt{6} - \\sqrt{2}}{4}",
+          "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}",
+          "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}",
         ].filter((w) => w !== item.ans);
-        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}cdotleft(${w}\right)$`));
+        const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
         return oneOf(
           rng,
           t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
@@ -1695,20 +1761,20 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
       ),
       generate(rng) {
         const item = rng.pick([
-          { deg: 15, decomp: "45° − 30°", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
-          { deg: 75, decomp: "45° + 30°", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
-          { deg: 105, decomp: "60° + 45°", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
-          { deg: 165, decomp: "180° − 15°", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
-          { deg: 195, decomp: "180° + 15°", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
-          { deg: 255, decomp: "270° − 15°", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
-          { deg: 285, decomp: "270° + 15°", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
-          { deg: 345, decomp: "360° − 15°", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
-          { deg: -15, decomp: "−15°", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
-          { deg: -75, decomp: "−75°", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
-          { deg: -105, decomp: "−105°", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
-          { deg: -165, decomp: "−165°", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
-          { deg: 375, decomp: "360° + 15°", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
-          { deg: 435, decomp: "360° + 75°", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: 15, decomp: "45^\\circ - 30^\\circ", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
+          { deg: 75, decomp: "45^\\circ + 30^\\circ", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: 105, decomp: "60^\\circ + 45^\\circ", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: 165, decomp: "180^\\circ - 15^\\circ", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
+          { deg: 195, decomp: "180^\\circ + 15^\\circ", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
+          { deg: 255, decomp: "270^\\circ - 15^\\circ", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: 285, decomp: "270^\\circ + 15^\\circ", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: 345, decomp: "360^\\circ - 15^\\circ", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
+          { deg: -15, decomp: "-15^\\circ", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
+          { deg: -75, decomp: "-75^\\circ", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: -105, decomp: "-105^\\circ", ans: "-\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
+          { deg: -165, decomp: "-165^\\circ", ans: "-\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
+          { deg: 375, decomp: "360^\\circ + 15^\\circ", ans: "\\frac{\\sqrt{6} + \\sqrt{2}}{4}" },
+          { deg: 435, decomp: "360^\\circ + 75^\\circ", ans: "\\frac{\\sqrt{6} - \\sqrt{2}}{4}" },
         ]);
         const mult = rng.pick([1, 2, 4]);
         const promptStr = mult === 1 ? `\\cos(${item.deg}^\\circ)` : `${mult}\\cos(${item.deg}^\\circ)`;
@@ -1807,18 +1873,18 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForTangent: TopicDe
       ),
       generate(rng) {
         const item = rng.pick([
-          { deg: 15, ans: "2 - \\sqrt{3}", decomp: "45° − 30°" },
-          { deg: 75, ans: "2 + \\sqrt{3}", decomp: "45° + 30°" },
-          { deg: 105, ans: "-2 - \\sqrt{3}", decomp: "60° + 45°" },
-          { deg: 165, ans: "-2 + \\sqrt{3}", decomp: "180° − 15°" },
-          { deg: 195, ans: "2 - \\sqrt{3}", decomp: "180° + 15°" },
-          { deg: 255, ans: "2 + \\sqrt{3}", decomp: "270° − 15°" },
-          { deg: 285, ans: "-2 - \\sqrt{3}", decomp: "270° + 15°" },
-          { deg: 345, ans: "-2 + \\sqrt{3}", decomp: "360° − 15°" },
-          { deg: -15, ans: "-2 + \\sqrt{3}", decomp: "−15°" },
-          { deg: -75, ans: "-2 - \\sqrt{3}", decomp: "−75°" },
-          { deg: 375, ans: "2 - \\sqrt{3}", decomp: "360° + 15°" },
-          { deg: 435, ans: "2 + \\sqrt{3}", decomp: "360° + 75°" },
+          { deg: 15, ans: "2 - \\sqrt{3}", decomp: "45^\\circ - 30^\\circ" },
+          { deg: 75, ans: "2 + \\sqrt{3}", decomp: "45^\\circ + 30^\\circ" },
+          { deg: 105, ans: "-2 - \\sqrt{3}", decomp: "60^\\circ + 45^\\circ" },
+          { deg: 165, ans: "-2 + \\sqrt{3}", decomp: "180^\\circ - 15^\\circ" },
+          { deg: 195, ans: "2 - \\sqrt{3}", decomp: "180^\\circ + 15^\\circ" },
+          { deg: 255, ans: "2 + \\sqrt{3}", decomp: "270^\\circ - 15^\\circ" },
+          { deg: 285, ans: "-2 - \\sqrt{3}", decomp: "270^\\circ + 15^\\circ" },
+          { deg: 345, ans: "-2 + \\sqrt{3}", decomp: "360^\\circ - 15^\\circ" },
+          { deg: -15, ans: "-2 + \\sqrt{3}", decomp: "-15^\\circ" },
+          { deg: -75, ans: "-2 - \\sqrt{3}", decomp: "-75^\\circ" },
+          { deg: 375, ans: "2 - \\sqrt{3}", decomp: "360^\\circ + 15^\\circ" },
+          { deg: 435, ans: "2 + \\sqrt{3}", decomp: "360^\\circ + 75^\\circ" },
         ]);
         const mult = rng.pick([1, 2, 3]);
         const promptStr = mult === 1 ? `\\tan(${item.deg}^\\circ)` : `${mult}\\tan(${item.deg}^\\circ)`;
