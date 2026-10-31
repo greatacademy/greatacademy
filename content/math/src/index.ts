@@ -25,6 +25,7 @@ import { angleTopics } from "./topics/angles.ts";
 import { areaTopics } from "./topics/area.ts";
 import { bivariateStatisticsTopics } from "./topics/bivariate-statistics.ts";
 import { calculusIHyperbolicTopics } from "./topics/calculus-i-hyperbolic.ts";
+import { calculusILimitTopics } from "./topics/calculus-i-limits.ts";
 import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
@@ -163,6 +164,7 @@ export const math: SubjectDef = {
     ...precalculusRandomVariableTopics,
     ...precalculusStatisticsTopics,
     ...calculusIHyperbolicTopics,
+    ...calculusILimitTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
