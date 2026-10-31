@@ -956,5 +956,372 @@ export const geometry: CourseDef = {
   ],
 };
 
+/** algebraII is the high-school Algebra II course. */
+export const algebraII: CourseDef = {
+  id: "algebra-ii",
+  title: t("Algebra II", "代数 II"),
+  description: t(
+    "The real numbers and an introduction to complex numbers; polynomials, their factoring, division, equations, theorems and graphs; functions and their graph transformations; logarithms, exponential and logarithmic equations, graphs and models; rational and radical expressions and functions; parabolas as conic sections; the unit circle, special trigonometric ratios and trigonometry with general triangles; and the graphs, properties, transformations and models of trigonometric functions.",
+    "实数与复数入门；多项式及其因式分解、除法、方程、定理与图象；函数及其图象变换；对数，指数与对数方程、图象与模型；有理式与根式及其函数；作为圆锥曲线的抛物线；单位圆、特殊三角比与一般三角形中的三角学；三角函数的图象、性质、变换与模型。",
+  ),
+  units: [
+    {
+      title: t("Number Systems", "数系"),
+      modules: [
+        {
+          title: t("The Real Number System", "实数系"),
+          topics: [
+            "the-real-number-system",
+            "writing-repeating-decimals-as-fractions",
+            "sums-and-products-of-rational-and-irrational-numbers",
+          ],
+        },
+        {
+          title: t("Introduction to Complex Numbers", "复数入门"),
+          topics: [
+            "imaginary-numbers",
+            "quadratic-equations-with-purely-imaginary-solutions",
+            "complex-numbers",
+            "adding-and-subtracting-complex-numbers",
+            "multiplying-complex-numbers",
+            "solving-quadratic-equations-with-complex-roots",
+            "cyclic-property-of-the-imaginary-unit",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Polynomials", "多项式"),
+      modules: [
+        {
+          title: t("Polynomials", "多项式"),
+          topics: [
+            "the-least-common-multiple-of-two-monomials",
+            "the-least-common-multiple-of-two-polynomials",
+            "describing-relationships-using-polynomial-identities",
+          ],
+        },
+        {
+          title: t("Factoring Polynomials", "多项式的因式分解"),
+          topics: [
+            "further-factoring-of-polynomials-using-gcfs",
+            "factoring-higher-order-polynomials-as-a-difference-of-squares",
+            "factoring-cubic-expressions-by-grouping",
+            "factoring-sums-and-differences-of-cubes",
+            "factoring-biquadratic-expressions",
+          ],
+        },
+        {
+          title: t("Dividing Polynomials", "多项式除法"),
+          topics: [
+            "splitting-rational-expressions-into-terms",
+            "dividing-polynomials-using-synthetic-division",
+            "dividing-polynomials-by-linear-binomials-using-long-division",
+            "dividing-polynomials-using-long-division",
+            "dividing-polynomials-by-manipulating-rational-expressions",
+          ],
+        },
+        {
+          title: t("Polynomial Equations", "多项式方程"),
+          topics: [
+            "determining-the-roots-of-polynomials",
+            "solving-polynomial-equations-using-the-gcf",
+            "solving-cubic-equations-by-grouping",
+            "solving-biquadratic-equations",
+          ],
+        },
+        {
+          title: t("Polynomial Theorems", "多项式定理"),
+          topics: [
+            "the-factor-theorem",
+            "determining-polynomial-coefficients-using-the-factor-theorem",
+            "factoring-cubic-polynomials-using-the-factor-theorem",
+            "factoring-quartic-polynomials-using-the-factor-theorem",
+            "multiplicities-of-the-roots-of-polynomials",
+            "finding-multiplicities-of-the-roots-of-quartic-polynomials-by-factoring",
+            "the-remainder-theorem",
+            "the-rational-roots-theorem",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Functions", "函数"),
+      modules: [
+        {
+          title: t("Functions", "函数"),
+          topics: [
+            "local-extrema",
+            "one-to-one-functions",
+            "graphs-of-inverse-functions",
+            "domain-and-range-of-inverse-functions",
+            "invertible-functions",
+            "calculating-the-inverse-of-a-function",
+            "inverses-of-quadratic-functions",
+            "plotting-x-as-a-function-of-y",
+            "periodic-functions",
+            "even-and-odd-functions",
+            "products-of-even-and-odd-functions",
+            "unbounded-behavior-of-functions-near-a-point",
+            "the-average-rate-of-change-of-a-function",
+          ],
+        },
+        {
+          title: t("Graph Transformations of Functions", "函数图象的变换"),
+          topics: [
+            "vertical-translations-of-functions",
+            "horizontal-translations-of-functions",
+            "vertical-stretches-of-functions",
+            "horizontal-stretches-of-functions",
+            "combining-graph-transformations-two-operations",
+            "combining-graph-transformations-three-or-more-operations",
+            "constructing-functions-using-transformations",
+            "vertical-reflections-of-functions",
+            "horizontal-reflections-of-functions",
+            "combining-reflections-with-other-graph-transformations",
+            "finding-points-on-transformed-curves",
+            "the-domain-and-range-of-transformed-functions",
+            "absolute-value-graph-transformations",
+          ],
+        },
+        {
+          title: t("Graphs of Polynomials", "多项式的图象"),
+          topics: [
+            "graphing-elementary-cubic-functions",
+            "graphing-cubic-curves-containing-three-distinct-real-roots",
+            "graphing-cubic-curves-containing-a-double-root",
+            "graphing-cubic-curves-containing-one-distinct-real-root",
+            "graphing-general-polynomials",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Exponentials & Logarithms", "指数与对数"),
+      modules: [
+        {
+          title: t("Introduction to Logarithms", "对数入门"),
+          topics: [
+            "converting-between-exponential-and-logarithmic-form",
+            "evaluating-logarithms",
+            "natural-logarithm",
+            "common-logarithm",
+            "simplifying-logarithmic-expressions",
+          ],
+        },
+        {
+          title: t("The Laws of Logarithms", "对数运算法则"),
+          topics: [
+            "product-rule-for-logarithms",
+            "quotient-rule-for-logarithms",
+            "power-rule-for-logarithms",
+            "combining-laws-of-logarithms",
+            "change-of-base-formula",
+          ],
+        },
+        {
+          title: t("Exponential Equations", "指数方程"),
+          topics: [
+            "solving-exponential-equations-using-logarithms",
+            "solving-equations-containing-the-exponential-function",
+            "solving-exponential-equations-with-different-bases-using-logarithms",
+            "solving-exponential-equations-using-the-zero-product-property",
+          ],
+        },
+        {
+          title: t("Logarithmic Equations", "对数方程"),
+          topics: [
+            "solving-logarithmic-equations",
+            "solving-logarithmic-equations-containing-the-natural-logarithm",
+            "solving-logarithmic-equations-using-the-laws-of-logarithms",
+            "solving-logarithmic-equations-by-combining-the-laws-of-logarithms",
+            "solving-logarithmic-equations-with-logarithms-on-both-sides",
+            "solving-logarithmic-equations-using-the-zero-product-property",
+          ],
+        },
+        {
+          title: t("Graphs of Exponential Functions", "指数函数的图象"),
+          topics: [
+            "vertical-translations-of-exponential-growth-functions",
+            "vertical-translations-of-exponential-decay-functions",
+            "interpreting-graphs-of-exponential-functions",
+            "vertical-reflections-of-exponential-functions",
+            "combining-graph-transformations-of-exponential-functions",
+            "properties-of-transformed-exponential-functions",
+          ],
+        },
+        {
+          title: t("Graphs of Logarithmic Functions", "对数函数的图象"),
+          topics: [
+            "graphing-logarithmic-functions",
+            "combining-graph-transformations-of-logarithmic-functions",
+            "properties-of-transformed-logarithmic-functions",
+            "inverses-of-exponential-and-logarithmic-functions",
+          ],
+        },
+        {
+          title: t("Modeling with Exponential Functions", "用指数函数建模"),
+          topics: ["modeling-with-compound-interest", "continuously-compounded-interest", "converting-between-exponents"],
+        },
+      ],
+    },
+    {
+      title: t("Rational Expressions & Functions", "有理式与有理函数"),
+      modules: [
+        {
+          title: t("Rational Expressions", "有理式"),
+          topics: [
+            "simplifying-rational-expressions-using-polynomial-factorization",
+            "adding-and-subtracting-rational-expressions",
+            "adding-rational-expressions-with-unlike-denominators",
+            "multiplying-rational-expressions",
+            "dividing-rational-expressions",
+          ],
+        },
+        {
+          title: t("Reciprocal Functions", "反比例函数"),
+          topics: [
+            "graphing-reciprocal-functions",
+            "graph-transformations-of-reciprocal-functions",
+            "combining-graph-transformations-of-reciprocal-functions",
+            "domain-and-range-of-transformed-reciprocal-functions",
+            "inverses-of-reciprocal-functions",
+            "finding-intersections-of-lines-and-reciprocal-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Radical Expressions & Functions", "根式与根式函数"),
+      modules: [
+        {
+          title: t("Radical Expressions", "根式"),
+          topics: ["simplifying-square-root-expressions-using-polynomial-factorization", "solving-advanced-radical-equations"],
+        },
+        {
+          title: t("Graphs of Radical Functions", "根式函数的图象"),
+          topics: [
+            "graphing-the-square-root-function",
+            "graph-transformations-of-square-root-functions",
+            "graphing-the-cube-root-function",
+            "properties-of-transformed-square-root-functions",
+            "the-domain-of-a-transformed-radical-function",
+            "the-range-of-a-transformed-radical-function",
+            "roots-of-transformed-radical-functions",
+            "inverses-of-radical-functions",
+            "finding-intersections-of-lines-and-radical-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Conic Sections", "圆锥曲线"),
+      modules: [
+        {
+          title: t("Parabolas as Conic Sections", "作为圆锥曲线的抛物线"),
+          topics: [
+            "upward-and-downward-opening-parabolas",
+            "left-and-right-opening-parabolas",
+            "the-vertex-of-a-parabola",
+            "calculating-the-vertex-of-a-parabola-by-completing-the-square",
+            "the-focus-directrix-property-of-a-parabola",
+            "calculating-the-focus-of-a-parabola",
+            "calculating-the-directrix-of-a-parabola",
+            "calculating-intercepts-of-parabolas",
+            "intersections-of-parabolas-with-lines",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("The Unit Circle", "单位圆"),
+      modules: [
+        {
+          title: t("The Unit Circle", "单位圆"),
+          topics: [
+            "angles-in-the-coordinate-plane",
+            "negative-angles-in-the-coordinate-plane",
+            "coterminal-angles",
+            "calculating-reference-angles",
+            "properties-of-the-unit-circle-in-the-first-quadrant",
+            "extending-the-trigonometric-ratios-using-the-unit-circle",
+            "extending-the-trigonometric-ratios-using-angles-in-radians",
+            "extending-the-trigonometric-ratios-to-negative-angles",
+            "extending-the-trigonometric-ratios-to-large-angles",
+            "using-the-pythagorean-identity-in-the-first-quadrant",
+            "extending-the-pythagorean-identity-to-all-quadrants",
+          ],
+        },
+        {
+          title: t("Special Trigonometric Ratios", "特殊三角比"),
+          topics: [
+            "finding-trigonometric-ratios-of-quadrantal-angles",
+            "trigonometric-ratios-of-quadrantal-angles-outside-the-standard-range",
+            "finding-trigonometric-ratios-of-special-angles-using-the-unit-circle",
+            "evaluating-trigonometric-expressions",
+            "further-extensions-of-the-special-trigonometric-ratios",
+          ],
+        },
+        {
+          title: t("Trigonometry with General Triangles", "一般三角形中的三角学"),
+          topics: [
+            "the-law-of-sines",
+            "the-law-of-cosines",
+            "the-area-of-a-general-triangle",
+            "modeling-using-the-law-of-sines",
+            "modeling-using-the-law-of-cosines",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Trigonometric Functions", "三角函数"),
+      modules: [
+        {
+          title: t("Graphing Trigonometric Functions", "画三角函数的图象"),
+          topics: ["graphing-sine-and-cosine", "graphing-tangent-and-cotangent", "graphing-secant-and-cosecant"],
+        },
+        {
+          title: t("Properties of Trigonometric Functions", "三角函数的性质"),
+          topics: [
+            "describing-properties-of-the-sine-function",
+            "describing-properties-of-the-cosine-function",
+            "describing-properties-of-the-tangent-function",
+            "describing-properties-of-the-secant-function",
+            "describing-properties-of-the-cosecant-function",
+            "describing-properties-of-the-cotangent-function",
+          ],
+        },
+        {
+          title: t("Graph Transformations of Trigonometric Functions", "三角函数图象的变换"),
+          topics: [
+            "vertical-translations-of-trigonometric-functions",
+            "vertical-stretches-of-trigonometric-functions",
+            "horizontal-translations-of-trigonometric-functions",
+            "horizontal-stretches-of-trigonometric-functions",
+            "combining-graph-transformations-of-sine-and-cosine",
+            "graph-transformations-of-tangent-and-cotangent",
+            "combining-graph-transformations-of-tangent-and-cotangent",
+            "combining-graph-transformations-of-secant-and-cosecant",
+            "graphing-reflections-of-trigonometric-functions",
+            "graphing-reflections-of-trigonometric-functions-three-or-more-transformations",
+          ],
+        },
+        {
+          title: t("Properties of Transformed Trigonometric Functions", "变换后三角函数的性质"),
+          topics: [
+            "properties-of-transformed-sine-and-cosine-functions",
+            "finding-zeros-and-extrema-of-transformed-sine-and-cosine-functions",
+            "properties-of-transformed-tangent-and-cotangent-functions",
+            "properties-of-transformed-secant-and-cosecant-functions",
+            "interpreting-trigonometric-models",
+            "modeling-with-trigonometric-functions",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
-export const mathCourses: readonly CourseDef[] = [algebraFoundations, prealgebra, algebraI, geometry];
+export const mathCourses: readonly CourseDef[] = [algebraFoundations, prealgebra, algebraI, geometry, algebraII];
