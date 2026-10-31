@@ -35,6 +35,7 @@ import { calculusIHyperbolicTopics } from "./topics/calculus-i-hyperbolic.ts";
 import { calculusIImplicitInverseTopics } from "./topics/calculus-i-implicit-inverse.ts";
 import { calculusILimitTechniqueTopics } from "./topics/calculus-i-limit-techniques.ts";
 import { calculusILimitTopics } from "./topics/calculus-i-limits.ts";
+import { calculusIOptimizationTopics } from "./topics/calculus-i-optimization.ts";
 import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
@@ -183,6 +184,7 @@ export const math: SubjectDef = {
     ...calculusIContextualTopics,
     ...calculusIExtremaTopics,
     ...calculusICurveTopics,
+    ...calculusIOptimizationTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
