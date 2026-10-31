@@ -1904,5 +1904,354 @@ export const precalculus: CourseDef = {
   ],
 };
 
+/** calculusI is the university Calculus I course. */
+export const calculusI: CourseDef = {
+  id: "calculus-i",
+  title: t("Calculus I", "微积分 I"),
+  description: t(
+    "The hyperbolic functions; limits from graphs, the algebra of limits, limits of elementary functions, limits by algebraic manipulation, and special limits; continuity, the intermediate value theorem and removing discontinuities; the derivative and the rules of differentiation, the chain rule, implicit, inverse and logarithmic differentiation; rates of change, estimating derivatives, related rates and L'Hopital's rule; the mean value theorem, extrema, curve sketching, linearization, optimization and straight-line motion; and integration: antiderivatives, Riemann sums, definite integrals and the fundamental theorem of calculus, areas under curves and accumulation functions.",
+    "双曲函数；由图像估计极限、极限的运算法则、初等函数的极限、用代数变形求极限与特殊极限；连续性、介值定理与消除间断点；导数与求导法则、链式法则、隐函数求导、反函数求导与对数求导法；变化率、估计导数、相关变化率与洛必达法则；中值定理、极值、曲线作图、线性化、最优化与直线运动；积分：原函数、黎曼和、定积分与微积分基本定理、曲线下的面积与累积函数。",
+  ),
+  units: [
+    {
+      title: t("Preliminaries", "预备知识"),
+      modules: [
+        {
+          title: t("The Hyperbolic Functions", "双曲函数"),
+          topics: [
+            "the-hyperbolic-functions",
+            "the-reciprocal-hyperbolic-functions",
+            "solving-equations-containing-hyperbolic-functions",
+            "graphs-of-the-hyperbolic-functions",
+            "graphs-of-the-reciprocal-hyperbolic-functions",
+            "the-inverse-hyperbolic-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Limits", "极限"),
+      modules: [
+        {
+          title: t("Estimating Limits from Graphs", "由图像估计极限"),
+          topics: [
+            "the-finite-limit-of-a-function",
+            "the-left-and-right-sided-limits-of-a-function",
+            "finding-the-existence-of-a-limit-using-one-sided-limits",
+            "limits-at-infinity-from-graphs",
+            "infinite-limits-from-graphs",
+          ],
+        },
+        {
+          title: t("The Algebra of Limits", "极限的运算法则"),
+          topics: [
+            "limits-of-power-functions-and-the-constant-rule-for-limits",
+            "the-sum-rule-for-limits",
+            "the-product-and-quotient-rules-for-limits",
+            "the-power-and-root-rules-for-limits",
+          ],
+        },
+        {
+          title: t("Limits of Functions", "函数的极限"),
+          topics: [
+            "limits-at-infinity-of-polynomials",
+            "limits-of-reciprocal-functions",
+            "limits-of-exponential-functions",
+            "limits-of-logarithmic-functions",
+            "limits-of-radical-functions",
+            "limits-of-trigonometric-functions",
+            "limits-of-reciprocal-trigonometric-functions",
+            "limits-of-inverse-trigonometric-functions",
+            "limits-of-piecewise-functions",
+          ],
+        },
+        {
+          title: t("Determining Limits Using Algebraic Manipulation", "用代数变形求极限"),
+          topics: [
+            "calculating-limits-of-rational-functions-by-factoring",
+            "limits-of-absolute-value-functions",
+            "calculating-limits-of-radical-functions-using-conjugate-multiplication",
+            "calculating-limits-using-trigonometric-identities",
+            "limits-at-infinity-and-horizontal-asymptotes-of-rational-functions",
+            "evaluating-limits-at-infinity-by-comparing-relative-magnitudes-of-functions",
+            "evaluating-limits-at-infinity-of-radical-functions",
+            "vertical-asymptotes-of-rational-functions",
+            "infinite-limits-of-rational-functions",
+          ],
+        },
+        {
+          title: t("Special Limits", "特殊极限"),
+          topics: [
+            "the-squeeze-theorem",
+            "special-limits-involving-sine",
+            "evaluating-special-limits-involving-sine-using-a-substitution",
+            "special-limits-involving-cosine",
+            "limits-involving-the-exponential-function",
+            "further-limits-involving-the-exponential-function",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Continuity", "连续性"),
+      modules: [
+        {
+          title: t("Continuity", "连续性"),
+          topics: [
+            "determining-continuity-from-graphs",
+            "defining-continuity-at-a-point",
+            "left-and-right-continuity",
+            "further-continuity-of-piecewise-functions",
+            "point-discontinuities",
+            "jump-discontinuities",
+            "discontinuities-due-to-vertical-asymptotes",
+            "continuity-over-an-interval",
+            "continuity-of-functions",
+            "the-intermediate-value-theorem",
+          ],
+        },
+        {
+          title: t("Removing Discontinuities", "消除间断点"),
+          topics: ["removing-point-discontinuities", "removing-jump-discontinuities", "removing-discontinuities-from-rational-functions"],
+        },
+      ],
+    },
+    {
+      title: t("Introduction to Differentiation", "微分入门"),
+      modules: [
+        {
+          title: t("Introduction to Differentiation", "微分入门"),
+          topics: [
+            "the-average-rate-of-change-of-a-function",
+            "the-average-rate-of-change-of-a-function-over-a-varying-interval",
+            "the-instantaneous-rate-of-change-of-a-function-at-a-point",
+            "defining-the-derivative-using-derivative-notation",
+            "continuity-and-differentiability-of-functions",
+            "the-power-rule-for-differentiation",
+            "the-sum-and-constant-multiple-rules-for-differentiation",
+            "calculating-the-slope-of-a-tangent-line-using-differentiation",
+            "calculating-the-equation-of-a-tangent-line-using-differentiation",
+            "calculating-the-equation-of-a-normal-line-using-differentiation",
+          ],
+        },
+        {
+          title: t("Derivatives of Functions and the Rules of Differentiation", "函数的导数与求导法则"),
+          topics: [
+            "differentiating-exponential-functions",
+            "differentiating-logarithmic-functions",
+            "differentiating-trigonometric-functions",
+            "differentiating-hyperbolic-functions",
+            "differentiating-reciprocal-hyperbolic-functions",
+            "second-and-higher-order-derivatives",
+            "the-product-rule-for-differentiation",
+            "the-quotient-rule-for-differentiation",
+            "differentiating-reciprocal-trigonometric-functions",
+            "calculating-derivatives-from-data-and-tables",
+            "calculating-derivatives-from-graphs",
+            "recognizing-derivatives-in-limits",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Advanced Differentiation", "进阶微分"),
+      modules: [
+        {
+          title: t("Differentiating Composite Functions", "复合函数求导"),
+          topics: [
+            "the-chain-rule-for-differentiation",
+            "the-chain-rule-with-exponential-functions",
+            "the-chain-rule-with-logarithmic-functions",
+            "the-chain-rule-with-trigonometric-functions",
+            "calculating-derivatives-from-data-using-the-chain-rule",
+            "calculating-derivatives-from-graphs-using-the-chain-rule",
+            "selecting-procedures-for-calculating-derivatives",
+          ],
+        },
+        {
+          title: t("Differentiating Implicit and Inverse Functions", "隐函数与反函数求导"),
+          topics: [
+            "implicit-differentiation",
+            "calculating-slopes-of-circles-ellipses-and-parabolas",
+            "calculating-dy-dx-using-dx-dy",
+            "differentiating-inverse-functions",
+            "differentiating-an-inverse-function-at-a-point",
+            "differentiating-inverse-trigonometric-functions",
+            "differentiating-inverse-reciprocal-trigonometric-functions",
+            "differentiating-inverse-hyperbolic-functions",
+            "differentiating-inverse-reciprocal-hyperbolic-functions",
+          ],
+        },
+        {
+          title: t("Differentiation Using Logarithms", "对数求导法"),
+          topics: ["logarithmic-differentiation", "further-logarithmic-differentiation"],
+        },
+      ],
+    },
+    {
+      title: t("Contextual Applications of Differentiation", "微分的情境应用"),
+      modules: [
+        {
+          title: t("Contextual Applications of Differentiation", "微分的情境应用"),
+          topics: ["interpreting-the-meaning-of-the-derivative-in-context", "rates-of-change-in-applied-contexts"],
+        },
+        {
+          title: t("Estimating Derivatives", "估计导数"),
+          topics: [
+            "estimating-derivatives-using-a-forward-difference-quotient",
+            "estimating-derivatives-using-a-backward-difference-quotient",
+            "estimating-derivatives-using-a-central-difference-quotient",
+          ],
+        },
+        {
+          title: t("Related Rates of Change", "相关变化率"),
+          topics: [
+            "introduction-to-related-rates",
+            "related-rates-with-implicit-functions",
+            "calculating-related-rates-with-circles-and-spheres",
+            "calculating-related-rates-with-squares",
+            "calculating-related-rates-with-rectangular-solids",
+            "calculating-related-rates-using-the-pythagorean-theorem",
+            "calculating-related-rates-using-similar-triangles",
+            "calculating-related-rates-using-trigonometry",
+            "calculating-related-rates-with-cones",
+          ],
+        },
+        {
+          title: t("L'Hopital's Rule", "洛必达法则"),
+          topics: ["lhopitals-rule", "lhopitals-rule-applied-to-tables"],
+        },
+      ],
+    },
+    {
+      title: t("Analytical Applications of Differentiation", "微分的分析应用"),
+      modules: [
+        {
+          title: t("Analytical Applications of Differentiation", "微分的分析应用"),
+          topics: [
+            "the-mean-value-theorem",
+            "global-vs-local-extrema-and-critical-points",
+            "the-extreme-value-theorem",
+            "using-differentiation-to-calculate-critical-points",
+            "determining-intervals-on-which-a-function-is-increasing-or-decreasing",
+            "using-the-first-derivative-test-to-classify-local-extrema",
+            "the-candidates-test",
+            "intervals-of-concavity",
+            "relating-concavity-to-the-second-derivative",
+            "points-of-inflection",
+            "the-second-derivative-test",
+          ],
+        },
+        {
+          title: t("Analysis of Curves", "曲线分析"),
+          topics: [
+            "sketching-the-derivative-of-a-function-from-the-functions-graph",
+            "interpreting-the-graph-of-a-functions-derivative",
+            "interpreting-the-graph-of-a-functions-derivative-concavity-and-points-of-inflection",
+            "sketching-a-function-from-the-graph-of-its-derivative",
+            "sketching-a-function-given-some-derivative-properties",
+          ],
+        },
+        {
+          title: t("Approximating Values of a Function", "函数值的近似"),
+          topics: [
+            "approximating-functions-using-local-linearity-and-linearization",
+            "approximating-the-roots-of-a-number-using-local-linearity",
+            "approximating-trigonometric-functions-using-local-linearity",
+          ],
+        },
+        {
+          title: t("Optimization", "最优化"),
+          topics: [
+            "solving-optimization-problems-using-derivatives",
+            "optimization-problems-involving-sectors-of-circles",
+            "optimization-problems-involving-boxes-and-trays",
+            "optimization-problems-involving-cylinders",
+            "optimizing-distances",
+            "optimizing-distances-to-curves",
+            "optimization-problems-with-inscribed-shapes",
+            "optimization-problems-in-economics",
+            "newtons-method",
+            "newtons-method-for-optimizing-single-variable-functions",
+          ],
+        },
+        {
+          title: t("Displacement, Velocity, and Acceleration", "位移、速度与加速度"),
+          topics: [
+            "calculating-velocity-for-straight-line-motion-using-differentiation",
+            "calculating-acceleration-for-straight-line-motion-using-differentiation",
+            "determining-characteristics-of-moving-objects-using-differentiation",
+            "newtons-second-law",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Integration", "积分"),
+      modules: [
+        {
+          title: t("Indefinite Integrals", "不定积分"),
+          topics: [
+            "the-antiderivative",
+            "the-constant-multiple-rule-for-indefinite-integrals",
+            "the-sum-rule-for-indefinite-integrals",
+            "integrating-the-reciprocal-function",
+            "integrating-exponential-functions",
+            "integrating-trigonometric-functions",
+            "integration-using-inverse-trigonometric-functions",
+            "integrating-hyperbolic-functions",
+            "integration-using-inverse-hyperbolic-functions",
+            "integration-using-inverse-reciprocal-hyperbolic-functions",
+          ],
+        },
+        {
+          title: t("Approximating Areas with Riemann Sums", "用黎曼和近似面积"),
+          topics: [
+            "approximating-areas-with-the-left-riemann-sum",
+            "approximating-areas-with-the-right-riemann-sum",
+            "approximating-areas-with-the-midpoint-riemann-sum",
+            "approximating-areas-with-the-trapezoidal-rule",
+            "left-and-right-riemann-sums-in-sigma-notation",
+            "midpoint-and-trapezoidal-rules-in-sigma-notation",
+            "approximating-areas-under-graphs-of-composite-functions",
+          ],
+        },
+        {
+          title: t("Definite Integrals", "定积分"),
+          topics: [
+            "defining-definite-integrals-using-left-and-right-riemann-sums",
+            "the-fundamental-theorem-of-calculus",
+            "applying-the-fundamental-theorem-of-calculus-to-exponential-and-trigonometric-functions",
+            "the-sum-and-constant-multiple-rules-for-definite-integrals",
+            "properties-of-definite-integrals-involving-the-limits-of-integration",
+          ],
+        },
+        {
+          title: t("The Area Under a Curve", "曲线下的面积"),
+          topics: [
+            "the-area-bounded-by-a-curve-and-the-x-axis",
+            "evaluating-definite-integrals-using-symmetry",
+            "finding-the-area-between-a-curve-and-the-x-axis-when-they-intersect",
+            "the-area-bounded-by-a-curve-and-the-y-axis",
+            "calculating-the-definite-integral-of-a-function-given-its-graph",
+            "calculating-the-definite-integral-of-a-functions-derivative-given-its-graph",
+            "definite-integrals-of-piecewise-functions",
+          ],
+        },
+        {
+          title: t("Accumulation Functions", "累积函数"),
+          topics: [
+            "the-integral-as-an-accumulation-function",
+            "the-second-fundamental-theorem-of-calculus",
+            "maximizing-a-function-using-the-graph-of-its-derivative",
+            "minimizing-a-function-using-the-graph-of-its-derivative",
+            "further-optimizing-functions-using-graphs-of-derivatives",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
-export const mathCourses: readonly CourseDef[] = [algebraFoundations, prealgebra, algebraI, geometry, algebraII, precalculus];
+export const mathCourses: readonly CourseDef[] = [algebraFoundations, prealgebra, algebraI, geometry, algebraII, precalculus, calculusI];
