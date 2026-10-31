@@ -54,6 +54,7 @@ import { numberTheoryTopics } from "./topics/number-theory.ts";
 import { polynomialTopics } from "./topics/polynomials.ts";
 import { precalculusComplexNumberTopics } from "./topics/precalculus-complex-numbers.ts";
 import { precalculusConicSectionTopics } from "./topics/precalculus-conic-sections.ts";
+import { precalculusDeMoivreTopics } from "./topics/precalculus-de-moivre.ts";
 import { precalculusInequalityTopics } from "./topics/precalculus-inequalities.ts";
 import { precalculusLinearTransformationTopics } from "./topics/precalculus-linear-transformations.ts";
 import { precalculusMatrixTopics } from "./topics/precalculus-matrices.ts";
@@ -154,6 +155,7 @@ export const math: SubjectDef = {
     ...precalculusLinearTransformationTopics,
     ...precalculusParametricPolarTopics,
     ...precalculusComplexNumberTopics,
+    ...precalculusDeMoivreTopics,
     ...precalculusRandomVariableTopics,
   ],
   courses: mathCourses,
