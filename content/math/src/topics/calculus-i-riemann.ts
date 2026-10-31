@@ -8,7 +8,7 @@ import { type Exact, exactLatex, exactMul, oneOf, type Poly, pLatex, power, roun
 // Calculus I unit 8: Integration, modules 8.24 and 8.25.
 
 /** qAt evaluates a polynomial with integer coefficients at a rational x. */
-const qAt = (p: Poly, x: Q) => p.reduce((s: Q, c, i) => s.add(Q.of(c).mul(x.pow(i))), Q.zero);
+export const qAt = (p: Poly, x: Q) => p.reduce((s: Q, c, i) => s.add(Q.of(c).mul(x.pow(i))), Q.zero);
 
 /** Rule is a way of choosing the heights in a Riemann sum. */
 type Rule = "left" | "right" | "midpoint" | "trapezoidal";
@@ -647,10 +647,10 @@ export const definingDefiniteIntegralsUsingLeftAndRightRiemannSums: TopicDef = {
 };
 
 /** antiderivativeLatex writes the antiderivative of a polynomial without its constant. */
-const antiderivativeLatex = (p: Poly) => poly(...p.map((c, i) => [Q.of(c, i + 1), power(i + 1)] as const).reverse());
+export const antiderivativeLatex = (p: Poly) => poly(...p.map((c, i) => [Q.of(c, i + 1), power(i + 1)] as const).reverse());
 
 /** antiderivativeAt evaluates the antiderivative of a polynomial at x. */
-const antiderivativeAt = (p: Poly, x: number) => p.reduce((s: Q, c, i) => s.add(Q.of(c * x ** (i + 1), i + 1)), Q.zero);
+export const antiderivativeAt = (p: Poly, x: number) => p.reduce((s: Q, c, i) => s.add(Q.of(c * x ** (i + 1), i + 1)), Q.zero);
 
 /** theFundamentalTheoremOfCalculus evaluates definite integrals with antiderivatives. */
 export const theFundamentalTheoremOfCalculus: TopicDef = {
