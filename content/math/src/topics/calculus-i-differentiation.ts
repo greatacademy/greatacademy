@@ -3,37 +3,16 @@ import { t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q } from "@ga/subject-math";
 
 import { choiceProblem, expressionProblem, functionProblem, numberProblem, solutionsProblem, yesNo } from "../problems.ts";
-import { bare, fac, lim, oneOf, range, table } from "./calculus-common.ts";
+import { bare, fac, lim, oneOf, type Poly, pAt, par, pDer, pLatex, power, range, sumLatex, table } from "./calculus-common.ts";
 
 // Calculus I unit 4: Introduction to Differentiation, module 4.9. Topic 4.9.1
 // is the existing the-average-rate-of-change-of-a-function.
-
-/** Poly is a polynomial by its coefficients, the constant term first. */
-type Poly = readonly number[];
-
-/** power writes x^n: "", "x", "x^{3}". */
-const power = (n: number, v = "x") => (n === 0 ? "" : n === 1 ? v : `${v}^{${n}}`);
-
-/** pLatex writes a polynomial from its highest power down. */
-const pLatex = (p: Poly, v = "x") => poly(...p.map((c, i) => [c, power(i, v)] as const).reverse());
-
-/** pAt evaluates a polynomial. */
-const pAt = (p: Poly, x: number) => p.reduce((s, c, i) => s + c * x ** i, 0);
-
-/** pDer is the derivative of a polynomial. */
-const pDer = (p: Poly): Poly => (p.length <= 1 ? [0] : p.slice(1).map((c, i) => c * (i + 1)));
 
 /** quadratic is sx² + bx + c with small coefficients. */
 const quadratic = (rng: Rng): Poly => [rng.int(-6, 6), rng.int(-5, 5), rng.nonZero(-3, 3)];
 
 /** cubic is a cubic with small coefficients. */
 const cubic = (rng: Rng): Poly => [rng.int(-6, 6), rng.int(-5, 5), rng.int(-3, 3), rng.nonZero(-2, 2)];
-
-/** par wraps a negative number in parentheses. */
-const par = (n: number | Q) => {
-  const q = n instanceof Q ? n : Q.of(n);
-  return q.sign() < 0 ? `(${q.toLatex()})` : q.toLatex();
-};
 
 /** yesNoProblem asks a yes-or-no question. */
 const yesNoProblem = (prompt: Text, yes: boolean, solution: Text) =>
@@ -586,10 +565,6 @@ function mixedTerm(rng: Rng): Term {
   const k = rng.pick([1, 2, 3, 4, 6, 8, -2, -4]);
   return { k: Q.of(k), e: form.e, latex: form.latex(k) };
 }
-
-/** sumLatex writes terms added together, as the learner reads them. */
-const sumLatex = (terms: readonly string[]) =>
-  terms.reduce((s, x, i) => (i === 0 ? x : x.startsWith("-") ? `${s} - ${x.slice(1)}` : `${s} + ${x}`), "");
 
 /** theSumAndConstantMultipleRulesForDifferentiation differentiates sums. */
 export const theSumAndConstantMultipleRulesForDifferentiation: TopicDef = {

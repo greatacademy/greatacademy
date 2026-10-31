@@ -1,6 +1,6 @@
 import type { Figure, Problem, Rng, Text } from "@ga/content";
 import { same, t } from "@ga/content";
-import { linear, Q, radical } from "@ga/subject-math";
+import { linear, poly, Q, radical } from "@ga/subject-math";
 
 import { choiceProblem } from "../problems.ts";
 
@@ -206,3 +206,36 @@ export function sqrtLatex(n: number): string {
   if (rest === 1) return String(out);
   return `${out === 1 ? "" : out}\\sqrt{${rest}}`;
 }
+
+/** Poly is a polynomial by its coefficients, the constant term first. */
+export type Poly = readonly number[];
+
+/** power writes x^n: "", "x", "x^{3}". */
+export const power = (n: number, v = "x") => (n === 0 ? "" : n === 1 ? v : `${v}^{${n}}`);
+
+/** pLatex writes a polynomial from its highest power down. */
+export const pLatex = (p: Poly, v = "x") => poly(...p.map((c, i) => [c, power(i, v)] as const).reverse());
+
+/** pAt evaluates a polynomial. */
+export const pAt = (p: Poly, x: number) => p.reduce((s, c, i) => s + c * x ** i, 0);
+
+/** pDer is the derivative of a polynomial. */
+export const pDer = (p: Poly): Poly => (p.length <= 1 ? [0] : p.slice(1).map((c, i) => c * (i + 1)));
+
+/** fracL writes k/den with the sign in front: "\\frac{3}{x}", "-\\frac{3}{x}". */
+export const fracL = (k: number, den: string) => `${k < 0 ? "-" : ""}\\frac{${Math.abs(k)}}{${den}}`;
+
+/** sumLatex writes terms added together, as the learner reads them; empty terms are skipped. */
+export const sumLatex = (terms: readonly string[]) =>
+  terms
+    .filter((x) => x !== "" && x !== "0")
+    .reduce((s, x, i) => (i === 0 ? x : x.startsWith("-") ? `${s} - ${x.slice(1)}` : `${s} + ${x}`), "") || "0";
+
+/** cdot writes k times a term that starts with a digit: "3^{x}", "-3^{x}", "2 \\cdot 3^{x}". */
+export const cdot = (k: number, x: string) => (k === 1 ? x : k === -1 ? `-${x}` : `${k} \\cdot ${x}`);
+
+/** par wraps a negative number in parentheses. */
+export const par = (n: number | Q) => {
+  const q = n instanceof Q ? n : Q.of(n);
+  return q.sign() < 0 ? `(${q.toLatex()})` : q.toLatex();
+};
