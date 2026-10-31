@@ -166,6 +166,9 @@ export const combiningLikeTerms: TopicDef = {
   ],
 };
 
+/** xTerm writes the term bx as a factor in a product: "x", "(-x)", "3x", "(-3)x". */
+const xTerm = (b: number) => (b === 1 ? "x" : b === -1 ? "(-x)" : `${paren(b)}x`);
+
 export const distributiveProperty: TopicDef = {
   id: "distributive-property",
   title: t("The Distributive Property", "乘法分配律"),
@@ -196,8 +199,8 @@ export const distributiveProperty: TopicDef = {
           simplified: true,
           wrong: [linear(a * b, c), linear(b, a * c), expr],
           solution: t(
-            `Multiply each term by $${a}$: ${steps(`${expr} = ${a} \\cdot ${paren(b)}x + ${a} \\cdot ${paren(c)} = ${answer}`)}`,
-            `用 $${a}$ 乘以每一项：${steps(`${expr} = ${a} \\cdot ${paren(b)}x + ${a} \\cdot ${paren(c)} = ${answer}`)}`,
+            `Multiply each term by $${a}$: ${steps(`${expr} = ${a} \\cdot ${xTerm(b)} + ${a} \\cdot ${paren(c)} = ${answer}`)}`,
+            `用 $${a}$ 乘以每一项：${steps(`${expr} = ${a} \\cdot ${xTerm(b)} + ${a} \\cdot ${paren(c)} = ${answer}`)}`,
           ),
         });
       },
@@ -222,8 +225,8 @@ export const distributiveProperty: TopicDef = {
           simplified: true,
           wrong: [linear(a * b, -a * c), linear(a * b, c), linear(-a * b, -a * c)],
           solution: t(
-            `Multiply each term by $${num(a)}$: ${steps(`${expr} = ${paren(a)} \\cdot ${paren(b)}x + ${paren(a)} \\cdot ${paren(c)} = ${answer}`)}`,
-            `用 $${num(a)}$ 乘以每一项：${steps(`${expr} = ${paren(a)} \\cdot ${paren(b)}x + ${paren(a)} \\cdot ${paren(c)} = ${answer}`)}`,
+            `Multiply each term by $${num(a)}$: ${steps(`${expr} = ${paren(a)} \\cdot ${xTerm(b)} + ${paren(a)} \\cdot ${paren(c)} = ${answer}`)}`,
+            `用 $${num(a)}$ 乘以每一项：${steps(`${expr} = ${paren(a)} \\cdot ${xTerm(b)} + ${paren(a)} \\cdot ${paren(c)} = ${answer}`)}`,
           ),
         });
       },
