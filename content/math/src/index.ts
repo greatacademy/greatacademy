@@ -25,6 +25,8 @@ import { angleTopics } from "./topics/angles.ts";
 import { areaTopics } from "./topics/area.ts";
 import { bivariateStatisticsTopics } from "./topics/bivariate-statistics.ts";
 import { calculusIContinuityTopics } from "./topics/calculus-i-continuity.ts";
+import { calculusIDerivativeRuleTopics } from "./topics/calculus-i-derivative-rules.ts";
+import { calculusIDifferentiationTopics } from "./topics/calculus-i-differentiation.ts";
 import { calculusIHyperbolicTopics } from "./topics/calculus-i-hyperbolic.ts";
 import { calculusILimitTechniqueTopics } from "./topics/calculus-i-limit-techniques.ts";
 import { calculusILimitTopics } from "./topics/calculus-i-limits.ts";
@@ -169,6 +171,8 @@ export const math: SubjectDef = {
     ...calculusILimitTopics,
     ...calculusILimitTechniqueTopics,
     ...calculusIContinuityTopics,
+    ...calculusIDifferentiationTopics,
+    ...calculusIDerivativeRuleTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
