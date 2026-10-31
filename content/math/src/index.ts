@@ -63,6 +63,7 @@ import { precalculusParametricPolarTopics } from "./topics/precalculus-parametri
 import { precalculusRandomVariableTopics } from "./topics/precalculus-random-variables.ts";
 import { precalculusRationalFunctionTopics } from "./topics/precalculus-rational-functions.ts";
 import { precalculusSeriesTopics } from "./topics/precalculus-series.ts";
+import { precalculusStatisticsTopics } from "./topics/precalculus-statistics.ts";
 import { precalculusTrigonometricEquationTopics } from "./topics/precalculus-trigonometric-equations.ts";
 import { precalculusTrigonometricIdentityTopics } from "./topics/precalculus-trigonometric-identities.ts";
 import { precalculusVector2DTopics } from "./topics/precalculus-vectors-2d.ts";
@@ -159,6 +160,7 @@ export const math: SubjectDef = {
     ...precalculusComplexNumberTopics,
     ...precalculusDeMoivreTopics,
     ...precalculusRandomVariableTopics,
+    ...precalculusStatisticsTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
