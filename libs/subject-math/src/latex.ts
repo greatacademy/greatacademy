@@ -24,7 +24,7 @@ export type Node =
   /** fn applies a named function such as \\sin or \\ln to a; a logarithm may carry a base, written \\log_{b} a. */
   | { readonly k: "fn"; readonly name: FnName; readonly a: Node; readonly base?: Node };
 
-/** FnName names a function the parser reads: trigonometric, inverse trigonometric, hyperbolic (with their reciprocals), exponential and logarithmic. */
+/** FnName names a function the parser reads: trigonometric and hyperbolic functions, their reciprocals and inverses, exponential and logarithmic. */
 export type FnName =
   | "sin"
   | "cos"
@@ -35,12 +35,21 @@ export type FnName =
   | "arcsin"
   | "arccos"
   | "arctan"
+  | "arcsec"
+  | "arccsc"
+  | "arccot"
   | "sinh"
   | "cosh"
   | "tanh"
   | "sech"
   | "csch"
   | "coth"
+  | "arsinh"
+  | "arcosh"
+  | "artanh"
+  | "arsech"
+  | "arcsch"
+  | "arcoth"
   | "exp"
   | "ln"
   | "log";
@@ -55,17 +64,39 @@ const fnNames: ReadonlySet<string> = new Set<FnName>([
   "arcsin",
   "arccos",
   "arctan",
+  "arcsec",
+  "arccsc",
+  "arccot",
   "sinh",
   "cosh",
   "tanh",
   "sech",
   "csch",
   "coth",
+  "arsinh",
+  "arcosh",
+  "artanh",
+  "arsech",
+  "arcsch",
+  "arcoth",
   "exp",
   "ln",
   "log",
 ]);
-const inverses: Partial<Record<FnName, FnName>> = { sin: "arcsin", cos: "arccos", tan: "arctan" };
+const inverses: Partial<Record<FnName, FnName>> = {
+  sin: "arcsin",
+  cos: "arccos",
+  tan: "arctan",
+  sec: "arcsec",
+  csc: "arccsc",
+  cot: "arccot",
+  sinh: "arsinh",
+  cosh: "arcosh",
+  tanh: "artanh",
+  sech: "arsech",
+  csch: "arcsch",
+  coth: "arcoth",
+};
 
 /** RelOp is a relation symbol. */
 export type RelOp = "=" | "<" | ">" | "<=" | ">=";
@@ -102,11 +133,14 @@ export function normalizeLatex(s: string): string {
     .replace(/≥/g, "\\ge ")
     .replace(/(\d)\{,\}(?=\d{3})/g, "$1")
     .replace(
-      /\\(?:mathrm|operatorname)\{(arcsin|arccos|arctan|sinh|cosh|tanh|sech|csch|coth|sin|cos|tan|sec|csc|cot|exp|ln|log)\}/g,
+      /\\(?:mathrm|operatorname)\{(arcsin|arccos|arctan|arcsec|arccsc|arccot|arsinh|arcosh|artanh|arsech|arcsch|arcoth|sinh|cosh|tanh|sech|csch|coth|sin|cos|tan|sec|csc|cot|exp|ln|log)\}/g,
       "\\$1 ",
     )
     .replace(/\\mathrm\{([^{}]*)\}/g, "$1")
-    .replace(/(?<![\\a-zA-Z])(arcsin|arccos|arctan|sinh|cosh|tanh|sech|csch|coth|sin|cos|tan|sec|csc|cot|exp|ln|log)/g, "\\$1 ")
+    .replace(
+      /(?<![\\a-zA-Z])(arcsin|arccos|arctan|arcsec|arccsc|arccot|arsinh|arcosh|artanh|arsech|arcsch|arcoth|sinh|cosh|tanh|sech|csch|coth|sin|cos|tan|sec|csc|cot|exp|ln|log)/g,
+      "\\$1 ",
+    )
     .trim();
 }
 
