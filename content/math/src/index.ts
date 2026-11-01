@@ -87,6 +87,7 @@ import { linearAlgebraVectorSpaceTopics } from "./topics/linear-algebra-vector-s
 import { linearEquationTopics } from "./topics/linear-equations.ts";
 import { lineTopics } from "./topics/lines.ts";
 import { methodsOfProofLogicTopics } from "./topics/methods-of-proof-logic.ts";
+import { methodsOfProofNumberTheoryTopics } from "./topics/methods-of-proof-number-theory.ts";
 import { methodsOfProofPredicateTopics } from "./topics/methods-of-proof-predicates.ts";
 import { methodsOfProofProofTopics } from "./topics/methods-of-proof-proofs.ts";
 import { methodsOfProofSetTopics } from "./topics/methods-of-proof-sets.ts";
@@ -239,6 +240,7 @@ export const math: SubjectDef = {
     ...methodsOfProofPredicateTopics,
     ...methodsOfProofSetTopics,
     ...methodsOfProofProofTopics,
+    ...methodsOfProofNumberTheoryTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
