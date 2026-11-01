@@ -60,6 +60,7 @@ import { discreteMathematicsBooleanTopics } from "./topics/discrete-mathematics-
 import { discreteMathematicsCountingTopics } from "./topics/discrete-mathematics-counting.ts";
 import { discreteMathematicsNumberTheoryTopics } from "./topics/discrete-mathematics-number-theory.ts";
 import { discreteMathematicsRandomVariableTopics } from "./topics/discrete-mathematics-random-variables.ts";
+import { discreteMathematicsSeriesTopics } from "./topics/discrete-mathematics-series.ts";
 import { equationTopics } from "./topics/equations.ts";
 import { exponentialFunctionTopics } from "./topics/exponential-functions.ts";
 import { exponentTopics } from "./topics/exponents.ts";
@@ -259,6 +260,7 @@ export const math: SubjectDef = {
     ...discreteMathematicsNumberTheoryTopics,
     ...discreteMathematicsRandomVariableTopics,
     ...discreteMathematicsCountingTopics,
+    ...discreteMathematicsSeriesTopics,
     ...multivariableCalculusVectorFunctionTopics,
     ...multivariableCalculusMultivariableFunctionTopics,
     ...multivariableCalculusMultipleIntegralTopics,
