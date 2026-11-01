@@ -439,6 +439,8 @@ describe("point", () => {
     [["3", "-2"], "y=-2, x=3"],
     [["1/2", "0"], "(0.5, 0)"],
     [["1/2", "0"], "(\\frac{1}{2}, 0)"],
+    [["3", "-2"], "\\langle 3, -2 \\rangle"],
+    [["3", "-2"], "\\left\\langle 3,-2\\right\\rangle"],
   ])("accepts %j as %s", (values, response) => {
     expect(check(values, response).correct).toBe(true);
   });

@@ -687,7 +687,7 @@ export const intervalChecker: Checker = {
 
 /**
  * pointChecker accepts an ordered pair (or tuple) of numbers equal to
- * expected.values, written "(3, -2)", or, when expected.vars names the
+ * expected.values, written "(3, -2)" or as a vector "\\langle 3, -2 \\rangle", or, when expected.vars names the
  * coordinates, as "x = 3, y = -2" in any order. Each number must be written
  * as in numberChecker's default form.
  */
@@ -702,6 +702,8 @@ export const pointChecker: Checker = {
     const vars = Array.isArray(e.vars) ? (e.vars as string[]) : undefined;
     const s = normalizeLatex(response)
       .replace(/\\left|\\right/g, "")
+      .replace(/\\langle/g, "(")
+      .replace(/\\rangle/g, ")")
       .trim();
     let parts: string[];
     if (s.startsWith("(") && s.endsWith(")") && splitTopLevel(s, ",").length === 1) {
