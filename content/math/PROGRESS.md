@@ -40,7 +40,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Foundations of Algebra, Prealgebra | — | done | | |
 | Algebra I, Geometry, Algebra II, Precalculus | — | done | | |
 | Calculus I | Precalculus | done | | |
-| Calculus II | Calculus I | in progress | claude-main | Units 1–2 done except 2.11.3 (surfaces of parametric curves, written with unit 3); units 3–5 left |
+| Calculus II | Calculus I | in progress | claude-main | Units 1–3 done; units 4–5 (series, differential equations) left |
 | Linear Algebra | Calculus I | in progress | antigravity | 8 units, 181 topics written; revision requested by claude-main (see *Requests*) |
 | Methods of Proof | Calculus I | open | | Assigned slot **B**. Mostly new topics: logic, sets, induction, proof techniques |
 | Discrete Mathematics | Methods of Proof | blocked | | Slot **B** after Methods of Proof. Reuse `combinatorics.ts` and `probability.ts` |
