@@ -54,7 +54,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Differential Equations | Multivariable Calculus | done | | 7 units, 159 topics (24 reused, 135 new) |
 | Probability & Statistics | Multivariable Calculus | done | | 10 units, 181 topics (53 reused, 128 new) |
 | Mathematics for Machine Learning | Calculus II, Linear Algebra | done | | 12 units, 301 topics (283 reused, 18 new) |
-| Mathematical Methods for the Physical Sciences I, II | Calculus II | in progress | antigravity | |
+| Mathematical Methods for the Physical Sciences I, II | Calculus II | done | | 13 units (294 topics) and 12 units (232 topics) |
 | Abstract Algebra | Methods of Proof, Linear Algebra | done | | 9 units, 129 topics |
 | SAT Math Fundamentals, SAT Math Prep | Algebra II | open | | Low priority: almost entirely reuse; do after the courses above |
 | ACT Math Fundamentals, ACT Math Prep | Precalculus | open | | Low priority, as for SAT |

@@ -11013,6 +11013,1083 @@ export const abstractAlgebra: CourseDef = {
   ],
 };
 
+/** mathematicalMethodsForThePhysicalSciencesI develops mathematical methods for the physical sciences. */
+export const mathematicalMethodsForThePhysicalSciencesI: CourseDef = {
+  id: "mathematical-methods-for-the-physical-sciences-i",
+  title: t("Mathematical Methods for the Physical Sciences I", "物理科学的数学方法一"),
+  description: t(
+    "The core mathematical structures and analytical tools used throughout theoretical and applied physics: vector geometry, linear algebra (systems of equations, determinants, vector spaces, linear transformations, eigenvalues and diagonalization), multivariable functions and calculus (partial derivatives, gradients, vector fields, multiple integrals), probability and continuous random variables, and first- and second-order ordinary differential equations with physical modeling and oscillatory dynamics.",
+    "理论与应用物理的核心数学结构与解析工具：空间向量几何、线性代数（线性方程组、行列式、向量空间、线性变换、特征值与对角化）、多元函数与微积分（偏导数、梯度、向量场、重积分）、概率与连续随机变量，以及用于物理建模和振动动力学的一阶与二阶常微分方程。",
+  ),
+  units: [
+    {
+      title: t("Preliminaries", "预备知识"),
+      modules: [
+        {
+          title: t("Vector Geometry", "向量几何"),
+          topics: [
+            "the-vector-equation-of-a-line",
+            "the-parametric-equations-of-a-line",
+            "the-cartesian-equation-of-a-line",
+            "the-vector-equation-of-a-plane",
+            "the-cartesian-equation-of-a-plane",
+            "the-parametric-equations-of-a-plane",
+            "the-intersection-of-two-planes",
+            "the-shortest-distance-between-a-plane-and-a-point",
+            "the-intersection-between-a-line-and-a-plane",
+          ],
+        },
+        {
+          title: t("Introduction to Set Theory", "集合论初步"),
+          topics: [
+            "special-sets",
+            "statements-and-predicates",
+            "equivalent-sets",
+            "the-constructive-definition-of-a-set",
+            "the-conditional-definition-of-a-set",
+            "describing-sets-using-set-builder-notation",
+            "describing-planar-regions-using-set-builder-notation",
+            "cardinality-of-finite-sets",
+            "infinite-sets",
+            "subsets",
+          ],
+        },
+        {
+          title: t("Set Operations", "集合运算"),
+          topics: [
+            "the-difference-of-sets",
+            "set-complements",
+            "the-cartesian-product",
+            "visualizing-cartesian-products",
+            "indexed-sets",
+            "sets-and-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Matrices", "矩阵"),
+      modules: [
+        {
+          title: t("Gaussian Elimination", "高斯消元法"),
+          topics: [
+            "systems-of-equations-as-augmented-matrices",
+            "row-echelon-form",
+            "solving-systems-of-equations-using-back-substitution",
+            "elementary-row-operations",
+            "creating-rows-or-columns-containing-zeros-using-gaussian-elimination",
+            "solving-2x2-systems-of-equations-using-gaussian-elimination",
+            "solving-2x2-singular-systems-of-equations-using-gaussian-elimination",
+            "solving-3x3-systems-of-equations-using-gaussian-elimination",
+            "identifying-the-pivot-columns-of-a-matrix",
+            "solving-3x3-singular-systems-of-equations-using-gaussian-elimination",
+            "reduced-row-echelon-form",
+            "gaussian-elimination-for-nxm-systems-of-equations",
+          ],
+        },
+        {
+          title: t("Elementary Matrices", "初等矩阵"),
+          topics: [
+            "elementary-2x2-matrices",
+            "row-operations-on-2x2-matrices-as-products-of-elementary-matrices",
+            "elementary-3x3-matrices",
+            "row-operations-on-3x3-matrices-as-products-of-elementary-matrices",
+          ],
+        },
+        {
+          title: t("The Inverse of a Matrix", "逆矩阵"),
+          topics: [
+            "the-invertible-matrix-theorem-in-terms-of-2x2-systems-of-equations",
+            "finding-the-inverse-of-a-2x2-matrix-using-row-operations",
+            "finding-the-inverse-of-a-3x3-matrix-using-row-operations",
+            "finding-the-inverse-of-an-nxn-square-matrix-using-row-operations",
+            "matrices-with-easy-to-find-inverses",
+          ],
+        },
+        {
+          title: t("Determinants", "行列式"),
+          topics: [
+            "the-determinant-of-an-nxn-matrix",
+            "finding-determinants-using-laplace-expansions",
+            "basic-properties-of-determinants",
+            "further-properties-of-determinants",
+            "row-and-column-operations-on-determinants",
+            "conditions-when-a-determinant-equals-zero",
+            "finding-determinants-using-row-and-column-operations",
+            "cramers-rule-for-2x2-systems-of-linear-equations",
+          ],
+        },
+        {
+          title: t("LU Factorization", "LU 分解"),
+          topics: [
+            "triangular-matrices",
+            "lu-factorization-of-2x2-matrices",
+            "lu-factorization-of-3x3-matrices",
+            "lu-factorization-of-nxn-matrices",
+            "solving-systems-of-equations-using-lu-factorization",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Vector Spaces", "向量空间"),
+      modules: [
+        {
+          title: t("Vectors in N-Dimensional Space", "n 维空间中的向量"),
+          topics: [
+            "vectors-in-n-dimensional-euclidean-space",
+            "linear-combinations-of-vectors-in-n-dimensional-euclidean-space",
+            "linear-span-of-vectors-in-n-dimensional-euclidean-space",
+            "linear-dependence-and-independence",
+          ],
+        },
+        {
+          title: t("Subspaces of N-Dimensional Space", "n 维空间的子空间"),
+          topics: [
+            "subspaces-of-n-dimensional-space",
+            "subspaces-of-n-dimensional-space-geometric-interpretation",
+            "the-column-space-of-a-matrix",
+            "the-null-space-of-a-matrix",
+          ],
+        },
+        {
+          title: t("Bases of N-Dimensional Space", "n 维空间的基"),
+          topics: [
+            "finding-a-basis-of-a-span",
+            "finding-a-basis-of-the-column-space-of-a-matrix",
+            "finding-a-basis-of-the-null-space-of-a-matrix",
+            "expressing-the-coordinates-of-a-vector-in-a-given-basis",
+            "writing-vectors-in-different-bases",
+            "the-change-of-coordinates-matrix",
+            "changing-a-basis-using-the-change-of-coordinates-matrix",
+          ],
+        },
+        {
+          title: t("Dimension and Rank in N-Dimensional Space", "n 维空间的维数与秩"),
+          topics: [
+            "the-dimension-of-a-span",
+            "the-rank-of-a-matrix",
+            "the-dimension-of-the-null-space-of-a-matrix",
+            "the-invertible-matrix-theorem-in-terms-of-dimension-rank-and-nullity",
+            "the-rank-nullity-theorem",
+          ],
+        },
+        {
+          title: t("Abstract Vector Spaces", "抽象向量空间"),
+          topics: [
+            "introduction-to-abstract-vector-spaces",
+            "defining-abstract-vector-spaces",
+            "linear-independence-in-abstract-vector-spaces",
+            "subspaces-of-abstract-vector-spaces",
+            "bases-in-abstract-vector-spaces",
+            "the-coordinates-of-a-vector-relative-to-a-basis-in-abstract-vector-spaces",
+            "dimension-in-abstract-vector-spaces",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Linear Transformations", "线性变换"),
+      modules: [
+        {
+          title: t("Linear Transformations", "线性变换"),
+          topics: [
+            "standard-matrix-of-a-linear-transformation-in-terms-of-the-standard-basis",
+            "kernel-of-a-linear-transformation",
+            "image-and-rank-of-a-linear-transformation",
+            "image-of-a-linear-transformation-in-the-cartesian-plane",
+            "invertible-matrix-theorem-in-terms-of-linear-transformations",
+            "rank-nullity-theorem-in-terms-of-linear-transformations",
+          ],
+        },
+        {
+          title: t("Linear Maps and Their Matrix Representations", "线性映射及其矩阵表示"),
+          topics: [
+            "matrix-of-a-linear-transformation-relative-to-a-basis",
+            "connections-between-matrix-representations-of-a-linear-transformation",
+            "linear-maps-between-two-different-vector-spaces",
+            "matrix-of-a-linear-map-relative-to-two-bases",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Diagonalization of Matrices", "矩阵对角化"),
+      modules: [
+        {
+          title: t("Eigenvectors and Eigenvalues", "特征向量与特征值"),
+          topics: [
+            "eigenvalues-and-eigenvectors-of-a-2x2-matrix",
+            "calculating-the-eigenvalues-of-a-2x2-matrix",
+            "calculating-the-eigenvectors-of-a-2x2-matrix",
+            "characteristic-equation-of-a-matrix",
+            "cayley-hamilton-theorem",
+            "calculating-the-eigenvectors-of-a-3x3-matrix-with-distinct-eigenvalues",
+            "calculating-the-eigenvectors-of-a-3x3-matrix-in-the-general-case",
+            "invertible-matrix-theorem-in-terms-of-eigenvalues",
+          ],
+        },
+        {
+          title: t("Diagonalization", "对角化"),
+          topics: [
+            "diagonalizing-a-2x2-matrix",
+            "properties-of-diagonalization",
+            "diagonalizing-a-3x3-matrix-with-distinct-eigenvalues",
+            "diagonalizing-a-3x3-matrix-in-the-general-case",
+          ],
+        },
+        {
+          title: t("Real Matrices With Complex Eigenvalues", "具有复特征值的实矩阵"),
+          topics: [
+            "vectors-over-the-complex-numbers",
+            "matrices-over-the-complex-numbers",
+            "finding-complex-eigenvalues-of-real-2x2-matrices",
+            "finding-complex-eigenvectors-of-real-2x2-matrices",
+          ],
+        },
+        {
+          title: t("Generalized Eigenvectors", "广义特征向量"),
+          topics: [
+            "nilpotent-and-idempotent-matrices",
+            "generalized-eigenvectors",
+            "ranks-of-generalized-eigenvectors",
+            "finding-generalized-eigenvectors-of-specific-ranks",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Multivariable Functions", "多元函数"),
+      modules: [
+        {
+          title: t("Introduction to Multivariable Functions", "多元函数入门"),
+          topics: [
+            "interior-and-boundary-points",
+            "interiors-and-boundaries-of-sets",
+            "open-and-closed-sets",
+            "the-domain-of-a-multivariable-function",
+            "level-curves",
+            "level-surfaces",
+            "limits-and-continuity-of-multivariable-functions",
+          ],
+        },
+        {
+          title: t("Quadric Surfaces and Cylinders", "二次曲面与柱面"),
+          topics: [
+            "ellipsoids",
+            "hyperboloids",
+            "paraboloids",
+            "elliptic-cones",
+            "cylinders",
+            "intersections-of-lines-and-planes-with-surfaces",
+            "identifying-quadric-surfaces",
+          ],
+        },
+        {
+          title: t("Partial Derivatives", "偏导数"),
+          topics: [
+            "introduction-to-partial-derivatives",
+            "computing-partial-derivatives-using-the-rules-of-differentiation",
+            "geometric-interpretations-of-partial-derivatives",
+            "partial-differentiability-of-multivariable-functions",
+            "higher-order-partial-derivatives",
+            "equality-of-mixed-partial-derivatives",
+            "tangent-planes-to-surfaces",
+            "linearization-of-multivariable-functions",
+            "differentiating-under-the-integral-sign",
+          ],
+        },
+        {
+          title: t("The Gradient Vector", "梯度向量"),
+          topics: [
+            "the-gradient-vector",
+            "the-gradient-as-a-normal-vector",
+            "tangent-lines-to-level-curves",
+            "tangent-planes-to-level-surfaces",
+            "directional-derivatives",
+            "the-multivariable-mean-value-theorem",
+          ],
+        },
+        {
+          title: t("Plane Transformations", "平面变换"),
+          topics: [
+            "affine-transformations",
+            "the-image-of-an-affine-transformation",
+            "the-inverse-of-an-affine-transformation",
+            "nonlinear-transformations-of-plane-regions",
+            "polar-coordinate-transformations",
+            "transformations-of-regions-between-curves",
+          ],
+        },
+        {
+          title: t("Differentiation", "多元微分"),
+          topics: [
+            "the-jacobian",
+            "the-inverse-function-theorem",
+            "the-jacobian-of-a-three-dimensional-transformation",
+            "the-derivative-of-a-multivariable-function",
+            "symmetric-matrices",
+            "the-second-derivative-of-a-multivariable-function",
+            "second-degree-taylor-polynomials-of-multivariable-functions",
+          ],
+        },
+        {
+          title: t("The Multivariable Chain Rule", "多元链式法则"),
+          topics: ["the-multivariable-chain-rule", "the-multivariable-chain-rule-in-vector-form", "differentials"],
+        },
+      ],
+    },
+    {
+      title: t("Vector Functions and Vector Fields", "向量函数与向量场"),
+      modules: [
+        {
+          title: t("Vector-Valued Functions", "向量值函数"),
+          topics: [
+            "the-domain-of-a-vector-valued-function",
+            "differentiation-rules-for-vector-valued-functions",
+            "integration-rules-for-vector-valued-functions",
+            "the-arc-length-of-a-vector-valued-function",
+            "tangent-vectors-and-tangent-lines-to-curves",
+            "unit-tangent-vectors",
+            "principal-normal-vectors",
+            "binormal-vectors",
+            "the-osculating-plane",
+            "parameterization-by-arc-length",
+          ],
+        },
+        {
+          title: t("Curvature", "曲率"),
+          topics: [
+            "introduction-to-curvature",
+            "finding-curvature-using-the-cross-product",
+            "radius-of-curvature",
+            "the-curvature-of-a-plane-curve",
+          ],
+        },
+        {
+          title: t("Vector Fields", "向量场"),
+          topics: [
+            "vector-fields",
+            "visualizing-vector-fields",
+            "gradient-vector-fields",
+            "conservative-vector-fields-in-the-cartesian-plane",
+            "calculating-potential-functions",
+            "simple-closed-and-oriented-curves",
+            "connected-and-simply-connected-regions",
+            "stream-functions",
+          ],
+        },
+        {
+          title: t("Divergence and Curl", "散度与旋度"),
+          topics: [
+            "the-divergence-of-a-vector-field",
+            "properties-of-the-divergence-operator",
+            "the-curl-of-a-vector-field",
+            "properties-of-the-curl-operator",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Multiple Integrals", "重积分"),
+      modules: [
+        {
+          title: t("Double Integrals", "二重积分"),
+          topics: [
+            "double-integrals-over-rectangular-domains",
+            "double-integrals-over-non-rectangular-domains",
+            "properties-of-double-integrals",
+            "type-i-and-ii-regions-in-two-dimensional-space",
+            "double-integrals-over-type-i-regions",
+            "double-integrals-over-type-ii-regions",
+            "double-integrals-over-partitioned-regions",
+            "changing-the-order-of-integration-in-double-integrals",
+          ],
+        },
+        {
+          title: t("Change of Variables for Double Integrals", "二重积分的变量代换"),
+          topics: [
+            "double-integrals-in-plane-polar-coordinates",
+            "double-integrals-between-polar-curves",
+            "computing-areas-using-a-change-of-variables",
+            "computing-double-integrals-using-a-change-of-variables",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Probability & Random Variables", "概率与随机变量"),
+      modules: [
+        {
+          title: t("Probability", "概率"),
+          topics: ["the-law-of-total-probability", "extending-the-law-of-total-probability", "bayes-theorem", "extending-bayes-theorem"],
+        },
+        {
+          title: t("Random Variables", "随机变量"),
+          topics: [
+            "probability-density-functions-of-continuous-random-variables",
+            "calculating-probabilities-with-continuous-random-variables",
+            "continuous-random-variables-over-infinite-domains",
+            "cumulative-distribution-functions-for-continuous-random-variables",
+            "median-quartiles-and-percentiles-of-continuous-random-variables",
+            "finding-the-mode-of-a-continuous-random-variable",
+            "approximating-discrete-random-variables-as-continuous",
+            "one-to-one-transformations-of-discrete-random-variables",
+            "many-to-one-transformations-of-discrete-random-variables",
+          ],
+        },
+        {
+          title: t("Distributions of Two Discrete Random Variables", "二维离散随机变量的分布"),
+          topics: [
+            "double-summations",
+            "joint-distributions-for-discrete-random-variables",
+            "the-joint-cdf-of-two-discrete-random-variables",
+            "marginal-distributions-for-discrete-random-variables",
+            "conditional-distributions-for-discrete-random-variables",
+            "independence-of-discrete-random-variables",
+          ],
+        },
+        {
+          title: t("Expectation of Random Variables", "随机变量的期望"),
+          topics: [
+            "expected-values-of-discrete-random-variables",
+            "properties-of-expectation-for-discrete-random-variables",
+            "variance-of-discrete-random-variables",
+            "moments-of-discrete-random-variables",
+            "properties-of-variance-for-discrete-random-variables",
+            "moments-of-continuous-random-variables",
+            "expected-values-of-continuous-random-variables",
+            "variance-of-continuous-random-variables",
+            "the-rule-of-the-lazy-statistician",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Continuous Probability Distributions", "连续概率分布"),
+      modules: [
+        {
+          title: t("The Normal Distribution", "正态分布"),
+          topics: [
+            "the-z-score",
+            "the-standard-normal-distribution",
+            "symmetry-properties-of-the-standard-normal-distribution",
+            "the-normal-distribution",
+            "mean-and-variance-of-the-normal-distribution",
+            "percentage-points-of-the-standard-normal-distribution",
+            "modeling-with-the-normal-distribution",
+          ],
+        },
+        {
+          title: t("The Exponential Distribution", "指数分布"),
+          topics: [
+            "the-exponential-distribution",
+            "modeling-with-the-exponential-distribution",
+            "mean-and-variance-of-the-exponential-distribution",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("First-Order Differential Equations", "一阶微分方程"),
+      modules: [
+        {
+          title: t("First-Order ODEs", "一阶常微分方程"),
+          topics: [
+            "solving-first-order-odes-using-separation-of-variables",
+            "solving-first-order-ivps-using-separation-of-variables",
+            "introduction-to-first-order-linear-odes",
+            "general-solutions-of-first-order-linear-odes",
+            "solving-first-order-linear-odes-with-exponential-forcing",
+            "solving-first-order-linear-odes-with-sinusoidal-forcing",
+            "solving-first-order-linear-odes-using-integrating-factors",
+            "solving-first-order-odes-by-substitution",
+            "further-solving-first-order-odes-by-substitution",
+            "reducing-odes-to-first-order-linear-by-substitution",
+            "phase-lines-of-first-order-odes",
+            "classifying-equilibrium-solutions-of-first-order-odes",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Modeling With First-Order Differential Equations", "一阶微分方程建模"),
+      modules: [
+        {
+          title: t("Applications of First-Order ODEs", "一阶常微分方程的应用"),
+          topics: [
+            "modeling-with-first-order-odes",
+            "further-modeling-with-first-order-odes",
+            "modeling-mixture-problems-with-first-order-separable-odes",
+            "modeling-mixture-problems-with-first-order-linear-odes",
+            "orthogonal-trajectories",
+          ],
+        },
+        {
+          title: t("Growth and Decay Models With First-Order ODEs", "一阶常微分方程的增长与衰减模型"),
+          topics: [
+            "exponential-growth-and-decay-models-with-first-order-odes",
+            "exponential-growth-and-decay-models-with-first-order-odes-calculating-unknown-times-and-initial-values",
+            "exponential-growth-and-decay-models-with-first-order-odes-half-life-problems",
+            "inhibited-growth-models-with-first-order-odes",
+            "inhibited-decay-models-with-first-order-odes",
+            "logistic-growth-models-with-first-order-odes",
+            "qualitative-analysis-of-the-logistic-growth-equation",
+            "solving-the-logistic-growth-equation",
+          ],
+        },
+        {
+          title: t("Physical Applications of First-Order ODEs", "一阶常微分方程的物理应用"),
+          topics: [
+            "velocity-and-acceleration-as-functions-of-displacement",
+            "determining-properties-of-objects-described-as-functions-of-displacement",
+            "falling-body-problems-with-linear-drag",
+            "falling-body-problems-with-quadratic-drag",
+            "newtons-law-of-universal-gravitation",
+            "modeling-escape-velocity-with-first-order-odes",
+            "modeling-rl-circuits-with-first-order-odes",
+            "modeling-rc-circuits-with-first-order-odes",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Linear Differential Equations", "线性微分方程"),
+      modules: [
+        {
+          title: t("Theory of Solutions to Linear ODEs", "线性常微分方程解的理论"),
+          topics: [
+            "differential-operators",
+            "linear-differential-operators",
+            "introduction-to-second-order-linear-odes",
+            "the-superposition-principle",
+            "reduction-of-order",
+            "linear-independence-of-solutions-to-homogeneous-odes",
+            "general-solutions-of-linear-odes",
+            "abels-identity",
+          ],
+        },
+        {
+          title: t("Second-Order Linear ODEs With Constant Coefficients", "常系数二阶线性常微分方程"),
+          topics: [
+            "second-order-homogeneous-odes-characteristic-equations-with-distinct-real-roots",
+            "second-order-homogeneous-odes-characteristic-equations-with-repeated-roots",
+            "second-order-homogeneous-odes-characteristic-equations-with-complex-roots",
+            "second-order-homogeneous-initial-value-problems",
+            "second-order-inhomogeneous-odes-with-polynomial-forcing",
+            "second-order-inhomogeneous-odes-with-exponential-forcing",
+            "second-order-inhomogeneous-odes-with-sinusoidal-forcing",
+          ],
+        },
+        {
+          title: t("Modeling With Second-Order ODEs", "二阶常微分方程建模"),
+          topics: [
+            "simple-harmonic-oscillators",
+            "damped-oscillators",
+            "forced-oscillators",
+            "resonance-in-vibrating-systems",
+            "modeling-capacitor-charge-in-rcl-circuits-with-second-order-odes",
+            "modeling-current-in-rcl-circuits-with-second-order-odes",
+          ],
+        },
+        {
+          title: t("Variation of Parameters", "常数变易法"),
+          topics: [
+            "variation-of-parameters-for-first-order-linear-odes",
+            "variation-of-parameters-for-second-order-odes",
+            "solving-second-order-odes-using-variation-of-parameters",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+/** mathematicalMethodsForThePhysicalSciencesII develops mathematical methods for the physical sciences. */
+export const mathematicalMethodsForThePhysicalSciencesII: CourseDef = {
+  id: "mathematical-methods-for-the-physical-sciences-ii",
+  title: t("Mathematical Methods for the Physical Sciences II", "物理科学的数学方法二"),
+  description: t(
+    "Advanced mathematical analysis and methods for the physical sciences: inner product spaces, orthogonal projections and the Gram-Schmidt process; quadratic forms, symmetric matrix diagonalization and singular value decomposition; triple integrals and vector calculus (line integrals, circulation and flux, Green's theorem, surface integrals and divergence/Stokes applications); systems of linear differential equations and phase portraits; Laplace transforms; boundary value problems and Fourier series; numerical methods for differential equations; and multivariate distributions, covariance and the central limit theorem.",
+    "物理科学的高级数学分析与方法：内积空间、正交投影与施密特正交化；二次型、实对称矩阵对角化与奇异值分解；三重积分与向量微积分（曲线积分、环量与通量、格林公式、曲面积分及散度与斯托克斯应用）；线性微分方程组与相图；拉普拉斯变换；边值问题与傅里叶级数；微分方程的数值近似解法；以及多元概率分布、协方差与中心极限定理。",
+  ),
+  units: [
+    {
+      title: t("Projections", "投影与正交"),
+      modules: [
+        {
+          title: t("Inner Products", "内积"),
+          topics: [
+            "dot-product-in-n-dimensional-euclidean-space",
+            "norm-of-a-vector-in-n-dimensional-euclidean-space",
+            "inner-product-spaces",
+            "inner-product-in-vector-spaces-over-the-complex-numbers",
+            "norm-of-a-vector-in-inner-product-spaces",
+          ],
+        },
+        {
+          title: t("Orthogonality", "正交性"),
+          topics: [
+            "orthogonal-vectors-in-euclidean-spaces",
+            "orthogonal-vectors-in-inner-product-spaces",
+            "cauchy-schwarz-inequality-and-angle-between-two-vectors",
+            "pythagorean-theorem-and-triangle-inequality-in-inner-product-spaces",
+            "orthogonal-complements",
+            "orthogonal-sets-in-euclidean-spaces",
+            "orthogonal-sets-in-inner-product-spaces",
+            "orthogonal-matrices",
+            "orthogonal-linear-transformations",
+            "four-fundamental-subspaces-of-a-matrix",
+          ],
+        },
+        {
+          title: t("Orthogonal Projections", "正交投影"),
+          topics: [
+            "projecting-vectors-onto-one-dimensional-subspaces",
+            "components-of-a-vector-with-respect-to-an-orthogonal-or-orthonormal-basis",
+            "projecting-vectors-onto-subspaces-in-euclidean-spaces-orthogonal-bases",
+            "projecting-vectors-onto-subspaces-in-euclidean-spaces-arbitrary-bases",
+            "projecting-vectors-onto-subspaces-in-euclidean-spaces-arbitrary-bases-applications",
+            "projection-matrices-linear-transformations-and-their-properties",
+            "projecting-vectors-onto-subspaces-in-inner-product-spaces",
+          ],
+        },
+        {
+          title: t("Orthogonalization Processes", "正交化方法"),
+          topics: ["gram-schmidt-process-for-two-vectors", "gram-schmidt-process-in-the-general-case", "qr-factorization"],
+        },
+      ],
+    },
+    {
+      title: t("Quadratic Forms", "二次型"),
+      modules: [
+        {
+          title: t("Diagonalization of Symmetric Matrices", "对称矩阵的对角化"),
+          topics: ["diagonalization-of-2x2-symmetric-matrices", "diagonalization-of-3x3-symmetric-matrices", "spectral-theorem"],
+        },
+        {
+          title: t("Quadratic Forms", "二次型"),
+          topics: [
+            "bilinear-forms",
+            "quadratic-forms",
+            "change-of-variables-in-quadratic-forms",
+            "positive-definite-and-negative-definite-quadratic-forms",
+            "constrained-optimization-of-quadratic-forms",
+            "constrained-optimization-of-quadratic-forms-determining-where-extrema-are-attained",
+          ],
+        },
+        {
+          title: t("Singular Value Decomposition", "奇异值分解"),
+          topics: [
+            "singular-values-of-a-matrix",
+            "computing-the-singular-values-of-a-matrix",
+            "singular-value-decomposition-of-2x2-matrices",
+            "singular-value-decomposition-of-2x2-matrices-with-zero-or-repeated-eigenvalues",
+            "singular-value-decomposition-of-larger-matrices",
+            "singular-value-decomposition-and-the-pseudoinverse-matrix",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Applications of Linear Algebra", "线性代数的应用"),
+      modules: [
+        {
+          title: t("Linear Least-Squares Problems", "线性最小二乘问题"),
+          topics: [
+            "least-squares-solution-of-a-linear-system-without-collinearity",
+            "least-squares-solution-of-a-linear-system-with-collinearity",
+            "finding-a-least-squares-solution-using-qr-factorization",
+            "weighted-least-squares",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Multiple Integrals", "重积分"),
+      modules: [
+        {
+          title: t("Triple Integrals", "三重积分"),
+          topics: [
+            "repeated-integrals-in-three-dimensions",
+            "triple-integrals-over-rectangular-domains",
+            "type-i-ii-and-iii-regions-in-three-dimensional-space",
+            "triple-integrals-over-type-i-regions",
+            "triple-integrals-over-type-ii-regions",
+            "triple-integrals-over-type-iii-regions",
+            "calculating-volumes-of-solids-using-triple-integrals",
+            "changing-the-order-of-integration-in-triple-integrals-changing-projection",
+            "changing-the-order-of-integration-in-triple-integrals-changing-region",
+          ],
+        },
+        {
+          title: t("Change of Variables for Triple Integrals", "三重积分的变量代换"),
+          topics: [
+            "cylindrical-polar-coordinates",
+            "surfaces-in-cylindrical-polar-coordinates",
+            "spherical-polar-coordinates",
+            "surfaces-in-spherical-polar-coordinates",
+            "the-multivariable-chain-rule-with-polar-coordinates",
+            "triple-integrals-in-cylindrical-polar-coordinates",
+            "triple-integrals-in-spherical-polar-coordinates",
+            "computing-triple-integrals-using-a-change-of-variables",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Line Integrals", "曲线积分"),
+      modules: [
+        {
+          title: t("Line Integrals of Scalar Functions", "标量函数的曲线积分"),
+          topics: [
+            "line-integrals-of-scalar-functions",
+            "properties-of-line-integrals-of-scalar-functions",
+            "line-integrals-of-scalar-functions-over-paths-expressed-as-functions-of-x",
+            "line-integrals-of-scalar-functions-over-paths-expressed-as-functions-of-y",
+          ],
+        },
+        {
+          title: t("Line Integrals of Scalar Functions Over Parametric Curves", "参数曲线上的标量曲线积分"),
+          topics: [
+            "line-integrals-of-scalar-functions-over-line-segments",
+            "line-integrals-of-scalar-functions-over-circles",
+            "line-integrals-of-scalar-functions-over-ellipses",
+            "further-properties-of-line-integrals-of-scalar-functions",
+            "line-integrals-of-scalar-functions-over-polar-curves",
+          ],
+        },
+        {
+          title: t("Line Integrals With Respect to X and Y", "对坐标的曲线积分"),
+          topics: [
+            "line-integrals-with-respect-to-x-and-y",
+            "properties-of-line-integrals-with-respect-to-x-and-y",
+            "sums-of-line-integrals-with-respect-to-x-and-y-over-parametric-curves",
+            "sums-of-line-integrals-with-respect-to-x-and-y",
+          ],
+        },
+        {
+          title: t("Line Integrals of Vector-Valued Functions", "向量线积分与做功"),
+          topics: [
+            "line-integrals-of-vector-valued-functions-over-parametric-curves",
+            "line-integrals-of-vector-valued-functions-over-general-curves",
+            "interpreting-line-integrals-of-vector-valued-functions",
+            "properties-of-line-integrals-of-vector-valued-functions",
+            "work-done-by-a-force-field",
+            "the-fundamental-theorem-of-line-integrals",
+          ],
+        },
+        {
+          title: t("Circulation and Flux", "环量与通量"),
+          topics: [
+            "path-independence-of-line-integrals",
+            "conservative-vector-fields-and-closed-paths",
+            "calculating-potential-functions-for-line-integrals",
+            "line-integrals-of-conservative-vector-fields-in-three-dimensions",
+            "conservation-of-mechanical-energy",
+          ],
+        },
+        {
+          title: t("Green's Theorem", "格林公式"),
+          topics: [
+            "circulation-and-flux-across-simple-closed-plane-curves",
+            "greens-theorem-in-circulation-curl-form",
+            "calculating-areas-using-greens-theorem",
+            "greens-theorem-in-flux-divergence-form",
+            "greens-theorem-on-regions-with-holes",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Surface Integrals", "曲面积分"),
+      modules: [
+        {
+          title: t("Parametric Surfaces", "参数曲面"),
+          topics: [
+            "parametric-surfaces",
+            "tangent-planes-to-parametric-surfaces",
+            "parametrizations-of-ellipsoids-and-cones",
+            "parametrizations-of-paraboloids-and-hyperboloids",
+            "parametrizations-of-cylinders",
+          ],
+        },
+        {
+          title: t("Surface Area", "曲面面积"),
+          topics: [
+            "surface-areas-of-revolution-rotation-about-the-x-axis",
+            "surface-areas-of-revolution-rotation-about-the-y-axis",
+            "surface-areas-of-revolution-for-parametric-curves",
+            "areas-of-parametric-surfaces",
+            "surfaces-of-revolution",
+            "areas-of-surfaces",
+          ],
+        },
+        {
+          title: t("Surface Integrals", "曲面积分"),
+          topics: [
+            "surface-integrals-over-parametric-surfaces",
+            "surface-integrals-over-cartesian-surfaces",
+            "flux-in-three-dimensional-vector-fields",
+            "flux-through-closed-surfaces",
+            "calculating-flux-through-parametric-surfaces",
+            "calculating-flux-through-cartesian-surfaces",
+            "calculating-flux-through-closed-surfaces",
+            "the-divergence-theorem",
+            "stokes-theorem",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Applications of Multivariable Calculus", "多元微积分的应用"),
+      modules: [
+        {
+          title: t("Vector Mechanics", "向量力学"),
+          topics: [
+            "velocity-and-acceleration-as-functions-of-displacement",
+            "determining-properties-of-objects-described-as-functions-of-displacement",
+            "the-components-of-acceleration",
+            "newtons-second-law",
+            "applying-newtons-second-law-in-the-plane",
+            "the-work-energy-principle",
+            "circular-motion-about-the-origin",
+          ],
+        },
+        {
+          title: t("Optimization", "最优化"),
+          topics: [
+            "global-vs-local-extrema-and-critical-points-of-multivariable-functions",
+            "the-second-partial-derivatives-test",
+            "calculating-global-extrema-of-multivariable-functions",
+            "lagrange-multipliers-with-one-constraint",
+            "lagrange-multipliers-with-multiple-constraints",
+            "optimizing-multivariable-functions-using-lagrange-multipliers",
+          ],
+        },
+        {
+          title: t("Applications of Multiple Integrals", "重积分的应用"),
+          topics: [
+            "the-average-value-of-a-multivariable-function",
+            "density-mass-and-charge-of-plane-laminas",
+            "moments-and-center-of-mass",
+            "moments-and-centers-of-mass-of-thin-rods",
+            "moments-and-centers-of-mass-of-plane-laminas",
+            "moments-of-inertia-of-laminas-about-the-coordinate-axes",
+            "moments-of-inertia-of-laminas-about-other-axes",
+            "calculating-the-radius-of-gyration-of-a-plane-lamina",
+            "the-parallel-axis-theorem",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Systems of Differential Equations", "微分方程组"),
+      modules: [
+        {
+          title: t("Systems of ODEs", "常微分方程组"),
+          topics: [
+            "introduction-to-systems-of-linear-odes",
+            "expressing-homogeneous-odes-as-first-order-systems",
+            "expressing-inhomogeneous-odes-as-first-order-systems",
+            "linear-independence-for-homogeneous-systems-of-odes",
+            "general-solutions-of-first-order-linear-systems-of-odes",
+          ],
+        },
+        {
+          title: t("Solving Systems of Linear ODEs", "线性常微分方程组的求解"),
+          topics: [
+            "solving-decoupled-homogeneous-systems-of-odes",
+            "solving-homogeneous-systems-of-odes-with-distinct-eigenvalues",
+            "solving-homogeneous-systems-of-odes-with-distinct-eigenvalues-and-initial-conditions",
+            "solving-homogeneous-systems-of-odes-with-repeated-eigenvalues",
+            "solving-homogeneous-systems-of-odes-with-complex-eigenvalues",
+            "solving-inhomogeneous-systems-of-odes",
+          ],
+        },
+        {
+          title: t("Phase Portraits for Systems of Linear ODEs", "线性常微分方程组的相图"),
+          topics: [
+            "phase-planes-and-phase-portraits",
+            "equilibrium-points-and-stability-for-systems-of-odes",
+            "phase-portraits-for-decoupled-linear-systems",
+            "phase-portraits-for-linear-systems-with-real-distinct-eigenvalues",
+            "phase-portraits-for-linear-systems-with-repeated-eigenvalues",
+            "phase-portraits-for-linear-systems-with-zero-eigenvalues",
+            "phase-portraits-for-linear-systems-with-complex-eigenvalues",
+            "shifted-systems-of-odes",
+            "linear-approximations-near-equilibria",
+          ],
+        },
+        {
+          title: t("Solving Systems of ODEs Using Matrix Methods", "用矩阵方法求解常微分方程组"),
+          topics: [
+            "matrix-exponentials",
+            "fundamental-matrices",
+            "solving-homogeneous-systems-of-odes-using-matrix-methods",
+            "solving-inhomogeneous-systems-of-odes-using-matrix-methods",
+            "solving-systems-of-odes-using-variation-of-parameters",
+          ],
+        },
+        {
+          title: t("Modeling With Systems of Linear ODEs", "线性常微分方程组建模"),
+          topics: ["the-lotka-volterra-predator-prey-model", "the-lotka-volterra-model-with-carrying-capacity"],
+        },
+      ],
+    },
+    {
+      title: t("Laplace Transforms", "拉普拉斯变换"),
+      modules: [
+        {
+          title: t("Laplace Transforms", "拉普拉斯变换"),
+          topics: [
+            "the-floor-and-ceiling-functions",
+            "the-unit-step-function",
+            "piecewise-continuity-and-piecewise-smoothness",
+            "introduction-to-laplace-transforms",
+            "linearity-of-laplace-transforms",
+            "laplace-transforms-of-piecewise-continuous-functions",
+            "the-smoothness-property-of-laplace-transforms",
+            "laplace-transforms-of-derivatives",
+            "laplace-transforms-of-integrals",
+            "the-first-shifting-theorem-of-laplace-transforms",
+            "the-second-shifting-theorem-of-laplace-transforms",
+            "inverse-laplace-transforms",
+          ],
+        },
+        {
+          title: t("Solving Linear ODEs Using Laplace Transforms", "用拉普拉斯变换求解线性常微分方程"),
+          topics: [
+            "solving-first-order-odes-using-laplace-transforms",
+            "solving-first-order-odes-with-time-delayed-forcing-using-laplace-transforms",
+            "solving-second-order-odes-using-laplace-transforms",
+            "solving-second-order-odes-with-time-delayed-forcing-using-laplace-transforms",
+            "solving-homogeneous-systems-of-odes-using-laplace-transforms",
+            "solving-inhomogeneous-systems-of-odes-using-laplace-transforms",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Boundary Value Problems", "边值问题"),
+      modules: [
+        {
+          title: t("Boundary Value Problems", "边值问题"),
+          topics: [
+            "introduction-to-boundary-value-problems",
+            "second-order-homogeneous-boundary-value-problems",
+            "second-order-inhomogeneous-boundary-value-problems",
+            "eigenvalues-and-eigenfunctions-of-homogeneous-bvps",
+          ],
+        },
+        {
+          title: t("Fourier Series", "傅里叶级数"),
+          topics: [
+            "introduction-to-fourier-series",
+            "properties-of-fourier-series",
+            "fourier-sine-series",
+            "fourier-cosine-series",
+            "fourier-series-of-arbitrary-period",
+            "convergence-of-fourier-series",
+            "differentiating-and-integrating-fourier-series",
+            "solving-odes-using-fourier-series",
+            "solving-ivps-using-fourier-series",
+            "solving-bvps-using-fourier-series",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Approximating Solutions to Differential Equations", "微分方程的近似解法"),
+      modules: [
+        {
+          title: t("Euler's Method", "欧拉方法"),
+          topics: [
+            "eulers-method-calculating-one-step",
+            "eulers-method-calculating-multiple-steps",
+            "the-modified-euler-method",
+            "eulers-method-for-systems-of-odes",
+            "eulers-method-for-second-order-odes",
+          ],
+        },
+        {
+          title: t("Higher-Order Numerical Methods", "高阶数值方法"),
+          topics: ["the-rk4-method", "the-abm2-method"],
+        },
+        {
+          title: t("Implicit Numerical Methods", "隐式数值方法"),
+          topics: [
+            "the-implicit-euler-method",
+            "the-trapezoidal-method",
+            "newtons-method",
+            "using-the-implicit-euler-method-with-newtons-method",
+            "using-the-trapezoidal-method-with-newtons-method",
+          ],
+        },
+        {
+          title: t("Analyzing Numerical Methods", "数值方法的分析"),
+          topics: ["big-o-notation", "error-in-numerical-methods", "order-of-numerical-methods", "stability-of-numerical-methods"],
+        },
+      ],
+    },
+    {
+      title: t("Combining Random Variables", "随机变量的组合"),
+      modules: [
+        {
+          title: t("Distributions of Two Continuous Random Variables", "二维连续随机变量的分布"),
+          topics: [
+            "joint-distributions-for-continuous-random-variables",
+            "marginal-distributions-for-continuous-random-variables",
+            "independence-of-continuous-random-variables",
+            "conditional-distributions-for-continuous-random-variables",
+            "the-joint-cdf-of-two-continuous-random-variables",
+            "properties-of-the-joint-cdf-of-two-continuous-random-variables",
+            "the-bivariate-normal-distribution",
+          ],
+        },
+        {
+          title: t("Combining Normal Random Variables", "正态随机变量的组合"),
+          topics: [
+            "combining-two-normally-distributed-random-variables",
+            "combining-multiple-normally-distributed-random-variables",
+            "iid-normal-random-variables",
+          ],
+        },
+        {
+          title: t("Expectation for Multivariate Distributions", "多维分布的期望"),
+          topics: [
+            "expected-values-of-sums-and-products-of-random-variables",
+            "variance-of-sums-of-independent-random-variables",
+            "computing-expected-values-from-joint-distributions",
+            "conditional-expectation-for-discrete-random-variables",
+            "conditional-variance-for-discrete-random-variables",
+            "the-rule-of-the-lazy-statistician-for-two-random-variables",
+          ],
+        },
+        {
+          title: t("Covariance of Random Variables", "随机变量的协方差"),
+          topics: [
+            "the-covariance-of-two-random-variables",
+            "variance-of-sums-of-random-variables",
+            "the-covariance-matrix",
+            "the-correlation-coefficient-for-two-random-variables",
+          ],
+        },
+        {
+          title: t("The Central Limit Theorem", "中心极限定理"),
+          topics: [
+            "the-sample-mean",
+            "sampling-distributions",
+            "variance-of-sample-means",
+            "sample-means-from-normal-populations",
+            "the-central-limit-theorem",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -11042,4 +12119,6 @@ export const mathCourses: readonly CourseDef[] = [
   mathematicalFoundationsIII,
   probabilityAndStatistics,
   mathematicsForMachineLearning,
+  mathematicalMethodsForThePhysicalSciencesI,
+  mathematicalMethodsForThePhysicalSciencesII,
 ];
