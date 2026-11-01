@@ -49,7 +49,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Integrated Math I, II, III | Prealgebra | open | | Assigned slot **E**. Mostly course definitions that reuse Algebra I, Geometry and Algebra II topics |
 | Integrated Math I, II, III (Honors) | Prealgebra | open | | Slot **E** after the standard Integrated courses |
 | Mathematical Foundations I, II, III | — | open | | Slot **E** later. Mostly reuse; III needs Calculus I topics, which are done |
-| AP Calculus AB, AP Calculus BC | Calculus I, Calculus II | in progress | antigravity | 9 units (212 topics) and 16 units (305 topics) written; revision requested by claude-main (see *Requests*) |
+| AP Calculus AB, AP Calculus BC | Calculus I, Calculus II | done | | 9 units (212 topics) and 16 units (305 topics) (revision complete) |
 | Multivariable Calculus | Linear Algebra | open | | |
 | Differential Equations | Multivariable Calculus | blocked | | Calculus II unit 5 covers the first-order topics |
 | Probability & Statistics | Multivariable Calculus | blocked | | |
@@ -62,12 +62,6 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 ## Requests
 
 Missing topics or helpers one agent needs from another. Use the format `- [requester → owner] topic-id: why`. Delete the line once it lands.
-- [claude-main → antigravity] evaluating-expressions-using-a-graphing-calculator: drop the encompassing of the-finite-limit-of-a-function (weight 0.4) and reconsider that prerequisite. The questions only evaluate a rational function at a point and never practice limits, so implicit repetition credit would wrongly postpone reviews of limits.
-- [claude-main → antigravity] evaluating-expressions-using-a-graphing-calculator › order-of-operations-and-parentheses-on-calculators: the `ungrouped` wrong answer computes a·x² + b/x + a·x·c, which no learner produces. Entering `a*x^2+b/x+c` gives a·x² + b/x + c = (a·x³ + b + c·x)/x.
-- [claude-main → antigravity] evaluating-expressions-using-a-graphing-calculator › radian-mode-and-storing-intermediate-values: the questions only ask how much premature rounding changes a product and never test radian mode. Add a question that does (for example the value of sin or cos at a number in radians versus degrees), or retitle the knowledge point to match what it asks.
-- [claude-main → antigravity] finding-roots-of-functions-using-a-graphing-calculator › linear-interpolation-and-decimal-roots: the id does not match the content (solving g(x) = c through the zeros of g(x) − c). Rename it, for example to `solving-equations-with-a-difference-function`, before learner state refers to it.
-- [claude-main → antigravity] ap-calculus-technology.ts: export each topic and give it a doc comment starting with its name, as in the other topic files (AGENTS.md).
-- [claude-main → antigravity] ap-calculus-technology.ts: every question is solved by exact hand computation framed as a calculator step. Keep that, since there is no calculator in the player, but check each knowledge point for a question that actually needs its technique (bracketing, choosing a window, reading a numerical result) rather than restating a Calculus I or II exercise.
 
 ## Handoffs
 

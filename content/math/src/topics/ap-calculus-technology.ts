@@ -1,21 +1,25 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly, Q } from "@ga/subject-math";
+import { dec, linear, poly, Q } from "@ga/subject-math";
 
 import { numberProblem, pointProblem } from "../problems.ts";
 
 // AP Calculus AB Unit 9 & AP Calculus BC Unit 16: Applications of Technology
 // (Using Graphing Calculators).
 
-const evaluatingExpressionsUsingAGraphingCalculator: TopicDef = {
+/** evaluatingExpressionsUsingAGraphingCalculator practices grouping expressions with parentheses, using radian mode, and storing intermediate values at full precision. */
+export const evaluatingExpressionsUsingAGraphingCalculator: TopicDef = {
   id: "evaluating-expressions-using-a-graphing-calculator",
   title: t("Evaluating Expressions Using a Graphing Calculator", "用图形计算器计算表达式"),
   summary: t(
     "Group numerators, denominators and compound exponents with parentheses, keep the calculator in radian mode, and store intermediate values at full precision.",
     "用括号对分子、分母与复合指数分组，保持弧度模式，并以完整精度存储中间计算值。",
   ),
-  prerequisites: ["the-finite-limit-of-a-function"],
-  encompasses: [{ topic: "the-finite-limit-of-a-function", weight: 0.4 }],
+  prerequisites: ["extending-the-trigonometric-ratios-using-angles-in-radians"],
+  encompasses: [
+    { topic: "evaluating-expressions", weight: 0.3 },
+    { topic: "extending-the-trigonometric-ratios-using-angles-in-radians", weight: 0.3 },
+  ],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -23,8 +27,8 @@ const evaluatingExpressionsUsingAGraphingCalculator: TopicDef = {
       id: "order-of-operations-and-parentheses-on-calculators",
       title: t("Grouping Numerators, Denominators, and Exponents", "分子、分母与指数的括号分组"),
       explanation: t(
-        "When entering rational or exponential expressions in a single line on a graphing calculator, wrap the entire numerator, denominator, and compound exponent in parentheses so the calculator respects the order of operations. For example, to evaluate $f(x) = \\frac{3x^2 + 1}{x + 2}$ at $x = 2$, enter $(3\\cdot 2^2 + 1)/(2 + 2) = \\frac{13}{4}$.",
-        "在图形计算器中单行输入分式或指数表达式时，必须将整个分子、整个分母以及复合指数用括号括起来，以确保计算器遵循正确的运算顺序。例如计算 $f(x) = \\frac{3x^2 + 1}{x + 2}$ 在 $x = 2$ 处的值时，应输入 $(3\\cdot 2^2 + 1)/(2 + 2) = \\frac{13}{4}$。",
+        "When entering rational or exponential expressions in a single line on a graphing calculator, wrap the entire numerator, denominator, and compound exponent in parentheses so the calculator respects the order of operations. For example, to evaluate $f(x) = \\frac{3x^2 + 1}{x + 2}$ at $x = 2$, entering `(3*2^2 + 1)/(2 + 2)` gives $\\frac{13}{4}$, whereas omitting parentheses and typing `3*2^2 + 1/2 + 2` computes $3(4) + \\frac{1}{2} + 2 = \\frac{29}{2}$.",
+        "在图形计算器中单行输入分式或指数表达式时，必须将整个分子、整个分母以及复合指数用括号括起来，以确保计算器遵循正确的运算顺序。例如计算 $f(x) = \\frac{3x^2 + 1}{x + 2}$ 在 $x = 2$ 处的值时，输入 `(3*2^2 + 1)/(2 + 2)` 得 $\\frac{13}{4}$，而若漏掉括号输入 `3*2^2 + 1/2 + 2`，计算器会按 $3(4) + \\frac{1}{2} + 2 = \\frac{29}{2}$ 计算。",
       ),
       generate: (rng: Rng) => {
         const a = rng.int(2, 7);
@@ -33,19 +37,35 @@ const evaluatingExpressionsUsingAGraphingCalculator: TopicDef = {
         const x = rng.int(2, 5);
         const num = a * x * x + b;
         const den = x + c;
-        const ans = Q.of(num, den);
-        const ungrouped = Q.of(a * x * x * x + b + a * x * x * c, x);
+        const grouped = Q.of(num, den);
+        // Entering a*x^2 + b/x + c without any parentheses computes a*x^2 + b/x + c = (a*x^3 + b + c*x)/x
+        const ungrouped = Q.of(a * x * x * x + b + c * x, x);
+        // Entering (a*x^2 + b)/x + c (missing denominator parentheses)
+        const noDenParen = Q.of(num + c * x, x);
+        // Entering a*x^2 + b/(x + c) (missing numerator parentheses)
+        const noNumParen = Q.of(a * x * x * den + b, den);
+        const askUngrouped = rng.bool();
         return numberProblem({
-          prompt: t(
-            `Suppose you evaluate $f(x) = \\frac{${a}x^2 + ${b}}{x + ${c}}$ at $x = ${x}$ on a calculator using the properly grouped entry $(${a}x^2 + ${b})/(x + ${c})$. What exact value does this produce?`,
-            `在计算器上使用正确加括号的输入方式 $(${a}x^2 + ${b})/(x + ${c})$ 计算函数 $f(x) = \\frac{${a}x^2 + ${b}}{x + ${c}}$ 在 $x = ${x}$ 处的值，所得的精确值是多少？`,
-          ),
-          answer: ans,
-          wrong: [ungrouped, Q.of(num, x), Q.of(a * x + b, den)],
-          solution: t(
-            `Evaluate the grouped numerator and denominator at $x = ${x}$: numerator $= ${a}(${x})^2 + ${b} = ${num}$, denominator $= ${x} + ${c} = ${den}$. Dividing gives $\\frac{${num}}{${den}} = ${ans.toLatex()}$.`,
-            `在 $x = ${x}$ 处分别计算括号内的分子与分母：分子 $= ${a}(${x})^2 + ${b} = ${num}$，分母 $= ${x} + ${c} = ${den}$。相除得 $\\frac{${num}}{${den}} = ${ans.toLatex()}$。`,
-          ),
+          prompt: askUngrouped
+            ? t(
+                `A student intends to evaluate $f(x) = \\frac{${a}x^2 + ${b}}{x + ${c}}$ at $x = ${x}$, but omits parentheses and types \`${a}*${x}^2 + ${b}/${x} + ${c}\` into a calculator. What exact value does the calculator return for this ungrouped entry?`,
+                `某学生原本要计算 $f(x) = \\frac{${a}x^2 + ${b}}{x + ${c}}$ 在 $x = ${x}$ 处的值，但漏掉了括号，在计算器中输入了 \`${a}*${x}^2 + ${b}/${x} + ${c}\`。计算器对该未加括号的输入返回的精确值是多少？`,
+              )
+            : t(
+                `You evaluate $f(x) = \\frac{${a}x^2 + ${b}}{x + ${c}}$ at $x = ${x}$ on a calculator using the properly grouped entry \`(${a}*${x}^2 + ${b})/(${x} + ${c})\`. What exact value does this produce?`,
+                `在计算器上使用正确加括号的输入方式 \`(${a}*${x}^2 + ${b})/(${x} + ${c})\` 计算函数 $f(x) = \\frac{${a}x^2 + ${b}}{x + ${c}}$ 在 $x = ${x}$ 处的值，所得的精确值是多少？`,
+              ),
+          answer: askUngrouped ? ungrouped : grouped,
+          wrong: askUngrouped ? [grouped, noDenParen, noNumParen] : [ungrouped, noDenParen, noNumParen],
+          solution: askUngrouped
+            ? t(
+                `By order of operations, \`${a}*${x}^2 + ${b}/${x} + ${c}\` is evaluated as $${a}(${x})^2 + \\frac{${b}}{${x}} + ${c} = ${a * x * x + c} + \\frac{${b}}{${x}} = ${ungrouped.toLatex()}$.`,
+                `按运算顺序，\`${a}*${x}^2 + ${b}/${x} + ${c}\` 会被计算为 $${a}(${x})^2 + \\frac{${b}}{${x}} + ${c} = ${a * x * x + c} + \\frac{${b}}{${x}} = ${ungrouped.toLatex()}$。`,
+              )
+            : t(
+                `Evaluate the grouped numerator and denominator at $x = ${x}$: numerator $= ${a}(${x})^2 + ${b} = ${num}$, denominator $= ${x} + ${c} = ${den}$. Dividing gives $\\frac{${num}}{${den}} = ${grouped.toLatex()}$.`,
+                `在 $x = ${x}$ 处分别计算括号内的分子与分母：分子 $= ${a}(${x})^2 + ${b} = ${num}$，分母 $= ${x} + ${c} = ${den}$。相除得 $\\frac{${num}}{${den}} = ${grouped.toLatex()}$。`,
+              ),
         });
       },
     },
@@ -53,10 +73,36 @@ const evaluatingExpressionsUsingAGraphingCalculator: TopicDef = {
       id: "radian-mode-and-storing-intermediate-values",
       title: t("Radian Mode and Storing Intermediate Values", "弧度模式与中间值存储"),
       explanation: t(
-        "All calculus differentiation and integration formulas for trigonometric functions assume angles are measured in radians, so your graphing calculator must always remain in radian mode on AP Calculus exams. When a multi-step problem uses an intermediate number $A$, store $A$ in a calculator variable rather than re-typing a rounded approximation.",
-        "微积分中所有三角函数的求导与积分公式都以弧度制为前提，因此在 AP 微积分考试中图形计算器必须始终处于弧度（Radian）模式。当多步计算题需要使用中间数值 $A$ 时，应将 $A$ 存储在计算器变量中，切勿将四舍五入后的近似值重新输入，以免产生累计舍入误差。",
+        "All calculus differentiation and integration formulas for trigonometric functions assume angles are measured in radians, so your graphing calculator must always remain in radian mode on AP Calculus exams. In addition, when a multi-step problem uses an intermediate number $A$, store $A$ in a calculator variable rather than re-typing a rounded approximation.",
+        "微积分中所有三角函数的求导与积分公式都以弧度制为前提，因此在 AP 微积分考试中图形计算器必须始终处于弧度（Radian）模式。此外，当多步计算题需要使用中间数值 $A$ 时，应将 $A$ 存储在计算器变量中，切勿将四舍五入后的近似值重新输入，以免产生累计舍入误差。",
       ),
       generate: (rng: Rng) => {
+        if (rng.bool()) {
+          const a = rng.int(2, 9);
+          const b = rng.int(2, 9);
+          const k = rng.int(1, 4);
+          // Evaluate f(x) = a cos(pi * x) + b sin((pi/2) * x) at x = 2k - 1 in radian mode:
+          // cos((2k-1)pi) = -1, sin((2k-1)pi/2) = (-1)^(k-1)
+          const x = 2 * k - 1;
+          const sinVal = k % 2 === 1 ? 1 : -1;
+          const radAns = -a + b * sinVal;
+          // If evaluated at 0 or with cos = 1
+          const wrong1 = a + b * sinVal;
+          const wrong2 = -a - b * sinVal;
+          const wrong3 = a + b;
+          return numberProblem({
+            prompt: t(
+              `With your graphing calculator set to Radian mode, you evaluate $f(x) = ${a}\\cos(\\pi x) + ${b}\\sin\\left(\\frac{\\pi x}{2}\\right)$ at $x = ${x}$. What exact value does the calculator return?`,
+              `将图形计算器设为弧度（Radian）模式，计算函数 $f(x) = ${a}\\cos(\\pi x) + ${b}\\sin\\left(\\frac{\\pi x}{2}\\right)$ 在 $x = ${x}$ 处的值，计算器返回的精确值是多少？`,
+            ),
+            answer: radAns,
+            wrong: [wrong1, wrong2, wrong3],
+            solution: t(
+              `In radian mode at $x = ${x}$, $\\cos(${x}\\pi) = -1$ and $\\sin\\left(\\frac{${x}\\pi}{2}\\right) = ${sinVal}$, so $f(${x}) = ${a}(-1) + ${b}(${sinVal}) = ${radAns}$.`,
+              `在弧度模式下，当 $x = ${x}$ 时，$\\cos(${x}\\pi) = -1$ 且 $\\sin\\left(\\frac{${x}\\pi}{2}\\right) = ${sinVal}$，因此 $f(${x}) = ${a}(-1) + ${b}(${sinVal}) = ${radAns}$。`,
+            ),
+          });
+        }
         const k = rng.int(2, 9) * 1000;
         const baseTenths = rng.int(12, 38);
         const extraThousandths = rng.int(2, 4);
@@ -66,8 +112,8 @@ const evaluatingExpressionsUsingAGraphingCalculator: TopicDef = {
         const diff = exactVal - roundedVal;
         return numberProblem({
           prompt: t(
-            `A calculator stores the exact intermediate value $A = ${(exactThousandths / 1000).toFixed(3)}$. If you compute $N = ${k}A$ using the stored value of $A$ instead of the two-decimal rounded value $${(baseTenths / 10).toFixed(2)}$, by how much does the exact result exceed the prematurely rounded result?`,
-            `计算器存储了精确中间值 $A = ${(exactThousandths / 1000).toFixed(3)}$。若使用存储的 $A$ 值计算 $N = ${k}A$，而不是使用四舍五入到两位小数的值 $${(baseTenths / 10).toFixed(2)}$，精确结果比提前舍入的结果大多少？`,
+            `A calculator stores the intermediate value $A = ${(exactThousandths / 1000).toFixed(3)}$. If you compute $N = ${k}A$ using the stored value of $A$ instead of the two-decimal rounded value $${(baseTenths / 10).toFixed(2)}$, by how much does the stored-value result exceed the prematurely rounded result?`,
+            `计算器存储了中间值 $A = ${(exactThousandths / 1000).toFixed(3)}$。若使用存储的 $A$ 值计算 $N = ${k}A$，而不是使用四舍五入到两位小数的值 $${(baseTenths / 10).toFixed(2)}$，使用存储值所得结果比提前舍入所得结果大多少？`,
           ),
           answer: diff,
           wrong: [exactVal, roundedVal, diff * 10],
@@ -81,12 +127,13 @@ const evaluatingExpressionsUsingAGraphingCalculator: TopicDef = {
   ],
 };
 
-const findingRootsOfFunctionsUsingAGraphingCalculator: TopicDef = {
+/** findingRootsOfFunctionsUsingAGraphingCalculator practices bracketing zeros with sign changes and solving equations g(x) = c by finding zeros of g(x) - c. */
+export const findingRootsOfFunctionsUsingAGraphingCalculator: TopicDef = {
   id: "finding-roots-of-functions-using-a-graphing-calculator",
   title: t("Finding Roots of Functions Using a Graphing Calculator", "用图形计算器求函数的根"),
   summary: t(
-    "Bracket roots with left and right bounds where a continuous function changes sign, and use the calculator's zero finder to solve f(x) = 0.",
-    "利用连续函数变号处的左、右边界锁定根所在的区间，并使用计算器的求零点功能求解 f(x) = 0。",
+    "Bracket roots with left and right bounds where a continuous function changes sign, and use the calculator's zero finder to solve g(x) = c via g(x) - c = 0.",
+    "利用连续函数变号处的左、右边界锁定根所在的区间，并通过求差函数 g(x) - c = 0 的零点求解方程 g(x) = c。",
   ),
   prerequisites: ["evaluating-expressions-using-a-graphing-calculator", "the-intermediate-value-theorem"],
   encompasses: [
@@ -104,7 +151,7 @@ const findingRootsOfFunctionsUsingAGraphingCalculator: TopicDef = {
         "图形计算器的求零点（`zero` 或 `root`）功能需要指定包含单个 $x$ 轴交点的左边界 $a$ 和右边界 $b$。对于连续函数 $f$，若 $f(a)$ 与 $f(b)$ 异号，则由介值定理可知区间 $(a, b)$ 内必存在至少一个实根。",
       ),
       generate: (rng: Rng) => {
-        const k = rng.int(1, 5);
+        const k = rng.int(1, 6);
         const v0 = -rng.int(5, 9);
         const v1 = -rng.int(1, 4);
         const v2 = rng.int(1, 4);
@@ -124,27 +171,33 @@ const findingRootsOfFunctionsUsingAGraphingCalculator: TopicDef = {
       },
     },
     {
-      id: "linear-interpolation-and-decimal-roots",
+      id: "solving-equations-with-a-difference-function",
       title: t("Solving Equations by Finding Zeros of a Difference Function", "通过求差函数的零点解方程"),
       explanation: t(
-        "Any equation $g(x) = c$ can be solved with a calculator's root finder by graphing $f(x) = g(x) - c$ and locating its $x$-intercept. For example, to solve $x^3 + 2x = 12$, graph $y = x^3 + 2x - 12$ and find its zero at $x = 2$.",
-        "对于任意方程 $g(x) = c$，都可以通过绘制差函数 $f(x) = g(x) - c$ 并定位其 $x$ 轴交点来用计算器求根功能求解。例如解 $x^3 + 2x = 12$ 时，可绘制 $y = x^3 + 2x - 12$ 并求出其零点 $x = 2$。",
+        "Any equation $g(x) = c$ can be solved with a calculator's root finder by graphing the difference function $Y_1 = g(x) - c$ and locating its $x$-intercept. Zooming in with a table step of $\\Delta\\text{Tbl} = 0.001$ around the sign change of $Y_1(x)$ determines the root to three decimal places.",
+        "对于任意方程 $g(x) = c$，都可以通过绘制差函数 $Y_1 = g(x) - c$ 并定位其 $x$ 轴交点来用计算器求根功能求解。在 $Y_1(x)$ 变号处将数值表步长设为 $\\Delta\\text{Tbl} = 0.001$，即可将根确定到小数点后三位。",
       ),
       generate: (rng: Rng) => {
-        const a = rng.int(1, 4);
-        const b = rng.int(2, 6);
-        const r = rng.int(1, 5);
-        const c = a * r * r * r + b * r;
+        const whole = rng.int(1, 4);
+        const thousandths = rng.int(11, 88) * 10 + rng.int(2, 8);
+        const r = Q.of(whole * 1000 + thousandths, 1000);
+        const rMinus = Q.of(whole * 1000 + thousandths - 1, 1000);
+        const rPlus = Q.of(whole * 1000 + thousandths + 1, 1000);
+        const c = rng.int(3, 12);
+        const yMinus = -rng.int(4, 9);
+        const yZero = rng.bool() ? 1 : -1;
+        const yPlus = rng.int(5, 9);
         return numberProblem({
           prompt: t(
-            `You use a graphing calculator to find the real root of $${a}x^3 + ${b}x = ${c}$ by graphing $y = ${a}x^3 + ${b}x - ${c}$ and locating its $x$-intercept. What is the value of this root?`,
-            `使用图形计算器绘制 $y = ${a}x^3 + ${b}x - ${c}$ 并定位其 $x$ 轴交点，以求方程 $${a}x^3 + ${b}x = ${c}$ 的实根。该实根的值是多少？`,
+            `To solve $e^x + x = ${c}$, you graph the difference function $Y_1 = e^x + x - ${c}$ and inspect a zoomed calculator table with step $\\Delta\\text{Tbl} = 0.001$:\n\n$$Y_1(${dec(rMinus)}) = ${(yMinus / 1000).toFixed(3)}, \\quad Y_1(${dec(r)}) = ${(yZero / 10000).toFixed(4)}, \\quad Y_1(${dec(rPlus)}) = ${(yPlus / 1000).toFixed(3)}.$$\n\nWhat is the root of $e^x + x = ${c}$ rounded to three decimal places?`,
+            `为解方程 $e^x + x = ${c}$，绘制差函数 $Y_1 = e^x + x - ${c}$ 并查看步长为 $\\Delta\\text{Tbl} = 0.001$ 的局部放大计算器数值表：\n\n$$Y_1(${dec(rMinus)}) = ${(yMinus / 1000).toFixed(3)}，\\quad Y_1(${dec(r)}) = ${(yZero / 10000).toFixed(4)}，\\quad Y_1(${dec(rPlus)}) = ${(yPlus / 1000).toFixed(3)}。$$\n\n求方程 $e^x + x = ${c}$ 精确到小数点后三位的根。`,
           ),
           answer: r,
-          wrong: [-r, r + 1, c],
+          form: "decimal",
+          wrong: [rMinus, rPlus, Q.of(c)],
           solution: t(
-            `The function $f(x) = ${a}x^3 + ${b}x - ${c}$ is strictly increasing because $f'(x) = ${3 * a}x^2 + ${b} > 0$. Testing $x = ${r}$ gives $${a}(${r})^3 + ${b}(${r}) - ${c} = 0$, so the unique real root is $x = ${r}$.`,
-            `由于 $f'(x) = ${3 * a}x^2 + ${b} > 0$，函数 $f(x) = ${a}x^3 + ${b}x - ${c}$ 严格递增。代入 $x = ${r}$ 得 $${a}(${r})^3 + ${b}(${r}) - ${c} = 0$，故唯一实根为 $x = ${r}$。`,
+            `The difference function $Y_1(x) = e^x + x - ${c}$ changes sign near $x = ${dec(r)}$, where $|Y_1(${dec(r)})| = 0.0001$ is much closer to $0$ than at $${dec(rMinus)}$ or $${dec(rPlus)}$. Thus the root rounded to three decimal places is $${dec(r)}$.`,
+            `差函数 $Y_1(x) = e^x + x - ${c}$ 在 $x = ${dec(r)}$ 附近变号，且 $|Y_1(${dec(r)})| = 0.0001$ 比在 $${dec(rMinus)}$ 或 $${dec(rPlus)}$ 处更接近 $0$，因此精确到三位小数的根为 $${dec(r)}$。`,
           ),
         });
       },
@@ -152,7 +205,8 @@ const findingRootsOfFunctionsUsingAGraphingCalculator: TopicDef = {
   ],
 };
 
-const findingIntersectionsOfFunctionsUsingAGraphingCalculator: TopicDef = {
+/** findingIntersectionsOfFunctionsUsingAGraphingCalculator practices locating intersection coordinates and adjusting the viewing window to capture all intersections. */
+export const findingIntersectionsOfFunctionsUsingAGraphingCalculator: TopicDef = {
   id: "finding-intersections-of-functions-using-a-graphing-calculator",
   title: t("Finding Intersections of Functions Using a Graphing Calculator", "用图形计算器求函数的交点"),
   summary: t(
@@ -168,29 +222,28 @@ const findingIntersectionsOfFunctionsUsingAGraphingCalculator: TopicDef = {
       id: "locating-intersection-coordinates",
       title: t("Locating Points of Intersection", "定位两函数图像的交点坐标"),
       explanation: t(
-        "To solve $f(x) = g(x)$ graphically, either graph $Y_1 = f(x)$ and $Y_2 = g(x)$ and use the `intersect` command, or graph the difference $Y_1 = f(x) - g(x)$ and use the `zero` command. In AP Calculus area and volume problems, always store the intersection $x$-coordinates in calculator variables to use as limits of integration.",
-        "用图像法解方程 $f(x) = g(x)$ 时，可以分别绘制 $Y_1 = f(x)$ 与 $Y_2 = g(x)$ 并使用求交点（`intersect`）命令，也可以绘制差函数 $Y_1 = f(x) - g(x)$ 并使用求零点（`zero`）命令。在 AP 微积分的面积与体积问题中，务必将交点的横坐标存入计算器变量以作为积分上下限。",
+        "To solve $f(x) = g(x)$ graphically, graph $Y_1 = f(x)$ and $Y_2 = g(x)$ and use the `intersect` command (or inspect a table where $Y_1(x) = Y_2(x)$). In AP Calculus area and volume problems, always store the intersection coordinates $(x, y)$ in calculator variables to use as limits of integration.",
+        "用图像法解方程 $f(x) = g(x)$ 时，可分别绘制 $Y_1 = f(x)$ 与 $Y_2 = g(x)$ 并使用求交点（`intersect`）命令（或在数值表中寻找使 $Y_1(x) = Y_2(x)$ 的行）。在 AP 微积分的面积与体积问题中，务必将交点坐标 $(x, y)$ 存入计算器变量以作为积分上下限。",
       ),
       generate: (rng: Rng) => {
-        const x0 = rng.int(1, 5);
-        const a = rng.int(1, 3);
-        const m = rng.int(2, 6);
-        const y0 = a * x0 * x0;
-        const b = y0 - m * x0;
+        const x0 = rng.int(1, 6);
+        const y0 = rng.int(4, 18);
+        const d1 = rng.int(2, 5);
+        const d2 = rng.int(2, 5);
         return pointProblem({
           prompt: t(
-            `Using a graphing calculator's intersect feature on $Y_1 = ${poly([a, "x^2"])}$ and $Y_2 = ${poly([m, "x"], [b, ""])}$ with initial guess near $x = ${x0}$, what intersection point $(x, y)$ does the calculator return?`,
-            `在图形计算器上对 $Y_1 = ${poly([a, "x^2"])}$ 与 $Y_2 = ${poly([m, "x"], [b, ""])}$ 使用求交点功能，并在 $x = ${x0}$ 附近选取初始猜测值，计算器返回的交点坐标 $(x, y)$ 是什么？`,
+            `A graphing calculator table for $Y_1 = f(x)$ and $Y_2 = g(x)$ shows:\n\n- At $x = ${x0 - 1}$: $Y_1 = ${y0 - d1}$ and $Y_2 = ${y0 - d1 + d2}$\n- At $x = ${x0}$: $Y_1 = ${y0}$ and $Y_2 = ${y0}$\n- At $x = ${x0 + 1}$: $Y_1 = ${y0 + d2}$ and $Y_2 = ${y0 + d2 - d1}$\n\nWhat intersection point $(x, y)$ does the calculator's \`intersect\` command return on $[${x0 - 1}, ${x0 + 1}]$?`,
+            `图形计算器关于 $Y_1 = f(x)$ 与 $Y_2 = g(x)$ 的数值表显示：\n\n- 当 $x = ${x0 - 1}$ 时：$Y_1 = ${y0 - d1}$，$Y_2 = ${y0 - d1 + d2}$\n- 当 $x = ${x0}$ 时：$Y_1 = ${y0}$，$Y_2 = ${y0}$\n- 当 $x = ${x0 + 1}$ 时：$Y_1 = ${y0 + d2}$，$Y_2 = ${y0 + d2 - d1}$\n\n计算器的求交点（\`intersect\`）功能在 $[${x0 - 1}, ${x0 + 1}]$ 上返回的交点坐标 $(x, y)$ 是什么？`,
           ),
           answer: [x0, y0],
           wrong: [
             [y0, x0],
-            [x0, m * x0],
-            [-x0, y0],
+            [x0 - 1, y0 - d1],
+            [x0 + 1, y0 + d2],
           ],
           solution: t(
-            `At $x = ${x0}$, $Y_1(${x0}) = ${a}(${x0})^2 = ${y0}$ and $Y_2(${x0}) = ${m}(${x0}) + (${b}) = ${y0}$. Therefore the intersection point is $(${x0}, ${y0})$.`,
-            `当 $x = ${x0}$ 时，$Y_1(${x0}) = ${a}(${x0})^2 = ${y0}$，且 $Y_2(${x0}) = ${m}(${x0}) + (${b}) = ${y0}$。因此交点坐标为 $(${x0}, ${y0})$。`,
+            `At $x = ${x0}$, both functions have the same value $Y_1(${x0}) = Y_2(${x0}) = ${y0}$, so the intersection point is $(${x0}, ${y0})$.`,
+            `当 $x = ${x0}$ 时，两函数值相等，即 $Y_1(${x0}) = Y_2(${x0}) = ${y0}$，故交点坐标为 $(${x0}, ${y0})$。`,
           ),
         });
       },
@@ -199,28 +252,29 @@ const findingIntersectionsOfFunctionsUsingAGraphingCalculator: TopicDef = {
       id: "counting-intersections-by-window-and-end-behavior",
       title: t("Adjusting the Viewing Window to Find All Intersections", "调整视图窗口以找出所有交点"),
       explanation: t(
-        "A standard $[-10, 10] \\times [-10, 10]$ viewing window can miss intersections that occur at large $x$- or $y$-values. Comparing growth rates or algebraic structure helps determine whether an additional intersection exists outside the initial window.",
-        "默认的 $[-10, 10] \\times [-10, 10]$ 视图窗口可能会遗漏发生在较大 $x$ 或 $y$ 值处的交点。通过分析函数的增长速率或代数结构，可以判断在初始窗口之外是否还存在其他交点。",
+        "A standard $[-10, 10] \\times [-10, 10]$ viewing window misses any intersection $(x_0, y_0)$ with $|x_0| > 10$ or $|y_0| > 10$. To display that intersection on screen, both $X_{\\max} > x_0$ and $Y_{\\max} > y_0$ (for a first-quadrant intersection) must be chosen large enough.",
+        "标准视图窗口 $[-10, 10] \\times [-10, 10]$ 会遗漏满足 $|x_0| > 10$ 或 $|y_0| > 10$ 的交点 $(x_0, y_0)$。要在屏幕上完整显示第一象限内的该交点，必须将窗口边界调整为 $X_{\\max} > x_0$ 且 $Y_{\\max} > y_0$。",
       ),
       generate: (rng: Rng) => {
-        const r1 = rng.int(1, 4);
-        const r2 = rng.int(14, 24);
-        const m = rng.int(2, 5);
-        const b = rng.int(1, 6);
-        const sum = r1 + r2;
-        const prod = r1 * r2;
-        const c1 = m - sum;
-        const c0 = prod + b;
+        const a = rng.int(1, 3);
+        const c = rng.int(0, 5);
+        const r1 = rng.int(1, 3);
+        const r2 = rng.int(11, 18);
+        // f(x) = a*x^2 + c and g(x) = a*(r1 + r2)*x - a*r1*r2 + c intersect at x = r1 and x = r2
+        const m = a * (r1 + r2);
+        const b = c - a * r1 * r2;
+        const y1 = a * r1 * r1 + c;
+        const y2 = a * r2 * r2 + c;
         return numberProblem({
           prompt: t(
-            `On the standard window $[-10, 10]$, a student sees only one intersection of $f(x) = ${poly([1, "x^2"], [c1, "x"], [c0, ""])}$ and $g(x) = ${poly([m, "x"], [b, ""])}$ at $x = ${r1}$. What is the $x$-coordinate of the second intersection that appears when the window is widened to $X_{\\max} = 30$?`,
-            `在标准窗口 $[-10, 10]$ 下，某学生只看到 $f(x) = ${poly([1, "x^2"], [c1, "x"], [c0, ""])}$ 与 $g(x) = ${poly([m, "x"], [b, ""])}$ 在 $x = ${r1}$ 处的一个交点。当将窗口扩大至 $X_{\\max} = 30$ 时，出现的第二个交点的横坐标是多少？`,
+            `On the standard $[-10, 10] \\times [-10, 10]$ viewing window, a student sees only one intersection of $Y_1 = ${poly([a, "x^2"], [c, ""])}$ and $Y_2 = ${poly([m, "x"], [b, ""])}$ at $(${r1}, ${y1})$. The second intersection occurs at $x = ${r2}$. What is the $y$-coordinate of this second intersection that $Y_{\\max}$ must exceed for the intersection to appear in the viewing window?`,
+            `在标准视图窗口 $[-10, 10] \\times [-10, 10]$ 下，某学生只看到 $Y_1 = ${poly([a, "x^2"], [c, ""])}$ 与 $Y_2 = ${poly([m, "x"], [b, ""])}$ 在 $(${r1}, ${y1})$ 处的一个交点。第二个交点位于 $x = ${r2}$ 处。要使该交点显示在视图窗口内，$Y_{\\max}$ 必须超过该交点的纵坐标 $y$，求这个纵坐标的值。`,
           ),
-          answer: r2,
-          wrong: [r1, sum, prod],
+          answer: y2,
+          wrong: [r2, m * r2, y1],
           solution: t(
-            `Setting $f(x) = g(x)$ gives $x^2 - ${sum}x + ${prod} = 0$, which factors as $(x - ${r1})(x - ${r2}) = 0$. The intersection outside $[-10, 10]$ occurs at $x = ${r2}$.`,
-            `令 $f(x) = g(x)$ 得 $x^2 - ${sum}x + ${prod} = 0$，因式分解为 $(x - ${r1})(x - ${r2}) = 0$。位于 $[-10, 10]$ 之外的交点横坐标为 $x = ${r2}$。`,
+            `At $x = ${r2}$, the $y$-coordinate on both graphs is $Y_1(${r2}) = ${a === 1 ? "" : `${a}\\cdot `}${r2}^2${c === 0 ? "" : ` + ${c}`} = ${y2}$, so the viewing window must have $Y_{\\max} > ${y2}$.`,
+            `在 $x = ${r2}$ 处，两图像上的纵坐标均为 $Y_1(${r2}) = ${a === 1 ? "" : `${a}\\cdot `}${r2}^2${c === 0 ? "" : ` + ${c}`} = ${y2}$，因此视图窗口必须满足 $Y_{\\max} > ${y2}$。`,
           ),
         });
       },
@@ -228,7 +282,8 @@ const findingIntersectionsOfFunctionsUsingAGraphingCalculator: TopicDef = {
   ],
 };
 
-const findingExtremaOfFunctionsUsingAGraphingCalculator: TopicDef = {
+/** findingExtremaOfFunctionsUsingAGraphingCalculator practices locating local extrema from calculator graphs/tables and via sign-changing zeros of the derivative. */
+export const findingExtremaOfFunctionsUsingAGraphingCalculator: TopicDef = {
   id: "finding-extrema-of-functions-using-a-graphing-calculator",
   title: t("Finding Extrema of Functions Using a Graphing Calculator", "用图形计算器求函数的极值"),
   summary: t(
@@ -247,30 +302,38 @@ const findingExtremaOfFunctionsUsingAGraphingCalculator: TopicDef = {
       id: "finding-extrema-directly-from-the-graph",
       title: t("Using the Minimum and Maximum Commands", "使用计算器的最小值与最大值功能"),
       explanation: t(
-        "The graphing calculator's `minimum` and `maximum` commands locate local extrema of $f(x)$ within a user-specified interval $[a, b]$. Always distinguish between the location of the extremum (the $x$-coordinate) and the extreme value itself (the $y$-coordinate).",
-        "图形计算器的 `minimum`（最小值）与 `maximum`（最大值）命令可在指定的区间 $[a, b]$ 内定位函数 $f(x)$ 的局部极值。解题时务必区分极值所在的位置（横坐标 $x$）与极值本身（纵坐标 $y$）。",
+        "The graphing calculator's `minimum` and `maximum` commands report the coordinates $(x, y)$ of a local extremum within a user-specified interval $[a, b]$. Always distinguish between the location of the extremum (the $x$-coordinate) and the extreme value itself (the $y$-coordinate), and compare interior extrema with endpoint values when finding an absolute extremum on $[a, b]$.",
+        "图形计算器的 `minimum`（最小值）与 `maximum`（最大值）命令会报告指定区间 $[a, b]$ 内局部极值点的坐标 $(x, y)$。解题时务必区分极值的位置（横坐标 $x$）与极值本身（纵坐标 $y$）；在求闭区间 $[a, b]$ 上的绝对最值时，还需将内部极值与端点函数值进行比较。",
       ),
       generate: (rng: Rng) => {
-        const h = rng.int(-4, 5);
-        const k = rng.int(-6, 8);
-        const a = rng.int(1, 3);
-        const bCoeff = -2 * a * h;
-        const cCoeff = a * h * h + k;
-        return pointProblem({
-          prompt: t(
-            `A graphing calculator's minimum command is applied to $f(x) = ${poly([a, "x^2"], [bCoeff, "x"], [cCoeff, ""])}$. What coordinates $(x, y)$ does it report for the local minimum?`,
-            `对函数 $f(x) = ${poly([a, "x^2"], [bCoeff, "x"], [cCoeff, ""])}$ 使用图形计算器的求最小值功能，它所报告的局部最小值点坐标 $(x, y)$ 是什么？`,
-          ),
-          answer: [h, k],
-          wrong: [
-            [k, h],
-            [-h, k],
-            [h, cCoeff],
-          ],
-          solution: t(
-            `Rewrite $f(x) = ${a}(x - (${h}))^2 + (${k})$. Since ${a} > 0$, the minimum occurs when $x = ${h}$ with minimum value $y = ${k}$.`,
-            `将函数改写为 $f(x) = ${a}(x - (${h}))^2 + (${k})$。由于 ${a} > 0$，当 $x = ${h}$ 时取得最小值 $y = ${k}$。`,
-          ),
+        const xMin = rng.int(1, 3);
+        const xMax = rng.int(5, 7);
+        const yEndLeft = rng.int(2, 8);
+        const yLocalMax = rng.int(12, 22);
+        const yLocalMin = -rng.int(3, 9);
+        const yEndRight = yLocalMax + rng.int(3, 8);
+        const askLocal = rng.bool();
+        return numberProblem({
+          prompt: askLocal
+            ? t(
+                `To analyze a continuous function $f$ on $[0, 8]$, you use a graphing calculator:\n\n- Endpoint values: $f(0) = ${yEndLeft}$ and $f(8) = ${yEndRight}$\n- Calculator \`Maximum\` command on $(0, 8)$: $(${xMin}, ${yLocalMax})$\n- Calculator \`Minimum\` command on $(0, 8)$: $(${xMax}, ${yLocalMin})$\n\nWhat is the local maximum value of $f$ on $(0, 8)$?`,
+                `在 $[0, 8]$ 上分析连续函数 $f$ 时，使用图形计算器测得：\n\n- 端点值：$f(0) = ${yEndLeft}$，$f(8) = ${yEndRight}$\n- $(0, 8)$ 内的 \`Maximum\`（最大值）命令结果：$(${xMin}, ${yLocalMax})$\n- $(0, 8)$ 内的 \`Minimum\`（最小值）命令结果：$(${xMax}, ${yLocalMin})$\n\n函数 $f$ 在 $(0, 8)$ 内的局部极大值是多少？`,
+              )
+            : t(
+                `To analyze a continuous function $f$ on $[0, 8]$, you use a graphing calculator:\n\n- Endpoint values: $f(0) = ${yEndLeft}$ and $f(8) = ${yEndRight}$\n- Calculator \`Maximum\` command on $(0, 8)$: $(${xMin}, ${yLocalMax})$\n- Calculator \`Minimum\` command on $(0, 8)$: $(${xMax}, ${yLocalMin})$\n\nWhat is the absolute maximum value of $f$ on the closed interval $[0, 8]$?`,
+                `在 $[0, 8]$ 上分析连续函数 $f$ 时，使用图形计算器测得：\n\n- 端点值：$f(0) = ${yEndLeft}$，$f(8) = ${yEndRight}$\n- $(0, 8)$ 内的 \`Maximum\`（最大值）命令结果：$(${xMin}, ${yLocalMax})$\n- $(0, 8)$ 内的 \`Minimum\`（最小值）命令结果：$(${xMax}, ${yLocalMin})$\n\n函数 $f$ 在闭区间 $[0, 8]$ 上的绝对最大值是多少？`,
+              ),
+          answer: askLocal ? yLocalMax : yEndRight,
+          wrong: askLocal ? [xMin, yEndRight, yLocalMin] : [yLocalMax, xMin, 8],
+          solution: askLocal
+            ? t(
+                `The \`Maximum\` command reports the interior local maximum point $(${xMin}, ${yLocalMax})$. The local maximum value is its $y$-coordinate, $${yLocalMax}$.`,
+                `\`Maximum\` 命令给出内部局部极大值点 $(${xMin}, ${yLocalMax})$，局部极大值为其纵坐标 $${yLocalMax}$。`,
+              )
+            : t(
+                `Compare the interior local maximum value $${yLocalMax}$ with the endpoint values $f(0) = ${yEndLeft}$ and $f(8) = ${yEndRight}$. The largest value on $[0, 8]$ is $${yEndRight}$.`,
+                `将内部局部极大值 $${yLocalMax}$ 与端点值 $f(0) = ${yEndLeft}$、$f(8) = ${yEndRight}$ 比较，闭区间 $[0, 8]$ 上的绝对最大值为 $${yEndRight}$。`,
+              ),
         });
       },
     },
@@ -278,36 +341,30 @@ const findingExtremaOfFunctionsUsingAGraphingCalculator: TopicDef = {
       id: "finding-extrema-via-zeros-of-the-derivative",
       title: t("Finding Extrema by Graphing the Derivative", "通过绘制导函数图像求极值"),
       explanation: t(
-        "On AP Calculus calculator-active problems, you are often given the derivative $f'(x)$ directly rather than $f(x)$. To find where $f$ has a local maximum or minimum, graph $Y_1 = f'(x)$ and use the `zero` command to find where $f'(x)$ changes sign (positive to negative for a local maximum; negative to positive for a local minimum).",
-        "在 AP 微积分允许使用计算器的题目中，题目往往直接给出导函数 $f'(x)$ 而非原函数 $f(x)$。要求 $f$ 取得局部极大值或极小值的位置，应绘制 $Y_1 = f'(x)$ 的图像并使用求零点（`zero`）功能，找出 $f'(x)$ 变号的点（由正变负为局部极大值点，由负变正为局部极小值点）。",
+        "On AP Calculus calculator-active problems, you are often given the derivative $f'(x)$ directly rather than $f(x)$. To find where $f$ has a local maximum or minimum, graph $Y_1 = f'(x)$ and use the `zero` command to find where $f'(x)$ changes sign (positive to negative for a local maximum; negative to positive for a local minimum; no sign change means neither).",
+        "在 AP 微积分允许使用计算器的题目中，题目往往直接给出导函数 $f'(x)$ 而非原函数 $f(x)$。要求 $f$ 取得局部极大值或极小值的位置，应绘制 $Y_1 = f'(x)$ 的图像并使用求零点（`zero`）功能，找出 $f'(x)$ 变号的点（由正变负为局部极大值点，由负变正为局部极小值点，不变号则不是极值点）。",
       ),
       generate: (rng: Rng) => {
-        const r1 = rng.int(1, 4);
-        const r2 = rng.int(6, 10);
+        const r1 = rng.int(1, 3);
+        const r2 = r1 + rng.int(2, 3);
+        const r3 = r2 + rng.int(2, 4);
         const askMax = rng.bool();
-        const sum = r1 + r2;
-        const prod = r1 * r2;
-        const ans = askMax ? r1 : r2;
+        const ans = askMax ? r2 : r3;
         return numberProblem({
-          prompt: askMax
-            ? t(
-                `Suppose $f'(x) = ${poly([1, "x^2"], [-sum, "x"], [prod, ""])}$. When you graph $Y_1 = f'(x)$ on a calculator and inspect its sign changes, at what value of $x$ does $f$ attain a local maximum?`,
-                `设 $f'(x) = ${poly([1, "x^2"], [-sum, "x"], [prod, ""])}$。在计算器上绘制 $Y_1 = f'(x)$ 并观察其符号变化，函数 $f$ 在 $x$ 取何值时取得局部极大值？`,
-              )
-            : t(
-                `Suppose $f'(x) = ${poly([1, "x^2"], [-sum, "x"], [prod, ""])}$. When you graph $Y_1 = f'(x)$ on a calculator and inspect its sign changes, at what value of $x$ does $f$ attain a local minimum?`,
-                `设 $f'(x) = ${poly([1, "x^2"], [-sum, "x"], [prod, ""])}$。在计算器上绘制 $Y_1 = f'(x)$ 并观察其符号变化，函数 $f$ 在 $x$ 取何值时取得局部极小值？`,
-              ),
+          prompt: t(
+            `You graph $Y_1 = f'(x)$ on a calculator and find that $f'(x)$ has three zeros at $x = ${r1}$, $x = ${r2}$, and $x = ${r3}$, with the following signs on the subintervals:\n\n- $f'(x) > 0$ on $(0, ${r1})$ and $(${r1}, ${r2})$\n- $f'(x) < 0$ on $(${r2}, ${r3})$\n- $f'(x) > 0$ on $(${r3}, 12)$\n\nAt what value of $x$ does $f$ attain a local ${askMax ? "maximum" : "minimum"}?`,
+            `在计算器上绘制 $Y_1 = f'(x)$，发现 $f'(x)$ 在 $x = ${r1}$、$x = ${r2}$ 和 $x = ${r3}$ 处有三个零点，且在各子区间上的符号如下：\n\n- 在 $(0, ${r1})$ 与 $(${r1}, ${r2})$ 上 $f'(x) > 0$\n- 在 $(${r2}, ${r3})$ 上 $f'(x) < 0$\n- 在 $(${r3}, 12)$ 上 $f'(x) > 0$\n\n原函数 $f$ 在 $x$ 取何值时取得局部${askMax ? "极大值" : "极小值"}？`,
+          ),
           answer: ans,
-          wrong: [askMax ? r2 : r1, Q.of(sum, 2), prod],
+          wrong: [r1, askMax ? r3 : r2, r1 + r2],
           solution: askMax
             ? t(
-                `Factor the derivative: $f'(x) = (x - ${r1})(x - ${r2})$. Because $f'(x)$ changes from positive to negative at $x = ${r1}$, $f$ has a local maximum at $x = ${r1}$.`,
-                `将导函数因式分解：$f'(x) = (x - ${r1})(x - ${r2})$。由于 $f'(x)$ 在 $x = ${r1}$ 处由正变负，$f$ 在 $x = ${r1}$ 处取得局部极大值。`,
+                `At $x = ${r1}$, $f'(x)$ does not change sign. At $x = ${r2}$, $f'(x)$ changes from positive to negative, so $f$ has a local maximum at $x = ${r2}$.`,
+                `在 $x = ${r1}$ 处 $f'(x)$ 不变号；在 $x = ${r2}$ 处 $f'(x)$ 由正变负，故 $f$ 在 $x = ${r2}$ 处取得局部极大值。`,
               )
             : t(
-                `Factor the derivative: $f'(x) = (x - ${r1})(x - ${r2})$. Because $f'(x)$ changes from negative to positive at $x = ${r2}$, $f$ has a local minimum at $x = ${r2}$.`,
-                `将导函数因式分解：$f'(x) = (x - ${r1})(x - ${r2})$。由于 $f'(x)$ 在 $x = ${r2}$ 处由负变正，$f$ 在 $x = ${r2}$ 处取得局部极小值。`,
+                `At $x = ${r1}$, $f'(x)$ does not change sign. At $x = ${r3}$, $f'(x)$ changes from negative to positive, so $f$ has a local minimum at $x = ${r3}$.`,
+                `在 $x = ${r1}$ 处 $f'(x)$ 不变号；在 $x = ${r3}$ 处 $f'(x)$ 由负变正，故 $f$ 在 $x = ${r3}$ 处取得局部极小值。`,
               ),
         });
       },
@@ -315,7 +372,8 @@ const findingExtremaOfFunctionsUsingAGraphingCalculator: TopicDef = {
   ],
 };
 
-const findingDerivativesUsingAGraphingCalculator: TopicDef = {
+/** findingDerivativesUsingAGraphingCalculator practices computing symmetric difference quotients and recognizing numerical derivative artifacts at sharp corners. */
+export const findingDerivativesUsingAGraphingCalculator: TopicDef = {
   id: "finding-derivatives-using-a-graphing-calculator",
   title: t("Finding Derivatives Using a Graphing Calculator", "用图形计算器求导数"),
   summary: t(
@@ -334,26 +392,28 @@ const findingDerivativesUsingAGraphingCalculator: TopicDef = {
       id: "numerical-derivative-command-and-symmetric-difference",
       title: t("The Numerical Derivative Command (nDeriv)", "数值求导命令（nDeriv）与对称差商"),
       explanation: t(
-        "Most graphing calculators compute numerical derivatives (`nDeriv`) using the symmetric difference quotient $\\frac{f(a + h) - f(a - h)}{2h}$ with a small step size $h$. For any quadratic function $f(x) = px^2 + qx + r$, the symmetric difference quotient equals the exact derivative $f'(a) = 2pa + q$ for every step size $h > 0$.",
-        "大多数图形计算器通过步长 $h$ 很小的对称差商 $\\frac{f(a + h) - f(a - h)}{2h}$ 来计算数值导数（`nDeriv`）。对于任意二次函数 $f(x) = px^2 + qx + r$，无论步长 $h > 0$ 取何值，对称差商都精确等于导数值 $f'(a) = 2pa + q$。",
+        "Graphing calculators compute numerical derivatives (`nDeriv`) using the symmetric difference quotient $\\frac{f(a + h) - f(a - h)}{2h}$ with step size $h$. While this is exact for quadratic functions, for a cubic $f(x) = kx^3$ it gives $\\frac{k(a+h)^3 - k(a-h)^3}{2h} = 3ka^2 + kh^2$, which differs from the exact derivative $3ka^2$ by $kh^2$.",
+        "图形计算器使用步长为 $h$ 的对称差商 $\\frac{f(a + h) - f(a - h)}{2h}$ 来计算数值导数（`nDeriv`）。对于二次函数该公式精确成立，但对于三次函数 $f(x) = kx^3$，对称差商等于 $\\frac{k(a+h)^3 - k(a-h)^3}{2h} = 3ka^2 + kh^2$，与精确导数 $3ka^2$ 相差 $kh^2$。",
       ),
       generate: (rng: Rng) => {
-        const p = rng.int(1, 5);
-        const q = rng.int(-5, 6);
-        const r = rng.int(1, 8);
-        const a = rng.int(1, 5);
-        const ans = 2 * p * a + q;
-        const fVal = p * a * a + q * a + r;
+        const a = rng.int(2, 6);
+        const yMinus = rng.int(3, 15);
+        const yCenter = yMinus + rng.int(2, 9);
+        const yPlus = yCenter + rng.int(4, 15);
+        // Step h = 0.1 = 1/10, so (f(a+h) - f(a-h)) / (2h) = (yPlus - yMinus) / (2/10) = 5 * (yPlus - yMinus)
+        const ans = 5 * (yPlus - yMinus);
+        const forward = 10 * (yPlus - yCenter);
+        const backward = 10 * (yCenter - yMinus);
         return numberProblem({
           prompt: t(
-            `You enter $\\text{nDeriv}(${poly([p, "x^2"], [q, "x"], [r, ""])}, x, ${a})$ on a graphing calculator. What value does it produce?`,
-            `在图形计算器上输入 $\\text{nDeriv}(${poly([p, "x^2"], [q, "x"], [r, ""])}, x, ${a})$，计算器输出的值是多少？`,
+            `A graphing calculator's numerical derivative command approximates $f'(${a})$ using the symmetric difference quotient $\\frac{f(${a} + h) - f(${a} - h)}{2h}$ with step $h = 0.1$. Given the calculator table values $f(${a - 0.1}) = ${yMinus}$, $f(${a}) = ${yCenter}$, and $f(${a + 0.1}) = ${yPlus}$, what value does this symmetric difference quotient produce?`,
+            `图形计算器的数值求导功能使用步长为 $h = 0.1$ 的对称差商 $\\frac{f(${a} + h) - f(${a} - h)}{2h}$ 来近似 $f'(${a})$。已知计算器数值表给出 $f(${a - 0.1}) = ${yMinus}$，$f(${a}) = ${yCenter}$，$f(${a + 0.1}) = ${yPlus}$，该对称差商计算出的值是多少？`,
           ),
           answer: ans,
-          wrong: [fVal, p * a + q, 2 * p * a + q + r],
+          wrong: [forward, backward, yPlus - yMinus],
           solution: t(
-            `For the quadratic $f(x) = ${poly([p, "x^2"], [q, "x"], [r, ""])}$, the symmetric difference quotient equals the exact derivative $f'(x) = ${poly([2 * p, "x"], [q, ""])}$. Evaluating at $x = ${a}$ gives $f'(${a}) = ${ans}$.`,
-            `对于二次函数 $f(x) = ${poly([p, "x^2"], [q, "x"], [r, ""])}$，对称差商等于精确导数 $f'(x) = ${poly([2 * p, "x"], [q, ""])}$。在 $x = ${a}$ 处求值得 $f'(${a}) = ${ans}$。`,
+            `Substitute $f(${a + 0.1}) = ${yPlus}$, $f(${a - 0.1}) = ${yMinus}$, and $2h = 0.2$: $\\frac{${yPlus} - ${yMinus}}{0.2} = 5(${yPlus - yMinus}) = ${ans}$.`,
+            `代入 $f(${a + 0.1}) = ${yPlus}$、$f(${a - 0.1}) = ${yMinus}$ 与 $2h = 0.2$：$\\frac{${yPlus} - ${yMinus}}{0.2} = 5(${yPlus - yMinus}) = ${ans}$。`,
           ),
         });
       },
@@ -366,19 +426,20 @@ const findingDerivativesUsingAGraphingCalculator: TopicDef = {
         "由于 `nDeriv` 使用对称差商 $\\frac{f(a+h) - f(a-h)}{2h}$，即使 $f'(a)$ 不存在，它仍可能返回一个有限数值！例如在折点函数 $f(x) = k|x - a| + mx$ 的 $x = a$ 处，左、右斜率分别为 $m - k$ 与 $m + k$，尽管 $f$ 在 $x = a$ 处不可导，对称差商仍会返回两者的平均值 $m$。",
       ),
       generate: (rng: Rng) => {
-        const k = rng.int(2, 7);
-        const m = rng.int(1, 6);
-        const a = rng.int(1, 5);
+        const k = rng.int(2, 8);
+        const m = rng.int(1, 7);
+        const a = rng.int(1, 6);
+        const inside = linear(1, -a);
         return numberProblem({
           prompt: t(
-            `The function $f(x) = ${k}|x - ${a}| + ${m}x$ has a sharp corner at $x = ${a}$, so $f'(${a})$ does not exist. What misleading numerical value does a calculator's symmetric difference quotient $\\frac{f(${a}+h) - f(${a}-h)}{2h}$ report at $x = ${a}$?`,
-            `函数 $f(x) = ${k}|x - ${a}| + ${m}x$ 在 $x = ${a}$ 处有尖角，故 $f'(${a})$ 不存在。计算器的对称差商 $\\frac{f(${a}+h) - f(${a}-h)}{2h}$ 在 $x = ${a}$ 处会报告什么具有误导性的数值？`,
+            `The function $f(x) = ${k}|${inside}| + ${poly([m, "x"])}$ has a sharp corner at $x = ${a}$, so $f'(${a})$ does not exist. What misleading numerical value does a calculator's symmetric difference quotient $\\frac{f(${a}+h) - f(${a}-h)}{2h}$ report at $x = ${a}$?`,
+            `函数 $f(x) = ${k}|${inside}| + ${poly([m, "x"])}$ 在 $x = ${a}$ 处有尖角，故 $f'(${a})$ 不存在。计算器的对称差商 $\\frac{f(${a}+h) - f(${a}-h)}{2h}$ 在 $x = ${a}$ 处会报告什么具有误导性的数值？`,
           ),
           answer: m,
           wrong: [k, m + k, m - k],
           solution: t(
-            `For $h > 0$, the $|x - ${a}|$ terms cancel in $f(${a}+h) - f(${a}-h) = (${k}h + ${m}\\cdot ${a} + ${m}h) - (${k}h + ${m}\\cdot ${a} - ${m}h) = ${2 * m}h$. Dividing by $2h$ gives the average of the left and right slopes, $${m}$.`,
-            `当 $h > 0$ 时，$f(${a}+h) - f(${a}-h) = (${k}h + ${m}\\cdot ${a} + ${m}h) - (${k}h + ${m}\\cdot ${a} - ${m}h) = ${2 * m}h$，其中 $|x - ${a}|$ 项相互抵消。除以 $2h$ 得到左、右斜率的平均值 $${m}$。`,
+            `For $h > 0$, the $|${inside}|$ terms cancel in $f(${a}+h) - f(${a}-h) = (${k}h + ${m}\\cdot ${a} + ${m}h) - (${k}h + ${m}\\cdot ${a} - ${m}h) = ${2 * m}h$. Dividing by $2h$ gives the average of the left and right slopes, $${m}$.`,
+            `当 $h > 0$ 时，$f(${a}+h) - f(${a}-h) = (${k}h + ${m}\\cdot ${a} + ${m}h) - (${k}h + ${m}\\cdot ${a} - ${m}h) = ${2 * m}h$，其中 $|${inside}|$ 项相互抵消。除以 $2h$ 得到左、右斜率的平均值 $${m}$。`,
           ),
         });
       },
@@ -386,7 +447,8 @@ const findingDerivativesUsingAGraphingCalculator: TopicDef = {
   ],
 };
 
-const findingDefiniteIntegralsUsingAGraphingCalculator: TopicDef = {
+/** findingDefiniteIntegralsUsingAGraphingCalculator practices combining calculator definite integrals with the Fundamental Theorem of Calculus and absolute-value integrands. */
+export const findingDefiniteIntegralsUsingAGraphingCalculator: TopicDef = {
   id: "finding-definite-integrals-using-a-graphing-calculator",
   title: t("Finding Definite Integrals Using a Graphing Calculator", "用图形计算器求定积分"),
   summary: t(
@@ -405,25 +467,28 @@ const findingDefiniteIntegralsUsingAGraphingCalculator: TopicDef = {
       id: "numerical-integration-and-accumulation",
       title: t("Computing Definite Integrals and Net Change with fnInt", "用数值积分（fnInt）计算定积分与净变化量"),
       explanation: t(
-        "The calculator's numerical integration command (`fnInt`) approximates $\\int_a^b f(x)\\,dx$ to high precision. Combined with the Fundamental Theorem of Calculus, $f(b) = f(a) + \\int_a^b f'(x)\\,dx$, this lets you find values of a function from its initial value and a calculator integral of its rate of change.",
-        "计算器的数值积分命令（`fnInt`）能高精度地计算定积分 $\\int_a^b f(x)\\,dx$。结合微积分基本定理 $f(b) = f(a) + \\int_a^b f'(x)\\,dx$，可以由初始值和变化率的计算器定积分求出函数在任意点的值。",
+        "The calculator's numerical integration command (`fnInt`) approximates $\\int_a^b f'(x)\\,dx$ even when $f'(x)$ has no elementary antiderivative (such as $f'(x) = \\sin(x^2)$). Combined with the Fundamental Theorem of Calculus, $f(b) = f(a) + \\int_a^b f'(x)\\,dx$, this determines $f(b)$ from an initial value and a calculator integral.",
+        "即使 $f'(x)$ 没有初等原函数（如 $f'(x) = \\sin(x^2)$），计算器的数值积分命令（`fnInt`）仍能高精度计算 $\\int_a^b f'(x)\\,dx$。结合微积分基本定理 $f(b) = f(a) + \\int_a^b f'(x)\\,dx$，可由初始值与计算器定积分求出 $f(b)$。",
       ),
       generate: (rng: Rng) => {
-        const y0 = rng.int(15, 50);
-        const net = rng.int(12, 45) * (rng.bool() ? 1 : -1);
+        const y0 = rng.int(10, 40);
+        const i1 = rng.int(8, 25);
+        const i2 = -rng.int(5, 20);
         const a = rng.int(1, 3);
-        const b = a + rng.int(2, 5);
-        const ans = y0 + net;
+        const b = a + rng.int(2, 3);
+        const c = b + rng.int(2, 3);
+        const fb = y0 + i1;
+        const fc = fb + i2;
         return numberProblem({
           prompt: t(
-            `A differentiable function $f$ satisfies $f(${a}) = ${y0}$. Using a graphing calculator's numerical integration command, you find $\\int_{${a}}^{${b}} f'(x)\\,dx = ${net}$. What is $f(${b})$?`,
-            `可导函数 $f$ 满足 $f(${a}) = ${y0}$。利用图形计算器的数值积分功能求得 $\\int_{${a}}^{${b}} f'(x)\\,dx = ${net}$，求 $f(${b})$ 的值。`,
+            `A function $f$ satisfies $f(${a}) = ${y0}$ and has derivative $f'(x)$ with critical points at $x = ${b}$ and $x = ${c}$. Using a graphing calculator's \`fnInt\` command, you find $\\int_{${a}}^{${b}} f'(x)\\,dx = ${i1}$ and $\\int_{${b}}^{${c}} f'(x)\\,dx = ${i2}$. What is the value of $f(${c})$?`,
+            `函数 $f$ 满足 $f(${a}) = ${y0}$，其导函数 $f'(x)$ 的驻点为 $x = ${b}$ 与 $x = ${c}$。使用图形计算器的 \`fnInt\` 命令求得 $\\int_{${a}}^{${b}} f'(x)\\,dx = ${i1}$ 且 $\\int_{${b}}^{${c}} f'(x)\\,dx = ${i2}$。求 $f(${c})$ 的值。`,
           ),
-          answer: ans,
-          wrong: [y0 - net, net, ans + a],
+          answer: fc,
+          wrong: [fb, y0 + i1 - i2, i1 + i2],
           solution: t(
-            `Apply the Fundamental Theorem of Calculus: $f(${b}) = f(${a}) + \\int_{${a}}^{${b}} f'(x)\\,dx = ${y0} + (${net}) = ${ans}$.`,
-            `应用微积分基本定理：$f(${b}) = f(${a}) + \\int_{${a}}^{${b}} f'(x)\\,dx = ${y0} + (${net}) = ${ans}$。`,
+            `By the Fundamental Theorem of Calculus, $f(${c}) = f(${a}) + \\int_{${a}}^{${b}} f'(x)\\,dx + \\int_{${b}}^{${c}} f'(x)\\,dx = ${y0} + ${i1} + (${i2}) = ${fc}$.`,
+            `由微积分基本定理，$f(${c}) = f(${a}) + \\int_{${a}}^{${b}} f'(x)\\,dx + \\int_{${b}}^{${c}} f'(x)\\,dx = ${y0} + ${i1} + (${i2}) = ${fc}$。`,
           ),
         });
       },
@@ -432,35 +497,46 @@ const findingDefiniteIntegralsUsingAGraphingCalculator: TopicDef = {
       id: "total-distance-and-absolute-value-integrals-on-calculators",
       title: t("Integrating Absolute Value for Total Area and Distance", "对绝对值函数数值积分求总面积与总路程"),
       explanation: t(
-        "On a graphing calculator, you do not need to split an integral at its zeros to find total area or total distance traveled: simply enter $\\int_a^b |f(x)|\\,dx$ using the calculator's `abs(` function.",
-        "在图形计算器上求总面积或质点运动的总路程时，无需在零点处分段积分，只需使用计算器的绝对值函数 `abs(` 直接输入 $\\int_a^b |f(x)|\\,dx$ 即可。",
+        "On a graphing calculator, entering $\\int_a^b |v(t)|\\,dt$ using `abs(` computes total distance traveled without splitting the integral at zeros of $v(t)$. Comparing the signed displacement integral $\\int_a^b v(t)\\,dt$ with the total distance integral $\\int_a^b |v(t)|\\,dt$ reveals how far the particle moved in each direction.",
+        "在图形计算器中使用 `abs(` 直接输入 $\\int_a^b |v(t)|\\,dt$，即可在不分段的情况下求出总路程。比较有向位移积分 $\\int_a^b v(t)\\,dt$ 与总路程积分 $\\int_a^b |v(t)|\\,dt$，还能算出质点沿正、负方向各自移动的距离。",
       ),
       generate: (rng: Rng) => {
-        const c = rng.int(1, 4);
-        const b = c + rng.int(1, 4);
-        const k = 2 * rng.int(1, 3);
-        const area1 = (k * c * c) / 2;
-        const area2 = (k * (b - c) * (b - c)) / 2;
-        const total = area1 + area2;
-        const net = area2 - area1;
+        const backwardDist = rng.int(6, 22);
+        const forwardDist = rng.int(10, 30);
+        const t1 = rng.int(2, 4);
+        const t2 = t1 + rng.int(2, 5);
+        const net = forwardDist - backwardDist;
+        const total = forwardDist + backwardDist;
+        const askTotal = rng.bool();
         return numberProblem({
-          prompt: t(
-            `A particle moves along a line with velocity $v(t) = ${poly([k, "t"], [-k * c, ""])}$ for $0 \\le t \\le ${b}$. What value does the calculator return for the total distance integral $\\int_0^{${b}} |v(t)|\\,dt$?`,
-            `质点沿直线运动，在 $0 \\le t \\le ${b}$ 内的速度为 $v(t) = ${poly([k, "t"], [-k * c, ""])}$。计算器对总路程积分 $\\int_0^{${b}} |v(t)|\\,dt$ 返回的值是多少？`,
-          ),
-          answer: total,
-          wrong: [net, area1, area2 * 2],
-          solution: t(
-            `Since $v(t) = ${k}(t - ${c})$ changes sign at $t = ${c}$, the area on $[0, ${c}]$ is $\\frac{1}{2}(${c})(${k * c}) = ${area1}$ and on $[${c}, ${b}]$ is $\\frac{1}{2}(${b - c})(${k * (b - c)}) = ${area2}$. Adding both positive areas gives $\\int_0^{${b}} |v(t)|\\,dt = ${total}$.`,
-            `由于 $v(t) = ${k}(t - ${c})$ 在 $t = ${c}$ 处变号，$[0, ${c}]$ 上的面积为 $\\frac{1}{2}(${c})(${k * c}) = ${area1}$，$[${c}, ${b}]$ 上的面积为 $\\frac{1}{2}(${b - c})(${k * (b - c)}) = ${area2}$。将两部分正面积相加得 $\\int_0^{${b}} |v(t)|\\,dt = ${total}$。`,
-          ),
+          prompt: askTotal
+            ? t(
+                `A particle moves along a line so that $v(t) \\le 0$ on $[0, ${t1}]$ and $v(t) \\ge 0$ on $[${t1}, ${t2}]$. A calculator gives $\\int_0^{${t1}} v(t)\\,dt = -${backwardDist}$ and $\\int_{${t1}}^{${t2}} v(t)\\,dt = ${forwardDist}$. What value does the calculator return for the single absolute-value integral $\\int_0^{${t2}} |v(t)|\\,dt$?`,
+                `质点沿直线运动，在 $[0, ${t1}]$ 上 $v(t) \\le 0$，在 $[${t1}, ${t2}]$ 上 $v(t) \\ge 0$。计算器给出 $\\int_0^{${t1}} v(t)\\,dt = -${backwardDist}$ 且 $\\int_{${t1}}^{${t2}} v(t)\\,dt = ${forwardDist}$。计算器对单个绝对值积分 $\\int_0^{${t2}} |v(t)|\\,dt$ 返回的值是多少？`,
+              )
+            : t(
+                `For a particle moving on $0 \\le t \\le ${t2}$, a graphing calculator gives the net displacement $\\int_0^{${t2}} v(t)\\,dt = ${net}$ and the total distance $\\int_0^{${t2}} |v(t)|\\,dt = ${total}$. What is the total distance the particle traveled in the negative direction (where $v(t) < 0$)?`,
+                `对于在 $0 \\le t \\le ${t2}$ 上运动的质点，图形计算器给出净位移 $\\int_0^{${t2}} v(t)\\,dt = ${net}$ 以及总路程 $\\int_0^{${t2}} |v(t)|\\,dt = ${total}$。求质点向负方向（即 $v(t) < 0$ 时）运动的总距离。`,
+              ),
+          answer: askTotal ? total : backwardDist,
+          wrong: askTotal ? [net, forwardDist, backwardDist] : [forwardDist, total, Math.abs(net)],
+          solution: askTotal
+            ? t(
+                `The absolute-value integral adds the magnitudes of motion on both intervals: $\\int_0^{${t2}} |v(t)|\\,dt = |-${backwardDist}| + ${forwardDist} = ${total}$.`,
+                `绝对值积分将两段区间上运动距离的绝对值相加：$\\int_0^{${t2}} |v(t)|\\,dt = |-${backwardDist}| + ${forwardDist} = ${total}$。`,
+              )
+            : t(
+                `Let $D_+$ and $D_-$ be the distances traveled in the positive and negative directions. Since $D_+ + D_- = ${total}$ and $D_+ - D_- = ${net}$, subtracting gives $2D_- = ${total - net}$, so $D_- = ${backwardDist}$.`,
+                `设质点向正、负方向运动的距离分别为 $D_+$ 与 $D_-$。由 $D_+ + D_- = ${total}$ 且 $D_+ - D_- = ${net}$，两式相减得 $2D_- = ${total - net}$，故 $D_- = ${backwardDist}$。`,
+              ),
         });
       },
     },
   ],
 };
 
-const findingImproperIntegralsUsingAGraphingCalculator: TopicDef = {
+/** findingImproperIntegralsUsingAGraphingCalculator practices approximating improper integrals numerically by truncating infinite intervals or vertical asymptotes. */
+export const findingImproperIntegralsUsingAGraphingCalculator: TopicDef = {
   id: "finding-improper-integrals-using-a-graphing-calculator",
   title: t("Finding Improper Integrals Using a Graphing Calculator", "用图形计算器求反常积分"),
   summary: t(
@@ -479,37 +555,37 @@ const findingImproperIntegralsUsingAGraphingCalculator: TopicDef = {
       id: "approximating-infinite-interval-integrals-with-large-bounds",
       title: t("Estimating Improper Integrals Over Infinite Intervals", "用大上限估计无穷区间上的反常积分"),
       explanation: t(
-        "Standard graphing calculators require finite limits of integration in `fnInt`. To investigate $\\int_a^{\\infty} f(x)\\,dx$ numerically, evaluate $I(B) = \\int_a^B f(x)\\,dx$ for successively larger values of $B$ (such as $B = 10, 100, 1000$). If $I(B)$ stabilizes around a constant $L$, the improper integral converges to $L$; if $I(B)$ grows without bound, it diverges.",
-        "标准图形计算器的数值积分功能（`fnInt`）要求积分上下限为有限数。要数值研究反常积分 $\\int_a^{\\infty} f(x)\\,dx$，可依次取越来越大的上限 $B$（如 $B = 10, 100, 1000$）计算 $I(B) = \\int_a^B f(x)\\,dx$。若 $I(B)$ 趋于稳定常数 $L$，则反常积分收敛于 $L$；若 $I(B)$ 无限增大，则发散。",
+        "Standard graphing calculators require finite limits of integration in `fnInt`. To investigate $\\int_a^{\\infty} f(x)\\,dx$ numerically, evaluate $I(B) = \\int_a^B f(x)\\,dx$ for successively larger values of $B$ (such as $B = 10, 100, 1000$). The truncation error committed by stopping at $x = B$ is the tail integral $\\int_B^{\\infty} f(x)\\,dx$.",
+        "标准图形计算器的数值积分功能（`fnInt`）要求积分上下限为有限数。要数值研究反常积分 $\\int_a^{\\infty} f(x)\\,dx$，可依次取越来越大的上限 $B$（如 $B = 10, 100, 1000$）计算 $I(B) = \\int_a^B f(x)\\,dx$。在 $x = B$ 处截断所产生的截断误差即为尾积分 $\\int_B^{\\infty} f(x)\\,dx$。",
       ),
       generate: (rng: Rng) => {
-        const k = rng.int(2, 8);
+        const k = rng.int(2, 9);
         const a = rng.int(1, 4);
-        const B = 100;
+        const B = rng.pick([10, 20, 50, 100] as const);
         const exactLim = Q.of(k, a);
         const truncVal = Q.of(k * (B - a), a * B);
         const tailErr = Q.of(k, B);
-        const askLimit = rng.bool();
+        const askTrunc = rng.bool();
         return numberProblem({
-          prompt: askLimit
+          prompt: askTrunc
             ? t(
-                `A student uses a calculator to evaluate $I(B) = \\int_{${a}}^B \\frac{${k}}{x^2}\\,dx$ for $B = 10, 100, 1000$. What exact limiting value $\\lim_{B\\to\\infty} I(B)$ do these numerical integrals approach?`,
-                `某学生用计算器在 $B = 10, 100, 1000$ 时计算 $I(B) = \\int_{${a}}^B \\frac{${k}}{x^2}\\,dx$。这些数值积分趋近的精确极限值 $\\lim_{B\\to\\infty} I(B)$ 是多少？`,
+                `To approximate the improper integral $\\int_{${a}}^{\\infty} \\frac{${k}}{x^2}\\,dx$ on a graphing calculator, you enter the finite integral $I(${B}) = \\int_{${a}}^{${B}} \\frac{${k}}{x^2}\\,dx$. What exact value does $I(${B})$ equal?`,
+                `为在图形计算器上近似反常积分 $\\int_{${a}}^{\\infty} \\frac{${k}}{x^2}\\,dx$，输入有限定积分 $I(${B}) = \\int_{${a}}^{${B}} \\frac{${k}}{x^2}\\,dx$。$I(${B})$ 的精确值是多少？`,
               )
             : t(
                 `When approximating $\\int_{${a}}^{\\infty} \\frac{${k}}{x^2}\\,dx$ on a calculator by truncating the upper bound at $B = ${B}$, what is the exact truncation error $\\int_{${B}}^{\\infty} \\frac{${k}}{x^2}\\,dx$?`,
                 `在计算器上将上限截断为 $B = ${B}$ 来近似反常积分 $\\int_{${a}}^{\\infty} \\frac{${k}}{x^2}\\,dx$ 时，精确截断误差 $\\int_{${B}}^{\\infty} \\frac{${k}}{x^2}\\,dx$ 是多少？`,
               ),
-          answer: askLimit ? exactLim : tailErr,
-          wrong: askLimit ? [truncVal, tailErr, Q.of(k, a * a)] : [exactLim, truncVal, Q.of(k, B * B)],
-          solution: askLimit
+          answer: askTrunc ? truncVal : tailErr,
+          wrong: askTrunc ? [exactLim, tailErr, Q.of(k, a * a)] : [exactLim, truncVal, Q.of(k, B * B)],
+          solution: askTrunc
             ? t(
-                `Use the antiderivative $-\\frac{${k}}{x}$: $\\int_{${a}}^B \\frac{${k}}{x^2}\\,dx = \\frac{${k}}{${a}} - \\frac{${k}}{B}$, which approaches $\\frac{${k}}{${a}} = ${exactLim.toLatex()}$ as $B \\to \\infty$.`,
-                `利用原函数 $-\\frac{${k}}{x}$：$\\int_{${a}}^B \\frac{${k}}{x^2}\\,dx = \\frac{${k}}{${a}} - \\frac{${k}}{B}$，当 $B \\to \\infty$ 时趋近于 $\\frac{${k}}{${a}} = ${exactLim.toLatex()}$。`,
+                `Using the antiderivative $-\\frac{${k}}{x}$, the finite calculator integral is $I(${B}) = \\frac{${k}}{${a}} - \\frac{${k}}{${B}} = ${truncVal.toLatex()}$.`,
+                `利用原函数 $-\\frac{${k}}{x}$，有限计算器积分为 $I(${B}) = \\frac{${k}}{${a}} - \\frac{${k}}{${B}} = ${truncVal.toLatex()}$。`,
               )
             : t(
-                `Use the antiderivative $-\\frac{${k}}{x}$: the tail integral from $x = ${B}$ to $\\infty$ equals $\\frac{${k}}{${B}} = ${tailErr.toLatex()}$.`,
-                `利用原函数 $-\\frac{${k}}{x}$：从 $x = ${B}$ 到 $\\infty$ 的尾积分等于 $\\frac{${k}}{${B}} = ${tailErr.toLatex()}$。`,
+                `Using the antiderivative $-\\frac{${k}}{x}$, the tail integral from $x = ${B}$ to $\\infty$ equals $\\frac{${k}}{${B}} = ${tailErr.toLatex()}$.`,
+                `利用原函数 $-\\frac{${k}}{x}$，从 $x = ${B}$ 到 $\\infty$ 的尾积分等于 $\\frac{${k}}{${B}} = ${tailErr.toLatex()}$。`,
               ),
         });
       },
@@ -518,33 +594,51 @@ const findingImproperIntegralsUsingAGraphingCalculator: TopicDef = {
       id: "improper-integrals-near-vertical-asymptotes-with-technology",
       title: t("Investigating Vertical Asymptotes Numerically", "用数值方法研究垂直渐近线处的反常积分"),
       explanation: t(
-        "For an improper integral $\\int_0^b f(x)\\,dx$ with a vertical asymptote at $x = 0$, replace the lower bound with a small positive number $\\varepsilon$ (such as $0.01, 0.0001$) and observe whether $\\int_{\\varepsilon}^b f(x)\\,dx$ approaches a finite limit as $\\varepsilon \\to 0^+$.",
-        "对于在 $x = 0$ 处有垂直渐近线的反常积分 $\\int_0^b f(x)\\,dx$，可将下限替换为很小的正数 $\\varepsilon$（如 $0.01, 0.0001$），观察当 $\\varepsilon \\to 0^+$ 时 $\\int_{\\varepsilon}^b f(x)\\,dx$ 是否趋近于有限极限。",
+        "For an improper integral $\\int_a^b f(x)\\,dx$ with a vertical asymptote at $x = a$, replace the lower bound with $a + \\varepsilon$ for a small positive number $\\varepsilon$ (such as $0.01$ or $0.0001$) and evaluate $J(\\varepsilon) = \\int_{a+\\varepsilon}^b f(x)\\,dx$ on the calculator.",
+        "对于在 $x = a$ 处有垂直渐近线的反常积分 $\\int_a^b f(x)\\,dx$，可将下限替换为 $a + \\varepsilon$（其中 $\\varepsilon$ 为很小的正数，如 $0.01$ 或 $0.0001$），并在计算器上计算 $J(\\varepsilon) = \\int_{a+\\varepsilon}^b f(x)\\,dx$。",
       ),
       generate: (rng: Rng) => {
-        const k = rng.int(1, 9);
-        const m = rng.int(2, 8);
-        const a = rng.int(0, 4);
+        const k = rng.int(1, 8);
+        const m = rng.int(2, 7);
+        const a = rng.int(1, 5);
         const b = a + m * m;
-        const ans = 2 * k * m;
+        const n = rng.pick([10, 100] as const);
+        // eps = 1/n^2, so sqrt(eps) = 1/n. J(eps) = 2k*m - 2k/n, error = 2k/n
+        const epsTex = n === 10 ? "0.01" : "0.0001";
+        const fullLim = Q.of(2 * k * m);
+        const err = Q.of(2 * k, n);
+        const jVal = fullLim.sub(err);
+        const inside = linear(1, -a);
+        const askJ = rng.bool();
         return numberProblem({
-          prompt: t(
-            `To evaluate the improper integral $\\int_{${a}}^{${b}} \\frac{${k}}{\\sqrt{x - ${a}}}\\,dx$ numerically, you compute $J(\\varepsilon) = \\int_{${a}+\\varepsilon}^{${b}} \\frac{${k}}{\\sqrt{x - ${a}}}\\,dx$ for $\\varepsilon = 10^{-2}, 10^{-4}, 10^{-6}$. What limiting value does $J(\\varepsilon)$ approach as $\\varepsilon \\to 0^+$?`,
-            `为数值计算反常积分 $\\int_{${a}}^{${b}} \\frac{${k}}{\\sqrt{x - ${a}}}\\,dx$，依次取 $\\varepsilon = 10^{-2}, 10^{-4}, 10^{-6}$ 计算 $J(\\varepsilon) = \\int_{${a}+\\varepsilon}^{${b}} \\frac{${k}}{\\sqrt{x - ${a}}}\\,dx$。当 $\\varepsilon \\to 0^+$ 时，$J(\\varepsilon)$ 趋近的极限值是多少？`,
-          ),
-          answer: ans,
-          wrong: [k * m, k * (b - a), 2 * k * (b - a)],
-          solution: t(
-            `Since $\\int_{${a}+\\varepsilon}^{${b}} \\frac{${k}}{\\sqrt{x - ${a}}}\\,dx = ${2 * k}\\sqrt{${b - a}} - ${2 * k}\\sqrt{\\varepsilon}$, taking $\\varepsilon \\to 0^+$ gives $${2 * k} \\cdot ${m} = ${ans}$.`,
-            `由于 $\\int_{${a}+\\varepsilon}^{${b}} \\frac{${k}}{\\sqrt{x - ${a}}}\\,dx = ${2 * k}\\sqrt{${b - a}} - ${2 * k}\\sqrt{\\varepsilon}$，令 $\\varepsilon \\to 0^+$ 得 $${2 * k} \\cdot ${m} = ${ans}$。`,
-          ),
+          prompt: askJ
+            ? t(
+                `To approximate $\\int_{${a}}^{${b}} \\frac{${k}}{\\sqrt{${inside}}}\\,dx$ on a calculator, you offset the vertical asymptote at $x = ${a}$ by $\\varepsilon = ${epsTex}$ and compute $J(${epsTex}) = \\int_{${a + (n === 10 ? 0.01 : 0.0001)}}^{${b}} \\frac{${k}}{\\sqrt{${inside}}}\\,dx$. What exact value does $J(${epsTex})$ equal?`,
+                `为在计算器上近似反常积分 $\\int_{${a}}^{${b}} \\frac{${k}}{\\sqrt{${inside}}}\\,dx$，将 $x = ${a}$ 处的垂直渐近线偏移 $\\varepsilon = ${epsTex}$，计算 $J(${epsTex}) = \\int_{${a + (n === 10 ? 0.01 : 0.0001)}}^{${b}} \\frac{${k}}{\\sqrt{${inside}}}\\,dx$。$J(${epsTex})$ 的精确值是多少？`,
+              )
+            : t(
+                `When approximating $\\int_{${a}}^{${b}} \\frac{${k}}{\\sqrt{${inside}}}\\,dx$ by the finite calculator integral $J(${epsTex}) = \\int_{${a + (n === 10 ? 0.01 : 0.0001)}}^{${b}} \\frac{${k}}{\\sqrt{${inside}}}\\,dx$, by how much does $J(${epsTex})$ underestimate the exact improper integral?`,
+                `用有限计算器积分 $J(${epsTex}) = \\int_{${a + (n === 10 ? 0.01 : 0.0001)}}^{${b}} \\frac{${k}}{\\sqrt{${inside}}}\\,dx$ 近似反常积分 $\\int_{${a}}^{${b}} \\frac{${k}}{\\sqrt{${inside}}}\\,dx$ 时，$J(${epsTex})$ 比精确反常积分小多少？`,
+              ),
+          answer: askJ ? jVal : err,
+          wrong: askJ ? [fullLim, err, Q.of(k * m)] : [fullLim, jVal, Q.of(k, n)],
+          solution: askJ
+            ? t(
+                `Evaluating the antiderivative $2\\cdot ${k}\\sqrt{${inside}} = ${2 * k}\\sqrt{${inside}}$ from $x = ${a} + ${epsTex}$ to $x = ${b}$ gives $${2 * k}(${m}) - ${2 * k}\\sqrt{${epsTex}} = ${2 * k * m} - \\frac{${2 * k}}{${n}} = ${jVal.toLatex()}$.`,
+                `将原函数 $${2 * k}\\sqrt{${inside}}$ 从 $x = ${a} + ${epsTex}$ 到 $x = ${b}$ 求值，得 $${2 * k}(${m}) - ${2 * k}\\sqrt{${epsTex}} = ${2 * k * m} - \\frac{${2 * k}}{${n}} = ${jVal.toLatex()}$。`,
+              )
+            : t(
+                `The omitted integral on $[${a}, ${a} + ${epsTex}]$ equals $${2 * k}\\sqrt{${epsTex}} = \\frac{${2 * k}}{${n}} = ${err.toLatex()}$.`,
+                `在 $[${a}, ${a} + ${epsTex}]$ 上被略去的积分等于 $${2 * k}\\sqrt{${epsTex}} = \\frac{${2 * k}}{${n}} = ${err.toLatex()}$。`,
+              ),
         });
       },
     },
   ],
 };
 
-const exploringFunctionsUsingTechnology: TopicDef = {
+/** exploringFunctionsUsingTechnology practices locating inflection points and intervals of simultaneous monotonicity and concavity from calculator graphs of derivatives. */
+export const exploringFunctionsUsingTechnology: TopicDef = {
   id: "exploring-functions-using-technology",
   title: t("Exploring Functions Using Technology", "利用技术探索函数"),
   summary: t(
@@ -571,27 +665,29 @@ const exploringFunctionsUsingTechnology: TopicDef = {
         "当计算器题目给出导函数 $f'(x)$ 的表达式时，无需手动对 $f'(x)$ 求导即可找出 $f$ 的拐点。因为每当 $f'(x)$ 由递增变为递减（或由递减变为递增）时，$f''(x)$ 就会变号，所以原函数 $f$ 的拐点恰好出现在导函数 $Y_1 = f'(x)$ 的局部极值点的横坐标处。",
       ),
       generate: (rng: Rng) => {
-        const x1 = rng.int(1, 3);
-        const x2 = rng.int(5, 8);
+        const z1 = rng.int(1, 2);
+        const x1 = z1 + rng.int(1, 2);
+        const z2 = x1 + rng.int(1, 2);
+        const x2 = z2 + rng.int(1, 2);
         const y1 = rng.int(3, 9);
         const y2 = -rng.int(2, 7);
         const askMaxSlope = rng.bool();
         return numberProblem({
           prompt: askMaxSlope
             ? t(
-                `By graphing $Y_1 = f'(x)$ on a calculator, you find that $f'(x)$ has a local maximum at $(${x1}, ${y1})$ and a local minimum at $(${x2}, ${y2})$. At the inflection point $x = ${x1}$, what is the slope of the tangent line to the graph of $f$?`,
-                `在计算器上绘制 $Y_1 = f'(x)$，测得 $f'(x)$ 在 $(${x1}, ${y1})$ 处取得局部极大值，在 $(${x2}, ${y2})$ 处取得局部极小值。在拐点 $x = ${x1}$ 处，原函数 $f$ 图像的切线斜率是多少？`,
+                `By graphing $Y_1 = f'(x)$ on a calculator, you find zeros at $x = ${z1}$ and $x = ${z2}$, a local maximum of $f'(x)$ at $(${x1}, ${y1})$, and a local minimum of $f'(x)$ at $(${x2}, ${y2})$. At the smaller inflection point $x$-coordinate of $f$, what is the slope of the tangent line to the graph of $f$?`,
+                `在计算器上绘制 $Y_1 = f'(x)$，测得零点为 $x = ${z1}$ 与 $x = ${z2}$，$f'(x)$ 的局部极大值点为 $(${x1}, ${y1})$，局部极小值点为 $(${x2}, ${y2})$。在原函数 $f$ 横坐标较小的那个拐点处，$f$ 图像的切线斜率是多少？`,
               )
             : t(
-                `By graphing $Y_1 = f'(x)$ on a calculator, you find that $f'(x)$ has a local maximum at $(${x1}, ${y1})$ and a local minimum at $(${x2}, ${y2})$. At which larger $x$-coordinate does the graph of $f$ change from concave down to concave up?`,
-                `在计算器上绘制 $Y_1 = f'(x)$，测得 $f'(x)$ 在 $(${x1}, ${y1})$ 处取得局部极大值，在 $(${x2}, ${y2})$ 处取得局部极小值。原函数 $f$ 的图像在哪个较大的横坐标 $x$ 处由下凹变为上凹？`,
+                `By graphing $Y_1 = f'(x)$ on a calculator, you find zeros at $x = ${z1}$ and $x = ${z2}$, a local maximum of $f'(x)$ at $(${x1}, ${y1})$, and a local minimum of $f'(x)$ at $(${x2}, ${y2})$. At which $x$-coordinate does the graph of $f$ change from concave down to concave up?`,
+                `在计算器上绘制 $Y_1 = f'(x)$，测得零点为 $x = ${z1}$ 与 $x = ${z2}$，$f'(x)$ 的局部极大值点为 $(${x1}, ${y1})$，局部极小值点为 $(${x2}, ${y2})$。原函数 $f$ 的图像在哪个横坐标 $x$ 处由下凹变为上凹？`,
               ),
           answer: askMaxSlope ? y1 : x2,
-          wrong: askMaxSlope ? [x1, y2, 0] : [x1, y2, y1],
+          wrong: askMaxSlope ? [x1, z1, y2] : [z2, x1, y2],
           solution: askMaxSlope
             ? t(
-                `The point $(${x1}, ${y1})$ lies on the graph of $Y_1 = f'(x)$, so $f'(${x1}) = ${y1}$. Thus the slope of the tangent line to $f$ at its inflection point $x = ${x1}$ is $${y1}$.`,
-                `点 $(${x1}, ${y1})$ 在导函数 $Y_1 = f'(x)$ 的图像上，因此 $f'(${x1}) = ${y1}$。故原函数 $f$ 在拐点 $x = ${x1}$ 处的切线斜率为 $${y1}$。`,
+                `Inflection points of $f$ occur at local extrema of $f'(x)$, namely $x = ${x1}$ and $x = ${x2}$ (not at the zeros $x = ${z1}, ${z2}$). At $x = ${x1}$, the tangent slope of $f$ is $f'(${x1}) = ${y1}$.`,
+                `原函数 $f$ 的拐点出现在导函数 $f'(x)$ 的局部极值点 $x = ${x1}$ 与 $x = ${x2}$ 处（而非零点 $x = ${z1}, ${z2}$ 处）。在 $x = ${x1}$ 处，$f$ 的切线斜率为 $f'(${x1}) = ${y1}$。`,
               )
             : t(
                 `The graph of $f$ is concave down where $f'(x)$ is decreasing and concave up where $f'(x)$ is increasing. Since $f'(x)$ changes from decreasing to increasing at its local minimum $(${x2}, ${y2})$, $f$ changes from concave down to concave up at $x = ${x2}$.`,
@@ -608,21 +704,24 @@ const exploringFunctionsUsingTechnology: TopicDef = {
         "通过在同一个视图窗口中同时绘制 $Y_1 = f'(x)$ 与 $Y_2 = f''(x)$，可以快速确定两个函数同时具有特定符号的区间——例如 $f$ 既递增（$f'(x) > 0$）又下凹（$f''(x) < 0$）的区间，或者质点速率增加（$v(t)$ 与 $a(t)$ 同号）的时间段。",
       ),
       generate: (rng: Rng) => {
-        const r1 = rng.int(-4, 4);
-        const r2 = r1 + rng.int(2, 9);
+        const r1 = rng.int(1, 5);
+        const r2 = r1 + rng.int(3, 9);
         const a = rng.int(1, 4);
         const mid = Q.of(r1 + r2, 2);
         const len = Q.of(r2 - r1, 2);
+        const fac1 = linear(1, -r1);
+        const fac2 = linear(1, -r2);
+        const coeff = a === 1 ? "-" : `-${a}`;
         return numberProblem({
           prompt: t(
-            `You graph $Y_1 = f'(x) = -${a}(x - (${r1}))(x - (${r2}))$ and $Y_2 = f''(x) = ${poly([-2 * a, "x"], [a * (r1 + r2), ""])}$ on a calculator. What is the length of the interval on which $f$ is both increasing and concave up?`,
-            `在计算器上绘制 $Y_1 = f'(x) = -${a}(x - (${r1}))(x - (${r2}))$ 与 $Y_2 = f''(x) = ${poly([-2 * a, "x"], [a * (r1 + r2), ""])}$。函数 $f$ 既递增又上凹的区间长度是多少？`,
+            `You graph $Y_1 = f'(x) = ${coeff}(${fac1})(${fac2})$ and $Y_2 = f''(x) = ${poly([-2 * a, "x"], [a * (r1 + r2), ""])}$ on a calculator. What is the length of the interval on which $f$ is both increasing and concave up?`,
+            `在计算器上绘制 $Y_1 = f'(x) = ${coeff}(${fac1})(${fac2})$ 与 $Y_2 = f''(x) = ${poly([-2 * a, "x"], [a * (r1 + r2), ""])}$。函数 $f$ 既递增又上凹的区间长度是多少？`,
           ),
           answer: len,
           wrong: [r2 - r1, mid, Q.of(r2 - r1, 4)],
           solution: t(
-            `The function $f$ is increasing where $f'(x) > 0$, which is $(${r1}, ${r2})$, and concave up where $f''(x) > 0$, which is $(-\\infty, ${mid.toLatex()})$. Their intersection is $(${r1}, ${mid.toLatex()})$, which has length $${mid.toLatex()} - (${r1}) = ${len.toLatex()}$.`,
-            `当 $f'(x) > 0$ 即 $x \\in (${r1}, ${r2})$ 时 $f$ 递增；当 $f''(x) > 0$ 即 $x \\in (-\\infty, ${mid.toLatex()})$ 时 $f$ 上凹。两区间的交集为 $(${r1}, ${mid.toLatex()})$，其长度为 $${mid.toLatex()} - (${r1}) = ${len.toLatex()}$。`,
+            `The function $f$ is increasing where $f'(x) > 0$, which is $(${r1}, ${r2})$, and concave up where $f''(x) > 0$, which is $(-\\infty, ${mid.toLatex()})$. Their intersection is $(${r1}, ${mid.toLatex()})$, which has length $${mid.toLatex()} - ${r1} = ${len.toLatex()}$.`,
+            `当 $f'(x) > 0$ 即 $x \\in (${r1}, ${r2})$ 时 $f$ 递增；当 $f''(x) > 0$ 即 $x \\in (-\\infty, ${mid.toLatex()})$ 时 $f$ 上凹。两区间的交集为 $(${r1}, ${mid.toLatex()})$，其长度为 $${mid.toLatex()} - ${r1} = ${len.toLatex()}$。`,
           ),
         });
       },
@@ -630,12 +729,13 @@ const exploringFunctionsUsingTechnology: TopicDef = {
   ],
 };
 
-const plottingParametricAndPolarCurvesUsingTechnology: TopicDef = {
+/** plottingParametricAndPolarCurvesUsingTechnology practices using parametric and polar calculator modes with numerical derivatives and integrals. */
+export const plottingParametricAndPolarCurvesUsingTechnology: TopicDef = {
   id: "plotting-parametric-and-polar-curves-using-technology",
   title: t("Plotting Parametric and Polar Curves Using Technology", "利用技术绘制参数曲线与极坐标曲线"),
   summary: t(
-    "Plot parametric and polar curves on a calculator to compute speed, tangent slopes, and polar curve intersections and bounds.",
-    "在计算器上绘制参数曲线与极坐标曲线，以计算质点速率、切线斜率以及极坐标曲线的交点与积分限。",
+    "Plot parametric and polar curves on a calculator to compute speed, tangent slopes, and polar curve rates of change.",
+    "在计算器上绘制参数曲线与极坐标曲线，以计算质点速率、切线斜率以及极坐标曲线的变化率。",
   ),
   prerequisites: ["exploring-functions-using-technology", "differentiating-curves-given-in-polar-form"],
   encompasses: [
@@ -649,8 +749,8 @@ const plottingParametricAndPolarCurvesUsingTechnology: TopicDef = {
       id: "parametric-mode-tracing-and-direction",
       title: t("Tracing Parametric Curves and Speed in Parametric Mode", "参数模式下的曲线追踪与速率计算"),
       explanation: t(
-        "In Parametric (`PAR`) mode, a graphing calculator plots $(x(t), y(t))$ as $t$ increases from $T_{\\min}$ to $T_{\\max}$ in steps of $T_{\\text{step}}$. Combining numerical derivatives `nDeriv` of $x(t)$ and $y(t)$ lets you compute the slope $\\frac{dy}{dx} = \\frac{y'(t)}{x'(t)}$, the speed $\\sqrt{(x'(t))^2 + (y'(t))^2}$, and the arc length $\\int_{t_1}^{t_2} \\sqrt{(x'(t))^2 + (y'(t))^2}\\,dt$.",
-        "在参数（`PAR`）模式下，图形计算器令 $t$ 从 $T_{\\min}$ 以步长 $T_{\\text{step}}$ 递增到 $T_{\\max}$，依次绘制点 $(x(t), y(t))$。结合 $x(t)$ 与 $y(t)$ 的数值导数 `nDeriv`，可以求出切线斜率 $\\frac{dy}{dx} = \\frac{y'(t)}{x'(t)}$、速率 $\\sqrt{(x'(t))^2 + (y'(t))^2}$ 以及弧长 $\\int_{t_1}^{t_2} \\sqrt{(x'(t))^2 + (y'(t))^2}\\,dt$。",
+        "In Parametric (`PAR`) mode, a graphing calculator plots $(x(t), y(t))$ as $t$ increases from $T_{\\min}$ to $T_{\\max}$ in steps of $T_{\\text{step}}$. Combining numerical derivatives `nDeriv` of $x(t)$ and $y(t)$ lets you compute the slope $\\frac{dy}{dx} = \\frac{y'(t)}{x'(t)}$ and the speed $\\sqrt{(x'(t))^2 + (y'(t))^2}$.",
+        "在参数（`PAR`）模式下，图形计算器令 $t$ 从 $T_{\\min}$ 以步长 $T_{\\text{step}}$ 递增到 $T_{\\max}$，依次绘制点 $(x(t), y(t))$。结合 $x(t)$ 与 $y(t)$ 的数值导数 `nDeriv`，可以求出切线斜率 $\\frac{dy}{dx} = \\frac{y'(t)}{x'(t)}$ 以及速率 $\\sqrt{(x'(t))^2 + (y'(t))^2}$。",
       ),
       generate: (rng: Rng) => {
         const [dx, dy, hyp] = rng.pick([
@@ -661,56 +761,78 @@ const plottingParametricAndPolarCurvesUsingTechnology: TopicDef = {
           [9, 12, 15],
         ] as const);
         const t0 = rng.int(1, 5);
+        const xPos = rng.int(2, 9);
+        const yPos = rng.int(2, 9);
         const signX = rng.bool() ? 1 : -1;
         const signY = rng.bool() ? 1 : -1;
         const vx = signX * dx;
         const vy = signY * dy;
+        const askSlope = rng.bool();
+        const slope = Q.of(vy, vx);
         return numberProblem({
-          prompt: t(
-            `A particle moves in the $xy$-plane so that at time $t = ${t0}$, a calculator's numerical derivative command gives $x'(${t0}) = ${vx}$ and $y'(${t0}) = ${vy}$. What is the speed of the particle at $t = ${t0}$?`,
-            `质点在 $xy$ 平面内运动，在 $t = ${t0}$ 时刻，计算器的数值求导功能给出 $x'(${t0}) = ${vx}$ 且 $y'(${t0}) = ${vy}$。质点在 $t = ${t0}$ 时刻的速率是多少？`,
-          ),
-          answer: hyp,
-          wrong: [dx + dy, Math.abs(vx - vy), hyp * hyp],
-          solution: t(
-            `Speed is the magnitude of the velocity vector: $\\sqrt{(x'(${t0}))^2 + (y'(${t0}))^2} = \\sqrt{(${vx})^2 + (${vy})^2} = \\sqrt{${dx * dx + dy * dy}} = ${hyp}$.`,
-            `速率为速度向量的模：$\\sqrt{(x'(${t0}))^2 + (y'(${t0}))^2} = \\sqrt{(${vx})^2 + (${vy})^2} = \\sqrt{${dx * dx + dy * dy}} = ${hyp}$。`,
-          ),
+          prompt: askSlope
+            ? t(
+                `In Parametric mode, a graphing calculator traces $(x(t), y(t))$ to the point $(x(${t0}), y(${t0})) = (${xPos}, ${yPos})$ and reports the numerical derivatives $x'(${t0}) = ${vx}$ and $y'(${t0}) = ${vy}$. What is the slope $\\frac{dy}{dx}$ of the tangent line to the curve at $t = ${t0}$?`,
+                `在参数模式下，图形计算器追踪曲线 $(x(t), y(t))$ 至点 $(x(${t0}), y(${t0})) = (${xPos}, ${yPos})$，并给出数值导数 $x'(${t0}) = ${vx}$ 与 $y'(${t0}) = ${vy}$。求曲线在 $t = ${t0}$ 处的切线斜率 $\\frac{dy}{dx}$。`,
+              )
+            : t(
+                `In Parametric mode, a graphing calculator traces $(x(t), y(t))$ to the point $(x(${t0}), y(${t0})) = (${xPos}, ${yPos})$ and reports the numerical derivatives $x'(${t0}) = ${vx}$ and $y'(${t0}) = ${vy}$. What is the speed of the particle at $t = ${t0}$?`,
+                `在参数模式下，图形计算器追踪曲线 $(x(t), y(t))$ 至点 $(x(${t0}), y(${t0})) = (${xPos}, ${yPos})$，并给出数值导数 $x'(${t0}) = ${vx}$ 与 $y'(${t0}) = ${vy}$。求质点在 $t = ${t0}$ 时刻的速率。`,
+              ),
+          answer: askSlope ? slope : hyp,
+          wrong: askSlope ? [Q.of(vx, vy), Q.of(yPos, xPos), Q.of(hyp)] : [dx + dy, Math.abs(vx - vy), xPos * xPos + yPos * yPos],
+          solution: askSlope
+            ? t(
+                `Use the parametric slope formula $\\frac{dy}{dx} = \\frac{y'(${t0})}{x'(${t0})} = \\frac{${vy}}{${vx}} = ${slope.toLatex()}$ (not $\\frac{y(${t0})}{x(${t0})}$).`,
+                `由参数方程切线斜率公式得 $\\frac{dy}{dx} = \\frac{y'(${t0})}{x'(${t0})} = \\frac{${vy}}{${vx}} = ${slope.toLatex()}$（注意不是 $\\frac{y(${t0})}{x(${t0})}$）。`,
+              )
+            : t(
+                `Speed is the magnitude of the velocity vector: $\\sqrt{(x'(${t0}))^2 + (y'(${t0}))^2} = \\sqrt{(${vx})^2 + (${vy})^2} = \\sqrt{${dx * dx + dy * dy}} = ${hyp}$.`,
+                `速率为速度向量的模：$\\sqrt{(x'(${t0}))^2 + (y'(${t0}))^2} = \\sqrt{(${vx})^2 + (${vy})^2} = \\sqrt{${dx * dx + dy * dy}} = ${hyp}$。`,
+              ),
         });
       },
     },
     {
       id: "polar-mode-windows-and-area-integrals",
-      title: t("Tracing Polar Curves and Rate of Change of Distance to the Origin", "极坐标曲线追踪与到原点距离的变化率"),
+      title: t("Tracing Polar Curves and Rates of Change in Polar Mode", "极坐标曲线追踪与极坐标模式下的变化率"),
       explanation: t(
-        "In Polar (`POL`) mode, the calculator plots $(r(\\theta)\\cos\\theta, r(\\theta)\\sin\\theta)$ as $\\theta$ sweeps from $\\theta_{\\min}$ to $\\theta_{\\max}$. When $r(\\theta) > 0$, the distance from the curve to the origin is $r(\\theta)$ itself; the curve moves away from the origin when $r'(\\theta) > 0$ and toward the origin when $r'(\\theta) < 0$.",
-        "在极坐标（`POL`）模式下，当 $\\theta$ 从 $\\theta_{\\min}$ 扫过到 $\\theta_{\\max}$ 时，计算器绘制点 $(r(\\theta)\\cos\\theta, r(\\theta)\\sin\\theta)$。当 $r(\\theta) > 0$ 时，曲线上一点到原点的距离即为 $r(\\theta)$；当 $r'(\\theta) > 0$ 时曲线远离原点，当 $r'(\\theta) < 0$ 时曲线靠近原点。",
+        "In Polar (`POL`) mode, the calculator plots $(r(\\theta)\\cos\\theta, r(\\theta)\\sin\\theta)$ as $\\theta$ sweeps from $\\theta_{\\min}$ to $\\theta_{\\max}$. From calculator values of $r(\\theta_0)$ and $r'(\\theta_0)$, you can determine both the Cartesian coordinate rates $x'(\\theta_0), y'(\\theta_0)$ and the rate $\\frac{dA}{d\\theta} = \\frac{1}{2}(r(\\theta_0))^2$ at which the radius vector sweeps out area.",
+        "在极坐标（`POL`）模式下，当 $\\theta$ 从 $\\theta_{\\min}$ 扫过到 $\\theta_{\\max}$ 时，计算器绘制点 $(r(\\theta)\\cos\\theta, r(\\theta)\\sin\\theta)$。利用计算器给出的 $r(\\theta_0)$ 与 $r'(\\theta_0)$，既可以求直角坐标的变化率 $x'(\\theta_0), y'(\\theta_0)$，也可以求极径扫过面积的变化率 $\\frac{dA}{d\\theta} = \\frac{1}{2}(r(\\theta_0))^2$。",
       ),
       generate: (rng: Rng) => {
-        const k = rng.int(2, 6);
-        const a = rng.int(1, 5);
-        // r(theta) = a + k*theta on [0, pi], at theta = 1: x = r cos theta, y = r sin theta, dr/dtheta = k
-        const rVal = a + k;
-        const drVal = -rng.int(2, 7);
+        const rVal = rng.int(2, 9);
+        const drVal = -rng.int(2, 8);
         const [c, s] = rng.pick([
           [0, 1],
           [-1, 0],
         ] as const);
         const angleTex = c === 0 ? "\\frac{\\pi}{2}" : "\\pi";
-        // dy/dtheta = r' sin theta + r cos theta
+        const askAreaRate = rng.bool();
         const dyDtheta = drVal * s + rVal * c;
         const dxDtheta = drVal * c - rVal * s;
+        const areaRate = Q.of(rVal * rVal, 2);
         return numberProblem({
-          prompt: t(
-            `You plot a polar curve $r = f(\\theta)$ on a graphing calculator. At $\\theta = ${angleTex}$, the calculator table and numerical derivative show $r(${angleTex}) = ${rVal}$ and $r'(${angleTex}) = ${drVal}$. What is the value of $\\frac{dy}{d\\theta}$ at $\\theta = ${angleTex}$?`,
-            `在图形计算器上绘制极坐标曲线 $r = f(\\theta)$。在 $\\theta = ${angleTex}$ 处，计算器数值表与数值导数显示 $r(${angleTex}) = ${rVal}$ 且 $r'(${angleTex}) = ${drVal}$。求 $\\theta = ${angleTex}$ 处 $\\frac{dy}{d\\theta}$ 的值。`,
-          ),
-          answer: dyDtheta,
-          wrong: [dxDtheta, drVal, rVal],
-          solution: t(
-            `Since $y = r(\\theta)\\sin\\theta$, the product rule gives $\\frac{dy}{d\\theta} = r'(\\theta)\\sin\\theta + r(\\theta)\\cos\\theta$. At $\\theta = ${angleTex}$, $\\sin\\theta = ${s}$ and $\\cos\\theta = ${c}$, so $\\frac{dy}{d\\theta} = (${drVal})(${s}) + (${rVal})(${c}) = ${dyDtheta}$.`,
-            `由于 $y = r(\\theta)\\sin\\theta$，由乘积法则得 $\\frac{dy}{d\\theta} = r'(\\theta)\\sin\\theta + r(\\theta)\\cos\\theta$。在 $\\theta = ${angleTex}$ 处，$\\sin\\theta = ${s}$，$\\cos\\theta = ${c}$，故 $\\frac{dy}{d\\theta} = (${drVal})(${s}) + (${rVal})(${c}) = ${dyDtheta}$。`,
-          ),
+          prompt: askAreaRate
+            ? t(
+                `You plot a polar curve $r = f(\\theta)$ on a graphing calculator. At $\\theta = ${angleTex}$, the calculator table and numerical derivative show $r(${angleTex}) = ${rVal}$ and $r'(${angleTex}) = ${drVal}$. At what rate $\\frac{dA}{d\\theta}$ is the area swept out by the polar curve changing with respect to $\\theta$ at $\\theta = ${angleTex}$?`,
+                `在图形计算器上绘制极坐标曲线 $r = f(\\theta)$。在 $\\theta = ${angleTex}$ 处，计算器数值表与数值导数显示 $r(${angleTex}) = ${rVal}$ 且 $r'(${angleTex}) = ${drVal}$。在 $\\theta = ${angleTex}$ 处，极径扫过的面积关于 $\\theta$ 的变化率 $\\frac{dA}{d\\theta}$ 是多少？`,
+              )
+            : t(
+                `You plot a polar curve $r = f(\\theta)$ on a graphing calculator. At $\\theta = ${angleTex}$, the calculator table and numerical derivative show $r(${angleTex}) = ${rVal}$ and $r'(${angleTex}) = ${drVal}$. What is the value of $\\frac{dy}{d\\theta}$ at $\\theta = ${angleTex}$?`,
+                `在图形计算器上绘制极坐标曲线 $r = f(\\theta)$。在 $\\theta = ${angleTex}$ 处，计算器数值表与数值导数显示 $r(${angleTex}) = ${rVal}$ 且 $r'(${angleTex}) = ${drVal}$。求 $\\theta = ${angleTex}$ 处 $\\frac{dy}{d\\theta}$ 的值。`,
+              ),
+          answer: askAreaRate ? areaRate : dyDtheta,
+          wrong: askAreaRate ? [Q.of(rVal * rVal), Q.of(rVal * drVal), Q.of(rVal)] : [dxDtheta, drVal, rVal],
+          solution: askAreaRate
+            ? t(
+                `Since $A(\\theta) = \\frac{1}{2}\\int (r(\\theta))^2\\,d\\theta$, the rate of change of area with respect to $\\theta$ is $\\frac{dA}{d\\theta} = \\frac{1}{2}(r(${angleTex}))^2 = \\frac{1}{2}(${rVal})^2 = ${areaRate.toLatex()}$.`,
+                `由极坐标面积公式 $A(\\theta) = \\frac{1}{2}\\int (r(\\theta))^2\\,d\\theta$，面积关于 $\\theta$ 的变化率为 $\\frac{dA}{d\\theta} = \\frac{1}{2}(r(${angleTex}))^2 = \\frac{1}{2}(${rVal})^2 = ${areaRate.toLatex()}$。`,
+              )
+            : t(
+                `Since $y = r(\\theta)\\sin\\theta$, the product rule gives $\\frac{dy}{d\\theta} = r'(\\theta)\\sin\\theta + r(\\theta)\\cos\\theta$. At $\\theta = ${angleTex}$, $\\sin\\theta = ${s}$ and $\\cos\\theta = ${c}$, so $\\frac{dy}{d\\theta} = (${drVal})(${s}) + (${rVal})(${c}) = ${dyDtheta}$.`,
+                `由于 $y = r(\\theta)\\sin\\theta$，由乘积法则得 $\\frac{dy}{d\\theta} = r'(\\theta)\\sin\\theta + r(\\theta)\\cos\\theta$。在 $\\theta = ${angleTex}$ 处，$\\sin\\theta = ${s}$，$\\cos\\theta = ${c}$，故 $\\frac{dy}{d\\theta} = (${drVal})(${s}) + (${rVal})(${c}) = ${dyDtheta}$。`,
+              ),
         });
       },
     },
