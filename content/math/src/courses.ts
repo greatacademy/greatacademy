@@ -2627,6 +2627,335 @@ export const linearAlgebra: CourseDef = {
   ],
 };
 
+/** calculusII is the university Calculus II course. */
+export const calculusII: CourseDef = {
+  id: "calculus-ii",
+  title: t("Calculus II", "微积分 II"),
+  description: t(
+    "Integration techniques: substitution, polynomial division, completing the square, trigonometric and hyperbolic identities, integration by parts, partial fractions and improper integrals; applications of integration: areas between curves, volumes, surface areas and motion; parametric equations, vector-valued functions and polar coordinates; sequences, series, convergence tests, Taylor polynomials and Taylor series; and first-order differential equations: separation of variables, exponential and logistic models, slope fields and Euler's method.",
+    "积分技巧：换元法、多项式除法、配方、三角与双曲恒等式、分部积分、部分分式与反常积分；积分的应用：曲线间的面积、体积、曲面面积与运动；参数方程、向量值函数与极坐标；数列、级数、收敛判别法、泰勒多项式与泰勒级数；一阶微分方程：分离变量、指数与逻辑斯谛模型、斜率场与欧拉法。",
+  ),
+  units: [
+    {
+      title: t("Integration Techniques", "积分技巧"),
+      modules: [
+        {
+          title: t("Integration Using Substitution", "换元积分法"),
+          topics: [
+            "integrating-algebraic-functions-using-substitution",
+            "integrating-linear-rational-functions-using-substitution",
+            "integration-using-substitution",
+            "calculating-definite-integrals-using-substitution",
+            "further-integration-of-algebraic-functions-using-substitution",
+            "integrating-exponential-functions-using-linear-substitution",
+            "integrating-exponential-functions-using-substitution",
+            "integrating-trigonometric-functions-using-substitution",
+            "integrating-logarithmic-functions-using-substitution",
+            "integration-by-substitution-with-inverse-trigonometric-functions",
+            "integrating-hyperbolic-functions-using-substitution",
+            "integration-by-substitution-with-inverse-hyperbolic-functions",
+            "integration-by-substitution-with-inverse-reciprocal-hyperbolic-functions",
+          ],
+        },
+        {
+          title: t("Special Techniques for Integration", "特殊积分技巧"),
+          topics: [
+            "integrating-functions-using-polynomial-division",
+            "integrating-functions-by-completing-the-square",
+            "integration-using-hyperbolic-functions-and-completing-the-square",
+            "integration-using-inverse-reciprocal-hyperbolic-functions-and-completing-the-square",
+          ],
+        },
+        {
+          title: t("Integration Using Trigonometric Identities", "用三角恒等式积分"),
+          topics: [
+            "integration-using-basic-trigonometric-identities",
+            "integration-using-the-pythagorean-identities",
+            "integration-using-the-double-angle-formulas",
+            "integrating-products-of-trigonometric-functions",
+          ],
+        },
+        {
+          title: t("Integration Using Hyperbolic Identities", "用双曲恒等式积分"),
+          topics: [
+            "integration-using-basic-hyperbolic-identities",
+            "integration-using-the-hyperbolic-pythagorean-identities",
+            "integration-using-the-hyperbolic-double-angle-formulas",
+          ],
+        },
+        {
+          title: t("Integration by Parts", "分部积分法"),
+          topics: [
+            "introduction-to-integration-by-parts",
+            "using-integration-by-parts-to-calculate-integrals-with-logarithms",
+            "applying-the-integration-by-parts-twice",
+            "the-tabular-method-of-integration-by-parts",
+            "integration-by-parts-in-cyclic-cases",
+          ],
+        },
+        {
+          title: t("Integration Using Partial Fractions", "用部分分式积分"),
+          topics: [
+            "expressing-rational-functions-as-sums-of-partial-fractions",
+            "expressing-rational-functions-with-repeated-factors-as-sums-of-partial-fractions",
+            "expressing-rational-functions-with-irreducible-quadratic-factors-as-sums-of-partial-fractions",
+            "integrating-rational-functions-using-partial-fractions",
+            "integrating-rational-functions-with-repeated-factors",
+            "integrating-rational-functions-with-irreducible-quadratic-factors",
+          ],
+        },
+        {
+          title: t("Improper Integrals", "反常积分"),
+          topics: [
+            "improper-integrals",
+            "improper-integrals-involving-exponential-functions",
+            "improper-integrals-involving-arctangent",
+            "improper-integrals-over-the-real-line",
+            "improper-integrals-of-the-second-kind",
+            "improper-integrals-of-the-second-kind-discontinuities-at-interior-points",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Applications of Integration", "积分的应用"),
+      modules: [
+        {
+          title: t("Applications of Integration", "积分的应用"),
+          topics: [
+            "integrating-rates-of-change",
+            "integrating-density-functions",
+            "the-average-value-of-a-function",
+            "the-area-between-curves-expressed-as-functions-of-x",
+            "the-area-between-curves-expressed-as-functions-of-y",
+            "finding-areas-between-curves-that-intersect-at-more-than-two-points",
+            "the-arc-length-of-a-planar-curve",
+          ],
+        },
+        {
+          title: t("Volumes of Solids With Known Cross Sections", "已知截面的立体的体积"),
+          topics: [
+            "volumes-of-solids-with-square-cross-sections",
+            "volumes-of-solids-with-rectangular-cross-sections",
+            "volumes-of-solids-with-triangular-cross-sections",
+            "volumes-of-solids-with-circular-cross-sections",
+          ],
+        },
+        {
+          title: t("Volumes of Revolution", "旋转体的体积"),
+          topics: [
+            "volumes-of-revolution-using-the-disc-method-rotation-about-the-coordinate-axes",
+            "volumes-of-revolution-using-the-disc-method-rotation-about-other-axes",
+            "volumes-of-revolution-using-the-washer-method-rotation-about-the-coordinate-axes",
+            "volumes-of-revolution-using-the-washer-method-rotation-about-other-axes",
+            "the-shell-method-rotating-a-region-about-the-x-axis",
+            "the-shell-method-rotating-a-region-between-two-curves-about-the-x-axis",
+            "the-shell-method-rotation-about-the-y-axis",
+          ],
+        },
+        {
+          title: t("Surface Areas of Revolution", "旋转曲面的面积"),
+          topics: ["surface-areas-of-revolution-rotation-about-the-x-axis", "surface-areas-of-revolution-rotation-about-the-y-axis"],
+        },
+        {
+          title: t("Connecting Position, Velocity and Acceleration Using Integrals", "用积分联系位置、速度与加速度"),
+          topics: [
+            "calculating-velocity-using-integration",
+            "determining-characteristics-of-moving-objects-using-integration",
+            "calculating-the-position-function-of-a-particle-using-integration",
+            "calculating-the-displacement-of-a-particle-using-integration",
+            "calculating-the-total-distance-traveled-by-a-particle",
+            "average-position-velocity-and-acceleration",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Parametric & Polar Equations", "参数方程与极坐标方程"),
+      modules: [
+        {
+          title: t("Parametric Equations", "参数方程"),
+          topics: [
+            "differentiating-parametric-curves",
+            "calculating-tangent-and-normal-lines-with-parametric-equations",
+            "second-derivatives-of-parametric-equations",
+            "the-arc-length-of-a-parametric-curve",
+            "surface-areas-of-revolution-for-parametric-curves",
+            "calculating-areas-bounded-by-parametric-functions",
+          ],
+        },
+        {
+          title: t("Vector-Valued Functions", "向量值函数"),
+          topics: ["defining-vector-valued-functions", "differentiating-vector-valued-functions", "integrating-vector-valued-functions"],
+        },
+        {
+          title: t("The Planar Motion of a Particle", "质点的平面运动"),
+          topics: [
+            "calculating-velocity-for-plane-motion-using-differentiation",
+            "calculating-acceleration-for-plane-motion-using-differentiation",
+            "finding-velocity-vectors-in-two-dimensions-using-integration",
+            "finding-displacement-vectors-in-two-dimensions-using-integration",
+            "applying-newtons-second-law-in-the-plane",
+          ],
+        },
+        {
+          title: t("Polar Coordinates", "极坐标"),
+          topics: [
+            "differentiating-curves-given-in-polar-form",
+            "further-differentiation-of-curves-given-in-polar-form",
+            "horizontal-and-vertical-tangents-to-polar-curves",
+            "horizontal-and-vertical-tangents-to-polar-curves-in-non-differentiable-cases",
+            "tangent-and-normal-lines-to-polar-curves",
+            "finding-the-area-of-a-polar-region",
+            "finding-the-limits-of-integration-for-a-given-polar-region",
+            "the-total-area-bounded-by-a-single-polar-curve",
+            "the-area-bounded-by-two-polar-curves",
+            "the-arc-length-of-a-polar-curve",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Sequences & Series", "数列与级数"),
+      modules: [
+        {
+          title: t("Sequences", "数列"),
+          topics: [
+            "limits-of-sequences",
+            "convergence-of-geometric-sequences",
+            "further-convergence-of-geometric-sequences",
+            "limits-of-sequences-with-factorials",
+            "determining-limits-of-sequences-using-relative-magnitudes",
+            "further-determining-limits-of-sequences-using-relative-magnitudes",
+          ],
+        },
+        {
+          title: t("Monotonic Sequences", "单调数列"),
+          topics: [
+            "monotonic-sequences",
+            "identifying-monotonic-sequences-using-differentiation",
+            "identifying-monotonic-sequences-using-ratios",
+          ],
+        },
+        {
+          title: t("Infinite Series", "无穷级数"),
+          topics: [
+            "infinite-series-and-partial-sums",
+            "convergent-and-divergent-infinite-series",
+            "properties-of-infinite-series",
+            "further-properties-of-infinite-series",
+            "telescoping-series",
+          ],
+        },
+        {
+          title: t("Geometric Series", "几何级数"),
+          topics: [
+            "finding-the-sum-of-an-infinite-geometric-series",
+            "writing-an-infinite-geometric-series-in-sigma-notation",
+            "sums-of-infinite-geometric-series-given-in-sigma-notation",
+            "convergence-of-geometric-series",
+            "repeating-decimals-as-infinite-geometric-series",
+          ],
+        },
+        {
+          title: t("Infinite Series Convergence Tests", "无穷级数的收敛判别法"),
+          topics: [
+            "the-nth-term-test-for-divergence",
+            "the-integral-test",
+            "the-remainder-estimate-for-the-integral-test",
+            "harmonic-series-and-p-series",
+            "the-comparison-test",
+            "the-limit-comparison-test",
+            "the-alternating-series-test",
+            "the-ratio-test",
+            "the-root-test",
+            "absolute-and-conditional-convergence",
+            "the-alternating-series-error-bound",
+            "determining-convergence-parameters-for-infinite-series",
+            "selecting-procedures-for-analyzing-infinite-series",
+          ],
+        },
+        {
+          title: t("Taylor Polynomials", "泰勒多项式"),
+          topics: [
+            "second-degree-taylor-polynomials",
+            "analyzing-second-degree-taylor-polynomials",
+            "third-degree-taylor-polynomials",
+            "higher-degree-taylor-polynomials",
+            "the-lagrange-error-bound",
+          ],
+        },
+        {
+          title: t("Taylor Series", "泰勒级数"),
+          topics: [
+            "radius-of-convergence-of-power-series-centered-at-the-origin",
+            "radius-of-convergence-of-power-series",
+            "maclaurin-series",
+            "taylor-series",
+            "representing-functions-as-power-series",
+            "recognizing-standard-maclaurin-series",
+            "recognizing-standard-maclaurin-series-for-trigonometric-functions",
+            "differentiating-taylor-series",
+            "approximating-integrals-using-taylor-series",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Differential Equations", "微分方程"),
+      modules: [
+        {
+          title: t("Introduction to Differential Equations", "微分方程简介"),
+          topics: [
+            "introduction-to-differential-equations",
+            "verifying-solutions-of-differential-equations",
+            "solving-first-order-odes-using-direct-integration",
+            "solving-first-order-odes-using-separation-of-variables",
+            "solving-first-order-ivps-using-separation-of-variables",
+            "modeling-with-first-order-odes",
+            "further-modeling-with-first-order-odes",
+          ],
+        },
+        {
+          title: t("Qualitative Techniques for Differential Equations", "微分方程的定性方法"),
+          topics: ["qualitative-analysis-of-first-order-odes", "equilibrium-solutions-of-first-order-odes"],
+        },
+        {
+          title: t("Modeling Exponential Growth and Decay With Differential Equations", "用微分方程建立指数增长与衰减模型"),
+          topics: [
+            "exponential-growth-and-decay-models-with-first-order-odes",
+            "exponential-growth-and-decay-models-with-first-order-odes-calculating-unknown-times-and-initial-values",
+            "exponential-growth-and-decay-models-with-first-order-odes-half-life-problems",
+          ],
+        },
+        {
+          title: t("Modeling Logistic Growth With Differential Equations", "用微分方程建立逻辑斯谛增长模型"),
+          topics: [
+            "logistic-growth-models-with-first-order-odes",
+            "qualitative-analysis-of-the-logistic-growth-equation",
+            "solving-the-logistic-growth-equation",
+          ],
+        },
+        {
+          title: t("Slope Fields", "斜率场"),
+          topics: [
+            "slope-fields-for-directly-integrable-differential-equations",
+            "slope-fields-for-autonomous-differential-equations",
+            "slope-fields-for-nonautonomous-differential-equations",
+            "analyzing-slope-fields-for-directly-integrable-differential-equations",
+            "analyzing-slope-fields-for-autonomous-differential-equations",
+            "analyzing-slope-fields-for-nonautonomous-differential-equations",
+          ],
+        },
+        {
+          title: t("Numerical Solutions of Differential Equations", "微分方程的数值解"),
+          topics: ["eulers-method-calculating-one-step", "eulers-method-calculating-multiple-steps"],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -2637,4 +2966,5 @@ export const mathCourses: readonly CourseDef[] = [
   precalculus,
   calculusI,
   linearAlgebra,
+  calculusII,
 ];
