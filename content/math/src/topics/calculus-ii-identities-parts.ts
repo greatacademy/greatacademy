@@ -8,18 +8,18 @@ import { coef, fracWith, integral, plusC, xPow } from "./calculus-ii-substitutio
 // Calculus II unit 1: Integration Techniques, modules 1.3–1.5.
 
 /** fn writes a function of ax: "\sin x", "\cos(3x)". */
-const fn = (f: string, a: number) => (a === 1 ? `${f} x` : `${f}(${a}x)`);
+export const fn = (f: string, a: number) => (a === 1 ? `${f} x` : `${f}(${a}x)`);
 
 /** fracTerm writes c·top/den with the sign in front: "\frac{x}{4}", "-\frac{3\ln x}{2x^{2}}". */
-const fracTerm = (c: Q, top: string, den: string) =>
+export const fracTerm = (c: Q, top: string, den: string) =>
   `${c.sign() < 0 ? "-" : ""}\\frac{${c.abs().n === 1n ? top || "1" : `${c.abs().n}${top}`}}{${c.d === 1n ? "" : c.d}${den}}`;
 
 /** joinTerms joins signed terms into a sum: ["x", "-2y"] gives "x - 2y". */
-const joinTerms = (terms: readonly string[]) =>
+export const joinTerms = (terms: readonly string[]) =>
   terms.filter((s) => s !== "").reduce((out, s, i) => (i === 0 ? s : s.startsWith("-") ? `${out} - ${s.slice(1)}` : `${out} + ${s}`), "");
 
 /** withC ends a sum of terms in "+ C". */
-const withC = (...terms: readonly string[]) => `${joinTerms(terms) || "0"} + C`;
+export const withC = (...terms: readonly string[]) => `${joinTerms(terms) || "0"} + C`;
 
 /** Case is one integrand with its antiderivative, plausible mistakes and a one-line solution. */
 interface Case {

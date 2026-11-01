@@ -57,7 +57,7 @@ export function integral(integrand: string, answer: string, wrong: readonly stri
 }
 
 /** exactValue builds a problem asking for the exact value of a definite integral. */
-function exactValue(integral: string, answer: string, wrong: readonly string[], en: string, zh: string) {
+export function exactValue(integral: string, answer: string, wrong: readonly string[], en: string, zh: string) {
   return functionProblem({
     prompt: t(`Evaluate $${integral}$. Give an exact answer.`, `计算 $${integral}$，给出精确值。`),
     answer,
