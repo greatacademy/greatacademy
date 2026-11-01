@@ -712,7 +712,7 @@ function fractionLabel(k: number, d: number): string {
 }
 
 /** fractionPlot draws a line plot of values counted in steps of 1/d from lo to hi steps. */
-function fractionPlot(values: readonly number[], d: number, lo: number, hi: number): string {
+export function fractionPlot(values: readonly number[], d: number, lo: number, hi: number): string {
   const x = (k: number) => Math.round((20 + ((k - lo) / (hi - lo)) * 280) * 100) / 100;
   const tallest = Math.max(...[...new Set(values)].map((v) => countOf(values, v)));
   const base = 12 + tallest * 14;
