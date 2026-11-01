@@ -39,7 +39,7 @@ function randomCurve(rng: Rng): { readonly x: Poly; readonly y: Poly } {
 }
 
 /** lineL writes the right side of y = mx + b. */
-function lineL(m: Q, b: Q) {
+export function lineL(m: Q, b: Q) {
   if (m.isZero()) return b.toLatex();
   const mx = `${coef(m)}x`;
   return b.isZero() ? mx : `${mx} ${b.sign() > 0 ? "+" : "-"} ${b.abs().toLatex()}`;
