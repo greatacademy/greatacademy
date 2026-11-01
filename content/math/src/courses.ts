@@ -8762,6 +8762,380 @@ export const mathematicalFoundationsIII: CourseDef = {
   ],
 };
 
+/** multivariableCalculus is the university Multivariable Calculus course. */
+export const multivariableCalculus: CourseDef = {
+  id: "multivariable-calculus",
+  title: t("Multivariable Calculus", "多变量微积分"),
+  description: t(
+    "Differential, integral, and vector calculus in multiple dimensions: vector-valued functions, space curves, and vector fields; limits, continuity, partial derivatives, directional derivatives, gradients, tangent planes, and optimization; double and triple integrals in Cartesian, polar, cylindrical, and spherical coordinates; line and surface integrals, circulation, flux, Green's theorem, Stokes' theorem, and the Divergence theorem; and applications to mechanics, center of mass, moments of inertia, and multivariable probability distributions.",
+    "多维空间中的微分、积分与向量微积分：向量值函数、空间曲线与向量场；极限、连续性、偏导数、方向导数、梯度、切平面与多元最优化；笛卡尔坐标、极坐标、柱坐标与球坐标下的二重与三重积分；第一型与第二型曲线和曲面积分、环量、通量、格林公式、斯托克斯公式与高斯散度定理；以及在力学、质心、转动惯量与多元概率分布中的应用。",
+  ),
+  units: [
+    {
+      title: t("Vector Functions and Vector Fields", "向量函数与向量场"),
+      modules: [
+        {
+          title: t("Vector-Valued Functions", "向量值函数"),
+          topics: [
+            "defining-vector-valued-functions",
+            "the-domain-of-a-vector-valued-function",
+            "continuity-and-differentiability-of-vector-valued-functions",
+            "differentiation-rules-for-vector-valued-functions",
+            "integration-rules-for-vector-valued-functions",
+            "the-arc-length-of-a-vector-valued-function",
+            "tangent-vectors-and-tangent-lines-to-curves",
+            "unit-tangent-vectors",
+            "principal-normal-vectors",
+            "binormal-vectors",
+            "the-osculating-plane",
+            "parameterization-by-arc-length",
+          ],
+        },
+        {
+          title: t("Curvature", "曲率"),
+          topics: [
+            "introduction-to-curvature",
+            "finding-curvature-using-the-cross-product",
+            "radius-of-curvature",
+            "the-curvature-of-a-plane-curve",
+          ],
+        },
+        {
+          title: t("Vector Fields", "向量场"),
+          topics: [
+            "vector-fields",
+            "visualizing-vector-fields",
+            "gradient-vector-fields",
+            "conservative-vector-fields-in-the-cartesian-plane",
+            "calculating-potential-functions",
+            "connected-and-simply-connected-regions",
+            "stream-functions",
+          ],
+        },
+        {
+          title: t("Divergence and Curl", "散度与旋度"),
+          topics: [
+            "the-divergence-of-a-vector-field",
+            "properties-of-the-divergence-operator",
+            "the-curl-of-a-vector-field",
+            "properties-of-the-curl-operator",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Multivariable Functions", "多元函数"),
+      modules: [
+        {
+          title: t("Introduction to Multivariable Functions", "多元函数概论"),
+          topics: [
+            "interior-and-boundary-points",
+            "interiors-and-boundaries-of-sets",
+            "open-and-closed-sets",
+            "the-domain-of-a-multivariable-function",
+            "level-curves",
+            "level-surfaces",
+            "limits-and-continuity-of-multivariable-functions",
+          ],
+        },
+        {
+          title: t("Quadric Surfaces and Cylinders", "二次曲面与柱面"),
+          topics: [
+            "ellipsoids",
+            "hyperboloids",
+            "paraboloids",
+            "elliptic-cones",
+            "cylinders",
+            "intersections-of-lines-and-planes-with-surfaces",
+            "identifying-quadric-surfaces",
+          ],
+        },
+        {
+          title: t("Partial Derivatives", "偏导数"),
+          topics: [
+            "introduction-to-partial-derivatives",
+            "computing-partial-derivatives-using-the-rules-of-differentiation",
+            "geometric-interpretations-of-partial-derivatives",
+            "partial-differentiability-of-multivariable-functions",
+            "higher-order-partial-derivatives",
+            "equality-of-mixed-partial-derivatives",
+            "tangent-planes-to-surfaces",
+            "linearization-of-multivariable-functions",
+            "differentiating-under-the-integral-sign",
+          ],
+        },
+        {
+          title: t("The Gradient Vector", "梯度向量"),
+          topics: [
+            "the-gradient-vector",
+            "the-gradient-as-a-normal-vector",
+            "tangent-lines-to-level-curves",
+            "tangent-planes-to-level-surfaces",
+            "directional-derivatives",
+            "the-multivariable-mean-value-theorem",
+          ],
+        },
+        {
+          title: t("The Multivariable Chain Rule", "多元链式法则"),
+          topics: [
+            "the-multivariable-chain-rule",
+            "the-multivariable-chain-rule-with-polar-coordinates",
+            "the-multivariable-chain-rule-in-vector-form",
+          ],
+        },
+        {
+          title: t("Coordinate Transformations", "坐标变换与雅可比行列式"),
+          topics: [
+            "differentials",
+            "affine-transformations",
+            "the-image-of-an-affine-transformation",
+            "the-inverse-of-an-affine-transformation",
+            "nonlinear-transformations-of-plane-regions",
+            "polar-coordinate-transformations",
+            "transformations-of-regions-between-curves",
+            "the-jacobian",
+            "the-inverse-function-theorem",
+          ],
+        },
+        {
+          title: t("Taylor Polynomials and Higher Derivatives", "泰勒多项式与高阶导数"),
+          topics: [
+            "the-jacobian-of-a-three-dimensional-transformation",
+            "the-derivative-of-a-multivariable-function",
+            "the-second-derivative-of-a-multivariable-function",
+            "second-degree-taylor-polynomials-of-multivariable-functions",
+          ],
+        },
+        {
+          title: t("Optimization", "最优化与拉格朗日乘数法"),
+          topics: [
+            "global-vs-local-extrema-and-critical-points-of-multivariable-functions",
+            "the-second-partial-derivatives-test",
+            "calculating-global-extrema-of-multivariable-functions",
+            "lagrange-multipliers-with-one-constraint",
+            "lagrange-multipliers-with-multiple-constraints",
+            "optimizing-multivariable-functions-using-lagrange-multipliers",
+            "newtons-method-for-multivariable-functions",
+            "newtons-method-for-optimizing-multivariable-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Multiple Integrals", "重积分"),
+      modules: [
+        {
+          title: t("Riemann Sums", "黎曼和"),
+          topics: [
+            "double-summations",
+            "partitions-of-intervals",
+            "calculating-double-summations-over-partitions",
+            "approximating-volumes-using-lower-riemann-sums",
+            "approximating-volumes-using-upper-riemann-sums",
+            "lower-riemann-sums-over-general-rectangular-partitions",
+            "upper-riemann-sums-over-general-rectangular-partitions",
+          ],
+        },
+        {
+          title: t("Double Integrals", "二重积分"),
+          topics: [
+            "defining-double-integrals-using-lower-and-upper-riemann-sums",
+            "double-integrals-over-rectangular-domains",
+            "double-integrals-over-non-rectangular-domains",
+            "properties-of-double-integrals",
+            "type-i-and-ii-regions-in-two-dimensional-space",
+            "double-integrals-over-type-i-regions",
+            "double-integrals-over-type-ii-regions",
+            "double-integrals-over-partitioned-regions",
+            "changing-the-order-of-integration-in-double-integrals",
+          ],
+        },
+        {
+          title: t("Triple Integrals", "三重积分"),
+          topics: [
+            "repeated-integrals-in-three-dimensions",
+            "triple-integrals-over-rectangular-domains",
+            "type-i-ii-and-iii-regions-in-three-dimensional-space",
+            "triple-integrals-over-type-i-regions",
+            "triple-integrals-over-type-ii-regions",
+            "triple-integrals-over-type-iii-regions",
+            "calculating-volumes-of-solids-using-triple-integrals",
+            "changing-the-order-of-integration-in-triple-integrals-changing-projection",
+            "changing-the-order-of-integration-in-triple-integrals-changing-region",
+          ],
+        },
+        {
+          title: t("Double Integrals in Polar Coordinates", "极坐标二重积分与变量替换"),
+          topics: [
+            "double-integrals-in-plane-polar-coordinates",
+            "double-integrals-between-polar-curves",
+            "computing-areas-using-a-change-of-variables",
+            "computing-double-integrals-using-a-change-of-variables",
+          ],
+        },
+        {
+          title: t("Cylindrical and Spherical Coordinates", "柱坐标与球坐标"),
+          topics: [
+            "cylindrical-polar-coordinates",
+            "surfaces-in-cylindrical-polar-coordinates",
+            "triple-integrals-in-cylindrical-polar-coordinates",
+            "spherical-polar-coordinates",
+            "surfaces-in-spherical-polar-coordinates",
+            "triple-integrals-in-spherical-polar-coordinates",
+            "computing-triple-integrals-using-a-change-of-variables",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Line Integrals", "曲线积分"),
+      modules: [
+        {
+          title: t("Line Integrals of Scalar Functions", "标量函数的曲线积分"),
+          topics: [
+            "simple-closed-and-oriented-curves",
+            "line-integrals-of-scalar-functions",
+            "properties-of-line-integrals-of-scalar-functions",
+            "line-integrals-of-scalar-functions-over-paths-expressed-as-functions-of-x",
+            "line-integrals-of-scalar-functions-over-paths-expressed-as-functions-of-y",
+          ],
+        },
+        {
+          title: t("Line Integrals of Scalar Functions Over Parametric Curves", "参数曲线上的标量曲线积分"),
+          topics: [
+            "line-integrals-of-scalar-functions-over-line-segments",
+            "line-integrals-of-scalar-functions-over-circles",
+            "line-integrals-of-scalar-functions-over-ellipses",
+            "further-properties-of-line-integrals-of-scalar-functions",
+            "line-integrals-of-scalar-functions-over-polar-curves",
+          ],
+        },
+        {
+          title: t("Line Integrals With Respect to X and Y", "对坐标的曲线积分"),
+          topics: [
+            "line-integrals-with-respect-to-x-and-y",
+            "properties-of-line-integrals-with-respect-to-x-and-y",
+            "sums-of-line-integrals-with-respect-to-x-and-y-over-parametric-curves",
+            "sums-of-line-integrals-with-respect-to-x-and-y",
+          ],
+        },
+        {
+          title: t("Line Integrals of Vector-Valued Functions", "向量线积分与做功"),
+          topics: [
+            "line-integrals-of-vector-valued-functions-over-parametric-curves",
+            "line-integrals-of-vector-valued-functions-over-general-curves",
+            "interpreting-line-integrals-of-vector-valued-functions",
+            "properties-of-line-integrals-of-vector-valued-functions",
+            "work-done-by-a-force-field",
+            "the-fundamental-theorem-of-line-integrals",
+          ],
+        },
+        {
+          title: t("Path Independence and Conservation", "路径无关性与势函数"),
+          topics: [
+            "path-independence-of-line-integrals",
+            "conservative-vector-fields-and-closed-paths",
+            "calculating-potential-functions-for-line-integrals",
+            "line-integrals-of-conservative-vector-fields-in-three-dimensions",
+            "conservation-of-mechanical-energy",
+          ],
+        },
+        {
+          title: t("Green's Theorem", "格林公式"),
+          topics: [
+            "circulation-and-flux-across-simple-closed-plane-curves",
+            "greens-theorem-in-circulation-curl-form",
+            "calculating-areas-using-greens-theorem",
+            "greens-theorem-in-flux-divergence-form",
+            "greens-theorem-on-regions-with-holes",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Surface Integrals", "曲面积分"),
+      modules: [
+        {
+          title: t("Parametric Surfaces", "参数曲面"),
+          topics: [
+            "parametric-surfaces",
+            "tangent-planes-to-parametric-surfaces",
+            "parametrizations-of-ellipsoids-and-cones",
+            "parametrizations-of-paraboloids-and-hyperboloids",
+            "parametrizations-of-cylinders",
+          ],
+        },
+        {
+          title: t("Surface Area", "曲面面积"),
+          topics: [
+            "surface-areas-of-revolution-rotation-about-the-x-axis",
+            "surface-areas-of-revolution-rotation-about-the-y-axis",
+            "surface-areas-of-revolution-for-parametric-curves",
+            "areas-of-parametric-surfaces",
+            "surfaces-of-revolution",
+            "areas-of-surfaces",
+          ],
+        },
+        {
+          title: t("Surface Integrals", "曲面积分与场论定理"),
+          topics: [
+            "surface-integrals-over-parametric-surfaces",
+            "surface-integrals-over-cartesian-surfaces",
+            "flux-in-three-dimensional-vector-fields",
+            "flux-through-closed-surfaces",
+            "calculating-flux-through-parametric-surfaces",
+            "calculating-flux-through-cartesian-surfaces",
+            "calculating-flux-through-closed-surfaces",
+            "the-divergence-theorem",
+            "stokes-theorem",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Applications of Multivariable Calculus", "多变量微积分的应用"),
+      modules: [
+        {
+          title: t("Vector Mechanics", "矢量力学"),
+          topics: [
+            "velocity-and-acceleration-as-functions-of-displacement",
+            "determining-properties-of-objects-described-as-functions-of-displacement",
+            "the-components-of-acceleration",
+            "newtons-second-law",
+            "applying-newtons-second-law-in-the-plane",
+            "the-work-energy-principle",
+            "circular-motion-about-the-origin",
+          ],
+        },
+        {
+          title: t("Applications of Multiple Integrals", "重积分的几何与物理应用"),
+          topics: [
+            "the-average-value-of-a-multivariable-function",
+            "density-mass-and-charge-of-plane-laminas",
+            "moments-and-center-of-mass",
+            "moments-and-centers-of-mass-of-thin-rods",
+            "moments-and-centers-of-mass-of-plane-laminas",
+            "moments-of-inertia-of-laminas-about-the-coordinate-axes",
+            "moments-of-inertia-of-laminas-about-other-axes",
+            "calculating-the-radius-of-gyration-of-a-plane-lamina",
+            "the-parallel-axis-theorem",
+          ],
+        },
+        {
+          title: t("Random Variables", "多元随机变量与概率分布"),
+          topics: [
+            "probability-density-functions-of-continuous-random-variables",
+            "calculating-probabilities-with-continuous-random-variables",
+            "continuous-random-variables-over-infinite-domains",
+            "joint-distributions-for-discrete-random-variables",
+            "joint-distributions-for-continuous-random-variables",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -8773,6 +9147,7 @@ export const mathCourses: readonly CourseDef[] = [
   calculusI,
   linearAlgebra,
   calculusII,
+  multivariableCalculus,
   apCalculusAB,
   apCalculusBC,
   methodsOfProof,
