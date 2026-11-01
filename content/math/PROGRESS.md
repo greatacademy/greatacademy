@@ -46,7 +46,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Discrete Mathematics | Methods of Proof | in progress | claude-main | Slot **B** after Methods of Proof. Reuse `combinatorics.ts` and `probability.ts` |
 | 4th Grade Math, 5th Grade Math | — | open | | Assigned slot **C**. `grade-4-operations.ts` and the Prealgebra files already cover part of these |
 | 6th, 7th and 8th Grade Math | 5th Grade Math (outline) | open | | Assigned slot **D**. Mostly reuse Prealgebra and Algebra I topics; can start alongside slot C, and request missing grade 4–5 topics from C |
-| Integrated Math I, II, III | Prealgebra | open | | Assigned slot **E**. Mostly course definitions that reuse Algebra I, Geometry and Algebra II topics |
+| Integrated Math I, II, III | Prealgebra | in progress | antigravity | Assigned slot **E**. Mostly course definitions that reuse Algebra I, Geometry and Algebra II topics |
 | Integrated Math I, II, III (Honors) | Prealgebra | open | | Slot **E** after the standard Integrated courses |
 | Mathematical Foundations I, II, III | — | open | | Slot **E** later. Mostly reuse; III needs Calculus I topics, which are done |
 | AP Calculus AB, AP Calculus BC | Calculus I, Calculus II | done | | 9 units (212 topics) and 16 units (305 topics) (revision complete) |
