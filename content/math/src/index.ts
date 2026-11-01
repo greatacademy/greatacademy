@@ -102,6 +102,7 @@ import { methodsOfProofSetTopics } from "./topics/methods-of-proof-sets.ts";
 import { multivariableCalculusLineIntegralTopics } from "./topics/multivariable-calculus-line-integrals.ts";
 import { multivariableCalculusMultipleIntegralTopics } from "./topics/multivariable-calculus-multiple-integrals.ts";
 import { multivariableCalculusMultivariableFunctionTopics } from "./topics/multivariable-calculus-multivariable-functions.ts";
+import { multivariableCalculusSurfaceIntegralTopics } from "./topics/multivariable-calculus-surface-integrals.ts";
 import { multivariableCalculusVectorFunctionTopics } from "./topics/multivariable-calculus-vector-functions.ts";
 import { numberTheoryTopics } from "./topics/number-theory.ts";
 import { polynomialTopics } from "./topics/polynomials.ts";
@@ -265,6 +266,7 @@ export const math: SubjectDef = {
     ...multivariableCalculusMultivariableFunctionTopics,
     ...multivariableCalculusMultipleIntegralTopics,
     ...multivariableCalculusLineIntegralTopics,
+    ...multivariableCalculusSurfaceIntegralTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
