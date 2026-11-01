@@ -743,10 +743,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
       "When differences d_i = x_{1i} - x_{2i} have known variance σ_d^2, testing H_0: μ_d = Δ_0 uses the one-sample z-statistic Z = (d̄ - Δ_0) / (σ_d / √n).",
       "当差值 d_i = x_{1i} - x_{2i} 具有已知方差 σ_d^2 时，检验 H_0: μ_d = Δ_0 使用单样本 z 统计量 Z = (d̄ - Δ_0) / (σ_d / √n)。",
     ),
-    prerequisites: [
-      "confidence-intervals-for-paired-samples-known-variances",
-      "hypothesis-tests-for-one-mean-known-population-variance",
-    ],
+    prerequisites: ["confidence-intervals-for-paired-samples-known-variances", "hypothesis-tests-for-one-mean-known-population-variance"],
     encompasses: [],
     xp: 12,
     knowledgePoints: [

@@ -52,7 +52,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | AP Calculus AB, AP Calculus BC | Calculus I, Calculus II | done | | 9 units (212 topics) and 16 units (305 topics) (revision complete) |
 | Multivariable Calculus | Linear Algebra | done | | 6 units, 187 topics |
 | Differential Equations | Multivariable Calculus | done | | 7 units, 159 topics (24 reused, 135 new) |
-| Probability & Statistics | Multivariable Calculus | in progress | antigravity | |
+| Probability & Statistics | Multivariable Calculus | done | | 10 units, 181 topics (53 reused, 128 new) |
 | Mathematics for Machine Learning | Calculus II, Linear Algebra | open | | |
 | Mathematical Methods for the Physical Sciences I, II | Calculus II | open | | |
 | Abstract Algebra | Methods of Proof, Linear Algebra | in progress | claude-main | |

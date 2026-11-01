@@ -423,10 +423,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
   // 7.26.5 Confidence Intervals for Paired Samples: Known Variances
   {
     id: "confidence-intervals-for-paired-samples-known-variances",
-    title: t(
-      "Confidence Intervals for Paired Samples: Known Variances",
-      "配对样本的置信区间：已知方差",
-    ),
+    title: t("Confidence Intervals for Paired Samples: Known Variances", "配对样本的置信区间：已知方差"),
     summary: t(
       "When the population variance of differences σ_d^2 is known, a 100(1 - α)% confidence interval for the mean difference μ_d is d̄ ± z_{α/2} (σ_d / √n).",
       "当差值总体方差 σ_d^2 已知时，平均差值 μ_d 的 100(1 - α)% 置信区间为 d̄ ± z_{α/2} (σ_d / √n)。",
@@ -465,10 +462,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
   // 7.26.6 Confidence Intervals for Paired Samples: Unknown Variances
   {
     id: "confidence-intervals-for-paired-samples-unknown-variances",
-    title: t(
-      "Confidence Intervals for Paired Samples: Unknown Variances",
-      "配对样本的置信区间：未知方差",
-    ),
+    title: t("Confidence Intervals for Paired Samples: Unknown Variances", "配对样本的置信区间：未知方差"),
     summary: t(
       "For paired observations (x_1i, x_2i) with unknown variance, analyzing univariate differences d_i = x_1i - x_2i gives the confidence interval d̄ ± t_{α/2, n-1} (s_d / √n).",
       "对于方差未知的配对观测值 (x_1i, x_2i)，分析一元差值 d_i = x_1i - x_2i 给出置信区间 d̄ ± t_{α/2, n-1} (s_d / √n)。",

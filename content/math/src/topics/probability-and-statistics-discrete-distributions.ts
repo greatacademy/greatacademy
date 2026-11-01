@@ -177,10 +177,7 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
   // 3.12.3 Mean and Variance of the Negative Binomial Distribution
   {
     id: "mean-and-variance-of-the-negative-binomial-distribution",
-    title: t(
-      "Mean and Variance of the Negative Binomial Distribution",
-      "负二项分布的均值与方差",
-    ),
+    title: t("Mean and Variance of the Negative Binomial Distribution", "负二项分布的均值与方差"),
     summary: t(
       "For a negative binomial random variable X ~ NegativeBinomial(r, p) representing the number of trials to achieve r successes, the expected value is E[X] = r / p and the variance is Var(X) = r(1 - p) / p^2.",
       "对于表示获得 r 次成功所需试验次数的负二项分布 X ~ NegativeBinomial(r, p)，其数学期望为 E[X] = r / p，方差为 Var(X) = r(1 - p) / p^2。",

@@ -9763,6 +9763,402 @@ export const differentialEquations: CourseDef = {
   ],
 };
 
+/** probabilityAndStatistics course covers probability theory and statistical methods. */
+export const probabilityAndStatistics: CourseDef = {
+  id: "probability-and-statistics",
+  title: t("Probability & Statistics", "概率与数理统计"),
+  description: t(
+    "A rigorous foundation in probability and statistical theory and methods, building on multivariable calculus and linear algebra: probability, combinatorics, random variables, expectation, common distributions, joint distributions, estimation, confidence intervals, hypothesis testing, ANOVA, regression, and goodness-of-fit.",
+    "以多元微积分和线性代数为基础，奠定概率与数理统计理论及方法的坚实根基：概率论、组合学、随机变量、数学期望、常见分布、联合分布、参数估计、置信区间、假设检验、方差分析、回归分析与拟合优度检验。",
+  ),
+  units: [
+    {
+      title: t("Probability & Random Variables", "概率与随机变量"),
+      modules: [
+        {
+          title: t("Probability", "概率"),
+          topics: ["the-law-of-total-probability", "extending-the-law-of-total-probability", "bayes-theorem", "extending-bayes-theorem"],
+        },
+        {
+          title: t("Combinatorics", "组合学"),
+          topics: ["permutations-with-repetition", "k-permutations-of-n-with-repetition", "combinations-with-repetition"],
+        },
+        {
+          title: t("Random Variables", "随机变量"),
+          topics: [
+            "probability-density-functions-of-continuous-random-variables",
+            "calculating-probabilities-with-continuous-random-variables",
+            "continuous-random-variables-over-infinite-domains",
+            "cumulative-distribution-functions-for-continuous-random-variables",
+            "median-quartiles-and-percentiles-of-continuous-random-variables",
+            "finding-the-mode-of-a-continuous-random-variable",
+            "approximating-discrete-random-variables-as-continuous",
+            "simulating-random-observations",
+          ],
+        },
+        {
+          title: t("Functions of Random Variables", "随机变量的函数"),
+          topics: [
+            "one-to-one-transformations-of-discrete-random-variables",
+            "many-to-one-transformations-of-discrete-random-variables",
+            "the-distribution-function-method",
+            "the-change-of-variables-method-for-continuous-random-variables",
+            "the-distribution-function-method-with-many-to-one-transformations",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Expectation", "数学期望"),
+      modules: [
+        {
+          title: t("Expectation of Random Variables", "随机变量的数学期望"),
+          topics: [
+            "expected-values-of-discrete-random-variables",
+            "properties-of-expectation-for-discrete-random-variables",
+            "variance-of-discrete-random-variables",
+            "moments-of-discrete-random-variables",
+            "properties-of-variance-for-discrete-random-variables",
+            "moments-of-continuous-random-variables",
+            "expected-values-of-continuous-random-variables",
+            "variance-of-continuous-random-variables",
+            "the-rule-of-the-lazy-statistician",
+          ],
+        },
+        {
+          title: t("Moment-Generating Functions", "矩母函数"),
+          topics: [
+            "moment-generating-functions",
+            "calculating-moments-using-moment-generating-functions",
+            "calculating-variance-and-standard-deviation-using-moment-generating-functions",
+            "constructing-moment-generating-functions-for-discrete-probability-distributions",
+            "constructing-moment-generating-functions-for-continuous-probability-distributions",
+            "properties-of-moment-generating-functions",
+            "the-uniqueness-property-of-mgfs",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Discrete Probability Distributions", "离散型概率分布"),
+      modules: [
+        {
+          title: t("The Discrete Uniform Distribution", "离散均匀分布"),
+          topics: [
+            "the-discrete-uniform-distribution",
+            "mean-and-variance-of-the-discrete-uniform-distribution",
+            "modeling-with-discrete-uniform-distributions",
+          ],
+        },
+        {
+          title: t("The Bernoulli Distribution", "伯努利分布"),
+          topics: ["the-bernoulli-distribution", "mean-and-variance-of-the-bernoulli-distribution"],
+        },
+        {
+          title: t("The Binomial Distribution", "二项分布"),
+          topics: [
+            "the-binomial-distribution",
+            "modeling-with-the-binomial-distribution",
+            "mean-and-variance-of-the-binomial-distribution",
+            "the-cdf-of-the-binomial-distribution",
+          ],
+        },
+        {
+          title: t("The Poisson Distribution", "泊松分布"),
+          topics: [
+            "the-poisson-distribution",
+            "modeling-with-the-poisson-distribution",
+            "mean-and-variance-of-the-poisson-distribution",
+            "the-cdf-of-the-poisson-distribution",
+            "the-poisson-approximation-of-the-binomial-distribution",
+          ],
+        },
+        {
+          title: t("The Geometric Distribution", "几何分布"),
+          topics: [
+            "the-geometric-distribution",
+            "modeling-with-the-geometric-distribution",
+            "mean-and-variance-of-the-geometric-distribution",
+          ],
+        },
+        {
+          title: t("The Negative Binomial Distribution", "负二项分布"),
+          topics: [
+            "the-negative-binomial-distribution",
+            "modeling-with-the-negative-binomial-distribution",
+            "mean-and-variance-of-the-negative-binomial-distribution",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Continuous Probability Distributions", "连续型概率分布"),
+      modules: [
+        {
+          title: t("The Normal Distribution", "正态分布"),
+          topics: [
+            "the-z-score",
+            "the-standard-normal-distribution",
+            "symmetry-properties-of-the-standard-normal-distribution",
+            "the-normal-distribution",
+            "mean-and-variance-of-the-normal-distribution",
+            "percentage-points-of-the-standard-normal-distribution",
+            "modeling-with-the-normal-distribution",
+            "the-empirical-rule-for-the-normal-distribution",
+            "normal-approximations-of-binomial-distributions",
+            "the-normal-approximation-of-the-poisson-distribution",
+          ],
+        },
+        {
+          title: t("The Continuous Uniform Distribution", "连续均匀分布"),
+          topics: [
+            "the-continuous-uniform-distribution",
+            "mean-and-variance-of-the-continuous-uniform-distribution",
+            "modeling-with-continuous-uniform-distributions",
+          ],
+        },
+        {
+          title: t("The Exponential Distribution", "指数分布"),
+          topics: [
+            "the-exponential-distribution",
+            "modeling-with-the-exponential-distribution",
+            "mean-and-variance-of-the-exponential-distribution",
+          ],
+        },
+        {
+          title: t("Other Continous Distributions", "其他连续型分布"),
+          topics: [
+            "the-gamma-function",
+            "the-gamma-distribution",
+            "the-chi-square-distribution",
+            "the-students-t-distribution",
+            "the-f-distribution",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Combining Random Variables", "复合随机变量"),
+      modules: [
+        {
+          title: t("Distributions of Two Discrete Random Variables", "两个离散随机变量的分布"),
+          topics: [
+            "joint-distributions-for-discrete-random-variables",
+            "the-joint-cdf-of-two-discrete-random-variables",
+            "marginal-distributions-for-discrete-random-variables",
+            "independence-of-discrete-random-variables",
+            "conditional-distributions-for-discrete-random-variables",
+            "the-trinomial-distribution",
+            "the-multinomial-distribution",
+          ],
+        },
+        {
+          title: t("Distributions of Two Continuous Random Variables", "两个连续随机变量的分布"),
+          topics: [
+            "joint-distributions-for-continuous-random-variables",
+            "marginal-distributions-for-continuous-random-variables",
+            "independence-of-continuous-random-variables",
+            "conditional-distributions-for-continuous-random-variables",
+            "the-joint-cdf-of-two-continuous-random-variables",
+            "properties-of-the-joint-cdf-of-two-continuous-random-variables",
+            "the-bivariate-normal-distribution",
+          ],
+        },
+        {
+          title: t("Linear Combinations of Random Variables", "随机变量的线性组合"),
+          topics: [
+            "linear-combinations-of-binomial-random-variables",
+            "linear-combinations-of-poisson-random-variables",
+            "combining-two-normally-distributed-random-variables",
+            "combining-multiple-normally-distributed-random-variables",
+            "iid-normal-random-variables",
+          ],
+        },
+        {
+          title: t("Expectation for Multivariate Distributions", "多元分布的数学期望"),
+          topics: [
+            "expected-values-of-sums-and-products-of-random-variables",
+            "variance-of-sums-of-independent-random-variables",
+            "computing-expected-values-from-joint-distributions",
+            "conditional-expectation-for-discrete-random-variables",
+            "conditional-variance-for-discrete-random-variables",
+            "the-rule-of-the-lazy-statistician-for-two-random-variables",
+            "the-law-of-total-expectation-for-discrete-random-variables",
+          ],
+        },
+        {
+          title: t("Covariance of Random Variables", "随机变量的协方差"),
+          topics: [
+            "the-covariance-of-two-random-variables",
+            "variance-of-sums-of-random-variables",
+            "the-covariance-matrix",
+            "the-correlation-coefficient-for-two-random-variables",
+            "the-sample-covariance-matrix",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Parametric Inference", "参数推断"),
+      modules: [
+        {
+          title: t("Mean, Variance, and Proportion", "均值、方差与比例"),
+          topics: [
+            "the-sample-mean",
+            "sampling-distributions",
+            "the-sample-variance",
+            "pooled-variance",
+            "variance-of-sample-means",
+            "sample-means-from-normal-populations",
+            "sampling-proportions-from-finite-populations",
+            "the-method-of-moments",
+            "the-method-of-moments-two-parameter-distributions",
+          ],
+        },
+        {
+          title: t("The Central Limit Theorem", "中心极限定理"),
+          topics: [
+            "the-central-limit-theorem",
+            "applications-of-the-central-limit-theorem",
+            "finite-population-corrections-for-sample-means",
+            "point-estimates-of-population-proportions",
+            "finite-population-corrections-for-sample-proportions",
+          ],
+        },
+        {
+          title: t("Maximum Likelihood", "最大似然估计"),
+          topics: [
+            "product-notation",
+            "logarithmic-differentiation",
+            "likelihood-functions-for-discrete-probability-distributions",
+            "log-likelihood-functions-for-discrete-probability-distributions",
+            "likelihood-functions-for-continuous-probability-distributions",
+            "log-likelihood-functions-for-continuous-probability-distributions",
+            "maximum-likelihood-estimation",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Confidence Intervals", "置信区间"),
+      modules: [
+        {
+          title: t("One-Sample Procedures", "单样本方法"),
+          topics: [
+            "confidence-intervals-for-one-mean-known-population-variance",
+            "confidence-intervals-for-one-mean-unknown-population-variance",
+            "confidence-intervals-for-one-mean-finite-population-correction",
+            "confidence-intervals-for-one-proportion",
+            "confidence-intervals-for-one-proportion-finite-population-corrections",
+            "confidence-intervals-for-one-variance",
+          ],
+        },
+        {
+          title: t("Two-Sample Procedures", "双样本方法"),
+          topics: [
+            "confidence-intervals-for-differences-between-two-means-known-population-variances",
+            "confidence-intervals-for-differences-between-two-means-unknown-equal-population-variances",
+            "confidence-intervals-for-differences-between-two-means-unknown-unequal-population-variances",
+            "confidence-intervals-for-differences-between-two-proportions",
+            "confidence-intervals-for-paired-samples-known-variances",
+            "confidence-intervals-for-paired-samples-unknown-variances",
+          ],
+        },
+        {
+          title: t("Sample Size", "样本容量"),
+          topics: [
+            "sample-size-determination-for-estimating-means",
+            "sample-size-determination-for-estimating-proportions",
+            "sample-size-determination-for-estimating-proportions-finite-populations",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Hypothesis Testing", "假设检验"),
+      modules: [
+        {
+          title: t("One-Sample Procedures", "单样本方法"),
+          topics: [
+            "introduction-to-hypothesis-testing",
+            "hypothesis-tests-for-the-rate-of-a-poisson-distribution",
+            "critical-regions-for-left-tailed-hypothesis-tests",
+            "critical-regions-for-right-tailed-hypothesis-tests",
+            "two-tailed-hypothesis-tests",
+            "type-i-and-type-ii-errors",
+            "hypothesis-tests-for-one-mean-known-population-variance",
+            "hypothesis-tests-for-one-mean-unknown-population-variance",
+            "hypothesis-tests-for-one-variance",
+          ],
+        },
+        {
+          title: t("Two-Sample Procedures", "双样本方法"),
+          topics: [
+            "hypothesis-tests-for-two-means-known-population-variances",
+            "hypothesis-tests-for-two-means-equal-but-unknown-population-variances",
+            "hypothesis-tests-for-two-means-unequal-and-unknown-population-variances",
+            "hypothesis-tests-for-two-proportions",
+            "hypothesis-tests-for-two-means-paired-sample-z-test",
+            "hypothesis-tests-for-two-means-paired-sample-t-test",
+            "hypothesis-tests-for-two-variances",
+          ],
+        },
+        {
+          title: t("Analysis of Variance", "方差分析"),
+          topics: [
+            "one-factor-within-groups-and-between-groups-variation",
+            "the-relationship-between-ssw-ssb-sst",
+            "one-factor-analysis-of-variance",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Regression", "回归分析"),
+      modules: [
+        {
+          title: t("Correlation and Regression", "相关与回归"),
+          topics: [
+            "the-linear-correlation-coefficient",
+            "linear-regression",
+            "residuals-and-residual-plots",
+            "spearmans-rank-correlation-coefficient",
+            "confidence-intervals-for-linear-regression-slope-parameters",
+            "confidence-intervals-for-linear-regression-intercept-parameters",
+          ],
+        },
+        {
+          title: t("Linear and Nonlinear Regression With Matrices", "矩阵形式的线性和非线性回归"),
+          topics: [
+            "least-squares-solution-of-a-linear-system-without-collinearity",
+            "least-squares-solution-of-a-linear-system-with-collinearity",
+            "linear-regression-with-matrices",
+            "polynomial-regression-with-matrices",
+            "multiple-linear-regression-with-matrices",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Nonparametric Inference", "非参数推断"),
+      modules: [
+        {
+          title: t("Goodness-of-Fit and Order Statistics", "拟合优度与顺序统计量"),
+          topics: [
+            "introduction-to-chi-square-goodness-of-fit",
+            "testing-binomial-models-using-chi-square-goodness-of-fit",
+            "testing-poisson-models-using-chi-square-goodness-of-fit",
+            "testing-continuous-uniform-models-using-chi-square-goodness-of-fit",
+            "testing-normal-models-using-chi-square-goodness-of-fit",
+            "chi-square-tests-of-independence-and-homogeneity",
+            "introduction-to-order-statistics",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -9789,4 +10185,5 @@ export const mathCourses: readonly CourseDef[] = [
   mathematicalFoundationsI,
   mathematicalFoundationsII,
   mathematicalFoundationsIII,
+  probabilityAndStatistics,
 ];
