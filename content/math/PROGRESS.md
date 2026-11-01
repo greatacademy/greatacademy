@@ -42,8 +42,8 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Calculus I | Precalculus | done | | |
 | Calculus II | Calculus I | done | | 5 units, 160 topics |
 | Linear Algebra | Calculus I | done | | Assigned slot **A**. Complete 8 units, 181 topics (revision complete: free-response checkers, signs and LaTeX polished) |
-| Methods of Proof | Calculus I | in progress | claude-main | Assigned slot **B**. Mostly new topics: logic, sets, induction, proof techniques |
-| Discrete Mathematics | Methods of Proof | blocked | | Slot **B** after Methods of Proof. Reuse `combinatorics.ts` and `probability.ts` |
+| Methods of Proof | Calculus I | done | | Assigned slot **B**. 7 units, 135 topics; Set Theory precedes Logic so the predicate topics can use sets |
+| Discrete Mathematics | Methods of Proof | in progress | claude-main | Slot **B** after Methods of Proof. Reuse `combinatorics.ts` and `probability.ts` |
 | 4th Grade Math, 5th Grade Math | — | open | | Assigned slot **C**. `grade-4-operations.ts` and the Prealgebra files already cover part of these |
 | 6th, 7th and 8th Grade Math | 5th Grade Math (outline) | open | | Assigned slot **D**. Mostly reuse Prealgebra and Algebra I topics; can start alongside slot C, and request missing grade 4–5 topics from C |
 | Integrated Math I, II, III | Prealgebra | open | | Assigned slot **E**. Mostly course definitions that reuse Algebra I, Geometry and Algebra II topics |
@@ -55,7 +55,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Probability & Statistics | Multivariable Calculus | blocked | | |
 | Mathematics for Machine Learning | Calculus II, Linear Algebra | blocked | | |
 | Mathematical Methods for the Physical Sciences I, II | Calculus II | blocked | | |
-| Abstract Algebra | Methods of Proof, Linear Algebra | blocked | | |
+| Abstract Algebra | Methods of Proof, Linear Algebra | open | | |
 | SAT Math Fundamentals, SAT Math Prep | Algebra II | open | | Low priority: almost entirely reuse; do after the courses above |
 | ACT Math Fundamentals, ACT Math Prep | Precalculus | open | | Low priority, as for SAT |
 

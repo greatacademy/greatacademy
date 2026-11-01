@@ -4028,6 +4028,284 @@ export const apCalculusBC: CourseDef = {
   ],
 };
 
+/** methodsOfProof is the university Methods of Proof course. */
+export const methodsOfProof: CourseDef = {
+  id: "methods-of-proof",
+  title: t("Methods of Proof", "证明方法"),
+  description: t(
+    "Propositional and predicate logic, quantifiers and logical inference; sets, subsets and set operations; direct proof, proof by contrapositive and by contradiction; divisibility, the division algorithm, primes and proof by induction; sequences and their limits, injections, surjections, bijections and the cardinality of infinite sets; modular congruence, linear congruences and the Chinese remainder theorem; and relations, equivalence relations, equivalence classes and the integers modulo n.",
+    "命题逻辑与谓词逻辑、量词与逻辑推理；集合、子集与集合运算；直接证明、逆否证法与反证法；整除、带余除法、素数与数学归纳法；数列及其极限，单射、满射、双射与无限集的基数；模同余、线性同余方程与中国剩余定理；关系、等价关系、等价类与模 n 整数。",
+  ),
+  units: [
+    {
+      title: t("Set Theory", "集合论"),
+      modules: [
+        {
+          title: t("Introduction to Set Theory", "集合论入门"),
+          topics: [
+            "special-sets",
+            "equivalent-sets",
+            "the-constructive-definition-of-a-set",
+            "the-conditional-definition-of-a-set",
+            "describing-sets-using-set-builder-notation",
+            "describing-planar-regions-using-set-builder-notation",
+            "cardinality-of-finite-sets",
+            "infinite-sets",
+            "the-maximum-and-minimum-of-a-set",
+          ],
+        },
+        {
+          title: t("Subsets", "子集"),
+          topics: ["subsets", "power-sets", "partitions-of-sets"],
+        },
+        {
+          title: t("Set Operations", "集合运算"),
+          topics: [
+            "the-difference-of-sets",
+            "set-complements",
+            "indicator-functions",
+            "the-cartesian-product",
+            "visualizing-cartesian-products",
+            "indexed-sets",
+            "disjoint-sets",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Logic", "逻辑"),
+      modules: [
+        {
+          title: t("Statements", "命题"),
+          topics: [
+            "statements-and-predicates",
+            "the-and-and-or-connectives",
+            "truth-tables",
+            "the-not-connective",
+            "logical-equivalence",
+            "logical-associative-and-commutative-laws",
+            "the-distributive-laws",
+            "the-absorption-laws",
+            "de-morgans-laws-for-logic",
+          ],
+        },
+        {
+          title: t("Implications and Biconditionals", "蕴涵与双条件"),
+          topics: [
+            "conditional-statements",
+            "logical-equivalence-with-conditional-statements",
+            "biconditional-statements",
+            "tautologies-and-contradictions",
+            "converse-inverse-and-contrapositive",
+          ],
+        },
+        {
+          title: t("Predicates", "谓词"),
+          topics: [
+            "truth-sets-of-predicates",
+            "the-and-and-or-connectives-with-predicates",
+            "the-not-connective-with-predicates",
+            "simplifying-predicate-expressions-using-de-morgans-laws",
+            "conditional-statements-with-predicates",
+            "necessary-and-sufficient-conditions",
+            "grammatical-constructions-for-conditional-statements",
+            "translating-between-logical-and-set-operations",
+          ],
+        },
+        {
+          title: t("Quantifiers", "量词"),
+          topics: [
+            "universal-and-existential-quantifiers",
+            "negating-quantified-statements",
+            "nested-quantifiers",
+            "formal-and-informal-language",
+            "negating-statements-with-nested-quantifiers",
+            "prenex-normal-form",
+          ],
+        },
+        {
+          title: t("Logical Inference", "逻辑推理"),
+          topics: [
+            "implication-elimination-and-denying-the-consequent",
+            "disjunctive-syllogism-and-transitivity-of-implication",
+            "additional-rules-of-logical-inference",
+          ],
+        },
+        {
+          title: t("Properties of Set Operations", "集合运算的性质"),
+          topics: [
+            "proving-subset-relations",
+            "elementary-properties-of-set-operations",
+            "proving-elementary-properties-of-set-operations",
+            "de-morgans-laws-for-sets",
+            "proving-de-morgans-laws-for-sets",
+            "distributive-properties-of-set-operations",
+            "proving-distributive-properties-of-union-and-intersection",
+            "proving-distributive-properties-of-the-cartesian-product",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Mathematical Proof", "数学证明"),
+      modules: [
+        {
+          title: t("Introduction to Mathematical Proof", "数学证明入门"),
+          topics: [
+            "direct-proof",
+            "proving-parity",
+            "proving-divisibility",
+            "proof-by-cases",
+            "disproving-universal-statements",
+            "disproving-implications",
+            "trivial-and-vacuous-proofs",
+            "proving-biconditional-statements",
+          ],
+        },
+        {
+          title: t("Proof by Contrapositive and Contradiction", "逆否证法与反证法"),
+          topics: [
+            "proof-by-contrapositive",
+            "proving-parity-by-contrapositive",
+            "proving-divisibility-by-contrapositive",
+            "proof-by-contradiction",
+            "proving-irrationality-by-contradiction",
+            "proving-properties-of-irrationals-by-contradiction",
+            "proving-divisibility-by-contradiction",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Discrete Mathematics & Number Theory", "离散数学与数论"),
+      modules: [
+        {
+          title: t("Divisibility", "整除"),
+          topics: [
+            "parity",
+            "integer-divisibility",
+            "the-division-algorithm",
+            "the-euclidean-algorithm",
+            "the-extended-euclidean-algorithm",
+            "linear-diophantine-equations",
+            "properties-of-integer-divisibility",
+            "properties-of-prime-divisibility",
+          ],
+        },
+        {
+          title: t("Proof by Induction", "数学归纳法"),
+          topics: [
+            "mathematical-induction",
+            "proving-inequalities-using-induction",
+            "proving-divisibility-using-induction",
+            "proving-matrix-identities-using-induction",
+            "strong-induction-and-recurrence-relations",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Sequences & Functions", "数列与函数"),
+      modules: [
+        {
+          title: t("Sequences", "数列"),
+          topics: [
+            "the-limit-of-a-null-sequence",
+            "proving-the-limit-of-a-null-sequence",
+            "proving-the-finite-limit-of-a-sequence",
+            "infinite-limits-of-sequences",
+            "proving-a-sequence-has-an-infinite-limit",
+          ],
+        },
+        {
+          title: t("Functions", "函数"),
+          topics: [
+            "sets-and-functions",
+            "injections",
+            "proving-injectivity",
+            "surjections",
+            "into-functions",
+            "proving-surjectivity",
+            "bijections",
+            "the-floor-and-ceiling-functions",
+          ],
+        },
+        {
+          title: t("Cardinality", "基数"),
+          topics: [
+            "discrete-infinite-sets-with-equal-cardinality",
+            "continuous-infinite-sets-with-equal-cardinality",
+            "cardinality-of-the-natural-numbers-integers-and-rationals",
+            "cantors-diagonal-argument",
+            "the-cantor-bernstein-schroder-theorem",
+            "the-cardinality-of-the-power-set-of-natural-numbers",
+            "cantors-theorem",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Congruence of Integers", "整数的同余"),
+      modules: [
+        {
+          title: t("Modular Congruence", "模同余"),
+          topics: [
+            "modular-congruence",
+            "the-addition-property-of-modular-arithmetic",
+            "modular-residues",
+            "the-multiplication-properties-of-modular-arithmetic",
+            "the-division-properties-of-modular-arithmetic",
+            "proving-properties-of-modular-congruence",
+            "proving-divisibility-using-congruence",
+            "proving-congruence-by-contrapositive",
+          ],
+        },
+        {
+          title: t("Linear Congruences", "线性同余方程"),
+          topics: [
+            "additive-inverses-modulo-n",
+            "multiplicative-inverses-modulo-n",
+            "solving-linear-congruences",
+            "solving-advanced-linear-congruences",
+            "the-chinese-remainder-theorem",
+            "proving-properties-of-linear-congruences",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Equivalence Relations", "等价关系"),
+      modules: [
+        {
+          title: t("Relations", "关系"),
+          topics: [
+            "relations-on-finite-sets",
+            "relations-on-infinite-sets",
+            "the-domain-and-range-of-a-relation",
+            "graphical-representations-of-relations",
+            "operations-on-relations",
+            "n-ary-relations",
+            "functional-relations",
+          ],
+        },
+        {
+          title: t("Equivalence Relations", "等价关系"),
+          topics: [
+            "reflexive-and-irreflexive-relations",
+            "symmetric-and-antisymmetric-relations",
+            "transitive-relations",
+            "equivalence-relations",
+            "proving-a-relation-is-an-equivalence-relation",
+            "residue-classes",
+            "equivalence-classes",
+            "the-integers-modulo-n",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -4041,4 +4319,5 @@ export const mathCourses: readonly CourseDef[] = [
   calculusII,
   apCalculusAB,
   apCalculusBC,
+  methodsOfProof,
 ];
