@@ -13,7 +13,7 @@ const term = (c: number | Q, sym: string, first = false) => {
   if (q.isZero()) return "";
   const neg = q.sign() < 0;
   const abs = q.abs();
-  const body = sym === "" ? abs.toLatex() : abs.eq(Q.of(1)) ? sym : `${abs.toLatex()}${sym}`;
+  const body = sym === "" ? abs.toLatex() : abs.eq(Q.of(1)) ? sym.replace(/^\\cdot /, "") : `${abs.toLatex()}${sym}`;
   return first ? `${neg ? "-" : ""}${body}` : ` ${neg ? "-" : "+"} ${body}`;
 };
 
@@ -269,7 +269,7 @@ export const firstOrderRecurrenceRelationsWithPolynomialForcing: TopicDef = {
                   .div(Q.of(1 - r)),
                 e.neg(),
               ]
-            : [Q.of(alpha, r - 1), Q.of(alpha, 1 + r), Q.of(alpha)],
+            : [Q.of(alpha, r - 1), Q.of(alpha).mul(Q.of(1 - r)), Q.of(alpha)],
           solution: t(
             `Substituting: $cn + e = ${r}(c(n - 1) + e)${term(alpha, "n")}${term(beta, "")}$. The $n$ terms give $c = ${r}c${term(alpha, "")}$, so $c = ${c.toLatex()}$; the constants give $e = ${-r}c + ${pn(r)}e${term(beta, "")}$, so $e = ${e.toLatex()}$.`,
             `代入：$cn + e = ${r}(c(n - 1) + e)${term(alpha, "n")}${term(beta, "")}$。比较 $n$ 的系数得 $c = ${r}c${term(alpha, "")}$，所以 $c = ${c.toLatex()}$；比较常数项得 $e = ${-r}c + ${pn(r)}e${term(beta, "")}$，所以 $e = ${e.toLatex()}$。`,
@@ -352,7 +352,7 @@ export const firstOrderRecurrenceRelationsWithExponentialForcing: TopicDef = {
             `$a_n = ${rec}$ 有形如 $K \\cdot ${pn(s)}^n$ 的特解。求 $K$。`,
           ),
           answer: value,
-          wrong: [Q.of(c, s - r), Q.of(c * s, s + r), Q.of(c * s, r - s), Q.of(c)],
+          wrong: [Q.of(c, s - r), Q.of(c * r, s - r), Q.of(c * s, r - s), Q.of(c)],
           solution: t(
             `Dividing $K \\cdot ${pn(s)}^n = ${r}K \\cdot ${pn(s)}^{n-1}${term(c, `\\cdot ${pn(s)}^n`)}$ by $${pn(s)}^{n-1}$: $${s}K = ${r}K ${c * s < 0 ? "-" : "+"} ${Math.abs(c * s)}$, so $K = ${value.toLatex()}$.`,
             `把 $K \\cdot ${pn(s)}^n = ${r}K \\cdot ${pn(s)}^{n-1}${term(c, `\\cdot ${pn(s)}^n`)}$ 两边除以 $${pn(s)}^{n-1}$：$${s}K = ${r}K ${c * s < 0 ? "-" : "+"} ${Math.abs(c * s)}$，所以 $K = ${value.toLatex()}$。`,
@@ -653,7 +653,7 @@ export const secondOrderHomogeneousRecurrenceRelationsWithComplexRoots: TopicDef
                 `$a_n = ${rec2(c.p, c.q)}$ 的特征根为 $\\rho(\\cos \\theta \\pm i \\sin \\theta)$，$0^\\circ < \\theta < 180^\\circ$。求 $\\theta$（以度为单位）。`,
               ),
           answer: askRho ? c.rhoSq : c.theta,
-          wrong: askRho ? [c.p, c.p * c.p, -c.q * 2, Math.abs(c.mu)] : [180 - c.theta, 90 - (c.theta % 90 || 45), c.theta / 2 + 90],
+          wrong: askRho ? [c.p, c.p * c.p, -c.q * 2, Math.abs(c.mu)] : [180 - c.theta, 90 - (c.theta % 90 || 45), 360 - c.theta],
           solution: t(
             `$${charTex(c.p, c.q)} = 0$ has roots $${c.rootTex} = ${c.rho}(\\cos ${c.theta}^\\circ \\pm i \\sin ${c.theta}^\\circ)$, so $\\rho^2 = ${c.rhoSq}$ and $\\theta = ${c.theta}^\\circ$.`,
             `$${charTex(c.p, c.q)} = 0$ 的根为 $${c.rootTex} = ${c.rho}(\\cos ${c.theta}^\\circ \\pm i \\sin ${c.theta}^\\circ)$，所以 $\\rho^2 = ${c.rhoSq}$，$\\theta = ${c.theta}^\\circ$。`,
@@ -744,7 +744,7 @@ export const secondOrderRecurrenceRelationsWithPolynomialForcing: TopicDef = {
                   .div(Q.of(D)),
                 e.neg(),
               ]
-            : [Q.of(-alpha, D), Q.of(alpha, 1 - p + q), Q.of(alpha)],
+            : [Q.of(-alpha, D), Q.of(alpha).mul(Q.of(D)), Q.of(alpha)],
           solution: t(
             `Substitute $cn + e$: $cn + e = ${pn(p)}(c(n - 1) + e) + ${pn(q)}(c(n - 2) + e)${term(alpha, "n")}${term(beta, "")}$. The $n$ terms give $${D}c = ${alpha}$, so $c = ${c.toLatex()}$. The constants give $${D}e = ${beta} - ${pn(p + 2 * q)}c$, so $e = ${e.toLatex()}$.`,
             `代入 $cn + e$：$cn + e = ${pn(p)}(c(n - 1) + e) + ${pn(q)}(c(n - 2) + e)${term(alpha, "n")}${term(beta, "")}$。比较 $n$ 的系数得 $${D}c = ${alpha}$，所以 $c = ${c.toLatex()}$。比较常数项得 $${D}e = ${beta} - ${pn(p + 2 * q)}c$，所以 $e = ${e.toLatex()}$。`,
@@ -771,7 +771,7 @@ export const secondOrderRecurrenceRelationsWithPolynomialForcing: TopicDef = {
             `$a_n = ${rec2(p, q)}${term(k, "")}$ 的特征根为 $1$ 和 $${s}$。它有形如 $a_n = cn$ 的特解。求 $c$。`,
           ),
           answer: value,
-          wrong: [Q.of(k, 1 - p - q + 1), Q.of(-k, p + 2 * q), Q.of(k, s), Q.of(k)],
+          wrong: [Q.of(k * s, 1 - s), Q.of(-k, p + 2 * q), Q.of(k, s), Q.of(k)],
           solution: t(
             `$cn = ${pn(p)}c(n - 1) + ${pn(q)}c(n - 2)${term(k, "")}$. The $n$ terms cancel because $1$ is a root, leaving $0 = ${pn(-(p + 2 * q))}c${term(k, "")}$, so $c = ${value.toLatex()}$.`,
             `$cn = ${pn(p)}c(n - 1) + ${pn(q)}c(n - 2)${term(k, "")}$。因为 $1$ 是特征根，$n$ 的项相互抵消，剩下 $0 = ${pn(-(p + 2 * q))}c${term(k, "")}$，所以 $c = ${value.toLatex()}$。`,
@@ -818,7 +818,7 @@ export const secondOrderRecurrenceRelationsWithExponentialForcing: TopicDef = {
             `$a_n = ${rec2(p, q)}${term(k, `\\cdot ${pn(s)}^n`)}$ 有形如 $K \\cdot ${pn(s)}^n$ 的特解。求 $K$。`,
           ),
           answer: value,
-          wrong: [Q.of(k, s * s - p * s - q), Q.of(k * s * s, s * s + p * s + q), Q.of(k * s, s - p - q), Q.of(k)],
+          wrong: [Q.of(k, s * s - p * s - q), Q.of(k * s * s, s * s - p * s - q).neg(), Q.of(k * s, s * s - p * s - q), Q.of(k)],
           solution: t(
             `Divide by $${pn(s)}^{n-2}$: $${s * s}K = ${pn(p * s)}K + ${pn(q)}K${term(k * s * s, "")}$, so $${s * s - p * s - q}K = ${k * s * s}$ and $K = ${value.toLatex()}$.`,
             `两边除以 $${pn(s)}^{n-2}$：$${s * s}K = ${pn(p * s)}K + ${pn(q)}K${term(k * s * s, "")}$，所以 $${s * s - p * s - q}K = ${k * s * s}$，$K = ${value.toLatex()}$。`,
@@ -834,8 +834,11 @@ export const secondOrderRecurrenceRelationsWithExponentialForcing: TopicDef = {
         "$a_n = a_{n-1} + 6a_{n-2} + 3^n$ 有特征根 $3$，所以设 $Kn3^n$。两边除以 $3^{n-2}$：$9Kn = 3K(n - 1) + 6K(n - 2) + 9$；$n$ 的项抵消，$15K = 9$，所以 $K = \\frac{3}{5}$。",
       ),
       generate(rng) {
-        const { p, q, r1, r2 } = randomRoots(rng);
-        const s = rng.bool() ? r1 : r2;
+        let roots: Roots;
+        do roots = randomRoots(rng);
+        while (Math.abs(roots.r1) < 2 && Math.abs(roots.r2) < 2);
+        const { p, q, r1, r2 } = roots;
+        const s = Math.abs(r1) < 2 ? r2 : Math.abs(r2) < 2 ? r1 : rng.bool() ? r1 : r2;
         const other = s === r1 ? r2 : r1;
         const k = rng.nonZero(-4, 4);
         const value = Q.of(k * s, s - other);
