@@ -61,6 +61,8 @@ import { differentialEquationsLinearTopics } from "./topics/differential-equatio
 import { differentialEquationsModelingTopics } from "./topics/differential-equations-modeling.ts";
 import { discreteMathematicsBooleanTopics } from "./topics/discrete-mathematics-boolean.ts";
 import { discreteMathematicsCountingTopics } from "./topics/discrete-mathematics-counting.ts";
+import { discreteMathematicsGraphAlgorithmTopics } from "./topics/discrete-mathematics-graph-algorithms.ts";
+import { discreteMathematicsGraphTopics } from "./topics/discrete-mathematics-graphs.ts";
 import { discreteMathematicsNumberTheoryTopics } from "./topics/discrete-mathematics-number-theory.ts";
 import { discreteMathematicsRandomVariableTopics } from "./topics/discrete-mathematics-random-variables.ts";
 import { discreteMathematicsRecurrenceTopics } from "./topics/discrete-mathematics-recurrences.ts";
@@ -268,6 +270,8 @@ export const math: SubjectDef = {
     ...discreteMathematicsCountingTopics,
     ...discreteMathematicsSeriesTopics,
     ...discreteMathematicsRecurrenceTopics,
+    ...discreteMathematicsGraphTopics,
+    ...discreteMathematicsGraphAlgorithmTopics,
     ...multivariableCalculusVectorFunctionTopics,
     ...multivariableCalculusMultivariableFunctionTopics,
     ...multivariableCalculusMultipleIntegralTopics,
