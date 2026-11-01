@@ -25,8 +25,8 @@ export function modInverse(a: number, n: number): number {
 /** units lists the units of ℤₙ in increasing order. */
 export const units = (n: number) => range(1, n - 1).filter((a) => gcd(a, n) === 1);
 
-/** phi is Euler's totient function. */
-export const phi = (n: number) => units(n).length;
+/** phi is Euler's totient function, with phi(1) = 1. */
+export const phi = (n: number) => (n === 1 ? 1 : units(n).length);
 
 /** multiplicativeOrder is the order of a in U(n). */
 export function multiplicativeOrder(a: number, n: number): number {
