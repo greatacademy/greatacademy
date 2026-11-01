@@ -189,7 +189,7 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
       "When testing whether data follow a normal distribution N(μ, σ^2) with both μ and σ estimated from the sample (by x̄ and s), m = 2 parameters are estimated, giving ν = k - 1 - 2 = k - 3 degrees of freedom.",
       "检验数据是否服从正态分布 N(μ, σ^2) 时，若均值 μ 与标准差 σ 均需通过样本统计量（x̄ 与 s）估计，则估计了 m = 2 个参数，自由度为 ν = k - 1 - 2 = k - 3。",
     ),
-    prerequisites: ["introduction-to-chi-square-goodness-of-fit", "the-normal-distribution"],
+    prerequisites: ["introduction-to-chi-square-goodness-of-fit"],
     encompasses: [],
     xp: 12,
     knowledgePoints: [

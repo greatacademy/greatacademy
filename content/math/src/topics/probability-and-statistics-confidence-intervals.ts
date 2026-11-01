@@ -420,15 +420,63 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
     ],
   },
 
-  // 7.26.4 Paired-Sample Confidence Intervals for the Difference Between Two Means
+  // 7.26.5 Confidence Intervals for Paired Samples: Known Variances
   {
-    id: "paired-sample-confidence-intervals-for-the-difference-between-two-means",
-    title: t("Paired-Sample Confidence Intervals for the Difference Between Two Means", "配对样本两个均值之差的置信区间"),
-    summary: t(
-      "For paired observations (x_1i, x_2i), analyzing the univariate differences d_i = x_1i - x_2i reduces the problem to a one-sample t-interval: d̄ ± t_{α/2, n-1} (s_d / √n).",
-      "对于配对观测值 (x_1i, x_2i)，通过分析一元差值 d_i = x_1i - x_2i，将问题化为单样本 t 置信区间：d̄ ± t_{α/2, n-1} (s_d / √n)。",
+    id: "confidence-intervals-for-paired-samples-known-variances",
+    title: t(
+      "Confidence Intervals for Paired Samples: Known Variances",
+      "配对样本的置信区间：已知方差",
     ),
-    prerequisites: ["confidence-intervals-for-one-mean-unknown-population-variance"],
+    summary: t(
+      "When the population variance of differences σ_d^2 is known, a 100(1 - α)% confidence interval for the mean difference μ_d is d̄ ± z_{α/2} (σ_d / √n).",
+      "当差值总体方差 σ_d^2 已知时，平均差值 μ_d 的 100(1 - α)% 置信区间为 d̄ ± z_{α/2} (σ_d / √n)。",
+    ),
+    prerequisites: ["confidence-intervals-for-one-mean-known-population-variance"],
+    encompasses: [],
+    xp: 12,
+    knowledgePoints: [
+      {
+        id: "paired-known-variance-margin-of-error",
+        title: t("Computing the margin of error for paired samples with known variance", "计算已知方差下配对样本的误差范围"),
+        explanation: t("E = z_{α/2} (σ_d / √n).", "E = z_{α/2} (σ_d / √n)。"),
+        generate: (rng: Rng): Problem => {
+          const k = rng.int(2, 8);
+          const n = k * k;
+          const z = rng.pick([2, 3]);
+          const sigmaD = k * rng.int(2, 10);
+          const margin = z * (sigmaD / k);
+
+          return numberProblem({
+            prompt: t(
+              `A paired sample of size $n = ${n}$ is drawn where the difference population has known standard deviation $\\sigma_d = ${sigmaD}$. For critical value $z_{\\alpha/2} = ${z}$, calculate the margin of error $E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}}$.`,
+              `抽取容量为 $n = ${n}$ 的配对样本，已知差值总体的标准差为 $\\sigma_d = ${sigmaD}$。取临界值 $z_{\\alpha/2} = ${z}$，计算误差范围 $E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}}$。`,
+            ),
+            answer: margin,
+            solution: t(
+              `$E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}} = ${z} \\times \\frac{${sigmaD}}{\\sqrt{${n}}} = ${z} \\times \\frac{${sigmaD}}{${k}} = ${margin}$.`,
+              `$E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}} = ${z} \\times \\frac{${sigmaD}}{\\sqrt{${n}}} = ${z} \\times \\frac{${sigmaD}}{${k}} = ${margin}$。`,
+            ),
+          });
+        },
+      },
+    ],
+  },
+
+  // 7.26.6 Confidence Intervals for Paired Samples: Unknown Variances
+  {
+    id: "confidence-intervals-for-paired-samples-unknown-variances",
+    title: t(
+      "Confidence Intervals for Paired Samples: Unknown Variances",
+      "配对样本的置信区间：未知方差",
+    ),
+    summary: t(
+      "For paired observations (x_1i, x_2i) with unknown variance, analyzing univariate differences d_i = x_1i - x_2i gives the confidence interval d̄ ± t_{α/2, n-1} (s_d / √n).",
+      "对于方差未知的配对观测值 (x_1i, x_2i)，分析一元差值 d_i = x_1i - x_2i 给出置信区间 d̄ ± t_{α/2, n-1} (s_d / √n)。",
+    ),
+    prerequisites: [
+      "confidence-intervals-for-paired-samples-known-variances",
+      "confidence-intervals-for-one-mean-unknown-population-variance",
+    ],
     encompasses: [],
     xp: 12,
     knowledgePoints: [
@@ -437,11 +485,11 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         title: t("Computing the mean difference d̄ from paired observations", "根据配对观测值计算平均差值 d̄"),
         explanation: t("d̄ = (1/n) ∑ (x_1i - x_2i).", "d̄ = (1/n) ∑ (x_1i - x_2i)。"),
         generate: (rng: Rng): Problem => {
-          const n = rng.int(4, 6);
+          const n = rng.int(4, 8);
           const diffs: number[] = [];
           let sumD = 0;
           for (let i = 0; i < n; i++) {
-            const d = rng.int(-5, 12);
+            const d = rng.int(-5, 15);
             diffs.push(d);
             sumD += d;
           }

@@ -173,4 +173,54 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
       },
     ],
   },
+
+  // 3.12.3 Mean and Variance of the Negative Binomial Distribution
+  {
+    id: "mean-and-variance-of-the-negative-binomial-distribution",
+    title: t(
+      "Mean and Variance of the Negative Binomial Distribution",
+      "负二项分布的均值与方差",
+    ),
+    summary: t(
+      "For a negative binomial random variable X ~ NegativeBinomial(r, p) representing the number of trials to achieve r successes, the expected value is E[X] = r / p and the variance is Var(X) = r(1 - p) / p^2.",
+      "对于表示获得 r 次成功所需试验次数的负二项分布 X ~ NegativeBinomial(r, p)，其数学期望为 E[X] = r / p，方差为 Var(X) = r(1 - p) / p^2。",
+    ),
+    prerequisites: ["the-negative-binomial-distribution"],
+    encompasses: [],
+    xp: 10,
+    knowledgePoints: [
+      {
+        id: "evaluating-negative-binomial-mean-and-variance",
+        title: t("Evaluating the mean and variance of a negative binomial variable", "计算负二项分布的均值与方差"),
+        explanation: t("E[X] = r / p and Var(X) = r(1 - p) / p^2.", "E[X] = r / p 且 Var(X) = r(1 - p) / p^2。"),
+        generate: (rng: Rng): Problem => {
+          const r = rng.int(2, 10);
+          const pDenom = rng.pick([2, 3, 4, 5, 10]);
+          const pNum = rng.int(1, pDenom - 1);
+          const p = Q.of(pNum, pDenom);
+          const askVar = rng.bool();
+
+          const mean = Q.of(r).div(p);
+          const variance = Q.of(r).mul(Q.one.sub(p)).div(p.mul(p));
+          const ans = askVar ? variance : mean;
+
+          return numberProblem({
+            prompt: t(
+              `Let $X$ denote the number of independent Bernoulli trials needed to achieve $r = ${r}$ successes, where each trial succeeds with probability $p = ${p.toLatex()}$, so $X \\sim \\text{NegativeBinomial}(${r}, ${p.toLatex()})$. Find the exact rational value of $${askVar ? "\\operatorname{Var}(X)" : "E[X]"}$.`,
+              `设 $X$ 表示为了获得 $r = ${r}$ 次成功所需的独立伯努利试验次数，其中每次试验成功的概率为 $p = ${p.toLatex()}$，即 $X \\sim \\text{NegativeBinomial}(${r}, ${p.toLatex()})$。求 $${askVar ? "\\operatorname{Var}(X)" : "E[X]"}$ 的精确有理数值。`,
+            ),
+            answer: ans,
+            solution: t(
+              askVar
+                ? `$\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2} = \\frac{${r} \\left(1 - ${p.toLatex()}\\right)}{\\left(${p.toLatex()}\\right)^2} = ${ans.toLatex()}$.`
+                : `$E[X] = \\frac{r}{p} = \\frac{${r}}{${p.toLatex()}} = ${ans.toLatex()}$.`,
+              askVar
+                ? `$\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2} = \\frac{${r} \\left(1 - ${p.toLatex()}\\right)}{\\left(${p.toLatex()}\\right)^2} = ${ans.toLatex()}$。`
+                : `$E[X] = \\frac{r}{p} = \\frac{${r}}{${p.toLatex()}} = ${ans.toLatex()}$。`,
+            ),
+          });
+        },
+      },
+    ],
+  },
 ];
