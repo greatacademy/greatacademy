@@ -57,6 +57,7 @@ import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
 import { discreteMathematicsBooleanTopics } from "./topics/discrete-mathematics-boolean.ts";
+import { discreteMathematicsCountingTopics } from "./topics/discrete-mathematics-counting.ts";
 import { discreteMathematicsNumberTheoryTopics } from "./topics/discrete-mathematics-number-theory.ts";
 import { discreteMathematicsRandomVariableTopics } from "./topics/discrete-mathematics-random-variables.ts";
 import { equationTopics } from "./topics/equations.ts";
@@ -256,6 +257,7 @@ export const math: SubjectDef = {
     ...discreteMathematicsBooleanTopics,
     ...discreteMathematicsNumberTheoryTopics,
     ...discreteMathematicsRandomVariableTopics,
+    ...discreteMathematicsCountingTopics,
     ...multivariableCalculusVectorFunctionTopics,
     ...multivariableCalculusMultivariableFunctionTopics,
     ...multivariableCalculusMultipleIntegralTopics,
