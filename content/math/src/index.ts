@@ -22,6 +22,7 @@ import { algebraIITrigonometricGraphTopics } from "./topics/algebra-ii-trigonome
 import { algebraIITrigonometricTransformationTopics } from "./topics/algebra-ii-trigonometric-transformations.ts";
 import { algebraIIUnitCircleTopics } from "./topics/algebra-ii-unit-circle.ts";
 import { angleTopics } from "./topics/angles.ts";
+import { apCalculusTechnologyTopics } from "./topics/ap-calculus-technology.ts";
 import { areaTopics } from "./topics/area.ts";
 import { bivariateStatisticsTopics } from "./topics/bivariate-statistics.ts";
 import { calculusIAccumulationTopics } from "./topics/calculus-i-accumulation.ts";
@@ -230,6 +231,7 @@ export const math: SubjectDef = {
     ...calculusIIConvergenceTopics,
     ...calculusIITaylorTopics,
     ...calculusIIDifferentialEquationTopics,
+    ...apCalculusTechnologyTopics,
     ...methodsOfProofLogicTopics,
   ],
   courses: mathCourses,
