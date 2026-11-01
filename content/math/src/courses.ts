@@ -12560,6 +12560,895 @@ export const eighthGradeMath: CourseDef = {
   ],
 };
 
+/** satMathFundamentals covers the complete mathematical foundations tested on the digital SAT. */
+export const satMathFundamentals: CourseDef = {
+  id: "sat-math-fundamentals",
+  title: t("SAT Math Fundamentals", "SAT 数学基础"),
+  description: t(
+    "Comprehensive coverage of the mathematical concepts, skills, and non-routine problem structures tested on the digital SAT: arithmetic, linear equations and inequalities, graphs and systems, geometry and measurement, right-triangle trigonometry, functions, polynomials, quadratics, exponentials, rational and radical equations, ratios, percentages, units, statistics, and probability.",
+    "全面涵盖数字 SAT 考试所测验的数学概念、解题技巧与典型题型结构：算术、一次方程与不等式、直线与方程组、几何与度量、直角三角形三角学、函数、多项式、二次方程、指数模型、分式与根式方程、比与百分比、单位换算、统计与概率。",
+  ),
+  units: [
+    {
+      title: t("Preliminaries", "预备知识与算术"),
+      modules: [
+        {
+          title: t("Addition and Subtraction of Rational Numbers", "有理数加减法"),
+          topics: [
+            "integers-and-opposites",
+            "absolute-value",
+            "adding-integers",
+            "subtracting-integers",
+            "adding-and-subtracting-fractions",
+          ],
+        },
+        {
+          title: t("Multiplication and Division of Rational Numbers", "有理数乘除法"),
+          topics: [
+            "multiplying-integers",
+            "dividing-integers",
+            "multiplying-fractions",
+            "dividing-fractions",
+            "operations-with-rational-numbers",
+          ],
+        },
+        {
+          title: t("Algebraic Expressions and Order of Operations", "四则混合运算与代数式"),
+          topics: [
+            "order-of-operations-with-integers",
+            "evaluating-expressions",
+            "combining-like-terms",
+            "distributive-property",
+            "simplifying-expressions",
+          ],
+        },
+        {
+          title: t("Exponents", "乘方与指数法则"),
+          topics: ["zero-and-negative-exponents", "product-and-quotient-rules", "power-rules"],
+        },
+        {
+          title: t("Radicals", "平方根与立方根"),
+          topics: ["square-roots-and-cube-roots", "simplifying-square-roots", "rationalizing-denominators"],
+        },
+      ],
+    },
+    {
+      title: t("Algebra - Linear Equations in One Variable", "代数：一元一次方程解法"),
+      modules: [
+        {
+          title: t("Solving Linear Equations", "解一元一次方程"),
+          topics: [
+            "one-step-equations-addition",
+            "one-step-equations-multiplication",
+            "two-step-equations",
+            "equations-with-variables-on-both-sides",
+            "equations-with-parentheses",
+            "linear-equations-with-unknown-coefficients",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Problem Solving - Ratios, Rates & Percentages", "问题解决：比、比例与百分比"),
+      modules: [
+        {
+          title: t("Ratios", "比与条形图"),
+          topics: ["ratios", "ratio-tables-and-tape-diagrams"],
+        },
+        {
+          title: t("Unit Rates", "单位率与单价"),
+          topics: ["unit-rates", "unit-prices-and-speed"],
+        },
+        {
+          title: t("Proportional Relationships", "正比例与比例方程"),
+          topics: ["proportions", "direct-variation"],
+        },
+        {
+          title: t("Percentages", "百分比、利息与折扣"),
+          topics: ["percents", "percent-of-a-number", "percent-change", "percent-applications-interest-and-discounts"],
+        },
+      ],
+    },
+    {
+      title: t("Algebra - Modeling With Linear Equations", "代数：一元一次方程建模"),
+      modules: [
+        {
+          title: t("Modeling With Linear Equations", "一元一次方程建模与实际应用"),
+          topics: [
+            "interpreting-linear-expressions",
+            "modeling-with-linear-equations",
+            "consecutive-integer-problems",
+            "speed-distance-time",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Algebra - Linear Equations in Two Variables", "代数：二元一次方程与直线"),
+      modules: [
+        {
+          title: t("Graphs of Linear Equations", "直线的图象与方程"),
+          topics: [
+            "the-coordinate-plane",
+            "slope-of-a-line",
+            "slope-intercept-form",
+            "properties-of-lines-in-slope-intercept-form",
+            "point-slope-form",
+            "standard-form",
+            "properties-of-lines-in-standard-form",
+            "parallel-lines-in-the-coordinate-plane",
+            "perpendicular-lines-in-the-coordinate-plane",
+          ],
+        },
+        {
+          title: t("Modeling With Two-Variable Linear Equations", "二元一次方程建模"),
+          topics: [
+            "modeling-with-two-variable-linear-equations",
+            "modeling-totals-with-two-variable-equations",
+            "analyzing-graphs-of-linear-models",
+            "further-modeling-with-two-variable-equations",
+            "distance-time-graphs",
+          ],
+        },
+        {
+          title: t("Systems of Equations", "线性方程组与特殊解"),
+          topics: [
+            "systems-of-linear-equations",
+            "solving-systems-by-substitution",
+            "introduction-to-elimination",
+            "elimination-with-one-transformation",
+            "elimination-with-two-transformations",
+            "systems-with-no-solution-or-infinitely-many-solutions",
+            "consistency-and-dependency",
+            "intersection-of-two-lines",
+            "modeling-with-systems",
+            "sat-linear-systems-unknown-constants",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Algebra - Linear Inequalities", "代数：线性不等式"),
+      modules: [
+        {
+          title: t("Linear Inequalities", "一元一次不等式"),
+          topics: ["inequalities-and-solutions", "solving-one-step-inequalities", "solving-multi-step-inequalities"],
+        },
+        {
+          title: t("Two-Variable Linear Inequalities", "二元一次不等式图象"),
+          topics: [
+            "graphing-strict-linear-inequalities",
+            "graphing-non-strict-linear-inequalities",
+            "further-graphing-linear-inequalities",
+            "systems-of-linear-inequalities",
+          ],
+        },
+        {
+          title: t("Modeling With Inequalities", "不等式建模"),
+          topics: [
+            "introduction-to-modeling-with-inequalities",
+            "modeling-with-one-step-inequalities",
+            "modeling-with-two-step-inequalities",
+            "modeling-with-systems-of-inequalities",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Geometry - Points, Lines, & Angles", "几何：点、线与角"),
+      modules: [
+        {
+          title: t("Introduction to Geometry", "角的初步"),
+          topics: ["angles-and-angle-measures"],
+        },
+        {
+          title: t("Angles", "角的性质与平行线"),
+          topics: ["complementary-and-supplementary-angles", "vertical-angles", "parallel-lines-and-transversals"],
+        },
+        {
+          title: t("Advanced Angles", "三角形内外角"),
+          topics: ["angles-of-a-triangle", "exterior-angles-of-triangles", "the-exterior-angle-theorem"],
+        },
+        {
+          title: t("Geometric Transformations", "刚体变换"),
+          topics: ["translations-of-geometric-figures", "rotations-of-geometric-figures", "reflections-in-the-coordinate-plane"],
+        },
+      ],
+    },
+    {
+      title: t("Geometry - Polygons & Solids", "几何：多边形与立体图形"),
+      modules: [
+        {
+          title: t("Triangles", "三角形分类"),
+          topics: ["classifying-triangles", "isosceles-triangles"],
+        },
+        {
+          title: t("Right Triangles", "直角三角形与勾股定理"),
+          topics: ["the-pythagorean-theorem", "isosceles-right-triangles", "thirty-sixty-ninety-triangles"],
+        },
+        {
+          title: t("Polygons", "多边形内角与对称"),
+          topics: ["angles-of-polygons", "reflective-symmetry", "rotational-symmetry"],
+        },
+        {
+          title: t("Solid Geometry", "多面体与展开图"),
+          topics: ["identifying-three-dimensional-shapes", "faces-vertices-and-edges-of-polyhedrons", "nets-of-polyhedrons"],
+        },
+      ],
+    },
+    {
+      title: t("Geometry - Congruence & Similarity", "几何：全等与相似"),
+      modules: [
+        {
+          title: t("Congruence", "三角形全等判定与刚性变换"),
+          topics: [
+            "the-asa-congruence-criterion",
+            "the-aas-congruence-criterion",
+            "the-sas-congruence-criterion",
+            "the-sss-congruence-criterion",
+            "rigid-motions-and-congruence",
+            "properties-of-congruence",
+          ],
+        },
+        {
+          title: t("Similarity", "相似多边形与比例图"),
+          topics: [
+            "similarity-and-similar-polygons",
+            "side-lengths-and-angle-measures-of-similar-polygons",
+            "scale-drawings-and-scale-factor",
+            "the-aa-similarity-criterion",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Geometry - Length, Area & Volume", "几何：长度、面积与体积"),
+      modules: [
+        {
+          title: t("Perimeter & Area of Plane Figures", "平面图形面积与周长"),
+          topics: [
+            "perimeter",
+            "area-of-rectangles-and-squares",
+            "area-of-parallelograms",
+            "area-of-triangles",
+            "area-of-trapezoids",
+            "composite-shapes",
+            "finding-surface-areas-using-nets",
+          ],
+        },
+        {
+          title: t("Units and Measurements", "单位换算与复合单位率"),
+          topics: ["two-step-unit-conversions", "mixed-units", "converting-units-of-area", "units-in-formulas", "units-of-rates-of-change"],
+        },
+        {
+          title: t("Coordinate Geometry", "坐标几何与距离"),
+          topics: [
+            "midpoints-in-the-coordinate-plane",
+            "the-distance-formula",
+            "finding-equations-of-parallel-lines",
+            "finding-equations-of-perpendicular-lines",
+          ],
+        },
+        {
+          title: t("Prisms, Cubes and Solids", "柱体表面积与体积"),
+          topics: ["volumes-of-cubes", "surface-areas-of-cubes", "volumes-of-rectangular-solids", "surface-areas-of-rectangular-solids"],
+        },
+      ],
+    },
+    {
+      title: t("Geometry - Circles", "几何：圆与弧度"),
+      modules: [
+        {
+          title: t("Circles", "圆的周长、面积与内接图形"),
+          topics: [
+            "circles",
+            "the-circumference-of-a-circle",
+            "areas-of-circles",
+            "calculating-arc-lengths-of-circular-sectors",
+            "calculating-areas-of-circular-sectors",
+            "circles-inscribed-in-squares",
+            "squares-inscribed-in-circles",
+          ],
+        },
+        {
+          title: t("Cylinders, Cones, and Spheres", "圆柱、圆锥与球"),
+          topics: [
+            "volumes-of-cylinders",
+            "surface-areas-of-cylinders",
+            "volumes-of-right-cones",
+            "surface-areas-of-right-cones",
+            "volumes-of-spheres",
+            "surface-areas-of-spheres",
+          ],
+        },
+        {
+          title: t("Circles in the Coordinate Plane", "坐标系中的圆方程"),
+          topics: ["circles-in-the-coordinate-plane", "equations-of-circles", "determining-circle-properties-by-completing-the-square"],
+        },
+        {
+          title: t("Radians", "弧度制与扇形"),
+          topics: ["introduction-to-radians", "calculating-arc-length-using-radians", "calculating-areas-of-sectors-using-radians"],
+        },
+      ],
+    },
+    {
+      title: t("Trigonometry", "三角学"),
+      modules: [
+        {
+          title: t("Trigonometry", "锐角三角函数"),
+          topics: [
+            "the-trigonometric-ratios",
+            "calculating-side-lengths-of-right-triangles-using-trigonometry",
+            "trigonometric-functions-of-complementary-angles",
+          ],
+        },
+        {
+          title: t("Special Trigonometric Ratios", "特殊角三角比"),
+          topics: ["special-trigonometric-ratios"],
+        },
+        {
+          title: t("The Unit Circle", "单位圆与任意角三角比"),
+          topics: [
+            "angles-in-the-coordinate-plane",
+            "properties-of-the-unit-circle-in-the-first-quadrant",
+            "extending-the-trigonometric-ratios-using-the-unit-circle",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Advanced Algebra - Functions", "进阶代数：函数概念与性质"),
+      modules: [
+        {
+          title: t("Functions", "函数定义域与值域"),
+          topics: [
+            "introduction-to-functions",
+            "representations-of-functions",
+            "graphs-of-functions",
+            "domain-of-a-function",
+            "range-of-a-function",
+          ],
+        },
+        {
+          title: t("Linear Functions", "一次函数特征与建模"),
+          topics: ["linear-vs-nonlinear-functions", "modeling-with-linear-functions", "constructing-linear-functions"],
+        },
+      ],
+    },
+    {
+      title: t("Advanced Algebra - Absolute Value", "进阶代数：绝对值"),
+      modules: [
+        {
+          title: t("Absolute Value Expressions and Equations", "绝对值与绝对值方程"),
+          topics: [
+            "absolute-value-expressions",
+            "rules-of-absolute-value",
+            "further-rules-of-absolute-value",
+            "absolute-value-equations",
+            "further-absolute-value-equations",
+            "equations-connecting-absolute-value-and-linear-functions",
+            "absolute-value-equations-with-extraneous-solutions",
+          ],
+        },
+        {
+          title: t("Absolute Value Functions & Inequalities", "绝对值函数与不等式"),
+          topics: ["absolute-value-inequalities", "absolute-value-graphs"],
+        },
+      ],
+    },
+    {
+      title: t("Advanced Algebra - Polynomials", "进阶代数：多项式与二次方程"),
+      modules: [
+        {
+          title: t("Polynomials", "多项式乘法与恒等式"),
+          topics: [
+            "introduction-to-polynomials",
+            "adding-and-subtracting-polynomials",
+            "multiplying-binomials",
+            "multiplying-polynomials",
+            "difference-of-squares-formula",
+          ],
+        },
+        {
+          title: t("Factoring Polynomials", "多项式因式分解"),
+          topics: ["factoring-trinomials", "factoring-trinomials-with-leading-coefficients", "factoring-differences-of-squares"],
+        },
+        {
+          title: t("Polynomial Expressions & Equations", "多项式待定系数法"),
+          topics: ["equating-polynomial-coefficients", "sat-equating-polynomial-coefficients"],
+        },
+        {
+          title: t("Quadratic Equations", "一元二次方程解法与韦达定理"),
+          topics: [
+            "solving-quadratic-equations-by-factoring",
+            "solving-quadratic-equations-with-leading-coefficients-by-factoring",
+            "the-quadratic-formula",
+            "the-discriminant-of-a-quadratic-equation",
+            "quadratic-equations-with-one-real-solution",
+            "vietas-formulas",
+          ],
+        },
+        {
+          title: t("Quadratic Functions", "二次函数与顶点最值"),
+          topics: [
+            "graphs-of-general-quadratic-functions",
+            "the-axis-of-symmetry-of-a-parabola",
+            "the-vertex-form-of-a-parabola",
+            "sat-quadratic-vertex-and-constants",
+          ],
+        },
+        {
+          title: t("Graph Transformations of Functions", "函数图象平移变换"),
+          topics: ["vertical-translations-of-functions", "horizontal-translations-of-functions"],
+        },
+        {
+          title: t("Systems of Equations", "二次与非线性方程组"),
+          topics: ["solving-systems-of-nonlinear-equations", "finding-intersections-of-lines-and-quadratic-functions"],
+        },
+        {
+          title: t("Modeling With Quadratic Functions", "二次模型与最优化"),
+          topics: ["vertical-motion", "revenue-cost-and-profit-functions", "maximizing-profit-and-break-even-points"],
+        },
+        {
+          title: t("Polynomial Theorems and Graphs", "余数定理、因式定理与端点行为"),
+          topics: ["dividing-polynomials-using-synthetic-division", "the-factor-theorem", "the-remainder-theorem", "end-behavior"],
+        },
+      ],
+    },
+    {
+      title: t("Advanced Algebra - Exponential Equations & Functions", "进阶代数：指数方程与函数"),
+      modules: [
+        {
+          title: t("Exponential Expressions & Equations", "解简单指数方程"),
+          topics: ["solving-exponential-equations"],
+        },
+        {
+          title: t("Exponential Functions", "指数函数建模与年化改写"),
+          topics: [
+            "exponential-functions",
+            "modeling-exponential-growth-with-functions",
+            "modeling-exponential-decay-with-functions",
+            "sat-exponential-model-rewriting",
+          ],
+        },
+        {
+          title: t("Graphs of Exponential Functions", "指数函数图象"),
+          topics: ["graphing-exponential-growth-functions", "graphing-exponential-decay-functions"],
+        },
+      ],
+    },
+    {
+      title: t("Advanced Algebra - Rational and Radical Equations", "进阶代数：分式与根式方程"),
+      modules: [
+        {
+          title: t("Rational Expressions", "分式化简"),
+          topics: ["equivalent-expressions-with-fractions", "simplifying-rational-expressions"],
+        },
+        {
+          title: t("Rational Equations", "分式方程解法"),
+          topics: ["rational-equations-with-one-fractional-term", "rational-equations-using-cross-multiplication"],
+        },
+        {
+          title: t("Radical Expressions & Equations", "根式方程与增根"),
+          topics: ["solving-radical-equations"],
+        },
+      ],
+    },
+    {
+      title: t("Data Analysis - Statistics & Probability", "数据分析：统计与概率"),
+      modules: [
+        {
+          title: t("Summarizing Data", "数据中心趋势"),
+          topics: ["mean-of-a-data-set", "median-and-mode"],
+        },
+        {
+          title: t("Representing Data", "点图、箱线图与直方图"),
+          topics: ["range-and-interquartile-range", "mean-absolute-deviation", "dot-plots", "box-plots", "histograms"],
+        },
+        {
+          title: t("Frequency Tables & Outliers", "双向频数表与异常值"),
+          topics: ["two-way-frequency-tables", "relative-frequency-tables", "outliers", "comparing-data-sets"],
+        },
+        {
+          title: t("Correlation & Regression", "散点图、趋势线与回归模型"),
+          topics: [
+            "scatter-plots",
+            "trend-lines",
+            "predictions-with-trend-lines",
+            "interpreting-trend-line-coefficients",
+            "linear-correlation",
+            "correlation-and-causation",
+            "selecting-a-regression-model",
+          ],
+        },
+        {
+          title: t("Introduction to Probability", "概率基础与互补事件"),
+          topics: [
+            "experimental-probability",
+            "using-experimental-probability-to-make-predictions",
+            "sample-spaces-and-events-in-probability",
+            "the-likelihood-of-an-event",
+            "single-events-in-probability",
+            "the-complement-of-an-event",
+          ],
+        },
+        {
+          title: t("Compound Events in Probability", "复合事件概率"),
+          topics: ["the-addition-law-of-probability", "mutually-exclusive-events"],
+        },
+        {
+          title: t("Sampling and Margin of Error", "抽样与误差范围"),
+          topics: ["sampling", "sat-margin-of-error-interpretation"],
+        },
+      ],
+    },
+  ],
+};
+
+/** satMathPrep is an exam-focused digital SAT Math preparation course. */
+export const satMathPrep: CourseDef = {
+  id: "sat-math-prep",
+  title: t("SAT Math Prep", "SAT 数学冲刺"),
+  description: t(
+    "A rigorous, exam-focused course covering the four domains of the digital SAT Math test: Algebra (linear equations, systems, inequalities, and graphs), Advanced Math (polynomials, quadratics, nonlinear equations, and exponentials), Geometry and Trigonometry (angles, triangles, circles, coordinate geometry, and right-triangle trigonometry), and Problem-Solving and Data Analysis (ratios, percentages, units, scatter plots, and probability).",
+    "面向数字 SAT 考试四大核心板块的精讲冲刺课程：代数（一次方程、方程组、不等式与图象）、进阶数学（多项式、二次函数、非线性方程与指数模型）、几何与三角学（角、三角形、圆、坐标几何与直角三角形三角学）以及问题解决与数据分析（比、百分比、单位换算、散点图与概率）。",
+  ),
+  units: [
+    {
+      title: t("Algebra", "代数"),
+      modules: [
+        {
+          title: t("Linear Expressions and Equations in One Variable", "一元一次表达式与方程"),
+          topics: [
+            "evaluating-expressions",
+            "one-step-equations-addition",
+            "one-step-equations-multiplication",
+            "two-step-equations",
+            "equations-with-variables-on-both-sides",
+            "equations-with-parentheses",
+            "linear-equations-with-unknown-coefficients",
+          ],
+        },
+        {
+          title: t("Word Problems and Modeling", "一次方程建模与应用题"),
+          topics: [
+            "interpreting-linear-expressions",
+            "modeling-with-linear-equations",
+            "consecutive-integer-problems",
+            "speed-distance-time",
+          ],
+        },
+        {
+          title: t("Graphs of Linear Equations", "一次方程图象与斜率"),
+          topics: [
+            "the-coordinate-plane",
+            "slope-of-a-line",
+            "slope-intercept-form",
+            "properties-of-lines-in-slope-intercept-form",
+            "point-slope-form",
+            "standard-form",
+            "properties-of-lines-in-standard-form",
+          ],
+        },
+        {
+          title: t("Parallel and Perpendicular Lines", "平行线与垂线方程"),
+          topics: [
+            "parallel-lines-in-the-coordinate-plane",
+            "perpendicular-lines-in-the-coordinate-plane",
+            "finding-equations-of-parallel-lines",
+            "finding-equations-of-perpendicular-lines",
+          ],
+        },
+        {
+          title: t("Two-Variable Linear Equations and Modeling", "二元一次方程与模型"),
+          topics: [
+            "modeling-with-two-variable-linear-equations",
+            "modeling-totals-with-two-variable-equations",
+            "analyzing-graphs-of-linear-models",
+            "further-modeling-with-two-variable-equations",
+            "distance-time-graphs",
+          ],
+        },
+        {
+          title: t("Systems of Two-Variable Linear Equations", "二元一次方程组解法"),
+          topics: [
+            "systems-of-linear-equations",
+            "solving-systems-by-substitution",
+            "introduction-to-elimination",
+            "elimination-with-one-transformation",
+            "elimination-with-two-transformations",
+            "intersection-of-two-lines",
+            "modeling-with-systems",
+          ],
+        },
+        {
+          title: t("Linear Equations With Infinitely Many or No Solutions", "特殊解与待定参数方程组"),
+          topics: [
+            "systems-with-no-solution-or-infinitely-many-solutions",
+            "consistency-and-dependency",
+            "sat-linear-systems-unknown-constants",
+          ],
+        },
+        {
+          title: t("Linear Inequalities in One Variable", "一元一次不等式"),
+          topics: [
+            "inequalities-and-solutions",
+            "solving-one-step-inequalities",
+            "solving-multi-step-inequalities",
+            "introduction-to-modeling-with-inequalities",
+            "modeling-with-one-step-inequalities",
+          ],
+        },
+        {
+          title: t("Linear Inequalities in Two Variables", "二元一次不等式与图象"),
+          topics: [
+            "graphing-strict-linear-inequalities",
+            "graphing-non-strict-linear-inequalities",
+            "further-graphing-linear-inequalities",
+            "systems-of-linear-inequalities",
+            "modeling-with-systems-of-inequalities",
+          ],
+        },
+        {
+          title: t("Linear Functions", "一次函数基础与特征"),
+          topics: [
+            "introduction-to-functions",
+            "representations-of-functions",
+            "graphs-of-functions",
+            "linear-vs-nonlinear-functions",
+            "modeling-with-linear-functions",
+            "constructing-linear-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Advanced Math", "进阶数学"),
+      modules: [
+        {
+          title: t("Exponential Expressions", "指数幂与根式化简"),
+          topics: [
+            "zero-and-negative-exponents",
+            "product-and-quotient-rules",
+            "power-rules",
+            "square-roots-and-cube-roots",
+            "simplifying-square-roots",
+            "rationalizing-denominators",
+          ],
+        },
+        {
+          title: t("Functions, Domain and Range", "函数概念与定义域值域"),
+          topics: ["domain-of-a-function", "range-of-a-function"],
+        },
+        {
+          title: t("Polynomial Expressions", "多项式乘积与恒等变形"),
+          topics: [
+            "multiplying-binomials",
+            "multiplying-polynomials",
+            "difference-of-squares-formula",
+            "equating-polynomial-coefficients",
+            "sat-equating-polynomial-coefficients",
+          ],
+        },
+        {
+          title: t("Rational Expressions and Equations", "分式化简与方程"),
+          topics: [
+            "equivalent-expressions-with-fractions",
+            "simplifying-rational-expressions",
+            "rational-equations-with-one-fractional-term",
+            "rational-equations-using-cross-multiplication",
+          ],
+        },
+        {
+          title: t("Quadratic Equations", "一元二次方程解法与判别式"),
+          topics: [
+            "factoring-trinomials",
+            "factoring-trinomials-with-leading-coefficients",
+            "solving-quadratic-equations-by-factoring",
+            "the-quadratic-formula",
+            "the-discriminant-of-a-quadratic-equation",
+            "vietas-formulas",
+          ],
+        },
+        {
+          title: t("Quadratic Functions", "二次函数与顶点式"),
+          topics: [
+            "graphs-of-general-quadratic-functions",
+            "the-axis-of-symmetry-of-a-parabola",
+            "the-vertex-form-of-a-parabola",
+            "writing-the-equation-of-a-parabola-in-vertex-form",
+            "sat-quadratic-vertex-and-constants",
+          ],
+        },
+        {
+          title: t("Modeling With Quadratics", "二次模型与最值"),
+          topics: ["vertical-motion", "revenue-cost-and-profit-functions", "maximizing-profit-and-break-even-points"],
+        },
+        {
+          title: t("Polynomials and Theorems", "多项式除法、定理与端点行为"),
+          topics: ["dividing-polynomials-using-synthetic-division", "the-factor-theorem", "the-remainder-theorem", "end-behavior"],
+        },
+        {
+          title: t("Exponential Functions", "指数函数性质与图象"),
+          topics: ["exponential-functions", "graphing-exponential-growth-functions", "graphing-exponential-decay-functions"],
+        },
+        {
+          title: t("Modeling With Exponential Functions", "指数函数建模与年化率"),
+          topics: [
+            "modeling-exponential-growth-with-functions",
+            "modeling-exponential-decay-with-functions",
+            "sat-exponential-model-rewriting",
+          ],
+        },
+        {
+          title: t("Radical Equations", "根式方程与增根"),
+          topics: ["solving-radical-equations", "absolute-value-equations-with-extraneous-solutions"],
+        },
+        {
+          title: t("Multivariable Equations", "多元公式变形"),
+          topics: ["many-variable-equations", "rearranging-formulas"],
+        },
+        {
+          title: t("Interpreting Graphs and Transformations", "函数图象与平移变换"),
+          topics: ["vertical-translations-of-functions", "horizontal-translations-of-functions"],
+        },
+        {
+          title: t("Systems of Nonlinear Equations", "非线性方程组"),
+          topics: ["solving-systems-of-nonlinear-equations", "finding-intersections-of-lines-and-quadratic-functions"],
+        },
+      ],
+    },
+    {
+      title: t("Geometry and Trigonometry", "几何与三角学"),
+      modules: [
+        {
+          title: t("Lines, Angles, and Triangles", "线、角与三角形内角"),
+          topics: [
+            "complementary-and-supplementary-angles",
+            "vertical-angles",
+            "parallel-lines-and-transversals",
+            "angles-of-a-triangle",
+            "exterior-angles-of-triangles",
+            "the-exterior-angle-theorem",
+          ],
+        },
+        {
+          title: t("Area and Perimeter", "平面多边形周长与面积"),
+          topics: [
+            "perimeter",
+            "area-of-rectangles-and-squares",
+            "area-of-parallelograms",
+            "area-of-triangles",
+            "area-of-trapezoids",
+            "composite-shapes",
+          ],
+        },
+        {
+          title: t("Right Triangles", "勾股定理与特殊直角三角形"),
+          topics: ["the-pythagorean-theorem", "isosceles-right-triangles", "thirty-sixty-ninety-triangles"],
+        },
+        {
+          title: t("Circles", "圆、弧长与扇形面积"),
+          topics: [
+            "circles",
+            "the-circumference-of-a-circle",
+            "areas-of-circles",
+            "calculating-arc-lengths-of-circular-sectors",
+            "calculating-areas-of-circular-sectors",
+          ],
+        },
+        {
+          title: t("Circles in the Coordinate Plane", "坐标平面中的圆方程"),
+          topics: ["circles-in-the-coordinate-plane", "equations-of-circles", "determining-circle-properties-by-completing-the-square"],
+        },
+        {
+          title: t("Inscribed Shapes", "内接与相切图形"),
+          topics: ["circles-inscribed-in-squares", "squares-inscribed-in-circles"],
+        },
+        {
+          title: t("Surface Area and Volume", "柱体、锥体与球体表面积与体积"),
+          topics: [
+            "volumes-of-rectangular-solids",
+            "surface-areas-of-rectangular-solids",
+            "volumes-of-cylinders",
+            "surface-areas-of-cylinders",
+            "volumes-of-right-cones",
+            "surface-areas-of-right-cones",
+            "volumes-of-spheres",
+            "surface-areas-of-spheres",
+          ],
+        },
+        {
+          title: t("Congruence and Similarity", "全等、相似与比例系数"),
+          topics: [
+            "rigid-motions-and-congruence",
+            "properties-of-congruence",
+            "similarity-and-similar-polygons",
+            "side-lengths-and-angle-measures-of-similar-polygons",
+            "scale-drawings-and-scale-factor",
+            "the-aa-similarity-criterion",
+          ],
+        },
+        {
+          title: t("Trigonometry", "直角三角函数与互余关系"),
+          topics: [
+            "the-trigonometric-ratios",
+            "calculating-side-lengths-of-right-triangles-using-trigonometry",
+            "trigonometric-functions-of-complementary-angles",
+            "special-trigonometric-ratios",
+            "introduction-to-radians",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Problem-Solving and Data Analysis", "问题解决与数据分析"),
+      modules: [
+        {
+          title: t("Percentages", "百分数计算与应用"),
+          topics: ["percents", "percent-of-a-number"],
+        },
+        {
+          title: t("Percentage Change", "百分比增减、利息与折扣"),
+          topics: ["percent-change", "percent-applications-interest-and-discounts"],
+        },
+        {
+          title: t("Proportional Variation", "正比例与速度问题"),
+          topics: ["direct-variation"],
+        },
+        {
+          title: t("Unit Conversions", "单位换算与复合单位"),
+          topics: ["two-step-unit-conversions", "mixed-units", "converting-units-of-area", "units-in-formulas", "units-of-rates-of-change"],
+        },
+        {
+          title: t("Measures of Centrality", "均值、中位数与众数"),
+          topics: ["mean-of-a-data-set", "median-and-mode"],
+        },
+        {
+          title: t("Representing Data", "点图、箱线图与直方图"),
+          topics: ["range-and-interquartile-range", "mean-absolute-deviation", "dot-plots", "box-plots", "histograms"],
+        },
+        {
+          title: t("Comparing Data", "异常值与数据集比较"),
+          topics: ["outliers", "comparing-data-sets", "two-way-frequency-tables", "relative-frequency-tables"],
+        },
+        {
+          title: t("Probability", "条件概率与事件运算"),
+          topics: [
+            "experimental-probability",
+            "using-experimental-probability-to-make-predictions",
+            "sample-spaces-and-events-in-probability",
+            "the-likelihood-of-an-event",
+            "single-events-in-probability",
+            "the-complement-of-an-event",
+            "the-addition-law-of-probability",
+            "mutually-exclusive-events",
+          ],
+        },
+        {
+          title: t("Sampling and Surveys", "随机抽样与误差范围"),
+          topics: ["sampling", "sat-margin-of-error-interpretation"],
+        },
+        {
+          title: t("Linear Regression", "散点图、趋势线与相关性"),
+          topics: [
+            "scatter-plots",
+            "trend-lines",
+            "predictions-with-trend-lines",
+            "interpreting-trend-line-coefficients",
+            "linear-correlation",
+            "correlation-and-causation",
+          ],
+        },
+        {
+          title: t("Nonlinear Data Models", "非线性回归选择"),
+          topics: ["selecting-a-regression-model"],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -12594,4 +13483,6 @@ export const mathCourses: readonly CourseDef[] = [
   sixthGradeMath,
   seventhGradeMath,
   eighthGradeMath,
+  satMathFundamentals,
+  satMathPrep,
 ];

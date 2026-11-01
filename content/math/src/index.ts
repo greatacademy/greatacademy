@@ -166,6 +166,7 @@ import { radicalExpressionTopics } from "./topics/radical-expressions.ts";
 import { radicalTopics } from "./topics/radicals.ts";
 import { rationalExpressionTopics } from "./topics/rational-expressions.ts";
 import { ratioTopics } from "./topics/ratios.ts";
+import { satMathStrategyTopics } from "./topics/sat-math-strategies.ts";
 import { sequenceTopics } from "./topics/sequences.ts";
 import { statisticsTopics } from "./topics/statistics.ts";
 import { twoVariableTopics } from "./topics/two-variable-models.ts";
@@ -343,6 +344,7 @@ export const math: SubjectDef = {
     ...mathematicsForMachineLearningMatrixCalculusTopics,
     ...mathematicsForMachineLearningContinuousConditioningTopics,
     ...grade6to8FoundationTopics,
+    ...satMathStrategyTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
