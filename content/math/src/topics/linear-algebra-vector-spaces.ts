@@ -1,7 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
-import { choiceProblem } from "../problems.ts";
+import { choiceProblem, numberProblem, pointProblem } from "../problems.ts";
 
 /** colVecLatex renders a column vector in LaTeX. */
 function colVecLatex(v: readonly (number | string)[]): string {
@@ -11,6 +11,36 @@ function colVecLatex(v: readonly (number | string)[]): string {
 /** matLatex renders a matrix in LaTeX. */
 function matLatex(rows: readonly (readonly (number | string)[])[]): string {
   return `\\begin{pmatrix} ${rows.map((r) => r.join(" & ")).join(" \\\\ ")} \\end{pmatrix}`;
+}
+
+/** formatLinearTerm formats a single term like "+ 2x", "- y", "3z", or "5". */
+function formatLinearTerm(coeff: number, symbol: string, isFirst = true): string {
+  if (coeff === 0) return "";
+  const sign = isFirst ? (coeff < 0 ? "-" : "") : coeff < 0 ? "- " : "+ ";
+  const abs = Math.abs(coeff);
+  const coeffPart = symbol === "" || abs !== 1 ? `${abs}` : "";
+  return `${sign}${coeffPart}${symbol}`;
+}
+
+/** formatLinearExpr formats a linear combination of symbols with coefficients, e.g. 2x - 3y + z. */
+function formatLinearExpr(terms: readonly (readonly [number, string])[]): string {
+  const nonZero = terms.filter(([c]) => c !== 0);
+  if (nonZero.length === 0) return "0";
+  return nonZero.map(([c, sym], i) => formatLinearTerm(c, sym, i === 0)).join(" ");
+}
+
+/** formatVectorComb formats a linear combination of vector symbols like 2\mathbf{v}_1 - 3\mathbf{v}_2 + \mathbf{v}_3. */
+function formatVectorComb(terms: readonly (readonly [number, string])[]): string {
+  return formatLinearExpr(terms);
+}
+
+/** formatPoly2 formats a degree <= 2 polynomial a0 + a1 t + a2 t^2. */
+function formatPoly2(a0: number, a1: number, a2: number, tVar = "t"): string {
+  return formatLinearExpr([
+    [a0, ""],
+    [a1, tVar],
+    [a2, `${tVar}^2`],
+  ]);
 }
 
 /** oneOf builds a multiple-choice problem with options shuffled and deduplicated. */
@@ -59,21 +89,26 @@ export const vectorsInNDimensionalEuclideanSpace: TopicDef = {
         const v = Array.from({ length: n }, () => rng.int(-6, 6));
         const sum = u.map((x, i) => x + v[i]!);
         const prompt = t(
-          `In $\\mathbb{R}^4$, compute $\\mathbf{u} + \\mathbf{v}$ for $\\mathbf{u} = ${colVecLatex(u)}$ and $\\mathbf{v} = ${colVecLatex(v)}$.`,
-          `在 $\\mathbb{R}^4$ 中，计算向量 $\\mathbf{u} = ${colVecLatex(u)}$ 与 $\\mathbf{v} = ${colVecLatex(v)}$ 的和 $\\mathbf{u} + \\mathbf{v}$。`,
+          `In $\\mathbb{R}^4$, compute $\\mathbf{u} + \\mathbf{v}$ for $\\mathbf{u} = ${colVecLatex(u)}$ and $\\mathbf{v} = ${colVecLatex(v)}$. Enter the vector as $\\langle a, b, c, d \\rangle$.`,
+          `在 $\\mathbb{R}^4$ 中，计算向量 $\\mathbf{u} = ${colVecLatex(u)}$ 与 $\\mathbf{v} = ${colVecLatex(v)}$ 的和 $\\mathbf{u} + \\mathbf{v}$。以 $\\langle a, b, c, d \\rangle$ 的形式输入结果。`,
         );
-        const right = t(`$${colVecLatex(sum)}$`, `$${colVecLatex(sum)}$`);
-        const wrong = [
-          t(`$${colVecLatex(u.map((x, i) => x - v[i]!))}$`, `$${colVecLatex(u.map((x, i) => x - v[i]!))}$`),
-          t(`$${colVecLatex(sum.map((x, i) => (i === 1 ? x + 1 : x)))}$`, `$${colVecLatex(sum.map((x, i) => (i === 1 ? x + 1 : x)))}$`),
-          t(`$${colVecLatex(sum.map((x) => -x))}$`, `$${colVecLatex(sum.map((x) => -x))}$`),
-          t(`$${colVecLatex(sum.map((x, i) => (i === 2 ? x - 2 : x)))}$`, `$${colVecLatex(sum.map((x, i) => (i === 2 ? x - 2 : x)))}$`),
-        ];
         const solution = t(
           `Add corresponding components:\n$$\\mathbf{u} + \\mathbf{v} = ${colVecLatex(sum)}$$`,
           `将对应分量分别相加：\n$$\\mathbf{u} + \\mathbf{v} = ${colVecLatex(sum)}$$`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: sum,
+          vector: true,
+          vars: ["x_1", "x_2", "x_3", "x_4"],
+          wrong: [
+            u.map((x, i) => x - v[i]!),
+            sum.map((x, i) => (i === 1 ? x + 1 : x)),
+            sum.map((x) => -x),
+            sum.map((x, i) => (i === 2 ? x - 2 : x)),
+          ],
+          solution,
+        });
       },
     },
     {
@@ -89,25 +124,31 @@ export const vectorsInNDimensionalEuclideanSpace: TopicDef = {
         const u = Array.from({ length: 4 }, () => rng.int(-4, 4));
         const v = Array.from({ length: 4 }, () => rng.int(-4, 4));
         const res = u.map((x, i) => c * x + d * v[i]!);
-        const cStr = c === 1 ? "" : c === -1 ? "-" : `${c}`;
-        const dStr = d > 0 ? `+ ${d === 1 ? "" : d}` : `- ${d === -1 ? "" : Math.abs(d)}`;
-        const expr = `${cStr}\\mathbf{u} ${dStr}\\mathbf{v}`;
+        const expr = formatVectorComb([
+          [c, "\\mathbf{u}"],
+          [d, "\\mathbf{v}"],
+        ]);
         const prompt = t(
-          `Given $\\mathbf{u} = ${colVecLatex(u)}$ and $\\mathbf{v} = ${colVecLatex(v)}$ in $\\mathbb{R}^4$, compute $${expr}$.`,
-          `已知 $\\mathbb{R}^4$ 中的向量 $\\mathbf{u} = ${colVecLatex(u)}$ 与 $\\mathbf{v} = ${colVecLatex(v)}$，计算 $${expr}$。`,
+          `Given $\\mathbf{u} = ${colVecLatex(u)}$ and $\\mathbf{v} = ${colVecLatex(v)}$ in $\\mathbb{R}^4$, compute $${expr}$. Enter the vector as $\\langle a, b, c, d \\rangle$.`,
+          `已知 $\\mathbb{R}^4$ 中的向量 $\\mathbf{u} = ${colVecLatex(u)}$ 与 $\\mathbf{v} = ${colVecLatex(v)}$，计算 $${expr}$。以 $\\langle a, b, c, d \\rangle$ 的形式输入结果。`,
         );
-        const right = t(`$${colVecLatex(res)}$`, `$${colVecLatex(res)}$`);
-        const wrong = [
-          t(`$${colVecLatex(u.map((x, i) => c * x - d * v[i]!))}$`, `$${colVecLatex(u.map((x, i) => c * x - d * v[i]!))}$`),
-          t(`$${colVecLatex(res.map((x, i) => (i === 0 ? x + c : x)))}$`, `$${colVecLatex(res.map((x, i) => (i === 0 ? x + c : x)))}$`),
-          t(`$${colVecLatex(u.map((x, i) => d * x + c * v[i]!))}$`, `$${colVecLatex(u.map((x, i) => d * x + c * v[i]!))}$`),
-          t(`$${colVecLatex(res.map((x) => -x))}$`, `$${colVecLatex(res.map((x) => -x))}$`),
-        ];
         const solution = t(
           `Compute each component: $c u_i + d v_i$. The resulting vector is $${colVecLatex(res)}$.`,
           `逐分量计算 $c u_i + d v_i$，得到向量为 $${colVecLatex(res)}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: res,
+          vector: true,
+          vars: ["x_1", "x_2", "x_3", "x_4"],
+          wrong: [
+            u.map((x, i) => c * x - d * v[i]!),
+            res.map((x, i) => (i === 0 ? x + c : x)),
+            u.map((x, i) => d * x + c * v[i]!),
+            res.map((x) => -x),
+          ],
+          solution,
+        });
       },
     },
   ],
@@ -134,9 +175,9 @@ export const linearCombinationsOfVectorsInNDimensionalEuclideanSpace: TopicDef =
         "向量组 v₁, ..., vₖ 关于权重 c₁, ..., cₖ 的线性组合为向量 c₁v₁ + ... + cₖvₖ。",
       ),
       generate(rng) {
-        const c1 = rng.int(-2, 3);
-        const c2 = rng.int(-2, 3);
-        const c3 = rng.int(-2, 3);
+        const c1 = rng.nonZero(-3, 3);
+        const c2 = rng.nonZero(-3, 3);
+        const c3 = rng.nonZero(-3, 3);
         const v1 = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
         const v2 = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
         const v3 = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
@@ -145,22 +186,32 @@ export const linearCombinationsOfVectorsInNDimensionalEuclideanSpace: TopicDef =
           c1 * v1[1]! + c2 * v2[1]! + c3 * v3[1]!,
           c1 * v1[2]! + c2 * v2[2]! + c3 * v3[2]!,
         ];
+        const expr = formatVectorComb([
+          [c1, "\\mathbf{v}_1"],
+          [c2, "\\mathbf{v}_2"],
+          [c3, "\\mathbf{v}_3"],
+        ]);
         const prompt = t(
-          `Compute the linear combination $(${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2 + (${c3})\\mathbf{v}_3$ for $\\mathbf{v}_1 = ${colVecLatex(v1)}$, $\\mathbf{v}_2 = ${colVecLatex(v2)}$, and $\\mathbf{v}_3 = ${colVecLatex(v3)}$.`,
-          `计算线性组合 $(${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2 + (${c3})\\mathbf{v}_3$，其中 $\\mathbf{v}_1 = ${colVecLatex(v1)}$，$\\mathbf{v}_2 = ${colVecLatex(v2)}$，$\\mathbf{v}_3 = ${colVecLatex(v3)}$。`,
+          `Compute the linear combination $${expr}$ for $\\mathbf{v}_1 = ${colVecLatex(v1)}$, $\\mathbf{v}_2 = ${colVecLatex(v2)}$, and $\\mathbf{v}_3 = ${colVecLatex(v3)}$. Enter the vector as $\\langle a, b, c \\rangle$.`,
+          `计算线性组合 $${expr}$，其中 $\\mathbf{v}_1 = ${colVecLatex(v1)}$，$\\mathbf{v}_2 = ${colVecLatex(v2)}$，$\\mathbf{v}_3 = ${colVecLatex(v3)}$。以 $\\langle a, b, c \\rangle$ 的形式输入结果。`,
         );
-        const right = t(`$${colVecLatex(res)}$`, `$${colVecLatex(res)}$`);
-        const wrong = [
-          t(`$${colVecLatex([res[0]! + 1, res[1]!, res[2]! - 1])}$`, `$${colVecLatex([res[0]! + 1, res[1]!, res[2]! - 1])}$`),
-          t(`$${colVecLatex([res[0]! - 2, res[1]! + 1, res[2]!])}$`, `$${colVecLatex([res[0]! - 2, res[1]! + 1, res[2]!])}$`),
-          t(`$${colVecLatex([-res[0]!, -res[1]!, -res[2]!])}$`, `$${colVecLatex([-res[0]!, -res[1]!, -res[2]!])}$`),
-          t(`$${colVecLatex([res[1]!, res[0]!, res[2]!])}$`, `$${colVecLatex([res[1]!, res[0]!, res[2]!])}$`),
-        ];
         const solution = t(
           `Multiply each vector by its scalar and add:\n$$\\mathbf{b} = ${colVecLatex(res)}$$`,
           `将每个向量乘以对应标量并相加，得到：\n$$\\mathbf{b} = ${colVecLatex(res)}$$`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: res,
+          vector: true,
+          vars: ["x", "y", "z"],
+          wrong: [
+            [res[0]! + 1, res[1]!, res[2]! - 1],
+            [res[0]! - 2, res[1]! + 1, res[2]!],
+            [-res[0]!, -res[1]!, -res[2]!],
+            [res[1]!, res[0]!, res[2]!],
+          ],
+          solution,
+        });
       },
     },
     {
@@ -181,15 +232,16 @@ export const linearCombinationsOfVectorsInNDimensionalEuclideanSpace: TopicDef =
         const isComb = rng.bool();
         const delta = isComb ? 0 : rng.pick([-3, -2, -1, 1, 2, 3]);
         const target = [c1 * v1[0]! + c2 * v2[0]!, c1 * v1[1]! + c2 * v2[1]!, c1 * v1[2]! + c2 * v2[2]! + delta];
+        const combStr = formatVectorComb([
+          [c1, "\\mathbf{v}_1"],
+          [c2, "\\mathbf{v}_2"],
+        ]);
         const prompt = t(
           `Determine whether $\\mathbf{b} = ${colVecLatex(target)}$ can be written as a linear combination of $\\mathbf{v}_1 = ${colVecLatex(v1)}$ and $\\mathbf{v}_2 = ${colVecLatex(v2)}$.`,
           `判断向量 $\\mathbf{b} = ${colVecLatex(target)}$ 是否可由 $\\mathbf{v}_1 = ${colVecLatex(v1)}$ 与 $\\mathbf{v}_2 = ${colVecLatex(v2)}$ 线性表出。`,
         );
         const right = isComb
-          ? t(
-              `Yes, $\\mathbf{b} = (${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2$`,
-              `是，$\\mathbf{b} = (${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2$`,
-            )
+          ? t(`Yes, $\\mathbf{b} = ${combStr}$`, `是，$\\mathbf{b} = ${combStr}$`)
           : t(
               `No, the system is inconsistent because the third component does not match $c_1(a+b) + c_2 d$`,
               `否，方程组不相容，第三个分量无法满足对应线性关系`,
@@ -198,23 +250,38 @@ export const linearCombinationsOfVectorsInNDimensionalEuclideanSpace: TopicDef =
           ? [
               t(`No, the system has no solution`, `否，该方程组无解`),
               t(
-                `Yes, $\\mathbf{b} = (${c1 + 1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2$`,
-                `是，$\\mathbf{b} = (${c1 + 1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2$`,
+                `Yes, $\\mathbf{b} = ${formatVectorComb([
+                  [c1 + 1, "\\mathbf{v}_1"],
+                  [c2, "\\mathbf{v}_2"],
+                ])}$`,
+                `是，$\\mathbf{b} = ${formatVectorComb([
+                  [c1 + 1, "\\mathbf{v}_1"],
+                  [c2, "\\mathbf{v}_2"],
+                ])}$`,
               ),
               t(
-                `Yes, $\\mathbf{b} = (${c1})\\mathbf{v}_1 + (${c2 - 1})\\mathbf{v}_2$`,
-                `是，$\\mathbf{b} = (${c1})\\mathbf{v}_1 + (${c2 - 1})\\mathbf{v}_2$`,
+                `Yes, $\\mathbf{b} = ${formatVectorComb([
+                  [c1, "\\mathbf{v}_1"],
+                  [c2 - 1, "\\mathbf{v}_2"],
+                ])}$`,
+                `是，$\\mathbf{b} = ${formatVectorComb([
+                  [c1, "\\mathbf{v}_1"],
+                  [c2 - 1, "\\mathbf{v}_2"],
+                ])}$`,
               ),
             ]
           : [
+              t(`Yes, $\\mathbf{b} = ${combStr}$`, `是，$\\mathbf{b} = ${combStr}$`),
+              t(`Yes, $\\mathbf{b} = \\mathbf{v}_1 + \\mathbf{v}_2$`, `是，$\\mathbf{b} = \\mathbf{v}_1 + \\mathbf{v}_2$`),
               t(
-                `Yes, $\\mathbf{b} = (${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2$`,
-                `是，$\\mathbf{b} = (${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2$`,
-              ),
-              t(`Yes, $\\mathbf{b} = (1)\\mathbf{v}_1 + (1)\\mathbf{v}_2$`, `是，$\\mathbf{b} = (1)\\mathbf{v}_1 + (1)\\mathbf{v}_2$`),
-              t(
-                `Yes, $\\mathbf{b} = (${c2})\\mathbf{v}_1 + (${c1})\\mathbf{v}_2$`,
-                `是，$\\mathbf{b} = (${c2})\\mathbf{v}_1 + (${c1})\\mathbf{v}_2$`,
+                `Yes, $\\mathbf{b} = ${formatVectorComb([
+                  [c2, "\\mathbf{v}_1"],
+                  [c1, "\\mathbf{v}_2"],
+                ])}$`,
+                `是，$\\mathbf{b} = ${formatVectorComb([
+                  [c2, "\\mathbf{v}_1"],
+                  [c1, "\\mathbf{v}_2"],
+                ])}$`,
               ),
             ];
         const solution = isComb
@@ -262,15 +329,16 @@ export const linearSpanOfVectorsInNDimensionalEuclideanSpace: TopicDef = {
         const inSpan = rng.bool();
         const delta = inSpan ? 0 : rng.pick([-4, -2, 2, 4]);
         const w = [c1, c1 * u1 + c2 * u2 + delta, c2];
+        const combStr = formatVectorComb([
+          [c1, "\\mathbf{v}_1"],
+          [c2, "\\mathbf{v}_2"],
+        ]);
         const prompt = t(
           `Does $\\mathbf{w} = ${colVecLatex(w)}$ belong to $\\text{Span}\\left\\{ ${colVecLatex(v1)}, ${colVecLatex(v2)} \\right\\}$?`,
           `向量 $\\mathbf{w} = ${colVecLatex(w)}$ 是否属于 $\\text{Span}\\left\\{ ${colVecLatex(v1)}, ${colVecLatex(v2)} \\right\\}$？`,
         );
         const right = inSpan
-          ? t(
-              `Yes, because $\\mathbf{w} = (${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2$`,
-              `是，因为 $\\mathbf{w} = (${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2$`,
-            )
+          ? t(`Yes, because $\\mathbf{w} = ${combStr}$`, `是，因为 $\\mathbf{w} = ${combStr}$`)
           : t(
               `No, because the required second component would be ${c1 * u1 + c2 * u2}, but here it is ${w[1]}`,
               `否，因为第二分量需满足 ${c1 * u1 + c2 * u2}，但此处为 ${w[1]}`,
@@ -285,10 +353,7 @@ export const linearSpanOfVectorsInNDimensionalEuclideanSpace: TopicDef = {
               t(`Yes, but only if $\\mathbf{w} = \\mathbf{0}$`, `是，但仅当 $\\mathbf{w} = \\mathbf{0}$ 时`),
             ]
           : [
-              t(
-                `Yes, because $\\mathbf{w} = (${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2$`,
-                `是，因为 $\\mathbf{w} = (${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2$`,
-              ),
+              t(`Yes, because $\\mathbf{w} = ${combStr}$`, `是，因为 $\\mathbf{w} = ${combStr}$`),
               t(
                 `Yes, because any vector in $\\mathbb{R}^3$ is in the span of two vectors`,
                 `是，因为任意 $\\mathbb{R}^3$ 向量都在两个向量的张成空间中`,
@@ -486,27 +551,49 @@ export const linearDependenceAndIndependence: TopicDef = {
           `Given $\\mathbf{v}_1 = ${colVecLatex(v1)}$, $\\mathbf{v}_2 = ${colVecLatex(v2)}$, and $\\mathbf{v}_3 = ${colVecLatex(v3)}$, which relation shows that $\\{\\mathbf{v}_1, \\mathbf{v}_2, \\mathbf{v}_3\\}$ is linearly dependent?`,
           `已知 $\\mathbf{v}_1 = ${colVecLatex(v1)}$，$\\mathbf{v}_2 = ${colVecLatex(v2)}$ 与 $\\mathbf{v}_3 = ${colVecLatex(v3)}$，下列哪个关系式证明了该向量组线性相关？`,
         );
-        const right = t(
-          `$(${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2 - \\mathbf{v}_3 = \\mathbf{0}$`,
-          `$(${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2 - \\mathbf{v}_3 = \\mathbf{0}$`,
-        );
+        const relStr = `${formatVectorComb([
+          [c1, "\\mathbf{v}_1"],
+          [c2, "\\mathbf{v}_2"],
+          [-1, "\\mathbf{v}_3"],
+        ])} = \\mathbf{0}`;
+        const right = t(`$${relStr}$`, `$${relStr}$`);
         const wrong = [
           t(
-            `$(${c1})\\mathbf{v}_1 - (${c2})\\mathbf{v}_2 + \\mathbf{v}_3 = \\mathbf{0}$`,
-            `$(${c1})\\mathbf{v}_1 - (${c2})\\mathbf{v}_2 + \\mathbf{v}_3 = \\mathbf{0}$`,
+            `$${formatVectorComb([
+              [c1, "\\mathbf{v}_1"],
+              [-c2, "\\mathbf{v}_2"],
+              [1, "\\mathbf{v}_3"],
+            ])} = \\mathbf{0}$`,
+            `$${formatVectorComb([
+              [c1, "\\mathbf{v}_1"],
+              [-c2, "\\mathbf{v}_2"],
+              [1, "\\mathbf{v}_3"],
+            ])} = \\mathbf{0}$`,
           ),
           t(
-            `$(${c2})\\mathbf{v}_1 + (${c1})\\mathbf{v}_2 - \\mathbf{v}_3 = \\mathbf{0}$`,
-            `$(${c2})\\mathbf{v}_1 + (${c1})\\mathbf{v}_2 - \\mathbf{v}_3 = \\mathbf{0}$`,
+            `$${formatVectorComb([
+              [c2, "\\mathbf{v}_1"],
+              [c1, "\\mathbf{v}_2"],
+              [-1, "\\mathbf{v}_3"],
+            ])} = \\mathbf{0}$`,
+            `$${formatVectorComb([
+              [c2, "\\mathbf{v}_1"],
+              [c1, "\\mathbf{v}_2"],
+              [-1, "\\mathbf{v}_3"],
+            ])} = \\mathbf{0}$`,
           ),
           t(
             `$\\mathbf{v}_1 + \\mathbf{v}_2 + \\mathbf{v}_3 = \\mathbf{0}$`,
             `$\\mathbf{v}_1 + \\mathbf{v}_2 + \\mathbf{v}_3 = \\mathbf{0}$`,
           ),
         ];
+        const comb3 = formatVectorComb([
+          [c1, "\\mathbf{v}_1"],
+          [c2, "\\mathbf{v}_2"],
+        ]);
         const solution = t(
-          `Since $\\mathbf{v}_3 = (${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2$, subtracting $\\mathbf{v}_3$ gives $(${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2 - \\mathbf{v}_3 = \\mathbf{0}$, which is a non-trivial relation (coefficients are $(${c1}, ${c2}, -1) \\neq (0, 0, 0)$).`,
-          `由构造知 $\\mathbf{v}_3 = (${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2$，移项即得 $(${c1})\\mathbf{v}_1 + (${c2})\\mathbf{v}_2 - \\mathbf{v}_3 = \\mathbf{0}$。系数为 $(${c1}, ${c2}, -1)$ 非全零，此式即为非平凡相关关系。`,
+          `Since $\\mathbf{v}_3 = ${comb3}$, subtracting $\\mathbf{v}_3$ gives $${relStr}$, which is a non-trivial relation (coefficients are $(${c1}, ${c2}, -1) \\neq (0, 0, 0)$).`,
+          `由构造知 $\\mathbf{v}_3 = ${comb3}$，移项即得 $${relStr}$。系数为 $(${c1}, ${c2}, -1)$ 非全零，此式即为非平凡相关关系。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -543,9 +630,14 @@ export const subspacesOfNDimensionalSpace: TopicDef = {
         const b = rng.nonZero(-5, 5);
         const c = rng.nonZero(-5, 5);
         const d = rng.nonZero(1, 8);
+        const eqLhs = formatLinearExpr([
+          [a, "x"],
+          [b, "y"],
+          [c, "z"],
+        ]);
         const prompt = t(
-          `Consider the subsets of $\\mathbb{R}^3$: $W_1 = \\{ (x, y, z) \\mid ${a}x + ${b}y + ${c}z = 0 \\}$, $W_2 = \\{ (x, y, z) \\mid ${a}x + ${b}y + ${c}z = ${d} \\}$, and $W_3 = \\{ (x, y, z) \\mid x \\ge 0 \\}$. Which of these is a subspace of $\\mathbb{R}^3$?`,
-          `考虑 $\\mathbb{R}^3$ 的子集：$W_1 = \\{ (x, y, z) \\mid ${a}x + ${b}y + ${c}z = 0 \\}$，$W_2 = \\{ (x, y, z) \\mid ${a}x + ${b}y + ${c}z = ${d} \\}$ 及 $W_3 = \\{ (x, y, z) \\mid x \\ge 0 \\}$。其中哪一个是 $\\mathbb{R}^3$ 的子空间？`,
+          `Consider the subsets of $\\mathbb{R}^3$: $W_1 = \\{ (x, y, z) \\mid ${eqLhs} = 0 \\}$, $W_2 = \\{ (x, y, z) \\mid ${eqLhs} = ${d} \\}$, and $W_3 = \\{ (x, y, z) \\mid x \\ge 0 \\}$. Which of these is a subspace of $\\mathbb{R}^3$?`,
+          `考虑 $\\mathbb{R}^3$ 的子集：$W_1 = \\{ (x, y, z) \\mid ${eqLhs} = 0 \\}$，$W_2 = \\{ (x, y, z) \\mid ${eqLhs} = ${d} \\}$ 及 $W_3 = \\{ (x, y, z) \\mid x \\ge 0 \\}$。其中哪一个是 $\\mathbb{R}^3$ 的子空间？`,
         );
         const right = t(`Only $W_1$`, `仅有 $W_1$`);
         const wrong = [
@@ -568,8 +660,8 @@ export const subspacesOfNDimensionalSpace: TopicDef = {
         "对 ℝⁿ 中任意向量组 {v₁, ..., vₖ}，其张成空间 Span{v₁, ..., vₖ} 恒为 ℝⁿ 的子空间。",
       ),
       generate(rng) {
-        const k = rng.int(2, 9);
-        const n = rng.int(3, 9);
+        const k = rng.int(2, 12);
+        const n = rng.int(3, 15);
         const prompt = t(
           `Let $S = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_${k}\\}$ be any collection of $${k}$ vectors in $\\mathbb{R}^${n}$. Which statement about $W = \\text{Span}(S)$ is always true?`,
           `设 $S = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_${k}\\}$ 为 $\\mathbb{R}^${n}$ 中的任意 $${k}$ 个向量构成的向量组。关于 $W = \\text{Span}(S)$，下列哪个说法恒成立？`,
@@ -621,9 +713,14 @@ export const subspacesOfNDimensionalSpaceGeometricInterpretation: TopicDef = {
         const c = rng.nonZero(-3, 3);
         const d = passOrigin ? 0 : rng.pick([-4, -2, 2, 4]);
         if (dim === 2) {
+          const planeLhs = formatLinearExpr([
+            [a, "x"],
+            [b, "y"],
+            [c, "z"],
+          ]);
           const prompt = t(
-            `Consider the geometric object in $\\mathbb{R}^3$ defined by $P: ${a}x + ${b}y + ${c}z = ${d}$. Is $P$ a subspace of $\\mathbb{R}^3$?`,
-            `考虑 $\\mathbb{R}^3$ 中由方程 $P: ${a}x + ${b}y + ${c}z = ${d}$ 定义的几何对象。$P$ 是否是 $\\mathbb{R}^3$ 的子空间？`,
+            `Consider the geometric object in $\\mathbb{R}^3$ defined by $P: ${planeLhs} = ${d}$. Is $P$ a subspace of $\\mathbb{R}^3$?`,
+            `考虑 $\\mathbb{R}^3$ 中由方程 $P: ${planeLhs} = ${d}$ 定义的几何对象。$P$ 是否是 $\\mathbb{R}^3$ 的子空间？`,
           );
           const right = passOrigin
             ? t(`Yes, because it is a plane passing through the origin`, `是，因为它是过原点的平面`)
@@ -682,7 +779,7 @@ export const subspacesOfNDimensionalSpaceGeometricInterpretation: TopicDef = {
       generate(rng) {
         const n = rng.int(4, 6);
         const coeffs = Array.from({ length: n }, () => rng.nonZero(-3, 3));
-        const eqLhs = coeffs.map((c, i) => `${c > 0 && i > 0 ? "+" : ""}${c}x_{${i + 1}}`).join(" ");
+        const eqLhs = formatLinearExpr(coeffs.map((c, i) => [c, `x_{${i + 1}}`]));
         const prompt = t(
           `The hyperplane in $\\mathbb{R}^${n}$ defined by $H = \\left\\{ (x_1, \\dots, x_${n}) \\mid ${eqLhs} = k \\right\\}$ forms a subspace of $\\mathbb{R}^${n}$ precisely when:`,
           `在 $\\mathbb{R}^${n}$ 中，由 $H = \\left\\{ (x_1, \\dots, x_${n}) \\mid ${eqLhs} = k \\right\\}$ 定义的超平面构成子空间，充要条件是：`,
@@ -720,8 +817,8 @@ export const theColumnSpaceOfAMatrix: TopicDef = {
         "对于 m × n 矩阵 A，其每个列向量包含 m 个分量，因此列空间 Col(A) 是 ℝᵐ 的子空间。",
       ),
       generate(rng) {
-        const m = rng.int(2, 6);
-        const n = rng.int(2, 6);
+        const m = rng.int(2, 10);
+        const n = rng.int(2, 10);
         const prompt = t(
           `Let $A$ be a $${m} \\times ${n}$ matrix. The column space $\\text{Col}(A)$ is a subspace of which Euclidean space?`,
           `设 $A$ 为一个 $${m} \\times ${n}$ 矩阵。其列空间 $\\text{Col}(A)$ 是哪一个欧几里得空间的子空间？`,
@@ -793,13 +890,17 @@ export const theColumnSpaceOfAMatrix: TopicDef = {
               t(`Yes, with solution $\\mathbf{x} = ${colVecLatex([x1, x2])}$`, `是，其解为 $\\mathbf{x} = ${colVecLatex([x1, x2])}$`),
               t(`No, because $\\text{Col}(A)$ is always the zero subspace`, `否，因为 $\\text{Col}(A)$ 始终是零子空间`),
             ];
+        const row3Lhs = formatLinearExpr([
+          [a31, "x_1"],
+          [a32, "x_2"],
+        ]);
         const solution = inCol
           ? t(
               `Row reducing the augmented matrix $[A \\mid \\mathbf{b}]$ shows that row 3 is consistent with $x_1 = ${x1}$ and $x_2 = ${x2}$. Therefore $\\mathbf{b} \\in \\text{Col}(A)$.`,
               `对增广矩阵 $[A \\mid \\mathbf{b}]$ 进行初等行变换，得到相容解 $x_1 = ${x1}$，$x_2 = ${x2}$。因此 $\\mathbf{b} \\in \\text{Col}(A)$。`,
             )
           : t(
-              `Row reducing $[A \\mid \\mathbf{b}]$ yields the system $x_1 = ${b[0]}$, $x_2 = ${b[1]} - (${a21})x_1$, but the third equation requires $(${a31})x_1 + (${a32})x_2 = ${b[2]}$, which fails. The system is inconsistent, so $\\mathbf{b} \\notin \\text{Col}(A)$.`,
+              `Row reducing $[A \\mid \\mathbf{b}]$ yields $x_1 = ${b[0]}$, but the third equation requires $${row3Lhs} = ${b[2]}$, which fails. The system is inconsistent, so $\\mathbf{b} \\notin \\text{Col}(A)$.`,
               `对增广矩阵 $[A \\mid \\mathbf{b}]$ 进行初等行变换后，第三行导出矛盾等式，方程组无解。因此 $\\mathbf{b} \\notin \\text{Col}(A)$。`,
             );
         return oneOf(rng, prompt, right, wrong, solution);
@@ -829,8 +930,8 @@ export const theNullSpaceOfAMatrix: TopicDef = {
         "对于 m × n 矩阵 A，方程 Ax = 0 中未知向量 x 必有 n 个分量，因此 Null(A) 是 ℝⁿ 的子空间。",
       ),
       generate(rng) {
-        const m = rng.int(2, 6);
-        const n = rng.int(2, 6);
+        const m = rng.int(2, 10);
+        const n = rng.int(2, 10);
         const prompt = t(
           `Let $A$ be an $${m} \\times ${n}$ matrix. In which Euclidean space does the null space $\\text{Null}(A)$ reside?`,
           `设 $A$ 为一个 $${m} \\times ${n}$ 矩阵。其零空间 $\\text{Null}(A)$ 是哪一个空间的子空间？`,
@@ -963,9 +1064,9 @@ export const findingABasisOfASpan: TopicDef = {
         "求 W = Span{v₁, ..., vₖ} 的基，将这些向量作为列构成矩阵并进行行化简，主元所在的原列向量即构成 W 的一组基。",
       ),
       generate(rng) {
-        const a = rng.nonZero(-2, 2);
-        const b = rng.nonZero(-2, 2);
-        const c = rng.nonZero(-2, 2);
+        const a = rng.nonZero(-3, 3);
+        const b = rng.nonZero(-3, 3);
+        const c = rng.nonZero(-3, 3);
         const v1 = [1, 0, a];
         const v2 = [0, 1, b];
         const v3 = [c, 2 * c, c * a + 2 * c * b]; // v3 = c*v1 + 2c*v2 (redundant)
@@ -979,9 +1080,13 @@ export const findingABasisOfASpan: TopicDef = {
           t(`$\\{\\mathbf{v}_3\\}$`, `$\\{\\mathbf{v}_3\\}$`),
           t(`$\\{\\mathbf{v}_1 + \\mathbf{v}_2 + \\mathbf{v}_3\\}$`, `$\\{\\mathbf{v}_1 + \\mathbf{v}_2 + \\mathbf{v}_3\\}$`),
         ];
+        const v3Comb = formatVectorComb([
+          [c, "\\mathbf{v}_1"],
+          [2 * c, "\\mathbf{v}_2"],
+        ]);
         const solution = t(
-          `Form the matrix $[\\mathbf{v}_1 \\; \\mathbf{v}_2 \\; \\mathbf{v}_3]$. Row reduction reveals pivot columns in columns 1 and 2, while $\\mathbf{v}_3 = (${c})\\mathbf{v}_1 + (${2 * c})\\mathbf{v}_2$. Removing redundant $\\mathbf{v}_3$ leaves the linearly independent spanning set $\\{\\mathbf{v}_1, \\mathbf{v}_2\\}$, which is a basis.`,
-          `将向量作为列构成矩阵 $[\\mathbf{v}_1 \\; \\mathbf{v}_2 \\; \\mathbf{v}_3]$。行化简显示主元位于第 1、2 列，而 $\\mathbf{v}_3 = (${c})\\mathbf{v}_1 + (${2 * c})\\mathbf{v}_2$ 为多余向量。剔除冗余向量后，剩下的线性无关张成组 $\\{\\mathbf{v}_1, \\mathbf{v}_2\\}$ 即为 $W$ 的一组基。`,
+          `Form the matrix $[\\mathbf{v}_1 \\; \\mathbf{v}_2 \\; \\mathbf{v}_3]$. Row reduction reveals pivot columns in columns 1 and 2, while $\\mathbf{v}_3 = ${v3Comb}$. Removing redundant $\\mathbf{v}_3$ leaves the linearly independent spanning set $\\{\\mathbf{v}_1, \\mathbf{v}_2\\}$, which is a basis.`,
+          `将向量作为列构成矩阵 $[\\mathbf{v}_1 \\; \\mathbf{v}_2 \\; \\mathbf{v}_3]$。行化简显示主元位于第 1、2 列，而 $\\mathbf{v}_3 = ${v3Comb}$ 为多余向量。剔除冗余向量后，剩下的线性无关张成组 $\\{\\mathbf{v}_1, \\mathbf{v}_2\\}$ 即为 $W$ 的一组基。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -1124,9 +1229,19 @@ export const findingABasisOfTheNullSpaceOfAMatrix: TopicDef = {
             `$\\left\\{ ${colVecLatex([1, 0, 0])}, ${colVecLatex([0, 1, 0])} \\right\\}$`,
           ),
         ];
+        const eq1 = formatLinearExpr([
+          [1, "x_1"],
+          [c1, "x_3"],
+        ]);
+        const eq2 = formatLinearExpr([
+          [1, "x_2"],
+          [c2, "x_3"],
+        ]);
+        const x1Expr = formatLinearTerm(-c1, "x_3");
+        const x2Expr = formatLinearTerm(-c2, "x_3");
         const solution = t(
-          `The homogeneous system is $x_1 + (${c1})x_3 = 0$ and $x_2 + (${c2})x_3 = 0$, with $x_3$ free. Thus $x_1 = ${-c1}x_3$ and $x_2 = ${-c2}x_3$. In parametric vector form:\n$$\\mathbf{x} = x_3 ${colVecLatex(basisVec)}$$\nSo a basis for $\\text{Null}(A)$ is $\\{${colVecLatex(basisVec)}\\}$.`,
-          `对应齐次方程为 $x_1 + (${c1})x_3 = 0$ 及 $x_2 + (${c2})x_3 = 0$，其中 $x_3$ 为自由未知量。移项得 $x_1 = ${-c1}x_3$，$x_2 = ${-c2}x_3$。写成参数向量形式：\n$$\\mathbf{x} = x_3 ${colVecLatex(basisVec)}$$\n故 $\\text{Null}(A)$ 的一组基为 $\\{${colVecLatex(basisVec)}\\}$。`,
+          `The homogeneous system is $${eq1} = 0$ and $${eq2} = 0$, with $x_3$ free. Thus $x_1 = ${x1Expr}$ and $x_2 = ${x2Expr}$. In parametric vector form:\n$$\\mathbf{x} = x_3 ${colVecLatex(basisVec)}$$\nSo a basis for $\\text{Null}(A)$ is $\\{${colVecLatex(basisVec)}\\}$.`,
+          `对应齐次方程为 $${eq1} = 0$ 及 $${eq2} = 0$，其中 $x_3$ 为自由未知量。移项得 $x_1 = ${x1Expr}$，$x_2 = ${x2Expr}$。写成参数向量形式：\n$$\\mathbf{x} = x_3 ${colVecLatex(basisVec)}$$\n故 $\\text{Null}(A)$ 的一组基为 $\\{${colVecLatex(basisVec)}\\}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -1167,9 +1282,14 @@ export const findingABasisOfTheNullSpaceOfAMatrix: TopicDef = {
           ),
           t(`$\\left\\{ ${colVecLatex(v1)} \\right\\}$`, `$\\left\\{ ${colVecLatex(v1)} \\right\\}$`),
         ];
+        const x1Expr = formatLinearExpr([
+          [-a, "x_2"],
+          [-b, "x_4"],
+        ]);
+        const x3Expr = formatLinearTerm(-c, "x_4");
         const solution = t(
-          `The basic variables are $x_1, x_3$ and the free variables are $x_2, x_4$. Expressing basic variables gives $x_1 = ${-a}x_2 - ${b}x_4$ and $x_3 = ${-c}x_4$. Parametric vector form is $\\mathbf{x} = x_2 ${colVecLatex(v1)} + x_4 ${colVecLatex(v2)}$. Thus $\\{${colVecLatex(v1)}, ${colVecLatex(v2)}\\}$ is a basis.`,
-          `主元未知量为 $x_1, x_3$，自由未知量为 $x_2, x_4$。将主元用自由未知量表示得 $x_1 = ${-a}x_2 - ${b}x_4$ 及 $x_3 = ${-c}x_4$。参数向量形式为 $\\mathbf{x} = x_2 ${colVecLatex(v1)} + x_4 ${colVecLatex(v2)}$。故基为 $\\{${colVecLatex(v1)}, ${colVecLatex(v2)}\\}$。`,
+          `The basic variables are $x_1, x_3$ and the free variables are $x_2, x_4$. Expressing basic variables gives $x_1 = ${x1Expr}$ and $x_3 = ${x3Expr}$. Parametric vector form is $\\mathbf{x} = x_2 ${colVecLatex(v1)} + x_4 ${colVecLatex(v2)}$. Thus $\\{${colVecLatex(v1)}, ${colVecLatex(v2)}\\}$ is a basis.`,
+          `主元未知量为 $x_1, x_3$，自由未知量为 $x_2, x_4$。将主元用自由未知量表示得 $x_1 = ${x1Expr}$ 及 $x_3 = ${x3Expr}$。参数向量形式为 $\\mathbf{x} = x_2 ${colVecLatex(v1)} + x_4 ${colVecLatex(v2)}$。故基为 $\\{${colVecLatex(v1)}, ${colVecLatex(v2)}\\}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -1204,20 +1324,25 @@ export const expressingTheCoordinatesOfAVectorInAGivenBasis: TopicDef = {
         const b2 = [0, rng.pick([-1, 1])];
         const x = [c1 * b1[0]! + c2 * b2[0]!, c1 * b1[1]! + c2 * b2[1]!];
         const prompt = t(
-          `Let $\\mathcal{B} = \\left\\{ ${colVecLatex(b1)}, ${colVecLatex(b2)} \\right\\}$ be a basis for $\\mathbb{R}^2$. Find the coordinate vector $[\\mathbf{x}]_{\\mathcal{B}}$ of $\\mathbf{x} = ${colVecLatex(x)}$.`,
-          `设 $\\mathcal{B} = \\left\\{ ${colVecLatex(b1)}, ${colVecLatex(b2)} \\right\\}$ 为 $\\mathbb{R}^2$ 的一组基。求向量 $\\mathbf{x} = ${colVecLatex(x)}$ 在基 $\\mathcal{B}$ 下的坐标向量 $[\\mathbf{x}]_{\\mathcal{B}}$。`,
+          `Let $\\mathcal{B} = \\left\\{ ${colVecLatex(b1)}, ${colVecLatex(b2)} \\right\\}$ be a basis for $\\mathbb{R}^2$. Find the coordinate vector $[\\mathbf{x}]_{\\mathcal{B}}$ of $\\mathbf{x} = ${colVecLatex(x)}$. Enter the vector as $\\langle c_1, c_2 \\rangle$.`,
+          `设 $\\mathcal{B} = \\left\\{ ${colVecLatex(b1)}, ${colVecLatex(b2)} \\right\\}$ 为 $\\mathbb{R}^2$ 的一组基。求向量 $\\mathbf{x} = ${colVecLatex(x)}$ 在基 $\\mathcal{B}$ 下的坐标向量 $[\\mathbf{x}]_{\\mathcal{B}}$。以 $\\langle c_1, c_2 \\rangle$ 的形式输入结果。`,
         );
-        const right = t(`$${colVecLatex([c1, c2])}$`, `$${colVecLatex([c1, c2])}$`);
-        const wrong = [
-          t(`$${colVecLatex([c1 + 1, c2])}$`, `$${colVecLatex([c1 + 1, c2])}$`),
-          t(`$${colVecLatex([c1, c2 - 2])}$`, `$${colVecLatex([c1, c2 - 2])}$`),
-          t(`$${colVecLatex([c1 - 1, c2 + 1])}$`, `$${colVecLatex([c1 - 1, c2 + 1])}$`),
-        ];
         const solution = t(
-          `Solve $c_1 ${colVecLatex(b1)} + c_2 ${colVecLatex(b2)} = ${colVecLatex(x)}$. Component 1 gives $c_1 = ${c1}$, and substituting into component 2 gives $c_2 = ${c2}$. Thus $[\\mathbf{x}]_{\\mathcal{B}} = ${colVecLatex([c1, c2])}$.`,
-          `解方程 $c_1 ${colVecLatex(b1)} + c_2 ${colVecLatex(b2)} = ${colVecLatex(x)}$。第一分量直接得到 $c_1 = ${c1}$，代入第二分量解得 $c_2 = ${c2}$。故 $[\\mathbf{x}]_{\\mathcal{B}} = ${colVecLatex([c1, c2])}$。`,
+          `Solve $c_1 ${colVecLatex(b1)} + c_2 ${colVecLatex(b2)} = ${colVecLatex(x)}$. Component 1 gives $c_1 = ${c1}$, and substituting into component 2 gives $c_2 = ${c2}$. Thus $[\\mathbf{x}]_{\\mathcal{B}} = \\langle ${c1}, ${c2} \\rangle$.`,
+          `解方程 $c_1 ${colVecLatex(b1)} + c_2 ${colVecLatex(b2)} = ${colVecLatex(x)}$。第一分量直接得到 $c_1 = ${c1}$，代入第二分量解得 $c_2 = ${c2}$。故 $[\\mathbf{x}]_{\\mathcal{B}} = \\langle ${c1}, ${c2} \\rangle$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: [c1, c2],
+          wrong: [
+            [c1 + 1, c2],
+            [c1, c2 - 2],
+            [c1 - 1, c2 + 1],
+          ],
+          vars: ["c_1", "c_2"],
+          vector: true,
+          solution,
+        });
       },
     },
     {
@@ -1241,20 +1366,30 @@ export const expressingTheCoordinatesOfAVectorInAGivenBasis: TopicDef = {
         ];
         const coords = [c1, c2, c3];
         const prompt = t(
-          `In $\\mathbb{R}^3$, relative to the basis $\\mathcal{B} = \\left\\{ ${colVecLatex(b1)}, ${colVecLatex(b2)}, ${colVecLatex(b3)} \\right\\}$, a vector has coordinates $[\\mathbf{x}]_{\\mathcal{B}} = ${colVecLatex(coords)}$. Find $\\mathbf{x}$ in standard coordinates.`,
-          `在 $\\mathbb{R}^3$ 中，设基为 $\\mathcal{B} = \\left\\{ ${colVecLatex(b1)}, ${colVecLatex(b2)}, ${colVecLatex(b3)} \\right\\}$，某向量在基 $\\mathcal{B}$ 下的坐标为 $[\\mathbf{x}]_{\\mathcal{B}} = ${colVecLatex(coords)}$。求 $\\mathbf{x}$ 在标准坐标系下的向量。`,
+          `In $\\mathbb{R}^3$, relative to the basis $\\mathcal{B} = \\left\\{ ${colVecLatex(b1)}, ${colVecLatex(b2)}, ${colVecLatex(b3)} \\right\\}$, a vector has coordinates $[\\mathbf{x}]_{\\mathcal{B}} = ${colVecLatex(coords)}$. Find $\\mathbf{x}$ in standard coordinates. Enter the vector as $\\langle x_1, x_2, x_3 \\rangle$.`,
+          `在 $\\mathbb{R}^3$ 中，设基为 $\\mathcal{B} = \\left\\{ ${colVecLatex(b1)}, ${colVecLatex(b2)}, ${colVecLatex(b3)} \\right\\}$，某向量在基 $\\mathcal{B}$ 下的坐标为 $[\\mathbf{x}]_{\\mathcal{B}} = ${colVecLatex(coords)}$。求 $\\mathbf{x}$ 在标准坐标系下的向量。以 $\\langle x_1, x_2, x_3 \\rangle$ 的形式输入结果。`,
         );
-        const right = t(`$${colVecLatex(x)}$`, `$${colVecLatex(x)}$`);
-        const wrong = [
-          t(`$${colVecLatex([x[0]! + 1, x[1]!, x[2]!])}$`, `$${colVecLatex([x[0]! + 1, x[1]!, x[2]!])}$`),
-          t(`$${colVecLatex([x[0]!, x[1]! + 1, x[2]! - 1])}$`, `$${colVecLatex([x[0]!, x[1]! + 1, x[2]! - 1])}$`),
-          t(`$${colVecLatex([x[0]! - 1, x[1]!, x[2]! + 2])}$`, `$${colVecLatex([x[0]! - 1, x[1]!, x[2]! + 2])}$`),
-        ];
+        const comb = formatVectorComb([
+          [c1, "\\mathbf{b}_1"],
+          [c2, "\\mathbf{b}_2"],
+          [c3, "\\mathbf{b}_3"],
+        ]);
         const solution = t(
-          `Compute $\\mathbf{x} = (${c1})\\mathbf{b}_1 + (${c2})\\mathbf{b}_2 + (${c3})\\mathbf{b}_3 = ${colVecLatex(x)}$.`,
-          `计算线性组合 $\\mathbf{x} = (${c1})\\mathbf{b}_1 + (${c2})\\mathbf{b}_2 + (${c3})\\mathbf{b}_3 = ${colVecLatex(x)}$。`,
+          `Compute $\\mathbf{x} = ${comb} = \\langle ${x.join(", ")} \\rangle$.`,
+          `计算线性组合 $\\mathbf{x} = ${comb} = \\langle ${x.join(", ")} \\rangle$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: x,
+          wrong: [
+            [x[0]! + 1, x[1]!, x[2]!],
+            [x[0]!, x[1]! + 1, x[2]! - 1],
+            [x[0]! - 1, x[1]!, x[2]! + 2],
+          ],
+          vars: ["x_1", "x_2", "x_3"],
+          vector: true,
+          solution,
+        });
       },
     },
   ],
@@ -1352,20 +1487,25 @@ export const writingVectorsInDifferentBases: TopicDef = {
         const c2 = x2;
         const coords = [c1, c2];
         const prompt = t(
-          `Let $\\mathcal{B} = \\left\\{ ${colVecLatex(b1)}, ${colVecLatex(b2)} \\right\\}$ be a basis for $\\mathbb{R}^2$. Using $P_{\\mathcal{B}}^{-1}$, find $[\\mathbf{x}]_{\\mathcal{B}}$ for $\\mathbf{x} = ${colVecLatex(x)}$.`,
-          `设 $\\mathcal{B} = \\left\\{ ${colVecLatex(b1)}, ${colVecLatex(b2)} \\right\\}$ 为 $\\mathbb{R}^2$ 的一组基。利用 $P_{\\mathcal{B}}^{-1}$ 计算向量 $\\mathbf{x} = ${colVecLatex(x)}$ 的坐标 $[\\mathbf{x}]_{\\mathcal{B}}$。`,
+          `Let $\\mathcal{B} = \\left\\{ ${colVecLatex(b1)}, ${colVecLatex(b2)} \\right\\}$ be a basis for $\\mathbb{R}^2$. Using $P_{\\mathcal{B}}^{-1}$, find $[\\mathbf{x}]_{\\mathcal{B}}$ for $\\mathbf{x} = ${colVecLatex(x)}$. Enter the vector as $\\langle c_1, c_2 \\rangle$.`,
+          `设 $\\mathcal{B} = \\left\\{ ${colVecLatex(b1)}, ${colVecLatex(b2)} \\right\\}$ 为 $\\mathbb{R}^2$ 的一组基。利用 $P_{\\mathcal{B}}^{-1}$ 计算向量 $\\mathbf{x} = ${colVecLatex(x)}$ 的坐标 $[\\mathbf{x}]_{\\mathcal{B}}$。以 $\\langle c_1, c_2 \\rangle$ 的形式输入结果。`,
         );
-        const right = t(`$${colVecLatex(coords)}$`, `$${colVecLatex(coords)}$`);
-        const wrong = [
-          t(`$${colVecLatex([c1 + 1, c2])}$`, `$${colVecLatex([c1 + 1, c2])}$`),
-          t(`$${colVecLatex([c1, c2 - 2])}$`, `$${colVecLatex([c1, c2 - 2])}$`),
-          t(`$${colVecLatex([c1 + 2, c2 + 1])}$`, `$${colVecLatex([c1 + 2, c2 + 1])}$`),
-        ];
         const solution = t(
-          `Since $P_{\\mathcal{B}} = \\begin{pmatrix} 1 & ${a} \\\\ 0 & 1 \\end{pmatrix}$, its inverse is $P_{\\mathcal{B}}^{-1} = \\begin{pmatrix} 1 & ${-a} \\\\ 0 & 1 \\end{pmatrix}$. Then $[\\mathbf{x}]_{\\mathcal{B}} = P_{\\mathcal{B}}^{-1} \\mathbf{x} = ${colVecLatex(coords)}$.`,
-          `因 $P_{\\mathcal{B}} = \\begin{pmatrix} 1 & ${a} \\\\ 0 & 1 \\end{pmatrix}$，其逆矩阵为 $P_{\\mathcal{B}}^{-1} = \\begin{pmatrix} 1 & ${-a} \\\\ 0 & 1 \\end{pmatrix}$。故 $[\\mathbf{x}]_{\\mathcal{B}} = P_{\\mathcal{B}}^{-1} \\mathbf{x} = ${colVecLatex(coords)}$。`,
+          `Since $P_{\\mathcal{B}} = \\begin{pmatrix} 1 & ${a} \\\\ 0 & 1 \\end{pmatrix}$, its inverse is $P_{\\mathcal{B}}^{-1} = \\begin{pmatrix} 1 & ${-a} \\\\ 0 & 1 \\end{pmatrix}$. Then $[\\mathbf{x}]_{\\mathcal{B}} = P_{\\mathcal{B}}^{-1} \\mathbf{x} = \\langle ${coords.join(", ")} \\rangle$.`,
+          `因 $P_{\\mathcal{B}} = \\begin{pmatrix} 1 & ${a} \\\\ 0 & 1 \\end{pmatrix}$，其逆矩阵为 $P_{\\mathcal{B}}^{-1} = \\begin{pmatrix} 1 & ${-a} \\\\ 0 & 1 \\end{pmatrix}$。故 $[\\mathbf{x}]_{\\mathcal{B}} = P_{\\mathcal{B}}^{-1} \\mathbf{x} = \\langle ${coords.join(", ")} \\rangle$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: coords,
+          wrong: [
+            [c1 + 1, c2],
+            [c1, c2 - 2],
+            [c1 + 2, c2 + 1],
+          ],
+          vars: ["c_1", "c_2"],
+          vector: true,
+          solution,
+        });
       },
     },
   ],
@@ -1450,20 +1590,25 @@ export const theChangeOfCoordinatesMatrix: TopicDef = {
         const v2 = p21 * u1 + p22 * u2;
         const v = [v1, v2];
         const prompt = t(
-          `Given the change-of-coordinates matrix $P_{\\mathcal{C} \\leftarrow \\mathcal{B}} = ${matLatex(P)}$ and $[\\mathbf{x}]_{\\mathcal{B}} = ${colVecLatex(u)}$, compute $[\\mathbf{x}]_{\\mathcal{C}}$.`,
-          `已知过渡矩阵 $P_{\\mathcal{C} \\leftarrow \\mathcal{B}} = ${matLatex(P)}$ 以及 $[\\mathbf{x}]_{\\mathcal{B}} = ${colVecLatex(u)}$，计算 $[\\mathbf{x}]_{\\mathcal{C}}$。`,
+          `Given the change-of-coordinates matrix $P_{\\mathcal{C} \\leftarrow \\mathcal{B}} = ${matLatex(P)}$ and $[\\mathbf{x}]_{\\mathcal{B}} = ${colVecLatex(u)}$, compute $[\\mathbf{x}]_{\\mathcal{C}}$. Enter the vector as $\\langle c_1, c_2 \\rangle$.`,
+          `已知过渡矩阵 $P_{\\mathcal{C} \\leftarrow \\mathcal{B}} = ${matLatex(P)}$ 以及 $[\\mathbf{x}]_{\\mathcal{B}} = ${colVecLatex(u)}$，计算 $[\\mathbf{x}]_{\\mathcal{C}}$。以 $\\langle c_1, c_2 \\rangle$ 的形式输入结果。`,
         );
-        const right = t(`$${colVecLatex(v)}$`, `$${colVecLatex(v)}$`);
-        const wrong = [
-          t(`$${colVecLatex([v1 + 1, v2])}$`, `$${colVecLatex([v1 + 1, v2])}$`),
-          t(`$${colVecLatex([v1 - 1, v2 + 2])}$`, `$${colVecLatex([v1 - 1, v2 + 2])}$`),
-          t(`$${colVecLatex([v1 + 2, v2 - 1])}$`, `$${colVecLatex([v1 + 2, v2 - 1])}$`),
-        ];
         const solution = t(
-          `Multiply $[\\mathbf{x}]_{\\mathcal{C}} = P_{\\mathcal{C} \\leftarrow \\mathcal{B}} [\\mathbf{x}]_{\\mathcal{B}} = ${matLatex(P)} ${colVecLatex(u)} = ${colVecLatex(v)}$.`,
-          `进行矩阵向量相乘：$[\\mathbf{x}]_{\\mathcal{C}} = P_{\\mathcal{C} \\leftarrow \\mathcal{B}} [\\mathbf{x}]_{\\mathcal{B}} = ${matLatex(P)} ${colVecLatex(u)} = ${colVecLatex(v)}$。`,
+          `Multiply $[\\mathbf{x}]_{\\mathcal{C}} = P_{\\mathcal{C} \\leftarrow \\mathcal{B}} [\\mathbf{x}]_{\\mathcal{B}} = ${matLatex(P)} ${colVecLatex(u)} = \\langle ${v.join(", ")} \\rangle$.`,
+          `进行矩阵向量相乘：$[\\mathbf{x}]_{\\mathcal{C}} = P_{\\mathcal{C} \\leftarrow \\mathcal{B}} [\\mathbf{x}]_{\\mathcal{B}} = ${matLatex(P)} ${colVecLatex(u)} = \\langle ${v.join(", ")} \\rangle$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: v,
+          wrong: [
+            [v1 + 1, v2],
+            [v1 - 1, v2 + 2],
+            [v1 + 2, v2 - 1],
+          ],
+          vars: ["c_1", "c_2"],
+          vector: true,
+          solution,
+        });
       },
     },
   ],
@@ -1627,39 +1772,49 @@ export const theDimensionOfASpan: TopicDef = {
       ),
       generate(rng) {
         const pivots = rng.pick([1, 2, 3]);
-        const a = rng.nonZero(-2, 2);
-        const b = rng.nonZero(-2, 2);
         let v1: number[];
         let v2: number[];
         let v3: number[];
         if (pivots === 1) {
-          v1 = [1, a, -1];
-          v2 = [2, 2 * a, -2];
-          v3 = [-a, -a * a, a];
+          const a = rng.nonZero(-3, 3);
+          const b = rng.int(-3, 3);
+          const c = rng.int(-3, 3);
+          const s1 = rng.nonZero(-3, 3);
+          const s2 = rng.nonZero(-3, 3);
+          v1 = [a, b, c];
+          v2 = [s1 * a, s1 * b, s1 * c];
+          v3 = [s2 * a, s2 * b, s2 * c];
         } else if (pivots === 2) {
+          const a = rng.int(-3, 3);
+          const b = rng.int(-3, 3);
+          const c = rng.nonZero(-2, 2);
+          const d = rng.nonZero(-2, 2);
           v1 = [1, 0, a];
           v2 = [0, 1, b];
-          v3 = [1, 1, a + b];
+          v3 = [c, d, c * a + d * b];
         } else {
+          const a = rng.int(-3, 3);
+          const b = rng.int(-3, 3);
+          const c = rng.int(-3, 3);
           v1 = [1, 0, 0];
           v2 = [a, 1, 0];
-          v3 = [0, b, 1];
+          v3 = [c, b, 1];
         }
         const prompt = t(
           `Find the dimension of the subspace $W = \\text{Span}\\left\\{ ${colVecLatex(v1)}, ${colVecLatex(v2)}, ${colVecLatex(v3)} \\right\\}$ in $\\mathbb{R}^3$.`,
           `求 $\\mathbb{R}^3$ 中子空间 $W = \\text{Span}\\left\\{ ${colVecLatex(v1)}, ${colVecLatex(v2)}, ${colVecLatex(v3)} \\right\\}$ 的维数。`,
         );
-        const right = t(`$${pivots}$`, `$${pivots}$`);
-        const wrong = [
-          t(`$${pivots === 3 ? 2 : pivots + 1}$`, `$${pivots === 3 ? 2 : pivots + 1}$`),
-          t(`$${pivots === 1 ? 3 : pivots - 1}$`, `$${pivots === 1 ? 3 : pivots - 1}$`),
-          t(`$0$`, `$0$`),
-        ];
         const solution = t(
           `Row reducing the matrix formed by the 3 vectors reveals exactly $${pivots}$ pivot column(s). Therefore, the dimension of the subspace is $${pivots}$.`,
-          `将这 3 个向量作为列构成矩阵并进行初等行化简，得到恰好 $${pivots}$ 个主元列。因此，该子空间的维数为 $${pivots}$。`,
+          `将这 3 个向量作为列构成矩阵并进行初等行化简，得到恰好 $${pivots}$ 个主元列。因此，该子空间的维数为 $${pivots}$.`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return numberProblem({
+          prompt,
+          answer: pivots,
+          form: "integer",
+          wrong: [pivots === 3 ? 2 : pivots + 1, pivots === 1 ? 3 : pivots - 1, 0],
+          solution,
+        });
       },
     },
   ],
@@ -1686,24 +1841,24 @@ export const theRankOfAMatrix: TopicDef = {
         "矩阵 A 的秩记作 rank(A)，是列空间 Col(A) 的维数，等于 A 的任意行阶梯形中主元列的个数。",
       ),
       generate(rng) {
-        const rows = rng.int(3, 8);
-        const cols = rng.int(3, 8);
+        const rows = rng.int(3, 10);
+        const cols = rng.int(3, 10);
         const r = rng.int(1, Math.min(rows, cols));
         const prompt = t(
           `A $${rows} \\times ${cols}$ matrix $A$ has reduced row echelon form containing exactly $${r}$ pivot positions (non-zero rows). What is $\\text{rank}(A)$?`,
           `一个 $${rows} \\times ${cols}$ 矩阵 $A$ 的简化行阶梯形中恰好有 $${r}$ 个主元位置（非零行）。矩阵 $A$ 的秩 $\\text{rank}(A)$ 是多少？`,
         );
-        const right = t(`$${r}$`, `$${r}$`);
-        const wrong = [
-          t(`$${cols}$`, `$${cols}$`),
-          t(`$${rows}$`, `$${rows}$`),
-          t(`$${Math.abs(cols - r) + 1}$`, `$${Math.abs(cols - r) + 1}$`),
-        ];
         const solution = t(
           `By definition, $\\text{rank}(A) = \\dim(\\text{Col}(A))$, which equals the number of pivot columns in echelon form. Here there are $${r}$ pivots, so $\\text{rank}(A) = ${r}$.`,
           `按定义，$\\text{rank}(A) = \\dim(\\text{Col}(A))$ 等于行阶梯形中主元的个数。此处有 $${r}$ 个主元，故 $\\text{rank}(A) = ${r}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return numberProblem({
+          prompt,
+          answer: r,
+          form: "integer",
+          wrong: [r + 1, r > 1 ? r - 1 : r + 2, 0],
+          solution,
+        });
       },
     },
     {
@@ -1721,13 +1876,20 @@ export const theRankOfAMatrix: TopicDef = {
           `What is the maximum possible rank of a $${m} \\times ${n}$ matrix $A$?`,
           `一个 $${m} \\times ${n}$ 矩阵 $A$ 的秩最大可能为多少？`,
         );
-        const right = t(`$${minMN}$`, `$${minMN}$`);
-        const wrong = [t(`$${Math.max(m, n)}$`, `$${Math.max(m, n)}$`), t(`$${m + n}$`, `$${m + n}$`), t(`$${m * n}$`, `$${m * n}$`)];
         const solution = t(
           `The number of pivots cannot exceed the number of rows ($m$) or the number of columns ($n$). Thus $\\text{rank}(A) \\le \\min(${m}, ${n}) = ${minMN}$.`,
           `主元的个数既不能超过行数（$${m}$），也不能超过列数（$${n}$）。因此 $\\text{rank}(A) \\le \\min(${m}, ${n}) = ${minMN}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        const w1 = Math.max(m, n) === minMN ? minMN + 1 : Math.max(m, n);
+        const w2 = m + n === w1 ? w1 + 1 : m + n;
+        const w3 = m * n === w2 || m * n === w1 ? w2 + 1 : m * n;
+        return numberProblem({
+          prompt,
+          answer: minMN,
+          form: "integer",
+          wrong: [w1, w2, w3],
+          solution,
+        });
       },
     },
   ],
@@ -1754,20 +1916,24 @@ export const theDimensionOfTheNullSpaceOfAMatrix: TopicDef = {
         "Null(A) 的维数称为矩阵 A 的零度（nullity），等于齐次线性方程组 Ax = 0 中自由未知量的个数。",
       ),
       generate(rng) {
-        const n = rng.int(4, 12);
+        const n = rng.int(4, 15);
         const pivots = rng.int(1, n - 1);
         const freeVars = n - pivots;
         const prompt = t(
           `A matrix $A$ has $${n}$ columns and its reduced row echelon form has $${pivots}$ pivot columns. What is $\\text{nullity}(A) = \\dim(\\text{Null}(A))$?`,
           `矩阵 $A$ 拥有 $${n}$ 列，其简化行阶梯形有 $${pivots}$ 个主元列。矩阵 $A$ 的零度 $\\text{nullity}(A) = \\dim(\\text{Null}(A))$ 是多少？`,
         );
-        const right = t(`$${freeVars}$`, `$${freeVars}$`);
-        const wrong = [t(`$${pivots}$`, `$${pivots}$`), t(`$${n}$`, `$${n}$`), t(`$0$`, `$0$`)];
         const solution = t(
           `The number of free variables in $A\\mathbf{x} = \\mathbf{0}$ equals the total number of columns minus the number of pivot columns: $${n} - ${pivots} = ${freeVars}$. Hence $\\text{nullity}(A) = ${freeVars}$.`,
           `齐次方程 $A\\mathbf{x} = \\mathbf{0}$ 的自由未知量个数等于总列数减去主元列数：$${n} - ${pivots} = ${freeVars}$。因此 $\\text{nullity}(A) = ${freeVars}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return numberProblem({
+          prompt,
+          answer: freeVars,
+          form: "integer",
+          wrong: [freeVars + 1, freeVars > 1 ? freeVars - 1 : freeVars + 2, 0],
+          solution,
+        });
       },
     },
     {
@@ -1894,21 +2060,25 @@ export const theRankNullityTheorem: TopicDef = {
         "对于 m × n 矩阵 A，rank(A) + nullity(A) = n。矩阵的每一列要么是主元列，要么对应一个自由未知量。",
       ),
       generate(rng) {
-        const m = rng.int(3, 7);
-        const n = rng.int(4, 8);
+        const m = rng.int(3, 10);
+        const n = rng.int(4, 12);
         const r = rng.int(1, Math.min(m, n) - 1);
         const nullity = n - r;
         const prompt = t(
           `A matrix $A$ has $${m}$ rows and $${n}$ columns. If $\\text{rank}(A) = ${r}$, what is $\\text{nullity}(A) = \\dim(\\text{Null}(A))$?`,
           `矩阵 $A$ 拥有 $${m}$ 行和 $${n}$ 列。若 $\\text{rank}(A) = ${r}$，则 $\\text{nullity}(A) = \\dim(\\text{Null}(A))$ 等于多少？`,
         );
-        const right = t(`$${nullity}$`, `$${nullity}$`);
-        const wrong = [t(`$${m - r}$`, `$${m - r}$`), t(`$${r}$`, `$${r}$`), t(`$${n}$`, `$${n}$`)];
         const solution = t(
           `By the Rank-Nullity Theorem, $\\text{rank}(A) + \\text{nullity}(A) = n$, where $n = ${n}$ is the number of columns. Thus $\\text{nullity}(A) = ${n} - ${r} = ${nullity}$.`,
           `根据秩-零度定理，$\\text{rank}(A) + \\text{nullity}(A) = n$，其中 $n = ${n}$ 为列数。故 $\\text{nullity}(A) = ${n} - ${r} = ${nullity}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return numberProblem({
+          prompt,
+          answer: nullity,
+          form: "integer",
+          wrong: [nullity + 1, nullity > 1 ? nullity - 1 : nullity + 2, 0],
+          solution,
+        });
       },
     },
     {
@@ -1919,21 +2089,25 @@ export const theRankNullityTheorem: TopicDef = {
         "含 n 个未知量的 m 个方程构成的齐次线性方程组 Ax = 0，其解空间的维数等于 n - rank(A)。",
       ),
       generate(rng) {
-        const m = rng.int(3, 10);
-        const n = rng.int(4, 12);
+        const m = rng.int(3, 12);
+        const n = rng.int(4, 15);
         const r = rng.int(1, Math.min(m, n) - 1);
         const dimSol = n - r;
         const prompt = t(
           `A homogeneous system of $${m}$ linear equations in $${n}$ variables has coefficient matrix with rank $${r}$. What is the dimension of the solution space?`,
           `一个由 $${m}$ 个方程与 $${n}$ 个未知量组成的齐次线性方程组，其系数矩阵的秩为 $${r}$。该方程组解空间的维数是多少？`,
         );
-        const right = t(`$${dimSol}$`, `$${dimSol}$`);
-        const wrong = [t(`$${r}$`, `$${r}$`), t(`$${m - r}$`, `$${m - r}$`), t(`$${n}$`, `$${n}$`)];
         const solution = t(
           `The solution space of $A\\mathbf{x} = \\mathbf{0}$ is $\\text{Null}(A)$. By the Rank-Nullity Theorem, $\\dim(\\text{Null}(A)) = n - \\text{rank}(A) = ${n} - ${r} = ${dimSol}$.`,
           `齐次方程组 $A\\mathbf{x} = \\mathbf{0}$ 的解空间即为零空间 $\\text{Null}(A)$。由秩-零度定理，$\\dim(\\text{Null}(A)) = n - \\text{rank}(A) = ${n} - ${r} = ${dimSol}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return numberProblem({
+          prompt,
+          answer: dimSol,
+          form: "integer",
+          wrong: [dimSol + 1, dimSol > 1 ? dimSol - 1 : dimSol + 2, 0],
+          solution,
+        });
       },
     },
   ],
@@ -2205,19 +2379,11 @@ export const linearIndependenceInAbstractVectorSpaces: TopicDef = {
       ),
       generate(rng) {
         const isDep = rng.bool();
-        const a = rng.nonZero(-2, 2);
-        const b = rng.nonZero(-2, 2);
-        const p1Str = a > 0 ? `1 + ${a}t` : `1 - ${Math.abs(a)}t`;
-        const p2Str = b > 0 ? `t + ${b}t^2` : `t - ${Math.abs(b)}t^2`;
-        let p3Str: string;
-        if (isDep) {
-          const mid = 2 * a + 1;
-          const midStr = mid >= 0 ? `+ ${mid}t` : `- ${Math.abs(mid)}t`;
-          const endStr = b > 0 ? `+ ${b}t^2` : `- ${Math.abs(b)}t^2`;
-          p3Str = `2 ${midStr} ${endStr}`;
-        } else {
-          p3Str = `t^2`;
-        }
+        const a = rng.nonZero(-3, 3);
+        const b = rng.nonZero(-3, 3);
+        const p1Str = formatPoly2(1, a, 0);
+        const p2Str = formatPoly2(0, 1, b);
+        const p3Str = isDep ? formatPoly2(2, 2 * a + 1, b) : `t^2`;
         const prompt = t(
           `Determine whether the set of polynomials $S = \\left\\{ p_1(t) = ${p1Str}, \\; p_2(t) = ${p2Str}, \\; p_3(t) = ${p3Str} \\right\\}$ in $\\mathbb{P}_2$ is linearly independent.`,
           `判断多项式空间 $\\mathbb{P}_2$ 中的多项式组 $S = \\left\\{ p_1(t) = ${p1Str}, \\; p_2(t) = ${p2Str}, \\; p_3(t) = ${p3Str} \\right\\}$ 是否线性无关。`,
@@ -2457,8 +2623,8 @@ export const basesInAbstractVectorSpaces: TopicDef = {
         const b = rng.nonZero(-5, 5);
         const c = rng.int(-4, 4);
         const p1 = `1`;
-        const p2 = a > 0 ? `1 + ${a}t` : `1 - ${Math.abs(a)}t`;
-        const p3 = isBasis ? (b > 0 ? `1 + ${c}t + ${b}t^2` : `1 + ${c}t - ${Math.abs(b)}t^2`) : `2 + ${2 * a}t`; // 2*p2, dependent
+        const p2 = formatPoly2(1, a, 0);
+        const p3 = isBasis ? formatPoly2(1, c, b) : formatPoly2(2, 2 * a, 0); // 2*p2, dependent
         const prompt = t(
           `Does the set $\\mathcal{B} = \\left\\{ ${p1}, \\; ${p2}, \\; ${p3} \\right\\}$ form a basis for $\\mathbb{P}_2$?`,
           `集合 $\\mathcal{B} = \\left\\{ ${p1}, \\; ${p2}, \\; ${p3} \\right\\}$ 是否构成 $\\mathbb{P}_2$ 的一组基？`,
@@ -2522,24 +2688,27 @@ export const theCoordinatesOfAVectorRelativeToABasisInAbstractVectorSpaces: Topi
         const a0 = rng.int(-5, 5);
         const a1 = rng.nonZero(-5, 5);
         const a2 = rng.nonZero(-5, 5);
-        const a1Str = a1 > 0 ? `+ ${a1 === 1 ? "" : a1}t` : `- ${a1 === -1 ? "" : Math.abs(a1)}t`;
-        const a2Str = a2 > 0 ? `+ ${a2 === 1 ? "" : a2}t^2` : `- ${a2 === -1 ? "" : Math.abs(a2)}t^2`;
-        const polyStr = `${a0} ${a1Str} ${a2Str}`;
+        const polyStr = formatPoly2(a0, a1, a2);
         const prompt = t(
-          `Find the coordinate vector $[p(t)]_{\\mathcal{B}}$ of the polynomial $p(t) = ${polyStr}$ relative to the ordered standard basis $\\mathcal{B} = \\{1, t, t^2\\}$ of $\\mathbb{P}_2$.`,
-          `求多项式 $p(t) = ${polyStr}$ 在 $\\mathbb{P}_2$ 的有序标准基 $\\mathcal{B} = \\{1, t, t^2\\}$ 下的坐标向量 $[p(t)]_{\\mathcal{B}}$。`,
+          `Find the coordinate vector $[p(t)]_{\\mathcal{B}}$ of the polynomial $p(t) = ${polyStr}$ relative to the ordered standard basis $\\mathcal{B} = \\{1, t, t^2\\}$ of $\\mathbb{P}_2$. Enter the vector as $\\langle a_0, a_1, a_2 \\rangle$.`,
+          `求多项式 $p(t) = ${polyStr}$ 在 $\\mathbb{P}_2$ 的有序标准基 $\\mathcal{B} = \\{1, t, t^2\\}$ 下的坐标向量 $[p(t)]_{\\mathcal{B}}$。以 $\\langle a_0, a_1, a_2 \\rangle$ 的形式输入结果。`,
         );
-        const right = t(`$${colVecLatex([a0, a1, a2])}$`, `$${colVecLatex([a0, a1, a2])}$`);
-        const wrong = [
-          t(`$${colVecLatex([a2, a1, a0])}$`, `$${colVecLatex([a2, a1, a0])}$`),
-          t(`$${colVecLatex([a0, -a1, a2])}$`, `$${colVecLatex([a0, -a1, a2])}$`),
-          t(`$${colVecLatex([a1, a2, a0])}$`, `$${colVecLatex([a1, a2, a0])}$`),
-        ];
         const solution = t(
-          `Writing $p(t) = (${a0})\\cdot 1 + (${a1})\\cdot t + (${a2})\\cdot t^2$, the coefficients with respect to the ordered basis $\\{1, t, t^2\\}$ are $a_0 = ${a0}$, $a_1 = ${a1}$, and $a_2 = ${a2}$. Thus $[p(t)]_{\\mathcal{B}} = ${colVecLatex([a0, a1, a2])}$.`,
-          `将多项式写为 $p(t) = (${a0})\\cdot 1 + (${a1})\\cdot t + (${a2})\\cdot t^2$，对应基 $\\{1, t, t^2\\}$ 的各分量系数分别为 $a_0 = ${a0}$，$a_1 = ${a1}$，$a_2 = ${a2}$。故坐标向量为 $[p(t)]_{\\mathcal{B}} = ${colVecLatex([a0, a1, a2])}$。`,
+          `Writing $p(t) = (${a0})\\cdot 1 + (${a1})\\cdot t + (${a2})\\cdot t^2$, the coefficients with respect to the ordered basis $\\{1, t, t^2\\}$ are $a_0 = ${a0}$, $a_1 = ${a1}$, and $a_2 = ${a2}$. Thus $[p(t)]_{\\mathcal{B}} = \\langle ${a0}, ${a1}, ${a2} \\rangle$.`,
+          `将多项式写为 $p(t) = (${a0})\\cdot 1 + (${a1})\\cdot t + (${a2})\\cdot t^2$，对应基 $\\{1, t, t^2\\}$ 的各分量系数分别为 $a_0 = ${a0}$，$a_1 = ${a1}$，$a_2 = ${a2}$。故坐标向量为 $[p(t)]_{\\mathcal{B}} = \\langle ${a0}, ${a1}, ${a2} \\rangle$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: [a0, a1, a2],
+          wrong: [
+            [a2, a1, a0],
+            [a0, -a1, a2],
+            [a1, a2, a0],
+          ],
+          vars: ["a_0", "a_1", "a_2"],
+          vector: true,
+          solution,
+        });
       },
     },
     {
@@ -2559,20 +2728,25 @@ export const theCoordinatesOfAVectorRelativeToABasisInAbstractVectorSpaces: Topi
           [c, d],
         ];
         const prompt = t(
-          `Find the coordinate vector $[M]_{\\mathcal{B}}$ of the matrix $M = ${matLatex(M)}$ relative to the standard ordered basis $\\mathcal{B} = \\left\\{ \\begin{pmatrix} 1 & 0 \\\\ 0 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 0 \\\\ 1 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 0 \\\\ 0 & 1 \\end{pmatrix} \\right\\}$ of $M_{2 \\times 2}$.`,
-          `求矩阵 $M = ${matLatex(M)}$ 在 $M_{2 \\times 2}$ 的标准有序基 $\\mathcal{B} = \\left\\{ \\begin{pmatrix} 1 & 0 \\\\ 0 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 0 \\\\ 1 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 0 \\\\ 0 & 1 \\end{pmatrix} \\right\\}$ 下的坐标向量 $[M]_{\\mathcal{B}}$。`,
+          `Find the coordinate vector $[M]_{\\mathcal{B}}$ of the matrix $M = ${matLatex(M)}$ relative to the standard ordered basis $\\mathcal{B} = \\left\\{ \\begin{pmatrix} 1 & 0 \\\\ 0 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 0 \\\\ 1 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 0 \\\\ 0 & 1 \\end{pmatrix} \\right\\}$ of $M_{2 \\times 2}$. Enter the vector as $\\langle a, b, c, d \\rangle$.`,
+          `求矩阵 $M = ${matLatex(M)}$ 在 $M_{2 \\times 2}$ 的标准有序基 $\\mathcal{B} = \\left\\{ \\begin{pmatrix} 1 & 0 \\\\ 0 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 0 \\\\ 1 & 0 \\end{pmatrix}, \\begin{pmatrix} 0 & 0 \\\\ 0 & 1 \\end{pmatrix} \\right\\}$ 下的坐标向量 $[M]_{\\mathcal{B}}$。以 $\\langle a, b, c, d \\rangle$ 的形式输入结果。`,
         );
-        const right = t(`$${colVecLatex([a, b, c, d])}$`, `$${colVecLatex([a, b, c, d])}$`);
-        const wrong = [
-          t(`$${colVecLatex([a, c, b, d])}$`, `$${colVecLatex([a, c, b, d])}$`),
-          t(`$${colVecLatex([d, c, b, a])}$`, `$${colVecLatex([d, c, b, a])}$`),
-          t(`$${colVecLatex([a, b, -c, -d])}$`, `$${colVecLatex([a, b, -c, -d])}$`),
-        ];
         const solution = t(
-          `Since $M = (${a})E_{11} + (${b})E_{12} + (${c})E_{21} + (${d})E_{22}$, reading the coordinates in the ordered basis gives $[M]_{\\mathcal{B}} = ${colVecLatex([a, b, c, d])} \\in \\mathbb{R}^4$.`,
-          `因 $M = (${a})E_{11} + (${b})E_{12} + (${c})E_{21} + (${d})E_{22}$，按基的顺序排列各系数得到 $[M]_{\\mathcal{B}} = ${colVecLatex([a, b, c, d])} \\in \\mathbb{R}^4$。`,
+          `Since $M = (${a})E_{11} + (${b})E_{12} + (${c})E_{21} + (${d})E_{22}$, reading the coordinates in the ordered basis gives $[M]_{\\mathcal{B}} = \\langle ${a}, ${b}, ${c}, ${d} \\rangle \\in \\mathbb{R}^4$.`,
+          `因 $M = (${a})E_{11} + (${b})E_{12} + (${c})E_{21} + (${d})E_{22}$，按基的顺序排列各系数得到 $[M]_{\\mathcal{B}} = \\langle ${a}, ${b}, ${c}, ${d} \\rangle \\in \\mathbb{R}^4$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: [a, b, c, d],
+          wrong: [
+            [a, c, b, d],
+            [d, c, b, a],
+            [a, b, -c, -d],
+          ],
+          vars: ["a", "b", "c", "d"],
+          vector: true,
+          solution,
+        });
       },
     },
   ],
@@ -2601,52 +2775,60 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
       generate(rng) {
         const choice = rng.pick(["polynomials", "matrices", "symmetric"]);
         if (choice === "polynomials") {
-          const n = rng.int(2, 7);
+          const n = rng.int(2, 15);
           const prompt = t(
             `What is the dimension of the polynomial vector space $\\mathbb{P}_${n}$?`,
             `多项式向量空间 $\\mathbb{P}_${n}$ 的维数是多少？`,
           );
-          const right = t(`$${n + 1}$`, `$${n + 1}$`);
-          const wrong = [t(`$${n}$`, `$${n}$`), t(`$${n - 1}$`, `$${n - 1}$`), t(`$2^${n}$`, `$2^${n}$`)];
           const solution = t(
             `The standard basis for $\\mathbb{P}_${n}$ is $\\{1, t, t^2, \\dots, t^${n}\\}$, which contains $${n} + 1 = ${n + 1}$ elements. Therefore $\\dim(\\mathbb{P}_${n}) = ${n + 1}$.`,
             `$\\mathbb{P}_${n}$ 的标准基为 $\\{1, t, t^2, \\dots, t^${n}\\}$，共含有 $${n} + 1 = ${n + 1}$ 个基向量。因此 $\\dim(\\mathbb{P}_${n}) = ${n + 1}$。`,
           );
-          return oneOf(rng, prompt, right, wrong, solution);
+          return numberProblem({
+            prompt,
+            answer: n + 1,
+            form: "integer",
+            wrong: [n, n - 1, 2 * n],
+            solution,
+          });
         }
         if (choice === "matrices") {
-          const m = rng.int(2, 5);
-          const n = rng.int(2, 5);
+          const m = rng.int(2, 6);
+          const n = rng.int(2, 6);
           const dim = m * n;
           const prompt = t(
             `What is the dimension of the vector space $M_{${m} \\times ${n}}$ of all $${m} \\times ${n}$ matrices?`,
             `所有 $${m} \\times ${n}$ 矩阵构成的向量空间 $M_{${m} \\times ${n}}$ 的维数是多少？`,
           );
-          const right = t(`$${dim}$`, `$${dim}$`);
-          const wrong = [
-            t(`$${m + n}$`, `$${m + n}$`),
-            t(`$${Math.max(m, n)}$`, `$${Math.max(m, n)}$`),
-            t(`$${Math.min(m, n)}$`, `$${Math.min(m, n)}$`),
-          ];
           const solution = t(
             `Each entry in an $m \\times n$ matrix is an independent free parameter. The standard basis consists of $mn = ${m} \\times ${n} = ${dim}$ elementary matrices $E_{ij}$, so the dimension is $${dim}$.`,
             `$m \\times n$ 矩阵中的每个位置都是独立的自由参数。标准基由 $mn = ${m} \\times ${n} = ${dim}$ 个单位矩阵 $E_{ij}$ 组成，因此维数为 $${dim}$。`,
           );
-          return oneOf(rng, prompt, right, wrong, solution);
+          return numberProblem({
+            prompt,
+            answer: dim,
+            form: "integer",
+            wrong: [dim + 1, dim - 1, m + n === dim ? dim + 2 : m + n],
+            solution,
+          });
         }
-        const n = rng.int(2, 4);
+        const n = rng.int(2, 8);
         const dimSym = (n * (n + 1)) / 2;
         const prompt = t(
           `What is the dimension of the subspace of all symmetric $${n} \\times ${n}$ matrices in $M_{${n} \\times ${n}}$?`,
           `在 $M_{${n} \\times ${n}}$ 中，所有 $${n} \\times ${n}$ 对称矩阵构成的子空间的维数是多少？`,
         );
-        const right = t(`$${dimSym}$`, `$${dimSym}$`);
-        const wrong = [t(`$${n * n}$`, `$${n * n}$`), t(`$${n}$`, `$${n}$`), t(`$${dimSym - 1}$`, `$${dimSym - 1}$`)];
         const solution = t(
           `A symmetric $n \\times n$ matrix is completely determined by the entries on and above the main diagonal. The number of such independent entries is $\\frac{n(n + 1)}{2} = \\frac{${n}(${n + 1})}{2} = ${dimSym}$.`,
           `$n \\times n$ 对称矩阵完全由主对角线及其上方的元素决定。独立元素的个数为 $\\frac{n(n + 1)}{2} = \\frac{${n}(${n + 1})}{2} = ${dimSym}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return numberProblem({
+          prompt,
+          answer: dimSym,
+          form: "integer",
+          wrong: [n * n, n, dimSym - 1],
+          solution,
+        });
       },
     },
     {

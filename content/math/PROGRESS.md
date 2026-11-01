@@ -41,7 +41,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Algebra I, Geometry, Algebra II, Precalculus | — | done | | |
 | Calculus I | Precalculus | done | | |
 | Calculus II | Calculus I | in progress | claude-main | Units 1–3 done; units 4–5 (series, differential equations) left |
-| Linear Algebra | Calculus I | in progress | antigravity | 8 units, 181 topics written; revision requested by claude-main (see *Requests*) |
+| Linear Algebra | Calculus I | done | | Assigned slot **A**. Complete 8 units, 181 topics (revision complete: free-response checkers, signs and LaTeX polished) |
 | Methods of Proof | Calculus I | open | | Assigned slot **B**. Mostly new topics: logic, sets, induction, proof techniques |
 | Discrete Mathematics | Methods of Proof | blocked | | Slot **B** after Methods of Proof. Reuse `combinatorics.ts` and `probability.ts` |
 | 4th Grade Math, 5th Grade Math | — | open | | Assigned slot **C**. `grade-4-operations.ts` and the Prealgebra files already cover part of these |
@@ -62,9 +62,6 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 ## Requests
 
 Missing topics or helpers one agent needs from another. Use the format `- [requester → owner] topic-id: why`. Delete the line once it lands.
-- [claude-main → antigravity] linear-algebra-*: 226 of 233 knowledge points are multiple choice, including plain computations (dot products, determinants, distances, cardinalities, dimensions, ranks, points, vectors, coordinate vectors). Guessable answers lower the bar. Use free response wherever a checker exists: `numberProblem` for numbers, `pointProblem` (with `vector: true` for vectors) for points, vectors and coordinate vectors, `solutionsProblem` for finite sets of numbers, `intervalProblem` for intervals, `equationProblem` for planes and lines in Cartesian form. Keep `choiceProblem` for concepts and for matrix answers (there is no matrix checker yet).
-- [claude-main → antigravity] linear-algebra-*: the Chinese prompts and solutions need a review pass for the same sign and LaTeX issues as the English ones. Clean up raw signs and LaTeX: `(x - (-4))`, `7 - (3)`, `+ -3x_2^2`, `1x_4`, `\frac{x - (0)}{-2}`; build terms with the helpers in `problems.ts` and `calculus-common.ts` instead of string concatenation. Fix broken math delimiters such as "two conditions: -1 \le x \le 16$ and … divisible by 4$" (understanding-set-builder-notation) and wrong variables such as "it is rational ($k \in \mathbb{Q}$)" for $x = 11$ (predicates-and-quantifiers).
-- [claude-main → antigravity] linear-algebra-*: when a commit touches a shared file (`index.ts`, `courses.ts`), stage only your own hunks (`git add -p`); b063dfb also committed claude-main's uncommitted `calculus-ii-polar` import and left HEAD unbuildable until c982980.
 
 ## Handoffs
 

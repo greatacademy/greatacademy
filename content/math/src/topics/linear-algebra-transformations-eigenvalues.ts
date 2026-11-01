@@ -1,7 +1,8 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { Q } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem } from "../problems.ts";
+import { choiceProblem, numberProblem, pointProblem, solutionsProblem } from "../problems.ts";
 
 // Linear Algebra Units 4 & 5: Linear Transformations, Eigenvalues, Diagonalization,
 // Complex Eigenvalues, Generalized Eigenvectors, and Jordan Canonical Form.
@@ -36,6 +37,125 @@ function vec2Latex(v: Vec2 | readonly [string, string]): string {
 function vec3Latex(v: Vec3 | readonly [string, string, string]): string {
   return `\\begin{pmatrix} ${v[0]} \\\\ ${v[1]} \\\\ ${v[2]} \\end{pmatrix}`;
 }
+
+/** formatShift formats A - lambda I as A - cI, A + cI, A - I, A + I, or A. */
+function formatShift(val: number, name = "I"): string {
+  if (val === 0) return "";
+  if (val === 1) return ` - ${name}`;
+  if (val === -1) return ` + ${name}`;
+  if (val > 0) return ` - ${val}${name}`;
+  return ` + ${-val}${name}`;
+}
+
+/** formatFactor formats (x - root) as x - r, x + r, or x. */
+function formatFactor(variable: string, root: number): string {
+  if (root === 0) return variable;
+  if (root > 0) return `${variable} - ${root}`;
+  return `${variable} + ${-root}`;
+}
+
+/** formatLinearComb2 formats c1 v1 + c2 v2 with proper signs and omitting 1/-1/0 coefficients. */
+function formatLinearComb2(c1: number, v1: string, c2: number, v2: string): string {
+  let first = "";
+  if (c1 === 1) first = v1;
+  else if (c1 === -1) first = `-${v1}`;
+  else if (c1 !== 0) first = `${c1}${v1}`;
+
+  let second = "";
+  if (c2 === 1) second = first ? ` + ${v2}` : v2;
+  else if (c2 === -1) second = first ? ` - ${v2}` : `-${v2}`;
+  else if (c2 > 0) second = first ? ` + ${c2}${v2}` : `${c2}${v2}`;
+  else if (c2 < 0) second = first ? ` - ${-c2}${v2}` : `-${-c2}${v2}`;
+
+  return first || second ? `${first}${second}` : "0";
+}
+
+/** formatPoly2 formats a quadratic polynomial c x^2 + d x + e cleanly. */
+function formatPoly2(c: number, d: number, e: number): string {
+  let res = "";
+  if (c === 1) res = "x^2";
+  else if (c === -1) res = "-x^2";
+  else if (c !== 0) res = `${c}x^2`;
+
+  if (d === 1) res += res ? " + x" : "x";
+  else if (d === -1) res += res ? " - x" : "-x";
+  else if (d > 0) res += res ? ` + ${d}x` : `${d}x`;
+  else if (d < 0) res += res ? ` - ${-d}x` : `-${-d}x`;
+
+  if (e > 0) res += res ? ` + ${e}` : `${e}`;
+  else if (e < 0) res += res ? ` - ${-e}` : `-${-e}`;
+
+  return res || "0";
+}
+
+/** formatComplex formats a + bi without 1i, -1i, 0+ or raw signs. */
+function formatComplex(a: number, b: number): string {
+  if (b === 0) return `${a}`;
+  const iPart = b === 1 ? "i" : b === -1 ? "-i" : `${b}i`;
+  if (a === 0) return iPart;
+  if (b === 1) return `${a} + i`;
+  if (b === -1) return `${a} - i`;
+  if (b > 0) return `${a} + ${b}i`;
+  return `${a} - ${-b}i`;
+}
+
+/** formatComplexPair formats a \pm bi without 1i or 0 \pm. */
+function formatComplexPair(a: number, b: number): string {
+  const iPart = b === 1 ? "i" : `${b}i`;
+  if (a === 0) return `\\pm ${iPart}`;
+  return `${a} \\pm ${iPart}`;
+}
+
+/** formatCharEq formats \lambda^2 - tr \lambda + det = 0. */
+function formatCharEq(tr: number, det: number): string {
+  let tPart = "";
+  if (tr === 1) tPart = " - \\lambda";
+  else if (tr === -1) tPart = " + \\lambda";
+  else if (tr > 0) tPart = ` - ${tr}\\lambda`;
+  else if (tr < 0) tPart = ` + ${-tr}\\lambda`;
+
+  let dPart = "";
+  if (det > 0) dPart = ` + ${det}`;
+  else if (det < 0) dPart = ` - ${-det}`;
+
+  return `\\lambda^2${tPart}${dPart} = 0`;
+}
+
+/** formatCayleyComb formats tr A - det I. */
+function formatCayleyComb(tr: number, det: number): string {
+  let tStr = "";
+  if (tr === 1) tStr = "A";
+  else if (tr === -1) tStr = "-A";
+  else if (tr !== 0) tStr = `${tr}A`;
+
+  let dStr = "";
+  if (det === 1) dStr = tStr ? " - I" : "-I";
+  else if (det === -1) dStr = tStr ? " + I" : "I";
+  else if (det > 0) dStr = tStr ? ` - ${det}I` : `-${det}I`;
+  else if (det < 0) dStr = tStr ? ` + ${-det}I` : `${-det}I`;
+
+  return tStr || dStr ? `${tStr}${dStr}` : "0";
+}
+
+/** Pythagorean triples scaled for rotation-scaling matrices. */
+const pythagoreanTriples: readonly (readonly [number, number, number])[] = [
+  [3, 4, 5],
+  [4, 3, 5],
+  [5, 12, 13],
+  [12, 5, 13],
+  [6, 8, 10],
+  [8, 6, 10],
+  [7, 24, 25],
+  [24, 7, 25],
+  [8, 15, 17],
+  [15, 8, 17],
+  [9, 12, 15],
+  [12, 9, 15],
+  [10, 24, 26],
+  [24, 10, 26],
+  [15, 20, 25],
+  [20, 15, 25],
+];
 
 /** oneOf builds a multiple-choice problem with options shuffled and deduplicated. */
 function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
@@ -186,21 +306,27 @@ export const kernelOfALinearTransformation: TopicDef = {
         ];
         const basisVec: Vec2 = [-k, 1];
         const prompt = t(
-          `Let $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ be the linear transformation defined by $T(x) = Ax$, where $A = ${mat2Latex(mat)}$. Which of the following vectors spans the kernel $\\ker(T)$?`,
-          `设 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 为由 $T(x) = Ax$ 定义的线性变换，其中 $A = ${mat2Latex(mat)}$。下列哪个向量张成该变换的核 $\\ker(T)$？`,
+          `Let $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ be the linear transformation defined by $T(\\mathbf{x}) = A\\mathbf{x}$, where $A = ${mat2Latex(mat)}$. Find the basis vector $\\mathbf{v} = \\langle x_1, x_2 \\rangle$ for the kernel $\\ker(T)$ whose second component is $x_2 = 1$.`,
+          `设 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 为由 $T(\\mathbf{x}) = A\\mathbf{x}$ 定义的线性变换，其中 $A = ${mat2Latex(mat)}$。求核 $\\ker(T)$ 的基向量 $\\mathbf{v} = \\langle x_1, x_2 \\rangle$，使其第二分量为 $x_2 = 1$。`,
         );
-        const right = t(`$${vec2Latex(basisVec)}$`, `$${vec2Latex(basisVec)}$`);
-        const wrong = [
-          t(`$${vec2Latex([k, 1])}$`, `$${vec2Latex([k, 1])}$`),
-          t(`$${vec2Latex([a, b])}$`, `$${vec2Latex([a, b])}$`),
-          t(`$${vec2Latex([1, 0])}$`, `$${vec2Latex([1, 0])}$`),
-          t(`$${vec2Latex([0, 1])}$`, `$${vec2Latex([0, 1])}$`),
-        ];
+        const kStr = k === 1 ? "" : k === -1 ? "-" : `${k}`;
+        const negKStr = -k === 1 ? "" : -k === -1 ? "-" : `${-k}`;
         const solution = t(
-          `The kernel is the null space of $A$, satisfying $Ax = 0$. Since row 2 is a multiple of row 1, the equation is $x_1 + ${k} x_2 = 0$, giving $x_1 = ${-k} x_2$. Thus, $\\ker(T) = \\operatorname{span}\\{${vec2Latex(basisVec)}\\}$.`,
-          `核是满足 $Ax = 0$ 的零空间。因为第 2 行是第 1 行的倍数，所以方程为 $x_1 + ${k} x_2 = 0$，即 $x_1 = ${-k} x_2$。因此 $\\ker(T) = \\operatorname{span}\\{${vec2Latex(basisVec)}\\}$。`,
+          `The kernel is the null space of $A$, satisfying $A\\mathbf{x} = \\mathbf{0}$. Since row 2 is a multiple of row 1, the equation is $x_1 ${k > 0 ? `+ ${kStr}` : `- ${negKStr}`}x_2 = 0$, giving $x_1 = ${negKStr}x_2$. Setting $x_2 = 1$ gives $x_1 = ${-k}$, so the basis vector is $\\langle ${-k}, 1 \\rangle$.`,
+          `核是满足 $A\\mathbf{x} = \\mathbf{0}$ 的零空间。因为第 2 行是第 1 行的倍数，所以方程为 $x_1 ${k > 0 ? `+ ${kStr}` : `- ${negKStr}`}x_2 = 0$，即 $x_1 = ${negKStr}x_2$。取 $x_2 = 1$ 可得 $x_1 = ${-k}$，因此基向量为 $\\langle ${-k}, 1 \\rangle$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: basisVec,
+          vector: true,
+          solution,
+          wrong: [
+            [k, 1],
+            [-k, -1],
+            [1, -k],
+            [a, b],
+          ],
+        });
       },
     },
   ],
@@ -468,9 +594,11 @@ export const matrixOfALinearTransformationRelativeToABasis: TopicDef = {
         const c2 = rng.pick([-4, -3, -2, 2, 3, 4])!;
         const d1 = rng.int(-5, 5);
         const d2 = rng.pick([-4, -3, -2, 2, 3, 4])!;
+        const expr1 = formatLinearComb2(c1, "b_1", c2, "b_2");
+        const expr2 = formatLinearComb2(d1, "b_1", d2, "b_2");
         const prompt = t(
-          `Let $B = \\{b_1, b_2\\}$ be a basis of $\\mathbb{R}^2$, and let $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ be a linear transformation satisfying $T(b_1) = ${c1}b_1 + ${c2}b_2$ and $T(b_2) = ${d1}b_1 + ${d2}b_2$. What is the matrix representation $[T]_B$?`,
-          `设 $B = \\{b_1, b_2\\}$ 为 $\\mathbb{R}^2$ 的一组基，线性变换 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 满足 $T(b_1) = ${c1}b_1 + ${c2}b_2$ 且 $T(b_2) = ${d1}b_1 + ${d2}b_2$。求 $T$ 关于基 $B$ 的矩阵表示 $[T]_B$。`,
+          `Let $B = \\{b_1, b_2\\}$ be a basis of $\\mathbb{R}^2$, and let $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ be a linear transformation satisfying $T(b_1) = ${expr1}$ and $T(b_2) = ${expr2}$. What is the matrix representation $[T]_B$?`,
+          `设 $B = \\{b_1, b_2\\}$ 为 $\\mathbb{R}^2$ 的一组基，线性变换 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 满足 $T(b_1) = ${expr1}$ 且 $T(b_2) = ${expr2}$。求 $T$ 关于基 $B$ 的矩阵表示 $[T]_B$。`,
         );
         const right = t(
           `$${mat2Latex([
@@ -564,36 +692,39 @@ export const connectionsBetweenMatrixRepresentationsOfALinearTransformation: Top
         "应用公式 [T]_C = P^{-1} [T]_B P，其中 P 为从基 C 到基 B 的过渡矩阵。",
       ),
       generate: (rng: Rng): Problem => {
-        const trace = rng.int(-5, 8);
+        const trace = rng.int(-8, 8);
         const det = rng.int(-9, 9);
+        const askTrace = rng.bool();
+        if (askTrace) {
+          const prompt = t(
+            `Let $B$ and $C$ be two bases of a vector space $V$, and let $P$ be the change-of-basis matrix from $C$ to $B$. If the matrix of a linear operator $T$ relative to $B$ has trace $\\operatorname{tr}([T]_B) = ${trace}$ and determinant $\\det([T]_B) = ${det}$, what is the trace $\\operatorname{tr}([T]_C)$?`,
+            `设 $B$ 与 $C$ 为向量空间 $V$ 的两组基，且 $P$ 为从基 $C$ 到基 $B$ 的过渡矩阵。若线性算子 $T$ 关于基 $B$ 的矩阵的迹为 $\\operatorname{tr}([T]_B) = ${trace}$ 且行列式为 $\\det([T]_B) = ${det}$，求 $\\operatorname{tr}([T]_C)$。`,
+          );
+          const solution = t(
+            `The matrices $[T]_B$ and $[T]_C$ are similar via $[T]_C = P^{-1} [T]_B P$. Since similar matrices share the same characteristic polynomial, the trace is invariant under change of basis. Thus, $\\operatorname{tr}([T]_C) = \\operatorname{tr}([T]_B) = ${trace}$.`,
+            `矩阵 $[T]_B$ 与 $[T]_C$ 满足相似关系 $[T]_C = P^{-1} [T]_B P$。因为相似矩阵具有相同的特征多项式，所以迹在基变换下保持不变。故 $\\operatorname{tr}([T]_C) = \\operatorname{tr}([T]_B) = ${trace}$。`,
+          );
+          return numberProblem({
+            prompt,
+            answer: trace,
+            solution,
+            wrong: [-trace, det, 0, trace + 1].filter((w) => w !== trace),
+          });
+        }
         const prompt = t(
-          `Let $B$ and $C$ be two bases of a vector space $V$, and let $P$ be the change-of-basis matrix from $C$ to $B$. If the matrix of a linear operator $T$ relative to $B$ has trace $\\operatorname{tr}([T]_B) = ${trace}$ and determinant $\\det([T]_B) = ${det}$, what are $\\operatorname{tr}([T]_C)$ and $\\det([T]_C)$?`,
-          `设 $B$ 与 $C$ 为向量空间 $V$ 的两组基，且 $P$ 为从基 $C$ 到基 $B$ 的过渡矩阵。若线性算子 $T$ 关于基 $B$ 的矩阵的迹为 $\\operatorname{tr}([T]_B) = ${trace}$ 且行列式为 $\\det([T]_B) = ${det}$，求 $\\operatorname{tr}([T]_C)$ 与 $\\det([T]_C)$。`,
+          `Let $B$ and $C$ be two bases of a vector space $V$, and let $P$ be the change-of-basis matrix from $C$ to $B$. If the matrix of a linear operator $T$ relative to $B$ has trace $\\operatorname{tr}([T]_B) = ${trace}$ and determinant $\\det([T]_B) = ${det}$, what is the determinant $\\det([T]_C)$?`,
+          `设 $B$ 与 $C$ 为向量空间 $V$ 的两组基，且 $P$ 为从基 $C$ 到基 $B$ 的过渡矩阵。若线性算子 $T$ 关于基 $B$ 的矩阵的迹为 $\\operatorname{tr}([T]_B) = ${trace}$ 且行列式为 $\\det([T]_B) = ${det}$，求 $\\det([T]_C)$。`,
         );
-        const right = t(
-          `$\\operatorname{tr}([T]_C) = ${trace}$ and $\\det([T]_C) = ${det}$`,
-          `$\\operatorname{tr}([T]_C) = ${trace}$ 且 $\\det([T]_C) = ${det}$`,
-        );
-        const wrong = [
-          t(
-            `$\\operatorname{tr}([T]_C) = ${-trace}$ and $\\det([T]_C) = ${-det}$`,
-            `$\\operatorname{tr}([T]_C) = ${-trace}$ 且 $\\det([T]_C) = ${-det}$`,
-          ),
-          t(
-            `$\\operatorname{tr}([T]_C) = ${det}$ and $\\det([T]_C) = ${trace}$`,
-            `$\\operatorname{tr}([T]_C) = ${det}$ 且 $\\det([T]_C) = ${trace}$`,
-          ),
-          t(`$\\operatorname{tr}([T]_C) = 0$ and $\\det([T]_C) = 1$`, `$\\operatorname{tr}([T]_C) = 0$ 且 $\\det([T]_C) = 1$`),
-          t(
-            `$\\operatorname{tr}([T]_C) = ${trace + 1}$ and $\\det([T]_C) = ${det + 1}$`,
-            `$\\operatorname{tr}([T]_C) = ${trace + 1}$ 且 $\\det([T]_C) = ${det + 1}$`,
-          ),
-        ];
         const solution = t(
-          `The matrices $[T]_B$ and $[T]_C$ are similar via $[T]_C = P^{-1} [T]_B P$. Since similar matrices share the same characteristic polynomial, their trace and determinant are invariant under change of basis. Thus, $\\operatorname{tr}([T]_C) = ${trace}$ and $\\det([T]_C) = ${det}$.`,
-          `矩阵 $[T]_B$ 与 $[T]_C$ 满足相似关系 $[T]_C = P^{-1} [T]_B P$。因为相似矩阵具有相同的特征多项式，所以它们的迹与行列式在基变换下保持不变。故 $\\operatorname{tr}([T]_C) = ${trace}$ 且 $\\det([T]_C) = ${det}$。`,
+          `The matrices $[T]_B$ and $[T]_C$ are similar via $[T]_C = P^{-1} [T]_B P$. Since similar matrices share the same characteristic polynomial, the determinant is invariant under change of basis. Thus, $\\det([T]_C) = \\det([T]_B) = ${det}$.`,
+          `矩阵 $[T]_B$ 与 $[T]_C$ 满足相似关系 $[T]_C = P^{-1} [T]_B P$。因为相似矩阵具有相同的特征多项式，所以行列式在基变换下保持不变。故 $\\det([T]_C) = \\det([T]_B) = ${det}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return numberProblem({
+          prompt,
+          answer: det,
+          solution,
+          wrong: [-det, trace, 1, det + 1].filter((w) => w !== det),
+        });
       },
     },
   ],
@@ -630,22 +761,30 @@ export const linearMapsBetweenTwoDifferentVectorSpaces: TopicDef = {
         // p'(b) = 2 * c * b + d
         const val1 = c * a * a + d * a + e;
         const val2 = 2 * c * b + d;
+        const polyStr = formatPoly2(c, d, e);
         const prompt = t(
-          `Let $T: P_2 \\to \\mathbb{R}^2$ be the linear map defined by $T(p) = \\begin{pmatrix} p(${a}) \\\\ p'(${b}) \\end{pmatrix}$. For the polynomial $p(x) = ${c}x^2 ${d >= 0 ? `+ ${d}` : `- ${-d}`}x ${e >= 0 ? `+ ${e}` : `- ${-e}`}$, find $T(p)$.`,
-          `设 $T: P_2 \\to \\mathbb{R}^2$ 为由 $T(p) = \\begin{pmatrix} p(${a}) \\\\ p'(${b}) \\end{pmatrix}$ 定义的线性映射。对于多项式 $p(x) = ${c}x^2 ${d >= 0 ? `+ ${d}` : `- ${-d}`}x ${e >= 0 ? `+ ${e}` : `- ${-e}`}$，求 $T(p)$。`,
+          `Let $T: P_2 \\to \\mathbb{R}^2$ be the linear map defined by $T(p) = \\begin{pmatrix} p(${a}) \\\\ p'(${b}) \\end{pmatrix}$. For the polynomial $p(x) = ${polyStr}$, find the vector $T(p) = \\langle y_1, y_2 \\rangle$.`,
+          `设 $T: P_2 \\to \\mathbb{R}^2$ 为由 $T(p) = \\begin{pmatrix} p(${a}) \\\\ p'(${b}) \\end{pmatrix}$ 定义的线性映射。对于多项式 $p(x) = ${polyStr}$，求向量 $T(p) = \\langle y_1, y_2 \\rangle$。`,
         );
-        const right = t(`$${vec2Latex([val1, val2])}$`, `$${vec2Latex([val1, val2])}$`);
-        const wrong = [
-          t(`$${vec2Latex([val2, val1])}$`, `$${vec2Latex([val2, val1])}$`),
-          t(`$${vec2Latex([val1 + 1, val2])}$`, `$${vec2Latex([val1 + 1, val2])}$`),
-          t(`$${vec2Latex([val1, val2 - 2])}$`, `$${vec2Latex([val1, val2 - 2])}$`),
-          t(`$${vec2Latex([-val1, val2])}$`, `$${vec2Latex([-val1, val2])}$`),
-        ];
+        const dEval = d === 0 ? "" : d > 0 ? ` + ${d}(${a})` : ` - ${-d}(${a})`;
+        const eEval = e === 0 ? "" : e > 0 ? ` + ${e}` : ` - ${-e}`;
+        const dPrime = d === 0 ? "" : d > 0 ? ` + ${d}` : ` - ${-d}`;
         const solution = t(
-          `Evaluate $p(${a}) = ${c}(${a})^2 + (${d})(${a}) + (${e}) = ${val1}$ and $p'(x) = ${2 * c}x + (${d})$, so $p'(${b}) = ${2 * c}(${b}) + (${d}) = ${val2}$. Thus, $T(p) = ${vec2Latex([val1, val2])}$.`,
-          `求值 $p(${a}) = ${c}(${a})^2 + (${d})(${a}) + (${e}) = ${val1}$，而导数为 $p'(x) = ${2 * c}x + (${d})$，故 $p'(${b}) = ${2 * c}(${b}) + (${d}) = ${val2}$。因此 $T(p) = ${vec2Latex([val1, val2])}$。`,
+          `Evaluate $p(${a}) = ${c}(${a})^2${dEval}${eEval} = ${val1}$ and $p'(x) = ${2 * c}x${dPrime}$, so $p'(${b}) = ${2 * c}(${b})${dPrime} = ${val2}$. Thus, $T(p) = \\langle ${val1}, ${val2} \\rangle$.`,
+          `求值 $p(${a}) = ${c}(${a})^2${dEval}${eEval} = ${val1}$，而导数为 $p'(x) = ${2 * c}x${dPrime}$，故 $p'(${b}) = ${2 * c}(${b})${dPrime} = ${val2}$。因此 $T(p) = \\langle ${val1}, ${val2} \\rangle$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: [val1, val2],
+          vector: true,
+          solution,
+          wrong: [
+            [val2, val1],
+            [val1 + 1, val2],
+            [val1, val2 - 2],
+            [-val1, val2],
+          ],
+        });
       },
     },
   ],
@@ -682,9 +821,10 @@ export const matrixOfALinearMapRelativeToTwoBases: TopicDef = {
         // [ b  a  0 ]
         // [ 0  0  2a]
         const mLatex = `\\begin{pmatrix} ${b} & ${a} & 0 \\\\ 0 & 0 & ${2 * a} \\end{pmatrix}`;
+        const bTerm = b >= 0 ? `+ ${b}` : `- ${-b}`;
         const prompt = t(
-          `Let $T: P_2 \\to P_1$ be the linear map defined by $T(p) = ${a} p'(x) + ${b} p(0)$. Let $B = \\{1, x, x^2\\}$ be the standard basis of $P_2$ and $C = \\{1, x\\}$ be the standard basis of $P_1$. Find the matrix $[T]_{C \\leftarrow B}$.`,
-          `设 $T: P_2 \\to P_1$ 为由 $T(p) = ${a} p'(x) + ${b} p(0)$ 定义的线性映射。设 $B = \\{1, x, x^2\\}$ 为 $P_2$ 的标准基，$C = \\{1, x\\}$ 为 $P_1$ 的标准基。求矩阵 $[T]_{C \\leftarrow B}$。`,
+          `Let $T: P_2 \\to P_1$ be the linear map defined by $T(p) = ${a} p'(x) ${bTerm} p(0)$. Let $B = \\{1, x, x^2\\}$ be the standard basis of $P_2$ and $C = \\{1, x\\}$ be the standard basis of $P_1$. Find the matrix $[T]_{C \\leftarrow B}$.`,
+          `设 $T: P_2 \\to P_1$ 为由 $T(p) = ${a} p'(x) ${bTerm} p(0)$ 定义的线性映射。设 $B = \\{1, x, x^2\\}$ 为 $P_2$ 的标准基，$C = \\{1, x\\}$ 为 $P_1$ 的标准基。求矩阵 $[T]_{C \\leftarrow B}$。`,
         );
         const right = t(`$${mLatex}$`, `$${mLatex}$`);
         const wrong = [
@@ -706,8 +846,8 @@ export const matrixOfALinearMapRelativeToTwoBases: TopicDef = {
           ),
         ];
         const solution = t(
-          `We compute the images of the basis vectors in $B$: $T(1) = ${b} = ${b}(1) + 0(x)$, $T(x) = ${a} = ${a}(1) + 0(x)$, and $T(x^2) = ${2 * a}x = 0(1) + ${2 * a}(x)$. Arranging these coordinate vectors as columns yields $[T]_{C \\leftarrow B} = ${mLatex}$.`,
-          `计算基 $B$ 中各向量的像：$T(1) = ${b} = ${b}(1) + 0(x)$，$T(x) = ${a} = ${a}(1) + 0(x)$，$T(x^2) = ${2 * a}x = 0(1) + ${2 * a}(x)$。将各坐标向量作为列构成矩阵，得到 $[T]_{C \\leftarrow B} = ${mLatex}$。`,
+          `We compute the images of the basis vectors in $B$ and express them in basis $C$: $T(1) = ${b}$ with coordinates $\\begin{pmatrix} ${b} \\\\ 0 \\end{pmatrix}$, $T(x) = ${a}$ with coordinates $\\begin{pmatrix} ${a} \\\\ 0 \\end{pmatrix}$, and $T(x^2) = ${2 * a}x$ with coordinates $\\begin{pmatrix} 0 \\\\ ${2 * a} \\end{pmatrix}$. Arranging these coordinate vectors as columns yields $[T]_{C \\leftarrow B} = ${mLatex}$.`,
+          `计算基 $B$ 中各基向量在基 $C$ 下的坐标：$T(1) = ${b}$ 的坐标为 $\\begin{pmatrix} ${b} \\\\ 0 \\end{pmatrix}$，$T(x) = ${a}$ 的坐标为 $\\begin{pmatrix} ${a} \\\\ 0 \\end{pmatrix}$，$T(x^2) = ${2 * a}x$ 的坐标为 $\\begin{pmatrix} 0 \\\\ ${2 * a} \\end{pmatrix}$。将各坐标向量按列排列，得到 $[T]_{C \\leftarrow B} = ${mLatex}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -787,28 +927,27 @@ export const calculatingTheEigenvaluesOfA2x2Matrix: TopicDef = {
         "利用矩阵的迹和行列式求解 2x2 矩阵的实特征值。",
       ),
       generate: (rng: Rng): Problem => {
-        const l1 = rng.int(-4, 2);
+        const l1 = rng.int(-5, 2);
         const l2 = rng.int(l1 + 1, 6);
-        // Create matrix with integer eigenvalues l1, l2:
-        // A = [[l1, k], [0, l2]]
-        const k = rng.pick([-3, -2, -1, 1, 2, 3])!;
+        const k = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4])!;
         const mat: Mat2 = [
           [l1, k],
           [0, l2],
         ];
-        const prompt = t(`Find the eigenvalues of the matrix $A = ${mat2Latex(mat)}$.`, `求矩阵 $A = ${mat2Latex(mat)}$ 的特征值。`);
-        const right = t(`$\\lambda_1 = ${l1}, \\lambda_2 = ${l2}$`, `$\\lambda_1 = ${l1}, \\lambda_2 = ${l2}$`);
-        const wrong = [
-          t(`$\\lambda_1 = ${-l1}, \\lambda_2 = ${-l2}$`, `$\\lambda_1 = ${-l1}, \\lambda_2 = ${-l2}$`),
-          t(`$\\lambda_1 = ${l1}, \\lambda_2 = ${-l2}$`, `$\\lambda_1 = ${l1}, \\lambda_2 = ${-l2}$`),
-          t(`$\\lambda_1 = ${l1 - 1}, \\lambda_2 = ${l2 + 1}$`, `$\\lambda_1 = ${l1 - 1}, \\lambda_2 = ${l2 + 1}$`),
-          t(`$\\lambda_1 = 0, \\lambda_2 = ${l1 + l2}$`, `$\\lambda_1 = 0, \\lambda_2 = ${l1 + l2}$`),
-        ];
+        const prompt = t(
+          `Find all real eigenvalues of the matrix $A = ${mat2Latex(mat)}$. Enter the eigenvalues separated by commas.`,
+          `求矩阵 $A = ${mat2Latex(mat)}$ 的所有实特征值。若有多个特征值，请用逗号分隔。`,
+        );
         const solution = t(
-          `Since $A$ is an upper triangular matrix, its eigenvalues are simply the entries on the main diagonal: $\\lambda_1 = ${l1}$ and $\\lambda_2 = ${l2}$.`,
+          `Since $A$ is an upper triangular matrix, its eigenvalues are the diagonal entries: $\\lambda_1 = ${l1}$ and $\\lambda_2 = ${l2}$.`,
           `因为 $A$ 是上三角矩阵，所以它的特征值就是主对角线上的元素：$\\lambda_1 = ${l1}$ 且 $\\lambda_2 = ${l2}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return solutionsProblem({
+          prompt,
+          values: [String(l1), String(l2)],
+          solution,
+          wrong: [[String(-l1), String(-l2)], [String(l1), String(-l2)], [String(-l1), String(l2)], [String(l1)], [String(l2)]],
+        });
       },
     },
   ],
@@ -834,35 +973,38 @@ export const calculatingTheEigenvectorsOfA2x2Matrix: TopicDef = {
         "求解 2x2 矩阵方程 (A - lambda I)v = 0 的非零解。",
       ),
       generate: (rng: Rng): Problem => {
-        const l1 = rng.int(-3, 3);
-        const l2 = rng.pick([-5, -4, 4, 5])!;
-        const b = rng.pick([-3, -2, -1, 1, 2, 3])!;
-        // A = [[l1, b], [0, l2]]
-        // For lambda = l2: (A - l2 I)v = 0
-        // [[l1 - l2, b], [0, 0]] [x, y]^T = 0
-        // (l1 - l2) x + b y = 0 => x = b, y = l2 - l1
-        const vx = b;
-        const vy = l2 - l1;
+        const l1 = rng.int(-4, 4);
+        const diff = rng.int(1, 5);
+        const l2 = l1 + diff;
+        const m = rng.pick([-3, -2, -1, 1, 2, 3])!;
+        const b = m * diff;
         const mat: Mat2 = [
           [l1, b],
           [0, l2],
         ];
         const prompt = t(
-          `For the matrix $A = ${mat2Latex(mat)}$, which of the following is an eigenvector corresponding to the eigenvalue $\\lambda = ${l2}$?`,
-          `对于矩阵 $A = ${mat2Latex(mat)}$，下列哪个向量是对应特征值 $\\lambda = ${l2}$ 的特征向量？`,
+          `For the matrix $A = ${mat2Latex(mat)}$, find an eigenvector $\\mathbf{v} = \\langle x, 1 \\rangle$ (with second component $1$) corresponding to the eigenvalue $\\lambda = ${l2}$.`,
+          `对于矩阵 $A = ${mat2Latex(mat)}$，求对应于特征值 $\\lambda = ${l2}$ 且第二分量为 $1$ 的特征向量 $\\mathbf{v} = \\langle x, 1 \\rangle$。`,
         );
-        const right = t(`$${vec2Latex([vx, vy])}$`, `$${vec2Latex([vx, vy])}$`);
-        const wrong = [
-          t(`$${vec2Latex([-vx, vy])}$`, `$${vec2Latex([-vx, vy])}$`),
-          t(`$${vec2Latex([1, 0])}$`, `$${vec2Latex([1, 0])}$`),
-          t(`$${vec2Latex([vy, vx])}$`, `$${vec2Latex([vy, vx])}$`),
-          t(`$${vec2Latex([0, 1])}$`, `$${vec2Latex([0, 1])}$`),
-        ];
+        const rowEq = formatLinearComb2(l1 - l2, "x", b, "y");
+        const xTerm = l1 - l2 === -1 ? "-x" : `${l1 - l2}x`;
         const solution = t(
-          `We solve $(A - ${l2} I)v = 0$: $\\begin{pmatrix} ${l1 - l2} & ${b} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$. This gives $(${l1 - l2})x + ${b}y = 0$, so choosing $y = ${vy}$ gives $x = ${vx}$. Thus, $v = ${vec2Latex([vx, vy])}$ is an eigenvector.`,
-          `求解方程 $(A - ${l2} I)v = 0$：$\\begin{pmatrix} ${l1 - l2} & ${b} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$。得到 $(${l1 - l2})x + ${b}y = 0$，取 $y = ${vy}$ 可得 $x = ${vx}$。因此 $v = ${vec2Latex([vx, vy])}$ 是特征向量。`,
+          `We solve $(A${formatShift(l2, "I")})\\mathbf{v} = \\mathbf{0}$: $\\begin{pmatrix} ${l1 - l2} & ${b} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$. This gives $${rowEq} = 0$. Setting $y = 1$ yields $${xTerm} = ${-b}$, so $x = ${m}$. Thus, $\\mathbf{v} = \\langle ${m}, 1 \\rangle$.`,
+          `求解方程 $(A${formatShift(l2, "I")})\\mathbf{v} = \\mathbf{0}$：$\\begin{pmatrix} ${l1 - l2} & ${b} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$。得到 $${rowEq} = 0$。取 $y = 1$ 可得 $${xTerm} = ${-b}$，解得 $x = ${m}$。因此 $\\mathbf{v} = \\langle ${m}, 1 \\rangle$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: [m, 1],
+          vector: true,
+          solution,
+          wrong: [
+            [-m, 1],
+            [m, -1],
+            [1, m],
+            [0, 1],
+            [1, 0],
+          ],
+        });
       },
     },
   ],
@@ -898,25 +1040,22 @@ export const characteristicEquationOfAMatrix: TopicDef = {
           [a, b],
           [c, d],
         ];
-        const formatEq = (tVal: number, dVal: number) => {
-          const tPart = tVal === 0 ? "" : tVal > 0 ? ` - ${tVal}\\lambda` : ` + ${-tVal}\\lambda`;
-          const dPart = dVal === 0 ? "" : dVal > 0 ? ` + ${dVal}` : ` - ${-dVal}`;
-          return `\\lambda^2${tPart}${dPart} = 0`;
-        };
         const prompt = t(
           `Find the characteristic equation of the matrix $A = ${mat2Latex(mat)}$.`,
           `求矩阵 $A = ${mat2Latex(mat)}$ 的特征方程。`,
         );
-        const right = t(`$${formatEq(tr, det)}$`, `$${formatEq(tr, det)}$`);
+        const right = t(`$${formatCharEq(tr, det)}$`, `$${formatCharEq(tr, det)}$`);
         const wrong = [
-          t(`$${formatEq(-tr, det)}$`, `$${formatEq(-tr, det)}$`),
-          t(`$${formatEq(tr, -det)}$`, `$${formatEq(tr, -det)}$`),
-          t(`$${formatEq(-tr, -det)}$`, `$${formatEq(-tr, -det)}$`),
-          t(`$${formatEq(tr + 1, det)}$`, `$${formatEq(tr + 1, det)}$`),
+          t(`$${formatCharEq(-tr, det)}$`, `$${formatCharEq(-tr, det)}$`),
+          t(`$${formatCharEq(tr, -det)}$`, `$${formatCharEq(tr, -det)}$`),
+          t(`$${formatCharEq(-tr, -det)}$`, `$${formatCharEq(-tr, -det)}$`),
+          t(`$${formatCharEq(tr + 1, det)}$`, `$${formatCharEq(tr + 1, det)}$`),
         ];
+        const trText =
+          a === 0 && d === 0 ? "0" : d === 0 ? `${a}` : a === 0 ? `${d}` : `${d >= 0 ? `${a} + ${d}` : `${a} - ${-d}`} = ${tr}`;
         const solution = t(
-          `The characteristic equation for a $2 \\times 2$ matrix is $\\det(A - \\lambda I) = \\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$. Here $\\operatorname{tr}(A) = ${a} + ${d} = ${tr}$ and $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$, giving $${formatEq(tr, det)}$.`,
-          `$2 \\times 2$ 矩阵的特征方程为 $\\det(A - \\lambda I) = \\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$。这里 $\\operatorname{tr}(A) = ${a} + ${d} = ${tr}$ 且 $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$，得到 $${formatEq(tr, det)}$。`,
+          `The characteristic equation for a $2 \\times 2$ matrix is $\\det(A - \\lambda I) = \\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$. Here $\\operatorname{tr}(A) = ${trText}$ and $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$, giving $${formatCharEq(tr, det)}$.`,
+          `$2 \\times 2$ 矩阵的特征方程为 $\\det(A - \\lambda I) = \\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$。这里 $\\operatorname{tr}(A) = ${trText}$ 且 $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$，得到 $${formatCharEq(tr, det)}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -946,25 +1085,21 @@ export const cayleyHamiltonTheorem: TopicDef = {
       generate: (rng: Rng): Problem => {
         const tr = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5])!;
         const det = rng.pick([-7, -6, -5, 5, 6, 7])!;
-        const formatComb = (tVal: number, dVal: number) => {
-          const tStr = `${tVal}A`;
-          const dStr = dVal > 0 ? ` - ${dVal}I` : ` + ${-dVal}I`;
-          return `${tStr}${dStr}`;
-        };
+        const charEq = formatCharEq(tr, det);
         const prompt = t(
-          `Let $A$ be a $2 \\times 2$ matrix with characteristic equation $\\lambda^2 - ${tr}\\lambda + ${det} = 0$. By the Cayley-Hamilton theorem, express $A^2$ as a linear combination of $A$ and the identity matrix $I$.`,
-          `设 $A$ 为 $2 \\times 2$ 矩阵，其特征方程为 $\\lambda^2 - ${tr}\\lambda + ${det} = 0$。根据凯莱-哈密顿定理，将 $A^2$ 表示为 $A$ 与单位矩阵 $I$ 的线性组合。`,
+          `Let $A$ be a $2 \\times 2$ matrix with characteristic equation $${charEq}$. By the Cayley-Hamilton theorem, express $A^2$ as a linear combination of $A$ and the identity matrix $I$.`,
+          `设 $A$ 为 $2 \\times 2$ 矩阵，其特征方程为 $${charEq}$。根据凯莱-哈密顿定理，将 $A^2$ 表示为 $A$ 与单位矩阵 $I$ 的线性组合。`,
         );
-        const right = t(`$A^2 = ${formatComb(tr, det)}$`, `$A^2 = ${formatComb(tr, det)}$`);
+        const right = t(`$A^2 = ${formatCayleyComb(tr, det)}$`, `$A^2 = ${formatCayleyComb(tr, det)}$`);
         const wrong = [
-          t(`$A^2 = ${formatComb(-tr, det)}$`, `$A^2 = ${formatComb(-tr, det)}$`),
-          t(`$A^2 = ${formatComb(tr, -det)}$`, `$A^2 = ${formatComb(tr, -det)}$`),
-          t(`$A^2 = ${formatComb(-tr, -det)}$`, `$A^2 = ${formatComb(-tr, -det)}$`),
-          t(`$A^2 = A + ${det}I$`, `$A^2 = A + ${det}I$`),
+          t(`$A^2 = ${formatCayleyComb(-tr, det)}$`, `$A^2 = ${formatCayleyComb(-tr, det)}$`),
+          t(`$A^2 = ${formatCayleyComb(tr, -det)}$`, `$A^2 = ${formatCayleyComb(tr, -det)}$`),
+          t(`$A^2 = ${formatCayleyComb(-tr, -det)}$`, `$A^2 = ${formatCayleyComb(-tr, -det)}$`),
+          t(`$A^2 = ${formatCayleyComb(1, det)}$`, `$A^2 = ${formatCayleyComb(1, det)}$`),
         ];
         const solution = t(
-          `The Cayley-Hamilton theorem states that a matrix satisfies its own characteristic equation: $A^2 - ${tr}A + ${det}I = 0$. Solving for $A^2$ gives $A^2 = ${formatComb(tr, det)}$.`,
-          `凯莱-哈密顿定理指出方阵满足其自身的特征方程：$A^2 - ${tr}A + ${det}I = 0$。解出 $A^2$ 得到 $A^2 = ${formatComb(tr, det)}$。`,
+          `The Cayley-Hamilton theorem states that a matrix satisfies its own characteristic equation: $A^2 ${formatShift(tr, "A")}${formatShift(-det, "I")} = 0$. Solving for $A^2$ gives $A^2 = ${formatCayleyComb(tr, det)}$.`,
+          `凯莱-哈密顿定理指出方阵满足其自身的特征方程：$A^2 ${formatShift(tr, "A")}${formatShift(-det, "I")} = 0$。解出 $A^2$ 得到 $A^2 = ${formatCayleyComb(tr, det)}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -1004,21 +1139,25 @@ export const calculatingTheEigenvectorsOfA3x3MatrixWithDistinctEigenvalues: Topi
           [0, 0, l3],
         ];
         const prompt = t(
-          `The upper triangular matrix $A = ${mat3Latex(mat)}$ has distinct eigenvalues $\\lambda_1 = ${l1}$, $\\lambda_2 = ${l2}$, and $\\lambda_3 = ${l3}$. Which of the following vectors is an eigenvector corresponding to $\\lambda_1 = ${l1}$?`,
-          `上三角矩阵 $A = ${mat3Latex(mat)}$ 具有相异特征值 $\\lambda_1 = ${l1}$、$\\lambda_2 = ${l2}$ 与 $\\lambda_3 = ${l3}$。下列哪个向量是对应 $\\lambda_1 = ${l1}$ 的特征向量？`,
+          `The upper triangular matrix $A = ${mat3Latex(mat)}$ has distinct eigenvalues $\\lambda_1 = ${l1}$, $\\lambda_2 = ${l2}$, and $\\lambda_3 = ${l3}$. Find the eigenvector $\\mathbf{v} = \\langle x_1, x_2, x_3 \\rangle$ corresponding to $\\lambda_1 = ${l1}$ whose first non-zero component is $1$.`,
+          `上三角矩阵 $A = ${mat3Latex(mat)}$ 具有相异特征值 $\\lambda_1 = ${l1}$、$\\lambda_2 = ${l2}$ 与 $\\lambda_3 = ${l3}$。求对应于 $\\lambda_1 = ${l1}$ 且首个非零分量为 $1$ 的特征向量 $\\mathbf{v} = \\langle x_1, x_2, x_3 \\rangle$。`,
         );
-        const right = t(`$${vec3Latex([1, 0, 0])}$`, `$${vec3Latex([1, 0, 0])}$`);
-        const wrong = [
-          t(`$${vec3Latex([0, 1, 0])}$`, `$${vec3Latex([0, 1, 0])}$`),
-          t(`$${vec3Latex([0, 0, 1])}$`, `$${vec3Latex([0, 0, 1])}$`),
-          t(`$${vec3Latex([1, 1, 0])}$`, `$${vec3Latex([1, 1, 0])}$`),
-          t(`$${vec3Latex([1, 0, 1])}$`, `$${vec3Latex([1, 0, 1])}$`),
-        ];
         const solution = t(
-          `Since $A$ is upper triangular, $A e_1 = A ${vec3Latex([1, 0, 0])} = ${vec3Latex([l1, 0, 0])} = ${l1} e_1$. Thus, $e_1 = ${vec3Latex([1, 0, 0])}$ is an eigenvector corresponding to $\\lambda_1 = ${l1}$.`,
-          `因为 $A$ 是上三角矩阵，计算可知 $A e_1 = A ${vec3Latex([1, 0, 0])} = ${vec3Latex([l1, 0, 0])} = ${l1} e_1$。因此 $e_1 = ${vec3Latex([1, 0, 0])}$ 是对应 $\\lambda_1 = ${l1}$ 的特征向量。`,
+          `Since $A$ is upper triangular, $A e_1 = A ${vec3Latex([1, 0, 0])} = ${vec3Latex([l1, 0, 0])} = ${l1} e_1$. Thus, $\\mathbf{v} = \\langle 1, 0, 0 \\rangle$ is the eigenvector corresponding to $\\lambda_1 = ${l1}$.`,
+          `因为 $A$ 是上三角矩阵，计算可知 $A e_1 = A ${vec3Latex([1, 0, 0])} = ${vec3Latex([l1, 0, 0])} = ${l1} e_1$。因此 $\\mathbf{v} = \\langle 1, 0, 0 \\rangle$ 是对应 $\\lambda_1 = ${l1}$ 的特征向量。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: [1, 0, 0],
+          vector: true,
+          solution,
+          wrong: [
+            [0, 1, 0],
+            [0, 0, 1],
+            [1, 1, 0],
+            [1, 0, 1],
+          ],
+        });
       },
     },
   ],
@@ -1061,15 +1200,16 @@ export const calculatingTheEigenvectorsOfA3x3MatrixInTheGeneralCase: TopicDef = 
           `For the matrix $A = ${mat3Latex(mat)}$, the eigenvalue $\\lambda = ${lambda}$ has algebraic multiplicity $2$. What is the geometric multiplicity of $\\lambda = ${lambda}$?`,
           `对于矩阵 $A = ${mat3Latex(mat)}$，特征值 $\\lambda = ${lambda}$ 的代数重数为 $2$。求 $\\lambda = ${lambda}$ 的几何重数。`,
         );
+        const shiftStr = formatShift(lambda, "I");
         const solution = t(
-          `The geometric multiplicity is $\\dim(\\ker(A - ${lambda} I)) = 3 - \\operatorname{rank}(A - ${lambda} I)$. Here $A - ${lambda} I = ${mat3Latex(
+          `The geometric multiplicity is $\\dim(\\ker(A${shiftStr})) = 3 - \\operatorname{rank}(A${shiftStr})$. Here $A${shiftStr} = ${mat3Latex(
             [
               [0, a, 0],
               [0, 0, 0],
               [0, 0, mu - lambda],
             ],
           )}$, which has rank ${3 - expectedGeoMult}. Therefore, the geometric multiplicity is $3 - ${3 - expectedGeoMult} = ${expectedGeoMult}$.`,
-          `几何重数为 $\\dim(\\ker(A - ${lambda} I)) = 3 - \\operatorname{rank}(A - ${lambda} I)$。这里 $A - ${lambda} I = ${mat3Latex([
+          `几何重数为 $\\dim(\\ker(A${shiftStr})) = 3 - \\operatorname{rank}(A${shiftStr})$。这里 $A${shiftStr} = ${mat3Latex([
             [0, a, 0],
             [0, 0, 0],
             [0, 0, mu - lambda],
@@ -1106,25 +1246,23 @@ export const invertibleMatrixTheoremInTermsOfEigenvalues: TopicDef = {
         "将矩阵的可逆性与其特征值谱中不含零联系起来。",
       ),
       generate: (rng: Rng): Problem => {
-        const l1 = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
-        const l2 = rng.pick([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6]);
+        const l1 = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9])!;
         const n = rng.int(2, 6);
         const prompt = t(
-          `Let $A$ be an invertible $${n} \\times ${n}$ matrix with known eigenvalue $\\lambda = ${l1}$. What is guaranteed to be an eigenvalue of $A^{-1}$?`,
-          `设 $A$ 为可逆的 $${n} \\times ${n}$ 矩阵，已知其具有特征值 $\\lambda = ${l1}$。则 $A^{-1}$ 必然具有哪个特征值？`,
+          `Let $A$ be an invertible $${n} \\times ${n}$ matrix with known eigenvalue $\\lambda = ${l1}$. What is the corresponding eigenvalue of $A^{-1}$?`,
+          `设 $A$ 为可逆的 $${n} \\times ${n}$ 矩阵，已知其具有特征值 $\\lambda = ${l1}$。求 $A^{-1}$ 对应的特征值。`,
         );
-        const right = t(`$\\frac{1}{${l1}}$`, `$\\frac{1}{${l1}}$`);
-        const wrong = [
-          t(`$${-l1}$`, `$${-l1}$`),
-          t(`$${l1}$`, `$${l1}$`),
-          t(`$0$`, `$0$`),
-          t(`$\\frac{1}{${l2 === l1 ? l1 + 1 : l2}}$`, `$\\frac{1}{${l2 === l1 ? l1 + 1 : l2}}$`),
-        ];
+        const ans = Q.of(1, l1);
         const solution = t(
-          `If $Av = \\lambda v$ with $\\lambda \\neq 0$, multiplying both sides by $A^{-1}$ gives $v = \\lambda A^{-1} v$, so $A^{-1} v = \\frac{1}{\\lambda} v$. Thus, $\\frac{1}{${l1}}$ is guaranteed to be an eigenvalue of $A^{-1}$.`,
-          `若 $Av = \\lambda v$ 且 $\\lambda \\neq 0$，两边同乘 $A^{-1}$ 得到 $v = \\lambda A^{-1} v$，即 $A^{-1} v = \\frac{1}{\\lambda} v$。因此 $\\frac{1}{${l1}}$ 必然是 $A^{-1}$ 的特征值。`,
+          `If $A\\mathbf{v} = \\lambda \\mathbf{v}$ with $\\lambda = ${l1} \\neq 0$, multiplying both sides by $A^{-1}$ yields $\\mathbf{v} = \\lambda A^{-1}\\mathbf{v}$, so $A^{-1}\\mathbf{v} = \\frac{1}{\\lambda}\\mathbf{v}$. Thus, the eigenvalue of $A^{-1}$ is $\\frac{1}{${l1}} = ${ans.toLatex()}$.`,
+          `若 $A\\mathbf{v} = \\lambda \\mathbf{v}$ 且 $\\lambda = ${l1} \\neq 0$，两边同乘 $A^{-1}$ 可得 $\\mathbf{v} = \\lambda A^{-1}\\mathbf{v}$，即 $A^{-1}\\mathbf{v} = \\frac{1}{\\lambda}\\mathbf{v}$。因此 $A^{-1}$ 对应的特征值为 $\\frac{1}{${l1}} = ${ans.toLatex()}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return numberProblem({
+          prompt,
+          answer: ans,
+          solution,
+          wrong: [Q.of(-1, l1), Q.of(l1), Q.of(-l1), Q.zero],
+        });
       },
     },
   ],
@@ -1451,26 +1589,27 @@ export const diagonalizingA3x3MatrixInTheGeneralCase: TopicDef = {
               t("Yes, because it has 3 distinct eigenvalues", "是，因为其具有 3 个互异特征值"),
               t("No, because its trace is non-zero", "否，因为其迹非零"),
             ];
+        const shiftStr = formatShift(lambda, "I");
         const solution = isDiag
           ? t(
-              `The eigenvalue $\\lambda = ${lambda}$ has algebraic multiplicity 2. Since $A - ${lambda} I = ${mat3Latex([
+              `The eigenvalue $\\lambda = ${lambda}$ has algebraic multiplicity 2. Since $A${shiftStr} = ${mat3Latex([
                 [0, 0, 0],
                 [0, 0, 0],
                 [0, 0, mu - lambda],
               ])}$ has rank 1, its nullity is $3 - 1 = 2$. Since geometric multiplicity equals algebraic multiplicity for all eigenvalues, $A$ is diagonalizable.`,
-              `特征值 $\\lambda = ${lambda}$ 的代数重数为 2。因为 $A - ${lambda} I = ${mat3Latex([
+              `特征值 $\\lambda = ${lambda}$ 的代数重数为 2。因为 $A${shiftStr} = ${mat3Latex([
                 [0, 0, 0],
                 [0, 0, 0],
                 [0, 0, mu - lambda],
               ])}$ 的秩为 1，零度为 $3 - 1 = 2$。所有特征值的几何重数均等于代数重数，因此 $A$ 可对角化。`,
             )
           : t(
-              `The eigenvalue $\\lambda = ${lambda}$ has algebraic multiplicity 2. Since $A - ${lambda} I = ${mat3Latex([
+              `The eigenvalue $\\lambda = ${lambda}$ has algebraic multiplicity 2. Since $A${shiftStr} = ${mat3Latex([
                 [0, a, 0],
                 [0, 0, 0],
                 [0, 0, mu - lambda],
               ])}$ has rank 2, its nullity (geometric multiplicity) is only $3 - 2 = 1 < 2$. Hence, $A$ is not diagonalizable.`,
-              `特征值 $\\lambda = ${lambda}$ 的代数重数为 2。因为 $A - ${lambda} I = ${mat3Latex([
+              `特征值 $\\lambda = ${lambda}$ 的代数重数为 2。因为 $A${shiftStr} = ${mat3Latex([
                 [0, a, 0],
                 [0, 0, 0],
                 [0, 0, mu - lambda],
@@ -1510,38 +1649,50 @@ export const vectorsOverTheComplexNumbers: TopicDef = {
         const b = rng.pick([-5, -4, -3, 3, 4, 5])!;
         const c = rng.int(-6, 6);
         const d = rng.pick([-5, -4, -3, 3, 4, 5])!;
-        const vStr: readonly [string, string] = [`${a} ${b >= 0 ? `+ ${b}i` : `- ${-b}i`}`, `${c} ${d >= 0 ? `+ ${d}i` : `- ${-d}i`}`];
+        const vStr: readonly [string, string] = [formatComplex(a, b), formatComplex(c, d)];
+        const askRe = rng.bool();
+        if (askRe) {
+          const prompt = t(
+            `Let $\\mathbf{v} = ${vec2Latex(vStr)} \\in \\mathbb{C}^2$. What is the real part $\\operatorname{Re}(\\mathbf{v})$? Enter your answer as a vector $\\langle x_1, x_2 \\rangle$.`,
+            `设 $\\mathbf{v} = ${vec2Latex(vStr)} \\in \\mathbb{C}^2$。求其实部 $\\operatorname{Re}(\\mathbf{v})$。请以向量 $\\langle x_1, x_2 \\rangle$ 的形式作答。`,
+          );
+          const solution = t(
+            `The real part takes the real components: $\\operatorname{Re}(\\mathbf{v}) = \\langle ${a}, ${c} \\rangle$.`,
+            `实部取各分量的实部：$\\operatorname{Re}(\\mathbf{v}) = \\langle ${a}, ${c} \\rangle$。`,
+          );
+          return pointProblem({
+            prompt,
+            answer: [a, c],
+            vector: true,
+            solution,
+            wrong: [
+              [b, d],
+              [-a, -c],
+              [a, b],
+              [c, d],
+            ],
+          });
+        }
         const prompt = t(
-          `Let $v = ${vec2Latex(vStr)} \\in \\mathbb{C}^2$. What are the real part $\\operatorname{Re}(v)$ and imaginary part $\\operatorname{Im}(v)$ of $v$?`,
-          `设 $v = ${vec2Latex(vStr)} \\in \\mathbb{C}^2$。求 $v$ 的实部 $\\operatorname{Re}(v)$ 与虚部 $\\operatorname{Im}(v)$。`,
+          `Let $\\mathbf{v} = ${vec2Latex(vStr)} \\in \\mathbb{C}^2$. What is the imaginary part $\\operatorname{Im}(\\mathbf{v})$? Enter your answer as a vector $\\langle y_1, y_2 \\rangle$.`,
+          `设 $\\mathbf{v} = ${vec2Latex(vStr)} \\in \\mathbb{C}^2$。求其虚部 $\\operatorname{Im}(\\mathbf{v})$。请以向量 $\\langle y_1, y_2 \\rangle$ 的形式作答。`,
         );
-        const right = t(
-          `$\\operatorname{Re}(v) = ${vec2Latex([a, c])}, \\; \\operatorname{Im}(v) = ${vec2Latex([b, d])}$`,
-          `$\\operatorname{Re}(v) = ${vec2Latex([a, c])}, \\; \\operatorname{Im}(v) = ${vec2Latex([b, d])}$`,
-        );
-        const wrong = [
-          t(
-            `$\\operatorname{Re}(v) = ${vec2Latex([b, d])}, \\; \\operatorname{Im}(v) = ${vec2Latex([a, c])}$`,
-            `$\\operatorname{Re}(v) = ${vec2Latex([b, d])}, \\; \\operatorname{Im}(v) = ${vec2Latex([a, c])}$`,
-          ),
-          t(
-            `$\\operatorname{Re}(v) = ${vec2Latex([a, c])}, \\; \\operatorname{Im}(v) = ${vec2Latex([-b, -d])}$`,
-            `$\\operatorname{Re}(v) = ${vec2Latex([a, c])}, \\; \\operatorname{Im}(v) = ${vec2Latex([-b, -d])}$`,
-          ),
-          t(
-            `$\\operatorname{Re}(v) = ${vec2Latex([a, b])}, \\; \\operatorname{Im}(v) = ${vec2Latex([c, d])}$`,
-            `$\\operatorname{Re}(v) = ${vec2Latex([a, b])}, \\; \\operatorname{Im}(v) = ${vec2Latex([c, d])}$`,
-          ),
-          t(
-            `$\\operatorname{Re}(v) = ${vec2Latex([-a, -c])}, \\; \\operatorname{Im}(v) = ${vec2Latex([b, d])}$`,
-            `$\\operatorname{Re}(v) = ${vec2Latex([-a, -c])}, \\; \\operatorname{Im}(v) = ${vec2Latex([b, d])}$`,
-          ),
-        ];
         const solution = t(
-          `The real part takes the real components: $\\operatorname{Re}(v) = ${vec2Latex([a, c])}$, and the imaginary part takes the coefficients of $i$: $\\operatorname{Im}(v) = ${vec2Latex([b, d])}$.`,
-          `实部取各分量的实部：$\\operatorname{Re}(v) = ${vec2Latex([a, c])}$，虚部取各分量中 $i$ 的系数：$\\operatorname{Im}(v) = ${vec2Latex([b, d])}$。`,
+          `The imaginary part takes the coefficients of $i$: $\\operatorname{Im}(\\mathbf{v}) = \\langle ${b}, ${d} \\rangle$.`,
+          `虚部取各分量中 $i$ 的系数：$\\operatorname{Im}(\\mathbf{v}) = \\langle ${b}, ${d} \\rangle$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: [b, d],
+          vector: true,
+          solution,
+          wrong: [
+            [a, c],
+            [-b, -d],
+            [a, b],
+            [c, d],
+          ],
+        });
       },
     },
   ],
@@ -1569,15 +1720,19 @@ export const matricesOverTheComplexNumbers: TopicDef = {
       generate: (rng: Rng): Problem => {
         const a = rng.int(-3, 3);
         const b = rng.pick([-4, -3, 3, 4])!;
-        const c = rng.int(-3, 3);
+        const c = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4])!;
         const d = rng.pick([-4, -3, 3, 4])!;
+        const biStr = formatComplex(0, b);
+        const ciStr = formatComplex(0, c);
+        const negCiStr = formatComplex(0, -c);
+        const negBiStr = formatComplex(0, -b);
         const mStr: readonly [readonly [string, string], readonly [string, string]] = [
-          [`${a}`, `${b}i`],
-          [`${c}i`, `${d}`],
+          [`${a}`, biStr],
+          [ciStr, `${d}`],
         ];
         const mAdjStr: readonly [readonly [string, string], readonly [string, string]] = [
-          [`${a}`, `${-c}i`],
-          [`${-b}i`, `${d}`],
+          [`${a}`, negCiStr],
+          [negBiStr, `${d}`],
         ];
         const prompt = t(
           `Find the conjugate transpose (Hermitian adjoint) $A^* = \\overline{A}^T$ of the matrix $A = ${mat2StrLatex(mStr)}$.`,
@@ -1597,32 +1752,32 @@ export const matricesOverTheComplexNumbers: TopicDef = {
           ),
           t(
             `$${mat2StrLatex([
-              [`${a}`, `${-b}i`],
-              [`${-c}i`, `${d}`],
+              [`${a}`, negBiStr],
+              [negCiStr, `${d}`],
             ])}$`,
             `$${mat2StrLatex([
-              [`${a}`, `${-b}i`],
-              [`${-c}i`, `${d}`],
-            ])}$`,
-          ),
-          t(
-            `$${mat2StrLatex([
-              [`${-a}`, `${c}i`],
-              [`${b}i`, `${-d}`],
-            ])}$`,
-            `$${mat2StrLatex([
-              [`${-a}`, `${c}i`],
-              [`${b}i`, `${-d}`],
+              [`${a}`, negBiStr],
+              [negCiStr, `${d}`],
             ])}$`,
           ),
           t(
             `$${mat2StrLatex([
-              [`${a}`, `${b}i`],
-              [`${c}i`, `${d}`],
+              [`${-a}`, ciStr],
+              [biStr, `${-d}`],
             ])}$`,
             `$${mat2StrLatex([
-              [`${a}`, `${b}i`],
-              [`${c}i`, `${d}`],
+              [`${-a}`, ciStr],
+              [biStr, `${-d}`],
+            ])}$`,
+          ),
+          t(
+            `$${mat2StrLatex([
+              [`${a}`, biStr],
+              [ciStr, `${d}`],
+            ])}$`,
+            `$${mat2StrLatex([
+              [`${a}`, biStr],
+              [ciStr, `${d}`],
             ])}$`,
           ),
         ];
@@ -1663,17 +1818,19 @@ export const findingComplexEigenvaluesOfReal2x2Matrices: TopicDef = {
           [a, -b],
           [b, a],
         ];
+        const eigPair = formatComplexPair(a, b);
         const prompt = t(`Find the eigenvalues of the real matrix $A = ${mat2Latex(mat)}$.`, `求实矩阵 $A = ${mat2Latex(mat)}$ 的特征值。`);
-        const right = t(`$\\lambda = ${a} \\pm ${b}i$`, `$\\lambda = ${a} \\pm ${b}i$`);
+        const right = t(`$\\lambda = ${eigPair}$`, `$\\lambda = ${eigPair}$`);
         const wrong = [
-          t(`$\\lambda = ${-a} \\pm ${b}i$`, `$\\lambda = ${-a} \\pm ${b}i$`),
-          t(`$\\lambda = ${b} \\pm ${Math.abs(a) || 1}i$`, `$\\lambda = ${b} \\pm ${Math.abs(a) || 1}i$`),
+          t(`$\\lambda = ${formatComplexPair(-a, b)}$`, `$\\lambda = ${formatComplexPair(-a, b)}$`),
+          t(`$\\lambda = ${formatComplexPair(b, Math.abs(a) || 1)}$`, `$\\lambda = ${formatComplexPair(b, Math.abs(a) || 1)}$`),
           t(`$\\lambda = ${a} \\pm ${b}$`, `$\\lambda = ${a} \\pm ${b}$`),
-          t(`$\\lambda = \\pm ${b}i$`, `$\\lambda = \\pm ${b}i$`),
+          t(`$\\lambda = ${formatComplexPair(0, b)}$`, `$\\lambda = ${formatComplexPair(0, b)}$`),
         ];
+        const aPart = a === 0 ? "\\lambda^2" : `(${formatFactor("\\lambda", a)})^2`;
         const solution = t(
-          `The characteristic equation is $\\det(A - \\lambda I) = (\\lambda - ${a})^2 + ${b}^2 = 0$. Solving gives $(\\lambda - ${a})^2 = -${b * b}$, so $\\lambda = ${a} \\pm ${b}i$.`,
-          `特征方程为 $\\det(A - \\lambda I) = (\\lambda - ${a})^2 + ${b}^2 = 0$。解得 $(\\lambda - ${a})^2 = -${b * b}$，因此 $\\lambda = ${a} \\pm ${b}i$。`,
+          `The characteristic equation is $\\det(A - \\lambda I) = ${aPart} + ${b * b} = 0$. Solving gives $${aPart} = -${b * b}$, so $\\lambda = ${eigPair}$.`,
+          `特征方程为 $\\det(A - \\lambda I) = ${aPart} + ${b * b} = 0$。解得 $${aPart} = -${b * b}$，因此 $\\lambda = ${eigPair}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -1707,9 +1864,10 @@ export const findingComplexEigenvectorsOfReal2x2Matrices: TopicDef = {
           [a, -b],
           [b, a],
         ];
+        const eigStr = formatComplex(a, -b);
         const prompt = t(
-          `For the matrix $A = ${mat2Latex(mat)}$, which of the following is an eigenvector corresponding to the eigenvalue $\\lambda = ${a} - ${b}i$?`,
-          `对于矩阵 $A = ${mat2Latex(mat)}$，下列哪个向量是对应特征值 $\\lambda = ${a} - ${b}i$ 的特征向量？`,
+          `For the matrix $A = ${mat2Latex(mat)}$, which of the following is an eigenvector corresponding to the eigenvalue $\\lambda = ${eigStr}$?`,
+          `对于矩阵 $A = ${mat2Latex(mat)}$，下列哪个向量是对应特征值 $\\lambda = ${eigStr}$ 的特征向量？`,
         );
         const right = t(`$${vec2Latex(["1", "i"])}$`, `$${vec2Latex(["1", "i"])}$`);
         const wrong = [
@@ -1718,9 +1876,11 @@ export const findingComplexEigenvectorsOfReal2x2Matrices: TopicDef = {
           t(`$${vec2Latex(["i", "1"])}$`, `$${vec2Latex(["i", "1"])}$`),
           t(`$${vec2Latex(["-1", "i"])}$`, `$${vec2Latex(["-1", "i"])}$`),
         ];
+        const biStr = formatComplex(0, b);
+        const v2Term = b === 1 ? "v_2" : `${b} v_2`;
         const solution = t(
-          `We solve $(A - (${a} - ${b}i)I)v = 0$: $\\begin{pmatrix} ${b}i & -${b} \\\\ ${b} & ${b}i \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$. The first row gives ${b}i v_1 - ${b} v_2 = 0$, so $v_2 = i v_1$. Choosing $v_1 = 1$ gives $v = ${vec2Latex(["1", "i"])}$.`,
-          `求解方程 $(A - (${a} - ${b}i)I)v = 0$：$\\begin{pmatrix} ${b}i & -${b} \\\\ ${b} & ${b}i \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$。第一行给出 ${b}i v_1 - ${b} v_2 = 0$，即 $v_2 = i v_1$。取 $v_1 = 1$ 可得 $v = ${vec2Latex(["1", "i"])}$。`,
+          `We solve $(A - (${eigStr})I)\\mathbf{v} = \\mathbf{0}$: $\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$. The first row gives ${biStr} v_1 - ${v2Term} = 0$, so $v_2 = i v_1$. Choosing $v_1 = 1$ gives $\\mathbf{v} = ${vec2Latex(["1", "i"])}$.`,
+          `求解方程 $(A - (${eigStr})I)\\mathbf{v} = \\mathbf{0}$：$\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$。第一行给出 ${biStr} v_1 - ${v2Term} = 0$，即 $v_2 = i v_1$。取 $v_1 = 1$ 可得 $\\mathbf{v} = ${vec2Latex(["1", "i"])}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -1748,26 +1908,28 @@ export const rotationScalingMatrices: TopicDef = {
         "计算旋转缩放矩阵缩放因子的平方 r^2 = a^2 + b^2。",
       ),
       generate: (rng: Rng): Problem => {
-        const a = rng.nonZero(-8, 8);
-        const b = rng.nonZero(-8, 8);
-        const rSq = a * a + b * b;
+        const [baseA, baseB, r] = rng.pick(pythagoreanTriples)!;
+        const signA = rng.pick([-1, 1])!;
+        const signB = rng.pick([-1, 1])!;
+        const a = signA * baseA;
+        const b = signB * baseB;
         const mat: Mat2 = [
           [a, -b],
           [b, a],
         ];
         const prompt = t(
-          `A rotation-scaling matrix has the form $C = ${mat2Latex(mat)}$. What is the square of its scaling factor $r^2 = a^2 + b^2$?`,
-          `旋转缩放矩阵具有形式 $C = ${mat2Latex(mat)}$。求其缩放因子的平方 $r^2 = a^2 + b^2$。`,
+          `A rotation-scaling matrix has the form $C = ${mat2Latex(mat)}$. What is its scaling factor $r = \\sqrt{a^2 + b^2}$?`,
+          `旋转缩放矩阵具有形式 $C = ${mat2Latex(mat)}$。求其缩放因子 $r = \\sqrt{a^2 + b^2}$。`,
         );
         const solution = t(
-          `A rotation-scaling matrix can be factored as $r \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$, where $r = \\sqrt{a^2 + b^2}$. Thus, $r^2 = (${a})^2 + (${b})^2 = ${a * a} + ${b * b} = ${rSq}$.`,
-          `旋转缩放矩阵可分解为 $r \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$，其中 $r = \\sqrt{a^2 + b^2}$。因此 $r^2 = (${a})^2 + (${b})^2 = ${a * a} + ${b * b} = ${rSq}$。`,
+          `A rotation-scaling matrix can be factored as $r \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$, where $r = \\sqrt{a^2 + b^2} = \\sqrt{(${a})^2 + (${b})^2} = \\sqrt{${a * a + b * b}} = ${r}$.`,
+          `旋转缩放矩阵可分解为 $r \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$，其中 $r = \\sqrt{a^2 + b^2} = \\sqrt{(${a})^2 + (${b})^2} = \\sqrt{${a * a + b * b}} = ${r}$。`,
         );
         return numberProblem({
           prompt,
-          answer: rSq,
+          answer: r,
           solution,
-          wrong: [a * a, b * b, Math.abs(a * b), rSq + 1].filter((w) => w !== rSq),
+          wrong: [r * r, Math.abs(a), Math.abs(b), Math.abs(a) + Math.abs(b)].filter((w) => w !== r),
         });
       },
     },
@@ -1796,9 +1958,10 @@ export const reducingReal2x2MatricesToRotationScalingForm: TopicDef = {
       generate: (rng: Rng): Problem => {
         const a = rng.int(-3, 3);
         const b = rng.int(1, 5);
+        const eigStr = formatComplex(a, -b);
         const prompt = t(
-          `Let $A$ be a real $2 \\times 2$ matrix with eigenvalue $\\lambda = ${a} - ${b}i$ and corresponding eigenvector $v = v_{\\text{re}} + i v_{\\text{im}}$. Which matrix $P$ satisfies $A = P C P^{-1}$ with $C = \\begin{pmatrix} ${a} & -${b} \\\\ ${b} & ${a} \\end{pmatrix}$?`,
-          `设 $A$ 为实 $2 \\times 2$ 矩阵，具有特征值 $\\lambda = ${a} - ${b}i$ 及对应特征向量 $v = v_{\\text{re}} + i v_{\\text{im}}$。哪个矩阵 $P$ 满足 $A = P C P^{-1}$，其中 $C = \\begin{pmatrix} ${a} & -${b} \\\\ ${b} & ${a} \\end{pmatrix}$？`,
+          `Let $A$ be a real $2 \\times 2$ matrix with eigenvalue $\\lambda = ${eigStr}$ and corresponding eigenvector $v = v_{\\text{re}} + i v_{\\text{im}}$. Which matrix $P$ satisfies $A = P C P^{-1}$ with $C = \\begin{pmatrix} ${a} & -${b} \\\\ ${b} & ${a} \\end{pmatrix}$?`,
+          `设 $A$ 为实 $2 \\times 2$ 矩阵，具有特征值 $\\lambda = ${eigStr}$ 及对应特征向量 $v = v_{\\text{re}} + i v_{\\text{im}}$。哪个矩阵 $P$ 满足 $A = P C P^{-1}$，其中 $C = \\begin{pmatrix} ${a} & -${b} \\\\ ${b} & ${a} \\end{pmatrix}$？`,
         );
         const right = t(
           `$P = \\begin{pmatrix} v_{\\text{re}} & v_{\\text{im}} \\end{pmatrix}$`,
@@ -1852,9 +2015,10 @@ export const blockDiagonalizationOfNxNMatrices: TopicDef = {
         const r1 = rng.int(-4, 4);
         const a = rng.int(1, 4);
         const b = rng.int(1, 5);
+        const eigPair = formatComplexPair(a, b);
         const prompt = t(
-          `A real $3 \\times 3$ matrix $A$ has eigenvalues $\\lambda_1 = ${r1}$ and complex conjugate pair $\\lambda_{2,3} = ${a} \\pm ${b}i$. In its real canonical block diagonal form $R = P^{-1} A P$, what are the sizes of the diagonal blocks?`,
-          `实 $3 \\times 3$ 矩阵 $A$ 具有特征值 $\\lambda_1 = ${r1}$ 以及共轭复特征值对 $\\lambda_{2,3} = ${a} \\pm ${b}i$。在其分块对角实标准型 $R = P^{-1} A P$ 中，各对角块的大小是多少？`,
+          `A real $3 \\times 3$ matrix $A$ has eigenvalues $\\lambda_1 = ${r1}$ and complex conjugate pair $\\lambda_{2,3} = ${eigPair}$. In its real canonical block diagonal form $R = P^{-1} A P$, what are the sizes of the diagonal blocks?`,
+          `实 $3 \\times 3$ 矩阵 $A$ 具有特征值 $\\lambda_1 = ${r1}$ 以及共轭复特征值对 $\\lambda_{2,3} = ${eigPair}$。在其分块对角实标准型 $R = P^{-1} A P$ 中，各对角块的大小是多少？`,
         );
         const right = t("One $1 \\times 1$ block and one $2 \\times 2$ block", "一个 $1 \\times 1$ 块和一个 $2 \\times 2$ 块");
         const wrong = [
@@ -1864,8 +2028,8 @@ export const blockDiagonalizationOfNxNMatrices: TopicDef = {
           t("Two $1 \\times 1$ blocks", "两个 $1 \\times 1$ 块"),
         ];
         const solution = t(
-          `Each real eigenvalue contributes a $1 \\times 1$ diagonal block $[${r1}]$, while each complex conjugate pair $a \\pm bi$ contributes a $2 \\times 2$ rotation-scaling block $\\begin{pmatrix} ${a} & -${b} \\\\ ${b} & ${a} \\end{pmatrix}$. Thus, the real canonical form consists of one $1 \\times 1$ block and one $2 \\times 2$ block.`,
-          `每个实特征值对应一个 $1 \\times 1$ 的对角块 $[${r1}]$，而每对共轭复特征值 $a \\pm bi$ 对应一个 $2 \\times 2$ 的旋转缩放块 $\\begin{pmatrix} ${a} & -${b} \\\\ ${b} & ${a} \\end{pmatrix}$。因此实标准型由一个 $1 \\times 1$ 块和一个 $2 \\times 2$ 块组成。`,
+          `Each real eigenvalue contributes a $1 \\times 1$ diagonal block $[${r1}]$, while the complex conjugate pair ${eigPair} contributes a $2 \\times 2$ rotation-scaling block $\\begin{pmatrix} ${a} & -${b} \\\\ ${b} & ${a} \\end{pmatrix}$. Thus, the real canonical form consists of one $1 \\times 1$ block and one $2 \\times 2$ block.`,
+          `每个实特征值对应一个 $1 \\times 1$ 的对角块 $[${r1}]$，而共轭复特征值对 ${eigPair} 对应一个 $2 \\times 2$ 的旋转缩放块 $\\begin{pmatrix} ${a} & -${b} \\\\ ${b} & ${a} \\end{pmatrix}$。因此实标准型由一个 $1 \\times 1$ 块和一个 $2 \\times 2$ 块组成。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -1953,22 +2117,23 @@ export const generalizedEigenvectors: TopicDef = {
           `Let $A$ be an $${n} \\times ${n}$ matrix with eigenvalue $\\lambda = ${lambda}$. By definition, a non-zero vector $v$ is a generalized eigenvector of rank $k = ${k}$ corresponding to $\\lambda = ${lambda}$ if and only if:`,
           `设 $A$ 为 $${n} \\times ${n}$ 矩阵，其特征值为 $\\lambda = ${lambda}$。根据定义，非零向量 $v$ 是对应于 $\\lambda = ${lambda}$ 的 $k = ${k}$ 阶广义特征向量当且仅当：`,
         );
+        const shiftStr = formatShift(lambda, "I");
         const right = t(
-          `$(A - (${lambda})I)^${k} v = 0$ and $(A - (${lambda})I)^{${k - 1}} v \\neq 0$`,
-          `$(A - (${lambda})I)^${k} v = 0$ 且 $(A - (${lambda})I)^{${k - 1}} v \\neq 0$`,
+          `$(A${shiftStr})^${k} v = 0$ and $(A${shiftStr})^{${k - 1}} v \\neq 0$`,
+          `$(A${shiftStr})^${k} v = 0$ 且 $(A${shiftStr})^{${k - 1}} v \\neq 0$`,
         );
         const wrong = [
-          t(`$(A - (${lambda})I)^${k} v = v$`, `$(A - (${lambda})I)^${k} v = v$`),
-          t(`$(A - (${lambda})I) v = ${k} v$`, `$(A - (${lambda})I) v = ${k} v$`),
+          t(`$(A${shiftStr})^${k} v = v$`, `$(A${shiftStr})^${k} v = v$`),
+          t(`$(A${shiftStr}) v = ${k} v$`, `$(A${shiftStr}) v = ${k} v$`),
           t(`$A^${k} v = (${lambda})^${k} v$`, `$A^${k} v = (${lambda})^${k} v$`),
           t(
-            `$(A - (${lambda})I)^${k} v \\neq 0$ and $(A - (${lambda})I)^{${k + 1}} v = 0$`,
-            `$(A - (${lambda})I)^${k} v \\neq 0$ 且 $(A - (${lambda})I)^{${k + 1}} v = 0$`,
+            `$(A${shiftStr})^${k} v \\neq 0$ and $(A${shiftStr})^{${k + 1}} v = 0$`,
+            `$(A${shiftStr})^${k} v \\neq 0$ 且 $(A${shiftStr})^{${k + 1}} v = 0$`,
           ),
         ];
         const solution = t(
-          `A non-zero vector $v$ is a generalized eigenvector of rank $k = ${k}$ for $\\lambda = ${lambda}$ if $(A - (${lambda})I)^${k} v = 0$ and $(A - (${lambda})I)^{${k - 1}} v \\neq 0$.`,
-          `非零向量 $v$ 是对应于 $\\lambda = ${lambda}$ 的 $k = ${k}$ 阶广义特征向量，当且仅当 $(A - (${lambda})I)^${k} v = 0$ 且 $(A - (${lambda})I)^{${k - 1}} v \\neq 0$。`,
+          `A non-zero vector $v$ is a generalized eigenvector of rank $k = ${k}$ for $\\lambda = ${lambda}$ if $(A${shiftStr})^${k} v = 0$ and $(A${shiftStr})^{${k - 1}} v \\neq 0$.`,
+          `非零向量 $v$ 是对应于 $\\lambda = ${lambda}$ 的 $k = ${k}$ 阶广义特征向量，当且仅当 $(A${shiftStr})^${k} v = 0$ 且 $(A${shiftStr})^{${k - 1}} v \\neq 0$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -2018,9 +2183,10 @@ export const ranksOfGeneralizedEigenvectors: TopicDef = {
           `For the matrix $A = ${mat3Latex(mat)}$ with eigenvalue $\\lambda = ${lambda}$, what is the rank (order) of the generalized eigenvector $v = ${vec3Latex(v)}$?`,
           `对于矩阵 $A = ${mat3Latex(mat)}$（特征值 $\\lambda = ${lambda}$），求广义特征向量 $v = ${vec3Latex(v)}$ 的阶（秩）。`,
         );
+        const shiftStr = formatShift(lambda, "I");
         const solution = t(
-          `We compute powers of $(A - ${lambda} I) = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \\end{pmatrix}$. The vector $v$ satisfies $(A - ${lambda} I)^{${rankCase}} v = 0$, while $(A - ${lambda} I)^{${rankCase - 1}} v \\neq 0$. Therefore, the rank is ${rankCase}.`,
-          `计算 $(A - ${lambda} I) = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \\end{pmatrix}$ 对向量 $v$ 的作用。可知 $(A - ${lambda} I)^{${rankCase}} v = 0$，且 $(A - ${lambda} I)^{${rankCase - 1}} v \\neq 0$。因此阶为 ${rankCase}$。`,
+          `We compute powers of $(A${shiftStr}) = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \\end{pmatrix}$. The vector $v$ satisfies $(A${shiftStr})^{${rankCase}} v = 0$, while $(A${shiftStr})^{${rankCase - 1}} v \\neq 0$. Therefore, the rank is ${rankCase}.`,
+          `计算 $(A${shiftStr}) = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \\end{pmatrix}$ 对向量 $v$ 的作用。可知 $(A${shiftStr})^{${rankCase}} v = 0$，且 $(A${shiftStr})^{${rankCase - 1}} v \\neq 0$。因此阶为 ${rankCase}$。`,
         );
         return numberProblem({
           prompt,
@@ -2053,8 +2219,8 @@ export const findingGeneralizedEigenvectorsOfSpecificRanks: TopicDef = {
         "求解 (A - lambda I)v_2 = v_1，其中 v_1 为普通特征向量。",
       ),
       generate: (rng: Rng): Problem => {
-        const lambda = rng.int(-3, 3);
-        const k = rng.pick([-3, -2, 2, 3])!;
+        const lambda = rng.int(-5, 5);
+        const k = rng.pick([-4, -3, -2, 2, 3, 4])!;
         // A = [[lambda, k], [0, lambda]]
         // (A - lambda I) = [[0, k], [0, 0]]
         // v1 = [k, 0]^T is an ordinary eigenvector.
@@ -2065,22 +2231,27 @@ export const findingGeneralizedEigenvectorsOfSpecificRanks: TopicDef = {
           [0, lambda],
         ];
         const v1: Vec2 = [k, 0];
+        const shiftStr = formatShift(lambda, "I");
         const prompt = t(
-          `Let $A = ${mat2Latex(mat)}$ have eigenvalue $\\lambda = ${lambda}$ with eigenvector $v_1 = ${vec2Latex(v1)}$. Which vector $v_2$ satisfies $(A - ${lambda} I)v_2 = v_1$, forming a Jordan chain of generalized eigenvectors?`,
-          `设 $A = ${mat2Latex(mat)}$ 具有特征值 $\\lambda = ${lambda}$，其特征向量为 $v_1 = ${vec2Latex(v1)}$。下列哪个向量 $v_2$ 满足 $(A - ${lambda} I)v_2 = v_1$，从而构成广义特征向量的若尔当链？`,
+          `Let $A = ${mat2Latex(mat)}$ have eigenvalue $\\lambda = ${lambda}$ with eigenvector $v_1 = ${vec2Latex(v1)}$. Find a rank-$2$ generalized eigenvector $\\mathbf{v}_2 = \\langle x, y \\rangle$ satisfying $(A${shiftStr})\\mathbf{v}_2 = v_1$ whose first component is $x = 0$.`,
+          `设 $A = ${mat2Latex(mat)}$ 具有特征值 $\\lambda = ${lambda}$，其特征向量为 $v_1 = ${vec2Latex(v1)}$。求满足 $(A${shiftStr})\\mathbf{v}_2 = v_1$ 且第一分量为 $x = 0$ 的 $2$ 阶广义特征向量 $\\mathbf{v}_2 = \\langle x, y \\rangle$。`,
         );
-        const right = t(`$${vec2Latex([0, 1])}$`, `$${vec2Latex([0, 1])}$`);
-        const wrong = [
-          t(`$${vec2Latex([1, 0])}$`, `$${vec2Latex([1, 0])}$`),
-          t(`$${vec2Latex([1, 1])}$`, `$${vec2Latex([1, 1])}$`),
-          t(`$${vec2Latex([k, 0])}$`, `$${vec2Latex([k, 0])}$`),
-          t(`$${vec2Latex([0, k])}$`, `$${vec2Latex([0, k])}$`),
-        ];
         const solution = t(
-          `We solve $\\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${k} \\\\ 0 \\end{pmatrix}$, which requires ${k}y = ${k}$, so $y = 1$ (with free variable $x = 0$). Thus, $v_2 = ${vec2Latex([0, 1])}$ is a rank-2 generalized eigenvector.`,
-          `求解方程 $\\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${k} \\\\ 0 \\end{pmatrix}$，要求 ${k}y = ${k}$，故 $y = 1$（自由变量取 $x = 0$）。因此 $v_2 = ${vec2Latex([0, 1])}$ 为 2 阶广义特征向量。`,
+          `We solve $(A${shiftStr})\\mathbf{v}_2 = v_1$: $\\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${k} \\\\ 0 \\end{pmatrix}$, which requires ${k}y = ${k}$, so $y = 1$. With $x = 0$, $\\mathbf{v}_2 = \\langle 0, 1 \\rangle$.`,
+          `求解方程 $(A${shiftStr})\\mathbf{v}_2 = v_1$：$\\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${k} \\\\ 0 \\end{pmatrix}$，要求 ${k}y = ${k}$，故 $y = 1$。取 $x = 0$，得到 $\\mathbf{v}_2 = \\langle 0, 1 \\rangle$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: [0, 1],
+          vector: true,
+          solution,
+          wrong: [
+            [1, 0],
+            [1, 1],
+            [0, k],
+            [k, 0],
+          ],
+        });
       },
     },
   ],
@@ -2337,9 +2508,10 @@ export const jordanCanonicalFormOfA2x2Matrix: TopicDef = {
             ])}$`,
           ),
         ];
+        const shiftStr = formatShift(lambda, "I");
         const solution = t(
-          `The matrix $A$ has repeated eigenvalue $\\lambda = ${lambda}$ with algebraic multiplicity 2. Since $A - ${lambda} I = \\begin{pmatrix} 0 & ${a} \\\\ 0 & 0 \\end{pmatrix}$ has rank 1, its nullity (geometric multiplicity) is $2 - 1 = 1 < 2$. Thus $A$ is defective and consists of a single $2 \\times 2$ Jordan block: $J = ${mat2Latex(matJ)}$.`,
-          `矩阵 $A$ 具有重特征值 $\\lambda = ${lambda}$（代数重数为 2）。因为 $A - ${lambda} I = \\begin{pmatrix} 0 & ${a} \\\\ 0 & 0 \\end{pmatrix}$ 的秩为 1，零度（几何重数）为 $2 - 1 = 1 < 2$。因此 $A$ 不可对角化，由单一的 $2 \\times 2$ 若尔当块构成：$J = ${mat2Latex(matJ)}$。`,
+          `The matrix $A$ has repeated eigenvalue $\\lambda = ${lambda}$ with algebraic multiplicity 2. Since $A${shiftStr} = \\begin{pmatrix} 0 & ${a} \\\\ 0 & 0 \\end{pmatrix}$ has rank 1, its nullity (geometric multiplicity) is $2 - 1 = 1 < 2$. Thus $A$ is defective and consists of a single $2 \\times 2$ Jordan block: $J = ${mat2Latex(matJ)}$.`,
+          `矩阵 $A$ 具有重特征值 $\\lambda = ${lambda}$（代数重数为 2）。因为 $A${shiftStr} = \\begin{pmatrix} 0 & ${a} \\\\ 0 & 0 \\end{pmatrix}$ 的秩为 1，零度（几何重数）为 $2 - 1 = 1 < 2$。因此 $A$ 不可对角化，由单一的 $2 \\times 2$ 若尔当块构成：$J = ${mat2Latex(matJ)}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -2428,9 +2600,10 @@ export const jordanCanonicalDecompositionOfA2x2Matrix: TopicDef = {
             ])}$`,
           ),
         ];
+        const shiftStr = formatShift(lambda, "I");
         const solution = t(
-          `The columns of $P = \\begin{pmatrix} v_1 & v_2 \\end{pmatrix}$ satisfy $A v_1 = ${lambda} v_1$ and $(A - ${lambda} I)v_2 = v_1$. Choosing $v_1 = ${vec2Latex([k, 0])}$ and $v_2 = ${vec2Latex([0, 1])}$ gives $(A - ${lambda} I)v_2 = \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} ${vec2Latex([0, 1])} = ${vec2Latex([k, 0])} = v_1$. Thus $P = ${mat2Latex(matP)}$.`,
-          `$P = \\begin{pmatrix} v_1 & v_2 \\end{pmatrix}$ 的列满足 $A v_1 = ${lambda} v_1$ 与 $(A - ${lambda} I)v_2 = v_1$。取 $v_1 = ${vec2Latex([k, 0])}$ 与 $v_2 = ${vec2Latex([0, 1])}$，满足 $(A - ${lambda} I)v_2 = \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} ${vec2Latex([0, 1])} = ${vec2Latex([k, 0])} = v_1$。因此 $P = ${mat2Latex(matP)}$。`,
+          `The columns of $P = \\begin{pmatrix} v_1 & v_2 \\end{pmatrix}$ satisfy $A v_1 = ${lambda} v_1$ and $(A${shiftStr})v_2 = v_1$. Choosing $v_1 = ${vec2Latex([k, 0])}$ and $v_2 = ${vec2Latex([0, 1])}$ gives $(A${shiftStr})v_2 = \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} ${vec2Latex([0, 1])} = ${vec2Latex([k, 0])} = v_1$. Thus $P = ${mat2Latex(matP)}$.`,
+          `$P = \\begin{pmatrix} v_1 & v_2 \\end{pmatrix}$ 的列满足 $A v_1 = ${lambda} v_1$ 与 $(A${shiftStr})v_2 = v_1$。取 $v_1 = ${vec2Latex([k, 0])}$ 与 $v_2 = ${vec2Latex([0, 1])}$，满足 $(A${shiftStr})v_2 = \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} ${vec2Latex([0, 1])} = ${vec2Latex([k, 0])} = v_1$。因此 $P = ${mat2Latex(matP)}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -2474,9 +2647,11 @@ export const jordanCanonicalFormOfA3x3Matrix: TopicDef = {
                 [0, c, 1],
                 [0, 0, c],
               ];
+        const polyFactor = formatFactor("\\lambda", c);
+        const shiftStr = formatShift(c, "I");
         const prompt = t(
-          `A $3 \\times 3$ matrix $A$ has characteristic polynomial $p(\\lambda) = (\\lambda - ${c})^3$. If $\\operatorname{rank}(A - ${c}I) = ${rankCase}$, what is the Jordan canonical form $J$ of $A$?`,
-          `$3 \\times 3$ 矩阵 $A$ 的特征多项式为 $p(\\lambda) = (\\lambda - ${c})^3$。若 $\\operatorname{rank}(A - ${c}I) = ${rankCase}$，求 $A$ 的若尔当标准型 $J$。`,
+          `A $3 \\times 3$ matrix $A$ has characteristic polynomial $p(\\lambda) = (${polyFactor})^3$. If $\\operatorname{rank}(A${shiftStr}) = ${rankCase}$, what is the Jordan canonical form $J$ of $A$?`,
+          `$3 \\times 3$ 矩阵 $A$ 的特征多项式为 $p(\\lambda) = (${polyFactor})^3$。若 $\\operatorname{rank}(A${shiftStr}) = ${rankCase}$，求 $A$ 的若尔当标准型 $J$。`,
         );
         const right = t(`$${mat3Latex(matJ)}$`, `$${mat3Latex(matJ)}$`);
         const wrong = [
@@ -2542,12 +2717,12 @@ export const jordanCanonicalFormOfA3x3Matrix: TopicDef = {
           ),
         ];
         const solution = t(
-          `The number of Jordan blocks is the geometric multiplicity $\\operatorname{nullity}(A - ${c}I) = 3 - ${rankCase} = ${3 - rankCase}$. ${
+          `The number of Jordan blocks is the geometric multiplicity $\\operatorname{nullity}(A${shiftStr}) = 3 - ${rankCase} = ${3 - rankCase}$. ${
             rankCase === 1
               ? `Since there are 2 Jordan blocks of total size 3, the block sizes must be $2 + 1$: $J = \\operatorname{diag}(J_2(${c}), J_1(${c})) = ${mat3Latex(matJ)}$.`
               : `Since there is only 1 Jordan block of size 3, $J = J_3(${c}) = ${mat3Latex(matJ)}$.`
           }`,
-          `若尔当块的数量等于几何重数 $\\operatorname{nullity}(A - ${c}I) = 3 - ${rankCase} = ${3 - rankCase}$。${
+          `若尔当块的数量等于几何重数 $\\operatorname{nullity}(A${shiftStr}) = 3 - ${rankCase} = ${3 - rankCase}$。${
             rankCase === 1
               ? `因为总尺寸为 3 且有 2 个若尔当块，所以块尺寸必为 $2 + 1$：$J = \\operatorname{diag}(J_2(${c}), J_1(${c})) = ${mat3Latex(matJ)}$。`
               : `因为只有一个尺寸为 3 的若尔当块，所以 $J = J_3(${c}) = ${mat3Latex(matJ)}$。`
@@ -2580,22 +2755,23 @@ export const jordanCanonicalDecompositionOfA3x3Matrix: TopicDef = {
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-15, 15);
+        const shiftStr = formatShift(lambda, "I");
         const prompt = t(
           `Let $A$ be a $3 \\times 3$ matrix with a single Jordan block $J_3(${lambda})$. How are the column vectors $v_1, v_2, v_3$ of the transition matrix $P = \\begin{pmatrix} v_1 & v_2 & v_3 \\end{pmatrix}$ (satisfying $P^{-1} A P = J_3(${lambda})$) related?`,
           `设 $A$ 为 $3 \\times 3$ 矩阵，其若尔当标准型为单一若尔当块 $J_3(${lambda})$。求满足 $P^{-1} A P = J_3(${lambda})$ 的过渡矩阵 $P = \\begin{pmatrix} v_1 & v_2 & v_3 \\end{pmatrix}$ 的列向量 $v_1, v_2, v_3$ 之间的关系。`,
         );
         const right = t(
-          `$(A - ${lambda}I)v_1 = 0$, $(A - ${lambda}I)v_2 = v_1$, and $(A - ${lambda}I)v_3 = v_2$`,
-          `$(A - ${lambda}I)v_1 = 0$、$(A - ${lambda}I)v_2 = v_1$ 且 $(A - ${lambda}I)v_3 = v_2$`,
+          `$(A${shiftStr})v_1 = 0$, $(A${shiftStr})v_2 = v_1$, and $(A${shiftStr})v_3 = v_2$`,
+          `$(A${shiftStr})v_1 = 0$、$(A${shiftStr})v_2 = v_1$ 且 $(A${shiftStr})v_3 = v_2$`,
         );
         const wrong = [
           t(
-            `$(A - ${lambda}I)v_1 = 0$, $(A - ${lambda}I)v_2 = 0$, and $(A - ${lambda}I)v_3 = 0$`,
-            `$(A - ${lambda}I)v_1 = 0$、$(A - ${lambda}I)v_2 = 0$ 且 $(A - ${lambda}I)v_3 = 0$`,
+            `$(A${shiftStr})v_1 = 0$, $(A${shiftStr})v_2 = 0$, and $(A${shiftStr})v_3 = 0$`,
+            `$(A${shiftStr})v_1 = 0$、$(A${shiftStr})v_2 = 0$ 且 $(A${shiftStr})v_3 = 0$`,
           ),
           t(
-            `$(A - ${lambda}I)v_3 = 0$, $(A - ${lambda}I)v_2 = v_3$, and $(A - ${lambda}I)v_1 = v_2$`,
-            `$(A - ${lambda}I)v_3 = 0$、$(A - ${lambda}I)v_2 = v_3$ 且 $(A - ${lambda}I)v_1 = v_2$`,
+            `$(A${shiftStr})v_3 = 0$, $(A${shiftStr})v_2 = v_3$, and $(A${shiftStr})v_1 = v_2$`,
+            `$(A${shiftStr})v_3 = 0$、$(A${shiftStr})v_2 = v_3$ 且 $(A${shiftStr})v_1 = v_2$`,
           ),
           t(
             `$Av_1 = ${lambda}v_1$, $Av_2 = ${lambda}^2 v_2$, and $Av_3 = ${lambda}^3 v_3$`,

@@ -1,7 +1,8 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { poly, q } from "@ga/subject-math";
 
-import { choiceProblem } from "../problems.ts";
+import { choiceProblem, equationProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem } from "../problems.ts";
 
 // Linear Algebra Unit 1: Preliminaries (Modules 1.1, 1.2, 1.3)
 // 25 topics covering Set Theory, Set Operations, and 3D Vector Geometry.
@@ -64,6 +65,32 @@ function planeEqLatex(a: number, b: number, c: number, d: number): string {
   if (d > 0) dStr = ` + ${d}`;
   else if (d < 0) dStr = ` - ${-d}`;
   return `${lhs}${dStr} = 0`;
+}
+
+function fmtTerm(coeff: number, v: string, p: number): string {
+  const inner = p === 0 ? v : p > 0 ? `(${v} - ${p})` : `(${v} + ${-p})`;
+  if (p === 0) {
+    if (coeff === 1) return v;
+    if (coeff === -1) return `-${v}`;
+    return `${coeff}${v}`;
+  }
+  if (coeff === 1) return inner;
+  if (coeff === -1) return `-${inner}`;
+  return `${coeff}${inner}`;
+}
+
+function fmtSub(a: number, b: number): string {
+  return b < 0 ? `${a} - (${b})` : `${a} - ${b}`;
+}
+
+function factorLatex(root: number, v = "x"): string {
+  if (root === 0) return v;
+  return root > 0 ? `(${v} - ${root})` : `(${v} + ${-root})`;
+}
+
+function symNum(axis: string, val: number): string {
+  if (val === 0) return axis;
+  return val > 0 ? `${axis} - ${val}` : `${axis} + ${-val}`;
 }
 
 function paramLineLatex(p: Vec3, v: Vec3, tVar = "t"): string {
@@ -446,8 +473,8 @@ export const statementsAndPredicates: TopicDef = {
               t("False, the statement must hold for all $x$", "假，该陈述必须对所有 $x$ 成立"),
             ],
             t(
-              `Since $x = ${k}$ is an integer, it is rational ($k \\in \\mathbb{Q}$) and satisfies $x^2 = ${k * k}$. Thus the existential statement is True.`,
-              `因为 $x = ${k}$ 是整数，属于有理数集（${k} \\in \\mathbb{Q}$），且满足 $x^2 = ${k * k}$。因此存在性命题为真。`,
+              `Since $x = ${k}$ is an integer, it is rational ($${k} \\in \\mathbb{Q}$) and satisfies $x^2 = ${k * k}$. Thus the existential statement is True.`,
+              `因为 $x = ${k}$ 是整数，属于有理数集（$${k} \\in \\mathbb{Q}$），且满足 $x^2 = ${k * k}$。因此存在性命题为真。`,
             ),
           );
         }
@@ -515,24 +542,20 @@ export const equivalentSets: TopicDef = {
         const q = p + rng.int(1, 6);
         const sum = p + q;
         const prod = p * q;
-        const setRoster = `\\{${p}, ${q}\\}`;
-        return oneOf(
-          rng,
-          t(
-            `Which set is equal to $S = \\{x \\in \\mathbb{R} \\mid x^2 - ${sum}x + ${prod} = 0\\}$?`,
-            `下列哪个集合与集合 $S = \\{x \\in \\mathbb{R} \\mid x^2 - ${sum}x + ${prod} = 0\\}$ 相等？`,
+        const polyStr = poly([1, "x^2"], [-sum, "x"], [prod, ""]);
+        return solutionsProblem({
+          prompt: t(
+            `Find all elements of the set $S = \\{x \\in \\mathbb{R} \\mid ${polyStr} = 0\\}$.`,
+            `求集合 $S = \\{x \\in \\mathbb{R} \\mid ${polyStr} = 0\\}$ 的全部元素。`,
           ),
-          t(`$${setRoster}$`, `$${setRoster}$`),
-          [
-            t(`\\{ -${p}, -${q} \\}`, `\\{ -${p}, -${q} \\}`),
-            t(`\\{ ${p} \\}`, `\\{ ${p} \\}`),
-            t(`\\{ ${sum}, ${prod} \\}`, `\\{ ${sum}, ${prod} \\}`),
-          ],
-          t(
-            `Factoring gives $x^2 - ${sum}x + ${prod} = (x - ${p})(x - ${q}) = 0$, whose real solutions are $x = ${p}$ and $x = ${q}$. Therefore, $S = ${setRoster}$.`,
-            `对二次多项式因式分解得到 $(x - ${p})(x - ${q}) = 0$，其实数解为 $x = ${p}$ 与 $x = ${q}$。因此 $S = ${setRoster}$。`,
+          values: [String(p), String(q)],
+          variable: "x",
+          solution: t(
+            `Factoring gives $${polyStr} = (x - ${p})(x - ${q}) = 0$, whose real solutions are $x = ${p}$ and $x = ${q}$. Therefore, the elements are $x = ${p}, ${q}$ (or $\\{${p}, ${q}\\}$).`,
+            `对二次多项式因式分解得到 $(x - ${p})(x - ${q}) = 0$，其实数解为 $x = ${p}$ 与 $x = ${q}$。因此集合元素为 $x = ${p}, ${q}$（或记为 $\\{${p}, ${q}\\}$）。`,
           ),
-        );
+          wrong: [[String(-p), String(-q)], [String(p)], [String(q)], [String(sum), String(prod)]],
+        });
       },
     },
   ],
@@ -560,29 +583,24 @@ export const theConstructiveDefinitionOfASet: TopicDef = {
         "集合的构造性（列举）表示法通过在花括号 $\\{ \\}$ 中用逗号分隔显式列出所有元素。集合中元素的排列次序是无关紧要的，例如 $\\{1, 2, 3\\} = \\{3, 1, 2\\}$。",
       ),
       generate(rng) {
-        const r1 = rng.int(-9, 0);
+        const r1 = rng.int(-9, -1);
         const r2 = rng.int(1, 6);
         const r3 = rng.int(7, 14);
-        const roots = [r1, r2, r3];
-        const correctSet = `\\{${roots.join(", ")}\\}`;
-        const scrambled = rng.shuffle(roots);
-        return oneOf(
-          rng,
-          t(
-            `Write the solution set of the equation $(x - (${r1}))(x - ${r2})(x - ${r3}) = 0$ in roster notation.`,
-            `用列举法写出方程 $(x - (${r1}))(x - ${r2})(x - ${r3}) = 0$ 的解集。`,
+        const eqStr = `${factorLatex(r1)}${factorLatex(r2)}${factorLatex(r3)} = 0`;
+        return solutionsProblem({
+          prompt: t(`Find all elements of the solution set of the equation $${eqStr}$.`, `求方程 $${eqStr}$ 解集的全部元素。`),
+          values: [String(r1), String(r2), String(r3)],
+          variable: "x",
+          solution: t(
+            `Setting each factor to zero yields $x = ${r1}$, $x = ${r2}$, and $x = ${r3}$. In roster notation, the solution set is $\\{${r1}, ${r2}, ${r3}\\}$.`,
+            `令各因式为零可得 $x = ${r1}$、$x = ${r2}$ 与 $x = ${r3}$。用列举法表示解集为 $\\{${r1}, ${r2}, ${r3}\\}$。`,
           ),
-          t(`$\\{${scrambled.join(", ")}\\}$`, `$\\{${scrambled.join(", ")}\\}$`),
-          [
-            t(`\\{${-r1}, ${-r2}, ${-r3}\\}`, `\\{${-r1}, ${-r2}, ${-r3}\\}`),
-            t(`\\{${r1}, ${r2}\\}`, `\\{${r1}, ${r2}\\}`),
-            t(`\\{${r2}, ${r3}\\}`, `\\{${r2}, ${r3}\\}`),
+          wrong: [
+            [String(-r1), String(-r2), String(-r3)],
+            [String(r1), String(r2)],
+            [String(r2), String(r3)],
           ],
-          t(
-            `Setting each factor to zero yields $x = ${r1}, ${r2}, ${r3}$. In roster notation, the set of solutions is $${correctSet}$, and the order of elements does not matter.`,
-            `令各因式为零可得 $x = ${r1}, ${r2}, ${r3}$。用列举法表示解集为 $${correctSet}$，元素排列次序不影响集合本身。`,
-          ),
-        );
+        });
       },
     },
     {
@@ -598,20 +616,20 @@ export const theConstructiveDefinitionOfASet: TopicDef = {
         const c = rng.int(11, 15);
         const rawList = [a, b, b, c, c, c, a];
         const rawStr = `\\{${rawList.join(", ")}\\}`;
-        return oneOf(
-          rng,
-          t(`Simplify the set $S = ${rawStr}$ by removing redundant duplicate listings.`, `去除冗余重复项，化简集合 $S = ${rawStr}$。`),
-          t(`$\\{${a}, ${b}, ${c}\\}$`, `$\\{${a}, ${b}, ${c}\\}$`),
-          [
-            t(`\\{${a}, ${b}\\}`, `\\{${a}, ${b}\\}`),
-            t(`\\{${b}, ${c}\\}`, `\\{${b}, ${c}\\}`),
-            t(`\\{${a}, ${b}, ${c}, ${rawList.length}\\}`, `\\{${a}, ${b}, ${c}, ${rawList.length}\\}`),
-          ],
-          t(
-            `In set theory, each distinct element is counted exactly once regardless of how many times it is written: $S = \\{${a}, ${b}, ${c}\\}$.`,
-            `在集合论中，不论一个元素被重复书写多少次，它都只算作一个元素，因此化简后为 $S = \\{${a}, ${b}, ${c}\\}$。`,
+        return solutionsProblem({
+          prompt: t(`List all distinct elements of the set $S = ${rawStr}$.`, `列出集合 $S = ${rawStr}$ 的所有互异元素。`),
+          values: [String(a), String(b), String(c)],
+          variable: "x",
+          solution: t(
+            `In set theory, duplicate listings are redundant. Listing each distinct element once gives $S = \\{${a}, ${b}, ${c}\\}$.`,
+            `在集合论中，重复列出的元素是多余的。每个不同元素只计一次，化简后为 $S = \\{${a}, ${b}, ${c}\\}$。`,
           ),
-        );
+          wrong: [
+            [String(a), String(b)],
+            [String(b), String(c)],
+            [String(a), String(b), String(c), String(rawList.length)],
+          ],
+        });
       },
     },
   ],
@@ -646,23 +664,19 @@ export const theConditionalDefinitionOfASet: TopicDef = {
         for (let x = lo; x <= hi; x++) {
           if (x % m === 0) validValues.push(x);
         }
-        const rightVal = rng.pick(validValues);
-        const wrongVal1 = rightVal + 1;
-        const wrongVal2 = hi + 2;
-        const wrongVal3 = lo - 2;
-        return oneOf(
-          rng,
-          t(
-            `Which of the following numbers is an element of the set $S = \\{x \\in \\mathbb{Z} \\mid ${lo} \\le x \\le ${hi} \\text{ and } x \\text{ is a multiple of } ${m}\\}$?`,
-            `下列哪个数属于集合 $S = \\{x \\in \\mathbb{Z} \\mid ${lo} \\le x \\le ${hi} \\text{ 且 } x \\text{ 是 } ${m} \\text{ 的倍数}\\}$？`,
+        const minValid = validValues[0]!;
+        return numberProblem({
+          prompt: t(
+            `Find the smallest integer in the set $S = \\{x \\in \\mathbb{Z} \\mid ${lo} \\le x \\le ${hi} \\text{ and } x \\text{ is a multiple of } ${m}\\}$.`,
+            `求集合 $S = \\{x \\in \\mathbb{Z} \\mid ${lo} \\le x \\le ${hi} \\text{ 且 } x \\text{ 是 } ${m} \\text{ 的倍数}\\}$ 中的最小整数。`,
           ),
-          t(`$${rightVal}$`, `$${rightVal}$`),
-          [t(`$${wrongVal1}$`, `$${wrongVal1}$`), t(`$${wrongVal2}$`, `$${wrongVal2}$`), t(`$${wrongVal3}$`, `$${wrongVal3}$`)],
-          t(
-            `To belong to $S$, an integer $x$ must satisfy two conditions: ${lo} \\le x \\le ${hi}$ and $x$ must be divisible by ${m}$. The number $${rightVal}$ satisfies both conditions ($${lo} \\le ${rightVal} \\le ${hi}$ and $${rightVal} = ${m} \\times ${rightVal / m}$).`,
-            `属于集合 $S$ 的整数 $x$ 必须同时满足两个条件：$${lo} \\le x \\le ${hi}$ 且能被 ${m}$ 整除。数 $${rightVal}$ 满足全部条件。`,
+          answer: minValid,
+          solution: t(
+            `To belong to $S$, an integer $x$ must satisfy two conditions: $${lo} \\le x \\le ${hi}$ and $x$ must be divisible by $${m}$. The multiples of $${m}$ in this range are $${validValues.join(", ")}$, so the smallest is $${minValid}$.`,
+            `属于集合 $S$ 的整数 $x$ 必须同时满足两个条件：$${lo} \\le x \\le ${hi}$ 且能被 $${m}$ 整除。在此范围内的 $${m}$ 的倍数为 $${validValues.join(", ")}$，因此最小的整数是 $${minValid}$。`,
           ),
-        );
+          wrong: [minValid + m, minValid - m, lo],
+        });
       },
     },
     {
@@ -673,31 +687,26 @@ export const theConditionalDefinitionOfASet: TopicDef = {
         "将描述法 $\\{x \\in \\mathbb{Z} \\mid P(x)\\}$ 转换为列举法时，逐一列出使谓词 $P(x)$ 成立的全部整数。反之，将列举法转换为描述法时，需识别其通项算术规律或特征性质。",
       ),
       generate(rng) {
-        const n = rng.int(3, 12);
+        const n = rng.int(3, 5);
         const d = rng.int(2, 6);
         const start = rng.int(1, 5);
         const elements: number[] = [];
         for (let i = start; i < start + n; i++) elements.push(i * d);
         const minVal = elements[0]!;
         const maxVal = elements[elements.length - 1]!;
-        const rosterStr = `\\{${elements.join(", ")}\\}`;
-        return oneOf(
-          rng,
-          t(
-            `Express the set $S = \\{x \\in \\mathbb{Z} \\mid ${minVal} \\le x \\le ${maxVal} \\text{ and } x \\text{ is a multiple of } ${d}\\}$ in roster form.`,
-            `将集合 $S = \\{x \\in \\mathbb{Z} \\mid ${minVal} \\le x \\le ${maxVal} \\text{ 且 } x \\text{ 是 } ${d} \\text{ 的倍数}\\}$ 用列举法表示。`,
+        return solutionsProblem({
+          prompt: t(
+            `List all elements of the set $S = \\{x \\in \\mathbb{Z} \\mid ${minVal} \\le x \\le ${maxVal} \\text{ and } x \\text{ is a multiple of } ${d}\\}$.`,
+            `列出集合 $S = \\{x \\in \\mathbb{Z} \\mid ${minVal} \\le x \\le ${maxVal} \\text{ 且 } x \\text{ 是 } ${d} \\text{ 的倍数}\\}$ 的全部元素。`,
           ),
-          t(`$${rosterStr}$`, `$${rosterStr}$`),
-          [
-            t(`\\{${elements.slice(0, -1).join(", ")}\\}`, `\\{${elements.slice(0, -1).join(", ")}\\}`),
-            t(`\\{${minVal}, ${minVal + 1}, \\dots, ${maxVal}\\}`, `\\{${minVal}, ${minVal + 1}, \\dots, ${maxVal}\\}`),
-            t(`\\{${elements.slice(1).join(", ")}\\}`, `\\{${elements.slice(1).join(", ")}\\}`),
-          ],
-          t(
-            `The multiples of $${d}$ between $${minVal}$ and $${maxVal}$ are $${elements.join(", ")}$. In roster form, $S = ${rosterStr}$.`,
-            `在 $${minVal}$ 到 $${maxVal}$ 之间 $${d}$ 的倍数有 $${elements.join(", ")}$。因此列举法表示为 $S = ${rosterStr}$。`,
+          values: elements.map(String),
+          variable: "x",
+          solution: t(
+            `The multiples of $${d}$ between $${minVal}$ and $${maxVal}$ are $${elements.join(", ")}$. In roster form, $S = \\{${elements.join(", ")}\\}$.`,
+            `在 $${minVal}$ 到 $${maxVal}$ 之间 $${d}$ 的倍数有 $${elements.join(", ")}$。因此集合元素为 $${elements.join(", ")}$（即列举法 $S = \\{${elements.join(", ")}\\}$）。`,
           ),
-        );
+          wrong: [elements.slice(0, -1).map(String), elements.slice(1).map(String)],
+        });
       },
     },
   ],
@@ -729,22 +738,18 @@ export const describingSetsUsingSetBuilderNotation: TopicDef = {
         const r = rng.int(0, m - 1);
         const kVal = rng.int(1, 15);
         const rightVal = m * kVal + r;
-        const wrongVal1 = rightVal + 1;
-        const wrongVal2 = rightVal + (r === 0 ? 1 : -1);
-        const wrongVal3 = rightVal + 2;
-        return oneOf(
-          rng,
-          t(
-            `Which of the following integers belongs to the residue set $S = \\{${m}k + ${r} \\mid k \\in \\mathbb{Z}\\}$?`,
-            `下列哪个整数属于同余集合 $S = \\{${m}k + ${r} \\mid k \\in \\mathbb{Z}\\}$？`,
+        return numberProblem({
+          prompt: t(
+            `Find the integer in the residue set $S = \\{${m}k + ${r} \\mid k \\in \\mathbb{Z}\\}$ corresponding to $k = ${kVal}$.`,
+            `求同余集合 $S = \\{${m}k + ${r} \\mid k \\in \\mathbb{Z}\\}$ 中对应于 $k = ${kVal}$ 的整数。`,
           ),
-          t(`$${rightVal}$`, `$${rightVal}$`),
-          [t(`$${wrongVal1}$`, `$${wrongVal1}$`), t(`$${wrongVal2}$`, `$${wrongVal2}$`), t(`$${wrongVal3}$`, `$${wrongVal3}$`)],
-          t(
-            `For $k = ${kVal}$, we have $${m}(${kVal}) + ${r} = ${rightVal}$. Since $(${rightVal} - ${r}) / ${m} = ${kVal} \\in \\mathbb{Z}$, $${rightVal} \\in S$.`,
-            `当 $k = ${kVal}$ 时，有 $${m}(${kVal}) + ${r} = ${rightVal}$。因为 $(${rightVal} - ${r}) / ${m} = ${kVal} \\in \\mathbb{Z}$，所以 $${rightVal} \\in S$。`,
+          answer: rightVal,
+          solution: t(
+            `Substituting $k = ${kVal}$ into the formula yields $${m}(${kVal}) + ${r} = ${rightVal}$.`,
+            `将 $k = ${kVal}$ 代入公式得 $${m}(${kVal}) + ${r} = ${rightVal}$。`,
           ),
-        );
+          wrong: [rightVal + 1, rightVal - 1, m * kVal],
+        });
       },
     },
     {
@@ -951,16 +956,15 @@ export const cardinalityOfFiniteSets: TopicDef = {
         const count = rng.int(4, 12);
         const hi = lo + (count - 1) * d;
         const setStr = `\\{x \\in \\mathbb{Z} \\mid ${lo} \\le x \\le ${hi} \\text{ and } (x - ${lo}) \\text{ is a multiple of } ${d}\\}`;
-        return oneOf(
-          rng,
-          t(`Find the cardinality $|S|$ of the set:\n\n$$S = ${setStr}$$`, `求集合 $S$ 的基数 $|S|$：\n\n$$S = ${setStr}$$`),
-          t(`$${count}$`, `$${count}$`),
-          [t(`$${count - 1}$`, `$${count - 1}$`), t(`$${count + 1}$`, `$${count + 1}$`), t(`$${hi - lo + 1}$`, `$${hi - lo + 1}$`)],
-          t(
-            `The elements form an arithmetic sequence $x_k = ${lo} + k \\cdot ${d}$ starting at $k = 0$ and ending at $k = \\frac{${hi} - ${lo}}{${d}} = ${count - 1}$. Thus there are $(${count - 1}) - 0 + 1 = ${count}$ distinct elements, so $|S| = ${count}$.`,
+        return numberProblem({
+          prompt: t(`Find the cardinality $|S|$ of the set:\n\n$$S = ${setStr}$$`, `求集合 $S$ 的基数 $|S|$：\n\n$$S = ${setStr}$$`),
+          answer: count,
+          solution: t(
+            `The elements form an arithmetic sequence starting at $${lo}$ with common difference $${d}$ and ending at $${hi}$. The number of terms is $\\frac{${hi} - ${lo}}{${d}} + 1 = ${count}$, so $|S| = ${count}$.`,
             `该集合元素构成首项为 $${lo}$、公差为 $${d}$ 的等差数列，末项为 $${hi}$。项数为 $\\frac{${hi} - ${lo}}{${d}} + 1 = ${count}$，因此基数 $|S| = ${count}$。`,
           ),
-        );
+          wrong: [count - 1, count + 1, hi - lo + 1],
+        });
       },
     },
     {
@@ -978,37 +982,31 @@ export const cardinalityOfFiniteSets: TopicDef = {
         const nUnion = nA + nB - nInter;
         const askUnion = rng.bool();
         if (askUnion) {
-          return oneOf(
-            rng,
-            t(
+          return numberProblem({
+            prompt: t(
               `Given two finite sets $A$ and $B$ with $|A| = ${nA}$, $|B| = ${nB}$, and $|A \\cap B| = ${nInter}$, find $|A \\cup B|$.`,
               `已知有限集合 $A$ 与 $B$ 满足 $|A| = ${nA}$，|B| = ${nB}$，且 $|A \\cap B| = ${nInter}$，求 $|A \\cup B|$。`,
             ),
-            t(`$${nUnion}$`, `$${nUnion}$`),
-            [t(`$${nA + nB}$`, `$${nA + nB}$`), t(`$${nUnion + 2}$`, `$${nUnion + 2}$`), t(`$${nUnion - 2}$`, `$${nUnion - 2}$`)],
-            t(
+            answer: nUnion,
+            solution: t(
               `By the Principle of Inclusion-Exclusion:\n\n$$|A \\cup B| = |A| + |B| - |A \\cap B| = ${nA} + ${nB} - ${nInter} = ${nUnion}$$`,
               `由容斥原理：\n\n$$|A \\cup B| = |A| + |B| - |A \\cap B| = ${nA} + ${nB} - ${nInter} = ${nUnion}$$`,
             ),
-          );
+            wrong: [nA + nB, nUnion + 2, nUnion - 2],
+          });
         } else {
-          return oneOf(
-            rng,
-            t(
+          return numberProblem({
+            prompt: t(
               `Given two finite sets $A$ and $B$ with $|A| = ${nA}$, $|B| = ${nB}$, and $|A \\cup B| = ${nUnion}$, find $|A \\cap B|$.`,
               `已知有限集合 $A$ 与 $B$ 满足 $|A| = ${nA}$，|B| = ${nB}$，且 $|A \\cup B| = ${nUnion}$，求 $|A \\cap B|$。`,
             ),
-            t(`$${nInter}$`, `$${nInter}$`),
-            [
-              t(`$${nInter + 1}$`, `$${nInter + 1}$`),
-              t(`$${Math.max(1, nInter - 2)}$`, `$${Math.max(1, nInter - 2)}$`),
-              t(`$${nA + nB}$`, `$${nA + nB}$`),
-            ],
-            t(
+            answer: nInter,
+            solution: t(
               `Rearranging the Inclusion-Exclusion formula:\n\n$$|A \\cap B| = |A| + |B| - |A \\cup B| = ${nA} + ${nB} - ${nUnion} = ${nInter}$$`,
               `由容斥原理变形可得：\n\n$$|A \\cap B| = |A| + |B| - |A \\cup B| = ${nA} + ${nB} - ${nUnion} = ${nInter}$$`,
             ),
-          );
+            wrong: [nInter + 1, Math.max(1, nInter - 2), nA + nB],
+          });
         }
       },
     },
@@ -1176,24 +1174,18 @@ export const subsets: TopicDef = {
         const elements = rng.sample(pool, n).sort((a, b) => a - b);
         const setStr = `\\{${elements.join(", ")}\\}`;
         const card = 2 ** n;
-        return oneOf(
-          rng,
-          t(
-            `If finite set $A = ${setStr}$, how many elements are in its power set $\\mathcal{P}(A)$?`,
-            `若有限集合 $A = ${setStr}$，则其幂集 $\\mathcal{P}(A)$ 中包含多少个元素？`,
+        return numberProblem({
+          prompt: t(
+            `If finite set $A = ${setStr}$, find the cardinality $|\\mathcal{P}(A)|$ of its power set.`,
+            `若有限集合 $A = ${setStr}$，求其幂集的基数 $|\\mathcal{P}(A)|$。`,
           ),
-          t(`$${card}$`, `$${card}$`),
-          [
-            t(`$${2 * n}$`, `$${2 * n}$`),
-            t(`$${n * n}$`, `$${n * n}$`),
-            t(`$${card - 1}$`, `$${card - 1}$`),
-            t(`$${card + 1}$`, `$${card + 1}$`),
-          ],
-          t(
+          answer: card,
+          solution: t(
             `Set $A$ contains $|A| = ${n}$ elements. Each element has 2 choices (included or excluded) in a subset, giving $|\\mathcal{P}(A)| = 2^{${n}} = ${card}$.`,
             `集合 $A$ 共含有 $|A| = ${n}$ 个元素。构造子集时每个元素均有包含与不包含2种选择，因此 $|\\mathcal{P}(A)| = 2^{${n}} = ${card}$。`,
           ),
-        );
+          wrong: [2 * n, n * n, card - 1, card + 1],
+        });
       },
     },
   ],
@@ -1246,24 +1238,19 @@ export const theDifferenceOfSets: TopicDef = {
         const aStr = `\\{${A.join(", ")}\\}`;
         const bStr = `\\{${B.join(", ")}\\}`;
         const diffStr = `\\{${onlyA.join(", ")}\\}`;
-        const bDiffAStr = `\\{${onlyB.join(", ")}\\}`;
-        return oneOf(
-          rng,
-          t(
-            `Given $A = ${aStr}$ and $B = ${bStr}$, compute the set difference $A \\setminus B$.`,
-            `已知 $A = ${aStr}$ 且 $B = ${bStr}$，计算差集 $A \\setminus B$。`,
+        return solutionsProblem({
+          prompt: t(
+            `Find all elements of the set difference $A \\setminus B$, where $A = ${aStr}$ and $B = ${bStr}$.`,
+            `求差集 $A \\setminus B$ 的全部元素，其中 $A = ${aStr}$ 且 $B = ${bStr}$。`,
           ),
-          t(`$${diffStr}$`, `$${diffStr}$`),
-          [
-            t(`$${bDiffAStr}$`, `$${bDiffAStr}$`),
-            t(`\\{${shared.join(", ")}\\}`, `\\{${shared.join(", ")}\\}`),
-            t(`\\emptyset`, `\\emptyset`),
-          ],
-          t(
+          values: onlyA.map(String),
+          variable: "x",
+          solution: t(
             `$A \\setminus B$ contains elements in $A$ that are not in $B$. Removing shared elements $\\{${shared.join(", ")}\\}$ from $A$ leaves $${diffStr}$.`,
             `$A \\setminus B$ 包含属于 $A$ 但不属于 $B$ 的元素。从 $A$ 中去掉两者的公共元素 $\\{${shared.join(", ")}\\}$，得到 $${diffStr}$。`,
           ),
-        );
+          wrong: [onlyB.map(String), shared.map(String)],
+        });
       },
     },
     {
@@ -1295,22 +1282,20 @@ export const theDifferenceOfSets: TopicDef = {
         const symDiff = [...onlyA, ...onlyB].sort((a, b) => a - b);
         const symDiffStr = `\\{${symDiff.join(", ")}\\}`;
         const unionAll = [...A, ...B].sort((a, b) => a - b);
-        const unionStr = `\\{${[...new Set(unionAll)].join(", ")}\\}`;
-        const interStr = `\\{${shared.join(", ")}\\}`;
 
-        return oneOf(
-          rng,
-          t(
-            `Given sets $A = ${aStr}$ and $B = ${bStr}$, evaluate the symmetric difference $(A \\setminus B) \\cup (B \\setminus A)$.`,
-            `已知集合 $A = ${aStr}$ 与 $B = ${bStr}$，求对称差集 $(A \\setminus B) \\cup (B \\setminus A)$。`,
+        return solutionsProblem({
+          prompt: t(
+            `Given sets $A = ${aStr}$ and $B = ${bStr}$, find all elements of the symmetric difference $(A \\setminus B) \\cup (B \\setminus A)$.`,
+            `已知集合 $A = ${aStr}$ 与 $B = ${bStr}$，求对称差集 $(A \\setminus B) \\cup (B \\setminus A)$ 的全部元素。`,
           ),
-          t(`$${symDiffStr}$`, `$${symDiffStr}$`),
-          [t(`$${unionStr}$`, `$${unionStr}$`), t(`$${interStr}$`, `$${interStr}$`), t(`\\emptyset`, `\\emptyset`)],
-          t(
+          values: symDiff.map(String),
+          variable: "x",
+          solution: t(
             `We have $A \\setminus B = \\{${onlyA.join(", ")}\\}$ and $B \\setminus A = \\{${onlyB.join(", ")}\\}$. Taking the union gives $(A \\setminus B) \\cup (B \\setminus A) = ${symDiffStr}$.`,
             `易得 $A \\setminus B = \\{${onlyA.join(", ")}\\}$ 且 $B \\setminus A = \\{${onlyB.join(", ")}\\}$。取并集得到 $(A \\setminus B) \\cup (B \\setminus A) = ${symDiffStr}$。`,
           ),
-        );
+          wrong: [unionAll.map(String), shared.map(String)],
+        });
       },
     },
   ],
@@ -1351,23 +1336,18 @@ export const setComplements: TopicDef = {
         const uStr = `\\{1, 2, \\dots, ${n}\\}`;
         const aStr = `\\{${A.join(", ")}\\}`;
         const acStr = `\\{${Ac.join(", ")}\\}`;
-        return oneOf(
-          rng,
-          t(
-            `Let universal set $U = ${uStr}$ and $A = \\{x \\in U \\mid x \\text{ is a multiple of } ${k}\\} = ${aStr}$. Find the complement $A^c$.`,
-            `设全集 $U = ${uStr}$ 且 $A = \\{x \\in U \\mid x \\text{ 是 } ${k} \\text{ 的倍数}\\} = ${aStr}$。求补集 $A^c$。`,
+        return numberProblem({
+          prompt: t(
+            `Let universal set $U = ${uStr}$ and $A = \\{x \\in U \\mid x \\text{ is a multiple of } ${k}\\} = ${aStr}$. Find the cardinality $|A^c|$ of the complement.`,
+            `设全集 $U = ${uStr}$ 且 $A = \\{x \\in U \\mid x \\text{ 是 } ${k} \\text{ 的倍数}\\} = ${aStr}$。求补集 $A^c$ 的基数 $|A^c|$。`,
           ),
-          t(`$${acStr}$`, `$${acStr}$`),
-          [
-            t(`$${aStr}$`, `$${aStr}$`),
-            t(`\\emptyset`, `\\emptyset`),
-            t(`\\{${Ac.slice(0, -1).join(", ")}\\}`, `\\{${Ac.slice(0, -1).join(", ")}\\}`),
-          ],
-          t(
-            `$A^c$ consists of all elements in $U$ that are not multiples of $${k}$. Subtracting $A$ from $U$ yields $${acStr}$.`,
-            `$A^c$ 由 $U$ 中所有不是 $${k}$ 的倍数的元素构成。从 $U$ 中排除 $A$ 的元素，得到 $${acStr}$。`,
+          answer: Ac.length,
+          solution: t(
+            `$A^c = U \\setminus A$ consists of all $${Ac.length}$ elements in $U$ that are not multiples of $${k}$: $A^c = ${acStr}$. Thus $|A^c| = ${Ac.length}$.`,
+            `$A^c = U \\setminus A$ 由 $U$ 中所有不是 $${k}$ 的倍数的 $${Ac.length}$ 个元素构成：$A^c = ${acStr}$。因此 $|A^c| = ${Ac.length}$。`,
           ),
-        );
+          wrong: [A.length, n, Ac.length + 1, Math.max(1, Ac.length - 1)],
+        });
       },
     },
     {
@@ -1383,7 +1363,6 @@ export const setComplements: TopicDef = {
         for (let i = 1; i <= n; i++) U.push(i);
         const aVals = rng.sample(U, rng.int(2, 4)).sort((a, b) => a - b);
         const bVals = rng.sample(U, rng.int(2, 4)).sort((a, b) => a - b);
-        const _A = new Set(aVals);
         const B = new Set(bVals);
         const isUnion = rng.bool();
         if (isUnion) {
@@ -1391,41 +1370,35 @@ export const setComplements: TopicDef = {
           const res = U.filter((x) => !unionSet.has(x));
           const resStr = `\\{${res.join(", ")}\\}`;
           const unionStr = `\\{${[...unionSet].sort((a, b) => a - b).join(", ")}\\}`;
-          return oneOf(
-            rng,
-            t(
-              `Let $U = \\{1, \\dots, ${n}\\}$, $A = \\{${aVals.join(", ")}\\}$, and $B = \\{${bVals.join(", ")}\\}$. By De Morgan's laws, evaluate $(A \\cup B)^c = A^c \\cap B^c$.`,
-              `设全集 $U = \\{1, \\dots, ${n}\\}$，$A = \\{${aVals.join(", ")}\\}$，$B = \\{${bVals.join(", ")}\\}$。由德摩根定律，计算 $(A \\cup B)^c = A^c \\cap B^c$。`,
+          return numberProblem({
+            prompt: t(
+              `Let $U = \\{1, \\dots, ${n}\\}$, $A = \\{${aVals.join(", ")}\\}$, and $B = \\{${bVals.join(", ")}\\}$. Find the cardinality $|(A \\cup B)^c|$ of the complement of the union.`,
+              `设全集 $U = \\{1, \\dots, ${n}\\}$，$A = \\{${aVals.join(", ")}\\}$，$B = \\{${bVals.join(", ")}\\}$。求并集的补集的基数 $|(A \\cup B)^c|$。`,
             ),
-            t(`$${resStr}$`, `$${resStr}$`),
-            [t(`$${unionStr}$`, `$${unionStr}$`), t(`\\emptyset`, `\\emptyset`), t(`\\{1, 2, \\dots, ${n}\\}`, `\\{1, 2, \\dots, ${n}\\}`)],
-            t(
-              `First compute the union $A \\cup B = ${unionStr}$. Then taking the complement with respect to $U$ gives $(A \\cup B)^c = ${resStr}$. By De Morgan's laws, this equals $A^c \\cap B^c$.`,
-              `首先求并集 $A \\cup B = ${unionStr}$。再取关于全集 $U$ 的补集得 $(A \\cup B)^c = ${resStr}$。由德摩根定律知其亦等于 $A^c \\cap B^c$。`,
+            answer: res.length,
+            solution: t(
+              `First compute the union $A \\cup B = ${unionStr}$, which has $${unionSet.size}$ elements. Taking the complement with respect to $U$ gives $(A \\cup B)^c = ${resStr}$, which has $|(A \\cup B)^c| = ${res.length}$ elements. By De Morgan's laws, this also equals $|A^c \\cap B^c|$.`,
+              `首先求并集 $A \\cup B = ${unionStr}$，共含 $${unionSet.size}$ 个元素。取关于全集 $U$ 的补集得 $(A \\cup B)^c = ${resStr}$，元素个数为 $|(A \\cup B)^c| = ${res.length}$。由德摩根定律知其亦等于 $|A^c \\cap B^c|$。`,
             ),
-          );
+            wrong: [n - res.length, n, res.length + 1, Math.max(0, res.length - 1)],
+          });
         } else {
           const interSet = new Set(aVals.filter((x) => B.has(x)));
           const res = U.filter((x) => !interSet.has(x));
           const resStr = `\\{${res.join(", ")}\\}`;
           const interStr = interSet.size === 0 ? "\\emptyset" : `\\{${[...interSet].sort((a, b) => a - b).join(", ")}\\}`;
-          return oneOf(
-            rng,
-            t(
-              `Let $U = \\{1, \\dots, ${n}\\}$, $A = \\{${aVals.join(", ")}\\}$, and $B = \\{${bVals.join(", ")}\\}$. By De Morgan's laws, evaluate $(A \\cap B)^c = A^c \\cup B^c$.`,
-              `设全集 $U = \\{1, \\dots, ${n}\\}$，$A = \\{${aVals.join(", ")}\\}$，$B = \\{${bVals.join(", ")}\\}$。由德摩根定律，计算 $(A \\cap B)^c = A^c \\cup B^c$。`,
+          return numberProblem({
+            prompt: t(
+              `Let $U = \\{1, \\dots, ${n}\\}$, $A = \\{${aVals.join(", ")}\\}$, and $B = \\{${bVals.join(", ")}\\}$. Find the cardinality $|(A \\cap B)^c|$ of the complement of the intersection.`,
+              `设全集 $U = \\{1, \\dots, ${n}\\}$，$A = \\{${aVals.join(", ")}\\}$，$B = \\{${bVals.join(", ")}\\}$。求交集的补集的基数 $|(A \\cap B)^c|$。`,
             ),
-            t(`$${resStr}$`, `$${resStr}$`),
-            [
-              t(`$${interStr}$`, `$${interStr}$`),
-              t(`\\emptyset`, `\\emptyset`),
-              t(`\\{${aVals.join(", ")}\\}`, `\\{${aVals.join(", ")}\\}`),
-            ],
-            t(
-              `First compute intersection $A \\cap B = ${interStr}$. Then $(A \\cap B)^c = U \\setminus (A \\cap B) = ${resStr}$. By De Morgan's laws, this equals $A^c \\cup B^c$.`,
-              `首先求交集 $A \\cap B = ${interStr}$。因此补集为 $(A \\cap B)^c = U \\setminus (A \\cap B) = ${resStr}$。由德摩根定律知其亦等于 $A^c \\cup B^c$。`,
+            answer: res.length,
+            solution: t(
+              `First compute intersection $A \\cap B = ${interStr}$, which has $${interSet.size}$ elements. Then $(A \\cap B)^c = U \\setminus (A \\cap B) = ${resStr}$, which has $|(A \\cap B)^c| = ${res.length}$ elements. By De Morgan's laws, this also equals $|A^c \\cup B^c|$.`,
+              `首先求交集 $A \\cap B = ${interStr}$，共含 $${interSet.size}$ 个元素。因此补集为 $(A \\cap B)^c = U \\setminus (A \\cap B) = ${resStr}$，元素个数为 $|(A \\cap B)^c| = ${res.length}$。由德摩根定律知其亦等于 $|A^c \\cup B^c|$。`,
             ),
-          );
+            wrong: [n - res.length, n, res.length + 1, Math.max(0, res.length - 1)],
+          });
         }
       },
     },
@@ -1485,19 +1458,18 @@ export const theCartesianProduct: TopicDef = {
         const m = rng.int(2, 8);
         const n = rng.int(2, 8);
         const prod = m * n;
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `If finite set $A$ has $|A| = ${m}$ and finite set $B$ has $|B| = ${n}$, find $|A \\times B|$.`,
             `若有限集合 $A$ 满足 $|A| = ${m}$，有限集合 $B$ 满足 $|B| = ${n}$，求 $|A \\times B|$。`,
           ),
-          t(`$${prod}$`, `$${prod}$`),
-          [t(`$${m + n}$`, `$${m + n}$`), t(`$${prod + 2}$`, `$${prod + 2}$`), t(`$${prod - 2}$`, `$${prod - 2}$`)],
-          t(
+          answer: prod,
+          solution: t(
             `Each of the $${m}$ choices from $A$ can be paired with any of the $${n}$ choices from $B$, giving $|A \\times B| = |A| \\cdot |B| = ${m} \\cdot ${n} = ${prod}$.`,
             `集合 $A$ 中的每个元素（共 $${m}$ 个）都可以与集合 $B$ 中的任意元素（共 $${n}$ 个）配对，因此 $|A \\times B| = |A| \\cdot |B| = ${m} \\cdot ${n} = ${prod}$。`,
           ),
-        );
+          wrong: [m + n, prod + 2, prod - 2],
+        });
       },
     },
   ],
@@ -1533,23 +1505,18 @@ export const visualizingCartesianProducts: TopicDef = {
         const B = rng.sample(poolY, countY).sort((a, b) => a - b);
         const positiveYCount = B.filter((y) => y > 0).length;
         const firstQuadrantPoints = A.length * positiveYCount;
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Let $A = \\{${A.join(", ")}\\}$ and $B = \\{${B.join(", ")}\\}$. How many points of the Cartesian product $A \\times B$ lie strictly in the first quadrant of $\\mathbb{R}^2$ ($x > 0$ and $y > 0$)?`,
             `设 $A = \\{${A.join(", ")}\\}$ 且 $B = \\{${B.join(", ")}\\}$。笛卡尔积 $A \\times B$ 中共有多少个点严格位于 $\\mathbb{R}^2$ 的第一象限（$x > 0$ 且 $y > 0$）？`,
           ),
-          t(`$${firstQuadrantPoints}$`, `$${firstQuadrantPoints}$`),
-          [
-            t(`$${A.length * B.length}$`, `$${A.length * B.length}$`),
-            t(`$${firstQuadrantPoints + 1}$`, `$${firstQuadrantPoints + 1}$`),
-            t(`$${Math.max(0, firstQuadrantPoints - 1)}$`, `$${Math.max(0, firstQuadrantPoints - 1)}$`),
-          ],
-          t(
+          answer: firstQuadrantPoints,
+          solution: t(
             `A point $(x, y) \\in A \\times B$ lies in the first quadrant if $x > 0$ and $y > 0$. Here all $${A.length}$ elements of $A$ are positive, and $${positiveYCount}$ elements of $B$ are positive, giving $${A.length} \\times ${positiveYCount} = ${firstQuadrantPoints}$ points.`,
             `点 $(x, y) \\in A \\times B$ 位于第一象限当且仅当 $x > 0$ 且 $y > 0$。在此 $A$ 的全部 $${A.length}$ 个元素均为正，$B$ 中有 $${positiveYCount}$ 个正数，因此第一象限内的点共有 $${A.length} \\times ${positiveYCount} = ${firstQuadrantPoints}$ 个。`,
           ),
-        );
+          wrong: [A.length * B.length, firstQuadrantPoints + 1, Math.max(0, firstQuadrantPoints - 1)],
+        });
       },
     },
     {
@@ -1567,19 +1534,18 @@ export const visualizingCartesianProducts: TopicDef = {
         const h = rng.int(2, 8);
         const d = c + h;
         const area = w * h;
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the area of the planar region formed by the Cartesian product $[${a}, ${b}] \\times [${c}, ${d}] \\subset \\mathbb{R}^2$.`,
             `求由笛卡尔积 $[${a}, ${b}] \\times [${c}, ${d}] \\subset \\mathbb{R}^2$ 构成的平面矩形区域的面积。`,
           ),
-          t(`$${area}$`, `$${area}$`),
-          [t(`$${2 * (w + h)}$`, `$${2 * (w + h)}$`), t(`$${area + w}$`, `$${area + w}$`), t(`$${area - h}$`, `$${area - h}$`)],
-          t(
-            `The region is a rectangle with width $b - a = ${b} - (${a}) = ${w}$ and height $d - c = ${d} - (${c}) = ${h}$. The area is $\\text{width} \\times \\text{height} = ${w} \\times ${h} = ${area}$.`,
-            `该区域为一个矩形，宽为 $b - a = ${b} - (${a}) = ${w}$，高为 $d - c = ${d} - (${c}) = ${h}$。其面积为 $\\text{宽} \\times \\text{高} = ${w} \\times ${h} = ${area}$。`,
+          answer: area,
+          solution: t(
+            `The region is a rectangle with width $b - a = ${fmtSub(b, a)} = ${w}$ and height $d - c = ${fmtSub(d, c)} = ${h}$. The area is $\\text{width} \\times \\text{height} = ${w} \\times ${h} = ${area}$.`,
+            `该区域为一个矩形，宽为 $b - a = ${fmtSub(b, a)} = ${w}$，高为 $d - c = ${fmtSub(d, c)} = ${h}$。其面积为 $\\text{宽} \\times \\text{高} = ${w} \\times ${h} = ${area}$。`,
           ),
-        );
+          wrong: [2 * (w + h), area + w, area - h],
+        });
       },
     },
   ],
@@ -1609,23 +1575,21 @@ export const indexedSets: TopicDef = {
       generate(rng) {
         const n = rng.int(3, 35);
         const start = rng.int(0, 5);
-        return oneOf(
-          rng,
-          t(
-            `For each $i \\in \\{1, 2, \\dots, ${n}\\}$, let $A_i = [${start}, ${start} + i] \\subset \\mathbb{R}$. Evaluate the union $\\bigcup_{i=1}^{${n}} A_i$.`,
-            `对每个 $i \\in \\{1, 2, \\dots, ${n}\\}$，设 $A_i = [${start}, ${start} + i] \\subset \\mathbb{R}$。计算并集 $\\bigcup_{i=1}^{${n}} A_i$。`,
+        return intervalProblem({
+          prompt: t(
+            `For each $i \\in \\{1, 2, \\dots, ${n}\\}$, let $A_i = [${start}, ${start} + i] \\subset \\mathbb{R}$. Evaluate the union $\\bigcup_{i=1}^{${n}} A_i$ in interval notation.`,
+            `对每个 $i \\in \\{1, 2, \\dots, ${n}\\}$，设 $A_i = [${start}, ${start} + i] \\subset \\mathbb{R}$。用区间记号表示并集 $\\bigcup_{i=1}^{${n}} A_i$。`,
           ),
-          t(`$[${start}, ${start + n}]$`, `$[${start}, ${start + n}]$`),
-          [
-            t(`$[${start}, ${start + 1}]$`, `$[${start}, ${start + 1}]$`),
-            t(`$[${start}, ${start + n + 1}]$`, `$[${start}, ${start + n + 1}]$`),
-            t(`\\{${start}, ${start + 1}, \\dots, ${start + n}\\}`, `\\{${start}, ${start + 1}, \\dots, ${start + n}\\}`),
-          ],
-          t(
+          set: [{ lo: q(start), loClosed: true, hi: q(start + n), hiClosed: true }],
+          solution: t(
             `Notice that $A_1 \\subset A_2 \\subset \\dots \\subset A_{${n}} = [${start}, ${start + n}]$. Since the sets are nested, their union is the largest set: $\\bigcup_{i=1}^{${n}} A_i = [${start}, ${start + n}]$.`,
             `注意到这些集合相互嵌套包含：$A_1 \\subset A_2 \\subset \\dots \\subset A_{${n}} = [${start}, ${start + n}]$。因此它们的并集就是包含所有元素的最大集合：$[${start}, ${start + n}]$。`,
           ),
-        );
+          wrong: [
+            [{ lo: q(start), loClosed: true, hi: q(start + 1), hiClosed: true }],
+            [{ lo: q(start), loClosed: true, hi: q(start + n + 1), hiClosed: true }],
+          ],
+        });
       },
     },
     {
@@ -1638,19 +1602,18 @@ export const indexedSets: TopicDef = {
       generate(rng) {
         const n = rng.int(3, 35);
         const c = rng.int(-5, 5);
-        return oneOf(
-          rng,
-          t(
-            `For each $i \\in \\{1, 2, \\dots, ${n}\\}$, let $A_i = [${c} - i, ${c} + i] \\subset \\mathbb{R}$. Evaluate the intersection $\\bigcap_{i=1}^{${n}} A_i$.`,
-            `对每个 $i \\in \\{1, 2, \\dots, ${n}\\}$，设 $A_i = [${c} - i, ${c} + i] \\subset \\mathbb{R}$。计算交集 $\\bigcap_{i=1}^{${n}} A_i$。`,
+        return intervalProblem({
+          prompt: t(
+            `For each $i \\in \\{1, 2, \\dots, ${n}\\}$, let $A_i = [${c} - i, ${c} + i] \\subset \\mathbb{R}$. Evaluate the intersection $\\bigcap_{i=1}^{${n}} A_i$ in interval notation.`,
+            `对每个 $i \\in \\{1, 2, \\dots, ${n}\\}$，设 $A_i = [${c} - i, ${c} + i] \\subset \\mathbb{R}$。用区间记号表示交集 $\\bigcap_{i=1}^{${n}} A_i$。`,
           ),
-          t(`$[${c - 1}, ${c + 1}]$`, `$[${c - 1}, ${c + 1}]$`),
-          [t(`$[${c - n}, ${c + n}]$`, `$[${c - n}, ${c + n}]$`), t(`\\{${c}\\}`, `\\{${c}\\}`), t(`\\emptyset`, `\\emptyset`)],
-          t(
+          set: [{ lo: q(c - 1), loClosed: true, hi: q(c + 1), hiClosed: true }],
+          solution: t(
             `The intervals are nested in reverse: $A_1 = [${c - 1}, ${c + 1}] \\subset A_2 \\subset \\dots \\subset A_{${n}}$. The intersection of nested sets is the smallest set, so $\\bigcap_{i=1}^{${n}} A_i = A_1 = [${c - 1}, ${c + 1}]$.`,
             `这些区间满足反向嵌套包含：$A_1 = [${c - 1}, ${c + 1}] \\subset A_2 \\subset \\dots \\subset A_{${n}}$。嵌套集合族的交集即为其最小集合，因此 $\\bigcap_{i=1}^{${n}} A_i = A_1 = [${c - 1}, ${c + 1}]$。`,
           ),
-        );
+          wrong: [[{ lo: q(c - n), loClosed: true, hi: q(c + n), hiClosed: true }]],
+        });
       },
     },
   ],
@@ -1716,28 +1679,25 @@ export const setsAndFunctions: TopicDef = {
         "对于函数 $f: A \\to B$，$A$ 称为定义域，$B$ 称为到达域（陪域），而值域（或像集）是实际达到的所有输出构成的集合：$f(A) = \\{f(a) \\mid a \\in A\\} \\subseteq B$。值域总是到达域的子集，但不一定等于整个到达域。",
       ),
       generate(rng) {
-        const c = rng.int(1, 5);
-        const d = rng.int(1, 5);
+        const c = rng.int(1, 8);
+        const d = rng.int(-5, 8);
         const domain = [1, 2, 3, 4];
         const rangeVals = domain.map((x) => c * x + d);
         const rangeStr = `\\{${rangeVals.join(", ")}\\}`;
-        return oneOf(
-          rng,
-          t(
-            `Let $f: \\{1, 2, 3, 4\\} \\to \\mathbb{Z}$ be defined by $f(x) = ${c}x + ${d}$. Find the range of $f$.`,
-            `设函数 $f: \\{1, 2, 3, 4\\} \\to \\mathbb{Z}$ 定义为 $f(x) = ${c}x + ${d}$。求 $f$ 的值域。`,
+        const fnExpr = d === 0 ? `${c}x` : d > 0 ? `${c}x + ${d}` : `${c}x - ${-d}`;
+        return solutionsProblem({
+          prompt: t(
+            `Let $f: \\{1, 2, 3, 4\\} \\to \\mathbb{Z}$ be defined by $f(x) = ${fnExpr}$. List all elements of the range of $f$.`,
+            `设函数 $f: \\{1, 2, 3, 4\\} \\to \\mathbb{Z}$ 定义为 $f(x) = ${fnExpr}$。列出 $f$ 的值域的全部元素。`,
           ),
-          t(`$${rangeStr}$`, `$${rangeStr}$`),
-          [
-            t(`\\mathbb{Z}`, `\\mathbb{Z}`),
-            t(`\\{1, 2, 3, 4\\}`, `\\{1, 2, 3, 4\\}`),
-            t(`\\{${rangeVals.slice(0, 3).join(", ")}\\}`, `\\{${rangeVals.slice(0, 3).join(", ")}\\}`),
-          ],
-          t(
-            `Compute $f(x)$ for each domain element:\n\n- $f(1) = ${c}(1) + ${d} = ${rangeVals[0]}$\n- $f(2) = ${c}(2) + ${d} = ${rangeVals[1]}$\n- $f(3) = ${c}(3) + ${d} = ${rangeVals[2]}$\n- $f(4) = ${c}(4) + ${d} = ${rangeVals[3]}$\n\nThus the range is $${rangeStr}$.`,
-            `分别计算定义域中每个元素的像：\n\n- $f(1) = ${c}(1) + ${d} = ${rangeVals[0]}$\n- $f(2) = ${c}(2) + ${d} = ${rangeVals[1]}$\n- $f(3) = ${c}(3) + ${d} = ${rangeVals[2]}$\n- $f(4) = ${c}(4) + ${d} = ${rangeVals[3]}$\n\n因此值域为 $${rangeStr}$。`,
+          values: rangeVals.map(String),
+          variable: "y",
+          solution: t(
+            `Compute $f(x)$ for each domain element:\n\n- $f(1) = ${rangeVals[0]}$\n- $f(2) = ${rangeVals[1]}$\n- $f(3) = ${rangeVals[2]}$\n- $f(4) = ${rangeVals[3]}$\n\nThus the range is $${rangeStr}$.`,
+            `分别计算定义域中每个元素的像：\n\n- $f(1) = ${rangeVals[0]}$\n- $f(2) = ${rangeVals[1]}$\n- $f(3) = ${rangeVals[2]}$\n- $f(4) = ${rangeVals[3]}$\n\n因此值域为 $${rangeStr}$。`,
           ),
-        );
+          wrong: [rangeVals.slice(0, 3).map(String), [1, 2, 3, 4].map(String)],
+        });
       },
     },
   ],
@@ -1821,23 +1781,19 @@ export const theVectorEquationOfALine: TopicDef = {
         const w1: Vec3 = [x0 + a * (tVal + 1), y0 + b * tVal, z0 + c * tVal];
         const w2: Vec3 = [x0 - a * tVal, y0 - b * tVal, z0 - c * tVal];
         const w3: Vec3 = [x0 + a, y0 + b, z0 + c];
-        return oneOf(
-          rng,
-          t(
-            `A line is given by $\\mathbf{r}(t) = ${vec3Latex(r0)} + t${vec3Latex(v)}$. Find the coordinates of the point corresponding to parameter $t = ${tVal}$.`,
-            `已知直线的向量方程为 $\\mathbf{r}(t) = ${vec3Latex(r0)} + t${vec3Latex(v)}$。求参数 $t = ${tVal}$ 时对应的空间点坐标。`,
+        return pointProblem({
+          prompt: t(
+            `A line is given by $\\mathbf{r}(t) = ${vec3Latex(r0)} + t${vec3Latex(v)}$. Find the coordinates $(x, y, z)$ of the point corresponding to parameter $t = ${tVal}$.`,
+            `已知直线的向量方程为 $\\mathbf{r}(t) = ${vec3Latex(r0)} + t${vec3Latex(v)}$。求参数 $t = ${tVal}$ 时对应的空间点坐标 $(x, y, z)$。`,
           ),
-          t(`$${pt3Latex(ptAtT)}$`, `$${pt3Latex(ptAtT)}$`),
-          [
-            t(`$${pt3Latex(w1)}$`, `$${pt3Latex(w1)}$`),
-            t(`$${pt3Latex(w2)}$`, `$${pt3Latex(w2)}$`),
-            t(`$${pt3Latex(w3)}$`, `$${pt3Latex(w3)}$`),
-          ],
-          t(
+          answer: ptAtT,
+          vars: ["x", "y", "z"],
+          solution: t(
             `Substitute $t = ${tVal}$ into each coordinate:\n\n$$x = ${x0} + (${a})(${tVal}) = ${ptAtT[0]}, \\quad y = ${y0} + (${b})(${tVal}) = ${ptAtT[1]}, \\quad z = ${z0} + (${c})(${tVal}) = ${ptAtT[2]}$$`,
             `将 $t = ${tVal}$ 代入各分量：\n\n$$x = ${x0} + (${a})(${tVal}) = ${ptAtT[0]}, \\quad y = ${y0} + (${b})(${tVal}) = ${ptAtT[1]}, \\quad z = ${z0} + (${c})(${tVal}) = ${ptAtT[2]}$$`,
           ),
-        );
+          wrong: [w1, w2, w3],
+        });
       },
     },
   ],
@@ -1913,23 +1869,20 @@ export const theParametricEquationsOfALine: TopicDef = {
         const v: Vec3 = [a, b, c];
         const lineStr = paramLineLatex(p, v);
 
-        return oneOf(
-          rng,
-          t(
-            `A line is given by parametric equations:\n\n$$${lineStr}$$\n\nIdentify a direction vector $\\mathbf{v}$ of this line.`,
-            `已知直线的参数方程为：\n\n$$${lineStr}$$\n\n确定该直线的一个方向向量 $\\mathbf{v}$。`,
+        return pointProblem({
+          prompt: t(
+            `A line is given by parametric equations:\n\n$$${lineStr}$$\n\nIdentify a direction vector $\\mathbf{v} = \\langle a, b, c \\rangle$ of this line.`,
+            `已知直线的参数方程为：\n\n$$${lineStr}$$\n\n确定该直线的一个方向向量 $\\mathbf{v} = \\langle a, b, c \\rangle$。`,
           ),
-          t(`$${vec3Latex(v)}$`, `$${vec3Latex(v)}$`),
-          [
-            t(`$${vec3Latex(p)}$`, `$${vec3Latex(p)}$`),
-            t(`$${vec3Latex([a, -b, c])}$`, `$${vec3Latex([a, -b, c])}$`),
-            t(`$${vec3Latex([-a, b, -c])}$`, `$${vec3Latex([-a, b, -c])}$`),
-          ],
-          t(
+          answer: v,
+          vars: ["x", "y", "z"],
+          vector: true,
+          solution: t(
             `The components of the direction vector are the coefficients of parameter $t$: $a = ${a}, b = ${b}, c = ${c}$, so $\\mathbf{v} = ${vec3Latex(v)}$.`,
             `方向向量的分量即为参数 $t$ 的系数：$a = ${a}, b = ${b}, c = ${c}$，因此 $\\mathbf{v} = ${vec3Latex(v)}$。`,
           ),
-        );
+          wrong: [p, [a, -b, c], [-a, b, -c]],
+        });
       },
     },
   ],
@@ -1964,10 +1917,7 @@ export const theCartesianEquationOfALine: TopicDef = {
         const b = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
         const c = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
 
-        const symPart = (val: number, dir: number, axis: string) => {
-          const num = val === 0 ? axis : val > 0 ? `${axis} - ${val}` : `${axis} + ${-val}`;
-          return `\\frac{${num}}{${dir}}`;
-        };
+        const symPart = (val: number, dir: number, axis: string) => `\\frac{${symNum(axis, val)}}{${dir}}`;
         const rightSym = `${symPart(x0, a, "x")} = ${symPart(y0, b, "y")} = ${symPart(z0, c, "z")}`;
         const wrong1 = `${symPart(a, x0 || 1, "x")} = ${symPart(b, y0 || 1, "y")} = ${symPart(c, z0 || 1, "z")}`;
         const wrong2 = `${symPart(-x0, a, "x")} = ${symPart(y0, b, "y")} = ${symPart(z0, c, "z")}`;
@@ -1984,8 +1934,8 @@ export const theCartesianEquationOfALine: TopicDef = {
           t(`$${rightSym}$`, `$${rightSym}$`),
           [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
           t(
-            `Solving for $t$ in each coordinate gives $t = \\frac{x - (${x0})}{${a}} = \\frac{y - (${y0})}{${b}} = \\frac{z - (${z0})}{${c}}$. Thus the symmetric equations are:\n\n$$${rightSym}$$`,
-            `在每个参数方程中解出 $t$，得 $t = \\frac{x - (${x0})}{${a}} = \\frac{y - (${y0})}{${b}} = \\frac{z - (${z0})}{${c}}$。联立即得对称式方程：\n\n$$${rightSym}$$`,
+            `Solving for $t$ in each coordinate gives $t = \\frac{${symNum("x", x0)}}{${a}} = \\frac{${symNum("y", y0)}}{${b}} = \\frac{${symNum("z", z0)}}{${c}}$. Thus the symmetric equations are:\n\n$$${rightSym}$$`,
+            `在每个参数方程中解出 $t$，得 $t = \\frac{${symNum("x", x0)}}{${a}} = \\frac{${symNum("y", y0)}}{${b}} = \\frac{${symNum("z", z0)}}{${c}}$。联立即得对称式方程：\n\n$$${rightSym}$$`,
           ),
         );
       },
@@ -2067,23 +2017,18 @@ export const theVectorEquationOfAPlane: TopicDef = {
         const r0: Vec3 = [x0, y0, z0];
         const d = dot3(n, r0);
 
-        const rightEq = `${vec3Latex(n)} \\cdot \\mathbf{r} = ${d}`;
-        const wrong1 = `${vec3Latex(n)} \\cdot \\mathbf{r} = ${-d}`;
-        const wrong2 = `${vec3Latex(r0)} \\cdot \\mathbf{r} = ${d}`;
-        const wrong3 = `${vec3Latex(n)} \\cdot \\mathbf{r} = 0`;
-        return oneOf(
-          rng,
-          t(
-            `Find the scalar product form $\\mathbf{n} \\cdot \\mathbf{r} = d$ of the plane passing through $P${pt3Latex(r0)}$ with normal vector $\\mathbf{n} = ${vec3Latex(n)}$.`,
-            `求通过点 $P${pt3Latex(r0)}$ 且法向量为 $\\mathbf{n} = ${vec3Latex(n)}$ 的平面的标量积方程 $\\mathbf{n} \\cdot \\mathbf{r} = d$。`,
+        return numberProblem({
+          prompt: t(
+            `Find the constant $d$ in the scalar product equation $\\mathbf{n} \\cdot \\mathbf{r} = d$ of the plane passing through $P${pt3Latex(r0)}$ with normal vector $\\mathbf{n} = ${vec3Latex(n)}$.`,
+            `求通过点 $P${pt3Latex(r0)}$ 且法向量为 $\\mathbf{n} = ${vec3Latex(n)}$ 的平面的标量积方程 $\\mathbf{n} \\cdot \\mathbf{r} = d$ 中的常数 $d$。`,
           ),
-          t(`$${rightEq}$`, `$${rightEq}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `The constant is $d = \\mathbf{n} \\cdot \\mathbf{r}_0 = (${A})(${x0}) + (${B})(${y0}) + (${C})(${z0}) = ${d}$. Thus the equation is $${rightEq}$.`,
-            `常数项为 $d = \\mathbf{n} \\cdot \\mathbf{r}_0 = (${A})(${x0}) + (${B})(${y0}) + (${C})(${z0}) = ${d}$。因此方程为 $${rightEq}$。`,
+          answer: d,
+          solution: t(
+            `The constant is $d = \\mathbf{n} \\cdot \\mathbf{r}_0 = (${A})(${x0}) + (${B})(${y0}) + (${C})(${z0}) = ${d}$. Thus the equation is $${vec3Latex(n)} \\cdot \\mathbf{r} = ${d}$.`,
+            `常数项为 $d = \\mathbf{n} \\cdot \\mathbf{r}_0 = (${A})(${x0}) + (${B})(${y0}) + (${C})(${z0}) = ${d}$。因此方程为 $${vec3Latex(n)} \\cdot \\mathbf{r} = ${d}$。`,
           ),
-        );
+          wrong: [-d, 0, d + 1, d - 1],
+        });
       },
     },
     {
@@ -2111,23 +2056,20 @@ export const theVectorEquationOfAPlane: TopicDef = {
         const wrong2: Vec3 = [n[1], n[0], n[2]];
         const wrong3: Vec3 = add3(u, v);
 
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `Find a normal vector $\\mathbf{n} = \\vec{PQ} \\times \\vec{PR}$ for the plane containing the three points $P${pt3Latex(P)}$, $Q${pt3Latex(Q)}$, and $R${pt3Latex(R)}$.`,
             `求包含点 $P${pt3Latex(P)}$、$Q${pt3Latex(Q)}$ 与 $R${pt3Latex(R)}$ 的平面的法向量 $\\mathbf{n} = \\vec{PQ} \\times \\vec{PR}$。`,
           ),
-          t(`$${vec3Latex(n)}$`, `$${vec3Latex(n)}$`),
-          [
-            t(`$${vec3Latex(wrong1)}$`, `$${vec3Latex(wrong1)}$`),
-            t(`$${vec3Latex(wrong2)}$`, `$${wrong2[0]}, ${wrong2[1]}, ${wrong2[2]}`),
-            t(`$${vec3Latex(wrong3)}$`, `$${wrong3[0]}, ${wrong3[1]}, ${wrong3[2]}`),
-          ],
-          t(
+          answer: n,
+          vars: ["x", "y", "z"],
+          vector: true,
+          solution: t(
             `Compute $\\vec{PQ} = ${vec3Latex(u)}$ and $\\vec{PR} = ${vec3Latex(v)}$. Then evaluate the cross product:\n\n$$\\mathbf{n} = \\vec{PQ} \\times \\vec{PR} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\end{vmatrix} = ${vec3Latex(n)}$$`,
             `先求位移向量 $\\vec{PQ} = ${vec3Latex(u)}$ 与 $\\vec{PR} = ${vec3Latex(v)}$。然后计算其叉积：\n\n$$\\mathbf{n} = \\vec{PQ} \\times \\vec{PR} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\end{vmatrix} = ${vec3Latex(n)}$$`,
           ),
-        );
+          wrong: [wrong1, wrong2, wrong3],
+        });
       },
     },
   ],
@@ -2170,19 +2112,18 @@ export const theCartesianEquationOfAPlane: TopicDef = {
 
         const p: Vec3 = [x0, y0, z0];
         const n: Vec3 = [A, B, C];
-        return oneOf(
-          rng,
-          t(
-            `Find the general equation of the plane passing through $P${pt3Latex(p)}$ with normal vector $\\mathbf{n} = ${vec3Latex(n)}$.`,
-            `求过点 $P${pt3Latex(p)}$ 且以 $\\mathbf{n} = ${vec3Latex(n)}$ 为法向量的平面的点法式一般方程。`,
+        return equationProblem({
+          prompt: t(
+            `Find the general equation of the plane passing through $P${pt3Latex(p)}$ with normal vector $\\mathbf{n} = ${vec3Latex(n)}$. Express the equation in the form $Ax + By + Cz + D = 0$.`,
+            `求过点 $P${pt3Latex(p)}$ 且以 $\\mathbf{n} = ${vec3Latex(n)}$ 为法向量的平面的点法式一般方程（写成 $Ax + By + Cz + D = 0$ 的形式）。`,
           ),
-          t(`$${rightEq}$`, `$${rightEq}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `Substitute into $A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$:\n\n$$${A}(x - (${x0})) + ${B}(y - (${y0})) + ${C}(z - (${z0})) = 0 \\implies ${rightEq}$$`,
-            `代入点法式方程 $A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$：\n\n$$${A}(x - (${x0})) + ${B}(y - (${y0})) + ${C}(z - (${z0})) = 0 \\implies ${rightEq}$$`,
+          answer: rightEq,
+          solution: t(
+            `Substitute into $A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$:\n\n$$${fmtTerm(A, "x", x0)} + ${fmtTerm(B, "y", y0)} + ${fmtTerm(C, "z", z0)} = 0 \\implies ${rightEq}$$`,
+            `代入点法式方程 $A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$：\n\n$$${fmtTerm(A, "x", x0)} + ${fmtTerm(B, "y", y0)} + ${fmtTerm(C, "z", z0)} = 0 \\implies ${rightEq}$$`,
           ),
-        );
+          wrong: [wrong1, wrong2, wrong3],
+        });
       },
     },
     {
@@ -2201,23 +2142,24 @@ export const theCartesianEquationOfAPlane: TopicDef = {
         const planeStr = planeEqLatex(A, B, C, D);
         const n: Vec3 = [A, B, C];
 
-        return oneOf(
-          rng,
-          t(
-            `The plane $\\Pi$ is defined by the equation:\n\n$$${planeStr}$$\n\nIdentify a normal vector $\\mathbf{n}$ perpendicular to this plane.`,
-            `平面 $\\Pi$ 由下列方程给出：\n\n$$${planeStr}$$\n\n确定垂直于该平面的一个法向量 $\\mathbf{n}$。`,
+        return pointProblem({
+          prompt: t(
+            `The plane $\\Pi$ is defined by the equation:\n\n$$${planeStr}$$\n\nIdentify a normal vector $\\mathbf{n} = \\langle A, B, C \\rangle$ perpendicular to this plane.`,
+            `平面 $\\Pi$ 由下列方程给出：\n\n$$${planeStr}$$\n\n确定垂直于该平面的一个法向量 $\\mathbf{n} = \\langle A, B, C \\rangle$。`,
           ),
-          t(`$${vec3Latex(n)}$`, `$${vec3Latex(n)}$`),
-          [
-            t(`$${vec3Latex([A, -B, C])}$`, `$${vec3Latex([A, -B, C])}$`),
-            t(`$${vec3Latex([A, B, D])}$`, `$${vec3Latex([A, B, D])}$`),
-            t(`$${vec3Latex([B, A, C])}$`, `$${vec3Latex([B, A, C])}$`),
-          ],
-          t(
+          answer: n,
+          vars: ["x", "y", "z"],
+          vector: true,
+          solution: t(
             `The coefficients of $x, y, z$ in $Ax + By + Cz + D = 0$ directly define a normal vector $\\mathbf{n} = \\langle A, B, C \\rangle = ${vec3Latex(n)}$.`,
-            `在方程 $Ax + By + Cz + D = 0$ 中，$x, y, z$ 的系数直接构成了平面的法向量 $\\mathbf{n} = \\langle A, B, C \\rangle = ${vec3Latex(n)}$。`,
+            `在方程 $Ax + By + Cz + D = 0$ 中，$x, y, z$ 的系数直接构成了平面的法向量 $\\mathbf{n} = \\langle A, B, C \\rangle = ${vec3Latex(n)}$.`,
           ),
-        );
+          wrong: [
+            [A, -B, C],
+            [A, B, D],
+            [B, A, C],
+          ],
+        });
       },
     },
   ],
@@ -2299,23 +2241,19 @@ export const theParametricEquationsOfAPlane: TopicDef = {
         const w2: Vec3 = [ptResult[0], ptResult[1] - 1, ptResult[2]];
         const w3: Vec3 = [x0 - sVal * u[0], y0 - sVal * u[1], z0 - sVal * u[2]];
 
-        return oneOf(
-          rng,
-          t(
-            `A plane has parametric equation $\\mathbf{r}(s, t) = ${vec3Latex(r0)} + s${vec3Latex(u)} + t${vec3Latex(v)}$. Find the point corresponding to parameters $s = ${sVal}$ and $t = ${tVal}$.`,
-            `已知平面的参数方程为 $\\mathbf{r}(s, t) = ${vec3Latex(r0)} + s${vec3Latex(u)} + t${vec3Latex(v)}$。求参数取值 $s = ${sVal}$ 且 $t = ${tVal}$ 时对应的空间点坐标。`,
+        return pointProblem({
+          prompt: t(
+            `A plane has parametric equation $\\mathbf{r}(s, t) = ${vec3Latex(r0)} + s${vec3Latex(u)} + t${vec3Latex(v)}$. Find the coordinates $(x, y, z)$ corresponding to parameters $s = ${sVal}$ and $t = ${tVal}$.`,
+            `已知平面的参数方程为 $\\mathbf{r}(s, t) = ${vec3Latex(r0)} + s${vec3Latex(u)} + t${vec3Latex(v)}$。求参数取值 $s = ${sVal}$ 且 $t = ${tVal}$ 时对应的空间点坐标 $(x, y, z)$。`,
           ),
-          t(`$${pt3Latex(ptResult)}$`, `$${pt3Latex(ptResult)}$`),
-          [
-            t(`$${pt3Latex(w1)}$`, `$${pt3Latex(w1)}$`),
-            t(`$${pt3Latex(w2)}$`, `$${pt3Latex(w2)}$`),
-            t(`$${pt3Latex(w3)}$`, `$${pt3Latex(w3)}$`),
-          ],
-          t(
+          answer: ptResult,
+          vars: ["x", "y", "z"],
+          solution: t(
             `Calculate each coordinate:\n\n$$x = ${x0} + (${sVal})(${u[0]}) + (${tVal})(${v[0]}) = ${ptResult[0]}$$\n$$y = ${y0} + (${sVal})(${u[1]}) + (${tVal})(${v[1]}) = ${ptResult[1]}$$\n$$z = ${z0} + (${sVal})(${u[2]}) + (${tVal})(${v[2]}) = ${ptResult[2]}$$`,
             `代入计算各分量：\n\n$$x = ${x0} + (${sVal})(${u[0]}) + (${tVal})(${v[0]}) = ${ptResult[0]}$$\n$$y = ${y0} + (${sVal})(${u[1]}) + (${tVal})(${v[1]}) = ${ptResult[1]}$$\n$$z = ${z0} + (${sVal})(${u[2]}) + (${tVal})(${v[2]}) = ${ptResult[2]}$$`,
           ),
-        );
+          wrong: [w1, w2, w3],
+        });
       },
     },
   ],
@@ -2361,23 +2299,20 @@ export const theIntersectionOfTwoPlanes: TopicDef = {
         const wrong2: Vec3 = [v[1], v[0], v[2]];
         const wrong3: Vec3 = add3(n1, n2);
 
-        return oneOf(
-          rng,
-          t(
-            `Find a direction vector $\\mathbf{v}$ for the line of intersection between the two planes:\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
-            `求下列两平面交线的方向向量 $\\mathbf{v}$：\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
+        return pointProblem({
+          prompt: t(
+            `Find a direction vector $\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$ for the line of intersection between the two planes:\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
+            `求下列两平面交线的方向向量 $\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$：\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
           ),
-          t(`$${vec3Latex(v)}$`, `$${vec3Latex(v)}$`),
-          [
-            t(`$${vec3Latex(wrong1)}$`, `$${vec3Latex(wrong1)}$`),
-            t(`$${vec3Latex(wrong2)}$`, `$${wrong2[0]}, ${wrong2[1]}, ${wrong2[2]}`),
-            t(`$${vec3Latex(wrong3)}$`, `$${wrong3[0]}, ${wrong3[1]}, ${wrong3[2]}`),
-          ],
-          t(
+          answer: v,
+          vars: ["x", "y", "z"],
+          vector: true,
+          solution: t(
             `The direction vector is perpendicular to both normal vectors $\\mathbf{n}_1 = ${vec3Latex(n1)}$ and $\\mathbf{n}_2 = ${vec3Latex(n2)}$:\n\n$$\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2 = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${n1[0]} & ${n1[1]} & ${n1[2]} \\\\ ${n2[0]} & ${n2[1]} & ${n2[2]} \\end{vmatrix} = ${vec3Latex(v)}$$`,
             `交线的方向向量垂直于两平面的法向量 $\\mathbf{n}_1 = ${vec3Latex(n1)}$ 与 $\\mathbf{n}_2 = ${vec3Latex(n2)}$：\n\n$$\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2 = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${n1[0]} & ${n1[1]} & ${n1[2]} \\\\ ${n2[0]} & ${n2[1]} & ${n2[2]} \\end{vmatrix} = ${vec3Latex(v)}$$`,
           ),
-        );
+          wrong: [wrong1, wrong2, wrong3],
+        });
       },
     },
     {
@@ -2388,14 +2323,10 @@ export const theIntersectionOfTwoPlanes: TopicDef = {
         "求解两平面的交线方程时，先由法向量叉积 $\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2$ 得到方向向量，再通过令某一坐标为零（例如 $z = 0$）解二元一次方程组求得两平面的一个公共交点 $P_0$，从而写出交线的参数方程。",
       ),
       generate(rng) {
-        // Construct two planes intersecting at line r(t) = P0 + t v
         const p0: Vec3 = [rng.int(-3, 3), rng.int(-3, 3), 0];
         const v: Vec3 = [rng.pick([-2, -1, 1, 2]), rng.pick([-2, -1, 1, 2]), 1];
 
-        // Choose n1 and n2 orthogonal to v
-        // Let n1 = [1, 0, -v[0]] -> dot with v is v[0] - v[0] = 0
         const n1: Vec3 = [1, 0, -v[0]];
-        // Let n2 = [0, 1, -v[1]] -> dot with v is v[1] - v[1] = 0
         const n2: Vec3 = [0, 1, -v[1]];
 
         const d1 = -dot3(n1, p0);
@@ -2404,24 +2335,21 @@ export const theIntersectionOfTwoPlanes: TopicDef = {
         const plane1Str = planeEqLatex(n1[0], n1[1], n1[2], d1);
         const plane2Str = planeEqLatex(n2[0], n2[1], n2[2], d2);
 
-        const rightLine = paramLineLatex(p0, v);
-        const wrong1 = paramLineLatex(p0, [v[0], -v[1], v[2]]);
-        const wrong2 = paramLineLatex([p0[0] + 1, p0[1], p0[2]], v);
-        const wrong3 = paramLineLatex(p0, [-v[0], v[1], v[2]]);
+        const wrong2: Vec3 = [p0[0] + 1, p0[1], 0];
 
-        return oneOf(
-          rng,
-          t(
-            `Find the parametric equations of the line of intersection of planes:\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
-            `求下列两平面交线的参数方程：\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
+        return pointProblem({
+          prompt: t(
+            `Find the coordinates $(x, y, z)$ of the point on the line of intersection of the two planes with $z = 0$:\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
+            `求下列两平面交线上 $z = 0$ 的交点坐标 $(x, y, z)$：\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
           ),
-          t(`$${rightLine}$`, `$${rightLine}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `Setting $z = 0$ in both equations immediately yields $x = ${p0[0]}$ and $y = ${p0[1]}$, giving initial point $P_0${pt3Latex(p0)}$. The cross product of the normal vectors gives direction vector $\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2 = ${vec3Latex(v)}$. Thus the parametric equations are $${rightLine}$.`,
-            `令 $z = 0$，由两方程分别直接解得 $x = ${p0[0]}$ 与 $y = ${p0[1]}$，得到交点 $P_0${pt3Latex(p0)}$。计算法向量叉积可得方向向量 $\\mathbf{v} = \\mathbf{n}_1 \\times \\mathbf{n}_2 = ${vec3Latex(v)}$。因此交线的参数方程为 $${rightLine}$。`,
+          answer: p0,
+          vars: ["x", "y", "z"],
+          solution: t(
+            `Setting $z = 0$ in both plane equations yields $x = ${p0[0]}$ and $y = ${p0[1]}$, giving intersection point $P_0${pt3Latex(p0)}$.`,
+            `令 $z = 0$，分别代入两平面方程解得 $x = ${p0[0]}$ 与 $y = ${p0[1]}$，得到交点 $P_0${pt3Latex(p0)}$。`,
           ),
-        );
+          wrong: [wrong2, [p0[0], p0[1] + 1, 0], [p0[1], p0[0], 0]],
+        });
       },
     },
   ],
@@ -2449,7 +2377,6 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
         "从空间点 $P_0(x_0, y_0, z_0)$ 到平面 $Ax + By + Cz + D = 0$ 的最短垂直距离公式为：\n\n$$d = \\frac{|Ax_0 + By_0 + Cz_0 + D|}{\\sqrt{A^2 + B^2 + C^2}}$$",
       ),
       generate(rng) {
-        // Use Pythagorean quadruples so denominator sqrt(A^2 + B^2 + C^2) is an integer
         const quadruples: readonly [number, number, number, number][] = [
           [1, 2, 2, 3],
           [2, 3, 6, 7],
@@ -2465,7 +2392,7 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
         const x0 = rng.int(-4, 4);
         const y0 = rng.int(-4, 4);
         const z0 = rng.int(-4, 4);
-        const targetD = rng.pick([1, 2, 3, 4, 5]) * norm; // multiple of norm
+        const targetD = rng.pick([1, 2, 3, 4, 5]) * norm;
         const baseVal = sA * x0 + sB * y0 + sC * z0;
         const D = targetD - baseVal;
         const dist = Math.abs(baseVal + D) / norm;
@@ -2473,23 +2400,18 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
         const planeStr = planeEqLatex(sA, sB, sC, D);
         const p0: Vec3 = [x0, y0, z0];
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the distance from point $P${pt3Latex(p0)}$ to the plane:\n\n$$${planeStr}$$`,
             `求点 $P${pt3Latex(p0)}$ 到平面 $${planeStr}$ 的最短距离。`,
           ),
-          t(`$${dist}$`, `$${dist}$`),
-          [
-            t(`$${dist + 1}$`, `$${dist + 1}$`),
-            t(`$${Math.max(1, dist - 1)}$`, `$${Math.max(1, dist - 1)}$`),
-            t(`$${dist * norm}$`, `$${dist * norm}$`),
-          ],
-          t(
+          answer: dist,
+          solution: t(
             `Applying the distance formula:\n\n$$d = \\frac{|(${sA})(${x0}) + (${sB})(${y0}) + (${sC})(${z0}) + (${D})|}{\\sqrt{(${sA})^2 + (${sB})^2 + (${sC})^2}} = \\frac{|${baseVal + D}|}{${norm}} = ${dist}$$`,
             `代入点到平面的距离公式：\n\n$$d = \\frac{|(${sA})(${x0}) + (${sB})(${y0}) + (${sC})(${z0}) + (${D})|}{\\sqrt{(${sA})^2 + (${sB})^2 + (${sC})^2}} = \\frac{|${baseVal + D}|}{${norm}} = ${dist}$$`,
           ),
-        );
+          wrong: [dist + 1, Math.max(1, dist - 1), dist * norm],
+        });
       },
     },
     {
@@ -2516,19 +2438,18 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
         const plane1Str = planeEqLatex(A, B, C, D1);
         const plane2Str = planeEqLatex(A, B, C, D2);
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the distance between the parallel planes:\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
             `求两平行平面之间的距离：\n\n$$\\Pi_1: ${plane1Str}$$\n$$\\Pi_2: ${plane2Str}$$`,
           ),
-          t(`$${dist}$`, `$${dist}$`),
-          [t(`$${dist + 2}$`, `$${dist + 2}$`), t(`$${diff}$`, `$${diff}$`), t(`$${dist + 1}$`, `$${dist + 1}$`)],
-          t(
-            `Using the parallel plane distance formula:\n\n$$d = \\frac{|D_1 - D_2|}{\\sqrt{A^2 + B^2 + C^2}} = \\frac{|${D1} - ${D2}|}{\\sqrt{${A}^2 + ${B}^2 + ${C}^2}} = \\frac{${diff}}{${norm}} = ${dist}$$`,
-            `应用平行平面间距离公式：\n\n$$d = \\frac{|D_1 - D_2|}{\\sqrt{A^2 + B^2 + C^2}} = \\frac{|${D1} - ${D2}|}{\\sqrt{${A}^2 + ${B}^2 + ${C}^2}} = \\frac{${diff}}{${norm}} = ${dist}$$`,
+          answer: dist,
+          solution: t(
+            `Using the parallel plane distance formula:\n\n$$d = \\frac{|${fmtSub(D1, D2)}|}{\\sqrt{${A}^2 + ${B}^2 + ${C}^2}} = \\frac{${diff}}{${norm}} = ${dist}$$`,
+            `应用平行平面间距离公式：\n\n$$d = \\frac{|${fmtSub(D1, D2)}|}{\\sqrt{${A}^2 + ${B}^2 + ${C}^2}} = \\frac{${diff}}{${norm}} = ${dist}$$`,
           ),
-        );
+          wrong: [dist + 2, diff, dist + 1],
+        });
       },
     },
   ],
@@ -2576,7 +2497,6 @@ export const theIntersectionBetweenALineAndAPlane: TopicDef = {
         const z0 = rng.int(-4, 4);
         const tSol = rng.pick([-3, -2, -1, 1, 2, 3]);
 
-        // We want A(x0 + a*tSol) + B(y0 + b*tSol) + C(z0 + c*tSol) + D = 0
         const xInt = x0 + a * tSol;
         const yInt = y0 + b * tSol;
         const zInt = z0 + c * tSol;
@@ -2593,23 +2513,22 @@ export const theIntersectionBetweenALineAndAPlane: TopicDef = {
         const w2: Vec3 = [x0, y0, z0];
         const w3: Vec3 = [xInt, yInt - 1, zInt];
 
-        return oneOf(
-          rng,
-          t(
-            `Find the point of intersection between the line and the plane:\n\n$$\\text{Line: } ${lineStr}$$\n$$\\text{Plane: } ${planeStr}$$`,
-            `求下列直线与平面的交点坐标：\n\n$$\\text{直线: } ${lineStr}$$\n$$\\text{平面: } ${planeStr}$$`,
+        const constTerm = A * x0 + B * y0 + C * z0 + D;
+        const eqStep = constTerm < 0 ? `${denom}t - ${-constTerm} = 0` : constTerm > 0 ? `${denom}t + ${constTerm} = 0` : `${denom}t = 0`;
+
+        return pointProblem({
+          prompt: t(
+            `Find the coordinates $(x, y, z)$ of the point of intersection between the line and the plane:\n\n$$\\text{Line: } ${lineStr}$$\n$$\\text{Plane: } ${planeStr}$$`,
+            `求下列直线与平面的交点坐标 $(x, y, z)$：\n\n$$\\text{直线: } ${lineStr}$$\n$$\\text{平面: } ${planeStr}$$`,
           ),
-          t(`$${pt3Latex(ptIntersect)}$`, `$${pt3Latex(ptIntersect)}$`),
-          [
-            t(`$${pt3Latex(w1)}$`, `$${pt3Latex(w1)}$`),
-            t(`$${pt3Latex(w2)}$`, `$${pt3Latex(w2)}$`),
-            t(`$${pt3Latex(w3)}$`, `$${pt3Latex(w3)}$`),
-          ],
-          t(
-            `Substitute $x(t), y(t), z(t)$ into the plane equation and solve for $t$:\n\n$$(${denom})t + (${A * x0 + B * y0 + C * z0 + D}) = 0 \\implies t = ${tSol}$$\n\nSubstituting $t = ${tSol}$ into the line gives $(x, y, z) = ${pt3Latex(ptIntersect)}$.`,
-            `将参数表达式 $x(t), y(t), z(t)$ 代入平面方程并解出 $t$：\n\n$$(${denom})t + (${A * x0 + B * y0 + C * z0 + D}) = 0 \\implies t = ${tSol}$$\n\n将 $t = ${tSol}$ 代回直线方程得交点坐标 $(x, y, z) = ${pt3Latex(ptIntersect)}$。`,
+          answer: ptIntersect,
+          vars: ["x", "y", "z"],
+          solution: t(
+            `Substitute $x(t), y(t), z(t)$ into the plane equation and solve for $t$:\n\n$$${eqStep} \\implies t = ${tSol}$$\n\nSubstituting $t = ${tSol}$ into the line gives $(x, y, z) = ${pt3Latex(ptIntersect)}$.`,
+            `将参数表达式 $x(t), y(t), z(t)$ 代入平面方程并解出 $t$：\n\n$$${eqStep} \\implies t = ${tSol}$$\n\n将 $t = ${tSol}$ 代回直线方程得交点坐标 $(x, y, z) = ${pt3Latex(ptIntersect)}$。`,
           ),
-        );
+          wrong: [w1, w2, w3],
+        });
       },
     },
     {

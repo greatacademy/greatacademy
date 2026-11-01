@@ -1,7 +1,8 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { Q } from "@ga/subject-math";
 
-import { choiceProblem } from "../problems.ts";
+import { choiceProblem, numberProblem, pointProblem } from "../problems.ts";
 
 // Linear Algebra Unit 2: Matrices, Gaussian Elimination, Determinants,
 // Elementary Matrices, and LU Factorization (Modules 2.4, 2.5, 2.6, 2.7, 2.8).
@@ -29,6 +30,37 @@ function augLatex(a: Mat, b: readonly (number | string)[]): string {
   const colSpec = `${"c".repeat(cols)}|c`;
   const rows = a.map((row, i) => `${row.join(" & ")} & ${b[i]}`);
   return `\\left[\\begin{array}{${colSpec}} ${rows.join(" \\\\ ")} \\end{array}\\right]`;
+}
+
+/** formatLinearTerm formats coeff * variable, e.g. 1x -> x, -1x -> -x, 3x -> 3x, -3x -> -3x. */
+function formatLinearTerm(coeff: number, variable: string, isFirst = false): string {
+  if (coeff === 0) return "";
+  const abs = Math.abs(coeff);
+  const coeffStr = abs === 1 ? "" : `${abs}`;
+  if (isFirst) {
+    return coeff < 0 ? `-${coeffStr}${variable}` : `${coeffStr}${variable}`;
+  }
+  return coeff < 0 ? `- ${coeffStr}${variable}` : `+ ${coeffStr}${variable}`;
+}
+
+/** formatLinear2 formats a 2-variable linear expression ax + by with proper signs. */
+function formatLinear2(a: number, b: number): string {
+  const t1 = formatLinearTerm(a, "x", true);
+  const t2 = formatLinearTerm(b, "y", !t1);
+  return [t1, t2].filter(Boolean).join(" ") || "0";
+}
+
+/** formatLinear3 formats a 3-variable linear expression ax + by + cz with proper signs. */
+function formatLinear3(a: number, b: number, c: number): string {
+  const t1 = formatLinearTerm(a, "x", true);
+  const t2 = formatLinearTerm(b, "y", !t1);
+  const t3 = formatLinearTerm(c, "z", !t1 && !t2);
+  return [t1, t2, t3].filter(Boolean).join(" ") || "0";
+}
+
+/** formatConst formats a constant with leading sign, e.g. + 3 or - 3. */
+function formatConst(c: number): string {
+  return c >= 0 ? `+ ${c}` : `- ${-c}`;
 }
 
 /** oneOf builds a multiple-choice problem with options shuffled and deduplicated. */
@@ -102,33 +134,27 @@ export const cramersRuleFor2x2SystemsOfLinearEquations: TopicDef = {
         const ansVal = askX ? xVal : yVal;
         const otherVal = askX ? yVal : xVal;
 
-        const bTerm = b >= 0 ? `+ ${b}y` : `- ${-b}y`;
-        const dTerm = d >= 0 ? `+ ${d}y` : `- ${-d}y`;
+        const eq1 = `${formatLinear2(a, b)} = ${e}`;
+        const eq2 = `${formatLinear2(c, d)} = ${f}`;
         const prompt = t(
           `Use Cramer's rule to solve for $${varName}$ in the system of linear equations:
 
-$$\begin{cases} ${a}x ${bTerm} = ${e} \\ ${c}x ${dTerm} = ${f} end{cases}$$`,
+$$\\begin{cases} ${eq1} \\\\ ${eq2} \\end{cases}$$`,
           `利用克莱姆法则求解下列线性方程组中的 $${varName}$：
 
-$$\begin{cases} ${a}x ${bTerm} = ${e} \\ ${c}x ${dTerm} = ${f} end{cases}$$`,
+$$\\begin{cases} ${eq1} \\\\ ${eq2} \\end{cases}$$`,
         );
 
-        return oneOf(
-          rng,
+        return numberProblem({
           prompt,
-          t(`$${varName} = ${ansVal}$`, `$${varName} = ${ansVal}$`),
-          [
-            t(`$${varName} = ${otherVal}$`, `$${varName} = ${otherVal}$`),
-            t(`$${varName} = ${-ansVal}$`, `$${varName} = ${-ansVal}$`),
-            t(`$${varName} = ${ansVal + 1}$`, `$${varName} = ${ansVal + 1}$`),
-            t(`$${varName} = ${ansVal - 1}$`, `$${varName} = ${ansVal - 1}$`),
-            t(`$${varName} = ${askX ? Dx : Dy}$`, `$${varName} = ${askX ? Dx : Dy}$`),
-          ],
-          t(
+          answer: ansVal,
+          solveFor: varName,
+          solution: t(
             `First compute the coefficient determinant: $D = (${a})(${d}) - (${b})(${c}) = ${D}$. Next compute $D_${varName} = ${askX ? Dx : Dy}$. Therefore, $${varName} = \\frac{D_${varName}}{D} = \\frac{${askX ? Dx : Dy}}{${D}} = ${ansVal}$.`,
             `首先计算系数行列式：$D = (${a})(${d}) - (${b})(${c}) = ${D}$。接着计算 $D_${varName} = ${askX ? Dx : Dy}$。因此 $${varName} = \\frac{D_${varName}}{D} = \\frac{${askX ? Dx : Dy}}{${D}} = ${ansVal}$。`,
           ),
-        );
+          wrong: [otherVal, -ansVal, ansVal + 1, ansVal - 1, askX ? Dx : Dy],
+        });
       },
     },
   ],
@@ -245,7 +271,8 @@ export const theDeterminantOfAnNxnMatrix: TopicDef = {
         "对于 $n \\times n$ 矩阵 $A = (a_{ij})$，其行列式由莱布尼茨公式定义：$\\det(A) = \\sum_{\\sigma \\in S_n} \\text{sgn}(\\sigma) \\prod_{i=1}^n a_{i, \\sigma(i)}$，其中 $S_n$ 为包含 $n!$ 个置换的对称群。置换的符号 $\\text{sgn}(\\sigma) = (-1)^{\\text{inv}(\\sigma)}$，其中 $\\text{inv}(\\sigma)$ 为逆序数（即满足 $i < j$ 且 $\\sigma(i) > \\sigma(j)$ 的数对个数）。",
       ),
       generate(rng) {
-        const p = rng.shuffle([1, 2, 3, 4, 5]);
+        const n = rng.pick([4, 5]);
+        const p = rng.shuffle(Array.from({ length: n }, (_, i) => i + 1));
         let invCount = 0;
         for (let i = 0; i < p.length; i++) {
           for (let j = i + 1; j < p.length; j++) {
@@ -258,8 +285,8 @@ export const theDeterminantOfAnNxnMatrix: TopicDef = {
         const parityZh = invCount % 2 === 0 ? "偶" : "奇";
 
         const prompt = t(
-          `In the Leibniz formula for the determinant of a $4 \\times 4$ matrix $A = (a_{ij})$, consider the permutation $\\sigma = (${p.join(", ")})$. What is its number of inversions $\\text{inv}(\\sigma)$ and signature $\\text{sgn}(\\sigma)$?`,
-          `在 $4 \\times 4$ 矩阵 $A = (a_{ij})$ 的行列式莱布尼茨展开式中，考虑置换 $\\sigma = (${p.join(", ")})$。它的逆序数 $\\text{inv}(\\sigma)$ 和符号 $\\text{sgn}(\\sigma)$ 分别是多少？`,
+          `In the Leibniz formula for the determinant of a $${n} \\times ${n}$ matrix $A = (a_{ij})$, consider the permutation $\\sigma = (${p.join(", ")})$. What is its number of inversions $\\text{inv}(\\sigma)$ and signature $\\text{sgn}(\\sigma)$?`,
+          `在 $${n} \\times ${n}$ 矩阵 $A = (a_{ij})$ 的行列式莱布尼茨展开式中，考虑置换 $\\sigma = (${p.join(", ")})$。它的逆序数 $\\text{inv}(\\sigma)$ 和符号 $\\text{sgn}(\\sigma)$ 分别是多少？`,
         );
 
         return oneOf(
@@ -354,21 +381,15 @@ $$A = ${matLatex(A)}$$`,
 $$A = ${matLatex(A)}$$`,
         );
 
-        return oneOf(
-          rng,
+        return numberProblem({
           prompt,
-          t(`$${ans}$`, `$${ans}$`),
-          [
-            t(`$${-ans}$`, `$${-ans}$`),
-            t(`$${ans + k}$`, `$${ans + k}$`),
-            t(`$${ans - k}$`, `$${ans - k}$`),
-            t(`$${k * minorDet}$`, `$${k * minorDet}$`),
-          ],
-          t(
+          answer: ans,
+          solution: t(
             `Row 2 has three zeros and only one non-zero entry $a_{23} = ${k}$. Expanding along row 2 gives $\\det(A) = a_{23} C_{23} = (${k})(-1)^{2+3} M_{23} = -(${k}) M_{23}$. The minor $M_{23}$ is upper triangular with diagonal entries $${m11}, ${m22}, ${m33}$, so $M_{23} = ${minorDet}$. Thus $\\det(A) = -(${k})(${minorDet}) = ${ans}$.`,
             `第 2 行有三个零，仅在第 3 列有一个非零元 $a_{23} = ${k}$。沿第 2 行展开得到 $\\det(A) = a_{23} C_{23} = (${k})(-1)^{2+3} M_{23} = -(${k}) M_{23}$。余子式 $M_{23}$ 是上三角矩阵，主对角线元素为 $${m11}, ${m22}, ${m33}$，其行列式为 $${minorDet}$。因此 $\\det(A) = -(${k})(${minorDet}) = ${ans}$。`,
           ),
-        );
+          wrong: [-ans, ans + k, ans - k, k * minorDet],
+        });
       },
     },
   ],
@@ -413,21 +434,15 @@ export const basicPropertiesOfDeterminants: TopicDef = {
           `设 $A$ 和 $B$ 均为 $${n} \\times ${n}$ 矩阵，已知 $\\det(A) = ${detA}$ 且 $\\det(B) = ${detB}$。求 $\\det(${k} A^T B)$ 的值。`,
         );
 
-        return oneOf(
-          rng,
+        return numberProblem({
           prompt,
-          t(`$${ans}$`, `$${ans}$`),
-          [
-            t(`$${wrongNoKn}$`, `$${wrongNoKn}$`),
-            t(`$${wrongKnMinus1}$`, `$${wrongKnMinus1}$`),
-            t(`$${wrongSign}$`, `$${wrongSign}$`),
-            t(`$${kn * (detA + detB)}$`, `$${kn * (detA + detB)}$`),
-          ],
-          t(
+          answer: ans,
+          solution: t(
             `Using properties of determinants: $\\det(${k} A^T B) = (${k})^n \\det(A^T)\\det(B)$. Since the matrices are $${n} \\times ${n}$, $(${k})^n = (${k})^{${n}} = ${kn}$. Since $\\det(A^T) = \\det(A) = ${detA}$, we have $\\det(${k} A^T B) = (${kn})(${detA})(${detB}) = ${ans}$.`,
             `利用行列式的性质：$\\det(${k} A^T B) = (${k})^n \\det(A^T)\\det(B)$。由于矩阵为 $${n} \\times ${n}$ 阶，所以 $(${k})^n = (${k})^{${n}} = ${kn}$。又因为 $\\det(A^T) = \\det(A) = ${detA}$，故 $\\det(${k} A^T B) = (${kn})(${detA})(${detB}) = ${ans}$。`,
           ),
-        );
+          wrong: [wrongNoKn, wrongKnMinus1, wrongSign, kn * (detA + detB)],
+        });
       },
     },
   ],
@@ -471,26 +486,17 @@ export const furtherPropertiesOfDeterminants: TopicDef = {
             `设 $A$ 为 $${n} \\times ${n}$ 可逆矩阵，且 $\\det(A) = ${d}$。求 $\\det((${c}A)^{-1})$ 的值。`,
           );
 
-          const rightStr = denom < 0 ? `-\frac{1}{${-denom}}` : `\frac{1}{${denom}}`;
-          const wrong1Str = denom < 0 ? `\frac{1}{${-denom}}` : `-\frac{1}{${denom}}`;
-          const wrong2Str = d < 0 ? `-\frac{1}{${c * -d}}` : `\frac{1}{${c * d}}`;
-          const wrong3Str = `${denom}`;
+          const ansQ = Q.of(1, denom);
 
-          return oneOf(
-            rng,
+          return numberProblem({
             prompt,
-            t(`$${rightStr}$`, `$${rightStr}$`),
-            [
-              t(`$${wrong1Str}$`, `$${wrong1Str}$`),
-              t(`$${wrong2Str}$`, `$${wrong2Str}$`),
-              t(`$${wrong3Str}$`, `$${wrong3Str}$`),
-              t(`$${d}$`, `$${d}$`),
-            ],
-            t(
-              `First, $\\det(${c}A) = (${c})^{${n}} \\det(A) = ${cn} \\cdot (${d}) = ${denom}$. Next, $\\det((${c}A)^{-1}) = \\frac{1}{\\det(${c}A)} = ${rightStr}$.`,
-              `首先，$\\det(${c}A) = (${c})^{${n}} \\det(A) = ${cn} \\cdot (${d}) = ${denom}$。进而，$\\det((${c}A)^{-1}) = \\frac{1}{\\det(${c}A)} = ${rightStr}$。`,
+            answer: ansQ,
+            solution: t(
+              `First, $\\det(${c}A) = (${c})^{${n}} \\det(A) = ${cn} \\cdot (${d}) = ${denom}$. Next, $\\det((${c}A)^{-1}) = \\frac{1}{\\det(${c}A)} = ${ansQ.toLatex()}$.`,
+              `首先，$\\det(${c}A) = (${c})^{${n}} \\det(A) = ${cn} \\cdot (${d}) = ${denom}$。进而，$\\det((${c}A)^{-1}) = \\frac{1}{\\det(${c}A)} = ${ansQ.toLatex()}$。`,
             ),
-          );
+            wrong: [Q.of(-1, denom), Q.of(1, c * d), denom, d],
+          });
         }
 
         const ans = d ** power;
@@ -499,21 +505,15 @@ export const furtherPropertiesOfDeterminants: TopicDef = {
           `设方阵 $A$ 满足 $\\det(A) = ${d}$。求 $\\det(A^{${power}})$ 的值。`,
         );
 
-        return oneOf(
-          rng,
+        return numberProblem({
           prompt,
-          t(`$${ans}$`, `$${ans}$`),
-          [
-            t(`$${power * d}$`, `$${power * d}$`),
-            t(`$${-ans}$`, `$${-ans}$`),
-            t(`$${d ** (power - 1)}$`, `$${d ** (power - 1)}$`),
-            t(`$${d ** power + 1}$`, `$${d ** power + 1}$`),
-          ],
-          t(
+          answer: ans,
+          solution: t(
             `Since $\\det(AB) = \\det(A)\\det(B)$, by induction $\\det(A^{${power}}) = (\\det A)^{${power}} = (${d})^{${power}} = ${ans}$.`,
             `因为 $\\det(AB) = \\det(A)\\det(B)$，由归纳法可得 $\\det(A^{${power}}) = (\\det A)^{${power}} = (${d})^{${power}} = ${ans}$。`,
           ),
-        );
+          wrong: [power * d, -ans, d ** (power - 1), d ** power + 1],
+        });
       },
     },
   ],
@@ -564,21 +564,15 @@ What is $\\det(B)$?`,
 求 $\\det(B)$ 的值。`,
         );
 
-        return oneOf(
-          rng,
+        return numberProblem({
           prompt,
-          t(`$${finalDet}$`, `$${finalDet}$`),
-          [
-            t(`$${-finalDet}$`, `$${-finalDet}$`),
-            t(`$${k * d}$`, `$${k * d}$`),
-            t(`$${finalDet + c}$`, `$${finalDet + c}$`),
-            t(`$${k ** 3 * d}$`, `$${k ** 3 * d}$`),
-          ],
-          t(
+          answer: finalDet,
+          solution: t(
             `Operation 1 (row swap) multiplies the determinant by $-1$. Operation 2 (scaling one row by $${k}$) multiplies the determinant by $${k}$. Operation 3 (adding a multiple of one row to another) leaves the determinant unchanged. Therefore, $\\det(B) = (-1) \\cdot (${k}) \\cdot (1) \\cdot \\det(A) = (${-k})(${d}) = ${finalDet}$.`,
             `变换 1（交换两行）使行列式乘以 $-1$。变换 2（将某一行乘以 $${k}$）使行列式乘以 $${k}$。变换 3（行倍加）不改变行列式的值。因此，$\\det(B) = (-1) \\cdot (${k}) \\cdot (1) \\cdot \\det(A) = (${-k})(${d}) = ${finalDet}$。`,
           ),
-        );
+          wrong: [-finalDet, k * d, finalDet + c, k ** 3 * d],
+        });
       },
     },
   ],
@@ -713,21 +707,15 @@ $$A = ${matLatex(A)}$$`,
 $$A = ${matLatex(A)}$$`,
         );
 
-        return oneOf(
-          rng,
+        return numberProblem({
           prompt,
-          t(`$${detA}$`, `$${detA}$`),
-          [
-            t(`$${-detA}$`, `$${-detA}$`),
-            t(`$${detA + u11}$`, `$${detA + u11}$`),
-            t(`$${detA - u22}$`, `$${detA - u22}$`),
-            t(`$${u11 * u22 + u33}$`, `$${u11 * u22 + u33}$`),
-          ],
-          t(
+          answer: detA,
+          solution: t(
             `Performing row operations $R_2 - (${l21}) R_1 \\to R_2$ and $R_3 - (${l31}) R_1 \\to R_3$, followed by $R_3 - (${l32}) R_2 \\to R_3$, reduces $A$ to the upper triangular matrix $U = \\begin{pmatrix} ${u11} & ${u12} & ${u13} \\\\ 0 & ${u22} & ${u23} \\\\ 0 & 0 & ${u33} \\end{pmatrix}$. Since row addition operations do not change the determinant, $\\det(A) = \\det(U) = (${u11})(${u22})(${u33}) = ${detA}$.`,
             `执行行变换 $R_2 - (${l21}) R_1 \\to R_2$ 和 $R_3 - (${l31}) R_1 \\to R_3$，随后执行 $R_3 - (${l32}) R_2 \\to R_3$，可将 $A$ 化为上三角矩阵 $U = \\begin{pmatrix} ${u11} & ${u12} & ${u13} \\\\ 0 & ${u22} & ${u23} \\\\ 0 & 0 & ${u33} \\end{pmatrix}$。由于行倍加变换不改变行列式的值，因此 $\\det(A) = \\det(U) = (${u11})(${u22})(${u33}) = ${detA}$。`,
           ),
-        );
+          wrong: [-detA, detA + u11, detA - u22, u11 * u22 + u33],
+        });
       },
     },
   ],
@@ -790,21 +778,15 @@ $$M = ${matLatex(M)}$$`,
 $$M = ${matLatex(M)}$$`,
         );
 
-        return oneOf(
-          rng,
+        return numberProblem({
           prompt,
-          t(`$${ans}$`, `$${ans}$`),
-          [
-            t(`$${detA + detD}$`, `$${detA + detD}$`),
-            t(`$${-ans}$`, `$${-ans}$`),
-            t(`$${ans + detA}$`, `$${ans + detA}$`),
-            t(`$${ans - detD}$`, `$${ans - detD}$`),
-          ],
-          t(
+          answer: ans,
+          solution: t(
             `The matrix $M$ is block upper triangular of the form $\\begin{pmatrix} A & B \\\\ 0 & D \\end{pmatrix}$ with $2 \\times 2$ blocks $A = \\begin{pmatrix} ${a1} & ${a2} \\\\ ${a3} & ${a4} \\end{pmatrix}$ and $D = \\begin{pmatrix} ${d1} & ${d2} \\\\ ${d3} & ${d4} \\end{pmatrix}$. By the block triangular determinant formula, $\\det(M) = \\det(A)\\det(D)$. Here $\\det(A) = (${a1})(${a4}) - (${a2})(${a3}) = ${detA}$ and $\\det(D) = (${d1})(${d4}) - (${d2})(${d3}) = ${detD}$. Thus $\\det(M) = (${detA})(${detD}) = ${ans}$.`,
             `矩阵 $M$ 是形如 $\\begin{pmatrix} A & B \\\\ 0 & D \\end{pmatrix}$ 的分块上三角矩阵，其中 $2 \\times 2$ 对角块分别为 $A = \\begin{pmatrix} ${a1} & ${a2} \\\\ ${a3} & ${a4} \\end{pmatrix}$ 和 $D = \\begin{pmatrix} ${d1} & ${d2} \\\\ ${d3} & ${d4} \\end{pmatrix}$。根据分块三角矩阵行列式公式，$\\det(M) = \\det(A)\\det(D)$。此处 $\\det(A) = (${a1})(${a4}) - (${a2})(${a3}) = ${detA}$，$\\det(D) = (${d1})(${d4}) - (${d2})(${d3}) = ${detD}$。因此 $\\det(M) = (${detA})(${detD}) = ${ans}$。`,
           ),
-        );
+          wrong: [detA + detD, -ans, ans + detA, ans - detD],
+        });
       },
     },
   ],
@@ -879,10 +861,10 @@ export const systemsOfEquationsAsAugmentedMatrices: TopicDef = {
         const prompt = t(
           `What is the augmented matrix $[A \\mid \\mathbf{b}]$ for the following system of linear equations?
 
-$$\\begin{cases} ${a1}x + ${b1}y + ${c1}z = ${d1} \\\\ ${a2}x + ${b2}y + ${c2}z = ${d2} \\\\ ${a3}x + ${b3}y + ${c3}z = ${d3} \\end{cases}$$`,
+$$\\begin{cases} ${formatLinear3(a1, b1, c1)} = ${d1} \\\\ ${formatLinear3(a2, b2, c2)} = ${d2} \\\\ ${formatLinear3(a3, b3, c3)} = ${d3} \\end{cases}$$`,
           `下列线性方程组对应的增广矩阵 $[A \\mid \\mathbf{b}]$ 是哪一个？
 
-$$\\begin{cases} ${a1}x + ${b1}y + ${c1}z = ${d1} \\\\ ${a2}x + ${b2}y + ${c2}z = ${d2} \\\\ ${a3}x + ${b3}y + ${c3}z = ${d3} \\end{cases}$$`,
+$$\\begin{cases} ${formatLinear3(a1, b1, c1)} = ${d1} \\\\ ${formatLinear3(a2, b2, c2)} = ${d2} \\\\ ${formatLinear3(a3, b3, c3)} = ${d3} \\end{cases}$$`,
         );
 
         return oneOf(
@@ -958,8 +940,8 @@ export const rowEchelonForm: TopicDef = {
         ];
 
         const prompt = t(
-          `Which of the following $3 \times 4$ matrices with first row $[${p1}, ${r12}, ${r13}, ${r14}]$ is in **Row Echelon Form (REF)**?`,
-          `下列首行为 $[${p1}, ${r12}, ${r13}, ${r14}]$ 的 $3 \times 4$ 矩阵中，哪一个是**行阶梯形矩阵 (REF)**？`,
+          `Which of the following $3 \\times 4$ matrices with first row $[${p1}, ${r12}, ${r13}, ${r14}]$ is in **Row Echelon Form (REF)**?`,
+          `下列首行为 $[${p1}, ${r12}, ${r13}, ${r14}]$ 的 $3 \\times 4$ 矩阵中，哪一个是**行阶梯形矩阵 (REF)**？`,
         );
 
         return oneOf(
@@ -1036,32 +1018,27 @@ $$${augLatex(U, bVec)}$$`,
 $$${augLatex(U, bVec)}$$`,
         );
 
-        const correctStr = `(x, y, z) = (${x}, ${y}, ${z})`;
-        const wrong1Str = `(x, y, z) = (${x}, ${y}, ${-z})`;
-        const wrong2Str = `(x, y, z) = (${y}, ${x}, ${z})`;
-        const wrong3Str = `(x, y, z) = (${x + 1}, ${y}, ${z})`;
-
-        return oneOf(
-          rng,
+        return pointProblem({
           prompt,
-          t(`$${correctStr}$`, `$${correctStr}$`),
-          [
-            t(`$${wrong1Str}$`, `$${wrong1Str}$`),
-            t(`$${wrong2Str}$`, `$${wrong2Str}$`),
-            t(`$${wrong3Str}$`, `$${wrong3Str}$`),
-            t(`(x, y, z) = (${x}, ${y + 1}, ${z})`, `(x, y, z) = (${x}, ${y + 1}, ${z})`),
-          ],
-          t(
-            `From row 3: $${u33}z = ${b3} \\implies z = ${z}$.
-Substitute into row 2: $${u22}y + (${u23})(${z}) = ${b2} \\implies ${u22}y + ${u23 * z} = ${b2} \\implies y = ${y}$.
-Substitute into row 1: $${u11}x + (${u12})(${y}) + (${u13})(${z}) = ${b1} \\implies x = ${x}$.
-Thus $${correctStr}$.`,
-            `由第 3 行方程：$${u33}z = ${b3} \\implies z = ${z}$。
-代入第 2 行方程：$${u22}y + (${u23})(${z}) = ${b2} \\implies ${u22}y + ${u23 * z} = ${b2} \\implies y = ${y}$。
-代入第 1 行方程：$${u11}x + (${u12})(${y}) + (${u13})(${z}) = ${b1} \\implies x = ${x}$。
-因此 $${correctStr}$。`,
+          answer: [x, y, z],
+          vars: ["x", "y", "z"],
+          solution: t(
+            `From row 3: $${formatLinearTerm(u33, "z", true)} = ${b3} \\implies z = ${z}$.
+Substitute into row 2: $${formatLinearTerm(u22, "y", true)} + (${u23})(${z}) = ${b2} \\implies ${formatLinearTerm(u22, "y", true)} ${formatConst(u23 * z)} = ${b2} \\implies y = ${y}$.
+Substitute into row 1: $${formatLinearTerm(u11, "x", true)} + (${u12})(${y}) + (${u13})(${z}) = ${b1} \\implies x = ${x}$.
+Thus $(x, y, z) = (${x}, ${y}, ${z})$.`,
+            `由第 3 行方程：$${formatLinearTerm(u33, "z", true)} = ${b3} \\implies z = ${z}$。
+代入第 2 行方程：$${formatLinearTerm(u22, "y", true)} + (${u23})(${z}) = ${b2} \\implies ${formatLinearTerm(u22, "y", true)} ${formatConst(u23 * z)} = ${b2} \\implies y = ${y}$。
+代入第 1 行方程：$${formatLinearTerm(u11, "x", true)} + (${u12})(${y}) + (${u13})(${z}) = ${b1} \\implies x = ${x}$。
+因此 $(x, y, z) = (${x}, ${y}, ${z})$。`,
           ),
-        );
+          wrong: [
+            [x, y, -z],
+            [y, x, z],
+            [x + 1, y, z],
+            [x, y + 1, z],
+          ],
+        });
       },
     },
   ],
@@ -1255,30 +1232,25 @@ $$${augLatex(A, bVec)}$$`,
 $$${augLatex(A, bVec)}$$`,
         );
 
-        const correctStr = `(x, y) = (${x}, ${y})`;
-        const wrong1Str = `(x, y) = (${y}, ${x})`;
-        const wrong2Str = `(x, y) = (${-x}, ${y})`;
-        const wrong3Str = `(x, y) = (${x}, ${-y})`;
-
-        return oneOf(
-          rng,
+        return pointProblem({
           prompt,
-          t(`$${correctStr}$`, `$${correctStr}$`),
-          [
-            t(`$${wrong1Str}$`, `$${wrong1Str}$`),
-            t(`$${wrong2Str}$`, `$${wrong2Str}$`),
-            t(`$${wrong3Str}$`, `$${wrong3Str}$`),
-            t(`(x, y) = (${x + 1}, ${y})`, `(x, y) = (${x + 1}, ${y})`),
-          ],
-          t(
-            `Apply $R_2 - ${m} R_1 \\to R_2$:
+          answer: [x, y],
+          vars: ["x", "y"],
+          solution: t(
+            `Apply $R_2 - (${m}) R_1 \\to R_2$:
 $$\\left[\\begin{array}{cc|c} 1 & ${a12} & ${b1} \\\\ 0 & ${u22} & ${u22 * y} \\end{array}\\right]$$
-Back substitution: $${u22}y = ${u22 * y} \\implies y = ${y}$. Then $x + (${a12})(${y}) = ${b1} \\implies x = ${x}$. Thus $${correctStr}$.`,
-            `执行行变换 $R_2 - ${m} R_1 \\to R_2$：
+Back substitution: $${formatLinearTerm(u22, "y", true)} = ${u22 * y} \\implies y = ${y}$. Then $x + (${a12})(${y}) = ${b1} \\implies x = ${x}$. Thus $(x, y) = (${x}, ${y})$.`,
+            `执行行变换 $R_2 - (${m}) R_1 \\to R_2$：
 $$\\left[\\begin{array}{cc|c} 1 & ${a12} & ${b1} \\\\ 0 & ${u22} & ${u22 * y} \\end{array}\\right]$$
-回代求解：$${u22}y = ${u22 * y} \\implies y = ${y}$。接着 $x + (${a12})(${y}) = ${b1} \\implies x = ${x}$。因此 $${correctStr}$。`,
+回代求解：$${formatLinearTerm(u22, "y", true)} = ${u22 * y} \\implies y = ${y}$。接着 $x + (${a12})(${y}) = ${b1} \\implies x = ${x}$。因此 $(x, y) = (${x}, ${y})$。`,
           ),
-        );
+          wrong: [
+            [y, x],
+            [-x, y],
+            [x, -y],
+            [x + 1, y],
+          ],
+        });
       },
     },
   ],
@@ -1356,10 +1328,10 @@ $$${augLatex(A, bVec)}$$`,
           t(
             isDependent
               ? `Since the entire row is zero ($0 = 0$), the two equations are multiples of each other, giving infinitely many solutions.`
-              : `Since $0x + 0y = ${c2 - m * c1} \ne 0$ is a contradiction ($0 = ${c2 - m * c1}$), the system is inconsistent and has no solution.`,
+              : `Since $0x + 0y = ${c2 - m * c1} \\ne 0$ is a contradiction ($0 = ${c2 - m * c1}$), the system is inconsistent and has no solution.`,
             isDependent
               ? `由于整行为全零（对应 $0 = 0$），两方程成比例重合，故系统有无穷多解。`
-              : `由于 $0x + 0y = ${c2 - m * c1} \ne 0$ 产生矛盾（$0 = ${c2 - m * c1}$），故系统矛盾无解。`,
+              : `由于 $0x + 0y = ${c2 - m * c1} \\ne 0$ 产生矛盾（$0 = ${c2 - m * c1}$），故系统矛盾无解。`,
           ),
         );
       },
@@ -1425,26 +1397,21 @@ $$${augLatex(A, bVec)}$$`,
 $$${augLatex(A, bVec)}$$`,
         );
 
-        const correctStr = `(x, y, z) = (${x}, ${y}, ${z})`;
-        const wrong1Str = `(x, y, z) = (${y}, ${x}, ${z})`;
-        const wrong2Str = `(x, y, z) = (${x}, ${-y}, ${z})`;
-        const wrong3Str = `(x, y, z) = (${x}, ${y}, ${-z})`;
-
-        return oneOf(
-          rng,
+        return pointProblem({
           prompt,
-          t(`$${correctStr}$`, `$${correctStr}$`),
-          [
-            t(`$${wrong1Str}$`, `$${wrong1Str}$`),
-            t(`$${wrong2Str}$`, `$${wrong2Str}$`),
-            t(`$${wrong3Str}$`, `$${wrong3Str}$`),
-            t(`(x, y, z) = (${x + 1}, ${y}, ${z})`, `(x, y, z) = (${x + 1}, ${y}, ${z})`),
-          ],
-          t(
-            `Performing forward elimination clears column 1 with $R_2 - (${m21}) R_1 \\to R_2$ and $R_3 - (${m31}) R_1 \\to R_3$, then clears column 2 with $R_3 - (${m32}) R_2 \\to R_3$. Back substitution gives $z = ${z}$, then $y = ${y}$, then $x = ${x}$. Thus $${correctStr}$.`,
-            `前向消元：执行 $R_2 - (${m21}) R_1 \\to R_2$ 与 $R_3 - (${m31}) R_1 \\to R_3$ 消去第 1 列，随后执行 $R_3 - (${m32}) R_2 \\to R_3$ 消去第 2 列得到上三角矩阵。回代求解依次得到 $z = ${z}$，$y = ${y}$，$x = ${x}$。因此 $${correctStr}$。`,
+          answer: [x, y, z],
+          vars: ["x", "y", "z"],
+          solution: t(
+            `Performing forward elimination clears column 1 with $R_2 - (${m21}) R_1 \\to R_2$ and $R_3 - (${m31}) R_1 \\to R_3$, then clears column 2 with $R_3 - (${m32}) R_2 \\to R_3$. Back substitution gives $z = ${z}$, then $y = ${y}$, then $x = ${x}$. Thus $(x, y, z) = (${x}, ${y}, ${z})$.`,
+            `前向消元：执行 $R_2 - (${m21}) R_1 \\to R_2$ 与 $R_3 - (${m31}) R_1 \\to R_3$ 消去第 1 列，随后执行 $R_3 - (${m32}) R_2 \\to R_3$ 消去第 2 列得到上三角矩阵。回代求解依次得到 $z = ${z}$，$y = ${y}$，$x = ${x}$。因此 $(x, y, z) = (${x}, ${y}, ${z})$。`,
           ),
-        );
+          wrong: [
+            [y, x, z],
+            [x, -y, z],
+            [x, y, -z],
+            [x + 1, y, z],
+          ],
+        });
       },
     },
   ],
@@ -1473,32 +1440,33 @@ export const identifyingThePivotColumnsOfAMatrix: TopicDef = {
         "在行阶梯形矩阵中，包含首非零元（主元）的列称为主元列，对应的未知数称为基本变量；不包含主元的列对应自由变量，在解集中可以任意取值。",
       ),
       generate(rng) {
-        // Create 3x5 matrix in REF with pivots at columns (1, 2, 4) or (1, 3, 5) or (1, 2, 5)
-        const pattern = rng.pick([
-          { pivots: [1, 2, 4], free: [3, 5] },
-          { pivots: [1, 3, 4], free: [2, 5] },
-          { pivots: [1, 2, 5], free: [3, 4] },
-          { pivots: [1, 3, 5], free: [2, 4] },
-        ]);
+        const rows = rng.pick([3, 4]);
+        const cols = rows === 3 ? rng.pick([4, 5]) : rng.pick([5, 6]);
+        const numPivots = rng.pick(rows === 3 ? [1, 2, 3] : [1, 2, 3, 4]);
 
-        const [c1, c2, c3] = pattern.pivots as [number, number, number];
-        const M: (number | string)[][] = [
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0],
-        ];
+        const pivotCols: number[] = [];
+        let minCol = 0;
+        for (let i = 0; i < numPivots; i++) {
+          const remainingPivots = numPivots - 1 - i;
+          const maxCol = cols - 1 - remainingPivots;
+          const choices: number[] = [];
+          for (let c = minCol; c <= maxCol; c++) {
+            choices.push(c);
+          }
+          const chosen = rng.pick(choices);
+          pivotCols.push(chosen);
+          minCol = chosen + 1;
+        }
 
-        // Fill row 1
-        for (let j = 0; j < 5; j++) {
-          M[0]![j] = j >= c1 - 1 ? (j === c1 - 1 ? rng.pick([1, 2]) : rng.pick([-2, 1, 3])) : 0;
-        }
-        // Fill row 2
-        for (let j = 0; j < 5; j++) {
-          M[1]![j] = j >= c2 - 1 ? (j === c2 - 1 ? rng.pick([1, 3]) : rng.pick([2, -1, 4])) : 0;
-        }
-        // Fill row 3
-        for (let j = 0; j < 5; j++) {
-          M[2]![j] = j >= c3 - 1 ? (j === c3 - 1 ? rng.pick([1, 2]) : rng.pick([3, 1])) : 0;
+        const M: number[][] = Array.from({ length: rows }, () => Array(cols).fill(0));
+        for (let i = 0; i < rows; i++) {
+          if (i < numPivots) {
+            const pCol = pivotCols[i]!;
+            M[i]![pCol] = rng.pick([1, 2, 3, 4, 5]);
+            for (let j = pCol + 1; j < cols; j++) {
+              M[i]![j] = rng.pick([-4, -3, -2, -1, 0, 1, 2, 3, 4, 5]);
+            }
+          }
         }
 
         const prompt = t(
@@ -1506,38 +1474,28 @@ export const identifyingThePivotColumnsOfAMatrix: TopicDef = {
 
 $$A = ${matLatex(M)}$$
 
-Which columns of $A$ are the **pivot columns**?`,
-          `矩阵 $A$ 已经处于行阶梯形：
+How many pivots does matrix $A$ have?`,
+          `矩阵 $A$ 处于行阶梯形：
 
 $$A = ${matLatex(M)}$$
 
-矩阵 $A$ 的**主元列**分别是哪些列？`,
+矩阵 $A$ 共有多少个主元（主元列）？`,
         );
 
-        const rightStr = `Columns ${pattern.pivots.join(", ")}`;
-        const rightStrZh = `第 ${pattern.pivots.join("、")} 列`;
+        const pivotColNamesEn = pivotCols.map((c) => `column ${c + 1}`).join(", ");
+        const pivotColNamesZh = pivotCols.map((c) => `第 ${c + 1} 列`).join("、");
+        const zeroRowsNoteEn = numPivots < rows ? ` The remaining row(s) are all zeros.` : "";
+        const zeroRowsNoteZh = numPivots < rows ? ` 其余行均为全零行。` : "";
 
-        const wrong1Str = `Columns ${pattern.free.join(", ")}`;
-        const wrong1StrZh = `第 ${pattern.free.join("、")} 列`;
-
-        const wrongPivots2 = [1, 2, 3];
-        const wrong2Str = `Columns ${wrongPivots2.join(", ")}`;
-        const wrong2StrZh = `第 ${wrongPivots2.join("、")} 列`;
-
-        const wrongPivots3 = [2, 3, 4];
-        const wrong3Str = `Columns ${wrongPivots3.join(", ")}`;
-        const wrong3StrZh = `第 ${wrongPivots3.join("、")} 列`;
-
-        return oneOf(
-          rng,
+        return numberProblem({
           prompt,
-          t(rightStr, rightStrZh),
-          [t(wrong1Str, wrong1StrZh), t(wrong2Str, wrong2StrZh), t(wrong3Str, wrong3StrZh)],
-          t(
-            `In row 1, the leading entry is in column ${c1}. In row 2, the leading entry is in column ${c2}. In row 3, the leading entry is in column ${c3}. Therefore, the pivot columns are columns ${pattern.pivots.join(", ")}, while columns ${pattern.free.join(", ")} correspond to free variables.`,
-            `第 1 行的主元位于第 ${c1} 列；第 2 行的主元位于第 ${c2} 列；第 3 行的主元位于第 ${c3} 列。因此主元列为第 ${pattern.pivots.join("、")} 列，而第 ${pattern.free.join("、")} 列对应自由变量。`,
+          answer: numPivots,
+          solution: t(
+            `In row echelon form, each non-zero row contains exactly one pivot (its first non-zero entry). Here, the pivots are in ${pivotColNamesEn}.${zeroRowsNoteEn} Therefore, matrix $A$ has exactly $${numPivots}$ pivots.`,
+            `在行阶梯形矩阵中，每个非零行恰好包含一个主元（首非零元）。此处各行主元分别位于 ${pivotColNamesZh}。${zeroRowsNoteZh}因此矩阵 $A$ 共有 $${numPivots}$ 个主元。`,
           ),
-        );
+          wrong: [numPivots + 1, numPivots - 1, rows, cols].filter((w) => w >= 0 && w !== numPivots),
+        });
       },
     },
   ],
@@ -1594,8 +1552,8 @@ export const solving3x3SingularSystemsOfEquationsUsingGaussianElimination: Topic
         ];
         const bVec = [b1, b2, 0];
 
-        const vyStr = vy >= 0 ? `+ ${vy}t` : `- ${-vy}t`;
-        const vxStr = vx >= 0 ? `+ ${vx}t` : `- ${-vx}t`;
+        const vyStr = formatLinearTerm(vy, "t");
+        const vxStr = formatLinearTerm(vx, "t");
         const prompt = t(
           `Find the parametric vector form of the solution $\\mathbf{x} = \\mathbf{x}_p + t\\mathbf{v}$ for the system with free parameter $z = t$:
 
@@ -1619,11 +1577,11 @@ $$${augLatex(U, bVec)}$$`,
           t(`$$${rightStr}$$`, `$$${rightStr}$$`),
           [t(`$$${wrong1Str}$$`, `$$${wrong1Str}$$`), t(`$$${wrong2Str}$$`, `$$${wrong2Str}$$`), t(`$$${wrong3Str}$$`, `$$${wrong3Str}$$`)],
           t(
-            `With free variable $z = t$, row 2 gives $y + (${u23})t = ${b2} implies y = ${y0} ${vyStr}.
-Substituting into row 1 gives $x + (${u12})(${y0} - ${u23}t) + (${u13})t = ${b1} implies x = ${x0} ${vxStr}.
+            `With free variable $z = t$, row 2 gives $y + (${u23})t = ${b2} \\implies y = ${y0} ${vyStr}$.
+Substituting into row 1 gives $x + (${u12})(${y0} - ${u23}t) + (${u13})t = ${b1} \\implies x = ${x0} ${vxStr}$.
 Writing in vector form gives $$${rightStr}$$.`,
-            `设自由变量 $z = t$，由第 2 行得 $y + (${u23})t = ${b2} implies y = ${y0} ${vyStr}。
-代入第 1 行得 $x + (${u12})(${y0} - ${u23}t) + (${u13})t = ${b1} implies x = ${x0} ${vxStr}。
+            `设自由变量 $z = t$，由第 2 行得 $y + (${u23})t = ${b2} \\implies y = ${y0} ${vyStr}$。
+代入第 1 行得 $x + (${u12})(${y0} - ${u23}t) + (${u13})t = ${b1} \\implies x = ${x0} ${vxStr}$。
 整理成向量形式即为 $$${rightStr}$$。`,
           ),
         );
@@ -1686,8 +1644,8 @@ export const reducedRowEchelonForm: TopicDef = {
         ];
 
         const prompt = t(
-          `Which of the following $3 \times 4$ matrices with non-pivot entries $c_1 = ${c1}$ and $c_2 = ${c2}$ is in **Reduced Row Echelon Form (RREF)**?`,
-          `下列包含非主元参数 $c_1 = ${c1}$ 与 $c_2 = ${c2}$ 的 $3 \times 4$ 矩阵中，哪一个是**简化行阶梯形矩阵 (RREF)**？`,
+          `Which of the following $3 \\times 4$ matrices with non-pivot entries $c_1 = ${c1}$ and $c_2 = ${c2}$ is in **Reduced Row Echelon Form (RREF)**?`,
+          `下列包含非主元参数 $c_1 = ${c1}$ 与 $c_2 = ${c2}$ 的 $3 \\times 4$ 矩阵中，哪一个是**简化行阶梯形矩阵 (RREF)**？`,
         );
 
         return oneOf(
@@ -1743,21 +1701,15 @@ export const gaussianEliminationForNxmSystemsOfEquations: TopicDef = {
           `一个由 $${m}$ 个方程与 $${n}$ 个未知数组成的相容线性方程组，其系数矩阵 $A$ 的秩为 $r = ${r}$。该方程组的通解包含多少个自由变量（自由度）？`,
         );
 
-        return oneOf(
-          rng,
+        return numberProblem({
           prompt,
-          t(`$${freeCount}$`, `$${freeCount}$`),
-          [
-            t(`$${r}$`, `$${r}$`),
-            t(`$${m - r}$`, `$${m - r}$`),
-            t(`$${n - m}$`, `$${n - m}$`),
-            t(`$${freeCount + 1}$`, `$${freeCount + 1}$`),
-          ],
-          t(
-            `In an $m \\times n$ system with rank $r$, the number of pivot columns (basic variables) is $r$. The remaining $n - r$ columns correspond to free variables. Here $n = ${n}$ and $r = ${r}$, so the number of free variables is $n - r = ${n} - ${r} = ${freeCount}$.`,
-            `在秩为 $r$ 的 $m \\times n$ 系统中，主元列（基本变量）的个数为 $r$。其余 $n - r$ 列均对应自由变量。此处 $n = ${n}$ 且 $r = ${r}$，故自由变量个数为 $n - r = ${n} - ${r} = ${freeCount}$。`,
+          answer: freeCount,
+          solution: t(
+            `In an $${m} \\times ${n}$ system with rank $r = ${r}$, the number of pivot columns (basic variables) is $r = ${r}$. The remaining $n - r$ columns correspond to free variables. Here $n = ${n}$ and $r = ${r}$, so the number of free variables is $n - r = ${n} - ${r} = ${freeCount}$.`,
+            `在秩为 $r = ${r}$ 的 $${m} \\times ${n}$ 系统中，主元列（基本变量）的个数为 $r = ${r}$。其余 $n - r$ 列均对应自由变量。此处 $n = ${n}$ 且 $r = ${r}$，故自由变量个数为 $n - r = ${n} - ${r} = ${freeCount}$。`,
           ),
-        );
+          wrong: [r, m - r, n - m, freeCount + 1, Math.max(0, freeCount - 1)],
+        });
       },
     },
   ],
@@ -2196,11 +2148,11 @@ export const theInvertibleMatrixTheoremInTermsOf2x2SystemsOfEquations: TopicDef 
           wrongTexts,
           t(
             isInvertible
-              ? `Since $det(A) = ${detA} \ne 0$, matrix $A$ is invertible. By the Invertible Matrix Theorem, $Amathbf{x} = mathbf{0} iff mathbf{x} = A^{-1}mathbf{0} = mathbf{0}$, meaning it has only the trivial solution.`
-              : `Since $det(A) = ${detA} = 0$, matrix $A$ is singular (not invertible). Thus the system has free variables and possesses infinitely many non-trivial solutions.`,
+              ? `Since $\\det(A) = ${detA} \\ne 0$, matrix $A$ is invertible. By the Invertible Matrix Theorem, $A\\mathbf{x} = \\mathbf{0} \\iff \\mathbf{x} = A^{-1}\\mathbf{0} = \\mathbf{0}$, meaning it has only the trivial solution.`
+              : `Since $\\det(A) = ${detA} = 0$, matrix $A$ is singular (not invertible). Thus the system has free variables and possesses infinitely many non-trivial solutions.`,
             isInvertible
-              ? `由于 $det(A) = ${detA} \ne 0$，矩阵 $A$ 可逆。根据可逆矩阵定理，$Amathbf{x} = mathbf{0} iff mathbf{x} = A^{-1}mathbf{0} = mathbf{0}$，因此只有平凡零解。`
-              : `由于 $det(A) = ${detA} = 0$，矩阵 $A$ 奇异不可逆。因此该齐次系统存在自由变量，包含无穷多非零解。`,
+              ? `由于 $\\det(A) = ${detA} \\ne 0$，矩阵 $A$ 可逆。根据可逆矩阵定理，$A\\mathbf{x} = \\mathbf{0} \\iff \\mathbf{x} = A^{-1}\\mathbf{0} = \\mathbf{0}$，因此只有平凡零解。`
+              : `由于 $\\det(A) = ${detA} = 0$，矩阵 $A$ 奇异不可逆。因此该齐次系统存在自由变量，包含无穷多非零解。`,
           ),
         );
       },
@@ -2419,8 +2371,8 @@ export const findingTheInverseOfAnNxnSquareMatrixUsingRowOperations: TopicDef = 
         const a2 = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
         const a3 = rng.pick([-3, -1, 2, 5]);
         const prompt = t(
-          `During the Gauss-Jordan inversion of an $${n} \times ${n}$ matrix $A$ with first row $[${a1}, ${a2}, ${a3}, dots]$, forward elimination produces a row of zeros in the left block of $[A mid I_${n}]$. What conclusion must follow?`,
-          `在对首行为 $[${a1}, ${a2}, ${a3}, dots]$ 的 $${n} \times ${n}$ 矩阵 $A$ 实施高斯-约当求逆消元 $[A mid I_${n}]$ 的过程中，若左侧部分出现了一行全零行，可以得出什么结论？`,
+          `During the Gauss-Jordan inversion of an $${n} \\times ${n}$ matrix $A$ with first row $[${a1}, ${a2}, ${a3}, \\dots]$, forward elimination produces a row of zeros in the left block of $[A \\mid I_{${n}}]$. What conclusion must follow?`,
+          `在对首行为 $[${a1}, ${a2}, ${a3}, \\dots]$ 的 $${n} \\times ${n}$ 矩阵 $A$ 实施高斯-约当求逆消元 $[A \\mid I_{${n}}]$ 的过程中，若左侧部分出现了一行全零行，可以得出什么结论？`,
         );
         const rightText = t("Matrix $A$ is singular and has no inverse", "矩阵 $A$ 是奇异矩阵，没有逆矩阵（不可逆）");
         const wrongTexts = [
@@ -2434,8 +2386,8 @@ export const findingTheInverseOfAnNxnSquareMatrixUsingRowOperations: TopicDef = 
           rightText,
           wrongTexts,
           t(
-            `If a row of zeros appears in the left block during row reduction, $\\text{rank}(A) < ${n}$. Since an $n \\times n$ matrix is invertible if and only if $\\text{rank}(A) = n$, $A$ cannot be transformed into the identity matrix $I_${n}$. Therefore, $A$ is singular and has no inverse.`,
-            `若行化简过程中左侧块出现全零行，说明 $\\text{rank}(A) < ${n}$。因为 $n \\times n$ 矩阵可逆当且仅当其满秩（$\\text{rank}(A) = n$），故 $A$ 无法化为单位矩阵 $I_${n}$，因此 $A$ 必然是奇异矩阵，没有逆矩阵。`,
+            `If a row of zeros appears in the left block during row reduction, $\\text{rank}(A) < ${n}$. Since an $n \\times n$ matrix is invertible if and only if $\\text{rank}(A) = n$, $A$ cannot be transformed into the identity matrix $I_{${n}}$. Therefore, $A$ is singular and has no inverse.`,
+            `若行化简过程中左侧块出现全零行，说明 $\\text{rank}(A) < ${n}$。因为 $n \\times n$ 矩阵可逆当且仅当其满秩（$\\text{rank}(A) = n$），故 $A$ 无法化为单位矩阵 $I_{${n}}$，因此 $A$ 必然是奇异矩阵，没有逆矩阵。`,
           ),
         );
       },
@@ -2555,21 +2507,15 @@ $$U = ${matLatex(U)}$$`,
 $$U = ${matLatex(U)}$$`,
         );
 
-        return oneOf(
-          rng,
+        return numberProblem({
           prompt,
-          t(`$${detU}$`, `$${detU}$`),
-          [
-            t(`$${d1 + d2 + d3}$`, `$${d1 + d2 + d3}$`),
-            t(`$${-detU}$`, `$${-detU}$`),
-            t(`$${detU + u12}$`, `$${detU + u12}$`),
-            t(`$${d1 * d2 + d3}$`, `$${d1 * d2 + d3}$`),
-          ],
-          t(
+          answer: detU,
+          solution: t(
             `For any triangular matrix (upper or lower), the determinant equals the product of its diagonal entries: $\\det(U) = (${d1}) \\cdot (${d2}) \\cdot (${d3}) = ${detU}$.`,
             `对任意三角矩阵（无论上三角或下三角），其行列式直接等于主对角线元素的乘积：$\\det(U) = (${d1}) \\cdot (${d2}) \\cdot (${d3}) = ${detU}$。`,
           ),
-        );
+          wrong: [d1 + d2 + d3, -detU, detU + u12, d1 * d2 + d3],
+        });
       },
     },
   ],

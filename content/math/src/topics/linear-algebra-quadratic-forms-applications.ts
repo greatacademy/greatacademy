@@ -2,7 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem } from "../problems.ts";
+import { choiceProblem, numberProblem, pointProblem, solutionsProblem } from "../problems.ts";
 
 // Linear Algebra Units 7 & 8: Diagonalization of Symmetric Matrices, Quadratic Forms,
 // Quadratic Forms in Euclidean Space, Singular Value Decomposition, Linear Least-Squares,
@@ -10,6 +10,7 @@ import { choiceProblem, numberProblem } from "../problems.ts";
 
 type Mat2 = readonly [readonly [number, number], readonly [number, number]];
 type Mat3 = readonly [readonly [number, number, number], readonly [number, number, number], readonly [number, number, number]];
+type Mat3x2 = readonly [readonly [number, number], readonly [number, number], readonly [number, number]];
 type Vec2 = readonly [number, number];
 type Vec3 = readonly [number, number, number];
 
@@ -28,6 +29,11 @@ function mat3Latex(m: Mat3): string {
   return `\\begin{pmatrix} ${m[0][0]} & ${m[0][1]} & ${m[0][2]} \\\\ ${m[1][0]} & ${m[1][1]} & ${m[1][2]} \\\\ ${m[2][0]} & ${m[2][1]} & ${m[2][2]} \\end{pmatrix}`;
 }
 
+/** mat3x2Latex formats a 3x2 numeric matrix as a LaTeX pmatrix. */
+function mat3x2Latex(m: Mat3x2): string {
+  return `\\begin{pmatrix} ${m[0][0]} & ${m[0][1]} \\\\ ${m[1][0]} & ${m[1][1]} \\\\ ${m[2][0]} & ${m[2][1]} \\end{pmatrix}`;
+}
+
 /** vec2Latex formats a 2-element vector as a LaTeX pmatrix. */
 function vec2Latex(v: Vec2 | readonly [string, string]): string {
   return `\\begin{pmatrix} ${v[0]} \\\\ ${v[1]} \\end{pmatrix}`;
@@ -36,6 +42,61 @@ function vec2Latex(v: Vec2 | readonly [string, string]): string {
 /** vec3Latex formats a 3-element vector as a LaTeX pmatrix. */
 function vec3Latex(v: Vec3 | readonly [string, string, string]): string {
   return `\\begin{pmatrix} ${v[0]} \\\\ ${v[1]} \\\\ ${v[2]} \\end{pmatrix}`;
+}
+
+/** formatSignedTerm formats "+ c var" or "- c var" without "+ -". */
+function formatSignedTerm(c: number, variable: string): string {
+  if (c === 0) return "";
+  const sign = c > 0 ? "+ " : "- ";
+  const abs = Math.abs(c);
+  const coeff = abs === 1 ? "" : `${abs}`;
+  return `${sign}${coeff}${variable}`;
+}
+
+/** formatFirstTerm formats "c var" or "-c var" for the leading term. */
+function formatFirstTerm(c: number, variable: string): string {
+  if (c === 0) return "";
+  if (c === 1) return variable;
+  if (c === -1) return `-${variable}`;
+  return `${c}${variable}`;
+}
+
+/** formatQuadratic formats a x1^2 + b x1 x2 + c x2^2 cleanly without "+ -". */
+function formatQuadratic(a: number, b: number, c: number, v1 = "x_1", v2 = "x_2"): string {
+  let res = formatFirstTerm(a, `${v1}^2`);
+  if (b !== 0) {
+    res = res ? `${res} ${formatSignedTerm(b, `${v1} ${v2}`)}` : formatFirstTerm(b, `${v1} ${v2}`);
+  }
+  if (c !== 0) {
+    res = res ? `${res} ${formatSignedTerm(c, `${v2}^2`)}` : formatFirstTerm(c, `${v2}^2`);
+  }
+  return res || "0";
+}
+
+/** formatBilinear formats a11 x1 y1 + a12 x1 y2 + a21 x2 y1 + a22 x2 y2 without "+ -". */
+function formatBilinear(a11: number, a12: number, a21: number, a22: number): string {
+  let res = formatFirstTerm(a11, "x_1 y_1");
+  if (a12 !== 0) res = res ? `${res} ${formatSignedTerm(a12, "x_1 y_2")}` : formatFirstTerm(a12, "x_1 y_2");
+  if (a21 !== 0) res = res ? `${res} ${formatSignedTerm(a21, "x_2 y_1")}` : formatFirstTerm(a21, "x_2 y_1");
+  if (a22 !== 0) res = res ? `${res} ${formatSignedTerm(a22, "x_2 y_2")}` : formatFirstTerm(a22, "x_2 y_2");
+  return res || "0";
+}
+
+/** formatDiagonalForm formats d1 y1^2 + d2 y2^2 without "+ -". */
+function formatDiagonalForm(d1: number, d2: number, v1 = "y_1", v2 = "y_2"): string {
+  let res = formatFirstTerm(d1, `${v1}^2`);
+  if (d2 !== 0) {
+    res = res ? `${res} ${formatSignedTerm(d2, `${v2}^2`)}` : formatFirstTerm(d2, `${v2}^2`);
+  }
+  return res || "0";
+}
+
+/** formatAddVar formats "+ c v" or "- c v" for linear combinations like x_1 + 2 x_2. */
+function formatAddVar(c: number, v: string): string {
+  if (c === 0) return "";
+  if (c === 1) return `+ ${v}`;
+  if (c === -1) return `- ${v}`;
+  return c > 0 ? `+ ${c}${v}` : `- ${-c}${v}`;
 }
 
 /** oneOf builds a multiple-choice problem with options shuffled and deduplicated. */
@@ -78,31 +139,35 @@ export const symmetricMatrices: TopicDef = {
         "实矩阵 $A$ 满足 $A^T = A$ 时称为实对称矩阵。实对称矩阵的特征值全为实数，且属于不同特征值的特征向量相互正交（点积为 0）。",
       ),
       generate: (rng: Rng): Problem => {
-        const u1 = rng.nonZero(-7, 7);
-        const u2 = rng.nonZero(-7, 7);
+        const u1 = rng.nonZero(-6, 6);
+        const u2 = rng.nonZero(-6, 6);
         const k = rng.nonZero(-3, 3);
         const v1 = -k * u2;
         const v2 = k * u1;
 
         const prompt = t(
-          `Let $A$ be a $2 \\times 2$ real symmetric matrix with distinct eigenvalues $\\lambda_1 \\ne \\lambda_2$. If $v_1 = ${vec2Latex([u1, u2])}$ is an eigenvector corresponding to $\\lambda_1$, which of the following could be an eigenvector of $A$ corresponding to $\\lambda_2$?`,
-          `设 $A$ 为 $2 \\times 2$ 实对称矩阵，具有两个不相等的特征值 $\\lambda_1 \\ne \\lambda_2$。若 $v_1 = ${vec2Latex([u1, u2])}$ 是对应于 $\\lambda_1$ 的特征向量，则下列哪个向量可能是对应于 $\\lambda_2$ 的特征向量？`,
+          `Let $A$ be a $2 \\times 2$ real symmetric matrix with distinct eigenvalues $\\lambda_1 \\ne \\lambda_2$. If $v_1 = ${vec2Latex([u1, u2])}$ is an eigenvector corresponding to $\\lambda_1$, find the eigenvector $v_2 = \\langle x_1, x_2 \\rangle$ corresponding to $\\lambda_2$ whose first component is $x_1 = ${v1}$. Enter the vector as $\\langle x_1, x_2 \\rangle$.`,
+          `设 $A$ 为 $2 \\times 2$ 实对称矩阵，具有两个不相等的特征值 $\\lambda_1 \\ne \\lambda_2$。若 $v_1 = ${vec2Latex([u1, u2])}$ 是对应于 $\\lambda_1$ 的特征向量，求对应于 $\\lambda_2$ 且第一个分量为 $x_1 = ${v1}$ 的特征向量 $v_2 = \\langle x_1, x_2 \\rangle$。以 $\\langle x_1, x_2 \\rangle$ 的形式输入向量。`,
         );
-
-        const right = t(`$${vec2Latex([v1, v2])}$`, `$${vec2Latex([v1, v2])}$`);
-        const wrong = [
-          t(`$${vec2Latex([u1, -u2])}$`, `$${vec2Latex([u1, -u2])}$`),
-          t(`$${vec2Latex([u2, u1])}$`, `$${vec2Latex([u2, u1])}$`),
-          t(`$${vec2Latex([2 * u1, 2 * u2])}$`, `$${vec2Latex([2 * u1, 2 * u2])}$`),
-          t(`$${vec2Latex([-u1, u2])}$`, `$${vec2Latex([-u1, u2])}$`),
-        ];
 
         const solution = t(
-          `Because $A$ is a real symmetric matrix, eigenvectors corresponding to distinct eigenvalues are orthogonal. Therefore, any eigenvector $v_2$ for $\\lambda_2$ must satisfy $v_1 \\cdot v_2 = 0$. Since $(${u1})(${v1}) + (${u2})(${v2}) = ${u1 * v1 + u2 * v2} = 0$, $${vec2Latex([v1, v2])}$ is orthogonal to $v_1$.`,
-          `因为 $A$ 为实对称矩阵，不同特征值对应的特征向量必然正交。因此对应于 $\\lambda_2$ 的特征向量 $v_2$ 必满足 $v_1 \\cdot v_2 = 0$。计算可得 $(${u1})(${v1}) + (${u2})(${v2}) = ${u1 * v1 + u2 * v2} = 0$，故 $${vec2Latex([v1, v2])}$ 与 $v_1$ 正交。`,
+          `Because $A$ is a real symmetric matrix, eigenvectors corresponding to distinct eigenvalues are orthogonal: $v_1 \\cdot v_2 = 0$. Hence $(${u1})(${v1}) + (${u2})x_2 = 0$, giving $(${u2})x_2 = ${-u1 * v1}$, which yields $x_2 = ${v2}$. Thus $v_2 = \\langle ${v1}, ${v2} \\rangle$.`,
+          `因为 $A$ 为实对称矩阵，不同特征值对应的特征向量相互正交：$v_1 \\cdot v_2 = 0$。即 $(${u1})(${v1}) + (${u2})x_2 = 0$，得 $(${u2})x_2 = ${-u1 * v1}$，解得 $x_2 = ${v2}$。因此 $v_2 = \\langle ${v1}, ${v2} \\rangle$。`,
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: [v1, v2],
+          vector: true,
+          vars: ["x_1", "x_2"],
+          solution,
+          wrong: [
+            [v1, -v2],
+            [-v1, v2],
+            [u1, u2],
+            [-u2, u1],
+          ],
+        });
       },
     },
   ],
@@ -243,11 +308,13 @@ export const diagonalizationOf3x3SymmetricMatrices: TopicDef = {
       ),
       generate: (rng: Rng): Problem => {
         const m = rng.int(-4, 4);
-        const k = rng.int(1, 5);
-        const c = rng.int(-5, 5);
+        const k = rng.int(1, 4);
         const l1 = m - k;
         const l2 = m + k;
-        const l3 = c;
+        let c = rng.int(-5, 5);
+        while (c === l1 || c === l2) {
+          c = rng.int(-5, 5);
+        }
 
         const mat: Mat3 = [
           [m, k, 0],
@@ -256,34 +323,28 @@ export const diagonalizationOf3x3SymmetricMatrices: TopicDef = {
         ];
 
         const prompt = t(
-          `Find the eigenvalues of the $3 \\times 3$ symmetric matrix\n\n$$A = ${mat3Latex(mat)}.$$`,
-          `求 $3 \\times 3$ 对称矩阵 $A = ${mat3Latex(mat)}$ 的全部特征值。`,
+          `Find all eigenvalues of the $3 \\times 3$ symmetric matrix\n\n$$A = ${mat3Latex(mat)}.$$\n\nEnter the eigenvalues separated by commas.`,
+          `求 $3 \\times 3$ 对称矩阵 $A = ${mat3Latex(mat)}$ 的所有特征值。多个特征值用逗号隔开。`,
         );
 
-        const sorted = [l1, l2, l3].slice().sort((x, y) => x - y);
-        const right = t(`$\\lambda = ${sorted.join(", ")}$`, `$\\lambda = ${sorted.join(", ")}$`);
-        const wrong = [
-          t(`$\\lambda = ${[m, k, c].sort((x, y) => x - y).join(", ")}$`, `$\\lambda = ${[m, k, c].sort((x, y) => x - y).join(", ")}$`),
-          t(
-            `$\\lambda = ${[l1, l2, -c].sort((x, y) => x - y).join(", ")}$`,
-            `$\\lambda = ${[l1, l2, -c].sort((x, y) => x - y).join(", ")}$`,
-          ),
-          t(
-            `$\\lambda = ${[m - 2 * k, m + 2 * k, c].sort((x, y) => x - y).join(", ")}$`,
-            `$\\lambda = ${[m - 2 * k, m + 2 * k, c].sort((x, y) => x - y).join(", ")}$`,
-          ),
-          t(
-            `$\\lambda = ${[l1 - 1, l2 + 1, c].sort((x, y) => x - y).join(", ")}$`,
-            `$\\lambda = ${[l1 - 1, l2 + 1, c].sort((x, y) => x - y).join(", ")}$`,
-          ),
-        ];
+        const sorted = [l1, l2, c].sort((x, y) => x - y);
+        const values = sorted.map(String);
 
         const solution = t(
-          `Since $A$ is block diagonal with a $2 \\times 2$ block $\\begin{pmatrix} ${m} & ${k} \\\\ ${k} & ${m} \\end{pmatrix}$ and a $1 \\times 1$ block $(${c})$, its characteristic polynomial is $\\det(A - \\lambda I) = [(${m} - \\lambda)^2 - ${k}^2](${c} - \\lambda) = 0$. The roots are $\\lambda = ${l1}$, $\\lambda = ${l2}$, and $\\lambda = ${l3}$, which are ${sorted.join(", ")}.`,
-          `因为 $A$ 为分块对角矩阵，包含 $2 \\times 2$ 块 $\\begin{pmatrix} ${m} & ${k} \\\\ ${k} & ${m} \\end{pmatrix}$ 与 $1 \\times 1$ 块 $(${c})$，其特征多项式为 $\\det(A - \\lambda I) = [(${m} - \\lambda)^2 - ${k}^2](${c} - \\lambda) = 0$。解得特征值为 $\\lambda = ${l1}, ${l2}, ${l3}$，即 ${sorted.join(", ")}。`,
+          `Because $A$ is block diagonal with a $2 \\times 2$ block $\\begin{pmatrix} ${m} & ${k} \\\\ ${k} & ${m} \\end{pmatrix}$ and a $1 \\times 1$ block $(${c})$, its characteristic polynomial factors as $\\det(A - \\lambda I) = [(${m} - \\lambda)^2 - ${k}^2](${c} - \\lambda) = 0$. Solving gives $\\lambda = ${l1}$, $\\lambda = ${l2}$, and $\\lambda = ${c}$.`,
+          `因为 $A$ 为分块对角矩阵，包含 $2 \\times 2$ 块 $\\begin{pmatrix} ${m} & ${k} \\\\ ${k} & ${m} \\end{pmatrix}$ 与 $1 \\times 1$ 块 $(${c})$，其特征多项式分解为 $\\det(A - \\lambda I) = [(${m} - \\lambda)^2 - ${k}^2](${c} - \\lambda) = 0$。解得特征值为 $\\lambda = ${l1}, ${l2}, ${c}$。`,
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return solutionsProblem({
+          prompt,
+          values,
+          solution,
+          wrong: [
+            [m, k, c].sort((x, y) => x - y).map(String),
+            [l1, l2, -c].sort((x, y) => x - y).map(String),
+            [m - 2 * k, m + 2 * k, c].sort((x, y) => x - y).map(String),
+          ],
+        });
       },
     },
   ],
@@ -425,9 +486,11 @@ export const bilinearForms: TopicDef = {
         const a21 = rng.nonZero(-6, 6);
         const a22 = rng.nonZero(-6, 6);
 
+        const formStr = formatBilinear(a11, a12, a21, a22);
+
         const prompt = t(
-          `Find the matrix $A$ representing the bilinear form $B(x, y) = ${a11}x_1 y_1 + ${a12}x_1 y_2 + ${a21}x_2 y_1 + ${a22}x_2 y_2$ with respect to the standard basis of $\\mathbb{R}^2$, such that $B(x, y) = x^T A y$.`,
-          `求以标准基表示的双线性型 $B(x, y) = ${a11}x_1 y_1 + ${a12}x_1 y_2 + ${a21}x_2 y_1 + ${a22}x_2 y_2$ 的矩阵 $A$，使得 $B(x, y) = x^T A y$。`,
+          `Find the matrix $A$ representing the bilinear form $B(x, y) = ${formStr}$ with respect to the standard basis of $\\mathbb{R}^2$, such that $B(x, y) = x^T A y$.`,
+          `求以标准基表示的双线性型 $B(x, y) = ${formStr}$ 的矩阵 $A$，使得 $B(x, y) = x^T A y$。`,
         );
 
         const right = t(
@@ -529,9 +592,11 @@ export const quadraticForms: TopicDef = {
         const c = rng.nonZero(-8, 8);
         const twoB = 2 * b;
 
+        const qStr = formatQuadratic(a, twoB, c);
+
         const prompt = t(
-          `Find the symmetric matrix $A$ associated with the quadratic form\n\n$$Q(x_1, x_2) = ${a}x_1^2 + ${twoB}x_1 x_2 + ${c}x_2^2.$$`,
-          `求与二次型 $Q(x_1, x_2) = ${a}x_1^2 + ${twoB}x_1 x_2 + ${c}x_2^2$ 对应的实对称矩阵 $A$。`,
+          `Find the symmetric matrix $A$ associated with the quadratic form\n\n$$Q(x_1, x_2) = ${qStr}.$$`,
+          `求与二次型 $Q(x_1, x_2) = ${qStr}$ 对应的实对称矩阵 $A$。`,
         );
 
         const right = t(
@@ -635,8 +700,6 @@ export const changeOfVariablesInQuadraticForms: TopicDef = {
         const p21 = rng.int(-2, 2);
         const p22 = rng.nonZero(-2, 2);
 
-        // A is diag(d1, d2)
-        // B = P^T A P
         const b11 = d1 * p11 * p11 + d2 * p21 * p21;
         const b12 = d1 * p11 * p12 + d2 * p21 * p22;
         const b22 = d1 * p12 * p12 + d2 * p22 * p22;
@@ -752,26 +815,31 @@ export const canonicalFormOfAQuadraticFormUsingLagrangesMethod: TopicDef = {
         const rem = rng.nonZero(-6, 6);
         const c = a * k * k + rem;
 
-        // Q = a x1^2 + 2ak x1 x2 + c x2^2 = a(x1 + k x2)^2 + rem x2^2
-        const prompt = t(
-          `Use Lagrange's method of completing the square to reduce the quadratic form\n\n$$Q(x_1, x_2) = ${a}x_1^2 + ${twoAk}x_1 x_2 + ${c}x_2^2$$\n\nto canonical form $d_1 y_1^2 + d_2 y_2^2$ with $y_1 = x_1 + ${k}x_2$ and $y_2 = x_2$. What are the coefficients $(d_1, d_2)$?`,
-          `使用拉格朗日配方法，将二次型\n\n$$Q(x_1, x_2) = ${a}x_1^2 + ${twoAk}x_1 x_2 + ${c}x_2^2$$\n\n化为标准形 $d_1 y_1^2 + d_2 y_2^2$（其中 $y_1 = x_1 + ${k}x_2$，$y_2 = x_2$）。求系数对 $(d_1, d_2)$。`,
-        );
+        const kTerm = formatAddVar(k, "x_2");
+        const qStr = formatQuadratic(a, twoAk, c);
 
-        const right = t(`$(${a}, ${rem})$`, `$(${a}, ${rem})$`);
-        const wrong = [
-          t(`$(${a}, ${c})$`, `$(${a}, ${c})$`),
-          t(`$(${a}, ${-rem})$`, `$(${a}, ${-rem})$`),
-          t(`$(${rem}, ${a})$`, `$(${rem}, ${a})$`),
-          t(`$(${a}, ${c - a * k})$`, `$(${a}, ${c - a * k})$`),
-        ];
+        const prompt = t(
+          `Use Lagrange's method of completing the square to reduce the quadratic form\n\n$$Q(x_1, x_2) = ${qStr}$$\n\nto canonical form $d_1 y_1^2 + d_2 y_2^2$ with $y_1 = x_1 ${kTerm}$ and $y_2 = x_2$. Enter the coefficients as an ordered pair $(d_1, d_2)$.`,
+          `使用拉格朗日配方法，将二次型\n\n$$Q(x_1, x_2) = ${qStr}$$\n\n化为标准形 $d_1 y_1^2 + d_2 y_2^2$（其中 $y_1 = x_1 ${kTerm}$，$y_2 = x_2$）。以有序数对 $(d_1, d_2)$ 的形式输入系数。`,
+        );
 
         const solution = t(
-          `Complete the square in $x_1$:\n\n$$Q(x_1, x_2) = ${a}(x_1^2 + ${2 * k}x_1 x_2) + ${c}x_2^2 = ${a}(x_1 + ${k}x_2)^2 - ${a * k * k}x_2^2 + ${c}x_2^2 = ${a}y_1^2 + ${rem}y_2^2.$$\n\nHence $(d_1, d_2) = (${a}, ${rem})$.`,
-          `对 $x_1$ 配方：\n\n$$Q(x_1, x_2) = ${a}(x_1^2 + ${2 * k}x_1 x_2) + ${c}x_2^2 = ${a}(x_1 + ${k}x_2)^2 - ${a * k * k}x_2^2 + ${c}x_2^2 = ${a}y_1^2 + ${rem}y_2^2。$$\n\n故系数对为 $(d_1, d_2) = (${a}, ${rem})$。`,
+          `Complete the square in $x_1$:\n\n$$Q(x_1, x_2) = ${a}(x_1 ${kTerm})^2 - ${a * k * k}x_2^2 + (${c})x_2^2 = ${a}y_1^2 ${formatSignedTerm(rem, "y_2^2")}.$$\n\nHence $(d_1, d_2) = (${a}, ${rem})$.`,
+          `对 $x_1$ 配方：\n\n$$Q(x_1, x_2) = ${a}(x_1 ${kTerm})^2 - ${a * k * k}x_2^2 + (${c})x_2^2 = ${a}y_1^2 ${formatSignedTerm(rem, "y_2^2")}。$$\n\n故系数对为 $(d_1, d_2) = (${a}, ${rem})$。`,
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: [a, rem],
+          vars: ["d_1", "d_2"],
+          solution,
+          wrong: [
+            [a, c],
+            [a, -rem],
+            [rem, a],
+            [a, c - a * k],
+          ],
+        });
       },
     },
   ],
@@ -803,28 +871,31 @@ export const canonicalFormOfAQuadraticFormUsingOrthogonalTransformations: TopicD
         const l1 = m - k;
         const l2 = m + k;
 
+        const qStr = formatQuadratic(m, twoK, m);
+        const rightStr = formatDiagonalForm(l1, l2);
+
         const prompt = t(
-          `Under an orthogonal transformation $x = P y$, find the canonical form of the quadratic form\n\n$$Q(x_1, x_2) = ${m}x_1^2 + ${twoK}x_1 x_2 + ${m}x_2^2.$$`,
-          `通过正交变换 $x = P y$，求二次型 $Q(x_1, x_2) = ${m}x_1^2 + ${twoK}x_1 x_2 + ${m}x_2^2$ 的标准形。`,
+          `Under an orthogonal transformation $x = P y$, find the canonical form of the quadratic form\n\n$$Q(x_1, x_2) = ${qStr}.$$`,
+          `通过正交变换 $x = P y$，求二次型 $Q(x_1, x_2) = ${qStr}$ 的标准形。`,
         );
 
-        const right = t(`$${l1}y_1^2 + ${l2}y_2^2$`, `$${l1}y_1^2 + ${l2}y_2^2$`);
+        const right = t(`$${rightStr}$`, `$${rightStr}$`);
         const wrong = [
-          t(`$${m}y_1^2 + ${twoK}y_2^2$`, `$${m}y_1^2 + ${twoK}y_2^2$`),
-          t(`$${m - 2 * k}y_1^2 + ${m + 2 * k}y_2^2$`, `$${m - 2 * k}y_1^2 + ${m + 2 * k}y_2^2$`),
-          t(`$${l2}y_1^2 - ${l1}y_2^2$`, `$${l2}y_1^2 - ${l1}y_2^2$`),
-          t(`$${m}y_1^2 + ${k}y_2^2$`, `$${m}y_1^2 + ${k}y_2^2$`),
+          t(`$${formatDiagonalForm(m, twoK)}$`, `$${formatDiagonalForm(m, twoK)}$`),
+          t(`$${formatDiagonalForm(m - 2 * k, m + 2 * k)}$`, `$${formatDiagonalForm(m - 2 * k, m + 2 * k)}$`),
+          t(`$${formatDiagonalForm(l2, -l1)}$`, `$${formatDiagonalForm(l2, -l1)}$`),
+          t(`$${formatDiagonalForm(m, k)}$`, `$${formatDiagonalForm(m, k)}$`),
         ];
 
         const solution = t(
           `The symmetric matrix of $Q$ is $A = ${mat2Latex([
             [m, k],
             [k, m],
-          ])}$. Its characteristic equation is $(${m} - \\lambda)^2 - ${k}^2 = 0$, giving eigenvalues $\\lambda_1 = ${l1}$ and $\\lambda_2 = ${l2}$. Under an orthogonal transformation, the coefficients of the canonical form are the eigenvalues, yielding $${l1}y_1^2 + ${l2}y_2^2$.`,
+          ])}$. Its characteristic equation is $(${m} - \\lambda)^2 - ${k}^2 = 0$, giving eigenvalues $\\lambda_1 = ${l1}$ and $\\lambda_2 = ${l2}$. Under an orthogonal transformation, the coefficients of the canonical form are the eigenvalues, yielding $${rightStr}$.`,
           `二次型 $Q$ 的实对称矩阵为 $A = ${mat2Latex([
             [m, k],
             [k, m],
-          ])}$。其特征方程为 $(${m} - \\lambda)^2 - ${k}^2 = 0$，解得特征值 $\\lambda_1 = ${l1}$，$\\lambda_2 = ${l2}$。在正交变换下，标准形的系数即为特征值，故为 $${l1}y_1^2 + ${l2}y_2^2$。`,
+          ])}$。其特征方程为 $(${m} - \\lambda)^2 - ${k}^2 = 0$，解得特征值 $\\lambda_1 = ${l1}$，$\\lambda_2 = ${l2}$。在正交变换下，标准形的系数即为特征值，故为 $${rightStr}$。`,
         );
 
         return oneOf(rng, prompt, right, wrong, solution);
@@ -853,7 +924,7 @@ export const positiveDefiniteAndNegativeDefiniteQuadraticForms: TopicDef = {
         "二次型的定性判定：\n- **正定**：当且仅当所有特征值大于 0（所有顺序主子式 $\\Delta_k > 0$）；\n- **负定**：当且仅当所有特征值小于 0（顺序主子式正负相错，即 $(-1)^k \\Delta_k > 0$）；\n- **不定**：具有异号特征值。",
       ),
       generate: (rng: Rng): Problem => {
-        const kind = rng.int(0, 2); // 0: positive definite, 1: negative definite, 2: indefinite
+        const kind = rng.int(0, 2);
         let a: number;
         let c: number;
         let b: number;
@@ -883,10 +954,11 @@ export const positiveDefiniteAndNegativeDefiniteQuadraticForms: TopicDef = {
         const twoB = 2 * b;
         const delta1 = a;
         const delta2 = a * c - b * b;
+        const qStr = formatQuadratic(a, twoB, c);
 
         const prompt = t(
-          `Classify the definiteness of the quadratic form\n\n$$Q(x_1, x_2) = ${a}x_1^2 + ${twoB}x_1 x_2 + ${c}x_2^2.$$`,
-          `判定二次型 $Q(x_1, x_2) = ${a}x_1^2 + ${twoB}x_1 x_2 + ${c}x_2^2$ 的定性。`,
+          `Classify the definiteness of the quadratic form\n\n$$Q(x_1, x_2) = ${qStr}.$$`,
+          `判定二次型 $Q(x_1, x_2) = ${qStr}$ 的定性。`,
         );
 
         const right = t(classificationEn, classificationZh);
@@ -902,7 +974,7 @@ export const positiveDefiniteAndNegativeDefiniteQuadraticForms: TopicDef = {
             ? `The leading principal minors are $\\Delta_1 = ${delta1} > 0$ and $\\Delta_2 = ac - b^2 = (${a})(${c}) - ${b}^2 = ${delta2} > 0$. By Sylvester's criterion, the quadratic form is positive definite.`
             : kind === 1
               ? `The leading principal minors are $\\Delta_1 = ${delta1} < 0$ and $\\Delta_2 = ac - b^2 = (${a})(${c}) - ${b}^2 = ${delta2} > 0$. The signs alternate starting with negative, so the quadratic form is negative definite.`
-              : `The leading principal minor determinant is $\\Delta_2 = ac - b^2 = (${a})(${c}) - ${b}^2 = ${delta2} < 0$. The eigenvalues have opposite signs, so the quadratic form is indefinite.`;
+              : `The determinant of the matrix is $\\Delta_2 = ac - b^2 = (${a})(${c}) - ${b}^2 = ${delta2} < 0$. The eigenvalues have opposite signs, so the quadratic form is indefinite.`;
 
         const reasonZh =
           kind === 0
@@ -950,28 +1022,31 @@ export const reducingAQuadraticCurveToItsPrincipalAxes: TopicDef = {
         const l1 = m - k;
         const l2 = m + k;
 
+        const lhsStr = formatQuadratic(m, twoK, m);
+        const rightStr = `${formatDiagonalForm(l1, l2)} = ${d}`;
+
         const prompt = t(
-          `Reduce the quadratic curve equation\n\n$$${m}x_1^2 + ${twoK}x_1 x_2 + ${m}x_2^2 = ${d}$$\n\nto its principal axes form $\\lambda_1 y_1^2 + \\lambda_2 y_2^2 = ${d}$ by an orthogonal rotation of axes (with $\\lambda_1 \\le \\lambda_2$).`,
-          `通过正交旋转坐标轴，将二次曲线方程 $${m}x_1^2 + ${twoK}x_1 x_2 + ${m}x_2^2 = ${d}$ 化为主轴标准方程 $\\lambda_1 y_1^2 + \\lambda_2 y_2^2 = ${d}$（其中 $\\lambda_1 \\le \\lambda_2$）。`,
+          `Reduce the quadratic curve equation\n\n$$${lhsStr} = ${d}$$\n\nto its principal axes form $\\lambda_1 y_1^2 + \\lambda_2 y_2^2 = ${d}$ by an orthogonal rotation of axes (with $\\lambda_1 \\le \\lambda_2$).`,
+          `通过正交旋转坐标轴，将二次曲线方程 $${lhsStr} = ${d}$ 化为主轴标准方程 $\\lambda_1 y_1^2 + \\lambda_2 y_2^2 = ${d}$（其中 $\\lambda_1 \\le \\lambda_2$）。`,
         );
 
-        const right = t(`$${l1}y_1^2 + ${l2}y_2^2 = ${d}$`, `$${l1}y_1^2 + ${l2}y_2^2 = ${d}$`);
+        const right = t(`$${rightStr}$`, `$${rightStr}$`);
         const wrong = [
-          t(`$${l2}y_1^2 + ${l1}y_2^2 = ${d}$`, `$${l2}y_1^2 + ${l1}y_2^2 = ${d}$`),
-          t(`$${m}y_1^2 + ${twoK}y_2^2 = ${d}$`, `$${m}y_1^2 + ${twoK}y_2^2 = ${d}$`),
-          t(`$${m - 2 * k}y_1^2 + ${m + 2 * k}y_2^2 = ${d}$`, `$${m - 2 * k}y_1^2 + ${m + 2 * k}y_2^2 = ${d}$`),
-          t(`$${l1}y_1^2 - ${l2}y_2^2 = ${d}$`, `$${l1}y_1^2 - ${l2}y_2^2 = ${d}$`),
+          t(`$${formatDiagonalForm(l2, l1)} = ${d}$`, `$${formatDiagonalForm(l2, l1)} = ${d}$`),
+          t(`$${formatDiagonalForm(m, twoK)} = ${d}$`, `$${formatDiagonalForm(m, twoK)} = ${d}$`),
+          t(`$${formatDiagonalForm(m - 2 * k, m + 2 * k)} = ${d}$`, `$${formatDiagonalForm(m - 2 * k, m + 2 * k)} = ${d}$`),
+          t(`$${formatDiagonalForm(l1, -l2)} = ${d}$`, `$${formatDiagonalForm(l1, -l2)} = ${d}$`),
         ];
 
         const solution = t(
           `The matrix of the quadratic part is $A = ${mat2Latex([
             [m, k],
             [k, m],
-          ])}$. Its eigenvalues are the roots of $(${m} - \\lambda)^2 - ${k}^2 = 0$, giving $\\lambda_1 = ${l1}$ and $\\lambda_2 = ${l2}$. In the principal axes coordinate system $(y_1, y_2)$, the equation is $${l1}y_1^2 + ${l2}y_2^2 = ${d}$.`,
+          ])}$. Its eigenvalues are the roots of $(${m} - \\lambda)^2 - ${k}^2 = 0$, giving $\\lambda_1 = ${l1}$ and $\\lambda_2 = ${l2}$. In the principal axes coordinate system $(y_1, y_2)$, the equation is $${rightStr}$.`,
           `二次项矩阵为 $A = ${mat2Latex([
             [m, k],
             [k, m],
-          ])}$。特征方程为 $(${m} - \\lambda)^2 - ${k}^2 = 0$，解得特征值 $\\lambda_1 = ${l1}$，$\\lambda_2 = ${l2}$。在主轴坐标系 $(y_1, y_2)$ 下，方程为 $${l1}y_1^2 + ${l2}y_2^2 = ${d}$。`,
+          ])}$。特征方程为 $(${m} - \\lambda)^2 - ${k}^2 = 0$，解得特征值 $\\lambda_1 = ${l1}$，$\\lambda_2 = ${l2}$。在主轴坐标系 $(y_1, y_2)$ 下，方程为 $${rightStr}$。`,
         );
 
         return oneOf(rng, prompt, right, wrong, solution);
@@ -1000,7 +1075,7 @@ export const classifyingQuadraticCurves: TopicDef = {
         "对于二次曲线 $a x^2 + 2b xy + c y^2 + d x + e y = f$，设 $A = \\begin{pmatrix} a & b \\\\ b & c \\end{pmatrix}$。由 $\\det(A) = ac - b^2$ 判定曲线类型：\n- $\\det(A) > 0$（特征值同号）：**椭圆**；\n- $\\det(A) < 0$（特征值异号）：**双曲线**；\n- $\\det(A) = 0$（存在零特征值）：**抛物线**。",
       ),
       generate: (rng: Rng): Problem => {
-        const type = rng.int(0, 2); // 0: ellipse, 1: hyperbola, 2: parabola
+        const type = rng.int(0, 2);
         let a: number;
         let b: number;
         let c: number;
@@ -1031,10 +1106,11 @@ export const classifyingQuadraticCurves: TopicDef = {
         const twoB = 2 * b;
         const detA = a * c - b * b;
         const rhs = rng.int(5, 30);
+        const lhsStr = formatQuadratic(a, twoB, c, "x", "y");
 
         const prompt = t(
-          `Classify the quadratic curve given by\n\n$$${a}x^2 + ${twoB}xy + ${c}y^2 = ${rhs}.$$`,
-          `判定二次曲线 $${a}x^2 + ${twoB}xy + ${c}y^2 = ${rhs}$ 的几何类型。`,
+          `Classify the quadratic curve given by\n\n$$${lhsStr} = ${rhs}.$$`,
+          `判定二次曲线 $${lhsStr} = ${rhs}$ 的几何类型。`,
         );
 
         const right = t(conicEn, conicZh);
@@ -1109,7 +1185,7 @@ export const constrainedOptimizationOfQuadraticForms: TopicDef = {
         "根据瑞利商定理，对于实对称矩阵 $A$，在 $\\|x\\| = 1$ 的约束下，$x^T A x$ 的最大值为最大特征值 $\\lambda_{\\max}(A)$，最小值为最小特征值 $\\lambda_{\\min}(A)$。",
       ),
       generate: (rng: Rng): Problem => {
-        const m = rng.int(-4, 6);
+        const m = rng.int(-5, 6);
         const k = rng.int(1, 6);
         const findMax = rng.bool();
         const lMax = m + k;
@@ -1117,10 +1193,11 @@ export const constrainedOptimizationOfQuadraticForms: TopicDef = {
         const targetValue = findMax ? lMax : lMin;
         const extremaWordEn = findMax ? "maximum" : "minimum";
         const extremaWordZh = findMax ? "最大值" : "最小值";
+        const qStr = formatQuadratic(m, 2 * k, m);
 
         const prompt = t(
-          `Find the ${extremaWordEn} value of the quadratic form $Q(x) = ${m}x_1^2 + ${2 * k}x_1 x_2 + ${m}x_2^2$ subject to the constraint $x_1^2 + x_2^2 = 1$.`,
-          `求二次型 $Q(x) = ${m}x_1^2 + ${2 * k}x_1 x_2 + ${m}x_2^2$ 在约束条件 $x_1^2 + x_2^2 = 1$ 下的${extremaWordZh}。`,
+          `Find the ${extremaWordEn} value of the quadratic form $Q(x) = ${qStr}$ subject to the constraint $x_1^2 + x_2^2 = 1$.`,
+          `求二次型 $Q(x) = ${qStr}$ 在约束条件 $x_1^2 + x_2^2 = 1$ 下的${extremaWordZh}。`,
         );
 
         return numberProblem({
@@ -1166,10 +1243,11 @@ export const constrainedOptimizationOfQuadraticFormsDeterminingWhereExtremaAreAt
         const m = rng.int(-4, 5);
         const k = rng.int(1, 5);
         const findMax = rng.bool();
+        const qStr = formatQuadratic(m, 2 * k, m);
 
         const prompt = t(
-          `At which of the following unit vectors does $Q(x) = ${m}x_1^2 + ${2 * k}x_1 x_2 + ${m}x_2^2$ attain its ${findMax ? "maximum" : "minimum"} subject to $\\|x\\| = 1$?`,
-          `在约束 $\\|x\\| = 1$ 下，二次型 $Q(x) = ${m}x_1^2 + ${2 * k}x_1 x_2 + ${m}x_2^2$ 在下列哪个单位向量处取得${findMax ? "最大值" : "最小值"}？`,
+          `At which of the following unit vectors does $Q(x) = ${qStr}$ attain its ${findMax ? "maximum" : "minimum"} subject to $\\|x\\| = 1$?`,
+          `在约束 $\\|x\\| = 1$ 下，二次型 $Q(x) = ${qStr}$ 在下列哪个单位向量处取得${findMax ? "最大值" : "最小值"}？`,
         );
 
         const rightVec: Vec2 = findMax ? [1, 1] : [1, -1];
@@ -1220,8 +1298,8 @@ export const singularValuesOfAMatrix: TopicDef = {
         "对于任意 $m \\times n$ 实矩阵 $A$，其奇异值 $\\sigma_1 \\ge \\sigma_2 \\ge \\dots \\ge \\sigma_n \\ge 0$ 定义为半正定矩阵 $A^T A$ 的特征值的算术平方根：$\\sigma_i = \\sqrt{\\lambda_i(A^T A)}$。非零奇异值的个数等于矩阵 $A$ 的秩。",
       ),
       generate: (rng: Rng): Problem => {
-        const m = rng.int(3, 7);
-        const n = rng.int(3, 7);
+        const m = rng.int(3, 9);
+        const n = rng.int(3, 9);
         const rank = rng.int(1, Math.min(m, n));
 
         const prompt = t(
@@ -1263,40 +1341,39 @@ export const computingTheSingularValuesOfAMatrix: TopicDef = {
         "计算 $A$ 的奇异值时，先求 $n \\times n$ 对称矩阵 $A^T A$，求其降序特征值 $\\lambda_1 \\ge \\lambda_2 \\ge \\dots \\ge 0$，再取平方根 $\\sigma_i = \\sqrt{\\lambda_i}$。",
       ),
       generate: (rng: Rng): Problem => {
-        // Construct matrix with nice singular values
-        // A = [[3k, 4k], [0, 0]] has ATA = [[9k^2, 12k^2], [12k^2, 16k^2]], tr = 25k^2, det = 0 -> sigma1 = 5k, sigma2 = 0
-        // Or A = [[c, 0], [0, d]] with sigma = |c|, |d|
-        const c = rng.int(2, 9);
+        const c = rng.int(2, 12);
         const d = rng.int(1, c - 1);
         const flip = rng.bool();
         const a11 = flip ? d : c;
         const a22 = flip ? c : d;
 
         const prompt = t(
-          `Compute the largest singular value $\\sigma_1$ of the matrix\n\n$$A = ${mat2Latex([
+          `Compute all singular values of the matrix\n\n$$A = ${mat2Latex([
             [a11, 0],
             [0, a22],
-          ])}.$$`,
+          ])}.$$\n\nEnter the singular values separated by commas.`,
           `计算矩阵 $A = ${mat2Latex([
             [a11, 0],
             [0, a22],
-          ])}$ 的最大奇异值 $\\sigma_1$。`,
+          ])}$ 的所有奇异值。多个奇异值用逗号隔开。`,
         );
 
-        return numberProblem({
+        const solution = t(
+          `Compute $A^T A = ${mat2Latex([
+            [a11 * a11, 0],
+            [0, a22 * a22],
+          ])}$. The eigenvalues of $A^T A$ are ${c * c}$ and ${d * d}$. Taking the positive square roots gives the singular values $\\sigma_1 = \\sqrt{${c * c}} = ${c}$ and $\\sigma_2 = \\sqrt{${d * d}} = ${d}$.`,
+          `计算 $A^T A = ${mat2Latex([
+            [a11 * a11, 0],
+            [0, a22 * a22],
+          ])}$。$A^T A$ 的特征值为 ${c * c}$ 和 ${d * d}$。取算术平方根得到奇异值为 $\\sigma_1 = \\sqrt{${c * c}} = ${c}$ 与 $\\sigma_2 = \\sqrt{${d * d}} = ${d}$。`,
+        );
+
+        return solutionsProblem({
           prompt,
-          answer: c,
-          solution: t(
-            `Compute $A^T A = ${mat2Latex([
-              [a11 * a11, 0],
-              [0, a22 * a22],
-            ])}$. The eigenvalues of $A^T A$ are ${c * c}$ and ${d * d}$. Taking the square root gives singular values $\\sigma_1 = \\sqrt{${c * c}} = ${c}$ and $\\sigma_2 = \\sqrt{${d * d}} = ${d}$.`,
-            `计算 $A^T A = ${mat2Latex([
-              [a11 * a11, 0],
-              [0, a22 * a22],
-            ])}$。$A^T A$ 的特征值为 ${c * c}$ 和 ${d * d}$。取平方根得到奇异值 $\\sigma_1 = \\sqrt{${c * c}} = ${c}$，$\\sigma_2 = \\sqrt{${d * d}} = ${d}$。`,
-          ),
-          wrong: [d, c * c, c + d, Math.abs(c - d)],
+          values: [String(c), String(d)],
+          solution,
+          wrong: [[String(c * c), String(d * d)], [String(c), String(c + d)], [String(d)], [String(c)]],
         });
       },
     },
@@ -1323,7 +1400,7 @@ export const singularValueDecompositionOf2x2Matrices: TopicDef = {
         "矩阵 $A$ 的奇异值分解为 $A = U \\Sigma V^T$，其中 $U$ 与 $V$ 为正交矩阵，$\\Sigma$ 对角线上为降序奇异值 $\\sigma_1 \\ge \\sigma_2 \\ge \\dots \\ge 0$。$V$ 的各列为 $A^T A$ 的标准正交特征向量，且 $u_i = \\frac{1}{\\sigma_i} A v_i$。",
       ),
       generate: (rng: Rng): Problem => {
-        const s1 = rng.int(4, 9);
+        const s1 = rng.int(4, 12);
         const s2 = rng.int(1, s1 - 1);
 
         const prompt = t(
@@ -1423,8 +1500,8 @@ export const singularValueDecompositionOf2x2MatricesWithZeroOrRepeatedEigenvalue
         "当 $\\operatorname{rank}(A) = 1$ 时，第二个奇异值为 $\\sigma_2 = 0$。此时 $u_1 = \\frac{1}{\\sigma_1} A v_1$，而 $u_2$ 选取与 $u_1$ 正交的任意单位向量以补齐 $\\mathbb{R}^2$ 的标准正交基。",
       ),
       generate: (rng: Rng): Problem => {
-        const u1 = rng.nonZero(-4, 4);
-        const u2 = rng.nonZero(-4, 4);
+        const u1 = rng.nonZero(-5, 5);
+        const u2 = rng.nonZero(-5, 5);
         const hypSq = u1 * u1 + u2 * u2;
 
         const prompt = t(
@@ -1583,8 +1660,8 @@ export const singularValueDecompositionAndThePseudoinverseMatrix: TopicDef = {
         "若矩阵 $A$ 的 SVD 分解为 $A = U \\Sigma V^T$，则其摩尔-彭罗斯伪逆为 $A^+ = V \\Sigma^+ U^T$。其中 $\\Sigma^+$ 是将 $\\Sigma$ 的每个非零奇异值 $\\sigma_i$ 替换为其倒数 $\\frac{1}{\\sigma_i}$ 并转置后得到的矩阵。",
       ),
       generate: (rng: Rng): Problem => {
-        const s1 = rng.int(2, 7);
-        const s2 = rng.int(2, 7);
+        const s1 = rng.int(2, 8);
+        const s2 = rng.int(2, 8);
 
         const prompt = t(
           `Let $\\Sigma = ${mat2Latex([
@@ -1693,38 +1770,48 @@ export const leastSquaresSolutionOfALinearSystemWithoutCollinearity: TopicDef = 
         "对于矛盾线性方程组 $A x = b$，若 $A$ 为列满秩矩阵，则 $A^T A$ 可逆。使残差范数 $\\|b - A x\\|$ 最小的唯一最小二乘解满足正规方程 $A^T A \\hat{x} = A^T b$，其解为 $\\hat{x} = (A^T A)^{-1} A^T b$。",
       ),
       generate: (rng: Rng): Problem => {
-        const x1 = rng.int(-2, 2);
-        const x2 = rng.int(-2, 2);
-        const x3 = rng.int(-2, 2);
+        const xHat1 = rng.int(-3, 3);
+        const xHat2 = rng.int(-3, 3);
+        const r = rng.nonZero(-2, 2);
 
-        // A = [[1, x1], [1, x2], [1, x3]]
-        // b = [b1, b2, b3]
-        const b1 = rng.int(-4, 4);
-        const b2 = rng.int(-4, 4);
-        const b3 = rng.int(-4, 4);
+        // A is 3x2 with orthogonal columns [1, 1, 1]^T and [-1, 0, 1]^T
+        // Residual vector e = r * [1, -2, 1]^T is orthogonal to Col(A)
+        const b1 = xHat1 - xHat2 + r;
+        const b2 = xHat1 - 2 * r;
+        const b3 = xHat1 + xHat2 + r;
 
-        const atb1 = b1 + b2 + b3;
-        const atb2 = x1 * b1 + x2 * b2 + x3 * b3;
-
-        const prompt = t(
-          `Given the linear system $A x = b$ with $A = \\begin{pmatrix} 1 & ${x1} \\\\ 1 & ${x2} \\\\ 1 & ${x3} \\end{pmatrix}$ and $b = ${vec3Latex([b1, b2, b3])}$, compute the right-hand side vector $A^T b$ of the normal equations $A^T A \\hat{x} = A^T b$.`,
-          `已知线性方程组 $A x = b$，其中 $A = \\begin{pmatrix} 1 & ${x1} \\\\ 1 & ${x2} \\\\ 1 & ${x3} \\end{pmatrix}$ 且 $b = ${vec3Latex([b1, b2, b3])}$。计算正规方程组 $A^T A \\hat{x} = A^T b$ 的右端常数向量 $A^T b$。`,
-        );
-
-        const right = t(`$${vec2Latex([atb1, atb2])}$`, `$${vec2Latex([atb1, atb2])}$`);
-        const wrong = [
-          t(`$${vec2Latex([atb2, atb1])}$`, `$${vec2Latex([atb2, atb1])}$`),
-          t(`$${vec2Latex([atb1, -atb2])}$`, `$${vec2Latex([atb1, -atb2])}$`),
-          t(`$${vec2Latex([b1 + b2, b2 + b3])}$`, `$${vec2Latex([b1 + b2, b2 + b3])}$`),
-          t(`$${vec2Latex([atb1 + 1, atb2 - 1])}$`, `$${vec2Latex([atb1 + 1, atb2 - 1])}$`),
+        const A: Mat3x2 = [
+          [1, -1],
+          [1, 0],
+          [1, 1],
         ];
 
-        const solution = t(
-          `Compute $A^T b = \\begin{pmatrix} 1 & 1 & 1 \\\\ ${x1} & ${x2} & ${x3} \\end{pmatrix} ${vec3Latex([b1, b2, b3])} = \\begin{pmatrix} (${b1}) + (${b2}) + (${b3}) \\\\ (${x1})(${b1}) + (${x2})(${b2}) + (${x3})(${b3}) \\end{pmatrix} = ${vec2Latex([atb1, atb2])}$.`,
-          `计算 $A^T b = \\begin{pmatrix} 1 & 1 & 1 \\\\ ${x1} & ${x2} & ${x3} \\end{pmatrix} ${vec3Latex([b1, b2, b3])} = \\begin{pmatrix} (${b1}) + (${b2}) + (${b3}) \\\\ (${x1})(${b1}) + (${x2})(${b2}) + (${x3})(${b3}) \\end{pmatrix} = ${vec2Latex([atb1, atb2])}$。`,
+        const prompt = t(
+          `Find the least-squares solution vector $\\hat{x} = \\langle x_1, x_2 \\rangle$ of the linear system $A x = b$, where\n\n$$A = ${mat3x2Latex(A)}, \\quad b = ${vec3Latex([b1, b2, b3])}.$$\n\nEnter the vector as $\\langle x_1, x_2 \\rangle$.`,
+          `求线性方程组 $A x = b$ 的最小二乘解向量 $\\hat{x} = \\langle x_1, x_2 \\rangle$，其中\n\n$$A = ${mat3x2Latex(A)}, \\quad b = ${vec3Latex([b1, b2, b3])}。$$\n\n以 $\\langle x_1, x_2 \\rangle$ 的形式输入向量。`,
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        const sumB = b1 + b2 + b3;
+        const diffB = -b1 + b3;
+
+        const solution = t(
+          `Compute the normal equation components:\n\n$$A^T A = \\begin{pmatrix} 1 & 1 & 1 \\\\ -1 & 0 & 1 \\end{pmatrix} ${mat3x2Latex(A)} = \\begin{pmatrix} 3 & 0 \\\\ 0 & 2 \\end{pmatrix},$$\n\n$$A^T b = \\begin{pmatrix} (${b1}) + (${b2}) + (${b3}) \\\\ -(${b1}) + (${b3}) \\end{pmatrix} = \\begin{pmatrix} ${sumB} \\\\ ${diffB} \\end{pmatrix}.$$\n\nSolving $A^T A \\hat{x} = A^T b$ gives $\\hat{x}_1 = \\frac{${sumB}}{3} = ${xHat1}$ and $\\hat{x}_2 = \\frac{${diffB}}{2} = ${xHat2}$. Thus $\\hat{x} = \\langle ${xHat1}, ${xHat2} \\rangle$.`,
+          `计算正规方程的各个部分：\n\n$$A^T A = \\begin{pmatrix} 1 & 1 & 1 \\\\ -1 & 0 & 1 \\end{pmatrix} ${mat3x2Latex(A)} = \\begin{pmatrix} 3 & 0 \\\\ 0 & 2 \\end{pmatrix}，$$\n\n$$A^T b = \\begin{pmatrix} (${b1}) + (${b2}) + (${b3}) \\\\ -(${b1}) + (${b3}) \\end{pmatrix} = \\begin{pmatrix} ${sumB} \\\\ ${diffB} \\end{pmatrix}。$$\n\n解 $A^T A \\hat{x} = A^T b$ 得 $\\hat{x}_1 = \\frac{${sumB}}{3} = ${xHat1}$，$\\hat{x}_2 = \\frac{${diffB}}{2} = ${xHat2}$。因此 $\\hat{x} = \\langle ${xHat1}, ${xHat2} \\rangle$。`,
+        );
+
+        return pointProblem({
+          prompt,
+          answer: [xHat1, xHat2],
+          vector: true,
+          vars: ["x_1", "x_2"],
+          solution,
+          wrong: [
+            [xHat2, xHat1],
+            [xHat1, -xHat2],
+            [-xHat1, xHat2],
+            [xHat1 + 1, xHat2 - 1],
+          ],
+        });
       },
     },
   ],
@@ -1750,9 +1837,9 @@ export const leastSquaresSolutionOfALinearSystemWithCollinearity: TopicDef = {
         "当 $A$ 的列向量线性相关时，$A^T A$ 奇异。正规方程 $A^T A \\hat{x} = A^T b$ 有无穷多组解，构成仿射集 $\\hat{x}_0 + \\operatorname{Nul}(A)$。在所有最小二乘解中，存在唯一的欧氏范数 $\\|\\hat{x}\\|$ 最小的解，由伪逆给出：$\\hat{x}_{\\text{min}} = A^+ b$。",
       ),
       generate: (rng: Rng): Problem => {
-        const c1 = rng.nonZero(-3, 3);
-        const c2 = rng.nonZero(-3, 3);
-        const mult = rng.int(2, 4);
+        const c1 = rng.nonZero(-4, 4);
+        const c2 = rng.nonZero(-4, 4);
+        const mult = rng.int(2, 5);
 
         const prompt = t(
           `Consider the linear system $A x = b$ where $A = \\begin{pmatrix} ${c1} & ${mult * c1} \\\\ ${c2} & ${mult * c2} \\end{pmatrix}$. Because the columns of $A$ are collinear, which statement correctly describes the set of least-squares solutions?`,
@@ -1818,27 +1905,31 @@ export const findingALeastSquaresSolutionUsingQrFactorization: TopicDef = {
           `Given the QR factorization $A = QR$ of a matrix $A$ with full column rank, where $R = ${mat2Latex([
             [r11, r12],
             [0, r22],
-          ])}$ and $Q^T b = ${vec2Latex([d1, d2])}$, solve for the least-squares solution $\\hat{x}$.`,
+          ])}$ and $Q^T b = ${vec2Latex([d1, d2])}$, solve for the least-squares solution $\\hat{x}$. Enter the vector as $\\langle x_1, x_2 \\rangle$.`,
           `已知列满秩矩阵 $A$ 的 QR 分解 $A = QR$，其中 $R = ${mat2Latex([
             [r11, r12],
             [0, r22],
-          ])}$ 且 $Q^T b = ${vec2Latex([d1, d2])}$。求解其最小二乘解 $\\hat{x}$。`,
+          ])}$ 且 $Q^T b = ${vec2Latex([d1, d2])}$。求解其最小二乘解 $\\hat{x}$。以 $\\langle x_1, x_2 \\rangle$ 的形式输入向量。`,
         );
-
-        const right = t(`$${vec2Latex([xHat1, xHat2])}$`, `$${vec2Latex([xHat1, xHat2])}$`);
-        const wrong = [
-          t(`$${vec2Latex([xHat2, xHat1])}$`, `$${vec2Latex([xHat2, xHat1])}$`),
-          t(`$${vec2Latex([xHat1, -xHat2])}$`, `$${vec2Latex([xHat1, -xHat2])}$`),
-          t(`$${vec2Latex([d1, d2])}$`, `$${vec2Latex([d1, d2])}$`),
-          t(`$${vec2Latex([xHat1 + 1, xHat2 - 1])}$`, `$${vec2Latex([xHat1 + 1, xHat2 - 1])}$`),
-        ];
 
         const solution = t(
-          `Solve the triangular system $R \\hat{x} = Q^T b$:\n\n1. From the second row: $${r22}\\hat{x}_2 = ${d2} \\implies \\hat{x}_2 = ${xHat2}$.\n2. From the first row: $${r11}\\hat{x}_1 + (${r12})(${xHat2}) = ${d1} \\implies ${r11}\\hat{x}_1 = ${d1 - r12 * xHat2} \\implies \\hat{x}_1 = ${xHat1}$.\n\nThus $\\hat{x} = ${vec2Latex([xHat1, xHat2])}$.`,
-          `求解上三角方程组 $R \\hat{x} = Q^T b$：\n\n1. 由第 2 行：$${r22}\\hat{x}_2 = ${d2} \\implies \\hat{x}_2 = ${xHat2}$；\n2. 由第 1 行：$${r11}\\hat{x}_1 + (${r12})(${xHat2}) = ${d1} \\implies ${r11}\\hat{x}_1 = ${d1 - r12 * xHat2} \\implies \\hat{x}_1 = ${xHat1}$。\n\n因此 $\\hat{x} = ${vec2Latex([xHat1, xHat2])}$。`,
+          `Solve the triangular system $R \\hat{x} = Q^T b$:\n\n1. From the second row: $${r22}\\hat{x}_2 = ${d2} \\implies \\hat{x}_2 = ${xHat2}$.\n2. From the first row: $${r11}\\hat{x}_1 + (${r12})(${xHat2}) = ${d1} \\implies ${r11}\\hat{x}_1 = ${d1 - r12 * xHat2} \\implies \\hat{x}_1 = ${xHat1}$.\n\nThus $\\hat{x} = \\langle ${xHat1}, ${xHat2} \\rangle$.`,
+          `求解上三角方程组 $R \\hat{x} = Q^T b$：\n\n1. 由第 2 行：$${r22}\\hat{x}_2 = ${d2} \\implies \\hat{x}_2 = ${xHat2}$；\n2. 由第 1 行：$${r11}\\hat{x}_1 + (${r12})(${xHat2}) = ${d1} \\implies ${r11}\\hat{x}_1 = ${d1 - r12 * xHat2} \\implies \\hat{x}_1 = ${xHat1}$。\n\n因此 $\\hat{x} = \\langle ${xHat1}, ${xHat2} \\rangle$。`,
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: [xHat1, xHat2],
+          vector: true,
+          vars: ["x_1", "x_2"],
+          solution,
+          wrong: [
+            [xHat2, xHat1],
+            [xHat1, -xHat2],
+            [d1, d2],
+            [xHat1 + 1, xHat2 - 1],
+          ],
+        });
       },
     },
   ],
@@ -1864,17 +1955,14 @@ export const weightedLeastSquares: TopicDef = {
         "当各数据点可靠性不同时，每个残差 $r_i$ 乘上权重 $w_i$。极小化加权残差 $\\|W(b - A x)\\|^2$ 导出的加权正规方程为 $A^T W^T W A \\hat{x} = A^T W^T W b$，即 $A^T \\Omega A \\hat{x} = A^T \\Omega b$，其中 $\\Omega = \\operatorname{diag}(w_1^2, \\dots, w_m^2)$。",
       ),
       generate: (rng: Rng): Problem => {
-        const w1 = rng.int(1, 3);
-        const w2 = rng.int(1, 3);
+        const w1 = rng.int(1, 4);
+        const w2 = rng.int(1, 4);
         const w1Sq = w1 * w1;
         const w2Sq = w2 * w2;
 
-        const a1 = rng.nonZero(-2, 2);
-        const a2 = rng.nonZero(-2, 2);
+        const a1 = rng.nonZero(-3, 3);
+        const a2 = rng.nonZero(-3, 3);
 
-        // A = [[a1], [a2]]
-        // Omega = diag(w1^2, w2^2)
-        // A^T Omega A = a1^2 * w1^2 + a2^2 * w2^2
         const atOmegaA = a1 * a1 * w1Sq + a2 * a2 * w2Sq;
 
         const prompt = t(
@@ -1932,45 +2020,51 @@ export const markovChains: TopicDef = {
         "列随机矩阵 $P$ 的元素非负且每列元素之和为 1。已知第 $k$ 步的状态概率向量为 $x_k$，则第 $k+1$ 步的状态向量由 $x_{k+1} = P x_k$ 给出。",
       ),
       generate: (rng: Rng): Problem => {
-        const p11Num = rng.int(55, 95);
-        const p12Num = rng.int(5, 45);
+        const aNum = rng.int(6, 9);
+        const bNum = rng.int(1, 4);
 
-        const p11Str = (p11Num / 100).toFixed(2);
-        const p21Str = ((100 - p11Num) / 100).toFixed(2);
-        const p12Str = (p12Num / 100).toFixed(2);
-        const p22Str = ((100 - p12Num) / 100).toFixed(2);
+        const p11 = Q.of(aNum, 10);
+        const p21 = Q.of(10 - aNum, 10);
+        const p12 = Q.of(bNum, 10);
+        const p22 = Q.of(10 - bNum, 10);
 
-        const prompt = t(
-          `A Markov chain has transition matrix $P = ${mat2StrLatex([
-            [p11Str, p12Str],
-            [p21Str, p22Str],
-          ])}$. If the initial state vector is $x_0 = ${vec2Latex([1, 0])}$, find the state vector $x_1 = P x_0$ after one step.`,
-          `某马尔可夫链的转移矩阵为 $P = ${mat2StrLatex([
-            [p11Str, p12Str],
-            [p21Str, p22Str],
-          ])}$。若初始状态向量为 $x_0 = ${vec2Latex([1, 0])}$，求一步之后的状态向量 $x_1 = P x_0$。`,
-        );
+        const useStandard = rng.bool();
+        const x01 = useStandard ? Q.one : Q.of(1, 2);
+        const x02 = useStandard ? Q.zero : Q.of(1, 2);
 
-        const right = t(`$${vec2Latex([p11Str, p21Str])}$`, `$${vec2Latex([p11Str, p21Str])}$`);
-        const wrong = [
-          t(`$${vec2Latex([p12Str, p22Str])}$`, `$${vec2Latex([p12Str, p22Str])}$`),
-          t(`$${vec2Latex([p11Str, p12Str])}$`, `$${vec2Latex([p11Str, p12Str])}$`),
-          t(`$${vec2Latex(["0.5", "0.5"])}$`, `$${vec2Latex(["0.5", "0.5"])}$`),
-          t(`$${vec2Latex([p21Str, p11Str])}$`, `$${vec2Latex([p21Str, p11Str])}$`),
+        const y1 = p11.mul(x01).add(p12.mul(x02));
+        const y2 = p21.mul(x01).add(p22.mul(x02));
+
+        const matStr: readonly [readonly [string, string], readonly [string, string]] = [
+          [p11.toLatex(), p12.toLatex()],
+          [p21.toLatex(), p22.toLatex()],
         ];
 
-        const solution = t(
-          `Multiply $P$ by $x_0$: $x_1 = P x_0 = ${mat2StrLatex([
-            [p11Str, p12Str],
-            [p21Str, p22Str],
-          ])} ${vec2Latex([1, 0])} = ${vec2Latex([p11Str, p21Str])}$.`,
-          `计算矩阵与初始向量之积：$x_1 = P x_0 = ${mat2StrLatex([
-            [p11Str, p12Str],
-            [p21Str, p22Str],
-          ])} ${vec2Latex([1, 0])} = ${vec2Latex([p11Str, p21Str])}$。`,
+        const x0Str: readonly [string, string] = [x01.toLatex(), x02.toLatex()];
+
+        const prompt = t(
+          `A Markov chain has transition matrix $P = ${mat2StrLatex(matStr)}$. If the initial state vector is $x_0 = ${vec2Latex(x0Str)}$, find the state vector $x_1 = P x_0$ after one step. Enter the vector as $\\langle x_1, x_2 \\rangle$.`,
+          `某马尔可夫链的转移矩阵为 $P = ${mat2StrLatex(matStr)}$。若初始状态向量为 $x_0 = ${vec2Latex(x0Str)}$，求一步之后的状态向量 $x_1 = P x_0$。以 $\\langle x_1, x_2 \\rangle$ 的形式输入向量。`,
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        const solution = t(
+          `Multiply $P$ by $x_0$:\n\n$$x_1 = P x_0 = ${mat2StrLatex(matStr)} ${vec2Latex(x0Str)} = \\begin{pmatrix} (${p11.toLatex()})(${x01.toLatex()}) + (${p12.toLatex()})(${x02.toLatex()}) \\\\ (${p21.toLatex()})(${x01.toLatex()}) + (${p22.toLatex()})(${x02.toLatex()}) \\end{pmatrix} = \\begin{pmatrix} ${y1.toLatex()} \\\\ ${y2.toLatex()} \\end{pmatrix}.$$\n\nThus $x_1 = \\langle ${y1.toLatex()}, ${y2.toLatex()} \\rangle$.`,
+          `计算矩阵与初始状态向量之积：\n\n$$x_1 = P x_0 = ${mat2StrLatex(matStr)} ${vec2Latex(x0Str)} = \\begin{pmatrix} (${p11.toLatex()})(${x01.toLatex()}) + (${p12.toLatex()})(${x02.toLatex()}) \\\\ (${p21.toLatex()})(${x01.toLatex()}) + (${p22.toLatex()})(${x02.toLatex()}) \\end{pmatrix} = \\begin{pmatrix} ${y1.toLatex()} \\\\ ${y2.toLatex()} \\end{pmatrix}。$$\n\n故 $x_1 = \\langle ${y1.toLatex()}, ${y2.toLatex()} \\rangle$。`,
+        );
+
+        return pointProblem({
+          prompt,
+          answer: [y1, y2],
+          vector: true,
+          vars: ["x_1", "x_2"],
+          solution,
+          wrong: [
+            [y2, y1],
+            [p12, p22],
+            [Q.of(1, 2), Q.of(1, 2)],
+            [p11, p12],
+          ],
+        });
       },
     },
   ],
@@ -2048,87 +2142,41 @@ export const linearRegressionWithMatrices: TopicDef = {
         "为了对 $n$ 个数据点 $(x_i, y_i)$ 拟合回归线 $y = \\beta_0 + \\beta_1 x$，建立设计矩阵 $X = \\begin{pmatrix} 1 & x_1 \\\\ \\vdots & \\vdots \\\\ 1 & x_n \\end{pmatrix}$ 与响应向量 $y = \\begin{pmatrix} y_1 \\\\ \\vdots \\\\ y_n \\end{pmatrix}$。回归参数向量 $\\beta = \\begin{pmatrix} \\beta_0 \\\\ \\beta_1 \\end{pmatrix}$ 满足正规方程 $X^T X \\beta = X^T y$。",
       ),
       generate: (rng: Rng): Problem => {
-        const x1 = rng.int(-5, -1);
-        const x2 = rng.int(0, 4);
-        const x3 = rng.int(5, 10);
+        const beta0 = rng.int(-4, 4);
+        const beta1 = rng.int(-3, 3);
+        const r = rng.nonZero(-2, 2);
 
-        const sumX = x1 + x2 + x3;
-        const sumXSq = x1 * x1 + x2 * x2 + x3 * x3;
+        // Points x = -1, 0, 1 with residuals orthogonal to Col(X)
+        const y1 = beta0 - beta1 + r;
+        const y2 = beta0 - 2 * r;
+        const y3 = beta0 + beta1 + r;
+
+        const sumY = y1 + y2 + y3;
+        const sumXY = -y1 + y3;
 
         const prompt = t(
-          `For the data points $(${x1}, y_1)$, $(${x2}, y_2)$, and $(${x3}, y_3)$, compute the $2 \\times 2$ matrix $X^T X$ where $X = \\begin{pmatrix} 1 & ${x1} \\\\ 1 & ${x2} \\\\ 1 & ${x3} \\end{pmatrix}$ is the design matrix.`,
-          `对于数据点 $(${x1}, y_1)$、$(${x2}, y_2)$ 及 $(${x3}, y_3)$，计算其设计矩阵 $X = \\begin{pmatrix} 1 & ${x1} \\\\ 1 & ${x2} \\\\ 1 & ${x3} \\end{pmatrix}$ 的正规矩阵 $X^T X$。`,
+          `Find the parameter vector $\\beta = \\langle \\beta_0, \\beta_1 \\rangle$ for the least-squares regression line $y = \\beta_0 + \\beta_1 x$ fitting the data points $(-1, ${y1})$, $(0, ${y2})$, and $(1, ${y3})$ using the normal equations $X^T X \\beta = X^T y$. Enter the vector as $\\langle \\beta_0, \\beta_1 \\rangle$.`,
+          `利用正规方程 $X^T X \\beta = X^T y$，求拟合数据点 $(-1, ${y1})$、$(0, ${y2})$ 与 $(1, ${y3})$ 的最小二乘回归直线 $y = \\beta_0 + \\beta_1 x$ 的参数向量 $\\beta = \\langle \\beta_0, \\beta_1 \\rangle$。以 $\\langle \\beta_0, \\beta_1 \\rangle$ 的形式输入向量。`,
         );
-
-        const right = t(
-          `$${mat2Latex([
-            [3, sumX],
-            [sumX, sumXSq],
-          ])}$`,
-          `$${mat2Latex([
-            [3, sumX],
-            [sumX, sumXSq],
-          ])}$`,
-        );
-        const wrong = [
-          t(
-            `$${mat2Latex([
-              [3, sumX],
-              [sumX, sumX * sumX],
-            ])}$`,
-            `$${mat2Latex([
-              [3, sumX],
-              [sumX, sumX * sumX],
-            ])}$`,
-          ),
-          t(
-            `$${mat2Latex([
-              [sumX, 3],
-              [sumXSq, sumX],
-            ])}$`,
-            `$${mat2Latex([
-              [sumX, 3],
-              [sumXSq, sumX],
-            ])}$`,
-          ),
-          t(
-            `$${mat2Latex([
-              [1, sumX],
-              [sumX, sumXSq],
-            ])}$`,
-            `$${mat2Latex([
-              [1, sumX],
-              [sumX, sumXSq],
-            ])}$`,
-          ),
-          t(
-            `$${mat2Latex([
-              [3, -sumX],
-              [-sumX, sumXSq],
-            ])}$`,
-            `$${mat2Latex([
-              [3, -sumX],
-              [-sumX, sumXSq],
-            ])}$`,
-          ),
-        ];
 
         const solution = t(
-          `Compute $X^T X = \\begin{pmatrix} 1 & 1 & 1 \\\\ ${x1} & ${x2} & ${x3} \\end{pmatrix} \\begin{pmatrix} 1 & ${x1} \\\\ 1 & ${x2} \\\\ 1 & ${x3} \\end{pmatrix} = \\begin{pmatrix} 1+1+1 & ${x1}+${x2}+${x3} \\\\ ${x1}+${x2}+${x3} & (${x1})^2+(${x2})^2+(${x3})^2 \\end{pmatrix} = ${mat2Latex(
-            [
-              [3, sumX],
-              [sumX, sumXSq],
-            ],
-          )}$.`,
-          `计算 $X^T X = \\begin{pmatrix} 1 & 1 & 1 \\\\ ${x1} & ${x2} & ${x3} \\end{pmatrix} \\begin{pmatrix} 1 & ${x1} \\\\ 1 & ${x2} \\\\ 1 & ${x3} \\end{pmatrix} = \\begin{pmatrix} 1+1+1 & ${x1}+${x2}+${x3} \\\\ ${x1}+${x2}+${x3} & (${x1})^2+(${x2})^2+(${x3})^2 \\end{pmatrix} = ${mat2Latex(
-            [
-              [3, sumX],
-              [sumX, sumXSq],
-            ],
-          )}$。`,
+          `Set up the design matrix $X$ and response vector $y$:\n\n$$X = \\begin{pmatrix} 1 & -1 \\\\ 1 & 0 \\\\ 1 & 1 \\end{pmatrix}, \\quad y = ${vec3Latex([y1, y2, y3])}.$$\n\nCompute $X^T X$ and $X^T y$:\n\n$$X^T X = \\begin{pmatrix} 3 & 0 \\\\ 0 & 2 \\end{pmatrix}, \\quad X^T y = \\begin{pmatrix} (${y1}) + (${y2}) + (${y3}) \\\\ -(${y1}) + (${y3}) \\end{pmatrix} = \\begin{pmatrix} ${sumY} \\\\ ${sumXY} \\end{pmatrix}.$$\n\nSolving $X^T X \\beta = X^T y$ gives $\\beta_0 = \\frac{${sumY}}{3} = ${beta0}$ and $\\beta_1 = \\frac{${sumXY}}{2} = ${beta1}$. Thus $\\beta = \\langle ${beta0}, ${beta1} \\rangle$.`,
+          `建立设计矩阵 $X$ 与响应向量 $y$：\n\n$$X = \\begin{pmatrix} 1 & -1 \\\\ 1 & 0 \\\\ 1 & 1 \\end{pmatrix}, \\quad y = ${vec3Latex([y1, y2, y3])}。$$\n\n计算 $X^T X$ 与 $X^T y$：\n\n$$X^T X = \\begin{pmatrix} 3 & 0 \\\\ 0 & 2 \\end{pmatrix}, \\quad X^T y = \\begin{pmatrix} (${y1}) + (${y2}) + (${y3}) \\\\ -(${y1}) + (${y3}) \\end{pmatrix} = \\begin{pmatrix} ${sumY} \\\\ ${sumXY} \\end{pmatrix}。$$\n\n求解 $X^T X \\beta = X^T y$ 得 $\\beta_0 = \\frac{${sumY}}{3} = ${beta0}$，$\\beta_1 = \\frac{${sumXY}}{2} = ${beta1}$。因此 $\\beta = \\langle ${beta0}, ${beta1} \\rangle$。`,
         );
 
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt,
+          answer: [beta0, beta1],
+          vector: true,
+          vars: ["\\beta_0", "\\beta_1"],
+          solution,
+          wrong: [
+            [beta1, beta0],
+            [beta0, -beta1],
+            [-beta0, beta1],
+            [beta0 + 1, beta1 - 1],
+          ],
+        });
       },
     },
   ],
@@ -2154,9 +2202,9 @@ export const polynomialRegressionWithMatrices: TopicDef = {
         "为了拟合多项式模型 $y = \\beta_0 + \\beta_1 x + \\beta_2 x^2 + \\dots + \\beta_d x^d$，设计矩阵 $X$ 为范德蒙德矩阵，其第 $i$ 行为 $\\begin{pmatrix} 1 & x_i & x_i^2 & \\dots & x_i^d \\end{pmatrix}$。系数向量 $\\beta$ 满足正规方程 $X^T X \\beta = X^T y$。",
       ),
       generate: (rng: Rng): Problem => {
-        const x1 = rng.int(-4, -1);
+        const x1 = rng.int(-5, -1);
         const x2 = rng.int(0, 3);
-        const x3 = rng.int(4, 8);
+        const x3 = rng.int(4, 9);
 
         const x1Sq = x1 * x1;
         const x2Sq = x2 * x2;
@@ -2257,7 +2305,7 @@ export const multipleLinearRegressionWithMatrices: TopicDef = {
       ),
       generate: (rng: Rng): Problem => {
         const n = rng.int(15, 50);
-        const p = rng.int(2, 6); // number of predictors (including intercept)
+        const p = rng.int(2, 6);
 
         const prompt = t(
           `In a multiple linear regression model with $n = ${n}$ observations and $p = ${p}$ parameters (including the intercept), the design matrix $X$ has full column rank. What is the trace of the hat matrix $H = X(X^T X)^{-1} X^T$?`,
