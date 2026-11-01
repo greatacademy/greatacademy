@@ -60,6 +60,7 @@ import { discreteMathematicsBooleanTopics } from "./topics/discrete-mathematics-
 import { discreteMathematicsCountingTopics } from "./topics/discrete-mathematics-counting.ts";
 import { discreteMathematicsNumberTheoryTopics } from "./topics/discrete-mathematics-number-theory.ts";
 import { discreteMathematicsRandomVariableTopics } from "./topics/discrete-mathematics-random-variables.ts";
+import { discreteMathematicsRecurrenceTopics } from "./topics/discrete-mathematics-recurrences.ts";
 import { discreteMathematicsSeriesTopics } from "./topics/discrete-mathematics-series.ts";
 import { equationTopics } from "./topics/equations.ts";
 import { exponentialFunctionTopics } from "./topics/exponential-functions.ts";
@@ -99,6 +100,7 @@ import { methodsOfProofPredicateTopics } from "./topics/methods-of-proof-predica
 import { methodsOfProofProofTopics } from "./topics/methods-of-proof-proofs.ts";
 import { methodsOfProofRelationTopics } from "./topics/methods-of-proof-relations.ts";
 import { methodsOfProofSetTopics } from "./topics/methods-of-proof-sets.ts";
+import { multivariableCalculusApplicationTopics } from "./topics/multivariable-calculus-applications.ts";
 import { multivariableCalculusLineIntegralTopics } from "./topics/multivariable-calculus-line-integrals.ts";
 import { multivariableCalculusMultipleIntegralTopics } from "./topics/multivariable-calculus-multiple-integrals.ts";
 import { multivariableCalculusMultivariableFunctionTopics } from "./topics/multivariable-calculus-multivariable-functions.ts";
@@ -262,11 +264,13 @@ export const math: SubjectDef = {
     ...discreteMathematicsRandomVariableTopics,
     ...discreteMathematicsCountingTopics,
     ...discreteMathematicsSeriesTopics,
+    ...discreteMathematicsRecurrenceTopics,
     ...multivariableCalculusVectorFunctionTopics,
     ...multivariableCalculusMultivariableFunctionTopics,
     ...multivariableCalculusMultipleIntegralTopics,
     ...multivariableCalculusLineIntegralTopics,
     ...multivariableCalculusSurfaceIntegralTopics,
+    ...multivariableCalculusApplicationTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
