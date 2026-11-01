@@ -110,6 +110,11 @@ import { linearAlgebraTransformationsEigenvaluesTopics } from "./topics/linear-a
 import { linearAlgebraVectorSpaceTopics } from "./topics/linear-algebra-vector-spaces.ts";
 import { linearEquationTopics } from "./topics/linear-equations.ts";
 import { lineTopics } from "./topics/lines.ts";
+import { mathematicsForMachineLearningContinuousConditioningTopics } from "./topics/mathematics-for-machine-learning-continuous-conditioning.ts";
+import { mathematicsForMachineLearningMatrixCalculusTopics } from "./topics/mathematics-for-machine-learning-matrix-calculus.ts";
+import { mathematicsForMachineLearningPcaTopics } from "./topics/mathematics-for-machine-learning-pca.ts";
+import { mathematicsForMachineLearningSetTheoryTopics } from "./topics/mathematics-for-machine-learning-set-theory.ts";
+import { mathematicsForMachineLearningVectorSpaceTopics } from "./topics/mathematics-for-machine-learning-vector-spaces.ts";
 import { methodsOfProofCongruenceTopics } from "./topics/methods-of-proof-congruence.ts";
 import { methodsOfProofFunctionTopics } from "./topics/methods-of-proof-functions.ts";
 import { methodsOfProofLogicTopics } from "./topics/methods-of-proof-logic.ts";
@@ -327,6 +332,11 @@ export const math: SubjectDef = {
     ...probabilityAndStatisticsHypothesisTestingTopics,
     ...probabilityAndStatisticsRegressionTopics,
     ...probabilityAndStatisticsNonparametricTopics,
+    ...mathematicsForMachineLearningSetTheoryTopics,
+    ...mathematicsForMachineLearningVectorSpaceTopics,
+    ...mathematicsForMachineLearningPcaTopics,
+    ...mathematicsForMachineLearningMatrixCalculusTopics,
+    ...mathematicsForMachineLearningContinuousConditioningTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,

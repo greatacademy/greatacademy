@@ -10159,6 +10159,604 @@ export const probabilityAndStatistics: CourseDef = {
   ],
 };
 
+/** mathematicsForMachineLearning course provides mathematical tools for modern machine learning. */
+export const mathematicsForMachineLearning: CourseDef = {
+  id: "mathematics-for-machine-learning",
+  title: t("Mathematics for Machine Learning", "机器学习数学基础"),
+  description: t(
+    "A comprehensive foundation of the essential mathematical tools required for modern machine learning, spanning linear algebra, vector calculus, probability, and optimization: matrices, vector spaces, eigenvalues, singular value decomposition, principal component analysis, multivariable calculus, matrix calculus, probability distributions, point estimation, and confidence intervals.",
+    "全面奠定现代机器学习所需的坚实数学基础，涵盖线性代数、向量微积分、概率论与最优化：矩阵、向量空间、特征值、奇异值分解、主成分分析、多元微积分、矩阵微积分、概率分布、点估计与置信区间。",
+  ),
+  units: [
+    {
+      title: t("Set Theory", "集合论"),
+      modules: [
+        {
+          title: t("Introduction to Set Theory", "集合论引论"),
+          topics: [
+            "special-sets",
+            "equivalent-sets",
+            "the-constructive-definition-of-a-set",
+            "the-conditional-definition-of-a-set",
+            "describing-sets-using-set-builder-notation",
+            "describing-planar-regions-using-set-builder-notation",
+          ],
+        },
+        {
+          title: t("Properties of Sets", "集合的性质"),
+          topics: [
+            "subsets",
+            "cardinality-of-finite-sets",
+            "infinite-sets",
+            "interior-and-boundary-points",
+            "interiors-and-boundaries-of-sets",
+            "open-and-closed-sets",
+            "the-maximum-and-minimum-of-a-set",
+            "supremum-and-infimum",
+            "argmax-and-argmin-notation",
+            "finding-argmax-and-argmin-from-tables-and-graphs",
+          ],
+        },
+        {
+          title: t("Set Operations", "集合运算"),
+          topics: [
+            "the-difference-of-sets",
+            "set-complements",
+            "indicator-functions",
+            "indicator-functions-for-predicates",
+            "the-cartesian-product",
+            "visualizing-cartesian-products",
+            "indexed-sets",
+            "disjoint-sets",
+            "sets-and-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Logic", "逻辑"),
+      modules: [
+        {
+          title: t("Logical Statements", "逻辑命题"),
+          topics: [
+            "statements-and-predicates",
+            "the-and-and-or-connectives",
+            "truth-tables",
+            "the-not-connective",
+            "logical-equivalence",
+            "logical-associative-and-commutative-laws",
+            "the-distributive-laws",
+            "the-absorption-laws",
+            "de-morgans-laws-for-logic",
+          ],
+        },
+        {
+          title: t("Implications and Biconditionals", "Implications and Biconditionals"),
+          topics: [
+            "conditional-statements",
+            "logical-equivalence-with-conditional-statements",
+            "biconditional-statements",
+            "truth-sets-of-predicates",
+            "the-and-and-or-connectives-with-predicates",
+            "the-not-connective-with-predicates",
+            "simplifying-predicate-expressions-using-de-morgans-laws",
+            "conditional-statements-with-predicates",
+          ],
+        },
+        {
+          title: t("Introduction to Boolean Algebra", "Introduction to Boolean Algebra"),
+          topics: ["boolean-functions", "boolean-functions-and-logical-operations"],
+        },
+      ],
+    },
+    {
+      title: t("Vectors and Matrices", "向量与矩阵"),
+      modules: [
+        {
+          title: t("Vector Geometry", "Vector Geometry"),
+          topics: [
+            "the-vector-equation-of-a-line",
+            "the-parametric-equations-of-a-line",
+            "the-cartesian-equation-of-a-line",
+            "the-vector-equation-of-a-plane",
+            "the-cartesian-equation-of-a-plane",
+            "the-parametric-equations-of-a-plane",
+            "the-intersection-of-two-planes",
+            "the-shortest-distance-between-a-plane-and-a-point",
+            "the-intersection-between-a-line-and-a-plane",
+          ],
+        },
+        {
+          title: t("Determinants", "行列式"),
+          topics: [
+            "the-determinant-of-an-nxn-matrix",
+            "finding-determinants-using-laplace-expansions",
+            "basic-properties-of-determinants",
+            "further-properties-of-determinants",
+            "row-and-column-operations-on-determinants",
+            "conditions-when-a-determinant-equals-zero",
+          ],
+        },
+        {
+          title: t("Gaussian Elimination", "高斯消元法"),
+          topics: [
+            "systems-of-equations-as-augmented-matrices",
+            "row-echelon-form",
+            "solving-systems-of-equations-using-back-substitution",
+            "elementary-row-operations",
+            "creating-rows-or-columns-containing-zeros-using-gaussian-elimination",
+            "solving-2x2-systems-of-equations-using-gaussian-elimination",
+            "solving-2x2-singular-systems-of-equations-using-gaussian-elimination",
+            "solving-3x3-systems-of-equations-using-gaussian-elimination",
+            "identifying-the-pivot-columns-of-a-matrix",
+            "solving-3x3-singular-systems-of-equations-using-gaussian-elimination",
+            "reduced-row-echelon-form",
+            "gaussian-elimination-for-nxm-systems-of-equations",
+          ],
+        },
+        {
+          title: t("The Inverse of a Matrix", "矩阵的逆"),
+          topics: [
+            "finding-the-inverse-of-a-2x2-matrix-using-row-operations",
+            "finding-the-inverse-of-a-3x3-matrix-using-row-operations",
+            "matrices-with-easy-to-find-inverses",
+            "the-invertible-matrix-theorem-in-terms-of-2x2-systems-of-equations",
+            "triangular-matrices",
+          ],
+        },
+        {
+          title: t("Affine Transformations", "仿射变换"),
+          topics: ["affine-transformations", "the-image-of-an-affine-transformation", "the-inverse-of-an-affine-transformation"],
+        },
+      ],
+    },
+    {
+      title: t("Vector Spaces", "向量空间"),
+      modules: [
+        {
+          title: t("Vectors in N-Dimensional Space", "N 维空间中的向量"),
+          topics: [
+            "vectors-in-n-dimensional-euclidean-space",
+            "linear-combinations-of-vectors-in-n-dimensional-euclidean-space",
+            "linear-span-of-vectors-in-n-dimensional-euclidean-space",
+            "linear-dependence-and-independence",
+            "the-hadamard-product",
+          ],
+        },
+        {
+          title: t("Subspaces of N-Dimensional Space", "N 维空间的子空间"),
+          topics: [
+            "subspaces-of-n-dimensional-space",
+            "subspaces-of-n-dimensional-space-geometric-interpretation",
+            "the-column-space-of-a-matrix",
+            "the-null-space-of-a-matrix",
+          ],
+        },
+        {
+          title: t("Bases of N-Dimensional Space", "N 维空间的基"),
+          topics: [
+            "finding-a-basis-of-a-span",
+            "finding-a-basis-of-the-column-space-of-a-matrix",
+            "finding-a-basis-of-the-null-space-of-a-matrix",
+            "expressing-the-coordinates-of-a-vector-in-a-given-basis",
+            "writing-vectors-in-different-bases",
+            "the-change-of-coordinates-matrix",
+            "changing-a-basis-using-the-change-of-coordinates-matrix",
+          ],
+        },
+        {
+          title: t("Dimension and Rank in N-Dimensional Space", "N 维空间的维数与秩"),
+          topics: [
+            "the-dimension-of-a-span",
+            "the-rank-of-a-matrix",
+            "the-dimension-of-the-null-space-of-a-matrix",
+            "the-invertible-matrix-theorem-in-terms-of-dimension-rank-and-nullity",
+            "the-rank-nullity-theorem",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Diagonalization of Matrices", "矩阵的对角化"),
+      modules: [
+        {
+          title: t("Eigenvectors and Eigenvalues", "Eigenvectors and Eigenvalues"),
+          topics: [
+            "eigenvalues-and-eigenvectors-of-a-2x2-matrix",
+            "calculating-the-eigenvalues-of-a-2x2-matrix",
+            "calculating-the-eigenvectors-of-a-2x2-matrix",
+            "characteristic-equation-of-a-matrix",
+            "calculating-the-eigenvectors-of-a-3x3-matrix-with-distinct-eigenvalues",
+            "calculating-the-eigenvectors-of-a-3x3-matrix-in-the-general-case",
+          ],
+        },
+        {
+          title: t("Diagonalization", "对角化"),
+          topics: [
+            "diagonalizing-a-2x2-matrix",
+            "properties-of-diagonalization",
+            "diagonalizing-a-3x3-matrix-with-distinct-eigenvalues",
+            "diagonalizing-a-3x3-matrix-in-the-general-case",
+            "symmetric-matrices",
+            "diagonalization-of-2x2-symmetric-matrices",
+            "diagonalization-of-3x3-symmetric-matrices",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Orthogonality & Projections", "正交性与投影"),
+      modules: [
+        {
+          title: t("Inner Products", "内积"),
+          topics: [
+            "dot-product-in-n-dimensional-euclidean-space",
+            "norm-of-a-vector-in-n-dimensional-euclidean-space",
+            "euclidean-manhattan-and-minkowski-distance",
+            "introduction-to-abstract-vector-spaces",
+            "defining-abstract-vector-spaces",
+            "inner-product-spaces",
+          ],
+        },
+        {
+          title: t("Orthogonality", "正交性"),
+          topics: [
+            "orthogonal-vectors-in-euclidean-spaces",
+            "cauchy-schwarz-inequality-and-angle-between-two-vectors",
+            "orthogonal-complements",
+            "orthogonal-sets-in-euclidean-spaces",
+            "orthogonal-matrices",
+            "orthogonal-linear-transformations",
+          ],
+        },
+        {
+          title: t("Orthogonal Projections", "正交投影"),
+          topics: [
+            "projecting-vectors-onto-one-dimensional-subspaces",
+            "components-of-a-vector-with-respect-to-an-orthogonal-or-orthonormal-basis",
+            "projecting-vectors-onto-subspaces-in-euclidean-spaces-orthogonal-bases",
+            "projecting-vectors-onto-subspaces-in-euclidean-spaces-arbitrary-bases",
+            "projecting-vectors-onto-subspaces-in-euclidean-spaces-arbitrary-bases-applications",
+            "gram-schmidt-process-for-two-vectors",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Singular Value Decomposition", "奇异值分解"),
+      modules: [
+        {
+          title: t("Quadratic Forms", "二次型"),
+          topics: [
+            "bilinear-forms",
+            "quadratic-forms",
+            "change-of-variables-in-quadratic-forms",
+            "positive-definite-and-negative-definite-quadratic-forms",
+            "constrained-optimization-of-quadratic-forms",
+            "constrained-optimization-of-quadratic-forms-determining-where-extrema-are-attained",
+          ],
+        },
+        {
+          title: t("Singular Value Decomposition", "奇异值分解"),
+          topics: [
+            "singular-values-of-a-matrix",
+            "computing-the-singular-values-of-a-matrix",
+            "singular-value-decomposition-of-2x2-matrices",
+            "singular-value-decomposition-of-2x2-matrices-with-zero-or-repeated-eigenvalues",
+            "singular-value-decomposition-of-larger-matrices",
+            "singular-value-decomposition-and-the-pseudoinverse-matrix",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Applications of Linear Algebra", "线性代数的应用"),
+      modules: [
+        {
+          title: t("Linear Least-Squares Problems", "Linear Least-Squares Problems"),
+          topics: [
+            "least-squares-solution-of-a-linear-system-without-collinearity",
+            "least-squares-solution-of-a-linear-system-with-collinearity",
+          ],
+        },
+        {
+          title: t("Linear Regression", "线性回归"),
+          topics: ["linear-regression-with-matrices", "polynomial-regression-with-matrices", "multiple-linear-regression-with-matrices"],
+        },
+        {
+          title: t("Principal Component Analysis", "主成分分析"),
+          topics: [
+            "introduction-to-principal-component-analysis",
+            "computing-principal-components",
+            "the-connection-between-pca-and-svd",
+            "feature-extraction-using-pca",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Multivariable Calculus", "多元微积分"),
+      modules: [
+        {
+          title: t("Introduction to Multivariable Functions", "多元函数引论"),
+          topics: [
+            "the-domain-of-a-multivariable-function",
+            "level-curves",
+            "level-surfaces",
+            "limits-and-continuity-of-multivariable-functions",
+          ],
+        },
+        {
+          title: t("Quadric Surfaces and Cylinders", "二次曲面与柱面"),
+          topics: [
+            "ellipsoids",
+            "hyperboloids",
+            "paraboloids",
+            "elliptic-cones",
+            "cylinders",
+            "intersections-of-lines-and-planes-with-surfaces",
+            "identifying-quadric-surfaces",
+          ],
+        },
+        {
+          title: t("Partial Derivatives", "偏导数"),
+          topics: [
+            "introduction-to-partial-derivatives",
+            "computing-partial-derivatives-using-the-rules-of-differentiation",
+            "geometric-interpretations-of-partial-derivatives",
+            "partial-differentiability-of-multivariable-functions",
+            "higher-order-partial-derivatives",
+            "equality-of-mixed-partial-derivatives",
+            "tangent-planes-to-surfaces",
+            "linearization-of-multivariable-functions",
+          ],
+        },
+        {
+          title: t("Vector-Valued Functions", "向量值函数"),
+          topics: [
+            "the-domain-of-a-vector-valued-function",
+            "tangent-vectors-and-tangent-lines-to-curves",
+            "the-gradient-vector",
+            "the-gradient-as-a-normal-vector",
+            "directional-derivatives",
+            "the-multivariable-chain-rule",
+            "the-multivariable-chain-rule-in-vector-form",
+            "gradients-with-respect-to-a-variable-subset",
+          ],
+        },
+        {
+          title: t("Differentiation", "微分"),
+          topics: [
+            "the-jacobian",
+            "the-inverse-function-theorem",
+            "the-jacobian-of-a-three-dimensional-transformation",
+            "the-derivative-of-a-multivariable-function",
+            "the-second-derivative-of-a-multivariable-function",
+            "second-degree-taylor-polynomials-of-multivariable-functions",
+          ],
+        },
+        {
+          title: t("Matrix Calculus", "矩阵微积分"),
+          topics: [
+            "total-and-tensor-derivatives",
+            "the-chain-rule-for-total-derivatives",
+            "vector-gradients",
+            "further-vector-gradients",
+            "matrix-gradients",
+          ],
+        },
+        {
+          title: t("Approximating Volumes With Riemann Sums", "用黎曼和近似体积"),
+          topics: [
+            "double-summations",
+            "partitions-of-intervals",
+            "calculating-double-summations-over-partitions",
+            "approximating-volumes-using-lower-riemann-sums",
+            "approximating-volumes-using-upper-riemann-sums",
+            "lower-riemann-sums-over-general-rectangular-partitions",
+            "upper-riemann-sums-over-general-rectangular-partitions",
+            "defining-double-integrals-using-lower-and-upper-riemann-sums",
+          ],
+        },
+        {
+          title: t("Double Integrals", "二重积分"),
+          topics: [
+            "double-integrals-over-rectangular-domains",
+            "double-integrals-over-non-rectangular-domains",
+            "properties-of-double-integrals",
+            "type-i-and-ii-regions-in-two-dimensional-space",
+            "double-integrals-over-type-i-regions",
+            "double-integrals-over-type-ii-regions",
+          ],
+        },
+        {
+          title: t("Optimization", "最优化"),
+          topics: [
+            "global-vs-local-extrema-and-critical-points-of-multivariable-functions",
+            "the-second-partial-derivatives-test",
+            "calculating-global-extrema-of-multivariable-functions",
+            "lagrange-multipliers-with-one-constraint",
+            "lagrange-multipliers-with-multiple-constraints",
+            "optimizing-multivariable-functions-using-lagrange-multipliers",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Probability & Random Variables", "概率与随机变量"),
+      modules: [
+        {
+          title: t("Probability", "概率"),
+          topics: ["extending-the-law-of-total-probability", "bayes-theorem", "extending-bayes-theorem"],
+        },
+        {
+          title: t("Random Variables", "随机变量"),
+          topics: [
+            "probability-density-functions-of-continuous-random-variables",
+            "calculating-probabilities-with-continuous-random-variables",
+            "continuous-random-variables-over-infinite-domains",
+            "cumulative-distribution-functions-for-continuous-random-variables",
+            "approximating-discrete-random-variables-as-continuous",
+            "simulating-random-observations",
+          ],
+        },
+        {
+          title: t("Transformations of Random Variables", "随机变量的变换"),
+          topics: [
+            "one-to-one-transformations-of-discrete-random-variables",
+            "many-to-one-transformations-of-discrete-random-variables",
+            "the-distribution-function-method",
+            "the-change-of-variables-method-for-continuous-random-variables",
+            "the-distribution-function-method-with-many-to-one-transformations",
+          ],
+        },
+        {
+          title: t("Expectation", "数学期望"),
+          topics: [
+            "expected-values-of-discrete-random-variables",
+            "properties-of-expectation-for-discrete-random-variables",
+            "variance-of-discrete-random-variables",
+            "moments-of-discrete-random-variables",
+            "properties-of-variance-for-discrete-random-variables",
+            "moments-of-continuous-random-variables",
+            "expected-values-of-continuous-random-variables",
+            "variance-of-continuous-random-variables",
+            "the-rule-of-the-lazy-statistician",
+          ],
+        },
+        {
+          title: t("Discrete Probability Distributions", "Discrete Probability Distributions"),
+          topics: [
+            "the-bernoulli-distribution",
+            "modeling-with-the-binomial-distribution",
+            "the-cdf-of-the-binomial-distribution",
+            "mean-and-variance-of-the-binomial-distribution",
+            "the-discrete-uniform-distribution",
+            "mean-and-variance-of-the-discrete-uniform-distribution",
+            "modeling-with-discrete-uniform-distributions",
+            "the-poisson-distribution",
+            "modeling-with-the-poisson-distribution",
+            "the-cdf-of-the-poisson-distribution",
+          ],
+        },
+        {
+          title: t("Continuous Probability Distributions", "Continuous Probability Distributions"),
+          topics: [
+            "the-continuous-uniform-distribution",
+            "mean-and-variance-of-the-continuous-uniform-distribution",
+            "modeling-with-continuous-uniform-distributions",
+            "the-gamma-function",
+            "the-chi-square-distribution",
+            "the-students-t-distribution",
+            "the-exponential-distribution",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Combining Random Variables", "复合随机变量"),
+      modules: [
+        {
+          title: t("Distributions of Two Discrete Random Variables", "Distributions of Two Discrete Random Variables"),
+          topics: [
+            "joint-distributions-for-discrete-random-variables",
+            "marginal-distributions-for-discrete-random-variables",
+            "independence-of-discrete-random-variables",
+            "conditional-distributions-for-discrete-random-variables",
+            "the-joint-cdf-of-two-discrete-random-variables",
+          ],
+        },
+        {
+          title: t("Distributions of Two Continuous Random Variables", "Distributions of Two Continuous Random Variables"),
+          topics: [
+            "joint-distributions-for-continuous-random-variables",
+            "marginal-distributions-for-continuous-random-variables",
+            "independence-of-continuous-random-variables",
+            "conditional-distributions-for-continuous-random-variables",
+            "the-joint-cdf-of-two-continuous-random-variables",
+            "properties-of-the-joint-cdf-of-two-continuous-random-variables",
+          ],
+        },
+        {
+          title: t("Expectation for Joint Distributions", "联合分布的数学期望"),
+          topics: [
+            "expected-values-of-sums-and-products-of-random-variables",
+            "variance-of-sums-of-independent-random-variables",
+            "computing-expected-values-from-joint-distributions",
+            "conditional-expectation-for-discrete-random-variables",
+            "the-law-of-total-expectation-for-discrete-random-variables",
+            "conditional-variance-for-discrete-random-variables",
+            "conditional-expectation-for-continuous-random-variables",
+            "conditional-variance-for-continuous-random-variables",
+            "the-rule-of-the-lazy-statistician-for-two-random-variables",
+          ],
+        },
+        {
+          title: t("Covariance of Random Variables", "随机变量的协方差"),
+          topics: [
+            "the-covariance-of-two-random-variables",
+            "variance-of-sums-of-random-variables",
+            "the-correlation-coefficient-for-two-random-variables",
+            "the-covariance-matrix",
+          ],
+        },
+        {
+          title: t("Normally Distributed Random Variables", "正态分布随机变量"),
+          topics: [
+            "normal-approximations-of-binomial-distributions",
+            "combining-two-normally-distributed-random-variables",
+            "combining-multiple-normally-distributed-random-variables",
+            "iid-normal-random-variables",
+            "the-bivariate-normal-distribution",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Parametric Inference", "参数推断"),
+      modules: [
+        {
+          title: t("Point Estimation", "点估计"),
+          topics: [
+            "the-sample-mean",
+            "sampling-distributions",
+            "the-sample-variance",
+            "variance-of-sample-means",
+            "sample-means-from-normal-populations",
+            "the-central-limit-theorem",
+            "sampling-proportions-from-finite-populations",
+            "point-estimates-of-population-proportions",
+            "the-sample-covariance-matrix",
+          ],
+        },
+        {
+          title: t("Maximum Likelihood", "极大似然"),
+          topics: [
+            "product-notation",
+            "logarithmic-differentiation",
+            "likelihood-functions-for-discrete-probability-distributions",
+            "log-likelihood-functions-for-discrete-probability-distributions",
+            "likelihood-functions-for-continuous-probability-distributions",
+            "log-likelihood-functions-for-continuous-probability-distributions",
+            "maximum-likelihood-estimation",
+          ],
+        },
+        {
+          title: t("Confidence Intervals", "置信区间"),
+          topics: [
+            "confidence-intervals-for-one-mean-known-population-variance",
+            "confidence-intervals-for-one-mean-unknown-population-variance",
+            "confidence-intervals-for-one-proportion",
+            "confidence-intervals-for-differences-between-two-means-known-population-variances",
+            "confidence-intervals-for-linear-regression-slope-parameters",
+            "confidence-intervals-for-linear-regression-intercept-parameters",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -10186,4 +10784,5 @@ export const mathCourses: readonly CourseDef[] = [
   mathematicalFoundationsII,
   mathematicalFoundationsIII,
   probabilityAndStatistics,
+  mathematicsForMachineLearning,
 ];
