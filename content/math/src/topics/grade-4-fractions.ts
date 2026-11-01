@@ -1096,6 +1096,69 @@ export const findingEquivalentFractionsUsingAreaModels = topic(
   ],
 );
 
+export const equivalentFractionsByMultiplyingAndDividing = topic(
+  "equivalent-fractions-by-multiplying-and-dividing",
+  t("Equivalent Fractions by Multiplying and Dividing", "用乘除法求等值分数"),
+  t(
+    "Multiplying or dividing the numerator and the denominator by the same number (not 0) gives an equivalent fraction: 3/4 = (3 × 5)/(4 × 5) = 15/20, and 12/18 = (12 ÷ 6)/(18 ÷ 6) = 2/3.",
+    "分子和分母同时乘或除以同一个数（0 除外），得到的分数与原分数相等：3/4 = (3 × 5)/(4 × 5) = 15/20，12/18 = (12 ÷ 6)/(18 ÷ 6) = 2/3。",
+  ),
+  ["finding-equivalent-fractions-using-area-models", "greatest-common-factor-by-listing"],
+  ["4.NF.A.1"],
+  [
+    {
+      id: "scaling-up-numerator-and-denominator",
+      title: t("Multiplying both parts", "分子分母同乘一个数"),
+      explanation: t(
+        "$\\frac{2}{7} = \\frac{\\square}{35}$: $35 = 7 \\times 5$, so multiply the numerator by $5$ too: $\\frac{10}{35}$.",
+        "$\\frac{2}{7} = \\frac{\\square}{35}$：$35 = 7 \\times 5$，所以分子也乘 $5$：$\\frac{10}{35}$。",
+      ),
+      generate(rng) {
+        const [n, d] = properFraction(rng, 12);
+        const k = rng.int(2, 10);
+        const askNum = rng.bool(0.7);
+        return numberProblem({
+          prompt: askNum
+            ? t(`Fill in the box: $$${fr(n, d)} = \\frac{\\square}{${d * k}}$$`, `填空：$$${fr(n, d)} = \\frac{\\square}{${d * k}}$$`)
+            : t(`Fill in the box: $$${fr(n, d)} = \\frac{${n * k}}{\\square}$$`, `填空：$$${fr(n, d)} = \\frac{${n * k}}{\\square}$$`),
+          answer: askNum ? n * k : d * k,
+          form: "integer",
+          wrong: askNum ? [n + d * k - d, n * d, d * k - n] : [d + n * k - n, n * k * d, n * k + d],
+          solution: t(
+            `Both parts are multiplied by $${k}$: $${fr(n, d)} = ${fr(`${n} \\times ${k}`, `${d} \\times ${k}`)} = ${fr(n * k, d * k)}$.`,
+            `分子分母同乘 $${k}$：$${fr(n, d)} = ${fr(`${n} \\times ${k}`, `${d} \\times ${k}`)} = ${fr(n * k, d * k)}$。`,
+          ),
+        });
+      },
+    },
+    {
+      id: "scaling-down-numerator-and-denominator",
+      title: t("Dividing both parts", "分子分母同除以一个数"),
+      explanation: t(
+        "$\\frac{24}{30} = \\frac{\\square}{5}$: $30 \\div 6 = 5$, so divide the numerator by $6$ too: $\\frac{4}{5}$.",
+        "$\\frac{24}{30} = \\frac{\\square}{5}$：$30 \\div 6 = 5$，所以分子也除以 $6$：$\\frac{4}{5}$。",
+      ),
+      generate(rng) {
+        const [n, d] = properFraction(rng, 12);
+        const k = rng.int(2, 9);
+        return numberProblem({
+          prompt: t(
+            `Fill in the box: $$${fr(n * k, d * k)} = \\frac{\\square}{${d}}$$`,
+            `填空：$$${fr(n * k, d * k)} = \\frac{\\square}{${d}}$$`,
+          ),
+          answer: n,
+          form: "integer",
+          wrong: [n * k - d * k + d, n * k, n + 1].filter((w) => w > 0 && w !== n),
+          solution: t(
+            `$${d * k} \\div ${k} = ${d}$, so $${n * k} \\div ${k} = ${n}$: $${fr(n * k, d * k)} = ${fr(n, d)}$.`,
+            `$${d * k} \\div ${k} = ${d}$，所以 $${n * k} \\div ${k} = ${n}$：$${fr(n * k, d * k)} = ${fr(n, d)}$。`,
+          ),
+        });
+      },
+    },
+  ],
+);
+
 export const leastCommonDenominators = topic(
   "least-common-denominators",
   t("Least Common Denominators", "最小公分母"),
@@ -1103,7 +1166,7 @@ export const leastCommonDenominators = topic(
     "The least common denominator of two fractions is the least common multiple of their denominators. For 3/4 and 5/6 it is 12, and the fractions become 9/12 and 10/12.",
     "两个分数的最小公分母是它们分母的最小公倍数。3/4 和 5/6 的最小公分母是 12，两个分数分别化为 9/12 和 10/12。",
   ),
-  ["equivalent-fractions", "least-common-multiple-by-listing"],
+  ["equivalent-fractions-by-multiplying-and-dividing", "least-common-multiple-by-listing"],
   ["4.NF.A.2"],
   [
     {
@@ -1175,7 +1238,7 @@ export const writingFractionsInLowestTerms = topic(
     "A fraction is in lowest terms when its numerator and denominator have no common factor other than 1. To get there, divide both by their greatest common factor: 18/24 = (18 ÷ 6)/(24 ÷ 6) = 3/4.",
     "分子和分母除了 1 以外没有其他公因数的分数叫最简分数。把分子和分母同时除以它们的最大公因数就得到最简分数：18/24 = (18 ÷ 6)/(24 ÷ 6) = 3/4。",
   ),
-  ["equivalent-fractions"],
+  ["equivalent-fractions-by-multiplying-and-dividing"],
   ["4.NF.A.1"],
   [
     {
@@ -2647,7 +2710,7 @@ export const decimalFractions = topic(
     "Fractions with denominator 10 or 100 are decimal fractions, written with a decimal point: 7/10 = 0.7 and 23/100 = 0.23. Since 1/10 = 10/100, tenths can be written as hundredths: 0.7 = 0.70.",
     "分母是 10 或 100 的分数叫十进分数，可以用小数点写成小数：7/10 = 0.7，23/100 = 0.23。因为 1/10 = 10/100，十分之几可以写成百分之几：0.7 = 0.70。",
   ),
-  ["equivalent-fractions", "place-value-with-numbers-up-to-four-digits"],
+  ["equivalent-fractions-by-multiplying-and-dividing", "place-value-with-numbers-up-to-four-digits"],
   ["4.NF.C.5", "4.NF.C.6"],
   [
     {
@@ -3171,6 +3234,7 @@ export const grade4FractionTopics: readonly TopicDef[] = [
   convertingImproperFractionsToMixedNumbers,
   convertingMixedNumbersToImproperFractions,
   findingEquivalentFractionsUsingAreaModels,
+  equivalentFractionsByMultiplyingAndDividing,
   leastCommonDenominators,
   writingFractionsInLowestTerms,
   comparingFractions,

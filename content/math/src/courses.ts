@@ -14324,6 +14324,299 @@ export const actMathPrep: CourseDef = {
   ],
 };
 
+/** fourthGradeMath is the Common Core-aligned 4th Grade Math course. */
+export const fourthGradeMath: CourseDef = {
+  id: "4th-grade-math",
+  title: t("4th Grade Math", "四年级数学"),
+  description: t(
+    "Place value, comparing and rounding whole numbers, and multi-digit addition and subtraction; multiplication and division with area models and place-value strategies, factors and multiples; fractions, mixed numbers, equivalent fractions, comparing, adding and subtracting fractions with like denominators, multiplying fractions by whole numbers, and decimal fractions; units and conversions, line plots, and the geometry of lines, rays and angles.",
+    "数位、整数的比较与取近似数、多位数加减法；用面积模型和数位策略做乘除法，因数与倍数；分数、带分数、等值分数，分数的比较、同分母分数加减法、整数乘分数以及十进分数；单位与换算、线图，以及直线、射线与角的几何。",
+  ),
+  units: [
+    {
+      title: t("The Number System", "数系"),
+      modules: [
+        {
+          title: t("Place Value", "数位"),
+          topics: [
+            "place-value-with-numbers-up-to-four-digits",
+            "place-value-with-numbers-up-to-seven-digits",
+            "writing-whole-numbers-in-words",
+            "reading-whole-numbers-written-in-words",
+            "converting-from-standard-form-to-expanded-form",
+            "converting-from-expanded-form-to-standard-form",
+            "equivalent-place-value-representations",
+            "more-on-equivalent-place-value-representations",
+            "equivalent-place-value-representations-and-borrowing",
+          ],
+        },
+        {
+          title: t("Comparing Whole Numbers", "比较整数"),
+          topics: [
+            "comparing-place-values",
+            "comparing-whole-numbers",
+            "comparing-whole-numbers-using-place-value",
+            "rounding-down-whole-numbers",
+            "rounding-up-whole-numbers",
+            "rounding-up-the-digit-9",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Addition & Subtraction", "加法与减法"),
+      modules: [
+        {
+          title: t("Adding Whole Numbers", "整数加法"),
+          topics: [
+            "adding-two-digit-whole-numbers",
+            "adding-three-digit-and-two-digit-numbers",
+            "adding-three-digit-numbers",
+            "adding-numbers-up-to-five-digits",
+            "adding-numbers-up-to-seven-digits",
+            "adding-three-multi-digit-numbers",
+            "estimating-multi-digit-addition",
+          ],
+        },
+        {
+          title: t("Subtracting Whole Numbers", "整数减法"),
+          topics: [
+            "subtracting-two-digit-numbers",
+            "subtracting-two-digit-numbers-from-three-digit-numbers",
+            "subtracting-three-digit-numbers",
+            "subtracting-numbers-up-to-five-digits",
+            "subtracting-numbers-up-to-seven-digits",
+            "estimating-multi-digit-subtraction",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Multiplication", "乘法"),
+      modules: [
+        {
+          title: t("Factors, Products, and Multiples", "因数、积与倍数"),
+          topics: [
+            "products-and-factors",
+            "factors-of-a-number",
+            "prime-and-composite-numbers",
+            "multiples-of-a-number",
+            "least-common-multiple-by-listing",
+            "connecting-factors-and-multiples",
+            "greatest-common-factor-by-listing",
+          ],
+        },
+        {
+          title: t("Multiplying Whole Numbers", "整数乘法"),
+          topics: [
+            "multiplying-by-10-100-and-1000",
+            "rewriting-numbers-ending-in-zeros",
+            "multiplying-numbers-ending-in-zeros",
+            "multiplying-using-repeated-addition",
+            "multiplying-using-repeated-subtraction",
+            "estimating-multi-digit-multiplication",
+          ],
+        },
+        {
+          title: t("Multiplying Whole Numbers Using Models", "用模型做整数乘法"),
+          topics: [
+            "two-digit-by-one-digit-multiplication-using-area-models",
+            "multi-digit-by-one-digit-multiplication-using-area-models",
+            "two-digit-by-one-digit-multiplication-using-place-value",
+            "multi-digit-by-one-digit-multiplication-using-place-value",
+            "two-digit-by-two-digit-multiplication-using-area-models",
+            "two-digit-by-two-digit-multiplication-using-place-value",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Division", "除法"),
+      modules: [
+        {
+          title: t("Dividing Whole Numbers", "整数除法"),
+          topics: [
+            "relationship-between-multiplication-and-division",
+            "understanding-remainders-using-models",
+            "finding-remainders",
+            "dividends-divisors-quotients-and-remainders",
+            "division-with-remainders",
+            "interpreting-remainders-in-context",
+            "dividing-by-10-100-and-1000",
+            "dividing-by-one-digit-numbers-using-multiplication",
+            "dividing-using-place-value-strategies",
+            "estimating-multi-digit-division",
+          ],
+        },
+        {
+          title: t("Dividing Whole Numbers Using Models", "用模型做整数除法"),
+          topics: [
+            "two-digit-by-one-digit-division-using-area-models",
+            "multi-digit-by-one-digit-division-using-area-models",
+            "more-multi-digit-by-one-digit-division-using-area-models",
+            "two-digit-by-one-digit-division-using-partial-quotients",
+            "two-digit-by-one-digit-division-with-remainders-using-partial-quotients",
+            "multi-digit-by-one-digit-division-using-partial-quotients",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Operations & Algebraic Thinking", "运算与代数思维"),
+      modules: [
+        {
+          title: t("Operations on Numbers", "数的运算"),
+          topics: [
+            "evaluating-expressions-involving-addition-and-multiplication",
+            "evaluating-expressions-containing-multiplication-and-division",
+            "solving-multistep-word-problems-using-number-operations",
+            "further-solving-multistep-word-problems-using-the-four-operations",
+          ],
+        },
+        {
+          title: t("Thinking Algebraically", "代数思维"),
+          topics: [
+            "interpreting-multiplication-equations-as-a-comparison",
+            "representing-comparison-statements-as-equations",
+            "word-problems-involving-additive-and-multiplicative-comparison",
+            "generating-patterns",
+            "identifying-patterns",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Fractions & Decimals", "分数与小数"),
+      modules: [
+        {
+          title: t("Fractions", "分数"),
+          topics: [
+            "fraction-models",
+            "modeling-fractions-using-number-lines",
+            "writing-unit-fractions-in-words",
+            "writing-fractions-in-words",
+            "interpreting-fractions-as-division",
+          ],
+        },
+        {
+          title: t("Improper Fractions and Mixed Numbers", "假分数与带分数"),
+          topics: [
+            "improper-fractions",
+            "models-for-mixed-numbers",
+            "modeling-mixed-numbers-using-number-lines",
+            "interpreting-division-problems-as-mixed-numbers",
+            "converting-improper-fractions-to-mixed-numbers",
+            "converting-mixed-numbers-to-improper-fractions",
+          ],
+        },
+        {
+          title: t("Equivalent Fractions", "等值分数"),
+          topics: [
+            "finding-equivalent-fractions-using-area-models",
+            "equivalent-fractions-by-multiplying-and-dividing",
+            "least-common-denominators",
+            "writing-fractions-in-lowest-terms",
+          ],
+        },
+        {
+          title: t("Comparing Fractions", "比较分数"),
+          topics: [
+            "comparing-fractions",
+            "comparing-fractions-using-unit-benchmarks",
+            "comparing-fractions-using-one-half-benchmarks",
+            "comparing-fraction-models-using-common-denominators",
+            "comparing-fractions-using-common-denominators",
+          ],
+        },
+        {
+          title: t("Adding Fractions", "分数加法"),
+          topics: [
+            "adding-fractions-with-like-denominators-using-models",
+            "adding-fractions-with-like-denominators",
+            "subtracting-fractions-with-like-denominators",
+            "adding-fractions-with-like-denominators-word-problems",
+            "subtracting-fractions-with-like-denominators-word-problems",
+            "decomposing-fractions-into-sums-using-models",
+            "decomposing-fractions-into-sums",
+          ],
+        },
+        {
+          title: t("Adding Mixed Numbers", "带分数加法"),
+          topics: [
+            "adding-mixed-numbers-with-like-denominators",
+            "subtracting-mixed-numbers-with-like-denominators",
+            "subtracting-mixed-numbers-with-like-denominators-using-improper-fractions",
+            "adding-mixed-numbers-with-like-denominators-word-problems",
+            "subtracting-mixed-numbers-with-like-denominators-word-problems",
+          ],
+        },
+        {
+          title: t("Multiplying Fractions", "分数乘法"),
+          topics: [
+            "multiplying-unit-fractions-by-whole-numbers-using-models",
+            "multiplying-fractions-by-whole-numbers-using-models",
+            "multiplying-fractions-by-whole-numbers",
+            "multiplying-fractions-by-whole-numbers-word-problems",
+            "strategies-to-simplify-whole-number-and-fraction-multiplication",
+          ],
+        },
+        {
+          title: t("Decimals", "小数"),
+          topics: [
+            "decimal-fractions",
+            "plotting-decimals-on-number-lines",
+            "comparing-decimals-up-to-hundredths",
+            "converting-fractions-to-decimals",
+            "converting-mixed-numbers-to-decimals",
+            "converting-decimals-to-fractions",
+            "converting-decimals-to-mixed-numbers",
+            "adding-decimal-fractions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Measurement & Data", "测量与数据"),
+      modules: [
+        {
+          title: t("Units", "单位"),
+          topics: [
+            "units-of-length",
+            "units-of-mass",
+            "units-of-time-and-elapsed-time",
+            "units-of-volume",
+            "converting-metric-units-of-length-to-smaller-units",
+            "converting-customary-units-of-length-to-smaller-units",
+            "converting-units-of-volume-to-smaller-units",
+            "converting-units-of-mass-to-smaller-units",
+            "converting-units-of-time-to-smaller-units",
+          ],
+        },
+        {
+          title: t("Representing and Interpreting Data", "表示与解读数据"),
+          topics: ["creating-and-interpreting-line-plots", "creating-and-interpreting-line-plots-with-fractions"],
+        },
+        {
+          title: t("Geometry", "几何"),
+          topics: [
+            "points-lines-rays-and-segments",
+            "angles-and-angle-measures",
+            "connecting-angles-and-circles",
+            "measuring-angles-using-a-protractor",
+            "right-straight-full-and-null-angles",
+            "acute-obtuse-and-reflex-angles",
+            "classifying-figures-based-on-angles",
+            "sums-of-angles",
+            "solving-angle-problems",
+            "parallel-and-perpendicular-lines",
+            "modeling-with-rectangles",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -14355,6 +14648,7 @@ export const mathCourses: readonly CourseDef[] = [
   mathematicsForMachineLearning,
   mathematicalMethodsForThePhysicalSciencesI,
   mathematicalMethodsForThePhysicalSciencesII,
+  fourthGradeMath,
   sixthGradeMath,
   seventhGradeMath,
   eighthGradeMath,
