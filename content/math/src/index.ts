@@ -10,6 +10,7 @@ import { abstractAlgebraHomomorphismTopics } from "./topics/abstract-algebra-hom
 import { abstractAlgebraPermutationTopics } from "./topics/abstract-algebra-permutations.ts";
 import { abstractAlgebraQuotientTopics } from "./topics/abstract-algebra-quotients.ts";
 import { abstractAlgebraSubgroupTopics } from "./topics/abstract-algebra-subgroups.ts";
+import { abstractAlgebraSylowTopics } from "./topics/abstract-algebra-sylow.ts";
 import { conicTopics } from "./topics/algebra-ii-conics.ts";
 import { algebraIIFactoringTopics } from "./topics/algebra-ii-factoring.ts";
 import { algebraIIFunctionTopics } from "./topics/algebra-ii-functions.ts";
@@ -300,6 +301,7 @@ export const math: SubjectDef = {
     ...abstractAlgebraQuotientTopics,
     ...abstractAlgebraHomomorphismTopics,
     ...abstractAlgebraActionTopics,
+    ...abstractAlgebraSylowTopics,
     ...multivariableCalculusVectorFunctionTopics,
     ...multivariableCalculusMultivariableFunctionTopics,
     ...multivariableCalculusMultipleIntegralTopics,
