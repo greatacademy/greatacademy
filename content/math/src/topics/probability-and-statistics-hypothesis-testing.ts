@@ -28,33 +28,45 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
           const mu0 = rng.int(20, 300);
           const contexts = [
             {
-              item: t("battery lifespan in hours", "电池寿命（小时）"),
-              claim: t("greater than", "大于"),
+              itemEn: "battery lifespan in hours",
+              itemZh: "电池寿命（小时）",
+              claimEn: "greater than",
+              claimZh: "大于",
               dir: ">",
             },
             {
-              item: t("mean tensile strength in MPa", "平均抗拉强度（MPa）"),
-              claim: t("less than", "小于"),
+              itemEn: "mean tensile strength in MPa",
+              itemZh: "平均抗拉强度（MPa）",
+              claimEn: "less than",
+              claimZh: "小于",
               dir: "<",
             },
             {
-              item: t("daily production yield", "日均产量"),
-              claim: t("different from", "不同于"),
+              itemEn: "daily production yield",
+              itemZh: "日均产量",
+              claimEn: "different from",
+              claimZh: "不同于",
               dir: "\\neq",
             },
             {
-              item: t("average customer wait time in seconds", "客户平均等待时间（秒）"),
-              claim: t("less than", "小于"),
+              itemEn: "average customer wait time in seconds",
+              itemZh: "客户平均等待时间（秒）",
+              claimEn: "less than",
+              claimZh: "小于",
               dir: "<",
             },
             {
-              item: t("mean volume filled per bottle in mL", "每瓶平均灌装量（mL）"),
-              claim: t("different from", "不同于"),
+              itemEn: "mean volume filled per bottle in mL",
+              itemZh: "每瓶平均灌装量（mL）",
+              claimEn: "different from",
+              claimZh: "不同于",
               dir: "\\neq",
             },
             {
-              item: t("average fuel efficiency in mpg", "平均燃油效率（mpg）"),
-              claim: t("greater than", "大于"),
+              itemEn: "average fuel efficiency in mpg",
+              itemZh: "平均燃油效率（mpg）",
+              claimEn: "greater than",
+              claimZh: "大于",
               dir: ">",
             },
           ];
@@ -77,8 +89,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
 
           return choiceProblem({
             prompt: t(
-              `A researcher tests whether the population mean $\\mu$ of ${ctx.item} is ${ctx.claim} ${mu0}. Which pair of hypotheses correctly formulates this statistical test?`,
-              `研究人员想检验${ctx.item}的总体均值 $\\mu$ 是否${ctx.claim} ${mu0}。哪一对假设正确地建立了该统计检验？`,
+              `A researcher tests whether the population mean $\\mu$ of ${ctx.itemEn} is ${ctx.claimEn} ${mu0}. Which pair of hypotheses correctly formulates this statistical test?`,
+              `研究人员想检验${ctx.itemZh}的总体均值 $\\mu$ 是否${ctx.claimZh} ${mu0}。哪一对假设正确地建立了该统计检验？`,
             ),
             options,
             correct,
@@ -356,33 +368,36 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         generate: (rng: Rng): Problem => {
           const scenarios = [
             {
-              h0: t("a new medicine has no effect", "新药没有疗效"),
-              action: t(
-                "the researchers conclude the medicine is effective when in reality it has no effect",
-                "研究人员得出该药有效，而实际上它并没有疗效",
-              ),
+              h0En: "a new medicine has no effect",
+              h0Zh: "新药没有疗效",
+              actionEn: "the researchers conclude the medicine is effective when in reality it has no effect",
+              actionZh: "研究人员得出该药有效，而实际上它并没有疗效",
               isTypeI: true,
             },
             {
-              h0: t("a defendant is innocent", "被告无罪"),
-              action: t("the court convicts an innocent defendant", "法院判决无辜的被告有罪"),
+              h0En: "a defendant is innocent",
+              h0Zh: "被告无罪",
+              actionEn: "the court convicts an innocent defendant",
+              actionZh: "法院判决无辜的被告有罪",
               isTypeI: true,
             },
             {
-              h0: t("a manufactured batch meets quality standards", "生产批次符合质量标准"),
-              action: t(
-                "the manufacturer ships a defective batch, concluding it meets standards",
-                "制造商错误地认为批次达标，将不合格批次出厂",
-              ),
+              h0En: "a manufactured batch meets quality standards",
+              h0Zh: "生产批次符合质量标准",
+              actionEn: "the manufacturer ships a defective batch, concluding it meets standards",
+              actionZh: "制造商错误地认为批次达标，将不合格批次出厂",
               isTypeI: false,
             },
             {
-              h0: t("a security alarm should remain silent (no intruder)", "安防警报保持静默（无入侵者）"),
-              action: t("an intruder enters the facility but the alarm fails to trigger", "有入侵者进入设施，但警报未触发"),
+              h0En: "a security alarm should remain silent (no intruder)",
+              h0Zh: "安防警报保持静默（无入侵者）",
+              actionEn: "an intruder enters the facility but the alarm fails to trigger",
+              actionZh: "有入侵者进入设施，但警报未触发",
               isTypeI: false,
             },
           ];
           const sc = rng.pick(scenarios);
+          const n = rng.int(50, 500);
           const correctErr = sc.isTypeI ? t("Type I error", "第一类错误") : t("Type II error", "第二类错误");
           const wrongErr = sc.isTypeI ? t("Type II error", "第二类错误") : t("Type I error", "第一类错误");
 
@@ -393,8 +408,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
 
           return choiceProblem({
             prompt: t(
-              `Consider a hypothesis test where the null hypothesis states that ${sc.h0}. In a particular study, ${sc.action}. What type of statistical error was committed?`,
-              `考虑一个假设检验，其中原假设为${sc.h0}。在某次具体试验中，${sc.action}。此时犯了哪一类统计错误？`,
+              `Consider a hypothesis test on a sample of size $n = ${n}$ where the null hypothesis states that ${sc.h0En}. In a particular study, ${sc.actionEn}. What type of statistical error was committed?`,
+              `考虑对容量为 $n = ${n}$ 的样本进行的假设检验，其中原假设为${sc.h0Zh}。在某次具体试验中，${sc.actionZh}。此时犯了哪一类统计错误？`,
             ),
             options,
             correct,
@@ -862,34 +877,32 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(3, 6);
+          const N = rng.int(30, 200);
           const contexts = [
             {
-              desc: t(
-                "testing whether different fertilizer types result in different crop yields",
-                "检验不同肥料类型是否导致不同的作物产量",
-              ),
-              factor: t("fertilizer type", "肥料类型"),
+              descEn: "testing whether different fertilizer types result in different crop yields",
+              descZh: "检验不同肥料类型是否导致不同的作物产量",
+              factorEn: "fertilizer type",
+              factorZh: "肥料类型",
             },
             {
-              desc: t(
-                "testing whether different teaching methods result in different exam scores",
-                "检验不同教学方法是否导致不同的考试成绩",
-              ),
-              factor: t("teaching method", "教学方法"),
+              descEn: "testing whether different teaching methods result in different exam scores",
+              descZh: "检验不同教学方法是否导致不同的考试成绩",
+              factorEn: "teaching method",
+              factorZh: "教学方法",
             },
             {
-              desc: t(
-                "testing whether different drug dosages result in different blood pressure reductions",
-                "检验不同药物剂量是否导致不同的降压效果",
-              ),
-              factor: t("drug dosage", "药物剂量"),
+              descEn: "testing whether different drug dosages result in different blood pressure reductions",
+              descZh: "检验不同药物剂量是否导致不同的降压效果",
+              factorEn: "drug dosage",
+              factorZh: "药物剂量",
             },
           ];
           const ctx = rng.pick(contexts);
 
           const opts = [
             t("Random error variation among individual observations within the same group.", "同一组内各观测值之间的随机误差变异。"),
-            t(`Differences between the average yields caused by the ${ctx.factor}.`, `由${ctx.factor}引起的组均值之间的系统差异。`),
+            t(`Differences between the average yields caused by the ${ctx.factorEn}.`, `由${ctx.factorZh}引起的组均值之间的系统差异。`),
             t("The total variation of all observations around the overall grand mean.", "所有观测值相对于总体总均值的全部总变异。"),
             t("The ratio of the treatment variance to the error variance.", "处理方差与误差方差的比值。"),
           ];
@@ -899,8 +912,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
 
           return choiceProblem({
             prompt: t(
-              `In a one-way ANOVA with $k = ${k}$ groups ${ctx.desc}, what does the within-groups sum of squares ($SSW$, or sum of squares for error $SSE$) measure?`,
-              `在包含 $k = ${k}$ 个组别的单因素方差分析中，${ctx.desc}，组内平方和（$SSW$，或误差平方和 $SSE$）测量的是什么？`,
+              `In a one-way ANOVA with $k = ${k}$ groups and a total of $N = ${N}$ observations ${ctx.descEn}, what does the within-groups sum of squares ($SSW$, or sum of squares for error $SSE$) measure?`,
+              `在包含 $k = ${k}$ 个组别、共 $N = ${N}$ 个观测值的单因素方差分析中，${ctx.descZh}，组内平方和（$SSW$，或误差平方和 $SSE$）测量的是什么？`,
             ),
             options,
             correct,
