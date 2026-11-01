@@ -10,14 +10,14 @@ import { coef, exactValue, fracWith, integral } from "./calculus-ii-substitution
 // Calculus II unit 1: Integration Techniques, modules 1.6–1.7.
 
 /** pMul multiplies two integer polynomials, lowest degree first. */
-function pMul(p: Poly, r: Poly): Poly {
+export function pMul(p: Poly, r: Poly): Poly {
   const out = Array.from({ length: p.length + r.length - 1 }, () => 0);
   for (const [i, a] of p.entries()) for (const [j, b] of r.entries()) out[i + j] = (out[i + j] ?? 0) + a * b;
   return out;
 }
 
 /** pSum adds integer polynomials, lowest degree first. */
-const pSum = (...ps: readonly Poly[]): Poly =>
+export const pSum = (...ps: readonly Poly[]): Poly =>
   Array.from({ length: Math.max(...ps.map((p) => p.length)) }, (_, i) => ps.reduce((s, p) => s + (p[i] ?? 0), 0));
 
 /** root is the polynomial x − a. */
