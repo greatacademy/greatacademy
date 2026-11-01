@@ -92,6 +92,7 @@ import { methodsOfProofLogicTopics } from "./topics/methods-of-proof-logic.ts";
 import { methodsOfProofNumberTheoryTopics } from "./topics/methods-of-proof-number-theory.ts";
 import { methodsOfProofPredicateTopics } from "./topics/methods-of-proof-predicates.ts";
 import { methodsOfProofProofTopics } from "./topics/methods-of-proof-proofs.ts";
+import { methodsOfProofRelationTopics } from "./topics/methods-of-proof-relations.ts";
 import { methodsOfProofSetTopics } from "./topics/methods-of-proof-sets.ts";
 import { numberTheoryTopics } from "./topics/number-theory.ts";
 import { polynomialTopics } from "./topics/polynomials.ts";
@@ -245,6 +246,7 @@ export const math: SubjectDef = {
     ...methodsOfProofNumberTheoryTopics,
     ...methodsOfProofFunctionTopics,
     ...methodsOfProofCongruenceTopics,
+    ...methodsOfProofRelationTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
