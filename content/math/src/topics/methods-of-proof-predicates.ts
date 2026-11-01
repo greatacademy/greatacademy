@@ -610,8 +610,8 @@ export const grammaticalConstructionsForConditionalStatements: TopicDef = {
   ],
 };
 
-/** setExpr translates a formula in p and q into a set expression in A and B. */
-function setExpr(f: Formula): string {
+/** setExpr translates a formula into a set expression, writing p, q, r and s as A, B, C and D. */
+export function setExpr(f: Formula): string {
   const names: Record<Var, string> = { p: "A", q: "B", r: "C", s: "D" };
   const inner = (g: Formula) => (g.k === "var" || g.k === "not" ? setExpr(g) : `(${setExpr(g)})`);
   if (f.k === "var") return names[f.v];
