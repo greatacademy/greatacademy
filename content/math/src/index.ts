@@ -9,6 +9,7 @@ import { abstractAlgebraGroupTopics } from "./topics/abstract-algebra-groups.ts"
 import { abstractAlgebraHomomorphismTopics } from "./topics/abstract-algebra-homomorphisms.ts";
 import { abstractAlgebraPermutationTopics } from "./topics/abstract-algebra-permutations.ts";
 import { abstractAlgebraQuotientTopics } from "./topics/abstract-algebra-quotients.ts";
+import { abstractAlgebraRingTopics } from "./topics/abstract-algebra-rings.ts";
 import { abstractAlgebraSubgroupTopics } from "./topics/abstract-algebra-subgroups.ts";
 import { abstractAlgebraSylowTopics } from "./topics/abstract-algebra-sylow.ts";
 import { conicTopics } from "./topics/algebra-ii-conics.ts";
@@ -302,6 +303,7 @@ export const math: SubjectDef = {
     ...abstractAlgebraHomomorphismTopics,
     ...abstractAlgebraActionTopics,
     ...abstractAlgebraSylowTopics,
+    ...abstractAlgebraRingTopics,
     ...multivariableCalculusVectorFunctionTopics,
     ...multivariableCalculusMultivariableFunctionTopics,
     ...multivariableCalculusMultipleIntegralTopics,
