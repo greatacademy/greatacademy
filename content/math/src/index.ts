@@ -136,6 +136,7 @@ import { precalculusTrigonometricIdentityTopics } from "./topics/precalculus-tri
 import { precalculusVector2DTopics } from "./topics/precalculus-vectors-2d.ts";
 import { precalculusVector3DTopics } from "./topics/precalculus-vectors-3d.ts";
 import { probabilityTopics } from "./topics/probability.ts";
+import { probabilityAndStatisticsContinuousDistributionTopics } from "./topics/probability-and-statistics-continuous-distributions.ts";
 import { probabilityAndStatisticsDiscreteDistributionTopics } from "./topics/probability-and-statistics-discrete-distributions.ts";
 import { probabilityAndStatisticsExpectationTopics } from "./topics/probability-and-statistics-expectation.ts";
 import { probabilityAndStatisticsRandomVariablesTopics } from "./topics/probability-and-statistics-random-variables.ts";
@@ -301,6 +302,7 @@ export const math: SubjectDef = {
     ...probabilityAndStatisticsRandomVariablesTopics,
     ...probabilityAndStatisticsExpectationTopics,
     ...probabilityAndStatisticsDiscreteDistributionTopics,
+    ...probabilityAndStatisticsContinuousDistributionTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
