@@ -1,12 +1,14 @@
-import type { Problem, Rng, Text, TopicDef } from "@ga/content";
+import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, yesNo } from "../problems.ts";
+import { numberProblem } from "../problems.ts";
 import {
   cayleyTex,
   cyclicGroup,
+  type Fact,
   type FiniteGroup,
+  factProblem,
   gcd,
   inverseOf,
   kleinGroup,
@@ -25,22 +27,6 @@ import {
 import { range } from "./methods-of-proof-common.ts";
 
 // Abstract Algebra unit 2, modules 2.2 and 2.3: binary operations and groups.
-
-/** Fact is a statement with its truth value and the reason, for yes-or-no questions. */
-interface Fact {
-  readonly prompt: Text;
-  readonly holds: boolean;
-  readonly reason: Text;
-}
-
-/** factProblem asks whether a fact holds. */
-const factProblem = (f: Fact): Problem =>
-  choiceProblem({
-    prompt: f.prompt,
-    options: yesNo,
-    correct: f.holds ? 0 : 1,
-    solution: t(`${f.holds ? "Yes" : "No"}. ${f.reason.en}`, `${f.holds ? "是" : "否"}。${f.reason["zh-CN"]}`),
-  });
 
 /** Linear is the operation a ∗ b = pa + qb + rab + k on the integers. */
 interface Linear {

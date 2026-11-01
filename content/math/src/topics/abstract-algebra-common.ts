@@ -1,7 +1,7 @@
 import type { Problem, Rng, Text } from "@ga/content";
 import { t } from "@ga/content";
 
-import { choiceProblem } from "../problems.ts";
+import { choiceProblem, yesNo } from "../problems.ts";
 import { range } from "./methods-of-proof-common.ts";
 
 // Helpers shared by the Abstract Algebra topic files: modular arithmetic and finite groups given by tables.
@@ -174,3 +174,19 @@ export function textChoice(rng: Rng, prompt: Text, options: readonly Text[], sol
 
 /** signed writes "+ k" or "- k" for a nonzero integer k, as a term after another. */
 export const signed = (k: number) => (k < 0 ? `- ${-k}` : `+ ${k}`);
+
+/** Fact is a statement with its truth value and the reason, for yes-or-no questions. */
+export interface Fact {
+  readonly prompt: Text;
+  readonly holds: boolean;
+  readonly reason: Text;
+}
+
+/** factProblem asks whether a fact holds. */
+export const factProblem = (f: Fact): Problem =>
+  choiceProblem({
+    prompt: f.prompt,
+    options: yesNo,
+    correct: f.holds ? 0 : 1,
+    solution: t(`${f.holds ? "Yes" : "No"}. ${f.reason.en}`, `${f.holds ? "是" : "否"}。${f.reason["zh-CN"]}`),
+  });
