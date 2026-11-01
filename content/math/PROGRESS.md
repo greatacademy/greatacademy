@@ -52,9 +52,9 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | AP Calculus AB, AP Calculus BC | Calculus I, Calculus II | done | | 9 units (212 topics) and 16 units (305 topics) (revision complete) |
 | Multivariable Calculus | Linear Algebra | done | | 6 units, 187 topics |
 | Differential Equations | Multivariable Calculus | done | | 7 units, 159 topics (24 reused, 135 new) |
-| Probability & Statistics | Multivariable Calculus | open | | |
-| Mathematics for Machine Learning | Calculus II, Linear Algebra | blocked | | |
-| Mathematical Methods for the Physical Sciences I, II | Calculus II | blocked | | |
+| Probability & Statistics | Multivariable Calculus | in progress | antigravity | |
+| Mathematics for Machine Learning | Calculus II, Linear Algebra | open | | |
+| Mathematical Methods for the Physical Sciences I, II | Calculus II | open | | |
 | Abstract Algebra | Methods of Proof, Linear Algebra | in progress | claude-main | |
 | SAT Math Fundamentals, SAT Math Prep | Algebra II | open | | Low priority: almost entirely reuse; do after the courses above |
 | ACT Math Fundamentals, ACT Math Prep | Precalculus | open | | Low priority, as for SAT |
