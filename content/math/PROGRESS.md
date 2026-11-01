@@ -55,7 +55,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Probability & Statistics | Multivariable Calculus | open | | |
 | Mathematics for Machine Learning | Calculus II, Linear Algebra | blocked | | |
 | Mathematical Methods for the Physical Sciences I, II | Calculus II | blocked | | |
-| Abstract Algebra | Methods of Proof, Linear Algebra | open | | |
+| Abstract Algebra | Methods of Proof, Linear Algebra | in progress | claude-main | |
 | SAT Math Fundamentals, SAT Math Prep | Algebra II | open | | Low priority: almost entirely reuse; do after the courses above |
 | ACT Math Fundamentals, ACT Math Prep | Precalculus | open | | Low priority, as for SAT |
 
