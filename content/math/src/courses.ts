@@ -10757,6 +10757,262 @@ export const mathematicsForMachineLearning: CourseDef = {
   ],
 };
 
+/** abstractAlgebra is the university course on groups, permutations, quotients, homomorphisms, group actions, the Sylow theorems, rings and fields. */
+export const abstractAlgebra: CourseDef = {
+  id: "abstract-algebra",
+  title: t("Abstract Algebra", "抽象代数"),
+  description: t(
+    "Binary operations, groups, subgroups and cyclic groups; permutations, permutation groups and isometries; direct products, cosets, Lagrange's theorem and quotient groups; homomorphisms and the isomorphism theorems; group actions, Burnside's lemma and the Sylow theorems; and rings, integral domains, fields, ideals, quotient rings, polynomial rings, irreducibility and the quaternions.",
+    "二元运算、群、子群与循环群；置换、置换群与等距变换；直积、陪集、拉格朗日定理与商群；同态与同构定理；群作用、伯恩赛德引理与西罗定理；以及环、整环、域、理想、商环、多项式环、不可约性与四元数。",
+  ),
+  units: [
+    {
+      title: t("Preliminaries", "预备知识"),
+      modules: [
+        {
+          title: t("Fermat and Euler's Theorems", "费马定理与欧拉定理"),
+          topics: ["fermats-little-theorem", "eulers-totient-function", "eulers-theorem"],
+        },
+      ],
+    },
+    {
+      title: t("Groups", "群"),
+      modules: [
+        {
+          title: t("Binary Operations", "二元运算"),
+          topics: [
+            "introduction-to-binary-operations",
+            "associative-binary-operations",
+            "commutative-binary-operations",
+            "identities-of-binary-operations",
+            "inverses-under-binary-operations",
+          ],
+        },
+        {
+          title: t("Groups", "群"),
+          topics: [
+            "introduction-to-groups",
+            "real-rational-and-complex-groups",
+            "matrix-groups",
+            "function-groups",
+            "general-groups",
+            "the-order-of-a-group",
+            "orders-of-group-elements",
+            "computing-inverses-of-elements-in-zn",
+            "cayley-tables",
+            "cayley-diagrams",
+            "abelian-groups",
+          ],
+        },
+        {
+          title: t("Subgroups", "子群"),
+          topics: ["subgroups-of-scalar-groups", "subgroups-of-matrix-groups", "subgroups-of-function-groups", "properties-of-subgroups"],
+        },
+        {
+          title: t("Cyclic Groups", "循环群"),
+          topics: [
+            "finite-cyclic-groups",
+            "cyclic-groups",
+            "cyclic-subgroups",
+            "cyclic-subgroups-in-the-complex-plane",
+            "generators-of-cyclic-groups",
+            "properties-of-cyclic-groups",
+          ],
+        },
+        {
+          title: t("Generating Sets and Presentations", "生成集与表示"),
+          topics: ["generating-sets", "free-groups", "universal-property-of-free-groups", "presentations-of-groups"],
+        },
+      ],
+    },
+    {
+      title: t("Permutations", "置换"),
+      modules: [
+        {
+          title: t("Permutations and Cycles", "置换与轮换"),
+          topics: [
+            "permutations",
+            "cycles",
+            "converting-between-permutations-and-cycles",
+            "the-inverse-of-a-cycle",
+            "the-inverse-of-a-permutation",
+            "the-order-of-a-cycle",
+            "the-order-of-a-permutation",
+            "transpositions",
+          ],
+        },
+        {
+          title: t("Permutation Groups", "置换群"),
+          topics: ["the-symmetric-group-on-n-symbols", "the-alternating-group-on-n-symbols"],
+        },
+        {
+          title: t("Isometries", "等距变换"),
+          topics: [
+            "the-symmetry-group-of-a-figure",
+            "dihedral-group",
+            "the-symmetry-group-of-a-tetrahedron",
+            "the-symmetry-group-of-a-cube-rotations-and-reflections",
+            "the-symmetry-group-of-a-cube-combining-rotations-and-reflections",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Product and Quotient Groups", "积群与商群"),
+      modules: [
+        {
+          title: t("Direct Products", "直积"),
+          topics: [
+            "external-direct-products",
+            "cyclic-direct-product-groups",
+            "torsion-groups",
+            "finitely-generated-abelian-groups",
+            "free-abelian-groups",
+            "internal-direct-products",
+          ],
+        },
+        {
+          title: t("Cosets and Quotient Groups", "陪集与商群"),
+          topics: [
+            "cosets-of-the-additive-groups-of-integers-modulo-n",
+            "cosets-of-the-multiplicative-groups-of-integers-modulo-n",
+            "cosets-of-infinite-scalar-groups",
+            "left-and-right-cosets-in-matrix-groups",
+            "left-and-right-cosets-in-permutation-groups",
+            "normal-subgroups",
+            "maximal-normal-subgroups",
+            "the-normalizer-of-a-subgroup",
+            "the-center-of-a-group",
+            "the-centralizer-of-a-subgroup",
+            "quotient-groups",
+            "lagranges-theorem",
+            "simple-groups",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Homomorphisms & Isomorphisms", "同态与同构"),
+      modules: [
+        {
+          title: t("Group Homomorphisms", "群同态"),
+          topics: ["group-homomorphisms", "the-image-of-a-group-homomorphism", "the-kernel-of-a-group-homomorphism", "group-isomorphisms"],
+        },
+        {
+          title: t("The Isomorphism Theorems", "同构定理"),
+          topics: ["the-first-isomorphism-theorem", "the-second-isomorphism-theorem", "the-third-isomorphism-theorem"],
+        },
+      ],
+    },
+    {
+      title: t("Group Actions", "群作用"),
+      modules: [
+        {
+          title: t("Group Actions", "群作用"),
+          topics: [
+            "natural-actions-of-symmetric-and-dihedral-groups",
+            "group-actions",
+            "orbits",
+            "stabilizers",
+            "the-orbit-stabilizer-theorem",
+            "burnsides-lemma",
+            "the-class-equation-of-a-group-action",
+            "conjugation-and-conjugacy-classes",
+            "conjugacy-of-group-subsets-and-subgroups",
+          ],
+        },
+        {
+          title: t("Applications of Burnside Formula to Counting", "伯恩赛德公式在计数中的应用"),
+          topics: [
+            "cycle-types-of-permutations",
+            "cycle-types-of-permutations-of-some-groups",
+            "permutation-actions-on-sets-of-words",
+            "colorings-of-necklaces",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Group Structures", "群的结构"),
+      modules: [
+        {
+          title: t("The Sylow Theorems", "西罗定理"),
+          topics: ["p-groups", "the-first-sylow-theorem", "the-second-sylow-theorem", "the-third-sylow-theorem"],
+        },
+      ],
+    },
+    {
+      title: t("Rings & Fields", "环与域"),
+      modules: [
+        {
+          title: t("Rings", "环"),
+          topics: [
+            "introduction-to-rings",
+            "commutative-rings",
+            "rings-with-unity",
+            "integral-domains",
+            "introduction-to-fields",
+            "the-characteristic-of-a-ring",
+            "the-units-of-a-ring",
+            "finding-the-inverse-of-a-matrix-over-a-ring",
+            "the-field-of-quotients-of-an-integral-domain",
+          ],
+        },
+        {
+          title: t("Ideals and Factor Rings", "理想与商环"),
+          topics: [
+            "subrings",
+            "ideals",
+            "generating-elements-of-principal-ideal-rings",
+            "quotient-rings",
+            "polynomial-quotient-rings",
+            "ring-homomorphisms",
+            "ring-homomorphisms-between-residue-rings",
+            "the-image-and-kernel-of-a-ring-homomorphism",
+            "prime-ideals-and-maximal-ideals",
+          ],
+        },
+        {
+          title: t("Rings of Polynomials", "多项式环"),
+          topics: [
+            "rings-of-polynomials",
+            "units-in-polynomial-rings",
+            "the-division-algorithm-in-rings-of-polynomials-over-finite-fields",
+            "the-euclidian-algorithm-in-rings-of-polynomials",
+            "the-extended-euclidian-algorithm-in-rings-of-polynomials",
+            "irreducible-polynomials-over-the-real-and-complex-numbers",
+            "irreducible-polynomials-over-the-integers-and-rational-numbers",
+            "irreducible-polynomials-over-a-finite-field",
+            "reducibility-tests-for-polynomials-over-the-integers-and-rationals",
+          ],
+        },
+        {
+          title: t("Quaternions", "四元数"),
+          topics: ["the-division-ring-of-quaternions", "inverting-quaternions", "linear-equations-over-quaternions"],
+        },
+      ],
+    },
+    {
+      title: t("Vector Spaces", "向量空间"),
+      modules: [
+        {
+          title: t("Abstract Vector Spaces", "抽象向量空间"),
+          topics: [
+            "introduction-to-abstract-vector-spaces",
+            "defining-abstract-vector-spaces",
+            "linear-independence-in-abstract-vector-spaces",
+            "subspaces-of-abstract-vector-spaces",
+            "bases-in-abstract-vector-spaces",
+            "the-coordinates-of-a-vector-relative-to-a-basis-in-abstract-vector-spaces",
+            "dimension-in-abstract-vector-spaces",
+            "vector-spaces-over-finite-fields",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -10774,6 +11030,7 @@ export const mathCourses: readonly CourseDef[] = [
   apCalculusBC,
   methodsOfProof,
   discreteMathematics,
+  abstractAlgebra,
   integratedMathI,
   integratedMathII,
   integratedMathIII,
