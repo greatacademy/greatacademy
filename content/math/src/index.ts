@@ -5,6 +5,7 @@ import { mathCheckers } from "@ga/subject-math";
 import { mathCourses } from "./courses.ts";
 import { absoluteValueTopics } from "./topics/absolute-value.ts";
 import { abstractAlgebraGroupTopics } from "./topics/abstract-algebra-groups.ts";
+import { abstractAlgebraHomomorphismTopics } from "./topics/abstract-algebra-homomorphisms.ts";
 import { abstractAlgebraPermutationTopics } from "./topics/abstract-algebra-permutations.ts";
 import { abstractAlgebraQuotientTopics } from "./topics/abstract-algebra-quotients.ts";
 import { abstractAlgebraSubgroupTopics } from "./topics/abstract-algebra-subgroups.ts";
@@ -293,6 +294,7 @@ export const math: SubjectDef = {
     ...abstractAlgebraSubgroupTopics,
     ...abstractAlgebraPermutationTopics,
     ...abstractAlgebraQuotientTopics,
+    ...abstractAlgebraHomomorphismTopics,
     ...multivariableCalculusVectorFunctionTopics,
     ...multivariableCalculusMultivariableFunctionTopics,
     ...multivariableCalculusMultipleIntegralTopics,
