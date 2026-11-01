@@ -40,13 +40,16 @@ import { calculusILimitTopics } from "./topics/calculus-i-limits.ts";
 import { calculusIOptimizationTopics } from "./topics/calculus-i-optimization.ts";
 import { calculusIRiemannTopics } from "./topics/calculus-i-riemann.ts";
 import { calculusIIAreaTopics } from "./topics/calculus-ii-areas.ts";
+import { calculusIIConvergenceTopics } from "./topics/calculus-ii-convergence.ts";
 import { calculusIIFractionImproperTopics } from "./topics/calculus-ii-fractions-improper.ts";
 import { calculusIIIdentityPartsTopics } from "./topics/calculus-ii-identities-parts.ts";
 import { calculusIIMotionTopics } from "./topics/calculus-ii-motion.ts";
 import { calculusIIParametricTopics } from "./topics/calculus-ii-parametric.ts";
 import { calculusIIPolarTopics } from "./topics/calculus-ii-polar.ts";
 import { calculusIIRevolutionTopics } from "./topics/calculus-ii-revolution.ts";
+import { calculusIISequenceTopics } from "./topics/calculus-ii-sequences.ts";
 import { calculusIISubstitutionTopics } from "./topics/calculus-ii-substitution.ts";
+import { calculusIITaylorTopics } from "./topics/calculus-ii-taylor.ts";
 import { calculusIIVectorTopics } from "./topics/calculus-ii-vectors.ts";
 import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
@@ -221,6 +224,9 @@ export const math: SubjectDef = {
     ...calculusIIParametricTopics,
     ...calculusIIVectorTopics,
     ...calculusIIPolarTopics,
+    ...calculusIISequenceTopics,
+    ...calculusIIConvergenceTopics,
+    ...calculusIITaylorTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
