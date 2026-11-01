@@ -56,6 +56,7 @@ import { calculusIIVectorTopics } from "./topics/calculus-ii-vectors.ts";
 import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
+import { discreteMathematicsBooleanTopics } from "./topics/discrete-mathematics-boolean.ts";
 import { equationTopics } from "./topics/equations.ts";
 import { exponentialFunctionTopics } from "./topics/exponential-functions.ts";
 import { exponentTopics } from "./topics/exponents.ts";
@@ -247,6 +248,7 @@ export const math: SubjectDef = {
     ...methodsOfProofFunctionTopics,
     ...methodsOfProofCongruenceTopics,
     ...methodsOfProofRelationTopics,
+    ...discreteMathematicsBooleanTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
