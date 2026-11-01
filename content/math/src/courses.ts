@@ -9438,6 +9438,331 @@ export const multivariableCalculus: CourseDef = {
   ],
 };
 
+/** Differential Equations course definition. */
+export const differentialEquations: CourseDef = {
+  id: "differential-equations",
+  title: t("Differential Equations", "常微分方程"),
+  description: t(
+    "Differential Equations is a comprehensive, advanced course devoted to the theory, solution techniques, and applications of ordinary differential equations. Building on multivariable calculus (with prior foundations in linear algebra and Calculus I-II), this course develops the analytical, qualitative, and numerical tools used to model and understand dynamic systems across mathematics, physics, engineering, and the applied sciences.",
+    "常微分方程是一门全面深入的高级数学课程，涵盖常微分方程的理论、求解方法与广泛应用。以多变量微积分、线性代数和微积分基础为依托，系统讲授用于建模和分析动态系统的解析、定性与数值工具，广泛应用于数学、物理、工程及应用科学领域。",
+  ),
+  units: [
+    {
+      title: t("First-Order Differential Equations", "一阶常微分方程"),
+      modules: [
+        {
+          title: t("Techniques for Solving First-Order ODEs", "一阶常微分方程的解法"),
+          topics: [
+            "solving-first-order-odes-using-separation-of-variables",
+            "solving-first-order-ivps-using-separation-of-variables",
+            "introduction-to-first-order-linear-odes",
+            "general-solutions-of-first-order-linear-odes",
+            "solving-first-order-linear-odes-with-exponential-forcing",
+            "solving-first-order-linear-odes-with-sinusoidal-forcing",
+            "solving-first-order-linear-odes-using-integrating-factors",
+            "solving-first-order-odes-by-substitution",
+            "further-solving-first-order-odes-by-substitution",
+            "reducing-odes-to-first-order-linear-by-substitution",
+          ],
+        },
+        {
+          title: t("Special First-Order Equations", "特殊一阶微分方程"),
+          topics: [
+            "homogeneous-functions",
+            "homogeneous-first-order-odes",
+            "exact-differential-equations",
+            "solving-exact-odes-using-integrating-factors",
+            "bernoulli-differential-equations",
+            "riccati-differential-equations",
+            "clairaut-differential-equations",
+            "dalembert-differential-equations",
+          ],
+        },
+        {
+          title: t("Qualitative Techniques for Differential Equations", "微分方程的定性方法"),
+          topics: [
+            "qualitative-analysis-of-first-order-odes",
+            "equilibrium-solutions-of-first-order-odes",
+            "phase-lines-of-first-order-odes",
+            "classifying-equilibrium-solutions-of-first-order-odes",
+          ],
+        },
+        {
+          title: t("Slope Fields", "斜率场"),
+          topics: [
+            "slope-fields-for-directly-integrable-differential-equations",
+            "slope-fields-for-autonomous-differential-equations",
+            "slope-fields-for-nonautonomous-differential-equations",
+            "analyzing-slope-fields-for-directly-integrable-differential-equations",
+            "analyzing-slope-fields-for-autonomous-differential-equations",
+            "analyzing-slope-fields-for-nonautonomous-differential-equations",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Modeling With First-Order Differential Equations", "一阶常微分方程建模"),
+      modules: [
+        {
+          title: t("Applications of First-Order ODEs", "一阶常微分方程的应用"),
+          topics: [
+            "modeling-with-first-order-odes",
+            "further-modeling-with-first-order-odes",
+            "modeling-mixture-problems-with-first-order-separable-odes",
+            "modeling-mixture-problems-with-first-order-linear-odes",
+            "orthogonal-trajectories",
+          ],
+        },
+        {
+          title: t("Growth and Decay Models With First-Order ODEs", "增长与衰减模型"),
+          topics: [
+            "exponential-growth-and-decay-models-with-first-order-odes",
+            "exponential-growth-and-decay-models-with-first-order-odes-calculating-unknown-times-and-initial-values",
+            "exponential-growth-and-decay-models-with-first-order-odes-half-life-problems",
+            "inhibited-growth-models-with-first-order-odes",
+            "inhibited-decay-models-with-first-order-odes",
+            "logistic-growth-models-with-first-order-odes",
+            "qualitative-analysis-of-the-logistic-growth-equation",
+            "solving-the-logistic-growth-equation",
+          ],
+        },
+        {
+          title: t("Physical Applications of First-Order ODEs", "物理应用模型"),
+          topics: [
+            "velocity-and-acceleration-as-functions-of-displacement",
+            "determining-properties-of-objects-described-as-functions-of-displacement",
+            "falling-body-problems-with-linear-drag",
+            "falling-body-problems-with-quadratic-drag",
+            "newtons-law-of-universal-gravitation",
+            "modeling-escape-velocity-with-first-order-odes",
+            "modeling-rl-circuits-with-first-order-odes",
+            "modeling-rc-circuits-with-first-order-odes",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Linear Differential Equations", "线性微分方程"),
+      modules: [
+        {
+          title: t("Theory of Solutions to Linear ODEs", "线性微分方程解的理论"),
+          topics: [
+            "differential-operators",
+            "linear-differential-operators",
+            "introduction-to-second-order-linear-odes",
+            "the-superposition-principle",
+            "reduction-of-order",
+            "linear-independence-of-solutions-to-homogeneous-odes",
+            "general-solutions-of-linear-odes",
+            "abels-identity",
+          ],
+        },
+        {
+          title: t("Second-Order Linear ODEs With Constant Coefficients", "二阶常系数线性常微分方程"),
+          topics: [
+            "second-order-homogeneous-odes-characteristic-equations-with-distinct-real-roots",
+            "second-order-homogeneous-odes-characteristic-equations-with-repeated-roots",
+            "second-order-homogeneous-odes-characteristic-equations-with-complex-roots",
+            "second-order-homogeneous-initial-value-problems",
+            "second-order-inhomogeneous-odes-with-polynomial-forcing",
+            "second-order-inhomogeneous-odes-with-exponential-forcing",
+            "second-order-inhomogeneous-odes-with-sinusoidal-forcing",
+          ],
+        },
+        {
+          title: t("The Cauchy-Euler Equations", "柯西-欧拉方程"),
+          topics: [
+            "cauchy-euler-equations-characteristic-equations-with-distinct-real-roots",
+            "cauchy-euler-equations-characteristic-equations-with-repeated-roots",
+            "cauchy-euler-equations-characteristic-equations-with-complex-roots",
+            "cauchy-euler-equations-with-forcing",
+          ],
+        },
+        {
+          title: t("Variation of Parameters", "常数变易法"),
+          topics: [
+            "variation-of-parameters-for-first-order-linear-odes",
+            "variation-of-parameters-for-second-order-odes",
+            "solving-second-order-odes-using-variation-of-parameters",
+            "variation-of-parameters-with-higher-order-odes",
+          ],
+        },
+        {
+          title: t("Modeling With Second-Order ODEs", "二阶常微分方程建模"),
+          topics: [
+            "simple-harmonic-oscillators",
+            "damped-oscillators",
+            "forced-oscillators",
+            "resonance-in-vibrating-systems",
+            "modeling-capacitor-charge-in-rcl-circuits-with-second-order-odes",
+            "modeling-current-in-rcl-circuits-with-second-order-odes",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Systems of Differential Equations", "微分方程组"),
+      modules: [
+        {
+          title: t("Systems of ODEs", "微分方程组基础"),
+          topics: [
+            "introduction-to-systems-of-linear-odes",
+            "expressing-homogeneous-odes-as-first-order-systems",
+            "expressing-inhomogeneous-odes-as-first-order-systems",
+            "linear-independence-for-homogeneous-systems-of-odes",
+            "general-solutions-of-first-order-linear-systems-of-odes",
+          ],
+        },
+        {
+          title: t("Solving Systems of Linear ODEs", "求解线性微分方程组"),
+          topics: [
+            "solving-decoupled-homogeneous-systems-of-odes",
+            "solving-homogeneous-systems-of-odes-with-distinct-eigenvalues",
+            "solving-homogeneous-systems-of-odes-with-distinct-eigenvalues-and-initial-conditions",
+            "solving-homogeneous-systems-of-odes-with-repeated-eigenvalues",
+            "solving-homogeneous-systems-of-odes-with-complex-eigenvalues",
+            "solving-inhomogeneous-systems-of-odes",
+          ],
+        },
+        {
+          title: t("Phase Portraits for Systems of Linear ODEs", "线性微分方程组的相图"),
+          topics: [
+            "phase-planes-and-phase-portraits",
+            "equilibrium-points-and-stability-for-systems-of-odes",
+            "phase-portraits-for-decoupled-linear-systems",
+            "phase-portraits-for-linear-systems-with-real-distinct-eigenvalues",
+            "phase-portraits-for-linear-systems-with-repeated-eigenvalues",
+            "phase-portraits-for-linear-systems-with-zero-eigenvalues",
+            "phase-portraits-for-linear-systems-with-complex-eigenvalues",
+            "shifted-systems-of-odes",
+            "linear-approximations-near-equilibria",
+          ],
+        },
+        {
+          title: t("Solving Systems of ODEs Using Matrix Methods", "用矩阵方法求解微分方程组"),
+          topics: [
+            "matrix-exponentials",
+            "fundamental-matrices",
+            "solving-homogeneous-systems-of-odes-using-matrix-methods",
+            "solving-inhomogeneous-systems-of-odes-using-matrix-methods",
+            "solving-systems-of-odes-using-variation-of-parameters",
+          ],
+        },
+        {
+          title: t("Modeling With Systems of Linear ODEs", "微分方程组建模"),
+          topics: ["the-lotka-volterra-predator-prey-model", "the-lotka-volterra-model-with-carrying-capacity"],
+        },
+      ],
+    },
+    {
+      title: t("Laplace Transforms", "拉普拉斯变换"),
+      modules: [
+        {
+          title: t("Laplace Transforms", "拉普拉斯变换基础"),
+          topics: [
+            "the-floor-and-ceiling-functions",
+            "the-unit-step-function",
+            "piecewise-continuity-and-piecewise-smoothness",
+            "introduction-to-laplace-transforms",
+            "linearity-of-laplace-transforms",
+            "laplace-transforms-of-piecewise-continuous-functions",
+            "the-smoothness-property-of-laplace-transforms",
+            "laplace-transforms-of-derivatives",
+            "laplace-transforms-of-integrals",
+            "the-first-shifting-theorem-of-laplace-transforms",
+            "the-second-shifting-theorem-of-laplace-transforms",
+            "inverse-laplace-transforms",
+          ],
+        },
+        {
+          title: t("Solving Linear ODEs Using Laplace Transforms", "用拉普拉斯变换求解线性常微分方程"),
+          topics: [
+            "solving-first-order-odes-using-laplace-transforms",
+            "solving-first-order-odes-with-time-delayed-forcing-using-laplace-transforms",
+            "solving-second-order-odes-using-laplace-transforms",
+            "solving-second-order-odes-with-time-delayed-forcing-using-laplace-transforms",
+            "solving-homogeneous-systems-of-odes-using-laplace-transforms",
+            "solving-inhomogeneous-systems-of-odes-using-laplace-transforms",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Boundary Value Problems", "边值问题"),
+      modules: [
+        {
+          title: t("Boundary Value Problems", "边值问题理论"),
+          topics: [
+            "introduction-to-boundary-value-problems",
+            "second-order-homogeneous-boundary-value-problems",
+            "second-order-inhomogeneous-boundary-value-problems",
+            "eigenvalues-and-eigenfunctions-of-homogeneous-bvps",
+          ],
+        },
+        {
+          title: t("Fourier Series", "傅里叶级数"),
+          topics: [
+            "introduction-to-fourier-series",
+            "properties-of-fourier-series",
+            "fourier-sine-series",
+            "fourier-cosine-series",
+            "fourier-series-of-arbitrary-period",
+            "convergence-of-fourier-series",
+            "differentiating-and-integrating-fourier-series",
+            "solving-odes-using-fourier-series",
+            "solving-ivps-using-fourier-series",
+            "solving-bvps-using-fourier-series",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Approximating Solutions to Differential Equations", "常微分方程的近似解法"),
+      modules: [
+        {
+          title: t("Series Solutions of Differential Equations", "微分方程的级数解法"),
+          topics: [
+            "introduction-to-recurrence-relations",
+            "taylor-series-solutions-of-differential-equations",
+            "power-series-solutions-of-differential-equations",
+            "regular-singular-points",
+            "the-method-of-frobenius",
+            "finding-recurrence-relations-for-the-coefficients-of-a-frobenius-solution",
+            "finding-general-solutions-using-the-method-of-frobenius",
+          ],
+        },
+        {
+          title: t("Euler's Method", "欧拉方法"),
+          topics: [
+            "eulers-method-calculating-one-step",
+            "eulers-method-calculating-multiple-steps",
+            "the-modified-euler-method",
+            "eulers-method-for-systems-of-odes",
+            "eulers-method-for-second-order-odes",
+          ],
+        },
+        {
+          title: t("Higher-Order Numerical Methods", "高阶数值方法"),
+          topics: ["the-rk4-method", "the-abm2-method"],
+        },
+        {
+          title: t("Implicit Numerical Methods", "隐式数值方法"),
+          topics: [
+            "the-implicit-euler-method",
+            "the-trapezoidal-method",
+            "using-the-implicit-euler-method-with-newtons-method",
+            "using-the-trapezoidal-method-with-newtons-method",
+          ],
+        },
+        {
+          title: t("Analyzing Numerical Methods", "数值方法分析"),
+          topics: ["big-o-notation", "error-in-numerical-methods", "order-of-numerical-methods", "stability-of-numerical-methods"],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -9450,6 +9775,7 @@ export const mathCourses: readonly CourseDef[] = [
   linearAlgebra,
   calculusII,
   multivariableCalculus,
+  differentialEquations,
   apCalculusAB,
   apCalculusBC,
   methodsOfProof,

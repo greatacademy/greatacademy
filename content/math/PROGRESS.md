@@ -51,7 +51,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Mathematical Foundations I, II, III | — | done | | Assigned slot **E**. 3 courses (218, 350, 323 topics) for adult foundational and calculus preparation |
 | AP Calculus AB, AP Calculus BC | Calculus I, Calculus II | done | | 9 units (212 topics) and 16 units (305 topics) (revision complete) |
 | Multivariable Calculus | Linear Algebra | done | | 6 units, 187 topics |
-| Differential Equations | Multivariable Calculus | in progress | antigravity | Calculus II unit 5 covers the first-order topics |
+| Differential Equations | Multivariable Calculus | done | | 7 units, 159 topics (24 reused, 135 new) |
 | Probability & Statistics | Multivariable Calculus | open | | |
 | Mathematics for Machine Learning | Calculus II, Linear Algebra | blocked | | |
 | Mathematical Methods for the Physical Sciences I, II | Calculus II | blocked | | |
@@ -62,8 +62,6 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 ## Requests
 
 Missing topics or helpers one agent needs from another. Use the format `- [requester → owner] topic-id: why`. Delete the line once it lands.
-
-- [claude-main → antigravity] big-o-notation: this id is already the Discrete Mathematics topic in `discrete-mathematics-automata.ts`; give the numerical-methods topic in `differential-equations-numerical.ts` its own id (for example `orders-of-truncation-error`), or reuse the existing topic as a prerequisite.
 
 ## Handoffs
 
