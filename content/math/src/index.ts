@@ -101,6 +101,7 @@ import { transformationTopics } from "./topics/geometry-transformations.ts";
 import { triangleTrigonometryTopics } from "./topics/geometry-triangles-trigonometry.ts";
 import { trigonometryTopics } from "./topics/geometry-trigonometry.ts";
 import { grade4OperationTopics } from "./topics/grade-4-operations.ts";
+import { grade6to8FoundationTopics } from "./topics/grade-6-8-foundations.ts";
 import { inequalityTopics } from "./topics/inequalities.ts";
 import { integerTopics } from "./topics/integers.ts";
 import { linearAlgebraMatrixTopics } from "./topics/linear-algebra-matrices.ts";
@@ -339,6 +340,7 @@ export const math: SubjectDef = {
     ...mathematicsForMachineLearningPcaTopics,
     ...mathematicsForMachineLearningMatrixCalculusTopics,
     ...mathematicsForMachineLearningContinuousConditioningTopics,
+    ...grade6to8FoundationTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,

@@ -12090,6 +12090,476 @@ export const mathematicalMethodsForThePhysicalSciencesII: CourseDef = {
   ],
 };
 
+/** sixthGradeMath is the Common Core-aligned 6th Grade Math course. */
+export const sixthGradeMath: CourseDef = {
+  id: "6th-grade-math",
+  title: t("6th Grade Math", "六年级数学"),
+  description: t(
+    "Whole number division, fractions, and decimal operations; ratios, tape diagrams, ratio tables, unit rates, percentages, and unit conversions; negative numbers, absolute value, and the coordinate plane; algebraic expressions, one-step equations, and linear inequalities; two-dimensional and three-dimensional geometry, nets, surface area, and volume of rectangular prisms; and introductory statistics with measures of center, spread, dot plots, box plots, and histograms.",
+    "多位数除法、分数与小数运算；比、线段图、比例表、单位率、百分比与单位换算；负数、绝对值与坐标平面；代数式、一步方程与一元一次不等式；平面几何与立体几何、展开图、表面积与长方体体积；以及包含集中趋势、离散程度、点图、箱线图与直方图的初等统计学。",
+  ),
+  units: [
+    {
+      title: t("The Number System: Whole Number Division", "数系：整数除法与运算"),
+      modules: [
+        {
+          title: t("Multiplying Whole Numbers", "整数乘法与模型"),
+          topics: [
+            "multiplying-by-10-100-and-1000",
+            "rewriting-numbers-ending-in-zeros",
+            "multiplying-numbers-ending-in-zeros",
+            "estimating-multi-digit-multiplication",
+            "two-digit-by-two-digit-multiplication-using-area-models",
+            "two-digit-by-two-digit-multiplication-using-place-value",
+          ],
+        },
+        {
+          title: t("Dividing Whole Numbers by One-Digit Numbers", "一位数除多位数"),
+          topics: [
+            "relationship-between-multiplication-and-division",
+            "understanding-remainders-using-models",
+            "finding-remainders",
+            "dividends-divisors-quotients-and-remainders",
+            "division-with-remainders",
+            "interpreting-remainders-in-context",
+          ],
+        },
+        {
+          title: t("Dividing Whole Numbers by Two-Digit Numbers", "两位数除多位数"),
+          topics: [
+            "dividing-by-10-100-and-1000",
+            "dividing-by-one-digit-numbers-using-multiplication",
+            "dividing-using-place-value-strategies",
+            "estimating-multi-digit-division",
+            "two-digit-by-one-digit-division-using-area-models",
+            "multi-digit-by-one-digit-division-using-area-models",
+            "more-multi-digit-by-one-digit-division-using-area-models",
+            "two-digit-by-one-digit-division-using-partial-quotients",
+            "two-digit-by-one-digit-division-with-remainders-using-partial-quotients",
+            "multi-digit-by-one-digit-division-using-partial-quotients",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("The Number System: Dividing Fractions", "数系：分数四则运算"),
+      modules: [
+        {
+          title: t("Fraction Operations", "分数加减乘除"),
+          topics: ["adding-and-subtracting-fractions", "mixed-numbers", "multiplying-fractions", "dividing-fractions"],
+        },
+      ],
+    },
+    {
+      title: t("The Number System: Decimals", "数系：小数四则运算"),
+      modules: [
+        {
+          title: t("Decimal Operations", "小数加减乘除"),
+          topics: ["fractions-and-decimals", "decimal-arithmetic"],
+        },
+      ],
+    },
+    {
+      title: t("Ratios & Proportional Relationships", "比与比例关系"),
+      modules: [
+        { title: t("Ratios", "比的初步"), topics: ["ratios"] },
+        { title: t("Representing Ratios", "比的表示"), topics: ["ratio-tables-and-tape-diagrams"] },
+        { title: t("Unit Rates", "单位率"), topics: ["unit-rates", "unit-prices-and-speed"] },
+        { title: t("Introduction to Percentages", "百分数初步"), topics: ["percents"] },
+        { title: t("Solving Problems With Percentages", "百分数应用"), topics: ["percent-of-a-number"] },
+        {
+          title: t("Unit Conversions", "单位换算"),
+          topics: ["metric-units-of-mass", "metric-units-of-length", "two-step-unit-conversions", "units-of-time", "mixed-units"],
+        },
+      ],
+    },
+    {
+      title: t("The Number System: Rational Numbers", "数系：有理数"),
+      modules: [
+        { title: t("Negative Numbers", "负数与绝对值"), topics: ["integers-and-opposites", "absolute-value"] },
+        { title: t("Rational Numbers", "有理数"), topics: ["operations-with-rational-numbers"] },
+        {
+          title: t("The Coordinate Plane", "坐标平面"),
+          topics: ["the-coordinate-plane", "reflections-in-the-coordinate-plane"],
+        },
+        { title: t("Exponents", "乘方"), topics: ["powers-of-integers"] },
+      ],
+    },
+    {
+      title: t("Expressions & Equations", "代数式与方程"),
+      modules: [
+        { title: t("Algebraic Expressions", "代数式"), topics: ["evaluating-expressions", "combining-like-terms"] },
+        { title: t("Equivalent Expressions", "等价表达式"), topics: ["distributive-property", "simplifying-expressions"] },
+        {
+          title: t("Linear Equations", "一元一次方程"),
+          topics: ["one-step-equations-addition", "one-step-equations-multiplication"],
+        },
+        {
+          title: t("Linear Inequalities", "一元一次不等式"),
+          topics: ["inequalities-and-solutions", "solving-one-step-inequalities"],
+        },
+        {
+          title: t("Two-Variable Equations", "二元方程"),
+          topics: ["interpreting-linear-expressions", "modeling-with-linear-equations"],
+        },
+      ],
+    },
+    {
+      title: t("Geometry", "几何"),
+      modules: [
+        {
+          title: t("Two-Dimensional Geometry", "二维平面几何"),
+          topics: ["area-of-rectangles-and-squares", "area-of-parallelograms", "area-of-triangles", "area-of-trapezoids"],
+        },
+        {
+          title: t("Three-Dimensional Geometry", "三维立体几何"),
+          topics: [
+            "identifying-three-dimensional-shapes",
+            "faces-vertices-and-edges-of-polyhedrons",
+            "nets-of-polyhedrons",
+            "finding-surface-areas-using-nets",
+            "volumes-of-cubes",
+            "surface-areas-of-cubes",
+            "volumes-of-rectangular-solids",
+            "surface-areas-of-rectangular-solids",
+          ],
+        },
+        {
+          title: t("Coordinate Geometry", "坐标几何"),
+          topics: [
+            "midpoints-in-the-coordinate-plane",
+            "calculating-perimeters-in-the-plane",
+            "calculating-areas-of-rectangles-in-the-plane",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Statistics & Probability", "统计与概率"),
+      modules: [
+        {
+          title: t("Summarizing Data", "数据概述"),
+          topics: ["mean-of-a-data-set", "median-and-mode", "range-and-interquartile-range", "mean-absolute-deviation"],
+        },
+        {
+          title: t("Representing Data", "数据展示"),
+          topics: ["dot-plots", "box-plots", "histograms"],
+        },
+      ],
+    },
+  ],
+};
+
+/** seventhGradeMath is the Common Core-aligned 7th Grade Math course. */
+export const seventhGradeMath: CourseDef = {
+  id: "7th-grade-math",
+  title: t("7th Grade Math", "七年级数学"),
+  description: t(
+    "Unit rates with ratios of fractions and proportional relationships; percentage increase and decrease, simple interest, markups and discounts; rational number operations and positive integer exponents; simplifying and factoring linear expressions, one-step and multi-step linear equations, systems of equations, linear inequalities, and rational equations; angles, scale drawings, circles, and area and volume of composite solids; and sampling, comparing populations, and theoretical and experimental probability of simple and compound events.",
+    "带分数的单位率与正比例关系；百分比增减、单利、加价与折扣；有理数四则运算与正整数乘方；化简与分解代数式、一步与多步一次方程、方程组、一次不等式与分式方程；角、缩放图、圆、组合体表面积与体积；以及抽样、比较总体、简单与复合事件的理论和实验概率。",
+  ),
+  units: [
+    {
+      title: t("Ratios & Proportional Relationships", "比与比例关系"),
+      modules: [
+        { title: t("Unit Rates", "单位率与比例"), topics: ["proportions"] },
+        {
+          title: t("Proportional Relationships", "正比例关系"),
+          topics: ["direct-variation", "modeling-with-direct-variation"],
+        },
+        { title: t("Percentages", "百分比变化"), topics: ["percent-change"] },
+        {
+          title: t("Applications of Percentages", "百分比应用"),
+          topics: ["percent-applications-interest-and-discounts"],
+        },
+      ],
+    },
+    {
+      title: t("The Number System", "数系"),
+      modules: [
+        {
+          title: t("Addition and Subtraction of Rational Numbers", "有理数加减法"),
+          topics: ["adding-integers", "subtracting-integers"],
+        },
+        {
+          title: t("Multiplication and Division of Rational Numbers", "有理数乘除法"),
+          topics: ["multiplying-integers", "dividing-integers", "order-of-operations-with-integers"],
+        },
+        { title: t("Exponents", "乘方"), topics: ["powers-of-rational-numbers"] },
+      ],
+    },
+    {
+      title: t("Expressions & Equations", "代数式与方程"),
+      modules: [
+        { title: t("One-Step and Two-Step Equations", "一步与两步方程"), topics: ["two-step-equations"] },
+        { title: t("Equations With Variables on Both Sides", "含未知数的方程解法"), topics: ["equations-with-variables-on-both-sides"] },
+        {
+          title: t("Solving Multi-Step Linear Equations", "多步一次方程与括号"),
+          topics: ["equations-with-parentheses", "systems-with-fractional-coefficients", "systems-with-decimal-coefficients"],
+        },
+        {
+          title: t("Modeling With Linear Equations and Inequalities", "方程与不等式建模"),
+          topics: [
+            "consecutive-integer-problems",
+            "speed-distance-time",
+            "introduction-to-modeling-with-inequalities",
+            "modeling-with-one-step-inequalities",
+          ],
+        },
+        {
+          title: t("Two-Variable Equations", "二元一次方程与图象"),
+          topics: ["analyzing-graphs-of-linear-models", "distance-time-graphs"],
+        },
+        {
+          title: t("Systems of Equations", "线性方程组"),
+          topics: ["systems-of-linear-equations", "solving-systems-by-substitution"],
+        },
+        { title: t("Solving Linear Inequalities", "解多步不等式"), topics: ["solving-multi-step-inequalities"] },
+        {
+          title: t("Rational Expressions and Equations", "分式方程与交叉相乘"),
+          topics: ["rational-equations-with-one-fractional-term", "rational-equations-using-cross-multiplication"],
+        },
+      ],
+    },
+    {
+      title: t("Geometry", "几何"),
+      modules: [
+        { title: t("Introduction to Geometry", "角的初步"), topics: ["angles-and-angle-measures"] },
+        {
+          title: t("Angles", "互余互补与对顶角"),
+          topics: ["complementary-and-supplementary-angles", "vertical-angles"],
+        },
+        { title: t("Polygons", "三角形分类"), topics: ["classifying-triangles", "isosceles-triangles"] },
+        { title: t("Area and Perimeter", "周长与组合图形面积"), topics: ["perimeter", "composite-shapes"] },
+        { title: t("Scale Drawings", "比例缩放图"), topics: ["scale-drawings-and-scale-factor"] },
+        {
+          title: t("Circles", "圆与扇形"),
+          topics: ["circles", "the-circumference-of-a-circle", "areas-of-circles", "arcs-segments-and-sectors-of-circles"],
+        },
+        {
+          title: t("Solid Geometry", "棱锥表面积与体积"),
+          topics: ["volumes-of-pyramids", "surface-areas-of-pyramids"],
+        },
+      ],
+    },
+    {
+      title: t("Statistics & Probability", "统计与概率"),
+      modules: [
+        {
+          title: t("Probability", "概率初步与互补事件"),
+          topics: [
+            "experimental-probability",
+            "using-experimental-probability-to-make-predictions",
+            "sample-spaces-and-events-in-probability",
+            "the-likelihood-of-an-event",
+            "single-events-in-probability",
+            "the-complement-of-an-event",
+          ],
+        },
+        {
+          title: t("Compound Events in Probability", "复合事件概率"),
+          topics: [
+            "venn-diagrams-in-probability",
+            "compound-events-in-probability-from-experimental-data",
+            "computing-probabilities-for-compound-events-using-venn-diagrams",
+            "the-addition-law-of-probability",
+            "mutually-exclusive-events",
+          ],
+        },
+        { title: t("Sampling", "抽样"), topics: ["sampling"] },
+        { title: t("Representing Data", "比较数据集"), topics: ["comparing-data-sets"] },
+        { title: t("Comparing Data", "异常值分析"), topics: ["outliers"] },
+      ],
+    },
+  ],
+};
+
+/** eighthGradeMath is the Common Core-aligned 8th Grade Math course. */
+export const eighthGradeMath: CourseDef = {
+  id: "8th-grade-math",
+  title: t("8th Grade Math", "八年级数学"),
+  description: t(
+    "Exponents, scientific notation, square and cube roots, and the real number system; operations with radicals and solving equations with radicals; divisibility and prime factorizations; slopes and equations of lines in slope-intercept and standard form, linear systems and elimination, and special solutions; function concepts, domain, range, rate of change, and linear versus nonlinear functions; rigid motions, dilations, and similarity; the Pythagorean theorem, the distance formula, and volumes of cylinders, cones, and spheres; and bivariate data with scatter plots, trend lines, and two-way tables.",
+    "指数幂与科学记数法、平方根与立方根及实数系；根式运算与根式方程；整除与质因数分解；直线斜率与斜截式及一般式方程、加减消元法解二元一次方程组与特殊解；函数概念、定义域、值域、变化率与线性与非线性函数判断；刚体变换、位似与相似；勾股定理、距离公式与圆柱、圆锥、球体体积；以及散点图、趋势线与双向频数表分析二元数据。",
+  ),
+  units: [
+    {
+      title: t("Exponents & Scientific Notation", "指数与科学记数法"),
+      modules: [
+        { title: t("Integer Exponents", "零指数与负指数"), topics: ["zero-and-negative-exponents"] },
+        { title: t("The Rules of Exponents", "指数运算法则"), topics: ["product-and-quotient-rules", "power-rules"] },
+        { title: t("Writing and Comparing Numbers in Scientific Notation", "科学记数法"), topics: ["scientific-notation"] },
+        { title: t("Operations in Scientific Notation", "科学记数法运算"), topics: ["operations-in-scientific-notation"] },
+        {
+          title: t("Working With Units", "单位换算与复合单位"),
+          topics: ["converting-units-of-area", "units-in-formulas", "units-of-rates-of-change"],
+        },
+      ],
+    },
+    {
+      title: t("Radicals", "根式"),
+      modules: [
+        { title: t("Square Roots and Cube Roots", "平方根与立方根"), topics: ["square-roots-and-cube-roots"] },
+        {
+          title: t("Simplifying and Operating With Radicals", "根式化简与加减"),
+          topics: ["simplifying-square-roots", "adding-and-subtracting-radicals"],
+        },
+        {
+          title: t("The Rules of Radicals", "根式乘除法则与分母有理化"),
+          topics: ["quotient-rule-for-square-roots", "rationalizing-denominators"],
+        },
+        {
+          title: t("Solving Equations Using Square and Cube Roots", "开平方法与乘方方程"),
+          topics: ["solving-equations-with-square-roots", "solving-odd-power-equations", "solving-even-power-equations"],
+        },
+      ],
+    },
+    {
+      title: t("The Real Number System", "实数系"),
+      modules: [
+        {
+          title: t("Rational and Irrational Numbers", "有理数与无理数"),
+          topics: ["the-real-number-system", "classifying-rational-and-irrational-numbers"],
+        },
+        { title: t("Approximating Irrational Numbers", "估算无理数"), topics: ["approximating-square-roots"] },
+      ],
+    },
+    {
+      title: t("Number Theory", "数论初步"),
+      modules: [
+        {
+          title: t("Integer Divisibility and Prime Numbers", "整除与质因数分解"),
+          topics: [
+            "divisibility-rules",
+            "prime-and-composite-numbers",
+            "prime-factorization",
+            "greatest-common-factor",
+            "least-common-multiple",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Linear Equations and Lines", "一次方程与直线"),
+      modules: [
+        {
+          title: t("Solving Linear Equations in One Variable", "含参数方程与公式变形"),
+          topics: ["linear-equations-with-unknown-coefficients", "many-variable-equations"],
+        },
+        {
+          title: t("Slopes and Equations of Lines", "直线的斜率与方程"),
+          topics: [
+            "slope-of-a-line",
+            "slope-intercept-form",
+            "properties-of-lines-in-slope-intercept-form",
+            "point-slope-form",
+            "standard-form",
+            "properties-of-lines-in-standard-form",
+          ],
+        },
+        {
+          title: t("Systems of Linear Equations", "消元法与二元方程应用"),
+          topics: [
+            "introduction-to-elimination",
+            "elimination-with-one-transformation",
+            "elimination-with-two-transformations",
+            "intersection-of-two-lines",
+            "modeling-with-systems",
+            "coin-problems",
+            "systems-with-no-solution-or-infinitely-many-solutions",
+            "consistency-and-dependency",
+          ],
+        },
+        {
+          title: t("Linear Modeling in Two Variables", "二元一次方程建模"),
+          topics: ["modeling-with-two-variable-linear-equations", "modeling-totals-with-two-variable-equations"],
+        },
+      ],
+    },
+    {
+      title: t("Functions", "函数初步"),
+      modules: [
+        {
+          title: t("Introduction to Functions", "函数概念与图象"),
+          topics: ["introduction-to-functions", "representations-of-functions", "graphs-of-functions"],
+        },
+        {
+          title: t("Properties of Functions", "定义域、极值、值域与增减性"),
+          topics: ["domain-of-a-function", "global-extrema", "range-of-a-function", "increasing-and-decreasing"],
+        },
+        {
+          title: t("Linear Functions and Modeling", "一次函数与建模"),
+          topics: ["linear-vs-nonlinear-functions", "modeling-with-linear-functions", "constructing-linear-functions"],
+        },
+      ],
+    },
+    {
+      title: t("Geometry: Transformations, Congruence, & Similarity", "几何变换、全等与相似"),
+      modules: [
+        {
+          title: t("Angles and Parallel Lines", "平行线与三角形内外角"),
+          topics: ["parallel-lines-and-transversals", "angles-of-a-triangle", "exterior-angles-of-triangles"],
+        },
+        { title: t("Angles in Triangles and Polygons", "多边形内角与外角"), topics: ["angles-of-polygons"] },
+        {
+          title: t("Rigid Transformations", "刚体变换与全等"),
+          topics: ["reflective-symmetry", "rotational-symmetry", "rigid-motions-and-congruence", "properties-of-congruence"],
+        },
+        {
+          title: t("Dilations and Similarity", "位似变换与相似判定"),
+          topics: [
+            "dilations-of-figures-in-the-coordinate-plane",
+            "similarity-and-similar-polygons",
+            "side-lengths-and-angle-measures-of-similar-polygons",
+            "similarity-transformations",
+            "the-aa-similarity-criterion",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("The Pythagorean Theorem & Volume", "勾股定理与圆体体积"),
+      modules: [
+        {
+          title: t("The Pythagorean Theorem and Distance", "勾股定理与距离公式"),
+          topics: ["the-pythagorean-theorem", "the-distance-formula", "the-distance-formula-in-three-dimensions"],
+        },
+        {
+          title: t("Volumes of Cylinders, Cones, and Spheres", "圆柱、圆锥与球体的体积"),
+          topics: [
+            "volumes-of-cylinders",
+            "surface-areas-of-cylinders",
+            "volumes-of-right-cones",
+            "surface-areas-of-right-cones",
+            "volumes-of-spheres",
+            "surface-areas-of-spheres",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Statistics: Bivariate Data", "二元数据统计"),
+      modules: [
+        {
+          title: t("Scatter Plots and Linear Models", "散点图与线性拟合"),
+          topics: [
+            "scatter-plots",
+            "trend-lines",
+            "predictions-with-trend-lines",
+            "interpreting-trend-line-coefficients",
+            "linear-correlation",
+            "correlation-and-causation",
+          ],
+        },
+        {
+          title: t("Bivariate Categorical Data and Two-Way Tables", "双向频数表与相对频数"),
+          topics: ["two-way-frequency-tables", "relative-frequency-tables"],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -12121,4 +12591,7 @@ export const mathCourses: readonly CourseDef[] = [
   mathematicsForMachineLearning,
   mathematicalMethodsForThePhysicalSciencesI,
   mathematicalMethodsForThePhysicalSciencesII,
+  sixthGradeMath,
+  seventhGradeMath,
+  eighthGradeMath,
 ];
