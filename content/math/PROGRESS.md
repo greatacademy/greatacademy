@@ -55,7 +55,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Probability & Statistics | Multivariable Calculus | done | | 10 units, 181 topics (53 reused, 128 new) |
 | Mathematics for Machine Learning | Calculus II, Linear Algebra | done | | 12 units, 301 topics (283 reused, 18 new) |
 | Mathematical Methods for the Physical Sciences I, II | Calculus II | in progress | antigravity | |
-| Abstract Algebra | Methods of Proof, Linear Algebra | in progress | claude-main | |
+| Abstract Algebra | Methods of Proof, Linear Algebra | done | | 9 units, 129 topics |
 | SAT Math Fundamentals, SAT Math Prep | Algebra II | open | | Low priority: almost entirely reuse; do after the courses above |
 | ACT Math Fundamentals, ACT Math Prep | Precalculus | open | | Low priority, as for SAT |
 
