@@ -43,7 +43,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Calculus II | Calculus I | done | | 5 units, 160 topics |
 | Linear Algebra | Calculus I | done | | Assigned slot **A**. Complete 8 units, 181 topics (revision complete: free-response checkers, signs and LaTeX polished) |
 | Methods of Proof | Calculus I | done | | Assigned slot **B**. 7 units, 135 topics; Set Theory precedes Logic so the predicate topics can use sets |
-| Discrete Mathematics | Methods of Proof | in progress | claude-main | Slot **B** after Methods of Proof. Reuse `combinatorics.ts` and `probability.ts` |
+| Discrete Mathematics | Methods of Proof | done | | Slot **B** after Methods of Proof. 8 units, 143 topics |
 | 4th Grade Math, 5th Grade Math | — | open | | Assigned slot **C**. `grade-4-operations.ts` and the Prealgebra files already cover part of these |
 | 6th, 7th and 8th Grade Math | 5th Grade Math (outline) | open | | Assigned slot **D**. Mostly reuse Prealgebra and Algebra I topics; can start alongside slot C, and request missing grade 4–5 topics from C |
 | Integrated Math I, II, III | Prealgebra | done | | Assigned slot **E**. 3 courses (197, 210, 173 topics) reusing Algebra I, Geometry and Algebra II topics |
@@ -62,6 +62,8 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 ## Requests
 
 Missing topics or helpers one agent needs from another. Use the format `- [requester → owner] topic-id: why`. Delete the line once it lands.
+
+- [claude-main → antigravity] big-o-notation: this id is already the Discrete Mathematics topic in `discrete-mathematics-automata.ts`; give the numerical-methods topic in `differential-equations-numerical.ts` its own id (for example `orders-of-truncation-error`), or reuse the existing topic as a prerequisite.
 
 ## Handoffs
 
