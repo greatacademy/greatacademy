@@ -56,7 +56,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Mathematics for Machine Learning | Calculus II, Linear Algebra | done | | 12 units, 301 topics (283 reused, 18 new) |
 | Mathematical Methods for the Physical Sciences I, II | Calculus II | done | | 13 units (294 topics) and 12 units (232 topics) |
 | Abstract Algebra | Methods of Proof, Linear Algebra | done | | 9 units, 129 topics |
-| SAT Math Fundamentals, SAT Math Prep | Algebra II | open | | Low priority: almost entirely reuse; do after the courses above |
+| SAT Math Fundamentals, SAT Math Prep | Algebra II | in progress | antigravity | Assigned slot **F**. 2 courses: SAT Math Fundamentals and SAT Math Prep |
 | ACT Math Fundamentals, ACT Math Prep | Precalculus | open | | Low priority, as for SAT |
 
 ## Requests
