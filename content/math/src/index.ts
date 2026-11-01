@@ -61,6 +61,7 @@ import { differentialEquationsFirstOrderTopics } from "./topics/differential-equ
 import { differentialEquationsLaplaceTopics } from "./topics/differential-equations-laplace.ts";
 import { differentialEquationsLinearTopics } from "./topics/differential-equations-linear.ts";
 import { differentialEquationsModelingTopics } from "./topics/differential-equations-modeling.ts";
+import { differentialEquationsNumericalTopics } from "./topics/differential-equations-numerical.ts";
 import { differentialEquationsSystemsTopics } from "./topics/differential-equations-systems.ts";
 import { discreteMathematicsAutomataTopics } from "./topics/discrete-mathematics-automata.ts";
 import { discreteMathematicsBooleanTopics } from "./topics/discrete-mathematics-boolean.ts";
@@ -289,6 +290,7 @@ export const math: SubjectDef = {
     ...differentialEquationsSystemsTopics,
     ...differentialEquationsLaplaceTopics,
     ...differentialEquationsBvpTopics,
+    ...differentialEquationsNumericalTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
