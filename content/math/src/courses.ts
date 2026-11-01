@@ -14617,6 +14617,292 @@ export const fourthGradeMath: CourseDef = {
   ],
 };
 
+/** fifthGradeMath is the Common Core-aligned 5th Grade Math course. */
+export const fifthGradeMath: CourseDef = {
+  id: "5th-grade-math",
+  title: t("5th Grade Math", "五年级数学"),
+  description: t(
+    "Whole number expressions and an introduction to negative numbers; multi-digit multiplication and division; adding and subtracting fractions and mixed numbers with unlike denominators; multiplying and dividing fractions; decimal place value, rounding and the four operations with decimals; exponents and powers of ten; converting to larger units, line plots with fractions, the coordinate plane and numerical patterns; volume of rectangular prisms, and classifying polygons and quadrilaterals.",
+    "整数表达式与负数初步；多位数乘除法；异分母分数和带分数的加减法；分数乘除法；小数的数位、取近似数及小数四则运算；指数与 10 的幂；化成较大的单位、分数线图、坐标平面与数的规律；长方体的体积，以及多边形和四边形的分类。",
+  ),
+  units: [
+    {
+      title: t("The Number System", "数系"),
+      modules: [
+        {
+          title: t("Whole Number Expressions", "整数表达式"),
+          topics: [
+            "evaluating-whole-number-expressions",
+            "evaluating-whole-number-expressions-with-parentheses",
+            "creating-and-interpreting-whole-number-expressions",
+            "creating-whole-number-expressions-from-terminology",
+            "additive-comparisons-of-whole-number-expressions",
+            "multiplicative-comparisons-of-whole-number-expressions",
+          ],
+        },
+        {
+          title: t("Introduction to Negative Numbers", "负数初步"),
+          topics: [
+            "negative-numbers",
+            "comparing-negative-numbers",
+            "integers-and-opposites",
+            "absolute-value",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Multiplying & Dividing Whole Numbers", "整数乘除法"),
+      modules: [
+        {
+          title: t("Multiplying Whole Numbers", "整数乘法"),
+          topics: [
+            "multiplying-numbers-by-powers-of-ten-using-place-value",
+            "two-digit-by-one-digit-multiplication",
+            "three-and-four-digit-by-one-digit-multiplication",
+            "five-and-six-digit-by-one-digit-multiplication",
+            "two-digit-by-two-digit-multiplication",
+            "multi-digit-by-two-digit-multiplication",
+            "three-digit-by-three-digit-multiplication",
+          ],
+        },
+        {
+          title: t("Dividing Whole Numbers", "整数除法"),
+          topics: [
+            "two-digit-by-one-digit-division",
+            "three-digit-by-one-digit-division",
+            "four-digit-by-one-digit-division",
+            "using-fractions-to-represent-division-of-whole-numbers",
+            "dividing-numbers-by-one-digit-numbers-with-rounding",
+            "dividing-numbers-by-one-digit-numbers-interpreting-the-remainder",
+            "dividing-by-two-digit-numbers-by-connecting-multiplication-and-division",
+            "dividing-by-two-digit-numbers-with-remainders-by-connecting-multiplication-and-division",
+            "multi-digit-by-two-digit-division-using-partial-quotients",
+            "three-digit-by-two-digit-division",
+            "four-digit-by-two-digit-division",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Adding & Subtracting Fractions", "分数加减法"),
+      modules: [
+        {
+          title: t("Adding and Subtracting Fractions and Whole Numbers", "分数与整数的加减法"),
+          topics: [
+            "adding-fractions-and-whole-numbers-using-models",
+            "adding-fractions-and-whole-numbers",
+            "subtracting-fractions-and-whole-numbers-using-models",
+            "subtracting-fractions-and-whole-numbers",
+          ],
+        },
+        {
+          title: t("Adding and Subtracting Fractions", "分数加减法"),
+          topics: [
+            "estimating-sums-and-differences-of-fractions",
+            "adding-fractions-with-unlike-denominators-using-models",
+            "subtracting-fractions-with-unlike-denominators-using-models",
+            "adding-fractions-with-unlike-denominators",
+            "subtracting-fractions-with-unlike-denominators",
+            "adding-and-subtracting-fractions-with-unlike-denominators-word-problems",
+          ],
+        },
+        {
+          title: t("Adding and Subtracting Mixed Numbers", "带分数加减法"),
+          topics: [
+            "adding-mixed-numbers-with-unlike-denominators",
+            "subtracting-mixed-numbers-with-unlike-denominators",
+            "subtracting-mixed-numbers-with-unlike-denominators-using-improper-fractions",
+            "adding-and-subtracting-mixed-numbers-with-unlike-denominators-word-problems",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Multiplying & Dividing Fractions", "分数乘除法"),
+      modules: [
+        {
+          title: t("Multiplying Fractions", "分数乘法"),
+          topics: [
+            "multiplying-fractions-by-unit-fractions-using-models",
+            "multiplying-fractions-using-models",
+            "multiplying-fractions",
+            "multiplying-fractions-word-problems",
+            "multiplying-fractions-by-swapping-denominators",
+            "multiplying-mixed-numbers-by-whole-numbers",
+            "multiplying-mixed-numbers-by-fractions",
+            "multiplying-mixed-numbers",
+            "multiplying-mixed-numbers-word-problems",
+            "connecting-fraction-multiplication-and-area",
+            "finding-areas-using-fraction-multiplication",
+            "fraction-multiplication-number-sense",
+          ],
+        },
+        {
+          title: t("Dividing Fractions", "分数除法"),
+          topics: [
+            "interpreting-fraction-division-using-area-models",
+            "dividing-whole-numbers-by-unit-fractions-using-models",
+            "dividing-whole-numbers-by-unit-fractions",
+            "dividing-unit-fractions-by-whole-numbers-using-models",
+            "dividing-unit-fractions-by-whole-numbers",
+            "reciprocals",
+            "dividing-whole-numbers-by-fractions-using-models-whole-number-results",
+            "dividing-whole-numbers-by-fractions-using-models-fractional-results",
+            "dividing-whole-numbers-by-fractions",
+            "dividing-fractions-by-whole-numbers-using-models",
+            "dividing-fractions-by-whole-numbers",
+            "dividing-fractions-and-whole-numbers-word-problems",
+            "dividing-fractions-using-models",
+            "dividing-fractions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Decimals", "小数"),
+      modules: [
+        {
+          title: t("Decimals", "小数"),
+          topics: [
+            "the-place-value-system-with-decimals",
+            "comparing-place-values-with-decimals",
+            "reading-and-writing-decimals-written-in-words",
+            "converting-decimals-from-standard-to-expanded-form",
+            "converting-decimals-from-expanded-to-standard-form",
+            "equivalent-decimals",
+            "comparing-decimals",
+            "rounding-down-decimals",
+            "rounding-up-decimals",
+            "significant-figures",
+            "significant-figures-with-decimals",
+          ],
+        },
+        {
+          title: t("Adding and Subtracting Decimals", "小数加减法"),
+          topics: [
+            "estimating-decimal-addition-and-subtraction",
+            "adding-decimals",
+            "addition-with-unequal-numbers-of-decimals",
+            "subtracting-decimals",
+            "subtraction-with-unequal-numbers-of-decimals",
+            "estimating-decimal-addition-with-benchmarks",
+            "estimating-decimal-subtraction-with-benchmarks",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Multiplying & Dividing Decimals", "小数乘除法"),
+      modules: [
+        {
+          title: t("Multiplying Decimals", "小数乘法"),
+          topics: [
+            "multiplying-decimals-by-powers-of-ten-using-place-value",
+            "multiplying-decimals-by-powers-of-ten-using-decimal-point-placement",
+            "estimating-decimal-multiplication",
+            "multiplying-a-decimal-by-a-one-digit-whole-number",
+            "multiplying-a-decimal-by-a-multi-digit-whole-number",
+            "multiplying-two-digit-decimals",
+            "multiplying-two-digit-decimals-by-three-digit-decimals",
+            "multiplying-three-digit-decimals",
+          ],
+        },
+        {
+          title: t("Dividing Decimals", "小数除法"),
+          topics: [
+            "dividing-decimals-by-powers-of-ten-using-place-value",
+            "dividing-decimals-by-powers-of-ten-using-decimal-point-placement",
+            "estimating-decimal-division",
+            "dividing-decimals-using-place-value-strategies",
+            "division-of-whole-numbers-with-decimal-quotients",
+            "division-of-whole-numbers-with-decimal-quotients-and-rounding",
+            "dividing-decimals-using-the-standard-algorithm",
+            "dividing-three-digit-decimals-by-two-digit-decimals",
+            "dividing-four-digit-and-five-digit-decimals",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Exponents", "指数"),
+      modules: [
+        {
+          title: t("Exponents", "指数"),
+          topics: [
+            "powers-of-ten",
+            "multiplying-numbers-by-powers-of-ten-with-exponents",
+            "multiplying-decimals-by-powers-of-ten-with-exponents",
+            "introduction-to-exponents",
+            "evaluating-exponents",
+            "evaluating-larger-exponents",
+            "evaluating-exponents-with-fractional-bases",
+            "evaluating-exponents-with-decimal-bases",
+            "comparing-exponents",
+            "evaluating-whole-number-expressions-containing-exponents",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Measurement & Data", "测量与数据"),
+      modules: [
+        {
+          title: t("Units and Data", "单位与数据"),
+          topics: [
+            "converting-metric-units-of-length-to-larger-units",
+            "converting-customary-units-of-length-to-larger-units",
+            "converting-units-of-volume-to-larger-units",
+            "converting-units-of-mass-to-larger-units",
+            "converting-units-of-time-to-larger-units",
+            "operations-on-fractions-with-line-plots",
+          ],
+        },
+        {
+          title: t("Coordinates", "坐标"),
+          topics: [
+            "describing-the-coordinate-plane",
+            "solving-real-world-problems-using-coordinates",
+            "coordinate-planes-as-maps",
+          ],
+        },
+        {
+          title: t("Patterns and Relationships", "规律与关系"),
+          topics: [
+            "connecting-patterns",
+            "comparing-patterns",
+            "graphing-patterns",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Geometry", "几何"),
+      modules: [
+        {
+          title: t("Volume", "体积"),
+          topics: [
+            "understanding-volume-using-unit-cubes",
+            "units-of-area-and-volume",
+            "volumes-of-right-rectangular-prisms",
+            "volumes-of-right-rectangular-prisms-word-problems",
+          ],
+        },
+        {
+          title: t("2D Shapes", "平面图形"),
+          topics: [
+            "polygons",
+            "quadrilaterals",
+            "rectangles-rhombuses-and-squares",
+            "perimeters-of-shapes",
+            "classifying-quadrilaterals",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -14649,6 +14935,7 @@ export const mathCourses: readonly CourseDef[] = [
   mathematicalMethodsForThePhysicalSciencesI,
   mathematicalMethodsForThePhysicalSciencesII,
   fourthGradeMath,
+  fifthGradeMath,
   sixthGradeMath,
   seventhGradeMath,
   eighthGradeMath,

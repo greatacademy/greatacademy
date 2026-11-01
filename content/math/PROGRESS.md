@@ -44,7 +44,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Linear Algebra | Calculus I | done | | Assigned slot **A**. Complete 8 units, 181 topics (revision complete: free-response checkers, signs and LaTeX polished) |
 | Methods of Proof | Calculus I | done | | Assigned slot **B**. 7 units, 135 topics; Set Theory precedes Logic so the predicate topics can use sets |
 | Discrete Mathematics | Methods of Proof | done | | Slot **B** after Methods of Proof. 8 units, 143 topics |
-| 4th Grade Math, 5th Grade Math | — | in progress | claude-main | Assigned slot **C**. `grade-4-operations.ts` and the Prealgebra files already cover part of these |
+| 4th Grade Math, 5th Grade Math | — | done | — | 4th: 7 units, 139 topics; 5th: 8 units, 134 topics (`grade-4-*.ts`, `grade-5-*.ts`) |
 | 6th, 7th and 8th Grade Math | 5th Grade Math (outline) | done | | Assigned slot **D**. 3 courses: 6th Grade Math (8 units, 77 topics), 7th Grade Math (5 units, 55 topics), and 8th Grade Math (9 units, 82 topics) |
 | Integrated Math I, II, III | Prealgebra | done | | Assigned slot **E**. 3 courses (197, 210, 173 topics) reusing Algebra I, Geometry and Algebra II topics |
 | Integrated Math I, II, III (Honors) | Prealgebra | done | | Assigned slot **E**. 3 courses (223, 330, 278 topics) providing an accelerated integrated pathway |
