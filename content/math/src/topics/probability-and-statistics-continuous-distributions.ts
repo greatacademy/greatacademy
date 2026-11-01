@@ -586,7 +586,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
           "对于 X ~ Exp(λ)，E[X^2] = Var(X) + (E[X])^2 = 1/λ^2 + 1/λ^2 = 2/λ^2。",
         ),
         generate: (rng: Rng): Problem => {
-          const lambda = rng.int(1, 20);
+          const lambda = rng.int(1, 50);
           const den = lambda * lambda;
 
           return numberProblem({
