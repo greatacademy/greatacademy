@@ -49,8 +49,8 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Integrated Math I, II, III | Prealgebra | open | | Assigned slot **E**. Mostly course definitions that reuse Algebra I, Geometry and Algebra II topics |
 | Integrated Math I, II, III (Honors) | Prealgebra | open | | Slot **E** after the standard Integrated courses |
 | Mathematical Foundations I, II, III | — | open | | Slot **E** later. Mostly reuse; III needs Calculus I topics, which are done |
-| AP Calculus AB, AP Calculus BC | Calculus I, Calculus II | open | | After Calculus II: course definitions plus the few AP-only topics |
-| Multivariable Calculus | Linear Algebra | blocked | | |
+| AP Calculus AB, AP Calculus BC | Calculus I, Calculus II | in progress | antigravity | After Calculus II: course definitions plus the few AP-only topics |
+| Multivariable Calculus | Linear Algebra | open | | |
 | Differential Equations | Multivariable Calculus | blocked | | Calculus II unit 5 covers the first-order topics |
 | Probability & Statistics | Multivariable Calculus | blocked | | |
 | Mathematics for Machine Learning | Calculus II, Linear Algebra | blocked | | |
