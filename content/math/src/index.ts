@@ -57,6 +57,7 @@ import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
 import { discreteMathematicsBooleanTopics } from "./topics/discrete-mathematics-boolean.ts";
+import { discreteMathematicsNumberTheoryTopics } from "./topics/discrete-mathematics-number-theory.ts";
 import { equationTopics } from "./topics/equations.ts";
 import { exponentialFunctionTopics } from "./topics/exponential-functions.ts";
 import { exponentTopics } from "./topics/exponents.ts";
@@ -249,6 +250,7 @@ export const math: SubjectDef = {
     ...methodsOfProofCongruenceTopics,
     ...methodsOfProofRelationTopics,
     ...discreteMathematicsBooleanTopics,
+    ...discreteMathematicsNumberTheoryTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
