@@ -104,6 +104,8 @@ import { grade4FractionTopics } from "./topics/grade-4-fractions.ts";
 import { grade4MeasurementTopics } from "./topics/grade-4-measurement.ts";
 import { grade4OperationTopics } from "./topics/grade-4-operations.ts";
 import { grade4WholeNumberTopics } from "./topics/grade-4-whole-numbers.ts";
+import { grade5FractionTopics } from "./topics/grade-5-fractions.ts";
+import { grade5WholeNumberTopics } from "./topics/grade-5-whole-numbers.ts";
 import { grade6to8FoundationTopics } from "./topics/grade-6-8-foundations.ts";
 import { inequalityTopics } from "./topics/inequalities.ts";
 import { integerTopics } from "./topics/integers.ts";
@@ -183,6 +185,8 @@ export const math: SubjectDef = {
     ...grade4FractionTopics,
     ...grade4MeasurementTopics,
     ...grade4OperationTopics,
+    ...grade5WholeNumberTopics,
+    ...grade5FractionTopics,
     ...numberTheoryTopics,
     ...fractionTopics,
     ...decimalAndPercentTopics,

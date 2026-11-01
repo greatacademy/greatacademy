@@ -8,23 +8,23 @@ import { wordsEn, wordsZh } from "./grade-4-whole-numbers.ts";
 // 4th Grade Math: fractions, mixed numbers, equivalent fractions, comparing, adding and multiplying fractions, and decimals.
 
 /** fr writes n/d in LaTeX exactly as given, without reducing it. */
-const fr = (n: number | string, d: number | string) => `\\frac{${n}}{${d}}`;
+export const fr = (n: number | string, d: number | string) => `\\frac{${n}}{${d}}`;
 
 /** mx writes a mixed number w r/d in LaTeX. */
-const mx = (w: number, r: number, d: number) => (r === 0 ? `${w}` : w === 0 ? fr(r, d) : `${w}${fr(r, d)}`);
+export const mx = (w: number, r: number, d: number) => (r === 0 ? `${w}` : w === 0 ? fr(r, d) : `${w}${fr(r, d)}`);
 
 /** qf is the rational number n/d. */
 const qf = (n: number, d: number) => Q.of(n, d);
 
 /** coprimeTo draws a numerator in [lo, hi] with no common factor with d. */
-function coprimeTo(rng: Rng, d: number, lo: number, hi: number): number {
+export function coprimeTo(rng: Rng, d: number, lo: number, hi: number): number {
   const options: number[] = [];
   for (let n = lo; n <= hi; n++) if (gcd(n, d) === 1) options.push(n);
   return rng.pick(options);
 }
 
 /** properFraction draws n/d in lowest terms with 0 < n < d and d in [2, maxDen]. */
-function properFraction(rng: Rng, maxDen = 12, minDen = 2): [number, number] {
+export function properFraction(rng: Rng, maxDen = 12, minDen = 2): [number, number] {
   const d = rng.int(minDen, maxDen);
   return [coprimeTo(rng, d, 1, d - 1), d];
 }
@@ -44,7 +44,7 @@ const relationOptions: readonly Text[] = symbols.map((s) => same(`$${s}$`));
 const relation = (a: Q, b: Q) => a.cmp(b) + 1;
 
 /** compareProblem asks which symbol goes between two LaTeX expressions. */
-function compareProblem(a: string, b: string, rel: number, solution: Text, figure?: Figure): Problem {
+export function compareProblem(a: string, b: string, rel: number, solution: Text, figure?: Figure): Problem {
   return {
     ...choiceProblem({
       prompt: t(`Which symbol makes this true? $$${a} \\ \\square \\ ${b}$$`, `方框中应填哪个符号？$$${a} \\ \\square \\ ${b}$$`),
@@ -57,7 +57,7 @@ function compareProblem(a: string, b: string, rel: number, solution: Text, figur
 }
 
 /** pickChoice builds a choice problem from a correct option and distinct wrong ones, keeping at most three wrong ones. */
-function pickChoice(rng: Rng, prompt: Text, correct: Text, wrong: readonly Text[], solution: Text, figure?: Figure): Problem {
+export function pickChoice(rng: Rng, prompt: Text, correct: Text, wrong: readonly Text[], solution: Text, figure?: Figure): Problem {
   const seen = new Set([correct.en]);
   const rest = wrong.filter((w) => !seen.has(w.en) && Boolean(seen.add(w.en))).slice(0, 3);
   const options = rng.shuffle([correct, ...rest]);
@@ -65,7 +65,7 @@ function pickChoice(rng: Rng, prompt: Text, correct: Text, wrong: readonly Text[
 }
 
 /** mathText is a choice option made of one LaTeX expression. */
-const mathText = (s: string): Text => same(`$${s}$`);
+export const mathText = (s: string): Text => same(`$${s}$`);
 
 // ---------------------------------------------------------------------------
 // Words for fractions
@@ -119,7 +119,7 @@ function barsSvg(d: number, shaded: number, count: number, rowsPerBar = 1): stri
 const round = (x: number) => Math.round(x * 100) / 100;
 
 /** barFigure is a figure of bars with an alt text. */
-function barFigure(d: number, shaded: number, count = 1): Figure {
+export function barFigure(d: number, shaded: number, count = 1): Figure {
   return {
     svg: barsSvg(d, shaded, count),
     alt: t(
@@ -130,7 +130,7 @@ function barFigure(d: number, shaded: number, count = 1): Figure {
 }
 
 /** twoBarsFigure stacks a bar cut into d1 parts with s1 shaded over a bar of the same size cut into d2 parts with s2 shaded. */
-function twoBarsFigure(d1: number, s1: number, d2: number, s2: number): Figure {
+export function twoBarsFigure(d1: number, s1: number, d2: number, s2: number): Figure {
   const w = 280;
   const h = 26;
   let body = "";
