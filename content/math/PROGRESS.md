@@ -53,7 +53,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Multivariable Calculus | Linear Algebra | done | | 6 units, 187 topics |
 | Differential Equations | Multivariable Calculus | done | | 7 units, 159 topics (24 reused, 135 new) |
 | Probability & Statistics | Multivariable Calculus | done | | 10 units, 181 topics (53 reused, 128 new) |
-| Mathematics for Machine Learning | Calculus II, Linear Algebra | open | | |
+| Mathematics for Machine Learning | Calculus II, Linear Algebra | in progress | antigravity | |
 | Mathematical Methods for the Physical Sciences I, II | Calculus II | open | | |
 | Abstract Algebra | Methods of Proof, Linear Algebra | in progress | claude-main | |
 | SAT Math Fundamentals, SAT Math Prep | Algebra II | open | | Low priority: almost entirely reuse; do after the courses above |
