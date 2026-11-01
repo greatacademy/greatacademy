@@ -4306,6 +4306,308 @@ export const methodsOfProof: CourseDef = {
   ],
 };
 
+/** discreteMathematics is the university course on Boolean algebra, number theory, probability, recursion, graphs and the theory of algorithms. */
+export const discreteMathematics: CourseDef = {
+  id: "discrete-mathematics",
+  title: t("Discrete Mathematics", "离散数学"),
+  description: t(
+    "Boolean functions, normal forms, Karnaugh maps, Post's functional completeness theorem and logic circuits; numbers in different bases, Fermat's and Euler's theorems and cryptography; discrete random variables and distributions, Bayes' theorem and combinatorics; finite and geometric series and the binomial theorem; recurrence relations and generating functions; graphs, trees, matrix representations of graphs and graph algorithms; and finite-state machines, Turing machines and asymptotic notation.",
+    "布尔函数、范式、卡诺图、Post 函数完备性定理与逻辑电路；不同进制的数、费马定理与欧拉定理以及密码学；离散随机变量及其分布、贝叶斯定理与组合学；有限级数、几何级数与二项式定理；递推关系与生成函数；图、树、图的矩阵表示与图算法；以及有限状态机、图灵机与渐近记号。",
+  ),
+  units: [
+    {
+      title: t("Preliminaries", "预备知识"),
+      modules: [
+        {
+          title: t("Matrices", "矩阵"),
+          topics: [
+            "systems-of-equations-as-augmented-matrices",
+            "row-echelon-form",
+            "solving-systems-of-equations-using-back-substitution",
+            "symmetric-matrices",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Boolean Algebra", "布尔代数"),
+      modules: [
+        {
+          title: t("Boolean Functions", "布尔函数"),
+          topics: [
+            "boolean-functions",
+            "boolean-functions-and-logical-operations",
+            "disjunctive-normal-forms",
+            "principal-disjunctive-normal-forms",
+            "conjunctive-normal-forms",
+            "principal-conjunctive-normal-forms",
+            "boolean-polynomials",
+            "simplifying-logical-expressions-using-karnaugh-maps",
+          ],
+        },
+        {
+          title: t("Classes of Boolean Functions", "布尔函数类"),
+          topics: [
+            "truth-preserving-boolean-functions",
+            "self-dual-boolean-functions",
+            "monotonic-boolean-functions",
+            "affine-boolean-functions",
+            "functionally-complete-sets",
+            "posts-functional-completeness-theorem",
+          ],
+        },
+        {
+          title: t("Logic Circuits", "逻辑电路"),
+          topics: ["introduction-to-logic-circuits", "logic-gates-and-combinational-circuits", "simplifying-logic-circuits"],
+        },
+      ],
+    },
+    {
+      title: t("Number Theory", "数论"),
+      modules: [
+        {
+          title: t("Numbers in Different Bases", "不同进制的数"),
+          topics: [
+            "binary-integers",
+            "adding-and-subtracting-binary-integers",
+            "multiplying-and-dividing-binary-integers",
+            "binary-fractions",
+            "hexadecimal-integers",
+            "converting-between-binary-and-hexadecimal-integers",
+            "integers-in-arbitrary-bases",
+            "fractions-in-arbitrary-bases",
+          ],
+        },
+        {
+          title: t("Fermat and Euler's Theorems", "费马定理与欧拉定理"),
+          topics: ["fermats-little-theorem", "eulers-totient-function", "eulers-theorem"],
+        },
+        {
+          title: t("Cryptography", "密码学"),
+          topics: ["introduction-to-cryptography", "the-linear-cipher", "the-diffie-hellman-protocol", "the-rsa-cryptosystem"],
+        },
+      ],
+    },
+    {
+      title: t("Probability and Combinatorics", "概率与组合"),
+      modules: [
+        {
+          title: t("Discrete Random Variables", "离散随机变量"),
+          topics: [
+            "probability-mass-functions-of-discrete-random-variables",
+            "cumulative-distribution-functions-for-discrete-random-variables",
+            "one-to-one-transformations-of-discrete-random-variables",
+            "many-to-one-transformations-of-discrete-random-variables",
+            "expected-values-of-discrete-random-variables",
+            "properties-of-expectation-for-discrete-random-variables",
+            "variance-of-discrete-random-variables",
+            "moments-of-discrete-random-variables",
+            "properties-of-variance-for-discrete-random-variables",
+          ],
+        },
+        {
+          title: t("The Discrete Uniform Distribution", "离散均匀分布"),
+          topics: [
+            "the-discrete-uniform-distribution",
+            "mean-and-variance-of-the-discrete-uniform-distribution",
+            "modeling-with-discrete-uniform-distributions",
+          ],
+        },
+        {
+          title: t("The Bernoulli Distribution", "伯努利分布"),
+          topics: ["the-bernoulli-distribution", "mean-and-variance-of-the-bernoulli-distribution"],
+        },
+        {
+          title: t("The Binomial Distribution", "二项分布"),
+          topics: [
+            "the-binomial-distribution",
+            "modeling-with-the-binomial-distribution",
+            "mean-and-variance-of-the-binomial-distribution",
+          ],
+        },
+        {
+          title: t("The Poisson Distribution", "泊松分布"),
+          topics: [
+            "the-poisson-distribution",
+            "modeling-with-the-poisson-distribution",
+            "mean-and-variance-of-the-poisson-distribution",
+            "the-poisson-approximation-of-the-binomial-distribution",
+          ],
+        },
+        {
+          title: t("The Geometric Distribution", "几何分布"),
+          topics: [
+            "the-geometric-distribution",
+            "modeling-with-the-geometric-distribution",
+            "mean-and-variance-of-the-geometric-distribution",
+          ],
+        },
+        {
+          title: t("The Negative Binomial Distribution", "负二项分布"),
+          topics: ["the-negative-binomial-distribution", "modeling-with-the-negative-binomial-distribution"],
+        },
+        {
+          title: t("The Hypergeometric Distribution", "超几何分布"),
+          topics: ["the-hypergeometric-distribution", "the-pmf-of-the-hypergeometric-distribution"],
+        },
+        {
+          title: t("Bayes' Theorem", "贝叶斯定理"),
+          topics: ["the-law-of-total-probability", "extending-the-law-of-total-probability", "bayes-theorem", "extending-bayes-theorem"],
+        },
+        {
+          title: t("Combinatorics", "组合学"),
+          topics: [
+            "permutations-with-repetition",
+            "k-permutations-of-n-with-repetition",
+            "combinations-with-repetition",
+            "the-inclusion-exclusion-principle",
+            "counting-integer-solutions-of-a-constrained-equation",
+            "partitions-of-natural-numbers",
+            "the-pigeonhole-principle",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Sequences", "数列"),
+      modules: [
+        {
+          title: t("Finite Series", "有限级数"),
+          topics: ["finite-linear-series", "finite-quadratic-series", "finite-cubic-series"],
+        },
+        {
+          title: t("Geometric Series", "几何级数"),
+          topics: [
+            "infinite-series-and-partial-sums",
+            "convergent-and-divergent-infinite-series",
+            "finding-the-sum-of-an-infinite-geometric-series",
+            "writing-an-infinite-geometric-series-in-sigma-notation",
+            "sums-of-infinite-geometric-series-given-in-sigma-notation",
+          ],
+        },
+        {
+          title: t("The Binomial Theorem", "二项式定理"),
+          topics: [
+            "the-generalized-binomial-theorem",
+            "working-with-the-generalized-binomial-theorem",
+            "determining-ranges-of-validity-for-generalized-binomial-expansions",
+            "approximating-values-using-the-generalized-binomial-theorem",
+            "the-multinomial-theorem",
+            "counting-terms-in-multinomial-expansions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Recursion", "递归"),
+      modules: [
+        {
+          title: t("Recurrence Relations", "递推关系"),
+          topics: [
+            "introduction-to-recurrence-relations",
+            "first-order-recurrence-relations",
+            "first-order-recurrence-relations-with-polynomial-forcing",
+            "first-order-recurrence-relations-with-exponential-forcing",
+          ],
+        },
+        {
+          title: t("Second-Order Recurrence Relations", "二阶递推关系"),
+          topics: [
+            "second-order-homogeneous-recurrence-relations-with-distinct-real-roots",
+            "second-order-homogeneous-recurrence-relations-with-repeated-roots",
+            "second-order-homogeneous-recurrence-relations-with-complex-roots",
+            "second-order-recurrence-relations-with-polynomial-forcing",
+            "second-order-recurrence-relations-with-exponential-forcing",
+          ],
+        },
+        {
+          title: t("Generating Functions", "生成函数"),
+          topics: [
+            "generating-functions",
+            "generating-functions-of-homogeneous-recurrence-relations",
+            "determining-the-general-term-of-a-sequence-from-its-generating-function",
+            "solving-homogeneous-recurrence-relations-using-generating-functions",
+            "generating-functions-for-inhomogeneous-recurrence-relations",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Graph Theory", "图论"),
+      modules: [
+        {
+          title: t("Introduction to Graph Theory", "图论入门"),
+          topics: [
+            "introduction-to-graphs",
+            "walks-trails-paths-and-distances",
+            "walks-paths-and-distances-in-directed-graphs",
+            "the-degree-of-a-vertex",
+            "the-handshaking-lemma",
+            "subgraphs-and-graph-complements",
+            "complete-and-bipartite-graphs",
+            "regular-graphs",
+            "planar-graphs",
+          ],
+        },
+        {
+          title: t("Connectivity in Graphs", "图的连通性"),
+          topics: ["cycles-in-graphs", "connected-graphs", "cut-vertices-and-cut-edges"],
+        },
+        {
+          title: t("Trees", "树"),
+          topics: ["trees-and-forests", "counting-trees"],
+        },
+        {
+          title: t("Matrix Representations of Graphs", "图的矩阵表示"),
+          topics: ["incidence-matrices", "adjacency-matrices", "adjacency-matrices-of-directed-graphs", "distance-matrices"],
+        },
+        {
+          title: t("DAGs and Topological Ordering", "有向无环图与拓扑排序"),
+          topics: ["directed-acyclic-graphs", "topological-ordering", "kahns-algorithm"],
+        },
+        {
+          title: t("Algorithms on Graphs", "图算法"),
+          topics: [
+            "breadth-first-search",
+            "kruskals-algorithm",
+            "prims-algorithm",
+            "applying-prims-algorithm-to-a-distance-matrix",
+            "shortest-paths-in-unweighted-graphs",
+            "dijkstras-algorithm",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("The Theory of Algorithms", "算法理论"),
+      modules: [
+        {
+          title: t("Finite-State Transducers", "有限状态转换器"),
+          topics: ["mealy-machines", "moore-machines"],
+        },
+        {
+          title: t("Finite-State Acceptors", "有限状态接受器"),
+          topics: [
+            "deterministic-finite-automata",
+            "processing-strings-using-deterministic-finite-automata",
+            "nondeterministic-finite-automata",
+            "the-language-of-automata",
+            "regular-expressions",
+          ],
+        },
+        {
+          title: t("Turing Machines", "图灵机"),
+          topics: ["introduction-to-turing-machines", "processing-strings-using-turing-machines", "nondeterministic-turing-machines"],
+        },
+        {
+          title: t("Algorithmic Complexity", "算法复杂度"),
+          topics: ["big-o-notation", "big-omega-notation", "big-theta-notation"],
+        },
+      ],
+    },
+  ],
+};
+
 /** integratedMathI is the high-school integrated mathematics course. */
 export const integratedMathI: CourseDef = {
   id: "integrated-math-i",
@@ -9151,6 +9453,7 @@ export const mathCourses: readonly CourseDef[] = [
   apCalculusAB,
   apCalculusBC,
   methodsOfProof,
+  discreteMathematics,
   integratedMathI,
   integratedMathII,
   integratedMathIII,
