@@ -6996,6 +6996,438 @@ export const integratedMathIIIHonors: CourseDef = {
   ],
 };
 
+/** mathematicalFoundationsI is the Mathematical Foundations I course. */
+export const mathematicalFoundationsI: CourseDef = {
+  id: "mathematical-foundations-i",
+  title: t("Mathematical Foundations I", "数学基础 I"),
+  description: t(
+    "Mathematical Foundations I develops numerical fluency, algebraic reasoning, and geometric fundamentals for adult learners returning to mathematics, covering integers, fractions, decimals, ratios, linear equations and inequalities, graphs of lines, systems of linear equations, units, polynomials, radical and rational expressions, functions, absolute value, exponential functions, and introductory geometry.",
+    "数学基础 I 为重返数学学习的成年学习者培养数感运算能力、代数推理与几何基础，涵盖整数、分数、小数、比例、一次方程与不等式、直线图象、线性方程组、单位、多项式、根式与分式、函数、绝对值、指数函数以及初等几何。",
+  ),
+  units: [
+    {
+      title: t("The Number System", "数系"),
+      modules: [
+        {
+          title: t("Number Theory", "数论初步"),
+          topics: [
+            "divisibility-rules",
+            "prime-and-composite-numbers",
+            "prime-factorization",
+            "greatest-common-factor",
+            "least-common-multiple",
+          ],
+        },
+        {
+          title: t("Integers", "整数"),
+          topics: [
+            "integers-and-opposites",
+            "absolute-value",
+            "adding-integers",
+            "subtracting-integers",
+            "multiplying-integers",
+            "dividing-integers",
+            "powers-of-integers",
+            "order-of-operations-with-integers",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Fractions", "分数"),
+      modules: [
+        {
+          title: t("Adding and Subtracting Fractions", "分数的加减法"),
+          topics: ["equivalent-fractions", "adding-and-subtracting-fractions", "mixed-numbers"],
+        },
+        {
+          title: t("Multiplying and Dividing Fractions", "分数的乘除法"),
+          topics: ["multiplying-fractions", "dividing-fractions"],
+        },
+      ],
+    },
+    {
+      title: t("Decimals and Proportions", "小数与比例"),
+      modules: [
+        {
+          title: t("Rational Numbers", "有理数"),
+          topics: ["operations-with-rational-numbers"],
+        },
+        {
+          title: t("Decimals", "小数"),
+          topics: ["fractions-and-decimals", "decimal-arithmetic"],
+        },
+        {
+          title: t("Ratios and Rates", "比与率"),
+          topics: ["ratios", "unit-rates"],
+        },
+        {
+          title: t("Percentages", "百分数"),
+          topics: ["percents", "percent-of-a-number", "percent-change"],
+        },
+      ],
+    },
+    {
+      title: t("Exponents & Radicals", "指数与根式"),
+      modules: [
+        {
+          title: t("Algebraic Expressions", "代数式"),
+          topics: ["evaluating-expressions", "combining-like-terms", "distributive-property", "simplifying-expressions"],
+        },
+        {
+          title: t("Exponents", "指数"),
+          topics: ["powers-of-rational-numbers", "zero-and-negative-exponents", "product-and-quotient-rules", "power-rules"],
+        },
+        {
+          title: t("Scientific Notation", "科学记数法"),
+          topics: ["scientific-notation", "operations-in-scientific-notation"],
+        },
+        {
+          title: t("Radicals", "根式"),
+          topics: [
+            "square-roots-and-cube-roots",
+            "simplifying-square-roots",
+            "adding-and-subtracting-radicals",
+            "rationalizing-denominators",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Equations & Inequalities", "方程与不等式"),
+      modules: [
+        {
+          title: t("Solving Linear Equations", "一元一次方程"),
+          topics: [
+            "one-step-equations-addition",
+            "one-step-equations-multiplication",
+            "two-step-equations",
+            "equations-with-variables-on-both-sides",
+            "equations-with-parentheses",
+            "linear-equations-with-unknown-coefficients",
+            "unknown-coefficients-by-factoring",
+            "many-variable-equations",
+            "rearranging-formulas",
+          ],
+        },
+        {
+          title: t("Proportions and Variation", "比例与变量关系"),
+          topics: ["proportions", "direct-variation", "inverse-variation"],
+        },
+        {
+          title: t("Modeling With Linear Equations", "用一次方程建模"),
+          topics: [
+            "interpreting-linear-expressions",
+            "modeling-with-linear-equations",
+            "consecutive-integer-problems",
+            "speed-distance-time",
+            "further-speed-distance-time",
+            "work-problems",
+            "mixture-problems",
+          ],
+        },
+        {
+          title: t("Linear Inequalities", "一次不等式"),
+          topics: [
+            "inequalities-and-solutions",
+            "solving-one-step-inequalities",
+            "solving-multi-step-inequalities",
+            "linear-inequalities-with-parameters",
+            "solving-compound-inequalities",
+            "interval-notation",
+            "unbounded-intervals",
+            "unions-of-intervals",
+            "intersections-of-intervals",
+            "compound-or-inequalities",
+            "compound-and-inequalities",
+          ],
+        },
+        {
+          title: t("Modeling With Inequalities", "用不等式建模"),
+          topics: [
+            "introduction-to-modeling-with-inequalities",
+            "modeling-with-one-step-inequalities",
+            "modeling-with-two-step-inequalities",
+            "modeling-with-compound-inequalities",
+          ],
+        },
+        {
+          title: t("Nonlinear Equations", "非线性方程"),
+          topics: ["solving-equations-with-square-roots", "solving-odd-power-equations", "solving-even-power-equations"],
+        },
+      ],
+    },
+    {
+      title: t("Two-Variable Equations", "二元方程"),
+      modules: [
+        {
+          title: t("Graphs of Linear Equations", "直线图像"),
+          topics: [
+            "the-coordinate-plane",
+            "slope-of-a-line",
+            "slope-intercept-form",
+            "properties-of-lines-in-slope-intercept-form",
+            "point-slope-form",
+            "standard-form",
+            "properties-of-lines-in-standard-form",
+            "parallel-lines-in-the-coordinate-plane",
+            "perpendicular-lines-in-the-coordinate-plane",
+          ],
+        },
+        {
+          title: t("Modeling With Linear Equations and Graphs", "一次方程与图像建模"),
+          topics: [
+            "modeling-with-two-variable-linear-equations",
+            "modeling-totals-with-two-variable-equations",
+            "analyzing-graphs-of-linear-models",
+            "further-modeling-with-two-variable-equations",
+            "distance-time-graphs",
+            "speed-time-graphs",
+          ],
+        },
+        {
+          title: t("Systems of Linear Equations", "二元一次方程组"),
+          topics: [
+            "systems-of-linear-equations",
+            "introduction-to-elimination",
+            "elimination-with-one-transformation",
+            "elimination-with-two-transformations",
+            "systems-with-fractional-coefficients",
+            "systems-with-decimal-coefficients",
+            "systems-with-no-solution-or-infinitely-many-solutions",
+            "consistency-and-dependency",
+            "solving-systems-by-substitution",
+            "intersection-of-two-lines",
+            "modeling-with-systems",
+            "coin-problems",
+          ],
+        },
+        {
+          title: t("Two-Variable Linear Inequalities", "二元一次不等式"),
+          topics: [
+            "graphing-strict-linear-inequalities",
+            "graphing-non-strict-linear-inequalities",
+            "further-graphing-linear-inequalities",
+            "systems-of-linear-inequalities",
+            "modeling-with-two-variable-inequalities",
+            "modeling-with-systems-of-inequalities",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Geometry Fundamentals", "几何基础"),
+      modules: [
+        {
+          title: t("Angles", "角"),
+          topics: [
+            "angles-and-angle-measures",
+            "complementary-and-supplementary-angles",
+            "vertical-angles",
+            "parallel-lines-and-transversals",
+          ],
+        },
+        {
+          title: t("Triangles and Polygons", "三角形与多边形"),
+          topics: [
+            "classifying-triangles",
+            "angles-of-a-triangle",
+            "exterior-angles-of-triangles",
+            "isosceles-triangles",
+            "angles-of-polygons",
+            "the-pythagorean-theorem",
+          ],
+        },
+        {
+          title: t("Perimeter and Area", "周长与面积"),
+          topics: [
+            "perimeter",
+            "area-of-rectangles-and-squares",
+            "area-of-parallelograms",
+            "area-of-triangles",
+            "area-of-trapezoids",
+            "composite-shapes",
+          ],
+        },
+        {
+          title: t("Circles", "圆"),
+          topics: ["circles", "the-circumference-of-a-circle", "areas-of-circles"],
+        },
+      ],
+    },
+    {
+      title: t("Units", "单位"),
+      modules: [
+        {
+          title: t("Unit Conversions", "单位换算"),
+          topics: [
+            "metric-units-of-mass",
+            "metric-units-of-length",
+            "two-step-unit-conversions",
+            "units-of-time",
+            "mixed-units",
+            "converting-units-of-area",
+            "units-in-formulas",
+            "units-of-rates-of-change",
+            "degrees-of-accuracy",
+            "distance-from-speed-time-graphs",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Polynomials", "多项式"),
+      modules: [
+        {
+          title: t("Polynomials", "多项式"),
+          topics: [
+            "introduction-to-polynomials",
+            "degree-of-a-polynomial",
+            "simplifying-polynomials",
+            "distributive-law-for-polynomials",
+            "adding-and-subtracting-polynomials",
+            "monomials-binomials-and-trinomials",
+            "multiplying-binomials",
+            "multiplying-polynomials",
+            "squaring-binomials",
+            "expanding-binomials-using-pascals-triangle",
+            "difference-of-squares-formula",
+          ],
+        },
+        {
+          title: t("Factoring Polynomials", "多项式因式分解"),
+          topics: [
+            "greatest-common-factor-of-monomials",
+            "factoring-polynomials-using-gcfs",
+            "factoring-perfect-square-trinomials",
+            "factoring-perfect-square-trinomials-with-leading-coefficients",
+            "factoring-differences-of-squares",
+            "factoring-trinomials",
+            "factoring-trinomials-using-common-factors",
+            "factoring-trinomials-with-leading-coefficients",
+            "further-factoring-trinomials-with-leading-coefficients",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Radical & Rational Expressions", "根式与分式"),
+      modules: [
+        {
+          title: t("Radical Expressions", "根式"),
+          topics: [
+            "square-roots-of-algebraic-perfect-squares",
+            "square-roots-with-domain-restrictions",
+            "cube-roots-of-algebraic-perfect-cubes",
+            "writing-radicals-using-fractional-exponents",
+            "simplifying-square-roots-with-variables",
+            "quotient-rule-for-square-roots",
+            "multiplying-radical-expressions",
+            "evaluating-radical-expressions",
+            "adding-and-subtracting-radical-expressions",
+          ],
+        },
+        {
+          title: t("Rational Expressions", "分式"),
+          topics: [
+            "equivalent-expressions-with-fractions",
+            "simplifying-rational-expressions",
+            "simplifying-rational-expressions-by-factoring",
+            "splitting-rational-expressions-into-terms",
+          ],
+        },
+        {
+          title: t("Rational Equations", "分式方程"),
+          topics: [
+            "rational-equations-with-one-fractional-term",
+            "rational-equations-using-cross-multiplication",
+            "rational-equations-containing-binomials",
+            "rational-equations-using-the-flip-method",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Functions", "函数"),
+      modules: [
+        {
+          title: t("Functions", "函数"),
+          topics: [
+            "introduction-to-functions",
+            "representations-of-functions",
+            "graphs-of-functions",
+            "domain-of-a-function",
+            "global-extrema",
+            "end-behavior",
+            "range-of-a-function",
+            "range-advanced-cases",
+            "roots-of-a-function",
+            "increasing-and-decreasing",
+            "piecewise-functions",
+            "modeling-with-linear-functions",
+            "constructing-linear-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Absolute Value", "绝对值"),
+      modules: [
+        {
+          title: t("Absolute Value Expressions, Equations & Inequalities", "绝对值代数式、方程与不等式"),
+          topics: [
+            "absolute-value-expressions",
+            "rules-of-absolute-value",
+            "further-rules-of-absolute-value",
+            "absolute-value-equations",
+            "further-absolute-value-equations",
+            "absolute-value-inequalities",
+            "absolute-value-graphs",
+            "vertical-reflections-of-absolute-value-graphs",
+            "stretches-of-absolute-value-graphs",
+            "combining-transformations-of-absolute-value-graphs",
+            "domain-and-range-of-absolute-value-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Exponential Functions", "指数函数"),
+      modules: [
+        {
+          title: t("Rules of Exponents", "指数法则"),
+          topics: [
+            "product-rule-with-algebraic-expressions",
+            "quotient-rule-with-algebraic-expressions",
+            "power-rule-with-algebraic-expressions",
+            "power-of-product-rule-with-algebraic-expressions",
+            "power-of-quotient-rule-with-algebraic-expressions",
+            "combining-rules-of-exponents-with-algebraic-expressions",
+          ],
+        },
+        {
+          title: t("Exponential Expressions and Equations", "指数式与指数方程"),
+          topics: ["solving-exponential-equations", "creating-exponential-growth-expressions", "creating-exponential-decay-expressions"],
+        },
+        {
+          title: t("Exponential Functions", "指数函数"),
+          topics: [
+            "exponential-functions",
+            "modeling-exponential-growth-with-functions",
+            "interpreting-exponential-growth",
+            "solving-exponential-growth-problems",
+            "modeling-exponential-decay-with-functions",
+            "interpreting-exponential-decay",
+            "solving-exponential-decay-problems",
+            "graphing-exponential-growth-functions",
+            "graphing-exponential-decay-functions",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathematicalFoundationsII is the Mathematical Foundations II course. */
 export const mathematicalFoundationsII: CourseDef = {
   id: "mathematical-foundations-ii",
@@ -8350,6 +8782,7 @@ export const mathCourses: readonly CourseDef[] = [
   integratedMathIHonors,
   integratedMathIIHonors,
   integratedMathIIIHonors,
+  mathematicalFoundationsI,
   mathematicalFoundationsII,
   mathematicalFoundationsIII,
 ];

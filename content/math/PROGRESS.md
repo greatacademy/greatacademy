@@ -48,7 +48,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | 6th, 7th and 8th Grade Math | 5th Grade Math (outline) | open | | Assigned slot **D**. Mostly reuse Prealgebra and Algebra I topics; can start alongside slot C, and request missing grade 4–5 topics from C |
 | Integrated Math I, II, III | Prealgebra | done | | Assigned slot **E**. 3 courses (197, 210, 173 topics) reusing Algebra I, Geometry and Algebra II topics |
 | Integrated Math I, II, III (Honors) | Prealgebra | done | | Assigned slot **E**. 3 courses (223, 330, 278 topics) providing an accelerated integrated pathway |
-| Mathematical Foundations I, II, III | — | in progress | antigravity | Assigned slot **E**. MF II (350 topics) and MF III (323 topics) done; MF I (357 topics) awaits elementary topics from Slots C & D |
+| Mathematical Foundations I, II, III | — | done | | Assigned slot **E**. 3 courses (218, 350, 323 topics) for adult foundational and calculus preparation |
 | AP Calculus AB, AP Calculus BC | Calculus I, Calculus II | done | | 9 units (212 topics) and 16 units (305 topics) (revision complete) |
 | Multivariable Calculus | Linear Algebra | open | | |
 | Differential Equations | Multivariable Calculus | blocked | | Calculus II unit 5 covers the first-order topics |
