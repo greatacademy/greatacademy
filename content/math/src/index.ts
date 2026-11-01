@@ -97,6 +97,7 @@ import { methodsOfProofPredicateTopics } from "./topics/methods-of-proof-predica
 import { methodsOfProofProofTopics } from "./topics/methods-of-proof-proofs.ts";
 import { methodsOfProofRelationTopics } from "./topics/methods-of-proof-relations.ts";
 import { methodsOfProofSetTopics } from "./topics/methods-of-proof-sets.ts";
+import { multivariableCalculusMultipleIntegralTopics } from "./topics/multivariable-calculus-multiple-integrals.ts";
 import { multivariableCalculusMultivariableFunctionTopics } from "./topics/multivariable-calculus-multivariable-functions.ts";
 import { multivariableCalculusVectorFunctionTopics } from "./topics/multivariable-calculus-vector-functions.ts";
 import { numberTheoryTopics } from "./topics/number-theory.ts";
@@ -257,6 +258,7 @@ export const math: SubjectDef = {
     ...discreteMathematicsRandomVariableTopics,
     ...multivariableCalculusVectorFunctionTopics,
     ...multivariableCalculusMultivariableFunctionTopics,
+    ...multivariableCalculusMultipleIntegralTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
