@@ -139,6 +139,7 @@ import { precalculusVector2DTopics } from "./topics/precalculus-vectors-2d.ts";
 import { precalculusVector3DTopics } from "./topics/precalculus-vectors-3d.ts";
 import { probabilityTopics } from "./topics/probability.ts";
 import { probabilityAndStatisticsCombiningVariablesTopics } from "./topics/probability-and-statistics-combining-variables.ts";
+import { probabilityAndStatisticsConfidenceIntervalTopics } from "./topics/probability-and-statistics-confidence-intervals.ts";
 import { probabilityAndStatisticsContinuousDistributionTopics } from "./topics/probability-and-statistics-continuous-distributions.ts";
 import { probabilityAndStatisticsDiscreteDistributionTopics } from "./topics/probability-and-statistics-discrete-distributions.ts";
 import { probabilityAndStatisticsExpectationTopics } from "./topics/probability-and-statistics-expectation.ts";
@@ -311,6 +312,7 @@ export const math: SubjectDef = {
     ...probabilityAndStatisticsContinuousDistributionTopics,
     ...probabilityAndStatisticsCombiningVariablesTopics,
     ...probabilityAndStatisticsParametricInferenceTopics,
+    ...probabilityAndStatisticsConfidenceIntervalTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
