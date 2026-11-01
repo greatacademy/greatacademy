@@ -2,7 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, Q } from "@ga/subject-math";
 
-import { choiceProblem, steps } from "../problems.ts";
+import { choiceProblem, equationProblem, numberProblem, pointProblem, radicalProblem, steps } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers for Conic Sections
@@ -158,17 +158,18 @@ export const introductionToEllipses: TopicDef = {
         const sumDist = 2 * a;
         const d1 = rng.int(2, sumDist - 2);
         const d2 = sumDist - d1;
-        const prompt = t(
-          `An ellipse is defined such that the sum of the distances from any point on it to the two foci $F_{1}$ and $F_{2}$ is $${sumDist}$. If a point $P$ lies on this ellipse and $PF_{1} = ${d1}$, what is the distance $PF_{2}$?`,
-          `已知椭圆上任意一点到两个焦点 $F_{1}$ 和 $F_{2}$ 的距离之和为 $${sumDist}$。如果点 $P$ 在该椭圆上且 $PF_{1} = ${d1}$，那么距离 $PF_{2}$ 是多少？`,
-        );
-        const correct = `${d2}`;
-        const distractors = [`${d1}`, `${sumDist + d1}`, `${Math.abs(a - d1) || a + 1}`, `${sumDist}`, `${d2 + 2}`];
-        const solution = t(
-          `By the definition of an ellipse, $PF_{1} + PF_{2} = ${sumDist}$. Therefore:${steps(`PF_{2} = ${sumDist} - PF_{1} = ${sumDist} - ${d1} = ${d2}`)}`,
-          `根据椭圆的几何定义，$PF_{1} + PF_{2} = ${sumDist}$。因此：${steps(`PF_{2} = ${sumDist} - PF_{1} = ${sumDist} - ${d1} = ${d2}`)}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return numberProblem({
+          prompt: t(
+            `An ellipse is defined such that the sum of the distances from any point on it to the two foci $F_{1}$ and $F_{2}$ is $${sumDist}$. If a point $P$ lies on this ellipse and $PF_{1} = ${d1}$, what is the distance $PF_{2}$?`,
+            `已知椭圆上任意一点到两个焦点 $F_{1}$ 和 $F_{2}$ 的距离之和为 $${sumDist}$。如果点 $P$ 在该椭圆上且 $PF_{1} = ${d1}$，那么距离 $PF_{2}$ 是多少？`,
+          ),
+          answer: d2,
+          wrong: [d1, sumDist + d1, Math.abs(a - d1) || a + 1, sumDist, d2 + 2],
+          solution: t(
+            `By the definition of an ellipse, $PF_{1} + PF_{2} = ${sumDist}$. Therefore:${steps(`PF_{2} = ${sumDist} - PF_{1} = ${sumDist} - ${d1} = ${d2}`)}`,
+            `根据椭圆的几何定义，$PF_{1} + PF_{2} = ${sumDist}$。因此：${steps(`PF_{2} = ${sumDist} - PF_{1} = ${sumDist} - ${d1} = ${d2}`)}`,
+          ),
+        });
       },
     },
     {
@@ -192,14 +193,6 @@ export const introductionToEllipses: TopicDef = {
               `一个椭圆的半长轴长为 $a = ${a}$，半短轴长为 $b = ${b}$。该椭圆的短轴长是多少？`,
             );
         const correctVal = askMajor ? 2 * a : 2 * b;
-        const correct = `${correctVal}`;
-        const distractors = [
-          `${askMajor ? a : b}`,
-          `${askMajor ? 2 * b : 2 * a}`,
-          `${a + b}`,
-          `${2 * (a + b)}`,
-          `${Math.abs(2 * a - 2 * b) || 1}`,
-        ];
         const solution = askMajor
           ? t(
               `The length of the major axis is twice the semi-major axis $a$:${steps(`\\text{Major axis} = 2a = 2 \\times ${a} = ${2 * a}`)}`,
@@ -209,7 +202,12 @@ export const introductionToEllipses: TopicDef = {
               `The length of the minor axis is twice the semi-minor axis $b$:${steps(`\\text{Minor axis} = 2b = 2 \\times ${b} = ${2 * b}`)}`,
               `短轴的长度是半短轴 $b$ 的两倍：${steps(`\\text{短轴长} = 2b = 2 \\times ${b} = ${2 * b}`)}`,
             );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return numberProblem({
+          prompt,
+          answer: correctVal,
+          wrong: [askMajor ? a : b, askMajor ? 2 * b : 2 * a, a + b, 2 * (a + b), Math.abs(2 * a - 2 * b) || 1],
+          solution,
+        });
       },
     },
     {
@@ -228,21 +226,28 @@ export const introductionToEllipses: TopicDef = {
         const v1y = horizontal ? k : k - d;
         const v2x = horizontal ? h + d : h;
         const v2y = horizontal ? k : k + d;
-        const prompt = t(
-          `The endpoints of the major axis of an ellipse are $(${v1x}, ${v1y})$ and $(${v2x}, ${v2y})$. What are the coordinates of the center of the ellipse?`,
-          `某椭圆长轴的两端点坐标分别为 $(${v1x}, ${v1y})$ 和 $(${v2x}, ${v2y})$。该椭圆的中心坐标是什么？`,
-        );
-        const correct = `(${h}, ${k})`;
-        const distractors = [`(${h + 1}, ${k})`, `(${h}, ${k + 1})`, `(${k}, ${h})`, `(${h - 1}, ${k - 1})`, `(${h + d}, ${k})`];
-        const solution = t(
-          `The center is the midpoint of the endpoints of the major axis:${steps(
-            `(h, k) = \\left(\\frac{${v1x} + ${paren(v2x)}}{2}, \\frac{${v1y} + ${paren(v2y)}}{2}\\right) = (${h}, ${k})`,
-          )}`,
-          `中心是长轴两端点的中点坐标：${steps(
-            `(h, k) = \\left(\\frac{${v1x} + ${paren(v2x)}}{2}, \\frac{${v1y} + ${paren(v2y)}}{2}\\right) = (${h}, ${k})`,
-          )}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return pointProblem({
+          prompt: t(
+            `The endpoints of the major axis of an ellipse are $(${v1x}, ${v1y})$ and $(${v2x}, ${v2y})$. What are the coordinates of the center of the ellipse?`,
+            `某椭圆长轴的两端点坐标分别为 $(${v1x}, ${v1y})$ 和 $(${v2x}, ${v2y})$。该椭圆的中心坐标是什么？`,
+          ),
+          answer: [h, k],
+          wrong: [
+            [h + 1, k],
+            [h, k + 1],
+            [k, h],
+            [h - 1, k - 1],
+            [h + d, k],
+          ],
+          solution: t(
+            `The center is the midpoint of the endpoints of the major axis:${steps(
+              `(h, k) = \\left(\\frac{${v1x} + ${paren(v2x)}}{2}, \\frac{${v1y} + ${paren(v2y)}}{2}\\right) = (${h}, ${k})`,
+            )}`,
+            `中心是长轴两端点的中点坐标：${steps(
+              `(h, k) = \\left(\\frac{${v1x} + ${paren(v2x)}}{2}, \\frac{${v1y} + ${paren(v2y)}}{2}\\right) = (${h}, ${k})`,
+            )}`,
+          ),
+        });
       },
     },
   ],
@@ -272,24 +277,26 @@ export const equationsOfEllipsesCenteredAtTheOrigin: TopicDef = {
         const b = rng.int(2, a - 1);
         const a2 = a * a;
         const b2 = b * b;
-        const prompt = t(
-          `An ellipse centered at $(0, 0)$ has vertices at $(\\pm ${a}, 0)$ and co-vertices at $(0, \\pm ${b})$. What is the standard equation of this ellipse?`,
-          `一个中心在 $(0, 0)$ 的椭圆顶点为 $(\\pm ${a}, 0)$，短轴端点为 $(0, \\pm ${b})$。该椭圆的标准方程是什么？`,
-        );
         const correct = `\\frac{x^{2}}{${a2}} + \\frac{y^{2}}{${b2}} = 1`;
-        const distractors = [
-          `\\frac{x^{2}}{${b2}} + \\frac{y^{2}}{${a2}} = 1`,
-          `\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${b2}} = 1`,
-          `\\frac{x^{2}}{${a}} + \\frac{y^{2}}{${b}} = 1`,
-          `\\frac{x^{2}}{${2 * a}} + \\frac{y^{2}}{${2 * b}} = 1`,
-        ];
-        const solution = t(
-          `Since the vertices are on the $x$-axis, the ellipse is horizontal with $a = ${a}$ ($a^{2} = ${a2}$) and $b = ${b}$ ($b^{2} = ${b2}$):${steps(
-            correct,
-          )}`,
-          `因为顶点在 $x$ 轴上，所以椭圆为水平方向，其中 $a = ${a}$（$a^{2} = ${a2}$），$b = ${b}$（$b^{2} = ${b2}$）：${steps(correct)}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return equationProblem({
+          prompt: t(
+            `An ellipse centered at $(0, 0)$ has vertices at $(\\pm ${a}, 0)$ and co-vertices at $(0, \\pm ${b})$. What is the standard equation of this ellipse?`,
+            `一个中心在 $(0, 0)$ 的椭圆顶点为 $(\\pm ${a}, 0)$，短轴端点为 $(0, \\pm ${b})$。该椭圆的标准方程是什么？`,
+          ),
+          answer: correct,
+          wrong: [
+            `\\frac{x^{2}}{${b2}} + \\frac{y^{2}}{${a2}} = 1`,
+            `\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${b2}} = 1`,
+            `\\frac{x^{2}}{${a}} + \\frac{y^{2}}{${b}} = 1`,
+            `\\frac{x^{2}}{${2 * a}} + \\frac{y^{2}}{${2 * b}} = 1`,
+          ],
+          solution: t(
+            `Since the vertices are on the $x$-axis, the ellipse is horizontal with $a = ${a}$ ($a^{2} = ${a2}$) and $b = ${b}$ ($b^{2} = ${b2}$):${steps(
+              correct,
+            )}`,
+            `因为顶点在 $x$ 轴上，所以椭圆为水平方向，其中 $a = ${a}$（$a^{2} = ${a2}$），$b = ${b}$（$b^{2} = ${b2}$）：${steps(correct)}`,
+          ),
+        });
       },
     },
     {
@@ -304,22 +311,24 @@ export const equationsOfEllipsesCenteredAtTheOrigin: TopicDef = {
         const b = rng.int(2, a - 1);
         const a2 = a * a;
         const b2 = b * b;
-        const prompt = t(
-          `An ellipse centered at $(0, 0)$ has vertices at $(0, \\pm ${a})$ and co-vertices at $(\\pm ${b}, 0)$. What is the standard equation of this ellipse?`,
-          `一个中心在 $(0, 0)$ 的椭圆顶点为 $(0, \\pm ${a})$，短轴端点为 $(\\pm ${b}, 0)$。该椭圆的标准方程是什么？`,
-        );
         const correct = `\\frac{x^{2}}{${b2}} + \\frac{y^{2}}{${a2}} = 1`;
-        const distractors = [
-          `\\frac{x^{2}}{${a2}} + \\frac{y^{2}}{${b2}} = 1`,
-          `\\frac{y^{2}}{${a2}} - \\frac{x^{2}}{${b2}} = 1`,
-          `\\frac{x^{2}}{${b}} + \\frac{y^{2}}{${a}} = 1`,
-          `\\frac{x^{2}}{${b2}} - \\frac{y^{2}}{${a2}} = 1`,
-        ];
-        const solution = t(
-          `Since the vertices are on the $y$-axis, $a = ${a}$ lies under $y^{2}$, giving:${steps(correct)}`,
-          `由于长轴顶点在 $y$ 轴上，$a = ${a}$ 位于 $y^{2}$ 之下，得：${steps(correct)}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return equationProblem({
+          prompt: t(
+            `An ellipse centered at $(0, 0)$ has vertices at $(0, \\pm ${a})$ and co-vertices at $(\\pm ${b}, 0)$. What is the standard equation of this ellipse?`,
+            `一个中心在 $(0, 0)$ 的椭圆顶点为 $(0, \\pm ${a})$，短轴端点为 $(\\pm ${b}, 0)$。该椭圆的标准方程是什么？`,
+          ),
+          answer: correct,
+          wrong: [
+            `\\frac{x^{2}}{${a2}} + \\frac{y^{2}}{${b2}} = 1`,
+            `\\frac{y^{2}}{${a2}} - \\frac{x^{2}}{${b2}} = 1`,
+            `\\frac{x^{2}}{${b}} + \\frac{y^{2}}{${a}} = 1`,
+            `\\frac{x^{2}}{${b2}} - \\frac{y^{2}}{${a2}} = 1`,
+          ],
+          solution: t(
+            `Since the vertices are on the $y$-axis, $a = ${a}$ lies under $y^{2}$, giving:${steps(correct)}`,
+            `由于长轴顶点在 $y$ 轴上，$a = ${a}$ 位于 $y^{2}$ 之下，得：${steps(correct)}`,
+          ),
+        });
       },
     },
     {
@@ -391,26 +400,28 @@ export const equationsOfEllipsesCenteredAtAGeneralPoint: TopicDef = {
         const horizontal = rng.bool();
         const a2 = a * a;
         const b2 = b * b;
-        const prompt = t(
-          `Write the standard equation of the ellipse with center $(${h}, ${k})$, semi-major axis $a = ${a}$ (${horizontal ? "horizontal" : "vertical"}), and semi-minor axis $b = ${b}$.`,
-          `写出中心在 $(${h}, ${k})$，半长轴长 $a = ${a}$（${horizontal ? "水平方向" : "竖直方向"}），半短轴长 $b = ${b}$ 的椭圆标准方程。`,
-        );
         const correct = ellipseEq(h, k, a2, b2, horizontal);
-        const distractors = [
-          ellipseEq(-h, -k, a2, b2, horizontal),
-          ellipseEq(h, k, b2, a2, horizontal),
-          ellipseEq(k, h, a2, b2, horizontal),
-          ellipseEq(h, k, a, b, horizontal),
-        ];
-        const solution = t(
-          `The center $(h, k) = (${h}, ${k})$ gives numerators $${sqTerm("x", h)}$ and $${sqTerm("y", k)}$. Since $a^{2} = ${a2}$ is on the ${horizontal ? "horizontal" : "vertical"} axis:${steps(
-            correct,
-          )}`,
-          `由中心 $(h, k) = (${h}, ${k})$ 可知分子为 $${sqTerm("x", h)}$ 和 $${sqTerm("y", k)}$。因为半长轴平方 $a^{2} = ${a2}$ 对应${horizontal ? "水平" : "竖直"}方向：${steps(
-            correct,
-          )}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return equationProblem({
+          prompt: t(
+            `Write the standard equation of the ellipse with center $(${h}, ${k})$, semi-major axis $a = ${a}$ (${horizontal ? "horizontal" : "vertical"}), and semi-minor axis $b = ${b}$.`,
+            `写出中心在 $(${h}, ${k})$，半长轴长 $a = ${a}$（${horizontal ? "水平方向" : "竖直方向"}），半短轴长 $b = ${b}$ 的椭圆标准方程。`,
+          ),
+          answer: correct,
+          wrong: [
+            ellipseEq(-h, -k, a2, b2, horizontal),
+            ellipseEq(h, k, b2, a2, horizontal),
+            ellipseEq(k, h, a2, b2, horizontal),
+            ellipseEq(h, k, a, b, horizontal),
+          ],
+          solution: t(
+            `The center $(h, k) = (${h}, ${k})$ gives numerators $${sqTerm("x", h)}$ and $${sqTerm("y", k)}$. Since $a^{2} = ${a2}$ is on the ${horizontal ? "horizontal" : "vertical"} axis:${steps(
+              correct,
+            )}`,
+            `由中心 $(h, k) = (${h}, ${k})$ 可知分子为 $${sqTerm("x", h)}$ 和 $${sqTerm("y", k)}$。因为半长轴平方 $a^{2} = ${a2}$ 对应${horizontal ? "水平" : "竖直"}方向：${steps(
+              correct,
+            )}`,
+          ),
+        });
       },
     },
     {
@@ -502,22 +513,24 @@ export const findingTheCenterAndAxesOfEllipsesByCompletingTheSquare: TopicDef = 
         let generalStr = `${A === 1 ? "" : A}x^{2} + ${B === 1 ? "" : B}y^{2}`;
         generalStr += C < 0 ? ` - ${-C}x` : ` + ${C}x`;
         generalStr += D < 0 ? ` - ${-D}y` : ` + ${D}y`;
-        generalStr += E < 0 ? ` - ${-E}` : ` + ${E}`;
+        generalStr += E < 0 ? ` - ${-E}` : E > 0 ? ` + ${E}` : "";
         generalStr += " = 0";
 
-        const prompt = t(`Convert the ellipse equation $${generalStr}$ into standard form.`, `将椭圆方程 $${generalStr}$ 化为标准方程。`);
         const correct = `\\frac{${sqTerm("x", h)}}{${a2}} + \\frac{${sqTerm("y", k)}}{${b2}} = 1`;
-        const distractors = [
-          `\\frac{${sqTerm("x", -h)}}{${a2}} + \\frac{${sqTerm("y", -k)}}{${b2}} = 1`,
-          `\\frac{${sqTerm("x", h)}}{${b2}} + \\frac{${sqTerm("y", k)}}{${a2}} = 1`,
-          `\\frac{${sqTerm("x", h)}}{${a2}} - \\frac{${sqTerm("y", k)}}{${b2}} = 1`,
-          `\\frac{${sqTerm("x", h)}}{${A}} + \\frac{${sqTerm("y", k)}}{${B}} = 1`,
-        ];
-        const solution = t(
-          `Group and complete the square:${steps(`${A}${sqTerm("x", h)} + ${B}${sqTerm("y", k)} = ${K}`, correct)}`,
-          `分组并配方：${steps(`${A}${sqTerm("x", h)} + ${B}${sqTerm("y", k)} = ${K}`, correct)}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return equationProblem({
+          prompt: t(`Convert the ellipse equation $${generalStr}$ into standard form.`, `将椭圆方程 $${generalStr}$ 化为标准方程。`),
+          answer: correct,
+          wrong: [
+            `\\frac{${sqTerm("x", -h)}}{${a2}} + \\frac{${sqTerm("y", -k)}}{${b2}} = 1`,
+            `\\frac{${sqTerm("x", h)}}{${b2}} + \\frac{${sqTerm("y", k)}}{${a2}} = 1`,
+            `\\frac{${sqTerm("x", h)}}{${a2}} - \\frac{${sqTerm("y", k)}}{${b2}} = 1`,
+            `\\frac{${sqTerm("x", h)}}{${A}} + \\frac{${sqTerm("y", k)}}{${B}} = 1`,
+          ],
+          solution: t(
+            `Group and complete the square:${steps(`${A}${sqTerm("x", h)} + ${B}${sqTerm("y", k)} = ${K}`, correct)}`,
+            `分组并配方：${steps(`${A}${sqTerm("x", h)} + ${B}${sqTerm("y", k)} = ${K}`, correct)}`,
+          ),
+        });
       },
     },
     {
@@ -548,31 +561,30 @@ export const findingTheCenterAndAxesOfEllipsesByCompletingTheSquare: TopicDef = 
         const E = A * h * h + B * k * k - K;
         const M = K / A;
         const N = K / B;
-        const aVal = Math.round(Math.sqrt(Math.max(M, N)));
-        const bVal = Math.round(Math.sqrt(Math.min(M, N)));
 
         let generalStr = `${A === 1 ? "" : A}x^{2} + ${B === 1 ? "" : B}y^{2}`;
         generalStr += C < 0 ? ` - ${-C}x` : ` + ${C}x`;
         generalStr += D < 0 ? ` - ${-D}y` : ` + ${D}y`;
-        generalStr += E < 0 ? ` - ${-E}` : ` + ${E}`;
+        generalStr += E < 0 ? ` - ${-E}` : E > 0 ? ` + ${E}` : "";
         generalStr += " = 0";
 
-        const prompt = t(
-          `Find the center $(h, k)$ and the semi-major axis $a$ of the ellipse $${generalStr}$.`,
-          `求椭圆 $${generalStr}$ 的中心 $(h, k)$ 和半长轴长 $a$。`,
-        );
-        const correct = `(${h}, ${k}), \\; a = ${aVal}`;
-        const distractors = [
-          `(${-h}, ${-k}), \\; a = ${aVal}`,
-          `(${h}, ${k}), \\; a = ${bVal}`,
-          `(${k}, ${h}), \\; a = ${aVal}`,
-          `(${h}, ${k}), \\; a = ${Math.max(M, N)}`,
-        ];
-        const solution = t(
-          `Completing the square yields $\\frac{${sqTerm("x", h)}}{${M}} + \\frac{${sqTerm("y", k)}}{${N}} = 1$. The center is $(${h}, ${k})$ and $a = \\sqrt{${Math.max(M, N)}} = ${aVal}$.`,
-          `配方得到 $\\frac{${sqTerm("x", h)}}{${M}} + \\frac{${sqTerm("y", k)}}{${N}} = 1$。中心为 $(${h}, ${k})$，半长轴长 $a = \\sqrt{${Math.max(M, N)}} = ${aVal}$。`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return pointProblem({
+          prompt: t(
+            `Find the coordinates of the center $(h, k)$ of the ellipse $${generalStr}$.`,
+            `求椭圆 $${generalStr}$ 的中心坐标 $(h, k)$。`,
+          ),
+          answer: [h, k],
+          wrong: [
+            [-h, -k],
+            [k, h],
+            [-h, k],
+            [h, -k],
+          ],
+          solution: t(
+            `Completing the square yields $\\frac{${sqTerm("x", h)}}{${M}} + \\frac{${sqTerm("y", k)}}{${N}} = 1$. Thus the center is $(${h}, ${k})$.`,
+            `配方得到 $\\frac{${sqTerm("x", h)}}{${M}} + \\frac{${sqTerm("y", k)}}{${N}} = 1$。因此椭圆中心为 $(${h}, ${k})$。`,
+          ),
+        });
       },
     },
   ],
@@ -706,17 +718,18 @@ export const findingIntersectionsOfEllipsesAndLines: TopicDef = {
           cVal = b + rng.int(1, 5);
           expectedCount = 0;
         }
-        const prompt = t(
-          `How many points of intersection exist between the ellipse $\\frac{x^{2}}{${a2}} + \\frac{y^{2}}{${b2}} = 1$ and the horizontal line $y = ${cVal}$?`,
-          `椭圆 $\\frac{x^{2}}{${a2}} + \\frac{y^{2}}{${b2}} = 1$ 与水平直线 $y = ${cVal}$ 有几个交点？`,
-        );
-        const correct = `${expectedCount}`;
-        const distractors = ["0", "1", "2", "3"].filter((s) => s !== correct);
-        const solution = t(
-          `Substituting $y = ${cVal}$ gives $\\frac{x^{2}}{${a2}} + \\frac{${cVal * cVal}}{${b2}} = 1 \\implies \\frac{x^{2}}{${a2}} = 1 - \\frac{${cVal * cVal}}{${b2}}$. Since the right side is ${expectedCount === 2 ? "positive" : expectedCount === 1 ? "zero" : "negative"}, there are $${expectedCount}$ intersection point(s).`,
-          `代入 $y = ${cVal}$ 得到 $\\frac{x^{2}}{${a2}} + \\frac{${cVal * cVal}}{${b2}} = 1 \\implies \\frac{x^{2}}{${a2}} = 1 - \\frac{${cVal * cVal}}{${b2}}$。因为右边${expectedCount === 2 ? "大于 0" : expectedCount === 1 ? "等于 0" : "小于 0"}，所以有 $${expectedCount}$ 个交点。`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return numberProblem({
+          prompt: t(
+            `How many points of intersection exist between the ellipse $\\frac{x^{2}}{${a2}} + \\frac{y^{2}}{${b2}} = 1$ and the horizontal line $y = ${cVal}$?`,
+            `椭圆 $\\frac{x^{2}}{${a2}} + \\frac{y^{2}}{${b2}} = 1$ 与水平直线 $y = ${cVal}$ 有几个交点？`,
+          ),
+          answer: expectedCount,
+          wrong: [0, 1, 2, 3].filter((n) => n !== expectedCount),
+          solution: t(
+            `Substituting $y = ${cVal}$ gives $\\frac{x^{2}}{${a2}} + \\frac{${cVal * cVal}}{${b2}} = 1 \\implies \\frac{x^{2}}{${a2}} = 1 - \\frac{${cVal * cVal}}{${b2}}$. Since the right side is ${expectedCount === 2 ? "positive" : expectedCount === 1 ? "zero" : "negative"}, there are $${expectedCount}$ intersection point(s).`,
+            `代入 $y = ${cVal}$ 得到 $\\frac{x^{2}}{${a2}} + \\frac{${cVal * cVal}}{${b2}} = 1 \\implies \\frac{x^{2}}{${a2}} = 1 - \\frac{${cVal * cVal}}{${b2}}$。因为右边${expectedCount === 2 ? "大于 0" : expectedCount === 1 ? "等于 0" : "小于 0"}，所以有 $${expectedCount}$ 个交点。`,
+          ),
+        });
       },
     },
     {
@@ -874,18 +887,19 @@ export const verticesAndEccentricityOfEllipses: TopicDef = {
         const horizontal = rng.bool();
         const eqStr = horizontal ? `\\frac{x^{2}}{${a2}} + \\frac{y^{2}}{${b2}} = 1` : `\\frac{x^{2}}{${b2}} + \\frac{y^{2}}{${a2}} = 1`;
         const eFrac = Q.of(C, A);
-        const prompt = t(`Calculate the eccentricity of the ellipse $${eqStr}$.`, `计算椭圆 $${eqStr}$ 的离心率。`);
-        const correct = eFrac.toLatex();
-        const distractors = [Q.of(B, A).toLatex(), Q.of(A, C).toLatex(), Q.of(C, B).toLatex(), Q.of(B, C).toLatex()];
-        const solution = t(
-          `Semi-major axis $a = ${A}$, semi-minor axis $b = ${B}$. First find $c = \\sqrt{${a2} - ${b2}} = ${C}$. Then:${steps(
-            `e = \\frac{c}{a} = \\frac{${C}}{${A}} = ${correct}`,
-          )}`,
-          `半长轴 $a = ${A}$，半短轴 $b = ${B}$。先求半焦距 $c = \\sqrt{${a2} - ${b2}} = ${C}$，再求离心率：${steps(
-            `e = \\frac{c}{a} = \\frac{${C}}{${A}} = ${correct}`,
-          )}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return numberProblem({
+          prompt: t(`Calculate the eccentricity of the ellipse $${eqStr}$.`, `计算椭圆 $${eqStr}$ 的离心率。`),
+          answer: eFrac,
+          wrong: [Q.of(B, A), Q.of(A, C), Q.of(C, B), Q.of(B, C)],
+          solution: t(
+            `Semi-major axis $a = ${A}$, semi-minor axis $b = ${B}$. First find $c = \\sqrt{${a2} - ${b2}} = ${C}$. Then:${steps(
+              `e = \\frac{c}{a} = \\frac{${C}}{${A}} = ${eFrac.toLatex()}`,
+            )}`,
+            `半长轴 $a = ${A}$，半短轴 $b = ${B}$。先求半焦距 $c = \\sqrt{${a2} - ${b2}} = ${C}$，再求离心率：${steps(
+              `e = \\frac{c}{a} = \\frac{${C}}{${A}} = ${eFrac.toLatex()}`,
+            )}`,
+          ),
+        });
       },
     },
     {
@@ -1000,24 +1014,20 @@ export const directricesOfEllipses: TopicDef = {
         const mult = rng.int(2, 6);
         const distDirectrix = eDenominator * mult;
         const distFocus = eNumerator * mult;
-        const prompt = t(
-          `A point $P$ lies on an ellipse with eccentricity $e = ${e.toLatex()}$. If the distance from $P$ to the directrix is $${distDirectrix}$, what is the distance from $P$ to the corresponding focus?`,
-          `点 $P$ 位于离心率 $e = ${e.toLatex()}$ 的椭圆上。如果点 $P$ 到准线的距离为 $${distDirectrix}$，那么点 $P$ 到对应焦点的距离是多少？`,
-        );
-        const correct = `${distFocus}`;
-        const distractors = [
-          `${distDirectrix}`,
-          `${distDirectrix - distFocus}`,
-          `${Math.round((distDirectrix * eDenominator) / eNumerator)}`,
-          `${distFocus + 2}`,
-        ];
-        const solution = t(
-          `Using the focus-directrix property $PF = e \\cdot d(P, \\ell)$:${steps(
-            `PF = ${e.toLatex()} \\times ${distDirectrix} = ${distFocus}`,
-          )}`,
-          `利用焦点-准线性质 $PF = e \\cdot d(P, \\ell)$：${steps(`PF = ${e.toLatex()} \\times ${distDirectrix} = ${distFocus}`)}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return numberProblem({
+          prompt: t(
+            `A point $P$ lies on an ellipse with eccentricity $e = ${e.toLatex()}$. If the distance from $P$ to the directrix is $${distDirectrix}$, what is the distance from $P$ to the corresponding focus?`,
+            `点 $P$ 位于离心率 $e = ${e.toLatex()}$ 的椭圆上。如果点 $P$ 到准线的距离为 $${distDirectrix}$，那么点 $P$ 到对应焦点的距离是多少？`,
+          ),
+          answer: distFocus,
+          wrong: [distDirectrix, distDirectrix - distFocus, Math.round((distDirectrix * eDenominator) / eNumerator), distFocus + 2],
+          solution: t(
+            `Using the focus-directrix property $PF = e \\cdot d(P, \\ell)$:${steps(
+              `PF = ${e.toLatex()} \\times ${distDirectrix} = ${distFocus}`,
+            )}`,
+            `利用焦点-准线性质 $PF = e \\cdot d(P, \\ell)$：${steps(`PF = ${e.toLatex()} \\times ${distDirectrix} = ${distFocus}`)}`,
+          ),
+        });
       },
     },
   ],
@@ -1076,19 +1086,20 @@ export const theAreaOfAnEllipse: TopicDef = {
         const a = rng.int(3, 12);
         const b = rng.int(2, a - 1);
         const areaCoef = a * b;
-        const prompt = t(
-          `The area of an ellipse is $${areaCoef}\\pi$. If the length of its semi-major axis is $a = ${a}$, what is the length of its semi-minor axis $b$?`,
-          `已知一个椭圆的面积为 $${areaCoef}\\pi$。如果其半长轴长为 $a = ${a}$，那么半短轴长 $b$ 是多少？`,
-        );
-        const correct = `${b}`;
-        const distractors = [`${a}`, `${areaCoef}`, `${b + 1}`, `${Math.abs(a - b) || 1}`];
-        const solution = t(
-          `Using the area formula $A = \\pi a b$:${steps(
-            `${areaCoef}\\pi = \\pi (${a}) b \\implies b = \\frac{${areaCoef}}{${a}} = ${b}`,
-          )}`,
-          `根据面积公式 $A = \\pi a b$：${steps(`${areaCoef}\\pi = \\pi (${a}) b \\implies b = \\frac{${areaCoef}}{${a}} = ${b}`)}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return numberProblem({
+          prompt: t(
+            `The area of an ellipse is $${areaCoef}\\pi$. If the length of its semi-major axis is $a = ${a}$, what is the length of its semi-minor axis $b$?`,
+            `已知一个椭圆的面积为 $${areaCoef}\\pi$。如果其半长轴长为 $a = ${a}$，那么半短轴长 $b$ 是多少？`,
+          ),
+          answer: b,
+          wrong: [a, areaCoef, b + 1, Math.abs(a - b) || 1],
+          solution: t(
+            `Using the area formula $A = \\pi a b$:${steps(
+              `${areaCoef}\\pi = \\pi (${a}) b \\implies b = \\frac{${areaCoef}}{${a}} = ${b}`,
+            )}`,
+            `根据面积公式 $A = \\pi a b$：${steps(`${areaCoef}\\pi = \\pi (${a}) b \\implies b = \\frac{${areaCoef}}{${a}} = ${b}`)}`,
+          ),
+        });
       },
     },
   ],
@@ -1120,19 +1131,20 @@ export const equationsOfHyperbolasCenteredAtTheOrigin: TopicDef = {
       generate(rng) {
         const a = rng.int(3, 10);
         const twoA = 2 * a;
-        const d1 = rng.int(2, 16);
+        const d1 = rng.int(1, twoA);
         const d2 = d1 + twoA;
-        const prompt = t(
-          `A hyperbola is defined such that the absolute difference of the distances from any point on it to the foci $F_{1}$ and $F_{2}$ is $${twoA}$. If a point $P$ on the hyperbola has $PF_{1} = ${d1}$, which of the following could be the distance $PF_{2}$?`,
-          `已知双曲线上任意一点到两焦点 $F_{1}, F_{2}$ 的距离之差的绝对值为 $${twoA}$。如果双曲线上某点 $P$ 到焦点 $F_{1}$ 的距离为 $PF_{1} = ${d1}$，那么距离 $PF_{2}$ 可能为下列哪个值？`,
-        );
-        const correct = `${d2}`;
-        const distractors = [`${d1}`, `${Math.abs(d1 - a) || d1 + a + 1}`, `${twoA}`, `${d1 + a}`];
-        const solution = t(
-          `By the definition $|PF_{1} - PF_{2}| = ${twoA}$, we have $PF_{2} = PF_{1} + ${twoA} = ${d1} + ${twoA} = ${d2}$.`,
-          `根据定义 $|PF_{1} - PF_{2}| = ${twoA}$，可知 $PF_{2} = PF_{1} + ${twoA} = ${d1} + ${twoA} = ${d2}$。`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return numberProblem({
+          prompt: t(
+            `A hyperbola is defined such that the absolute difference of the distances from any point on it to the foci $F_{1}$ and $F_{2}$ is $${twoA}$. If a point $P$ on the hyperbola has $PF_{1} = ${d1}$, what is the distance $PF_{2} > 0$?`,
+            `已知双曲线上任意一点到两焦点 $F_{1}, F_{2}$ 的距离之差的绝对值为 $${twoA}$。如果双曲线上某点 $P$ 到焦点 $F_{1}$ 的距离为 $PF_{1} = ${d1}$，求距离 $PF_{2} > 0$。`,
+          ),
+          answer: d2,
+          wrong: [d1, Math.abs(d1 - a) || d1 + a + 1, twoA, d1 + a],
+          solution: t(
+            `By the definition $|PF_{1} - PF_{2}| = ${twoA}$ and $PF_{2} > 0$ (since $PF_{1} - ${twoA} = ${d1 - twoA} \\le 0$), we have $PF_{2} = PF_{1} + ${twoA} = ${d1} + ${twoA} = ${d2}$.`,
+            `根据定义 $|PF_{1} - PF_{2}| = ${twoA}$ 且 $PF_{2} > 0$（因为 $PF_{1} - ${twoA} = ${d1 - twoA} \\le 0$），可知 $PF_{2} = PF_{1} + ${twoA} = ${d1} + ${twoA} = ${d2}$。`,
+          ),
+        });
       },
     },
     {
@@ -1158,20 +1170,23 @@ export const equationsOfHyperbolasCenteredAtTheOrigin: TopicDef = {
               `写出中心在 $(0, 0)$、顶点为 $(0, \\pm ${a})$ 且 $b = ${b}$ 的双曲线标准方程。`,
             );
         const correct = horizontal ? `\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${b2}} = 1` : `\\frac{y^{2}}{${a2}} - \\frac{x^{2}}{${b2}} = 1`;
-        const distractors = [
-          horizontal ? `\\frac{y^{2}}{${a2}} - \\frac{x^{2}}{${b2}} = 1` : `\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${b2}} = 1`,
-          `\\frac{x^{2}}{${a2}} + \\frac{y^{2}}{${b2}} = 1`,
-          horizontal ? `\\frac{x^{2}}{${b2}} - \\frac{y^{2}}{${a2}} = 1` : `\\frac{y^{2}}{${b2}} - \\frac{x^{2}}{${a2}} = 1`,
-        ];
-        const solution = t(
-          `Since the vertices are on the ${horizontal ? "x" : "y"}-axis, the positive term is ${horizontal ? "x^{2}" : "y^{2}"} with denominator $a^{2} = ${a2}$:${steps(
-            correct,
-          )}`,
-          `因为顶点在 ${horizontal ? "x" : "y"} 轴上，所以正项是 ${horizontal ? "x^{2}" : "y^{2}"}，分母为 $a^{2} = ${a2}$：${steps(
-            correct,
-          )}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return equationProblem({
+          prompt,
+          answer: correct,
+          wrong: [
+            horizontal ? `\\frac{y^{2}}{${a2}} - \\frac{x^{2}}{${b2}} = 1` : `\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${b2}} = 1`,
+            `\\frac{x^{2}}{${a2}} + \\frac{y^{2}}{${b2}} = 1`,
+            horizontal ? `\\frac{x^{2}}{${b2}} - \\frac{y^{2}}{${a2}} = 1` : `\\frac{y^{2}}{${b2}} - \\frac{x^{2}}{${a2}} = 1`,
+          ],
+          solution: t(
+            `Since the vertices are on the ${horizontal ? "x" : "y"}-axis, the positive term is ${horizontal ? "x^{2}" : "y^{2}"} with denominator $a^{2} = ${a2}$:${steps(
+              correct,
+            )}`,
+            `因为顶点在 ${horizontal ? "x" : "y"} 轴上，所以正项是 ${horizontal ? "x^{2}" : "y^{2}"}，分母为 $a^{2} = ${a2}$：${steps(
+              correct,
+            )}`,
+          ),
+        });
       },
     },
   ],
@@ -1204,26 +1219,28 @@ export const equationsOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
         const a2 = a * a;
         const b2 = b * b;
         const horizontal = rng.bool();
-        const prompt = t(
-          `Write the equation of the hyperbola with center $(${h}, ${k})$, vertices at $(${horizontal ? `${h} \\pm ${a}, ${k}` : `${h}, ${k} \\pm ${a}`})$, and $b = ${b}$.`,
-          `写出中心在 $(${h}, ${k})$，顶点为 $(${horizontal ? `${h} \\pm ${a}, ${k}` : `${h}, ${k} \\pm ${a}`})$ 且 $b = ${b}$ 的双曲线标准方程。`,
-        );
         const correct = hyperbolaEq(h, k, a2, b2, horizontal);
-        const distractors = [
-          hyperbolaEq(-h, -k, a2, b2, horizontal),
-          hyperbolaEq(h, k, a2, b2, !horizontal),
-          ellipseEq(h, k, a2, b2, horizontal),
-          hyperbolaEq(k, h, a2, b2, horizontal),
-        ];
-        const solution = t(
-          `Center is $(${h}, ${k})$, $a = ${a}$ ($a^{2} = ${a2}$), and $b = ${b}$ ($b^{2} = ${b2}$). Transverse axis is ${horizontal ? "horizontal" : "vertical"}:${steps(
-            correct,
-          )}`,
-          `中心为 $(${h}, ${k})$，$a = ${a}$（$a^{2} = ${a2}$），$b = ${b}$（$b^{2} = ${b2}$）。实轴为${horizontal ? "水平" : "竖直"}方向：${steps(
-            correct,
-          )}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return equationProblem({
+          prompt: t(
+            `Write the equation of the hyperbola with center $(${h}, ${k})$, vertices at $(${horizontal ? `${h} \\pm ${a}, ${k}` : `${h}, ${k} \\pm ${a}`})$, and $b = ${b}$.`,
+            `写出中心在 $(${h}, ${k})$，顶点为 $(${horizontal ? `${h} \\pm ${a}, ${k}` : `${h}, ${k} \\pm ${a}`})$ 且 $b = ${b}$ 的双曲线标准方程。`,
+          ),
+          answer: correct,
+          wrong: [
+            hyperbolaEq(-h, -k, a2, b2, horizontal),
+            hyperbolaEq(h, k, a2, b2, !horizontal),
+            ellipseEq(h, k, a2, b2, horizontal),
+            hyperbolaEq(k, h, a2, b2, horizontal),
+          ],
+          solution: t(
+            `Center is $(${h}, ${k})$, $a = ${a}$ ($a^{2} = ${a2}$), and $b = ${b}$ ($b^{2} = ${b2}$). Transverse axis is ${horizontal ? "horizontal" : "vertical"}:${steps(
+              correct,
+            )}`,
+            `中心为 $(${h}, ${k})$，$a = ${a}$（$a^{2} = ${a2}$），$b = ${b}$（$b^{2} = ${b2}$）。实轴为${horizontal ? "水平" : "竖直"}方向：${steps(
+              correct,
+            )}`,
+          ),
+        });
       },
     },
     {
@@ -1553,14 +1570,15 @@ export const transverseAxesOfHyperbolas: TopicDef = {
         const b2 = b * b;
         const horizontal = rng.bool();
         const eqStr = horizontal ? `\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${b2}} = 1` : `\\frac{y^{2}}{${a2}} - \\frac{x^{2}}{${b2}} = 1`;
-        const prompt = t(`What is the length of the transverse axis of the hyperbola $${eqStr}$?`, `双曲线 $${eqStr}$ 的实轴长度是多少？`);
-        const correct = `${2 * a}`;
-        const distractors = [`${a}`, `${2 * b}`, `${b}`, `${a2}`];
-        const solution = t(
-          `The positive term denominator is $a^{2} = ${a2} \\implies a = ${a}$. The length of the transverse axis is $2a = 2(${a}) = ${2 * a}$.`,
-          `正项的分母为 $a^{2} = ${a2} \\implies a = ${a}$。实轴长度为 $2a = 2(${a}) = ${2 * a}$。`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return numberProblem({
+          prompt: t(`What is the length of the transverse axis of the hyperbola $${eqStr}$?`, `双曲线 $${eqStr}$ 的实轴长度是多少？`),
+          answer: 2 * a,
+          wrong: [a, 2 * b, b, a2],
+          solution: t(
+            `The positive term denominator is $a^{2} = ${a2} \\implies a = ${a}$. The length of the transverse axis is $2a = 2(${a}) = ${2 * a}$.`,
+            `正项的分母为 $a^{2} = ${a2} \\implies a = ${a}$。实轴长度为 $2a = 2(${a}) = ${2 * a}$。`,
+          ),
+        });
       },
     },
     {
@@ -1631,14 +1649,15 @@ export const conjugateAxesOfHyperbolas: TopicDef = {
         const b2 = b * b;
         const horizontal = rng.bool();
         const eqStr = horizontal ? `\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${b2}} = 1` : `\\frac{y^{2}}{${a2}} - \\frac{x^{2}}{${b2}} = 1`;
-        const prompt = t(`What is the length of the conjugate axis of the hyperbola $${eqStr}$?`, `双曲线 $${eqStr}$ 的虚轴长度是多少？`);
-        const correct = `${2 * b}`;
-        const distractors = [`${b}`, `${2 * a}`, `${a}`, `${b2}`];
-        const solution = t(
-          `The negative term denominator is $b^{2} = ${b2} \\implies b = ${b}$. The length of the conjugate axis is $2b = 2(${b}) = ${2 * b}$.`,
-          `负项的分母为 $b^{2} = ${b2} \\implies b = ${b}$。虚轴长为 $2b = 2(${b}) = ${2 * b}$。`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return numberProblem({
+          prompt: t(`What is the length of the conjugate axis of the hyperbola $${eqStr}$?`, `双曲线 $${eqStr}$ 的虚轴长度是多少？`),
+          answer: 2 * b,
+          wrong: [b, 2 * a, a, b2],
+          solution: t(
+            `The negative term denominator is $b^{2} = ${b2} \\implies b = ${b}$. The length of the conjugate axis is $2b = 2(${b}) = ${2 * b}$.`,
+            `负项的分母为 $b^{2} = ${b2} \\implies b = ${b}$。虚轴长为 $2b = 2(${b}) = ${2 * b}$。`,
+          ),
+        });
       },
     },
     {
@@ -1654,21 +1673,22 @@ export const conjugateAxesOfHyperbolas: TopicDef = {
         const a2 = a * a;
         const b2 = b * b;
         const areaRect = 4 * a * b;
-        const prompt = t(
-          `Find the area of the central fundamental rectangle for the hyperbola $\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${b2}} = 1$.`,
-          `求双曲线 $\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${b2}} = 1$ 的中心基本矩形的面积。`,
-        );
-        const correct = `${areaRect}`;
-        const distractors = [`${a * b}`, `${2 * a * b}`, `${2 * (a + b)}`, `${4 * (a + b)}`];
-        const solution = t(
-          `The dimensions of the central rectangle are $2a = 2(${a}) = ${2 * a}$ and $2b = 2(${b}) = ${2 * b}$. Its area is:${steps(
-            `\\text{Area} = (2a)(2b) = (${2 * a})(${2 * b}) = ${areaRect}`,
-          )}`,
-          `中心矩形的两边长分别为 $2a = 2(${a}) = ${2 * a}$ 和 $2b = 2(${b}) = ${2 * b}$。其面积为：${steps(
-            `\\text{面积} = (2a)(2b) = (${2 * a})(${2 * b}) = ${areaRect}`,
-          )}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return numberProblem({
+          prompt: t(
+            `Find the area of the central fundamental rectangle for the hyperbola $\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${b2}} = 1$.`,
+            `求双曲线 $\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${b2}} = 1$ 的中心基本矩形的面积。`,
+          ),
+          answer: areaRect,
+          wrong: [a * b, 2 * a * b, 2 * (a + b), 4 * (a + b)],
+          solution: t(
+            `The dimensions of the central rectangle are $2a = 2(${a}) = ${2 * a}$ and $2b = 2(${b}) = ${2 * b}$. Its area is:${steps(
+              `\\text{Area} = (2a)(2b) = (${2 * a})(${2 * b}) = ${areaRect}`,
+            )}`,
+            `中心矩形的两边长分别为 $2a = 2(${a}) = ${2 * a}$ 和 $2b = 2(${b}) = ${2 * b}$。其面积为：${steps(
+              `\\text{面积} = (2a)(2b) = (${2 * a})(${2 * b}) = ${areaRect}`,
+            )}`,
+          ),
+        });
       },
     },
   ],
@@ -1785,18 +1805,19 @@ export const eccentricityAndVerticesOfHyperbolas: TopicDef = {
         const horizontal = rng.bool();
         const eqStr = horizontal ? `\\frac{x^{2}}{${a2}} - \\frac{y^{2}}{${b2}} = 1` : `\\frac{y^{2}}{${a2}} - \\frac{x^{2}}{${b2}} = 1`;
         const eFrac = Q.of(C, A);
-        const prompt = t(`Calculate the eccentricity of the hyperbola $${eqStr}$.`, `计算双曲线 $${eqStr}$ 的离心率。`);
-        const correct = eFrac.toLatex();
-        const distractors = [Q.of(A, C).toLatex(), Q.of(B, A).toLatex(), Q.of(C, B).toLatex(), "1"];
-        const solution = t(
-          `Here $a = ${A}, b = ${B}$. First find $c = \\sqrt{${a2} + ${b2}} = ${C}$. Then:${steps(
-            `e = \\frac{c}{a} = \\frac{${C}}{${A}} = ${correct}`,
-          )}`,
-          `此处 $a = ${A}, b = ${B}$。先求半焦距 $c = \\sqrt{${a2} + ${b2}} = ${C}$。然后求离心率：${steps(
-            `e = \\frac{c}{a} = \\frac{${C}}{${A}} = ${correct}`,
-          )}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return numberProblem({
+          prompt: t(`Calculate the eccentricity of the hyperbola $${eqStr}$.`, `计算双曲线 $${eqStr}$ 的离心率。`),
+          answer: eFrac,
+          wrong: [Q.of(A, C), Q.of(B, A), Q.of(C, B), 1],
+          solution: t(
+            `Here $a = ${A}, b = ${B}$. First find $c = \\sqrt{${a2} + ${b2}} = ${C}$. Then:${steps(
+              `e = \\frac{c}{a} = \\frac{${C}}{${A}} = ${eFrac.toLatex()}`,
+            )}`,
+            `此处 $a = ${A}, b = ${B}$。先求半焦距 $c = \\sqrt{${a2} + ${b2}} = ${C}$。然后求离心率：${steps(
+              `e = \\frac{c}{a} = \\frac{${C}}{${A}} = ${eFrac.toLatex()}`,
+            )}`,
+          ),
+        });
       },
     },
     {
@@ -1816,18 +1837,19 @@ export const eccentricityAndVerticesOfHyperbolas: TopicDef = {
         else if (form === "cleared-x") eqStr = `x^{2} - y^{2} = ${a2}`;
         else eqStr = `y^{2} - x^{2} = ${a2}`;
 
-        const prompt = t(`What is the eccentricity of the equilateral hyperbola $${eqStr}$?`, `等轴双曲线 $${eqStr}$ 的离心率是多少？`);
-        const correct = "\\sqrt{2}";
-        const distractors = ["2", "\\frac{\\sqrt{2}}{2}", "1", "\\sqrt{3}"];
-        const solution = t(
-          `For an equilateral hyperbola, $a = b = ${a}$. The focal distance is $c = \\sqrt{${a2} + ${a2}} = ${a}\\sqrt{2}$. The eccentricity is always:${steps(
-            `e = \\frac{c}{a} = \\frac{${a}\\sqrt{2}}{${a}} = \\sqrt{2}`,
-          )}`,
-          `对于等轴双曲线，$a = b = ${a}$。焦距 $c = \\sqrt{${a2} + ${a2}} = ${a}\\sqrt{2}$。离心率恒为：${steps(
-            `e = \\frac{c}{a} = \\frac{${a}\\sqrt{2}}{${a}} = \\sqrt{2}`,
-          )}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return radicalProblem({
+          prompt: t(`What is the eccentricity of the equilateral hyperbola $${eqStr}$?`, `等轴双曲线 $${eqStr}$ 的离心率是多少？`),
+          answer: [1, 2],
+          wrong: ["2", "\\frac{\\sqrt{2}}{2}", "1", "\\sqrt{3}"],
+          solution: t(
+            `For an equilateral hyperbola, $a = b = ${a}$. The focal distance is $c = \\sqrt{${a2} + ${a2}} = ${a}\\sqrt{2}$. The eccentricity is always:${steps(
+              `e = \\frac{c}{a} = \\frac{${a}\\sqrt{2}}{${a}} = \\sqrt{2}`,
+            )}`,
+            `对于等轴双曲线，$a = b = ${a}$。焦距 $c = \\sqrt{${a2} + ${a2}} = ${a}\\sqrt{2}$。离心率恒为：${steps(
+              `e = \\frac{c}{a} = \\frac{${a}\\sqrt{2}}{${a}} = \\sqrt{2}`,
+            )}`,
+          ),
+        });
       },
     },
   ],
@@ -1899,24 +1921,20 @@ export const directricesOfHyperbolas: TopicDef = {
         const mult = rng.int(2, 5);
         const distDirectrix = eDenominator * mult;
         const distFocus = eNumerator * mult;
-        const prompt = t(
-          `A point $P$ lies on a hyperbola with eccentricity $e = ${e.toLatex()}$. If the distance from $P$ to the directrix is $${distDirectrix}$, what is the distance from $P$ to the corresponding focus?`,
-          `点 $P$ 位于离心率 $e = ${e.toLatex()}$ 的双曲线上。如果点 $P$ 到准线的距离为 $${distDirectrix}$，那么点 $P$ 到对应焦点的距离是多少？`,
-        );
-        const correct = `${distFocus}`;
-        const distractors = [
-          `${distDirectrix}`,
-          `${Math.round((distDirectrix * eDenominator) / eNumerator)}`,
-          `${distFocus + 2}`,
-          `${distFocus - 2}`,
-        ];
-        const solution = t(
-          `Using the focus-directrix property $PF = e \\cdot d(P, \\ell)$:${steps(
-            `PF = ${e.toLatex()} \\times ${distDirectrix} = ${distFocus}`,
-          )}`,
-          `利用焦点-准线性质 $PF = e \\cdot d(P, \\ell)$：${steps(`PF = ${e.toLatex()} \\times ${distDirectrix} = ${distFocus}`)}`,
-        );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return numberProblem({
+          prompt: t(
+            `A point $P$ lies on a hyperbola with eccentricity $e = ${e.toLatex()}$. If the distance from $P$ to the directrix is $${distDirectrix}$, what is the distance from $P$ to the corresponding focus?`,
+            `点 $P$ 位于离心率 $e = ${e.toLatex()}$ 的双曲线上。如果点 $P$ 到准线的距离为 $${distDirectrix}$，那么点 $P$ 到对应焦点的距离是多少？`,
+          ),
+          answer: distFocus,
+          wrong: [distDirectrix, Math.round((distDirectrix * eDenominator) / eNumerator), distFocus + 2, distFocus - 2],
+          solution: t(
+            `Using the focus-directrix property $PF = e \\cdot d(P, \\ell)$:${steps(
+              `PF = ${e.toLatex()} \\times ${distDirectrix} = ${distFocus}`,
+            )}`,
+            `利用焦点-准线性质 $PF = e \\cdot d(P, \\ell)$：${steps(`PF = ${e.toLatex()} \\times ${distDirectrix} = ${distFocus}`)}`,
+          ),
+        });
       },
     },
   ],

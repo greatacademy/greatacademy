@@ -1,7 +1,15 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly } from "@ga/subject-math";
-import { choiceProblem } from "../problems.ts";
+import {
+  choiceProblem,
+  equationProblem,
+  expressionProblem,
+  factoredProblem,
+  numberProblem,
+  pointProblem,
+  radicalProblem,
+} from "../problems.ts";
 
 // Precalculus Unit 10: Complex Numbers
 // Part 1: Modules 10.30 (The Complex Plane), 10.31 (Further Complex Numbers),
@@ -210,23 +218,23 @@ export const theComplexPlane: TopicDef = {
       generate(rng) {
         const a = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
         const b = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
-        const prompt = t(
-          `Which point in the complex plane represents the complex number $z = ${cx(a, b)}$?`,
-          `在复平面中，哪个点表示复数 $z = ${cx(a, b)}$？`,
-        );
-        const right = t(`$(${a}, ${b})$`, `$(${a}, ${b})$`);
-        const wrong = [
-          t(`$(${b}, ${a})$`, `$(${b}, ${a})$`),
-          t(`$(${-a}, ${b})$`, `$(${-a}, ${b})$`),
-          t(`$(${a}, ${-b})$`, `$(${a}, ${-b})$`),
-          t(`$(${-b}, ${-a})$`, `$(${-b}, ${-a})$`),
-          t(`$(${-a}, ${-b})$`, `$(${-a}, ${-b})$`),
-        ];
-        const solution = t(
-          `For $z = a + bi$, the real part $a$ is the $x$-coordinate and the imaginary part $b$ is the $y$-coordinate. Here $a = ${a}$ and $b = ${b}$, so the point is $(${a}, ${b})$.`,
-          `对于复数 $z = a + bi$，实部 $a$ 是横坐标，虚部 $b$ 是纵坐标。本题中 $a = ${a}$，$b = ${b}$，因此对应的点是 $(${a}, ${b})$。`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt: t(
+            `Find the coordinates $(x, y)$ of the point in the complex plane that represents $z = ${cx(a, b)}$.`,
+            `求在复平面中表示复数 $z = ${cx(a, b)}$ 的点坐标 $(x, y)$。`,
+          ),
+          answer: [a, b],
+          wrong: [
+            [b, a],
+            [-a, b],
+            [a, -b],
+            [-b, -a],
+          ],
+          solution: t(
+            `For $z = a + bi$, the real part $a$ is the $x$-coordinate and the imaginary part $b$ is the $y$-coordinate. Here $a = ${a}$ and $b = ${b}$, so the point is $(${a}, ${b})$.`,
+            `对于复数 $z = a + bi$，实部 $a$ 是横坐标，虚部 $b$ 是纵坐标。本题中 $a = ${a}$，$b = ${b}$，因此对应的点是 $(${a}, ${b})$。`,
+          ),
+        });
       },
     },
     {
@@ -327,35 +335,36 @@ export const theMagnitudeOfAComplexNumber: TopicDef = {
       ),
       generate(rng) {
         const item = rng.pick([
-          { a: 3, b: 4, ans: "5", wrong: ["7", "25", "1", "\\sqrt{7}"] },
-          { a: 5, b: 12, ans: "13", wrong: ["17", "169", "7", "\\sqrt{119}"] },
-          { a: 8, b: 6, ans: "10", wrong: ["14", "100", "2", "\\sqrt{28}"] },
-          { a: 7, b: 24, ans: "25", wrong: ["31", "625", "17", "\\sqrt{527}"] },
-          { a: 8, b: 15, ans: "17", wrong: ["23", "289", "7", "\\sqrt{161}"] },
-          { a: 9, b: 12, ans: "15", wrong: ["21", "225", "3", "\\sqrt{63}"] },
-          { a: 1, b: 1, ans: "\\sqrt{2}", wrong: ["2", "1", "\\sqrt{3}", "4"] },
-          { a: 1, b: 2, ans: "\\sqrt{5}", wrong: ["3", "5", "\\sqrt{3}", "1"] },
-          { a: 2, b: 3, ans: "\\sqrt{13}", wrong: ["5", "13", "\\sqrt{5}", "1"] },
-          { a: 1, b: 3, ans: "\\sqrt{10}", wrong: ["4", "10", "\\sqrt{8}", "2"] },
-          { a: 3, b: 3, ans: "3\\sqrt{2}", wrong: ["6", "18", "\\sqrt{6}", "3"] },
-          { a: 2, b: 4, ans: "2\\sqrt{5}", wrong: ["6", "20", "\\sqrt{12}", "2"] },
-          { a: 1, b: 4, ans: "\\sqrt{17}", wrong: ["5", "17", "\\sqrt{15}", "3"] },
-          { a: 2, b: 5, ans: "\\sqrt{29}", wrong: ["7", "29", "\\sqrt{21}", "3"] },
-          { a: 4, b: 4, ans: "4\\sqrt{2}", wrong: ["8", "32", "16", "4"] },
-          { a: 3, b: 5, ans: "\\sqrt{34}", wrong: ["8", "34", "\\sqrt{16}", "4"] },
+          { a: 3, b: 4, c: 5, m: 1, ans: "5", wrong: ["7", "25", "1", "\\sqrt{7}"] },
+          { a: 5, b: 12, c: 13, m: 1, ans: "13", wrong: ["17", "169", "7", "\\sqrt{119}"] },
+          { a: 8, b: 6, c: 10, m: 1, ans: "10", wrong: ["14", "100", "2", "\\sqrt{28}"] },
+          { a: 7, b: 24, c: 25, m: 1, ans: "25", wrong: ["31", "625", "17", "\\sqrt{527}"] },
+          { a: 8, b: 15, c: 17, m: 1, ans: "17", wrong: ["23", "289", "7", "\\sqrt{161}"] },
+          { a: 9, b: 12, c: 15, m: 1, ans: "15", wrong: ["21", "225", "3", "\\sqrt{63}"] },
+          { a: 1, b: 1, c: 1, m: 2, ans: "\\sqrt{2}", wrong: ["2", "1", "\\sqrt{3}", "4"] },
+          { a: 1, b: 2, c: 1, m: 5, ans: "\\sqrt{5}", wrong: ["3", "5", "\\sqrt{3}", "1"] },
+          { a: 2, b: 3, c: 1, m: 13, ans: "\\sqrt{13}", wrong: ["5", "13", "\\sqrt{5}", "1"] },
+          { a: 1, b: 3, c: 1, m: 10, ans: "\\sqrt{10}", wrong: ["4", "10", "\\sqrt{8}", "2"] },
+          { a: 3, b: 3, c: 3, m: 2, ans: "3\\sqrt{2}", wrong: ["6", "18", "\\sqrt{6}", "3"] },
+          { a: 2, b: 4, c: 2, m: 5, ans: "2\\sqrt{5}", wrong: ["6", "20", "\\sqrt{12}", "2"] },
+          { a: 1, b: 4, c: 1, m: 17, ans: "\\sqrt{17}", wrong: ["5", "17", "\\sqrt{15}", "3"] },
+          { a: 2, b: 5, c: 1, m: 29, ans: "\\sqrt{29}", wrong: ["7", "29", "\\sqrt{21}", "3"] },
+          { a: 4, b: 4, c: 4, m: 2, ans: "4\\sqrt{2}", wrong: ["8", "32", "16", "4"] },
+          { a: 3, b: 5, c: 1, m: 34, ans: "\\sqrt{34}", wrong: ["8", "34", "\\sqrt{16}", "4"] },
         ]);
         const s1 = rng.pick([-1, 1]);
         const s2 = rng.pick([-1, 1]);
         const a = s1 * item.a;
         const b = s2 * item.b;
-        const prompt = t(`Find the magnitude (modulus) $|z|$ of $z = ${cx(a, b)}$.`, `求复数 $z = ${cx(a, b)}$ 的模长 $|z|$。`);
-        const right = t(`$${item.ans}$`, `$${item.ans}$`);
-        const wrong = item.wrong.map((w) => t(`$${w}$`, `$${w}$`));
-        const solution = t(
-          `$$|z| = \\sqrt{(${a})^2 + (${b})^2} = \\sqrt{${a * a} + ${b * b}} = \\sqrt{${a * a + b * b}} = ${item.ans}$$`,
-          `$$|z| = \\sqrt{(${a})^2 + (${b})^2} = \\sqrt{${a * a} + ${b * b}} = \\sqrt{${a * a + b * b}} = ${item.ans}$$`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return radicalProblem({
+          prompt: t(`Find the magnitude (modulus) $|z|$ of $z = ${cx(a, b)}$.`, `求复数 $z = ${cx(a, b)}$ 的模长 $|z|$。`),
+          answer: [item.c, item.m],
+          wrong: item.wrong,
+          solution: t(
+            `$$|z| = \\sqrt{(${a})^2 + (${b})^2} = \\sqrt{${a * a} + ${b * b}} = \\sqrt{${a * a + b * b}} = ${item.ans}$$`,
+            `$$|z| = \\sqrt{(${a})^2 + (${b})^2} = \\sqrt{${a * a} + ${b * b}} = \\sqrt{${a * a + b * b}} = ${item.ans}$$`,
+          ),
+        });
       },
     },
     {
@@ -367,15 +376,15 @@ export const theMagnitudeOfAComplexNumber: TopicDef = {
       ),
       generate(rng) {
         const item = rng.pick([
-          { da: 3, db: 4, dist: "5", wrong: ["7", "25", "1", "\\sqrt{7}"] },
-          { da: 4, db: 3, dist: "5", wrong: ["7", "25", "1", "\\sqrt{7}"] },
-          { da: 6, db: 8, dist: "10", wrong: ["14", "100", "2", "\\sqrt{28}"] },
-          { da: 5, db: 12, dist: "13", wrong: ["17", "169", "7", "\\sqrt{119}"] },
-          { da: 1, db: 1, dist: "\\sqrt{2}", wrong: ["2", "1", "\\sqrt{3}", "4"] },
-          { da: 1, db: 2, dist: "\\sqrt{5}", wrong: ["3", "5", "\\sqrt{3}", "1"] },
-          { da: 2, db: 3, dist: "\\sqrt{13}", wrong: ["5", "13", "\\sqrt{5}", "1"] },
-          { da: 1, db: 3, dist: "\\sqrt{10}", wrong: ["4", "10", "\\sqrt{8}", "2"] },
-          { da: 2, db: 2, dist: "2\\sqrt{2}", wrong: ["4", "8", "\\sqrt{4}", "2"] },
+          { da: 3, db: 4, c: 5, m: 1, dist: "5", wrong: ["7", "25", "1", "\\sqrt{7}"] },
+          { da: 4, db: 3, c: 5, m: 1, dist: "5", wrong: ["7", "25", "1", "\\sqrt{7}"] },
+          { da: 6, db: 8, c: 10, m: 1, dist: "10", wrong: ["14", "100", "2", "\\sqrt{28}"] },
+          { da: 5, db: 12, c: 13, m: 1, dist: "13", wrong: ["17", "169", "7", "\\sqrt{119}"] },
+          { da: 1, db: 1, c: 1, m: 2, dist: "\\sqrt{2}", wrong: ["2", "1", "\\sqrt{3}", "4"] },
+          { da: 1, db: 2, c: 1, m: 5, dist: "\\sqrt{5}", wrong: ["3", "5", "\\sqrt{3}", "1"] },
+          { da: 2, db: 3, c: 1, m: 13, dist: "\\sqrt{13}", wrong: ["5", "13", "\\sqrt{5}", "1"] },
+          { da: 1, db: 3, c: 1, m: 10, dist: "\\sqrt{10}", wrong: ["4", "10", "\\sqrt{8}", "2"] },
+          { da: 2, db: 2, c: 2, m: 2, dist: "2\\sqrt{2}", wrong: ["4", "8", "\\sqrt{4}", "2"] },
         ]);
         const sa = rng.pick([-1, 1]);
         const sb = rng.pick([-1, 1]);
@@ -385,17 +394,18 @@ export const theMagnitudeOfAComplexNumber: TopicDef = {
         const y2 = rng.int(-5, 5);
         const x1 = x2 + da;
         const y1 = y2 + db;
-        const prompt = t(
-          `Find the distance $|z_1 - z_2|$ between $z_1 = ${cx(x1, y1)}$ and $z_2 = ${cx(x2, y2)}$ in the complex plane.`,
-          `求复平面上 $z_1 = ${cx(x1, y1)}$ 与 $z_2 = ${cx(x2, y2)}$ 之间的距离 $|z_1 - z_2|$。`,
-        );
-        const right = t(`$${item.dist}$`, `$${item.dist}$`);
-        const wrong = item.wrong.map((w) => t(`$${w}$`, `$${w}$`));
-        const solution = t(
-          `$$z_1 - z_2 = (${cx(x1, y1)}) - (${cx(x2, y2)}) = ${cx(da, db)}$$\n\n$$|z_1 - z_2| = \\sqrt{(${da})^2 + (${db})^2} = \\sqrt{${da * da + db * db}} = ${item.dist}$$`,
-          `$$z_1 - z_2 = (${cx(x1, y1)}) - (${cx(x2, y2)}) = ${cx(da, db)}$$\n\n$$|z_1 - z_2| = \\sqrt{(${da})^2 + (${db})^2} = \\sqrt{${da * da + db * db}} = ${item.dist}$$`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return radicalProblem({
+          prompt: t(
+            `Find the distance $|z_1 - z_2|$ between $z_1 = ${cx(x1, y1)}$ and $z_2 = ${cx(x2, y2)}$ in the complex plane.`,
+            `求复平面上 $z_1 = ${cx(x1, y1)}$ 与 $z_2 = ${cx(x2, y2)}$ 之间的距离 $|z_1 - z_2|$。`,
+          ),
+          answer: [item.c, item.m],
+          wrong: item.wrong,
+          solution: t(
+            `$$z_1 - z_2 = (${cx(x1, y1)}) - (${cx(x2, y2)}) = ${cx(da, db)}$$\n\n$$|z_1 - z_2| = \\sqrt{(${da})^2 + (${db})^2} = \\sqrt{${da * da + db * db}} = ${item.dist}$$`,
+            `$$z_1 - z_2 = (${cx(x1, y1)}) - (${cx(x2, y2)}) = ${cx(da, db)}$$\n\n$$|z_1 - z_2| = \\sqrt{(${da})^2 + (${db})^2} = \\sqrt{${da * da + db * db}} = ${item.dist}$$`,
+          ),
+        });
       },
     },
   ],
@@ -552,22 +562,19 @@ export const arithmeticInTheComplexPlane: TopicDef = {
         const b2 = rng.pick([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6]);
         const sumA = a1 + a2;
         const sumB = b1 + b2;
-        const prompt = t(
-          `In the complex plane, the origin $0$, $z_1 = ${cx(a1, b1)}$, and $z_2 = ${cx(a2, b2)}$ form three vertices of a parallelogram. What complex number represents the fourth vertex (opposite the origin)?`,
-          `在复平面中，原点 $0$、$z_1 = ${cx(a1, b1)}$ 和 $z_2 = ${cx(a2, b2)}$ 是一个平行四边形的三个顶点。与原点相对的第四个顶点对应的复数是什么？`,
-        );
-        const right = t(`$${cx(sumA, sumB)}$`, `$${cx(sumA, sumB)}$`);
-        const wrong = [
-          t(`$${cx(a1 - a2, b1 - b2)}$`, `$${cx(a1 - a2, b1 - b2)}$`),
-          t(`$${cx(a2 - a1, b2 - b1)}$`, `$${cx(a2 - a1, b2 - b1)}$`),
-          t(`$${cx(sumA, -sumB)}$`, `$${cx(sumA, -sumB)}$`),
-          t(`$${cx(-sumA, sumB)}$`, `$${cx(-sumA, sumB)}$`),
-        ];
-        const solution = t(
-          `By the parallelogram rule for vector addition, the fourth vertex opposite the origin is $z_1 + z_2 = (${cx(a1, b1)}) + (${cx(a2, b2)}) = ${cx(sumA, sumB)}$.`,
-          `根据向量加法的平行四边形法则，与原点相对的第四个顶点为 $z_1 + z_2 = (${cx(a1, b1)}) + (${cx(a2, b2)}) = ${cx(sumA, sumB)}$。`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return expressionProblem({
+          prompt: t(
+            `In the complex plane, the origin $0$, $z_1 = ${cx(a1, b1)}$, and $z_2 = ${cx(a2, b2)}$ form three vertices of a parallelogram. Find the complex number (in the form $a + bi$) that represents the fourth vertex opposite the origin.`,
+            `在复平面中，原点 $0$、$z_1 = ${cx(a1, b1)}$ 和 $z_2 = ${cx(a2, b2)}$ 是一个平行四边形的三个顶点。求与原点相对的第四个顶点对应的复数（写成 $a + bi$ 形式）。`,
+          ),
+          answer: cx(sumA, sumB),
+          simplified: true,
+          wrong: [cx(a1 - a2, b1 - b2), cx(a2 - a1, b2 - b1), cx(sumA, -sumB), cx(-sumA, sumB)],
+          solution: t(
+            `By the parallelogram rule for vector addition, the fourth vertex opposite the origin is $z_1 + z_2 = (${cx(a1, b1)}) + (${cx(a2, b2)}) = ${cx(sumA, sumB)}$.`,
+            `根据向量加法的平行四边形法则，与原点相对的第四个顶点为 $z_1 + z_2 = (${cx(a1, b1)}) + (${cx(a2, b2)}) = ${cx(sumA, sumB)}$。`,
+          ),
+        });
       },
     },
     {
@@ -588,22 +595,19 @@ export const arithmeticInTheComplexPlane: TopicDef = {
           const b1 = my - dy;
           const a2 = mx + dx;
           const b2 = my + dy;
-          const prompt = t(
-            `Find the midpoint of the line segment joining $z_1 = ${cx(a1, b1)}$ and $z_2 = ${cx(a2, b2)}$ in the complex plane.`,
-            `求复平面中连接 $z_1 = ${cx(a1, b1)}$ 与 $z_2 = ${cx(a2, b2)}$ 的线段中点对应的复数。`,
-          );
-          const right = t(`$${cx(mx, my)}$`, `$${cx(mx, my)}$`);
-          const wrong = [
-            t(`$${cx(mx, -my)}$`, `$${cx(mx, -my)}$`),
-            t(`$${cx(2 * dx, 2 * dy)}$`, `$${cx(2 * dx, 2 * dy)}$`),
-            t(`$${cx(-mx, my)}$`, `$${cx(-mx, my)}$`),
-            t(`$${cx(my, mx)}$`, `$${cx(my, mx)}$`),
-          ];
-          const solution = t(
-            `$$M = \\frac{z_1 + z_2}{2} = \\frac{(${cx(a1, b1)}) + (${cx(a2, b2)})}{2} = \\frac{${cx(2 * mx, 2 * my)}}{2} = ${cx(mx, my)}$$`,
-            `$$M = \\frac{z_1 + z_2}{2} = \\frac{(${cx(a1, b1)}) + (${cx(a2, b2)})}{2} = \\frac{${cx(2 * mx, 2 * my)}}{2} = ${cx(mx, my)}$$`,
-          );
-          return oneOf(rng, prompt, right, wrong, solution);
+          return expressionProblem({
+            prompt: t(
+              `Find the complex number (in the form $a + bi$) representing the midpoint of the line segment joining $z_1 = ${cx(a1, b1)}$ and $z_2 = ${cx(a2, b2)}$ in the complex plane.`,
+              `求复平面中连接 $z_1 = ${cx(a1, b1)}$ 与 $z_2 = ${cx(a2, b2)}$ 的线段中点对应的复数（写成 $a + bi$ 形式）。`,
+            ),
+            answer: cx(mx, my),
+            simplified: true,
+            wrong: [cx(mx, -my), cx(2 * dx, 2 * dy), cx(-mx, my), cx(my, mx)],
+            solution: t(
+              `$$M = \\frac{z_1 + z_2}{2} = \\frac{(${cx(a1, b1)}) + (${cx(a2, b2)})}{2} = \\frac{${cx(2 * mx, 2 * my)}}{2} = ${cx(mx, my)}$$`,
+              `$$M = \\frac{z_1 + z_2}{2} = \\frac{(${cx(a1, b1)}) + (${cx(a2, b2)})}{2} = \\frac{${cx(2 * mx, 2 * my)}}{2} = ${cx(mx, my)}$$`,
+            ),
+          });
         }
         const a1 = rng.int(-5, 5);
         const b1 = rng.int(-5, 5);
@@ -611,22 +615,19 @@ export const arithmeticInTheComplexPlane: TopicDef = {
         const b2 = rng.int(-5, 5);
         const diffA = a2 - a1;
         const diffB = b2 - b1;
-        const prompt = t(
-          `Which complex number represents the displacement vector from $z_1 = ${cx(a1, b1)}$ to $z_2 = ${cx(a2, b2)}$?`,
-          `哪一个复数表示从 $z_1 = ${cx(a1, b1)}$ 指向 $z_2 = ${cx(a2, b2)}$ 的位移向量？`,
-        );
-        const right = t(`$${cx(diffA, diffB)}$`, `$${cx(diffA, diffB)}$`);
-        const wrong = [
-          t(`$${cx(-diffA, -diffB)}$`, `$${cx(-diffA, -diffB)}$`),
-          t(`$${cx(a1 + a2, b1 + b2)}$`, `$${cx(a1 + a2, b1 + b2)}$`),
-          t(`$${cx(diffA, -diffB)}$`, `$${cx(diffA, -diffB)}$`),
-          t(`$${cx(-diffA, diffB)}$`, `$${cx(-diffA, diffB)}$`),
-        ];
-        const solution = t(
-          `The displacement vector from $z_1$ to $z_2$ is $z_2 - z_1 = (${cx(a2, b2)}) - (${cx(a1, b1)}) = ${cx(diffA, diffB)}$.`,
-          `从 $z_1$ 指向 $z_2$ 的位移向量为 $z_2 - z_1 = (${cx(a2, b2)}) - (${cx(a1, b1)}) = ${cx(diffA, diffB)}$。`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return expressionProblem({
+          prompt: t(
+            `Find the complex number $z_2 - z_1$ (in the form $a + bi$) representing the displacement from $z_1 = ${cx(a1, b1)}$ to $z_2 = ${cx(a2, b2)}$.`,
+            `求表示从 $z_1 = ${cx(a1, b1)}$ 指向 $z_2 = ${cx(a2, b2)}$ 的位移复数 $z_2 - z_1$（写成 $a + bi$ 形式）。`,
+          ),
+          answer: cx(diffA, diffB),
+          simplified: true,
+          wrong: [cx(-diffA, -diffB), cx(a1 + a2, b1 + b2), cx(diffA, -diffB), cx(-diffA, diffB)],
+          solution: t(
+            `The displacement from $z_1$ to $z_2$ is $z_2 - z_1 = (${cx(a2, b2)}) - (${cx(a1, b1)}) = ${cx(diffA, diffB)}$.`,
+            `从 $z_1$ 指向 $z_2$ 的位移为 $z_2 - z_1 = (${cx(a2, b2)}) - (${cx(a1, b1)}) = ${cx(diffA, diffB)}$。`,
+          ),
+        });
       },
     },
   ],
@@ -694,22 +695,18 @@ export const geometryInTheComplexPlane: TopicDef = {
           const midY = (y1 + y2) / 2;
           const z1 = cx(c, y1);
           const z2 = cx(c, y2);
-          const prompt = t(
-            `What is the Cartesian equation of the locus $|z - (${z1})| = |z - (${z2})|$ in the complex plane?`,
-            `复平面中轨迹方程 $|z - (${z1})| = |z - (${z2})|$ 对应的笛卡尔直角坐标方程是什么？`,
-          );
-          const right = t(`$y = ${midY}$`, `$y = ${midY}$`);
-          const wrong = [
-            t(`$x = ${midY}$`, `$x = ${midY}$`),
-            t(`$y = ${-midY}$`, `$y = ${-midY}$`),
-            t(`$x = ${c}$`, `$x = ${c}$`),
-            t(`$y = ${y2 - y1}$`, `$y = ${y2 - y1}$`),
-          ];
-          const solution = t(
-            `Points $z_1 = (${c}, ${y1})$ and $z_2 = (${c}, ${y2})$ have the same $x$-coordinate. The perpendicular bisector of the vertical segment connecting them is the horizontal line $y = \\frac{${poly([y1, ""], [y2, ""])}}{2} = ${midY}$.`,
-            `两点 $z_1 = (${c}, ${y1})$ 与 $z_2 = (${c}, ${y2})$ 的横坐标相同。连接它们的垂直线段的中垂线是水平直线 $y = \\frac{${poly([y1, ""], [y2, ""])}}{2} = ${midY}$。`,
-          );
-          return oneOf(rng, prompt, right, wrong, solution);
+          return equationProblem({
+            prompt: t(
+              `Find the Cartesian equation of the locus $|z - (${z1})| = |z - (${z2})|$ in the complex plane.`,
+              `求复平面中轨迹方程 $|z - (${z1})| = |z - (${z2})|$ 对应的笛卡尔直角坐标方程。`,
+            ),
+            answer: `y = ${midY}`,
+            wrong: [`x = ${midY}`, `y = ${-midY}`, `x = ${c}`, `y = ${y2 - y1}`],
+            solution: t(
+              `Points $z_1 = (${c}, ${y1})$ and $z_2 = (${c}, ${y2})$ have the same $x$-coordinate. The perpendicular bisector of the vertical segment connecting them is the horizontal line $y = \\frac{${poly([y1, ""], [y2, ""])}}{2} = ${midY}$.`,
+              `两点 $z_1 = (${c}, ${y1})$ 与 $z_2 = (${c}, ${y2})$ 的横坐标相同。连接它们的垂直线段的中垂线是水平直线 $y = \\frac{${poly([y1, ""], [y2, ""])}}{2} = ${midY}$。`,
+            ),
+          });
         }
         const c = rng.int(-5, 5);
         const x1 = rng.pick([-6, -4, -2, 2, 4, 6]);
@@ -718,22 +715,18 @@ export const geometryInTheComplexPlane: TopicDef = {
         const midX = (x1 + x2) / 2;
         const z1 = cx(x1, c);
         const z2 = cx(x2, c);
-        const prompt = t(
-          `What is the Cartesian equation of the locus $|z - (${z1})| = |z - (${z2})|$ in the complex plane?`,
-          `复平面中轨迹方程 $|z - (${z1})| = |z - (${z2})|$ 对应的笛卡尔直角坐标方程是什么？`,
-        );
-        const right = t(`$x = ${midX}$`, `$x = ${midX}$`);
-        const wrong = [
-          t(`$y = ${midX}$`, `$y = ${midX}$`),
-          t(`$x = ${-midX}$`, `$x = ${-midX}$`),
-          t(`$y = ${c}$`, `$y = ${c}$`),
-          t(`$x = ${x2 - x1}$`, `$x = ${x2 - x1}$`),
-        ];
-        const solution = t(
-          `Points $z_1 = (${x1}, ${c})$ and $z_2 = (${x2}, ${c})$ have the same $y$-coordinate. The perpendicular bisector of the horizontal segment connecting them is the vertical line $x = \\frac{${poly([x1, ""], [x2, ""])}}{2} = ${midX}$.`,
-          `两点 $z_1 = (${x1}, ${c})$ 与 $z_2 = (${x2}, ${c})$ 的纵坐标相同。连接它们的水平线段的中垂线是垂直直线 $x = \\frac{${poly([x1, ""], [x2, ""])}}{2} = ${midX}$。`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return equationProblem({
+          prompt: t(
+            `Find the Cartesian equation of the locus $|z - (${z1})| = |z - (${z2})|$ in the complex plane.`,
+            `求复平面中轨迹方程 $|z - (${z1})| = |z - (${z2})|$ 对应的笛卡尔直角坐标方程。`,
+          ),
+          answer: `x = ${midX}`,
+          wrong: [`y = ${midX}`, `x = ${-midX}`, `y = ${c}`, `x = ${x2 - x1}`],
+          solution: t(
+            `Points $z_1 = (${x1}, ${c})$ and $z_2 = (${x2}, ${c})$ have the same $y$-coordinate. The perpendicular bisector of the horizontal segment connecting them is the vertical line $x = \\frac{${poly([x1, ""], [x2, ""])}}{2} = ${midX}$.`,
+            `两点 $z_1 = (${x1}, ${c})$ 与 $z_2 = (${x2}, ${c})$ 的纵坐标相同。连接它们的水平线段的中垂线是垂直直线 $x = \\frac{${poly([x1, ""], [x2, ""])}}{2} = ${midX}$。`,
+          ),
+        });
       },
     },
   ],
@@ -792,22 +785,15 @@ export const theComplexConjugate: TopicDef = {
         const a = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
         const b = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
         const prod = a * a + b * b;
-        const prompt = t(
-          `Evaluate the product $z \\bar{z}$ for $z = ${cx(a, b)}$.`,
-          `计算复数 $z = ${cx(a, b)}$ 与其共轭的乘积 $z \\bar{z}$。`,
-        );
-        const right = t(`$${prod}$`, `$${prod}$`);
-        const wrong = [
-          t(`$${a * a - b * b}$`, `$${a * a - b * b}$`),
-          t(`$${prod}i$`, `$${prod}i$`),
-          t(`$${2 * a}$`, `$${2 * a}$`),
-          t(`$${a * a - b * b}i$`, `$${a * a - b * b}i$`),
-        ];
-        const solution = t(
-          `$$z \\bar{z} = (${cx(a, b)})(${cx(a, -b)}) = (${a})^2 + (${b})^2 = ${a * a} + ${b * b} = ${prod}$$`,
-          `$$z \\bar{z} = (${cx(a, b)})(${cx(a, -b)}) = (${a})^2 + (${b})^2 = ${a * a} + ${b * b} = ${prod}$$`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return numberProblem({
+          prompt: t(`Evaluate the product $z \\bar{z}$ for $z = ${cx(a, b)}$.`, `计算复数 $z = ${cx(a, b)}$ 与其共轭的乘积 $z \\bar{z}$。`),
+          answer: prod,
+          wrong: [a * a - b * b, 2 * a, -prod, Math.abs(a) + Math.abs(b)],
+          solution: t(
+            `$$z \\bar{z} = (${cx(a, b)})(${cx(a, -b)}) = (${a})^2 + (${b})^2 = ${a * a} + ${b * b} = ${prod}$$`,
+            `$$z \\bar{z} = (${cx(a, b)})(${cx(a, -b)}) = (${a})^2 + (${b})^2 = ${a * a} + ${b * b} = ${prod}$$`,
+          ),
+        });
       },
     },
   ],
@@ -838,7 +824,6 @@ export const specialPropertiesOfTheComplexConjugate: TopicDef = {
       generate(rng) {
         const a1 = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
         const b1 = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
-        // Pick a2, b2 ensuring z1 + z2 != 0 and z1 - z2 != 0
         let a2 = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
         while (a1 + a2 === 0) a2 = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
         let b2 = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
@@ -848,46 +833,37 @@ export const specialPropertiesOfTheComplexConjugate: TopicDef = {
         if (isSum) {
           const resA = a1 + a2;
           const resB = -(b1 + b2);
-          const prompt = t(
-            `If $z_1 = ${cx(a1, b1)}$ and $z_2 = ${cx(a2, b2)}$, evaluate $\\overline{z_1 + z_2}$.`,
-            `已知 $z_1 = ${cx(a1, b1)}$ 且 $z_2 = ${cx(a2, b2)}$，求 $\\overline{z_1 + z_2}$。`,
-          );
-          const right = t(`$${cx(resA, resB)}$`, `$${cx(resA, resB)}$`);
-          const wrong = [
-            t(`$${cx(resA, -resB)}$`, `$${cx(resA, -resB)}$`),
-            t(`$${cx(-resA, resB)}$`, `$${cx(-resA, resB)}$`),
-            t(`$${cx(-resA, -resB)}$`, `$${cx(-resA, -resB)}$`),
-            t(`$${cx(resB, resA)}$`, `$${cx(resB, resA)}$`),
-            t(`$${cx(resA + 1, resB)}$`, `$${cx(resA + 1, resB)}$`),
-          ];
-          const solution = t(
-            `$$\\overline{z_1 + z_2} = \\bar{z}_1 + \\bar{z}_2 = (${cx(a1, -b1)}) + (${cx(a2, -b2)}) = ${cx(resA, resB)}$$`,
-            `$$\\overline{z_1 + z_2} = \\bar{z}_1 + \\bar{z}_2 = (${cx(a1, -b1)}) + (${cx(a2, -b2)}) = ${cx(resA, resB)}$$`,
-          );
-          return oneOf(rng, prompt, right, wrong, solution);
+          return expressionProblem({
+            prompt: t(
+              `If $z_1 = ${cx(a1, b1)}$ and $z_2 = ${cx(a2, b2)}$, evaluate $\\overline{z_1 + z_2}$ in the form $a + bi$.`,
+              `已知 $z_1 = ${cx(a1, b1)}$ 且 $z_2 = ${cx(a2, b2)}$，求 $\\overline{z_1 + z_2}$（写成 $a + bi$ 形式）。`,
+            ),
+            answer: cx(resA, resB),
+            simplified: true,
+            wrong: [cx(resA, -resB), cx(-resA, resB), cx(-resA, -resB), cx(resB, resA)],
+            solution: t(
+              `$$\\overline{z_1 + z_2} = \\bar{z}_1 + \\bar{z}_2 = (${cx(a1, -b1)}) + (${cx(a2, -b2)}) = ${cx(resA, resB)}$$`,
+              `$$\\overline{z_1 + z_2} = \\bar{z}_1 + \\bar{z}_2 = (${cx(a1, -b1)}) + (${cx(a2, -b2)}) = ${cx(resA, resB)}$$`,
+            ),
+          });
         }
-        // Product
         const pRe = a1 * a2 - b1 * b2;
         const pIm = a1 * b2 + a2 * b1;
         const ansRe = pRe;
         const ansIm = -pIm;
-        const prompt = t(
-          `If $z_1 = ${cx(a1, b1)}$ and $z_2 = ${cx(a2, b2)}$, evaluate $\\overline{z_1 z_2}$.`,
-          `已知 $z_1 = ${cx(a1, b1)}$ 且 $z_2 = ${cx(a2, b2)}$，求 $\\overline{z_1 z_2}$。`,
-        );
-        const right = t(`$${cx(ansRe, ansIm)}$`, `$${cx(ansRe, ansIm)}$`);
-        const wrong = [
-          t(`$${cx(pRe, pIm)}$`, `$${cx(pRe, pIm)}$`),
-          t(`$${cx(-ansRe, ansIm)}$`, `$${cx(-ansRe, ansIm)}$`),
-          t(`$${cx(-ansRe, -ansIm)}$`, `$${cx(-ansRe, -ansIm)}$`),
-          t(`$${cx(ansIm, ansRe)}$`, `$${cx(ansIm, ansRe)}$`),
-          t(`$${cx(ansRe + 2, ansIm)}$`, `$${cx(ansRe + 2, ansIm)}$`),
-        ];
-        const solution = t(
-          `$$z_1 z_2 = (${cx(a1, b1)})(${cx(a2, b2)}) = ${cx(pRe, pIm)}$$\n\n$$\\overline{z_1 z_2} = ${cx(ansRe, ansIm)}$$`,
-          `$$z_1 z_2 = (${cx(a1, b1)})(${cx(a2, b2)}) = ${cx(pRe, pIm)}$$\n\n$$\\overline{z_1 z_2} = ${cx(ansRe, ansIm)}$$`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return expressionProblem({
+          prompt: t(
+            `If $z_1 = ${cx(a1, b1)}$ and $z_2 = ${cx(a2, b2)}$, evaluate $\\overline{z_1 z_2}$ in the form $a + bi$.`,
+            `已知 $z_1 = ${cx(a1, b1)}$ 且 $z_2 = ${cx(a2, b2)}$，求 $\\overline{z_1 z_2}$（写成 $a + bi$ 形式）。`,
+          ),
+          answer: cx(ansRe, ansIm),
+          simplified: true,
+          wrong: [cx(pRe, pIm), cx(-ansRe, ansIm), cx(-ansRe, -ansIm), cx(ansIm, ansRe)],
+          solution: t(
+            `$$z_1 z_2 = (${cx(a1, b1)})(${cx(a2, b2)}) = ${cx(pRe, pIm)}$$\n\n$$\\overline{z_1 z_2} = ${cx(ansRe, ansIm)}$$`,
+            `$$z_1 z_2 = (${cx(a1, b1)})(${cx(a2, b2)}) = ${cx(pRe, pIm)}$$\n\n$$\\overline{z_1 z_2} = ${cx(ansRe, ansIm)}$$`,
+          ),
+        });
       },
     },
     {
@@ -902,29 +878,31 @@ export const specialPropertiesOfTheComplexConjugate: TopicDef = {
         const b = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
         const askReal = rng.bool();
         if (askReal) {
-          const prompt = t(
-            `For $z = ${cx(a, b)}$, find the value of $\\frac{z + \\bar{z}}{2}$.`,
-            `对于复数 $z = ${cx(a, b)}$，求 $\\frac{z + \\bar{z}}{2}$ 的值。`,
-          );
-          const right = t(`$${a}$`, `$${a}$`);
-          const wrong = [t(`$${b}$`, `$${b}$`), t(`$${-a}$`, `$${-a}$`), t(`$${a}i$`, `$${a}i$`), t(`$${b}i$`, `$${b}i$`)];
-          const solution = t(
-            `$$\\frac{z + \\bar{z}}{2} = \\frac{(${cx(a, b)}) + (${cx(a, -b)})}{2} = \\frac{${2 * a}}{2} = ${a}$$`,
-            `$$\\frac{z + \\bar{z}}{2} = \\frac{(${cx(a, b)}) + (${cx(a, -b)})}{2} = \\frac{${2 * a}}{2} = ${a}$$`,
-          );
-          return oneOf(rng, prompt, right, wrong, solution);
+          return numberProblem({
+            prompt: t(
+              `For $z = ${cx(a, b)}$, find the value of $\\frac{z + \\bar{z}}{2}$.`,
+              `对于复数 $z = ${cx(a, b)}$，求 $\\frac{z + \\bar{z}}{2}$ 的值。`,
+            ),
+            answer: a,
+            wrong: [b, -a, 2 * a],
+            solution: t(
+              `$$\\frac{z + \\bar{z}}{2} = \\frac{(${cx(a, b)}) + (${cx(a, -b)})}{2} = \\frac{${2 * a}}{2} = ${a}$$`,
+              `$$\\frac{z + \\bar{z}}{2} = \\frac{(${cx(a, b)}) + (${cx(a, -b)})}{2} = \\frac{${2 * a}}{2} = ${a}$$`,
+            ),
+          });
         }
-        const prompt = t(
-          `For $z = ${cx(a, b)}$, find the value of $\\frac{z - \\bar{z}}{2i}$.`,
-          `对于复数 $z = ${cx(a, b)}$，求 $\\frac{z - \\bar{z}}{2i}$ 的值。`,
-        );
-        const right = t(`$${b}$`, `$${b}$`);
-        const wrong = [t(`$${a}$`, `$${a}$`), t(`$${-b}$`, `$${-b}$`), t(`$${b}i$`, `$${b}i$`), t(`$${a}i$`, `$${a}i$`)];
-        const solution = t(
-          `$$\\frac{z - \\bar{z}}{2i} = \\frac{(${cx(a, b)}) - (${cx(a, -b)})}{2i} = \\frac{${2 * b}i}{2i} = ${b}$$`,
-          `$$\\frac{z - \\bar{z}}{2i} = \\frac{(${cx(a, b)}) - (${cx(a, -b)})}{2i} = \\frac{${2 * b}i}{2i} = ${b}$$`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return numberProblem({
+          prompt: t(
+            `For $z = ${cx(a, b)}$, find the value of $\\frac{z - \\bar{z}}{2i}$.`,
+            `对于复数 $z = ${cx(a, b)}$，求 $\\frac{z - \\bar{z}}{2i}$ 的值。`,
+          ),
+          answer: b,
+          wrong: [a, -b, 2 * b],
+          solution: t(
+            `$$\\frac{z - \\bar{z}}{2i} = \\frac{(${cx(a, b)}) - (${cx(a, -b)})}{2i} = \\frac{${2 * b}i}{2i} = ${b}$$`,
+            `$$\\frac{z - \\bar{z}}{2i} = \\frac{(${cx(a, b)}) - (${cx(a, -b)})}{2i} = \\frac{${2 * b}i}{2i} = ${b}$$`,
+          ),
+        });
       },
     },
   ],
@@ -955,22 +933,19 @@ export const theComplexConjugateAndTheRootsOfAQuadraticEquation: TopicDef = {
       generate(rng) {
         const p = rng.pick([-8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8]);
         const q = rng.pick([1, 2, 3, 4, 5, 6, 7, 8]);
-        const prompt = t(
-          `A quadratic equation with real coefficients has a root $x = ${cx(p, q)}$. What must be the other root of the equation?`,
-          `一个实系数一元二次方程的一个根为 $x = ${cx(p, q)}$。该方程的另一个根必然是什么？`,
-        );
-        const right = t(`$x = ${cx(p, -q)}$`, `$x = ${cx(p, -q)}$`);
-        const wrong = [
-          t(`$x = ${cx(-p, q)}$`, `$x = ${cx(-p, q)}$`),
-          t(`$x = ${cx(-p, -q)}$`, `$x = ${cx(-p, -q)}$`),
-          t(`$x = ${cx(q, p)}$`, `$x = ${cx(q, p)}$`),
-          t(`$x = ${cx(-q, -p)}$`, `$x = ${cx(-q, -p)}$`),
-        ];
-        const solution = t(
-          `By the Complex Conjugate Root Theorem, because all coefficients are real, non-real roots occur in conjugate pairs. Thus, the other root is the conjugate $\\overline{${cx(p, q)}} = ${cx(p, -q)}$.`,
-          `根据共轭虚根定理，实系数多项式的虚根必成对出现。因此，另一个根是该根的共轭复数 $\\overline{${cx(p, q)}} = ${cx(p, -q)}$。`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return expressionProblem({
+          prompt: t(
+            `A quadratic equation with real coefficients has a root $x = ${cx(p, q)}$. Find the other root of the equation in the form $a + bi$.`,
+            `一个实系数一元二次方程的一个根为 $x = ${cx(p, q)}$。求该方程的另一个根（写成 $a + bi$ 形式）。`,
+          ),
+          answer: cx(p, -q),
+          simplified: true,
+          wrong: [cx(-p, q), cx(-p, -q), cx(q, p), cx(-q, -p)],
+          solution: t(
+            `By the Complex Conjugate Root Theorem, because all coefficients are real, non-real roots occur in conjugate pairs. Thus, the other root is the conjugate $\\overline{${cx(p, q)}} = ${cx(p, -q)}$.`,
+            `根据共轭虚根定理，实系数多项式的虚根必成对出现。因此，另一个根是该根的共轭复数 $\\overline{${cx(p, q)}} = ${cx(p, -q)}$。`,
+          ),
+        });
       },
     },
     {
@@ -986,24 +961,23 @@ export const theComplexConjugateAndTheRootsOfAQuadraticEquation: TopicDef = {
         const sum = 2 * p;
         const prod = p * p + q * q;
         const eqStr = `${poly([1, "x^2"], [-sum, "x"], [prod, ""])} = 0`;
-        const prompt = t(
-          `Find the monic quadratic equation with real coefficients whose roots are $x = ${cx(p, q)}$ and $x = ${cx(p, -q)}$.`,
-          `求以 $x = ${cx(p, q)}$ 和 $x = ${cx(p, -q)}$ 为两根且最高次项系数为 $1$ 的实系数一元二次方程。`,
-        );
-        const right = t(`$${eqStr}$`, `$${eqStr}$`);
         const wrongProdSub = p * p - q * q;
-        const wrong = [
-          ...[
-            poly([1, "x^2"], [sum, "x"], [prod, ""]),
-            poly([1, "x^2"], [-sum, "x"], [wrongProdSub, ""]),
-            poly([1, "x^2"], [-sum, "x"], [-prod, ""]),
-          ].map((e) => t(`$${e} = 0$`, `$${e} = 0$`)),
-        ];
-        const solution = t(
-          `Sum of roots $= (${cx(p, q)}) + (${cx(p, -q)}) = ${sum}$.\nProduct of roots $= (${cx(p, q)})(${cx(p, -q)}) = ${p}^2 + ${q}^2 = ${prod}$.\n\nThe equation is $x^2 - (${sum})x + ${prod} = 0$, which is $${eqStr}$.`,
-          `两根之和 $= (${cx(p, q)}) + (${cx(p, -q)}) = ${sum}$。\n两根之积 $= (${cx(p, q)})(${cx(p, -q)}) = ${p}^2 + ${q}^2 = ${prod}$。\n\n方程为 $x^2 - (${sum})x + ${prod} = 0$，即 $${eqStr}$。`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return equationProblem({
+          prompt: t(
+            `Find the monic quadratic equation with real coefficients whose roots are $x = ${cx(p, q)}$ and $x = ${cx(p, -q)}$.`,
+            `求以 $x = ${cx(p, q)}$ 和 $x = ${cx(p, -q)}$ 为两根且最高次项系数为 $1$ 的实系数一元二次方程。`,
+          ),
+          answer: eqStr,
+          wrong: [
+            `${poly([1, "x^2"], [sum, "x"], [prod, ""])} = 0`,
+            `${poly([1, "x^2"], [-sum, "x"], [wrongProdSub, ""])} = 0`,
+            `${poly([1, "x^2"], [-sum, "x"], [-prod, ""])} = 0`,
+          ],
+          solution: t(
+            `Sum of roots $= (${cx(p, q)}) + (${cx(p, -q)}) = ${sum}$.\nProduct of roots $= (${cx(p, q)})(${cx(p, -q)}) = ${p}^2 + ${q}^2 = ${prod}$.\n\nThe equation is $x^2 - (${sum})x + ${prod} = 0$, which is $${eqStr}$.`,
+            `两根之和 $= (${cx(p, q)}) + (${cx(p, -q)}) = ${sum}$。\n两根之积 $= (${cx(p, q)})(${cx(p, -q)}) = ${p}^2 + ${q}^2 = ${prod}$。\n\n方程为 $x^2 - (${sum})x + ${prod} = 0$，即 $${eqStr}$。`,
+          ),
+        });
       },
     },
   ],
@@ -1036,22 +1010,19 @@ export const dividingComplexNumbers: TopicDef = {
         const b = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
         const den = a * a + b * b;
         const ansStr = cxFrac(a, -b, den);
-        const prompt = t(
-          `Express the reciprocal $\\frac{1}{${cx(a, b)}}$ in standard form $a + bi$.`,
-          `将倒数 $\\frac{1}{${cx(a, b)}}$ 写成代数标准形式 $a + bi$。`,
-        );
-        const right = t(`$${ansStr}$`, `$${ansStr}$`);
-        const wrong = [
-          t(`$${cxFrac(a, b, den)}$`, `$${cxFrac(a, b, den)}$`),
-          t(`$${cxFrac(-a, -b, den)}$`, `$${cxFrac(-a, -b, den)}$`),
-          t(`$${cxFrac(b, -a, den)}$`, `$${cxFrac(b, -a, den)}$`),
-          t(`$${cx(a, -b)}$`, `$${cx(a, -b)}$`),
-        ];
-        const solution = t(
-          `$$\\frac{1}{${cx(a, b)}} = \\frac{${cx(a, -b)}}{(${cx(a, b)})(${cx(a, -b)})} = \\frac{${cx(a, -b)}}{${den}} = ${ansStr}$$`,
-          `$$\\frac{1}{${cx(a, b)}} = \\frac{${cx(a, -b)}}{(${cx(a, b)})(${cx(a, -b)})} = \\frac{${cx(a, -b)}}{${den}} = ${ansStr}$$`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return expressionProblem({
+          prompt: t(
+            `Express the reciprocal $\\frac{1}{${cx(a, b)}}$ in standard form $a + bi$.`,
+            `将倒数 $\\frac{1}{${cx(a, b)}}$ 写成代数标准形式 $a + bi$。`,
+          ),
+          answer: ansStr,
+          simplified: true,
+          wrong: [cxFrac(a, b, den), cxFrac(-a, -b, den), cxFrac(b, -a, den), cx(a, -b)],
+          solution: t(
+            `$$\\frac{1}{${cx(a, b)}} = \\frac{${cx(a, -b)}}{(${cx(a, b)})(${cx(a, -b)})} = \\frac{${cx(a, -b)}}{${den}} = ${ansStr}$$`,
+            `$$\\frac{1}{${cx(a, b)}} = \\frac{${cx(a, -b)}}{(${cx(a, b)})(${cx(a, -b)})} = \\frac{${cx(a, -b)}}{${den}} = ${ansStr}$$`,
+          ),
+        });
       },
     },
     {
@@ -1074,23 +1045,20 @@ export const dividingComplexNumbers: TopicDef = {
         const v = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
         const numA = z2.c * u - z2.d * v;
         const numB = z2.c * v + z2.d * u;
-        const prompt = t(
-          `Evaluate the quotient $\\frac{${cx(numA, numB)}}{${cx(z2.c, z2.d)}}$ and write in standard form $a + bi$.`,
-          `计算商 $\\frac{${cx(numA, numB)}}{${cx(z2.c, z2.d)}}$ 并写成标准形式 $a + bi$。`,
-        );
-        const right = t(`$${cx(u, v)}$`, `$${cx(u, v)}$`);
-        const wrong = [
-          t(`$${cx(u, -v)}$`, `$${cx(u, -v)}$`),
-          t(`$${cx(-u, v)}$`, `$${cx(-u, v)}$`),
-          t(`$${cx(v, u)}$`, `$${cx(v, u)}$`),
-          t(`$${cx(-u, -v)}$`, `$${cx(-u, -v)}$`),
-        ];
         const denom = z2.c * z2.c + z2.d * z2.d;
-        const solution = t(
-          `Multiply numerator and denominator by the conjugate of the denominator, ${cx(z2.c, -z2.d)}:\n\n$$\\frac{(${cx(numA, numB)})(${cx(z2.c, -z2.d)})}{${denom}} = \\frac{${cx(u * denom, v * denom)}}{${denom}} = ${cx(u, v)}$$`,
-          `分子分母同乘分母的共轭复数 ${cx(z2.c, -z2.d)}：\n\n$$\\frac{(${cx(numA, numB)})(${cx(z2.c, -z2.d)})}{${denom}} = \\frac{${cx(u * denom, v * denom)}}{${denom}} = ${cx(u, v)}$$`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return expressionProblem({
+          prompt: t(
+            `Evaluate the quotient $\\frac{${cx(numA, numB)}}{${cx(z2.c, z2.d)}}$ and write in standard form $a + bi$.`,
+            `计算商 $\\frac{${cx(numA, numB)}}{${cx(z2.c, z2.d)}}$ 并写成标准形式 $a + bi$。`,
+          ),
+          answer: cx(u, v),
+          simplified: true,
+          wrong: [cx(u, -v), cx(-u, v), cx(v, u), cx(-u, -v)],
+          solution: t(
+            `Multiply numerator and denominator by the conjugate of the denominator, ${cx(z2.c, -z2.d)}:\n\n$$\\frac{(${cx(numA, numB)})(${cx(z2.c, -z2.d)})}{${denom}} = \\frac{${cx(u * denom, v * denom)}}{${denom}} = ${cx(u, v)}$$`,
+            `分子分母同乘分母的共轭复数 ${cx(z2.c, -z2.d)}：\n\n$$\\frac{(${cx(numA, numB)})(${cx(z2.c, -z2.d)})}{${denom}} = \\frac{${cx(u * denom, v * denom)}}{${denom}} = ${cx(u, v)}$$`,
+          ),
+        });
       },
     },
   ],
@@ -1129,22 +1097,24 @@ export const solvingEquationsByEquatingRealAndImaginaryParts: TopicDef = {
         const q = c * y + d;
         const leftReal = `${a}x ${b >= 0 ? `+ ${b}` : `- ${-b}`}`;
         const leftImag = `${c}y ${d >= 0 ? `+ ${d}` : `- ${-d}`}`;
-        const prompt = t(
-          `Find the real numbers $x$ and $y$ that satisfy $(${leftReal}) + (${leftImag})i = ${cx(p, q)}$.`,
-          `求满足方程 $(${leftReal}) + (${leftImag})i = ${cx(p, q)}$ 的实数 $x$ 和 $y$。`,
-        );
-        const right = t(`$x = ${x}, \\; y = ${y}$`, `$x = ${x}, \\; y = ${y}$`);
-        const wrong = [
-          t(`$x = ${y}, \\; y = ${x}$`, `$x = ${y}, \\; y = ${x}$`),
-          t(`$x = ${-x}, \\; y = ${y}$`, `$x = ${-x}, \\; y = ${y}$`),
-          t(`$x = ${x}, \\; y = ${-y}$`, `$x = ${x}, \\; y = ${-y}$`),
-          t(`$x = ${-x}, \\; y = ${-y}$`, `$x = ${-x}, \\; y = ${-y}$`),
-        ];
-        const solution = t(
-          `Equate real parts: $${poly([a, "x"], [b, ""])} = ${p} \\implies ${poly([a, "x"])} = ${p - b} \\implies x = ${x}$.\nEquate imaginary parts: $${poly([c, "y"], [d, ""])} = ${q} \\implies ${poly([c, "y"])} = ${q - d} \\implies y = ${y}$.`,
-          `令实部相等：$${poly([a, "x"], [b, ""])} = ${p} \\implies ${poly([a, "x"])} = ${p - b} \\implies x = ${x}$。\n令虚部相等：$${poly([c, "y"], [d, ""])} = ${q} \\implies ${poly([c, "y"])} = ${q - d} \\implies y = ${y}$。`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return pointProblem({
+          prompt: t(
+            `Find the real numbers $x$ and $y$ that satisfy $(${leftReal}) + (${leftImag})i = ${cx(p, q)}$, written as $(x, y)$.`,
+            `求满足方程 $(${leftReal}) + (${leftImag})i = ${cx(p, q)}$ 的实数 $x$ 和 $y$，写成有序数对 $(x, y)$。`,
+          ),
+          answer: [x, y],
+          vars: ["x", "y"],
+          wrong: [
+            [y, x],
+            [-x, y],
+            [x, -y],
+            [-x, -y],
+          ],
+          solution: t(
+            `Equate real parts: $${poly([a, "x"], [b, ""])} = ${p} \\implies ${poly([a, "x"])} = ${p - b} \\implies x = ${x}$.\nEquate imaginary parts: $${poly([c, "y"], [d, ""])} = ${q} \\implies ${poly([c, "y"])} = ${q - d} \\implies y = ${y}$.`,
+            `令实部相等：$${poly([a, "x"], [b, ""])} = ${p} \\implies ${poly([a, "x"])} = ${p - b} \\implies x = ${x}$。\n令虚部相等：$${poly([c, "y"], [d, ""])} = ${q} \\implies ${poly([c, "y"])} = ${q - d} \\implies y = ${y}$。`,
+          ),
+        });
       },
     },
     {
@@ -1161,22 +1131,19 @@ export const solvingEquationsByEquatingRealAndImaginaryParts: TopicDef = {
         const y = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
         const bigA = (k + m) * x;
         const bigB = (k - m) * y;
-        const prompt = t(
-          `Find the complex number $z = x + yi$ ($x, y \\in \\mathbb{R}$) that satisfies $${k}z + \\bar{z} = ${cx(bigA, bigB)}$.`,
-          `设 $x, y \\in \\mathbb{R}$，求满足方程 $${k}z + \\bar{z} = ${cx(bigA, bigB)}$ 的复数 $z = x + yi$。`,
-        );
-        const right = t(`$z = ${cx(x, y)}$`, `$z = ${cx(x, y)}$`);
-        const wrong = [
-          t(`$z = ${cx(x, -y)}$`, `$z = ${cx(x, -y)}$`),
-          t(`$z = ${cx(-x, y)}$`, `$z = ${cx(-x, y)}$`),
-          t(`$z = ${cx(y, x)}$`, `$z = ${cx(y, x)}$`),
-          t(`$z = ${cx(-x, -y)}$`, `$z = ${cx(-x, -y)}$`),
-        ];
-        const solution = t(
-          `Substitute $z = x + yi$ and $\\bar{z} = x - yi$:\n$$${k}(x + yi) + (x - yi) = (${k + m})x + (${k - m})yi = ${cx(bigA, bigB)}$$\nEquating real parts: $${poly([k + m, "x"])} = ${bigA} \\implies x = ${x}$.\nEquating imaginary parts: $${poly([k - m, "y"])} = ${bigB} \\implies y = ${y}$.\nThus, $z = ${cx(x, y)}$.`,
-          `代入 $z = x + yi$ 与 $\\bar{z} = x - yi$：\n$$${k}(x + yi) + (x - yi) = (${k + m})x + (${k - m})yi = ${cx(bigA, bigB)}$$\n实部相等：$${poly([k + m, "x"])} = ${bigA} \\implies x = ${x}$。\n虚部相等：$${poly([k - m, "y"])} = ${bigB} \\implies y = ${y}$。\n因此，$z = ${cx(x, y)}$。`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return expressionProblem({
+          prompt: t(
+            `Find the complex number $z = x + yi$ ($x, y \\in \\mathbb{R}$) that satisfies $${k}z + \\bar{z} = ${cx(bigA, bigB)}$.`,
+            `设 $x, y \\in \\mathbb{R}$，求满足方程 $${k}z + \\bar{z} = ${cx(bigA, bigB)}$ 的复数 $z = x + yi$。`,
+          ),
+          answer: cx(x, y),
+          simplified: true,
+          wrong: [cx(x, -y), cx(-x, y), cx(y, x), cx(-x, -y)],
+          solution: t(
+            `Substitute $z = x + yi$ and $\\bar{z} = x - yi$:\n$$${k}(x + yi) + (x - yi) = (${k + m})x + (${k - m})yi = ${cx(bigA, bigB)}$$\nEquating real parts: $${poly([k + m, "x"])} = ${bigA} \\implies x = ${x}$.\nEquating imaginary parts: $${poly([k - m, "y"])} = ${bigB} \\implies y = ${y}$.\nThus, $z = ${cx(x, y)}$.`,
+            `代入 $z = x + yi$ 与 $\\bar{z} = x - yi$：\n$$${k}(x + yi) + (x - yi) = (${k + m})x + (${k - m})yi = ${cx(bigA, bigB)}$$\n实部相等：$${poly([k + m, "x"])} = ${bigA} \\implies x = ${x}$。\n虚部相等：$${poly([k - m, "y"])} = ${bigB} \\implies y = ${y}$。\n因此，$z = ${cx(x, y)}$。`,
+          ),
+        });
       },
     },
   ],
@@ -1205,28 +1172,60 @@ export const extendingPolynomialIdentitiesToTheComplexNumbers: TopicDef = {
         "在实数范围内，平方和 $a^2 + b^2$ 无法分解为一次实因式。但在复数范围内，利用 $i^2 = -1$，可将 $b^2$ 改写为 $-(bi)^2$，从而利用平方差公式进行因式分解：\n\n$$a^2 + b^2 = a^2 - (bi)^2 = (a + bi)(a - bi)$$\n\n例如：$x^2 + 9 = (x + 3i)(x - 3i)$，以及 $4x^2 + 25 = (2x + 5i)(2x - 5i)$。",
       ),
       generate(rng) {
-        const a = rng.pick([1, 2, 3, 4, 5]);
-        const b = rng.pick([2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        const pairs = [
+          [1, 2],
+          [1, 3],
+          [1, 4],
+          [1, 5],
+          [1, 6],
+          [1, 7],
+          [1, 8],
+          [1, 9],
+          [1, 10],
+          [2, 3],
+          [2, 5],
+          [2, 7],
+          [2, 9],
+          [3, 2],
+          [3, 4],
+          [3, 5],
+          [3, 7],
+          [3, 8],
+          [3, 10],
+          [4, 3],
+          [4, 5],
+          [4, 7],
+          [4, 9],
+          [5, 2],
+          [5, 3],
+          [5, 4],
+          [5, 6],
+          [5, 7],
+          [5, 8],
+          [5, 9],
+        ] as const;
+        const [a, b] = rng.pick(pairs);
         const aSq = a * a;
         const bSq = b * b;
         const exprStr = a === 1 ? `x^2 + ${bSq}` : `${aSq}x^2 + ${bSq}`;
         const axStr = a === 1 ? "x" : `${a}x`;
-        const prompt = t(
-          `Factor the expression $${exprStr}$ completely over the complex numbers.`,
-          `在复数范围内彻底因式分解式子 $${exprStr}$。`,
-        );
-        const right = t(`$(${axStr} + ${b}i)(${axStr} - ${b}i)$`, `$(${axStr} + ${b}i)(${axStr} - ${b}i)$`);
-        const wrong = [
-          t(`$(${axStr} + ${b})(${axStr} - ${b})$`, `$(${axStr} + ${b})(${axStr} - ${b})$`),
-          t(`$(${axStr} + ${b}i)^2$`, `$(${axStr} + ${b}i)^2$`),
-          t(`$(${axStr} - ${b}i)^2$`, `$(${axStr} - ${b}i)^2$`),
-          t(`$(${axStr} + ${bSq}i)(${axStr} - ${bSq}i)$`, `$(${axStr} + ${bSq}i)(${axStr} - ${bSq}i)$`),
-        ];
-        const solution = t(
-          `Rewrite as a difference of squares: $${exprStr} = (${axStr})^2 - (${b}i)^2 = (${axStr} + ${b}i)(${axStr} - ${b}i)$.`,
-          `写成平方差形式：$${exprStr} = (${axStr})^2 - (${b}i)^2 = (${axStr} + ${b}i)(${axStr} - ${b}i)$。`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return factoredProblem({
+          prompt: t(
+            `Factor the expression $${exprStr}$ completely over the complex numbers.`,
+            `在复数范围内彻底因式分解式子 $${exprStr}$。`,
+          ),
+          answer: `(${axStr} + ${b}i)(${axStr} - ${b}i)`,
+          wrong: [
+            `(${axStr} + ${b})(${axStr} - ${b})`,
+            `(${axStr} + ${b}i)^2`,
+            `(${axStr} - ${b}i)^2`,
+            `(${axStr} + ${bSq}i)(${axStr} - ${bSq}i)`,
+          ],
+          solution: t(
+            `Rewrite as a difference of squares: $${exprStr} = (${axStr})^2 - (${b}i)^2 = (${axStr} + ${b}i)(${axStr} - ${b}i)$.`,
+            `写成平方差形式：$${exprStr} = (${axStr})^2 - (${b}i)^2 = (${axStr} + ${b}i)(${axStr} - ${b}i)$。`,
+          ),
+        });
       },
     },
     {
@@ -1414,24 +1413,21 @@ export const productsOfComplexNumbersExpressedInPolarForm: TopicDef = {
       generate(rng) {
         const a = rng.pick([-8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8]);
         const b = rng.pick([-8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8]);
-        const prompt = t(
-          `If the complex number $z = ${cx(a, b)}$ is rotated counterclockwise by $90^\\circ$ around the origin, which complex number represents the resulting point?`,
-          `若将复数 $z = ${cx(a, b)}$ 绕原点逆时针旋转 $90^\\circ$，所得新点表示的复数是什么？`,
-        );
         const rotA = -b;
         const rotB = a;
-        const right = t(`$${cx(rotA, rotB)}$`, `$${cx(rotA, rotB)}$`);
-        const wrong = [
-          t(`$${cx(-rotA, -rotB)}$`, `$${cx(-rotA, -rotB)}$`),
-          t(`$${cx(rotB, rotA)}$`, `$${cx(rotB, rotA)}$`),
-          t(`$${cx(a, -b)}$`, `$${cx(a, -b)}$`),
-          t(`$${cx(-a, b)}$`, `$${cx(-a, b)}$`),
-        ];
-        const solution = t(
-          `Rotating counterclockwise by $90^\\circ$ corresponds to multiplying by $i$:\n$$i(${cx(a, b)}) = ${poly([a, "i"], [b, "i^2"])} = ${poly([-b, ""], [a, "i"])} = ${cx(rotA, rotB)}$$`,
-          `绕原点逆时针旋转 $90^\\circ$ 等价于乘以虚数单位 $i$：\n$$i(${cx(a, b)}) = ${poly([a, "i"], [b, "i^2"])} = ${poly([-b, ""], [a, "i"])} = ${cx(rotA, rotB)}$$`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return expressionProblem({
+          prompt: t(
+            `If the complex number $z = ${cx(a, b)}$ is rotated counterclockwise by $90^\\circ$ around the origin, find the resulting complex number in the form $a + bi$.`,
+            `若将复数 $z = ${cx(a, b)}$ 绕原点逆时针旋转 $90^\\circ$，求所得的复数（写成 $a + bi$ 形式）。`,
+          ),
+          answer: cx(rotA, rotB),
+          simplified: true,
+          wrong: [cx(-rotA, -rotB), cx(rotB, rotA), cx(a, -b), cx(-a, b)],
+          solution: t(
+            `Rotating counterclockwise by $90^\\circ$ corresponds to multiplying by $i$:\n$$i(${cx(a, b)}) = ${poly([a, "i"], [b, "i^2"])} = ${poly([-b, ""], [a, "i"])} = ${cx(rotA, rotB)}$$`,
+            `绕原点逆时针旋转 $90^\\circ$ 等价于乘以虚数单位 $i$：\n$$i(${cx(a, b)}) = ${poly([a, "i"], [b, "i^2"])} = ${poly([-b, ""], [a, "i"])} = ${cx(rotA, rotB)}$$`,
+          ),
+        });
       },
     },
   ],
@@ -1600,8 +1596,8 @@ export const theCisNotation: TopicDef = {
             t(`$${prodR}\\,\\text{cis}(${(a1 * a2) % 360}^\\circ)$`, `$${prodR}\\,\\text{cis}(${(a1 * a2) % 360}^\\circ)$`),
           ];
           const solution = t(
-            `Multiply moduli: $${r1} \\times ${r2} = ${prodR}$.\nAdd angles: ${a1}^\\circ + ${a2}^\\circ = ${sumA}^\\circ$.\nResult: $${prodR}\\,\\text{cis}(${sumA}^\\circ)$.`,
-            `模长相乘：$${r1} \\times ${r2} = ${prodR}$。\n辐角相加：${a1}^\\circ + ${a2}^\\circ = ${sumA}^\\circ$。\n结果为：$${prodR}\\,\\text{cis}(${sumA}^\\circ)$。`,
+            `Multiply moduli: $${r1} \\times ${r2} = ${prodR}$.\nAdd angles: $${a1}^\\circ + ${a2}^\\circ = ${sumA}^\\circ$.\nResult: $${prodR}\\,\\text{cis}(${sumA}^\\circ)$.`,
+            `模长相乘：$${r1} \\times ${r2} = ${prodR}$。\n辐角相加：$${a1}^\\circ + ${a2}^\\circ = ${sumA}^\\circ$。\n结果为：$${prodR}\\,\\text{cis}(${sumA}^\\circ)$。`,
           );
           return oneOf(rng, prompt, right, wrong, solution);
         }
@@ -1624,8 +1620,8 @@ export const theCisNotation: TopicDef = {
           t(`$${quotR * 2}\\,\\text{cis}(${diffA}^\\circ)$`, `$${quotR * 2}\\,\\text{cis}(${diffA}^\\circ)$`),
         ];
         const solution = t(
-          `Divide moduli: $\\frac{${r1}}{${r2}} = ${quotR}$.\nSubtract angles: ${a1}^\\circ - ${a2}^\\circ = ${diffA}^\\circ$.\nResult: $${quotR}\\,\\text{cis}(${diffA}^\\circ)$.`,
-          `模长相除：$\\frac{${r1}}{${r2}} = ${quotR}$。\n辐角相减：${a1}^\\circ - ${a2}^\\circ = ${diffA}^\\circ$。\n结果为：$${quotR}\\,\\text{cis}(${diffA}^\\circ)$。`,
+          `Divide moduli: $\\frac{${r1}}{${r2}} = ${quotR}$.\nSubtract angles: $${a1}^\\circ - ${a2}^\\circ = ${diffA}^\\circ$.\nResult: $${quotR}\\,\\text{cis}(${diffA}^\\circ)$.`,
+          `模长相除：$\\frac{${r1}}{${r2}} = ${quotR}$。\n辐角相减：$${a1}^\\circ - ${a2}^\\circ = ${diffA}^\\circ$。\n结果为：$${quotR}\\,\\text{cis}(${diffA}^\\circ)$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },

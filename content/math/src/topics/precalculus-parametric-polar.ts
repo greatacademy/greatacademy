@@ -1,8 +1,8 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly } from "@ga/subject-math";
+import { poly, Q } from "@ga/subject-math";
 
-import { choiceProblem } from "../problems.ts";
+import { choiceProblem, equationProblem, numberProblem, pointProblem, radicalProblem } from "../problems.ts";
 
 // Precalculus units 8 & 9: Parametric Equations and Polar Coordinates
 // (Module 8.28: Parametric Equations; Module 9.29: Polar Coordinates).
@@ -93,25 +93,24 @@ export const graphingCurvesDefinedParametrically: TopicDef = {
         const yVal = c * t0 * t0 + d;
         const xExpr = linExpr(a, b, "t");
         const yExpr = `${c === 1 ? "" : c === -1 ? "-" : c}t^2 ${sgnTerm(d)}`.trim();
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `For the curve defined parametrically by $x(t) = ${xExpr}$ and $y(t) = ${yExpr}$, find the point $(x, y)$ corresponding to $t = ${t0}$.`,
             `对于参数方程为 $x(t) = ${xExpr}$ 和 $y(t) = ${yExpr}$ 的曲线，求当 $t = ${t0}$ 时对应的点 $(x, y)$ 的坐标。`,
           ),
-          t(`$(${xVal}, ${yVal})$`, `$(${xVal}, ${yVal})$`),
-          [
-            t(`$(${yVal}, ${xVal})$`, `$(${yVal}, ${xVal})$`),
-            t(`$(${xVal}, ${-yVal})$`, `$(${xVal}, ${-yVal})$`),
-            t(`$(${-xVal}, ${yVal})$`, `$(${-xVal}, ${yVal})$`),
-            t(`$(${xVal + 2}, ${yVal})$`, `$(${xVal + 2}, ${yVal})$`),
-            t(`$(${xVal}, ${yVal - 3})$`, `$(${xVal}, ${yVal - 3})$`),
+          answer: [xVal, yVal],
+          wrong: [
+            [yVal, xVal],
+            [xVal, -yVal],
+            [-xVal, yVal],
+            [xVal + 2, yVal],
+            [xVal, yVal - 3],
           ],
-          t(
+          solution: t(
             `Substitute $t = ${t0}$ into the parametric equations:\n$$x(${t0}) = ${xVal}, \\quad y(${t0}) = ${yVal}$$\nThe point is $(${xVal}, ${yVal})$.`,
             `将 $t = ${t0}$ 代入参数方程：\n$$x(${t0}) = ${xVal}, \\quad y(${t0}) = ${yVal}$$\n所求点为 $(${xVal}, ${yVal})$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -134,24 +133,26 @@ export const graphingCurvesDefinedParametrically: TopicDef = {
         const y1 = c * t1 + d;
         const x2 = a * t2 + b;
         const y2 = c * t2 + d;
-        return oneOf(
-          rng,
-          t(
-            `A curve is defined parametrically by $x(t) = ${xExpr}$ and $y(t) = ${yExpr}$ for $t \\in [${t1}, ${t2}]$. Find the initial point and terminal point as $t$ increases.`,
-            `已知参数方程 $x(t) = ${xExpr}$，$y(t) = ${yExpr}$，其中 $t \\in [${t1}, ${t2}]$。求随着 $t$ 增大，曲线的起点与终点坐标。`,
+        const askInitial = rng.bool();
+        const ans: [number, number] = askInitial ? [x1, y1] : [x2, y2];
+        const other: [number, number] = askInitial ? [x2, y2] : [x1, y1];
+        return pointProblem({
+          prompt: askInitial
+            ? t(
+                `A curve is defined parametrically by $x(t) = ${xExpr}$ and $y(t) = ${yExpr}$ for $t \\in [${t1}, ${t2}]$. Find the initial point $(x, y)$ as $t$ increases.`,
+                `已知参数方程 $x(t) = ${xExpr}$，$y(t) = ${yExpr}$，其中 $t \\in [${t1}, ${t2}]$。求随着 $t$ 增大，曲线的起点坐标 $(x, y)$。`,
+              )
+            : t(
+                `A curve is defined parametrically by $x(t) = ${xExpr}$ and $y(t) = ${yExpr}$ for $t \\in [${t1}, ${t2}]$. Find the terminal point $(x, y)$ as $t$ increases.`,
+                `已知参数方程 $x(t) = ${xExpr}$，$y(t) = ${yExpr}$，其中 $t \\in [${t1}, ${t2}]$。求随着 $t$ 增大，曲线的终点坐标 $(x, y)$。`,
+              ),
+          answer: ans,
+          wrong: [other, [ans[1], ans[0]], [ans[0], -ans[1]], [ans[0] + 1, ans[1]]],
+          solution: t(
+            `At the beginning of the interval $t = ${t1}$:\n$$(x(${t1}), y(${t1})) = (${x1}, ${y1})$$\nAt the end of the interval $t = ${t2}$:\n$$(x(${t2}), y(${t2})) = (${x2}, ${y2})$$\nThus the ${askInitial ? "initial" : "terminal"} point is $(${ans[0]}, ${ans[1]})$.`,
+            `在参数区间起点 $t = ${t1}$ 处：\n$$(x(${t1}), y(${t1})) = (${x1}, ${y1})$$\n在参数区间终点 $t = ${t2}$ 处：\n$$(x(${t2}), y(${t2})) = (${x2}, ${y2})$$\n因此${askInitial ? "起点" : "终点"}为 $(${ans[0]}, ${ans[1]})$。`,
           ),
-          t(`Initial: $(${x1}, ${y1})$, Terminal: $(${x2}, ${y2})$`, `起点: $(${x1}, ${y1})$，终点: $(${x2}, ${y2})$`),
-          [
-            t(`Initial: $(${x2}, ${y2})$, Terminal: $(${x1}, ${y1})$`, `起点: $(${x2}, ${y2})$，终点: $(${x1}, ${y1})$`),
-            t(`Initial: $(${y1}, ${x1})$, Terminal: $(${y2}, ${x2})$`, `起点: $(${y1}, ${x1})$，终点: $(${y2}, ${x2})$`),
-            t(`Initial: $(${x1}, ${-y1})$, Terminal: $(${x2}, ${-y2})$`, `起点: $(${x1}, ${-y1})$，终点: $(${x2}, ${-y2})$`),
-            t(`Initial: $(${x1 + 1}, ${y1})$, Terminal: $(${x2 + 1}, ${y2})$`, `起点: $(${x1 + 1}, ${y1})$，终点: $(${x2 + 1}, ${y2})$`),
-          ],
-          t(
-            `At the beginning of the interval $t = ${t1}$:\n$$(x(${t1}), y(${t1})) = (${x1}, ${y1})$$\nAt the end of the interval $t = ${t2}$:\n$$(x(${t2}), y(${t2})) = (${x2}, ${y2})$$\nThus the initial point is $(${x1}, ${y1})$ and the terminal point is $(${x2}, ${y2})$.`,
-            `在参数区间起点 $t = ${t1}$ 处：\n$$(x(${t1}), y(${t1})) = (${x1}, ${y1})$$\n在参数区间终点 $t = ${t2}$ 处：\n$$(x(${t2}), y(${t2})) = (${x2}, ${y2})$$\n因此起点为 $(${x1}, ${y1})$，终点为 $(${x2}, ${y2})$。`,
-          ),
-        );
+        });
       },
     },
   ],
@@ -191,24 +192,18 @@ export const cartesianEquationsOfParametricCurves: TopicDef = {
         const wrong2 = `x = ${aCoeff}${sq("y", h)} ${sgnTerm(k)}`.trim();
         const wrong3 = `y = ${aCoeff}${sq("x", h)} ${sgnTerm(-k)}`.trim();
         const wrong4 = `y = ${a === -1 ? "" : a + 1 === -1 ? "-" : a + 1}${sq("x", h)} ${sgnTerm(k)}`.trim();
-        return oneOf(
-          rng,
-          t(
+        return equationProblem({
+          prompt: t(
             `Eliminate the parameter $t$ to find the Cartesian equation of the curve $x(t) = ${xExpr}$, $y(t) = ${yExpr}$.`,
             `消去参数 $t$，求参数曲线 $x(t) = ${xExpr}$，$y(t) = ${yExpr}$ 的直角坐标方程。`,
           ),
-          t(`$${rightEq}$`, `$${rightEq}$`),
-          [
-            t(`$${wrong1}$`, `$${wrong1}$`),
-            t(`$${wrong2}$`, `$${wrong2}$`),
-            t(`$${wrong3}$`, `$${wrong3}$`),
-            t(`$${wrong4}$`, `$${wrong4}$`),
-          ],
-          t(
+          answer: rightEq,
+          wrong: [wrong1, wrong2, wrong3, wrong4],
+          solution: t(
             `Solve for $t$ from $x(t)$: $t = ${lin("x", h)}$.\nSubstitute into $y(t)$:\n$$y = ${aCoeff}${sq("x", h)} ${sgnTerm(k)}$$`,
             `由 $x(t)$ 解得 $t = ${lin("x", h)}$。\n代入 $y(t)$ 可得：\n$$y = ${aCoeff}${sq("x", h)} ${sgnTerm(k)}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -233,24 +228,18 @@ export const cartesianEquationsOfParametricCurves: TopicDef = {
         const wrong2 = `\\frac{${sq("x", h)}}{${b2}} + \\frac{${sq("y", k)}}{${a2}} = 1`;
         const wrong3 = `\\frac{${sq("x", -h)}}{${a2}} + \\frac{${sq("y", -k)}}{${b2}} = 1`;
         const wrong4 = `\\frac{${lin("x", h)}}{${a}} + \\frac{${lin("y", k)}}{${b}} = 1`;
-        return oneOf(
-          rng,
-          t(
+        return equationProblem({
+          prompt: t(
             `Eliminate the parameter $\\theta$ from $x = ${xTerm}$, $y = ${yTerm}$ ($0 \\le \\theta < 2\\pi$) to find its Cartesian equation.`,
             `消去参数 $\\theta$（$0 \\le \\theta < 2\\pi$），求曲线 $x = ${xTerm}$，$y = ${yTerm}$ 的直角坐标方程。`,
           ),
-          t(`$${rightEq}$`, `$${rightEq}$`),
-          [
-            t(`$${wrong1}$`, `$${wrong1}$`),
-            t(`$${wrong2}$`, `$${wrong2}$`),
-            t(`$${wrong3}$`, `$${wrong3}$`),
-            t(`$${wrong4}$`, `$${wrong4}$`),
-          ],
-          t(
+          answer: rightEq,
+          wrong: [wrong1, wrong2, wrong3, wrong4],
+          solution: t(
             `Isolate the trigonometric functions:\n$$\\cos\\theta = \\frac{${lin("x", h)}}{${a}}, \\quad \\sin\\theta = \\frac{${lin("y", k)}}{${b}}$$\nUsing $\\cos^2\\theta + \\sin^2\\theta = 1$:\n$$\\frac{${sq("x", h)}}{${a2}} + \\frac{${sq("y", k)}}{${b2}} = 1$$`,
             `分离三角函数：\n$$\\cos\\theta = \\frac{${lin("x", h)}}{${a}}, \\quad \\sin\\theta = \\frac{${lin("y", k)}}{${b}}$$\n代入 $\\cos^2\\theta + \\sin^2\\theta = 1$：\n$$\\frac{${sq("x", h)}}{${a2}} + \\frac{${sq("y", k)}}{${b2}} = 1$$`,
           ),
-        );
+        });
       },
     },
   ],
@@ -430,24 +419,23 @@ export const findingIntersectionsOfParametricCurvesAndLines: TopicDef = {
         const p1yExpr = linExpr(c1, d1, "t");
         const p2xExpr = linExpr(a2, b2, "t");
         const p2yExpr = linExpr(c2, d2, "t");
-        return oneOf(
-          rng,
-          t(
-            `Two particles follow paths $P_1(t) = (${p1xExpr}, ${p1yExpr})$ and $P_2(t) = (${p2xExpr}, ${p2yExpr})$ for $t \\ge 0$. Find the collision time $t$ and collision point $(x, y)$.`,
-            `两颗粒子分别沿轨迹 $P_1(t) = (${p1xExpr}, ${p1yExpr})$ 与 $P_2(t) = (${p2xExpr}, ${p2yExpr})$（$t \\ge 0$）运动。求碰撞时刻 $t$ 以及碰撞点坐标 $(x, y)$。`,
+        return pointProblem({
+          prompt: t(
+            `Two particles follow paths $P_1(t) = (${p1xExpr}, ${p1yExpr})$ and $P_2(t) = (${p2xExpr}, ${p2yExpr})$ for $t \\ge 0$. Find the coordinates $(x, y)$ of their collision point.`,
+            `两颗粒子分别沿轨迹 $P_1(t) = (${p1xExpr}, ${p1yExpr})$ 与 $P_2(t) = (${p2xExpr}, ${p2yExpr})$（$t \\ge 0$）运动。求它们碰撞点的坐标 $(x, y)$。`,
           ),
-          t(`$t = ${tStar}$, at $(${xStar}, ${yStar})$`, `$t = ${tStar}$，位于 $(${xStar}, ${yStar})$`),
-          [
-            t(`$t = ${tStar + 1}$, at $(${xStar + 1}, ${yStar})$`, `$t = ${tStar + 1}$，位于 $(${xStar + 1}, ${yStar})$`),
-            t(`$t = ${tStar}$, at $(${yStar}, ${xStar})$`, `$t = ${tStar}$，位于 $(${yStar}, ${xStar})$`),
-            t(`$t = ${tStar}$, at $(${xStar}, ${-yStar})$`, `$t = ${tStar}$，位于 $(${xStar}, ${-yStar})$`),
-            t(`$t = ${tStar + 2}$, at $(${xStar}, ${yStar})$`, `$t = ${tStar + 2}$，位于 $(${xStar}, ${yStar})$`),
+          answer: [xStar, yStar],
+          wrong: [
+            [xStar + 1, yStar],
+            [yStar, xStar],
+            [xStar, -yStar],
+            [xStar, yStar + 2],
           ],
-          t(
+          solution: t(
             `Set the $x$-coordinates equal: $${p1xExpr} = ${p2xExpr} \\implies ${poly([a1 - a2, "t"])} = ${b2 - b1} \\implies t = ${tStar}$.\nSubstitute $t = ${tStar}$ into $y_1(t)$ and $y_2(t)$:\n$$y_1(${tStar}) = ${yStar}, \\quad y_2(${tStar}) = ${yStar}$$\nBoth coordinates match at $t = ${tStar}$, giving collision point $(${xStar}, ${yStar})$.`,
             `令两粒子的 $x$ 坐标相等：$${p1xExpr} = ${p2xExpr} \\implies ${poly([a1 - a2, "t"])} = ${b2 - b1} \\implies t = ${tStar}$。\n将 $t = ${tStar}$ 代入 $y$ 坐标验证：\n$$y_1(${tStar}) = ${yStar}, \\quad y_2(${tStar}) = ${yStar}$$\n两坐标在 $t = ${tStar}$ 处完全相同，因此发生碰撞，碰撞点为 $(${xStar}, ${yStar})$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -522,24 +510,25 @@ export const parametricEquationsOfCircles: TopicDef = {
         const r = rng.int(2, 10);
         const xTerm = trigTerm(h, r, "\\cos\\theta");
         const yTerm = trigTerm(k, r, "\\sin\\theta");
-        return oneOf(
-          rng,
-          t(
-            `Identify the center and radius of the circle defined by $x = ${xTerm}$, $y = ${yTerm}$.`,
-            `求参数方程 $x = ${xTerm}$，$y = ${yTerm}$ 所表示的圆的圆心和半径。`,
+        const r2 = r * r;
+        const stdEq = `${sq("x", h)} + ${sq("y", k)} = ${r2}`;
+        return equationProblem({
+          prompt: t(
+            `Eliminate the parameter $\\theta$ to find the standard Cartesian equation of the circle defined by $x = ${xTerm}$, $y = ${yTerm}$.`,
+            `消去参数 $\\theta$，求由参数方程 $x = ${xTerm}$，$y = ${yTerm}$ 所表示的圆的标准直角坐标方程。`,
           ),
-          t(`Center $(${h}, ${k})$, radius $r = ${r}$`, `圆心 $(${h}, ${k})$，半径 $r = ${r}$`),
-          [
-            t(`Center $(${-h}, ${-k})$, radius $r = ${r}$`, `圆心 $(${-h}, ${-k})$，半径 $r = ${r}$`),
-            t(`Center $(${k}, ${h})$, radius $r = ${r}$`, `圆心 $(${k}, ${h})$，半径 $r = ${r}$`),
-            t(`Center $(${h}, ${k})$, radius $r = ${r * r}$`, `圆心 $(${h}, ${k})$，半径 $r = ${r * r}$`),
-            t(`Center $(${h}, ${-k})$, radius $r = ${r}$`, `圆心 $(${h}, ${-k})$，半径 $r = ${r}$`),
+          answer: stdEq,
+          wrong: [
+            `${sq("x", -h)} + ${sq("y", -k)} = ${r2}`,
+            `${sq("x", k)} + ${sq("y", h)} = ${r2}`,
+            `${sq("x", h)} + ${sq("y", k)} = ${r}`,
+            `${sq("x", h)} - ${sq("y", k)} = ${r2}`,
           ],
-          t(
-            `Comparing with $x = h + r\\cos\\theta$ and $y = k + r\\sin\\theta$ gives center $(h, k) = (${h}, ${k})$ and radius $r = ${r}$.`,
-            `与标准参数形式 $x = h + r\\cos\\theta$ 和 $y = k + r\\sin\\theta$ 对比可得圆心 $(h, k) = (${h}, ${k})$，半径 $r = ${r}$。`,
+          solution: t(
+            `Comparing with $x = h + r\\cos\\theta$ and $y = k + r\\sin\\theta$ gives center $(h, k) = (${h}, ${k})$ and radius $r = ${r}$. Thus the standard Cartesian equation is:\n$$${stdEq}$$`,
+            `与标准参数形式 $x = h + r\\cos\\theta$ 和 $y = k + r\\sin\\theta$ 对比可得圆心 $(h, k) = (${h}, ${k})$，半径 $r = ${r}$。因此圆的标准方程为：\n$$${stdEq}$$`,
           ),
-        );
+        });
       },
     },
   ],
@@ -618,39 +607,24 @@ export const parametricEquationsOfEllipses: TopicDef = {
         const yTerm = trigTerm(k, b, "\\sin\\theta");
         const majorLen = 2 * Math.max(a, b);
         const minorLen = 2 * Math.min(a, b);
-        return oneOf(
-          rng,
-          t(
-            `For the ellipse $x = ${xTerm}$, $y = ${yTerm}$, find the center, major axis length, and minor axis length.`,
-            `对于椭圆 $x = ${xTerm}$，$y = ${yTerm}$，求其中心坐标、长轴长与短轴长。`,
-          ),
-          t(
-            `Center $(${h}, ${k})$, major axis $${majorLen}$, minor axis $${minorLen}$`,
-            `中心 $(${h}, ${k})$，长轴长 $${majorLen}$，短轴长 $${minorLen}$`,
-          ),
-          [
-            t(
-              `Center $(${h}, ${k})$, major axis $${Math.max(a, b)}$, minor axis $${Math.min(a, b)}$`,
-              `中心 $(${h}, ${k})$，长轴长 $${Math.max(a, b)}$，短轴长 $${Math.min(a, b)}$`,
-            ),
-            t(
-              `Center $(${-h}, ${-k})$, major axis $${majorLen}$, minor axis $${minorLen}$`,
-              `中心 $(${-h}, ${-k})$，长轴长 $${majorLen}$，短轴长 $${minorLen}$`,
-            ),
-            t(
-              `Center $(${h}, ${k})$, major axis $${minorLen}$, minor axis $${majorLen}$`,
-              `中心 $(${h}, ${k})$，长轴长 $${minorLen}$，短轴长 $${majorLen}$`,
-            ),
-            t(
-              `Center $(${k}, ${h})$, major axis $${majorLen}$, minor axis $${minorLen}$`,
-              `中心 $(${k}, ${h})$，长轴长 $${majorLen}$，短轴长 $${minorLen}$`,
-            ),
-          ],
-          t(
+        const askMajor = rng.bool();
+        return numberProblem({
+          prompt: askMajor
+            ? t(
+                `For the ellipse $x = ${xTerm}$, $y = ${yTerm}$, find the length of the major axis.`,
+                `对于椭圆 $x = ${xTerm}$，$y = ${yTerm}$，求其长轴的全长。`,
+              )
+            : t(
+                `For the ellipse $x = ${xTerm}$, $y = ${yTerm}$, find the length of the minor axis.`,
+                `对于椭圆 $x = ${xTerm}$，$y = ${yTerm}$，求其短轴的全长。`,
+              ),
+          answer: askMajor ? majorLen : minorLen,
+          wrong: [askMajor ? minorLen : majorLen, Math.max(a, b), Math.min(a, b), 2 * (a + b)],
+          solution: t(
             `The center is $(h, k) = (${h}, ${k})$. The semi-axes are $a = ${a}$ and $b = ${b}$.\nThe major axis has length $2\\max(${a}, ${b}) = ${majorLen}$, and the minor axis has length $2\\min(${a}, ${b}) = ${minorLen}$.`,
             `椭圆中心为 $(h, k) = (${h}, ${k})$。半轴长分别为 $a = ${a}$ 与 $b = ${b}$。\n长轴全长为 $2\\max(${a}, ${b}) = ${majorLen}$，短轴全长为 $2\\min(${a}, ${b}) = ${minorLen}$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -689,43 +663,37 @@ export const parametricEquationsOfParabolas: TopicDef = {
           const wrong1 = `x^2 = ${fourP}y`;
           const wrong2 = `y^2 = ${2 * p}x`;
           const wrong3 = `y^2 = ${-fourP}x`;
-          return oneOf(
-            rng,
-            t(
+          return equationProblem({
+            prompt: t(
               `Eliminate the parameter $t$ from $x = ${pCoeff}t^2, y = ${poly([2 * p, "t"])}$ ($t \\in \\mathbb{R}$) to find the Cartesian equation of the parabola.`,
               `消去参数 $t$（$t \\in \\mathbb{R}$），求抛物线 $x = ${pCoeff}t^2, y = ${poly([2 * p, "t"])}$ 的直角坐标方程。`,
             ),
-            t(`$${rightEq}$`, `$${rightEq}$`),
-            [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-            t(
+            answer: rightEq,
+            wrong: [wrong1, wrong2, wrong3],
+            solution: t(
               `Solve for $t$ from $y$: $t = \\frac{y}{${2 * p}}$. Substitute into $x$:\n$$x = ${p}\\left(\\frac{y}{${2 * p}}\\right)^2 = \\frac{y^2}{${fourP}} \\implies ${rightEq}$$`,
               `由 $y$ 解出 $t = \\frac{y}{${2 * p}}$，代入 $x$：\n$$x = ${p}\\left(\\frac{y}{${2 * p}}\\right)^2 = \\frac{y^2}{${fourP}} \\implies ${rightEq}$$`,
             ),
-          );
+          });
         }
 
         if (mode === "focusDirectrix") {
-          const rightAns = `Focus $(${p}, 0)$, directrix $x = ${-p}`;
-          const wrong1 = `Focus $(0, ${p})$, directrix $y = ${-p}`;
-          const wrong2 = `Focus $(${2 * p}, 0)$, directrix $x = ${-2 * p}`;
-          const wrong3 = `Focus $(${-p}, 0)$, directrix $x = ${p}`;
-          return oneOf(
-            rng,
-            t(
-              `For the parabola given parametrically by $x = ${pCoeff}t^2, y = ${poly([2 * p, "t"])}$, find the coordinates of its focus and the equation of its directrix.`,
-              `求参数方程为 $x = ${pCoeff}t^2, y = ${poly([2 * p, "t"])}$ 的抛物线的焦点坐标与准线方程。`,
+          return pointProblem({
+            prompt: t(
+              `For the parabola given parametrically by $x = ${pCoeff}t^2, y = ${poly([2 * p, "t"])}$, find the coordinates of its focus.`,
+              `求参数方程为 $x = ${pCoeff}t^2, y = ${poly([2 * p, "t"])}$ 的抛物线的焦点坐标。`,
             ),
-            t(rightAns, `焦点 $(${p}, 0)$，准线 $x = ${-p}$`),
-            [
-              t(wrong1, `焦点 $(0, ${p})$，准线 $y = ${-p}$`),
-              t(wrong2, `焦点 $(${2 * p}, 0)$，准线 $x = ${-2 * p}$`),
-              t(wrong3, `焦点 $(${-p}, 0)$，准线 $x = ${p}$`),
+            answer: [p, 0],
+            wrong: [
+              [0, p],
+              [2 * p, 0],
+              [-p, 0],
             ],
-            t(
+            solution: t(
               `In standard parametric form $x = pt^2, y = 2pt$, the parameter value is $p = ${p}$.\nThe focus is $(p, 0) = (${p}, 0)$ and the directrix is $x = -p \\implies x = ${-p}$.`,
               `标准参数式为 $x = pt^2, y = 2pt$，参数值为 $p = ${p}$。\n因此焦点为 $(p, 0) = (${p}, 0)$，准线为 $x = -p \\implies x = ${-p}$。`,
             ),
-          );
+          });
         }
 
         const rightParam = `x = ${pCoeff}t^2, \\; y = ${poly([2 * p, "t"])}`;
@@ -765,43 +733,37 @@ export const parametricEquationsOfParabolas: TopicDef = {
           const wrong1 = `y^2 = ${fourP}x`;
           const wrong2 = `x^2 = ${2 * p}y`;
           const wrong3 = `x^2 = ${-fourP}y`;
-          return oneOf(
-            rng,
-            t(
+          return equationProblem({
+            prompt: t(
               `Eliminate the parameter $t$ from $x = ${poly([2 * p, "t"])}, y = ${pCoeff}t^2$ ($t \\in \\mathbb{R}$) to find the Cartesian equation of the parabola.`,
               `消去参数 $t$（$t \\in \\mathbb{R}$），求抛物线 $x = ${poly([2 * p, "t"])}, y = ${pCoeff}t^2$ 的直角坐标方程。`,
             ),
-            t(`$${rightEq}$`, `$${rightEq}$`),
-            [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-            t(
+            answer: rightEq,
+            wrong: [wrong1, wrong2, wrong3],
+            solution: t(
               `Solve for $t$ from $x$: $t = \\frac{x}{${2 * p}}$. Substitute into $y$:\n$$y = ${p}\\left(\\frac{x}{${2 * p}}\\right)^2 = \\frac{x^2}{${fourP}} \\implies ${rightEq}$$`,
               `由 $x$ 解出 $t = \\frac{x}{${2 * p}}$，代入 $y$：\n$$y = ${p}\\left(\\frac{x}{${2 * p}}\\right)^2 = \\frac{x^2}{${fourP}} \\implies ${rightEq}$$`,
             ),
-          );
+          });
         }
 
         if (mode === "focusDirectrix") {
-          const rightAns = `Focus $(0, ${p})$, directrix $y = ${-p}$`;
-          const wrong1 = `Focus $(${p}, 0)$, directrix $x = ${-p}$`;
-          const wrong2 = `Focus $(0, ${2 * p})$, directrix $y = ${-2 * p}$`;
-          const wrong3 = `Focus $(0, ${-p})$, directrix $y = ${p}$`;
-          return oneOf(
-            rng,
-            t(
-              `For the parabola given parametrically by $x = ${poly([2 * p, "t"])}, y = ${pCoeff}t^2$, find the coordinates of its focus and the equation of its directrix.`,
-              `求参数方程为 $x = ${poly([2 * p, "t"])}, y = ${pCoeff}t^2$ 的抛物线的焦点坐标与准线方程。`,
+          return pointProblem({
+            prompt: t(
+              `For the parabola given parametrically by $x = ${poly([2 * p, "t"])}, y = ${pCoeff}t^2$, find the coordinates of its focus.`,
+              `求参数方程为 $x = ${poly([2 * p, "t"])}, y = ${pCoeff}t^2$ 的抛物线的焦点坐标。`,
             ),
-            t(rightAns, `焦点 $(0, ${p})$，准线 $y = ${-p}$`),
-            [
-              t(wrong1, `焦点 $(${p}, 0)$，准线 $x = ${-p}$`),
-              t(wrong2, `焦点 $(0, ${2 * p})$，准线 $y = ${-2 * p}$`),
-              t(wrong3, `焦点 $(0, ${-p})$，准线 $y = ${p}$`),
+            answer: [0, p],
+            wrong: [
+              [p, 0],
+              [0, 2 * p],
+              [0, -p],
             ],
-            t(
+            solution: t(
               `In standard parametric form $x = 2pt, y = pt^2$, the parameter is $p = ${p}$.\nThe focus is $(0, p) = (0, ${p})$ and the directrix is $y = -p \\implies y = ${-p}$.`,
               `标准参数式为 $x = 2pt, y = pt^2$，参数值为 $p = ${p}$。\n因此焦点为 $(0, p) = (0, ${p})$，准线为 $y = -p \\implies y = ${-p}$。`,
             ),
-          );
+          });
         }
 
         const rightParam = `x = ${poly([2 * p, "t"])}, \\; y = ${pCoeff}t^2`;
@@ -856,29 +818,22 @@ export const parametricEquationsOfParabolasCenteredAtHk: TopicDef = {
         const pCoeff = p === 1 ? "" : p === -1 ? "-" : `${p}`;
         const yTerm = `${pCoeff}t^2 ${sgnTerm(k)}`.trim();
         const stdEq = `${sq("x", h)} = ${4 * p}${lin("y", k)}`;
-        const rightChoice = `Vertex $(${h}, ${k})$, equation: $${stdEq}$`;
-        const wrong1 = `Vertex $(${-h}, ${-k})$, equation: $${stdEq}$`;
-        const wrong2 = `Vertex $(${k}, ${h})$, equation: $${stdEq}$`;
-        const wrong3 = `Vertex $(${h}, ${k})$, equation: $${sq("y", k)} = ${4 * p}${lin("x", h)}$`;
-        const wrong4 = `Vertex $(${h}, ${k})$, equation: $${sq("x", h)} = ${2 * p}${lin("y", k)}$`;
-        return oneOf(
-          rng,
-          t(
-            `Identify the vertex and Cartesian equation of the parabola $x(t) = ${xTerm}$, $y(t) = ${yTerm}$.`,
-            `求参数抛物线 $x(t) = ${xTerm}$，$y(t) = ${yTerm}$ 的顶点坐标与直角坐标方程。`,
+        return equationProblem({
+          prompt: t(
+            `Eliminate the parameter $t$ to find the Cartesian equation of the parabola $x(t) = ${xTerm}$, $y(t) = ${yTerm}$.`,
+            `消去参数 $t$，求参数抛物线 $x(t) = ${xTerm}$，$y(t) = ${yTerm}$ 的直角坐标方程。`,
           ),
-          t(rightChoice, `顶点 $(${h}, ${k})$，方程: $${stdEq}$`),
-          [
-            t(wrong1, `顶点 $(${-h}, ${-k})$，方程: $${stdEq}$`),
-            t(wrong2, `顶点 $(${k}, ${h})$，方程: $${stdEq}$`),
-            t(wrong3, `顶点 $(${h}, ${k})$，方程: $${sq("y", k)} = ${4 * p}${lin("x", h)}$`),
-            t(wrong4, `顶点 $(${h}, ${k})$，方程: $${sq("x", h)} = ${2 * p}${lin("y", k)}$`),
+          answer: stdEq,
+          wrong: [
+            `${sq("x", -h)} = ${4 * p}${lin("y", -k)}`,
+            `${sq("y", k)} = ${4 * p}${lin("x", h)}`,
+            `${sq("x", h)} = ${2 * p}${lin("y", k)}`,
           ],
-          t(
+          solution: t(
             `Setting $t = 0$ gives vertex $(x, y) = (${h}, ${k})$.\nSolve for $t$ from $x$: $t = \\frac{${lin("x", h)}}{${2 * p}}$.\nSubstitute into $y$:\n$$${linExpr(1, -k, "y")} = ${p}\\left(\\frac{${lin("x", h)}}{${2 * p}}\\right)^2 = \\frac{${sq("x", h)}}{${4 * p}} \\implies ${stdEq}$$`,
             `令 $t = 0$ 得顶点 $(x, y) = (${h}, ${k})$。\n由 $x$ 解得 $t = \\frac{${lin("x", h)}}{${2 * p}}$。\n代入 $y$：\n$$${linExpr(1, -k, "y")} = ${p}\\left(\\frac{${lin("x", h)}}{${2 * p}}\\right)^2 = \\frac{${sq("x", h)}}{${4 * p}} \\implies ${stdEq}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -896,29 +851,22 @@ export const parametricEquationsOfParabolasCenteredAtHk: TopicDef = {
         const xTerm = `${pCoeff}t^2 ${sgnTerm(h)}`.trim();
         const yTerm = linExpr(2 * p, k, "t");
         const stdEq = `${sq("y", k)} = ${4 * p}${lin("x", h)}`;
-        const rightChoice = `Vertex $(${h}, ${k})$, equation: $${stdEq}$`;
-        const wrong1 = `Vertex $(${-h}, ${-k})$, equation: $${stdEq}$`;
-        const wrong2 = `Vertex $(${k}, ${h})$, equation: $${stdEq}$`;
-        const wrong3 = `Vertex $(${h}, ${k})$, equation: $${sq("x", h)} = ${4 * p}${lin("y", k)}$`;
-        const wrong4 = `Vertex $(${h}, ${k})$, equation: $${sq("y", k)} = ${2 * p}${lin("x", h)}$`;
-        return oneOf(
-          rng,
-          t(
-            `Identify the vertex and Cartesian equation of the parabola $x(t) = ${xTerm}$, $y(t) = ${yTerm}$.`,
-            `求参数抛物线 $x(t) = ${xTerm}$，$y(t) = ${yTerm}$ 的顶点坐标与直角坐标方程。`,
+        return equationProblem({
+          prompt: t(
+            `Eliminate the parameter $t$ to find the Cartesian equation of the parabola $x(t) = ${xTerm}$, $y(t) = ${yTerm}$.`,
+            `消去参数 $t$，求参数抛物线 $x(t) = ${xTerm}$，$y(t) = ${yTerm}$ 的直角坐标方程。`,
           ),
-          t(rightChoice, `顶点 $(${h}, ${k})$，方程: $${stdEq}$`),
-          [
-            t(wrong1, `顶点 $(${-h}, ${-k})$，方程: $${stdEq}$`),
-            t(wrong2, `顶点 $(${k}, ${h})$，方程: $${stdEq}$`),
-            t(wrong3, `顶点 $(${h}, ${k})$，方程: $${sq("x", h)} = ${4 * p}${lin("y", k)}$`),
-            t(wrong4, `顶点 $(${h}, ${k})$，方程: $${sq("y", k)} = ${2 * p}${lin("x", h)}$`),
+          answer: stdEq,
+          wrong: [
+            `${sq("y", -k)} = ${4 * p}${lin("x", -h)}`,
+            `${sq("x", h)} = ${4 * p}${lin("y", k)}`,
+            `${sq("y", k)} = ${2 * p}${lin("x", h)}`,
           ],
-          t(
+          solution: t(
             `Setting $t = 0$ gives vertex $(x, y) = (${h}, ${k})$.\nSolve for $t$ from $y$: $t = \\frac{${lin("y", k)}}{${2 * p}}$.\nSubstitute into $x$:\n$$${linExpr(1, -h, "x")} = ${p}\\left(\\frac{${lin("y", k)}}{${2 * p}}\\right)^2 = \\frac{${sq("y", k)}}{${4 * p}} \\implies ${stdEq}$$`,
             `令 $t = 0$ 得顶点 $(x, y) = (${h}, ${k})$。\n由 $y$ 解得 $t = \\frac{${lin("y", k)}}{${2 * p}}$。\n代入 $x$：\n$$${linExpr(1, -h, "x")} = ${p}\\left(\\frac{${lin("y", k)}}{${2 * p}}\\right)^2 = \\frac{${sq("y", k)}}{${4 * p}} \\implies ${stdEq}$$`,
           ),
-        );
+        });
       },
     },
   ],
@@ -988,43 +936,27 @@ export const parametricEquationsOfHorizontalHyperbolas: TopicDef = {
         const k = rng.int(-5, 5);
         const a = rng.int(2, 8);
         const b = rng.int(2, 8);
+        const a2 = a * a;
+        const b2 = b * b;
         const xTerm = trigTerm(h, a, "\\sec\\theta");
         const yTerm = trigTerm(k, b, "\\tan\\theta");
-        const v1x = h - a;
-        const v2x = h + a;
-        return oneOf(
-          rng,
-          t(
-            `Find the center and vertices of the hyperbola defined by $x = ${xTerm}$, $y = ${yTerm}$.`,
-            `求参数方程 $x = ${xTerm}$，$y = ${yTerm}$ 定义的双曲线的中心与顶点坐标。`,
+        const stdEq = `\\frac{${sq("x", h)}}{${a2}} - \\frac{${sq("y", k)}}{${b2}} = 1`;
+        return equationProblem({
+          prompt: t(
+            `Eliminate the parameter $\\theta$ to find the standard Cartesian equation of the hyperbola defined by $x = ${xTerm}$, $y = ${yTerm}$.`,
+            `消去参数 $\\theta$，求由参数方程 $x = ${xTerm}$，$y = ${yTerm}$ 定义的双曲线的标准直角坐标方程。`,
           ),
-          t(
-            `Center $(${h}, ${k})$, vertices $(${v1x}, ${k})$ and $(${v2x}, ${k})$`,
-            `中心 $(${h}, ${k})$，顶点 $(${v1x}, ${k})$ 和 $(${v2x}, ${k})$`,
-          ),
-          [
-            t(
-              `Center $(${h}, ${k})$, vertices $(${h}, ${k - a})$ and $(${h}, ${k + a})$`,
-              `中心 $(${h}, ${k})$，顶点 $(${h}, ${k - a})$ 和 $(${h}, ${k + a})$`,
-            ),
-            t(
-              `Center $(${-h}, ${-k})$, vertices $(${v1x}, ${k})$ and $(${v2x}, ${k})$`,
-              `中心 $(${-h}, ${-k})$，顶点 $(${v1x}, ${k})$ 和 $(${v2x}, ${k})$`,
-            ),
-            t(
-              `Center $(${h}, ${k})$, vertices $(${h - b}, ${k})$ and $(${h + b}, ${k})$`,
-              `中心 $(${h}, ${k})$，顶点 $(${h - b}, ${k})$ 和 $(${h + b}, ${k})$`,
-            ),
-            t(
-              `Center $(${k}, ${h})$, vertices $(${v1x}, ${k})$ and $(${v2x}, ${k})$`,
-              `中心 $(${k}, ${h})$，顶点 $(${v1x}, ${k})$ 和 $(${v2x}, ${k})$`,
-            ),
+          answer: stdEq,
+          wrong: [
+            `\\frac{${sq("y", k)}}{${a2}} - \\frac{${sq("x", h)}}{${b2}} = 1`,
+            `\\frac{${sq("x", -h)}}{${a2}} - \\frac{${sq("y", -k)}}{${b2}} = 1`,
+            `\\frac{${sq("x", h)}}{${a2}} + \\frac{${sq("y", k)}}{${b2}} = 1`,
           ],
-          t(
-            `The center is $(h, k) = (${h}, ${k})$. The transverse axis is horizontal with semi-length $a = ${a}$.\nThe vertices are $(h \\pm a, k)$, which are $(${v1x}, ${k})$ and $(${v2x}, ${k})$.`,
-            `中心为 $(h, k) = (${h}, ${k})$。实轴为水平方向，半实轴长 $a = ${a}$。\n因此顶点为 $(h \\pm a, k)$，即 $(${v1x}, ${k})$ 和 $(${v2x}, ${k})$。`,
+          solution: t(
+            `The center is $(h, k) = (${h}, ${k})$. Since $\\sec\\theta = \\frac{${lin("x", h)}}{${a}}$ and $\\tan\\theta = \\frac{${lin("y", k)}}{${b}}$, using $\\sec^2\\theta - \\tan^2\\theta = 1$ gives:\n$$${stdEq}$$`,
+            `中心为 $(h, k) = (${h}, ${k})$。由于 $\\sec\\theta = \\frac{${lin("x", h)}}{${a}}$ 且 $\\tan\\theta = \\frac{${lin("y", k)}}{${b}}$，利用 $\\sec^2\\theta - \\tan^2\\theta = 1$ 可得：\n$$${stdEq}$$`,
           ),
-        );
+        });
       },
     },
   ],
@@ -1094,43 +1026,27 @@ export const parametricEquationsOfVerticalHyperbolas: TopicDef = {
         const k = rng.int(-5, 5);
         const a = rng.int(2, 8);
         const b = rng.int(2, 8);
+        const a2 = a * a;
+        const b2 = b * b;
         const xTerm = trigTerm(h, b, "\\tan\\theta");
         const yTerm = trigTerm(k, a, "\\sec\\theta");
-        const v1y = k - a;
-        const v2y = k + a;
-        return oneOf(
-          rng,
-          t(
-            `Find the center and vertices of the hyperbola defined by $x = ${xTerm}$, $y = ${yTerm}$.`,
-            `求参数方程 $x = ${xTerm}$，$y = ${yTerm}$ 定义的双曲线的中心与顶点坐标。`,
+        const stdEq = `\\frac{${sq("y", k)}}{${a2}} - \\frac{${sq("x", h)}}{${b2}} = 1`;
+        return equationProblem({
+          prompt: t(
+            `Eliminate the parameter $\\theta$ to find the standard Cartesian equation of the hyperbola defined by $x = ${xTerm}$, $y = ${yTerm}$.`,
+            `消去参数 $\\theta$，求由参数方程 $x = ${xTerm}$，$y = ${yTerm}$ 定义的双曲线的标准直角坐标方程。`,
           ),
-          t(
-            `Center $(${h}, ${k})$, vertices $(${h}, ${v1y})$ and $(${h}, ${v2y})$`,
-            `中心 $(${h}, ${k})$，顶点 $(${h}, ${v1y})$ 和 $(${h}, ${v2y})$`,
-          ),
-          [
-            t(
-              `Center $(${h}, ${k})$, vertices $(${h - a}, ${k})$ and $(${h + a}, ${k})$`,
-              `中心 $(${h}, ${k})$，顶点 $(${h - a}, ${k})$ 和 $(${h + a}, ${k})$`,
-            ),
-            t(
-              `Center $(${-h}, ${-k})$, vertices $(${h}, ${v1y})$ and $(${h}, ${v2y})$`,
-              `中心 $(${-h}, ${-k})$，顶点 $(${h}, ${v1y})$ 和 $(${h}, ${v2y})$`,
-            ),
-            t(
-              `Center $(${h}, ${k})$, vertices $(${h}, ${k - b})$ and $(${h}, ${k + b})$`,
-              `中心 $(${h}, ${k})$，顶点 $(${h}, ${k - b})$ 和 $(${h}, ${k + b})$`,
-            ),
-            t(
-              `Center $(${k}, ${h})$, vertices $(${h}, ${v1y})$ and $(${h}, ${v2y})$`,
-              `中心 $(${k}, ${h})$，顶点 $(${h}, ${v1y})$ 和 $(${h}, ${v2y})$`,
-            ),
+          answer: stdEq,
+          wrong: [
+            `\\frac{${sq("x", h)}}{${a2}} - \\frac{${sq("y", k)}}{${b2}} = 1`,
+            `\\frac{${sq("y", -k)}}{${a2}} - \\frac{${sq("x", -h)}}{${b2}} = 1`,
+            `\\frac{${sq("y", k)}}{${a2}} + \\frac{${sq("x", h)}}{${b2}} = 1`,
           ],
-          t(
-            `The center is $(h, k) = (${h}, ${k})$. The transverse axis is vertical with semi-length $a = ${a}$.\nThe vertices are $(h, k \\pm a)$, which are $(${h}, ${v1y})$ and $(${h}, ${v2y})$.`,
-            `中心为 $(h, k) = (${h}, ${k})$。实轴为铅直方向，半实轴长 $a = ${a}$。\n因此顶点为 $(h, k \\pm a)$，即 $(${h}, ${v1y})$ 和 $(${h}, ${v2y})$。`,
+          solution: t(
+            `The center is $(h, k) = (${h}, ${k})$. Since $\\sec\\theta = \\frac{${lin("y", k)}}{${a}}$ and $\\tan\\theta = \\frac{${lin("x", h)}}{${b}}$, using $\\sec^2\\theta - \\tan^2\\theta = 1$ gives:\n$$${stdEq}$$`,
+            `中心为 $(h, k) = (${h}, ${k})$。由于 $\\sec\\theta = \\frac{${lin("y", k)}}{${a}}$ 且 $\\tan\\theta = \\frac{${lin("x", h)}}{${b}}$，利用 $\\sec^2\\theta - \\tan^2\\theta = 1$ 可得：\n$$${stdEq}$$`,
           ),
-        );
+        });
       },
     },
   ],
@@ -1301,10 +1217,12 @@ export const convertingFromPolarCoordinatesToCartesianCoordinates: TopicDef = {
           { th: "\\frac{11\\pi}{6}", x: `${k === 1 ? "" : k}\\sqrt{3}`, y: `-${k}` },
         ];
         const item = rng.pick(angles);
+        const negX = item.x.startsWith("-") ? item.x.slice(1) : `-${item.x}`;
+        const negY = item.y.startsWith("-") ? item.y.slice(1) : `-${item.y}`;
         const rightChoice = `(${item.x}, ${item.y})`;
         const wrong1 = `(${item.y}, ${item.x})`;
-        const wrong2 = `(-(${item.x}), ${item.y})`;
-        const wrong3 = `(${item.x}, -(${item.y}))`;
+        const wrong2 = `(${negX}, ${item.y})`;
+        const wrong3 = `(${item.x}, ${negY})`;
         return oneOf(
           rng,
           t(
@@ -1315,7 +1233,7 @@ export const convertingFromPolarCoordinatesToCartesianCoordinates: TopicDef = {
           [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
           t(
             `Calculate $x$ and $y$:\n$$x = ${r}\\cos\\left(${item.th}\\right) = ${item.x}$$\n$$y = ${r}\\sin\\left(${item.th}\\right) = ${item.y}$$\nThus $(x, y) = ${rightChoice}$.`,
-            `计算 $x$ 与 $y$：\n$$x = ${r}\\cos\\left(${item.th}\\right) = ${item.x}$$\n$$y = ${r}\\sin\\left(${item.th}\\right) = ${item.y}$$\n因此直角坐标为 ${rightChoice}。`,
+            `计算 $x$ 与 $y$：\n$$x = ${r}\\cos\\left(${item.th}\\right) = ${item.x}$$\n$$y = ${r}\\sin\\left(${item.th}\\right) = ${item.y}$$\n因此直角坐标为 $${rightChoice}$。`,
           ),
         );
       },
@@ -1390,59 +1308,18 @@ export const polarEquationsOfCirclesCenteredAtTheOrigin: TopicDef = {
         ]);
         const radius = Math.abs(a);
         const diameter = 2 * radius;
-        const mode = rng.pick(["centerRadius", "diameterCircumference"]);
-
-        if (mode === "diameterCircumference") {
-          const circ = `${2 * radius}\\pi`;
-          const area = `${radius * radius}\\pi`;
-          return oneOf(
-            rng,
-            t(
-              `Find the circumference and area of the circle defined by the polar equation $r = ${a}$.`,
-              `求极坐标方程 $r = ${a}$ 所表示的圆的周长与面积。`,
-            ),
-            t(`Circumference $${circ}$, area $${area}$`, `周长 $${circ}$，面积 $${area}$`),
-            [
-              t(`Circumference $${radius}\\pi$, area $${area}$`, `周长 $${radius}\\pi$，面积 $${area}$`),
-              t(`Circumference $${circ}$, area $${2 * radius}\\pi$`, `周长 $${circ}$，面积 $${2 * radius}\\pi$`),
-              t(`Circumference $${4 * radius}\\pi$, area $${area}$`, `周长 $${4 * radius}\\pi$，面积 $${area}$`),
-            ],
-            t(
-              `The radius is $R = |${a}| = ${radius}$.\nCircumference $C = 2\\pi R = ${circ}$, area $A = \\pi R^2 = ${area}$.`,
-              `半径为 $R = |${a}| = ${radius}$。\n周长 $C = 2\\pi R = ${circ}$，面积 $A = \\pi R^2 = ${area}$。`,
-            ),
-          );
-        }
-
-        return oneOf(
-          rng,
-          t(
-            `Identify the center, radius, and diameter of the curve with polar equation $r = ${a}$.`,
-            `求极坐标方程 $r = ${a}$ 所表示曲线的圆心、半径与直径。`,
+        const askRadius = rng.bool();
+        return numberProblem({
+          prompt: askRadius
+            ? t(`Find the radius of the circle with polar equation $r = ${a}$.`, `求极坐标方程 $r = ${a}$ 所表示的圆的半径。`)
+            : t(`Find the diameter of the circle with polar equation $r = ${a}$.`, `求极坐标方程 $r = ${a}$ 所表示的圆的直径。`),
+          answer: askRadius ? radius : diameter,
+          wrong: [askRadius ? diameter : radius, a, radius * radius],
+          solution: t(
+            `The equation $r = ${a}$ represents all points at distance $|${a}| = ${radius}$ from the pole $(0, 0)$.\nThus the center is $(0, 0)$, radius is $${radius}$, and diameter is $2(${radius}) = ${diameter}$.`,
+            `方程 $r = ${a}$ 表示所有到极点 $(0, 0)$ 的距离为 $|${a}| = ${radius}$ 的点。\n因此圆心为 $(0, 0)$，半径为 $${radius}$，直径为 $2(${radius}) = ${diameter}$。`,
           ),
-          t(
-            `Center $(0, 0)$, radius $r = ${radius}$, diameter $d = ${diameter}`,
-            `圆心 $(0, 0)$，半径 $r = ${radius}$，直径 $d = ${diameter}`,
-          ),
-          [
-            t(
-              `Center $(${a}, 0)$, radius $r = ${radius}$, diameter $d = ${diameter}`,
-              `圆心 $(${a}, 0)$，半径 $r = ${radius}$，直径 $d = ${diameter}`,
-            ),
-            t(
-              `Center $(0, ${a})$, radius $r = ${radius}$, diameter $d = ${diameter}`,
-              `圆心 $(0, ${a})$，半径 $r = ${radius}$，直径 $d = ${diameter}`,
-            ),
-            t(
-              `Center $(0, 0)$, radius $r = ${radius * radius}$, diameter $d = ${2 * radius * radius}`,
-              `圆心 $(0, 0)$，半径 $r = ${radius * radius}$，直径 $d = ${2 * radius * radius}`,
-            ),
-          ],
-          t(
-            `The equation $r = ${a}$ represents all points at distance $|${a}| = ${radius}$ from the pole $(0, 0)$.\nThus the center is $(0, 0)$, radius is ${radius}$, and diameter is $2(${radius}) = ${diameter}$.`,
-            `方程 $r = ${a}$ 表示所有到极点 $(0, 0)$ 的距离为 $|${a}| = ${radius}$ 的点。\n因此圆心为 $(0, 0)$，半径为 ${radius}$，直径为 $2(${radius}) = ${diameter}$。`,
-          ),
-        );
+        });
       },
     },
     {
@@ -1453,44 +1330,24 @@ export const polarEquationsOfCirclesCenteredAtTheOrigin: TopicDef = {
         "由于极坐标与直角坐标的关系满足 $x^2 + y^2 = r^2$，将 $r = a$ 两边平方即可得：\n$$r^2 = a^2 \\implies x^2 + y^2 = a^2$$\n例如，极坐标方程 $r = 5$ 对应的直角坐标方程为 $x^2 + y^2 = 25$。",
       ),
       generate(rng) {
-        const a = rng.int(2, 20);
-        const a2 = a * a;
-        const mode = rng.pick(["polarToCart", "cartToPolar"]);
-
-        if (mode === "cartToPolar") {
-          const rightAns = `r = ${a}`;
-          const wrong1 = `r = ${a2}`;
-          const wrong2 = `\\theta = ${a}`;
-          const wrong3 = `r = ${2 * a}`;
-          return oneOf(
-            rng,
-            t(
-              `Convert the Cartesian circle equation $x^2 + y^2 = ${a2}$ into a polar equation with $r > 0$.`,
-              `将圆的直角坐标方程 $x^2 + y^2 = ${a2}$ 转化为极径 $r > 0$ 的极坐标方程。`,
-            ),
-            t(`$${rightAns}$`, `$${rightAns}$`),
-            [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-            t(
-              `Substitute $x^2 + y^2 = r^2$:\n$$r^2 = ${a2} \\implies r = ${a} \\quad (r > 0)$$`,
-              `代入 $x^2 + y^2 = r^2$：\n$$r^2 = ${a2} \\implies r = ${a} \\quad (r > 0)$$`,
-            ),
-          );
-        }
-
-        return oneOf(
-          rng,
-          t(`Find the Cartesian equation corresponding to the polar equation $r = ${a}$.`, `求极坐标方程 $r = ${a}$ 对应的直角坐标方程。`),
-          t(`$x^2 + y^2 = ${a2}$`, `$x^2 + y^2 = ${a2}$`),
-          [
-            t(`$x^2 + y^2 = ${a}$`, `$x^2 + y^2 = ${a}$`),
-            t(`$${sq("x", a)} + y^2 = ${a2}$`, `$${sq("x", a)} + y^2 = ${a2}$`),
-            t(`$x^2 + (y - ${a})^2 = ${a2}$`, `$x^2 + (y - ${a})^2 = ${a2}$`),
-          ],
-          t(
-            `Square both sides of $r = ${a}$:\n$$r^2 = ${a}^2 = ${a2}$$\nSince $r^2 = x^2 + y^2$, the Cartesian equation is $x^2 + y^2 = ${a2}$.`,
-            `将 $r = ${a}$ 两边平方：\n$$r^2 = ${a}^2 = ${a2}$$\n由 $r^2 = x^2 + y^2$ 可得直角坐标方程为 $x^2 + y^2 = ${a2}$。`,
+        const a = rng.pick([
+          -18, -16, -15, -14, -13, -12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18,
+          20,
+        ]);
+        const radius = Math.abs(a);
+        const a2 = radius * radius;
+        return equationProblem({
+          prompt: t(
+            `Find the Cartesian equation corresponding to the polar equation $r = ${a}$.`,
+            `求极坐标方程 $r = ${a}$ 对应的直角坐标方程。`,
           ),
-        );
+          answer: `x^2 + y^2 = ${a2}`,
+          wrong: [`x^2 + y^2 = ${radius}`, `${sq("x", a)} + y^2 = ${a2}`, `x^2 + ${sq("y", a)} = ${a2}`],
+          solution: t(
+            `Square both sides of $r = ${a}$:\n$$r^2 = (${a})^2 = ${a2}$$\nSince $r^2 = x^2 + y^2$, the Cartesian equation is $x^2 + y^2 = ${a2}$.`,
+            `将 $r = ${a}$ 两边平方：\n$$r^2 = (${a})^2 = ${a2}$$\n由 $r^2 = x^2 + y^2$ 可得直角坐标方程为 $x^2 + y^2 = ${a2}$。`,
+          ),
+        });
       },
     },
   ],
@@ -1612,19 +1469,30 @@ export const polarEquationsOfRadialLines: TopicDef = {
           );
         }
         const angleTex = mode === "slopeDeg" ? item.deg : item.alpha;
-        return oneOf(
-          rng,
-          t(
-            `Find the slope of the line given by the polar equation $\\theta = ${angleTex}$.`,
-            `求极坐标方程 $\\theta = ${angleTex}$ 所表示直线的斜率。`,
+        const slopeAnswer: [number | Q, number] =
+          item.slope === "\\frac{\\sqrt{3}}{3}"
+            ? [Q.of(1, 3), 3]
+            : item.slope === "-\\frac{\\sqrt{3}}{3}"
+              ? [Q.of(-1, 3), 3]
+              : item.slope === "\\sqrt{3}"
+                ? [1, 3]
+                : item.slope === "-\\sqrt{3}"
+                  ? [-1, 3]
+                  : item.slope === "1"
+                    ? [1, 1]
+                    : [-1, 1];
+        return radicalProblem({
+          prompt: t(
+            `Find the slope $m$ of the line given by the polar equation $\\theta = ${angleTex}$.`,
+            `求极坐标方程 $\\theta = ${angleTex}$ 所表示直线的斜率 $m$。`,
           ),
-          t(`$m = ${item.slope}$`, `$m = ${item.slope}$`),
-          [t(`$m = ${item.bad1}$`, `$m = ${item.bad1}$`), t(`$m = ${item.bad2}$`, `$m = ${item.bad2}$`), t(`$m = 0$`, `$m = 0$`)],
-          t(
+          answer: slopeAnswer,
+          wrong: [item.bad1, item.bad2, "0"],
+          solution: t(
             `The line passes through the pole with inclination angle $\\alpha = ${angleTex}$.\nThe slope is $m = \\tan\\left(${angleTex}\\right) = ${item.slope}$.`,
             `该直线通过极点，倾斜角为 $\\alpha = ${angleTex}$。\n因此斜率为 $m = \\tan\\left(${angleTex}\\right) = ${item.slope}$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -1870,35 +1738,18 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
           );
         }
 
-        return oneOf(
-          rng,
-          t(
-            `Identify the center, radius, and Cartesian equation of the curve $r = ${twoA}\\cos\\theta$.`,
-            `求极坐标方程 $r = ${twoA}\\cos\\theta$ 所表示圆的圆心、半径与直角坐标方程。`,
+        return equationProblem({
+          prompt: t(
+            `Convert the polar equation $r = ${twoA}\\cos\\theta$ into standard Cartesian form $(x - a)^2 + y^2 = a^2$.`,
+            `将极坐标方程 $r = ${twoA}\\cos\\theta$ 化为圆的标准直角坐标方程 $(x - a)^2 + y^2 = a^2$。`,
           ),
-          t(
-            `Center $(${a}, 0)$, radius $r = ${radius}$, equation $${sq("x", a)} + y^2 = ${a2}$`,
-            `圆心 $(${a}, 0)$，半径 $r = ${radius}$，方程 $${sq("x", a)} + y^2 = ${a2}$`,
+          answer: `${sq("x", a)} + y^2 = ${a2}`,
+          wrong: [`x^2 + ${sq("y", a)} = ${a2}`, `${sq("x", twoA)} + y^2 = ${twoA * twoA}`, `${sq("x", -a)} + y^2 = ${a2}`],
+          solution: t(
+            `Multiply by $r$: $r^2 = ${twoA}r\\cos\\theta \\implies x^2 + y^2 = ${twoA}x$.\nComplete the square: $${poly([1, "x^2"], [-twoA, "x"], [a2, ""])} + y^2 = ${a2} \\implies ${sq("x", a)} + y^2 = ${a2}$.\nCenter is $(${a}, 0)$ and radius is $${radius}$.`,
+            `两端同乘 $r$ 得 $r^2 = ${twoA}r\\cos\\theta \\implies x^2 + y^2 = ${twoA}x$。\n配方得 $${poly([1, "x^2"], [-twoA, "x"], [a2, ""])} + y^2 = ${a2} \\implies ${sq("x", a)} + y^2 = ${a2}$。\n因此圆心为 $(${a}, 0)$，半径为 $${radius}$。`,
           ),
-          [
-            t(
-              `Center $(0, ${a})$, radius $r = ${radius}$, equation $x^2 + ${sq("y", a)} = ${a2}$`,
-              `圆心 $(0, ${a})$，半径 $r = ${radius}$，方程 $x^2 + ${sq("y", a)} = ${a2}$`,
-            ),
-            t(
-              `Center $(${twoA}, 0)$, radius $r = ${Math.abs(twoA)}$, equation $${sq("x", twoA)} + y^2 = ${twoA * twoA}$`,
-              `圆心 $(${twoA}, 0)$，半径 $r = ${Math.abs(twoA)}$，方程 $${sq("x", twoA)} + y^2 = ${twoA * twoA}$`,
-            ),
-            t(
-              `Center $(${-a}, 0)$, radius $r = ${radius}$, equation $${sq("x", -a)} + y^2 = ${a2}$`,
-              `圆心 $(${-a}, 0)$，半径 $r = ${radius}$，方程 $${sq("x", -a)} + y^2 = ${a2}$`,
-            ),
-          ],
-          t(
-            `Multiply by $r$: $r^2 = ${twoA}r\\cos\\theta \\implies x^2 + y^2 = ${twoA}x$.\nComplete the square: $${poly([1, "x^2"], [-twoA, "x"], [a2, ""])} + y^2 = ${a2} \\implies ${sq("x", a)} + y^2 = ${a2}$.\nCenter is $(${a}, 0)$ and radius is ${radius}$.`,
-            `两端同乘 $r$ 得 $r^2 = ${twoA}r\\cos\\theta \\implies x^2 + y^2 = ${twoA}x$。\n配方得 $${poly([1, "x^2"], [-twoA, "x"], [a2, ""])} + y^2 = ${a2} \\implies ${sq("x", a)} + y^2 = ${a2}$。\n因此圆心为 $(${a}, 0)$，半径为 ${radius}$。`,
-          ),
-        );
+        });
       },
     },
     {
@@ -1935,35 +1786,18 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
           );
         }
 
-        return oneOf(
-          rng,
-          t(
-            `Identify the center, radius, and Cartesian equation of the curve $r = ${twoB}\\sin\\theta$.`,
-            `求极坐标方程 $r = ${twoB}\\sin\\theta$ 所表示圆的圆心、半径与直角坐标方程。`,
+        return equationProblem({
+          prompt: t(
+            `Convert the polar equation $r = ${twoB}\\sin\\theta$ into standard Cartesian form $x^2 + (y - b)^2 = b^2$.`,
+            `将极坐标方程 $r = ${twoB}\\sin\\theta$ 化为圆的标准直角坐标方程 $x^2 + (y - b)^2 = b^2$。`,
           ),
-          t(
-            `Center $(0, ${b})$, radius $r = ${radius}$, equation $x^2 + ${sq("y", b)} = ${b2}$`,
-            `圆心 $(0, ${b})$，半径 $r = ${radius}$，方程 $x^2 + ${sq("y", b)} = ${b2}$`,
+          answer: `x^2 + ${sq("y", b)} = ${b2}`,
+          wrong: [`${sq("x", b)} + y^2 = ${b2}`, `x^2 + ${sq("y", twoB)} = ${twoB * twoB}`, `x^2 + ${sq("y", -b)} = ${b2}`],
+          solution: t(
+            `Multiply by $r$: $r^2 = ${twoB}r\\sin\\theta \\implies x^2 + y^2 = ${twoB}y$.\nComplete the square: $x^2 + ${poly([1, "y^2"], [-twoB, "y"], [b2, ""])} = ${b2} \\implies x^2 + ${sq("y", b)} = ${b2}$.\nCenter is $(0, ${b})$ and radius is $${radius}$.`,
+            `两端同乘 $r$ 得 $r^2 = ${twoB}r\\sin\\theta \\implies x^2 + y^2 = ${twoB}y$。\n配方得 $x^2 + ${poly([1, "y^2"], [-twoB, "y"], [b2, ""])} = ${b2} \\implies x^2 + ${sq("y", b)} = ${b2}$。\n因此圆心为 $(0, ${b})$，半径为 $${radius}$。`,
           ),
-          [
-            t(
-              `Center $(${b}, 0)$, radius $r = ${radius}$, equation $${sq("x", b)} + y^2 = ${b2}$`,
-              `圆心 $(${b}, 0)$，半径 $r = ${radius}$，方程 $${sq("x", b)} + y^2 = ${b2}$`,
-            ),
-            t(
-              `Center $(0, ${twoB})$, radius $r = ${Math.abs(twoB)}$, equation $x^2 + ${sq("y", twoB)} = ${twoB * twoB}$`,
-              `圆心 $(0, ${twoB})$, 半径 $r = ${Math.abs(twoB)}$，方程 $x^2 + ${sq("y", twoB)} = ${twoB * twoB}$`,
-            ),
-            t(
-              `Center $(0, ${-b})$, radius $r = ${radius}$, equation $x^2 + ${sq("y", -b)} = ${b2}$`,
-              `圆心 $(0, ${-b})$，半径 $r = ${radius}$，方程 $x^2 + ${sq("y", -b)} = ${b2}$`,
-            ),
-          ],
-          t(
-            `Multiply by $r$: $r^2 = ${twoB}r\\sin\\theta \\implies x^2 + y^2 = ${twoB}y$.\nComplete the square: $x^2 + ${poly([1, "y^2"], [-twoB, "y"], [b2, ""])} = ${b2} \\implies x^2 + ${sq("y", b)} = ${b2}$.\nCenter is $(0, ${b})$ and radius is ${radius}$.`,
-            `两端同乘 $r$ 得 $r^2 = ${twoB}r\\sin\\theta \\implies x^2 + y^2 = ${twoB}y$。\n配方得 $x^2 + ${poly([1, "y^2"], [-twoB, "y"], [b2, ""])} = ${b2} \\implies x^2 + ${sq("y", b)} = ${b2}$。\n因此圆心为 $(0, ${b})$，半径为 ${radius}$。`,
-          ),
-        );
+        });
       },
     },
   ],
@@ -2013,8 +1847,8 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
             t(rightChoice, rightChoice),
             [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
             t(
-              `Set equations equal: ${twoA}\\cos\\theta = ${eq1} \\implies \\cos\\theta = \\frac{\\sqrt{2}}{2}$.\nOn $[0, 2\\pi)$, $\\theta = \\frac{\\pi}{4}, \\frac{7\\pi}{4}$.\nThus the intersection points are $${p1}$ and $${p2}$.`,
-              `联立方程：${twoA}\\cos\\theta = ${eq1} \\implies \\cos\\theta = \\frac{\\sqrt{2}}{2}$。\n在 $[0, 2\\pi)$ 内解得 $\\theta = \\frac{\\pi}{4}, \\frac{7\\pi}{4}$。\n因此交点为 $${p1}$ 和 $${p2}$。`,
+              `Set equations equal: $${twoA}\\cos\\theta = ${eq1} \\implies \\cos\\theta = \\frac{\\sqrt{2}}{2}$.\nOn $[0, 2\\pi)$, $\\theta = \\frac{\\pi}{4}, \\frac{7\\pi}{4}$.\nThus the intersection points are $${p1}$ and $${p2}$.`,
+              `联立方程：$${twoA}\\cos\\theta = ${eq1} \\implies \\cos\\theta = \\frac{\\sqrt{2}}{2}$。\n在 $[0, 2\\pi)$ 内解得 $\\theta = \\frac{\\pi}{4}, \\frac{7\\pi}{4}$。\n因此交点为 $${p1}$ 和 $${p2}$。`,
             ),
           );
         }
@@ -2036,8 +1870,8 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
             t(rightChoice, rightChoice),
             [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
             t(
-              `Set equations equal: ${twoA}\\sin\\theta = ${eq1} \\implies \\sin\\theta = \\frac{\\sqrt{2}}{2}$.\nOn $[0, 2\\pi)$, $\\theta = \\frac{\\pi}{4}, \\frac{3\\pi}{4}$.\nThus the intersection points are $${p1}$ and $${p2}$.`,
-              `联立方程：${twoA}\\sin\\theta = ${eq1} \\implies \\sin\\theta = \\frac{\\sqrt{2}}{2}$。\n在 $[0, 2\\pi)$ 内解得 $\\theta = \\frac{\\pi}{4}, \\frac{3\\pi}{4}$。\n因此交点为 $${p1}$ 和 $${p2}$。`,
+              `Set equations equal: $${twoA}\\sin\\theta = ${eq1} \\implies \\sin\\theta = \\frac{\\sqrt{2}}{2}$.\nOn $[0, 2\\pi)$, $\\theta = \\frac{\\pi}{4}, \\frac{3\\pi}{4}$.\nThus the intersection points are $${p1}$ and $${p2}$.`,
+              `联立方程：$${twoA}\\sin\\theta = ${eq1} \\implies \\sin\\theta = \\frac{\\sqrt{2}}{2}$。\n在 $[0, 2\\pi)$ 内解得 $\\theta = \\frac{\\pi}{4}, \\frac{3\\pi}{4}$。\n因此交点为 $${p1}$ 和 $${p2}$。`,
             ),
           );
         }
@@ -2061,8 +1895,8 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
           t(rightChoice, rightChoice),
           [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
           t(
-            `Set equations equal: ${eq2} = ${a} \\implies ${isCos ? "\\cos" : "\\sin"}\\theta = \\frac{1}{2}$.\nOn $[0, 2\\pi)$, $\\theta = ${isCos ? "\\frac{\\pi}{3}, \\frac{5\\pi}{3}" : "\\frac{\\pi}{6}, \\frac{5\\pi}{6}"}$.\nThe points are $${p1}$ and $${p2}$.`,
-            `联立方程：${eq2} = ${a} \\implies ${isCos ? "\\cos" : "\\sin"}\\theta = \\frac{1}{2}$。\n在 $[0, 2\\pi)$ 内，解得 $\\theta = ${isCos ? "\\frac{\\pi}{3}, \\frac{5\\pi}{3}" : "\\frac{\\pi}{6}, \\frac{5\\pi}{6}"}$。\n因此交点为 $${p1}$ 和 $${p2}$。`,
+            `Set equations equal: $${eq2} = ${a} \\implies ${isCos ? "\\cos" : "\\sin"}\\theta = \\frac{1}{2}$.\nOn $[0, 2\\pi)$, $\\theta = ${isCos ? "\\frac{\\pi}{3}, \\frac{5\\pi}{3}" : "\\frac{\\pi}{6}, \\frac{5\\pi}{6}"}$.\nThe points are $${p1}$ and $${p2}$.`,
+            `联立方程：$${eq2} = ${a} \\implies ${isCos ? "\\cos" : "\\sin"}\\theta = \\frac{1}{2}$。\n在 $[0, 2\\pi)$ 内，解得 $\\theta = ${isCos ? "\\frac{\\pi}{3}, \\frac{5\\pi}{3}" : "\\frac{\\pi}{6}, \\frac{5\\pi}{6}"}$。\n因此交点为 $${p1}$ 和 $${p2}$。`,
           ),
         );
       },

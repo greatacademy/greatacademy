@@ -1,6 +1,6 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { choiceProblem } from "../problems.ts";
+import { choiceProblem, numberProblem, solutionsProblem } from "../problems.ts";
 
 // Precalculus unit 4: Trigonometry (modules 4.13 to 4.15: elementary, transformed,
 // and advanced trigonometric equations).
@@ -32,62 +32,95 @@ export const elementaryTrigonometricEquationsContainingSine: TopicDef = {
       id: "solve-elementary-sine-equations-degrees",
       title: t("Solve sin(x) = c in degrees on [0°, 360°)", "在 [0°, 360°) 内求解正弦方程（角度制）"),
       explanation: t(
-        "To solve $\\sin x = c$ on $[0^{\\circ}, 360^{\\circ})$:\n\n1. Find the reference angle $\\alpha = \\arcsin|c|$.\n2. Sine is positive in Quadrants I and II ($x = \\alpha, 180^{\\circ} - \\alpha$) and negative in Quadrants III and IV ($x = 180^{\\circ} + \\alpha, 360^{\\circ} - \\alpha$).\n\nFor example, $\\sin x = \\frac{1}{2}$ has reference angle $30^{\\circ}$, giving solutions $30^{\\circ}$ and $150^{\\circ}$.",
-        "在 $[0^{\\circ}, 360^{\\circ})$ 上求解 $\\sin x = c$：\n\n1. 求参考角 $\\alpha = \\arcsin|c|$。\n2. 正弦在第一、二象限为正（$x = \\alpha, 180^{\\circ} - \\alpha$），在第三、四象限为负（$x = 180^{\\circ} + \\alpha, 360^{\\circ} - \\alpha$）。\n\n例如，$\\sin x = \\frac{1}{2}$ 的参考角为 $30^{\\circ}$，解为 $30^{\\circ}$ 与 $150^{\\circ}$。",
+        "To solve $\\sin x^{\\circ} = c$ on $[0, 360)$:\n\n1. Find the reference angle $\\alpha = \\arcsin|c|$.\n2. Sine is positive in Quadrants I and II ($x = \\alpha, 180 - \\alpha$) and negative in Quadrants III and IV ($x = 180 + \\alpha, 360 - \\alpha$).\n\nFor example, $\\sin x^{\\circ} = \\frac{1}{2}$ has reference angle $30^{\\circ}$, giving solutions $x = 30, 150$.",
+        "在 $[0, 360)$ 上求解 $\\sin x^{\\circ} = c$：\n\n1. 求参考角 $\\alpha = \\arcsin|c|$。\n2. 正弦在第一、二象限为正（$x = \\alpha, 180 - \\alpha$），在第三、四象限为负（$x = 180 + \\alpha, 360 - \\alpha$）。\n\n例如，$\\sin x^{\\circ} = \\frac{1}{2}$ 的参考角为 $30^{\\circ}$，解为 $x = 30, 150$。",
       ),
       generate(rng) {
         const item = rng.pick([
-          { val: "0", ans: "0^\\circ, 180^\\circ", wrong: ["0^\\circ, 360^\\circ", "90^\\circ, 270^\\circ", "0^\\circ, 90^\\circ"] },
-          { val: "1", ans: "90^\\circ", wrong: ["90^\\circ, 270^\\circ", "0^\\circ, 180^\\circ", "270^\\circ"] },
-          { val: "-1", ans: "270^\\circ", wrong: ["90^\\circ", "180^\\circ", "90^\\circ, 270^\\circ"] },
+          {
+            val: "0",
+            ans: ["0", "180"],
+            wrong: [
+              ["0", "360"],
+              ["90", "270"],
+              ["0", "90"],
+            ],
+          },
+          { val: "1", ans: ["90"], wrong: [["90", "270"], ["0", "180"], ["270"]] },
+          { val: "-1", ans: ["270"], wrong: [["90"], ["180"], ["90", "270"]] },
           {
             val: "\\frac{1}{2}",
-            ans: "30^\\circ, 150^\\circ",
-            wrong: ["60^\\circ, 120^\\circ", "30^\\circ, 330^\\circ", "30^\\circ, 210^\\circ"],
+            ans: ["30", "150"],
+            wrong: [
+              ["60", "120"],
+              ["30", "330"],
+              ["30", "210"],
+            ],
           },
           {
             val: "-\\frac{1}{2}",
-            ans: "210^\\circ, 330^\\circ",
-            wrong: ["150^\\circ, 210^\\circ", "240^\\circ, 300^\\circ", "30^\\circ, 330^\\circ"],
+            ans: ["210", "330"],
+            wrong: [
+              ["150", "210"],
+              ["240", "300"],
+              ["30", "330"],
+            ],
           },
           {
             val: "\\frac{\\sqrt{2}}{2}",
-            ans: "45^\\circ, 135^\\circ",
-            wrong: ["45^\\circ, 315^\\circ", "45^\\circ, 225^\\circ", "135^\\circ, 225^\\circ"],
+            ans: ["45", "135"],
+            wrong: [
+              ["45", "315"],
+              ["45", "225"],
+              ["135", "225"],
+            ],
           },
           {
             val: "-\\frac{\\sqrt{2}}{2}",
-            ans: "225^\\circ, 315^\\circ",
-            wrong: ["135^\\circ, 315^\\circ", "45^\\circ, 225^\\circ", "225^\\circ, 270^\\circ"],
+            ans: ["225", "315"],
+            wrong: [
+              ["135", "315"],
+              ["45", "225"],
+              ["225", "270"],
+            ],
           },
           {
             val: "\\frac{\\sqrt{3}}{2}",
-            ans: "60^\\circ, 120^\\circ",
-            wrong: ["30^\\circ, 150^\\circ", "60^\\circ, 300^\\circ", "120^\\circ, 240^\\circ"],
+            ans: ["60", "120"],
+            wrong: [
+              ["30", "150"],
+              ["60", "300"],
+              ["120", "240"],
+            ],
           },
           {
             val: "-\\frac{\\sqrt{3}}{2}",
-            ans: "240^\\circ, 300^\\circ",
-            wrong: ["210^\\circ, 330^\\circ", "120^\\circ, 240^\\circ", "300^\\circ, 330^\\circ"],
+            ans: ["240", "300"],
+            wrong: [
+              ["210", "330"],
+              ["120", "240"],
+              ["300", "330"],
+            ],
           },
         ]);
-        const v = rng.pick(["x", "\\theta", "\\alpha"]);
+        const v = rng.pick(["x", "t", "u"]);
         const coeff = rng.pick([1, 2, 3, 4]);
         const coeffLatex = coeff === 1 ? "" : `${coeff}`;
         const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
-        return oneOf(
-          rng,
-          t(
-            `Solve $${coeffLatex}\\sin ${v} = ${rhs}$ for $${v} \\in [0^\\circ, 360^\\circ)$.`,
-            `在 $${v} \\in [0^\\circ, 360^\\circ)$ 上解方程 $${coeffLatex}\\sin ${v} = ${rhs}$。`,
+        const ansStr = item.ans.join(", ");
+        return solutionsProblem({
+          prompt: t(
+            `Solve $${coeffLatex}\\sin(${v}^{\\circ}) = ${rhs}$ for $${v} \\in [0, 360)$.`,
+            `在 $${v} \\in [0, 360)$ 上解方程 $${coeffLatex}\\sin(${v}^{\\circ}) = ${rhs}$。`,
           ),
-          t(`$${v} = ${item.ans}$`, `$${v} = ${item.ans}$`),
-          item.wrong.map((w) => t(`$${v} = ${w}$`, `$${v} = ${w}$`)),
-          t(
-            `Dividing by coefficient gives $\\sin ${v} = ${item.val}$. Looking for all solutions in $[0^\\circ, 360^\\circ)$ gives $${v} = ${item.ans}$.`,
-            `两边除以系数得 $\\sin ${v} = ${item.val}$。在 $[0^\\circ, 360^\\circ)$ 上求得解为 $${v} = ${item.ans}$。`,
+          variable: v,
+          values: item.ans,
+          wrong: item.wrong,
+          solution: t(
+            `Dividing by the coefficient gives $\\sin(${v}^{\\circ}) = ${item.val}$. All solutions in $[0, 360)$ are $${v} = ${ansStr}$.`,
+            `两边除以系数得 $\\sin(${v}^{\\circ}) = ${item.val}$。在 $[0, 360)$ 上的全部解为 $${v} = ${ansStr}$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -171,62 +204,95 @@ export const elementaryTrigonometricEquationsContainingCosine: TopicDef = {
       id: "solve-elementary-cosine-equations-degrees",
       title: t("Solve cos(x) = c in degrees on [0°, 360°)", "在 [0°, 360°) 内求解余弦方程（角度制）"),
       explanation: t(
-        "Cosine is positive in Quadrants I and IV ($x = \\alpha, 360^{\\circ} - \\alpha$) and negative in Quadrants II and III ($x = 180^{\\circ} - \\alpha, 180^{\\circ} + \\alpha$).\n\nFor example, $\\cos x = \\frac{1}{2} \\implies x = 60^{\\circ}, 300^{\\circ}$.",
-        "余弦在第一、四象限为正（$x = \\alpha, 360^{\\circ} - \\alpha$），在第二、三象限为负（$x = 180^{\\circ} - \\alpha, 180^{\\circ} + \\alpha$）。\n\n例如，$\\cos x = \\frac{1}{2} \\implies x = 60^{\\circ}, 300^{\\circ}$。",
+        "Cosine is positive in Quadrants I and IV ($x = \\alpha, 360 - \\alpha$) and negative in Quadrants II and III ($x = 180 - \\alpha, 180 + \\alpha$).\n\nFor example, $\\cos x^{\\circ} = \\frac{1}{2} \\implies x = 60, 300$.",
+        "余弦在第一、四象限为正（$x = \\alpha, 360 - \\alpha$），在第二、三象限为负（$x = 180 - \\alpha, 180 + \\alpha$）。\n\n例如，$\\cos x^{\\circ} = \\frac{1}{2} \\implies x = 60, 300$。",
       ),
       generate(rng) {
         const item = rng.pick([
-          { val: "0", ans: "90^\\circ, 270^\\circ", wrong: ["0^\\circ, 180^\\circ", "90^\\circ, 180^\\circ", "0^\\circ, 360^\\circ"] },
-          { val: "1", ans: "0^\\circ", wrong: ["90^\\circ", "180^\\circ", "0^\\circ, 180^\\circ"] },
-          { val: "-1", ans: "180^\\circ", wrong: ["0^\\circ", "270^\\circ", "90^\\circ, 270^\\circ"] },
+          {
+            val: "0",
+            ans: ["90", "270"],
+            wrong: [
+              ["0", "180"],
+              ["90", "180"],
+              ["0", "360"],
+            ],
+          },
+          { val: "1", ans: ["0"], wrong: [["90"], ["180"], ["0", "180"]] },
+          { val: "-1", ans: ["180"], wrong: [["0"], ["270"], ["90", "270"]] },
           {
             val: "\\frac{1}{2}",
-            ans: "60^\\circ, 300^\\circ",
-            wrong: ["30^\\circ, 330^\\circ", "60^\\circ, 120^\\circ", "120^\\circ, 240^\\circ"],
+            ans: ["60", "300"],
+            wrong: [
+              ["30", "330"],
+              ["60", "120"],
+              ["120", "240"],
+            ],
           },
           {
             val: "-\\frac{1}{2}",
-            ans: "120^\\circ, 240^\\circ",
-            wrong: ["60^\\circ, 300^\\circ", "150^\\circ, 210^\\circ", "120^\\circ, 300^\\circ"],
+            ans: ["120", "240"],
+            wrong: [
+              ["60", "300"],
+              ["150", "210"],
+              ["120", "300"],
+            ],
           },
           {
             val: "\\frac{\\sqrt{2}}{2}",
-            ans: "45^\\circ, 315^\\circ",
-            wrong: ["45^\\circ, 135^\\circ", "135^\\circ, 225^\\circ", "45^\\circ, 225^\\circ"],
+            ans: ["45", "315"],
+            wrong: [
+              ["45", "135"],
+              ["135", "225"],
+              ["45", "225"],
+            ],
           },
           {
             val: "-\\frac{\\sqrt{2}}{2}",
-            ans: "135^\\circ, 225^\\circ",
-            wrong: ["45^\\circ, 315^\\circ", "135^\\circ, 315^\\circ", "225^\\circ, 315^\\circ"],
+            ans: ["135", "225"],
+            wrong: [
+              ["45", "315"],
+              ["135", "315"],
+              ["225", "315"],
+            ],
           },
           {
             val: "\\frac{\\sqrt{3}}{2}",
-            ans: "30^\\circ, 330^\\circ",
-            wrong: ["60^\\circ, 300^\\circ", "30^\\circ, 150^\\circ", "150^\\circ, 210^\\circ"],
+            ans: ["30", "330"],
+            wrong: [
+              ["60", "300"],
+              ["30", "150"],
+              ["150", "210"],
+            ],
           },
           {
             val: "-\\frac{\\sqrt{3}}{2}",
-            ans: "150^\\circ, 210^\\circ",
-            wrong: ["120^\\circ, 240^\\circ", "30^\\circ, 330^\\circ", "210^\\circ, 330^\\circ"],
+            ans: ["150", "210"],
+            wrong: [
+              ["120", "240"],
+              ["30", "330"],
+              ["210", "330"],
+            ],
           },
         ]);
-        const v = rng.pick(["x", "\\theta", "\\alpha"]);
+        const v = rng.pick(["x", "t", "u"]);
         const coeff = rng.pick([1, 2, 3, 4]);
         const coeffLatex = coeff === 1 ? "" : `${coeff}`;
         const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
-        return oneOf(
-          rng,
-          t(
-            `Solve $${coeffLatex}\\cos ${v} = ${rhs}$ for $${v} \\in [0^\\circ, 360^\\circ)$.`,
-            `在 $${v} \\in [0^\\circ, 360^\\circ)$ 上解方程 $${coeffLatex}\\cos ${v} = ${rhs}$。`,
+        const ansStr = item.ans.join(", ");
+        return solutionsProblem({
+          prompt: t(
+            `Solve $${coeffLatex}\\cos(${v}^{\\circ}) = ${rhs}$ for $${v} \\in [0, 360)$.`,
+            `在 $${v} \\in [0, 360)$ 上解方程 $${coeffLatex}\\cos(${v}^{\\circ}) = ${rhs}$。`,
           ),
-          t(`$${v} = ${item.ans}$`, `$${v} = ${item.ans}$`),
-          item.wrong.map((w) => t(`$${v} = ${w}$`, `$${v} = ${w}$`)),
-          t(
-            `Divide by coefficient: $\\cos ${v} = ${item.val}$. Solutions in $[0^\\circ, 360^\\circ)$ are $${v} = ${item.ans}$.`,
-            `除以系数得 $\\cos ${v} = ${item.val}$。在 $[0^\\circ, 360^\\circ)$ 上的解为 $${v} = ${item.ans}$。`,
+          variable: v,
+          values: item.ans,
+          wrong: item.wrong,
+          solution: t(
+            `Dividing by the coefficient gives $\\cos(${v}^{\\circ}) = ${item.val}$. All solutions in $[0, 360)$ are $${v} = ${ansStr}$.`,
+            `除以系数得 $\\cos(${v}^{\\circ}) = ${item.val}$。在 $[0, 360)$ 上的全部解为 $${v} = ${ansStr}$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -310,56 +376,85 @@ export const elementaryTrigonometricEquationsContainingTangent: TopicDef = {
       id: "solve-elementary-tangent-equations-degrees",
       title: t("Solve tan(x) = c in degrees on [0°, 360°)", "在 [0°, 360°) 内求解正切方程（角度制）"),
       explanation: t(
-        "Tangent has period $180^{\\circ}$. It is positive in Quadrants I and III ($x = \\alpha, 180^{\\circ} + \\alpha$) and negative in Quadrants II and IV ($x = 180^{\\circ} - \\alpha, 360^{\\circ} - \\alpha$).\n\nFor example, $\\tan x = 1 \\implies x = 45^{\\circ}, 225^{\\circ}$.",
-        "正切函数的周期为 $180^{\\circ}$。在第一、三象限为正（$x = \\alpha, 180^{\\circ} + \\alpha$），在第二、四象限为负（$x = 180^{\\circ} - \\alpha, 360^{\\circ} - \\alpha$）。\n\n例如，$\\tan x = 1 \\implies x = 45^{\\circ}, 225^{\\circ}$。",
+        "Tangent has period $180^{\\circ}$. It is positive in Quadrants I and III ($x = \\alpha, 180 + \\alpha$) and negative in Quadrants II and IV ($x = 180 - \\alpha, 360 - \\alpha$).\n\nFor example, $\\tan x^{\\circ} = 1 \\implies x = 45, 225$.",
+        "正切函数的周期为 $180^{\\circ}$。在第一、三象限为正（$x = \\alpha, 180 + \\alpha$），在第二、四象限为负（$x = 180 - \\alpha, 360 - \\alpha$）。\n\n例如，$\\tan x^{\\circ} = 1 \\implies x = 45, 225$。",
       ),
       generate(rng) {
         const item = rng.pick([
-          { val: "0", ans: "0^\\circ, 180^\\circ", wrong: ["90^\\circ, 270^\\circ", "0^\\circ, 360^\\circ", "180^\\circ"] },
-          { val: "1", ans: "45^\\circ, 225^\\circ", wrong: ["45^\\circ, 135^\\circ", "135^\\circ, 315^\\circ", "45^\\circ, 315^\\circ"] },
+          { val: "0", ans: ["0", "180"], wrong: [["90", "270"], ["0", "360"], ["180"]] },
+          {
+            val: "1",
+            ans: ["45", "225"],
+            wrong: [
+              ["45", "135"],
+              ["135", "315"],
+              ["45", "315"],
+            ],
+          },
           {
             val: "-1",
-            ans: "135^\\circ, 315^\\circ",
-            wrong: ["45^\\circ, 225^\\circ", "135^\\circ, 225^\\circ", "225^\\circ, 315^\\circ"],
+            ans: ["135", "315"],
+            wrong: [
+              ["45", "225"],
+              ["135", "225"],
+              ["225", "315"],
+            ],
           },
           {
             val: "\\sqrt{3}",
-            ans: "60^\\circ, 240^\\circ",
-            wrong: ["30^\\circ, 210^\\circ", "60^\\circ, 120^\\circ", "120^\\circ, 300^\\circ"],
+            ans: ["60", "240"],
+            wrong: [
+              ["30", "210"],
+              ["60", "120"],
+              ["120", "300"],
+            ],
           },
           {
             val: "-\\sqrt{3}",
-            ans: "120^\\circ, 300^\\circ",
-            wrong: ["60^\\circ, 240^\\circ", "150^\\circ, 330^\\circ", "240^\\circ, 300^\\circ"],
+            ans: ["120", "300"],
+            wrong: [
+              ["60", "240"],
+              ["150", "330"],
+              ["240", "300"],
+            ],
           },
           {
             val: "\\frac{\\sqrt{3}}{3}",
-            ans: "30^\\circ, 210^\\circ",
-            wrong: ["60^\\circ, 240^\\circ", "30^\\circ, 150^\\circ", "150^\\circ, 330^\\circ"],
+            ans: ["30", "210"],
+            wrong: [
+              ["60", "240"],
+              ["30", "150"],
+              ["150", "330"],
+            ],
           },
           {
             val: "-\\frac{\\sqrt{3}}{3}",
-            ans: "150^\\circ, 330^\\circ",
-            wrong: ["30^\\circ, 210^\\circ", "120^\\circ, 300^\\circ", "210^\\circ, 330^\\circ"],
+            ans: ["150", "330"],
+            wrong: [
+              ["30", "210"],
+              ["120", "300"],
+              ["210", "330"],
+            ],
           },
         ]);
-        const v = rng.pick(["x", "\\theta", "\\alpha"]);
+        const v = rng.pick(["x", "t", "u"]);
         const coeff = rng.pick([1, 2, 3, 4]);
         const coeffLatex = coeff === 1 ? "" : `${coeff}`;
         const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
-        return oneOf(
-          rng,
-          t(
-            `Solve $${coeffLatex}\\tan ${v} = ${rhs}$ for $${v} \\in [0^\\circ, 360^\\circ)$.`,
-            `在 $${v} \\in [0^\\circ, 360^\\circ)$ 上解方程 $${coeffLatex}\\tan ${v} = ${rhs}$。`,
+        const ansStr = item.ans.join(", ");
+        return solutionsProblem({
+          prompt: t(
+            `Solve $${coeffLatex}\\tan(${v}^{\\circ}) = ${rhs}$ for $${v} \\in [0, 360)$.`,
+            `在 $${v} \\in [0, 360)$ 上解方程 $${coeffLatex}\\tan(${v}^{\\circ}) = ${rhs}$。`,
           ),
-          t(`$${v} = ${item.ans}$`, `$${v} = ${item.ans}$`),
-          item.wrong.map((w) => t(`$${v} = ${w}$`, `$${v} = ${w}$`)),
-          t(
-            `We have $\\tan ${v} = ${item.val}$. In $[0^\\circ, 360^\\circ)$, solutions are $${v} = ${item.ans}$.`,
-            `方程为 $\\tan ${v} = ${item.val}$。在 $[0^\\circ, 360^\\circ)$ 上的解为 $${v} = ${item.ans}$。`,
+          variable: v,
+          values: item.ans,
+          wrong: item.wrong,
+          solution: t(
+            `We have $\\tan(${v}^{\\circ}) = ${item.val}$. In $[0, 360)$, the solutions are $${v} = ${ansStr}$.`,
+            `方程化为 $\\tan(${v}^{\\circ}) = ${item.val}$。在 $[0, 360)$ 上的全部解为 $${v} = ${ansStr}$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -505,6 +600,98 @@ export const elementaryTrigonometricEquationsContainingSecant: TopicDef = {
         );
       },
     },
+    {
+      id: "solve-elementary-secant-equations-degrees",
+      title: t("Solve sec(x) = c in degrees on [0°, 360°)", "在 [0°, 360°) 上求解正割方程（角度制）"),
+      explanation: t(
+        "Use $\\cos(x^{\\circ}) = \\frac{1}{\\sec(x^{\\circ})}$:\n\n$$\\sec(x^{\\circ}) = 2 \\iff \\cos(x^{\\circ}) = \\frac{1}{2} \\implies x = 60, 300$$",
+        "利用 $\\cos(x^{\\circ}) = \\frac{1}{\\sec(x^{\\circ})}$：\n\n$$\\sec(x^{\\circ}) = 2 \\iff \\cos(x^{\\circ}) = \\frac{1}{2} \\implies x = 60, 300$$",
+      ),
+      generate(rng) {
+        const item = rng.pick([
+          { val: "1", inv: "1", ans: ["0"], wrong: [["90"], ["180"], ["0", "180"]] },
+          { val: "-1", inv: "-1", ans: ["180"], wrong: [["0"], ["270"], ["90", "270"]] },
+          {
+            val: "2",
+            inv: "\\frac{1}{2}",
+            ans: ["60", "300"],
+            wrong: [
+              ["30", "330"],
+              ["60", "120"],
+              ["120", "240"],
+            ],
+          },
+          {
+            val: "-2",
+            inv: "-\\frac{1}{2}",
+            ans: ["120", "240"],
+            wrong: [
+              ["60", "300"],
+              ["150", "210"],
+              ["120", "300"],
+            ],
+          },
+          {
+            val: "\\sqrt{2}",
+            inv: "\\frac{\\sqrt{2}}{2}",
+            ans: ["45", "315"],
+            wrong: [
+              ["45", "135"],
+              ["135", "225"],
+              ["45", "225"],
+            ],
+          },
+          {
+            val: "-\\sqrt{2}",
+            inv: "-\\frac{\\sqrt{2}}{2}",
+            ans: ["135", "225"],
+            wrong: [
+              ["45", "315"],
+              ["135", "315"],
+              ["225", "315"],
+            ],
+          },
+          {
+            val: "\\frac{2\\sqrt{3}}{3}",
+            inv: "\\frac{\\sqrt{3}}{2}",
+            ans: ["30", "330"],
+            wrong: [
+              ["60", "300"],
+              ["30", "150"],
+              ["150", "210"],
+            ],
+          },
+          {
+            val: "-\\frac{2\\sqrt{3}}{3}",
+            inv: "-\\frac{\\sqrt{3}}{2}",
+            ans: ["150", "210"],
+            wrong: [
+              ["120", "240"],
+              ["30", "330"],
+              ["210", "330"],
+            ],
+          },
+        ]);
+        const v = rng.pick(["x", "t", "u"]);
+        const coeff = rng.pick([1, 2, 3, 4]);
+        const coeffLatex = coeff === 1 ? "" : `${coeff}`;
+        const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
+        const ansStr = item.ans.join(", ");
+        return solutionsProblem({
+          prompt: t(
+            `Solve $${coeffLatex}\\sec(${v}^{\\circ}) = ${rhs}$ for $${v} \\in [0, 360)$.`,
+            `在 $${v} \\in [0, 360)$ 上解方程 $${coeffLatex}\\sec(${v}^{\\circ}) = ${rhs}$。`,
+          ),
+          variable: v,
+          values: item.ans,
+          wrong: item.wrong,
+          solution: t(
+            `Since $\\sec(${v}^{\\circ}) = ${item.val}$, taking the reciprocal gives $\\cos(${v}^{\\circ}) = ${item.inv}$, which yields $${v} = ${ansStr}$ in $[0, 360)$.`,
+            `由 $\\sec(${v}^{\\circ}) = ${item.val}$ 取倒数得 $\\cos(${v}^{\\circ}) = ${item.inv}$，在 $[0, 360)$ 上解得 $${v} = ${ansStr}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -588,6 +775,98 @@ export const elementaryTrigonometricEquationsContainingCosecant: TopicDef = {
         );
       },
     },
+    {
+      id: "solve-elementary-cosecant-equations-degrees",
+      title: t("Solve csc(x) = c in degrees on [0°, 360°)", "在 [0°, 360°) 上求解余割方程（角度制）"),
+      explanation: t(
+        "Use $\\sin(x^{\\circ}) = \\frac{1}{\\csc(x^{\\circ})}$:\n\n$$\\csc(x^{\\circ}) = 2 \\iff \\sin(x^{\\circ}) = \\frac{1}{2} \\implies x = 30, 150$$",
+        "利用 $\\sin(x^{\\circ}) = \\frac{1}{\\csc(x^{\\circ})}$：\n\n$$\\csc(x^{\\circ}) = 2 \\iff \\sin(x^{\\circ}) = \\frac{1}{2} \\implies x = 30, 150$$",
+      ),
+      generate(rng) {
+        const item = rng.pick([
+          { val: "1", inv: "1", ans: ["90"], wrong: [["90", "270"], ["0", "180"], ["270"]] },
+          { val: "-1", inv: "-1", ans: ["270"], wrong: [["90"], ["180"], ["90", "270"]] },
+          {
+            val: "2",
+            inv: "\\frac{1}{2}",
+            ans: ["30", "150"],
+            wrong: [
+              ["60", "120"],
+              ["30", "330"],
+              ["30", "210"],
+            ],
+          },
+          {
+            val: "-2",
+            inv: "-\\frac{1}{2}",
+            ans: ["210", "330"],
+            wrong: [
+              ["150", "210"],
+              ["240", "300"],
+              ["30", "330"],
+            ],
+          },
+          {
+            val: "\\sqrt{2}",
+            inv: "\\frac{\\sqrt{2}}{2}",
+            ans: ["45", "135"],
+            wrong: [
+              ["45", "315"],
+              ["45", "225"],
+              ["135", "225"],
+            ],
+          },
+          {
+            val: "-\\sqrt{2}",
+            inv: "-\\frac{\\sqrt{2}}{2}",
+            ans: ["225", "315"],
+            wrong: [
+              ["135", "315"],
+              ["45", "225"],
+              ["225", "270"],
+            ],
+          },
+          {
+            val: "\\frac{2\\sqrt{3}}{3}",
+            inv: "\\frac{\\sqrt{3}}{2}",
+            ans: ["60", "120"],
+            wrong: [
+              ["30", "150"],
+              ["60", "300"],
+              ["120", "240"],
+            ],
+          },
+          {
+            val: "-\\frac{2\\sqrt{3}}{3}",
+            inv: "-\\frac{\\sqrt{3}}{2}",
+            ans: ["240", "300"],
+            wrong: [
+              ["210", "330"],
+              ["120", "240"],
+              ["300", "330"],
+            ],
+          },
+        ]);
+        const v = rng.pick(["x", "t", "u"]);
+        const coeff = rng.pick([1, 2, 3, 4]);
+        const coeffLatex = coeff === 1 ? "" : `${coeff}`;
+        const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
+        const ansStr = item.ans.join(", ");
+        return solutionsProblem({
+          prompt: t(
+            `Solve $${coeffLatex}\\csc(${v}^{\\circ}) = ${rhs}$ for $${v} \\in [0, 360)$.`,
+            `在 $${v} \\in [0, 360)$ 上解方程 $${coeffLatex}\\csc(${v}^{\\circ}) = ${rhs}$。`,
+          ),
+          variable: v,
+          values: item.ans,
+          wrong: item.wrong,
+          solution: t(
+            `Since $\\csc(${v}^{\\circ}) = ${item.val}$, taking the reciprocal gives $\\sin(${v}^{\\circ}) = ${item.inv}$, which yields $${v} = ${ansStr}$ in $[0, 360)$.`,
+            `由 $\\csc(${v}^{\\circ}) = ${item.val}$ 取倒数得 $\\sin(${v}^{\\circ}) = ${item.inv}$，在 $[0, 360)$ 上解得 $${v} = ${ansStr}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -661,6 +940,99 @@ export const elementaryTrigonometricEquationsContainingCotangent: TopicDef = {
             `方程化简为 $\\cot ${v} = ${item.val}$。在 $[0, 2\\pi)$ 上的解为 $${v} = ${item.ans}$。`,
           ),
         );
+      },
+    },
+    {
+      id: "solve-elementary-cotangent-equations-degrees",
+      title: t("Solve cot(x) = c in degrees on [0°, 360°)", "在 [0°, 360°) 上求解余切方程（角度制）"),
+      explanation: t(
+        "Use $\\tan(x^{\\circ}) = \\frac{1}{\\cot(x^{\\circ})}$:\n\n$$\\cot(x^{\\circ}) = \\sqrt{3} \\iff \\tan(x^{\\circ}) = \\frac{\\sqrt{3}}{3} \\implies x = 30, 210$$",
+        "利用 $\\tan(x^{\\circ}) = \\frac{1}{\\cot(x^{\\circ})}$：\n\n$$\\cot(x^{\\circ}) = \\sqrt{3} \\iff \\tan(x^{\\circ}) = \\frac{\\sqrt{3}}{3} \\implies x = 30, 210$$",
+      ),
+      generate(rng) {
+        const item = rng.pick([
+          {
+            val: "0",
+            ans: ["90", "270"],
+            wrong: [
+              ["0", "180"],
+              ["90", "180"],
+              ["0", "360"],
+            ],
+          },
+          {
+            val: "1",
+            ans: ["45", "225"],
+            wrong: [
+              ["45", "135"],
+              ["135", "315"],
+              ["45", "315"],
+            ],
+          },
+          {
+            val: "-1",
+            ans: ["135", "315"],
+            wrong: [
+              ["45", "225"],
+              ["135", "225"],
+              ["225", "315"],
+            ],
+          },
+          {
+            val: "\\sqrt{3}",
+            ans: ["30", "210"],
+            wrong: [
+              ["60", "240"],
+              ["30", "150"],
+              ["150", "330"],
+            ],
+          },
+          {
+            val: "-\\sqrt{3}",
+            ans: ["150", "330"],
+            wrong: [
+              ["30", "210"],
+              ["120", "300"],
+              ["210", "330"],
+            ],
+          },
+          {
+            val: "\\frac{\\sqrt{3}}{3}",
+            ans: ["60", "240"],
+            wrong: [
+              ["30", "210"],
+              ["60", "120"],
+              ["120", "300"],
+            ],
+          },
+          {
+            val: "-\\frac{\\sqrt{3}}{3}",
+            ans: ["120", "300"],
+            wrong: [
+              ["60", "240"],
+              ["150", "330"],
+              ["240", "300"],
+            ],
+          },
+        ]);
+        const v = rng.pick(["x", "t", "u"]);
+        const coeff = rng.pick([1, 2, 3, 4]);
+        const coeffLatex = coeff === 1 ? "" : `${coeff}`;
+        const rhs = coeff === 1 ? item.val : `${coeff}\\left(${item.val}\\right)`;
+        const ansStr = item.ans.join(", ");
+        return solutionsProblem({
+          prompt: t(
+            `Solve $${coeffLatex}\\cot(${v}^{\\circ}) = ${rhs}$ for $${v} \\in [0, 360)$.`,
+            `在 $${v} \\in [0, 360)$ 上解方程 $${coeffLatex}\\cot(${v}^{\\circ}) = ${rhs}$。`,
+          ),
+          variable: v,
+          values: item.ans,
+          wrong: item.wrong,
+          solution: t(
+            `Since $\\cot(${v}^{\\circ}) = ${item.val}$, its solutions in $[0, 360)$ are $${v} = ${ansStr}$.`,
+            `由 $\\cot(${v}^{\\circ}) = ${item.val}$，在 $[0, 360)$ 上的全部解为 $${v} = ${ansStr}$。`,
+          ),
+        });
       },
     },
   ],
@@ -764,6 +1136,40 @@ export const generalSolutionsOfElementaryTrigonometricEquations: TopicDef = {
         );
       },
     },
+    {
+      id: "particular-solutions-from-general-trig",
+      title: t("Evaluate particular degree solutions from general formulas", "由通解公式求特定角度解"),
+      explanation: t(
+        "Given a general solution $x = \\alpha + 360k$ or $x = \\alpha + 180k$ in degrees, substitute the specified integer $k$ to find a particular solution.",
+        "给定角度制下的通解 $x = \\alpha + 360k$ 或 $x = \\alpha + 180k$，代入指定的整数 $k$ 即可求得对应的特解。",
+      ),
+      generate(rng) {
+        const item = rng.pick([
+          { fn: "\\sin", val: "\\frac{1}{2}", alpha: 30, period: 360 },
+          { fn: "\\sin", val: "\\frac{\\sqrt{2}}{2}", alpha: 45, period: 360 },
+          { fn: "\\sin", val: "\\frac{\\sqrt{3}}{2}", alpha: 60, period: 360 },
+          { fn: "\\cos", val: "\\frac{1}{2}", alpha: 60, period: 360 },
+          { fn: "\\cos", val: "\\frac{\\sqrt{3}}{2}", alpha: 30, period: 360 },
+          { fn: "\\tan", val: "1", alpha: 45, period: 180 },
+          { fn: "\\tan", val: "\\sqrt{3}", alpha: 60, period: 180 },
+          { fn: "\\tan", val: "\\frac{\\sqrt{3}}{3}", alpha: 30, period: 180 },
+        ]);
+        const k = rng.pick([-2, -1, 1, 2, 3]);
+        const ans = item.alpha + k * item.period;
+        return numberProblem({
+          prompt: t(
+            `One branch of the general solution to $${item.fn}(x^{\\circ}) = ${item.val}$ is $x = ${item.alpha} + ${item.period}k$. Find the value of $x$ when $k = ${k}$.`,
+            `方程 $${item.fn}(x^{\\circ}) = ${item.val}$ 的通解分支之一为 $x = ${item.alpha} + ${item.period}k$。求当 $k = ${k}$ 时 $x$ 的值。`,
+          ),
+          answer: ans,
+          wrong: [item.alpha - k * item.period, item.alpha + k * 180, item.alpha + (k + 1) * item.period],
+          solution: t(
+            `Substitute $k = ${k}$ into $x = ${item.alpha} + ${item.period}k$: $x = ${item.alpha} + ${item.period}(${k}) = ${ans}$.`,
+            `将 $k = ${k}$ 代入 $x = ${item.alpha} + ${item.period}k$：得 $x = ${item.alpha} + ${item.period}(${k}) = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -839,6 +1245,40 @@ export const generalSolutionsOfTrigonometricEquationsWithTransformedFunctions: T
             `先求整体参数 $u = ${B}${v}$，然后两边除以 $${B}$ 得：$${v} = ${item.ans}$。`,
           ),
         );
+      },
+    },
+    {
+      id: "period-and-spacing-of-transformed-trig-solutions",
+      title: t("Particular degree solutions of transformed equations", "变换三角方程的特解计算"),
+      explanation: t(
+        "For $\\sin(Bx^{\\circ}) = c$, dividing the general solution $Bx = \\alpha + 360k$ by $B$ gives $x = \\frac{\\alpha}{B} + \\frac{360}{B}k$.",
+        "对于 $\\sin(Bx^{\\circ}) = c$，将 $Bx = \\alpha + 360k$ 两边除以 $B$ 可得 $x = \\frac{\\alpha}{B} + \\frac{360}{B}k$。",
+      ),
+      generate(rng) {
+        const B = rng.pick([2, 3, 5, 6]);
+        const item = rng.pick([
+          { fn: "\\sin", val: "\\frac{1}{2}", alpha: 30, basePeriod: 360 },
+          { fn: "\\cos", val: "\\frac{1}{2}", alpha: 60, basePeriod: 360 },
+          { fn: "\\sin", val: "1", alpha: 90, basePeriod: 360 },
+          { fn: "\\tan", val: "0", alpha: 0, basePeriod: 180 },
+          { fn: "\\tan", val: "\\sqrt{3}", alpha: 60, basePeriod: 180 },
+        ]);
+        const k = rng.pick([1, 2, 3]);
+        const step = item.basePeriod / B;
+        const base = item.alpha / B;
+        const ans = base + k * step;
+        return numberProblem({
+          prompt: t(
+            `The principal branch of solutions to $${item.fn}(${B}x^{\\circ}) = ${item.val}$ is $x = \\frac{${item.alpha} + ${item.basePeriod}k}{${B}}$. Find $x$ when $k = ${k}$.`,
+            `方程 $${item.fn}(${B}x^{\\circ}) = ${item.val}$ 的主解分支为 $x = \\frac{${item.alpha} + ${item.basePeriod}k}{${B}}$。求当 $k = ${k}$ 时 $x$ 的值。`,
+          ),
+          answer: ans,
+          wrong: [item.alpha + k * step, base + k * item.basePeriod, ans + step],
+          solution: t(
+            `Substitute $k = ${k}$: $x = \\frac{${item.alpha} + ${item.basePeriod}(${k})}{${B}} = ${base} + ${k} \\cdot ${step} = ${ans}$.`,
+            `代入 $k = ${k}$：$x = \\frac{${item.alpha} + ${item.basePeriod}(${k})}{${B}} = ${base} + ${k} \\cdot ${step} = ${ans}$。`,
+          ),
+        });
       },
     },
   ],
@@ -923,6 +1363,46 @@ export const trigonometricEquationsContainingTransformedSineFunctions: TopicDef 
         );
       },
     },
+    {
+      id: "solve-transformed-sine-degrees",
+      title: t("Solve transformed sine equations in degrees", "在角度制下求解变换正弦方程"),
+      explanation: t(
+        "To solve $\\sin(x^{\\circ} - \\varphi^{\\circ}) = c$ on $[0, 360)$, find the reference angles for $x - \\varphi$ and add $\\varphi$.",
+        "在 $[0, 360)$ 上求解 $\\sin(x^{\\circ} - \\varphi^{\\circ}) = c$ 时，先求出 $x - \\varphi$ 的解，再加上 $\\varphi$。",
+      ),
+      generate(rng) {
+        const shift = rng.pick([10, 15, 20, 25, 30, 40]);
+        const sign = rng.pick([1, -1]);
+        const item = rng.pick([
+          { val: "1", base: [90] },
+          { val: "-1", base: [270] },
+          { val: "\\frac{1}{2}", base: [30, 150] },
+          { val: "\\frac{\\sqrt{2}}{2}", base: [45, 135] },
+          { val: "\\frac{\\sqrt{3}}{2}", base: [60, 120] },
+        ]);
+        const v = rng.pick(["x", "t", "u"]);
+        const shiftLatex = sign === 1 ? `${v}^{\\circ} - ${shift}^{\\circ}` : `${v}^{\\circ} + ${shift}^{\\circ}`;
+        const ansNums = item.base.map((b) => b + sign * shift);
+        const ans = ansNums.map(String);
+        const wrong1 = item.base.map((b) => String(b - sign * shift));
+        const wrong2 = item.base.map(String);
+        const wrong3 = ansNums.map((a) => String(a + 30));
+        const ansStr = ans.join(", ");
+        return solutionsProblem({
+          prompt: t(
+            `Solve $\\sin(${shiftLatex}) = ${item.val}$ for $${v} \\in [0, 360)$.`,
+            `在 $${v} \\in [0, 360)$ 上解方程 $\\sin(${shiftLatex}) = ${item.val}$。`,
+          ),
+          variable: v,
+          values: ans,
+          wrong: [wrong1, wrong2, wrong3],
+          solution: t(
+            `The inner angle equals $${item.base.join("^{\\circ}, ")}{}^{\\circ}$, so solving for $${v}$ gives $${v} = ${ansStr}$.`,
+            `内层角等于 $${item.base.join("^{\\circ}, ")}{}^{\\circ}$，解得 $${v} = ${ansStr}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1002,6 +1482,46 @@ export const trigonometricEquationsContainingTransformedCosineFunctions: TopicDe
         );
       },
     },
+    {
+      id: "solve-transformed-cosine-degrees",
+      title: t("Solve transformed cosine equations in degrees", "在角度制下求解变换余弦方程"),
+      explanation: t(
+        "To solve $\\cos(x^{\\circ} - \\varphi^{\\circ}) = c$ on $[0, 360)$, find the reference angles for $x - \\varphi$ and add $\\varphi$.",
+        "在 $[0, 360)$ 上求解 $\\cos(x^{\\circ} - \\varphi^{\\circ}) = c$ 时，先求内层角的值，再解出 $x$。",
+      ),
+      generate(rng) {
+        const shift = rng.pick([10, 15, 20, 25]);
+        const sign = rng.pick([1, -1]);
+        const item = rng.pick([
+          { val: "0", base: [90, 270] },
+          { val: "-1", base: [180] },
+          { val: "\\frac{1}{2}", base: [60, 300] },
+          { val: "\\frac{\\sqrt{2}}{2}", base: [45, 315] },
+          { val: "\\frac{\\sqrt{3}}{2}", base: [30, 330] },
+        ]);
+        const v = rng.pick(["x", "t", "u"]);
+        const shiftLatex = sign === 1 ? `${v}^{\\circ} - ${shift}^{\\circ}` : `${v}^{\\circ} + ${shift}^{\\circ}`;
+        const ansNums = item.base.map((b) => b + sign * shift);
+        const ans = ansNums.map(String);
+        const wrong1 = item.base.map((b) => String(b - sign * shift));
+        const wrong2 = item.base.map(String);
+        const wrong3 = ansNums.map((a) => String(a + 30));
+        const ansStr = ans.join(", ");
+        return solutionsProblem({
+          prompt: t(
+            `Solve $\\cos(${shiftLatex}) = ${item.val}$ for $${v} \\in [0, 360)$.`,
+            `在 $${v} \\in [0, 360)$ 上解方程 $\\cos(${shiftLatex}) = ${item.val}$。`,
+          ),
+          variable: v,
+          values: ans,
+          wrong: [wrong1, wrong2, wrong3],
+          solution: t(
+            `The inner angle equals $${item.base.join("^{\\circ}, ")}{}^{\\circ}$, so solving for $${v}$ gives $${v} = ${ansStr}$.`,
+            `内层角等于 $${item.base.join("^{\\circ}, ")}{}^{\\circ}$，解得 $${v} = ${ansStr}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1078,6 +1598,42 @@ export const trigonometricEquationsContainingTransformedTangentFunctions: TopicD
             `令内层变量在 $[0, 2\\pi)$ 内取值并除以频率系数：$${v} = ${item.ans}$。`,
           ),
         );
+      },
+    },
+    {
+      id: "solve-transformed-tangent-degrees",
+      title: t("Solve transformed tangent equations in degrees", "在角度制下求解变换正切方程"),
+      explanation: t(
+        "To solve $\\tan(x^{\\circ} - \\varphi^{\\circ}) = c$ on $[0, 180)$, find the principal angle in $[0, 180)$ and shift by $\\varphi$.",
+        "在 $[0, 180)$ 上求解 $\\tan(x^{\\circ} - \\varphi^{\\circ}) = c$ 时，先求出主值角并加上偏移量 $\\varphi$。",
+      ),
+      generate(rng) {
+        const shift = rng.pick([5, 10, 15, 20, 25]);
+        const sign = rng.pick([1, -1]);
+        const item = rng.pick([
+          { val: "1", base: 45 },
+          { val: "-1", base: 135 },
+          { val: "\\sqrt{3}", base: 60 },
+          { val: "-\\sqrt{3}", base: 120 },
+          { val: "\\frac{\\sqrt{3}}{3}", base: 30 },
+          { val: "-\\frac{\\sqrt{3}}{3}", base: 150 },
+        ]);
+        const v = rng.pick(["x", "t", "u"]);
+        const shiftLatex = sign === 1 ? `${v}^{\\circ} - ${shift}^{\\circ}` : `${v}^{\\circ} + ${shift}^{\\circ}`;
+        const ans = item.base + sign * shift;
+        return solutionsProblem({
+          prompt: t(
+            `Solve $\\tan(${shiftLatex}) = ${item.val}$ for $${v} \\in [0, 180)$.`,
+            `在 $${v} \\in [0, 180)$ 上解方程 $\\tan(${shiftLatex}) = ${item.val}$。`,
+          ),
+          variable: v,
+          values: [String(ans)],
+          wrong: [[String(item.base - sign * shift)], [String(item.base)], [String(ans + 90)]],
+          solution: t(
+            `The inner angle on $[0^{\\circ}, 180^{\\circ})$ is $${item.base}^{\\circ}$, so $${v} = ${ans}$.`,
+            `在 $[0^{\\circ}, 180^{\\circ})$ 内内层角为 $${item.base}^{\\circ}$，解得 $${v} = ${ans}$。`,
+          ),
+        });
       },
     },
   ],
@@ -1163,6 +1719,93 @@ export const solvingTrigonometricEquationsUsingTheSinCosTanIdentity: TopicDef = 
             `两边同除以 $\\cos ${v}$ 得到正切方程：$\\tan ${v} = \\dots$，解得 $${v} = ${item.ans}$。`,
           ),
         );
+      },
+    },
+    {
+      id: "solve-sin-cos-tan-identity-degrees",
+      title: t("Solve A sin(x) = B cos(x) in degrees on [0°, 360°)", "在 [0°, 360°) 上利用商数关系求解（角度制）"),
+      explanation: t(
+        "Divide both sides by $\\cos(x^{\\circ})$ to obtain $\\tan(x^{\\circ}) = \\frac{B}{A}$, then find all solutions in $[0, 360)$.",
+        "两边同除以 $\\cos(x^{\\circ})$ 得到 $\\tan(x^{\\circ}) = \\frac{B}{A}$，再求出 $[0, 360)$ 内的所有解。",
+      ),
+      generate(rng) {
+        const coeff = rng.pick([1, 2, 3, 5]);
+        const cStr = coeff === 1 ? "" : `${coeff}`;
+        const item = rng.pick([
+          {
+            expr: `${cStr}\\sin(x^{\\circ}) = ${cStr}\\cos(x^{\\circ})`,
+            tanVal: "1",
+            ans: ["45", "225"],
+            wrong: [
+              ["45", "135"],
+              ["135", "315"],
+              ["45", "315"],
+            ],
+          },
+          {
+            expr: `${cStr}\\sin(x^{\\circ}) = -${cStr}\\cos(x^{\\circ})`,
+            tanVal: "-1",
+            ans: ["135", "315"],
+            wrong: [
+              ["45", "225"],
+              ["135", "225"],
+              ["225", "315"],
+            ],
+          },
+          {
+            expr: `${cStr}\\sin(x^{\\circ}) - ${cStr}\\sqrt{3}\\cos(x^{\\circ}) = 0`,
+            tanVal: "\\sqrt{3}",
+            ans: ["60", "240"],
+            wrong: [
+              ["30", "210"],
+              ["60", "120"],
+              ["120", "300"],
+            ],
+          },
+          {
+            expr: `${cStr}\\sin(x^{\\circ}) + ${cStr}\\sqrt{3}\\cos(x^{\\circ}) = 0`,
+            tanVal: "-\\sqrt{3}",
+            ans: ["120", "300"],
+            wrong: [
+              ["60", "240"],
+              ["150", "330"],
+              ["240", "300"],
+            ],
+          },
+          {
+            expr: `${cStr}\\sqrt{3}\\sin(x^{\\circ}) - ${cStr}\\cos(x^{\\circ}) = 0`,
+            tanVal: "\\frac{\\sqrt{3}}{3}",
+            ans: ["30", "210"],
+            wrong: [
+              ["60", "240"],
+              ["30", "150"],
+              ["150", "330"],
+            ],
+          },
+          {
+            expr: `${cStr}\\sqrt{3}\\sin(x^{\\circ}) + ${cStr}\\cos(x^{\\circ}) = 0`,
+            tanVal: "-\\frac{\\sqrt{3}}{3}",
+            ans: ["150", "330"],
+            wrong: [
+              ["30", "210"],
+              ["120", "300"],
+              ["210", "330"],
+            ],
+          },
+        ]);
+        const v = rng.pick(["x", "t", "u"]);
+        const promptExpr = item.expr.replaceAll("x", v);
+        const ansStr = item.ans.join(", ");
+        return solutionsProblem({
+          prompt: t(`Solve $${promptExpr}$ for $${v} \\in [0, 360)$.`, `在 $${v} \\in [0, 360)$ 上解方程 $${promptExpr}$。`),
+          variable: v,
+          values: item.ans,
+          wrong: item.wrong,
+          solution: t(
+            `Dividing by $\\cos(${v}^{\\circ})$ yields $\\tan(${v}^{\\circ}) = ${item.tanVal}$, giving $${v} = ${ansStr}$.`,
+            `两边除以 $\\cos(${v}^{\\circ})$ 得 $\\tan(${v}^{\\circ}) = ${item.tanVal}$，解得 $${v} = ${ansStr}$。`,
+          ),
+        });
       },
     },
   ],
@@ -1252,6 +1895,106 @@ export const solvingTrigonometricEquationsUsingTheZeroProductProperty: TopicDef 
             `因式分解为两式之积等于零，再合并各自的解：$${v} = ${item.ans}$。`,
           ),
         );
+      },
+    },
+    {
+      id: "solve-zero-product-trig-degrees",
+      title: t("Solve factored trigonometric equations in degrees", "在角度制下分解因式求解三角方程"),
+      explanation: t(
+        "Factor the equation into a product equal to zero and collect all degree solutions on $[0, 360)$.",
+        "将方程分解因式后令各因式等于零，合并 $[0, 360)$ 上的全部角度解。",
+      ),
+      generate(rng) {
+        const k = rng.pick([1, 2, 3]);
+        const kStr = k === 1 ? "" : `${k}`;
+        const item = rng.pick([
+          {
+            expr: `${2 * k}\\sin(x^{\\circ})\\cos(x^{\\circ}) - ${kStr}\\cos(x^{\\circ}) = 0`,
+            ans: ["30", "90", "150", "270"],
+            wrong: [
+              ["30", "150"],
+              ["90", "270"],
+              ["60", "90", "120"],
+            ],
+          },
+          {
+            expr: `${2 * k}\\sin(x^{\\circ})\\cos(x^{\\circ}) + ${kStr}\\cos(x^{\\circ}) = 0`,
+            ans: ["90", "210", "270", "330"],
+            wrong: [
+              ["210", "330"],
+              ["90", "270"],
+              ["30", "90", "150"],
+            ],
+          },
+          {
+            expr: `${2 * k}\\sin(x^{\\circ})\\cos(x^{\\circ}) - ${kStr}\\sin(x^{\\circ}) = 0`,
+            ans: ["0", "60", "180", "300"],
+            wrong: [
+              ["0", "180"],
+              ["60", "300"],
+              ["0", "30", "150"],
+            ],
+          },
+          {
+            expr: `${2 * k}\\sin(x^{\\circ})\\cos(x^{\\circ}) + ${kStr}\\sin(x^{\\circ}) = 0`,
+            ans: ["0", "120", "180", "240"],
+            wrong: [
+              ["0", "180"],
+              ["120", "240"],
+              ["0", "60", "300"],
+            ],
+          },
+          {
+            expr: `${kStr}\\sin^2(x^{\\circ}) - ${kStr}\\sin(x^{\\circ}) = 0`,
+            ans: ["0", "90", "180"],
+            wrong: [["0", "180"], ["90"], ["0", "90"]],
+          },
+          {
+            expr: `${kStr}\\cos^2(x^{\\circ}) - ${kStr}\\cos(x^{\\circ}) = 0`,
+            ans: ["0", "90", "270"],
+            wrong: [["0", "180"], ["90", "270"], ["0"]],
+          },
+          {
+            expr: `${2 * k}\\cos^2(x^{\\circ}) - ${kStr}\\cos(x^{\\circ}) = 0`,
+            ans: ["60", "90", "270", "300"],
+            wrong: [
+              ["60", "300"],
+              ["90", "270"],
+              ["30", "90"],
+            ],
+          },
+          {
+            expr: `${2 * k}\\sin^2(x^{\\circ}) - ${kStr}\\sin(x^{\\circ}) = 0`,
+            ans: ["0", "30", "150", "180"],
+            wrong: [
+              ["30", "150"],
+              ["0", "180"],
+              ["60", "120"],
+            ],
+          },
+          {
+            expr: `${kStr}\\tan^2(x^{\\circ}) - ${kStr}\\tan(x^{\\circ}) = 0`,
+            ans: ["0", "45", "180", "225"],
+            wrong: [
+              ["0", "180"],
+              ["45", "225"],
+              ["45", "135"],
+            ],
+          },
+        ]);
+        const v = rng.pick(["x", "t", "u"]);
+        const promptExpr = item.expr.replaceAll("x", v);
+        const ansStr = item.ans.join(", ");
+        return solutionsProblem({
+          prompt: t(`Solve $${promptExpr}$ for $${v} \\in [0, 360)$.`, `在 $${v} \\in [0, 360)$ 上解方程 $${promptExpr}$。`),
+          variable: v,
+          values: item.ans,
+          wrong: item.wrong,
+          solution: t(
+            `Factoring and setting each factor to zero gives $${v} = ${ansStr}$ in $[0, 360)$.`,
+            `提取公因式并令各因式为零，在 $[0, 360)$ 上解得 $${v} = ${ansStr}$。`,
+          ),
+        });
       },
     },
   ],
@@ -1356,6 +2099,102 @@ export const quadraticTrigonometricEquationsContainingSineOrCosine: TopicDef = {
             `视为关于 $\\sin ${v}$ 或 $\\cos ${v}$ 的二次方程因式分解，分别求解：$${v} = ${item.ans}$。`,
           ),
         );
+      },
+    },
+    {
+      id: "solve-quadratic-sin-cos-degrees",
+      title: t("Solve quadratic equations in sin or cos in degrees", "在角度制下求解正弦或余弦二次方程"),
+      explanation: t(
+        "Factor the quadratic in $\\sin(x^{\\circ})$ or $\\cos(x^{\\circ})$ and find all degree solutions in $[0, 360)$.",
+        "对关于 $\\sin(x^{\\circ})$ 或 $\\cos(x^{\\circ})$ 的二次方程分解因式，求出 $[0, 360)$ 内的全部角度解。",
+      ),
+      generate(rng) {
+        const k = rng.pick([1, 2, 3]);
+        const kStr = k === 1 ? "" : `${k}`;
+        const item = rng.pick([
+          {
+            expr: `${2 * k}\\sin^2(x^{\\circ}) - ${kStr}\\sin(x^{\\circ}) - ${k} = 0`,
+            ans: ["90", "210", "330"],
+            wrong: [
+              ["30", "150", "270"],
+              ["90", "150"],
+              ["210", "330"],
+            ],
+          },
+          {
+            expr: `${2 * k}\\sin^2(x^{\\circ}) + ${kStr}\\sin(x^{\\circ}) - ${k} = 0`,
+            ans: ["30", "150", "270"],
+            wrong: [["90", "210", "330"], ["30", "150"], ["270"]],
+          },
+          {
+            expr: `${2 * k}\\cos^2(x^{\\circ}) - ${kStr}\\cos(x^{\\circ}) - ${k} = 0`,
+            ans: ["0", "120", "240"],
+            wrong: [
+              ["60", "180", "300"],
+              ["0", "60", "300"],
+              ["120", "240"],
+            ],
+          },
+          {
+            expr: `${2 * k}\\cos^2(x^{\\circ}) + ${kStr}\\cos(x^{\\circ}) - ${k} = 0`,
+            ans: ["60", "180", "300"],
+            wrong: [["0", "120", "240"], ["60", "300"], ["180"]],
+          },
+          {
+            expr: `${4 * k}\\sin^2(x^{\\circ}) - ${k} = 0`,
+            ans: ["30", "150", "210", "330"],
+            wrong: [
+              ["60", "120", "240", "300"],
+              ["30", "150"],
+              ["210", "330"],
+            ],
+          },
+          {
+            expr: `${4 * k}\\cos^2(x^{\\circ}) - ${3 * k} = 0`,
+            ans: ["30", "150", "210", "330"],
+            wrong: [
+              ["60", "120", "240", "300"],
+              ["30", "330"],
+              ["150", "210"],
+            ],
+          },
+          {
+            expr: `${2 * k}\\cos^2(x^{\\circ}) + ${3 * k}\\sin(x^{\\circ}) - ${3 * k} = 0`,
+            ans: ["30", "90", "150"],
+            wrong: [["30", "150"], ["90"], ["60", "120"]],
+          },
+          {
+            expr: `${2 * k}\\sin^2(x^{\\circ}) - ${kStr}\\cos(x^{\\circ}) - ${k} = 0`,
+            ans: ["60", "180", "300"],
+            wrong: [
+              ["0", "120", "240"],
+              ["60", "300"],
+              ["0", "180"],
+            ],
+          },
+          {
+            expr: `${2 * k}\\sin^2(x^{\\circ}) - ${3 * k}\\sin(x^{\\circ}) + ${k} = 0`,
+            ans: ["30", "90", "150"],
+            wrong: [
+              ["30", "150"],
+              ["90", "270"],
+              ["60", "90", "120"],
+            ],
+          },
+        ]);
+        const v = rng.pick(["x", "t", "u"]);
+        const promptExpr = item.expr.replaceAll("x", v);
+        const ansStr = item.ans.join(", ");
+        return solutionsProblem({
+          prompt: t(`Solve $${promptExpr}$ for $${v} \\in [0, 360)$.`, `在 $${v} \\in [0, 360)$ 上解方程 $${promptExpr}$。`),
+          variable: v,
+          values: item.ans,
+          wrong: item.wrong,
+          solution: t(
+            `Factor the quadratic equation and solve each branch in $[0, 360)$ to get $${v} = ${ansStr}$.`,
+            `将二次方程分解因式并在 $[0, 360)$ 内分别求解，得 $${v} = ${ansStr}$。`,
+          ),
+        });
       },
     },
   ],
@@ -1466,6 +2305,114 @@ export const quadraticTrigonometricEquationsContainingTangentOrCotangent: TopicD
             `求解关于 $\\tan ${v}$ 的二次方程（必要时代入 $1 + \\tan^2 ${v} = \\sec^2 ${v}$）：$${v} = ${cleanAns}$。`,
           ),
         );
+      },
+    },
+    {
+      id: "solve-quadratic-tangent-cotangent-degrees",
+      title: t("Solve quadratic equations in tangent or cotangent in degrees", "在角度制下求解正切或余切二次方程"),
+      explanation: t(
+        "Solve the quadratic equation for $\\tan(x^{\\circ})$ or $\\cot(x^{\\circ})$ and list all degree solutions in $[0, 360)$.",
+        "求出 $\\tan(x^{\\circ})$ 或 $\\cot(x^{\\circ})$ 的二次方程解，并列出 $[0, 360)$ 内的所有角度解。",
+      ),
+      generate(rng) {
+        const k = rng.pick([1, 2, 3]);
+        const kStr = k === 1 ? "" : `${k}`;
+        const item = rng.pick([
+          {
+            expr: `${kStr}\\tan^2(x^{\\circ}) - ${3 * k} = 0`,
+            ans: ["60", "120", "240", "300"],
+            wrong: [
+              ["30", "150", "210", "330"],
+              ["60", "240"],
+              ["120", "300"],
+            ],
+          },
+          {
+            expr: `${3 * k}\\tan^2(x^{\\circ}) - ${k} = 0`,
+            ans: ["30", "150", "210", "330"],
+            wrong: [
+              ["60", "120", "240", "300"],
+              ["30", "210"],
+              ["150", "330"],
+            ],
+          },
+          {
+            expr: `${kStr}\\tan^2(x^{\\circ}) - ${k} = 0`,
+            ans: ["45", "135", "225", "315"],
+            wrong: [
+              ["45", "225"],
+              ["135", "315"],
+              ["45", "135"],
+            ],
+          },
+          {
+            expr: `${kStr}\\tan^2(x^{\\circ}) - ${kStr}\\sqrt{3}\\tan(x^{\\circ}) = 0`,
+            ans: ["0", "60", "180", "240"],
+            wrong: [
+              ["0", "180"],
+              ["60", "240"],
+              ["0", "30", "180", "210"],
+            ],
+          },
+          {
+            expr: `${kStr}\\tan^2(x^{\\circ}) + ${kStr}\\sqrt{3}\\tan(x^{\\circ}) = 0`,
+            ans: ["0", "120", "180", "300"],
+            wrong: [
+              ["0", "180"],
+              ["120", "300"],
+              ["0", "60", "180", "240"],
+            ],
+          },
+          {
+            expr: `${kStr}\\sec^2(x^{\\circ}) - ${2 * k}\\tan(x^{\\circ}) = ${4 * k}`,
+            ans: ["135", "315"],
+            wrong: [
+              ["45", "225"],
+              ["45", "135"],
+              ["0", "180"],
+            ],
+          },
+          {
+            expr: `${2 * k}\\sec^2(x^{\\circ}) + ${kStr}\\tan^2(x^{\\circ}) - ${5 * k} = 0`,
+            ans: ["45", "135", "225", "315"],
+            wrong: [
+              ["60", "120", "240", "300"],
+              ["45", "225"],
+              ["30", "150"],
+            ],
+          },
+          {
+            expr: `${kStr}\\cot^2(x^{\\circ}) - ${3 * k} = 0`,
+            ans: ["30", "150", "210", "330"],
+            wrong: [
+              ["60", "120", "240", "300"],
+              ["30", "210"],
+              ["150", "330"],
+            ],
+          },
+          {
+            expr: `${kStr}\\cot^2(x^{\\circ}) - ${k} = 0`,
+            ans: ["45", "135", "225", "315"],
+            wrong: [
+              ["45", "225"],
+              ["135", "315"],
+              ["30", "150"],
+            ],
+          },
+        ]);
+        const v = rng.pick(["x", "t", "u"]);
+        const promptExpr = item.expr.replaceAll("x", v);
+        const ansStr = item.ans.join(", ");
+        return solutionsProblem({
+          prompt: t(`Solve $${promptExpr}$ for $${v} \\in [0, 360)$.`, `在 $${v} \\in [0, 360)$ 上解方程 $${promptExpr}$。`),
+          variable: v,
+          values: item.ans,
+          wrong: item.wrong,
+          solution: t(
+            `Solve the quadratic equation in $\\tan(${v}^{\\circ})$ or $\\cot(${v}^{\\circ})$ to obtain $${v} = ${ansStr}$ in $[0, 360)$.`,
+            `求解关于 $\\tan(${v}^{\\circ})$ 或 $\\cot(${v}^{\\circ})$ 的二次方程，在 $[0, 360)$ 内得 $${v} = ${ansStr}$。`,
+          ),
+        });
       },
     },
   ],
