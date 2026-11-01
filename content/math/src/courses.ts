@@ -6996,6 +6996,1340 @@ export const integratedMathIIIHonors: CourseDef = {
   ],
 };
 
+/** mathematicalFoundationsII is the Mathematical Foundations II course. */
+export const mathematicalFoundationsII: CourseDef = {
+  id: "mathematical-foundations-ii",
+  title: t("Mathematical Foundations II", "数学基础 II"),
+  description: t(
+    "Mathematical Foundations II covers intermediate algebra, functions, exponentials and logarithms, radical and rational functions, sequences, geometry, trigonometry, vectors, introductory calculus, statistics, and probability.",
+    "数学基础 II 涵盖中级代数、函数、指数与对数、根式与有理函数、数列、几何、三角学、向量、初等微积分、统计与概率。",
+  ),
+  units: [
+    {
+      title: t("Quadratics", "二次式"),
+      modules: [
+        {
+          title: t("Quadratic Equations", "二次方程"),
+          topics: [
+            "introduction-to-quadratic-equations",
+            "solving-perfect-square-quadratic-equations",
+            "zero-product-rule",
+            "solving-quadratic-equations-using-a-difference-of-squares",
+            "solving-quadratic-equations-with-no-constant-term",
+            "solving-quadratic-equations-by-factoring",
+            "solving-quadratic-equations-with-leading-coefficients-by-factoring",
+            "completing-the-square",
+            "completing-the-square-with-leading-coefficients",
+            "solving-quadratic-equations-by-completing-the-square",
+            "solving-quadratic-equations-with-leading-coefficients-by-completing-the-square",
+            "the-quadratic-formula",
+            "the-discriminant-of-a-quadratic-equation",
+            "quadratic-equations-with-one-real-solution",
+            "equating-polynomial-coefficients",
+            "vietas-formulas",
+          ],
+        },
+        {
+          title: t("Quadratic Functions", "二次函数"),
+          topics: [
+            "graphing-elementary-quadratic-functions",
+            "vertical-reflections-of-quadratic-functions",
+            "graphs-of-general-quadratic-functions",
+            "roots-of-quadratic-functions",
+            "the-discriminant-of-a-quadratic-function",
+            "the-axis-of-symmetry-of-a-parabola",
+            "the-average-of-the-roots-formula",
+            "the-vertex-form-of-a-parabola",
+            "writing-the-equation-of-a-parabola-in-vertex-form",
+            "domain-and-range-of-quadratic-functions",
+            "solving-systems-of-nonlinear-equations",
+            "finding-intersections-of-lines-and-quadratic-functions",
+            "modeling-downwards-vertical-motion",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Vectors", "向量"),
+      modules: [
+        {
+          title: t("Introduction to Vectors", "向量入门"),
+          topics: [
+            "introduction-to-vectors",
+            "the-triangle-law-for-the-addition-of-two-vectors",
+            "the-magnitude-of-a-vector",
+            "problem-solving-using-vector-diagrams",
+            "parallel-vectors",
+            "unit-vectors",
+            "linear-combinations-of-vectors-and-their-properties",
+            "describing-the-position-vector-of-a-point-using-known-vectors",
+          ],
+        },
+        {
+          title: t("Vectors in 2D Cartesian Coordinates", "二维笛卡尔坐标系中的向量"),
+          topics: [
+            "two-dimensional-vectors-expressed-in-component-form",
+            "addition-and-scalar-multiplication-of-cartesian-vectors-in-2d",
+            "calculating-the-magnitude-of-cartesian-vectors-in-2d",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Polynomials", "多项式"),
+      modules: [
+        {
+          title: t("Factoring Polynomials", "多项式因式分解"),
+          topics: [
+            "further-factoring-of-polynomials-using-gcfs",
+            "factoring-higher-order-polynomials-as-a-difference-of-squares",
+            "factoring-cubic-expressions-by-grouping",
+            "factoring-sums-and-differences-of-cubes",
+            "factoring-biquadratic-expressions",
+          ],
+        },
+        {
+          title: t("Polynomials", "多项式"),
+          topics: [
+            "the-least-common-multiple-of-two-monomials",
+            "the-least-common-multiple-of-two-polynomials",
+            "determining-the-roots-of-polynomials",
+            "solving-polynomial-equations-using-the-gcf",
+            "solving-cubic-equations-by-grouping",
+            "end-behavior",
+          ],
+        },
+        {
+          title: t("Dividing Polynomials", "多项式除法"),
+          topics: [
+            "dividing-polynomials-using-synthetic-division",
+            "dividing-polynomials-by-linear-binomials-using-long-division",
+            "dividing-polynomials-using-long-division",
+            "dividing-polynomials-by-manipulating-rational-expressions",
+          ],
+        },
+        {
+          title: t("Polynomial Theorems", "多项式定理"),
+          topics: [
+            "the-factor-theorem",
+            "determining-polynomial-coefficients-using-the-factor-theorem",
+            "factoring-cubic-polynomials-using-the-factor-theorem",
+            "factoring-quartic-polynomials-using-the-factor-theorem",
+            "multiplicities-of-the-roots-of-polynomials",
+            "the-remainder-theorem",
+            "the-rational-roots-theorem",
+            "closure-properties-of-polynomials",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Number Systems", "数系"),
+      modules: [
+        {
+          title: t("The Number System", "数系"),
+          topics: ["the-real-number-system", "sums-and-products-of-rational-and-irrational-numbers"],
+        },
+        {
+          title: t("Introduction to Complex Numbers", "复数入门"),
+          topics: [
+            "imaginary-numbers",
+            "quadratic-equations-with-purely-imaginary-solutions",
+            "complex-numbers",
+            "adding-and-subtracting-complex-numbers",
+            "multiplying-complex-numbers",
+            "solving-quadratic-equations-with-complex-roots",
+            "cyclic-property-of-the-imaginary-unit",
+          ],
+        },
+        {
+          title: t("The Complex Plane", "复平面"),
+          topics: ["the-complex-plane", "the-magnitude-of-a-complex-number", "the-argument-of-a-complex-number"],
+        },
+      ],
+    },
+    {
+      title: t("Functions", "函数"),
+      modules: [
+        {
+          title: t("Functions", "函数"),
+          topics: [
+            "local-extrema",
+            "one-to-one-functions",
+            "graphs-of-inverse-functions",
+            "domain-and-range-of-inverse-functions",
+            "invertible-functions",
+            "calculating-the-inverse-of-a-function",
+            "inverses-of-quadratic-functions",
+            "plotting-x-as-a-function-of-y",
+            "periodic-functions",
+            "even-and-odd-functions",
+            "unbounded-behavior-of-functions-near-a-point",
+          ],
+        },
+        {
+          title: t("Graph Transformations of Functions", "函数的图像变换"),
+          topics: [
+            "vertical-translations-of-functions",
+            "horizontal-translations-of-functions",
+            "vertical-stretches-of-functions",
+            "horizontal-stretches-of-functions",
+            "vertical-reflections-of-functions",
+            "horizontal-reflections-of-functions",
+            "combining-graph-transformations-two-operations",
+            "combining-graph-transformations-three-or-more-operations",
+            "constructing-functions-using-transformations",
+            "combining-reflections-with-other-graph-transformations",
+            "finding-points-on-transformed-curves",
+            "the-domain-and-range-of-transformed-functions",
+          ],
+        },
+        {
+          title: t("Graphs of Polynomials", "多项式图像"),
+          topics: [
+            "graphing-elementary-cubic-functions",
+            "graphing-cubic-curves-containing-three-distinct-real-roots",
+            "graphing-cubic-curves-containing-a-double-root",
+            "graphing-cubic-curves-containing-one-distinct-real-root",
+            "graphing-general-polynomials",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Exponentials & Logarithms", "指数与对数"),
+      modules: [
+        {
+          title: t("Introduction to Logarithms", "对数入门"),
+          topics: [
+            "converting-between-exponential-and-logarithmic-form",
+            "evaluating-logarithms",
+            "natural-logarithm",
+            "common-logarithm",
+            "simplifying-logarithmic-expressions",
+          ],
+        },
+        {
+          title: t("The Laws of Logarithms", "对数运算法则"),
+          topics: [
+            "product-rule-for-logarithms",
+            "quotient-rule-for-logarithms",
+            "power-rule-for-logarithms",
+            "combining-laws-of-logarithms",
+            "change-of-base-formula",
+          ],
+        },
+        {
+          title: t("Exponential Equations", "指数方程"),
+          topics: [
+            "solving-exponential-equations-using-logarithms",
+            "solving-equations-containing-the-exponential-function",
+            "solving-exponential-equations-with-different-bases-using-logarithms",
+            "solving-exponential-equations-using-the-zero-product-property",
+          ],
+        },
+        {
+          title: t("Logarithmic Equations", "对数方程"),
+          topics: [
+            "solving-logarithmic-equations",
+            "solving-logarithmic-equations-containing-the-natural-logarithm",
+            "solving-logarithmic-equations-using-the-laws-of-logarithms",
+            "solving-logarithmic-equations-by-combining-the-laws-of-logarithms",
+            "solving-logarithmic-equations-with-logarithms-on-both-sides",
+          ],
+        },
+        {
+          title: t("Graphs of Exponential Functions", "指数函数图象"),
+          topics: [
+            "vertical-translations-of-exponential-growth-functions",
+            "vertical-translations-of-exponential-decay-functions",
+            "vertical-reflections-of-exponential-functions",
+            "combining-graph-transformations-of-exponential-functions",
+            "properties-of-transformed-exponential-functions",
+          ],
+        },
+        {
+          title: t("Graphs of Logarithmic Functions", "对数函数图象"),
+          topics: [
+            "graphing-logarithmic-functions",
+            "combining-graph-transformations-of-logarithmic-functions",
+            "properties-of-transformed-logarithmic-functions",
+            "inverses-of-exponential-and-logarithmic-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Radical & Rational Functions", "根式与有理函数"),
+      modules: [
+        {
+          title: t("Rational Expressions", "分式"),
+          topics: [
+            "simplifying-rational-expressions-using-polynomial-factorization",
+            "adding-and-subtracting-rational-expressions",
+            "adding-rational-expressions-with-unlike-denominators",
+            "multiplying-rational-expressions",
+            "dividing-rational-expressions",
+            "expressing-rational-functions-as-sums-of-partial-fractions",
+          ],
+        },
+        {
+          title: t("Rational Equations", "分式方程"),
+          topics: ["rational-equations-with-three-terms", "advanced-rational-equations"],
+        },
+        {
+          title: t("Rational Functions", "有理函数"),
+          topics: [
+            "graphing-reciprocal-functions",
+            "graph-transformations-of-reciprocal-functions",
+            "combining-graph-transformations-of-reciprocal-functions",
+            "domain-and-range-of-transformed-reciprocal-functions",
+            "inverses-of-reciprocal-functions",
+            "finding-intersections-of-lines-and-reciprocal-functions",
+            "roots-of-rational-functions",
+            "vertical-asymptotes-of-rational-functions",
+            "horizontal-asymptotes-of-rational-functions",
+          ],
+        },
+        {
+          title: t("Radical Expressions", "根式"),
+          topics: ["rationalizing-algebraic-denominators", "rationalizing-two-term-denominators", "further-rationalizing-denominators"],
+        },
+        {
+          title: t("Radical Functions", "根式函数"),
+          topics: [
+            "solving-radical-equations",
+            "graphing-the-square-root-function",
+            "graph-transformations-of-square-root-functions",
+            "graphing-the-cube-root-function",
+            "properties-of-transformed-square-root-functions",
+            "the-domain-of-a-transformed-radical-function",
+            "the-range-of-a-transformed-radical-function",
+            "inverses-of-radical-functions",
+            "roots-of-transformed-radical-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Sequences", "数列"),
+      modules: [
+        {
+          title: t("Introduction to Sequences", "数列入门"),
+          topics: [
+            "introduction-to-sequences",
+            "recursive-sequences",
+            "fibonacci-sequences",
+            "sigma-notation",
+            "properties-of-finite-series",
+          ],
+        },
+        {
+          title: t("Arithmetic Sequences", "等差数列"),
+          topics: [
+            "arithmetic-sequences",
+            "recursive-formulas-for-arithmetic-sequences",
+            "nth-term-of-an-arithmetic-sequence",
+            "explicit-and-recursive-arithmetic-formulas",
+            "arithmetic-sequences-from-two-terms",
+            "index-of-a-term-in-an-arithmetic-sequence",
+          ],
+        },
+        {
+          title: t("Geometric Sequences", "等比数列"),
+          topics: [
+            "geometric-sequences",
+            "nth-term-of-a-geometric-sequence",
+            "recursive-formulas-for-geometric-sequences",
+            "geometric-sequences-from-two-terms",
+            "index-of-a-term-in-a-geometric-sequence",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Geometry", "几何"),
+      modules: [
+        {
+          title: t("Coordinate Geometry", "坐标几何"),
+          topics: [
+            "finding-equations-of-parallel-lines",
+            "perpendicular-lines-in-the-coordinate-plane",
+            "finding-equations-of-perpendicular-lines",
+            "midpoints-in-the-coordinate-plane",
+            "the-distance-formula",
+            "the-shortest-distance-between-a-point-and-a-line",
+            "the-distance-formula-in-three-dimensions",
+          ],
+        },
+        {
+          title: t("Geometric Transformations", "几何变换"),
+          topics: [
+            "translations-of-geometric-figures",
+            "rotations-of-geometric-figures",
+            "rotation-rules-in-the-coordinate-plane",
+            "reflections-in-the-coordinate-plane",
+            "reflections-across-arbitrary-lines",
+            "dilations-of-geometric-figures",
+            "dilations-of-figures-in-the-coordinate-plane",
+            "stretches-of-geometric-figures",
+            "combining-stretches-of-geometric-figures",
+            "combining-geometric-transformations",
+            "rigid-motions-and-congruence",
+            "similarity-and-similar-polygons",
+            "similarity-transformations",
+            "reflective-symmetry",
+            "rotational-symmetry",
+          ],
+        },
+        {
+          title: t("Solid Geometry", "立体几何"),
+          topics: [
+            "identifying-three-dimensional-shapes",
+            "faces-vertices-and-edges-of-polyhedrons",
+            "nets-of-polyhedrons",
+            "finding-surface-areas-using-nets",
+            "volumes-of-cubes",
+            "volumes-of-rectangular-solids",
+            "surface-areas-of-cubes",
+            "volumes-of-cylinders",
+            "volumes-of-spheres",
+            "surface-areas-of-spheres",
+            "surface-areas-of-cylinders",
+            "eulers-formula-for-polyhedra",
+            "the-five-platonic-solids",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Trigonometry", "三角学"),
+      modules: [
+        {
+          title: t("Introduction to Trigonometry", "三角学入门"),
+          topics: [
+            "angles-and-sides-in-right-triangles",
+            "the-trigonometric-ratios",
+            "calculating-trigonometric-ratios-using-the-pythagorean-theorem",
+            "calculating-side-lengths-of-right-triangles-using-trigonometry",
+            "calculating-angles-in-right-triangles-using-trigonometry",
+            "the-reciprocal-trigonometric-ratios",
+            "trigonometric-functions-of-complementary-angles",
+            "special-trigonometric-ratios",
+            "calculating-areas-of-right-triangles-using-trigonometry",
+            "introduction-to-radians",
+            "trigonometric-ratios-with-radians",
+          ],
+        },
+        {
+          title: t("Trigonometry with General Triangles", "任意三角形中的三角学"),
+          topics: ["the-law-of-sines", "the-law-of-cosines", "the-area-of-a-general-triangle"],
+        },
+        {
+          title: t("The Unit Circle", "单位圆"),
+          topics: [
+            "angles-in-the-coordinate-plane",
+            "negative-angles-in-the-coordinate-plane",
+            "coterminal-angles",
+            "calculating-reference-angles",
+            "properties-of-the-unit-circle-in-the-first-quadrant",
+            "extending-the-trigonometric-ratios-using-the-unit-circle",
+            "extending-the-trigonometric-ratios-using-angles-in-radians",
+            "extending-the-trigonometric-ratios-to-negative-angles",
+            "extending-the-trigonometric-ratios-to-large-angles",
+            "using-the-pythagorean-identity-in-the-first-quadrant",
+            "extending-the-pythagorean-identity-to-all-quadrants",
+          ],
+        },
+        {
+          title: t("Special Trigonometric Ratios", "特殊角三角比"),
+          topics: [
+            "finding-trigonometric-ratios-of-quadrantal-angles",
+            "trigonometric-ratios-of-quadrantal-angles-outside-the-standard-range",
+            "finding-trigonometric-ratios-of-special-angles-using-the-unit-circle",
+            "evaluating-trigonometric-expressions",
+            "further-extensions-of-the-special-trigonometric-ratios",
+          ],
+        },
+        {
+          title: t("Graphing Trigonometric Functions", "绘制三角函数图象"),
+          topics: ["graphing-sine-and-cosine", "graphing-tangent-and-cotangent", "graphing-secant-and-cosecant"],
+        },
+        {
+          title: t("Properties of Trigonometric Functions", "三角函数的性质"),
+          topics: [
+            "describing-properties-of-the-sine-function",
+            "describing-properties-of-the-cosine-function",
+            "describing-properties-of-the-tangent-function",
+            "describing-properties-of-the-secant-function",
+            "describing-properties-of-the-cosecant-function",
+            "describing-properties-of-the-cotangent-function",
+          ],
+        },
+        {
+          title: t("Graph Transformations of Trigonometric Functions", "三角函数的图象变换"),
+          topics: [
+            "vertical-translations-of-trigonometric-functions",
+            "vertical-stretches-of-trigonometric-functions",
+            "horizontal-translations-of-trigonometric-functions",
+            "horizontal-stretches-of-trigonometric-functions",
+            "combining-graph-transformations-of-sine-and-cosine",
+            "graph-transformations-of-tangent-and-cotangent",
+            "combining-graph-transformations-of-tangent-and-cotangent",
+            "combining-graph-transformations-of-secant-and-cosecant",
+            "graphing-reflections-of-trigonometric-functions",
+          ],
+        },
+        {
+          title: t("Properties of Transformed Trigonometric Functions", "变换后三角函数的性质"),
+          topics: [
+            "properties-of-transformed-sine-and-cosine-functions",
+            "finding-zeros-and-extrema-of-transformed-sine-and-cosine-functions",
+            "properties-of-transformed-tangent-and-cotangent-functions",
+            "properties-of-transformed-secant-and-cosecant-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Limits & Continuity", "极限与连续性"),
+      modules: [
+        {
+          title: t("Estimating Limits from Graphs", "由图象估计极限"),
+          topics: [
+            "the-finite-limit-of-a-function",
+            "the-left-and-right-sided-limits-of-a-function",
+            "finding-the-existence-of-a-limit-using-one-sided-limits",
+            "limits-at-infinity-from-graphs",
+            "infinite-limits-from-graphs",
+          ],
+        },
+        {
+          title: t("The Algebra of Limits", "极限的代数运算法则"),
+          topics: [
+            "limits-of-power-functions-and-the-constant-rule-for-limits",
+            "the-sum-rule-for-limits",
+            "the-product-and-quotient-rules-for-limits",
+            "the-power-and-root-rules-for-limits",
+          ],
+        },
+        {
+          title: t("Limits of Functions", "函数的极限"),
+          topics: [
+            "limits-at-infinity-of-polynomials",
+            "limits-of-reciprocal-functions",
+            "limits-of-exponential-functions",
+            "limits-of-logarithmic-functions",
+            "limits-of-radical-functions",
+            "limits-of-trigonometric-functions",
+            "limits-of-reciprocal-trigonometric-functions",
+            "limits-of-piecewise-functions",
+            "calculating-limits-of-rational-functions-by-factoring",
+          ],
+        },
+        {
+          title: t("Continuity", "连续性"),
+          topics: [
+            "determining-continuity-from-graphs",
+            "defining-continuity-at-a-point",
+            "left-and-right-continuity",
+            "continuity-over-an-interval",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Introduction to Calculus", "微积分入门"),
+      modules: [
+        {
+          title: t("Introduction to Differentiation", "微分入门"),
+          topics: [
+            "the-average-rate-of-change-of-a-function",
+            "the-average-rate-of-change-of-a-function-over-a-varying-interval",
+            "the-instantaneous-rate-of-change-of-a-function-at-a-point",
+            "defining-the-derivative-using-derivative-notation",
+            "the-power-rule-for-differentiation",
+            "the-sum-and-constant-multiple-rules-for-differentiation",
+            "calculating-the-slope-of-a-tangent-line-using-differentiation",
+            "calculating-the-equation-of-a-tangent-line-using-differentiation",
+            "calculating-the-equation-of-a-normal-line-using-differentiation",
+          ],
+        },
+        {
+          title: t("Derivatives of Functions and the Rules of Differentiation", "函数的导数与求导法则"),
+          topics: [
+            "differentiating-exponential-functions",
+            "differentiating-logarithmic-functions",
+            "differentiating-trigonometric-functions",
+            "second-and-higher-order-derivatives",
+            "the-product-rule-for-differentiation",
+            "the-quotient-rule-for-differentiation",
+            "calculating-derivatives-from-data-and-tables",
+            "calculating-derivatives-from-graphs",
+            "differentiating-reciprocal-trigonometric-functions",
+          ],
+        },
+        {
+          title: t("Differentiating Composite Functions", "复合函数求导"),
+          topics: [
+            "the-chain-rule-for-differentiation",
+            "the-chain-rule-with-exponential-functions",
+            "the-chain-rule-with-logarithmic-functions",
+            "the-chain-rule-with-trigonometric-functions",
+            "selecting-procedures-for-calculating-derivatives",
+            "interpreting-the-meaning-of-the-derivative-in-context",
+          ],
+        },
+        {
+          title: t("Indefinite Integrals", "不定积分"),
+          topics: [
+            "the-antiderivative",
+            "the-constant-multiple-rule-for-indefinite-integrals",
+            "the-sum-rule-for-indefinite-integrals",
+            "integrating-the-reciprocal-function",
+            "integrating-exponential-functions",
+            "integrating-trigonometric-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Statistics", "统计"),
+      modules: [
+        {
+          title: t("Analyzing Data", "数据分析"),
+          topics: [
+            "mean-of-a-data-set",
+            "variance-and-standard-deviation",
+            "estimating-means-and-variances-for-grouped-data",
+            "the-z-score",
+          ],
+        },
+        {
+          title: t("Correlation and Regression", "相关与回归"),
+          topics: [
+            "scatter-plots",
+            "trend-lines",
+            "predictions-with-trend-lines",
+            "linear-correlation",
+            "residuals-and-residual-plots",
+            "selecting-a-regression-model",
+            "covariance",
+            "sums-of-squares",
+            "the-linear-correlation-coefficient",
+            "linear-regression",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Probability & Combinatorics", "概率与组合"),
+      modules: [
+        {
+          title: t("Introduction to Probability", "概率入门"),
+          topics: [
+            "sets",
+            "experimental-probability",
+            "using-experimental-probability-to-make-predictions",
+            "sample-spaces-and-events-in-probability",
+            "the-likelihood-of-an-event",
+            "single-events-in-probability",
+            "using-probability-to-make-predictions",
+            "the-complement-of-an-event",
+            "venn-diagrams-in-probability",
+          ],
+        },
+        {
+          title: t("Compound Events in Probability", "复合事件概率"),
+          topics: [
+            "the-union-of-sets",
+            "the-intersection-of-sets",
+            "compound-events-in-probability-from-experimental-data",
+            "computing-probabilities-for-compound-events-using-venn-diagrams",
+            "computing-probabilities-of-events-containing-complements-using-venn-diagrams",
+          ],
+        },
+        {
+          title: t("Combinatorics", "排列组合"),
+          topics: [
+            "the-rules-of-sum-and-product",
+            "factorials",
+            "factorials-in-variable-expressions",
+            "ordering-objects",
+            "permutations",
+            "combinations",
+            "computing-probabilities-using-combinatorics",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+/** mathematicalFoundationsIII is the Mathematical Foundations III course. */
+export const mathematicalFoundationsIII: CourseDef = {
+  id: "mathematical-foundations-iii",
+  title: t("Mathematical Foundations III", "数学基础 III"),
+  description: t(
+    "Mathematical Foundations III develops advanced mathematical maturity through sequences and series, inequalities, parametric and polar coordinates, conic sections, advanced trigonometry, complex numbers, differential and integral calculus, differential equations, vectors, linear algebra, and probability.",
+    "数学基础 III 通过数列与级数、不等式、参数方程与极坐标、圆锥曲线、进阶三角学、复数、微分与积分微积分、微分方程、向量、线性代数和概率培养高阶数学素养。",
+  ),
+  units: [
+    {
+      title: t("Conic Sections", "圆锥曲线"),
+      modules: [
+        {
+          title: t("Circles", "圆"),
+          topics: [
+            "circles-in-the-coordinate-plane",
+            "equations-of-circles-centered-at-the-origin",
+            "equations-of-circles",
+            "determining-circle-properties-by-completing-the-square",
+            "calculating-circle-intercepts",
+            "intersections-of-circles-with-lines",
+          ],
+        },
+        {
+          title: t("Parabolas", "抛物线"),
+          topics: [
+            "upward-and-downward-opening-parabolas",
+            "left-and-right-opening-parabolas",
+            "the-vertex-of-a-parabola",
+            "calculating-the-vertex-of-a-parabola-by-completing-the-square",
+            "calculating-intercepts-of-parabolas",
+          ],
+        },
+        {
+          title: t("Ellipses", "椭圆"),
+          topics: [
+            "introduction-to-ellipses",
+            "equations-of-ellipses-centered-at-the-origin",
+            "equations-of-ellipses-centered-at-a-general-point",
+            "finding-the-center-and-axes-of-ellipses-by-completing-the-square",
+            "finding-intercepts-of-ellipses",
+          ],
+        },
+        {
+          title: t("Hyperbolas", "双曲线"),
+          topics: [
+            "equations-of-hyperbolas-centered-at-the-origin",
+            "equations-of-hyperbolas-centered-at-a-general-point",
+            "asymptotes-of-hyperbolas-centered-at-the-origin",
+            "asymptotes-of-hyperbolas-centered-at-a-general-point",
+            "finding-intercepts-and-intersections-of-hyperbolas",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Parametric & Polar Coordinates", "参数方程与极坐标"),
+      modules: [
+        {
+          title: t("Parametric Equations", "参数方程"),
+          topics: [
+            "graphing-curves-defined-parametrically",
+            "cartesian-equations-of-parametric-curves",
+            "finding-intersections-of-parametric-curves-and-lines",
+            "differentiating-parametric-curves",
+            "calculating-tangent-and-normal-lines-with-parametric-equations",
+            "second-derivatives-of-parametric-equations",
+            "parametric-equations-of-circles",
+            "parametric-equations-of-ellipses",
+            "parametric-equations-of-parabolas",
+            "parametric-equations-of-parabolas-centered-at-hk",
+            "parametric-equations-of-horizontal-hyperbolas",
+            "parametric-equations-of-vertical-hyperbolas",
+          ],
+        },
+        {
+          title: t("Polar Coordinates", "极坐标"),
+          topics: [
+            "introduction-to-polar-coordinates",
+            "converting-from-polar-coordinates-to-cartesian-coordinates",
+            "polar-equations-of-circles-centered-at-the-origin",
+            "polar-equations-of-radial-lines",
+            "differentiating-curves-given-in-polar-form",
+            "further-differentiation-of-curves-given-in-polar-form",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Trigonometry", "三角学"),
+      modules: [
+        {
+          title: t("The Inverse Trigonometric Functions", "反三角函数"),
+          topics: [
+            "graphing-the-inverse-sine-function",
+            "graphing-the-inverse-cosine-function",
+            "graphing-the-inverse-tangent-function",
+            "evaluating-expressions-containing-inverse-trigonometric-functions",
+            "limits-of-inverse-trigonometric-functions",
+          ],
+        },
+        {
+          title: t("Trigonometric Identities", "三角恒等式"),
+          topics: [
+            "simplifying-expressions-using-basic-trigonometric-identities",
+            "simplifying-expressions-using-the-pythagorean-identity",
+            "alternate-forms-of-the-pythagorean-identity",
+            "simplifying-expressions-using-the-secant-tangent-identity",
+            "alternate-forms-of-the-secant-tangent-identity",
+            "simplifying-trigonometric-expressions-using-the-cotangent-cosecant-identity",
+          ],
+        },
+        {
+          title: t("The Sum and Difference Formulas", "和差角公式"),
+          topics: [
+            "the-sum-and-difference-formulas-for-sine",
+            "the-sum-and-difference-formulas-for-cosine",
+            "writing-sums-of-trigonometric-functions-in-amplitude-phase-form",
+            "the-double-angle-formula-for-sine",
+            "the-double-angle-formula-for-cosine",
+          ],
+        },
+        {
+          title: t("Elementary Trigonometric Equations", "初等三角方程"),
+          topics: [
+            "elementary-trigonometric-equations-containing-sine",
+            "elementary-trigonometric-equations-containing-cosine",
+            "elementary-trigonometric-equations-containing-tangent",
+            "elementary-trigonometric-equations-containing-secant",
+            "elementary-trigonometric-equations-containing-cosecant",
+            "elementary-trigonometric-equations-containing-cotangent",
+            "solving-trigonometric-equations-using-the-sin-cos-tan-identity",
+            "general-solutions-of-elementary-trigonometric-equations",
+            "general-solutions-of-trigonometric-equations-with-transformed-functions",
+            "trigonometric-equations-containing-transformed-tangent-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Complex Numbers", "复数"),
+      modules: [
+        {
+          title: t("Further Complex Numbers", "复数进阶"),
+          topics: [
+            "the-complex-conjugate",
+            "special-properties-of-the-complex-conjugate",
+            "the-complex-conjugate-and-the-roots-of-a-quadratic-equation",
+            "dividing-complex-numbers",
+            "solving-equations-by-equating-real-and-imaginary-parts",
+            "extending-polynomial-identities-to-the-complex-numbers",
+          ],
+        },
+        {
+          title: t("Euler's Formula", "欧拉公式"),
+          topics: [
+            "the-polar-form-of-a-complex-number",
+            "de-moivres-theorem",
+            "eulers-formula",
+            "the-roots-of-unity",
+            "properties-of-roots-of-unity",
+          ],
+        },
+        {
+          title: t("The Fundamental Theorem of Algebra", "代数基本定理"),
+          topics: [
+            "the-fundamental-theorem-of-algebra-for-quadratic-equations",
+            "the-fundamental-theorem-of-algebra-with-cubic-equations",
+            "solving-cubic-equations-with-complex-roots",
+            "the-fundamental-theorem-of-algebra-with-quartic-equations",
+            "solving-quartic-equations-with-complex-roots",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Vectors", "向量"),
+      modules: [
+        {
+          title: t("Vectors in 3D Cartesian Coordinates", "三维笛卡尔坐标系中的向量"),
+          topics: [
+            "three-dimensional-vectors-in-component-form",
+            "addition-and-scalar-multiplication-of-cartesian-vectors-in-3d",
+            "calculating-the-magnitude-of-cartesian-vectors-in-3d",
+          ],
+        },
+        {
+          title: t("The Dot Product", "点积"),
+          topics: [
+            "calculating-the-dot-product-using-angle-and-magnitude",
+            "calculating-the-dot-product-using-components",
+            "the-angle-between-two-vectors",
+            "calculating-a-scalar-projection",
+            "calculating-a-vector-projection",
+          ],
+        },
+        {
+          title: t("The Cross Product", "叉积"),
+          topics: [
+            "the-cross-product-of-two-vectors",
+            "properties-of-the-cross-product",
+            "calculating-the-cross-product-using-determinants",
+            "finding-areas-using-the-cross-product",
+            "the-scalar-triple-product",
+            "volumes-of-parallelepipeds",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Linear Algebra", "线性代数"),
+      modules: [
+        {
+          title: t("Introduction to Matrices", "矩阵入门"),
+          topics: [
+            "introduction-to-matrices",
+            "index-notation-for-matrices",
+            "adding-and-subtracting-matrices",
+            "properties-of-matrix-addition",
+            "scalar-multiplication-of-matrices",
+            "zero-square-diagonal-and-identity-matrices",
+            "the-transpose-of-a-matrix",
+          ],
+        },
+        {
+          title: t("Matrix Multiplication", "矩阵乘法"),
+          topics: [
+            "multiplying-a-matrix-by-a-column-vector",
+            "multiplying-square-matrices",
+            "conformability-for-matrix-multiplication",
+            "multiplying-matrices",
+            "powers-of-matrices",
+            "multiplying-a-matrix-by-the-identity-matrix",
+            "properties-of-matrix-multiplication",
+            "representing-2x2-systems-of-equations-using-a-matrix-product",
+            "representing-3x3-systems-of-equations-using-a-matrix-product",
+          ],
+        },
+        {
+          title: t("Determinants", "行列式"),
+          topics: [
+            "the-determinant-of-a-2x2-matrix",
+            "the-geometric-interpretation-of-the-2x2-determinant",
+            "the-minors-of-a-3x3-matrix",
+            "the-determinant-of-a-3x3-matrix",
+          ],
+        },
+        {
+          title: t("The Inverse of a Matrix", "逆矩阵"),
+          topics: [
+            "introduction-to-the-inverse-of-a-matrix",
+            "inverses-of-2x2-matrices",
+            "calculating-the-inverse-of-a-3x3-matrix-using-the-cofactor-method",
+            "solving-2x2-systems-of-equations-using-inverse-matrices",
+            "solving-systems-of-equations-using-inverse-matrices",
+          ],
+        },
+        {
+          title: t("Linear Transformations", "线性变换"),
+          topics: [
+            "introduction-to-linear-transformations",
+            "the-standard-matrix-of-a-linear-transformation",
+            "linear-transformations-of-points-and-lines-in-the-plane",
+            "linear-transformations-of-objects-in-the-plane",
+            "dilations-and-reflections-as-linear-transformations",
+            "shear-and-stretch-as-linear-transformations",
+            "right-angle-rotations-as-linear-transformations",
+            "rotations-as-linear-transformations",
+            "combining-linear-transformations-using-2x2-matrices",
+            "inverting-linear-transformations",
+            "area-scale-factors-of-linear-transformations",
+            "singular-linear-transformations-in-the-plane",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Limits & Continuity", "极限与连续性"),
+      modules: [
+        {
+          title: t("Limits", "极限"),
+          topics: [
+            "lhopitals-rule",
+            "special-limits-involving-sine",
+            "limits-involving-the-exponential-function",
+            "vertical-asymptotes-of-rational-functions",
+            "limits-at-infinity-and-horizontal-asymptotes-of-rational-functions",
+            "calculating-limits-of-radical-functions-using-conjugate-multiplication",
+            "evaluating-limits-at-infinity-by-comparing-relative-magnitudes-of-functions",
+          ],
+        },
+        {
+          title: t("Continuity", "连续性"),
+          topics: ["continuity-of-functions", "the-intermediate-value-theorem"],
+        },
+      ],
+    },
+    {
+      title: t("Inequalities", "不等式"),
+      modules: [
+        {
+          title: t("Single-Variable Inequalities", "一元不等式"),
+          topics: [
+            "solving-elementary-quadratic-inequalities",
+            "solving-quadratic-inequalities-from-graphs",
+            "solving-quadratic-inequalities-using-the-graphical-method",
+            "solving-quadratic-inequalities-using-the-sign-table-method",
+            "inequalities-involving-powers-of-binomials",
+            "solving-polynomial-inequalities-using-a-graphical-method",
+            "solving-polynomial-inequalities-using-the-sign-table-method",
+            "solving-inequalities-involving-positive-and-negative-factors",
+            "solving-rational-inequalities",
+            "solving-radical-inequalities",
+            "solving-inequalities-involving-exponential-functions",
+            "solving-inequalities-involving-exponential-functions-and-polynomials",
+            "solving-inequalities-involving-logarithmic-functions",
+            "solving-inequalities-involving-geometric-sequences",
+          ],
+        },
+        {
+          title: t("Two-Variable Inequalities", "二元不等式"),
+          topics: [
+            "graphing-strict-linear-inequalities",
+            "graphing-non-strict-linear-inequalities",
+            "further-graphing-linear-inequalities",
+            "systems-of-linear-inequalities",
+            "solving-two-variable-nonlinear-inequalities",
+            "further-solving-of-two-variable-nonlinear-inequalities",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Differentiation", "微分"),
+      modules: [
+        {
+          title: t("Differentiating Implicit and Inverse Functions", "隐函数与反函数求导"),
+          topics: [
+            "implicit-differentiation",
+            "calculating-slopes-of-circles-ellipses-and-parabolas",
+            "calculating-dy-dx-using-dx-dy",
+            "differentiating-inverse-functions",
+            "differentiating-an-inverse-function-at-a-point",
+            "differentiating-inverse-trigonometric-functions",
+            "differentiating-inverse-reciprocal-trigonometric-functions",
+            "integration-using-inverse-trigonometric-functions",
+          ],
+        },
+        {
+          title: t("Analytical Applications of Differentiation", "导数的分析应用"),
+          topics: [
+            "continuity-and-differentiability-of-functions",
+            "the-mean-value-theorem",
+            "global-vs-local-extrema-and-critical-points",
+            "the-extreme-value-theorem",
+            "using-differentiation-to-calculate-critical-points",
+            "determining-intervals-on-which-a-function-is-increasing-or-decreasing",
+            "using-the-first-derivative-test-to-classify-local-extrema",
+            "the-candidates-test",
+            "intervals-of-concavity",
+            "relating-concavity-to-the-second-derivative",
+            "points-of-inflection",
+            "the-second-derivative-test",
+            "approximating-functions-using-local-linearity-and-linearization",
+          ],
+        },
+        {
+          title: t("Estimating Derivatives", "估计导数"),
+          topics: [
+            "estimating-derivatives-using-a-forward-difference-quotient",
+            "estimating-derivatives-using-a-backward-difference-quotient",
+            "estimating-derivatives-using-a-central-difference-quotient",
+          ],
+        },
+        {
+          title: t("Taylor Series", "泰勒级数"),
+          topics: [
+            "second-degree-taylor-polynomials",
+            "analyzing-second-degree-taylor-polynomials",
+            "third-degree-taylor-polynomials",
+            "higher-degree-taylor-polynomials",
+            "maclaurin-series",
+            "taylor-series",
+            "representing-functions-as-power-series",
+            "recognizing-standard-maclaurin-series",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Definite Integrals", "定积分"),
+      modules: [
+        {
+          title: t("Approximating Areas with Riemann Sums", "用黎曼和近似面积"),
+          topics: [
+            "approximating-areas-with-the-left-riemann-sum",
+            "approximating-areas-with-the-right-riemann-sum",
+            "left-and-right-riemann-sums-in-sigma-notation",
+            "approximating-areas-with-the-trapezoidal-rule",
+          ],
+        },
+        {
+          title: t("Definite Integrals", "定积分"),
+          topics: [
+            "defining-definite-integrals-using-left-and-right-riemann-sums",
+            "the-fundamental-theorem-of-calculus",
+            "applying-the-fundamental-theorem-of-calculus-to-exponential-and-trigonometric-functions",
+            "the-sum-and-constant-multiple-rules-for-definite-integrals",
+            "properties-of-definite-integrals-involving-the-limits-of-integration",
+          ],
+        },
+        {
+          title: t("The Area Under a Curve", "曲线下方区域的面积"),
+          topics: [
+            "the-area-bounded-by-a-curve-and-the-x-axis",
+            "the-area-bounded-by-a-curve-and-the-y-axis",
+            "evaluating-definite-integrals-using-symmetry",
+            "finding-the-area-between-a-curve-and-the-x-axis-when-they-intersect",
+            "calculating-the-definite-integral-of-a-function-given-its-graph",
+            "definite-integrals-of-piecewise-functions",
+          ],
+        },
+        {
+          title: t("Accumulation Functions", "累积函数"),
+          topics: ["the-integral-as-an-accumulation-function", "the-second-fundamental-theorem-of-calculus"],
+        },
+      ],
+    },
+    {
+      title: t("Integration Techniques", "积分技巧"),
+      modules: [
+        {
+          title: t("Integration Using Substitution", "换元积分法"),
+          topics: [
+            "integrating-algebraic-functions-using-substitution",
+            "integrating-linear-rational-functions-using-substitution",
+            "integration-using-substitution",
+            "calculating-definite-integrals-using-substitution",
+            "further-integration-of-algebraic-functions-using-substitution",
+            "integrating-exponential-functions-using-linear-substitution",
+            "integrating-exponential-functions-using-substitution",
+            "integrating-trigonometric-functions-using-substitution",
+            "integrating-logarithmic-functions-using-substitution",
+            "integration-by-substitution-with-inverse-trigonometric-functions",
+          ],
+        },
+        {
+          title: t("Integration Using Trigonometric Identities", "利用三角恒等式积分"),
+          topics: [
+            "integration-using-basic-trigonometric-identities",
+            "integration-using-the-pythagorean-identities",
+            "integration-using-the-double-angle-formulas",
+          ],
+        },
+        {
+          title: t("Special Techniques for Integration", "特殊积分技巧"),
+          topics: ["integrating-functions-using-polynomial-division", "integrating-functions-by-completing-the-square"],
+        },
+        {
+          title: t("Integration by Parts", "分部积分法"),
+          topics: [
+            "introduction-to-integration-by-parts",
+            "using-integration-by-parts-to-calculate-integrals-with-logarithms",
+            "applying-the-integration-by-parts-twice",
+            "integration-by-parts-in-cyclic-cases",
+          ],
+        },
+        {
+          title: t("Integration Using Partial Fractions", "部分分式积分法"),
+          topics: [
+            "expressing-rational-functions-as-sums-of-partial-fractions",
+            "expressing-rational-functions-with-repeated-factors-as-sums-of-partial-fractions",
+            "expressing-rational-functions-with-irreducible-quadratic-factors-as-sums-of-partial-fractions",
+            "integrating-rational-functions-using-partial-fractions",
+            "integrating-rational-functions-with-repeated-factors",
+            "integrating-rational-functions-with-irreducible-quadratic-factors",
+          ],
+        },
+        {
+          title: t("Improper Integrals", "反常积分"),
+          topics: [
+            "improper-integrals",
+            "improper-integrals-involving-exponential-functions",
+            "improper-integrals-involving-arctangent",
+            "improper-integrals-over-the-real-line",
+            "improper-integrals-of-the-second-kind",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Applications of Integration", "积分的应用"),
+      modules: [
+        {
+          title: t("Applications of Integration", "积分的应用"),
+          topics: [
+            "the-average-value-of-a-function",
+            "the-area-between-curves-expressed-as-functions-of-x",
+            "the-arc-length-of-a-planar-curve",
+            "the-arc-length-of-a-parametric-curve",
+            "finding-the-area-of-a-polar-region",
+            "the-arc-length-of-a-polar-curve",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Contextual Applications of Calculus", "微积分的情境应用"),
+      modules: [
+        {
+          title: t("Related Rates and Optimization", "相关变化率与最优化"),
+          topics: [
+            "rates-of-change-in-applied-contexts",
+            "introduction-to-related-rates",
+            "related-rates-with-implicit-functions",
+            "calculating-related-rates-with-circles-and-spheres",
+            "calculating-related-rates-using-the-pythagorean-theorem",
+            "solving-optimization-problems-using-derivatives",
+            "optimizing-distances",
+            "optimizing-distances-to-curves",
+          ],
+        },
+        {
+          title: t("Displacement, Velocity, and Acceleration", "位移、速度与加速度"),
+          topics: [
+            "calculating-velocity-for-straight-line-motion-using-differentiation",
+            "calculating-acceleration-for-straight-line-motion-using-differentiation",
+            "determining-characteristics-of-moving-objects-using-differentiation",
+            "calculating-velocity-using-integration",
+            "determining-characteristics-of-moving-objects-using-integration",
+            "calculating-the-position-function-of-a-particle-using-integration",
+            "calculating-the-displacement-of-a-particle-using-integration",
+          ],
+        },
+        {
+          title: t("Vector-Valued Functions", "向量值函数"),
+          topics: ["defining-vector-valued-functions", "differentiating-vector-valued-functions", "integrating-vector-valued-functions"],
+        },
+        {
+          title: t("The Planar Motion of a Particle", "质点的平面运动"),
+          topics: [
+            "velocity-and-acceleration-for-plane-motion",
+            "calculating-displacement-for-plane-motion",
+            "calculating-velocity-for-plane-motion-using-differentiation",
+            "calculating-acceleration-for-plane-motion-using-differentiation",
+            "finding-velocity-vectors-in-two-dimensions-using-integration",
+            "finding-displacement-vectors-in-two-dimensions-using-integration",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Sequences and Series", "数列与级数"),
+      modules: [
+        {
+          title: t("The Binomial Theorem", "二项式定理"),
+          topics: [
+            "pascals-triangle-and-the-binomial-coefficients",
+            "expanding-a-binomial-using-binomial-coefficients",
+            "the-special-case-of-the-binomial-theorem",
+            "approximating-values-using-the-binomial-theorem",
+          ],
+        },
+        {
+          title: t("Arithmetic Series", "等差数列求和"),
+          topics: [
+            "expressing-an-arithmetic-series-in-sigma-notation",
+            "finding-the-sum-of-an-arithmetic-series",
+            "finding-the-first-term-of-an-arithmetic-series",
+            "calculating-the-number-of-terms-in-an-arithmetic-series",
+          ],
+        },
+        {
+          title: t("Finite Geometric Series", "有限等比数列求和"),
+          topics: [
+            "the-sum-of-a-finite-geometric-series",
+            "the-sum-of-the-first-n-terms-of-a-geometric-series",
+            "writing-geometric-series-in-sigma-notation",
+            "sums-of-finite-geometric-series-given-in-sigma-notation",
+          ],
+        },
+        {
+          title: t("Infinite Series", "无穷级数"),
+          topics: [
+            "limits-of-sequences",
+            "convergence-of-geometric-sequences",
+            "further-convergence-of-geometric-sequences",
+            "determining-limits-of-sequences-using-relative-magnitudes",
+            "infinite-series-and-partial-sums",
+            "convergent-and-divergent-infinite-series",
+            "properties-of-infinite-series",
+            "further-properties-of-infinite-series",
+            "finding-the-sum-of-an-infinite-geometric-series",
+            "writing-an-infinite-geometric-series-in-sigma-notation",
+            "sums-of-infinite-geometric-series-given-in-sigma-notation",
+            "convergence-of-geometric-series",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Differential Equations", "微分方程"),
+      modules: [
+        {
+          title: t("Introduction to Differential Equations", "微分方程入门"),
+          topics: [
+            "introduction-to-differential-equations",
+            "verifying-solutions-of-differential-equations",
+            "solving-first-order-odes-using-direct-integration",
+            "solving-first-order-odes-using-separation-of-variables",
+            "solving-first-order-ivps-using-separation-of-variables",
+            "qualitative-analysis-of-first-order-odes",
+            "modeling-with-first-order-odes",
+          ],
+        },
+        {
+          title: t("Numerical Solutions of Differential Equations", "微分方程的数值解"),
+          topics: ["eulers-method-calculating-one-step", "eulers-method-calculating-multiple-steps"],
+        },
+      ],
+    },
+    {
+      title: t("Probability", "概率"),
+      modules: [
+        {
+          title: t("Probability", "概率"),
+          topics: [
+            "conditional-probabilities-from-venn-diagrams",
+            "the-multiplication-law-for-conditional-probability",
+            "the-law-of-total-probability",
+            "independent-events",
+            "the-addition-law-of-probability",
+            "applying-the-addition-law-with-event-complements",
+            "mutually-exclusive-events",
+          ],
+        },
+        {
+          title: t("Discrete Random Variables", "离散型随机变量"),
+          topics: [
+            "probability-mass-functions-of-discrete-random-variables",
+            "cumulative-distribution-functions-for-discrete-random-variables",
+            "expected-values-of-discrete-random-variables",
+            "the-binomial-distribution",
+            "modeling-with-the-binomial-distribution",
+            "the-geometric-distribution",
+            "modeling-with-the-geometric-distribution",
+          ],
+        },
+        {
+          title: t("The Normal Distribution", "正态分布"),
+          topics: [
+            "the-standard-normal-distribution",
+            "symmetry-properties-of-the-standard-normal-distribution",
+            "the-normal-distribution",
+            "mean-and-variance-of-the-normal-distribution",
+            "percentage-points-of-the-standard-normal-distribution",
+            "modeling-with-the-normal-distribution",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -7016,4 +8350,6 @@ export const mathCourses: readonly CourseDef[] = [
   integratedMathIHonors,
   integratedMathIIHonors,
   integratedMathIIIHonors,
+  mathematicalFoundationsII,
+  mathematicalFoundationsIII,
 ];
