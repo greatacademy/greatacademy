@@ -101,6 +101,7 @@ import { transformationTopics } from "./topics/geometry-transformations.ts";
 import { triangleTrigonometryTopics } from "./topics/geometry-triangles-trigonometry.ts";
 import { trigonometryTopics } from "./topics/geometry-trigonometry.ts";
 import { grade4OperationTopics } from "./topics/grade-4-operations.ts";
+import { grade4WholeNumberTopics } from "./topics/grade-4-whole-numbers.ts";
 import { grade6to8FoundationTopics } from "./topics/grade-6-8-foundations.ts";
 import { inequalityTopics } from "./topics/inequalities.ts";
 import { integerTopics } from "./topics/integers.ts";
@@ -175,6 +176,7 @@ export const math: SubjectDef = {
   id: "math",
   title: t("Mathematics", "数学"),
   topics: [
+    ...grade4WholeNumberTopics,
     ...grade4OperationTopics,
     ...numberTheoryTopics,
     ...fractionTopics,
