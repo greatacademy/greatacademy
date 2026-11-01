@@ -4,6 +4,8 @@ import { mathCheckers } from "@ga/subject-math";
 
 import { mathCourses } from "./courses.ts";
 import { absoluteValueTopics } from "./topics/absolute-value.ts";
+import { abstractAlgebraGroupTopics } from "./topics/abstract-algebra-groups.ts";
+import { abstractAlgebraSubgroupTopics } from "./topics/abstract-algebra-subgroups.ts";
 import { conicTopics } from "./topics/algebra-ii-conics.ts";
 import { algebraIIFactoringTopics } from "./topics/algebra-ii-factoring.ts";
 import { algebraIIFunctionTopics } from "./topics/algebra-ii-functions.ts";
@@ -134,6 +136,7 @@ import { precalculusTrigonometricIdentityTopics } from "./topics/precalculus-tri
 import { precalculusVector2DTopics } from "./topics/precalculus-vectors-2d.ts";
 import { precalculusVector3DTopics } from "./topics/precalculus-vectors-3d.ts";
 import { probabilityTopics } from "./topics/probability.ts";
+import { probabilityAndStatisticsRandomVariablesTopics } from "./topics/probability-and-statistics-random-variables.ts";
 import { quadraticEquationTopics } from "./topics/quadratic-equations.ts";
 import { quadraticFunctionTopics } from "./topics/quadratic-functions.ts";
 import { radicalExpressionTopics } from "./topics/radical-expressions.ts";
@@ -278,6 +281,8 @@ export const math: SubjectDef = {
     ...discreteMathematicsGraphTopics,
     ...discreteMathematicsGraphAlgorithmTopics,
     ...discreteMathematicsAutomataTopics,
+    ...abstractAlgebraGroupTopics,
+    ...abstractAlgebraSubgroupTopics,
     ...multivariableCalculusVectorFunctionTopics,
     ...multivariableCalculusMultivariableFunctionTopics,
     ...multivariableCalculusMultipleIntegralTopics,
@@ -291,6 +296,7 @@ export const math: SubjectDef = {
     ...differentialEquationsLaplaceTopics,
     ...differentialEquationsBvpTopics,
     ...differentialEquationsNumericalTopics,
+    ...probabilityAndStatisticsRandomVariablesTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
