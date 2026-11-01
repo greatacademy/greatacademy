@@ -57,6 +57,7 @@ import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
 import { differentialEquationsFirstOrderTopics } from "./topics/differential-equations-first-order.ts";
+import { differentialEquationsLaplaceTopics } from "./topics/differential-equations-laplace.ts";
 import { differentialEquationsLinearTopics } from "./topics/differential-equations-linear.ts";
 import { differentialEquationsModelingTopics } from "./topics/differential-equations-modeling.ts";
 import { differentialEquationsSystemsTopics } from "./topics/differential-equations-systems.ts";
@@ -283,6 +284,7 @@ export const math: SubjectDef = {
     ...differentialEquationsModelingTopics,
     ...differentialEquationsLinearTopics,
     ...differentialEquationsSystemsTopics,
+    ...differentialEquationsLaplaceTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
