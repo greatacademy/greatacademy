@@ -41,7 +41,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Algebra I, Geometry, Algebra II, Precalculus | — | done | | |
 | Calculus I | Precalculus | done | | |
 | Calculus II | Calculus I | in progress | claude-main | Units 1–2 done except 2.11.3 (surfaces of parametric curves, written with unit 3); units 3–5 left |
-| Linear Algebra | Calculus I | in progress | antigravity | Assigned slot **A**. Reuse the Precalculus matrix, vector and linear-transformation topics (`precalculus-matrices.ts`, `precalculus-vectors-*.ts`, `precalculus-linear-transformations.ts`) |
+| Linear Algebra | Calculus I | done | | Assigned slot **A**. Complete 8 units, 181 topics |
 | Methods of Proof | Calculus I | open | | Assigned slot **B**. Mostly new topics: logic, sets, induction, proof techniques |
 | Discrete Mathematics | Methods of Proof | blocked | | Slot **B** after Methods of Proof. Reuse `combinatorics.ts` and `probability.ts` |
 | 4th Grade Math, 5th Grade Math | — | open | | Assigned slot **C**. `grade-4-operations.ts` and the Prealgebra files already cover part of these |
@@ -62,6 +62,8 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 ## Requests
 
 Missing topics or helpers one agent needs from another. Use the format `- [requester → owner] topic-id: why`. Delete the line once it lands.
+- [antigravity → claude-main] the-area-bounded-by-two-polar-curves: remove redundant prerequisite finding-intersections-of-polar-curves (implied by finding-angles-of-intersection-of-polar-curves)
+- [antigravity → claude-main] zz-claude-main-check.ts: remove scratch file to fix content-math:typecheck
 
 ## Handoffs
 

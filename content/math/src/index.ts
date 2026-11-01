@@ -44,6 +44,7 @@ import { calculusIIFractionImproperTopics } from "./topics/calculus-ii-fractions
 import { calculusIIIdentityPartsTopics } from "./topics/calculus-ii-identities-parts.ts";
 import { calculusIIMotionTopics } from "./topics/calculus-ii-motion.ts";
 import { calculusIIParametricTopics } from "./topics/calculus-ii-parametric.ts";
+import { calculusIIPolarTopics } from "./topics/calculus-ii-polar.ts";
 import { calculusIIRevolutionTopics } from "./topics/calculus-ii-revolution.ts";
 import { calculusIISubstitutionTopics } from "./topics/calculus-ii-substitution.ts";
 import { calculusIIVectorTopics } from "./topics/calculus-ii-vectors.ts";
@@ -72,6 +73,12 @@ import { trigonometryTopics } from "./topics/geometry-trigonometry.ts";
 import { grade4OperationTopics } from "./topics/grade-4-operations.ts";
 import { inequalityTopics } from "./topics/inequalities.ts";
 import { integerTopics } from "./topics/integers.ts";
+import { linearAlgebraMatrixTopics } from "./topics/linear-algebra-matrices.ts";
+import { linearAlgebraPreliminaryTopics } from "./topics/linear-algebra-preliminaries.ts";
+import { linearAlgebraProjectionsTopics } from "./topics/linear-algebra-projections.ts";
+import { linearAlgebraQuadraticFormsApplicationsTopics } from "./topics/linear-algebra-quadratic-forms-applications.ts";
+import { linearAlgebraTransformationsEigenvaluesTopics } from "./topics/linear-algebra-transformations-eigenvalues.ts";
+import { linearAlgebraVectorSpaceTopics } from "./topics/linear-algebra-vector-spaces.ts";
 import { linearEquationTopics } from "./topics/linear-equations.ts";
 import { lineTopics } from "./topics/lines.ts";
 import { numberTheoryTopics } from "./topics/number-theory.ts";
@@ -184,6 +191,12 @@ export const math: SubjectDef = {
     ...precalculusDeMoivreTopics,
     ...precalculusRandomVariableTopics,
     ...precalculusStatisticsTopics,
+    ...linearAlgebraPreliminaryTopics,
+    ...linearAlgebraMatrixTopics,
+    ...linearAlgebraVectorSpaceTopics,
+    ...linearAlgebraTransformationsEigenvaluesTopics,
+    ...linearAlgebraProjectionsTopics,
+    ...linearAlgebraQuadraticFormsApplicationsTopics,
     ...calculusIHyperbolicTopics,
     ...calculusILimitTopics,
     ...calculusILimitTechniqueTopics,
@@ -207,6 +220,7 @@ export const math: SubjectDef = {
     ...calculusIIMotionTopics,
     ...calculusIIParametricTopics,
     ...calculusIIVectorTopics,
+    ...calculusIIPolarTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,

@@ -2253,5 +2253,388 @@ export const calculusI: CourseDef = {
   ],
 };
 
+/** linearAlgebra defines the complete Linear Algebra curriculum. */
+export const linearAlgebra: CourseDef = {
+  id: "linear-algebra",
+  title: t("Linear Algebra", "线性代数"),
+  description: t(
+    "Systems of equations and matrices, Gaussian elimination, determinants, elementary matrices, and LU factorization; vectors in n-dimensional Euclidean space, linear combinations, span, linear independence, subspaces, bases, dimension, rank, and abstract vector spaces; linear transformations, kernel, image, and matrix representations; eigenvalues, eigenvectors, the characteristic equation, diagonalization, complex eigenvalues, generalized eigenvectors, and Jordan canonical form; inner product spaces, orthogonality, orthogonal projections, and the Gram-Schmidt process; quadratic forms, diagonalization of symmetric matrices, the spectral theorem, and singular value decomposition; with applications to linear least-squares problems, Markov chains, and linear regression.",
+    "线性方程组与矩阵、高斯消元法、行列式、初等矩阵与 LU 分解；n 维欧几里得空间中的向量、线性组合、生成空间、线性无关性、子空间、基、维数、秩与抽象向量空间；线性变换、核、像与矩阵表示；特征值、特征向量、特征方程、对角化、复特征值、广义特征向量与若尔当标准型；内积空间、正交性、正交投影与施密特正交化过程；二次型、对称矩阵对角化、谱定理与奇异值分解；以及线性最小二乘问题、马尔可夫链和线性回归等实际应用。",
+  ),
+  units: [
+    {
+      title: t("Preliminaries", "预备知识"),
+      modules: [
+        {
+          title: t("Introduction to Set Theory", "集合论初步"),
+          topics: [
+            "special-sets",
+            "statements-and-predicates",
+            "equivalent-sets",
+            "the-constructive-definition-of-a-set",
+            "the-conditional-definition-of-a-set",
+            "describing-sets-using-set-builder-notation",
+            "describing-planar-regions-using-set-builder-notation",
+            "cardinality-of-finite-sets",
+            "infinite-sets",
+            "subsets",
+          ],
+        },
+        {
+          title: t("Set Operations", "集合运算"),
+          topics: [
+            "the-difference-of-sets",
+            "set-complements",
+            "the-cartesian-product",
+            "visualizing-cartesian-products",
+            "indexed-sets",
+            "sets-and-functions",
+          ],
+        },
+        {
+          title: t("Vector Geometry", "向量几何"),
+          topics: [
+            "the-vector-equation-of-a-line",
+            "the-parametric-equations-of-a-line",
+            "the-cartesian-equation-of-a-line",
+            "the-vector-equation-of-a-plane",
+            "the-cartesian-equation-of-a-plane",
+            "the-parametric-equations-of-a-plane",
+            "the-intersection-of-two-planes",
+            "the-shortest-distance-between-a-plane-and-a-point",
+            "the-intersection-between-a-line-and-a-plane",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Matrices", "矩阵"),
+      modules: [
+        {
+          title: t("Determinants", "行列式"),
+          topics: [
+            "cramers-rule-for-2x2-systems-of-linear-equations",
+            "cramers-rule-for-3x3-systems",
+            "the-determinant-of-an-nxn-matrix",
+            "finding-determinants-using-laplace-expansions",
+            "basic-properties-of-determinants",
+            "further-properties-of-determinants",
+            "row-and-column-operations-on-determinants",
+            "conditions-when-a-determinant-equals-zero",
+            "finding-determinants-using-row-and-column-operations",
+            "partitioned-and-block-matrices",
+          ],
+        },
+        {
+          title: t("Gaussian Elimination", "高斯消元法"),
+          topics: [
+            "systems-of-equations-as-augmented-matrices",
+            "row-echelon-form",
+            "solving-systems-of-equations-using-back-substitution",
+            "elementary-row-operations",
+            "creating-rows-or-columns-containing-zeros-using-gaussian-elimination",
+            "solving-2x2-systems-of-equations-using-gaussian-elimination",
+            "solving-2x2-singular-systems-of-equations-using-gaussian-elimination",
+            "solving-3x3-systems-of-equations-using-gaussian-elimination",
+            "identifying-the-pivot-columns-of-a-matrix",
+            "solving-3x3-singular-systems-of-equations-using-gaussian-elimination",
+            "reduced-row-echelon-form",
+            "gaussian-elimination-for-nxm-systems-of-equations",
+          ],
+        },
+        {
+          title: t("Elementary Matrices", "初等矩阵"),
+          topics: [
+            "elementary-2x2-matrices",
+            "row-operations-on-2x2-matrices-as-products-of-elementary-matrices",
+            "elementary-3x3-matrices",
+            "row-operations-on-3x3-matrices-as-products-of-elementary-matrices",
+          ],
+        },
+        {
+          title: t("The Inverse of a Matrix", "逆矩阵"),
+          topics: [
+            "the-invertible-matrix-theorem-in-terms-of-2x2-systems-of-equations",
+            "finding-the-inverse-of-a-2x2-matrix-using-row-operations",
+            "finding-the-inverse-of-a-3x3-matrix-using-row-operations",
+            "finding-the-inverse-of-an-nxn-square-matrix-using-row-operations",
+            "matrices-with-easy-to-find-inverses",
+          ],
+        },
+        {
+          title: t("LU Factorization", "LU 分解"),
+          topics: [
+            "triangular-matrices",
+            "lu-factorization-of-2x2-matrices",
+            "lu-factorization-of-3x3-matrices",
+            "lu-factorization-of-nxn-matrices",
+            "solving-systems-of-equations-using-lu-factorization",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Vector Spaces", "向量空间"),
+      modules: [
+        {
+          title: t("Vectors in N-Dimensional Space", "N 维空间中的向量"),
+          topics: [
+            "vectors-in-n-dimensional-euclidean-space",
+            "linear-combinations-of-vectors-in-n-dimensional-euclidean-space",
+            "linear-span-of-vectors-in-n-dimensional-euclidean-space",
+            "linear-dependence-and-independence",
+          ],
+        },
+        {
+          title: t("Subspaces of N-Dimensional Space", "N 维空间的子空间"),
+          topics: [
+            "subspaces-of-n-dimensional-space",
+            "subspaces-of-n-dimensional-space-geometric-interpretation",
+            "the-column-space-of-a-matrix",
+            "the-null-space-of-a-matrix",
+          ],
+        },
+        {
+          title: t("Bases of N-Dimensional Space", "N 维空间的基"),
+          topics: [
+            "finding-a-basis-of-a-span",
+            "finding-a-basis-of-the-column-space-of-a-matrix",
+            "finding-a-basis-of-the-null-space-of-a-matrix",
+            "expressing-the-coordinates-of-a-vector-in-a-given-basis",
+            "writing-vectors-in-different-bases",
+            "the-change-of-coordinates-matrix",
+            "changing-a-basis-using-the-change-of-coordinates-matrix",
+          ],
+        },
+        {
+          title: t("Dimension and Rank in N-Dimensional Space", "N 维空间的维数与秩"),
+          topics: [
+            "the-dimension-of-a-span",
+            "the-rank-of-a-matrix",
+            "the-dimension-of-the-null-space-of-a-matrix",
+            "the-invertible-matrix-theorem-in-terms-of-dimension-rank-and-nullity",
+            "the-rank-nullity-theorem",
+          ],
+        },
+        {
+          title: t("Abstract Vector Spaces", "抽象向量空间"),
+          topics: [
+            "introduction-to-abstract-vector-spaces",
+            "defining-abstract-vector-spaces",
+            "linear-independence-in-abstract-vector-spaces",
+            "subspaces-of-abstract-vector-spaces",
+            "bases-in-abstract-vector-spaces",
+            "the-coordinates-of-a-vector-relative-to-a-basis-in-abstract-vector-spaces",
+            "dimension-in-abstract-vector-spaces",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Linear Transformations", "线性变换"),
+      modules: [
+        {
+          title: t("Linear Transformations", "线性变换"),
+          topics: [
+            "standard-matrix-of-a-linear-transformation-in-terms-of-the-standard-basis",
+            "kernel-of-a-linear-transformation",
+            "image-and-rank-of-a-linear-transformation",
+            "image-of-a-linear-transformation-in-the-cartesian-plane",
+            "invertible-matrix-theorem-in-terms-of-linear-transformations",
+            "rank-nullity-theorem-in-terms-of-linear-transformations",
+          ],
+        },
+        {
+          title: t("Linear Maps and Their Matrix Representations", "线性映射及其矩阵表示"),
+          topics: [
+            "matrix-of-a-linear-transformation-relative-to-a-basis",
+            "connections-between-matrix-representations-of-a-linear-transformation",
+            "linear-maps-between-two-different-vector-spaces",
+            "matrix-of-a-linear-map-relative-to-two-bases",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Diagonalization of Matrices", "矩阵的对角化"),
+      modules: [
+        {
+          title: t("Eigenvectors and Eigenvalues", "特征向量与特征值"),
+          topics: [
+            "eigenvalues-and-eigenvectors-of-a-2x2-matrix",
+            "calculating-the-eigenvalues-of-a-2x2-matrix",
+            "calculating-the-eigenvectors-of-a-2x2-matrix",
+            "characteristic-equation-of-a-matrix",
+            "cayley-hamilton-theorem",
+            "calculating-the-eigenvectors-of-a-3x3-matrix-with-distinct-eigenvalues",
+            "calculating-the-eigenvectors-of-a-3x3-matrix-in-the-general-case",
+            "invertible-matrix-theorem-in-terms-of-eigenvalues",
+          ],
+        },
+        {
+          title: t("Diagonalization", "对角化"),
+          topics: [
+            "diagonalizing-a-2x2-matrix",
+            "properties-of-diagonalization",
+            "diagonalizing-a-3x3-matrix-with-distinct-eigenvalues",
+            "diagonalizing-a-3x3-matrix-in-the-general-case",
+          ],
+        },
+        {
+          title: t("Real Matrices With Complex Eigenvalues", "具有复特征值的实矩阵"),
+          topics: [
+            "vectors-over-the-complex-numbers",
+            "matrices-over-the-complex-numbers",
+            "finding-complex-eigenvalues-of-real-2x2-matrices",
+            "finding-complex-eigenvectors-of-real-2x2-matrices",
+            "rotation-scaling-matrices",
+            "reducing-real-2x2-matrices-to-rotation-scaling-form",
+            "block-diagonalization-of-nxn-matrices",
+          ],
+        },
+        {
+          title: t("Generalized Eigenvectors", "广义特征向量"),
+          topics: [
+            "nilpotent-and-idempotent-matrices",
+            "generalized-eigenvectors",
+            "ranks-of-generalized-eigenvectors",
+            "finding-generalized-eigenvectors-of-specific-ranks",
+          ],
+        },
+        {
+          title: t("Jordan Canonical Decomposition", "若尔当标准型分解"),
+          topics: [
+            "jordan-blocks-and-jordan-matrices",
+            "jordan-canonical-form-of-a-2x2-matrix",
+            "jordan-canonical-decomposition-of-a-2x2-matrix",
+            "jordan-canonical-form-of-a-3x3-matrix",
+            "jordan-canonical-decomposition-of-a-3x3-matrix",
+            "matrix-functions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Projections", "投影"),
+      modules: [
+        {
+          title: t("Inner Products", "内积"),
+          topics: [
+            "dot-product-in-n-dimensional-euclidean-space",
+            "norm-of-a-vector-in-n-dimensional-euclidean-space",
+            "inner-product-spaces",
+            "inner-product-in-vector-spaces-over-the-complex-numbers",
+            "norm-of-a-vector-in-inner-product-spaces",
+          ],
+        },
+        {
+          title: t("Orthogonality", "正交性"),
+          topics: [
+            "orthogonal-vectors-in-euclidean-spaces",
+            "orthogonal-vectors-in-inner-product-spaces",
+            "cauchy-schwarz-inequality-and-angle-between-two-vectors",
+            "pythagorean-theorem-and-triangle-inequality-in-inner-product-spaces",
+            "orthogonal-complements",
+            "orthogonal-sets-in-euclidean-spaces",
+            "orthogonal-sets-in-inner-product-spaces",
+            "orthogonal-matrices",
+            "orthogonal-linear-transformations",
+            "four-fundamental-subspaces-of-a-matrix",
+          ],
+        },
+        {
+          title: t("Orthogonal Projections", "正交投影"),
+          topics: [
+            "projecting-vectors-onto-one-dimensional-subspaces",
+            "components-of-a-vector-with-respect-to-an-orthogonal-or-orthonormal-basis",
+            "projecting-vectors-onto-subspaces-in-euclidean-spaces-orthogonal-bases",
+            "projecting-vectors-onto-subspaces-in-euclidean-spaces-arbitrary-bases",
+            "projecting-vectors-onto-subspaces-in-euclidean-spaces-arbitrary-bases-applications",
+            "projection-matrices-linear-transformations-and-their-properties",
+            "projecting-vectors-onto-subspaces-in-inner-product-spaces",
+          ],
+        },
+        {
+          title: t("Orthogonalization Processes", "正交化过程"),
+          topics: ["gram-schmidt-process-for-two-vectors", "gram-schmidt-process-in-the-general-case", "qr-factorization"],
+        },
+      ],
+    },
+    {
+      title: t("Quadratic Forms", "二次型"),
+      modules: [
+        {
+          title: t("Diagonalization of Symmetric Matrices", "对称矩阵的对角化"),
+          topics: [
+            "symmetric-matrices",
+            "diagonalization-of-2x2-symmetric-matrices",
+            "diagonalization-of-3x3-symmetric-matrices",
+            "spectral-theorem",
+          ],
+        },
+        {
+          title: t("Quadratic Forms", "二次型"),
+          topics: [
+            "bilinear-forms",
+            "quadratic-forms",
+            "change-of-variables-in-quadratic-forms",
+            "canonical-form-of-a-quadratic-form-using-lagranges-method",
+            "canonical-form-of-a-quadratic-form-using-orthogonal-transformations",
+            "positive-definite-and-negative-definite-quadratic-forms",
+          ],
+        },
+        {
+          title: t("Quadratic Forms in Euclidian Space", "欧几里得空间中的二次型"),
+          topics: ["reducing-a-quadratic-curve-to-its-principal-axes", "classifying-quadratic-curves"],
+        },
+        {
+          title: t("Singular Value Decomposition", "奇异值分解"),
+          topics: [
+            "constrained-optimization-of-quadratic-forms",
+            "constrained-optimization-of-quadratic-forms-determining-where-extrema-are-attained",
+            "singular-values-of-a-matrix",
+            "computing-the-singular-values-of-a-matrix",
+            "singular-value-decomposition-of-2x2-matrices",
+            "singular-value-decomposition-of-2x2-matrices-with-zero-or-repeated-eigenvalues",
+            "singular-value-decomposition-of-larger-matrices",
+            "singular-value-decomposition-and-the-pseudoinverse-matrix",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Applications of Linear Algebra", "线性代数的应用"),
+      modules: [
+        {
+          title: t("Linear Least-Squares Problems", "线性最小二乘问题"),
+          topics: [
+            "least-squares-solution-of-a-linear-system-without-collinearity",
+            "least-squares-solution-of-a-linear-system-with-collinearity",
+            "finding-a-least-squares-solution-using-qr-factorization",
+            "weighted-least-squares",
+          ],
+        },
+        {
+          title: t("Markov Chains", "马尔可夫链"),
+          topics: ["markov-chains", "steady-state-vectors"],
+        },
+        {
+          title: t("Linear Regression", "线性回归"),
+          topics: ["linear-regression-with-matrices", "polynomial-regression-with-matrices", "multiple-linear-regression-with-matrices"],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
-export const mathCourses: readonly CourseDef[] = [algebraFoundations, prealgebra, algebraI, geometry, algebraII, precalculus, calculusI];
+export const mathCourses: readonly CourseDef[] = [
+  algebraFoundations,
+  prealgebra,
+  algebraI,
+  geometry,
+  algebraII,
+  precalculus,
+  calculusI,
+  linearAlgebra,
+];
