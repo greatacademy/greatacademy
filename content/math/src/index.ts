@@ -5,6 +5,7 @@ import { mathCheckers } from "@ga/subject-math";
 import { mathCourses } from "./courses.ts";
 import { absoluteValueTopics } from "./topics/absolute-value.ts";
 import { abstractAlgebraGroupTopics } from "./topics/abstract-algebra-groups.ts";
+import { abstractAlgebraPermutationTopics } from "./topics/abstract-algebra-permutations.ts";
 import { abstractAlgebraSubgroupTopics } from "./topics/abstract-algebra-subgroups.ts";
 import { conicTopics } from "./topics/algebra-ii-conics.ts";
 import { algebraIIFactoringTopics } from "./topics/algebra-ii-factoring.ts";
@@ -286,6 +287,7 @@ export const math: SubjectDef = {
     ...discreteMathematicsAutomataTopics,
     ...abstractAlgebraGroupTopics,
     ...abstractAlgebraSubgroupTopics,
+    ...abstractAlgebraPermutationTopics,
     ...multivariableCalculusVectorFunctionTopics,
     ...multivariableCalculusMultivariableFunctionTopics,
     ...multivariableCalculusMultipleIntegralTopics,
