@@ -56,11 +56,13 @@ import { calculusIIVectorTopics } from "./topics/calculus-ii-vectors.ts";
 import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
+import { differentialEquationsBvpTopics } from "./topics/differential-equations-bvp.ts";
 import { differentialEquationsFirstOrderTopics } from "./topics/differential-equations-first-order.ts";
 import { differentialEquationsLaplaceTopics } from "./topics/differential-equations-laplace.ts";
 import { differentialEquationsLinearTopics } from "./topics/differential-equations-linear.ts";
 import { differentialEquationsModelingTopics } from "./topics/differential-equations-modeling.ts";
 import { differentialEquationsSystemsTopics } from "./topics/differential-equations-systems.ts";
+import { discreteMathematicsAutomataTopics } from "./topics/discrete-mathematics-automata.ts";
 import { discreteMathematicsBooleanTopics } from "./topics/discrete-mathematics-boolean.ts";
 import { discreteMathematicsCountingTopics } from "./topics/discrete-mathematics-counting.ts";
 import { discreteMathematicsGraphAlgorithmTopics } from "./topics/discrete-mathematics-graph-algorithms.ts";
@@ -274,6 +276,7 @@ export const math: SubjectDef = {
     ...discreteMathematicsRecurrenceTopics,
     ...discreteMathematicsGraphTopics,
     ...discreteMathematicsGraphAlgorithmTopics,
+    ...discreteMathematicsAutomataTopics,
     ...multivariableCalculusVectorFunctionTopics,
     ...multivariableCalculusMultivariableFunctionTopics,
     ...multivariableCalculusMultipleIntegralTopics,
@@ -285,6 +288,7 @@ export const math: SubjectDef = {
     ...differentialEquationsLinearTopics,
     ...differentialEquationsSystemsTopics,
     ...differentialEquationsLaplaceTopics,
+    ...differentialEquationsBvpTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
