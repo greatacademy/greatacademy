@@ -122,7 +122,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
           "对于 X ~ Poisson(λ)，其均值和方差均为 λ，因此标准差为 σ = √λ。",
         ),
         generate: (rng: Rng): Problem => {
-          const k = rng.int(4, 25);
+          const k = rng.int(4, 50);
           const lambda = k * k; // perfect square so sqrt(lambda) = k
 
           return numberProblem({
