@@ -11,21 +11,21 @@ import { coef } from "./calculus-ii-substitution.ts";
 // Calculus II unit 2: Applications of Integration, modules 2.8–2.9.
 
 /** intQ integrates an integer polynomial exactly between integer limits. */
-const intQ = (p: Poly, a: number, b: number) => antiderivativeAt(p, b).sub(antiderivativeAt(p, a));
+export const intQ = (p: Poly, a: number, b: number) => antiderivativeAt(p, b).sub(antiderivativeAt(p, a));
 
 /** pScale multiplies a polynomial by k. */
-const pScale = (p: Poly, k: number): Poly => p.map((c) => c * k);
+export const pScale = (p: Poly, k: number): Poly => p.map((c) => c * k);
 
 /** int writes a definite integral. */
-const int = (a: number | string, b: number | string, body: string, v = "x") => `\\int_{${a}}^{${b}} ${body} \\, d${v}`;
+export const int = (a: number | string, b: number | string, body: string, v = "x") => `\\int_{${a}}^{${b}} ${body} \\, d${v}`;
 
 /** exactProblem asks for an exact value written as an expression, such as a multiple of π. */
-function exactProblem(prompt: Text, answer: string, wrong: readonly string[], en: string, zh: string) {
+export function exactProblem(prompt: Text, answer: string, wrong: readonly string[], en: string, zh: string) {
   return functionProblem({ prompt, answer, wrong, solution: t(en, zh) });
 }
 
 /** times writes q times a constant symbol: "\frac{3}{2}\pi", "\sqrt{3}". */
-const times = (q: Q, symbol: string) => (symbol === "" ? q.toLatex() : q.isZero() ? "0" : `${coef(q)}${symbol}`);
+export const times = (q: Q, symbol: string) => (symbol === "" ? q.toLatex() : q.isZero() ? "0" : `${coef(q)}${symbol}`);
 
 /** positivePoly chooses a polynomial of degree at most 2 with non-negative coefficients and a positive constant term. */
 function positivePoly(rng: Rng): Poly {

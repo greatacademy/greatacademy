@@ -42,6 +42,7 @@ import { calculusIRiemannTopics } from "./topics/calculus-i-riemann.ts";
 import { calculusIIAreaTopics } from "./topics/calculus-ii-areas.ts";
 import { calculusIIFractionImproperTopics } from "./topics/calculus-ii-fractions-improper.ts";
 import { calculusIIIdentityPartsTopics } from "./topics/calculus-ii-identities-parts.ts";
+import { calculusIIRevolutionTopics } from "./topics/calculus-ii-revolution.ts";
 import { calculusIISubstitutionTopics } from "./topics/calculus-ii-substitution.ts";
 import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
@@ -199,6 +200,7 @@ export const math: SubjectDef = {
     ...calculusIIIdentityPartsTopics,
     ...calculusIIFractionImproperTopics,
     ...calculusIIAreaTopics,
+    ...calculusIIRevolutionTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
