@@ -144,6 +144,7 @@ import { probabilityAndStatisticsConfidenceIntervalTopics } from "./topics/proba
 import { probabilityAndStatisticsContinuousDistributionTopics } from "./topics/probability-and-statistics-continuous-distributions.ts";
 import { probabilityAndStatisticsDiscreteDistributionTopics } from "./topics/probability-and-statistics-discrete-distributions.ts";
 import { probabilityAndStatisticsExpectationTopics } from "./topics/probability-and-statistics-expectation.ts";
+import { probabilityAndStatisticsHypothesisTestingTopics } from "./topics/probability-and-statistics-hypothesis-testing.ts";
 import { probabilityAndStatisticsParametricInferenceTopics } from "./topics/probability-and-statistics-parametric-inference.ts";
 import { probabilityAndStatisticsRandomVariablesTopics } from "./topics/probability-and-statistics-random-variables.ts";
 import { quadraticEquationTopics } from "./topics/quadratic-equations.ts";
@@ -315,6 +316,7 @@ export const math: SubjectDef = {
     ...probabilityAndStatisticsCombiningVariablesTopics,
     ...probabilityAndStatisticsParametricInferenceTopics,
     ...probabilityAndStatisticsConfidenceIntervalTopics,
+    ...probabilityAndStatisticsHypothesisTestingTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,

@@ -628,8 +628,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         title: t("Evaluating products of powers and constants", "计算常数与幂次的连乘式"),
         explanation: t("∏_{i=1}^n (c x_i) = c^n ∏_{i=1}^n x_i.", "∏_{i=1}^n (c x_i) = c^n ∏_{i=1}^n x_i。"),
         generate: (rng: Rng): Problem => {
-          const c = rng.int(2, 6);
-          const n = rng.int(2, 5);
+          const c = rng.int(2, 15);
+          const n = rng.int(2, 6);
           let ans = 1;
           for (let i = 0; i < n; i++) ans *= c;
 
