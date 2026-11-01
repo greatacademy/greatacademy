@@ -43,6 +43,7 @@ import { calculusIIAreaTopics } from "./topics/calculus-ii-areas.ts";
 import { calculusIIFractionImproperTopics } from "./topics/calculus-ii-fractions-improper.ts";
 import { calculusIIIdentityPartsTopics } from "./topics/calculus-ii-identities-parts.ts";
 import { calculusIIMotionTopics } from "./topics/calculus-ii-motion.ts";
+import { calculusIIParametricTopics } from "./topics/calculus-ii-parametric.ts";
 import { calculusIIRevolutionTopics } from "./topics/calculus-ii-revolution.ts";
 import { calculusIISubstitutionTopics } from "./topics/calculus-ii-substitution.ts";
 import { combinatoricsTopics } from "./topics/combinatorics.ts";
@@ -203,6 +204,7 @@ export const math: SubjectDef = {
     ...calculusIIAreaTopics,
     ...calculusIIRevolutionTopics,
     ...calculusIIMotionTopics,
+    ...calculusIIParametricTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,

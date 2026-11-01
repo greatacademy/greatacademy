@@ -742,7 +742,7 @@ export const theShellMethodRotationAboutTheYAxis: TopicDef = {
 };
 
 /** rootTimes writes q·√n·symbol with the square factors of n taken out. */
-function rootTimes(q: Q, n: number, symbol: string) {
+export function rootTimes(q: Q, n: number, symbol: string) {
   let s = Math.floor(Math.sqrt(n));
   while (n % (s * s) !== 0) s--;
   const rest = n / (s * s);
