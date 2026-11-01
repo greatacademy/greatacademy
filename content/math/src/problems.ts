@@ -369,6 +369,8 @@ export interface PointProblem {
   readonly answer: readonly Coefficient[];
   /** vars name the coordinates, so that "x = 3, y = -2" is accepted too; x and y by default. */
   readonly vars?: readonly string[];
+  /** vector writes the answer as a vector, "\\langle 3, -2 \\rangle", instead of a point. */
+  readonly vector?: boolean;
   readonly solution: Text;
   /** wrong are the pairs typical mistakes produce; pairs equal to the answer are dropped. */
   readonly wrong?: readonly (readonly Coefficient[])[];
@@ -379,9 +381,15 @@ export function pointLatex(values: readonly Coefficient[]): string {
   return `(${values.map((v) => toQ(v).toLatex()).join(", ")})`;
 }
 
+/** vectorLatex writes a vector by its components: "\\langle 3, -\\frac{1}{2} \\rangle". */
+export function vectorLatex(values: readonly Coefficient[]): string {
+  return `\\langle ${values.map((v) => toQ(v).toLatex()).join(", ")} \\rangle`;
+}
+
 /** pointProblem builds a problem checked by the "point" checker. */
 export function pointProblem(p: PointProblem): Problem {
   const answer = p.answer.map(toQ);
+  const write = p.vector ? vectorLatex : pointLatex;
   const same = (w: readonly Coefficient[]) => w.length === answer.length && w.every((v, i) => toQ(v).eq(answer[i]!));
   return {
     prompt: p.prompt,
@@ -391,8 +399,8 @@ export function pointProblem(p: PointProblem): Problem {
       input: { kind: "math" },
     },
     solution: p.solution,
-    canonical: pointLatex(answer),
-    wrong: [...new Set((p.wrong ?? []).filter((w) => !same(w)).map(pointLatex))],
+    canonical: write(answer),
+    wrong: [...new Set((p.wrong ?? []).filter((w) => !same(w)).map(write))],
   };
 }
 

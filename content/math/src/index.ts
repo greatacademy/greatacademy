@@ -46,6 +46,7 @@ import { calculusIIMotionTopics } from "./topics/calculus-ii-motion.ts";
 import { calculusIIParametricTopics } from "./topics/calculus-ii-parametric.ts";
 import { calculusIIRevolutionTopics } from "./topics/calculus-ii-revolution.ts";
 import { calculusIISubstitutionTopics } from "./topics/calculus-ii-substitution.ts";
+import { calculusIIVectorTopics } from "./topics/calculus-ii-vectors.ts";
 import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
@@ -205,6 +206,7 @@ export const math: SubjectDef = {
     ...calculusIIRevolutionTopics,
     ...calculusIIMotionTopics,
     ...calculusIIParametricTopics,
+    ...calculusIIVectorTopics,
   ],
   courses: mathCourses,
   checkers: mathCheckers,
