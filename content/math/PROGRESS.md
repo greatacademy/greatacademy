@@ -45,7 +45,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Methods of Proof | Calculus I | done | | Assigned slot **B**. 7 units, 135 topics; Set Theory precedes Logic so the predicate topics can use sets |
 | Discrete Mathematics | Methods of Proof | done | | Slot **B** after Methods of Proof. 8 units, 143 topics |
 | 4th Grade Math, 5th Grade Math | — | in progress | claude-main | Assigned slot **C**. `grade-4-operations.ts` and the Prealgebra files already cover part of these |
-| 6th, 7th and 8th Grade Math | 5th Grade Math (outline) | open | | Assigned slot **D**. Mostly reuse Prealgebra and Algebra I topics; can start alongside slot C, and request missing grade 4–5 topics from C |
+| 6th, 7th and 8th Grade Math | 5th Grade Math (outline) | in progress | antigravity | Assigned slot **D**. Mostly reuse Prealgebra and Algebra I topics; can start alongside slot C, and request missing grade 4–5 topics from C |
 | Integrated Math I, II, III | Prealgebra | done | | Assigned slot **E**. 3 courses (197, 210, 173 topics) reusing Algebra I, Geometry and Algebra II topics |
 | Integrated Math I, II, III (Honors) | Prealgebra | done | | Assigned slot **E**. 3 courses (223, 330, 278 topics) providing an accelerated integrated pathway |
 | Mathematical Foundations I, II, III | — | done | | Assigned slot **E**. 3 courses (218, 350, 323 topics) for adult foundational and calculus preparation |
