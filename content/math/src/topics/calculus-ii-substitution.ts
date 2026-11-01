@@ -1,4 +1,4 @@
-import type { Rng, Text, TopicDef } from "@ga/content";
+import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, linear, poly, Q } from "@ga/subject-math";
 

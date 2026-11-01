@@ -217,7 +217,7 @@ export const evaluatingDefiniteIntegralsUsingSymmetry: TopicDef = {
           answer,
           wrong: [2 * P, 0, P, -P, -2 * P],
           solution: t(
-            `The graph of an ${isEven ? "even function is symmetric about the $y$-axis, so the area on $[-" + a + ", 0]$ matches that on $[0, " + a + "]$" : "odd function is symmetric about the origin, so the integral on $[-" + a + ", 0]$ is the negative of that on $[0, " + a + "]$"}. Hence $${ask} = ${answer}$.`,
+            `The graph of an ${isEven ? `even function is symmetric about the $y$-axis, so the area on $[-${a}, 0]$ matches that on $[0, ${a}]$` : `odd function is symmetric about the origin, so the integral on $[-${a}, 0]$ is the negative of that on $[0, ${a}]$`}. Hence $${ask} = ${answer}$.`,
             `${isEven ? `偶函数的图像关于 $y$ 轴对称，$[-${a}, 0]$ 上的积分与 $[0, ${a}]$ 上的相等` : `奇函数的图像关于原点对称，$[-${a}, 0]$ 上的积分是 $[0, ${a}]$ 上积分的相反数`}。因此 $${ask} = ${answer}$。`,
           ),
         });
@@ -757,7 +757,7 @@ function extremum(rng: Rng, max: boolean): Extremum {
 /** extremumTopic builds the topic of finding an absolute maximum or minimum from the graph of f′. */
 function extremumTopic(max: boolean): TopicDef {
   const [word, zh] = max ? ["maximum", "最大值"] : ["minimum", "最小值"];
-  const [up, down] = max ? ["positive to negative", "negative to positive"] : ["negative to positive", "positive to negative"];
+  const [up, _down] = max ? ["positive to negative", "negative to positive"] : ["negative to positive", "positive to negative"];
   return {
     id: max ? "maximizing-a-function-using-the-graph-of-its-derivative" : "minimizing-a-function-using-the-graph-of-its-derivative",
     title: max

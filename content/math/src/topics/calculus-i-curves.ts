@@ -333,7 +333,11 @@ function stepFigure(vs: readonly number[]): Figure {
 }
 
 /** stepTotals are the values of f at the ends of the pieces, given f(−6). */
-const stepTotals = (vs: readonly number[], y0: number) => vs.reduce((acc, v) => [...acc, acc[acc.length - 1]! + 2 * v], [y0]);
+const stepTotals = (vs: readonly number[], y0: number) => {
+  const totals = [y0];
+  for (const v of vs) totals.push(totals[totals.length - 1]! + 2 * v);
+  return totals;
+};
 
 /** sketchingAFunctionFromTheGraphOfItsDerivative recovers a function from the graph of its derivative. */
 export const sketchingAFunctionFromTheGraphOfItsDerivative: TopicDef = {

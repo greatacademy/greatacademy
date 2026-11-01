@@ -22,7 +22,7 @@ const ruleName: Record<Rule, Text> = {
 };
 
 /** ruleWithArticle names a rule in English with its article: "a left Riemann sum", "the trapezoidal rule". */
-const ruleWithArticle = (rule: Rule) => (rule === "trapezoidal" ? "the" : "a") + ` ${ruleName[rule].en}`;
+const ruleWithArticle = (rule: Rule) => `${rule === "trapezoidal" ? "the" : "a"} ${ruleName[rule].en}`;
 
 /** Grid is a partition of [a, b] into n subintervals of width dx. */
 interface Grid {

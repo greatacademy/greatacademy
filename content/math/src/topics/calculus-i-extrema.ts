@@ -663,7 +663,7 @@ export const usingTheFirstDerivativeTestToClassifyLocalExtrema: TopicDef = {
         const other = max === c.up ? c.c2 : c.c1;
         return numberProblem({
           prompt: t(
-            `$f(x) = ${pLatex(c.p)}$ has one local maximum and one local minimum. Find the ${valueAsked ? "local " + (max ? "maximum" : "minimum") + " value" : `$x$-coordinate of the local ${max ? "maximum" : "minimum"}`}.`,
+            `$f(x) = ${pLatex(c.p)}$ has one local maximum and one local minimum. Find the ${valueAsked ? `local ${max ? "maximum" : "minimum"} value` : `$x$-coordinate of the local ${max ? "maximum" : "minimum"}`}.`,
             `$f(x) = ${pLatex(c.p)}$ 有一个局部极大值和一个局部极小值。求${valueAsked ? `局部${max ? "极大值" : "极小值"}` : `局部${max ? "极大值" : "极小值"}点的 $x$ 坐标`}。`,
           ),
           answer,

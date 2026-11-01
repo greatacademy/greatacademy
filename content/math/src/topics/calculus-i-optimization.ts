@@ -1041,7 +1041,7 @@ export const calculatingAccelerationForStraightLineMotionUsingDifferentiation: T
           unit: "m/s^2",
           wrong: [0, pAt(m.s, at), -answer],
           solution: t(
-            `$v(t) = ${pLatex(pDer(m.s), "t")}$ is $0$ at $t = ${m.p}$ and $t = ${m.q}$${m.p === 0 ? ", and only $t = " + m.q + "$ is allowed" : ""}. $a(t) = ${pLatex(pDer(pDer(m.s)), "t")}$, so $a(${at}) = ${answer}$ m/s².`,
+            `$v(t) = ${pLatex(pDer(m.s), "t")}$ is $0$ at $t = ${m.p}$ and $t = ${m.q}$${m.p === 0 ? `, and only $t = ${m.q}$ is allowed` : ""}. $a(t) = ${pLatex(pDer(pDer(m.s)), "t")}$, so $a(${at}) = ${answer}$ m/s².`,
             `$v(t) = ${pLatex(pDer(m.s), "t")}$ 在 $t = ${m.p}$ 和 $t = ${m.q}$ 处为 $0$${m.p === 0 ? `，只有 $t = ${m.q}$ 符合要求` : ""}。$a(t) = ${pLatex(pDer(pDer(m.s)), "t")}$，所以 $a(${at}) = ${answer}$ 米/秒²。`,
           ),
         });

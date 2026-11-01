@@ -637,7 +637,7 @@ export const theSumRuleForLimits: TopicDef = {
         const cubic = rng.bool(0.4);
         const d = cubic ? rng.pick([-2, -1, 1, 2]) : 0;
         const q = quadratic(rng);
-        const latex = cubic ? `${poly([d, "x^{3}"])} ${q.latex.startsWith("-") ? "- " + q.latex.slice(1) : "+ " + q.latex}` : q.latex;
+        const latex = cubic ? `${poly([d, "x^{3}"])} ${q.latex.startsWith("-") ? `- ${q.latex.slice(1)}` : `+ ${q.latex}`}` : q.latex;
         const answer = d * a ** 3 + q.at(a);
         return numberProblem({
           prompt: t(`Find $${lim(a)} \\left(${latex}\\right)$.`, `求 $${lim(a)} \\left(${latex}\\right)$。`),

@@ -933,7 +933,8 @@ export const calculatingDerivativesFromDataAndTables: TopicDef = {
       ),
       generate(rng) {
         const steps = [rng.int(1, 3), rng.int(1, 3), rng.int(1, 3), rng.int(1, 3)];
-        const ts = steps.reduce<number[]>((acc, s) => [...acc, acc[acc.length - 1]! + s], [0]);
+        const ts = [0];
+        for (const s of steps) ts.push(ts[ts.length - 1]! + s);
         const temps = ts.map(() => 0);
         temps[0] = rng.int(20, 60);
         for (let j = 1; j < ts.length; j++) temps[j] = temps[j - 1]! + rng.int(-9, 9);
