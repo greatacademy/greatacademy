@@ -1,8 +1,8 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { paren, poly, Q, radical, simplifyRadical } from "@ga/subject-math";
+import { paren, poly, Q } from "@ga/subject-math";
 
-import { choiceProblem } from "../problems.ts";
+import { choiceProblem, numberProblem, pointProblem } from "../problems.ts";
 
 // Precalculus unit 5: Vectors (Part 2: 3D Vectors, Dot Product, and Cross Product,
 // modules 5.18 to 5.20).
@@ -52,12 +52,6 @@ function basisLatex(v: Vec3): string {
   return parts.length === 0 ? "\\mathbf{0}" : parts.join(" ");
 }
 
-function sqrtLatex(n: number): string {
-  if (n <= 0) return "0";
-  const [k, m] = simplifyRadical(n);
-  return radical(k, m);
-}
-
 /** oneOf builds a multiple-choice problem with options shuffled and deduplicated. */
 function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solution: Text): Problem {
   const seen = new Set([right.en]);
@@ -104,6 +98,209 @@ function pickQuadruple(rng: Rng): [Vec3, number] {
   return [[perm[0] * sx, perm[1] * sy, perm[2] * sz], L];
 }
 
+const integerCrossProductPairs: readonly (readonly [Vec3, Vec3, number])[] = [
+  [[-3, -3, 0], [-3, -2, -2], 9],
+  [[-3, -3, 0], [-3, -2, 0], 3],
+  [[-3, -2, -2], [-3, -3, 0], 9],
+  [[-3, -2, -2], [-3, -1, 0], 7],
+  [[-3, -2, 0], [-3, -3, 0], 3],
+  [[-3, -2, 0], [-3, -1, 0], 3],
+  [[-3, -2, 2], [-3, -3, 0], 9],
+  [[-3, -2, 2], [-3, -1, 0], 7],
+  [[-3, -1, 0], [-3, -3, 0], 6],
+  [[-3, -1, 0], [-3, -2, -2], 7],
+  [[-3, 0, -3], [-3, -2, -2], 9],
+  [[-3, 0, -3], [-3, 0, -2], 3],
+  [[-3, 0, -2], [-3, -2, 2], 14],
+  [[-3, 0, -2], [-3, -1, 0], 7],
+  [[-3, 0, -1], [-3, -2, -2], 7],
+  [[-3, 0, -1], [-3, -2, 0], 7],
+  [[-3, 0, 1], [-3, -2, -2], 11],
+  [[-3, 0, 1], [-3, -2, 0], 7],
+  [[-3, 0, 2], [-3, -2, -2], 14],
+  [[-3, 0, 2], [-3, -1, 0], 7],
+  [[-3, 0, 3], [-3, -2, 2], 9],
+  [[-3, 0, 3], [-3, 0, -3], 18],
+  [[-3, 1, 0], [-3, -3, 0], 12],
+  [[-3, 1, 0], [-3, -2, -2], 11],
+  [[-3, 2, -2], [-3, -2, 0], 14],
+  [[-3, 2, -2], [-3, -1, 0], 11],
+  [[-3, 2, 0], [-3, -3, 0], 15],
+  [[-3, 2, 0], [-3, -2, -2], 14],
+  [[-3, 2, 2], [-3, -2, 0], 14],
+  [[-3, 2, 2], [-3, -1, 0], 11],
+  [[-3, 3, 0], [-3, -3, 0], 18],
+  [[-3, 3, 0], [-3, -2, 0], 15],
+  [[-2, -3, -2], [-3, -3, 0], 9],
+  [[-2, -3, -2], [-3, -2, 2], 15],
+  [[-2, -3, 0], [-3, -3, 0], 3],
+  [[-2, -3, 0], [-3, -2, 0], 5],
+];
+
+function pickIntegerCrossProduct(rng: Rng): [Vec3, Vec3, Vec3, number] {
+  const item = rng.pick(integerCrossProductPairs);
+  const [u, v, L] = item;
+  const sx = rng.pick([1, -1]);
+  const sy = rng.pick([1, -1]);
+  const sz = rng.pick([1, -1]);
+  const uSigned: Vec3 = [u[0] * sx, u[1] * sy, u[2] * sz];
+  const vSigned: Vec3 = [v[0] * sx, v[1] * sy, v[2] * sz];
+  const swap = rng.bool();
+  const uFinal = swap ? vSigned : uSigned;
+  const vFinal = swap ? uSigned : vSigned;
+  const cp = cross3(uFinal, vFinal);
+  return [uFinal, vFinal, cp, L];
+}
+
+const specialAnglePairs: readonly {
+  readonly u: Vec3;
+  readonly v: Vec3;
+  readonly degNum: number;
+  readonly cosStr: string;
+  readonly wrongs: readonly number[];
+}[] = [
+  {
+    u: [1, 1, 0],
+    v: [1, 0, 1],
+    degNum: 60,
+    cosStr: "\\frac{1}{2}",
+    wrongs: [30, 45, 90, 120],
+  },
+  {
+    u: [0, 1, 1],
+    v: [1, 1, 0],
+    degNum: 60,
+    cosStr: "\\frac{1}{2}",
+    wrongs: [30, 45, 90, 120],
+  },
+  {
+    u: [1, -1, 0],
+    v: [1, 0, -1],
+    degNum: 60,
+    cosStr: "\\frac{1}{2}",
+    wrongs: [30, 45, 90, 120],
+  },
+  {
+    u: [1, 1, 0],
+    v: [-1, 0, 1],
+    degNum: 120,
+    cosStr: "-\\frac{1}{2}",
+    wrongs: [60, 90, 135, 150],
+  },
+  {
+    u: [1, 0, 1],
+    v: [0, -1, -1],
+    degNum: 120,
+    cosStr: "-\\frac{1}{2}",
+    wrongs: [60, 90, 135, 150],
+  },
+  {
+    u: [1, 0, 0],
+    v: [1, 1, 0],
+    degNum: 45,
+    cosStr: "\\frac{\\sqrt{2}}{2}",
+    wrongs: [30, 60, 90, 135],
+  },
+  {
+    u: [0, 1, 0],
+    v: [0, 1, 1],
+    degNum: 45,
+    cosStr: "\\frac{\\sqrt{2}}{2}",
+    wrongs: [30, 60, 90, 135],
+  },
+  {
+    u: [0, 0, 1],
+    v: [1, 0, 1],
+    degNum: 45,
+    cosStr: "\\frac{\\sqrt{2}}{2}",
+    wrongs: [30, 60, 90, 135],
+  },
+  {
+    u: [1, 0, 0],
+    v: [-1, 1, 0],
+    degNum: 135,
+    cosStr: "-\\frac{\\sqrt{2}}{2}",
+    wrongs: [45, 90, 120, 150],
+  },
+  {
+    u: [0, 1, 0],
+    v: [0, -1, 1],
+    degNum: 135,
+    cosStr: "-\\frac{\\sqrt{2}}{2}",
+    wrongs: [45, 90, 120, 150],
+  },
+  {
+    u: [0, 0, 1],
+    v: [1, 0, -1],
+    degNum: 135,
+    cosStr: "-\\frac{\\sqrt{2}}{2}",
+    wrongs: [45, 90, 120, 150],
+  },
+  {
+    u: [1, 2, 2],
+    v: [2, 1, -2],
+    degNum: 90,
+    cosStr: "0",
+    wrongs: [0, 45, 60, 180],
+  },
+  {
+    u: [2, 3, 6],
+    v: [6, -2, -1],
+    degNum: 90,
+    cosStr: "0",
+    wrongs: [45, 60, 120, 180],
+  },
+  {
+    u: [1, 0, 0],
+    v: [0, 1, 0],
+    degNum: 90,
+    cosStr: "0",
+    wrongs: [0, 45, 60, 180],
+  },
+  {
+    u: [0, 1, 0],
+    v: [0, 0, 1],
+    degNum: 90,
+    cosStr: "0",
+    wrongs: [0, 45, 60, 180],
+  },
+  {
+    u: [1, -1, 0],
+    v: [1, 1, 0],
+    degNum: 90,
+    cosStr: "0",
+    wrongs: [0, 45, 60, 180],
+  },
+  {
+    u: [2, -1, 3],
+    v: [4, -2, 6],
+    degNum: 0,
+    cosStr: "1",
+    wrongs: [45, 60, 90, 180],
+  },
+  {
+    u: [1, 2, 3],
+    v: [2, 4, 6],
+    degNum: 0,
+    cosStr: "1",
+    wrongs: [45, 60, 90, 180],
+  },
+  {
+    u: [2, -1, 3],
+    v: [-4, 2, -6],
+    degNum: 180,
+    cosStr: "-1",
+    wrongs: [0, 90, 120, 135],
+  },
+  {
+    u: [1, 2, 3],
+    v: [-2, -4, -6],
+    degNum: 180,
+    cosStr: "-1",
+    wrongs: [0, 90, 120, 135],
+  },
+];
+
 // ─── Module 5.18. Vectors in 3D Cartesian Coordinates ────────────────────────
 
 // ─── 5.18.1 Three-Dimensional Vectors in Component Form ──────────────────────
@@ -129,50 +326,32 @@ export const threeDimensionalVectorsInComponentForm: TopicDef = {
         "在三维空间直角坐标系中，向量可以表示为坐标分量形式 $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$，也可以表示为标准单位基向量 $\\mathbf{i} = \\langle 1, 0, 0 \\rangle$、$\\mathbf{j} = \\langle 0, 1, 0 \\rangle$ 与 $\\mathbf{k} = \\langle 0, 0, 1 \\rangle$ 的线性组合：\n\n$$\\mathbf{v} = v_1\\mathbf{i} + v_2\\mathbf{j} + v_3\\mathbf{k}$$",
       ),
       generate(rng) {
+        const hasZero = rng.bool();
         const x = rng.pick([-7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7]);
-        const y = rng.pick([-7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7]);
+        const y = hasZero ? 0 : rng.pick([-7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7]);
         const z = rng.pick([-7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7]);
         const v: Vec3 = [x, y, z];
-        const vStr = vec3Latex(v);
         const bStr = basisLatex(v);
 
-        if (rng.bool()) {
-          const w1 = basisLatex([x, -y, z]);
-          const w2 = basisLatex([x, z, y]);
-          const w3 = basisLatex([-x, y, -z]);
-          const w4 = basisLatex([z, y, x]);
-          return oneOf(
-            rng,
-            t(
-              `Express the vector $\\mathbf{v} = ${vStr}$ in terms of the standard unit basis vectors $\\mathbf{i}$, $\\mathbf{j}$, and $\\mathbf{k}$.`,
-              `用标准单位基向量 $\\mathbf{i}$、$\\mathbf{j}$、$\\mathbf{k}$ 表示向量 $\\mathbf{v} = ${vStr}$。`,
-            ),
-            t(`$${bStr}$`, `$${bStr}$`),
-            [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-            t(
-              `Using the definition $\\langle v_1, v_2, v_3 \\rangle = v_1\\mathbf{i} + v_2\\mathbf{j} + v_3\\mathbf{k}$, we obtain $${bStr}$.`,
-              `由定义 $\\langle v_1, v_2, v_3 \\rangle = v_1\\mathbf{i} + v_2\\mathbf{j} + v_3\\mathbf{k}$，可得 $${bStr}$。`,
-            ),
-          );
-        }
-
-        const w1 = vec3Latex([x, -y, z]);
-        const w2 = vec3Latex([x, z, y]);
-        const w3 = vec3Latex([-x, y, -z]);
-        const w4 = vec3Latex([z, y, x]);
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `Write the vector $\\mathbf{v} = ${bStr}$ in component form $\\langle x, y, z \\rangle$.`,
             `将向量 $\\mathbf{v} = ${bStr}$ 写成坐标分量形式 $\\langle x, y, z \\rangle$。`,
           ),
-          t(`$${vStr}$`, `$${vStr}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `The coefficients of $\\mathbf{i}$, $\\mathbf{j}$, and $\\mathbf{k}$ correspond directly to the components, giving $${vStr}$.`,
-            `$\\mathbf{i}$、$\\mathbf{j}$、$\\mathbf{k}$ 的系数直接对应各个坐标分量，得到 $${vStr}$。`,
+          answer: v,
+          vars: ["x", "y", "z"],
+          vector: true,
+          wrong: [
+            [x, -y, z],
+            [x, z, y],
+            [-x, y, -z],
+            [z, y, x],
+          ],
+          solution: t(
+            `The coefficients of $\\mathbf{i}$, $\\mathbf{j}$, and $\\mathbf{k}$ correspond directly to the components, giving $${vec3Latex(v)}$.`,
+            `$\\mathbf{i}$、$\\mathbf{j}$、$\\mathbf{k}$ 的系数直接对应各个坐标分量，得到 $${vec3Latex(v)}$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -192,26 +371,27 @@ export const threeDimensionalVectorsInComponentForm: TopicDef = {
         const x2 = x1 + dx;
         const y2 = y1 + dy;
         const z2 = z1 + dz;
+        const ansVec: Vec3 = [dx, dy, dz];
 
-        const right = vec3Latex([dx, dy, dz]);
-        const w1 = vec3Latex([-dx, -dy, -dz]);
-        const w2 = vec3Latex([x1 + x2, y1 + y2, z1 + z2]);
-        const w3 = vec3Latex([dx, -dy, dz]);
-        const w4 = vec3Latex([dx, dy, -dz]);
-
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `Find the component form of the displacement vector $\\vec{AB}$ from initial point $A(${x1}, ${y1}, ${z1})$ to terminal point $B(${x2}, ${y2}, ${z2})$.`,
             `求从起点 $A(${x1}, ${y1}, ${z1})$ 到终点 $B(${x2}, ${y2}, ${z2})$ 的位移向量 $\\vec{AB}$ 的坐标表示。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `Subtract the coordinates of initial point $A$ from terminal point $B$:\n\n$$\\vec{AB} = \\langle ${x2} - (${x1}), \\; ${y2} - (${y1}), \\; ${z2} - (${z1}) \\rangle = ${right}$$`,
-            `用终点 $B$ 的坐标减去起点 $A$ 的坐标：\n\n$$\\vec{AB} = \\langle ${x2} - (${x1}), \\; ${y2} - (${y1}), \\; ${z2} - (${z1}) \\rangle = ${right}$$`,
+          answer: ansVec,
+          vars: ["x", "y", "z"],
+          vector: true,
+          wrong: [
+            [-dx, -dy, -dz],
+            [dx, -dy, dz],
+            [dx, dy, -dz],
+            [x1 + x2, y1 + y2, z1 + z2],
+          ],
+          solution: t(
+            `Subtract the coordinates of initial point $A$ from terminal point $B$:\n\n$$\\vec{AB} = \\langle ${x2} - ${paren(x1)}, \\; ${y2} - ${paren(y1)}, \\; ${z2} - ${paren(z1)} \\rangle = ${vec3Latex(ansVec)}$$`,
+            `用终点 $B$ 的坐标减去起点 $A$ 的坐标：\n\n$$\\vec{AB} = \\langle ${x2} - ${paren(x1)}, \\; ${y2} - ${paren(y1)}, \\; ${z2} - ${paren(z1)} \\rangle = ${vec3Latex(ansVec)}$$`,
           ),
-        );
+        });
       },
     },
   ],
@@ -253,29 +433,25 @@ export const additionAndScalarMultiplicationOfCartesianVectorsIn3D: TopicDef = {
         const isAdd = rng.bool();
         const res = isAdd ? add3(u, v) : sub3(u, v);
         const opp = isAdd ? sub3(u, v) : add3(u, v);
-        const revSub = isAdd ? sub3(v, u) : sub3(v, u);
+        const revSub = sub3(v, u);
         const signErr: Vec3 = [res[0], -res[1], res[2]];
 
         const opSymbol = isAdd ? "+" : "-";
-        const prompt = t(
-          `Given $\\mathbf{u} = ${vec3Latex(u)}$ and $\\mathbf{v} = ${vec3Latex(v)}$, find $\\mathbf{u} ${opSymbol} \\mathbf{v}$.`,
-          `已知 $\\mathbf{u} = ${vec3Latex(u)}$ 且 $\\mathbf{v} = ${vec3Latex(v)}$，求 $\\mathbf{u} ${opSymbol} \\mathbf{v}$。`,
-        );
 
-        return oneOf(
-          rng,
-          prompt,
-          t(`$${vec3Latex(res)}$`, `$${vec3Latex(res)}$`),
-          [
-            t(`$${vec3Latex(opp)}$`, `$${vec3Latex(opp)}$`),
-            t(`$${vec3Latex(revSub)}$`, `$${vec3Latex(revSub)}$`),
-            t(`$${vec3Latex(signErr)}$`, `$${vec3Latex(signErr)}$`),
-          ],
-          t(
-            `Combine corresponding components:\n\n$$\\mathbf{u} ${opSymbol} \\mathbf{v} = \\langle ${u[0]} ${opSymbol} (${v[0]}), \\; ${u[1]} ${opSymbol} (${v[1]}), \\; ${u[2]} ${opSymbol} (${v[2]}) \\rangle = ${vec3Latex(res)}$$`,
-            `对应分量分别运算：\n\n$$\\mathbf{u} ${opSymbol} \\mathbf{v} = \\langle ${u[0]} ${opSymbol} (${v[0]}), \\; ${u[1]} ${opSymbol} (${v[1]}), \\; ${u[2]} ${opSymbol} (${v[2]}) \\rangle = ${vec3Latex(res)}$$`,
+        return pointProblem({
+          prompt: t(
+            `Given $\\mathbf{u} = ${vec3Latex(u)}$ and $\\mathbf{v} = ${vec3Latex(v)}$, find $\\mathbf{u} ${opSymbol} \\mathbf{v}$.`,
+            `已知 $\\mathbf{u} = ${vec3Latex(u)}$ 且 $\\mathbf{v} = ${vec3Latex(v)}$，求 $\\mathbf{u} ${opSymbol} \\mathbf{v}$。`,
           ),
-        );
+          answer: res,
+          vars: ["x", "y", "z"],
+          vector: true,
+          wrong: [opp, revSub, signErr],
+          solution: t(
+            `Combine corresponding components:\n\n$$\\mathbf{u} ${opSymbol} \\mathbf{v} = \\langle ${u[0]} ${opSymbol} ${paren(v[0])}, \\; ${u[1]} ${opSymbol} ${paren(v[1])}, \\; ${u[2]} ${opSymbol} ${paren(v[2])} \\rangle = ${vec3Latex(res)}$$`,
+            `对应分量分别运算：\n\n$$\\mathbf{u} ${opSymbol} \\mathbf{v} = \\langle ${u[0]} ${opSymbol} ${paren(v[0])}, \\; ${u[1]} ${opSymbol} ${paren(v[1])}, \\; ${u[2]} ${opSymbol} ${paren(v[2])} \\rangle = ${vec3Latex(res)}$$`,
+          ),
+        });
       },
     },
     {
@@ -307,27 +483,23 @@ export const additionAndScalarMultiplicationOfCartesianVectorsIn3D: TopicDef = {
         const w3: Vec3 = [right[0], -right[1], right[2]];
         const w4 = add3(u, v);
 
-        const bTerm = b > 0 ? `+ ${b}\\mathbf{v}` : `- ${-b}\\mathbf{v}`;
-        const prompt = t(
-          `Given $\\mathbf{u} = ${vec3Latex(u)}$ and $\\mathbf{v} = ${vec3Latex(v)}$, find $${a}\\mathbf{u} ${bTerm}$.`,
-          `已知 $\\mathbf{u} = ${vec3Latex(u)}$ 且 $\\mathbf{v} = ${vec3Latex(v)}$，求 $${a}\\mathbf{u} ${bTerm}$。`,
-        );
+        const aTerm = a === 1 ? "\\mathbf{u}" : a === -1 ? "-\\mathbf{u}" : `${a}\\mathbf{u}`;
+        const bTerm = b > 0 ? (b === 1 ? "+ \\mathbf{v}" : `+ ${b}\\mathbf{v}`) : b === -1 ? "- \\mathbf{v}" : `- ${-b}\\mathbf{v}`;
 
-        return oneOf(
-          rng,
-          prompt,
-          t(`$${vec3Latex(right)}$`, `$${vec3Latex(right)}$`),
-          [
-            t(`$${vec3Latex(w1)}$`, `$${vec3Latex(w1)}$`),
-            t(`$${vec3Latex(w2)}$`, `$${vec3Latex(w2)}$`),
-            t(`$${vec3Latex(w3)}$`, `$${vec3Latex(w3)}$`),
-            t(`$${vec3Latex(w4)}$`, `$${vec3Latex(w4)}$`),
-          ],
-          t(
-            `First scale each vector:\n\n$$${a}\\mathbf{u} = ${vec3Latex(au)}, \\quad ${b}\\mathbf{v} = ${vec3Latex(bv)}$$\n\nThen add the components together to get $${vec3Latex(right)}$.`,
-            `先分别进行数乘：\n\n$$${a}\\mathbf{u} = ${vec3Latex(au)}, \\quad ${b}\\mathbf{v} = ${vec3Latex(bv)}$$\n\n再将对应分量相加，得 $${vec3Latex(right)}$。`,
+        return pointProblem({
+          prompt: t(
+            `Given $\\mathbf{u} = ${vec3Latex(u)}$ and $\\mathbf{v} = ${vec3Latex(v)}$, find $${aTerm} ${bTerm}$.`,
+            `已知 $\\mathbf{u} = ${vec3Latex(u)}$ 且 $\\mathbf{v} = ${vec3Latex(v)}$，求 $${aTerm} ${bTerm}$。`,
           ),
-        );
+          answer: right,
+          vars: ["x", "y", "z"],
+          vector: true,
+          wrong: [w1, w2, w3, w4],
+          solution: t(
+            `First scale each vector:\n\n$$${aTerm} = ${vec3Latex(au)}, \\quad ${bTerm.replace(/^[+-]\s*/, "")} = ${vec3Latex(smul3(Math.abs(b), v))}$$\n\nThen add the components together to get $${vec3Latex(right)}$.`,
+            `先分别进行数乘：\n\n$$${aTerm} = ${vec3Latex(au)}, \\quad ${bTerm.replace(/^[+-]\s*/, "")} = ${vec3Latex(smul3(Math.abs(b), v))}$$\n\n再将对应分量相加，得 $${vec3Latex(right)}$。`,
+          ),
+        });
       },
     },
   ],
@@ -352,56 +524,48 @@ export const calculatingTheMagnitudeOfCartesianVectorsIn3D: TopicDef = {
       id: "magnitude-of-a-3d-vector",
       title: t("Magnitude of a 3D vector", "三维向量的模长"),
       explanation: t(
-        "By extending the Pythagorean theorem to three dimensions, the magnitude (or length) of $\\mathbf{v} = \\langle x, y, z \\rangle$ is:\n\n$$\\|\\mathbf{v}\\| = \\sqrt{x^2 + y^2 + z^2}$$",
-        "将勾股定理推广至三维空间，向量 $\\mathbf{v} = \\langle x, y, z \\rangle$ 的模长（长度）为：\n\n$$\\|\\mathbf{v}\\| = \\sqrt{x^2 + y^2 + z^2}$$",
+        "By extending the Pythagorean theorem to three dimensions, the magnitude (or length) of $\\mathbf{v} = \\langle x, y, z \\rangle$ is:\n\n$$\\|\\mathbf{v}\\| = \\sqrt{x^2 + y^2 + z^2}$$\n\nThe distance between two points $P(x_1, y_1, z_1)$ and $Q(x_2, y_2, z_2)$ is the magnitude of the displacement vector $\\vec{PQ}$.",
+        "将勾股定理推广至三维空间，向量 $\\mathbf{v} = \\langle x, y, z \\rangle$ 的模长（长度）为：\n\n$$\\|\\mathbf{v}\\| = \\sqrt{x^2 + y^2 + z^2}$$\n\n两点 $P(x_1, y_1, z_1)$ 与 $Q(x_2, y_2, z_2)$ 之间的距离即位移向量 $\\vec{PQ}$ 的模长。",
       ),
       generate(rng) {
         if (rng.bool()) {
-          const [v, L] = pickQuadruple(rng);
-          const right = `${L}`;
-          const w1 = `${L + 1}`;
-          const w2 = `${Math.max(1, L - 1)}`;
-          const w3 = `${L + 2}`;
-          const w4 = `\\sqrt{${L * L + 2}}`;
-          return oneOf(
-            rng,
-            t(
+          const [vBase, LBase] = pickQuadruple(rng);
+          const scale = rng.pick([1, 1, 2]);
+          const v = smul3(scale, vBase);
+          const L = LBase * scale;
+
+          return numberProblem({
+            prompt: t(
               `Calculate the magnitude of the vector $\\mathbf{v} = ${vec3Latex(v)}$.`,
               `计算向量 $\\mathbf{v} = ${vec3Latex(v)}$ 的模长。`,
             ),
-            t(`$${right}$`, `$${right}$`),
-            [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-            t(
+            answer: L,
+            form: "integer",
+            wrong: [L + 1, Math.max(1, L - 1), L + 2],
+            solution: t(
               `$$\\|\\mathbf{v}\\| = \\sqrt{(${v[0]})^2 + (${v[1]})^2 + (${v[2]})^2} = \\sqrt{${v[0] * v[0] + v[1] * v[1] + v[2] * v[2]}} = ${L}$$`,
               `$$\\|\\mathbf{v}\\| = \\sqrt{(${v[0]})^2 + (${v[1]})^2 + (${v[2]})^2} = \\sqrt{${v[0] * v[0] + v[1] * v[1] + v[2] * v[2]}} = ${L}$$`,
             ),
-          );
+          });
         }
 
-        const x = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
-        const y = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
-        const z = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
-        const v: Vec3 = [x, y, z];
-        const sumSq = x * x + y * y + z * z;
-        const ans = sqrtLatex(sumSq);
-        const w1 = sqrtLatex(sumSq + 2);
-        const w2 = sqrtLatex(Math.max(1, sumSq - 3));
-        const w3 = `${sumSq}`;
-        const w4 = sqrtLatex(x * x + y * y);
+        const [delta, L] = pickQuadruple(rng);
+        const P: Vec3 = [rng.pick([-6, -4, -2, 0, 2, 4, 6]), rng.pick([-5, -3, -1, 1, 3, 5]), rng.pick([-4, -2, 0, 2, 4])];
+        const Q: Vec3 = add3(P, delta);
 
-        return oneOf(
-          rng,
-          t(
-            `Find the magnitude $\\|\\mathbf{v}\\|$ of the vector $\\mathbf{v} = ${vec3Latex(v)}$.`,
-            `求向量 $\\mathbf{v} = ${vec3Latex(v)}$ 的模长 $\\|\\mathbf{v}\\|$。`,
+        return numberProblem({
+          prompt: t(
+            `Find the distance between the points $P(${P[0]}, ${P[1]}, ${P[2]})$ and $Q(${Q[0]}, ${Q[1]}, ${Q[2]})$ in $\\mathbb{R}^3$.`,
+            `求三维空间中点 $P(${P[0]}, ${P[1]}, ${P[2]})$ 与点 $Q(${Q[0]}, ${Q[1]}, ${Q[2]})$ 之间的距离。`,
           ),
-          t(`$${ans}$`, `$${ans}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `$$\\|\\mathbf{v}\\| = \\sqrt{(${x})^2 + (${y})^2 + (${z})^2} = \\sqrt{${sumSq}} = ${ans}$$`,
-            `$$\\|\\mathbf{v}\\| = \\sqrt{(${x})^2 + (${y})^2 + (${z})^2} = \\sqrt{${sumSq}} = ${ans}$$`,
+          answer: L,
+          form: "integer",
+          wrong: [L + 1, Math.max(1, L - 1), L + 2],
+          solution: t(
+            `$$d(P, Q) = \\sqrt{(${Q[0]} - ${paren(P[0])})^2 + (${Q[1]} - ${paren(P[1])})^2 + (${Q[2]} - ${paren(P[2])})^2} = \\sqrt{(${delta[0]})^2 + (${delta[1]})^2 + (${delta[2]})^2} = ${L}$$`,
+            `$$d(P, Q) = \\sqrt{(${Q[0]} - ${paren(P[0])})^2 + (${Q[1]} - ${paren(P[1])})^2 + (${Q[2]} - ${paren(P[2])})^2} = \\sqrt{(${delta[0]})^2 + (${delta[1]})^2 + (${delta[2]})^2} = ${L}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -418,25 +582,20 @@ export const calculatingTheMagnitudeOfCartesianVectorsIn3D: TopicDef = {
         const sqQv: readonly [Q, Q, Q] = [Q.of(v[0], L * L), Q.of(v[1], L * L), Q.of(v[2], L * L)];
         const flipQv: readonly [Q, Q, Q] = [Q.of(v[0], L), Q.of(-v[1], L), Q.of(v[2], L)];
 
-        const right = qVec3Latex(qv);
-        const w1 = qVec3Latex(oppQv);
-        const w2 = qVec3Latex(sqQv);
-        const w3 = qVec3Latex(flipQv);
-        const w4 = vec3Latex(v);
-
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `Find the unit vector $\\mathbf{u}$ that has the same direction as $\\mathbf{v} = ${vec3Latex(v)}$.`,
             `求与向量 $\\mathbf{v} = ${vec3Latex(v)}$ 同向的单位向量 $\\mathbf{u}$。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `First, the magnitude is $\\|\\mathbf{v}\\| = \\sqrt{(${v[0]})^2 + (${v[1]})^2 + (${v[2]})^2} = ${L}$.\n\nDividing $\\mathbf{v}$ by $${L}$ gives the unit vector $${right}$.`,
-            `首先计算模长 $\\|\\mathbf{v}\\| = \\sqrt{(${v[0]})^2 + (${v[1]})^2 + (${v[2]})^2} = ${L}$。\n\n将 $\\mathbf{v}$ 各分量除以 $${L}$，得到单位向量 $${right}$。`,
+          answer: qv,
+          vars: ["x", "y", "z"],
+          vector: true,
+          wrong: [oppQv, sqQv, flipQv, v],
+          solution: t(
+            `First, the magnitude is $\\|\\mathbf{v}\\| = \\sqrt{(${v[0]})^2 + (${v[1]})^2 + (${v[2]})^2} = ${L}$.\n\nDividing $\\mathbf{v}$ by $${L}$ gives the unit vector $${qVec3Latex(qv)}$.`,
+            `首先计算模长 $\\|\\mathbf{v}\\| = \\sqrt{(${v[0]})^2 + (${v[1]})^2 + (${v[2]})^2} = ${L}$。\n\n将 $\\mathbf{v}$ 各分量除以 $${L}$，得到单位向量 $${qVec3Latex(qv)}$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -467,8 +626,8 @@ export const calculatingTheDotProductUsingAngleAndMagnitude: TopicDef = {
         "两个向量 $\\mathbf{u}$ 与 $\\mathbf{v}$ 的数量积（点积）在几何上定义为：\n\n$$\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\cos\\theta$$\n\n其中 $\\theta$ 是两向量的夹角，满足 $0 \\le \\theta \\le \\pi$（即 $0^\\circ \\le \\theta \\le 180^\\circ$）。",
       ),
       generate(rng) {
-        const magU = rng.pick([2, 3, 4, 5, 6, 8, 10]);
-        const magV = rng.pick([2, 3, 4, 5, 6, 8, 10]);
+        const magU = rng.pick([2, 4, 6, 8, 10]);
+        const magV = rng.pick([2, 3, 4, 5, 6, 7, 8, 9]);
         const angleItem = rng.pick([
           { deg: "0^\\circ", rad: "0", cosVal: 1, cosTex: "1", isRad: false },
           { deg: "60^\\circ", rad: "\\frac{\\pi}{3}", cosVal: 0.5, cosTex: "\\frac{1}{2}", isRad: true },
@@ -478,41 +637,21 @@ export const calculatingTheDotProductUsingAngleAndMagnitude: TopicDef = {
         ]);
 
         const thetaStr = angleItem.isRad ? angleItem.rad : angleItem.deg;
-        const qProd = Q.of(magU * magV);
-        const dotVal =
-          angleItem.cosVal === 1
-            ? qProd.toLatex()
-            : angleItem.cosVal === -1
-              ? qProd.neg().toLatex()
-              : angleItem.cosVal === 0
-                ? "0"
-                : angleItem.cosVal > 0
-                  ? Q.of(magU * magV, 2).toLatex()
-                  : Q.of(-magU * magV, 2).toLatex();
+        const dot = Math.round(magU * magV * angleItem.cosVal);
 
-        const wrong1 = Q.of(magU * magV).toLatex();
-        const wrong2 = Q.of(-magU * magV).toLatex();
-        const wrong3 = "0";
-        const wrong4 = Q.of(magU + magV).toLatex();
-
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Given two vectors with $\\|\\mathbf{u}\\| = ${magU}$, $\\|\\mathbf{v}\\| = ${magV}$, and the angle between them $\\theta = ${thetaStr}$, compute $\\mathbf{u} \\cdot \\mathbf{v}$.`,
             `已知两向量满足 $\\|\\mathbf{u}\\| = ${magU}$，$\\|\\mathbf{v}\\| = ${magV}$，且夹角 $\\theta = ${thetaStr}$，计算 $\\mathbf{u} \\cdot \\mathbf{v}$。`,
           ),
-          t(`$${dotVal}$`, `$${dotVal}$`),
-          [
-            t(`$${wrong1}$`, `$${wrong1}$`),
-            t(`$${wrong2}$`, `$${wrong2}$`),
-            t(`$${wrong3}$`, `$${wrong3}$`),
-            t(`$${wrong4}$`, `$${wrong4}$`),
-          ],
-          t(
-            `$$\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\cos\\theta = (${magU})(${magV})(${angleItem.cosTex}) = ${dotVal}$$`,
-            `$$\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\cos\\theta = (${magU})(${magV})(${angleItem.cosTex}) = ${dotVal}$$`,
+          answer: dot,
+          form: "integer",
+          wrong: [magU * magV, -magU * magV, 0, magU + magV],
+          solution: t(
+            `$$\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\cos\\theta = (${magU})(${magV})(${angleItem.cosTex}) = ${dot}$$`,
+            `$$\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\cos\\theta = (${magU})(${magV})(${angleItem.cosTex}) = ${dot}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -538,7 +677,7 @@ export const calculatingTheDotProductUsingAngleAndMagnitude: TopicDef = {
             prompt,
             t("Acute ($0^\\circ \\le \\theta < 90^\\circ$)", "锐角（$0^\\circ \\le \\theta < 90^\\circ$）"),
             [
-              t("Right angle ($\\theta = 90^\\circ$)", "直角（$\\theta = 90^\\circ$）"),
+              t("Right angle ($\\theta = 90^\\circ$, orthogonal)", "直角（$\\theta = 90^\\circ$，互相垂直）"),
               t("Obtuse ($90^\\circ < \\theta \\le 180^\\circ$)", "钝角（$90^\\circ < \\theta \\le 180^\\circ$）"),
               t("Straight angle ($\\theta = 180^\\circ$)", "平角（$\\theta = 180^\\circ$）"),
             ],
@@ -570,7 +709,7 @@ export const calculatingTheDotProductUsingAngleAndMagnitude: TopicDef = {
           t("Obtuse ($90^\\circ < \\theta \\le 180^\\circ$)", "钝角（$90^\\circ < \\theta \\le 180^\\circ$）"),
           [
             t("Acute ($0^\\circ \\le \\theta < 90^\\circ$)", "锐角（$0^\\circ \\le \\theta < 90^\\circ$）"),
-            t("Right angle ($\\theta = 90^\\circ$)", "直角（$\\theta = 90^\\circ$）"),
+            t("Right angle ($\\theta = 90^\\circ$, orthogonal)", "直角（$\\theta = 90^\\circ$，互相垂直）"),
             t("Zero angle ($\\theta = 0^\\circ$)", "零角（$\\theta = 0^\\circ$）"),
           ],
           t(
@@ -607,7 +746,6 @@ export const calculatingTheDotProductUsingComponents: TopicDef = {
       ),
       generate(rng) {
         if (rng.bool()) {
-          // 3D dot product
           const u: Vec3 = [
             rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]),
             rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]),
@@ -620,47 +758,40 @@ export const calculatingTheDotProductUsingComponents: TopicDef = {
           ];
           const ans = dot3(u, v);
           const w1 = u[0] * v[0] - u[1] * v[1] + u[2] * v[2];
-          const w2 = -ans;
-          const w3 = ans + 4;
-          const w4 = ans - 5;
 
-          return oneOf(
-            rng,
-            t(
+          return numberProblem({
+            prompt: t(
               `Calculate the dot product $\\mathbf{u} \\cdot \\mathbf{v}$ for $\\mathbf{u} = ${vec3Latex(u)}$ and $\\mathbf{v} = ${vec3Latex(v)}$.`,
               `计算向量 $\\mathbf{u} = ${vec3Latex(u)}$ 与 $\\mathbf{v} = ${vec3Latex(v)}$ 的数量积 $\\mathbf{u} \\cdot \\mathbf{v}$。`,
             ),
-            t(`$${ans}$`, `$${ans}$`),
-            [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-            t(
-              `$$\\mathbf{u} \\cdot \\mathbf{v} = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) + (${u[2]})(${v[2]}) = ${u[0] * v[0]} + (${u[1] * v[1]}) + (${u[2] * v[2]}) = ${ans}$$`,
-              `$$\\mathbf{u} \\cdot \\mathbf{v} = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) + (${u[2]})(${v[2]}) = ${u[0] * v[0]} + (${u[1] * v[1]}) + (${u[2] * v[2]}) = ${ans}$$`,
+            answer: ans,
+            form: "integer",
+            wrong: [w1, -ans, ans + 4, ans - 5],
+            solution: t(
+              `$$\\mathbf{u} \\cdot \\mathbf{v} = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) + (${u[2]})(${v[2]}) = ${ans}$$`,
+              `$$\\mathbf{u} \\cdot \\mathbf{v} = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) + (${u[2]})(${v[2]}) = ${ans}$$`,
             ),
-          );
+          });
         }
 
-        // 2D dot product
         const u: Vec2 = [rng.pick([-9, -7, -5, -3, -1, 1, 3, 5, 7, 9]), rng.pick([-8, -6, -4, -2, 2, 4, 6, 8])];
         const v: Vec2 = [rng.pick([-9, -7, -5, -3, -1, 1, 3, 5, 7, 9]), rng.pick([-8, -6, -4, -2, 2, 4, 6, 8])];
         const ans = dot2(u, v);
         const w1 = u[0] * v[0] - u[1] * v[1];
-        const w2 = -ans;
-        const w3 = ans + 3;
-        const w4 = ans - 2;
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Calculate the dot product $\\mathbf{u} \\cdot \\mathbf{v}$ for $\\mathbf{u} = ${vec2Latex(u)}$ and $\\mathbf{v} = ${vec2Latex(v)}$.`,
             `计算二维向量 $\\mathbf{u} = ${vec2Latex(u)}$ 与 $\\mathbf{v} = ${vec2Latex(v)}$ 的数量积 $\\mathbf{u} \\cdot \\mathbf{v}$。`,
           ),
-          t(`$${ans}$`, `$${ans}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `$$\\mathbf{u} \\cdot \\mathbf{v} = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) = ${u[0] * v[0]} + (${u[1] * v[1]}) = ${ans}$$`,
-            `$$\\mathbf{u} \\cdot \\mathbf{v} = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) = ${u[0] * v[0]} + (${u[1] * v[1]}) = ${ans}$$`,
+          answer: ans,
+          form: "integer",
+          wrong: [w1, -ans, ans + 3, ans - 2],
+          solution: t(
+            `$$\\mathbf{u} \\cdot \\mathbf{v} = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) = ${ans}$$`,
+            `$$\\mathbf{u} \\cdot \\mathbf{v} = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) = ${ans}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -677,34 +808,28 @@ export const calculatingTheDotProductUsingComponents: TopicDef = {
         const x = rng.pick([-5, -3, -1, 1, 3, 5]);
         const y = rng.pick([-4, -2, 2, 4]);
 
-        // Target: a*x + b*y + c*k = 0 => k = -(a*x + b*y)/c
-        // Choose x, y such that a*x + b*y is divisible by c:
         const rem = (((a * x + b * y) % c) + c) % c;
-        const adjustedX = rem === 0 ? x : x + (c - rem) * (a % 2 === 0 ? 1 : 1);
+        const adjustedX = rem === 0 ? x : x + (c - rem);
         const numerator = -(a * adjustedX + b * y);
         const ansK = Math.round(numerator / c);
 
         const uVec: Vec3 = [a, b, c];
         const vVecPrompt = `\\langle ${adjustedX}, ${y}, k \\rangle`;
-        const right = `${ansK}`;
-        const w1 = `${-ansK}`;
-        const w2 = `${ansK + 1}`;
-        const w3 = `${ansK - 2}`;
-        const w4 = `${ansK + 3}`;
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the value of $k$ such that the vectors $\\mathbf{u} = ${vec3Latex(uVec)}$ and $\\mathbf{v} = ${vVecPrompt}$ are orthogonal.`,
             `求使向量 $\\mathbf{u} = ${vec3Latex(uVec)}$ 与 $\\mathbf{v} = ${vVecPrompt}$ 正交（互相垂直）的实数 $k$ 的值。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
+          answer: ansK,
+          solveFor: "k",
+          form: "integer",
+          wrong: [-ansK, ansK + 1, ansK - 2, ansK + 3],
+          solution: t(
             `Set the dot product to $0$:\n\n$$\\mathbf{u} \\cdot \\mathbf{v} = (${a})(${adjustedX}) + (${b})(${y}) + (${c})k = 0$$\n\n$$${poly([a * adjustedX + b * y, ""], [c, "k"])} = 0 \\implies k = ${ansK}$$`,
             `令数量积为 $0$：\n\n$$\\mathbf{u} \\cdot \\mathbf{v} = (${a})(${adjustedX}) + (${b})(${y}) + (${c})k = 0$$\n\n$$${poly([a * adjustedX + b * y, ""], [c, "k"])} = 0 \\implies k = ${ansK}$$`,
           ),
-        );
+        });
       },
     },
   ],
@@ -738,132 +863,50 @@ export const theAngleBetweenTwoVectors: TopicDef = {
         const dot = dot3(u, v);
         const denom = Lu * Lv;
         const cosQ = Q.of(dot, denom);
-        const right = cosQ.toLatex();
-        const w1 = cosQ.neg().toLatex();
-        const w2 = Q.of(dot, denom > 1 ? denom - 1 : 2).toLatex();
-        const w3 = Q.of(Math.abs(dot) + 1, denom).toLatex();
-        const w4 = "0";
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find $\\cos\\theta$, where $\\theta$ is the angle between the vectors $\\mathbf{u} = ${vec3Latex(u)}$ and $\\mathbf{v} = ${vec3Latex(v)}$.`,
             `求向量 $\\mathbf{u} = ${vec3Latex(u)}$ 与 $\\mathbf{v} = ${vec3Latex(v)}$ 的夹角 $\\theta$ 的余弦值 $\\cos\\theta$。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `Compute the components:\n\n- $\\mathbf{u} \\cdot \\mathbf{v} = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) + (${u[2]})(${v[2]}) = ${dot}$\n- $\\|\\mathbf{u}\\| = ${Lu}, \\quad \\|\\mathbf{v}\\| = ${Lv}$\n\n$$\\cos\\theta = \\frac{${dot}}{(${Lu})(${Lv})} = ${right}$$`,
-            `分别计算各项：\n\n- $\\mathbf{u} \\cdot \\mathbf{v} = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) + (${u[2]})(${v[2]}) = ${dot}$\n- $\\|\\mathbf{u}\\| = ${Lu}, \\quad \\|\\mathbf{v}\\| = ${Lv}$\n\n$$\\cos\\theta = \\frac{${dot}}{(${Lu})(${Lv})} = ${right}$$`,
+          answer: cosQ,
+          wrong: [cosQ.neg(), Q.of(dot, denom > 1 ? denom - 1 : 2), Q.of(Math.abs(dot) + 1, denom), 0],
+          solution: t(
+            `Compute the components:\n\n- $\\mathbf{u} \\cdot \\mathbf{v} = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) + (${u[2]})(${v[2]}) = ${dot}$\n- $\\|\\mathbf{u}\\| = ${Lu}, \\quad \\|\\mathbf{v}\\| = ${Lv}$\n\n$$\\cos\\theta = \\frac{${dot}}{(${Lu})(${Lv})} = ${cosQ.toLatex()}$$`,
+            `分别计算各项：\n\n- $\\mathbf{u} \\cdot \\mathbf{v} = (${u[0]})(${v[0]}) + (${u[1]})(${v[1]}) + (${u[2]})(${v[2]}) = ${dot}$\n- $\\|\\mathbf{u}\\| = ${Lu}, \\quad \\|\\mathbf{v}\\| = ${Lv}$\n\n$$\\cos\\theta = \\frac{${dot}}{(${Lu})(${Lv})} = ${cosQ.toLatex()}$$`,
           ),
-        );
+        });
       },
     },
     {
       id: "determining-the-exact-angle-between-vectors",
       title: t("Determining the exact angle between vectors", "求两向量夹角的精确值"),
       explanation: t(
-        "Once $\\cos\\theta$ is determined, the angle $\\theta \\in [0^\\circ, 180^\\circ]$ is found by evaluating $\\arccos(\\cos\\theta)$. Familiar values include:\n\n- $\\cos\\theta = 0 \\implies 90^\\circ$\n- $\\cos\\theta = \\frac{1}{2} \\implies 60^\\circ, \\quad -\\frac{1}{2} \\implies 120^\\circ$\n- $\\cos\\theta = \\frac{\\sqrt{2}}{2} \\implies 45^\\circ, \\quad -\\frac{\\sqrt{2}}{2} \\implies 135^\\circ$",
-        "求出 $\\cos\\theta$ 后，通过 $\\arccos(\\cos\\theta)$ 确定夹角 $\\theta \\in [0^\\circ, 180^\\circ]$。常见特殊角包括：\n\n- $\\cos\\theta = 0 \\implies 90^\\circ$\n- $\\cos\\theta = \\frac{1}{2} \\implies 60^\\circ, \\quad -\\frac{1}{2} \\implies 120^\\circ$\n- $\\cos\\theta = \\frac{\\sqrt{2}}{2} \\implies 45^\\circ, \\quad -\\frac{\\sqrt{2}}{2} \\implies 135^\\circ$",
+        "Once $\\cos\\theta$ is determined, the angle $\\theta \\in [0^\\circ, 180^\\circ]$ is found by evaluating $\\arccos(\\cos\\theta)$. Familiar special angles include:\n\n- $\\cos\\theta = 1 \\implies 0^\\circ$\n- $\\cos\\theta = \\frac{\\sqrt{2}}{2} \\implies 45^\\circ, \\quad -\\frac{\\sqrt{2}}{2} \\implies 135^\\circ$\n- $\\cos\\theta = \\frac{1}{2} \\implies 60^\\circ, \\quad -\\frac{1}{2} \\implies 120^\\circ$\n- $\\cos\\theta = 0 \\implies 90^\\circ$\n- $\\cos\\theta = -1 \\implies 180^\\circ$",
+        "求出 $\\cos\\theta$ 后，通过 $\\arccos(\\cos\\theta)$ 确定夹角 $\\theta \\in [0^\\circ, 180^\\circ]$。常见特殊角包括：\n\n- $\\cos\\theta = 1 \\implies 0^\\circ$\n- $\\cos\\theta = \\frac{\\sqrt{2}}{2} \\implies 45^\\circ, \\quad -\\frac{\\sqrt{2}}{2} \\implies 135^\\circ$\n- $\\cos\\theta = \\frac{1}{2} \\implies 60^\\circ, \\quad -\\frac{1}{2} \\implies 120^\\circ$\n- $\\cos\\theta = 0 \\implies 90^\\circ$\n- $\\cos\\theta = -1 \\implies 180^\\circ$",
       ),
       generate(rng) {
-        const item = rng.pick([
-          {
-            u: [1, 1, 0] as Vec3,
-            v: [1, 0, 1] as Vec3,
-            deg: "60^\\circ",
-            rad: "\\frac{\\pi}{3}",
-            cosStr: "\\frac{1}{2}",
-            wrongsDeg: ["30^\\circ", "45^\\circ", "90^\\circ", "120^\\circ"],
-            wrongsRad: ["\\frac{\\pi}{6}", "\\frac{\\pi}{4}", "\\frac{\\pi}{2}", "\\frac{2\\pi}{3}"],
-          },
-          {
-            u: [1, 1, 0] as Vec3,
-            v: [-1, 0, 1] as Vec3,
-            deg: "120^\\circ",
-            rad: "\\frac{2\\pi}{3}",
-            cosStr: "-\\frac{1}{2}",
-            wrongsDeg: ["60^\\circ", "135^\\circ", "150^\\circ", "90^\\circ"],
-            wrongsRad: ["\\frac{\\pi}{3}", "\\frac{3\\pi}{4}", "\\frac{5\\pi}{6}", "\\frac{\\pi}{2}"],
-          },
-          {
-            u: [1, 0, 0] as Vec3,
-            v: [1, 1, 0] as Vec3,
-            deg: "45^\\circ",
-            rad: "\\frac{\\pi}{4}",
-            cosStr: "\\frac{\\sqrt{2}}{2}",
-            wrongsDeg: ["30^\\circ", "60^\\circ", "90^\\circ", "135^\\circ"],
-            wrongsRad: ["\\frac{\\pi}{6}", "\\frac{\\pi}{3}", "\\frac{\\pi}{2}", "\\frac{3\\pi}{4}"],
-          },
-          {
-            u: [1, 0, 0] as Vec3,
-            v: [-1, 1, 0] as Vec3,
-            deg: "135^\\circ",
-            rad: "\\frac{3\\pi}{4}",
-            cosStr: "-\\frac{\\sqrt{2}}{2}",
-            wrongsDeg: ["45^\\circ", "120^\\circ", "150^\\circ", "90^\\circ"],
-            wrongsRad: ["\\frac{\\pi}{4}", "\\frac{2\\pi}{3}", "\\frac{5\\pi}{6}", "\\frac{\\pi}{2}"],
-          },
-          {
-            u: [1, 2, 2] as Vec3,
-            v: [2, 1, -2] as Vec3,
-            deg: "90^\\circ",
-            rad: "\\frac{\\pi}{2}",
-            cosStr: "0",
-            wrongsDeg: ["0^\\circ", "45^\\circ", "60^\\circ", "180^\\circ"],
-            wrongsRad: ["0", "\\frac{\\pi}{4}", "\\frac{\\pi}{3}", "\\pi"],
-          },
-          {
-            u: [2, 3, 6] as Vec3,
-            v: [6, -2, -1] as Vec3,
-            deg: "90^\\circ",
-            rad: "\\frac{\\pi}{2}",
-            cosStr: "0",
-            wrongsDeg: ["45^\\circ", "60^\\circ", "120^\\circ", "180^\\circ"],
-            wrongsRad: ["\\frac{\\pi}{4}", "\\frac{\\pi}{3}", "\\frac{2\\pi}{3}", "\\pi"],
-          },
-          {
-            u: [2, -1, 3] as Vec3,
-            v: [4, -2, 6] as Vec3,
-            deg: "0^\\circ",
-            rad: "0",
-            cosStr: "1",
-            wrongsDeg: ["45^\\circ", "90^\\circ", "180^\\circ", "60^\\circ"],
-            wrongsRad: ["\\frac{\\pi}{4}", "\\frac{\\pi}{2}", "\\pi", "\\frac{\\pi}{3}"],
-          },
-          {
-            u: [2, -1, 3] as Vec3,
-            v: [-4, 2, -6] as Vec3,
-            deg: "180^\\circ",
-            rad: "\\pi",
-            cosStr: "-1",
-            wrongsDeg: ["0^\\circ", "90^\\circ", "135^\\circ", "120^\\circ"],
-            wrongsRad: ["0", "\\frac{\\pi}{2}", "\\frac{3\\pi}{4}", "\\frac{2\\pi}{3}"],
-          },
-        ]);
-
+        const item = rng.pick(specialAnglePairs);
         const scaleU = rng.pick([1, 2, 3, 4, 5, 6]);
-        const scaleV = rng.pick([1, 2, 3]);
+        const scaleV = rng.pick([1, 2, 3, 4]);
         const swap = rng.bool();
         const uScaled = smul3(scaleU, swap ? item.v : item.u);
         const vScaled = smul3(scaleV, swap ? item.u : item.v);
-        const inRad = rng.bool();
-        const ans = inRad ? item.rad : item.deg;
-        const wrongs = inRad ? item.wrongsRad : item.wrongsDeg;
 
-        return oneOf(
-          rng,
-          t(
-            `Find the angle $\\theta$ between the vectors $\\mathbf{u} = ${vec3Latex(uScaled)}$ and $\\mathbf{v} = ${vec3Latex(vScaled)}$.`,
-            `求向量 $\\mathbf{u} = ${vec3Latex(uScaled)}$ 与 $\\mathbf{v} = ${vec3Latex(vScaled)}$ 的夹角 $\\theta$。`,
+        return numberProblem({
+          prompt: t(
+            `Find the angle $\\theta$ between the vectors $\\mathbf{u} = ${vec3Latex(uScaled)}$ and $\\mathbf{v} = ${vec3Latex(vScaled)}$ in degrees.`,
+            `求向量 $\\mathbf{u} = ${vec3Latex(uScaled)}$ 与 $\\mathbf{v} = ${vec3Latex(vScaled)}$ 的夹角 $\\theta$（以度为单位）。`,
           ),
-          t(`$${ans}$`, `$${ans}$`),
-          wrongs.map((w) => t(`$${w}$`, `$${w}$`)),
-          t(
-            `Using $\\cos\\theta = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{u}\\|\\|\\mathbf{v}\\|} = ${item.cosStr}$, we find $\\theta = ${ans}$.`,
-            `由 $\\cos\\theta = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{u}\\|\\|\\mathbf{v}\\|} = ${item.cosStr}$，解得 $\\theta = ${ans}$。`,
+          answer: item.degNum,
+          unit: "°",
+          form: "integer",
+          wrong: item.wrongs,
+          solution: t(
+            `Using $\\cos\\theta = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{u}\\|\\|\\mathbf{v}\\|} = ${item.cosStr}$, we find $\\theta = ${item.degNum}^\\circ$.`,
+            `由 $\\cos\\theta = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{u}\\|\\|\\mathbf{v}\\|} = ${item.cosStr}$，解得 $\\theta = ${item.degNum}^\\circ$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -900,25 +943,19 @@ export const calculatingAScalarProjection: TopicDef = {
         ];
         const dot = dot3(u, v);
         const ansQ = Q.of(dot, Lv);
-        const right = ansQ.toLatex();
-        const w1 = ansQ.neg().toLatex();
-        const w2 = Q.of(dot, Lv * Lv).toLatex();
-        const w3 = `${dot}`;
-        const w4 = Q.of(dot + 1, Lv).toLatex();
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the scalar projection $\\text{comp}_{\\mathbf{v}}\\mathbf{u}$ of $\\mathbf{u} = ${vec3Latex(u)}$ onto $\\mathbf{v} = ${vec3Latex(v)}$.`,
             `求向量 $\\mathbf{u} = ${vec3Latex(u)}$ 在向量 $\\mathbf{v} = ${vec3Latex(v)}$ 上的标量投影 $\\text{comp}_{\\mathbf{v}}\\mathbf{u}$。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `First calculate $\\mathbf{u} \\cdot \\mathbf{v} = ${dot}$ and $\\|\\mathbf{v}\\| = ${Lv}$.\n\n$$\\text{comp}_{\\mathbf{v}}\\mathbf{u} = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{v}\\|} = \\frac{${dot}}{${Lv}} = ${right}$$`,
-            `首先计算 $\\mathbf{u} \\cdot \\mathbf{v} = ${dot}$ 及 $\\|\\mathbf{v}\\| = ${Lv}$。\n\n$$\\text{comp}_{\\mathbf{v}}\\mathbf{u} = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{v}\\|} = \\frac{${dot}}{${Lv}} = ${right}$$`,
+          answer: ansQ,
+          wrong: [ansQ.neg(), Q.of(dot, Lv * Lv), dot, Q.of(dot + 1, Lv)],
+          solution: t(
+            `First calculate $\\mathbf{u} \\cdot \\mathbf{v} = ${dot}$ and $\\|\\mathbf{v}\\| = ${Lv}$.\n\n$$\\text{comp}_{\\mathbf{v}}\\mathbf{u} = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{v}\\|} = \\frac{${dot}}{${Lv}} = ${ansQ.toLatex()}$$`,
+            `首先计算 $\\mathbf{u} \\cdot \\mathbf{v} = ${dot}$ 及 $\\|\\mathbf{v}\\| = ${Lv}$。\n\n$$\\text{comp}_{\\mathbf{v}}\\mathbf{u} = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{v}\\|} = \\frac{${dot}}{${Lv}} = ${ansQ.toLatex()}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -929,31 +966,48 @@ export const calculatingAScalarProjection: TopicDef = {
         "由 $\\text{comp}_{\\mathbf{v}}\\mathbf{u} = \\|\\mathbf{u}\\|\\cos\\theta$ 可知：\n\n- 当夹角 $\\theta$ 为锐角时，$\\text{comp}_{\\mathbf{v}}\\mathbf{u} > 0$；\n- 当 $\\mathbf{u} \\perp \\mathbf{v}$ 时，$\\text{comp}_{\\mathbf{v}}\\mathbf{u} = 0$；\n- 当 $\\theta$ 为钝角时，$\\text{comp}_{\\mathbf{v}}\\mathbf{u} < 0$，表示投影方向与 $\\mathbf{v}$ 反向。",
       ),
       generate(rng) {
+        if (rng.bool()) {
+          const val = rng.pick([-15, -12, -9, -6, -4]);
+          const Lv = rng.pick([3, 5, 7]);
+          const prompt = t(
+            `Two nonzero vectors $\\mathbf{u}$ and $\\mathbf{v}$ satisfy $\\|\\mathbf{v}\\| = ${Lv}$ and $\\text{comp}_{\\mathbf{v}}\\mathbf{u} = ${Q.of(val, Lv).toLatex()} < 0$. What does the negative sign indicate about the angle $\\theta$ between them?`,
+            `已知两非零向量 $\\mathbf{u}$ 与 $\\mathbf{v}$ 满足 $\\|\\mathbf{v}\\| = ${Lv}$ 且 $\\text{comp}_{\\mathbf{v}}\\mathbf{u} = ${Q.of(val, Lv).toLatex()} < 0$。负号表明两向量夹角 $\\theta$ 属于哪种类型？`,
+          );
+          return oneOf(
+            rng,
+            prompt,
+            t("Obtuse angle ($90^\\circ < \\theta \\le 180^\\circ$)", "钝角（$90^\\circ < \\theta \\le 180^\\circ$）"),
+            [
+              t("Acute angle ($0^\\circ \\le \\theta < 90^\\circ$)", "锐角（$0^\\circ \\le \\theta < 90^\\circ$）"),
+              t("Right angle ($\\theta = 90^\\circ$)", "直角（$\\theta = 90^\\circ$）"),
+              t("Zero angle ($\\theta = 0^\\circ$)", "零角（$\\theta = 0^\\circ$）"),
+            ],
+            t(
+              `Since $\\text{comp}_{\\mathbf{v}}\\mathbf{u} = \\|\\mathbf{u}\\|\\cos\\theta < 0$, $\\cos\\theta < 0$, which means $\\theta$ is obtuse.`,
+              `因为 $\\text{comp}_{\\mathbf{v}}\\mathbf{u} = \\|\\mathbf{u}\\|\\cos\\theta < 0$，所以 $\\cos\\theta < 0$，说明 $\\theta$ 为钝角。`,
+            ),
+          );
+        }
+
         const [v, Lv] = pickQuadruple(rng);
-        // choose u so dot product is strictly negative
         const k = rng.pick([1, 2, 3]);
         const perp: Vec3 = [-v[1], v[0], 0];
         const u: Vec3 = sub3(perp, smul3(k, v));
         const dot = dot3(u, v);
         const ansQ = Q.of(dot, Lv);
-        const right = ansQ.toLatex();
-        const w1 = ansQ.neg().toLatex();
-        const w2 = Q.of(dot, Lv * Lv).toLatex();
-        const w3 = "0";
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Given $\\mathbf{u} = ${vec3Latex(u)}$ and $\\mathbf{v} = ${vec3Latex(v)}$, calculate the scalar projection $\\text{comp}_{\\mathbf{v}}\\mathbf{u}$.`,
             `已知 $\\mathbf{u} = ${vec3Latex(u)}$ 且 $\\mathbf{v} = ${vec3Latex(v)}$，计算标量投影 $\\text{comp}_{\\mathbf{v}}\\mathbf{u}$。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`)],
-          t(
-            `$$\\text{comp}_{\\mathbf{v}}\\mathbf{u} = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{v}\\|} = \\frac{${dot}}{${Lv}} = ${right}$$\n\nThe negative sign indicates that the angle between $\\mathbf{u}$ and $\\mathbf{v}$ is obtuse.`,
-            `$$\\text{comp}_{\\mathbf{v}}\\mathbf{u} = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{v}\\|} = \\frac{${dot}}{${Lv}} = ${right}$$\n\n负号表明 $\\mathbf{u}$ 与 $\\mathbf{v}$ 的夹角为钝角。`,
+          answer: ansQ,
+          wrong: [ansQ.neg(), Q.of(dot, Lv * Lv), 0],
+          solution: t(
+            `$$\\text{comp}_{\\mathbf{v}}\\mathbf{u} = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{v}\\|} = \\frac{${dot}}{${Lv}} = ${ansQ.toLatex()}$$\n\nThe negative sign indicates that the angle between $\\mathbf{u}$ and $\\mathbf{v}$ is obtuse.`,
+            `$$\\text{comp}_{\\mathbf{v}}\\mathbf{u} = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{v}\\|} = \\frac{${dot}}{${Lv}} = ${ansQ.toLatex()}$$\n\n负号表明 $\\mathbf{u}$ 与 $\\mathbf{v}$ 的夹角为钝角。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -982,42 +1036,35 @@ export const calculatingAVectorProjection: TopicDef = {
         "向量 $\\mathbf{u}$ 在向量 $\\mathbf{v}$ 上的向量投影是与 $\\mathbf{v}$ 平行的向量，等于标量投影乘以 $\\mathbf{v}$ 方向的单位向量：\n\n$$\\text{proj}_{\\mathbf{v}}\\mathbf{u} = \\left(\\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{v}\\|^2}\\right)\\mathbf{v} = \\left(\\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\mathbf{v} \\cdot \\mathbf{v}}\\right)\\mathbf{v}$$",
       ),
       generate(rng) {
-        // Choose v with clean magnitude squared M
         const v = rng.pick([
-          [1, 1, 0] as Vec3, // M = 2
-          [1, 1, 1] as Vec3, // M = 3
-          [2, 1, 0] as Vec3, // M = 5
-          [1, 2, 2] as Vec3, // M = 9
-          [0, 3, 4] as Vec3, // M = 25
-          [2, 2, 1] as Vec3, // M = 9
+          [1, 1, 0] as Vec3,
+          [1, 1, 1] as Vec3,
+          [2, 1, 0] as Vec3,
+          [1, 2, 2] as Vec3,
+          [0, 3, 4] as Vec3,
+          [2, 2, 1] as Vec3,
         ]);
         const M = magSq3(v);
         const k = rng.pick([-3, -2, -1, 1, 2, 3]);
-        // construct u = k*v + orthogonal vector
         const perpCandidates = [[-v[1], v[0], 0] as Vec3, [0, -v[2], v[1]] as Vec3, [-v[2], 0, v[0]] as Vec3];
         const perp = rng.pick(perpCandidates.filter((p) => dot3(p, v) === 0 && magSq3(p) > 0)) ?? [-v[1], v[0], 0];
         const u = add3(smul3(k, v), perp);
-
         const proj = smul3(k, v);
-        const right = vec3Latex(proj);
-        const w1 = vec3Latex(smul3(-k, v));
-        const w2 = vec3Latex(u);
-        const w3 = vec3Latex(perp);
-        const w4 = vec3Latex(add3(proj, [1, 0, 0]));
 
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `Find the vector projection $\\text{proj}_{\\mathbf{v}}\\mathbf{u}$ of $\\mathbf{u} = ${vec3Latex(u)}$ onto $\\mathbf{v} = ${vec3Latex(v)}$.`,
             `求向量 $\\mathbf{u} = ${vec3Latex(u)}$ 在向量 $\\mathbf{v} = ${vec3Latex(v)}$ 上的向量投影 $\\text{proj}_{\\mathbf{v}}\\mathbf{u}$。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `Compute the dot products:\n\n- $\\mathbf{u} \\cdot \\mathbf{v} = ${dot3(u, v)}$\n- $\\|\\mathbf{v}\\|^2 = ${M}$\n\n$$\\text{proj}_{\\mathbf{v}}\\mathbf{u} = \\left(\\frac{${dot3(u, v)}}{${M}}\\right)${vec3Latex(v)} = ${k}${vec3Latex(v)} = ${right}$$`,
-            `计算相关数量积：\n\n- $\\mathbf{u} \\cdot \\mathbf{v} = ${dot3(u, v)}$\n- $\\|\\mathbf{v}\\|^2 = ${M}$\n\n$$\\text{proj}_{\\mathbf{v}}\\mathbf{u} = \\left(\\frac{${dot3(u, v)}}{${M}}\\right)${vec3Latex(v)} = ${k}${vec3Latex(v)} = ${right}$$`,
+          answer: proj,
+          vars: ["x", "y", "z"],
+          vector: true,
+          wrong: [smul3(-k, v), u, perp, add3(proj, [1, 0, 0])],
+          solution: t(
+            `Compute the dot products:\n\n- $\\mathbf{u} \\cdot \\mathbf{v} = ${dot3(u, v)}$\n- $\\|\\mathbf{v}\\|^2 = ${M}$\n\n$$\\text{proj}_{\\mathbf{v}}\\mathbf{u} = \\left(\\frac{${dot3(u, v)}}{${M}}\\right)${vec3Latex(v)} = ${vec3Latex(proj)}$$`,
+            `计算相关数量积：\n\n- $\\mathbf{u} \\cdot \\mathbf{v} = ${dot3(u, v)}$\n- $\\|\\mathbf{v}\\|^2 = ${M}$\n\n$$\\text{proj}_{\\mathbf{v}}\\mathbf{u} = \\left(\\frac{${dot3(u, v)}}{${M}}\\right)${vec3Latex(v)} = ${vec3Latex(proj)}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -1036,25 +1083,20 @@ export const calculatingAVectorProjection: TopicDef = {
         const u = add3(smul3(k, v), uPerp);
         const proj = smul3(k, v);
 
-        const right = vec3Latex(uPerp);
-        const w1 = vec3Latex(proj);
-        const w2 = vec3Latex(smul3(-1, uPerp));
-        const w3 = vec3Latex(u);
-        const w4 = vec3Latex(add3(u, proj));
-
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `Find the component of $\\mathbf{u} = ${vec3Latex(u)}$ orthogonal to $\\mathbf{v} = ${vec3Latex(v)}$.`,
             `求向量 $\\mathbf{u} = ${vec3Latex(u)}$ 在垂直于 $\\mathbf{v} = ${vec3Latex(v)}$ 方向上的正交分量。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `First find $\\text{proj}_{\\mathbf{v}}\\mathbf{u} = ${vec3Latex(proj)}$.\n\nThen subtract:\n\n$$\\mathbf{u}_{\\perp} = \\mathbf{u} - \\text{proj}_{\\mathbf{v}}\\mathbf{u} = ${vec3Latex(u)} - ${vec3Latex(proj)} = ${right}$$\n\nNotice that $\\mathbf{u}_{\\perp} \\cdot \\mathbf{v} = 0$.`,
-            `首先计算平行分量 $\\text{proj}_{\\mathbf{v}}\\mathbf{u} = ${vec3Latex(proj)}$。\n\n再做向量减法：\n\n$$\\mathbf{u}_{\\perp} = \\mathbf{u} - \\text{proj}_{\\mathbf{v}}\\mathbf{u} = ${vec3Latex(u)} - ${vec3Latex(proj)} = ${right}$$\n\n验证可得 $\\mathbf{u}_{\\perp} \\cdot \\mathbf{v} = 0$。`,
+          answer: uPerp,
+          vars: ["x", "y", "z"],
+          vector: true,
+          wrong: [proj, smul3(-1, uPerp), u, add3(u, proj)],
+          solution: t(
+            `First find $\\text{proj}_{\\mathbf{v}}\\mathbf{u} = ${vec3Latex(proj)}$.\n\nThen subtract:\n\n$$\\mathbf{u}_{\\perp} = \\mathbf{u} - \\text{proj}_{\\mathbf{v}}\\mathbf{u} = ${vec3Latex(u)} - ${vec3Latex(proj)} = ${vec3Latex(uPerp)}$$\n\nNotice that $\\mathbf{u}_{\\perp} \\cdot \\mathbf{v} = 0$.`,
+            `首先计算平行分量 $\\text{proj}_{\\mathbf{v}}\\mathbf{u} = ${vec3Latex(proj)}$。\n\n再做向量减法：\n\n$$\\mathbf{u}_{\\perp} = \\mathbf{u} - \\text{proj}_{\\mathbf{v}}\\mathbf{u} = ${vec3Latex(u)} - ${vec3Latex(proj)} = ${vec3Latex(uPerp)}$$\n\n验证可得 $\\mathbf{u}_{\\perp} \\cdot \\mathbf{v} = 0$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -1085,8 +1127,8 @@ export const theCrossProductOfTwoVectors: TopicDef = {
         "与数量积不同，叉积（向量积）$\\mathbf{u} \\times \\mathbf{v}$ 的结果是三维空间中的一个向量。其模长公式为：\n\n$$\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\sin\\theta$$\n\n其中 $\\theta \\in [0, \\pi]$ 是两向量的夹角。",
       ),
       generate(rng) {
-        const uMag = rng.pick([2, 3, 4, 5, 6, 8, 10]);
-        const vMag = rng.pick([2, 3, 4, 5, 6, 8, 10]);
+        const uMag = rng.pick([2, 4, 6, 8, 10]);
+        const vMag = rng.pick([2, 3, 4, 5, 6, 7, 8, 9]);
         const angle = rng.pick([
           { deg: "30^\\circ", sinVal: 0.5, sinTex: "\\frac{1}{2}" },
           { deg: "90^\\circ", sinVal: 1, sinTex: "1" },
@@ -1096,26 +1138,21 @@ export const theCrossProductOfTwoVectors: TopicDef = {
         ]);
 
         const prod = uMag * vMag;
-        const ans = angle.sinVal === 1 ? `${prod}` : angle.sinVal === 0 ? "0" : Q.of(prod, 2).toLatex();
+        const ans = Math.round(prod * angle.sinVal);
 
-        const w1 = `${prod}`;
-        const w2 = "0";
-        const w3 = `${uMag + vMag}`;
-        const w4 = Q.of(prod, 3).toLatex();
-
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Given two vectors with $\\|\\mathbf{u}\\| = ${uMag}$, $\\|\\mathbf{v}\\| = ${vMag}$, and angle $\\theta = ${angle.deg}$, calculate $\\|\\mathbf{u} \\times \\mathbf{v}\\|$.`,
             `已知两向量满足 $\\|\\mathbf{u}\\| = ${uMag}$，$\\|\\mathbf{v}\\| = ${vMag}$，且夹角 $\\theta = ${angle.deg}$，计算叉积的模长 $\\|\\mathbf{u} \\times \\mathbf{v}\\|$。`,
           ),
-          t(`$${ans}$`, `$${ans}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
+          answer: ans,
+          form: "integer",
+          wrong: [prod, 0, uMag + vMag, Math.round(prod / 4)],
+          solution: t(
             `$$\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\sin\\theta = (${uMag})(${vMag})(${angle.sinTex}) = ${ans}$$`,
             `$$\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\sin\\theta = (${uMag})(${vMag})(${angle.sinTex}) = ${ans}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -1127,20 +1164,20 @@ export const theCrossProductOfTwoVectors: TopicDef = {
       ),
       generate(rng) {
         const item = rng.pick([
-          { expr: "\\mathbf{i} \\times \\mathbf{j}", ans: "\\mathbf{k}", wrong: ["-\\mathbf{k}", "\\mathbf{0}", "1", "\\mathbf{j}"] },
-          { expr: "\\mathbf{j} \\times \\mathbf{i}", ans: "-\\mathbf{k}", wrong: ["\\mathbf{k}", "\\mathbf{0}", "-1", "\\mathbf{i}"] },
-          { expr: "\\mathbf{j} \\times \\mathbf{k}", ans: "\\mathbf{i}", wrong: ["-\\mathbf{i}", "\\mathbf{k}", "\\mathbf{0}", "1"] },
-          { expr: "\\mathbf{k} \\times \\mathbf{j}", ans: "-\\mathbf{i}", wrong: ["\\mathbf{i}", "-\\mathbf{k}", "\\mathbf{0}", "-1"] },
-          { expr: "\\mathbf{k} \\times \\mathbf{i}", ans: "\\mathbf{j}", wrong: ["-\\mathbf{j}", "\\mathbf{i}", "\\mathbf{0}", "1"] },
-          { expr: "\\mathbf{i} \\times \\mathbf{k}", ans: "-\\mathbf{j}", wrong: ["\\mathbf{j}", "-\\mathbf{i}", "\\mathbf{0}", "-1"] },
+          { expr: "\\mathbf{i} \\times \\mathbf{j}", ans: "\\mathbf{k}", wrong: ["-\\mathbf{k}", "\\mathbf{0}", "\\mathbf{j}"] },
+          { expr: "\\mathbf{j} \\times \\mathbf{i}", ans: "-\\mathbf{k}", wrong: ["\\mathbf{k}", "\\mathbf{0}", "\\mathbf{i}"] },
+          { expr: "\\mathbf{j} \\times \\mathbf{k}", ans: "\\mathbf{i}", wrong: ["-\\mathbf{i}", "\\mathbf{k}", "\\mathbf{0}"] },
+          { expr: "\\mathbf{k} \\times \\mathbf{j}", ans: "-\\mathbf{i}", wrong: ["\\mathbf{i}", "-\\mathbf{k}", "\\mathbf{0}"] },
+          { expr: "\\mathbf{k} \\times \\mathbf{i}", ans: "\\mathbf{j}", wrong: ["-\\mathbf{j}", "\\mathbf{i}", "\\mathbf{0}"] },
+          { expr: "\\mathbf{i} \\times \\mathbf{k}", ans: "-\\mathbf{j}", wrong: ["\\mathbf{j}", "-\\mathbf{i}", "\\mathbf{0}"] },
         ]);
         const a = rng.pick([2, 3, -2, -3]);
         const b = rng.pick([2, 4, -1]);
         const coeff = a * b;
 
         const exprParts = item.expr.split("\\times");
-        const term1 = a === 1 ? exprParts[0]!.trim() : `(${a}${exprParts[0]!.trim()})`;
-        const term2 = b === 1 ? exprParts[1]!.trim() : `(${b}${exprParts[1]!.trim()})`;
+        const term1 = a === 1 ? exprParts[0]!.trim() : a === -1 ? `(-${exprParts[0]!.trim()})` : `(${a}${exprParts[0]!.trim()})`;
+        const term2 = b === 1 ? exprParts[1]!.trim() : b === -1 ? `(-${exprParts[1]!.trim()})` : `(${b}${exprParts[1]!.trim()})`;
         const promptExpr = `${term1} \\times ${term2}`;
 
         const baseSign = item.ans.startsWith("-") ? -1 : 1;
@@ -1149,14 +1186,13 @@ export const theCrossProductOfTwoVectors: TopicDef = {
         const right = finalCoeff === 1 ? baseSymbol : finalCoeff === -1 ? `-${baseSymbol}` : `${finalCoeff}${baseSymbol}`;
         const w1 = finalCoeff === 1 ? `-${baseSymbol}` : `${-finalCoeff}${baseSymbol}`;
         const w2 = "\\mathbf{0}";
-        const w3 = `${finalCoeff}`;
-        const w4 = `${finalCoeff}\\mathbf{k}`;
+        const w3 = `${finalCoeff}\\mathbf{k}`;
 
         return oneOf(
           rng,
           t(`Evaluate the vector expression $${promptExpr}$.`, `计算向量表达式 $${promptExpr}$。`),
           t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
+          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`)],
           t(
             `Pull out the scalars: $(${a})(${b})(${item.expr}) = ${coeff}(${item.ans}) = ${right}$.`,
             `先提出标量系数：$(${a})(${b})(${item.expr}) = ${coeff}(${item.ans}) = ${right}$。`,
@@ -1198,30 +1234,25 @@ export const propertiesOfTheCrossProduct: TopicDef = {
           ];
           const a = rng.pick([2, 3, -2]);
           const b = rng.pick([2, 4, -1]);
-          // (a v) x (b u) = a*b*(v x u) = -a*b*(u x v) = -a*b*w
           const factor = -a * b;
           const ans = smul3(factor, w);
-          const w1 = smul3(-factor, w);
-          const w2 = smul3(a * b, w);
-          const w3: Vec3 = [0, 0, 0];
+          const aStr = a === 1 ? "\\mathbf{v}" : a === -1 ? "-\\mathbf{v}" : `${a}\\mathbf{v}`;
+          const bStr = b === 1 ? "\\mathbf{u}" : b === -1 ? "-\\mathbf{u}" : `${b}\\mathbf{u}`;
 
-          return oneOf(
-            rng,
-            t(
-              `Given that $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(w)}$, find the value of $(${a}\\mathbf{v}) \\times (${b}\\mathbf{u})$.`,
-              `已知 $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(w)}$，求 $(${a}\\mathbf{v}) \\times (${b}\\mathbf{u})$ 的值。`,
+          return pointProblem({
+            prompt: t(
+              `Given that $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(w)}$, find the value of $(${aStr}) \\times (${bStr})$.`,
+              `已知 $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(w)}$，求 $(${aStr}) \\times (${bStr})$ 的值。`,
             ),
-            t(`$${vec3Latex(ans)}$`, `$${vec3Latex(ans)}$`),
-            [
-              t(`$${vec3Latex(w1)}$`, `$${vec3Latex(w1)}$`),
-              t(`$${vec3Latex(w2)}$`, `$${vec3Latex(w2)}$`),
-              t(`$${vec3Latex(w3)}$`, `$${vec3Latex(w3)}$`),
-            ],
-            t(
-              `By anti-commutativity and scalar associativity:\n\n$$(${a}\\mathbf{v}) \\times (${b}\\mathbf{u}) = ${a * b}(\\mathbf{v} \\times \\mathbf{u}) = -${a * b}(\\mathbf{u} \\times \\mathbf{v}) = ${factor}${vec3Latex(w)} = ${vec3Latex(ans)}$$`,
-              `根据反交换律与数乘结合律：\n\n$$(${a}\\mathbf{v}) \\times (${b}\\mathbf{u}) = ${a * b}(\\mathbf{v} \\times \\mathbf{u}) = -${a * b}(\\mathbf{u} \\times \\mathbf{v}) = ${factor}${vec3Latex(w)} = ${vec3Latex(ans)}$$`,
+            answer: ans,
+            vars: ["x", "y", "z"],
+            vector: true,
+            wrong: [smul3(-factor, w), smul3(a * b, w), [0, 0, 0]],
+            solution: t(
+              `By anti-commutativity and scalar associativity:\n\n$$(${aStr}) \\times (${bStr}) = ${a * b}(\\mathbf{v} \\times \\mathbf{u}) = -${a * b}(\\mathbf{u} \\times \\mathbf{v}) = ${factor}${vec3Latex(w)} = ${vec3Latex(ans)}$$`,
+              `根据反交换律与数乘结合律：\n\n$$(${aStr}) \\times (${bStr}) = ${a * b}(\\mathbf{v} \\times \\mathbf{u}) = -${a * b}(\\mathbf{u} \\times \\mathbf{v}) = ${factor}${vec3Latex(w)} = ${vec3Latex(ans)}$$`,
             ),
-          );
+          });
         }
 
         const base: Vec3 = [rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3])];
@@ -1263,7 +1294,6 @@ export const propertiesOfTheCrossProduct: TopicDef = {
         const c = rng.pick([-3, -2, -1, 1, 2, 3]);
         const d = rng.pick([-3, -2, -1, 1, 2, 3]);
 
-        // (a u + b v) x (c u + d v) = (a*d - b*c) (u x v)
         const det = a * d - b * c;
         const right = `${det}(\\mathbf{u} \\times \\mathbf{v})`;
         const w1 = `${a * d + b * c}(\\mathbf{u} \\times \\mathbf{v})`;
@@ -1272,9 +1302,9 @@ export const propertiesOfTheCrossProduct: TopicDef = {
         const w4 = "\\mathbf{0}";
 
         const aStr = a === 1 ? "\\mathbf{u}" : a === -1 ? "-\\mathbf{u}" : `${a}\\mathbf{u}`;
-        const bStr = b > 0 ? `+ ${b === 1 ? "" : b}\\mathbf{v}` : `- ${b === -1 ? "" : -b}\\mathbf{v}`;
+        const bStr = b > 0 ? (b === 1 ? "+ \\mathbf{v}" : `+ ${b}\\mathbf{v}`) : b === -1 ? "- \\mathbf{v}" : `- ${-b}\\mathbf{v}`;
         const cStr = c === 1 ? "\\mathbf{u}" : c === -1 ? "-\\mathbf{u}" : `${c}\\mathbf{u}`;
-        const dStr = d > 0 ? `+ ${d === 1 ? "" : d}\\mathbf{v}` : `- ${d === -1 ? "" : -d}\\mathbf{v}`;
+        const dStr = d > 0 ? (d === 1 ? "+ \\mathbf{v}" : `+ ${d}\\mathbf{v}`) : d === -1 ? "- \\mathbf{v}" : `- ${-d}\\mathbf{v}`;
 
         return oneOf(
           rng,
@@ -1334,25 +1364,20 @@ export const calculatingTheCrossProductUsingDeterminants: TopicDef = {
         const offset1: Vec3 = [cp[0] + 1, cp[1] - 1, cp[2] + 2];
         const offset2: Vec3 = [cp[0] - 2, cp[1] + 2, cp[2] - 1];
 
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `Calculate the cross product $\\mathbf{u} \\times \\mathbf{v}$ for $\\mathbf{u} = ${vec3Latex(u)}$ and $\\mathbf{v} = ${vec3Latex(v)}$.`,
             `计算向量 $\\mathbf{u} = ${vec3Latex(u)}$ 与 $\\mathbf{v} = ${vec3Latex(v)}$ 的叉积 $\\mathbf{u} \\times \\mathbf{v}$。`,
           ),
-          t(`$${vec3Latex(cp)}$`, `$${vec3Latex(cp)}$`),
-          [
-            t(`$${vec3Latex(opp)}$`, `$${vec3Latex(opp)}$`),
-            t(`$${vec3Latex(signErrY)}$`, `$${vec3Latex(signErrY)}$`),
-            t(`$${vec3Latex(swapErr)}$`, `$${vec3Latex(swapErr)}$`),
-            t(`$${vec3Latex(offset1)}$`, `$${vec3Latex(offset1)}$`),
-            t(`$${vec3Latex(offset2)}$`, `$${vec3Latex(offset2)}$`),
-          ],
-          t(
+          answer: cp,
+          vars: ["x", "y", "z"],
+          vector: true,
+          wrong: [opp, signErrY, swapErr, offset1, offset2],
+          solution: t(
             `Expand along the first row:\n\n$$\\mathbf{u} \\times \\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\end{vmatrix} = \\langle (${u[1]})(${v[2]}) - (${u[2]})(${v[1]}), \\; -((${u[0]})(${v[2]}) - (${u[2]})(${v[0]})), \\; (${u[0]})(${v[1]}) - (${u[1]})(${v[0]}) \\rangle = ${vec3Latex(cp)}$$`,
             `按第一行展开三阶行列式：\n\n$$\\mathbf{u} \\times \\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\end{vmatrix} = \\langle (${u[1]})(${v[2]}) - (${u[2]})(${v[1]}), \\; -((${u[0]})(${v[2]}) - (${u[2]})(${v[0]})), \\; (${u[0]})(${v[1]}) - (${u[1]})(${v[0]}) \\rangle = ${vec3Latex(cp)}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -1366,7 +1391,6 @@ export const calculatingTheCrossProductUsingDeterminants: TopicDef = {
         const u: Vec3 = [rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3])];
         const v: Vec3 = [rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3])];
         const cp = cross3(u, v);
-        // Ensure cp is not zero
         const target = magSq3(cp) > 0 ? cp : ([1, 0, 0] as Vec3);
 
         const w1 = add3(u, v);
@@ -1420,45 +1444,21 @@ export const findingAreasUsingTheCrossProduct: TopicDef = {
         "以相邻向量 $\\mathbf{u}$ 与 $\\mathbf{v}$ 为邻边的平行四边形的面积等于两向量叉积的模长：\n\n$$A = \\|\\mathbf{u} \\times \\mathbf{v}\\|$$",
       ),
       generate(rng) {
-        const uVec: Vec3 = [rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-2, -1, 0, 1, 2]), rng.pick([-2, -1, 0, 1, 2])];
-        const vVec: Vec3 = [rng.pick([-2, -1, 0, 1, 2]), rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-2, -1, 0, 1, 2])];
-        const cp = cross3(uVec, vVec);
-        const sq = magSq3(cp);
-        if (sq === 0) {
-          // fallback
-          return oneOf(
-            rng,
-            t(
-              "Find the area of the parallelogram spanned by $\\mathbf{u} = \\langle 3, 0, 0 \\rangle$ and $\\mathbf{v} = \\langle 0, 4, 0 \\rangle$.",
-              "求由向量 $\\mathbf{u} = \\langle 3, 0, 0 \\rangle$ 与 $\\mathbf{v} = \\langle 0, 4, 0 \\rangle$ 张成的平行四边形的面积。",
-            ),
-            t("$12$", "$12$"),
-            [t("$6$", "$6$"), t("$7$", "$7$"), t("$24$", "$24$")],
-            t(
-              "$$\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\langle 0, 0, 12 \\rangle\\| = 12$$",
-              "$$\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\langle 0, 0, 12 \\rangle\\| = 12$$",
-            ),
-          );
-        }
-        const right = sqrtLatex(sq);
-        const w1 = sqrtLatex(sq + 3);
-        const w2 = sqrtLatex(Math.max(1, sq - 4));
-        const w3 = `${sq}`;
-        const w4 = `\\frac{${right}}{2}`;
+        const [uVec, vVec, cp, L] = pickIntegerCrossProduct(rng);
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the area of the parallelogram spanned by adjacent vectors $\\mathbf{u} = ${vec3Latex(uVec)}$ and $\\mathbf{v} = ${vec3Latex(vVec)}$.`,
             `求由相邻向量 $\\mathbf{u} = ${vec3Latex(uVec)}$ 与 $\\mathbf{v} = ${vec3Latex(vVec)}$ 张成的平行四边形的面积。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `First compute the cross product $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(cp)}$.\n\nThe area is the magnitude:\n\n$$A = \\|\\mathbf{u} \\times \\mathbf{v}\\| = \\sqrt{(${cp[0]})^2 + (${cp[1]})^2 + (${cp[2]})^2} = \\sqrt{${sq}} = ${right}$$`,
-            `首先计算叉积 $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(cp)}$。\n\n面积等于其模长：\n\n$$A = \\|\\mathbf{u} \\times \\mathbf{v}\\| = \\sqrt{(${cp[0]})^2 + (${cp[1]})^2 + (${cp[2]})^2} = \\sqrt{${sq}} = ${right}$$`,
+          answer: L,
+          form: "integer",
+          wrong: [L + 1, Math.max(1, L - 1), L + 2, 2 * L],
+          solution: t(
+            `First compute the cross product $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(cp)}$.\n\nThe area is the magnitude:\n\n$$A = \\|\\mathbf{u} \\times \\mathbf{v}\\| = \\sqrt{(${cp[0]})^2 + (${cp[1]})^2 + (${cp[2]})^2} = \\sqrt{${L * L}} = ${L}$$`,
+            `首先计算叉积 $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(cp)}$。\n\n面积等于其模长：\n\n$$A = \\|\\mathbf{u} \\times \\mathbf{v}\\| = \\sqrt{(${cp[0]})^2 + (${cp[1]})^2 + (${cp[2]})^2} = \\sqrt{${L * L}} = ${L}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -1469,39 +1469,27 @@ export const findingAreasUsingTheCrossProduct: TopicDef = {
         "以 $A, B, C$ 为顶点的三角形的面积等于由 $\\vec{AB}$ 和 $\\vec{AC}$ 构成的平行四边形面积的一半：\n\n$$A = \\frac{1}{2}\\|\\vec{AB} \\times \\vec{AC}\\|$$",
       ),
       generate(rng) {
+        const [u, v, cp, L] = pickIntegerCrossProduct(rng);
         const ax = rng.pick([-2, -1, 0, 1, 2]);
         const ay = rng.pick([-2, -1, 0, 1, 2]);
         const az = rng.pick([-2, -1, 0, 1, 2]);
         const A: Vec3 = [ax, ay, az];
-
-        // Choose edge vectors AB and AC
-        const u: Vec3 = [rng.pick([2, 4, 6]), 0, 0];
-        const v: Vec3 = [0, rng.pick([2, 4, 6]), 0];
         const B = add3(A, u);
         const C = add3(A, v);
-        const cp = cross3(u, v); // [0, 0, u[0]*v[1]]
-        const mag = Math.abs(cp[2]);
-        const area = mag / 2;
+        const areaQ = Q.of(L, 2);
 
-        const right = `${area}`;
-        const w1 = `${mag}`; // forgot 1/2
-        const w2 = `${area / 2}`;
-        const w3 = `${area + 2}`;
-        const w4 = `${Math.max(1, area - 3)}`;
-
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the area of the triangle with vertices $A(${A[0]}, ${A[1]}, ${A[2]})$, $B(${B[0]}, ${B[1]}, ${B[2]})$, and $C(${C[0]}, ${C[1]}, ${C[2]})$.`,
             `求空间中顶点为 $A(${A[0]}, ${A[1]}, ${A[2]})$、$B(${B[0]}, ${B[1]}, ${B[2]})$ 与 $C(${C[0]}, ${C[1]}, ${C[2]})$ 的三角形的面积。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `Form vectors $\\vec{AB} = ${vec3Latex(u)}$ and $\\vec{AC} = ${vec3Latex(v)}$.\n\nCompute the cross product:\n\n$$\\vec{AB} \\times \\vec{AC} = ${vec3Latex(cp)}$$\n\nThe area is:\n\n$$A = \\frac{1}{2}\\|\\vec{AB} \\times \\vec{AC}\\| = \\frac{1}{2}(${mag}) = ${right}$$`,
-            `求向量 $\\vec{AB} = ${vec3Latex(u)}$ 及 $\\vec{AC} = ${vec3Latex(v)}$。\n\n计算叉积：\n\n$$\\vec{AB} \\times \\vec{AC} = ${vec3Latex(cp)}$$\n\n三角形面积为：\n\n$$A = \\frac{1}{2}\\|\\vec{AB} \\times \\vec{AC}\\| = \\frac{1}{2}(${mag}) = ${right}$$`,
+          answer: areaQ,
+          wrong: [L, Q.of(L, 4), Q.of(L + 2, 2)],
+          solution: t(
+            `Form vectors $\\vec{AB} = ${vec3Latex(u)}$ and $\\vec{AC} = ${vec3Latex(v)}$.\n\nCompute the cross product:\n\n$$\\vec{AB} \\times \\vec{AC} = ${vec3Latex(cp)}$$\n\nThe area is:\n\n$$A = \\frac{1}{2}\\|\\vec{AB} \\times \\vec{AC}\\| = \\frac{1}{2}(${L}) = ${areaQ.toLatex()}$$`,
+            `求向量 $\\vec{AB} = ${vec3Latex(u)}$ 及 $\\vec{AC} = ${vec3Latex(v)}$。\n\n计算叉积：\n\n$$\\vec{AB} \\times \\vec{AC} = ${vec3Latex(cp)}$$\n\n三角形面积为：\n\n$$A = \\frac{1}{2}\\|\\vec{AB} \\times \\vec{AC}\\| = \\frac{1}{2}(${L}) = ${areaQ.toLatex()}$$`,
           ),
-        );
+        });
       },
     },
   ],
@@ -1535,25 +1523,20 @@ export const theScalarTripleProduct: TopicDef = {
         const w: Vec3 = [rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3])];
 
         const ans = det3(u, v, w);
-        const w1 = -ans;
-        const w2 = ans + 6;
-        const w3 = ans - 5;
-        const w4 = ans + 2;
-        const w5 = ans - 3;
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Compute the scalar triple product $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})$ for $\\mathbf{u} = ${vec3Latex(u)}$, $\\mathbf{v} = ${vec3Latex(v)}$, and $\\mathbf{w} = ${vec3Latex(w)}$.`,
             `计算向量 $\\mathbf{u} = ${vec3Latex(u)}$、$\\mathbf{v} = ${vec3Latex(v)}$ 与 $\\mathbf{w} = ${vec3Latex(w)}$ 的混合积 $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})$。`,
           ),
-          t(`$${ans}$`, `$${ans}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`), t(`$${w5}$`, `$${w5}$`)],
-          t(
+          answer: ans,
+          form: "integer",
+          wrong: [-ans, ans + 6, ans - 5, ans + 2],
+          solution: t(
             `$$\\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${w[0]} & ${w[1]} & ${w[2]} \\end{vmatrix} = ${u[0]}(${v[1] * w[2] - v[2] * w[1]}) - (${u[1]})(${v[0] * w[2] - v[2] * w[0]}) + (${u[2]})(${v[0] * w[1] - v[1] * w[0]}) = ${ans}$$`,
             `$$\\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${w[0]} & ${w[1]} & ${w[2]} \\end{vmatrix} = ${u[0]}(${v[1] * w[2] - v[2] * w[1]}) - (${u[1]})(${v[0] * w[2] - v[2] * w[0]}) + (${u[2]})(${v[0] * w[1] - v[1] * w[0]}) = ${ans}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -1564,35 +1547,56 @@ export const theScalarTripleProduct: TopicDef = {
         "三维空间中的三个向量共面（处于同一平面内）当且仅当它们的混合积等于零：\n\n$$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$$",
       ),
       generate(rng) {
-        // Choose u and v
         const u: Vec3 = [rng.pick([1, 2, 3]), rng.pick([-2, -1, 1, 2]), rng.pick([-2, -1, 1, 2])];
         const v: Vec3 = [rng.pick([-2, -1, 1, 2]), rng.pick([1, 2, 3]), rng.pick([-2, -1, 1, 2])];
+
+        if (rng.bool()) {
+          const prompt = t(
+            `Which of the following conditions is necessary and sufficient for three nonzero vectors $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ in $\\mathbb{R}^3$ to be coplanar?`,
+            `下列哪个条件是三维空间中三个非零向量 $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ 共面的充要条件？`,
+          );
+          return oneOf(
+            rng,
+            prompt,
+            t("$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$", "$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$"),
+            [
+              t(
+                "$\\mathbf{u} \\times (\\mathbf{v} \\times \\mathbf{w}) = \\mathbf{0}$",
+                "$\\mathbf{u} \\times (\\mathbf{v} \\times \\mathbf{w}) = \\mathbf{0}$",
+              ),
+              t(
+                "$\\mathbf{u} \\cdot \\mathbf{v} = \\mathbf{v} \\cdot \\mathbf{w}$",
+                "$\\mathbf{u} \\cdot \\mathbf{v} = \\mathbf{v} \\cdot \\mathbf{w}$",
+              ),
+              t("$\\mathbf{u} + \\mathbf{v} + \\mathbf{w} = \\mathbf{0}$", "$\\mathbf{u} + \\mathbf{v} + \\mathbf{w} = \\mathbf{0}$"),
+            ],
+            t(
+              "Three vectors are coplanar if and only if the volume of the parallelepiped they span is zero, which means $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$.",
+              "三个向量共面当且仅当它们张成的平行六面体体积为零，即标量三重积 $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$。",
+            ),
+          );
+        }
+
         const a = rng.pick([-2, -1, 1, 2]);
         const b = rng.pick([-2, -1, 1, 2]);
         const wCop: Vec3 = add3(smul3(a, u), smul3(b, v));
         const ansK = wCop[2];
-
         const wPrompt = `\\langle ${wCop[0]}, ${wCop[1]}, k \\rangle`;
-        const right = `${ansK}`;
-        const w1 = `${-ansK}`;
-        const w2 = `${ansK + 1}`;
-        const w3 = `${ansK - 2}`;
-        const w4 = `${ansK + 3}`;
-        const w5 = `${ansK - 3}`;
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the value of $k$ such that the vectors $\\mathbf{u} = ${vec3Latex(u)}$, $\\mathbf{v} = ${vec3Latex(v)}$, and $\\mathbf{w} = ${wPrompt}$ are coplanar.`,
             `求实数 $k$ 的值，使得向量 $\\mathbf{u} = ${vec3Latex(u)}$、$\\mathbf{v} = ${vec3Latex(v)}$ 与 $\\mathbf{w} = ${wPrompt}$ 共面。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`), t(`$${w5}$`, `$${w5}$`)],
-          t(
+          answer: ansK,
+          solveFor: "k",
+          form: "integer",
+          wrong: [-ansK, ansK + 1, ansK - 2, ansK + 3],
+          solution: t(
             `Three vectors are coplanar if and only if their determinant is zero:\n\n$$\\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${wCop[0]} & ${wCop[1]} & k \\end{vmatrix} = 0 \\implies k = ${ansK}$$`,
             `三个向量共面当且仅当它们构成的行列式为零：\n\n$$\\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${wCop[0]} & ${wCop[1]} & k \\end{vmatrix} = 0 \\implies k = ${ansK}$$`,
           ),
-        );
+        });
       },
     },
   ],
@@ -1627,25 +1631,19 @@ export const volumesOfParallelepipeds: TopicDef = {
         const d = det3(u, v, w);
         const V = Math.abs(d);
 
-        const right = `${V}`;
-        const w1 = `${V * 2}`;
-        const w2 = `${Math.max(1, V - 3)}`;
-        const w3 = `${V + 4}`;
-        const w4 = `${Math.round(V / 2)}`;
-
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the volume of the parallelepiped determined by the vectors $\\mathbf{u} = ${vec3Latex(u)}$, $\\mathbf{v} = ${vec3Latex(v)}$, and $\\mathbf{w} = ${vec3Latex(w)}$.`,
             `求由向量 $\\mathbf{u} = ${vec3Latex(u)}$、$\\mathbf{v} = ${vec3Latex(v)}$ 与 $\\mathbf{w} = ${vec3Latex(w)}$ 确定的平行六面体的体积。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `The volume is the absolute value of the scalar triple product:\n\n$$V = |\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\left| \\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${w[0]} & ${w[1]} & ${w[2]} \\end{vmatrix} \\right| = |${d}| = ${right}$$`,
-            `体积等于混合积的绝对值：\n\n$$V = |\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\left| \\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${w[0]} & ${w[1]} & ${w[2]} \\end{vmatrix} \\right| = |${d}| = ${right}$$`,
+          answer: V,
+          form: "integer",
+          wrong: [V * 2, Math.max(1, V - 3), V + 4, Math.round(V / 2)],
+          solution: t(
+            `The volume is the absolute value of the scalar triple product:\n\n$$V = |\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\left| \\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${w[0]} & ${w[1]} & ${w[2]} \\end{vmatrix} \\right| = |${d}| = ${V}$$`,
+            `体积等于混合积的绝对值：\n\n$$V = |\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\left| \\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${w[0]} & ${w[1]} & ${w[2]} \\end{vmatrix} \\right| = |${d}| = ${V}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -1666,25 +1664,20 @@ export const volumesOfParallelepipeds: TopicDef = {
         const D = add3(A, w);
 
         const V = Math.abs(det3(u, v, w));
-        const right = `${V}`;
-        const w1 = `${V * 2}`;
-        const w2 = `${Math.max(1, V - 2)}`;
-        const w3 = `${V + 3}`;
-        const w4 = `${Math.round(V / 3)}`;
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the volume of the parallelepiped with vertex $A(${A[0]}, ${A[1]}, ${A[2]})$ and adjacent vertices $B(${B[0]}, ${B[1]}, ${B[2]})$, $C(${C[0]}, ${C[1]}, ${C[2]})$, and $D(${D[0]}, ${D[1]}, ${D[2]})$.`,
             `求以 $A(${A[0]}, ${A[1]}, ${A[2]})$ 为顶点，且与之相邻的三个顶点为 $B(${B[0]}, ${B[1]}, ${B[2]})$、$C(${C[0]}, ${C[1]}, ${C[2]})$ 与 $D(${D[0]}, ${D[1]}, ${D[2]})$ 的平行六面体的体积。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `Form edge vectors $\\vec{AB} = ${vec3Latex(u)}$, $\\vec{AC} = ${vec3Latex(v)}$, $\\vec{AD} = ${vec3Latex(w)}$.\n\nThen evaluate the determinant:\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})| = ${right}$$`,
-            `求棱向量 $\\vec{AB} = ${vec3Latex(u)}$、$\\vec{AC} = ${vec3Latex(v)}$ 与 $\\vec{AD} = ${vec3Latex(w)}$。\n\n计算行列式绝对值：\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})| = ${right}$$`,
+          answer: V,
+          form: "integer",
+          wrong: [V * 2, Math.max(1, V - 2), V + 3, Math.round(V / 3)],
+          solution: t(
+            `Form edge vectors $\\vec{AB} = ${vec3Latex(u)}$, $\\vec{AC} = ${vec3Latex(v)}$, $\\vec{AD} = ${vec3Latex(w)}$.\n\nThen evaluate the determinant:\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})| = ${V}$$`,
+            `求棱向量 $\\vec{AB} = ${vec3Latex(u)}$、$\\vec{AC} = ${vec3Latex(v)}$ 与 $\\vec{AD} = ${vec3Latex(w)}$。\n\n计算行列式绝对值：\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})| = ${V}$$`,
           ),
-        );
+        });
       },
     },
   ],
@@ -1713,7 +1706,6 @@ export const findingVolumesOfTetrahedronsAndPyramidsUsingVectorProducts: TopicDe
         "由三个向量 $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ 确定的四面体（三棱锥）的体积等于相应平行六面体体积的 $\\frac{1}{6}$：\n\n$$V = \\frac{1}{6}|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\frac{1}{6}\\left| \\det[\\mathbf{u}, \\mathbf{v}, \\mathbf{w}] \\right|$$",
       ),
       generate(rng) {
-        // Engineer so det is divisible by 6
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
         const u: Vec3 = [rng.pick([1, 2, 3]), 0, 0];
         const v: Vec3 = [0, rng.pick([1, 2, 3]), 0];
@@ -1723,25 +1715,19 @@ export const findingVolumesOfTetrahedronsAndPyramidsUsingVectorProducts: TopicDe
         const detVal = Math.round(Math.abs(det3(u, v, w)));
         const V = Math.round(detVal / 6);
 
-        const right = `${V}`;
-        const w1 = `${detVal}`; // forgot 1/6
-        const w2 = `${Math.round(detVal / 3)}`; // used pyramid 1/3
-        const w3 = `${Math.round(detVal / 2)}`;
-        const w4 = `${V + 2}`;
-
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the volume of the tetrahedron determined by the edge vectors $\\mathbf{u} = ${vec3Latex(u)}$, $\\mathbf{v} = ${vec3Latex(v)}$, and $\\mathbf{w} = ${vec3Latex(w)}$.`,
             `求由棱向量 $\\mathbf{u} = ${vec3Latex(u)}$、$\\mathbf{v} = ${vec3Latex(v)}$ 与 $\\mathbf{w} = ${vec3Latex(w)}$ 确定的四面体的体积。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `The volume of a tetrahedron is $\\frac{1}{6}$ of the scalar triple product:\n\n$$V = \\frac{1}{6}|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\frac{1}{6}(${detVal}) = ${right}$$`,
-            `四面体的体积为标量三重积绝对值的 $\\frac{1}{6}$：\n\n$$V = \\frac{1}{6}|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\frac{1}{6}(${detVal}) = ${right}$$`,
+          answer: V,
+          form: "integer",
+          wrong: [detVal, Math.round(detVal / 3), Math.round(detVal / 2), V + 2],
+          solution: t(
+            `The volume of a tetrahedron is $\\frac{1}{6}$ of the scalar triple product:\n\n$$V = \\frac{1}{6}|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\frac{1}{6}(${detVal}) = ${V}$$`,
+            `四面体的体积为标量三重积绝对值的 $\\frac{1}{6}$：\n\n$$V = \\frac{1}{6}|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\frac{1}{6}(${detVal}) = ${V}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -1752,7 +1738,6 @@ export const findingVolumesOfTetrahedronsAndPyramidsUsingVectorProducts: TopicDe
         "底面为由 $\\mathbf{u}$ 与 $\\mathbf{v}$ 张成的平行四边形，且从同一起点指向顶点的向量为 $\\mathbf{w}$ 的四棱锥，其体积为：\n\n$$V = \\frac{1}{3}\\times \\text{底面积} \\times \\text{高} = \\frac{1}{3}|\\mathbf{w} \\cdot (\\mathbf{u} \\times \\mathbf{v})|$$",
       ),
       generate(rng) {
-        // Engineer so det is divisible by 3
         const k = rng.pick([1, 2, 3, 4, 5, 6, 7]);
         const u: Vec3 = [rng.pick([1, 2, 3]), 0, 0];
         const v: Vec3 = [0, rng.pick([1, 2, 3]), 0];
@@ -1762,25 +1747,19 @@ export const findingVolumesOfTetrahedronsAndPyramidsUsingVectorProducts: TopicDe
         const detVal = Math.round(Math.abs(det3(u, v, w)));
         const V = Math.round(detVal / 3);
 
-        const right = `${V}`;
-        const w1 = `${detVal}`; // forgot 1/3
-        const w2 = `${Math.round(detVal / 6)}`; // used tetrahedron 1/6
-        const w3 = `${V + 2}`;
-        const w4 = `${Math.max(1, V - 2)}`;
-
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the volume of a pyramid whose base is a parallelogram spanned by $\\mathbf{u} = ${vec3Latex(u)}$ and $\\mathbf{v} = ${vec3Latex(v)}$, and whose apex is defined by vector $\\mathbf{w} = ${vec3Latex(w)}$ from the same origin.`,
             `一个四棱锥的底面是由 $\\mathbf{u} = ${vec3Latex(u)}$ 与 $\\mathbf{v} = ${vec3Latex(v)}$ 张成的平行四边形，从同一起点指向顶点的向量为 $\\mathbf{w} = ${vec3Latex(w)}$。求该棱锥的体积。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `The volume of a pyramid with a parallelogram base is $\\frac{1}{3}$ of the parallelepiped volume:\n\n$$V = \\frac{1}{3}|\\mathbf{w} \\cdot (\\mathbf{u} \\times \\mathbf{v})| = \\frac{1}{3}(${detVal}) = ${right}$$`,
-            `底面为平行四边形的棱锥体积是相应平行六面体体积的 $\\frac{1}{3}$：\n\n$$V = \\frac{1}{3}|\\mathbf{w} \\cdot (\\mathbf{u} \\times \\mathbf{v})| = \\frac{1}{3}(${detVal}) = ${right}$$`,
+          answer: V,
+          form: "integer",
+          wrong: [detVal, Math.round(detVal / 6), V + 2, Math.max(1, V - 2)],
+          solution: t(
+            `The volume of a pyramid with a parallelogram base is $\\frac{1}{3}$ of the parallelepiped volume:\n\n$$V = \\frac{1}{3}|\\mathbf{w} \\cdot (\\mathbf{u} \\times \\mathbf{v})| = \\frac{1}{3}(${detVal}) = ${V}$$`,
+            `底面为平行四边形的棱锥体积是相应平行六面体体积的 $\\frac{1}{3}$：\n\n$$V = \\frac{1}{3}|\\mathbf{w} \\cdot (\\mathbf{u} \\times \\mathbf{v})| = \\frac{1}{3}(${detVal}) = ${V}$$`,
           ),
-        );
+        });
       },
     },
   ],

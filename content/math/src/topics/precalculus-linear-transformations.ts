@@ -2,7 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 
-import { choiceProblem } from "../problems.ts";
+import { choiceProblem, numberProblem, pointProblem, vectorLatex } from "../problems.ts";
 
 // Precalculus Unit 6 Part 2: Matrix Inverses, Systems, and Linear Transformations in the Plane
 // Modules 6.24 and 6.25 (17 topics total).
@@ -183,24 +183,19 @@ export const introductionToTheInverseOfAMatrix: TopicDef = {
         const w3 = -kSingular;
         const w4 = kSingular + 4;
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `For what value of $k$ is the matrix $M = \\begin{pmatrix} ${a} & ${b} \\\\ ${c} & k \\end{pmatrix}$ singular (not invertible)?`,
             `当 $k$ 取何值时，矩阵 $M = \\begin{pmatrix} ${a} & ${b} \\\\ ${c} & k \\end{pmatrix}$ 是奇异矩阵（不可逆）？`,
           ),
-          t(`$k = ${kSingular}$`, `$k = ${kSingular}$`),
-          [
-            t(`$k = ${w1}$`, `$k = ${w1}$`),
-            t(`$k = ${w2}$`, `$k = ${w2}$`),
-            t(`$k = ${w3}$`, `$k = ${w3}$`),
-            t(`$k = ${w4}$`, `$k = ${w4}$`),
-          ],
-          t(
-            `A matrix is singular if and only if its determinant is zero:\n\n$$\\det(M) = (${a})(k) - (${b})(${c}) = 0 \\implies ${a}k = ${b * c} \\implies k = ${kSingular}$$.`,
-            `方阵为奇异矩阵当且仅当其行列式为零：\n\n$$\\det(M) = (${a})(k) - (${b})(${c}) = 0 \\implies ${a}k = ${b * c} \\implies k = ${kSingular}$$。\n满足条件。`,
+          answer: kSingular,
+          solveFor: "k",
+          solution: t(
+            `A matrix is singular if and only if its determinant is zero:\n\n$$\\det(M) = (${a})(k) - (${b})(${c}) = 0 \\implies ${poly([a, "k"])} = ${b * c} \\implies k = ${kSingular}$$.`,
+            `方阵为奇异矩阵当且仅当其行列式为零：\n\n$$\\det(M) = (${a})(k) - (${b})(${c}) = 0 \\implies ${poly([a, "k"])} = ${b * c} \\implies k = ${kSingular}$$。`,
           ),
-        );
+          wrong: [w1, w2, w3, w4],
+        });
       },
     },
   ],
@@ -338,8 +333,8 @@ export const inversesOf2x2Matrices: TopicDef = {
             t(`$${mat2QLatex(w4)}$`, `$${mat2QLatex(w4)}$`),
           ],
           t(
-            `Calculate the determinant: $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$.\n\nThen compute $A^{-1} = \\frac{1}{${det}}\\begin{pmatrix} ${d} & ${-b} \\\\ ${-c} & ${a} \\end{pmatrix} = ${rightLatex}$.`,
-            `计算行列式：$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$。\n\n因此 $A^{-1} = \\frac{1}{${det}}\\begin{pmatrix} ${d} & ${-b} \\\\ ${-c} & ${a} \\end{pmatrix} = ${rightLatex}$。`,
+            `Calculate the determinant: $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$.\n\nThen compute $A^{-1} = ${Q.of(1, det).toLatex()}\\begin{pmatrix} ${d} & ${-b} \\\\ ${-c} & ${a} \\end{pmatrix} = ${rightLatex}$.`,
+            `计算行列式：$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$。\n\n因此 $A^{-1} = ${Q.of(1, det).toLatex()}\\begin{pmatrix} ${d} & ${-b} \\\\ ${-c} & ${a} \\end{pmatrix} = ${rightLatex}$。`,
           ),
         );
       },
@@ -442,24 +437,18 @@ export const calculatingTheInverseOfA3x3MatrixUsingTheCofactorMethod: TopicDef =
         const ALatex = mat3Latex(A);
         const entryVal = A[row]![col]!;
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `For the matrix $A = ${ALatex}$, find the cofactor $C_{${row + 1}${col + 1}}$ corresponding to entry $a_{${row + 1}${col + 1}} = ${entryVal}$.`,
             `对于矩阵 $A = ${ALatex}$，求元素 $a_{${row + 1}${col + 1}} = ${entryVal}$ 对应的代数余子式 $C_{${row + 1}${col + 1}}$。`,
           ),
-          t(`$C_{${row + 1}${col + 1}} = ${cofactor}$`, `$C_{${row + 1}${col + 1}} = ${cofactor}$`),
-          [
-            t(`$C_{${row + 1}${col + 1}} = ${w1}$`, `$C_{${row + 1}${col + 1}} = ${w1}$`),
-            t(`$C_{${row + 1}${col + 1}} = ${w2}$`, `$C_{${row + 1}${col + 1}} = ${w2}$`),
-            t(`$C_{${row + 1}${col + 1}} = ${w3}$`, `$C_{${row + 1}${col + 1}} = ${w3}$`),
-            t(`$C_{${row + 1}${col + 1}} = ${w4}$`, `$C_{${row + 1}${col + 1}} = ${w4}$`),
-          ],
-          t(
-            `Delete row ${row + 1} and column ${col + 1} to get the submatrix $\\begin{pmatrix} ${m00} & ${m01} \\\\ ${m10} & ${m11} \\end{pmatrix}$.\n\nIts determinant is $M_{${row + 1}${col + 1}} = (${m00})(${m11}) - (${m01})(${m10}) = ${minor}$.\n\nThe sign is $(-1)^{${row + 1} + ${col + 1}} = ${sign > 0 ? "+1" : "-1"}$, so $C_{${row + 1}${col + 1}} = ${cofactor}$.`,
-            `划去第 ${row + 1} 行与第 ${col + 1} 列，得到子矩阵 $\\begin{pmatrix} ${m00} & ${m01} \\\\ ${m10} & ${m11} \\end{pmatrix}$。\n\n其行列式为 $M_{${row + 1}${col + 1}} = (${m00})(${m11}) - (${m01})(${m10}) = ${minor}$。\n\n符号为 $(-1)^{${row + 1} + ${col + 1}} = ${sign > 0 ? "+1" : "-1"}$，故 $C_{${row + 1}${col + 1}} = ${cofactor}$。`,
+          answer: cofactor,
+          solution: t(
+            `Delete row ${row + 1} and column ${col + 1} to get the submatrix $\\begin{pmatrix} ${m00} & ${m01} \\\\ ${m10} & ${m11} \\end{pmatrix}$.\n\nIts determinant is $M_{${row + 1}${col + 1}} = (${m00})(${m11}) - (${m01})(${m10}) = ${minor}$.\n\nThe sign is $(-1)^{${row + 1} + ${col + 1}} = ${sign > 0 ? "1" : "-1"}$, so $C_{${row + 1}${col + 1}} = ${cofactor}$.`,
+            `划去第 ${row + 1} 行与第 ${col + 1} 列，得到子矩阵 $\\begin{pmatrix} ${m00} & ${m01} \\\\ ${m10} & ${m11} \\end{pmatrix}$。\n\n其行列式为 $M_{${row + 1}${col + 1}} = (${m00})(${m11}) - (${m01})(${m10}) = ${minor}$。\n\n符号为 $(-1)^{${row + 1} + ${col + 1}} = ${sign > 0 ? "1" : "-1"}$，故 $C_{${row + 1}${col + 1}} = ${cofactor}$。`,
           ),
-        );
+          wrong: [w1, w2, w3, w4],
+        });
       },
     },
     {
@@ -686,24 +675,19 @@ export const solving2x2SystemsOfEquationsUsingInverseMatrices: TopicDef = {
         const w3: Vec2 = [x0, -y0];
         const w4: Vec2 = [x0 + 1, y0 - 1];
 
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `Use inverse matrices to solve the system of equations:\n\n$$\\begin{cases} ${poly([A[0][0], "x"], [A[0][1], "y"])} = ${e} \\\\ ${poly([A[1][0], "x"], [A[1][1], "y"])} = ${f} \\end{cases}$$`,
             `利用逆矩阵求解下列方程组：\n\n$$\\begin{cases} ${poly([A[0][0], "x"], [A[0][1], "y"])} = ${e} \\\\ ${poly([A[1][0], "x"], [A[1][1], "y"])} = ${f} \\end{cases}$$`,
           ),
-          t(`$x = ${x0},\\; y = ${y0}$`, `$x = ${x0},\\; y = ${y0}$`),
-          [
-            t(`$x = ${w1[0]},\\; y = ${w1[1]}$`, `$x = ${w1[0]},\\; y = ${w1[1]}$`),
-            t(`$x = ${w2[0]},\\; y = ${w2[1]}$`, `$x = ${w2[0]},\\; y = ${w2[1]}$`),
-            t(`$x = ${w3[0]},\\; y = ${w3[1]}$`, `$x = ${w3[0]},\\; y = ${w3[1]}$`),
-            t(`$x = ${w4[0]},\\; y = ${w4[1]}$`, `$x = ${w4[0]},\\; y = ${w4[1]}$`),
-          ],
-          t(
-            `Coefficient matrix $A = ${mat2Latex(A)}$ has determinant $\\det(A) = (${A[0][0]})(${A[1][1]}) - (${A[0][1]})(${A[1][0]}) = ${A[0][0] * A[1][1] - A[0][1] * A[1][0]}$.\n\nMultiplying $\\mathbf{x} = A^{-1}\\mathbf{b}$ gives $x = ${x0},\\; y = ${y0}$.`,
-            `系数矩阵 $A = ${mat2Latex(A)}$ 的行列式为 $\\det(A) = (${A[0][0]})(${A[1][1]}) - (${A[0][1]})(${A[1][0]}) = ${A[0][0] * A[1][1] - A[0][1] * A[1][0]}$。\n\n计算 $\\mathbf{x} = A^{-1}\\mathbf{b}$ 可得 $x = ${x0},\\; y = ${y0}$。`,
+          answer: [x0, y0],
+          vars: ["x", "y"],
+          solution: t(
+            `Coefficient matrix $A = ${mat2Latex(A)}$ has determinant $\\det(A) = (${A[0][0]})(${A[1][1]}) - (${A[0][1]})(${A[1][0]}) = ${A[0][0] * A[1][1] - A[0][1] * A[1][0]}$.\n\nMultiplying $\\mathbf{x} = A^{-1}\\mathbf{b}$ gives $(x, y) = (${x0}, ${y0})$.`,
+            `系数矩阵 $A = ${mat2Latex(A)}$ 的行列式为 $\\det(A) = (${A[0][0]})(${A[1][1]}) - (${A[0][1]})(${A[1][0]}) = ${A[0][0] * A[1][1] - A[0][1] * A[1][0]}$。\n\n计算 $\\mathbf{x} = A^{-1}\\mathbf{b}$ 可得 $(x, y) = (${x0}, ${y0})$。`,
           ),
-        );
+          wrong: [w1, w2, w3, w4],
+        });
       },
     },
   ],
@@ -980,24 +964,19 @@ export const introductionToLinearTransformations: TopicDef = {
         const vLatex = vec2Latex(vImg);
         const rightLatex = vec2Latex(rightVec);
 
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `Let $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ be a linear transformation such that $T(\\mathbf{u}) = ${uLatex}$ and $T(\\mathbf{v}) = ${vLatex}$. Find $T(${poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"])})$.`,
             `设 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 是线性变换，且 $T(\\mathbf{u}) = ${uLatex}$，$T(\\mathbf{v}) = ${vLatex}$。求 $T(${poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"])})$ 的值。`,
           ),
-          t(`$${rightLatex}$`, `$${rightLatex}$`),
-          [
-            t(`$${vec2Latex(w1)}$`, `$${vec2Latex(w1)}$`),
-            t(`$${vec2Latex(w2)}$`, `$${vec2Latex(w2)}$`),
-            t(`$${vec2Latex(w3)}$`, `$${vec2Latex(w3)}$`),
-            t(`$${vec2Latex(w4)}$`, `$${vec2Latex(w4)}$`),
-          ],
-          t(
-            `By the linearity property:\n\n$$T(${poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"])}) = ${poly([c1, "T(\\mathbf{u})"], [c2, "T(\\mathbf{v})"])} = ${poly([c1, uLatex], [c2, vLatex])} = ${rightLatex}$$.`,
-            `由线性变换的基本性质：\n\n$$T(${poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"])}) = ${poly([c1, "T(\\mathbf{u})"], [c2, "T(\\mathbf{v})"])} = ${poly([c1, uLatex], [c2, vLatex])} = ${rightLatex}$$.`,
+          answer: rightVec,
+          vector: true,
+          solution: t(
+            `By the linearity property:\n\n$$T(${poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"])}) = ${poly([c1, "T(\\mathbf{u})"], [c2, "T(\\mathbf{v})"])} = ${poly([c1, uLatex], [c2, vLatex])} = ${rightLatex} = ${vectorLatex(rightVec)}$$.`,
+            `由线性变换的基本性质：\n\n$$T(${poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"])}) = ${poly([c1, "T(\\mathbf{u})"], [c2, "T(\\mathbf{v})"])} = ${poly([c1, uLatex], [c2, vLatex])} = ${rightLatex} = ${vectorLatex(rightVec)}$$。`,
           ),
-        );
+          wrong: [w1, w2, w3, w4],
+        });
       },
     },
   ],
@@ -1177,24 +1156,36 @@ export const linearTransformationsOfPointsAndLinesInThePlane: TopicDef = {
           [c, d],
         ]);
 
-        return oneOf(
-          rng,
-          t(
+        const isVector = rng.pick([true, false]);
+        if (isVector) {
+          return pointProblem({
+            prompt: t(
+              `Find the image vector $T(\\mathbf{v})$ of $\\mathbf{v} = \\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}$ under the linear transformation with standard matrix $A = ${ALatex}$.`,
+              `求向量 $\\mathbf{v} = \\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}$ 在标准矩阵为 $A = ${ALatex}$ 的线性变换作用下的像向量 $T(\\mathbf{v})$。`,
+            ),
+            answer: [xp, yp],
+            vector: true,
+            solution: t(
+              `Multiply the matrix by the vector:\n\n$$T(\\mathbf{v}) = A\\mathbf{v} = ${ALatex}\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix} = \\begin{pmatrix} (${a})(${x}) + (${b})(${y}) \\\\ (${c})(${x}) + (${d})(${y}) \\end{pmatrix} = ${vectorLatex([xp, yp])}$$.\n\nSo $T(\\mathbf{v}) = ${vectorLatex([xp, yp])}$.`,
+              `将标准矩阵与向量相乘：\n\n$$T(\\mathbf{v}) = A\\mathbf{v} = ${ALatex}\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix} = \\begin{pmatrix} (${a})(${x}) + (${b})(${y}) \\\\ (${c})(${x}) + (${d})(${y}) \\end{pmatrix} = ${vectorLatex([xp, yp])}$$.\n\n故像向量为 $T(\\mathbf{v}) = ${vectorLatex([xp, yp])}$。`,
+            ),
+            wrong: [w1, w2, w3, w4],
+          });
+        }
+
+        return pointProblem({
+          prompt: t(
             `Find the coordinates of the image of point $P(${x}, ${y})$ under the linear transformation with standard matrix $A = ${ALatex}$.`,
             `求点 $P(${x}, ${y})$ 在标准矩阵为 $A = ${ALatex}$ 的线性变换作用下的像点坐标。`,
           ),
-          t(`$(${xp}, ${yp})$`, `$(${xp}, ${yp})$`),
-          [
-            t(`$(${w1[0]}, ${w1[1]})$`, `$(${w1[0]}, ${w1[1]})$`),
-            t(`$(${w2[0]}, ${w2[1]})$`, `$(${w2[0]}, ${w2[1]})$`),
-            t(`$(${w3[0]}, ${w3[1]})$`, `$(${w3[0]}, ${w3[1]})$`),
-            t(`$(${w4[0]}, ${w4[1]})$`, `$(${w4[0]}, ${w4[1]})$`),
-          ],
-          t(
+          answer: [xp, yp],
+          vars: ["x", "y"],
+          solution: t(
             `Multiply the matrix by the point vector:\n\n$$A\\begin{pmatrix} x \\\\ y \\end{pmatrix} = ${ALatex}\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix} = \\begin{pmatrix} (${a})(${x}) + (${b})(${y}) \\\\ (${c})(${x}) + (${d})(${y}) \\end{pmatrix} = \\begin{pmatrix} ${xp} \\\\ ${yp} \\end{pmatrix}$$.\n\nSo the image point is $(${xp}, ${yp})$.`,
             `将标准矩阵与点的坐标列向量相乘：\n\n$$A\\begin{pmatrix} x \\\\ y \\end{pmatrix} = ${ALatex}\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix} = \\begin{pmatrix} (${a})(${x}) + (${b})(${y}) \\\\ (${c})(${x}) + (${d})(${y}) \\end{pmatrix} = \\begin{pmatrix} ${xp} \\\\ ${yp} \\end{pmatrix}$$.\n\n故像点坐标为 $(${xp}, ${yp})$。`,
           ),
-        );
+          wrong: [w1, w2, w3, w4],
+        });
       },
     },
     {
@@ -1286,24 +1277,19 @@ export const linearTransformationsOfObjectsInThePlane: TopicDef = {
 
         const MLatex = mat2Latex(A);
 
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `A triangle has vertices $A(${vA[0]}, ${vA[1]})$, $B(${vB[0]}, ${vB[1]})$, and $C(${vC[0]}, ${vC[1]})$. Under the linear transformation with standard matrix $M = ${MLatex}$, what are the coordinates of the image vertex $${targetVertex}'$?`,
             `三角形的三个顶点为 $A(${vA[0]}, ${vA[1]})$、$B(${vB[0]}, ${vB[1]})$ 和 $C(${vC[0]}, ${vC[1]})$。在标准矩阵为 $M = ${MLatex}$ 的线性变换作用下，像顶点 $${targetVertex}'$ 的坐标是多少？`,
           ),
-          t(`$${targetVertex}'(${xp}, ${yp})$`, `$${targetVertex}'(${xp}, ${yp})$`),
-          [
-            t(`$${targetVertex}'(${w1[0]}, ${w1[1]})$`, `$${targetVertex}'(${w1[0]}, ${w1[1]})$`),
-            t(`$${targetVertex}'(${w2[0]}, ${w2[1]})$`, `$${targetVertex}'(${w2[0]}, ${w2[1]})$`),
-            t(`$${targetVertex}'(${w3[0]}, ${w3[1]})$`, `$${targetVertex}'(${w3[0]}, ${w3[1]})$`),
-            t(`$${targetVertex}'(${w4[0]}, ${w4[1]})$`, `$${targetVertex}'(${w4[0]}, ${w4[1]})$`),
-          ],
-          t(
+          answer: [xp, yp],
+          vars: ["x", "y"],
+          solution: t(
             `Multiply the transformation matrix $M$ by the column vector of vertex $${targetVertex}(${orig[0]}, ${orig[1]})$:\n\n$$M \\begin{pmatrix} ${orig[0]} \\\\ ${orig[1]} \\end{pmatrix} = ${MLatex}\\begin{pmatrix} ${orig[0]} \\\\ ${orig[1]} \\end{pmatrix} = \\begin{pmatrix} ${xp} \\\\ ${yp} \\end{pmatrix}$$.\n\nThus $${targetVertex}'$ has coordinates $(${xp}, ${yp})$.`,
             `将变换矩阵 $M$ 与顶点 $${targetVertex}(${orig[0]}, ${orig[1]})$ 的坐标列向量相乘：\n\n$$M \\begin{pmatrix} ${orig[0]} \\\\ ${orig[1]} \\end{pmatrix} = ${MLatex}\\begin{pmatrix} ${orig[0]} \\\\ ${orig[1]} \\end{pmatrix} = \\begin{pmatrix} ${xp} \\\\ ${yp} \\end{pmatrix}$$.\n\n故 $${targetVertex}'$ 的坐标为 $(${xp}, ${yp})$。`,
           ),
-        );
+          wrong: [w1, w2, w3, w4],
+        });
       },
     },
     {
@@ -1331,24 +1317,19 @@ export const linearTransformationsOfObjectsInThePlane: TopicDef = {
 
         const MLatex = mat2Latex(M);
 
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `A triangle has centroid $G(${gx}, ${gy})$. What is the centroid $G'$ of the image triangle under the linear transformation with matrix $M = ${MLatex}$?`,
             `某三角形的重心为 $G(${gx}, ${gy})$。在矩阵为 $M = ${MLatex}$ 的线性变换作用下，像三角形的重心 $G'$ 的坐标是多少？`,
           ),
-          t(`$G'(${gpx}, ${gpy})$`, `$G'(${gpx}, ${gpy})$`),
-          [
-            t(`$G'(${w1[0]}, ${w1[1]})$`, `$G'(${w1[0]}, ${w1[1]})$`),
-            t(`$G'(${w2[0]}, ${w2[1]})$`, `$G'(${w2[0]}, ${w2[1]})$`),
-            t(`$G'(${w3[0]}, ${w3[1]})$`, `$G'(${w3[0]}, ${w3[1]})$`),
-            t(`$G'(${w4[0]}, ${w4[1]})$`, `$G'(${w4[0]}, ${w4[1]})$`),
-          ],
-          t(
+          answer: [gpx, gpy],
+          vars: ["x", "y"],
+          solution: t(
             `Because linear transformations preserve centroids, $G' = M G$:\n\n$$G' = ${MLatex}\\begin{pmatrix} ${gx} \\\\ ${gy} \\end{pmatrix} = \\begin{pmatrix} ${gpx} \\\\ ${gpy} \\end{pmatrix}$$.\n\nSo $G' = (${gpx}, ${gpy})$.`,
             `由于线性变换保持图形的重心性质，$G' = M G$：\n\n$$G' = ${MLatex}\\begin{pmatrix} ${gx} \\\\ ${gy} \\end{pmatrix} = \\begin{pmatrix} ${gpx} \\\\ ${gpy} \\end{pmatrix}$$.\n\n因此 $G' = (${gpx}, ${gpy})$。`,
           ),
-        );
+          wrong: [w1, w2, w3, w4],
+        });
       },
     },
   ],
@@ -1389,24 +1370,19 @@ export const dilationsAndReflectionsAsLinearTransformations: TopicDef = {
           const w3: Vec2 = [xp, -yp];
           const w4: Vec2 = [x + k, y + k];
 
-          return oneOf(
-            rng,
-            t(
+          return pointProblem({
+            prompt: t(
               `Find the coordinates of the image of point $P(${x}, ${y})$ under a uniform dilation centered at the origin with scale factor $k = ${k}$.`,
               `求点 $P(${x}, ${y})$ 在以原点为中心、缩放比例为 $k = ${k}$ 的位似伸缩变换下的像点坐标。`,
             ),
-            t(`$(${xp}, ${yp})$`, `$(${xp}, ${yp})$`),
-            [
-              t(`$(${w1[0]}, ${w1[1]})$`, `$(${w1[0]}, ${w1[1]})$`),
-              t(`$(${w2[0]}, ${w2[1]})$`, `$(${w2[0]}, ${w2[1]})$`),
-              t(`$(${w3[0]}, ${w3[1]})$`, `$(${w3[0]}, ${w3[1]})$`),
-              t(`$(${w4[0]}, ${w4[1]})$`, `$(${w4[0]}, ${w4[1]})$`),
-            ],
-            t(
+            answer: [xp, yp],
+            vars: ["x", "y"],
+            solution: t(
               `The dilation scales both coordinates by $k = ${k}$:\n\n$$(${k} \\times ${x}, \\; ${k} \\times ${y}) = (${xp}, ${yp})$$.`,
               `位似变换将每个坐标均缩放 $k = ${k}$ 倍：\n\n$$(${k} \\times ${x}, \\; ${k} \\times ${y}) = (${xp}, ${yp})$$。`,
             ),
-          );
+            wrong: [w1, w2, w3, w4],
+          });
         }
 
         const D: Mat2 = [
@@ -1504,24 +1480,19 @@ export const dilationsAndReflectionsAsLinearTransformations: TopicDef = {
         const w3: Vec2 = [-xp, -yp];
         const w4: Vec2 = [yp, xp];
 
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `Find the coordinates of the image of point $P(${x}, ${y})$ after reflection across ${item.lineEn}.`,
             `求点 $P(${x}, ${y})$ 关于${item.lineZh}反射后的像点坐标。`,
           ),
-          t(`$(${xp}, ${yp})$`, `$(${xp}, ${yp})$`),
-          [
-            t(`$(${w1[0]}, ${w1[1]})$`, `$(${w1[0]}, ${w1[1]})$`),
-            t(`$(${w2[0]}, ${w2[1]})$`, `$(${w2[0]}, ${w2[1]})$`),
-            t(`$(${w3[0]}, ${w3[1]})$`, `$(${w3[0]}, ${w3[1]})$`),
-            t(`$(${w4[0]}, ${w4[1]})$`, `$(${w4[0]}, ${w4[1]})$`),
-          ],
-          t(
+          answer: [xp, yp],
+          vars: ["x", "y"],
+          solution: t(
             `The reflection matrix across ${item.lineEn} is $R = ${mat2Latex(item.mat)}$.\nMultiplying by $\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}$ yields $(${xp}, ${yp})$.`,
             `关于${item.lineZh}反射的标准矩阵为 $R = ${mat2Latex(item.mat)}$。\n乘以坐标列向量 $\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}$ 可得 $(${xp}, ${yp})$。`,
           ),
-        );
+          wrong: [w1, w2, w3, w4],
+        });
       },
     },
   ],
@@ -1572,24 +1543,19 @@ export const shearAndStretchAsLinearTransformations: TopicDef = {
         const w3: Vec2 = isHorizontal ? [x, k * x + y] : [x + k * y, y];
         const w4: Vec2 = [x + k, y + k];
 
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `Find the coordinates of point $P(${x}, ${y})$ under a ${dirEn} shear with shear factor $k = ${k}$.`,
             `求点 $P(${x}, ${y})$ 在切变因子为 $k = ${k}$ 的${dirZh}切变变换下的像点坐标。`,
           ),
-          t(`$(${xp}, ${yp})$`, `$(${xp}, ${yp})$`),
-          [
-            t(`$(${w1[0]}, ${w1[1]})$`, `$(${w1[0]}, ${w1[1]})$`),
-            t(`$(${w2[0]}, ${w2[1]})$`, `$(${w2[0]}, ${w2[1]})$`),
-            t(`$(${w3[0]}, ${w3[1]})$`, `$(${w3[0]}, ${w3[1]})$`),
-            t(`$(${w4[0]}, ${w4[1]})$`, `$(${w4[0]}, ${w4[1]})$`),
-          ],
-          t(
-            `The standard matrix for a ${dirEn} shear of factor $k = ${k}$ is $S = ${mat2Latex(mat)}$.\nMultiplying by $\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}$ gives $\\begin{pmatrix} ${xp} \\\\ ${yp} \\end{pmatrix}$.`,
-            `切变因子为 $k = ${k}$ 的${dirZh}切变标准矩阵为 $S = ${mat2Latex(mat)}$。\n乘以坐标列向量 $\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}$ 得到 $\\begin{pmatrix} ${xp} \\\\ ${yp} \\end{pmatrix}$。`,
+          answer: [xp, yp],
+          vars: ["x", "y"],
+          solution: t(
+            `The standard matrix for a ${dirEn} shear of factor $k = ${k}$ is $S = ${mat2Latex(mat)}$.\nMultiplying by $\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}$ gives $\\begin{pmatrix} ${xp} \\\\ ${yp} \\end{pmatrix} = (${xp}, ${yp})$.`,
+            `切变因子为 $k = ${k}$ 的${dirZh}切变标准矩阵为 $S = ${mat2Latex(mat)}$。\n乘以坐标列向量 $\\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}$ 得到 $\\begin{pmatrix} ${xp} \\\\ ${yp} \\end{pmatrix} = (${xp}, ${yp})$。`,
           ),
-        );
+          wrong: [w1, w2, w3, w4],
+        });
       },
     },
     {
@@ -1868,24 +1834,36 @@ export const rightAngleRotationsAsLinearTransformations: TopicDef = {
         const w3: Vec2 = [xp, -yp];
         const w4: Vec2 = [-xp, -yp];
 
-        return oneOf(
-          rng,
-          t(
+        const isVector = rng.pick([true, false]);
+        if (isVector) {
+          return pointProblem({
+            prompt: t(
+              `Find the image vector $T(\\mathbf{v})$ of $\\mathbf{v} = \\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}$ after a counterclockwise rotation of $${angle}^\\circ$ about the origin.`,
+              `求向量 $\\mathbf{v} = \\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}$ 绕原点逆时针旋转 $${angle}^\\circ$ 后的像向量 $T(\\mathbf{v})$。`,
+            ),
+            answer: [xp, yp],
+            vector: true,
+            solution: t(
+              `Under a $${angle}^\\circ$ counterclockwise rotation, $\\begin{pmatrix} x \\\\ y \\end{pmatrix} \\mapsto \\begin{pmatrix} ${angle === 90 ? "-y \\\\ x" : angle === 180 ? "-x \\\\ -y" : "y \\\\ -x"} \\end{pmatrix}$.\nSubstituting $x = ${x}, y = ${y}$ yields $T(\\mathbf{v}) = ${vectorLatex([xp, yp])}$.`,
+              `在逆时针旋转 $${angle}^\\circ$ 变换下，$\\begin{pmatrix} x \\\\ y \\end{pmatrix} \\mapsto \\begin{pmatrix} ${angle === 90 ? "-y \\\\ x" : angle === 180 ? "-x \\\\ -y" : "y \\\\ -x"} \\end{pmatrix}$。\n代入 $x = ${x}, y = ${y}$，得到像向量 $T(\\mathbf{v}) = ${vectorLatex([xp, yp])}$。`,
+            ),
+            wrong: [w1, w2, w3, w4],
+          });
+        }
+
+        return pointProblem({
+          prompt: t(
             `Find the coordinates of the image of point $P(${x}, ${y})$ after a counterclockwise rotation of $${angle}^\\circ$ about the origin.`,
             `求点 $P(${x}, ${y})$ 绕原点逆时针旋转 $${angle}^\\circ$ 后的像点坐标。`,
           ),
-          t(`$(${xp}, ${yp})$`, `$(${xp}, ${yp})$`),
-          [
-            t(`$(${w1[0]}, ${w1[1]})$`, `$(${w1[0]}, ${w1[1]})$`),
-            t(`$(${w2[0]}, ${w2[1]})$`, `$(${w2[0]}, ${w2[1]})$`),
-            t(`$(${w3[0]}, ${w3[1]})$`, `$(${w3[0]}, ${w3[1]})$`),
-            t(`$(${w4[0]}, ${w4[1]})$`, `$(${w4[0]}, ${w4[1]})$`),
-          ],
-          t(
+          answer: [xp, yp],
+          vars: ["x", "y"],
+          solution: t(
             `Under a $${angle}^\\circ$ counterclockwise rotation, $(x, y) \\mapsto (${angle === 90 ? "-y, x" : angle === 180 ? "-x, -y" : "y, -x"})$.\nSubstituting $x = ${x}, y = ${y}$ yields $(${xp}, ${yp})$.`,
             `在逆时针旋转 $${angle}^\\circ$ 变换下，$(x, y) \\mapsto (${angle === 90 ? "-y, x" : angle === 180 ? "-x, -y" : "y, -x"})$。\n代入 $x = ${x}, y = ${y}$，得到像点坐标 $(${xp}, ${yp})$。`,
           ),
-        );
+          wrong: [w1, w2, w3, w4],
+        });
       },
     },
   ],
@@ -1940,12 +1918,13 @@ export const rotationsAsLinearTransformations: TopicDef = {
         const cosVal = item.cosStr;
         const sinVal = item.sinStr;
         const negSinVal = sinVal.startsWith("-") ? sinVal.slice(1) : `-${sinVal}`;
+        const negCosVal = cosVal.startsWith("-") ? cosVal.slice(1) : `-${cosVal}`;
 
         const rightLatex = `\\begin{pmatrix} ${cosVal} & ${negSinVal} \\\\ ${sinVal} & ${cosVal} \\end{pmatrix}`;
         const w1 = `\\begin{pmatrix} ${cosVal} & ${sinVal} \\\\ ${negSinVal} & ${cosVal} \\end{pmatrix}`;
         const w2 = `\\begin{pmatrix} ${sinVal} & ${cosVal} \\\\ ${cosVal} & ${sinVal} \\end{pmatrix}`;
         const w3 = `\\begin{pmatrix} ${cosVal} & ${negSinVal} \\\\ ${negSinVal} & ${cosVal} \\end{pmatrix}`;
-        const w4 = `\\begin{pmatrix} ${sinVal} & -${cosVal} \\\\ ${cosVal} & ${sinVal} \\end{pmatrix}`;
+        const w4 = `\\begin{pmatrix} ${sinVal} & ${negCosVal} \\\\ ${cosVal} & ${sinVal} \\end{pmatrix}`;
 
         return oneOf(
           rng,
@@ -2856,24 +2835,19 @@ export const invertingLinearTransformations: TopicDef = {
 
         const ALatex = mat2Latex(A);
 
-        return oneOf(
-          rng,
-          t(
+        return pointProblem({
+          prompt: t(
             `A linear transformation with standard matrix $A = ${ALatex}$ maps an unknown point $P(x, y)$ to $P'(${xp}, ${yp})$. Find the coordinates of the original point $P$.`,
             `标准矩阵为 $A = ${ALatex}$ 的线性变换将未知点 $P(x, y)$ 映射为 $P'(${xp}, ${yp})$。求原像点 $P$ 的坐标。`,
           ),
-          t(`$P(${x}, ${y})$`, `$P(${x}, ${y})$`),
-          [
-            t(`$P(${w1[0]}, ${w1[1]})$`, `$P(${w1[0]}, ${w1[1]})$`),
-            t(`$P(${w2[0]}, ${w2[1]})$`, `$P(${w2[0]}, ${w2[1]})$`),
-            t(`$P(${w3[0]}, ${w3[1]})$`, `$P(${w3[0]}, ${w3[1]})$`),
-            t(`$P(${w4[0]}, ${w4[1]})$`, `$P(${w4[0]}, ${w4[1]})$`),
-          ],
-          t(
+          answer: [x, y],
+          vars: ["x", "y"],
+          solution: t(
             `Multiply the transformed point by the inverse matrix $A^{-1}$:\n\n$$\\begin{pmatrix} x \\\\ y \\end{pmatrix} = A^{-1}\\begin{pmatrix} ${xp} \\\\ ${yp} \\end{pmatrix} = \\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}$$.\n\nThus $P = (${x}, ${y})$.`,
             `将像点坐标向量左乘逆矩阵 $A^{-1}$：\n\n$$\\begin{pmatrix} x \\\\ y \\end{pmatrix} = A^{-1}\\begin{pmatrix} ${xp} \\\\ ${yp} \\end{pmatrix} = \\begin{pmatrix} ${x} \\\\ ${y} \\end{pmatrix}$$.\n\n故原像点为 $P = (${x}, ${y})$。`,
           ),
-        );
+          wrong: [w1, w2, w3, w4],
+        });
       },
     },
   ],
@@ -2921,19 +2895,38 @@ export const areaScaleFactorsOfLinearTransformations: TopicDef = {
           [c, d],
         ]);
 
-        return oneOf(
-          rng,
-          t(
+        const askScaleFactor = rng.pick([true, false]);
+        if (askScaleFactor) {
+          const w1 = absDet + 1;
+          const w2 = absDet === 1 ? 2 : absDet - 1;
+          const w3 = Math.abs(a + d);
+          const w4 = absDet + 2;
+          return numberProblem({
+            prompt: t(
+              `What is the area scale factor of the linear transformation with standard matrix $A = ${ALatex}$?`,
+              `求标准矩阵为 $A = ${ALatex}$ 的线性变换的面积缩放因子。`,
+            ),
+            answer: absDet,
+            solution: t(
+              `Calculate the determinant: $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$.\n\nThe area scale factor is the absolute value of the determinant: $|\\det(A)| = |${det}| = ${absDet}$.`,
+              `计算行列式：$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$。\n\n面积缩放因子为行列式的绝对值：$|\\det(A)| = |${det}| = ${absDet}$。`,
+            ),
+            wrong: [w1, w2, w3, w4],
+          });
+        }
+
+        return numberProblem({
+          prompt: t(
             `A geometric shape in the plane has an area of $${origArea}$. What is the area of its image under the linear transformation with matrix $A = ${ALatex}$?`,
             `平面上某几何图形的面积为 $${origArea}$。在矩阵为 $A = ${ALatex}$ 的线性变换作用下，其像图形的面积是多少？`,
           ),
-          t(`$${newArea}$`, `$${newArea}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `Calculate the determinant: $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$.\nThe area scale factor is $|\\det(A)| = |${det}| = ${absDet}$.\nThus, the transformed area is ${absDet} \\times ${origArea} = ${newArea}.`,
-            `计算行列式：$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$。\n面积缩放因子为 $|\\det(A)| = |${det}| = ${absDet}$。\n因此变换后的面积为 ${absDet} \\times ${origArea} = ${newArea}。`,
+          answer: newArea,
+          solution: t(
+            `Calculate the determinant: $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$.\n\nThe area scale factor is $|\\det(A)| = |${det}| = ${absDet}$.\n\nThus, the transformed area is ${absDet} \\times ${origArea} = ${newArea}.`,
+            `计算行列式：$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$。\n\n面积缩放因子为 $|\\det(A)| = |${det}| = ${absDet}$。\n\n因此变换后的面积为 ${absDet} \\times ${origArea} = ${newArea}。`,
           ),
-        );
+          wrong: [w1, w2, w3, w4],
+        });
       },
     },
     {

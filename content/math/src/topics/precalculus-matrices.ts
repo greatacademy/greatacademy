@@ -1,7 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
-import { choiceProblem } from "../problems.ts";
+import { choiceProblem, numberProblem } from "../problems.ts";
 
 // Precalculus unit 6: Matrices (Part 1: Matrix Algebra and Determinants,
 // modules 6.21, 6.22, and 6.23).
@@ -194,25 +194,18 @@ export const introductionToMatrices: TopicDef = {
         const aLatex = matLatex(A);
         const total = m * n;
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `How many total entries (elements) are in the matrix $A$?\n\n$$A = ${aLatex}$$`,
             `矩阵 $A$ 中总共包含多少个元素？\n\n$$A = ${aLatex}$$`,
           ),
-          t(`$${total}$`, `$${total}$`),
-          [
-            t(`$${m + n}$`, `$${m + n}$`),
-            t(`$${2 * (m + n)}$`, `$${2 * (m + n)}$`),
-            t(`$${total + 1}$`, `$${total + 1}$`),
-            t(`$${total - 1}$`, `$${total - 1}$`),
-            t(`$${total + 2}$`, `$${total + 2}$`),
-          ],
-          t(
+          answer: total,
+          wrong: [m + n, 2 * (m + n), total + 1, Math.max(1, total - 1), total + 2],
+          solution: t(
             `Matrix $A$ has $${m}$ rows and $${n}$ columns. The total number of entries is the product of the row count and column count: $${m} \\times ${n} = ${total}$.`,
             `矩阵 $A$ 包含 $${m}$ 行与 $${n}$ 列。元素的总数等于行数与列数的乘积：$${m} \\times ${n} = ${total}$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -270,19 +263,18 @@ export const indexNotationForMatrices: TopicDef = {
           if (r !== i - 1) wrongVals.push(A[r]![j - 1]!);
         }
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `In the matrix $A$, what is the entry $a_{${i}${j}}$?\n\n$$A = ${aLatex}$$`,
             `在矩阵 $A$ 中，元素 $a_{${i}${j}}$ 的值是多少？\n\n$$A = ${aLatex}$$`,
           ),
-          t(`$${target}$`, `$${target}$`),
-          wrongVals.map((w) => t(`$${w}$`, `$${w}$`)),
-          t(
+          answer: target,
+          wrong: wrongVals,
+          solution: t(
             `The entry $a_{${i}${j}}$ is located at row $${i}$ and column $${j}$. Looking across row $${i}$ to column $${j}$, the entry is $${target}$.`,
             `元素 $a_{${i}${j}}$ 位于第 $${i}$ 行第 $${j}$ 列。沿第 $${i}$ 行数至第 $${j}$ 列，该元素为 $${target}$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -329,25 +321,18 @@ export const indexNotationForMatrices: TopicDef = {
           altVal = -val;
         }
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `A $3 \\times 3$ matrix $A = [a_{ij}]$ has entries given by $a_{ij} = ${formulaLatex}$. Find the entry $a_{${i}${j}}$.`,
             `一个 $3 \\times 3$ 矩阵 $A = [a_{ij}]$ 的元素由 $a_{ij} = ${formulaZh}$ 给出。求元素 $a_{${i}${j}}$ 的值。`,
           ),
-          t(`$${val}$`, `$${val}$`),
-          [
-            t(`$${altVal}$`, `$${altVal}$`),
-            t(`$${-val}$`, `$${-val}$`),
-            t(`$${val + 1}$`, `$${val + 1}$`),
-            t(`$${val - 2}$`, `$${val - 2}$`),
-            t(`$${val + 3}$`, `$${val + 3}$`),
-          ],
-          t(
+          answer: val,
+          wrong: [altVal, -val, val + 1, val - 2, val + 3],
+          solution: t(
             `Substitute row index $i = ${i}$ and column index $j = ${j}$ into the definition: $a_{${i}${j}} = ${val}$.`,
             `将行下标 $i = ${i}$ 和列下标 $j = ${j}$ 代入定义式中，得到 $a_{${i}${j}} = ${val}$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -551,29 +536,26 @@ export const propertiesOfMatrixAddition: TopicDef = {
         const targetRow = rng.pick([0, 1]);
         const targetCol = rng.pick([0, 1]);
         const x = B[targetRow]![targetCol]!;
+        const aVal = A[targetRow]![targetCol]!;
+        const cVal = C[targetRow]![targetCol]!;
 
         const bDisplay: (readonly (number | string)[])[] = B.map((row, r) =>
           row.map((val, c) => (r === targetRow && c === targetCol ? "x" : val)),
         );
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the value of $x$ that satisfies the matrix equation:\n\n$$${matLatex(A)} + ${matLatex(bDisplay)} = ${matLatex(C)}$$`,
             `求满足下列矩阵方程的未知数 $x$ 的值：\n\n$$${matLatex(A)} + ${matLatex(bDisplay)} = ${matLatex(C)}$$`,
           ),
-          t(`$${x}$`, `$${x}$`),
-          [
-            t(`$${-x}$`, `$${-x}$`),
-            t(`$${x + 1}$`, `$${x + 1}$`),
-            t(`$${x - 2}$`, `$${x - 2}$`),
-            t(`$${C[targetRow]![targetCol]! + A[targetRow]![targetCol]!}$`, `$${C[targetRow]![targetCol]! + A[targetRow]![targetCol]!}$`),
-          ],
-          t(
-            `From entrywise addition at row $${targetRow + 1}$, column $${targetCol + 1}$: $${A[targetRow]![targetCol]!} + x = ${C[targetRow]![targetCol]!}$, so $x = ${C[targetRow]![targetCol]!} - (${A[targetRow]![targetCol]!}) = ${x}$.`,
-            `根据第 $${targetRow + 1}$ 行第 $${targetCol + 1}$ 列的对应元素相加关系：$${A[targetRow]![targetCol]!} + x = ${C[targetRow]![targetCol]!}$，解得 $x = ${C[targetRow]![targetCol]!} - (${A[targetRow]![targetCol]!}) = ${x}$。`,
+          solveFor: "x",
+          answer: x,
+          wrong: [-x, x + 1, x - 2, cVal + aVal],
+          solution: t(
+            `From entrywise addition at row $${targetRow + 1}$, column $${targetCol + 1}$: $${aVal} + x = ${cVal}$, so $x = ${cVal} - (${aVal}) = ${x}$.`,
+            `根据第 $${targetRow + 1}$ 行第 $${targetCol + 1}$ 列的对应元素相加关系：$${aVal} + x = ${cVal}$，解得 $x = ${cVal} - (${aVal}) = ${x}$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -646,36 +628,23 @@ export const scalarMultiplicationOfMatrices: TopicDef = {
           [rng.pick(pool), rng.pick(pool)],
           [rng.pick(pool), rng.pick(pool)],
         ];
-        const kA = matScale(k, A);
+        const i = rng.pick([1, 2]);
+        const j = rng.pick([1, 2]);
+        const aVal = A[i - 1]![j - 1]!;
+        const val = k * aVal;
 
-        // Distractor: only scaled first row
-        const row1Only: Mat = [kA[0]!, A[1]!];
-        // Distractor: scaled with wrong sign
-        const negKA = matScale(-k, A);
-        // Distractor: added scalar instead of multiplying
-        const addedK: Mat = A.map((row) => row.map((v) => v + k));
-
-        return oneOf(
-          rng,
-          t(
-            `Compute the scalar product $${k}A$, where:\n\n$$A = ${matLatex(A)}$$`,
-            `计算数乘矩阵 $${k}A$，其中：\n\n$$A = ${matLatex(A)}$$`,
+        return numberProblem({
+          prompt: t(
+            `For the matrix $A$, compute the entry in row $${i}$, column $${j}$ of the scalar multiple $${k}A$:\n\n$$A = ${matLatex(A)}$$`,
+            `对于矩阵 $A$，计算数乘矩阵 $${k}A$ 中位于第 $${i}$ 行第 $${j}$ 列的元素：\n\n$$A = ${matLatex(A)}$$`,
           ),
-          t(`$${matLatex(kA)}$`, `$${matLatex(kA)}$`),
-          [
-            t(`$${matLatex(row1Only)}$`, `$${matLatex(row1Only)}$`),
-            t(`$${matLatex(negKA)}$`, `$${matLatex(negKA)}$`),
-            t(`$${matLatex(addedK)}$`, `$${matLatex(addedK)}$`),
-            t(
-              `$${matLatex(kA.map((r, i) => r.map((v, j) => (i === 1 && j === 1 ? v + 1 : v))))}$`,
-              `$${matLatex(kA.map((r, i) => r.map((v, j) => (i === 1 && j === 1 ? v + 1 : v))))}$`,
-            ),
-          ],
-          t(
-            `Multiply every entry of $A$ by $${k}$:\n\n$$${k} ${matLatex(A)} = ${matLatex(kA)}$$`,
-            `将矩阵 $A$ 中的每个元素都乘以 $${k}$：\n\n$$${k} ${matLatex(A)} = ${matLatex(kA)}$$`,
+          answer: val,
+          wrong: [aVal, -val, k + aVal, val + k, val - k],
+          solution: t(
+            `To find entry $(k A)_{${i}${j}}$, multiply entry $a_{${i}${j}} = ${aVal}$ by the scalar $k = ${k}$:\n\n$$(${k})(${aVal}) = ${val}$$`,
+            `计算数乘矩阵元素 $(k A)_{${i}${j}}$ 时，将元素 $a_{${i}${j}} = ${aVal}$ 乘以标量 $k = ${k}$：\n\n$$(${k})(${aVal}) = ${val}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -688,7 +657,7 @@ export const scalarMultiplicationOfMatrices: TopicDef = {
       generate(rng) {
         const c1 = rng.pick([2, 3, 4]);
         const c2 = rng.pick([-3, -2, 2, 3]);
-        const pool = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
+        const pool = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
         const A: Mat = [
           [rng.pick(pool), rng.pick(pool)],
           [rng.pick(pool), rng.pick(pool)],
@@ -697,34 +666,32 @@ export const scalarMultiplicationOfMatrices: TopicDef = {
           [rng.pick(pool), rng.pick(pool)],
           [rng.pick(pool), rng.pick(pool)],
         ];
-        const ans = matAdd(matScale(c1, A), matScale(c2, B));
+        const i = rng.pick([1, 2]);
+        const j = rng.pick([1, 2]);
+        const aVal = A[i - 1]![j - 1]!;
+        const bVal = B[i - 1]![j - 1]!;
+        const val = c1 * aVal + c2 * bVal;
         const signStr = c2 < 0 ? `- ${-c2}` : `+ ${c2}`;
 
-        // Distractor: flipped sign on c2
-        const wrongSign = matAdd(matScale(c1, A), matScale(-c2, B));
-        // Distractor: swapped coefficients
-        const swapped = matAdd(matScale(c2, A), matScale(c1, B));
+        const wrongSignVal = c1 * aVal - c2 * bVal;
+        const swappedVal = c2 * aVal + c1 * bVal;
 
-        return oneOf(
-          rng,
-          t(
-            `Compute $${c1}A ${signStr} B$, where:\n\n$$A = ${matLatex(A)}, \\quad B = ${matLatex(B)}$$`,
-            `计算 $${c1}A ${signStr} B$，其中：\n\n$$A = ${matLatex(A)}, \\quad B = ${matLatex(B)}$$`,
+        const term1 = c1 * aVal;
+        const term2 = c2 * bVal;
+        const step2 = term2 < 0 ? `${term1} - ${-term2}` : `${term1} + ${term2}`;
+
+        return numberProblem({
+          prompt: t(
+            `For the matrices $A$ and $B$, compute the entry in row $${i}$, column $${j}$ of the linear combination $C = ${c1}A ${signStr} B$:\n\n$$A = ${matLatex(A)}, \\quad B = ${matLatex(B)}$$`,
+            `对于矩阵 $A$ 与 $B$，计算线性组合 $C = ${c1}A ${signStr} B$ 中位于第 $${i}$ 行第 $${j}$ 列的元素 $c_{${i}${j}}$：\n\n$$A = ${matLatex(A)}, \\quad B = ${matLatex(B)}$$`,
           ),
-          t(`$${matLatex(ans)}$`, `$${matLatex(ans)}$`),
-          [
-            t(`$${matLatex(wrongSign)}$`, `$${matLatex(wrongSign)}$`),
-            t(`$${matLatex(swapped)}$`, `$${matLatex(swapped)}$`),
-            t(
-              `$${matLatex(ans.map((r, i) => r.map((v, j) => (i === 0 && j === 0 ? v + 1 : v))))}$`,
-              `$${matLatex(ans.map((r, i) => r.map((v, j) => (i === 0 && j === 0 ? v + 1 : v))))}$`,
-            ),
-          ],
-          t(
-            `Compute $${c1}A = ${matLatex(matScale(c1, A))}$ and $${c2}B = ${matLatex(matScale(c2, B))}$. Adding these gives $${matLatex(ans)}$.`,
-            `计算 $${c1}A = ${matLatex(matScale(c1, A))}$ 与 $${c2}B = ${matLatex(matScale(c2, B))}$，将二者相加得到 $${matLatex(ans)}$。`,
+          answer: val,
+          wrong: [wrongSignVal, swappedVal, -val, val + 1, val - 2],
+          solution: t(
+            `Compute the entry in row $${i}$, column $${j}$ using the linear combination of corresponding entries:\n\n$$c_{${i}${j}} = ${c1}(${aVal}) ${c2 < 0 ? "-" : "+"} ${Math.abs(c2)}(${bVal}) = ${step2} = ${val}$$`,
+            `通过对应元素的线性组合计算第 $${i}$ 行第 $${j}$ 列的元素：\n\n$$c_{${i}${j}} = ${c1}(${aVal}) ${c2 < 0 ? "-" : "+"} ${Math.abs(c2)}(${bVal}) = ${step2} = ${val}$$`,
           ),
-        );
+        });
       },
     },
   ],
@@ -960,19 +927,23 @@ export const theTransposeOfAMatrix: TopicDef = {
           [offDiagVal, a22],
         ];
 
-        return oneOf(
-          rng,
-          t(
+        const rhsStep = offDiagVal - c2;
+        const solveStep =
+          c1 === 1 ? `x = ${x}` : c1 === -1 ? `-x = ${rhsStep} \\implies x = ${x}` : `${c1}x = ${rhsStep} \\implies x = ${x}`;
+
+        return numberProblem({
+          prompt: t(
             `Find the value of $x$ such that the matrix $A$ is symmetric:\n\n$$A = ${matLatex(M)}$$`,
             `求使得矩阵 $A$ 为对称矩阵的未知数 $x$ 的值：\n\n$$A = ${matLatex(M)}$$`,
           ),
-          t(`$${x}$`, `$${x}$`),
-          [t(`$${-x}$`, `$${-x}$`), t(`$${x + 1}$`, `$${x + 1}$`), t(`$${x - 2}$`, `$${x - 2}$`), t(`$${x + 3}$`, `$${x + 3}$`)],
-          t(
-            `For $A$ to be symmetric, $a_{12} = a_{21}$. Setting $${expr} = ${offDiagVal}$ yields $${c1}x = ${offDiagVal - c2}$, so $x = ${x}$.`,
-            `对称矩阵要求 $a_{12} = a_{21}$。令 $${expr} = ${offDiagVal}$，得 $${c1}x = ${offDiagVal - c2}$，解得 $x = ${x}$。`,
+          solveFor: "x",
+          answer: x,
+          wrong: [-x, x + 1, x - 2, x + 3],
+          solution: t(
+            `For $A$ to be symmetric, $a_{12} = a_{21}$. Setting $${expr} = ${offDiagVal}$ yields $${solveStep}$.`,
+            `对称矩阵要求 $a_{12} = a_{21}$。令 $${expr} = ${offDiagVal}$，得 $${solveStep}$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -1016,6 +987,13 @@ export const multiplyingAMatrixByAColumnVector: TopicDef = {
         const vLatex = colVecLatex(v);
         const ansLatex = colVecLatex([res0, res1]);
 
+        const t00 = A[0]![0]! * v[0]!;
+        const t01 = A[0]![1]! * v[1]!;
+        const step0 = t01 < 0 ? `${t00} - ${-t01}` : `${t00} + ${t01}`;
+        const t10 = A[1]![0]! * v[0]!;
+        const t11 = A[1]![1]! * v[1]!;
+        const step1 = t11 < 0 ? `${t10} - ${-t11}` : `${t10} + ${t11}`;
+
         return oneOf(
           rng,
           t(
@@ -1030,8 +1008,8 @@ export const multiplyingAMatrixByAColumnVector: TopicDef = {
             t(`$${colVecLatex([res0 + 2, res1 - 1])}$`, `$${colVecLatex([res0 + 2, res1 - 1])}$`),
           ],
           t(
-            `Multiply row by column:\n\n$$(A\\mathbf{v})_1 = (${A[0]![0]!})(${v[0]!}) + (${A[0]![1]!})(${v[1]!}) = ${res0}$$\n$$(A\\mathbf{v})_2 = (${A[1]![0]!})(${v[0]!}) + (${A[1]![1]!})(${v[1]!}) = ${res1}$$\n\nResult is $${ansLatex}$.`,
-            `按行与列相乘求和：\n\n$$(A\\mathbf{v})_1 = (${A[0]![0]!})(${v[0]!}) + (${A[0]![1]!})(${v[1]!}) = ${res0}$$\n$$(A\\mathbf{v})_2 = (${A[1]![0]!})(${v[0]!}) + (${A[1]![1]!})(${v[1]!}) = ${res1}$$\n\n结果为 $${ansLatex}$。`,
+            `Multiply row by column:\n\n$$(A\\mathbf{v})_1 = (${A[0]![0]!})(${v[0]!}) + (${A[0]![1]!})(${v[1]!}) = ${step0} = ${res0}$$\n$$(A\\mathbf{v})_2 = (${A[1]![0]!})(${v[0]!}) + (${A[1]![1]!})(${v[1]!}) = ${step1} = ${res1}$$\n\nResult is $${ansLatex}$.`,
+            `按行与列相乘求和：\n\n$$(A\\mathbf{v})_1 = (${A[0]![0]!})(${v[0]!}) + (${A[0]![1]!})(${v[1]!}) = ${step0} = ${res0}$$\n$$(A\\mathbf{v})_2 = (${A[1]![0]!})(${v[0]!}) + (${A[1]![1]!})(${v[1]!}) = ${step1} = ${res1}$$\n\n结果为 $${ansLatex}$。`,
           ),
         );
       },
@@ -1163,24 +1141,26 @@ export const multiplyingSquareMatrices: TopicDef = {
         const val = AB[i - 1]![j - 1]!;
         const swappedVal = AB[j - 1]![i - 1]!;
 
-        return oneOf(
-          rng,
-          t(
+        const r1 = A[i - 1]![0]!;
+        const r2 = A[i - 1]![1]!;
+        const c1 = B[0]![j - 1]!;
+        const c2 = B[1]![j - 1]!;
+        const term1 = r1 * c1;
+        const term2 = r2 * c2;
+        const step = term2 < 0 ? `${term1} - ${-term2}` : `${term1} + ${term2}`;
+
+        return numberProblem({
+          prompt: t(
             `For the matrices $A$ and $B$, compute the entry in row $${i}$, column $${j}$ of the product $C = AB$:\n\n$$A = ${matLatex(A)}, \\quad B = ${matLatex(B)}$$`,
             `对于矩阵 $A$ 与 $B$，计算乘积 $C = AB$ 中位于第 $${i}$ 行第 $${j}$ 列的元素 $c_{${i}${j}}$：\n\n$$A = ${matLatex(A)}, \\quad B = ${matLatex(B)}$$`,
           ),
-          t(`$${val}$`, `$${val}$`),
-          [
-            t(`$${swappedVal}$`, `$${swappedVal}$`),
-            t(`$${-val}$`, `$${-val}$`),
-            t(`$${val + 2}$`, `$${val + 2}$`),
-            t(`$${val - 3}$`, `$${val - 3}$`),
-          ],
-          t(
-            `Take row $${i}$ of $A$ and column $${j}$ of $B$: $(${A[i - 1]![0]!})(${B[0]![j - 1]!}) + (${A[i - 1]![1]!})(${B[1]![j - 1]!}) = ${val}$.`,
-            `取 $A$ 的第 $${i}$ 行与 $B$ 的第 $${j}$ 列相乘求和：$(${A[i - 1]![0]!})(${B[0]![j - 1]!}) + (${A[i - 1]![1]!})(${B[1]![j - 1]!}) = ${val}$。`,
+          answer: val,
+          wrong: [swappedVal, -val, val + 2, val - 3, val + 1],
+          solution: t(
+            `Take row $${i}$ of $A$ and column $${j}$ of $B$:\n\n$$c_{${i}${j}} = (${r1})(${c1}) + (${r2})(${c2}) = ${step} = ${val}$$`,
+            `取 $A$ 的第 $${i}$ 行与 $B$ 的第 $${j}$ 列相乘求和：\n\n$$c_{${i}${j}} = (${r1})(${c1}) + (${r2})(${c2}) = ${step} = ${val}$$`,
           ),
-        );
+        });
       },
     },
   ],
@@ -1377,24 +1357,29 @@ export const multiplyingMatrices: TopicDef = {
         const AB = matMul(A, B);
         const val = AB[i - 1]![j - 1]!;
 
-        return oneOf(
-          rng,
-          t(
+        const r1 = A[i - 1]![0]!;
+        const r2 = A[i - 1]![1]!;
+        const r3 = A[i - 1]![2]!;
+        const c1 = B[0]![j - 1]!;
+        const c2 = B[1]![j - 1]!;
+        const c3 = B[2]![j - 1]!;
+        const t1 = r1 * c1;
+        const t2 = r2 * c2;
+        const t3 = r3 * c3;
+        const step = `${t1} ${t2 < 0 ? `- ${-t2}` : `+ ${t2}`} ${t3 < 0 ? `- ${-t3}` : `+ ${t3}`}`;
+
+        return numberProblem({
+          prompt: t(
             `Given matrices $A$ ($2 \\times 3$) and $B$ ($3 \\times 3$), find the entry in row $${i}$, column $${j}$ of $AB$:\n\n$$A = ${matLatex(A)}, \\quad B = ${matLatex(B)}$$`,
             `给定矩阵 $A$（$2 \\times 3$）与 $B$（$3 \\times 3$），求乘积 $AB$ 中位于第 $${i}$ 行第 $${j}$ 列的元素：\n\n$$A = ${matLatex(A)}, \\quad B = ${matLatex(B)}$$`,
           ),
-          t(`$${val}$`, `$${val}$`),
-          [
-            t(`$${-val}$`, `$${-val}$`),
-            t(`$${val + 3}$`, `$${val + 3}$`),
-            t(`$${val - 2}$`, `$${val - 2}$`),
-            t(`$${val + 1}$`, `$${val + 1}$`),
-          ],
-          t(
-            `Multiply row $${i}$ of $A$ by column $${j}$ of $B$:\n\n$$(${A[i - 1]![0]!})(${B[0]![j - 1]!}) + (${A[i - 1]![1]!})(${B[1]![j - 1]!}) + (${A[i - 1]![2]!})(${B[2]![j - 1]!}) = ${val}$$`,
-            `将 $A$ 的第 $${i}$ 行与 $B$ 的第 $${j}$ 列对应相乘求和：\n\n$$(${A[i - 1]![0]!})(${B[0]![j - 1]!}) + (${A[i - 1]![1]!})(${B[1]![j - 1]!}) + (${A[i - 1]![2]!})(${B[2]![j - 1]!}) = ${val}$$`,
+          answer: val,
+          wrong: [-val, val + 3, val - 2, val + 1],
+          solution: t(
+            `Multiply row $${i}$ of $A$ by column $${j}$ of $B$:\n\n$$(${r1})(${c1}) + (${r2})(${c2}) + (${r3})(${c3}) = ${step} = ${val}$$`,
+            `将 $A$ 的第 $${i}$ 行与 $B$ 的第 $${j}$ 列对应相乘求和：\n\n$$(${r1})(${c1}) + (${r2})(${c2}) + (${r3})(${c3}) = ${step} = ${val}$$`,
           ),
-        );
+        });
       },
     },
   ],
@@ -2049,24 +2034,18 @@ export const representing3x3SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
         const j = rng.pick([1, 2, 3]);
         const targetVal = A[i - 1]![j - 1]!;
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `In the matrix equation $A \\begin{pmatrix} x \\\\ y \\\\ z \\end{pmatrix} = \\mathbf{b}$ representing a linear system, what is the entry $a_{${i}${j}}$ of the coefficient matrix $A$?\n\n$$A = ${matLatex(A)}, \\quad \\mathbf{b} = ${colVecLatex(b)}$$`,
             `在线性方程组的矩阵方程 $A \\begin{pmatrix} x \\\\ y \\\\ z \\end{pmatrix} = \\mathbf{b}$ 中，系数矩阵 $A$ 的元素 $a_{${i}${j}}$ 是多少？\n\n$$A = ${matLatex(A)}, \\quad \\mathbf{b} = ${colVecLatex(b)}$$`,
           ),
-          t(`$${targetVal}$`, `$${targetVal}$`),
-          [
-            t(`$${-targetVal}$`, `$${-targetVal}$`),
-            t(`$${b[i - 1]!}$`, `$${b[i - 1]!}$`),
-            t(`$${A[j - 1]![i - 1]!}$`, `$${A[j - 1]![i - 1]!}$`),
-            t(`$${targetVal + 1}$`, `$${targetVal + 1}$`),
-          ],
-          t(
+          answer: targetVal,
+          wrong: [-targetVal, b[i - 1]!, A[j - 1]![i - 1]!, targetVal + 1, targetVal - 1],
+          solution: t(
             `Entry $a_{${i}${j}}$ is the coefficient in equation (row) $${i}$ for variable $j$ (column $${j}$). In matrix $A$, that entry is $${targetVal}$.`,
             `元素 $a_{${i}${j}}$ 对应第 $${i}$ 个方程（第 $${i}$ 行）中第 $${j}$ 个未知数（第 $${j}$ 列）的系数。在矩阵 $A$ 中，该元素为 $${targetVal}$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -2109,9 +2088,12 @@ export const theDeterminantOfA2x2Matrix: TopicDef = {
         // Distractor: ac - bd
         const wrongCols = a * c - b * d;
 
-        return oneOf(
-          rng,
-          t(
+        const ad = a * d;
+        const bc = b * c;
+        const step = bc < 0 ? `${ad} - (${bc}) = ${ad} + ${-bc}` : `${ad} - ${bc}`;
+
+        return numberProblem({
+          prompt: t(
             `Evaluate the determinant:\n\n$$\\det ${matLatex([
               [a, b],
               [c, d],
@@ -2127,18 +2109,13 @@ export const theDeterminantOfA2x2Matrix: TopicDef = {
               [c, d],
             ])}$$`,
           ),
-          t(`$${val}$`, `$${val}$`),
-          [
-            t(`$${wrongSign}$`, `$${wrongSign}$`),
-            t(`$${-val}$`, `$${-val}$`),
-            t(`$${wrongCols}$`, `$${wrongCols}$`),
-            t(`$${val + 2}$`, `$${val + 2}$`),
-          ],
-          t(
-            `Use the formula $\\det(A) = ad - bc$:\n\n$$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${a * d} - (${b * c}) = ${val}$$`,
-            `根据计算公式 $\\det(A) = ad - bc$：\n\n$$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${a * d} - (${b * c}) = ${val}$$`,
+          answer: val,
+          wrong: [wrongSign, -val, wrongCols, val + 2, val - 2],
+          solution: t(
+            `Use the formula $\\det(A) = ad - bc$:\n\n$$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${step} = ${val}$$`,
+            `根据计算公式 $\\det(A) = ad - bc$：\n\n$$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${step} = ${val}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -2160,19 +2137,24 @@ export const theDeterminantOfA2x2Matrix: TopicDef = {
           [c, d],
         ];
 
-        return oneOf(
-          rng,
-          t(
+        const bc = b * c;
+        const dStr = d === 1 ? "" : d === -1 ? "-" : `${d}`;
+        const rhs = k + bc;
+        const subStep = bc < 0 ? `+ ${-bc}` : `- ${bc}`;
+
+        return numberProblem({
+          prompt: t(
             `Solve for $x$ in the determinant equation:\n\n$$${detLatex(M)} = ${k}$$`,
             `解下列关于未知数 $x$ 的行列式方程：\n\n$$${detLatex(M)} = ${k}$$`,
           ),
-          t(`$${x}$`, `$${x}$`),
-          [t(`$${-x}$`, `$${-x}$`), t(`$${x + 1}$`, `$${x + 1}$`), t(`$${x - 2}$`, `$${x - 2}$`), t(`$${x + 3}$`, `$${x + 3}$`)],
-          t(
-            `Expand the determinant: $x(${d}) - (${b})(${c}) = ${k}$.\n\n$$${d}x - (${b * c}) = ${k} \\implies ${d}x = ${k + b * c} \\implies x = ${x}$$`,
-            `展开行列式：$x(${d}) - (${b})(${c}) = ${k}$。\n\n$$${d}x - (${b * c}) = ${k} \\implies ${d}x = ${k + b * c} \\implies x = ${x}$$`,
+          solveFor: "x",
+          answer: x,
+          wrong: [-x, x + 1, x - 2, x + 3],
+          solution: t(
+            `Expand the determinant: $x(${d}) - (${b})(${c}) = ${k}$.\n\n$$${dStr}x ${subStep} = ${k} \\implies ${dStr}x = ${rhs} \\implies x = ${x}$$`,
+            `展开行列式：$x(${d}) - (${b})(${c}) = ${k}$。\n\n$$${dStr}x ${subStep} = ${k} \\implies ${dStr}x = ${rhs} \\implies x = ${x}$$`,
           ),
-        );
+        });
       },
     },
   ],
@@ -2216,24 +2198,18 @@ export const theGeometricInterpretationOfThe2x2Determinant: TopicDef = {
         }
         const area = Math.abs(detVal);
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the area of the parallelogram spanned by the vectors $\\mathbf{u} = \\langle ${u1}, ${u2} \\rangle$ and $\\mathbf{v} = \\langle ${v1}, ${v2} \\rangle$ in the Cartesian plane.`,
             `求直角坐标平面中由向量 $\\mathbf{u} = \\langle ${u1}, ${u2} \\rangle$ 与 $\\mathbf{v} = \\langle ${v1}, ${v2} \\rangle$ 张成的平行四边形的面积。`,
           ),
-          t(`$${area}$`, `$${area}$`),
-          [
-            t(`$${detVal < 0 ? detVal : -area}$`, `$${detVal < 0 ? detVal : -area}$`),
-            t(`$${u1 * v1 + u2 * v2}$`, `$${u1 * v1 + u2 * v2}$`),
-            t(`$${Math.round(area / 2)}$`, `$${Math.round(area / 2)}$`),
-            t(`$${area + 4}$`, `$${area + 4}$`),
-          ],
-          t(
+          answer: area,
+          wrong: [Math.abs(u1 * v1 + u2 * v2), Math.abs(u1 * v2 + u2 * v1), area + 4, Math.max(1, area - 2)],
+          solution: t(
             `The area is the absolute value of the determinant:\n\n$$\\text{Area} = |\\det \\begin{pmatrix} ${u1} & ${v1} \\\\ ${u2} & ${v2} \\end{pmatrix}| = |(${u1})(${v2}) - (${u2})(${v1})| = |${detVal}| = ${area}$$`,
             `平行四边形面积等于二阶行列式的绝对值：\n\n$$\\text{Area} = |\\det \\begin{pmatrix} ${u1} & ${v1} \\\\ ${u2} & ${v2} \\end{pmatrix}| = |(${u1})(${v2}) - (${u2})(${v1})| = |${detVal}| = ${area}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -2368,24 +2344,26 @@ export const theMinorsOfA3x3Matrix: TopicDef = {
         const sub = submatrix3(A, i - 1, j - 1);
         const mVal = minor3(A, i - 1, j - 1);
 
-        return oneOf(
-          rng,
-          t(
+        const a11 = sub[0]![0]!;
+        const a22 = sub[1]![1]!;
+        const a12 = sub[0]![1]!;
+        const a21 = sub[1]![0]!;
+        const p1 = a11 * a22;
+        const p2 = a12 * a21;
+        const step = p2 < 0 ? `${p1} - (${p2}) = ${p1} + ${-p2}` : `${p1} - ${p2}`;
+
+        return numberProblem({
+          prompt: t(
             `Find the minor $M_{${i}${j}}$ of the matrix $A$:\n\n$$A = ${matLatex(A)}$$`,
             `求矩阵 $A$ 的余子式 $M_{${i}${j}}$：\n\n$$A = ${matLatex(A)}$$`,
           ),
-          t(`$${mVal}$`, `$${mVal}$`),
-          [
-            t(`$${-mVal}$`, `$${-mVal}$`),
-            t(`$${sub[0]![0]! * sub[1]![1]! + sub[0]![1]! * sub[1]![0]!}$`, `$${sub[0]![0]! * sub[1]![1]! + sub[0]![1]! * sub[1]![0]!}$`),
-            t(`$${mVal + 3}$`, `$${mVal + 3}$`),
-            t(`$${mVal - 4}$`, `$${mVal - 4}$`),
-          ],
-          t(
-            `Delete row $${i}$ and column $${j}$ to get the $2 \\times 2$ submatrix:\n\n$$M_{${i}${j}} = ${detLatex(sub)} = (${sub[0]![0]!})(${sub[1]![1]!}) - (${sub[0]![1]!})(${sub[1]![0]!}) = ${mVal}$$`,
-            `划去第 $${i}$ 行与第 $${j}$ 列得到 $2 \\times 2$ 子矩阵：\n\n$$M_{${i}${j}} = ${detLatex(sub)} = (${sub[0]![0]!})(${sub[1]![1]!}) - (${sub[0]![1]!})(${sub[1]![0]!}) = ${mVal}$$`,
+          answer: mVal,
+          wrong: [-mVal, p1 + p2, mVal + 3, mVal - 4],
+          solution: t(
+            `Delete row $${i}$ and column $${j}$ to get the $2 \\times 2$ submatrix:\n\n$$M_{${i}${j}} = ${detLatex(sub)} = (${a11})(${a22}) - (${a12})(${a21}) = ${step} = ${mVal}$$`,
+            `划去第 $${i}$ 行与第 $${j}$ 列得到 $2 \\times 2$ 子矩阵：\n\n$$M_{${i}${j}} = ${detLatex(sub)} = (${a11})(${a22}) - (${a12})(${a21}) = ${step} = ${mVal}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -2408,24 +2386,18 @@ export const theMinorsOfA3x3Matrix: TopicDef = {
         const cVal = cofactor3(A, i - 1, j - 1);
         const sign = (i + j) % 2 === 0 ? "+" : "-";
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the cofactor $C_{${i}${j}}$ of the matrix $A$:\n\n$$A = ${matLatex(A)}$$`,
             `求矩阵 $A$ 的代数余子式 $C_{${i}${j}}$：\n\n$$A = ${matLatex(A)}$$`,
           ),
-          t(`$${cVal}$`, `$${cVal}$`),
-          [
-            t(`$${-cVal}$`, `$${-cVal}$`),
-            t(`$${mVal}$`, `$${mVal}$`),
-            t(`$${cVal + 2}$`, `$${cVal + 2}$`),
-            t(`$${cVal - 3}$`, `$${cVal - 3}$`),
-          ],
-          t(
+          answer: cVal,
+          wrong: [-cVal, mVal, cVal + 2, cVal - 3],
+          solution: t(
             `First find the minor $M_{${i}${j}} = ${mVal}$. Since $i + j = ${i} + ${j} = ${i + j}$, the sign factor is $(-1)^{${i + j}} = ${sign === "+" ? "1" : "-1"}$. Thus $C_{${i}${j}} = ${cVal}$.`,
             `首先求得余子式 $M_{${i}${j}} = ${mVal}$。由于 $i + j = ${i} + ${j} = ${i + j}$，符号因子为 $(-1)^{${i + j}} = ${sign === "+" ? "1" : "-1"}$。因此 $C_{${i}${j}} = ${cVal}$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -2462,25 +2434,26 @@ export const theDeterminantOfA3x3Matrix: TopicDef = {
           [rng.pick(pool), rng.pick(pool), rng.pick(pool)],
         ];
         const val = det3(A);
+        const a11 = A[0]![0]!;
+        const a13 = A[0]![2]!;
+        const c11 = cofactor3(A, 0, 0);
+        const c13 = cofactor3(A, 0, 2);
+        const t1 = a11 * c11;
+        const t3 = a13 * c13;
+        const step = t3 < 0 ? `${t1} - ${-t3}` : `${t1} + ${t3}`;
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Evaluate the $3 \\times 3$ determinant by expanding along row 1:\n\n$$\\det ${matLatex(A)} = ${detLatex(A)}$$`,
             `利用第一行拉普拉斯展开计算该三阶行列式的值：\n\n$$\\det ${matLatex(A)} = ${detLatex(A)}$$`,
           ),
-          t(`$${val}$`, `$${val}$`),
-          [
-            t(`$${-val}$`, `$${-val}$`),
-            t(`$${val + 4}$`, `$${val + 4}$`),
-            t(`$${val - 6}$`, `$${val - 6}$`),
-            t(`$${val + 10}$`, `$${val + 10}$`),
-          ],
-          t(
-            `Expand along the first row:\n\n$$\\det(A) = (${A[0]![0]!}) C_{11} + (0) C_{12} + (${A[0]![2]!}) C_{13}$$\n\nEvaluating the $2 \\times 2$ minors gives $\\det(A) = ${val}$.`,
-            `沿第一行展开：\n\n$$\\det(A) = (${A[0]![0]!}) C_{11} + (0) C_{12} + (${A[0]![2]!}) C_{13}$$\n\n分别计算各 $2 \\times 2$ 余子式后代入，得到 $\\det(A) = ${val}$。`,
+          answer: val,
+          wrong: [-val, val + 4, val - 6, val + 10],
+          solution: t(
+            `Expand along the first row:\n\n$$\\det(A) = (${a11}) C_{11} + (0) C_{12} + (${a13}) C_{13} = (${a11})(${c11}) + (${a13})(${c13}) = ${step} = ${val}$$`,
+            `沿第一行展开：\n\n$$\\det(A) = (${a11}) C_{11} + (0) C_{12} + (${a13}) C_{13} = (${a11})(${c11}) + (${a13})(${c13}) = ${step} = ${val}$$`,
           ),
-        );
+        });
       },
     },
     {
@@ -2509,21 +2482,19 @@ export const theDeterminantOfA3x3Matrix: TopicDef = {
         const m3 = A[0]![1]! * A[1]![0]! * A[2]![2]!;
         const sumM = m1 + m2 + m3;
 
-        return oneOf(
-          rng,
-          t(`Evaluate the $3 \\times 3$ determinant:\n\n$$${detLatex(A)}$$`, `计算该三阶行列式的值：\n\n$$${detLatex(A)}$$`),
-          t(`$${val}$`, `$${val}$`),
-          [
-            t(`$${-val}$`, `$${-val}$`),
-            t(`$${val + 6}$`, `$${val + 6}$`),
-            t(`$${val - 6}$`, `$${val - 6}$`),
-            t(`$${sumP + sumM}$`, `$${sumP + sumM}$`),
-          ],
-          t(
-            `Using Sarrus' rule:\n\nDownward products: $(${p1}) + (${p2}) + (${p3}) = ${sumP}$\nUpward products: $(${m1}) + (${m2}) + (${m3}) = ${sumM}$\n\n$$\\det(A) = ${sumP} - (${sumM}) = ${val}$$`,
-            `利用沙鲁对角线法则：\n\n主对角线三项乘积之和：$(${p1}) + (${p2}) + (${p3}) = ${sumP}$\n副对角线三项乘积之和：$(${m1}) + (${m2}) + (${m3}) = ${sumM}$\n\n$$\\det(A) = ${sumP} - (${sumM}) = ${val}$$`,
+        const pTermsStr = `${p1} ${p2 < 0 ? `- ${-p2}` : `+ ${p2}`} ${p3 < 0 ? `- ${-p3}` : `+ ${p3}`}`;
+        const mTermsStr = `${m1} ${m2 < 0 ? `- ${-m2}` : `+ ${m2}`} ${m3 < 0 ? `- ${-m3}` : `+ ${m3}`}`;
+        const finalStep = sumM < 0 ? `${sumP} - (${sumM}) = ${sumP} + ${-sumM}` : `${sumP} - ${sumM}`;
+
+        return numberProblem({
+          prompt: t(`Evaluate the $3 \\times 3$ determinant:\n\n$$${detLatex(A)}$$`, `计算该三阶行列式的值：\n\n$$${detLatex(A)}$$`),
+          answer: val,
+          wrong: [-val, val + 6, val - 6, sumP + sumM],
+          solution: t(
+            `Using Sarrus' rule:\n\nDownward products: $${pTermsStr} = ${sumP}$\nUpward products: $${mTermsStr} = ${sumM}$\n\n$$\\det(A) = ${finalStep} = ${val}$$`,
+            `利用沙鲁对角线法则：\n\n主对角线三项乘积之和：$${pTermsStr} = ${sumP}$\n副对角线三项乘积之和：$${mTermsStr} = ${sumM}$\n\n$$\\det(A) = ${finalStep} = ${val}$$`,
           ),
-        );
+        });
       },
     },
   ],

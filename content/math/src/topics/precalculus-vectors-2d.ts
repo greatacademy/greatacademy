@@ -1,8 +1,8 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { paren, poly } from "@ga/subject-math";
+import { paren, poly, Q } from "@ga/subject-math";
 
-import { choiceProblem } from "../problems.ts";
+import { choiceProblem, numberProblem, pointProblem } from "../problems.ts";
 
 // Precalculus unit 5: Vectors (modules 5.16 and 5.17: 2D Vectors).
 
@@ -416,19 +416,18 @@ export const theMagnitudeOfAVector: TopicDef = {
 
         const wrongVals = [k * len, len * (Math.abs(k) + 1), Math.abs(k) + len].filter((v) => v !== rightVal);
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Given that $\\|${vec}\\| = ${len}$, find the magnitude $\\|${k}${vec}\\|$.`,
             `已知 $\\|${vec}\\| = ${len}$，求模长 $\\|${k}${vec}\\|$。`,
           ),
-          t(`$${rightVal}$`, `$${rightVal}$`),
-          wrongVals.map((w) => t(`$${w}$`, `$${w}$`)),
-          t(
+          answer: rightVal,
+          wrong: wrongVals,
+          solution: t(
             `Using the scaling property of vector magnitudes, $\\|${k}${vec}\\| = |${k}|\\,\\|${vec}\\| = ${Math.abs(k)} \\times ${len} = ${rightVal}$.`,
             `根据向量模长的数乘性质，$\\|${k}${vec}\\| = |${k}|\\,\\|${vec}\\| = ${Math.abs(k)} \\times ${len} = ${rightVal}$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -544,7 +543,7 @@ export const problemSolvingUsingVectorDiagrams: TopicDef = {
         "对于任意顶点依次为 $A_1, A_2, \\dots, A_n$ 的闭合多边形，沿周长依次相连的向量之和为零向量：\n\n$$\\vec{A_1 A_2} + \\vec{A_2 A_3} + \\dots + \\vec{A_n A_1} = \\mathbf{0}$$\n\n在 $\\triangle ABC$ 中，$\\vec{AB} + \\vec{BC} + \\vec{CA} = \\mathbf{0}$，从而 $\\vec{CA} = -(\\vec{AB} + \\vec{BC})$。",
       ),
       generate(rng) {
-        const poly = rng.pick([
+        const polyShape = rng.pick([
           { pts: ["A", "B", "C"], n: 3 },
           { pts: ["P", "Q", "R"], n: 3 },
           { pts: ["K", "L", "M"], n: 3 },
@@ -559,8 +558,8 @@ export const problemSolvingUsingVectorDiagrams: TopicDef = {
         const b = rng.pick(["\\mathbf{b}", "\\mathbf{v}"]);
         const c = rng.pick(["\\mathbf{c}", "\\mathbf{w}"]);
 
-        if (poly.n === 3) {
-          const [p1, p2, p3] = poly.pts;
+        if (polyShape.n === 3) {
+          const [p1, p2, p3] = polyShape.pts;
           return oneOf(
             rng,
             t(
@@ -576,7 +575,7 @@ export const problemSolvingUsingVectorDiagrams: TopicDef = {
           );
         }
 
-        const [p1, p2, p3, p4] = poly.pts;
+        const [p1, p2, p3, p4] = polyShape.pts;
         return oneOf(
           rng,
           t(
@@ -712,26 +711,22 @@ export const parallelVectors: TopicDef = {
         const aVec = rng.pick(["\\mathbf{a}", "\\mathbf{e}_1"]);
         const bVec = rng.pick(["\\mathbf{b}", "\\mathbf{e}_2"]);
 
-        const uStr = `${uA === 1 ? "" : uA}${aVec} ${uB > 0 ? `+ ${uB}` : `- ${Math.abs(uB)}`}${bVec}`;
-        const vPromptStr = `${vA}${aVec} + m${bVec}`;
+        const uStr = poly([uA, aVec], [uB, bVec]);
+        const vPromptStr = `${poly([vA, aVec])} + m${bVec}`;
 
-        return oneOf(
-          rng,
-          t(
-            `Let ${aVec} and ${bVec} be non-collinear basis vectors. If $\\mathbf{u} = ${uStr}$ and $\\mathbf{v} = ${vPromptStr}$ are parallel, find the value of $m$.`,
-            `设 ${aVec} 和 ${bVec} 为不共线的基底向量。若 $\\mathbf{u} = ${uStr}$ 与 $\\mathbf{v} = ${vPromptStr}$ 平行，求 $m$ 的值。`,
+        return numberProblem({
+          prompt: t(
+            `Let $${aVec}$ and $${bVec}$ be non-collinear basis vectors. If $\\mathbf{u} = ${uStr}$ and $\\mathbf{v} = ${vPromptStr}$ are parallel, find the value of $m$.`,
+            `设 $${aVec}$ 和 $${bVec}$ 为不共线的基底向量。若 $\\mathbf{u} = ${uStr}$ 与 $\\mathbf{v} = ${vPromptStr}$ 平行，求 $m$ 的值。`,
           ),
-          t(`$m = ${vB}$`, `$m = ${vB}$`),
-          [
-            t(`$m = ${-vB}$`, `$m = ${-vB}$`),
-            t(`$m = ${vB + (k > 0 ? 1 : -1)}$`, `$m = ${vB + (k > 0 ? 1 : -1)}$`),
-            t(`$m = ${Math.round(uB / aCoeff)}$`, `$m = ${Math.round(uB / aCoeff)}$`),
-          ],
-          t(
-            `Since $\\mathbf{u} \\parallel \\mathbf{v}$, there is a scalar $k$ such that $\\mathbf{v} = k\\mathbf{u}$. Comparing coefficients of ${aVec}: $k \\times ${uA} = ${vA} \\implies k = ${k}$. Then $m = k \\times (${uB}) = ${vB}$.`,
-            `因为 $\\mathbf{u} \\parallel \\mathbf{v}$，存在标量 $k$ 使得 $\\mathbf{v} = k\\mathbf{u}$。比较 ${aVec} 的系数：$k \\times ${uA} = ${vA} \\implies k = ${k}$。因此 $m = k \\times (${uB}) = ${vB}$。`,
+          solveFor: "m",
+          answer: vB,
+          wrong: [-vB, vB + (k > 0 ? 1 : -1), Math.round(uB / aCoeff)],
+          solution: t(
+            `Since $\\mathbf{u} \\parallel \\mathbf{v}$, there is a scalar $k$ such that $\\mathbf{v} = k\\mathbf{u}$. Comparing coefficients of $${aVec}$: $k \\times ${uA} = ${vA} \\implies k = ${k}$. Then $m = ${k} \\times ${paren(uB)} = ${vB}$.`,
+            `因为 $\\mathbf{u} \\parallel \\mathbf{v}$，存在标量 $k$ 使得 $\\mathbf{v} = k\\mathbf{u}$。比较 $${aVec}$ 的系数：$k \\times ${uA} = ${vA} \\implies k = ${k}$。因此 $m = ${k} \\times ${paren(uB)} = ${vB}$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -839,6 +834,10 @@ export const unitVectors: TopicDef = {
           { vec: "\\langle 0, 1 \\rangle", isUnit: true, mag: "\\sqrt{0^2 + 1^2} = 1" },
           { vec: "\\left\\langle \\frac{7}{25}, \\frac{24}{25} \\right\\rangle", isUnit: true, mag: "\\sqrt{49/625 + 576/625} = 1" },
           { vec: "\\left\\langle -\\frac{8}{17}, \\frac{15}{17} \\right\\rangle", isUnit: true, mag: "\\sqrt{64/289 + 225/289} = 1" },
+          { vec: "\\left\\langle \\frac{8}{17}, -\\frac{15}{17} \\right\\rangle", isUnit: true, mag: "\\sqrt{64/289 + 225/289} = 1" },
+          { vec: "\\left\\langle -\\frac{7}{25}, -\\frac{24}{25} \\right\\rangle", isUnit: true, mag: "\\sqrt{49/625 + 576/625} = 1" },
+          { vec: "\\left\\langle \\frac{20}{29}, \\frac{21}{29} \\right\\rangle", isUnit: true, mag: "\\sqrt{400/841 + 441/841} = 1" },
+          { vec: "\\left\\langle -\\frac{20}{29}, \\frac{21}{29} \\right\\rangle", isUnit: true, mag: "\\sqrt{400/841 + 441/841} = 1" },
           // non-units
           { vec: "\\langle 1, 1 \\rangle", isUnit: false, mag: "\\sqrt{1^2 + 1^2} = \\sqrt{2} \\neq 1" },
           { vec: "\\langle 2, 0 \\rangle", isUnit: false, mag: "2 \\neq 1" },
@@ -857,6 +856,12 @@ export const unitVectors: TopicDef = {
           { vec: "\\left\\langle \\frac{3}{4}, \\frac{3}{4} \\right\\rangle", isUnit: false, mag: "\\frac{3\\sqrt{2}}{4} \\neq 1" },
           { vec: "\\langle 1, 2 \\rangle", isUnit: false, mag: "\\sqrt{5} \\neq 1" },
           { vec: "\\langle -2, 1 \\rangle", isUnit: false, mag: "\\sqrt{5} \\neq 1" },
+          { vec: "\\langle 3, 4 \\rangle", isUnit: false, mag: "5 \\neq 1" },
+          { vec: "\\langle -5, 12 \\rangle", isUnit: false, mag: "13 \\neq 1" },
+          { vec: "\\left\\langle \\frac{1}{3}, \\frac{2}{3} \\right\\rangle", isUnit: false, mag: "\\frac{\\sqrt{5}}{3} \\neq 1" },
+          { vec: "\\langle 0, 2 \\rangle", isUnit: false, mag: "2 \\neq 1" },
+          { vec: "\\langle -4, 0 \\rangle", isUnit: false, mag: "4 \\neq 1" },
+          { vec: "\\left\\langle \\frac{2}{5}, \\frac{3}{5} \\right\\rangle", isUnit: false, mag: "\\frac{\\sqrt{13}}{5} \\neq 1" },
         ];
         const pick = rng.pick(units);
         const right = pick.isUnit
@@ -894,62 +899,55 @@ export const unitVectors: TopicDef = {
         "求与非零向量 $\\mathbf{v}$ **同方向**的单位向量 $\\mathbf{u}$，只需将 $\\mathbf{v}$ 除以其模长（归一化）：\n\n$$\\mathbf{u} = \\frac{\\mathbf{v}}{\\|\\mathbf{v}\\|}$$\n\n与 $\\mathbf{v}$ **反方向**的单位向量为 $-\\frac{\\mathbf{v}}{\\|\\mathbf{v}\\|}$。",
       ),
       generate(rng) {
-        const triples = [
-          { x: 3, y: 4, mag: 5 },
-          { x: -3, y: 4, mag: 5 },
-          { x: 3, y: -4, mag: 5 },
-          { x: -3, y: -4, mag: 5 },
-          { x: 4, y: 3, mag: 5 },
-          { x: -4, y: 3, mag: 5 },
-          { x: 4, y: -3, mag: 5 },
-          { x: -4, y: -3, mag: 5 },
-          { x: 5, y: 12, mag: 13 },
-          { x: -5, y: 12, mag: 13 },
-          { x: 5, y: -12, mag: 13 },
-          { x: -5, y: -12, mag: 13 },
-          { x: 12, y: 5, mag: 13 },
-          { x: -12, y: 5, mag: 13 },
-          { x: 6, y: 8, mag: 10 },
-          { x: -6, y: 8, mag: 10 },
-          { x: 8, y: 6, mag: 10 },
-          { x: -8, y: 6, mag: 10 },
-          { x: 8, y: 15, mag: 17 },
-          { x: -8, y: 15, mag: 17 },
-          { x: 15, y: 8, mag: 17 },
-          { x: -15, y: 8, mag: 17 },
-          { x: 7, y: 24, mag: 25 },
-          { x: -7, y: 24, mag: 25 },
-          { x: 9, y: 12, mag: 15 },
-          { x: -9, y: 12, mag: 15 },
-          { x: 10, y: 24, mag: 26 },
-          { x: -10, y: 24, mag: 26 },
+        const baseTriples = [
+          { a: 3, b: 4, mag: 5 },
+          { a: 4, b: 3, mag: 5 },
+          { a: 5, b: 12, mag: 13 },
+          { a: 12, b: 5, mag: 13 },
+          { a: 8, b: 15, mag: 17 },
+          { a: 15, b: 8, mag: 17 },
+          { a: 7, b: 24, mag: 25 },
+          { a: 24, b: 7, mag: 25 },
+          { a: 20, b: 21, mag: 29 },
+          { a: 21, b: 20, mag: 29 },
+          { a: 9, b: 40, mag: 41 },
+          { a: 40, b: 9, mag: 41 },
+          { a: 12, b: 35, mag: 37 },
+          { a: 35, b: 12, mag: 37 },
         ];
-        const triple = rng.pick(triples);
-        const { x, y, mag } = triple;
+        const triple = rng.pick(baseTriples);
+        const sx = rng.pick([1, -1]);
+        const sy = rng.pick([1, -1]);
+        const x = sx * triple.a;
+        const y = sy * triple.b;
+        const mag = triple.mag;
+
         const dir = rng.pick(["same", "opposite"]);
         const isSame = dir === "same";
 
         const ux = isSame ? x : -x;
         const uy = isSame ? y : -y;
+        const qx = Q.of(ux, mag);
+        const qy = Q.of(uy, mag);
 
-        const rightStr = `\\left\\langle \\frac{${ux}}{${mag}}, \\frac{${uy}}{${mag}} \\right\\rangle`;
-        const wrong1 = `\\left\\langle \\frac{${-ux}}{${mag}}, \\frac{${-uy}}{${mag}} \\right\\rangle`;
-        const wrong2 = `\\left\\langle \\frac{${ux}}{${mag * mag}}, \\frac{${uy}}{${mag * mag}} \\right\\rangle`;
-        const wrong3 = `\\langle ${ux}, ${uy} \\rangle`;
-
-        return oneOf(
-          rng,
-          t(
-            `Find the unit vector pointing in the ${isSame ? "same" : "opposite"} direction as $\\mathbf{v} = \\langle ${x}, ${y} \\rangle$.`,
-            `求与向量 $\\mathbf{v} = \\langle ${x}, ${y} \\rangle$ ${isSame ? "同向" : "反向"}的单位向量。`,
+        return pointProblem({
+          prompt: t(
+            `Find the unit vector pointing in the ${isSame ? "same" : "opposite"} direction as $\\mathbf{v} = \\langle ${x}, ${y} \\rangle$. Write your answer in component form $\\langle x, y \\rangle$.`,
+            `求与向量 $\\mathbf{v} = \\langle ${x}, ${y} \\rangle$ ${isSame ? "同向" : "反向"}的单位向量。请用坐标分量形式 $\\langle x, y \\rangle$ 作答。`,
           ),
-          t(`$${rightStr}$`, `$${rightStr}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `The magnitude is $\\|\\mathbf{v}\\| = \\sqrt{(${x})^2 + (${y})^2} = ${mag}$. Dividing by its magnitude and ${isSame ? "keeping" : "reversing"} direction yields $${rightStr}$.`,
-            `模长为 $\\|\\mathbf{v}\\| = \\sqrt{(${x})^2 + (${y})^2} = ${mag}$。除以模长并${isSame ? "保持" : "反转"}方向得到 $${rightStr}$。`,
+          vector: true,
+          answer: [qx, qy],
+          wrong: [
+            [Q.of(-ux, mag), Q.of(-uy, mag)],
+            [ux, uy],
+            [Q.of(ux, mag * mag), Q.of(uy, mag * mag)],
+            [Q.of(uy, mag), Q.of(ux, mag)],
+          ],
+          solution: t(
+            `The magnitude is $\\|\\mathbf{v}\\| = \\sqrt{(${x})^2 + (${y})^2} = ${mag}$. Dividing by its magnitude and ${isSame ? "keeping" : "reversing"} direction yields $\\langle ${qx.toLatex()}, ${qy.toLatex()} \\rangle$.`,
+            `模长为 $\\|\\mathbf{v}\\| = \\sqrt{(${x})^2 + (${y})^2} = ${mag}$。除以模长并${isSame ? "保持" : "反转"}方向得到 $\\langle ${qx.toLatex()}, ${qy.toLatex()} \\rangle$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -1004,8 +1002,8 @@ export const linearCombinationsOfVectorsAndTheirProperties: TopicDef = {
           t(`$${ansStr}$`, `$${ansStr}$`),
           [t(`$${wrong1Str}$`, `$${wrong1Str}$`), t(`$${wrong2Str}$`, `$${wrong2Str}$`), t(`$${wrong3Str}$`, `$${wrong3Str}$`)],
           t(
-            `Expand brackets and collect like terms: $(${c1} \\times ${a1} + ${paren(c2)} \\times ${paren(a2)})${u} + (${c1} \\times ${paren(b1)} + ${paren(c2)} \\times ${paren(b2)})${v} = ${ansStr}$.`,
-            `展开括号并合并同类项：$(${c1} \\times ${a1} + ${paren(c2)} \\times ${paren(a2)})${u} + (${c1} \\times ${paren(b1)} + ${paren(c2)} \\times ${paren(b2)})${v} = ${ansStr}$。`,
+            `Expand brackets and collect like terms: $(${c1} \\cdot ${a1} ${c2 > 0 ? `+ ${c2}` : `- ${Math.abs(c2)}`} \\cdot ${paren(a2)})${u} + (${c1} \\cdot ${paren(b1)} ${c2 > 0 ? `+ ${c2}` : `- ${Math.abs(c2)}`} \\cdot ${paren(b2)})${v} = ${ansStr}$.`,
+            `展开括号并合并同类项：$(${c1} \\cdot ${a1} ${c2 > 0 ? `+ ${c2}` : `- ${Math.abs(c2)}`} \\cdot ${paren(a2)})${u} + (${c1} \\cdot ${paren(b1)} ${c2 > 0 ? `+ ${c2}` : `- ${Math.abs(c2)}`} \\cdot ${paren(b2)})${v} = ${ansStr}$。`,
           ),
         );
       },
@@ -1018,28 +1016,38 @@ export const linearCombinationsOfVectorsAndTheirProperties: TopicDef = {
         "若向量 $\\mathbf{u}$ 和 $\\mathbf{v}$ 不共线（线性无关），则：\n\n$$x\\mathbf{u} + y\\mathbf{v} = a\\mathbf{u} + b\\mathbf{v} \\iff x = a \\text{ 且 } y = b$$",
       ),
       generate(rng) {
-        const x = rng.pick([2, 3, 4, 5, 6]);
-        const y = rng.pick([1, 2, 3, 4, 5]);
+        const x = rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8]);
+        const y = rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8]);
         const c1 = 2 * x + y;
         const c2 = x - y;
+        const rhs = poly([c1, "\\mathbf{u}"], [c2, "\\mathbf{v}"]);
 
-        return oneOf(
-          rng,
-          t(
-            `Let $\\mathbf{u}$ and $\\mathbf{v}$ be non-collinear vectors. If $(2x + y)\\mathbf{u} + (x - y)\\mathbf{v} = ${c1}\\mathbf{u} + (${c2})\\mathbf{v}$, find $x$ and $y$.`,
-            `设 $\\mathbf{u}$ 与 $\\mathbf{v}$ 为不共线的向量。若 $(2x + y)\\mathbf{u} + (x - y)\\mathbf{v} = ${c1}\\mathbf{u} + (${c2})\\mathbf{v}$，求 $x$ 与 $y$ 的值。`,
+        return pointProblem({
+          prompt: t(
+            `Let $\\mathbf{u}$ and $\\mathbf{v}$ be non-collinear vectors. If $(2x + y)\\mathbf{u} + (x - y)\\mathbf{v} = ${rhs}$, solve for $x$ and $y$.`,
+            `设 $\\mathbf{u}$ 与 $\\mathbf{v}$ 为不共线的向量。若 $(2x + y)\\mathbf{u} + (x - y)\\mathbf{v} = ${rhs}$，求 $x$ 与 $y$ 的值。`,
           ),
-          t(`$x = ${x}, \\; y = ${y}$`, `$x = ${x}, \\; y = ${y}$`),
-          [
-            t(`$x = ${y}, \\; y = ${x}$`, `$x = ${y}, \\; y = ${x}$`),
-            t(`$x = ${x + 1}, \\; y = ${y - 1}$`, `$x = ${x + 1}, \\; y = ${y - 1}$`),
-            t(`$x = ${x}, \\; y = ${-y}$`, `$x = ${x}, \\; y = ${-y}$`),
+          vars: ["x", "y"],
+          answer: [x, y],
+          wrong: [
+            [y, x],
+            [x + 1, y - 1],
+            [x, -y],
+            [-x, y],
           ],
-          t(
-            `Since $\\mathbf{u}$ and $\\mathbf{v}$ are non-collinear, coefficients on both sides must match:\n1) $2x + y = ${c1}$\n2) $x - y = ${c2}$\n\nAdding the equations gives $3x = ${c1 + c2} \\implies x = ${x}$. Substituting back gives $y = ${y}$.`,
-            `因为 $\\mathbf{u}$ 和 $\\mathbf{v}$ 不共线，对应系数必相等：\n1) $2x + y = ${c1}$\n2) $x - y = ${c2}$\n\n两式相加得 $3x = ${c1 + c2} \\implies x = ${x}$。代回得 $y = ${y}$。`,
+          solution: t(
+            `Since $\\mathbf{u}$ and $\\mathbf{v}$ are non-collinear, coefficients on both sides must match:
+1) $2x + y = ${c1}$
+2) $x - y = ${c2}$
+
+Adding the two equations yields $3x = ${c1 + c2} \\implies x = ${x}$. Substituting back gives $y = ${y}$. Thus $(x, y) = (${x}, ${y})$.`,
+            `因为 $\\mathbf{u}$ 和 $\\mathbf{v}$ 不共线，对应系数必相等：
+1) $2x + y = ${c1}$
+2) $x - y = ${c2}$
+
+两式相加得 $3x = ${c1 + c2} \\implies x = ${x}$。代回得 $y = ${y}$。因此 $(x, y) = (${x}, ${y})$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -1188,24 +1196,23 @@ export const twoDimensionalVectorsExpressedInComponentForm: TopicDef = {
         const x2 = x1 + dx;
         const y2 = y1 + dy;
 
-        const ans = `\\langle ${dx}, ${dy} \\rangle`;
-        const wrong1 = `\\langle ${-dx}, ${-dy} \\rangle`;
-        const wrong2 = `\\langle ${x1 + x2}, ${y1 + y2} \\rangle`;
-        const wrong3 = `\\langle ${dy}, ${dx} \\rangle`;
-
-        return oneOf(
-          rng,
-          t(
-            `Find the component form of vector $\\vec{AB}$ given initial point $A(${x1}, ${y1})$ and terminal point $B(${x2}, ${y2})$.`,
-            `已知起点 $A(${x1}, ${y1})$ 与终点 $B(${x2}, ${y2})$，求向量 $\\vec{AB}$ 的坐标分量形式。`,
+        return pointProblem({
+          prompt: t(
+            `Find the component form $\\langle x, y \\rangle$ of the vector $\\vec{AB}$ given initial point $A(${x1}, ${y1})$ and terminal point $B(${x2}, ${y2})$.`,
+            `已知起点 $A(${x1}, ${y1})$ 与终点 $B(${x2}, ${y2})$，求向量 $\\vec{AB}$ 的坐标分量形式 $\\langle x, y \\rangle$。`,
           ),
-          t(`$${ans}$`, `$${ans}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `Subtract initial point coordinates from terminal point coordinates: $\\vec{AB} = \\langle ${x2} - (${x1}),\\, ${y2} - (${y1}) \\rangle = ${ans}$.`,
-            `终点坐标减去起点坐标：$\\vec{AB} = \\langle ${x2} - (${x1}),\\, ${y2} - (${y1}) \\rangle = ${ans}$。`,
+          vector: true,
+          answer: [dx, dy],
+          wrong: [
+            [-dx, -dy],
+            [x1 + x2, y1 + y2],
+            [dy, dx],
+          ],
+          solution: t(
+            `Subtract initial point coordinates from terminal point coordinates: $\\vec{AB} = \\langle ${x2} - ${paren(x1)},\\, ${y2} - ${paren(y1)} \\rangle = \\langle ${dx}, ${dy} \\rangle$.`,
+            `终点坐标减去起点坐标：$\\vec{AB} = \\langle ${x2} - ${paren(x1)},\\, ${y2} - ${paren(y1)} \\rangle = \\langle ${dx}, ${dy} \\rangle$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -1277,24 +1284,24 @@ export const additionAndScalarMultiplicationOfCartesianVectorsIn2d: TopicDef = {
         const ry = isAdd ? u2 + v2 : u2 - v2;
 
         const opSymbol = isAdd ? "+" : "-";
-        const ans = `\\langle ${rx}, ${ry} \\rangle`;
-        const wrong1 = `\\langle ${isAdd ? u1 - v1 : u1 + v1}, ${isAdd ? u2 - v2 : u2 + v2} \\rangle`;
-        const wrong2 = `\\langle ${rx}, ${-ry} \\rangle`;
-        const wrong3 = `\\langle ${ry}, ${rx} \\rangle`;
 
-        return oneOf(
-          rng,
-          t(
-            `Given $\\mathbf{u} = \\langle ${u1}, ${u2} \\rangle$ and $\\mathbf{v} = \\langle ${v1}, ${v2} \\rangle$, calculate $\\mathbf{u} ${opSymbol} \\mathbf{v}$.`,
-            `已知 $\\mathbf{u} = \\langle ${u1}, ${u2} \\rangle$ 且 $\\mathbf{v} = \\langle ${v1}, ${v2} \\rangle$，计算 $\\mathbf{u} ${opSymbol} \\mathbf{v}$。`,
+        return pointProblem({
+          prompt: t(
+            `Given $\\mathbf{u} = \\langle ${u1}, ${u2} \\rangle$ and $\\mathbf{v} = \\langle ${v1}, ${v2} \\rangle$, calculate $\\mathbf{u} ${opSymbol} \\mathbf{v}$. Write your answer in component form $\\langle x, y \\rangle$.`,
+            `已知 $\\mathbf{u} = \\langle ${u1}, ${u2} \\rangle$ 且 $\\mathbf{v} = \\langle ${v1}, ${v2} \\rangle$，计算 $\\mathbf{u} ${opSymbol} \\mathbf{v}$。请用坐标分量形式 $\\langle x, y \\rangle$ 作答。`,
           ),
-          t(`$${ans}$`, `$${ans}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `Combine corresponding components: $\\mathbf{u} ${opSymbol} \\mathbf{v} = \\langle ${u1} ${opSymbol} (${v1}),\\, ${u2} ${opSymbol} (${v2}) \\rangle = ${ans}$.`,
-            `对应分量分别进行运算：$\\mathbf{u} ${opSymbol} \\mathbf{v} = \\langle ${u1} ${opSymbol} (${v1}),\\, ${u2} ${opSymbol} (${v2}) \\rangle = ${ans}$。`,
+          vector: true,
+          answer: [rx, ry],
+          wrong: [
+            [isAdd ? u1 - v1 : u1 + v1, isAdd ? u2 - v2 : u2 + v2],
+            [rx, -ry],
+            [ry, rx],
+          ],
+          solution: t(
+            `Combine corresponding components: $\\mathbf{u} ${opSymbol} \\mathbf{v} = \\langle ${u1} ${opSymbol} ${paren(v1)},\\, ${u2} ${opSymbol} ${paren(v2)} \\rangle = \\langle ${rx}, ${ry} \\rangle$.`,
+            `对应分量分别进行运算：$\\mathbf{u} ${opSymbol} \\mathbf{v} = \\langle ${u1} ${opSymbol} ${paren(v1)},\\, ${u2} ${opSymbol} ${paren(v2)} \\rangle = \\langle ${rx}, ${ry} \\rangle$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -1315,26 +1322,25 @@ export const additionAndScalarMultiplicationOfCartesianVectorsIn2d: TopicDef = {
         const rx = a * u1 + b * v1;
         const ry = a * u2 + b * v2;
 
-        const ans = `\\langle ${rx}, ${ry} \\rangle`;
-        const wrong1 = `\\langle ${rx + 1}, ${ry - 1} \\rangle`;
-        const wrong2 = `\\langle ${a * u1 - b * v1}, ${a * u2 - b * v2} \\rangle`;
-        const wrong3 = `\\langle ${ry}, ${rx} \\rangle`;
-
         const bSignStr = b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
 
-        return oneOf(
-          rng,
-          t(
-            `Given $\\mathbf{u} = \\langle ${u1}, ${u2} \\rangle$ and $\\mathbf{v} = \\langle ${v1}, ${v2} \\rangle$, evaluate the linear combination $${a}\\mathbf{u} ${bSignStr}\\mathbf{v}$.`,
-            `已知 $\\mathbf{u} = \\langle ${u1}, ${u2} \\rangle$ 且 $\\mathbf{v} = \\langle ${v1}, ${v2} \\rangle$，计算线性组合 $${a}\\mathbf{u} ${bSignStr}\\mathbf{v}$。`,
+        return pointProblem({
+          prompt: t(
+            `Given $\\mathbf{u} = \\langle ${u1}, ${u2} \\rangle$ and $\\mathbf{v} = \\langle ${v1}, ${v2} \\rangle$, evaluate the linear combination $${a}\\mathbf{u} ${bSignStr}\\mathbf{v}$. Write your answer in component form $\\langle x, y \\rangle$.`,
+            `已知 $\\mathbf{u} = \\langle ${u1}, ${u2} \\rangle$ 且 $\\mathbf{v} = \\langle ${v1}, ${v2} \\rangle$，计算线性组合 $${a}\\mathbf{u} ${bSignStr}\\mathbf{v}$。请用坐标分量形式 $\\langle x, y \\rangle$ 作答。`,
           ),
-          t(`$${ans}$`, `$${ans}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `Compute each component: $x = ${a}(${u1}) + (${b})(${v1}) = ${rx}$, and $y = ${a}(${u2}) + (${b})(${v2}) = ${ry}$, giving $${ans}$.`,
-            `分别计算各分量：$x = ${a}(${u1}) + (${b})(${v1}) = ${rx}$，$y = ${a}(${u2}) + (${b})(${v2}) = ${ry}$，得到 $${ans}$。`,
+          vector: true,
+          answer: [rx, ry],
+          wrong: [
+            [rx + 1, ry - 1],
+            [a * u1 - b * v1, a * u2 - b * v2],
+            [ry, rx],
+          ],
+          solution: t(
+            `Compute each component: $x = ${a}(${u1}) ${b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`}(${v1}) = ${rx}$, and $y = ${a}(${u2}) ${b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`}(${v2}) = ${ry}$, giving $\\langle ${rx}, ${ry} \\rangle$.`,
+            `分别计算各分量：$x = ${a}(${u1}) ${b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`}(${v1}) = ${rx}$，$y = ${a}(${u2}) ${b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`}(${v2}) = ${ry}$，得到 $\\langle ${rx}, ${ry} \\rangle$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -1364,76 +1370,54 @@ export const calculatingTheMagnitudeOfCartesianVectorsIn2d: TopicDef = {
       ),
       generate(rng) {
         const triples = [
-          { x: 3, y: 4, ans: 5, ansStr: "5" },
-          { x: -3, y: 4, ans: 5, ansStr: "5" },
-          { x: 3, y: -4, ans: 5, ansStr: "5" },
-          { x: -3, y: -4, ans: 5, ansStr: "5" },
-          { x: 4, y: 3, ans: 5, ansStr: "5" },
-          { x: -4, y: 3, ans: 5, ansStr: "5" },
-          { x: 4, y: -3, ans: 5, ansStr: "5" },
-          { x: -4, y: -3, ans: 5, ansStr: "5" },
-          { x: 6, y: 8, ans: 10, ansStr: "10" },
-          { x: -6, y: 8, ans: 10, ansStr: "10" },
-          { x: 6, y: -8, ans: 10, ansStr: "10" },
-          { x: -6, y: -8, ans: 10, ansStr: "10" },
-          { x: 8, y: 6, ans: 10, ansStr: "10" },
-          { x: -8, y: 6, ans: 10, ansStr: "10" },
-          { x: 5, y: 12, ans: 13, ansStr: "13" },
-          { x: -5, y: 12, ans: 13, ansStr: "13" },
-          { x: 5, y: -12, ans: 13, ansStr: "13" },
-          { x: -5, y: -12, ans: 13, ansStr: "13" },
-          { x: 12, y: 5, ans: 13, ansStr: "13" },
-          { x: -12, y: 5, ans: 13, ansStr: "13" },
-          { x: 9, y: 12, ans: 15, ansStr: "15" },
-          { x: -9, y: 12, ans: 15, ansStr: "15" },
-          { x: 12, y: 9, ans: 15, ansStr: "15" },
-          { x: 8, y: 15, ans: 17, ansStr: "17" },
-          { x: -8, y: 15, ans: 17, ansStr: "17" },
-          { x: 15, y: 8, ans: 17, ansStr: "17" },
-          { x: 7, y: 24, ans: 25, ansStr: "25" },
-          { x: -7, y: 24, ans: 25, ansStr: "25" },
-          { x: 24, y: 7, ans: 25, ansStr: "25" },
-          { x: -7, y: -24, ans: 25, ansStr: "25" },
-          { x: 10, y: 24, ans: 26, ansStr: "26" },
-          { x: -10, y: 24, ans: 26, ansStr: "26" },
-          { x: 1, y: 1, ans: 0, ansStr: "\\sqrt{2}" },
-          { x: -1, y: 1, ans: 0, ansStr: "\\sqrt{2}" },
-          { x: 1, y: -1, ans: 0, ansStr: "\\sqrt{2}" },
-          { x: -2, y: 2, ans: 0, ansStr: "2\\sqrt{2}" },
-          { x: 2, y: 2, ans: 0, ansStr: "2\\sqrt{2}" },
-          { x: 1, y: 2, ans: 0, ansStr: "\\sqrt{5}" },
-          { x: -1, y: 2, ans: 0, ansStr: "\\sqrt{5}" },
-          { x: 2, y: 1, ans: 0, ansStr: "\\sqrt{5}" },
-          { x: 2, y: 3, ans: 0, ansStr: "\\sqrt{13}" },
-          { x: -2, y: 3, ans: 0, ansStr: "\\sqrt{13}" },
-          { x: 3, y: 2, ans: 0, ansStr: "\\sqrt{13}" },
-          { x: 3, y: 5, ans: 0, ansStr: "\\sqrt{34}" },
-          { x: 1, y: 7, ans: 0, ansStr: "5\\sqrt{2}" },
+          { a: 3, b: 4, c: 5 },
+          { a: 4, b: 3, c: 5 },
+          { a: 6, b: 8, c: 10 },
+          { a: 8, b: 6, c: 10 },
+          { a: 5, b: 12, c: 13 },
+          { a: 12, b: 5, c: 13 },
+          { a: 9, b: 12, c: 15 },
+          { a: 12, b: 9, c: 15 },
+          { a: 8, b: 15, c: 17 },
+          { a: 15, b: 8, c: 17 },
+          { a: 12, b: 16, c: 20 },
+          { a: 16, b: 12, c: 20 },
+          { a: 7, b: 24, c: 25 },
+          { a: 24, b: 7, c: 25 },
+          { a: 15, b: 20, c: 25 },
+          { a: 20, b: 15, c: 25 },
+          { a: 10, b: 24, c: 26 },
+          { a: 24, b: 10, c: 26 },
+          { a: 20, b: 21, c: 29 },
+          { a: 21, b: 20, c: 29 },
+          { a: 9, b: 40, c: 41 },
+          { a: 40, b: 9, c: 41 },
+          { a: 12, b: 35, c: 37 },
+          { a: 35, b: 12, c: 37 },
         ];
-        const item = rng.pick(triples);
-        const { x, y, ansStr } = item;
+        const triple = rng.pick(triples);
+        const sx = rng.pick([1, -1]);
+        const sy = rng.pick([1, -1]);
+        const x = sx * triple.a;
+        const y = sy * triple.b;
+        const ans = triple.c;
 
-        const wrong1 = item.ans > 0 ? `${item.ans + 2}` : `\\sqrt{${x * x + y * y + 3}}`;
-        const wrong2 = `${Math.abs(x) + Math.abs(y)}`;
-        const wrong3 = item.ans > 0 ? `${Math.abs(x * y)}` : `\\sqrt{${x * x + y * y - 2}}`;
+        const wrong1 = ans + 2;
+        const wrong2 = Math.abs(x) + Math.abs(y);
+        const wrong3 = Math.max(1, ans - 2);
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the magnitude of the vector $\\mathbf{v} = \\langle ${x}, ${y} \\rangle$.`,
             `求向量 $\\mathbf{v} = \\langle ${x}, ${y} \\rangle$ 的模长。`,
           ),
-          t(`$\\|\\mathbf{v}\\| = ${ansStr}$`, `$\\|\\mathbf{v}\\| = ${ansStr}$`),
-          [
-            t(`$\\|\\mathbf{v}\\| = ${wrong1}$`, `$\\|\\mathbf{v}\\| = ${wrong1}$`),
-            t(`$\\|\\mathbf{v}\\| = ${wrong2}$`, `$\\|\\mathbf{v}\\| = ${wrong2}$`),
-            t(`$\\|\\mathbf{v}\\| = ${wrong3}$`, `$\\|\\mathbf{v}\\| = ${wrong3}$`),
-          ],
-          t(
-            `Using the magnitude formula: $\\|\\mathbf{v}\\| = \\sqrt{(${x})^2 + (${y})^2} = \\sqrt{${x * x + y * y}} = ${ansStr}$.`,
-            `由模长公式：$\\|\\mathbf{v}\\| = \\sqrt{(${x})^2 + (${y})^2} = \\sqrt{${x * x + y * y}} = ${ansStr}$。`,
+          answer: ans,
+          wrong: [wrong1, wrong2, wrong3],
+          solution: t(
+            `Using the magnitude formula: $\\|\\mathbf{v}\\| = \\sqrt{(${x})^2 + (${y})^2} = \\sqrt{${x * x + y * y}} = ${ans}$.`,
+            `由模长公式：$\\|\\mathbf{v}\\| = \\sqrt{(${x})^2 + (${y})^2} = \\sqrt{${x * x + y * y}} = ${ans}$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -1445,58 +1429,66 @@ export const calculatingTheMagnitudeOfCartesianVectorsIn2d: TopicDef = {
       ),
       generate(rng) {
         const pairs = [
-          { u1: 1, u2: 2, v1: 2, v2: 2, s1: 3, s2: 4, mag: 5, magStr: "" },
-          { u1: 2, u2: 1, v1: 1, v2: 3, s1: 3, s2: 4, mag: 5, magStr: "" },
-          { u1: -1, u2: 3, v1: 4, v2: 1, s1: 3, s2: 4, mag: 5, magStr: "" },
-          { u1: 5, u2: 1, v1: -2, v2: 3, s1: 3, s2: 4, mag: 5, magStr: "" },
-          { u1: 4, u2: 1, v1: 2, v2: 7, s1: 6, s2: 8, mag: 10, magStr: "" },
-          { u1: 3, u2: 5, v1: 3, v2: 3, s1: 6, s2: 8, mag: 10, magStr: "" },
-          { u1: 1, u2: 4, v1: 5, v2: 4, s1: 6, s2: 8, mag: 10, magStr: "" },
-          { u1: -2, u2: 5, v1: 7, v2: 7, s1: 5, s2: 12, mag: 13, magStr: "" },
-          { u1: 1, u2: 8, v1: 4, v2: 4, s1: 5, s2: 12, mag: 13, magStr: "" },
-          { u1: 2, u2: 6, v1: 3, v2: 6, s1: 5, s2: 12, mag: 13, magStr: "" },
-          { u1: 3, u2: -1, v1: 5, v2: 16, s1: 8, s2: 15, mag: 17, magStr: "" },
-          { u1: 4, u2: 7, v1: 4, v2: 8, s1: 8, s2: 15, mag: 17, magStr: "" },
-          { u1: -1, u2: 10, v1: 8, v2: 14, s1: 7, s2: 24, mag: 25, magStr: "" },
-          { u1: 5, u2: 12, v1: 2, v2: 12, s1: 7, s2: 24, mag: 25, magStr: "" },
-          { u1: 2, u2: 3, v1: 1, v2: 1, s1: 3, s2: 4, mag: 5, magStr: "" },
-          { u1: 5, u2: 3, v1: -2, v2: 1, s1: 3, s2: 4, mag: 5, magStr: "" },
-          { u1: 7, u2: 9, v1: -2, v2: -1, s1: 5, s2: 8, mag: 0, magStr: "\\sqrt{89}" },
-          { u1: 1, u2: 4, v1: 3, v2: 2, s1: 4, s2: 6, mag: 0, magStr: "2\\sqrt{13}" },
-          { u1: 2, u2: 5, v1: 1, v2: -2, s1: 3, s2: 3, mag: 0, magStr: "3\\sqrt{2}" },
-          { u1: -3, u2: 2, v1: 5, v2: 0, s1: 2, s2: 2, mag: 0, magStr: "2\\sqrt{2}" },
-          { u1: 4, u2: -2, v1: 1, v2: 3, s1: 5, s2: 1, mag: 0, magStr: "\\sqrt{26}" },
-          { u1: 3, u2: 1, v1: -1, v2: 3, s1: 2, s2: 4, mag: 0, magStr: "2\\sqrt{5}" },
-          { u1: 6, u2: 2, v1: -2, v2: 1, s1: 4, s2: 3, mag: 5, magStr: "" },
-          { u1: 0, u2: 4, v1: 3, v2: 0, s1: 3, s2: 4, mag: 5, magStr: "" },
-          { u1: -4, u2: 1, v1: 1, v2: 3, s1: -3, s2: 4, mag: 5, magStr: "" },
-          { u1: 2, u2: -1, v1: 2, v2: -2, s1: 4, s2: -3, mag: 5, magStr: "" },
-          { u1: 1, u2: 1, v1: 5, v2: 7, s1: 6, s2: 8, mag: 10, magStr: "" },
-          { u1: -2, u2: 3, v1: -4, v2: 5, s1: -6, s2: 8, mag: 10, magStr: "" },
-          { u1: 3, u2: 2, v1: 2, v2: 10, s1: 5, s2: 12, mag: 13, magStr: "" },
-          { u1: 8, u2: 5, v1: -3, v2: 7, s1: 5, s2: 12, mag: 13, magStr: "" },
+          { u1: 1, u2: 2, v1: 2, v2: 2, s1: 3, s2: 4, mag: 5 },
+          { u1: 2, u2: 1, v1: 1, v2: 3, s1: 3, s2: 4, mag: 5 },
+          { u1: -1, u2: 3, v1: 4, v2: 1, s1: 3, s2: 4, mag: 5 },
+          { u1: 5, u2: 1, v1: -2, v2: 3, s1: 3, s2: 4, mag: 5 },
+          { u1: 6, u2: 2, v1: -2, v2: 1, s1: 4, s2: 3, mag: 5 },
+          { u1: 0, u2: 4, v1: 3, v2: 0, s1: 3, s2: 4, mag: 5 },
+          { u1: -4, u2: 1, v1: 1, v2: 3, s1: -3, s2: 4, mag: 5 },
+          { u1: 2, u2: -1, v1: 2, v2: -2, s1: 4, s2: -3, mag: 5 },
+          { u1: 2, u2: 3, v1: 1, v2: 1, s1: 3, s2: 4, mag: 5 },
+          { u1: 5, u2: 3, v1: -2, v2: 1, s1: 3, s2: 4, mag: 5 },
+          { u1: 4, u2: 1, v1: 2, v2: 7, s1: 6, s2: 8, mag: 10 },
+          { u1: 3, u2: 5, v1: 3, v2: 3, s1: 6, s2: 8, mag: 10 },
+          { u1: 1, u2: 4, v1: 5, v2: 4, s1: 6, s2: 8, mag: 10 },
+          { u1: 1, u2: 1, v1: 5, v2: 7, s1: 6, s2: 8, mag: 10 },
+          { u1: -2, u2: 3, v1: -4, v2: 5, s1: -6, s2: 8, mag: 10 },
+          { u1: 5, u2: 2, v1: 3, v2: 4, s1: 8, s2: 6, mag: 10 },
+          { u1: 7, u2: 1, v1: 1, v2: 5, s1: 8, s2: 6, mag: 10 },
+          { u1: -2, u2: 5, v1: 7, v2: 7, s1: 5, s2: 12, mag: 13 },
+          { u1: 1, u2: 8, v1: 4, v2: 4, s1: 5, s2: 12, mag: 13 },
+          { u1: 2, u2: 6, v1: 3, v2: 6, s1: 5, s2: 12, mag: 13 },
+          { u1: 3, u2: 2, v1: 2, v2: 10, s1: 5, s2: 12, mag: 13 },
+          { u1: 8, u2: 5, v1: -3, v2: 7, s1: 5, s2: 12, mag: 13 },
+          { u1: 10, u2: 3, v1: 2, v2: 2, s1: 12, s2: 5, mag: 13 },
+          { u1: 7, u2: 1, v1: 5, v2: 4, s1: 12, s2: 5, mag: 13 },
+          { u1: 3, u2: -1, v1: 5, v2: 16, s1: 8, s2: 15, mag: 17 },
+          { u1: 4, u2: 7, v1: 4, v2: 8, s1: 8, s2: 15, mag: 17 },
+          { u1: 2, u2: 5, v1: 6, v2: 10, s1: 8, s2: 15, mag: 17 },
+          { u1: 10, u2: 3, v1: 5, v2: 5, s1: 15, s2: 8, mag: 17 },
+          { u1: 11, u2: 2, v1: 4, v2: 6, s1: 15, s2: 8, mag: 17 },
+          { u1: 5, u2: 4, v1: 4, v2: 8, s1: 9, s2: 12, mag: 15 },
+          { u1: 6, u2: 5, v1: 3, v2: 7, s1: 9, s2: 12, mag: 15 },
+          { u1: 8, u2: 3, v1: 4, v2: 6, s1: 12, s2: 9, mag: 15 },
+          { u1: -1, u2: 10, v1: 8, v2: 14, s1: 7, s2: 24, mag: 25 },
+          { u1: 5, u2: 12, v1: 2, v2: 12, s1: 7, s2: 24, mag: 25 },
+          { u1: 4, u2: 9, v1: 3, v2: 15, s1: 7, s2: 24, mag: 25 },
+          { u1: 15, u2: 4, v1: 9, v2: 3, s1: 24, s2: 7, mag: 25 },
+          { u1: 10, u2: 2, v1: 14, v2: 5, s1: 24, s2: 7, mag: 25 },
+          { u1: 8, u2: 10, v1: 4, v2: 6, s1: 12, s2: 16, mag: 20 },
+          { u1: 9, u2: 7, v1: 7, v2: 5, s1: 16, s2: 12, mag: 20 },
+          { u1: 6, u2: 14, v1: 4, v2: 10, s1: 10, s2: 24, mag: 26 },
         ];
         const item = rng.pick(pairs);
-        const { u1, u2, v1, v2, s1, s2 } = item;
-        const ans = item.mag > 0 ? `${item.mag}` : item.magStr;
+        const { u1, u2, v1, v2, s1, s2, mag } = item;
 
-        const wrong1 = item.mag > 0 ? `${item.mag + 2}` : "\\sqrt{97}";
-        const wrong2 = `${Math.abs(s1) + Math.abs(s2)}`;
-        const wrong3 = item.mag > 0 ? `${item.mag - 1}` : "10";
+        const wrong1 = mag + 2;
+        const wrong2 = Math.abs(s1) + Math.abs(s2);
+        const wrong3 = Math.max(1, mag - 2);
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Given $\\mathbf{u} = \\langle ${u1}, ${u2} \\rangle$ and $\\mathbf{v} = \\langle ${v1}, ${v2} \\rangle$, find the magnitude of their sum, $\\|\\mathbf{u} + \\mathbf{v}\\|$.`,
             `已知 $\\mathbf{u} = \\langle ${u1}, ${u2} \\rangle$ 且 $\\mathbf{v} = \\langle ${v1}, ${v2} \\rangle$，求它们的和向量模长 $\\|\\mathbf{u} + \\mathbf{v}\\|$。`,
           ),
-          t(`$${ans}$`, `$${ans}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `First add the vectors: $\\mathbf{u} + \\mathbf{v} = \\langle ${u1} + ${paren(v1)},\\, ${u2} + ${paren(v2)} \\rangle = \\langle ${s1}, ${s2} \\rangle$. Then compute magnitude: $\\sqrt{(${s1})^2 + (${s2})^2} = ${ans}$.`,
-            `首先计算向量之和：$\\mathbf{u} + \\mathbf{v} = \\langle ${u1} + ${paren(v1)},\\, ${u2} + ${paren(v2)} \\rangle = \\langle ${s1}, ${s2} \\rangle$。然后计算模长：$\\sqrt{(${s1})^2 + (${s2})^2} = ${ans}$。`,
+          answer: mag,
+          wrong: [wrong1, wrong2, wrong3],
+          solution: t(
+            `First add the vectors: $\\mathbf{u} + \\mathbf{v} = \\langle ${u1} + ${paren(v1)},\\, ${u2} + ${paren(v2)} \\rangle = \\langle ${s1}, ${s2} \\rangle$. Then compute magnitude: $\\sqrt{(${s1})^2 + (${s2})^2} = ${mag}$.`,
+            `首先计算向量之和：$\\mathbf{u} + \\mathbf{v} = \\langle ${u1} + ${paren(v1)},\\, ${u2} + ${paren(v2)} \\rangle = \\langle ${s1}, ${s2} \\rangle$。然后计算模长：$\\sqrt{(${s1})^2 + (${s2})^2} = ${mag}$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -1525,32 +1517,34 @@ export const calculatingTheDirectionOfCartesianVectorsIn2d: TopicDef = {
         "向量 $\\mathbf{v} = \\langle x, y \\rangle$ 的**方向角** $\\theta \\in [0^\\circ, 360^\\circ)$ 是从正 $x$ 轴逆时针测量的角度。\n\n- 在坐标轴上：$\\langle c, 0 \\rangle$ 的方向角为 $0^\\circ$（$c > 0$）或 $180^\\circ$（$c < 0$）；$\\langle 0, c \\rangle$ 的方向角为 $90^\\circ$（$c > 0$）或 $270^\\circ$（$c < 0$）。\n- 在第一象限（$x > 0, y > 0$）：$\\theta = \\arctan\\left(\\frac{y}{x}\\right)$。",
       ),
       generate(rng) {
-        const k = rng.pick([1, 2, 3, 4, 5, 6, 7, 8]);
+        const k = rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        const kSurd = k === 1 ? "\\sqrt{3}" : `${k}\\sqrt{3}`;
         const items = [
           { vec: `\\langle ${k}, 0 \\rangle`, theta: 0 },
           { vec: `\\langle 0, ${k} \\rangle`, theta: 90 },
           { vec: `\\langle ${k}, ${k} \\rangle`, theta: 45 },
-          { vec: `\\langle ${k}\\sqrt{3}, ${k} \\rangle`, theta: 30 },
-          { vec: `\\langle ${k}, ${k}\\sqrt{3} \\rangle`, theta: 60 },
+          { vec: `\\langle ${kSurd}, ${k} \\rangle`, theta: 30 },
+          { vec: `\\langle ${k}, ${kSurd} \\rangle`, theta: 60 },
         ];
         const item = rng.pick(items);
         const { vec, theta } = item;
 
         const wrongAngles = [30, 45, 60, 90, 0].filter((a) => a !== theta).slice(0, 3);
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the direction angle $\\theta \\in [0^\\circ, 360^\\circ)$ of the vector $\\mathbf{v} = ${vec}$.`,
             `求向量 $\\mathbf{v} = ${vec}$ 的方向角 $\\theta \\in [0^\\circ, 360^\\circ)$。`,
           ),
-          t(`$\\theta = ${theta}^\\circ$`, `$\\theta = ${theta}^\\circ$`),
-          wrongAngles.map((w) => t(`$\\theta = ${w}^\\circ$`, `$\\theta = ${w}^\\circ$`)),
-          t(
+          answer: theta,
+          unit: "°",
+          form: "integer",
+          wrong: wrongAngles,
+          solution: t(
             `The vector lies ${theta % 90 === 0 ? "on a positive coordinate axis" : "in Quadrant I"}. Using $\\tan\\theta = y/x$, we obtain $\\theta = ${theta}^\\circ$.`,
             `该向量位于${theta % 90 === 0 ? "正坐标轴上" : "第一象限"}。由 $\\tan\\theta = y/x$ 求得 $\\theta = ${theta}^\\circ$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -1561,22 +1555,23 @@ export const calculatingTheDirectionOfCartesianVectorsIn2d: TopicDef = {
         "对于不在第一象限的向量 $\\mathbf{v} = \\langle x, y \\rangle$，先计算参考角 $\\alpha = \\arctan\\left(\\left|\\frac{y}{x}\\right|\\right)$：\n\n- 第二象限（$x < 0, y > 0$）：$\\theta = 180^\\circ - \\alpha$\n- 第三象限（$x < 0, y < 0$）：$\\theta = 180^\\circ + \\alpha$\n- 第四象限（$x > 0, y < 0$）：$\\theta = 360^\\circ - \\alpha$",
       ),
       generate(rng) {
-        const k = rng.pick([1, 2, 3, 4, 5, 6]);
+        const k = rng.pick([1, 2, 3, 4, 5, 6, 7, 8]);
+        const kSurd = k === 1 ? "\\sqrt{3}" : `${k}\\sqrt{3}`;
         const cases = [
           // Q2
           { vec: `\\langle -${k}, ${k} \\rangle`, theta: 135, quad: "II", ref: 45 },
-          { vec: `\\langle -${k}\\sqrt{3}, ${k} \\rangle`, theta: 150, quad: "II", ref: 30 },
-          { vec: `\\langle -${k}, ${k}\\sqrt{3} \\rangle`, theta: 120, quad: "II", ref: 60 },
+          { vec: `\\langle -${kSurd}, ${k} \\rangle`, theta: 150, quad: "II", ref: 30 },
+          { vec: `\\langle -${k}, ${kSurd} \\rangle`, theta: 120, quad: "II", ref: 60 },
           { vec: `\\langle -${k}, 0 \\rangle`, theta: 180, quad: "negative x-axis", ref: 0 },
           // Q3
           { vec: `\\langle -${k}, -${k} \\rangle`, theta: 225, quad: "III", ref: 45 },
-          { vec: `\\langle -${k}\\sqrt{3}, -${k} \\rangle`, theta: 210, quad: "III", ref: 30 },
-          { vec: `\\langle -${k}, -${k}\\sqrt{3} \\rangle`, theta: 240, quad: "III", ref: 60 },
+          { vec: `\\langle -${kSurd}, -${k} \\rangle`, theta: 210, quad: "III", ref: 30 },
+          { vec: `\\langle -${k}, -${kSurd} \\rangle`, theta: 240, quad: "III", ref: 60 },
           { vec: `\\langle 0, -${k} \\rangle`, theta: 270, quad: "negative y-axis", ref: 0 },
           // Q4
           { vec: `\\langle ${k}, -${k} \\rangle`, theta: 315, quad: "IV", ref: 45 },
-          { vec: `\\langle ${k}\\sqrt{3}, -${k} \\rangle`, theta: 330, quad: "IV", ref: 30 },
-          { vec: `\\langle ${k}, -${k}\\sqrt{3} \\rangle`, theta: 300, quad: "IV", ref: 60 },
+          { vec: `\\langle ${kSurd}, -${k} \\rangle`, theta: 330, quad: "IV", ref: 30 },
+          { vec: `\\langle ${k}, -${kSurd} \\rangle`, theta: 300, quad: "IV", ref: 60 },
         ];
         const pick = rng.pick(cases);
         const { vec, theta, quad, ref } = pick;
@@ -1585,19 +1580,20 @@ export const calculatingTheDirectionOfCartesianVectorsIn2d: TopicDef = {
           .filter((a) => a !== theta)
           .slice(0, 3);
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `Find the direction angle $\\theta \\in [0^\\circ, 360^\\circ)$ of the vector $\\mathbf{v} = ${vec}$.`,
             `求向量 $\\mathbf{v} = ${vec}$ 的方向角 $\\theta \\in [0^\\circ, 360^\\circ)$。`,
           ),
-          t(`$\\theta = ${theta}^\\circ$`, `$\\theta = ${theta}^\\circ$`),
-          wrongAngles.map((w) => t(`$\\theta = ${w}^\\circ$`, `$\\theta = ${w}^\\circ$`)),
-          t(
+          answer: theta,
+          unit: "°",
+          form: "integer",
+          wrong: wrongAngles,
+          solution: t(
             `The vector terminates in ${quad}. With reference angle $\\alpha = ${ref}^\\circ$, the standard direction angle is $\\theta = ${theta}^\\circ$.`,
             `该向量位于 ${quad}。参考角为 $\\alpha = ${ref}^\\circ$，因此标准方向角为 $\\theta = ${theta}^\\circ$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -1628,24 +1624,26 @@ export const calculatingTheComponentsOfCartesianVectorsIn2d: TopicDef = {
       generate(rng) {
         const r = rng.pick([2, 4, 6, 8, 10, 12]);
         const h = r / 2;
+        const hSurd = h === 1 ? "\\sqrt{3}" : `${h}\\sqrt{3}`;
         const angleData = [
           { deg: 0, x: `${r}`, y: "0" },
-          { deg: 30, x: `${h}\\sqrt{3}`, y: `${h}` },
-          { deg: 60, x: `${h}`, y: `${h}\\sqrt{3}` },
+          { deg: 30, x: `${hSurd}`, y: `${h}` },
+          { deg: 60, x: `${h}`, y: `${hSurd}` },
           { deg: 90, x: "0", y: `${r}` },
-          { deg: 120, x: `-${h}`, y: `${h}\\sqrt{3}` },
-          { deg: 150, x: `-${h}\\sqrt{3}`, y: `${h}` },
+          { deg: 120, x: `-${h}`, y: `${hSurd}` },
+          { deg: 150, x: `-${hSurd}`, y: `${h}` },
           { deg: 180, x: `-${r}`, y: "0" },
-          { deg: 210, x: `-${h}\\sqrt{3}`, y: `-${h}` },
-          { deg: 240, x: `-${h}`, y: `-${h}\\sqrt{3}` },
+          { deg: 210, x: `-${hSurd}`, y: `-${h}` },
+          { deg: 240, x: `-${h}`, y: `-${hSurd}` },
           { deg: 270, x: "0", y: `-${r}` },
-          { deg: 300, x: `${h}`, y: `-${h}\\sqrt{3}` },
-          { deg: 330, x: `${h}\\sqrt{3}`, y: `-${h}` },
+          { deg: 300, x: `${h}`, y: `-${hSurd}` },
+          { deg: 330, x: `${hSurd}`, y: `-${h}` },
         ];
         const item = rng.pick(angleData);
         const ans = `\\langle ${item.x}, ${item.y} \\rangle`;
         const wrong1 = `\\langle ${item.y}, ${item.x} \\rangle`;
-        const wrong2 = `\\langle -${item.x.replace(/^--/, "")}, ${item.y} \\rangle`;
+        const negX = item.x.startsWith("-") ? item.x.slice(1) : item.x === "0" ? "0" : `-${item.x}`;
+        const wrong2 = `\\langle ${negX}, ${item.y} \\rangle`;
         const wrong3 = `\\langle ${r}, ${item.deg} \\rangle`;
 
         return oneOf(
@@ -1673,35 +1671,47 @@ export const calculatingTheComponentsOfCartesianVectorsIn2d: TopicDef = {
       generate(rng) {
         const r = rng.pick([2, 4, 6, 8, 10, 12]);
         const h = r / 2;
+        const hSqrt3 = h === 1 ? "\\sqrt{3}" : `${h}\\sqrt{3}`;
+        const hSqrt2 = h === 1 ? "\\sqrt{2}" : `${h}\\sqrt{2}`;
         const vName = rng.pick(["\\mathbf{v}", "\\mathbf{u}", "\\mathbf{w}", "\\mathbf{a}"]);
         const angleList = [
-          { deg: 30, x: `${h}\\sqrt{3}`, y: `${h}` },
-          { deg: 45, x: `${h}\\sqrt{2}`, y: `${h}\\sqrt{2}` },
-          { deg: 60, x: `${h}`, y: `${h}\\sqrt{3}` },
-          { deg: 120, x: `-${h}`, y: `${h}\\sqrt{3}` },
-          { deg: 135, x: `-${h}\\sqrt{2}`, y: `${h}\\sqrt{2}` },
-          { deg: 150, x: `-${h}\\sqrt{3}`, y: `${h}` },
-          { deg: 210, x: `-${h}\\sqrt{3}`, y: `-${h}` },
-          { deg: 225, x: `-${h}\\sqrt{2}`, y: `-${h}\\sqrt{2}` },
-          { deg: 240, x: `-${h}`, y: `-${h}\\sqrt{3}` },
-          { deg: 300, x: `${h}`, y: `-${h}\\sqrt{3}` },
-          { deg: 315, x: `${h}\\sqrt{2}`, y: `-${h}\\sqrt{2}` },
-          { deg: 330, x: `${h}\\sqrt{3}`, y: `-${h}` },
+          { deg: 30, x: `${hSqrt3}`, y: `${h}` },
+          { deg: 45, x: `${hSqrt2}`, y: `${hSqrt2}` },
+          { deg: 60, x: `${h}`, y: `${hSqrt3}` },
+          { deg: 120, x: `-${h}`, y: `${hSqrt3}` },
+          { deg: 135, x: `-${hSqrt2}`, y: `${hSqrt2}` },
+          { deg: 150, x: `-${hSqrt3}`, y: `${h}` },
+          { deg: 210, x: `-${hSqrt3}`, y: `-${h}` },
+          { deg: 225, x: `-${hSqrt2}`, y: `-${hSqrt2}` },
+          { deg: 240, x: `-${h}`, y: `-${hSqrt3}` },
+          { deg: 300, x: `${h}`, y: `-${hSqrt3}` },
+          { deg: 315, x: `${hSqrt2}`, y: `-${hSqrt2}` },
+          { deg: 330, x: `${hSqrt3}`, y: `-${h}` },
         ];
         const item = rng.pick(angleList);
 
-        // ij writes x i + y j from coefficients written in LaTeX, such as "-3\\sqrt{2}".
-        const ij = (x: string, y: string) => {
-          const unit = (c: string) => (c === "1" ? "" : c);
-          const xs = x.startsWith("-") ? `-${unit(x.slice(1))}` : unit(x);
-          const ys = y.startsWith("-") ? `- ${unit(y.slice(1))}` : `+ ${unit(y)}`;
-          return `${xs}\\mathbf{i} ${ys}\\mathbf{j}`;
+        const formatBasis = (xStr: string, yStr: string) => {
+          const term = (c: string, unit: string) => {
+            if (c === "1") return unit;
+            if (c === "-1") return `-${unit}`;
+            return `${c}${unit}`;
+          };
+          const xPart = term(xStr, "\\mathbf{i}");
+          let yPart = "";
+          if (yStr.startsWith("-")) {
+            const absY = yStr.slice(1);
+            yPart = ` - ${term(absY, "\\mathbf{j}")}`;
+          } else {
+            yPart = ` + ${term(yStr, "\\mathbf{j}")}`;
+          }
+          return `${xPart}${yPart}`;
         };
+
         const neg = (c: string) => (c.startsWith("-") ? c.slice(1) : `-${c}`);
-        const ans = ij(item.x, item.y);
-        const wrong1 = ij(item.y, item.x);
-        const wrong2 = ij(item.x, neg(item.y));
-        const wrong3 = ij(String(r), String(item.deg));
+        const ans = formatBasis(item.x, item.y);
+        const wrong1 = formatBasis(item.y, item.x);
+        const wrong2 = formatBasis(item.x, neg(item.y));
+        const wrong3 = formatBasis(String(r), String(item.deg));
 
         return oneOf(
           rng,
@@ -1745,12 +1755,22 @@ export const velocityAndAccelerationForPlaneMotion: TopicDef = {
       ),
       generate(rng) {
         const triples = [
+          { vx: 15, vy: 20, speed: 25 },
+          { vx: -15, vy: 20, speed: 25 },
+          { vx: 15, vy: -20, speed: 25 },
+          { vx: -15, vy: -20, speed: 25 },
+          { vx: 20, vy: 15, speed: 25 },
+          { vx: -20, vy: 15, speed: 25 },
+          { vx: 20, vy: -15, speed: 25 },
+          { vx: -20, vy: -15, speed: 25 },
           { vx: 30, vy: 40, speed: 50 },
           { vx: -30, vy: 40, speed: 50 },
           { vx: 30, vy: -40, speed: 50 },
           { vx: -30, vy: -40, speed: 50 },
           { vx: 40, vy: 30, speed: 50 },
           { vx: -40, vy: 30, speed: 50 },
+          { vx: 40, vy: -30, speed: 50 },
+          { vx: -40, vy: -30, speed: 50 },
           { vx: 50, vy: 120, speed: 130 },
           { vx: -50, vy: 120, speed: 130 },
           { vx: 50, vy: -120, speed: 130 },
@@ -1764,15 +1784,29 @@ export const velocityAndAccelerationForPlaneMotion: TopicDef = {
           { vx: 70, vy: 240, speed: 250 },
           { vx: -70, vy: 240, speed: 250 },
           { vx: 240, vy: 70, speed: 250 },
+          { vx: 240, vy: -70, speed: 250 },
+          { vx: -240, vy: 70, speed: 250 },
+          { vx: -240, vy: -70, speed: 250 },
           { vx: -80, vy: 150, speed: 170 },
           { vx: 80, vy: 150, speed: 170 },
           { vx: 150, vy: 80, speed: 170 },
+          { vx: 150, vy: -80, speed: 170 },
+          { vx: -150, vy: 80, speed: 170 },
+          { vx: -150, vy: -80, speed: 170 },
           { vx: 90, vy: 120, speed: 150 },
           { vx: -90, vy: 120, speed: 150 },
           { vx: 120, vy: 90, speed: 150 },
           { vx: 120, vy: 160, speed: 200 },
           { vx: -120, vy: 160, speed: 200 },
           { vx: 160, vy: 120, speed: 200 },
+          { vx: 100, vy: 240, speed: 260 },
+          { vx: -100, vy: 240, speed: 260 },
+          { vx: 240, vy: 100, speed: 260 },
+          { vx: -240, vy: 100, speed: 260 },
+          { vx: 200, vy: 210, speed: 290 },
+          { vx: -200, vy: 210, speed: 290 },
+          { vx: 210, vy: 200, speed: 290 },
+          { vx: -210, vy: 200, speed: 290 },
         ];
         const item = rng.pick(triples);
         const { vx, vy, speed } = item;
@@ -1781,23 +1815,19 @@ export const velocityAndAccelerationForPlaneMotion: TopicDef = {
         const wrong2 = Math.abs(vx) + Math.abs(vy);
         const wrong3 = Math.round(speed * 0.8);
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `An object moves in the coordinate plane with velocity vector $\\mathbf{v} = \\langle ${vx}, ${vy} \\rangle\\text{ m/s}$. Find its speed.`,
             `一物体在坐标平面内运动，其速度向量为 $\\mathbf{v} = \\langle ${vx}, ${vy} \\rangle\\text{ m/s}$。求该物体的速率。`,
           ),
-          t(`$${speed}\\text{ m/s}$`, `$${speed}\\text{ m/s}$`),
-          [
-            t(`$${wrong1}\\text{ m/s}$`, `$${wrong1}\\text{ m/s}$`),
-            t(`$${wrong2}\\text{ m/s}$`, `$${wrong2}\\text{ m/s}$`),
-            t(`$${wrong3}\\text{ m/s}$`, `$${wrong3}\\text{ m/s}$`),
-          ],
-          t(
+          answer: speed,
+          unit: "m/s",
+          wrong: [wrong1, wrong2, wrong3],
+          solution: t(
             `Speed is the magnitude of the velocity vector: $\\|\\mathbf{v}\\| = \\sqrt{(${vx})^2 + (${vy})^2} = \\sqrt{${vx * vx + vy * vy}} = ${speed}\\text{ m/s}$.`,
             `速率是速度向量的模长：$\\|\\mathbf{v}\\| = \\sqrt{(${vx})^2 + (${vy})^2} = \\sqrt{${vx * vx + vy * vy}} = ${speed}\\text{ m/s}$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -1808,27 +1838,26 @@ export const velocityAndAccelerationForPlaneMotion: TopicDef = {
         "当物体在流动的介质中运动时（如飞机在风中飞行或小船在水流中航行），其**合速度**为各分速度的向量和：\n\n$$\\mathbf{v}_{\\text{合}} = \\mathbf{v}_{\\text{自身}} + \\mathbf{v}_{\\text{介质}}$$",
       ),
       generate(rng) {
-        const boatSpeed = rng.pick([12, 15, 18, 20, 24]);
-        const currentSpeed = rng.pick([5, 8, 9, 10, 12]);
+        const boatSpeed = rng.pick([12, 15, 18, 20, 24, 25, 30]);
+        const currentSpeed = rng.pick([3, 4, 5, 6, 8, 9, 10, 12]);
 
-        const ans = `\\langle ${currentSpeed}, ${boatSpeed} \\rangle\\text{ km/h}`;
-        const wrong1 = `\\langle ${boatSpeed}, ${currentSpeed} \\rangle\\text{ km/h}`;
-        const wrong2 = `\\langle -${currentSpeed}, ${boatSpeed} \\rangle\\text{ km/h}`;
-        const wrong3 = `\\langle ${currentSpeed + boatSpeed}, 0 \\rangle\\text{ km/h}`;
-
-        return oneOf(
-          rng,
-          t(
-            `A boat is heading due north across a river with a velocity of $${boatSpeed}\\text{ km/h}$ relative to the water ($\\mathbf{v}_{\\text{boat}} = \\langle 0, ${boatSpeed} \\rangle$). The river flows due east with a current velocity of $${currentSpeed}\\text{ km/h}$ ($\\mathbf{v}_{\\text{river}} = \\langle ${currentSpeed}, 0 \\rangle$). What is the boat's resultant velocity vector relative to the riverbank?`,
-            `一艘小船相对于水面以 $${boatSpeed}\\text{ km/h}$ 的速度正北航行（$\\mathbf{v}_{\\text{船}} = \\langle 0, ${boatSpeed} \\rangle$）。河水以 $${currentSpeed}\\text{ km/h}$ 的流速向正东流动（$\\mathbf{v}_{\\text{水}} = \\langle ${currentSpeed}, 0 \\rangle$）。小船相对于河岸的合速度向量是多少？`,
+        return pointProblem({
+          prompt: t(
+            `A boat is heading due north across a river with a velocity of $${boatSpeed}\\text{ km/h}$ relative to the water ($\\mathbf{v}_{\\text{boat}} = \\langle 0, ${boatSpeed} \\rangle$). The river flows due east with a current velocity of $${currentSpeed}\\text{ km/h}$ ($\\mathbf{v}_{\\text{river}} = \\langle ${currentSpeed}, 0 \\rangle$). Find the boat's resultant velocity vector relative to the riverbank in component form $\\langle v_x, v_y \\rangle$.`,
+            `一艘小船相对于水面以 $${boatSpeed}\\text{ km/h}$ 的速度向正北航行（$\\mathbf{v}_{\\text{船}} = \\langle 0, ${boatSpeed} \\rangle$）。河水以 $${currentSpeed}\\text{ km/h}$ 的流速向正东流动（$\\mathbf{v}_{\\text{水}} = \\langle ${currentSpeed}, 0 \\rangle$）。用坐标分量形式 $\\langle v_x, v_y \\rangle$ 求小船相对于河岸的合速度向量。`,
           ),
-          t(`$${ans}$`, `$${ans}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `Add the velocity vectors: $\\mathbf{v}_{\\text{resultant}} = \\langle 0, ${boatSpeed} \\rangle + \\langle ${currentSpeed}, 0 \\rangle = ${ans}$.`,
-            `相加各速度向量：$\\mathbf{v}_{\\text{合}} = \\langle 0, ${boatSpeed} \\rangle + \\langle ${currentSpeed}, 0 \\rangle = ${ans}$。`,
+          vector: true,
+          answer: [currentSpeed, boatSpeed],
+          wrong: [
+            [boatSpeed, currentSpeed],
+            [-currentSpeed, boatSpeed],
+            [currentSpeed, -boatSpeed],
+          ],
+          solution: t(
+            `Add the velocity vectors: $\\mathbf{v}_{\\text{resultant}} = \\langle 0, ${boatSpeed} \\rangle + \\langle ${currentSpeed}, 0 \\rangle = \\langle ${currentSpeed}, ${boatSpeed} \\rangle\\text{ km/h}$.`,
+            `相加各速度向量：$\\mathbf{v}_{\\text{合}} = \\langle 0, ${boatSpeed} \\rangle + \\langle ${currentSpeed}, 0 \\rangle = \\langle ${currentSpeed}, ${boatSpeed} \\rangle\\text{ km/h}$。`,
           ),
-        );
+        });
       },
     },
   ],
@@ -1864,24 +1893,24 @@ export const calculatingDisplacementForPlaneMotion: TopicDef = {
         const sx = vx * tVal;
         const sy = vy * tVal;
 
-        const ans = `\\langle ${sx}, ${sy} \\rangle\\text{ m}`;
-        const wrong1 = `\\langle ${sx + tVal}, ${sy} \\rangle\\text{ m}`;
-        const wrong2 = `\\langle ${vx}, ${vy} \\rangle\\text{ m}`;
-        const wrong3 = `\\langle ${sy}, ${sx} \\rangle\\text{ m}`;
-
-        return oneOf(
-          rng,
-          t(
-            `A particle moves with constant velocity $\\mathbf{v} = \\langle ${vx}, ${vy} \\rangle\\text{ m/s}$ for $t = ${tVal}\\text{ s}$. Find its total displacement vector $\\vec{s}$.`,
-            `一质点以恒定速度 $\\mathbf{v} = \\langle ${vx}, ${vy} \\rangle\\text{ m/s}$ 运动了 $t = ${tVal}\\text{ s}$。求其总位移向量 $\\vec{s}$。`,
+        return pointProblem({
+          prompt: t(
+            `A particle moves with constant velocity $\\mathbf{v} = \\langle ${vx}, ${vy} \\rangle\\text{ m/s}$ for $t = ${tVal}\\text{ s}$. Find its total displacement vector $\\vec{s}$ in component form $\\langle x, y \\rangle$.`,
+            `一质点以恒定速度 $\\mathbf{v} = \\langle ${vx}, ${vy} \\rangle\\text{ m/s}$ 运动了 $t = ${tVal}\\text{ s}$。用坐标分量形式 $\\langle x, y \\rangle$ 求其总位移向量 $\\vec{s}$。`,
           ),
-          t(`$${ans}$`, `$${ans}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `Multiply velocity by time: $\\vec{s} = \\mathbf{v}t = \\langle (${vx})(${tVal}),\\, (${vy})(${tVal}) \\rangle = ${ans}$.`,
-            `速度乘以时间：$\\vec{s} = \\mathbf{v}t = \\langle (${vx})(${tVal}),\\, (${vy})(${tVal}) \\rangle = ${ans}$。`,
+          vector: true,
+          answer: [sx, sy],
+          wrong: [
+            [sx + tVal, sy],
+            [vx, vy],
+            [sy, sx],
+            [-sx, -sy],
+          ],
+          solution: t(
+            `Multiply velocity by time: $\\vec{s} = \\mathbf{v}t = \\langle (${vx})(${tVal}),\\, (${vy})(${tVal}) \\rangle = \\langle ${sx}, ${sy} \\rangle\\text{ m}$.`,
+            `速度乘以时间：$\\vec{s} = \\mathbf{v}t = \\langle (${vx})(${tVal}),\\, (${vy})(${tVal}) \\rangle = \\langle ${sx}, ${sy} \\rangle\\text{ m}$。`,
           ),
-        );
+        });
       },
     },
     {
@@ -1920,6 +1949,26 @@ export const calculatingDisplacementForPlaneMotion: TopicDef = {
           { x1: 10, y1: 4, x2: 5, y2: 4, tx: 15, ty: 8, dist: 17 },
           { x1: 12, y1: 10, x2: 8, y2: 5, tx: 20, ty: 15, dist: 25 },
           { x1: 11, y1: 6, x2: 9, y2: 9, tx: 20, ty: 15, dist: 25 },
+          { x1: 8, y1: 12, x2: 4, y2: 8, tx: 12, ty: 20, dist: 20 },
+          { x1: 3, y1: 6, x2: 7, y2: 18, tx: 10, ty: 24, dist: 26 },
+          { x1: 14, y1: 8, x2: 6, y2: 13, tx: 20, ty: 21, dist: 29 },
+          { x1: -3, y1: 1, x2: 7, y2: 2, tx: 4, ty: 3, dist: 5 },
+          { x1: 2, y1: 7, x2: 4, y2: 1, tx: 6, ty: 8, dist: 10 },
+          { x1: 7, y1: 3, x2: -1, y2: 5, tx: 6, ty: 8, dist: 10 },
+          { x1: 1, y1: 6, x2: 11, y2: -1, tx: 12, ty: 5, dist: 13 },
+          { x1: 4, y1: 2, x2: 8, y2: 3, tx: 12, ty: 5, dist: 13 },
+          { x1: 5, y1: 6, x2: 10, y2: 2, tx: 15, ty: 8, dist: 17 },
+          { x1: 6, y1: 3, x2: 9, y2: 5, tx: 15, ty: 8, dist: 17 },
+          { x1: 9, y1: 11, x2: 7, y2: 1, tx: 16, ty: 12, dist: 20 },
+          { x1: 11, y1: 4, x2: 5, y2: 8, tx: 16, ty: 12, dist: 20 },
+          { x1: 10, y1: 9, x2: 6, y2: 3, tx: 16, ty: 12, dist: 20 },
+          { x1: 13, y1: 5, x2: 7, y2: 10, tx: 20, ty: 15, dist: 25 },
+          { x1: 8, y1: 7, x2: 12, y2: 8, tx: 20, ty: 15, dist: 25 },
+          { x1: 14, y1: 2, x2: 10, y2: 5, tx: 24, ty: 7, dist: 25 },
+          { x1: 16, y1: 4, x2: 8, y2: 3, tx: 24, ty: 7, dist: 25 },
+          { x1: 18, y1: 1, x2: 6, y2: 6, tx: 24, ty: 7, dist: 25 },
+          { x1: 5, y1: 14, x2: 5, y2: 10, tx: 10, ty: 24, dist: 26 },
+          { x1: 7, y1: 9, x2: 3, y2: 15, tx: 10, ty: 24, dist: 26 },
         ];
         const item = rng.pick(scenarios);
         const { x1, y1, x2, y2, tx, ty, dist } = item;
@@ -1928,23 +1977,19 @@ export const calculatingDisplacementForPlaneMotion: TopicDef = {
         const wrong2 = Math.abs(tx) + Math.abs(ty);
         const wrong3 = dist * 2;
 
-        return oneOf(
-          rng,
-          t(
+        return numberProblem({
+          prompt: t(
             `A hiker travels displacement $\\vec{s}_1 = \\langle ${x1}, ${y1} \\rangle\\text{ km}$ on the first day, and displacement $\\vec{s}_2 = \\langle ${x2}, ${y2} \\rangle\\text{ km}$ on the second day. What is the hiker's net straight-line distance from the starting position?`,
             `一名徒步旅行者第一天的位移为 $\\vec{s}_1 = \\langle ${x1}, ${y1} \\rangle\\text{ km}$，第二天的位移为 $\\vec{s}_2 = \\langle ${x2}, ${y2} \\rangle\\text{ km}$。求该旅行者距离起点的直线距离。`,
           ),
-          t(`$${dist}\\text{ km}$`, `$${dist}\\text{ km}$`),
-          [
-            t(`$${wrong1}\\text{ km}$`, `$${wrong1}\\text{ km}$`),
-            t(`$${wrong2}\\text{ km}$`, `$${wrong2}\\text{ km}$`),
-            t(`$${wrong3}\\text{ km}$`, `$${wrong3}\\text{ km}$`),
-          ],
-          t(
+          answer: dist,
+          unit: "km",
+          wrong: [wrong1, wrong2, wrong3],
+          solution: t(
             `The total displacement vector is $\\vec{s}_{\\text{net}} = \\langle ${x1} + ${paren(x2)},\\, ${y1} + ${paren(y2)} \\rangle = \\langle ${tx}, ${ty} \\rangle\\text{ km}$. The straight-line distance is its magnitude: $\\|\\vec{s}_{\\text{net}}\\| = \\sqrt{(${tx})^2 + (${ty})^2} = ${dist}\\text{ km}$.`,
             `总位移向量为 $\\vec{s}_{\\text{合}} = \\langle ${x1} + ${paren(x2)},\\, ${y1} + ${paren(y2)} \\rangle = \\langle ${tx}, ${ty} \\rangle\\text{ km}$。直线距离为其模长：$\\|\\vec{s}_{\\text{合}}\\| = \\sqrt{(${tx})^2 + (${ty})^2} = ${dist}\\text{ km}$。`,
           ),
-        );
+        });
       },
     },
   ],
