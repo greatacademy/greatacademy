@@ -6,6 +6,7 @@ import { mathCourses } from "./courses.ts";
 import { absoluteValueTopics } from "./topics/absolute-value.ts";
 import { abstractAlgebraGroupTopics } from "./topics/abstract-algebra-groups.ts";
 import { abstractAlgebraPermutationTopics } from "./topics/abstract-algebra-permutations.ts";
+import { abstractAlgebraQuotientTopics } from "./topics/abstract-algebra-quotients.ts";
 import { abstractAlgebraSubgroupTopics } from "./topics/abstract-algebra-subgroups.ts";
 import { conicTopics } from "./topics/algebra-ii-conics.ts";
 import { algebraIIFactoringTopics } from "./topics/algebra-ii-factoring.ts";
@@ -290,6 +291,7 @@ export const math: SubjectDef = {
     ...abstractAlgebraGroupTopics,
     ...abstractAlgebraSubgroupTopics,
     ...abstractAlgebraPermutationTopics,
+    ...abstractAlgebraQuotientTopics,
     ...multivariableCalculusVectorFunctionTopics,
     ...multivariableCalculusMultivariableFunctionTopics,
     ...multivariableCalculusMultipleIntegralTopics,
