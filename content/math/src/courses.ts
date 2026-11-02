@@ -12771,181 +12771,296 @@ export const eighthGradeMath: CourseDef = {
   id: "8th-grade-math",
   title: t("8th Grade Math", "八年级数学"),
   description: t(
-    "Exponents, scientific notation, square and cube roots, and the real number system; operations with radicals and solving equations with radicals; divisibility and prime factorizations; slopes and equations of lines in slope-intercept and standard form, linear systems and elimination, and special solutions; function concepts, domain, range, rate of change, and linear versus nonlinear functions; rigid motions, dilations, and similarity; the Pythagorean theorem, the distance formula, and volumes of cylinders, cones, and spheres; and bivariate data with scatter plots, trend lines, and two-way tables.",
-    "指数幂与科学记数法、平方根与立方根及实数系；根式运算与根式方程；整除与质因数分解；直线斜率与斜截式及一般式方程、加减消元法解二元一次方程组与特殊解；函数概念、定义域、值域、变化率与线性与非线性函数判断；刚体变换、位似与相似；勾股定理、距离公式与圆柱、圆锥、球体体积；以及散点图、趋势线与双向频数表分析二元数据。",
+    "Rational and irrational numbers; integer exponents, scientific notation and units; square and cube roots, radicals and equations solved with roots; divisibility and prime numbers; linear equations in one variable, slopes and equations of lines, and systems of linear equations; functions, their properties and linear models; angles and parallel lines, angles of triangles and polygons, rigid motions, dilations and similarity; the Pythagorean theorem, distance and volumes of cylinders, cones and spheres; and bivariate data with scatter plots, trend lines and two-way tables.",
+    "有理数与无理数；整数指数、科学记数法与单位；平方根与立方根、根式及用开方解方程；整除与质数；一元一次方程、直线的斜率与方程、二元一次方程组；函数及其性质与一次函数模型；角与平行线、三角形与多边形的角、刚体变换、位似与相似；勾股定理、距离以及圆柱、圆锥与球的体积；以及用散点图、趋势线与双向表分析双变量数据。",
   ),
   units: [
     {
+      title: t("The Real Number System", "实数系"),
+      modules: [
+        {
+          title: t("Rational and Irrational Numbers", "有理数与无理数"),
+          topics: [
+            "the-real-number-system",
+            "classifying-square-roots-and-cube-roots-as-rational-or-irrational",
+            "writing-repeating-decimals-as-fractions",
+          ],
+        },
+        {
+          title: t("Approximating Irrational Numbers", "估算无理数"),
+          topics: [
+            "approximating-square-roots-and-cube-roots",
+            "comparing-and-ordering-real-numbers",
+            "estimating-expressions-with-irrational-numbers",
+          ],
+        },
+      ],
+    },
+    {
       title: t("Exponents & Scientific Notation", "指数与科学记数法"),
       modules: [
-        { title: t("Integer Exponents", "零指数与负指数"), topics: ["zero-and-negative-exponents"] },
-        { title: t("The Rules of Exponents", "指数运算法则"), topics: ["product-and-quotient-rules", "power-rules"] },
-        { title: t("Writing and Comparing Numbers in Scientific Notation", "科学记数法"), topics: ["scientific-notation"] },
-        { title: t("Operations in Scientific Notation", "科学记数法运算"), topics: ["operations-in-scientific-notation"] },
         {
-          title: t("Working With Units", "单位换算与复合单位"),
-          topics: ["converting-units-of-area", "units-in-formulas", "units-of-rates-of-change"],
+          title: t("Integer Exponents", "整数指数"),
+          topics: ["the-zeroth-power", "powers-of-negative-one", "negative-exponents"],
+        },
+        {
+          title: t("The Rules of Exponents", "指数运算法则"),
+          topics: [
+            "evaluating-expressions-with-integer-exponents",
+            "the-product-rule-for-exponents",
+            "the-quotient-rule-for-exponents",
+            "the-power-rule-for-exponents",
+            "the-power-of-product-rule-for-exponents",
+            "the-power-of-quotient-rule-for-exponents",
+            "combining-the-rules-of-exponents",
+          ],
+        },
+        {
+          title: t("Writing and Comparing Numbers in Scientific Notation", "用科学记数法表示和比较数"),
+          topics: [
+            "writing-numbers-in-scientific-notation",
+            "converting-scientific-notation-to-standard-notation",
+            "comparing-numbers-in-scientific-notation",
+          ],
+        },
+        {
+          title: t("Operations in Scientific Notation", "科学记数法的运算"),
+          topics: [
+            "addition-and-subtraction-in-scientific-notation",
+            "addition-in-scientific-notation-with-different-powers-of-ten",
+            "subtraction-in-scientific-notation-with-different-powers-of-ten",
+            "further-addition-in-scientific-notation-with-different-powers-of-ten",
+            "multiplying-numbers-in-scientific-notation",
+            "dividing-numbers-in-scientific-notation",
+            "estimating-and-comparing-real-world-quantities-using-scientific-notation",
+          ],
+        },
+        {
+          title: t("Working With Units", "单位的运用"),
+          topics: ["units-in-formulas", "units-of-rates-of-change"],
         },
       ],
     },
     {
       title: t("Radicals", "根式"),
       modules: [
-        { title: t("Square Roots and Cube Roots", "平方根与立方根"), topics: ["square-roots-and-cube-roots"] },
         {
-          title: t("Simplifying and Operating With Radicals", "根式化简与加减"),
-          topics: ["simplifying-square-roots", "adding-and-subtracting-radicals"],
+          title: t("Square Roots and Cube Roots", "平方根与立方根"),
+          topics: ["the-square-root-of-a-perfect-square", "squaring-a-square-root", "the-cube-root-of-a-perfect-cube", "surds"],
         },
         {
-          title: t("The Rules of Radicals", "根式乘除法则与分母有理化"),
-          topics: ["quotient-rule-for-square-roots", "rationalizing-denominators"],
+          title: t("Simplifying and Operating With Radicals", "根式的化简与运算"),
+          topics: [
+            "simplifying-square-roots",
+            "evaluating-radical-expressions",
+            "adding-and-subtracting-radicals",
+            "rationalizing-denominators",
+          ],
         },
         {
-          title: t("Solving Equations Using Square and Cube Roots", "开平方法与乘方方程"),
-          topics: ["solving-equations-with-square-roots", "solving-odd-power-equations", "solving-even-power-equations"],
+          title: t("The Rules of Radicals", "根式运算法则"),
+          topics: ["writing-radicals-using-fractional-exponents", "the-product-rule-for-radicals", "the-quotient-rule-for-radicals"],
         },
-      ],
-    },
-    {
-      title: t("The Real Number System", "实数系"),
-      modules: [
         {
-          title: t("Rational and Irrational Numbers", "有理数与无理数"),
-          topics: ["the-real-number-system", "classifying-rational-and-irrational-numbers"],
+          title: t("Solving Equations Using Square and Cube Roots", "用平方根和立方根解方程"),
+          topics: [
+            "solving-equations-with-square-roots",
+            "solving-radical-equations-with-square-roots",
+            "solving-equations-using-cube-roots",
+            "solving-radical-equations-with-cube-roots",
+            "finding-side-lengths-of-squares-and-cubes-from-area-or-volume",
+          ],
         },
-        { title: t("Approximating Irrational Numbers", "估算无理数"), topics: ["approximating-square-roots"] },
       ],
     },
     {
       title: t("Number Theory", "数论初步"),
       modules: [
         {
-          title: t("Integer Divisibility and Prime Numbers", "整除与质因数分解"),
+          title: t("Integer Divisibility and Prime Numbers", "整除与质数"),
           topics: [
-            "divisibility-rules",
+            "divisibility-of-integers-by-2-5-10-4-and-8",
+            "divisibility-of-integers-by-3-9-6-and-7",
+            "rational-numbers-as-finite-or-repeating-decimals",
             "prime-and-composite-numbers",
-            "prime-factorization",
-            "greatest-common-factor",
-            "least-common-multiple",
+            "prime-factors",
+            "the-fundamental-theorem-of-arithmetic",
+            "finding-greatest-common-factors-using-prime-factorization",
+            "finding-lowest-common-multiples-using-prime-factorization",
           ],
         },
       ],
     },
     {
-      title: t("Linear Equations and Lines", "一次方程与直线"),
+      title: t("Linear Equations", "一次方程"),
       modules: [
         {
-          title: t("Solving Linear Equations in One Variable", "含参数方程与公式变形"),
-          topics: ["linear-equations-with-unknown-coefficients", "many-variable-equations"],
+          title: t("Solving Linear Equations in One Variable", "解一元一次方程"),
+          topics: ["equations-with-variables-on-both-sides", "equations-with-parentheses"],
         },
         {
-          title: t("Slopes and Equations of Lines", "直线的斜率与方程"),
+          title: t("Slopes and Equations of Lines", "斜率与直线方程"),
           topics: [
+            "graphing-linear-equations",
+            "horizontal-and-vertical-lines",
             "slope-of-a-line",
+            "slope-as-a-unit-rate-in-proportional-relationships",
             "slope-intercept-form",
             "properties-of-lines-in-slope-intercept-form",
-            "point-slope-form",
-            "standard-form",
-            "properties-of-lines-in-standard-form",
           ],
         },
         {
-          title: t("Systems of Linear Equations", "消元法与二元方程应用"),
+          title: t("Solving and Analyzing Linear Equations", "一次方程的求解与分析"),
           topics: [
+            "linear-equations-with-infinitely-many-solutions",
+            "linear-equations-with-no-solutions",
+            "determining-the-number-of-solutions-of-a-linear-equation",
+            "modeling-with-two-variable-linear-equations",
+            "modeling-totals-with-two-variable-equations",
+            "analyzing-graphs-of-linear-models",
+          ],
+        },
+        {
+          title: t("Systems of Linear Equations", "二元一次方程组"),
+          topics: [
+            "systems-of-linear-equations",
+            "solving-systems-by-substitution",
             "introduction-to-elimination",
             "elimination-with-one-transformation",
             "elimination-with-two-transformations",
-            "intersection-of-two-lines",
-            "modeling-with-systems",
-            "coin-problems",
             "systems-with-no-solution-or-infinitely-many-solutions",
-            "consistency-and-dependency",
+            "modeling-with-systems",
           ],
-        },
-        {
-          title: t("Linear Modeling in Two Variables", "二元一次方程建模"),
-          topics: ["modeling-with-two-variable-linear-equations", "modeling-totals-with-two-variable-equations"],
         },
       ],
     },
     {
-      title: t("Functions", "函数初步"),
+      title: t("Functions", "函数"),
       modules: [
         {
-          title: t("Introduction to Functions", "函数概念与图象"),
+          title: t("Introduction to Functions", "函数初步"),
           topics: ["introduction-to-functions", "representations-of-functions", "graphs-of-functions"],
         },
         {
-          title: t("Properties of Functions", "定义域、极值、值域与增减性"),
-          topics: ["domain-of-a-function", "global-extrema", "range-of-a-function", "increasing-and-decreasing"],
+          title: t("Properties of Functions", "函数的性质"),
+          topics: [
+            "increasing-and-decreasing",
+            "global-extrema",
+            "describing-the-functional-relationship-between-two-quantities-from-a-graph",
+          ],
         },
         {
           title: t("Linear Functions and Modeling", "一次函数与建模"),
-          topics: ["linear-vs-nonlinear-functions", "modeling-with-linear-functions", "constructing-linear-functions"],
+          topics: [
+            "linear-functions-versus-nonlinear-functions",
+            "modeling-with-linear-functions",
+            "interpreting-rate-of-change-and-initial-value-in-context",
+            "comparing-properties-of-two-functions-represented-differently",
+          ],
         },
       ],
     },
     {
-      title: t("Geometry: Transformations, Congruence, & Similarity", "几何变换、全等与相似"),
+      title: t("Geometry: Transformations, Congruence, & Similarity", "几何：变换、全等与相似"),
       modules: [
         {
-          title: t("Angles and Parallel Lines", "平行线与三角形内外角"),
-          topics: ["parallel-lines-and-transversals", "angles-of-a-triangle", "exterior-angles-of-triangles"],
-        },
-        { title: t("Angles in Triangles and Polygons", "多边形内角与外角"), topics: ["angles-of-polygons"] },
-        {
-          title: t("Rigid Transformations", "刚体变换与全等"),
-          topics: ["reflective-symmetry", "rotational-symmetry", "rigid-motions-and-congruence", "properties-of-congruence"],
-        },
-        {
-          title: t("Dilations and Similarity", "位似变换与相似判定"),
+          title: t("Angles and Parallel Lines", "角与平行线"),
           topics: [
+            "complementary-angles",
+            "non-adjacent-complementary-angles",
+            "corresponding-angles",
+            "alternate-angles",
+            "consecutive-angles",
+            "angle-criteria-for-parallel-lines",
+          ],
+        },
+        {
+          title: t("Angles in Triangles and Polygons", "三角形与多边形中的角"),
+          topics: [
+            "angles-of-a-triangle",
+            "exterior-angles-of-triangles",
+            "problem-solving-with-angles-of-triangles",
+            "the-triangle-inequality",
+            "isosceles-triangles",
+            "angles-of-polygons",
+            "exterior-angles-of-polygons",
+            "regular-polygons",
+          ],
+        },
+        {
+          title: t("Rigid Transformations", "刚体变换"),
+          topics: [
+            "translations-of-geometric-figures",
+            "reflections-of-points-in-the-coordinate-plane",
+            "reflections-in-the-coordinate-plane",
+            "rotations-of-geometric-figures",
+            "verifying-properties-of-rigid-motions",
+            "applying-sequences-of-rigid-motions",
+            "congruence-through-rigid-motions",
+          ],
+        },
+        {
+          title: t("Dilations and Similarity", "位似与相似"),
+          topics: [
+            "dilations-of-geometric-figures",
             "dilations-of-figures-in-the-coordinate-plane",
             "similarity-and-similar-polygons",
             "side-lengths-and-angle-measures-of-similar-polygons",
             "similarity-transformations",
             "the-aa-similarity-criterion",
+            "using-similar-triangles-to-explain-slope",
+            "describing-a-sequence-of-transformations-that-maps-one-figure-onto-another",
           ],
         },
       ],
     },
     {
-      title: t("The Pythagorean Theorem & Volume", "勾股定理与圆体体积"),
+      title: t("The Pythagorean Theorem & Volume", "勾股定理与体积"),
       modules: [
         {
-          title: t("The Pythagorean Theorem and Distance", "勾股定理与距离公式"),
-          topics: ["the-pythagorean-theorem", "the-distance-formula", "the-distance-formula-in-three-dimensions"],
+          title: t("The Pythagorean Theorem and Distance", "勾股定理与距离"),
+          topics: [
+            "the-pythagorean-theorem",
+            "the-converse-of-the-pythagorean-theorem",
+            "understanding-and-proving-the-pythagorean-theorem",
+            "solving-real-world-problems-using-the-pythagorean-theorem",
+            "finding-the-distance-between-two-points-using-the-pythagorean-theorem",
+            "the-distance-formula",
+            "applying-the-pythagorean-theorem-to-three-dimensional-figures",
+          ],
         },
         {
-          title: t("Volumes of Cylinders, Cones, and Spheres", "圆柱、圆锥与球体的体积"),
+          title: t("Volumes of Cylinders, Cones, and Spheres", "圆柱、圆锥与球的体积"),
           topics: [
             "volumes-of-cylinders",
-            "surface-areas-of-cylinders",
             "volumes-of-right-cones",
-            "surface-areas-of-right-cones",
             "volumes-of-spheres",
-            "surface-areas-of-spheres",
+            "solving-real-world-problems-involving-volumes-of-cylinders-cones-and-spheres",
           ],
         },
       ],
     },
     {
-      title: t("Statistics: Bivariate Data", "二元数据统计"),
+      title: t("Statistics: Bivariate Data", "统计：双变量数据"),
       modules: [
         {
-          title: t("Scatter Plots and Linear Models", "散点图与线性拟合"),
+          title: t("Scatter Plots and Linear Models", "散点图与线性模型"),
           topics: [
             "scatter-plots",
+            "describing-patterns-of-association-in-scatter-plots",
             "trend-lines",
+            "informally-assessing-the-fit-of-a-trend-line-to-a-scatter-plot",
             "predictions-with-trend-lines",
             "interpreting-trend-line-coefficients",
-            "linear-correlation",
-            "correlation-and-causation",
           ],
         },
         {
-          title: t("Bivariate Categorical Data and Two-Way Tables", "双向频数表与相对频数"),
-          topics: ["two-way-frequency-tables", "relative-frequency-tables"],
+          title: t("Bivariate Categorical Data and Two-Way Tables", "双变量分类数据与双向表"),
+          topics: [
+            "joint-frequency-tables",
+            "calculating-relative-frequencies-from-two-way-tables",
+            "identifying-patterns-of-association-from-two-way-tables",
+          ],
         },
       ],
     },
