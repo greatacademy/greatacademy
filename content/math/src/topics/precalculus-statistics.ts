@@ -194,8 +194,8 @@ const sampling: TopicDef = {
     "Tell a population from a sample, name the method used to choose a sample, and use a random sample to estimate a count in the population.",
     "区分总体与样本，判断抽取样本所用的方法，并用随机样本估计总体中的数量。",
   ),
-  prerequisites: ["using-experimental-probability-to-make-predictions"],
-  encompasses: [{ topic: "using-experimental-probability-to-make-predictions", weight: 0.2 }],
+  prerequisites: ["proportions"],
+  encompasses: [{ topic: "proportions", weight: 0.2 }],
   xp: 12,
   standards: ["CCSS.HSS.IC.A.1", "CCSS.HSS.IC.B.3"],
   knowledgePoints: [
