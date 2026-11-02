@@ -114,6 +114,7 @@ import { grade6ExpressionTopics } from "./topics/grade-6-expressions.ts";
 import { grade6GeometryTopics } from "./topics/grade-6-geometry.ts";
 import { grade6NumberSystemTopics } from "./topics/grade-6-number-system.ts";
 import { grade6RatioTopics } from "./topics/grade-6-ratios.ts";
+import { grade6StatisticsTopics } from "./topics/grade-6-statistics.ts";
 import { inequalityTopics } from "./topics/inequalities.ts";
 import { integerTopics } from "./topics/integers.ts";
 import { linearAlgebraMatrixTopics } from "./topics/linear-algebra-matrices.ts";
@@ -201,6 +202,7 @@ export const math: SubjectDef = {
     ...grade6ExpressionTopics,
     ...grade6EquationTopics,
     ...grade6GeometryTopics,
+    ...grade6StatisticsTopics,
     ...numberTheoryTopics,
     ...fractionTopics,
     ...decimalAndPercentTopics,
