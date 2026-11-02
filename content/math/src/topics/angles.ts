@@ -1293,7 +1293,7 @@ const polygonNames: Record<number, Text> = {
 };
 
 /** polygonName names an n-gon: "hexagon", or "15-gon" when it has no common name. */
-const polygonName = (n: number): Text => polygonNames[n] ?? t(`${n}-gon`, `${n} 边形`);
+export const polygonName = (n: number): Text => polygonNames[n] ?? t(`${n}-gon`, `${n} 边形`);
 
 /** interiorAngle is the measure of an interior angle at vertex i of a polygon. */
 function interiorAngle(points: readonly Point[], i: number): number {
