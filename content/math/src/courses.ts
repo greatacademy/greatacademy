@@ -14642,12 +14642,7 @@ export const fifthGradeMath: CourseDef = {
         },
         {
           title: t("Introduction to Negative Numbers", "负数初步"),
-          topics: [
-            "negative-numbers",
-            "comparing-negative-numbers",
-            "integers-and-opposites",
-            "absolute-value",
-          ],
+          topics: ["negative-numbers", "comparing-negative-numbers", "integers-and-opposites", "absolute-value"],
         },
       ],
     },
@@ -14860,19 +14855,11 @@ export const fifthGradeMath: CourseDef = {
         },
         {
           title: t("Coordinates", "坐标"),
-          topics: [
-            "describing-the-coordinate-plane",
-            "solving-real-world-problems-using-coordinates",
-            "coordinate-planes-as-maps",
-          ],
+          topics: ["describing-the-coordinate-plane", "solving-real-world-problems-using-coordinates", "coordinate-planes-as-maps"],
         },
         {
           title: t("Patterns and Relationships", "规律与关系"),
-          topics: [
-            "connecting-patterns",
-            "comparing-patterns",
-            "graphing-patterns",
-          ],
+          topics: ["connecting-patterns", "comparing-patterns", "graphing-patterns"],
         },
       ],
     },
@@ -14890,13 +14877,7 @@ export const fifthGradeMath: CourseDef = {
         },
         {
           title: t("2D Shapes", "平面图形"),
-          topics: [
-            "polygons",
-            "quadrilaterals",
-            "rectangles-rhombuses-and-squares",
-            "perimeters-of-shapes",
-            "classifying-quadrilaterals",
-          ],
+          topics: ["polygons", "quadrilaterals", "rectangles-rhombuses-and-squares", "perimeters-of-shapes", "classifying-quadrilaterals"],
         },
       ],
     },
