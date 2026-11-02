@@ -750,13 +750,13 @@ export const introductionToCurvature: TopicDef = {
             `The speed is $\\|\\mathbf{r}'(t)\\| = \\sqrt{${a}^2 + ${b}^2} = \\sqrt{${sumSq}}$.`,
             `The unit tangent vector is $\\mathbf{T}(t) = \\left\\langle -\\frac{${a}}{\\sqrt{${sumSq}}}\\sin t, \\frac{${a}}{\\sqrt{${sumSq}}}\\cos t, \\frac{${b}}{\\sqrt{${sumSq}}} \\right\\rangle$.`,
             `Its derivative is $\\mathbf{T}'(t) = \\left\\langle -\\frac{${a}}{\\sqrt{${sumSq}}}\\cos t, -\\frac{${a}}{\\sqrt{${sumSq}}}\\sin t, 0 \\right\\rangle$, with norm $\\|\\mathbf{T}'(t)\\| = \\frac{${a}}{\\sqrt{${sumSq}}}$.`,
-            `Thus $\\kappa = \\frac{\\|\\mathbf{T}'(t)\\|}{\\|\\mathbf{r}'(t)\\|} = \\frac{${a}/\\sqrt{${sumSq}}}{\\sqrt{${sumSq}}} = \\frac{${a}}{${sumSq}}${ans.isInteger() || ans.d === BigInt(sumSq) ? "" : ` = ${ans.toLatex()}`}.`,
+            `Thus $\\kappa = \\frac{\\|\\mathbf{T}'(t)\\|}{\\|\\mathbf{r}'(t)\\|} = \\frac{${a}/\\sqrt{${sumSq}}}{\\sqrt{${sumSq}}} = \\frac{${a}}{${sumSq}}${ans.isInteger() || ans.d === BigInt(sumSq) ? "" : ` = ${ans.toLatex()}`}$.`,
           ),
           steps(
             `速率为 $\\|\\mathbf{r}'(t)\\| = \\sqrt{${a}^2 + ${b}^2} = \\sqrt{${sumSq}}$。`,
             `单位切向量为 $\\mathbf{T}(t) = \\left\\langle -\\frac{${a}}{\\sqrt{${sumSq}}}\\sin t, \\frac{${a}}{\\sqrt{${sumSq}}}\\cos t, \\frac{${b}}{\\sqrt{${sumSq}}} \\right\\rangle$。`,
             `其导数为 $\\mathbf{T}'(t) = \\left\\langle -\\frac{${a}}{\\sqrt{${sumSq}}}\\cos t, -\\frac{${a}}{\\sqrt{${sumSq}}}\\sin t, 0 \\right\\rangle$，模长为 $\\|\\mathbf{T}'(t)\\| = \\frac{${a}}{\\sqrt{${sumSq}}}$。`,
-            `因此 $\\kappa = \\frac{\\|\\mathbf{T}'(t)\\|}{\\|\\mathbf{r}'(t)\\|} = \\frac{${a}/\\sqrt{${sumSq}}}{\\sqrt{${sumSq}}} = \\frac{${a}}{${sumSq}}${ans.isInteger() || ans.d === BigInt(sumSq) ? "" : ` = ${ans.toLatex()}`}。`,
+            `因此 $\\kappa = \\frac{\\|\\mathbf{T}'(t)\\|}{\\|\\mathbf{r}'(t)\\|} = \\frac{${a}/\\sqrt{${sumSq}}}{\\sqrt{${sumSq}}} = \\frac{${a}}{${sumSq}}${ans.isInteger() || ans.d === BigInt(sumSq) ? "" : ` = ${ans.toLatex()}`}$。`,
           ),
         );
         return numberProblem({
@@ -1068,7 +1068,7 @@ export const visualizingVectorFields: TopicDef = {
         );
         const solution = t(
           `The field $\\mathbf{F}(x, y) = ${item.field}$ ${item.right.en.toLowerCase()}.`,
-          `向量场 $\\mathbf{F}(x, y) = ${item.field}${item.right["zh-CN"]}。`,
+          `向量场 $\\mathbf{F}(x, y) = ${item.field}$${item.right["zh-CN"]}。`,
         );
         return pickChoice(rng, prompt, item.right, item.wrong, solution);
       },

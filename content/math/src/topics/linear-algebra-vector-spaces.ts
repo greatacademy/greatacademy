@@ -646,8 +646,8 @@ export const subspacesOfNDimensionalSpace: TopicDef = {
           t(`All three are subspaces`, `三个都是子空间`),
         ];
         const solution = t(
-          `$W_1$ contains $\\mathbf{0}$ and is defined by a homogeneous linear equation, so it is closed under vector addition and scalar multiplication. $W_2$ does not contain the origin (${d} \\neq 0$). $W_3$ fails closure under negative scalar multiplication. Hence only $W_1$ is a subspace.`,
-          `$W_1$ 包含原点且由齐次线性方程定义，对向量加法和数乘均封闭，因此是子空间。$W_2$ 不含原点（${d} \\neq 0$）；$W_3$ 对负标量乘法不封闭。故仅 $W_1$ 是子空间。`,
+          `$W_1$ contains $\\mathbf{0}$ and is defined by a homogeneous linear equation, so it is closed under vector addition and scalar multiplication. $W_2$ does not contain the origin ($${d} \\neq 0$). $W_3$ fails closure under negative scalar multiplication. Hence only $W_1$ is a subspace.`,
+          `$W_1$ 包含原点且由齐次线性方程定义，对向量加法和数乘均封闭，因此是子空间。$W_2$ 不含原点（$${d} \\neq 0$）；$W_3$ 对负标量乘法不封闭。故仅 $W_1$ 是子空间。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -725,8 +725,8 @@ export const subspacesOfNDimensionalSpaceGeometricInterpretation: TopicDef = {
           const right = passOrigin
             ? t(`Yes, because it is a plane passing through the origin`, `是，因为它是过原点的平面`)
             : t(
-                `No, because it is an affine plane that does not pass through the origin (${d} \\neq 0$)`,
-                `否，因为它是不过原点的仿射平面（${d} \\neq 0$）`,
+                `No, because it is an affine plane that does not pass through the origin ($${d} \\neq 0$)`,
+                `否，因为它是不过原点的仿射平面（$${d} \\neq 0$）`,
               );
           const wrong = passOrigin
             ? [
@@ -2856,8 +2856,8 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
           t(`$\\mathbb{R}^${d}$, the ${d}-dimensional Euclidean space`, `$\\mathbb{R}^${d}$，${d} 维欧几里得空间`),
         ];
         const solution = t(
-          `$C[${a}, ${b}]$ contains linearly independent sets of arbitrary finite size (for example, $\\{1, x, x^2, x^3, \\dots\\}$), so no finite set of functions can span it. Hence $C[${a}, ${b}]$ is infinite-dimensional. $\\mathbb{P}_${d}$ has dimension ${d + 1}$, $M_{2 \\times ${d}}$ has dimension ${2 * d}$, and $\\mathbb{R}^${d}$ has dimension ${d}$.`,
-          `$C[${a}, ${b}]$ 包含任意有限大小的线性无关集（例如 $\\{1, x, x^2, x^3, \\dots\\}$），无法由有限个函数张成，故为无限维空间。$\\mathbb{P}_${d}$ 维数为 ${d + 1}$，$M_{2 \\times ${d}}$ 维数为 ${2 * d}$，$\\mathbb{R}^${d}$ 维数为 ${d}$。`,
+          `$C[${a}, ${b}]$ contains linearly independent sets of arbitrary finite size (for example, $\\{1, x, x^2, x^3, \\dots\\}$), so no finite set of functions can span it. Hence $C[${a}, ${b}]$ is infinite-dimensional. $\\mathbb{P}_${d}$ has dimension $${d + 1}$, $M_{2 \\times ${d}}$ has dimension $${2 * d}$, and $\\mathbb{R}^${d}$ has dimension $${d}$.`,
+          `$C[${a}, ${b}]$ 包含任意有限大小的线性无关集（例如 $\\{1, x, x^2, x^3, \\dots\\}$），无法由有限个函数张成，故为无限维空间。$\\mathbb{P}_${d}$ 维数为 $${d + 1}$，$M_{2 \\times ${d}}$ 维数为 $${2 * d}$，$\\mathbb{R}^${d}$ 维数为 $${d}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },

@@ -152,12 +152,12 @@ export const lineIntegralsOfScalarFunctions: TopicDef = {
           steps(
             `Parametrize the line segment: $\\mathbf{r}(t) = \\langle ${x1}t, ${y1}t \\rangle$ for $0 \\le t \\le 1$.`,
             `Compute the speed element: $\\mathbf{r}'(t) = \\langle ${x1}, ${y1} \\rangle \\implies ds = \\sqrt{${x1}^2 + ${y1}^2}\\,dt = ${L}\\,dt$.`,
-            `Substitute into the integral: $\\int_0^1 ${c}(${x1}t + ${y1}t)(${L})\\,dt = ${c * (x1 + y1) * L} \\int_0^1 t\\,dt = \\frac{${num}}{2} = ${ans.toLatex()}.`,
+            `Substitute into the integral: $\\int_0^1 ${c}(${x1}t + ${y1}t)(${L})\\,dt = ${c * (x1 + y1) * L} \\int_0^1 t\\,dt = \\frac{${num}}{2} = ${ans.toLatex()}$.`,
           ),
           steps(
             `参数化线段：$\\mathbf{r}(t) = \\langle ${x1}t, ${y1}t \\rangle$（$0 \\le t \\le 1$）。`,
             `计算速度及弧长微元：$\\mathbf{r}'(t) = \\langle ${x1}, ${y1} \\rangle \\implies ds = \\sqrt{${x1}^2 + ${y1}^2}\\,dt = ${L}\\,dt$。`,
-            `代入积分式：$\\int_0^1 ${c}(${x1}t + ${y1}t)(${L})\\,dt = ${c * (x1 + y1) * L} \\int_0^1 t\\,dt = \\frac{${num}}{2} = ${ans.toLatex()}。$$ `,
+            `代入积分式：$\\int_0^1 ${c}(${x1}t + ${y1}t)(${L})\\,dt = ${c * (x1 + y1) * L} \\int_0^1 t\\,dt = \\frac{${num}}{2} = ${ans.toLatex()}$。`,
           ),
         );
         return numberProblem({
@@ -301,7 +301,7 @@ export const lineIntegralsOfScalarFunctionsOverPathsExpressedAsFunctionsOfY: Top
       title: t("Line integrals along explicit curves x = h(y)", "计算沿显式曲线 x = h(y) 的标量曲线积分"),
       explanation: t(
         "For $x = \\frac{a}{b}y$ with $0 \\le y \\le b$, $ds = \\frac{\\sqrt{a^2 + b^2}}{b}\\,dy = \\frac{c}{b}\\,dy$. Then $\\int_C ky\\,ds = \\frac{kc b}{2}$.",
-        "对于 $0 \\le y \\le b$ 上的线段 $x = \\frac{a}{b}y$，$ds = \\frac{\\sqrt{a^2 + b^2}}{b}\\,dy = \\frac{c}{b}\\,dy$。则 $\\int_C ky\\,ds = \\frac{kc b}{2}。$$",
+        "对于 $0 \\le y \\le b$ 上的线段 $x = \\frac{a}{b}y$，$ds = \\frac{\\sqrt{a^2 + b^2}}{b}\\,dy = \\frac{c}{b}\\,dy$。则 $\\int_C ky\\,ds = \\frac{kc b}{2}$。",
       ),
       generate(rng: Rng): Problem {
         const [a0, b0, c0] = rng.pick(pythagoreanTriples);
@@ -701,12 +701,10 @@ export const propertiesOfLineIntegralsWithRespectToXAndY: TopicDef = {
         );
         const solution = t(
           steps(
-            `Reversing the orientation of the curve reverses the sign of the line integral with respect to coordinates:`,
-            `$$\\int_{-C} (P\\,dx + Q\\,dy) = -\\int_C (P\\,dx + Q\\,dy) = -(${val}) = ${ans}.$$ `,
+            `Reversing the orientation of the curve reverses the sign of the line integral with respect to coordinates:\n\n$$\\int_{-C} (P\\,dx + Q\\,dy) = -\\int_C (P\\,dx + Q\\,dy) = -(${val}) = ${ans}.$$ `,
           ),
           steps(
-            `反转曲线的行进方向会导致对坐标的曲线积分变号：`,
-            `$$\\int_{-C} (P\\,dx + Q\\,dy) = -\\int_C (P\\,dx + Q\\,dy) = -(${val}) = ${ans}。$$ `,
+            `反转曲线的行进方向会导致对坐标的曲线积分变号：\n\n$$\\int_{-C} (P\\,dx + Q\\,dy) = -\\int_C (P\\,dx + Q\\,dy) = -(${val}) = ${ans}。$$ `,
           ),
         );
         return numberProblem({
@@ -828,11 +826,11 @@ export const sumsOfLineIntegralsWithRespectToXAndY: TopicDef = {
         const solution = t(
           steps(
             `Along the horizontal segment $y = ${y0}$, $y$ is constant and $x$ varies from $${x1}$ to $${x2}$.`,
-            `Integrate directly: $\\int_{${x1}}^{${x2}} ${a}x\\,dx = ${a} \\left[\\frac{x^2}{2}\\right]_{${x1}}^{${x2}} = ${a} \\frac{${x2 * x2} - ${x1 * x1}}{2} = \\frac{${num}}{2} = ${ans.toLatex()}.`,
+            `Integrate directly: $\\int_{${x1}}^{${x2}} ${a}x\\,dx = ${a} \\left[\\frac{x^2}{2}\\right]_{${x1}}^{${x2}} = ${a} \\frac{${x2 * x2} - ${x1 * x1}}{2} = \\frac{${num}}{2} = ${ans.toLatex()}$.`,
           ),
           steps(
             `在水平线段 $y = ${y0}$ 上，$y$ 为常数，$x$ 从 $${x1}$ 变到 $${x2}$。`,
-            `直接积分：$\\int_{${x1}}^{${x2}} ${a}x\\,dx = ${a} \\left[\\frac{x^2}{2}\\right]_{${x1}}^{${x2}} = ${a} \\frac{${x2 * x2} - ${x1 * x1}}{2} = \\frac{${num}}{2} = ${ans.toLatex()}。$$ `,
+            `直接积分：$\\int_{${x1}}^{${x2}} ${a}x\\,dx = ${a} \\left[\\frac{x^2}{2}\\right]_{${x1}}^{${x2}} = ${a} \\frac{${x2 * x2} - ${x1 * x1}}{2} = \\frac{${num}}{2} = ${ans.toLatex()}$。`,
           ),
         );
         return numberProblem({
@@ -897,13 +895,13 @@ export const lineIntegralsOfVectorValuedFunctionsOverParametricCurves: TopicDef 
             `Find velocity: $\\mathbf{r}'(t) = \\langle 1, 2t \\rangle$.`,
             `Evaluate field along curve: $\\mathbf{F}(\\mathbf{r}(t)) = \\langle ${a}t^2, ${b}t \\rangle$.`,
             `Compute dot product: $\\mathbf{F} \\cdot \\mathbf{r}'(t) = (${a}t^2)(1) + (${b}t)(2t) = ${a + 2 * b}t^2$.`,
-            `Integrate: $\\int_0^{${T}} ${a + 2 * b}t^2\\,dt = ${a + 2 * b} \\left[\\frac{t^3}{3}\\right]_0^{${T}} = \\frac{${num}}{3} = ${ans.toLatex()}.`,
+            `Integrate: $\\int_0^{${T}} ${a + 2 * b}t^2\\,dt = ${a + 2 * b} \\left[\\frac{t^3}{3}\\right]_0^{${T}} = \\frac{${num}}{3} = ${ans.toLatex()}$.`,
           ),
           steps(
             `求速度向量：$\\mathbf{r}'(t) = \\langle 1, 2t \\rangle$。`,
             `将曲线代入向量场：$\\mathbf{F}(\\mathbf{r}(t)) = \\langle ${a}t^2, ${b}t \\rangle$。`,
             `计算点积：$\\mathbf{F} \\cdot \\mathbf{r}'(t) = (${a}t^2)(1) + (${b}t)(2t) = ${a + 2 * b}t^2$。`,
-            `定积分求值：$\\int_0^{${T}} ${a + 2 * b}t^2\\,dt = ${a + 2 * b} \\left[\\frac{t^3}{3}\\right]_0^{${T}} = \\frac{${num}}{3} = ${ans.toLatex()}。$$ `,
+            `定积分求值：$\\int_0^{${T}} ${a + 2 * b}t^2\\,dt = ${a + 2 * b} \\left[\\frac{t^3}{3}\\right]_0^{${T}} = \\frac{${num}}{3} = ${ans.toLatex()}$。`,
           ),
         );
         return numberProblem({
@@ -1552,14 +1550,14 @@ export const circulationAndFluxAcrossSimpleClosedPlaneCurves: TopicDef = {
           steps(
             `The outward flux line integral is $\\oint_C (P\\,dy - Q\\,dx)$ where $P(x, y) = ${a}x$ and $Q(x, y) = ${b}y$.`,
             `By the flux form of Green's theorem, the outward flux equals $\\iint_D (\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y})\\,dA$.`,
-            `Here $\\frac{\\partial P}{\\partial x} = ${a}$ and $\\frac{\\partial Q}{\\partial y} = ${b}$, so the integrand is ${a} + ${b} = ${a + b}$.`,
+            `Here $\\frac{\\partial P}{\\partial x} = ${a}$ and $\\frac{\\partial Q}{\\partial y} = ${b}$, so the integrand is $${a} + ${b} = ${a + b}$.`,
             `The area of the rectangle is $W \\times H = ${W} \\times ${H} = ${W * H}$.`,
             `Thus the outward flux is $(${a + b}) \\times ${W * H} = ${ans}$.`,
           ),
           steps(
             `外法向通量曲线积分为 $\\oint_C (P\\,dy - Q\\,dx)$，其中 $P(x, y) = ${a}x$，$Q(x, y) = ${b}y$。`,
             `由格林公式通量形式，外法向通量等于 $\\iint_D (\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y})\\,dA$。`,
-            `此处 $\\frac{\\partial P}{\\partial x} = ${a}$，$\\frac{\\partial Q}{\\partial y} = ${b}$，被积函数为 ${a} + ${b} = ${a + b}$。`,
+            `此处 $\\frac{\\partial P}{\\partial x} = ${a}$，$\\frac{\\partial Q}{\\partial y} = ${b}$，被积函数为 $${a} + ${b} = ${a + b}$。`,
             `矩形面积为 $W \\times H = ${W} \\times ${H} = ${W * H}$。`,
             `因此外法向通量为 $(${a + b}) \\times ${W * H} = ${ans}$。`,
           ),

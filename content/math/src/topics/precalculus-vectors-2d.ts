@@ -885,8 +885,8 @@ export const unitVectors: TopicDef = {
           right,
           wrong,
           t(
-            `Calculate the magnitude: $\\|\\mathbf{u}\\| = ${pick.mag}. Since the length ${pick.isUnit ? "equals" : "does not equal"} $1$, it ${pick.isUnit ? "is" : "is not"} a unit vector.`,
-            `计算模长：$\\|\\mathbf{u}\\| = ${pick.mag}。由于其长度${pick.isUnit ? "等于" : "不等于"} $1$，因此它${pick.isUnit ? "是" : "不是"}单位向量。`,
+            `Calculate the magnitude: $\\|\\mathbf{u}\\| = ${pick.mag}$. Since the length ${pick.isUnit ? "equals" : "does not equal"} $1$, it ${pick.isUnit ? "is" : "is not"} a unit vector.`,
+            `计算模长：$\\|\\mathbf{u}\\| = ${pick.mag}$。由于其长度${pick.isUnit ? "等于" : "不等于"} $1$，因此它${pick.isUnit ? "是" : "不是"}单位向量。`,
           ),
         );
       },

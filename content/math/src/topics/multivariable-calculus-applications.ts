@@ -826,12 +826,12 @@ export const probabilityDensityFunctionsOfContinuousRandomVariables: TopicDef = 
           steps(
             `The total probability over the entire support domain must equal 1: $\\iint_D f(x, y)\\,dA = 1$.`,
             `Compute the integral: $\\iint_D C\\,dA = C \\times \\text{Area}(D) = C (${a} \\times ${b}) = ${invC}C$.`,
-            `Equating to 1 gives ${invC}C = 1$, which implies $1/C = ${invC}$.`,
+            `Equating to 1 gives $${invC}C = 1$, which implies $1/C = ${invC}$.`,
           ),
           steps(
             `全区域上的总概率必须满足归一化条件：$\\iint_D f(x, y)\\,dA = 1$。`,
             `计算二重积分：$\\iint_D C\\,dA = C \\times \\text{Area}(D) = C (${a} \\times ${b}) = ${invC}C$。`,
-            `令其等于 1 得 ${invC}C = 1$，因此 $1/C = ${invC}$。`,
+            `令其等于 1 得 $${invC}C = 1$，因此 $1/C = ${invC}$。`,
           ),
         );
         return numberProblem({
@@ -883,12 +883,12 @@ export const calculatingProbabilitiesWithContinuousRandomVariables: TopicDef = {
         const solution = t(
           steps(
             `The joint density is $f(x, y) = \\frac{1}{W H} = \\frac{1}{${W * H}}$.`,
-            `The subregion is $R = [0, ${x1}] \\times [0, ${y1}]$, which has area ${x1} \\times ${y1} = ${x1 * y1}$.`,
+            `The subregion is $R = [0, ${x1}] \\times [0, ${y1}]$, which has area $${x1} \\times ${y1} = ${x1 * y1}$.`,
             `Compute the probability: $P(X \\le ${x1}, Y \\le ${y1}) = \\frac{\\text{Area}(R)}{\\text{Area}(D)} = \\frac{${x1 * y1}}{${W * H}} = ${ans.toLatex()}$.`,
           ),
           steps(
             `联合概率密度为 $f(x, y) = \\frac{1}{W H} = \\frac{1}{${W * H}}$。`,
-            `子区域为 $R = [0, ${x1}] \\times [0, ${y1}]$，其面积为 ${x1} \\times ${y1} = ${x1 * y1}$。`,
+            `子区域为 $R = [0, ${x1}] \\times [0, ${y1}]$，其面积为 $${x1} \\times ${y1} = ${x1 * y1}$。`,
             `计算概率：$P(X \\le ${x1}, Y \\le ${y1}) = \\frac{${x1 * y1}}{${W * H}} = ${ans.toLatex()}$。`,
           ),
         );

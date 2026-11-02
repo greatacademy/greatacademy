@@ -1304,7 +1304,7 @@ export const singularValuesOfAMatrix: TopicDef = {
 
         const prompt = t(
           `Let $A$ be a $${m} \\times ${n}$ real matrix with $\\operatorname{rank}(A) = ${rank}$. How many strictly positive singular values does $A$ have?`,
-          `设 $A$ 为秩为 ${rank}$ 的 $${m} \\times ${n}$ 实矩阵。矩阵 $A$ 恰有多少个严格大于零的奇异值？`,
+          `设 $A$ 为秩为 $${rank}$ 的 $${m} \\times ${n}$ 实矩阵。矩阵 $A$ 恰有多少个严格大于零的奇异值？`,
         );
 
         return numberProblem({
@@ -1312,7 +1312,7 @@ export const singularValuesOfAMatrix: TopicDef = {
           answer: rank,
           solution: t(
             `The number of strictly positive (non-zero) singular values of any matrix $A$ is precisely equal to its rank, $\\operatorname{rank}(A)$. Therefore, $A$ has ${rank} positive singular values.`,
-            `任意矩阵 $A$ 的严格大于零（非零）的奇异值个数恰好等于其矩阵的秩 $\\operatorname{rank}(A)$。因此，$A$ 拥有 ${rank}$ 个正奇异值。`,
+            `任意矩阵 $A$ 的严格大于零（非零）的奇异值个数恰好等于其矩阵的秩 $\\operatorname{rank}(A)$。因此，$A$ 拥有 $${rank}$ 个正奇异值。`,
           ),
           wrong: [m, n, Math.min(m, n), Math.max(0, rank - 1)],
         });
@@ -2108,8 +2108,8 @@ export const steadyStateVectors: TopicDef = {
           prompt,
           answer: q1,
           solution: t(
-            `The steady-state equation $(P - I) q = 0$ gives $-\\frac{${aNum}}{${denom}} q_1 + \\frac{${bNum}}{${denom}} q_2 = 0$, which simplifies to ${aNum} q_1 = ${bNum} q_2$. Together with the probability condition $q_1 + q_2 = 1$, substituting $q_2 = \\frac{${aNum}}{${bNum}} q_1$ gives $\\left(1 + \\frac{${aNum}}{${bNum}}\\right) q_1 = 1$, so $q_1 = \\frac{${bNum}}{${sum}} = ${q1.toLatex()}$.`,
-            `稳态方程 $(P - I) q = 0$ 给出 $-\\frac{${aNum}}{${denom}} q_1 + \\frac{${bNum}}{${denom}} q_2 = 0$，化简得 ${aNum} q_1 = ${bNum} q_2$。结合概率条件 $q_1 + q_2 = 1$，代入 $q_2 = \\frac{${aNum}}{${bNum}} q_1$ 得 $\\left(1 + \\frac{${aNum}}{${bNum}}\\right) q_1 = 1$，解得 $q_1 = \\frac{${bNum}}{${sum}} = ${q1.toLatex()}$。`,
+            `The steady-state equation $(P - I) q = 0$ gives $-\\frac{${aNum}}{${denom}} q_1 + \\frac{${bNum}}{${denom}} q_2 = 0$, which simplifies to $${aNum} q_1 = ${bNum} q_2$. Together with the probability condition $q_1 + q_2 = 1$, substituting $q_2 = \\frac{${aNum}}{${bNum}} q_1$ gives $\\left(1 + \\frac{${aNum}}{${bNum}}\\right) q_1 = 1$, so $q_1 = \\frac{${bNum}}{${sum}} = ${q1.toLatex()}$.`,
+            `稳态方程 $(P - I) q = 0$ 给出 $-\\frac{${aNum}}{${denom}} q_1 + \\frac{${bNum}}{${denom}} q_2 = 0$，化简得 $${aNum} q_1 = ${bNum} q_2$。结合概率条件 $q_1 + q_2 = 1$，代入 $q_2 = \\frac{${aNum}}{${bNum}} q_1$ 得 $\\left(1 + \\frac{${aNum}}{${bNum}}\\right) q_1 = 1$，解得 $q_1 = \\frac{${bNum}}{${sum}} = ${q1.toLatex()}$。`,
           ),
           wrong: [q2, Q.of(1, 2), Q.of(aNum, denom)],
         });
@@ -2316,8 +2316,8 @@ export const multipleLinearRegressionWithMatrices: TopicDef = {
           prompt,
           answer: p,
           solution: t(
-            `Using the cyclic property of the trace, $\\operatorname{tr}(H) = \\operatorname{tr}(X (X^T X)^{-1} X^T) = \\operatorname{tr}((X^T X)^{-1} X^T X) = \\operatorname{tr}(I_p) = p$. Since there are $p = ${p}$ parameters, the trace of the hat matrix is ${p}$.`,
-            `利用迹的循环性质，$\\operatorname{tr}(H) = \\operatorname{tr}(X (X^T X)^{-1} X^T) = \\operatorname{tr}((X^T X)^{-1} X^T X) = \\operatorname{tr}(I_p) = p$。由于共有 $p = ${p}$ 个参数，故帽子矩阵的迹为 ${p}$。`,
+            `Using the cyclic property of the trace, $\\operatorname{tr}(H) = \\operatorname{tr}(X (X^T X)^{-1} X^T) = \\operatorname{tr}((X^T X)^{-1} X^T X) = \\operatorname{tr}(I_p) = p$. Since there are $p = ${p}$ parameters, the trace of the hat matrix is $${p}$.`,
+            `利用迹的循环性质，$\\operatorname{tr}(H) = \\operatorname{tr}(X (X^T X)^{-1} X^T) = \\operatorname{tr}((X^T X)^{-1} X^T X) = \\operatorname{tr}(I_p) = p$。由于共有 $p = ${p}$ 个参数，故帽子矩阵的迹为 $${p}$。`,
           ),
           wrong: [n, n - p, p - 1, 1],
         });

@@ -1263,7 +1263,7 @@ export const linearizationOfMultivariableFunctions: TopicDef = {
         const ans = poly([a, "x"], [b, "y"], [c, ""]);
 
         const prompt = t(
-          `Find the linearization $L(x, y)$ of the function $f(x, y) = ${poly([1, "x^2"], [a, "x"], [b, "y"], [c, ""])} at $(0, 0)$.`,
+          `Find the linearization $L(x, y)$ of the function $f(x, y) = ${poly([1, "x^2"], [a, "x"], [b, "y"], [c, ""])}$ at $(0, 0)$.`,
           `求函数 $f(x, y) = ${poly([1, "x^2"], [a, "x"], [b, "y"], [c, ""])}$ 在点 $(0, 0)$ 处的线性化 $L(x, y)$。`,
         );
         const solution = t(
@@ -2421,12 +2421,10 @@ export const theInverseFunctionTheorem: TopicDef = {
         );
         const solution = t(
           steps(
-            `By the Inverse Function Theorem, the Jacobian of the inverse transformation is the reciprocal of the forward Jacobian:`,
-            `$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{\\frac{\\partial(x, y)}{\\partial(u, v)}} = \\frac{1}{${jVal}} = ${ans.toLatex()}.$$`,
+            `By the Inverse Function Theorem, the Jacobian of the inverse transformation is the reciprocal of the forward Jacobian:\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{\\frac{\\partial(x, y)}{\\partial(u, v)}} = \\frac{1}{${jVal}} = ${ans.toLatex()}.$$`,
           ),
           steps(
-            `由反函数定理，逆变换的雅可比行列式等于正向变换雅可比行列式的倒数：`,
-            `$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{\\frac{\\partial(x, y)}{\\partial(u, v)}} = \\frac{1}{${jVal}} = ${ans.toLatex()}。$$`,
+            `由反函数定理，逆变换的雅可比行列式等于正向变换雅可比行列式的倒数：\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\frac{1}{\\frac{\\partial(x, y)}{\\partial(u, v)}} = \\frac{1}{${jVal}} = ${ans.toLatex()}。$$`,
           ),
         );
         return numberProblem({

@@ -566,14 +566,12 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
         );
         const solution = t(
           steps(
-            `Set up the iterated integral by Fubini's theorem:`,
-            `$$\\int_{${a}}^{${b}} \\int_{${c}}^{${d}} (${poly([p, "x"], [q, "y"])})\\,dy\\,dx$$`,
+            `Set up the iterated integral by Fubini's theorem:\n\n$$\\int_{${a}}^{${b}} \\int_{${c}}^{${d}} (${poly([p, "x"], [q, "y"])})\\,dy\\,dx$$`,
             `Integrate with respect to $y$:\n\n$$\\left[${poly([p, "xy"], [q, "\\frac{y^2}{2}"])}\\right]_{${c}}^{${d}} = ${p}(x)(${d - c}) + ${q}\\frac{${d * d - c * c}}{2} = ${p * (d - c)}x + ${Q.of(q * (d * d - c * c), 2).toLatex()}.$$ `,
             `Integrate with respect to $x$ from $${a}$ to $${b}$:\n\n$$\\int_{${a}}^{${b}} \\left(${p * (d - c)}x + ${Q.of(q * (d * d - c * c), 2).toLatex()}\\right) dx = ${ans.toLatex()}.$$ `,
           ),
           steps(
-            `由富比尼定理建立二次积分：`,
-            `$$\\int_{${a}}^{${b}} \\int_{${c}}^{${d}} (${poly([p, "x"], [q, "y"])})\\,dy\\,dx$$`,
+            `由富比尼定理建立二次积分：\n\n$$\\int_{${a}}^{${b}} \\int_{${c}}^{${d}} (${poly([p, "x"], [q, "y"])})\\,dy\\,dx$$`,
             `先对 $y$ 积分：\n\n$$\\left[${poly([p, "xy"], [q, "\\frac{y^2}{2}"])}\\right]_{${c}}^{${d}} = ${p}(x)(${d - c}) + ${q}\\frac{${d * d - c * c}}{2} = ${p * (d - c)}x + ${Q.of(q * (d * d - c * c), 2).toLatex()}。$$ `,
             `再对 $x$ 从 $${a}$ 积到 $${b}$：\n\n$$\\int_{${a}}^{${b}} \\left(${p * (d - c)}x + ${Q.of(q * (d * d - c * c), 2).toLatex()}\\right) dx = ${ans.toLatex()}。$$ `,
           ),
@@ -725,8 +723,8 @@ export const typeIAndIiRegionsInTwoDimensionalSpace: TopicDef = {
 
         if (isType1) {
           desc = t(
-            `$\\{(x, y) : 0 \\le x \\le ${a}, ${b}x^2 \\le y \\le ${b * a}x\\}`,
-            `$\\{(x, y) : 0 \\le x \\le ${a}, ${b}x^2 \\le y \\le ${b * a}x\\}`,
+            `\\{(x, y) : 0 \\le x \\le ${a}, ${b}x^2 \\le y \\le ${b * a}x\\}`,
+            `\\{(x, y) : 0 \\le x \\le ${a}, ${b}x^2 \\le y \\le ${b * a}x\\}`,
           );
           right = t("Type I (X-simple)", "X-型区域（Type I）");
           wrong = [t("Type II (Y-simple)", "Y-型区域（Type II）"), t("Neither Type I nor Type II", "既非 X-型亦非 Y-型")];
@@ -736,8 +734,8 @@ export const typeIAndIiRegionsInTwoDimensionalSpace: TopicDef = {
           );
         } else {
           desc = t(
-            `$\\{(x, y) : 0 \\le y \\le ${a}, ${b}y^2 \\le x \\le ${b * a}y\\}`,
-            `$\\{(x, y) : 0 \\le y \\le ${a}, ${b}y^2 \\le x \\le ${b * a}y\\}`,
+            `\\{(x, y) : 0 \\le y \\le ${a}, ${b}y^2 \\le x \\le ${b * a}y\\}`,
+            `\\{(x, y) : 0 \\le y \\le ${a}, ${b}y^2 \\le x \\le ${b * a}y\\}`,
           );
           right = t("Type II (Y-simple)", "Y-型区域（Type II）");
           wrong = [t("Type I (X-simple)", "X-型区域（Type I）"), t("Neither Type I nor Type II", "既非 X-型亦非 Y-型")];
@@ -1070,16 +1068,14 @@ export const tripleIntegralsOverRectangularDomains: TopicDef = {
         );
         const solution = t(
           steps(
-            `Because the integrand is separable and the domain is a box, factor into three independent integrals:`,
-            `$$\\iiint_B xyz\\,dV = \\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} y\\,dy\\right)\\left(\\int_0^{${c}} z\\,dz\\right)$$`,
+            `Because the integrand is separable and the domain is a box, factor into three independent integrals:\n\n$$\\iiint_B xyz\\,dV = \\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} y\\,dy\\right)\\left(\\int_0^{${c}} z\\,dz\\right)$$`,
             `Compute each factor: $\\frac{${a}^2}{2} = \\frac{${a * a}}{2}$, $\\frac{${b}^2}{2} = \\frac{${b * b}}{2}$, $\\frac{${c}^2}{2} = \\frac{${c * c}}{2}$.`,
             `Multiply the results: $\\frac{${a * a}}{2} \\times \\frac{${b * b}}{2} \\times \\frac{${c * c}}{2} = \\frac{${prod * prod}}{8} = ${ans.toLatex()}$.`,
           ),
           steps(
-            `由于被积函数可分离且积分区域为长方体，可因式分解为三个独立的单积分：`,
-            `$$\\iiint_B xyz\\,dV = \\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} y\\,dy\\right)\\left(\\int_0^{${c}} z\\,dz\\right)$$`,
+            `由于被积函数可分离且积分区域为长方体，可因式分解为三个独立的单积分：\n\n$$\\iiint_B xyz\\,dV = \\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} y\\,dy\\right)\\left(\\int_0^{${c}} z\\,dz\\right)$$`,
             `计算各因子：$\\frac{${a}^2}{2} = \\frac{${a * a}}{2}$，$\\frac{${b}^2}{2} = \\frac{${b * b}}{2}$，$\\frac{${c}^2}{2} = \\frac{${c * c}}{2}$。`,
-            `各因子相乘：$\\frac{${a * a}}{2} \\times \\frac{${b * b}}{2} \\times \\frac{${c * c}}{2} = \\frac{${prod * prod}}{8} = ${ans.toLatex()}。$$ `,
+            `各因子相乘：$\\frac{${a * a}}{2} \\times \\frac{${b * b}}{2} \\times \\frac{${c * c}}{2} = \\frac{${prod * prod}}{8} = ${ans.toLatex()}$。`,
           ),
         );
         return numberProblem({
@@ -1124,8 +1120,8 @@ export const typeIIiAndIiiRegionsInThreeDimensionalSpace: TopicDef = {
 
         if (choice === 1) {
           desc = t(
-            `$\\{(x, y, z) : (x, y) \\in D, 0 \\le z \\le ${a}x^2 + ${b}y^2\\}`,
-            `$\\{(x, y, z) : (x, y) \\in D, 0 \\le z \\le ${a}x^2 + ${b}y^2\\}`,
+            `\\{(x, y, z) : (x, y) \\in D, 0 \\le z \\le ${a}x^2 + ${b}y^2\\}`,
+            `\\{(x, y, z) : (x, y) \\in D, 0 \\le z \\le ${a}x^2 + ${b}y^2\\}`,
           );
           right = t("Type I (bounded in z)", "Type I 型（z 处于两曲面之间）");
           wrong = [
@@ -1138,8 +1134,8 @@ export const typeIIiAndIiiRegionsInThreeDimensionalSpace: TopicDef = {
           );
         } else if (choice === 2) {
           desc = t(
-            `$\\{(x, y, z) : (x, z) \\in D, 0 \\le y \\le ${a}x^2 + ${b}z^2\\}`,
-            `$\\{(x, y, z) : (x, z) \\in D, 0 \\le y \\le ${a}x^2 + ${b}z^2\\}`,
+            `\\{(x, y, z) : (x, z) \\in D, 0 \\le y \\le ${a}x^2 + ${b}z^2\\}`,
+            `\\{(x, y, z) : (x, z) \\in D, 0 \\le y \\le ${a}x^2 + ${b}z^2\\}`,
           );
           right = t("Type II (bounded in y)", "Type II 型（y 处于两曲面之间）");
           wrong = [
@@ -1152,8 +1148,8 @@ export const typeIIiAndIiiRegionsInThreeDimensionalSpace: TopicDef = {
           );
         } else {
           desc = t(
-            `$\\{(x, y, z) : (y, z) \\in D, 0 \\le x \\le ${a}y^2 + ${b}z^2\\}`,
-            `$\\{(x, y, z) : (y, z) \\in D, 0 \\le x \\le ${a}y^2 + ${b}z^2\\}`,
+            `\\{(x, y, z) : (y, z) \\in D, 0 \\le x \\le ${a}y^2 + ${b}z^2\\}`,
+            `\\{(x, y, z) : (y, z) \\in D, 0 \\le x \\le ${a}y^2 + ${b}z^2\\}`,
           );
           right = t("Type III (bounded in x)", "Type III 型（x 处于两曲面之间）");
           wrong = [
@@ -1211,11 +1207,11 @@ export const tripleIntegralsOverTypeIRegions: TopicDef = {
         const solution = t(
           steps(
             `Set up the triple integral with $z$ ranging from $0$ to $${c}xy$:\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}xy} 1\\,dz\\,dy\\,dx = \\int_0^{${a}} \\int_0^{${b}} ${c}xy\\,dy\\,dx.$$`,
-            `Separate the integrals: $${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} y\\,dy\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = \\frac{${num}}{4} = ${ans.toLatex()}.$$ `,
+            `Separate the integrals: $${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} y\\,dy\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = \\frac{${num}}{4} = ${ans.toLatex()}$.`,
           ),
           steps(
             `建立三重积分，内层 $z$ 从 $0$ 变到 $${c}xy$：\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}xy} 1\\,dz\\,dy\\,dx = \\int_0^{${a}} \\int_0^{${b}} ${c}xy\\,dy\\,dx。$$`,
-            `分离单积分计算：$${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} y\\,dy\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = \\frac{${num}}{4} = ${ans.toLatex()}。$$ `,
+            `分离单积分计算：$${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} y\\,dy\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = \\frac{${num}}{4} = ${ans.toLatex()}$。`,
           ),
         );
         return numberProblem({
@@ -1263,11 +1259,11 @@ export const tripleIntegralsOverTypeIiRegions: TopicDef = {
         const solution = t(
           steps(
             `Set up the iterated integral with $y$ as the innermost variable:\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}xz} 1\\,dy\\,dz\\,dx = \\int_0^{${a}} \\int_0^{${b}} ${c}xz\\,dz\\,dx.$$`,
-            `Factor into single integrals: $${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}.$$ `,
+            `Factor into single integrals: $${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}$.`,
           ),
           steps(
             `建立以 $y$ 为最内层变量的二次积分：\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}xz} 1\\,dy\\,dz\\,dx = \\int_0^{${a}} \\int_0^{${b}} ${c}xz\\,dz\\,dx。$$`,
-            `因式分解为单积分求积：$${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}。$$ `,
+            `因式分解为单积分求积：$${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}$。`,
           ),
         );
         return numberProblem({
@@ -1315,11 +1311,11 @@ export const tripleIntegralsOverTypeIiiRegions: TopicDef = {
         const solution = t(
           steps(
             `Set up the iterated integral with $x$ as the innermost variable:\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}yz} 1\\,dx\\,dz\\,dy = \\int_0^{${a}} \\int_0^{${b}} ${c}yz\\,dz\\,dy.$$`,
-            `Factor into single integrals: $${c}\\left(\\int_0^{${a}} y\\,dy\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}.$$ `,
+            `Factor into single integrals: $${c}\\left(\\int_0^{${a}} y\\,dy\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}$.`,
           ),
           steps(
             `建立以 $x$ 为最内层变量的二次积分：\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}yz} 1\\,dx\\,dz\\,dy = \\int_0^{${a}} \\int_0^{${b}} ${c}yz\\,dz\\,dy。$$`,
-            `因式分解为单积分求积：$${c}\\left(\\int_0^{${a}} y\\,dy\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}。$$ `,
+            `因式分解为单积分求积：$${c}\\left(\\int_0^{${a}} y\\,dy\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}$。`,
           ),
         );
         return numberProblem({
@@ -1370,7 +1366,7 @@ export const calculatingVolumesOfSolidsUsingTripleIntegrals: TopicDef = {
             `建立体积的三重积分 $\\text{Vol}(E) = \\iiint_E 1\\,dV$：`,
             `$$\\int_0^{${a}} \\int_0^{${b}(1 - x/${a})} \\int_0^{${c}(1 - x/${a} - y/${b})} 1\\,dz\\,dy\\,dx$$`,
             `三条直角边截距为 $a, b, c$ 的直角四面体体积为 $\\frac{1}{3}(\\text{底面积}) \\times (\\text{高}) = \\frac{1}{3}\\left(\\frac{ab}{2}\\right)c = \\frac{abc}{6}$。`,
-            `代入 $a = ${a}$、$b = ${b}$、$c = ${c}$ 得到 $\\frac{${a * b * c}}{6} = ${ans.toLatex()}。$$ `,
+            `代入 $a = ${a}$、$b = ${b}$、$c = ${c}$ 得到 $\\frac{${a * b * c}}{6} = ${ans.toLatex()}$。`,
           ),
         );
         return numberProblem({
@@ -1406,7 +1402,7 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingProjection: T
       title: t("Reprojecting triple integrals from xy to xz plane", "将三重积分从 xy 投影转为 xz 投影"),
       explanation: t(
         "For a wedge $0 \\le x \\le a$, $0 \\le y \\le b$, $0 \\le z \\le 1 - x/a$, projecting onto the $xz$-plane gives region $0 \\le z \\le 1, 0 \\le x \\le a(1 - z)$. Then $\\iiint_E 1\\,dV = \\int_0^1 \\int_0^{a(1-z)} \\int_0^b 1\\,dy\\,dx\\,dz = \\frac{ab}{2}$.",
-        "对于楔形体 $0 \\le x \\le a$、$0 \\le y \\le b$、$0 \\le z \\le 1 - x/a$，向 $xz$ 平面投影得到平面区域 $0 \\le z \\le 1, 0 \\le x \\le a(1 - z)$。积分化为 $\\iiint_E 1\\,dV = \\int_0^1 \\int_0^{a(1-z)} \\int_0^b 1\\,dy\\,dx\\,dz = \\frac{ab}{2}。$$",
+        "对于楔形体 $0 \\le x \\le a$、$0 \\le y \\le b$、$0 \\le z \\le 1 - x/a$，向 $xz$ 平面投影得到平面区域 $0 \\le z \\le 1, 0 \\le x \\le a(1 - z)$。积分化为 $\\iiint_E 1\\,dV = \\int_0^1 \\int_0^{a(1-z)} \\int_0^b 1\\,dy\\,dx\\,dz = \\frac{ab}{2}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
@@ -1421,12 +1417,12 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingProjection: T
           steps(
             `Projecting onto the $xz$-plane, the cross-section is the triangle $0 \\le z \\le 1$ and $0 \\le x \\le ${a}(1 - z)$.`,
             `Because the solid has uniform thickness in $y$, $0 \\le y \\le ${b}$, integrating $y$ gives $\\int_0^{${b}} 1\\,dy = ${b}$.`,
-            `The remaining double integral over the $xz$-projection is $\\int_0^1 \\int_0^{${a}(1 - z)} ${b}\\,dx\\,dz = ${b} \\int_0^1 ${a}(1 - z)\\,dz = ${b} \\cdot \\frac{${a}}{2} = ${ans.toLatex()}.`,
+            `The remaining double integral over the $xz$-projection is $\\int_0^1 \\int_0^{${a}(1 - z)} ${b}\\,dx\\,dz = ${b} \\int_0^1 ${a}(1 - z)\\,dz = ${b} \\cdot \\frac{${a}}{2} = ${ans.toLatex()}$.`,
           ),
           steps(
             `向 $xz$ 平面投影，所得截面为三角形 $0 \\le z \\le 1$ 且 $0 \\le x \\le ${a}(1 - z)$。`,
             `由于该楔形体在 $y$ 方向厚度均匀，$0 \\le y \\le ${b}$，对 $y$ 积分得到 $\\int_0^{${b}} 1\\,dy = ${b}$。`,
-            `在 $xz$ 投影上的二重积分为 $\\int_0^1 \\int_0^{${a}(1 - z)} ${b}\\,dx\\,dz = ${b} \\int_0^1 ${a}(1 - z)\\,dz = ${b} \\cdot \\frac{${a}}{2} = ${ans.toLatex()}。`,
+            `在 $xz$ 投影上的二重积分为 $\\int_0^1 \\int_0^{${a}(1 - z)} ${b}\\,dx\\,dz = ${b} \\int_0^1 ${a}(1 - z)\\,dz = ${b} \\cdot \\frac{${a}}{2} = ${ans.toLatex()}$。`,
           ),
         );
         return numberProblem({
@@ -1480,7 +1476,7 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingRegion: Topic
             `The iterated integral becomes $\\int_0^{${b}} \\int_0^{${a}} \\int_0^x x\\,dz\\,dx\\,dy$.`,
             `Integrate with respect to $z$: $\\int_0^x x\\,dz = x^2$.`,
             `Integrate with respect to $x$: $\\int_0^{${a}} x^2\\,dx = \\frac{${a}^3}{3} = \\frac{${a * a * a}}{3}$.`,
-            `Integrate with respect to $y$: $\\int_0^{${b}} \\frac{${a * a * a}}{3}\\,dy = ${b} \\times \\frac{${a * a * a}}{3} = ${ans.toLatex()}.`,
+            `Integrate with respect to $y$: $\\int_0^{${b}} \\frac{${a * a * a}}{3}\\,dy = ${b} \\times \\frac{${a * a * a}}{3} = ${ans.toLatex()}$.`,
           ),
           steps(
             `由原积分限知 $x$ 与 $z$ 满足 $0 \\le z \\le ${a}$ 且 $z \\le x \\le ${a}$。`,
@@ -1488,7 +1484,7 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingRegion: Topic
             `三次积分变为 $\\int_0^{${b}} \\int_0^{${a}} \\int_0^x x\\,dz\\,dx\\,dy$。`,
             `先对 $z$ 积分：$\\int_0^x x\\,dz = x^2$。`,
             `再对 $x$ 积分：$\\int_0^{${a}} x^2\\,dx = \\frac{${a}^3}{3} = \\frac{${a * a * a}}{3}$。`,
-            `最后对 $y$ 积分：$\\int_0^{${b}} \\frac{${a * a * a}}{3}\\,dy = ${b} \\times \\frac{${a * a * a}}{3} = ${ans.toLatex()}。`,
+            `最后对 $y$ 积分：$\\int_0^{${b}} \\frac{${a * a * a}}{3}\\,dy = ${b} \\times \\frac{${a * a * a}}{3} = ${ans.toLatex()}$。`,
           ),
         );
         return numberProblem({
@@ -1536,8 +1532,8 @@ export const doubleIntegralsInPlanePolarCoordinates: TopicDef = {
         const ans = Q.of(R * R * R * R, 2);
 
         const prompt = t(
-          `Find the value of $\\frac{1}{\\pi} \\iint_D (x^2 + y^2)\\,dA$, where $D$ is the disk of radius ${R}$ centered at the origin.`,
-          `计算 $\\frac{1}{\\pi} \\iint_D (x^2 + y^2)\\,dA$ 的值，其中 $D$ 为以原点为中心、半径为 ${R}$ 的圆盘。`,
+          `Find the value of $\\frac{1}{\\pi} \\iint_D (x^2 + y^2)\\,dA$, where $D$ is the disk of radius $${R}$ centered at the origin.`,
+          `计算 $\\frac{1}{\\pi} \\iint_D (x^2 + y^2)\\,dA$ 的值，其中 $D$ 为以原点为中心、半径为 $${R}$ 的圆盘。`,
         );
         const solution = t(
           steps(
@@ -1827,7 +1823,7 @@ export const surfacesInCylindricalPolarCoordinates: TopicDef = {
           right = t("Circular cylinder", "圆柱面");
           wrong = [t("Circular cone", "圆锥面"), t("Circular paraboloid", "旋转抛物面"), t("Sphere", "球面")];
           sol = t(
-            `$r = ${c} \\iff x^2 + y^2 = ${c * c}$, which is a circular cylinder of radius ${c}$ around the $z$-axis.`,
+            `$r = ${c} \\iff x^2 + y^2 = ${c * c}$, which is a circular cylinder of radius $${c}$ around the $z$-axis.`,
             `$r = ${c} \\iff x^2 + y^2 = ${c * c}$，表示以 $z$ 轴为对称轴、半径为 ${c} 的圆柱面。`,
           );
         } else if (type === 1) {
@@ -1969,7 +1965,7 @@ export const surfacesInSphericalPolarCoordinates: TopicDef = {
           right = t("Sphere", "球面");
           wrong = [t("Circular cone", "圆锥面"), t("Circular cylinder", "圆柱面"), t("Paraboloid", "抛物面")];
           sol = t(
-            `$\\rho = ${c} \\iff x^2 + y^2 + z^2 = ${c * c}$, which is a sphere of radius ${c}$ centered at the origin.`,
+            `$\\rho = ${c} \\iff x^2 + y^2 + z^2 = ${c * c}$, which is a sphere of radius $${c}$ centered at the origin.`,
             `$\\rho = ${c} \\iff x^2 + y^2 + z^2 = ${c * c}$，表示以原点为中心、半径为 ${c} 的球面。`,
           );
         } else if (type === 1) {
@@ -2106,15 +2102,13 @@ export const tripleIntegralsInSphericalPolarCoordinates: TopicDef = {
           steps(
             `In spherical coordinates, the limits for the ball are $0 \\le \\rho \\le ${R}$, $0 \\le \\phi \\le \\pi$, and $0 \\le \\theta \\le 2\\pi$.`,
             `The volume element is $dV = \\rho^2 \\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta$.`,
-            `Evaluate the triple integral:`,
-            `$$\\iiint_B 1\\,dV = \\left(\\int_0^{2\\pi} d\\theta\\right)\\left(\\int_0^\\pi \\sin\\phi\\,d\\phi\\right)\\left(\\int_0^{${R}} \\rho^2\\,d\\rho\\right) = 2\\pi \\times 2 \\times \\frac{${R}^3}{3} = \\frac{4\\pi}{3}(${R * R * R}) = \\pi \\cdot ${ans.toLatex()}.$$ `,
+            `Evaluate the triple integral:\n\n$$\\iiint_B 1\\,dV = \\left(\\int_0^{2\\pi} d\\theta\\right)\\left(\\int_0^\\pi \\sin\\phi\\,d\\phi\\right)\\left(\\int_0^{${R}} \\rho^2\\,d\\rho\\right) = 2\\pi \\times 2 \\times \\frac{${R}^3}{3} = \\frac{4\\pi}{3}(${R * R * R}) = \\pi \\cdot ${ans.toLatex()}.$$ `,
             `Dividing by $\\pi$ yields $${ans.toLatex()}$.`,
           ),
           steps(
             `在球面坐标下，整球的积分限为 $0 \\le \\rho \\le ${R}$、$0 \\le \\phi \\le \\pi$ 与 $0 \\le \\theta \\le 2\\pi$。`,
             `体积微元为 $dV = \\rho^2 \\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta$。`,
-            `计算三重积分：`,
-            `$$\\iiint_B 1\\,dV = \\left(\\int_0^{2\\pi} d\\theta\\right)\\left(\\int_0^\\pi \\sin\\phi\\,d\\phi\\right)\\left(\\int_0^{${R}} \\rho^2\\,d\\rho\\right) = 2\\pi \\times 2 \\times \\frac{${R}^3}{3} = \\frac{4\\pi}{3}(${R * R * R}) = \\pi \\cdot ${ans.toLatex()}。$$ `,
+            `计算三重积分：\n\n$$\\iiint_B 1\\,dV = \\left(\\int_0^{2\\pi} d\\theta\\right)\\left(\\int_0^\\pi \\sin\\phi\\,d\\phi\\right)\\left(\\int_0^{${R}} \\rho^2\\,d\\rho\\right) = 2\\pi \\times 2 \\times \\frac{${R}^3}{3} = \\frac{4\\pi}{3}(${R * R * R}) = \\pi \\cdot ${ans.toLatex()}。$$ `,
             `除以 $\\pi$ 得到 $${ans.toLatex()}$。`,
           ),
         );
@@ -2172,13 +2166,13 @@ export const computingTripleIntegralsUsingAChangeOfVariables: TopicDef = {
           steps(
             `Apply the transformation $x = ${a}u, y = ${b}v, z = ${c}w$. The region becomes the unit ball $B: u^2 + v^2 + w^2 \\le 1$.`,
             `The Jacobian determinant is $J = \\begin{vmatrix} ${a} & 0 & 0 \\\\ 0 & ${b} & 0 \\\\ 0 & 0 & ${c} \\end{vmatrix} = ${a} \\times ${b} \\times ${c} = ${prod}$.`,
-            `Compute the volume: $\\text{Vol}(E) = \\iiint_B |J|\\,du\\,dv\\,dw = ${prod} \\times \\text{Vol}(B) = ${prod}\\left(\\frac{4}{3}\\pi \\cdot 1^3\\right) = \\pi \\cdot ${ans.toLatex()}.`,
+            `Compute the volume: $\\text{Vol}(E) = \\iiint_B |J|\\,du\\,dv\\,dw = ${prod} \\times \\text{Vol}(B) = ${prod}\\left(\\frac{4}{3}\\pi \\cdot 1^3\\right) = \\pi \\cdot ${ans.toLatex()}$.`,
             `Dividing by $\\pi$ yields $${ans.toLatex()}$.`,
           ),
           steps(
             `作变量代换 $x = ${a}u, y = ${b}v, z = ${c}w$，椭球体转化为单位球体 $B: u^2 + v^2 + w^2 \\le 1$。`,
             `雅可比行列式为 $J = \\begin{vmatrix} ${a} & 0 & 0 \\\\ 0 & ${b} & 0 \\\\ 0 & 0 & ${c} \\end{vmatrix} = ${a} \\times ${b} \\times ${c} = ${prod}$。`,
-            `计算体积：$\\text{Vol}(E) = \\iiint_B |J|\\,du\\,dv\\,dw = ${prod} \\times \\text{Vol}(B) = ${prod}\\left(\\frac{4}{3}\\pi \\cdot 1^3\\right) = \\pi \\cdot ${ans.toLatex()}。`,
+            `计算体积：$\\text{Vol}(E) = \\iiint_B |J|\\,du\\,dv\\,dw = ${prod} \\times \\text{Vol}(B) = ${prod}\\left(\\frac{4}{3}\\pi \\cdot 1^3\\right) = \\pi \\cdot ${ans.toLatex()}$。`,
             `除以 $\\pi$ 得到 $${ans.toLatex()}$。`,
           ),
         );

@@ -196,13 +196,13 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
               `Assume the Frobenius series $y = \\sum_{n=0}^\\infty a_n x^{n+r}$ with $a_0 \\ne 0$.`,
               `The lowest power of $x$ gives the indicial equation: $r(r - 1) - ${r1}r + ${r1} = 0$.`,
               `Factor the quadratic: $r^2 - (${r1 + 1})r + ${r1} = (r - 1)(r - ${r1}) = 0$.`,
-              `The roots are $r = 1$ and $r = ${ans}$. The larger root is ${ans}$.`,
+              `The roots are $r = 1$ and $r = ${ans}$. The larger root is $${ans}$.`,
             ),
             steps(
               `设弗罗贝尼乌斯级数 $y = \\sum_{n=0}^\\infty a_n x^{n+r}$（$a_0 \\ne 0$）。`,
               `考察最低次幂系数，导出指标方程：$r(r - 1) - ${r1}r + ${r1} = 0$。`,
               `分解二次方程：$r^2 - (${r1 + 1})r + ${r1} = (r - 1)(r - ${r1}) = 0$。`,
-              `方程的两根为 $r = 1$ 与 $r = ${ans}$。较大根为 ${ans}$。`,
+              `方程的两根为 $r = 1$ 与 $r = ${ans}$。较大根为 $${ans}$。`,
             ),
           );
 
@@ -248,13 +248,13 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
           const solution = t(
             steps(
               `Substitute $y = \\sum a_n x^n$: $x y'' = \\sum_{n=1}^\\infty n(n-1)a_n x^{n-1} = \\sum_{k=0}^\\infty (k+1)k a_{k+1} x^k$.`,
-              `The second term is ${c} y' = ${c} \\sum_{n=1}^\\infty n a_n x^{n-1} = ${c} \\sum_{k=0}^\\infty (k+1) a_{k+1} x^k$.`,
+              `The second term is $${c} y' = ${c} \\sum_{n=1}^\\infty n a_n x^{n-1} = ${c} \\sum_{k=0}^\\infty (k+1) a_{k+1} x^k$.`,
               `For $k = 0$, the $x^0$ coefficient is $(0 + ${c})a_1 + a_0 = ${c}a_1 + a_0 = 0$.`,
               `Solving for $a_1$: $a_1 = -\\frac{a_0}{${c}} = -\\frac{${a0}}{${c}} = ${ans}$.`,
             ),
             steps(
               `代入级数 $y = \\sum a_n x^n$：$x y'' = \\sum_{k=0}^\\infty (k+1)k a_{k+1} x^k$。`,
-              `第二项为 ${c} y' = ${c} \\sum_{k=0}^\\infty (k+1) a_{k+1} x^k$。`,
+              `第二项为 $${c} y' = ${c} \\sum_{k=0}^\\infty (k+1) a_{k+1} x^k$。`,
               `考察常数项（$k = 0$）：$(0 + ${c})a_1 + a_0 = ${c}a_1 + a_0 = 0$。`,
               `解得 $a_1 = -\\frac{a_0}{${c}} = -\\frac{${a0}}{${c}} = ${ans}$。`,
             ),
@@ -410,13 +410,13 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
               `The vector Euler update is $\\mathbf{x}_1 = \\mathbf{x}_0 + h A \\mathbf{x}_0$.`,
               `Compute $A \\mathbf{x}_0 = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix} \\begin{pmatrix} 0 \\\\ ${v0} \\end{pmatrix} = \\begin{pmatrix} ${v0} \\\\ 0 \\end{pmatrix}$.`,
               `Add to the initial state: $\\mathbf{x}_1 = \\begin{pmatrix} 0 \\\\ ${v0} \\end{pmatrix} + 1 \\begin{pmatrix} ${v0} \\\\ 0 \\end{pmatrix} = \\begin{pmatrix} ${ans} \\\\ ${v0} \\end{pmatrix}$.`,
-              `The first component is ${ans}.`,
+              `The first component is $${ans}$.`,
             ),
             steps(
               `向量欧拉更新公式为 $\\mathbf{x}_1 = \\mathbf{x}_0 + h A \\mathbf{x}_0$。`,
               `计算变化率向量：$A \\mathbf{x}_0 = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix} \\begin{pmatrix} 0 \\\\ ${v0} \\end{pmatrix} = \\begin{pmatrix} ${v0} \\\\ 0 \\end{pmatrix}$。`,
               `与初值相加：$\\mathbf{x}_1 = \\begin{pmatrix} 0 \\\\ ${v0} \\end{pmatrix} + 1 \\begin{pmatrix} ${v0} \\\\ 0 \\end{pmatrix} = \\begin{pmatrix} ${ans} \\\\ ${v0} \\end{pmatrix}$。`,
-              `因此第一分量为 ${ans}$。`,
+              `因此第一分量为 $${ans}$。`,
             ),
           );
 
@@ -518,12 +518,12 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
             steps(
               `The RK4 update formula is $y_1 = y_0 + \\frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)$.`,
               `Substitute $h = 6$: $\\frac{6}{6} = 1$, so $y_1 = y_0 + k_1 + 2k_2 + 2k_3 + k_4$.`,
-              `Compute the weighted sum: ${y0} + ${k1} + 2(${k2}) + 2(${k3}) + ${k4} = ${y0} + ${k1} + ${2 * k2} + ${2 * k3} + ${k4} = ${ans}$.`,
+              `Compute the weighted sum: $${y0} + ${k1} + 2(${k2}) + 2(${k3}) + ${k4} = ${y0} + ${k1} + ${2 * k2} + ${2 * k3} + ${k4} = ${ans}$.`,
             ),
             steps(
               `RK4 的更新公式为 $y_1 = y_0 + \\frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)$。`,
               `代入步长 $h = 6$ 得 $\\frac{6}{6} = 1$，因此 $y_1 = y_0 + k_1 + 2k_2 + 2k_3 + k_4$。`,
-              `代入各数值计算加权和：${y0} + ${k1} + 2(${k2}) + 2(${k3}) + ${k4} = ${ans}$。`,
+              `代入各数值计算加权和：$${y0} + ${k1} + 2(${k2}) + 2(${k3}) + ${k4} = ${ans}$。`,
             ),
           );
 
@@ -823,7 +823,7 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
             steps(
               `Over a fixed interval $[t_0, T]$, the number of steps required is $N = \\frac{T - t_0}{h} = O(h^{-1})$.`,
               `The global error is approximately the sum of $N$ local errors: $E_{\\text{global}} \\approx N \\cdot O(h^{${localOrder}}) = O(h^{-1}) \\cdot O(h^{${localOrder}}) = O(h^{${ans}})$.`,
-              `Thus the global order is ${ans}.`,
+              `Thus the global order is $${ans}$.`,
             ),
             steps(
               `在固定时间区间 $[t_0, T]$ 上，总计算步数为 $N = \\frac{T - t_0}{h} = O(h^{-1})$。`,
@@ -874,12 +874,12 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
             steps(
               `The global error formula is $E(h) = C h^2$.`,
               `Replacing $h$ with $h/${M}$ gives $E(h/${M}) = C \\left(\\frac{h}{${M}}\\right)^2 = \\frac{1}{${M}^2} E(h)$.`,
-              `Therefore, the error is reduced by a factor of ${M}^2 = ${ans}$.`,
+              `Therefore, the error is reduced by a factor of $${M}^2 = ${ans}$.`,
             ),
             steps(
               `全局误差公式为 $E(h) = C h^2$。`,
               `将步长更新为 $h/${M}$：$E(h/${M}) = C \\left(\\frac{h}{${M}}\\right)^2 = \\frac{1}{${M}^2} E(h)$。`,
-              `因此全局误差减小了 ${M}^2 = ${ans}$ 倍。`,
+              `因此全局误差减小了 $${M}^2 = ${ans}$ 倍。`,
             ),
           );
 

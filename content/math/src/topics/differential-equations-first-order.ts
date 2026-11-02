@@ -122,7 +122,7 @@ export const generalSolutionsOfFirstOrderLinearOdes: TopicDef = {
             `齐次方程 $y' + ${a}y = 0$ 的解为 $y_h(x) = C e^{-${a}x}$。`,
             `常数特解为 $y_p = \\frac{${b}}{${a}} = ${k}$。`,
             `通解为 $y(x) = ${k} + C e^{-${a}x}$。由初值条件 $y(0) = ${y0}$，得 $C = ${y0 - k}$。`,
-            `因为 $a = ${a} > 0$，$\\lim_{x \\to \\infty} e^{-${a}x} = 0$，故稳态极限为 ${k}$。`,
+            `因为 $a = ${a} > 0$，$\\lim_{x \\to \\infty} e^{-${a}x} = 0$，故稳态极限为 $${k}$。`,
           ),
         );
         return numberProblem({
@@ -609,12 +609,12 @@ export const exactDifferentialEquations: TopicDef = {
           steps(
             `Identify $M(x, y) = ${2 * a}xy + ${b}y^2$.`,
             `Differentiate with respect to $y$: $\\frac{\\partial M}{\\partial y} = ${2 * a}x + ${2 * b}y$.`,
-            `Evaluate at $(${x0}, ${y0})$: ${2 * a}(${x0}) + ${2 * b}(${y0}) = ${2 * a * x0} + ${2 * b * y0} = ${ans}$.`,
+            `Evaluate at $(${x0}, ${y0})$: $${2 * a}(${x0}) + ${2 * b}(${y0}) = ${2 * a * x0} + ${2 * b * y0} = ${ans}$.`,
           ),
           steps(
             `确定 $M(x, y) = ${2 * a}xy + ${b}y^2$。`,
             `对 $y$ 求偏导：$\\frac{\\partial M}{\\partial y} = ${2 * a}x + ${2 * b}y$。`,
-            `代入点 $(${x0}, ${y0})$：${2 * a}(${x0}) + ${2 * b}(${y0}) = ${ans}$。`,
+            `代入点 $(${x0}, ${y0})$：$${2 * a}(${x0}) + ${2 * b}(${y0}) = ${ans}$。`,
           ),
         );
         return numberProblem({

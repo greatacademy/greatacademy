@@ -921,7 +921,7 @@ export const describingPlanarRegionsUsingSetBuilderNotation: TopicDef = {
           ],
           t(
             `The distance from $(x, y)$ to $(h, k)$ is $\\sqrt{(x - h)^2 + (y - k)^2}$. For a closed disk of radius $r = ${r}$, the condition is $\\text{distance} \\le r$, or $(x - ${h})^2 + (y - ${k})^2 \\le ${r}^2 = ${rSq}$.`,
-            `点 $(x, y)$ 到圆心 $(h, k)$ 的距离为 $\\sqrt{(x - h)^2 + (y - k)^2}$。闭圆盘要求该距离小于等于半径 $r = ${r}$，平方后即为 ${hStr} + ${kStr} \\le ${rSq}$。`,
+            `点 $(x, y)$ 到圆心 $(h, k)$ 的距离为 $\\sqrt{(x - h)^2 + (y - k)^2}$。闭圆盘要求该距离小于等于半径 $r = ${r}$，平方后即为 $${hStr} + ${kStr} \\le ${rSq}$。`,
           ),
         );
       },
@@ -985,7 +985,7 @@ export const cardinalityOfFiniteSets: TopicDef = {
           return numberProblem({
             prompt: t(
               `Given two finite sets $A$ and $B$ with $|A| = ${nA}$, $|B| = ${nB}$, and $|A \\cap B| = ${nInter}$, find $|A \\cup B|$.`,
-              `已知有限集合 $A$ 与 $B$ 满足 $|A| = ${nA}$，|B| = ${nB}$，且 $|A \\cap B| = ${nInter}$，求 $|A \\cup B|$。`,
+              `已知有限集合 $A$ 与 $B$ 满足 $|A| = ${nA}$，$|B| = ${nB}$，且 $|A \\cap B| = ${nInter}$，求 $|A \\cup B|$。`,
             ),
             answer: nUnion,
             solution: t(
@@ -998,7 +998,7 @@ export const cardinalityOfFiniteSets: TopicDef = {
           return numberProblem({
             prompt: t(
               `Given two finite sets $A$ and $B$ with $|A| = ${nA}$, $|B| = ${nB}$, and $|A \\cup B| = ${nUnion}$, find $|A \\cap B|$.`,
-              `已知有限集合 $A$ 与 $B$ 满足 $|A| = ${nA}$，|B| = ${nB}$，且 $|A \\cup B| = ${nUnion}$，求 $|A \\cap B|$。`,
+              `已知有限集合 $A$ 与 $B$ 满足 $|A| = ${nA}$，$|B| = ${nB}$，且 $|A \\cup B| = ${nUnion}$，求 $|A \\cap B|$。`,
             ),
             answer: nInter,
             solution: t(
@@ -2571,8 +2571,8 @@ export const theIntersectionBetweenALineAndAPlane: TopicDef = {
               t("The line is perpendicular to the plane", "直线与平面垂直"),
             ],
             t(
-              `The dot product $\\mathbf{n} \\cdot \\mathbf{v} = (${A})(${B}) + (${B})(-${A}) + (${C})(0) = 0$, so the line is parallel to the plane. Testing initial point $P_0${pt3Latex(p0)} in the plane equation gives $0 = 0$. Thus the line lies entirely within the plane.`,
-              `法向量与方向向量的点积为 $\\mathbf{n} \\cdot \\mathbf{v} = (${A})(${B}) + (${B})(-${A}) + (${C})(0) = 0$，说明直线平行于平面。将直线的基准点 $P_0${pt3Latex(p0)} 代入平面方程满足等式，因此整条直线完全包含在平面内。`,
+              `The dot product $\\mathbf{n} \\cdot \\mathbf{v} = (${A})(${B}) + (${B})(-${A}) + (${C})(0) = 0$, so the line is parallel to the plane. Testing initial point $P_0${pt3Latex(p0)}$ in the plane equation gives $0 = 0$. Thus the line lies entirely within the plane.`,
+              `法向量与方向向量的点积为 $\\mathbf{n} \\cdot \\mathbf{v} = (${A})(${B}) + (${B})(-${A}) + (${C})(0) = 0$，说明直线平行于平面。将直线的基准点 $P_0${pt3Latex(p0)}$ 代入平面方程满足等式，因此整条直线完全包含在平面内。`,
             ),
           );
         } else {

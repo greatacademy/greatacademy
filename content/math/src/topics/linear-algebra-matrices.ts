@@ -552,7 +552,7 @@ export const rowAndColumnOperationsOnDeterminants: TopicDef = {
         const prompt = t(
           `Let $A$ be a $3 \\times 3$ matrix with $\\det(A) = ${d}$. Matrix $B$ is obtained from $A$ by applying three successive operations:
 1. Swap row 1 and row 2 ($R_1 \\leftrightarrow R_2$)
-2. Multiply row 3 by $${k}$ (${k} R_3 \\to R_3$)
+2. Multiply row 3 by $${k}$ ($${k} R_3 \\to R_3$)
 3. Add $${c}$ times row 1 to row 3 ($R_3 + ${c} R_1 \\to R_3$)
 
 What is $\\det(B)$?`,

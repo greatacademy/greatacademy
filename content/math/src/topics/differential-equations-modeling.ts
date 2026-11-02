@@ -159,7 +159,7 @@ export const orthogonalTrajectories: TopicDef = {
             `Differentiate $y = C x^{${k}}$ with respect to $x$: $\\frac{dy}{dx} = ${k} C x^{${k}-1}$.`,
             `Eliminate the parameter $C$ using $C = \\frac{y}{x^{${k}}}$: $\\frac{dy}{dx} = ${k} \\left(\\frac{y}{x^{${k}}}\\right) x^{${k}-1} = \\frac{${k}y}{x}$.`,
             `The orthogonal trajectories must have the negative reciprocal slope: $\\frac{dy}{dx} = -\\frac{x}{${k}y}$.`,
-            `Separate variables: ${k}y\\,dy = -x\\,dx \\implies x\\,dx + ${k}y\\,dy = 0$.`,
+            `Separate variables: $${k}y\\,dy = -x\\,dx \\implies x\\,dx + ${k}y\\,dy = 0$.`,
             `Integrate both sides: $\\frac{x^2}{2} + \\frac{${k}y^2}{2} = K \\implies x^2 + ${k}y^2 = C'$.`,
             `Comparing with $x^2 + B y^2 = C'$, we obtain $B = ${ans}$.`,
           ),
@@ -167,7 +167,7 @@ export const orthogonalTrajectories: TopicDef = {
             `对曲线族 $y = C x^{${k}}$ 关于 $x$ 求导：$\\frac{dy}{dx} = ${k} C x^{${k}-1}$。`,
             `由 $C = \\frac{y}{x^{${k}}}$ 消去参数 $C$：$\\frac{dy}{dx} = ${k} \\left(\\frac{y}{x^{${k}}}\\right) x^{${k}-1} = \\frac{${k}y}{x}$。`,
             `正交轨迹的斜率为负倒数：$\\frac{dy}{dx} = -\\frac{x}{${k}y}$。`,
-            `分离变量：${k}y\\,dy = -x\\,dx \\implies x\\,dx + ${k}y\\,dy = 0$。`,
+            `分离变量：$${k}y\\,dy = -x\\,dx \\implies x\\,dx + ${k}y\\,dy = 0$。`,
             `两边积分：$\\frac{x^2}{2} + \\frac{${k}y^2}{2} = K \\implies x^2 + ${k}y^2 = C'$。`,
             `与 $x^2 + B y^2 = C'$ 对比系数，得 $B = ${ans}$。`,
           ),
@@ -276,12 +276,12 @@ export const inhibitedDecayModelsWithFirstOrderOdes: TopicDef = {
           steps(
             `The rate of temperature decrease is given by $-\\frac{dT}{dt} = ${k}(T - ${Tm})$.`,
             `Substitute $T = ${Tval}^\\circ\\text{C}$: $-\\frac{dT}{dt} = ${k}(${Tval} - ${Tm}) = ${k}(${diff})$.`,
-            `Calculate the product: ${k} \\times ${diff} = ${ans}^\\circ\\text{C/min}$.`,
+            `Calculate the product: $${k} \\times ${diff} = ${ans}^\\circ\\text{C/min}$.`,
           ),
           steps(
             `温度的下降速率由 $-\\frac{dT}{dt} = ${k}(T - ${Tm})$ 给出。`,
             `代入 $T = ${Tval}^\\circ\\text{C}$：$-\\frac{dT}{dt} = ${k}(${Tval} - ${Tm}) = ${k}(${diff})$。`,
-            `计算乘积：${k} \\times ${diff} = ${ans}^\\circ\\text{C/分}$。`,
+            `计算乘积：$${k} \\times ${diff} = ${ans}^\\circ\\text{C/分}$。`,
           ),
         );
 
@@ -337,13 +337,13 @@ export const fallingBodyProblemsWithLinearDrag: TopicDef = {
           steps(
             `Newton's second law for the downward motion is $m \\frac{dv}{dt} = mg - bv$.`,
             `Terminal velocity occurs when the net force is zero and acceleration vanishes: $mg - bv_{\\text{term}} = 0$.`,
-            `Substitute the given values: ${W} - ${b}v_{\\text{term}} = 0$.`,
+            `Substitute the given values: $${W} - ${b}v_{\\text{term}} = 0$.`,
             `Solve for $v_{\\text{term}}$: $v_{\\text{term}} = \\frac{${W}}{${b}} = ${ans}\\text{ m/s}$.`,
           ),
           steps(
             `根据牛顿第二定律，物体向下的运动方程为 $m \\frac{dv}{dt} = mg - bv$。`,
             `当合外力为零、加速度消失时达到收尾速度：$mg - bv_{\\text{term}} = 0$。`,
-            `代入已知数值：${W} - ${b}v_{\\text{term}} = 0$。`,
+            `代入已知数值：$${W} - ${b}v_{\\text{term}} = 0$。`,
             `解得收尾速度：$v_{\\text{term}} = \\frac{${W}}{${b}} = ${ans}\\text{ 米/秒}$。`,
           ),
         );
@@ -390,13 +390,13 @@ export const fallingBodyProblemsWithQuadraticDrag: TopicDef = {
         const solution = t(
           steps(
             `At terminal velocity, the gravitational force balances the drag force: $mg = c v_{\\text{term}}^2$.`,
-            `Substitute $mg = ${W}$ and $c = ${c}$: ${W} = ${c} v_{\\text{term}}^2$.`,
+            `Substitute $mg = ${W}$ and $c = ${c}$: $${W} = ${c} v_{\\text{term}}^2$.`,
             `Solve for $v_{\\text{term}}^2$: $v_{\\text{term}}^2 = \\frac{${W}}{${c}} = ${ans * ans}$.`,
             `Take the square root: $v_{\\text{term}} = \\sqrt{${ans * ans}} = ${ans}\\text{ m/s}$.`,
           ),
           steps(
             `达到终端收尾速度时，重力与空气阻力相互平衡：$mg = c v_{\\text{term}}^2$。`,
-            `代入 $mg = ${W}$ 与 $c = ${c}$：${W} = ${c} v_{\\text{term}}^2$。`,
+            `代入 $mg = ${W}$ 与 $c = ${c}$：$${W} = ${c} v_{\\text{term}}^2$。`,
             `解得速度平方：$v_{\\text{term}}^2 = \\frac{${W}}{${c}} = ${ans * ans}$。`,
             `开平方求得终端速度：$v_{\\text{term}} = \\sqrt{${ans * ans}} = ${ans}\\text{ 米/秒}$。`,
           ),
@@ -551,13 +551,13 @@ export const modelingRlCircuitsWithFirstOrderOdes: TopicDef = {
         const solution = t(
           steps(
             `Kirchhoff's voltage law yields the first-order differential equation $L \\frac{di}{dt} + R i = V_0$.`,
-            `Substitute the given components: ${L} \\frac{di}{dt} + ${R} i = ${V0}$.`,
+            `Substitute the given components: $${L} \\frac{di}{dt} + ${R} i = ${V0}$.`,
             `As $t \\to \\infty$, the transient current settles into steady state where $\\frac{di}{dt} = 0$.`,
             `The equation reduces to $R i_\\infty = V_0 \\implies i_\\infty = \\frac{V_0}{R} = \\frac{${V0}}{${R}} = ${ans}\\text{ A}$.`,
           ),
           steps(
             `由基尔霍夫电压定律列出一阶微分方程：$L \\frac{di}{dt} + R i = V_0$。`,
-            `代入电路参数：${L} \\frac{di}{dt} + ${R} i = ${V0}$。`,
+            `代入电路参数：$${L} \\frac{di}{dt} + ${R} i = ${V0}$。`,
             `当 $t \\to \\infty$ 时，瞬态过程结束进入稳态，此时电流变化率 $\\frac{di}{dt} = 0$。`,
             `方程简化为电阻两端电压降等于电源电压：$R i_\\infty = V_0 \\implies i_\\infty = \\frac{V_0}{R} = \\frac{${V0}}{${R}} = ${ans}\\text{ 安}$。`,
           ),

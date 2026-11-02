@@ -610,12 +610,12 @@ export const solvingInhomogeneousSystemsOfOdes: TopicDef = {
         const solution = t(
           steps(
             `At steady state, the derivative vanishes: $x_1' = 0$.`,
-            `Set the right-hand side to zero: -${a}x_1 + ${b1} = 0$.`,
+            `Set the right-hand side to zero: $-${a}x_1 + ${b1} = 0$.`,
             `Solve for $x_1$: $x_1 = \\frac{${b1}}{${a}} = ${ans}$.`,
           ),
           steps(
             `在稳态平衡点处，状态变化率为零：$x_1' = 0$。`,
-            `令导数项为零：-${a}x_1 + ${b1} = 0$。`,
+            `令导数项为零：$-${a}x_1 + ${b1} = 0$。`,
             `解得稳态值：$x_1 = \\frac{${b1}}{${a}} = ${ans}$。`,
           ),
         );
@@ -936,18 +936,18 @@ export const phasePortraitsForLinearSystemsWithZeroEigenvalues: TopicDef = {
         const ans = a;
 
         const prompt = t(
-          `For the linear system $\\mathbf{x}' = \\begin{pmatrix} ${a} & 1 \\\\ ${2 * a} & 2 \\end{pmatrix} \\mathbf{x}$, the equilibrium points form a line ${a}x + y = 0$. Find the coefficient of $x$ in this line equation.`,
-          `对于线性系统 $\\mathbf{x}' = \\begin{pmatrix} ${a} & 1 \\\\ ${2 * a} & 2 \\end{pmatrix} \\mathbf{x}$，其平衡点构成直线 ${a}x + y = 0$。求该平衡线方程中 $x$ 的系数。`,
+          `For the linear system $\\mathbf{x}' = \\begin{pmatrix} ${a} & 1 \\\\ ${2 * a} & 2 \\end{pmatrix} \\mathbf{x}$, the equilibrium points form a line $${a}x + y = 0$. Find the coefficient of $x$ in this line equation.`,
+          `对于线性系统 $\\mathbf{x}' = \\begin{pmatrix} ${a} & 1 \\\\ ${2 * a} & 2 \\end{pmatrix} \\mathbf{x}$，其平衡点构成直线 $${a}x + y = 0$。求该平衡线方程中 $x$ 的系数。`,
         );
         const solution = t(
           steps(
             `Equilibrium points satisfy $A \\mathbf{x} = \\mathbf{0}$, which gives ${a}x + y = 0$ and ${2 * a}x + 2y = 0$.`,
-            `Both equations are identical to ${a}x + y = 0$.`,
+            `Both equations are identical to $${a}x + y = 0$.`,
             `The coefficient of $x$ is $a = ${ans}$.`,
           ),
           steps(
             `平衡点满足 $A \\mathbf{x} = \\mathbf{0}$，展开得 ${a}x + y = 0$ 与 ${2 * a}x + 2y = 0$。`,
-            `两方程线性相关，化简均为 ${a}x + y = 0$。`,
+            `两方程线性相关，化简均为 $${a}x + y = 0$。`,
             `因此 $x$ 的系数为 $a = ${ans}$。`,
           ),
         );
@@ -1055,12 +1055,12 @@ export const shiftedSystemsOfOdes: TopicDef = {
         const solution = t(
           steps(
             `At the equilibrium point, the rate of change is zero: $x' = 0$.`,
-            `Set the equation to zero: -${a}(x_* - ${xStar}) = 0$.`,
+            `Set the equation to zero: $-${a}(x_* - ${xStar}) = 0$.`,
             `Solve for $x_*$: $x_* = ${ans}$.`,
           ),
           steps(
             `在平衡点处，状态变化率为零：$x' = 0$。`,
-            `令方程右端为零：-${a}(x_* - ${xStar}) = 0$。`,
+            `令方程右端为零：$-${a}(x_* - ${xStar}) = 0$。`,
             `解得平衡点坐标：$x_* = ${ans}$。`,
           ),
         );

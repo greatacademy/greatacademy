@@ -38,14 +38,14 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
           const solution = t(
             steps(
               `The unit step function $u(t - c)$ is $1$ for $t \\ge c$ and $0$ for $t < c$.`,
-              `Since ${t0} > ${c1}$, $u(${t0} - ${c1}) = 1$.`,
-              `Since ${t0} > ${c2}$, $u(${t0} - ${c2}) = 1$.`,
+              `Since $${t0} > ${c1}$, $u(${t0} - ${c1}) = 1$.`,
+              `Since $${t0} > ${c2}$, $u(${t0} - ${c2}) = 1$.`,
               `Therefore, $f(${t0}) = ${a}(1) + ${b}(1) = ${ans}$.`,
             ),
             steps(
               `单位阶跃函数 $u(t - c)$ 在 $t \\ge c$ 时取值为 $1$，在 $t < c$ 时取值为 $0$。`,
-              `因为 ${t0} > ${c1}$，所以 $u(${t0} - ${c1}) = 1$。`,
-              `因为 ${t0} > ${c2}$，所以 $u(${t0} - ${c2}) = 1$。`,
+              `因为 $${t0} > ${c1}$，所以 $u(${t0} - ${c1}) = 1$。`,
+              `因为 $${t0} > ${c2}$，所以 $u(${t0} - ${c2}) = 1$。`,
               `因此，$f(${t0}) = ${a}(1) + ${b}(1) = ${ans}$。`,
             ),
           );
@@ -205,7 +205,7 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
             steps(
               `利用拉普拉斯变换的线性性质：$\\mathcal{L}\\{${a} t^2 + ${b} t + ${c}\\} = ${a} \\mathcal{L}\\{t^2\\} + ${b} \\mathcal{L}\\{t\\} + ${c} \\mathcal{L}\\{1\\}$。`,
               `因为 $\\mathcal{L}\\{t^2\\} = \\frac{2!}{s^3} = \\frac{2}{s^3}$，该分项为 $\\frac{2(${a})}{s^3} = \\frac{${ans}}{s^3}$。`,
-              `因此 $\\frac{1}{s^3}$ 项的系数为 ${ans}$。`,
+              `因此 $\\frac{1}{s^3}$ 项的系数为 $${ans}$。`,
             ),
           );
 
@@ -302,13 +302,13 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
             steps(
               `The differentiation rule gives $\\mathcal{L}\\{t g(t)\\} = -G'(s)$.`,
               `For $g(t) = e^{${a}t}$, $G(s) = \\frac{1}{s - ${a}}$, so $-G'(s) = \\frac{1}{(s - ${a})^2}$.`,
-              `Multiplying by the coefficient ${c}$, $\\mathcal{L}\\{f(t)\\} = \\frac{${c}}{(s - ${a})^2}$.`,
+              `Multiplying by the coefficient $${c}$, $\\mathcal{L}\\{f(t)\\} = \\frac{${c}}{(s - ${a})^2}$.`,
               `Therefore, $(s - ${a})^2 \\mathcal{L}\\{f(t)\\} = ${ans}$.`,
             ),
             steps(
               `频域求导法则为 $\\mathcal{L}\\{t g(t)\\} = -G'(s)$。`,
               `当 $g(t) = e^{${a}t}$ 时，$G(s) = \\frac{1}{s - ${a}}$，故 $-G'(s) = \\frac{1}{(s - ${a})^2}$。`,
-              `乘以系数 ${c}$，得 $\\mathcal{L}\\{f(t)\\} = \\frac{${c}}{(s - ${a})^2}$。`,
+              `乘以系数 $${c}$，得 $\\mathcal{L}\\{f(t)\\} = \\frac{${c}}{(s - ${a})^2}$。`,
               `因此，$(s - ${a})^2 \\mathcal{L}\\{f(t)\\} = ${ans}$。`,
             ),
           );
@@ -409,13 +409,13 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
               `By the integration property of Laplace transforms, $\\mathcal{L}\\left\\{\\int_0^t f(\\tau)\\,d\\tau\\right\\} = \\frac{1}{s} F(s)$.`,
               `Here $f(t) = ${c} e^{${a}t}$, so $F(s) = \\frac{${c}}{s - ${a}}$.`,
               `Thus $\\mathcal{L}\\{g(t)\\} = \\frac{${c}}{s(s - ${a})}$.`,
-              `Multiplying by $s(s - ${a})$ yields ${ans}$.`,
+              `Multiplying by $s(s - ${a})$ yields $${ans}$.`,
             ),
             steps(
               `根据拉普拉斯变换的积分性质，$\\mathcal{L}\\left\\{\\int_0^t f(\\tau)\\,d\\tau\\right\\} = \\frac{1}{s} F(s)$。`,
               `此处 $f(t) = ${c} e^{${a}t}$，其变换为 $F(s) = \\frac{${c}}{s - ${a}}$。`,
               `因此 $\\mathcal{L}\\{g(t)\\} = \\frac{${c}}{s(s - ${a})}$。`,
-              `两端乘以 $s(s - ${a})$ 即得 ${ans}$。`,
+              `两端乘以 $s(s - ${a})$ 即得 $${ans}$。`,
             ),
           );
 
@@ -517,13 +517,13 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
               `The second shifting theorem states that $\\mathcal{L}\\{u(t - c) g(t - c)\\} = e^{-cs} G(s)$.`,
               `Here $g(t) = ${k}t$, so $G(s) = \\mathcal{L}\\{${k}t\\} = \\frac{${k}}{s^2}$.`,
               `Thus $\\mathcal{L}\\{f(t)\\} = \\frac{${k} e^{-${c}s}}{s^2}$.`,
-              `Multiplying by $s^2 e^{${c}s}$ cancels both denominators and exponentials, leaving ${ans}$.`,
+              `Multiplying by $s^2 e^{${c}s}$ cancels both denominators and exponentials, leaving $${ans}$.`,
             ),
             steps(
               `第二位移定理表明 $\\mathcal{L}\\{u(t - c) g(t - c)\\} = e^{-cs} G(s)$。`,
               `此处 $g(t) = ${k}t$，故 $G(s) = \\mathcal{L}\\{${k}t\\} = \\frac{${k}}{s^2}$。`,
               `因此 $\\mathcal{L}\\{f(t)\\} = \\frac{${k} e^{-${c}s}}{s^2}$。`,
-              `乘以 $s^2 e^{${c}s}$ 后消去分母与指数因子，结果为 ${ans}$。`,
+              `乘以 $s^2 e^{${c}s}$ 后消去分母与指数因子，结果为 $${ans}$。`,
             ),
           );
 
@@ -635,7 +635,7 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
               `两边取拉普拉斯变换：$s Y(s) - y(0) + ${a} Y(s) = \\frac{${K}}{s}$。`,
               `因 $y(0) = 0$，得 $(s + ${a}) Y(s) = \\frac{${K}}{s} \\implies Y(s) = \\frac{${K}}{s(s + ${a})}$。`,
               `拆分为部分分式：$Y(s) = \\frac{${ans}}{s} - \\frac{${ans}}{s + ${a}}$。`,
-              `求逆变换得 $y(t) = ${ans}(1 - e^{-${a}t})$。当 $t \\to \\infty$ 时，稳态极限为 ${ans}$。`,
+              `求逆变换得 $y(t) = ${ans}(1 - e^{-${a}t})$。当 $t \\to \\infty$ 时，稳态极限为 $${ans}$。`,
             ),
           );
 
@@ -854,12 +854,12 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
             steps(
               `The matrix $sI - A = \\begin{pmatrix} s - ${a} & -${b} \\\\ -${c} & s - ${d} \\end{pmatrix}$.`,
               `Its determinant is $\\det(sI - A) = (s - ${a})(s - ${d}) - (-${b})(-${c}) = s^2 - (${a + d})s + (${a * d} - ${b * c})$.`,
-              `Evaluating at $s = 0$ gives ${a * d} - ${b * c} = ${ans}$.`,
+              `Evaluating at $s = 0$ gives $${a * d} - ${b * c} = ${ans}$.`,
             ),
             steps(
               `写出特征矩阵 $sI - A = \\begin{pmatrix} s - ${a} & -${b} \\\\ -${c} & s - ${d} \\end{pmatrix}$。`,
               `计算行列式：$\\det(sI - A) = (s - ${a})(s - ${d}) - (-${b})(-${c}) = s^2 - (${a + d})s + (${a * d} - ${b * c})$。`,
-              `在 $s = 0$ 处代入得 ${a * d} - ${b * c} = ${ans}$。`,
+              `在 $s = 0$ 处代入得 $${a * d} - ${b * c} = ${ans}$。`,
             ),
           );
 

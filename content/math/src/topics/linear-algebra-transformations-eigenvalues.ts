@@ -1879,8 +1879,8 @@ export const findingComplexEigenvectorsOfReal2x2Matrices: TopicDef = {
         const biStr = formatComplex(0, b);
         const v2Term = b === 1 ? "v_2" : `${b} v_2`;
         const solution = t(
-          `We solve $(A - (${eigStr})I)\\mathbf{v} = \\mathbf{0}$: $\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$. The first row gives ${biStr} v_1 - ${v2Term} = 0$, so $v_2 = i v_1$. Choosing $v_1 = 1$ gives $\\mathbf{v} = ${vec2Latex(["1", "i"])}$.`,
-          `求解方程 $(A - (${eigStr})I)\\mathbf{v} = \\mathbf{0}$：$\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$。第一行给出 ${biStr} v_1 - ${v2Term} = 0$，即 $v_2 = i v_1$。取 $v_1 = 1$ 可得 $\\mathbf{v} = ${vec2Latex(["1", "i"])}$。`,
+          `We solve $(A - (${eigStr})I)\\mathbf{v} = \\mathbf{0}$: $\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$. The first row gives $${biStr} v_1 - ${v2Term} = 0$, so $v_2 = i v_1$. Choosing $v_1 = 1$ gives $\\mathbf{v} = ${vec2Latex(["1", "i"])}$.`,
+          `求解方程 $(A - (${eigStr})I)\\mathbf{v} = \\mathbf{0}$：$\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$。第一行给出 $${biStr} v_1 - ${v2Term} = 0$，即 $v_2 = i v_1$。取 $v_1 = 1$ 可得 $\\mathbf{v} = ${vec2Latex(["1", "i"])}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -2186,7 +2186,7 @@ export const ranksOfGeneralizedEigenvectors: TopicDef = {
         const shiftStr = formatShift(lambda, "I");
         const solution = t(
           `We compute powers of $(A${shiftStr}) = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \\end{pmatrix}$. The vector $v$ satisfies $(A${shiftStr})^{${rankCase}} v = 0$, while $(A${shiftStr})^{${rankCase - 1}} v \\neq 0$. Therefore, the rank is ${rankCase}.`,
-          `计算 $(A${shiftStr}) = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \\end{pmatrix}$ 对向量 $v$ 的作用。可知 $(A${shiftStr})^{${rankCase}} v = 0$，且 $(A${shiftStr})^{${rankCase - 1}} v \\neq 0$。因此阶为 ${rankCase}$。`,
+          `计算 $(A${shiftStr}) = \\begin{pmatrix} 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \\end{pmatrix}$ 对向量 $v$ 的作用。可知 $(A${shiftStr})^{${rankCase}} v = 0$，且 $(A${shiftStr})^{${rankCase - 1}} v \\neq 0$。因此阶为 $${rankCase}$。`,
         );
         return numberProblem({
           prompt,
@@ -2237,8 +2237,8 @@ export const findingGeneralizedEigenvectorsOfSpecificRanks: TopicDef = {
           `设 $A = ${mat2Latex(mat)}$ 具有特征值 $\\lambda = ${lambda}$，其特征向量为 $v_1 = ${vec2Latex(v1)}$。求满足 $(A${shiftStr})\\mathbf{v}_2 = v_1$ 且第一分量为 $x = 0$ 的 $2$ 阶广义特征向量 $\\mathbf{v}_2 = \\langle x, y \\rangle$。`,
         );
         const solution = t(
-          `We solve $(A${shiftStr})\\mathbf{v}_2 = v_1$: $\\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${k} \\\\ 0 \\end{pmatrix}$, which requires ${k}y = ${k}$, so $y = 1$. With $x = 0$, $\\mathbf{v}_2 = \\langle 0, 1 \\rangle$.`,
-          `求解方程 $(A${shiftStr})\\mathbf{v}_2 = v_1$：$\\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${k} \\\\ 0 \\end{pmatrix}$，要求 ${k}y = ${k}$，故 $y = 1$。取 $x = 0$，得到 $\\mathbf{v}_2 = \\langle 0, 1 \\rangle$。`,
+          `We solve $(A${shiftStr})\\mathbf{v}_2 = v_1$: $\\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${k} \\\\ 0 \\end{pmatrix}$, which requires $${k}y = ${k}$, so $y = 1$. With $x = 0$, $\\mathbf{v}_2 = \\langle 0, 1 \\rangle$.`,
+          `求解方程 $(A${shiftStr})\\mathbf{v}_2 = v_1$：$\\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ${k} \\\\ 0 \\end{pmatrix}$，要求 $${k}y = ${k}$，故 $y = 1$。取 $x = 0$，得到 $\\mathbf{v}_2 = \\langle 0, 1 \\rangle$。`,
         );
         return pointProblem({
           prompt,

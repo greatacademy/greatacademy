@@ -463,12 +463,12 @@ export const surfaceIntegralsOverParametricSurfaces: TopicDef = {
         const solution = t(
           steps(
             `Convert the surface integral to a double integral: $\\iint_S ${k}\\,dS = \\iint_D ${k} \\|\\mathbf{r}_u \\times \\mathbf{r}_v\\|\\,du\\,dv$.`,
-            `Since $\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = ${norm}$, the integrand is constant: ${k} \\times ${norm} = ${k * norm}$.`,
+            `Since $\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = ${norm}$, the integrand is constant: $${k} \\times ${norm} = ${k * norm}$.`,
             `Multiply by the parameter area $U \\times V = ${U} \\times ${V} = ${U * V}$: $(${k * norm}) \\times ${U * V} = ${ans}$.`,
           ),
           steps(
             `将曲面积分转化为二重积分：$\\iint_S ${k}\\,dS = \\iint_D ${k} \\|\\mathbf{r}_u \\times \\mathbf{r}_v\\|\\,du\\,dv$。`,
-            `由 $\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = ${norm}$，被积函数为常数：${k} \\times ${norm} = ${k * norm}$。`,
+            `由 $\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = ${norm}$，被积函数为常数：$${k} \\times ${norm} = ${k * norm}$。`,
             `乘以参数域面积 $U \\times V = ${U} \\times ${V} = ${U * V}$：$(${k * norm}) \\times ${U * V} = ${ans}$。`,
           ),
         );
@@ -518,13 +518,13 @@ export const surfaceIntegralsOverCartesianSurfaces: TopicDef = {
             `The surface element is $dS = \\sqrt{1 + z_x^2 + z_y^2}\\,dA = \\sqrt{1 + 2^2 + 2^2}\\,dA = 3\\,dA$.`,
             `Convert to double integral: $\\iint_S ${c}\\,dS = \\iint_D ${c}(3)\\,dA = ${3 * c} \\iint_D 1\\,dA$.`,
             `The domain area is $\\text{Area}(D) = ${W} \\times ${H} = ${W * H}$.`,
-            `Compute the integral: ${3 * c} \\times ${W * H} = ${ans}$.`,
+            `Compute the integral: $${3 * c} \\times ${W * H} = ${ans}$.`,
           ),
           steps(
             `曲面面积微元为 $dS = \\sqrt{1 + z_x^2 + z_y^2}\\,dA = \\sqrt{1 + 2^2 + 2^2}\\,dA = 3\\,dA$。`,
             `转化为二重积分：$\\iint_S ${c}\\,dS = \\iint_D ${c}(3)\\,dA = ${3 * c} \\iint_D 1\\,dA$。`,
             `投影区域面积为 $\\text{Area}(D) = ${W} \\times ${H} = ${W * H}$。`,
-            `计算得：${3 * c} \\times ${W * H} = ${ans}$。`,
+            `计算得：$${3 * c} \\times ${W * H} = ${ans}$。`,
           ),
         );
         return numberProblem({
@@ -575,13 +575,13 @@ export const fluxInThreeDimensionalVectorFields: TopicDef = {
             `The upward unit normal to the $xy$-plane is $\\mathbf{n} = \\langle 0, 0, 1 \\rangle = \\mathbf{k}$.`,
             `Compute the dot product: $\\mathbf{F} \\cdot \\mathbf{n} = \\langle ${a}, ${b}, ${c} \\rangle \\cdot \\langle 0, 0, 1 \\rangle = ${c}$.`,
             `The flux is $\\iint_S \\mathbf{F} \\cdot \\mathbf{n}\\,dS = ${c} \\iint_S 1\\,dS = ${c} \\times \\text{Area}(S)$.`,
-            `The area is $W \\times H = ${W} \\times ${H} = ${area}$, so the flux is ${c} \\times ${area} = ${flux}$.`,
+            `The area is $W \\times H = ${W} \\times ${H} = ${area}$, so the flux is $${c} \\times ${area} = ${flux}$.`,
           ),
           steps(
             `$xy$ 平面的向上单位法向量为 $\\mathbf{n} = \\langle 0, 0, 1 \\rangle = \\mathbf{k}$。`,
             `计算点积：$\\mathbf{F} \\cdot \\mathbf{n} = \\langle ${a}, ${b}, ${c} \\rangle \\cdot \\langle 0, 0, 1 \\rangle = ${c}$。`,
             `通量公式：$\\iint_S \\mathbf{F} \\cdot \\mathbf{n}\\,dS = ${c} \\iint_S 1\\,dS = ${c} \\times \\text{Area}(S)$。`,
-            `矩形面积为 $W \\times H = ${W} \\times ${H} = ${area}$，故通量为 ${c} \\times ${area} = ${flux}$。`,
+            `矩形面积为 $W \\times H = ${W} \\times ${H} = ${area}$，故通量为 $${c} \\times ${area} = ${flux}$。`,
           ),
         );
         return numberProblem({
@@ -752,7 +752,7 @@ export const calculatingFluxThroughCartesianSurfaces: TopicDef = {
             `对于平面 $z = g(x, y) = ${a}x + ${b}y$，偏导数为 $g_x = ${a}$，$g_y = ${b}$。`,
             `向上向量微元为 $d\\mathbf{S} = \\langle -g_x, -g_y, 1 \\rangle dA = \\langle -${a}, -${b}, 1 \\rangle dA$。`,
             `做点积运算：$\\mathbf{F} \\cdot d\\mathbf{S} = [(${P})(-${a}) + (${Q})(-${b}) + (${R})(1)] dA = ${dot} dA$。`,
-            `在面积为 $W \\times H = ${W * H}$ 的矩形上积分：通量为 ${dot} \\times ${W * H} = ${flux}$。`,
+            `在面积为 $W \\times H = ${W * H}$ 的矩形上积分：通量为 $${dot} \\times ${W * H} = ${flux}$。`,
           ),
         );
         return numberProblem({
@@ -867,13 +867,13 @@ export const theDivergenceTheorem: TopicDef = {
             `Calculate the divergence: $\\text{div}\\,\\mathbf{F} = \\frac{\\partial}{\\partial x}(${a}x + y^2) + \\frac{\\partial}{\\partial y}(${b}y + z^2) + \\frac{\\partial}{\\partial z}(${c}z + x^2) = ${a} + ${b} + ${c} = ${div}$.`,
             `By the Divergence Theorem, $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iiint_E \\text{div}\\,\\mathbf{F}\\,dV = \\iiint_E ${div}\\,dV$.`,
             `The volume of the box is $L \\times W \\times H = ${L} \\times ${W} \\times ${H} = ${vol}$.`,
-            `Compute the integral: ${div} \\times ${vol} = ${ans}$.`,
+            `Compute the integral: $${div} \\times ${vol} = ${ans}$.`,
           ),
           steps(
             `计算向量场的散度：$\\text{div}\\,\\mathbf{F} = \\frac{\\partial}{\\partial x}(${a}x + y^2) + \\frac{\\partial}{\\partial y}(${b}y + z^2) + \\frac{\\partial}{\\partial z}(${c}z + x^2) = ${a} + ${b} + ${c} = ${div}$。`,
             `由高斯散度定理，$\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iiint_E \\text{div}\\,\\mathbf{F}\\,dV = ${div} \\iiint_E 1\\,dV$。`,
             `长方体体积为 $L \\times W \\times H = ${L} \\times ${W} \\times ${H} = ${vol}$。`,
-            `相乘得：${div} \\times ${vol} = ${ans}$。`,
+            `相乘得：$${div} \\times ${vol} = ${ans}$。`,
           ),
         );
         return numberProblem({
@@ -923,13 +923,13 @@ export const stokesTheorem: TopicDef = {
             `Calculate the curl of $\\mathbf{F}$: $\\text{curl}\\,\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\langle 0, 0, \\frac{\\partial}{\\partial x}(${a}x) - \\frac{\\partial}{\\partial y}(-${a}y) \\rangle = \\langle 0, 0, ${a} - (-${a}) \\rangle = \\langle 0, 0, ${curlZ} \\rangle$.`,
             `By Stokes' Theorem, $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_S (\\text{curl}\\,\\mathbf{F}) \\cdot \\mathbf{k}\\,dS$.`,
             `Since the normal is $\\mathbf{k}$, $(\\text{curl}\\,\\mathbf{F}) \\cdot \\mathbf{k} = ${curlZ}$.`,
-            `Multiply by the area of the rectangle $W \\times H = ${W} \\times ${H} = ${area}$: ${curlZ} \\times ${area} = ${ans}$.`,
+            `Multiply by the area of the rectangle $W \\times H = ${W} \\times ${H} = ${area}$: $${curlZ} \\times ${area} = ${ans}$.`,
           ),
           steps(
             `计算向量场的旋度：$\\text{curl}\\,\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\langle 0, 0, \\frac{\\partial}{\\partial x}(${a}x) - \\frac{\\partial}{\\partial y}(-${a}y) \\rangle = \\langle 0, 0, ${curlZ} \\rangle$。`,
             `由斯托克斯定理，$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_S (\\text{curl}\\,\\mathbf{F}) \\cdot \\mathbf{k}\\,dS$。`,
             `平面向上的法向为 $\\mathbf{k}$，点积为 $(\\text{curl}\\,\\mathbf{F}) \\cdot \\mathbf{k} = ${curlZ}$。`,
-            `乘以矩形面积 $W \\times H = ${W} \\times ${H} = ${area}$：${curlZ} \\times ${area} = ${ans}$。`,
+            `乘以矩形面积 $W \\times H = ${W} \\times ${H} = ${area}$：$${curlZ} \\times ${area} = ${ans}$。`,
           ),
         );
         return numberProblem({

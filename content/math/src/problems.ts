@@ -473,7 +473,7 @@ export function choiceProblem(p: ChoiceProblem): Problem {
 /** yesNo are the options of a yes-or-no question. */
 export const yesNo: readonly Text[] = [t("Yes", "是"), t("No", "否")];
 
-/** steps writes solution steps as display math on lines of their own. */
+/** steps writes solution steps on lines of their own: a step of pure math as display math, and a step that already contains math delimiters as a paragraph of text. */
 export function steps(...lines: readonly string[]): string {
-  return `\n\n${lines.map((l) => `$$${l}$$`).join("\n\n")}\n\n`;
+  return `\n\n${lines.map((l) => (l.includes("$") ? l : `$$${l}$$`)).join("\n\n")}\n\n`;
 }

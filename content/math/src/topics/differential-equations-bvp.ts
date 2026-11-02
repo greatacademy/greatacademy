@@ -565,7 +565,7 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
             ),
             steps(
               `直接求导：$\\frac{d}{dx}[${bn} \\sin(${n}x)] = ${bn} \\cdot ${n} \\cos(${n}x) = ${ans} \\cos(${n}x)$。`,
-              `因此 $\\cos(${n}x)$ 的系数为 ${ans}$。`,
+              `因此 $\\cos(${n}x)$ 的系数为 $${ans}$。`,
             ),
           );
 
@@ -718,7 +718,7 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
           const solution = t(
             steps(
               `Substitute $y(x) = Y_{${m}} \\sin(${m}x)$ into the ODE: $-y''(x) = -(-${m}^2 Y_{${m}} \\sin(${m}x)) = ${mSq} Y_{${m}} \\sin(${m}x)$.`,
-              `Equate with the forcing term: ${mSq} Y_{${m}} = ${Fm}.`,
+              `Equate with the forcing term: $${mSq} Y_{${m}} = ${Fm}$.`,
               `Dividing gives $Y_{${m}} = \\frac{${Fm}}{${mSq}} = ${ans}$. Notice that the boundary conditions $y(0) = 0$ and $y(\\pi) = 0$ are automatically satisfied.`,
             ),
             steps(

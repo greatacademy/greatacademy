@@ -723,12 +723,12 @@ export const secondOrderInhomogeneousOdesWithPolynomialForcing: TopicDef = {
           steps(
             `Compute derivatives: $y_p' = A$ and $y_p'' = 0$.`,
             `Substitute into the ODE: $0 + ${b}(A) + ${c}(Ax + B) = ${K}x$.`,
-            `Equate coefficients of $x$: ${c}A = ${K} \\implies A = \\frac{${K}}{${c}} = ${ans}$.`,
+            `Equate coefficients of $x$: $${c}A = ${K} \\implies A = \\frac{${K}}{${c}} = ${ans}$.`,
           ),
           steps(
             `求导：$y_p' = A$，$y_p'' = 0$。`,
             `代入原方程：$0 + ${b}(A) + ${c}(Ax + B) = ${K}x$。`,
-            `对比一次项系数：${c}A = ${K} \\implies A = \\frac{${K}}{${c}} = ${ans}$。`,
+            `对比一次项系数：$${c}A = ${K} \\implies A = \\frac{${K}}{${c}} = ${ans}$。`,
           ),
         );
 
@@ -846,13 +846,13 @@ export const secondOrderInhomogeneousOdesWithSinusoidalForcing: TopicDef = {
           steps(
             `Substitute $y_p = A\\cos(${omega}x)$: $y_p'' = -${omega * omega}A\\cos(${omega}x)$.`,
             `Plug into the equation: $[-${omega * omega} + ${omega0 * omega0}] A\\cos(${omega}x) = ${F0}\\cos(${omega}x)$.`,
-            `Evaluate the coefficient difference: ${omega0 * omega0} - ${omega * omega} = ${denom}$.`,
+            `Evaluate the coefficient difference: $${omega0 * omega0} - ${omega * omega} = ${denom}$.`,
             `Solve for $A$: $A = \\frac{${F0}}{${denom}} = ${ans}$.`,
           ),
           steps(
             `将特解 $y_p = A\\cos(${omega}x)$ 求二阶导：$y_p'' = -${omega * omega}A\\cos(${omega}x)$。`,
             `代入原方程：$[-${omega * omega} + ${omega0 * omega0}] A\\cos(${omega}x) = ${F0}\\cos(${omega}x)$。`,
-            `计算系数差：${omega0 * omega0} - ${omega * omega} = ${denom}$。`,
+            `计算系数差：$${omega0 * omega0} - ${omega * omega} = ${denom}$。`,
             `解出待定振幅 $A$：$A = \\frac{${F0}}{${denom}} = ${ans}$。`,
           ),
         );
