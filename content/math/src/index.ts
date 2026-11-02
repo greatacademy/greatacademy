@@ -128,6 +128,7 @@ import { grade8ExponentTopics } from "./topics/grade-8-exponents.ts";
 import { grade8FunctionTopics } from "./topics/grade-8-functions.ts";
 import { grade8LinearEquationTopics } from "./topics/grade-8-linear-equations.ts";
 import { grade8NumberTheoryTopics } from "./topics/grade-8-number-theory.ts";
+import { grade8PythagoreanTopics } from "./topics/grade-8-pythagorean.ts";
 import { grade8RadicalTopics } from "./topics/grade-8-radicals.ts";
 import { grade8RealNumberTopics } from "./topics/grade-8-real-numbers.ts";
 import { grade8ScientificNotationTopics } from "./topics/grade-8-scientific-notation.ts";
@@ -237,6 +238,7 @@ export const math: SubjectDef = {
     ...grade8FunctionTopics,
     ...grade8AngleTopics,
     ...grade8TransformationTopics,
+    ...grade8PythagoreanTopics,
     ...numberTheoryTopics,
     ...fractionTopics,
     ...decimalAndPercentTopics,

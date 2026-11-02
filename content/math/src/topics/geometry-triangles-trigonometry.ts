@@ -80,15 +80,16 @@ function names(points: readonly Point[], letters: string, c: Point = center(poin
 }
 
 /** Pose turns and maybe mirrors a drawing, so that figures do not all face the same way. */
-interface Pose {
+export interface Pose {
   readonly turn: number;
   readonly mirror: boolean;
 }
 
-const pickPose = (rng: Rng): Pose => ({ turn: rng.pick([0, 0, 0, 90, 180, 270, 15, -15]), mirror: rng.bool() });
+/** pickPose picks a random pose. */
+export const pickPose = (rng: Rng): Pose => ({ turn: rng.pick([0, 0, 0, 90, 180, 270, 15, -15]), mirror: rng.bool() });
 
 /** posed applies a pose to points. */
-function posed<T extends readonly Point[]>(points: T, pose: Pose): T {
+export function posed<T extends readonly Point[]>(points: T, pose: Pose): T {
   const [c, s] = [Math.cos(rad(pose.turn)), Math.sin(rad(pose.turn))];
   return points.map(([x0, y]) => {
     const x = pose.mirror ? -x0 : x0;
@@ -97,13 +98,14 @@ function posed<T extends readonly Point[]>(points: T, pose: Pose): T {
 }
 
 /** Tri is a right triangle: the right-angle vertex R, the end U of the bottom leg and the end V of the upright leg. */
-type Tri = readonly [Point, Point, Point];
+export type Tri = readonly [Point, Point, Point];
 
 /** rightTri places a right triangle with legs p = RU and q = RV in a pose. */
-const rightTri = (p: number, q: number, pose: Pose): Tri => posed([[0, 0] as Point, [p, 0] as Point, [0, q] as Point] as const, pose);
+export const rightTri = (p: number, q: number, pose: Pose): Tri =>
+  posed([[0, 0] as Point, [p, 0] as Point, [0, q] as Point] as const, pose);
 
 /** RightLabels label a right triangle: its sides RU, UV (the hypotenuse) and VR, angle arcs at U and V, and vertex letters for R, U, V. */
-interface RightLabels {
+export interface RightLabels {
   readonly sides?: readonly [string | null, string | null, string | null];
   readonly atU?: string;
   readonly atV?: string;
@@ -111,7 +113,7 @@ interface RightLabels {
 }
 
 /** rightMarks draws a right triangle with its right-angle mark and labels. */
-function rightMarks(tri: Tri, l: RightLabels): Mark[] {
+export function rightMarks(tri: Tri, l: RightLabels): Mark[] {
   const [r, u, v] = tri;
   const marks: Mark[] = [
     { kind: "polygon", points: [r, u, v] },
@@ -136,7 +138,7 @@ type S = readonly [Q, number];
 const q = (n: number, d = 1) => Q.of(n, d);
 
 /** rootOf writes √n in simplest form, as [k, m] with n = k²·m. */
-function rootOf(n: number): [number, number] {
+export function rootOf(n: number): [number, number] {
   let k = 1;
   for (let f = 2; f * f <= n / (k * k); f++) while ((n / (k * k)) % (f * f) === 0) k *= f;
   return [k, n / (k * k)];
@@ -180,7 +182,7 @@ const triples = [
 ] as const;
 
 /** pickTriple picks a Pythagorean triple with hypotenuse at most max, legs in random order. */
-function pickTriple(rng: Rng, max = 60): [number, number, number] {
+export function pickTriple(rng: Rng, max = 60): [number, number, number] {
   for (;;) {
     const [a, b, c] = rng.pick(triples);
     if (c > max) continue;

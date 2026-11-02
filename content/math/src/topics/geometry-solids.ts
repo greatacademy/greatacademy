@@ -7,9 +7,10 @@ import { choiceProblem, expressionProblem, numberProblem, radicalProblem, soluti
 const units = ["cm", "m", "in", "ft"] as const;
 
 /** Unit is a unit of length. */
-type Unit = (typeof units)[number];
+export type Unit = (typeof units)[number];
 
-const pickUnit = (rng: Rng): Unit => rng.pick(units);
+/** pickUnit picks a unit of length. */
+export const pickUnit = (rng: Rng): Unit => rng.pick(units);
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -17,7 +18,7 @@ const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 const len = (v: Coefficient, u: Unit) => `${toQ(v).isInteger() ? toQ(v).toString() : dec(v)} ${u}`;
 
 /** tex writes a length, an area or a volume in LaTeX: "8\text{ cm}", "24\text{ cm}^2". */
-const tex = (v: Coefficient, u: Unit, power = 1) => `${num(v)}\\text{ ${u}}${power > 1 ? `^${power}` : ""}`;
+export const tex = (v: Coefficient, u: Unit, power = 1) => `${num(v)}\\text{ ${u}}${power > 1 ? `^${power}` : ""}`;
 
 /** unitTex writes a unit of length, area or volume alone: "\text{cm}^3". */
 const unitTex = (u: Unit, power: number) => `\\text{${u}}${power > 1 ? `^${power}` : ""}`;
@@ -25,7 +26,7 @@ const unitTex = (u: Unit, power: number) => `\\text{${u}}${power > 1 ? `^${power
 const figure = (marks: readonly Mark[], en: string, zh: string): Figure => ({ svg: sketch(marks), alt: t(en, zh) });
 
 /** piTex writes c·π: "\pi", "36\pi", "\frac{32}{3}\pi". */
-function piTex(c: Coefficient): string {
+export function piTex(c: Coefficient): string {
   const v = toQ(c);
   return v.eq(Q.one) ? "\\pi" : `${v.toLatex()}\\pi`;
 }
@@ -51,7 +52,7 @@ function rootProblem(p: { prompt: Text; n: number; solution: Text; wrong?: reado
 }
 
 /** piProblem builds a problem whose answer is c·π, entered in terms of π and fully simplified. */
-function piProblem(p: { prompt: Text; coef: Coefficient; solution: Text; wrong?: readonly Coefficient[] }): Problem {
+export function piProblem(p: { prompt: Text; coef: Coefficient; solution: Text; wrong?: readonly Coefficient[] }): Problem {
   return expressionProblem({
     prompt: p.prompt,
     answer: piTex(p.coef),
@@ -62,10 +63,10 @@ function piProblem(p: { prompt: Text; coef: Coefficient; solution: Text; wrong?:
 }
 
 /** inPi is the instruction to answer exactly, in terms of π. */
-const inPi = t("Give the exact answer in terms of $\\pi$.", "用含 $\\pi$ 的式子给出精确答案。");
+export const inPi = t("Give the exact answer in terms of $\\pi$.", "用含 $\\pi$ 的式子给出精确答案。");
 
 /** fitBox enlarges small dimensions so that a drawing stays readable: none is less than a third of the largest. */
-function fitBox(vs: readonly number[]): number[] {
+export function fitBox(vs: readonly number[]): number[] {
   const m = Math.max(...vs);
   return vs.map((v) => Math.max(v, m / 3));
 }
@@ -74,14 +75,14 @@ function fitBox(vs: readonly number[]): number[] {
 const P3 = (x: number, y: number, z: number): Point => [x + 0.45 * z, y + 0.3 * z];
 
 /** BoxLabels are the labels of a box's length, depth and height. */
-interface BoxLabels {
+export interface BoxLabels {
   readonly l?: string;
   readonly d?: string;
   readonly h?: string;
 }
 
 /** boxMarks draws a box l long, d deep and h high, with hidden edges dashed and an optional diagonal. */
-function boxMarks(L: number, D: number, H: number, labels: BoxLabels, diagonal?: "space" | "front"): Mark[] {
+export function boxMarks(L: number, D: number, H: number, labels: BoxLabels, diagonal?: "space" | "front"): Mark[] {
   const [l, d, h] = fitBox([L, D, H]) as [number, number, number];
   const p = (x: number, y: number, z: number) => P3(x * l, y * h, z * d);
   const marks: Mark[] = [
@@ -101,7 +102,7 @@ function boxMarks(L: number, D: number, H: number, labels: BoxLabels, diagonal?:
 }
 
 /** arc approximates part of an ellipse by short segments, from angle a0 to a1. */
-function arc(cx: number, cy: number, rx: number, ry: number, a0: number, a1: number, dashed: boolean): Mark[] {
+export function arc(cx: number, cy: number, rx: number, ry: number, a0: number, a1: number, dashed: boolean): Mark[] {
   const n = 16;
   const at = (i: number): Point => {
     const a = a0 + ((a1 - a0) * i) / n;
@@ -111,7 +112,7 @@ function arc(cx: number, cy: number, rx: number, ry: number, a0: number, a1: num
 }
 
 /** ellipse is a closed ellipse drawn as a polygon. */
-function ellipse(cx: number, cy: number, rx: number, ry: number): Mark {
+export function ellipse(cx: number, cy: number, rx: number, ry: number): Mark {
   return {
     kind: "polygon",
     points: Array.from({ length: 40 }, (_, i): Point => [cx + rx * Math.cos((i * Math.PI) / 20), cy + ry * Math.sin((i * Math.PI) / 20)]),
@@ -119,7 +120,7 @@ function ellipse(cx: number, cy: number, rx: number, ry: number): Mark {
 }
 
 /** RoundLabels are the labels of a round solid's radius (or diameter), height and slant height. */
-interface RoundLabels {
+export interface RoundLabels {
   readonly r?: string;
   readonly d?: string;
   readonly h?: string;
@@ -127,7 +128,7 @@ interface RoundLabels {
 }
 
 /** cylinderMarks draws a cylinder of radius R and height H. */
-function cylinderMarks(R: number, H: number, labels: RoundLabels): Mark[] {
+export function cylinderMarks(R: number, H: number, labels: RoundLabels): Mark[] {
   const [w, h] = fitBox([2 * R, H]) as [number, number];
   const r = w / 2;
   const ry = 0.28 * r;
@@ -151,7 +152,7 @@ function cylinderMarks(R: number, H: number, labels: RoundLabels): Mark[] {
 }
 
 /** coneMarks draws a right cone of radius R and height H. */
-function coneMarks(R: number, H: number, labels: RoundLabels): Mark[] {
+export function coneMarks(R: number, H: number, labels: RoundLabels): Mark[] {
   const [w, h] = fitBox([2 * R, H]) as [number, number];
   const r = w / 2;
   const ry = 0.28 * r;
@@ -191,7 +192,7 @@ function sphereMarks(labels: RoundLabels): Mark[] {
 }
 
 /** PyramidLabels are the labels of a pyramid's base length and depth, height and slant height. */
-interface PyramidLabels {
+export interface PyramidLabels {
   readonly l?: string;
   readonly d?: string;
   readonly h?: string;
@@ -199,7 +200,7 @@ interface PyramidLabels {
 }
 
 /** pyramidMarks draws a pyramid on an l by d rectangular base, with its apex above the center. */
-function pyramidMarks(L: number, D: number, H: number, labels: PyramidLabels): Mark[] {
+export function pyramidMarks(L: number, D: number, H: number, labels: PyramidLabels): Mark[] {
   const [l, d, h] = fitBox([L, D, H]) as [number, number, number];
   const p = (x: number, z: number) => P3(x * l, 0, z * d);
   const apex = P3(l / 2, h, d / 2);
@@ -216,12 +217,12 @@ function pyramidMarks(L: number, D: number, H: number, labels: PyramidLabels): M
   if (labels.h) {
     const foot = p(0.5, 0.5);
     marks.push({ kind: "segment", a: apex, b: foot, dashed: true, accent: true }, { kind: "dot", at: foot });
-    marks.push({ kind: "label", at: [(apex[0] + foot[0]) / 2, (apex[1] + foot[1]) / 2], text: labels.h, dir: "w" });
+    marks.push({ kind: "label", at: [(apex[0] + foot[0]) / 2, (apex[1] + foot[1]) / 2], text: labels.h, dir: labels.s ? "e" : "w" });
   }
   if (labels.s) {
     const mid = p(0.5, 0);
     marks.push({ kind: "segment", a: apex, b: mid, accent: true });
-    marks.push({ kind: "label", at: [(apex[0] + mid[0]) / 2, (apex[1] + mid[1]) / 2], text: labels.s, dir: "e" });
+    marks.push({ kind: "label", at: [(apex[0] + mid[0]) / 2, (apex[1] + mid[1]) / 2], text: labels.s, dir: labels.h ? "w" : "e" });
   }
   if (labels.l) marks.push({ kind: "side", a: p(0, 0), b: p(1, 0), text: labels.l });
   if (labels.d) marks.push({ kind: "side", a: p(1, 0), b: p(1, 1), text: labels.d });
