@@ -5,7 +5,7 @@ import { dec, gcd, num, Q, sci } from "@ga/subject-math";
 import { expressionProblem, numberProblem, scientificProblem, scientificValue, steps } from "../problems.ts";
 
 /** mono writes a monomial: mono(6, [["x", 5], ["y", 1]]) is "6x^{5}y". */
-function mono(c: number, factors: readonly (readonly [string, number])[]): string {
+export function mono(c: number, factors: readonly (readonly [string, number])[]): string {
   const vars = factors
     .filter(([, e]) => e !== 0)
     .map(([v, e]) => (e === 1 ? v : `${v}^{${e}}`))
@@ -18,7 +18,7 @@ function mono(c: number, factors: readonly (readonly [string, number])[]): strin
 const coef = (c: number) => (c === 1 ? "" : c === -1 ? "-" : String(c));
 
 /** base writes a rational base in parentheses when it is negative or a fraction. */
-function base(v: Q): string {
+export function base(v: Q): string {
   return v.sign() < 0 || !v.isInteger() ? `\\left(${dec10(v)}\\right)` : dec10(v);
 }
 
@@ -30,7 +30,7 @@ function dec10(v: Q): string {
 }
 
 /** standard writes a number in standard notation, with thin-space thousands separators: "45{,}000", "0.00032". */
-function standard(v: Q): string {
+export function standard(v: Q): string {
   const s = dec(v);
   const [whole = "", frac] = s.replace("-", "").split(".");
   const grouped = whole.length > 4 ? whole.replace(/\B(?=(\d{3})+$)/g, "{,}") : whole;
@@ -38,7 +38,7 @@ function standard(v: Q): string {
 }
 
 /** normalize writes a positive v as a × 10^n with 1 ≤ a < 10. */
-function normalize(v: Q): { a: Q; n: number } {
+export function normalize(v: Q): { a: Q; n: number } {
   let a = v;
   let n = 0;
   const ten = Q.of(10);
@@ -54,7 +54,7 @@ function normalize(v: Q): { a: Q; n: number } {
 }
 
 /** mantissa draws a in [1, 10) with one or two decimal places, such as 4.5 or 3.07. */
-function mantissa(rng: Rng): Q {
+export function mantissa(rng: Rng): Q {
   return rng.bool(0.6) ? Q.of(rng.int(11, 99), 10) : Q.of(rng.int(101, 999), 100);
 }
 
