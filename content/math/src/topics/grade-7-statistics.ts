@@ -870,7 +870,7 @@ export const samplingAndMarginOfError = topic(
 // Joint and cumulative frequency
 
 /** TwoWay is a two-way table's story: the groups in its rows and the answers in its columns. */
-interface TwoWay {
+export interface TwoWay {
   readonly intro: Text;
   readonly rows: readonly Option[];
   readonly cols: readonly Option[];
@@ -878,9 +878,14 @@ interface TwoWay {
   readonly cell: (r: Option, c: Option) => Text;
   /** who names the people in row r who gave answer c. */
   readonly who: (r: Option, c: Option) => Text;
+  /** ofRow asks what percent of the people in row r gave answer c. */
+  readonly ofRow: (r: Option, c: Option) => Text;
+  /** ofCol asks what percent of the people who gave answer c are in row r. */
+  readonly ofCol: (r: Option, c: Option) => Text;
 }
 
-const twoWays: readonly TwoWay[] = [
+/** twoWays are the stories of the two-way tables. */
+export const twoWays: readonly TwoWay[] = [
   {
     intro: t("Students were asked which pet they prefer.", "调查了学生喜欢哪种宠物。"),
     rows: [
@@ -894,6 +899,8 @@ const twoWays: readonly TwoWay[] = [
     ],
     cell: (r, c) => t(`How many ${r[0]} prefer ${c[0]}?`, `有多少名${r[1]}喜欢${c[1]}？`),
     who: (r, c) => t(`${r[0]} who prefer ${c[0]}`, `喜欢${c[1]}的${r[1]}`),
+    ofRow: (r, c) => t(`What percent of the ${r[0]} prefer ${c[0]}?`, `${r[1]}中，喜欢${c[1]}的占百分之几？`),
+    ofCol: (r, c) => t(`Of the students who prefer ${c[0]}, what percent are ${r[0]}?`, `喜欢${c[1]}的学生中，${r[1]}占百分之几？`),
   },
   {
     intro: t("Visitors to a museum were asked how they got there.", "调查了博物馆的参观者是怎样来的。"),
@@ -908,6 +915,8 @@ const twoWays: readonly TwoWay[] = [
     ],
     cell: (r, c) => t(`How many ${r[0]} came ${c[0]}?`, `有多少名${r[1]}是${c[1]}来的？`),
     who: (r, c) => t(`${r[0]} who came ${c[0]}`, `${c[1]}来的${r[1]}`),
+    ofRow: (r, c) => t(`What percent of the ${r[0]} came ${c[0]}?`, `${r[1]}中，${c[1]}来的占百分之几？`),
+    ofCol: (r, c) => t(`Of the visitors who came ${c[0]}, what percent are ${r[0]}?`, `${c[1]}来的参观者中，${r[1]}占百分之几？`),
   },
   {
     intro: t(
@@ -925,11 +934,13 @@ const twoWays: readonly TwoWay[] = [
     ],
     cell: (r, c) => t(`How many ${r[0]} chose ${c[0]}?`, `有多少名${r[1]}选择${c[1]}？`),
     who: (r, c) => t(`${r[0]} who chose ${c[0]}`, `选择${c[1]}的${r[1]}`),
+    ofRow: (r, c) => t(`What percent of the ${r[0]} chose ${c[0]}?`, `${r[1]}中，选择${c[1]}的占百分之几？`),
+    ofCol: (r, c) => t(`Of the members who chose ${c[0]}, what percent are ${r[0]}?`, `选择${c[1]}的会员中，${r[1]}占百分之几？`),
   },
 ];
 
 /** jointTable writes a two-way table with totals; cells listed in hide show as blanks, and the cell at ask as "?". */
-function jointTable(w: TwoWay, c: readonly (readonly number[])[], hide: readonly string[], ask: string, lang: 0 | 1): string {
+export function jointTable(w: TwoWay, c: readonly (readonly number[])[], hide: readonly string[], ask: string, lang: 0 | 1): string {
   const rowTotals = c.map((r) => sum(r));
   const colTotals = w.cols.map((_, j) => sum(c.map((r) => r[j]!)));
   const show = (key: string, v: number) => (key === ask ? "?" : hide.includes(key) ? " " : m(v));

@@ -5,10 +5,10 @@ import { dec, linear, num, type PlaneMark, type PlaneView, paren, plane, Q } fro
 import { choiceProblem, equationProblem, numberProblem, pointLatex, steps } from "../problems.ts";
 
 /** Pt is a data point (x, y). */
-type Pt = readonly [number, number];
+export type Pt = readonly [number, number];
 
 /** Pair is a phrase in English and Chinese. */
-type Pair = readonly [string, string];
+export type Pair = readonly [string, string];
 
 /** view is the first-quadrant window of the scatter plots. */
 const view: PlaneView = { xMin: 0, xMax: 10, yMin: 0, yMax: 10, labelEvery: 2 };
@@ -17,7 +17,7 @@ const view: PlaneView = { xMin: 0, xMax: 10, yMin: 0, yMax: 10, labelEvery: 2 };
 const plain = (v: number) => String(Math.round(v * 10) / 10);
 
 /** scatterFigure draws data points, and any extra marks such as a trend line, in the first quadrant. */
-function scatterFigure(points: readonly Pt[], extra: readonly PlaneMark[] = [], line?: Pair): Figure {
+export function scatterFigure(points: readonly Pt[], extra: readonly PlaneMark[] = [], line?: Pair): Figure {
   const marks: PlaneMark[] = [...extra, ...points.map((p): PlaneMark => ({ kind: "point", at: p }))];
   const list = points.map(([x, y]) => `(${plain(x)}, ${plain(y)})`);
   return {
@@ -40,10 +40,10 @@ function decLinear(m: Q, b: Q): string {
 }
 
 /** plainLine writes y = mx + b for alt text. */
-const plainLine = (m: Q, b: Q) => `y = ${linear(m, b).replace(/\\frac\{(\d+)\}\{(\d+)\}/g, "$1/$2")}`;
+export const plainLine = (m: Q, b: Q) => `y = ${linear(m, b).replace(/\\frac\{(\d+)\}\{(\d+)\}/g, "$1/$2")}`;
 
 /** lineMark draws the line y = mx + b. */
-const lineMark = (m: Q, b: Q, dashed = false): PlaneMark => ({
+export const lineMark = (m: Q, b: Q, dashed = false): PlaneMark => ({
   kind: "line",
   a: [0, b.toNumber()],
   b: [1, b.add(m).toNumber()],
@@ -52,16 +52,16 @@ const lineMark = (m: Q, b: Q, dashed = false): PlaneMark => ({
 });
 
 /** near places points at the given x near the line y = mx + b, with integer y and noise up to ±noise, or returns undefined when one leaves 1…9. */
-function near(rng: Rng, xs: readonly number[], m: Q, b: Q, noise: number): Pt[] | undefined {
+export function near(rng: Rng, xs: readonly number[], m: Q, b: Q, noise: number): Pt[] | undefined {
   const pts = xs.map((x): Pt => [x, Math.round(m.mul(Q.of(x)).add(b).toNumber()) + rng.int(-noise, noise)]);
   return pts.every(([, y]) => y >= 1 && y <= 9) ? pts : undefined;
 }
 
 /** xsOf draws n distinct x-values from 1 to 9, sorted. */
-const xsOf = (rng: Rng, n: number) => rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 9], n).sort((a, b) => a - b);
+export const xsOf = (rng: Rng, n: number) => rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 9], n).sort((a, b) => a - b);
 
 /** pearson is the correlation coefficient of the points, used only to classify generated data. */
-function pearson(pts: readonly Pt[]): number {
+export function pearson(pts: readonly Pt[]): number {
   const n = pts.length;
   const mx = pts.reduce((s, p) => s + p[0], 0) / n;
   const my = pts.reduce((s, p) => s + p[1], 0) / n;
@@ -114,7 +114,7 @@ const strengthRange: Record<Strength, readonly [number, number]> = {
 };
 
 /** shuffledChoice builds a choice problem from the correct option and the wrong ones, in random order. */
-function shuffledChoice(rng: Rng, p: { prompt: Text; correct: Text; wrong: readonly Text[]; solution: Text }) {
+export function shuffledChoice(rng: Rng, p: { prompt: Text; correct: Text; wrong: readonly Text[]; solution: Text }) {
   const options = rng.shuffle([p.correct, ...p.wrong]);
   return choiceProblem({ prompt: p.prompt, options, correct: options.indexOf(p.correct), solution: p.solution });
 }
@@ -123,7 +123,7 @@ function shuffledChoice(rng: Rng, p: { prompt: Text; correct: Text; wrong: reado
 const decimalForm = (v: Q) => (v.isInteger() ? {} : { form: "decimal" as const });
 
 /** Scene is a small data set drawn on a scatter plot. */
-interface Scene {
+export interface Scene {
   /** items counts the items with their measure word: "students" / "名学生". */
   readonly items: Pair;
   readonly item: Pair;
@@ -132,7 +132,8 @@ interface Scene {
   readonly dir: 1 | -1;
 }
 
-const scenes: readonly Scene[] = [
+/** scenes are the stories of the scatter plots: what the items and the two variables are. */
+export const scenes: readonly Scene[] = [
   {
     items: ["students", "名学生"],
     item: ["student", "名学生"],
@@ -171,7 +172,7 @@ const scenes: readonly Scene[] = [
 ];
 
 /** sceneIntro says what the points of a scatter plot stand for. */
-const sceneIntro = (s: Scene, n: number) =>
+export const sceneIntro = (s: Scene, n: number) =>
   t(
     `The scatter plot shows data for ${n} ${s.items[0]}: $x$ is the ${s.x[0]} and $y$ is the ${s.y[0]}.`,
     `散点图显示了 ${n} ${s.items[1]}的数据：$x$ 表示${s.x[1]}，$y$ 表示${s.y[1]}。`,
