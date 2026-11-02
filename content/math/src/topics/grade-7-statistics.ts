@@ -1,12 +1,14 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { dec, Q, svgDocument } from "@ga/subject-math";
+import type { Axis, FiveNumberSummary } from "@ga/subject-math";
+import { boxPlot, dec, dotPlot, Q, svgDocument } from "@ga/subject-math";
 
 import { isTerminating, numberProblem, steps, yesNo } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
 
 // 7th Grade Math, statistics: estimating from samples, bias, survey results and margins of error,
-// joint and cumulative frequency tables, and the mean, median and mode of tabulated and grouped data.
+// joint and cumulative frequency tables, the mean, median and mode of tabulated and grouped data,
+// and comparing two data sets by their centers, spreads and overlap.
 
 /** ccss is a helper for writing Common Core codes. */
 const ccss = (...codes: string[]) => codes.map((c) => `CCSS.${c}`);
@@ -60,9 +62,6 @@ export function mdTable(header: readonly string[], rows: readonly (readonly stri
 
 /** m writes a number as inline math: "$12$". */
 export const m = (v: number | string) => `$${v}$`;
-
-/** names are people in word problems. */
-export const names = ["Maya", "Leo", "Ana", "Sam", "Noah", "Mia", "Ken", "Lily"] as const;
 
 // ---------------------------------------------------------------------------
 // Grouped data
@@ -1706,7 +1705,925 @@ export const calculatingMeansFromHistograms = topic(
   ],
 );
 
-/** grade7StatisticsTopics lists the 7th grade topics on sampling and on representing data. */
+// ---------------------------------------------------------------------------
+// Comparing data sets
+
+/** Groups is a comparison of two groups, A and B: what was measured and the range of the values. */
+interface Groups {
+  readonly what: Text;
+  readonly lo: number;
+  readonly hi: number;
+}
+
+const comparisons: readonly Groups[] = [
+  {
+    what: t(
+      "the scores of the students in two classes, A and B, on a 20-point quiz",
+      "两个班（A 班和 B 班）的学生在一次满分 20 分的小测中的成绩",
+    ),
+    lo: 4,
+    hi: 20,
+  },
+  {
+    what: t("the points that two basketball players, A and B, scored in their recent games", "篮球运动员 A 和 B 最近几场比赛的得分"),
+    lo: 4,
+    hi: 30,
+  },
+  {
+    what: t(
+      "the heights, in centimeters, of bean plants grown with two fertilizers, A and B",
+      "使用 A、B 两种肥料种出的豆苗的高度（厘米）",
+    ),
+    lo: 10,
+    hi: 40,
+  },
+  {
+    what: t("the numbers of minutes that two buses, A and B, were late on several days", "公交车 A 和 B 若干天的晚点时间（分钟）"),
+    lo: 0,
+    hi: 20,
+  },
+];
+
+/** data draws n whole numbers from lo to hi. */
+const data = (rng: Rng, n: number, lo: number, hi: number) => Array.from({ length: n }, () => rng.int(lo, hi));
+
+/** quartiles are the medians of the lower and upper halves of the sorted data, the median left out when the count is odd. */
+function quartiles(xs: readonly number[]): [Q, Q] {
+  const s = sorted(xs);
+  const h = Math.floor(s.length / 2);
+  return [median(s.slice(0, h)), median(s.slice(s.length - h))];
+}
+
+/** fiveNumbers is the minimum, first quartile, median, third quartile and maximum, for data whose quartiles are whole numbers. */
+function fiveNumbers(xs: readonly number[]): FiveNumberSummary {
+  const s = sorted(xs);
+  const [q1, q3] = quartiles(xs);
+  return [s[0]!, Number(q1.n), Number(median(xs).n), Number(q3.n), s[s.length - 1]!];
+}
+
+/** mad is the mean absolute deviation: the mean distance of the values from their mean. */
+function mad(xs: readonly number[]): Q {
+  const mu = mean(xs);
+  return xs.reduce((s, x) => s.add(Q.of(x).sub(mu).abs()), Q.zero).div(Q.of(xs.length));
+}
+
+/** variance is the mean squared distance from the mean; it orders data sets the same way as the standard deviation. */
+function variance(xs: readonly number[]): Q {
+  const mu = mean(xs);
+  return xs.reduce((s, x) => s.add(Q.of(x).sub(mu).mul(Q.of(x).sub(mu))), Q.zero).div(Q.of(xs.length));
+}
+
+/** modes are the values with the greatest frequency. */
+function modes(xs: readonly number[]): number[] {
+  const counts = new Map<number, number>();
+  for (const x of xs) counts.set(x, (counts.get(x) ?? 0) + 1);
+  const top = Math.max(...counts.values());
+  return [...counts].filter(([, c]) => c === top).map(([v]) => v);
+}
+
+/** count is how many times x occurs in xs. */
+const count = (xs: readonly number[], x: number) => xs.filter((v) => v === x).length;
+
+/** axisFor is an axis from lo to hi in steps of 1, rounded out to multiples of 5 and numbered every 5. */
+const axisFor = (lo: number, hi: number): Axis => ({ min: Math.floor(lo / 5) * 5, max: Math.ceil(hi / 5) * 5, step: 1, labelEvery: 5 });
+
+/** stack draws two plots one above the other, labeled A and B. */
+function stack(a: string, b: string): string {
+  const parse = (svg: string) => ({
+    h: Number(/viewBox="0 0 \d+ ([\d.]+)"/.exec(svg)![1]),
+    body: svg.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, ""),
+  });
+  const [p, q] = [parse(a), parse(b)];
+  return svgDocument(
+    p.h + q.h + 8,
+    `<text x="8" y="14">A</text>${p.body}<g transform="translate(0 ${p.h + 8})"><text x="8" y="14">B</text>${q.body}</g>`,
+  );
+}
+
+/** dotsAlt describes a dot plot: "2 at 5, 3 at 6". */
+const dotsAlt = (xs: readonly number[], at: string, dot: string, sep: string) =>
+  [...new Set(sorted(xs))].map((v) => (at === "at" ? `${count(xs, v)} at ${v}` : `${v} 处 ${count(xs, v)} ${dot}`)).join(sep);
+
+/** dotPairFigure draws data sets A and B as dot plots on the same axis. */
+function dotPairFigure(a: readonly number[], b: readonly number[]): Figure {
+  const axis = axisFor(Math.min(...a, ...b), Math.max(...a, ...b));
+  return {
+    svg: stack(dotPlot(a, axis), dotPlot(b, axis)),
+    alt: t(
+      `Two dot plots on the same scale. A: ${dotsAlt(a, "at", "", ", ")}. B: ${dotsAlt(b, "at", "", ", ")}.`,
+      `同一刻度上的两个点图。A：${dotsAlt(a, "处", "个点", "，")}。B：${dotsAlt(b, "处", "个点", "，")}。`,
+    ),
+  };
+}
+
+/** boxPairFigure draws data sets A and B as box plots on the same axis. */
+function boxPairFigure(a: readonly number[], b: readonly number[]): Figure {
+  const axis = axisFor(Math.min(...a, ...b), Math.max(...a, ...b));
+  const [sa, sb] = [fiveNumbers(a), fiveNumbers(b)];
+  const en = (s: FiveNumberSummary) => `minimum ${s[0]}, first quartile ${s[1]}, median ${s[2]}, third quartile ${s[3]}, maximum ${s[4]}`;
+  const zh = (s: FiveNumberSummary) => `最小值 ${s[0]}，第一四分位数 ${s[1]}，中位数 ${s[2]}，第三四分位数 ${s[3]}，最大值 ${s[4]}`;
+  return {
+    svg: stack(boxPlot(sa, axis), boxPlot(sb, axis)),
+    alt: t(`Two box plots on the same scale. A: ${en(sa)}. B: ${en(sb)}.`, `同一刻度上的两个箱线图。A：${zh(sa)}。B：${zh(sb)}。`),
+  };
+}
+
+/** setsText writes data sets A and B on lines of their own. */
+const setsText = (a: readonly number[], b: readonly number[]) => `\n\nA: $${list(a)}$\n\nB: $${list(b)}$\n\n`;
+
+/** setsTextZh writes data sets A and B on lines of their own, with Chinese punctuation. */
+const setsTextZh = (a: readonly number[], b: readonly number[]) => `\n\nA：$${list(a)}$\n\nB：$${list(b)}$\n\n`;
+
+/** meanLine works out the mean of one data set: "A: $\frac{60}{5} = 12$". */
+const meanLine = (label: string, xs: readonly number[], colon = ": ") =>
+  `${label}${colon}$\\frac{${sum(xs)}}{${xs.length}} = ${dec(mean(xs))}$`;
+
+/** comparingMeans compares two data sets by the difference of their means and says what that difference means. */
+export const comparingMeans = topic(
+  "comparing-means",
+  t("Comparing Means", "比较平均数"),
+  t(
+    "Two groups can be compared by their means: the difference of the means says how much greater the values of one group are than those of the other, on average. It does not say that every value of one group is greater, and when the groups differ in size it is not the difference of their totals.",
+    "可以用平均数比较两组数据：平均数之差说明一组的数据平均比另一组大多少。它并不说明一组的每个数据都更大；两组数据个数不同时，它也不是两组总和之差。",
+  ),
+  ["the-mean-of-a-data-set"],
+  ["7.SP.B.4"],
+  [
+    {
+      id: "the-difference-of-two-means",
+      title: t("The difference of two means", "两个平均数之差"),
+      explanation: t(
+        "Player A scored $12, 15, 9, 20, 14$ and player B scored $10, 8, 13, 11, 6, 12$. The means are $\\frac{70}{5} = 14$ and $\\frac{60}{6} = 10$, so A’s mean is $14 - 10 = 4$ points greater. Find each mean first: the difference of the totals, $70 - 60 = 10$, mixes up the number of games with the scores.",
+        "运动员 A 的得分是 $12, 15, 9, 20, 14$，运动员 B 的得分是 $10, 8, 13, 11, 6, 12$。平均数分别是 $\\frac{70}{5} = 14$ 和 $\\frac{60}{6} = 10$，所以 A 的平均数比 B 大 $14 - 10 = 4$ 分。要先分别求平均数：总和之差 $70 - 60 = 10$ 把比赛场数和得分混在了一起。",
+      ),
+      generate(rng) {
+        const g = rng.pick(comparisons);
+        for (;;) {
+          const a = data(rng, rng.int(5, 8), g.lo, g.hi);
+          const b = data(rng, rng.int(5, 8), g.lo, g.hi);
+          const d = mean(a).sub(mean(b));
+          if (d.sign() <= 0 || !clean(mean(a)) || !clean(mean(b)) || a.length === b.length) continue;
+          return numberProblem({
+            prompt: t(
+              `The data show ${g.what.en}.${setsText(a, b)}How much greater is the mean of A than the mean of B?`,
+              `数据显示了${g.what["zh-CN"]}。${setsTextZh(a, b)}A 的平均数比 B 的平均数大多少？`,
+            ),
+            answer: d,
+            form: "decimal",
+            // The difference of the totals, and the difference of the medians.
+            wrong: [Q.of(sum(a) - sum(b)), median(a).sub(median(b))],
+            solution: t(
+              `Find each mean, then subtract:${steps(meanLine("A", a), meanLine("B", b), `${dec(mean(a))} - ${dec(mean(b))} = ${dec(d)}`)}`,
+              `先分别求平均数，再相减：${steps(meanLine("A", a, "："), meanLine("B", b, "："), `${dec(mean(a))} - ${dec(mean(b))} = ${dec(d)}`)}`,
+            ),
+          });
+        }
+      },
+    },
+    {
+      id: "what-a-difference-of-means-says",
+      title: t("What a difference of means says", "平均数之差的含义"),
+      explanation: t(
+        "If the mean of A is $14$ and the mean of B is $10$, then on average the values of A are $4$ greater. Some values of B can still be greater than some values of A, the totals can differ by any amount when the groups have different sizes, and the greatest values need not differ by $4$.",
+        "如果 A 的平均数是 $14$，B 的平均数是 $10$，那么 A 的数据平均比 B 大 $4$。但 B 的某些数据仍可能比 A 的某些数据大；两组数据个数不同时，总和之差可以是任何数；两组的最大值之差也不一定是 $4$。",
+      ),
+      generate(rng) {
+        const g = rng.pick(comparisons);
+        for (;;) {
+          const a = data(rng, rng.int(5, 7), g.lo, g.hi);
+          const b = data(rng, rng.int(5, 7), g.lo, g.hi);
+          const d = mean(a).sub(mean(b));
+          if (d.sign() <= 0 || !mean(a).isInteger() || !mean(b).isInteger()) continue;
+          if (Math.min(...a) > Math.max(...b) || d.eq(Q.of(sum(a) - sum(b))) || d.eq(Q.of(Math.max(...a) - Math.max(...b)))) continue;
+          const dd = d.toLatex();
+          return pickChoice(
+            rng,
+            t(
+              `The data show ${g.what.en}.${setsText(a, b)}The mean of A is $${mean(a).toLatex()}$ and the mean of B is $${mean(b).toLatex()}$. Which statement is true?`,
+              `数据显示了${g.what["zh-CN"]}。${setsTextZh(a, b)}A 的平均数是 $${mean(a).toLatex()}$，B 的平均数是 $${mean(b).toLatex()}$。哪种说法正确？`,
+            ),
+            t(`On average, the values of A are $${dd}$ greater than the values of B.`, `平均来看，A 的数据比 B 的数据大 $${dd}$。`),
+            [
+              t("Every value of A is greater than every value of B.", "A 的每个数据都比 B 的每个数据大。"),
+              t(`The values of A add up to $${dd}$ more than the values of B.`, `A 的数据之和比 B 的数据之和大 $${dd}$。`),
+              t(`The greatest value of A is $${dd}$ greater than the greatest value of B.`, `A 的最大值比 B 的最大值大 $${dd}$。`),
+            ],
+            t(
+              `The difference of the means, $${mean(a).toLatex()} - ${mean(b).toLatex()} = ${dd}$, compares the groups on average. The other statements are false: B’s greatest value $${Math.max(...b)}$ is greater than A’s least value $${Math.min(...a)}$, the totals are $${sum(a)}$ and $${sum(b)}$, and the greatest values are $${Math.max(...a)}$ and $${Math.max(...b)}$.`,
+              `平均数之差 $${mean(a).toLatex()} - ${mean(b).toLatex()} = ${dd}$ 是从平均的角度比较两组。其他说法都不对：B 的最大值 $${Math.max(...b)}$ 比 A 的最小值 $${Math.min(...a)}$ 大；两组总和分别是 $${sum(a)}$ 和 $${sum(b)}$；两组最大值分别是 $${Math.max(...a)}$ 和 $${Math.max(...b)}$。`,
+            ),
+          );
+        }
+      },
+    },
+  ],
+);
+
+/** comparingMedians compares two data sets by their medians, from lists and from box plots. */
+export const comparingMedians = topic(
+  "comparing-medians",
+  t("Comparing Medians", "比较中位数"),
+  t(
+    "Two groups can also be compared by their medians, which are not pulled by extreme values. Sort each data set before finding its middle value. On box plots drawn on the same scale, the medians are the lines inside the boxes, so they can be compared directly.",
+    "也可以用中位数比较两组数据，中位数不受极端值的牵引。求中间值之前要先把每组数据排序。在同一刻度上画出的箱线图中，中位数就是箱子里的竖线，可以直接比较。",
+  ),
+  ["the-median-of-a-data-set", "box-plots"],
+  ["7.SP.B.4"],
+  [
+    {
+      id: "the-difference-of-two-medians",
+      title: t("The difference of two medians", "两个中位数之差"),
+      explanation: t(
+        "For A: $9, 15, 12, 20, 14$, sorted $9, 12, 14, 15, 20$, the median is $14$. For B: $10, 6, 13, 8, 11, 12$, sorted $6, 8, 10, 11, 12, 13$, the median is $\\frac{10 + 11}{2} = 10.5$. So A’s median is $14 - 10.5 = 3.5$ greater. Taking the middle of the unsorted lists would give $12$ and the wrong difference.",
+        "A：$9, 15, 12, 20, 14$，排序后为 $9, 12, 14, 15, 20$，中位数是 $14$。B：$10, 6, 13, 8, 11, 12$，排序后为 $6, 8, 10, 11, 12, 13$，中位数是 $\\frac{10 + 11}{2} = 10.5$。所以 A 的中位数比 B 大 $14 - 10.5 = 3.5$。如果直接取未排序数据的中间值，A 会得到 $12$，差也就错了。",
+      ),
+      generate(rng) {
+        const g = rng.pick(comparisons);
+        for (;;) {
+          const a = data(rng, rng.int(5, 8), g.lo, g.hi);
+          const b = data(rng, rng.int(5, 8), g.lo, g.hi);
+          const d = median(a).sub(median(b));
+          if (d.sign() <= 0 || a.length % 2 === b.length % 2) continue;
+          const middle = (xs: readonly number[]) => {
+            const h = Math.floor(xs.length / 2);
+            return xs.length % 2 === 1 ? Q.of(xs[h]!) : Q.of(xs[h - 1]! + xs[h]!, 2);
+          };
+          const line = (label: string, xs: readonly number[], colon: string, word: string) =>
+            `${label}${colon}$${list(sorted(xs))}$${word}$${dec(median(xs))}$`;
+          return numberProblem({
+            prompt: t(
+              `The data show ${g.what.en}.${setsText(a, b)}How much greater is the median of A than the median of B?`,
+              `数据显示了${g.what["zh-CN"]}。${setsTextZh(a, b)}A 的中位数比 B 的中位数大多少？`,
+            ),
+            answer: d,
+            form: "decimal",
+            // The middles of the unsorted lists, and the difference of the means.
+            wrong: [middle(a).sub(middle(b)), mean(a).sub(mean(b))].filter(clean),
+            solution: t(
+              `Sort each data set and find its middle:${steps(line("A", a, ": ", ", median "), line("B", b, ": ", ", median "), `${dec(median(a))} - ${dec(median(b))} = ${dec(d)}`)}`,
+              `把每组数据排序，再找中间值：${steps(line("A", a, "：", "，中位数 "), line("B", b, "：", "，中位数 "), `${dec(median(a))} - ${dec(median(b))} = ${dec(d)}`)}`,
+            ),
+          });
+        }
+      },
+    },
+    {
+      id: "medians-on-box-plots",
+      title: t("Medians on box plots", "箱线图中的中位数"),
+      explanation: t(
+        "On two box plots drawn on the same scale, the median is the line inside each box. If A’s line is at $16$ and B’s at $11$, A’s median is $5$ greater. The edges of the box are the quartiles and the ends of the whiskers are the least and greatest values; neither is the median.",
+        "在同一刻度上的两个箱线图中，中位数是每个箱子里的竖线。如果 A 的竖线在 $16$，B 的在 $11$，A 的中位数就比 B 大 $5$。箱子的两边是四分位数，须线的两端是最小值和最大值，它们都不是中位数。",
+      ),
+      generate(rng) {
+        const g = rng.pick(comparisons);
+        for (;;) {
+          const a = data(rng, rng.pick([11, 15]), g.lo, g.hi);
+          const b = data(rng, rng.pick([11, 15]), g.lo, g.hi);
+          const [sa, sb] = [fiveNumbers(a), fiveNumbers(b)];
+          const d = sa[2] - sb[2];
+          if (d <= 0) continue;
+          return {
+            ...numberProblem({
+              prompt: t(
+                `The box plots show ${g.what.en}. How much greater is the median of A than the median of B?`,
+                `箱线图显示了${g.what["zh-CN"]}。A 的中位数比 B 的中位数大多少？`,
+              ),
+              answer: d,
+              form: "integer",
+              // The left edges of the boxes, the right edges, and the middles of the whole ranges.
+              wrong: [sa[1] - sb[1], sa[3] - sb[3], Q.of(sa[0] + sa[4] - sb[0] - sb[4], 2)],
+              solution: t(
+                `The medians are the lines inside the boxes: $${sa[2]}$ for A and $${sb[2]}$ for B.${steps(`${sa[2]} - ${sb[2]} = ${d}`)}`,
+                `中位数是箱子里的竖线：A 是 $${sa[2]}$，B 是 $${sb[2]}$。${steps(`${sa[2]} - ${sb[2]} = ${d}`)}`,
+              ),
+            }),
+            figure: boxPairFigure(a, b),
+          };
+        }
+      },
+    },
+  ],
+);
+
+/** Choices is a categorical survey of two groups: the groups and the answers they chose from. */
+interface Choices {
+  readonly intro: Text;
+  readonly rows: readonly [Option, Option];
+  readonly cols: readonly Option[];
+}
+
+const choiceSurveys: readonly Choices[] = [
+  {
+    intro: t("Students in two grades chose their favorite sport.", "两个年级的学生选出了自己最喜欢的运动。"),
+    rows: [
+      ["7th graders", "七年级学生"],
+      ["8th graders", "八年级学生"],
+    ],
+    cols: [
+      ["soccer", "足球"],
+      ["basketball", "篮球"],
+      ["tennis", "网球"],
+      ["swimming", "游泳"],
+    ],
+  },
+  {
+    intro: t("Customers at two stores were asked which fruit they buy most often.", "调查了两家商店的顾客最常买哪种水果。"),
+    rows: [
+      ["store A customers", "A 店顾客"],
+      ["store B customers", "B 店顾客"],
+    ],
+    cols: [
+      ["apples", "苹果"],
+      ["bananas", "香蕉"],
+      ["grapes", "葡萄"],
+      ["oranges", "橙子"],
+    ],
+  },
+  {
+    intro: t("Children and adults at a library chose the kind of book they like best.", "图书馆里的儿童和成人选出了自己最喜欢的图书类型。"),
+    rows: [
+      ["children", "儿童"],
+      ["adults", "成人"],
+    ],
+    cols: [
+      ["mystery", "悬疑"],
+      ["science", "科普"],
+      ["history", "历史"],
+      ["comics", "漫画"],
+    ],
+  },
+];
+
+/** comparingModes compares two data sets by their modes, for numbers and for categories. */
+export const comparingModes = topic(
+  "comparing-modes",
+  t("Comparing Modes", "比较众数"),
+  t(
+    "The mode is the most common value, so comparing modes compares the most typical answers of two groups. It is the only measure of center for categories such as favorite sports. Each group has its own mode: the most common answer of the two groups together can differ from the mode of either group.",
+    "众数是出现次数最多的值，所以比较众数就是比较两组最常见的回答。对于“最喜欢的运动”这类类别数据，众数是唯一能用的集中趋势量。每组有自己的众数：两组合在一起最常见的回答，可能与其中任何一组的众数都不同。",
+  ),
+  ["the-mode-of-a-data-set"],
+  ["7.SP.B.4"],
+  [
+    {
+      id: "the-difference-of-two-modes",
+      title: t("The difference of two modes", "两个众数之差"),
+      explanation: t(
+        "In A: $12, 15, 12, 18, 12, 15, 20$ the value $12$ occurs three times, so the mode is $12$. In B: $9, 10, 9, 14, 10, 10$ the mode is $10$. A’s mode is $12 - 10 = 2$ greater. The answer compares values, not how often they occur: subtracting the frequencies $3 - 3 = 0$ answers a different question.",
+        "在 A：$12, 15, 12, 18, 12, 15, 20$ 中，$12$ 出现三次，所以众数是 $12$。在 B：$9, 10, 9, 14, 10, 10$ 中，众数是 $10$。A 的众数比 B 大 $12 - 10 = 2$。比较的是数值，而不是出现的次数：频数相减 $3 - 3 = 0$ 回答的是另一个问题。",
+      ),
+      generate(rng) {
+        const g = rng.pick(comparisons);
+        for (;;) {
+          const cA = rng.int(g.lo + 3, g.hi - 3);
+          const cB = rng.int(g.lo + 3, g.hi - 3);
+          const a = data(rng, rng.int(7, 10), cA - 3, cA + 3);
+          const b = data(rng, rng.int(7, 10), cB - 3, cB + 3);
+          const [ma, mb] = [modes(a), modes(b)];
+          if (ma.length !== 1 || mb.length !== 1 || ma[0]! <= mb[0]!) continue;
+          const [x, y] = [ma[0]!, mb[0]!];
+          return numberProblem({
+            prompt: t(
+              `The data show ${g.what.en}.${setsText(a, b)}How much greater is the mode of A than the mode of B?`,
+              `数据显示了${g.what["zh-CN"]}。${setsTextZh(a, b)}A 的众数比 B 的众数大多少？`,
+            ),
+            answer: x - y,
+            form: "integer",
+            // The difference of the frequencies, and of the medians.
+            wrong: [Q.of(count(a, x) - count(b, y)), median(a).sub(median(b))].filter(clean),
+            solution: t(
+              `In A, $${x}$ occurs $${count(a, x)}$ times, more than any other value; in B, $${y}$ occurs $${count(b, y)}$ times. So the modes are $${x}$ and $${y}$:${steps(`${x} - ${y} = ${x - y}`)}`,
+              `在 A 中，$${x}$ 出现 $${count(a, x)}$ 次，比其他值都多；在 B 中，$${y}$ 出现 $${count(b, y)}$ 次。所以两组的众数分别是 $${x}$ 和 $${y}$：${steps(`${x} - ${y} = ${x - y}`)}`,
+            ),
+          });
+        }
+      },
+    },
+    {
+      id: "modes-of-categories",
+      title: t("Modes of categories", "类别数据的众数"),
+      explanation: t(
+        "If $14$ seventh graders and $9$ eighth graders chose soccer, and $8$ seventh graders and $12$ eighth graders chose tennis, the mode for the 7th graders is soccer and the mode for the 8th graders is tennis, even though soccer is more popular overall ($23$ against $20$). Find each group’s mode in its own row.",
+        "如果选足球的七年级学生有 $14$ 人、八年级学生有 $9$ 人，选网球的七年级学生有 $8$ 人、八年级学生有 $12$ 人，那么七年级的众数是足球，八年级的众数是网球，尽管从总体看足球更受欢迎（$23$ 对 $20$）。要在每组自己的那一行里找众数。",
+      ),
+      generate(rng) {
+        const s = rng.pick(choiceSurveys);
+        for (;;) {
+          const c = [0, 1].map(() => s.cols.map(() => rng.int(3, 20)));
+          const top = (xs: readonly number[]) => {
+            const best = Math.max(...xs);
+            return xs.filter((x) => x === best).length === 1 ? xs.indexOf(best) : -1;
+          };
+          const [i, j] = [top(c[0]!), top(c[1]!)];
+          const totals = s.cols.map((_, k) => c[0]![k]! + c[1]![k]!);
+          const k = top(totals);
+          if (i < 0 || j < 0 || k < 0 || i === j) continue;
+          const name = (col: number, lang: 0 | 1) => s.cols[col]![lang];
+          const [r0, r1] = s.rows;
+          const statement = (x: number, y: number) =>
+            t(
+              `The mode for ${r0[0]} is ${name(x, 0)}, and the mode for ${r1[0]} is ${name(y, 0)}.`,
+              `${r0[1]}的众数是${name(x, 1)}，${r1[1]}的众数是${name(y, 1)}。`,
+            );
+          const table = (lang: 0 | 1) =>
+            mdTable(
+              ["", ...s.cols.map((col) => col[lang])],
+              s.rows.map((row, r) => [row[lang], ...c[r]!.map((v) => m(v))]),
+            );
+          return pickChoice(
+            rng,
+            t(`${s.intro.en}${table(0)}Which statement is true?`, `${s.intro["zh-CN"]}${table(1)}哪种说法正确？`),
+            statement(i, j),
+            [
+              statement(j, i),
+              statement(k, k),
+              t(
+                `The mode for both groups is ${name(k, 0)}, because it was chosen most often in all.`,
+                `两组的众数都是${name(k, 1)}，因为总共选它的人最多。`,
+              ),
+              statement(i, i),
+            ],
+            t(
+              `In the row for ${r0[0]} the greatest count is $${c[0]![i]}$, for ${name(i, 0)}; in the row for ${r1[0]} it is $${c[1]![j]}$, for ${name(j, 0)}. Each group has its own mode, whatever is most common in all.`,
+              `在“${r0[1]}”这一行，最大的数是 $${c[0]![i]}$，对应${name(i, 1)}；在“${r1[1]}”这一行，最大的数是 $${c[1]![j]}$，对应${name(j, 1)}。每组有自己的众数，与两组合起来最常见的回答无关。`,
+            ),
+          );
+        }
+      },
+    },
+  ],
+);
+
+/** comparingDataSetsUsingRangeAndQuartiles compares the spreads of two data sets by their ranges and interquartile ranges. */
+export const comparingDataSetsUsingRangeAndQuartiles = topic(
+  "comparing-data-sets-using-range-and-quartiles",
+  t("Comparing Data Sets Using Range and Quartiles", "用极差和四分位数比较数据集"),
+  t(
+    "The range and the interquartile range compare how spread out two data sets are: on box plots, the range is the length from whisker end to whisker end, and the IQR is the length of the box. A single extreme value stretches the range but barely moves the quartiles, so the IQR says better how consistent the typical values are.",
+    "极差和四分位距可以比较两组数据的分散程度：在箱线图中，极差是从一端须线到另一端须线的长度，四分位距是箱子的长度。一个极端值会拉长极差，却几乎不影响四分位数，所以四分位距更能说明典型数据是否稳定。",
+  ),
+  ["range-quartiles-and-iqr", "box-plots"],
+  ["7.SP.B.3", "7.SP.B.4"],
+  [
+    {
+      id: "ranges-and-iqrs-on-box-plots",
+      title: t("Ranges and IQRs on box plots", "箱线图中的极差和四分位距"),
+      explanation: t(
+        "For box plots with A: $4, 9, 12, 14, 20$ and B: $6, 10, 11, 15, 17$ (minimum, quartiles, median, maximum), the ranges are $20 - 4 = 16$ and $17 - 6 = 11$, and the IQRs are $14 - 9 = 5$ and $15 - 10 = 5$. A has the greater range, but the middle halves are equally spread.",
+        "两个箱线图中，A 的五数概括为 $4, 9, 12, 14, 20$，B 的为 $6, 10, 11, 15, 17$。极差分别是 $20 - 4 = 16$ 和 $17 - 6 = 11$，四分位距分别是 $14 - 9 = 5$ 和 $15 - 10 = 5$。A 的极差更大，但两组中间一半数据的分散程度相同。",
+      ),
+      generate(rng) {
+        const g = rng.pick(comparisons);
+        const iqr = rng.bool();
+        for (;;) {
+          const a = data(rng, rng.pick([11, 15]), g.lo, g.hi);
+          const b = data(rng, rng.pick([11, 15]), g.lo, g.hi);
+          const [sa, sb] = [fiveNumbers(a), fiveNumbers(b)];
+          const [ra, rb, ia, ib] = [sa[4] - sa[0], sb[4] - sb[0], sa[3] - sa[1], sb[3] - sb[1]];
+          const d = iqr ? ia - ib : ra - rb;
+          if (d <= 0 || ia - ib === ra - rb) continue;
+          const name = iqr ? t("interquartile range", "四分位距") : t("range", "极差");
+          return {
+            ...numberProblem({
+              prompt: t(
+                `The box plots show ${g.what.en}. How much greater is the ${name.en} of A than the ${name.en} of B?`,
+                `箱线图显示了${g.what["zh-CN"]}。A 的${name["zh-CN"]}比 B 的${name["zh-CN"]}大多少？`,
+              ),
+              answer: d,
+              form: "integer",
+              // The other measure of spread, and the difference of the medians.
+              wrong: [iqr ? ra - rb : ia - ib, sa[2] - sb[2], iqr ? sa[3] - sb[3] : sa[4] - sb[4]],
+              solution: iqr
+                ? t(
+                    `The IQR is the length of the box, $Q_3 - Q_1$:${steps(`\\text{A}: ${sa[3]} - ${sa[1]} = ${ia}`, `\\text{B}: ${sb[3]} - ${sb[1]} = ${ib}`, `${ia} - ${ib} = ${d}`)}`,
+                    `四分位距是箱子的长度 $Q_3 - Q_1$：${steps(`\\text{A}: ${sa[3]} - ${sa[1]} = ${ia}`, `\\text{B}: ${sb[3]} - ${sb[1]} = ${ib}`, `${ia} - ${ib} = ${d}`)}`,
+                  )
+                : t(
+                    `The range is the greatest value minus the least, from one end of the whiskers to the other:${steps(`\\text{A}: ${sa[4]} - ${sa[0]} = ${ra}`, `\\text{B}: ${sb[4]} - ${sb[0]} = ${rb}`, `${ra} - ${rb} = ${d}`)}`,
+                    `极差是最大值减最小值，即从一端须线到另一端须线：${steps(`\\text{A}: ${sa[4]} - ${sa[0]} = ${ra}`, `\\text{B}: ${sb[4]} - ${sb[0]} = ${rb}`, `${ra} - ${rb} = ${d}`)}`,
+                  ),
+            }),
+            figure: boxPairFigure(a, b),
+          };
+        }
+      },
+    },
+    {
+      id: "consistency-and-the-iqr",
+      title: t("Consistency and the IQR", "稳定性与四分位距"),
+      explanation: t(
+        "Player A scored $14, 15, 15, 16, 16, 17, 30$ and player B scored $8, 11, 13, 16, 19, 21, 23$. A’s range, $30 - 14 = 16$, is greater than B’s, $23 - 8 = 15$, but A’s IQR is $17 - 15 = 2$ and B’s is $21 - 11 = 10$. Apart from one unusual game, A’s scores are much more consistent; A’s range is large only because of that single value.",
+        "运动员 A 的得分是 $14, 15, 15, 16, 16, 17, 30$，运动员 B 的得分是 $8, 11, 13, 16, 19, 21, 23$。A 的极差 $30 - 14 = 16$ 比 B 的极差 $23 - 8 = 15$ 大，但 A 的四分位距是 $17 - 15 = 2$，B 的是 $21 - 11 = 10$。除了一场反常的比赛，A 的得分稳定得多；A 的极差大，只是因为那一个值。",
+      ),
+      generate(rng) {
+        const g = rng.pick(comparisons);
+        for (;;) {
+          const n = rng.pick([7, 11]);
+          const c = rng.int(g.lo + 8, g.hi - 8);
+          const tight = [...data(rng, n - 1, c - 2, c + 2), c + (rng.bool() ? 1 : -1) * rng.int(7, 8)];
+          const wide = data(rng, n, c - 6, c + 6);
+          const iqr = (xs: readonly number[]) => quartiles(xs)[1].sub(quartiles(xs)[0]);
+          const range = (xs: readonly number[]) => Math.max(...xs) - Math.min(...xs);
+          if (iqr(tight).cmp(iqr(wide)) >= 0 || range(tight) <= range(wide)) continue;
+          if (Math.min(...tight) < g.lo || Math.max(...tight) > g.hi) continue;
+          const tightIsA = rng.bool();
+          const [a, b] = tightIsA ? [rng.shuffle(tight), wide] : [wide, rng.shuffle(tight)];
+          const [qa, qb] = [quartiles(a), quartiles(b)];
+          const line = (label: string, xs: readonly number[], q: [Q, Q]) =>
+            `\\text{${label}}: \\quad \\text{IQR} = ${dec(q[1])} - ${dec(q[0])} = ${dec(iqr(xs))}, \\quad \\text{range} = ${Math.max(...xs)} - ${Math.min(...xs)} = ${range(xs)}`;
+          const lineZh = (label: string, xs: readonly number[], q: [Q, Q]) =>
+            `\\text{${label}}: \\quad \\text{四分位距} = ${dec(q[1])} - ${dec(q[0])} = ${dec(iqr(xs))}, \\quad \\text{极差} = ${Math.max(...xs)} - ${Math.min(...xs)} = ${range(xs)}`;
+          const [x, y] = tightIsA ? ["A", "B"] : ["B", "A"];
+          const extreme = tight[tight.length - 1]!;
+          return pickChoice(
+            rng,
+            t(
+              `The data show ${g.what.en}.${setsText(a, b)}Use the interquartile range to decide which data set is more consistent.`,
+              `数据显示了${g.what["zh-CN"]}。${setsTextZh(a, b)}用四分位距判断哪组数据更稳定。`,
+            ),
+            t(`Data set ${x}`, `数据集 ${x}`),
+            [t(`Data set ${y}`, `数据集 ${y}`), t("Both are equally consistent.", "两组同样稳定。")],
+            t(
+              `${steps(line("A", a, qa), line("B", b, qb))}Data set ${x} has the smaller IQR, so its typical values are more consistent. Its range is greater only because of the single value $${extreme}$.`,
+              `${steps(lineZh("A", a, qa), lineZh("B", b, qb))}数据集 ${x} 的四分位距更小，所以它的典型数据更稳定。它的极差更大，只是因为有 $${extreme}$ 这一个值。`,
+            ),
+          );
+        }
+      },
+    },
+  ],
+);
+
+/** approx writes a number exactly when it has at most two decimal places, and otherwise rounded with ≈. */
+const approx = (q: Q) => (clean(q) ? `= ${dec(q)}` : `\\approx ${dec(Q.of(Math.round((Number(q.n) * 100) / Number(q.d)), 100))}`);
+
+/** madLine works out the mean and the MAD of one data set. */
+const madLine = (label: string, xs: readonly number[]) =>
+  `\\text{${label}}: \\quad \\text{mean} ${approx(mean(xs))}, \\quad \\text{MAD} ${approx(mad(xs))}`;
+
+/** madLineZh works out the mean and the MAD of one data set, in Chinese. */
+const madLineZh = (label: string, xs: readonly number[]) =>
+  `\\text{${label}}: \\quad \\text{平均数} ${approx(mean(xs))}, \\quad \\text{MAD} ${approx(mad(xs))}`;
+
+/** comparingDataSetVisualizationsUsingStandardDeviationAndMad compares spreads of dot plots by eye, as the MAD and standard deviation measure them. */
+export const comparingDataSetVisualizationsUsingStandardDeviationAndMad = topic(
+  "comparing-data-set-visualizations-using-standard-deviation-and-mad",
+  t("Comparing Data Set Visualizations Using Standard Deviation and MAD", "用标准差和平均绝对偏差比较数据图"),
+  t(
+    "The mean absolute deviation and the standard deviation both measure how far the values typically lie from the mean; the standard deviation is found from squared distances, but it is large and small for the same kinds of data. On a dot plot, dots bunched near the center mean a small spread, and dots far out on both sides a large one, however tall the stacks. Sliding every dot the same distance changes the mean but not the spread.",
+    "平均绝对偏差和标准差都衡量数据通常离平均数有多远；标准差是用距离的平方算出来的，但它的大小规律与平均绝对偏差相同。在点图中，点聚集在中心附近说明分散程度小，点向两侧散开说明分散程度大，与点堆的高矮无关。把每个点都平移同样的距离，平均数会变，分散程度不变。",
+  ),
+  ["comparing-measures-of-spread", "measuring-range-and-mad-from-dot-plots"],
+  ["7.SP.B.3"],
+  [
+    {
+      id: "the-greater-spread-on-dot-plots",
+      title: t("The greater spread on dot plots", "从点图看哪组更分散"),
+      explanation: t(
+        "If A’s dots stand in tall stacks at $9$, $10$ and $11$ and B’s few dots lie from $4$ to $16$, B has the greater MAD and standard deviation: its values lie farther from the mean. Tall stacks show many values close together, which means a small spread, not a large one.",
+        "如果 A 的点在 $9$、$10$、$11$ 处堆得很高，而 B 的少数几个点分布在 $4$ 到 $16$ 之间，那么 B 的平均绝对偏差和标准差更大：它的数据离平均数更远。高高的点堆表示许多数据挨在一起，说明分散程度小，而不是大。",
+      ),
+      generate(rng) {
+        const g = rng.pick(comparisons);
+        for (;;) {
+          const c = rng.int(g.lo + 6, g.hi - 6);
+          const tight = data(rng, rng.int(10, 14), c - 2, c + 2);
+          const wide = data(rng, rng.int(6, 9), c - 6, c + 6);
+          // Make the difference plain to the eye: the wide data reach well out on both sides.
+          if (Math.min(...wide) > c - 4 || Math.max(...wide) < c + 4) continue;
+          if (mad(tight).mul(Q.of(2)).cmp(mad(wide)) > 0 || variance(tight).cmp(variance(wide)) >= 0) continue;
+          const tightIsA = rng.bool();
+          const [a, b] = tightIsA ? [tight, wide] : [wide, tight];
+          const [x, y] = tightIsA ? ["B", "A"] : ["A", "B"];
+          return pickChoice(
+            rng,
+            t(
+              `The dot plots show ${g.what.en}. Which data set has the greater mean absolute deviation and standard deviation?`,
+              `点图显示了${g.what["zh-CN"]}。哪组数据的平均绝对偏差和标准差更大？`,
+            ),
+            t(`Data set ${x}`, `数据集 ${x}`),
+            [t(`Data set ${y}`, `数据集 ${y}`), t("They are about the same.", "两者差不多。")],
+            t(
+              `The dots of ${x} lie far from the center on both sides, while those of ${y} are bunched near it, however tall the stacks:${steps(madLine("A", a), madLine("B", b))}So ${x} has the greater MAD, and its standard deviation is greater too.`,
+              `${x} 的点向两侧散开，离中心较远；${y} 的点虽然堆得高，却聚集在中心附近：${steps(madLineZh("A", a), madLineZh("B", b))}所以 ${x} 的平均绝对偏差更大，标准差也更大。`,
+            ),
+            dotPairFigure(a, b),
+          );
+        }
+      },
+    },
+    {
+      id: "shifted-data-keeps-its-spread",
+      title: t("Shifted data keeps its spread", "平移后分散程度不变"),
+      explanation: t(
+        "If B’s dot plot is A’s moved $5$ to the right, every value of B is $5$ more than a value of A. The mean goes up by $5$, but every distance from the mean stays the same, so the MAD and the standard deviation do not change.",
+        "如果 B 的点图是把 A 的点图向右平移 $5$ 得到的，那么 B 的每个数据都比 A 的某个数据大 $5$。平均数增加 $5$，但每个数据到平均数的距离都不变，所以平均绝对偏差和标准差都不变。",
+      ),
+      generate(rng) {
+        const g = rng.pick(comparisons);
+        for (;;) {
+          const k = (rng.bool() ? 1 : -1) * rng.int(2, 6);
+          const c = rng.int(g.lo + 3 + Math.max(0, -k), g.hi - 3 - Math.max(0, k));
+          const a = data(rng, rng.int(7, 10), c - 3, c + 3);
+          const b = a.map((x) => x + k);
+          if (mad(a).isZero()) continue;
+          const kk = Math.abs(k);
+          const more = k > 0;
+          return pickChoice(
+            rng,
+            t(`The dot plots show ${g.what.en}. Which statement is true?`, `点图显示了${g.what["zh-CN"]}。哪种说法正确？`),
+            t(
+              `They have the same MAD, and the mean of B is $${kk}$ ${more ? "greater" : "less"} than the mean of A.`,
+              `两组的平均绝对偏差相同，B 的平均数比 A 的${more ? "大" : "小"} $${kk}$。`,
+            ),
+            [
+              t(
+                `The MAD of B is $${kk}$ ${more ? "greater" : "less"} than the MAD of A.`,
+                `B 的平均绝对偏差比 A 的${more ? "大" : "小"} $${kk}$。`,
+              ),
+              t("They have the same mean and the same MAD.", "两组的平均数相同，平均绝对偏差也相同。"),
+              t(
+                `They have the same mean, and B has the ${more ? "greater" : "smaller"} MAD.`,
+                `两组的平均数相同，B 的平均绝对偏差更${more ? "大" : "小"}。`,
+              ),
+            ],
+            t(
+              `Each dot of B is a dot of A moved $${kk}$ to the ${more ? "right" : "left"}, so the mean moves by $${kk}$ while every distance from the mean stays the same:${steps(madLine("A", a), madLine("B", b))}`,
+              `B 的每个点都是 A 的点向${more ? "右" : "左"}平移 $${kk}$ 得到的，所以平均数移动 $${kk}$，而每个数据到平均数的距离都不变：${steps(madLineZh("A", a), madLineZh("B", b))}`,
+            ),
+            dotPairFigure(a, b),
+          );
+        }
+      },
+    },
+  ],
+);
+
+/** Process is something measured repeatedly by two sources, with typical means and standard deviations. */
+interface Process {
+  readonly intro: Text;
+  readonly sources: readonly [Option, Option];
+  readonly unit: Option;
+  readonly mean: readonly [number, number];
+  readonly sd: readonly [number, number];
+  /** places is the number of decimal places of the means and standard deviations. */
+  readonly places: number;
+}
+
+const processes: readonly Process[] = [
+  {
+    intro: t(
+      "Two machines fill bags of rice. A sample of bags from each was weighed.",
+      "两台机器灌装大米。从每台机器灌装的袋子中各抽取一些称重。",
+    ),
+    sources: [
+      ["Machine A", "机器 A"],
+      ["Machine B", "机器 B"],
+    ],
+    unit: ["g", "克"],
+    mean: [995, 1005],
+    sd: [2, 12],
+    places: 1,
+  },
+  {
+    intro: t("Two runners timed their 100-meter sprints over a month.", "两名跑步运动员记录了一个月里每次 100 米跑的成绩。"),
+    sources: [
+      ["Runner A", "运动员 A"],
+      ["Runner B", "运动员 B"],
+    ],
+    unit: ["s", "秒"],
+    mean: [12, 14],
+    sd: [0.1, 0.8],
+    places: 2,
+  },
+  {
+    intro: t("Two archers measured how far their arrows landed from the center of the target.", "两名射箭运动员测量了箭落点到靶心的距离。"),
+    sources: [
+      ["Archer A", "运动员 A"],
+      ["Archer B", "运动员 B"],
+    ],
+    unit: ["cm", "厘米"],
+    mean: [4, 15],
+    sd: [1, 6],
+    places: 1,
+  },
+  {
+    intro: t("Two bakeries weighed the loaves of bread they baked in a week.", "两家面包店称了一周里烤出的面包的质量。"),
+    sources: [
+      ["Bakery A", "面包店 A"],
+      ["Bakery B", "面包店 B"],
+    ],
+    unit: ["g", "克"],
+    mean: [490, 510],
+    sd: [3, 15],
+    places: 1,
+  },
+];
+
+/** comparingDataSetsUsingStandardDeviationAndMad judges consistency by spread and measures a difference of means in units of spread. */
+export const comparingDataSetsUsingStandardDeviationAndMad = topic(
+  "comparing-data-sets-using-standard-deviation-and-mad",
+  t("Comparing Data Sets Using Standard Deviation and MAD", "用标准差和平均绝对偏差比较数据集"),
+  t(
+    "A smaller standard deviation or MAD means more consistent values, whatever the means are. To judge whether two means are far apart, compare their difference with the spread: dividing the difference of the means by the MAD (or the standard deviation) says how many typical distances apart the centers are.",
+    "标准差或平均绝对偏差越小，数据越稳定，与平均数大小无关。要判断两个平均数相差得远不远，要把它们的差与分散程度比较：用平均数之差除以平均绝对偏差（或标准差），就知道两组的中心相差几个“典型距离”。",
+  ),
+  ["mean-absolute-deviation", "comparing-means"],
+  ["7.SP.B.3", "7.SP.B.4"],
+  [
+    {
+      id: "consistency-from-the-standard-deviation",
+      title: t("Consistency from the standard deviation", "由标准差判断稳定性"),
+      explanation: t(
+        "Machine A fills bags with a mean of $1002$ g and a standard deviation of $3.1$ g; machine B with a mean of $998$ g and a standard deviation of $6.4$ g. A is more consistent, because its bags vary less from their mean. Which mean is greater says nothing about consistency.",
+        "机器 A 灌装的袋子平均 $1002$ 克，标准差 $3.1$ 克；机器 B 平均 $998$ 克，标准差 $6.4$ 克。A 更稳定，因为它灌装的袋子偏离平均数较少。哪个平均数更大，与稳定性无关。",
+      ),
+      generate(rng) {
+        const p = rng.pick(processes);
+        const f = 10 ** p.places;
+        const value = (lo: number, hi: number) => Q.of(rng.int(lo * f, hi * f), f);
+        for (;;) {
+          const means = [value(p.mean[0], p.mean[1]), value(p.mean[0], p.mean[1])] as const;
+          const sds = [value(p.sd[0], p.sd[1]), value(p.sd[0], p.sd[1])] as const;
+          if (means[0].eq(means[1]) || sds[0].cmp(sds[1]) === 0) continue;
+          if (sds[0].cmp(sds[1].mul(Q.of(3, 4))) > 0 && sds[1].cmp(sds[0].mul(Q.of(3, 4))) > 0) continue;
+          const x = sds[0].cmp(sds[1]) < 0 ? 0 : 1;
+          const y = 1 - x;
+          const [ux, uz] = p.unit;
+          const greaterMean = means[y]!.cmp(means[x]!) > 0;
+          const describe = (i: number, lang: 0 | 1) =>
+            lang === 0
+              ? `${p.sources[i]![0]}: mean $${dec(means[i]!)}$ ${ux}, standard deviation $${dec(sds[i]!)}$ ${ux}`
+              : `${p.sources[i]![1]}：平均数 $${dec(means[i]!)}$ ${uz}，标准差 $${dec(sds[i]!)}$ ${uz}`;
+          return pickChoice(
+            rng,
+            t(
+              `${p.intro.en}\n\n${describe(0, 0)}\n\n${describe(1, 0)}\n\nWhich is more consistent, and why?`,
+              `${p.intro["zh-CN"]}\n\n${describe(0, 1)}\n\n${describe(1, 1)}\n\n哪个更稳定？为什么？`,
+            ),
+            t(`${p.sources[x]![0]}, because its standard deviation is smaller.`, `${p.sources[x]![1]}，因为它的标准差更小。`),
+            [
+              t(`${p.sources[y]![0]}, because its standard deviation is greater.`, `${p.sources[y]![1]}，因为它的标准差更大。`),
+              t(
+                `${p.sources[y]![0]}, because its mean is ${greaterMean ? "greater" : "smaller"}.`,
+                `${p.sources[y]![1]}，因为它的平均数更${greaterMean ? "大" : "小"}。`,
+              ),
+              t("Neither, because data sets with different means cannot be compared.", "无法判断，因为平均数不同的数据集不能比较。"),
+            ],
+            t(
+              `A smaller standard deviation means the values lie closer to their mean. $${dec(sds[x]!)}$ is less than $${dec(sds[y]!)}$, so ${p.sources[x]![0]} is more consistent; the means do not decide it.`,
+              `标准差越小，数据越靠近平均数。$${dec(sds[x]!)}$ 小于 $${dec(sds[y]!)}$，所以${p.sources[x]![1]} 更稳定；这与平均数无关。`,
+            ),
+          );
+        }
+      },
+    },
+    {
+      id: "differences-of-means-in-units-of-spread",
+      title: t("Differences of means in units of spread", "以分散程度为单位的平均数之差"),
+      explanation: t(
+        "The mean of A is $24$, the mean of B is $18$, and both have a MAD of $2$. The difference of the means is $24 - 18 = 6$, which is $\\frac{6}{2} = 3$ MADs. A difference of several MADs is large compared with the variation inside each group.",
+        "A 的平均数是 $24$，B 的平均数是 $18$，两组的平均绝对偏差都是 $2$。平均数之差是 $24 - 18 = 6$，相当于 $\\frac{6}{2} = 3$ 个平均绝对偏差。相差好几个平均绝对偏差，说明与每组内部的波动相比，这个差距很大。",
+      ),
+      generate(rng) {
+        const g = rng.pick(comparisons);
+        const sd = rng.bool();
+        const name = sd ? t("standard deviation", "标准差") : t("mean absolute deviation", "平均绝对偏差");
+        for (;;) {
+          const spread = Q.of(rng.pick([3, 4, 5, 6, 8]), 2);
+          const r = Q.of(rng.int(1, 8), 2);
+          const d = spread.mul(r);
+          const mb = Q.of(rng.int(g.lo + 2, g.hi - 8));
+          const ma = mb.add(d);
+          if (!clean(d) || ma.cmp(Q.of(g.hi)) > 0) continue;
+          return numberProblem({
+            prompt: t(
+              `The data show ${g.what.en}. The mean of A is $${dec(ma)}$ and the mean of B is $${dec(mb)}$, and both data sets have a ${name.en} of $${dec(spread)}$. How many ${name.en}s apart are the means?`,
+              `数据显示了${g.what["zh-CN"]}。A 的平均数是 $${dec(ma)}$，B 的平均数是 $${dec(mb)}$，两组的${name["zh-CN"]}都是 $${dec(spread)}$。两个平均数相差几个${name["zh-CN"]}？`,
+            ),
+            answer: r,
+            form: "decimal",
+            // The difference itself, the ratio upside down, and half the difference.
+            wrong: [d, spread.div(d), d.div(spread.mul(Q.of(2)))].filter(clean),
+            solution: t(
+              `Divide the difference of the means by the ${name.en}:${steps(`\\frac{${dec(ma)} - ${dec(mb)}}{${dec(spread)}} = \\frac{${dec(d)}}{${dec(spread)}} = ${dec(r)}`)}`,
+              `用平均数之差除以${name["zh-CN"]}：${steps(`\\frac{${dec(ma)} - ${dec(mb)}}{${dec(spread)}} = \\frac{${dec(d)}}{${dec(spread)}} = ${dec(r)}`)}`,
+            ),
+          });
+        }
+      },
+    },
+  ],
+);
+
+/** overlapping draws data set A, with a whole-number mean and a nonzero MAD, and B as A shifted up by k. */
+function overlapping(rng: Rng, g: Groups, k: number): { a: number[]; b: number[] } {
+  for (;;) {
+    const c = rng.int(g.lo + 3, g.hi - 3 - k);
+    const a = data(rng, rng.int(8, 10), c - 3, c + 3);
+    if (mean(a).isInteger() && !mad(a).isZero()) return { a, b: a.map((x) => x + k) };
+  }
+}
+
+const overlapStatements: readonly Text[] = [
+  t(
+    "The distributions overlap a lot: the difference between the groups is small compared with the variation within each group.",
+    "两个分布重叠很多：与每组内部的波动相比，两组之间的差距很小。",
+  ),
+  t(
+    "The distributions barely overlap: the difference between the groups is large compared with the variation within each group.",
+    "两个分布几乎不重叠：与每组内部的波动相比，两组之间的差距很大。",
+  ),
+  t(
+    "The distributions overlap a lot: the difference between the groups is large compared with the variation within each group.",
+    "两个分布重叠很多：与每组内部的波动相比，两组之间的差距很大。",
+  ),
+  t(
+    "The distributions barely overlap: the difference between the groups is small compared with the variation within each group.",
+    "两个分布几乎不重叠：与每组内部的波动相比，两组之间的差距很小。",
+  ),
+];
+
+/** assessingVisualOverlapOfDataDistributions judges and measures how much two distributions overlap, by the difference of means in MADs. */
+export const assessingVisualOverlapOfDataDistributions = topic(
+  "assessing-visual-overlap-of-data-distributions",
+  t("Assessing Visual Overlap of Data Distributions", "评估数据分布的重叠程度"),
+  t(
+    "When two distributions have similar spreads, the difference of their means divided by the MAD measures how much they overlap. A ratio below about 1 means the dot plots overlap a lot and the groups are hard to tell apart; a ratio of 3 or more means they barely overlap and the difference between the groups stands out against the variation within them.",
+    "两个分布的分散程度相近时，用平均数之差除以平均绝对偏差，可以衡量它们的重叠程度。这个比值小于 1 左右时，点图重叠很多，两组很难区分；比值达到 3 或更大时，点图几乎不重叠，两组之间的差距相对组内波动非常明显。",
+  ),
+  ["comparing-data-set-visualizations-using-standard-deviation-and-mad", "comparing-data-sets-using-standard-deviation-and-mad"],
+  ["7.SP.B.3"],
+  [
+    {
+      id: "judging-overlap",
+      title: t("Judging overlap", "判断重叠程度"),
+      explanation: t(
+        "If A and B both have a MAD of about $1.5$ and their means are $10$ and $11$, the means differ by less than one MAD: most dots of the two plots sit over the same numbers, and the groups are hard to tell apart. If the means are $10$ and $16$, they differ by $4$ MADs and the plots barely overlap.",
+        "如果 A 和 B 的平均绝对偏差都约为 $1.5$，平均数分别是 $10$ 和 $11$，那么两个平均数相差不到一个平均绝对偏差：两个点图的大部分点落在相同的数上，两组很难区分。如果平均数是 $10$ 和 $16$，就相差 $4$ 个平均绝对偏差，两个点图几乎不重叠。",
+      ),
+      generate(rng) {
+        const g = rng.pick(comparisons);
+        const apart = rng.bool();
+        for (;;) {
+          const k = apart ? rng.int(6, 9) : rng.int(1, 2);
+          const { a, b } = overlapping(rng, g, k);
+          const ratio = Q.of(k).div(mad(a));
+          if (apart ? ratio.cmp(Q.of(3)) < 0 : ratio.cmp(Q.of(1)) > 0) continue;
+          return pickChoice(
+            rng,
+            t(`The dot plots show ${g.what.en}. Which statement describes them?`, `点图显示了${g.what["zh-CN"]}。哪种说法描述了它们？`),
+            overlapStatements[apart ? 1 : 0]!,
+            overlapStatements.filter((_, i) => i !== (apart ? 1 : 0)),
+            t(
+              `${steps(madLine("A", a), madLine("B", b))}The means differ by $${k}$, which is $\\frac{${k}}{\\text{MAD}} ${approx(ratio)}$ MADs: ${apart ? "large compared with the spread, so the plots barely overlap" : "no more than one MAD, so the plots overlap a lot"}.`,
+              `${steps(madLineZh("A", a), madLineZh("B", b))}两个平均数相差 $${k}$，相当于 $\\frac{${k}}{\\text{MAD}} ${approx(ratio)}$ 个平均绝对偏差：${apart ? "相对分散程度很大，所以两个点图几乎不重叠" : "不超过一个平均绝对偏差，所以两个点图重叠很多"}。`,
+            ),
+            dotPairFigure(a, b),
+          );
+        }
+      },
+    },
+    {
+      id: "measuring-overlap",
+      title: t("Measuring overlap", "衡量重叠程度"),
+      explanation: t(
+        "A: $8, 9, 10, 10, 11, 12$ has mean $10$ and distances $2, 1, 0, 0, 1, 2$, so its MAD is $1$. B is A moved up by $3$, so its mean is $13$ and its MAD is also $1$. The means differ by $\\frac{13 - 10}{1} = 3$ MADs, so the plots barely overlap.",
+        "A：$8, 9, 10, 10, 11, 12$ 的平均数是 $10$，各数到平均数的距离是 $2, 1, 0, 0, 1, 2$，所以平均绝对偏差是 $1$。B 是 A 整体加 $3$，所以平均数是 $13$，平均绝对偏差也是 $1$。两个平均数相差 $\\frac{13 - 10}{1} = 3$ 个平均绝对偏差，所以两个点图几乎不重叠。",
+      ),
+      generate(rng) {
+        const g = rng.pick(comparisons);
+        for (;;) {
+          const k = rng.int(1, 8);
+          const { a, b } = overlapping(rng, g, k);
+          const ratio = Q.of(k).div(mad(a));
+          if (!clean(ratio) || !clean(mad(a))) continue;
+          const mu = mean(a);
+          const distances = a.map((x) => Math.abs(x - Number(mu.n)));
+          return {
+            ...numberProblem({
+              prompt: t(
+                `The dot plots show ${g.what.en}. Both data sets have the same MAD. How many MADs apart are their means?`,
+                `点图显示了${g.what["zh-CN"]}。两组数据的平均绝对偏差相同。两个平均数相差几个平均绝对偏差？`,
+              ),
+              answer: ratio,
+              form: "decimal",
+              // The difference of the means itself, the ratio upside down, and the MAD.
+              wrong: [Q.of(k), mad(a).div(Q.of(k)), mad(a)].filter(clean),
+              solution: t(
+                `A has mean $\\frac{${sum(a)}}{${a.length}} = ${dec(mu)}$, distances $${list(distances)}$ from it, and MAD $\\frac{${sum(distances)}}{${a.length}} = ${dec(mad(a))}$. B has mean $${dec(mean(b))}$. So${steps(`\\frac{${dec(mean(b))} - ${dec(mu)}}{${dec(mad(a))}} = ${dec(ratio)}`)}`,
+                `A 的平均数是 $\\frac{${sum(a)}}{${a.length}} = ${dec(mu)}$，各数到它的距离是 $${list(distances)}$，平均绝对偏差是 $\\frac{${sum(distances)}}{${a.length}} = ${dec(mad(a))}$。B 的平均数是 $${dec(mean(b))}$。所以${steps(`\\frac{${dec(mean(b))} - ${dec(mu)}}{${dec(mad(a))}} = ${dec(ratio)}`)}`,
+              ),
+            }),
+            figure: dotPairFigure(a, b),
+          };
+        }
+      },
+    },
+  ],
+);
+
+/** grade7StatisticsTopics lists the 7th grade topics on sampling, representing data and comparing data sets. */
 export const grade7StatisticsTopics: readonly TopicDef[] = [
   estimationFromSamples,
   biasedAndUnbiasedSamples,
@@ -1719,4 +2636,11 @@ export const grade7StatisticsTopics: readonly TopicDef[] = [
   calculatingModesFromFrequencyTables,
   calculatingModesAndMediansFromHistograms,
   calculatingMeansFromHistograms,
+  comparingMeans,
+  comparingMedians,
+  comparingModes,
+  comparingDataSetsUsingRangeAndQuartiles,
+  comparingDataSetVisualizationsUsingStandardDeviationAndMad,
+  comparingDataSetsUsingStandardDeviationAndMad,
+  assessingVisualOverlapOfDataDistributions,
 ];
