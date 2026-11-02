@@ -30,7 +30,7 @@ const arcTex = (name: string) => `\\overset{\\frown}{${name}}`;
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
 /** piTex writes c·π in LaTeX: "16\pi", "\pi", "\frac{25\pi}{2}", "\frac{\pi}{3}". */
-function piTex(c: Coefficient): string {
+export function piTex(c: Coefficient): string {
   const v = toQ(c);
   if (v.isZero()) return "0";
   const n = v.n < 0n ? -v.n : v.n;
@@ -40,13 +40,15 @@ function piTex(c: Coefficient): string {
 }
 
 /** piSum writes a + c·π in LaTeX, in that order: "12 + 4\pi", "64 - 16\pi". */
-const piSum = (a: Coefficient, c: Coefficient) => poly([a, ""], [c, "\\pi"]);
+export const piSum = (a: Coefficient, c: Coefficient) => poly([a, ""], [c, "\\pi"]);
 
 /** piQ is 3.14 as an exact rational, the usual approximation of π. */
-const piQ = q(314, 100);
+export const piQ = q(314, 100);
 
-const PI_EN = " Give the exact answer in terms of $\\pi$.";
-const PI_ZH = "结果保留 $\\pi$。";
+/** PI_EN asks for an exact answer in terms of π, in English. */
+export const PI_EN = " Give the exact answer in terms of $\\pi$.";
+/** PI_ZH asks for an exact answer in terms of π, in Chinese. */
+export const PI_ZH = "结果保留 $\\pi$。";
 
 /** PiProblem describes a problem whose answer is an exact expression in π. */
 interface PiProblem {
@@ -60,7 +62,7 @@ interface PiProblem {
 }
 
 /** piProblem builds a problem whose answer is a simplified expression in π, with an optional unit after the field. */
-function piProblem(p: PiProblem): Problem {
+export function piProblem(p: PiProblem): Problem {
   const base = expressionProblem({ prompt: p.prompt, answer: p.answer, solution: p.solution, simplified: true, wrong: p.wrong ?? [] });
   return p.unit ? { ...base, answer: { ...base.answer, input: { kind: "math", suffix: unitLatex(p.unit) } } } : base;
 }
@@ -80,7 +82,7 @@ const compassPoints: readonly Compass[] = ["e", "ne", "n", "nw", "w", "sw", "s",
 const dirOf = (d: number): Compass => compassPoints[(((Math.round(d / 45) % 8) + 8) % 8) as 0]!;
 
 /** arcPoints are points along the arc from angle a counterclockwise to angle b. */
-function arcPoints(a: number, b: number, r = R, c: Point = O): Point[] {
+export function arcPoints(a: number, b: number, r = R, c: Point = O): Point[] {
   const span = (((b - a) % 360) + 360) % 360 || 360;
   const n = Math.max(2, Math.ceil(span / 4));
   return Array.from({ length: n + 1 }, (_, i) => on(a + (span * i) / n, r, c));
