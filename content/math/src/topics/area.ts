@@ -48,7 +48,7 @@ export function height(apex: Point, foot: Point, toward: Point, label: string): 
 const intOr = (a: number, b: number, fallback: number) => (Number.isInteger(a / b) ? a / b : fallback);
 
 /** scaleneTriangle draws a triangle to scale with whole-number sides, the longest at the bottom. */
-function scaleneTriangle(rng: Rng): [Point[], number[]] {
+export function scaleneTriangle(rng: Rng): [Point[], number[]] {
   for (;;) {
     const [a, b, c] = [rng.int(4, 18), rng.int(4, 18), rng.int(6, 20)];
     if (c < a || c < b || a + b <= c + 1) continue;
