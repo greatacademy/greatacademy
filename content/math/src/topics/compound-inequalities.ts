@@ -47,7 +47,7 @@ function span(lo: Coefficient, loClosed: boolean, hi: Coefficient, hiClosed: boo
 }
 
 /** ray is the set of x with x op v. */
-function ray(op: InequalityOp, v: Coefficient): Interval {
+export function ray(op: InequalityOp, v: Coefficient): Interval {
   return op === "<" || op === "<="
     ? { hi: toQ(v), hiClosed: op === "<=", loClosed: false }
     : { lo: toQ(v), loClosed: op === ">=", hiClosed: false };
@@ -90,7 +90,7 @@ const ask = (en: string, zh: string, form: Text): Text => t(`${en} ${form.en}`, 
 const closedWords = (closed: boolean) => (closed ? t("closed dot", "实心点") : t("open circle", "空心圈"));
 
 /** numberLineFigure graphs a set with integer endpoints on a number line from min to max. */
-function numberLineFigure(set: RealSet, min: number, max: number): Figure {
+export function numberLineFigure(set: RealSet, min: number, max: number): Figure {
   const width = 320;
   const pad = 30;
   const y = 20;
