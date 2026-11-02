@@ -124,6 +124,7 @@ import { grade7ProbabilityTopics } from "./topics/grade-7-probability.ts";
 import { grade7RatioTopics } from "./topics/grade-7-ratios.ts";
 import { grade7StatisticsTopics } from "./topics/grade-7-statistics.ts";
 import { grade8ExponentTopics } from "./topics/grade-8-exponents.ts";
+import { grade8RealNumberTopics } from "./topics/grade-8-real-numbers.ts";
 import { grade8ScientificNotationTopics } from "./topics/grade-8-scientific-notation.ts";
 import { inequalityTopics } from "./topics/inequalities.ts";
 import { integerTopics } from "./topics/integers.ts";
@@ -221,6 +222,7 @@ export const math: SubjectDef = {
     ...grade7MeasurementTopics,
     ...grade7StatisticsTopics,
     ...grade7ProbabilityTopics,
+    ...grade8RealNumberTopics,
     ...grade8ExponentTopics,
     ...grade8ScientificNotationTopics,
     ...numberTheoryTopics,
