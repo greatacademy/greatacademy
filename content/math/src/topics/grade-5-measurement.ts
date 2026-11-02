@@ -1010,7 +1010,7 @@ export const graphingPatterns = topic(
 // Volume
 
 /** prismSvg draws a box l long, w deep and h tall in oblique projection, as unit cubes or with its edges labeled. */
-function prismSvg(l: number, w: number, h: number, labels?: { l: string; w: string; h: string }): string {
+export function prismSvg(l: number, w: number, h: number, labels?: { l: string; w: string; h: string }): string {
   const dx = 0.5;
   const dy = 0.35;
   const u = Math.min(30, 250 / (l + dx * w), 150 / (h + dy * w));

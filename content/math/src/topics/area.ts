@@ -20,7 +20,7 @@ const tex = (v: number, u: Unit, power = 1) => `${v}\\text{ ${u}}${power === 2 ?
 const figure = (marks: readonly Mark[], en: string, zh: string): Figure => ({ svg: sketch(marks), alt: t(en, zh) });
 
 /** sides labels each side of a counterclockwise polygon, outside it; a null label leaves the side unlabeled. */
-function sides(points: readonly Point[], labels: readonly (string | null)[]): Mark[] {
+export function sides(points: readonly Point[], labels: readonly (string | null)[]): Mark[] {
   return points.flatMap((a, i): Mark[] => {
     const text = labels[i];
     return text == null ? [] : [{ kind: "side", a, b: points[(i + 1) % points.length]!, text }];
@@ -28,7 +28,7 @@ function sides(points: readonly Point[], labels: readonly (string | null)[]): Ma
 }
 
 /** rectangle is the corners of an l by w rectangle, counterclockwise from the origin. */
-const rectangle = (l: number, w: number): Point[] => [
+export const rectangle = (l: number, w: number): Point[] => [
   [0, 0],
   [l, 0],
   [l, w],
@@ -36,7 +36,7 @@ const rectangle = (l: number, w: number): Point[] => [
 ];
 
 /** height marks a dashed height from apex down to foot, with a right angle at the foot toward toward. */
-function height(apex: Point, foot: Point, toward: Point, label: string): Mark[] {
+export function height(apex: Point, foot: Point, toward: Point, label: string): Mark[] {
   return [
     { kind: "segment", a: apex, b: foot, dashed: true, accent: true },
     { kind: "right", vertex: foot, from: apex, to: toward },
