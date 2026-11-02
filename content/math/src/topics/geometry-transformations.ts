@@ -1141,7 +1141,7 @@ export const combiningStretchesOfGeometricFigures: TopicDef = {
 // ─── Combining Geometric Transformations ────────────────────────────────────
 
 /** Move is a transformation of the plane that maps grid points to grid points, with its inverse. */
-interface Move {
+export interface Move {
   readonly f: (p: XY) => XY;
   readonly inv: (p: XY) => XY;
   readonly name: Text;
@@ -1151,7 +1151,8 @@ interface Move {
 /** translationRule writes (x, y) → (x + h, y + v). */
 const translationRule = (h: number, v: number) => `(x, y) \\to (${linear(1, h)}, ${linear(1, v, "y")})`;
 
-const translation = (h: number, v: number): Move => ({
+/** translation is the move (x, y) → (x + h, y + v). */
+export const translation = (h: number, v: number): Move => ({
   f: ([x, y]) => [x + h, y + v],
   inv: ([x, y]) => [x - h, y - v],
   name: t(`the translation $${translationRule(h, v)}$`, `平移 $${translationRule(h, v)}$`),
@@ -1159,7 +1160,7 @@ const translation = (h: number, v: number): Move => ({
 });
 
 /** rigidMoves are the reflections and rotations about the origin that keep grid points on the grid. */
-const rigidMoves: readonly Move[] = [
+export const rigidMoves: readonly Move[] = [
   {
     f: ([x, y]) => [x, z(-y)],
     inv: ([x, y]) => [x, z(-y)],
@@ -1215,17 +1216,18 @@ const dilation = (k: number): Move => ({
 const pickTranslation = (rng: Rng) => translation(rng.nonZero(-5, 5), rng.nonZero(-5, 5));
 
 /** sequenceName lists transformations in order: "A, followed by B, followed by C". */
-function sequenceName(moves: readonly Move[]): Text {
+export function sequenceName(moves: readonly Move[]): Text {
   return t(moves.map((m) => m.name.en).join(", followed by "), moves.map((m) => m.name["zh-CN"]).join("，然后"));
 }
 
 /** applyAll applies moves in order. */
-const applyAll = (moves: readonly Move[], p: XY): XY => moves.reduce((q, m) => m.f(q), p);
+export const applyAll = (moves: readonly Move[], p: XY): XY => moves.reduce((q, m) => m.f(q), p);
 
-const same2 = (a: XY, b: XY) => a[0] === b[0] && a[1] === b[1];
+/** same2 tells whether two points are equal. */
+export const same2 = (a: XY, b: XY) => a[0] === b[0] && a[1] === b[1];
 
 /** traceSteps writes the images of p after each move: P₁, P₂, …, the last named P'. */
-function traceSteps(moves: readonly Move[], p: XY): { en: string; zh: string } {
+export function traceSteps(moves: readonly Move[], p: XY): { en: string; zh: string } {
   let q = p;
   const en: string[] = [];
   const zh: string[] = [];

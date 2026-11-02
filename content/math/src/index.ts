@@ -131,6 +131,7 @@ import { grade8NumberTheoryTopics } from "./topics/grade-8-number-theory.ts";
 import { grade8RadicalTopics } from "./topics/grade-8-radicals.ts";
 import { grade8RealNumberTopics } from "./topics/grade-8-real-numbers.ts";
 import { grade8ScientificNotationTopics } from "./topics/grade-8-scientific-notation.ts";
+import { grade8TransformationTopics } from "./topics/grade-8-transformations.ts";
 import { inequalityTopics } from "./topics/inequalities.ts";
 import { integerTopics } from "./topics/integers.ts";
 import { linearAlgebraMatrixTopics } from "./topics/linear-algebra-matrices.ts";
@@ -235,6 +236,7 @@ export const math: SubjectDef = {
     ...grade8LinearEquationTopics,
     ...grade8FunctionTopics,
     ...grade8AngleTopics,
+    ...grade8TransformationTopics,
     ...numberTheoryTopics,
     ...fractionTopics,
     ...decimalAndPercentTopics,

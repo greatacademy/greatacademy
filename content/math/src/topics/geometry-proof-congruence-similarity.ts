@@ -1499,7 +1499,7 @@ type XY = readonly [number, number];
 const pl = (p: readonly (number | Q)[]) => pointLatex(p);
 
 /** polygonMarks draws a polygon in the plane with its vertices named outward from its center. */
-function polygonMarks(pts: readonly XY[], names: readonly string[], accent = true, dashed = false): PlaneMark[] {
+export function polygonMarks(pts: readonly XY[], names: readonly string[], accent = true, dashed = false): PlaneMark[] {
   const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length;
   const cy = pts.reduce((s, p) => s + p[1], 0) / pts.length;
   return [
@@ -1512,7 +1512,7 @@ function polygonMarks(pts: readonly XY[], names: readonly string[], accent = tru
 const within = (pts: readonly XY[], lim = 7) => pts.every((p) => Math.abs(p[0]) <= lim && Math.abs(p[1]) <= lim);
 
 /** pickTriangle picks a triangle with integer vertices in a small box, not too thin. */
-function pickTriangle(rng: Rng, lo = -5, hi = 5): [XY, XY, XY] {
+export function pickTriangle(rng: Rng, lo = -5, hi = 5): [XY, XY, XY] {
   for (;;) {
     const pts = [0, 1, 2].map((): XY => [rng.int(lo, hi), rng.int(lo, hi)]) as [XY, XY, XY];
     const [a, b, c] = pts;
@@ -1531,7 +1531,7 @@ function pickPoint(rng: Rng, lim = 6): XY {
 }
 
 /** shift describes a translation in words: "3 units left and 2 units up". */
-function shift(h: number, v: number): Text {
+export function shift(h: number, v: number): Text {
   const en = [
     h !== 0 && `${Math.abs(h)} unit${Math.abs(h) === 1 ? "" : "s"} ${h > 0 ? "right" : "left"}`,
     v !== 0 && `${Math.abs(v)} unit${Math.abs(v) === 1 ? "" : "s"} ${v > 0 ? "up" : "down"}`,
