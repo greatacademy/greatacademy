@@ -109,6 +109,7 @@ import { grade5FractionTopics } from "./topics/grade-5-fractions.ts";
 import { grade5MeasurementTopics } from "./topics/grade-5-measurement.ts";
 import { grade5WholeNumberTopics } from "./topics/grade-5-whole-numbers.ts";
 import { grade6to8FoundationTopics } from "./topics/grade-6-8-foundations.ts";
+import { grade6RatioTopics } from "./topics/grade-6-ratios.ts";
 import { inequalityTopics } from "./topics/inequalities.ts";
 import { integerTopics } from "./topics/integers.ts";
 import { linearAlgebraMatrixTopics } from "./topics/linear-algebra-matrices.ts";
@@ -191,6 +192,7 @@ export const math: SubjectDef = {
     ...grade5FractionTopics,
     ...grade5DecimalTopics,
     ...grade5MeasurementTopics,
+    ...grade6RatioTopics,
     ...numberTheoryTopics,
     ...fractionTopics,
     ...decimalAndPercentTopics,
