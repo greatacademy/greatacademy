@@ -1592,7 +1592,7 @@ export const convertingUnitsOfLengthToLargerUnitsUsingLongDivision = topic(
     "To convert a large number of small units, divide by the conversion factor with long division. The quotient is the number of larger units and the remainder is what is left in smaller units: 1,000 inches ÷ 12 = 83 R 4, so 1,000 in = 83 ft 4 in = 83 1/3 ft.",
     "把较多的小单位化成大单位，用长除法除以进率。商是大单位的个数，余数是剩下的小单位：1000 ÷ 12 = 83 余 4，所以 1000 英寸 = 83 英尺 4 英寸 = 83 1/3 英尺。",
   ),
-  ["converting-customary-units-of-length-to-larger-units", "four-digit-by-two-digit-division"],
+  ["converting-customary-units-of-length-to-larger-units", "multi-digit-by-two-digit-division-using-partial-quotients"],
   ["6.RP.A.3d"],
   [
     {
