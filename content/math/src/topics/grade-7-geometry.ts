@@ -1739,8 +1739,8 @@ function footOf(p: Point, a: Point, b: Point): Point {
   return [a[0] + k * dx, a[1] + k * dy];
 }
 
-/** heightOrMedian draws triangle ABC on base BC with the height AD and the median AM; when the triangle is obtuse, D lies on BC extended. */
-function heightOrMedian(ax: number, h: number): Mark[] {
+/** heightOrMedian draws triangle ABC on base BC with the height from A to the foot named foot and the median from A to the midpoint named mid; when the triangle is obtuse, the foot lies on BC extended. */
+function heightOrMedian(ax: number, h: number, foot: string, mid: string): Mark[] {
   const B: Point = [0, 0];
   const C: Point = [8, 0];
   const A: Point = [ax, h];
@@ -1754,8 +1754,8 @@ function heightOrMedian(ax: number, h: number): Mark[] {
     ticks(B, M),
     ticks(C, M),
     ...names([B, C, A], "BCA"),
-    { kind: "label", at: D, text: "D", dir: "s", italic: true },
-    { kind: "label", at: M, text: "M", dir: "s", italic: true },
+    { kind: "label", at: D, text: foot, dir: "s", italic: true },
+    { kind: "label", at: M, text: mid, dir: "s", italic: true },
   ];
   if (ax < 0) marks.push({ kind: "segment", a: D, b: B, dashed: true });
   if (ax > 8) marks.push({ kind: "segment", a: C, b: D, dashed: true });
@@ -1807,22 +1807,23 @@ export const heightsOfTriangles = topic(
         const ax = obtuse ? rng.pick([-3, -2, 10, 11]) : rng.pick([1.5, 2, 2.5, 5.5, 6, 6.5]);
         const h = rng.pick([4, 5, 6]);
         const at = ax < 0 ? "B" : "C";
+        const [foot, mid] = rng.sample(["D", "E", "H", "M", "N", "P"], 2) as [string, string];
         return pickChoice(
           rng,
           t(
             "Which segment is the height of $\\triangle ABC$ to the base $\\overline{BC}$?",
             "哪条线段是 $\\triangle ABC$ 底边 $\\overline{BC}$ 上的高？",
           ),
-          mathText(over("AD")),
-          ["AM", "AB", "AC"].map((s) => mathText(over(s))),
+          mathText(over(`A${foot}`)),
+          [`A${mid}`, "AB", "AC"].map((s) => mathText(over(s))),
           t(
-            `A height goes from the opposite vertex to the line containing the base and meets it at a right angle. $${over("AD")}$ meets line $BC$ at a right angle at $D$, so it is the height. $${over("AM")}$ goes to the midpoint of $${over("BC")}$ but is not perpendicular to it, and $${over("AB")}$ and $${over("AC")}$ are sides.${obtuse ? ` Because the angle at $${at}$ is obtuse, the foot $D$ lies outside the triangle, on the base extended.` : ""}`,
-            `高从底边所对的顶点出发，与底边所在的直线成直角。$${over("AD")}$ 在 $D$ 处与直线 $BC$ 垂直，所以它是高。$${over("AM")}$ 连到 $${over("BC")}$ 的中点，但不与它垂直；$${over("AB")}$ 和 $${over("AC")}$ 是三角形的边。${obtuse ? `因为 $${at}$ 处的角是钝角，垂足 $D$ 在三角形外，落在底边的延长线上。` : ""}`,
+            `A height goes from the opposite vertex to the line containing the base and meets it at a right angle. $${over(`A${foot}`)}$ meets line $BC$ at a right angle at $${foot}$, so it is the height. $${over(`A${mid}`)}$ goes to the midpoint of $${over("BC")}$ but is not perpendicular to it, and $${over("AB")}$ and $${over("AC")}$ are sides.${obtuse ? ` Because the angle at $${at}$ is obtuse, the foot $${foot}$ lies outside the triangle, on the base extended.` : ""}`,
+            `高从底边所对的顶点出发，与底边所在的直线成直角。$${over(`A${foot}`)}$ 在 $${foot}$ 处与直线 $BC$ 垂直，所以它是高。$${over(`A${mid}`)}$ 连到 $${over("BC")}$ 的中点，但不与它垂直；$${over("AB")}$ 和 $${over("AC")}$ 是三角形的边。${obtuse ? `因为 $${at}$ 处的角是钝角，垂足 $${foot}$ 在三角形外，落在底边的延长线上。` : ""}`,
           ),
           fig(
-            heightOrMedian(ax, h),
-            `Triangle ABC on base BC. AD is perpendicular to line BC at D${obtuse ? ", outside the triangle" : ""}, and AM goes to the midpoint M of BC.`,
-            `底边为 BC 的三角形 ABC。AD 在 D 处垂直于直线 BC${obtuse ? "，D 在三角形外" : ""}，AM 连到 BC 的中点 M。`,
+            heightOrMedian(ax, h, foot, mid),
+            `Triangle ABC on base BC. A${foot} is perpendicular to line BC at ${foot}${obtuse ? ", outside the triangle" : ""}, and A${mid} goes to the midpoint ${mid} of BC.`,
+            `底边为 BC 的三角形 ABC。A${foot} 在 ${foot} 处垂直于直线 BC${obtuse ? `，${foot} 在三角形外` : ""}，A${mid} 连到 BC 的中点 ${mid}。`,
           ),
         );
       },

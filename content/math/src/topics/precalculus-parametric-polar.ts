@@ -1910,32 +1910,56 @@ export const findingIntersectionsOfPolarCurves: TopicDef = {
       ),
       generate(rng) {
         const a = rng.int(1, 8);
-        const b = rng.int(1, 8);
-        const twoA = 2 * a;
-        const twoB = 2 * b;
-        return oneOf(
-          rng,
+        // 0: r = 2b sin θ meets C₁ at the pole and one more point; 1: r = 2b cos θ touches it only at the pole;
+        // 2: the circle r = c with c < 2a crosses it twice away from the pole; 3: r = c with c > 2a misses it.
+        const kind = rng.int(0, 3);
+        const b = kind === 1 ? rng.pick([1, 2, 3, 4, 5, 6, 7, 8].filter((x) => x !== a)) : rng.int(1, 8);
+        const c = kind === 2 ? rng.int(1, 2 * a - 1) : rng.int(2 * a + 1, 2 * a + 6);
+        const c2 = [`${2 * b}\\sin\\theta`, `${2 * b}\\cos\\theta`, `${c}`, `${c}`][kind]!;
+        const c1 = `${2 * a}\\cos\\theta`;
+        const options = [
           t(
-            `Do the polar curves $C_1: r = ${twoA}\\cos\\theta$ and $C_2: r = ${twoB}\\sin\\theta$ intersect at the pole, and what is the total number of distinct intersection points in the plane?`,
-            `极坐标曲线 $C_1: r = ${twoA}\\cos\\theta$ 与 $C_2: r = ${twoB}\\sin\\theta$ 是否相交于极点？它们在平面内共有几个不同的交点？`,
+            "Yes, the pole is an intersection point; there are 2 intersection points in total (the pole and 1 other point).",
+            "是，极点是交点；平面内共有 2 个交点（极点及另外 1 个点）。",
           ),
+          t("Yes, the pole is an intersection point, and it is the only one.", "是，极点是交点，而且是唯一的交点。"),
           t(
-            `Yes, the pole is an intersection point; there are 2 intersection points in total (the pole and 1 other point).`,
-            `是，极点是交点；平面内共有 2 个交点（极点及另外 1 个点）。`,
+            "No, the pole is not an intersection point; there are 2 intersection points in total.",
+            "否，极点不是交点；平面内共有 2 个交点。",
           ),
-          [
-            t(
-              `No, the pole is not an intersection point; there is only 1 intersection point in total.`,
-              `否，极点不是交点；平面内只有 1 个交点。`,
-            ),
-            t(`Yes, the pole is an intersection point; there are 4 intersection points in total.`, `是，极点是交点；平面内共有 4 个交点。`),
-            t(`No, the two curves do not intersect anywhere.`, `否，两条曲线在平面内没有任何交点。`),
-          ],
-          t(
-            `Testing the pole $r = 0$:\n- For $C_1$: $r = 0$ when $\\theta = \\frac{\\pi}{2}$ (since $\\cos\\frac{\\pi}{2} = 0$).\n- For $C_2$: $r = 0$ when $\\theta = 0$ (since $\\sin 0 = 0$).\nBoth curves pass through the pole, so the pole is an intersection point.\nEquating non-zero radii: $2a\\cos\\theta = 2b\\sin\\theta \\implies \\tan\\theta = \\frac{a}{b} = \\frac{${a}}{${b}}$, giving a second intersection point.\nThus there are 2 distinct intersection points in total.`,
-            `检验极点 $r = 0$：\n- 对于 $C_1$：当 $\\theta = \\frac{\\pi}{2}$ 时 $r = 0$（因为 $\\cos\\frac{\\pi}{2} = 0$）。\n- 对于 $C_2$：当 $\\theta = 0$ 时 $r = 0$（因为 $\\sin 0 = 0$）。\n两曲线均经过极点，因此极点是交点。\n联立非零极径：$2a\\cos\\theta = 2b\\sin\\theta \\implies \\tan\\theta = \\frac{a}{b} = \\frac{${a}}{${b}}$，在 $[0, \\pi)$ 内产生第 2 个交点。\n因此平面内共有 2 个不同的交点。`,
-          ),
+          t("No, the two curves do not intersect anywhere.", "否，两条曲线在平面内没有任何交点。"),
+        ];
+        const pole = t(
+          `$C_1$ passes through the pole at $\\theta = \\frac{\\pi}{2}$, since $\\cos\\frac{\\pi}{2} = 0$.`,
+          `$C_1$ 在 $\\theta = \\frac{\\pi}{2}$ 处经过极点，因为 $\\cos\\frac{\\pi}{2} = 0$。`,
         );
+        const rest = [
+          t(
+            `$C_2$ passes through the pole at $\\theta = 0$, since $\\sin 0 = 0$, so the pole is an intersection point even though the curves reach it at different angles. Equating radii: $${2 * a}\\cos\\theta = ${2 * b}\\sin\\theta$ gives $\\tan\\theta = ${Q.of(a, b).toLatex()}$, one more point. So there are 2 intersection points.`,
+            `$C_2$ 在 $\\theta = 0$ 处经过极点，因为 $\\sin 0 = 0$，所以即使两曲线到达极点的角度不同，极点仍是交点。令极径相等：$${2 * a}\\cos\\theta = ${2 * b}\\sin\\theta$，得 $\\tan\\theta = ${Q.of(a, b).toLatex()}$，又得一个交点。所以共有 2 个交点。`,
+          ),
+          t(
+            `$C_2$ also passes through the pole at $\\theta = \\frac{\\pi}{2}$. Equating radii: $${2 * a}\\cos\\theta = ${2 * b}\\cos\\theta$ forces $\\cos\\theta = 0$, which is the pole again. The circles touch only at the pole.`,
+            `$C_2$ 也在 $\\theta = \\frac{\\pi}{2}$ 处经过极点。令极径相等：$${2 * a}\\cos\\theta = ${2 * b}\\cos\\theta$ 迫使 $\\cos\\theta = 0$，仍是极点。两圆只在极点相切。`,
+          ),
+          t(
+            `$C_2$ is the circle of radius $${c}$ about the pole, so it never reaches the pole. Equating radii: $\\cos\\theta = ${Q.of(c, 2 * a).toLatex()}$ has two solutions in $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$, so there are 2 intersection points, neither of them the pole.`,
+            `$C_2$ 是以极点为圆心、半径为 $${c}$ 的圆，永远不经过极点。令极径相等：$\\cos\\theta = ${Q.of(c, 2 * a).toLatex()}$ 在 $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$ 内有两个解，所以共有 2 个交点，都不是极点。`,
+          ),
+          t(
+            `$C_2$ is the circle of radius $${c}$ about the pole, so it never reaches the pole. Every point of $C_1$ is at distance $|${2 * a}\\cos\\theta| \\le ${2 * a} < ${c}$ from the pole, so the curves do not meet.`,
+            `$C_2$ 是以极点为圆心、半径为 $${c}$ 的圆，永远不经过极点。$C_1$ 上每一点到极点的距离 $|${2 * a}\\cos\\theta| \\le ${2 * a} < ${c}$，所以两曲线不相交。`,
+          ),
+        ][kind]!;
+        return choiceProblem({
+          prompt: t(
+            `Do the polar curves $C_1: r = ${c1}$ and $C_2: r = ${c2}$ intersect at the pole, and how many distinct intersection points do they have in the plane?`,
+            `极坐标曲线 $C_1: r = ${c1}$ 与 $C_2: r = ${c2}$ 是否相交于极点？它们在平面内共有几个不同的交点？`,
+          ),
+          options,
+          correct: kind,
+          solution: t(`${pole.en} ${rest.en}`, `${pole["zh-CN"]}${rest["zh-CN"]}`),
+        });
       },
     },
   ],

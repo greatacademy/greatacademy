@@ -2244,18 +2244,25 @@ export const combiningLinearTransformationsUsing2x2Matrices: TopicDef = {
 
         const ALatex = mat2Latex(A);
         const BLatex = mat2Latex(B);
+        // first and then name the matrices of the transformations applied first and second.
+        const [first, then, firstT, thenT] = rng.bool() ? ["A", "B", "T_1", "T_2"] : ["B", "A", "T_2", "T_1"];
 
         return oneOf(
           rng,
           t(
-            `A transformation $T_1$ has standard matrix $A = ${ALatex}$, and transformation $T_2$ has standard matrix $B = ${BLatex}$. Which expression gives the standard matrix of the composite transformation formed by applying $T_1$ first, followed by $T_2$?`,
-            `变换 $T_1$ 的标准矩阵为 $A = ${ALatex}$，变换 $T_2$ 的标准矩阵为 $B = ${BLatex}$。先进行变换 $T_1$，再进行变换 $T_2$ 的复合变换的标准矩阵由哪一个表达式给出？`,
+            `A transformation $T_1$ has standard matrix $A = ${ALatex}$, and transformation $T_2$ has standard matrix $B = ${BLatex}$. Which expression gives the standard matrix of the composite transformation formed by applying $${firstT}$ first, followed by $${thenT}$?`,
+            `变换 $T_1$ 的标准矩阵为 $A = ${ALatex}$，变换 $T_2$ 的标准矩阵为 $B = ${BLatex}$。先进行变换 $${firstT}$，再进行变换 $${thenT}$ 的复合变换的标准矩阵由哪一个表达式给出？`,
           ),
-          t(`$B A$`, `$B A$`),
-          [t(`$A B$`, `$A B$`), t(`$A + B$`, `$A + B$`), t(`$A^{-1} B$`, `$A^{-1} B$`), t(`$B^{-1} A$`, `$B^{-1} A$`)],
+          t(`$${then} ${first}$`, `$${then} ${first}$`),
+          [
+            t(`$${first} ${then}$`, `$${first} ${then}$`),
+            t(`$A + B$`, `$A + B$`),
+            t(`$A^{-1} B$`, `$A^{-1} B$`),
+            t(`$B^{-1} A$`, `$B^{-1} A$`),
+          ],
           t(
-            `Applying $T_1$ first maps $\\mathbf{x}$ to $A\\mathbf{x}$. Then applying $T_2$ maps this result to $B(A\\mathbf{x}) = (BA)\\mathbf{x}$. Therefore, the composite matrix is $BA$. Note that because matrix multiplication is non-commutative, $BA \\ne AB$ in general.`,
-            `先进行 $T_1$ 将 $\\mathbf{x}$ 映射为 $A\\mathbf{x}$，随后进行 $T_2$ 将其映射为 $B(A\\mathbf{x}) = (BA)\\mathbf{x}$。因此复合矩阵为 $BA$。注意矩阵乘法一般不满足交换律，故 $BA \\ne AB$。`,
+            `Applying $${firstT}$ first maps $\\mathbf{x}$ to $${first}\\mathbf{x}$. Then applying $${thenT}$ maps this result to $${then}(${first}\\mathbf{x}) = (${then}${first})\\mathbf{x}$. Therefore, the composite matrix is $${then}${first}$. Note that because matrix multiplication is non-commutative, $${then}${first} \\ne ${first}${then}$ in general.`,
+            `先进行 $${firstT}$ 将 $\\mathbf{x}$ 映射为 $${first}\\mathbf{x}$，随后进行 $${thenT}$ 将其映射为 $${then}(${first}\\mathbf{x}) = (${then}${first})\\mathbf{x}$。因此复合矩阵为 $${then}${first}$。注意矩阵乘法一般不满足交换律，故 $${then}${first} \\ne ${first}${then}$。`,
           ),
         );
       },

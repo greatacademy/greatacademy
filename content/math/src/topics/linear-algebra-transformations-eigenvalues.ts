@@ -1863,30 +1863,27 @@ export const findingComplexEigenvectorsOfReal2x2Matrices: TopicDef = {
       generate: (rng: Rng): Problem => {
         const a = rng.int(-3, 3);
         const b = rng.int(1, 5);
-        // A = [[a, -b], [b, a]]
-        // For lambda = a - bi: (A - (a - bi)I)v = [[bi, -b], [b, bi]] v = 0
-        // bi v1 - b v2 = 0 => v2 = i v1. With v1 = 1, v = [1, i]^T.
+        // A = [[a, -b], [b, a]] has eigenvalues a ∓ bi. For λ = a - sbi (s = ±1), the first row of
+        // A - λI is (sbi, -b), so sbi v1 - b v2 = 0 and v2 = si v1: v = (1, si).
+        const s = rng.pick([1, -1]);
         const mat: Mat2 = [
           [a, -b],
           [b, a],
         ];
-        const eigStr = formatComplex(a, -b);
+        const eigStr = formatComplex(a, -s * b);
         const prompt = t(
           `For the matrix $A = ${mat2Latex(mat)}$, which of the following is an eigenvector corresponding to the eigenvalue $\\lambda = ${eigStr}$?`,
           `对于矩阵 $A = ${mat2Latex(mat)}$，下列哪个向量是对应特征值 $\\lambda = ${eigStr}$ 的特征向量？`,
         );
-        const right = t(`$${vec2Latex(["1", "i"])}$`, `$${vec2Latex(["1", "i"])}$`);
-        const wrong = [
-          t(`$${vec2Latex(["1", "-i"])}$`, `$${vec2Latex(["1", "-i"])}$`),
-          t(`$${vec2Latex(["1", "1"])}$`, `$${vec2Latex(["1", "1"])}$`),
-          t(`$${vec2Latex(["i", "1"])}$`, `$${vec2Latex(["i", "1"])}$`),
-          t(`$${vec2Latex(["-1", "i"])}$`, `$${vec2Latex(["-1", "i"])}$`),
-        ];
-        const biStr = formatComplex(0, b);
+        const si = s === 1 ? "i" : "-i";
+        const vec = (v: [string, string]) => t(`$${vec2Latex(v)}$`, `$${vec2Latex(v)}$`);
+        const right = vec(["1", si]);
+        const wrong = [vec(["1", s === 1 ? "-i" : "i"]), vec(["1", "1"]), vec([si, "1"]), vec(["-1", si])];
+        const biStr = formatComplex(0, s * b);
         const v2Term = b === 1 ? "v_2" : `${b} v_2`;
         const solution = t(
-          `We solve $(A - (${eigStr})I)\\mathbf{v} = \\mathbf{0}$: $\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$. The first row gives $${biStr} v_1 - ${v2Term} = 0$, so $v_2 = i v_1$. Choosing $v_1 = 1$ gives $\\mathbf{v} = ${vec2Latex(["1", "i"])}$.`,
-          `求解方程 $(A - (${eigStr})I)\\mathbf{v} = \\mathbf{0}$：$\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$。第一行给出 $${biStr} v_1 - ${v2Term} = 0$，即 $v_2 = i v_1$。取 $v_1 = 1$ 可得 $\\mathbf{v} = ${vec2Latex(["1", "i"])}$。`,
+          `We solve $(A - (${eigStr})I)\\mathbf{v} = \\mathbf{0}$: $\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$. The first row gives $${biStr} v_1 - ${v2Term} = 0$, so $v_2 = ${si} v_1$. Choosing $v_1 = 1$ gives $\\mathbf{v} = ${vec2Latex(["1", si])}$.`,
+          `求解方程 $(A - (${eigStr})I)\\mathbf{v} = \\mathbf{0}$：$\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$。第一行给出 $${biStr} v_1 - ${v2Term} = 0$，即 $v_2 = ${si} v_1$。取 $v_1 = 1$ 可得 $\\mathbf{v} = ${vec2Latex(["1", si])}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -2018,26 +2015,39 @@ export const blockDiagonalizationOfNxNMatrices: TopicDef = {
         "根据实特征值与共轭复特征值对确定分块对角结构。",
       ),
       generate: (rng: Rng): Problem => {
-        const r1 = rng.int(-4, 4);
-        const a = rng.int(1, 4);
-        const b = rng.int(1, 5);
-        const eigPair = formatComplexPair(a, b);
-        const prompt = t(
-          `A real $3 \\times 3$ matrix $A$ has eigenvalues $\\lambda_1 = ${r1}$ and complex conjugate pair $\\lambda_{2,3} = ${eigPair}$. In its real canonical block diagonal form $R = P^{-1} A P$, what are the sizes of the diagonal blocks?`,
-          `实 $3 \\times 3$ 矩阵 $A$ 具有特征值 $\\lambda_1 = ${r1}$ 以及共轭复特征值对 $\\lambda_{2,3} = ${eigPair}$。在其分块对角实标准型 $R = P^{-1} A P$ 中，各对角块的大小是多少？`,
-        );
-        const right = t("One $1 \\times 1$ block and one $2 \\times 2$ block", "一个 $1 \\times 1$ 块和一个 $2 \\times 2$ 块");
-        const wrong = [
-          t("Three $1 \\times 1$ blocks", "三个 $1 \\times 1$ 块"),
-          t("One $3 \\times 3$ block", "一个 $3 \\times 3$ 块"),
-          t("Two $2 \\times 2$ blocks", "两个 $2 \\times 2$ 块"),
-          t("Two $1 \\times 1$ blocks", "两个 $1 \\times 1$ 块"),
+        // kind: 0 three real eigenvalues (3 × 3), 1 one real and a pair (3 × 3), 2 two pairs (4 × 4), 3 two real and a pair (4 × 4).
+        const kind = rng.int(0, 3);
+        const reals = rng.sample([-4, -3, -2, -1, 0, 1, 2, 3, 4], [3, 1, 0, 2][kind]!).sort((m, n) => m - n);
+        const pairs = Array.from({ length: [0, 1, 2, 1][kind]! }, () => [rng.int(1, 4), rng.int(1, 5)] as const);
+        if (pairs.length === 2 && pairs[0]![0] === pairs[1]![0] && pairs[0]![1] === pairs[1]![1])
+          pairs[1] = [pairs[0]![0], pairs[0]![1] + 1];
+        const size = reals.length + 2 * pairs.length;
+        const listed = [
+          ...reals.map((r) => t(`$${r}$`, `$${r}$`)),
+          ...pairs.map(([a, b]) => t(`the conjugate pair $${formatComplexPair(a, b)}$`, `共轭复特征值对 $${formatComplexPair(a, b)}$`)),
         ];
-        const solution = t(
-          `Each real eigenvalue contributes a $1 \\times 1$ diagonal block $[${r1}]$, while the complex conjugate pair $${eigPair}$ contributes a $2 \\times 2$ rotation-scaling block $\\begin{pmatrix} ${a} & -${b} \\\\ ${b} & ${a} \\end{pmatrix}$. Thus, the real canonical form consists of one $1 \\times 1$ block and one $2 \\times 2$ block.`,
-          `每个实特征值对应一个 $1 \\times 1$ 的对角块 $[${r1}]$，而共轭复特征值对 $${eigPair}$ 对应一个 $2 \\times 2$ 的旋转缩放块 $\\begin{pmatrix} ${a} & -${b} \\\\ ${b} & ${a} \\end{pmatrix}$。因此实标准型由一个 $1 \\times 1$ 块和一个 $2 \\times 2$ 块组成。`,
+        const prompt = t(
+          `A real $${size} \\times ${size}$ matrix $A$ has eigenvalues ${listed
+            .map((x) => x.en)
+            .join(listed.length === 2 ? " and " : ", ")
+            .replace(
+              /, ([^,]*)$/,
+              ", and $1",
+            )}. In its real canonical block diagonal form $R = P^{-1} A P$, what are the sizes of the diagonal blocks?`,
+          `实 $${size} \\times ${size}$ 矩阵 $A$ 的特征值为 ${listed.map((x) => x["zh-CN"]).join("、")}。在其分块对角实标准型 $R = P^{-1} A P$ 中，各对角块的大小是多少？`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        const options = [
+          t("Three $1 \\times 1$ blocks", "三个 $1 \\times 1$ 块"),
+          t("One $1 \\times 1$ block and one $2 \\times 2$ block", "一个 $1 \\times 1$ 块和一个 $2 \\times 2$ 块"),
+          t("Two $2 \\times 2$ blocks", "两个 $2 \\times 2$ 块"),
+          t("Two $1 \\times 1$ blocks and one $2 \\times 2$ block", "两个 $1 \\times 1$ 块和一个 $2 \\times 2$ 块"),
+        ];
+        const blocks = pairs.map(([a, b]) => `\\begin{pmatrix} ${a} & -${b} \\\\ ${b} & ${a} \\end{pmatrix}`).join(", ");
+        const solution = t(
+          `Each real eigenvalue contributes a $1 \\times 1$ block, and each complex conjugate pair $a \\pm bi$ contributes a $2 \\times 2$ rotation-scaling block $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$${pairs.length ? `, here $${blocks}$` : ""}. With ${reals.length} real eigenvalue${reals.length === 1 ? "" : "s"} and ${pairs.length} pair${pairs.length === 1 ? "" : "s"}, the form has ${options[kind]!.en.toLowerCase()}.`,
+          `每个实特征值对应一个 $1 \\times 1$ 块，每对共轭复特征值 $a \\pm bi$ 对应一个 $2 \\times 2$ 旋转缩放块 $\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$${pairs.length ? `，这里是 $${blocks}$` : ""}。有 ${reals.length} 个实特征值和 ${pairs.length} 对复特征值，所以实标准型由${options[kind]!["zh-CN"]}组成。`,
+        );
+        return choiceProblem({ prompt, options, correct: kind, solution });
       },
     },
   ],

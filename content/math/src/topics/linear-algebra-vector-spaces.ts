@@ -1,6 +1,6 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { paren, poly } from "@ga/subject-math";
+import { paren, poly, Q } from "@ga/subject-math";
 
 import { article, choiceProblem, numberProblem, pointProblem } from "../problems.ts";
 
@@ -636,21 +636,29 @@ export const subspacesOfNDimensionalSpace: TopicDef = {
           [b, "y"],
           [c, "z"],
         ]);
-        const prompt = t(
-          `Consider the subsets of $\\mathbb{R}^3$: $W_1 = \\{ (x, y, z) \\mid ${eqLhs} = 0 \\}$, $W_2 = \\{ (x, y, z) \\mid ${eqLhs} = ${d} \\}$, and $W_3 = \\{ (x, y, z) \\mid x \\ge 0 \\}$. Which of these is a subspace of $\\mathbb{R}^3$?`,
-          `考虑 $\\mathbb{R}^3$ 的子集：$W_1 = \\{ (x, y, z) \\mid ${eqLhs} = 0 \\}$，$W_2 = \\{ (x, y, z) \\mid ${eqLhs} = ${d} \\}$ 及 $W_3 = \\{ (x, y, z) \\mid x \\ge 0 \\}$。其中哪一个是 $\\mathbb{R}^3$ 的子空间？`,
-        );
-        const right = t(`Only $W_1$`, `仅有 $W_1$`);
-        const wrong = [
-          t(`Only $W_2$`, `仅有 $W_2$`),
-          t(`Both $W_1$ and $W_2$`, `$W_1$ 与 $W_2$ 都是`),
-          t(`All three are subspaces`, `三个都是子空间`),
-        ];
-        const solution = t(
-          `$W_1$ contains $\\mathbf{0}$ and is defined by a homogeneous linear equation, so it is closed under vector addition and scalar multiplication. $W_2$ does not contain the origin ($${d} \\neq 0$). $W_3$ fails closure under negative scalar multiplication. Hence only $W_1$ is a subspace.`,
-          `$W_1$ 包含原点且由齐次线性方程定义，对向量加法和数乘均封闭，因此是子空间。$W_2$ 不含原点（$${d} \\neq 0$）；$W_3$ 对负标量乘法不封闭。故仅 $W_1$ 是子空间。`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        // sets lists the plane through the origin, the shifted plane and the half-space; order assigns them the names W₁, W₂, W₃.
+        const sets = [`${eqLhs} = 0`, `${eqLhs} = ${d}`, "x \\ge 0"];
+        const order = rng.shuffle([0, 1, 2]);
+        const name = (kind: number) => `W_${order.indexOf(kind) + 1}`;
+        const listed = order.map((kind, i) => `W_${i + 1} = \\{ (x, y, z) \\mid ${sets[kind]} \\}`);
+        const answer = order.indexOf(0);
+        return choiceProblem({
+          prompt: t(
+            `Consider the subsets of $\\mathbb{R}^3$: $${listed[0]}$, $${listed[1]}$, and $${listed[2]}$. Which of these is a subspace of $\\mathbb{R}^3$?`,
+            `考虑 $\\mathbb{R}^3$ 的子集：$${listed[0]}$，$${listed[1]}$ 及 $${listed[2]}$。其中哪一个是 $\\mathbb{R}^3$ 的子空间？`,
+          ),
+          options: [
+            t("Only $W_1$", "仅有 $W_1$"),
+            t("Only $W_2$", "仅有 $W_2$"),
+            t("Only $W_3$", "仅有 $W_3$"),
+            t("All three are subspaces", "三个都是子空间"),
+          ],
+          correct: answer,
+          solution: t(
+            `$${name(0)}$ contains $\\mathbf{0}$ and is defined by a homogeneous linear equation, so it is closed under vector addition and scalar multiplication. $${name(1)}$ does not contain the origin ($${d} \\neq 0$). $${name(2)}$ fails closure under multiplication by a negative scalar. Hence only $${name(0)}$ is a subspace.`,
+            `$${name(0)}$ 包含原点且由齐次线性方程定义，对向量加法和数乘均封闭，因此是子空间。$${name(1)}$ 不含原点（$${d} \\neq 0$）；$${name(2)}$ 对负数数乘不封闭。故仅 $${name(0)}$ 是子空间。`,
+          ),
+        });
       },
     },
     {
@@ -781,15 +789,17 @@ export const subspacesOfNDimensionalSpaceGeometricInterpretation: TopicDef = {
         const n = rng.int(4, 6);
         const coeffs = Array.from({ length: n }, () => rng.nonZero(-3, 3));
         const eqLhs = formatLinearExpr(coeffs.map((c, i) => [c, `x_{${i + 1}}`]));
+        const m = rng.int(-9, 9);
+        const rhs = m === 0 ? "k" : `k ${m < 0 ? "+" : "-"} ${Math.abs(m)}`;
         const prompt = t(
-          `The hyperplane in $\\mathbb{R}^${n}$ defined by $H = \\left\\{ (x_1, \\dots, x_${n}) \\mid ${eqLhs} = k \\right\\}$ forms a subspace of $\\mathbb{R}^${n}$ precisely when:`,
-          `在 $\\mathbb{R}^${n}$ 中，由 $H = \\left\\{ (x_1, \\dots, x_${n}) \\mid ${eqLhs} = k \\right\\}$ 定义的超平面构成子空间，充要条件是：`,
+          `The hyperplane in $\\mathbb{R}^${n}$ defined by $H = \\left\\{ (x_1, \\dots, x_${n}) \\mid ${eqLhs} = ${rhs} \\right\\}$ forms a subspace of $\\mathbb{R}^${n}$ precisely when:`,
+          `在 $\\mathbb{R}^${n}$ 中，由 $H = \\left\\{ (x_1, \\dots, x_${n}) \\mid ${eqLhs} = ${rhs} \\right\\}$ 定义的超平面构成子空间，充要条件是：`,
         );
-        const right = t(`$k = 0$`, `$k = 0$`);
-        const wrong = [t(`$k = 1$`, `$k = 1$`), t(`$k = ${coeffs[0]}$`, `$k = ${coeffs[0]}$`), t(`$k > 0$`, `$k > 0$`)];
+        const right = t(`$k = ${m}$`, `$k = ${m}$`);
+        const wrong = [-m, m + 1, m - 1, m === 0 ? 2 : 0, coeffs[0]!].map((v) => t(`$k = ${v}$`, `$k = ${v}$`));
         const solution = t(
-          `A subset must contain the zero vector $\\mathbf{0} = (0, \\dots, 0)$. Evaluating the equation at $\\mathbf{0}$ gives $0 = k$, so $k$ must equal $0$.`,
-          `子空间必须包含零向量 $\\mathbf{0} = (0, \\dots, 0)$。将零向量代入方程左边得 0，故必须有 $k = 0$。`,
+          `A subspace must contain the zero vector $\\mathbf{0} = (0, \\dots, 0)$. At $\\mathbf{0}$ the left side is $0$, so $0 = ${rhs}$ and $k = ${m}$; then the equation is homogeneous and $H$ is closed under addition and scalar multiplication.`,
+          `子空间必须包含零向量 $\\mathbf{0} = (0, \\dots, 0)$。在 $\\mathbf{0}$ 处左边为 $0$，所以 $0 = ${rhs}$，$k = ${m}$；此时方程是齐次的，$H$ 对加法和数乘封闭。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -1070,29 +1080,45 @@ export const findingABasisOfASpan: TopicDef = {
       generate(rng) {
         const a = rng.nonZero(-3, 3);
         const b = rng.nonZero(-3, 3);
-        const c = rng.nonZero(-3, 3);
-        const v1 = [1, 0, a];
-        const v2 = [0, 1, b];
-        const v3 = [c, 2 * c, c * a + 2 * c * b]; // v3 = c*v1 + 2c*v2 (redundant)
-        const prompt = t(
-          `Find a basis for the subspace $W = \\text{Span}\\left\\{ \\mathbf{v}_1 = ${colVecLatex(v1)}, \\mathbf{v}_2 = ${colVecLatex(v2)}, \\mathbf{v}_3 = ${colVecLatex(v3)} \\right\\}$.`,
-          `求子空间 $W = \\text{Span}\\left\\{ \\mathbf{v}_1 = ${colVecLatex(v1)}, \\mathbf{v}_2 = ${colVecLatex(v2)}, \\mathbf{v}_3 = ${colVecLatex(v3)} \\right\\}$ 的一组基。`,
-        );
-        const right = t(`$\\{\\mathbf{v}_1, \\mathbf{v}_2\\}$`, `$\\{\\mathbf{v}_1, \\mathbf{v}_2\\}$`);
-        const wrong = [
-          t(`$\\{\\mathbf{v}_1, \\mathbf{v}_2, \\mathbf{v}_3\\}$`, `$\\{\\mathbf{v}_1, \\mathbf{v}_2, \\mathbf{v}_3\\}$`),
-          t(`$\\{\\mathbf{v}_3\\}$`, `$\\{\\mathbf{v}_3\\}$`),
-          t(`$\\{\\mathbf{v}_1 + \\mathbf{v}_2 + \\mathbf{v}_3\\}$`, `$\\{\\mathbf{v}_1 + \\mathbf{v}_2 + \\mathbf{v}_3\\}$`),
-        ];
-        const v3Comb = formatVectorComb([
-          [c, "\\mathbf{v}_1"],
-          [2 * c, "\\mathbf{v}_2"],
+        const c = rng.pick([-3, -2, 2, 3]);
+        const p = [1, 0, a];
+        const q = [0, 1, b];
+        const [u, w] = rng.bool() ? [p, q] : [q, p];
+        // Two of the vectors are parallel (u and cu); the pivot columns keep the earlier of the two and the third vector w.
+        const vectors = rng.shuffle([
+          { v: u, kind: "u" },
+          { v: u.map((x) => c * x), kind: "cu" },
+          { v: w, kind: "w" },
         ]);
-        const solution = t(
-          `Form the matrix $[\\mathbf{v}_1 \\; \\mathbf{v}_2 \\; \\mathbf{v}_3]$. Row reduction reveals pivot columns in columns 1 and 2, while $\\mathbf{v}_3 = ${v3Comb}$. Removing redundant $\\mathbf{v}_3$ leaves the linearly independent spanning set $\\{\\mathbf{v}_1, \\mathbf{v}_2\\}$, which is a basis.`,
-          `将向量作为列构成矩阵 $[\\mathbf{v}_1 \\; \\mathbf{v}_2 \\; \\mathbf{v}_3]$。行化简显示主元位于第 1、2 列，而 $\\mathbf{v}_3 = ${v3Comb}$ 为多余向量。剔除冗余向量后，剩下的线性无关张成组 $\\{\\mathbf{v}_1, \\mathbf{v}_2\\}$ 即为 $W$ 的一组基。`,
+        const pos = (kind: string) => vectors.findIndex((x) => x.kind === kind) + 1;
+        const [i, j] = [pos("u"), pos("cu")].sort((m, n) => m - n) as [number, number];
+        const k = pos("w");
+        const ratio = pos("u") < pos("cu") ? Q.of(c) : Q.of(1, c);
+        const v = (n: number) => `\\mathbf{v}_${n}`;
+        const set = (ns: number[]) =>
+          `$\\{${[...ns]
+            .sort((m, n) => m - n)
+            .map(v)
+            .join(", ")}\\}$`;
+        const span = vectors.map((x, n) => `${v(n + 1)} = ${colVecLatex(x.v)}`).join(", ");
+        const prompt = t(
+          `Find a basis for the subspace $W = \\text{Span}\\left\\{ ${span} \\right\\}$.`,
+          `求子空间 $W = \\text{Span}\\left\\{ ${span} \\right\\}$ 的一组基。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        const right = set([i, k]);
+        const wrong = [set([i, j]), set([1, 2, 3]), set([k])];
+        const pivots = [i, k].sort((m, n) => m - n).join(", ");
+        const solution = t(
+          `Form the matrix $[\\mathbf{v}_1 \\; \\mathbf{v}_2 \\; \\mathbf{v}_3]$. Since $${v(j)} = ${ratio.toLatex()}${v(i)}$, column ${j} is not a pivot column; the pivot columns are ${pivots}. Removing the redundant $${v(j)}$ leaves the linearly independent spanning set ${right}, which is a basis. ${set([i, j])} is dependent, and ${set([k])} spans only a line.`,
+          `将向量作为列构成矩阵 $[\\mathbf{v}_1 \\; \\mathbf{v}_2 \\; \\mathbf{v}_3]$。由于 $${v(j)} = ${ratio.toLatex()}${v(i)}$，第 ${j} 列不是主元列，主元列为第 ${pivots} 列。剔除多余的 $${v(j)}$ 后，剩下的线性无关张成组 ${right} 即为 $W$ 的一组基。${set([i, j])} 线性相关，${set([k])} 只张成一条直线。`,
+        );
+        return oneOf(
+          rng,
+          prompt,
+          t(right, right),
+          wrong.map((x) => t(x, x)),
+          solution,
+        );
       },
     },
   ],
@@ -2515,21 +2541,28 @@ export const subspacesOfAbstractVectorSpaces: TopicDef = {
         const x0 = rng.int(-5, 5);
         const k = rng.nonZero(1, 9);
         const n = rng.int(2, 6);
-        const prompt = t(
-          `Consider the subsets of $\\mathbb{P}_${n}$: $W_1 = \\{ p(t) \\in \\mathbb{P}_${n} \\mid p(${x0}) = 0 \\}$, $W_2 = \\{ p(t) \\in \\mathbb{P}_${n} \\mid p(${x0}) = ${k} \\}$, and $W_3 = \\{ p(t) \\in \\mathbb{P}_${n} \\mid \\deg(p) = ${n} \\}$. Which of these is a subspace of $\\mathbb{P}_${n}$?`,
-          `考虑 $\\mathbb{P}_${n}$ 的子集：$W_1 = \\{ p(t) \\in \\mathbb{P}_${n} \\mid p(${x0}) = 0 \\}$，$W_2 = \\{ p(t) \\in \\mathbb{P}_${n} \\mid p(${x0}) = ${k} \\}$ 及 $W_3 = \\{ p(t) \\in \\mathbb{P}_${n} \\mid \\deg(p) = ${n} \\}$。其中哪一个是 $\\mathbb{P}_${n}$ 的子空间？`,
-        );
-        const right = t(`Only $W_1$`, `仅有 $W_1$`);
-        const wrong = [
-          t(`Only $W_2$`, `仅有 $W_2$`),
-          t(`Both $W_1$ and $W_2$`, `$W_1$ 与 $W_2$ 都是`),
-          t(`All three are subspaces`, `三个都是子空间`),
-        ];
-        const solution = t(
-          `$W_1$ contains the zero polynomial ($0(${x0}) = 0$) and if $p(${x0}) = 0, q(${x0}) = 0$, then $(p+q)(${x0}) = 0$ and $(cp)(${x0}) = 0$. $W_2$ does not contain the zero polynomial ($0 \\neq ${k}$). $W_3$ does not contain the zero polynomial (which has degree $-\\infty$). Hence only $W_1$ is a subspace.`,
-          `$W_1$ 包含零多项式且满足加法与数乘封闭性，故为子空间。$W_2$ 不含零多项式（$0 \\neq ${k}$）；$W_3$ 不含零多项式（零多项式没有确定的正次数）。因此仅有 $W_1$ 是子空间。`,
-        );
-        return oneOf(rng, prompt, right, wrong, solution);
+        // sets lists the polynomials vanishing at x0, those taking the value k there and those of degree exactly n; order names them W₁, W₂, W₃.
+        const sets = [`p(${x0}) = 0`, `p(${x0}) = ${k}`, `\\deg(p) = ${n}`];
+        const order = rng.shuffle([0, 1, 2]);
+        const name = (kind: number) => `W_${order.indexOf(kind) + 1}`;
+        const listed = order.map((kind, i) => `W_${i + 1} = \\{ p(t) \\in \\mathbb{P}_${n} \\mid ${sets[kind]} \\}`);
+        return choiceProblem({
+          prompt: t(
+            `Consider the subsets of $\\mathbb{P}_${n}$: $${listed[0]}$, $${listed[1]}$, and $${listed[2]}$. Which of these is a subspace of $\\mathbb{P}_${n}$?`,
+            `考虑 $\\mathbb{P}_${n}$ 的子集：$${listed[0]}$，$${listed[1]}$ 及 $${listed[2]}$。其中哪一个是 $\\mathbb{P}_${n}$ 的子空间？`,
+          ),
+          options: [
+            t("Only $W_1$", "仅有 $W_1$"),
+            t("Only $W_2$", "仅有 $W_2$"),
+            t("Only $W_3$", "仅有 $W_3$"),
+            t("All three are subspaces", "三个都是子空间"),
+          ],
+          correct: order.indexOf(0),
+          solution: t(
+            `$${name(0)}$ contains the zero polynomial ($0(${x0}) = 0$), and if $p(${x0}) = 0$ and $q(${x0}) = 0$, then $(p+q)(${x0}) = 0$ and $(cp)(${x0}) = 0$. $${name(1)}$ does not contain the zero polynomial ($0 \\neq ${k}$). $${name(2)}$ does not contain the zero polynomial, which has no degree $${n}$. Hence only $${name(0)}$ is a subspace.`,
+            `$${name(0)}$ 包含零多项式（$0(${x0}) = 0$），且若 $p(${x0}) = 0$、$q(${x0}) = 0$，则 $(p+q)(${x0}) = 0$、$(cp)(${x0}) = 0$，故为子空间。$${name(1)}$ 不含零多项式（$0 \\neq ${k}$）；$${name(2)}$ 不含零多项式（零多项式的次数不是 $${n}$）。因此仅有 $${name(0)}$ 是子空间。`,
+          ),
+        });
       },
     },
     {

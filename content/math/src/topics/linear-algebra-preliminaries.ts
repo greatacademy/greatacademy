@@ -261,26 +261,39 @@ export const specialSets: TopicDef = {
         "空集 $\\emptyset$（或记为 $\\{\\}$）是不含任何元素的唯一集合，其元素个数为 $|\\emptyset| = 0$。对于任意对象 $x$，$x \\in \\emptyset$ 恒为假。空集是任意集合 $A$ 的子集（$\\emptyset \\subseteq A$），但除非特别将其作为元素包含，否则它通常不是 $A$ 的元素。",
       ),
       generate(rng) {
-        const c = rng.int(1, 30);
-        const k = rng.int(1, 20);
-        return oneOf(
-          rng,
-          t(
-            `Consider the real set $S = \\{x \\in \\mathbb{R} \\mid x^2 + ${c} = 0\\}$. Which statement about $S$ is true?`,
-            `考虑实数集合 $S = \\{x \\in \\mathbb{R} \\mid x^2 + ${c} = 0\\}$。关于 $S$ 的下列陈述哪项是正确的？`,
-          ),
+        const r = rng.int(1, 9);
+        // 0: x² + r² = 0 has no real root, 1: x² − r² = 0 has two, 2: (x − r)² = 0 has one.
+        const kind = rng.int(0, 2);
+        const equation = [`x^2 + ${r * r} = 0`, `x^2 - ${r * r} = 0`, `(x - ${r})^2 = 0`][kind]!;
+        const options = [
           t("$S = \\emptyset$ and $|S| = 0$", "$S = \\emptyset$ 且 $|S| = 0$"),
-          [
-            t(`$S = \\{ -${c}, ${c} \\}$`, `$S = \\{ -${c}, ${c} \\}$`),
-            t(`$S = \\{ \\sqrt{${c}} \\}$`, `$S = \\{ \\sqrt{${c}} \\}$`),
-            t(`$${k} \\in S$`, `$${k} \\in S$`),
-            t("$S = \\{ 0 \\}$", "$S = \\{ 0 \\}$"),
-          ],
+          t(`$S = \\{-${r}, ${r}\\}$ and $|S| = 2$`, `$S = \\{-${r}, ${r}\\}$ 且 $|S| = 2$`),
+          t(`$S = \\{${r}\\}$ and $|S| = 1$`, `$S = \\{${r}\\}$ 且 $|S| = 1$`),
+          t("$S = \\{0\\}$ and $|S| = 1$", "$S = \\{0\\}$ 且 $|S| = 1$"),
+        ];
+        const solution = [
           t(
-            `For any real number $x$, $x^2 \\ge 0$, so $x^2 + ${c} \\ge ${c} > 0$. There are no real solutions to $x^2 + ${c} = 0$, so $S$ contains no elements: $S = \\emptyset$ and $|S| = 0$.`,
-            `对任意实数 $x$ 都有 $x^2 \\ge 0$，因此 $x^2 + ${c} \\ge ${c} > 0$。方程在实数集内无解，因此 $S$ 不包含任何元素，即 $S = \\emptyset$ 且 $|S| = 0$。`,
+            `For any real number $x$, $x^2 \\ge 0$, so $x^2 + ${r * r} \\ge ${r * r} > 0$. The equation has no real solution, so $S$ contains no elements: $S = \\emptyset$ and $|S| = 0$. Note that $\\emptyset$ is not $\\{0\\}$, which has one element.`,
+            `对任意实数 $x$ 都有 $x^2 \\ge 0$，因此 $x^2 + ${r * r} \\ge ${r * r} > 0$。方程没有实数解，所以 $S$ 不含任何元素：$S = \\emptyset$ 且 $|S| = 0$。注意 $\\emptyset$ 不是含一个元素的 $\\{0\\}$。`,
           ),
-        );
+          t(
+            `$x^2 = ${r * r}$ gives $x = ${r}$ or $x = -${r}$, so $S = \\{-${r}, ${r}\\}$ and $|S| = 2$.`,
+            `由 $x^2 = ${r * r}$ 得 $x = ${r}$ 或 $x = -${r}$，所以 $S = \\{-${r}, ${r}\\}$ 且 $|S| = 2$。`,
+          ),
+          t(
+            `$(x - ${r})^2 = 0$ only when $x - ${r} = 0$, so $S = \\{${r}\\}$ and $|S| = 1$; the repeated root is one element.`,
+            `$(x - ${r})^2 = 0$ 仅当 $x - ${r} = 0$，所以 $S = \\{${r}\\}$ 且 $|S| = 1$；重根只算一个元素。`,
+          ),
+        ];
+        return choiceProblem({
+          prompt: t(
+            `Consider the real set $S = \\{x \\in \\mathbb{R} \\mid ${equation}\\}$. Which statement about $S$ is true?`,
+            `考虑实数集合 $S = \\{x \\in \\mathbb{R} \\mid ${equation}\\}$。关于 $S$ 的下列陈述哪项是正确的？`,
+          ),
+          options,
+          correct: kind,
+          solution: solution[kind]!,
+        });
       },
     },
   ],
@@ -1140,30 +1153,56 @@ export const subsets: TopicDef = {
       ),
       generate(rng) {
         const pool = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-        const subsetElements = rng.sample(pool, 3).sort((a, b) => a - b);
-        const extraElements = rng
-          .sample(
-            pool.filter((x) => !subsetElements.includes(x)),
-            2,
-          )
-          .sort((a, b) => a - b);
-        const supersetElements = [...subsetElements, ...extraElements].sort((a, b) => a - b);
-
-        const aStr = `\\{${subsetElements.join(", ")}\\}`;
-        const bStr = `\\{${supersetElements.join(", ")}\\}`;
-        return oneOf(
-          rng,
+        const shared = rng.sample(pool, 3);
+        const [x, y] = rng.sample(
+          pool.filter((n) => !shared.includes(n)),
+          2,
+        ) as [number, number];
+        // 0: A ⊊ B, 1: B ⊊ A, 2: A = B, 3: neither contains the other.
+        const relation = rng.int(0, 3);
+        const a = [...shared, ...(relation === 1 ? [x, y] : relation === 3 ? [x] : [])];
+        const b = [...shared, ...(relation === 0 ? [x, y] : relation === 3 ? [y] : [])];
+        const aList = rng.shuffle(a);
+        let bList = rng.shuffle(b);
+        // Equal sets are listed in different orders, so the solution's remark holds.
+        if (bList.join() === aList.join()) bList = [...bList].reverse();
+        const [aStr, bStr] = [aList, bList].map((xs) => `\\{${xs.join(", ")}\\}`);
+        const sorted = (xs: number[]) => [...xs].sort((m, n) => m - n).join(", ");
+        const options = [
+          t("$A \\subsetneq B$ ($A$ is a proper subset of $B$)", "$A \\subsetneq B$（$A$ 是 $B$ 的真子集）"),
+          t("$B \\subsetneq A$ ($B$ is a proper subset of $A$)", "$B \\subsetneq A$（$B$ 是 $A$ 的真子集）"),
+          t("$A = B$", "$A = B$"),
+          t("Neither is a subset of the other", "两者互不为子集"),
+        ];
+        const extraB = b.filter((n) => !a.includes(n));
+        const extraA = a.filter((n) => !b.includes(n));
+        const solution = [
           t(
+            `Every element of $A$ is in $B$, so $A \\subseteq B$, and $B$ also contains $${sorted(extraB)}$, which ${extraB.length === 1 ? "is" : "are"} not in $A$. So $A \\subsetneq B$.`,
+            `$A$ 的每个元素都在 $B$ 中，故 $A \\subseteq B$；而 $B$ 还含有 $A$ 中没有的 $${sorted(extraB)}$，所以 $A \\subsetneq B$。`,
+          ),
+          t(
+            `Every element of $B$ is in $A$, so $B \\subseteq A$, and $A$ also contains $${sorted(extraA)}$, which ${extraA.length === 1 ? "is" : "are"} not in $B$. So $B \\subsetneq A$.`,
+            `$B$ 的每个元素都在 $A$ 中，故 $B \\subseteq A$；而 $A$ 还含有 $B$ 中没有的 $${sorted(extraA)}$，所以 $B \\subsetneq A$。`,
+          ),
+          t(
+            "Both sets have exactly the same elements, listed in a different order, so $A \\subseteq B$ and $B \\subseteq A$: $A = B$.",
+            "两个集合的元素完全相同，只是列出的顺序不同，故 $A \\subseteq B$ 且 $B \\subseteq A$，即 $A = B$。",
+          ),
+          t(
+            `$${sorted(extraA)} \\in A$ but not in $B$, and $${sorted(extraB)} \\in B$ but not in $A$, so neither set is a subset of the other.`,
+            `$${sorted(extraA)} \\in A$ 但不在 $B$ 中，$${sorted(extraB)} \\in B$ 但不在 $A$ 中，所以两者互不为子集。`,
+          ),
+        ];
+        return choiceProblem({
+          prompt: t(
             `Let $A = ${aStr}$ and $B = ${bStr}$. Which relationship between $A$ and $B$ is correct?`,
             `设 $A = ${aStr}$ 且 $B = ${bStr}$。下列关于 $A$ 与 $B$ 之间关系的表述哪项是正确的？`,
           ),
-          t("$A \\subsetneq B$ ($A$ is a proper subset of $B$)", "$A \\subsetneq B$（$A$ 是 $B$ 的真子集）"),
-          [t("$B \\subseteq A$", "$B \\subseteq A$"), t("$A = B$", "$A = B$"), t("$A \\in B$", "$A \\in B$")],
-          t(
-            `Every element in $A$ is also in $B$, so $A \\subseteq B$. Moreover, $B$ contains elements (${extraElements.join(", ")}) not in $A$, so $A \\neq B$. Thus $A$ is a proper subset of $B$ ($A \\subsetneq B$).`,
-            `集合 $A$ 中的每个元素都在 $B$ 中，故 $A \\subseteq B$。此外 $B$ 中还含有 $A$ 中没有的元素（${extraElements.join(", ")}），因此 $A \\neq B$，即 $A$ 是 $B$ 的真子集（$A \\subsetneq B$）。`,
-          ),
-        );
+          options,
+          correct: relation,
+          solution: solution[relation]!,
+        });
       },
     },
     {

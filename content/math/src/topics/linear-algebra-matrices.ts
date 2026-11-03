@@ -2370,26 +2370,34 @@ export const findingTheInverseOfAnNxnSquareMatrixUsingRowOperations: TopicDef = 
         const a1 = rng.pick([1, 2, 3, 4, 5]);
         const a2 = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
         const a3 = rng.pick([-3, -1, 2, 5]);
+        const singular = rng.bool();
+        const outcome = singular
+          ? t("forward elimination produces a row of zeros in the left block", "左侧部分出现了一行全零行")
+          : t(`the left block becomes $I_{${n}}$`, `左侧部分化成了 $I_{${n}}$`);
         const prompt = t(
-          `During the Gauss-Jordan inversion of ${article(n)} $${n} \\times ${n}$ matrix $A$ with first row $[${a1}, ${a2}, ${a3}, \\dots]$, forward elimination produces a row of zeros in the left block of $[A \\mid I_{${n}}]$. What conclusion must follow?`,
-          `在对首行为 $[${a1}, ${a2}, ${a3}, \\dots]$ 的 $${n} \\times ${n}$ 矩阵 $A$ 实施高斯-约当求逆消元 $[A \\mid I_{${n}}]$ 的过程中，若左侧部分出现了一行全零行，可以得出什么结论？`,
+          `During the Gauss-Jordan inversion of ${article(n)} $${n} \\times ${n}$ matrix $A$ with first row $[${a1}, ${a2}, ${a3}, \\dots]$, ${outcome.en} of $[A \\mid I_{${n}}]$. What conclusion must follow?`,
+          `在对首行为 $[${a1}, ${a2}, ${a3}, \\dots]$ 的 $${n} \\times ${n}$ 矩阵 $A$ 实施高斯-约当求逆消元 $[A \\mid I_{${n}}]$ 的过程中，若${outcome["zh-CN"]}，可以得出什么结论？`,
         );
-        const rightText = t("Matrix $A$ is singular and has no inverse", "矩阵 $A$ 是奇异矩阵，没有逆矩阵（不可逆）");
-        const wrongTexts = [
-          t("Matrix $A$ has infinitely many inverses", "矩阵 $A$ 拥有无穷多个逆矩阵"),
+        const options = [
+          t("Matrix $A$ is singular and has no inverse", "矩阵 $A$ 是奇异矩阵，没有逆矩阵（不可逆）"),
+          t("$A$ is invertible, and the right block is $A^{-1}$", "$A$ 可逆，右侧部分就是 $A^{-1}$"),
           t("The inverse matrix $A^{-1}$ has a row of zeros", "逆矩阵 $A^{-1}$ 必然包含一个全零行"),
-          t("Matrix $A$ is orthogonal", "矩阵 $A$ 是正交矩阵"),
+          t("Matrix $A$ has infinitely many inverses", "矩阵 $A$ 拥有无穷多个逆矩阵"),
         ];
-        return oneOf(
-          rng,
+        return choiceProblem({
           prompt,
-          rightText,
-          wrongTexts,
-          t(
-            `If a row of zeros appears in the left block during row reduction, $\\text{rank}(A) < ${n}$. Since an $n \\times n$ matrix is invertible if and only if $\\text{rank}(A) = n$, $A$ cannot be transformed into the identity matrix $I_{${n}}$. Therefore, $A$ is singular and has no inverse.`,
-            `若行化简过程中左侧块出现全零行，说明 $\\text{rank}(A) < ${n}$。因为 $n \\times n$ 矩阵可逆当且仅当其满秩（$\\text{rank}(A) = n$），故 $A$ 无法化为单位矩阵 $I_{${n}}$，因此 $A$ 必然是奇异矩阵，没有逆矩阵。`,
-          ),
-        );
+          options,
+          correct: singular ? 0 : 1,
+          solution: singular
+            ? t(
+                `If a row of zeros appears in the left block during row reduction, $\\text{rank}(A) < ${n}$. Since an $n \\times n$ matrix is invertible if and only if $\\text{rank}(A) = n$, $A$ cannot be transformed into the identity matrix $I_{${n}}$. Therefore, $A$ is singular and has no inverse.`,
+                `若行化简过程中左侧块出现全零行，说明 $\\text{rank}(A) < ${n}$。因为 $n \\times n$ 矩阵可逆当且仅当其满秩（$\\text{rank}(A) = n$），故 $A$ 无法化为单位矩阵 $I_{${n}}$，因此 $A$ 必然是奇异矩阵，没有逆矩阵。`,
+              )
+            : t(
+                `The row operations amount to multiplying on the left by one invertible matrix $E$. If $EA = I_{${n}}$, then $E = A^{-1}$, and the right block is $EI_{${n}} = A^{-1}$. An inverse is unique, and it is invertible itself, so it has no row of zeros.`,
+                `行变换相当于左乘一个可逆矩阵 $E$。若 $EA = I_{${n}}$，则 $E = A^{-1}$，右侧部分为 $EI_{${n}} = A^{-1}$。逆矩阵是唯一的，且本身可逆，所以没有全零行。`,
+              ),
+        });
       },
     },
   ],
@@ -2728,72 +2736,44 @@ export const luFactorizationOfNxnMatrices: TopicDef = {
         "若在高斯消元过程中主元位置出现零，则矩阵可能无法直接进行标准的 $A = LU$ 分解。通过使用置换矩阵 $P$ 交换各行，任意可逆方阵均存在分解 $PA = LU$，其中 $P$ 为置换矩阵，$L$ 为单位下三角矩阵，$U$ 为上三角矩阵。",
       ),
       generate(rng) {
-        // Construct 3x3 matrix with zero in (1, 1) position so row swap is needed
-        const a12 = rng.pick([2, 3, 4]);
-        const a13 = rng.pick([1, -2, 5]);
-
-        const a21 = rng.pick([1, 2, 3]);
-        const a22 = rng.pick([-1, 4, 2]);
-        const a23 = rng.pick([3, 1, -2]);
-
-        const a31 = rng.pick([2, -1, 4]);
-        const a32 = rng.pick([1, 0, -3]);
-        const a33 = rng.pick([5, 2, 1]);
-
+        // a_{11} = 0, so a row swap is needed; partial pivoting brings up the entry of largest absolute value in column 1.
+        const a21 = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
+        const a31 = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5].filter((x) => Math.abs(x) !== Math.abs(a21)));
         const A: Mat = [
-          [0, a12, a13],
-          [a21, a22, a23],
-          [a31, a32, a33],
+          [0, rng.pick([2, 3, 4]), rng.pick([1, -2, 5])],
+          [a21, rng.pick([-1, 4, 2]), rng.pick([3, 1, -2])],
+          [a31, rng.pick([1, 0, -3]), rng.pick([5, 2, 1])],
         ];
-
-        // Swapping row 1 and row 2 gives P
-        const P: Mat = [
-          [0, 1, 0],
-          [1, 0, 0],
-          [0, 0, 1],
-        ];
-
+        const pivotRow = Math.abs(a21) > Math.abs(a31) ? 2 : 3;
+        const swap = (r: number, s: number): Mat =>
+          [0, 1, 2].map((row) => {
+            const from = row === r - 1 ? s - 1 : row === s - 1 ? r - 1 : row;
+            return [0, 1, 2].map((col) => (col === from ? 1 : 0));
+          });
+        const P = swap(1, pivotRow);
+        const pivot = pivotRow === 2 ? a21 : a31;
+        const other = pivotRow === 2 ? a31 : a21;
         const prompt = t(
           `Matrix $A$ has a zero in the $(1, 1)$ entry:
 
 $$A = ${matLatex(A)}$$
 
-To compute the $PA = LU$ factorization, rows 1 and 2 must be interchanged ($R_1 \\leftrightarrow R_2$). What is the permutation matrix $P$?`,
+Using partial pivoting, the first step of the $PA = LU$ factorization swaps row 1 with the row whose entry in column 1 has the largest absolute value. What is the permutation matrix $P$ for this step?`,
           `矩阵 $A$ 的 $(1, 1)$ 位置为零：
 
 $$A = ${matLatex(A)}$$
 
-为了进行 $PA = LU$ 分解，需要交换第 1 行与第 2 行（$R_1 \\leftrightarrow R_2$）。对应的置换矩阵 $P$ 是哪一个？`,
+采用部分主元法，$PA = LU$ 分解的第一步把第 1 行与第 1 列中绝对值最大的元素所在的行交换。这一步的置换矩阵 $P$ 是哪一个？`,
         );
-
-        const wrongP1: Mat = [
-          [1, 0, 0],
-          [0, 0, 1],
-          [0, 1, 0],
-        ]; // R2 <-> R3
-        const wrongP2: Mat = [
-          [0, 0, 1],
-          [0, 1, 0],
-          [1, 0, 0],
-        ]; // R1 <-> R3
-        const wrongP3: Mat = [
-          [1, 0, 0],
-          [0, 1, 0],
-          [0, 0, 1],
-        ]; // Identity
-
+        const mat = (m: Mat) => t(`$$${matLatex(m)}$$`, `$$${matLatex(m)}$$`);
         return oneOf(
           rng,
           prompt,
-          t(`$$${matLatex(P)}$$`, `$$${matLatex(P)}$$`),
-          [
-            t(`$$${matLatex(wrongP1)}$$`, `$$${matLatex(wrongP1)}$$`),
-            t(`$$${matLatex(wrongP2)}$$`, `$$${matLatex(wrongP2)}$$`),
-            t(`$$${matLatex(wrongP3)}$$`, `$$${matLatex(wrongP3)}$$`),
-          ],
+          mat(P),
+          [mat(swap(1, 5 - pivotRow)), mat(swap(2, 3)), mat(swap(1, 1))],
           t(
-            `Because $a_{11} = 0$, elimination cannot proceed without swapping rows. Swapping row 1 and row 2 of the identity matrix $I_3$ creates the permutation matrix $P = ${matLatex(P)}$. Multiplying $P A$ puts the non-zero pivot $${a21}$ into the $(1, 1)$ position, enabling the $PA = LU$ factorization.`,
-            `因为 $a_{11} = 0$，如果不交换行就无法进行前向消元。对单位矩阵 $I_3$ 交换第 1 行与第 2 行即得到置换矩阵 $P = ${matLatex(P)}$。计算 $P A$ 会将非零主元 $${a21}$ 换到 $(1, 1)$ 位置，从而保证 $PA = LU$ 分解顺利进行。`,
+            `In column 1, $|${pivot}| > |${other}|$, so partial pivoting swaps rows 1 and ${pivotRow}. Swapping those rows of $I_3$ gives $P = ${matLatex(P)}$, and $PA$ has the pivot $${pivot}$ in the $(1, 1)$ position.`,
+            `第 1 列中 $|${pivot}| > |${other}|$，所以部分主元法交换第 1 行与第 ${pivotRow} 行。对 $I_3$ 交换这两行得 $P = ${matLatex(P)}$，$PA$ 的 $(1, 1)$ 位置为主元 $${pivot}$。`,
           ),
         );
       },
