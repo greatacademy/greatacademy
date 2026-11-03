@@ -23,7 +23,7 @@ function factor(a: number, inner: string): string {
 
 export const evaluatingExpressions: TopicDef = {
   id: "evaluating-expressions",
-  title: t("Evaluating Algebraic Expressions", "代数式求值"),
+  title: t("Evaluating Expressions With Integers", "代入整数求代数式的值"),
   summary: t("Substitute integers for variables and evaluate.", "用整数代入变量并求值。"),
   prerequisites: ["order-of-operations-with-integers"],
   encompasses: [
@@ -239,7 +239,7 @@ export const distributiveProperty: TopicDef = {
 
 export const simplifyingExpressions: TopicDef = {
   id: "simplifying-expressions",
-  title: t("Simplifying Linear Expressions", "化简一次式"),
+  title: t("Simplifying Expressions With Parentheses", "化简含括号的代数式"),
   summary: t("Expand parentheses and combine like terms.", "去括号并合并同类项。"),
   prerequisites: ["combining-like-terms", "distributive-property"],
   encompasses: [
