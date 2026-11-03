@@ -461,8 +461,8 @@ export const elementaryTrigonometricEquationsContainingTangent: TopicDef = {
       id: "solve-elementary-tangent-equations-radians",
       title: t("Solve tan(x) = c in radians on [0, 2π)", "在 [0, 2π) 内求解正切方程（弧度制）"),
       explanation: t(
-        "For $\\tan x = c$ on $[0, 2\\pi)$:\n\n$$\\tan x = \\sqrt{3} \\implies x = \\frac{\\pi}{3}, \\; \\frac{4\\pi}{3}$$\n\n$$\\tan x = -1 \\implies x = \\frac{3\\pi}{4}, \\; \\frac{7\\pi}{4}$$",
-        "在 $[0, 2\\pi)$ 上求解 $\\tan x = c$：\n\n$$\\tan x = \\sqrt{3} \\implies x = \\frac{\\pi}{3}, \\; \\frac{4\\pi}{3}$$\n\n$$\\tan x = -1 \\implies x = \\frac{3\\pi}{4}, \\; \\frac{7\\pi}{4}$$",
+        "Tangent has period $\\pi$, so first find the reference solution in $(-\\tfrac{\\pi}{2}, \\tfrac{\\pi}{2})$, then add $\\pi$ to get the second solution in the interval. For $\\tan x = c$ on $[0, 2\\pi)$:\n\n$$\\tan x = \\sqrt{3} \\implies x = \\frac{\\pi}{3}, \\; \\frac{4\\pi}{3}$$\n\n$$\\tan x = -1 \\implies x = \\frac{3\\pi}{4}, \\; \\frac{7\\pi}{4}$$",
+        "正切函数的周期是 $\\pi$，所以先在 $(-\\tfrac{\\pi}{2}, \\tfrac{\\pi}{2})$ 内找到基准解，再加上 $\\pi$ 得到区间内的第二个解。在 $[0, 2\\pi)$ 上求解 $\\tan x = c$：\n\n$$\\tan x = \\sqrt{3} \\implies x = \\frac{\\pi}{3}, \\; \\frac{4\\pi}{3}$$\n\n$$\\tan x = -1 \\implies x = \\frac{3\\pi}{4}, \\; \\frac{7\\pi}{4}$$",
       ),
       generate(rng) {
         const item = rng.pick([
