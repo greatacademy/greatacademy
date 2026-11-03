@@ -873,10 +873,11 @@ export const solvingLogarithmicEquationsUsingTheZeroProductProperty: TopicDef = 
 
 // Unit: graphs of exponential functions.
 
-/** Labeled is a point of a graph with the direction of its label. */
+/** Labeled is a point of a graph with the direction of its label; a bare point is drawn without one. */
 interface Labeled {
   readonly at: Point;
   readonly dir: Compass;
+  readonly bare?: boolean;
 }
 
 /** ptL writes a point label: "(1, -2)". */
@@ -889,7 +890,7 @@ function expGraph(view: PlaneView, f: (x: number) => number, k: number, pts: rea
   const marks: PlaneMark[] = [];
   if (k !== 0) marks.push({ kind: "line", a: [view.xMin, k], b: [view.xMax, k], dashed: true });
   marks.push(from === undefined ? { kind: "curve", f, accent: true } : { kind: "curve", f, from, accent: true });
-  for (const p of pts) marks.push({ kind: "point", at: p.at, label: ptL(p.at), dir: p.dir });
+  for (const p of pts) marks.push(p.bare ? { kind: "point", at: p.at } : { kind: "point", at: p.at, label: ptL(p.at), dir: p.dir });
   const list = pts.map((p) => ptL(p.at));
   const near = k === 0 ? t("the x-axis", "x 轴") : t(`the dashed horizontal line y = ${k}`, `水平虚线 y = ${k}`);
   return {
@@ -1669,6 +1670,53 @@ export const combiningGraphTransformationsOfExponentialFunctions: TopicDef = {
         });
       },
     },
+    {
+      id: "the-transformed-exponential-from-its-graph",
+      title: t("The equation from the graph", "由图象求解析式"),
+      explanation: t(
+        "To read $g(x) = a \\cdot b^{x - h} + k$ with $a = \\pm 1$ from its graph, start with the horizontal asymptote, which is $y = k$. The graph lies above it when $a = 1$ and below it when $a = -1$. At $x = h$ the power is $b^{0} = 1$, so the graph is exactly $1$ unit from the asymptote there, which locates $h$; one step to the right it is $b$ units away, which gives $b$. A graph above $y = -2$ through $(1, -1)$ and $(2, 1)$ is $g(x) = 3^{x - 1} - 2$.",
+        "要从图象读出 $g(x) = a \\cdot b^{x - h} + k$（$a = \\pm 1$），先看水平渐近线，它是 $y = k$。$a = 1$ 时图象在渐近线上方，$a = -1$ 时在下方。在 $x = h$ 处幂为 $b^{0} = 1$，所以图象恰好离渐近线 $1$ 个单位，由此确定 $h$；向右再走一步，图象离渐近线 $b$ 个单位，由此得到 $b$。在 $y = -2$ 上方、经过 $(1, -1)$ 和 $(2, 1)$ 的图象是 $g(x) = 3^{x - 1} - 2$。",
+      ),
+      generate(rng) {
+        for (;;) {
+          const a = rng.pick([1, -1]);
+          const b = rng.pick([2, 3]);
+          const h = rng.int(-3, 2);
+          const k = rng.int(-3, 4);
+          const near = k + a;
+          const far = k + a * b;
+          if (far > 9 || far < -5 || (h === 0 && near === 0)) continue;
+          const B = Q.of(b);
+          const answer = expT(a, B, h, k);
+          const side = a > 0 ? t("above", "上方") : t("below", "下方");
+          return {
+            ...expressionProblem({
+              prompt: t(
+                `The graph of $g(x) = a \\cdot b^{x - h} + k$ with $a = 1$ or $a = -1$ is shown; its horizontal asymptote is ${k === 0 ? "the $x$-axis" : "dashed"}, and the marked points lie on grid points. Write $g(x)$.`,
+                `如图是 $g(x) = a \\cdot b^{x - h} + k$（$a = 1$ 或 $a = -1$）的图象，${k === 0 ? "它的水平渐近线是 $x$ 轴" : "虚线是它的水平渐近线"}，标出的点都在格点上。写出 $g(x)$。`,
+              ),
+              answer,
+              prefix: "g(x) =",
+              wrong: [expT(a, B, -h, k), expT(-a, B, h, k), expT(a, B, h, -k), expT(a, Q.of(b + 1), h, k)],
+              solution: t(
+                `The asymptote is $y = ${k}$, so $k = ${k}$, and the graph lies ${side.en} it, so $a = ${a}$. At $x = ${h}$ the graph is $1$ unit from the asymptote, at $(${h}, ${near})$, so $h = ${h}$. At $x = ${h + 1}$ it is $${b}$ units away, at $(${h + 1}, ${far})$, so $b = ${b}$. Hence $g(x) = ${answer}$.`,
+                `渐近线是 $y = ${k}$，所以 $k = ${k}$；图象在它的${side["zh-CN"]}，所以 $a = ${a}$。在 $x = ${h}$ 处图象离渐近线 $1$ 个单位，位于 $(${h}, ${near})$，所以 $h = ${h}$。在 $x = ${h + 1}$ 处离渐近线 $${b}$ 个单位，位于 $(${h + 1}, ${far})$，所以 $b = ${b}$。因此 $g(x) = ${answer}$。`,
+              ),
+            }),
+            figure: expGraph(
+              expView,
+              expFn(a, B, h, k),
+              k,
+              [
+                { at: [h, near], dir: "e", bare: true },
+                { at: [h + 1, far], dir: "e", bare: true },
+              ],
+              a > 0,
+            ),
+          };
+        }
+      },
+    },
   ],
   diagnostic: "writing-the-transformed-exponential",
 };
@@ -1815,7 +1863,7 @@ function logGraph(a: number, b: number, h: number, k: number, pts: readonly Labe
   const rising = a > 0 === b > 1;
   for (const p of pts) {
     // The label of (1, 0) on a rising graph would sit on the axes, so that point is drawn without one.
-    const bare = rising && p.at[0] === 1 && p.at[1] === 0;
+    const bare = p.bare || (rising && p.at[0] === 1 && p.at[1] === 0);
     marks.push(bare ? { kind: "point", at: p.at } : { kind: "point", at: p.at, label: ptL(p.at), dir: p.dir });
   }
   const list = pts.map((p) => ptL(p.at));
@@ -2076,6 +2124,42 @@ export const combiningGraphTransformationsOfLogarithmicFunctions: TopicDef = {
             `${f} \\to ${logT(1, B, h, 0)} \\to ${logT(a, B, h, 0)} \\to ${logT(a, B, h, k)}`,
           ),
         });
+      },
+    },
+    {
+      id: "the-transformed-logarithm-from-its-graph",
+      title: t("The equation from the graph", "由图象求解析式"),
+      explanation: t(
+        "To read $g(x) = a\\log_{b}(x - h) + k$ with $a = \\pm 1$ from its graph, start with the vertical asymptote, which is $x = h$. One unit to its right the argument is $1$ and the logarithm is $0$, so the graph passes through $(h + 1, k)$, which gives $k$. At $x = h + b$ the logarithm is $1$, so the graph is $1$ unit above $k$ when $a = 1$ and $1$ unit below when $a = -1$; this gives $b$ and $a$. A graph with asymptote $x = 2$ through $(3, 1)$ and $(5, 2)$ is $g(x) = \\log_{3}(x - 2) + 1$.",
+        "要从图象读出 $g(x) = a\\log_{b}(x - h) + k$（$a = \\pm 1$），先看竖直渐近线，它是 $x = h$。在它右侧 $1$ 个单位处真数为 $1$，对数为 $0$，所以图象经过 $(h + 1, k)$，由此得到 $k$。在 $x = h + b$ 处对数为 $1$，所以 $a = 1$ 时图象比 $k$ 高 $1$，$a = -1$ 时比 $k$ 低 $1$；由此得到 $b$ 和 $a$。渐近线为 $x = 2$、经过 $(3, 1)$ 和 $(5, 2)$ 的图象是 $g(x) = \\log_{3}(x - 2) + 1$。",
+      ),
+      generate(rng) {
+        const a = rng.pick([1, -1]);
+        const b = rng.pick([2, 3, 4]);
+        const h = rng.int(-2, 4);
+        const k = rng.int(-3, 3);
+        const B = numBase(b);
+        const g = (aa: number, bb: number, hh: number, kk: number) => m(`g(x) = ${logT(aa, numBase(bb), hh, kk)}`);
+        const p1: Point = [h + 1, k];
+        const p2: Point = [h + b, k + a];
+        return {
+          ...oneOf(rng, {
+            prompt: t(
+              `The graph of $g(x) = a\\log_{b}(x - h) + k$ with $a = 1$ or $a = -1$ is shown; its vertical asymptote is ${h === 0 ? "the $y$-axis" : "dashed"}, and the marked points lie on grid points. Which function is it?`,
+              `如图是 $g(x) = a\\log_{b}(x - h) + k$（$a = 1$ 或 $a = -1$）的图象，${h === 0 ? "它的竖直渐近线是 $y$ 轴" : "虚线是它的竖直渐近线"}，标出的点都在格点上。它是哪个函数？`,
+            ),
+            right: g(a, b, h, k),
+            wrong: [g(a, b, -h, k), g(-a, b, h, k), g(a, b + 1, h, k), g(a, b, h + 1, k)],
+            solution: t(
+              `The asymptote is $x = ${h}$, so $h = ${h}$. The graph passes through $(${p1[0]}, ${k})$, one unit right of the asymptote, so $k = ${k}$. It passes through $(${p2[0]}, ${p2[1]})$, $${b}$ units right of the asymptote and $1$ unit ${a > 0 ? "above" : "below"} $k$, so $b = ${b}$ and $a = ${a}$. Hence $g(x) = ${logT(a, B, h, k)}$.`,
+              `渐近线是 $x = ${h}$，所以 $h = ${h}$。图象经过渐近线右侧 $1$ 个单位处的 $(${p1[0]}, ${k})$，所以 $k = ${k}$。它还经过渐近线右侧 $${b}$ 个单位处的 $(${p2[0]}, ${p2[1]})$，比 $k$ ${a > 0 ? "高" : "低"} $1$，所以 $b = ${b}$，$a = ${a}$。因此 $g(x) = ${logT(a, B, h, k)}$。`,
+            ),
+          }),
+          figure: logGraph(a, b, h, k, [
+            { at: p1, dir: "e", bare: true },
+            { at: p2, dir: "e", bare: true },
+          ]),
+        };
       },
     },
   ],
