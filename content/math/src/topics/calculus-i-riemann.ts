@@ -1,6 +1,6 @@
-import type { Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly, Q, radical } from "@ga/subject-math";
+import { type PlaneMark, plane, poly, Q, radical } from "@ga/subject-math";
 
 import { functionProblem, numberProblem } from "../problems.ts";
 import { type Exact, exactLatex, exactMul, oneOf, type Poly, pLatex, power, rounded, specialAngles, table } from "./calculus-common.ts";
@@ -504,6 +504,34 @@ const curves = (k: number): Curve[] => [
   { latex: `${k + 1} + \\sin x`, f: (x) => k + 1 + Math.sin(x), from: -2 },
 ];
 
+/** midpointFigure plots y = √(1 + x²) on [0, 4] under four midpoint rectangles, each as tall as the curve at its center. */
+const midpointFigure: Figure = {
+  svg: plane({ xMin: -1, xMax: 5, yMin: -1, yMax: 5, labelEvery: 1 }, [
+    ...[0, 1, 2, 3].flatMap((i): PlaneMark[] => {
+      const h = Math.sqrt(1 + (i + 0.5) ** 2);
+      return [
+        {
+          kind: "region",
+          halfPlanes: [
+            [1, 0, -i],
+            [-1, 0, i + 1],
+            [0, 1, 0],
+            [0, -1, h],
+          ],
+        },
+        { kind: "segment", a: [i, 0], b: [i, h] },
+        { kind: "segment", a: [i, h], b: [i + 1, h] },
+        { kind: "segment", a: [i + 1, 0], b: [i + 1, h] },
+        { kind: "point", at: [i + 0.5, h] },
+      ];
+    }),
+    { kind: "curve", f: (x) => Math.sqrt(1 + x * x), from: -1, to: 5, accent: true },
+  ]),
+  alt: t(
+    "The graph of y = √(1 + x²) over [0, 4] with four rectangles of width 1; each rectangle's top meets the curve at the midpoint of its base, so the rectangles' total area approximates the area under the curve.",
+    "y = √(1 + x²) 在 [0, 4] 上的图像，下方有四个宽为 1 的矩形；每个矩形的顶边在底边中点处与曲线相交，矩形面积之和近似曲线下方的面积。",
+  ),
+};
 /** approximatingAreasUnderGraphsOfCompositeFunctions applies the rules to functions needing a calculator. */
 export const approximatingAreasUnderGraphsOfCompositeFunctions: TopicDef = {
   id: "approximating-areas-under-graphs-of-composite-functions",
@@ -527,6 +555,7 @@ export const approximatingAreasUnderGraphsOfCompositeFunctions: TopicDef = {
         "The rules work the same way for any function: find $\\Delta x$, list the points the rule uses, evaluate $f$ there with a calculator, and combine. Keep full precision until the end and round only the final answer.",
         "这些法则对任何函数都一样用：求出 $\\Delta x$，列出法则要用的点，用计算器求这些点处的 $f$ 值，再组合起来。中间保留全部精度，只对最终答案取近似。",
       ),
+      figure: midpointFigure,
       generate(rng) {
         const k = rng.int(1, 5);
         const c = rng.pick(curves(k));
