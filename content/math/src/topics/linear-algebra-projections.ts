@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q, sketch } from "@ga/subject-math";
 
-import { article, choiceProblem, expressionProblem, numberProblem, pointProblem } from "../problems.ts";
+import { article, choiceProblem, expressionProblem, numberProblem, pointProblem, yesNo } from "../problems.ts";
 
 /** gcd computes the greatest common divisor of two integers. */
 function gcd(a: number, b: number): number {
@@ -153,6 +153,13 @@ function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solu
   return choiceProblem({ prompt, options: order.map((i) => options[i]!), correct: order.indexOf(0), solution });
 }
 
+/** signedSum joins LaTeX terms with + or −, absorbing each term's leading minus sign and skipping zeros. */
+function signedSum(terms: readonly string[]): string {
+  const kept = terms.filter((x) => x !== "0");
+  if (kept.length === 0) return "0";
+  return kept.map((x, i) => (i === 0 ? x : x.startsWith("-") ? `- ${x.slice(1)}` : `+ ${x}`)).join(" ");
+}
+
 // ════════════════════════════════════════════════════════════════════════════
 // MODULE 6.21: INNER PRODUCTS
 // ════════════════════════════════════════════════════════════════════════════
@@ -202,6 +209,37 @@ export const dotProductInNDimensionalEuclideanSpace: TopicDef = {
           answer: dot,
           solution,
           wrong: [dot + 2, dot - 3, -dot, dot + u[0]! * v[0]! + 1, dot - u[dim - 1]! * v[dim - 1]! - 2, dot + 5],
+        });
+      },
+    },
+    {
+      id: "expanding-dot-products-of-combinations",
+      title: t("Expanding dot products of linear combinations", "展开线性组合的点积"),
+      explanation: t(
+        "The dot product is symmetric and distributes over sums and scalar multiples, so a product of two combinations expands like ordinary algebra:\n\n$$(au + bv) \\cdot (cu + dv) = ac\\,(u \\cdot u) + (ad + bc)\\,(u \\cdot v) + bd\\,(v \\cdot v).$$\n\nOnly three numbers are needed, $u \\cdot u$, $u \\cdot v$ and $v \\cdot v$, whatever the dimension of the space.",
+        "点积是对称的，并对加法和数乘满足分配律，所以两个组合的点积可以像普通代数那样展开：\n\n$$(au + bv) \\cdot (cu + dv) = ac\\,(u \\cdot u) + (ad + bc)\\,(u \\cdot v) + bd\\,(v \\cdot v)。$$\n\n无论空间维数多少，只需要三个数：$u \\cdot u$、$u \\cdot v$ 与 $v \\cdot v$。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const A = rng.int(2, 9);
+        const B = rng.int(2, 9);
+        const C = rng.nonZero(-4, 4);
+        const a = rng.nonZero(-3, 3);
+        const b = rng.nonZero(-3, 3);
+        const c = rng.nonZero(-3, 3);
+        const d = rng.nonZero(-3, 3);
+        const ans = a * c * A + (a * d + b * c) * C + b * d * B;
+        const comb = (x: number, y: number) => formatLinEq([x, y], ["u", "v"]);
+        return numberProblem({
+          prompt: t(
+            `In $\\mathbb{R}^n$, $u \\cdot u = ${A}$, $v \\cdot v = ${B}$ and $u \\cdot v = ${C}$. Find $(${comb(a, b)}) \\cdot (${comb(c, d)})$.`,
+            `在 $\\mathbb{R}^n$ 中，$u \\cdot u = ${A}$，$v \\cdot v = ${B}$，$u \\cdot v = ${C}$。求 $(${comb(a, b)}) \\cdot (${comb(c, d)})$。`,
+          ),
+          answer: ans,
+          wrong: [a * c * A + b * d * B, a * c * A + a * d * C + b * d * B, a * c * A + 2 * (a * d + b * c) * C + b * d * B, a * c + b * d],
+          solution: t(
+            `Expand: $(${a})(${c})(${A}) + ((${a})(${d}) + (${b})(${c}))(${C}) + (${b})(${d})(${B}) = ${ans}$.`,
+            `展开：$(${a})(${c})(${A}) + ((${a})(${d}) + (${b})(${c}))(${C}) + (${b})(${d})(${B}) = ${ans}$。`,
+          ),
         });
       },
     },
@@ -273,6 +311,44 @@ export const normOfAVectorInNDimensionalEuclideanSpace: TopicDef = {
         });
       },
     },
+    {
+      id: "distance-between-points-in-rn",
+      title: t("The distance between two points in $\\mathbb{R}^n$", "$\\mathbb{R}^n$ 中两点间的距离"),
+      explanation: t(
+        "The distance between two points of $\\mathbb{R}^n$ is the norm of their difference, $d(u, v) = \\|u - v\\| = \\sqrt{(u_1 - v_1)^2 + \\dots + (u_n - v_n)^2}$. Subtract entry by entry first, then square, add and take the square root. The order of subtraction does not matter because the squares remove the signs.",
+        "$\\mathbb{R}^n$ 中两点间的距离是它们之差的范数，$d(u, v) = \\|u - v\\| = \\sqrt{(u_1 - v_1)^2 + \\dots + (u_n - v_n)^2}$。先逐个分量相减，再平方、相加、开方。相减的顺序无关紧要，因为平方消去了符号。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const quads: [number[], number][] = [
+          [[1, 2, 2, 0], 3],
+          [[2, 3, 6, 0], 7],
+          [[1, 1, 1, 1], 2],
+          [[1, 1, 3, 5], 6],
+          [[2, 4, 5, 6], 9],
+          [[2, 2, 4, 5], 7],
+          [[1, 5, 5, 7], 10],
+          [[1, 2, 4, 10], 11],
+          [[1, 4, 8, 0], 9],
+        ];
+        const [base, n] = rng.pick(quads);
+        const d = rng.shuffle(base.map((x) => (rng.int(0, 1) === 0 ? x : -x)));
+        const u = Array.from({ length: 4 }, () => rng.int(-5, 5));
+        const v = u.map((x, i) => x + d[i]!);
+        const sq = d.map((x) => x * x);
+        return numberProblem({
+          prompt: t(
+            `Find the distance between $u = (${u.join(", ")})$ and $v = (${v.join(", ")})$ in $\\mathbb{R}^4$.`,
+            `求 $\\mathbb{R}^4$ 中 $u = (${u.join(", ")})$ 与 $v = (${v.join(", ")})$ 之间的距离。`,
+          ),
+          answer: n,
+          wrong: [n * n, d.reduce((s, x) => s + Math.abs(x), 0), n + 1],
+          solution: t(
+            `$v - u = (${d.join(", ")})$, so $\\|v - u\\| = \\sqrt{${sq.join(" + ")}} = \\sqrt{${n * n}} = ${n}$.`,
+            `$v - u = (${d.join(", ")})$，所以 $\\|v - u\\| = \\sqrt{${sq.join(" + ")}} = \\sqrt{${n * n}} = ${n}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -326,6 +402,48 @@ export const innerProductSpaces: TopicDef = {
           solution,
           wrong: [Q.of(num + 6, 6), Q.of(num - 6, 6), Q.of(-num, 6), Q.of(num + 1, 6), Q.of(num - 1, 6)],
         });
+      },
+    },
+    {
+      id: "deciding-whether-a-bilinear-formula-is-an-inner-product",
+      title: t("Deciding whether a formula is an inner product", "判断公式是否为内积"),
+      explanation: t(
+        "A formula $\\langle x, y \\rangle = a x_1 y_1 + c(x_1 y_2 + x_2 y_1) + b x_2 y_2$ on $\\mathbb{R}^2$ is automatically symmetric and linear in each argument. It is an inner product exactly when it is also positive definite, $\\langle x, x \\rangle = a x_1^2 + 2c x_1 x_2 + b x_2^2 > 0$ for every $x \\ne 0$. That happens precisely when $a > 0$ and $ab - c^2 > 0$; otherwise some nonzero vector has $\\langle x, x \\rangle \\le 0$.",
+        "$\\mathbb{R}^2$ 上的公式 $\\langle x, y \\rangle = a x_1 y_1 + c(x_1 y_2 + x_2 y_1) + b x_2 y_2$ 自动对称，并对每个变元线性。它是内积，当且仅当它还正定，即对每个 $x \\ne 0$ 都有 $\\langle x, x \\rangle = a x_1^2 + 2c x_1 x_2 + b x_2^2 > 0$。这恰好在 $a > 0$ 且 $ab - c^2 > 0$ 时成立；否则存在某个非零向量使 $\\langle x, x \\rangle \\le 0$。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const a = rng.nonZero(-2, 5);
+        const b = rng.nonZero(-2, 5);
+        const c = rng.int(-3, 3);
+        const yes = a > 0 && a * b - c * c > 0;
+        const cross = c === 0 ? "" : ` ${c > 0 ? "+" : "-"} ${Math.abs(c) === 1 ? "" : Math.abs(c)}(x_1 y_2 + x_2 y_1)`;
+        const first = a === 1 ? "x_1 y_1" : a === -1 ? "-x_1 y_1" : `${a} x_1 y_1`;
+        const last = `${b > 0 ? "+" : "-"} ${Math.abs(b) === 1 ? "" : `${Math.abs(b)} `}x_2 y_2`;
+        const formula = `${first}${cross} ${last}`;
+        const why = yes
+          ? t(
+              `Here $a = ${a} > 0$ and $ab - c^2 = ${a * b - c * c} > 0$, so $\\langle x, x \\rangle > 0$ for every $x \\ne 0$: it is an inner product.`,
+              `这里 $a = ${a} > 0$，$ab - c^2 = ${a * b - c * c} > 0$，所以对每个 $x \\ne 0$ 有 $\\langle x, x \\rangle > 0$：它是内积。`,
+            )
+          : a <= 0
+            ? t(
+                `Here $\\langle e_1, e_1 \\rangle = ${a} \\le 0$, so positivity fails: it is not an inner product.`,
+                `这里 $\\langle e_1, e_1 \\rangle = ${a} \\le 0$，正定性不成立：它不是内积。`,
+              )
+            : t(
+                `Here $ab - c^2 = ${a * b - c * c} \\le 0$, so some nonzero $x$ has $\\langle x, x \\rangle \\le 0$: it is not an inner product.`,
+                `这里 $ab - c^2 = ${a * b - c * c} \\le 0$，所以某个非零 $x$ 使 $\\langle x, x \\rangle \\le 0$：它不是内积。`,
+              );
+        return oneOf(
+          rng,
+          t(
+            `Is $\\langle x, y \\rangle = ${formula}$ an inner product on $\\mathbb{R}^2$?`,
+            `$\\langle x, y \\rangle = ${formula}$ 是 $\\mathbb{R}^2$ 上的内积吗？`,
+          ),
+          yes ? yesNo[0]! : yesNo[1]!,
+          [yes ? yesNo[1]! : yesNo[0]!],
+          why,
+        );
       },
     },
   ],
@@ -390,6 +508,33 @@ export const innerProductInVectorSpacesOverTheComplexNumbers: TopicDef = {
         return oneOf(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "norm-of-a-complex-vector",
+      title: t("The norm of a vector in $\\mathbb{C}^n$", "$\\mathbb{C}^n$ 中向量的范数"),
+      explanation: t(
+        "With the standard inner product on $\\mathbb{C}^n$, $\\langle v, v \\rangle = \\sum v_k \\overline{v_k} = \\sum |v_k|^2$, a sum of nonnegative real numbers. So $\\|v\\|^2$ adds the squared moduli $|a + bi|^2 = a^2 + b^2$ of the entries. Squaring the entries themselves would be a mistake: $(a + bi)^2$ is complex and can even make the sum zero for a nonzero vector.",
+        "在 $\\mathbb{C}^n$ 的标准内积下，$\\langle v, v \\rangle = \\sum v_k \\overline{v_k} = \\sum |v_k|^2$，是非负实数之和。所以 $\\|v\\|^2$ 把各分量的模的平方 $|a + bi|^2 = a^2 + b^2$ 相加。直接把分量平方是错误的：$(a + bi)^2$ 是复数，甚至可能使非零向量的和为零。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const a1 = rng.int(-4, 4);
+        const b1 = rng.nonZero(-4, 4);
+        const a2 = rng.nonZero(-4, 4);
+        const b2 = rng.int(-4, 4);
+        const ans = a1 * a1 + b1 * b1 + a2 * a2 + b2 * b2;
+        return numberProblem({
+          prompt: t(
+            `Find $\\|v\\|^2$ for $v = (${formatComplex(a1, b1)}, ${formatComplex(a2, b2)}) \\in \\mathbb{C}^2$.`,
+            `对 $v = (${formatComplex(a1, b1)}, ${formatComplex(a2, b2)}) \\in \\mathbb{C}^2$ 求 $\\|v\\|^2$。`,
+          ),
+          answer: ans,
+          wrong: [a1 * a1 - b1 * b1 + a2 * a2 - b2 * b2, a1 + b1 + a2 + b2, (a1 + a2) ** 2 + (b1 + b2) ** 2],
+          solution: t(
+            `$\\|v\\|^2 = |${formatComplex(a1, b1)}|^2 + |${formatComplex(a2, b2)}|^2 = ${a1 * a1 + b1 * b1} + ${a2 * a2 + b2 * b2} = ${ans}$.`,
+            `$\\|v\\|^2 = |${formatComplex(a1, b1)}|^2 + |${formatComplex(a2, b2)}|^2 = ${a1 * a1 + b1 * b1} + ${a2 * a2 + b2 * b2} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -444,6 +589,32 @@ export const normOfAVectorInInnerProductSpaces: TopicDef = {
             Math.abs(sumVal - 5) || sumVal + 2,
             sumVal + 8,
           ],
+        });
+      },
+    },
+    {
+      id: "norm-of-a-linear-polynomial-in-l2",
+      title: t("The norm of a polynomial under an integral inner product", "积分内积下多项式的范数"),
+      explanation: t(
+        "With $\\langle p, q \\rangle = \\int_0^1 p(x) q(x)\\,dx$, the induced norm is $\\|p\\| = \\sqrt{\\int_0^1 p(x)^2\\,dx}$. For a linear polynomial,\n\n$$\\|a + bx\\|^2 = \\int_0^1 (a^2 + 2abx + b^2x^2)\\,dx = a^2 + ab + \\frac{b^2}{3}.$$\n\nSquare the polynomial first and integrate the result; integrating first and squaring afterwards gives a different, wrong number.",
+        "在 $\\langle p, q \\rangle = \\int_0^1 p(x) q(x)\\,dx$ 下，导出的范数为 $\\|p\\| = \\sqrt{\\int_0^1 p(x)^2\\,dx}$。对一次多项式，\n\n$$\\|a + bx\\|^2 = \\int_0^1 (a^2 + 2abx + b^2x^2)\\,dx = a^2 + ab + \\frac{b^2}{3}。$$\n\n要先把多项式平方再积分；先积分再平方会得到另一个错误的数。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const a = rng.nonZero(-4, 4);
+        const b = rng.nonZero(-4, 4);
+        const ans = Q.of(3 * a * a + 3 * a * b + b * b, 3);
+        const p = formatPoly(b, a).replace(/t/g, "x");
+        return numberProblem({
+          prompt: t(
+            `With $\\langle p, q \\rangle = \\int_0^1 p(x) q(x)\\,dx$, find $\\|p\\|^2$ for $p(x) = ${p}$.`,
+            `在 $\\langle p, q \\rangle = \\int_0^1 p(x) q(x)\\,dx$ 下，对 $p(x) = ${p}$ 求 $\\|p\\|^2$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of((2 * a + b) ** 2, 4), Q.of(a * a + b * b), Q.of(3 * a * a + 6 * a * b + b * b, 3)],
+          solution: t(
+            `$\\|p\\|^2 = a^2 + ab + \\frac{b^2}{3}$ with $a = ${a}$, $b = ${b}$: $${a * a} ${a * b < 0 ? "-" : "+"} ${Math.abs(a * b)} + ${frac(b * b, 3)} = ${ans.toLatex()}$.`,
+            `$\\|p\\|^2 = a^2 + ab + \\frac{b^2}{3}$，其中 $a = ${a}$，$b = ${b}$：$${a * a} ${a * b < 0 ? "-" : "+"} ${Math.abs(a * b)} + ${frac(b * b, 3)} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -507,6 +678,36 @@ export const orthogonalVectorsInEuclideanSpaces: TopicDef = {
         });
       },
     },
+    {
+      id: "testing-orthogonality-in-rn",
+      title: t("Testing whether two vectors are orthogonal", "检验两个向量是否正交"),
+      explanation: t(
+        "Two vectors of $\\mathbb{R}^n$ are orthogonal exactly when their dot product is zero. Nothing about their lengths or the size of individual entries matters: compute $u \\cdot v$ and compare it with $0$. The zero vector is orthogonal to every vector, including itself.",
+        "$\\mathbb{R}^n$ 中两个向量正交，当且仅当它们的点积为零。与长度或单个分量的大小无关：计算 $u \\cdot v$ 并与 $0$ 比较。零向量与每个向量都正交，包括它自己。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const u = [rng.nonZero(-4, 4), rng.int(-4, 4), rng.nonZero(-4, 4), rng.int(-4, 4)];
+        const m = rng.nonZero(-2, 2);
+        const n = rng.nonZero(-2, 2);
+        const v = [m * u[1]!, -m * u[0]!, n * u[3]!, -n * u[2]!];
+        if (rng.int(0, 1) === 0) v[0] = v[0]! + rng.pick([-1, 1]);
+        const dot = u.reduce((s, x, i) => s + x * v[i]!, 0);
+        const terms = u.map((x, i) => `(${x})(${v[i]!})`).join(" + ");
+        return oneOf(
+          rng,
+          t(
+            `Are $u = (${u.join(", ")})$ and $v = (${v.join(", ")})$ orthogonal?`,
+            `$u = (${u.join(", ")})$ 与 $v = (${v.join(", ")})$ 正交吗？`,
+          ),
+          dot === 0 ? yesNo[0]! : yesNo[1]!,
+          [dot === 0 ? yesNo[1]! : yesNo[0]!],
+          t(
+            `$u \\cdot v = ${terms} = ${dot}$, so they are ${dot === 0 ? "" : "not "}orthogonal.`,
+            `$u \\cdot v = ${terms} = ${dot}$，所以它们${dot === 0 ? "" : "不"}正交。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -558,6 +759,34 @@ export const orthogonalVectorsInInnerProductSpaces: TopicDef = {
           solveFor: "k",
           solution,
           wrong: [Q.of(a * (m + 1), m + n + 1), Q.of(-a, m + n + 1), Q.of(-a * (m + n + 1), m + 1), 0, Q.of(-a * (m + 2), m + n + 1)],
+        });
+      },
+    },
+    {
+      id: "orthogonality-under-a-weighted-inner-product",
+      title: t("Orthogonality under a weighted inner product", "加权内积下的正交"),
+      explanation: t(
+        "Orthogonality depends on the inner product. Under $\\langle x, y \\rangle = a x_1 y_1 + b x_2 y_2$ with $a, b > 0$, the vectors $(1, k)$ and $(p, q)$ are orthogonal when $ap + bkq = 0$, that is $k = -\\frac{ap}{bq}$. Vectors that are orthogonal for the dot product are usually not orthogonal for a weighted product, and vice versa.",
+        "正交依赖于内积。在 $a, b > 0$ 的 $\\langle x, y \\rangle = a x_1 y_1 + b x_2 y_2$ 下，向量 $(1, k)$ 与 $(p, q)$ 正交当 $ap + bkq = 0$，即 $k = -\\frac{ap}{bq}$。对点积正交的向量通常对加权内积不正交，反之亦然。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const a = rng.int(2, 5);
+        const b = rng.int(1, 4);
+        const p = rng.nonZero(-4, 4);
+        const q = rng.nonZero(-4, 4);
+        const k = Q.of(-a * p, b * q);
+        const weights = `${a} x_1 y_1 + ${b === 1 ? "" : `${b} `}x_2 y_2`;
+        return numberProblem({
+          prompt: t(
+            `On $\\mathbb{R}^2$ use $\\langle x, y \\rangle = ${weights}$. Find $k$ so that $(1, k)$ is orthogonal to $(${p}, ${q})$.`,
+            `在 $\\mathbb{R}^2$ 上使用 $\\langle x, y \\rangle = ${weights}$。求 $k$ 使 $(1, k)$ 与 $(${p}, ${q})$ 正交。`,
+          ),
+          answer: k,
+          wrong: [Q.of(-p, q), Q.of(-b * p, a * q), k.neg()],
+          solution: t(
+            `$\\langle (1, k), (${p}, ${q}) \\rangle = ${a * p} ${b * q < 0 ? "-" : "+"} ${Math.abs(b * q)}k = 0$, so $k = ${k.toLatex()}$.`,
+            `$\\langle (1, k), (${p}, ${q}) \\rangle = ${a * p} ${b * q < 0 ? "-" : "+"} ${Math.abs(b * q)}k = 0$，所以 $k = ${k.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -625,6 +854,42 @@ export const cauchySchwarzInequalityAndAngleBetweenTwoVectors: TopicDef = {
           answer,
           solution,
           wrong: [Q.of(-dot, denom), Q.of(dot, denom + 2), Q.of(dot + 1, denom), Q.of(dot - 1, denom)],
+        });
+      },
+    },
+    {
+      id: "maximizing-a-linear-expression-on-a-sphere",
+      title: t("Maximizing a linear expression on a sphere", "在球面上求线性式的最大值"),
+      explanation: t(
+        "The Cauchy–Schwarz inequality $|u \\cdot v| \\le \\|u\\|\\,\\|v\\|$ turns into an optimization tool. With $u = (a, b, c)$ and $v = (x, y, z)$ on the sphere $x^2 + y^2 + z^2 = R^2$,\n\n$$ax + by + cz \\le R\\sqrt{a^2 + b^2 + c^2},$$\n\nwith equality when $v$ points in the same direction as $u$. So the maximum is $R\\,\\|u\\|$ and the minimum is $-R\\,\\|u\\|$.",
+        "柯西–施瓦茨不等式 $|u \\cdot v| \\le \\|u\\|\\,\\|v\\|$ 可以用来求最值。令 $u = (a, b, c)$，$v = (x, y, z)$ 在球面 $x^2 + y^2 + z^2 = R^2$ 上，则\n\n$$ax + by + cz \\le R\\sqrt{a^2 + b^2 + c^2},$$\n\n当 $v$ 与 $u$ 同向时取等号。所以最大值为 $R\\,\\|u\\|$，最小值为 $-R\\,\\|u\\|$。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const triples: [number[], number][] = [
+          [[1, 2, 2], 3],
+          [[2, 3, 6], 7],
+          [[1, 4, 8], 9],
+          [[2, 6, 9], 11],
+          [[4, 4, 7], 9],
+          [[2, 10, 11], 15],
+        ];
+        const [base, n] = rng.pick(triples);
+        const u = rng.shuffle(base.map((x) => (rng.int(0, 1) === 0 ? x : -x)));
+        const R = rng.int(1, 5);
+        const max = rng.int(0, 2) > 0;
+        const ans = (max ? 1 : -1) * R * n;
+        const lin = formatLinEq(u, ["x", "y", "z"]);
+        return numberProblem({
+          prompt: t(
+            `Find the ${max ? "maximum" : "minimum"} of $${lin}$ subject to $x^2 + y^2 + z^2 = ${R * R}$.`,
+            `在 $x^2 + y^2 + z^2 = ${R * R}$ 的条件下求 $${lin}$ 的${max ? "最大值" : "最小值"}。`,
+          ),
+          answer: ans,
+          wrong: [-ans, ans * R, (max ? 1 : -1) * R * u.reduce((s, x) => s + Math.abs(x), 0), (max ? 1 : -1) * n],
+          solution: t(
+            `$\\|(${u.join(", ")})\\| = \\sqrt{${n * n}} = ${n}$ and the radius is $${R}$, so by Cauchy–Schwarz the ${max ? "maximum" : "minimum"} is $${ans}$, attained when $(x, y, z)$ is a ${max ? "positive" : "negative"} multiple of $(${u.join(", ")})$.`,
+            `$\\|(${u.join(", ")})\\| = \\sqrt{${n * n}} = ${n}$，半径为 $${R}$，所以由柯西–施瓦茨不等式，${max ? "最大值" : "最小值"}为 $${ans}$，当 $(x, y, z)$ 是 $(${u.join(", ")})$ 的${max ? "正" : "负"}倍数时取到。`,
+          ),
         });
       },
     },
@@ -701,6 +966,33 @@ export const pythagoreanTheoremAndTriangleInequalityInInnerProductSpaces: TopicD
         });
       },
     },
+    {
+      id: "the-parallelogram-law",
+      title: t("The parallelogram law", "平行四边形定律"),
+      explanation: t(
+        "Expanding $\\|u + v\\|^2$ and $\\|u - v\\|^2$ with the inner product and adding them cancels the cross terms $\\pm 2\\langle u, v \\rangle$:\n\n$$\\|u + v\\|^2 + \\|u - v\\|^2 = 2\\|u\\|^2 + 2\\|v\\|^2.$$\n\nGeometrically, the squares of the two diagonals of a parallelogram add up to the squares of its four sides. Knowing three of the lengths determines the fourth.",
+        "用内积展开 $\\|u + v\\|^2$ 与 $\\|u - v\\|^2$ 再相加，交叉项 $\\pm 2\\langle u, v \\rangle$ 抵消：\n\n$$\\|u + v\\|^2 + \\|u - v\\|^2 = 2\\|u\\|^2 + 2\\|v\\|^2。$$\n\n几何上，平行四边形两条对角线的平方和等于四条边的平方和。知道其中三个长度就能确定第四个。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const A = rng.int(2, 7);
+        const B = rng.int(2, 7);
+        const C = rng.int(-Math.floor((A * B) / 2), Math.floor((A * B) / 2));
+        const plus = A * A + B * B + 2 * C;
+        const ans = A * A + B * B - 2 * C;
+        return numberProblem({
+          prompt: t(
+            `In an inner product space, $\\|u\\| = ${A}$, $\\|v\\| = ${B}$ and $\\|u + v\\|^2 = ${plus}$. Find $\\|u - v\\|^2$.`,
+            `在内积空间中，$\\|u\\| = ${A}$，$\\|v\\| = ${B}$，$\\|u + v\\|^2 = ${plus}$。求 $\\|u - v\\|^2$。`,
+          ),
+          answer: ans,
+          wrong: [A * A + B * B - plus, 2 * A * A + 2 * B * B + plus, (A - B) ** 2, plus],
+          solution: t(
+            `By the parallelogram law, $\\|u - v\\|^2 = 2(${A * A}) + 2(${B * B}) - ${plus} = ${ans}$.`,
+            `由平行四边形定律，$\\|u - v\\|^2 = 2(${A * A}) + 2(${B * B}) - ${plus} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -754,6 +1046,47 @@ export const orthogonalComplements: TopicDef = {
         });
       },
     },
+    {
+      id: "membership-in-an-orthogonal-complement",
+      title: t("Membership in an orthogonal complement", "判断是否属于正交补"),
+      explanation: t(
+        "If $W = \\operatorname{span}\\{w_1, w_2\\}$, a vector $v$ lies in $W^\\perp$ exactly when $v \\cdot w_1 = 0$ and $v \\cdot w_2 = 0$. Orthogonality to the spanning vectors is enough, because every vector of $W$ is a combination of them and the dot product is linear. Being orthogonal to only one of the spanning vectors is not enough.",
+        "若 $W = \\operatorname{span}\\{w_1, w_2\\}$，则 $v \\in W^\\perp$ 当且仅当 $v \\cdot w_1 = 0$ 且 $v \\cdot w_2 = 0$。与张成向量正交就足够，因为 $W$ 中每个向量都是它们的组合，而点积是线性的。只与其中一个张成向量正交是不够的。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const w1 = [rng.nonZero(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
+        let w2 = [rng.int(-3, 3), rng.nonZero(-3, 3), rng.int(-3, 3)];
+        let n = [w1[1]! * w2[2]! - w1[2]! * w2[1]!, w1[2]! * w2[0]! - w1[0]! * w2[2]!, w1[0]! * w2[1]! - w1[1]! * w2[0]!];
+        if (n.every((x) => x === 0)) {
+          w2 = [0, 1, 1];
+          n = [w1[1]! - w1[2]!, -w1[0]!, w1[0]!];
+        }
+        const g = n.reduce((s, x) => gcd(s, x), 0);
+        const k = rng.nonZero(-2, 2);
+        const v = n.map((x) => (x / g) * k);
+        const yes = rng.int(0, 1) === 0;
+        if (!yes) {
+          // Add a multiple of w1 so that v stays orthogonal to w2 only when w1 is.
+          for (let i = 0; i < 3; i++) v[i] = v[i]! + w1[i]!;
+        }
+        const d1 = v.reduce((s, x, i) => s + x * w1[i]!, 0);
+        const d2 = v.reduce((s, x, i) => s + x * w2[i]!, 0);
+        const inW = d1 === 0 && d2 === 0;
+        return oneOf(
+          rng,
+          t(
+            `$W = \\operatorname{span}\\{(${w1.join(", ")}), (${w2.join(", ")})\\}$ in $\\mathbb{R}^3$. Is $v = (${v.join(", ")})$ in $W^\\perp$?`,
+            `$\\mathbb{R}^3$ 中 $W = \\operatorname{span}\\{(${w1.join(", ")}), (${w2.join(", ")})\\}$。$v = (${v.join(", ")})$ 属于 $W^\\perp$ 吗？`,
+          ),
+          inW ? yesNo[0]! : yesNo[1]!,
+          [inW ? yesNo[1]! : yesNo[0]!],
+          t(
+            `$v \\cdot w_1 = ${d1}$ and $v \\cdot w_2 = ${d2}$, so $v$ ${inW ? "is" : "is not"} in $W^\\perp$.`,
+            `$v \\cdot w_1 = ${d1}$，$v \\cdot w_2 = ${d2}$，所以 $v$ ${inW ? "属于" : "不属于"} $W^\\perp$。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -802,6 +1135,59 @@ export const orthogonalSetsInEuclideanSpaces: TopicDef = {
         });
       },
     },
+    {
+      id: "the-norm-of-a-combination-of-an-orthogonal-set",
+      title: t("The norm of a combination of an orthogonal set", "正交组线性组合的范数"),
+      explanation: t(
+        "For an orthogonal set $\\{u_1, u_2, u_3\\}$ all the cross terms $u_i \\cdot u_j$ with $i \\ne j$ vanish, so the Pythagorean theorem extends to any number of vectors:\n\n$$\\|c_1u_1 + c_2u_2 + c_3u_3\\|^2 = c_1^2\\|u_1\\|^2 + c_2^2\\|u_2\\|^2 + c_3^2\\|u_3\\|^2.$$\n\nThis avoids forming the combination entry by entry.",
+        "对正交组 $\\{u_1, u_2, u_3\\}$，所有 $i \\ne j$ 的交叉项 $u_i \\cdot u_j$ 都为零，所以勾股定理推广到任意多个向量：\n\n$$\\|c_1u_1 + c_2u_2 + c_3u_3\\|^2 = c_1^2\\|u_1\\|^2 + c_2^2\\|u_2\\|^2 + c_3^2\\|u_3\\|^2。$$\n\n这样不必逐个分量算出组合。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const sets = [
+          [
+            [1, 1, 1],
+            [1, -1, 0],
+            [1, 1, -2],
+          ],
+          [
+            [1, 0, 1],
+            [1, 0, -1],
+            [0, 1, 0],
+          ],
+          [
+            [1, 2, 2],
+            [2, 1, -2],
+            [2, -2, 1],
+          ],
+          [
+            [2, 1, 0],
+            [1, -2, 0],
+            [0, 0, 3],
+          ],
+        ];
+        const set = rng.pick(sets);
+        const c = [rng.nonZero(-3, 3), rng.nonZero(-3, 3), rng.nonZero(-3, 3)];
+        const n2 = set.map((u) => u.reduce((s, x) => s + x * x, 0));
+        const ans = c.reduce((s, x, i) => s + x * x * n2[i]!, 0);
+        const comb = formatLinEq(c, ["u_1", "u_2", "u_3"]);
+        return numberProblem({
+          prompt: t(
+            `$u_1 = (${set[0]!.join(", ")})$, $u_2 = (${set[1]!.join(", ")})$ and $u_3 = (${set[2]!.join(", ")})$ form an orthogonal set. Find $\\|${comb}\\|^2$.`,
+            `$u_1 = (${set[0]!.join(", ")})$、$u_2 = (${set[1]!.join(", ")})$ 与 $u_3 = (${set[2]!.join(", ")})$ 构成正交组。求 $\\|${comb}\\|^2$。`,
+          ),
+          answer: ans,
+          wrong: [
+            c.reduce((s, x, i) => s + x * n2[i]!, 0),
+            c.reduce((s, x) => s + x * x, 0),
+            c.reduce((s, x, i) => s + Math.abs(x) * n2[i]!, 0) ** 2,
+          ],
+          solution: t(
+            `$\\|u_1\\|^2 = ${n2[0]}$, $\\|u_2\\|^2 = ${n2[1]}$, $\\|u_3\\|^2 = ${n2[2]}$, so the result is $${c.map((x, i) => `${x * x} \\cdot ${n2[i]}`).join(" + ")} = ${ans}$.`,
+            `$\\|u_1\\|^2 = ${n2[0]}$，$\\|u_2\\|^2 = ${n2[1]}$，$\\|u_3\\|^2 = ${n2[2]}$，所以结果为 $${c.map((x, i) => `${x * x} \\cdot ${n2[i]}`).join(" + ")} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -844,6 +1230,41 @@ export const orthogonalSetsInInnerProductSpaces: TopicDef = {
           solution,
           wrong: [Q.of(a * a, 2 * k), Q.of(a, radicand), Q.of(a * a, k + 1), Q.of(a * a, 2 * k + 2)],
         });
+      },
+    },
+    {
+      id: "orthogonality-of-monomials-on-a-symmetric-interval",
+      title: t("Orthogonality of powers on $[-1, 1]$", "$[-1, 1]$ 上幂函数的正交性"),
+      explanation: t(
+        "Under $\\langle p, q \\rangle = \\int_{-1}^{1} p(x) q(x)\\,dx$, the product $x^m \\cdot x^n = x^{m+n}$ is an odd function when $m + n$ is odd, and the integral of an odd function over a symmetric interval is zero. So $x^m$ and $x^n$ are orthogonal when $m + n$ is odd. When $m + n$ is even the integrand is even and positive away from $0$, so the inner product $\\frac{2}{m + n + 1}$ is never zero.",
+        "在 $\\langle p, q \\rangle = \\int_{-1}^{1} p(x) q(x)\\,dx$ 下，当 $m + n$ 为奇数时，乘积 $x^m \\cdot x^n = x^{m+n}$ 是奇函数，而奇函数在对称区间上的积分为零。所以 $m + n$ 为奇数时 $x^m$ 与 $x^n$ 正交。当 $m + n$ 为偶数时被积函数是偶函数，且在 $0$ 以外为正，所以内积 $\\frac{2}{m + n + 1}$ 不为零。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const m = rng.int(0, 5);
+        let n = rng.int(0, 5);
+        if (n === m) n = (m + rng.int(1, 3)) % 6;
+        const a = rng.nonZero(-4, 4);
+        const b = rng.nonZero(-4, 4);
+        const mono = (c: number, e: number) => (e === 0 ? `${c}` : `${c === 1 ? "" : c === -1 ? "-" : c}x${e === 1 ? "" : `^${e}`}`);
+        const odd = (m + n) % 2 === 1;
+        return oneOf(
+          rng,
+          t(
+            `With $\\langle p, q \\rangle = \\int_{-1}^{1} p(x) q(x)\\,dx$, are $p(x) = ${mono(a, m)}$ and $q(x) = ${mono(b, n)}$ orthogonal?`,
+            `在 $\\langle p, q \\rangle = \\int_{-1}^{1} p(x) q(x)\\,dx$ 下，$p(x) = ${mono(a, m)}$ 与 $q(x) = ${mono(b, n)}$ 正交吗？`,
+          ),
+          odd ? yesNo[0]! : yesNo[1]!,
+          [odd ? yesNo[1]! : yesNo[0]!],
+          odd
+            ? t(
+                `The product is a multiple of $x^{${m + n}}$, an odd function, so its integral over $[-1, 1]$ is $0$.`,
+                `乘积是 $x^{${m + n}}$ 的倍数，为奇函数，所以它在 $[-1, 1]$ 上的积分为 $0$。`,
+              )
+            : t(
+                `$\\langle p, q \\rangle = ${a * b} \\int_{-1}^{1} x^{${m + n}}\\,dx = ${frac(2 * a * b, m + n + 1)} \\ne 0$.`,
+                `$\\langle p, q \\rangle = ${a * b} \\int_{-1}^{1} x^{${m + n}}\\,dx = ${frac(2 * a * b, m + n + 1)} \\ne 0$。`,
+              ),
+        );
       },
     },
   ],
@@ -970,6 +1391,50 @@ export const orthogonalMatrices: TopicDef = {
         return oneOf(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "solving-with-an-orthogonal-matrix",
+      title: t("Solving $Qx = b$ with an orthogonal matrix", "用正交矩阵解 $Qx = b$"),
+      explanation: t(
+        "An orthogonal matrix satisfies $Q^TQ = I$, so its inverse is simply its transpose. The system $Qx = b$ is therefore solved by $x = Q^Tb$, a matrix-vector product with no elimination. For the rotation-like matrix $Q = \\frac{1}{c}\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$ with $a^2 + b^2 = c^2$, the solution is $x = \\frac{1}{c}\\begin{pmatrix} a & b \\\\ -b & a \\end{pmatrix} b$.",
+        "正交矩阵满足 $Q^TQ = I$，所以它的逆就是它的转置。因此方程组 $Qx = b$ 的解为 $x = Q^Tb$，只需做一次矩阵与向量的乘法，不必消元。对 $a^2 + b^2 = c^2$ 的类旋转矩阵 $Q = \\frac{1}{c}\\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$，解为 $x = \\frac{1}{c}\\begin{pmatrix} a & b \\\\ -b & a \\end{pmatrix} b$。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const [a0, b0, c] = rng.pick([
+          [3, 4, 5],
+          [4, 3, 5],
+          [5, 12, 13],
+          [12, 5, 13],
+          [8, 15, 17],
+        ] as const);
+        const a = rng.int(0, 1) === 0 ? a0 : -a0;
+        const b = rng.int(0, 1) === 0 ? b0 : -b0;
+        const x = [rng.int(-4, 4), rng.nonZero(-4, 4)];
+        // b = Qx is an integer vector when x is a multiple of c; use x scaled by c and divide in the display.
+        const rhs = [a * x[0]! - b * x[1]!, b * x[0]! + a * x[1]!];
+        const Qm = matLatex([
+          [frac(a, c), frac(-b, c)],
+          [frac(b, c), frac(a, c)],
+        ]);
+        const bv = [frac(rhs[0]!, c), frac(rhs[1]!, c)];
+        return pointProblem({
+          prompt: t(
+            `$Q = ${Qm}$ is orthogonal. Solve $Qx = ${colVecLatex(bv)}$.`,
+            `$Q = ${Qm}$ 是正交矩阵。解 $Qx = ${colVecLatex(bv)}$。`,
+          ),
+          answer: x,
+          vector: true,
+          wrong: [
+            [Q.of(a * rhs[0]! - b * rhs[1]!, c * c), Q.of(b * rhs[0]! + a * rhs[1]!, c * c)],
+            [-x[0]!, -x[1]!],
+            [x[1]!, x[0]!],
+          ],
+          solution: t(
+            `$Q^{-1} = Q^T$, so $x = Q^T${colVecLatex(bv)} = ${colVecLatex(x)}$.`,
+            `$Q^{-1} = Q^T$，所以 $x = Q^T${colVecLatex(bv)} = ${colVecLatex(x)}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1023,6 +1488,32 @@ export const orthogonalLinearTransformations: TopicDef = {
             val + 6,
             Math.abs(val - 4) || val + 2,
           ],
+        });
+      },
+    },
+    {
+      id: "distances-under-an-orthogonal-transformation",
+      title: t("Distances under an orthogonal transformation", "正交变换下的距离"),
+      explanation: t(
+        "An orthogonal transformation preserves inner products, $\\langle T u, T v \\rangle = \\langle u, v \\rangle$, and therefore lengths, distances and angles. To find $\\|Tu - Tv\\|^2$, use linearity to write it as $\\|T(u - v)\\|^2 = \\|u - v\\|^2$ and expand:\n\n$$\\|u - v\\|^2 = \\|u\\|^2 - 2\\langle u, v \\rangle + \\|v\\|^2.$$",
+        "正交变换保持内积，$\\langle T u, T v \\rangle = \\langle u, v \\rangle$，因此保持长度、距离与角度。求 $\\|Tu - Tv\\|^2$ 时，用线性把它写成 $\\|T(u - v)\\|^2 = \\|u - v\\|^2$ 再展开：\n\n$$\\|u - v\\|^2 = \\|u\\|^2 - 2\\langle u, v \\rangle + \\|v\\|^2。$$",
+      ),
+      generate: (rng: Rng): Problem => {
+        const A = rng.int(2, 6);
+        const B = rng.int(2, 6);
+        const C = rng.int(-A * B + 1, A * B - 1);
+        const ans = A * A + B * B - 2 * C;
+        return numberProblem({
+          prompt: t(
+            `$T$ is an orthogonal linear transformation, $\\|u\\| = ${A}$, $\\|v\\| = ${B}$ and $\\langle u, v \\rangle = ${C}$. Find $\\|T u - T v\\|^2$.`,
+            `$T$ 是正交线性变换，$\\|u\\| = ${A}$，$\\|v\\| = ${B}$，$\\langle u, v \\rangle = ${C}$。求 $\\|T u - T v\\|^2$。`,
+          ),
+          answer: ans,
+          wrong: [A * A + B * B + 2 * C, A * A + B * B - C, (A - B) ** 2],
+          solution: t(
+            `$\\|Tu - Tv\\|^2 = \\|u - v\\|^2 = ${A * A} - 2(${C}) + ${B * B} = ${ans}$.`,
+            `$\\|Tu - Tv\\|^2 = \\|u - v\\|^2 = ${A * A} - 2(${C}) + ${B * B} = ${ans}$。`,
+          ),
         });
       },
     },
@@ -1082,6 +1573,39 @@ export const fourFundamentalSubspacesOfAMatrix: TopicDef = {
         });
       },
     },
+    {
+      id: "dimensions-of-the-four-subspaces",
+      title: t("Dimensions of the four fundamental subspaces", "四个基本子空间的维数"),
+      explanation: t(
+        "For an $m \\times n$ matrix $A$ of rank $r$, the four fundamental subspaces have dimensions fixed by $m$, $n$ and $r$ alone:\n\n$$\\dim \\operatorname{Col}(A) = \\dim \\operatorname{Row}(A) = r, \\quad \\dim \\operatorname{Nul}(A) = n - r, \\quad \\dim \\operatorname{Nul}(A^T) = m - r.$$\n\nThe row space and null space live in $\\mathbb{R}^n$ and are orthogonal complements, so their dimensions add to $n$; the column space and left null space live in $\\mathbb{R}^m$ and add to $m$.",
+        "对秩为 $r$ 的 $m \\times n$ 矩阵 $A$，四个基本子空间的维数只由 $m$、$n$、$r$ 决定：\n\n$$\\dim \\operatorname{Col}(A) = \\dim \\operatorname{Row}(A) = r, \\quad \\dim \\operatorname{Nul}(A) = n - r, \\quad \\dim \\operatorname{Nul}(A^T) = m - r。$$\n\n行空间与零空间位于 $\\mathbb{R}^n$ 中且互为正交补，维数之和为 $n$；列空间与左零空间位于 $\\mathbb{R}^m$ 中，维数之和为 $m$。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const m = rng.int(3, 8);
+        const n = rng.int(3, 8);
+        const r = rng.int(1, Math.min(m, n));
+        const kind = rng.int(0, 2);
+        const names = [
+          t("the null space $\\operatorname{Nul}(A)$", "零空间 $\\operatorname{Nul}(A)$"),
+          t("the left null space $\\operatorname{Nul}(A^T)$", "左零空间 $\\operatorname{Nul}(A^T)$"),
+          t("the row space $\\operatorname{Row}(A)$", "行空间 $\\operatorname{Row}(A)$"),
+        ];
+        const ans = [n - r, m - r, r][kind]!;
+        const name = names[kind]!;
+        return numberProblem({
+          prompt: t(
+            `$A$ is a $${m} \\times ${n}$ matrix of rank $${r}$. What is the dimension of ${name.en}?`,
+            `$A$ 是秩为 $${r}$ 的 $${m} \\times ${n}$ 矩阵。${name["zh-CN"]}的维数是多少？`,
+          ),
+          answer: ans,
+          wrong: [n - r, m - r, r, m, n].filter((w) => w !== ans),
+          solution: t(
+            `$\\dim \\operatorname{Row}(A) = r = ${r}$, $\\dim \\operatorname{Nul}(A) = n - r = ${n - r}$ and $\\dim \\operatorname{Nul}(A^T) = m - r = ${m - r}$. So the answer is $${ans}$.`,
+            `$\\dim \\operatorname{Row}(A) = r = ${r}$，$\\dim \\operatorname{Nul}(A) = n - r = ${n - r}$，$\\dim \\operatorname{Nul}(A^T) = m - r = ${m - r}$。所以答案是 $${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1137,6 +1661,40 @@ export const projectingVectorsOntoOneDimensionalSubspaces: TopicDef = {
         });
       },
     },
+    {
+      id: "the-component-orthogonal-to-a-line",
+      title: t("The component orthogonal to a line", "垂直于直线的分量"),
+      explanation: t(
+        "Every vector $y$ splits uniquely as $y = \\hat{y} + z$ with $\\hat{y}$ on the line spanned by $u$ and $z$ orthogonal to $u$. First compute the projection $\\hat{y} = \\frac{y \\cdot u}{u \\cdot u}\\,u$, then subtract: $z = y - \\hat{y}$. A quick check is $z \\cdot u = 0$.",
+        "每个向量 $y$ 都能唯一分解为 $y = \\hat{y} + z$，其中 $\\hat{y}$ 在 $u$ 张成的直线上，$z$ 与 $u$ 正交。先求投影 $\\hat{y} = \\frac{y \\cdot u}{u \\cdot u}\\,u$，再相减：$z = y - \\hat{y}$。可用 $z \\cdot u = 0$ 快速检验。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const u = [rng.nonZero(-3, 3), rng.nonZero(-3, 3)];
+        const k = rng.nonZero(-3, 3);
+        const m = rng.nonZero(-2, 2);
+        const z = [-m * u[1]!, m * u[0]!];
+        const y = [k * u[0]! + z[0]!, k * u[1]! + z[1]!];
+        const uu = u[0]! * u[0]! + u[1]! * u[1]!;
+        const yu = y[0]! * u[0]! + y[1]! * u[1]!;
+        return pointProblem({
+          prompt: t(
+            `Write $y = (${y.join(", ")})$ as $\\hat{y} + z$ with $\\hat{y}$ a multiple of $u = (${u.join(", ")})$ and $z \\perp u$. Find $z$.`,
+            `把 $y = (${y.join(", ")})$ 写成 $\\hat{y} + z$，其中 $\\hat{y}$ 是 $u = (${u.join(", ")})$ 的倍数且 $z \\perp u$。求 $z$。`,
+          ),
+          answer: z,
+          vector: true,
+          wrong: [
+            [k * u[0]!, k * u[1]!],
+            [-z[0]!, -z[1]!],
+            [y[0]! - u[0]!, y[1]! - u[1]!],
+          ],
+          solution: t(
+            `$\\frac{y \\cdot u}{u \\cdot u} = \\frac{${yu}}{${uu}} = ${k}$, so $\\hat{y} = (${k * u[0]!}, ${k * u[1]!})$ and $z = y - \\hat{y} = (${z.join(", ")})$.`,
+            `$\\frac{y \\cdot u}{u \\cdot u} = \\frac{${yu}}{${uu}} = ${k}$，所以 $\\hat{y} = (${k * u[0]!}, ${k * u[1]!})$，$z = y - \\hat{y} = (${z.join(", ")})$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1186,6 +1744,40 @@ export const componentsOfAVectorWithRespectToAnOrthogonalOrOrthonormalBasis: Top
           vector: true,
           solution,
           wrong: [y, [c2, c1, c3], [-c1, -c2, -c3], [c1 + 1, c2 - 1, c3]],
+        });
+      },
+    },
+    {
+      id: "length-from-orthonormal-coordinates",
+      title: t("Length from orthonormal coordinates", "由标准正交坐标求长度"),
+      explanation: t(
+        "If $\\{u_1, \\dots, u_n\\}$ is an orthonormal basis and $x = c_1u_1 + \\dots + c_nu_n$, then all cross terms vanish and every $\\|u_i\\| = 1$, so\n\n$$\\|x\\|^2 = c_1^2 + \\dots + c_n^2.$$\n\nLengths can be read straight from the coordinates, exactly as with the standard basis. This fails for a basis that is only orthogonal: there each $c_i^2$ must be weighted by $\\|u_i\\|^2$.",
+        "若 $\\{u_1, \\dots, u_n\\}$ 是标准正交基且 $x = c_1u_1 + \\dots + c_nu_n$，则所有交叉项为零且每个 $\\|u_i\\| = 1$，所以\n\n$$\\|x\\|^2 = c_1^2 + \\dots + c_n^2。$$\n\n长度可以直接从坐标读出，与标准基完全一样。对只是正交的基这不成立：那时每个 $c_i^2$ 都要乘以 $\\|u_i\\|^2$。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const quads: [number[], number][] = [
+          [[1, 2, 2, 0], 3],
+          [[2, 3, 6, 0], 7],
+          [[1, 1, 1, 1], 2],
+          [[1, 1, 3, 5], 6],
+          [[2, 4, 5, 6], 9],
+          [[2, 2, 4, 5], 7],
+          [[1, 5, 5, 7], 10],
+          [[1, 4, 8, 0], 9],
+        ];
+        const [base, n] = rng.pick(quads);
+        const c = rng.shuffle(base.map((x) => (rng.int(0, 1) === 0 ? x : -x)));
+        return numberProblem({
+          prompt: t(
+            `$\\{u_1, u_2, u_3, u_4\\}$ is an orthonormal basis of $\\mathbb{R}^4$ and $x = ${formatLinEq(c, ["u_1", "u_2", "u_3", "u_4"])}$. Find $\\|x\\|$.`,
+            `$\\{u_1, u_2, u_3, u_4\\}$ 是 $\\mathbb{R}^4$ 的标准正交基，$x = ${formatLinEq(c, ["u_1", "u_2", "u_3", "u_4"])}$。求 $\\|x\\|$。`,
+          ),
+          answer: n,
+          wrong: [n * n, c.reduce((s, x) => s + x, 0), c.reduce((s, x) => s + Math.abs(x), 0)],
+          solution: t(
+            `$\\|x\\|^2 = ${c.map((x) => `${x * x}`).join(" + ")} = ${n * n}$, so $\\|x\\| = ${n}$.`,
+            `$\\|x\\|^2 = ${c.map((x) => `${x * x}`).join(" + ")} = ${n * n}$，所以 $\\|x\\| = ${n}$。`,
+          ),
         });
       },
     },
@@ -1240,6 +1832,39 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesOrthogonalBases: Top
           vector: true,
           solution,
           wrong: [z, [k1, k1, 0, 0], [0, 0, k2, k2], [-k1, -k1, -k2, -k2]],
+        });
+      },
+    },
+    {
+      id: "distance-to-a-plane-with-an-orthogonal-basis",
+      title: t("Distance from a point to a plane through the origin", "点到过原点平面的距离"),
+      explanation: t(
+        "With an orthogonal basis $\\{u_1, u_2\\}$ of a plane $W$, the projection is $\\hat{y} = \\frac{y \\cdot u_1}{u_1 \\cdot u_1}u_1 + \\frac{y \\cdot u_2}{u_2 \\cdot u_2}u_2$. The distance from $y$ to $W$ is the length of what is left over, $\\|y - \\hat{y}\\|$, because $\\hat{y}$ is the closest point of $W$ to $y$ and $y - \\hat{y}$ is orthogonal to $W$.",
+        "用平面 $W$ 的正交基 $\\{u_1, u_2\\}$，投影为 $\\hat{y} = \\frac{y \\cdot u_1}{u_1 \\cdot u_1}u_1 + \\frac{y \\cdot u_2}{u_2 \\cdot u_2}u_2$。$y$ 到 $W$ 的距离是剩余部分的长度 $\\|y - \\hat{y}\\|$，因为 $\\hat{y}$ 是 $W$ 中离 $y$ 最近的点，而 $y - \\hat{y}$ 与 $W$ 正交。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const frames = [
+          { u1: [2, -1, 0], u2: [2, 4, -5], n: [1, 2, 2], len: 3 },
+          { u1: [0, 1, -1], u2: [4, 1, 1], n: [1, -2, -2], len: 3 },
+        ];
+        const f = rng.pick(frames);
+        const a = rng.int(-2, 2);
+        const b = rng.nonZero(-1, 1);
+        const k = rng.nonZero(-3, 3);
+        const y = [0, 1, 2].map((i) => a * f.u1[i]! + b * f.u2[i]! + k * f.n[i]!);
+        const ans = Math.abs(k) * f.len;
+        const yhat = [0, 1, 2].map((i) => a * f.u1[i]! + b * f.u2[i]!);
+        return numberProblem({
+          prompt: t(
+            `$u_1 = (${f.u1.join(", ")})$ and $u_2 = (${f.u2.join(", ")})$ are an orthogonal basis of a plane $W$. Find the distance from $y = (${y.join(", ")})$ to $W$.`,
+            `$u_1 = (${f.u1.join(", ")})$ 与 $u_2 = (${f.u2.join(", ")})$ 是平面 $W$ 的正交基。求 $y = (${y.join(", ")})$ 到 $W$ 的距离。`,
+          ),
+          answer: ans,
+          wrong: [ans * ans, Math.abs(k), f.len],
+          solution: t(
+            `The coefficients are $${a}$ and $${b}$, so $\\hat{y} = (${yhat.join(", ")})$ and $y - \\hat{y} = (${f.n.map((x) => x * k).join(", ")})$, whose length is $${ans}$.`,
+            `系数为 $${a}$ 与 $${b}$，所以 $\\hat{y} = (${yhat.join(", ")})$，$y - \\hat{y} = (${f.n.map((x) => x * k).join(", ")})$，其长度为 $${ans}$。`,
+          ),
         });
       },
     },
@@ -1301,6 +1926,50 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBases: Topi
             [x1 + 1, x2 - 1],
             [y[0]!, y[1]!],
           ],
+        });
+      },
+    },
+    {
+      id: "projection-onto-a-column-space",
+      title: t("The projection onto a column space", "向列空间的投影"),
+      explanation: t(
+        "When the columns of $A$ are independent but not orthogonal, the projection of $b$ onto $\\operatorname{Col}(A)$ is $\\hat{b} = A\\hat{x}$, where $\\hat{x}$ solves the normal equations $A^TA\\hat{x} = A^Tb$. Solve the small square system first, then multiply by $A$. The error $b - \\hat{b}$ is orthogonal to every column of $A$.",
+        "当 $A$ 的列线性无关但不正交时，$b$ 在 $\\operatorname{Col}(A)$ 上的投影为 $\\hat{b} = A\\hat{x}$，其中 $\\hat{x}$ 满足法方程 $A^TA\\hat{x} = A^Tb$。先解这个小的方阵方程组，再乘以 $A$。误差 $b - \\hat{b}$ 与 $A$ 的每一列都正交。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const c1 = [1, rng.int(-2, 2), rng.int(-2, 2)];
+        let c2 = [rng.int(-2, 2), 1, rng.int(-2, 2)];
+        const cross = () => [c1[1]! * c2[2]! - c1[2]! * c2[1]!, c1[2]! * c2[0]! - c1[0]! * c2[2]!, c1[0]! * c2[1]! - c1[1]! * c2[0]!];
+        let n = cross();
+        if (n.every((x) => x === 0)) {
+          c2 = [0, 1, 0];
+          n = cross();
+        }
+        const g = n.reduce((s, x) => gcd(s, x), 0);
+        n = n.map((x) => x / g);
+        const xh = [rng.nonZero(-3, 3), rng.nonZero(-3, 3)];
+        const k = rng.nonZero(-2, 2);
+        const p = [0, 1, 2].map((i) => xh[0]! * c1[i]! + xh[1]! * c2[i]!);
+        const b = p.map((x, i) => x + k * n[i]!);
+        const AtA = [
+          [c1.reduce((s, x) => s + x * x, 0), c1.reduce((s, x, i) => s + x * c2[i]!, 0)],
+          [c1.reduce((s, x, i) => s + x * c2[i]!, 0), c2.reduce((s, x) => s + x * x, 0)],
+        ];
+        const Atb = [c1.reduce((s, x, i) => s + x * b[i]!, 0), c2.reduce((s, x, i) => s + x * b[i]!, 0)];
+        const A = [0, 1, 2].map((i) => [c1[i]!, c2[i]!]);
+        return pointProblem({
+          prompt: t(
+            `Find the projection of $b = ${colVecLatex(b)}$ onto the column space of $A = ${matLatex(A)}$.`,
+            `求 $b = ${colVecLatex(b)}$ 在 $A = ${matLatex(A)}$ 的列空间上的投影。`,
+          ),
+          answer: p,
+          vector: true,
+          vars: ["x", "y", "z"],
+          wrong: [b, [k * n[0]!, k * n[1]!, k * n[2]!], [xh[0]!, xh[1]!, 0]],
+          solution: t(
+            `$A^TA = ${matLatex(AtA)}$ and $A^Tb = ${colVecLatex(Atb)}$, so $\\hat{x} = ${colVecLatex(xh)}$ and $A\\hat{x} = ${colVecLatex(p)}$.`,
+            `$A^TA = ${matLatex(AtA)}$，$A^Tb = ${colVecLatex(Atb)}$，所以 $\\hat{x} = ${colVecLatex(xh)}$，$A\\hat{x} = ${colVecLatex(p)}$。`,
+          ),
         });
       },
     },
@@ -1370,6 +2039,42 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBasesApplic
         });
       },
     },
+    {
+      id: "least-squares-line-through-the-origin",
+      title: t("The least-squares line through the origin", "过原点的最小二乘直线"),
+      explanation: t(
+        "Fitting $y = mx$ to data points $(x_i, y_i)$ asks for the least-squares solution of the overdetermined system $x_i m = y_i$. Its matrix has the single column $x = (x_1, \\dots, x_n)$, so the normal equation is $(x \\cdot x)\\,m = x \\cdot y$ and\n\n$$m = \\frac{\\sum x_i y_i}{\\sum x_i^2}.$$\n\nThis is the projection coefficient of the data vector $y$ onto the line spanned by $x$.",
+        "用 $y = mx$ 拟合数据点 $(x_i, y_i)$，就是求超定方程组 $x_i m = y_i$ 的最小二乘解。它的矩阵只有一列 $x = (x_1, \\dots, x_n)$，所以法方程为 $(x \\cdot x)\\,m = x \\cdot y$，\n\n$$m = \\frac{\\sum x_i y_i}{\\sum x_i^2}。$$\n\n这正是数据向量 $y$ 在 $x$ 张成的直线上的投影系数。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const xs = rng.shuffle([1, 2, 3, 4, -1, -2]).slice(0, 3);
+        const ys: number[] = xs.map(() => rng.int(-6, 6));
+        if (!ys.some((y) => y !== 0)) ys[0] = 1;
+        const sxy = xs.reduce((s, x, i) => s + x * ys[i]!, 0);
+        const sxx = xs.reduce((s, x) => s + x * x, 0);
+        const m = Q.of(sxy, sxx);
+        const pts = xs.map((x, i) => `(${x}, ${ys[i]!})`).join(", ");
+        return numberProblem({
+          prompt: t(
+            `Find the slope $m$ of the least-squares line $y = mx$ through the origin for the points ${pts}.`,
+            `对点 ${pts} 求过原点的最小二乘直线 $y = mx$ 的斜率 $m$。`,
+          ),
+          answer: m,
+          wrong: [
+            Q.of(sxx, sxy === 0 ? 1 : sxy),
+            Q.of(
+              ys.reduce((s, y) => s + y, 0),
+              xs.reduce((s, x) => s + x, 0) || 1,
+            ),
+            Q.of(sxy, 3),
+          ],
+          solution: t(
+            `$\\sum x_iy_i = ${sxy}$ and $\\sum x_i^2 = ${sxx}$, so $m = ${m.toLatex()}$.`,
+            `$\\sum x_iy_i = ${sxy}$，$\\sum x_i^2 = ${sxx}$，所以 $m = ${m.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1412,6 +2117,40 @@ export const projectionMatricesLinearTransformationsAndTheirProperties: TopicDef
           answer: k,
           solution,
           wrong: [n, n - k, 0, 1, k * 2],
+        });
+      },
+    },
+    {
+      id: "an-entry-of-the-projection-matrix-onto-a-line",
+      title: t("The projection matrix onto a line", "向直线投影的矩阵"),
+      explanation: t(
+        "The matrix that projects $\\mathbb{R}^n$ onto the line spanned by $a$ is\n\n$$P = \\frac{aa^T}{a^Ta},$$\n\nso its $(i, j)$ entry is $\\frac{a_ia_j}{\\|a\\|^2}$. It is symmetric, satisfies $P^2 = P$, and has trace $1$, the dimension of the line. Scaling $a$ does not change $P$.",
+        "把 $\\mathbb{R}^n$ 投影到 $a$ 张成的直线上的矩阵为\n\n$$P = \\frac{aa^T}{a^Ta},$$\n\n所以它的 $(i, j)$ 元为 $\\frac{a_ia_j}{\\|a\\|^2}$。它是对称的，满足 $P^2 = P$，迹为 $1$，即直线的维数。把 $a$ 乘以常数不改变 $P$。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const a = [rng.nonZero(-3, 3), rng.int(-3, 3), rng.nonZero(-3, 3)];
+        const i = rng.int(1, 3);
+        const j = rng.int(1, 3);
+        const aa = a.reduce((s, x) => s + x * x, 0);
+        const ans = Q.of(a[i - 1]! * a[j - 1]!, aa);
+        return numberProblem({
+          prompt: t(
+            `$P$ is the matrix of the orthogonal projection of $\\mathbb{R}^3$ onto the line spanned by $a = (${a.join(", ")})$. Find the entry $P_{${i}${j}}$.`,
+            `$P$ 是把 $\\mathbb{R}^3$ 正交投影到 $a = (${a.join(", ")})$ 张成的直线上的矩阵。求元素 $P_{${i}${j}}$。`,
+          ),
+          answer: ans,
+          wrong: [
+            Q.of(a[i - 1]! * a[j - 1]!),
+            Q.of(
+              a[i - 1]! * a[j - 1]!,
+              a.reduce((s, x) => s + Math.abs(x), 0),
+            ),
+            ans.neg(),
+          ],
+          solution: t(
+            `$\\|a\\|^2 = ${aa}$, so $P_{${i}${j}} = \\frac{a_${i}a_${j}}{\\|a\\|^2} = \\frac{(${a[i - 1]!})(${a[j - 1]!})}{${aa}} = ${ans.toLatex()}$.`,
+            `$\\|a\\|^2 = ${aa}$，所以 $P_{${i}${j}} = \\frac{a_${i}a_${j}}{\\|a\\|^2} = \\frac{(${a[i - 1]!})(${a[j - 1]!})}{${aa}} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1463,6 +2202,33 @@ export const projectingVectorsOntoSubspacesInInnerProductSpaces: TopicDef = {
           prefix: "\\hat{f}(t) =",
           solution,
           wrong: [formatPoly(b, c), formatPoly(b, 3 * m + c), formatPoly(-b, constantTerm), formatPoly(m, c)],
+        });
+      },
+    },
+    {
+      id: "the-best-constant-approximation",
+      title: t("The best constant approximation", "最佳常数逼近"),
+      explanation: t(
+        "In $C[0, 1]$ with $\\langle f, g \\rangle = \\int_0^1 f(x)g(x)\\,dx$, the constants form a one-dimensional subspace spanned by $1$, with $\\langle 1, 1 \\rangle = 1$. The closest constant to $f$ is its projection\n\n$$\\hat{f} = \\frac{\\langle f, 1 \\rangle}{\\langle 1, 1 \\rangle} = \\int_0^1 f(x)\\,dx,$$\n\nthe average value of $f$ on the interval. For a polynomial $a + bx + cx^2$ this is $a + \\frac{b}{2} + \\frac{c}{3}$.",
+        "在 $\\langle f, g \\rangle = \\int_0^1 f(x)g(x)\\,dx$ 的 $C[0, 1]$ 中，常数构成由 $1$ 张成的一维子空间，且 $\\langle 1, 1 \\rangle = 1$。离 $f$ 最近的常数是它的投影\n\n$$\\hat{f} = \\frac{\\langle f, 1 \\rangle}{\\langle 1, 1 \\rangle} = \\int_0^1 f(x)\\,dx,$$\n\n即 $f$ 在该区间上的平均值。对多项式 $a + bx + cx^2$，它为 $a + \\frac{b}{2} + \\frac{c}{3}$。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const a = rng.int(-4, 4);
+        const b = rng.nonZero(-5, 5);
+        const c = rng.nonZero(-5, 5);
+        const ans = Q.of(6 * a + 3 * b + 2 * c, 6);
+        const f = formatPoly2(c, b, a).replace(/t/g, "x");
+        return numberProblem({
+          prompt: t(
+            `With $\\langle f, g \\rangle = \\int_0^1 f(x) g(x)\\,dx$, find the constant $k$ closest to $f(x) = ${f}$.`,
+            `在 $\\langle f, g \\rangle = \\int_0^1 f(x) g(x)\\,dx$ 下，求离 $f(x) = ${f}$ 最近的常数 $k$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(a), Q.of(a + b + c), Q.of(2 * a + b + c, 2)],
+          solution: t(
+            `$k = \\int_0^1 (${f})\\,dx = ${signedSum([`${a}`, frac(b, 2), frac(c, 3)])} = ${ans.toLatex()}$.`,
+            `$k = \\int_0^1 (${f})\\,dx = ${signedSum([`${a}`, frac(b, 2), frac(c, 3)])} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1527,6 +2293,40 @@ export const gramSchmidtProcessForTwoVectors: TopicDef = {
         });
       },
     },
+    {
+      id: "gram-schmidt-under-a-weighted-inner-product",
+      title: t("Gram–Schmidt under a weighted inner product", "加权内积下的格拉姆–施密特"),
+      explanation: t(
+        "The Gram–Schmidt step $w_2 = v_2 - \\frac{\\langle v_2, v_1 \\rangle}{\\langle v_1, v_1 \\rangle}v_1$ works for any inner product, but every bracket must be computed with that inner product. Under $\\langle x, y \\rangle = a x_1 y_1 + x_2 y_2$ the result is orthogonal to $v_1$ in the weighted sense, and usually not for the ordinary dot product.",
+        "格拉姆–施密特步骤 $w_2 = v_2 - \\frac{\\langle v_2, v_1 \\rangle}{\\langle v_1, v_1 \\rangle}v_1$ 对任何内积都适用，但每个括号都要用该内积计算。在 $\\langle x, y \\rangle = a x_1 y_1 + x_2 y_2$ 下，结果在加权意义下与 $v_1$ 正交，通常对普通点积并不正交。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const a = rng.int(2, 5);
+        const s = rng.nonZero(-3, 3);
+        let p = rng.int(-4, 4);
+        if (p === s) p += 1;
+        const q = s * (a + 1) - a * p;
+        const w2 = [p - s, q - s];
+        const ip = a * p + q;
+        return pointProblem({
+          prompt: t(
+            `On $\\mathbb{R}^2$ use $\\langle x, y \\rangle = ${a} x_1 y_1 + x_2 y_2$. Apply Gram–Schmidt to $v_1 = (1, 1)$, $v_2 = (${p}, ${q})$ and find $w_2$.`,
+            `在 $\\mathbb{R}^2$ 上使用 $\\langle x, y \\rangle = ${a} x_1 y_1 + x_2 y_2$。对 $v_1 = (1, 1)$，$v_2 = (${p}, ${q})$ 作格拉姆–施密特正交化，求 $w_2$。`,
+          ),
+          answer: w2,
+          vector: true,
+          wrong: [
+            [Q.of(2 * p - (p + q), 2), Q.of(2 * q - (p + q), 2)],
+            [p + s, q + s],
+            [p, q],
+          ],
+          solution: t(
+            `$\\langle v_2, v_1 \\rangle = ${ip}$ and $\\langle v_1, v_1 \\rangle = ${a + 1}$, so the coefficient is $${s}$ and $w_2 = (${p}, ${q}) - ${s < 0 ? `(${s})` : s}(1, 1) = (${w2.join(", ")})$.`,
+            `$\\langle v_2, v_1 \\rangle = ${ip}$，$\\langle v_1, v_1 \\rangle = ${a + 1}$，所以系数为 $${s}$，$w_2 = (${p}, ${q}) - ${s < 0 ? `(${s})` : s}(1, 1) = (${w2.join(", ")})$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1576,6 +2376,60 @@ export const gramSchmidtProcessInTheGeneralCase: TopicDef = {
           vector: true,
           solution,
           wrong: [[c1, 0, c3], [0, c2, c3], x3, [0, 0, -c3]],
+        });
+      },
+    },
+    {
+      id: "the-third-gram-schmidt-vector",
+      title: t("The third Gram–Schmidt vector", "第三个格拉姆–施密特向量"),
+      explanation: t(
+        "In the general case each new vector has its projections onto all earlier ones removed:\n\n$$w_3 = v_3 - \\frac{v_3 \\cdot w_1}{w_1 \\cdot w_1}w_1 - \\frac{v_3 \\cdot w_2}{w_2 \\cdot w_2}w_2.$$\n\nWhen $v_1$ and $v_2$ are already orthogonal, $w_1 = v_1$ and $w_2 = v_2$, and only this last step is needed. Subtracting both projections is essential; removing only one leaves a vector that is not orthogonal to the other.",
+        "一般情形下，每个新向量都要去掉它在之前所有向量上的投影：\n\n$$w_3 = v_3 - \\frac{v_3 \\cdot w_1}{w_1 \\cdot w_1}w_1 - \\frac{v_3 \\cdot w_2}{w_2 \\cdot w_2}w_2。$$\n\n当 $v_1$ 与 $v_2$ 已经正交时，$w_1 = v_1$，$w_2 = v_2$，只需这最后一步。两个投影都要减去；只去掉一个会留下与另一个不正交的向量。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const frames = [
+          [
+            [1, 1, 1],
+            [1, -1, 0],
+            [1, 1, -2],
+          ],
+          [
+            [1, 0, 1],
+            [1, 0, -1],
+            [0, 1, 0],
+          ],
+          [
+            [1, 2, 2],
+            [2, 1, -2],
+            [2, -2, 1],
+          ],
+          [
+            [1, -1, 1],
+            [1, 1, 0],
+            [-1, 1, 2],
+          ],
+        ];
+        const [w1, w2, n] = rng.pick(frames) as [number[], number[], number[]];
+        const a = rng.nonZero(-2, 2);
+        const b = rng.nonZero(-2, 2);
+        const k = rng.nonZero(-2, 2);
+        const v3 = [0, 1, 2].map((i) => a * w1[i]! + b * w2[i]! + k * n[i]!);
+        const w3 = n.map((x) => k * x);
+        const n1 = w1.reduce((s, x) => s + x * x, 0);
+        const n2 = w2.reduce((s, x) => s + x * x, 0);
+        return pointProblem({
+          prompt: t(
+            `$v_1 = (${w1.join(", ")})$ and $v_2 = (${w2.join(", ")})$ are orthogonal. Gram–Schmidt continues with $v_3 = (${v3.join(", ")})$. Find $w_3$.`,
+            `$v_1 = (${w1.join(", ")})$ 与 $v_2 = (${w2.join(", ")})$ 正交。格拉姆–施密特继续处理 $v_3 = (${v3.join(", ")})$。求 $w_3$。`,
+          ),
+          answer: w3,
+          vector: true,
+          vars: ["x", "y", "z"],
+          wrong: [[0, 1, 2].map((i) => v3[i]! - a * w1[i]!), [0, 1, 2].map((i) => v3[i]! - b * w2[i]!), w3.map((x) => -x)],
+          solution: t(
+            `$\\frac{v_3 \\cdot w_1}{w_1 \\cdot w_1} = \\frac{${a * n1}}{${n1}} = ${a}$ and $\\frac{v_3 \\cdot w_2}{w_2 \\cdot w_2} = \\frac{${b * n2}}{${n2}} = ${b}$, so $w_3 = v_3 - ${a === 1 ? "" : a < 0 ? `(${a})` : a}w_1 - ${b === 1 ? "" : b < 0 ? `(${b})` : b}w_2 = (${w3.join(", ")})$.`,
+            `$\\frac{v_3 \\cdot w_1}{w_1 \\cdot w_1} = \\frac{${a * n1}}{${n1}} = ${a}$，$\\frac{v_3 \\cdot w_2}{w_2 \\cdot w_2} = \\frac{${b * n2}}{${n2}} = ${b}$，所以 $w_3 = v_3 - ${a === 1 ? "" : a < 0 ? `(${a})` : a}w_1 - ${b === 1 ? "" : b < 0 ? `(${b})` : b}w_2 = (${w3.join(", ")})$。`,
+          ),
         });
       },
     },
@@ -1695,6 +2549,50 @@ export const qrFactorization: TopicDef = {
         );
 
         return oneOf(rng, prompt, right, wrong, solution);
+      },
+    },
+    {
+      id: "r-from-q-transpose-a",
+      title: t("Recovering $R$ as $Q^TA$", "由 $Q^TA$ 求 $R$"),
+      explanation: t(
+        "If $A = QR$ and $Q$ has orthonormal columns, then $Q^TQ = I$, so multiplying on the left by $Q^T$ gives $R = Q^TA$. Each entry is a dot product: $r_{ij} = q_i \\cdot a_j$, the $i$th column of $Q$ dotted with the $j$th column of $A$. The entries below the diagonal come out as zero automatically.",
+        "若 $A = QR$ 且 $Q$ 的列标准正交，则 $Q^TQ = I$，在左边乘以 $Q^T$ 得 $R = Q^TA$。每个元素都是点积：$r_{ij} = q_i \\cdot a_j$，即 $Q$ 的第 $i$ 列与 $A$ 的第 $j$ 列的点积。对角线以下的元素自动为零。",
+      ),
+      generate: (rng: Rng): Problem => {
+        const q1 = [1, 2, 2];
+        const q2 = rng.pick([
+          [2, 1, -2],
+          [-2, 2, -1],
+          [2, -2, 1],
+        ]);
+        const r11 = rng.int(1, 3);
+        const r12 = rng.nonZero(-3, 3);
+        const r22 = rng.int(1, 3);
+        // With Q = (1/3)[q1 q2] and R = 3[[r11, r12], [0, r22]], A has integer entries.
+        const a1 = q1.map((x) => x * r11);
+        const a2 = [0, 1, 2].map((i) => q1[i]! * r12 + q2[i]! * r22);
+        const A = [0, 1, 2].map((i) => [a1[i]!, a2[i]!]);
+        const Qm = [0, 1, 2].map((i) => [frac(q1[i]!, 3), frac(q2[i]!, 3)]);
+        const which = rng.int(0, 2);
+        const label = ["r_{11}", "r_{12}", "r_{22}"][which]!;
+        const ans = [3 * r11, 3 * r12, 3 * r22][which]!;
+        const cols = [
+          [q1, a1],
+          [q1, a2],
+          [q2, a2],
+        ][which]!;
+        return numberProblem({
+          prompt: t(
+            `$A = ${matLatex(A)} = QR$ with $Q = ${matLatex(Qm)}$. Find $${label}$.`,
+            `$A = ${matLatex(A)} = QR$，其中 $Q = ${matLatex(Qm)}$。求 $${label}$。`,
+          ),
+          answer: ans,
+          wrong: [ans / 3, -ans, 3 * r11 + 3 * r22 - ans || 1, ans * 3],
+          solution: t(
+            `$${label} = q_${which === 2 ? 2 : 1} \\cdot a_${which === 0 ? 1 : 2} = \\frac{1}{3}(${cols[0]!.map((x, i) => `(${x})(${cols[1]![i]!})`).join(" + ")}) = ${ans}$.`,
+            `$${label} = q_${which === 2 ? 2 : 1} \\cdot a_${which === 0 ? 1 : 2} = \\frac{1}{3}(${cols[0]!.map((x, i) => `(${x})(${cols[1]![i]!})`).join(" + ")}) = ${ans}$。`,
+          ),
+        });
       },
     },
   ],
