@@ -583,6 +583,59 @@ export const approximatingAreasUnderGraphsOfCompositeFunctions: TopicDef = {
         });
       },
     },
+    {
+      id: "overestimates-from-monotonicity-and-concavity",
+      title: t("Overestimates from monotonicity and concavity", "由单调性和凹凸性判断高估或低估"),
+      explanation: t(
+        "Whether an approximation is too big or too small depends on the shape of the graph, not on the numbers:\n\n- **left and right sums** depend on monotonicity: for an increasing $f$, $L_{n}$ underestimates and $R_{n}$ overestimates; for a decreasing $f$ it is the other way round;\n- **the trapezoidal rule and the midpoint sum** depend on concavity: if $f$ is concave up, each chord lies above the curve, so the trapezoidal rule overestimates, and each midpoint rectangle trades a smaller piece of extra area for a larger missing one, so the midpoint sum underestimates; if $f$ is concave down, both reverse.\n\nSo find the signs of $f'$ and $f''$ on the interval first. For $\\sqrt{x + 1}$, $f' > 0$ and $f'' < 0$: the right sum and the midpoint sum overestimate.",
+        "近似值偏大还是偏小取决于图像的形状，而不是具体数值：\n\n- **左、右黎曼和**取决于单调性：$f$ 递增时，$L_{n}$ 低估、$R_{n}$ 高估；$f$ 递减时正好相反；\n- **梯形法则和中点黎曼和**取决于凹凸性：$f$ 下凸（凹向上）时，每条弦都在曲线上方，所以梯形法则高估；每个中点矩形多出的面积小于缺少的面积，所以中点黎曼和低估；$f$ 上凸（凹向下）时，两者都反过来。\n\n所以先判断 $f'$ 和 $f''$ 在区间上的符号。对 $\\sqrt{x + 1}$，$f' > 0$，$f'' < 0$：右黎曼和与中点黎曼和高估。",
+      ),
+      generate(rng) {
+        const k = rng.int(1, 5);
+        const kinds: [string, boolean, boolean][] = [
+          [`\\sqrt{x + ${k}}`, true, false],
+          [`\\ln(x + ${k})`, true, false],
+          [`\\frac{${k}}{x + 1}`, false, true],
+          [`e^{\\frac{x}{${k + 1}}}`, true, true],
+          [`\\sqrt{x^{2} + ${k}}`, true, true],
+          [`e^{-\\frac{x}{${k + 1}}}`, false, true],
+        ];
+        const [f, increasing, up] = rng.pick(kinds);
+        const a = rng.int(0, 3);
+        const b = a + rng.int(2, 6);
+        const n = rng.int(3, 8);
+        const rule = rng.pick(["left", "right", "midpoint", "trapezoidal"] as const);
+        const over = rule === "left" ? !increasing : rule === "right" ? increasing : rule === "trapezoidal" ? up : !up;
+        const byShape = rule === "left" || rule === "right";
+        const shape = byShape
+          ? t(increasing ? "increasing" : "decreasing", increasing ? "递增" : "递减")
+          : t(up ? "concave up" : "concave down", up ? "下凸（凹向上）" : "上凸（凹向下）");
+        const reason = byShape
+          ? t(
+              `the height at the ${rule} end of each subinterval is the ${over ? "largest" : "smallest"} value on it`,
+              `每个子区间${rule === "left" ? "左" : "右"}端点处的高度是该区间上的${over ? "最大" : "最小"}值`,
+            )
+          : rule === "trapezoidal"
+            ? t(`each chord lies ${over ? "above" : "below"} the curve`, `每条弦都在曲线${over ? "上方" : "下方"}`)
+            : t(
+                `each midpoint rectangle ${over ? "adds more area than it leaves out" : "leaves out more area than it adds"}`,
+                `每个中点矩形${over ? "多出的面积大于缺少的面积" : "缺少的面积大于多出的面积"}`,
+              );
+        return oneOf(
+          rng,
+          t(
+            `The area under $y = ${f}$ on $[${a}, ${b}]$ is approximated by ${ruleWithArticle(rule)} with $${n}$ subintervals. Is the approximation an overestimate or an underestimate of the area?`,
+            `用 $${n}$ 个子区间的${ruleName[rule]["zh-CN"]}近似 $y = ${f}$ 在 $[${a}, ${b}]$ 上的图像下方面积。这个近似值是高估还是低估？`,
+          ),
+          over ? t("An overestimate", "高估") : t("An underestimate", "低估"),
+          [over ? t("An underestimate", "低估") : t("An overestimate", "高估"), t("It equals the area exactly", "恰好等于面积")],
+          t(
+            `The ${ruleName[rule].en} depends on whether $f$ is ${byShape ? "increasing or decreasing" : "concave up or down"}. $y = ${f}$ is ${shape.en} on $[${a}, ${b}]$, so ${reason.en}: the approximation is ${over ? "an overestimate" : "an underestimate"}.`,
+            `${ruleName[rule]["zh-CN"]}取决于 $f$ 的${byShape ? "单调性" : "凹凸性"}。$y = ${f}$ 在 $[${a}, ${b}]$ 上${shape["zh-CN"]}，所以${reason["zh-CN"]}：近似值是${over ? "高估" : "低估"}。`,
+          ),
+        );
+      },
+    },
   ],
 };
 

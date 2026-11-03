@@ -449,6 +449,41 @@ export const calculatingTheDefiniteIntegralOfAFunctionGivenItsGraph: TopicDef = 
         };
       },
     },
+    {
+      id: "integrals-of-combinations-from-a-graph",
+      title: t("Integrals of combinations from a graph", "由图像求组合函数的积分"),
+      explanation: t(
+        "The integral is linear: constants factor out, and the integral of a constant $k$ over $[a, b]$ is the area of a rectangle, $k(b - a)$. So\n\n$$\\int_{a}^{b} \\big(c f(x) + k\\big) \\, dx = c \\int_{a}^{b} f(x) \\, dx + k(b - a).$$\n\nRead $\\int_{a}^{b} f(x) \\, dx$ off the graph as a signed area, then scale and add. If $\\int_{0}^{4} f(x) \\, dx = 6$, then $\\int_{0}^{4} \\big(3f(x) - 2\\big) \\, dx = 18 - 8 = 10$.",
+        "积分是线性的：常数因子可以提出，常数 $k$ 在 $[a, b]$ 上的积分是矩形面积 $k(b - a)$。所以\n\n$$\\int_{a}^{b} \\big(c f(x) + k\\big) \\, dx = c \\int_{a}^{b} f(x) \\, dx + k(b - a)。$$\n\n先从图像读出有向面积 $\\int_{a}^{b} f(x) \\, dx$，再乘以系数并相加。若 $\\int_{0}^{4} f(x) \\, dx = 6$，则 $\\int_{0}^{4} \\big(3f(x) - 2\\big) \\, dx = 18 - 8 = 10$。",
+      ),
+      generate(rng) {
+        const ys = zigzag(rng);
+        const [a, b] = nodePair(rng);
+        const c = rng.pick([-3, -2, -1, 2, 3, 4]);
+        const k = rng.nonZero(-4, 4);
+        const value = zigIntegral(ys, Q.of(a), Q.of(b));
+        const answer = value.mul(Q.of(c)).add(Q.of(k * (b - a)));
+        const body = `${c === -1 ? "-" : c}f(x) ${k < 0 ? "-" : "+"} ${Math.abs(k)}`;
+        const integrand = `\\big(${body}\\big)`;
+        return {
+          ...numberProblem({
+            prompt: t(`The graph of $f$ is shown. Find $${int(a, b, integrand)}$.`, `图中是 $f$ 的图像。求 $${int(a, b, integrand)}$。`),
+            answer,
+            wrong: [
+              value.mul(Q.of(c)),
+              value.mul(Q.of(c)).add(Q.of(k)),
+              value.add(Q.of(k * (b - a))),
+              value.mul(Q.of(c)).sub(Q.of(k * (b - a))),
+            ],
+            solution: t(
+              `As a signed area, $${int(a, b, "f(x)")} = ${value.toLatex()}$. By linearity:${steps(`${int(a, b, integrand)} = ${c} \\cdot ${par(value)} + ${par(Q.of(k))} \\cdot ${b - a} = ${answer.toLatex()}`)}`,
+              `作为有向面积，$${int(a, b, "f(x)")} = ${value.toLatex()}$。由线性性：${steps(`${int(a, b, integrand)} = ${c} \\cdot ${par(value)} + ${par(Q.of(k))} \\cdot ${b - a} = ${answer.toLatex()}`)}`,
+            ),
+          }),
+          figure: zigzagFigure(ys, "f"),
+        };
+      },
+    },
   ],
 };
 
