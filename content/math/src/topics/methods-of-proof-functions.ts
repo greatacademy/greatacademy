@@ -497,10 +497,13 @@ export const injections: TopicDef = {
           yesNo[value ? 0 : 1]!,
           [yesNo[value ? 1 : 0]!],
           value
-            ? t("Yes: all outputs are different.", "是：所有输出都不同。")
+            ? t(
+                "Yes: the outputs are all different, so no two inputs share an output.",
+                "是：所有输出都不同，所以没有两个输入对应同一个输出。",
+              )
             : t(
-                `No: $f(${f.values.indexOf(f.values[repeat]!) + 1}) = f(${repeat + 1}) = ${f.values[repeat]}$.`,
-                `不是：$f(${f.values.indexOf(f.values[repeat]!) + 1}) = f(${repeat + 1}) = ${f.values[repeat]}$。`,
+                `No: two different inputs share an output, $f(${f.values.indexOf(f.values[repeat]!) + 1}) = f(${repeat + 1}) = ${f.values[repeat]}$.`,
+                `不是：两个不同的输入对应同一个输出，$f(${f.values.indexOf(f.values[repeat]!) + 1}) = f(${repeat + 1}) = ${f.values[repeat]}$。`,
               ),
         );
       },
@@ -540,10 +543,13 @@ export const injections: TopicDef = {
                   `输入比输出多，必有两个输入取相同的值：$0$ 个。`,
                 )
               : t(
-                  `$${range(n - m + 1, n)
+                  `The first input has $${n}$ choices of output, the next $${n - 1}$, and so on, since outputs may not repeat: $${range(
+                    n - m + 1,
+                    n,
+                  )
                     .reverse()
                     .join(" \\cdot ")} = ${count}$.`,
-                  `$${range(n - m + 1, n)
+                  `第一个输入有 $${n}$ 种输出可选，下一个有 $${n - 1}$ 种，依此类推，因为输出不能重复：$${range(n - m + 1, n)
                     .reverse()
                     .join(" \\cdot ")} = ${count}$。`,
                 ),
@@ -738,12 +744,18 @@ export const surjections: TopicDef = {
                 `There are $${n}^{${m}} = ${n ** m}$ functions and $${formula} = ${count}$ surjections, so $${n ** m - count}$ are not onto.`,
                 `共有 $${n}^{${m}} = ${n ** m}$ 个函数，其中满射有 $${formula} = ${count}$ 个，所以非满射有 $${n ** m - count}$ 个。`,
               )
-            : t(`$${formula} = ${count}$.`, `$${formula} = ${count}$。`),
+            : t(
+                `By inclusion–exclusion, subtract from all $${n}^{${m}}$ functions those that miss at least one of the $${n}$ outputs: $${formula} = ${count}$.`,
+                `由容斥原理，从全部 $${n}^{${m}}$ 个函数中去掉至少漏掉 $${n}$ 个输出之一的函数：$${formula} = ${count}$。`,
+              ),
         });
       },
     },
   ],
 };
+
+/** lower lowercases the first letter of a sentence so that it can follow "Yes:" or "No:". */
+const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
 /** intoFunctions studies functions whose range is a proper subset of the codomain. */
 export const intoFunctions: TopicDef = {
@@ -841,7 +853,15 @@ export const intoFunctions: TopicDef = {
           ),
           yesNo[into ? 0 : 1]!,
           [yesNo[into ? 1 : 0]!],
-          why,
+          into
+            ? t(
+                `Yes: ${lower(why.en)} So some values of the codomain $${cod}$ are never reached, and $f$ is into.`,
+                `是：${why["zh-CN"]}所以陪域 $${cod}$ 中有的值取不到，$f$ 是非满射。`,
+              )
+            : t(
+                `No: ${lower(why.en)} So every value of the codomain $${cod}$ is reached, and $f$ is onto.`,
+                `不是：${why["zh-CN"]}所以陪域 $${cod}$ 中的每个值都能取到，$f$ 是满射。`,
+              ),
         );
       },
     },
@@ -1661,8 +1681,8 @@ export const theCardinalityOfThePowerSetOfNaturalNumbers: TopicDef = {
             answer: v,
             wrong: [S.reduce((s, n) => s + 2 ** n, 0), S.reduce((s, n) => s + n, 0), v + 1],
             solution: t(
-              `$${S.length === 0 ? "0" : S.map((n) => `2^{${n - 1}}`).join(" + ")} = ${v}$.`,
-              `$${S.length === 0 ? "0" : S.map((n) => `2^{${n - 1}}`).join(" + ")} = ${v}$。`,
+              `Each element $n$ of $S$ contributes $2^{n - 1}$: $${S.length === 0 ? "0" : S.map((n) => `2^{${n - 1}}`).join(" + ")} = ${v}$.`,
+              `$S$ 的每个元素 $n$ 贡献 $2^{n - 1}$：$${S.length === 0 ? "0" : S.map((n) => `2^{${n - 1}}`).join(" + ")} = ${v}$。`,
             ),
           });
         }

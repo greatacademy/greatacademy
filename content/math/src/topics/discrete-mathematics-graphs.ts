@@ -167,10 +167,22 @@ export const walksTrailsPathsAndDistances: TopicDef = {
         }
         const cls = walkClass(g, seq);
         const why = [
-          t("No vertex is repeated.", "没有重复的顶点。"),
-          t("A vertex is repeated, but no edge is.", "有顶点重复，但没有边重复。"),
-          t("An edge is used twice.", "有一条边被经过两次。"),
-          t("Two consecutive vertices are not joined by an edge.", "有两个相邻的顶点之间没有边。"),
+          t(
+            "Consecutive vertices are joined by edges and no vertex is repeated, so it is a path.",
+            "相邻的顶点之间都有边，且没有重复的顶点，所以它是路径。",
+          ),
+          t(
+            "A vertex is repeated, so it is not a path, but no edge is repeated, so it is a trail.",
+            "有顶点重复，所以不是路径；但没有边重复，所以它是迹。",
+          ),
+          t(
+            "Consecutive vertices are joined by edges, so it is a walk, but an edge is used twice, so it is not a trail.",
+            "相邻的顶点之间都有边，所以它是途径；但有一条边被经过两次，所以不是迹。",
+          ),
+          t(
+            "Two consecutive vertices are not joined by an edge, so it is not a walk at all.",
+            "有两个相邻的顶点之间没有边，所以它根本不是途径。",
+          ),
         ][cls]!;
         const s = seq.map(vx).join(", ");
         return withFigure(
@@ -644,7 +656,10 @@ export const completeAndBipartiteGraphs: TopicDef = {
             prompt: t(`How many edges does $K_{${n}}$ have?`, `$K_{${n}}$ 有多少条边？`),
             answer: choose(n, 2),
             wrong: [n * (n - 1), n - 1, choose(n + 1, 2)],
-            solution: t(`$\\binom{${n}}{2} = ${choose(n, 2)}$.`, `$\\binom{${n}}{2} = ${choose(n, 2)}$。`),
+            solution: t(
+              `Every pair of the $${n}$ vertices is joined by exactly one edge, so count the pairs: $\\binom{${n}}{2} = \\frac{${n} \\cdot ${n - 1}}{2} = ${choose(n, 2)}$.`,
+              `$${n}$ 个顶点中每两个之间恰有一条边，所以数顶点对：$\\binom{${n}}{2} = \\frac{${n} \\cdot ${n - 1}}{2} = ${choose(n, 2)}$。`,
+            ),
           });
         }
         const m = rng.int(2, 9);

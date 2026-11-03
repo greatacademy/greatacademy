@@ -159,7 +159,10 @@ export const subtractingAPositiveNumberFromASmallerPositiveNumber = topic(
           answer: a - b,
           form: "integer",
           wrong: [b - a, -(a + b), a + b],
-          solution: t(`$${a} - ${b} = -(${b} - ${a}) = ${a - b}$.`, `$${a} - ${b} = -(${b} - ${a}) = ${a - b}$。`),
+          solution: t(
+            `A fall, payment or descent subtracts: $${a} - ${b}$. Taking away more than there is goes below $0$ by the difference: $${a} - ${b} = -(${b} - ${a}) = ${a - b}$.`,
+            `下降、支付或下行都是减法：$${a} - ${b}$。减去的比原有的多，结果就低于 $0$，相差多少就是负多少：$${a} - ${b} = -(${b} - ${a}) = ${a - b}$。`,
+          ),
         });
       },
     },

@@ -1558,8 +1558,8 @@ const semiLogScatterPlots: TopicDef = {
           ...decimalForm(ans),
           wrong: [Q.of(ld * k, 1000), Q.of(ld + 1000 * (k + 1), 1000), Q.of(ld - 1000 * k, 1000)],
           solution: t(
-            `$$Y = \\log ${y} = ${d === 1 ? `${k}` : `\\log ${d} + ${paren(String(k))} \\approx ${dec(ans)}`}$$`,
-            `$$Y = \\log ${y} = ${d === 1 ? `${k}` : `\\log ${d} + ${paren(String(k))} \\approx ${dec(ans)}`}$$`,
+            `A semi-log plot keeps $x$ and replaces $y$ by $\\log y$, so $Y = \\log ${y}$.${d === 1 ? ` Since $${y} = 10^{${k}}$, $Y = ${k}$.` : ` Write $${y} = ${d} \\cdot 10^{${k}}$; the log of a product is the sum of the logs: $$Y = \\log ${d} + ${paren(String(k))} \\approx ${dec(ans)}$$`}`,
+            `半对数图保持 $x$ 不变，把 $y$ 换成 $\\log y$，所以 $Y = \\log ${y}$。${d === 1 ? `由于 $${y} = 10^{${k}}$，$Y = ${k}$。` : `把 $${y}$ 写成 $${d} \\cdot 10^{${k}}$；积的对数等于对数之和：$$Y = \\log ${d} + ${paren(String(k))} \\approx ${dec(ans)}$$`}`,
           ),
         });
       },

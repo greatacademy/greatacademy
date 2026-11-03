@@ -1107,7 +1107,10 @@ export const normalSubgroups: TopicDef = {
           {
             prompt: t(`Is $A_{${n}}$ normal in $S_{${n}}$?`, `$A_{${n}}$ 在 $S_{${n}}$ 中正规吗？`),
             holds: true,
-            reason: t("It has index $2$.", "它的指数为 $2$。"),
+            reason: t(
+              "It has index $2$, and a subgroup of index $2$ is normal: its left and right cosets are both the subgroup and its complement.",
+              "它的指数为 $2$，而指数为 $2$ 的子群是正规的：它的左陪集和右陪集都是该子群本身与其补集。",
+            ),
           },
           {
             prompt: t(`Is $\\langle (1\\;2) \\rangle$ normal in $S_{${n}}$?`, `$\\langle (1\\;2) \\rangle$ 在 $S_{${n}}$ 中正规吗？`),
@@ -1123,7 +1126,10 @@ export const normalSubgroups: TopicDef = {
               `旋转子群 $\\langle r \\rangle$ 在 $D_{${n}}$ 中正规吗？`,
             ),
             holds: true,
-            reason: t("It has index $2$.", "它的指数为 $2$。"),
+            reason: t(
+              "It has index $2$, and a subgroup of index $2$ is normal: its left and right cosets are both the subgroup and its complement.",
+              "它的指数为 $2$，而指数为 $2$ 的子群是正规的：它的左陪集和右陪集都是该子群本身与其补集。",
+            ),
           },
           {
             prompt: t(

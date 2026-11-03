@@ -1102,7 +1102,10 @@ function situation(rng: Rng): Situation {
           `一名工人每小时挣 $\\$${k + 10}$，没有其他收入。工资与工作的小时数成正比例吗？`,
         ),
         proportional: true,
-        why: t(`The pay is $y = ${k + 10}x$.`, `工资 $y = ${k + 10}x$。`),
+        why: t(
+          `Yes: for $x$ hours the pay is $y = ${k + 10}x$, a constant times $x$, and $0$ hours earn $\\$0$.`,
+          `成正比例：工作 $x$ 小时的工资是 $y = ${k + 10}x$，是 $x$ 的常数倍，且工作 $0$ 小时挣 $\\$0$。`,
+        ),
       };
     case 3:
       return {
@@ -1295,7 +1298,10 @@ export const interpretingDataFromProportionalRelationships = topic(
             answer: y,
             form: "decimal",
             wrong: [kq.div(Q.of(x)), kq.add(Q.of(x)), Q.of(x).div(kq)],
-            solution: t(`$y = ${k} \\times ${x} = ${dec(y)}$.`, `$y = ${k} \\times ${x} = ${dec(y)}$。`),
+            solution: t(
+              `Substitute $x = ${x}$ into the equation: $y = ${k} \\times ${x} = ${dec(y)}$.`,
+              `把 $x = ${x}$ 代入方程：$y = ${k} \\times ${x} = ${dec(y)}$。`,
+            ),
           });
         }
         const ask = job.askX(dec(y));

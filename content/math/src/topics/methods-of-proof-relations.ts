@@ -842,6 +842,11 @@ export const reflexiveAndIrreflexiveRelations: TopicDef = {
         ];
         const [rule, kind, why] = rng.pick(rules);
         const options = [t("Reflexive", "自反"), t("Irreflexive", "反自反"), t("Neither", "两者都不是")];
+        const verdicts = [
+          t("Reflexive: every integer is related to itself, because", "自反：每个整数都与自身有关系，因为 "),
+          t("Irreflexive: no integer is related to itself, because", "反自反：没有整数与自身有关系，因为 "),
+          t("Neither: some integers are related to themselves and some are not:", "两者都不是：有的整数与自身有关系，有的没有："),
+        ];
         return oneOf(
           rng,
           t(
@@ -850,7 +855,7 @@ export const reflexiveAndIrreflexiveRelations: TopicDef = {
           ),
           options[kind]!,
           options.filter((_, i) => i !== kind),
-          why,
+          t(`${verdicts[kind]!.en} ${why.en}`, `${verdicts[kind]!["zh-CN"]}${why["zh-CN"]}`),
         );
       },
     },
@@ -945,7 +950,14 @@ export const symmetricAndAntisymmetricRelations: TopicDef = {
               `$a + b = b + a$，且 $(1, ${k - 1})$、$(${k - 1}, 1)$ 都在 $R$ 中。`,
             ),
           ],
-          [`|a - b| = ${k}`, 0, t("$|a - b| = |b - a|$.", "$|a - b| = |b - a|$。")],
+          [
+            `|a - b| = ${k}`,
+            0,
+            t(
+              `Symmetric: $|a - b| = |b - a|$, so $a \\mathrel{R} b$ gives $b \\mathrel{R} a$. Not antisymmetric: $0 \\mathrel{R} ${k}$ and $${k} \\mathrel{R} 0$ with $0 \\ne ${k}$.`,
+              `对称：$|a - b| = |b - a|$，所以由 $a \\mathrel{R} b$ 可得 $b \\mathrel{R} a$。不是反对称：$0 \\mathrel{R} ${k}$ 且 $${k} \\mathrel{R} 0$，但 $0 \\ne ${k}$。`,
+            ),
+          ],
           [
             "a \\le b",
             1,

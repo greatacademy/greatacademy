@@ -798,8 +798,8 @@ export const creatingAndInterpretingLinePlotsWithFractions = topic(
             answer: Q.of(a - b, d),
             wrong: [Q.of(a, d), Q.of(a + b, d), Q.of(countOf(values, a) + 0, 1)].filter((w) => !w.eq(Q.of(a - b, d))),
             solution: t(
-              `$${mixedLatex(Q.of(a, d))} - ${mixedLatex(Q.of(b, d))} = ${mixedLatex(Q.of(a - b, d))}$ inches.`,
-              `$${mixedLatex(Q.of(a, d))} - ${mixedLatex(Q.of(b, d))} = ${mixedLatex(Q.of(a - b, d))}$ 英寸。`,
+              `The rightmost mark is the longest, $${mixedLatex(Q.of(a, d))}$ inches, and the leftmost is the shortest, $${mixedLatex(Q.of(b, d))}$ inches. Subtract: $${mixedLatex(Q.of(a, d))} - ${mixedLatex(Q.of(b, d))} = ${mixedLatex(Q.of(a - b, d))}$ inches.`,
+              `最右边的点是最长的，$${mixedLatex(Q.of(a, d))}$ 英寸；最左边的点是最短的，$${mixedLatex(Q.of(b, d))}$ 英寸。相减：$${mixedLatex(Q.of(a, d))} - ${mixedLatex(Q.of(b, d))} = ${mixedLatex(Q.of(a - b, d))}$ 英寸。`,
             ),
           }),
           figure: {
@@ -1687,7 +1687,10 @@ export const solvingAngleProblems = topic(
             wrong: [total - step, total / step + 1, (total === 180 ? 360 : 180) / step].filter(
               (w) => w !== total / step && Number.isInteger(w),
             ),
-            solution: t(`$${total} \\div ${step} = ${total / step}$ turns.`, `$${total} \\div ${step} = ${total / step}$ 次。`),
+            solution: t(
+              `Count how many $${step}^\\circ$ turns fit into $${total}^\\circ$: $${total} \\div ${step} = ${total / step}$ turns.`,
+              `数一数 $${total}^\\circ$ 里有几个 $${step}^\\circ$：$${total} \\div ${step} = ${total / step}$ 次。`,
+            ),
           });
         }
         const whole = rng.int(8, 17) * 10;
@@ -1701,7 +1704,10 @@ export const solvingAngleProblems = topic(
           form: "integer",
           unit: "°",
           wrong: [whole + a, 180 - a, 360 - whole - a].filter((w) => w > 0 && w !== whole - a),
-          solution: t(`$${whole}^\\circ - ${a}^\\circ = ${whole - a}^\\circ$.`, `$${whole}^\\circ - ${a}^\\circ = ${whole - a}^\\circ$。`),
+          solution: t(
+            `The two sections add up to the whole $${whole}^\\circ$, so subtract the known one: $${whole}^\\circ - ${a}^\\circ = ${whole - a}^\\circ$.`,
+            `两部分合起来是整个 $${whole}^\\circ$，所以减去已知的部分：$${whole}^\\circ - ${a}^\\circ = ${whole - a}^\\circ$。`,
+          ),
         });
       },
     },
@@ -1859,7 +1865,10 @@ export const modelingWithRectangles = topic(
             answer: w,
             form: "integer",
             wrong: [l * w - l, (l * w) / 2 - l > 0 ? (l * w) / 2 - l : w + 1, l].filter((x) => Number.isInteger(x) && x !== w),
-            solution: t(`$${l * w} \\div ${l} = ${w}$ inches.`, `$${l * w} \\div ${l} = ${w}$ 英寸。`),
+            solution: t(
+              `Area is length times width, so the width is the area divided by the length: $${l * w} \\div ${l} = ${w}$ inches.`,
+              `面积等于长乘宽，所以宽等于面积除以长：$${l * w} \\div ${l} = ${w}$ 英寸。`,
+            ),
           });
         }
         return numberProblem({

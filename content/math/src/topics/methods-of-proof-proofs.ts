@@ -1174,8 +1174,8 @@ export const provingIrrationalityByContradiction: TopicDef = {
           [yesNo[value ? 1 : 0]!],
           value
             ? t(
-                `$${r} = ${Math.round(cube ? Math.cbrt(n) : Math.sqrt(n))}$.`,
-                `$${r} = ${Math.round(cube ? Math.cbrt(n) : Math.sqrt(n))}$。`,
+                `Yes: $${n} = ${Math.round(cube ? Math.cbrt(n) : Math.sqrt(n))}^{${cube ? 3 : 2}}$ is a perfect ${cube ? "cube" : "square"}, so $${r} = ${Math.round(cube ? Math.cbrt(n) : Math.sqrt(n))}$, an integer and so rational.`,
+                `是：$${n} = ${Math.round(cube ? Math.cbrt(n) : Math.sqrt(n))}^{${cube ? 3 : 2}}$ 是完全${cube ? "立方" : "平方"}数，所以 $${r} = ${Math.round(cube ? Math.cbrt(n) : Math.sqrt(n))}$ 是整数，因而是有理数。`,
               )
             : t(
                 `$${n}$ is not a perfect ${cube ? "cube" : "square"}, so $${r}$ is irrational.`,

@@ -209,7 +209,10 @@ export const modularResidues: TopicDef = {
           ),
           answer: r,
           wrong: [Math.abs(a) % n, a % n, n - r],
-          solution: t(`$${a} = ${n} \\cdot (${q}) + ${r}$.`, `$${a} = ${n} \\cdot (${q}) + ${r}$。`),
+          solution: t(
+            `Divide by $${n}$ with a remainder in $[0, ${n})$: $${a} = ${n} \\cdot (${q}) + ${r}$, so $${a} - ${r}$ is a multiple of $${n}$ and $r = ${r}$.`,
+            `除以 $${n}$，使余数在 $[0, ${n})$ 中：$${a} = ${n} \\cdot (${q}) + ${r}$，所以 $${a} - ${r}$ 是 $${n}$ 的倍数，$r = ${r}$。`,
+          ),
         });
       },
     },

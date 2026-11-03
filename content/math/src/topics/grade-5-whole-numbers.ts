@@ -402,6 +402,8 @@ interface Phrase {
   readonly wrong: readonly string[];
   /** slip is the value of the first wrong expression, when it is a whole number. */
   readonly slip?: number;
+  /** why says which operation the description names last, so where the parentheses go. */
+  readonly why?: { readonly en: string; readonly zh: string };
 }
 
 /** stepPhrase draws a two-step calculation described as instructions: "add 8 and 7, then multiply by 2". */
@@ -559,6 +561,10 @@ function termPhrase(rng: Rng): Phrase {
         value: a * (b + c),
         wrong: [`${a} \\times ${b} + ${c}`, `${a} + ${b} \\times ${c}`, `${a} \\times ${b} \\times ${c}`],
         slip: a * b + c,
+        why: {
+          en: `"The product of ${a} and the sum" multiplies ${a} by the whole sum, so the sum needs parentheses`,
+          zh: `"${a} 与和的积"是用 ${a} 乘整个和，所以和要加括号`,
+        },
       };
     case 1:
       return {
@@ -568,6 +574,10 @@ function termPhrase(rng: Rng): Phrase {
         value: b + a * c,
         wrong: [`(${b} + ${a}) \\times ${c}`, `${b} \\times ${a} + ${c}`, `${b} + ${a} + ${c}`],
         slip: (b + a) * c,
+        why: {
+          en: `"The sum of ${b} and the product" adds ${b} to a product, and multiplication comes first without parentheses`,
+          zh: `"${b} 与积的和"是把 ${b} 加上一个积，不加括号时乘法先算`,
+        },
       };
     case 2: {
       const big = a * (c + rng.int(1, 9));
@@ -578,6 +588,10 @@ function termPhrase(rng: Rng): Phrase {
         tex: `${top} - ${big} \\div ${a}`,
         value: top - big / a,
         wrong: [`(${top} - ${big}) \\div ${a}`, `${big} \\div ${a} - ${top}`, `${top} - ${a} \\div ${big}`],
+        why: {
+          en: `"The difference of ${top} and the quotient" subtracts the quotient $${big} \\div ${a}$ from ${top}, and division comes first without parentheses`,
+          zh: `"${top} 与商的差"是用 ${top} 减去商 $${big} \\div ${a}$，不加括号时除法先算`,
+        },
       };
     }
     case 3: {
@@ -589,6 +603,10 @@ function termPhrase(rng: Rng): Phrase {
         tex: `(${s - x} + ${x}) \\div ${a}`,
         value: s / a,
         wrong: [`${s - x} + ${x} \\div ${a}`, `${a} \\div (${s - x} + ${x})`, `(${s - x} + ${x}) \\times ${a}`],
+        why: {
+          en: `"The quotient of the sum and ${a}" divides the whole sum by ${a}, so the sum needs parentheses`,
+          zh: `"和除以 ${a} 的商"是用整个和除以 ${a}，所以和要加括号`,
+        },
       };
     }
     default: {
@@ -600,6 +618,10 @@ function termPhrase(rng: Rng): Phrase {
         value: 2 * (big - c),
         wrong: [`2 \\times ${big} - ${c}`, `${big} - 2 \\times ${c}`, `2 + (${big} - ${c})`],
         slip: 2 * big - c,
+        why: {
+          en: `"Twice the difference" doubles the whole difference, so the difference needs parentheses`,
+          zh: `"差的 2 倍"是把整个差乘 2，所以差要加括号`,
+        },
       };
     }
   }
@@ -629,7 +651,7 @@ export const creatingWholeNumberExpressionsFromTerminology = topic(
           t(`Which expression is ${p.en}?`, `哪个算式表示"${p.zh}"？`),
           mathText(p.tex),
           p.wrong.map(mathText),
-          t(`It is $${p.tex}$.`, `它是 $${p.tex}$。`),
+          t(`${p.why?.en ?? "Translate the words in order"}: $${p.tex}$.`, `${p.why?.zh ?? "按文字顺序列式"}：$${p.tex}$。`),
         );
       },
     },
@@ -714,7 +736,10 @@ export const additiveComparisonsOfWholeNumberExpressions = topic(
           t(`$A = ${A}$ and $B = ${B}$. Which statement is true?`, `$A = ${A}$，$B = ${B}$。下面哪种说法正确？`),
           bigger ? greater : lessT,
           [bigger ? lessT : greater, times, eq],
-          t(`$A$ is $B$ ${bigger ? "plus" : "minus"} $${k}$.`, `$A$ 等于 $B$ ${bigger ? "加" : "减"} $${k}$。`),
+          t(
+            `Both sums contain $${B}$. $A$ then ${bigger ? "adds" : "subtracts"} $${k}$, so $A$ is $B$ ${bigger ? "plus" : "minus"} $${k}$: it is ${k} ${bigger ? "greater" : "less"} than $B$.`,
+            `两个式子都含有 $${B}$。$A$ 又${bigger ? "加上" : "减去"}了 $${k}$，所以 $A$ 等于 $B$ ${bigger ? "加" : "减"} $${k}$，即 $A$ 比 $B$ ${bigger ? "大" : "小"} ${k}。`,
+          ),
         );
       },
     },

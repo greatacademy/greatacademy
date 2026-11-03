@@ -657,8 +657,14 @@ export const wordProblemsInvolvingAdditiveAndMultiplicativeComparison: TopicDef 
           form: "integer",
           wrong: findLarger ? [k + b, b] : [k * b - k, k * b * k],
           solution: findLarger
-            ? t(`$${k} \\times ${b} = ${k * b}$.`, `$${k} \\times ${b} = ${k * b}$。`)
-            : t(`$${k * b} \\div ${k} = ${b}$.`, `$${k * b} \\div ${k} = ${b}$。`),
+            ? t(
+                `${p} has ${k} groups of ${q}'s ${b}, so multiply: $${k} \\times ${b} = ${k * b}$ ${th.en}.`,
+                `${p} 的数量是 ${k} 个 ${q} 的 ${b}，所以用乘法：$${k} \\times ${b} = ${k * b}$。`,
+              )
+            : t(
+                `${p}'s ${k * b} is ${k} groups of ${q}'s amount, so divide: $${k * b} \\div ${k} = ${b}$ ${th.en}. Check: $${k} \\times ${b} = ${k * b}$.`,
+                `${p} 的 ${k * b} 是 ${k} 个 ${q} 的数量，所以用除法：$${k * b} \\div ${k} = ${b}$。验算：$${k} \\times ${b} = ${k * b}$。`,
+              ),
         });
       },
     },
@@ -689,8 +695,14 @@ export const wordProblemsInvolvingAdditiveAndMultiplicativeComparison: TopicDef 
           form: "integer",
           wrong: askTimes ? [a - b, a + b] : [k, a + b],
           solution: askTimes
-            ? t(`Divide: $${a} \\div ${b} = ${k}$.`, `用除法：$${a} \\div ${b} = ${k}$。`)
-            : t(`Subtract: $${a} - ${b} = ${a - b}$.`, `用减法：$${a} - ${b} = ${a - b}$。`),
+            ? t(
+                `"How many times as many" compares by dividing: $${a} \\div ${b} = ${k}$, because $${k} \\times ${b} = ${a}$.`,
+                `"是几倍"用除法比较：$${a} \\div ${b} = ${k}$，因为 $${k} \\times ${b} = ${a}$。`,
+              )
+            : t(
+                `"How many more" compares by subtracting: $${a} - ${b} = ${a - b}$, because $${b} + ${a - b} = ${a}$.`,
+                `"多多少"用减法比较：$${a} - ${b} = ${a - b}$，因为 $${b} + ${a - b} = ${a}$。`,
+              ),
         });
       },
     },
@@ -1296,8 +1308,8 @@ export const moreOnEquivalentPlaceValueRepresentations: TopicDef = {
           form: "integer",
           wrong: [Number(`${a}${b}${"0".repeat(loK)}`), a * 10 ** hiK + b, a * 10 ** hiK + b * 10 ** (loK + 1)].filter((x) => x !== value),
           solution: t(
-            `$${fmt(a * 10 ** hiK)} + ${fmt(b * 10 ** loK)} = ${fmt(value)}$.`,
-            `$${fmt(a * 10 ** hiK)} + ${fmt(b * 10 ** loK)} = ${fmt(value)}$。`,
+            `$${a}$ ${placeNames[hiK]!.en} is $${fmt(a * 10 ** hiK)}$ and $${b}$ ${placeNames[loK]!.en} is $${b} \\times ${fmt(10 ** loK)} = ${fmt(b * 10 ** loK)}$, so the number is $${fmt(a * 10 ** hiK)} + ${fmt(b * 10 ** loK)} = ${fmt(value)}$.`,
+            `$${a}$ 个${roundNames[hiK]!["zh-CN"]}是 $${fmt(a * 10 ** hiK)}$，$${b}$ 个${roundNames[loK]!["zh-CN"]}是 $${b} \\times ${fmt(10 ** loK)} = ${fmt(b * 10 ** loK)}$，所以这个数是 $${fmt(a * 10 ** hiK)} + ${fmt(b * 10 ** loK)} = ${fmt(value)}$。`,
           ),
         });
       },
@@ -1322,7 +1334,10 @@ export const moreOnEquivalentPlaceValueRepresentations: TopicDef = {
           answer: value,
           form: "integer",
           wrong: [Number(`${a}${b}${c}`), a * 100 + b + c, a + b + c],
-          solution: t(`$${a * 100} + ${b * 10} + ${c} = ${value}$.`, `$${a * 100} + ${b * 10} + ${c} = ${value}$。`),
+          solution: t(
+            `Multiply each count by its unit: $${a}$ hundreds is $${a * 100}$, $${b}$ tens is $${b * 10}$ and $${c}$ ones is $${c}$. Then add: $${a * 100} + ${b * 10} + ${c} = ${fmt(value)}$.`,
+            `把每个个数乘它的计数单位：$${a}$ 个百是 $${a * 100}$，$${b}$ 个十是 $${b * 10}$，$${c}$ 个一是 $${c}$。再相加：$${a * 100} + ${b * 10} + ${c} = ${fmt(value)}$。`,
+          ),
         });
       },
     },
@@ -1912,7 +1927,10 @@ function additionTopic(id: string, title: Text, summary: Text, prerequisites: st
             answer: s,
             form: "integer",
             wrong: [ns.reduce(noCarrySum), s + 10, s - 100].filter((x) => x !== s),
-            solution: t(`$${ns.map(fmt).join(" + ")} = ${fmt(s)}$.`, `$${ns.map(fmt).join(" + ")} = ${fmt(s)}$。`),
+            solution: t(
+              `"In all" puts the ${ns.length} days together, so add them, lining up the digits by place: $${ns.map(fmt).join(" + ")} = ${fmt(s)}$ visitors.`,
+              `"一共"是把这 ${ns.length} 天的人数合起来，所以把它们相加，相同数位对齐：$${ns.map(fmt).join(" + ")} = ${fmt(s)}$ 人。`,
+            ),
           });
         },
       },
@@ -2156,12 +2174,20 @@ function subtractionTopic(
               `一座山高 ${plain(a)} 英尺，一座小山高 ${plain(b)} 英尺。大山比小山高多少英尺？`,
             ),
           ];
+          const reasons: Text[] = [
+            t("The books lent out leave the library, so subtract them", "借出的书离开了图书馆，所以要减去"),
+            t("The empty seats are the seats not taken, so subtract the people seated", "空座位是没人坐的座位，所以要减去已坐的人数"),
+            t('"How many feet taller" asks for the difference of the heights', '"高多少"求的是两个高度的差'),
+          ];
           return numberProblem({
             prompt: prompts[kind]!,
             answer: a - b,
             form: "integer",
             wrong: [smallerFromLarger(a, b), a + b, a - b + 10],
-            solution: t(`$${fmt(a)} - ${fmt(b)} = ${fmt(a - b)}$.`, `$${fmt(a)} - ${fmt(b)} = ${fmt(a - b)}$。`),
+            solution: t(
+              `${reasons[kind]!.en}: $${fmt(a)} - ${fmt(b)} = ${fmt(a - b)}$. Check: $${fmt(a - b)} + ${fmt(b)} = ${fmt(a)}$.`,
+              `${reasons[kind]!["zh-CN"]}：$${fmt(a)} - ${fmt(b)} = ${fmt(a - b)}$。验算：$${fmt(a - b)} + ${fmt(b)} = ${fmt(a)}$。`,
+            ),
           });
         },
       },

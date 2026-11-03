@@ -327,12 +327,18 @@ export const partitionsOfSets: TopicDef = {
           const target = blocks.find((b) => b !== donor)!;
           target.push(x);
           target.sort((p, q) => p - q);
-          why = t(`No: $${x}$ lies in two blocks.`, `不是：$${x}$ 同时在两块中。`);
+          why = t(
+            `No: the blocks of a partition must be pairwise disjoint, but $${x}$ lies in two blocks.`,
+            `不是：划分的各块必须两两不交，但 $${x}$ 同时在两块中。`,
+          );
         } else if (flaw === 2) {
           const b = blocks.find((bl) => bl.length > 1) ?? blocks[0]!;
           const x = b.pop()!;
           if (b.length === 0) blocks.splice(blocks.indexOf(b), 1);
-          why = t(`No: $${x}$ is in no block.`, `不是：$${x}$ 不在任何一块中。`);
+          why = t(
+            `No: the blocks of a partition must cover the whole set, but $${x}$ is in no block.`,
+            `不是：划分的各块必须覆盖整个集合，但 $${x}$ 不在任何一块中。`,
+          );
         } else if (flaw === 3) {
           blocks.push([]);
           why = t("No: a partition cannot contain the empty set.", "不是：划分中不能含有空集。");
@@ -659,7 +665,10 @@ export const disjointSets: TopicDef = {
                 `The sets are $${setTex(A)}$ and $${setTex(B)}$, which share no element.`,
                 `两个集合分别是 $${setTex(A)}$ 和 $${setTex(B)}$，没有公共元素。`,
               )
-            : t(`No: $${common[0]}$ is in both sets.`, `不是：$${common[0]}$ 同属两个集合。`),
+            : t(
+                `No: disjoint sets share no element, but $${common[0]}$ is in both, since it is a multiple of $${k}$ and also ${shift === 0 ? `a multiple of $${m}$` : `of the form $${m}j + ${shift}$`}.`,
+                `不是：不相交的集合没有公共元素，但 $${common[0]}$ 是 $${k}$ 的倍数，也${shift === 0 ? `是 $${m}$ 的倍数` : `形如 $${m}j + ${shift}$`}，同属两个集合。`,
+              ),
         );
       },
     },

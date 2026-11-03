@@ -1592,19 +1592,56 @@ export const disjunctiveSyllogismAndTransitivityOfImplication: TopicDef = {
 /** Rule is a named rule of inference. */
 interface Rule {
   readonly name: Text;
+  /** form is the rule's schema with the letters P, Q and R. */
+  readonly form: Text;
   readonly make: (a: Formula, b: Formula, c: Formula) => { premises: Formula[]; conclusion: Formula };
 }
 
 /** inferenceRules are the named rules of inference. */
 const inferenceRules: readonly Rule[] = [
-  { name: t("Modus ponens", "肯定前件"), make: (a, b) => ({ premises: [imp(a, b), a], conclusion: b }) },
-  { name: t("Modus tollens", "否定后件"), make: (a, b) => ({ premises: [imp(a, b), neg(b)], conclusion: neg(a) }) },
-  { name: t("Disjunctive syllogism", "选言推理"), make: (a, b) => ({ premises: [or(a, b), neg(a)], conclusion: b }) },
-  { name: t("Transitivity", "传递性"), make: (a, b, c) => ({ premises: [imp(a, b), imp(b, c)], conclusion: imp(a, c) }) },
-  { name: t("Conjunction", "合取引入"), make: (a, b) => ({ premises: [a, b], conclusion: and(a, b) }) },
-  { name: t("Simplification", "化简"), make: (a, b) => ({ premises: [and(a, b)], conclusion: a }) },
-  { name: t("Addition", "附加"), make: (a, b) => ({ premises: [a], conclusion: or(a, b) }) },
-  { name: t("Resolution", "消解"), make: (a, b, c) => ({ premises: [or(a, b), or(neg(a), c)], conclusion: or(b, c) }) },
+  {
+    name: t("Modus ponens", "肯定前件"),
+    form: t("from $P \\Rightarrow Q$ and $P$, conclude $Q$", "由 $P \\Rightarrow Q$ 与 $P$ 推出 $Q$"),
+    make: (a, b) => ({ premises: [imp(a, b), a], conclusion: b }),
+  },
+  {
+    name: t("Modus tollens", "否定后件"),
+    form: t("from $P \\Rightarrow Q$ and $\\neg Q$, conclude $\\neg P$", "由 $P \\Rightarrow Q$ 与 $\\neg Q$ 推出 $\\neg P$"),
+    make: (a, b) => ({ premises: [imp(a, b), neg(b)], conclusion: neg(a) }),
+  },
+  {
+    name: t("Disjunctive syllogism", "选言推理"),
+    form: t("from $P \\lor Q$ and $\\neg P$, conclude $Q$", "由 $P \\lor Q$ 与 $\\neg P$ 推出 $Q$"),
+    make: (a, b) => ({ premises: [or(a, b), neg(a)], conclusion: b }),
+  },
+  {
+    name: t("Transitivity", "传递性"),
+    form: t(
+      "from $P \\Rightarrow Q$ and $Q \\Rightarrow R$, conclude $P \\Rightarrow R$",
+      "由 $P \\Rightarrow Q$ 与 $Q \\Rightarrow R$ 推出 $P \\Rightarrow R$",
+    ),
+    make: (a, b, c) => ({ premises: [imp(a, b), imp(b, c)], conclusion: imp(a, c) }),
+  },
+  {
+    name: t("Conjunction", "合取引入"),
+    form: t("from $P$ and $Q$, conclude $P \\land Q$", "由 $P$ 与 $Q$ 推出 $P \\land Q$"),
+    make: (a, b) => ({ premises: [a, b], conclusion: and(a, b) }),
+  },
+  {
+    name: t("Simplification", "化简"),
+    form: t("from $P \\land Q$, conclude $P$", "由 $P \\land Q$ 推出 $P$"),
+    make: (a, b) => ({ premises: [and(a, b)], conclusion: a }),
+  },
+  {
+    name: t("Addition", "附加"),
+    form: t("from $P$, conclude $P \\lor Q$", "由 $P$ 推出 $P \\lor Q$"),
+    make: (a, b) => ({ premises: [a], conclusion: or(a, b) }),
+  },
+  {
+    name: t("Resolution", "消解"),
+    form: t("from $P \\lor Q$ and $\\neg P \\lor R$, conclude $Q \\lor R$", "由 $P \\lor Q$ 与 $\\neg P \\lor R$ 推出 $Q \\lor R$"),
+    make: (a, b, c) => ({ premises: [or(a, b), or(neg(a), c)], conclusion: or(b, c) }),
+  },
 ];
 
 /** additionalRulesOfLogicalInference names and checks rules of inference. */
@@ -1641,7 +1678,7 @@ export const additionalRulesOfLogicalInference: TopicDef = {
           ),
           rule.name,
           rng.shuffle(inferenceRules.filter((r) => r !== rule)).map((r) => r.name),
-          t(`This is ${rule.name.en.toLowerCase()}.`, `这是${rule.name["zh-CN"]}。`),
+          t(`This is ${rule.name.en.toLowerCase()}: ${rule.form.en}.`, `这是${rule.name["zh-CN"]}：${rule.form["zh-CN"]}。`),
         );
       },
     },

@@ -170,8 +170,14 @@ export const integerDivisibility: TopicDef = {
           a === 0
             ? t(`$0 \\cdot k = 0 \\ne ${b}$ for every integer $k$.`, `对每个整数 $k$，$0 \\cdot k = 0 \\ne ${b}$。`)
             : value
-              ? t(`$${b} = (${a})(${b / a})$.`, `$${b} = (${a})(${b / a})$。`)
-              : t(`$${b} / (${a})$ is not an integer.`, `$${b} / (${a})$ 不是整数。`),
+              ? t(
+                  `Yes: $${a} \\mid ${b}$ means $${b} = ${a}k$ for some integer $k$, and $k = ${b / a}$ works: $${b} = (${a})(${b / a})$.`,
+                  `成立：$${a} \\mid ${b}$ 表示存在整数 $k$ 使 $${b} = ${a}k$，取 $k = ${b / a}$ 即可：$${b} = (${a})(${b / a})$。`,
+                )
+              : t(
+                  `No: $${a} \\mid ${b}$ would need an integer $k$ with $${b} = ${a}k$, but $${b} / (${a})$ is not an integer.`,
+                  `不成立：$${a} \\mid ${b}$ 需要整数 $k$ 使 $${b} = ${a}k$，但 $${b} / (${a})$ 不是整数。`,
+                ),
         );
       },
     },
@@ -249,7 +255,10 @@ export const theDivisionAlgorithm: TopicDef = {
           ),
           answer: r,
           wrong: [Math.abs(a) % b, a % b, b - r],
-          solution: t(`$${a} = ${b} \\cdot (${floorDiv(a, b)}) + ${r}$.`, `$${a} = ${b} \\cdot (${floorDiv(a, b)}) + ${r}$。`),
+          solution: t(
+            `Take $q = \\lfloor ${a} / ${b} \\rfloor = ${floorDiv(a, b)}$, the largest integer with $${b}q \\le ${a}$; then $r = ${a} - ${b} \\cdot (${floorDiv(a, b)}) = ${r}$, which lies in $[0, ${b})$.`,
+            `取 $q = \\lfloor ${a} / ${b} \\rfloor = ${floorDiv(a, b)}$，即满足 $${b}q \\le ${a}$ 的最大整数；于是 $r = ${a} - ${b} \\cdot (${floorDiv(a, b)}) = ${r}$，它在 $[0, ${b})$ 中。`,
+          ),
         });
       },
     },

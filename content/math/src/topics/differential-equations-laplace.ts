@@ -166,7 +166,11 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
               true,
               t(`its only discontinuity is a jump of $${k}$ at $t = ${c}$`, `它唯一的间断点是 $t = ${c}$ 处大小为 $${k}$ 的跳跃`),
             ],
-            [`|t - ${c}|`, true, t("it is continuous", "它是连续的")],
+            [
+              `|t - ${c}|`,
+              true,
+              t("it is continuous on the whole interval, so it has no discontinuities at all", "它在整个区间上连续，根本没有间断点"),
+            ],
             [`\\frac{${k}}{t - ${c}}`, false, t(`it tends to infinity at $t = ${c}$`, `它在 $t = ${c}$ 处趋于无穷`)],
             [`\\tan\\frac{\\pi t}{${2 * c}}`, false, t(`it tends to infinity at $t = ${c}$`, `它在 $t = ${c}$ 处趋于无穷`)],
             [`\\sin\\frac{${k}}{t - ${c}}`, false, t(`it has no one-sided limits at $t = ${c}$`, `它在 $t = ${c}$ 处没有单侧极限`)],

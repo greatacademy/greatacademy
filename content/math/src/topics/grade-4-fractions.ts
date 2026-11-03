@@ -940,7 +940,10 @@ export const convertingImproperFractionsToMixedNumbers = topic(
             answer: w,
             form: "integer",
             wrong: [w * d - d, w + 1, d],
-            solution: t(`$${w * d} \\div ${d} = ${w}$.`, `$${w * d} \\div ${d} = ${w}$。`),
+            solution: t(
+              `Every $${d}$ parts of size $${fr(1, d)}$ make one whole, so $${w * d}$ parts make $${w * d} \\div ${d} = ${w}$ wholes.`,
+              `每 $${d}$ 个 $${fr(1, d)}$ 组成一个整体，所以 $${w * d}$ 个组成 $${w * d} \\div ${d} = ${w}$ 个整体。`,
+            ),
           });
         }
         const r = rng.int(1, d - 1);
@@ -1014,7 +1017,10 @@ export const convertingMixedNumbersToImproperFractions = topic(
           answer: w * d + r,
           form: "integer",
           wrong: [w + r, w * r + d, w * d],
-          solution: t(`$${w} \\times ${d} + ${r} = ${w * d + r}$.`, `$${w} \\times ${d} + ${r} = ${w * d + r}$。`),
+          solution: t(
+            `Each whole is $${d}$ parts of size $${fr(1, d)}$, so $${w}$ wholes are $${w} \\times ${d} = ${w * d}$ parts. Add the $${r}$ more parts: $${w * d} + ${r} = ${w * d + r}$.`,
+            `每个整体是 $${d}$ 个 $${fr(1, d)}$，所以 $${w}$ 个整体是 $${w} \\times ${d} = ${w * d}$ 个。再加上另外 $${r}$ 个：$${w * d} + ${r} = ${w * d + r}$。`,
+          ),
         });
       },
     },
@@ -2806,7 +2812,10 @@ export const decimalFractions = topic(
           answer: qf(n, den),
           form: "decimal",
           wrong: [qf(n, tenths ? 100 : 10), qf(n, tenths ? 1 : 1000), n],
-          solution: t(`$${fr(n, den)} = ${dec(n, places)}$.`, `$${fr(n, den)} = ${dec(n, places)}$。`),
+          solution: t(
+            `$${fr(n, den)}$ is $${n}$ ${tenths ? "tenths" : "hundredths"}, so the last digit goes ${places} ${places === 1 ? "place" : "places"} after the decimal point: $${fr(n, den)} = ${dec(n, places)}$.`,
+            `$${fr(n, den)}$ 是 $${n}$ 个${tenths ? "十分之一" : "百分之一"}，所以最后一位数字写在小数点后第 ${places} 位：$${fr(n, den)} = ${dec(n, places)}$。`,
+          ),
         });
       },
     },
@@ -2991,7 +3000,10 @@ export const convertingFractionsToDecimals = topic(
           answer: qf(n, den),
           form: "decimal",
           wrong: [qf(n, den === 10 ? 100 : 10), qf(n, den * 10)],
-          solution: t(`$${fr(n, den)} = ${dec(n, den === 10 ? 1 : 2)}$.`, `$${fr(n, den)} = ${dec(n, den === 10 ? 1 : 2)}$。`),
+          solution: t(
+            `Dividing by $${den}$ moves the decimal point of $${n}$ ${den === 10 ? "one place" : "two places"} to the left: $${fr(n, den)} = ${dec(n, den === 10 ? 1 : 2)}$.`,
+            `除以 $${den}$ 就是把 $${n}$ 的小数点向左移动${den === 10 ? "一" : "两"}位：$${fr(n, den)} = ${dec(n, den === 10 ? 1 : 2)}$。`,
+          ),
         });
       },
     },
@@ -3180,7 +3192,10 @@ export const convertingDecimalsToMixedNumbers = topic(
           answer: qf(w * den + n, den),
           form: "mixed",
           wrong: [mixedValue(w, n, tenths ? 100 : 10), qf(n, den), w],
-          solution: t(`$${s} = ${mx(w, n, den)}$.`, `$${s} = ${mx(w, n, den)}$。`),
+          solution: t(
+            `The whole-number part is $${w}$, and the digits after the point are $${n}$ ${tenths ? "tenths" : "hundredths"}: $${s} = ${w} + ${fr(n, den)} = ${mx(w, n, den)}$.`,
+            `整数部分是 $${w}$，小数点后的数字表示 $${n}$ 个${tenths ? "十分之一" : "百分之一"}：$${s} = ${w} + ${fr(n, den)} = ${mx(w, n, den)}$。`,
+          ),
         });
       },
     },

@@ -247,7 +247,10 @@ export const parametrizationsOfEllipsoidsAndCones: TopicDef = {
           ),
           answer: ans,
           wrong: [ans.neg(), Q.of(askZ ? c : a), Q.of(b * num, den), Q.of(askZ ? a * num : c * num, den)],
-          solution: t(`$${line}$.`, `$${line}$。`),
+          solution: t(
+            `Substitute $\\phi = ${lab}$ and $\\theta = ${th}$ into the $${sym}$-component, $${askZ ? `${c}\\cos\\phi` : `${a}\\sin\\phi\\cos\\theta`}$: $${line}$.`,
+            `把 $\\phi = ${lab}$、$\\theta = ${th}$ 代入 $${sym}$ 分量 $${askZ ? `${c}\\cos\\phi` : `${a}\\sin\\phi\\cos\\theta`}$：$${line}$。`,
+          ),
         });
       },
     },
