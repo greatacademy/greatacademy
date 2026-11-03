@@ -20,8 +20,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "taylor-series-second-derivative",
         title: t("Evaluating the second derivative from a first-order ODE", "由一阶常微分方程计算二阶导数值"),
         explanation: t(
-          "For $y' = b x + y$ with $y(0) = a$, differentiating gives $y'' = b + y'$. At $x = 0$, $y'(0) = y(0) = a$, so $y''(0) = b + a$.",
-          "对于微分方程 $y' = b x + y$（初值 $y(0) = a$），两边求导得 $y'' = b + y'$。在 $x = 0$ 处，$y'(0) = y(0) = a$，因此 $y''(0) = b + a$。",
+          "Differentiating the equation itself gives the second derivative in terms of lower derivatives, and the initial condition supplies their values at the center. For $y' = b x + y$ with $y(0) = a$, differentiating gives $y'' = b + y'$. At $x = 0$, $y'(0) = y(0) = a$, so $y''(0) = b + a$.",
+          "对方程本身求导，就用低阶导数表示出二阶导数，初始条件提供它们在中心处的值。对于微分方程 $y' = b x + y$（初值 $y(0) = a$），两边求导得 $y'' = b + y'$。在 $x = 0$ 处，$y'(0) = y(0) = a$，因此 $y''(0) = b + a$。",
         ),
         generate(rng: Rng): Problem {
           const a = rng.int(2, 25);
@@ -72,8 +72,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "power-series-recurrence-step",
         title: t("Calculating higher coefficient from power series recurrence", "由幂级数递推关系计算高阶系数"),
         explanation: t(
-          "For $y'' - k y = 0$, substituting $y = \\sum a_n x^n$ gives $(n+2)(n+1)a_{n+2} = k a_n$. For $n = 0$, $a_2 = \\frac{k a_0}{2}$.",
-          "对于方程 $y'' - k y = 0$，代入 $y = \\sum a_n x^n$ 得递推公式 $(n+2)(n+1)a_{n+2} = k a_n$。当 $n = 0$ 时，$a_2 = \\frac{k a_0}{2}$。",
+          "Substituting a power series and matching the coefficients of each power gives a recurrence that determines each coefficient from an earlier one. For $y'' - k y = 0$, substituting $y = \\sum a_n x^n$ gives $(n+2)(n+1)a_{n+2} = k a_n$. For $n = 0$, $a_2 = \\frac{k a_0}{2}$.",
+          "代入幂级数并比较各次幂的系数，就得到由前面的系数确定每个系数的递推关系。对于方程 $y'' - k y = 0$，代入 $y = \\sum a_n x^n$ 得递推公式 $(n+2)(n+1)a_{n+2} = k a_n$。当 $n = 0$ 时，$a_2 = \\frac{k a_0}{2}$。",
         ),
         generate(rng: Rng): Problem {
           const k = rng.int(2, 10);
@@ -180,8 +180,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "frobenius-indicial-root",
         title: t("Larger root of the Frobenius indicial equation", "弗罗贝尼乌斯指标方程的较大根"),
         explanation: t(
-          "For $x^2 y'' - r_1 x y' + r_1 y = 0$, the indicial equation is $r(r - 1) - r_1 r + r_1 = (r - 1)(r - r_1) = 0$. The roots are $r = 1$ and $r = r_1$.",
-          "对于方程 $x^2 y'' - r_1 x y' + r_1 y = 0$，指标方程为 $r(r - 1) - r_1 r + r_1 = (r - 1)(r - r_1) = 0$。其根为 $r = 1$ 与 $r = r_1$。",
+          "The indicial equation comes from the lowest power of the variable after substitution, and its roots give the possible starting exponents of the series. For $x^2 y'' - r_1 x y' + r_1 y = 0$, the indicial equation is $r(r - 1) - r_1 r + r_1 = (r - 1)(r - r_1) = 0$. The roots are $r = 1$ and $r = r_1$.",
+          "指标方程来自代入后变量的最低次幂，它的根给出级数可能的起始指数。对于方程 $x^2 y'' - r_1 x y' + r_1 y = 0$，指标方程为 $r(r - 1) - r_1 r + r_1 = (r - 1)(r - r_1) = 0$。其根为 $r = 1$ 与 $r = r_1$。",
         ),
         generate(rng: Rng): Problem {
           const r1 = rng.int(2, 35);
@@ -233,8 +233,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "frobenius-first-recurrence-step",
         title: t("First recurrence coefficient in a Frobenius expansion", "弗罗贝尼乌斯展开中的第一递推系数"),
         explanation: t(
-          "For $x y'' + c y' + y = 0$ with $r = 0$, equating the $x^0$ term gives $1(c) a_1 + a_0 = 0 \\implies a_1 = -a_0 / c$.",
-          "对于方程 $x y'' + c y' + y = 0$（取指标 $r = 0$），令 $x^0$ 项系数为零得 $1(c) a_1 + a_0 = 0 \\implies a_1 = -a_0 / c$。",
+          "Matching the coefficient of the next power gives the first coefficient after the leading one in terms of that leading coefficient. For $x y'' + c y' + y = 0$ with $r = 0$, equating the $x^0$ term gives $1(c) a_1 + a_0 = 0 \\implies a_1 = -a_0 / c$.",
+          "比较下一个幂的系数，就能用首项系数表示出首项之后的第一个系数。对于方程 $x y'' + c y' + y = 0$（取指标 $r = 0$），令 $x^0$ 项系数为零得 $1(c) a_1 + a_0 = 0 \\implies a_1 = -a_0 / c$。",
         ),
         generate(rng: Rng): Problem {
           const c = rng.int(2, 8);
@@ -287,8 +287,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "frobenius-non-integer-root-difference",
         title: t("Exponent of the primary Frobenius solution", "主弗罗贝尼乌斯解的指数"),
         explanation: t(
-          "For $2 x^2 y'' + x y' - k(2k - 1) y = 0$, the indicial equation is $2r(r - 1) + r - k(2k - 1) = (2r + 2k - 1)(r - k) = 0$. The larger positive exponent is $r = k$.",
-          "对于方程 $2 x^2 y'' + x y' - k(2k - 1) y = 0$，指标方程为 $2r(r - 1) + r - k(2k - 1) = (2r + 2k - 1)(r - k) = 0$。较大的正指标为 $r = k$。",
+          "When the two roots of the indicial equation do not differ by an integer, each root gives its own independent series solution. For $2 x^2 y'' + x y' - k(2k - 1) y = 0$, the indicial equation is $2r(r - 1) + r - k(2k - 1) = (2r + 2k - 1)(r - k) = 0$. The larger positive exponent is $r = k$.",
+          "当指标方程的两个根之差不是整数时，每个根都给出一个独立的级数解。对于方程 $2 x^2 y'' + x y' - k(2k - 1) y = 0$，指标方程为 $2r(r - 1) + r - k(2k - 1) = (2r + 2k - 1)(r - k) = 0$。较大的正指标为 $r = k$。",
         ),
         generate(rng: Rng): Problem {
           const k = rng.int(2, 35);
@@ -341,8 +341,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "modified-euler-predictor-corrector-step",
         title: t("Executing one step of the modified Euler method", "执行一步改进欧拉预估-校正计算"),
         explanation: t(
-          "For $y' = 2t$ with $y(0) = y_0$ and step $h = 1$: slope $k_1 = 2(0) = 0$. Predictor $\\tilde{y}_1 = y_0$. Slope $k_2 = 2(1) = 2$. Corrector $y_1 = y_0 + \\frac{1}{2}(0 + 2) = y_0 + 1$.",
-          "对于 $y' = 2t$（初值 $y(0) = y_0$，步长 $h = 1$）：步首斜率 $k_1 = 0$。预估值 $\\tilde{y}_1 = y_0$。步末斜率 $k_2 = 2$。校正值 $y_1 = y_0 + \\frac{1}{2}(0 + 2) = y_0 + 1$。",
+          "The method first predicts the next value with an Euler step, then corrects it by averaging the slopes at the start and at the predicted point. For $y' = 2t$ with $y(0) = y_0$ and step $h = 1$: slope $k_1 = 2(0) = 0$. Predictor $\\tilde{y}_1 = y_0$. Slope $k_2 = 2(1) = 2$. Corrector $y_1 = y_0 + \\frac{1}{2}(0 + 2) = y_0 + 1$.",
+          "这种方法先用欧拉步预测下一个值，再用起点与预测点处斜率的平均值来修正它。对于 $y' = 2t$（初值 $y(0) = y_0$，步长 $h = 1$）：步首斜率 $k_1 = 0$。预估值 $\\tilde{y}_1 = y_0$。步末斜率 $k_2 = 2$。校正值 $y_1 = y_0 + \\frac{1}{2}(0 + 2) = y_0 + 1$。",
         ),
         generate(rng: Rng): Problem {
           const y0 = rng.int(2, 35);
@@ -394,8 +394,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "vector-euler-step-component",
         title: t("Computing a state component after one Euler step", "计算欧拉一步后的状态分量"),
         explanation: t(
-          "For $\\mathbf{x}' = A \\mathbf{x}$ with $\\mathbf{x}_0 = \\begin{pmatrix} 0 \\\\ v_0 \\end{pmatrix}$ and $A = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix}$, $A \\mathbf{x}_0 = \\begin{pmatrix} v_0 \\\\ 0 \\end{pmatrix}$. For $h = 1$, $\\mathbf{x}_1 = \\begin{pmatrix} v_0 \\\\ v_0 \\end{pmatrix}$. The first component is $v_0$.",
-          "对于系统 $\\mathbf{x}' = A \\mathbf{x}$（初值 $\\mathbf{x}_0 = \\begin{pmatrix} 0 \\\\ v_0 \\end{pmatrix}$，转移矩阵 $A = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix}$），导数向量为 $A \\mathbf{x}_0 = \\begin{pmatrix} v_0 \\\\ 0 \\end{pmatrix}$。步长 $h = 1$ 时，$\\mathbf{x}_1 = \\begin{pmatrix} v_0 \\\\ v_0 \\end{pmatrix}$，第一分量为 $v_0$。",
+          "Euler's method for a system updates every component at once, adding the step size times the corresponding entry of the derivative vector. For $\\mathbf{x}' = A \\mathbf{x}$ with $\\mathbf{x}_0 = \\begin{pmatrix} 0 \\\\ v_0 \\end{pmatrix}$ and $A = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix}$, $A \\mathbf{x}_0 = \\begin{pmatrix} v_0 \\\\ 0 \\end{pmatrix}$. For $h = 1$, $\\mathbf{x}_1 = \\begin{pmatrix} v_0 \\\\ v_0 \\end{pmatrix}$. The first component is $v_0$.",
+          "方程组的欧拉法同时更新所有分量，每个分量加上步长乘以导数向量的相应分量。对于系统 $\\mathbf{x}' = A \\mathbf{x}$（初值 $\\mathbf{x}_0 = \\begin{pmatrix} 0 \\\\ v_0 \\end{pmatrix}$，转移矩阵 $A = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix}$），导数向量为 $A \\mathbf{x}_0 = \\begin{pmatrix} v_0 \\\\ 0 \\end{pmatrix}$。步长 $h = 1$ 时，$\\mathbf{x}_1 = \\begin{pmatrix} v_0 \\\\ v_0 \\end{pmatrix}$，第一分量为 $v_0$。",
         ),
         generate(rng: Rng): Problem {
           const v0 = rng.int(2, 35);
@@ -447,8 +447,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "second-order-euler-position-update",
         title: t("Position update for a second-order ODE under Euler's method", "二阶常微分方程欧拉法下的位置更新"),
         explanation: t(
-          "For $y'' = f(t, y, v)$, setting $y' = v$ gives the Euler position update $y_1 = y_0 + h v_0$. When $y_0 = 0$ and $h = 1$, $y_1 = v_0$.",
-          "令 $y' = v$，二阶微分方程的位置更新公式为 $y_1 = y_0 + h v_0$。当 $y_0 = 0$ 且 $h = 1$ 时，一步后的位置即为 $y_1 = v_0$。",
+          "Writing the velocity as a second unknown turns the second order equation into a system, and the position update uses the current velocity as its slope. For $y'' = f(t, y, v)$, setting $y' = v$ gives the Euler position update $y_1 = y_0 + h v_0$. When $y_0 = 0$ and $h = 1$, $y_1 = v_0$.",
+          "把速度作为第二个未知函数，就把二阶方程化为方程组，位置的更新以当前速度作为斜率。令 $y' = v$，二阶微分方程的位置更新公式为 $y_1 = y_0 + h v_0$。当 $y_0 = 0$ 且 $h = 1$ 时，一步后的位置即为 $y_1 = v_0$。",
         ),
         generate(rng: Rng): Problem {
           const v0 = rng.int(2, 35);
@@ -499,8 +499,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "rk4-weighted-average-step",
         title: t("Evaluating the weighted slope average in the RK4 update", "计算 RK4 更新公式中的加权斜率平均"),
         explanation: t(
-          "The RK4 update formula is $y_{n+1} = y_n + \\frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)$. For step size $h = 6$, $y_{n+1} = y_n + k_1 + 2k_2 + 2k_3 + k_4$.",
-          "RK4 的步进更新公式为 $y_{n+1} = y_n + \\frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)$。当步长 $h = 6$ 时，更新公式简化为 $y_{n+1} = y_n + k_1 + 2k_2 + 2k_3 + k_4$。",
+          "The fourth order method takes a weighted average of four slope estimates, counting the two midpoint slopes twice as heavily as the end slopes. The RK4 update formula is $y_{n+1} = y_n + \\frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)$. For step size $h = 6$, $y_{n+1} = y_n + k_1 + 2k_2 + 2k_3 + k_4$.",
+          "四阶方法取四个斜率估计的加权平均，两个中点斜率的权重是端点斜率的两倍。RK4 的步进更新公式为 $y_{n+1} = y_n + \\frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)$。当步长 $h = 6$ 时，更新公式简化为 $y_{n+1} = y_n + k_1 + 2k_2 + 2k_3 + k_4$。",
         ),
         generate(rng: Rng): Problem {
           const y0 = rng.int(2, 25);
@@ -554,8 +554,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "ab2-predictor-formula",
         title: t("Evaluating the Adams-Bashforth two-step predictor", "计算二步亚当斯-巴什福思预测值"),
         explanation: t(
-          "The explicit 2-step Adams-Bashforth predictor is $y_{n+1}^{(p)} = y_n + \\frac{h}{2}(3 f_n - f_{n-1})$. For $y_n = 0$, $h = 2$, $f_{n-1} = 1$, and $f_n = a$, $y_{n+1}^{(p)} = 3a - 1$.",
-          "二步显式亚当斯-巴什福思预测公式为 $y_{n+1}^{(p)} = y_n + \\frac{h}{2}(3 f_n - f_{n-1})$。当 $y_n = 0$，$h = 2$，$f_{n-1} = 1$，$f_n = a$ 时，预测值为 $y_{n+1}^{(p)} = 3a - 1$。",
+          "A multistep method reuses slopes from earlier steps instead of computing new intermediate ones, extrapolating the trend of the slope forward. The explicit 2-step Adams-Bashforth predictor is $y_{n+1}^{(p)} = y_n + \\frac{h}{2}(3 f_n - f_{n-1})$. For $y_n = 0$, $h = 2$, $f_{n-1} = 1$, and $f_n = a$, $y_{n+1}^{(p)} = 3a - 1$.",
+          "多步法重复使用前几步的斜率，而不是计算新的中间斜率，把斜率的变化趋势向前外推。二步显式亚当斯-巴什福思预测公式为 $y_{n+1}^{(p)} = y_n + \\frac{h}{2}(3 f_n - f_{n-1})$。当 $y_n = 0$，$h = 2$，$f_{n-1} = 1$，$f_n = a$ 时，预测值为 $y_{n+1}^{(p)} = 3a - 1$。",
         ),
         generate(rng: Rng): Problem {
           const a = rng.int(2, 35);
@@ -603,8 +603,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "implicit-euler-decay-step",
         title: t("One step of implicit Euler on a decay equation", "隐式欧拉法对指数衰减方程的一步求解"),
         explanation: t(
-          "For $y' = -\\lambda y$, the implicit Euler update is $y_{n+1} = y_n - h\\lambda y_{n+1} \\implies y_{n+1} = \\frac{y_n}{1 + h\\lambda}$. When $h\\lambda = 1$, $y_{n+1} = y_n / 2$.",
-          "对于衰减方程 $y' = -\\lambda y$，隐式欧拉格式为 $y_{n+1} = y_n - h\\lambda y_{n+1} \\implies y_{n+1} = \\frac{y_n}{1 + h\\lambda}$。当 $h\\lambda = 1$ 时，$y_{n+1} = y_n / 2$。",
+          "The implicit method uses the slope at the new point, which means solving an equation at each step, but it stays stable for large steps on decay problems. For $y' = -\\lambda y$, the implicit Euler update is $y_{n+1} = y_n - h\\lambda y_{n+1} \\implies y_{n+1} = \\frac{y_n}{1 + h\\lambda}$. When $h\\lambda = 1$, $y_{n+1} = y_n / 2$.",
+          "隐式方法使用新点处的斜率，所以每一步都要解一个方程，但在衰减问题上即使步长很大也保持稳定。对于衰减方程 $y' = -\\lambda y$，隐式欧拉格式为 $y_{n+1} = y_n - h\\lambda y_{n+1} \\implies y_{n+1} = \\frac{y_n}{1 + h\\lambda}$。当 $h\\lambda = 1$ 时，$y_{n+1} = y_n / 2$。",
         ),
         generate(rng: Rng): Problem {
           const ans = rng.int(2, 35);
@@ -654,8 +654,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "trapezoidal-amplification-denominator",
         title: t("Denominators in the trapezoidal amplification factor", "梯形法增长因子中的分母项计算"),
         explanation: t(
-          "Applying the trapezoidal method to $y' = -\\lambda y$ gives $y_{n+1} = y_n - \\frac{h\\lambda}{2}y_n - \\frac{h\\lambda}{2}y_{n+1} \\implies y_{n+1} = \\frac{1 - z/2}{1 + z/2} y_n$ where $z = h\\lambda$. For $z = 2k$, the denominator is $1 + k$.",
-          "将梯形法应用于 $y' = -\\lambda y$ 导出 $y_{n+1} = \\frac{1 - z/2}{1 + z/2} y_n$（其中 $z = h\\lambda$）。当 $z = 2k$ 时，分母值为 $1 + k$。",
+          "The trapezoidal method averages the slopes at both ends of the step, so the amplification factor is a ratio of two linear expressions in the step size. Applying the trapezoidal method to $y' = -\\lambda y$ gives $y_{n+1} = y_n - \\frac{h\\lambda}{2}y_n - \\frac{h\\lambda}{2}y_{n+1} \\implies y_{n+1} = \\frac{1 - z/2}{1 + z/2} y_n$ where $z = h\\lambda$. For $z = 2k$, the denominator is $1 + k$.",
+          "梯形法取步长两端斜率的平均值，所以放大因子是两个关于步长的一次式之比。将梯形法应用于 $y' = -\\lambda y$ 导出 $y_{n+1} = \\frac{1 - z/2}{1 + z/2} y_n$（其中 $z = h\\lambda$）。当 $z = 2k$ 时，分母值为 $1 + k$。",
         ),
         generate(rng: Rng): Problem {
           const k = rng.int(2, 35);
@@ -706,8 +706,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "implicit-euler-newton-jacobian",
         title: t("Jacobian evaluation in Newton iteration for implicit Euler", "隐式欧拉牛顿迭代中的雅可比导数值计算"),
         explanation: t(
-          "For $g(y) = y - y_n - h f(t_{n+1}, y) = 0$, the derivative is $g'(y) = 1 - h f_y(t_{n+1}, y)$. For $f(t, y) = -k y$, $g'(y) = 1 + h k$.",
-          "定义残差函数 $g(y) = y - y_n - h f(t_{n+1}, y) = 0$，其导数为 $g'(y) = 1 - h f_y(t_{n+1}, y)$。当 $f(t, y) = -k y$ 时，$g'(y) = 1 + h k$。",
+          "Each implicit step solves an equation for the new value, and Newton's method needs the derivative of that equation with respect to the unknown. For $g(y) = y - y_n - h f(t_{n+1}, y) = 0$, the derivative is $g'(y) = 1 - h f_y(t_{n+1}, y)$. For $f(t, y) = -k y$, $g'(y) = 1 + h k$.",
+          "每一个隐式步都要解关于新值的方程，牛顿法需要这个方程对未知数的导数。定义残差函数 $g(y) = y - y_n - h f(t_{n+1}, y) = 0$，其导数为 $g'(y) = 1 - h f_y(t_{n+1}, y)$。当 $f(t, y) = -k y$ 时，$g'(y) = 1 + h k$。",
         ),
         generate(rng: Rng): Problem {
           const k = rng.int(2, 35);
@@ -757,8 +757,8 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "trapezoidal-newton-jacobian",
         title: t("Jacobian evaluation in Newton iteration for trapezoidal method", "梯形法牛顿迭代中的导数值计算"),
         explanation: t(
-          "For $g(y) = y - y_n - \\frac{h}{2}f_n - \\frac{h}{2}f(t_{n+1}, y) = 0$, $g'(y) = 1 - \\frac{h}{2} f_y(t_{n+1}, y)$. For $f_y = -2k$ and $h = 1$, $g'(y) = 1 + k$.",
-          "对于残差方程 $g(y) = y - y_n - \\frac{h}{2}f_n - \\frac{h}{2}f(t_{n+1}, y) = 0$，其导数为 $g'(y) = 1 - \\frac{h}{2} f_y(t_{n+1}, y)$。当 $f_y = -2k$ 且 $h = 1$ 时，$g'(y) = 1 + k$。",
+          "The trapezoidal equation contains the slope at the new point with half weight, so its derivative has half the factor that the implicit Euler method has. For $g(y) = y - y_n - \\frac{h}{2}f_n - \\frac{h}{2}f(t_{n+1}, y) = 0$, $g'(y) = 1 - \\frac{h}{2} f_y(t_{n+1}, y)$. For $f_y = -2k$ and $h = 1$, $g'(y) = 1 + k$.",
+          "梯形法的方程以一半的权重包含新点处的斜率，所以它的导数中的因子是隐式欧拉法的一半。对于残差方程 $g(y) = y - y_n - \\frac{h}{2}f_n - \\frac{h}{2}f(t_{n+1}, y) = 0$，其导数为 $g'(y) = 1 - \\frac{h}{2} f_y(t_{n+1}, y)$。当 $f_y = -2k$ 且 $h = 1$ 时，$g'(y) = 1 + k$。",
         ),
         generate(rng: Rng): Problem {
           const k = rng.int(2, 35);

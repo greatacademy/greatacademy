@@ -1059,8 +1059,8 @@ export const bigONotation: TopicDef = {
       id: "polynomial-upper-bounds",
       title: t("Polynomial upper bounds", "多项式上界"),
       explanation: t(
-        "$3n^2\\log_2 n$ is $O(n^3)$, since $\\log_2 n \\le n$, but not $O(n^2)$, since $\\log_2 n$ is unbounded. So the smallest integer $k$ with $3n^2 \\log_2 n = O(n^k)$ is $3$.",
-        "$3n^2\\log_2 n$ 是 $O(n^3)$，因为 $\\log_2 n \\le n$；但不是 $O(n^2)$，因为 $\\log_2 n$ 无界。所以使 $3n^2 \\log_2 n = O(n^k)$ 的最小整数 $k$ 为 $3$。",
+        "A function is big O of another when it eventually stays below a constant multiple of it, so a slowly growing factor like a logarithm can push it past a lower power. $3n^2\\log_2 n$ is $O(n^3)$, since $\\log_2 n \\le n$, but not $O(n^2)$, since $\\log_2 n$ is unbounded. So the smallest integer $k$ with $3n^2 \\log_2 n = O(n^k)$ is $3$.",
+        "当一个函数最终保持在另一个函数的某个常数倍以下时，它就是后者的大 O，所以像对数这样增长缓慢的因子也能使它超过较低的幂。$3n^2\\log_2 n$ 是 $O(n^3)$，因为 $\\log_2 n \\le n$；但不是 $O(n^2)$，因为 $\\log_2 n$ 无界。所以使 $3n^2 \\log_2 n = O(n^k)$ 的最小整数 $k$ 为 $3$。",
       ),
       generate(rng) {
         const g = randomGrowth(rng);
@@ -1079,8 +1079,8 @@ export const bigONotation: TopicDef = {
       id: "constants-in-big-o-bounds",
       title: t("Witness constants", "见证常数"),
       explanation: t(
-        "For $n \\ge 1$, $4n^2 + 3n + 5 \\le 4n^2 + 3n^2 + 5n^2 = 12n^2$, with equality at $n = 1$. So $C = 12$, $N = 1$ witness $4n^2 + 3n + 5 = O(n^2)$, and no smaller $C$ works for all $n \\ge 1$.",
-        "当 $n \\ge 1$ 时，$4n^2 + 3n + 5 \\le 4n^2 + 3n^2 + 5n^2 = 12n^2$，且 $n = 1$ 时取等号。所以 $C = 12$、$N = 1$ 是 $4n^2 + 3n + 5 = O(n^2)$ 的见证，对所有 $n \\ge 1$ 不存在更小的 $C$。",
+        "To prove a big O bound, exhibit a constant and a starting point beyond which the inequality holds, often by replacing every lower power with the highest one. For $n \\ge 1$, $4n^2 + 3n + 5 \\le 4n^2 + 3n^2 + 5n^2 = 12n^2$, with equality at $n = 1$. So $C = 12$, $N = 1$ witness $4n^2 + 3n + 5 = O(n^2)$, and no smaller $C$ works for all $n \\ge 1$.",
+        "要证明大 O 界，就要给出一个常数和一个起点，使不等式在此之后成立，常用的方法是把每个低次幂都换成最高次幂。当 $n \\ge 1$ 时，$4n^2 + 3n + 5 \\le 4n^2 + 3n^2 + 5n^2 = 12n^2$，且 $n = 1$ 时取等号。所以 $C = 12$、$N = 1$ 是 $4n^2 + 3n + 5 = O(n^2)$ 的见证，对所有 $n \\ge 1$ 不存在更小的 $C$。",
       ),
       generate(rng) {
         const deg = rng.int(2, 3);

@@ -20,8 +20,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "bvp-midpoint-solution",
         title: t("Midpoint evaluation of a linear Dirichlet BVP", "线性狄利克雷边值问题的中点值计算"),
         explanation: t(
-          "For $y'' = 0$ on $[0, L]$ with $y(0) = a$ and $y(L) = b$, the solution is the straight line $y(x) = a + \\frac{b - a}{L} x$. At the midpoint $x = L/2$, $y(L/2) = \\frac{a + b}{2}$.",
-          "对于区间 $[0, L]$ 上的边值问题 $y'' = 0$（边界条件 $y(0) = a$，$y(L) = b$），其解为直线 $y(x) = a + \\frac{b - a}{L} x$。在区间中点 $x = L/2$ 处，解的值恰为两端点值的算术平均：$y(L/2) = \\frac{a + b}{2}$。",
+          "A zero second derivative means the solution is a straight line, so it is fixed by the values at the two ends and its midpoint value is their average. For $y'' = 0$ on $[0, L]$ with $y(0) = a$ and $y(L) = b$, the solution is the straight line $y(x) = a + \\frac{b - a}{L} x$. At the midpoint $x = L/2$, $y(L/2) = \\frac{a + b}{2}$.",
+          "二阶导数为零意味着解是一条直线，所以它由两端的值确定，中点处的值是它们的平均值。对于区间 $[0, L]$ 上的边值问题 $y'' = 0$（边界条件 $y(0) = a$，$y(L) = b$），其解为直线 $y(x) = a + \\frac{b - a}{L} x$。在区间中点 $x = L/2$ 处，解的值恰为两端点值的算术平均：$y(L/2) = \\frac{a + b}{2}$。",
         ),
         generate(rng: Rng): Problem {
           const k1 = rng.int(2, 35);
@@ -77,8 +77,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "dirichlet-neumann-mixed-bvp",
         title: t("Solving a Dirichlet-Neumann mixed BVP", "求解狄利克雷-诺依曼混合边值问题"),
         explanation: t(
-          "For $y'' = 0$ on $[0, L]$ with $y(0) = 0$ and $y'(L) = k$, integrating gives $y(x) = c_1 x + c_2$. The derivative is $y'(x) = c_1 = k$, and $y(0) = 0 \\implies c_2 = 0$. Thus $y(x) = k x$, so $y(m) = k m$.",
-          "对于 $[0, L]$ 上的 $y'' = 0$（边界条件 $y(0) = 0$，$y'(L) = k$），积分得 $y(x) = c_1 x + c_2$。导数为 $y'(x) = c_1 = k$，初值 $y(0) = 0$ 给出 $c_2 = 0$。因此 $y(x) = k x$，从而 $y(m) = k m$。",
+          "One boundary condition fixes a value and the other fixes a slope, and together they determine the two constants of the straight line solution. For $y'' = 0$ on $[0, L]$ with $y(0) = 0$ and $y'(L) = k$, integrating gives $y(x) = c_1 x + c_2$. The derivative is $y'(x) = c_1 = k$, and $y(0) = 0 \\implies c_2 = 0$. Thus $y(x) = k x$, so $y(m) = k m$.",
+          "一个边界条件固定函数值，另一个固定斜率，二者共同确定直线解中的两个常数。对于 $[0, L]$ 上的 $y'' = 0$（边界条件 $y(0) = 0$，$y'(L) = k$），积分得 $y(x) = c_1 x + c_2$。导数为 $y'(x) = c_1 = k$，初值 $y(0) = 0$ 给出 $c_2 = 0$。因此 $y(x) = k x$，从而 $y(m) = k m$。",
         ),
         generate(rng: Rng): Problem {
           const k = rng.int(2, 10);
@@ -132,8 +132,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "inhomogeneous-bvp-solution",
         title: t("Maximum deflection under uniform load", "均布载荷下的最大挠度"),
         explanation: t(
-          "For $y'' = -q$ with $y(0) = 0$ and $y(L) = 0$, integration yields $y(x) = \\frac{q}{2} x (L - x)$. The maximum occurs at the midpoint $x = L/2$, where $y(L/2) = \\frac{q L^2}{8}$.",
-          "对于方程 $y'' = -q$（满足 $y(0) = 0$，$y(L) = 0$），积分得到抛物线型解 $y(x) = \\frac{q}{2} x (L - x)$。最大值出现在中点 $x = L/2$，此时 $y(L/2) = \\frac{q L^2}{8}$。",
+          "Integrating the constant load twice gives a parabola, and the two boundary conditions pin it down so that its maximum lies at the center. For $y'' = -q$ with $y(0) = 0$ and $y(L) = 0$, integration yields $y(x) = \\frac{q}{2} x (L - x)$. The maximum occurs at the midpoint $x = L/2$, where $y(L/2) = \\frac{q L^2}{8}$.",
+          "把常数载荷积分两次得到一条抛物线，两个边界条件把它确定下来，使其最大值位于中点。对于方程 $y'' = -q$（满足 $y(0) = 0$，$y(L) = 0$），积分得到抛物线型解 $y(x) = \\frac{q}{2} x (L - x)$。最大值出现在中点 $x = L/2$，此时 $y(L/2) = \\frac{q L^2}{8}$。",
         ),
         generate(rng: Rng): Problem {
           const k = rng.int(1, 4);
@@ -187,8 +187,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "dirichlet-eigenvalues",
         title: t("Finding the n-th eigenvalue for Dirichlet boundary conditions", "求狄利克雷边界条件下的第 n 个特征值"),
         explanation: t(
-          "For $y'' + \\lambda y = 0$ on $[0, \\pi]$ with $y(0) = 0$ and $y(\\pi) = 0$, nontrivial solutions are $\\phi_n(x) = \\sin(nx)$ corresponding to eigenvalues $\\lambda_n = n^2$.",
-          "对于定义在 $[0, \\pi]$ 上的问题 $y'' + \\lambda y = 0$（边界条件 $y(0) = 0$ 与 $y(\\pi) = 0$），非平凡特征函数为 $\\phi_n(x) = \\sin(nx)$，对应的特征值为 $\\lambda_n = n^2$。",
+          "Only special values of the parameter allow a nonzero solution that vanishes at both ends, and these are the squares of whole numbers. For $y'' + \\lambda y = 0$ on $[0, \\pi]$ with $y(0) = 0$ and $y(\\pi) = 0$, nontrivial solutions are $\\phi_n(x) = \\sin(nx)$ corresponding to eigenvalues $\\lambda_n = n^2$.",
+          "只有参数取特殊的值时，才存在两端都为零的非零解，这些值是整数的平方。对于定义在 $[0, \\pi]$ 上的问题 $y'' + \\lambda y = 0$（边界条件 $y(0) = 0$ 与 $y(\\pi) = 0$），非平凡特征函数为 $\\phi_n(x) = \\sin(nx)$，对应的特征值为 $\\lambda_n = n^2$。",
         ),
         generate(rng: Rng): Problem {
           const n = rng.int(2, 35);
@@ -240,8 +240,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "fourier-constant-coefficient",
         title: t("Constant term coefficient in a Fourier series", "傅里叶级数中的常数项系数"),
         explanation: t(
-          "For a function $f(x)$ on $[-\\pi, \\pi]$, the coefficient $a_0 = \\frac{1}{\\pi} \\int_{-\\pi}^\\pi f(x)\\,dx$. For $f(x) = C$, $a_0 = \\frac{1}{\\pi}(2\\pi C) = 2C$.",
-          "对于定义在 $[-\\pi, \\pi]$ 上的函数 $f(x)$，傅里叶常数项系数定义为 $a_0 = \\frac{1}{\\pi} \\int_{-\\pi}^\\pi f(x)\\,dx$。当 $f(x) = C$ 为常数时，$a_0 = \\frac{1}{\\pi}(2\\pi C) = 2C$。",
+          "The constant coefficient of a Fourier series is related to the average value of the function over one period. For a function $f(x)$ on $[-\\pi, \\pi]$, the coefficient $a_0 = \\frac{1}{\\pi} \\int_{-\\pi}^\\pi f(x)\\,dx$. For $f(x) = C$, $a_0 = \\frac{1}{\\pi}(2\\pi C) = 2C$.",
+          "傅里叶级数的常数项系数与函数在一个周期上的平均值有关。对于定义在 $[-\\pi, \\pi]$ 上的函数 $f(x)$，傅里叶常数项系数定义为 $a_0 = \\frac{1}{\\pi} \\int_{-\\pi}^\\pi f(x)\\,dx$。当 $f(x) = C$ 为常数时，$a_0 = \\frac{1}{\\pi}(2\\pi C) = 2C$。",
         ),
         generate(rng: Rng): Problem {
           const C = rng.int(2, 35);
@@ -291,8 +291,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "fourier-orthogonality-integral",
         title: t("Orthogonality norm integral of trigonometric modes", "三角模态的正交范数积分"),
         explanation: t(
-          "By orthogonality, $\\int_{-\\pi}^\\pi \\sin^2(nx)\\,dx = \\pi$ for any non-zero integer $n$. Thus $\\frac{1}{\\pi} \\int_{-\\pi}^\\pi (k \\sin(nx))^2\\,dx = k^2$.",
-          "根据正交性，对任意非零整数 $n$，均有 $\\int_{-\\pi}^\\pi \\sin^2(nx)\\,dx = \\pi$。因此 $\\frac{1}{\\pi} \\int_{-\\pi}^\\pi (k \\sin(nx))^2\\,dx = k^2$。",
+          "Different sine and cosine modes are orthogonal over a full period, so each mode can be isolated by multiplying by it and integrating. By orthogonality, $\\int_{-\\pi}^\\pi \\sin^2(nx)\\,dx = \\pi$ for any non-zero integer $n$. Thus $\\frac{1}{\\pi} \\int_{-\\pi}^\\pi (k \\sin(nx))^2\\,dx = k^2$.",
+          "不同的正弦和余弦模式在一个完整周期上是正交的，所以乘以某个模式再积分就能把它单独分离出来。根据正交性，对任意非零整数 $n$，均有 $\\int_{-\\pi}^\\pi \\sin^2(nx)\\,dx = \\pi$。因此 $\\frac{1}{\\pi} \\int_{-\\pi}^\\pi (k \\sin(nx))^2\\,dx = k^2$。",
         ),
         generate(rng: Rng): Problem {
           const k = rng.int(2, 35);
@@ -343,8 +343,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "fourier-sine-coefficient-pure-tone",
         title: t("Fourier sine coefficient of a harmonic component", "谐波分量的傅里叶正弦系数"),
         explanation: t(
-          "For $f(x) = k \\sin(m x)$ on $(0, \\pi)$, orthogonality implies that $b_n = k$ when $n = m$ and $0$ for all $n \\ne m$.",
-          "对于在 $(0, \\pi)$ 上定义的正弦函数 $f(x) = k \\sin(m x)$，由正交性可知，当 $n = m$ 时其傅里叶正弦系数 $b_m = k$，其余系数均为 $0$。",
+          "A function that is already a single sine mode has that mode as its only Fourier component, so every other coefficient is zero. For $f(x) = k \\sin(m x)$ on $(0, \\pi)$, orthogonality implies that $b_n = k$ when $n = m$ and $0$ for all $n \\ne m$.",
+          "本身就是单个正弦模式的函数，其傅里叶分量只有这一个模式，所以其他系数都为零。对于在 $(0, \\pi)$ 上定义的正弦函数 $f(x) = k \\sin(m x)$，由正交性可知，当 $n = m$ 时其傅里叶正弦系数 $b_m = k$，其余系数均为 $0$。",
         ),
         generate(rng: Rng): Problem {
           const k = rng.int(2, 35);
@@ -393,8 +393,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "fourier-cosine-coefficient-pure-tone",
         title: t("Fourier cosine coefficient of a harmonic component", "谐波分量的傅里叶余弦系数"),
         explanation: t(
-          "For $f(x) = k \\cos(m x)$ on $(0, \\pi)$, orthogonality implies that $a_m = k$ and all other $a_n = 0$.",
-          "对于在 $(0, \\pi)$ 上定义的余弦函数 $f(x) = k \\cos(m x)$，由正交性可知，当 $n = m$ 时其傅里叶余弦系数 $a_m = k$，其余系数均为 $0$。",
+          "A function that is already a single cosine mode has only one nonzero cosine coefficient, equal to its amplitude. For $f(x) = k \\cos(m x)$ on $(0, \\pi)$, orthogonality implies that $a_m = k$ and all other $a_n = 0$.",
+          "本身就是单个余弦模式的函数只有一个非零的余弦系数，等于它的振幅。对于在 $(0, \\pi)$ 上定义的余弦函数 $f(x) = k \\cos(m x)$，由正交性可知，当 $n = m$ 时其傅里叶余弦系数 $a_m = k$，其余系数均为 $0$。",
         ),
         generate(rng: Rng): Problem {
           const k = rng.int(2, 35);
@@ -494,8 +494,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "dirichlet-jump-convergence",
         title: t("Convergence at a jump discontinuity via Dirichlet's theorem", "狄利克雷定理下跳跃间断点处的收敛值"),
         explanation: t(
-          "At a jump discontinuity $x_0$, the Fourier series converges to $\\frac{f(x_0^+) + f(x_0^-)}{2}$.",
-          "在跳跃间断点 $x_0$ 处，傅里叶级数收敛于左右极限的平均值：$\\frac{f(x_0^+) + f(x_0^-)}{2}$。",
+          "At a jump, the Fourier series cannot choose either side, so it converges to the midpoint of the two one sided limits. At a jump discontinuity $x_0$, the Fourier series converges to $\\frac{f(x_0^+) + f(x_0^-)}{2}$.",
+          "在跳跃点处，傅里叶级数无法偏向任何一侧，所以它收敛到两个单侧极限的中点。在跳跃间断点 $x_0$ 处，傅里叶级数收敛于左右极限的平均值：$\\frac{f(x_0^+) + f(x_0^-)}{2}$。",
         ),
         generate(rng: Rng): Problem {
           const k1 = rng.int(2, 35);
@@ -546,8 +546,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "term-by-term-differentiation-coefficient",
         title: t("Cosine coefficient obtained from term-by-term differentiation", "逐项求导得到的余弦分量系数"),
         explanation: t(
-          "For $f(x) = b_n \\sin(nx)$, differentiating term-by-term gives $f'(x) = (n b_n) \\cos(nx)$. The coefficient of $\\cos(nx)$ is $n b_n$.",
-          "对于 $f(x) = b_n \\sin(nx)$，逐项求导得 $f'(x) = (n b_n) \\cos(nx)$。因此 $\\cos(nx)$ 项的系数为 $n b_n$。",
+          "Differentiating a sine mode gives a cosine mode multiplied by its frequency, so the coefficients of the derivative are the old ones times the frequency. For $f(x) = b_n \\sin(nx)$, differentiating term-by-term gives $f'(x) = (n b_n) \\cos(nx)$. The coefficient of $\\cos(nx)$ is $n b_n$.",
+          "对正弦模式求导得到乘以频率的余弦模式，所以导数的系数是原系数乘以频率。对于 $f(x) = b_n \\sin(nx)$，逐项求导得 $f'(x) = (n b_n) \\cos(nx)$。因此 $\\cos(nx)$ 项的系数为 $n b_n$。",
         ),
         generate(rng: Rng): Problem {
           const n = rng.int(2, 8);
@@ -596,8 +596,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "fourier-mode-amplitude",
         title: t("Fundamental mode response amplitude in driven oscillation", "受迫振荡中的基频响应振幅"),
         explanation: t(
-          "For $y'' + \\omega_0^2 y = F_1 \\sin(x)$, substituting the ansatz $y_p(t) = Y_1 \\sin(x)$ gives $(-1 + \\omega_0^2) Y_1 = F_1$, so $Y_1 = \\frac{F_1}{\\omega_0^2 - 1}$.",
-          "对于方程 $y'' + \\omega_0^2 y = F_1 \\sin(x)$，代入试探解 $y_p(t) = Y_1 \\sin(x)$ 得到 $(-1 + \\omega_0^2) Y_1 = F_1$，故响应振幅为 $Y_1 = \\frac{F_1}{\\omega_0^2 - 1}$。",
+          "Each forcing mode drives a response in the same mode, and its amplitude is the forcing amplitude divided by the difference of the squared frequencies. For $y'' + \\omega_0^2 y = F_1 \\sin(x)$, substituting the ansatz $y_p(t) = Y_1 \\sin(x)$ gives $(-1 + \\omega_0^2) Y_1 = F_1$, so $Y_1 = \\frac{F_1}{\\omega_0^2 - 1}$.",
+          "每个强迫模式都会在同一模式中引起响应，振幅等于强迫振幅除以频率平方之差。对于方程 $y'' + \\omega_0^2 y = F_1 \\sin(x)$，代入试探解 $y_p(t) = Y_1 \\sin(x)$ 得到 $(-1 + \\omega_0^2) Y_1 = F_1$，故响应振幅为 $Y_1 = \\frac{F_1}{\\omega_0^2 - 1}$。",
         ),
         generate(rng: Rng): Problem {
           const omega0 = rng.int(2, 8);
@@ -650,8 +650,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "fourier-ivp-constant-determination",
         title: t("Determining homogeneous coefficient in a driven IVP", "确定受迫初值问题中的齐次项系数"),
         explanation: t(
-          "For $y'' + \\omega_0^2 y = F(t)$ with a particular solution satisfying $y_p(0) = 0$, the general solution is $y(t) = y_p(t) + c_1 \\cos(\\omega_0 t) + c_2 \\sin(\\omega_0 t)$. Setting $t = 0$ yields $y(0) = c_1 = y_0$.",
-          "对于包含满足 $y_p(0) = 0$ 的特解的方程 $y'' + \\omega_0^2 y = F(t)$，通解为 $y(t) = y_p(t) + c_1 \\cos(\\omega_0 t) + c_2 \\sin(\\omega_0 t)$。在 $t = 0$ 处代入即得 $y(0) = c_1 = y_0$。",
+          "The particular solution handles the forcing, and the initial conditions then fix the coefficients of the homogeneous part of the solution. For $y'' + \\omega_0^2 y = F(t)$ with a particular solution satisfying $y_p(0) = 0$, the general solution is $y(t) = y_p(t) + c_1 \\cos(\\omega_0 t) + c_2 \\sin(\\omega_0 t)$. Setting $t = 0$ yields $y(0) = c_1 = y_0$.",
+          "特解处理强迫项，再由初始条件确定解中齐次部分的系数。对于包含满足 $y_p(0) = 0$ 的特解的方程 $y'' + \\omega_0^2 y = F(t)$，通解为 $y(t) = y_p(t) + c_1 \\cos(\\omega_0 t) + c_2 \\sin(\\omega_0 t)$。在 $t = 0$ 处代入即得 $y(0) = c_1 = y_0$。",
         ),
         generate(rng: Rng): Problem {
           const omega0 = rng.int(2, 6);
@@ -702,8 +702,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "fourier-bvp-sine-expansion",
         title: t("Sine mode amplitude in a Poisson-type BVP", "泊松型边值问题中的正弦模态振幅"),
         explanation: t(
-          "For $-y'' = F_m \\sin(mx)$ on $[0, \\pi]$ with $y(0) = 0$ and $y(\\pi) = 0$, substituting $y(x) = Y_m \\sin(mx)$ yields $m^2 Y_m = F_m$, so $Y_m = \\frac{F_m}{m^2}$.",
-          "对于定义在 $[0, \\pi]$ 上的边值问题 $-y'' = F_m \\sin(mx)$（边界条件 $y(0) = 0$，$y(\\pi) = 0$），代入 $y(x) = Y_m \\sin(mx)$ 得 $m^2 Y_m = F_m$，因此响应振幅为 $Y_m = \\frac{F_m}{m^2}$。",
+          "A sine mode already vanishes at both ends, so substituting it reduces the boundary value problem to finding a single amplitude. For $-y'' = F_m \\sin(mx)$ on $[0, \\pi]$ with $y(0) = 0$ and $y(\\pi) = 0$, substituting $y(x) = Y_m \\sin(mx)$ yields $m^2 Y_m = F_m$, so $Y_m = \\frac{F_m}{m^2}$.",
+          "正弦模式在两端本来就为零，所以代入后边值问题就简化为求一个振幅。对于定义在 $[0, \\pi]$ 上的边值问题 $-y'' = F_m \\sin(mx)$（边界条件 $y(0) = 0$，$y(\\pi) = 0$），代入 $y(x) = Y_m \\sin(mx)$ 得 $m^2 Y_m = F_m$，因此响应振幅为 $Y_m = \\frac{F_m}{m^2}$。",
         ),
         generate(rng: Rng): Problem {
           const m = rng.int(2, 6);

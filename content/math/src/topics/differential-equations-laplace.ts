@@ -78,8 +78,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "jump-discontinuity-magnitude",
         title: t("Calculating the jump magnitude of a piecewise function", "计算分段函数的跳跃幅度"),
         explanation: t(
-          "At a jump discontinuity $t = c$, the jump magnitude is $\\Delta f(c) = f(c^+) - f(c^-) = \\lim_{t \\to c^+} f(t) - \\lim_{t \\to c^-} f(t)$.",
-          "在跳跃间断点 $t = c$ 处，跳跃幅度定义为右极限减去左极限：$\\Delta f(c) = f(c^+) - f(c^-) = \\lim_{t \\to c^+} f(t) - \\lim_{t \\to c^-} f(t)$。",
+          "The size of a jump is the difference between the limit from the right and the limit from the left at the point where the function breaks. At a jump discontinuity $t = c$, the jump magnitude is $\\Delta f(c) = f(c^+) - f(c^-) = \\lim_{t \\to c^+} f(t) - \\lim_{t \\to c^-} f(t)$.",
+          "跳跃的大小是函数断开处右极限与左极限之差。在跳跃间断点 $t = c$ 处，跳跃幅度定义为右极限减去左极限：$\\Delta f(c) = f(c^+) - f(c^-) = \\lim_{t \\to c^+} f(t) - \\lim_{t \\to c^-} f(t)$。",
         ),
         generate(rng: Rng): Problem {
           const c = rng.int(2, 6);
@@ -134,8 +134,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "laplace-transform-integral-definition",
         title: t("Evaluating the Laplace transform integral of a constant", "计算常数函数的拉普拉斯积分"),
         explanation: t(
-          "By definition, $\\mathcal{L}\\{C\\}(s) = \\int_0^\\infty C e^{-st}\\,dt = \\left[ -\\frac{C}{s} e^{-st} \\right]_0^\\infty = \\frac{C}{s}$ for $s > 0$.",
-          "根据定义，$\\mathcal{L}\\{C\\}(s) = \\int_0^\\infty C e^{-st}\\,dt = \\left[ -\\frac{C}{s} e^{-st} \\right]_0^\\infty = \\frac{C}{s}$（当 $s > 0$ 时）。",
+          "The Laplace transform multiplies the function by a decaying exponential and integrates over all positive times, turning functions of time into functions of a new variable. By definition, $\\mathcal{L}\\{C\\}(s) = \\int_0^\\infty C e^{-st}\\,dt = \\left[ -\\frac{C}{s} e^{-st} \\right]_0^\\infty = \\frac{C}{s}$ for $s > 0$.",
+          "拉普拉斯变换把函数乘以一个衰减的指数函数，再在所有正时间上积分，把时间的函数变成一个新变量的函数。根据定义，$\\mathcal{L}\\{C\\}(s) = \\int_0^\\infty C e^{-st}\\,dt = \\left[ -\\frac{C}{s} e^{-st} \\right]_0^\\infty = \\frac{C}{s}$（当 $s > 0$ 时）。",
         ),
         generate(rng: Rng): Problem {
           const s = rng.int(2, 10);
@@ -184,8 +184,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "evaluating-linear-combinations-of-transforms",
         title: t("Transforming linear combinations of powers of t", "变换 t 的幂的线性组合"),
         explanation: t(
-          "Recall $\\mathcal{L}\\{1\\} = \\frac{1}{s}$, $\\mathcal{L}\\{t\\} = \\frac{1}{s^2}$, and $\\mathcal{L}\\{t^2\\} = \\frac{2}{s^3}$. The leading high-frequency coefficient of $s^3 \\mathcal{L}\\{a t^2 + b t + c\\}$ as $s \\to 0$ is $2a$.",
-          "已知 $\\mathcal{L}\\{1\\} = \\frac{1}{s}$，$\\mathcal{L}\\{t\\} = \\frac{1}{s^2}$，$\\mathcal{L}\\{t^2\\} = \\frac{2}{s^3}$。$\\mathcal{L}\\{a t^2 + b t + c\\}$ 中 $1/s^3$ 项的系数为 $2a$。",
+          "The transform is linear, so a combination of powers of time transforms into the same combination of their known transforms. Recall $\\mathcal{L}\\{1\\} = \\frac{1}{s}$, $\\mathcal{L}\\{t\\} = \\frac{1}{s^2}$, and $\\mathcal{L}\\{t^2\\} = \\frac{2}{s^3}$. The leading high-frequency coefficient of $s^3 \\mathcal{L}\\{a t^2 + b t + c\\}$ as $s \\to 0$ is $2a$.",
+          "这个变换是线性的，所以时间的幂的组合变换为它们已知变换的同样组合。已知 $\\mathcal{L}\\{1\\} = \\frac{1}{s}$，$\\mathcal{L}\\{t\\} = \\frac{1}{s^2}$，$\\mathcal{L}\\{t^2\\} = \\frac{2}{s^3}$。$\\mathcal{L}\\{a t^2 + b t + c\\}$ 中 $1/s^3$ 项的系数为 $2a$。",
         ),
         generate(rng: Rng): Problem {
           const a = rng.int(2, 35);
@@ -237,8 +237,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "transform-of-finite-pulse",
         title: t("Zero-frequency limit of a finite pulse transform", "有限脉冲变换的零频极限"),
         explanation: t(
-          "For a finite pulse $f(t) = h$ on $[0, c)$ and $0$ for $t \\ge c$, $\\lim_{s \\to 0^+} F(s) = \\int_0^c h\\,dt = hc$, representing the total area under the signal.",
-          "对于在 $[0, c)$ 上取值 $h$、在 $t \\ge c$ 上取值 $0$ 的脉冲信号，其变换在 $s \\to 0^+$ 时的极限为 $\\lim_{s \\to 0^+} F(s) = \\int_0^c h\\,dt = hc$，代表信号下方的总面积。",
+          "As the variable approaches zero the exponential factor approaches one, so the transform approaches the total area under the pulse. For a finite pulse $f(t) = h$ on $[0, c)$ and $0$ for $t \\ge c$, $\\lim_{s \\to 0^+} F(s) = \\int_0^c h\\,dt = hc$, representing the total area under the signal.",
+          "当变量趋于零时，指数因子趋于 1，所以变换趋于脉冲下方的总面积。对于在 $[0, c)$ 上取值 $h$、在 $t \\ge c$ 上取值 $0$ 的脉冲信号，其变换在 $s \\to 0^+$ 时的极限为 $\\lim_{s \\to 0^+} F(s) = \\int_0^c h\\,dt = hc$，代表信号下方的总面积。",
         ),
         generate(rng: Rng): Problem {
           const h = rng.int(2, 15);
@@ -287,8 +287,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "multiplication-by-t-frequency-differentiation",
         title: t("Frequency differentiation formula for t e^(at)", "t e^(at) 的频域求导公式"),
         explanation: t(
-          "Since $\\mathcal{L}\\{e^{at}\\} = \\frac{1}{s - a}$, differentiation gives $\\mathcal{L}\\{t e^{at}\\} = -\\frac{d}{ds}\\left(\\frac{1}{s - a}\\right) = \\frac{1}{(s - a)^2}$. For $f(t) = c t e^{at}$, $(s - a)^2 \\mathcal{L}\\{f(t)\\} = c$.",
-          "因为 $\\mathcal{L}\\{e^{at}\\} = \\frac{1}{s - a}$，求导可得 $\\mathcal{L}\\{t e^{at}\\} = -\\frac{d}{ds}\\left(\\frac{1}{s - a}\\right) = \\frac{1}{(s - a)^2}$。对于 $f(t) = c t e^{at}$，有 $(s - a)^2 \\mathcal{L}\\{f(t)\\} = c$。",
+          "Multiplying a function by time corresponds to differentiating its transform and changing the sign, which gives the transforms of such products quickly. Since $\\mathcal{L}\\{e^{at}\\} = \\frac{1}{s - a}$, differentiation gives $\\mathcal{L}\\{t e^{at}\\} = -\\frac{d}{ds}\\left(\\frac{1}{s - a}\\right) = \\frac{1}{(s - a)^2}$. For $f(t) = c t e^{at}$, $(s - a)^2 \\mathcal{L}\\{f(t)\\} = c$.",
+          "把函数乘以时间对应于对它的变换求导并改变符号，这样可以很快得到这类乘积的变换。因为 $\\mathcal{L}\\{e^{at}\\} = \\frac{1}{s - a}$，求导可得 $\\mathcal{L}\\{t e^{at}\\} = -\\frac{d}{ds}\\left(\\frac{1}{s - a}\\right) = \\frac{1}{(s - a)^2}$。对于 $f(t) = c t e^{at}$，有 $(s - a)^2 \\mathcal{L}\\{f(t)\\} = c$。",
         ),
         generate(rng: Rng): Problem {
           const a = rng.int(2, 10);
@@ -341,8 +341,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "second-derivative-initial-value-formula",
         title: t("Initial condition polynomial from second derivative transform", "二阶导数变换中的初值多项式"),
         explanation: t(
-          "For an IVP with $y(0) = y_0$ and $y'(0) = y_1$, the Laplace transform satisfies $s^2 Y(s) - \\mathcal{L}\\{y''\\} = y_0 s + y_1$. At $s = 1$, this polynomial equals $y_0 + y_1$.",
-          "在初值问题 $y(0) = y_0$ 和 $y'(0) = y_1$ 中，导数变换公式为 $\\mathcal{L}\\{y''\\} = s^2 Y(s) - y_0 s - y_1$。因此 $s^2 Y(s) - \\mathcal{L}\\{y''\\} = y_0 s + y_1$，在 $s = 1$ 处该值等于 $y_0 + y_1$。",
+          "Transforming a derivative brings in the initial values, so the initial conditions appear as a polynomial in the transformed equation. For an IVP with $y(0) = y_0$ and $y'(0) = y_1$, the Laplace transform satisfies $s^2 Y(s) - \\mathcal{L}\\{y''\\} = y_0 s + y_1$. At $s = 1$, this polynomial equals $y_0 + y_1$.",
+          "对导数做变换会引入初始值，所以初始条件在变换后的方程中以多项式的形式出现。在初值问题 $y(0) = y_0$ 和 $y'(0) = y_1$ 中，导数变换公式为 $\\mathcal{L}\\{y''\\} = s^2 Y(s) - y_0 s - y_1$。因此 $s^2 Y(s) - \\mathcal{L}\\{y''\\} = y_0 s + y_1$，在 $s = 1$ 处该值等于 $y_0 + y_1$。",
         ),
         generate(rng: Rng): Problem {
           const y0 = rng.int(2, 25);
@@ -393,8 +393,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "transform-of-running-integral",
         title: t("Applying the integral theorem of Laplace transforms", "应用拉普拉斯变换的积分定理"),
         explanation: t(
-          "For $g(t) = \\int_0^t c e^{a\\tau}\\,d\\tau$, the integral theorem states $\\mathcal{L}\\{g(t)\\} = \\frac{1}{s} \\mathcal{L}\\{c e^{at}\\} = \\frac{c}{s(s - a)}$. Thus $s(s - a) \\mathcal{L}\\{g(t)\\} = c$.",
-          "对于 $g(t) = \\int_0^t c e^{a\\tau}\\,d\\tau$，由积分定理可知 $\\mathcal{L}\\{g(t)\\} = \\frac{1}{s} \\mathcal{L}\\{c e^{at}\\} = \\frac{c}{s(s - a)}$。因此 $s(s - a) \\mathcal{L}\\{g(t)\\} = c$。",
+          "Integrating a function from zero corresponds to dividing its transform by the variable, the reverse of what differentiating does. For $g(t) = \\int_0^t c e^{a\\tau}\\,d\\tau$, the integral theorem states $\\mathcal{L}\\{g(t)\\} = \\frac{1}{s} \\mathcal{L}\\{c e^{at}\\} = \\frac{c}{s(s - a)}$. Thus $s(s - a) \\mathcal{L}\\{g(t)\\} = c$.",
+          "从零开始对函数积分对应于把它的变换除以变量，这与求导的作用正好相反。对于 $g(t) = \\int_0^t c e^{a\\tau}\\,d\\tau$，由积分定理可知 $\\mathcal{L}\\{g(t)\\} = \\frac{1}{s} \\mathcal{L}\\{c e^{at}\\} = \\frac{c}{s(s - a)}$。因此 $s(s - a) \\mathcal{L}\\{g(t)\\} = c$。",
         ),
         generate(rng: Rng): Problem {
           const a = rng.int(2, 10);
@@ -447,8 +447,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "exponential-shift-rule",
         title: t("Applying the first shifting theorem to damped sine", "对指数衰减正弦应用第一位移定理"),
         explanation: t(
-          "For $f(t) = e^{at} \\sin(\\omega t)$, $\\mathcal{L}\\{f(t)\\} = \\frac{\\omega}{(s - a)^2 + \\omega^2} = \\frac{\\omega}{s^2 - 2as + (a^2 + \\omega^2)}$. The constant term in the denominator is $a^2 + \\omega^2$.",
-          "对于 $f(t) = e^{at} \\sin(\\omega t)$，$\\mathcal{L}\\{f(t)\\} = \\frac{\\omega}{(s - a)^2 + \\omega^2} = \\frac{\\omega}{s^2 - 2as + (a^2 + \\omega^2)}$。分母中的常数项为 $a^2 + \\omega^2$。",
+          "Multiplying by an exponential in time shifts the transform, replacing the variable by the variable minus the rate. For $f(t) = e^{at} \\sin(\\omega t)$, $\\mathcal{L}\\{f(t)\\} = \\frac{\\omega}{(s - a)^2 + \\omega^2} = \\frac{\\omega}{s^2 - 2as + (a^2 + \\omega^2)}$. The constant term in the denominator is $a^2 + \\omega^2$.",
+          "在时间上乘以一个指数函数会使变换平移，把变量换成变量减去增长率。对于 $f(t) = e^{at} \\sin(\\omega t)$，$\\mathcal{L}\\{f(t)\\} = \\frac{\\omega}{(s - a)^2 + \\omega^2} = \\frac{\\omega}{s^2 - 2as + (a^2 + \\omega^2)}$。分母中的常数项为 $a^2 + \\omega^2$。",
         ),
         generate(rng: Rng): Problem {
           const a = rng.int(1, 10);
@@ -501,8 +501,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "time-delayed-unit-step-transform",
         title: t("Applying the second shifting theorem to delayed linear ramp", "对延迟线性斜坡应用第二位移定理"),
         explanation: t(
-          "For $f(t) = k u(t - c)(t - c)$, the second shifting theorem yields $\\mathcal{L}\\{f(t)\\} = k e^{-cs} \\mathcal{L}\\{t\\} = \\frac{k e^{-cs}}{s^2}$. Thus $s^2 e^{cs} \\mathcal{L}\\{f(t)\\} = k$.",
-          "对于 $f(t) = k u(t - c)(t - c)$，应用第二位移定理得 $\\mathcal{L}\\{f(t)\\} = k e^{-cs} \\mathcal{L}\\{t\\} = \\frac{k e^{-cs}}{s^2}$。因此 $s^2 e^{cs} \\mathcal{L}\\{f(t)\\} = k$。",
+          "Delaying a function by switching it on later multiplies its transform by a decaying exponential that records the delay. For $f(t) = k u(t - c)(t - c)$, the second shifting theorem yields $\\mathcal{L}\\{f(t)\\} = k e^{-cs} \\mathcal{L}\\{t\\} = \\frac{k e^{-cs}}{s^2}$. Thus $s^2 e^{cs} \\mathcal{L}\\{f(t)\\} = k$.",
+          "把函数推迟开启会使它的变换乘以一个记录延迟的衰减指数函数。对于 $f(t) = k u(t - c)(t - c)$，应用第二位移定理得 $\\mathcal{L}\\{f(t)\\} = k e^{-cs} \\mathcal{L}\\{t\\} = \\frac{k e^{-cs}}{s^2}$。因此 $s^2 e^{cs} \\mathcal{L}\\{f(t)\\} = k$。",
         ),
         generate(rng: Rng): Problem {
           const c = rng.int(1, 8);
@@ -555,8 +555,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "partial-fractions-for-inverse-laplace",
         title: t("Initial value from partial fraction inverse transform", "由部分分式逆变换确定初值"),
         explanation: t(
-          "For $F(s) = \\frac{A}{s - a} + \\frac{B}{s - b}$, the inverse transform is $f(t) = A e^{at} + B e^{bt}$. At $t = 0$, $f(0) = A + B$.",
-          "对于 $F(s) = \\frac{A}{s - a} + \\frac{B}{s - b}$，逆变换为 $f(t) = A e^{at} + B e^{bt}$。在 $t = 0$ 处，$f(0) = A + B$。",
+          "Splitting the transform into simple fractions lets you invert each one separately, since each simple fraction is the transform of an exponential. For $F(s) = \\frac{A}{s - a} + \\frac{B}{s - b}$, the inverse transform is $f(t) = A e^{at} + B e^{bt}$. At $t = 0$, $f(0) = A + B$.",
+          "把变换拆成简单分式后，可以分别对每一项求逆变换，因为每个简单分式都是某个指数函数的变换。对于 $F(s) = \\frac{A}{s - a} + \\frac{B}{s - b}$，逆变换为 $f(t) = A e^{at} + B e^{bt}$。在 $t = 0$ 处，$f(0) = A + B$。",
         ),
         generate(rng: Rng): Problem {
           const a = rng.int(1, 5);
@@ -613,8 +613,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "first-order-ivp-via-laplace",
         title: t("Steady-state solution of a first-order ODE via Laplace", "由拉普拉斯变换求解一阶方程的稳态解"),
         explanation: t(
-          "For $y' + a y = K$ with $y(0) = 0$, $Y(s) = \\frac{K}{s(s + a)} = \\frac{K/a}{s} - \\frac{K/a}{s + a}$. In the time domain, $y(t) = \\frac{K}{a}(1 - e^{-at})$, so the steady-state limit is $\\lim_{t \\to \\infty} y(t) = \\frac{K}{a}$.",
-          "对于 $y' + a y = K$（满足 $y(0) = 0$），变换后 $Y(s) = \\frac{K}{s(s + a)}$。求逆变换得 $y(t) = \\frac{K}{a}(1 - e^{-at})$，其稳态极限为 $\\lim_{t \\to \\infty} y(t) = \\frac{K}{a}$。",
+          "Transforming the equation turns it into algebra, and the term that does not decay in the inverse transform gives the steady state. For $y' + a y = K$ with $y(0) = 0$, $Y(s) = \\frac{K}{s(s + a)} = \\frac{K/a}{s} - \\frac{K/a}{s + a}$. In the time domain, $y(t) = \\frac{K}{a}(1 - e^{-at})$, so the steady-state limit is $\\lim_{t \\to \\infty} y(t) = \\frac{K}{a}$.",
+          "对方程做变换就把它变成代数问题，逆变换中不衰减的那一项给出稳态。对于 $y' + a y = K$（满足 $y(0) = 0$），变换后 $Y(s) = \\frac{K}{s(s + a)}$。求逆变换得 $y(t) = \\frac{K}{a}(1 - e^{-at})$，其稳态极限为 $\\lim_{t \\to \\infty} y(t) = \\frac{K}{a}$。",
         ),
         generate(rng: Rng): Problem {
           const a = rng.int(2, 8);
@@ -667,8 +667,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "delayed-step-forcing-first-order",
         title: t("Long-term limit with delayed step forcing", "含延迟阶跃激励的长期极限"),
         explanation: t(
-          "For $y' + a y = K u(t - c)$ with $y(0) = 0$, $Y(s) = \\frac{K e^{-cs}}{s(s + a)}$. Inverting gives $y(t) = \\frac{K}{a}(1 - e^{-a(t - c)}) u(t - c)$. As $t \\to \\infty$, $y(t) \\to \\frac{K}{a}$.",
-          "对于方程 $y' + a y = K u(t - c)$（$y(0) = 0$），变换得 $Y(s) = \\frac{K e^{-cs}}{s(s + a)}$。其解为 $y(t) = \\frac{K}{a}(1 - e^{-a(t - c)}) u(t - c)$。当 $t \\to \\infty$ 时，$y(t) \\to \\frac{K}{a}$。",
+          "A delayed step does nothing before it switches on, and long afterward the solution settles to the same steady state as for an immediate step. For $y' + a y = K u(t - c)$ with $y(0) = 0$, $Y(s) = \\frac{K e^{-cs}}{s(s + a)}$. Inverting gives $y(t) = \\frac{K}{a}(1 - e^{-a(t - c)}) u(t - c)$. As $t \\to \\infty$, $y(t) \\to \\frac{K}{a}$.",
+          "延迟的阶跃在开启之前不起作用，很久以后解会稳定到与立即阶跃相同的稳态。对于方程 $y' + a y = K u(t - c)$（$y(0) = 0$），变换得 $Y(s) = \\frac{K e^{-cs}}{s(s + a)}$。其解为 $y(t) = \\frac{K}{a}(1 - e^{-a(t - c)}) u(t - c)$。当 $t \\to \\infty$ 时，$y(t) \\to \\frac{K}{a}$。",
         ),
         generate(rng: Rng): Problem {
           const a = rng.int(2, 6);
@@ -722,8 +722,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "harmonic-oscillator-ivp-via-laplace",
         title: t("Oscillation amplitude from Laplace transform of an IVP", "由初值问题的拉普拉斯变换确定振幅"),
         explanation: t(
-          "For $y'' + \\omega^2 y = 0$ with $y(0) = 0$ and $y'(0) = v_0$, $Y(s) = \\frac{v_0}{s^2 + \\omega^2} = \\frac{v_0}{\\omega} \\frac{\\omega}{s^2 + \\omega^2}$. The solution is $y(t) = \\frac{v_0}{\\omega} \\sin(\\omega t)$, with amplitude $A = \\frac{v_0}{\\omega}$.",
-          "对于 $y'' + \\omega^2 y = 0$（$y(0) = 0$，$y'(0) = v_0$），变换后 $Y(s) = \\frac{v_0}{s^2 + \\omega^2}$，其逆变换为 $y(t) = \\frac{v_0}{\\omega} \\sin(\\omega t)$，振荡振幅为 $A = \\frac{v_0}{\\omega}$。",
+          "The transformed solution has the form of the transform of a sine, so the inverse is a sine wave whose amplitude is read from the coefficient. For $y'' + \\omega^2 y = 0$ with $y(0) = 0$ and $y'(0) = v_0$, $Y(s) = \\frac{v_0}{s^2 + \\omega^2} = \\frac{v_0}{\\omega} \\frac{\\omega}{s^2 + \\omega^2}$. The solution is $y(t) = \\frac{v_0}{\\omega} \\sin(\\omega t)$, with amplitude $A = \\frac{v_0}{\\omega}$.",
+          "变换后的解具有正弦函数变换的形式，所以逆变换是一条正弦曲线，振幅可以从系数读出。对于 $y'' + \\omega^2 y = 0$（$y(0) = 0$，$y'(0) = v_0$），变换后 $Y(s) = \\frac{v_0}{s^2 + \\omega^2}$，其逆变换为 $y(t) = \\frac{v_0}{\\omega} \\sin(\\omega t)$，振荡振幅为 $A = \\frac{v_0}{\\omega}$。",
         ),
         generate(rng: Rng): Problem {
           const omega = rng.int(2, 10);
@@ -780,8 +780,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "delayed-step-forcing-second-order",
         title: t("Equilibrium offset under delayed step excitation", "延迟阶跃激励下的平衡位置偏移"),
         explanation: t(
-          "For $y'' + \\omega^2 y = K u(t - c)$ with zero initial conditions, $Y(s) = \\frac{K e^{-cs}}{s(s^2 + \\omega^2)} = \\frac{K}{\\omega^2} e^{-cs} \\left[ \\frac{1}{s} - \\frac{s}{s^2 + \\omega^2} \\right]$. For $t \\ge c$, $y(t) = \\frac{K}{\\omega^2}[1 - \\cos(\\omega(t - c))]$, oscillating about the equilibrium level $\\frac{K}{\\omega^2}$.",
-          "对于 $y'' + \\omega^2 y = K u(t - c)$（零初始条件），变换后 $Y(s) = \\frac{K e^{-cs}}{s(s^2 + \\omega^2)}$。当 $t \\ge c$ 时，$y(t) = \\frac{K}{\\omega^2}[1 - \\cos(\\omega(t - c))]$，围绕平衡中心 $\\frac{K}{\\omega^2}$ 振荡。",
+          "After the step switches on, the oscillator vibrates about a new equilibrium, shifted by the step size divided by the square of the frequency. For $y'' + \\omega^2 y = K u(t - c)$ with zero initial conditions, $Y(s) = \\frac{K e^{-cs}}{s(s^2 + \\omega^2)} = \\frac{K}{\\omega^2} e^{-cs} \\left[ \\frac{1}{s} - \\frac{s}{s^2 + \\omega^2} \\right]$. For $t \\ge c$, $y(t) = \\frac{K}{\\omega^2}[1 - \\cos(\\omega(t - c))]$, oscillating about the equilibrium level $\\frac{K}{\\omega^2}$.",
+          "阶跃开启后，振子围绕一个新的平衡位置振动，偏移量等于阶跃大小除以频率的平方。对于 $y'' + \\omega^2 y = K u(t - c)$（零初始条件），变换后 $Y(s) = \\frac{K e^{-cs}}{s(s^2 + \\omega^2)}$。当 $t \\ge c$ 时，$y(t) = \\frac{K}{\\omega^2}[1 - \\cos(\\omega(t - c))]$，围绕平衡中心 $\\frac{K}{\\omega^2}$ 振荡。",
         ),
         generate(rng: Rng): Problem {
           const omega = rng.int(2, 6);
@@ -836,8 +836,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "resolvent-matrix-system-laplace",
         title: t("Evaluating the determinant of the characteristic matrix sI - A", "计算特征矩阵 sI - A 的行列式"),
         explanation: t(
-          "For $\\mathbf{x}' = A \\mathbf{x}$, taking Laplace transforms yields $(sI - A)\\mathbf{X}(s) = \\mathbf{x}(0)$. The determinant $\\det(sI - A)$ is the characteristic polynomial of $A$. At $s = 0$, $\\det(0I - A) = \\det(-A) = (-1)^n \\det(A)$.",
-          "对系统 $\\mathbf{x}' = A \\mathbf{x}$ 取拉普拉斯变换得到 $(sI - A)\\mathbf{X}(s) = \\mathbf{x}(0)$。行列式 $\\det(sI - A)$ 即为 $A$ 的特征多项式。在 $s = 0$ 处，$\\det(0I - A) = \\det(-A) = (-1)^n \\det(A)$。",
+          "Transforming a linear system gives a matrix equation, and the determinant of the shifted matrix is the characteristic polynomial of the system. For $\\mathbf{x}' = A \\mathbf{x}$, taking Laplace transforms yields $(sI - A)\\mathbf{X}(s) = \\mathbf{x}(0)$. The determinant $\\det(sI - A)$ is the characteristic polynomial of $A$. At $s = 0$, $\\det(0I - A) = \\det(-A) = (-1)^n \\det(A)$.",
+          "对线性方程组做变换得到一个矩阵方程，平移后矩阵的行列式就是方程组的特征多项式。对系统 $\\mathbf{x}' = A \\mathbf{x}$ 取拉普拉斯变换得到 $(sI - A)\\mathbf{X}(s) = \\mathbf{x}(0)$。行列式 $\\det(sI - A)$ 即为 $A$ 的特征多项式。在 $s = 0$ 处，$\\det(0I - A) = \\det(-A) = (-1)^n \\det(A)$。",
         ),
         generate(rng: Rng): Problem {
           const a = rng.int(2, 6);
@@ -891,8 +891,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "inhomogeneous-system-transfer-function",
         title: t("Steady-state component in an uncoupled inhomogeneous system", "非齐次解耦系统中的稳态分量"),
         explanation: t(
-          "For $x_1' = -a x_1 + c_1$ with $x_1(0) = 0$, transforming gives $(s + a)X_1(s) = \\frac{c_1}{s}$, so $x_1(t) = \\frac{c_1}{a}(1 - e^{-at})$. The steady-state component is $\\lim_{t \\to \\infty} x_1(t) = \\frac{c_1}{a}$.",
-          "对于 $x_1' = -a x_1 + c_1$（$x_1(0) = 0$），取变换得 $(s + a)X_1(s) = \\frac{c_1}{s}$，解得 $x_1(t) = \\frac{c_1}{a}(1 - e^{-at})$。其稳态极限为 $\\lim_{t \\to \\infty} x_1(t) = \\frac{c_1}{a}$。",
+          "When the equations are uncoupled, each component can be transformed and solved on its own, and its long term value is its steady state. For $x_1' = -a x_1 + c_1$ with $x_1(0) = 0$, transforming gives $(s + a)X_1(s) = \\frac{c_1}{s}$, so $x_1(t) = \\frac{c_1}{a}(1 - e^{-at})$. The steady-state component is $\\lim_{t \\to \\infty} x_1(t) = \\frac{c_1}{a}$.",
+          "当方程互不耦合时，每个分量都可以单独变换和求解，它的长期值就是稳态。对于 $x_1' = -a x_1 + c_1$（$x_1(0) = 0$），取变换得 $(s + a)X_1(s) = \\frac{c_1}{s}$，解得 $x_1(t) = \\frac{c_1}{a}(1 - e^{-at})$。其稳态极限为 $\\lim_{t \\to \\infty} x_1(t) = \\frac{c_1}{a}$。",
         ),
         generate(rng: Rng): Problem {
           const a = rng.int(2, 6);

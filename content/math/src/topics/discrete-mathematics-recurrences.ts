@@ -73,8 +73,8 @@ export const introductionToRecurrenceRelations: TopicDef = {
       id: "computing-terms-from-a-recurrence-relation",
       title: t("Computing terms", "计算各项"),
       explanation: t(
-        "If $a_n = 2a_{n-1} - a_{n-2} + 3$ with $a_0 = 1$, $a_1 = 2$, then $a_2 = 4 - 1 + 3 = 6$, $a_3 = 12 - 2 + 3 = 13$, $a_4 = 26 - 6 + 3 = 23$.",
-        "若 $a_n = 2a_{n-1} - a_{n-2} + 3$，$a_0 = 1$，$a_1 = 2$，则 $a_2 = 4 - 1 + 3 = 6$，$a_3 = 12 - 2 + 3 = 13$，$a_4 = 26 - 6 + 3 = 23$。",
+        "A recurrence gives each term from the ones before it, so start from the given initial terms and apply the rule one step at a time. If $a_n = 2a_{n-1} - a_{n-2} + 3$ with $a_0 = 1$, $a_1 = 2$, then $a_2 = 4 - 1 + 3 = 6$, $a_3 = 12 - 2 + 3 = 13$, $a_4 = 26 - 6 + 3 = 23$.",
+        "递推关系由前面的项给出每一项，所以从给定的初始项开始，一步一步地应用这个规则。若 $a_n = 2a_{n-1} - a_{n-2} + 3$，$a_0 = 1$，$a_1 = 2$，则 $a_2 = 4 - 1 + 3 = 6$，$a_3 = 12 - 2 + 3 = 13$，$a_4 = 26 - 6 + 3 = 23$。",
       ),
       generate(rng) {
         const p = rng.nonZero(-3, 3);

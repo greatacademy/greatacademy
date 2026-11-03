@@ -23,8 +23,8 @@ export const introductionToSystemsOfLinearOdes: TopicDef = {
       id: "matrix-form-of-first-order-linear-systems",
       title: t("Trace of the coefficient matrix in a linear system", "线性系统系数矩阵的迹"),
       explanation: t(
-        "For a $2 \\times 2$ system $\\mathbf{x}' = A \\mathbf{x}$ where $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, the trace is $\\operatorname{tr}(A) = a + d$.",
-        "对于二阶线性常微分方程组 $\\mathbf{x}' = A \\mathbf{x}$（系数矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$），其主对角线元素之和称为迹：$\\operatorname{tr}(A) = a + d$。",
+        "A linear system collects the coefficients into a matrix, and the trace of that matrix equals the sum of its eigenvalues. For a $2 \\times 2$ system $\\mathbf{x}' = A \\mathbf{x}$ where $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, the trace is $\\operatorname{tr}(A) = a + d$.",
+        "线性方程组把系数汇集成一个矩阵，这个矩阵的迹等于其特征值之和。对于二阶线性常微分方程组 $\\mathbf{x}' = A \\mathbf{x}$（系数矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$），其主对角线元素之和称为迹：$\\operatorname{tr}(A) = a + d$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 15);
@@ -77,8 +77,8 @@ export const expressingHomogeneousOdesAsFirstOrderSystems: TopicDef = {
       id: "companion-matrix-of-scalar-homogeneous-odes",
       title: t("Companion matrix representation of a second-order ODE", "二阶常微分方程的友矩阵表示"),
       explanation: t(
-        "Setting $x_1 = y, x_2 = y'$ for $y'' + p y' + q y = 0$ yields $x_1' = x_2$ and $x_2' = -q x_1 - p x_2$. The determinant of the companion matrix is $\\det(A) = q$.",
-        "对于方程 $y'' + p y' + q y = 0$，设 $x_1 = y, x_2 = y'$，得 $x_1' = x_2$ 且 $x_2' = -q x_1 - p x_2$。友矩阵 $\\begin{pmatrix} 0 & 1 \\\\ -q & -p \\end{pmatrix}$ 的行列式为 $\\det(A) = q$。",
+        "Introducing the derivative as a second unknown turns one second order equation into a system of two first order equations. Setting $x_1 = y, x_2 = y'$ for $y'' + p y' + q y = 0$ yields $x_1' = x_2$ and $x_2' = -q x_1 - p x_2$. The determinant of the companion matrix is $\\det(A) = q$.",
+        "把导数作为第二个未知函数引入，就把一个二阶方程化为两个一阶方程组成的方程组。对于方程 $y'' + p y' + q y = 0$，设 $x_1 = y, x_2 = y'$，得 $x_1' = x_2$ 且 $x_2' = -q x_1 - p x_2$。友矩阵 $\\begin{pmatrix} 0 & 1 \\\\ -q & -p \\end{pmatrix}$ 的行列式为 $\\det(A) = q$。",
       ),
       generate(rng: Rng): Problem {
         const p = rng.int(1, 10);
@@ -136,8 +136,8 @@ export const expressingInhomogeneousOdesAsFirstOrderSystems: TopicDef = {
       id: "forcing-vector-in-first-order-companion-systems",
       title: t("Forcing vector in first-order companion systems", "一阶伴随系统中的外力激励向量"),
       explanation: t(
-        "For $y'' + p y' + q y = K t^2$, state variables $x_1 = y, x_2 = y'$ yield $\\mathbf{x}' = A \\mathbf{x} + \\begin{pmatrix} 0 \\\\ K t^2 \\end{pmatrix}$. At $t = 2$, the second component is $4K$.",
-        "对于 $y'' + p y' + q y = K t^2$，转化为状态空间形式后外力激励向量为 $\\mathbf{g}(t) = \\begin{pmatrix} 0 \\\\ K t^2 \\end{pmatrix}$。在 $t = 2$ 处第二分量为 $4K$。",
+        "The forcing term of the original equation appears only in the equation for the highest derivative, so it occupies the last entry of the forcing vector. For $y'' + p y' + q y = K t^2$, state variables $x_1 = y, x_2 = y'$ yield $\\mathbf{x}' = A \\mathbf{x} + \\begin{pmatrix} 0 \\\\ K t^2 \\end{pmatrix}$. At $t = 2$, the second component is $4K$.",
+        "原方程的强迫项只出现在最高阶导数的方程中，所以它位于强迫向量的最后一个分量。对于 $y'' + p y' + q y = K t^2$，转化为状态空间形式后外力激励向量为 $\\mathbf{g}(t) = \\begin{pmatrix} 0 \\\\ K t^2 \\end{pmatrix}$。在 $t = 2$ 处第二分量为 $4K$。",
       ),
       generate(rng: Rng): Problem {
         const K = rng.int(2, 40);
@@ -192,8 +192,8 @@ export const linearIndependenceForHomogeneousSystemsOfOdes: TopicDef = {
       id: "wronskian-of-vector-solutions",
       title: t("Wronskian determinant of vector solutions", "向量解组的朗斯基行列式"),
       explanation: t(
-        "For $\\mathbf{x}_1(t) = \\begin{pmatrix} 1 \\\\ a \\end{pmatrix}e^{\\lambda_1 t}$ and $\\mathbf{x}_2(t) = \\begin{pmatrix} 1 \\\\ b \\end{pmatrix}e^{\\lambda_2 t}$, the Wronskian at $t = 0$ is $\\det \\begin{pmatrix} 1 & 1 \\\\ a & b \\end{pmatrix} = b - a$.",
-        "对于向量解 $\\mathbf{x}_1(t) = \\begin{pmatrix} 1 \\\\ a \\end{pmatrix}e^{\\lambda_1 t}$ 与 $\\mathbf{x}_2(t) = \\begin{pmatrix} 1 \\\\ b \\end{pmatrix}e^{\\lambda_2 t}$，在 $t = 0$ 处的朗斯基行列式为 $\\det \\begin{pmatrix} 1 & 1 \\\\ a & b \\end{pmatrix} = b - a$。",
+        "For vector solutions the Wronskian is the determinant of the matrix whose columns are the solutions, and it tests whether they are independent. For $\\mathbf{x}_1(t) = \\begin{pmatrix} 1 \\\\ a \\end{pmatrix}e^{\\lambda_1 t}$ and $\\mathbf{x}_2(t) = \\begin{pmatrix} 1 \\\\ b \\end{pmatrix}e^{\\lambda_2 t}$, the Wronskian at $t = 0$ is $\\det \\begin{pmatrix} 1 & 1 \\\\ a & b \\end{pmatrix} = b - a$.",
+        "对于向量解，朗斯基行列式是以这些解为列的矩阵的行列式，用来检验它们是否线性无关。对于向量解 $\\mathbf{x}_1(t) = \\begin{pmatrix} 1 \\\\ a \\end{pmatrix}e^{\\lambda_1 t}$ 与 $\\mathbf{x}_2(t) = \\begin{pmatrix} 1 \\\\ b \\end{pmatrix}e^{\\lambda_2 t}$，在 $t = 0$ 处的朗斯基行列式为 $\\det \\begin{pmatrix} 1 & 1 \\\\ a & b \\end{pmatrix} = b - a$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 10);
@@ -250,8 +250,8 @@ export const generalSolutionsOfFirstOrderLinearSystemsOfOdes: TopicDef = {
       id: "fundamental-set-and-superposition-of-vector-solutions",
       title: t("Superposition and initial condition coefficients", "基本解组线性组合与初值系数确定"),
       explanation: t(
-        "If $\\mathbf{x}_1(0) = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ and $\\mathbf{x}_2(0) = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$, then $\\mathbf{x}(0) = \\begin{pmatrix} c_1 \\\\ c_2 \\end{pmatrix}$. For initial vector $\\begin{pmatrix} u_0 \\\\ v_0 \\end{pmatrix}$, the coefficients are $c_1 = u_0$ and $c_2 = v_0$.",
-        "若规范化基本解在初值处满足 $\\mathbf{x}_1(0) = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ 且 $\\mathbf{x}_2(0) = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$，则任意初值 $\\begin{pmatrix} u_0 \\\\ v_0 \\end{pmatrix}$ 的组合系数直接为 $c_1 = u_0$ 与 $c_2 = v_0$。",
+        "When the solutions start at the standard unit vectors, the coefficients needed for any initial condition are simply the entries of the initial vector. If $\\mathbf{x}_1(0) = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ and $\\mathbf{x}_2(0) = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$, then $\\mathbf{x}(0) = \\begin{pmatrix} c_1 \\\\ c_2 \\end{pmatrix}$. For initial vector $\\begin{pmatrix} u_0 \\\\ v_0 \\end{pmatrix}$, the coefficients are $c_1 = u_0$ and $c_2 = v_0$.",
+        "当各个解从标准单位向量出发时，任意初始条件所需的系数就是初始向量的各个分量。若规范化基本解在初值处满足 $\\mathbf{x}_1(0) = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ 且 $\\mathbf{x}_2(0) = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$，则任意初值 $\\begin{pmatrix} u_0 \\\\ v_0 \\end{pmatrix}$ 的组合系数直接为 $c_1 = u_0$ 与 $c_2 = v_0$。",
       ),
       generate(rng: Rng): Problem {
         const u0 = rng.int(2, 20);
@@ -311,8 +311,8 @@ export const solvingDecoupledHomogeneousSystemsOfOdes: TopicDef = {
       id: "independent-exponential-solutions-of-diagonal-systems",
       title: t("Initial velocity in decoupled linear systems", "解耦系统的初始演化导数值"),
       explanation: t(
-        "For decoupled equations $x_1' = \\lambda_1 x_1$, the initial derivative is $x_1'(0) = \\lambda_1 x_1(0)$.",
-        "在解耦系统 $x_1' = \\lambda_1 x_1$ 中，初始演化速度直接由 $x_1'(0) = \\lambda_1 x_1(0)$ 计算得到。",
+        "In a decoupled system each equation involves only its own unknown, so each component grows or decays exponentially at its own rate. For decoupled equations $x_1' = \\lambda_1 x_1$, the initial derivative is $x_1'(0) = \\lambda_1 x_1(0)$.",
+        "在解耦的方程组中，每个方程只含自己的未知函数，所以每个分量按各自的速率指数增长或衰减。在解耦系统 $x_1' = \\lambda_1 x_1$ 中，初始演化速度直接由 $x_1'(0) = \\lambda_1 x_1(0)$ 计算得到。",
       ),
       generate(rng: Rng): Problem {
         const lambda = rng.int(2, 12);
@@ -366,8 +366,8 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvalues: TopicDef = 
       id: "eigenvalue-eigenvector-method-for-linear-systems",
       title: t("Eigenvalues of a triangular coefficient matrix", "三角系数矩阵的特征值"),
       explanation: t(
-        "For a triangular matrix $A = \\begin{pmatrix} a & 0 \\\\ c & d \\end{pmatrix}$, the eigenvalues are the diagonal entries $\\lambda = a$ and $\\lambda = d$.",
-        "对于下三角矩阵 $A = \\begin{pmatrix} a & 0 \\\\ c & d \\end{pmatrix}$，特征值即为其主对角线上的元素 $\\lambda = a$ 与 $\\lambda = d$。",
+        "The eigenvalues of a triangular matrix are its diagonal entries, and each eigenvalue with its eigenvector gives an exponential solution of the system. For a triangular matrix $A = \\begin{pmatrix} a & 0 \\\\ c & d \\end{pmatrix}$, the eigenvalues are the diagonal entries $\\lambda = a$ and $\\lambda = d$.",
+        "三角矩阵的特征值就是它的对角元素，每个特征值及其特征向量给出方程组的一个指数解。对于下三角矩阵 $A = \\begin{pmatrix} a & 0 \\\\ c & d \\end{pmatrix}$，特征值即为其主对角线上的元素 $\\lambda = a$ 与 $\\lambda = d$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 10);
@@ -425,8 +425,8 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvaluesAndInitialCon
       id: "initial-value-problems-for-diagonalizable-systems",
       title: t("Initial rate of change in diagonalized systems", "对角化系统中的初始变化率"),
       explanation: t(
-        "For $\\mathbf{x}' = A \\mathbf{x}$, the initial derivative vector is $\\mathbf{x}'(0) = A \\mathbf{x}(0)$.",
-        "对于系统 $\\mathbf{x}' = A \\mathbf{x}$，初值处的演化导数向量为 $\\mathbf{x}'(0) = A \\mathbf{x}(0)$。",
+        "The system itself gives the derivative at the start: multiply the coefficient matrix by the initial vector. For $\\mathbf{x}' = A \\mathbf{x}$, the initial derivative vector is $\\mathbf{x}'(0) = A \\mathbf{x}(0)$.",
+        "方程组本身给出了初始时刻的导数：用系数矩阵乘以初始向量。对于系统 $\\mathbf{x}' = A \\mathbf{x}$，初值处的演化导数向量为 $\\mathbf{x}'(0) = A \\mathbf{x}(0)$。",
       ),
       generate(rng: Rng): Problem {
         const lambda1 = rng.int(2, 10);
@@ -482,8 +482,8 @@ export const solvingHomogeneousSystemsOfOdesWithRepeatedEigenvalues: TopicDef = 
       id: "generalized-eigenvectors-for-defective-systems",
       title: t("Generalized eigenvectors for defective systems", "亏损矩阵的广义特征向量"),
       explanation: t(
-        "For a Jordan block $A = \\begin{pmatrix} \\lambda & k \\\\ 0 & \\lambda \\end{pmatrix}$, $(A - \\lambda I) = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$. If the eigenvector is $\\mathbf{v} = \\begin{pmatrix} k \\\\ 0 \\end{pmatrix}$, then $\\mathbf{w} = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ satisfies $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$.",
-        "对于约当块矩阵 $A = \\begin{pmatrix} \\lambda & k \\\\ 0 & \\lambda \\end{pmatrix}$，有 $(A - \\lambda I) = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$。若特征向量为 $\\mathbf{v} = \\begin{pmatrix} k \\\\ 0 \\end{pmatrix}$，则广义特征向量 $\\mathbf{w} = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ 满足 $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$。",
+        "When a matrix lacks enough eigenvectors, a generalized eigenvector provides a second solution that includes a factor of time. For a Jordan block $A = \\begin{pmatrix} \\lambda & k \\\\ 0 & \\lambda \\end{pmatrix}$, $(A - \\lambda I) = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$. If the eigenvector is $\\mathbf{v} = \\begin{pmatrix} k \\\\ 0 \\end{pmatrix}$, then $\\mathbf{w} = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ satisfies $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$.",
+        "当矩阵的特征向量不够时，广义特征向量提供了含有时间因子的第二个解。对于约当块矩阵 $A = \\begin{pmatrix} \\lambda & k \\\\ 0 & \\lambda \\end{pmatrix}$，有 $(A - \\lambda I) = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$。若特征向量为 $\\mathbf{v} = \\begin{pmatrix} k \\\\ 0 \\end{pmatrix}$，则广义特征向量 $\\mathbf{w} = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ 满足 $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$。",
       ),
       generate(rng: Rng): Problem {
         const lambda = rng.int(2, 35);
@@ -538,8 +538,8 @@ export const solvingHomogeneousSystemsOfOdesWithComplexEigenvalues: TopicDef = {
       id: "real-solutions-from-complex-eigenvalues",
       title: t("Angular frequency from complex eigenvalues", "复特征值的旋转角频率"),
       explanation: t(
-        "For $A = \\begin{pmatrix} \\alpha & -\\beta \\\\ \\beta & \\alpha \\end{pmatrix}$, the characteristic roots are $\\lambda = \\alpha \\pm i\\beta$, producing trajectories oscillating with angular speed $\\beta$.",
-        "对于标准旋转伸缩矩阵 $A = \\begin{pmatrix} \\alpha & -\\beta \\\\ \\beta & \\alpha \\end{pmatrix}$，其特征值为 $\\lambda = \\alpha \\pm i\\beta$，轨迹具有旋转角频率 $\\beta$。",
+        "A pair of complex eigenvalues produces rotating solutions, with the real part controlling growth and the imaginary part setting the angular frequency. For $A = \\begin{pmatrix} \\alpha & -\\beta \\\\ \\beta & \\alpha \\end{pmatrix}$, the characteristic roots are $\\lambda = \\alpha \\pm i\\beta$, producing trajectories oscillating with angular speed $\\beta$.",
+        "一对复特征值产生旋转的解，实部控制增长，虚部决定角频率。对于标准旋转伸缩矩阵 $A = \\begin{pmatrix} \\alpha & -\\beta \\\\ \\beta & \\alpha \\end{pmatrix}$，其特征值为 $\\lambda = \\alpha \\pm i\\beta$，轨迹具有旋转角频率 $\\beta$。",
       ),
       generate(rng: Rng): Problem {
         const alpha = rng.int(1, 10);
@@ -595,8 +595,8 @@ export const solvingInhomogeneousSystemsOfOdes: TopicDef = {
       id: "undetermined-coefficients-for-constant-forcing-vectors",
       title: t("Steady-state particular solution for constant forcing", "常数激励下的稳态特解向量"),
       explanation: t(
-        "For $\\mathbf{x}' = A \\mathbf{x} + \\mathbf{b}$ where $A = \\operatorname{diag}(a, d)$, setting $\\mathbf{x}_p = \\mathbf{c}$ gives $A \\mathbf{c} + \\mathbf{b} = \\mathbf{0} \\implies c_1 = -b_1 / a$.",
-        "对于对角系统 $\\mathbf{x}' = A \\mathbf{x} + \\mathbf{b}$，设常数特解 $\\mathbf{x}_p = \\mathbf{c}$，代入平衡条件 $A \\mathbf{c} + \\mathbf{b} = \\mathbf{0}$，得第一分量为 $c_1 = -b_1 / a$。",
+        "With constant forcing, try a constant particular solution; setting the derivative to zero leaves a linear system for the steady state. For $\\mathbf{x}' = A \\mathbf{x} + \\mathbf{b}$ where $A = \\operatorname{diag}(a, d)$, setting $\\mathbf{x}_p = \\mathbf{c}$ gives $A \\mathbf{c} + \\mathbf{b} = \\mathbf{0} \\implies c_1 = -b_1 / a$.",
+        "当强迫项是常数时，试探常数特解；令导数为零，就得到关于稳态的线性方程组。对于对角系统 $\\mathbf{x}' = A \\mathbf{x} + \\mathbf{b}$，设常数特解 $\\mathbf{x}_p = \\mathbf{c}$，代入平衡条件 $A \\mathbf{c} + \\mathbf{b} = \\mathbf{0}$，得第一分量为 $c_1 = -b_1 / a$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
@@ -657,8 +657,8 @@ export const phasePlanesAndPhasePortraits: TopicDef = {
       id: "direction-fields-and-trajectories-in-the-phase-plane",
       title: t("Trajectory slope in the phase plane", "相平面上状态轨迹的切线斜率"),
       explanation: t(
-        "The slope of a phase trajectory is $\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}$. For $x' = a x$ and $y' = b y$, $\\frac{dy}{dx} = \\frac{b y}{a x}$.",
-        "相轨迹的斜率由链式法则给出：$\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}$。对于系统 $x' = a x, y' = b y$，切线斜率为 $\\frac{dy}{dx} = \\frac{b y}{a x}$。",
+        "A phase trajectory hides time and shows only the path, and its slope is the ratio of the vertical rate to the horizontal rate. The slope of a phase trajectory is $\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}$. For $x' = a x$ and $y' = b y$, $\\frac{dy}{dx} = \\frac{b y}{a x}$.",
+        "相轨线隐去了时间，只显示路径，它的斜率是竖直变化率与水平变化率之比。相轨迹的斜率由链式法则给出：$\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}$。对于系统 $x' = a x, y' = b y$，切线斜率为 $\\frac{dy}{dx} = \\frac{b y}{a x}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
@@ -707,8 +707,8 @@ export const equilibriumPointsAndStabilityForSystemsOfOdes: TopicDef = {
       id: "classification-of-isolated-critical-points",
       title: t("Determinant test for isolated critical points", "孤立平衡点的行列式判定准则"),
       explanation: t(
-        "A linear system $A \\mathbf{x} = \\mathbf{0}$ has an isolated critical point at the origin if and only if $\\det(A) \\ne 0$.",
-        "线性系统 $A \\mathbf{x} = \\mathbf{0}$ 在原点具有孤立平衡点当且仅当系数矩阵行列式 $\\det(A) \\ne 0$。",
+        "The origin is the only equilibrium of a linear system exactly when the matrix is invertible, that is, when its determinant is not zero. A linear system $A \\mathbf{x} = \\mathbf{0}$ has an isolated critical point at the origin if and only if $\\det(A) \\ne 0$.",
+        "线性方程组只有原点一个平衡点，当且仅当矩阵可逆，也就是行列式不为零。线性系统 $A \\mathbf{x} = \\mathbf{0}$ 在原点具有孤立平衡点当且仅当系数矩阵行列式 $\\det(A) \\ne 0$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
@@ -762,8 +762,8 @@ export const phasePortraitsForDecoupledLinearSystems: TopicDef = {
       id: "trajectories-of-decoupled-systems",
       title: t("Power exponent of decoupled phase trajectories", "解耦系统相曲线的幂指数"),
       explanation: t(
-        "For $\\frac{dy}{dx} = \\frac{\\lambda_2 y}{\\lambda_1 x}$, separation of variables yields $\\ln|y| = \\frac{\\lambda_2}{\\lambda_1}\\ln|x| + C \\implies y = K x^p$ where $p = \\frac{\\lambda_2}{\\lambda_1}$.",
-        "对于 $\\frac{dy}{dx} = \\frac{\\lambda_2 y}{\\lambda_1 x}$，分离变量积分可得 $\\ln|y| = \\frac{\\lambda_2}{\\lambda_1}\\ln|x| + C \\implies y = K x^p$，其中幂指数 $p = \\frac{\\lambda_2}{\\lambda_1}$。",
+        "Separating the variables in the trajectory equation shows that the path is a power curve whose exponent is the ratio of the two rates. For $\\frac{dy}{dx} = \\frac{\\lambda_2 y}{\\lambda_1 x}$, separation of variables yields $\\ln|y| = \\frac{\\lambda_2}{\\lambda_1}\\ln|x| + C \\implies y = K x^p$ where $p = \\frac{\\lambda_2}{\\lambda_1}$.",
+        "对轨线方程分离变量可以看出，路径是一条幂曲线，指数是两个速率之比。对于 $\\frac{dy}{dx} = \\frac{\\lambda_2 y}{\\lambda_1 x}$，分离变量积分可得 $\\ln|y| = \\frac{\\lambda_2}{\\lambda_1}\\ln|x| + C \\implies y = K x^p$，其中幂指数 $p = \\frac{\\lambda_2}{\\lambda_1}$。",
       ),
       generate(rng: Rng): Problem {
         const p = rng.int(2, 35);
@@ -820,8 +820,8 @@ export const phasePortraitsForLinearSystemsWithRealDistinctEigenvalues: TopicDef
       id: "saddle-points-and-nodes-classification",
       title: t("Determinant condition for a saddle point", "鞍点的行列式负判定条件"),
       explanation: t(
-        "A saddle point occurs when the eigenvalues have opposite signs, which is equivalent to $\\det(A) = \\lambda_1 \\lambda_2 < 0$.",
-        "当特征值异号时系统在原点形成鞍点，其等价充要代数条件为行列式 $\\det(A) = \\lambda_1 \\lambda_2 < 0$。",
+        "The determinant is the product of the eigenvalues, so a negative determinant means one eigenvalue is positive and one negative, which makes a saddle. A saddle point occurs when the eigenvalues have opposite signs, which is equivalent to $\\det(A) = \\lambda_1 \\lambda_2 < 0$.",
+        "行列式是特征值之积，所以行列式为负意味着一个特征值为正、一个为负，这就是鞍点。当特征值异号时系统在原点形成鞍点，其等价充要代数条件为行列式 $\\det(A) = \\lambda_1 \\lambda_2 < 0$。",
       ),
       generate(rng: Rng): Problem {
         const lambda1 = rng.int(2, 10);
@@ -929,8 +929,8 @@ export const phasePortraitsForLinearSystemsWithZeroEigenvalues: TopicDef = {
       id: "lines-of-equilibria-when-determinant-is-zero",
       title: t("Lines of equilibria when determinant is zero", "零特征值系统的平衡线方程"),
       explanation: t(
-        "For $A = \\begin{pmatrix} a & b \\\\ 2a & 2b \\end{pmatrix}$, $\\det(A) = 0$. The equilibrium points satisfy $a x + b y = 0$.",
-        "对于秩为 1 的矩阵 $A = \\begin{pmatrix} a & b \\\\ 2a & 2b \\end{pmatrix}$，$\\det(A) = 0$。其平衡点轨迹构成直线 $a x + b y = 0$。",
+        "A zero determinant means the matrix sends a whole line of vectors to zero, so every point of that line is an equilibrium. For $A = \\begin{pmatrix} a & b \\\\ 2a & 2b \\end{pmatrix}$, $\\det(A) = 0$. The equilibrium points satisfy $a x + b y = 0$.",
+        "行列式为零意味着矩阵把一整条直线上的向量都映射到零，所以这条直线上的每一点都是平衡点。对于秩为 1 的矩阵 $A = \\begin{pmatrix} a & b \\\\ 2a & 2b \\end{pmatrix}$，$\\det(A) = 0$。其平衡点轨迹构成直线 $a x + b y = 0$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 35);
@@ -985,8 +985,8 @@ export const phasePortraitsForLinearSystemsWithComplexEigenvalues: TopicDef = {
       id: "centers-and-spiral-points",
       title: t("Frequency of closed orbits around a center", "中心点周围封闭轨道的循环频率"),
       explanation: t(
-        "For $A = \\begin{pmatrix} 0 & -\\omega \\\\ \\omega & 0 \\end{pmatrix}$, eigenvalues are $\\pm i\\omega$, producing a center with angular frequency $\\omega$.",
-        "对于系统 $A = \\begin{pmatrix} 0 & -\\omega \\\\ \\omega & 0 \\end{pmatrix}$，特征值为纯虚根 $\\pm i\\omega$，原点为中心点，闭轨道的角频率为 $\\omega$。",
+        "Purely imaginary eigenvalues give closed orbits that circle the origin forever, and their frequency is the imaginary part. For $A = \\begin{pmatrix} 0 & -\\omega \\\\ \\omega & 0 \\end{pmatrix}$, eigenvalues are $\\pm i\\omega$, producing a center with angular frequency $\\omega$.",
+        "纯虚特征值给出永远绕原点运行的闭轨道，频率就是虚部。对于系统 $A = \\begin{pmatrix} 0 & -\\omega \\\\ \\omega & 0 \\end{pmatrix}$，特征值为纯虚根 $\\pm i\\omega$，原点为中心点，闭轨道的角频率为 $\\omega$。",
       ),
       generate(rng: Rng): Problem {
         const omega = rng.int(2, 35);
@@ -1041,8 +1041,8 @@ export const shiftedSystemsOfOdes: TopicDef = {
       id: "translation-of-equilibrium-to-the-origin",
       title: t("Coordinates of a shifted equilibrium point", "平移平衡点的空间坐标"),
       explanation: t(
-        "For $x' = -a(x - x_*)$, the equilibrium point is located at $x = x_*$.",
-        "对于方程 $x' = -a(x - x_*)$，系统的稳定平衡点位于 $x = x_*$。",
+        "Shifting the variable by the equilibrium value moves the equilibrium to the origin, where the standard analysis applies. For $x' = -a(x - x_*)$, the equilibrium point is located at $x = x_*$.",
+        "把变量平移一个平衡值，就把平衡点移到原点，在那里可以使用标准的分析方法。对于方程 $x' = -a(x - x_*)$，系统的稳定平衡点位于 $x = x_*$。",
       ),
       generate(rng: Rng): Problem {
         const xStar = rng.int(2, 35);
@@ -1093,8 +1093,8 @@ export const linearApproximationsNearEquilibria: TopicDef = {
       id: "jacobian-matrix-and-local-linearization",
       title: t("Jacobian entry of a nonlinear system", "非线性系统在平衡点处的雅可比矩阵元素"),
       explanation: t(
-        "For $x' = f(x, y) = a x - x^2$, the partial derivative $\\frac{\\partial f}{\\partial x} = a - 2x$. At the origin $(0, 0)$, $J_{11} = a$.",
-        "对于 $x' = f(x, y) = a x - x^2$，偏导数为 $\\frac{\\partial f}{\\partial x} = a - 2x$。在原点平衡点 $(0, 0)$ 处，雅可比元素为 $J_{11} = a$。",
+        "Near an equilibrium a nonlinear system behaves like its linearization, whose matrix is the Jacobian of partial derivatives evaluated there. For $x' = f(x, y) = a x - x^2$, the partial derivative $\\frac{\\partial f}{\\partial x} = a - 2x$. At the origin $(0, 0)$, $J_{11} = a$.",
+        "在平衡点附近，非线性方程组的行为与它的线性化相似，其矩阵是在该点处求值的偏导数雅可比矩阵。对于 $x' = f(x, y) = a x - x^2$，偏导数为 $\\frac{\\partial f}{\\partial x} = a - 2x$。在原点平衡点 $(0, 0)$ 处，雅可比元素为 $J_{11} = a$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 35);
@@ -1151,8 +1151,8 @@ export const matrixExponentials: TopicDef = {
       id: "definition-and-properties-of-matrix-exponentials",
       title: t("Matrix exponential of a nilpotent shear matrix", "幂零剪切矩阵的矩阵指数"),
       explanation: t(
-        "For $A = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$, $A^2 = 0$. Thus $e^{At} = I + At = \\begin{pmatrix} 1 & kt \\\\ 0 & 1 \\end{pmatrix}$. At $t = 1$, the upper right entry is $k$.",
-        "对于矩阵 $A = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$，有 $A^2 = 0$。因此 $e^{At} = I + At = \\begin{pmatrix} 1 & kt \\\\ 0 & 1 \\end{pmatrix}$。在 $t = 1$ 处右上角元素即为 $k$。",
+        "The matrix exponential is defined by the same power series as the ordinary exponential, and when a power of the matrix is zero, the series stops. For $A = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$, $A^2 = 0$. Thus $e^{At} = I + At = \\begin{pmatrix} 1 & kt \\\\ 0 & 1 \\end{pmatrix}$. At $t = 1$, the upper right entry is $k$.",
+        "矩阵指数由与普通指数相同的幂级数定义，当矩阵的某次幂为零时，级数就终止了。对于矩阵 $A = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$，有 $A^2 = 0$。因此 $e^{At} = I + At = \\begin{pmatrix} 1 & kt \\\\ 0 & 1 \\end{pmatrix}$。在 $t = 1$ 处右上角元素即为 $k$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 35);
@@ -1204,8 +1204,8 @@ export const fundamentalMatrices: TopicDef = {
       id: "the-fundamental-matrix-solution",
       title: t("Initial determinant of a fundamental matrix", "基本解矩阵的初值行列式"),
       explanation: t(
-        "For $\\Phi(t) = \\begin{pmatrix} e^{a t} & 0 \\\\ 0 & e^{b t} \\end{pmatrix}$, evaluating at $t = 0$ gives $\\Phi(0) = I$, with determinant $\\det(\\Phi(0)) = 1$. For scaled columns, $\\det(\\Phi(0)) = u v$.",
-        "对于基本解矩阵 $\\Phi(t)$，在 $t = 0$ 处的行列式等于各初始解向量构成的方阵行列式。",
+        "A fundamental matrix has independent solutions as its columns, and its determinant at any time is the Wronskian of those solutions. For $\\Phi(t) = \\begin{pmatrix} e^{a t} & 0 \\\\ 0 & e^{b t} \\end{pmatrix}$, evaluating at $t = 0$ gives $\\Phi(0) = I$, with determinant $\\det(\\Phi(0)) = 1$. For scaled columns, $\\det(\\Phi(0)) = u v$.",
+        "基本矩阵以线性无关的解为列，它在任意时刻的行列式就是这些解的朗斯基行列式。对于基本解矩阵 $\\Phi(t)$，在 $t = 0$ 处的行列式等于各初始解向量构成的方阵行列式。",
       ),
       generate(rng: Rng): Problem {
         const u = rng.int(2, 10);
@@ -1254,8 +1254,8 @@ export const solvingHomogeneousSystemsOfOdesUsingMatrixMethods: TopicDef = {
       id: "solution-via-matrix-exponential",
       title: t("Initial state evaluation via matrix exponential", "矩阵指数解在初始状态下的验证"),
       explanation: t(
-        "Since $e^{A \\cdot 0} = I$, the solution $\\mathbf{x}(t) = e^{At}\\mathbf{x}_0$ satisfies $\\mathbf{x}(0) = I \\mathbf{x}_0 = \\mathbf{x}_0$.",
-        "因为 $e^{A \\cdot 0} = I$，解向量 $\\mathbf{x}(t) = e^{At}\\mathbf{x}_0$ 在 $t = 0$ 处满足 $\\mathbf{x}(0) = I \\mathbf{x}_0 = \\mathbf{x}_0$。",
+        "Multiplying the matrix exponential by the initial vector solves the system, and at time zero the exponential is the identity, so the initial condition holds. Since $e^{A \\cdot 0} = I$, the solution $\\mathbf{x}(t) = e^{At}\\mathbf{x}_0$ satisfies $\\mathbf{x}(0) = I \\mathbf{x}_0 = \\mathbf{x}_0$.",
+        "用矩阵指数乘以初始向量就解出了方程组，在零时刻指数是单位矩阵，所以初始条件成立。因为 $e^{A \\cdot 0} = I$，解向量 $\\mathbf{x}(t) = e^{At}\\mathbf{x}_0$ 在 $t = 0$ 处满足 $\\mathbf{x}(0) = I \\mathbf{x}_0 = \\mathbf{x}_0$。",
       ),
       generate(rng: Rng): Problem {
         const x0 = rng.int(2, 20);
@@ -1311,8 +1311,8 @@ export const solvingInhomogeneousSystemsOfOdesUsingMatrixMethods: TopicDef = {
       id: "matrix-variation-of-parameters-formula",
       title: t("Initial rate of change of the convolution integral", "卷积特解在初始时刻的变化率"),
       explanation: t(
-        "For $\\mathbf{x}_p(t) = \\int_0^t e^{A(t-s)}\\mathbf{g}(s)\\,ds$, differentiating by Leibniz's rule yields $\\mathbf{x}_p'(0) = \\mathbf{g}(0)$.",
-        "对于卷积特解 $\\mathbf{x}_p(t) = \\int_0^t e^{A(t-s)}\\mathbf{g}(s)\\,ds$，根据含参变限积分莱布尼茨求导法则，在 $t = 0$ 处满足 $\\mathbf{x}_p'(0) = \\mathbf{g}(0)$。",
+        "The particular solution adds up the effect of the forcing at each earlier time, carried forward by the matrix exponential to the present. For $\\mathbf{x}_p(t) = \\int_0^t e^{A(t-s)}\\mathbf{g}(s)\\,ds$, differentiating by Leibniz's rule yields $\\mathbf{x}_p'(0) = \\mathbf{g}(0)$.",
+        "特解把之前每个时刻强迫项的作用加起来，并由矩阵指数传递到当前时刻。对于卷积特解 $\\mathbf{x}_p(t) = \\int_0^t e^{A(t-s)}\\mathbf{g}(s)\\,ds$，根据含参变限积分莱布尼茨求导法则，在 $t = 0$ 处满足 $\\mathbf{x}_p'(0) = \\mathbf{g}(0)$。",
       ),
       generate(rng: Rng): Problem {
         const g1 = rng.int(2, 35);
@@ -1369,8 +1369,8 @@ export const solvingSystemsOfOdesUsingVariationOfParameters: TopicDef = {
       id: "vector-variation-of-parameters-system",
       title: t("Parameter derivative vector in variation of parameters", "常数变易法中的参数导数向量"),
       explanation: t(
-        "For $\\Phi(0) = I$, the parameter derivative at $t = 0$ is $\\mathbf{u}'(0) = \\Phi(0)^{-1}\\mathbf{g}(0) = \\mathbf{g}(0)$.",
-        "当规范化基本解矩阵满足 $\\Phi(0) = I$ 时，在 $t = 0$ 处的参数导数向量为 $\\mathbf{u}'(0) = \\Phi(0)^{-1}\\mathbf{g}(0) = \\mathbf{g}(0)$。",
+        "Writing the solution as the fundamental matrix times an unknown vector leads to an equation for the derivative of that vector. For $\\Phi(0) = I$, the parameter derivative at $t = 0$ is $\\mathbf{u}'(0) = \\Phi(0)^{-1}\\mathbf{g}(0) = \\mathbf{g}(0)$.",
+        "把解写成基本矩阵乘以一个未知向量，就得到关于这个向量导数的方程。当规范化基本解矩阵满足 $\\Phi(0) = I$ 时，在 $t = 0$ 处的参数导数向量为 $\\mathbf{u}'(0) = \\Phi(0)^{-1}\\mathbf{g}(0) = \\mathbf{g}(0)$。",
       ),
       generate(rng: Rng): Problem {
         const g2 = rng.int(2, 35);

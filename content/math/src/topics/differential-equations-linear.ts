@@ -23,8 +23,8 @@ export const differentialOperators: TopicDef = {
       id: "action-of-differential-operators",
       title: t("Action of polynomial differential operators on exponentials", "多项式微分算子作用于指数函数"),
       explanation: t(
-        "For a differential operator $P(D) = D^2 + b D + c$, applying it to $y = e^{rx}$ yields $P(D)e^{rx} = P(r)e^{rx} = (r^2 + br + c)e^{rx}$.",
-        "对于二次微分算子 $P(D) = D^2 + b D + c$，作用于指数函数 $y = e^{rx}$ 得到 $P(D)e^{rx} = P(r)e^{rx} = (r^2 + br + c)e^{rx}$。",
+        "A differential operator applied to an exponential simply multiplies it by the polynomial evaluated at the rate, which is why exponentials are natural trial solutions. For a differential operator $P(D) = D^2 + b D + c$, applying it to $y = e^{rx}$ yields $P(D)e^{rx} = P(r)e^{rx} = (r^2 + br + c)e^{rx}$.",
+        "微分算子作用于指数函数时，只是把它乘以多项式在增长率处的值，所以指数函数是自然的试探解。对于二次微分算子 $P(D) = D^2 + b D + c$，作用于指数函数 $y = e^{rx}$ 得到 $P(D)e^{rx} = P(r)e^{rx} = (r^2 + br + c)e^{rx}$。",
       ),
       generate(rng: Rng): Problem {
         const b = rng.int(1, 8);
@@ -78,8 +78,8 @@ export const linearDifferentialOperators: TopicDef = {
       id: "linearity-and-composition-of-operators",
       title: t("Factoring constant-coefficient differential operators", "常系数微分算子的因式分解"),
       explanation: t(
-        "Factoring the operator $(D - r_1)(D - r_2)$ gives $D^2 - (r_1 + r_2)D + r_1 r_2$. The constant term is $r_1 r_2$.",
-        "展开微分算子乘积 $(D - r_1)(D - r_2)$ 可得 $D^2 - (r_1 + r_2)D + r_1 r_2$，其常数项为两根乘积 $r_1 r_2$。",
+        "Constant coefficient operators multiply like polynomials, so they can be factored and applied in any order. Factoring the operator $(D - r_1)(D - r_2)$ gives $D^2 - (r_1 + r_2)D + r_1 r_2$. The constant term is $r_1 r_2$.",
+        "常系数算子像多项式一样相乘，所以可以因式分解，并按任意顺序作用。展开微分算子乘积 $(D - r_1)(D - r_2)$ 可得 $D^2 - (r_1 + r_2)D + r_1 r_2$，其常数项为两根乘积 $r_1 r_2$。",
       ),
       generate(rng: Rng): Problem {
         const r1 = rng.int(2, 12);
@@ -131,8 +131,8 @@ export const introductionToSecondOrderLinearOdes: TopicDef = {
       id: "standard-form-of-second-order-linear-odes",
       title: t("Initial acceleration in second-order homogeneous ODEs", "二阶齐次微分方程的初始二阶导数值"),
       explanation: t(
-        "From $y'' + p y' + q y = 0$, evaluating at $x = 0$ gives $y''(0) = -p y'(0) - q y(0)$.",
-        "由方程 $y'' + p y' + q y = 0$ 在 $x = 0$ 处求值，可得初始二阶导数为 $y''(0) = -p y'(0) - q y(0)$。",
+        "The equation itself gives the second derivative in terms of the function and its first derivative, so substituting the initial conditions gives the initial acceleration. From $y'' + p y' + q y = 0$, evaluating at $x = 0$ gives $y''(0) = -p y'(0) - q y(0)$.",
+        "方程本身用函数及其一阶导数表示了二阶导数，所以代入初始条件就得到初始加速度。由方程 $y'' + p y' + q y = 0$ 在 $x = 0$ 处求值，可得初始二阶导数为 $y''(0) = -p y'(0) - q y(0)$。",
       ),
       generate(rng: Rng): Problem {
         const p = rng.int(1, 6);
@@ -185,8 +185,8 @@ export const theSuperpositionPrinciple: TopicDef = {
       id: "linear-superposition-of-homogeneous-solutions",
       title: t("Superposition of normalized initial value solutions", "规范化初值解的线性叠加"),
       explanation: t(
-        "If $y_1$ satisfies $y_1(0) = 1, y_1'(0) = 0$ and $y_2$ satisfies $y_2(0) = 0, y_2'(0) = 1$, then the solution with $y(0) = A$ and $y'(0) = B$ is $y = A y_1 + B y_2$.",
-        "若 $y_1$ 满足 $y_1(0) = 1, y_1'(0) = 0$ 且 $y_2$ 满足 $y_2(0) = 0, y_2'(0) = 1$，则满足初值 $y(0) = A, y'(0) = B$ 的特解为 $y = A y_1 + B y_2$。",
+        "Because the equation is linear, a combination of solutions is again a solution, and solutions with simple initial conditions combine to match any initial conditions. If $y_1$ satisfies $y_1(0) = 1, y_1'(0) = 0$ and $y_2$ satisfies $y_2(0) = 0, y_2'(0) = 1$, then the solution with $y(0) = A$ and $y'(0) = B$ is $y = A y_1 + B y_2$.",
+        "由于方程是线性的，解的组合仍然是解，具有简单初始条件的解可以组合出任意初始条件。若 $y_1$ 满足 $y_1(0) = 1, y_1'(0) = 0$ 且 $y_2$ 满足 $y_2(0) = 0, y_2'(0) = 1$，则满足初值 $y(0) = A, y'(0) = B$ 的特解为 $y = A y_1 + B y_2$。",
       ),
       generate(rng: Rng): Problem {
         const A = rng.int(2, 9);
@@ -237,8 +237,8 @@ export const reductionOfOrder: TopicDef = {
       id: "finding-a-second-solution-via-reduction-of-order",
       title: t("Finding a second solution via reduction of order", "利用降阶法求二阶齐次方程的第二个特解"),
       explanation: t(
-        "For $y'' - 2a y' + a^2 y = 0$ with known solution $y_1 = e^{ax}$, the substitution $y = u e^{ax}$ yields $u'' = 0 \\implies u(x) = x$, giving the second independent solution $y_2 = x e^{ax}$.",
-        "对于微分方程 $y'' - 2a y' + a^2 y = 0$，已知特解为 $y_1 = e^{ax}$。代换 $y = u e^{ax}$ 可降阶得 $u'' = 0 \\implies u(x) = x$，从而得到第二个线性无关解 $y_2 = x e^{ax}$。",
+        "Multiplying the known solution by an unknown function and substituting gives a simpler equation for that function, whose solution yields a second independent solution. For $y'' - 2a y' + a^2 y = 0$ with known solution $y_1 = e^{ax}$, the substitution $y = u e^{ax}$ yields $u'' = 0 \\implies u(x) = x$, giving the second independent solution $y_2 = x e^{ax}$.",
+        "把已知解乘以一个未知函数再代入，得到关于这个函数的更简单的方程，解出它就得到第二个线性无关的解。对于微分方程 $y'' - 2a y' + a^2 y = 0$，已知特解为 $y_1 = e^{ax}$。代换 $y = u e^{ax}$ 可降阶得 $u'' = 0 \\implies u(x) = x$，从而得到第二个线性无关解 $y_2 = x e^{ax}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 35);
@@ -290,8 +290,8 @@ export const linearIndependenceOfSolutionsToHomogeneousOdes: TopicDef = {
       id: "the-wronskian-determinant",
       title: t("The Wronskian determinant", "朗斯基行列式"),
       explanation: t(
-        "For $y_1 = \\cos(\\omega x)$ and $y_2 = \\sin(\\omega x)$, the Wronskian is $W(y_1, y_2) = (\\cos \\omega x)(\\omega \\cos \\omega x) - (-\\omega \\sin \\omega x)(\\sin \\omega x) = \\omega(\\cos^2 \\omega x + \\sin^2 \\omega x) = \\omega$.",
-        "对于 $y_1 = \\cos(\\omega x)$ 和 $y_2 = \\sin(\\omega x)$，朗斯基行列式为 $W(y_1, y_2) = (\\cos \\omega x)(\\omega \\cos \\omega x) - (-\\omega \\sin \\omega x)(\\sin \\omega x) = \\omega(\\cos^2 \\omega x + \\sin^2 \\omega x) = \\omega$。",
+        "The Wronskian is the determinant formed from two solutions and their derivatives, and it is nonzero exactly when the solutions are independent. For $y_1 = \\cos(\\omega x)$ and $y_2 = \\sin(\\omega x)$, the Wronskian is $W(y_1, y_2) = (\\cos \\omega x)(\\omega \\cos \\omega x) - (-\\omega \\sin \\omega x)(\\sin \\omega x) = \\omega(\\cos^2 \\omega x + \\sin^2 \\omega x) = \\omega$.",
+        "朗斯基行列式由两个解及其导数构成，当且仅当这两个解线性无关时它不为零。对于 $y_1 = \\cos(\\omega x)$ 和 $y_2 = \\sin(\\omega x)$，朗斯基行列式为 $W(y_1, y_2) = (\\cos \\omega x)(\\omega \\cos \\omega x) - (-\\omega \\sin \\omega x)(\\sin \\omega x) = \\omega(\\cos^2 \\omega x + \\sin^2 \\omega x) = \\omega$。",
       ),
       generate(rng: Rng): Problem {
         const omega = rng.int(2, 40);
@@ -409,8 +409,8 @@ export const abelsIdentity: TopicDef = {
       id: "abels-formula-for-the-wronskian",
       title: t("Abel's formula for the Wronskian", "阿贝尔微分公式与朗斯基行列式"),
       explanation: t(
-        "For $y'' + a y' + b y = 0$ with constant coefficient $a$, the Wronskian satisfies $\\frac{dW}{dx} = -a W$. Thus $\\frac{W'(0)}{W(0)} = -a$.",
-        "对于常系数齐次方程 $y'' + a y' + b y = 0$，朗斯基行列式满足微分方程 $\\frac{dW}{dx} = -a W$，因此导数相对变化率为 $\\frac{W'(0)}{W(0)} = -a$。",
+        "Abel's formula shows that the Wronskian satisfies its own first order equation, so it is either never zero or always zero. For $y'' + a y' + b y = 0$ with constant coefficient $a$, the Wronskian satisfies $\\frac{dW}{dx} = -a W$. Thus $\\frac{W'(0)}{W(0)} = -a$.",
+        "阿贝尔公式说明朗斯基行列式满足一个一阶方程，所以它要么永不为零，要么恒为零。对于常系数齐次方程 $y'' + a y' + b y = 0$，朗斯基行列式满足微分方程 $\\frac{dW}{dx} = -a W$，因此导数相对变化率为 $\\frac{W'(0)}{W(0)} = -a$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 30);
@@ -469,8 +469,8 @@ export const secondOrderHomogeneousOdesCharacteristicEquationsWithDistinctRealRo
       id: "distinct-real-characteristic-roots",
       title: t("Distinct real characteristic roots", "互异实特征根与指数通解"),
       explanation: t(
-        "If the characteristic polynomial factors as $(r - r_1)(r - r_2) = 0$ with $r_1 \\ne r_2$, the characteristic roots are $r_1$ and $r_2$.",
-        "若特征多项式分解为 $(r - r_1)(r - r_2) = 0$（$r_1 \\ne r_2$），则特征根为 $r_1$ 和 $r_2$。",
+        "Each real root of the characteristic equation gives an exponential solution, and two different roots give two independent solutions. If the characteristic polynomial factors as $(r - r_1)(r - r_2) = 0$ with $r_1 \\ne r_2$, the characteristic roots are $r_1$ and $r_2$.",
+        "特征方程的每个实根给出一个指数解，两个不同的根给出两个线性无关的解。若特征多项式分解为 $(r - r_1)(r - r_2) = 0$（$r_1 \\ne r_2$），则特征根为 $r_1$ 和 $r_2$。",
       ),
       generate(rng: Rng): Problem {
         const r1 = rng.int(1, 8);
@@ -530,8 +530,8 @@ export const secondOrderHomogeneousOdesCharacteristicEquationsWithRepeatedRoots:
       id: "repeated-characteristic-roots",
       title: t("Repeated characteristic roots", "二重实特征根与通解构造"),
       explanation: t(
-        "For $(r - a)^2 = 0$, the repeated root is $r = a$. The general solution is $y(x) = (c_1 + c_2 x)e^{ax}$.",
-        "对于 $(r - a)^2 = 0$，二重特征根为 $r = a$。通解为 $y(x) = (c_1 + c_2 x)e^{ax}$。",
+        "A repeated root gives only one exponential, so the second solution is that exponential multiplied by the variable. For $(r - a)^2 = 0$, the repeated root is $r = a$. The general solution is $y(x) = (c_1 + c_2 x)e^{ax}$.",
+        "重根只给出一个指数函数，所以第二个解是这个指数函数乘以自变量。对于 $(r - a)^2 = 0$，二重特征根为 $r = a$。通解为 $y(x) = (c_1 + c_2 x)e^{ax}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 30);
@@ -584,8 +584,8 @@ export const secondOrderHomogeneousOdesCharacteristicEquationsWithComplexRoots: 
       id: "complex-conjugate-characteristic-roots",
       title: t("Complex conjugate characteristic roots", "共轭复特征根与振荡角频率"),
       explanation: t(
-        "For $r = \\alpha \\pm i \\beta$, the angular frequency in the trigonometric arguments is $\\beta = \\sqrt{c - \\alpha^2}$.",
-        "特征根为 $r = \\alpha \\pm i \\beta$ 时，三角函数中的振荡角频率为虚部 $\\beta = \\sqrt{c - \\alpha^2}$。",
+        "Complex roots produce oscillating solutions: the real part sets the growth or decay and the imaginary part sets the frequency of the sine and cosine. For $r = \\alpha \\pm i \\beta$, the angular frequency in the trigonometric arguments is $\\beta = \\sqrt{c - \\alpha^2}$.",
+        "复根产生振荡的解：实部决定增长或衰减，虚部决定正弦和余弦的频率。特征根为 $r = \\alpha \\pm i \\beta$ 时，三角函数中的振荡角频率为虚部 $\\beta = \\sqrt{c - \\alpha^2}$。",
       ),
       generate(rng: Rng): Problem {
         const alpha = rng.int(1, 6);
@@ -645,8 +645,8 @@ export const secondOrderHomogeneousInitialValueProblems: TopicDef = {
       id: "solving-second-order-homogeneous-ivp",
       title: t("Solving second-order homogeneous initial value problems", "求解二阶齐次线性初值问题"),
       explanation: t(
-        "For $y'' + \\omega^2 y = 0$ with $y(0) = y_0$ and $y'(0) = y_1$, the solution is $y(x) = y_0 \\cos(\\omega x) + \\frac{y_1}{\\omega} \\sin(\\omega x)$.",
-        "对于简谐振动方程 $y'' + \\omega^2 y = 0$（初值 $y(0) = y_0, y'(0) = y_1$），特解为 $y(x) = y_0 \\cos(\\omega x) + \\frac{y_1}{\\omega} \\sin(\\omega x)$。",
+        "Write the general solution with two unknown constants, then use the two initial conditions to find both constants. For $y'' + \\omega^2 y = 0$ with $y(0) = y_0$ and $y'(0) = y_1$, the solution is $y(x) = y_0 \\cos(\\omega x) + \\frac{y_1}{\\omega} \\sin(\\omega x)$.",
+        "写出含两个未知常数的通解，再用两个初始条件求出这两个常数。对于简谐振动方程 $y'' + \\omega^2 y = 0$（初值 $y(0) = y_0, y'(0) = y_1$），特解为 $y(x) = y_0 \\cos(\\omega x) + \\frac{y_1}{\\omega} \\sin(\\omega x)$。",
       ),
       generate(rng: Rng): Problem {
         const omega = rng.int(2, 10);
@@ -706,8 +706,8 @@ export const secondOrderInhomogeneousOdesWithPolynomialForcing: TopicDef = {
       id: "undetermined-coefficients-polynomial",
       title: t("Undetermined coefficients for polynomial forcing", "多项式右端项的待定系数法"),
       explanation: t(
-        "For $y'' + b y' + c y = K x$ with $c \\ne 0$, setting $y_p = A x + B$ gives $c A = K \\implies A = K / c$.",
-        "对于 $y'' + b y' + c y = K x$（$c \\ne 0$），设 $y_p = A x + B$ 代入可得最高次项系数满足 $c A = K \\implies A = K / c$。",
+        "For a polynomial forcing term, guess a polynomial of the same degree, substitute it, and match the coefficients of each power. For $y'' + b y' + c y = K x$ with $c \\ne 0$, setting $y_p = A x + B$ gives $c A = K \\implies A = K / c$.",
+        "对于多项式强迫项，猜测一个同次的多项式，代入后比较各次幂的系数。对于 $y'' + b y' + c y = K x$（$c \\ne 0$），设 $y_p = A x + B$ 代入可得最高次项系数满足 $c A = K \\implies A = K / c$。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(2, 10);
@@ -765,8 +765,8 @@ export const secondOrderInhomogeneousOdesWithExponentialForcing: TopicDef = {
       id: "undetermined-coefficients-exponential",
       title: t("Undetermined coefficients for exponential forcing", "指数右端项的待定系数法"),
       explanation: t(
-        "Applying $P(D)$ to $A e^{mx}$ gives $A P(m) e^{mx} = K e^{mx} \\implies A = \\frac{K}{P(m)}$.",
-        "将特征算子 $P(D)$ 作用于 $A e^{mx}$ 得 $A P(m) e^{mx} = K e^{mx} \\implies A = \\frac{K}{P(m)}$。",
+        "The operator turns the exponential guess into the polynomial value times the exponential, so the coefficient is the forcing constant divided by that value. Applying $P(D)$ to $A e^{mx}$ gives $A P(m) e^{mx} = K e^{mx} \\implies A = \\frac{K}{P(m)}$.",
+        "算子把指数型猜测变成多项式的值乘以指数函数，所以系数等于强迫常数除以这个值。将特征算子 $P(D)$ 作用于 $A e^{mx}$ 得 $A P(m) e^{mx} = K e^{mx} \\implies A = \\frac{K}{P(m)}$。",
       ),
       generate(rng: Rng): Problem {
         const m = rng.int(1, 4);
@@ -828,8 +828,8 @@ export const secondOrderInhomogeneousOdesWithSinusoidalForcing: TopicDef = {
       id: "undetermined-coefficients-sinusoidal",
       title: t("Undetermined coefficients for sinusoidal forcing", "正弦三角函数右端项的待定系数法"),
       explanation: t(
-        "For $y'' + \\omega_0^2 y = F_0 \\cos(\\omega x)$, substituting $y_p = A \\cos(\\omega x)$ yields $(-\\omega^2 + \\omega_0^2) A = F_0 \\implies A = \\frac{F_0}{\\omega_0^2 - \\omega^2}$.",
-        "对于 $y'' + \\omega_0^2 y = F_0 \\cos(\\omega x)$，代入 $y_p = A \\cos(\\omega x)$ 得 $(-\\omega^2 + \\omega_0^2) A = F_0 \\implies A = \\frac{F_0}{\\omega_0^2 - \\omega^2}$。",
+        "A sinusoidal forcing term calls for a sinusoidal guess at the same frequency, and without damping a cosine guess alone is enough. For $y'' + \\omega_0^2 y = F_0 \\cos(\\omega x)$, substituting $y_p = A \\cos(\\omega x)$ yields $(-\\omega^2 + \\omega_0^2) A = F_0 \\implies A = \\frac{F_0}{\\omega_0^2 - \\omega^2}$.",
+        "正弦型强迫项要求猜测同频率的正弦型解，在无阻尼时只需猜测余弦即可。对于 $y'' + \\omega_0^2 y = F_0 \\cos(\\omega x)$，代入 $y_p = A \\cos(\\omega x)$ 得 $(-\\omega^2 + \\omega_0^2) A = F_0 \\implies A = \\frac{F_0}{\\omega_0^2 - \\omega^2}$。",
       ),
       generate(rng: Rng): Problem {
         const omega = rng.int(1, 4);
@@ -894,8 +894,8 @@ export const cauchyEulerEquationsCharacteristicEquationsWithDistinctRealRoots: T
       id: "cauchy-euler-distinct-real-roots",
       title: t("Indicial equation with distinct real roots", "柯西-欧拉方程的互异实指标根"),
       explanation: t(
-        "For $x^2 y'' + a x y' + b y = 0$, the indicial equation is $m^2 + (a - 1)m + b = 0$.",
-        "对于柯西-欧拉方程 $x^2 y'' + a x y' + b y = 0$，指标特征方程为 $m^2 + (a - 1)m + b = 0$。",
+        "In a Cauchy Euler equation each power of the variable matches the order of the derivative, so a power of the variable is the natural trial solution. For $x^2 y'' + a x y' + b y = 0$, the indicial equation is $m^2 + (a - 1)m + b = 0$.",
+        "在柯西-欧拉方程中，变量的幂次与导数的阶数相对应，所以变量的幂是自然的试探解。对于柯西-欧拉方程 $x^2 y'' + a x y' + b y = 0$，指标特征方程为 $m^2 + (a - 1)m + b = 0$。",
       ),
       generate(rng: Rng): Problem {
         const m1 = rng.int(1, 6);
@@ -962,8 +962,8 @@ export const cauchyEulerEquationsCharacteristicEquationsWithRepeatedRoots: Topic
       id: "cauchy-euler-repeated-roots",
       title: t("Indicial equation with repeated roots", "柯西-欧拉方程的二重指标根"),
       explanation: t(
-        "For $(m - k)^2 = 0$, the repeated root is $m = k$. The second independent solution incorporates a logarithmic factor: $y_2 = x^k \\ln x$.",
-        "对于 $(m - k)^2 = 0$，二重指标根为 $m = k$。第二个线性无关解引入对数因子：$y_2 = x^k \\ln x$。",
+        "With a repeated root, the second solution is the first one multiplied by the logarithm of the variable. For $(m - k)^2 = 0$, the repeated root is $m = k$. The second independent solution incorporates a logarithmic factor: $y_2 = x^k \\ln x$.",
+        "当有重根时，第二个解是第一个解乘以变量的对数。对于 $(m - k)^2 = 0$，二重指标根为 $m = k$。第二个线性无关解引入对数因子：$y_2 = x^k \\ln x$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(1, 35);
@@ -1022,8 +1022,8 @@ export const cauchyEulerEquationsCharacteristicEquationsWithComplexRoots: TopicD
       id: "cauchy-euler-complex-roots",
       title: t("Indicial equation with complex roots", "柯西-欧拉方程的复数指标根"),
       explanation: t(
-        "For $x^2 y'' + x y' + \\beta^2 y = 0$, the indicial equation is $m^2 + \\beta^2 = 0 \\implies m = \\pm i\\beta$, giving solutions $\\cos(\\beta \\ln x)$ and $\\sin(\\beta \\ln x)$.",
-        "对于 $x^2 y'' + x y' + \\beta^2 y = 0$，指标特征方程为 $m(m-1) + m + \\beta^2 = m^2 + \\beta^2 = 0 \\implies m = \\pm i\\beta$，对应解为 $\\cos(\\beta \\ln x)$ 和 $\\sin(\\beta \\ln x)$。",
+        "Complex roots give powers with imaginary exponents, which are rewritten as cosines and sines of the logarithm of the variable. For $x^2 y'' + x y' + \\beta^2 y = 0$, the indicial equation is $m^2 + \\beta^2 = 0 \\implies m = \\pm i\\beta$, giving solutions $\\cos(\\beta \\ln x)$ and $\\sin(\\beta \\ln x)$.",
+        "复根给出指数为虚数的幂，它们被改写成变量对数的余弦和正弦。对于 $x^2 y'' + x y' + \\beta^2 y = 0$，指标特征方程为 $m(m-1) + m + \\beta^2 = m^2 + \\beta^2 = 0 \\implies m = \\pm i\\beta$，对应解为 $\\cos(\\beta \\ln x)$ 和 $\\sin(\\beta \\ln x)$。",
       ),
       generate(rng: Rng): Problem {
         const beta = rng.int(2, 35);
@@ -1084,8 +1084,8 @@ export const cauchyEulerEquationsWithForcing: TopicDef = {
       id: "transformation-to-constant-coefficients",
       title: t("Transformation to constant coefficients via logarithmic substitution", "对数代换化柯西-欧拉方程为常系数微分方程"),
       explanation: t(
-        "Under $x = e^t$, $x \\frac{dy}{dx} = \\frac{dy}{dt}$ and $x^2 \\frac{d^2y}{dx^2} = \\frac{d^2y}{dt^2} - \\frac{dy}{dt}$. Thus $x^2 y'' + a x y' + b y = f(e^t)$ becomes $\\frac{d^2y}{dt^2} + (a - 1)\\frac{dy}{dt} + b y = f(e^t)$.",
-        "在变量代换 $x = e^t$ 下，$x \\frac{dy}{dx} = \\frac{dy}{dt}$，且 $x^2 \\frac{d^2y}{dx^2} = \\frac{d^2y}{dt^2} - \\frac{dy}{dt}$。方程 $x^2 y'' + a x y' + b y = f(e^t)$ 转化为 $\\frac{d^2y}{dt^2} + (a - 1)\\frac{dy}{dt} + b y = f(e^t)$。",
+        "Substituting the variable as an exponential of a new variable turns the Cauchy Euler equation into one with constant coefficients. Under $x = e^t$, $x \\frac{dy}{dx} = \\frac{dy}{dt}$ and $x^2 \\frac{d^2y}{dx^2} = \\frac{d^2y}{dt^2} - \\frac{dy}{dt}$. Thus $x^2 y'' + a x y' + b y = f(e^t)$ becomes $\\frac{d^2y}{dt^2} + (a - 1)\\frac{dy}{dt} + b y = f(e^t)$.",
+        "把自变量换成新变量的指数函数，就把柯西-欧拉方程化为常系数方程。在变量代换 $x = e^t$ 下，$x \\frac{dy}{dx} = \\frac{dy}{dt}$，且 $x^2 \\frac{d^2y}{dx^2} = \\frac{d^2y}{dt^2} - \\frac{dy}{dt}$。方程 $x^2 y'' + a x y' + b y = f(e^t)$ 转化为 $\\frac{d^2y}{dt^2} + (a - 1)\\frac{dy}{dt} + b y = f(e^t)$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 20);
@@ -1142,8 +1142,8 @@ export const variationOfParametersForFirstOrderLinearOdes: TopicDef = {
       id: "variation-of-parameters-first-order",
       title: t("Variation of parameters derivative formula for first-order ODEs", "一阶微分方程常数变易法的导数公式"),
       explanation: t(
-        "For $y' + a y = K e^{-a x}$, homogeneous solution is $y_h = e^{-a x}$. Setting $y = u(x) e^{-a x}$ gives $u'(x) = K$.",
-        "对于 $y' + a y = K e^{-a x}$，对应齐次解为 $y_h = e^{-a x}$。设 $y = u(x) e^{-a x}$ 代入可得 $u'(x) = K$。",
+        "Replace the constant in the homogeneous solution by an unknown function, substitute, and the equation reduces to a simple formula for that function's derivative. For $y' + a y = K e^{-a x}$, homogeneous solution is $y_h = e^{-a x}$. Setting $y = u(x) e^{-a x}$ gives $u'(x) = K$.",
+        "把齐次解中的常数换成一个未知函数并代入，方程就化为该函数导数的简单公式。对于 $y' + a y = K e^{-a x}$，对应齐次解为 $y_h = e^{-a x}$。设 $y = u(x) e^{-a x}$ 代入可得 $u'(x) = K$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 8);
@@ -1201,8 +1201,8 @@ export const variationOfParametersForSecondOrderOdes: TopicDef = {
       id: "second-order-variation-of-parameters-system",
       title: t("Linear system for parameter derivatives", "待定变易参数导数的代数线性方程组"),
       explanation: t(
-        "The variation of parameters system is $u_1' y_1 + u_2' y_2 = 0$ and $u_1' y_1' + u_2' y_2' = g(x)$. By Cramer's rule, $u_2' = \\frac{y_1 g}{W}$.",
-        "常数变易法联立代数方程组为 $u_1' y_1 + u_2' y_2 = 0$ 与 $u_1' y_1' + u_2' y_2' = g(x)$。由克莱姆法则解得 $u_2' = \\frac{y_1 g}{W}$。",
+        "The extra condition makes the derivatives of the parameters satisfy a linear system, which Cramer's rule solves with the Wronskian in the denominator. The variation of parameters system is $u_1' y_1 + u_2' y_2 = 0$ and $u_1' y_1' + u_2' y_2' = g(x)$. By Cramer's rule, $u_2' = \\frac{y_1 g}{W}$.",
+        "附加条件使参数的导数满足一个线性方程组，用克拉默法则求解时分母是朗斯基行列式。常数变易法联立代数方程组为 $u_1' y_1 + u_2' y_2 = 0$ 与 $u_1' y_1' + u_2' y_2' = g(x)$。由克莱姆法则解得 $u_2' = \\frac{y_1 g}{W}$。",
       ),
       generate(rng: Rng): Problem {
         const factor = rng.int(2, 25);
@@ -1254,8 +1254,8 @@ export const solvingSecondOrderOdesUsingVariationOfParameters: TopicDef = {
       id: "variation-of-parameters-secant-forcing",
       title: t("Particular solution with secant forcing", "正割函数右端项的常数变易法特解"),
       explanation: t(
-        "For $y'' + y = \\sec x$, fundamental solutions are $y_1 = \\cos x, y_2 = \\sin x$ with $W = 1$. Then $u_2' = \\cos x \\sec x = 1 \\implies u_2(x) = x$.",
-        "对于 $y'' + y = \\sec x$，基本齐次解为 $y_1 = \\cos x, y_2 = \\sin x$（$W = 1$）。由公式得 $u_2' = \\cos x \\sec x = 1 \\implies u_2(x) = x$。",
+        "Undetermined coefficients cannot handle a secant forcing term, but variation of parameters works for any continuous forcing function. For $y'' + y = \\sec x$, fundamental solutions are $y_1 = \\cos x, y_2 = \\sin x$ with $W = 1$. Then $u_2' = \\cos x \\sec x = 1 \\implies u_2(x) = x$.",
+        "待定系数法无法处理正割型强迫项，但常数变易法适用于任何连续的强迫函数。对于 $y'' + y = \\sec x$，基本齐次解为 $y_1 = \\cos x, y_2 = \\sin x$（$W = 1$）。由公式得 $u_2' = \\cos x \\sec x = 1 \\implies u_2(x) = x$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 30);
@@ -1370,8 +1370,8 @@ export const simpleHarmonicOscillators: TopicDef = {
       id: "natural-frequency-of-harmonic-oscillator",
       title: t("Natural angular frequency of a harmonic oscillator", "简谐振子的固有角频率"),
       explanation: t(
-        "The natural angular frequency of a mass $m$ attached to a spring with stiffness constant $k$ is $\\omega_0 = \\sqrt{\\frac{k}{m}}$.",
-        "质量为 $m$、劲度系数为 $k$ 的弹簧振子的固有角频率为 $\\omega_0 = \\sqrt{\\frac{k}{m}}$。",
+        "A stiffer spring pulls back harder and a heavier mass responds more slowly, so the natural frequency grows with stiffness and shrinks with mass. The natural angular frequency of a mass $m$ attached to a spring with stiffness constant $k$ is $\\omega_0 = \\sqrt{\\frac{k}{m}}$.",
+        "弹簧越硬，回复力越大；质量越大，响应越慢；所以固有频率随刚度增大而增大，随质量增大而减小。质量为 $m$、劲度系数为 $k$ 的弹簧振子的固有角频率为 $\\omega_0 = \\sqrt{\\frac{k}{m}}$。",
       ),
       generate(rng: Rng): Problem {
         const m = rng.int(1, 8);
@@ -1423,8 +1423,8 @@ export const dampedOscillators: TopicDef = {
       id: "critical-damping-coefficient",
       title: t("Critical damping coefficient", "临界阻尼系数计算"),
       explanation: t(
-        "Critical damping occurs when the characteristic discriminant vanishes: $c_{\\text{crit}}^2 - 4mk = 0 \\implies c_{\\text{crit}} = 2\\sqrt{mk}$.",
-        "当特征方程判别式为零时系统处于临界阻尼状态：$c_{\\text{crit}}^2 - 4mk = 0 \\implies c_{\\text{crit}} = 2\\sqrt{mk}$。",
+        "Critical damping is the boundary between oscillating and not oscillating, which is where the characteristic equation has a repeated root. Critical damping occurs when the characteristic discriminant vanishes: $c_{\\text{crit}}^2 - 4mk = 0 \\implies c_{\\text{crit}} = 2\\sqrt{mk}$.",
+        "临界阻尼是振荡与不振荡之间的分界，此时特征方程有重根。当特征方程判别式为零时系统处于临界阻尼状态：$c_{\\text{crit}}^2 - 4mk = 0 \\implies c_{\\text{crit}} = 2\\sqrt{mk}$。",
       ),
       generate(rng: Rng): Problem {
         const p = rng.int(2, 35);
@@ -1530,8 +1530,8 @@ export const resonanceInVibratingSystems: TopicDef = {
       id: "pure-resonance-amplitude-growth",
       title: t("Linear amplitude growth rate in pure resonance", "纯共振下的线性振幅增长速率"),
       explanation: t(
-        "For $y'' + \\omega_0^2 y = F_0 \\cos(\\omega_0 t)$, the particular solution is $y_p(t) = \\frac{F_0}{2\\omega_0} t \\sin(\\omega_0 t)$, where the amplitude envelope grows at rate $\\frac{F_0}{2\\omega_0}$.",
-        "对于纯共振方程 $y'' + \\omega_0^2 y = F_0 \\cos(\\omega_0 t)$，特解为 $y_p(t) = \\frac{F_0}{2\\omega_0} t \\sin(\\omega_0 t)$，振幅包络按速率 $\\frac{F_0}{2\\omega_0}$ 随时间线性发散。",
+        "When the forcing matches the natural frequency exactly and there is no damping, each push adds to the motion, so the amplitude grows steadily in time. For $y'' + \\omega_0^2 y = F_0 \\cos(\\omega_0 t)$, the particular solution is $y_p(t) = \\frac{F_0}{2\\omega_0} t \\sin(\\omega_0 t)$, where the amplitude envelope grows at rate $\\frac{F_0}{2\\omega_0}$.",
+        "当强迫频率恰好等于固有频率且没有阻尼时，每一次推动都会加强运动，所以振幅随时间稳定增长。对于纯共振方程 $y'' + \\omega_0^2 y = F_0 \\cos(\\omega_0 t)$，特解为 $y_p(t) = \\frac{F_0}{2\\omega_0} t \\sin(\\omega_0 t)$，振幅包络按速率 $\\frac{F_0}{2\\omega_0}$ 随时间线性发散。",
       ),
       generate(rng: Rng): Problem {
         const omega0 = rng.int(2, 8);
@@ -1585,8 +1585,8 @@ export const modelingCapacitorChargeInRclCircuitsWithSecondOrderOdes: TopicDef =
       id: "rcl-natural-frequency",
       title: t("Resonant natural frequency of an LC circuit", "LC 谐振回路的固有振荡频率"),
       explanation: t(
-        "In an ideal LC circuit ($R = 0$), charge satisfies $L q'' + \\frac{1}{C} q = 0$, oscillating at natural frequency $\\omega_0 = \\frac{1}{\\sqrt{LC}}$.",
-        "在理想无阻尼 LC 电路（$R = 0$）中，电荷满足 $L q'' + \\frac{1}{C} q = 0$，固有自由振荡角频率为 $\\omega_0 = \\frac{1}{\\sqrt{LC}}$。",
+        "A circuit with an inductor and a capacitor obeys the same equation as a mass on a spring, with inductance playing the role of mass. In an ideal LC circuit ($R = 0$), charge satisfies $L q'' + \\frac{1}{C} q = 0$, oscillating at natural frequency $\\omega_0 = \\frac{1}{\\sqrt{LC}}$.",
+        "含电感和电容的电路与弹簧上的物体满足同样的方程，电感起着质量的作用。在理想无阻尼 LC 电路（$R = 0$）中，电荷满足 $L q'' + \\frac{1}{C} q = 0$，固有自由振荡角频率为 $\\omega_0 = \\frac{1}{\\sqrt{LC}}$。",
       ),
       generate(rng: Rng): Problem {
         const omega0 = rng.int(2, 40);
@@ -1642,8 +1642,8 @@ export const modelingCurrentInRclCircuitsWithSecondOrderOdes: TopicDef = {
       id: "rcl-current-differential-equation",
       title: t("Forcing term in the current differential equation", "电流微分方程中的激励导数项"),
       explanation: t(
-        "Differentiating $L q'' + R q' + \\frac{1}{C} q = E(t)$ with $i = q'$ yields $L i'' + R i' + \\frac{1}{C} i = E'(t)$. For $E(t) = E_0 \\sin(\\omega t)$, the forcing term is $E'(t) = \\omega E_0 \\cos(\\omega t)$.",
-        "对回路方程 $L q'' + R q' + \\frac{1}{C} q = E(t)$ 求导，得 $L i'' + R i' + \\frac{1}{C} i = E'(t)$。当电源为正弦交流电 $E(t) = E_0 \\sin(\\omega t)$ 时，电流方程的激励项为 $E'(t) = \\omega E_0 \\cos(\\omega t)$。",
+        "Differentiating the charge equation once turns it into an equation for the current, and the forcing term becomes the derivative of the voltage. Differentiating $L q'' + R q' + \\frac{1}{C} q = E(t)$ with $i = q'$ yields $L i'' + R i' + \\frac{1}{C} i = E'(t)$. For $E(t) = E_0 \\sin(\\omega t)$, the forcing term is $E'(t) = \\omega E_0 \\cos(\\omega t)$.",
+        "把电荷方程求导一次，就变成关于电流的方程，强迫项变为电压的导数。对回路方程 $L q'' + R q' + \\frac{1}{C} q = E(t)$ 求导，得 $L i'' + R i' + \\frac{1}{C} i = E'(t)$。当电源为正弦交流电 $E(t) = E_0 \\sin(\\omega t)$ 时，电流方程的激励项为 $E'(t) = \\omega E_0 \\cos(\\omega t)$。",
       ),
       generate(rng: Rng): Problem {
         const E0 = rng.int(5, 50);

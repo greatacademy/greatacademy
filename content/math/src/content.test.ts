@@ -25,6 +25,7 @@ const explainedCourses = [
   "ap-calculus-bc",
   "linear-algebra",
   "multivariable-calculus",
+  "differential-equations",
   "integrated-math-i",
   "integrated-math-ii",
   "integrated-math-iii",

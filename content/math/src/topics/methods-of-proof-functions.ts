@@ -1070,8 +1070,8 @@ export const theFloorAndCeilingFunctions: TopicDef = {
       id: "evaluating-floor-and-ceiling",
       title: t("Evaluating floor and ceiling", "计算取整"),
       explanation: t(
-        "$\\lfloor 3.7 \\rfloor = 3$, $\\lceil 3.2 \\rceil = 4$, $\\lfloor -2.5 \\rfloor = -3$ and $\\lceil -2.5 \\rceil = -2$. For an integer $n$, $\\lfloor n \\rfloor = \\lceil n \\rceil = n$.",
-        "$\\lfloor 3.7 \\rfloor = 3$，$\\lceil 3.2 \\rceil = 4$，$\\lfloor -2.5 \\rfloor = -3$，$\\lceil -2.5 \\rceil = -2$。对整数 $n$，$\\lfloor n \\rfloor = \\lceil n \\rceil = n$。",
+        "The floor rounds down to the nearest integer and the ceiling rounds up, so for negative numbers the floor moves further from zero. $\\lfloor 3.7 \\rfloor = 3$, $\\lceil 3.2 \\rceil = 4$, $\\lfloor -2.5 \\rfloor = -3$ and $\\lceil -2.5 \\rceil = -2$. For an integer $n$, $\\lfloor n \\rfloor = \\lceil n \\rceil = n$.",
+        "下取整向下取到最近的整数，上取整向上取，所以对于负数，下取整会离零更远。$\\lfloor 3.7 \\rfloor = 3$，$\\lceil 3.2 \\rceil = 4$，$\\lfloor -2.5 \\rfloor = -3$，$\\lceil -2.5 \\rceil = -2$。对整数 $n$，$\\lfloor n \\rfloor = \\lceil n \\rceil = n$。",
       ),
       generate(rng) {
         const a = rng.int(-40, 40);
@@ -1097,8 +1097,8 @@ export const theFloorAndCeilingFunctions: TopicDef = {
       id: "solving-floor-equations",
       title: t("Solving floor equations", "解取整方程"),
       explanation: t(
-        "$\\lfloor x \\rfloor = m$ means $m \\le x < m + 1$. So $\\left\\lfloor \\dfrac{n}{4} \\right\\rfloor = 5$ means $20 \\le n < 24$: four integers. $\\lfloor \\sqrt{n} \\rfloor = 3$ means $9 \\le n < 16$: seven integers.",
-        "$\\lfloor x \\rfloor = m$ 表示 $m \\le x < m + 1$。所以 $\\left\\lfloor \\dfrac{n}{4} \\right\\rfloor = 5$ 表示 $20 \\le n < 24$：四个整数。$\\lfloor \\sqrt{n} \\rfloor = 3$ 表示 $9 \\le n < 16$：七个整数。",
+        "Saying that the floor of a number is an integer means the number lies in a half open interval starting at that integer, which turns the equation into inequalities. $\\lfloor x \\rfloor = m$ means $m \\le x < m + 1$. So $\\left\\lfloor \\dfrac{n}{4} \\right\\rfloor = 5$ means $20 \\le n < 24$: four integers. $\\lfloor \\sqrt{n} \\rfloor = 3$ means $9 \\le n < 16$: seven integers.",
+        "说一个数的下取整等于某个整数，就是说这个数位于从该整数开始的半开区间内，这把方程化为不等式。$\\lfloor x \\rfloor = m$ 表示 $m \\le x < m + 1$。所以 $\\left\\lfloor \\dfrac{n}{4} \\right\\rfloor = 5$ 表示 $20 \\le n < 24$：四个整数。$\\lfloor \\sqrt{n} \\rfloor = 3$ 表示 $9 \\le n < 16$：七个整数。",
       ),
       generate(rng) {
         const m = rng.int(2, 12);

@@ -44,8 +44,8 @@ export const introductionToFirstOrderLinearOdes: TopicDef = {
       id: "identifying-and-standardizing-first-order-linear-odes",
       title: t("Identifying and standardizing first-order linear ODEs", "识别一阶线性常微分方程并化为标准形式"),
       explanation: t(
-        "Dividing $a x y' + b y = c x^m$ by $a x$ yields standard form $y' + \\frac{b}{a x}y = \\frac{c}{a}x^{m-1}$, where the coefficient function is $P(x) = \\frac{b}{a x}$.",
-        "将方程 $a x y' + b y = c x^m$ 两端同除以 $a x$ 可化为标准形式 $y' + \\frac{b}{a x}y = \\frac{c}{a}x^{m-1}$，其中系数函数为 $P(x) = \\frac{b}{a x}$。",
+        "A first order equation is linear when the unknown function and its derivative appear only to the first power, and dividing by the leading coefficient puts it in standard form. Dividing $a x y' + b y = c x^m$ by $a x$ yields standard form $y' + \\frac{b}{a x}y = \\frac{c}{a}x^{m-1}$, where the coefficient function is $P(x) = \\frac{b}{a x}$.",
+        "当未知函数及其导数都只以一次幂出现时，一阶方程是线性的；除以首项系数就化为标准形式。将方程 $a x y' + b y = c x^m$ 两端同除以 $a x$ 可化为标准形式 $y' + \\frac{b}{a x}y = \\frac{c}{a}x^{m-1}$，其中系数函数为 $P(x) = \\frac{b}{a x}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 6);
@@ -152,8 +152,8 @@ export const solvingFirstOrderLinearOdesWithExponentialForcing: TopicDef = {
       id: "method-of-undetermined-coefficients-for-exponential-forcing",
       title: t("Method of undetermined coefficients for exponential forcing", "待定系数法求解指数激励一阶常微分方程"),
       explanation: t(
-        "Substituting $y_p(x) = A e^{kx}$ into $y' + ay = b e^{kx}$ gives $(k + a) A e^{kx} = b e^{kx}$, so $A = \\frac{b}{a + k}$.",
-        "将特解形式 $y_p(x) = A e^{kx}$ 代入方程 $y' + ay = b e^{kx}$ 得 $(k + a) A e^{kx} = b e^{kx}$，由此解得 $A = \\frac{b}{a + k}$。",
+        "When the forcing term is an exponential, guess a multiple of the same exponential, substitute it, and solve for the unknown coefficient. Substituting $y_p(x) = A e^{kx}$ into $y' + ay = b e^{kx}$ gives $(k + a) A e^{kx} = b e^{kx}$, so $A = \\frac{b}{a + k}$.",
+        "当强迫项是指数函数时，猜测解是同一个指数函数的倍数，代入后解出未知系数。将特解形式 $y_p(x) = A e^{kx}$ 代入方程 $y' + ay = b e^{kx}$ 得 $(k + a) A e^{kx} = b e^{kx}$，由此解得 $A = \\frac{b}{a + k}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
@@ -206,8 +206,8 @@ export const solvingFirstOrderLinearOdesWithSinusoidalForcing: TopicDef = {
       id: "steady-state-amplitude-for-sinusoidal-forcing",
       title: t("Steady-state amplitude for sinusoidal forcing", "正弦激励下稳态振荡的振幅计算"),
       explanation: t(
-        "Substituting $y_p = A \\cos(\\omega x) + B \\sin(\\omega x)$ into $y' + a y = b \\cos(\\omega x)$ yields amplitude $R = \\sqrt{A^2 + B^2} = \\frac{b}{\\sqrt{a^2 + \\omega^2}}$.",
-        "设特解为 $y_p = A \\cos(\\omega x) + B \\sin(\\omega x)$，代入 $y' + a y = b \\cos(\\omega x)$ 可得稳态响应振幅为 $R = \\sqrt{A^2 + B^2} = \\frac{b}{\\sqrt{a^2 + \\omega^2}}$。",
+        "A sinusoidal input produces a sinusoidal output at the same frequency, and the amplitude of that output is the length of the vector of its two coefficients. Substituting $y_p = A \\cos(\\omega x) + B \\sin(\\omega x)$ into $y' + a y = b \\cos(\\omega x)$ yields amplitude $R = \\sqrt{A^2 + B^2} = \\frac{b}{\\sqrt{a^2 + \\omega^2}}$.",
+        "正弦输入产生同频率的正弦输出，输出的振幅等于由两个系数构成的向量的长度。设特解为 $y_p = A \\cos(\\omega x) + B \\sin(\\omega x)$，代入 $y' + a y = b \\cos(\\omega x)$ 可得稳态响应振幅为 $R = \\sqrt{A^2 + B^2} = \\frac{b}{\\sqrt{a^2 + \\omega^2}}$。",
       ),
       generate(rng: Rng): Problem {
         const triple = rng.pick(pythagoreanTriples);
@@ -262,8 +262,8 @@ export const solvingFirstOrderLinearOdesUsingIntegratingFactors: TopicDef = {
       id: "determining-the-integrating-factor",
       title: t("Determining the integrating factor", "确定一阶线性微分方程的积分因子"),
       explanation: t(
-        "For $x y' + k y = Q(x)$ ($x > 0$), dividing by $x$ gives $y' + \\frac{k}{x}y = \\frac{Q(x)}{x}$. The integrating factor is $I(x) = e^{\\int \\frac{k}{x}dx} = e^{k \\ln x} = x^k$.",
-        "对于 $x y' + k y = Q(x)$（$x > 0$），同除以 $x$ 得 $y' + \\frac{k}{x}y = \\frac{Q(x)}{x}$。其积分因子为 $I(x) = e^{\\int \\frac{k}{x}dx} = e^{k \\ln x} = x^k$。",
+        "Multiplying by the integrating factor turns the left side into the derivative of a product, so the equation can be solved by integrating once. For $x y' + k y = Q(x)$ ($x > 0$), dividing by $x$ gives $y' + \\frac{k}{x}y = \\frac{Q(x)}{x}$. The integrating factor is $I(x) = e^{\\int \\frac{k}{x}dx} = e^{k \\ln x} = x^k$.",
+        "乘以积分因子后，左边变成一个乘积的导数，所以积分一次就能解出方程。对于 $x y' + k y = Q(x)$（$x > 0$），同除以 $x$ 得 $y' + \\frac{k}{x}y = \\frac{Q(x)}{x}$。其积分因子为 $I(x) = e^{\\int \\frac{k}{x}dx} = e^{k \\ln x} = x^k$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 9);
@@ -319,8 +319,8 @@ export const solvingFirstOrderOdesBySubstitution: TopicDef = {
       id: "linear-substitutions-in-first-order-odes",
       title: t("Linear substitutions in first-order ODEs", "一阶微分方程中的一次式代换"),
       explanation: t(
-        "For $y' = (ax + by)^2$, letting $v = ax + by$ gives $\\frac{dv}{dx} = a + b y' = a + b v^2$, which is separable.",
-        "对于 $y' = (ax + by)^2$，令 $v = ax + by$ 可得 $\\frac{dv}{dx} = a + b y' = a + b v^2$，方程化为可分离变量形式。",
+        "When the right side depends only on a linear combination of the variables, naming that combination as a new unknown often makes the equation separable. For $y' = (ax + by)^2$, letting $v = ax + by$ gives $\\frac{dv}{dx} = a + b y' = a + b v^2$, which is separable.",
+        "当右边只依赖于变量的某个线性组合时，把这个组合设为新的未知函数，方程常常变为可分离变量的。对于 $y' = (ax + by)^2$，令 $v = ax + by$ 可得 $\\frac{dv}{dx} = a + b y' = a + b v^2$，方程化为可分离变量形式。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
@@ -371,8 +371,8 @@ export const furtherSolvingFirstOrderOdesBySubstitution: TopicDef = {
       id: "logarithmic-and-power-substitutions",
       title: t("Logarithmic and power substitutions", "对数与幂次变量代换技巧"),
       explanation: t(
-        "For $y' = y(a - b \\ln y)$, setting $u = \\ln y$ gives $u' = \\frac{y'}{y} = a - b u$, which is linear and separable.",
-        "对于方程 $y' = y(a - b \\ln y)$，令 $u = \\ln y$ 可得 $u' = \\frac{y'}{y} = a - b u$，方程转化为线性且可分离形式。",
+        "A substitution is useful when the derivative of the new unknown turns the equation into a form you already know how to solve, such as a linear equation. For $y' = y(a - b \\ln y)$, setting $u = \\ln y$ gives $u' = \\frac{y'}{y} = a - b u$, which is linear and separable.",
+        "当新未知函数的导数能把方程化成已经会解的形式（例如线性方程）时，这种换元就很有用。对于方程 $y' = y(a - b \\ln y)$，令 $u = \\ln y$ 可得 $u' = \\frac{y'}{y} = a - b u$，方程转化为线性且可分离形式。",
       ),
       generate(rng: Rng): Problem {
         const b = rng.int(2, 6);
@@ -429,8 +429,8 @@ export const reducingOdesToFirstOrderLinearBySubstitution: TopicDef = {
       id: "transforming-to-linear-form-via-functional-substitutions",
       title: t("Transforming to linear form via functional substitutions", "利用函数代换化为一阶线性微分方程"),
       explanation: t(
-        "For $e^y y' + a e^y = b$, setting $v = e^y$ yields $v' + a v = b$. The steady-state value of $v$ as $x \\to \\infty$ is $\\frac{b}{a}$.",
-        "对于方程 $e^y y' + a e^y = b$，令 $v = e^y$ 得 $v' + a v = b$。当 $x \\to \\infty$ 时 $v$ 的稳态值为 $\\frac{b}{a}$。",
+        "If one expression and its derivative both appear in the equation, letting that expression be the new unknown makes the equation linear. For $e^y y' + a e^y = b$, setting $v = e^y$ yields $v' + a v = b$. The steady-state value of $v$ as $x \\to \\infty$ is $\\frac{b}{a}$.",
+        "如果某个式子及其导数都出现在方程中，把这个式子设为新的未知函数，方程就变成线性的。对于方程 $e^y y' + a e^y = b$，令 $v = e^y$ 得 $v' + a v = b$。当 $x \\to \\infty$ 时 $v$ 的稳态值为 $\\frac{b}{a}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 6);
@@ -485,8 +485,8 @@ export const homogeneousFunctions: TopicDef = {
       id: "determining-the-degree-of-homogeneity",
       title: t("Determining the degree of homogeneity", "确定多项式齐次函数的齐次次数"),
       explanation: t(
-        "For $f(x, y) = a x^p y^q + b x^{p+q}$, scaling by $t$ gives $f(tx, ty) = a (tx)^p (ty)^q + b (tx)^{p+q} = t^{p+q} f(x, y)$, so the degree of homogeneity is $n = p + q$.",
-        "对于 $f(x, y) = a x^p y^q + b x^{p+q}$，代入缩放系数 $t$ 得 $f(tx, ty) = t^{p+q} f(x, y)$，因此其齐次次数为 $n = p + q$。",
+        "A function is homogeneous of some degree when scaling both inputs by the same factor scales the output by a fixed power of that factor. For $f(x, y) = a x^p y^q + b x^{p+q}$, scaling by $t$ gives $f(tx, ty) = a (tx)^p (ty)^q + b (tx)^{p+q} = t^{p+q} f(x, y)$, so the degree of homogeneity is $n = p + q$.",
+        "如果把两个自变量都乘以同一个因子时，函数值乘以这个因子的固定次幂，那么函数就是该次齐次的。对于 $f(x, y) = a x^p y^q + b x^{p+q}$，代入缩放系数 $t$ 得 $f(tx, ty) = t^{p+q} f(x, y)$，因此其齐次次数为 $n = p + q$。",
       ),
       generate(rng: Rng): Problem {
         const p = rng.int(1, 5);
@@ -538,8 +538,8 @@ export const homogeneousFirstOrderOdes: TopicDef = {
       id: "solving-homogeneous-odes-via-v-substitution",
       title: t("Solving homogeneous ODEs via v-substitution", "利用 y = vx 代换解一阶齐次方程"),
       explanation: t(
-        "For $x y' = y + k \\frac{y^2}{x}$, setting $y = v x$ gives $x v' + v = v + k v^2$, so $x \\frac{dv}{dx} = k v^2$. Separating variables yields $-\\frac{1}{v} = k \\ln|x| + C$.",
-        "对于方程 $x y' = y + k \\frac{y^2}{x}$，令 $y = v x$ 得 $x v' + v = v + k v^2$，化简为 $x \\frac{dv}{dx} = k v^2$。分离变量积分得 $-\\frac{1}{v} = k \\ln|x| + C$。",
+        "In a homogeneous equation the slope depends only on the ratio of the variables, so writing the unknown as that ratio times the variable makes the equation separable. For $x y' = y + k \\frac{y^2}{x}$, setting $y = v x$ gives $x v' + v = v + k v^2$, so $x \\frac{dv}{dx} = k v^2$. Separating variables yields $-\\frac{1}{v} = k \\ln|x| + C$.",
+        "在齐次方程中，斜率只取决于变量之比，所以把未知函数写成这个比值乘以自变量，方程就变为可分离变量的。对于方程 $x y' = y + k \\frac{y^2}{x}$，令 $y = v x$ 得 $x v' + v = v + k v^2$，化简为 $x \\frac{dv}{dx} = k v^2$。分离变量积分得 $-\\frac{1}{v} = k \\ln|x| + C$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 7);
@@ -591,8 +591,8 @@ export const exactDifferentialEquations: TopicDef = {
       id: "exactness-condition-and-mixed-partials",
       title: t("Exactness condition and mixed partials", "恰当微分方程的判别条件与混合偏导数"),
       explanation: t(
-        "For $M(x, y) dx + N(x, y) dy = 0$, exactness requires $\\frac{\\partial M}{\\partial y} = \\frac{\\partial N}{\\partial x}$. If $M(x, y) = 2a x y + b y^2$, then $\\frac{\\partial M}{\\partial y} = 2a x + 2b y$.",
-        "对于 $M(x, y) dx + N(x, y) dy = 0$，恰当性条件为 $\\frac{\\partial M}{\\partial y} = \\frac{\\partial N}{\\partial x}$。若 $M(x, y) = 2a x y + b y^2$，则 $\\frac{\\partial M}{\\partial y} = 2a x + 2b y$。",
+        "An equation is exact when its left side is the total differential of some function, and equal mixed partial derivatives are the test for this. For $M(x, y) dx + N(x, y) dy = 0$, exactness requires $\\frac{\\partial M}{\\partial y} = \\frac{\\partial N}{\\partial x}$. If $M(x, y) = 2a x y + b y^2$, then $\\frac{\\partial M}{\\partial y} = 2a x + 2b y$.",
+        "当方程的左边是某个函数的全微分时，方程是恰当的，检验方法是看混合偏导数是否相等。对于 $M(x, y) dx + N(x, y) dy = 0$，恰当性条件为 $\\frac{\\partial M}{\\partial y} = \\frac{\\partial N}{\\partial x}$。若 $M(x, y) = 2a x y + b y^2$，则 $\\frac{\\partial M}{\\partial y} = 2a x + 2b y$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -644,8 +644,8 @@ export const solvingExactOdesUsingIntegratingFactors: TopicDef = {
       id: "integrating-factors-as-functions-of-a-single-variable",
       title: t("Integrating factors as functions of a single variable", "一元积分因子的构造准则"),
       explanation: t(
-        "If $\\frac{M_y - N_x}{N} = \\frac{k}{x}$, then the integrating factor making the equation exact is $\\mu(x) = e^{\\int \\frac{k}{x}dx} = x^k$.",
-        "若 $\\frac{M_y - N_x}{N} = \\frac{k}{x}$，则使方程变为恰当方程的积分因子为 $\\mu(x) = e^{\\int \\frac{k}{x}dx} = x^k$。",
+        "When the expression that measures the failure of exactness depends on one variable alone, an integrating factor depending on that variable will fix it. If $\\frac{M_y - N_x}{N} = \\frac{k}{x}$, then the integrating factor making the equation exact is $\\mu(x) = e^{\\int \\frac{k}{x}dx} = x^k$.",
+        "当衡量不恰当程度的式子只依赖于一个变量时，用只依赖于该变量的积分因子就能使方程恰当。若 $\\frac{M_y - N_x}{N} = \\frac{k}{x}$，则使方程变为恰当方程的积分因子为 $\\mu(x) = e^{\\int \\frac{k}{x}dx} = x^k$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 35);
@@ -700,8 +700,8 @@ export const bernoulliDifferentialEquations: TopicDef = {
       id: "linearizing-bernoulli-equations",
       title: t("Linearizing Bernoulli equations", "伯努利方程的线性化变量代换"),
       explanation: t(
-        "Dividing $y' + a y = b y^n$ by $y^n$ gives $y^{-n} y' + a y^{1-n} = b$. With $v = y^{1-n}$, $\\frac{dv}{dx} = (1-n) y^{-n} y'$, leading to $v' + (1-n) a v = (1-n) b$.",
-        "将方程 $y' + a y = b y^n$ 同除以 $y^n$ 得 $y^{-n} y' + a y^{1-n} = b$。令 $v = y^{1-n}$，则 $v' = (1-n)y^{-n}y'$，方程化为 $v' + (1-n) a v = (1-n) b$。",
+        "A Bernoulli equation is not linear because of the power of the unknown, but a substitution with a power of the unknown removes that term and leaves a linear equation. Dividing $y' + a y = b y^n$ by $y^n$ gives $y^{-n} y' + a y^{1-n} = b$. With $v = y^{1-n}$, $\\frac{dv}{dx} = (1-n) y^{-n} y'$, leading to $v' + (1-n) a v = (1-n) b$.",
+        "伯努利方程因含未知函数的幂而不是线性的，但用未知函数的幂换元可以消去这一项，得到线性方程。将方程 $y' + a y = b y^n$ 同除以 $y^n$ 得 $y^{-n} y' + a y^{1-n} = b$。令 $v = y^{1-n}$，则 $v' = (1-n)y^{-n}y'$，方程化为 $v' + (1-n) a v = (1-n) b$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -754,8 +754,8 @@ export const riccatiDifferentialEquations: TopicDef = {
       id: "transforming-riccati-equations-with-a-known-solution",
       title: t("Transforming Riccati equations with a known solution", "已知特解时黎卡提方程的线性化代换"),
       explanation: t(
-        "For $y' = y^2 - a^2$, a particular solution is $y_1 = a$. Substituting $y = a + \\frac{1}{u}$ yields $u' + 2a u = -1$, a first-order linear equation in $u$.",
-        "对于方程 $y' = y^2 - a^2$，常数特解为 $y_1 = a$。代入 $y = a + \\frac{1}{u}$ 可化简得 $u' + 2a u = -1$，这是一阶线性常微分方程。",
+        "Once one solution of a Riccati equation is known, writing the general solution as that solution plus a new unknown leads to a Bernoulli equation. For $y' = y^2 - a^2$, a particular solution is $y_1 = a$. Substituting $y = a + \\frac{1}{u}$ yields $u' + 2a u = -1$, a first-order linear equation in $u$.",
+        "一旦知道里卡蒂方程的一个解，把通解写成这个解加上一个新的未知函数，就得到伯努利方程。对于方程 $y' = y^2 - a^2$，常数特解为 $y_1 = a$。代入 $y = a + \\frac{1}{u}$ 可化简得 $u' + 2a u = -1$，这是一阶线性常微分方程。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 40);
@@ -808,8 +808,8 @@ export const clairautDifferentialEquations: TopicDef = {
       id: "general-linear-solutions-of-clairauts-equation",
       title: t("General linear solutions of Clairaut's equation", "克莱罗方程的通解直线族"),
       explanation: t(
-        "Differentiating $y = x y' + f(y')$ yields $y' = y' + x y'' + f'(y')y'' \\implies [x + f'(y')]y'' = 0$. Setting $y'' = 0$ gives $y' = C$, leading to general solution lines $y = C x + f(C)$.",
-        "对克莱罗方程 $y = x y' + f(y')$ 求导得 $y' = y' + [x + f'(y')]y'' \\implies [x + f'(y')]y'' = 0$。令 $y'' = 0$ 可得斜率为常数 $y' = C$，从而得到通解直线族 $y = C x + f(C)$。",
+        "Differentiating the equation gives a product equal to zero, and setting the second derivative to zero gives a family of straight line solutions. Differentiating $y = x y' + f(y')$ yields $y' = y' + x y'' + f'(y')y'' \\implies [x + f'(y')]y'' = 0$. Setting $y'' = 0$ gives $y' = C$, leading to general solution lines $y = C x + f(C)$.",
+        "对方程求导得到一个等于零的乘积，令二阶导数为零就得到一族直线解。对克莱罗方程 $y = x y' + f(y')$ 求导得 $y' = y' + [x + f'(y')]y'' \\implies [x + f'(y')]y'' = 0$。令 $y'' = 0$ 可得斜率为常数 $y' = C$，从而得到通解直线族 $y = C x + f(C)$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 6);
@@ -860,8 +860,8 @@ export const dalembertDifferentialEquations: TopicDef = {
       id: "reduction-of-dalembert-equations-to-linear-form",
       title: t("Reduction of d'Alembert equations to linear form", "达朗贝尔方程求导转化为线性方程"),
       explanation: t(
-        "For $y = 2x p + g(p)$, differentiating with respect to $x$ gives $p = 2p + 2x \\frac{dp}{dx} + g'(p)\\frac{dp}{dx}$, which rearranges to $\\frac{dx}{dp} + \\frac{2}{p}x = -\\frac{g'(p)}{p}$, an integrating factor $p^2$ ODE.",
-        "对于方程 $y = 2x p + g(p)$，关于 $x$ 求导得 $p = 2p + [2x + g'(p)]\\frac{dp}{dx}$，变形可得 $\\frac{dx}{dp} + \\frac{2}{p}x = -\\frac{g'(p)}{p}$，该线性方程的积分因子为 $p^2$。",
+        "Differentiating the equation and treating the variable as a function of the slope turns the problem into a linear equation in the variable. For $y = 2x p + g(p)$, differentiating with respect to $x$ gives $p = 2p + 2x \\frac{dp}{dx} + g'(p)\\frac{dp}{dx}$, which rearranges to $\\frac{dx}{dp} + \\frac{2}{p}x = -\\frac{g'(p)}{p}$, an integrating factor $p^2$ ODE.",
+        "对方程求导，并把自变量看作斜率的函数，问题就化为关于自变量的线性方程。对于方程 $y = 2x p + g(p)$，关于 $x$ 求导得 $p = 2p + [2x + g'(p)]\\frac{dp}{dx}$，变形可得 $\\frac{dx}{dp} + \\frac{2}{p}x = -\\frac{g'(p)}{p}$，该线性方程的积分因子为 $p^2$。",
       ),
       generate(rng: Rng): Problem {
         const m = rng.int(2, 35);
@@ -916,8 +916,8 @@ export const phaseLinesOfFirstOrderOdes: TopicDef = {
       id: "constructing-and-interpreting-phase-lines",
       title: t("Constructing and interpreting phase lines", "构造与分析自自治方程的相位线"),
       explanation: t(
-        "For $y' = (y - a)(b - y)$ with $a < b$, $f(y) > 0$ when $a < y < b$ (solutions increase, arrow points right/up), while $f(y) < 0$ when $y > b$ or $y < a$ (solutions decrease).",
-        "对于 $y' = (y - a)(b - y)$（$a < b$），在区间 $a < y < b$ 上 $f(y) > 0$（解单调递增，箭头指向正方向）；在 $y > b$ 或 $y < a$ 时 $f(y) < 0$（解单调递减）。",
+        "A phase line marks the equilibria and shows, between them, whether solutions increase or decrease according to the sign of the right side. For $y' = (y - a)(b - y)$ with $a < b$, $f(y) > 0$ when $a < y < b$ (solutions increase, arrow points right/up), while $f(y) < 0$ when $y > b$ or $y < a$ (solutions decrease).",
+        "相线标出平衡点，并在平衡点之间根据右边的符号说明解是增加还是减少。对于 $y' = (y - a)(b - y)$（$a < b$），在区间 $a < y < b$ 上 $f(y) > 0$（解单调递增，箭头指向正方向）；在 $y > b$ 或 $y < a$ 时 $f(y) < 0$（解单调递减）。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 8);
@@ -970,8 +970,8 @@ export const classifyingEquilibriumSolutionsOfFirstOrderOdes: TopicDef = {
       id: "derivative-test-for-equilibrium-stability",
       title: t("Derivative test for equilibrium stability", "平衡点稳定性判别的导数检验法"),
       explanation: t(
-        "For $y' = k(y - a)(y - b)$ ($k > 0$, $a < b$), the derivative is $f'(y) = k(y - b) + k(y - a)$. At $y = a$, $f'(a) = k(a - b) < 0$, identifying $y = a$ as a stable equilibrium.",
-        "对于 $y' = k(y - a)(y - b)$（$k > 0$，$a < b$），导函数为 $f'(y) = k(y - b) + k(y - a)$。在 $y = a$ 处，$f'(a) = k(a - b) < 0$，因此 $y = a$ 为渐近稳定平衡解。",
+        "An equilibrium is stable when the right side decreases through it, because nearby solutions are then pushed back toward the equilibrium. For $y' = k(y - a)(y - b)$ ($k > 0$, $a < b$), the derivative is $f'(y) = k(y - b) + k(y - a)$. At $y = a$, $f'(a) = k(a - b) < 0$, identifying $y = a$ as a stable equilibrium.",
+        "当右边在平衡点处递减时，平衡点是稳定的，因为附近的解会被推回平衡点。对于 $y' = k(y - a)(y - b)$（$k > 0$，$a < b$），导函数为 $f'(y) = k(y - b) + k(y - a)$。在 $y = a$ 处，$f'(a) = k(a - b) < 0$，因此 $y = a$ 为渐近稳定平衡解。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(1, 4);

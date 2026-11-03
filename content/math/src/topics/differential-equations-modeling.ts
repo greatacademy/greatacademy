@@ -143,8 +143,8 @@ export const orthogonalTrajectories: TopicDef = {
       id: "finding-orthogonal-trajectories-of-a-family-of-curves",
       title: t("Finding orthogonal trajectories of a family of curves", "求解平面曲线族的正交轨迹"),
       explanation: t(
-        "For $y = C x^k$, differentiating yields $\\frac{dy}{dx} = \\frac{k y}{x}$. The orthogonal trajectories satisfy $\\frac{dy}{dx} = -\\frac{x}{k y} \\implies k y\\,dy + x\\,dx = 0$, giving the family $x^2 + k y^2 = C'$.",
-        "对于曲线族 $y = C x^k$，求导消去常数 $C$ 得 $\\frac{dy}{dx} = \\frac{k y}{x}$。其正交轨迹满足负倒数斜率 $\\frac{dy}{dx} = -\\frac{x}{k y} \\implies k y\\,dy + x\\,dx = 0$，积分得到曲线族 $x^2 + k y^2 = C'$。",
+        "Orthogonal trajectories cross every curve of the family at right angles, so their slope is the negative reciprocal of the family's slope at each point. For $y = C x^k$, differentiating yields $\\frac{dy}{dx} = \\frac{k y}{x}$. The orthogonal trajectories satisfy $\\frac{dy}{dx} = -\\frac{x}{k y} \\implies k y\\,dy + x\\,dx = 0$, giving the family $x^2 + k y^2 = C'$.",
+        "正交轨线与曲线族中的每条曲线都垂直相交，所以它在每一点的斜率是曲线族斜率的负倒数。对于曲线族 $y = C x^k$，求导消去常数 $C$ 得 $\\frac{dy}{dx} = \\frac{k y}{x}$。其正交轨迹满足负倒数斜率 $\\frac{dy}{dx} = -\\frac{x}{k y} \\implies k y\\,dy + x\\,dx = 0$，积分得到曲线族 $x^2 + k y^2 = C'$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 35);
@@ -258,8 +258,8 @@ export const inhibitedDecayModelsWithFirstOrderOdes: TopicDef = {
       id: "newtons-law-of-cooling",
       title: t("Newton's law of cooling", "牛顿冷却定律"),
       explanation: t(
-        "According to Newton's law of cooling, $\\frac{dT}{dt} = -k(T - T_m)$. The rate of temperature decrease is $-\\frac{dT}{dt} = k(T - T_m)$.",
-        "根据牛顿冷却定律，$\\frac{dT}{dt} = -k(T - T_m)$。温度的下降速率为 $-\\frac{dT}{dt} = k(T - T_m)$。",
+        "An object cools faster when it is much hotter than its surroundings, so its rate of change is proportional to the temperature difference. According to Newton's law of cooling, $\\frac{dT}{dt} = -k(T - T_m)$. The rate of temperature decrease is $-\\frac{dT}{dt} = k(T - T_m)$.",
+        "物体比周围环境热得越多，冷却得越快，所以它的变化率与温差成正比。根据牛顿冷却定律，$\\frac{dT}{dt} = -k(T - T_m)$。温度的下降速率为 $-\\frac{dT}{dt} = k(T - T_m)$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 8);
@@ -321,8 +321,8 @@ export const fallingBodyProblemsWithLinearDrag: TopicDef = {
       id: "terminal-velocity-with-linear-air-resistance",
       title: t("Terminal velocity with linear air resistance", "线性空气阻力下的收尾速度"),
       explanation: t(
-        "Terminal velocity is reached when acceleration becomes zero ($m\\frac{dv}{dt} = 0$), so $mg - bv_{\\text{term}} = 0 \\implies v_{\\text{term}} = \\frac{mg}{b}$.",
-        "当加速度降为零（$m\\frac{dv}{dt} = 0$）时物体达到收尾速度，此时重力与阻力平衡：$mg - bv_{\\text{term}} = 0 \\implies v_{\\text{term}} = \\frac{mg}{b}$。",
+        "As the object speeds up the resistance grows until it balances gravity, and at that speed the acceleration is zero and the velocity stops changing. Terminal velocity is reached when acceleration becomes zero ($m\\frac{dv}{dt} = 0$), so $mg - bv_{\\text{term}} = 0 \\implies v_{\\text{term}} = \\frac{mg}{b}$.",
+        "物体加速时阻力随之增大，直到与重力平衡；在这个速度下加速度为零，速度不再变化。当加速度降为零（$m\\frac{dv}{dt} = 0$）时物体达到收尾速度，此时重力与阻力平衡：$mg - bv_{\\text{term}} = 0 \\implies v_{\\text{term}} = \\frac{mg}{b}$。",
       ),
       generate(rng: Rng): Problem {
         const b = rng.int(2, 15);
@@ -375,8 +375,8 @@ export const fallingBodyProblemsWithQuadraticDrag: TopicDef = {
       id: "terminal-velocity-with-quadratic-air-resistance",
       title: t("Terminal velocity with quadratic air resistance", "二次空气阻力下的收尾速度"),
       explanation: t(
-        "At terminal velocity under quadratic drag, $mg - c v_{\\text{term}}^2 = 0 \\implies v_{\\text{term}} = \\sqrt{\\frac{mg}{c}}$.",
-        "二次空气阻力达到平衡时，$mg - c v_{\\text{term}}^2 = 0 \\implies v_{\\text{term}} = \\sqrt{\\frac{mg}{c}}$。",
+        "With resistance proportional to the square of the speed, the balance of forces gives an equation for the square of the terminal velocity. At terminal velocity under quadratic drag, $mg - c v_{\\text{term}}^2 = 0 \\implies v_{\\text{term}} = \\sqrt{\\frac{mg}{c}}$.",
+        "当阻力与速率的平方成正比时，力的平衡给出关于终极速度平方的方程。二次空气阻力达到平衡时，$mg - c v_{\\text{term}}^2 = 0 \\implies v_{\\text{term}} = \\sqrt{\\frac{mg}{c}}$。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 10);
@@ -482,8 +482,8 @@ export const modelingEscapeVelocityWithFirstOrderOdes: TopicDef = {
       id: "deriving-escape-velocity-via-chain-rule",
       title: t("Deriving escape velocity via chain rule", "应用链式法则推导天体逃逸速度"),
       explanation: t(
-        "By rewriting acceleration as $v \\frac{dv}{dr} = -\\frac{g_0 R^2}{r^2}$ and integrating $\\int_{v_{\\text{esc}}}^0 v\\,dv = -g_0 R^2 \\int_R^\\infty \\frac{dr}{r^2}$, we find $v_{\\text{esc}}^2 = 2 g_0 R$.",
-        "将加速度改写为 $v \\frac{dv}{dr} = -\\frac{g_0 R^2}{r^2}$，两端积分 $\\int_{v_{\\text{esc}}}^0 v\\,dv = -g_0 R^2 \\int_R^\\infty \\frac{dr}{r^2}$，可求得逃逸速度平方 $v_{\\text{esc}}^2 = 2 g_0 R$。",
+        "Writing acceleration in terms of distance lets you integrate from the surface to infinity, and the escape velocity is the speed that just reaches zero far away. By rewriting acceleration as $v \\frac{dv}{dr} = -\\frac{g_0 R^2}{r^2}$ and integrating $\\int_{v_{\\text{esc}}}^0 v\\,dv = -g_0 R^2 \\int_R^\\infty \\frac{dr}{r^2}$, we find $v_{\\text{esc}}^2 = 2 g_0 R$.",
+        "把加速度用距离表示，就可以从表面积分到无穷远，逃逸速度就是在无穷远处恰好减为零的速度。将加速度改写为 $v \\frac{dv}{dr} = -\\frac{g_0 R^2}{r^2}$，两端积分 $\\int_{v_{\\text{esc}}}^0 v\\,dv = -g_0 R^2 \\int_R^\\infty \\frac{dr}{r^2}$，可求得逃逸速度平方 $v_{\\text{esc}}^2 = 2 g_0 R$。",
       ),
       generate(rng: Rng): Problem {
         const ans = rng.int(4, 30); // v_esc in km/s
