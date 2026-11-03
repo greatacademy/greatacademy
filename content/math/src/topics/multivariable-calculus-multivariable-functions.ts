@@ -2643,34 +2643,61 @@ export const secondDegreeTaylorPolynomialsOfMultivariableFunctions: TopicDef = {
         "二元二次泰勒多项式在中心处与函数的值、一阶偏导数和二阶偏导数都一致。函数 $f(x, y)$ 在 $(0, 0)$ 处的二阶泰勒多项式为：\n\n$$P_2(x, y) = f(0, 0) + f_x(0, 0)x + f_y(0, 0)y + \\frac{1}{2}f_{xx}(0, 0)x^2 + f_{xy}(0, 0)xy + \\frac{1}{2}f_{yy}(0, 0)y^2。$$",
       ),
       generate(rng: Rng): Problem {
-        const a = rng.nonZero(-3, 3);
-        const b = rng.nonZero(-3, 3);
-        const c0 = rng.int(-4, 4);
-
-        // Let f(x, y) = c0 + x + y + a*x^2 + b*y^2
-        // f(0, 0) = c0, fx(0, 0) = 1, fy(0, 0) = 1, fxx(0, 0) = 2a, fyy(0, 0) = 2b, fxy = 0
-        // P2(x, y) = c0 + x + y + a*x^2 + b*y^2
-        const ans = poly([a, "x^2"], [b, "y^2"], [1, "x"], [1, "y"], [c0, ""]);
-
-        const prompt = t(
-          `Find the second-degree Taylor polynomial $P_2(x, y)$ centered at $(0, 0)$ for $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [1, "x"], [1, "y"], [c0, ""])}$.`,
-          `求函数 $f(x, y) = ${poly([a, "x^2"], [b, "y^2"], [1, "x"], [1, "y"], [c0, ""])}$ 在 $(0, 0)$ 处的二阶泰勒多项式 $P_2(x, y)$。`,
-        );
-        const solution = t(
-          steps(
-            `Because $f(x, y)$ is already a polynomial of degree $2$, its second-degree Taylor polynomial is identically the function itself:`,
-            `$$P_2(x, y) = ${ans}.$$`,
-          ),
-          steps(`因为 $f(x, y)$ 本身即为二次多项式，故其二阶泰勒多项式恒等于该函数本身：`, `$$P_2(x, y) = ${ans}。$$`),
-        );
+        const c = rng.pick([-4, -2, 2, 4]);
+        if (rng.bool()) {
+          // f = c e^{px + qy}: P2 = c (1 + u + u^2 / 2) with u = px + qy.
+          const p = rng.nonZero(-2, 2);
+          const q = rng.nonZero(-2, 2);
+          const f = `${c === 1 ? "" : c === -1 ? "-" : c}e^{${poly([p, "x"], [q, "y"])}}`;
+          const ans = poly([c, ""], [c * p, "x"], [c * q, "y"], [(c * p * p) / 2, "x^2"], [c * p * q, "xy"], [(c * q * q) / 2, "y^2"]);
+          return expressionProblem({
+            prompt: t(
+              `Find the second-degree Taylor polynomial $P_2(x, y)$ centered at $(0, 0)$ for $f(x, y) = ${f}$.`,
+              `求函数 $f(x, y) = ${f}$ 在 $(0, 0)$ 处的二阶泰勒多项式 $P_2(x, y)$。`,
+            ),
+            solution: t(
+              steps(
+                `At $(0, 0)$: $f = ${c}$, $f_x = ${c * p}$, $f_y = ${c * q}$, $f_{xx} = ${c * p * p}$, $f_{xy} = ${c * p * q}$ and $f_{yy} = ${c * q * q}$.`,
+                `Halving the pure second derivatives: $$P_2(x, y) = ${ans}.$$`,
+              ),
+              steps(
+                `在 $(0, 0)$ 处：$f = ${c}$，$f_x = ${c * p}$，$f_y = ${c * q}$，$f_{xx} = ${c * p * p}$，$f_{xy} = ${c * p * q}$，$f_{yy} = ${c * q * q}$。`,
+                `纯二阶导数乘以 $\\frac{1}{2}$：$$P_2(x, y) = ${ans}。$$`,
+              ),
+            ),
+            answer: ans,
+            wrong: [
+              poly([c, ""], [c * p, "x"], [c * q, "y"], [c * p * p, "x^2"], [c * p * q, "xy"], [c * q * q, "y^2"]),
+              poly([c, ""], [c * p, "x"], [c * q, "y"], [(c * p * p) / 2, "x^2"], [(c * p * q) / 2, "xy"], [(c * q * q) / 2, "y^2"]),
+              poly([c, ""], [c * p, "x"], [c * q, "y"], [(c * p * p) / 2, "x^2"], [(c * q * q) / 2, "y^2"]),
+            ],
+          });
+        }
+        // f = c cos(px) e^{qy}: cos(px) ≈ 1 - p^2 x^2 / 2 and e^{qy} ≈ 1 + qy + q^2 y^2 / 2.
+        const p = rng.int(1, 3);
+        const q = rng.nonZero(-2, 2);
+        const f = `${c}\\cos(${poly([p, "x"])}) e^{${poly([q, "y"])}}`;
+        const ans = poly([c, ""], [c * q, "y"], [-(c * p * p) / 2, "x^2"], [(c * q * q) / 2, "y^2"]);
         return expressionProblem({
-          prompt,
-          solution,
+          prompt: t(
+            `Find the second-degree Taylor polynomial $P_2(x, y)$ centered at $(0, 0)$ for $f(x, y) = ${f}$.`,
+            `求函数 $f(x, y) = ${f}$ 在 $(0, 0)$ 处的二阶泰勒多项式 $P_2(x, y)$。`,
+          ),
+          solution: t(
+            steps(
+              `At $(0, 0)$: $f = ${c}$, $f_x = 0$, $f_y = ${c * q}$, $f_{xx} = ${-c * p * p}$, $f_{xy} = 0$ and $f_{yy} = ${c * q * q}$.`,
+              `Halving the pure second derivatives: $$P_2(x, y) = ${ans}.$$`,
+            ),
+            steps(
+              `在 $(0, 0)$ 处：$f = ${c}$，$f_x = 0$，$f_y = ${c * q}$，$f_{xx} = ${-c * p * p}$，$f_{xy} = 0$，$f_{yy} = ${c * q * q}$。`,
+              `纯二阶导数乘以 $\\frac{1}{2}$：$$P_2(x, y) = ${ans}。$$`,
+            ),
+          ),
           answer: ans,
           wrong: [
-            poly([2 * a, "x^2"], [2 * b, "y^2"], [1, "x"], [1, "y"], [c0, ""]),
-            poly([a, "x^2"], [b, "y^2"]),
-            poly([1, "x"], [1, "y"], [c0, ""]),
+            poly([c, ""], [c * q, "y"], [(c * p * p) / 2, "x^2"], [(c * q * q) / 2, "y^2"]),
+            poly([c, ""], [c * q, "y"], [-c * p * p, "x^2"], [c * q * q, "y^2"]),
+            poly([c, ""], [c * q, "y"], [-(c * p * p) / 2, "x^2"]),
           ],
         });
       },
