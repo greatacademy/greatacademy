@@ -671,8 +671,6 @@ export const findingAreasBetweenShapes = topic(
         ];
         const s = rng.pick(stories);
         const [x, y] = [rng.int(2, L - l - 2), rng.int(2, W - w - 2)];
-        const outer = rectangle(L, W);
-        const inner: Point[] = rectangle(l, w).map(([px, py]) => [px + x, py + y]);
         const area = L * W - l * w;
         return {
           ...numberProblem({
