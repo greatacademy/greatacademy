@@ -1,6 +1,6 @@
-import type { Problem, Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly, Q } from "@ga/subject-math";
+import { type PlaneMark, type Point, plane, poly, Q } from "@ga/subject-math";
 
 import { choiceProblem, equationProblem, numberProblem, pointProblem, radicalProblem } from "../problems.ts";
 
@@ -61,6 +61,130 @@ function trigTerm(h: number, c: number, trig: string): string {
   return c < 0 ? `${h} - ${coeff}` : `${h} + ${coeff}`;
 }
 
+/** traced samples the parametric curve (x(t), y(t)) for t from t1 to t2 as segments. */
+function traced(x: (t: number) => number, y: (t: number) => number, t1: number, t2: number, accent = true): PlaneMark[] {
+  const n = 80;
+  const at = (i: number): Point => {
+    const u = t1 + ((t2 - t1) * i) / n;
+    return [x(u), y(u)];
+  };
+  return Array.from({ length: n }, (_, i): PlaneMark => ({ kind: "segment", a: at(i), b: at(i + 1), accent }));
+}
+
+/** arrowhead draws an arrowhead at p pointing along the direction d, with sides of length size. */
+function arrowhead(p: Point, d: Point, size = 0.5): PlaneMark[] {
+  const n = Math.hypot(d[0], d[1]);
+  const [ux, uy] = [d[0] / n, d[1] / n];
+  return [0.45, -0.45].map((a): PlaneMark => {
+    const [c, s] = [Math.cos(a), Math.sin(a)];
+    return { kind: "segment", a: p, b: [p[0] - size * (ux * c - uy * s), p[1] - size * (ux * s + uy * c)], accent: true };
+  });
+}
+
+/** parametricPointsFigure plots x = 2t − 1, y = t² + 3 with the points for t = −2, …, 2. */
+const parametricPointsFigure: Figure = {
+  svg: plane({ xMin: -6, xMax: 4, yMin: 0, yMax: 9 }, [
+    ...traced(
+      (u) => 2 * u - 1,
+      (u) => u * u + 3,
+      -2.2,
+      2.2,
+    ),
+    ...[-2, -1, 0, 1, 2].map(
+      (u): PlaneMark => ({
+        kind: "point",
+        at: [2 * u - 1, u * u + 3],
+        label: `t = ${String(u).replace("-", "−")}`,
+        dir: u < 0 ? "w" : u > 0 ? "e" : "s",
+      }),
+    ),
+  ]),
+  alt: t(
+    "The curve x = 2t − 1, y = t² + 3, with the points for t = −2, −1, 0, 1 and 2 marked: (−5, 7), (−3, 4), (−1, 3), (1, 4) and (3, 7).",
+    "曲线 x = 2t − 1，y = t² + 3，标出了 t = −2、−1、0、1、2 对应的点：(−5, 7)、(−3, 4)、(−1, 3)、(1, 4)、(3, 7)。",
+  ),
+};
+
+/** orientationFigure traces x = 2t − 1, y = t² + 3 for t from −2 to 2 with arrows in the direction of increasing t. */
+const orientationFigure: Figure = {
+  svg: plane({ xMin: -6, xMax: 4, yMin: 0, yMax: 9 }, [
+    ...traced(
+      (u) => 2 * u - 1,
+      (u) => u * u + 3,
+      -2,
+      2,
+    ),
+    ...arrowhead([-4, 5.25], [2, -3]),
+    ...arrowhead([0, 3.25], [2, 1]),
+    ...arrowhead([2, 5.25], [2, 3]),
+    { kind: "point", at: [-5, 7], label: "t = −2", dir: "w" },
+    { kind: "point", at: [3, 7], label: "t = 2", dir: "e" },
+  ]),
+  alt: t(
+    "The curve x = 2t − 1, y = t² + 3 for t from −2 to 2, traced from the initial point (−5, 7) down through (−1, 3) and up to the terminal point (3, 7), with arrows pointing in the direction of increasing t.",
+    "t 从 −2 到 2 时的曲线 x = 2t − 1，y = t² + 3：从起点 (−5, 7) 向下经过 (−1, 3)，再向上到终点 (3, 7)，箭头指向 t 增大的方向。",
+  ),
+};
+
+/** circleMarks draws the circle of radius r about (h, k). */
+const circleMarks = (h: number, k: number, r: number, accent = true) =>
+  traced(
+    (u) => h + r * Math.cos(u),
+    (u) => k + r * Math.sin(u),
+    0,
+    2 * Math.PI,
+    accent,
+  );
+
+const sampleAngle = (2 * Math.PI) / 9;
+const sampleP: Point = [2 + 3 * Math.cos(sampleAngle), 1 + 3 * Math.sin(sampleAngle)];
+
+/** parametricCircleFigure shows how x = h + r cos θ, y = k + r sin θ locate a point of the circle from its center. */
+const parametricCircleFigure: Figure = {
+  svg: plane({ xMin: -2, xMax: 7, yMin: -3, yMax: 6 }, [
+    ...circleMarks(2, 1, 3),
+    { kind: "segment", a: [2, 1], b: sampleP },
+    { kind: "segment", a: [2, 1], b: [sampleP[0], 1], dashed: true },
+    { kind: "segment", a: [sampleP[0], 1], b: sampleP, dashed: true },
+    { kind: "label", at: [2.6, 1.15], text: "θ", dir: "ne" },
+    { kind: "label", at: [(2 + sampleP[0]) / 2, (1 + sampleP[1]) / 2], text: "r", dir: "nw" },
+    { kind: "label", at: [(2 + sampleP[0]) / 2, 1], text: "r cos θ", dir: "s" },
+    { kind: "label", at: [sampleP[0], (1 + sampleP[1]) / 2], text: "r sin θ", dir: "e" },
+    { kind: "point", at: [2, 1], label: "(h, k)", dir: "sw" },
+    { kind: "point", at: sampleP },
+  ]),
+  alt: t(
+    "A circle with center (h, k) and radius r. The radius to a point of the circle makes the angle θ with the horizontal; the horizontal leg of the right triangle below it has length r cos θ and the vertical leg has length r sin θ, so the point is (h + r cos θ, k + r sin θ).",
+    "圆心为 (h, k)、半径为 r 的圆。到圆上一点的半径与水平方向成角 θ；其下方直角三角形的水平直角边长为 r cos θ，竖直直角边长为 r sin θ，所以该点为 (h + r cos θ, k + r sin θ)。",
+  ),
+};
+
+/** cosineCircleFigure shows r = 4 cos θ, the circle with center (2, 0) and radius 2 through the pole. */
+const cosineCircleFigure: Figure = {
+  svg: plane({ xMin: -2, xMax: 6, yMin: -3, yMax: 3 }, [
+    ...circleMarks(2, 0, 2),
+    { kind: "point", at: [2, 0], label: "(2, 0)", dir: "n" },
+    { kind: "point", at: [0, 0] },
+  ]),
+  alt: t(
+    "The graph of r = 4 cos θ: a circle with center (2, 0) on the x-axis and radius 2. It passes through the pole and touches the y-axis there.",
+    "r = 4 cos θ 的图象：圆心 (2, 0) 在 x 轴上、半径为 2 的圆。它经过极点，并在极点处与 y 轴相切。",
+  ),
+};
+
+/** sineCircleFigure shows r = 4 sin θ, the circle with center (0, 2) and radius 2 through the pole. */
+const sineCircleFigure: Figure = {
+  svg: plane({ xMin: -3, xMax: 3, yMin: -2, yMax: 5 }, [
+    ...circleMarks(0, 2, 2),
+    { kind: "point", at: [0, 2], label: "(0, 2)", dir: "e" },
+    { kind: "point", at: [0, 0] },
+  ]),
+  alt: t(
+    "The graph of r = 4 sin θ: a circle with center (0, 2) on the y-axis and radius 2. It passes through the pole and touches the x-axis there.",
+    "r = 4 sin θ 的图象：圆心 (0, 2) 在 y 轴上、半径为 2 的圆。它经过极点，并在极点处与 x 轴相切。",
+  ),
+};
+
 // ─── 8.28.1 Graphing Curves Defined Parametrically ──────────────────────────
 
 /** graphingCurvesDefinedParametrically covers evaluating parametric tables and orientation. */
@@ -83,6 +207,7 @@ export const graphingCurvesDefinedParametrically: TopicDef = {
         "A plane curve can be defined parametrically by expressing both coordinates as functions of a third variable called a **parameter** $t$:\n$$x = f(t), \\quad y = g(t)$$\nTo plot points on the curve, substitute chosen values of $t$ into $f(t)$ and $g(t)$ to obtain coordinate pairs $(x(t), y(t))$ on the Cartesian plane.\n\nFor example, if $x(t) = 2t - 1$ and $y(t) = t^2 + 3$, then at $t = 2$:\n$$x(2) = 2(2) - 1 = 3, \\quad y(2) = 2^2 + 3 = 7$$\nyielding the point $(3, 7)$.",
         "平面曲线可以通过将两个坐标分别表示为第三个变量（称为**参数** $t$）的函数来定义：\n$$x = f(t), \\quad y = g(t)$$\n作图时，选取参数 $t$ 的特定取值代入 $f(t)$ 与 $g(t)$，得到直角坐标平面上的点 $(x(t), y(t))$。\n\n例如，若 $x(t) = 2t - 1$ 且 $y(t) = t^2 + 3$，则在 $t = 2$ 处：\n$$x(2) = 2(2) - 1 = 3, \\quad y(2) = 2^2 + 3 = 7$$\n对应的平面点坐标为 $(3, 7)$。",
       ),
+      figure: parametricPointsFigure,
       generate(rng) {
         const a = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
         const b = rng.int(-5, 5);
@@ -117,9 +242,10 @@ export const graphingCurvesDefinedParametrically: TopicDef = {
       id: "direction-of-motion-orientation",
       title: t("Orientation and direction of motion", "曲线的取向与运动方向"),
       explanation: t(
-        "As the parameter $t$ increases along an interval $[t_1, t_2]$, the point $(x(t), y(t))$ traces the curve in a specific direction called the **orientation** of the curve.\n\nThe point corresponding to the smallest parameter value $t = t_1$ is the **initial point** $(x(t_1), y(t_1))$, and the point corresponding to $t = t_2$ is the **terminal point** $(x(t_2), y(t_2))$. Directional arrows are placed along the curve to display this movement.",
-        "当参数 $t$ 在区间 $[t_1, t_2]$ 上逐渐增大时，动点 $(x(t), y(t))$ 在曲线上运动的方向称为曲线的**取向**（或运动方向）。\n\n对应区间左端点 $t = t_1$ 的点称为**起点**（初始点）$(x(t_1), y(t_1))$，对应右端点 $t = t_2$ 的点称为**终点**（终止点）$(x(t_2), y(t_2))$。通常在曲线上标出箭头以指示随 $t$ 增大的运动方向。",
+        "As the parameter $t$ increases along an interval $[t_1, t_2]$, the point $(x(t), y(t))$ traces the curve in a specific direction called the **orientation** of the curve.\n\nThe point corresponding to the smallest parameter value $t = t_1$ is the **initial point** $(x(t_1), y(t_1))$, and the point corresponding to $t = t_2$ is the **terminal point** $(x(t_2), y(t_2))$. Directional arrows are placed along the curve to display this movement. For $x = 2t - 1$, $y = t^{2} + 3$ with $-2 \\le t \\le 2$, the initial point is $(-5, 7)$ and the terminal point is $(3, 7)$.",
+        "当参数 $t$ 在区间 $[t_1, t_2]$ 上逐渐增大时，动点 $(x(t), y(t))$ 在曲线上运动的方向称为曲线的**取向**（或运动方向）。\n\n对应区间左端点 $t = t_1$ 的点称为**起点**（初始点）$(x(t_1), y(t_1))$，对应右端点 $t = t_2$ 的点称为**终点**（终止点）$(x(t_2), y(t_2))$。通常在曲线上标出箭头以指示随 $t$ 增大的运动方向。对于 $x = 2t - 1$，$y = t^{2} + 3$（$-2 \\le t \\le 2$），起点是 $(-5, 7)$，终点是 $(3, 7)$。",
       ),
+      figure: orientationFigure,
       generate(rng) {
         const t1 = rng.pick([-3, -2, -1, 0]);
         const t2 = rng.pick([1, 2, 3, 4]);
@@ -466,6 +592,7 @@ export const parametricEquationsOfCircles: TopicDef = {
         "A circle centered at $(h, k)$ with radius $r > 0$ has standard equation:\n$$(x - h)^2 + (y - k)^2 = r^2$$\nIts parametric representation is:\n$$x = h + r\\cos\\theta, \\quad y = k + r\\sin\\theta \\quad (0 \\le \\theta < 2\\pi)$$\nwhere $\\theta$ represents the angle from the positive horizontal ray extending from the center.",
         "圆心为 $(h, k)$、半径为 $r > 0$ 的圆的标准方程为：\n$$(x - h)^2 + (y - k)^2 = r^2$$\n其参数方程表示为：\n$$x = h + r\\cos\\theta, \\quad y = k + r\\sin\\theta \\quad (0 \\le \\theta < 2\\pi)$$\n其中参数 $\\theta$ 表示从圆心引出的水平正向射线逆时针旋转的角。",
       ),
+      figure: parametricCircleFigure,
       generate(rng) {
         const h = rng.int(-6, 6);
         const k = rng.int(-6, 6);
@@ -1711,6 +1838,7 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
         "Multiplying $r = 2a\\cos\\theta$ by $r$ gives:\n$$r^2 = 2a(r\\cos\\theta) \\implies x^2 + y^2 = 2ax \\implies (x - a)^2 + y^2 = a^2$$\nThis is a circle with:\n- Center at $(a, 0)$ on the $x$-axis\n- Radius $R = |a|$\n- Passing through the pole $(0, 0)$ and tangent to the $y$-axis.",
         "将方程 $r = 2a\\cos\\theta$ 两端同乘 $r$ 可得：\n$$r^2 = 2a(r\\cos\\theta) \\implies x^2 + y^2 = 2ax \\implies (x - a)^2 + y^2 = a^2$$\n这表示一个圆，其特征为：\n- 圆心在 $x$ 轴上的 $(a, 0)$\n- 半径为 $R = |a|$\n- 经过极点 $(0, 0)$ 且与 $y$ 轴相切于极点。",
       ),
+      figure: cosineCircleFigure,
       generate(rng) {
         const a = rng.pick([-12, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12]);
         const twoA = 2 * a;
@@ -1759,6 +1887,7 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
         "Multiplying $r = 2b\\sin\\theta$ by $r$ gives:\n$$r^2 = 2b(r\\sin\\theta) \\implies x^2 + y^2 = 2by \\implies x^2 + (y - b)^2 = b^2$$\nThis is a circle with:\n- Center at $(0, b)$ on the $y$-axis\n- Radius $R = |b|$\n- Passing through the pole $(0, 0)$ and tangent to the $x$-axis.",
         "将方程 $r = 2b\\sin\\theta$ 两端同乘 $r$ 可得：\n$$r^2 = 2b(r\\sin\\theta) \\implies x^2 + y^2 = 2by \\implies x^2 + (y - b)^2 = b^2$$\n这表示一个圆，其特征为：\n- 圆心在 $y$ 轴上的 $(0, b)$\n- 半径为 $R = |b|$\n- 经过极点 $(0, 0)$ 且与 $x$ 轴相切于极点。",
       ),
+      figure: sineCircleFigure,
       generate(rng) {
         const b = rng.pick([-12, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12]);
         const twoB = 2 * b;
