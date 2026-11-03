@@ -885,7 +885,7 @@ export const matrixGroups: TopicDef = {
   knowledgePoints: [
     {
       id: "inverses-in-sl2z",
-      title: t("Inverses in SL(2, ℤ)", "SL(2, ℤ) 中的逆元"),
+      title: t("Inverses in $SL(2, \\mathbb{Z})$", "$SL(2, \\mathbb{Z})$ 中的逆元"),
       explanation: t(
         "If $\\det A = ad - bc = 1$, then $A^{-1} = \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$, which again has integer entries and determinant $1$. So the integer matrices of determinant $1$ form a group, $SL(2, \\mathbb{Z})$.",
         "若 $\\det A = ad - bc = 1$，则 $A^{-1} = \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$，它的元素仍是整数且行列式为 $1$。所以行列式为 $1$ 的整数矩阵构成群 $SL(2, \\mathbb{Z})$。",

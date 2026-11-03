@@ -570,7 +570,7 @@ export const introductionToFields: TopicDef = {
     },
     {
       id: "solving-linear-equations-in-zp",
-      title: t("Solving ax = b in ℤₚ", "在 ℤₚ 中解 ax = b"),
+      title: t("Solving $ax = b$ in $\\mathbb{Z}_p$", "在 $\\mathbb{Z}_p$ 中解 $ax = b$"),
       explanation: t(
         "Modulo a prime every nonzero element has an inverse, so a linear equation is solved by multiplying by the inverse of the coefficient. In $\\mathbb{Z}_{11}$, $3x = 7$ gives $x = 7 \\cdot 3^{-1} = 7 \\cdot 4 = 28 \\equiv 6$. Check: $3 \\cdot 6 = 18 \\equiv 7$.",
         "模素数时每个非零元素都有逆元，所以线性方程可以通过乘以系数的逆元来求解。在 $\\mathbb{Z}_{11}$ 中，$3x = 7$ 得 $x = 7 \\cdot 3^{-1} = 7 \\cdot 4 = 28 \\equiv 6$。验证：$3 \\cdot 6 = 18 \\equiv 7$。",
@@ -1099,7 +1099,7 @@ export const ideals: TopicDef = {
     },
     {
       id: "sums-intersections-and-products-of-ideals-of-z",
-      title: t("Combining ideals of ℤ", "组合 ℤ 的理想"),
+      title: t("Combining ideals of $\\mathbb{Z}$", "组合 $\\mathbb{Z}$ 的理想"),
       explanation: t(
         "Every ideal of the integers is the multiples of one number, and sums, intersections and products correspond to the gcd, the lcm and the product. $12\\mathbb{Z} + 18\\mathbb{Z} = 6\\mathbb{Z}$, $12\\mathbb{Z} \\cap 18\\mathbb{Z} = 36\\mathbb{Z}$, and $(12\\mathbb{Z})(18\\mathbb{Z}) = 216\\mathbb{Z}$.",
         "整数环的每个理想都是某个数的倍数，理想的和、交、积分别对应最大公因数、最小公倍数和乘积。$12\\mathbb{Z} + 18\\mathbb{Z} = 6\\mathbb{Z}$，$12\\mathbb{Z} \\cap 18\\mathbb{Z} = 36\\mathbb{Z}$，$(12\\mathbb{Z})(18\\mathbb{Z}) = 216\\mathbb{Z}$。",
@@ -1234,7 +1234,7 @@ export const quotientRings: TopicDef = {
   knowledgePoints: [
     {
       id: "sizes-of-quotients-of-gaussian-integers",
-      title: t("Quotients of ℤ[i]", "ℤ[i] 的商环"),
+      title: t("Quotients of $\\mathbb{Z}[i]$", "$\\mathbb{Z}[i]$ 的商环"),
       explanation: t(
         "The quotient of the Gaussian integers by a principal ideal has as many elements as the norm of its generator. $\\mathbb{Z}[i]/\\langle 2 + i \\rangle$ has $2^2 + 1^2 = 5$ elements; in fact it is isomorphic to $\\mathbb{Z}_5$, since $i \\equiv -2$.",
         "高斯整数环模一个主理想所得商环的元素个数，等于生成元的范数。$\\mathbb{Z}[i]/\\langle 2 + i \\rangle$ 有 $2^2 + 1^2 = 5$ 个元素；事实上它同构于 $\\mathbb{Z}_5$，因为 $i \\equiv -2$。",
@@ -1319,7 +1319,7 @@ export const polynomialQuotientRings: TopicDef = {
   knowledgePoints: [
     {
       id: "sizes-of-polynomial-quotient-rings",
-      title: t("Sizes of ℤₚ[x]/⟨f⟩", "ℤₚ[x]/⟨f⟩ 的大小"),
+      title: t("Sizes of $\\mathbb{Z}_p[x]/\\langle f \\rangle$", "$\\mathbb{Z}_p[x]/\\langle f \\rangle$ 的大小"),
       explanation: t(
         "Every class has a unique remainder of degree less than the modulus polynomial, so count those remainders by their coefficients. $\\mathbb{Z}_3[x]/\\langle x^2 + 1 \\rangle$ consists of the $a + bx$ with $a, b \\in \\mathbb{Z}_3$: $3^2 = 9$ elements.",
         "每个类都有唯一一个次数小于模多项式的余式，所以按系数来数这些余式。$\\mathbb{Z}_3[x]/\\langle x^2 + 1 \\rangle$ 由 $a + bx$（$a, b \\in \\mathbb{Z}_3$）组成：共 $3^2 = 9$ 个元素。",
@@ -1605,7 +1605,7 @@ export const theImageAndKernelOfARingHomomorphism: TopicDef = {
   knowledgePoints: [
     {
       id: "kernels-of-homomorphisms-from-z",
-      title: t("Kernels from ℤ", "从 ℤ 出发的核"),
+      title: t("Kernels from $\\mathbb{Z}$", "从 $\\mathbb{Z}$ 出发的核"),
       explanation: t(
         "The kernel of $\\mathbb{Z} \\to \\mathbb{Z}_4 \\times \\mathbb{Z}_6$, $x \\mapsto (x \\bmod 4, x \\bmod 6)$, consists of the common multiples of $4$ and $6$: $12\\mathbb{Z}$. So the image is isomorphic to $\\mathbb{Z}_{12}$.",
         "$\\mathbb{Z} \\to \\mathbb{Z}_4 \\times \\mathbb{Z}_6$，$x \\mapsto (x \\bmod 4, x \\bmod 6)$ 的核由 $4$ 与 $6$ 的公倍数组成：$12\\mathbb{Z}$。所以像同构于 $\\mathbb{Z}_{12}$。",

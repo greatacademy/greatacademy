@@ -326,7 +326,7 @@ export const theDivisionAlgorithmInRingsOfPolynomialsOverFiniteFields: TopicDef 
     },
     {
       id: "dividing-polynomials-over-zp",
-      title: t("Long division over ℤₚ", "在 ℤₚ 上做长除法"),
+      title: t("Long division over $\\mathbb{Z}_p$", "在 $\\mathbb{Z}_p$ 上做长除法"),
       explanation: t(
         "Long division works over a prime modulus because the leading coefficient of the divisor has an inverse there. Over $\\mathbb{Z}_5$, divide $x^3 + 2x + 1$ by $2x^2 + 1$: $2^{-1} = 3$, so the first term of the quotient is $3x$; $x^3 + 2x + 1 - 3x(2x^2 + 1) = -x + 1 = 4x + 1$. So $q = 3x$ and $r = 4x + 1$.",
         "在素数模下长除法可行，因为除式的首项系数在那里有逆元。在 $\\mathbb{Z}_5$ 上，用 $2x^2 + 1$ 除 $x^3 + 2x + 1$：$2^{-1} = 3$，所以商的首项为 $3x$；$x^3 + 2x + 1 - 3x(2x^2 + 1) = -x + 1 = 4x + 1$。所以 $q = 3x$，$r = 4x + 1$。",
@@ -733,7 +733,7 @@ export const irreduciblePolynomialsOverTheIntegersAndRationalNumbers: TopicDef =
     },
     {
       id: "irreducibility-over-z-versus-q",
-      title: t("Over ℤ versus over ℚ", "ℤ 上与 ℚ 上"),
+      title: t("Over $\\mathbb{Z}$ versus over $\\mathbb{Q}$", "$\\mathbb{Z}$ 上与 $\\mathbb{Q}$ 上"),
       explanation: t(
         "Over the integers a nonunit constant factor makes a polynomial reducible, while over the rationals constants are units and do not count. $6x + 9 = 3(2x + 3)$ is reducible over $\\mathbb{Z}$, since $3$ is not a unit of $\\mathbb{Z}$, but irreducible over $\\mathbb{Q}$, where $3$ is a unit.",
         "在整数上，非单位的常数因子会使多项式可约，而在有理数上常数都是单位，不算作因子。$6x + 9 = 3(2x + 3)$ 在 $\\mathbb{Z}$ 上可约，因为 $3$ 不是 $\\mathbb{Z}$ 的单位；但在 $\\mathbb{Q}$ 上不可约，因为 $3$ 在那里是单位。",
@@ -811,7 +811,7 @@ export const irreduciblePolynomialsOverAFiniteField: TopicDef = {
   knowledgePoints: [
     {
       id: "irreducibility-over-zp",
-      title: t("Irreducible over ℤₚ?", "在 ℤₚ 上不可约吗？"),
+      title: t("Irreducible over $\\mathbb{Z}_p$?", "在 $\\mathbb{Z}_p$ 上不可约吗？"),
       explanation: t(
         "Over $\\mathbb{Z}_3$, $x^3 + 2x + 1$ takes the values $1, 1, 1$ at $0, 1, 2$, so it has no root and, being a cubic, is irreducible.",
         "在 $\\mathbb{Z}_3$ 上，$x^3 + 2x + 1$ 在 $0, 1, 2$ 处的值为 $1, 1, 1$，所以无根，而它是三次多项式，因此不可约。",

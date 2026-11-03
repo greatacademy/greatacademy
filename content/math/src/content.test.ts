@@ -6,6 +6,9 @@ import { mathTextIssue } from "./sampling.ts";
 
 const rawMath = /\^|_[A-Za-z0-9{]|sqrt\(/;
 
+/** unicodeMath matches Unicode math symbols, which belong in TeX; unit superscripts such as m² are prose. */
+const unicodeMath = /[λμσθΓχνρβαε√≤≥≠∈∑∫ℝℙℂℤ₀₁₂₃ₖₙᵢᵀⁿ]|(?<![米秒]|\b(?:mm|cm|km|m|ft|in|yd|s))[²³]|[A-Za-z][\u0302\u0304]/u;
+
 const minProseWords = 15;
 const proseWords = (text: string) => text.replace(/\$\$[\s\S]*?\$\$|\$[^$]*\$/g, " ").match(/[A-Za-z]{2,}/g)?.length ?? 0;
 
@@ -32,6 +35,24 @@ describe("math content", () => {
     for (const topic of compileMath().topics.values()) {
       check(`${topic.id} summary`, topic.summary);
       for (const kp of topic.knowledgePoints) check(`${topic.id}#${kp.id} explanation`, kp.explanation);
+    }
+    expect(issues).toEqual([]);
+  });
+
+  it("writes the math of knowledge point titles and explanations in TeX, not Unicode", () => {
+    const issues: string[] = [];
+    for (const topic of compileMath().topics.values()) {
+      for (const kp of topic.knowledgePoints) {
+        for (const [where, text] of [
+          ["title", kp.title],
+          ["explanation", kp.explanation],
+        ] as const) {
+          for (const [locale, value] of Object.entries(text)) {
+            const prose = value.replace(/\\\$|`[^`]*`/g, "").replace(/\$\$[\s\S]*?\$\$|\$[^$]*\$/g, " ");
+            if (unicodeMath.test(prose)) issues.push(`${topic.id}#${kp.id} ${where} (${locale})`);
+          }
+        }
+      }
     }
     expect(issues).toEqual([]);
   });

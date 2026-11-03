@@ -1177,7 +1177,7 @@ export const discreteInfiniteSetsWithEqualCardinality: TopicDef = {
     },
     {
       id: "a-bijection-from-naturals-to-integers",
-      title: t("ℕ and ℤ", "ℕ 与 ℤ"),
+      title: t("$\\mathbb{N}$ and $\\mathbb{Z}$", "$\\mathbb{N}$ 与 $\\mathbb{Z}$"),
       explanation: t(
         "Listing the integers alternately on each side of zero pairs every natural number with exactly one integer, so both sets have the same size. List $\\mathbb{Z}$ as $0, -1, 1, -2, 2, \\dots$: $f(n) = \\dfrac{n}{2}$ for even $n$ and $f(n) = -\\dfrac{n + 1}{2}$ for odd $n$ is a bijection $\\mathbb{N} \\to \\mathbb{Z}$. For example $f(7) = -4$ and $f(8) = 4$.",
         "把整数在零的两侧交替列出，就把每个自然数与恰好一个整数配对，所以这两个集合大小相同。把 $\\mathbb{Z}$ 排成 $0, -1, 1, -2, 2, \\dots$：$n$ 为偶数时 $f(n) = \\dfrac{n}{2}$，$n$ 为奇数时 $f(n) = -\\dfrac{n + 1}{2}$，这是 $\\mathbb{N} \\to \\mathbb{Z}$ 的双射。例如 $f(7) = -4$，$f(8) = 4$。",

@@ -495,7 +495,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
     knowledgePoints: [
       {
         id: "paired-differences-mean-calculation",
-        title: t("Computing the mean difference d̄ from paired observations", "根据配对观测值计算平均差值 d̄"),
+        title: t("Computing the mean difference $\\bar{d}$ from paired observations", "根据配对观测值计算平均差值 $\\bar{d}$"),
         explanation: t(
           "Subtract within each pair first, then average the differences; this removes the variation between subjects. The mean difference is $\\bar{d} = \\frac{1}{n} \\sum_i (x_{1i} - x_{2i})$.",
           "先在每一对内部相减，再对差值求平均；这样就消除了个体之间的差异。差值的均值为 $\\bar{d} = \\frac{1}{n} \\sum_i (x_{1i} - x_{2i})$。",
