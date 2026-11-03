@@ -1,6 +1,6 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { linear, type Mark, type Point, Q, radical, sketch } from "@ga/subject-math";
+import { linear, type Mark, type Point, plane, Q, radical, sketch } from "@ga/subject-math";
 
 import { expressionProblem, numberProblem, radicalProblem, steps } from "../problems.ts";
 import { pickChoice } from "./grade-4-fractions.ts";
@@ -1534,6 +1534,37 @@ export const isoscelesTrianglesInCircles = topic(
   ],
 );
 
+/** translatedCircleFigure shows the circle of radius 2 about (−3, 2), dashed, moved 5 right and 4 down to the circle about (2, −2). */
+const translatedCircleFigure: Figure = {
+  svg: plane({ xMin: -6, xMax: 5, yMin: -5, yMax: 5 }, [
+    { kind: "circle", center: [-3, 2], r: 2, dashed: true },
+    { kind: "circle", center: [2, -2], r: 2, accent: true },
+    { kind: "segment", a: [-3, 2], b: [2, -2], dashed: true },
+    { kind: "point", at: [-3, 2], label: "(−3, 2)", dir: "n" },
+    { kind: "point", at: [2, -2], label: "(2, −2)", dir: "s", accent: true },
+  ]),
+  alt: t(
+    "A dashed circle of radius 2 centered at (−3, 2) and the same circle moved 5 units right and 4 units down, centered at (2, −2). The two circles have the same radius; only the center moved.",
+    "一个以 (−3, 2) 为圆心、半径为 2 的虚线圆，以及把它向右平移 5 个单位、向下平移 4 个单位后以 (2, −2) 为圆心的圆。两个圆半径相同，只有圆心移动了。",
+  ),
+};
+
+/** dilatedCircleFigure shows the circle of radius 1.5 about (1, 1), dashed, dilated about its center by 2 to radius 3. */
+const dilatedCircleFigure: Figure = {
+  svg: plane({ xMin: -3, xMax: 5, yMin: -3, yMax: 5 }, [
+    { kind: "circle", center: [1, 1], r: 1.5, dashed: true },
+    { kind: "circle", center: [1, 1], r: 3, accent: true },
+    { kind: "segment", a: [1, 1], b: [4, 1], accent: true },
+    { kind: "point", at: [1, 1], dir: "n" },
+    { kind: "label", at: [1.75, 1], text: "1.5", dir: "s" },
+    { kind: "label", at: [3.25, 1], text: "3", dir: "s" },
+  ]),
+  alt: t(
+    "A dashed circle of radius 1.5 centered at (1, 1) and its dilation about the center by a factor of 2: a circle with the same center and radius 3.",
+    "一个以 (1, 1) 为圆心、半径为 1.5 的虚线圆，以及以圆心为中心按比例 2 放大后的圆：圆心相同，半径为 3。",
+  ),
+};
+
 /** transformingCircles finds the equations of circles after translations and dilations. */
 export const transformingCircles = topic(
   "transforming-circles",
@@ -1574,6 +1605,7 @@ export const transformingCircles = topic(
           ),
         });
       },
+      translatedCircleFigure,
     ),
     kp(
       "dilating-a-circle",
@@ -1602,6 +1634,7 @@ export const transformingCircles = topic(
           ),
         });
       },
+      dilatedCircleFigure,
     ),
   ],
 );
