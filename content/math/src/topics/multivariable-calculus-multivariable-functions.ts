@@ -2,7 +2,17 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
 
-import { choiceProblem, equationProblem, expressionProblem, numberProblem, pointProblem, steps, vectorLatex } from "../problems.ts";
+import {
+  choiceProblem,
+  equationProblem,
+  expressionProblem,
+  lowestTerms,
+  numberProblem,
+  pointProblem,
+  steps,
+  vectorLatex,
+  yesNo,
+} from "../problems.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -107,6 +117,36 @@ export const interiorAndBoundaryPoints: TopicDef = {
         return pickChoice(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "classifying-points-relative-to-a-region-above-a-parabola",
+      title: t("Classifying points relative to a region above a parabola", "判断点相对于抛物线上方区域的位置"),
+      explanation: t(
+        "For $S = \\{(x, y) : y > x^2 + c\\}$, compare $y$ with $x^2 + c$ at the point. If $y > x^2 + c$, a small disk around the point still satisfies the strict inequality, so it is an interior point. If $y = x^2 + c$ the point lies on the parabola: every disk around it reaches both above and below, so it is a boundary point, even though it does not belong to $S$. If $y < x^2 + c$ the point is exterior.",
+        "对 $S = \\{(x, y) : y > x^2 + c\\}$，在该点比较 $y$ 与 $x^2 + c$。若 $y > x^2 + c$，该点周围的小圆盘仍满足严格不等式，所以它是内点。若 $y = x^2 + c$，该点在抛物线上：它周围的每个圆盘都同时伸到上方和下方，所以它是边界点，尽管它不属于 $S$。若 $y < x^2 + c$，该点是外点。",
+      ),
+      generate(rng: Rng): Problem {
+        const c = rng.int(-4, 4);
+        const x = rng.int(-3, 3);
+        const kind = rng.int(0, 2);
+        const y = x * x + c + (kind === 0 ? rng.int(1, 4) : kind === 1 ? 0 : -rng.int(1, 4));
+        const names = [t("Interior point", "内点"), t("Boundary point", "边界点"), t("Exterior point", "外点")];
+        const right = names[kind] ?? names[0]!;
+        const rel = kind === 0 ? ">" : kind === 1 ? "=" : "<";
+        return pickChoice(
+          rng,
+          t(
+            `Classify the point $(${x}, ${y})$ relative to $S = \\{(x, y) : y > ${poly([1, "x^2"], [c, ""])}\\}$.`,
+            `判断点 $(${x}, ${y})$ 相对于 $S = \\{(x, y) : y > ${poly([1, "x^2"], [c, ""])}\\}$ 的位置。`,
+          ),
+          right,
+          names.filter((_, i) => i !== kind),
+          t(
+            `At $x = ${x}$, $x^2 ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${x * x + c}$ and $y = ${y} ${rel} ${x * x + c}$, so the point is ${/^[aeiou]/i.test(right.en) ? "an" : "a"} ${right.en.toLowerCase()}.`,
+            `在 $x = ${x}$ 处 $x^2 ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${x * x + c}$，而 $y = ${y} ${rel} ${x * x + c}$，所以该点是${right["zh-CN"]}。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -158,6 +198,31 @@ export const interiorsAndBoundariesOfSets: TopicDef = {
             `${poly([b * b, "x^2"], [-a * a, "y^2"])} = ${k}`,
             `${poly([1, "x^2"], [1, "y^2"])} = ${k}`,
           ],
+        });
+      },
+    },
+    {
+      id: "the-length-of-the-boundary-of-a-rectangle",
+      title: t("The length of the boundary of a rectangle", "矩形边界的长度"),
+      explanation: t(
+        "The boundary of a set does not depend on which edges are included: $\\{|x| \\le a, |y| < b\\}$ and $\\{|x| < a, |y| < b\\}$ both have the whole rectangle outline as boundary. Removing a single point from the inside adds that point to the boundary, since every disk around it meets both $S$ and the missing point, but a point has no length. So the boundary length is the perimeter $4a + 4b$ in each case.",
+        "集合的边界与包含哪些边无关：$\\{|x| \\le a, |y| < b\\}$ 与 $\\{|x| < a, |y| < b\\}$ 的边界都是整个矩形轮廓。从内部去掉一个点会使该点成为边界点，因为它周围的每个圆盘都同时与 $S$ 和这个缺失的点相交，但一个点没有长度。所以每种情形下边界长度都是周长 $4a + 4b$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 9);
+        const b = rng.int(1, 9);
+        const rx = rng.pick(["\\le", "<"]);
+        const ry = rng.pick(["\\le", "<"]);
+        const hole = rng.int(0, 1) === 1;
+        const set = `\\{(x, y) : |x| ${rx} ${a},\\ |y| ${ry} ${b}\\}${hole ? " \\setminus \\{(0, 0)\\}" : ""}`;
+        return numberProblem({
+          prompt: t(`Find the total length of the boundary of $S = ${set}$.`, `求 $S = ${set}$ 的边界的总长度。`),
+          answer: 4 * a + 4 * b,
+          wrong: [2 * a + 2 * b, a * b * 4, 4 * a + 4 * b + 1],
+          solution: t(
+            `The boundary is the outline of the rectangle $[-${a}, ${a}] \\times [-${b}, ${b}]$${hole ? " together with the point $(0, 0)$, which adds no length" : ""}. Its length is $4 \\cdot ${a} + 4 \\cdot ${b} = ${4 * a + 4 * b}$.`,
+            `边界是矩形 $[-${a}, ${a}] \\times [-${b}, ${b}]$ 的轮廓${hole ? "，再加上点 $(0, 0)$，后者不增加长度" : ""}。其长度为 $4 \\cdot ${a} + 4 \\cdot ${b} = ${4 * a + 4 * b}$。`,
+          ),
         });
       },
     },
@@ -221,6 +286,51 @@ export const openAndClosedSets: TopicDef = {
         return pickChoice(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "classifying-half-planes-and-other-sets",
+      title: t("Classifying half-planes and other sets", "判断半平面等集合的开闭性"),
+      explanation: t(
+        "A set is open when it contains none of its boundary points and closed when it contains all of them. Strict inequalities between continuous functions give open sets, and non-strict ones give closed sets. Mixing the two usually gives a set that is neither. A single point is closed, and the whole plane $\\mathbb{R}^2$ has no boundary at all, so it is both open and closed.",
+        "集合不含任何边界点时是开集，含有全部边界点时是闭集。连续函数之间的严格不等式给出开集，非严格不等式给出闭集。两者混合通常得到既不开也不闭的集合。单点集是闭集，而整个平面 $\\mathbb{R}^2$ 根本没有边界点，所以它既开又闭。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-5, 5);
+        const b = rng.int(-5, 5);
+        const forms: readonly [string, number][] = [
+          [`\\{(x, y) : x + y < ${a}\\}`, 0],
+          [`\\{(x, y) : x > ${a},\\ y > ${b}\\}`, 0],
+          [`\\{(x, y) : y \\ge x^2 ${a < 0 ? "-" : "+"} ${Math.abs(a)}\\}`, 1],
+          [`\\{(${a}, ${b})\\}`, 1],
+          [`\\{(x, y) : x \\ge ${a},\\ y \\le ${b}\\}`, 1],
+          [`\\{(x, y) : x > ${a},\\ y \\le ${b}\\}`, 3],
+          [`\\{(x, y) : ${a} \\le x < ${a + 3}\\}`, 3],
+          ["\\mathbb{R}^2", 2],
+        ];
+        const [set, kind] = rng.pick(forms);
+        const names = [t("Open", "开集"), t("Closed", "闭集"), t("Both open and closed", "既开又闭"), t("Neither", "既不开也不闭")];
+        const right = names[kind] ?? names[0]!;
+        return pickChoice(
+          rng,
+          t(`Classify the set $${set}$.`, `判断集合 $${set}$ 的开闭性。`),
+          right,
+          names.filter((_, i) => i !== kind),
+          t(
+            [
+              "It is defined by strict inequalities, so it contains none of its boundary points: open.",
+              "It contains all of its boundary points: closed.",
+              "The plane has no boundary points, so it is both open and closed.",
+              "It contains some of its boundary points but not all: neither.",
+            ][kind] ?? "",
+            [
+              "它由严格不等式定义，不含任何边界点：开集。",
+              "它包含全部边界点：闭集。",
+              "平面没有边界点，所以既开又闭。",
+              "它包含部分边界点而非全部：既不开也不闭。",
+            ][kind] ?? "",
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -272,6 +382,34 @@ export const theDomainOfAMultivariableFunction: TopicDef = {
         });
       },
     },
+    {
+      id: "the-area-of-a-domain",
+      title: t("The area of a domain", "定义域的面积"),
+      explanation: t(
+        "To find the domain of a function built from roots and logarithms, collect the conditions from every piece: each square root needs a non-negative argument and each logarithm a positive one. The domain is the set where all of them hold at once. For example $\\sqrt{x} + \\sqrt{y} + \\sqrt{c - x - y}$ needs $x \\ge 0$, $y \\ge 0$ and $x + y \\le c$, a triangle of area $\\frac{c^2}{2}$.",
+        "要求由根式和对数构成的函数的定义域，需要汇集每一部分的条件：每个平方根要求被开方式非负，每个对数要求真数为正。定义域就是这些条件同时成立的集合。例如 $\\sqrt{x} + \\sqrt{y} + \\sqrt{c - x - y}$ 要求 $x \\ge 0$、$y \\ge 0$ 且 $x + y \\le c$，这是面积为 $\\frac{c^2}{2}$ 的三角形。",
+      ),
+      generate(rng: Rng): Problem {
+        const tri = rng.int(0, 1) === 0;
+        const a = rng.int(1, 9);
+        const b = rng.int(1, 9);
+        const ans = tri ? Q.of(a * a, 2) : Q.of(4 * a * b);
+        const f = tri ? `\\sqrt{x} + \\sqrt{y} + \\sqrt{${a} - x - y}` : `\\sqrt{${a * a} - x^2} + \\ln(${b * b} - y^2)`;
+        return numberProblem({
+          prompt: t(`Find the area of the domain of $f(x, y) = ${f}$.`, `求 $f(x, y) = ${f}$ 的定义域的面积。`),
+          answer: ans,
+          wrong: tri ? [Q.of(a * a), Q.of(a, 2), Q.of(a * a, 4)] : [Q.of(a * b), Q.of(4 * a * a * b * b), Q.of(2 * a * b)],
+          solution: t(
+            tri
+              ? `The domain is the triangle $x \\ge 0$, $y \\ge 0$, $x + y \\le ${a}$, of area $\\frac{${a}^2}{2} = ${ans.toLatex()}$.`
+              : `The domain is $|x| \\le ${a}$ and $|y| < ${b}$, a rectangle of area $${2 * a} \\cdot ${2 * b} = ${ans.toLatex()}$.`,
+            tri
+              ? `定义域是三角形 $x \\ge 0$，$y \\ge 0$，$x + y \\le ${a}$，面积为 $\\frac{${a}^2}{2} = ${ans.toLatex()}$。`
+              : `定义域为 $|x| \\le ${a}$ 且 $|y| < ${b}$，是面积为 $${2 * a} \\cdot ${2 * b} = ${ans.toLatex()}$ 的矩形。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -317,6 +455,34 @@ export const levelCurves: TopicDef = {
             `${poly([a, "x^2"], [-b, "y^2"])} = ${c}`,
             `${poly([b, "x^2"], [a, "y^2"])} = ${c}`,
           ],
+        });
+      },
+    },
+    {
+      id: "the-level-curve-through-a-point",
+      title: t("The level curve through a point", "过某点的等值线"),
+      explanation: t(
+        "The level curve of $f$ through a point $(p, q)$ is $f(x, y) = c$ with $c = f(p, q)$. For $f(x, y) = ax^2 + by^2$ with $a, b > 0$ it is the ellipse $ax^2 + by^2 = c$. Setting $y = 0$ shows where it crosses the $x$-axis, so its semi-axis along $x$ satisfies\n\n$$s_x^2 = \\frac{c}{a}.$$",
+        "$f$ 过点 $(p, q)$ 的等值线是 $f(x, y) = c$，其中 $c = f(p, q)$。对 $a, b > 0$ 的 $f(x, y) = ax^2 + by^2$，它是椭圆 $ax^2 + by^2 = c$。令 $y = 0$ 可知它与 $x$ 轴的交点，所以沿 $x$ 方向的半轴满足\n\n$$s_x^2 = \\frac{c}{a}.$$",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 6);
+        const b = rng.int(1, 6);
+        const p = rng.int(-4, 4);
+        const q = rng.int(-4, 4) || 1;
+        const c = a * p * p + b * q * q;
+        const ans = Q.of(c, a);
+        return numberProblem({
+          prompt: t(
+            `The level curve of $f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ through $(${p}, ${q})$ is an ellipse. Find the square of its semi-axis along the $x$-axis.`,
+            `$f(x, y) = ${poly([a, "x^2"], [b, "y^2"])}$ 过点 $(${p}, ${q})$ 的等值线是一个椭圆。求它沿 $x$ 轴的半轴长的平方。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(c), Q.of(c, b), Q.of(p * p)],
+          solution: t(
+            `$c = f(${p}, ${q}) = ${c}$, so the curve is $${poly([a, "x^2"], [b, "y^2"])} = ${c}$ and $s_x^2 = \\frac{${c}}{${a}}${lowestTerms(c, a)}$.`,
+            `$c = f(${p}, ${q}) = ${c}$，所以曲线为 $${poly([a, "x^2"], [b, "y^2"])} = ${c}$，$s_x^2 = \\frac{${c}}{${a}}${lowestTerms(c, a)}$。`,
+          ),
         });
       },
     },
@@ -367,6 +533,38 @@ export const levelSurfaces: TopicDef = {
             `${poly([1, "x^2"], [1, "y^2"], [1, "z^2"])} = ${k}`,
           ],
         });
+      },
+    },
+    {
+      id: "the-shape-of-the-level-surface-through-a-point",
+      title: t("The shape of the level surface through a point", "过某点的等值面的形状"),
+      explanation: t(
+        "The level surfaces of $F(x, y, z) = x^2 + y^2 - z^2$ change shape with the level $c$. For $c > 0$, $x^2 + y^2 - z^2 = c$ is a hyperboloid of one sheet; for $c < 0$ it is a hyperboloid of two sheets; for $c = 0$ it is a double cone. To find the surface through a point, first compute $c = F$ at that point.",
+        "$F(x, y, z) = x^2 + y^2 - z^2$ 的等值面随水平值 $c$ 改变形状。$c > 0$ 时，$x^2 + y^2 - z^2 = c$ 是单叶双曲面；$c < 0$ 时是双叶双曲面；$c = 0$ 时是双圆锥面。要找过某点的等值面，先计算该点处的 $c = F$。",
+      ),
+      generate(rng: Rng): Problem {
+        const [x, y, z] = [rng.int(-4, 4), rng.int(-4, 4), rng.int(-5, 5)];
+        const c = x * x + y * y - z * z;
+        const kind = c > 0 ? 0 : c < 0 ? 1 : 2;
+        const names = [
+          t("Hyperboloid of one sheet", "单叶双曲面"),
+          t("Hyperboloid of two sheets", "双叶双曲面"),
+          t("Double cone", "双圆锥面"),
+        ];
+        const right = names[kind] ?? names[0]!;
+        return pickChoice(
+          rng,
+          t(
+            `Identify the level surface of $F(x, y, z) = x^2 + y^2 - z^2$ that passes through $(${x}, ${y}, ${z})$.`,
+            `判断 $F(x, y, z) = x^2 + y^2 - z^2$ 过点 $(${x}, ${y}, ${z})$ 的等值面。`,
+          ),
+          right,
+          names.filter((_, i) => i !== kind),
+          t(
+            `$c = ${x * x} + ${y * y} - ${z * z} = ${c}$, so the surface $x^2 + y^2 - z^2 = ${c}$ is a ${right.en.toLowerCase()}.`,
+            `$c = ${x * x} + ${y * y} - ${z * z} = ${c}$，所以曲面 $x^2 + y^2 - z^2 = ${c}$ 是${right["zh-CN"]}。`,
+          ),
+        );
       },
     },
   ],
@@ -427,6 +625,31 @@ export const limitsAndContinuityOfMultivariableFunctions: TopicDef = {
         });
       },
     },
+    {
+      id: "limits-along-parabolic-paths",
+      title: t("Limits along parabolic paths", "沿抛物线路径的极限"),
+      explanation: t(
+        "Some functions have the same limit along every straight line through the origin and still have no limit. For $f(x, y) = \\frac{x^2y}{x^4 + y^2}$, every line $y = mx$ gives $0$, but along the parabola $y = kx^2$,\n\n$$f(x, kx^2) = \\frac{kx^4}{x^4 + k^2x^4} = \\frac{k}{1 + k^2}.$$\n\nDifferent parabolas give different values, so the limit at the origin does not exist.",
+        "有些函数沿过原点的每条直线极限都相同，但极限仍不存在。对 $f(x, y) = \\frac{x^2y}{x^4 + y^2}$，每条直线 $y = mx$ 都给出 $0$，但沿抛物线 $y = kx^2$，\n\n$$f(x, kx^2) = \\frac{kx^4}{x^4 + k^2x^4} = \\frac{k}{1 + k^2}.$$\n\n不同的抛物线给出不同的值，所以原点处的极限不存在。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 5);
+        const k = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]);
+        const ans = Q.of(a * k, 1 + k * k);
+        return numberProblem({
+          prompt: t(
+            `Find the limit of $f(x, y) = \\frac{${a === 1 ? "" : a}x^2y}{x^4 + y^2}$ as $(x, y) \\to (0, 0)$ along the parabola $y = ${k === 1 ? "" : k === -1 ? "-" : k}x^2$.`,
+            `求 $f(x, y) = \\frac{${a === 1 ? "" : a}x^2y}{x^4 + y^2}$ 沿抛物线 $y = ${k === 1 ? "" : k === -1 ? "-" : k}x^2$ 当 $(x, y) \\to (0, 0)$ 时的极限。`,
+          ),
+          answer: ans,
+          wrong: [Q.zero, Q.of(a, 1 + k * k), Q.of(a, k)],
+          solution: t(
+            `Substituting $y = ${k}x^2$: $\\frac{${a * k}x^4}{x^4 + ${k * k}x^4} = ${ans.toLatex()}$.`,
+            `代入 $y = ${k}x^2$：$\\frac{${a * k}x^4}{x^4 + ${k * k}x^4} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -478,6 +701,30 @@ export const ellipsoids: TopicDef = {
         });
       },
     },
+    {
+      id: "the-volume-of-an-ellipsoid",
+      title: t("The volume of an ellipsoid", "椭球的体积"),
+      explanation: t(
+        "The ellipsoid $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$ is a unit sphere stretched by $a$, $b$ and $c$ along the three axes. Stretching multiplies volume by $abc$, so the enclosed volume is\n\n$$V = \\frac{4}{3}\\pi abc.$$\n\nRead the semi-axes as the square roots of the denominators, not the denominators themselves.",
+        "椭球 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$ 是单位球沿三个坐标轴分别伸缩 $a$、$b$、$c$ 倍得到的。伸缩使体积乘以 $abc$，所以所围体积为\n\n$$V = \\frac{4}{3}\\pi abc.$$\n\n半轴长是分母的平方根，而不是分母本身。",
+      ),
+      generate(rng: Rng): Problem {
+        const [a, b, c] = [rng.int(2, 7), rng.int(2, 7), rng.int(2, 7)];
+        const ans = Q.of(4 * a * b * c, 3);
+        return numberProblem({
+          prompt: t(
+            `The volume enclosed by $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1$ is $k\\pi$. Find $k$.`,
+            `$\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1$ 所围体积为 $k\\pi$。求 $k$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(4 * a * a * b * b * c * c, 3), Q.of(a * b * c), Q.of(4 * a * b * c)],
+          solution: t(
+            `The semi-axes are $${a}$, $${b}$, $${c}$, so $V = \\frac{4}{3}\\pi \\cdot ${a * b * c}$ and $k = ${ans.toLatex()}$.`,
+            `半轴长为 $${a}$、$${b}$、$${c}$，所以 $V = \\frac{4}{3}\\pi \\cdot ${a * b * c}$，$k = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -526,6 +773,31 @@ export const hyperboloids: TopicDef = {
         });
       },
     },
+    {
+      id: "horizontal-traces-of-a-hyperboloid-of-one-sheet",
+      title: t("Horizontal traces of a hyperboloid of one sheet", "单叶双曲面的水平截线"),
+      explanation: t(
+        "Cutting $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$ with the plane $z = h$ gives\n\n$$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1 + \\frac{h^2}{c^2},$$\n\nan ellipse for every $h$. The traces are smallest at $h = 0$ and grow as $|h|$ grows, which is why a hyperboloid of one sheet looks like a cooling tower. The semi-axis along $x$ satisfies $s_x^2 = a^2\\left(1 + \\frac{h^2}{c^2}\\right)$.",
+        "用平面 $z = h$ 截 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$ 得\n\n$$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1 + \\frac{h^2}{c^2},$$\n\n对每个 $h$ 都是椭圆。截线在 $h = 0$ 时最小，随 $|h|$ 增大而增大，所以单叶双曲面看起来像冷却塔。沿 $x$ 方向的半轴满足 $s_x^2 = a^2\\left(1 + \\frac{h^2}{c^2}\\right)$。",
+      ),
+      generate(rng: Rng): Problem {
+        const [a, b, c] = [rng.int(2, 6), rng.int(2, 6), rng.int(2, 5)];
+        const h = rng.int(1, 6) * rng.pick([-1, 1]);
+        const ans = Q.of(a * a * (c * c + h * h), c * c);
+        return numberProblem({
+          prompt: t(
+            `The plane $z = ${h}$ cuts $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} - \\frac{z^2}{${c * c}} = 1$ in an ellipse. Find the square of its semi-axis along $x$.`,
+            `平面 $z = ${h}$ 截 $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} - \\frac{z^2}{${c * c}} = 1$ 得一椭圆。求它沿 $x$ 方向的半轴长的平方。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(a * a * (c * c - h * h), c * c), Q.of(a * a), Q.of(a * a * h * h, c * c)],
+          solution: t(
+            `At $z = ${h}$: $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1 + \\frac{${h * h}}{${c * c}}$, so $s_x^2 = ${a * a}\\left(1 + \\frac{${h * h}}{${c * c}}\\right) = ${ans.toLatex()}$.`,
+            `在 $z = ${h}$ 处：$\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1 + \\frac{${h * h}}{${c * c}}$，所以 $s_x^2 = ${a * a}\\left(1 + \\frac{${h * h}}{${c * c}}\\right) = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -566,6 +838,32 @@ export const paraboloids: TopicDef = {
           `该方程包含一个一次变量与两个${isElliptic ? "同号" : "异号"}的平方项，因此它是${right["zh-CN"]}。`,
         );
         return pickChoice(rng, prompt, right, wrong, solution);
+      },
+    },
+    {
+      id: "the-area-of-a-trace-of-an-elliptic-paraboloid",
+      title: t("The area of a trace of an elliptic paraboloid", "椭圆抛物面截线所围面积"),
+      explanation: t(
+        "The plane $z = h$ with $h > 0$ cuts the elliptic paraboloid $z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ in the ellipse\n\n$$\\frac{x^2}{a^2 h} + \\frac{y^2}{b^2 h} = 1,$$\n\nwhose semi-axes are $a\\sqrt{h}$ and $b\\sqrt{h}$. An ellipse with semi-axes $p$ and $q$ encloses area $\\pi pq$, so this trace encloses $\\pi abh$. The area grows linearly with the height, not with its square.",
+        "平面 $z = h$（$h > 0$）截椭圆抛物面 $z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ 得椭圆\n\n$$\\frac{x^2}{a^2 h} + \\frac{y^2}{b^2 h} = 1,$$\n\n其半轴为 $a\\sqrt{h}$ 和 $b\\sqrt{h}$。半轴为 $p$、$q$ 的椭圆所围面积为 $\\pi pq$，所以这条截线所围面积为 $\\pi abh$。面积随高度线性增长，而不是随高度的平方增长。",
+      ),
+      generate(rng: Rng): Problem {
+        const [a, b] = [rng.int(2, 6), rng.int(2, 6)];
+        const h = rng.int(2, 9);
+        const rt = Math.sqrt(h);
+        const axis = (m: number): string => (Number.isInteger(rt) ? String(m * rt) : `${m}\\sqrt{${h}}`);
+        return numberProblem({
+          prompt: t(
+            `The plane $z = ${h}$ cuts $z = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$ in an ellipse enclosing area $k\\pi$. Find $k$.`,
+            `平面 $z = ${h}$ 截 $z = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$ 得一椭圆，其所围面积为 $k\\pi$。求 $k$。`,
+          ),
+          answer: a * b * h,
+          wrong: [a * b * h * h, a * a * b * b * h, a * b],
+          solution: t(
+            `The trace is $\\frac{x^2}{${a * a * h}} + \\frac{y^2}{${b * b * h}} = 1$ with semi-axes $${axis(a)}$ and $${axis(b)}$, so the area is $\\pi \\cdot ${a} \\cdot ${b} \\cdot ${h}$ and $k = ${a * b * h}$.`,
+            `截线为 $\\frac{x^2}{${a * a * h}} + \\frac{y^2}{${b * b * h}} = 1$，半轴为 $${axis(a)}$ 和 $${axis(b)}$，所以面积为 $\\pi \\cdot ${a} \\cdot ${b} \\cdot ${h}$，$k = ${a * b * h}$。`,
+          ),
+        });
       },
     },
   ],
@@ -617,6 +915,40 @@ export const ellipticCones: TopicDef = {
           solution,
           answer: ans,
           wrong: [a, k, ans * ans],
+        });
+      },
+    },
+    {
+      id: "lines-on-an-elliptic-cone",
+      title: t("Lines on an elliptic cone", "椭圆锥面上的直线"),
+      explanation: t(
+        "The elliptic cone $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ is made of lines through the origin. The line $(x, y, z) = s(p, q, r)$ lies on the cone exactly when its direction satisfies the equation, because every term scales by $s^2$:\n\n$$r^2 = \\frac{p^2}{a^2} + \\frac{q^2}{b^2}.$$\n\nIf the two sides differ, the line meets the cone only at the origin.",
+        "椭圆锥面 $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$ 由过原点的直线组成。直线 $(x, y, z) = s(p, q, r)$ 恰好在其方向满足方程时落在锥面上，因为每一项都按 $s^2$ 缩放：\n\n$$r^2 = \\frac{p^2}{a^2} + \\frac{q^2}{b^2}.$$\n\n若两边不等，该直线只在原点与锥面相交。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(2, 4);
+        const b = rng.int(2, 4);
+        const u = rng.int(1, 3);
+        const v = rng.int(1, 3);
+        const p = a * u * rng.pick([-1, 1]);
+        const q = b * v * rng.pick([-1, 1]);
+        const r2 = u * u + v * v;
+        const on = rng.int(0, 1) === 0;
+        const r = Math.sqrt(r2);
+        const rLatex = Number.isInteger(r) ? String(r) : `\\sqrt{${r2}}`;
+        const rShown = on ? rLatex : Number.isInteger(r) ? String(r + 1) : `\\sqrt{${r2 + 1}}`;
+        const rShown2 = on ? r2 : Number.isInteger(r) ? (r + 1) * (r + 1) : r2 + 1;
+        return choiceProblem({
+          prompt: t(
+            `Does the line $(x, y, z) = s(${p}, ${q}, ${rShown})$ lie on the cone $z^2 = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$?`,
+            `直线 $(x, y, z) = s(${p}, ${q}, ${rShown})$ 是否在锥面 $z^2 = \\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}}$ 上？`,
+          ),
+          options: yesNo,
+          correct: on ? 0 : 1,
+          solution: t(
+            `$\\frac{${p * p}}{${a * a}} + \\frac{${q * q}}{${b * b}} = ${u * u} + ${v * v} = ${r2}$ and $z^2 = ${rShown2}$. ${on ? "They agree, so the whole line lies on the cone." : "They differ, so the line meets the cone only at the origin."}`,
+            `$\\frac{${p * p}}{${a * a}} + \\frac{${q * q}}{${b * b}} = ${u * u} + ${v * v} = ${r2}$，而 $z^2 = ${rShown2}$。${on ? "两者相等，所以整条直线在锥面上。" : "两者不等，所以该直线只在原点与锥面相交。"}`,
+          ),
         });
       },
     },
@@ -675,6 +1007,33 @@ export const cylinders: TopicDef = {
         return pickChoice(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "points-on-a-parabolic-cylinder",
+      title: t("Points on a parabolic cylinder", "抛物柱面上的点"),
+      explanation: t(
+        "An equation in $\\mathbb{R}^3$ that does not mention $z$, such as $y = ax^2 + b$, describes a cylinder: the parabola in the $xy$-plane is copied to every height. So a point $(x, y, z)$ lies on it exactly when $y = ax^2 + b$, whatever $z$ is. Finding the missing coordinate of a point on the surface uses only $x$ and $y$.",
+        "$\\mathbb{R}^3$ 中不含 $z$ 的方程，例如 $y = ax^2 + b$，描述的是柱面：$xy$ 平面上的抛物线被复制到每个高度。所以点 $(x, y, z)$ 在该曲面上当且仅当 $y = ax^2 + b$，与 $z$ 无关。求曲面上一点所缺的坐标只需用到 $x$ 与 $y$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.pick([-3, -2, -1, 1, 2, 3]);
+        const b = rng.int(-6, 6);
+        const x = rng.int(-4, 4);
+        const z = rng.int(-9, 9);
+        const y = a * x * x + b;
+        return numberProblem({
+          prompt: t(
+            `The point $(${x}, y, ${z})$ lies on the surface $y = ${poly([a, "x^2"], [b, ""])}$ in $\\mathbb{R}^3$. Find $y$.`,
+            `点 $(${x}, y, ${z})$ 在 $\\mathbb{R}^3$ 中的曲面 $y = ${poly([a, "x^2"], [b, ""])}$ 上。求 $y$。`,
+          ),
+          answer: y,
+          wrong: [a * x * x + b + z, a * z * z + b, a * x + b],
+          solution: t(
+            `The surface is a cylinder parallel to the $z$-axis, so $z = ${z}$ plays no role: $y = ${a} \\cdot ${x * x} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${y}$.`,
+            `该曲面是平行于 $z$ 轴的柱面，所以 $z = ${z}$ 不起作用：$y = ${a} \\cdot ${x * x} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${y}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -729,6 +1088,44 @@ export const intersectionsOfLinesAndPlanesWithSurfaces: TopicDef = {
           solution,
           answer: ans,
           wrong: [R, h, R - h],
+        });
+      },
+    },
+    {
+      id: "where-a-line-meets-a-sphere",
+      title: t("Where a line meets a sphere", "直线与球面的交点"),
+      explanation: t(
+        "To intersect a line with a surface, substitute the line's parametric equations into the surface's equation and solve for the parameter. For the line $(t, q, r)$, parallel to the $x$-axis, and the sphere $x^2 + y^2 + z^2 = R^2$, this gives $t^2 = R^2 - q^2 - r^2$. Each real solution $t$ gives one intersection point.",
+        "要求直线与曲面的交点，把直线的参数方程代入曲面方程，解出参数。对平行于 $x$ 轴的直线 $(t, q, r)$ 与球面 $x^2 + y^2 + z^2 = R^2$，得到 $t^2 = R^2 - q^2 - r^2$。每个实数解 $t$ 对应一个交点。",
+      ),
+      generate(rng: Rng): Problem {
+        const [p, q, r, R] = rng.pick([
+          [3, 4, 0, 5],
+          [4, 0, 3, 5],
+          [2, 3, 6, 7],
+          [6, 3, 2, 7],
+          [1, 4, 8, 9],
+          [4, 1, 8, 9],
+          [8, 4, 1, 9],
+          [2, 6, 9, 11],
+          [6, 2, 9, 11],
+          [12, 4, 3, 13],
+          [3, 4, 12, 13],
+          [5, 0, 12, 13],
+        ] as const);
+        const sy = rng.pick([-1, 1]);
+        const sz = rng.pick([-1, 1]);
+        return numberProblem({
+          prompt: t(
+            `The line $(x, y, z) = (t, ${sy * q}, ${sz * r})$ meets the sphere $x^2 + y^2 + z^2 = ${R * R}$ at two points. Find the larger of their $x$-coordinates.`,
+            `直线 $(x, y, z) = (t, ${sy * q}, ${sz * r})$ 与球面 $x^2 + y^2 + z^2 = ${R * R}$ 交于两点。求两交点 $x$ 坐标中较大的一个。`,
+          ),
+          answer: p,
+          wrong: [p * p, R - q - r, -p],
+          solution: t(
+            `Substituting: $t^2 + ${q * q} + ${r * r} = ${R * R}$, so $t^2 = ${p * p}$ and $t = \\pm ${p}$. The larger is $${p}$.`,
+            `代入得 $t^2 + ${q * q} + ${r * r} = ${R * R}$，所以 $t^2 = ${p * p}$，$t = \\pm ${p}$。较大者为 $${p}$。`,
+          ),
         });
       },
     },
@@ -802,6 +1199,59 @@ export const identifyingQuadricSurfaces: TopicDef = {
         return pickChoice(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "identifying-quadric-surfaces-from-their-signs",
+      title: t("Identifying quadric surfaces from their signs", "根据符号识别二次曲面"),
+      explanation: t(
+        "When every variable appears squared, count the signs after moving the constant to the right side with $d > 0$. Three positive squares give an ellipsoid, two positive and one negative a hyperboloid of one sheet, one positive and two negative a hyperboloid of two sheets, and two positive and one negative equal to $0$ an elliptic cone. When one variable appears only to the first power, the surface is a paraboloid: elliptic if the two squares have the same sign, hyperbolic if they have opposite signs.",
+        "当每个变量都以平方出现时，把常数移到右边并使 $d > 0$，然后数符号。三个正的平方项是椭球面，两正一负是单叶双曲面，一正两负是双叶双曲面，两正一负且等于 $0$ 是椭圆锥面。当某个变量只以一次方出现时，曲面是抛物面：两个平方项同号为椭圆抛物面，异号为双曲抛物面。",
+      ),
+      generate(rng: Rng): Problem {
+        const [u, v, w] = rng.pick([
+          ["x", "y", "z"],
+          ["y", "z", "x"],
+          ["z", "x", "y"],
+        ] as const);
+        const [a, b, c] = [rng.int(1, 9), rng.int(1, 9), rng.int(1, 9)];
+        const d = rng.int(1, 20);
+        const kind = rng.int(0, 5);
+        const eq = [
+          `${poly([a, `${u}^2`], [b, `${v}^2`], [c, `${w}^2`])} = ${d}`,
+          `${poly([a, `${u}^2`], [b, `${v}^2`], [-c, `${w}^2`])} = ${d}`,
+          `${poly([-a, `${u}^2`], [-b, `${v}^2`], [c, `${w}^2`])} = ${d}`,
+          `${poly([a, `${u}^2`], [b, `${v}^2`], [-c, `${w}^2`])} = 0`,
+          `${w} = ${poly([a, `${u}^2`], [b, `${v}^2`])}`,
+          `${w} = ${poly([a, `${u}^2`], [-b, `${v}^2`])}`,
+        ][kind];
+        const names = [
+          t("Ellipsoid", "椭球面"),
+          t("Hyperboloid of one sheet", "单叶双曲面"),
+          t("Hyperboloid of two sheets", "双叶双曲面"),
+          t("Elliptic cone", "椭圆锥面"),
+          t("Elliptic paraboloid", "椭圆抛物面"),
+          t("Hyperbolic paraboloid", "双曲抛物面"),
+        ];
+        const right = names[kind] ?? names[0]!;
+        const why = [
+          ["all three squares are positive and the right side is positive", "三个平方项都为正且右边为正"],
+          ["two squares are positive, one is negative, and the right side is positive", "两个平方项为正、一个为负，且右边为正"],
+          ["one square is positive, two are negative, and the right side is positive", "一个平方项为正、两个为负，且右边为正"],
+          ["two squares are positive, one is negative, and the right side is $0$", "两个平方项为正、一个为负，且右边为 $0$"],
+          [`$${w}$ appears to the first power and the two squares have the same sign`, `$${w}$ 只以一次方出现，且两个平方项同号`],
+          [`$${w}$ appears to the first power and the two squares have opposite signs`, `$${w}$ 只以一次方出现，且两个平方项异号`],
+        ][kind] ?? ["", ""];
+        return pickChoice(
+          rng,
+          t(`Identify the surface $${eq}$.`, `识别曲面 $${eq}$。`),
+          right,
+          names.filter((_, i) => i !== kind),
+          t(
+            `Here ${why[0]}, so the surface is ${/^[aeiou]/i.test(right.en) ? "an" : "a"} ${right.en.toLowerCase()}.`,
+            `这里${why[1]}，所以曲面是${right["zh-CN"]}。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -868,6 +1318,35 @@ export const introductionToPartialDerivatives: TopicDef = {
         });
       },
     },
+    {
+      id: "evaluating-a-partial-derivative-with-respect-to-y",
+      title: t("Evaluating a partial derivative with respect to y", "计算关于 y 的偏导数的值"),
+      explanation: t(
+        "To find $f_y$, treat $x$ as a constant and differentiate with respect to $y$ as in one-variable calculus. A term such as $ax^2y$ is a constant multiple of $y$, so its derivative is $ax^2$; a term without $y$ has derivative $0$. Then substitute the point.",
+        "求 $f_y$ 时，把 $x$ 当作常数，像一元微积分那样对 $y$ 求导。像 $ax^2y$ 这样的项是 $y$ 的常数倍，所以其导数为 $ax^2$；不含 $y$ 的项导数为 $0$。然后代入该点。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-4, 4) || 2;
+        const b = rng.int(-3, 3) || 1;
+        const c = rng.int(-5, 5);
+        const e = rng.int(1, 6);
+        const p = rng.int(-3, 3);
+        const q = rng.int(-3, 3);
+        const fy = a * p * p + 3 * b * p * q * q + c;
+        return numberProblem({
+          prompt: t(
+            `Find $f_y(${p}, ${q})$ for $f(x, y) = ${poly([a, "x^2y"], [b, "xy^3"], [c, "y"], [e, "x^3"])}$.`,
+            `对 $f(x, y) = ${poly([a, "x^2y"], [b, "xy^3"], [c, "y"], [e, "x^3"])}$，求 $f_y(${p}, ${q})$。`,
+          ),
+          answer: fy,
+          wrong: [fy + 3 * e * p * p, a * p * p + b * p * q * q + c, 2 * a * p * q + b * q * q * q],
+          solution: t(
+            `$f_y = ${poly([a, "x^2"], [3 * b, "xy^2"], [c, ""])}$, so $f_y(${p}, ${q}) = ${fy}$.`,
+            `$f_y = ${poly([a, "x^2"], [3 * b, "xy^2"], [c, ""])}$，所以 $f_y(${p}, ${q}) = ${fy}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -927,6 +1406,36 @@ export const computingPartialDerivativesUsingTheRulesOfDifferentiation: TopicDef
         });
       },
     },
+    {
+      id: "partial-derivatives-of-a-quotient",
+      title: t("Partial derivatives of a quotient", "商的偏导数"),
+      explanation: t(
+        "The quotient rule works for partial derivatives with the other variable held constant. For $f(x, y) = \\frac{x + ay}{x + by}$,\n\n$$f_x = \\frac{(x + by) - (x + ay)}{(x + by)^2} = \\frac{(b - a)y}{(x + by)^2}.$$\n\nSimplify the numerator before substituting, since much of it cancels.",
+        "商法则同样适用于偏导数，只需把另一个变量当作常数。对 $f(x, y) = \\frac{x + ay}{x + by}$，\n\n$$f_x = \\frac{(x + by) - (x + ay)}{(x + by)^2} = \\frac{(b - a)y}{(x + by)^2}.$$\n\n代入之前先化简分子，因为其中很多项会抵消。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-4, 4);
+        let b = rng.int(-4, 4);
+        if (b === a) b = a + 1;
+        const q = rng.int(1, 3) * rng.pick([-1, 1]);
+        let p = rng.int(-4, 4);
+        if (p + b * q === 0) p += 1;
+        const den = (p + b * q) ** 2;
+        const ans = Q.of((b - a) * q, den);
+        return numberProblem({
+          prompt: t(
+            `Find $f_x(${p}, ${q})$ for $f(x, y) = \\frac{${poly([1, "x"], [a, "y"])}}{${poly([1, "x"], [b, "y"])}}$.`,
+            `对 $f(x, y) = \\frac{${poly([1, "x"], [a, "y"])}}{${poly([1, "x"], [b, "y"])}}$，求 $f_x(${p}, ${q})$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of((a - b) * q, den), Q.of((b - a) * p, den), Q.of(1, p + b * q)],
+          solution: t(
+            `${steps(`f_x = \\frac{(${poly([1, "x"], [b, "y"])}) - (${poly([1, "x"], [a, "y"])})}{(${poly([1, "x"], [b, "y"])})^2} = \\frac{${poly([b - a, "y"])}}{(${poly([1, "x"], [b, "y"])})^2}`)}At $(${p}, ${q})$: $f_x = ${ans.toLatex()}$.`,
+            `${steps(`f_x = \\frac{(${poly([1, "x"], [b, "y"])}) - (${poly([1, "x"], [a, "y"])})}{(${poly([1, "x"], [b, "y"])})^2} = \\frac{${poly([b - a, "y"])}}{(${poly([1, "x"], [b, "y"])})^2}`)}在 $(${p}, ${q})$ 处：$f_x = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -979,6 +1488,34 @@ export const geometricInterpretationsOfPartialDerivatives: TopicDef = {
           solution,
           answer: ans,
           wrong: [2 * b * y0, a * x0, -ans],
+        });
+      },
+    },
+    {
+      id: "the-slope-of-a-surface-in-a-plane-x-equals-constant",
+      title: t("The slope of a surface in a plane x = constant", "曲面在平面 x = 常数 中的斜率"),
+      explanation: t(
+        "The plane $x = p$ cuts the surface $z = f(x, y)$ in a curve $z = f(p, y)$. Its slope in the $y$-direction at $y = q$ is the partial derivative $f_y(p, q)$: moving along this curve changes $y$ while $x$ stays fixed. So the slope is found by differentiating with respect to $y$ and substituting.",
+        "平面 $x = p$ 截曲面 $z = f(x, y)$ 得曲线 $z = f(p, y)$。它在 $y = q$ 处沿 $y$ 方向的斜率就是偏导数 $f_y(p, q)$：沿这条曲线移动时 $y$ 变化而 $x$ 不变。所以对 $y$ 求导再代入即可得到斜率。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-4, 4) || 1;
+        const b = rng.int(-4, 4);
+        const c = rng.int(-3, 3) || 1;
+        const p = rng.int(-3, 3);
+        const q = rng.int(-3, 3);
+        const slope = b * p + 2 * c * q;
+        return numberProblem({
+          prompt: t(
+            `The plane $x = ${p}$ cuts $z = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$ in a curve. Find its slope $\\frac{\\partial z}{\\partial y}$ at $y = ${q}$.`,
+            `平面 $x = ${p}$ 截 $z = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$ 得一曲线。求它在 $y = ${q}$ 处的斜率 $\\frac{\\partial z}{\\partial y}$。`,
+          ),
+          answer: slope,
+          wrong: [2 * a * p + b * q, slope + 2 * a * p, b * q + 2 * c * p],
+          solution: t(
+            `$f_y = ${poly([b, "x"], [2 * c, "y"])}$, so the slope is $f_y(${p}, ${q}) = ${slope}$.`,
+            `$f_y = ${poly([b, "x"], [2 * c, "y"])}$，所以斜率为 $f_y(${p}, ${q}) = ${slope}$。`,
+          ),
         });
       },
     },
@@ -1041,6 +1578,34 @@ export const partialDifferentiabilityOfMultivariableFunctions: TopicDef = {
         });
       },
     },
+    {
+      id: "partial-derivatives-at-the-origin-from-the-definition",
+      title: t("Partial derivatives at the origin from the definition", "用定义求原点处的偏导数"),
+      explanation: t(
+        "When a function is defined piecewise at the origin, the rules of differentiation do not apply there, so use the definition. For $f(x, y) = \\frac{ax^3 + by^3}{x^2 + y^2}$ with $f(0, 0) = 0$,\n\n$$f_x(0, 0) = \\lim_{h \\to 0} \\frac{f(h, 0) - f(0, 0)}{h} = \\lim_{h \\to 0} \\frac{ah^3 / h^2}{h} = a,$$\n\nand in the same way $f_y(0, 0) = b$. Only the values on the axes matter for these limits.",
+        "当函数在原点处分段定义时，求导法则在那里不适用，所以要用定义。对 $f(0, 0) = 0$ 的 $f(x, y) = \\frac{ax^3 + by^3}{x^2 + y^2}$，\n\n$$f_x(0, 0) = \\lim_{h \\to 0} \\frac{f(h, 0) - f(0, 0)}{h} = \\lim_{h \\to 0} \\frac{ah^3 / h^2}{h} = a,$$\n\n同理 $f_y(0, 0) = b$。这些极限只与坐标轴上的取值有关。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-9, 9) || 2;
+        let b = rng.int(-9, 9) || -3;
+        if (b === a) b = -a;
+        const wantY = rng.int(0, 1) === 1;
+        const ans = wantY ? b : a;
+        const v = wantY ? "y" : "x";
+        return numberProblem({
+          prompt: t(
+            `Let $f(x, y) = \\frac{${poly([a, "x^3"], [b, "y^3"])}}{x^2 + y^2}$ for $(x, y) \\ne (0, 0)$ and $f(0, 0) = 0$. Find $f_${v}(0, 0)$.`,
+            `设 $(x, y) \\ne (0, 0)$ 时 $f(x, y) = \\frac{${poly([a, "x^3"], [b, "y^3"])}}{x^2 + y^2}$，且 $f(0, 0) = 0$。求 $f_${v}(0, 0)$。`,
+          ),
+          answer: ans,
+          wrong: [0, wantY ? a : b, 3 * ans],
+          solution: t(
+            `$f_${v}(0, 0) = \\lim_{h \\to 0} \\frac{${poly([ans, "h^3"])} / h^2}{h} = ${ans}$.`,
+            `$f_${v}(0, 0) = \\lim_{h \\to 0} \\frac{${poly([ans, "h^3"])} / h^2}{h} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1099,6 +1664,34 @@ export const higherOrderPartialDerivatives: TopicDef = {
         });
       },
     },
+    {
+      id: "third-order-partial-derivatives",
+      title: t("Third-order partial derivatives", "三阶偏导数"),
+      explanation: t(
+        "A third-order partial derivative such as $f_{xxy}$ is found by differentiating three times, in the order the subscripts are read from left to right: first with respect to $x$, then $x$ again, then $y$. Each step treats the other variable as a constant. Terms disappear as soon as their power of the current variable runs out.",
+        "像 $f_{xxy}$ 这样的三阶偏导数要求导三次，顺序按下标从左到右：先对 $x$，再对 $x$，最后对 $y$。每一步都把另一个变量当作常数。某一项一旦当前变量的次数用完就会消失。",
+      ),
+      generate(rng: Rng): Problem {
+        const A = rng.int(-3, 3) || 1;
+        const B = rng.int(-3, 3) || 2;
+        const C = rng.int(-6, 6);
+        const p = rng.int(-3, 3);
+        const q = rng.int(-3, 3) || 1;
+        const ans = 12 * A * p * q + 6 * B * q * q;
+        return numberProblem({
+          prompt: t(
+            `Find $f_{xxy}(${p}, ${q})$ for $f(x, y) = ${poly([A, "x^3y^2"], [B, "x^2y^3"], [C, "xy"])}$.`,
+            `对 $f(x, y) = ${poly([A, "x^3y^2"], [B, "x^2y^3"], [C, "xy"])}$，求 $f_{xxy}(${p}, ${q})$。`,
+          ),
+          answer: ans,
+          wrong: [6 * A * p * q * q + 2 * B * q * q * q, 12 * A * p * q + 6 * B * q * q + C, 12 * A * p * q + 3 * B * q * q],
+          solution: t(
+            `${steps(`f_x = ${poly([3 * A, "x^2y^2"], [2 * B, "xy^3"], [C, "y"])}`, `f_{xx} = ${poly([6 * A, "xy^2"], [2 * B, "y^3"])}`, `f_{xxy} = ${poly([12 * A, "xy"], [6 * B, "y^2"])}`)}At $(${p}, ${q})$ this is $${ans}$.`,
+            `${steps(`f_x = ${poly([3 * A, "x^2y^2"], [2 * B, "xy^3"], [C, "y"])}`, `f_{xx} = ${poly([6 * A, "xy^2"], [2 * B, "y^3"])}`, `f_{xxy} = ${poly([12 * A, "xy"], [6 * B, "y^2"])}`)}在 $(${p}, ${q})$ 处其值为 $${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1153,6 +1746,34 @@ export const equalityOfMixedPartialDerivatives: TopicDef = {
           solution,
           answer: ans,
           wrong: [2 * a * x0 * y0 + b, -ans, ans + 2],
+        });
+      },
+    },
+    {
+      id: "reordering-third-order-mixed-partials",
+      title: t("Reordering third-order mixed partials", "三阶混合偏导数的换序"),
+      explanation: t(
+        "When the partial derivatives are continuous, Clairaut's theorem lets you differentiate in any order: $f_{yxy} = f_{xyy} = f_{yyx}$, since each takes one derivative in $x$ and two in $y$. Choose the order that makes the work easiest. Only the number of derivatives in each variable matters, not their order.",
+        "当偏导数连续时，克莱罗定理允许以任意顺序求导：$f_{yxy} = f_{xyy} = f_{yyx}$，因为它们都对 $x$ 求一次导、对 $y$ 求两次导。选择最省事的顺序。只有对每个变量求导的次数重要，顺序无关。",
+      ),
+      generate(rng: Rng): Problem {
+        const A = rng.int(-3, 3) || 1;
+        const B = rng.int(-5, 5) || 2;
+        const C = rng.int(-4, 4);
+        const p = rng.int(-3, 3) || 2;
+        const q = rng.int(-3, 3);
+        const ans = 12 * A * p * q + 2 * B;
+        return numberProblem({
+          prompt: t(
+            `Find $f_{yxy}(${p}, ${q})$ for $f(x, y) = ${poly([A, "x^2y^3"], [B, "xy^2"], [C, "x^3"])}$.`,
+            `对 $f(x, y) = ${poly([A, "x^2y^3"], [B, "xy^2"], [C, "x^3"])}$，求 $f_{yxy}(${p}, ${q})$。`,
+          ),
+          answer: ans,
+          wrong: [12 * A * p * q, 6 * A * p * q + 2 * B, 6 * A * p * p + 2 * B],
+          solution: t(
+            `${steps(`f_y = ${poly([3 * A, "x^2y^2"], [2 * B, "xy"])}`, `f_{yx} = ${poly([6 * A, "xy^2"], [2 * B, "y"])}`, `f_{yxy} = ${poly([12 * A, "xy"], [2 * B, ""])}`)}At $(${p}, ${q})$ this is $${ans}$.`,
+            `${steps(`f_y = ${poly([3 * A, "x^2y^2"], [2 * B, "xy"])}`, `f_{yx} = ${poly([6 * A, "xy^2"], [2 * B, "y"])}`, `f_{yxy} = ${poly([12 * A, "xy"], [2 * B, ""])}`)}在 $(${p}, ${q})$ 处其值为 $${ans}$。`,
+          ),
         });
       },
     },
@@ -1227,6 +1848,37 @@ export const tangentPlanesToSurfaces: TopicDef = {
         });
       },
     },
+    {
+      id: "the-z-intercept-of-a-tangent-plane",
+      title: t("The z-intercept of a tangent plane", "切平面的 z 截距"),
+      explanation: t(
+        "The tangent plane to $z = f(x, y)$ at $(a, b)$ is\n\n$$z = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b).$$\n\nIts $z$-intercept is where $x = y = 0$:\n\n$$z_0 = f(a, b) - a f_x(a, b) - b f_y(a, b).$$\n\nKeep the signs of $-a$ and $-b$ straight when the point has negative coordinates.",
+        "$z = f(x, y)$ 在 $(a, b)$ 处的切平面为\n\n$$z = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b).$$\n\n它的 $z$ 截距在 $x = y = 0$ 处：\n\n$$z_0 = f(a, b) - a f_x(a, b) - b f_y(a, b).$$\n\n当点的坐标为负时要注意 $-a$ 和 $-b$ 的符号。",
+      ),
+      generate(rng: Rng): Problem {
+        const A = rng.int(-3, 3) || 1;
+        const B = rng.int(-3, 3);
+        const D = rng.int(-5, 5) || 3;
+        const a = rng.int(-3, 3) || 1;
+        const b = rng.int(-3, 3);
+        const f = A * a * a + B * a * b + D * b;
+        const fx = 2 * A * a + B * b;
+        const fy = B * a + D;
+        const z0 = f - a * fx - b * fy;
+        return numberProblem({
+          prompt: t(
+            `Find the $z$-intercept of the tangent plane to $z = ${poly([A, "x^2"], [B, "xy"], [D, "y"])}$ at $(${a}, ${b})$.`,
+            `求 $z = ${poly([A, "x^2"], [B, "xy"], [D, "y"])}$ 在 $(${a}, ${b})$ 处切平面的 $z$ 截距。`,
+          ),
+          answer: z0,
+          wrong: [f, f + a * fx + b * fy, f - a * fx],
+          solution: t(
+            `$f(${a}, ${b}) = ${f}$, $f_x = ${fx}$ and $f_y = ${fy}$, so $z_0 = ${f} - (${a})(${fx}) - (${b})(${fy}) = ${z0}$.`,
+            `$f(${a}, ${b}) = ${f}$，$f_x = ${fx}$，$f_y = ${fy}$，所以 $z_0 = ${f} - (${a})(${fx}) - (${b})(${fy}) = ${z0}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1285,6 +1937,36 @@ export const linearizationOfMultivariableFunctions: TopicDef = {
         });
       },
     },
+    {
+      id: "approximating-a-distance-with-a-linearization",
+      title: t("Approximating a distance with a linearization", "用线性化近似距离"),
+      explanation: t(
+        "For $f(x, y) = \\sqrt{x^2 + y^2}$ at a point $(p, q)$ with $\\sqrt{p^2 + q^2} = r$, the partial derivatives are $\\frac{p}{r}$ and $\\frac{q}{r}$, so\n\n$$L(x, y) = r + \\frac{p}{r}(x - p) + \\frac{q}{r}(y - q).$$\n\nNear $(p, q)$, $L$ approximates $f$ with only arithmetic. A nearby value is estimated by adding the change predicted by each partial derivative.",
+        "对 $f(x, y) = \\sqrt{x^2 + y^2}$，在满足 $\\sqrt{p^2 + q^2} = r$ 的点 $(p, q)$ 处，偏导数为 $\\frac{p}{r}$ 与 $\\frac{q}{r}$，所以\n\n$$L(x, y) = r + \\frac{p}{r}(x - p) + \\frac{q}{r}(y - q).$$\n\n在 $(p, q)$ 附近，$L$ 只需算术运算就能近似 $f$。估计附近的值时，把每个偏导数预测的变化量加上去。",
+      ),
+      generate(rng: Rng): Problem {
+        const [p, q, r] = rng.pick(pythagoreanTriples.filter(([, , c]) => 100 % c === 0));
+        const h = Q.of(rng.int(1, 3) * rng.pick([-1, 1]), 10);
+        const k = Q.of(rng.int(-3, 3), 10);
+        const x = Q.of(p).add(h);
+        const y = Q.of(q).add(k);
+        const ans = Q.of(r).add(Q.of(p, r).mul(h)).add(Q.of(q, r).mul(k));
+        const dec = (v: Q): string => String(v.toNumber());
+        return numberProblem({
+          prompt: t(
+            `Use the linearization of $f(x, y) = \\sqrt{x^2 + y^2}$ at $(${p}, ${q})$ to estimate $f(${dec(x)}, ${dec(y)})$.`,
+            `用 $f(x, y) = \\sqrt{x^2 + y^2}$ 在 $(${p}, ${q})$ 处的线性化估计 $f(${dec(x)}, ${dec(y)})$。`,
+          ),
+          answer: ans,
+          form: "decimal",
+          wrong: [Q.of(r).add(h).add(k), Q.of(r).add(Q.of(q, r).mul(h)).add(Q.of(p, r).mul(k)), Q.of(r)],
+          solution: t(
+            `$L = ${r} + \\frac{${p}}{${r}}(${dec(h)}) + \\frac{${q}}{${r}}(${dec(k)}) = ${dec(ans)}$.`,
+            `$L = ${r} + \\frac{${p}}{${r}}(${dec(h)}) + \\frac{${q}}{${r}}(${dec(k)}) = ${dec(ans)}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1337,6 +2019,32 @@ export const differentiatingUnderTheIntegralSign: TopicDef = {
           solution,
           answer: ans,
           wrong: [bEven, ans * 2, a + ans],
+        });
+      },
+    },
+    {
+      id: "differentiating-an-integral-with-a-variable-limit",
+      title: t("Differentiating an integral with a variable limit", "对变上限积分求导"),
+      explanation: t(
+        "When both the limit and the integrand depend on $t$, Leibniz's rule has two parts:\n\n$$\\frac{d}{dt}\\int_0^t f(x, t)\\,dx = f(t, t) + \\int_0^t \\frac{\\partial f}{\\partial t}(x, t)\\,dx.$$\n\nThe first term comes from moving the upper limit, and the second from changing the integrand. Forgetting either part gives a wrong derivative.",
+        "当积分限和被积函数都依赖于 $t$ 时，莱布尼茨法则有两部分：\n\n$$\\frac{d}{dt}\\int_0^t f(x, t)\\,dx = f(t, t) + \\int_0^t \\frac{\\partial f}{\\partial t}(x, t)\\,dx.$$\n\n第一项来自上限的移动，第二项来自被积函数的变化。漏掉任何一部分都会得到错误的导数。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-4, 4) || 2;
+        const b = rng.int(-4, 4);
+        const p = rng.int(1, 4) * rng.pick([-1, 1]);
+        const ans = Q.of(3 * a + 2 * b, 2).mul(Q.of(p * p));
+        return numberProblem({
+          prompt: t(
+            `Let $F(t) = \\int_0^t (${poly([a, "tx"], [b, "x^2"])})\\,dx$. Find $F'(${p})$.`,
+            `设 $F(t) = \\int_0^t (${poly([a, "tx"], [b, "x^2"])})\\,dx$。求 $F'(${p})$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of((a + b) * p * p), Q.of(a * p * p, 2), Q.of(3 * a + 2 * b, 2)],
+          solution: t(
+            `${steps(`F'(t) = (${poly([a, "t^2"], [b, "t^2"])}) + \\int_0^t ${poly([a, "x"])}\\,dx = ${poly([Q.of(3 * a + 2 * b, 2), "t^2"])}`)}So $F'(${p}) = ${ans.toLatex()}$.`,
+            `${steps(`F'(t) = (${poly([a, "t^2"], [b, "t^2"])}) + \\int_0^t ${poly([a, "x"])}\\,dx = ${poly([Q.of(3 * a + 2 * b, 2), "t^2"])}`)}所以 $F'(${p}) = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1414,6 +2122,35 @@ export const theGradientVector: TopicDef = {
         });
       },
     },
+    {
+      id: "the-length-of-the-gradient",
+      title: t("The length of the gradient", "梯度的长度"),
+      explanation: t(
+        "The gradient $\\nabla f = (f_x, f_y)$ points in the direction of fastest increase, and its length $|\\nabla f| = \\sqrt{f_x^2 + f_y^2}$ is that greatest rate of increase. To find $|\\nabla f|^2$ at a point, compute both partial derivatives there and add their squares.",
+        "梯度 $\\nabla f = (f_x, f_y)$ 指向增长最快的方向，其长度 $|\\nabla f| = \\sqrt{f_x^2 + f_y^2}$ 就是最大增长率。要求某点处的 $|\\nabla f|^2$，先算出该点的两个偏导数，再把它们的平方相加。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-3, 3) || 1;
+        const b = rng.int(-3, 3) || 2;
+        const p = rng.int(-3, 3) || 1;
+        const q = rng.int(-3, 3);
+        const fx = 2 * a * p * q;
+        const fy = a * p * p + 2 * b * q;
+        const ans = fx * fx + fy * fy;
+        return numberProblem({
+          prompt: t(
+            `Find $|\\nabla f(${p}, ${q})|^2$ for $f(x, y) = ${poly([a, "x^2y"], [b, "y^2"])}$.`,
+            `对 $f(x, y) = ${poly([a, "x^2y"], [b, "y^2"])}$，求 $|\\nabla f(${p}, ${q})|^2$。`,
+          ),
+          answer: ans,
+          wrong: [fx + fy, ans + 2 * fx * fy, fx * fx],
+          solution: t(
+            `$f_x = ${poly([2 * a, "xy"])} = ${fx}$ and $f_y = ${poly([a, "x^2"], [2 * b, "y"])} = ${fy}$ at the point, so $|\\nabla f|^2 = ${fx * fx} + ${fy * fy} = ${ans}$.`,
+            `在该点 $f_x = ${poly([2 * a, "xy"])} = ${fx}$，$f_y = ${poly([a, "x^2"], [2 * b, "y"])} = ${fy}$，所以 $|\\nabla f|^2 = ${fx * fx} + ${fy * fy} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1480,6 +2217,34 @@ export const theGradientAsANormalVector: TopicDef = {
         });
       },
     },
+    {
+      id: "following-a-normal-line-to-a-plane",
+      title: t("Following a normal line to a plane", "沿法线到达平面"),
+      explanation: t(
+        "At a point on the level surface $F(x, y, z) = k$, the gradient $\\nabla F$ is normal to the surface, so the normal line is $(x_0, y_0, z_0) + s\\,\\nabla F(x_0, y_0, z_0)$. To find where it meets another surface, such as the plane $z = 0$, solve the $z$-equation for $s$ and substitute that $s$ into the other coordinates.",
+        "在等值面 $F(x, y, z) = k$ 上的点处，梯度 $\\nabla F$ 垂直于曲面，所以法线为 $(x_0, y_0, z_0) + s\\,\\nabla F(x_0, y_0, z_0)$。要求它与另一曲面（如平面 $z = 0$）的交点，先由 $z$ 的方程解出 $s$，再把 $s$ 代入其他坐标。",
+      ),
+      generate(rng: Rng): Problem {
+        const [a, b, c] = [rng.int(1, 4), rng.int(1, 4), rng.int(1, 4)];
+        const p = rng.int(-4, 4) || 3;
+        const q = rng.int(-3, 3);
+        const r = rng.int(1, 3) * rng.pick([-1, 1]);
+        const k = a * p * p + b * q * q + c * r * r;
+        const ans = Q.of(p * (c - a), c);
+        return numberProblem({
+          prompt: t(
+            `The normal line to $${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])} = ${k}$ at $(${p}, ${q}, ${r})$ meets the plane $z = 0$. Find the $x$-coordinate of that point.`,
+            `$${poly([a, "x^2"], [b, "y^2"], [c, "z^2"])} = ${k}$ 在 $(${p}, ${q}, ${r})$ 处的法线与平面 $z = 0$ 相交。求交点的 $x$ 坐标。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(p * (c + a), c), Q.of(p), Q.of(p * (a - c), a)],
+          solution: t(
+            `$\\nabla F = (${2 * a * p}, ${2 * b * q}, ${2 * c * r})$. The $z$-coordinate $${r} ${2 * c * r < 0 ? "-" : "+"} ${Math.abs(2 * c * r)}s$ is $0$ at $s = ${Q.of(-1, 2 * c).toLatex()}$, so $x = ${p} + ${paren(2 * a * p)} \\cdot \\left(${Q.of(-1, 2 * c).toLatex()}\\right) = ${ans.toLatex()}$.`,
+            `$\\nabla F = (${2 * a * p}, ${2 * b * q}, ${2 * c * r})$。$z$ 坐标 $${r} ${2 * c * r < 0 ? "-" : "+"} ${Math.abs(2 * c * r)}s$ 在 $s = ${Q.of(-1, 2 * c).toLatex()}$ 时为 $0$，所以 $x = ${p} + ${paren(2 * a * p)} \\cdot \\left(${Q.of(-1, 2 * c).toLatex()}\\right) = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1537,6 +2302,38 @@ export const tangentLinesToLevelCurves: TopicDef = {
           solution,
           answer,
           wrong: [`${poly([B, "x"], [A, "y"])} = ${C}`, `${poly([A, "x"], [-B, "y"])} = ${C}`, `${poly([a, "x"], [b, "y"])} = ${C}`],
+        });
+      },
+    },
+    {
+      id: "the-slope-of-a-level-curve",
+      title: t("The slope of a level curve", "等值线的斜率"),
+      explanation: t(
+        "The gradient $(f_x, f_y)$ is perpendicular to the level curve through a point, so the tangent line has direction $(f_y, -f_x)$ and slope\n\n$$\\frac{dy}{dx} = -\\frac{f_x}{f_y}$$\n\nwhenever $f_y \\ne 0$. This is implicit differentiation written with partial derivatives.",
+        "梯度 $(f_x, f_y)$ 垂直于过该点的等值线，所以切线方向为 $(f_y, -f_x)$，在 $f_y \\ne 0$ 时斜率为\n\n$$\\frac{dy}{dx} = -\\frac{f_x}{f_y}.$$\n\n这就是用偏导数写出的隐函数求导。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-3, 3) || 1;
+        const b = rng.int(-4, 4);
+        const c = rng.int(-3, 3) || 2;
+        const p = rng.int(-3, 3);
+        let q = rng.int(-3, 3) || 1;
+        if (b * p + 2 * c * q === 0) q += 1;
+        const fx = 2 * a * p + b * q;
+        const fy = b * p + 2 * c * q;
+        const ans = Q.of(-fx, fy);
+        const k = a * p * p + b * p * q + c * q * q;
+        return numberProblem({
+          prompt: t(
+            `Find the slope of the tangent line to the level curve $${poly([a, "x^2"], [b, "xy"], [c, "y^2"])} = ${k}$ at $(${p}, ${q})$.`,
+            `求等值线 $${poly([a, "x^2"], [b, "xy"], [c, "y^2"])} = ${k}$ 在 $(${p}, ${q})$ 处切线的斜率。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(fx, fy), Q.of(fy, fx === 0 ? 1 : fx), Q.of(-fy, fx === 0 ? 1 : fx)],
+          solution: t(
+            `$f_x = ${fx}$ and $f_y = ${fy}$ at the point, so the slope is $-\\frac{f_x}{f_y} = ${ans.toLatex()}$.`,
+            `在该点 $f_x = ${fx}$，$f_y = ${fy}$，所以斜率为 $-\\frac{f_x}{f_y} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1607,6 +2404,34 @@ export const tangentPlanesToLevelSurfaces: TopicDef = {
         });
       },
     },
+    {
+      id: "intercepts-of-a-tangent-plane-to-xyz-equals-k",
+      title: t("Intercepts of a tangent plane to xyz = k", "xyz = k 切平面的截距"),
+      explanation: t(
+        "For $F(x, y, z) = xyz$ the gradient at $(p, q, r)$ is $(qr, pr, pq)$, so the tangent plane to $xyz = pqr$ there is $qr(x - p) + pr(y - q) + pq(z - r) = 0$. Dividing by $pqr$ gives\n\n$$\\frac{x}{p} + \\frac{y}{q} + \\frac{z}{r} = 3,$$\n\nso the intercepts are $3p$, $3q$ and $3r$.",
+        "对 $F(x, y, z) = xyz$，在 $(p, q, r)$ 处的梯度为 $(qr, pr, pq)$，所以 $xyz = pqr$ 在该点的切平面为 $qr(x - p) + pr(y - q) + pq(z - r) = 0$。两边除以 $pqr$ 得\n\n$$\\frac{x}{p} + \\frac{y}{q} + \\frac{z}{r} = 3,$$\n\n所以截距为 $3p$、$3q$ 和 $3r$。",
+      ),
+      generate(rng: Rng): Problem {
+        const nz = (): number => rng.int(1, 5) * rng.pick([-1, 1]);
+        const [p, q, r] = [nz(), nz(), nz()];
+        const ans = 3 * (p + q + r);
+        const term = (v: string, d: number, first: boolean): string =>
+          `${d < 0 ? "-" : first ? "" : "+"} ${Math.abs(d) === 1 ? v : `\\frac{${v}}{${Math.abs(d)}}`}`;
+        const plane = `${term("x", p, true)} ${term("y", q, false)} ${term("z", r, false)}`.trim();
+        return numberProblem({
+          prompt: t(
+            `Find the sum of the $x$-, $y$- and $z$-intercepts of the tangent plane to $xyz = ${p * q * r}$ at $(${p}, ${q}, ${r})$.`,
+            `求 $xyz = ${p * q * r}$ 在 $(${p}, ${q}, ${r})$ 处切平面的 $x$、$y$、$z$ 截距之和。`,
+          ),
+          answer: ans,
+          wrong: [p + q + r, 2 * (p + q + r), 3 * p * q * r],
+          solution: t(
+            `The tangent plane is $${plane} = 3$, with intercepts $${3 * p}$, $${3 * q}$, $${3 * r}$, whose sum is $${ans}$.`,
+            `切平面为 $${plane} = 3$，截距为 $${3 * p}$、$${3 * q}$、$${3 * r}$，其和为 $${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1668,6 +2493,38 @@ export const directionalDerivatives: TopicDef = {
         });
       },
     },
+    {
+      id: "the-directional-derivative-toward-a-point",
+      title: t("The directional derivative toward a point", "朝向某点的方向导数"),
+      explanation: t(
+        "To find the rate of change of $f$ at $P$ in the direction of another point $R$, first form the vector $\\vec{PR}$ and divide it by its length to get a unit vector $\\mathbf{u}$. Then\n\n$$D_{\\mathbf{u}} f(P) = \\nabla f(P) \\cdot \\mathbf{u}.$$\n\nSkipping the normalization multiplies the answer by $|\\vec{PR}|$.",
+        "要求 $f$ 在 $P$ 处朝另一点 $R$ 方向的变化率，先构造向量 $\\vec{PR}$，再除以其长度得到单位向量 $\\mathbf{u}$。于是\n\n$$D_{\\mathbf{u}} f(P) = \\nabla f(P) \\cdot \\mathbf{u}.$$\n\n若不单位化，答案会被乘以 $|\\vec{PR}|$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-3, 3) || 1;
+        const b = rng.int(-5, 5) || 2;
+        const p = rng.int(-3, 3);
+        const q = rng.int(-3, 3);
+        const [u0, v0, w] = rng.pick(pythagoreanTriples.slice(0, 4));
+        const u = u0 * rng.pick([-1, 1]);
+        const v = v0 * rng.pick([-1, 1]);
+        const fx = 2 * a * p;
+        const fy = b;
+        const ans = Q.of(fx * u + fy * v, w);
+        return numberProblem({
+          prompt: t(
+            `Find the directional derivative of $f(x, y) = ${poly([a, "x^2"], [b, "y"])}$ at $P(${p}, ${q})$ in the direction of $R(${p + u}, ${q + v})$.`,
+            `求 $f(x, y) = ${poly([a, "x^2"], [b, "y"])}$ 在 $P(${p}, ${q})$ 处朝 $R(${p + u}, ${q + v})$ 方向的方向导数。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(fx * u + fy * v), Q.of(fx + fy), Q.of(fx * v + fy * u, w)],
+          solution: t(
+            `$\\vec{PR} = (${u}, ${v})$ has length $${w}$, so $\\mathbf{u} = \\left(${Q.of(u, w).toLatex()}, ${Q.of(v, w).toLatex()}\\right)$. With $\\nabla f(P) = (${fx}, ${fy})$, $D_{\\mathbf{u}} f = ${ans.toLatex()}$.`,
+            `$\\vec{PR} = (${u}, ${v})$ 的长度为 $${w}$，所以 $\\mathbf{u} = \\left(${Q.of(u, w).toLatex()}, ${Q.of(v, w).toLatex()}\\right)$。由 $\\nabla f(P) = (${fx}, ${fy})$ 得 $D_{\\mathbf{u}} f = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1723,6 +2580,39 @@ export const theMultivariableMeanValueTheorem: TopicDef = {
           solution,
           answer: ans,
           wrong: [u * dy + v * dx, ans + 2, -ans],
+        });
+      },
+    },
+    {
+      id: "the-mean-value-point-of-a-quadratic",
+      title: t("The mean value point of a quadratic", "二次函数的中值点"),
+      explanation: t(
+        "The mean value theorem says that for $f$ differentiable along the segment from $P$ to $R$ there is a point $C$ on it with\n\n$$f(R) - f(P) = \\nabla f(C) \\cdot (R - P).$$\n\nFor $f(x, y) = ax^2 + cy^2 + dx$ with $a, c > 0$, $\\nabla f$ changes linearly along the segment, and the point that works is exactly the midpoint of $P$ and $R$. Check this by writing $C = P + t(R - P)$ and solving for $t$.",
+        "中值定理指出，若 $f$ 沿从 $P$ 到 $R$ 的线段可微，则线段上存在点 $C$ 使\n\n$$f(R) - f(P) = \\nabla f(C) \\cdot (R - P).$$\n\n对 $a, c > 0$ 的 $f(x, y) = ax^2 + cy^2 + dx$，$\\nabla f$ 沿线段线性变化，满足条件的点恰好是 $P$ 与 $R$ 的中点。可以令 $C = P + t(R - P)$ 并解出 $t$ 来验证。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 4);
+        const c = rng.int(1, 4);
+        const d = rng.int(-5, 5);
+        const P = [rng.int(-4, 4), rng.int(-4, 4)] as const;
+        const R = [P[0] + rng.int(1, 5) * rng.pick([-1, 1]), P[1] + rng.int(-4, 4)] as const;
+        const mx = Q.of(P[0] + R[0], 2);
+        const my = Q.of(P[1] + R[1], 2);
+        return pointProblem({
+          prompt: t(
+            `For $f(x, y) = ${poly([a, "x^2"], [c, "y^2"], [d, "x"])}$, find the point $C$ on the segment from $P(${P[0]}, ${P[1]})$ to $R(${R[0]}, ${R[1]})$ with $f(R) - f(P) = \\nabla f(C) \\cdot (R - P)$.`,
+            `对 $f(x, y) = ${poly([a, "x^2"], [c, "y^2"], [d, "x"])}$，求从 $P(${P[0]}, ${P[1]})$ 到 $R(${R[0]}, ${R[1]})$ 的线段上满足 $f(R) - f(P) = \\nabla f(C) \\cdot (R - P)$ 的点 $C$。`,
+          ),
+          answer: [mx, my],
+          wrong: [
+            [P[0], P[1]],
+            [R[0], R[1]],
+            [Q.of(R[0] - P[0], 2), Q.of(R[1] - P[1], 2)],
+          ],
+          solution: t(
+            `For a quadratic with $a, c > 0$ the mean value point is the midpoint, $C = \\left(${mx.toLatex()}, ${my.toLatex()}\\right)$: along $C = P + t(R - P)$ the right side is linear in $t$ and matches the left side at $t = \\frac{1}{2}$.`,
+            `对 $a, c > 0$ 的二次函数，中值点是中点 $C = \\left(${mx.toLatex()}, ${my.toLatex()}\\right)$：沿 $C = P + t(R - P)$，右边关于 $t$ 是线性的，并在 $t = \\frac{1}{2}$ 时与左边相等。`,
+          ),
         });
       },
     },
@@ -1787,6 +2677,36 @@ export const theMultivariableChainRule: TopicDef = {
         });
       },
     },
+    {
+      id: "the-chain-rule-with-two-parameters",
+      title: t("The chain rule with two parameters", "含两个参数的链式法则"),
+      explanation: t(
+        "When $z = f(x, y)$ with $x$ and $y$ both functions of $s$ and $t$, the partial derivative with respect to $s$ adds one term for each path from $z$ to $s$:\n\n$$\\frac{\\partial z}{\\partial s} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial s} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial s}.$$\n\nEvaluate $x$ and $y$ at the given $(s, t)$ before substituting into the partial derivatives of $f$.",
+        "当 $z = f(x, y)$ 且 $x$、$y$ 都是 $s$ 和 $t$ 的函数时，对 $s$ 的偏导数对从 $z$ 到 $s$ 的每条路径加一项：\n\n$$\\frac{\\partial z}{\\partial s} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial s} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial s}.$$\n\n代入 $f$ 的偏导数之前，先求出给定 $(s, t)$ 处的 $x$ 和 $y$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-3, 3) || 1;
+        const s = rng.int(-3, 3);
+        const tt = rng.int(-3, 3) || 2;
+        const x = s + tt;
+        const y = s * tt;
+        const zx = 2 * a * x * y;
+        const zy = a * x * x;
+        const ans = zx + zy * tt;
+        return numberProblem({
+          prompt: t(
+            `Let $z = ${poly([a, "x^2y"])}$ with $x = s + t$ and $y = st$. Find $\\frac{\\partial z}{\\partial s}$ at $s = ${s}$, $t = ${tt}$.`,
+            `设 $z = ${poly([a, "x^2y"])}$，其中 $x = s + t$，$y = st$。求 $s = ${s}$，$t = ${tt}$ 时的 $\\frac{\\partial z}{\\partial s}$。`,
+          ),
+          answer: ans,
+          wrong: [zx + zy, zx, zx + zy * s],
+          solution: t(
+            `At this point $x = ${x}$ and $y = ${y}$. $\\frac{\\partial z}{\\partial x} = ${poly([2 * a, "xy"])} = ${zx}$, $\\frac{\\partial z}{\\partial y} = ${poly([a, "x^2"])} = ${zy}$, $\\frac{\\partial x}{\\partial s} = 1$ and $\\frac{\\partial y}{\\partial s} = t = ${tt}$, so $\\frac{\\partial z}{\\partial s} = ${zx} + ${paren(zy)} \\cdot ${paren(tt)} = ${ans}$.`,
+            `在该点 $x = ${x}$，$y = ${y}$。$\\frac{\\partial z}{\\partial x} = ${poly([2 * a, "xy"])} = ${zx}$，$\\frac{\\partial z}{\\partial y} = ${poly([a, "x^2"])} = ${zy}$，$\\frac{\\partial x}{\\partial s} = 1$，$\\frac{\\partial y}{\\partial s} = t = ${tt}$，所以 $\\frac{\\partial z}{\\partial s} = ${zx} + ${paren(zy)} \\cdot ${paren(tt)} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1846,6 +2766,45 @@ export const theMultivariableChainRuleWithPolarCoordinates: TopicDef = {
         });
       },
     },
+    {
+      id: "the-angular-derivative-in-polar-coordinates",
+      title: t("The angular derivative in polar coordinates", "极坐标下对角度的导数"),
+      explanation: t(
+        "With $x = r\\cos\\theta$ and $y = r\\sin\\theta$, we have $\\frac{\\partial x}{\\partial \\theta} = -y$ and $\\frac{\\partial y}{\\partial \\theta} = x$, so the chain rule gives\n\n$$\\frac{\\partial z}{\\partial \\theta} = -y\\,z_x + x\\,z_y.$$\n\nFind the Cartesian point first, then substitute it into both partial derivatives.",
+        "由 $x = r\\cos\\theta$，$y = r\\sin\\theta$ 得 $\\frac{\\partial x}{\\partial \\theta} = -y$，$\\frac{\\partial y}{\\partial \\theta} = x$，所以链式法则给出\n\n$$\\frac{\\partial z}{\\partial \\theta} = -y\\,z_x + x\\,z_y.$$\n\n先求出直角坐标点，再把它代入两个偏导数。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-3, 3) || 1;
+        const b = rng.int(-3, 3);
+        const d = rng.int(-4, 4);
+        const e = rng.int(-4, 4) || 1;
+        const k = rng.int(1, 3);
+        const [sx, sy, ang] = rng.pick([
+          [1, 1, "\\frac{\\pi}{4}"],
+          [-1, 1, "\\frac{3\\pi}{4}"],
+          [-1, -1, "\\frac{5\\pi}{4}"],
+          [1, -1, "\\frac{7\\pi}{4}"],
+        ] as const);
+        const x = sx * k;
+        const y = sy * k;
+        const zx = 2 * a * x + d;
+        const zy = 2 * b * y + e;
+        const ans = -y * zx + x * zy;
+        const r = k === 1 ? "\\sqrt{2}" : `${k}\\sqrt{2}`;
+        return numberProblem({
+          prompt: t(
+            `Let $z = ${poly([a, "x^2"], [b, "y^2"], [d, "x"], [e, "y"])}$ with $x = r\\cos\\theta$, $y = r\\sin\\theta$. Find $\\frac{\\partial z}{\\partial \\theta}$ at $r = ${r}$, $\\theta = ${ang}$.`,
+            `设 $z = ${poly([a, "x^2"], [b, "y^2"], [d, "x"], [e, "y"])}$，其中 $x = r\\cos\\theta$，$y = r\\sin\\theta$。求 $r = ${r}$，$\\theta = ${ang}$ 时的 $\\frac{\\partial z}{\\partial \\theta}$。`,
+          ),
+          answer: ans,
+          wrong: [y * zx + x * zy, -x * zx + y * zy, x * zx + y * zy],
+          solution: t(
+            `The point is $(x, y) = (${x}, ${y})$, where $z_x = ${zx}$ and $z_y = ${zy}$. So $\\frac{\\partial z}{\\partial \\theta} = -y\\,z_x + x\\,z_y = ${-y * zx} + ${paren(x * zy)} = ${ans}$.`,
+            `该点为 $(x, y) = (${x}, ${y})$，此处 $z_x = ${zx}$，$z_y = ${zy}$。所以 $\\frac{\\partial z}{\\partial \\theta} = -y\\,z_x + x\\,z_y = ${-y * zx} + ${paren(x * zy)} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1896,6 +2855,35 @@ export const theMultivariableChainRuleInVectorForm: TopicDef = {
           solution,
           answer: ans,
           wrong: [ans + 1, -ans, grad[0] * vel[0]],
+        });
+      },
+    },
+    {
+      id: "the-rate-of-change-along-a-space-curve",
+      title: t("The rate of change along a space curve", "沿空间曲线的变化率"),
+      explanation: t(
+        "In vector form the chain rule reads\n\n$$\\frac{d}{dt} f(\\mathbf{r}(t)) = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t).$$\n\nEvaluate the curve at the given $t$ to find the point, compute the gradient there, and take its dot product with the velocity $\\mathbf{r}'(t)$.",
+        "链式法则的向量形式为\n\n$$\\frac{d}{dt} f(\\mathbf{r}(t)) = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t).$$\n\n先在给定的 $t$ 处求出曲线上的点，再计算该点的梯度，最后与速度 $\\mathbf{r}'(t)$ 作点积。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-3, 3) || 1;
+        const b = rng.int(-4, 4) || 2;
+        const p = rng.int(1, 3) * rng.pick([-1, 1]);
+        const ans = Q.of(3 * a * p * p).sub(Q.of(2 * b, p ** 3));
+        const pt = [Q.of(p), Q.of(p * p), Q.of(1, p)];
+        const grad = [Q.of(a * p * p), Q.of(a * p), Q.of(2 * b, p)];
+        const vel = [Q.of(1), Q.of(2 * p), Q.of(-1, p * p)];
+        return numberProblem({
+          prompt: t(
+            `Let $f(x, y, z) = ${poly([a, "xy"], [b, "z^2"])}$ and $\\mathbf{r}(t) = \\left(t, t^2, \\frac{1}{t}\\right)$. Find $\\frac{d}{dt} f(\\mathbf{r}(t))$ at $t = ${p}$.`,
+            `设 $f(x, y, z) = ${poly([a, "xy"], [b, "z^2"])}$，$\\mathbf{r}(t) = \\left(t, t^2, \\frac{1}{t}\\right)$。求 $t = ${p}$ 时的 $\\frac{d}{dt} f(\\mathbf{r}(t))$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(3 * a * p * p).add(Q.of(2 * b, p ** 3)), Q.of(2 * a * p * p).sub(Q.of(2 * b, p ** 3)), Q.of(3 * a * p * p)],
+          solution: t(
+            `$\\mathbf{r}(${p}) = ${v3L(pt)}$, $\\nabla f = ${v3L(grad)}$ there, and $\\mathbf{r}'(${p}) = ${v3L(vel)}$. Their dot product is $${ans.toLatex()}$.`,
+            `$\\mathbf{r}(${p}) = ${v3L(pt)}$，该点处 $\\nabla f = ${v3L(grad)}$，$\\mathbf{r}'(${p}) = ${v3L(vel)}$。它们的点积为 $${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1959,6 +2947,34 @@ export const differentials: TopicDef = {
           solution,
           answer: ans,
           wrong: [fx * dx - fy * dy, ans + 1, -ans],
+        });
+      },
+    },
+    {
+      id: "estimating-percentage-error-with-differentials",
+      title: t("Estimating percentage error with differentials", "用全微分估计百分比误差"),
+      explanation: t(
+        "For a product of powers such as $V = \\pi r^2 h$, divide the differential by $V$:\n\n$$\\frac{dV}{V} = 2\\frac{dr}{r} + \\frac{dh}{h}.$$\n\nSo relative errors add, each multiplied by its exponent. If $r$ is measured within $p\\%$ and $h$ within $q\\%$, the largest error in $V$ is about $(2p + q)\\%$; constant factors such as $\\pi$ or $\\frac{1}{3}$ do not change it.",
+        "对于幂的乘积，如 $V = \\pi r^2 h$，把全微分除以 $V$：\n\n$$\\frac{dV}{V} = 2\\frac{dr}{r} + \\frac{dh}{h}.$$\n\n所以相对误差相加，并各乘以其指数。若 $r$ 的测量误差不超过 $p\\%$，$h$ 不超过 $q\\%$，则 $V$ 的最大误差约为 $(2p + q)\\%$；像 $\\pi$ 或 $\\frac{1}{3}$ 这样的常数因子不改变它。",
+      ),
+      generate(rng: Rng): Problem {
+        const p = rng.int(1, 6);
+        const q = rng.int(1, 6);
+        const cone = rng.int(0, 1) === 1;
+        const shape = cone ? t("cone", "圆锥") : t("cylinder", "圆柱");
+        const V = cone ? "V = \\frac{1}{3}\\pi r^2 h" : "V = \\pi r^2 h";
+        return numberProblem({
+          prompt: t(
+            `The radius of a ${shape.en} is measured with error at most $${p}\\%$ and its height with error at most $${q}\\%$. Use differentials to estimate the largest percentage error in its volume $${V}$.`,
+            `测量一个${shape["zh-CN"]}的半径误差不超过 $${p}\\%$，高的误差不超过 $${q}\\%$。用全微分估计其体积 $${V}$ 的最大百分比误差。`,
+          ),
+          answer: 2 * p + q,
+          percent: true,
+          wrong: [p + q, p + 2 * q, 2 * p * q],
+          solution: t(
+            `$\\frac{dV}{V} = 2\\frac{dr}{r} + \\frac{dh}{h}$, so the error is at most $2 \\cdot ${p}\\% + ${q}\\% = ${2 * p + q}\\%$.`,
+            `$\\frac{dV}{V} = 2\\frac{dr}{r} + \\frac{dh}{h}$，所以误差不超过 $2 \\cdot ${p}\\% + ${q}\\% = ${2 * p + q}\\%$。`,
+          ),
         });
       },
     },
@@ -2034,6 +3050,39 @@ export const affineTransformations: TopicDef = {
         });
       },
     },
+    {
+      id: "the-fixed-point-of-an-affine-transformation",
+      title: t("The fixed point of an affine transformation", "仿射变换的不动点"),
+      explanation: t(
+        "A fixed point of $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ is a point with $T(\\mathbf{x}) = \\mathbf{x}$. Rearranging gives the linear system\n\n$$(I - A)\\mathbf{x} = \\mathbf{b},$$\n\nwhich has exactly one solution when $\\det(I - A) \\ne 0$. Write out the two equations coordinate by coordinate and solve them.",
+        "$T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ 的不动点是满足 $T(\\mathbf{x}) = \\mathbf{x}$ 的点。移项得线性方程组\n\n$$(I - A)\\mathbf{x} = \\mathbf{b},$$\n\n当 $\\det(I - A) \\ne 0$ 时它恰有一个解。按坐标写出两个方程并求解。",
+      ),
+      generate(rng: Rng): Problem {
+        const k = rng.int(1, 2) * rng.pick([-1, 1]);
+        const j = rng.int(-2, 2) || 1;
+        const M = [1 + k * j, k, j, 1];
+        if (rng.int(0, 1) === 1) [M[0], M[3]] = [M[3]!, M[0]!];
+        const [m11, m12, m21, m22] = M as [number, number, number, number];
+        const X = rng.int(-4, 4);
+        const Y = rng.int(-4, 4);
+        const b1 = m11 * X + m12 * Y;
+        const b2 = m21 * X + m22 * Y;
+        const T = `\\left(${poly([1 - m11, "x"], [-m12, "y"], [b1, ""])}, ${poly([-m21, "x"], [1 - m22, "y"], [b2, ""])}\\right)`;
+        return pointProblem({
+          prompt: t(`Find the fixed point of $T(x, y) = ${T}$.`, `求 $T(x, y) = ${T}$ 的不动点。`),
+          answer: [X, Y],
+          wrong: [
+            [-X, -Y],
+            [Y, X],
+            [b1, b2],
+          ],
+          solution: t(
+            `${steps(`${poly([m11, "x"], [m12, "y"])} = ${b1}`, `${poly([m21, "x"], [m22, "y"])} = ${b2}`)}Solving gives $(x, y) = (${X}, ${Y})$.`,
+            `${steps(`${poly([m11, "x"], [m12, "y"])} = ${b1}`, `${poly([m21, "x"], [m22, "y"])} = ${b2}`)}解得 $(x, y) = (${X}, ${Y})$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -2085,6 +3134,39 @@ export const theImageOfAnAffineTransformation: TopicDef = {
           solution,
           answer: ans,
           wrong: [areaS, absDet + areaS, ans * 2],
+        });
+      },
+    },
+    {
+      id: "the-area-of-the-image-of-a-triangle",
+      title: t("The area of the image of a triangle", "三角形像的面积"),
+      explanation: t(
+        "An affine transformation $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ maps triangles to triangles and multiplies every area by $|\\det A|$; the translation $\\mathbf{b}$ does not change areas. So find the area of the original triangle, then multiply by $|\\det A|$. A negative determinant only reverses orientation.",
+        "仿射变换 $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ 把三角形映成三角形，并把每个面积乘以 $|\\det A|$；平移 $\\mathbf{b}$ 不改变面积。所以先求原三角形的面积，再乘以 $|\\det A|$。行列式为负只是使定向反转。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 4) * rng.pick([-1, 1]);
+        const [b, c] = [rng.int(-3, 3), rng.int(-3, 3)];
+        let dd = rng.int(-4, 4);
+        if (a * dd - b * c === 0) dd += 1;
+        const D = a * dd - b * c;
+        const m = rng.int(1, 6);
+        const n = rng.int(1, 6);
+        const e = rng.int(-5, 5);
+        const f = rng.int(-5, 5);
+        const ans = Q.of(Math.abs(D) * m * n, 2);
+        const T = `\\left(${poly([a, "x"], [b, "y"], [e, ""])}, ${poly([c, "x"], [dd, "y"], [f, ""])}\\right)`;
+        return numberProblem({
+          prompt: t(
+            `Find the area of the image of the triangle with vertices $(0, 0)$, $(${m}, 0)$ and $(0, ${n})$ under $T(x, y) = ${T}$.`,
+            `求以 $(0, 0)$、$(${m}, 0)$、$(0, ${n})$ 为顶点的三角形在 $T(x, y) = ${T}$ 下的像的面积。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(Math.abs(D) * m * n), Q.of(m * n, 2), Q.of((Math.abs(D) + 1) * m * n, 2)],
+          solution: t(
+            `The triangle has area $\\frac{${m} \\cdot ${n}}{2}$ and $\\det A = ${a} \\cdot ${paren(dd)} - ${paren(b)} \\cdot ${paren(c)} = ${D}$, so the image has area $${Math.abs(D)} \\cdot \\frac{${m * n}}{2} = ${ans.toLatex()}$.`,
+            `三角形面积为 $\\frac{${m} \\cdot ${n}}{2}$，$\\det A = ${a} \\cdot ${paren(dd)} - ${paren(b)} \\cdot ${paren(c)} = ${D}$，所以像的面积为 $${Math.abs(D)} \\cdot \\frac{${m * n}}{2} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -2151,6 +3233,41 @@ export const theInverseOfAnAffineTransformation: TopicDef = {
         });
       },
     },
+    {
+      id: "applying-the-inverse-of-a-coupled-affine-map",
+      title: t("Applying the inverse of a coupled affine map", "求耦合仿射变换的逆像"),
+      explanation: t(
+        "To find $T^{-1}(u, v)$ for $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$, undo the steps in reverse order: subtract the translation, then apply $A^{-1}$:\n\n$$T^{-1}(\\mathbf{u}) = A^{-1}(\\mathbf{u} - \\mathbf{b}).$$\n\nFor a $2 \\times 2$ matrix, $A^{-1} = \\frac{1}{ad - bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$. Check the answer by applying $T$ to it.",
+        "要对 $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ 求 $T^{-1}(u, v)$，按相反的顺序撤销各步：先减去平移，再作用 $A^{-1}$：\n\n$$T^{-1}(\\mathbf{u}) = A^{-1}(\\mathbf{u} - \\mathbf{b}).$$\n\n对 $2 \\times 2$ 矩阵，$A^{-1} = \\frac{1}{ad - bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$。把 $T$ 作用于答案来检验。",
+      ),
+      generate(rng: Rng): Problem {
+        const k = rng.int(1, 3) * rng.pick([-1, 1]);
+        const j = rng.int(-2, 2);
+        const swap = rng.int(0, 1) === 1;
+        const [a, b, c, d] = swap ? [1, k, j, 1 + k * j] : [1 + k * j, k, j, 1];
+        const det = a * d - b * c;
+        const e = rng.int(-5, 5);
+        const f = rng.int(-5, 5);
+        const X = rng.int(-4, 4);
+        const Y = rng.int(-4, 4);
+        const u = a * X + b * Y + e;
+        const v = c * X + d * Y + f;
+        const T = `\\left(${poly([a, "x"], [b, "y"], [e, ""])}, ${poly([c, "x"], [d, "y"], [f, ""])}\\right)`;
+        return pointProblem({
+          prompt: t(`Let $T(x, y) = ${T}$. Find $T^{-1}(${u}, ${v})$.`, `设 $T(x, y) = ${T}$。求 $T^{-1}(${u}, ${v})$。`),
+          answer: [X, Y],
+          wrong: [
+            [u - e, v - f],
+            [a * u + b * v + e, c * u + d * v + f],
+            [Y, X],
+          ],
+          solution: t(
+            `$\\mathbf{u} - \\mathbf{b} = (${u - e}, ${v - f})$ and $\\det A = ${det}$, so $A^{-1}(\\mathbf{u} - \\mathbf{b}) = (${X}, ${Y})$. Check: $T(${X}, ${Y}) = (${u}, ${v})$.`,
+            `$\\mathbf{u} - \\mathbf{b} = (${u - e}, ${v - f})$，$\\det A = ${det}$，所以 $A^{-1}(\\mathbf{u} - \\mathbf{b}) = (${X}, ${Y})$。检验：$T(${X}, ${Y}) = (${u}, ${v})$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -2213,6 +3330,32 @@ export const nonlinearTransformationsOfPlaneRegions: TopicDef = {
         });
       },
     },
+    {
+      id: "the-image-of-a-vertical-line-under-a-nonlinear-map",
+      title: t("The image of a vertical line under a nonlinear map", "竖直直线在非线性变换下的像"),
+      explanation: t(
+        "To find the image of a curve under $T(x, y) = (u, v)$, substitute the curve's description into $u$ and $v$ and eliminate the parameter. Under $T(x, y) = (x + ay^2, y)$ the line $x = c$ goes to the points $(c + ay^2, y)$, so with $v = y$ its image is the parabola\n\n$$u = c + av^2.$$\n\nLines become curves because the map is not linear.",
+        "要求曲线在 $T(x, y) = (u, v)$ 下的像，把曲线的描述代入 $u$ 和 $v$ 并消去参数。在 $T(x, y) = (x + ay^2, y)$ 下，直线 $x = c$ 映到点 $(c + ay^2, y)$，令 $v = y$ 得其像为抛物线\n\n$$u = c + av^2.$$\n\n由于变换不是线性的，直线变成了曲线。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.pick([-3, -2, -1, 1, 2, 3]);
+        const c = rng.int(-5, 5);
+        const k = rng.int(-4, 4) || 2;
+        const ans = c + a * k * k;
+        return numberProblem({
+          prompt: t(
+            `Under $T(x, y) = (${poly([1, "x"], [a, "y^2"])}, y)$ the image of the line $x = ${c}$ is a curve in the $uv$-plane. Find $u$ at the point of the image with $v = ${k}$.`,
+            `在 $T(x, y) = (${poly([1, "x"], [a, "y^2"])}, y)$ 下，直线 $x = ${c}$ 的像是 $uv$ 平面上的一条曲线。求像上 $v = ${k}$ 的点的 $u$ 值。`,
+          ),
+          answer: ans,
+          wrong: [c, c + a * k, a * k * k],
+          solution: t(
+            `The image is $u = ${poly([c, ""], [a, "v^2"])}$, so at $v = ${k}$, $u = ${ans}$.`,
+            `像为 $u = ${poly([c, ""], [a, "v^2"])}$，所以 $v = ${k}$ 时 $u = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -2258,6 +3401,46 @@ export const polarCoordinateTransformations: TopicDef = {
           solution,
           answer: ans,
           wrong: [r0 * r0, 1, r0 + 2],
+        });
+      },
+    },
+    {
+      id: "the-area-of-a-polar-rectangle",
+      title: t("The area of a polar rectangle", "极坐标矩形的面积"),
+      explanation: t(
+        "The polar map $(r, \\theta) \\mapsto (r\\cos\\theta, r\\sin\\theta)$ sends the rectangle $r_1 \\le r \\le r_2$, $\\alpha \\le \\theta \\le \\beta$ to a piece of an annulus. Its area is a fraction $\\frac{\\beta - \\alpha}{2\\pi}$ of the full annulus:\n\n$$A = \\frac{1}{2}(\\beta - \\alpha)(r_2^2 - r_1^2).$$\n\nThe same result comes from integrating the Jacobian $r$ over the rectangle.",
+        "极坐标映射 $(r, \\theta) \\mapsto (r\\cos\\theta, r\\sin\\theta)$ 把矩形 $r_1 \\le r \\le r_2$，$\\alpha \\le \\theta \\le \\beta$ 映成圆环的一部分。其面积是整个圆环的 $\\frac{\\beta - \\alpha}{2\\pi}$：\n\n$$A = \\frac{1}{2}(\\beta - \\alpha)(r_2^2 - r_1^2).$$\n\n在矩形上对雅可比行列式 $r$ 积分也得到同样的结果。",
+      ),
+      generate(rng: Rng): Problem {
+        const r1 = rng.int(0, 4);
+        const r2 = r1 + rng.int(1, 4);
+        const [m, n] = rng.pick([
+          [1, 6],
+          [1, 4],
+          [1, 3],
+          [1, 2],
+          [2, 3],
+          [3, 4],
+          [1, 1],
+          [3, 2],
+        ] as const);
+        const span = Q.of(m, n);
+        const ans = span.mul(Q.of(r2 * r2 - r1 * r1, 2));
+        const piL = (v: Q): string => (v.eq(Q.one) ? "\\pi" : v.d === 1n ? `${v.n}\\pi` : `\\frac{${v.n === 1n ? "" : v.n}\\pi}{${v.d}}`);
+        const start = Q.of(rng.int(0, 3), 2);
+        const end = start.add(span);
+        const alpha = start.isZero() ? "0" : piL(start);
+        return numberProblem({
+          prompt: t(
+            `The region $${r1} \\le r \\le ${r2}$, $${alpha} \\le \\theta \\le ${piL(end)}$ in polar coordinates has area $k\\pi$. Find $k$.`,
+            `极坐标区域 $${r1} \\le r \\le ${r2}$，$${alpha} \\le \\theta \\le ${piL(end)}$ 的面积为 $k\\pi$。求 $k$。`,
+          ),
+          answer: ans,
+          wrong: [span.mul(Q.of((r2 - r1) ** 2, 2)), span.mul(Q.of(r2 * r2 - r1 * r1)), Q.of(r2 * r2 - r1 * r1)],
+          solution: t(
+            `$A = \\frac{1}{2} \\cdot ${piL(span)} \\cdot (${r2 * r2} - ${r1 * r1}) = ${piL(ans)}$, so $k = ${ans.toLatex()}$.`,
+            `$A = \\frac{1}{2} \\cdot ${piL(span)} \\cdot (${r2 * r2} - ${r1 * r1}) = ${piL(ans)}$，所以 $k = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -2317,6 +3500,33 @@ export const transformationsOfRegionsBetweenCurves: TopicDef = {
             [x0 + y0, y0 - x0],
             [u, 1],
           ],
+        });
+      },
+    },
+    {
+      id: "the-jacobian-of-the-hyperbola-ray-coordinates",
+      title: t("The Jacobian of hyperbola and ray coordinates", "双曲线与射线坐标的雅可比行列式"),
+      explanation: t(
+        "Regions between hyperbolas $xy = c$ and rays $y = mx$ become rectangles in the coordinates $u = xy$, $v = \\frac{y}{x}$. Their Jacobian is\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\begin{vmatrix} y & x \\\\ -\\frac{y}{x^2} & \\frac{1}{x} \\end{vmatrix} = \\frac{y}{x} + \\frac{y}{x} = \\frac{2y}{x} = 2v.$$\n\nWith constant factors $u = a\\,xy$ and $v = b\\,\\frac{y}{x}$, the Jacobian is multiplied by $ab$.",
+        "在坐标 $u = xy$，$v = \\frac{y}{x}$ 下，双曲线 $xy = c$ 与射线 $y = mx$ 之间的区域变成矩形。其雅可比行列式为\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\begin{vmatrix} y & x \\\\ -\\frac{y}{x^2} & \\frac{1}{x} \\end{vmatrix} = \\frac{y}{x} + \\frac{y}{x} = \\frac{2y}{x} = 2v.$$\n\n若带常数因子 $u = a\\,xy$，$v = b\\,\\frac{y}{x}$，雅可比行列式要乘以 $ab$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 4);
+        const b = rng.int(1, 4);
+        const p = rng.int(1, 5);
+        const q = rng.int(1, 6);
+        const ans = Q.of(2 * a * b * q, p);
+        return numberProblem({
+          prompt: t(
+            `Let $u = ${a === 1 ? "" : a}xy$ and $v = \\frac{${b === 1 ? "" : b}y}{x}$. Find $\\frac{\\partial(u, v)}{\\partial(x, y)}$ at $(${p}, ${q})$.`,
+            `设 $u = ${a === 1 ? "" : a}xy$，$v = \\frac{${b === 1 ? "" : b}y}{x}$。求 $\\frac{\\partial(u, v)}{\\partial(x, y)}$ 在 $(${p}, ${q})$ 处的值。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(a * b * q, p), Q.zero, Q.of(2 * a * b * p, q)],
+          solution: t(
+            `$\\frac{\\partial(u, v)}{\\partial(x, y)} = ${a * b} \\cdot \\frac{2y}{x} = ${a * b} \\cdot \\frac{${2 * q}}{${p}} = ${ans.toLatex()}$.`,
+            `$\\frac{\\partial(u, v)}{\\partial(x, y)} = ${a * b} \\cdot \\frac{2y}{x} = ${a * b} \\cdot \\frac{${2 * q}}{${p}} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -2386,6 +3596,32 @@ export const theJacobian: TopicDef = {
         });
       },
     },
+    {
+      id: "area-under-a-nonlinear-map-by-the-jacobian",
+      title: t("Area under a nonlinear map by the Jacobian", "用雅可比行列式求非线性变换下的面积"),
+      explanation: t(
+        "When $T(u, v) = (x, y)$ is one-to-one on a region $R$, the area of the image is\n\n$$\\iint_R \\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| du\\,dv.$$\n\nFor $T(u, v) = (u, uv)$ the Jacobian is $\\begin{vmatrix} 1 & 0 \\\\ v & u \\end{vmatrix} = u$, so it stretches area more where $u$ is larger. Integrating $u$ over the rectangle gives the image's area.",
+        "当 $T(u, v) = (x, y)$ 在区域 $R$ 上是一一映射时，像的面积为\n\n$$\\iint_R \\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| du\\,dv.$$\n\n对 $T(u, v) = (u, uv)$，雅可比行列式为 $\\begin{vmatrix} 1 & 0 \\\\ v & u \\end{vmatrix} = u$，所以 $u$ 越大面积被拉伸得越多。在矩形上对 $u$ 积分就得到像的面积。",
+      ),
+      generate(rng: Rng): Problem {
+        const p = rng.int(1, 4);
+        const q = p + rng.int(1, 4);
+        const n = rng.int(1, 6);
+        const ans = Q.of(n * (q * q - p * p), 2);
+        return numberProblem({
+          prompt: t(
+            `Find the area of the image of the rectangle $${p} \\le u \\le ${q}$, $0 \\le v \\le ${n}$ under $T(u, v) = (u, uv)$.`,
+            `求矩形 $${p} \\le u \\le ${q}$，$0 \\le v \\le ${n}$ 在 $T(u, v) = (u, uv)$ 下的像的面积。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(n * (q - p)), Q.of(n * (q * q - p * p)), Q.of(n * (q - p) ** 2, 2)],
+          solution: t(
+            `The Jacobian is $u$, so the area is $\\int_0^{${n}}\\int_{${p}}^{${q}} u\\,du\\,dv = ${n} \\cdot \\frac{${q * q} - ${p * p}}{2} = ${ans.toLatex()}$.`,
+            `雅可比行列式为 $u$，所以面积为 $\\int_0^{${n}}\\int_{${p}}^{${q}} u\\,du\\,dv = ${n} \\cdot \\frac{${q * q} - ${p * p}}{2} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -2429,6 +3665,46 @@ export const theInverseFunctionTheorem: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(jVal), ans.neg(), Q.of(1, jVal * jVal)],
+        });
+      },
+    },
+    {
+      id: "partial-derivatives-of-a-local-inverse",
+      title: t("Partial derivatives of a local inverse", "局部逆映射的偏导数"),
+      explanation: t(
+        "If $T(x, y) = (u, v)$ has a nonzero Jacobian at a point, the inverse function theorem gives a local inverse whose derivative matrix is the inverse of $DT$:\n\n$$\\begin{pmatrix} x_u & x_v \\\\ y_u & y_v \\end{pmatrix} = \\frac{1}{u_x v_y - u_y v_x}\\begin{pmatrix} v_y & -u_y \\\\ -v_x & u_x \\end{pmatrix}.$$\n\nSo the partial derivatives of the inverse can be found without solving for $x$ and $y$.",
+        "若 $T(x, y) = (u, v)$ 在某点的雅可比行列式非零，反函数定理给出一个局部逆映射，其导数矩阵是 $DT$ 的逆：\n\n$$\\begin{pmatrix} x_u & x_v \\\\ y_u & y_v \\end{pmatrix} = \\frac{1}{u_x v_y - u_y v_x}\\begin{pmatrix} v_y & -u_y \\\\ -v_x & u_x \\end{pmatrix}.$$\n\n所以无需解出 $x$ 和 $y$ 就能求出逆映射的偏导数。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-3, 3) || 1;
+        const b = rng.int(-3, 3) || 2;
+        const p = rng.int(-3, 3) || 1;
+        let q = rng.int(-3, 3) || 2;
+        if (4 * p * q - a * b === 0) q += 1;
+        const J = 4 * p * q - a * b;
+        const which = rng.int(0, 3);
+        const names = [
+          "\\frac{\\partial x}{\\partial u}",
+          "\\frac{\\partial x}{\\partial v}",
+          "\\frac{\\partial y}{\\partial u}",
+          "\\frac{\\partial y}{\\partial v}",
+        ];
+        const nums = [2 * q, -a, -b, 2 * p];
+        const num = nums[which] ?? 0;
+        const ans = Q.of(num, J);
+        const u0 = p * p + a * q;
+        const v0 = b * p + q * q;
+        return numberProblem({
+          prompt: t(
+            `Let $T(x, y) = (${poly([1, "x^2"], [a, "y"])}, ${poly([b, "x"], [1, "y^2"])})$. Near $(${p}, ${q})$, $T$ has a local inverse. Find $${names[which]}$ at $(u, v) = (${u0}, ${v0})$.`,
+            `设 $T(x, y) = (${poly([1, "x^2"], [a, "y"])}, ${poly([b, "x"], [1, "y^2"])})$。在 $(${p}, ${q})$ 附近 $T$ 有局部逆映射。求 $(u, v) = (${u0}, ${v0})$ 处的 $${names[which]}$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(nums[3 - which] ?? 1, J), Q.of(J, num === 0 ? 1 : num), Q.of(-num, J)],
+          solution: t(
+            `$DT(${p}, ${q}) = \\begin{pmatrix} ${2 * p} & ${a} \\\\ ${b} & ${2 * q} \\end{pmatrix}$ with determinant $${J}$. Its inverse is $${J < 0 ? "-" : ""}\\frac{1}{${Math.abs(J)}}\\begin{pmatrix} ${2 * q} & ${-a} \\\\ ${-b} & ${2 * p} \\end{pmatrix}$, so $${names[which]} = ${ans.toLatex()}$.`,
+            `$DT(${p}, ${q}) = \\begin{pmatrix} ${2 * p} & ${a} \\\\ ${b} & ${2 * q} \\end{pmatrix}$，行列式为 $${J}$。其逆为 $${J < 0 ? "-" : ""}\\frac{1}{${Math.abs(J)}}\\begin{pmatrix} ${2 * q} & ${-a} \\\\ ${-b} & ${2 * p} \\end{pmatrix}$，所以 $${names[which]} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -2507,6 +3783,36 @@ export const theJacobianOfAThreeDimensionalTransformation: TopicDef = {
         });
       },
     },
+    {
+      id: "the-spherical-coordinate-jacobian",
+      title: t("The spherical coordinate Jacobian", "球坐标的雅可比行列式"),
+      explanation: t(
+        "For spherical coordinates $x = \\rho\\sin\\varphi\\cos\\theta$, $y = \\rho\\sin\\varphi\\sin\\theta$, $z = \\rho\\cos\\varphi$, the absolute value of the Jacobian is\n\n$$\\left|\\frac{\\partial(x, y, z)}{\\partial(\\rho, \\theta, \\varphi)}\\right| = \\rho^2 \\sin\\varphi.$$\n\nIt does not depend on $\\theta$, because turning about the $z$-axis does not stretch volume. Small boxes far from the origin and near the equator $\\varphi = \\frac{\\pi}{2}$ have the largest volume.",
+        "对球坐标 $x = \\rho\\sin\\varphi\\cos\\theta$，$y = \\rho\\sin\\varphi\\sin\\theta$，$z = \\rho\\cos\\varphi$，雅可比行列式的绝对值为\n\n$$\\left|\\frac{\\partial(x, y, z)}{\\partial(\\rho, \\theta, \\varphi)}\\right| = \\rho^2 \\sin\\varphi.$$\n\n它与 $\\theta$ 无关，因为绕 $z$ 轴旋转不拉伸体积。离原点远且靠近赤道 $\\varphi = \\frac{\\pi}{2}$ 的小块体积最大。",
+      ),
+      generate(rng: Rng): Problem {
+        const r = rng.int(1, 8);
+        const [phi, s] = rng.pick([
+          ["\\frac{\\pi}{6}", Q.of(1, 2)],
+          ["\\frac{\\pi}{2}", Q.one],
+          ["\\frac{5\\pi}{6}", Q.of(1, 2)],
+        ] as const);
+        const theta = rng.pick(["0", "\\frac{\\pi}{3}", "\\frac{\\pi}{2}", "\\pi", "\\frac{4\\pi}{3}"]);
+        const ans = s.mul(Q.of(r * r));
+        return numberProblem({
+          prompt: t(
+            `Find $\\left|\\frac{\\partial(x, y, z)}{\\partial(\\rho, \\theta, \\varphi)}\\right|$ for spherical coordinates at $\\rho = ${r}$, $\\theta = ${theta}$, $\\varphi = ${phi}$.`,
+            `求球坐标在 $\\rho = ${r}$，$\\theta = ${theta}$，$\\varphi = ${phi}$ 处的 $\\left|\\frac{\\partial(x, y, z)}{\\partial(\\rho, \\theta, \\varphi)}\\right|$。`,
+          ),
+          answer: ans,
+          wrong: [s.mul(Q.of(r)), Q.of(r * r), s.mul(Q.of(r * r * r))],
+          solution: t(
+            `$\\rho^2 \\sin\\varphi = ${r * r} \\sin ${phi} = ${ans.toLatex()}$; the value of $\\theta$ does not matter.`,
+            `$\\rho^2 \\sin\\varphi = ${r * r} \\sin ${phi} = ${ans.toLatex()}$；$\\theta$ 的值不影响结果。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -2560,6 +3866,47 @@ export const theDerivativeOfAMultivariableFunction: TopicDef = {
           solution,
           answer: ans,
           wrong: [2 * b * y0, a * x0, -ans],
+        });
+      },
+    },
+    {
+      id: "approximating-a-vector-function-with-its-derivative-matrix",
+      title: t("Approximating a vector function with its derivative matrix", "用导数矩阵近似向量函数"),
+      explanation: t(
+        "The derivative of $\\mathbf{F}: \\mathbb{R}^2 \\to \\mathbb{R}^2$ at $\\mathbf{a}$ is its Jacobian matrix $D\\mathbf{F}(\\mathbf{a})$, the best linear approximation of the change in $\\mathbf{F}$:\n\n$$\\mathbf{F}(\\mathbf{a} + \\mathbf{h}) \\approx \\mathbf{F}(\\mathbf{a}) + D\\mathbf{F}(\\mathbf{a})\\,\\mathbf{h}.$$\n\nEach row of the matrix is the gradient of one component, so each component is approximated by its own linearization.",
+        "$\\mathbf{F}: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 在 $\\mathbf{a}$ 处的导数是其雅可比矩阵 $D\\mathbf{F}(\\mathbf{a})$，即 $\\mathbf{F}$ 的变化量的最佳线性近似：\n\n$$\\mathbf{F}(\\mathbf{a} + \\mathbf{h}) \\approx \\mathbf{F}(\\mathbf{a}) + D\\mathbf{F}(\\mathbf{a})\\,\\mathbf{h}.$$\n\n矩阵的每一行是一个分量的梯度，所以每个分量都用自己的线性化来近似。",
+      ),
+      generate(rng: Rng): Problem {
+        const c = rng.int(-3, 3) || 2;
+        const p = rng.int(-3, 3) || 1;
+        const q = rng.int(-3, 3) || 2;
+        const h1 = Q.of(rng.int(1, 3) * rng.pick([-1, 1]), 10);
+        const h2 = Q.of(rng.int(-3, 3), 10);
+        const F = [p * q, p * p + c * q];
+        const D = [
+          [q, p],
+          [2 * p, c],
+        ] as const;
+        const a1 = Q.of(F[0]!).add(Q.of(D[0][0]).mul(h1)).add(Q.of(D[0][1]).mul(h2));
+        const a2 = Q.of(F[1]!).add(Q.of(D[1][0]).mul(h1)).add(Q.of(D[1][1]).mul(h2));
+        const dec = (v: Q): string => String(v.toNumber());
+        const x = Q.of(p).add(h1);
+        const y = Q.of(q).add(h2);
+        return pointProblem({
+          prompt: t(
+            `Let $\\mathbf{F}(x, y) = (xy, ${poly([1, "x^2"], [c, "y"])})$. Use $D\\mathbf{F}(${p}, ${q})$ to approximate $\\mathbf{F}(${dec(x)}, ${dec(y)})$.`,
+            `设 $\\mathbf{F}(x, y) = (xy, ${poly([1, "x^2"], [c, "y"])})$。用 $D\\mathbf{F}(${p}, ${q})$ 近似 $\\mathbf{F}(${dec(x)}, ${dec(y)})$。`,
+          ),
+          answer: [a1, a2],
+          vars: ["u", "v"],
+          wrong: [
+            [Q.of(F[0]!), Q.of(F[1]!)],
+            [Q.of(F[0]!).add(Q.of(D[0][1]).mul(h1)).add(Q.of(D[0][0]).mul(h2)), a2],
+          ],
+          solution: t(
+            `$\\mathbf{F}(${p}, ${q}) = (${F[0]}, ${F[1]})$ and $D\\mathbf{F} = \\begin{pmatrix} ${q} & ${p} \\\\ ${2 * p} & ${c} \\end{pmatrix}$. With $\\mathbf{h} = (${dec(h1)}, ${dec(h2)})$, $\\mathbf{F}(\\mathbf{a}) + D\\mathbf{F}\\,\\mathbf{h} = (${dec(a1)}, ${dec(a2)})$.`,
+            `$\\mathbf{F}(${p}, ${q}) = (${F[0]}, ${F[1]})$，$D\\mathbf{F} = \\begin{pmatrix} ${q} & ${p} \\\\ ${2 * p} & ${c} \\end{pmatrix}$。取 $\\mathbf{h} = (${dec(h1)}, ${dec(h2)})$，$\\mathbf{F}(\\mathbf{a}) + D\\mathbf{F}\\,\\mathbf{h} = (${dec(a1)}, ${dec(a2)})$。`,
+          ),
         });
       },
     },
@@ -2617,6 +3964,39 @@ export const theSecondDerivativeOfAMultivariableFunction: TopicDef = {
           solution,
           answer: ans,
           wrong: [4 * a * b + c * c, 2 * a * b - c, -ans],
+        });
+      },
+    },
+    {
+      id: "the-second-directional-derivative",
+      title: t("The second directional derivative", "二阶方向导数"),
+      explanation: t(
+        "The second derivative of $f$ is its Hessian matrix $H$. The second derivative of $f$ in the direction of a unit vector $\\mathbf{u} = (u_1, u_2)$ is\n\n$$D_{\\mathbf{u}}^2 f = \\mathbf{u}^{\\mathsf{T}} H \\mathbf{u} = f_{xx}u_1^2 + 2f_{xy}u_1u_2 + f_{yy}u_2^2.$$\n\nIt measures how the surface curves along that direction. The mixed term appears twice because $H$ is symmetric.",
+        "$f$ 的二阶导数是其黑塞矩阵 $H$。$f$ 沿单位向量 $\\mathbf{u} = (u_1, u_2)$ 方向的二阶导数为\n\n$$D_{\\mathbf{u}}^2 f = \\mathbf{u}^{\\mathsf{T}} H \\mathbf{u} = f_{xx}u_1^2 + 2f_{xy}u_1u_2 + f_{yy}u_2^2.$$\n\n它衡量曲面沿该方向的弯曲程度。由于 $H$ 是对称的，混合项出现两次。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-3, 3) || 1;
+        const b = rng.int(-4, 4);
+        const c = rng.int(-3, 3) || 2;
+        const [u0, v0, w] = rng.pick(pythagoreanTriples.slice(0, 4));
+        const u = u0 * rng.pick([-1, 1]);
+        const v = v0;
+        const ans = Q.of(2 * a * u * u + 2 * b * u * v + 2 * c * v * v, w * w);
+        return numberProblem({
+          prompt: t(
+            `Find the second directional derivative of $f(x, y) = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$ in the direction of $\\mathbf{u} = \\left(${Q.of(u, w).toLatex()}, ${Q.of(v, w).toLatex()}\\right)$.`,
+            `求 $f(x, y) = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$ 沿 $\\mathbf{u} = \\left(${Q.of(u, w).toLatex()}, ${Q.of(v, w).toLatex()}\\right)$ 方向的二阶方向导数。`,
+          ),
+          answer: ans,
+          wrong: [
+            Q.of(2 * a * u * u + b * u * v + 2 * c * v * v, w * w),
+            Q.of(2 * a * u * u + 2 * b * u * v + 2 * c * v * v, w),
+            Q.of(2 * a + 2 * c),
+          ],
+          solution: t(
+            `$H = \\begin{pmatrix} ${2 * a} & ${b} \\\\ ${b} & ${2 * c} \\end{pmatrix}$, so $\\mathbf{u}^{\\mathsf{T}} H \\mathbf{u} = \\frac{${2 * a} \\cdot ${u * u} + 2 \\cdot ${paren(b)} \\cdot ${paren(u * v)} + ${paren(2 * c)} \\cdot ${v * v}}{${w * w}} = ${ans.toLatex()}$.`,
+            `$H = \\begin{pmatrix} ${2 * a} & ${b} \\\\ ${b} & ${2 * c} \\end{pmatrix}$，所以 $\\mathbf{u}^{\\mathsf{T}} H \\mathbf{u} = \\frac{${2 * a} \\cdot ${u * u} + 2 \\cdot ${paren(b)} \\cdot ${paren(u * v)} + ${paren(2 * c)} \\cdot ${v * v}}{${w * w}} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -2702,6 +4082,50 @@ export const secondDegreeTaylorPolynomialsOfMultivariableFunctions: TopicDef = {
         });
       },
     },
+    {
+      id: "coefficients-of-a-second-degree-taylor-polynomial",
+      title: t("Coefficients of a second-degree Taylor polynomial", "二阶泰勒多项式的系数"),
+      explanation: t(
+        "The second-degree Taylor polynomial at the origin is\n\n$$P_2 = f + f_x x + f_y y + \\tfrac{1}{2}f_{xx}x^2 + f_{xy}xy + \\tfrac{1}{2}f_{yy}y^2,$$\n\nwith every derivative taken at $(0, 0)$. So the coefficient of $x^2$ is half of $f_{xx}(0, 0)$, while the coefficient of $xy$ is the whole of $f_{xy}(0, 0)$, since the two mixed partials have been combined. Products of one-variable series give the same coefficients.",
+        "原点处的二阶泰勒多项式为\n\n$$P_2 = f + f_x x + f_y y + \\tfrac{1}{2}f_{xx}x^2 + f_{xy}xy + \\tfrac{1}{2}f_{yy}y^2,$$\n\n其中所有导数都在 $(0, 0)$ 处取值。所以 $x^2$ 的系数是 $f_{xx}(0, 0)$ 的一半，而 $xy$ 的系数是整个 $f_{xy}(0, 0)$，因为两个混合偏导数已合并。用一元级数相乘也得到同样的系数。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-4, 4) || 1;
+        const b = rng.int(-4, 4) || 3;
+        const cosForm = rng.int(0, 1) === 1;
+        const mono = rng.pick(["x^2", "xy", "y^2"] as const);
+        const f = cosForm ? `e^{${poly([a, "x"])}}\\cos(${poly([b, "y"])})` : `e^{${poly([a, "x"], [b, "y"])}}`;
+        const coef = cosForm
+          ? mono === "x^2"
+            ? Q.of(a * a, 2)
+            : mono === "xy"
+              ? Q.zero
+              : Q.of(-b * b, 2)
+          : mono === "x^2"
+            ? Q.of(a * a, 2)
+            : mono === "xy"
+              ? Q.of(a * b)
+              : Q.of(b * b, 2);
+        const deriv = mono === "x^2" ? "f_{xx}" : mono === "xy" ? "f_{xy}" : "f_{yy}";
+        const dv = mono === "xy" ? coef : coef.mul(Q.of(2));
+        return numberProblem({
+          prompt: t(
+            `Find the coefficient of $${mono}$ in the second-degree Taylor polynomial of $f(x, y) = ${f}$ at $(0, 0)$.`,
+            `求 $f(x, y) = ${f}$ 在 $(0, 0)$ 处的二阶泰勒多项式中 $${mono}$ 的系数。`,
+          ),
+          answer: coef,
+          wrong: [dv.eq(coef) ? coef.mul(Q.of(2)) : dv, coef.neg(), Q.of(a * b, 2)],
+          solution: t(
+            mono === "xy"
+              ? `$f_{xy}(0, 0) = ${dv.toLatex()}$, and the coefficient of $xy$ is $f_{xy}(0, 0)$ itself: $${coef.toLatex()}$.`
+              : `$${deriv}(0, 0) = ${dv.toLatex()}$, so the coefficient is $\\frac{1}{2} \\cdot ${paren(dv)} = ${coef.toLatex()}$.`,
+            mono === "xy"
+              ? `$f_{xy}(0, 0) = ${dv.toLatex()}$，而 $xy$ 的系数就是 $f_{xy}(0, 0)$ 本身：$${coef.toLatex()}$。`
+              : `$${deriv}(0, 0) = ${dv.toLatex()}$，所以系数为 $\\frac{1}{2} \\cdot ${paren(dv)} = ${coef.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -2770,6 +4194,31 @@ export const globalVsLocalExtremaAndCriticalPointsOfMultivariableFunctions: Topi
             [y0, x0],
             [0, 0],
           ],
+        });
+      },
+    },
+    {
+      id: "a-local-minimum-that-is-not-global",
+      title: t("A local minimum that is not global", "不是全局最小值的局部最小值"),
+      explanation: t(
+        "A local minimum is lower than all nearby values, but the function may still go lower far away. For $f(x, y) = x^3 - 3k^2x + y^2 + c$ with $k > 0$, the critical points are $(\\pm k, 0)$. At $(k, 0)$, $f_{xx} = 6k > 0$ and $f_{yy} = 2 > 0$ with $f_{xy} = 0$, so it is a local minimum with value $c - 2k^3$. It is not global: along $y = 0$, $x^3$ makes $f \\to -\\infty$ as $x \\to -\\infty$.",
+        "局部最小值比附近所有的值都小，但函数在远处仍可能更小。对 $k > 0$ 的 $f(x, y) = x^3 - 3k^2x + y^2 + c$，临界点为 $(\\pm k, 0)$。在 $(k, 0)$ 处 $f_{xx} = 6k > 0$，$f_{yy} = 2 > 0$，$f_{xy} = 0$，所以它是局部最小值点，值为 $c - 2k^3$。它不是全局最小值：沿 $y = 0$，当 $x \\to -\\infty$ 时 $x^3$ 使 $f \\to -\\infty$。",
+      ),
+      generate(rng: Rng): Problem {
+        const k = rng.int(1, 4);
+        const c = rng.int(-9, 9);
+        const ans = c - 2 * k ** 3;
+        return numberProblem({
+          prompt: t(
+            `Find the local minimum value of $f(x, y) = ${poly([1, "x^3"], [-3 * k * k, "x"], [1, "y^2"], [c, ""])}$.`,
+            `求 $f(x, y) = ${poly([1, "x^3"], [-3 * k * k, "x"], [1, "y^2"], [c, ""])}$ 的局部最小值。`,
+          ),
+          answer: ans,
+          wrong: [c + 2 * k ** 3, c, c - 4 * k ** 3],
+          solution: t(
+            `$f_x = 3x^2 - ${3 * k * k} = 0$ and $f_y = 2y = 0$ give $(\\pm ${k}, 0)$. At $(${k}, 0)$, $f_{xx} = ${6 * k} > 0$, so it is a local minimum with $f(${k}, 0) = ${k ** 3} - ${3 * k ** 3} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${ans}$. It is not a global minimum, since $f(x, 0) \\to -\\infty$ as $x \\to -\\infty$.`,
+            `由 $f_x = 3x^2 - ${3 * k * k} = 0$，$f_y = 2y = 0$ 得 $(\\pm ${k}, 0)$。在 $(${k}, 0)$ 处 $f_{xx} = ${6 * k} > 0$，所以它是局部最小值点，$f(${k}, 0) = ${k ** 3} - ${3 * k ** 3} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${ans}$。它不是全局最小值，因为当 $x \\to -\\infty$ 时 $f(x, 0) \\to -\\infty$。`,
+          ),
         });
       },
     },
@@ -2853,6 +4302,58 @@ export const theSecondPartialDerivativesTest: TopicDef = {
         return pickChoice(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "classifying-the-origin-for-a-quadratic-form",
+      title: t("Classifying the origin for a quadratic form", "判断二次型在原点的类型"),
+      explanation: t(
+        "For $f(x, y) = ax^2 + bxy + cy^2$ the origin is a critical point with $f_{xx} = 2a$, $f_{xy} = b$, $f_{yy} = 2c$, so the discriminant is\n\n$$D = f_{xx}f_{yy} - f_{xy}^2 = 4ac - b^2.$$\n\nIf $D > 0$ the origin is a local minimum when $a > 0$ and a local maximum when $a < 0$; if $D < 0$ it is a saddle point; if $D = 0$ the test is inconclusive.",
+        "对 $f(x, y) = ax^2 + bxy + cy^2$，原点是临界点，且 $f_{xx} = 2a$，$f_{xy} = b$，$f_{yy} = 2c$，所以判别式为\n\n$$D = f_{xx}f_{yy} - f_{xy}^2 = 4ac - b^2.$$\n\n若 $D > 0$，当 $a > 0$ 时原点是局部最小值点，当 $a < 0$ 时是局部最大值点；若 $D < 0$，它是鞍点；若 $D = 0$，检验无法判定。",
+      ),
+      generate(rng: Rng): Problem {
+        const kind = rng.int(0, 3);
+        let a: number;
+        let b: number;
+        let c: number;
+        if (kind === 3) {
+          const m = rng.int(1, 3);
+          const n = rng.int(1, 3);
+          const s = rng.pick([-1, 1]);
+          a = m * m * s;
+          b = 2 * m * n * rng.pick([-1, 1]) * s;
+          c = n * n * s;
+        } else {
+          a = rng.int(1, 4);
+          c = rng.int(1, 4);
+          const bs = [-10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((v) =>
+            kind === 2 ? v * v > 4 * a * c : v * v < 4 * a * c,
+          );
+          b = rng.pick(bs);
+          if (kind === 1) [a, b, c] = [-a, -b, -c];
+          if (kind === 2 && rng.int(0, 1) === 1) [a, c] = [-a, c];
+        }
+        const D = 4 * a * c - b * b;
+        const names = [
+          t("Local minimum", "局部最小值点"),
+          t("Local maximum", "局部最大值点"),
+          t("Saddle point", "鞍点"),
+          t("The test is inconclusive", "检验无法判定"),
+        ];
+        const right = names[kind] ?? names[0]!;
+        return pickChoice(
+          rng,
+          t(
+            `Use the second partials test to classify the critical point $(0, 0)$ of $f(x, y) = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$.`,
+            `用二阶偏导数检验判断 $f(x, y) = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$ 的临界点 $(0, 0)$ 的类型。`,
+          ),
+          right,
+          names.filter((_, i) => i !== kind),
+          t(
+            `$D = 4 \\cdot ${paren(a)} \\cdot ${paren(c)} - ${paren(b)}^2 = ${D}$${D > 0 ? ` and $f_{xx} = ${2 * a}$` : ""}, so the answer is: ${right.en.toLowerCase()}.`,
+            `$D = 4 \\cdot ${paren(a)} \\cdot ${paren(c)} - ${paren(b)}^2 = ${D}$${D > 0 ? `，$f_{xx} = ${2 * a}$` : ""}，所以答案是：${right["zh-CN"]}。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -2910,6 +4411,36 @@ export const calculatingGlobalExtremaOfMultivariableFunctions: TopicDef = {
         });
       },
     },
+    {
+      id: "the-maximum-distance-on-a-square",
+      title: t("The maximum distance on a square", "正方形上的最大距离"),
+      explanation: t(
+        "A continuous function on a closed, bounded region attains a global maximum, either at a critical point inside or on the boundary. The function $f(x, y) = (x - p)^2 + (y - q)^2$ is the squared distance to $(p, q)$; its only critical point is the minimum at $(p, q)$. So on a square its maximum is on the boundary, at the corner farthest from $(p, q)$.",
+        "闭有界区域上的连续函数必取得全局最大值，要么在内部的临界点，要么在边界上。函数 $f(x, y) = (x - p)^2 + (y - q)^2$ 是到 $(p, q)$ 的距离的平方；其唯一的临界点是 $(p, q)$ 处的最小值点。所以它在正方形上的最大值在边界上，位于离 $(p, q)$ 最远的顶点。",
+      ),
+      generate(rng: Rng): Problem {
+        const L = rng.int(1, 5);
+        const p = rng.int(-L + 1, L - 1);
+        const q = rng.int(-L, L);
+        const ans = (L + Math.abs(p)) ** 2 + (L + Math.abs(q)) ** 2;
+        const cx = p > 0 ? -L : L;
+        const cy = q > 0 ? -L : L;
+        const fx = p === 0 ? "x^2" : `(${poly([1, "x"], [-p, ""])})^2`;
+        const fy = q === 0 ? "y^2" : `(${poly([1, "y"], [-q, ""])})^2`;
+        return numberProblem({
+          prompt: t(
+            `Find the maximum value of $f(x, y) = ${fx} + ${fy}$ on the square $-${L} \\le x \\le ${L}$, $-${L} \\le y \\le ${L}$.`,
+            `求 $f(x, y) = ${fx} + ${fy}$ 在正方形 $-${L} \\le x \\le ${L}$，$-${L} \\le y \\le ${L}$ 上的最大值。`,
+          ),
+          answer: ans,
+          wrong: [0, (L - Math.abs(p)) ** 2 + (L - Math.abs(q)) ** 2, 2 * L * L],
+          solution: t(
+            `The only critical point $(${p}, ${q})$ gives the minimum $0$. The maximum is at the farthest corner $(${cx}, ${cy})$: $f = ${(L + Math.abs(p)) ** 2} + ${(L + Math.abs(q)) ** 2} = ${ans}$.`,
+            `唯一的临界点 $(${p}, ${q})$ 给出最小值 $0$。最大值在最远的顶点 $(${cx}, ${cy})$ 处：$f = ${(L + Math.abs(p)) ** 2} + ${(L + Math.abs(q)) ** 2} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -2960,6 +4491,33 @@ export const lagrangeMultipliersWithOneConstraint: TopicDef = {
           solution,
           answer: ans,
           wrong: [c, r * a, -ans],
+        });
+      },
+    },
+    {
+      id: "the-closest-point-of-a-line-to-the-origin",
+      title: t("The closest point of a line to the origin", "直线上离原点最近的点"),
+      explanation: t(
+        "To minimize $f = x^2 + y^2$ subject to $ax + by = c$, set $\\nabla f = \\lambda \\nabla g$: $2x = \\lambda a$ and $2y = \\lambda b$. So $(x, y)$ is a multiple of $(a, b)$, and the constraint gives $\\frac{\\lambda}{2}(a^2 + b^2) = c$. The minimum value is\n\n$$f_{\\min} = \\frac{c^2}{a^2 + b^2},$$\n\nthe square of the distance from the origin to the line.",
+        "要在约束 $ax + by = c$ 下最小化 $f = x^2 + y^2$，令 $\\nabla f = \\lambda \\nabla g$：$2x = \\lambda a$，$2y = \\lambda b$。所以 $(x, y)$ 是 $(a, b)$ 的倍数，由约束得 $\\frac{\\lambda}{2}(a^2 + b^2) = c$。最小值为\n\n$$f_{\\min} = \\frac{c^2}{a^2 + b^2},$$\n\n即原点到该直线距离的平方。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 5) * rng.pick([-1, 1]);
+        const b = rng.int(1, 5) * rng.pick([-1, 1]);
+        const c = rng.int(1, 9) * rng.pick([-1, 1]);
+        const ans = Q.of(c * c, a * a + b * b);
+        const k = Q.of(c, a * a + b * b);
+        return numberProblem({
+          prompt: t(
+            `Use Lagrange multipliers to find the minimum of $x^2 + y^2$ subject to $${poly([a, "x"], [b, "y"])} = ${c}$.`,
+            `用拉格朗日乘数法求 $x^2 + y^2$ 在约束 $${poly([a, "x"], [b, "y"])} = ${c}$ 下的最小值。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(Math.abs(c), a * a + b * b), Q.of(c * c, (Math.abs(a) + Math.abs(b)) ** 2), Q.of(c * c)],
+          solution: t(
+            `$(x, y) = t(${a}, ${b})$ with $t \\cdot ${a * a + b * b} = ${c}$, so $t = ${k.toLatex()}$ and the minimum is $t^2 \\cdot ${a * a + b * b} = ${ans.toLatex()}$.`,
+            `$(x, y) = t(${a}, ${b})$，且 $t \\cdot ${a * a + b * b} = ${c}$，所以 $t = ${k.toLatex()}$，最小值为 $t^2 \\cdot ${a * a + b * b} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -3016,6 +4574,35 @@ export const lagrangeMultipliersWithMultipleConstraints: TopicDef = {
           solution,
           answer: ans,
           wrong: [b, a + b, a - b],
+        });
+      },
+    },
+    {
+      id: "the-closest-point-on-the-intersection-of-two-planes",
+      title: t("The closest point on the intersection of two planes", "两平面交线上离原点最近的点"),
+      explanation: t(
+        "To minimize $x^2 + y^2 + z^2$ subject to $x + y + z = p$ and $x - y = q$, set $\\nabla f = \\lambda \\nabla g + \\mu \\nabla h$:\n\n$$(2x, 2y, 2z) = \\lambda(1, 1, 1) + \\mu(1, -1, 0).$$\n\nThis gives $x = \\frac{\\lambda + \\mu}{2}$, $y = \\frac{\\lambda - \\mu}{2}$, $z = \\frac{\\lambda}{2}$. The constraints then give $\\lambda = \\frac{2p}{3}$ and $\\mu = q$, and the minimum works out to $\\frac{p^2}{3} + \\frac{q^2}{2}$.",
+        "要在约束 $x + y + z = p$ 与 $x - y = q$ 下最小化 $x^2 + y^2 + z^2$，令 $\\nabla f = \\lambda \\nabla g + \\mu \\nabla h$：\n\n$$(2x, 2y, 2z) = \\lambda(1, 1, 1) + \\mu(1, -1, 0).$$\n\n由此得 $x = \\frac{\\lambda + \\mu}{2}$，$y = \\frac{\\lambda - \\mu}{2}$，$z = \\frac{\\lambda}{2}$。再由约束得 $\\lambda = \\frac{2p}{3}$，$\\mu = q$，最小值为 $\\frac{p^2}{3} + \\frac{q^2}{2}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const p = rng.int(-9, 9);
+        const q = rng.int(-6, 6) || 2;
+        const ans = Q.of(p * p, 3).add(Q.of(q * q, 2));
+        const lam = Q.of(2 * p, 3);
+        const x = lam.add(Q.of(q)).div(Q.of(2));
+        const y = lam.sub(Q.of(q)).div(Q.of(2));
+        const z = lam.div(Q.of(2));
+        return numberProblem({
+          prompt: t(
+            `Find the minimum of $x^2 + y^2 + z^2$ subject to $x + y + z = ${p}$ and $x - y = ${q}$.`,
+            `求 $x^2 + y^2 + z^2$ 在约束 $x + y + z = ${p}$ 与 $x - y = ${q}$ 下的最小值。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(p * p, 3), Q.of(p * p + q * q, 3), Q.of(p * p, 3).add(Q.of(q * q))],
+          solution: t(
+            `$\\lambda = ${lam.toLatex()}$ and $\\mu = ${q}$ give the point $\\left(${x.toLatex()}, ${y.toLatex()}, ${z.toLatex()}\\right)$, where $x^2 + y^2 + z^2 = ${ans.toLatex()}$.`,
+            `$\\lambda = ${lam.toLatex()}$，$\\mu = ${q}$ 给出点 $\\left(${x.toLatex()}, ${y.toLatex()}, ${z.toLatex()}\\right)$，此处 $x^2 + y^2 + z^2 = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -3076,6 +4663,46 @@ export const optimizingMultivariableFunctionsUsingLagrangeMultipliers: TopicDef 
           solution,
           answer: ans,
           wrong: [Math.floor((C * C) / (2 * a * b)), ans + k, ans * 2],
+        });
+      },
+    },
+    {
+      id: "maximizing-a-product-of-powers-on-a-line",
+      title: t("Maximizing a product of powers on a line", "在直线上最大化幂的乘积"),
+      explanation: t(
+        "To maximize $f = x^m y^n$ with $x, y > 0$ subject to $x + y = s$, the Lagrange condition $\\nabla f = \\lambda \\nabla g$ gives $m x^{m-1}y^n = \\lambda$ and $n x^m y^{n-1} = \\lambda$. Dividing, $\\frac{m}{x} = \\frac{n}{y}$, so the sum is split in the ratio of the exponents:\n\n$$x = \\frac{m}{m + n}s, \\qquad y = \\frac{n}{m + n}s.$$",
+        "要在 $x, y > 0$ 且约束 $x + y = s$ 下最大化 $f = x^m y^n$，拉格朗日条件 $\\nabla f = \\lambda \\nabla g$ 给出 $m x^{m-1}y^n = \\lambda$ 与 $n x^m y^{n-1} = \\lambda$。两式相除得 $\\frac{m}{x} = \\frac{n}{y}$，所以和按指数之比分配：\n\n$$x = \\frac{m}{m + n}s, \\qquad y = \\frac{n}{m + n}s.$$",
+      ),
+      generate(rng: Rng): Problem {
+        const [m, n] = rng.pick([
+          [1, 1],
+          [1, 2],
+          [2, 1],
+          [2, 2],
+          [1, 3],
+          [3, 1],
+          [2, 3],
+          [3, 2],
+          [1, 4],
+          [4, 1],
+        ] as const);
+        const k = rng.int(1, 4);
+        const s = (m + n) * k;
+        const x = m * k;
+        const y = n * k;
+        const ans = x ** m * y ** n;
+        const mon = `${m === 1 ? "x" : `x^${m}`}${n === 1 ? "y" : `y^${n}`}`;
+        return numberProblem({
+          prompt: t(
+            `Find the maximum of $${mon}$ for $x, y > 0$ subject to $x + y = ${s}$.`,
+            `求 $x, y > 0$ 且 $x + y = ${s}$ 时 $${mon}$ 的最大值。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(s, 2).pow(m + n), Q.of(y ** m * x ** n), Q.of(x * y)],
+          solution: t(
+            `Splitting $${s}$ in the ratio $${m} : ${n}$ gives $x = ${x}$, $y = ${y}$, so the maximum is $${x}^{${m}} \\cdot ${y}^{${n}} = ${ans}$.`,
+            `按 $${m} : ${n}$ 分配 $${s}$ 得 $x = ${x}$，$y = ${y}$，所以最大值为 $${x}^{${m}} \\cdot ${y}^{${n}} = ${ans}$。`,
+          ),
         });
       },
     },
@@ -3143,6 +4770,41 @@ export const newtonsMethodForMultivariableFunctions: TopicDef = {
         });
       },
     },
+    {
+      id: "a-newton-step-for-a-circle-and-a-line",
+      title: t("A Newton step for a circle and a line", "圆与直线方程组的牛顿迭代一步"),
+      explanation: t(
+        "Newton's method for a system $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$ replaces $\\mathbf{F}$ by its linearization at the current guess and solves that instead:\n\n$$J(\\mathbf{x}_0)\\,\\Delta = -\\mathbf{F}(\\mathbf{x}_0), \\qquad \\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta.$$\n\nFor $\\mathbf{F} = (x^2 + y^2 - a, x - y)$ the Jacobian is $\\begin{pmatrix} 2x & 2y \\\\ 1 & -1 \\end{pmatrix}$. Solve the $2 \\times 2$ system for $\\Delta$ rather than inverting the matrix by habit.",
+        "方程组 $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$ 的牛顿法用 $\\mathbf{F}$ 在当前猜测处的线性化代替 $\\mathbf{F}$ 并求解：\n\n$$J(\\mathbf{x}_0)\\,\\Delta = -\\mathbf{F}(\\mathbf{x}_0), \\qquad \\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta.$$\n\n对 $\\mathbf{F} = (x^2 + y^2 - a, x - y)$，雅可比矩阵为 $\\begin{pmatrix} 2x & 2y \\\\ 1 & -1 \\end{pmatrix}$。解这个 $2 \\times 2$ 方程组求 $\\Delta$，不必习惯性地求逆矩阵。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 20);
+        const x0 = rng.int(1, 4);
+        const y0 = rng.int(0, 4);
+        const F1 = x0 * x0 + y0 * y0 - a;
+        const F2 = x0 - y0;
+        // 2x0 d1 + 2y0 d2 = -F1, d1 - d2 = -F2
+        const d2 = Q.of(-F1 + 2 * x0 * F2, 2 * x0 + 2 * y0);
+        const d1 = d2.sub(Q.of(F2));
+        const x1 = Q.of(x0).add(d1);
+        const y1 = Q.of(y0).add(d2);
+        return pointProblem({
+          prompt: t(
+            `Apply one step of Newton's method to the system $x^2 + y^2 = ${a}$, $x - y = 0$, starting from $(${x0}, ${y0})$.`,
+            `从 $(${x0}, ${y0})$ 出发，对方程组 $x^2 + y^2 = ${a}$，$x - y = 0$ 作一步牛顿迭代。`,
+          ),
+          answer: [x1, y1],
+          wrong: [
+            [Q.of(x0).sub(d1), Q.of(y0).sub(d2)],
+            [d1, d2],
+          ],
+          solution: t(
+            `${steps(`\\mathbf{F}(${x0}, ${y0}) = (${F1}, ${F2})`, `\\begin{pmatrix} ${2 * x0} & ${2 * y0} \\\\ 1 & -1 \\end{pmatrix}\\Delta = (${-F1}, ${-F2})`)}This gives $\\Delta = \\left(${d1.toLatex()}, ${d2.toLatex()}\\right)$, so $\\mathbf{x}_1 = \\left(${x1.toLatex()}, ${y1.toLatex()}\\right)$.`,
+            `${steps(`\\mathbf{F}(${x0}, ${y0}) = (${F1}, ${F2})`, `\\begin{pmatrix} ${2 * x0} & ${2 * y0} \\\\ 1 & -1 \\end{pmatrix}\\Delta = (${-F1}, ${-F2})`)}解得 $\\Delta = \\left(${d1.toLatex()}, ${d2.toLatex()}\\right)$，所以 $\\mathbf{x}_1 = \\left(${x1.toLatex()}, ${y1.toLatex()}\\right)$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -3205,6 +4867,37 @@ export const newtonsMethodForOptimizingMultivariableFunctions: TopicDef = {
             [yTarget, xTarget],
             [0, 0],
           ],
+        });
+      },
+    },
+    {
+      id: "a-newton-optimization-step-with-a-cubic-term",
+      title: t("A Newton optimization step with a cubic term", "含三次项的牛顿优化一步"),
+      explanation: t(
+        "Newton's method for finding a critical point applies Newton's method to $\\nabla f = \\mathbf{0}$, so the Hessian plays the role of the Jacobian:\n\n$$\\mathbf{x}_1 = \\mathbf{x}_0 - H(\\mathbf{x}_0)^{-1}\\nabla f(\\mathbf{x}_0).$$\n\nFor $f = \\frac{x^3}{3} - ax + y^2 - by$ the Hessian is diagonal, $\\operatorname{diag}(2x, 2)$, so each coordinate updates on its own. The quadratic part in $y$ is solved exactly in one step, while the cubic part in $x$ only gets closer to $\\sqrt{a}$.",
+        "求临界点的牛顿法是把牛顿法用于 $\\nabla f = \\mathbf{0}$，所以黑塞矩阵起雅可比矩阵的作用：\n\n$$\\mathbf{x}_1 = \\mathbf{x}_0 - H(\\mathbf{x}_0)^{-1}\\nabla f(\\mathbf{x}_0).$$\n\n对 $f = \\frac{x^3}{3} - ax + y^2 - by$，黑塞矩阵是对角的 $\\operatorname{diag}(2x, 2)$，所以每个坐标各自更新。$y$ 的二次部分一步就精确求出，而 $x$ 的三次部分只是更接近 $\\sqrt{a}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 12);
+        const b = rng.int(-6, 6);
+        const x0 = rng.int(1, 4);
+        const y0 = rng.int(-3, 3);
+        const x1 = Q.of(x0 * x0 + a, 2 * x0);
+        const y1 = Q.of(b, 2);
+        return pointProblem({
+          prompt: t(
+            `Apply one step of Newton's method for optimization to $f(x, y) = \\frac{x^3}{3} ${poly([-a, "x"], [1, "y^2"], [-b, "y"])}$, starting from $(${x0}, ${y0})$.`,
+            `从 $(${x0}, ${y0})$ 出发，对 $f(x, y) = \\frac{x^3}{3} ${poly([-a, "x"], [1, "y^2"], [-b, "y"])}$ 作一步牛顿优化迭代。`,
+          ),
+          answer: [x1, y1],
+          wrong: [
+            [Q.of(x0 * x0 - a, 2 * x0), y1],
+            [Q.of(x0).sub(Q.of(x0 * x0 - a)), Q.of(y0).sub(Q.of(2 * y0 - b))],
+          ],
+          solution: t(
+            `$\\nabla f(${x0}, ${y0}) = (${x0 * x0 - a}, ${2 * y0 - b})$ and $H = \\operatorname{diag}(${2 * x0}, 2)$, so $x_1 = ${x0} - ${paren(Q.of(x0 * x0 - a, 2 * x0))} = ${x1.toLatex()}$ and $y_1 = ${y0} - ${paren(Q.of(2 * y0 - b, 2))} = ${y1.toLatex()}$.`,
+            `$\\nabla f(${x0}, ${y0}) = (${x0 * x0 - a}, ${2 * y0 - b})$，$H = \\operatorname{diag}(${2 * x0}, 2)$，所以 $x_1 = ${x0} - ${paren(Q.of(x0 * x0 - a, 2 * x0))} = ${x1.toLatex()}$，$y_1 = ${y0} - ${paren(Q.of(2 * y0 - b, 2))} = ${y1.toLatex()}$。`,
+          ),
         });
       },
     },
