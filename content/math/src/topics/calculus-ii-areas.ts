@@ -653,8 +653,8 @@ export const theArcLengthOfAPlanarCurve: TopicDef = {
       id: "arc-length-with-a-perfect-square",
       title: t("Arc length with a perfect square", "利用完全平方求弧长"),
       explanation: t(
-        "Some curves are designed so that $1 + (f')^{2}$ is a perfect square. For $y = \\frac{x^{3}}{6} + \\frac{1}{2x}$, $f'(x) = \\frac{x^{2}}{2} - \\frac{1}{2x^{2}}$ and\n\n$$1 + (f')^{2} = \\frac{x^{4}}{4} + \\frac{1}{2} + \\frac{1}{4x^{4}} = \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right)^{2},$$\n\nso $L = \\int_{a}^{b} \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right) dx = \\left[\\frac{x^{3}}{6} - \\frac{1}{2x}\\right]_{a}^{b}$.",
-        "有些曲线经过设计，使 $1 + (f')^{2}$ 恰为完全平方。对 $y = \\frac{x^{3}}{6} + \\frac{1}{2x}$，$f'(x) = \\frac{x^{2}}{2} - \\frac{1}{2x^{2}}$，且\n\n$$1 + (f')^{2} = \\frac{x^{4}}{4} + \\frac{1}{2} + \\frac{1}{4x^{4}} = \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right)^{2}，$$\n\n所以 $L = \\int_{a}^{b} \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right) dx = \\left[\\frac{x^{3}}{6} - \\frac{1}{2x}\\right]_{a}^{b}$。",
+        "These curves are chosen so that one plus the square of the derivative is a perfect square, which removes the root and leaves a simple integral. Some curves are designed so that $1 + (f')^{2}$ is a perfect square. For $y = \\frac{x^{3}}{6} + \\frac{1}{2x}$, $f'(x) = \\frac{x^{2}}{2} - \\frac{1}{2x^{2}}$ and\n\n$$1 + (f')^{2} = \\frac{x^{4}}{4} + \\frac{1}{2} + \\frac{1}{4x^{4}} = \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right)^{2},$$\n\nso $L = \\int_{a}^{b} \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right) dx = \\left[\\frac{x^{3}}{6} - \\frac{1}{2x}\\right]_{a}^{b}$.",
+        "这些曲线经过特别选择，使 1 加导数的平方是一个完全平方，从而去掉根号，只剩一个简单的积分。有些曲线经过设计，使 $1 + (f')^{2}$ 恰为完全平方。对 $y = \\frac{x^{3}}{6} + \\frac{1}{2x}$，$f'(x) = \\frac{x^{2}}{2} - \\frac{1}{2x^{2}}$，且\n\n$$1 + (f')^{2} = \\frac{x^{4}}{4} + \\frac{1}{2} + \\frac{1}{4x^{4}} = \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right)^{2}，$$\n\n所以 $L = \\int_{a}^{b} \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right) dx = \\left[\\frac{x^{3}}{6} - \\frac{1}{2x}\\right]_{a}^{b}$。",
       ),
       generate(rng) {
         const a = rng.int(1, 4);
@@ -921,8 +921,8 @@ export const volumesOfSolidsWithTriangularCrossSections: TopicDef = {
       id: "equilateral-triangle-cross-sections",
       title: t("Equilateral triangle cross sections", "等边三角形截面"),
       explanation: t(
-        "An equilateral triangle with side $s$ has area $\\frac{\\sqrt{3}}{4}s^{2}$, so $V = \\frac{\\sqrt{3}}{4}\\int_{a}^{b} s(x)^{2} \\, dx$.",
-        "边长为 $s$ 的等边三角形面积为 $\\frac{\\sqrt{3}}{4}s^{2}$，所以 $V = \\frac{\\sqrt{3}}{4}\\int_{a}^{b} s(x)^{2} \\, dx$。",
+        "Slice the solid perpendicular to the axis; each slice is a thin triangle whose area depends on its side, and adding up the slices gives the volume. An equilateral triangle with side $s$ has area $\\frac{\\sqrt{3}}{4}s^{2}$, so $V = \\frac{\\sqrt{3}}{4}\\int_{a}^{b} s(x)^{2} \\, dx$.",
+        "垂直于轴把立体切成薄片；每一片是一个面积取决于边长的三角形，把所有薄片加起来就得到体积。边长为 $s$ 的等边三角形面积为 $\\frac{\\sqrt{3}}{4}s^{2}$，所以 $V = \\frac{\\sqrt{3}}{4}\\int_{a}^{b} s(x)^{2} \\, dx$。",
       ),
       generate(rng) {
         const section: Section = {
@@ -976,8 +976,8 @@ export const volumesOfSolidsWithCircularCrossSections: TopicDef = {
       id: "semicircular-cross-sections",
       title: t("Semicircular cross sections", "半圆形截面"),
       explanation: t(
-        "A semicircle with diameter $s$ has radius $\\frac{s}{2}$ and area $\\frac{1}{2}\\pi\\left(\\frac{s}{2}\\right)^{2} = \\frac{\\pi}{8}s^{2}$, so $V = \\frac{\\pi}{8}\\int_{a}^{b} s(x)^{2} \\, dx$.",
-        "直径为 $s$ 的半圆半径为 $\\frac{s}{2}$，面积为 $\\frac{1}{2}\\pi\\left(\\frac{s}{2}\\right)^{2} = \\frac{\\pi}{8}s^{2}$，所以 $V = \\frac{\\pi}{8}\\int_{a}^{b} s(x)^{2} \\, dx$。",
+        "When the base of each slice is the diameter of a semicircle, find its area from that diameter and integrate it along the axis. A semicircle with diameter $s$ has radius $\\frac{s}{2}$ and area $\\frac{1}{2}\\pi\\left(\\frac{s}{2}\\right)^{2} = \\frac{\\pi}{8}s^{2}$, so $V = \\frac{\\pi}{8}\\int_{a}^{b} s(x)^{2} \\, dx$.",
+        "当每个截面的底边是半圆的直径时，由直径求出它的面积，再沿轴积分。直径为 $s$ 的半圆半径为 $\\frac{s}{2}$，面积为 $\\frac{1}{2}\\pi\\left(\\frac{s}{2}\\right)^{2} = \\frac{\\pi}{8}s^{2}$，所以 $V = \\frac{\\pi}{8}\\int_{a}^{b} s(x)^{2} \\, dx$。",
       ),
       generate(rng) {
         const section: Section = {
@@ -993,8 +993,8 @@ export const volumesOfSolidsWithCircularCrossSections: TopicDef = {
       id: "circular-cross-sections",
       title: t("Circular cross sections", "圆形截面"),
       explanation: t(
-        "A circle with diameter $s$ has area $\\pi\\left(\\frac{s}{2}\\right)^{2} = \\frac{\\pi}{4}s^{2}$, so $V = \\frac{\\pi}{4}\\int_{a}^{b} s(x)^{2} \\, dx$. Remember to halve the diameter before squaring.",
-        "直径为 $s$ 的圆面积为 $\\pi\\left(\\frac{s}{2}\\right)^{2} = \\frac{\\pi}{4}s^{2}$，所以 $V = \\frac{\\pi}{4}\\int_{a}^{b} s(x)^{2} \\, dx$。注意先把直径减半再平方。",
+        "Each slice is a full circle whose diameter spans the base region, so its area is a quarter of pi times the square of that length. A circle with diameter $s$ has area $\\pi\\left(\\frac{s}{2}\\right)^{2} = \\frac{\\pi}{4}s^{2}$, so $V = \\frac{\\pi}{4}\\int_{a}^{b} s(x)^{2} \\, dx$. Remember to halve the diameter before squaring.",
+        "每个截面都是一个整圆，它的直径横跨底面区域，所以面积是 π/4 乘以这个长度的平方。直径为 $s$ 的圆面积为 $\\pi\\left(\\frac{s}{2}\\right)^{2} = \\frac{\\pi}{4}s^{2}$，所以 $V = \\frac{\\pi}{4}\\int_{a}^{b} s(x)^{2} \\, dx$。注意先把直径减半再平方。",
       ),
       generate(rng) {
         const section: Section = {

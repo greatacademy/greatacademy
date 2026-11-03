@@ -73,8 +73,8 @@ export const theAverageRateOfChangeOfAFunctionOverAVaryingInterval: TopicDef = {
       id: "difference-quotient-at-a-general-point",
       title: t("The difference quotient at a general point", "一般点处的差商"),
       explanation: t(
-        "At a general point $x$ the difference quotient is an expression in both $x$ and $h$. For $f(x) = 3x^{2}$:\n\n$$\\frac{3(x + h)^{2} - 3x^{2}}{h} = \\frac{6xh + 3h^{2}}{h} = 6x + 3h.$$",
-        "在一般点 $x$ 处，差商是同时含 $x$ 和 $h$ 的式子。对 $f(x) = 3x^{2}$：\n\n$$\\frac{3(x + h)^{2} - 3x^{2}}{h} = \\frac{6xh + 3h^{2}}{h} = 6x + 3h.$$",
+        "Expand the function at the shifted input, cancel the terms without the step, and divide by the step; letting the step go to zero then gives the derivative. At a general point $x$ the difference quotient is an expression in both $x$ and $h$. For $f(x) = 3x^{2}$:\n\n$$\\frac{3(x + h)^{2} - 3x^{2}}{h} = \\frac{6xh + 3h^{2}}{h} = 6x + 3h.$$",
+        "展开平移后自变量处的函数值，消去不含步长的项，再除以步长；令步长趋于零就得到导数。在一般点 $x$ 处，差商是同时含 $x$ 和 $h$ 的式子。对 $f(x) = 3x^{2}$：\n\n$$\\frac{3(x + h)^{2} - 3x^{2}}{h} = \\frac{6xh + 3h^{2}}{h} = 6x + 3h.$$",
       ),
       generate(rng) {
         const p = quadratic(rng);
@@ -583,8 +583,8 @@ export const theSumAndConstantMultipleRulesForDifferentiation: TopicDef = {
       id: "differentiating-polynomials",
       title: t("Differentiating polynomials", "多项式求导"),
       explanation: t(
-        "**Sum rule.** $(f + g)' = f' + g'$. **Constant multiple rule.** $(cf)' = cf'$. So a polynomial is differentiated term by term:\n\n$$\\frac{d}{dx}\\left(2x^{3} - 5x^{2} + 7x - 4\\right) = 6x^{2} - 10x + 7.$$",
-        "**和法则** $(f + g)' = f' + g'$。**常数倍法则** $(cf)' = cf'$。所以多项式可以逐项求导：\n\n$$\\frac{d}{dx}\\left(2x^{3} - 5x^{2} + 7x - 4\\right) = 6x^{2} - 10x + 7.$$",
+        "The derivative of a sum is the sum of the derivatives and constants factor out, so a polynomial is differentiated one term at a time with the power rule. **Sum rule.** $(f + g)' = f' + g'$. **Constant multiple rule.** $(cf)' = cf'$. So a polynomial is differentiated term by term:\n\n$$\\frac{d}{dx}\\left(2x^{3} - 5x^{2} + 7x - 4\\right) = 6x^{2} - 10x + 7.$$",
+        "和的导数等于导数的和，常数可以提出，所以多项式可以用幂法则逐项求导。**和法则** $(f + g)' = f' + g'$。**常数倍法则** $(cf)' = cf'$。所以多项式可以逐项求导：\n\n$$\\frac{d}{dx}\\left(2x^{3} - 5x^{2} + 7x - 4\\right) = 6x^{2} - 10x + 7.$$",
       ),
       generate(rng) {
         const deg = rng.int(3, 5);

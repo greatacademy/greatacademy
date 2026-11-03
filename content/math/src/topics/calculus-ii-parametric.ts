@@ -136,8 +136,8 @@ export const differentiatingParametricCurves: TopicDef = {
       id: "the-slope-in-terms-of-t",
       title: t("The slope in terms of t", "用 t 表示斜率"),
       explanation: t(
-        "The same quotient gives $\\frac{dy}{dx}$ as a function of the parameter. For the ellipse $x = 3\\cos t$, $y = 2\\sin t$: $\\frac{dy}{dx} = \\frac{2\\cos t}{-3\\sin t} = -\\frac{2\\cos t}{3\\sin t}$.",
-        "同样的商把 $\\frac{dy}{dx}$ 表示为参数的函数。对椭圆 $x = 3\\cos t$、$y = 2\\sin t$：$\\frac{dy}{dx} = \\frac{2\\cos t}{-3\\sin t} = -\\frac{2\\cos t}{3\\sin t}$。",
+        "For a curve given by a parameter, the slope is the rate of change of the vertical coordinate divided by the rate of change of the horizontal one. The same quotient gives $\\frac{dy}{dx}$ as a function of the parameter. For the ellipse $x = 3\\cos t$, $y = 2\\sin t$: $\\frac{dy}{dx} = \\frac{2\\cos t}{-3\\sin t} = -\\frac{2\\cos t}{3\\sin t}$.",
+        "对于由参数给出的曲线，斜率等于竖直坐标的变化率除以水平坐标的变化率。同样的商把 $\\frac{dy}{dx}$ 表示为参数的函数。对椭圆 $x = 3\\cos t$、$y = 2\\sin t$：$\\frac{dy}{dx} = \\frac{2\\cos t}{-3\\sin t} = -\\frac{2\\cos t}{3\\sin t}$。",
       ),
       generate: slopeFunction,
     },
@@ -217,8 +217,8 @@ export const calculatingTangentAndNormalLinesWithParametricEquations: TopicDef =
       id: "tangent-lines-to-parametric-curves",
       title: t("Tangent lines to parametric curves", "参数曲线的切线"),
       explanation: t(
-        "At $t = t_{0}$, the point is $(x(t_{0}), y(t_{0}))$ and the slope is $m = \\frac{dy/dt}{dx/dt}$ evaluated at $t_{0}$. The tangent line is $y - y(t_{0}) = m\\left(x - x(t_{0})\\right)$.",
-        "在 $t = t_{0}$ 处，点为 $(x(t_{0}), y(t_{0}))$，斜率为 $m = \\frac{dy/dt}{dx/dt}$ 在 $t_{0}$ 处的值。切线为 $y - y(t_{0}) = m\\left(x - x(t_{0})\\right)$。",
+        "Substitute the parameter value to get both the point and the slope there, then write the line through that point with that slope. At $t = t_{0}$, the point is $(x(t_{0}), y(t_{0}))$ and the slope is $m = \\frac{dy/dt}{dx/dt}$ evaluated at $t_{0}$. The tangent line is $y - y(t_{0}) = m\\left(x - x(t_{0})\\right)$.",
+        "代入参数值，求出该点及其斜率，再写出经过该点、具有该斜率的直线。在 $t = t_{0}$ 处，点为 $(x(t_{0}), y(t_{0}))$，斜率为 $m = \\frac{dy/dt}{dx/dt}$ 在 $t_{0}$ 处的值。切线为 $y - y(t_{0}) = m\\left(x - x(t_{0})\\right)$。",
       ),
       generate: (rng) => tangentOrNormal(rng, false),
     },
@@ -580,8 +580,8 @@ export const surfaceAreasOfRevolutionForParametricCurves: TopicDef = {
       id: "surfaces-from-polynomial-parametric-curves",
       title: t("Surfaces from polynomial parametric curves", "多项式参数曲线旋转所得的曲面"),
       explanation: t(
-        "Replace $ds = \\sqrt{1 + f'(x)^{2}} \\, dx$ by the parametric arc length element $ds = \\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt$. Rotating about the $x$-axis, the radius is $y(t)$:\n\n$$S = 2\\pi\\int_{a}^{b} y(t)\\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt.$$",
-        "把 $ds = \\sqrt{1 + f'(x)^{2}} \\, dx$ 换成参数形式的弧长元素 $ds = \\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt$。绕 $x$ 轴旋转时半径为 $y(t)$：\n\n$$S = 2\\pi\\int_{a}^{b} y(t)\\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt。$$",
+        "The surface area of a rotated curve adds up thin bands whose width is the arc length element and whose radius is the distance from the axis. Replace $ds = \\sqrt{1 + f'(x)^{2}} \\, dx$ by the parametric arc length element $ds = \\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt$. Rotating about the $x$-axis, the radius is $y(t)$:\n\n$$S = 2\\pi\\int_{a}^{b} y(t)\\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt.$$",
+        "旋转曲线的表面积是把许多窄带加起来，窄带的宽是弧长微元，半径是到轴的距离。把 $ds = \\sqrt{1 + f'(x)^{2}} \\, dx$ 换成参数形式的弧长元素 $ds = \\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt$。绕 $x$ 轴旋转时半径为 $y(t)$：\n\n$$S = 2\\pi\\int_{a}^{b} y(t)\\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt。$$",
       ),
       generate: polynomialParametricSurface,
     },

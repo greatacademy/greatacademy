@@ -832,8 +832,8 @@ export const theRootTest: TopicDef = {
       id: "conclusions-from-the-root-test",
       title: t("Conclusions from the root test", "根值判别法的结论"),
       explanation: t(
-        "Compare $L$ with $1$. For $\\sum \\left(\\frac{3n}{n + 4}\\right)^{n}$, $L = 3 > 1$, so the series diverges; for $\\sum \\left(\\frac{n}{3n + 4}\\right)^{n}$, $L = \\frac{1}{3} < 1$, so it converges.",
-        "把 $L$ 与 $1$ 比较。对 $\\sum \\left(\\frac{3n}{n + 4}\\right)^{n}$，$L = 3 > 1$，级数发散；对 $\\sum \\left(\\frac{n}{3n + 4}\\right)^{n}$，$L = \\frac{1}{3} < 1$，级数收敛。",
+        "If the limit of the root of the terms is below one, the terms shrink like a convergent geometric series; above one they do not shrink, and exactly one gives no conclusion. Compare $L$ with $1$. For $\\sum \\left(\\frac{3n}{n + 4}\\right)^{n}$, $L = 3 > 1$, so the series diverges; for $\\sum \\left(\\frac{n}{3n + 4}\\right)^{n}$, $L = \\frac{1}{3} < 1$, so it converges.",
+        "如果项的方根的极限小于 1，各项像收敛的等比级数那样缩小；大于 1 时不缩小；恰好等于 1 时无法判断。把 $L$ 与 $1$ 比较。对 $\\sum \\left(\\frac{3n}{n + 4}\\right)^{n}$，$L = 3 > 1$，级数发散；对 $\\sum \\left(\\frac{n}{3n + 4}\\right)^{n}$，$L = \\frac{1}{3} < 1$，级数收敛。",
       ),
       generate(rng) {
         const k = rootCase(rng);

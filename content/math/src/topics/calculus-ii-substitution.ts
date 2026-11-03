@@ -184,8 +184,8 @@ export const integratingLinearRationalFunctionsUsingSubstitution: TopicDef = {
       id: "integrating-one-over-a-linear-function",
       title: t("Integrating one over a linear function", "一次式倒数的积分"),
       explanation: t(
-        "With $u = ax + b$ and $dx = \\frac{1}{a} \\, du$,\n\n$$\\int \\frac{1}{ax + b} \\, dx = \\frac{1}{a}\\int \\frac{1}{u} \\, du = \\frac{1}{a}\\ln|ax + b| + C.$$\n\nThe power rule does not apply because the exponent is $-1$.",
-        "令 $u = ax + b$，$dx = \\frac{1}{a} \\, du$，则\n\n$$\\int \\frac{1}{ax + b} \\, dx = \\frac{1}{a}\\int \\frac{1}{u} \\, du = \\frac{1}{a}\\ln|ax + b| + C。$$\n\n指数为 $-1$，所以不能用幂法则。",
+        "Substituting the linear expression turns the integrand into one over the new variable, whose integral is a logarithm; the leftover factor is one over the coefficient. With $u = ax + b$ and $dx = \\frac{1}{a} \\, du$,\n\n$$\\int \\frac{1}{ax + b} \\, dx = \\frac{1}{a}\\int \\frac{1}{u} \\, du = \\frac{1}{a}\\ln|ax + b| + C.$$\n\nThe power rule does not apply because the exponent is $-1$.",
+        "把一次式换元后，被积函数变成新变量的倒数，它的积分是对数；剩下的因子是系数的倒数。令 $u = ax + b$，$dx = \\frac{1}{a} \\, du$，则\n\n$$\\int \\frac{1}{ax + b} \\, dx = \\frac{1}{a}\\int \\frac{1}{u} \\, du = \\frac{1}{a}\\ln|ax + b| + C。$$\n\n指数为 $-1$，所以不能用幂法则。",
       ),
       generate(rng) {
         const a = rng.pick([2, 3, 4, 5, 6, -2, -3, -4]);
@@ -323,8 +323,8 @@ export const integrationUsingSubstitution: TopicDef = {
       id: "integrating-f-of-g-times-g-prime",
       title: t("Integrating f(g(x))g'(x)", "求 f(g(x))g'(x) 的积分"),
       explanation: t(
-        "Substitute $u = g(x)$, replace $g'(x) \\, dx$ by $du$ (adjusting a constant factor), integrate in $u$, and substitute back. With $u = x^{2} + 4x + 1$ and $du = (2x + 4) \\, dx = 2(x + 2) \\, dx$:\n\n$$\\int (x + 2)(x^{2} + 4x + 1)^{3} \\, dx = \\frac{1}{2}\\int u^{3} \\, du = \\frac{1}{8}(x^{2} + 4x + 1)^{4} + C.$$",
-        "代换 $u = g(x)$，把 $g'(x) \\, dx$ 换成 $du$（调整常数因子），对 $u$ 积分，再代回。令 $u = x^{2} + 4x + 1$，$du = (2x + 4) \\, dx = 2(x + 2) \\, dx$：\n\n$$\\int (x + 2)(x^{2} + 4x + 1)^{3} \\, dx = \\frac{1}{2}\\int u^{3} \\, du = \\frac{1}{8}(x^{2} + 4x + 1)^{4} + C。$$",
+        "Look for an inner function whose derivative also appears as a factor, since that is exactly the pattern the chain rule produces when you differentiate. Substitute $u = g(x)$, replace $g'(x) \\, dx$ by $du$ (adjusting a constant factor), integrate in $u$, and substitute back. With $u = x^{2} + 4x + 1$ and $du = (2x + 4) \\, dx = 2(x + 2) \\, dx$:\n\n$$\\int (x + 2)(x^{2} + 4x + 1)^{3} \\, dx = \\frac{1}{2}\\int u^{3} \\, du = \\frac{1}{8}(x^{2} + 4x + 1)^{4} + C.$$",
+        "寻找一个内层函数，使它的导数也作为因子出现，因为这正是求导时链式法则产生的形式。代换 $u = g(x)$，把 $g'(x) \\, dx$ 换成 $du$（调整常数因子），对 $u$ 积分，再代回。令 $u = x^{2} + 4x + 1$，$du = (2x + 4) \\, dx = 2(x + 2) \\, dx$：\n\n$$\\int (x + 2)(x^{2} + 4x + 1)^{3} \\, dx = \\frac{1}{2}\\int u^{3} \\, du = \\frac{1}{8}(x^{2} + 4x + 1)^{4} + C。$$",
       ),
       generate(rng) {
         const h = rng.nonZero(-5, 5);
@@ -410,8 +410,8 @@ export const calculatingDefiniteIntegralsUsingSubstitution: TopicDef = {
       id: "definite-integrals-giving-logarithms",
       title: t("Definite integrals giving logarithms", "结果为对数的定积分"),
       explanation: t(
-        "With $u = x^{2} + c$ and $du = 2x \\, dx$,\n\n$$\\int_{a}^{b} \\frac{x}{x^{2} + c} \\, dx = \\frac{1}{2}\\int_{a^{2} + c}^{b^{2} + c} \\frac{1}{u} \\, du = \\frac{1}{2}\\ln\\frac{b^{2} + c}{a^{2} + c}$$\n\nfor $c > 0$, using $\\ln p - \\ln q = \\ln\\frac{p}{q}$.",
-        "令 $u = x^{2} + c$，$du = 2x \\, dx$，当 $c > 0$ 时\n\n$$\\int_{a}^{b} \\frac{x}{x^{2} + c} \\, dx = \\frac{1}{2}\\int_{a^{2} + c}^{b^{2} + c} \\frac{1}{u} \\, du = \\frac{1}{2}\\ln\\frac{b^{2} + c}{a^{2} + c}，$$\n\n这里用到 $\\ln p - \\ln q = \\ln\\frac{p}{q}$。",
+        "When you substitute in a definite integral, change the limits to values of the new variable too, so you never need to substitute back. With $u = x^{2} + c$ and $du = 2x \\, dx$,\n\n$$\\int_{a}^{b} \\frac{x}{x^{2} + c} \\, dx = \\frac{1}{2}\\int_{a^{2} + c}^{b^{2} + c} \\frac{1}{u} \\, du = \\frac{1}{2}\\ln\\frac{b^{2} + c}{a^{2} + c}$$\n\nfor $c > 0$, using $\\ln p - \\ln q = \\ln\\frac{p}{q}$.",
+        "在定积分中换元时，把上下限也换成新变量的值，这样就不必再代回原变量。令 $u = x^{2} + c$，$du = 2x \\, dx$，当 $c > 0$ 时\n\n$$\\int_{a}^{b} \\frac{x}{x^{2} + c} \\, dx = \\frac{1}{2}\\int_{a^{2} + c}^{b^{2} + c} \\frac{1}{u} \\, du = \\frac{1}{2}\\ln\\frac{b^{2} + c}{a^{2} + c}，$$\n\n这里用到 $\\ln p - \\ln q = \\ln\\frac{p}{q}$。",
       ),
       generate(rng) {
         const c = rng.int(1, 9);
@@ -448,8 +448,8 @@ export const furtherIntegrationOfAlgebraicFunctionsUsingSubstitution: TopicDef =
       id: "rewriting-x-in-terms-of-u",
       title: t("Rewriting x in terms of u", "把 x 写成 u 的式子"),
       explanation: t(
-        "When a factor of $x$ is left over, express it through $u$ as well. For $\\int x(x + 2)^{4} \\, dx$, let $u = x + 2$, so $x = u - 2$:\n\n$$\\int (u - 2)u^{4} \\, du = \\int (u^{5} - 2u^{4}) \\, du = \\frac{(x + 2)^{6}}{6} - \\frac{2(x + 2)^{5}}{5} + C.$$",
-        "当剩下一个因子 $x$ 时，也要用 $u$ 表示它。对 $\\int x(x + 2)^{4} \\, dx$，令 $u = x + 2$，则 $x = u - 2$：\n\n$$\\int (u - 2)u^{4} \\, du = \\int (u^{5} - 2u^{4}) \\, du = \\frac{(x + 2)^{6}}{6} - \\frac{2(x + 2)^{5}}{5} + C。$$",
+        "If a factor of the original variable remains after substituting, solve the substitution for that variable and replace it, so everything is written in the new variable. When a factor of $x$ is left over, express it through $u$ as well. For $\\int x(x + 2)^{4} \\, dx$, let $u = x + 2$, so $x = u - 2$:\n\n$$\\int (u - 2)u^{4} \\, du = \\int (u^{5} - 2u^{4}) \\, du = \\frac{(x + 2)^{6}}{6} - \\frac{2(x + 2)^{5}}{5} + C.$$",
+        "如果换元后还剩下原变量的因子，就从换元式中解出原变量并代入，使所有部分都用新变量表示。当剩下一个因子 $x$ 时，也要用 $u$ 表示它。对 $\\int x(x + 2)^{4} \\, dx$，令 $u = x + 2$，则 $x = u - 2$：\n\n$$\\int (u - 2)u^{4} \\, du = \\int (u^{5} - 2u^{4}) \\, du = \\frac{(x + 2)^{6}}{6} - \\frac{2(x + 2)^{5}}{5} + C。$$",
       ),
       generate(rng) {
         const b = rng.nonZero(-6, 6);
@@ -474,8 +474,8 @@ export const furtherIntegrationOfAlgebraicFunctionsUsingSubstitution: TopicDef =
       id: "rewriting-x-under-a-root",
       title: t("Rewriting x under a root", "根式中的 x 的改写"),
       explanation: t(
-        "The same idea works with roots. For $\\int \\frac{x}{\\sqrt{x + 1}} \\, dx$, let $u = x + 1$, so $x = u - 1$:\n\n$$\\int \\frac{u - 1}{\\sqrt{u}} \\, du = \\int \\left(u^{\\frac{1}{2}} - u^{-\\frac{1}{2}}\\right) du = \\frac{2}{3}(x + 1)^{\\frac{3}{2}} - 2\\sqrt{x + 1} + C.$$",
-        "根式同理。对 $\\int \\frac{x}{\\sqrt{x + 1}} \\, dx$，令 $u = x + 1$，则 $x = u - 1$：\n\n$$\\int \\frac{u - 1}{\\sqrt{u}} \\, du = \\int \\left(u^{\\frac{1}{2}} - u^{-\\frac{1}{2}}\\right) du = \\frac{2}{3}(x + 1)^{\\frac{3}{2}} - 2\\sqrt{x + 1} + C。$$",
+        "Substituting the expression under the root makes the root a simple power, and the leftover variable is rewritten from the substitution before splitting into powers. The same idea works with roots. For $\\int \\frac{x}{\\sqrt{x + 1}} \\, dx$, let $u = x + 1$, so $x = u - 1$:\n\n$$\\int \\frac{u - 1}{\\sqrt{u}} \\, du = \\int \\left(u^{\\frac{1}{2}} - u^{-\\frac{1}{2}}\\right) du = \\frac{2}{3}(x + 1)^{\\frac{3}{2}} - 2\\sqrt{x + 1} + C.$$",
+        "把根号下的式子换元后，根式变成简单的幂，剩下的变量也用换元式改写，再拆成几个幂。根式同理。对 $\\int \\frac{x}{\\sqrt{x + 1}} \\, dx$，令 $u = x + 1$，则 $x = u - 1$：\n\n$$\\int \\frac{u - 1}{\\sqrt{u}} \\, du = \\int \\left(u^{\\frac{1}{2}} - u^{-\\frac{1}{2}}\\right) du = \\frac{2}{3}(x + 1)^{\\frac{3}{2}} - 2\\sqrt{x + 1} + C。$$",
       ),
       generate(rng) {
         // x + b > 0 must hold at most sample points, so b ≥ −1.
@@ -533,8 +533,8 @@ export const integratingExponentialFunctionsUsingLinearSubstitution: TopicDef = 
       id: "exponentials-with-linear-exponents",
       title: t("Exponentials with linear exponents", "指数为一次式的指数函数"),
       explanation: t(
-        "With $u = ax + b$ and $dx = \\frac{1}{a} \\, du$,\n\n$$\\int e^{ax + b} \\, dx = \\frac{1}{a}e^{ax + b} + C, \\qquad \\int c^{ax + b} \\, dx = \\frac{c^{ax + b}}{a\\ln c} + C.$$\n\nRewrite a reciprocal first: $\\frac{1}{e^{2x}} = e^{-2x}$.",
-        "令 $u = ax + b$，$dx = \\frac{1}{a} \\, du$：\n\n$$\\int e^{ax + b} \\, dx = \\frac{1}{a}e^{ax + b} + C, \\qquad \\int c^{ax + b} \\, dx = \\frac{c^{ax + b}}{a\\ln c} + C。$$\n\n倒数先改写：$\\frac{1}{e^{2x}} = e^{-2x}$。",
+        "A linear exponent changes only the scale, so the antiderivative is the same exponential divided by the coefficient of the variable. With $u = ax + b$ and $dx = \\frac{1}{a} \\, du$,\n\n$$\\int e^{ax + b} \\, dx = \\frac{1}{a}e^{ax + b} + C, \\qquad \\int c^{ax + b} \\, dx = \\frac{c^{ax + b}}{a\\ln c} + C.$$\n\nRewrite a reciprocal first: $\\frac{1}{e^{2x}} = e^{-2x}$.",
+        "一次式指数只改变缩放比例，所以原函数是同一个指数式再除以变量的系数。令 $u = ax + b$，$dx = \\frac{1}{a} \\, du$：\n\n$$\\int e^{ax + b} \\, dx = \\frac{1}{a}e^{ax + b} + C, \\qquad \\int c^{ax + b} \\, dx = \\frac{c^{ax + b}}{a\\ln c} + C。$$\n\n倒数先改写：$\\frac{1}{e^{2x}} = e^{-2x}$。",
       ),
       generate(rng) {
         const a = rng.pick([2, 3, 4, 5]);
@@ -570,8 +570,8 @@ export const integratingExponentialFunctionsUsingLinearSubstitution: TopicDef = 
       id: "definite-integrals-of-exponentials",
       title: t("Definite integrals of exponentials", "指数函数的定积分"),
       explanation: t(
-        "Find the antiderivative and evaluate it at the limits: $\\int_{0}^{1} e^{2x} \\, dx = \\left[\\frac{1}{2}e^{2x}\\right]_{0}^{1} = \\frac{1}{2}\\left(e^{2} - 1\\right)$, since $e^{0} = 1$.",
-        "求出原函数，再代入上下限：$\\int_{0}^{1} e^{2x} \\, dx = \\left[\\frac{1}{2}e^{2x}\\right]_{0}^{1} = \\frac{1}{2}\\left(e^{2} - 1\\right)$，因为 $e^{0} = 1$。",
+        "After finding the antiderivative, evaluate it at the upper and lower limits and subtract, simplifying with the rule that any base to the power zero is one. Find the antiderivative and evaluate it at the limits: $\\int_{0}^{1} e^{2x} \\, dx = \\left[\\frac{1}{2}e^{2x}\\right]_{0}^{1} = \\frac{1}{2}\\left(e^{2} - 1\\right)$, since $e^{0} = 1$.",
+        "求出原函数后，在上下限处分别求值并相减，再利用任何底数的零次幂都等于 1 来化简。求出原函数，再代入上下限：$\\int_{0}^{1} e^{2x} \\, dx = \\left[\\frac{1}{2}e^{2x}\\right]_{0}^{1} = \\frac{1}{2}\\left(e^{2} - 1\\right)$，因为 $e^{0} = 1$。",
       ),
       generate(rng) {
         const a = rng.pick([2, 3, 4, -1, -2, -3]);
@@ -617,8 +617,8 @@ export const integratingExponentialFunctionsUsingSubstitution: TopicDef = {
       id: "exponentials-of-powers-of-x",
       title: t("Exponentials of powers of x", "以 x 的幂为指数的指数函数"),
       explanation: t(
-        "For $\\int x^{n - 1}e^{ax^{n}} \\, dx$, let $u = ax^{n}$, so $du = nax^{n - 1} \\, dx$:\n\n$$\\int x^{n - 1}e^{ax^{n}} \\, dx = \\frac{1}{na}e^{ax^{n}} + C.$$\n\nFor example, $\\int xe^{x^{2}} \\, dx = \\frac{1}{2}e^{x^{2}} + C$. Without the factor $x^{n - 1}$ the substitution does not work.",
-        "对 $\\int x^{n - 1}e^{ax^{n}} \\, dx$，令 $u = ax^{n}$，则 $du = nax^{n - 1} \\, dx$：\n\n$$\\int x^{n - 1}e^{ax^{n}} \\, dx = \\frac{1}{na}e^{ax^{n}} + C。$$\n\n例如 $\\int xe^{x^{2}} \\, dx = \\frac{1}{2}e^{x^{2}} + C$。若没有因子 $x^{n - 1}$，这个代换就行不通。",
+        "The substitution works because the power of the variable in front is exactly what differentiating the exponent produces, up to a constant. For $\\int x^{n - 1}e^{ax^{n}} \\, dx$, let $u = ax^{n}$, so $du = nax^{n - 1} \\, dx$:\n\n$$\\int x^{n - 1}e^{ax^{n}} \\, dx = \\frac{1}{na}e^{ax^{n}} + C.$$\n\nFor example, $\\int xe^{x^{2}} \\, dx = \\frac{1}{2}e^{x^{2}} + C$. Without the factor $x^{n - 1}$ the substitution does not work.",
+        "这个换元之所以可行，是因为前面那个变量的幂恰好是指数求导后得到的式子，只差一个常数。对 $\\int x^{n - 1}e^{ax^{n}} \\, dx$，令 $u = ax^{n}$，则 $du = nax^{n - 1} \\, dx$：\n\n$$\\int x^{n - 1}e^{ax^{n}} \\, dx = \\frac{1}{na}e^{ax^{n}} + C。$$\n\n例如 $\\int xe^{x^{2}} \\, dx = \\frac{1}{2}e^{x^{2}} + C$。若没有因子 $x^{n - 1}$，这个代换就行不通。",
       ),
       generate(rng) {
         const n = rng.int(2, 3);
@@ -639,8 +639,8 @@ export const integratingExponentialFunctionsUsingSubstitution: TopicDef = {
       id: "substituting-expressions-in-e-to-the-x",
       title: t("Substituting expressions in eˣ", "代换含 eˣ 的式子"),
       explanation: t(
-        "Other substitutions make exponential integrands simple:\n\n- $u = e^{x} + b$: $\\int \\frac{e^{x}}{e^{x} + b} \\, dx = \\ln(e^{x} + b) + C$ for $b > 0$.\n- $u = \\sqrt{x}$, $du = \\frac{1}{2\\sqrt{x}} \\, dx$: $\\int \\frac{e^{\\sqrt{x}}}{\\sqrt{x}} \\, dx = 2e^{\\sqrt{x}} + C$.\n- $u = \\frac{1}{x}$, $du = -\\frac{1}{x^{2}} \\, dx$: $\\int \\frac{e^{\\frac{1}{x}}}{x^{2}} \\, dx = -e^{\\frac{1}{x}} + C$.",
-        "其他代换也能化简指数型被积函数：\n\n- $u = e^{x} + b$：当 $b > 0$ 时 $\\int \\frac{e^{x}}{e^{x} + b} \\, dx = \\ln(e^{x} + b) + C$。\n- $u = \\sqrt{x}$，$du = \\frac{1}{2\\sqrt{x}} \\, dx$：$\\int \\frac{e^{\\sqrt{x}}}{\\sqrt{x}} \\, dx = 2e^{\\sqrt{x}} + C$。\n- $u = \\frac{1}{x}$，$du = -\\frac{1}{x^{2}} \\, dx$：$\\int \\frac{e^{\\frac{1}{x}}}{x^{2}} \\, dx = -e^{\\frac{1}{x}} + C$。",
+        "Since the exponential is its own derivative, letting the new variable be an expression in the exponential often turns the integrand into something simple. Other substitutions make exponential integrands simple:\n\n- $u = e^{x} + b$: $\\int \\frac{e^{x}}{e^{x} + b} \\, dx = \\ln(e^{x} + b) + C$ for $b > 0$.\n- $u = \\sqrt{x}$, $du = \\frac{1}{2\\sqrt{x}} \\, dx$: $\\int \\frac{e^{\\sqrt{x}}}{\\sqrt{x}} \\, dx = 2e^{\\sqrt{x}} + C$.\n- $u = \\frac{1}{x}$, $du = -\\frac{1}{x^{2}} \\, dx$: $\\int \\frac{e^{\\frac{1}{x}}}{x^{2}} \\, dx = -e^{\\frac{1}{x}} + C$.",
+        "由于指数函数的导数是它自己，把新变量设为含指数函数的式子，常常能把被积函数变简单。其他代换也能化简指数型被积函数：\n\n- $u = e^{x} + b$：当 $b > 0$ 时 $\\int \\frac{e^{x}}{e^{x} + b} \\, dx = \\ln(e^{x} + b) + C$。\n- $u = \\sqrt{x}$，$du = \\frac{1}{2\\sqrt{x}} \\, dx$：$\\int \\frac{e^{\\sqrt{x}}}{\\sqrt{x}} \\, dx = 2e^{\\sqrt{x}} + C$。\n- $u = \\frac{1}{x}$，$du = -\\frac{1}{x^{2}} \\, dx$：$\\int \\frac{e^{\\frac{1}{x}}}{x^{2}} \\, dx = -e^{\\frac{1}{x}} + C$。",
       ),
       generate(rng) {
         const k = rng.nonZero(-9, 9);
@@ -719,8 +719,8 @@ export const integratingTrigonometricFunctionsUsingSubstitution: TopicDef = {
       id: "trigonometric-functions-of-powers-of-x",
       title: t("Trigonometric functions of powers of x", "以 x 的幂为自变量的三角函数"),
       explanation: t(
-        "For $\\int x^{n - 1}\\sin(ax^{n}) \\, dx$, let $u = ax^{n}$, so $x^{n - 1} \\, dx = \\frac{1}{na} \\, du$:\n\n$$\\int x^{n - 1}\\sin(ax^{n}) \\, dx = -\\frac{1}{na}\\cos(ax^{n}) + C, \\qquad \\int x^{n - 1}\\cos(ax^{n}) \\, dx = \\frac{1}{na}\\sin(ax^{n}) + C.$$",
-        "对 $\\int x^{n - 1}\\sin(ax^{n}) \\, dx$，令 $u = ax^{n}$，则 $x^{n - 1} \\, dx = \\frac{1}{na} \\, du$：\n\n$$\\int x^{n - 1}\\sin(ax^{n}) \\, dx = -\\frac{1}{na}\\cos(ax^{n}) + C, \\qquad \\int x^{n - 1}\\cos(ax^{n}) \\, dx = \\frac{1}{na}\\sin(ax^{n}) + C。$$",
+        "Let the argument of the trigonometric function be the new variable, and check that the factor in front is its derivative up to a constant. For $\\int x^{n - 1}\\sin(ax^{n}) \\, dx$, let $u = ax^{n}$, so $x^{n - 1} \\, dx = \\frac{1}{na} \\, du$:\n\n$$\\int x^{n - 1}\\sin(ax^{n}) \\, dx = -\\frac{1}{na}\\cos(ax^{n}) + C, \\qquad \\int x^{n - 1}\\cos(ax^{n}) \\, dx = \\frac{1}{na}\\sin(ax^{n}) + C.$$",
+        "把三角函数的自变量设为新变量，并检查前面的因子是否是它的导数，最多相差一个常数。对 $\\int x^{n - 1}\\sin(ax^{n}) \\, dx$，令 $u = ax^{n}$，则 $x^{n - 1} \\, dx = \\frac{1}{na} \\, du$：\n\n$$\\int x^{n - 1}\\sin(ax^{n}) \\, dx = -\\frac{1}{na}\\cos(ax^{n}) + C, \\qquad \\int x^{n - 1}\\cos(ax^{n}) \\, dx = \\frac{1}{na}\\sin(ax^{n}) + C。$$",
       ),
       generate(rng) {
         const n = rng.int(2, 3);
@@ -810,8 +810,8 @@ export const integratingLogarithmicFunctionsUsingSubstitution: TopicDef = {
       id: "powers-of-ln-x-over-x",
       title: t("Powers of ln x over x", "ln x 的幂除以 x"),
       explanation: t(
-        "Since $\\frac{d}{dx}\\ln x = \\frac{1}{x}$, the substitution $u = \\ln x$, $du = \\frac{1}{x} \\, dx$ gives\n\n$$\\int \\frac{(\\ln x)^{m}}{x} \\, dx = \\int u^{m} \\, du = \\frac{(\\ln x)^{m + 1}}{m + 1} + C \\quad (m \\ne -1).$$",
-        "由于 $\\frac{d}{dx}\\ln x = \\frac{1}{x}$，代换 $u = \\ln x$，$du = \\frac{1}{x} \\, dx$，得\n\n$$\\int \\frac{(\\ln x)^{m}}{x} \\, dx = \\int u^{m} \\, du = \\frac{(\\ln x)^{m + 1}}{m + 1} + C \\quad (m \\ne -1)。$$",
+        "One over the variable is the derivative of the natural logarithm, so substituting the logarithm turns the integrand into a simple power. Since $\\frac{d}{dx}\\ln x = \\frac{1}{x}$, the substitution $u = \\ln x$, $du = \\frac{1}{x} \\, dx$ gives\n\n$$\\int \\frac{(\\ln x)^{m}}{x} \\, dx = \\int u^{m} \\, du = \\frac{(\\ln x)^{m + 1}}{m + 1} + C \\quad (m \\ne -1).$$",
+        "变量的倒数是自然对数的导数，所以把对数换元后，被积函数就变成简单的幂。由于 $\\frac{d}{dx}\\ln x = \\frac{1}{x}$，代换 $u = \\ln x$，$du = \\frac{1}{x} \\, dx$，得\n\n$$\\int \\frac{(\\ln x)^{m}}{x} \\, dx = \\int u^{m} \\, du = \\frac{(\\ln x)^{m + 1}}{m + 1} + C \\quad (m \\ne -1)。$$",
       ),
       generate(rng) {
         const k = rng.nonZero(-9, 9);
@@ -919,8 +919,8 @@ export const integrationBySubstitutionWithInverseTrigonometricFunctions: TopicDe
       id: "scaled-arcsine-and-arctangent-integrals",
       title: t("Scaled arcsine and arctangent integrals", "带系数的反正弦与反正切积分"),
       explanation: t(
-        "With $u = cx$ and $dx = \\frac{1}{c} \\, du$,\n\n$$\\int \\frac{1}{a^{2} + c^{2}x^{2}} \\, dx = \\frac{1}{ac}\\arctan\\frac{cx}{a} + C, \\qquad \\int \\frac{1}{\\sqrt{a^{2} - c^{2}x^{2}}} \\, dx = \\frac{1}{c}\\arcsin\\frac{cx}{a} + C.$$\n\nFor example, $\\int \\frac{1}{4 + 9x^{2}} \\, dx = \\frac{1}{6}\\arctan\\frac{3x}{2} + C$.",
-        "令 $u = cx$，$dx = \\frac{1}{c} \\, du$：\n\n$$\\int \\frac{1}{a^{2} + c^{2}x^{2}} \\, dx = \\frac{1}{ac}\\arctan\\frac{cx}{a} + C, \\qquad \\int \\frac{1}{\\sqrt{a^{2} - c^{2}x^{2}}} \\, dx = \\frac{1}{c}\\arcsin\\frac{cx}{a} + C。$$\n\n例如 $\\int \\frac{1}{4 + 9x^{2}} \\, dx = \\frac{1}{6}\\arctan\\frac{3x}{2} + C$。",
+        "When the square has a coefficient, substitute to remove it, which introduces an extra factor of one over that coefficient in the answer. With $u = cx$ and $dx = \\frac{1}{c} \\, du$,\n\n$$\\int \\frac{1}{a^{2} + c^{2}x^{2}} \\, dx = \\frac{1}{ac}\\arctan\\frac{cx}{a} + C, \\qquad \\int \\frac{1}{\\sqrt{a^{2} - c^{2}x^{2}}} \\, dx = \\frac{1}{c}\\arcsin\\frac{cx}{a} + C.$$\n\nFor example, $\\int \\frac{1}{4 + 9x^{2}} \\, dx = \\frac{1}{6}\\arctan\\frac{3x}{2} + C$.",
+        "当平方项有系数时，用换元去掉它，答案中会多出一个该系数的倒数因子。令 $u = cx$，$dx = \\frac{1}{c} \\, du$：\n\n$$\\int \\frac{1}{a^{2} + c^{2}x^{2}} \\, dx = \\frac{1}{ac}\\arctan\\frac{cx}{a} + C, \\qquad \\int \\frac{1}{\\sqrt{a^{2} - c^{2}x^{2}}} \\, dx = \\frac{1}{c}\\arcsin\\frac{cx}{a} + C。$$\n\n例如 $\\int \\frac{1}{4 + 9x^{2}} \\, dx = \\frac{1}{6}\\arctan\\frac{3x}{2} + C$。",
       ),
       generate(rng) {
         const k = rng.nonZero(-9, 9);
@@ -981,8 +981,8 @@ export const integrationBySubstitutionWithInverseTrigonometricFunctions: TopicDe
       id: "substitutions-leading-to-inverse-trigonometric-functions",
       title: t("Substitutions leading to inverse trigonometric functions", "化为反三角函数的代换"),
       explanation: t(
-        "Sometimes $u^{2}$ is hidden in the integrand:\n\n- $u = x^{2}$: $\\int \\frac{x}{x^{4} + a^{2}} \\, dx = \\frac{1}{2a}\\arctan\\frac{x^{2}}{a} + C$.\n- $u = e^{x}$: $\\int \\frac{e^{x}}{1 + e^{2x}} \\, dx = \\arctan(e^{x}) + C$.\n- $u = \\sin x$: $\\int \\frac{\\cos x}{1 + \\sin^{2} x} \\, dx = \\arctan(\\sin x) + C$.\n- $u = \\ln x$: $\\int \\frac{1}{x(1 + (\\ln x)^{2})} \\, dx = \\arctan(\\ln x) + C$.",
-        "有时 $u^{2}$ 隐藏在被积函数中：\n\n- $u = x^{2}$：$\\int \\frac{x}{x^{4} + a^{2}} \\, dx = \\frac{1}{2a}\\arctan\\frac{x^{2}}{a} + C$。\n- $u = e^{x}$：$\\int \\frac{e^{x}}{1 + e^{2x}} \\, dx = \\arctan(e^{x}) + C$。\n- $u = \\sin x$：$\\int \\frac{\\cos x}{1 + \\sin^{2} x} \\, dx = \\arctan(\\sin x) + C$。\n- $u = \\ln x$：$\\int \\frac{1}{x(1 + (\\ln x)^{2})} \\, dx = \\arctan(\\ln x) + C$。",
+        "Look for a square hidden inside the integrand, such as a fourth power or a square of an exponential, whose derivative also appears as a factor. Sometimes $u^{2}$ is hidden in the integrand:\n\n- $u = x^{2}$: $\\int \\frac{x}{x^{4} + a^{2}} \\, dx = \\frac{1}{2a}\\arctan\\frac{x^{2}}{a} + C$.\n- $u = e^{x}$: $\\int \\frac{e^{x}}{1 + e^{2x}} \\, dx = \\arctan(e^{x}) + C$.\n- $u = \\sin x$: $\\int \\frac{\\cos x}{1 + \\sin^{2} x} \\, dx = \\arctan(\\sin x) + C$.\n- $u = \\ln x$: $\\int \\frac{1}{x(1 + (\\ln x)^{2})} \\, dx = \\arctan(\\ln x) + C$.",
+        "寻找被积函数中隐藏的平方，例如四次方或指数式的平方，同时它的导数也作为因子出现。有时 $u^{2}$ 隐藏在被积函数中：\n\n- $u = x^{2}$：$\\int \\frac{x}{x^{4} + a^{2}} \\, dx = \\frac{1}{2a}\\arctan\\frac{x^{2}}{a} + C$。\n- $u = e^{x}$：$\\int \\frac{e^{x}}{1 + e^{2x}} \\, dx = \\arctan(e^{x}) + C$。\n- $u = \\sin x$：$\\int \\frac{\\cos x}{1 + \\sin^{2} x} \\, dx = \\arctan(\\sin x) + C$。\n- $u = \\ln x$：$\\int \\frac{1}{x(1 + (\\ln x)^{2})} \\, dx = \\arctan(\\ln x) + C$。",
       ),
       generate(rng) {
         const k = rng.nonZero(-9, 9);
@@ -1052,8 +1052,8 @@ export const integratingHyperbolicFunctionsUsingSubstitution: TopicDef = {
       id: "hyperbolic-functions-of-powers-of-x",
       title: t("Hyperbolic functions of powers of x", "以 x 的幂为自变量的双曲函数"),
       explanation: t(
-        "With $u = ax^{n}$ and $x^{n - 1} \\, dx = \\frac{1}{na} \\, du$,\n\n$$\\int x^{n - 1}\\sinh(ax^{n}) \\, dx = \\frac{1}{na}\\cosh(ax^{n}) + C, \\qquad \\int x^{n - 1}\\cosh(ax^{n}) \\, dx = \\frac{1}{na}\\sinh(ax^{n}) + C.$$\n\nUnlike the trigonometric case, there is no minus sign.",
-        "令 $u = ax^{n}$，$x^{n - 1} \\, dx = \\frac{1}{na} \\, du$：\n\n$$\\int x^{n - 1}\\sinh(ax^{n}) \\, dx = \\frac{1}{na}\\cosh(ax^{n}) + C, \\qquad \\int x^{n - 1}\\cosh(ax^{n}) \\, dx = \\frac{1}{na}\\sinh(ax^{n}) + C。$$\n\n与三角函数不同，这里没有负号。",
+        "This works just like the trigonometric case, except that integrating hyperbolic sine and cosine involves no change of sign. With $u = ax^{n}$ and $x^{n - 1} \\, dx = \\frac{1}{na} \\, du$,\n\n$$\\int x^{n - 1}\\sinh(ax^{n}) \\, dx = \\frac{1}{na}\\cosh(ax^{n}) + C, \\qquad \\int x^{n - 1}\\cosh(ax^{n}) \\, dx = \\frac{1}{na}\\sinh(ax^{n}) + C.$$\n\nUnlike the trigonometric case, there is no minus sign.",
+        "这与三角函数的情形完全一样，只是对双曲正弦和双曲余弦积分时不需要改变符号。令 $u = ax^{n}$，$x^{n - 1} \\, dx = \\frac{1}{na} \\, du$：\n\n$$\\int x^{n - 1}\\sinh(ax^{n}) \\, dx = \\frac{1}{na}\\cosh(ax^{n}) + C, \\qquad \\int x^{n - 1}\\cosh(ax^{n}) \\, dx = \\frac{1}{na}\\sinh(ax^{n}) + C。$$\n\n与三角函数不同，这里没有负号。",
       ),
       generate(rng) {
         const n = rng.int(2, 3);
@@ -1076,8 +1076,8 @@ export const integratingHyperbolicFunctionsUsingSubstitution: TopicDef = {
       id: "powers-of-hyperbolic-functions",
       title: t("Powers of hyperbolic functions", "双曲函数的幂"),
       explanation: t(
-        "Since $\\frac{d}{dx}\\sinh x = \\cosh x$, $\\frac{d}{dx}\\cosh x = \\sinh x$ and $\\frac{d}{dx}\\tanh x = \\operatorname{sech}^{2} x$:\n\n- $\\int \\sinh^{m} x\\cosh x \\, dx = \\frac{\\sinh^{m + 1} x}{m + 1} + C$ and $\\int \\cosh^{m} x\\sinh x \\, dx = \\frac{\\cosh^{m + 1} x}{m + 1} + C$.\n- $\\int \\tanh^{m} x\\operatorname{sech}^{2} x \\, dx = \\frac{\\tanh^{m + 1} x}{m + 1} + C$.\n- With $u = \\cosh x$: $\\int \\tanh x \\, dx = \\ln(\\cosh x) + C$; with $u = \\sinh x$: $\\int \\coth x \\, dx = \\ln|\\sinh x| + C$.",
-        "由于 $\\frac{d}{dx}\\sinh x = \\cosh x$，$\\frac{d}{dx}\\cosh x = \\sinh x$，$\\frac{d}{dx}\\tanh x = \\operatorname{sech}^{2} x$：\n\n- $\\int \\sinh^{m} x\\cosh x \\, dx = \\frac{\\sinh^{m + 1} x}{m + 1} + C$，$\\int \\cosh^{m} x\\sinh x \\, dx = \\frac{\\cosh^{m + 1} x}{m + 1} + C$。\n- $\\int \\tanh^{m} x\\operatorname{sech}^{2} x \\, dx = \\frac{\\tanh^{m + 1} x}{m + 1} + C$。\n- 令 $u = \\cosh x$：$\\int \\tanh x \\, dx = \\ln(\\cosh x) + C$；令 $u = \\sinh x$：$\\int \\coth x \\, dx = \\ln|\\sinh x| + C$。",
+        "Choose the new variable so that its derivative is the other factor in the integrand, which turns the power of a hyperbolic function into a simple power. Since $\\frac{d}{dx}\\sinh x = \\cosh x$, $\\frac{d}{dx}\\cosh x = \\sinh x$ and $\\frac{d}{dx}\\tanh x = \\operatorname{sech}^{2} x$:\n\n- $\\int \\sinh^{m} x\\cosh x \\, dx = \\frac{\\sinh^{m + 1} x}{m + 1} + C$ and $\\int \\cosh^{m} x\\sinh x \\, dx = \\frac{\\cosh^{m + 1} x}{m + 1} + C$.\n- $\\int \\tanh^{m} x\\operatorname{sech}^{2} x \\, dx = \\frac{\\tanh^{m + 1} x}{m + 1} + C$.\n- With $u = \\cosh x$: $\\int \\tanh x \\, dx = \\ln(\\cosh x) + C$; with $u = \\sinh x$: $\\int \\coth x \\, dx = \\ln|\\sinh x| + C$.",
+        "选择新变量，使它的导数正好是被积函数中的另一个因子，这样双曲函数的幂就变成了简单的幂。由于 $\\frac{d}{dx}\\sinh x = \\cosh x$，$\\frac{d}{dx}\\cosh x = \\sinh x$，$\\frac{d}{dx}\\tanh x = \\operatorname{sech}^{2} x$：\n\n- $\\int \\sinh^{m} x\\cosh x \\, dx = \\frac{\\sinh^{m + 1} x}{m + 1} + C$，$\\int \\cosh^{m} x\\sinh x \\, dx = \\frac{\\cosh^{m + 1} x}{m + 1} + C$。\n- $\\int \\tanh^{m} x\\operatorname{sech}^{2} x \\, dx = \\frac{\\tanh^{m + 1} x}{m + 1} + C$。\n- 令 $u = \\cosh x$：$\\int \\tanh x \\, dx = \\ln(\\cosh x) + C$；令 $u = \\sinh x$：$\\int \\coth x \\, dx = \\ln|\\sinh x| + C$。",
       ),
       generate(rng) {
         const k = rng.nonZero(-9, 9);
@@ -1146,8 +1146,8 @@ export const integrationBySubstitutionWithInverseHyperbolicFunctions: TopicDef =
       id: "scaled-inverse-hyperbolic-integrals",
       title: t("Scaled inverse hyperbolic integrals", "带系数的反双曲函数积分"),
       explanation: t(
-        "With $u = cx$ and $dx = \\frac{1}{c} \\, du$:\n\n$$\\int \\frac{dx}{\\sqrt{c^{2}x^{2} + a^{2}}} = \\frac{1}{c}\\operatorname{arsinh}\\frac{cx}{a} + C, \\qquad \\int \\frac{dx}{\\sqrt{c^{2}x^{2} - a^{2}}} = \\frac{1}{c}\\operatorname{arcosh}\\frac{cx}{a} + C \\ \\left(x > \\frac{a}{c}\\right),$$\n\n$$\\int \\frac{dx}{a^{2} - c^{2}x^{2}} = \\frac{1}{ac}\\operatorname{artanh}\\frac{cx}{a} + C \\ \\left(|x| < \\frac{a}{c}\\right).$$",
-        "令 $u = cx$，$dx = \\frac{1}{c} \\, du$：\n\n$$\\int \\frac{dx}{\\sqrt{c^{2}x^{2} + a^{2}}} = \\frac{1}{c}\\operatorname{arsinh}\\frac{cx}{a} + C, \\qquad \\int \\frac{dx}{\\sqrt{c^{2}x^{2} - a^{2}}} = \\frac{1}{c}\\operatorname{arcosh}\\frac{cx}{a} + C \\ \\left(x > \\frac{a}{c}\\right),$$\n\n$$\\int \\frac{dx}{a^{2} - c^{2}x^{2}} = \\frac{1}{ac}\\operatorname{artanh}\\frac{cx}{a} + C \\ \\left(|x| < \\frac{a}{c}\\right)。$$",
+        "Substitute to remove the coefficient of the square, then use the standard inverse hyperbolic integral and keep the factor that the substitution introduces. With $u = cx$ and $dx = \\frac{1}{c} \\, du$:\n\n$$\\int \\frac{dx}{\\sqrt{c^{2}x^{2} + a^{2}}} = \\frac{1}{c}\\operatorname{arsinh}\\frac{cx}{a} + C, \\qquad \\int \\frac{dx}{\\sqrt{c^{2}x^{2} - a^{2}}} = \\frac{1}{c}\\operatorname{arcosh}\\frac{cx}{a} + C \\ \\left(x > \\frac{a}{c}\\right),$$\n\n$$\\int \\frac{dx}{a^{2} - c^{2}x^{2}} = \\frac{1}{ac}\\operatorname{artanh}\\frac{cx}{a} + C \\ \\left(|x| < \\frac{a}{c}\\right).$$",
+        "通过换元去掉平方项的系数，再用标准的反双曲函数积分，并保留换元带来的因子。令 $u = cx$，$dx = \\frac{1}{c} \\, du$：\n\n$$\\int \\frac{dx}{\\sqrt{c^{2}x^{2} + a^{2}}} = \\frac{1}{c}\\operatorname{arsinh}\\frac{cx}{a} + C, \\qquad \\int \\frac{dx}{\\sqrt{c^{2}x^{2} - a^{2}}} = \\frac{1}{c}\\operatorname{arcosh}\\frac{cx}{a} + C \\ \\left(x > \\frac{a}{c}\\right),$$\n\n$$\\int \\frac{dx}{a^{2} - c^{2}x^{2}} = \\frac{1}{ac}\\operatorname{artanh}\\frac{cx}{a} + C \\ \\left(|x| < \\frac{a}{c}\\right)。$$",
       ),
       generate(rng) {
         const k = rng.nonZero(-9, 9);
@@ -1235,8 +1235,8 @@ export const integrationBySubstitutionWithInverseHyperbolicFunctions: TopicDef =
       id: "substitutions-leading-to-inverse-hyperbolic-functions",
       title: t("Substitutions leading to inverse hyperbolic functions", "化为反双曲函数的代换"),
       explanation: t(
-        "As with arctangent, $u^{2}$ may be hidden:\n\n- $u = x^{2}$: $\\int \\frac{x}{\\sqrt{x^{4} + a^{2}}} \\, dx = \\frac{1}{2}\\operatorname{arsinh}\\frac{x^{2}}{a} + C$.\n- $u = e^{x}$: $\\int \\frac{e^{x}}{\\sqrt{e^{2x} + 1}} \\, dx = \\operatorname{arsinh}(e^{x}) + C$.\n- $u = \\sin x$: $\\int \\frac{\\cos x}{\\sqrt{1 + \\sin^{2} x}} \\, dx = \\operatorname{arsinh}(\\sin x) + C$.",
-        "与反正切一样，$u^{2}$ 可能是隐藏的：\n\n- $u = x^{2}$：$\\int \\frac{x}{\\sqrt{x^{4} + a^{2}}} \\, dx = \\frac{1}{2}\\operatorname{arsinh}\\frac{x^{2}}{a} + C$。\n- $u = e^{x}$：$\\int \\frac{e^{x}}{\\sqrt{e^{2x} + 1}} \\, dx = \\operatorname{arsinh}(e^{x}) + C$。\n- $u = \\sin x$：$\\int \\frac{\\cos x}{\\sqrt{1 + \\sin^{2} x}} \\, dx = \\operatorname{arsinh}(\\sin x) + C$。",
+        "As with the inverse trigonometric integrals, a hidden square and its derivative in the integrand point to the right substitution. As with arctangent, $u^{2}$ may be hidden:\n\n- $u = x^{2}$: $\\int \\frac{x}{\\sqrt{x^{4} + a^{2}}} \\, dx = \\frac{1}{2}\\operatorname{arsinh}\\frac{x^{2}}{a} + C$.\n- $u = e^{x}$: $\\int \\frac{e^{x}}{\\sqrt{e^{2x} + 1}} \\, dx = \\operatorname{arsinh}(e^{x}) + C$.\n- $u = \\sin x$: $\\int \\frac{\\cos x}{\\sqrt{1 + \\sin^{2} x}} \\, dx = \\operatorname{arsinh}(\\sin x) + C$.",
+        "与反三角函数的积分一样，被积函数中隐藏的平方及其导数指明了应该怎样换元。与反正切一样，$u^{2}$ 可能是隐藏的：\n\n- $u = x^{2}$：$\\int \\frac{x}{\\sqrt{x^{4} + a^{2}}} \\, dx = \\frac{1}{2}\\operatorname{arsinh}\\frac{x^{2}}{a} + C$。\n- $u = e^{x}$：$\\int \\frac{e^{x}}{\\sqrt{e^{2x} + 1}} \\, dx = \\operatorname{arsinh}(e^{x}) + C$。\n- $u = \\sin x$：$\\int \\frac{\\cos x}{\\sqrt{1 + \\sin^{2} x}} \\, dx = \\operatorname{arsinh}(\\sin x) + C$。",
       ),
       generate(rng) {
         const k = rng.nonZero(-9, 9);
@@ -1297,8 +1297,8 @@ export const integrationBySubstitutionWithInverseReciprocalHyperbolicFunctions: 
       id: "scaled-arsech-and-arcsch-integrals",
       title: t("Scaled arsech and arcsch integrals", "带系数的 arsech 与 arcsch 积分"),
       explanation: t(
-        "With $u = cx$, $dx = \\frac{1}{c} \\, du$ and $x = \\frac{u}{c}$, the factors of $c$ cancel:\n\n$$\\int \\frac{dx}{x\\sqrt{a^{2} - c^{2}x^{2}}} = \\int \\frac{du}{u\\sqrt{a^{2} - u^{2}}} = -\\frac{1}{a}\\operatorname{arsech}\\frac{cx}{a} + C \\ \\left(0 < x < \\frac{a}{c}\\right),$$\n\n$$\\int \\frac{dx}{x\\sqrt{a^{2} + c^{2}x^{2}}} = -\\frac{1}{a}\\operatorname{arcsch}\\frac{cx}{a} + C \\ (x > 0).$$",
-        "令 $u = cx$，$dx = \\frac{1}{c} \\, du$，$x = \\frac{u}{c}$，$c$ 的因子相互抵消：\n\n$$\\int \\frac{dx}{x\\sqrt{a^{2} - c^{2}x^{2}}} = \\int \\frac{du}{u\\sqrt{a^{2} - u^{2}}} = -\\frac{1}{a}\\operatorname{arsech}\\frac{cx}{a} + C \\ \\left(0 < x < \\frac{a}{c}\\right),$$\n\n$$\\int \\frac{dx}{x\\sqrt{a^{2} + c^{2}x^{2}}} = -\\frac{1}{a}\\operatorname{arcsch}\\frac{cx}{a} + C \\ (x > 0)。$$",
+        "Here the factor of the variable outside the root also gets rewritten, and the constants from the substitution cancel, leaving the standard form. With $u = cx$, $dx = \\frac{1}{c} \\, du$ and $x = \\frac{u}{c}$, the factors of $c$ cancel:\n\n$$\\int \\frac{dx}{x\\sqrt{a^{2} - c^{2}x^{2}}} = \\int \\frac{du}{u\\sqrt{a^{2} - u^{2}}} = -\\frac{1}{a}\\operatorname{arsech}\\frac{cx}{a} + C \\ \\left(0 < x < \\frac{a}{c}\\right),$$\n\n$$\\int \\frac{dx}{x\\sqrt{a^{2} + c^{2}x^{2}}} = -\\frac{1}{a}\\operatorname{arcsch}\\frac{cx}{a} + C \\ (x > 0).$$",
+        "这里根号外的变量因子也要改写，换元产生的常数相互抵消，只剩下标准形式。令 $u = cx$，$dx = \\frac{1}{c} \\, du$，$x = \\frac{u}{c}$，$c$ 的因子相互抵消：\n\n$$\\int \\frac{dx}{x\\sqrt{a^{2} - c^{2}x^{2}}} = \\int \\frac{du}{u\\sqrt{a^{2} - u^{2}}} = -\\frac{1}{a}\\operatorname{arsech}\\frac{cx}{a} + C \\ \\left(0 < x < \\frac{a}{c}\\right),$$\n\n$$\\int \\frac{dx}{x\\sqrt{a^{2} + c^{2}x^{2}}} = -\\frac{1}{a}\\operatorname{arcsch}\\frac{cx}{a} + C \\ (x > 0)。$$",
       ),
       generate(rng) {
         const k = rng.nonZero(-9, 9);
@@ -1345,8 +1345,8 @@ export const integrationBySubstitutionWithInverseReciprocalHyperbolicFunctions: 
       id: "substituting-x-squared-for-arsech-and-arcsch",
       title: t("Substituting x² for arsech and arcsch", "用 x² 代换得 arsech 与 arcsch"),
       explanation: t(
-        "Multiply the top and bottom by $x$ and let $u = x^{2}$, so $\\frac{dx}{x} = \\frac{x \\, dx}{x^{2}} = \\frac{du}{2u}$:\n\n$$\\int \\frac{dx}{x\\sqrt{a^{2} - x^{4}}} = \\frac{1}{2}\\int \\frac{du}{u\\sqrt{a^{2} - u^{2}}} = -\\frac{1}{2a}\\operatorname{arsech}\\frac{x^{2}}{a} + C,$$\n\nand likewise $\\int \\frac{dx}{x\\sqrt{a^{2} + x^{4}}} = -\\frac{1}{2a}\\operatorname{arcsch}\\frac{x^{2}}{a} + C$.",
-        "分子分母同乘 $x$，令 $u = x^{2}$，则 $\\frac{dx}{x} = \\frac{x \\, dx}{x^{2}} = \\frac{du}{2u}$：\n\n$$\\int \\frac{dx}{x\\sqrt{a^{2} - x^{4}}} = \\frac{1}{2}\\int \\frac{du}{u\\sqrt{a^{2} - u^{2}}} = -\\frac{1}{2a}\\operatorname{arsech}\\frac{x^{2}}{a} + C，$$\n\n同理 $\\int \\frac{dx}{x\\sqrt{a^{2} + x^{4}}} = -\\frac{1}{2a}\\operatorname{arcsch}\\frac{x^{2}}{a} + C$。",
+        "Multiplying the top and bottom by the variable creates the derivative of its square, so substituting the square turns the integrand into a standard form. Multiply the top and bottom by $x$ and let $u = x^{2}$, so $\\frac{dx}{x} = \\frac{x \\, dx}{x^{2}} = \\frac{du}{2u}$:\n\n$$\\int \\frac{dx}{x\\sqrt{a^{2} - x^{4}}} = \\frac{1}{2}\\int \\frac{du}{u\\sqrt{a^{2} - u^{2}}} = -\\frac{1}{2a}\\operatorname{arsech}\\frac{x^{2}}{a} + C,$$\n\nand likewise $\\int \\frac{dx}{x\\sqrt{a^{2} + x^{4}}} = -\\frac{1}{2a}\\operatorname{arcsch}\\frac{x^{2}}{a} + C$.",
+        "分子分母同乘以变量就产生了它平方的导数，所以把平方换元后，被积函数就成了标准形式。分子分母同乘 $x$，令 $u = x^{2}$，则 $\\frac{dx}{x} = \\frac{x \\, dx}{x^{2}} = \\frac{du}{2u}$：\n\n$$\\int \\frac{dx}{x\\sqrt{a^{2} - x^{4}}} = \\frac{1}{2}\\int \\frac{du}{u\\sqrt{a^{2} - u^{2}}} = -\\frac{1}{2a}\\operatorname{arsech}\\frac{x^{2}}{a} + C，$$\n\n同理 $\\int \\frac{dx}{x\\sqrt{a^{2} + x^{4}}} = -\\frac{1}{2a}\\operatorname{arcsch}\\frac{x^{2}}{a} + C$。",
       ),
       generate(rng) {
         const k = rng.nonZero(-9, 9);
@@ -1395,8 +1395,8 @@ export const integratingFunctionsUsingPolynomialDivision: TopicDef = {
       id: "dividing-by-a-linear-denominator",
       title: t("Dividing by a linear denominator", "除以一次分母"),
       explanation: t(
-        "If the numerator has degree at least that of the denominator, divide first: $\\frac{p(x)}{x + r} = q(x) + \\frac{R}{x + r}$. Then\n\n$$\\int \\frac{x^{2} + 3x + 5}{x + 1} \\, dx = \\int \\left(x + 2 + \\frac{3}{x + 1}\\right) dx = \\frac{x^{2}}{2} + 2x + 3\\ln|x + 1| + C.$$",
-        "若分子次数不低于分母次数，先做除法：$\\frac{p(x)}{x + r} = q(x) + \\frac{R}{x + r}$。于是\n\n$$\\int \\frac{x^{2} + 3x + 5}{x + 1} \\, dx = \\int \\left(x + 2 + \\frac{3}{x + 1}\\right) dx = \\frac{x^{2}}{2} + 2x + 3\\ln|x + 1| + C。$$",
+        "When the top has at least the degree of the bottom, polynomial division leaves a polynomial plus a remainder fraction, and each part integrates easily. If the numerator has degree at least that of the denominator, divide first: $\\frac{p(x)}{x + r} = q(x) + \\frac{R}{x + r}$. Then\n\n$$\\int \\frac{x^{2} + 3x + 5}{x + 1} \\, dx = \\int \\left(x + 2 + \\frac{3}{x + 1}\\right) dx = \\frac{x^{2}}{2} + 2x + 3\\ln|x + 1| + C.$$",
+        "当分子的次数不低于分母时，用多项式除法得到一个多项式加一个余式分式，每一部分都容易积分。若分子次数不低于分母次数，先做除法：$\\frac{p(x)}{x + r} = q(x) + \\frac{R}{x + r}$。于是\n\n$$\\int \\frac{x^{2} + 3x + 5}{x + 1} \\, dx = \\int \\left(x + 2 + \\frac{3}{x + 1}\\right) dx = \\frac{x^{2}}{2} + 2x + 3\\ln|x + 1| + C。$$",
       ),
       generate(rng) {
         const a = rng.pick([1, 1, 2, 3]);
@@ -1477,8 +1477,8 @@ export const integratingFunctionsByCompletingTheSquare: TopicDef = {
       id: "completing-the-square-for-arctangent",
       title: t("Completing the square for arctangent", "配方得反正切"),
       explanation: t(
-        "Write $x^{2} + 2hx + h^{2} + a^{2} = (x + h)^{2} + a^{2}$ and let $u = x + h$:\n\n$$\\int \\frac{dx}{(x + h)^{2} + a^{2}} = \\frac{1}{a}\\arctan\\frac{x + h}{a} + C.$$\n\nFor example, $x^{2} + 4x + 13 = (x + 2)^{2} + 9$, so $\\int \\frac{dx}{x^{2} + 4x + 13} = \\frac{1}{3}\\arctan\\frac{x + 2}{3} + C$.",
-        "写成 $x^{2} + 2hx + h^{2} + a^{2} = (x + h)^{2} + a^{2}$，令 $u = x + h$：\n\n$$\\int \\frac{dx}{(x + h)^{2} + a^{2}} = \\frac{1}{a}\\arctan\\frac{x + h}{a} + C。$$\n\n例如 $x^{2} + 4x + 13 = (x + 2)^{2} + 9$，所以 $\\int \\frac{dx}{x^{2} + 4x + 13} = \\frac{1}{3}\\arctan\\frac{x + 2}{3} + C$。",
+        "Completing the square turns a quadratic with no real roots into a shifted square plus a constant, so a shift of the variable gives the arctangent form. Write $x^{2} + 2hx + h^{2} + a^{2} = (x + h)^{2} + a^{2}$ and let $u = x + h$:\n\n$$\\int \\frac{dx}{(x + h)^{2} + a^{2}} = \\frac{1}{a}\\arctan\\frac{x + h}{a} + C.$$\n\nFor example, $x^{2} + 4x + 13 = (x + 2)^{2} + 9$, so $\\int \\frac{dx}{x^{2} + 4x + 13} = \\frac{1}{3}\\arctan\\frac{x + 2}{3} + C$.",
+        "配方把没有实根的二次式变成平移后的平方加常数，所以平移变量后就得到反正切的形式。写成 $x^{2} + 2hx + h^{2} + a^{2} = (x + h)^{2} + a^{2}$，令 $u = x + h$：\n\n$$\\int \\frac{dx}{(x + h)^{2} + a^{2}} = \\frac{1}{a}\\arctan\\frac{x + h}{a} + C。$$\n\n例如 $x^{2} + 4x + 13 = (x + 2)^{2} + 9$，所以 $\\int \\frac{dx}{x^{2} + 4x + 13} = \\frac{1}{3}\\arctan\\frac{x + 2}{3} + C$。",
       ),
       generate(rng) {
         const h = rng.nonZero(-4, 4);
@@ -1546,8 +1546,8 @@ export const integrationUsingHyperbolicFunctionsAndCompletingTheSquare: TopicDef
       id: "completing-the-square-for-arsinh",
       title: t("Completing the square for arsinh", "配方得 arsinh"),
       explanation: t(
-        "If $x^{2} + 2hx + c = (x + h)^{2} + a^{2}$ with $a > 0$, let $u = x + h$:\n\n$$\\int \\frac{dx}{\\sqrt{(x + h)^{2} + a^{2}}} = \\operatorname{arsinh}\\frac{x + h}{a} + C.$$\n\nFor example, $x^{2} - 6x + 13 = (x - 3)^{2} + 4$.",
-        "若 $x^{2} + 2hx + c = (x + h)^{2} + a^{2}$，$a > 0$，令 $u = x + h$：\n\n$$\\int \\frac{dx}{\\sqrt{(x + h)^{2} + a^{2}}} = \\operatorname{arsinh}\\frac{x + h}{a} + C。$$\n\n例如 $x^{2} - 6x + 13 = (x - 3)^{2} + 4$。",
+        "After completing the square under the root, a shifted square plus a positive constant gives the inverse hyperbolic sine form. If $x^{2} + 2hx + c = (x + h)^{2} + a^{2}$ with $a > 0$, let $u = x + h$:\n\n$$\\int \\frac{dx}{\\sqrt{(x + h)^{2} + a^{2}}} = \\operatorname{arsinh}\\frac{x + h}{a} + C.$$\n\nFor example, $x^{2} - 6x + 13 = (x - 3)^{2} + 4$.",
+        "在根号下配方后，平移后的平方加正常数就给出反双曲正弦的形式。若 $x^{2} + 2hx + c = (x + h)^{2} + a^{2}$，$a > 0$，令 $u = x + h$：\n\n$$\\int \\frac{dx}{\\sqrt{(x + h)^{2} + a^{2}}} = \\operatorname{arsinh}\\frac{x + h}{a} + C。$$\n\n例如 $x^{2} - 6x + 13 = (x - 3)^{2} + 4$。",
       ),
       generate(rng) {
         const h = rng.nonZero(-4, 4);
@@ -1572,8 +1572,8 @@ export const integrationUsingHyperbolicFunctionsAndCompletingTheSquare: TopicDef
       id: "completing-the-square-for-arcosh",
       title: t("Completing the square for arcosh", "配方得 arcosh"),
       explanation: t(
-        "If $x^{2} + 2hx + c = (x + h)^{2} - a^{2}$ with $a > 0$, then for $x + h > a$\n\n$$\\int \\frac{dx}{\\sqrt{(x + h)^{2} - a^{2}}} = \\operatorname{arcosh}\\frac{x + h}{a} + C.$$\n\nFor example, $x^{2} + 4x = (x + 2)^{2} - 4$.",
-        "若 $x^{2} + 2hx + c = (x + h)^{2} - a^{2}$，$a > 0$，则当 $x + h > a$ 时\n\n$$\\int \\frac{dx}{\\sqrt{(x + h)^{2} - a^{2}}} = \\operatorname{arcosh}\\frac{x + h}{a} + C。$$\n\n例如 $x^{2} + 4x = (x + 2)^{2} - 4$。",
+        "After completing the square, a shifted square minus a positive constant under the root gives the inverse hyperbolic cosine form on the right side. If $x^{2} + 2hx + c = (x + h)^{2} - a^{2}$ with $a > 0$, then for $x + h > a$\n\n$$\\int \\frac{dx}{\\sqrt{(x + h)^{2} - a^{2}}} = \\operatorname{arcosh}\\frac{x + h}{a} + C.$$\n\nFor example, $x^{2} + 4x = (x + 2)^{2} - 4$.",
+        "配方后，根号下平移后的平方减去正常数，就在右侧给出反双曲余弦的形式。若 $x^{2} + 2hx + c = (x + h)^{2} - a^{2}$，$a > 0$，则当 $x + h > a$ 时\n\n$$\\int \\frac{dx}{\\sqrt{(x + h)^{2} - a^{2}}} = \\operatorname{arcosh}\\frac{x + h}{a} + C。$$\n\n例如 $x^{2} + 4x = (x + 2)^{2} - 4$。",
       ),
       generate(rng) {
         const a = rng.int(1, 3);
@@ -1621,8 +1621,8 @@ export const integrationUsingInverseReciprocalHyperbolicFunctionsAndCompletingTh
       id: "completing-the-square-for-arsech",
       title: t("Completing the square for arsech", "配方得 arsech"),
       explanation: t(
-        "If $c - 2hx - x^{2} = a^{2} - (x + h)^{2}$, let $u = x + h$. For $0 < x + h < a$,\n\n$$\\int \\frac{dx}{(x + h)\\sqrt{a^{2} - (x + h)^{2}}} = -\\frac{1}{a}\\operatorname{arsech}\\frac{x + h}{a} + C.$$",
-        "若 $c - 2hx - x^{2} = a^{2} - (x + h)^{2}$，令 $u = x + h$。当 $0 < x + h < a$ 时，\n\n$$\\int \\frac{dx}{(x + h)\\sqrt{a^{2} - (x + h)^{2}}} = -\\frac{1}{a}\\operatorname{arsech}\\frac{x + h}{a} + C。$$",
+        "Complete the square so that the root holds a constant minus a shifted square, and the shifted factor outside matches, giving the inverse hyperbolic secant form. If $c - 2hx - x^{2} = a^{2} - (x + h)^{2}$, let $u = x + h$. For $0 < x + h < a$,\n\n$$\\int \\frac{dx}{(x + h)\\sqrt{a^{2} - (x + h)^{2}}} = -\\frac{1}{a}\\operatorname{arsech}\\frac{x + h}{a} + C.$$",
+        "配方使根号下是常数减平移后的平方，根号外的因子也是同样的平移式，就得到反双曲正割的形式。若 $c - 2hx - x^{2} = a^{2} - (x + h)^{2}$，令 $u = x + h$。当 $0 < x + h < a$ 时，\n\n$$\\int \\frac{dx}{(x + h)\\sqrt{a^{2} - (x + h)^{2}}} = -\\frac{1}{a}\\operatorname{arsech}\\frac{x + h}{a} + C。$$",
       ),
       generate(rng) {
         const [h, a] = rng.pick<Scale>([
@@ -1656,8 +1656,8 @@ export const integrationUsingInverseReciprocalHyperbolicFunctionsAndCompletingTh
       id: "completing-the-square-for-arcsch",
       title: t("Completing the square for arcsch", "配方得 arcsch"),
       explanation: t(
-        "If $x^{2} + 2hx + c = (x + h)^{2} + a^{2}$, let $u = x + h$. For $x + h > 0$,\n\n$$\\int \\frac{dx}{(x + h)\\sqrt{(x + h)^{2} + a^{2}}} = -\\frac{1}{a}\\operatorname{arcsch}\\frac{x + h}{a} + C.$$",
-        "若 $x^{2} + 2hx + c = (x + h)^{2} + a^{2}$，令 $u = x + h$。当 $x + h > 0$ 时，\n\n$$\\int \\frac{dx}{(x + h)\\sqrt{(x + h)^{2} + a^{2}}} = -\\frac{1}{a}\\operatorname{arcsch}\\frac{x + h}{a} + C。$$",
+        "Complete the square so that the root holds a shifted square plus a constant, and with the matching factor outside, this gives the inverse hyperbolic cosecant form. If $x^{2} + 2hx + c = (x + h)^{2} + a^{2}$, let $u = x + h$. For $x + h > 0$,\n\n$$\\int \\frac{dx}{(x + h)\\sqrt{(x + h)^{2} + a^{2}}} = -\\frac{1}{a}\\operatorname{arcsch}\\frac{x + h}{a} + C.$$",
+        "配方使根号下是平移后的平方加常数，根号外有相应的因子，就得到反双曲余割的形式。若 $x^{2} + 2hx + c = (x + h)^{2} + a^{2}$，令 $u = x + h$。当 $x + h > 0$ 时，\n\n$$\\int \\frac{dx}{(x + h)\\sqrt{(x + h)^{2} + a^{2}}} = -\\frac{1}{a}\\operatorname{arcsch}\\frac{x + h}{a} + C。$$",
       ),
       generate(rng) {
         const h = rng.pick([1, 2, 3, -1]);

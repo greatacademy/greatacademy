@@ -516,8 +516,8 @@ export const limitsOfPowerFunctionsAndTheConstantRuleForLimits: TopicDef = {
       id: "limits-of-constants-and-powers",
       title: t("Limits of constants and powers", "常数与幂的极限"),
       explanation: t(
-        "Two basic rules:\n\n- **Constant rule:** $\\lim_{x \\to a} c = c$.\n- **Power rule:** $\\lim_{x \\to a} x^{n} = a^{n}$, and with a constant multiple, $\\lim_{x \\to a} cx^{n} = ca^{n}$.\n\nSo $\\lim_{x \\to -2} 3x^{3} = 3(-2)^{3} = -24$ and $\\lim_{x \\to 5} 7 = 7$.",
-        "两条基本法则：\n\n- **常数法则：**$\\lim_{x \\to a} c = c$。\n- **幂法则：**$\\lim_{x \\to a} x^{n} = a^{n}$；带常数倍时，$\\lim_{x \\to a} cx^{n} = ca^{n}$。\n\n所以 $\\lim_{x \\to -2} 3x^{3} = 3(-2)^{3} = -24$，$\\lim_{x \\to 5} 7 = 7$。",
+        "A constant does not depend on the variable at all, and a power of the variable approaches the same power of the point it approaches. Two basic rules:\n\n- **Constant rule:** $\\lim_{x \\to a} c = c$.\n- **Power rule:** $\\lim_{x \\to a} x^{n} = a^{n}$, and with a constant multiple, $\\lim_{x \\to a} cx^{n} = ca^{n}$.\n\nSo $\\lim_{x \\to -2} 3x^{3} = 3(-2)^{3} = -24$ and $\\lim_{x \\to 5} 7 = 7$.",
+        "常数完全不依赖于变量，而变量的幂趋近于它所趋近的点的同次幂。两条基本法则：\n\n- **常数法则：**$\\lim_{x \\to a} c = c$。\n- **幂法则：**$\\lim_{x \\to a} x^{n} = a^{n}$；带常数倍时，$\\lim_{x \\to a} cx^{n} = ca^{n}$。\n\n所以 $\\lim_{x \\to -2} 3x^{3} = 3(-2)^{3} = -24$，$\\lim_{x \\to 5} 7 = 7$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-4, 4);
@@ -549,8 +549,8 @@ export const limitsOfPowerFunctionsAndTheConstantRuleForLimits: TopicDef = {
       id: "limits-of-negative-and-fractional-coefficient-powers",
       title: t("Powers with negative exponents", "负指数幂的极限"),
       explanation: t(
-        "The power rule also holds for negative exponents when $a \\ne 0$: $\\lim_{x \\to a} cx^{-n} = \\frac{c}{a^{n}}$.\n\nSo $\\lim_{x \\to 2} 6x^{-3} = \\frac{6}{8} = \\frac{3}{4}$.",
-        "当 $a \\ne 0$ 时，幂法则对负指数同样成立：$\\lim_{x \\to a} cx^{-n} = \\frac{c}{a^{n}}$。\n\n所以 $\\lim_{x \\to 2} 6x^{-3} = \\frac{6}{8} = \\frac{3}{4}$。",
+        "A negative power is a reciprocal, so as long as the point is not zero, the limit is found by substituting the point. The power rule also holds for negative exponents when $a \\ne 0$: $\\lim_{x \\to a} cx^{-n} = \\frac{c}{a^{n}}$.\n\nSo $\\lim_{x \\to 2} 6x^{-3} = \\frac{6}{8} = \\frac{3}{4}$.",
+        "负指数幂是倒数，所以只要该点不是零，代入该点就能求出极限。当 $a \\ne 0$ 时，幂法则对负指数同样成立：$\\lim_{x \\to a} cx^{-n} = \\frac{c}{a^{n}}$。\n\n所以 $\\lim_{x \\to 2} 6x^{-3} = \\frac{6}{8} = \\frac{3}{4}$。",
       ),
       generate(rng) {
         const a = rng.pick([-3, -2, -1, 2, 3, 4, 5]);
@@ -598,8 +598,8 @@ export const theSumRuleForLimits: TopicDef = {
       id: "combining-limits-with-the-sum-rule",
       title: t("Combining known limits", "组合已知极限"),
       explanation: t(
-        "If $\\lim_{x \\to a} f(x) = A$ and $\\lim_{x \\to a} g(x) = B$ both exist, then\n\n$$\\lim_{x \\to a} \\left[ p f(x) + q g(x) \\right] = pA + qB.$$\n\nWith $A = 4$ and $B = -1$: $\\lim_{x \\to a} [3f(x) - 2g(x)] = 12 + 2 = 14$.",
-        "若 $\\lim_{x \\to a} f(x) = A$ 与 $\\lim_{x \\to a} g(x) = B$ 都存在，则\n\n$$\\lim_{x \\to a} \\left[ p f(x) + q g(x) \\right] = pA + qB.$$\n\n当 $A = 4$，$B = -1$ 时：$\\lim_{x \\to a} [3f(x) - 2g(x)] = 12 + 2 = 14$。",
+        "When the limits of two functions are known, the limit of any combination of them with constant coefficients is the same combination of the limits. If $\\lim_{x \\to a} f(x) = A$ and $\\lim_{x \\to a} g(x) = B$ both exist, then\n\n$$\\lim_{x \\to a} \\left[ p f(x) + q g(x) \\right] = pA + qB.$$\n\nWith $A = 4$ and $B = -1$: $\\lim_{x \\to a} [3f(x) - 2g(x)] = 12 + 2 = 14$.",
+        "当两个函数的极限已知时，它们任意常系数组合的极限，就是这两个极限的同样组合。若 $\\lim_{x \\to a} f(x) = A$ 与 $\\lim_{x \\to a} g(x) = B$ 都存在，则\n\n$$\\lim_{x \\to a} \\left[ p f(x) + q g(x) \\right] = pA + qB.$$\n\n当 $A = 4$，$B = -1$ 时：$\\lim_{x \\to a} [3f(x) - 2g(x)] = 12 + 2 = 14$。",
       ),
       generate(rng) {
         const a = rng.int(-5, 5);
@@ -670,8 +670,8 @@ export const theProductAndQuotientRulesForLimits: TopicDef = {
       id: "combining-limits-with-products-and-quotients",
       title: t("Combining known limits", "组合已知极限"),
       explanation: t(
-        "If $\\lim f = A$ and $\\lim g = B$, then $\\lim (fg) = AB$, and $\\lim \\frac{f}{g} = \\frac{A}{B}$ provided $B \\ne 0$.\n\nWith $A = 6$, $B = -4$ and $\\lim h = 3$: $\\lim \\frac{f(x)g(x)}{h(x)} = \\frac{6 \\cdot (-4)}{3} = -8$.",
-        "若 $\\lim f = A$，$\\lim g = B$，则 $\\lim (fg) = AB$；当 $B \\ne 0$ 时，$\\lim \\frac{f}{g} = \\frac{A}{B}$。\n\n当 $A = 6$，$B = -4$，$\\lim h = 3$ 时：$\\lim \\frac{f(x)g(x)}{h(x)} = \\frac{6 \\cdot (-4)}{3} = -8$。",
+        "Products and quotients of functions have limits equal to the products and quotients of their limits, except that a quotient needs a nonzero limit below. If $\\lim f = A$ and $\\lim g = B$, then $\\lim (fg) = AB$, and $\\lim \\frac{f}{g} = \\frac{A}{B}$ provided $B \\ne 0$.\n\nWith $A = 6$, $B = -4$ and $\\lim h = 3$: $\\lim \\frac{f(x)g(x)}{h(x)} = \\frac{6 \\cdot (-4)}{3} = -8$.",
+        "函数之积与商的极限等于各自极限的积与商，只是商要求分母的极限不为零。若 $\\lim f = A$，$\\lim g = B$，则 $\\lim (fg) = AB$；当 $B \\ne 0$ 时，$\\lim \\frac{f}{g} = \\frac{A}{B}$。\n\n当 $A = 6$，$B = -4$，$\\lim h = 3$ 时：$\\lim \\frac{f(x)g(x)}{h(x)} = \\frac{6 \\cdot (-4)}{3} = -8$。",
       ),
       generate(rng) {
         const a = rng.int(-5, 5);
@@ -747,8 +747,8 @@ export const thePowerAndRootRulesForLimits: TopicDef = {
       id: "powers-and-roots-of-limits",
       title: t("Powers and roots of limits", "极限的幂与根"),
       explanation: t(
-        "If $\\lim_{x \\to a} f(x) = A$, then\n\n$$\\lim_{x \\to a} [f(x)]^{n} = A^{n}, \\qquad \\lim_{x \\to a} \\sqrt[n]{f(x)} = \\sqrt[n]{A},$$\n\nwhere for even $n$ we need $A > 0$. So if $\\lim f = 8$, then $\\lim \\sqrt[3]{f(x)} = 2$ and $\\lim [f(x)]^{2} = 64$.",
-        "若 $\\lim_{x \\to a} f(x) = A$，则\n\n$$\\lim_{x \\to a} [f(x)]^{n} = A^{n}, \\qquad \\lim_{x \\to a} \\sqrt[n]{f(x)} = \\sqrt[n]{A},$$\n\n其中 $n$ 为偶数时要求 $A > 0$。所以若 $\\lim f = 8$，则 $\\lim \\sqrt[3]{f(x)} = 2$，$\\lim [f(x)]^{2} = 64$。",
+        "Raising to a power or taking a root can be done after finding the limit, as long as an even root is applied to a nonnegative number. If $\\lim_{x \\to a} f(x) = A$, then\n\n$$\\lim_{x \\to a} [f(x)]^{n} = A^{n}, \\qquad \\lim_{x \\to a} \\sqrt[n]{f(x)} = \\sqrt[n]{A},$$\n\nwhere for even $n$ we need $A > 0$. So if $\\lim f = 8$, then $\\lim \\sqrt[3]{f(x)} = 2$ and $\\lim [f(x)]^{2} = 64$.",
+        "可以先求极限再取幂或开方，只要偶次方根作用在非负数上即可。若 $\\lim_{x \\to a} f(x) = A$，则\n\n$$\\lim_{x \\to a} [f(x)]^{n} = A^{n}, \\qquad \\lim_{x \\to a} \\sqrt[n]{f(x)} = \\sqrt[n]{A},$$\n\n其中 $n$ 为偶数时要求 $A > 0$。所以若 $\\lim f = 8$，则 $\\lim \\sqrt[3]{f(x)} = 2$，$\\lim [f(x)]^{2} = 64$。",
       ),
       generate(rng) {
         const a = rng.int(-5, 5);
@@ -788,8 +788,8 @@ export const thePowerAndRootRulesForLimits: TopicDef = {
       id: "limits-of-roots-of-polynomials",
       title: t("Limits of roots of polynomials", "多项式开方的极限"),
       explanation: t(
-        "Combine the root rule with the limit of a polynomial:\n\n$$\\lim_{x \\to 3} \\sqrt{x^{2} + 16} = \\sqrt{\\lim_{x \\to 3} (x^{2} + 16)} = \\sqrt{25} = 5.$$",
-        "把根式法则与多项式的极限结合：\n\n$$\\lim_{x \\to 3} \\sqrt{x^{2} + 16} = \\sqrt{\\lim_{x \\to 3} (x^{2} + 16)} = \\sqrt{25} = 5.$$",
+        "A polynomial has no breaks, so find its limit by substitution, and then apply the root to the result. Combine the root rule with the limit of a polynomial:\n\n$$\\lim_{x \\to 3} \\sqrt{x^{2} + 16} = \\sqrt{\\lim_{x \\to 3} (x^{2} + 16)} = \\sqrt{25} = 5.$$",
+        "多项式没有间断，所以用代入法求它的极限，再对结果开方。把根式法则与多项式的极限结合：\n\n$$\\lim_{x \\to 3} \\sqrt{x^{2} + 16} = \\sqrt{\\lim_{x \\to 3} (x^{2} + 16)} = \\sqrt{25} = 5.$$",
       ),
       generate(rng) {
         const square = rng.bool(0.7);
@@ -947,8 +947,8 @@ export const limitsOfReciprocalFunctions: TopicDef = {
       id: "reciprocal-limits-at-infinity",
       title: t("Limits at infinity", "无穷远处的极限"),
       explanation: t(
-        "As $x \\to \\pm\\infty$, $(x - h)^{n}$ grows without bound, so $\\frac{k}{(x - h)^{n}} \\to 0$ and $\\frac{k}{(x - h)^{n}} + c \\to c$. The line $y = c$ is a horizontal asymptote.",
-        "当 $x \\to \\pm\\infty$ 时，$(x - h)^{n}$ 无界增大，所以 $\\frac{k}{(x - h)^{n}} \\to 0$，$\\frac{k}{(x - h)^{n}} + c \\to c$。直线 $y = c$ 是水平渐近线。",
+        "When the denominator grows without bound, the fraction shrinks toward zero, so only the constant added to it remains in the limit. As $x \\to \\pm\\infty$, $(x - h)^{n}$ grows without bound, so $\\frac{k}{(x - h)^{n}} \\to 0$ and $\\frac{k}{(x - h)^{n}} + c \\to c$. The line $y = c$ is a horizontal asymptote.",
+        "当分母无限增大时，分式趋近于零，所以极限中只剩下与它相加的常数。当 $x \\to \\pm\\infty$ 时，$(x - h)^{n}$ 无界增大，所以 $\\frac{k}{(x - h)^{n}} \\to 0$，$\\frac{k}{(x - h)^{n}} + c \\to c$。直线 $y = c$ 是水平渐近线。",
       ),
       generate(rng) {
         const h = rng.int(-4, 4);
@@ -990,8 +990,8 @@ export const limitsOfExponentialFunctions: TopicDef = {
       id: "exponential-limits-at-infinity",
       title: t("Limits at infinity", "无穷远处的极限"),
       explanation: t(
-        "For $b > 1$: $b^{x} \\to \\infty$ as $x \\to \\infty$ and $b^{x} \\to 0$ as $x \\to -\\infty$. For $0 < b < 1$ it is the other way round. So\n\n$$\\lim_{x \\to -\\infty} (3 \\cdot 2^{x} + 5) = 5, \\qquad \\lim_{x \\to \\infty} (-e^{x} + 1) = -\\infty.$$",
-        "当 $b > 1$ 时：$x \\to \\infty$ 时 $b^{x} \\to \\infty$，$x \\to -\\infty$ 时 $b^{x} \\to 0$。当 $0 < b < 1$ 时恰好相反。所以\n\n$$\\lim_{x \\to -\\infty} (3 \\cdot 2^{x} + 5) = 5, \\qquad \\lim_{x \\to \\infty} (-e^{x} + 1) = -\\infty.$$",
+        "A base greater than one makes powers grow rapidly in one direction and shrink toward zero in the other, which gives the graph its horizontal asymptote. For $b > 1$: $b^{x} \\to \\infty$ as $x \\to \\infty$ and $b^{x} \\to 0$ as $x \\to -\\infty$. For $0 < b < 1$ it is the other way round. So\n\n$$\\lim_{x \\to -\\infty} (3 \\cdot 2^{x} + 5) = 5, \\qquad \\lim_{x \\to \\infty} (-e^{x} + 1) = -\\infty.$$",
+        "底数大于 1 时，幂在一个方向上迅速增大，在另一个方向上趋近于零，这就是图像有水平渐近线的原因。当 $b > 1$ 时：$x \\to \\infty$ 时 $b^{x} \\to \\infty$，$x \\to -\\infty$ 时 $b^{x} \\to 0$。当 $0 < b < 1$ 时恰好相反。所以\n\n$$\\lim_{x \\to -\\infty} (3 \\cdot 2^{x} + 5) = 5, \\qquad \\lim_{x \\to \\infty} (-e^{x} + 1) = -\\infty.$$",
       ),
       generate(rng) {
         const bases = [
@@ -1032,8 +1032,8 @@ export const limitsOfExponentialFunctions: TopicDef = {
       id: "exponential-limits-at-a-point",
       title: t("Limits at a point", "一点处的极限"),
       explanation: t(
-        "Exponential functions have no breaks, so their limit at a point is their value: $\\lim_{x \\to 1} (2e^{3x} - 4) = 2e^{3} - 4$.",
-        "指数函数没有间断，所以它在一点处的极限等于函数值：$\\lim_{x \\to 1} (2e^{3x} - 4) = 2e^{3} - 4$。",
+        "Because there is no hole or jump in an exponential graph, the limit at any point is simply the value of the function there. Exponential functions have no breaks, so their limit at a point is their value: $\\lim_{x \\to 1} (2e^{3x} - 4) = 2e^{3} - 4$.",
+        "因为指数函数的图像没有洞或跳跃，所以在任意点处的极限就是该点的函数值。指数函数没有间断，所以它在一点处的极限等于函数值：$\\lim_{x \\to 1} (2e^{3x} - 4) = 2e^{3} - 4$。",
       ),
       generate(rng) {
         const a = rng.pick([-3, -2, -1, 2, 3, 4]);
@@ -1082,8 +1082,8 @@ export const limitsOfLogarithmicFunctions: TopicDef = {
       id: "logarithmic-limits-at-the-asymptote-and-infinity",
       title: t("Limits at the asymptote and at infinity", "渐近线处与无穷远处的极限"),
       explanation: t(
-        "For a base $b > 1$: $\\log_{b} x \\to -\\infty$ as $x \\to 0^{+}$ and $\\log_{b} x \\to \\infty$ as $x \\to \\infty$, slowly. Shifted, $\\ln(x - h) \\to -\\infty$ as $x \\to h^{+}$. A negative multiplier flips the sign: $\\lim_{x \\to 0^{+}} (-2\\ln x) = \\infty$.",
-        "对于底数 $b > 1$：$x \\to 0^{+}$ 时 $\\log_{b} x \\to -\\infty$，$x \\to \\infty$ 时 $\\log_{b} x \\to \\infty$（增长缓慢）。平移后，$x \\to h^{+}$ 时 $\\ln(x - h) \\to -\\infty$。负的系数会改变符号：$\\lim_{x \\to 0^{+}} (-2\\ln x) = \\infty$。",
+        "A logarithm drops without bound as its input approaches zero from the right, and grows without bound, though very slowly, as its input grows. For a base $b > 1$: $\\log_{b} x \\to -\\infty$ as $x \\to 0^{+}$ and $\\log_{b} x \\to \\infty$ as $x \\to \\infty$, slowly. Shifted, $\\ln(x - h) \\to -\\infty$ as $x \\to h^{+}$. A negative multiplier flips the sign: $\\lim_{x \\to 0^{+}} (-2\\ln x) = \\infty$.",
+        "当自变量从右侧趋近于零时，对数无限减小；当自变量增大时，对数也无限增大，只是增长得很慢。对于底数 $b > 1$：$x \\to 0^{+}$ 时 $\\log_{b} x \\to -\\infty$，$x \\to \\infty$ 时 $\\log_{b} x \\to \\infty$（增长缓慢）。平移后，$x \\to h^{+}$ 时 $\\ln(x - h) \\to -\\infty$。负的系数会改变符号：$\\lim_{x \\to 0^{+}} (-2\\ln x) = \\infty$。",
       ),
       generate(rng) {
         const h = rng.int(-4, 4);
@@ -1112,8 +1112,8 @@ export const limitsOfLogarithmicFunctions: TopicDef = {
       id: "logarithmic-limits-at-a-point",
       title: t("Limits at a point", "一点处的极限"),
       explanation: t(
-        "Inside its domain a logarithm has no breaks, so its limit is its value: $\\lim_{x \\to 8} (3\\log_{2} x - 1) = 3 \\cdot 3 - 1 = 8$.",
-        "在定义域内，对数函数没有间断，所以极限等于函数值：$\\lim_{x \\to 8} (3\\log_{2} x - 1) = 3 \\cdot 3 - 1 = 8$。",
+        "At any point inside its domain, a logarithm behaves continuously, so you can find the limit by evaluating the logarithm at the point. Inside its domain a logarithm has no breaks, so its limit is its value: $\\lim_{x \\to 8} (3\\log_{2} x - 1) = 3 \\cdot 3 - 1 = 8$.",
+        "在定义域内的任意点处，对数函数是连续的，所以求出该点的对数值就得到极限。在定义域内，对数函数没有间断，所以极限等于函数值：$\\lim_{x \\to 8} (3\\log_{2} x - 1) = 3 \\cdot 3 - 1 = 8$。",
       ),
       generate(rng) {
         const b = rng.pick([2, 3, 5, 10]);
@@ -1363,8 +1363,8 @@ export const limitsOfReciprocalTrigonometricFunctions: TopicDef = {
       id: "reciprocal-trigonometric-limits-at-special-angles",
       title: t("Limits at special angles", "特殊角处的极限"),
       explanation: t(
-        "Where the denominator is not zero, $\\sec x = \\frac{1}{\\cos x}$, $\\csc x = \\frac{1}{\\sin x}$ and $\\cot x = \\frac{\\cos x}{\\sin x}$ have no breaks, so substitute:\n\n$$\\lim_{x \\to \\frac{\\pi}{6}} \\sec x = \\frac{1}{\\sqrt{3}/2} = \\frac{2\\sqrt{3}}{3}.$$",
-        "在分母不为零处，$\\sec x = \\frac{1}{\\cos x}$、$\\csc x = \\frac{1}{\\sin x}$、$\\cot x = \\frac{\\cos x}{\\sin x}$ 没有间断，直接代入：\n\n$$\\lim_{x \\to \\frac{\\pi}{6}} \\sec x = \\frac{1}{\\sqrt{3}/2} = \\frac{2\\sqrt{3}}{3}.$$",
+        "Evaluate the sine or cosine at the special angle first, check that the denominator is not zero, and then take the reciprocal or quotient. Where the denominator is not zero, $\\sec x = \\frac{1}{\\cos x}$, $\\csc x = \\frac{1}{\\sin x}$ and $\\cot x = \\frac{\\cos x}{\\sin x}$ have no breaks, so substitute:\n\n$$\\lim_{x \\to \\frac{\\pi}{6}} \\sec x = \\frac{1}{\\sqrt{3}/2} = \\frac{2\\sqrt{3}}{3}.$$",
+        "先求出特殊角处的正弦或余弦值，确认分母不为零，再取倒数或商。在分母不为零处，$\\sec x = \\frac{1}{\\cos x}$、$\\csc x = \\frac{1}{\\sin x}$、$\\cot x = \\frac{\\cos x}{\\sin x}$ 没有间断，直接代入：\n\n$$\\lim_{x \\to \\frac{\\pi}{6}} \\sec x = \\frac{1}{\\sqrt{3}/2} = \\frac{2\\sqrt{3}}{3}.$$",
       ),
       generate(rng) {
         for (;;) {
@@ -1484,8 +1484,8 @@ export const limitsOfInverseTrigonometricFunctions: TopicDef = {
       id: "inverse-trigonometric-limits-at-a-point",
       title: t("Limits at a point", "一点处的极限"),
       explanation: t(
-        "Inside their domains, $\\arcsin$, $\\arccos$ and $\\arctan$ have no breaks, so their limits are their values: $\\lim_{x \\to 1/2} \\arccos x = \\frac{\\pi}{3}$ and $\\lim_{x \\to -1} \\arctan x = -\\frac{\\pi}{4}$.",
-        "在定义域内，$\\arcsin$、$\\arccos$、$\\arctan$ 没有间断，所以极限等于函数值：$\\lim_{x \\to 1/2} \\arccos x = \\frac{\\pi}{3}$，$\\lim_{x \\to -1} \\arctan x = -\\frac{\\pi}{4}$。",
+        "Inside their domains the inverse trigonometric functions are continuous, so the limit is the angle whose sine, cosine or tangent is the given number. Inside their domains, $\\arcsin$, $\\arccos$ and $\\arctan$ have no breaks, so their limits are their values: $\\lim_{x \\to 1/2} \\arccos x = \\frac{\\pi}{3}$ and $\\lim_{x \\to -1} \\arctan x = -\\frac{\\pi}{4}$.",
+        "在定义域内反三角函数是连续的，所以极限就是正弦、余弦或正切等于给定数的那个角。在定义域内，$\\arcsin$、$\\arccos$、$\\arctan$ 没有间断，所以极限等于函数值：$\\lim_{x \\to 1/2} \\arccos x = \\frac{\\pi}{3}$，$\\lim_{x \\to -1} \\arctan x = -\\frac{\\pi}{4}$。",
       ),
       generate(rng) {
         const v = rng.pick(inverseTrigValues);

@@ -199,8 +199,8 @@ export const evaluatingDefiniteIntegralsUsingSymmetry: TopicDef = {
       id: "using-symmetry-with-known-integrals",
       title: t("Using symmetry with known integrals", "结合已知积分利用对称性"),
       explanation: t(
-        "If $\\int_{0}^{a} f(x) \\, dx = P$, then for even $f$, $\\int_{-a}^{0} f(x) \\, dx = P$ and $\\int_{-a}^{a} f(x) \\, dx = 2P$; for odd $f$, $\\int_{-a}^{0} f(x) \\, dx = -P$ and $\\int_{-a}^{a} f(x) \\, dx = 0$.",
-        "若 $\\int_{0}^{a} f(x) \\, dx = P$，则当 $f$ 为偶函数时，$\\int_{-a}^{0} f(x) \\, dx = P$，$\\int_{-a}^{a} f(x) \\, dx = 2P$；当 $f$ 为奇函数时，$\\int_{-a}^{0} f(x) \\, dx = -P$，$\\int_{-a}^{a} f(x) \\, dx = 0$。",
+        "An even function has a graph symmetric about the vertical axis, so both halves have equal area, while for an odd function the two halves cancel. If $\\int_{0}^{a} f(x) \\, dx = P$, then for even $f$, $\\int_{-a}^{0} f(x) \\, dx = P$ and $\\int_{-a}^{a} f(x) \\, dx = 2P$; for odd $f$, $\\int_{-a}^{0} f(x) \\, dx = -P$ and $\\int_{-a}^{a} f(x) \\, dx = 0$.",
+        "偶函数的图像关于纵轴对称，所以两半面积相等；而奇函数的两半相互抵消。若 $\\int_{0}^{a} f(x) \\, dx = P$，则当 $f$ 为偶函数时，$\\int_{-a}^{0} f(x) \\, dx = P$，$\\int_{-a}^{a} f(x) \\, dx = 2P$；当 $f$ 为奇函数时，$\\int_{-a}^{0} f(x) \\, dx = -P$，$\\int_{-a}^{a} f(x) \\, dx = 0$。",
       ),
       generate(rng) {
         const a = rng.int(1, 9);
@@ -696,8 +696,8 @@ export const theSecondFundamentalTheoremOfCalculus: TopicDef = {
       id: "variable-limits-and-the-chain-rule",
       title: t("Variable limits and the chain rule", "变限与链式法则"),
       explanation: t(
-        "If the upper limit is a function $u(x)$, the chain rule gives\n\n$$\\frac{d}{dx}\\int_{a}^{u(x)} f(t) \\, dt = f(u(x)) \\cdot u'(x).$$\n\nFor example, $\\frac{d}{dx}\\int_{0}^{x^{2}} \\sin t \\, dt = 2x\\sin(x^{2})$.",
-        "若上限是函数 $u(x)$，由链式法则\n\n$$\\frac{d}{dx}\\int_{a}^{u(x)} f(t) \\, dt = f(u(x)) \\cdot u'(x)。$$\n\n例如 $\\frac{d}{dx}\\int_{0}^{x^{2}} \\sin t \\, dt = 2x\\sin(x^{2})$。",
+        "By the fundamental theorem, differentiating an integral with a variable upper limit returns the integrand there, and the chain rule multiplies by the derivative of the limit. If the upper limit is a function $u(x)$, the chain rule gives\n\n$$\\frac{d}{dx}\\int_{a}^{u(x)} f(t) \\, dt = f(u(x)) \\cdot u'(x).$$\n\nFor example, $\\frac{d}{dx}\\int_{0}^{x^{2}} \\sin t \\, dt = 2x\\sin(x^{2})$.",
+        "根据微积分基本定理，对变上限积分求导会得到上限处的被积函数，链式法则再乘以上限的导数。若上限是函数 $u(x)$，由链式法则\n\n$$\\frac{d}{dx}\\int_{a}^{u(x)} f(t) \\, dt = f(u(x)) \\cdot u'(x)。$$\n\n例如 $\\frac{d}{dx}\\int_{0}^{x^{2}} \\sin t \\, dt = 2x\\sin(x^{2})$。",
       ),
       generate(rng) {
         const h = rng.pick(integrands);

@@ -109,8 +109,8 @@ export const implicitDifferentiation: TopicDef = {
       id: "implicit-slopes-at-a-point",
       title: t("Implicit slopes at a point", "隐函数在某点处的斜率"),
       explanation: t(
-        "After finding $\\frac{dy}{dx}$ in terms of $x$ and $y$, substitute both coordinates of the point. For $x^{2} + xy + y^{2} = 7$ at $(1, 2)$: $\\frac{dy}{dx} = -\\frac{2(1) + 2}{1 + 2(2)} = -\\frac{4}{5}$.",
-        "求出用 $x$ 和 $y$ 表示的 $\\frac{dy}{dx}$ 后，代入该点的两个坐标。对 $x^{2} + xy + y^{2} = 7$ 在 $(1, 2)$ 处：$\\frac{dy}{dx} = -\\frac{2(1) + 2}{1 + 2(2)} = -\\frac{4}{5}$。",
+        "Implicit differentiation gives the slope in terms of both coordinates, so you need the full point on the curve to get a number. After finding $\\frac{dy}{dx}$ in terms of $x$ and $y$, substitute both coordinates of the point. For $x^{2} + xy + y^{2} = 7$ at $(1, 2)$: $\\frac{dy}{dx} = -\\frac{2(1) + 2}{1 + 2(2)} = -\\frac{4}{5}$.",
+        "隐函数求导给出的斜率同时含有两个坐标，所以需要曲线上完整的点才能算出一个数。求出用 $x$ 和 $y$ 表示的 $\\frac{dy}{dx}$ 后，代入该点的两个坐标。对 $x^{2} + xy + y^{2} = 7$ 在 $(1, 2)$ 处：$\\frac{dy}{dx} = -\\frac{2(1) + 2}{1 + 2(2)} = -\\frac{4}{5}$。",
       ),
       generate(rng) {
         // a = ±2 would make the curve a pair of lines.
@@ -171,8 +171,8 @@ export const calculatingSlopesOfCirclesEllipsesAndParabolas: TopicDef = {
       id: "slopes-of-circles",
       title: t("Slopes of circles", "圆的斜率"),
       explanation: t(
-        "For the circle $(x - h)^{2} + (y - k)^{2} = r^{2}$,\n\n$$2(x - h) + 2(y - k)\\frac{dy}{dx} = 0 \\implies \\frac{dy}{dx} = -\\frac{x - h}{y - k}.$$\n\nThe tangent line is perpendicular to the radius, whose slope is $\\frac{y - k}{x - h}$.",
-        "对圆 $(x - h)^{2} + (y - k)^{2} = r^{2}$，\n\n$$2(x - h) + 2(y - k)\\frac{dy}{dx} = 0 \\implies \\frac{dy}{dx} = -\\frac{x - h}{y - k}.$$\n\n切线与半径垂直，半径的斜率为 $\\frac{y - k}{x - h}$。",
+        "The tangent to a circle is perpendicular to the radius, and the implicit derivative confirms this: its slope is the negative reciprocal of the radius slope. For the circle $(x - h)^{2} + (y - k)^{2} = r^{2}$,\n\n$$2(x - h) + 2(y - k)\\frac{dy}{dx} = 0 \\implies \\frac{dy}{dx} = -\\frac{x - h}{y - k}.$$\n\nThe tangent line is perpendicular to the radius, whose slope is $\\frac{y - k}{x - h}$.",
+        "圆的切线垂直于半径，隐函数求导也证实了这一点：切线斜率是半径斜率的负倒数。对圆 $(x - h)^{2} + (y - k)^{2} = r^{2}$，\n\n$$2(x - h) + 2(y - k)\\frac{dy}{dx} = 0 \\implies \\frac{dy}{dx} = -\\frac{x - h}{y - k}.$$\n\n切线与半径垂直，半径的斜率为 $\\frac{y - k}{x - h}$。",
       ),
       generate(rng) {
         let [u, v] = rng.pick(pythagorean.filter(([, b]) => b !== 0));
@@ -202,8 +202,8 @@ export const calculatingSlopesOfCirclesEllipsesAndParabolas: TopicDef = {
       id: "slopes-of-ellipses",
       title: t("Slopes of ellipses", "椭圆的斜率"),
       explanation: t(
-        "For $px^{2} + qy^{2} = r$, $2px + 2qy\\frac{dy}{dx} = 0$, so\n\n$$\\frac{dy}{dx} = -\\frac{px}{qy}.$$",
-        "对 $px^{2} + qy^{2} = r$，$2px + 2qy\\frac{dy}{dx} = 0$，所以\n\n$$\\frac{dy}{dx} = -\\frac{px}{qy}.$$",
+        "Differentiate both sides with respect to the horizontal variable, treating the vertical variable as a function of it, and then solve for the derivative. For $px^{2} + qy^{2} = r$, $2px + 2qy\\frac{dy}{dx} = 0$, so\n\n$$\\frac{dy}{dx} = -\\frac{px}{qy}.$$",
+        "两边对水平变量求导，把竖直变量看作它的函数，再解出导数。对 $px^{2} + qy^{2} = r$，$2px + 2qy\\frac{dy}{dx} = 0$，所以\n\n$$\\frac{dy}{dx} = -\\frac{px}{qy}.$$",
       ),
       generate(rng) {
         const [p, q] = rng.sample([1, 2, 3, 4, 5, 9, 16, 25], 2) as [number, number];
@@ -229,8 +229,8 @@ export const calculatingSlopesOfCirclesEllipsesAndParabolas: TopicDef = {
       id: "slopes-of-sideways-parabolas",
       title: t("Slopes of sideways parabolas", "开口向左右的抛物线的斜率"),
       explanation: t(
-        "A parabola $x = ay^{2} + by + c$ opens left or right. Differentiating with respect to $x$:\n\n$$1 = (2ay + b)\\frac{dy}{dx} \\implies \\frac{dy}{dx} = \\frac{1}{2ay + b}.$$",
-        "抛物线 $x = ay^{2} + by + c$ 开口向左或向右。对 $x$ 求导：\n\n$$1 = (2ay + b)\\frac{dy}{dx} \\implies \\frac{dy}{dx} = \\frac{1}{2ay + b}.$$",
+        "A parabola that opens sideways is not a function of the horizontal variable, but implicit differentiation still gives the slope at each point. A parabola $x = ay^{2} + by + c$ opens left or right. Differentiating with respect to $x$:\n\n$$1 = (2ay + b)\\frac{dy}{dx} \\implies \\frac{dy}{dx} = \\frac{1}{2ay + b}.$$",
+        "开口向左右的抛物线不是水平变量的函数，但隐函数求导仍能给出每一点处的斜率。抛物线 $x = ay^{2} + by + c$ 开口向左或向右。对 $x$ 求导：\n\n$$1 = (2ay + b)\\frac{dy}{dx} \\implies \\frac{dy}{dx} = \\frac{1}{2ay + b}.$$",
       ),
       generate(rng) {
         const p: Poly = [rng.int(-5, 5), rng.int(-4, 4), rng.nonZero(-3, 3)];
@@ -273,8 +273,8 @@ export const calculatingDyDxUsingDxDy: TopicDef = {
       id: "dy-dx-as-a-reciprocal",
       title: t("dy/dx as a reciprocal", "dy/dx 作为倒数"),
       explanation: t(
-        "When $x$ is a function of $y$, where $\\frac{dx}{dy} \\ne 0$,\n\n$$\\frac{dy}{dx} = \\frac{1}{\\frac{dx}{dy}}.$$\n\nFor $x = y^{3} + 2y$: $\\frac{dx}{dy} = 3y^{2} + 2$, so $\\frac{dy}{dx} = \\frac{1}{3y^{2} + 2}$.",
-        "当 $x$ 是 $y$ 的函数且 $\\frac{dx}{dy} \\ne 0$ 时，\n\n$$\\frac{dy}{dx} = \\frac{1}{\\frac{dx}{dy}}.$$\n\n对 $x = y^{3} + 2y$：$\\frac{dx}{dy} = 3y^{2} + 2$，所以 $\\frac{dy}{dx} = \\frac{1}{3y^{2} + 2}$。",
+        "When the curve is described with the horizontal variable as a function of the vertical one, the slope is the reciprocal of the derivative you can compute directly. When $x$ is a function of $y$, where $\\frac{dx}{dy} \\ne 0$,\n\n$$\\frac{dy}{dx} = \\frac{1}{\\frac{dx}{dy}}.$$\n\nFor $x = y^{3} + 2y$: $\\frac{dx}{dy} = 3y^{2} + 2$, so $\\frac{dy}{dx} = \\frac{1}{3y^{2} + 2}$.",
+        "当曲线把水平变量表示为竖直变量的函数时，斜率就是可以直接求出的那个导数的倒数。当 $x$ 是 $y$ 的函数且 $\\frac{dx}{dy} \\ne 0$ 时，\n\n$$\\frac{dy}{dx} = \\frac{1}{\\frac{dx}{dy}}.$$\n\n对 $x = y^{3} + 2y$：$\\frac{dx}{dy} = 3y^{2} + 2$，所以 $\\frac{dy}{dx} = \\frac{1}{3y^{2} + 2}$。",
       ),
       generate(rng) {
         const kind = rng.int(0, 2);
@@ -361,8 +361,8 @@ export const differentiatingInverseFunctions: TopicDef = {
       id: "the-derivative-of-an-inverse-function",
       title: t("The derivative of an inverse function", "反函数的导数"),
       explanation: t(
-        "If $y = f^{-1}(x)$, then $f(y) = x$, so $f'(y)\\frac{dy}{dx} = 1$:\n\n$$\\left(f^{-1}\\right)'(x) = \\frac{1}{f'\\left(f^{-1}(x)\\right)}.$$\n\nFor $f(x) = e^{2x}$: $f^{-1}(x) = \\frac{1}{2}\\ln x$ and $f'(x) = 2e^{2x}$, so $\\left(f^{-1}\\right)'(x) = \\frac{1}{2e^{\\ln x}} = \\frac{1}{2x}$.",
-        "若 $y = f^{-1}(x)$，则 $f(y) = x$，于是 $f'(y)\\frac{dy}{dx} = 1$：\n\n$$\\left(f^{-1}\\right)'(x) = \\frac{1}{f'\\left(f^{-1}(x)\\right)}.$$\n\n对 $f(x) = e^{2x}$：$f^{-1}(x) = \\frac{1}{2}\\ln x$，$f'(x) = 2e^{2x}$，所以 $\\left(f^{-1}\\right)'(x) = \\frac{1}{2e^{\\ln x}} = \\frac{1}{2x}$。",
+        "The graph of an inverse is the reflection of the original graph, so its slope at a point is the reciprocal of the original slope at the reflected point. If $y = f^{-1}(x)$, then $f(y) = x$, so $f'(y)\\frac{dy}{dx} = 1$:\n\n$$\\left(f^{-1}\\right)'(x) = \\frac{1}{f'\\left(f^{-1}(x)\\right)}.$$\n\nFor $f(x) = e^{2x}$: $f^{-1}(x) = \\frac{1}{2}\\ln x$ and $f'(x) = 2e^{2x}$, so $\\left(f^{-1}\\right)'(x) = \\frac{1}{2e^{\\ln x}} = \\frac{1}{2x}$.",
+        "反函数的图像是原图像的对称图形，所以它在一点处的斜率是原函数在对称点处斜率的倒数。若 $y = f^{-1}(x)$，则 $f(y) = x$，于是 $f'(y)\\frac{dy}{dx} = 1$：\n\n$$\\left(f^{-1}\\right)'(x) = \\frac{1}{f'\\left(f^{-1}(x)\\right)}.$$\n\n对 $f(x) = e^{2x}$：$f^{-1}(x) = \\frac{1}{2}\\ln x$，$f'(x) = 2e^{2x}$，所以 $\\left(f^{-1}\\right)'(x) = \\frac{1}{2e^{\\ln x}} = \\frac{1}{2x}$。",
       ),
       generate(rng) {
         const kind = rng.int(0, 2);
@@ -583,8 +583,8 @@ export const differentiatingInverseTrigonometricFunctions: TopicDef = {
       id: "derivatives-of-arcsin-arccos-and-arctan",
       title: t("Derivatives of arcsin, arccos and arctan", "arcsin、arccos、arctan 的导数"),
       explanation: t(
-        "$$\\frac{d}{dx}\\arcsin x = \\frac{1}{\\sqrt{1 - x^{2}}}, \\qquad \\frac{d}{dx}\\arccos x = -\\frac{1}{\\sqrt{1 - x^{2}}}, \\qquad \\frac{d}{dx}\\arctan x = \\frac{1}{1 + x^{2}}.$$\n\nFor $y = \\arcsin x$, $\\sin y = x$, so $\\cos y\\,\\frac{dy}{dx} = 1$, and $\\cos y = \\sqrt{1 - x^{2}}$ since $-\\frac{\\pi}{2} \\le y \\le \\frac{\\pi}{2}$.",
-        "$$\\frac{d}{dx}\\arcsin x = \\frac{1}{\\sqrt{1 - x^{2}}}, \\qquad \\frac{d}{dx}\\arccos x = -\\frac{1}{\\sqrt{1 - x^{2}}}, \\qquad \\frac{d}{dx}\\arctan x = \\frac{1}{1 + x^{2}}.$$\n\n对 $y = \\arcsin x$，$\\sin y = x$，所以 $\\cos y\\,\\frac{dy}{dx} = 1$；由于 $-\\frac{\\pi}{2} \\le y \\le \\frac{\\pi}{2}$，$\\cos y = \\sqrt{1 - x^{2}}$。",
+        "These formulas come from implicit differentiation of the inverse relation, followed by a Pythagorean identity that removes the trigonometric functions. $$\\frac{d}{dx}\\arcsin x = \\frac{1}{\\sqrt{1 - x^{2}}}, \\qquad \\frac{d}{dx}\\arccos x = -\\frac{1}{\\sqrt{1 - x^{2}}}, \\qquad \\frac{d}{dx}\\arctan x = \\frac{1}{1 + x^{2}}.$$\n\nFor $y = \\arcsin x$, $\\sin y = x$, so $\\cos y\\,\\frac{dy}{dx} = 1$, and $\\cos y = \\sqrt{1 - x^{2}}$ since $-\\frac{\\pi}{2} \\le y \\le \\frac{\\pi}{2}$.",
+        "这些公式来自对反函数关系进行隐函数求导，再用勾股恒等式消去三角函数。$$\\frac{d}{dx}\\arcsin x = \\frac{1}{\\sqrt{1 - x^{2}}}, \\qquad \\frac{d}{dx}\\arccos x = -\\frac{1}{\\sqrt{1 - x^{2}}}, \\qquad \\frac{d}{dx}\\arctan x = \\frac{1}{1 + x^{2}}.$$\n\n对 $y = \\arcsin x$，$\\sin y = x$，所以 $\\cos y\\,\\frac{dy}{dx} = 1$；由于 $-\\frac{\\pi}{2} \\le y \\le \\frac{\\pi}{2}$，$\\cos y = \\sqrt{1 - x^{2}}$。",
       ),
       generate(rng) {
         const [r1, r2] = rng.sample(inverseTrigRules, 2) as [InverseRule, InverseRule];
@@ -611,8 +611,8 @@ export const differentiatingInverseTrigonometricFunctions: TopicDef = {
       id: "inverse-trigonometric-functions-of-inner-functions",
       title: t("Inverse trigonometric functions of inner functions", "内层函数的反三角函数"),
       explanation: t(
-        "Use the chain rule. For example,\n\n$$\\frac{d}{dx}\\arctan(3x) = \\frac{3}{1 + 9x^{2}}, \\qquad \\frac{d}{dx}\\arcsin\\left(\\frac{x}{2}\\right) = \\frac{\\frac{1}{2}}{\\sqrt{1 - \\frac{x^{2}}{4}}} = \\frac{1}{\\sqrt{4 - x^{2}}}.$$",
-        "使用链式法则。例如\n\n$$\\frac{d}{dx}\\arctan(3x) = \\frac{3}{1 + 9x^{2}}, \\qquad \\frac{d}{dx}\\arcsin\\left(\\frac{x}{2}\\right) = \\frac{\\frac{1}{2}}{\\sqrt{1 - \\frac{x^{2}}{4}}} = \\frac{1}{\\sqrt{4 - x^{2}}}.$$",
+        "Apply the formula for the inverse function with the inner function in place of the variable, then multiply by the derivative of the inner function. Use the chain rule. For example,\n\n$$\\frac{d}{dx}\\arctan(3x) = \\frac{3}{1 + 9x^{2}}, \\qquad \\frac{d}{dx}\\arcsin\\left(\\frac{x}{2}\\right) = \\frac{\\frac{1}{2}}{\\sqrt{1 - \\frac{x^{2}}{4}}} = \\frac{1}{\\sqrt{4 - x^{2}}}.$$",
+        "把内层函数代替变量套用反函数的求导公式，再乘以内层函数的导数。使用链式法则。例如\n\n$$\\frac{d}{dx}\\arctan(3x) = \\frac{3}{1 + 9x^{2}}, \\qquad \\frac{d}{dx}\\arcsin\\left(\\frac{x}{2}\\right) = \\frac{\\frac{1}{2}}{\\sqrt{1 - \\frac{x^{2}}{4}}} = \\frac{1}{\\sqrt{4 - x^{2}}}.$$",
       ),
       generate(rng) {
         const kind = rng.int(0, 3);
@@ -673,8 +673,8 @@ export const differentiatingInverseReciprocalTrigonometricFunctions: TopicDef = 
       id: "derivatives-of-arccot-arcsec-and-arccsc",
       title: t("Derivatives of arccot, arcsec and arccsc", "arccot、arcsec、arccsc 的导数"),
       explanation: t(
-        "$$\\frac{d}{dx}\\operatorname{arccot} x = -\\frac{1}{1 + x^{2}}, \\quad \\frac{d}{dx}\\operatorname{arcsec} x = \\frac{1}{|x|\\sqrt{x^{2} - 1}}, \\quad \\frac{d}{dx}\\operatorname{arccsc} x = -\\frac{1}{|x|\\sqrt{x^{2} - 1}}.$$\n\nThe absolute value makes the slope of $\\operatorname{arcsec} x$ positive for $x < -1$ as well as for $x > 1$.",
-        "$$\\frac{d}{dx}\\operatorname{arccot} x = -\\frac{1}{1 + x^{2}}, \\quad \\frac{d}{dx}\\operatorname{arcsec} x = \\frac{1}{|x|\\sqrt{x^{2} - 1}}, \\quad \\frac{d}{dx}\\operatorname{arccsc} x = -\\frac{1}{|x|\\sqrt{x^{2} - 1}}.$$\n\n绝对值保证了 $\\operatorname{arcsec} x$ 在 $x < -1$ 和 $x > 1$ 时斜率都为正。",
+        "Each of these is the negative of, or closely related to, an earlier formula, and the absolute value in the arcsecant formula keeps its slope positive. $$\\frac{d}{dx}\\operatorname{arccot} x = -\\frac{1}{1 + x^{2}}, \\quad \\frac{d}{dx}\\operatorname{arcsec} x = \\frac{1}{|x|\\sqrt{x^{2} - 1}}, \\quad \\frac{d}{dx}\\operatorname{arccsc} x = -\\frac{1}{|x|\\sqrt{x^{2} - 1}}.$$\n\nThe absolute value makes the slope of $\\operatorname{arcsec} x$ positive for $x < -1$ as well as for $x > 1$.",
+        "这些公式与前面的公式相差一个负号或密切相关，反正割公式中的绝对值保证了它的斜率为正。$$\\frac{d}{dx}\\operatorname{arccot} x = -\\frac{1}{1 + x^{2}}, \\quad \\frac{d}{dx}\\operatorname{arcsec} x = \\frac{1}{|x|\\sqrt{x^{2} - 1}}, \\quad \\frac{d}{dx}\\operatorname{arccsc} x = -\\frac{1}{|x|\\sqrt{x^{2} - 1}}.$$\n\n绝对值保证了 $\\operatorname{arcsec} x$ 在 $x < -1$ 和 $x > 1$ 时斜率都为正。",
       ),
       generate(rng) {
         const r = rng.pick(inverseReciprocalTrigRules);
@@ -697,8 +697,8 @@ export const differentiatingInverseReciprocalTrigonometricFunctions: TopicDef = 
       id: "evaluating-derivatives-of-inverse-reciprocal-trigonometric-functions",
       title: t("Evaluating derivatives of inverse reciprocal trigonometric functions", "计算反倒数三角函数的导数值"),
       explanation: t(
-        "Substitute into the derivative and simplify radicals. For $\\operatorname{arcsec} x$ at $x = -2$: $\\frac{1}{|-2|\\sqrt{4 - 1}} = \\frac{1}{2\\sqrt{3}} = \\frac{\\sqrt{3}}{6}$.",
-        "代入导数并化简根式。对 $\\operatorname{arcsec} x$ 在 $x = -2$ 处：$\\frac{1}{|-2|\\sqrt{4 - 1}} = \\frac{1}{2\\sqrt{3}} = \\frac{\\sqrt{3}}{6}$。",
+        "Substitute the point into the derivative formula and be careful with the absolute value and the signs before simplifying the radical. Substitute into the derivative and simplify radicals. For $\\operatorname{arcsec} x$ at $x = -2$: $\\frac{1}{|-2|\\sqrt{4 - 1}} = \\frac{1}{2\\sqrt{3}} = \\frac{\\sqrt{3}}{6}$.",
+        "把该点代入导数公式，化简根式之前要注意绝对值和符号。代入导数并化简根式。对 $\\operatorname{arcsec} x$ 在 $x = -2$ 处：$\\frac{1}{|-2|\\sqrt{4 - 1}} = \\frac{1}{2\\sqrt{3}} = \\frac{\\sqrt{3}}{6}$。",
       ),
       generate(rng) {
         const r = rng.int(0, 2);
@@ -766,8 +766,8 @@ export const differentiatingInverseHyperbolicFunctions: TopicDef = {
       id: "derivatives-of-arsinh-arcosh-and-artanh",
       title: t("Derivatives of arsinh, arcosh and artanh", "arsinh、arcosh、artanh 的导数"),
       explanation: t(
-        "$$\\frac{d}{dx}\\operatorname{arsinh} x = \\frac{1}{\\sqrt{x^{2} + 1}}, \\quad \\frac{d}{dx}\\operatorname{arcosh} x = \\frac{1}{\\sqrt{x^{2} - 1}} \\ (x > 1), \\quad \\frac{d}{dx}\\operatorname{artanh} x = \\frac{1}{1 - x^{2}} \\ (|x| < 1).$$\n\nFor $y = \\operatorname{arsinh} x$, $\\sinh y = x$, so $\\cosh y\\,\\frac{dy}{dx} = 1$ and $\\cosh y = \\sqrt{1 + \\sinh^{2}y} = \\sqrt{1 + x^{2}}$.",
-        "$$\\frac{d}{dx}\\operatorname{arsinh} x = \\frac{1}{\\sqrt{x^{2} + 1}}, \\quad \\frac{d}{dx}\\operatorname{arcosh} x = \\frac{1}{\\sqrt{x^{2} - 1}} \\ (x > 1), \\quad \\frac{d}{dx}\\operatorname{artanh} x = \\frac{1}{1 - x^{2}} \\ (|x| < 1).$$\n\n对 $y = \\operatorname{arsinh} x$，$\\sinh y = x$，所以 $\\cosh y\\,\\frac{dy}{dx} = 1$，而 $\\cosh y = \\sqrt{1 + \\sinh^{2}y} = \\sqrt{1 + x^{2}}$。",
+        "These formulas resemble the inverse trigonometric ones, with signs inside the radicals changed, reflecting the minus sign in the hyperbolic identity. $$\\frac{d}{dx}\\operatorname{arsinh} x = \\frac{1}{\\sqrt{x^{2} + 1}}, \\quad \\frac{d}{dx}\\operatorname{arcosh} x = \\frac{1}{\\sqrt{x^{2} - 1}} \\ (x > 1), \\quad \\frac{d}{dx}\\operatorname{artanh} x = \\frac{1}{1 - x^{2}} \\ (|x| < 1).$$\n\nFor $y = \\operatorname{arsinh} x$, $\\sinh y = x$, so $\\cosh y\\,\\frac{dy}{dx} = 1$ and $\\cosh y = \\sqrt{1 + \\sinh^{2}y} = \\sqrt{1 + x^{2}}$.",
+        "这些公式与反三角函数的公式相似，只是根号内的符号不同，这反映了双曲恒等式中的负号。$$\\frac{d}{dx}\\operatorname{arsinh} x = \\frac{1}{\\sqrt{x^{2} + 1}}, \\quad \\frac{d}{dx}\\operatorname{arcosh} x = \\frac{1}{\\sqrt{x^{2} - 1}} \\ (x > 1), \\quad \\frac{d}{dx}\\operatorname{artanh} x = \\frac{1}{1 - x^{2}} \\ (|x| < 1).$$\n\n对 $y = \\operatorname{arsinh} x$，$\\sinh y = x$，所以 $\\cosh y\\,\\frac{dy}{dx} = 1$，而 $\\cosh y = \\sqrt{1 + \\sinh^{2}y} = \\sqrt{1 + x^{2}}$。",
       ),
       generate(rng) {
         const r = rng.pick(inverseHyperbolicRules);
@@ -789,8 +789,8 @@ export const differentiatingInverseHyperbolicFunctions: TopicDef = {
       id: "inverse-hyperbolic-functions-of-inner-functions",
       title: t("Inverse hyperbolic functions of inner functions", "内层函数的反双曲函数"),
       explanation: t(
-        "Use the chain rule: $\\frac{d}{dx}\\operatorname{arsinh}(3x) = \\frac{3}{\\sqrt{9x^{2} + 1}}$ and $\\frac{d}{dx}\\operatorname{artanh}\\left(\\frac{x}{2}\\right) = \\frac{\\frac{1}{2}}{1 - \\frac{x^{2}}{4}} = \\frac{2}{4 - x^{2}}$.",
-        "使用链式法则：$\\frac{d}{dx}\\operatorname{arsinh}(3x) = \\frac{3}{\\sqrt{9x^{2} + 1}}$，$\\frac{d}{dx}\\operatorname{artanh}\\left(\\frac{x}{2}\\right) = \\frac{\\frac{1}{2}}{1 - \\frac{x^{2}}{4}} = \\frac{2}{4 - x^{2}}$。",
+        "As with every composite function, use the formula for the outer inverse function and then multiply by the derivative of what is inside. Use the chain rule: $\\frac{d}{dx}\\operatorname{arsinh}(3x) = \\frac{3}{\\sqrt{9x^{2} + 1}}$ and $\\frac{d}{dx}\\operatorname{artanh}\\left(\\frac{x}{2}\\right) = \\frac{\\frac{1}{2}}{1 - \\frac{x^{2}}{4}} = \\frac{2}{4 - x^{2}}$.",
+        "与所有复合函数一样，先用外层反函数的公式，再乘以里面函数的导数。使用链式法则：$\\frac{d}{dx}\\operatorname{arsinh}(3x) = \\frac{3}{\\sqrt{9x^{2} + 1}}$，$\\frac{d}{dx}\\operatorname{artanh}\\left(\\frac{x}{2}\\right) = \\frac{\\frac{1}{2}}{1 - \\frac{x^{2}}{4}} = \\frac{2}{4 - x^{2}}$。",
       ),
       generate(rng) {
         const kind = rng.int(0, 2);
@@ -892,8 +892,8 @@ export const differentiatingInverseReciprocalHyperbolicFunctions: TopicDef = {
       id: "evaluating-derivatives-of-inverse-reciprocal-hyperbolic-functions",
       title: t("Evaluating derivatives of inverse reciprocal hyperbolic functions", "计算反倒数双曲函数的导数值"),
       explanation: t(
-        "Substitute into the derivative. For $\\operatorname{arcoth} x$ at $x = 3$: $\\frac{1}{1 - 9} = -\\frac{1}{8}$. For $\\operatorname{arsech} x$ at $x = \\frac{3}{5}$: $-\\frac{1}{\\frac{3}{5} \\cdot \\frac{4}{5}} = -\\frac{25}{12}$.",
-        "代入导数。对 $\\operatorname{arcoth} x$ 在 $x = 3$ 处：$\\frac{1}{1 - 9} = -\\frac{1}{8}$。对 $\\operatorname{arsech} x$ 在 $x = \\frac{3}{5}$ 处：$-\\frac{1}{\\frac{3}{5} \\cdot \\frac{4}{5}} = -\\frac{25}{12}$。",
+        "Make sure the point lies in the domain of the function first, then substitute it into the derivative formula and simplify. Substitute into the derivative. For $\\operatorname{arcoth} x$ at $x = 3$: $\\frac{1}{1 - 9} = -\\frac{1}{8}$. For $\\operatorname{arsech} x$ at $x = \\frac{3}{5}$: $-\\frac{1}{\\frac{3}{5} \\cdot \\frac{4}{5}} = -\\frac{25}{12}$.",
+        "先确认该点在函数的定义域内，再把它代入导数公式并化简。代入导数。对 $\\operatorname{arcoth} x$ 在 $x = 3$ 处：$\\frac{1}{1 - 9} = -\\frac{1}{8}$。对 $\\operatorname{arsech} x$ 在 $x = \\frac{3}{5}$ 处：$-\\frac{1}{\\frac{3}{5} \\cdot \\frac{4}{5}} = -\\frac{25}{12}$。",
       ),
       generate(rng) {
         const arcoth = rng.bool();
@@ -1017,8 +1017,8 @@ export const logarithmicDifferentiation: TopicDef = {
       id: "a-function-to-a-variable-power",
       title: t("A function to a variable power", "函数的变量次幂"),
       explanation: t(
-        "For $y = f(x)^{g(x)}$ with $f(x) > 0$: $\\ln y = g(x)\\ln f(x)$, so\n\n$$\\frac{dy}{dx} = f(x)^{g(x)}\\left(g'(x)\\ln f(x) + \\frac{g(x)f'(x)}{f(x)}\\right).$$",
-        "对 $y = f(x)^{g(x)}$（$f(x) > 0$）：$\\ln y = g(x)\\ln f(x)$，所以\n\n$$\\frac{dy}{dx} = f(x)^{g(x)}\\left(g'(x)\\ln f(x) + \\frac{g(x)f'(x)}{f(x)}\\right).$$",
+        "When the variable appears in both the base and the exponent, neither the power rule nor the exponential rule applies, so take logarithms first and differentiate implicitly. For $y = f(x)^{g(x)}$ with $f(x) > 0$: $\\ln y = g(x)\\ln f(x)$, so\n\n$$\\frac{dy}{dx} = f(x)^{g(x)}\\left(g'(x)\\ln f(x) + \\frac{g(x)f'(x)}{f(x)}\\right).$$",
+        "当底数和指数中都有变量时，幂法则和指数法则都不适用，所以先取对数，再用隐函数求导。对 $y = f(x)^{g(x)}$（$f(x) > 0$）：$\\ln y = g(x)\\ln f(x)$，所以\n\n$$\\frac{dy}{dx} = f(x)^{g(x)}\\left(g'(x)\\ln f(x) + \\frac{g(x)f'(x)}{f(x)}\\right).$$",
       ),
       generate(rng) {
         const c = rng.int(1, 9);
@@ -1123,8 +1123,8 @@ export const furtherLogarithmicDifferentiation: TopicDef = {
       id: "logarithmic-derivatives-at-a-point",
       title: t("Logarithmic derivatives at a point", "对数求导法求某点处的导数"),
       explanation: t(
-        "At a point, evaluate $y$ and the bracket separately, then multiply. For $y = x^{x}$ at $x = 2$: $y = 4$ and $\\ln 2 + 1$, so $\\frac{dy}{dx} = 4(\\ln 2 + 1)$.",
-        "在某点处，分别计算 $y$ 和括号内的值，再相乘。对 $y = x^{x}$ 在 $x = 2$ 处：$y = 4$，括号为 $\\ln 2 + 1$，所以 $\\frac{dy}{dx} = 4(\\ln 2 + 1)$。",
+        "At a specific point it is easier to compute the value of the function and the value of the bracket separately and then multiply the two numbers. At a point, evaluate $y$ and the bracket separately, then multiply. For $y = x^{x}$ at $x = 2$: $y = 4$ and $\\ln 2 + 1$, so $\\frac{dy}{dx} = 4(\\ln 2 + 1)$.",
+        "在具体的一点处，分别算出函数值和括号的值再把两个数相乘会更容易。在某点处，分别计算 $y$ 和括号内的值，再相乘。对 $y = x^{x}$ 在 $x = 2$ 处：$y = 4$，括号为 $\\ln 2 + 1$，所以 $\\frac{dy}{dx} = 4(\\ln 2 + 1)$。",
       ),
       generate(rng) {
         let x0 = rng.int(2, 4);

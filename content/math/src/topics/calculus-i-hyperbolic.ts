@@ -94,8 +94,8 @@ export const theHyperbolicFunctions: TopicDef = {
       id: "evaluating-sinh-and-cosh",
       title: t("Evaluating sinh and cosh", "计算 sinh 与 cosh"),
       explanation: t(
-        "The **hyperbolic sine** and **hyperbolic cosine** are\n\n$$\\sinh x = \\frac{e^{x} - e^{-x}}{2}, \\qquad \\cosh x = \\frac{e^{x} + e^{-x}}{2}.$$\n\n$\\sinh$ is odd and $\\cosh$ is even. At $x = \\ln k$, $e^{x} = k$ and $e^{-x} = \\frac{1}{k}$:\n\n$$\\sinh(\\ln 3) = \\frac{3 - \\frac{1}{3}}{2} = \\frac{4}{3}, \\qquad \\cosh(\\ln 3) = \\frac{3 + \\frac{1}{3}}{2} = \\frac{5}{3}.$$",
-        "**双曲正弦**和**双曲余弦**定义为\n\n$$\\sinh x = \\frac{e^{x} - e^{-x}}{2}, \\qquad \\cosh x = \\frac{e^{x} + e^{-x}}{2}.$$\n\n$\\sinh$ 是奇函数，$\\cosh$ 是偶函数。在 $x = \\ln k$ 处，$e^{x} = k$，$e^{-x} = \\frac{1}{k}$：\n\n$$\\sinh(\\ln 3) = \\frac{3 - \\frac{1}{3}}{2} = \\frac{4}{3}, \\qquad \\cosh(\\ln 3) = \\frac{3 + \\frac{1}{3}}{2} = \\frac{5}{3}.$$",
+        "The hyperbolic functions are built from exponentials, so to evaluate one at a logarithm, substitute and use the fact that the exponential undoes the logarithm. The **hyperbolic sine** and **hyperbolic cosine** are\n\n$$\\sinh x = \\frac{e^{x} - e^{-x}}{2}, \\qquad \\cosh x = \\frac{e^{x} + e^{-x}}{2}.$$\n\n$\\sinh$ is odd and $\\cosh$ is even. At $x = \\ln k$, $e^{x} = k$ and $e^{-x} = \\frac{1}{k}$:\n\n$$\\sinh(\\ln 3) = \\frac{3 - \\frac{1}{3}}{2} = \\frac{4}{3}, \\qquad \\cosh(\\ln 3) = \\frac{3 + \\frac{1}{3}}{2} = \\frac{5}{3}.$$",
+        "双曲函数由指数函数构成，所以在对数处求值时，代入后利用指数函数与对数互逆这一事实化简。**双曲正弦**和**双曲余弦**定义为\n\n$$\\sinh x = \\frac{e^{x} - e^{-x}}{2}, \\qquad \\cosh x = \\frac{e^{x} + e^{-x}}{2}.$$\n\n$\\sinh$ 是奇函数，$\\cosh$ 是偶函数。在 $x = \\ln k$ 处，$e^{x} = k$，$e^{-x} = \\frac{1}{k}$：\n\n$$\\sinh(\\ln 3) = \\frac{3 - \\frac{1}{3}}{2} = \\frac{4}{3}, \\qquad \\cosh(\\ln 3) = \\frac{3 + \\frac{1}{3}}{2} = \\frac{5}{3}.$$",
       ),
       keyPrerequisites: ["natural-logarithm"],
       generate(rng) {
@@ -122,8 +122,8 @@ export const theHyperbolicFunctions: TopicDef = {
       id: "evaluating-tanh",
       title: t("Evaluating tanh", "计算 tanh"),
       explanation: t(
-        "The **hyperbolic tangent** is\n\n$$\\tanh x = \\frac{\\sinh x}{\\cosh x} = \\frac{e^{x} - e^{-x}}{e^{x} + e^{-x}}.$$\n\nIt is odd. At $x = \\ln k$, multiply the top and bottom by $k$:\n\n$$\\tanh(\\ln 2) = \\frac{2 - \\frac{1}{2}}{2 + \\frac{1}{2}} = \\frac{4 - 1}{4 + 1} = \\frac{3}{5}.$$",
-        "**双曲正切**定义为\n\n$$\\tanh x = \\frac{\\sinh x}{\\cosh x} = \\frac{e^{x} - e^{-x}}{e^{x} + e^{-x}}.$$\n\n它是奇函数。在 $x = \\ln k$ 处，分子分母同乘 $k$：\n\n$$\\tanh(\\ln 2) = \\frac{2 - \\frac{1}{2}}{2 + \\frac{1}{2}} = \\frac{4 - 1}{4 + 1} = \\frac{3}{5}.$$",
+        "The hyperbolic tangent is the ratio of the hyperbolic sine to the hyperbolic cosine, and its values always lie strictly between minus one and one. The **hyperbolic tangent** is\n\n$$\\tanh x = \\frac{\\sinh x}{\\cosh x} = \\frac{e^{x} - e^{-x}}{e^{x} + e^{-x}}.$$\n\nIt is odd. At $x = \\ln k$, multiply the top and bottom by $k$:\n\n$$\\tanh(\\ln 2) = \\frac{2 - \\frac{1}{2}}{2 + \\frac{1}{2}} = \\frac{4 - 1}{4 + 1} = \\frac{3}{5}.$$",
+        "双曲正切是双曲正弦与双曲余弦之比，它的值总是严格介于 −1 和 1 之间。**双曲正切**定义为\n\n$$\\tanh x = \\frac{\\sinh x}{\\cosh x} = \\frac{e^{x} - e^{-x}}{e^{x} + e^{-x}}.$$\n\n它是奇函数。在 $x = \\ln k$ 处，分子分母同乘 $k$：\n\n$$\\tanh(\\ln 2) = \\frac{2 - \\frac{1}{2}}{2 + \\frac{1}{2}} = \\frac{4 - 1}{4 + 1} = \\frac{3}{5}.$$",
       ),
       generate(rng) {
         const k = rng.int(2, 12);
@@ -148,8 +148,8 @@ export const theHyperbolicFunctions: TopicDef = {
       id: "the-hyperbolic-identity",
       title: t("The identity cosh²x − sinh²x = 1", "恒等式 cosh²x − sinh²x = 1"),
       explanation: t(
-        "Squaring the definitions and subtracting gives\n\n$$\\cosh^{2} x - \\sinh^{2} x = 1.$$\n\nSince $\\cosh x > 0$ always, $\\cosh x = \\sqrt{1 + \\sinh^{2} x}$. If $\\sinh x = \\frac{3}{4}$, then $\\cosh x = \\sqrt{1 + \\frac{9}{16}} = \\frac{5}{4}$ and $\\tanh x = \\frac{3/4}{5/4} = \\frac{3}{5}$.",
-        "把定义平方后相减得\n\n$$\\cosh^{2} x - \\sinh^{2} x = 1.$$\n\n因为 $\\cosh x$ 恒为正，$\\cosh x = \\sqrt{1 + \\sinh^{2} x}$。若 $\\sinh x = \\frac{3}{4}$，则 $\\cosh x = \\sqrt{1 + \\frac{9}{16}} = \\frac{5}{4}$，$\\tanh x = \\frac{3/4}{5/4} = \\frac{3}{5}$。",
+        "This identity plays the same role for hyperbolic functions that the Pythagorean identity plays for sine and cosine, but with a minus sign instead of a plus. Squaring the definitions and subtracting gives\n\n$$\\cosh^{2} x - \\sinh^{2} x = 1.$$\n\nSince $\\cosh x > 0$ always, $\\cosh x = \\sqrt{1 + \\sinh^{2} x}$. If $\\sinh x = \\frac{3}{4}$, then $\\cosh x = \\sqrt{1 + \\frac{9}{16}} = \\frac{5}{4}$ and $\\tanh x = \\frac{3/4}{5/4} = \\frac{3}{5}$.",
+        "这个恒等式对双曲函数的作用，就像勾股恒等式对正弦和余弦的作用一样，只是把加号换成了减号。把定义平方后相减得\n\n$$\\cosh^{2} x - \\sinh^{2} x = 1.$$\n\n因为 $\\cosh x$ 恒为正，$\\cosh x = \\sqrt{1 + \\sinh^{2} x}$。若 $\\sinh x = \\frac{3}{4}$，则 $\\cosh x = \\sqrt{1 + \\frac{9}{16}} = \\frac{5}{4}$，$\\tanh x = \\frac{3/4}{5/4} = \\frac{3}{5}$。",
       ),
       generate(rng) {
         const [p, q, c] = rng.pick(triples);
@@ -191,8 +191,8 @@ export const theReciprocalHyperbolicFunctions: TopicDef = {
       id: "evaluating-the-reciprocal-hyperbolic-functions",
       title: t("Evaluating sech, csch and coth", "计算 sech、csch 与 coth"),
       explanation: t(
-        "$$\\operatorname{sech} x = \\frac{1}{\\cosh x} = \\frac{2}{e^{x} + e^{-x}}, \\quad \\operatorname{csch} x = \\frac{1}{\\sinh x}, \\quad \\coth x = \\frac{\\cosh x}{\\sinh x}.$$\n\n$\\operatorname{sech}$ is even; $\\operatorname{csch}$ and $\\coth$ are odd and not defined at $0$. Since $\\cosh(\\ln 2) = \\frac{5}{4}$, $\\operatorname{sech}(\\ln 2) = \\frac{4}{5}$.",
-        "$$\\operatorname{sech} x = \\frac{1}{\\cosh x} = \\frac{2}{e^{x} + e^{-x}}, \\quad \\operatorname{csch} x = \\frac{1}{\\sinh x}, \\quad \\coth x = \\frac{\\cosh x}{\\sinh x}.$$\n\n$\\operatorname{sech}$ 是偶函数；$\\operatorname{csch}$ 和 $\\coth$ 是奇函数，在 $0$ 处无定义。因为 $\\cosh(\\ln 2) = \\frac{5}{4}$，所以 $\\operatorname{sech}(\\ln 2) = \\frac{4}{5}$。",
+        "Each reciprocal hyperbolic function is one over a basic one, so evaluate the basic function first and then take its reciprocal. $$\\operatorname{sech} x = \\frac{1}{\\cosh x} = \\frac{2}{e^{x} + e^{-x}}, \\quad \\operatorname{csch} x = \\frac{1}{\\sinh x}, \\quad \\coth x = \\frac{\\cosh x}{\\sinh x}.$$\n\n$\\operatorname{sech}$ is even; $\\operatorname{csch}$ and $\\coth$ are odd and not defined at $0$. Since $\\cosh(\\ln 2) = \\frac{5}{4}$, $\\operatorname{sech}(\\ln 2) = \\frac{4}{5}$.",
+        "每个倒数双曲函数都是某个基本双曲函数的倒数，所以先求出基本函数的值，再取倒数。$$\\operatorname{sech} x = \\frac{1}{\\cosh x} = \\frac{2}{e^{x} + e^{-x}}, \\quad \\operatorname{csch} x = \\frac{1}{\\sinh x}, \\quad \\coth x = \\frac{\\cosh x}{\\sinh x}.$$\n\n$\\operatorname{sech}$ 是偶函数；$\\operatorname{csch}$ 和 $\\coth$ 是奇函数，在 $0$ 处无定义。因为 $\\cosh(\\ln 2) = \\frac{5}{4}$，所以 $\\operatorname{sech}(\\ln 2) = \\frac{4}{5}$。",
       ),
       generate(rng) {
         const k = rng.int(2, 10);
@@ -219,8 +219,8 @@ export const theReciprocalHyperbolicFunctions: TopicDef = {
       id: "reciprocal-hyperbolic-functions-from-sinh",
       title: t("Reciprocal hyperbolic values from sinh", "由 sinh 求倒数双曲函数值"),
       explanation: t(
-        "From $\\sinh x$, find $\\cosh x = \\sqrt{1 + \\sinh^{2} x}$, then take reciprocals. If $\\sinh x = \\frac{5}{12}$, then $\\cosh x = \\frac{13}{12}$, so\n\n$$\\operatorname{sech} x = \\frac{12}{13}, \\quad \\operatorname{csch} x = \\frac{12}{5}, \\quad \\coth x = \\frac{13}{5}.$$",
-        "由 $\\sinh x$ 先求 $\\cosh x = \\sqrt{1 + \\sinh^{2} x}$，再取倒数。若 $\\sinh x = \\frac{5}{12}$，则 $\\cosh x = \\frac{13}{12}$，所以\n\n$$\\operatorname{sech} x = \\frac{12}{13}, \\quad \\operatorname{csch} x = \\frac{12}{5}, \\quad \\coth x = \\frac{13}{5}.$$",
+        "Knowing one hyperbolic value is enough to find all the others, because the hyperbolic identity gives the cosine and the rest are quotients and reciprocals. From $\\sinh x$, find $\\cosh x = \\sqrt{1 + \\sinh^{2} x}$, then take reciprocals. If $\\sinh x = \\frac{5}{12}$, then $\\cosh x = \\frac{13}{12}$, so\n\n$$\\operatorname{sech} x = \\frac{12}{13}, \\quad \\operatorname{csch} x = \\frac{12}{5}, \\quad \\coth x = \\frac{13}{5}.$$",
+        "知道一个双曲函数值就足以求出所有其他值，因为双曲恒等式给出双曲余弦，其余都是商或倒数。由 $\\sinh x$ 先求 $\\cosh x = \\sqrt{1 + \\sinh^{2} x}$，再取倒数。若 $\\sinh x = \\frac{5}{12}$，则 $\\cosh x = \\frac{13}{12}$，所以\n\n$$\\operatorname{sech} x = \\frac{12}{13}, \\quad \\operatorname{csch} x = \\frac{12}{5}, \\quad \\coth x = \\frac{13}{5}.$$",
       ),
       generate(rng) {
         const [p, q, c] = rng.pick(triples);
@@ -522,8 +522,8 @@ export const theInverseHyperbolicFunctions: TopicDef = {
       id: "evaluating-inverse-hyperbolic-functions",
       title: t("Evaluating inverse hyperbolic functions", "计算反双曲函数"),
       explanation: t(
-        "$\\operatorname{arsinh} c$ is the $x$ with $\\sinh x = c$; $\\operatorname{arcosh} c$ (for $c \\ge 1$) is the $x \\ge 0$ with $\\cosh x = c$; $\\operatorname{artanh} c$ (for $|c| < 1$) is the $x$ with $\\tanh x = c$.\n\nSince $\\cosh(\\ln 2) = \\frac{5}{4}$, $\\operatorname{arcosh} \\frac{5}{4} = \\ln 2$.",
-        "$\\operatorname{arsinh} c$ 是满足 $\\sinh x = c$ 的 $x$；$\\operatorname{arcosh} c$（$c \\ge 1$）是满足 $\\cosh x = c$ 的 $x \\ge 0$；$\\operatorname{artanh} c$（$|c| < 1$）是满足 $\\tanh x = c$ 的 $x$。\n\n因为 $\\cosh(\\ln 2) = \\frac{5}{4}$，所以 $\\operatorname{arcosh} \\frac{5}{4} = \\ln 2$。",
+        "An inverse hyperbolic function answers the question of which input gives a stated output, so work backwards from the definition of the original function. $\\operatorname{arsinh} c$ is the $x$ with $\\sinh x = c$; $\\operatorname{arcosh} c$ (for $c \\ge 1$) is the $x \\ge 0$ with $\\cosh x = c$; $\\operatorname{artanh} c$ (for $|c| < 1$) is the $x$ with $\\tanh x = c$.\n\nSince $\\cosh(\\ln 2) = \\frac{5}{4}$, $\\operatorname{arcosh} \\frac{5}{4} = \\ln 2$.",
+        "反双曲函数回答的是哪个输入会给出指定的输出，所以要从原函数的定义倒推。$\\operatorname{arsinh} c$ 是满足 $\\sinh x = c$ 的 $x$；$\\operatorname{arcosh} c$（$c \\ge 1$）是满足 $\\cosh x = c$ 的 $x \\ge 0$；$\\operatorname{artanh} c$（$|c| < 1$）是满足 $\\tanh x = c$ 的 $x$。\n\n因为 $\\cosh(\\ln 2) = \\frac{5}{4}$，所以 $\\operatorname{arcosh} \\frac{5}{4} = \\ln 2$。",
       ),
       generate(rng) {
         const k = rng.int(2, 9);
@@ -552,8 +552,8 @@ export const theInverseHyperbolicFunctions: TopicDef = {
       id: "logarithmic-forms-of-inverse-hyperbolic-functions",
       title: t("Logarithmic forms", "对数形式"),
       explanation: t(
-        "Solving $\\sinh x = c$, $\\cosh x = c$ and $\\tanh x = c$ for $x$ gives\n\n$$\\operatorname{arsinh} c = \\ln\\left(c + \\sqrt{c^{2} + 1}\\right), \\quad \\operatorname{arcosh} c = \\ln\\left(c + \\sqrt{c^{2} - 1}\\right), \\quad \\operatorname{artanh} c = \\frac{1}{2}\\ln\\frac{1 + c}{1 - c}.$$\n\nFor example $\\operatorname{arsinh} 2 = \\ln\\left(2 + \\sqrt{5}\\right)$.",
-        "由 $\\sinh x = c$、$\\cosh x = c$、$\\tanh x = c$ 解出 $x$，得\n\n$$\\operatorname{arsinh} c = \\ln\\left(c + \\sqrt{c^{2} + 1}\\right), \\quad \\operatorname{arcosh} c = \\ln\\left(c + \\sqrt{c^{2} - 1}\\right), \\quad \\operatorname{artanh} c = \\frac{1}{2}\\ln\\frac{1 + c}{1 - c}.$$\n\n例如 $\\operatorname{arsinh} 2 = \\ln\\left(2 + \\sqrt{5}\\right)$。",
+        "Because hyperbolic functions are made of exponentials, solving for the input leads to a quadratic in the exponential, whose solution is a logarithm. Solving $\\sinh x = c$, $\\cosh x = c$ and $\\tanh x = c$ for $x$ gives\n\n$$\\operatorname{arsinh} c = \\ln\\left(c + \\sqrt{c^{2} + 1}\\right), \\quad \\operatorname{arcosh} c = \\ln\\left(c + \\sqrt{c^{2} - 1}\\right), \\quad \\operatorname{artanh} c = \\frac{1}{2}\\ln\\frac{1 + c}{1 - c}.$$\n\nFor example $\\operatorname{arsinh} 2 = \\ln\\left(2 + \\sqrt{5}\\right)$.",
+        "由于双曲函数由指数函数构成，求自变量时会得到关于指数式的二次方程，它的解是一个对数。由 $\\sinh x = c$、$\\cosh x = c$、$\\tanh x = c$ 解出 $x$，得\n\n$$\\operatorname{arsinh} c = \\ln\\left(c + \\sqrt{c^{2} + 1}\\right), \\quad \\operatorname{arcosh} c = \\ln\\left(c + \\sqrt{c^{2} - 1}\\right), \\quad \\operatorname{artanh} c = \\frac{1}{2}\\ln\\frac{1 + c}{1 - c}.$$\n\n例如 $\\operatorname{arsinh} 2 = \\ln\\left(2 + \\sqrt{5}\\right)$。",
       ),
       generate(rng) {
         const which = rng.int(0, 2);

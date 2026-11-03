@@ -273,8 +273,8 @@ export const limitsOfSequencesWithFactorials: TopicDef = {
       id: "cancelling-factorials",
       title: t("Cancelling factorials", "阶乘的约分"),
       explanation: t(
-        "Since $(n + 1)! = (n + 1) \\cdot n!$ and $(n + 2)! = (n + 2)(n + 1) \\cdot n!$, a quotient of factorials that differ by a fixed amount is a polynomial:\n\n$$\\frac{(n + 2)!}{n! \\, (3n^{2} + 1)} = \\frac{(n + 2)(n + 1)}{3n^{2} + 1} \\to \\frac{1}{3}.$$",
-        "由于 $(n + 1)! = (n + 1) \\cdot n!$，$(n + 2)! = (n + 2)(n + 1) \\cdot n!$，相差固定量的两个阶乘之商是多项式：\n\n$$\\frac{(n + 2)!}{n! \\, (3n^{2} + 1)} = \\frac{(n + 2)(n + 1)}{3n^{2} + 1} \\to \\frac{1}{3}。$$",
+        "A larger factorial contains every factor of a smaller one, so write the larger one as a product ending in the smaller factorial and cancel. Since $(n + 1)! = (n + 1) \\cdot n!$ and $(n + 2)! = (n + 2)(n + 1) \\cdot n!$, a quotient of factorials that differ by a fixed amount is a polynomial:\n\n$$\\frac{(n + 2)!}{n! \\, (3n^{2} + 1)} = \\frac{(n + 2)(n + 1)}{3n^{2} + 1} \\to \\frac{1}{3}.$$",
+        "较大的阶乘包含较小阶乘的所有因子，所以把较大的阶乘写成以较小阶乘结尾的乘积，再约分。由于 $(n + 1)! = (n + 1) \\cdot n!$，$(n + 2)! = (n + 2)(n + 1) \\cdot n!$，相差固定量的两个阶乘之商是多项式：\n\n$$\\frac{(n + 2)!}{n! \\, (3n^{2} + 1)} = \\frac{(n + 2)(n + 1)}{3n^{2} + 1} \\to \\frac{1}{3}。$$",
       ),
       generate(rng) {
         if (rng.bool()) {
@@ -654,8 +654,8 @@ export const identifyingMonotonicSequencesUsingRatios: TopicDef = {
       id: "the-ratio-of-consecutive-terms",
       title: t("The ratio of consecutive terms", "相邻两项之比"),
       explanation: t(
-        "When the terms are products, their ratio simplifies well. For $a_n = \\frac{3^{n}}{n!}$:\n\n$$\\frac{a_{n+1}}{a_n} = \\frac{3^{n+1}}{(n + 1)!} \\cdot \\frac{n!}{3^{n}} = \\frac{3}{n + 1}.$$",
-        "各项是乘积时，比值很容易化简。对 $a_n = \\frac{3^{n}}{n!}$：\n\n$$\\frac{a_{n+1}}{a_n} = \\frac{3^{n+1}}{(n + 1)!} \\cdot \\frac{n!}{3^{n}} = \\frac{3}{n + 1}。$$",
+        "Dividing a term by the one before it cancels most factors when the terms are products of powers and factorials, leaving a simple expression in the index. When the terms are products, their ratio simplifies well. For $a_n = \\frac{3^{n}}{n!}$:\n\n$$\\frac{a_{n+1}}{a_n} = \\frac{3^{n+1}}{(n + 1)!} \\cdot \\frac{n!}{3^{n}} = \\frac{3}{n + 1}.$$",
+        "当各项是幂与阶乘的积时，用一项除以前一项会约去大部分因子，只剩下关于下标的简单式子。各项是乘积时，比值很容易化简。对 $a_n = \\frac{3^{n}}{n!}$：\n\n$$\\frac{a_{n+1}}{a_n} = \\frac{3^{n+1}}{(n + 1)!} \\cdot \\frac{n!}{3^{n}} = \\frac{3}{n + 1}。$$",
       ),
       generate(rng) {
         const k = rng.int(2, 9);
@@ -786,8 +786,8 @@ export const infiniteSeriesAndPartialSums: TopicDef = {
       id: "terms-from-partial-sums",
       title: t("Recovering terms from partial sums", "由部分和求项"),
       explanation: t(
-        "Since $S_n = S_{n-1} + a_n$, each term is the difference of consecutive partial sums: $a_n = S_n - S_{n-1}$ for $n \\ge 2$, and $a_1 = S_1$. If $S_n = \\frac{2n}{n + 1}$, then $a_3 = S_3 - S_2 = \\frac{3}{2} - \\frac{4}{3} = \\frac{1}{6}$.",
-        "由于 $S_n = S_{n-1} + a_n$，每一项都是相邻部分和之差：$n \\ge 2$ 时 $a_n = S_n - S_{n-1}$，且 $a_1 = S_1$。若 $S_n = \\frac{2n}{n + 1}$，则 $a_3 = S_3 - S_2 = \\frac{3}{2} - \\frac{4}{3} = \\frac{1}{6}$。",
+        "A partial sum adds one more term than the one before it, so the difference of two consecutive partial sums is exactly the newest term. Since $S_n = S_{n-1} + a_n$, each term is the difference of consecutive partial sums: $a_n = S_n - S_{n-1}$ for $n \\ge 2$, and $a_1 = S_1$. If $S_n = \\frac{2n}{n + 1}$, then $a_3 = S_3 - S_2 = \\frac{3}{2} - \\frac{4}{3} = \\frac{1}{6}$.",
+        "每个部分和都比前一个多加一项，所以相邻两个部分和之差恰好是新加的那一项。由于 $S_n = S_{n-1} + a_n$，每一项都是相邻部分和之差：$n \\ge 2$ 时 $a_n = S_n - S_{n-1}$，且 $a_1 = S_1$。若 $S_n = \\frac{2n}{n + 1}$，则 $a_3 = S_3 - S_2 = \\frac{3}{2} - \\frac{4}{3} = \\frac{1}{6}$。",
       ),
       generate(rng) {
         const c = rng.nonZero(-9, 9);
@@ -973,8 +973,8 @@ export const furtherPropertiesOfInfiniteSeries: TopicDef = {
       id: "removing-initial-terms",
       title: t("Removing initial terms", "去掉开头的项"),
       explanation: t(
-        "Starting a series later subtracts the terms left out:\n\n$$\\sum_{n=k}^{\\infty} a_n = \\sum_{n=1}^{\\infty} a_n - (a_1 + \\cdots + a_{k-1}).$$\n\nIf $\\sum_{n=1}^{\\infty} \\frac{1}{n(n + 1)} = 1$, then $\\sum_{n=3}^{\\infty} \\frac{1}{n(n + 1)} = 1 - \\frac{1}{2} - \\frac{1}{6} = \\frac{1}{3}$.",
-        "从后面的项开始求和，就减去被省略的项：\n\n$$\\sum_{n=k}^{\\infty} a_n = \\sum_{n=1}^{\\infty} a_n - (a_1 + \\cdots + a_{k-1})。$$\n\n若 $\\sum_{n=1}^{\\infty} \\frac{1}{n(n + 1)} = 1$，则 $\\sum_{n=3}^{\\infty} \\frac{1}{n(n + 1)} = 1 - \\frac{1}{2} - \\frac{1}{6} = \\frac{1}{3}$。",
+        "Starting the sum at a later index leaves out finitely many terms, which does not affect whether it converges but does change its value. Starting a series later subtracts the terms left out:\n\n$$\\sum_{n=k}^{\\infty} a_n = \\sum_{n=1}^{\\infty} a_n - (a_1 + \\cdots + a_{k-1}).$$\n\nIf $\\sum_{n=1}^{\\infty} \\frac{1}{n(n + 1)} = 1$, then $\\sum_{n=3}^{\\infty} \\frac{1}{n(n + 1)} = 1 - \\frac{1}{2} - \\frac{1}{6} = \\frac{1}{3}$.",
+        "从较后的下标开始求和会去掉有限个项，这不影响是否收敛，但会改变和的值。从后面的项开始求和，就减去被省略的项：\n\n$$\\sum_{n=k}^{\\infty} a_n = \\sum_{n=1}^{\\infty} a_n - (a_1 + \\cdots + a_{k-1})。$$\n\n若 $\\sum_{n=1}^{\\infty} \\frac{1}{n(n + 1)} = 1$，则 $\\sum_{n=3}^{\\infty} \\frac{1}{n(n + 1)} = 1 - \\frac{1}{2} - \\frac{1}{6} = \\frac{1}{3}$。",
       ),
       generate(rng) {
         const p = rng.int(1, 12);
@@ -1077,8 +1077,8 @@ export const telescopingSeries: TopicDef = {
       id: "partial-sums-of-telescoping-series",
       title: t("Partial sums of telescoping series", "裂项级数的部分和"),
       explanation: t(
-        "When each term is a difference $b_n - b_{n+1}$, the middle terms cancel in pairs:\n\n$$S_N = (b_1 - b_2) + (b_2 - b_3) + \\cdots + (b_N - b_{N+1}) = b_1 - b_{N+1}.$$\n\nFor $\\frac{1}{n(n + 1)} = \\frac{1}{n} - \\frac{1}{n + 1}$: $S_N = 1 - \\frac{1}{N + 1}$, so $S_4 = \\frac{4}{5}$.",
-        "当每一项都是差 $b_n - b_{n+1}$ 时，中间的项两两相消：\n\n$$S_N = (b_1 - b_2) + (b_2 - b_3) + \\cdots + (b_N - b_{N+1}) = b_1 - b_{N+1}。$$\n\n对 $\\frac{1}{n(n + 1)} = \\frac{1}{n} - \\frac{1}{n + 1}$：$S_N = 1 - \\frac{1}{N + 1}$，所以 $S_4 = \\frac{4}{5}$。",
+        "In a telescoping sum each term cancels part of the next one, so only the first and last pieces survive, and the limit is easy to find. When each term is a difference $b_n - b_{n+1}$, the middle terms cancel in pairs:\n\n$$S_N = (b_1 - b_2) + (b_2 - b_3) + \\cdots + (b_N - b_{N+1}) = b_1 - b_{N+1}.$$\n\nFor $\\frac{1}{n(n + 1)} = \\frac{1}{n} - \\frac{1}{n + 1}$: $S_N = 1 - \\frac{1}{N + 1}$, so $S_4 = \\frac{4}{5}$.",
+        "在裂项相消的和中，每一项都抵消下一项的一部分，只剩下首尾两部分，极限就很容易求了。当每一项都是差 $b_n - b_{n+1}$ 时，中间的项两两相消：\n\n$$S_N = (b_1 - b_2) + (b_2 - b_3) + \\cdots + (b_N - b_{N+1}) = b_1 - b_{N+1}。$$\n\n对 $\\frac{1}{n(n + 1)} = \\frac{1}{n} - \\frac{1}{n + 1}$：$S_N = 1 - \\frac{1}{N + 1}$，所以 $S_4 = \\frac{4}{5}$。",
       ),
       generate(rng) {
         const c = rng.int(1, 9);
@@ -1291,8 +1291,8 @@ export const sumsOfInfiniteGeometricSeriesGivenInSigmaNotation: TopicDef = {
       id: "the-first-term-from-the-starting-index",
       title: t("The first term from the starting index", "由起始下标求首项"),
       explanation: t(
-        "In $\\sum_{n=k}^{\\infty} c \\, r^{n}$ the first term is $c \\, r^{k}$, not $c$. With $|r| < 1$:\n\n$$\\sum_{n=k}^{\\infty} c \\, r^{n} = \\frac{c \\, r^{k}}{1 - r}.$$\n\nFor example, $\\sum_{n=2}^{\\infty} 4\\left(\\frac{1}{3}\\right)^{n} = \\frac{4/9}{2/3} = \\frac{2}{3}$.",
-        "在 $\\sum_{n=k}^{\\infty} c \\, r^{n}$ 中，首项是 $c \\, r^{k}$ 而不是 $c$。当 $|r| < 1$ 时：\n\n$$\\sum_{n=k}^{\\infty} c \\, r^{n} = \\frac{c \\, r^{k}}{1 - r}。$$\n\n例如 $\\sum_{n=2}^{\\infty} 4\\left(\\frac{1}{3}\\right)^{n} = \\frac{4/9}{2/3} = \\frac{2}{3}$。",
+        "The formula for a geometric series uses its first term, so substitute the starting index to find that term before using the formula. In $\\sum_{n=k}^{\\infty} c \\, r^{n}$ the first term is $c \\, r^{k}$, not $c$. With $|r| < 1$:\n\n$$\\sum_{n=k}^{\\infty} c \\, r^{n} = \\frac{c \\, r^{k}}{1 - r}.$$\n\nFor example, $\\sum_{n=2}^{\\infty} 4\\left(\\frac{1}{3}\\right)^{n} = \\frac{4/9}{2/3} = \\frac{2}{3}$.",
+        "等比级数的求和公式用到首项，所以使用公式前要先代入起始下标求出首项。在 $\\sum_{n=k}^{\\infty} c \\, r^{n}$ 中，首项是 $c \\, r^{k}$ 而不是 $c$。当 $|r| < 1$ 时：\n\n$$\\sum_{n=k}^{\\infty} c \\, r^{n} = \\frac{c \\, r^{k}}{1 - r}。$$\n\n例如 $\\sum_{n=2}^{\\infty} 4\\left(\\frac{1}{3}\\right)^{n} = \\frac{4/9}{2/3} = \\frac{2}{3}$。",
       ),
       generate(rng) {
         const { r } = geometricSeries(rng);
@@ -1392,8 +1392,8 @@ export const convergenceOfGeometricSeries: TopicDef = {
       id: "the-sum-as-a-function-of-x",
       title: t("The sum as a function of x", "和作为 x 的函数"),
       explanation: t(
-        "Where it converges, a geometric series in $x$ has a sum given by $\\frac{a}{1 - r}$, which is a function of $x$:\n\n$$\\sum_{n=1}^{\\infty} 2\\left(\\frac{x}{3}\\right)^{n} = \\frac{2 \\cdot \\frac{x}{3}}{1 - \\frac{x}{3}} = \\frac{2x}{3 - x} \\quad \\text{for } -3 < x < 3.$$",
-        "在收敛的范围内，含 $x$ 的等比级数之和由 $\\frac{a}{1 - r}$ 给出，是 $x$ 的函数：\n\n$$\\sum_{n=1}^{\\infty} 2\\left(\\frac{x}{3}\\right)^{n} = \\frac{2 \\cdot \\frac{x}{3}}{1 - \\frac{x}{3}} = \\frac{2x}{3 - x}，\\quad -3 < x < 3。$$",
+        "For each value of the variable where the ratio is between minus one and one, the series converges, and its sum is given by the same formula in terms of the variable. Where it converges, a geometric series in $x$ has a sum given by $\\frac{a}{1 - r}$, which is a function of $x$:\n\n$$\\sum_{n=1}^{\\infty} 2\\left(\\frac{x}{3}\\right)^{n} = \\frac{2 \\cdot \\frac{x}{3}}{1 - \\frac{x}{3}} = \\frac{2x}{3 - x} \\quad \\text{for } -3 < x < 3.$$",
+        "对每个使公比介于 −1 和 1 之间的变量值，级数都收敛，它的和由同一个含变量的公式给出。在收敛的范围内，含 $x$ 的等比级数之和由 $\\frac{a}{1 - r}$ 给出，是 $x$ 的函数：\n\n$$\\sum_{n=1}^{\\infty} 2\\left(\\frac{x}{3}\\right)^{n} = \\frac{2 \\cdot \\frac{x}{3}}{1 - \\frac{x}{3}} = \\frac{2x}{3 - x}，\\quad -3 < x < 3。$$",
       ),
       generate(rng) {
         const c = rng.nonZero(-6, 6);
@@ -1439,8 +1439,8 @@ export const repeatingDecimalsAsInfiniteGeometricSeries: TopicDef = {
       id: "purely-repeating-decimals",
       title: t("Purely repeating decimals", "纯循环小数"),
       explanation: t(
-        "$0.\\overline{27} = 0.27 + 0.0027 + 0.000027 + \\cdots$ is geometric with $a = \\frac{27}{100}$ and $r = \\frac{1}{100}$, so\n\n$$0.\\overline{27} = \\frac{27/100}{1 - 1/100} = \\frac{27}{99} = \\frac{3}{11}.$$\n\nIn general, a block of $k$ repeating digits $B$ gives $\\frac{B}{10^{k} - 1}$.",
-        "$0.\\overline{27} = 0.27 + 0.0027 + 0.000027 + \\cdots$ 是 $a = \\frac{27}{100}$、$r = \\frac{1}{100}$ 的等比级数，所以\n\n$$0.\\overline{27} = \\frac{27/100}{1 - 1/100} = \\frac{27}{99} = \\frac{3}{11}。$$\n\n一般地，$k$ 位循环节 $B$ 给出 $\\frac{B}{10^{k} - 1}$。",
+        "A repeating decimal is a geometric series whose first term is the repeating block and whose ratio is a power of one tenth. $0.\\overline{27} = 0.27 + 0.0027 + 0.000027 + \\cdots$ is geometric with $a = \\frac{27}{100}$ and $r = \\frac{1}{100}$, so\n\n$$0.\\overline{27} = \\frac{27/100}{1 - 1/100} = \\frac{27}{99} = \\frac{3}{11}.$$\n\nIn general, a block of $k$ repeating digits $B$ gives $\\frac{B}{10^{k} - 1}$.",
+        "循环小数是一个等比级数，首项是循环节，公比是十分之一的幂。$0.\\overline{27} = 0.27 + 0.0027 + 0.000027 + \\cdots$ 是 $a = \\frac{27}{100}$、$r = \\frac{1}{100}$ 的等比级数，所以\n\n$$0.\\overline{27} = \\frac{27/100}{1 - 1/100} = \\frac{27}{99} = \\frac{3}{11}。$$\n\n一般地，$k$ 位循环节 $B$ 给出 $\\frac{B}{10^{k} - 1}$。",
       ),
       generate(rng) {
         const k = rng.int(2, 3);
@@ -1463,8 +1463,8 @@ export const repeatingDecimalsAsInfiniteGeometricSeries: TopicDef = {
       id: "decimals-with-a-delayed-repeat",
       title: t("Decimals whose repeat starts later", "循环节不从第一位开始的小数"),
       explanation: t(
-        "Split off the digits before the repeat: $0.4\\overline{36} = \\frac{4}{10} + 0.0\\overline{36}$, and $0.0\\overline{36}$ is geometric with $a = \\frac{36}{1000}$ and $r = \\frac{1}{100}$:\n\n$$0.4\\overline{36} = \\frac{4}{10} + \\frac{36}{990} = \\frac{396 + 36}{990} = \\frac{24}{55}.$$",
-        "先把循环节之前的数字拆出来：$0.4\\overline{36} = \\frac{4}{10} + 0.0\\overline{36}$，而 $0.0\\overline{36}$ 是 $a = \\frac{36}{1000}$、$r = \\frac{1}{100}$ 的等比级数：\n\n$$0.4\\overline{36} = \\frac{4}{10} + \\frac{36}{990} = \\frac{396 + 36}{990} = \\frac{24}{55}。$$",
+        "Separate the digits that do not repeat, write the repeating part as a geometric series, and add the two fractions. Split off the digits before the repeat: $0.4\\overline{36} = \\frac{4}{10} + 0.0\\overline{36}$, and $0.0\\overline{36}$ is geometric with $a = \\frac{36}{1000}$ and $r = \\frac{1}{100}$:\n\n$$0.4\\overline{36} = \\frac{4}{10} + \\frac{36}{990} = \\frac{396 + 36}{990} = \\frac{24}{55}.$$",
+        "把不循环的数字分出来，把循环部分写成等比级数，再把两个分数相加。先把循环节之前的数字拆出来：$0.4\\overline{36} = \\frac{4}{10} + 0.0\\overline{36}$，而 $0.0\\overline{36}$ 是 $a = \\frac{36}{1000}$、$r = \\frac{1}{100}$ 的等比级数：\n\n$$0.4\\overline{36} = \\frac{4}{10} + \\frac{36}{990} = \\frac{396 + 36}{990} = \\frac{24}{55}。$$",
       ),
       generate(rng) {
         const m = rng.int(1, 9);

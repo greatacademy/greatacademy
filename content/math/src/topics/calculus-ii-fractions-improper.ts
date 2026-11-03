@@ -141,8 +141,8 @@ export const expressingRationalFunctionsWithRepeatedFactorsAsSumsOfPartialFracti
       id: "a-single-repeated-factor",
       title: t("A single repeated factor", "单个重因式"),
       explanation: t(
-        "Write $\\frac{px + q}{(x - a)^{2}} = \\frac{A}{x - a} + \\frac{B}{(x - a)^{2}}$, so $px + q = A(x - a) + B$. Setting $x = a$ gives $B$; comparing the coefficients of $x$ gives $A = p$. For example, $\\frac{3x - 4}{(x - 2)^{2}}$: $A = 3$ and $B = 3 \\cdot 2 - 4 = 2$.",
-        "写成 $\\frac{px + q}{(x - a)^{2}} = \\frac{A}{x - a} + \\frac{B}{(x - a)^{2}}$，则 $px + q = A(x - a) + B$。令 $x = a$ 得 $B$；比较 $x$ 的系数得 $A = p$。例如 $\\frac{3x - 4}{(x - 2)^{2}}$：$A = 3$，$B = 3 \\cdot 2 - 4 = 2$。",
+        "A repeated factor needs one fraction for each power up to its multiplicity, because a single fraction cannot produce every possible numerator. Write $\\frac{px + q}{(x - a)^{2}} = \\frac{A}{x - a} + \\frac{B}{(x - a)^{2}}$, so $px + q = A(x - a) + B$. Setting $x = a$ gives $B$; comparing the coefficients of $x$ gives $A = p$. For example, $\\frac{3x - 4}{(x - 2)^{2}}$: $A = 3$ and $B = 3 \\cdot 2 - 4 = 2$.",
+        "重复因式的每一个幂都需要一个分式，直到它的重数，因为一个分式不能产生所有可能的分子。写成 $\\frac{px + q}{(x - a)^{2}} = \\frac{A}{x - a} + \\frac{B}{(x - a)^{2}}$，则 $px + q = A(x - a) + B$。令 $x = a$ 得 $B$；比较 $x$ 的系数得 $A = p$。例如 $\\frac{3x - 4}{(x - 2)^{2}}$：$A = 3$，$B = 3 \\cdot 2 - 4 = 2$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-6, 6);
@@ -166,8 +166,8 @@ export const expressingRationalFunctionsWithRepeatedFactorsAsSumsOfPartialFracti
       id: "repeated-and-distinct-factors-together",
       title: t("Repeated and distinct factors together", "重因式与不同因式并存"),
       explanation: t(
-        "For $(x - a)^{2}(x - b)$ write $\\frac{A}{x - a} + \\frac{B}{(x - a)^{2}} + \\frac{C}{x - b}$, so\n\n$$N(x) = A(x - a)(x - b) + B(x - b) + C(x - a)^{2}.$$\n\n$x = a$ gives $B$, $x = b$ gives $C$, and comparing the coefficients of $x^{2}$ gives $A + C$, hence $A$.",
-        "对 $(x - a)^{2}(x - b)$，写成 $\\frac{A}{x - a} + \\frac{B}{(x - a)^{2}} + \\frac{C}{x - b}$，则\n\n$$N(x) = A(x - a)(x - b) + B(x - b) + C(x - a)^{2}。$$\n\n令 $x = a$ 得 $B$，令 $x = b$ 得 $C$，比较 $x^{2}$ 的系数得 $A + C$，从而得 $A$。",
+        "Clear the denominators, then substitute the roots to find some constants quickly and compare coefficients to find the rest. For $(x - a)^{2}(x - b)$ write $\\frac{A}{x - a} + \\frac{B}{(x - a)^{2}} + \\frac{C}{x - b}$, so\n\n$$N(x) = A(x - a)(x - b) + B(x - b) + C(x - a)^{2}.$$\n\n$x = a$ gives $B$, $x = b$ gives $C$, and comparing the coefficients of $x^{2}$ gives $A + C$, hence $A$.",
+        "先去分母，再代入各个根快速求出一部分常数，其余的通过比较系数求出。对 $(x - a)^{2}(x - b)$，写成 $\\frac{A}{x - a} + \\frac{B}{(x - a)^{2}} + \\frac{C}{x - b}$，则\n\n$$N(x) = A(x - a)(x - b) + B(x - b) + C(x - a)^{2}。$$\n\n令 $x = a$ 得 $B$，令 $x = b$ 得 $C$，比较 $x^{2}$ 的系数得 $A + C$，从而得 $A$。",
       ),
       generate(rng) {
         const [a, b] = rng.shuffle(distinctRoots(rng, -3, 3));
@@ -284,8 +284,8 @@ export const integratingRationalFunctionsUsingPartialFractions: TopicDef = {
       id: "indefinite-integrals-with-distinct-linear-factors",
       title: t("Indefinite integrals with distinct linear factors", "不同一次因式的不定积分"),
       explanation: t(
-        "Once $\\frac{N(x)}{(x - a)(x - b)} = \\frac{A}{x - a} + \\frac{B}{x - b}$, each term integrates to a logarithm:\n\n$$\\int \\frac{5x - 1}{(x - 1)(x + 1)} \\, dx = \\int \\left(\\frac{2}{x - 1} + \\frac{3}{x + 1}\\right) dx = 2\\ln|x - 1| + 3\\ln|x + 1| + C.$$",
-        "一旦 $\\frac{N(x)}{(x - a)(x - b)} = \\frac{A}{x - a} + \\frac{B}{x - b}$，每一项都积分为对数：\n\n$$\\int \\frac{5x - 1}{(x - 1)(x + 1)} \\, dx = \\int \\left(\\frac{2}{x - 1} + \\frac{3}{x + 1}\\right) dx = 2\\ln|x - 1| + 3\\ln|x + 1| + C。$$",
+        "Splitting the fraction into simpler fractions makes each term the reciprocal of a linear expression, which integrates to a logarithm. Once $\\frac{N(x)}{(x - a)(x - b)} = \\frac{A}{x - a} + \\frac{B}{x - b}$, each term integrates to a logarithm:\n\n$$\\int \\frac{5x - 1}{(x - 1)(x + 1)} \\, dx = \\int \\left(\\frac{2}{x - 1} + \\frac{3}{x + 1}\\right) dx = 2\\ln|x - 1| + 3\\ln|x + 1| + C.$$",
+        "把分式拆成几个简单分式后，每一项都是一次式的倒数，它的积分是对数。一旦 $\\frac{N(x)}{(x - a)(x - b)} = \\frac{A}{x - a} + \\frac{B}{x - b}$，每一项都积分为对数：\n\n$$\\int \\frac{5x - 1}{(x - 1)(x + 1)} \\, dx = \\int \\left(\\frac{2}{x - 1} + \\frac{3}{x + 1}\\right) dx = 2\\ln|x - 1| + 3\\ln|x + 1| + C。$$",
       ),
       generate(rng) {
         const [a, b] = distinctRoots(rng, -5, 5);
@@ -358,8 +358,8 @@ export const integratingRationalFunctionsWithRepeatedFactors: TopicDef = {
       id: "integrating-over-a-squared-linear-factor",
       title: t("Integrating over a squared linear factor", "分母为一次因式平方的积分"),
       explanation: t(
-        "By the power rule, $\\int \\frac{B}{(x - a)^{2}} \\, dx = -\\frac{B}{x - a} + C$. So\n\n$$\\int \\frac{3x - 4}{(x - 2)^{2}} \\, dx = \\int \\left(\\frac{3}{x - 2} + \\frac{2}{(x - 2)^{2}}\\right) dx = 3\\ln|x - 2| - \\frac{2}{x - 2} + C.$$",
-        "由幂函数积分法则，$\\int \\frac{B}{(x - a)^{2}} \\, dx = -\\frac{B}{x - a} + C$。所以\n\n$$\\int \\frac{3x - 4}{(x - 2)^{2}} \\, dx = \\int \\left(\\frac{3}{x - 2} + \\frac{2}{(x - 2)^{2}}\\right) dx = 3\\ln|x - 2| - \\frac{2}{x - 2} + C。$$",
+        "A squared linear factor in the denominator integrates by the power rule, not to a logarithm, giving a reciprocal of the linear expression. By the power rule, $\\int \\frac{B}{(x - a)^{2}} \\, dx = -\\frac{B}{x - a} + C$. So\n\n$$\\int \\frac{3x - 4}{(x - 2)^{2}} \\, dx = \\int \\left(\\frac{3}{x - 2} + \\frac{2}{(x - 2)^{2}}\\right) dx = 3\\ln|x - 2| - \\frac{2}{x - 2} + C.$$",
+        "分母中的一次式平方要用幂法则积分，而不是得到对数，结果是一次式的倒数。由幂函数积分法则，$\\int \\frac{B}{(x - a)^{2}} \\, dx = -\\frac{B}{x - a} + C$。所以\n\n$$\\int \\frac{3x - 4}{(x - 2)^{2}} \\, dx = \\int \\left(\\frac{3}{x - 2} + \\frac{2}{(x - 2)^{2}}\\right) dx = 3\\ln|x - 2| - \\frac{2}{x - 2} + C。$$",
       ),
       generate(rng) {
         const a = rng.nonZero(-6, 6);
@@ -433,8 +433,8 @@ export const integratingRationalFunctionsWithIrreducibleQuadraticFactors: TopicD
       id: "integrating-over-x-times-a-quadratic",
       title: t("Integrating over x times a quadratic", "分母为 x 乘二次式的积分"),
       explanation: t(
-        "Split the quadratic term in two:\n\n$$\\int \\frac{Bx + C}{x^{2} + m^{2}} \\, dx = \\frac{B}{2}\\ln(x^{2} + m^{2}) + \\frac{C}{m}\\arctan\\frac{x}{m} + K.$$\n\nFor example, $\\frac{3x^{2} + x + 4}{x(x^{2} + 4)} = \\frac{1}{x} + \\frac{2x + 1}{x^{2} + 4}$ integrates to $\\ln|x| + \\ln(x^{2} + 4) + \\frac{1}{2}\\arctan\\frac{x}{2} + K$.",
-        "把二次因式那一项拆成两部分：\n\n$$\\int \\frac{Bx + C}{x^{2} + m^{2}} \\, dx = \\frac{B}{2}\\ln(x^{2} + m^{2}) + \\frac{C}{m}\\arctan\\frac{x}{m} + K。$$\n\n例如 $\\frac{3x^{2} + x + 4}{x(x^{2} + 4)} = \\frac{1}{x} + \\frac{2x + 1}{x^{2} + 4}$，积分为 $\\ln|x| + \\ln(x^{2} + 4) + \\frac{1}{2}\\arctan\\frac{x}{2} + K$。",
+        "A quadratic factor with no real roots gets a linear numerator, which splits into a logarithm part and an arctangent part. Split the quadratic term in two:\n\n$$\\int \\frac{Bx + C}{x^{2} + m^{2}} \\, dx = \\frac{B}{2}\\ln(x^{2} + m^{2}) + \\frac{C}{m}\\arctan\\frac{x}{m} + K.$$\n\nFor example, $\\frac{3x^{2} + x + 4}{x(x^{2} + 4)} = \\frac{1}{x} + \\frac{2x + 1}{x^{2} + 4}$ integrates to $\\ln|x| + \\ln(x^{2} + 4) + \\frac{1}{2}\\arctan\\frac{x}{2} + K$.",
+        "没有实根的二次因式对应一个一次分子，它可以拆成对数部分和反正切部分。把二次因式那一项拆成两部分：\n\n$$\\int \\frac{Bx + C}{x^{2} + m^{2}} \\, dx = \\frac{B}{2}\\ln(x^{2} + m^{2}) + \\frac{C}{m}\\arctan\\frac{x}{m} + K。$$\n\n例如 $\\frac{3x^{2} + x + 4}{x(x^{2} + 4)} = \\frac{1}{x} + \\frac{2x + 1}{x^{2} + 4}$，积分为 $\\ln|x| + \\ln(x^{2} + 4) + \\frac{1}{2}\\arctan\\frac{x}{2} + K$。",
       ),
       generate(rng) {
         return irreducibleIntegral(rng, 0);
@@ -610,8 +610,8 @@ export const improperIntegralsInvolvingExponentialFunctions: TopicDef = {
       id: "improper-integrals-of-exponentials",
       title: t("Improper integrals of exponentials", "指数函数的反常积分"),
       explanation: t(
-        "For $a > 0$, $e^{-at} \\to 0$ as $t \\to \\infty$, so\n\n$$\\int_{b}^{\\infty} e^{-ax} \\, dx = \\lim_{t \\to \\infty}\\left[-\\frac{1}{a}e^{-ax}\\right]_{b}^{t} = \\frac{1}{a}e^{-ab}.$$\n\nLikewise $\\int_{-\\infty}^{b} e^{ax} \\, dx = \\frac{1}{a}e^{ab}$.",
-        "当 $a > 0$ 时，$t \\to \\infty$ 时 $e^{-at} \\to 0$，所以\n\n$$\\int_{b}^{\\infty} e^{-ax} \\, dx = \\lim_{t \\to \\infty}\\left[-\\frac{1}{a}e^{-ax}\\right]_{b}^{t} = \\frac{1}{a}e^{-ab}。$$\n\n同理 $\\int_{-\\infty}^{b} e^{ax} \\, dx = \\frac{1}{a}e^{ab}$。",
+        "An integral to infinity is the limit of integrals over longer and longer intervals, and a decaying exponential makes that limit finite. For $a > 0$, $e^{-at} \\to 0$ as $t \\to \\infty$, so\n\n$$\\int_{b}^{\\infty} e^{-ax} \\, dx = \\lim_{t \\to \\infty}\\left[-\\frac{1}{a}e^{-ax}\\right]_{b}^{t} = \\frac{1}{a}e^{-ab}.$$\n\nLikewise $\\int_{-\\infty}^{b} e^{ax} \\, dx = \\frac{1}{a}e^{ab}$.",
+        "积到无穷的积分是区间越来越长时积分的极限，衰减的指数式使这个极限是有限的。当 $a > 0$ 时，$t \\to \\infty$ 时 $e^{-at} \\to 0$，所以\n\n$$\\int_{b}^{\\infty} e^{-ax} \\, dx = \\lim_{t \\to \\infty}\\left[-\\frac{1}{a}e^{-ax}\\right]_{b}^{t} = \\frac{1}{a}e^{-ab}。$$\n\n同理 $\\int_{-\\infty}^{b} e^{ax} \\, dx = \\frac{1}{a}e^{ab}$。",
       ),
       generate(rng) {
         const a = rng.int(1, 4);
@@ -688,8 +688,8 @@ export const improperIntegralsInvolvingArctangent: TopicDef = {
       id: "improper-integrals-from-zero",
       title: t("Improper integrals from zero", "从零开始的反常积分"),
       explanation: t(
-        "Since $\\int \\frac{1}{x^{2} + m^{2}} \\, dx = \\frac{1}{m}\\arctan\\frac{x}{m}$ and $\\arctan t \\to \\frac{\\pi}{2}$ as $t \\to \\infty$,\n\n$$\\int_{0}^{\\infty} \\frac{1}{x^{2} + m^{2}} \\, dx = \\frac{1}{m}\\left(\\frac{\\pi}{2} - 0\\right) = \\frac{\\pi}{2m}.$$",
-        "由于 $\\int \\frac{1}{x^{2} + m^{2}} \\, dx = \\frac{1}{m}\\arctan\\frac{x}{m}$，且 $t \\to \\infty$ 时 $\\arctan t \\to \\frac{\\pi}{2}$，\n\n$$\\int_{0}^{\\infty} \\frac{1}{x^{2} + m^{2}} \\, dx = \\frac{1}{m}\\left(\\frac{\\pi}{2} - 0\\right) = \\frac{\\pi}{2m}。$$",
+        "The arctangent levels off at a quarter turn as its input grows, so the area under this curve stays finite even over an infinite interval. Since $\\int \\frac{1}{x^{2} + m^{2}} \\, dx = \\frac{1}{m}\\arctan\\frac{x}{m}$ and $\\arctan t \\to \\frac{\\pi}{2}$ as $t \\to \\infty$,\n\n$$\\int_{0}^{\\infty} \\frac{1}{x^{2} + m^{2}} \\, dx = \\frac{1}{m}\\left(\\frac{\\pi}{2} - 0\\right) = \\frac{\\pi}{2m}.$$",
+        "反正切在自变量增大时趋于 π/2，所以即使在无穷区间上，这条曲线下的面积也是有限的。由于 $\\int \\frac{1}{x^{2} + m^{2}} \\, dx = \\frac{1}{m}\\arctan\\frac{x}{m}$，且 $t \\to \\infty$ 时 $\\arctan t \\to \\frac{\\pi}{2}$，\n\n$$\\int_{0}^{\\infty} \\frac{1}{x^{2} + m^{2}} \\, dx = \\frac{1}{m}\\left(\\frac{\\pi}{2} - 0\\right) = \\frac{\\pi}{2m}。$$",
       ),
       generate(rng) {
         const m = rng.int(1, 6);
@@ -709,8 +709,8 @@ export const improperIntegralsInvolvingArctangent: TopicDef = {
       id: "improper-integrals-from-other-limits",
       title: t("Improper integrals from other limits", "从其他下限开始的反常积分"),
       explanation: t(
-        "Evaluate the arctangent at the finite limit. For example,\n\n$$\\int_{2}^{\\infty} \\frac{1}{x^{2} + 4} \\, dx = \\frac{1}{2}\\left(\\frac{\\pi}{2} - \\arctan 1\\right) = \\frac{1}{2}\\left(\\frac{\\pi}{2} - \\frac{\\pi}{4}\\right) = \\frac{\\pi}{8}.$$",
-        "在有限的积分限处计算反正切。例如\n\n$$\\int_{2}^{\\infty} \\frac{1}{x^{2} + 4} \\, dx = \\frac{1}{2}\\left(\\frac{\\pi}{2} - \\arctan 1\\right) = \\frac{1}{2}\\left(\\frac{\\pi}{2} - \\frac{\\pi}{4}\\right) = \\frac{\\pi}{8}。$$",
+        "Evaluate the antiderivative at the finite limit as usual, and use the limiting value of the arctangent for the infinite one. Evaluate the arctangent at the finite limit. For example,\n\n$$\\int_{2}^{\\infty} \\frac{1}{x^{2} + 4} \\, dx = \\frac{1}{2}\\left(\\frac{\\pi}{2} - \\arctan 1\\right) = \\frac{1}{2}\\left(\\frac{\\pi}{2} - \\frac{\\pi}{4}\\right) = \\frac{\\pi}{8}.$$",
+        "像平常一样在有限的那个限处计算原函数，无穷那一端则用反正切的极限值。在有限的积分限处计算反正切。例如\n\n$$\\int_{2}^{\\infty} \\frac{1}{x^{2} + 4} \\, dx = \\frac{1}{2}\\left(\\frac{\\pi}{2} - \\arctan 1\\right) = \\frac{1}{2}\\left(\\frac{\\pi}{2} - \\frac{\\pi}{4}\\right) = \\frac{\\pi}{8}。$$",
       ),
       generate(rng) {
         const m = rng.int(1, 5);
@@ -777,8 +777,8 @@ export const improperIntegralsOverTheRealLine: TopicDef = {
       id: "completing-the-square-over-the-real-line",
       title: t("Completing the square over the real line", "在整个实数轴上配方"),
       explanation: t(
-        "Complete the square, $x^{2} - 2hx + h^{2} + m^{2} = (x - h)^{2} + m^{2}$, and substitute $u = x - h$; the limits stay $-\\infty$ and $\\infty$:\n\n$$\\int_{-\\infty}^{\\infty} \\frac{1}{x^{2} + 4x + 13} \\, dx = \\int_{-\\infty}^{\\infty} \\frac{1}{u^{2} + 9} \\, du = \\frac{\\pi}{3}.$$",
-        "配方 $x^{2} - 2hx + h^{2} + m^{2} = (x - h)^{2} + m^{2}$，再代换 $u = x - h$；积分限仍为 $-\\infty$ 与 $\\infty$：\n\n$$\\int_{-\\infty}^{\\infty} \\frac{1}{x^{2} + 4x + 13} \\, dx = \\int_{-\\infty}^{\\infty} \\frac{1}{u^{2} + 9} \\, du = \\frac{\\pi}{3}。$$",
+        "A shift of the variable does not change an infinite interval in both directions, so after completing the square the limits stay the same. Complete the square, $x^{2} - 2hx + h^{2} + m^{2} = (x - h)^{2} + m^{2}$, and substitute $u = x - h$; the limits stay $-\\infty$ and $\\infty$:\n\n$$\\int_{-\\infty}^{\\infty} \\frac{1}{x^{2} + 4x + 13} \\, dx = \\int_{-\\infty}^{\\infty} \\frac{1}{u^{2} + 9} \\, du = \\frac{\\pi}{3}.$$",
+        "平移变量不会改变两端都是无穷的区间，所以配方后上下限保持不变。配方 $x^{2} - 2hx + h^{2} + m^{2} = (x - h)^{2} + m^{2}$，再代换 $u = x - h$；积分限仍为 $-\\infty$ 与 $\\infty$：\n\n$$\\int_{-\\infty}^{\\infty} \\frac{1}{x^{2} + 4x + 13} \\, dx = \\int_{-\\infty}^{\\infty} \\frac{1}{u^{2} + 9} \\, du = \\frac{\\pi}{3}。$$",
       ),
       generate(rng) {
         const h = rng.nonZero(-5, 5);
@@ -828,8 +828,8 @@ export const improperIntegralsOfTheSecondKind: TopicDef = {
       id: "evaluating-integrals-with-an-unbounded-integrand",
       title: t("Evaluating integrals with an unbounded integrand", "计算被积函数无界的积分"),
       explanation: t(
-        "If $f$ is unbounded at $x = a$, define\n\n$$\\int_{a}^{b} f(x) \\, dx = \\lim_{t \\to a^{+}} \\int_{t}^{b} f(x) \\, dx.$$\n\nFor example, $\\int_{0}^{9} \\frac{1}{\\sqrt{x}} \\, dx = \\lim_{t \\to 0^{+}} \\left[2\\sqrt{x}\\right]_{t}^{9} = 6$. In general $\\int_{0}^{b} x^{-p} \\, dx = \\frac{b^{1 - p}}{1 - p}$ for $p < 1$.",
-        "若 $f$ 在 $x = a$ 处无界，定义\n\n$$\\int_{a}^{b} f(x) \\, dx = \\lim_{t \\to a^{+}} \\int_{t}^{b} f(x) \\, dx。$$\n\n例如 $\\int_{0}^{9} \\frac{1}{\\sqrt{x}} \\, dx = \\lim_{t \\to 0^{+}} \\left[2\\sqrt{x}\\right]_{t}^{9} = 6$。一般地，当 $p < 1$ 时 $\\int_{0}^{b} x^{-p} \\, dx = \\frac{b^{1 - p}}{1 - p}$。",
+        "When the function blows up at an endpoint, integrate up to a point near it and take the limit as that point approaches the endpoint. If $f$ is unbounded at $x = a$, define\n\n$$\\int_{a}^{b} f(x) \\, dx = \\lim_{t \\to a^{+}} \\int_{t}^{b} f(x) \\, dx.$$\n\nFor example, $\\int_{0}^{9} \\frac{1}{\\sqrt{x}} \\, dx = \\lim_{t \\to 0^{+}} \\left[2\\sqrt{x}\\right]_{t}^{9} = 6$. In general $\\int_{0}^{b} x^{-p} \\, dx = \\frac{b^{1 - p}}{1 - p}$ for $p < 1$.",
+        "当函数在端点处趋于无穷时，先积分到它附近的一点，再取这个点趋近端点时的极限。若 $f$ 在 $x = a$ 处无界，定义\n\n$$\\int_{a}^{b} f(x) \\, dx = \\lim_{t \\to a^{+}} \\int_{t}^{b} f(x) \\, dx。$$\n\n例如 $\\int_{0}^{9} \\frac{1}{\\sqrt{x}} \\, dx = \\lim_{t \\to 0^{+}} \\left[2\\sqrt{x}\\right]_{t}^{9} = 6$。一般地，当 $p < 1$ 时 $\\int_{0}^{b} x^{-p} \\, dx = \\frac{b^{1 - p}}{1 - p}$。",
       ),
       generate(rng) {
         const r = rng.pick(rootPowers);
@@ -909,8 +909,8 @@ export const improperIntegralsOfTheSecondKindDiscontinuitiesAtInteriorPoints: To
       id: "splitting-at-an-interior-discontinuity",
       title: t("Splitting at an interior discontinuity", "在内部间断点处拆开"),
       explanation: t(
-        "If $f$ is unbounded at $c$ inside $[a, b]$, write $\\int_{a}^{b} f = \\int_{a}^{c} f + \\int_{c}^{b} f$ and evaluate each part as a limit. For example,\n\n$$\\int_{-1}^{8} \\frac{1}{\\sqrt[3]{x}} \\, dx = \\left[\\frac{3}{2}x^{2/3}\\right]_{-1}^{0} + \\left[\\frac{3}{2}x^{2/3}\\right]_{0}^{8} = -\\frac{3}{2} + 6 = \\frac{9}{2}.$$",
-        "若 $f$ 在 $[a, b]$ 内的点 $c$ 处无界，写成 $\\int_{a}^{b} f = \\int_{a}^{c} f + \\int_{c}^{b} f$，并把每一部分作为极限计算。例如\n\n$$\\int_{-1}^{8} \\frac{1}{\\sqrt[3]{x}} \\, dx = \\left[\\frac{3}{2}x^{2/3}\\right]_{-1}^{0} + \\left[\\frac{3}{2}x^{2/3}\\right]_{0}^{8} = -\\frac{3}{2} + 6 = \\frac{9}{2}。$$",
+        "A point inside the interval where the function blows up must be treated as an endpoint of two separate improper integrals, and both must converge. If $f$ is unbounded at $c$ inside $[a, b]$, write $\\int_{a}^{b} f = \\int_{a}^{c} f + \\int_{c}^{b} f$ and evaluate each part as a limit. For example,\n\n$$\\int_{-1}^{8} \\frac{1}{\\sqrt[3]{x}} \\, dx = \\left[\\frac{3}{2}x^{2/3}\\right]_{-1}^{0} + \\left[\\frac{3}{2}x^{2/3}\\right]_{0}^{8} = -\\frac{3}{2} + 6 = \\frac{9}{2}.$$",
+        "区间内部使函数趋于无穷的点必须看作两个反常积分的端点，而且两个积分都必须收敛。若 $f$ 在 $[a, b]$ 内的点 $c$ 处无界，写成 $\\int_{a}^{b} f = \\int_{a}^{c} f + \\int_{c}^{b} f$，并把每一部分作为极限计算。例如\n\n$$\\int_{-1}^{8} \\frac{1}{\\sqrt[3]{x}} \\, dx = \\left[\\frac{3}{2}x^{2/3}\\right]_{-1}^{0} + \\left[\\frac{3}{2}x^{2/3}\\right]_{0}^{8} = -\\frac{3}{2} + 6 = \\frac{9}{2}。$$",
       ),
       generate(rng) {
         const [m, n] = [rng.int(1, 3), rng.int(1, 3)];

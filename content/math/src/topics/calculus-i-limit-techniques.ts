@@ -270,8 +270,8 @@ export const calculatingLimitsOfRadicalFunctionsUsingConjugateMultiplication: To
       id: "conjugate-multiplication-with-a-quadratic",
       title: t("Conjugates with a quadratic factor", "共轭与二次因式"),
       explanation: t(
-        "After multiplying by the conjugate, factor what remains before cancelling:\n\n$$\\lim_{x \\to 1} \\frac{x^{2} + 2x - 3}{\\sqrt{x + 3} - 2} = \\lim_{x \\to 1} \\frac{(x - 1)(x + 3)(\\sqrt{x + 3} + 2)}{x - 1} = 4 \\cdot 4 = 16.$$",
-        "乘以共轭式后，先把剩余部分分解再约分：\n\n$$\\lim_{x \\to 1} \\frac{x^{2} + 2x - 3}{\\sqrt{x + 3} - 2} = \\lim_{x \\to 1} \\frac{(x - 1)(x + 3)(\\sqrt{x + 3} + 2)}{x - 1} = 4 \\cdot 4 = 16.$$",
+        "Multiplying by the conjugate removes the radical from the denominator, and then factoring the quadratic reveals the common factor that causes zero over zero. After multiplying by the conjugate, factor what remains before cancelling:\n\n$$\\lim_{x \\to 1} \\frac{x^{2} + 2x - 3}{\\sqrt{x + 3} - 2} = \\lim_{x \\to 1} \\frac{(x - 1)(x + 3)(\\sqrt{x + 3} + 2)}{x - 1} = 4 \\cdot 4 = 16.$$",
+        "乘以共轭式可以去掉分母中的根式，再把二次式因式分解，就能找到造成零比零的公因式。乘以共轭式后，先把剩余部分分解再约分：\n\n$$\\lim_{x \\to 1} \\frac{x^{2} + 2x - 3}{\\sqrt{x + 3} - 2} = \\lim_{x \\to 1} \\frac{(x - 1)(x + 3)(\\sqrt{x + 3} + 2)}{x - 1} = 4 \\cdot 4 = 16.$$",
       ),
       generate(rng) {
         const r = rng.int(1, 5);
@@ -445,8 +445,8 @@ export const calculatingLimitsUsingTrigonometricIdentities: TopicDef = {
       id: "trigonometric-limits-with-the-pythagorean-identity",
       title: t("Using the Pythagorean identity", "利用勾股恒等式"),
       explanation: t(
-        "Write $\\sin^{2} x = 1 - \\cos^{2} x = (1 - \\cos x)(1 + \\cos x)$, and similarly $\\cos^{2} x = (1 - \\sin x)(1 + \\sin x)$, then cancel:\n\n$$\\lim_{x \\to 0} \\frac{\\sin^{2} x}{1 - \\cos x} = \\lim_{x \\to 0} \\frac{(1 - \\cos x)(1 + \\cos x)}{1 - \\cos x} = \\lim_{x \\to 0} (1 + \\cos x) = 2.$$",
-        "把 $\\sin^{2} x$ 写成 $1 - \\cos^{2} x = (1 - \\cos x)(1 + \\cos x)$，同理 $\\cos^{2} x = (1 - \\sin x)(1 + \\sin x)$，然后约分：\n\n$$\\lim_{x \\to 0} \\frac{\\sin^{2} x}{1 - \\cos x} = \\lim_{x \\to 0} \\frac{(1 - \\cos x)(1 + \\cos x)}{1 - \\cos x} = \\lim_{x \\to 0} (1 + \\cos x) = 2.$$",
+        "When direct substitution gives zero over zero, rewrite a squared function with the Pythagorean identity so that a common factor appears and can be cancelled. Write $\\sin^{2} x = 1 - \\cos^{2} x = (1 - \\cos x)(1 + \\cos x)$, and similarly $\\cos^{2} x = (1 - \\sin x)(1 + \\sin x)$, then cancel:\n\n$$\\lim_{x \\to 0} \\frac{\\sin^{2} x}{1 - \\cos x} = \\lim_{x \\to 0} \\frac{(1 - \\cos x)(1 + \\cos x)}{1 - \\cos x} = \\lim_{x \\to 0} (1 + \\cos x) = 2.$$",
+        "当直接代入得到零比零时，用勾股恒等式改写平方项，使公因式出现，然后约去。把 $\\sin^{2} x$ 写成 $1 - \\cos^{2} x = (1 - \\cos x)(1 + \\cos x)$，同理 $\\cos^{2} x = (1 - \\sin x)(1 + \\sin x)$，然后约分：\n\n$$\\lim_{x \\to 0} \\frac{\\sin^{2} x}{1 - \\cos x} = \\lim_{x \\to 0} \\frac{(1 - \\cos x)(1 + \\cos x)}{1 - \\cos x} = \\lim_{x \\to 0} (1 + \\cos x) = 2.$$",
       ),
       generate(rng) {
         return identityLimit(rng, pythagoreanForms, {
@@ -459,8 +459,8 @@ export const calculatingLimitsUsingTrigonometricIdentities: TopicDef = {
       id: "trigonometric-limits-with-double-angle-formulas",
       title: t("Using the double-angle formulas", "利用二倍角公式"),
       explanation: t(
-        "Rewrite $\\sin 2x = 2\\sin x\\cos x$ and $\\cos 2x = \\cos^{2} x - \\sin^{2} x = (\\cos x - \\sin x)(\\cos x + \\sin x)$, then cancel:\n\n$$\\lim_{x \\to \\pi/4} \\frac{\\cos 2x}{\\cos x - \\sin x} = \\lim_{x \\to \\pi/4} (\\cos x + \\sin x) = \\sqrt{2}.$$",
-        "把 $\\sin 2x$ 写成 $2\\sin x\\cos x$，$\\cos 2x$ 写成 $\\cos^{2} x - \\sin^{2} x = (\\cos x - \\sin x)(\\cos x + \\sin x)$，然后约分：\n\n$$\\lim_{x \\to \\pi/4} \\frac{\\cos 2x}{\\cos x - \\sin x} = \\lim_{x \\to \\pi/4} (\\cos x + \\sin x) = \\sqrt{2}.$$",
+        "Expanding the double angle often produces a factor that matches the denominator, and cancelling it removes the zero over zero form. Rewrite $\\sin 2x = 2\\sin x\\cos x$ and $\\cos 2x = \\cos^{2} x - \\sin^{2} x = (\\cos x - \\sin x)(\\cos x + \\sin x)$, then cancel:\n\n$$\\lim_{x \\to \\pi/4} \\frac{\\cos 2x}{\\cos x - \\sin x} = \\lim_{x \\to \\pi/4} (\\cos x + \\sin x) = \\sqrt{2}.$$",
+        "展开二倍角往往会产生与分母相同的因式，约去它就消除了零比零的形式。把 $\\sin 2x$ 写成 $2\\sin x\\cos x$，$\\cos 2x$ 写成 $\\cos^{2} x - \\sin^{2} x = (\\cos x - \\sin x)(\\cos x + \\sin x)$，然后约分：\n\n$$\\lim_{x \\to \\pi/4} \\frac{\\cos 2x}{\\cos x - \\sin x} = \\lim_{x \\to \\pi/4} (\\cos x + \\sin x) = \\sqrt{2}.$$",
       ),
       generate(rng) {
         return identityLimit(rng, doubleAngleForms, { en: "By the double-angle formulas,", zh: "由二倍角公式，" });
@@ -681,8 +681,8 @@ export const evaluatingLimitsAtInfinityOfRadicalFunctions: TopicDef = {
       id: "quotients-with-roots-at-infinity",
       title: t("Quotients with roots", "含根式的商"),
       explanation: t(
-        "For large $|x|$, $\\sqrt{k^{2}x^{2} + bx + c} \\approx \\sqrt{k^{2}x^{2}} = k|x|$. As $x \\to \\infty$, $|x| = x$; as $x \\to -\\infty$, $|x| = -x$. So\n\n$$\\lim_{x \\to \\infty} \\frac{\\sqrt{9x^{2} + 1}}{2x - 5} = \\frac{3}{2}, \\qquad \\lim_{x \\to -\\infty} \\frac{\\sqrt{9x^{2} + 1}}{2x - 5} = -\\frac{3}{2}.$$",
-        "当 $|x|$ 很大时，$\\sqrt{k^{2}x^{2} + bx + c} \\approx \\sqrt{k^{2}x^{2}} = k|x|$。当 $x \\to \\infty$ 时 $|x| = x$；当 $x \\to -\\infty$ 时 $|x| = -x$。所以\n\n$$\\lim_{x \\to \\infty} \\frac{\\sqrt{9x^{2} + 1}}{2x - 5} = \\frac{3}{2}, \\qquad \\lim_{x \\to -\\infty} \\frac{\\sqrt{9x^{2} + 1}}{2x - 5} = -\\frac{3}{2}.$$",
+        "For very large inputs, only the highest power under the root matters, but the square root of a square is an absolute value, so the sign depends on the direction. For large $|x|$, $\\sqrt{k^{2}x^{2} + bx + c} \\approx \\sqrt{k^{2}x^{2}} = k|x|$. As $x \\to \\infty$, $|x| = x$; as $x \\to -\\infty$, $|x| = -x$. So\n\n$$\\lim_{x \\to \\infty} \\frac{\\sqrt{9x^{2} + 1}}{2x - 5} = \\frac{3}{2}, \\qquad \\lim_{x \\to -\\infty} \\frac{\\sqrt{9x^{2} + 1}}{2x - 5} = -\\frac{3}{2}.$$",
+        "当自变量很大时，根号下只有最高次项起作用，但平方的平方根是绝对值，所以符号取决于趋近的方向。当 $|x|$ 很大时，$\\sqrt{k^{2}x^{2} + bx + c} \\approx \\sqrt{k^{2}x^{2}} = k|x|$。当 $x \\to \\infty$ 时 $|x| = x$；当 $x \\to -\\infty$ 时 $|x| = -x$。所以\n\n$$\\lim_{x \\to \\infty} \\frac{\\sqrt{9x^{2} + 1}}{2x - 5} = \\frac{3}{2}, \\qquad \\lim_{x \\to -\\infty} \\frac{\\sqrt{9x^{2} + 1}}{2x - 5} = -\\frac{3}{2}.$$",
       ),
       generate(rng) {
         const k = rng.int(1, 6);
@@ -715,8 +715,8 @@ export const evaluatingLimitsAtInfinityOfRadicalFunctions: TopicDef = {
       id: "differences-with-roots-at-infinity",
       title: t("Differences with roots", "含根式的差"),
       explanation: t(
-        "$\\sqrt{x^{2} + 6x} - x$ has the form $\\infty - \\infty$. Multiply and divide by the conjugate:\n\n$$\\sqrt{x^{2} + 6x} - x = \\frac{6x}{\\sqrt{x^{2} + 6x} + x} = \\frac{6}{\\sqrt{1 + \\frac{6}{x}} + 1} \\to \\frac{6}{2} = 3.$$\n\nIn general, $\\sqrt{k^{2}x^{2} + bx + c} - kx \\to \\frac{b}{2k}$ as $x \\to \\infty$.",
-        "$\\sqrt{x^{2} + 6x} - x$ 是 $\\infty - \\infty$ 型。乘以并除以共轭式：\n\n$$\\sqrt{x^{2} + 6x} - x = \\frac{6x}{\\sqrt{x^{2} + 6x} + x} = \\frac{6}{\\sqrt{1 + \\frac{6}{x}} + 1} \\to \\frac{6}{2} = 3.$$\n\n一般地，当 $x \\to \\infty$ 时，$\\sqrt{k^{2}x^{2} + bx + c} - kx \\to \\frac{b}{2k}$。",
+        "A difference of two large quantities can hide a finite limit, and multiplying by the conjugate turns it into a quotient whose limit is easy to read. $\\sqrt{x^{2} + 6x} - x$ has the form $\\infty - \\infty$. Multiply and divide by the conjugate:\n\n$$\\sqrt{x^{2} + 6x} - x = \\frac{6x}{\\sqrt{x^{2} + 6x} + x} = \\frac{6}{\\sqrt{1 + \\frac{6}{x}} + 1} \\to \\frac{6}{2} = 3.$$\n\nIn general, $\\sqrt{k^{2}x^{2} + bx + c} - kx \\to \\frac{b}{2k}$ as $x \\to \\infty$.",
+        "两个很大的量之差可能隐藏着有限的极限，乘以共轭式把它变成商后，极限就容易看出了。$\\sqrt{x^{2} + 6x} - x$ 是 $\\infty - \\infty$ 型。乘以并除以共轭式：\n\n$$\\sqrt{x^{2} + 6x} - x = \\frac{6x}{\\sqrt{x^{2} + 6x} + x} = \\frac{6}{\\sqrt{1 + \\frac{6}{x}} + 1} \\to \\frac{6}{2} = 3.$$\n\n一般地，当 $x \\to \\infty$ 时，$\\sqrt{k^{2}x^{2} + bx + c} - kx \\to \\frac{b}{2k}$。",
       ),
       generate(rng) {
         const k = rng.int(1, 4);
@@ -791,8 +791,8 @@ export const theSqueezeTheorem: TopicDef = {
       id: "squeezing-oscillating-functions",
       title: t("Oscillating functions", "振荡函数"),
       explanation: t(
-        "Since $-1 \\le \\sin u \\le 1$, a bounded oscillation times something that tends to $0$ also tends to $0$:\n\n$$-x^{2} \\le x^{2}\\sin\\frac{1}{x} \\le x^{2} \\quad\\Rightarrow\\quad \\lim_{x \\to 0} x^{2}\\sin\\frac{1}{x} = 0.$$\n\nLikewise $\\frac{\\cos x}{x} \\to 0$ as $x \\to \\infty$, so $\\lim_{x \\to \\infty} \\frac{3x + \\cos x}{x} = 3$.",
-        "因为 $-1 \\le \\sin u \\le 1$，有界的振荡乘以趋于 $0$ 的量也趋于 $0$：\n\n$$-x^{2} \\le x^{2}\\sin\\frac{1}{x} \\le x^{2} \\quad\\Rightarrow\\quad \\lim_{x \\to 0} x^{2}\\sin\\frac{1}{x} = 0.$$\n\n同样，当 $x \\to \\infty$ 时 $\\frac{\\cos x}{x} \\to 0$，所以 $\\lim_{x \\to \\infty} \\frac{3x + \\cos x}{x} = 3$。",
+        "If a function is trapped between two functions that approach the same limit, it is forced to approach that limit too, however much it oscillates. Since $-1 \\le \\sin u \\le 1$, a bounded oscillation times something that tends to $0$ also tends to $0$:\n\n$$-x^{2} \\le x^{2}\\sin\\frac{1}{x} \\le x^{2} \\quad\\Rightarrow\\quad \\lim_{x \\to 0} x^{2}\\sin\\frac{1}{x} = 0.$$\n\nLikewise $\\frac{\\cos x}{x} \\to 0$ as $x \\to \\infty$, so $\\lim_{x \\to \\infty} \\frac{3x + \\cos x}{x} = 3$.",
+        "如果一个函数被夹在两个趋于同一极限的函数之间，无论它怎样振荡，都必然趋于这个极限。因为 $-1 \\le \\sin u \\le 1$，有界的振荡乘以趋于 $0$ 的量也趋于 $0$：\n\n$$-x^{2} \\le x^{2}\\sin\\frac{1}{x} \\le x^{2} \\quad\\Rightarrow\\quad \\lim_{x \\to 0} x^{2}\\sin\\frac{1}{x} = 0.$$\n\n同样，当 $x \\to \\infty$ 时 $\\frac{\\cos x}{x} \\to 0$，所以 $\\lim_{x \\to \\infty} \\frac{3x + \\cos x}{x} = 3$。",
       ),
       generate(rng) {
         const fn = rng.pick(["\\sin", "\\cos"]);
@@ -869,8 +869,8 @@ export const specialLimitsInvolvingSine: TopicDef = {
       id: "limits-of-sin-ax-over-bx",
       title: t("Limits of sin ax over bx", "sin ax 与 bx 之商的极限"),
       explanation: t(
-        "By the squeeze theorem (with $\\cos x \\le \\frac{\\sin x}{x} \\le 1$ near $0$),\n\n$$\\lim_{x \\to 0} \\frac{\\sin x}{x} = 1.$$\n\nFor $\\frac{\\sin ax}{bx}$, make the argument appear underneath: $\\frac{\\sin ax}{bx} = \\frac{a}{b} \\cdot \\frac{\\sin ax}{ax} \\to \\frac{a}{b}$. Likewise $\\frac{bx}{\\sin ax} \\to \\frac{b}{a}$.",
-        "由夹逼定理（在 $0$ 附近 $\\cos x \\le \\frac{\\sin x}{x} \\le 1$），\n\n$$\\lim_{x \\to 0} \\frac{\\sin x}{x} = 1.$$\n\n对于 $\\frac{\\sin ax}{bx}$，在分母凑出相同的自变量：$\\frac{\\sin ax}{bx} = \\frac{a}{b} \\cdot \\frac{\\sin ax}{ax} \\to \\frac{a}{b}$。同理 $\\frac{bx}{\\sin ax} \\to \\frac{b}{a}$。",
+        "Multiply and divide so that the argument of the sine also appears below it, use the basic limit of sine over its argument, and keep the leftover constant ratio. By the squeeze theorem (with $\\cos x \\le \\frac{\\sin x}{x} \\le 1$ near $0$),\n\n$$\\lim_{x \\to 0} \\frac{\\sin x}{x} = 1.$$\n\nFor $\\frac{\\sin ax}{bx}$, make the argument appear underneath: $\\frac{\\sin ax}{bx} = \\frac{a}{b} \\cdot \\frac{\\sin ax}{ax} \\to \\frac{a}{b}$. Likewise $\\frac{bx}{\\sin ax} \\to \\frac{b}{a}$.",
+        "通过乘除使分母中也出现正弦的自变量，利用正弦与自变量之比的基本极限，再保留剩下的常数比。由夹逼定理（在 $0$ 附近 $\\cos x \\le \\frac{\\sin x}{x} \\le 1$），\n\n$$\\lim_{x \\to 0} \\frac{\\sin x}{x} = 1.$$\n\n对于 $\\frac{\\sin ax}{bx}$，在分母凑出相同的自变量：$\\frac{\\sin ax}{bx} = \\frac{a}{b} \\cdot \\frac{\\sin ax}{ax} \\to \\frac{a}{b}$。同理 $\\frac{bx}{\\sin ax} \\to \\frac{b}{a}$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-7, 7);
@@ -896,8 +896,8 @@ export const specialLimitsInvolvingSine: TopicDef = {
       id: "limits-of-quotients-of-sines-and-tangents",
       title: t("Quotients of sines and tangents", "正弦与正切之商"),
       explanation: t(
-        "Since $\\tan x = \\frac{\\sin x}{\\cos x}$ and $\\cos x \\to 1$, also $\\frac{\\tan x}{x} \\to 1$. For a quotient of two such functions, divide top and bottom by $x$:\n\n$$\\lim_{x \\to 0} \\frac{\\sin 5x}{\\tan 2x} = \\lim_{x \\to 0} \\frac{5 \\cdot \\frac{\\sin 5x}{5x}}{2 \\cdot \\frac{\\tan 2x}{2x}} = \\frac{5}{2}.$$",
-        "因为 $\\tan x = \\frac{\\sin x}{\\cos x}$ 且 $\\cos x \\to 1$，所以 $\\frac{\\tan x}{x} \\to 1$。对于这类函数之商，分子分母同除以 $x$：\n\n$$\\lim_{x \\to 0} \\frac{\\sin 5x}{\\tan 2x} = \\lim_{x \\to 0} \\frac{5 \\cdot \\frac{\\sin 5x}{5x}}{2 \\cdot \\frac{\\tan 2x}{2x}} = \\frac{5}{2}.$$",
+        "Near zero, sine and tangent of a small multiple of the variable both behave like that multiple, so the limit of their quotient is the ratio of the multiples. Since $\\tan x = \\frac{\\sin x}{\\cos x}$ and $\\cos x \\to 1$, also $\\frac{\\tan x}{x} \\to 1$. For a quotient of two such functions, divide top and bottom by $x$:\n\n$$\\lim_{x \\to 0} \\frac{\\sin 5x}{\\tan 2x} = \\lim_{x \\to 0} \\frac{5 \\cdot \\frac{\\sin 5x}{5x}}{2 \\cdot \\frac{\\tan 2x}{2x}} = \\frac{5}{2}.$$",
+        "在零附近，变量的小倍数的正弦和正切都近似等于这个倍数，所以它们商的极限是两个倍数之比。因为 $\\tan x = \\frac{\\sin x}{\\cos x}$ 且 $\\cos x \\to 1$，所以 $\\frac{\\tan x}{x} \\to 1$。对于这类函数之商，分子分母同除以 $x$：\n\n$$\\lim_{x \\to 0} \\frac{\\sin 5x}{\\tan 2x} = \\lim_{x \\to 0} \\frac{5 \\cdot \\frac{\\sin 5x}{5x}}{2 \\cdot \\frac{\\tan 2x}{2x}} = \\frac{5}{2}.$$",
       ),
       generate(rng) {
         const [a, b] = rng.sample([1, 2, 3, 4, 5, 6, 7, 9], 2) as [number, number];
@@ -941,8 +941,8 @@ export const evaluatingSpecialLimitsInvolvingSineUsingASubstitution: TopicDef = 
       id: "substituting-a-shifted-argument",
       title: t("A shifted argument", "平移后的自变量"),
       explanation: t(
-        "If $u = x - a$, then $u \\to 0$ as $x \\to a$, so\n\n$$\\lim_{x \\to a} \\frac{\\sin(x - a)}{x - a} = \\lim_{u \\to 0} \\frac{\\sin u}{u} = 1.$$\n\nWith multiples: $\\lim_{x \\to 2} \\frac{\\sin(3x - 6)}{x - 2} = \\lim_{u \\to 0} \\frac{\\sin 3u}{u} = 3$.",
-        "令 $u = x - a$，则 $x \\to a$ 时 $u \\to 0$，所以\n\n$$\\lim_{x \\to a} \\frac{\\sin(x - a)}{x - a} = \\lim_{u \\to 0} \\frac{\\sin u}{u} = 1.$$\n\n带倍数时：$\\lim_{x \\to 2} \\frac{\\sin(3x - 6)}{x - 2} = \\lim_{u \\to 0} \\frac{\\sin 3u}{u} = 3$。",
+        "A substitution moves the point of interest to zero, where the standard limit of sine over its argument can be used directly. If $u = x - a$, then $u \\to 0$ as $x \\to a$, so\n\n$$\\lim_{x \\to a} \\frac{\\sin(x - a)}{x - a} = \\lim_{u \\to 0} \\frac{\\sin u}{u} = 1.$$\n\nWith multiples: $\\lim_{x \\to 2} \\frac{\\sin(3x - 6)}{x - 2} = \\lim_{u \\to 0} \\frac{\\sin 3u}{u} = 3$.",
+        "换元把所关心的点移到零处，这样就可以直接使用正弦与自变量之比的标准极限。令 $u = x - a$，则 $x \\to a$ 时 $u \\to 0$，所以\n\n$$\\lim_{x \\to a} \\frac{\\sin(x - a)}{x - a} = \\lim_{u \\to 0} \\frac{\\sin u}{u} = 1.$$\n\n带倍数时：$\\lim_{x \\to 2} \\frac{\\sin(3x - 6)}{x - 2} = \\lim_{u \\to 0} \\frac{\\sin 3u}{u} = 3$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-5, 5);
@@ -966,8 +966,8 @@ export const evaluatingSpecialLimitsInvolvingSineUsingASubstitution: TopicDef = 
       id: "substituting-with-a-factored-denominator",
       title: t("Factoring around the substitution", "结合因式分解换元"),
       explanation: t(
-        "Split off the factor that matches the sine's argument:\n\n$$\\lim_{x \\to 3} \\frac{\\sin(x - 3)}{x^{2} - x - 6} = \\lim_{x \\to 3} \\frac{\\sin(x - 3)}{x - 3} \\cdot \\frac{1}{x + 2} = 1 \\cdot \\frac{1}{5} = \\frac{1}{5}.$$\n\nSimilarly $\\frac{\\sin(x^{2} - 9)}{x - 3} = \\frac{\\sin(x^{2} - 9)}{x^{2} - 9} \\cdot (x + 3) \\to 6$.",
-        "拆出与正弦的自变量相同的因式：\n\n$$\\lim_{x \\to 3} \\frac{\\sin(x - 3)}{x^{2} - x - 6} = \\lim_{x \\to 3} \\frac{\\sin(x - 3)}{x - 3} \\cdot \\frac{1}{x + 2} = 1 \\cdot \\frac{1}{5} = \\frac{1}{5}.$$\n\n同理 $\\frac{\\sin(x^{2} - 9)}{x - 3} = \\frac{\\sin(x^{2} - 9)}{x^{2} - 9} \\cdot (x + 3) \\to 6$。",
+        "Factor the denominator so that one factor matches the argument of the sine; that part gives the standard limit, and the other factor is found by substitution. Split off the factor that matches the sine's argument:\n\n$$\\lim_{x \\to 3} \\frac{\\sin(x - 3)}{x^{2} - x - 6} = \\lim_{x \\to 3} \\frac{\\sin(x - 3)}{x - 3} \\cdot \\frac{1}{x + 2} = 1 \\cdot \\frac{1}{5} = \\frac{1}{5}.$$\n\nSimilarly $\\frac{\\sin(x^{2} - 9)}{x - 3} = \\frac{\\sin(x^{2} - 9)}{x^{2} - 9} \\cdot (x + 3) \\to 6$.",
+        "把分母因式分解，使其中一个因式与正弦的自变量相同；这部分给出标准极限，另一个因式用代入法求值。拆出与正弦的自变量相同的因式：\n\n$$\\lim_{x \\to 3} \\frac{\\sin(x - 3)}{x^{2} - x - 6} = \\lim_{x \\to 3} \\frac{\\sin(x - 3)}{x - 3} \\cdot \\frac{1}{x + 2} = 1 \\cdot \\frac{1}{5} = \\frac{1}{5}.$$\n\n同理 $\\frac{\\sin(x^{2} - 9)}{x - 3} = \\frac{\\sin(x^{2} - 9)}{x^{2} - 9} \\cdot (x + 3) \\to 6$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-5, 5);
@@ -1023,8 +1023,8 @@ export const specialLimitsInvolvingCosine: TopicDef = {
       id: "limits-of-one-minus-cosine",
       title: t("Limits of 1 − cos ax", "1 − cos ax 的极限"),
       explanation: t(
-        "Multiplying by $1 + \\cos x$ gives $\\frac{1 - \\cos x}{x} = \\frac{\\sin x}{x} \\cdot \\frac{\\sin x}{1 + \\cos x} \\to 1 \\cdot 0 = 0$, and\n\n$$\\lim_{x \\to 0} \\frac{1 - \\cos x}{x^{2}} = \\lim_{x \\to 0} \\left(\\frac{\\sin x}{x}\\right)^{2} \\frac{1}{1 + \\cos x} = \\frac{1}{2}.$$\n\nWith $ax$ in place of $x$: $\\frac{1 - \\cos ax}{bx^{2}} \\to \\frac{a^{2}}{2b}$.",
-        "乘以 $1 + \\cos x$ 得 $\\frac{1 - \\cos x}{x} = \\frac{\\sin x}{x} \\cdot \\frac{\\sin x}{1 + \\cos x} \\to 1 \\cdot 0 = 0$，以及\n\n$$\\lim_{x \\to 0} \\frac{1 - \\cos x}{x^{2}} = \\lim_{x \\to 0} \\left(\\frac{\\sin x}{x}\\right)^{2} \\frac{1}{1 + \\cos x} = \\frac{1}{2}.$$\n\n把 $x$ 换成 $ax$：$\\frac{1 - \\cos ax}{bx^{2}} \\to \\frac{a^{2}}{2b}$。",
+        "One minus cosine shrinks like the square of a small angle, so divided by the angle itself it goes to zero, and divided by the square it goes to a half. Multiplying by $1 + \\cos x$ gives $\\frac{1 - \\cos x}{x} = \\frac{\\sin x}{x} \\cdot \\frac{\\sin x}{1 + \\cos x} \\to 1 \\cdot 0 = 0$, and\n\n$$\\lim_{x \\to 0} \\frac{1 - \\cos x}{x^{2}} = \\lim_{x \\to 0} \\left(\\frac{\\sin x}{x}\\right)^{2} \\frac{1}{1 + \\cos x} = \\frac{1}{2}.$$\n\nWith $ax$ in place of $x$: $\\frac{1 - \\cos ax}{bx^{2}} \\to \\frac{a^{2}}{2b}$.",
+        "1 减余弦像小角的平方那样趋于零，所以除以角本身时趋于零，除以角的平方时趋于二分之一。乘以 $1 + \\cos x$ 得 $\\frac{1 - \\cos x}{x} = \\frac{\\sin x}{x} \\cdot \\frac{\\sin x}{1 + \\cos x} \\to 1 \\cdot 0 = 0$，以及\n\n$$\\lim_{x \\to 0} \\frac{1 - \\cos x}{x^{2}} = \\lim_{x \\to 0} \\left(\\frac{\\sin x}{x}\\right)^{2} \\frac{1}{1 + \\cos x} = \\frac{1}{2}.$$\n\n把 $x$ 换成 $ax$：$\\frac{1 - \\cos ax}{bx^{2}} \\to \\frac{a^{2}}{2b}$。",
       ),
       generate(rng) {
         const a = rng.int(1, 6);
@@ -1054,8 +1054,8 @@ export const specialLimitsInvolvingCosine: TopicDef = {
       id: "combining-cosine-and-sine-limits",
       title: t("Combining with sine limits", "与正弦极限结合"),
       explanation: t(
-        "Replace each factor by its behavior near $0$: $1 - \\cos ax \\approx \\frac{a^{2}x^{2}}{2}$, $\\sin bx \\approx bx$ and $1 - \\cos bx \\approx \\frac{b^{2}x^{2}}{2}$. So\n\n$$\\lim_{x \\to 0} \\frac{1 - \\cos 4x}{x \\sin 2x} = \\frac{16/2}{2} = 4, \\qquad \\lim_{x \\to 0} \\frac{1 - \\cos 3x}{1 - \\cos x} = 9.$$",
-        "把每个因子换成它在 $0$ 附近的近似：$1 - \\cos ax \\approx \\frac{a^{2}x^{2}}{2}$，$\\sin bx \\approx bx$，$1 - \\cos bx \\approx \\frac{b^{2}x^{2}}{2}$。所以\n\n$$\\lim_{x \\to 0} \\frac{1 - \\cos 4x}{x \\sin 2x} = \\frac{16/2}{2} = 4, \\qquad \\lim_{x \\to 0} \\frac{1 - \\cos 3x}{1 - \\cos x} = 9.$$",
+        "Replacing each factor by the simplest expression it behaves like near zero turns a complicated quotient into a ratio of powers that can be simplified. Replace each factor by its behavior near $0$: $1 - \\cos ax \\approx \\frac{a^{2}x^{2}}{2}$, $\\sin bx \\approx bx$ and $1 - \\cos bx \\approx \\frac{b^{2}x^{2}}{2}$. So\n\n$$\\lim_{x \\to 0} \\frac{1 - \\cos 4x}{x \\sin 2x} = \\frac{16/2}{2} = 4, \\qquad \\lim_{x \\to 0} \\frac{1 - \\cos 3x}{1 - \\cos x} = 9.$$",
+        "把每个因式换成它在零附近近似等于的最简单式子，就能把复杂的商变成可以化简的幂之比。把每个因子换成它在 $0$ 附近的近似：$1 - \\cos ax \\approx \\frac{a^{2}x^{2}}{2}$，$\\sin bx \\approx bx$，$1 - \\cos bx \\approx \\frac{b^{2}x^{2}}{2}$。所以\n\n$$\\lim_{x \\to 0} \\frac{1 - \\cos 4x}{x \\sin 2x} = \\frac{16/2}{2} = 4, \\qquad \\lim_{x \\to 0} \\frac{1 - \\cos 3x}{1 - \\cos x} = 9.$$",
       ),
       generate(rng) {
         const [a, b] = rng.sample([1, 2, 3, 4, 5, 6], 2) as [number, number];
@@ -1098,8 +1098,8 @@ export const limitsInvolvingTheExponentialFunction: TopicDef = {
       id: "limits-of-one-plus-a-over-x",
       title: t("Limits of (1 + a/x)^(bx)", "(1 + a/x)^(bx) 的极限"),
       explanation: t(
-        "The number $e$ is the limit\n\n$$e = \\lim_{x \\to \\infty} \\left(1 + \\frac{1}{x}\\right)^{x}.$$\n\nSubstituting $x = au$ gives $\\left(1 + \\frac{a}{x}\\right)^{x} \\to e^{a}$, and raising to the power $b$: $\\lim_{x \\to \\infty} \\left(1 + \\frac{a}{x}\\right)^{bx} = e^{ab}$.",
-        "数 $e$ 定义为极限\n\n$$e = \\lim_{x \\to \\infty} \\left(1 + \\frac{1}{x}\\right)^{x}.$$\n\n代换 $x = au$ 得 $\\left(1 + \\frac{a}{x}\\right)^{x} \\to e^{a}$，再取 $b$ 次方：$\\lim_{x \\to \\infty} \\left(1 + \\frac{a}{x}\\right)^{bx} = e^{ab}$。",
+        "This limit defines the number e, and a substitution shows that changing the constants changes the answer to e raised to their product. The number $e$ is the limit\n\n$$e = \\lim_{x \\to \\infty} \\left(1 + \\frac{1}{x}\\right)^{x}.$$\n\nSubstituting $x = au$ gives $\\left(1 + \\frac{a}{x}\\right)^{x} \\to e^{a}$, and raising to the power $b$: $\\lim_{x \\to \\infty} \\left(1 + \\frac{a}{x}\\right)^{bx} = e^{ab}$.",
+        "这个极限定义了数 e，换元可以说明改变常数后，答案变为 e 的它们乘积次幂。数 $e$ 定义为极限\n\n$$e = \\lim_{x \\to \\infty} \\left(1 + \\frac{1}{x}\\right)^{x}.$$\n\n代换 $x = au$ 得 $\\left(1 + \\frac{a}{x}\\right)^{x} \\to e^{a}$，再取 $b$ 次方：$\\lim_{x \\to \\infty} \\left(1 + \\frac{a}{x}\\right)^{bx} = e^{ab}$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-5, 5);
@@ -1124,8 +1124,8 @@ export const limitsInvolvingTheExponentialFunction: TopicDef = {
       id: "limits-of-one-plus-ax-to-the-b-over-x",
       title: t("Limits of (1 + ax)^(b/x)", "(1 + ax)^(b/x) 的极限"),
       explanation: t(
-        "Substituting $u = \\frac{1}{x}$ turns $\\lim_{x \\to \\infty}$ into $\\lim_{u \\to 0^{+}}$, and the limit also holds from the left:\n\n$$\\lim_{x \\to 0} (1 + x)^{1/x} = e, \\qquad \\lim_{x \\to 0} (1 + ax)^{b/x} = e^{ab}.$$",
-        "代换 $u = \\frac{1}{x}$ 把 $\\lim_{x \\to \\infty}$ 化为 $\\lim_{u \\to 0^{+}}$，而从左侧趋近时结论同样成立：\n\n$$\\lim_{x \\to 0} (1 + x)^{1/x} = e, \\qquad \\lim_{x \\to 0} (1 + ax)^{b/x} = e^{ab}.$$",
+        "This form is the same as the limit that defines e, written with a small quantity instead of a large one, so the answer is again a power of e. Substituting $u = \\frac{1}{x}$ turns $\\lim_{x \\to \\infty}$ into $\\lim_{u \\to 0^{+}}$, and the limit also holds from the left:\n\n$$\\lim_{x \\to 0} (1 + x)^{1/x} = e, \\qquad \\lim_{x \\to 0} (1 + ax)^{b/x} = e^{ab}.$$",
+        "这种形式与定义 e 的极限相同，只是用一个小量代替了一个大量，所以答案仍是 e 的幂。代换 $u = \\frac{1}{x}$ 把 $\\lim_{x \\to \\infty}$ 化为 $\\lim_{u \\to 0^{+}}$，而从左侧趋近时结论同样成立：\n\n$$\\lim_{x \\to 0} (1 + x)^{1/x} = e, \\qquad \\lim_{x \\to 0} (1 + ax)^{b/x} = e^{ab}.$$",
       ),
       generate(rng) {
         const a = rng.nonZero(-6, 6);
@@ -1165,8 +1165,8 @@ export const furtherLimitsInvolvingTheExponentialFunction: TopicDef = {
       id: "limits-of-e-to-the-ax-minus-one",
       title: t("Limits of (e^(ax) − 1)/(bx)", "(e^(ax) − 1)/(bx) 的极限"),
       explanation: t(
-        "A standard limit is\n\n$$\\lim_{x \\to 0} \\frac{e^{x} - 1}{x} = 1,$$\n\nso near $0$, $e^{ax} - 1 \\approx ax$. Hence $\\frac{e^{ax} - 1}{bx} \\to \\frac{a}{b}$ and $\\frac{e^{ax} - e^{bx}}{cx} = \\frac{(e^{ax} - 1) - (e^{bx} - 1)}{cx} \\to \\frac{a - b}{c}$.",
-        "一个标准极限是\n\n$$\\lim_{x \\to 0} \\frac{e^{x} - 1}{x} = 1,$$\n\n所以在 $0$ 附近 $e^{ax} - 1 \\approx ax$。因此 $\\frac{e^{ax} - 1}{bx} \\to \\frac{a}{b}$，$\\frac{e^{ax} - e^{bx}}{cx} = \\frac{(e^{ax} - 1) - (e^{bx} - 1)}{cx} \\to \\frac{a - b}{c}$。",
+        "This standard limit says the exponential curve has slope one at zero, so near zero the exponential minus one behaves like its exponent. A standard limit is\n\n$$\\lim_{x \\to 0} \\frac{e^{x} - 1}{x} = 1,$$\n\nso near $0$, $e^{ax} - 1 \\approx ax$. Hence $\\frac{e^{ax} - 1}{bx} \\to \\frac{a}{b}$ and $\\frac{e^{ax} - e^{bx}}{cx} = \\frac{(e^{ax} - 1) - (e^{bx} - 1)}{cx} \\to \\frac{a - b}{c}$.",
+        "这个标准极限说明指数曲线在零处的斜率为 1，所以在零附近，指数式减 1 近似等于它的指数。一个标准极限是\n\n$$\\lim_{x \\to 0} \\frac{e^{x} - 1}{x} = 1,$$\n\n所以在 $0$ 附近 $e^{ax} - 1 \\approx ax$。因此 $\\frac{e^{ax} - 1}{bx} \\to \\frac{a}{b}$，$\\frac{e^{ax} - e^{bx}}{cx} = \\frac{(e^{ax} - 1) - (e^{bx} - 1)}{cx} \\to \\frac{a - b}{c}$。",
       ),
       generate(rng) {
         const [a, b] = rng.sample([-4, -3, -2, -1, 1, 2, 3, 4, 5], 2) as [number, number];
@@ -1193,8 +1193,8 @@ export const furtherLimitsInvolvingTheExponentialFunction: TopicDef = {
       id: "combining-exponential-and-sine-limits",
       title: t("Combining with other special limits", "与其他特殊极限结合"),
       explanation: t(
-        "Replace each factor by its linear approximation near $0$: $e^{ax} - 1 \\approx ax$, $\\sin bx \\approx bx$, $\\tan bx \\approx bx$. So\n\n$$\\lim_{x \\to 0} \\frac{e^{6x} - 1}{\\sin 2x} = \\frac{6}{2} = 3, \\qquad \\lim_{x \\to 0} \\frac{e^{2x} - 1}{e^{5x} - 1} = \\frac{2}{5}.$$",
-        "把每个因子换成它在 $0$ 附近的线性近似：$e^{ax} - 1 \\approx ax$，$\\sin bx \\approx bx$，$\\tan bx \\approx bx$。所以\n\n$$\\lim_{x \\to 0} \\frac{e^{6x} - 1}{\\sin 2x} = \\frac{6}{2} = 3, \\qquad \\lim_{x \\to 0} \\frac{e^{2x} - 1}{e^{5x} - 1} = \\frac{2}{5}.$$",
+        "Each factor that goes to zero behaves like a simple multiple of the variable, so the limit of the whole quotient is the ratio of those multiples. Replace each factor by its linear approximation near $0$: $e^{ax} - 1 \\approx ax$, $\\sin bx \\approx bx$, $\\tan bx \\approx bx$. So\n\n$$\\lim_{x \\to 0} \\frac{e^{6x} - 1}{\\sin 2x} = \\frac{6}{2} = 3, \\qquad \\lim_{x \\to 0} \\frac{e^{2x} - 1}{e^{5x} - 1} = \\frac{2}{5}.$$",
+        "每个趋于零的因式都近似于变量的一个简单倍数，所以整个商的极限就是这些倍数之比。把每个因子换成它在 $0$ 附近的线性近似：$e^{ax} - 1 \\approx ax$，$\\sin bx \\approx bx$，$\\tan bx \\approx bx$。所以\n\n$$\\lim_{x \\to 0} \\frac{e^{6x} - 1}{\\sin 2x} = \\frac{6}{2} = 3, \\qquad \\lim_{x \\to 0} \\frac{e^{2x} - 1}{e^{5x} - 1} = \\frac{2}{5}.$$",
       ),
       generate(rng) {
         const [a, b] = rng.sample([-3, -2, -1, 1, 2, 3, 4, 5, 6, 7], 2) as [number, number];

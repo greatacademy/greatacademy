@@ -181,8 +181,8 @@ export const verifyingSolutionsOfDifferentialEquations: TopicDef = {
       id: "exponential-solutions-with-an-unknown-rate",
       title: t("Exponential solutions with an unknown rate", "求指数解中的未知常数"),
       explanation: t(
-        "Substituting $y = e^{rx}$ into $y'' + by' + cy = 0$ gives $e^{rx}(r^{2} + br + c) = 0$, and $e^{rx}$ is never $0$, so $r^{2} + br + c = 0$. For $y'' - y' - 6y = 0$: $r^{2} - r - 6 = (r - 3)(r + 2) = 0$, so $r = 3$ or $r = -2$.",
-        "把 $y = e^{rx}$ 代入 $y'' + by' + cy = 0$ 得 $e^{rx}(r^{2} + br + c) = 0$，而 $e^{rx}$ 永不为 $0$，所以 $r^{2} + br + c = 0$。对 $y'' - y' - 6y = 0$：$r^{2} - r - 6 = (r - 3)(r + 2) = 0$，所以 $r = 3$ 或 $r = -2$。",
+        "Guessing an exponential solution turns the differential equation into an ordinary quadratic for the rate, because the exponential factor is never zero. Substituting $y = e^{rx}$ into $y'' + by' + cy = 0$ gives $e^{rx}(r^{2} + br + c) = 0$, and $e^{rx}$ is never $0$, so $r^{2} + br + c = 0$. For $y'' - y' - 6y = 0$: $r^{2} - r - 6 = (r - 3)(r + 2) = 0$, so $r = 3$ or $r = -2$.",
+        "猜测解是指数函数，就能把微分方程变成关于增长率的普通二次方程，因为指数因子永不为零。把 $y = e^{rx}$ 代入 $y'' + by' + cy = 0$ 得 $e^{rx}(r^{2} + br + c) = 0$，而 $e^{rx}$ 永不为 $0$，所以 $r^{2} + br + c = 0$。对 $y'' - y' - 6y = 0$：$r^{2} - r - 6 = (r - 3)(r + 2) = 0$，所以 $r = 3$ 或 $r = -2$。",
       ),
       generate(rng) {
         // Nonzero roots keep both factors in the form (r − c).
@@ -355,8 +355,8 @@ export const solvingFirstOrderOdesUsingSeparationOfVariables: TopicDef = {
       id: "general-solutions-by-separation",
       title: t("General solutions by separation", "分离变量求通解"),
       explanation: t(
-        "For $\\frac{dy}{dx} = kx^{m}y$: $\\int \\frac{dy}{y} = \\int kx^{m} \\, dx$ gives $\\ln|y| = \\frac{k}{m + 1}x^{m+1} + C_1$, so $y = Ce^{\\frac{k}{m + 1}x^{m+1}}$ with $C = \\pm e^{C_1}$ (and $C = 0$ for the solution $y = 0$). For $\\frac{dy}{dx} = 6x^{2}y$: $y = Ce^{2x^{3}}$.",
-        "对 $\\frac{dy}{dx} = kx^{m}y$：由 $\\int \\frac{dy}{y} = \\int kx^{m} \\, dx$ 得 $\\ln|y| = \\frac{k}{m + 1}x^{m+1} + C_1$，所以 $y = Ce^{\\frac{k}{m + 1}x^{m+1}}$，其中 $C = \\pm e^{C_1}$（$C = 0$ 对应解 $y = 0$）。对 $\\frac{dy}{dx} = 6x^{2}y$：$y = Ce^{2x^{3}}$。",
+        "Move every factor with the unknown function to one side and every factor with the variable to the other, then integrate both sides. For $\\frac{dy}{dx} = kx^{m}y$: $\\int \\frac{dy}{y} = \\int kx^{m} \\, dx$ gives $\\ln|y| = \\frac{k}{m + 1}x^{m+1} + C_1$, so $y = Ce^{\\frac{k}{m + 1}x^{m+1}}$ with $C = \\pm e^{C_1}$ (and $C = 0$ for the solution $y = 0$). For $\\frac{dy}{dx} = 6x^{2}y$: $y = Ce^{2x^{3}}$.",
+        "把含未知函数的因子都移到一边，含自变量的因子都移到另一边，再两边积分。对 $\\frac{dy}{dx} = kx^{m}y$：由 $\\int \\frac{dy}{y} = \\int kx^{m} \\, dx$ 得 $\\ln|y| = \\frac{k}{m + 1}x^{m+1} + C_1$，所以 $y = Ce^{\\frac{k}{m + 1}x^{m+1}}$，其中 $C = \\pm e^{C_1}$（$C = 0$ 对应解 $y = 0$）。对 $\\frac{dy}{dx} = 6x^{2}y$：$y = Ce^{2x^{3}}$。",
       ),
       generate(rng) {
         const k = rng.nonZero(-9, 9);
@@ -403,8 +403,8 @@ export const solvingFirstOrderIvpsUsingSeparationOfVariables: TopicDef = {
       id: "exponential-ivps",
       title: t("IVPs with exponential solutions", "解为指数函数的初值问题"),
       explanation: t(
-        "For $\\frac{dy}{dx} = kx^{m}y$ with $y(0) = y_0$, the general solution $y = Ce^{\\frac{k}{m + 1}x^{m+1}}$ gives $y(0) = C$, so $C = y_0$. For $\\frac{dy}{dx} = 4xy$ with $y(0) = 3$: $y = 3e^{2x^{2}}$.",
-        "对 $\\frac{dy}{dx} = kx^{m}y$，$y(0) = y_0$，通解 $y = Ce^{\\frac{k}{m + 1}x^{m+1}}$ 给出 $y(0) = C$，所以 $C = y_0$。对 $\\frac{dy}{dx} = 4xy$，$y(0) = 3$：$y = 3e^{2x^{2}}$。",
+        "The initial condition fixes the constant in the general solution, and for an exponential solution at zero, that constant is simply the starting value. For $\\frac{dy}{dx} = kx^{m}y$ with $y(0) = y_0$, the general solution $y = Ce^{\\frac{k}{m + 1}x^{m+1}}$ gives $y(0) = C$, so $C = y_0$. For $\\frac{dy}{dx} = 4xy$ with $y(0) = 3$: $y = 3e^{2x^{2}}$.",
+        "初始条件确定了通解中的常数；对于在零处的指数型解，这个常数就是初始值。对 $\\frac{dy}{dx} = kx^{m}y$，$y(0) = y_0$，通解 $y = Ce^{\\frac{k}{m + 1}x^{m+1}}$ 给出 $y(0) = C$，所以 $C = y_0$。对 $\\frac{dy}{dx} = 4xy$，$y(0) = 3$：$y = 3e^{2x^{2}}$。",
       ),
       generate(rng) {
         const k = rng.nonZero(-6, 6);
@@ -437,8 +437,8 @@ export const solvingFirstOrderIvpsUsingSeparationOfVariables: TopicDef = {
       id: "ivps-with-reciprocal-solutions",
       title: t("IVPs with reciprocal solutions", "解为倒数形式的初值问题"),
       explanation: t(
-        "For $\\frac{dy}{dx} = kxy^{2}$: $\\int y^{-2} \\, dy = \\int kx \\, dx$ gives $-\\frac{1}{y} = \\frac{k}{2}x^{2} + C$. With $y(0) = y_0$, $C = -\\frac{1}{y_0}$. For $\\frac{dy}{dx} = 2xy^{2}$, $y(0) = 1$: $-\\frac{1}{y} = x^{2} - 1$, so $y = \\frac{1}{1 - x^{2}}$ and $y\\left(\\frac{1}{2}\\right) = \\frac{4}{3}$.",
-        "对 $\\frac{dy}{dx} = kxy^{2}$：由 $\\int y^{-2} \\, dy = \\int kx \\, dx$ 得 $-\\frac{1}{y} = \\frac{k}{2}x^{2} + C$。由 $y(0) = y_0$ 得 $C = -\\frac{1}{y_0}$。对 $\\frac{dy}{dx} = 2xy^{2}$，$y(0) = 1$：$-\\frac{1}{y} = x^{2} - 1$，所以 $y = \\frac{1}{1 - x^{2}}$，$y\\left(\\frac{1}{2}\\right) = \\frac{4}{3}$。",
+        "Separating and integrating gives the reciprocal of the unknown function, so use the initial condition to find the constant before solving for the function. For $\\frac{dy}{dx} = kxy^{2}$: $\\int y^{-2} \\, dy = \\int kx \\, dx$ gives $-\\frac{1}{y} = \\frac{k}{2}x^{2} + C$. With $y(0) = y_0$, $C = -\\frac{1}{y_0}$. For $\\frac{dy}{dx} = 2xy^{2}$, $y(0) = 1$: $-\\frac{1}{y} = x^{2} - 1$, so $y = \\frac{1}{1 - x^{2}}$ and $y\\left(\\frac{1}{2}\\right) = \\frac{4}{3}$.",
+        "分离变量并积分后得到未知函数的倒数，所以先用初始条件求出常数，再解出函数。对 $\\frac{dy}{dx} = kxy^{2}$：由 $\\int y^{-2} \\, dy = \\int kx \\, dx$ 得 $-\\frac{1}{y} = \\frac{k}{2}x^{2} + C$。由 $y(0) = y_0$ 得 $C = -\\frac{1}{y_0}$。对 $\\frac{dy}{dx} = 2xy^{2}$，$y(0) = 1$：$-\\frac{1}{y} = x^{2} - 1$，所以 $y = \\frac{1}{1 - x^{2}}$，$y\\left(\\frac{1}{2}\\right) = \\frac{4}{3}$。",
       ),
       generate(rng) {
         for (;;) {
@@ -960,8 +960,8 @@ export const exponentialGrowthAndDecayModelsWithFirstOrderOdesCalculatingUnknown
       id: "finding-an-unknown-time",
       title: t("Finding an unknown time", "求未知时间"),
       explanation: t(
-        "If $P$ doubles every $d$ years, then $P = P_0 \\cdot 2^{t/d}$. To reach $8P_0$ we need $2^{t/d} = 8 = 2^{3}$, so $t = 3d$. In general, solving $e^{kt} = m$ gives $t = \\frac{\\ln m}{k}$.",
-        "若 $P$ 每 $d$ 年翻一倍，则 $P = P_0 \\cdot 2^{t/d}$。要达到 $8P_0$，需要 $2^{t/d} = 8 = 2^{3}$，所以 $t = 3d$。一般地，解 $e^{kt} = m$ 得 $t = \\frac{\\ln m}{k}$。",
+        "Write the quantity as its starting value times a power with time in the exponent, set it equal to the target, and solve with logarithms. If $P$ doubles every $d$ years, then $P = P_0 \\cdot 2^{t/d}$. To reach $8P_0$ we need $2^{t/d} = 8 = 2^{3}$, so $t = 3d$. In general, solving $e^{kt} = m$ gives $t = \\frac{\\ln m}{k}$.",
+        "把这个量写成初始值乘以一个以时间为指数的幂，令它等于目标值，再用对数求解。若 $P$ 每 $d$ 年翻一倍，则 $P = P_0 \\cdot 2^{t/d}$。要达到 $8P_0$，需要 $2^{t/d} = 8 = 2^{3}$，所以 $t = 3d$。一般地，解 $e^{kt} = m$ 得 $t = \\frac{\\ln m}{k}$。",
       ),
       generate(rng) {
         const m = rng.pick([2, 3]);
@@ -1147,8 +1147,8 @@ export const logisticGrowthModelsWithFirstOrderOdes: TopicDef = {
       id: "logistic-growth-rates",
       title: t("Growth rates in a logistic model", "逻辑斯谛模型中的增长速率"),
       explanation: t(
-        "Substitute the current population. For $\\frac{dP}{dt} = 0.1P\\left(1 - \\frac{P}{500}\\right)$ at $P = 100$: $0.1 \\cdot 100 \\cdot \\frac{4}{5} = 8$ individuals per unit of time.",
-        "代入当前种群数量。对 $\\frac{dP}{dt} = 0.1P\\left(1 - \\frac{P}{500}\\right)$，在 $P = 100$ 时：$0.1 \\cdot 100 \\cdot \\frac{4}{5} = 8$，即每单位时间增加 $8$ 个个体。",
+        "In a logistic model the growth rate is proportional to both the population and the room left before the carrying capacity, so substitute the current population. Substitute the current population. For $\\frac{dP}{dt} = 0.1P\\left(1 - \\frac{P}{500}\\right)$ at $P = 100$: $0.1 \\cdot 100 \\cdot \\frac{4}{5} = 8$ individuals per unit of time.",
+        "在逻辑斯谛模型中，增长率既与种群数量成正比，也与距离环境容量的余量成正比，所以代入当前的种群数量。代入当前种群数量。对 $\\frac{dP}{dt} = 0.1P\\left(1 - \\frac{P}{500}\\right)$，在 $P = 100$ 时：$0.1 \\cdot 100 \\cdot \\frac{4}{5} = 8$，即每单位时间增加 $8$ 个个体。",
       ),
       generate(rng) {
         const L = logistic(rng);
@@ -1263,8 +1263,8 @@ export const solvingTheLogisticGrowthEquation: TopicDef = {
       id: "the-constant-in-the-logistic-solution",
       title: t("The constant A", "常数 A"),
       explanation: t(
-        "Separating gives $\\int \\frac{K}{P(K - P)} \\, dP = \\int k \\, dt$, and partial fractions give $\\ln\\left|\\frac{P}{K - P}\\right| = kt + C$. Solving for $P$:\n\n$$P(t) = \\frac{K}{1 + Ae^{-kt}}, \\qquad A = \\frac{K - P_0}{P_0}.$$\n\nWith $K = 1000$ and $P_0 = 200$: $A = \\frac{800}{200} = 4$.",
-        "分离变量得 $\\int \\frac{K}{P(K - P)} \\, dP = \\int k \\, dt$，用部分分式得 $\\ln\\left|\\frac{P}{K - P}\\right| = kt + C$。解出 $P$：\n\n$$P(t) = \\frac{K}{1 + Ae^{-kt}}, \\qquad A = \\frac{K - P_0}{P_0}。$$\n\n当 $K = 1000$，$P_0 = 200$ 时：$A = \\frac{800}{200} = 4$。",
+        "The constant in the logistic solution is fixed by the starting population, measuring how far below the carrying capacity the population begins. Separating gives $\\int \\frac{K}{P(K - P)} \\, dP = \\int k \\, dt$, and partial fractions give $\\ln\\left|\\frac{P}{K - P}\\right| = kt + C$. Solving for $P$:\n\n$$P(t) = \\frac{K}{1 + Ae^{-kt}}, \\qquad A = \\frac{K - P_0}{P_0}.$$\n\nWith $K = 1000$ and $P_0 = 200$: $A = \\frac{800}{200} = 4$.",
+        "逻辑斯谛解中的常数由初始种群数量确定，它衡量种群开始时比环境容量低多少。分离变量得 $\\int \\frac{K}{P(K - P)} \\, dP = \\int k \\, dt$，用部分分式得 $\\ln\\left|\\frac{P}{K - P}\\right| = kt + C$。解出 $P$：\n\n$$P(t) = \\frac{K}{1 + Ae^{-kt}}, \\qquad A = \\frac{K - P_0}{P_0}。$$\n\n当 $K = 1000$，$P_0 = 200$ 时：$A = \\frac{800}{200} = 4$。",
       ),
       generate(rng) {
         const L = logistic(rng);
@@ -1288,8 +1288,8 @@ export const solvingTheLogisticGrowthEquation: TopicDef = {
       id: "writing-the-logistic-solution",
       title: t("Writing the solution", "写出解"),
       explanation: t(
-        "Read $K$ and $k$ from the equation, compute $A$ from $P_0$, and substitute. For $\\frac{dP}{dt} = \\frac{1}{2}P\\left(1 - \\frac{P}{300}\\right)$ with $P(0) = 50$: $A = 5$, so $P(t) = \\frac{300}{1 + 5e^{-t/2}}$.",
-        "从方程读出 $K$ 和 $k$，由 $P_0$ 求出 $A$，再代入。对 $\\frac{dP}{dt} = \\frac{1}{2}P\\left(1 - \\frac{P}{300}\\right)$，$P(0) = 50$：$A = 5$，所以 $P(t) = \\frac{300}{1 + 5e^{-t/2}}$。",
+        "Once the carrying capacity, the rate and the constant are known, the solution is a fraction that rises from the starting value toward the carrying capacity. Read $K$ and $k$ from the equation, compute $A$ from $P_0$, and substitute. For $\\frac{dP}{dt} = \\frac{1}{2}P\\left(1 - \\frac{P}{300}\\right)$ with $P(0) = 50$: $A = 5$, so $P(t) = \\frac{300}{1 + 5e^{-t/2}}$.",
+        "一旦知道环境容量、增长率和常数，解就是一个从初始值上升并趋近环境容量的分式。从方程读出 $K$ 和 $k$，由 $P_0$ 求出 $A$，再代入。对 $\\frac{dP}{dt} = \\frac{1}{2}P\\left(1 - \\frac{P}{300}\\right)$，$P(0) = 50$：$A = 5$，所以 $P(t) = \\frac{300}{1 + 5e^{-t/2}}$。",
       ),
       generate(rng) {
         const L = logistic(rng);

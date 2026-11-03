@@ -124,8 +124,8 @@ export const differentiatingCurvesGivenInPolarForm: TopicDef = {
       id: "slopes-of-polar-curves",
       title: t("Slopes of polar curves", "极坐标曲线的斜率"),
       explanation: t(
-        `As for any parametric curve,\n\n$$${polarSlopeFormula}.$$\n\nIt is not $\\frac{dr}{d\\theta}$. For $r = 2 + \\cos\\theta$ at $\\theta = \\frac{\\pi}{2}$: $\\frac{dy}{dx} = \\frac{-1}{-2} = \\frac{1}{2}$.`,
-        `与任何参数曲线一样，\n\n$$${polarSlopeFormula}。$$\n\n它不等于 $\\frac{dr}{d\\theta}$。对 $r = 2 + \\cos\\theta$，在 $\\theta = \\frac{\\pi}{2}$ 处 $\\frac{dy}{dx} = \\frac{-1}{-2} = \\frac{1}{2}$。`,
+        `A polar curve is a parametric curve with the angle as the parameter, so its slope is the derivative of the vertical coordinate over that of the horizontal one. As for any parametric curve,\n\n$$${polarSlopeFormula}.$$\n\nIt is not $\\frac{dr}{d\\theta}$. For $r = 2 + \\cos\\theta$ at $\\theta = \\frac{\\pi}{2}$: $\\frac{dy}{dx} = \\frac{-1}{-2} = \\frac{1}{2}$.`,
+        `极坐标曲线是以角为参数的参数曲线，所以它的斜率是竖直坐标的导数除以水平坐标的导数。与任何参数曲线一样，\n\n$$${polarSlopeFormula}。$$\n\n它不等于 $\\frac{dr}{d\\theta}$。对 $r = 2 + \\cos\\theta$，在 $\\theta = \\frac{\\pi}{2}$ 处 $\\frac{dy}{dx} = \\frac{-1}{-2} = \\frac{1}{2}$。`,
       ),
       generate: quadrantalSlope,
     },
@@ -211,8 +211,8 @@ export const furtherDifferentiationOfCurvesGivenInPolarForm: TopicDef = {
       id: "slopes-at-odd-multiples-of-a-quarter-turn",
       title: t("Slopes at odd multiples of π/4", "π/4 奇数倍处的斜率"),
       explanation: t(
-        `At $\\theta = \\frac{\\pi}{4}$, $\\cos\\theta = \\sin\\theta = \\frac{\\sqrt{2}}{2}$, and the common factor cancels in $${polarSlopeFormula}$. For $r = 3 + \\cos 2\\theta$ at $\\frac{\\pi}{4}$: $r = 3$ and $r' = -2\\sin 2\\theta = -2$, so $\\frac{dy}{dx} = \\frac{-2 + 3}{-2 - 3} = -\\frac{1}{5}$.`,
-        `在 $\\theta = \\frac{\\pi}{4}$ 处 $\\cos\\theta = \\sin\\theta = \\frac{\\sqrt{2}}{2}$，在 $${polarSlopeFormula}$ 中公因子约去。对 $r = 3 + \\cos 2\\theta$，在 $\\frac{\\pi}{4}$ 处 $r = 3$，$r' = -2\\sin 2\\theta = -2$，所以 $\\frac{dy}{dx} = \\frac{-2 + 3}{-2 - 3} = -\\frac{1}{5}$。`,
+        `At these angles sine and cosine have the same size, so a common factor cancels from the slope and the computation becomes much shorter. At $\\theta = \\frac{\\pi}{4}$, $\\cos\\theta = \\sin\\theta = \\frac{\\sqrt{2}}{2}$, and the common factor cancels in $${polarSlopeFormula}$. For $r = 3 + \\cos 2\\theta$ at $\\frac{\\pi}{4}$: $r = 3$ and $r' = -2\\sin 2\\theta = -2$, so $\\frac{dy}{dx} = \\frac{-2 + 3}{-2 - 3} = -\\frac{1}{5}$.`,
+        `在这些角处正弦和余弦的绝对值相等，所以斜率中的公因子可以约去，计算变得短得多。在 $\\theta = \\frac{\\pi}{4}$ 处 $\\cos\\theta = \\sin\\theta = \\frac{\\sqrt{2}}{2}$，在 $${polarSlopeFormula}$ 中公因子约去。对 $r = 3 + \\cos 2\\theta$，在 $\\frac{\\pi}{4}$ 处 $r = 3$，$r' = -2\\sin 2\\theta = -2$，所以 $\\frac{dy}{dx} = \\frac{-2 + 3}{-2 - 3} = -\\frac{1}{5}$。`,
       ),
       generate: diagonalSlope,
     },
@@ -220,8 +220,8 @@ export const furtherDifferentiationOfCurvesGivenInPolarForm: TopicDef = {
       id: "slopes-of-logarithmic-spirals",
       title: t("Slopes of logarithmic spirals", "对数螺线的斜率"),
       explanation: t(
-        "For the spiral $r = ae^{k\\theta}$, $r' = kr$, so $r$ cancels from the slope: $\\frac{dy}{dx} = \\frac{k\\sin\\theta + \\cos\\theta}{k\\cos\\theta - \\sin\\theta}$. For $k = 2$ at $\\theta = \\frac{\\pi}{2}$: $\\frac{dy}{dx} = \\frac{2}{-1} = -2$.",
-        "对螺线 $r = ae^{k\\theta}$，$r' = kr$，所以斜率中 $r$ 约去：$\\frac{dy}{dx} = \\frac{k\\sin\\theta + \\cos\\theta}{k\\cos\\theta - \\sin\\theta}$。取 $k = 2$，在 $\\theta = \\frac{\\pi}{2}$ 处 $\\frac{dy}{dx} = \\frac{2}{-1} = -2$。",
+        "The derivative of the radius is a constant multiple of the radius itself, so the radius cancels and the slope depends only on the angle. For the spiral $r = ae^{k\\theta}$, $r' = kr$, so $r$ cancels from the slope: $\\frac{dy}{dx} = \\frac{k\\sin\\theta + \\cos\\theta}{k\\cos\\theta - \\sin\\theta}$. For $k = 2$ at $\\theta = \\frac{\\pi}{2}$: $\\frac{dy}{dx} = \\frac{2}{-1} = -2$.",
+        "半径的导数是半径本身的常数倍，所以半径被约去，斜率只取决于角度。对螺线 $r = ae^{k\\theta}$，$r' = kr$，所以斜率中 $r$ 约去：$\\frac{dy}{dx} = \\frac{k\\sin\\theta + \\cos\\theta}{k\\cos\\theta - \\sin\\theta}$。取 $k = 2$，在 $\\theta = \\frac{\\pi}{2}$ 处 $\\frac{dy}{dx} = \\frac{2}{-1} = -2$。",
       ),
       generate: spiralSlope,
     },
@@ -691,8 +691,8 @@ export const findingTheAreaOfAPolarRegion: TopicDef = {
       id: "areas-bounded-by-limacons",
       title: t("Areas bounded by limaçons", "蜗线围成的面积"),
       explanation: t(
-        "Expand $r^{2}$ and use $\\cos^{2}\\theta = \\frac{1 + \\cos 2\\theta}{2}$ (or the same for $\\sin^{2}\\theta$). For $r = 2 + \\cos\\theta$ from $0$ to $\\frac{\\pi}{2}$:\n\n$$A = \\frac{1}{2}\\int_{0}^{\\pi/2} (4 + 4\\cos\\theta + \\cos^{2}\\theta) \\, d\\theta = \\frac{1}{2}\\left(2\\pi + 4 + \\frac{\\pi}{4}\\right) = \\frac{9\\pi}{8} + 2.$$",
-        "展开 $r^{2}$，并用 $\\cos^{2}\\theta = \\frac{1 + \\cos 2\\theta}{2}$（$\\sin^{2}\\theta$ 类似）。对 $r = 2 + \\cos\\theta$，从 $0$ 到 $\\frac{\\pi}{2}$：\n\n$$A = \\frac{1}{2}\\int_{0}^{\\pi/2} (4 + 4\\cos\\theta + \\cos^{2}\\theta) \\, d\\theta = \\frac{1}{2}\\left(2\\pi + 4 + \\frac{\\pi}{4}\\right) = \\frac{9\\pi}{8} + 2。$$",
+        "Polar area adds up thin sectors, each with area half the square of the radius times the angle, so expand the square and lower the powers of cosine. Expand $r^{2}$ and use $\\cos^{2}\\theta = \\frac{1 + \\cos 2\\theta}{2}$ (or the same for $\\sin^{2}\\theta$). For $r = 2 + \\cos\\theta$ from $0$ to $\\frac{\\pi}{2}$:\n\n$$A = \\frac{1}{2}\\int_{0}^{\\pi/2} (4 + 4\\cos\\theta + \\cos^{2}\\theta) \\, d\\theta = \\frac{1}{2}\\left(2\\pi + 4 + \\frac{\\pi}{4}\\right) = \\frac{9\\pi}{8} + 2.$$",
+        "极坐标面积是把许多细扇形加起来，每个扇形的面积是半径平方的一半乘以角度，所以要展开平方并给余弦降幂。展开 $r^{2}$，并用 $\\cos^{2}\\theta = \\frac{1 + \\cos 2\\theta}{2}$（$\\sin^{2}\\theta$ 类似）。对 $r = 2 + \\cos\\theta$，从 $0$ 到 $\\frac{\\pi}{2}$：\n\n$$A = \\frac{1}{2}\\int_{0}^{\\pi/2} (4 + 4\\cos\\theta + \\cos^{2}\\theta) \\, d\\theta = \\frac{1}{2}\\left(2\\pi + 4 + \\frac{\\pi}{4}\\right) = \\frac{9\\pi}{8} + 2。$$",
       ),
       generate: limaconArea,
     },

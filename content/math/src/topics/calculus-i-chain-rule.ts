@@ -91,8 +91,8 @@ export const theChainRuleForDifferentiation: TopicDef = {
       id: "roots-and-reciprocals-of-inner-functions",
       title: t("Roots and reciprocals of inner functions", "内层函数的根式与倒数"),
       explanation: t(
-        "Write roots and reciprocals as powers first: $\\sqrt{u} = u^{\\frac{1}{2}}$ and $\\frac{k}{u} = ku^{-1}$. Then\n\n$$\\frac{d}{dx}\\sqrt{u} = \\frac{u'}{2\\sqrt{u}}, \\qquad \\frac{d}{dx}\\frac{k}{u} = -\\frac{ku'}{u^{2}}.$$",
-        "先把根式和倒数写成幂：$\\sqrt{u} = u^{\\frac{1}{2}}$，$\\frac{k}{u} = ku^{-1}$。于是\n\n$$\\frac{d}{dx}\\sqrt{u} = \\frac{u'}{2\\sqrt{u}}, \\qquad \\frac{d}{dx}\\frac{k}{u} = -\\frac{ku'}{u^{2}}.$$",
+        "Writing roots and reciprocals as powers lets you use the power rule together with the chain rule, multiplying by the derivative of the inside. Write roots and reciprocals as powers first: $\\sqrt{u} = u^{\\frac{1}{2}}$ and $\\frac{k}{u} = ku^{-1}$. Then\n\n$$\\frac{d}{dx}\\sqrt{u} = \\frac{u'}{2\\sqrt{u}}, \\qquad \\frac{d}{dx}\\frac{k}{u} = -\\frac{ku'}{u^{2}}.$$",
+        "把根式和倒数写成幂的形式，就可以把幂法则与链式法则结合起来，再乘以内层函数的导数。先把根式和倒数写成幂：$\\sqrt{u} = u^{\\frac{1}{2}}$，$\\frac{k}{u} = ku^{-1}$。于是\n\n$$\\frac{d}{dx}\\sqrt{u} = \\frac{u'}{2\\sqrt{u}}, \\qquad \\frac{d}{dx}\\frac{k}{u} = -\\frac{ku'}{u^{2}}.$$",
       ),
       generate(rng) {
         const inner = rng.bool() ? linearInner(rng, true) : quadraticInner(rng, true);
@@ -137,8 +137,8 @@ export const theChainRuleForDifferentiation: TopicDef = {
       id: "derivatives-of-composite-functions-at-a-point",
       title: t("Derivatives of composite functions at a point", "复合函数在某点处的导数"),
       explanation: t(
-        "For $h(x) = f(g(x))$, $h'(a) = f'(g(a)) \\cdot g'(a)$: evaluate $g(a)$ first, then $f'$ at that value, then multiply by $g'(a)$.",
-        "对 $h(x) = f(g(x))$，$h'(a) = f'(g(a)) \\cdot g'(a)$：先求 $g(a)$，再求 $f'$ 在该值处的值，最后乘以 $g'(a)$。",
+        "The chain rule works from the inside out: find where the inner function sends the point, then use the slopes of both functions at the right places. For $h(x) = f(g(x))$, $h'(a) = f'(g(a)) \\cdot g'(a)$: evaluate $g(a)$ first, then $f'$ at that value, then multiply by $g'(a)$.",
+        "链式法则由内向外进行：先求内层函数把该点送到哪里，再在相应的位置用两个函数的斜率。对 $h(x) = f(g(x))$，$h'(a) = f'(g(a)) \\cdot g'(a)$：先求 $g(a)$，再求 $f'$ 在该值处的值，最后乘以 $g'(a)$。",
       ),
       generate(rng) {
         const f: Poly = [rng.int(-5, 5), rng.int(-4, 4), rng.nonZero(-3, 3)];
@@ -182,8 +182,8 @@ export const theChainRuleWithExponentialFunctions: TopicDef = {
       id: "e-to-an-inner-function",
       title: t("e to an inner function", "e 的内层函数次幂"),
       explanation: t(
-        "$$\\frac{d}{dx} e^{g(x)} = g'(x)e^{g(x)}.$$\n\nThe exponent stays the same; multiply by its derivative. For example, $\\frac{d}{dx} e^{x^{2} - 3x} = (2x - 3)e^{x^{2} - 3x}$.",
-        "$$\\frac{d}{dx} e^{g(x)} = g'(x)e^{g(x)}.$$\n\n指数保持不变，再乘以指数的导数。例如 $\\frac{d}{dx} e^{x^{2} - 3x} = (2x - 3)e^{x^{2} - 3x}$。",
+        "The exponential function is its own derivative, so by the chain rule only the derivative of the exponent is added as a factor. $$\\frac{d}{dx} e^{g(x)} = g'(x)e^{g(x)}.$$\n\nThe exponent stays the same; multiply by its derivative. For example, $\\frac{d}{dx} e^{x^{2} - 3x} = (2x - 3)e^{x^{2} - 3x}$.",
+        "指数函数的导数就是它自己，所以根据链式法则，只需多乘一个指数的导数。$$\\frac{d}{dx} e^{g(x)} = g'(x)e^{g(x)}.$$\n\n指数保持不变，再乘以指数的导数。例如 $\\frac{d}{dx} e^{x^{2} - 3x} = (2x - 3)e^{x^{2} - 3x}$。",
       ),
       generate(rng) {
         const linear = rng.bool();
@@ -212,8 +212,8 @@ export const theChainRuleWithExponentialFunctions: TopicDef = {
       id: "other-bases-to-an-inner-function",
       title: t("Other bases to an inner function", "其他底数的内层函数次幂"),
       explanation: t(
-        "$$\\frac{d}{dx} b^{g(x)} = g'(x)\\,b^{g(x)}\\ln b.$$\n\nFor example, $\\frac{d}{dx} 2^{3x} = 3 \\cdot 2^{3x}\\ln 2$.",
-        "$$\\frac{d}{dx} b^{g(x)} = g'(x)\\,b^{g(x)}\\ln b.$$\n\n例如 $\\frac{d}{dx} 2^{3x} = 3 \\cdot 2^{3x}\\ln 2$。",
+        "Any base can be written as e raised to its natural logarithm, which is why the derivative of a power of another base carries that extra logarithm factor. $$\\frac{d}{dx} b^{g(x)} = g'(x)\\,b^{g(x)}\\ln b.$$\n\nFor example, $\\frac{d}{dx} 2^{3x} = 3 \\cdot 2^{3x}\\ln 2$.",
+        "任何底数都可以写成 e 的其自然对数次幂，所以其他底数的指数函数的导数会多一个对数因子。$$\\frac{d}{dx} b^{g(x)} = g'(x)\\,b^{g(x)}\\ln b.$$\n\n例如 $\\frac{d}{dx} 2^{3x} = 3 \\cdot 2^{3x}\\ln 2$。",
       ),
       generate(rng) {
         const b = rng.pick([2, 3, 5, 10]);
@@ -253,8 +253,8 @@ export const theChainRuleWithLogarithmicFunctions: TopicDef = {
       id: "ln-of-an-inner-function",
       title: t("ln of an inner function", "内层函数的自然对数"),
       explanation: t(
-        "$$\\frac{d}{dx} \\ln g(x) = \\frac{g'(x)}{g(x)}.$$\n\nFor example, $\\frac{d}{dx} \\ln\\left(x^{2} + 4\\right) = \\frac{2x}{x^{2} + 4}$.",
-        "$$\\frac{d}{dx} \\ln g(x) = \\frac{g'(x)}{g(x)}.$$\n\n例如 $\\frac{d}{dx} \\ln\\left(x^{2} + 4\\right) = \\frac{2x}{x^{2} + 4}$。",
+        "The derivative of the natural logarithm of a function is the derivative of the function divided by the function itself. $$\\frac{d}{dx} \\ln g(x) = \\frac{g'(x)}{g(x)}.$$\n\nFor example, $\\frac{d}{dx} \\ln\\left(x^{2} + 4\\right) = \\frac{2x}{x^{2} + 4}$.",
+        "函数的自然对数的导数，等于这个函数的导数除以函数本身。$$\\frac{d}{dx} \\ln g(x) = \\frac{g'(x)}{g(x)}.$$\n\n例如 $\\frac{d}{dx} \\ln\\left(x^{2} + 4\\right) = \\frac{2x}{x^{2} + 4}$。",
       ),
       generate(rng) {
         const kind = rng.int(0, 2);
@@ -289,8 +289,8 @@ export const theChainRuleWithLogarithmicFunctions: TopicDef = {
       id: "logarithms-of-powers-and-products",
       title: t("Logarithms of powers and products", "幂与乘积的对数"),
       explanation: t(
-        "Simplify with the laws of logarithms before differentiating:\n\n$$\\frac{d}{dx} \\ln\\left((2x + 1)^{3}\\right) = \\frac{d}{dx} 3\\ln(2x + 1) = \\frac{6}{2x + 1}.$$",
-        "求导前先用对数运算法则化简：\n\n$$\\frac{d}{dx} \\ln\\left((2x + 1)^{3}\\right) = \\frac{d}{dx} 3\\ln(2x + 1) = \\frac{6}{2x + 1}.$$",
+        "Using the laws of logarithms to break apart powers and products first leaves simpler pieces that are much easier to differentiate. Simplify with the laws of logarithms before differentiating:\n\n$$\\frac{d}{dx} \\ln\\left((2x + 1)^{3}\\right) = \\frac{d}{dx} 3\\ln(2x + 1) = \\frac{6}{2x + 1}.$$",
+        "先用对数运算法则把幂和积拆开，得到的部分要简单得多，也更容易求导。求导前先用对数运算法则化简：\n\n$$\\frac{d}{dx} \\ln\\left((2x + 1)^{3}\\right) = \\frac{d}{dx} 3\\ln(2x + 1) = \\frac{6}{2x + 1}.$$",
       ),
       generate(rng) {
         const a = rng.int(1, 5);
@@ -353,8 +353,8 @@ export const theChainRuleWithTrigonometricFunctions: TopicDef = {
       id: "trigonometric-functions-of-inner-functions",
       title: t("Trigonometric functions of inner functions", "内层函数的三角函数"),
       explanation: t(
-        "$$\\frac{d}{dx} \\sin g(x) = g'(x)\\cos g(x), \\quad \\frac{d}{dx} \\cos g(x) = -g'(x)\\sin g(x), \\quad \\frac{d}{dx} \\tan g(x) = g'(x)\\sec^{2} g(x).$$\n\nFor example, $\\frac{d}{dx} \\cos\\left(x^{2}\\right) = -2x\\sin\\left(x^{2}\\right)$.",
-        "$$\\frac{d}{dx} \\sin g(x) = g'(x)\\cos g(x), \\quad \\frac{d}{dx} \\cos g(x) = -g'(x)\\sin g(x), \\quad \\frac{d}{dx} \\tan g(x) = g'(x)\\sec^{2} g(x).$$\n\n例如 $\\frac{d}{dx} \\cos\\left(x^{2}\\right) = -2x\\sin\\left(x^{2}\\right)$。",
+        "Differentiate the outer trigonometric function as usual, keeping the inner function unchanged inside it, then multiply by the derivative of the inner function. $$\\frac{d}{dx} \\sin g(x) = g'(x)\\cos g(x), \\quad \\frac{d}{dx} \\cos g(x) = -g'(x)\\sin g(x), \\quad \\frac{d}{dx} \\tan g(x) = g'(x)\\sec^{2} g(x).$$\n\nFor example, $\\frac{d}{dx} \\cos\\left(x^{2}\\right) = -2x\\sin\\left(x^{2}\\right)$.",
+        "像平常一样对外层三角函数求导，里面的内层函数保持不变，再乘以内层函数的导数。$$\\frac{d}{dx} \\sin g(x) = g'(x)\\cos g(x), \\quad \\frac{d}{dx} \\cos g(x) = -g'(x)\\sin g(x), \\quad \\frac{d}{dx} \\tan g(x) = g'(x)\\sec^{2} g(x).$$\n\n例如 $\\frac{d}{dx} \\cos\\left(x^{2}\\right) = -2x\\sin\\left(x^{2}\\right)$。",
       ),
       generate(rng) {
         const o = rng.pick(trigOuters);
@@ -382,8 +382,8 @@ export const theChainRuleWithTrigonometricFunctions: TopicDef = {
       id: "powers-of-trigonometric-functions",
       title: t("Powers of trigonometric functions", "三角函数的幂"),
       explanation: t(
-        "$\\sin^{n}x$ means $(\\sin x)^{n}$: the outer function is the power. So\n\n$$\\frac{d}{dx} \\sin^{3}x = 3\\sin^{2}x\\cos x, \\qquad \\frac{d}{dx} \\cos^{4}x = -4\\cos^{3}x\\sin x.$$",
-        "$\\sin^{n}x$ 表示 $(\\sin x)^{n}$：外层函数是幂函数。所以\n\n$$\\frac{d}{dx} \\sin^{3}x = 3\\sin^{2}x\\cos x, \\qquad \\frac{d}{dx} \\cos^{4}x = -4\\cos^{3}x\\sin x.$$",
+        "A power of a trigonometric function has the power on the outside, so use the power rule first and then multiply by the derivative of the trigonometric function. $\\sin^{n}x$ means $(\\sin x)^{n}$: the outer function is the power. So\n\n$$\\frac{d}{dx} \\sin^{3}x = 3\\sin^{2}x\\cos x, \\qquad \\frac{d}{dx} \\cos^{4}x = -4\\cos^{3}x\\sin x.$$",
+        "三角函数的幂中，幂在外层，所以先用幂法则，再乘以三角函数的导数。$\\sin^{n}x$ 表示 $(\\sin x)^{n}$：外层函数是幂函数。所以\n\n$$\\frac{d}{dx} \\sin^{3}x = 3\\sin^{2}x\\cos x, \\qquad \\frac{d}{dx} \\cos^{4}x = -4\\cos^{3}x\\sin x.$$",
       ),
       generate(rng) {
         const o = rng.pick(trigOuters);
@@ -467,8 +467,8 @@ export const calculatingDerivativesFromDataUsingTheChainRule: TopicDef = {
       id: "powers-and-roots-from-a-table",
       title: t("Powers and roots from a table", "由表格求幂与根式的导数"),
       explanation: t(
-        "For $h(x) = [f(x)]^{n}$, $h'(a) = n[f(a)]^{n - 1}f'(a)$. For $h(x) = \\sqrt{f(x)}$, $h'(a) = \\frac{f'(a)}{2\\sqrt{f(a)}}$.",
-        "对 $h(x) = [f(x)]^{n}$，$h'(a) = n[f(a)]^{n - 1}f'(a)$。对 $h(x) = \\sqrt{f(x)}$，$h'(a) = \\frac{f'(a)}{2\\sqrt{f(a)}}$。",
+        "Use the chain rule at the point with the tabulated values, putting the value of the inner function into the derivative of the power or root. For $h(x) = [f(x)]^{n}$, $h'(a) = n[f(a)]^{n - 1}f'(a)$. For $h(x) = \\sqrt{f(x)}$, $h'(a) = \\frac{f'(a)}{2\\sqrt{f(a)}}$.",
+        "在该点用表中的值套用链式法则，把内层函数的值代入幂或根式的导数中。对 $h(x) = [f(x)]^{n}$，$h'(a) = n[f(a)]^{n - 1}f'(a)$。对 $h(x) = \\sqrt{f(x)}$，$h'(a) = \\frac{f'(a)}{2\\sqrt{f(a)}}$。",
       ),
       generate(rng) {
         const xs = [0, 1, 2, 3];
@@ -600,8 +600,8 @@ export const calculatingDerivativesFromGraphsUsingTheChainRule: TopicDef = {
       id: "outer-functions-of-a-graphed-function",
       title: t("Outer functions of a graphed function", "以图中函数为内层的导数"),
       explanation: t(
-        "When the graphed function is the inner one, read both $f(a)$ and $f'(a)$. For $h(x) = [f(x)]^{2}$, $h'(a) = 2f(a)f'(a)$; for $h(x) = e^{f(x)}$, $h'(a) = f'(a)e^{f(a)}$.",
-        "当图中的函数是内层函数时，要读出 $f(a)$ 和 $f'(a)$。对 $h(x) = [f(x)]^{2}$，$h'(a) = 2f(a)f'(a)$；对 $h(x) = e^{f(x)}$，$h'(a) = f'(a)e^{f(a)}$。",
+        "When the graphed function is inside another function, the chain rule needs both its height and its slope at the point, both of which you read from the graph. When the graphed function is the inner one, read both $f(a)$ and $f'(a)$. For $h(x) = [f(x)]^{2}$, $h'(a) = 2f(a)f'(a)$; for $h(x) = e^{f(x)}$, $h'(a) = f'(a)e^{f(a)}$.",
+        "当图像给出的函数位于另一个函数内部时，链式法则既要用到它在该点的高度，也要用到斜率，两者都从图像读出。当图中的函数是内层函数时，要读出 $f(a)$ 和 $f'(a)$。对 $h(x) = [f(x)]^{2}$，$h'(a) = 2f(a)f'(a)$；对 $h(x) = e^{f(x)}$，$h'(a) = f'(a)e^{f(a)}$。",
       ),
       generate(rng) {
         const ys = polyline(rng);

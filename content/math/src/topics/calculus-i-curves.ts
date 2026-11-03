@@ -637,8 +637,8 @@ export const approximatingFunctionsUsingLocalLinearityAndLinearization: TopicDef
       id: "estimating-values-with-a-linearization",
       title: t("Estimating values with a linearization", "用线性化估计函数值"),
       explanation: t(
-        "To estimate $f(a + h)$ for small $h$, use $f(a + h) \\approx f(a) + f'(a) \\, h$. Only the value and the derivative at $a$ are needed.",
-        "当 $h$ 很小时，用 $f(a + h) \\approx f(a) + f'(a) \\, h$ 估计 $f(a + h)$。只需要 $a$ 处的函数值和导数。",
+        "Near a point, a curve is close to its tangent line, so the tangent line gives a good estimate of values a small step away. To estimate $f(a + h)$ for small $h$, use $f(a + h) \\approx f(a) + f'(a) \\, h$. Only the value and the derivative at $a$ are needed.",
+        "在一点附近，曲线与它的切线很接近，所以切线可以很好地估计稍微偏离该点处的函数值。当 $h$ 很小时，用 $f(a + h) \\approx f(a) + f'(a) \\, h$ 估计 $f(a + h)$。只需要 $a$ 处的函数值和导数。",
       ),
       generate(rng) {
         const a = rng.int(-5, 8);
@@ -729,8 +729,8 @@ export const approximatingTheRootsOfANumberUsingLocalLinearity: TopicDef = {
       id: "approximating-square-roots",
       title: t("Approximating square roots", "近似平方根"),
       explanation: t(
-        "To estimate $\\sqrt{n}$, linearize $f(x) = \\sqrt{x}$ at the nearest perfect square $a^{2}$: $f'(a^{2}) = \\frac{1}{2a}$, so $\\sqrt{a^{2} + h} \\approx a + \\frac{h}{2a}$. For $\\sqrt{26}$: $5 + \\frac{1}{10} = 5.1$.",
-        "估计 $\\sqrt{n}$ 时，把 $f(x) = \\sqrt{x}$ 在最近的完全平方数 $a^{2}$ 处线性化：$f'(a^{2}) = \\frac{1}{2a}$，所以 $\\sqrt{a^{2} + h} \\approx a + \\frac{h}{2a}$。对 $\\sqrt{26}$：$5 + \\frac{1}{10} = 5.1$。",
+        "Choose the perfect square nearest to the number, because the tangent line estimate is most accurate when the step from the known point is small. To estimate $\\sqrt{n}$, linearize $f(x) = \\sqrt{x}$ at the nearest perfect square $a^{2}$: $f'(a^{2}) = \\frac{1}{2a}$, so $\\sqrt{a^{2} + h} \\approx a + \\frac{h}{2a}$. For $\\sqrt{26}$: $5 + \\frac{1}{10} = 5.1$.",
+        "选择离这个数最近的完全平方数，因为离已知点的步长越小，切线估计就越准确。估计 $\\sqrt{n}$ 时，把 $f(x) = \\sqrt{x}$ 在最近的完全平方数 $a^{2}$ 处线性化：$f'(a^{2}) = \\frac{1}{2a}$，所以 $\\sqrt{a^{2} + h} \\approx a + \\frac{h}{2a}$。对 $\\sqrt{26}$：$5 + \\frac{1}{10} = 5.1$。",
       ),
       generate(rng) {
         const a = rng.int(2, 12);
@@ -755,8 +755,8 @@ export const approximatingTheRootsOfANumberUsingLocalLinearity: TopicDef = {
       id: "approximating-cube-roots-and-powers",
       title: t("Approximating cube roots and powers", "近似立方根和幂"),
       explanation: t(
-        "The same idea works for any power. $\\sqrt[3]{a^{3} + h} \\approx a + \\frac{h}{3a^{2}}$, and $(a + h)^{n} \\approx a^{n} + na^{n - 1}h$. For $(2.01)^{5}$: $32 + 80(0.01) = 32.8$.",
-        "同样的思路适用于任何幂。$\\sqrt[3]{a^{3} + h} \\approx a + \\frac{h}{3a^{2}}$，$(a + h)^{n} \\approx a^{n} + na^{n - 1}h$。对 $(2.01)^{5}$：$32 + 80(0.01) = 32.8$。",
+        "Pick a nearby point where the root or power is easy to compute exactly, and use the derivative there to adjust for the small difference. The same idea works for any power. $\\sqrt[3]{a^{3} + h} \\approx a + \\frac{h}{3a^{2}}$, and $(a + h)^{n} \\approx a^{n} + na^{n - 1}h$. For $(2.01)^{5}$: $32 + 80(0.01) = 32.8$.",
+        "选一个附近的、根或幂容易精确算出的点，再用该点的导数修正这个小差别。同样的思路适用于任何幂。$\\sqrt[3]{a^{3} + h} \\approx a + \\frac{h}{3a^{2}}$，$(a + h)^{n} \\approx a^{n} + na^{n - 1}h$。对 $(2.01)^{5}$：$32 + 80(0.01) = 32.8$。",
       ),
       generate(rng) {
         if (rng.bool()) {
@@ -837,8 +837,8 @@ export const approximatingTrigonometricFunctionsUsingLocalLinearity: TopicDef = 
       id: "small-angle-approximations",
       title: t("Small angle approximations", "小角近似"),
       explanation: t(
-        "Linearizing at $0$ gives $\\sin x \\approx x$, $\\tan x \\approx x$ and $\\cos x \\approx 1$ for small $x$ in radians. Near $\\pi$, $\\sin(\\pi + h) \\approx -h$, since $\\sin \\pi = 0$ and $\\cos \\pi = -1$.",
-        "在 $0$ 处线性化，对弧度制下很小的 $x$，有 $\\sin x \\approx x$，$\\tan x \\approx x$，$\\cos x \\approx 1$。在 $\\pi$ 附近，由于 $\\sin \\pi = 0$，$\\cos \\pi = -1$，有 $\\sin(\\pi + h) \\approx -h$。",
+        "Near zero, the graphs of sine and tangent hug the line through the origin with slope one, while cosine stays close to its maximum of one. Linearizing at $0$ gives $\\sin x \\approx x$, $\\tan x \\approx x$ and $\\cos x \\approx 1$ for small $x$ in radians. Near $\\pi$, $\\sin(\\pi + h) \\approx -h$, since $\\sin \\pi = 0$ and $\\cos \\pi = -1$.",
+        "在零附近，正弦和正切的图像紧贴着经过原点、斜率为 1 的直线，而余弦则保持在最大值 1 附近。在 $0$ 处线性化，对弧度制下很小的 $x$，有 $\\sin x \\approx x$，$\\tan x \\approx x$，$\\cos x \\approx 1$。在 $\\pi$ 附近，由于 $\\sin \\pi = 0$，$\\cos \\pi = -1$，有 $\\sin(\\pi + h) \\approx -h$。",
       ),
       generate(rng) {
         const h = Q.of(rng.nonZero(-9, 9), rng.pick([100, 1000]));

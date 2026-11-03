@@ -384,8 +384,8 @@ export const estimatingDerivativesUsingAForwardDifferenceQuotient: TopicDef = {
       id: "forward-difference-quotients-from-formulas",
       title: t("Forward difference quotients from formulas", "由公式计算向前差商"),
       explanation: t(
-        "Evaluate $f(a + h)$ and $f(a)$ exactly, subtract and divide by $h$. For $f(x) = x^{2}$, $a = 3$ and $h = 0.1$: $\\frac{9.61 - 9}{0.1} = 6.1$, close to $f'(3) = 6$.",
-        "精确计算 $f(a + h)$ 和 $f(a)$，相减后除以 $h$。对 $f(x) = x^{2}$，$a = 3$，$h = 0.1$：$\\frac{9.61 - 9}{0.1} = 6.1$，接近 $f'(3) = 6$。",
+        "A forward difference quotient is the slope of a secant line to a nearby point on the right, which estimates the derivative when the step is small. Evaluate $f(a + h)$ and $f(a)$ exactly, subtract and divide by $h$. For $f(x) = x^{2}$, $a = 3$ and $h = 0.1$: $\\frac{9.61 - 9}{0.1} = 6.1$, close to $f'(3) = 6$.",
+        "向前差商是到右侧邻近点的割线斜率，当步长很小时，它可以估计导数。精确计算 $f(a + h)$ 和 $f(a)$，相减后除以 $h$。对 $f(x) = x^{2}$，$a = 3$，$h = 0.1$：$\\frac{9.61 - 9}{0.1} = 6.1$，接近 $f'(3) = 6$。",
       ),
       generate: (rng) => quotientFromFormula(rng, "forward"),
     },
@@ -418,8 +418,8 @@ export const estimatingDerivativesUsingABackwardDifferenceQuotient: TopicDef = {
       id: "backward-difference-quotients-from-formulas",
       title: t("Backward difference quotients from formulas", "由公式计算向后差商"),
       explanation: t(
-        "For $f(x) = x^{2}$, $a = 3$ and $h = 0.1$: $\\frac{9 - 8.41}{0.1} = 5.9$. The forward estimate $6.1$ and the backward estimate $5.9$ lie on either side of $f'(3) = 6$.",
-        "对 $f(x) = x^{2}$，$a = 3$，$h = 0.1$：$\\frac{9 - 8.41}{0.1} = 5.9$。向前估计值 $6.1$ 与向后估计值 $5.9$ 分别位于 $f'(3) = 6$ 的两侧。",
+        "A backward difference quotient uses a nearby point on the left instead, and for a curve that bends one way the two estimates lie on opposite sides of the true slope. For $f(x) = x^{2}$, $a = 3$ and $h = 0.1$: $\\frac{9 - 8.41}{0.1} = 5.9$. The forward estimate $6.1$ and the backward estimate $5.9$ lie on either side of $f'(3) = 6$.",
+        "向后差商改用左侧的邻近点；对于向同一方向弯曲的曲线，两个估计值位于真实斜率的两侧。对 $f(x) = x^{2}$，$a = 3$，$h = 0.1$：$\\frac{9 - 8.41}{0.1} = 5.9$。向前估计值 $6.1$ 与向后估计值 $5.9$ 分别位于 $f'(3) = 6$ 的两侧。",
       ),
       generate: (rng) => quotientFromFormula(rng, "backward"),
     },
@@ -452,8 +452,8 @@ export const estimatingDerivativesUsingACentralDifferenceQuotient: TopicDef = {
       id: "central-difference-quotients-from-formulas",
       title: t("Central difference quotients from formulas", "由公式计算中心差商"),
       explanation: t(
-        "For $f(x) = x^{2}$, $a = 3$ and $h = 0.1$: $\\frac{9.61 - 8.41}{0.2} = 6$, exactly $f'(3)$. For a quadratic the central difference quotient is always exact.",
-        "对 $f(x) = x^{2}$，$a = 3$，$h = 0.1$：$\\frac{9.61 - 8.41}{0.2} = 6$，恰好等于 $f'(3)$。对二次函数，中心差商总是精确的。",
+        "The central difference quotient uses points on both sides, so their errors largely cancel and it is usually much more accurate than either one-sided estimate. For $f(x) = x^{2}$, $a = 3$ and $h = 0.1$: $\\frac{9.61 - 8.41}{0.2} = 6$, exactly $f'(3)$. For a quadratic the central difference quotient is always exact.",
+        "中心差商使用两侧的点，误差大部分相互抵消，所以通常比任何一侧的估计都准确得多。对 $f(x) = x^{2}$，$a = 3$，$h = 0.1$：$\\frac{9.61 - 8.41}{0.2} = 6$，恰好等于 $f'(3)$。对二次函数，中心差商总是精确的。",
       ),
       generate: (rng) => quotientFromFormula(rng, "central"),
     },
@@ -480,8 +480,8 @@ export const introductionToRelatedRates: TopicDef = {
       id: "finding-a-related-rate",
       title: t("Finding a related rate", "求相关变化率"),
       explanation: t(
-        "If $x$ and $y$ both depend on $t$ and $y = f(x)$, the chain rule gives\n\n$$\\frac{dy}{dt} = f'(x)\\frac{dx}{dt}.$$\n\nFor $y = x^{3}$ with $\\frac{dx}{dt} = 2$ when $x = 1$: $\\frac{dy}{dt} = 3(1)^{2}(2) = 6$.",
-        "若 $x$ 和 $y$ 都依赖于 $t$，且 $y = f(x)$，则由链式法则\n\n$$\\frac{dy}{dt} = f'(x)\\frac{dx}{dt}.$$\n\n对 $y = x^{3}$，当 $x = 1$ 时 $\\frac{dx}{dt} = 2$：$\\frac{dy}{dt} = 3(1)^{2}(2) = 6$。",
+        "When two quantities are linked by an equation and both change with time, differentiating the equation with respect to time links their rates of change. If $x$ and $y$ both depend on $t$ and $y = f(x)$, the chain rule gives\n\n$$\\frac{dy}{dt} = f'(x)\\frac{dx}{dt}.$$\n\nFor $y = x^{3}$ with $\\frac{dx}{dt} = 2$ when $x = 1$: $\\frac{dy}{dt} = 3(1)^{2}(2) = 6$.",
+        "当两个量由一个方程联系并都随时间变化时，把方程对时间求导，就把它们的变化率联系起来了。若 $x$ 和 $y$ 都依赖于 $t$，且 $y = f(x)$，则由链式法则\n\n$$\\frac{dy}{dt} = f'(x)\\frac{dx}{dt}.$$\n\n对 $y = x^{3}$，当 $x = 1$ 时 $\\frac{dx}{dt} = 2$：$\\frac{dy}{dt} = 3(1)^{2}(2) = 6$。",
       ),
       generate(rng) {
         const p: Poly = [rng.int(-5, 5), rng.int(-4, 4), rng.int(-3, 3), rng.nonZero(-2, 2)];
@@ -507,8 +507,8 @@ export const introductionToRelatedRates: TopicDef = {
       id: "solving-for-an-unknown-rate",
       title: t("Solving for an unknown rate", "求未知的变化率"),
       explanation: t(
-        "The same equation can be solved for either rate. If $y = x^{2} + 1$ and $\\frac{dy}{dt} = 12$ when $x = 3$, then $12 = 2(3)\\frac{dx}{dt}$, so $\\frac{dx}{dt} = 2$.",
-        "同一个方程可以解出任一个变化率。若 $y = x^{2} + 1$，当 $x = 3$ 时 $\\frac{dy}{dt} = 12$，则 $12 = 2(3)\\frac{dx}{dt}$，所以 $\\frac{dx}{dt} = 2$。",
+        "After differentiating, substitute every value you know at that moment, and the equation that remains can be solved for the rate you want. The same equation can be solved for either rate. If $y = x^{2} + 1$ and $\\frac{dy}{dt} = 12$ when $x = 3$, then $12 = 2(3)\\frac{dx}{dt}$, so $\\frac{dx}{dt} = 2$.",
+        "求导后，代入那一时刻所有已知的值，剩下的方程就可以解出所求的变化率。同一个方程可以解出任一个变化率。若 $y = x^{2} + 1$，当 $x = 3$ 时 $\\frac{dy}{dt} = 12$，则 $12 = 2(3)\\frac{dx}{dt}$，所以 $\\frac{dx}{dt} = 2$。",
       ),
       generate(rng) {
         const p: Poly = [rng.int(-5, 5), rng.int(-4, 4), rng.nonZero(-3, 3)];
@@ -570,8 +570,8 @@ export const relatedRatesWithImplicitFunctions: TopicDef = {
       id: "related-rates-on-circles",
       title: t("Related rates on circles", "圆上的相关变化率"),
       explanation: t(
-        "A point moves on $x^{2} + y^{2} = 25$. Differentiating with respect to $t$: $2x\\frac{dx}{dt} + 2y\\frac{dy}{dt} = 0$. At $(3, 4)$ with $\\frac{dx}{dt} = 2$: $2(3)(2) + 2(4)\\frac{dy}{dt} = 0$, so $\\frac{dy}{dt} = -\\frac{3}{2}$.",
-        "一点在 $x^{2} + y^{2} = 25$ 上运动。对 $t$ 求导：$2x\\frac{dx}{dt} + 2y\\frac{dy}{dt} = 0$。在 $(3, 4)$ 处且 $\\frac{dx}{dt} = 2$ 时：$2(3)(2) + 2(4)\\frac{dy}{dt} = 0$，所以 $\\frac{dy}{dt} = -\\frac{3}{2}$。",
+        "For a point moving on a curve, differentiate the equation of the curve with respect to time, then substitute the position and the known rate. A point moves on $x^{2} + y^{2} = 25$. Differentiating with respect to $t$: $2x\\frac{dx}{dt} + 2y\\frac{dy}{dt} = 0$. At $(3, 4)$ with $\\frac{dx}{dt} = 2$: $2(3)(2) + 2(4)\\frac{dy}{dt} = 0$, so $\\frac{dy}{dt} = -\\frac{3}{2}$.",
+        "对于沿曲线运动的点，把曲线方程对时间求导，再代入位置和已知的变化率。一点在 $x^{2} + y^{2} = 25$ 上运动。对 $t$ 求导：$2x\\frac{dx}{dt} + 2y\\frac{dy}{dt} = 0$。在 $(3, 4)$ 处且 $\\frac{dx}{dt} = 2$ 时：$2(3)(2) + 2(4)\\frac{dy}{dt} = 0$，所以 $\\frac{dy}{dt} = -\\frac{3}{2}$。",
       ),
       generate(rng) {
         const [a, b, c] = rng.pick(triples);
@@ -670,8 +670,8 @@ export const calculatingRelatedRatesWithCirclesAndSpheres: TopicDef = {
       id: "growing-circles",
       title: t("Growing circles", "扩大的圆"),
       explanation: t(
-        "Differentiate $A = \\pi r^{2}$ with respect to $t$: $\\frac{dA}{dt} = 2\\pi r\\frac{dr}{dt}$. For the circumference $C = 2\\pi r$: $\\frac{dC}{dt} = 2\\pi\\frac{dr}{dt}$. Leave answers in terms of $\\pi$.",
-        "把 $A = \\pi r^{2}$ 对 $t$ 求导：$\\frac{dA}{dt} = 2\\pi r\\frac{dr}{dt}$。对周长 $C = 2\\pi r$：$\\frac{dC}{dt} = 2\\pi\\frac{dr}{dt}$。答案用 $\\pi$ 表示。",
+        "Differentiate the area or circumference formula with respect to time, so that the rate of the radius appears as a factor by the chain rule. Differentiate $A = \\pi r^{2}$ with respect to $t$: $\\frac{dA}{dt} = 2\\pi r\\frac{dr}{dt}$. For the circumference $C = 2\\pi r$: $\\frac{dC}{dt} = 2\\pi\\frac{dr}{dt}$. Leave answers in terms of $\\pi$.",
+        "把面积或周长公式对时间求导，根据链式法则，半径的变化率会作为一个因子出现。把 $A = \\pi r^{2}$ 对 $t$ 求导：$\\frac{dA}{dt} = 2\\pi r\\frac{dr}{dt}$。对周长 $C = 2\\pi r$：$\\frac{dC}{dt} = 2\\pi\\frac{dr}{dt}$。答案用 $\\pi$ 表示。",
       ),
       generate(rng) {
         const r0 = rng.int(2, 30);
@@ -703,8 +703,8 @@ export const calculatingRelatedRatesWithCirclesAndSpheres: TopicDef = {
       id: "growing-spheres",
       title: t("Growing spheres", "膨胀的球"),
       explanation: t(
-        "For a sphere, $V = \\frac{4}{3}\\pi r^{3}$ and $S = 4\\pi r^{2}$, so\n\n$$\\frac{dV}{dt} = 4\\pi r^{2}\\frac{dr}{dt}, \\qquad \\frac{dS}{dt} = 8\\pi r\\frac{dr}{dt}.$$",
-        "对球，$V = \\frac{4}{3}\\pi r^{3}$，$S = 4\\pi r^{2}$，所以\n\n$$\\frac{dV}{dt} = 4\\pi r^{2}\\frac{dr}{dt}, \\qquad \\frac{dS}{dt} = 8\\pi r\\frac{dr}{dt}.$$",
+        "The rate at which the volume grows is the surface area times the rate of the radius, because new volume is added as a thin shell over the surface. For a sphere, $V = \\frac{4}{3}\\pi r^{3}$ and $S = 4\\pi r^{2}$, so\n\n$$\\frac{dV}{dt} = 4\\pi r^{2}\\frac{dr}{dt}, \\qquad \\frac{dS}{dt} = 8\\pi r\\frac{dr}{dt}.$$",
+        "体积增长的速率等于表面积乘以半径的变化率，因为新增的体积是覆盖在表面上的一层薄壳。对球，$V = \\frac{4}{3}\\pi r^{3}$，$S = 4\\pi r^{2}$，所以\n\n$$\\frac{dV}{dt} = 4\\pi r^{2}\\frac{dr}{dt}, \\qquad \\frac{dS}{dt} = 8\\pi r\\frac{dr}{dt}.$$",
       ),
       generate(rng) {
         const r0 = rng.int(2, 15);
@@ -786,8 +786,8 @@ export const calculatingRelatedRatesWithSquares: TopicDef = {
       id: "rates-of-area-and-perimeter-of-squares",
       title: t("Rates of area and perimeter of squares", "正方形面积与周长的变化率"),
       explanation: t(
-        "For a square of side $s$, $A = s^{2}$ and $P = 4s$, so $\\frac{dA}{dt} = 2s\\frac{ds}{dt}$ and $\\frac{dP}{dt} = 4\\frac{ds}{dt}$.",
-        "边长为 $s$ 的正方形，$A = s^{2}$，$P = 4s$，所以 $\\frac{dA}{dt} = 2s\\frac{ds}{dt}$，$\\frac{dP}{dt} = 4\\frac{ds}{dt}$。",
+        "Write the area or perimeter as a formula in the side length, differentiate it with respect to time, and substitute the current side and its rate. For a square of side $s$, $A = s^{2}$ and $P = 4s$, so $\\frac{dA}{dt} = 2s\\frac{ds}{dt}$ and $\\frac{dP}{dt} = 4\\frac{ds}{dt}$.",
+        "把面积或周长写成边长的公式，对时间求导，再代入当前的边长及其变化率。边长为 $s$ 的正方形，$A = s^{2}$，$P = 4s$，所以 $\\frac{dA}{dt} = 2s\\frac{ds}{dt}$，$\\frac{dP}{dt} = 4\\frac{ds}{dt}$。",
       ),
       generate(rng) {
         const s0 = rng.int(2, 25);
@@ -861,8 +861,8 @@ export const calculatingRelatedRatesWithRectangularSolids: TopicDef = {
       id: "rates-of-volume-of-boxes",
       title: t("Rates of volume of boxes", "长方体体积的变化率"),
       explanation: t(
-        "For $V = lwh$ with all three edges changing, the product rule gives\n\n$$\\frac{dV}{dt} = \\frac{dl}{dt}wh + l\\frac{dw}{dt}h + lw\\frac{dh}{dt}.$$",
-        "对 $V = lwh$，当三条棱都在变化时，由乘积法则\n\n$$\\frac{dV}{dt} = \\frac{dl}{dt}wh + l\\frac{dw}{dt}h + lw\\frac{dh}{dt}.$$",
+        "When several dimensions change at once, the product rule gives one term for each dimension, with that dimension's rate times the other two dimensions. For $V = lwh$ with all three edges changing, the product rule gives\n\n$$\\frac{dV}{dt} = \\frac{dl}{dt}wh + l\\frac{dw}{dt}h + lw\\frac{dh}{dt}.$$",
+        "当几个尺寸同时变化时，积法则为每个尺寸给出一项，即该尺寸的变化率乘以另外两个尺寸。对 $V = lwh$，当三条棱都在变化时，由乘积法则\n\n$$\\frac{dV}{dt} = \\frac{dl}{dt}wh + l\\frac{dw}{dt}h + lw\\frac{dh}{dt}.$$",
       ),
       generate(rng) {
         const [l, w, h] = [rng.int(2, 12), rng.int(2, 10), rng.int(1, 8)];
@@ -887,8 +887,8 @@ export const calculatingRelatedRatesWithRectangularSolids: TopicDef = {
       id: "rates-of-cubes",
       title: t("Rates of cubes", "正方体的变化率"),
       explanation: t(
-        "For a cube of edge $s$, $V = s^{3}$ and $S = 6s^{2}$, so $\\frac{dV}{dt} = 3s^{2}\\frac{ds}{dt}$ and $\\frac{dS}{dt} = 12s\\frac{ds}{dt}$.",
-        "棱长为 $s$ 的正方体，$V = s^{3}$，$S = 6s^{2}$，所以 $\\frac{dV}{dt} = 3s^{2}\\frac{ds}{dt}$，$\\frac{dS}{dt} = 12s\\frac{ds}{dt}$。",
+        "All edges of a cube are equal, so its volume and surface area depend on one length, and the chain rule turns the rate of the edge into their rates. For a cube of edge $s$, $V = s^{3}$ and $S = 6s^{2}$, so $\\frac{dV}{dt} = 3s^{2}\\frac{ds}{dt}$ and $\\frac{dS}{dt} = 12s\\frac{ds}{dt}$.",
+        "立方体的各条棱都相等，所以体积和表面积只取决于一个长度，链式法则把棱长的变化率转化为它们的变化率。棱长为 $s$ 的正方体，$V = s^{3}$，$S = 6s^{2}$，所以 $\\frac{dV}{dt} = 3s^{2}\\frac{ds}{dt}$，$\\frac{dS}{dt} = 12s\\frac{ds}{dt}$。",
       ),
       generate(rng) {
         const s0 = rng.int(2, 12);
@@ -1327,8 +1327,8 @@ export const lhopitalsRule: TopicDef = {
       id: "applying-lhopitals-rule-repeatedly",
       title: t("Applying L'Hopital's rule repeatedly", "多次使用洛必达法则"),
       explanation: t(
-        "If $\\frac{f'(x)}{g'(x)}$ is still indeterminate, apply the rule again:\n\n$$\\lim_{x \\to 0}\\frac{e^{x} - 1 - x}{x^{2}} = \\lim_{x \\to 0}\\frac{e^{x} - 1}{2x} = \\lim_{x \\to 0}\\frac{e^{x}}{2} = \\frac{1}{2}.$$\n\nIt also handles $\\frac{\\infty}{\\infty}$: $\\lim_{x \\to \\infty}\\frac{x^{2}}{e^{x}} = \\lim_{x \\to \\infty}\\frac{2x}{e^{x}} = \\lim_{x \\to \\infty}\\frac{2}{e^{x}} = 0$.",
-        "若 $\\frac{f'(x)}{g'(x)}$ 仍是未定式，就再用一次法则：\n\n$$\\lim_{x \\to 0}\\frac{e^{x} - 1 - x}{x^{2}} = \\lim_{x \\to 0}\\frac{e^{x} - 1}{2x} = \\lim_{x \\to 0}\\frac{e^{x}}{2} = \\frac{1}{2}.$$\n\n它也适用于 $\\frac{\\infty}{\\infty}$：$\\lim_{x \\to \\infty}\\frac{x^{2}}{e^{x}} = \\lim_{x \\to \\infty}\\frac{2x}{e^{x}} = \\lim_{x \\to \\infty}\\frac{2}{e^{x}} = 0$。",
+        "Check the form again after each application, because the rule only applies while the quotient is still zero over zero or infinity over infinity. If $\\frac{f'(x)}{g'(x)}$ is still indeterminate, apply the rule again:\n\n$$\\lim_{x \\to 0}\\frac{e^{x} - 1 - x}{x^{2}} = \\lim_{x \\to 0}\\frac{e^{x} - 1}{2x} = \\lim_{x \\to 0}\\frac{e^{x}}{2} = \\frac{1}{2}.$$\n\nIt also handles $\\frac{\\infty}{\\infty}$: $\\lim_{x \\to \\infty}\\frac{x^{2}}{e^{x}} = \\lim_{x \\to \\infty}\\frac{2x}{e^{x}} = \\lim_{x \\to \\infty}\\frac{2}{e^{x}} = 0$.",
+        "每次使用后都要再检查形式，因为只有当商仍是零比零或无穷比无穷时才能使用这个法则。若 $\\frac{f'(x)}{g'(x)}$ 仍是未定式，就再用一次法则：\n\n$$\\lim_{x \\to 0}\\frac{e^{x} - 1 - x}{x^{2}} = \\lim_{x \\to 0}\\frac{e^{x} - 1}{2x} = \\lim_{x \\to 0}\\frac{e^{x}}{2} = \\frac{1}{2}.$$\n\n它也适用于 $\\frac{\\infty}{\\infty}$：$\\lim_{x \\to \\infty}\\frac{x^{2}}{e^{x}} = \\lim_{x \\to \\infty}\\frac{2x}{e^{x}} = \\lim_{x \\to \\infty}\\frac{2}{e^{x}} = 0$。",
       ),
       generate(rng) {
         const kind = rng.int(0, 3);

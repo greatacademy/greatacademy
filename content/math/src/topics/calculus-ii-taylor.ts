@@ -159,8 +159,8 @@ export const secondDegreeTaylorPolynomials: TopicDef = {
       id: "second-degree-taylor-polynomials-of-functions",
       title: t("P₂ for a given function", "给定函数的 P₂"),
       explanation: t(
-        "Compute $f(a)$, $f'(a)$ and $f''(a)$, then substitute. For $f(x) = e^{3x}$ at $a = 0$: $f(0) = 1$, $f'(0) = 3$, $f''(0) = 9$, so $P_2(x) = 1 + 3x + \\frac{9}{2}x^{2}$.",
-        "先求 $f(a)$、$f'(a)$、$f''(a)$，再代入公式。对 $f(x) = e^{3x}$，$a = 0$：$f(0) = 1$，$f'(0) = 3$，$f''(0) = 9$，所以 $P_2(x) = 1 + 3x + \\frac{9}{2}x^{2}$。",
+        "The second degree Taylor polynomial matches the value, slope and curvature of the function at the center, so it follows the curve better than the tangent line. Compute $f(a)$, $f'(a)$ and $f''(a)$, then substitute. For $f(x) = e^{3x}$ at $a = 0$: $f(0) = 1$, $f'(0) = 3$, $f''(0) = 9$, so $P_2(x) = 1 + 3x + \\frac{9}{2}x^{2}$.",
+        "二次泰勒多项式在中心处与函数的值、斜率和弯曲程度都一致，所以比切线更贴近曲线。先求 $f(a)$、$f'(a)$、$f''(a)$，再代入公式。对 $f(x) = e^{3x}$，$a = 0$：$f(0) = 1$，$f'(0) = 3$，$f''(0) = 9$，所以 $P_2(x) = 1 + 3x + \\frac{9}{2}x^{2}$。",
       ),
       generate: (rng) => maclaurinPolynomialProblem(rng, 2),
     },
@@ -191,8 +191,8 @@ export const analyzingSecondDegreeTaylorPolynomials: TopicDef = {
       id: "reading-derivatives-from-p2",
       title: t("Reading derivatives from P₂", "从 P₂ 读出导数"),
       explanation: t(
-        "In $P_2(x) = c_0 + c_1(x - a) + c_2(x - a)^{2}$, $c_0 = f(a)$, $c_1 = f'(a)$ and $c_2 = \\frac{f''(a)}{2}$, so $f''(a) = 2c_2$. For $P_2(x) = 5 - (x - 2) + 3(x - 2)^{2}$: $f'(2) = -1$ and $f''(2) = 6$.",
-        "在 $P_2(x) = c_0 + c_1(x - a) + c_2(x - a)^{2}$ 中，$c_0 = f(a)$，$c_1 = f'(a)$，$c_2 = \\frac{f''(a)}{2}$，所以 $f''(a) = 2c_2$。对 $P_2(x) = 5 - (x - 2) + 3(x - 2)^{2}$：$f'(2) = -1$，$f''(2) = 6$。",
+        "Each coefficient of a Taylor polynomial is a derivative at the center divided by a factorial, so multiplying by the factorial recovers the derivative. In $P_2(x) = c_0 + c_1(x - a) + c_2(x - a)^{2}$, $c_0 = f(a)$, $c_1 = f'(a)$ and $c_2 = \\frac{f''(a)}{2}$, so $f''(a) = 2c_2$. For $P_2(x) = 5 - (x - 2) + 3(x - 2)^{2}$: $f'(2) = -1$ and $f''(2) = 6$.",
+        "泰勒多项式的每个系数都是中心处的导数除以阶乘，所以乘以阶乘就能还原出导数。在 $P_2(x) = c_0 + c_1(x - a) + c_2(x - a)^{2}$ 中，$c_0 = f(a)$，$c_1 = f'(a)$，$c_2 = \\frac{f''(a)}{2}$，所以 $f''(a) = 2c_2$。对 $P_2(x) = 5 - (x - 2) + 3(x - 2)^{2}$：$f'(2) = -1$，$f''(2) = 6$。",
       ),
       generate(rng) {
         const a = rng.int(-4, 4);
@@ -260,8 +260,8 @@ export const analyzingSecondDegreeTaylorPolynomials: TopicDef = {
       id: "approximating-with-p2",
       title: t("Approximating values with P₂", "用 P₂ 近似函数值"),
       explanation: t(
-        "Near $a$, $f(x) \\approx P_2(x)$, usually much better than the linearization. With $P_2(x) = 4 + 2(x - 1) - 3(x - 1)^{2}$: $f(1.1) \\approx 4 + 2(0.1) - 3(0.1)^{2} = 4.17$.",
-        "在 $a$ 附近 $f(x) \\approx P_2(x)$，通常比线性化精确得多。对 $P_2(x) = 4 + 2(x - 1) - 3(x - 1)^{2}$：$f(1.1) \\approx 4 + 2(0.1) - 3(0.1)^{2} = 4.17$。",
+        "Substitute the nearby value into the polynomial instead of the function, which gives an estimate that is accurate when the value is close to the center. Near $a$, $f(x) \\approx P_2(x)$, usually much better than the linearization. With $P_2(x) = 4 + 2(x - 1) - 3(x - 1)^{2}$: $f(1.1) \\approx 4 + 2(0.1) - 3(0.1)^{2} = 4.17$.",
+        "把附近的值代入多项式而不是原函数，当这个值离中心很近时，得到的估计值很准确。在 $a$ 附近 $f(x) \\approx P_2(x)$，通常比线性化精确得多。对 $P_2(x) = 4 + 2(x - 1) - 3(x - 1)^{2}$：$f(1.1) \\approx 4 + 2(0.1) - 3(0.1)^{2} = 4.17$。",
       ),
       generate(rng) {
         const a = rng.int(-3, 3);
@@ -316,8 +316,8 @@ export const thirdDegreeTaylorPolynomials: TopicDef = {
       id: "third-degree-taylor-polynomials-from-derivative-values",
       title: t("Building P₃ from derivative values", "由导数值构造 P₃"),
       explanation: t(
-        "The third derivative of $(x - a)^{3}$ is $3! = 6$, so the cubic coefficient is $\\frac{f'''(a)}{3!}$:\n\n$$P_3(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2!}(x - a)^{2} + \\frac{f'''(a)}{3!}(x - a)^{3}.$$\n\nIf $f(0) = 2$, $f'(0) = 1$, $f''(0) = -4$ and $f'''(0) = 12$, then $P_3(x) = 2 + x - 2x^{2} + 2x^{3}$.",
-        "$(x - a)^{3}$ 的三阶导数是 $3! = 6$，所以三次项系数为 $\\frac{f'''(a)}{3!}$：\n\n$$P_3(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2!}(x - a)^{2} + \\frac{f'''(a)}{3!}(x - a)^{3}。$$\n\n若 $f(0) = 2$，$f'(0) = 1$，$f''(0) = -4$，$f'''(0) = 12$，则 $P_3(x) = 2 + x - 2x^{2} + 2x^{3}$。",
+        "Each new term uses the next derivative at the center, divided by the factorial of its order, multiplied by the matching power of the distance from the center. The third derivative of $(x - a)^{3}$ is $3! = 6$, so the cubic coefficient is $\\frac{f'''(a)}{3!}$:\n\n$$P_3(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2!}(x - a)^{2} + \\frac{f'''(a)}{3!}(x - a)^{3}.$$\n\nIf $f(0) = 2$, $f'(0) = 1$, $f''(0) = -4$ and $f'''(0) = 12$, then $P_3(x) = 2 + x - 2x^{2} + 2x^{3}$.",
+        "每增加一项就用中心处的下一阶导数，除以其阶数的阶乘，再乘以到中心距离的相应次幂。$(x - a)^{3}$ 的三阶导数是 $3! = 6$，所以三次项系数为 $\\frac{f'''(a)}{3!}$：\n\n$$P_3(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2!}(x - a)^{2} + \\frac{f'''(a)}{3!}(x - a)^{3}。$$\n\n若 $f(0) = 2$，$f'(0) = 1$，$f''(0) = -4$，$f'''(0) = 12$，则 $P_3(x) = 2 + x - 2x^{2} + 2x^{3}$。",
       ),
       generate: (rng) => fromValuesProblem(rng, 3),
     },
@@ -325,8 +325,8 @@ export const thirdDegreeTaylorPolynomials: TopicDef = {
       id: "third-degree-taylor-polynomials-of-functions",
       title: t("P₃ for a given function", "给定函数的 P₃"),
       explanation: t(
-        "Differentiate three times and evaluate at the center. For $f(x) = \\sin(2x)$ at $0$: $f(0) = 0$, $f'(0) = 2$, $f''(0) = 0$, $f'''(0) = -8$, so $P_3(x) = 2x - \\frac{8}{6}x^{3} = 2x - \\frac{4}{3}x^{3}$.",
-        "求三阶导数并在中心处取值。对 $f(x) = \\sin(2x)$，中心 $0$：$f(0) = 0$，$f'(0) = 2$，$f''(0) = 0$，$f'''(0) = -8$，所以 $P_3(x) = 2x - \\frac{8}{6}x^{3} = 2x - \\frac{4}{3}x^{3}$。",
+        "Find the first three derivatives, evaluate them and the function at the center, and divide each by the right factorial to get the coefficients. Differentiate three times and evaluate at the center. For $f(x) = \\sin(2x)$ at $0$: $f(0) = 0$, $f'(0) = 2$, $f''(0) = 0$, $f'''(0) = -8$, so $P_3(x) = 2x - \\frac{8}{6}x^{3} = 2x - \\frac{4}{3}x^{3}$.",
+        "求出前三阶导数，把它们和函数在中心处的值算出来，再分别除以相应的阶乘得到系数。求三阶导数并在中心处取值。对 $f(x) = \\sin(2x)$，中心 $0$：$f(0) = 0$，$f'(0) = 2$，$f''(0) = 0$，$f'''(0) = -8$，所以 $P_3(x) = 2x - \\frac{8}{6}x^{3} = 2x - \\frac{4}{3}x^{3}$。",
       ),
       generate: (rng) => maclaurinPolynomialProblem(rng, 3),
     },
@@ -421,8 +421,8 @@ export const theLagrangeErrorBound: TopicDef = {
       id: "applying-the-lagrange-error-bound",
       title: t("Applying the Lagrange error bound", "应用拉格朗日误差界"),
       explanation: t(
-        "The error $R_n(x) = f(x) - P_n(x)$ equals $\\frac{f^{(n+1)}(z)}{(n + 1)!}(x - a)^{n+1}$ for some $z$ between $a$ and $x$. So if $|f^{(n+1)}| \\le M$ there,\n\n$$|R_n(x)| \\le \\frac{M \\, |x - a|^{n+1}}{(n + 1)!}.$$\n\nWith $n = 3$, $M = 6$ and $|x - a| = \\frac{1}{2}$: $|R_3| \\le \\frac{6 \\cdot (1/2)^{4}}{4!} = \\frac{1}{64}$.",
-        "误差 $R_n(x) = f(x) - P_n(x)$ 等于 $\\frac{f^{(n+1)}(z)}{(n + 1)!}(x - a)^{n+1}$，其中 $z$ 介于 $a$ 与 $x$ 之间。所以若在该区间上 $|f^{(n+1)}| \\le M$，则\n\n$$|R_n(x)| \\le \\frac{M \\, |x - a|^{n+1}}{(n + 1)!}。$$\n\n当 $n = 3$，$M = 6$，$|x - a| = \\frac{1}{2}$ 时：$|R_3| \\le \\frac{6 \\cdot (1/2)^{4}}{4!} = \\frac{1}{64}$。",
+        "The error depends on the next derivative somewhere between the center and the point, so a bound on that derivative bounds the error. The error $R_n(x) = f(x) - P_n(x)$ equals $\\frac{f^{(n+1)}(z)}{(n + 1)!}(x - a)^{n+1}$ for some $z$ between $a$ and $x$. So if $|f^{(n+1)}| \\le M$ there,\n\n$$|R_n(x)| \\le \\frac{M \\, |x - a|^{n+1}}{(n + 1)!}.$$\n\nWith $n = 3$, $M = 6$ and $|x - a| = \\frac{1}{2}$: $|R_3| \\le \\frac{6 \\cdot (1/2)^{4}}{4!} = \\frac{1}{64}$.",
+        "误差取决于中心与该点之间某处的下一阶导数，所以给这个导数一个上界，就能给出误差的上界。误差 $R_n(x) = f(x) - P_n(x)$ 等于 $\\frac{f^{(n+1)}(z)}{(n + 1)!}(x - a)^{n+1}$，其中 $z$ 介于 $a$ 与 $x$ 之间。所以若在该区间上 $|f^{(n+1)}| \\le M$，则\n\n$$|R_n(x)| \\le \\frac{M \\, |x - a|^{n+1}}{(n + 1)!}。$$\n\n当 $n = 3$，$M = 6$，$|x - a| = \\frac{1}{2}$ 时：$|R_3| \\le \\frac{6 \\cdot (1/2)^{4}}{4!} = \\frac{1}{64}$。",
       ),
       generate(rng) {
         const n = rng.int(1, 4);
@@ -868,8 +868,8 @@ export const taylorSeries: TopicDef = {
       id: "first-terms-of-taylor-series",
       title: t("The first terms of a Taylor series", "泰勒级数的前几项"),
       explanation: t(
-        "Evaluate $f$, $f'$ and $f''$ at the center. For $\\sqrt{x}$ at $a = 4$: $f(4) = 2$, $f'(4) = \\frac{1}{4}$, $f''(4) = -\\frac{1}{32}$, so the series begins $2 + \\frac{1}{4}(x - 4) - \\frac{1}{64}(x - 4)^{2} + \\cdots$.",
-        "在中心处求 $f$、$f'$、$f''$ 的值。对 $\\sqrt{x}$，$a = 4$：$f(4) = 2$，$f'(4) = \\frac{1}{4}$，$f''(4) = -\\frac{1}{32}$，所以级数以 $2 + \\frac{1}{4}(x - 4) - \\frac{1}{64}(x - 4)^{2} + \\cdots$ 开头。",
+        "The first terms of a Taylor series are the Taylor polynomial of low degree, built from the derivatives at the center divided by factorials. Evaluate $f$, $f'$ and $f''$ at the center. For $\\sqrt{x}$ at $a = 4$: $f(4) = 2$, $f'(4) = \\frac{1}{4}$, $f''(4) = -\\frac{1}{32}$, so the series begins $2 + \\frac{1}{4}(x - 4) - \\frac{1}{64}(x - 4)^{2} + \\cdots$.",
+        "泰勒级数的前几项就是低次的泰勒多项式，由中心处的导数除以阶乘构成。在中心处求 $f$、$f'$、$f''$ 的值。对 $\\sqrt{x}$，$a = 4$：$f(4) = 2$，$f'(4) = \\frac{1}{4}$，$f''(4) = -\\frac{1}{32}$，所以级数以 $2 + \\frac{1}{4}(x - 4) - \\frac{1}{64}(x - 4)^{2} + \\cdots$ 开头。",
       ),
       generate(rng) {
         const kind = rng.int(0, 2);
@@ -1002,8 +1002,8 @@ export const recognizingStandardMaclaurinSeries: TopicDef = {
       id: "naming-a-standard-series",
       title: t("Naming the function", "说出对应的函数"),
       explanation: t(
-        "Three series to know:\n\n$$e^{x} = \\sum_{n=0}^{\\infty} \\frac{x^{n}}{n!}, \\qquad \\frac{1}{1 - x} = \\sum_{n=0}^{\\infty} x^{n}, \\qquad \\ln(1 + x) = \\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1} x^{n}}{n}.$$\n\nReplacing $x$ with $kx$ turns $x^{n}$ into $k^{n}x^{n}$, so $\\sum \\frac{3^{n} x^{n}}{n!} = e^{3x}$.",
-        "需要熟记三个级数：\n\n$$e^{x} = \\sum_{n=0}^{\\infty} \\frac{x^{n}}{n!}, \\qquad \\frac{1}{1 - x} = \\sum_{n=0}^{\\infty} x^{n}, \\qquad \\ln(1 + x) = \\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1} x^{n}}{n}。$$\n\n把 $x$ 换成 $kx$，$x^{n}$ 就变成 $k^{n}x^{n}$，所以 $\\sum \\frac{3^{n} x^{n}}{n!} = e^{3x}$。",
+        "A few series appear so often that it pays to recognize them on sight from the pattern of their coefficients and signs. Three series to know:\n\n$$e^{x} = \\sum_{n=0}^{\\infty} \\frac{x^{n}}{n!}, \\qquad \\frac{1}{1 - x} = \\sum_{n=0}^{\\infty} x^{n}, \\qquad \\ln(1 + x) = \\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1} x^{n}}{n}.$$\n\nReplacing $x$ with $kx$ turns $x^{n}$ into $k^{n}x^{n}$, so $\\sum \\frac{3^{n} x^{n}}{n!} = e^{3x}$.",
+        "有几个级数出现得非常频繁，值得根据系数和符号的规律一眼认出它们。需要熟记三个级数：\n\n$$e^{x} = \\sum_{n=0}^{\\infty} \\frac{x^{n}}{n!}, \\qquad \\frac{1}{1 - x} = \\sum_{n=0}^{\\infty} x^{n}, \\qquad \\ln(1 + x) = \\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1} x^{n}}{n}。$$\n\n把 $x$ 换成 $kx$，$x^{n}$ 就变成 $k^{n}x^{n}$，所以 $\\sum \\frac{3^{n} x^{n}}{n!} = e^{3x}$。",
       ),
       generate(rng) {
         const kind = rng.int(0, 2);
@@ -1074,8 +1074,8 @@ export const recognizingStandardMaclaurinSeries: TopicDef = {
       id: "sums-from-standard-series",
       title: t("Sums from standard series", "用标准级数求和"),
       explanation: t(
-        "A numerical series can be a standard series at a particular $x$. Since $e^{x} = \\sum \\frac{x^{n}}{n!}$, taking $x = \\ln 5$ gives $\\sum_{n=0}^{\\infty} \\frac{(\\ln 5)^{n}}{n!} = e^{\\ln 5} = 5$.",
-        "一个数项级数可能是某个标准级数在特定 $x$ 处的值。由于 $e^{x} = \\sum \\frac{x^{n}}{n!}$，取 $x = \\ln 5$ 得 $\\sum_{n=0}^{\\infty} \\frac{(\\ln 5)^{n}}{n!} = e^{\\ln 5} = 5$。",
+        "If a numerical series matches a standard series evaluated at one value of the variable, its sum is the function evaluated at that value. A numerical series can be a standard series at a particular $x$. Since $e^{x} = \\sum \\frac{x^{n}}{n!}$, taking $x = \\ln 5$ gives $\\sum_{n=0}^{\\infty} \\frac{(\\ln 5)^{n}}{n!} = e^{\\ln 5} = 5$.",
+        "如果一个数项级数与某个标准级数在变量取某值时相同，它的和就是函数在该值处的值。一个数项级数可能是某个标准级数在特定 $x$ 处的值。由于 $e^{x} = \\sum \\frac{x^{n}}{n!}$，取 $x = \\ln 5$ 得 $\\sum_{n=0}^{\\infty} \\frac{(\\ln 5)^{n}}{n!} = e^{\\ln 5} = 5$。",
       ),
       generate(rng) {
         const k = rng.int(2, 9);
@@ -1147,8 +1147,8 @@ export const recognizingStandardMaclaurinSeriesForTrigonometricFunctions: TopicD
       id: "sums-from-trigonometric-series",
       title: t("Sums from trigonometric series", "用三角函数级数求和"),
       explanation: t(
-        "Recognize the series at a particular $x$. $\\sum_{n=0}^{\\infty} \\frac{(-1)^{n} \\pi^{2n}}{3^{2n} (2n)!}$ is the cosine series at $x = \\frac{\\pi}{3}$, so it equals $\\cos \\frac{\\pi}{3} = \\frac{1}{2}$.",
-        "识别出级数是某个标准级数在特定 $x$ 处的值。$\\sum_{n=0}^{\\infty} \\frac{(-1)^{n} \\pi^{2n}}{3^{2n} (2n)!}$ 是余弦级数在 $x = \\frac{\\pi}{3}$ 处的值，所以等于 $\\cos \\frac{\\pi}{3} = \\frac{1}{2}$。",
+        "Match the factorials and the alternating signs to the sine or cosine series, then read off the value of the variable from the powers. Recognize the series at a particular $x$. $\\sum_{n=0}^{\\infty} \\frac{(-1)^{n} \\pi^{2n}}{3^{2n} (2n)!}$ is the cosine series at $x = \\frac{\\pi}{3}$, so it equals $\\cos \\frac{\\pi}{3} = \\frac{1}{2}$.",
+        "根据阶乘和交替的符号与正弦或余弦级数对应，再从幂中读出变量的值。识别出级数是某个标准级数在特定 $x$ 处的值。$\\sum_{n=0}^{\\infty} \\frac{(-1)^{n} \\pi^{2n}}{3^{2n} (2n)!}$ 是余弦级数在 $x = \\frac{\\pi}{3}$ 处的值，所以等于 $\\cos \\frac{\\pi}{3} = \\frac{1}{2}$。",
       ),
       generate(rng) {
         const sine = rng.bool();
@@ -1191,8 +1191,8 @@ export const differentiatingTaylorSeries: TopicDef = {
       id: "series-for-derivatives",
       title: t("Series for derivatives", "导数的级数"),
       explanation: t(
-        "If $f(x) = \\sum c_n x^{n}$ for $|x| < R$, then $f'(x) = \\sum n c_n x^{n-1}$ for $|x| < R$. Differentiating $\\frac{1}{1 - kx} = \\sum k^{n} x^{n}$ gives $\\frac{k}{(1 - kx)^{2}} = \\sum_{n=1}^{\\infty} n k^{n} x^{n-1}$, so the coefficient of $x^{m}$ in $\\frac{1}{(1 - kx)^{2}}$ is $(m + 1)k^{m}$.",
-        "若在 $|x| < R$ 上 $f(x) = \\sum c_n x^{n}$，则在 $|x| < R$ 上 $f'(x) = \\sum n c_n x^{n-1}$。对 $\\frac{1}{1 - kx} = \\sum k^{n} x^{n}$ 求导得 $\\frac{k}{(1 - kx)^{2}} = \\sum_{n=1}^{\\infty} n k^{n} x^{n-1}$，所以 $\\frac{1}{(1 - kx)^{2}}$ 中 $x^{m}$ 的系数为 $(m + 1)k^{m}$。",
+        "A power series can be differentiated term by term inside its interval of convergence, and the result is the series of the derivative. If $f(x) = \\sum c_n x^{n}$ for $|x| < R$, then $f'(x) = \\sum n c_n x^{n-1}$ for $|x| < R$. Differentiating $\\frac{1}{1 - kx} = \\sum k^{n} x^{n}$ gives $\\frac{k}{(1 - kx)^{2}} = \\sum_{n=1}^{\\infty} n k^{n} x^{n-1}$, so the coefficient of $x^{m}$ in $\\frac{1}{(1 - kx)^{2}}$ is $(m + 1)k^{m}$.",
+        "幂级数在收敛区间内可以逐项求导，结果就是导数的级数。若在 $|x| < R$ 上 $f(x) = \\sum c_n x^{n}$，则在 $|x| < R$ 上 $f'(x) = \\sum n c_n x^{n-1}$。对 $\\frac{1}{1 - kx} = \\sum k^{n} x^{n}$ 求导得 $\\frac{k}{(1 - kx)^{2}} = \\sum_{n=1}^{\\infty} n k^{n} x^{n-1}$，所以 $\\frac{1}{(1 - kx)^{2}}$ 中 $x^{m}$ 的系数为 $(m + 1)k^{m}$。",
       ),
       generate(rng) {
         const k = rng.nonZero(-3, 3);
@@ -1218,8 +1218,8 @@ export const differentiatingTaylorSeries: TopicDef = {
       id: "sums-by-differentiating-series",
       title: t("Sums by differentiating", "通过求导求和"),
       explanation: t(
-        "Differentiating $\\frac{1}{1 - x} = \\sum x^{n}$ gives $\\frac{1}{(1 - x)^{2}} = \\sum_{n=1}^{\\infty} n x^{n-1}$, so $\\sum_{n=1}^{\\infty} n x^{n} = \\frac{x}{(1 - x)^{2}}$ for $|x| < 1$. At $x = \\frac{1}{3}$: $\\sum \\frac{n}{3^{n}} = \\frac{1/3}{(2/3)^{2}} = \\frac{3}{4}$.",
-        "对 $\\frac{1}{1 - x} = \\sum x^{n}$ 求导得 $\\frac{1}{(1 - x)^{2}} = \\sum_{n=1}^{\\infty} n x^{n-1}$，所以当 $|x| < 1$ 时 $\\sum_{n=1}^{\\infty} n x^{n} = \\frac{x}{(1 - x)^{2}}$。取 $x = \\frac{1}{3}$：$\\sum \\frac{n}{3^{n}} = \\frac{1/3}{(2/3)^{2}} = \\frac{3}{4}$。",
+        "Differentiating a known series brings down the index as a factor, so it gives the sums of series whose terms include the index. Differentiating $\\frac{1}{1 - x} = \\sum x^{n}$ gives $\\frac{1}{(1 - x)^{2}} = \\sum_{n=1}^{\\infty} n x^{n-1}$, so $\\sum_{n=1}^{\\infty} n x^{n} = \\frac{x}{(1 - x)^{2}}$ for $|x| < 1$. At $x = \\frac{1}{3}$: $\\sum \\frac{n}{3^{n}} = \\frac{1/3}{(2/3)^{2}} = \\frac{3}{4}$.",
+        "对已知级数求导会把下标作为因子带下来，所以可以求出各项含下标的级数的和。对 $\\frac{1}{1 - x} = \\sum x^{n}$ 求导得 $\\frac{1}{(1 - x)^{2}} = \\sum_{n=1}^{\\infty} n x^{n-1}$，所以当 $|x| < 1$ 时 $\\sum_{n=1}^{\\infty} n x^{n} = \\frac{x}{(1 - x)^{2}}$。取 $x = \\frac{1}{3}$：$\\sum \\frac{n}{3^{n}} = \\frac{1/3}{(2/3)^{2}} = \\frac{3}{4}$。",
       ),
       generate(rng) {
         const k = rng.int(2, 9);

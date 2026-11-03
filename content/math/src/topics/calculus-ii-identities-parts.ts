@@ -50,8 +50,8 @@ export const integrationUsingBasicTrigonometricIdentities: TopicDef = {
       id: "rewriting-with-reciprocal-and-quotient-identities",
       title: t("Rewriting with reciprocal and quotient identities", "用倒数关系与商数关系改写"),
       explanation: t(
-        "Use $\\sec x = \\frac{1}{\\cos x}$, $\\csc x = \\frac{1}{\\sin x}$, $\\tan x = \\frac{\\sin x}{\\cos x}$ and $\\cot x = \\frac{\\cos x}{\\sin x}$ to turn an integrand into a known derivative:\n\n$$\\int \\frac{\\sin x}{\\cos^{2} x} \\, dx = \\int \\tan x\\sec x \\, dx = \\sec x + C, \\qquad \\int \\frac{1}{\\sin^{2} x} \\, dx = \\int \\csc^{2} x \\, dx = -\\cot x + C.$$",
-        "利用 $\\sec x = \\frac{1}{\\cos x}$、$\\csc x = \\frac{1}{\\sin x}$、$\\tan x = \\frac{\\sin x}{\\cos x}$、$\\cot x = \\frac{\\cos x}{\\sin x}$，把被积函数化为已知的导数：\n\n$$\\int \\frac{\\sin x}{\\cos^{2} x} \\, dx = \\int \\tan x\\sec x \\, dx = \\sec x + C, \\qquad \\int \\frac{1}{\\sin^{2} x} \\, dx = \\int \\csc^{2} x \\, dx = -\\cot x + C。$$",
+        "Rewriting the integrand in sine and cosine often reveals a simpler function or a pattern you already know how to integrate. Use $\\sec x = \\frac{1}{\\cos x}$, $\\csc x = \\frac{1}{\\sin x}$, $\\tan x = \\frac{\\sin x}{\\cos x}$ and $\\cot x = \\frac{\\cos x}{\\sin x}$ to turn an integrand into a known derivative:\n\n$$\\int \\frac{\\sin x}{\\cos^{2} x} \\, dx = \\int \\tan x\\sec x \\, dx = \\sec x + C, \\qquad \\int \\frac{1}{\\sin^{2} x} \\, dx = \\int \\csc^{2} x \\, dx = -\\cot x + C.$$",
+        "把被积函数改写成正弦和余弦的形式，常常会出现更简单的函数或已经会积分的形式。利用 $\\sec x = \\frac{1}{\\cos x}$、$\\csc x = \\frac{1}{\\sin x}$、$\\tan x = \\frac{\\sin x}{\\cos x}$、$\\cot x = \\frac{\\cos x}{\\sin x}$，把被积函数化为已知的导数：\n\n$$\\int \\frac{\\sin x}{\\cos^{2} x} \\, dx = \\int \\tan x\\sec x \\, dx = \\sec x + C, \\qquad \\int \\frac{1}{\\sin^{2} x} \\, dx = \\int \\csc^{2} x \\, dx = -\\cot x + C。$$",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -106,8 +106,8 @@ export const integrationUsingBasicTrigonometricIdentities: TopicDef = {
       id: "expanding-products-with-reciprocal-functions",
       title: t("Expanding products with reciprocal functions", "展开含倒数函数的乘积"),
       explanation: t(
-        "Expand a product into terms that are known derivatives, or split a quotient over its denominator:\n\n$$\\int \\sec x(\\sec x + \\tan x) \\, dx = \\int (\\sec^{2} x + \\sec x\\tan x) \\, dx = \\tan x + \\sec x + C,$$\n\n$$\\int \\frac{\\sin x + \\cos x}{\\cos x} \\, dx = \\int (\\tan x + 1) \\, dx = -\\ln|\\cos x| + x + C.$$",
-        "把乘积展开成若干已知导数的项，或把商按分母拆开：\n\n$$\\int \\sec x(\\sec x + \\tan x) \\, dx = \\int (\\sec^{2} x + \\sec x\\tan x) \\, dx = \\tan x + \\sec x + C，$$\n\n$$\\int \\frac{\\sin x + \\cos x}{\\cos x} \\, dx = \\int (\\tan x + 1) \\, dx = -\\ln|\\cos x| + x + C。$$",
+        "After expanding, each term should be the derivative of a known function, such as the square of secant or the product of secant and tangent. Expand a product into terms that are known derivatives, or split a quotient over its denominator:\n\n$$\\int \\sec x(\\sec x + \\tan x) \\, dx = \\int (\\sec^{2} x + \\sec x\\tan x) \\, dx = \\tan x + \\sec x + C,$$\n\n$$\\int \\frac{\\sin x + \\cos x}{\\cos x} \\, dx = \\int (\\tan x + 1) \\, dx = -\\ln|\\cos x| + x + C.$$",
+        "展开之后，每一项都应是某个已知函数的导数，例如正割的平方或正割与正切的积。把乘积展开成若干已知导数的项，或把商按分母拆开：\n\n$$\\int \\sec x(\\sec x + \\tan x) \\, dx = \\int (\\sec^{2} x + \\sec x\\tan x) \\, dx = \\tan x + \\sec x + C，$$\n\n$$\\int \\frac{\\sin x + \\cos x}{\\cos x} \\, dx = \\int (\\tan x + 1) \\, dx = -\\ln|\\cos x| + x + C。$$",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -167,8 +167,8 @@ export const integrationUsingThePythagoreanIdentities: TopicDef = {
       id: "integrating-squares-of-tangent-and-cotangent",
       title: t("Integrating squares of tangent and cotangent", "正切与余切平方的积分"),
       explanation: t(
-        "From $\\sin^{2} x + \\cos^{2} x = 1$ come $\\tan^{2} x = \\sec^{2} x - 1$ and $\\cot^{2} x = \\csc^{2} x - 1$. So\n\n$$\\int \\tan^{2} x \\, dx = \\tan x - x + C, \\qquad \\int \\cot^{2} x \\, dx = -\\cot x - x + C.$$\n\nThe identity also simplifies quotients: $\\frac{1 - \\sin^{2} x}{\\cos x} = \\frac{\\cos^{2} x}{\\cos x} = \\cos x$.",
-        "由 $\\sin^{2} x + \\cos^{2} x = 1$ 得 $\\tan^{2} x = \\sec^{2} x - 1$，$\\cot^{2} x = \\csc^{2} x - 1$。所以\n\n$$\\int \\tan^{2} x \\, dx = \\tan x - x + C, \\qquad \\int \\cot^{2} x \\, dx = -\\cot x - x + C。$$\n\n这个恒等式也能化简商：$\\frac{1 - \\sin^{2} x}{\\cos x} = \\frac{\\cos^{2} x}{\\cos x} = \\cos x$。",
+        "The square of tangent has no direct antiderivative, but the Pythagorean identity rewrites it as the square of secant minus one, which does. From $\\sin^{2} x + \\cos^{2} x = 1$ come $\\tan^{2} x = \\sec^{2} x - 1$ and $\\cot^{2} x = \\csc^{2} x - 1$. So\n\n$$\\int \\tan^{2} x \\, dx = \\tan x - x + C, \\qquad \\int \\cot^{2} x \\, dx = -\\cot x - x + C.$$\n\nThe identity also simplifies quotients: $\\frac{1 - \\sin^{2} x}{\\cos x} = \\frac{\\cos^{2} x}{\\cos x} = \\cos x$.",
+        "正切的平方没有直接的原函数，但勾股恒等式把它改写成正割的平方减 1，这个就能积分了。由 $\\sin^{2} x + \\cos^{2} x = 1$ 得 $\\tan^{2} x = \\sec^{2} x - 1$，$\\cot^{2} x = \\csc^{2} x - 1$。所以\n\n$$\\int \\tan^{2} x \\, dx = \\tan x - x + C, \\qquad \\int \\cot^{2} x \\, dx = -\\cot x - x + C。$$\n\n这个恒等式也能化简商：$\\frac{1 - \\sin^{2} x}{\\cos x} = \\frac{\\cos^{2} x}{\\cos x} = \\cos x$。",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -286,8 +286,8 @@ export const integrationUsingTheDoubleAngleFormulas: TopicDef = {
       id: "integrating-squares-of-sine-and-cosine",
       title: t("Integrating squares of sine and cosine", "正弦与余弦平方的积分"),
       explanation: t(
-        "Even powers do not yield to substitution. Lower the power with $\\sin^{2} \\theta = \\frac{1 - \\cos 2\\theta}{2}$ and $\\cos^{2} \\theta = \\frac{1 + \\cos 2\\theta}{2}$:\n\n$$\\int \\sin^{2}(ax) \\, dx = \\frac{x}{2} - \\frac{\\sin(2ax)}{4a} + C, \\qquad \\int \\cos^{2}(ax) \\, dx = \\frac{x}{2} + \\frac{\\sin(2ax)}{4a} + C.$$",
-        "偶次幂不能直接换元。用 $\\sin^{2} \\theta = \\frac{1 - \\cos 2\\theta}{2}$ 和 $\\cos^{2} \\theta = \\frac{1 + \\cos 2\\theta}{2}$ 降幂：\n\n$$\\int \\sin^{2}(ax) \\, dx = \\frac{x}{2} - \\frac{\\sin(2ax)}{4a} + C, \\qquad \\int \\cos^{2}(ax) \\, dx = \\frac{x}{2} + \\frac{\\sin(2ax)}{4a} + C。$$",
+        "The power reduction formulas turn a square into a constant plus a cosine of the doubled angle, both of which are easy to integrate. Even powers do not yield to substitution. Lower the power with $\\sin^{2} \\theta = \\frac{1 - \\cos 2\\theta}{2}$ and $\\cos^{2} \\theta = \\frac{1 + \\cos 2\\theta}{2}$:\n\n$$\\int \\sin^{2}(ax) \\, dx = \\frac{x}{2} - \\frac{\\sin(2ax)}{4a} + C, \\qquad \\int \\cos^{2}(ax) \\, dx = \\frac{x}{2} + \\frac{\\sin(2ax)}{4a} + C.$$",
+        "降幂公式把平方变成一个常数加上二倍角的余弦，这两部分都容易积分。偶次幂不能直接换元。用 $\\sin^{2} \\theta = \\frac{1 - \\cos 2\\theta}{2}$ 和 $\\cos^{2} \\theta = \\frac{1 + \\cos 2\\theta}{2}$ 降幂：\n\n$$\\int \\sin^{2}(ax) \\, dx = \\frac{x}{2} - \\frac{\\sin(2ax)}{4a} + C, \\qquad \\int \\cos^{2}(ax) \\, dx = \\frac{x}{2} + \\frac{\\sin(2ax)}{4a} + C。$$",
       ),
       generate(rng) {
         const k = rng.nonZero(-8, 8);
@@ -313,8 +313,8 @@ export const integrationUsingTheDoubleAngleFormulas: TopicDef = {
       id: "integrating-products-of-sine-and-cosine-of-the-same-angle",
       title: t("Integrating sin·cos of the same angle", "同角正弦与余弦之积的积分"),
       explanation: t(
-        "Use $\\sin \\theta\\cos \\theta = \\frac{1}{2}\\sin 2\\theta$: $\\int \\sin(ax)\\cos(ax) \\, dx = -\\frac{\\cos(2ax)}{4a} + C$. (Substituting $u = \\sin(ax)$ gives $\\frac{\\sin^{2}(ax)}{2a} + C$, which differs only by a constant.) Squaring the identity, $\\sin^{2} x\\cos^{2} x = \\frac{1}{4}\\sin^{2} 2x = \\frac{1 - \\cos 4x}{8}$.",
-        "利用 $\\sin \\theta\\cos \\theta = \\frac{1}{2}\\sin 2\\theta$：$\\int \\sin(ax)\\cos(ax) \\, dx = -\\frac{\\cos(2ax)}{4a} + C$。（代换 $u = \\sin(ax)$ 得 $\\frac{\\sin^{2}(ax)}{2a} + C$，两者只差一个常数。）把恒等式平方，$\\sin^{2} x\\cos^{2} x = \\frac{1}{4}\\sin^{2} 2x = \\frac{1 - \\cos 4x}{8}$。",
+        "The product of sine and cosine of one angle is half the sine of the doubled angle, which integrates to a cosine. Use $\\sin \\theta\\cos \\theta = \\frac{1}{2}\\sin 2\\theta$: $\\int \\sin(ax)\\cos(ax) \\, dx = -\\frac{\\cos(2ax)}{4a} + C$. (Substituting $u = \\sin(ax)$ gives $\\frac{\\sin^{2}(ax)}{2a} + C$, which differs only by a constant.) Squaring the identity, $\\sin^{2} x\\cos^{2} x = \\frac{1}{4}\\sin^{2} 2x = \\frac{1 - \\cos 4x}{8}$.",
+        "同一个角的正弦与余弦之积等于二倍角正弦的一半，它的积分是一个余弦。利用 $\\sin \\theta\\cos \\theta = \\frac{1}{2}\\sin 2\\theta$：$\\int \\sin(ax)\\cos(ax) \\, dx = -\\frac{\\cos(2ax)}{4a} + C$。（代换 $u = \\sin(ax)$ 得 $\\frac{\\sin^{2}(ax)}{2a} + C$，两者只差一个常数。）把恒等式平方，$\\sin^{2} x\\cos^{2} x = \\frac{1}{4}\\sin^{2} 2x = \\frac{1 - \\cos 4x}{8}$。",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -407,8 +407,8 @@ export const integratingProductsOfTrigonometricFunctions: TopicDef = {
       id: "integrating-sine-times-sine-and-cosine-times-cosine",
       title: t("Integrating sine times sine and cosine times cosine", "正弦乘正弦与余弦乘余弦的积分"),
       explanation: t(
-        "From the sum and difference formulas for cosine:\n\n$$\\sin A\\sin B = \\frac{1}{2}\\left[\\cos(A - B) - \\cos(A + B)\\right], \\qquad \\cos A\\cos B = \\frac{1}{2}\\left[\\cos(A - B) + \\cos(A + B)\\right].$$\n\nSo $\\int \\cos 3x\\cos x \\, dx = \\frac{\\sin 2x}{4} + \\frac{\\sin 4x}{8} + C$.",
-        "由余弦的和角与差角公式：\n\n$$\\sin A\\sin B = \\frac{1}{2}\\left[\\cos(A - B) - \\cos(A + B)\\right], \\qquad \\cos A\\cos B = \\frac{1}{2}\\left[\\cos(A - B) + \\cos(A + B)\\right]。$$\n\n所以 $\\int \\cos 3x\\cos x \\, dx = \\frac{\\sin 2x}{4} + \\frac{\\sin 4x}{8} + C$。",
+        "The product to sum formulas turn a product of two trigonometric functions into a sum, and each term then integrates on its own. From the sum and difference formulas for cosine:\n\n$$\\sin A\\sin B = \\frac{1}{2}\\left[\\cos(A - B) - \\cos(A + B)\\right], \\qquad \\cos A\\cos B = \\frac{1}{2}\\left[\\cos(A - B) + \\cos(A + B)\\right].$$\n\nSo $\\int \\cos 3x\\cos x \\, dx = \\frac{\\sin 2x}{4} + \\frac{\\sin 4x}{8} + C$.",
+        "积化和差公式把两个三角函数的积化成和，然后每一项都可以单独积分。由余弦的和角与差角公式：\n\n$$\\sin A\\sin B = \\frac{1}{2}\\left[\\cos(A - B) - \\cos(A + B)\\right], \\qquad \\cos A\\cos B = \\frac{1}{2}\\left[\\cos(A - B) + \\cos(A + B)\\right]。$$\n\n所以 $\\int \\cos 3x\\cos x \\, dx = \\frac{\\sin 2x}{4} + \\frac{\\sin 4x}{8} + C$。",
       ),
       generate(rng) {
         const [a, b] = productPair(rng);
@@ -451,8 +451,8 @@ export const integrationUsingBasicHyperbolicIdentities: TopicDef = {
       id: "rewriting-with-hyperbolic-quotient-identities",
       title: t("Rewriting with hyperbolic quotient identities", "用双曲函数的商数关系改写"),
       explanation: t(
-        "As with trigonometric functions, $\\tanh x = \\frac{\\sinh x}{\\cosh x}$, $\\operatorname{sech} x = \\frac{1}{\\cosh x}$, and so on. Recall $\\frac{d}{dx}\\operatorname{sech} x = -\\operatorname{sech} x\\tanh x$, $\\frac{d}{dx}\\tanh x = \\operatorname{sech}^{2} x$ and $\\frac{d}{dx}\\coth x = -\\operatorname{csch}^{2} x$. For example,\n\n$$\\int \\frac{\\sinh x}{\\cosh^{2} x} \\, dx = \\int \\operatorname{sech} x\\tanh x \\, dx = -\\operatorname{sech} x + C.$$",
-        "与三角函数类似，$\\tanh x = \\frac{\\sinh x}{\\cosh x}$，$\\operatorname{sech} x = \\frac{1}{\\cosh x}$，等等。回忆 $\\frac{d}{dx}\\operatorname{sech} x = -\\operatorname{sech} x\\tanh x$，$\\frac{d}{dx}\\tanh x = \\operatorname{sech}^{2} x$，$\\frac{d}{dx}\\coth x = -\\operatorname{csch}^{2} x$。例如\n\n$$\\int \\frac{\\sinh x}{\\cosh^{2} x} \\, dx = \\int \\operatorname{sech} x\\tanh x \\, dx = -\\operatorname{sech} x + C。$$",
+        "Writing hyperbolic functions in terms of hyperbolic sine and cosine can reveal a quotient in which the top is the derivative of the bottom. As with trigonometric functions, $\\tanh x = \\frac{\\sinh x}{\\cosh x}$, $\\operatorname{sech} x = \\frac{1}{\\cosh x}$, and so on. Recall $\\frac{d}{dx}\\operatorname{sech} x = -\\operatorname{sech} x\\tanh x$, $\\frac{d}{dx}\\tanh x = \\operatorname{sech}^{2} x$ and $\\frac{d}{dx}\\coth x = -\\operatorname{csch}^{2} x$. For example,\n\n$$\\int \\frac{\\sinh x}{\\cosh^{2} x} \\, dx = \\int \\operatorname{sech} x\\tanh x \\, dx = -\\operatorname{sech} x + C.$$",
+        "把双曲函数写成双曲正弦和双曲余弦的形式，可能会出现分子是分母导数的商。与三角函数类似，$\\tanh x = \\frac{\\sinh x}{\\cosh x}$，$\\operatorname{sech} x = \\frac{1}{\\cosh x}$，等等。回忆 $\\frac{d}{dx}\\operatorname{sech} x = -\\operatorname{sech} x\\tanh x$，$\\frac{d}{dx}\\tanh x = \\operatorname{sech}^{2} x$，$\\frac{d}{dx}\\coth x = -\\operatorname{csch}^{2} x$。例如\n\n$$\\int \\frac{\\sinh x}{\\cosh^{2} x} \\, dx = \\int \\operatorname{sech} x\\tanh x \\, dx = -\\operatorname{sech} x + C。$$",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -508,8 +508,8 @@ export const integrationUsingBasicHyperbolicIdentities: TopicDef = {
       id: "integrating-with-exponential-definitions",
       title: t("Integrating with the exponential definitions", "用指数定义积分"),
       explanation: t(
-        "When a hyperbolic function is multiplied by an exponential, write it with $\\sinh x = \\frac{e^{x} - e^{-x}}{2}$ and $\\cosh x = \\frac{e^{x} + e^{-x}}{2}$:\n\n$$\\int e^{x}\\cosh x \\, dx = \\int \\frac{e^{2x} + 1}{2} \\, dx = \\frac{e^{2x}}{4} + \\frac{x}{2} + C.$$",
-        "当双曲函数乘以指数函数时，用 $\\sinh x = \\frac{e^{x} - e^{-x}}{2}$、$\\cosh x = \\frac{e^{x} + e^{-x}}{2}$ 改写：\n\n$$\\int e^{x}\\cosh x \\, dx = \\int \\frac{e^{2x} + 1}{2} \\, dx = \\frac{e^{2x}}{4} + \\frac{x}{2} + C。$$",
+        "When a hyperbolic function is multiplied by an exponential, the exponential definitions turn the product into a sum of simple exponentials. When a hyperbolic function is multiplied by an exponential, write it with $\\sinh x = \\frac{e^{x} - e^{-x}}{2}$ and $\\cosh x = \\frac{e^{x} + e^{-x}}{2}$:\n\n$$\\int e^{x}\\cosh x \\, dx = \\int \\frac{e^{2x} + 1}{2} \\, dx = \\frac{e^{2x}}{4} + \\frac{x}{2} + C.$$",
+        "当双曲函数乘以指数函数时，用指数定义可以把这个积变成几个简单指数式的和。当双曲函数乘以指数函数时，用 $\\sinh x = \\frac{e^{x} - e^{-x}}{2}$、$\\cosh x = \\frac{e^{x} + e^{-x}}{2}$ 改写：\n\n$$\\int e^{x}\\cosh x \\, dx = \\int \\frac{e^{2x} + 1}{2} \\, dx = \\frac{e^{2x}}{4} + \\frac{x}{2} + C。$$",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -553,8 +553,8 @@ export const integrationUsingTheHyperbolicPythagoreanIdentities: TopicDef = {
       id: "integrating-squares-of-tanh-and-coth",
       title: t("Integrating squares of tanh and coth", "tanh 与 coth 平方的积分"),
       explanation: t(
-        "Dividing $\\cosh^{2} x - \\sinh^{2} x = 1$ by $\\cosh^{2} x$ or $\\sinh^{2} x$ gives $\\tanh^{2} x = 1 - \\operatorname{sech}^{2} x$ and $\\coth^{2} x = 1 + \\operatorname{csch}^{2} x$. So\n\n$$\\int \\tanh^{2} x \\, dx = x - \\tanh x + C, \\qquad \\int \\coth^{2} x \\, dx = x - \\coth x + C.$$\n\nNote the signs differ from the trigonometric case.",
-        "把 $\\cosh^{2} x - \\sinh^{2} x = 1$ 两边除以 $\\cosh^{2} x$ 或 $\\sinh^{2} x$，得 $\\tanh^{2} x = 1 - \\operatorname{sech}^{2} x$，$\\coth^{2} x = 1 + \\operatorname{csch}^{2} x$。所以\n\n$$\\int \\tanh^{2} x \\, dx = x - \\tanh x + C, \\qquad \\int \\coth^{2} x \\, dx = x - \\coth x + C。$$\n\n注意符号与三角函数的情形不同。",
+        "The hyperbolic identity rewrites these squares in terms of the squares of the reciprocal functions, whose antiderivatives are known. Dividing $\\cosh^{2} x - \\sinh^{2} x = 1$ by $\\cosh^{2} x$ or $\\sinh^{2} x$ gives $\\tanh^{2} x = 1 - \\operatorname{sech}^{2} x$ and $\\coth^{2} x = 1 + \\operatorname{csch}^{2} x$. So\n\n$$\\int \\tanh^{2} x \\, dx = x - \\tanh x + C, \\qquad \\int \\coth^{2} x \\, dx = x - \\coth x + C.$$\n\nNote the signs differ from the trigonometric case.",
+        "双曲恒等式把这些平方改写成倒数双曲函数的平方，而后者的原函数是已知的。把 $\\cosh^{2} x - \\sinh^{2} x = 1$ 两边除以 $\\cosh^{2} x$ 或 $\\sinh^{2} x$，得 $\\tanh^{2} x = 1 - \\operatorname{sech}^{2} x$，$\\coth^{2} x = 1 + \\operatorname{csch}^{2} x$。所以\n\n$$\\int \\tanh^{2} x \\, dx = x - \\tanh x + C, \\qquad \\int \\coth^{2} x \\, dx = x - \\coth x + C。$$\n\n注意符号与三角函数的情形不同。",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -588,8 +588,8 @@ export const integrationUsingTheHyperbolicPythagoreanIdentities: TopicDef = {
       id: "integrating-odd-powers-of-sinh-and-cosh",
       title: t("Integrating odd powers of sinh and cosh", "sinh 与 cosh 奇次幂的积分"),
       explanation: t(
-        "Keep one factor for $du$ and convert the rest with $\\sinh^{2} x = \\cosh^{2} x - 1$ or $\\cosh^{2} x = 1 + \\sinh^{2} x$:\n\n$$\\int \\sinh^{3} x \\, dx = \\int (\\cosh^{2} x - 1)\\sinh x \\, dx = \\frac{\\cosh^{3} x}{3} - \\cosh x + C.$$",
-        "留一个因子作 $du$，其余用 $\\sinh^{2} x = \\cosh^{2} x - 1$ 或 $\\cosh^{2} x = 1 + \\sinh^{2} x$ 转化：\n\n$$\\int \\sinh^{3} x \\, dx = \\int (\\cosh^{2} x - 1)\\sinh x \\, dx = \\frac{\\cosh^{3} x}{3} - \\cosh x + C。$$",
+        "Save one factor to pair with the differential, and convert the remaining even power with the hyperbolic identity so the substitution works. Keep one factor for $du$ and convert the rest with $\\sinh^{2} x = \\cosh^{2} x - 1$ or $\\cosh^{2} x = 1 + \\sinh^{2} x$:\n\n$$\\int \\sinh^{3} x \\, dx = \\int (\\cosh^{2} x - 1)\\sinh x \\, dx = \\frac{\\cosh^{3} x}{3} - \\cosh x + C.$$",
+        "留出一个因子与微分配对，再用双曲恒等式转化剩下的偶次幂，这样就可以换元了。留一个因子作 $du$，其余用 $\\sinh^{2} x = \\cosh^{2} x - 1$ 或 $\\cosh^{2} x = 1 + \\sinh^{2} x$ 转化：\n\n$$\\int \\sinh^{3} x \\, dx = \\int (\\cosh^{2} x - 1)\\sinh x \\, dx = \\frac{\\cosh^{3} x}{3} - \\cosh x + C。$$",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -662,8 +662,8 @@ export const integrationUsingTheHyperbolicDoubleAngleFormulas: TopicDef = {
       id: "integrating-squares-of-sinh-and-cosh",
       title: t("Integrating squares of sinh and cosh", "sinh 与 cosh 平方的积分"),
       explanation: t(
-        "From $\\cosh 2\\theta = \\cosh^{2} \\theta + \\sinh^{2} \\theta$ and $\\cosh^{2} \\theta - \\sinh^{2} \\theta = 1$: $\\cosh^{2} \\theta = \\frac{\\cosh 2\\theta + 1}{2}$ and $\\sinh^{2} \\theta = \\frac{\\cosh 2\\theta - 1}{2}$. So\n\n$$\\int \\sinh^{2}(ax) \\, dx = \\frac{\\sinh(2ax)}{4a} - \\frac{x}{2} + C, \\qquad \\int \\cosh^{2}(ax) \\, dx = \\frac{\\sinh(2ax)}{4a} + \\frac{x}{2} + C.$$",
-        "由 $\\cosh 2\\theta = \\cosh^{2} \\theta + \\sinh^{2} \\theta$ 与 $\\cosh^{2} \\theta - \\sinh^{2} \\theta = 1$ 得 $\\cosh^{2} \\theta = \\frac{\\cosh 2\\theta + 1}{2}$，$\\sinh^{2} \\theta = \\frac{\\cosh 2\\theta - 1}{2}$。所以\n\n$$\\int \\sinh^{2}(ax) \\, dx = \\frac{\\sinh(2ax)}{4a} - \\frac{x}{2} + C, \\qquad \\int \\cosh^{2}(ax) \\, dx = \\frac{\\sinh(2ax)}{4a} + \\frac{x}{2} + C。$$",
+        "Just as with sine and cosine, the double angle formula lowers the power, so the square becomes a constant plus a hyperbolic cosine of the doubled angle. From $\\cosh 2\\theta = \\cosh^{2} \\theta + \\sinh^{2} \\theta$ and $\\cosh^{2} \\theta - \\sinh^{2} \\theta = 1$: $\\cosh^{2} \\theta = \\frac{\\cosh 2\\theta + 1}{2}$ and $\\sinh^{2} \\theta = \\frac{\\cosh 2\\theta - 1}{2}$. So\n\n$$\\int \\sinh^{2}(ax) \\, dx = \\frac{\\sinh(2ax)}{4a} - \\frac{x}{2} + C, \\qquad \\int \\cosh^{2}(ax) \\, dx = \\frac{\\sinh(2ax)}{4a} + \\frac{x}{2} + C.$$",
+        "与正弦和余弦一样，二倍角公式可以降幂，平方变成一个常数加上二倍角的双曲余弦。由 $\\cosh 2\\theta = \\cosh^{2} \\theta + \\sinh^{2} \\theta$ 与 $\\cosh^{2} \\theta - \\sinh^{2} \\theta = 1$ 得 $\\cosh^{2} \\theta = \\frac{\\cosh 2\\theta + 1}{2}$，$\\sinh^{2} \\theta = \\frac{\\cosh 2\\theta - 1}{2}$。所以\n\n$$\\int \\sinh^{2}(ax) \\, dx = \\frac{\\sinh(2ax)}{4a} - \\frac{x}{2} + C, \\qquad \\int \\cosh^{2}(ax) \\, dx = \\frac{\\sinh(2ax)}{4a} + \\frac{x}{2} + C。$$",
       ),
       generate(rng) {
         const k = rng.nonZero(-8, 8);
@@ -689,8 +689,8 @@ export const integrationUsingTheHyperbolicDoubleAngleFormulas: TopicDef = {
       id: "integrating-products-of-sinh-and-cosh",
       title: t("Integrating products of sinh and cosh", "sinh 与 cosh 之积的积分"),
       explanation: t(
-        "Use $\\sinh 2\\theta = 2\\sinh \\theta\\cosh \\theta$: $\\int \\sinh(ax)\\cosh(ax) \\, dx = \\frac{\\cosh(2ax)}{4a} + C$. Squaring, $\\sinh^{2} x\\cosh^{2} x = \\frac{1}{4}\\sinh^{2} 2x = \\frac{\\cosh 4x - 1}{8}$, so $\\int \\sinh^{2} x\\cosh^{2} x \\, dx = \\frac{\\sinh 4x}{32} - \\frac{x}{8} + C$.",
-        "利用 $\\sinh 2\\theta = 2\\sinh \\theta\\cosh \\theta$：$\\int \\sinh(ax)\\cosh(ax) \\, dx = \\frac{\\cosh(2ax)}{4a} + C$。平方得 $\\sinh^{2} x\\cosh^{2} x = \\frac{1}{4}\\sinh^{2} 2x = \\frac{\\cosh 4x - 1}{8}$，所以 $\\int \\sinh^{2} x\\cosh^{2} x \\, dx = \\frac{\\sinh 4x}{32} - \\frac{x}{8} + C$。",
+        "The product of hyperbolic sine and cosine of one angle is half the hyperbolic sine of the doubled angle, which integrates directly. Use $\\sinh 2\\theta = 2\\sinh \\theta\\cosh \\theta$: $\\int \\sinh(ax)\\cosh(ax) \\, dx = \\frac{\\cosh(2ax)}{4a} + C$. Squaring, $\\sinh^{2} x\\cosh^{2} x = \\frac{1}{4}\\sinh^{2} 2x = \\frac{\\cosh 4x - 1}{8}$, so $\\int \\sinh^{2} x\\cosh^{2} x \\, dx = \\frac{\\sinh 4x}{32} - \\frac{x}{8} + C$.",
+        "同一个角的双曲正弦与双曲余弦之积等于二倍角双曲正弦的一半，可以直接积分。利用 $\\sinh 2\\theta = 2\\sinh \\theta\\cosh \\theta$：$\\int \\sinh(ax)\\cosh(ax) \\, dx = \\frac{\\cosh(2ax)}{4a} + C$。平方得 $\\sinh^{2} x\\cosh^{2} x = \\frac{1}{4}\\sinh^{2} 2x = \\frac{\\cosh 4x - 1}{8}$，所以 $\\int \\sinh^{2} x\\cosh^{2} x \\, dx = \\frac{\\sinh 4x}{32} - \\frac{x}{8} + C$。",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -749,8 +749,8 @@ export const introductionToIntegrationByParts: TopicDef = {
       id: "integrating-x-times-exponential-or-trigonometric-functions",
       title: t("Integrating x times exponential or trigonometric functions", "x 乘指数或三角函数的积分"),
       explanation: t(
-        "Integrating the product rule $(uv)' = u'v + uv'$ gives\n\n$$\\int u \\, dv = uv - \\int v \\, du.$$\n\nFor $\\int xe^{2x} \\, dx$ take $u = x$ and $dv = e^{2x} \\, dx$, so $du = dx$ and $v = \\frac{1}{2}e^{2x}$:\n\n$$\\int xe^{2x} \\, dx = \\frac{1}{2}xe^{2x} - \\int \\frac{1}{2}e^{2x} \\, dx = \\frac{1}{2}xe^{2x} - \\frac{1}{4}e^{2x} + C.$$",
-        "对乘积法则 $(uv)' = u'v + uv'$ 积分，得\n\n$$\\int u \\, dv = uv - \\int v \\, du。$$\n\n对 $\\int xe^{2x} \\, dx$，取 $u = x$，$dv = e^{2x} \\, dx$，则 $du = dx$，$v = \\frac{1}{2}e^{2x}$：\n\n$$\\int xe^{2x} \\, dx = \\frac{1}{2}xe^{2x} - \\int \\frac{1}{2}e^{2x} \\, dx = \\frac{1}{2}xe^{2x} - \\frac{1}{4}e^{2x} + C。$$",
+        "Choose the factor that gets simpler when differentiated, here the power of the variable, and integrate the other factor. Integrating the product rule $(uv)' = u'v + uv'$ gives\n\n$$\\int u \\, dv = uv - \\int v \\, du.$$\n\nFor $\\int xe^{2x} \\, dx$ take $u = x$ and $dv = e^{2x} \\, dx$, so $du = dx$ and $v = \\frac{1}{2}e^{2x}$:\n\n$$\\int xe^{2x} \\, dx = \\frac{1}{2}xe^{2x} - \\int \\frac{1}{2}e^{2x} \\, dx = \\frac{1}{2}xe^{2x} - \\frac{1}{4}e^{2x} + C.$$",
+        "选择求导后变简单的因子，这里是变量的幂，再对另一个因子积分。对乘积法则 $(uv)' = u'v + uv'$ 积分，得\n\n$$\\int u \\, dv = uv - \\int v \\, du。$$\n\n对 $\\int xe^{2x} \\, dx$，取 $u = x$，$dv = e^{2x} \\, dx$，则 $du = dx$，$v = \\frac{1}{2}e^{2x}$：\n\n$$\\int xe^{2x} \\, dx = \\frac{1}{2}xe^{2x} - \\int \\frac{1}{2}e^{2x} \\, dx = \\frac{1}{2}xe^{2x} - \\frac{1}{4}e^{2x} + C。$$",
       ),
       generate(rng) {
         const k = rng.nonZero(-6, 6);
@@ -849,8 +849,8 @@ export const usingIntegrationByPartsToCalculateIntegralsWithLogarithms: TopicDef
       id: "integrating-powers-of-x-times-ln-x",
       title: t("Integrating powers of x times ln x", "x 的幂乘 ln x 的积分"),
       explanation: t(
-        "Take $u = \\ln x$ and $dv = x^{n} \\, dx$, so $du = \\frac{1}{x} \\, dx$ and $v = \\frac{x^{n + 1}}{n + 1}$:\n\n$$\\int x^{n}\\ln x \\, dx = \\frac{x^{n + 1}\\ln x}{n + 1} - \\frac{x^{n + 1}}{(n + 1)^{2}} + C.$$\n\nWith $n = 0$ this gives $\\int \\ln x \\, dx = x\\ln x - x + C$.",
-        "取 $u = \\ln x$，$dv = x^{n} \\, dx$，则 $du = \\frac{1}{x} \\, dx$，$v = \\frac{x^{n + 1}}{n + 1}$：\n\n$$\\int x^{n}\\ln x \\, dx = \\frac{x^{n + 1}\\ln x}{n + 1} - \\frac{x^{n + 1}}{(n + 1)^{2}} + C。$$\n\n取 $n = 0$ 得 $\\int \\ln x \\, dx = x\\ln x - x + C$。",
+        "The logarithm is hard to integrate but easy to differentiate, so let it be the part you differentiate and integrate the power instead. Take $u = \\ln x$ and $dv = x^{n} \\, dx$, so $du = \\frac{1}{x} \\, dx$ and $v = \\frac{x^{n + 1}}{n + 1}$:\n\n$$\\int x^{n}\\ln x \\, dx = \\frac{x^{n + 1}\\ln x}{n + 1} - \\frac{x^{n + 1}}{(n + 1)^{2}} + C.$$\n\nWith $n = 0$ this gives $\\int \\ln x \\, dx = x\\ln x - x + C$.",
+        "对数难以积分但容易求导，所以让它作为求导的部分，而对幂积分。取 $u = \\ln x$，$dv = x^{n} \\, dx$，则 $du = \\frac{1}{x} \\, dx$，$v = \\frac{x^{n + 1}}{n + 1}$：\n\n$$\\int x^{n}\\ln x \\, dx = \\frac{x^{n + 1}\\ln x}{n + 1} - \\frac{x^{n + 1}}{(n + 1)^{2}} + C。$$\n\n取 $n = 0$ 得 $\\int \\ln x \\, dx = x\\ln x - x + C$。",
       ),
       generate(rng) {
         const n = rng.int(0, 4);
@@ -1025,8 +1025,8 @@ export const applyingTheIntegrationByPartsTwice: TopicDef = {
       id: "x-squared-times-sine-or-cosine",
       title: t("x² times sine or cosine", "x² 乘正弦或余弦"),
       explanation: t(
-        "Take $u = x^{2}$ twice. For example,\n\n$$\\int x^{2}\\cos x \\, dx = x^{2}\\sin x - 2\\int x\\sin x \\, dx = x^{2}\\sin x + 2x\\cos x - 2\\sin x + C.$$\n\nWatch the signs: $\\int \\sin x \\, dx = -\\cos x$ introduces a minus each time a sine is integrated.",
-        "两次都取 $u = x^{2}$（第二次为 $x$）。例如\n\n$$\\int x^{2}\\cos x \\, dx = x^{2}\\sin x - 2\\int x\\sin x \\, dx = x^{2}\\sin x + 2x\\cos x - 2\\sin x + C。$$\n\n注意符号：每次对正弦积分，$\\int \\sin x \\, dx = -\\cos x$ 都会带来一个负号。",
+        "Each round of integration by parts lowers the power of the variable by one, so a square needs two rounds before only a trigonometric integral remains. Take $u = x^{2}$ twice. For example,\n\n$$\\int x^{2}\\cos x \\, dx = x^{2}\\sin x - 2\\int x\\sin x \\, dx = x^{2}\\sin x + 2x\\cos x - 2\\sin x + C.$$\n\nWatch the signs: $\\int \\sin x \\, dx = -\\cos x$ introduces a minus each time a sine is integrated.",
+        "每做一次分部积分，变量的幂就降低一次，所以平方需要做两次，最后只剩一个三角函数的积分。两次都取 $u = x^{2}$（第二次为 $x$）。例如\n\n$$\\int x^{2}\\cos x \\, dx = x^{2}\\sin x - 2\\int x\\sin x \\, dx = x^{2}\\sin x + 2x\\cos x - 2\\sin x + C。$$\n\n注意符号：每次对正弦积分，$\\int \\sin x \\, dx = -\\cos x$ 都会带来一个负号。",
       ),
       generate(rng) {
         const a = rng.int(1, 3);
@@ -1154,8 +1154,8 @@ export const integrationByPartsInCyclicCases: TopicDef = {
       id: "exponential-times-sine-or-cosine",
       title: t("Exponential times sine or cosine", "指数函数乘正弦或余弦"),
       explanation: t(
-        "Integrating $I = \\int e^{ax}\\sin(bx) \\, dx$ by parts twice returns $I$ itself:\n\n$$I = \\frac{1}{a}e^{ax}\\sin(bx) - \\frac{b}{a^{2}}e^{ax}\\cos(bx) - \\frac{b^{2}}{a^{2}}I.$$\n\nSolving for $I$,\n\n$$\\int e^{ax}\\sin(bx) \\, dx = \\frac{e^{ax}}{a^{2} + b^{2}}\\left(a\\sin(bx) - b\\cos(bx)\\right) + C, \\qquad \\int e^{ax}\\cos(bx) \\, dx = \\frac{e^{ax}}{a^{2} + b^{2}}\\left(a\\cos(bx) + b\\sin(bx)\\right) + C.$$",
-        "对 $I = \\int e^{ax}\\sin(bx) \\, dx$ 两次分部积分后，又回到 $I$：\n\n$$I = \\frac{1}{a}e^{ax}\\sin(bx) - \\frac{b}{a^{2}}e^{ax}\\cos(bx) - \\frac{b^{2}}{a^{2}}I。$$\n\n解出 $I$：\n\n$$\\int e^{ax}\\sin(bx) \\, dx = \\frac{e^{ax}}{a^{2} + b^{2}}\\left(a\\sin(bx) - b\\cos(bx)\\right) + C, \\qquad \\int e^{ax}\\cos(bx) \\, dx = \\frac{e^{ax}}{a^{2} + b^{2}}\\left(a\\cos(bx) + b\\sin(bx)\\right) + C。$$",
+        "Neither factor simplifies, but integrating by parts twice brings back the original integral, and solving the resulting equation for it gives the answer. Integrating $I = \\int e^{ax}\\sin(bx) \\, dx$ by parts twice returns $I$ itself:\n\n$$I = \\frac{1}{a}e^{ax}\\sin(bx) - \\frac{b}{a^{2}}e^{ax}\\cos(bx) - \\frac{b^{2}}{a^{2}}I.$$\n\nSolving for $I$,\n\n$$\\int e^{ax}\\sin(bx) \\, dx = \\frac{e^{ax}}{a^{2} + b^{2}}\\left(a\\sin(bx) - b\\cos(bx)\\right) + C, \\qquad \\int e^{ax}\\cos(bx) \\, dx = \\frac{e^{ax}}{a^{2} + b^{2}}\\left(a\\cos(bx) + b\\sin(bx)\\right) + C.$$",
+        "两个因子都不会变简单，但分部积分两次后会回到原来的积分，解这个方程就得到答案。对 $I = \\int e^{ax}\\sin(bx) \\, dx$ 两次分部积分后，又回到 $I$：\n\n$$I = \\frac{1}{a}e^{ax}\\sin(bx) - \\frac{b}{a^{2}}e^{ax}\\cos(bx) - \\frac{b^{2}}{a^{2}}I。$$\n\n解出 $I$：\n\n$$\\int e^{ax}\\sin(bx) \\, dx = \\frac{e^{ax}}{a^{2} + b^{2}}\\left(a\\sin(bx) - b\\cos(bx)\\right) + C, \\qquad \\int e^{ax}\\cos(bx) \\, dx = \\frac{e^{ax}}{a^{2} + b^{2}}\\left(a\\cos(bx) + b\\sin(bx)\\right) + C。$$",
       ),
       generate(rng) {
         const a = rng.pick([1, 2, 3, -1, -2]);

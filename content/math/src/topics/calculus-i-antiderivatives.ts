@@ -182,8 +182,8 @@ export const theConstantMultipleRuleForIndefiniteIntegrals: TopicDef = {
       id: "constant-multiples-of-powers",
       title: t("Constant multiples of powers", "幂的常数倍"),
       explanation: t(
-        "Constants come out of integrals: $\\int k f(x) \\, dx = k \\int f(x) \\, dx$. So $\\int 6x^{2} \\, dx = 6 \\cdot \\frac{x^{3}}{3} + C = 2x^{3} + C$.",
-        "常数可以提到积分号外：$\\int k f(x) \\, dx = k \\int f(x) \\, dx$。所以 $\\int 6x^{2} \\, dx = 6 \\cdot \\frac{x^{3}}{3} + C = 2x^{3} + C$。",
+        "To integrate a power, increase the exponent by one and divide by the new exponent, which reverses the power rule for derivatives. Constants come out of integrals: $\\int k f(x) \\, dx = k \\int f(x) \\, dx$. So $\\int 6x^{2} \\, dx = 6 \\cdot \\frac{x^{3}}{3} + C = 2x^{3} + C$.",
+        "对幂积分时，把指数加 1 再除以新的指数，这正好是求导幂法则的逆过程。常数可以提到积分号外：$\\int k f(x) \\, dx = k \\int f(x) \\, dx$。所以 $\\int 6x^{2} \\, dx = 6 \\cdot \\frac{x^{3}}{3} + C = 2x^{3} + C$。",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -209,8 +209,8 @@ export const theConstantMultipleRuleForIndefiniteIntegrals: TopicDef = {
       id: "constant-multiples-of-roots-and-reciprocals",
       title: t("Constant multiples of roots and reciprocals", "根式与倒数的常数倍"),
       explanation: t(
-        "Rewrite first, then integrate. $\\frac{k}{x^{n}} = kx^{-n}$ and $k\\sqrt[m]{x^{p}} = kx^{\\frac{p}{m}}$. For example $\\int \\frac{4}{\\sqrt{x}} \\, dx = \\int 4x^{-\\frac{1}{2}} \\, dx = 8x^{\\frac{1}{2}} + C$.",
-        "先改写再积分。$\\frac{k}{x^{n}} = kx^{-n}$，$k\\sqrt[m]{x^{p}} = kx^{\\frac{p}{m}}$。例如 $\\int \\frac{4}{\\sqrt{x}} \\, dx = \\int 4x^{-\\frac{1}{2}} \\, dx = 8x^{\\frac{1}{2}} + C$。",
+        "Roots and reciprocals must be rewritten as powers before integrating, because the power rule only applies once the expression is a power of the variable. Rewrite first, then integrate. $\\frac{k}{x^{n}} = kx^{-n}$ and $k\\sqrt[m]{x^{p}} = kx^{\\frac{p}{m}}$. For example $\\int \\frac{4}{\\sqrt{x}} \\, dx = \\int 4x^{-\\frac{1}{2}} \\, dx = 8x^{\\frac{1}{2}} + C$.",
+        "积分前必须把根式和倒数改写成幂，因为只有当式子是变量的幂时才能用幂法则。先改写再积分。$\\frac{k}{x^{n}} = kx^{-n}$，$k\\sqrt[m]{x^{p}} = kx^{\\frac{p}{m}}$。例如 $\\int \\frac{4}{\\sqrt{x}} \\, dx = \\int 4x^{-\\frac{1}{2}} \\, dx = 8x^{\\frac{1}{2}} + C$。",
       ),
       generate(rng) {
         const k = rng.int(1, 12);
@@ -262,8 +262,8 @@ export const theSumRuleForIndefiniteIntegrals: TopicDef = {
       id: "integrating-polynomials",
       title: t("Integrating polynomials", "多项式的积分"),
       explanation: t(
-        "Integrals split over sums: $\\int (f + g) \\, dx = \\int f \\, dx + \\int g \\, dx$. Integrate each term and write one $+ C$ at the end.",
-        "积分对和式可拆开：$\\int (f + g) \\, dx = \\int f \\, dx + \\int g \\, dx$。逐项积分，最后只写一个 $+ C$。",
+        "Because an integral of a sum is the sum of the integrals, a polynomial is integrated term by term, and only one constant is needed for the whole answer. Integrals split over sums: $\\int (f + g) \\, dx = \\int f \\, dx + \\int g \\, dx$. Integrate each term and write one $+ C$ at the end.",
+        "由于和的积分等于积分的和，多项式可以逐项积分，整个答案只需要一个常数。积分对和式可拆开：$\\int (f + g) \\, dx = \\int f \\, dx + \\int g \\, dx$。逐项积分，最后只写一个 $+ C$。",
       ),
       generate(rng) {
         const cs = [rng.int(-9, 9), rng.int(-9, 9), rng.int(-9, 9), rng.nonZero(-8, 8)];
@@ -390,8 +390,8 @@ export const integratingTheReciprocalFunction: TopicDef = {
       id: "quotients-that-produce-logarithms",
       title: t("Quotients that produce logarithms", "产生对数的商"),
       explanation: t(
-        "Split a quotient over $x$ into terms; the term with $x^{-1}$ gives a logarithm. $\\int \\frac{x^{2} + 3}{x} \\, dx = \\int \\left(x + \\frac{3}{x}\\right) dx = \\frac{x^{2}}{2} + 3\\ln|x| + C$.",
-        "把除以 $x$ 的商拆成若干项；含 $x^{-1}$ 的项积分得对数。$\\int \\frac{x^{2} + 3}{x} \\, dx = \\int \\left(x + \\frac{3}{x}\\right) dx = \\frac{x^{2}}{2} + 3\\ln|x| + C$。",
+        "The power rule fails for the reciprocal of the variable, whose antiderivative is the natural logarithm of its absolute value. Split a quotient over $x$ into terms; the term with $x^{-1}$ gives a logarithm. $\\int \\frac{x^{2} + 3}{x} \\, dx = \\int \\left(x + \\frac{3}{x}\\right) dx = \\frac{x^{2}}{2} + 3\\ln|x| + C$.",
+        "幂法则对变量的倒数不适用，它的原函数是其绝对值的自然对数。把除以 $x$ 的商拆成若干项；含 $x^{-1}$ 的项积分得对数。$\\int \\frac{x^{2} + 3}{x} \\, dx = \\int \\left(x + \\frac{3}{x}\\right) dx = \\frac{x^{2}}{2} + 3\\ln|x| + C$。",
       ),
       generate(rng) {
         const n = rng.int(1, 3);
@@ -437,8 +437,8 @@ export const integratingExponentialFunctions: TopicDef = {
       id: "integrating-natural-exponentials",
       title: t("Integrating natural exponentials", "自然指数函数的积分"),
       explanation: t(
-        "$\\int e^{x} \\, dx = e^{x} + C$. With a linear exponent, divide by its coefficient: $\\int e^{kx + b} \\, dx = \\frac{1}{k}e^{kx + b} + C$, since differentiating $e^{kx + b}$ multiplies by $k$.",
-        "$\\int e^{x} \\, dx = e^{x} + C$。指数为一次式时，除以其系数：$\\int e^{kx + b} \\, dx = \\frac{1}{k}e^{kx + b} + C$，因为对 $e^{kx + b}$ 求导会乘以 $k$。",
+        "The exponential function is its own antiderivative, and when the exponent has a coefficient, dividing by it undoes the factor the chain rule would produce. $\\int e^{x} \\, dx = e^{x} + C$. With a linear exponent, divide by its coefficient: $\\int e^{kx + b} \\, dx = \\frac{1}{k}e^{kx + b} + C$, since differentiating $e^{kx + b}$ multiplies by $k$.",
+        "指数函数的原函数就是它自己；当指数有系数时，除以这个系数可以抵消链式法则产生的因子。$\\int e^{x} \\, dx = e^{x} + C$。指数为一次式时，除以其系数：$\\int e^{kx + b} \\, dx = \\frac{1}{k}e^{kx + b} + C$，因为对 $e^{kx + b}$ 求导会乘以 $k$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-12, 12);
@@ -462,8 +462,8 @@ export const integratingExponentialFunctions: TopicDef = {
       id: "integrating-general-exponentials",
       title: t("Integrating general exponentials", "一般指数函数的积分"),
       explanation: t(
-        "Since $\\frac{d}{dx}a^{x} = a^{x}\\ln a$, $\\int a^{x} \\, dx = \\frac{a^{x}}{\\ln a} + C$ for $a > 0$, $a \\ne 1$.",
-        "由于 $\\frac{d}{dx}a^{x} = a^{x}\\ln a$，当 $a > 0$、$a \\ne 1$ 时 $\\int a^{x} \\, dx = \\frac{a^{x}}{\\ln a} + C$。",
+        "Differentiating a power of another base produces an extra natural logarithm factor, so integrating must divide by that same factor. Since $\\frac{d}{dx}a^{x} = a^{x}\\ln a$, $\\int a^{x} \\, dx = \\frac{a^{x}}{\\ln a} + C$ for $a > 0$, $a \\ne 1$.",
+        "对其他底数的指数函数求导会多出一个自然对数因子，所以积分时要除以这个因子。由于 $\\frac{d}{dx}a^{x} = a^{x}\\ln a$，当 $a > 0$、$a \\ne 1$ 时 $\\int a^{x} \\, dx = \\frac{a^{x}}{\\ln a} + C$。",
       ),
       generate(rng) {
         const base = rng.pick([2, 3, 5, 7, 10]);
@@ -546,8 +546,8 @@ export const integratingTrigonometricFunctions: TopicDef = {
       id: "integrating-sine-and-cosine",
       title: t("Integrating sine and cosine", "正弦与余弦的积分"),
       explanation: t(
-        "$\\int \\cos x \\, dx = \\sin x + C$ and $\\int \\sin x \\, dx = -\\cos x + C$; watch the sign, since $\\frac{d}{dx}\\cos x = -\\sin x$. With $cx$ inside, divide by $c$: $\\int \\sin 3x \\, dx = -\\frac{1}{3}\\cos 3x + C$.",
-        "$\\int \\cos x \\, dx = \\sin x + C$，$\\int \\sin x \\, dx = -\\cos x + C$；注意符号，因为 $\\frac{d}{dx}\\cos x = -\\sin x$。括号内是 $cx$ 时除以 $c$：$\\int \\sin 3x \\, dx = -\\frac{1}{3}\\cos 3x + C$。",
+        "Each integral reverses a derivative rule, so check your answer by differentiating it; the sign of the cosine term is the most common mistake. $\\int \\cos x \\, dx = \\sin x + C$ and $\\int \\sin x \\, dx = -\\cos x + C$; watch the sign, since $\\frac{d}{dx}\\cos x = -\\sin x$. With $cx$ inside, divide by $c$: $\\int \\sin 3x \\, dx = -\\frac{1}{3}\\cos 3x + C$.",
+        "每个积分都是某个求导法则的逆过程，所以可以通过求导检验答案；余弦项的符号是最常见的错误。$\\int \\cos x \\, dx = \\sin x + C$，$\\int \\sin x \\, dx = -\\cos x + C$；注意符号，因为 $\\frac{d}{dx}\\cos x = -\\sin x$。括号内是 $cx$ 时除以 $c$：$\\int \\sin 3x \\, dx = -\\frac{1}{3}\\cos 3x + C$。",
       ),
       generate(rng) {
         return rng.bool()
@@ -573,8 +573,8 @@ export const integratingTrigonometricFunctions: TopicDef = {
       id: "integrating-secant-and-cosecant-expressions",
       title: t("Integrating secant and cosecant expressions", "正割与余割表达式的积分"),
       explanation: t(
-        "Each derivative rule gives an integral:\n\n- $\\int \\sec^{2} x \\, dx = \\tan x + C$\n- $\\int \\csc^{2} x \\, dx = -\\cot x + C$\n- $\\int \\sec x \\tan x \\, dx = \\sec x + C$\n- $\\int \\csc x \\cot x \\, dx = -\\csc x + C$",
-        "每条求导法则都给出一个积分：\n\n- $\\int \\sec^{2} x \\, dx = \\tan x + C$\n- $\\int \\csc^{2} x \\, dx = -\\cot x + C$\n- $\\int \\sec x \\tan x \\, dx = \\sec x + C$\n- $\\int \\csc x \\cot x \\, dx = -\\csc x + C$",
+        "These integrals come directly from the derivatives of tangent, cotangent, secant and cosecant, so recognizing the derivative pattern is the whole method. Each derivative rule gives an integral:\n\n- $\\int \\sec^{2} x \\, dx = \\tan x + C$\n- $\\int \\csc^{2} x \\, dx = -\\cot x + C$\n- $\\int \\sec x \\tan x \\, dx = \\sec x + C$\n- $\\int \\csc x \\cot x \\, dx = -\\csc x + C$",
+        "这些积分直接来自正切、余切、正割和余割的导数，所以认出导数的形式就是全部方法。每条求导法则都给出一个积分：\n\n- $\\int \\sec^{2} x \\, dx = \\tan x + C$\n- $\\int \\csc^{2} x \\, dx = -\\cot x + C$\n- $\\int \\sec x \\tan x \\, dx = \\sec x + C$\n- $\\int \\csc x \\cot x \\, dx = -\\csc x + C$",
       ),
       generate(rng) {
         const rules: [TrigRule, string, string][] = [
@@ -623,8 +623,8 @@ export const integrationUsingInverseTrigonometricFunctions: TopicDef = {
       id: "integrating-to-arcsine",
       title: t("Integrating to arcsine", "积分为反正弦"),
       explanation: t(
-        "From $\\frac{d}{dx}\\arcsin \\frac{x}{a} = \\frac{1}{\\sqrt{a^{2} - x^{2}}}$ for $a > 0$:\n\n$$\\int \\frac{1}{\\sqrt{a^{2} - x^{2}}} \\, dx = \\arcsin \\frac{x}{a} + C.$$",
-        "由 $a > 0$ 时 $\\frac{d}{dx}\\arcsin \\frac{x}{a} = \\frac{1}{\\sqrt{a^{2} - x^{2}}}$：\n\n$$\\int \\frac{1}{\\sqrt{a^{2} - x^{2}}} \\, dx = \\arcsin \\frac{x}{a} + C。$$",
+        "A square root of a constant minus a square in the denominator signals the arcsine, with the constant under the root fixing the scale. From $\\frac{d}{dx}\\arcsin \\frac{x}{a} = \\frac{1}{\\sqrt{a^{2} - x^{2}}}$ for $a > 0$:\n\n$$\\int \\frac{1}{\\sqrt{a^{2} - x^{2}}} \\, dx = \\arcsin \\frac{x}{a} + C.$$",
+        "分母中出现常数减平方的平方根时，就是反正弦的信号，根号下的常数决定了缩放比例。由 $a > 0$ 时 $\\frac{d}{dx}\\arcsin \\frac{x}{a} = \\frac{1}{\\sqrt{a^{2} - x^{2}}}$：\n\n$$\\int \\frac{1}{\\sqrt{a^{2} - x^{2}}} \\, dx = \\arcsin \\frac{x}{a} + C。$$",
       ),
       generate(rng) {
         const a = rng.int(4, 9);
@@ -653,8 +653,8 @@ export const integrationUsingInverseTrigonometricFunctions: TopicDef = {
       id: "integrating-to-arctangent-and-arcsecant",
       title: t("Integrating to arctangent and arcsecant", "积分为反正切与反正割"),
       explanation: t(
-        "$$\\int \\frac{1}{a^{2} + x^{2}} \\, dx = \\frac{1}{a}\\arctan \\frac{x}{a} + C, \\qquad \\int \\frac{1}{x\\sqrt{x^{2} - 1}} \\, dx = \\operatorname{arcsec} x + C \\ (x > 1).$$\n\nNote the factor $\\frac{1}{a}$ for arctangent, which arcsine does not have.",
-        "$$\\int \\frac{1}{a^{2} + x^{2}} \\, dx = \\frac{1}{a}\\arctan \\frac{x}{a} + C, \\qquad \\int \\frac{1}{x\\sqrt{x^{2} - 1}} \\, dx = \\operatorname{arcsec} x + C \\ (x > 1)。$$\n\n注意反正切有因子 $\\frac{1}{a}$，而反正弦没有。",
+        "A constant plus a square in the denominator signals the arctangent, and the extra factor of the variable outside a root signals the arcsecant. $$\\int \\frac{1}{a^{2} + x^{2}} \\, dx = \\frac{1}{a}\\arctan \\frac{x}{a} + C, \\qquad \\int \\frac{1}{x\\sqrt{x^{2} - 1}} \\, dx = \\operatorname{arcsec} x + C \\ (x > 1).$$\n\nNote the factor $\\frac{1}{a}$ for arctangent, which arcsine does not have.",
+        "分母中出现常数加平方时是反正切的信号，根号外多一个变量因子时则是反正割的信号。$$\\int \\frac{1}{a^{2} + x^{2}} \\, dx = \\frac{1}{a}\\arctan \\frac{x}{a} + C, \\qquad \\int \\frac{1}{x\\sqrt{x^{2} - 1}} \\, dx = \\operatorname{arcsec} x + C \\ (x > 1)。$$\n\n注意反正切有因子 $\\frac{1}{a}$，而反正弦没有。",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -715,8 +715,8 @@ export const integratingHyperbolicFunctions: TopicDef = {
       id: "integrating-sinh-and-cosh",
       title: t("Integrating sinh and cosh", "sinh 与 cosh 的积分"),
       explanation: t(
-        "Unlike sine and cosine, there is no sign change: $\\int \\sinh x \\, dx = \\cosh x + C$ and $\\int \\cosh x \\, dx = \\sinh x + C$. With $cx$ inside, divide by $c$.",
-        "与正弦、余弦不同，这里没有符号变化：$\\int \\sinh x \\, dx = \\cosh x + C$，$\\int \\cosh x \\, dx = \\sinh x + C$。括号内是 $cx$ 时除以 $c$。",
+        "Hyperbolic sine and cosine are each other's derivatives without a sign change, so their integrals also swap them without a minus sign. Unlike sine and cosine, there is no sign change: $\\int \\sinh x \\, dx = \\cosh x + C$ and $\\int \\cosh x \\, dx = \\sinh x + C$. With $cx$ inside, divide by $c$.",
+        "双曲正弦和双曲余弦互为导数且不变号，所以它们的积分也只是互换而不带负号。与正弦、余弦不同，这里没有符号变化：$\\int \\sinh x \\, dx = \\cosh x + C$，$\\int \\cosh x \\, dx = \\sinh x + C$。括号内是 $cx$ 时除以 $c$。",
       ),
       generate(rng) {
         return rng.bool()
@@ -742,8 +742,8 @@ export const integratingHyperbolicFunctions: TopicDef = {
       id: "integrating-reciprocal-hyperbolic-expressions",
       title: t("Integrating reciprocal hyperbolic expressions", "倒数双曲表达式的积分"),
       explanation: t(
-        "Reversing the derivative rules:\n\n- $\\int \\operatorname{sech}^{2} x \\, dx = \\tanh x + C$\n- $\\int \\operatorname{csch}^{2} x \\, dx = -\\coth x + C$\n- $\\int \\operatorname{sech} x \\tanh x \\, dx = -\\operatorname{sech} x + C$\n- $\\int \\operatorname{csch} x \\coth x \\, dx = -\\operatorname{csch} x + C$",
-        "把求导法则反过来：\n\n- $\\int \\operatorname{sech}^{2} x \\, dx = \\tanh x + C$\n- $\\int \\operatorname{csch}^{2} x \\, dx = -\\coth x + C$\n- $\\int \\operatorname{sech} x \\tanh x \\, dx = -\\operatorname{sech} x + C$\n- $\\int \\operatorname{csch} x \\coth x \\, dx = -\\operatorname{csch} x + C$",
+        "Each formula reverses a derivative of a hyperbolic function, so the signs match those in the derivative rules. Reversing the derivative rules:\n\n- $\\int \\operatorname{sech}^{2} x \\, dx = \\tanh x + C$\n- $\\int \\operatorname{csch}^{2} x \\, dx = -\\coth x + C$\n- $\\int \\operatorname{sech} x \\tanh x \\, dx = -\\operatorname{sech} x + C$\n- $\\int \\operatorname{csch} x \\coth x \\, dx = -\\operatorname{csch} x + C$",
+        "每个公式都是某个双曲函数求导的逆过程，所以符号与求导法则中的符号一致。把求导法则反过来：\n\n- $\\int \\operatorname{sech}^{2} x \\, dx = \\tanh x + C$\n- $\\int \\operatorname{csch}^{2} x \\, dx = -\\coth x + C$\n- $\\int \\operatorname{sech} x \\tanh x \\, dx = -\\operatorname{sech} x + C$\n- $\\int \\operatorname{csch} x \\coth x \\, dx = -\\operatorname{csch} x + C$",
       ),
       generate(rng) {
         const rules: [TrigRule, string, string][] = [
@@ -796,8 +796,8 @@ export const integrationUsingInverseHyperbolicFunctions: TopicDef = {
       id: "integrating-to-arsinh",
       title: t("Integrating to arsinh", "积分为 arsinh"),
       explanation: t(
-        "$$\\int \\frac{1}{\\sqrt{x^{2} + a^{2}}} \\, dx = \\operatorname{arsinh} \\frac{x}{a} + C.$$\n\nCompare $\\int \\frac{1}{\\sqrt{a^{2} - x^{2}}} \\, dx = \\arcsin \\frac{x}{a} + C$: the sign under the root decides between the hyperbolic and the circular function.",
-        "$$\\int \\frac{1}{\\sqrt{x^{2} + a^{2}}} \\, dx = \\operatorname{arsinh} \\frac{x}{a} + C。$$\n\n与 $\\int \\frac{1}{\\sqrt{a^{2} - x^{2}}} \\, dx = \\arcsin \\frac{x}{a} + C$ 对比：根号下的符号决定是双曲函数还是三角函数。",
+        "A square root of a square plus a constant gives the inverse hyperbolic sine, while a constant minus a square under the root gives the arcsine instead. $$\\int \\frac{1}{\\sqrt{x^{2} + a^{2}}} \\, dx = \\operatorname{arsinh} \\frac{x}{a} + C.$$\n\nCompare $\\int \\frac{1}{\\sqrt{a^{2} - x^{2}}} \\, dx = \\arcsin \\frac{x}{a} + C$: the sign under the root decides between the hyperbolic and the circular function.",
+        "根号下是平方加常数时得到反双曲正弦，而根号下是常数减平方时得到的是反正弦。$$\\int \\frac{1}{\\sqrt{x^{2} + a^{2}}} \\, dx = \\operatorname{arsinh} \\frac{x}{a} + C。$$\n\n与 $\\int \\frac{1}{\\sqrt{a^{2} - x^{2}}} \\, dx = \\arcsin \\frac{x}{a} + C$ 对比：根号下的符号决定是双曲函数还是三角函数。",
       ),
       generate(rng) {
         const a = rng.int(1, 9);
@@ -827,8 +827,8 @@ export const integrationUsingInverseHyperbolicFunctions: TopicDef = {
       id: "integrating-to-arcosh-and-artanh",
       title: t("Integrating to arcosh and artanh", "积分为 arcosh 与 artanh"),
       explanation: t(
-        "$$\\int \\frac{1}{\\sqrt{x^{2} - a^{2}}} \\, dx = \\operatorname{arcosh} \\frac{x}{a} + C \\ (x > a), \\qquad \\int \\frac{1}{a^{2} - x^{2}} \\, dx = \\frac{1}{a}\\operatorname{artanh} \\frac{x}{a} + C \\ (|x| < a).$$",
-        "$$\\int \\frac{1}{\\sqrt{x^{2} - a^{2}}} \\, dx = \\operatorname{arcosh} \\frac{x}{a} + C \\ (x > a), \\qquad \\int \\frac{1}{a^{2} - x^{2}} \\, dx = \\frac{1}{a}\\operatorname{artanh} \\frac{x}{a} + C \\ (|x| < a)。$$",
+        "A square minus a constant under a root gives the inverse hyperbolic cosine, and a constant minus a square with no root gives the inverse hyperbolic tangent. $$\\int \\frac{1}{\\sqrt{x^{2} - a^{2}}} \\, dx = \\operatorname{arcosh} \\frac{x}{a} + C \\ (x > a), \\qquad \\int \\frac{1}{a^{2} - x^{2}} \\, dx = \\frac{1}{a}\\operatorname{artanh} \\frac{x}{a} + C \\ (|x| < a).$$",
+        "根号下是平方减常数时得到反双曲余弦，没有根号的常数减平方则得到反双曲正切。$$\\int \\frac{1}{\\sqrt{x^{2} - a^{2}}} \\, dx = \\operatorname{arcosh} \\frac{x}{a} + C \\ (x > a), \\qquad \\int \\frac{1}{a^{2} - x^{2}} \\, dx = \\frac{1}{a}\\operatorname{artanh} \\frac{x}{a} + C \\ (|x| < a)。$$",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -895,8 +895,8 @@ export const integrationUsingInverseReciprocalHyperbolicFunctions: TopicDef = {
       id: "integrating-to-arsech",
       title: t("Integrating to arsech", "积分为 arsech"),
       explanation: t(
-        "For $0 < x < a$,\n\n$$\\int \\frac{1}{x\\sqrt{a^{2} - x^{2}}} \\, dx = -\\frac{1}{a}\\operatorname{arsech} \\frac{x}{a} + C.$$\n\nThe minus sign comes from $\\frac{d}{dx}\\operatorname{arsech} x = -\\frac{1}{x\\sqrt{1 - x^{2}}}$.",
-        "当 $0 < x < a$ 时，\n\n$$\\int \\frac{1}{x\\sqrt{a^{2} - x^{2}}} \\, dx = -\\frac{1}{a}\\operatorname{arsech} \\frac{x}{a} + C。$$\n\n负号来自 $\\frac{d}{dx}\\operatorname{arsech} x = -\\frac{1}{x\\sqrt{1 - x^{2}}}$。",
+        "When the variable multiplies a root of a constant minus its square, the integral reverses the derivative of the inverse hyperbolic secant. For $0 < x < a$,\n\n$$\\int \\frac{1}{x\\sqrt{a^{2} - x^{2}}} \\, dx = -\\frac{1}{a}\\operatorname{arsech} \\frac{x}{a} + C.$$\n\nThe minus sign comes from $\\frac{d}{dx}\\operatorname{arsech} x = -\\frac{1}{x\\sqrt{1 - x^{2}}}$.",
+        "当变量乘以常数减其平方的平方根时，这个积分是反双曲正割求导的逆过程。当 $0 < x < a$ 时，\n\n$$\\int \\frac{1}{x\\sqrt{a^{2} - x^{2}}} \\, dx = -\\frac{1}{a}\\operatorname{arsech} \\frac{x}{a} + C。$$\n\n负号来自 $\\frac{d}{dx}\\operatorname{arsech} x = -\\frac{1}{x\\sqrt{1 - x^{2}}}$。",
       ),
       generate(rng) {
         const a = rng.int(4, 9);
@@ -927,8 +927,8 @@ export const integrationUsingInverseReciprocalHyperbolicFunctions: TopicDef = {
       id: "integrating-to-arcsch",
       title: t("Integrating to arcsch", "积分为 arcsch"),
       explanation: t(
-        "For $x > 0$,\n\n$$\\int \\frac{1}{x\\sqrt{a^{2} + x^{2}}} \\, dx = -\\frac{1}{a}\\operatorname{arcsch} \\frac{x}{a} + C.$$",
-        "当 $x > 0$ 时，\n\n$$\\int \\frac{1}{x\\sqrt{a^{2} + x^{2}}} \\, dx = -\\frac{1}{a}\\operatorname{arcsch} \\frac{x}{a} + C。$$",
+        "When the variable multiplies a root of a constant plus its square, the integral reverses the derivative of the inverse hyperbolic cosecant, which also carries a minus sign. For $x > 0$,\n\n$$\\int \\frac{1}{x\\sqrt{a^{2} + x^{2}}} \\, dx = -\\frac{1}{a}\\operatorname{arcsch} \\frac{x}{a} + C.$$",
+        "当变量乘以常数加其平方的平方根时，这个积分是反双曲余割求导的逆过程，同样带有负号。当 $x > 0$ 时，\n\n$$\\int \\frac{1}{x\\sqrt{a^{2} + x^{2}}} \\, dx = -\\frac{1}{a}\\operatorname{arcsch} \\frac{x}{a} + C。$$",
       ),
       generate(rng) {
         const a = rng.int(1, 9);

@@ -143,8 +143,8 @@ export const differentiatingLogarithmicFunctions: TopicDef = {
       id: "the-derivative-of-ln-x",
       title: t("The derivative of ln x", "ln x 的导数"),
       explanation: t(
-        "For $x > 0$,\n\n$$\\frac{d}{dx} \\ln x = \\frac{1}{x}.$$\n\nSo $\\frac{d}{dx}\\left(3\\ln x + x^{2}\\right) = \\frac{3}{x} + 2x$.",
-        "当 $x > 0$ 时，\n\n$$\\frac{d}{dx} \\ln x = \\frac{1}{x}.$$\n\n所以 $\\frac{d}{dx}\\left(3\\ln x + x^{2}\\right) = \\frac{3}{x} + 2x$。",
+        "The slope of the natural logarithm at any positive input is the reciprocal of that input, so the graph gets flatter as the input grows. For $x > 0$,\n\n$$\\frac{d}{dx} \\ln x = \\frac{1}{x}.$$\n\nSo $\\frac{d}{dx}\\left(3\\ln x + x^{2}\\right) = \\frac{3}{x} + 2x$.",
+        "自然对数在任意正数处的斜率都是该数的倒数，所以随着自变量增大，图像越来越平缓。当 $x > 0$ 时，\n\n$$\\frac{d}{dx} \\ln x = \\frac{1}{x}.$$\n\n所以 $\\frac{d}{dx}\\left(3\\ln x + x^{2}\\right) = \\frac{3}{x} + 2x$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-7, 7);
@@ -170,8 +170,8 @@ export const differentiatingLogarithmicFunctions: TopicDef = {
       id: "the-derivative-of-log-base-b-of-x",
       title: t("The derivative of a logarithm to base b", "以 b 为底的对数的导数"),
       explanation: t(
-        "By the change of base formula, $\\log_{b} x = \\frac{\\ln x}{\\ln b}$, and $\\ln b$ is a constant. So\n\n$$\\frac{d}{dx} \\log_{b} x = \\frac{1}{x\\ln b}.$$",
-        "由换底公式，$\\log_{b} x = \\frac{\\ln x}{\\ln b}$，而 $\\ln b$ 是常数。所以\n\n$$\\frac{d}{dx} \\log_{b} x = \\frac{1}{x\\ln b}.$$",
+        "A logarithm to any base is a constant multiple of the natural logarithm, so its derivative is the same reciprocal divided by the natural logarithm of the base. By the change of base formula, $\\log_{b} x = \\frac{\\ln x}{\\ln b}$, and $\\ln b$ is a constant. So\n\n$$\\frac{d}{dx} \\log_{b} x = \\frac{1}{x\\ln b}.$$",
+        "任意底数的对数都是自然对数的常数倍，所以它的导数是同样的倒数再除以底数的自然对数。由换底公式，$\\log_{b} x = \\frac{\\ln x}{\\ln b}$，而 $\\ln b$ 是常数。所以\n\n$$\\frac{d}{dx} \\log_{b} x = \\frac{1}{x\\ln b}.$$",
       ),
       generate(rng) {
         const b = rng.pick([2, 3, 4, 5, 7, 10]);
@@ -286,8 +286,8 @@ export const differentiatingTrigonometricFunctions: TopicDef = {
       id: "slopes-of-trigonometric-curves",
       title: t("Slopes of trigonometric curves", "三角函数曲线的斜率"),
       explanation: t(
-        "Differentiate, then substitute the angle. For $y = 3\\sin x - 2\\cos x$ at $x = \\pi$: $y' = 3\\cos x + 2\\sin x$, so the slope is $3(-1) + 2(0) = -3$.",
-        "先求导，再代入角度。对 $y = 3\\sin x - 2\\cos x$ 在 $x = \\pi$ 处：$y' = 3\\cos x + 2\\sin x$，所以斜率为 $3(-1) + 2(0) = -3$。",
+        "The slope of a curve at a point is the value of the derivative there, so find the derivative first and then substitute the exact values at the angle. Differentiate, then substitute the angle. For $y = 3\\sin x - 2\\cos x$ at $x = \\pi$: $y' = 3\\cos x + 2\\sin x$, so the slope is $3(-1) + 2(0) = -3$.",
+        "曲线在一点处的斜率就是该点的导数值，所以先求导，再代入该角的精确三角函数值。先求导，再代入角度。对 $y = 3\\sin x - 2\\cos x$ 在 $x = \\pi$ 处：$y' = 3\\cos x + 2\\sin x$，所以斜率为 $3(-1) + 2(0) = -3$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-6, 6);
@@ -335,8 +335,8 @@ export const differentiatingHyperbolicFunctions: TopicDef = {
       id: "derivatives-of-sinh-cosh-and-tanh",
       title: t("Derivatives of sinh, cosh and tanh", "sinh、cosh、tanh 的导数"),
       explanation: t(
-        "Differentiating $\\sinh x = \\frac{e^{x} - e^{-x}}{2}$ and $\\cosh x = \\frac{e^{x} + e^{-x}}{2}$ gives\n\n$$\\frac{d}{dx} \\sinh x = \\cosh x, \\qquad \\frac{d}{dx} \\cosh x = \\sinh x, \\qquad \\frac{d}{dx} \\tanh x = \\operatorname{sech}^{2}x.$$\n\nUnlike cosine, the derivative of $\\cosh x$ has **no** minus sign.",
-        "对 $\\sinh x = \\frac{e^{x} - e^{-x}}{2}$ 和 $\\cosh x = \\frac{e^{x} + e^{-x}}{2}$ 求导，得\n\n$$\\frac{d}{dx} \\sinh x = \\cosh x, \\qquad \\frac{d}{dx} \\cosh x = \\sinh x, \\qquad \\frac{d}{dx} \\tanh x = \\operatorname{sech}^{2}x.$$\n\n与余弦不同，$\\cosh x$ 的导数**没有**负号。",
+        "Differentiating the exponential definitions shows that hyperbolic sine and cosine are each other's derivatives, with no minus sign, unlike sine and cosine. Differentiating $\\sinh x = \\frac{e^{x} - e^{-x}}{2}$ and $\\cosh x = \\frac{e^{x} + e^{-x}}{2}$ gives\n\n$$\\frac{d}{dx} \\sinh x = \\cosh x, \\qquad \\frac{d}{dx} \\cosh x = \\sinh x, \\qquad \\frac{d}{dx} \\tanh x = \\operatorname{sech}^{2}x.$$\n\nUnlike cosine, the derivative of $\\cosh x$ has **no** minus sign.",
+        "对指数定义求导可以看出，双曲正弦和双曲余弦互为导数，而且不像正弦和余弦那样出现负号。对 $\\sinh x = \\frac{e^{x} - e^{-x}}{2}$ 和 $\\cosh x = \\frac{e^{x} + e^{-x}}{2}$ 求导，得\n\n$$\\frac{d}{dx} \\sinh x = \\cosh x, \\qquad \\frac{d}{dx} \\cosh x = \\sinh x, \\qquad \\frac{d}{dx} \\tanh x = \\operatorname{sech}^{2}x.$$\n\n与余弦不同，$\\cosh x$ 的导数**没有**负号。",
       ),
       generate(rng) {
         const rules = rng.sample(hyperbolicRules, 2);
@@ -360,8 +360,8 @@ export const differentiatingHyperbolicFunctions: TopicDef = {
       id: "evaluating-derivatives-of-hyperbolic-functions",
       title: t("Evaluating derivatives of hyperbolic functions", "计算双曲函数的导数值"),
       explanation: t(
-        "At $x = 0$: $\\sinh 0 = 0$ and $\\cosh 0 = 1$. At $x = \\ln 2$: $\\sinh(\\ln 2) = \\frac{2 - \\frac{1}{2}}{2} = \\frac{3}{4}$ and $\\cosh(\\ln 2) = \\frac{2 + \\frac{1}{2}}{2} = \\frac{5}{4}$.",
-        "在 $x = 0$ 处：$\\sinh 0 = 0$，$\\cosh 0 = 1$。在 $x = \\ln 2$ 处：$\\sinh(\\ln 2) = \\frac{2 - \\frac{1}{2}}{2} = \\frac{3}{4}$，$\\cosh(\\ln 2) = \\frac{2 + \\frac{1}{2}}{2} = \\frac{5}{4}$。",
+        "Find the derivative first, then evaluate the hyperbolic functions at the point by substituting into their exponential definitions. At $x = 0$: $\\sinh 0 = 0$ and $\\cosh 0 = 1$. At $x = \\ln 2$: $\\sinh(\\ln 2) = \\frac{2 - \\frac{1}{2}}{2} = \\frac{3}{4}$ and $\\cosh(\\ln 2) = \\frac{2 + \\frac{1}{2}}{2} = \\frac{5}{4}$.",
+        "先求导，再把该点代入双曲函数的指数定义中求值。在 $x = 0$ 处：$\\sinh 0 = 0$，$\\cosh 0 = 1$。在 $x = \\ln 2$ 处：$\\sinh(\\ln 2) = \\frac{2 - \\frac{1}{2}}{2} = \\frac{3}{4}$，$\\cosh(\\ln 2) = \\frac{2 + \\frac{1}{2}}{2} = \\frac{5}{4}$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-8, 8);
@@ -418,8 +418,8 @@ export const differentiatingReciprocalHyperbolicFunctions: TopicDef = {
       id: "derivatives-of-sech-csch-and-coth",
       title: t("Derivatives of sech, csch and coth", "sech、csch、coth 的导数"),
       explanation: t(
-        "$$\\frac{d}{dx} \\operatorname{sech} x = -\\operatorname{sech} x\\tanh x, \\qquad \\frac{d}{dx} \\operatorname{csch} x = -\\operatorname{csch} x\\coth x, \\qquad \\frac{d}{dx} \\coth x = -\\operatorname{csch}^{2}x.$$\n\nCompare $\\frac{d}{dx} \\sec x = \\sec x\\tan x$: the hyperbolic secant's derivative carries a minus sign.",
-        "$$\\frac{d}{dx} \\operatorname{sech} x = -\\operatorname{sech} x\\tanh x, \\qquad \\frac{d}{dx} \\operatorname{csch} x = -\\operatorname{csch} x\\coth x, \\qquad \\frac{d}{dx} \\coth x = -\\operatorname{csch}^{2}x.$$\n\n对比 $\\frac{d}{dx} \\sec x = \\sec x\\tan x$：双曲正割的导数带负号。",
+        "These follow from the quotient rule applied to reciprocals, and their pattern resembles the derivatives of secant, cosecant and cotangent, with some signs changed. $$\\frac{d}{dx} \\operatorname{sech} x = -\\operatorname{sech} x\\tanh x, \\qquad \\frac{d}{dx} \\operatorname{csch} x = -\\operatorname{csch} x\\coth x, \\qquad \\frac{d}{dx} \\coth x = -\\operatorname{csch}^{2}x.$$\n\nCompare $\\frac{d}{dx} \\sec x = \\sec x\\tan x$: the hyperbolic secant's derivative carries a minus sign.",
+        "这些公式来自对倒数使用商法则，它们的形式与正割、余割和余切的导数相似，只是有些符号不同。$$\\frac{d}{dx} \\operatorname{sech} x = -\\operatorname{sech} x\\tanh x, \\qquad \\frac{d}{dx} \\operatorname{csch} x = -\\operatorname{csch} x\\coth x, \\qquad \\frac{d}{dx} \\coth x = -\\operatorname{csch}^{2}x.$$\n\n对比 $\\frac{d}{dx} \\sec x = \\sec x\\tan x$：双曲正割的导数带负号。",
       ),
       generate(rng) {
         const r = rng.pick(reciprocalHyperbolicRules);
@@ -441,8 +441,8 @@ export const differentiatingReciprocalHyperbolicFunctions: TopicDef = {
       id: "sums-of-hyperbolic-functions",
       title: t("Sums of hyperbolic functions", "双曲函数之和"),
       explanation: t(
-        "Differentiate a sum term by term with the rules for all six hyperbolic functions:\n\n$$\\frac{d}{dx}\\left(2\\cosh x - \\coth x\\right) = 2\\sinh x + \\operatorname{csch}^{2}x.$$",
-        "用六个双曲函数的求导法则对和式逐项求导：\n\n$$\\frac{d}{dx}\\left(2\\cosh x - \\coth x\\right) = 2\\sinh x + \\operatorname{csch}^{2}x.$$",
+        "Just as with any other functions, a sum of hyperbolic functions is differentiated one term at a time, keeping the constant multiples. Differentiate a sum term by term with the rules for all six hyperbolic functions:\n\n$$\\frac{d}{dx}\\left(2\\cosh x - \\coth x\\right) = 2\\sinh x + \\operatorname{csch}^{2}x.$$",
+        "与其他函数一样，双曲函数的和可以逐项求导，并保留常数倍数。用六个双曲函数的求导法则对和式逐项求导：\n\n$$\\frac{d}{dx}\\left(2\\cosh x - \\coth x\\right) = 2\\sinh x + \\operatorname{csch}^{2}x.$$",
       ),
       generate(rng) {
         const r1 = rng.pick(reciprocalHyperbolicRules);
@@ -512,8 +512,8 @@ export const secondAndHigherOrderDerivatives: TopicDef = {
       id: "second-derivatives-of-polynomials",
       title: t("Second derivatives of polynomials", "多项式的二阶导数"),
       explanation: t(
-        "The **second derivative** $f''$ is the derivative of $f'$, also written $\\frac{d^{2}y}{dx^{2}}$. For $f(x) = x^{4} - 3x^{2}$: $f'(x) = 4x^{3} - 6x$ and $f''(x) = 12x^{2} - 6$.",
-        "**二阶导数** $f''$ 是 $f'$ 的导数，也记作 $\\frac{d^{2}y}{dx^{2}}$。对 $f(x) = x^{4} - 3x^{2}$：$f'(x) = 4x^{3} - 6x$，$f''(x) = 12x^{2} - 6$。",
+        "Differentiating twice measures how the slope itself changes, and for a polynomial you simply apply the power rule a second time. The **second derivative** $f''$ is the derivative of $f'$, also written $\\frac{d^{2}y}{dx^{2}}$. For $f(x) = x^{4} - 3x^{2}$: $f'(x) = 4x^{3} - 6x$ and $f''(x) = 12x^{2} - 6$.",
+        "求两次导数衡量的是斜率本身怎样变化，对多项式只需再用一次幂法则。**二阶导数** $f''$ 是 $f'$ 的导数，也记作 $\\frac{d^{2}y}{dx^{2}}$。对 $f(x) = x^{4} - 3x^{2}$：$f'(x) = 4x^{3} - 6x$，$f''(x) = 12x^{2} - 6$。",
       ),
       generate(rng) {
         const deg = rng.int(3, 5);
@@ -574,8 +574,8 @@ export const secondAndHigherOrderDerivatives: TopicDef = {
       id: "acceleration-as-a-second-derivative",
       title: t("Acceleration as a second derivative", "加速度作为二阶导数"),
       explanation: t(
-        "For a position $s(t)$, the velocity is $v(t) = s'(t)$ and the **acceleration** is $a(t) = v'(t) = s''(t)$.",
-        "对位置函数 $s(t)$，速度为 $v(t) = s'(t)$，**加速度**为 $a(t) = v'(t) = s''(t)$。",
+        "Velocity is the rate of change of position and acceleration is the rate of change of velocity, so differentiating position twice gives acceleration. For a position $s(t)$, the velocity is $v(t) = s'(t)$ and the **acceleration** is $a(t) = v'(t) = s''(t)$.",
+        "速度是位置的变化率，加速度是速度的变化率，所以对位置求两次导数就得到加速度。对位置函数 $s(t)$，速度为 $v(t) = s'(t)$，**加速度**为 $a(t) = v'(t) = s''(t)$。",
       ),
       generate(rng) {
         const p: Poly = [rng.int(0, 9), rng.int(-9, 9), rng.int(-6, 6), rng.nonZero(-2, 2)];
@@ -669,8 +669,8 @@ export const theProductRuleForDifferentiation: TopicDef = {
       id: "the-product-rule-at-a-point",
       title: t("The product rule at a point", "某点处的乘积法则"),
       explanation: t(
-        "To find $(uv)'(a)$, evaluate $u(a)$, $u'(a)$, $v(a)$ and $v'(a)$, then combine: $(uv)'(a) = u'(a)v(a) + u(a)v'(a)$. There is no need to expand the product.",
-        "求 $(uv)'(a)$ 时，先求 $u(a)$、$u'(a)$、$v(a)$、$v'(a)$，再组合：$(uv)'(a) = u'(a)v(a) + u(a)v'(a)$。不必把乘积展开。",
+        "The derivative of a product is not the product of the derivatives; each factor takes a turn being differentiated while the other stays as it is. To find $(uv)'(a)$, evaluate $u(a)$, $u'(a)$, $v(a)$ and $v'(a)$, then combine: $(uv)'(a) = u'(a)v(a) + u(a)v'(a)$. There is no need to expand the product.",
+        "积的导数不等于导数的积；两个因子轮流被求导，另一个保持不变。求 $(uv)'(a)$ 时，先求 $u(a)$、$u'(a)$、$v(a)$、$v'(a)$，再组合：$(uv)'(a) = u'(a)v(a) + u(a)v'(a)$。不必把乘积展开。",
       ),
       generate(rng) {
         const u: Poly = [rng.int(-6, 6), rng.nonZero(-4, 4)];
@@ -709,8 +709,8 @@ export const theQuotientRuleForDifferentiation: TopicDef = {
       id: "the-quotient-rule-for-rational-functions",
       title: t("The quotient rule for rational functions", "有理函数的商法则"),
       explanation: t(
-        "**Quotient rule.**\n\n$$\\left(\\frac{u}{v}\\right)' = \\frac{u'v - uv'}{v^{2}}.$$\n\nThe order in the numerator matters. For $\\frac{2x + 1}{x - 3}$: $\\frac{2(x - 3) - (2x + 1)(1)}{(x - 3)^{2}} = \\frac{-7}{(x - 3)^{2}}$.",
-        "**商法则**\n\n$$\\left(\\frac{u}{v}\\right)' = \\frac{u'v - uv'}{v^{2}}.$$\n\n分子中的顺序很重要。对 $\\frac{2x + 1}{x - 3}$：$\\frac{2(x - 3) - (2x + 1)(1)}{(x - 3)^{2}} = \\frac{-7}{(x - 3)^{2}}$。",
+        "In the quotient rule, the derivative of the top comes first in the numerator and the whole result is divided by the square of the bottom. **Quotient rule.**\n\n$$\\left(\\frac{u}{v}\\right)' = \\frac{u'v - uv'}{v^{2}}.$$\n\nThe order in the numerator matters. For $\\frac{2x + 1}{x - 3}$: $\\frac{2(x - 3) - (2x + 1)(1)}{(x - 3)^{2}} = \\frac{-7}{(x - 3)^{2}}$.",
+        "在商法则中，分子里先写分子函数的导数，整个结果除以分母函数的平方。**商法则**\n\n$$\\left(\\frac{u}{v}\\right)' = \\frac{u'v - uv'}{v^{2}}.$$\n\n分子中的顺序很重要。对 $\\frac{2x + 1}{x - 3}$：$\\frac{2(x - 3) - (2x + 1)(1)}{(x - 3)^{2}} = \\frac{-7}{(x - 3)^{2}}$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-5, 5);
@@ -739,8 +739,8 @@ export const theQuotientRuleForDifferentiation: TopicDef = {
       id: "the-quotient-rule-with-other-functions",
       title: t("The quotient rule with other functions", "含其他函数的商法则"),
       explanation: t(
-        "For $\\frac{e^{x}}{x^{2}}$: $\\frac{e^{x} \\cdot x^{2} - e^{x} \\cdot 2x}{x^{4}} = \\frac{xe^{x} - 2e^{x}}{x^{3}}$, after cancelling a factor $x$. Simplify by cancelling common powers of $x$.",
-        "对 $\\frac{e^{x}}{x^{2}}$：$\\frac{e^{x} \\cdot x^{2} - e^{x} \\cdot 2x}{x^{4}} = \\frac{xe^{x} - 2e^{x}}{x^{3}}$（约去一个因子 $x$）。化简时约去公共的 $x$ 的幂。",
+        "The quotient rule works for any differentiable functions, and the result can often be simplified by cancelling a common factor from the top and bottom. For $\\frac{e^{x}}{x^{2}}$: $\\frac{e^{x} \\cdot x^{2} - e^{x} \\cdot 2x}{x^{4}} = \\frac{xe^{x} - 2e^{x}}{x^{3}}$, after cancelling a factor $x$. Simplify by cancelling common powers of $x$.",
+        "商法则适用于任意可导函数，结果常常可以通过约去分子和分母的公因式来化简。对 $\\frac{e^{x}}{x^{2}}$：$\\frac{e^{x} \\cdot x^{2} - e^{x} \\cdot 2x}{x^{4}} = \\frac{xe^{x} - 2e^{x}}{x^{3}}$（约去一个因子 $x$）。化简时约去公共的 $x$ 的幂。",
       ),
       generate(rng) {
         const g = rng.pick(factors);
@@ -802,8 +802,8 @@ export const differentiatingReciprocalTrigonometricFunctions: TopicDef = {
       id: "derivatives-of-secant-cosecant-and-cotangent",
       title: t("Derivatives of secant, cosecant and cotangent", "正割、余割、余切的导数"),
       explanation: t(
-        'Applying the quotient rule to $\\frac{1}{\\cos x}$, $\\frac{1}{\\sin x}$ and $\\frac{\\cos x}{\\sin x}$ gives\n\n$$\\frac{d}{dx} \\sec x = \\sec x\\tan x, \\qquad \\frac{d}{dx} \\csc x = -\\csc x\\cot x, \\qquad \\frac{d}{dx} \\cot x = -\\csc^{2}x.$$\n\nThe "co" functions have minus signs.',
-        "对 $\\frac{1}{\\cos x}$、$\\frac{1}{\\sin x}$、$\\frac{\\cos x}{\\sin x}$ 用商法则，得\n\n$$\\frac{d}{dx} \\sec x = \\sec x\\tan x, \\qquad \\frac{d}{dx} \\csc x = -\\csc x\\cot x, \\qquad \\frac{d}{dx} \\cot x = -\\csc^{2}x.$$\n\n带“余”字的函数，导数带负号。",
+        'Applying the quotient rule to $\\frac{1}{\\cos x}$, $\\frac{1}{\\sin x}$ and $\\frac{\\cos x}{\\sin x}$ gives\n\n$$\\frac{d}{dx} \\sec x = \\sec x\\tan x, \\qquad \\frac{d}{dx} \\csc x = -\\csc x\\cot x, \\qquad \\frac{d}{dx} \\cot x = -\\csc^{2}x.$$\n\nThe "These derivatives come from writing each function as a quotient of sine and cosine, and the ones whose names start with co carry a minus sign. co" functions have minus signs.',
+        "把每个函数写成正弦与余弦之商就能得到这些导数，名字以“余”开头的函数导数带负号。对 $\\frac{1}{\\cos x}$、$\\frac{1}{\\sin x}$、$\\frac{\\cos x}{\\sin x}$ 用商法则，得\n\n$$\\frac{d}{dx} \\sec x = \\sec x\\tan x, \\qquad \\frac{d}{dx} \\csc x = -\\csc x\\cot x, \\qquad \\frac{d}{dx} \\cot x = -\\csc^{2}x.$$\n\n带“余”字的函数，导数带负号。",
       ),
       generate(rng) {
         const r1 = rng.pick(reciprocalTrigRules);
@@ -826,8 +826,8 @@ export const differentiatingReciprocalTrigonometricFunctions: TopicDef = {
       id: "quotients-of-trigonometric-functions",
       title: t("Quotients of trigonometric functions", "三角函数之商"),
       explanation: t(
-        "Use the quotient rule, then simplify with $\\sin^{2}x + \\cos^{2}x = 1$. For $\\frac{2 + \\sin x}{\\cos x}$:\n\n$$\\frac{\\cos x \\cdot \\cos x - (2 + \\sin x)(-\\sin x)}{\\cos^{2}x} = \\frac{1 + 2\\sin x}{\\cos^{2}x}.$$",
-        "先用商法则，再用 $\\sin^{2}x + \\cos^{2}x = 1$ 化简。对 $\\frac{2 + \\sin x}{\\cos x}$：\n\n$$\\frac{\\cos x \\cdot \\cos x - (2 + \\sin x)(-\\sin x)}{\\cos^{2}x} = \\frac{1 + 2\\sin x}{\\cos^{2}x}.$$",
+        "After applying the quotient rule, look for the sum of squares of sine and cosine in the numerator, since replacing it by one usually simplifies the answer. Use the quotient rule, then simplify with $\\sin^{2}x + \\cos^{2}x = 1$. For $\\frac{2 + \\sin x}{\\cos x}$:\n\n$$\\frac{\\cos x \\cdot \\cos x - (2 + \\sin x)(-\\sin x)}{\\cos^{2}x} = \\frac{1 + 2\\sin x}{\\cos^{2}x}.$$",
+        "使用商法则后，在分子中寻找正弦与余弦的平方和，把它换成 1 通常能化简答案。先用商法则，再用 $\\sin^{2}x + \\cos^{2}x = 1$ 化简。对 $\\frac{2 + \\sin x}{\\cos x}$：\n\n$$\\frac{\\cos x \\cdot \\cos x - (2 + \\sin x)(-\\sin x)}{\\cos^{2}x} = \\frac{1 + 2\\sin x}{\\cos^{2}x}.$$",
       ),
       generate(rng) {
         const a = rng.nonZero(-5, 5);
@@ -877,8 +877,8 @@ export const calculatingDerivativesFromDataAndTables: TopicDef = {
       id: "combining-derivatives-from-a-table",
       title: t("Combining derivatives from a table", "由表格组合导数"),
       explanation: t(
-        "When only values of $f$, $f'$, $g$ and $g'$ are known, apply the rules at the point:\n\n$$(fg)'(a) = f'(a)g(a) + f(a)g'(a), \\qquad \\left(\\frac{f}{g}\\right)'(a) = \\frac{f'(a)g(a) - f(a)g'(a)}{g(a)^{2}}.$$",
-        "当只知道 $f$、$f'$、$g$、$g'$ 的值时，在该点处应用求导法则：\n\n$$(fg)'(a) = f'(a)g(a) + f(a)g'(a), \\qquad \\left(\\frac{f}{g}\\right)'(a) = \\frac{f'(a)g(a) - f(a)g'(a)}{g(a)^{2}}.$$",
+        "You do not need formulas for the functions themselves: the rules only use the values of the functions and their derivatives at the one point. When only values of $f$, $f'$, $g$ and $g'$ are known, apply the rules at the point:\n\n$$(fg)'(a) = f'(a)g(a) + f(a)g'(a), \\qquad \\left(\\frac{f}{g}\\right)'(a) = \\frac{f'(a)g(a) - f(a)g'(a)}{g(a)^{2}}.$$",
+        "不需要知道函数本身的公式：这些法则只用到函数及其导数在这一点处的值。当只知道 $f$、$f'$、$g$、$g'$ 的值时，在该点处应用求导法则：\n\n$$(fg)'(a) = f'(a)g(a) + f(a)g'(a), \\qquad \\left(\\frac{f}{g}\\right)'(a) = \\frac{f'(a)g(a) - f(a)g'(a)}{g(a)^{2}}.$$",
       ),
       generate(rng) {
         const xs = [1, 2, 3];
@@ -1055,8 +1055,8 @@ export const calculatingDerivativesFromGraphs: TopicDef = {
       id: "derivatives-of-products-from-a-graph",
       title: t("Derivatives of products from a graph", "由图像求乘积的导数"),
       explanation: t(
-        "Read $f(a)$ and $f'(a)$ from the graph, then apply the rules. For $h(x) = x^{2}f(x)$:\n\n$$h'(a) = 2af(a) + a^{2}f'(a).$$",
-        "从图像读出 $f(a)$ 和 $f'(a)$，再应用求导法则。对 $h(x) = x^{2}f(x)$：\n\n$$h'(a) = 2af(a) + a^{2}f'(a).$$",
+        "A graph gives the value of a function by its height and the derivative by the slope of the tangent, which is often read from a straight segment. Read $f(a)$ and $f'(a)$ from the graph, then apply the rules. For $h(x) = x^{2}f(x)$:\n\n$$h'(a) = 2af(a) + a^{2}f'(a).$$",
+        "图像以高度给出函数值，以切线的斜率给出导数，后者常可以从一段直线读出。从图像读出 $f(a)$ 和 $f'(a)$，再应用求导法则。对 $h(x) = x^{2}f(x)$：\n\n$$h'(a) = 2af(a) + a^{2}f'(a).$$",
       ),
       generate(rng) {
         const ys = polyline(rng);
@@ -1168,8 +1168,8 @@ export const recognizingDerivativesInLimits: TopicDef = {
       id: "limits-that-are-derivatives-of-powers",
       title: t("Limits that are derivatives of powers", "幂函数导数形式的极限"),
       explanation: t(
-        "Both\n\n$$\\lim_{h \\to 0} \\frac{f(a + h) - f(a)}{h} \\quad\\text{and}\\quad \\lim_{x \\to a} \\frac{f(x) - f(a)}{x - a}$$\n\nequal $f'(a)$. So $\\lim_{h \\to 0} \\frac{(2 + h)^{5} - 32}{h}$ is the derivative of $x^{5}$ at $2$: $5 \\cdot 2^{4} = 80$, with no expanding needed.",
-        "下面两个极限\n\n$$\\lim_{h \\to 0} \\frac{f(a + h) - f(a)}{h} \\quad\\text{和}\\quad \\lim_{x \\to a} \\frac{f(x) - f(a)}{x - a}$$\n\n都等于 $f'(a)$。所以 $\\lim_{h \\to 0} \\frac{(2 + h)^{5} - 32}{h}$ 就是 $x^{5}$ 在 $2$ 处的导数：$5 \\cdot 2^{4} = 80$，不必展开。",
+        "Recognizing a limit as the definition of a derivative lets you evaluate it with the derivative rules instead of algebra. Both\n\n$$\\lim_{h \\to 0} \\frac{f(a + h) - f(a)}{h} \\quad\\text{and}\\quad \\lim_{x \\to a} \\frac{f(x) - f(a)}{x - a}$$\n\nequal $f'(a)$. So $\\lim_{h \\to 0} \\frac{(2 + h)^{5} - 32}{h}$ is the derivative of $x^{5}$ at $2$: $5 \\cdot 2^{4} = 80$, with no expanding needed.",
+        "认出一个极限就是导数的定义后，就可以用求导法则而不是代数运算来计算它。下面两个极限\n\n$$\\lim_{h \\to 0} \\frac{f(a + h) - f(a)}{h} \\quad\\text{和}\\quad \\lim_{x \\to a} \\frac{f(x) - f(a)}{x - a}$$\n\n都等于 $f'(a)$。所以 $\\lim_{h \\to 0} \\frac{(2 + h)^{5} - 32}{h}$ 就是 $x^{5}$ 在 $2$ 处的导数：$5 \\cdot 2^{4} = 80$，不必展开。",
       ),
       generate(rng) {
         const n = rng.int(3, 8);

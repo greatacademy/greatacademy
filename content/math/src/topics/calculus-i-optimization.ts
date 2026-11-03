@@ -324,8 +324,8 @@ export const optimizationProblemsInvolvingCylinders: TopicDef = {
       id: "open-cylinders",
       title: t("Open cylinders", "无盖圆柱"),
       explanation: t(
-        "Without a lid, $S(r) = \\pi r^{2} + 2\\pi r h = \\pi r^{2} + \\frac{2V}{r}$. $S'(r) = 2\\pi r - \\frac{2V}{r^{2}} = 0$ when $r^{3} = \\frac{V}{\\pi}$, and then $h = r$.",
-        "无盖时，$S(r) = \\pi r^{2} + 2\\pi r h = \\pi r^{2} + \\frac{2V}{r}$。$S'(r) = 2\\pi r - \\frac{2V}{r^{2}} = 0$ 时 $r^{3} = \\frac{V}{\\pi}$，此时 $h = r$。",
+        "Use the fixed volume to write the height in terms of the radius, so the surface area becomes a function of one variable that you can minimize. Without a lid, $S(r) = \\pi r^{2} + 2\\pi r h = \\pi r^{2} + \\frac{2V}{r}$. $S'(r) = 2\\pi r - \\frac{2V}{r^{2}} = 0$ when $r^{3} = \\frac{V}{\\pi}$, and then $h = r$.",
+        "用固定的体积把高表示为半径的函数，这样表面积就成了一个变量的函数，可以求它的最小值。无盖时，$S(r) = \\pi r^{2} + 2\\pi r h = \\pi r^{2} + \\frac{2V}{r}$。$S'(r) = 2\\pi r - \\frac{2V}{r^{2}} = 0$ 时 $r^{3} = \\frac{V}{\\pi}$，此时 $h = r$。",
       ),
       generate(rng) {
         const r = rng.int(1, 15);
@@ -649,8 +649,8 @@ export const optimizationProblemsInEconomics: TopicDef = {
       id: "minimizing-average-cost",
       title: t("Minimizing average cost", "平均成本最小化"),
       explanation: t(
-        "The average cost per item is $\\bar{C}(q) = \\frac{C(q)}{q}$. For $C(q) = F + cq + kq^{2}$, $\\bar{C}(q) = \\frac{F}{q} + c + kq$, and $\\bar{C}'(q) = -\\frac{F}{q^{2}} + k = 0$ at $q = \\sqrt{\\frac{F}{k}}$.",
-        "每件的平均成本为 $\\bar{C}(q) = \\frac{C(q)}{q}$。对 $C(q) = F + cq + kq^{2}$，$\\bar{C}(q) = \\frac{F}{q} + c + kq$，$\\bar{C}'(q) = -\\frac{F}{q^{2}} + k = 0$ 于 $q = \\sqrt{\\frac{F}{k}}$。",
+        "Dividing total cost by quantity spreads the fixed cost over more items, and the minimum average cost occurs where its derivative is zero. The average cost per item is $\\bar{C}(q) = \\frac{C(q)}{q}$. For $C(q) = F + cq + kq^{2}$, $\\bar{C}(q) = \\frac{F}{q} + c + kq$, and $\\bar{C}'(q) = -\\frac{F}{q^{2}} + k = 0$ at $q = \\sqrt{\\frac{F}{k}}$.",
+        "用总成本除以数量会把固定成本分摊到更多的产品上，平均成本的最小值出现在它的导数为零处。每件的平均成本为 $\\bar{C}(q) = \\frac{C(q)}{q}$。对 $C(q) = F + cq + kq^{2}$，$\\bar{C}(q) = \\frac{F}{q} + c + kq$，$\\bar{C}'(q) = -\\frac{F}{q^{2}} + k = 0$ 于 $q = \\sqrt{\\frac{F}{k}}$。",
       ),
       generate(rng) {
         const k = rng.int(1, 5);
@@ -701,8 +701,8 @@ export const newtonsMethod: TopicDef = {
       id: "one-step-of-newtons-method",
       title: t("One step of Newton's method", "牛顿法的一步"),
       explanation: t(
-        "To solve $f(x) = 0$ from a guess $x_{0}$, follow the tangent line at $x_{0}$ to the $x$-axis:\n\n$$x_{1} = x_{0} - \\frac{f(x_{0})}{f'(x_{0})}.$$",
-        "从初始猜测 $x_{0}$ 出发解 $f(x) = 0$ 时，沿 $x_{0}$ 处的切线走到 $x$ 轴：\n\n$$x_{1} = x_{0} - \\frac{f(x_{0})}{f'(x_{0})}。$$",
+        "Each step replaces the curve by its tangent line and finds where that line crosses the axis, which is usually much closer to the true root. To solve $f(x) = 0$ from a guess $x_{0}$, follow the tangent line at $x_{0}$ to the $x$-axis:\n\n$$x_{1} = x_{0} - \\frac{f(x_{0})}{f'(x_{0})}.$$",
+        "每一步都用切线代替曲线，并求出切线与坐标轴的交点，这个点通常离真正的根近得多。从初始猜测 $x_{0}$ 出发解 $f(x) = 0$ 时，沿 $x_{0}$ 处的切线走到 $x$ 轴：\n\n$$x_{1} = x_{0} - \\frac{f(x_{0})}{f'(x_{0})}。$$",
       ),
       generate(rng) {
         for (;;) {
@@ -813,8 +813,8 @@ export const newtonsMethodForOptimizingSingleVariableFunctions: TopicDef = {
       id: "newton-steps-for-transcendental-functions",
       title: t("Newton steps for other functions", "其他函数的牛顿步"),
       explanation: t(
-        "The same step works for any twice-differentiable function. For $f(x) = x^{2} + \\frac{k}{x}$: $f'(x) = 2x - \\frac{k}{x^{2}}$ and $f''(x) = 2 + \\frac{2k}{x^{3}}$.",
-        "同样的迭代适用于任何二阶可导函数。对 $f(x) = x^{2} + \\frac{k}{x}$：$f'(x) = 2x - \\frac{k}{x^{2}}$，$f''(x) = 2 + \\frac{2k}{x^{3}}$。",
+        "The method needs only the value and the derivative of the function at the current guess, so it works just as well for functions that are not polynomials. The same step works for any twice-differentiable function. For $f(x) = x^{2} + \\frac{k}{x}$: $f'(x) = 2x - \\frac{k}{x^{2}}$ and $f''(x) = 2 + \\frac{2k}{x^{3}}$.",
+        "这个方法只需要函数在当前估计值处的值和导数，所以对非多项式函数同样适用。同样的迭代适用于任何二阶可导函数。对 $f(x) = x^{2} + \\frac{k}{x}$：$f'(x) = 2x - \\frac{k}{x^{2}}$，$f''(x) = 2 + \\frac{2k}{x^{3}}$。",
       ),
       generate(rng) {
         for (;;) {

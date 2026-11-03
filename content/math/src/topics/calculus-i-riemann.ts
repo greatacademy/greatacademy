@@ -342,8 +342,8 @@ export const leftAndRightRiemannSumsInSigmaNotation: TopicDef = {
       id: "writing-left-and-right-sums",
       title: t("Writing left and right sums", "写出左、右黎曼和"),
       explanation: t(
-        "The endpoints are $x_{i} = a + i\\Delta x$. The left sum uses $i = 0$ to $n - 1$ and the right sum $i = 1$ to $n$:\n\n$$L_{n} = \\sum_{i = 0}^{n - 1} f(a + i\\Delta x)\\Delta x, \\qquad R_{n} = \\sum_{i = 1}^{n} f(a + i\\Delta x)\\Delta x.$$",
-        "端点为 $x_{i} = a + i\\Delta x$。左黎曼和取 $i = 0$ 到 $n - 1$，右黎曼和取 $i = 1$ 到 $n$：\n\n$$L_{n} = \\sum_{i = 0}^{n - 1} f(a + i\\Delta x)\\Delta x, \\qquad R_{n} = \\sum_{i = 1}^{n} f(a + i\\Delta x)\\Delta x。$$",
+        "Divide the interval into equal widths, then add up the areas of rectangles whose heights are taken at the left or right end of each piece. The endpoints are $x_{i} = a + i\\Delta x$. The left sum uses $i = 0$ to $n - 1$ and the right sum $i = 1$ to $n$:\n\n$$L_{n} = \\sum_{i = 0}^{n - 1} f(a + i\\Delta x)\\Delta x, \\qquad R_{n} = \\sum_{i = 1}^{n} f(a + i\\Delta x)\\Delta x.$$",
+        "把区间分成等宽的小段，再把高度取在每段左端或右端的矩形面积加起来。端点为 $x_{i} = a + i\\Delta x$。左黎曼和取 $i = 0$ 到 $n - 1$，右黎曼和取 $i = 1$ 到 $n$：\n\n$$L_{n} = \\sum_{i = 0}^{n - 1} f(a + i\\Delta x)\\Delta x, \\qquad R_{n} = \\sum_{i = 1}^{n} f(a + i\\Delta x)\\Delta x。$$",
       ),
       generate(rng) {
         const g = { ...grid(rng, 4, 10) };
@@ -456,8 +456,8 @@ export const midpointAndTrapezoidalRulesInSigmaNotation: TopicDef = {
       id: "the-trapezoidal-rule-in-sigma-notation",
       title: t("The trapezoidal rule in sigma notation", "用求和符号表示梯形法则"),
       explanation: t(
-        "The inner endpoints $x_{1}, \\ldots, x_{n - 1}$ count twice and the ends once:\n\n$$T_{n} = \\frac{\\Delta x}{2}\\left[f(a) + 2\\sum_{i = 1}^{n - 1} f(a + i\\Delta x) + f(b)\\right].$$",
-        "内部端点 $x_{1}, \\ldots, x_{n - 1}$ 各算两次，两端各算一次：\n\n$$T_{n} = \\frac{\\Delta x}{2}\\left[f(a) + 2\\sum_{i = 1}^{n - 1} f(a + i\\Delta x) + f(b)\\right]。$$",
+        "Each trapezoid averages the heights at its two ends, so every inner point is shared by two trapezoids and counted twice. The inner endpoints $x_{1}, \\ldots, x_{n - 1}$ count twice and the ends once:\n\n$$T_{n} = \\frac{\\Delta x}{2}\\left[f(a) + 2\\sum_{i = 1}^{n - 1} f(a + i\\Delta x) + f(b)\\right].$$",
+        "每个梯形取两端高度的平均值，所以每个内部点被两个梯形共用，要算两次。内部端点 $x_{1}, \\ldots, x_{n - 1}$ 各算两次，两端各算一次：\n\n$$T_{n} = \\frac{\\Delta x}{2}\\left[f(a) + 2\\sum_{i = 1}^{n - 1} f(a + i\\Delta x) + f(b)\\right]。$$",
       ),
       generate(rng) {
         const g = grid(rng, 4, 10);
@@ -614,8 +614,8 @@ export const definingDefiniteIntegralsUsingLeftAndRightRiemannSums: TopicDef = {
       id: "evaluating-integrals-from-the-definition",
       title: t("Evaluating integrals from the definition", "由定义计算定积分"),
       explanation: t(
-        "For polynomials the limit can be computed with\n\n$$\\sum_{i = 1}^{n} 1 = n, \\qquad \\sum_{i = 1}^{n} i = \\frac{n(n + 1)}{2}, \\qquad \\sum_{i = 1}^{n} i^{2} = \\frac{n(n + 1)(2n + 1)}{6}.$$\n\nFor example, $\\int_{0}^{b} x^{2} \\, dx = \\lim_{n \\to \\infty} \\sum_{i = 1}^{n} \\frac{b^{2}i^{2}}{n^{2}} \\cdot \\frac{b}{n} = \\lim_{n \\to \\infty} \\frac{b^{3}}{n^{3}} \\cdot \\frac{n(n + 1)(2n + 1)}{6} = \\frac{b^{3}}{3}$.",
-        "对多项式，可以用下列公式求极限：\n\n$$\\sum_{i = 1}^{n} 1 = n, \\qquad \\sum_{i = 1}^{n} i = \\frac{n(n + 1)}{2}, \\qquad \\sum_{i = 1}^{n} i^{2} = \\frac{n(n + 1)(2n + 1)}{6}。$$\n\n例如 $\\int_{0}^{b} x^{2} \\, dx = \\lim_{n \\to \\infty} \\sum_{i = 1}^{n} \\frac{b^{2}i^{2}}{n^{2}} \\cdot \\frac{b}{n} = \\lim_{n \\to \\infty} \\frac{b^{3}}{n^{3}} \\cdot \\frac{n(n + 1)(2n + 1)}{6} = \\frac{b^{3}}{3}$。",
+        "Write the right sum with the sum formulas for powers of the index, simplify it in terms of the number of pieces, and let that number grow without bound. For polynomials the limit can be computed with\n\n$$\\sum_{i = 1}^{n} 1 = n, \\qquad \\sum_{i = 1}^{n} i = \\frac{n(n + 1)}{2}, \\qquad \\sum_{i = 1}^{n} i^{2} = \\frac{n(n + 1)(2n + 1)}{6}.$$\n\nFor example, $\\int_{0}^{b} x^{2} \\, dx = \\lim_{n \\to \\infty} \\sum_{i = 1}^{n} \\frac{b^{2}i^{2}}{n^{2}} \\cdot \\frac{b}{n} = \\lim_{n \\to \\infty} \\frac{b^{3}}{n^{3}} \\cdot \\frac{n(n + 1)(2n + 1)}{6} = \\frac{b^{3}}{3}$.",
+        "用下标幂的求和公式写出右和，把它化简为小段数的式子，再让小段数无限增大。对多项式，可以用下列公式求极限：\n\n$$\\sum_{i = 1}^{n} 1 = n, \\qquad \\sum_{i = 1}^{n} i = \\frac{n(n + 1)}{2}, \\qquad \\sum_{i = 1}^{n} i^{2} = \\frac{n(n + 1)(2n + 1)}{6}。$$\n\n例如 $\\int_{0}^{b} x^{2} \\, dx = \\lim_{n \\to \\infty} \\sum_{i = 1}^{n} \\frac{b^{2}i^{2}}{n^{2}} \\cdot \\frac{b}{n} = \\lim_{n \\to \\infty} \\frac{b^{3}}{n^{3}} \\cdot \\frac{n(n + 1)(2n + 1)}{6} = \\frac{b^{3}}{3}$。",
       ),
       generate(rng) {
         const b = rng.int(1, 6);
@@ -776,8 +776,8 @@ export const applyingTheFundamentalTheoremToExponentialAndTrigonometricFunctions
       id: "exponential-and-reciprocal-integrals",
       title: t("Exponential and reciprocal integrals", "指数函数与倒数函数的积分"),
       explanation: t(
-        "Give exact answers: $\\int_{0}^{2} e^{x} \\, dx = e^{2} - e^{0} = e^{2} - 1$ and $\\int_{1}^{5} \\frac{1}{x} \\, dx = \\ln 5 - \\ln 1 = \\ln 5$. Remember $e^{0} = 1$ and $\\ln 1 = 0$.",
-        "给出精确答案：$\\int_{0}^{2} e^{x} \\, dx = e^{2} - e^{0} = e^{2} - 1$，$\\int_{1}^{5} \\frac{1}{x} \\, dx = \\ln 5 - \\ln 1 = \\ln 5$。记住 $e^{0} = 1$，$\\ln 1 = 0$。",
+        "Find the antiderivative, evaluate it at both limits and subtract, using the facts that e to the zero is one and the logarithm of one is zero. Give exact answers: $\\int_{0}^{2} e^{x} \\, dx = e^{2} - e^{0} = e^{2} - 1$ and $\\int_{1}^{5} \\frac{1}{x} \\, dx = \\ln 5 - \\ln 1 = \\ln 5$. Remember $e^{0} = 1$ and $\\ln 1 = 0$.",
+        "求出原函数，在上下限处分别求值再相减，并利用 e 的零次幂为 1、1 的对数为 0 这两个事实。给出精确答案：$\\int_{0}^{2} e^{x} \\, dx = e^{2} - e^{0} = e^{2} - 1$，$\\int_{1}^{5} \\frac{1}{x} \\, dx = \\ln 5 - \\ln 1 = \\ln 5$。记住 $e^{0} = 1$，$\\ln 1 = 0$。",
       ),
       generate(rng) {
         const k = rng.int(1, 9);
@@ -818,8 +818,8 @@ export const applyingTheFundamentalTheoremToExponentialAndTrigonometricFunctions
       id: "trigonometric-integrals",
       title: t("Trigonometric integrals", "三角函数的积分"),
       explanation: t(
-        "Integrate, then use exact values at special angles: $\\int_{0}^{\\frac{\\pi}{3}} \\sin x \\, dx = \\Big[-\\cos x\\Big]_{0}^{\\frac{\\pi}{3}} = -\\frac{1}{2} - (-1) = \\frac{1}{2}$. Watch the minus sign in $\\int \\sin x \\, dx = -\\cos x + C$.",
-        "先积分，再用特殊角的精确值：$\\int_{0}^{\\frac{\\pi}{3}} \\sin x \\, dx = \\Big[-\\cos x\\Big]_{0}^{\\frac{\\pi}{3}} = -\\frac{1}{2} - (-1) = \\frac{1}{2}$。注意 $\\int \\sin x \\, dx = -\\cos x + C$ 中的负号。",
+        "After finding the antiderivative, the exact values of sine and cosine at the special angles give an exact answer instead of a decimal. Integrate, then use exact values at special angles: $\\int_{0}^{\\frac{\\pi}{3}} \\sin x \\, dx = \\Big[-\\cos x\\Big]_{0}^{\\frac{\\pi}{3}} = -\\frac{1}{2} - (-1) = \\frac{1}{2}$. Watch the minus sign in $\\int \\sin x \\, dx = -\\cos x + C$.",
+        "求出原函数后，利用特殊角的正弦和余弦精确值，就能得到精确答案而不是小数。先积分，再用特殊角的精确值：$\\int_{0}^{\\frac{\\pi}{3}} \\sin x \\, dx = \\Big[-\\cos x\\Big]_{0}^{\\frac{\\pi}{3}} = -\\frac{1}{2} - (-1) = \\frac{1}{2}$。注意 $\\int \\sin x \\, dx = -\\cos x + C$ 中的负号。",
       ),
       generate(rng) {
         const k = rng.int(1, 8);
@@ -895,8 +895,8 @@ export const theSumAndConstantMultipleRulesForDefiniteIntegrals: TopicDef = {
       id: "combining-known-integrals",
       title: t("Combining known integrals", "组合已知的积分"),
       explanation: t(
-        "Definite integrals split over sums and constant multiples:\n\n$$\\int_{a}^{b} \\left[pf(x) + qg(x)\\right] dx = p\\int_{a}^{b} f(x) \\, dx + q\\int_{a}^{b} g(x) \\, dx.$$",
-        "定积分对和与常数倍可以拆开：\n\n$$\\int_{a}^{b} \\left[pf(x) + qg(x)\\right] dx = p\\int_{a}^{b} f(x) \\, dx + q\\int_{a}^{b} g(x) \\, dx。$$",
+        "Definite integrals are linear, so when the integrals of the separate functions are known, any combination of them can be found without integrating again. Definite integrals split over sums and constant multiples:\n\n$$\\int_{a}^{b} \\left[pf(x) + qg(x)\\right] dx = p\\int_{a}^{b} f(x) \\, dx + q\\int_{a}^{b} g(x) \\, dx.$$",
+        "定积分是线性的，所以当各个函数的积分已知时，不必重新积分就能求出它们的任意组合。定积分对和与常数倍可以拆开：\n\n$$\\int_{a}^{b} \\left[pf(x) + qg(x)\\right] dx = p\\int_{a}^{b} f(x) \\, dx + q\\int_{a}^{b} g(x) \\, dx。$$",
       ),
       generate(rng) {
         const a = rng.int(-3, 3);
@@ -923,8 +923,8 @@ export const theSumAndConstantMultipleRulesForDefiniteIntegrals: TopicDef = {
       id: "integrals-with-a-constant-term",
       title: t("Integrals with a constant term", "含常数项的积分"),
       explanation: t(
-        "A constant integrates to the constant times the length of the interval: $\\int_{a}^{b} c \\, dx = c(b - a)$. So $\\int_{1}^{4} \\left[2f(x) + 5\\right] dx = 2\\int_{1}^{4} f(x) \\, dx + 15$.",
-        "常数的积分等于常数乘以区间长度：$\\int_{a}^{b} c \\, dx = c(b - a)$。所以 $\\int_{1}^{4} \\left[2f(x) + 5\\right] dx = 2\\int_{1}^{4} f(x) \\, dx + 15$。",
+        "A constant function gives a rectangle under its graph, whose area is the constant times the width of the interval. A constant integrates to the constant times the length of the interval: $\\int_{a}^{b} c \\, dx = c(b - a)$. So $\\int_{1}^{4} \\left[2f(x) + 5\\right] dx = 2\\int_{1}^{4} f(x) \\, dx + 15$.",
+        "常数函数的图像下方是一个矩形，它的面积等于这个常数乘以区间的宽度。常数的积分等于常数乘以区间长度：$\\int_{a}^{b} c \\, dx = c(b - a)$。所以 $\\int_{1}^{4} \\left[2f(x) + 5\\right] dx = 2\\int_{1}^{4} f(x) \\, dx + 15$。",
       ),
       generate(rng) {
         const a = rng.int(-3, 3);
@@ -968,8 +968,8 @@ export const propertiesOfDefiniteIntegralsInvolvingTheLimitsOfIntegration: Topic
       id: "reversing-the-limits",
       title: t("Reversing the limits", "交换上下限"),
       explanation: t(
-        "Swapping the limits changes the sign, and an interval of length zero gives zero:\n\n$$\\int_{b}^{a} f(x) \\, dx = -\\int_{a}^{b} f(x) \\, dx, \\qquad \\int_{a}^{a} f(x) \\, dx = 0.$$",
-        "交换上下限会改变符号，长度为零的区间给出零：\n\n$$\\int_{b}^{a} f(x) \\, dx = -\\int_{a}^{b} f(x) \\, dx, \\qquad \\int_{a}^{a} f(x) \\, dx = 0。$$",
+        "Integrating from right to left counts every piece of area with the opposite sign, so swapping the limits flips the sign of the integral. Swapping the limits changes the sign, and an interval of length zero gives zero:\n\n$$\\int_{b}^{a} f(x) \\, dx = -\\int_{a}^{b} f(x) \\, dx, \\qquad \\int_{a}^{a} f(x) \\, dx = 0.$$",
+        "从右往左积分时每一块面积都取相反的符号，所以交换上下限会改变积分的符号。交换上下限会改变符号，长度为零的区间给出零：\n\n$$\\int_{b}^{a} f(x) \\, dx = -\\int_{a}^{b} f(x) \\, dx, \\qquad \\int_{a}^{a} f(x) \\, dx = 0。$$",
       ),
       generate(rng) {
         const a = rng.int(-4, 3);
@@ -1008,8 +1008,8 @@ export const propertiesOfDefiniteIntegralsInvolvingTheLimitsOfIntegration: Topic
       id: "splitting-the-interval",
       title: t("Splitting the interval", "拆分积分区间"),
       explanation: t(
-        "For any $a$, $b$ and $c$,\n\n$$\\int_{a}^{b} f(x) \\, dx + \\int_{b}^{c} f(x) \\, dx = \\int_{a}^{c} f(x) \\, dx.$$\n\nTo find a piece, subtract, reversing limits where needed.",
-        "对任意 $a$、$b$、$c$，\n\n$$\\int_{a}^{b} f(x) \\, dx + \\int_{b}^{c} f(x) \\, dx = \\int_{a}^{c} f(x) \\, dx。$$\n\n要求其中一段，就做减法，必要时交换上下限。",
+        "Area over a whole interval is the sum of the areas over its pieces, so a known total and one known piece give the other piece. For any $a$, $b$ and $c$,\n\n$$\\int_{a}^{b} f(x) \\, dx + \\int_{b}^{c} f(x) \\, dx = \\int_{a}^{c} f(x) \\, dx.$$\n\nTo find a piece, subtract, reversing limits where needed.",
+        "整个区间上的面积等于各个小区间上面积的和，所以已知总和与其中一块，就能求出另一块。对任意 $a$、$b$、$c$，\n\n$$\\int_{a}^{b} f(x) \\, dx + \\int_{b}^{c} f(x) \\, dx = \\int_{a}^{c} f(x) \\, dx。$$\n\n要求其中一段，就做减法，必要时交换上下限。",
       ),
       generate(rng) {
         const a = rng.int(-5, 2);

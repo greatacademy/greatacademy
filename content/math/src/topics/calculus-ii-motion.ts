@@ -333,8 +333,8 @@ export const calculatingThePositionFunctionOfAParticleUsingIntegration: TopicDef
       id: "position-from-velocity",
       title: t("Position from velocity", "由速度求位置"),
       explanation: t(
-        "Since $s'(t) = v(t)$, the position is $s(t) = \\int v(t) \\, dt$, and a known position fixes the constant.\n\nFor $v(t) = 3t^{2} - 4$ with $s(1) = 2$: $s(t) = t^{3} - 4t + C$ and $s(1) = -3 + C = 2$, so $s(t) = t^{3} - 4t + 5$.",
-        "因为 $s'(t) = v(t)$，位置为 $s(t) = \\int v(t) \\, dt$，由已知位置确定常数。\n\n对 $v(t) = 3t^{2} - 4$、$s(1) = 2$：$s(t) = t^{3} - 4t + C$，$s(1) = -3 + C = 2$，所以 $s(t) = t^{3} - 4t + 5$。",
+        "Position is an antiderivative of velocity, and knowing the position at one moment fixes the constant of integration. Since $s'(t) = v(t)$, the position is $s(t) = \\int v(t) \\, dt$, and a known position fixes the constant.\n\nFor $v(t) = 3t^{2} - 4$ with $s(1) = 2$: $s(t) = t^{3} - 4t + C$ and $s(1) = -3 + C = 2$, so $s(t) = t^{3} - 4t + 5$.",
+        "位置是速度的原函数，知道某一时刻的位置就能确定积分常数。因为 $s'(t) = v(t)$，位置为 $s(t) = \\int v(t) \\, dt$，由已知位置确定常数。\n\n对 $v(t) = 3t^{2} - 4$、$s(1) = 2$：$s(t) = t^{3} - 4t + C$，$s(1) = -3 + C = 2$，所以 $s(t) = t^{3} - 4t + 5$。",
       ),
       generate: positionFunction,
     },
@@ -342,8 +342,8 @@ export const calculatingThePositionFunctionOfAParticleUsingIntegration: TopicDef
       id: "position-from-acceleration",
       title: t("Position from acceleration", "由加速度求位置"),
       explanation: t(
-        "Given the acceleration, integrate twice: first $v(t) = v(0) + \\int_{0}^{t} a(u) \\, du$, then $s(t) = s(0) + \\int_{0}^{t} v(u) \\, du$. Each integration needs its own initial value.",
-        "已知加速度时积分两次：先求 $v(t) = v(0) + \\int_{0}^{t} a(u) \\, du$，再求 $s(t) = s(0) + \\int_{0}^{t} v(u) \\, du$。每次积分都需要各自的初始值。",
+        "Each integration loses a constant, so you need both a starting velocity and a starting position to recover the position from the acceleration. Given the acceleration, integrate twice: first $v(t) = v(0) + \\int_{0}^{t} a(u) \\, du$, then $s(t) = s(0) + \\int_{0}^{t} v(u) \\, du$. Each integration needs its own initial value.",
+        "每次积分都会丢失一个常数，所以要由加速度还原位置，需要初始速度和初始位置两个条件。已知加速度时积分两次：先求 $v(t) = v(0) + \\int_{0}^{t} a(u) \\, du$，再求 $s(t) = s(0) + \\int_{0}^{t} v(u) \\, du$。每次积分都需要各自的初始值。",
       ),
       generate: positionFromAcceleration,
     },
@@ -460,8 +460,8 @@ export const calculatingTheDisplacementOfAParticleUsingIntegration: TopicDef = {
       id: "displacement-with-other-velocities",
       title: t("Displacement with other velocities", "其他速度函数的位移"),
       explanation: t(
-        "The same integral works for any velocity. For $v(t) = 3\\cos t + 2$ from $t = 0$ to $t = \\frac{\\pi}{2}$:\n\n$$\\int_{0}^{\\frac{\\pi}{2}} (3\\cos t + 2) \\, dt = \\Big[3\\sin t + 2t\\Big]_{0}^{\\frac{\\pi}{2}} = 3 + \\pi.$$",
-        "对任何速度函数都用同样的积分。对 $v(t) = 3\\cos t + 2$，从 $t = 0$ 到 $t = \\frac{\\pi}{2}$：\n\n$$\\int_{0}^{\\frac{\\pi}{2}} (3\\cos t + 2) \\, dt = \\Big[3\\sin t + 2t\\Big]_{0}^{\\frac{\\pi}{2}} = 3 + \\pi。$$",
+        "Displacement is the integral of velocity over the time interval, whatever kind of function the velocity is. The same integral works for any velocity. For $v(t) = 3\\cos t + 2$ from $t = 0$ to $t = \\frac{\\pi}{2}$:\n\n$$\\int_{0}^{\\frac{\\pi}{2}} (3\\cos t + 2) \\, dt = \\Big[3\\sin t + 2t\\Big]_{0}^{\\frac{\\pi}{2}} = 3 + \\pi.$$",
+        "无论速度是哪种函数，位移都是速度在时间区间上的积分。对任何速度函数都用同样的积分。对 $v(t) = 3\\cos t + 2$，从 $t = 0$ 到 $t = \\frac{\\pi}{2}$：\n\n$$\\int_{0}^{\\frac{\\pi}{2}} (3\\cos t + 2) \\, dt = \\Big[3\\sin t + 2t\\Big]_{0}^{\\frac{\\pi}{2}} = 3 + \\pi。$$",
       ),
       generate: exactDisplacement,
     },
