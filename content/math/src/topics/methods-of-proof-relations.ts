@@ -1,5 +1,6 @@
-import type { Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { svgDocument } from "@ga/subject-math";
 
 import { numberProblem, yesNo } from "../problems.ts";
 import { oneOf } from "./calculus-common.ts";
@@ -341,6 +342,51 @@ export const theDomainAndRangeOfARelation: TopicDef = {
   ],
 };
 
+/** relationFigure draws the directed graph of a relation on {1, …, n}: vertices on a circle, an arrow for each pair (offset when its reverse is also present) and a loop for each (a, a). */
+function relationFigure(n: number, r: readonly Pair[]): Figure {
+  const [cx, cy, R, rv] = [160, 110, 70, 12];
+  const fx = (x: number) => Math.round(x * 10) / 10;
+  const angle = (v: number) => -Math.PI / 2 + (2 * Math.PI * (v - 1)) / n;
+  const pos = (v: number) => [cx + R * Math.cos(angle(v)), cy + R * Math.sin(angle(v))] as const;
+  const keys = new Set(r.map(pairKey));
+  let body = "";
+  for (const [a, b] of r) {
+    const [x1, y1] = pos(a);
+    if (a === b) {
+      // A loop sits just outside the vertex, away from the center.
+      const [ux, uy] = [Math.cos(angle(a)), Math.sin(angle(a))];
+      const [lx, ly] = [x1 + ux * (rv + 9), y1 + uy * (rv + 9)];
+      body += `<circle cx="${fx(lx)}" cy="${fx(ly)}" r="10"/>`;
+      // The arrowhead points back into the vertex where the loop meets it.
+      const [hx, hy] = [x1 + ux * rv - uy * 6, y1 + uy * rv + ux * 6];
+      body += `<polygon fill="currentColor" points="${fx(hx)},${fx(hy)} ${fx(hx + ux * 7 - uy * 3)},${fx(hy + uy * 7 + ux * 3)} ${fx(hx + ux * 7 + uy * 4)},${fx(hy + uy * 7 - ux * 4)}"/>`;
+      continue;
+    }
+    const [x2, y2] = pos(b);
+    const len = Math.hypot(x2 - x1, y2 - y1);
+    const [ux, uy] = [(x2 - x1) / len, (y2 - y1) / len];
+    const off = keys.has(pairKey([b, a])) ? 4 : 0;
+    const [ox, oy] = [-uy * off, ux * off];
+    const [ex, ey] = [x2 - ux * rv + ox, y2 - uy * rv + oy];
+    const [bx, by] = [ex - ux * 8, ey - uy * 8];
+    body += `<line x1="${fx(x1 + ux * rv + ox)}" y1="${fx(y1 + uy * rv + oy)}" x2="${fx(ex)}" y2="${fx(ey)}"/>`;
+    body += `<polygon fill="currentColor" points="${fx(ex)},${fx(ey)} ${fx(bx - uy * 3.5)},${fx(by + ux * 3.5)} ${fx(bx + uy * 3.5)},${fx(by - ux * 3.5)}"/>`;
+  }
+  for (let v = 1; v <= n; v++) {
+    const [x, y] = pos(v);
+    body += `<circle cx="${fx(x)}" cy="${fx(y)}" r="${rv}"/><text x="${fx(x)}" y="${fx(y + 4.5)}" stroke="none" fill="currentColor">${v}</text>`;
+  }
+  const list = r.map(([a, b]) => (a === b ? `a loop at ${a}` : `${a} → ${b}`));
+  const zhList = r.map(([a, b]) => (a === b ? `${a} 处的自环` : `${a} → ${b}`));
+  return {
+    svg: svgDocument(220, body),
+    alt: t(
+      `A directed graph with vertices 1 to ${n} and ${list.length === 0 ? "no arrows" : `arrows ${list.join(", ")}`}.`,
+      `一个有向图，顶点为 1 到 ${n}，${zhList.length === 0 ? "没有箭头" : `箭头为 ${zhList.join("、")}`}。`,
+    ),
+  };
+}
+
 /** graphicalRepresentationsOfRelations draws relations as directed graphs and matrices. */
 export const graphicalRepresentationsOfRelations: TopicDef = {
   id: "graphical-representations-of-relations",
@@ -361,6 +407,13 @@ export const graphicalRepresentationsOfRelations: TopicDef = {
         "In the directed graph of $R = \\{(1, 1), (1, 2), (2, 3), (3, 1), (3, 2)\\}$ there is one loop (at $1$), and vertex $3$ has two outgoing arrows (to $1$ and $2$).",
         "在 $R = \\{(1, 1), (1, 2), (2, 3), (3, 1), (3, 2)\\}$ 的有向图中有一个自环（在 $1$ 处），顶点 $3$ 有两条出边（指向 $1$ 和 $2$）。",
       ),
+      figure: relationFigure(3, [
+        [1, 1],
+        [1, 2],
+        [2, 3],
+        [3, 1],
+        [3, 2],
+      ]),
       generate(rng) {
         const n = rng.int(3, 5);
         const r = sortPairs(randomRel(rng, n, 40));
@@ -374,11 +427,18 @@ export const graphicalRepresentationsOfRelations: TopicDef = {
           [`How many arrows leave vertex $${v}$ (counting a loop)?`, `从顶点 $${v}$ 出发的箭头有多少条（自环也算）？`, outs, ins],
           [`How many arrows enter vertex $${v}$ (counting a loop)?`, `指向顶点 $${v}$ 的箭头有多少条（自环也算）？`, ins, outs],
         ][kind] as [string, string, number, number];
-        return numberProblem({
-          prompt: t(
-            `Let $R = ${relTex(r)}$ on $${setTex(range(1, n))}$. ${en}`,
-            `设 $R = ${relTex(r)}$ 是 $${setTex(range(1, n))}$ 上的关系。${zh}`,
-          ),
+        // Half the time the relation is given only by its drawing.
+        const drawn = rng.bool();
+        const problem = numberProblem({
+          prompt: drawn
+            ? t(
+                `The figure shows the directed graph of a relation $R$ on $${setTex(range(1, n))}$. ${en}`,
+                `图中是 $${setTex(range(1, n))}$ 上关系 $R$ 的有向图。${zh}`,
+              )
+            : t(
+                `Let $R = ${relTex(r)}$ on $${setTex(range(1, n))}$. ${en}`,
+                `设 $R = ${relTex(r)}$ 是 $${setTex(range(1, n))}$ 上的关系。${zh}`,
+              ),
           answer: value,
           wrong: [alt, value + 1, Math.max(0, value - 1)],
           solution: t(
@@ -390,6 +450,7 @@ export const graphicalRepresentationsOfRelations: TopicDef = {
               : `统计${kind === 1 ? "第一个" : "第二个"}坐标为 $${v}$ 的序对：共 $${value}$ 个。`,
           ),
         });
+        return drawn ? { ...problem, figure: relationFigure(n, r) } : problem;
       },
     },
     {
