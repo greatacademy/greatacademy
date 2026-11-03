@@ -1,6 +1,6 @@
 import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { dec, type Mark, type Point, Q, sketch } from "@ga/subject-math";
+import { dec, type Mark, type PlaneMark, type Point, plane, Q, sketch } from "@ga/subject-math";
 
 import { choiceProblem, mixedLatex, numberProblem, pointLatex, pointProblem, steps, yesNo } from "../problems.ts";
 import { height, rectangle, sides } from "./area.ts";
@@ -1497,6 +1497,24 @@ const quadOptions: Record<QuadKind, Text> = {
   trapezoid: t("A trapezoid", "梯形"),
 };
 
+/** coordinatePolygonFigure plots a polygon with labeled vertices in the coordinate plane, highlighting the sides listed by their first vertex's index. */
+function coordinatePolygonFigure(pts: readonly Point[], names: string, highlight: readonly number[], alt: Text): Figure {
+  const xs = pts.map((p) => p[0]);
+  const ys = pts.map((p) => p[1]);
+  const view = { xMin: Math.min(-1, ...xs) - 1, xMax: Math.max(1, ...xs) + 1, yMin: Math.min(-1, ...ys) - 1, yMax: Math.max(1, ...ys) + 1 };
+  const cx = xs.reduce((a, b) => a + b, 0) / xs.length;
+  const cy = ys.reduce((a, b) => a + b, 0) / ys.length;
+  const marks: PlaneMark[] = pts.flatMap((p, i): PlaneMark[] => {
+    const q = pts[(i + 1) % pts.length]!;
+    const dir = `${p[1] >= cy ? "n" : "s"}${p[0] >= cx ? "e" : "w"}` as const;
+    return [
+      { kind: "segment", a: p, b: q, accent: highlight.includes(i) },
+      { kind: "point", at: p, label: names[i]!, dir },
+    ];
+  });
+  return { svg: plane(view, marks), alt };
+}
+
 export const polygonsInTheCoordinatePlane = topic(
   "polygons-in-the-coordinate-plane",
   t("Polygons in the Coordinate Plane", "坐标平面中的多边形"),
@@ -1513,6 +1531,20 @@ export const polygonsInTheCoordinatePlane = topic(
       explanation: t(
         "A side whose endpoints share an $x$-coordinate is vertical; its length is the distance between the $y$-coordinates. When they have opposite signs, add their absolute values, since the side crosses the axis.\n\nRectangle $ABCD$ has vertices $A(-3, -2)$, $B(5, -2)$, $C(5, 4)$ and $D(-3, 4)$. Side $BC$ is vertical, from $y = -2$ to $y = 4$, so it is $2 + 4 = 6$ units long.",
         "两个端点横坐标相同的边是竖直的，它的长度是两个纵坐标之间的距离。两个坐标符号相反时，把它们的绝对值相加，因为这条边跨过了坐标轴。\n\n长方形 $ABCD$ 的顶点是 $A(-3, -2)$、$B(5, -2)$、$C(5, 4)$ 和 $D(-3, 4)$。边 $BC$ 是竖直的，从 $y = -2$ 到 $y = 4$，所以长 $2 + 4 = 6$ 个单位。",
+      ),
+      figure: coordinatePolygonFigure(
+        [
+          [-3, -2],
+          [5, -2],
+          [5, 4],
+          [-3, 4],
+        ],
+        "ABCD",
+        [1],
+        t(
+          "Rectangle ABCD plotted with A(−3, −2), B(5, −2), C(5, 4) and D(−3, 4). The vertical side BC is highlighted; it runs from y = −2 up across the x-axis to y = 4.",
+          "在坐标平面中画出长方形 ABCD：A(−3, −2)、B(5, −2)、C(5, 4)、D(−3, 4)。竖直边 BC 被高亮，它从 y = −2 向上跨过 x 轴到 y = 4。",
+        ),
       ),
       generate(rng) {
         const [x1, x2] = [rng.int(-9, 2), rng.int(1, 9)];
@@ -1556,6 +1588,20 @@ export const polygonsInTheCoordinatePlane = topic(
       explanation: t(
         "$A(-2, 1)$, $B(4, 1)$, $C(6, 5)$, $D(0, 5)$: $AB$ and $DC$ are both horizontal and $6$ units long, so they are parallel and equal. $AD$ is not vertical, because $A$ and $D$ have different $x$-coordinates, so the angles are not right angles: $ABCD$ is a parallelogram that is not a rectangle.",
         "$A(-2, 1)$、$B(4, 1)$、$C(6, 5)$、$D(0, 5)$：$AB$ 和 $DC$ 都是水平的，长都是 $6$ 个单位，所以它们平行且相等。$A$ 和 $D$ 的横坐标不同，$AD$ 不是竖直的，所以角不是直角：$ABCD$ 是不是长方形的平行四边形。",
+      ),
+      figure: coordinatePolygonFigure(
+        [
+          [-2, 1],
+          [4, 1],
+          [6, 5],
+          [0, 5],
+        ],
+        "ABCD",
+        [0, 2],
+        t(
+          "Quadrilateral ABCD plotted with A(−2, 1), B(4, 1), C(6, 5) and D(0, 5). The horizontal sides AB and CD are highlighted, each 6 units long; the slanted sides AD and BC are not vertical.",
+          "在坐标平面中画出四边形 ABCD：A(−2, 1)、B(4, 1)、C(6, 5)、D(0, 5)。水平边 AB 和 CD 被高亮，长都是 6 个单位；斜边 AD 和 BC 不是竖直的。",
+        ),
       ),
       generate(rng) {
         const kind = rng.pick(quadKinds);
