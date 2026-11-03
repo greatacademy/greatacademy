@@ -13,6 +13,7 @@ import { abstractAlgebraQuotientTopics } from "./topics/abstract-algebra-quotien
 import { abstractAlgebraRingTopics } from "./topics/abstract-algebra-rings.ts";
 import { abstractAlgebraSubgroupTopics } from "./topics/abstract-algebra-subgroups.ts";
 import { abstractAlgebraSylowTopics } from "./topics/abstract-algebra-sylow.ts";
+import { actFundamentalsNumberTopics } from "./topics/act-fundamentals-number.ts";
 import { actGeometryDataTopics } from "./topics/act-geometry-data.ts";
 import { actNumberAlgebraTopics } from "./topics/act-number-algebra.ts";
 import { approximatingSystemsTopics } from "./topics/algebra-i-approximating-systems.ts";
@@ -425,6 +426,7 @@ export const math: SubjectDef = {
     ...satPrepAdvancedTopics,
     ...satPrepDataTopics,
     ...actNumberAlgebraTopics,
+    ...actFundamentalsNumberTopics,
     ...actGeometryDataTopics,
     ...satMathStrategyTopics,
   ],
