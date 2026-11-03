@@ -11,6 +11,7 @@ import {
   pointProblem,
   steps,
   vectorLatex,
+  yesNo,
 } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -27,6 +28,12 @@ function pickChoice(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[],
   const options = rng.shuffle([right, ...wrong]);
   const correct = options.indexOf(right);
   return choiceProblem({ prompt, options, correct, solution });
+}
+
+/** cubicCurve writes ⟨2at, at², (a/3)t³⟩, the curve whose speed a(t² + 2) makes arc length and curvature exact. */
+function cubicCurve(a: number, sign = 1): string {
+  const z = a === 3 ? "t^3" : `\\frac{${a}}{3}t^3`;
+  return `\\left\\langle ${2 * a}t, ${poly([sign * a, "t^2"])}, ${z} \\right\\rangle`;
 }
 
 /** pythagoreanTriples are integer right triangles used to yield nice integer or rational magnitudes. */
@@ -102,6 +109,46 @@ export const theDomainOfAVectorValuedFunction: TopicDef = {
             [{ lo: Q.of(a), hi: Q.of(b), loClosed: false, hiClosed: true }],
             [{ lo: Q.of(a), loClosed: true, hiClosed: false }],
           ],
+        });
+      },
+    },
+    {
+      id: "a-domain-with-a-logarithm-and-a-hole",
+      title: t("A domain with a logarithm and an excluded point", "含对数与挖去点的定义域"),
+      explanation: t(
+        "The domain of $\\mathbf{r}(t)$ is the set of $t$ where every component is defined. A logarithm $\\ln(t - a)$ needs $t > a$ strictly, a square root $\\sqrt{c - t}$ needs $c - t \\ge 0$, and a quotient $\\frac{1}{t - b}$ removes the single point $t = b$. When the removed point lies inside the interval allowed by the other components, the domain splits into two intervals joined by $\\cup$.",
+        "$\\mathbf{r}(t)$ 的定义域是使每个分量都有定义的 $t$ 的集合。对数 $\\ln(t - a)$ 需要严格的 $t > a$，平方根 $\\sqrt{c - t}$ 需要 $c - t \\ge 0$，商 $\\frac{1}{t - b}$ 去掉单个点 $t = b$。若去掉的点落在其他分量允许的区间内部，定义域就分成用 $\\cup$ 连接的两个区间。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-6, 2);
+        const b = a + rng.int(1, 4);
+        const c = b + rng.int(1, 4);
+        const set: RealSet = [
+          { lo: Q.of(a), hi: Q.of(b), loClosed: false, hiClosed: false },
+          { lo: Q.of(b), hi: Q.of(c), loClosed: false, hiClosed: true },
+        ];
+        return intervalProblem({
+          prompt: t(
+            `Find the domain of $\\mathbf{r}(t) = \\left\\langle \\ln(${tMinus(a)}), \\frac{1}{${tMinus(b)}}, \\sqrt{${poly([-1, "t"], [c, ""])}} \\right\\rangle$ in interval notation.`,
+            `用区间记号求 $\\mathbf{r}(t) = \\left\\langle \\ln(${tMinus(a)}), \\frac{1}{${tMinus(b)}}, \\sqrt{${poly([-1, "t"], [c, ""])}} \\right\\rangle$ 的定义域。`,
+          ),
+          set,
+          form: "interval",
+          wrong: [
+            [{ lo: Q.of(a), hi: Q.of(c), loClosed: false, hiClosed: true }],
+            [
+              { lo: Q.of(a), hi: Q.of(b), loClosed: true, hiClosed: false },
+              { lo: Q.of(b), hi: Q.of(c), loClosed: false, hiClosed: true },
+            ],
+            [
+              { lo: Q.of(a), hi: Q.of(b), loClosed: false, hiClosed: false },
+              { lo: Q.of(b), hi: Q.of(c), loClosed: false, hiClosed: false },
+            ],
+          ],
+          solution: t(
+            `The logarithm needs $t > ${a}$, the square root needs $t \\le ${c}$, and the fraction excludes $t = ${b}$, which lies inside $(${a}, ${c}]$. So the domain is $(${a}, ${b}) \\cup (${b}, ${c}]$.`,
+            `对数需要 $t > ${a}$，平方根需要 $t \\le ${c}$，分式排除 $t = ${b}$，它位于 $(${a}, ${c}]$ 内部。所以定义域为 $(${a}, ${b}) \\cup (${b}, ${c}]$。`,
+          ),
         });
       },
     },
@@ -347,6 +394,32 @@ export const continuityAndDifferentiabilityOfVectorValuedFunctions: TopicDef = {
         });
       },
     },
+    {
+      id: "choosing-a-value-that-makes-a-vector-function-continuous",
+      title: t("Choosing a value that makes $\\mathbf{r}$ continuous", "选取使 $\\mathbf{r}$ 连续的值"),
+      explanation: t(
+        "A vector-valued function is continuous at $t = a$ exactly when each component is continuous there, that is, when $\\lim_{t \\to a}\\mathbf{r}(t) = \\mathbf{r}(a)$ component by component. If one component is $\\frac{t^2 - a^2}{t - a}$ for $t \\ne a$, its limit is found by cancelling: $\\frac{t^2 - a^2}{t - a} = t + a \\to 2a$. Defining that component to be $2a$ at $t = a$ removes the discontinuity.",
+        "向量值函数在 $t = a$ 处连续，当且仅当每个分量在该处连续，即逐分量地 $\\lim_{t \\to a}\\mathbf{r}(t) = \\mathbf{r}(a)$。若某分量在 $t \\ne a$ 时为 $\\frac{t^2 - a^2}{t - a}$，约分可求极限：$\\frac{t^2 - a^2}{t - a} = t + a \\to 2a$。把该分量在 $t = a$ 处定义为 $2a$ 就消除了间断。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-6, 6);
+        const m = rng.int(1, 3);
+        const ans = 2 * a * m;
+        const num = m === 1 ? `t^2 - ${a * a}` : `${m}(t^2 - ${a * a})`;
+        return numberProblem({
+          prompt: t(
+            `$\\mathbf{r}(t) = \\left\\langle \\frac{${num}}{${tMinus(a)}}, t^2 \\right\\rangle$ for $t \\ne ${a}$, and $\\mathbf{r}(${a}) = \\langle k, ${a * a} \\rangle$. Find $k$ so that $\\mathbf{r}$ is continuous at $t = ${a}$.`,
+            `当 $t \\ne ${a}$ 时 $\\mathbf{r}(t) = \\left\\langle \\frac{${num}}{${tMinus(a)}}, t^2 \\right\\rangle$，且 $\\mathbf{r}(${a}) = \\langle k, ${a * a} \\rangle$。求 $k$ 使 $\\mathbf{r}$ 在 $t = ${a}$ 处连续。`,
+          ),
+          answer: ans,
+          wrong: [0, a * m, -ans, a * a * m],
+          solution: t(
+            `For $t \\ne ${a}$ the first component equals $${m === 1 ? "" : m}(t ${a > 0 ? "+" : "-"} ${Math.abs(a)})$, which tends to $${m === 1 ? "" : `${m} \\cdot `}${paren(2 * a)} = ${ans}$. So $k = ${ans}$.`,
+            `当 $t \\ne ${a}$ 时第一分量等于 $${m === 1 ? "" : m}(t ${a > 0 ? "+" : "-"} ${Math.abs(a)})$，趋于 $${m === 1 ? "" : `${m} \\cdot `}${paren(2 * a)} = ${ans}$。所以 $k = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -400,6 +473,36 @@ export const differentiationRulesForVectorValuedFunctions: TopicDef = {
           solution,
           answer: ans,
           wrong: [dot3(up, vp), dot3(u, v), dot3(up, v) - dot3(u, vp)],
+        });
+      },
+    },
+    {
+      id: "the-product-rule-for-a-scalar-times-a-vector",
+      title: t("The product rule for $f(t)\\mathbf{u}(t)$", "$f(t)\\mathbf{u}(t)$ 的乘积法则"),
+      explanation: t(
+        "A scalar function times a vector function is differentiated with the ordinary product rule, applied componentwise:\n\n$$\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right] = f'(t)\\mathbf{u}(t) + f(t)\\mathbf{u}'(t).$$\n\nSo at a single instant only four pieces of data are needed: $f$, $f'$, $\\mathbf{u}$ and $\\mathbf{u}'$ at that instant.",
+        "标量函数乘以向量函数按普通乘积法则逐分量求导：\n\n$$\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right] = f'(t)\\mathbf{u}(t) + f(t)\\mathbf{u}'(t)。$$\n\n所以在某一时刻只需四个数据：该时刻的 $f$、$f'$、$\\mathbf{u}$ 与 $\\mathbf{u}'$。",
+      ),
+      generate(rng: Rng): Problem {
+        const t0 = rng.int(0, 3);
+        const f = rng.nonZero(-4, 4);
+        const fp = rng.nonZero(-4, 4);
+        const u: Vec3 = [rng.int(-3, 3), rng.int(-3, 3), rng.nonZero(-3, 3)];
+        const up: Vec3 = [rng.int(-3, 3), rng.nonZero(-3, 3), rng.int(-3, 3)];
+        const ans = [0, 1, 2].map((i) => fp * u[i]! + f * up[i]!);
+        return pointProblem({
+          prompt: t(
+            `$f(${t0}) = ${f}$, $f'(${t0}) = ${fp}$, $\\mathbf{u}(${t0}) = ${v3L(u)}$ and $\\mathbf{u}'(${t0}) = ${v3L(up)}$. Find $\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right]$ at $t = ${t0}$.`,
+            `$f(${t0}) = ${f}$，$f'(${t0}) = ${fp}$，$\\mathbf{u}(${t0}) = ${v3L(u)}$，$\\mathbf{u}'(${t0}) = ${v3L(up)}$。求 $t = ${t0}$ 处的 $\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right]$。`,
+          ),
+          answer: ans,
+          vector: true,
+          vars: ["x", "y", "z"],
+          wrong: [[0, 1, 2].map((i) => fp * up[i]!), [0, 1, 2].map((i) => f * u[i]! + fp * up[i]!), [0, 1, 2].map((i) => fp * u[i]!)],
+          solution: t(
+            `$f'\\mathbf{u} + f\\mathbf{u}' = ${fp === 1 ? "" : fp === -1 ? "-" : fp}${v3L(u)} ${f < 0 ? "-" : "+"} ${Math.abs(f) === 1 ? "" : Math.abs(f)}${v3L(up)} = ${v3L(ans)}$.`,
+            `$f'\\mathbf{u} + f\\mathbf{u}' = ${fp === 1 ? "" : fp === -1 ? "-" : fp}${v3L(u)} ${f < 0 ? "-" : "+"} ${Math.abs(f) === 1 ? "" : Math.abs(f)}${v3L(up)} = ${v3L(ans)}$。`,
+          ),
         });
       },
     },
@@ -470,6 +573,43 @@ export const integrationRulesForVectorValuedFunctions: TopicDef = {
         });
       },
     },
+    {
+      id: "recovering-a-position-from-its-derivative-and-a-starting-value",
+      title: t(
+        "Recovering $\\mathbf{r}(t)$ from $\\mathbf{r}'(t)$ and $\\mathbf{r}(0)$",
+        "由 $\\mathbf{r}'(t)$ 与 $\\mathbf{r}(0)$ 还原 $\\mathbf{r}(t)$",
+      ),
+      explanation: t(
+        "Integrating a vector function componentwise leaves one constant per component, which together form a constant vector $\\mathbf{C}$. An initial value fixes it: since $\\mathbf{r}(t) = \\mathbf{r}(0) + \\int_0^t \\mathbf{r}'(u)\\,du$, the position at time $T$ is the starting position plus the definite integral of the derivative from $0$ to $T$.",
+        "逐分量积分向量函数时，每个分量留下一个常数，合起来是常向量 $\\mathbf{C}$。初值确定它：由于 $\\mathbf{r}(t) = \\mathbf{r}(0) + \\int_0^t \\mathbf{r}'(u)\\,du$，时刻 $T$ 的位置是起始位置加上导数从 $0$ 到 $T$ 的定积分。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-4, 4);
+        const b = rng.nonZero(-3, 3);
+        const c = rng.nonZero(-2, 2);
+        const r0: Vec3 = [rng.int(-5, 5), rng.int(-5, 5), rng.int(-5, 5)];
+        const T = rng.int(1, 3);
+        const ans = [r0[0] + a * T, r0[1] + b * T * T, r0[2] + c * T ** 3];
+        return pointProblem({
+          prompt: t(
+            `$\\mathbf{r}'(t) = \\left\\langle ${a}, ${poly([2 * b, "t"])}, ${poly([3 * c, "t^2"])} \\right\\rangle$ and $\\mathbf{r}(0) = ${v3L(r0)}$. Find $\\mathbf{r}(${T})$.`,
+            `$\\mathbf{r}'(t) = \\left\\langle ${a}, ${poly([2 * b, "t"])}, ${poly([3 * c, "t^2"])} \\right\\rangle$，$\\mathbf{r}(0) = ${v3L(r0)}$。求 $\\mathbf{r}(${T})$。`,
+          ),
+          answer: ans,
+          vector: true,
+          vars: ["x", "y", "z"],
+          wrong: [
+            [a * T, b * T * T, c * T ** 3],
+            [r0[0] + a, r0[1] + 2 * b * T, r0[2] + 3 * c * T * T],
+            [r0[0] + a * T, r0[1] + 2 * b * T * T, r0[2] + 3 * c * T ** 3],
+          ],
+          solution: t(
+            `$\\int_0^{${T}} \\mathbf{r}'(u)\\,du = ${v3L([a * T, b * T * T, c * T ** 3])}$, so $\\mathbf{r}(${T}) = ${v3L(r0)} + ${v3L([a * T, b * T * T, c * T ** 3])} = ${v3L(ans)}$.`,
+            `$\\int_0^{${T}} \\mathbf{r}'(u)\\,du = ${v3L([a * T, b * T * T, c * T ** 3])}$，所以 $\\mathbf{r}(${T}) = ${v3L(r0)} + ${v3L([a * T, b * T * T, c * T ** 3])} = ${v3L(ans)}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -517,6 +657,33 @@ export const theArcLengthOfAVectorValuedFunction: TopicDef = {
           solution,
           answer: ans,
           wrong: [a * k, b * k, (a + b) * k, c],
+        });
+      },
+    },
+    {
+      id: "arc-length-when-the-speed-is-a-perfect-square",
+      title: t("Arc length when the speed is a perfect square", "速率为完全平方时的弧长"),
+      explanation: t(
+        "Arc length $L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt$ is usually hard because of the square root, but some curves make it a perfect square. For $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$ with $a > 0$,\n\n$$\\|\\mathbf{r}'(t)\\| = a\\sqrt{4 + 4t^2 + t^4} = a(t^2 + 2),$$\n\nso $L = a\\left[\\frac{t^3}{3} + 2t\\right]_{t_0}^{t_1}$.",
+        "弧长 $L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt$ 通常因平方根而困难，但有些曲线使它成为完全平方。对 $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$（$a > 0$），\n\n$$\\|\\mathbf{r}'(t)\\| = a\\sqrt{4 + 4t^2 + t^4} = a(t^2 + 2),$$\n\n所以 $L = a\\left[\\frac{t^3}{3} + 2t\\right]_{t_0}^{t_1}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 3);
+        const t0 = rng.int(0, 2);
+        const t1 = t0 + rng.int(1, 3);
+        const F = (x: number) => Q.of(x ** 3, 3).add(Q.of(2 * x));
+        const ans = F(t1).sub(F(t0)).mul(Q.of(a));
+        return numberProblem({
+          prompt: t(
+            `Find the arc length of $\\mathbf{r}(t) = ${cubicCurve(a)}$ for $${t0} \\le t \\le ${t1}$.`,
+            `求 $\\mathbf{r}(t) = ${cubicCurve(a)}$ 在 $${t0} \\le t \\le ${t1}$ 上的弧长。`,
+          ),
+          answer: ans,
+          wrong: [F(t1).sub(F(t0)), Q.of(a * (t1 ** 3 - t0 ** 3), 3), Q.of(a * (t1 * t1 + 2 - t0 * t0 - 2)), ans.add(Q.of(2 * a))],
+          solution: t(
+            `$\\|\\mathbf{r}'(t)\\| = ${a === 1 ? "" : a}(t^2 + 2)$, so $L = ${a === 1 ? "" : a}\\left[\\frac{t^3}{3} + 2t\\right]_{${t0}}^{${t1}} = ${ans.toLatex()}$.`,
+            `$\\|\\mathbf{r}'(t)\\| = ${a === 1 ? "" : a}(t^2 + 2)$，所以 $L = ${a === 1 ? "" : a}\\left[\\frac{t^3}{3} + 2t\\right]_{${t0}}^{${t1}} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -578,6 +745,36 @@ export const tangentVectorsAndTangentLinesToCurves: TopicDef = {
             [2 * a, 3 * b, c],
             [ansY, ansX, ansZ],
           ],
+        });
+      },
+    },
+    {
+      id: "where-a-tangent-line-meets-the-xy-plane",
+      title: t("Where a tangent line meets the $xy$-plane", "切线与 $xy$ 平面的交点"),
+      explanation: t(
+        "The tangent line to $\\mathbf{r}(t)$ at $t = t_0$ is $\\boldsymbol{\\ell}(s) = \\mathbf{r}(t_0) + s\\,\\mathbf{r}'(t_0)$. To find where it meets a plane, substitute its coordinates into the plane's equation and solve for $s$. For the plane $z = 0$, solve $z(t_0) + s\\,z'(t_0) = 0$, then put that $s$ back into the other two coordinates.",
+        "$\\mathbf{r}(t)$ 在 $t = t_0$ 处的切线为 $\\boldsymbol{\\ell}(s) = \\mathbf{r}(t_0) + s\\,\\mathbf{r}'(t_0)$。要求它与某平面的交点，把坐标代入平面方程解出 $s$。对平面 $z = 0$，解 $z(t_0) + s\\,z'(t_0) = 0$，再把 $s$ 代回另外两个坐标。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-4, 4);
+        const t0 = rng.nonZero(-3, 3);
+        const ans = [Q.of(2 * a * t0, 3), Q.of(t0 * t0, 3), Q.zero];
+        return pointProblem({
+          prompt: t(
+            `Where does the tangent line to $\\mathbf{r}(t) = \\langle ${poly([a, "t"])}, t^2, t^3 \\rangle$ at $t = ${t0}$ meet the $xy$-plane?`,
+            `$\\mathbf{r}(t) = \\langle ${poly([a, "t"])}, t^2, t^3 \\rangle$ 在 $t = ${t0}$ 处的切线与 $xy$ 平面交于何处？`,
+          ),
+          answer: ans,
+          vars: ["x", "y", "z"],
+          wrong: [
+            [Q.of(a * t0), Q.of(t0 * t0), Q.zero],
+            [Q.of(4 * a * t0, 3), Q.of(5 * t0 * t0, 3), Q.zero],
+            [Q.of(a * t0, 3), Q.of(t0 * t0, 3), Q.zero],
+          ],
+          solution: t(
+            `$\\mathbf{r}(${t0}) = ${v3L([a * t0, t0 * t0, t0 ** 3])}$ and $\\mathbf{r}'(${t0}) = ${v3L([a, 2 * t0, 3 * t0 * t0])}$. Setting $${t0 ** 3} + ${3 * t0 * t0}s = 0$ gives $s = ${Q.of(-t0, 3).toLatex()}$, and the point is $(${ans[0]!.toLatex()}, ${ans[1]!.toLatex()}, 0)$.`,
+            `$\\mathbf{r}(${t0}) = ${v3L([a * t0, t0 * t0, t0 ** 3])}$，$\\mathbf{r}'(${t0}) = ${v3L([a, 2 * t0, 3 * t0 * t0])}$。令 $${t0 ** 3} + ${3 * t0 * t0}s = 0$ 得 $s = ${Q.of(-t0, 3).toLatex()}$，交点为 $(${ans[0]!.toLatex()}, ${ans[1]!.toLatex()}, 0)$。`,
+          ),
         });
       },
     },
@@ -646,6 +843,39 @@ export const unitTangentVectors: TopicDef = {
         });
       },
     },
+    {
+      id: "a-unit-tangent-vector-with-rational-entries",
+      title: t("A unit tangent vector with rational entries", "分量为有理数的单位切向量"),
+      explanation: t(
+        "The unit tangent vector is $\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}$. For $\\mathbf{r}(t) = \\langle 2at, \\pm at^2, \\frac{a}{3}t^3 \\rangle$ with $a > 0$, $\\mathbf{r}'(t) = a\\langle 2, \\pm 2t, t^2 \\rangle$ and $\\|\\mathbf{r}'(t)\\| = a(t^2 + 2)$. The factor $a$ cancels, leaving\n\n$$\\mathbf{T}(t) = \\frac{\\langle 2, \\pm 2t, t^2 \\rangle}{t^2 + 2}.$$\n\nRescaling a curve's speed never changes its unit tangent.",
+        "单位切向量为 $\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}$。对 $\\mathbf{r}(t) = \\langle 2at, \\pm at^2, \\frac{a}{3}t^3 \\rangle$（$a > 0$），$\\mathbf{r}'(t) = a\\langle 2, \\pm 2t, t^2 \\rangle$，$\\|\\mathbf{r}'(t)\\| = a(t^2 + 2)$。因子 $a$ 约去，得\n\n$$\\mathbf{T}(t) = \\frac{\\langle 2, \\pm 2t, t^2 \\rangle}{t^2 + 2}。$$\n\n改变曲线速率的倍数从不改变其单位切向量。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 4);
+        const s = rng.pick([1, -1]);
+        const t0 = rng.int(-3, 3);
+        const n = t0 * t0 + 2;
+        const ans = [Q.of(2, n), Q.of(2 * s * t0, n), Q.of(t0 * t0, n)];
+        return pointProblem({
+          prompt: t(
+            `Find the unit tangent vector $\\mathbf{T}(${t0})$ of $\\mathbf{r}(t) = ${cubicCurve(a, s)}$.`,
+            `求 $\\mathbf{r}(t) = ${cubicCurve(a, s)}$ 的单位切向量 $\\mathbf{T}(${t0})$。`,
+          ),
+          answer: ans,
+          vector: true,
+          vars: ["x", "y", "z"],
+          wrong: [
+            [Q.of(2 * a), Q.of(2 * a * s * t0), Q.of(a * t0 * t0)],
+            [Q.of(2, a * n), Q.of(2 * s * t0, a * n), Q.of(t0 * t0, a * n)],
+            [Q.of(2, n), Q.of(-2 * s * t0, n), Q.of(t0 * t0, n)],
+          ],
+          solution: t(
+            `$\\mathbf{r}'(${t0}) = ${v3L([2 * a, 2 * a * s * t0, a * t0 * t0])}$ with length $${a * n}$, so $\\mathbf{T}(${t0}) = ${v3L(ans)}$.`,
+            `$\\mathbf{r}'(${t0}) = ${v3L([2 * a, 2 * a * s * t0, a * t0 * t0])}$，长度为 $${a * n}$，所以 $\\mathbf{T}(${t0}) = ${v3L(ans)}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -708,6 +938,51 @@ export const principalNormalVectors: TopicDef = {
             [0, 0, 1],
             [ans[1], ans[0], 0],
           ],
+        });
+      },
+    },
+    {
+      id: "the-principal-normal-of-a-circle-points-to-its-center",
+      title: t("The principal normal of a circle points to its center", "圆的主法向量指向圆心"),
+      explanation: t(
+        "The principal unit normal $\\mathbf{N} = \\frac{\\mathbf{T}'}{\\|\\mathbf{T}'\\|}$ points in the direction the curve is turning. On a circle the curve always turns toward the center, so at a point $P$ of the circle with center $C$,\n\n$$\\mathbf{N} = \\frac{C - P}{\\|C - P\\|},$$\n\nwhatever the direction of travel or the speed.",
+        "主单位法向量 $\\mathbf{N} = \\frac{\\mathbf{T}'}{\\|\\mathbf{T}'\\|}$ 指向曲线弯曲的方向。在圆上曲线总是朝圆心弯曲，所以在圆心为 $C$ 的圆上一点 $P$ 处，\n\n$$\\mathbf{N} = \\frac{C - P}{\\|C - P\\|},$$\n\n与运动方向和速率无关。",
+      ),
+      generate(rng: Rng): Problem {
+        const R = rng.int(1, 6);
+        const h = rng.int(-4, 4);
+        const k = rng.int(-4, 4);
+        const w = rng.pick([1, 2, 3]);
+        const cw = rng.int(0, 1) === 1;
+        const [num, den, cs, sn] = rng.pick([
+          [0, 1, 1, 0],
+          [1, 2, 0, 1],
+          [1, 1, -1, 0],
+          [3, 2, 0, -1],
+        ] as const);
+        const wt = w === 1 ? "t" : `${w}t`;
+        const tq = Q.of(num, den * w);
+        const t0 = num === 0 ? "0" : tq.isInteger() ? `${tq.n === 1n ? "" : tq.n}\\pi` : `\\frac{${tq.n === 1n ? "" : tq.n}\\pi}{${tq.d}}`;
+        const ys = cw ? -sn : sn;
+        const ans = [-cs, -ys];
+        const x = `${R === 1 ? "" : R}\\cos ${wt}${h === 0 ? "" : h > 0 ? ` + ${h}` : ` - ${-h}`}`;
+        const y = `${cw ? "-" : ""}${R === 1 ? "" : R}\\sin ${wt}${k === 0 ? "" : k > 0 ? ` + ${k}` : ` - ${-k}`}`;
+        return pointProblem({
+          prompt: t(
+            `Find the principal unit normal $\\mathbf{N}$ of $\\mathbf{r}(t) = \\langle ${x}, ${y} \\rangle$ at $t = ${t0}$.`,
+            `求 $\\mathbf{r}(t) = \\langle ${x}, ${y} \\rangle$ 在 $t = ${t0}$ 处的主单位法向量 $\\mathbf{N}$。`,
+          ),
+          answer: ans,
+          vector: true,
+          wrong: [
+            [cs, ys],
+            [-ys, cs],
+            [ys, -cs],
+          ],
+          solution: t(
+            `The point is $(${h + R * cs}, ${k + R * ys})$ on the circle centered at $(${h}, ${k})$. $\\mathbf{N}$ points to the center: $\\langle ${-cs}, ${-ys} \\rangle$.`,
+            `该点为 $(${h + R * cs}, ${k + R * ys})$，位于圆心 $(${h}, ${k})$ 的圆上。$\\mathbf{N}$ 指向圆心：$\\langle ${-cs}, ${-ys} \\rangle$。`,
+          ),
         });
       },
     },
@@ -792,6 +1067,41 @@ export const binormalVectors: TopicDef = {
         });
       },
     },
+    {
+      id: "the-binormal-of-a-plane-curve",
+      title: t("The binormal of a plane curve", "平面曲线的副法向量"),
+      explanation: t(
+        "For a curve lying in a plane, both $\\mathbf{T}$ and $\\mathbf{N}$ lie in that plane, so $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ is a unit normal to the plane. For a circle in a horizontal plane $z = c$, the right-hand rule decides the sign: traversed counterclockwise when viewed from above, $\\mathbf{B} = \\langle 0, 0, 1 \\rangle$; clockwise, $\\mathbf{B} = \\langle 0, 0, -1 \\rangle$. The radius and the speed do not matter.",
+        "对位于平面内的曲线，$\\mathbf{T}$ 与 $\\mathbf{N}$ 都在该平面内，所以 $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$ 是该平面的单位法向量。对水平平面 $z = c$ 内的圆，右手法则决定符号：从上方看逆时针运动时 $\\mathbf{B} = \\langle 0, 0, 1 \\rangle$；顺时针时 $\\mathbf{B} = \\langle 0, 0, -1 \\rangle$。半径与速率无关。",
+      ),
+      generate(rng: Rng): Problem {
+        const R = rng.int(1, 6);
+        const w = rng.int(1, 4);
+        const c = rng.int(-5, 5);
+        const cw = rng.int(0, 1) === 1;
+        const wt = w === 1 ? "t" : `${w}t`;
+        const r = R === 1 ? "" : String(R);
+        const ans = [0, 0, cw ? -1 : 1];
+        return pointProblem({
+          prompt: t(
+            `Find the binormal vector $\\mathbf{B}(t)$ of $\\mathbf{r}(t) = \\langle ${r}\\cos ${wt}, ${cw ? "-" : ""}${r}\\sin ${wt}, ${c} \\rangle$.`,
+            `求 $\\mathbf{r}(t) = \\langle ${r}\\cos ${wt}, ${cw ? "-" : ""}${r}\\sin ${wt}, ${c} \\rangle$ 的副法向量 $\\mathbf{B}(t)$。`,
+          ),
+          answer: ans,
+          vector: true,
+          vars: ["x", "y", "z"],
+          wrong: [
+            [0, 0, cw ? 1 : -1],
+            [0, 0, R],
+            [0, 0, c === 0 ? 2 : c],
+          ],
+          solution: t(
+            `The curve is a circle in the plane $z = ${c}$, traversed ${cw ? "clockwise" : "counterclockwise"} seen from above, so $\\mathbf{B} = \\langle 0, 0, ${cw ? -1 : 1} \\rangle$.`,
+            `该曲线是平面 $z = ${c}$ 内的圆，从上方看${cw ? "顺时针" : "逆时针"}运动，所以 $\\mathbf{B} = \\langle 0, 0, ${cw ? -1 : 1} \\rangle$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -850,6 +1160,37 @@ export const theOsculatingPlane: TopicDef = {
         });
       },
     },
+    {
+      id: "the-osculating-plane-of-a-plane-curve",
+      title: t("The osculating plane of a plane curve", "平面曲线的密切平面"),
+      explanation: t(
+        "The osculating plane at a point contains $\\mathbf{T}$ and $\\mathbf{N}$, the directions in which the curve is moving and turning. If the whole curve lies in a plane, every tangent and normal lies in that plane too, so the osculating plane is the same plane at every point. To find it, look for a linear relation among the coordinates, such as $z = \\alpha x + \\beta y + \\gamma$, that holds for every $t$.",
+        "某点处的密切平面包含 $\\mathbf{T}$ 与 $\\mathbf{N}$，即曲线运动与弯曲的方向。若整条曲线位于一个平面内，每个切向量和法向量也都在其中，所以每点的密切平面都是这个平面。要找到它，就寻找对每个 $t$ 都成立的坐标间的线性关系，如 $z = \\alpha x + \\beta y + \\gamma$。",
+      ),
+      generate(rng: Rng): Problem {
+        const al = rng.nonZero(-4, 4);
+        const be = rng.nonZero(-4, 4);
+        const ga = rng.int(-5, 5);
+        const z = poly([al, "t"], [be, "t^2"], [ga, ""]);
+        return pointProblem({
+          prompt: t(
+            `The osculating plane of $\\mathbf{r}(t) = \\langle t, t^2, ${z} \\rangle$ is the same at every point and has the form $z = \\alpha x + \\beta y + \\gamma$. Enter $(\\alpha, \\beta, \\gamma)$.`,
+            `$\\mathbf{r}(t) = \\langle t, t^2, ${z} \\rangle$ 的密切平面在每点都相同，形如 $z = \\alpha x + \\beta y + \\gamma$。输入 $(\\alpha, \\beta, \\gamma)$。`,
+          ),
+          answer: [al, be, ga],
+          vars: ["\\alpha", "\\beta", "\\gamma"],
+          wrong: [
+            [be, al, ga],
+            [al, be, 0],
+            [-al, -be, -ga],
+          ],
+          solution: t(
+            `With $x = t$ and $y = t^2$, $z = ${z} = ${poly([al, "x"], [be, "y"], [ga, ""])}$ for every $t$. The curve lies in that plane, so it is the osculating plane: $(${al}, ${be}, ${ga})$.`,
+            `由 $x = t$，$y = t^2$，对每个 $t$ 有 $z = ${z} = ${poly([al, "x"], [be, "y"], [ga, ""])}$。曲线位于该平面内，所以它就是密切平面：$(${al}, ${be}, ${ga})$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -898,6 +1239,46 @@ export const parameterizationByArcLength: TopicDef = {
           solution,
           answer: t0,
           wrong: [sVal * c, sVal + c, sVal - c],
+        });
+      },
+    },
+    {
+      id: "a-point-at-a-given-arc-length-along-a-line",
+      title: t("The point at a given arc length along a line", "直线上给定弧长处的点"),
+      explanation: t(
+        "A line $\\mathbf{r}(t) = P + t\\mathbf{v}$ has constant speed $\\|\\mathbf{v}\\|$, so the arc length from $t = 0$ is $s = \\|\\mathbf{v}\\|t$. Solving $t = s/\\|\\mathbf{v}\\|$ gives the arc length parametrization\n\n$$\\mathbf{r}(s) = P + \\frac{s}{\\|\\mathbf{v}\\|}\\mathbf{v},$$\n\nwhich moves at unit speed. The point at arc length $s$ is $P$ plus $s$ times the unit vector in the direction of $\\mathbf{v}$.",
+        "直线 $\\mathbf{r}(t) = P + t\\mathbf{v}$ 速率恒为 $\\|\\mathbf{v}\\|$，所以从 $t = 0$ 起的弧长为 $s = \\|\\mathbf{v}\\|t$。解出 $t = s/\\|\\mathbf{v}\\|$ 得弧长参数化\n\n$$\\mathbf{r}(s) = P + \\frac{s}{\\|\\mathbf{v}\\|}\\mathbf{v},$$\n\n它以单位速率运动。弧长 $s$ 处的点是 $P$ 加上 $s$ 乘以 $\\mathbf{v}$ 方向的单位向量。",
+      ),
+      generate(rng: Rng): Problem {
+        const [a, b, c, n] = rng.pick([
+          [1, 2, 2, 3],
+          [2, 3, 6, 7],
+          [1, 4, 8, 9],
+          [4, 4, 7, 9],
+          [2, 6, 9, 11],
+        ] as const);
+        const sg = [rng.pick([1, -1]), rng.pick([1, -1]), rng.pick([1, -1])];
+        const v: Vec3 = [sg[0]! * a, sg[1]! * b, sg[2]! * c];
+        const P: Vec3 = [rng.int(-4, 4), rng.int(-4, 4), rng.int(-4, 4)];
+        const s = n * rng.int(1, 3);
+        const k = s / n;
+        const ans = [P[0] + k * v[0], P[1] + k * v[1], P[2] + k * v[2]];
+        return pointProblem({
+          prompt: t(
+            `Starting at $t = 0$, find the point at arc length $${s}$ along $\\mathbf{r}(t) = ${v3L(P)} + t${v3L(v)}$, $t \\ge 0$.`,
+            `从 $t = 0$ 开始，求沿 $\\mathbf{r}(t) = ${v3L(P)} + t${v3L(v)}$（$t \\ge 0$）弧长为 $${s}$ 处的点。`,
+          ),
+          answer: ans,
+          vars: ["x", "y", "z"],
+          wrong: [
+            [P[0] + s * v[0], P[1] + s * v[1], P[2] + s * v[2]],
+            [k * v[0], k * v[1], k * v[2]],
+            [P[0] - k * v[0], P[1] - k * v[1], P[2] - k * v[2]],
+          ],
+          solution: t(
+            `$\\|\\mathbf{v}\\| = \\sqrt{${a * a} + ${b * b} + ${c * c}} = ${n}$, so arc length $${s}$ is reached at $t = ${k}$, at the point $(${ans.join(", ")})$.`,
+            `$\\|\\mathbf{v}\\| = \\sqrt{${a * a} + ${b * b} + ${c * c}} = ${n}$，所以弧长 $${s}$ 在 $t = ${k}$ 时达到，对应点 $(${ans.join(", ")})$。`,
+          ),
         });
       },
     },
@@ -956,6 +1337,32 @@ export const introductionToCurvature: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(1, a), Q.of(b, sumSq), Q.of(1, sumSq)],
+        });
+      },
+    },
+    {
+      id: "the-curvature-of-a-circle-is-the-reciprocal-of-its-radius",
+      title: t("The curvature of a circle", "圆的曲率"),
+      explanation: t(
+        "Curvature $\\kappa = \\left\\|\\frac{d\\mathbf{T}}{ds}\\right\\|$ measures how fast the direction turns per unit of distance travelled. Around a circle of radius $R$ the tangent turns through $2\\pi$ while the point travels $2\\pi R$, at a steady rate, so\n\n$$\\kappa = \\frac{2\\pi}{2\\pi R} = \\frac{1}{R}.$$\n\nThe parametrization's speed and the circle's center do not affect $\\kappa$, because curvature is measured per unit arc length.",
+        "曲率 $\\kappa = \\left\\|\\frac{d\\mathbf{T}}{ds}\\right\\|$ 衡量每走过单位距离方向转动多快。绕半径为 $R$ 的圆一周，切向转过 $2\\pi$，而点走过 $2\\pi R$，且速率均匀，所以\n\n$$\\kappa = \\frac{2\\pi}{2\\pi R} = \\frac{1}{R}。$$\n\n参数化的速率和圆心位置都不影响 $\\kappa$，因为曲率是按单位弧长度量的。",
+      ),
+      generate(rng: Rng): Problem {
+        const R = rng.int(2, 9);
+        const w = rng.int(1, 5);
+        const h = rng.int(-4, 4);
+        const wt = w === 1 ? "t" : `${w}t`;
+        return numberProblem({
+          prompt: t(
+            `Find the curvature of $\\mathbf{r}(t) = \\langle ${R}\\cos ${wt}${h === 0 ? "" : h > 0 ? ` + ${h}` : ` - ${-h}`}, ${R}\\sin ${wt} \\rangle$.`,
+            `求 $\\mathbf{r}(t) = \\langle ${R}\\cos ${wt}${h === 0 ? "" : h > 0 ? ` + ${h}` : ` - ${-h}`}, ${R}\\sin ${wt} \\rangle$ 的曲率。`,
+          ),
+          answer: Q.of(1, R),
+          wrong: [Q.of(w, R), Q.of(R), Q.of(1, R * w), Q.of(1, R * R)],
+          solution: t(
+            `This is a circle of radius $${R}$, traversed at speed $${R * w}$. Curvature does not depend on the speed, so $\\kappa = \\frac{1}{${R}}$.`,
+            `这是半径为 $${R}$ 的圆，以速率 $${R * w}$ 运动。曲率与速率无关，所以 $\\kappa = \\frac{1}{${R}}$。`,
+          ),
         });
       },
     },
@@ -1021,6 +1428,32 @@ export const findingCurvatureUsingTheCrossProduct: TopicDef = {
         });
       },
     },
+    {
+      id: "curvature-of-a-cubic-space-curve-by-the-cross-product",
+      title: t("Curvature of a cubic space curve", "三次空间曲线的曲率"),
+      explanation: t(
+        "The cross product formula $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ works for any parametrization, so there is no need to reparametrize by arc length first. Compute the first two derivatives, take their cross product, and divide its length by the cube of the speed. For $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$, $\\mathbf{r}' = a\\langle 2, 2t, t^2 \\rangle$ and $\\mathbf{r}'' = a\\langle 0, 2, 2t \\rangle$, so\n\n$$\\mathbf{r}' \\times \\mathbf{r}'' = a^2\\langle 2t^2, -4t, 4 \\rangle, \\qquad \\|\\mathbf{r}' \\times \\mathbf{r}''\\| = 2a^2(t^2 + 2).$$\n\nWith $\\|\\mathbf{r}'\\| = a(t^2 + 2)$ this gives $\\kappa(t) = \\frac{2}{a(t^2 + 2)^2}$.",
+        "叉积公式 $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ 对任意参数化都成立，因此不必先改用弧长参数。求出前两阶导数，取叉积，再用其长度除以速率的立方。对 $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$，$\\mathbf{r}' = a\\langle 2, 2t, t^2 \\rangle$，$\\mathbf{r}'' = a\\langle 0, 2, 2t \\rangle$，所以\n\n$$\\mathbf{r}' \\times \\mathbf{r}'' = a^2\\langle 2t^2, -4t, 4 \\rangle, \\qquad \\|\\mathbf{r}' \\times \\mathbf{r}''\\| = 2a^2(t^2 + 2)。$$\n\n由 $\\|\\mathbf{r}'\\| = a(t^2 + 2)$ 得 $\\kappa(t) = \\frac{2}{a(t^2 + 2)^2}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 4);
+        const t0 = rng.int(-3, 3);
+        const n = t0 * t0 + 2;
+        const ans = Q.of(2, a * n * n);
+        return numberProblem({
+          prompt: t(
+            `Find the curvature of $\\mathbf{r}(t) = ${cubicCurve(a)}$ at $t = ${t0}$.`,
+            `求 $\\mathbf{r}(t) = ${cubicCurve(a)}$ 在 $t = ${t0}$ 处的曲率。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(2, n * n), Q.of(2, a * n), Q.of(2 * a, n * n), Q.of(1, a * n * n)],
+          solution: t(
+            `$\\|\\mathbf{r}' \\times \\mathbf{r}''\\| = ${2 * a * a} \\cdot ${n}$ and $\\|\\mathbf{r}'\\|^3 = (${a} \\cdot ${n})^3$, so $\\kappa = \\frac{2}{${a} \\cdot ${n}^2} = ${ans.toLatex()}$.`,
+            `$\\|\\mathbf{r}' \\times \\mathbf{r}''\\| = ${2 * a * a} \\cdot ${n}$，$\\|\\mathbf{r}'\\|^3 = (${a} \\cdot ${n})^3$，所以 $\\kappa = \\frac{2}{${a} \\cdot ${n}^2} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1066,6 +1499,33 @@ export const radiusOfCurvature: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(1, k), k * k, k + 1],
+        });
+      },
+    },
+    {
+      id: "the-radius-of-curvature-at-a-vertex-of-an-ellipse",
+      title: t("The radius of curvature at a vertex of an ellipse", "椭圆顶点处的曲率半径"),
+      explanation: t(
+        "For the ellipse $\\mathbf{r}(t) = \\langle A\\cos t, B\\sin t \\rangle$, the cross product formula gives\n\n$$\\kappa(t) = \\frac{AB}{(A^2\\sin^2 t + B^2\\cos^2 t)^{3/2}}.$$\n\nAt the vertex $(A, 0)$, where $t = 0$, this is $\\kappa = \\frac{A}{B^2}$, so the radius of curvature is $\\rho = \\frac{1}{\\kappa} = \\frac{B^2}{A}$. At $(0, B)$ the roles swap and $\\rho = \\frac{A^2}{B}$.",
+        "对椭圆 $\\mathbf{r}(t) = \\langle A\\cos t, B\\sin t \\rangle$，叉积公式给出\n\n$$\\kappa(t) = \\frac{AB}{(A^2\\sin^2 t + B^2\\cos^2 t)^{3/2}}。$$\n\n在顶点 $(A, 0)$（$t = 0$）处，$\\kappa = \\frac{A}{B^2}$，所以曲率半径 $\\rho = \\frac{1}{\\kappa} = \\frac{B^2}{A}$。在 $(0, B)$ 处角色互换，$\\rho = \\frac{A^2}{B}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const A = rng.int(2, 9);
+        let B = rng.int(2, 9);
+        if (B === A) B += 1;
+        const onX = rng.int(0, 1) === 0;
+        const ans = onX ? Q.of(B * B, A) : Q.of(A * A, B);
+        return numberProblem({
+          prompt: t(
+            `Find the radius of curvature of the ellipse $\\frac{x^2}{${A * A}} + \\frac{y^2}{${B * B}} = 1$ at the point $${onX ? `(${A}, 0)` : `(0, ${B})`}$.`,
+            `求椭圆 $\\frac{x^2}{${A * A}} + \\frac{y^2}{${B * B}} = 1$ 在点 $${onX ? `(${A}, 0)` : `(0, ${B})`}$ 处的曲率半径。`,
+          ),
+          answer: ans,
+          wrong: [onX ? Q.of(A, B * B) : Q.of(B, A * A), onX ? Q.of(A * A, B) : Q.of(B * B, A), Q.of(onX ? A : B), Q.of(onX ? B : A)],
+          solution: t(
+            `With $A = ${A}$ and $B = ${B}$, the curvature at $${onX ? `(${A}, 0)` : `(0, ${B})`}$ is $${onX ? `\\frac{${A}}{${B * B}}` : `\\frac{${B}}{${A * A}}`}$, so $\\rho = ${ans.toLatex()}$.`,
+            `由 $A = ${A}$，$B = ${B}$，在 $${onX ? `(${A}, 0)` : `(0, ${B})`}$ 处曲率为 $${onX ? `\\frac{${A}}{${B * B}}` : `\\frac{${B}}{${A * A}}`}$，所以 $\\rho = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1116,6 +1576,46 @@ export const theCurvatureOfAPlaneCurve: TopicDef = {
           solution,
           answer: ans,
           wrong: [a, ans / 2, ans * 2],
+        });
+      },
+    },
+    {
+      id: "curvature-of-a-graph-from-its-slope-and-concavity",
+      title: t("Curvature of a graph from $f'$ and $f''$", "由 $f'$ 与 $f''$ 求图像的曲率"),
+      explanation: t(
+        "For the graph $y = f(x)$ the curvature is\n\n$$\\kappa = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}.$$\n\nIt grows with the concavity $|f''|$ but is damped where the graph is steep. When the slope is a ratio from a Pythagorean triple, such as $\\frac34$, the denominator is rational: $1 + \\frac{9}{16} = \\frac{25}{16}$, whose $\\frac32$ power is $\\frac{125}{64}$.",
+        "对图像 $y = f(x)$，曲率为\n\n$$\\kappa = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}。$$\n\n它随凹凸程度 $|f''|$ 增大，但在图像陡峭处被削弱。当斜率是勾股数之比如 $\\frac34$ 时分母为有理数：$1 + \\frac{9}{16} = \\frac{25}{16}$，其 $\\frac32$ 次幂为 $\\frac{125}{64}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const [p, q, r] = rng.pick([
+          [0, 1, 1],
+          [3, 4, 5],
+          [4, 3, 5],
+          [5, 12, 13],
+          [12, 5, 13],
+        ] as const);
+        const sg = rng.pick([1, -1]);
+        const slope = Q.of(sg * p, q);
+        const k = rng.nonZero(-9, 9);
+        const x0 = rng.int(-3, 3);
+        const ans = Q.of(Math.abs(k) * q ** 3, r ** 3);
+        return numberProblem({
+          prompt: t(
+            `At $x = ${x0}$ a function has $f'(${x0}) = ${slope.toLatex()}$ and $f''(${x0}) = ${k}$. Find the curvature of $y = f(x)$ there.`,
+            `某函数在 $x = ${x0}$ 处 $f'(${x0}) = ${slope.toLatex()}$，$f''(${x0}) = ${k}$。求 $y = f(x)$ 在该处的曲率。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(Math.abs(k)), Q.of(Math.abs(k) * q * q, r * r), Q.of(Math.abs(k) * q, r), Q.of(k * q ** 3, r ** 3)],
+          solution:
+            p === 0
+              ? t(
+                  `With $f' = 0$ the denominator is $1$, so $\\kappa = |f''| = ${Math.abs(k)}$.`,
+                  `$f' = 0$ 时分母为 $1$，所以 $\\kappa = |f''| = ${Math.abs(k)}$。`,
+                )
+              : t(
+                  `$1 + f'^2 = \\frac{${r * r}}{${q * q}}$, whose $\\frac32$ power is $\\frac{${r ** 3}}{${q ** 3}}$. So $\\kappa = ${Math.abs(k)} \\cdot \\frac{${q ** 3}}{${r ** 3}} = ${ans.toLatex()}$.`,
+                  `$1 + f'^2 = \\frac{${r * r}}{${q * q}}$，其 $\\frac32$ 次幂为 $\\frac{${r ** 3}}{${q ** 3}}$。所以 $\\kappa = ${Math.abs(k)} \\cdot \\frac{${q ** 3}}{${r ** 3}} = ${ans.toLatex()}$。`,
+                ),
         });
       },
     },
@@ -1187,6 +1687,45 @@ export const vectorFields: TopicDef = {
             [-ansX, -ansY, -ansZ],
             [pt[0], pt[1], pt[2]],
           ],
+        });
+      },
+    },
+    {
+      id: "finding-where-a-vector-field-vanishes",
+      title: t("Finding where a vector field vanishes", "求向量场为零的点"),
+      explanation: t(
+        "A point where $\\mathbf{F} = \\mathbf{0}$ is an equilibrium of the field: a particle carried by the flow and placed there stays put. To find it, set every component equal to zero and solve the resulting system. For $\\mathbf{F} = \\langle x + y - p, x - y - q \\rangle$, adding and subtracting the equations gives $x = \\frac{p + q}{2}$ and $y = \\frac{p - q}{2}$.",
+        "使 $\\mathbf{F} = \\mathbf{0}$ 的点是场的平衡点：放在那里随流运动的质点保持不动。求它时令每个分量为零并解所得方程组。对 $\\mathbf{F} = \\langle x + y - p, x - y - q \\rangle$，把两个方程相加、相减得 $x = \\frac{p + q}{2}$，$y = \\frac{p - q}{2}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const x = rng.int(-5, 5);
+        const y = rng.int(-5, 5);
+        const a = rng.nonZero(-3, 3);
+        const b = rng.nonZero(-3, 3);
+        let c = rng.nonZero(-3, 3);
+        let d = rng.nonZero(-3, 3);
+        if (a * d - b * c === 0) {
+          c = -c;
+          if (a * d - b * c === 0) d += 1;
+          if (d === 0) d = 2;
+        }
+        const p = a * x + b * y;
+        const q = c * x + d * y;
+        return pointProblem({
+          prompt: t(
+            `At which point is $\\mathbf{F}(x, y) = \\langle ${poly([a, "x"], [b, "y"], [-p, ""])}, ${poly([c, "x"], [d, "y"], [-q, ""])} \\rangle$ the zero vector?`,
+            `$\\mathbf{F}(x, y) = \\langle ${poly([a, "x"], [b, "y"], [-p, ""])}, ${poly([c, "x"], [d, "y"], [-q, ""])} \\rangle$ 在哪一点为零向量？`,
+          ),
+          answer: [x, y],
+          wrong: [
+            [y, x],
+            [-x, -y],
+            [p, q],
+          ],
+          solution: t(
+            `Solve $${poly([a, "x"], [b, "y"])} = ${p}$ and $${poly([c, "x"], [d, "y"])} = ${q}$: the solution is $(${x}, ${y})$.`,
+            `解 $${poly([a, "x"], [b, "y"])} = ${p}$ 与 $${poly([c, "x"], [d, "y"])} = ${q}$：解为 $(${x}, ${y})$。`,
+          ),
         });
       },
     },
@@ -1265,6 +1804,48 @@ export const visualizingVectorFields: TopicDef = {
         return pickChoice(rng, prompt, item.right, item.wrong, solution);
       },
     },
+    {
+      id: "the-direction-of-a-field-arrow-at-a-point",
+      title: t("The direction of a field arrow at a point", "某点处场箭头的方向"),
+      explanation: t(
+        "A plot of a vector field draws the arrow $\\mathbf{F}(x, y)$ with its tail at $(x, y)$. The signs of the two components already tell the rough direction: a positive first component points right and a negative one left, while a positive second component points up and a negative one down. This is often enough to match a formula with a picture.",
+        "向量场图在点 $(x, y)$ 处画出以该点为起点的箭头 $\\mathbf{F}(x, y)$。两个分量的符号已能说明大致方向：第一分量为正指向右、为负指向左；第二分量为正指向上、为负指向下。这通常足以把公式与图对应起来。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-3, 3);
+        const b = rng.nonZero(-3, 3);
+        const swap = rng.int(0, 1) === 1;
+        const x0 = rng.nonZero(-4, 4);
+        const y0 = rng.nonZero(-4, 4);
+        const P = swap ? a * x0 * y0 : a * y0;
+        const Qv = swap ? b * x0 : b * x0 * y0;
+        const Pe = swap ? poly([a, "xy"]) : poly([a, "y"]);
+        const Qe = swap ? poly([b, "x"]) : poly([b, "xy"]);
+        const dir = (h: number, v: number) =>
+          h > 0
+            ? v > 0
+              ? t("Up and to the right", "向右上方")
+              : t("Down and to the right", "向右下方")
+            : v > 0
+              ? t("Up and to the left", "向左上方")
+              : t("Down and to the left", "向左下方");
+        const right = dir(P, Qv);
+        const all = [dir(1, 1), dir(1, -1), dir(-1, 1), dir(-1, -1)];
+        return pickChoice(
+          rng,
+          t(
+            `In a plot of $\\mathbf{F}(x, y) = \\langle ${Pe}, ${Qe} \\rangle$, which way does the arrow at $(${x0}, ${y0})$ point?`,
+            `在 $\\mathbf{F}(x, y) = \\langle ${Pe}, ${Qe} \\rangle$ 的图中，点 $(${x0}, ${y0})$ 处的箭头指向哪里？`,
+          ),
+          right,
+          all.filter((o) => o.en !== right.en),
+          t(
+            `$\\mathbf{F}(${x0}, ${y0}) = \\langle ${P}, ${Qv} \\rangle$: the arrow points ${right.en.toLowerCase()}.`,
+            `$\\mathbf{F}(${x0}, ${y0}) = \\langle ${P}, ${Qv} \\rangle$：箭头指${right["zh-CN"]}。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -1326,6 +1907,39 @@ export const gradientVectorFields: TopicDef = {
         });
       },
     },
+    {
+      id: "the-gradient-of-a-sum-of-products",
+      title: t("The gradient of a sum of products", "乘积之和的梯度"),
+      explanation: t(
+        "The gradient field $\\nabla f = \\langle f_x, f_y, f_z \\rangle$ is found one partial derivative at a time, treating the other variables as constants. For $f = axy + byz + cxz$, each product contributes to the two variables it contains:\n\n$$\\nabla f = \\langle ay + cz,\\ ax + bz,\\ by + cx \\rangle.$$",
+        "梯度场 $\\nabla f = \\langle f_x, f_y, f_z \\rangle$ 逐个偏导求出，把其他变量视为常数。对 $f = axy + byz + cxz$，每个乘积对它所含的两个变量都有贡献：\n\n$$\\nabla f = \\langle ay + cz,\\ ax + bz,\\ by + cx \\rangle。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-4, 4);
+        const b = rng.nonZero(-4, 4);
+        const c = rng.nonZero(-4, 4);
+        const [x, y, z] = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
+        const ans = [a * y + c * z, a * x + b * z, b * y + c * x];
+        return pointProblem({
+          prompt: t(
+            `Find $\\nabla f(${x}, ${y}, ${z})$ for $f(x, y, z) = ${poly([a, "xy"], [b, "yz"], [c, "xz"])}$.`,
+            `对 $f(x, y, z) = ${poly([a, "xy"], [b, "yz"], [c, "xz"])}$ 求 $\\nabla f(${x}, ${y}, ${z})$。`,
+          ),
+          answer: ans,
+          vector: true,
+          vars: ["x", "y", "z"],
+          wrong: [
+            [a * x + c * z, b * y + a * y, c * x + b * z],
+            [a * y, b * z, c * x],
+            [-ans[0]!, -ans[1]!, -ans[2]!],
+          ],
+          solution: t(
+            `$\\nabla f = \\langle ${poly([a, "y"], [c, "z"])}, ${poly([a, "x"], [b, "z"])}, ${poly([b, "y"], [c, "x"])} \\rangle$, which at $(${x}, ${y}, ${z})$ is $${v3L(ans)}$.`,
+            `$\\nabla f = \\langle ${poly([a, "y"], [c, "z"])}, ${poly([a, "x"], [b, "z"])}, ${poly([b, "y"], [c, "x"])} \\rangle$，在 $(${x}, ${y}, ${z})$ 处为 $${v3L(ans)}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1373,6 +1987,34 @@ export const conservativeVectorFieldsInTheCartesianPlane: TopicDef = {
           answer: cleanAns,
           wrong: [cleanA, -cleanAns, cleanAns + 1],
         });
+      },
+    },
+    {
+      id: "deciding-whether-a-polynomial-field-is-conservative",
+      title: t("Deciding whether a polynomial field is conservative", "判断多项式场是否保守"),
+      explanation: t(
+        "On the whole plane, $\\mathbf{F} = \\langle P, Q \\rangle$ with continuous partial derivatives is conservative exactly when $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$ at every point. For $P = px^2y + r$ and $Q = qx^3 + sy$, the test gives $px^2 = 3qx^2$, which holds for every $x$ only when $p = 3q$. Equality at a single point is not enough; it must hold identically.",
+        "在整个平面上，偏导连续的 $\\mathbf{F} = \\langle P, Q \\rangle$ 是保守的，当且仅当每点都有 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$。对 $P = px^2y + r$，$Q = qx^3 + sy$，检验给出 $px^2 = 3qx^2$，只有当 $p = 3q$ 时才对所有 $x$ 成立。在单个点相等是不够的，必须恒等成立。",
+      ),
+      generate(rng: Rng): Problem {
+        const q = rng.nonZero(-3, 3);
+        const yes = rng.int(0, 1) === 0;
+        const p = yes ? 3 * q : rng.pick([q, 2 * q, -3 * q, 4 * q]);
+        const r = rng.int(-5, 5);
+        const s = rng.nonZero(-5, 5);
+        return pickChoice(
+          rng,
+          t(
+            `Is $\\mathbf{F}(x, y) = \\langle ${poly([p, "x^2y"], [r, ""])}, ${poly([q, "x^3"], [s, "y"])} \\rangle$ conservative on the plane?`,
+            `$\\mathbf{F}(x, y) = \\langle ${poly([p, "x^2y"], [r, ""])}, ${poly([q, "x^3"], [s, "y"])} \\rangle$ 在平面上是保守场吗？`,
+          ),
+          yes ? yesNo[0]! : yesNo[1]!,
+          [yes ? yesNo[1]! : yesNo[0]!],
+          t(
+            `$\\frac{\\partial P}{\\partial y} = ${poly([p, "x^2"])}$ and $\\frac{\\partial Q}{\\partial x} = ${poly([3 * q, "x^2"])}$. ${yes ? "They are identical, so the field is conservative." : "They differ, so the field is not conservative."}`,
+            `$\\frac{\\partial P}{\\partial y} = ${poly([p, "x^2"])}$，$\\frac{\\partial Q}{\\partial x} = ${poly([3 * q, "x^2"])}$。${yes ? "二者恒等，所以场是保守的。" : "二者不同，所以场不是保守的。"}`,
+          ),
+        );
       },
     },
   ],
@@ -1430,6 +2072,39 @@ export const calculatingPotentialFunctions: TopicDef = {
           solution,
           answer: ans,
           wrong: [poly([2 * a, "x^2"], [b, "xy"], [2 * c, "y^2"]), poly([a, "x^2"], [-b, "xy"], [c, "y^2"]), poly([a, "x^2"], [c, "y^2"])],
+        });
+      },
+    },
+    {
+      id: "a-potential-function-in-three-variables",
+      title: t("A potential function in three variables", "三元势函数"),
+      explanation: t(
+        "In three variables, integrate the first component in $x$, then fix the leftover function of $y$ and $z$ using the second component, and finally fix the leftover function of $z$ using the third. For $\\mathbf{F} = \\langle 2ax + dy, dx + ez, ey + 2cz \\rangle$ the steps give\n\n$$f(x, y, z) = ax^2 + dxy + eyz + cz^2,$$\n\nup to a constant, which the condition $f(0, 0, 0) = 0$ sets to zero.",
+        "在三个变量中，先把第一个分量对 $x$ 积分，再用第二个分量确定剩下的 $y$、$z$ 的函数，最后用第三个分量确定剩下的 $z$ 的函数。对 $\\mathbf{F} = \\langle 2ax + dy, dx + ez, ey + 2cz \\rangle$，这些步骤给出\n\n$$f(x, y, z) = ax^2 + dxy + eyz + cz^2,$$\n\n相差一个常数，条件 $f(0, 0, 0) = 0$ 使它为零。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-3, 3);
+        const c = rng.nonZero(-3, 3);
+        const d = rng.nonZero(-4, 4);
+        const e = rng.nonZero(-4, 4);
+        const [x, y, z] = [rng.int(-2, 3), rng.int(-2, 3), rng.nonZero(-2, 3)];
+        const ans = a * x * x + d * x * y + e * y * z + c * z * z;
+        return numberProblem({
+          prompt: t(
+            `$\\nabla f = \\langle ${poly([2 * a, "x"], [d, "y"])}, ${poly([d, "x"], [e, "z"])}, ${poly([e, "y"], [2 * c, "z"])} \\rangle$ and $f(0, 0, 0) = 0$. Find $f(${x}, ${y}, ${z})$.`,
+            `$\\nabla f = \\langle ${poly([2 * a, "x"], [d, "y"])}, ${poly([d, "x"], [e, "z"])}, ${poly([e, "y"], [2 * c, "z"])} \\rangle$，$f(0, 0, 0) = 0$。求 $f(${x}, ${y}, ${z})$。`,
+          ),
+          answer: ans,
+          wrong: [
+            2 * a * x * x + d * x * y + e * y * z + 2 * c * z * z,
+            a * x * x + 2 * d * x * y + 2 * e * y * z + c * z * z,
+            a * x * x + c * z * z,
+            -ans,
+          ],
+          solution: t(
+            `$f = ${poly([a, "x^2"], [d, "xy"], [e, "yz"], [c, "z^2"])}$, so $f(${x}, ${y}, ${z}) = ${ans}$.`,
+            `$f = ${poly([a, "x^2"], [d, "xy"], [e, "yz"], [c, "z^2"])}$，所以 $f(${x}, ${y}, ${z}) = ${ans}$。`,
+          ),
         });
       },
     },
@@ -1526,6 +2201,56 @@ export const connectedAndSimplyConnectedRegions: TopicDef = {
         return pickChoice(rng, prompt, item.right, item.wrong, solution);
       },
     },
+    {
+      id: "picking-the-simply-connected-region",
+      title: t("Picking the simply connected region", "挑出单连通区域"),
+      explanation: t(
+        "A region is connected if any two of its points can be joined by a path inside it, and simply connected if, in addition, every closed curve in it can be shrunk to a point without leaving it. A disk, a half-plane and a rectangle are simply connected. Even the plane with a ray removed is simply connected, because a loop cannot surround the ray's endpoint without crossing the ray. An annulus, a punctured disk or the plane without the origin each have a hole, and two separate disks are not even connected.",
+        "若区域中任意两点都能用区域内的路径连接，则区域连通；若此外区域内每条闭曲线都能在不离开区域的情况下收缩为一点，则区域单连通。圆盘、半平面与矩形都是单连通的。甚至去掉一条射线的平面也是单连通的，因为环路不穿过射线就无法绕住射线端点。圆环、去心圆盘或去掉原点的平面都有洞，而两个分离的圆盘甚至不连通。",
+      ),
+      generate(rng: Rng): Problem {
+        const R = rng.int(2, 6);
+        const r = rng.int(1, R - 1);
+        const c = rng.int(-4, 4);
+        const regions: [Text, boolean][] = [
+          [t(`the half-plane $y > ${c}$`, `半平面 $y > ${c}$`), true],
+          [t(`the plane with the ray $\\{(x, ${c}) : x \\le 0\\}$ removed`, `去掉射线 $\\{(x, ${c}) : x \\le 0\\}$ 的平面`), true],
+          [t(`the open rectangle $0 < x < ${R}$, $${c} < y < ${c + r}$`, `开矩形 $0 < x < ${R}$，$${c} < y < ${c + r}$`), true],
+          [t(`the open disk $(x - ${R})^2 + y^2 < ${r * r}$`, `开圆盘 $(x - ${R})^2 + y^2 < ${r * r}$`), true],
+          [t(`the annulus $${r * r} < x^2 + y^2 < ${R * R}$`, `圆环 $${r * r} < x^2 + y^2 < ${R * R}$`), false],
+          [t(`the punctured disk $0 < x^2 + (y - ${R})^2 < ${r * r}$`, `去心圆盘 $0 < x^2 + (y - ${R})^2 < ${r * r}$`), false],
+          [t(`the plane with the point $(${c}, ${R})$ removed`, `去掉点 $(${c}, ${R})$ 的平面`), false],
+          [
+            t(
+              `the union of the disks $x^2 + y^2 < 1$ and $(x - ${R + 2})^2 + y^2 < 1$`,
+              `圆盘 $x^2 + y^2 < 1$ 与 $(x - ${R + 2})^2 + y^2 < 1$ 之并`,
+            ),
+            false,
+          ],
+        ];
+        const [region, yes] = rng.pick(regions);
+        return pickChoice(
+          rng,
+          t(`Is ${region.en} simply connected?`, `${region["zh-CN"]}是单连通的吗？`),
+          yes ? yesNo[0]! : yesNo[1]!,
+          [yes ? yesNo[1]! : yesNo[0]!],
+          yes
+            ? t(
+                `Yes. The region is connected and has no holes, so every closed curve in it can be shrunk to a point inside it.`,
+                `是。该区域连通且没有洞，其中每条闭曲线都能在区域内收缩为一点。`,
+              )
+            : region === regions[7]![0]
+              ? t(
+                  "No. The two disks do not touch, so the region is not even connected, and simple connectivity requires a connected region.",
+                  "不是。两个圆盘不相交，所以区域甚至不连通，而单连通要求区域连通。",
+                )
+              : t(
+                  "No. The region has a hole, so a loop around the hole cannot be shrunk to a point without leaving the region.",
+                  "不是。区域有洞，绕洞的环路不离开区域就无法收缩为一点。",
+                ),
+        );
+      },
+    },
   ],
 };
 
@@ -1581,6 +2306,40 @@ export const streamFunctions: TopicDef = {
           solution,
           answer: ans,
           wrong: [poly([a, "y^2"], [b, "x^2"]), poly([2 * a, "y^2"], [-2 * b, "x^2"]), poly([b, "y^2"], [-a, "x^2"])],
+        });
+      },
+    },
+    {
+      id: "a-velocity-field-from-its-stream-function",
+      title: t("A velocity field from its stream function", "由流函数求速度场"),
+      explanation: t(
+        "A stream function $\\psi$ determines an incompressible flow through $P = \\frac{\\partial \\psi}{\\partial y}$ and $Q = -\\frac{\\partial \\psi}{\\partial x}$. Such a field is automatically divergence free, since $P_x + Q_y = \\psi_{yx} - \\psi_{xy} = 0$. Differentiating $\\psi$ and evaluating at a point gives the velocity there, which is tangent to the streamline $\\psi = C$ through that point.",
+        "流函数 $\\psi$ 通过 $P = \\frac{\\partial \\psi}{\\partial y}$，$Q = -\\frac{\\partial \\psi}{\\partial x}$ 确定一个不可压缩流。这样的场自动无散，因为 $P_x + Q_y = \\psi_{yx} - \\psi_{xy} = 0$。对 $\\psi$ 求导并在某点取值就得到该点的速度，它与过该点的流线 $\\psi = C$ 相切。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-3, 3);
+        const b = rng.nonZero(-3, 3);
+        const c = rng.nonZero(-3, 3);
+        const x = rng.int(-3, 3);
+        const y = rng.int(-3, 3);
+        const P = a * x + 2 * c * y;
+        const Qv = -(a * y + 2 * b * x);
+        return pointProblem({
+          prompt: t(
+            `The stream function of a flow is $\\psi(x, y) = ${poly([a, "xy"], [b, "x^2"], [c, "y^2"])}$, with $P = \\psi_y$ and $Q = -\\psi_x$. Find the velocity $\\mathbf{F}(${x}, ${y})$.`,
+            `某流动的流函数为 $\\psi(x, y) = ${poly([a, "xy"], [b, "x^2"], [c, "y^2"])}$，$P = \\psi_y$，$Q = -\\psi_x$。求速度 $\\mathbf{F}(${x}, ${y})$。`,
+          ),
+          answer: [P, Qv],
+          vector: true,
+          wrong: [
+            [-Qv, P],
+            [-Qv, -P],
+            [P, -Qv],
+          ],
+          solution: t(
+            `$\\psi_y = ${poly([a, "x"], [2 * c, "y"])}$ and $\\psi_x = ${poly([a, "y"], [2 * b, "x"])}$, so $\\mathbf{F}(${x}, ${y}) = \\langle ${P}, ${Qv} \\rangle$.`,
+            `$\\psi_y = ${poly([a, "x"], [2 * c, "y"])}$，$\\psi_x = ${poly([a, "y"], [2 * b, "x"])}$，所以 $\\mathbf{F}(${x}, ${y}) = \\langle ${P}, ${Qv} \\rangle$。`,
+          ),
         });
       },
     },
@@ -1648,6 +2407,33 @@ export const theDivergenceOfAVectorField: TopicDef = {
         });
       },
     },
+    {
+      id: "the-divergence-at-a-point",
+      title: t("The divergence at a point", "某点处的散度"),
+      explanation: t(
+        "The divergence $\\nabla \\cdot \\mathbf{F} = P_x + Q_y + R_z$ is a scalar function, so it can change from point to point. Positive divergence at a point means the flow spreads out there, like a source, and negative divergence means it converges, like a sink. Compute the three partial derivatives first, add them, and only then substitute the coordinates.",
+        "散度 $\\nabla \\cdot \\mathbf{F} = P_x + Q_y + R_z$ 是标量函数，所以随点而变。某点散度为正说明流在那里发散，像源；为负说明汇聚，像汇。先求三个偏导数并相加，再代入坐标。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-3, 3);
+        const b = rng.nonZero(-4, 4);
+        const c = rng.nonZero(-3, 3);
+        const [x, y, z] = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
+        const ans = 2 * a * x * y + b * z + 2 * c * x * z;
+        return numberProblem({
+          prompt: t(
+            `Find $\\nabla \\cdot \\mathbf{F}$ at $(${x}, ${y}, ${z})$ for $\\mathbf{F} = \\langle ${poly([a, "x^2y"])}, ${poly([b, "yz"])}, ${poly([c, "xz^2"])} \\rangle$.`,
+            `对 $\\mathbf{F} = \\langle ${poly([a, "x^2y"])}, ${poly([b, "yz"])}, ${poly([c, "xz^2"])} \\rangle$ 求 $(${x}, ${y}, ${z})$ 处的 $\\nabla \\cdot \\mathbf{F}$。`,
+          ),
+          answer: ans,
+          wrong: [a * x * x + b * y + c * z * z, 2 * a * x * y + b * y + 2 * c * x * z, a * x * x * y + b * y * z + c * x * z * z],
+          solution: t(
+            `$\\nabla \\cdot \\mathbf{F} = ${poly([2 * a, "xy"], [b, "z"], [2 * c, "xz"])}$, which at $(${x}, ${y}, ${z})$ equals $${ans}$.`,
+            `$\\nabla \\cdot \\mathbf{F} = ${poly([2 * a, "xy"], [b, "z"], [2 * c, "xz"])}$，在 $(${x}, ${y}, ${z})$ 处等于 $${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1698,6 +2484,33 @@ export const propertiesOfTheDivergenceOperator: TopicDef = {
           solution,
           answer: ans,
           wrong: [a + b, a - b, b - a],
+        });
+      },
+    },
+    {
+      id: "the-product-rule-for-divergence",
+      title: t("The product rule for divergence", "散度的乘积法则"),
+      explanation: t(
+        "The divergence of a scalar function times a field follows a product rule:\n\n$$\\nabla \\cdot (f\\mathbf{F}) = \\nabla f \\cdot \\mathbf{F} + f\\,(\\nabla \\cdot \\mathbf{F}).$$\n\nFor $f = x$ the gradient is $\\langle 1, 0, 0 \\rangle$, so the first term is just the first component of $\\mathbf{F}$. The rule saves expanding $f\\mathbf{F}$ before differentiating.",
+        "标量函数乘以场的散度满足乘积法则：\n\n$$\\nabla \\cdot (f\\mathbf{F}) = \\nabla f \\cdot \\mathbf{F} + f\\,(\\nabla \\cdot \\mathbf{F})。$$\n\n对 $f = x$，梯度为 $\\langle 1, 0, 0 \\rangle$，所以第一项就是 $\\mathbf{F}$ 的第一个分量。这一法则省去了先展开 $f\\mathbf{F}$ 再求导。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-4, 4);
+        const b = rng.nonZero(-4, 4);
+        const c = rng.nonZero(-4, 4);
+        const [x, y, z] = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
+        const ans = a * y + x * (b + c);
+        return numberProblem({
+          prompt: t(
+            `$\\mathbf{F} = \\langle ${poly([a, "y"])}, ${poly([b, "y"])}, ${poly([c, "z"])} \\rangle$. Find $\\nabla \\cdot (x\\mathbf{F})$ at $(${x}, ${y}, ${z})$.`,
+            `$\\mathbf{F} = \\langle ${poly([a, "y"])}, ${poly([b, "y"])}, ${poly([c, "z"])} \\rangle$。求 $(${x}, ${y}, ${z})$ 处的 $\\nabla \\cdot (x\\mathbf{F})$。`,
+          ),
+          answer: ans,
+          wrong: [x * (b + c), a * y, b + c, a * y + b + c],
+          solution: t(
+            `$\\nabla x \\cdot \\mathbf{F} = ${poly([a, "y"])}$ and $\\nabla \\cdot \\mathbf{F} = ${b + c}$, so $\\nabla \\cdot (x\\mathbf{F}) = ${poly([a, "y"], [b + c, "x"])}$, which is $${ans}$ at the point.`,
+            `$\\nabla x \\cdot \\mathbf{F} = ${poly([a, "y"])}$，$\\nabla \\cdot \\mathbf{F} = ${b + c}$，所以 $\\nabla \\cdot (x\\mathbf{F}) = ${poly([a, "y"], [b + c, "x"])}$，在该点为 $${ans}$。`,
+          ),
         });
       },
     },
@@ -1772,6 +2585,35 @@ export const theCurlOfAVectorField: TopicDef = {
         });
       },
     },
+    {
+      id: "the-scalar-curl-of-a-plane-field-at-a-point",
+      title: t("The scalar curl of a plane field at a point", "平面场在某点的标量旋度"),
+      explanation: t(
+        "For a plane field $\\mathbf{F} = \\langle P, Q \\rangle$, viewed as $\\langle P, Q, 0 \\rangle$ in space, the curl points along $\\mathbf{k}$ with size\n\n$$\\operatorname{curl}\\mathbf{F} \\cdot \\mathbf{k} = \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}.$$\n\nThis scalar curl measures the local rotation: positive means a tiny paddle wheel would spin counterclockwise, negative means clockwise.",
+        "对平面场 $\\mathbf{F} = \\langle P, Q \\rangle$，视为空间中的 $\\langle P, Q, 0 \\rangle$，旋度沿 $\\mathbf{k}$ 方向，大小为\n\n$$\\operatorname{curl}\\mathbf{F} \\cdot \\mathbf{k} = \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}。$$\n\n这个标量旋度衡量局部转动：为正表示小桨轮逆时针转，为负表示顺时针转。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-3, 3);
+        const b = rng.nonZero(-4, 4);
+        const c = rng.nonZero(-3, 3);
+        const d = rng.nonZero(-4, 4);
+        const x = rng.int(-3, 3);
+        const y = rng.int(-3, 3);
+        const ans = 3 * c * x * x + d - a * x * x - b;
+        return numberProblem({
+          prompt: t(
+            `Find $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}$ at $(${x}, ${y})$ for $\\mathbf{F} = \\langle ${poly([a, "x^2y"], [b, "y"])}, ${poly([c, "x^3"], [d, "x"])} \\rangle$.`,
+            `对 $\\mathbf{F} = \\langle ${poly([a, "x^2y"], [b, "y"])}, ${poly([c, "x^3"], [d, "x"])} \\rangle$ 求 $(${x}, ${y})$ 处的 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}$。`,
+          ),
+          answer: ans,
+          wrong: [-ans, 3 * c * x * x + d + a * x * x + b, 3 * c * x * x + d, 2 * a * x * y],
+          solution: t(
+            `$Q_x = ${poly([3 * c, "x^2"], [d, ""])}$ and $P_y = ${poly([a, "x^2"], [b, ""])}$, so the scalar curl is $${poly([3 * c - a, "x^2"], [d - b, ""])}$, which is $${ans}$ at $x = ${x}$.`,
+            `$Q_x = ${poly([3 * c, "x^2"], [d, ""])}$，$P_y = ${poly([a, "x^2"], [b, ""])}$，所以标量旋度为 $${poly([3 * c - a, "x^2"], [d - b, ""])}$，在 $x = ${x}$ 处为 $${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1826,6 +2668,39 @@ export const propertiesOfTheCurlOperator: TopicDef = {
           answer: ans,
           wrong: [-ans, ans + 1, 0],
         });
+      },
+    },
+    {
+      id: "gradient-fields-are-irrotational",
+      title: t("Gradient fields are irrotational", "梯度场无旋"),
+      explanation: t(
+        "For any function $f$ with continuous second partial derivatives, $\\nabla \\times (\\nabla f) = \\mathbf{0}$, because each component of the curl is a difference of mixed partials such as $f_{zy} - f_{yz}$, which cancel. So every gradient field is irrotational, however complicated $f$ is. A field that is not a gradient may or may not be irrotational, and its curl must be computed to tell.",
+        "对任意二阶偏导连续的函数 $f$，$\\nabla \\times (\\nabla f) = \\mathbf{0}$，因为旋度的每个分量都是 $f_{zy} - f_{yz}$ 这类混合偏导之差，它们相互抵消。所以无论 $f$ 多复杂，梯度场都无旋。不是梯度的场可能无旋也可能有旋，需要计算旋度才能判断。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(2, 5);
+        const b = rng.int(2, 5);
+        const fs = [`x^${a}y^${b}z`, `${a}x^2yz^${b}`, `e^{${a}x}\\sin(${b}y)`, `x^${a}z + y^${b}`];
+        const f = rng.pick(fs);
+        const right = t("$\\nabla f$", "$\\nabla f$");
+        const wrongs = [
+          t(`$\\langle -${a}y, ${a}x, 0 \\rangle$`, `$\\langle -${a}y, ${a}x, 0 \\rangle$`),
+          t(`$\\langle ${b}yz, 0, 0 \\rangle$`, `$\\langle ${b}yz, 0, 0 \\rangle$`),
+          t(`$\\langle 0, 0, ${a}x + ${b}y \\rangle$`, `$\\langle 0, 0, ${a}x + ${b}y \\rangle$`),
+        ];
+        return pickChoice(
+          rng,
+          t(
+            `Let $f(x, y, z) = ${f}$. Which vector field is guaranteed to have zero curl everywhere?`,
+            `设 $f(x, y, z) = ${f}$。哪个向量场的旋度处处为零是有保证的？`,
+          ),
+          right,
+          wrongs,
+          t(
+            `The curl of a gradient is always $\\mathbf{0}$. The others have nonzero curl: $\\langle 0, 0, ${2 * a} \\rangle$, $\\langle 0, ${b}y, ${-b}z \\rangle$ and $\\langle ${b}, ${-a}, 0 \\rangle$.`,
+            `梯度的旋度总是 $\\mathbf{0}$。其他场旋度非零：$\\langle 0, 0, ${2 * a} \\rangle$、$\\langle 0, ${b}y, ${-b}z \\rangle$ 与 $\\langle ${b}, ${-a}, 0 \\rangle$。`,
+          ),
+        );
       },
     },
   ],
