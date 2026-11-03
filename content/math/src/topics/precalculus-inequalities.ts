@@ -238,6 +238,34 @@ const polyView: PlaneView = { xMin: -6, xMax: 6, yMin: -8, yMax: 8 };
 /** minus writes a number for alt text, with a true minus sign. */
 const minus = (n: number | Q) => (n instanceof Q ? n.toLatex() : String(n)).replace("-", "−");
 
+/** signFigure draws y = f(x) with the parts above the x-axis highlighted, the parts below dashed, and the roots marked. */
+function signFigure(f: (x: number) => number, roots: readonly number[], en: string, zh: string): Figure {
+  const cuts = [polyView.xMin, ...roots, polyView.xMax];
+  const marks: PlaneMark[] = cuts.slice(0, -1).map((from, i) => {
+    const to = cuts[i + 1]!;
+    const above = f((from + to) / 2) > 0;
+    return { kind: "curve", f, from, to, accent: above, dashed: !above };
+  });
+  for (const r of roots) marks.push({ kind: "point", at: [r, 0] });
+  return { svg: plane(polyView, marks), alt: t(en, zh) };
+}
+
+/** quadraticSignFigure shows where y = x² − x − 6 is above and below the x-axis. */
+const quadraticSignFigure = signFigure(
+  (x) => x * x - x - 6,
+  [-2, 3],
+  "The graph of y = x² − x − 6, an upward parabola crossing the x-axis at −2 and 3. It lies above the axis to the left of −2 and to the right of 3, drawn solid and highlighted, and below the axis between them, drawn dashed.",
+  "y = x² − x − 6 的图象：一条开口向上、与 x 轴交于 −2 和 3 的抛物线。它在 −2 左侧和 3 右侧位于 x 轴上方（实线、突出显示），在两者之间位于 x 轴下方（虚线）。",
+);
+
+/** cubicSignFigure shows where y = x³ − 4x is above and below the x-axis. */
+const cubicSignFigure = signFigure(
+  (x) => x ** 3 - 4 * x,
+  [-2, 0, 2],
+  "The graph of y = x³ − 4x, crossing the x-axis at −2, 0 and 2. It lies above the axis between −2 and 0 and to the right of 2, drawn solid and highlighted, and below the axis to the left of −2 and between 0 and 2, drawn dashed.",
+  "y = x³ − 4x 的图象：与 x 轴交于 −2、0 和 2。它在 −2 与 0 之间以及 2 的右侧位于 x 轴上方（实线、突出显示），在 −2 左侧以及 0 与 2 之间位于 x 轴下方（虚线）。",
+);
+
 // ─── 3.6.1 Solving elementary quadratic inequalities ───────────────────────
 
 /** solvingElementaryQuadraticInequalities solves x² op k and (x − h)² op k by taking square roots. */
@@ -565,6 +593,7 @@ export const solvingQuadraticInequalitiesUsingTheGraphicalMethod: TopicDef = {
         "To solve $x^{2} - x - 6 > 0$ without a graph, factor to find the roots, then picture the graph:\n\n$$x^{2} - x - 6 = (x + 2)(x - 3)$$\n\nThe roots are $-2$ and $3$. The coefficient of $x^{2}$ is positive, so the parabola opens upward: it is below the $x$-axis between the roots and above it outside them. So $x^{2} - x - 6 > 0$ on $(-\\infty, -2) \\cup (3, \\infty)$, and $x^{2} - x - 6 \\le 0$ on $[-2, 3]$.",
         "不画图也能解 $x^{2} - x - 6 > 0$：先因式分解求根，再想象图象：\n\n$$x^{2} - x - 6 = (x + 2)(x - 3)$$\n\n两根是 $-2$ 和 $3$。$x^{2}$ 的系数为正，抛物线开口向上：在两根之间位于 $x$ 轴下方，在两根之外位于上方。所以 $x^{2} - x - 6 > 0$ 的解是 $(-\\infty, -2) \\cup (3, \\infty)$，$x^{2} - x - 6 \\le 0$ 的解是 $[-2, 3]$。",
       ),
+      figure: quadraticSignFigure,
       generate(rng) {
         const [r, s] = distinctPair(rng, -9, 9);
         const op = rng.pick(ops);
@@ -1397,6 +1426,7 @@ export const solvingPolynomialInequalitiesUsingSpecialFactoringTechniquesAndTheG
         "When every term contains $x$, factor out $x$ (or $x^{2}$) first. For $x^{3} - 4x > 0$:\n\n$$x(x^{2} - 4) > 0 \\implies x(x - 2)(x + 2) > 0$$\n\nThe roots are $-2, 0, 2$. The leading coefficient is positive, so the solution is $(-2, 0) \\cup (2, \\infty)$.",
         "当每一项都含有 $x$ 时，先提取 $x$（或 $x^{2}$）。以 $x^{3} - 4x > 0$ 为例：\n\n$$x(x^{2} - 4) > 0 \\implies x(x - 2)(x + 2) > 0$$\n\n零点是 $-2, 0, 2$。首项系数为正，所以解集是 $(-2, 0) \\cup (2, \\infty)$。",
       ),
+      figure: cubicSignFigure,
       generate(rng) {
         const r = rng.int(1, 9);
         const polyTex = poly([1, "x^{3}"], [-r * r, "x"]);
