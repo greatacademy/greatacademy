@@ -1,7 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
-import { choiceProblem, numberProblem, steps } from "../problems.ts";
+import { choiceProblem, numberProblem, pointProblem, steps, yesNo } from "../problems.ts";
 
 /** Pythagorean triples for clean coordinates. */
 const pythagoreanTriples = [
@@ -1509,6 +1509,500 @@ export const conservationOfMechanicalEnergy: TopicDef = {
 };
 
 // ---------------------------------------------------------------------------
+// Circulation and Flux
+// ---------------------------------------------------------------------------
+
+/** outwardPointingUnitNormalVectorsIn2D turns the tangent of a counterclockwise curve into its outward normal. */
+export const outwardPointingUnitNormalVectorsIn2D: TopicDef = {
+  id: "outward-pointing-unit-normal-vectors-in-2d",
+  title: t("Outward-Pointing Unit Normal Vectors in 2D", "平面上指向外侧的单位法向量"),
+  summary: t(
+    "For a simple closed curve traversed counterclockwise with tangent $\\mathbf{r}'(t) = \\langle x'(t), y'(t) \\rangle$, the outward unit normal is $\\mathbf{n} = \\dfrac{\\langle y'(t), -x'(t) \\rangle}{\\lVert \\mathbf{r}'(t) \\rVert}$.",
+    "对于沿逆时针方向遍历、切向量为 $\\mathbf{r}'(t) = \\langle x'(t), y'(t) \\rangle$ 的简单闭曲线，向外的单位法向量为 $\\mathbf{n} = \\dfrac{\\langle y'(t), -x'(t) \\rangle}{\\lVert \\mathbf{r}'(t) \\rVert}$。",
+  ),
+  prerequisites: ["unit-tangent-vectors", "simple-closed-and-oriented-curves"],
+  encompasses: [{ topic: "unit-tangent-vectors", weight: 0.3 }],
+  xp: 10,
+  knowledgePoints: [
+    {
+      id: "outward-normals-on-a-circle",
+      title: t("Outward normals on a circle", "圆上的外法向量"),
+      explanation: t(
+        "When a closed curve is traversed counterclockwise, the region it encloses is always on the left, so turning the tangent a quarter turn clockwise makes it point away from the region. Turning $\\langle x', y' \\rangle$ clockwise gives $\\langle y', -x' \\rangle$; dividing by its length makes it a unit vector. For the circle $\\mathbf{r}(t) = \\langle R\\cos t, R\\sin t \\rangle$, $\\mathbf{r}'(t) = \\langle -R\\sin t, R\\cos t \\rangle$, so\n\n$$\\mathbf{n} = \\frac{\\langle R\\cos t, R\\sin t \\rangle}{R} = \\left\\langle \\frac{x}{R}, \\frac{y}{R} \\right\\rangle,$$\n\nthe position vector divided by the radius.",
+        "沿逆时针方向遍历闭曲线时，它所围的区域总在左侧，所以把切向量顺时针旋转四分之一圈，就使它指向远离区域的方向。把 $\\langle x', y' \\rangle$ 顺时针旋转得到 $\\langle y', -x' \\rangle$，再除以它的长度就得到单位向量。对于圆 $\\mathbf{r}(t) = \\langle R\\cos t, R\\sin t \\rangle$，$\\mathbf{r}'(t) = \\langle -R\\sin t, R\\cos t \\rangle$，所以\n\n$$\\mathbf{n} = \\frac{\\langle R\\cos t, R\\sin t \\rangle}{R} = \\left\\langle \\frac{x}{R}, \\frac{y}{R} \\right\\rangle,$$\n\n即位置向量除以半径。",
+      ),
+      generate(rng: Rng): Problem {
+        const [p, q, c] = rng.pick(pythagoreanTriples);
+        const x = rng.sign() * p;
+        const y = rng.sign() * q;
+        const prompt = t(
+          `The circle $x^2 + y^2 = ${c * c}$ is traversed counterclockwise. Find the outward-pointing unit normal vector at the point $(${x}, ${y})$.`,
+          `圆 $x^2 + y^2 = ${c * c}$ 沿逆时针方向遍历。求它在点 $(${x}, ${y})$ 处指向外侧的单位法向量。`,
+        );
+        const n = `\\left\\langle ${Q.of(x, c).toLatex()}, ${Q.of(y, c).toLatex()} \\right\\rangle`;
+        const solution = t(
+          steps(
+            `With $\\mathbf{r}(t) = \\langle ${c}\\cos t, ${c}\\sin t \\rangle$, the tangent is $\\langle -${c}\\sin t, ${c}\\cos t \\rangle = \\langle -y, x \\rangle$.`,
+            `Turning it clockwise gives $\\langle x, y \\rangle = \\langle ${x}, ${y} \\rangle$, which has length $${c}$.`,
+            `So $\\mathbf{n} = ${n}$, pointing away from the center.`,
+          ),
+          steps(
+            `取 $\\mathbf{r}(t) = \\langle ${c}\\cos t, ${c}\\sin t \\rangle$，切向量为 $\\langle -${c}\\sin t, ${c}\\cos t \\rangle = \\langle -y, x \\rangle$。`,
+            `把它顺时针旋转得到 $\\langle x, y \\rangle = \\langle ${x}, ${y} \\rangle$，长度为 $${c}$。`,
+            `所以 $\\mathbf{n} = ${n}$，指向远离圆心的方向。`,
+          ),
+        );
+        return pointProblem({
+          prompt,
+          solution,
+          answer: [Q.of(x, c), Q.of(y, c)],
+          vector: true,
+          wrong: [
+            [Q.of(-x, c), Q.of(-y, c)],
+            [Q.of(-y, c), Q.of(x, c)],
+            [x, y],
+          ],
+        });
+      },
+    },
+    {
+      id: "outward-normals-on-a-polygon",
+      title: t("Outward normals on a polygon side", "多边形边上的外法向量"),
+      explanation: t(
+        "On a side of a polygon traversed counterclockwise, the tangent direction is the vector from the start of the side to its end. If that vector is $\\langle d_x, d_y \\rangle$, the outward unit normal is\n\n$$\\mathbf{n} = \\frac{\\langle d_y, -d_x \\rangle}{\\sqrt{d_x^2 + d_y^2}},$$\n\nthe same along the whole side, because a straight side never changes direction.",
+        "沿逆时针方向遍历多边形时，一条边上的切线方向就是从该边起点指向终点的向量。若这个向量为 $\\langle d_x, d_y \\rangle$，则向外的单位法向量为\n\n$$\\mathbf{n} = \\frac{\\langle d_y, -d_x \\rangle}{\\sqrt{d_x^2 + d_y^2}},$$\n\n它在整条边上都相同，因为直边的方向从不改变。",
+      ),
+      generate(rng: Rng): Problem {
+        const [p, q, c] = rng.pick(pythagoreanTriples);
+        const dx = rng.sign() * p;
+        const dy = rng.sign() * q;
+        const x0 = rng.int(-4, 4);
+        const y0 = rng.int(-4, 4);
+        const prompt = t(
+          `The boundary of a polygon is traversed counterclockwise, and one of its sides runs from $(${x0}, ${y0})$ to $(${x0 + dx}, ${y0 + dy})$. Find the outward-pointing unit normal vector on that side.`,
+          `沿逆时针方向遍历一个多边形的边界，其中一条边从 $(${x0}, ${y0})$ 到 $(${x0 + dx}, ${y0 + dy})$。求这条边上指向外侧的单位法向量。`,
+        );
+        const n = `\\left\\langle ${Q.of(dy, c).toLatex()}, ${Q.of(-dx, c).toLatex()} \\right\\rangle`;
+        const solution = t(
+          steps(
+            `The direction of the side is $\\langle ${dx}, ${dy} \\rangle$, of length $\\sqrt{${dx * dx} + ${dy * dy}} = ${c}$.`,
+            `Turning it clockwise gives $\\langle ${dy}, ${-dx} \\rangle$.`,
+            `So $\\mathbf{n} = ${n}$.`,
+          ),
+          steps(
+            `这条边的方向为 $\\langle ${dx}, ${dy} \\rangle$，长度为 $\\sqrt{${dx * dx} + ${dy * dy}} = ${c}$。`,
+            `把它顺时针旋转得到 $\\langle ${dy}, ${-dx} \\rangle$。`,
+            `所以 $\\mathbf{n} = ${n}$。`,
+          ),
+        );
+        return pointProblem({
+          prompt,
+          solution,
+          answer: [Q.of(dy, c), Q.of(-dx, c)],
+          vector: true,
+          wrong: [
+            [Q.of(-dy, c), Q.of(dx, c)],
+            [Q.of(dx, c), Q.of(dy, c)],
+            [dy, -dx],
+          ],
+        });
+      },
+    },
+  ],
+};
+
+/** circulation measures how much a plane field flows along a closed curve. */
+export const circulation: TopicDef = {
+  id: "circulation",
+  title: t("Circulation", "环量"),
+  summary: t(
+    "The circulation of $\\mathbf{F} = \\langle P, Q \\rangle$ around a closed curve $C$ is $\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = \\oint_C (P\\,dx + Q\\,dy)$: the net flow along the curve.",
+    "向量场 $\\mathbf{F} = \\langle P, Q \\rangle$ 沿闭曲线 $C$ 的环量为 $\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = \\oint_C (P\\,dx + Q\\,dy)$，即沿曲线方向的净流动。",
+  ),
+  prerequisites: ["line-integrals-of-vector-valued-functions-over-general-curves"],
+  encompasses: [{ topic: "line-integrals-of-vector-valued-functions-over-general-curves", weight: 0.3 }],
+  xp: 10,
+  knowledgePoints: [
+    {
+      id: "circulation-around-a-rectangle",
+      title: t("Circulation around a rectangle", "沿矩形的环量"),
+      explanation: t(
+        "Circulation is the line integral of the tangential component of the field around a closed curve, so it measures how strongly the field pushes along the curve. Around a rectangle, add the four sides: on a horizontal side only $P\\,dx$ contributes, and on a vertical side only $Q\\,dy$, with $dx < 0$ along the top and $dy < 0$ along the left side when traversing counterclockwise.",
+        "环量是场的切向分量沿闭曲线的曲线积分，所以它衡量场沿曲线推动的强弱。沿矩形计算时把四条边相加：在水平边上只有 $P\\,dx$ 有贡献，在竖直边上只有 $Q\\,dy$ 有贡献；逆时针遍历时，顶边上 $dx < 0$，左边上 $dy < 0$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-6, 6);
+        let b = rng.nonZero(-6, 6);
+        if (b === a) b = a + 1;
+        const W = rng.int(2, 6);
+        const H = rng.int(2, 6);
+        const ans = (b - a) * W * H;
+        const prompt = t(
+          `Find the circulation of $\\mathbf{F} = \\langle ${poly([a, "y"])}, ${poly([b, "x"])} \\rangle$ around the boundary of the rectangle $[0, ${W}] \\times [0, ${H}]$, traversed counterclockwise.`,
+          `求 $\\mathbf{F} = \\langle ${poly([a, "y"])}, ${poly([b, "x"])} \\rangle$ 沿矩形 $[0, ${W}] \\times [0, ${H}]$ 的边界逆时针方向的环量。`,
+        );
+        const solution = t(
+          steps(
+            `Bottom ($y = 0$, $x$ from $0$ to $${W}$): $\\int P\\,dx = \\int_0^{${W}} 0\\,dx = 0$.`,
+            `Right ($x = ${W}$, $y$ from $0$ to $${H}$): $\\int Q\\,dy = \\int_0^{${H}} ${b * W}\\,dy = ${b * W * H}$.`,
+            `Top ($y = ${H}$, $x$ from $${W}$ to $0$): $\\int P\\,dx = \\int_{${W}}^0 ${a * H}\\,dx = ${-a * H * W}$.`,
+            `Left ($x = 0$, $y$ from $${H}$ to $0$): $\\int Q\\,dy = 0$.`,
+            `The circulation is $${b * W * H} + ${paren(-a * H * W)} = ${ans}$.`,
+          ),
+          steps(
+            `底边（$y = 0$，$x$ 从 $0$ 到 $${W}$）：$\\int P\\,dx = \\int_0^{${W}} 0\\,dx = 0$。`,
+            `右边（$x = ${W}$，$y$ 从 $0$ 到 $${H}$）：$\\int Q\\,dy = \\int_0^{${H}} ${b * W}\\,dy = ${b * W * H}$。`,
+            `顶边（$y = ${H}$，$x$ 从 $${W}$ 到 $0$）：$\\int P\\,dx = \\int_{${W}}^0 ${a * H}\\,dx = ${-a * H * W}$。`,
+            `左边（$x = 0$，$y$ 从 $${H}$ 到 $0$）：$\\int Q\\,dy = 0$。`,
+            `环量为 $${b * W * H} + ${paren(-a * H * W)} = ${ans}$。`,
+          ),
+        );
+        return numberProblem({ prompt, solution, answer: ans, wrong: [(a + b) * W * H, (a - b) * W * H, b * W * H] });
+      },
+    },
+    {
+      id: "circulation-around-a-circle",
+      title: t("Circulation around a circle", "沿圆的环量"),
+      explanation: t(
+        "For a rotating field $\\mathbf{F} = \\langle -ky, kx \\rangle$ on the circle of radius $R$, the field is tangent to the circle with constant length $kR$, so $\\mathbf{F} \\cdot \\mathbf{T} = kR$ everywhere. The circulation is that constant times the length of the circle:\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = kR \\cdot 2\\pi R = 2\\pi k R^2.$$",
+        "对于旋转场 $\\mathbf{F} = \\langle -ky, kx \\rangle$，在半径为 $R$ 的圆上，场与圆相切且长度恒为 $kR$，所以处处有 $\\mathbf{F} \\cdot \\mathbf{T} = kR$。环量就是这个常数乘以圆周长：\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = kR \\cdot 2\\pi R = 2\\pi k R^2。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const k = rng.nonZero(-5, 5);
+        const R = rng.int(2, 6);
+        const ans = 2 * k * R * R;
+        const field = `\\langle ${poly([-k, "y"])}, ${poly([k, "x"])} \\rangle`;
+        const prompt = t(
+          `The circulation of $\\mathbf{F} = ${field}$ around the circle $x^2 + y^2 = ${R * R}$, traversed counterclockwise, equals $c\\pi$. Find $c$.`,
+          `$\\mathbf{F} = ${field}$ 沿圆 $x^2 + y^2 = ${R * R}$ 逆时针方向的环量等于 $c\\pi$。求 $c$。`,
+        );
+        const solution = t(
+          steps(
+            `With $\\mathbf{r}(t) = \\langle ${R}\\cos t, ${R}\\sin t \\rangle$: $\\mathbf{F} = \\langle ${-k * R}\\sin t, ${k * R}\\cos t \\rangle$ and $\\mathbf{r}'(t) = \\langle -${R}\\sin t, ${R}\\cos t \\rangle$.`,
+            `\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${k * R * R}\\sin^2 t + ${paren(k * R * R)}\\cos^2 t = ${k * R * R}`,
+            `\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi} ${k * R * R}\\,dt = ${ans}\\pi`,
+            `So $c = ${ans}$.`,
+          ),
+          steps(
+            `取 $\\mathbf{r}(t) = \\langle ${R}\\cos t, ${R}\\sin t \\rangle$：$\\mathbf{F} = \\langle ${-k * R}\\sin t, ${k * R}\\cos t \\rangle$，$\\mathbf{r}'(t) = \\langle -${R}\\sin t, ${R}\\cos t \\rangle$。`,
+            `\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${k * R * R}\\sin^2 t + ${paren(k * R * R)}\\cos^2 t = ${k * R * R}`,
+            `\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi} ${k * R * R}\\,dt = ${ans}\\pi`,
+            `所以 $c = ${ans}$。`,
+          ),
+        );
+        return numberProblem({ prompt, solution, answer: ans, wrong: [k * R * R, 2 * k * R, -ans] });
+      },
+    },
+    {
+      id: "the-sign-of-the-circulation",
+      title: t("The sign of the circulation", "环量的符号"),
+      explanation: t(
+        "Positive circulation around a counterclockwise curve means the field flows mostly with the direction of travel, negative means mostly against it, and zero means the flow along the curve cancels out, as it does for every gradient field.",
+        "沿逆时针曲线的环量为正，表示场大体顺着行进方向流动；为负表示大体逆着行进方向；为零表示沿曲线的流动相互抵消，每个梯度场都是如此。",
+      ),
+      generate(rng: Rng): Problem {
+        const kind = rng.pick(["positive", "negative", "zero"] as const);
+        const k = rng.int(1, 5);
+        const R = rng.int(1, 5);
+        const field =
+          kind === "positive"
+            ? `\\langle ${poly([-k, "y"])}, ${poly([k, "x"])} \\rangle`
+            : kind === "negative"
+              ? `\\langle ${poly([k, "y"])}, ${poly([-k, "x"])} \\rangle`
+              : `\\langle ${poly([2 * k, "x"])}, ${poly([2 * k, "y"])} \\rangle`;
+        const options = [t("Positive", "正"), t("Negative", "负"), t("Zero", "零")];
+        const correct = ["positive", "negative", "zero"].indexOf(kind);
+        const prompt = t(
+          `Is the circulation of $\\mathbf{F} = ${field}$ around the circle $x^2 + y^2 = ${R * R}$, traversed counterclockwise, positive, negative or zero?`,
+          `$\\mathbf{F} = ${field}$ 沿圆 $x^2 + y^2 = ${R * R}$ 逆时针方向的环量是正、负还是零？`,
+        );
+        const reason =
+          kind === "positive"
+            ? t(
+                `On the circle $\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${k * R * R} > 0$: the field flows counterclockwise, with the direction of travel.`,
+                `在圆上 $\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${k * R * R} > 0$：场沿逆时针方向流动，与行进方向一致。`,
+              )
+            : kind === "negative"
+              ? t(
+                  `On the circle $\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${-k * R * R} < 0$: the field flows clockwise, against the direction of travel.`,
+                  `在圆上 $\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${-k * R * R} < 0$：场沿顺时针方向流动，与行进方向相反。`,
+                )
+              : t(
+                  `The field is the gradient of $${k}(x^2 + y^2)$ and points straight out of the circle, so $\\mathbf{F} \\cdot \\mathbf{T} = 0$ everywhere on it and the circulation is zero.`,
+                  `这个场是 $${k}(x^2 + y^2)$ 的梯度，垂直指向圆外，所以在圆上处处有 $\\mathbf{F} \\cdot \\mathbf{T} = 0$，环量为零。`,
+                );
+        return choiceProblem({ prompt, options, correct, solution: reason });
+      },
+    },
+  ],
+};
+
+/** fluxInTwoDimensionalVectorFields defines the flux of a plane field across a curve. */
+export const fluxInTwoDimensionalVectorFields: TopicDef = {
+  id: "flux-in-two-dimensional-vector-fields",
+  title: t("Flux in Two-Dimensional Vector Fields", "二维向量场的通量"),
+  summary: t(
+    "The flux of $\\mathbf{F}$ across a curve $C$ is $\\int_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds$, the rate at which the field crosses the curve in the direction of the normal $\\mathbf{n}$.",
+    "$\\mathbf{F}$ 穿过曲线 $C$ 的通量为 $\\int_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds$，即场沿法向量 $\\mathbf{n}$ 方向穿过曲线的速率。",
+  ),
+  prerequisites: ["outward-pointing-unit-normal-vectors-in-2d", "line-integrals-of-scalar-functions-over-line-segments"],
+  encompasses: [{ topic: "outward-pointing-unit-normal-vectors-in-2d", weight: 0.4 }],
+  xp: 10,
+  knowledgePoints: [
+    {
+      id: "flux-of-a-constant-field-across-a-segment",
+      title: t("Flux of a constant field across a segment", "常向量场穿过线段的通量"),
+      explanation: t(
+        "Flux measures how much of the field crosses the curve rather than running along it, so it uses the normal component $\\mathbf{F} \\cdot \\mathbf{n}$. For a constant field and a straight segment both $\\mathbf{F}$ and $\\mathbf{n}$ are constant, so the flux is $\\mathbf{F} \\cdot \\mathbf{n}$ times the length. With direction $\\langle d_x, d_y \\rangle$ and $\\mathbf{n}$ on its right, this is $P\\,d_y - Q\\,d_x$.",
+        "通量衡量的是场穿过曲线而不是沿曲线流动的部分，所以它使用法向分量 $\\mathbf{F} \\cdot \\mathbf{n}$。对于常向量场和直线段，$\\mathbf{F}$ 和 $\\mathbf{n}$ 都是常量，所以通量等于 $\\mathbf{F} \\cdot \\mathbf{n}$ 乘以长度。若方向为 $\\langle d_x, d_y \\rangle$ 且 $\\mathbf{n}$ 在其右侧，结果就是 $P\\,d_y - Q\\,d_x$。",
+      ),
+      generate(rng: Rng): Problem {
+        const [p, q, c] = rng.pick(pythagoreanTriples);
+        const dx = rng.sign() * p;
+        const dy = rng.sign() * q;
+        const P = rng.nonZero(-6, 6);
+        const Qc = rng.nonZero(-6, 6);
+        const ans = P * dy - Qc * dx;
+        const prompt = t(
+          `Find the flux of the constant field $\\mathbf{F} = \\langle ${P}, ${Qc} \\rangle$ across the segment from $(0, 0)$ to $(${dx}, ${dy})$, with $\\mathbf{n} = \\frac{1}{${c}}\\langle ${dy}, ${-dx} \\rangle$, the unit normal on the right of the direction of travel.`,
+          `求常向量场 $\\mathbf{F} = \\langle ${P}, ${Qc} \\rangle$ 穿过从 $(0, 0)$ 到 $(${dx}, ${dy})$ 的线段的通量，其中 $\\mathbf{n} = \\frac{1}{${c}}\\langle ${dy}, ${-dx} \\rangle$ 是行进方向右侧的单位法向量。`,
+        );
+        const solution = t(
+          steps(
+            `\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${P} \\cdot ${paren(dy)} + ${paren(Qc)} \\cdot ${paren(-dx)}}{${c}} = \\frac{${ans}}{${c}}`,
+            `The segment has length $${c}$, so the flux is $\\frac{${ans}}{${c}} \\cdot ${c} = ${ans}$.`,
+          ),
+          steps(
+            `\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${P} \\cdot ${paren(dy)} + ${paren(Qc)} \\cdot ${paren(-dx)}}{${c}} = \\frac{${ans}}{${c}}`,
+            `线段长度为 $${c}$，所以通量为 $\\frac{${ans}}{${c}} \\cdot ${c} = ${ans}$。`,
+          ),
+        );
+        return numberProblem({ prompt, solution, answer: ans, wrong: [P * dx + Qc * dy, -ans, Q.of(ans, c)] });
+      },
+    },
+    {
+      id: "the-sign-of-the-flux",
+      title: t("The sign of the outward flux", "外法向通量的符号"),
+      explanation: t(
+        "Positive outward flux across a closed curve means more of the field leaves the region than enters it, negative means more enters than leaves, and zero means the flow in and the flow out balance exactly.",
+        "穿过闭曲线的外法向通量为正，表示离开区域的场多于进入的；为负表示进入的多于离开的；为零表示流入与流出恰好平衡。",
+      ),
+      generate(rng: Rng): Problem {
+        const kind = rng.pick(["positive", "negative", "zero"] as const);
+        const k = rng.int(1, 5);
+        const R = rng.int(1, 5);
+        const field =
+          kind === "positive"
+            ? `\\langle ${poly([k, "x"])}, ${poly([k, "y"])} \\rangle`
+            : kind === "negative"
+              ? `\\langle ${poly([-k, "x"])}, ${poly([-k, "y"])} \\rangle`
+              : `\\langle ${poly([-k, "y"])}, ${poly([k, "x"])} \\rangle`;
+        const options = [t("Positive", "正"), t("Negative", "负"), t("Zero", "零")];
+        const correct = ["positive", "negative", "zero"].indexOf(kind);
+        const prompt = t(
+          `Is the outward flux of $\\mathbf{F} = ${field}$ across the circle $x^2 + y^2 = ${R * R}$ positive, negative or zero?`,
+          `$\\mathbf{F} = ${field}$ 穿过圆 $x^2 + y^2 = ${R * R}$ 的外法向通量是正、负还是零？`,
+        );
+        const solution =
+          kind === "zero"
+            ? t(
+                `The outward normal is $\\mathbf{n} = \\frac{1}{${R}}\\langle x, y \\rangle$, and $\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${k}(-yx + xy)}{${R}} = 0$: the field runs along the circle and never crosses it.`,
+                `外法向量为 $\\mathbf{n} = \\frac{1}{${R}}\\langle x, y \\rangle$，$\\mathbf{F} \\cdot \\mathbf{n} = \\frac{${k}(-yx + xy)}{${R}} = 0$：场沿着圆流动，从不穿过它。`,
+              )
+            : t(
+                `The outward normal is $\\mathbf{n} = \\frac{1}{${R}}\\langle x, y \\rangle$, and $\\mathbf{F} \\cdot \\mathbf{n} = ${kind === "positive" ? "" : "-"}\\frac{${k}(x^2 + y^2)}{${R}} = ${kind === "positive" ? k * R : -k * R}$ everywhere on the circle, so the field points ${kind === "positive" ? "out of" : "into"} the disk and the flux is ${kind}.`,
+                `外法向量为 $\\mathbf{n} = \\frac{1}{${R}}\\langle x, y \\rangle$，在圆上处处有 $\\mathbf{F} \\cdot \\mathbf{n} = ${kind === "positive" ? "" : "-"}\\frac{${k}(x^2 + y^2)}{${R}} = ${kind === "positive" ? k * R : -k * R}$，所以场指向圆盘${kind === "positive" ? "外" : "内"}，通量为${kind === "positive" ? "正" : "负"}。`,
+              );
+        return choiceProblem({ prompt, options, correct, solution });
+      },
+    },
+  ],
+};
+
+/** calculatingFluxInTwoDimensionalVectorFields computes outward flux across closed plane curves. */
+export const calculatingFluxInTwoDimensionalVectorFields: TopicDef = {
+  id: "calculating-flux-in-two-dimensional-vector-fields",
+  title: t("Calculating Flux in Two-Dimensional Vector Fields", "计算二维向量场的通量"),
+  summary: t(
+    "With $\\mathbf{n}\\,ds = \\langle dy, -dx \\rangle$ on a counterclockwise curve, the outward flux of $\\mathbf{F} = \\langle P, Q \\rangle$ is $\\oint_C (P\\,dy - Q\\,dx)$.",
+    "在逆时针曲线上 $\\mathbf{n}\\,ds = \\langle dy, -dx \\rangle$，所以 $\\mathbf{F} = \\langle P, Q \\rangle$ 的外法向通量为 $\\oint_C (P\\,dy - Q\\,dx)$。",
+  ),
+  prerequisites: ["flux-in-two-dimensional-vector-fields", "line-integrals-with-respect-to-x-and-y"],
+  encompasses: [{ topic: "flux-in-two-dimensional-vector-fields", weight: 0.5 }],
+  xp: 10,
+  knowledgePoints: [
+    {
+      id: "outward-flux-across-a-rectangle",
+      title: t("Outward flux across a rectangle", "穿过矩形的外法向通量"),
+      explanation: t(
+        "Since $\\mathbf{n}\\,ds = \\langle y'(t), -x'(t) \\rangle\\,dt = \\langle dy, -dx \\rangle$, the outward flux is $\\oint_C (P\\,dy - Q\\,dx)$. Around a rectangle, compute it side by side: the outward normal is $\\langle 1, 0 \\rangle$ on the right side, $\\langle -1, 0 \\rangle$ on the left, $\\langle 0, 1 \\rangle$ on top and $\\langle 0, -1 \\rangle$ on the bottom.",
+        "由于 $\\mathbf{n}\\,ds = \\langle y'(t), -x'(t) \\rangle\\,dt = \\langle dy, -dx \\rangle$，外法向通量为 $\\oint_C (P\\,dy - Q\\,dx)$。沿矩形逐边计算：外法向量在右边为 $\\langle 1, 0 \\rangle$，左边为 $\\langle -1, 0 \\rangle$，顶边为 $\\langle 0, 1 \\rangle$，底边为 $\\langle 0, -1 \\rangle$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-5, 5);
+        const b = rng.nonZero(-5, 5);
+        const c = rng.nonZero(-4, 4);
+        const W = rng.int(2, 6);
+        const H = rng.int(2, 6);
+        const ans = (a + b) * W * H;
+        const field = `\\langle ${poly([a, "x"], [c, "y"])}, ${poly([b, "y"])} \\rangle`;
+        const prompt = t(
+          `Find the outward flux of $\\mathbf{F} = ${field}$ across the boundary of the rectangle $[0, ${W}] \\times [0, ${H}]$.`,
+          `求 $\\mathbf{F} = ${field}$ 穿过矩形 $[0, ${W}] \\times [0, ${H}]$ 边界的外法向通量。`,
+        );
+        const solution = t(
+          steps(
+            `Right ($x = ${W}$, $\\mathbf{n} = \\langle 1, 0 \\rangle$): $\\int_0^{${H}} (${a * W} + ${paren(c)}y)\\,dy = ${Q.of(2 * a * W * H + c * H * H, 2).toLatex()}$.`,
+            `Left ($x = 0$, $\\mathbf{n} = \\langle -1, 0 \\rangle$): $\\int_0^{${H}} -${paren(c)}y\\,dy = ${Q.of(-c * H * H, 2).toLatex()}$.`,
+            `Top ($y = ${H}$, $\\mathbf{n} = \\langle 0, 1 \\rangle$): $\\int_0^{${W}} ${b * H}\\,dx = ${b * H * W}$. Bottom ($y = 0$): $Q = 0$, so $0$.`,
+            `The terms from $${c}y$ cancel, and the flux is $${a * W * H} + ${paren(b * H * W)} = ${ans}$.`,
+          ),
+          steps(
+            `右边（$x = ${W}$，$\\mathbf{n} = \\langle 1, 0 \\rangle$）：$\\int_0^{${H}} (${a * W} + ${paren(c)}y)\\,dy = ${Q.of(2 * a * W * H + c * H * H, 2).toLatex()}$。`,
+            `左边（$x = 0$，$\\mathbf{n} = \\langle -1, 0 \\rangle$）：$\\int_0^{${H}} -${paren(c)}y\\,dy = ${Q.of(-c * H * H, 2).toLatex()}$。`,
+            `顶边（$y = ${H}$，$\\mathbf{n} = \\langle 0, 1 \\rangle$）：$\\int_0^{${W}} ${b * H}\\,dx = ${b * H * W}$。底边（$y = 0$）：$Q = 0$，结果为 $0$。`,
+            `来自 $${c}y$ 的项相互抵消，通量为 $${a * W * H} + ${paren(b * H * W)} = ${ans}$。`,
+          ),
+        );
+        return numberProblem({
+          prompt,
+          solution,
+          answer: ans,
+          wrong: [Q.of(2 * ans + c * H * H, 2), (a - b) * W * H, a * W * H],
+        });
+      },
+    },
+    {
+      id: "outward-flux-across-a-circle",
+      title: t("Outward flux across a circle", "穿过圆的外法向通量"),
+      explanation: t(
+        "On a circle, parametrize with $x = R\\cos t$, $y = R\\sin t$ for $0 \\le t \\le 2\\pi$, substitute into $\\oint_C (P\\,dy - Q\\,dx)$, and integrate in $t$. The averages $\\int_0^{2\\pi} \\cos^2 t\\,dt = \\int_0^{2\\pi} \\sin^2 t\\,dt = \\pi$ and $\\int_0^{2\\pi} \\sin t \\cos t\\,dt = 0$ do most of the work.",
+        "在圆上，用 $x = R\\cos t$、$y = R\\sin t$（$0 \\le t \\le 2\\pi$）参数化，代入 $\\oint_C (P\\,dy - Q\\,dx)$ 后对 $t$ 积分。$\\int_0^{2\\pi} \\cos^2 t\\,dt = \\int_0^{2\\pi} \\sin^2 t\\,dt = \\pi$ 和 $\\int_0^{2\\pi} \\sin t \\cos t\\,dt = 0$ 这两个结果完成了大部分计算。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-5, 5);
+        const b = rng.nonZero(-5, 5);
+        const R = rng.int(1, 5);
+        const ans = (a + b) * R * R;
+        const field = `\\langle ${poly([a, "x"])}, ${poly([b, "y"])} \\rangle`;
+        const prompt = t(
+          `The outward flux of $\\mathbf{F} = ${field}$ across the circle $x^2 + y^2 = ${R * R}$ equals $c\\pi$. Find $c$.`,
+          `$\\mathbf{F} = ${field}$ 穿过圆 $x^2 + y^2 = ${R * R}$ 的外法向通量等于 $c\\pi$。求 $c$。`,
+        );
+        const solution = t(
+          steps(
+            `With $x = ${R}\\cos t$, $y = ${R}\\sin t$: $P\\,dy = ${a * R * R}\\cos^2 t\\,dt$ and $-Q\\,dx = ${b * R * R}\\sin^2 t\\,dt$.`,
+            `\\oint_C (P\\,dy - Q\\,dx) = \\int_0^{2\\pi} (${a * R * R}\\cos^2 t + ${paren(b * R * R)}\\sin^2 t)\\,dt = ${a * R * R}\\pi + ${paren(b * R * R)}\\pi = ${ans}\\pi`,
+            `So $c = ${ans}$.`,
+          ),
+          steps(
+            `取 $x = ${R}\\cos t$，$y = ${R}\\sin t$：$P\\,dy = ${a * R * R}\\cos^2 t\\,dt$，$-Q\\,dx = ${b * R * R}\\sin^2 t\\,dt$。`,
+            `\\oint_C (P\\,dy - Q\\,dx) = \\int_0^{2\\pi} (${a * R * R}\\cos^2 t + ${paren(b * R * R)}\\sin^2 t)\\,dt = ${a * R * R}\\pi + ${paren(b * R * R)}\\pi = ${ans}\\pi`,
+            `所以 $c = ${ans}$。`,
+          ),
+        );
+        return numberProblem({ prompt, solution, answer: ans, wrong: [2 * ans, (a - b) * R * R, (a + b) * R] });
+      },
+    },
+  ],
+};
+
+/** sourceFreeVectorFields identifies plane fields with zero divergence. */
+export const sourceFreeVectorFields: TopicDef = {
+  id: "source-free-vector-fields",
+  title: t("Source-Free Vector Fields", "无源向量场"),
+  summary: t(
+    "A plane field $\\mathbf{F} = \\langle P, Q \\rangle$ is source-free when $\\nabla \\cdot \\mathbf{F} = P_x + Q_y = 0$; its outward flux across every simple closed curve is then zero.",
+    "当 $\\nabla \\cdot \\mathbf{F} = P_x + Q_y = 0$ 时，平面向量场 $\\mathbf{F} = \\langle P, Q \\rangle$ 是无源的；这时它穿过每条简单闭曲线的外法向通量都为零。",
+  ),
+  prerequisites: ["the-divergence-of-a-vector-field", "calculating-flux-in-two-dimensional-vector-fields"],
+  encompasses: [{ topic: "the-divergence-of-a-vector-field", weight: 0.3 }],
+  xp: 10,
+  knowledgePoints: [
+    {
+      id: "recognizing-source-free-fields",
+      title: t("Recognizing source-free fields", "识别无源场"),
+      explanation: t(
+        "The divergence measures how much a field spreads out from a point, so a field with zero divergence everywhere has no sources or sinks: whatever flows into a region also flows out. To test a field, compute $P_x + Q_y$ and check whether it is identically zero.",
+        "散度衡量场从一点向外发散的程度，所以处处散度为零的场没有源也没有汇：流入一个区域的量也同样流出。要检验一个场，计算 $P_x + Q_y$，看它是否恒等于零。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-5, 5);
+        const c = rng.nonZero(-5, 5);
+        const d = rng.nonZero(-5, 5);
+        const free = rng.bool();
+        const b = free ? -a : rng.pick([a, 2 * a, -2 * a]);
+        const field = `\\langle ${poly([a, "x"], [c, "y^2"])}, ${poly([b, "y"], [d, "x^2"])} \\rangle`;
+        const prompt = t(`Is $\\mathbf{F} = ${field}$ source-free?`, `$\\mathbf{F} = ${field}$ 是无源场吗？`);
+        const solution = t(
+          steps(
+            `P_x + Q_y = ${a} + ${paren(b)} = ${a + b}`,
+            free
+              ? `The divergence is $${a + b} = 0$ everywhere, so the field is source-free.`
+              : `The divergence is $${a + b} \\ne 0$, so the field is not source-free.`,
+          ),
+          steps(
+            `P_x + Q_y = ${a} + ${paren(b)} = ${a + b}`,
+            free ? `散度处处为 $${a + b} = 0$，所以这个场是无源的。` : `散度为 $${a + b} \\ne 0$，所以这个场不是无源的。`,
+          ),
+        );
+        return choiceProblem({ prompt, options: yesNo, correct: free ? 0 : 1, solution });
+      },
+    },
+    {
+      id: "making-a-field-source-free",
+      title: t("Making a field source-free", "使向量场无源"),
+      explanation: t(
+        "To choose a constant that makes a field source-free, write the divergence $P_x + Q_y$ in terms of the constant and pick the value that makes it vanish for every point $(x, y)$.",
+        "要选取一个常数使向量场无源，就把散度 $P_x + Q_y$ 用这个常数表示出来，再选出使它对每个点 $(x, y)$ 都为零的值。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-5, 5);
+        const c = rng.nonZero(-5, 5);
+        const ans = -2 * a;
+        const field = `\\langle ${poly([a, "x^2"], [c, "y"])}, kxy \\rangle`;
+        const prompt = t(
+          `Find the constant $k$ for which $\\mathbf{F} = ${field}$ is source-free.`,
+          `求常数 $k$，使 $\\mathbf{F} = ${field}$ 为无源场。`,
+        );
+        const solution = t(
+          steps(`P_x + Q_y = ${2 * a}x + kx = (${2 * a} + k)x`, `This is zero for every $x$ exactly when $k = ${ans}$.`),
+          steps(`P_x + Q_y = ${2 * a}x + kx = (${2 * a} + k)x`, `它对每个 $x$ 都为零，当且仅当 $k = ${ans}$。`),
+        );
+        return numberProblem({ prompt, solution, answer: ans, solveFor: "k", wrong: [2 * a, -a, a] });
+      },
+    },
+    {
+      id: "balanced-flux-of-source-free-fields",
+      title: t("Balanced flux of a source-free field", "无源场的通量平衡"),
+      explanation: t(
+        "A source-free field creates and destroys nothing inside a region, so its net outward flux across a simple closed curve is zero, a fact Green's theorem will prove. If the boundary is made of several pieces, the outward fluxes across the pieces add up to zero, which lets you find a missing one.",
+        "无源场在区域内既不产生也不消灭任何东西，所以它穿过简单闭曲线的净外法向通量为零，这一事实将由格林公式证明。如果边界由若干段组成，各段的外法向通量之和为零，由此可以求出缺少的那一段。",
+      ),
+      generate(rng: Rng): Problem {
+        const f1 = rng.nonZero(-12, 12);
+        const f2 = rng.nonZero(-12, 12);
+        const f3 = rng.nonZero(-12, 12);
+        const ans = -(f1 + f2 + f3);
+        const prompt = t(
+          `A source-free field $\\mathbf{F}$ has outward fluxes $${f1}$, $${f2}$ and $${f3}$ across three sides of a square. Find its outward flux across the fourth side.`,
+          `无源场 $\\mathbf{F}$ 穿过一个正方形三条边的外法向通量分别为 $${f1}$、$${f2}$ 和 $${f3}$。求它穿过第四条边的外法向通量。`,
+        );
+        const solution = t(
+          steps(
+            `The net outward flux of a source-free field across the boundary is $0$.`,
+            `${f1} + ${paren(f2)} + ${paren(f3)} + x = 0`,
+            `So $x = ${ans}$.`,
+          ),
+          steps(`无源场穿过边界的净外法向通量为 $0$。`, `${f1} + ${paren(f2)} + ${paren(f3)} + x = 0`, `所以 $x = ${ans}$。`),
+        );
+        return numberProblem({ prompt, solution, answer: ans, wrong: [f1 + f2 + f3, 0, -(f1 + f2)] });
+      },
+    },
+  ],
+};
+
+// ---------------------------------------------------------------------------
 // 4.23 Green's Theorem
 // ---------------------------------------------------------------------------
 
@@ -1520,12 +2014,10 @@ export const circulationAndFluxAcrossSimpleClosedPlaneCurves: TopicDef = {
     "Circulation $\\oint_C (P\\,dx + Q\\,dy)$ accumulates the field along the tangent $\\mathbf{T}$, while flux $\\oint_C (P\\,dy - Q\\,dx)$ accumulates it across the outward normal $\\mathbf{n}$.",
     "环量 $\\oint_C (P\\,dx + Q\\,dy)$ 沿切向量 $\\mathbf{T}$ 累积场，通量 $\\oint_C (P\\,dy - Q\\,dx)$ 沿向外法向量 $\\mathbf{n}$ 累积场。",
   ),
-  prerequisites: ["line-integrals-of-vector-valued-functions-over-general-curves"],
+  prerequisites: ["circulation", "calculating-flux-in-two-dimensional-vector-fields"],
   encompasses: [
-    {
-      topic: "line-integrals-of-vector-valued-functions-over-general-curves",
-      weight: 0.3,
-    },
+    { topic: "circulation", weight: 0.3 },
+    { topic: "calculating-flux-in-two-dimensional-vector-fields", weight: 0.3 },
   ],
   xp: 10,
   knowledgePoints: [
@@ -1939,6 +2431,13 @@ export const multivariableCalculusLineIntegralTopics: readonly TopicDef[] = [
   calculatingPotentialFunctionsForLineIntegrals,
   lineIntegralsOfConservativeVectorFieldsInThreeDimensions,
   conservationOfMechanicalEnergy,
+
+  // Circulation and Flux
+  outwardPointingUnitNormalVectorsIn2D,
+  circulation,
+  fluxInTwoDimensionalVectorFields,
+  calculatingFluxInTwoDimensionalVectorFields,
+  sourceFreeVectorFields,
 
   // 4.23 Green's Theorem
   circulationAndFluxAcrossSimpleClosedPlaneCurves,

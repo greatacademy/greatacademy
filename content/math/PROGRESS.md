@@ -63,11 +63,11 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Integrated Math I, II, III (Honors) | Prealgebra | done | | Assigned slot **E**. 3 courses (227, 331, 278 topics) providing an accelerated integrated pathway |
 | Mathematical Foundations I, II, III | — | done | | Assigned slot **E**. 3 courses (358, 355, 323 topics) for adult foundational and calculus preparation |
 | AP Calculus AB, AP Calculus BC | Calculus I, Calculus II | done | | 9 units (212 topics) and 16 units (305 topics) (revision complete) |
-| Multivariable Calculus | Linear Algebra | done | | 6 units, 187 topics |
+| Multivariable Calculus | Linear Algebra | done | | 6 units, 193 topics |
 | Differential Equations | Multivariable Calculus | done | | 7 units, 159 topics (24 reused, 135 new) |
 | Probability & Statistics | Multivariable Calculus | done | | 10 units, 181 topics (53 reused, 128 new) |
 | Mathematics for Machine Learning | Calculus II, Linear Algebra | done | | 12 units, 301 topics (283 reused, 18 new) |
-| Mathematical Methods for the Physical Sciences I, II | Calculus II | done | | 13 units (294 topics) and 12 units (232 topics) |
+| Mathematical Methods for the Physical Sciences I, II | Calculus II | done | | 13 units (294 topics) and 12 units (238 topics) |
 | Abstract Algebra | Methods of Proof, Linear Algebra | done | | 9 units, 129 topics |
 | SAT Math Fundamentals, SAT Math Prep | Algebra II | done | | Assigned slot **F**. 2 courses: SAT Math Fundamentals (rebuilt to the full outline: 17 units, 655 topics, `sat-fundamentals-*.ts` for the 76 new ones) and SAT Math Prep (rebuilt to the full outline: 4 units, 292 topics, `sat-prep-*.ts` for the 32 new ones) |
 | ACT Math Fundamentals, ACT Math Prep | Precalculus | done | | Assigned slot **G**. 2 courses: ACT Math Fundamentals (rebuilt to the full outline: 7 units, 851 topics) and ACT Math Prep (rebuilt to the full outline: 6 units, 305 topics); `act-*.ts` hold the 17 new topics |

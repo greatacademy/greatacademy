@@ -9834,6 +9834,16 @@ export const multivariableCalculus: CourseDef = {
           ],
         },
         {
+          title: t("Circulation and Flux", "环量与通量"),
+          topics: [
+            "outward-pointing-unit-normal-vectors-in-2d",
+            "circulation",
+            "flux-in-two-dimensional-vector-fields",
+            "calculating-flux-in-two-dimensional-vector-fields",
+            "source-free-vector-fields",
+          ],
+        },
+        {
           title: t("Green's Theorem", "格林公式"),
           topics: [
             "circulation-and-flux-across-simple-closed-plane-curves",
@@ -12273,13 +12283,23 @@ export const mathematicalMethodsForThePhysicalSciencesII: CourseDef = {
           ],
         },
         {
-          title: t("Circulation and Flux", "环量与通量"),
+          title: t("Path Independence and Conservation", "路径无关性与势函数"),
           topics: [
             "path-independence-of-line-integrals",
             "conservative-vector-fields-and-closed-paths",
             "calculating-potential-functions-for-line-integrals",
             "line-integrals-of-conservative-vector-fields-in-three-dimensions",
             "conservation-of-mechanical-energy",
+          ],
+        },
+        {
+          title: t("Circulation and Flux", "环量与通量"),
+          topics: [
+            "outward-pointing-unit-normal-vectors-in-2d",
+            "circulation",
+            "flux-in-two-dimensional-vector-fields",
+            "calculating-flux-in-two-dimensional-vector-fields",
+            "source-free-vector-fields",
           ],
         },
         {
