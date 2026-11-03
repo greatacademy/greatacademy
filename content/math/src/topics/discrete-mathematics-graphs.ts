@@ -41,8 +41,8 @@ export const introductionToGraphs: TopicDef = {
   id: "introduction-to-graphs",
   title: t("Introduction to Graphs", "图的简介"),
   summary: t(
-    "A graph G = (V, E) is a set of vertices V and a set E of edges, each joining two vertices. In a simple graph there are no loops or repeated edges, so it has at most C(n, 2) edges on n vertices.",
-    "图 G = (V, E) 由顶点集 V 和边集 E 组成，每条边连接两个顶点。简单图没有环和重边，所以 n 个顶点的简单图至多有 C(n, 2) 条边。",
+    "A graph $G = (V, E)$ is a set of vertices $V$ and a set $E$ of edges, each joining two vertices. In a simple graph there are no loops or repeated edges, so it has at most $\\binom{n}{2}$ edges on $n$ vertices.",
+    "图 $G = (V, E)$ 由顶点集 $V$ 和边集 $E$ 组成，每条边连接两个顶点。简单图没有环和重边，所以 $n$ 个顶点的简单图至多有 $\\binom{n}{2}$ 条边。",
   ),
   prerequisites: ["relations-on-finite-sets", "combinations"],
   encompasses: [],
@@ -56,6 +56,13 @@ export const introductionToGraphs: TopicDef = {
         "If $N(A) = \\{B, C\\}$, $N(B) = \\{A\\}$, $N(C) = \\{A\\}$, the edges are $AB$ and $AC$. Each edge appears in two lists, so the number of edges is half the total length of the lists: $\\frac{4}{2} = 2$.",
         "若 $N(A) = \\{B, C\\}$，$N(B) = \\{A\\}$，$N(C) = \\{A\\}$，则边为 $AB$ 和 $AC$。每条边出现在两个表中，所以边数是各表长度总和的一半：$\\frac{4}{2} = 2$。",
       ),
+      figure: graphFigure({
+        n: 3,
+        edges: [
+          [0, 1],
+          [0, 2],
+        ],
+      }),
       generate(rng) {
         const n = rng.int(5, 7);
         const g = randomGraph(rng, n, rng.int(n - 1, n + 4));
@@ -710,9 +717,23 @@ export const regularGraphs: TopicDef = {
       id: "edges-of-regular-graphs",
       title: t("Edges of regular graphs", "正则图的边数"),
       explanation: t(
-        "A $4$-regular graph on $9$ vertices has $\\frac{9 \\cdot 4}{2} = 18$ edges. Conversely a regular graph on $8$ vertices with $12$ edges is $\\frac{2 \\cdot 12}{8} = 3$-regular.",
-        "$9$ 个顶点的 $4$-正则图有 $\\frac{9 \\cdot 4}{2} = 18$ 条边。反过来，$8$ 个顶点、$12$ 条边的正则图是 $\\frac{2 \\cdot 12}{8} = 3$-正则的。",
+        "In an $r$-regular graph every vertex has degree $r$, so $n$ vertices have $nr$ edge ends and, since each edge has two ends, $\\frac{nr}{2}$ edges. The graph shown is $3$-regular on $6$ vertices, with $\\frac{6 \\cdot 3}{2} = 9$ edges. A $4$-regular graph on $9$ vertices has $\\frac{9 \\cdot 4}{2} = 18$ edges. Conversely a regular graph on $8$ vertices with $12$ edges is $\\frac{2 \\cdot 12}{8} = 3$-regular.",
+        "在 $r$-正则图中每个顶点的度都是 $r$，所以 $n$ 个顶点共有 $nr$ 个边端点；每条边有两个端点，所以共有 $\\frac{nr}{2}$ 条边。图中是 $6$ 个顶点的 $3$-正则图，有 $\\frac{6 \\cdot 3}{2} = 9$ 条边。$9$ 个顶点的 $4$-正则图有 $\\frac{9 \\cdot 4}{2} = 18$ 条边。反过来，$8$ 个顶点、$12$ 条边的正则图是 $\\frac{2 \\cdot 12}{8} = 3$-正则的。",
       ),
+      figure: graphFigure({
+        n: 6,
+        edges: [
+          [0, 1],
+          [1, 2],
+          [2, 3],
+          [3, 4],
+          [4, 5],
+          [0, 5],
+          [0, 3],
+          [1, 4],
+          [2, 5],
+        ],
+      }),
       generate(rng) {
         let n: number;
         let r: number;
@@ -796,9 +817,23 @@ export const planarGraphs: TopicDef = {
       id: "eulers-formula-for-planar-graphs",
       title: t("Euler's formula", "欧拉公式"),
       explanation: t(
-        "A connected planar graph with $8$ vertices and $12$ edges divides the plane into $f = 2 - 8 + 12 = 6$ faces, counting the outer face.",
-        "有 $8$ 个顶点、$12$ 条边的连通平面图把平面分成 $f = 2 - 8 + 12 = 6$ 个面（含外部面）。",
+        "A connected graph drawn in the plane without crossings satisfies Euler's formula $v - e + f = 2$, where $f$ counts the faces, including the unbounded outer face. The graph shown has $6$ vertices and $9$ edges, and its $4$ triangles and the outer face make $f = 2 - 6 + 9 = 5$ faces. A connected planar graph with $8$ vertices and $12$ edges divides the plane into $f = 2 - 8 + 12 = 6$ faces.",
+        "在平面上画成没有交叉的连通图满足欧拉公式 $v - e + f = 2$，其中 $f$ 是面的个数，包括无界的外部面。图中的图有 $6$ 个顶点、$9$ 条边，它的 $4$ 个三角形加上外部面共 $f = 2 - 6 + 9 = 5$ 个面。有 $8$ 个顶点、$12$ 条边的连通平面图把平面分成 $f = 2 - 8 + 12 = 6$ 个面。",
       ),
+      figure: graphFigure({
+        n: 6,
+        edges: [
+          [0, 1],
+          [1, 2],
+          [2, 3],
+          [3, 4],
+          [4, 5],
+          [0, 5],
+          [0, 2],
+          [0, 3],
+          [0, 4],
+        ],
+      }),
       generate(rng) {
         const v = rng.int(4, 20);
         const e = rng.int(v - 1, 3 * v - 6);
