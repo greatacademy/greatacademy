@@ -137,6 +137,34 @@ export const satEquatingPolynomialCoefficients: TopicDef = {
         });
       },
     },
+    {
+      id: "sat-unknown-inside-a-factor",
+      title: t("Finding an Unknown Inside a Factor", "求因式中的未知常数"),
+      explanation: t(
+        "When the unknown sits inside one of the factors, expand anyway, keeping the unknown as a letter, and then match the coefficient you are given. For\n$$(3x + 2)(4x + k) = 12x^2 + 23x + 2k$$\nthe $x$-coefficient on the left is $3k + 2 \\cdot 4 = 3k + 8$. Setting $3k + 8 = 23$ gives $k = 5$. Check with the constant term: $2k = 10$ on both sides.",
+        "当未知数在某个因式里时，照样展开，把未知数保留为字母，再与已知系数比较。对于\n$$(3x + 2)(4x + k) = 12x^2 + 23x + 2k$$\n左边的一次项系数为 $3k + 2 \\cdot 4 = 3k + 8$。令 $3k + 8 = 23$，得 $k = 5$。用常数项检验：两边都是 $2k = 10$。",
+      ),
+      generate(rng) {
+        const a = rng.int(2, 6);
+        const b = rng.int(1, 7);
+        const c = rng.int(2, 5);
+        const k = rng.int(2, 9);
+        const middle = a * k + b * c;
+        return numberProblem({
+          prompt: t(
+            `The equation $(${a}x + ${b})(${c}x + k) = ${a * c}x^2 + ${middle}x + ${b}k$, where $k$ is a constant, is true for all values of $x$. What is the value of $k$?`,
+            `等式 $(${a}x + ${b})(${c}x + k) = ${a * c}x^2 + ${middle}x + ${b}k$（$k$ 为常数）对所有 $x$ 的值均成立。$k$ 的值是多少？`,
+          ),
+          answer: k,
+          form: "integer",
+          wrong: [middle - b * c, middle - a * c, k + 1].filter((w) => w !== k),
+          solution: t(
+            `The $x$-coefficient of the left side is $${a}k + ${b} \\cdot ${c} = ${a}k + ${b * c}$. Setting $${a}k + ${b * c} = ${middle}$ gives $${a}k = ${a * k}$, so $k = ${k}$.`,
+            `左边的一次项系数为 $${a}k + ${b} \\cdot ${c} = ${a}k + ${b * c}$。令 $${a}k + ${b * c} = ${middle}$，得 $${a}k = ${a * k}$，所以 $k = ${k}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -279,6 +307,44 @@ export const satExponentialModelRewriting: TopicDef = {
         });
       },
     },
+    {
+      id: "sat-growth-over-a-shorter-period",
+      title: t("Percent Change over a Shorter Period", "较短周期内的百分比变化"),
+      explanation: t(
+        "A yearly factor can be rewritten for a shorter period with the exponent rules. Every half year is $\\frac{1}{2}$ of a year, so the half-year factor $q$ must satisfy $q^2 = b$, and\n$$a\\,b^t = a\\,(q^2)^t = a\\,q^{2t},$$\nwhere $2t$ counts half years. For $P(t) = 800(1.21)^t$, $q = \\sqrt{1.21} = 1.1$, so the quantity grows by $10\\%$ every half year, not by half of $21\\%$.",
+        "年增长因子可以用指数法则改写成较短周期的因子。每半年是 $\\frac{1}{2}$ 年，所以半年因子 $q$ 满足 $q^2 = b$，并且\n$$a\\,b^t = a\\,(q^2)^t = a\\,q^{2t},$$\n其中 $2t$ 是半年的个数。对于 $P(t) = 800(1.21)^t$，$q = \\sqrt{1.21} = 1.1$，所以该量每半年增长 $10\\%$，而不是 $21\\%$ 的一半。",
+      ),
+      generate(rng) {
+        const q = rng.pick([110, 120, 130, 140, 150, 90, 80, 70, 60, 105, 95, 102, 98]);
+        const square = q * q;
+        const dec = (n: number) => (n / 10000).toString();
+        const base = dec(square);
+        const initial = rng.int(2, 30) * 100;
+        const change = Math.abs(q - 100);
+        const grows = q > 100;
+        const yearly = Math.abs(square - 10000) / 100;
+        const [what, whatZh] = rng.pick([
+          ["the number of users of an app", "某应用的用户数"],
+          ["the value of a machine", "一台机器的价值"],
+          ["the mass of a sample", "一个样本的质量"],
+          ["the population of a town", "某镇的人口"],
+        ] as const);
+        return numberProblem({
+          prompt: t(
+            `The function $f(t) = ${initial}(${base})^t$ models ${what}, where $t$ is the time in years. By what percent does it ${grows ? "increase" : "decrease"} every half year?`,
+            `函数 $f(t) = ${initial}(${base})^t$ 描述${whatZh}，其中 $t$ 为时间（年）。它每半年${grows ? "增加" : "减少"}百分之几？`,
+          ),
+          answer: change,
+          form: "integer",
+          unit: "%",
+          wrong: [yearly, yearly / 2, change * 2].filter((w) => Number.isInteger(w) && w !== change),
+          solution: t(
+            `Write $${base} = (${dec(q * 100)})^2$, so $f(t) = ${initial}(${dec(q * 100)})^{2t}$, where $2t$ counts half years. The half-year factor $${dec(q * 100)}$ means a ${change}% ${grows ? "increase" : "decrease"} each half year.`,
+            `把 $${base}$ 写成 $(${dec(q * 100)})^2$，则 $f(t) = ${initial}(${dec(q * 100)})^{2t}$，其中 $2t$ 是半年的个数。半年因子 $${dec(q * 100)}$ 表示每半年${grows ? "增加" : "减少"} ${change}%。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -326,6 +392,36 @@ export const satQuadraticVertexAndConstants: TopicDef = {
           form: "integer",
           wrong: [h, k + h, k - h],
           solution,
+        });
+      },
+    },
+    {
+      id: "sat-constant-from-the-vertex",
+      title: t("Finding a Coefficient from the Vertex", "由顶点求系数"),
+      explanation: t(
+        "In standard form $f(x) = ax^2 + bx + c$, the vertex has $x$-coordinate $-\\frac{b}{2a}$. If the minimum or maximum is known to occur at $x = h$, then $-\\frac{b}{2a} = h$, so $b = -2ah$.\n\nFor $f(x) = 3x^2 + bx + 5$ with its minimum at $x = 2$: $b = -2 \\cdot 3 \\cdot 2 = -12$. Check: $-\\frac{-12}{2 \\cdot 3} = 2$.",
+        "在一般式 $f(x) = ax^2 + bx + c$ 中，顶点的横坐标为 $-\\frac{b}{2a}$。若已知最小值或最大值在 $x = h$ 处取得，则 $-\\frac{b}{2a} = h$，所以 $b = -2ah$。\n\n对于在 $x = 2$ 处取得最小值的 $f(x) = 3x^2 + bx + 5$：$b = -2 \\cdot 3 \\cdot 2 = -12$。检验：$-\\frac{-12}{2 \\cdot 3} = 2$。",
+      ),
+      generate(rng) {
+        const up = rng.bool();
+        const a = (up ? 1 : -1) * rng.int(1, 5);
+        const h = rng.pick([-1, 1]) * rng.int(1, 8);
+        const c = rng.int(-9, 20);
+        const b = -2 * a * h;
+        const lead = a === 1 ? "" : a === -1 ? "-" : `${a}`;
+        const cTex = c < 0 ? ` - ${-c}` : c === 0 ? "" : ` + ${c}`;
+        return numberProblem({
+          prompt: t(
+            `The function $f(x) = ${lead}x^2 + bx${cTex}$, where $b$ is a constant, reaches its ${up ? "minimum" : "maximum"} value at $x = ${h}$. What is the value of $b$?`,
+            `函数 $f(x) = ${lead}x^2 + bx${cTex}$（$b$ 为常数）在 $x = ${h}$ 处取得${up ? "最小" : "最大"}值。$b$ 的值是多少？`,
+          ),
+          answer: b,
+          form: "integer",
+          wrong: [-b, -a * h, -2 * h].filter((w) => w !== b),
+          solution: t(
+            `The vertex is at $x = -\\frac{b}{2a}$ with $a = ${a}$. Setting $-\\frac{b}{2(${a})} = ${h}$ gives $b = -2(${a})(${h}) = ${b}$.`,
+            `顶点横坐标为 $x = -\\frac{b}{2a}$，其中 $a = ${a}$。令 $-\\frac{b}{2(${a})} = ${h}$，得 $b = -2(${a})(${h}) = ${b}$。`,
+          ),
         });
       },
     },
