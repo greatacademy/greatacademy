@@ -15,6 +15,7 @@ import { abstractAlgebraSubgroupTopics } from "./topics/abstract-algebra-subgrou
 import { abstractAlgebraSylowTopics } from "./topics/abstract-algebra-sylow.ts";
 import { actGeometryDataTopics } from "./topics/act-geometry-data.ts";
 import { actNumberAlgebraTopics } from "./topics/act-number-algebra.ts";
+import { approximatingSystemsTopics } from "./topics/algebra-i-approximating-systems.ts";
 import { conicTopics } from "./topics/algebra-ii-conics.ts";
 import { algebraIIFactoringTopics } from "./topics/algebra-ii-factoring.ts";
 import { algebraIIFunctionTopics } from "./topics/algebra-ii-functions.ts";
@@ -266,6 +267,7 @@ export const math: SubjectDef = {
     ...linearEquationTopics,
     ...compoundInequalityTopics,
     ...lineTopics,
+    ...approximatingSystemsTopics,
     ...twoVariableTopics,
     ...functionTopics,
     ...absoluteValueTopics,

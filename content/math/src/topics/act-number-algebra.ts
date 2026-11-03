@@ -1,8 +1,8 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { type PlaneMark, plane, Q } from "@ga/subject-math";
+import { linear, type PlaneMark, plane, poly, Q } from "@ga/subject-math";
 
-import { expressionProblem, numberProblem, steps } from "../problems.ts";
+import { expressionProblem, numberProblem, pointProblem, steps } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
 
 // ACT Math, number and algebra: ones digits of powers, digits of expansions in powers of a base, counting integers
@@ -1359,7 +1359,6 @@ export const simplifyingRationalExpressionsWithSumsAndDifferencesOfCubes = topic
   ],
 );
 
-/** solvingSystemsOfNonlinearEquationsUsingGraphs counts and identifies the solutions of a system as the points where its graphs meet. */
 export /** circleMarks draws the circle x² + y² = r² as its upper and lower halves. */
 function circleMarks(r: number): PlaneMark[] {
   const half = (x: number) => Math.sqrt(Math.max(0, r * r - x * x));
@@ -1426,44 +1425,98 @@ const checkingPointFigure: Figure = {
   ),
 };
 
+/** vertexForm writes a(x − h)² + v in LaTeX, leaving out a unit coefficient and zero terms. */
+function vertexForm(a: number, h: number, v: number): string {
+  const sq = h === 0 ? "x^{2}" : `(x ${h < 0 ? "+" : "-"} ${Math.abs(h)})^{2}`;
+  const coef = a === 1 ? "" : a === -1 ? "-" : String(a);
+  return `${coef}${sq}${v === 0 ? "" : ` ${v < 0 ? "-" : "+"} ${Math.abs(v)}`}`;
+}
+
+/** lineAt writes m · x + b with the number x substituted, for checking a point on y = mx + b. */
+const lineAt = (m: number, b: number, x: number) => `${m} \\cdot ${paren(x)} ${b < 0 ? "-" : "+"} ${Math.abs(b)}`;
+
+/** plain writes a LaTeX expression for alt text: superscript squares, true minus signs and no braces. */
+const plain = (latex: string) =>
+  latex
+    .replace(/\^\{2\}/g, "²")
+    .replace(/-/g, "−")
+    .replace(/[{}]/g, "");
+
+/** parabolaCheckFigure shows y = x² − 3 and y = x − 1 meeting at (2, 1) and (−1, −2), with (−2, 1) on the parabola only. */
+const parabolaCheckFigure: Figure = {
+  svg: plane(systemsView, [
+    { kind: "curve", f: (x) => x * x - 3 },
+    { kind: "line", a: [0, -1], b: [1, 0], accent: true },
+    { kind: "point", at: [2, 1], accent: true, label: "(2, 1)", dir: "e" },
+    { kind: "point", at: [-1, -2], accent: true, label: "(−1, −2)", dir: "w" },
+    { kind: "point", at: [-2, 1], open: true, label: "(−2, 1)", dir: "w" },
+  ]),
+  alt: t(
+    "The parabola y = x² − 3 and the line y = x − 1, which meet at (2, 1) and (−1, −2); the point (−2, 1) lies on the parabola but not on the line.",
+    "抛物线 y = x² − 3 与直线 y = x − 1 交于 (2, 1) 和 (−1, −2)；点 (−2, 1) 在抛物线上，但不在直线上。",
+  ),
+};
+
+/** solvingSystemsOfNonlinearEquationsUsingGraphs reads, counts and checks the solutions of a system as the points where its graphs meet. */
 const solvingSystemsOfNonlinearEquationsUsingGraphs = topic(
   "solving-systems-of-nonlinear-equations-using-graphs",
   t("Solving Systems of Nonlinear Equations Using Graphs", "用图象解非线性方程组"),
   t(
-    "Treat the solutions of a system as the points where the graphs of its equations meet, count them by picturing a circle or a parabola together with a line, and check a point by testing it in both equations.",
-    "把方程组的解看作各方程图象的交点：通过想象圆或抛物线与一条直线的位置来数出解的个数，并把一个点代入两个方程来检验它是否为解。",
+    "Treat the solutions of a system as the points where the graphs of its equations meet: read them from a graph, count them by picturing a parabola together with a horizontal line, and check a point by testing it in both equations.",
+    "把方程组的解看作各方程图象的交点：从图象上读出解，通过想象抛物线与水平线的位置来数出解的个数，并把一个点代入两个方程来检验它是否为解。",
   ),
-  ["solving-systems-of-nonlinear-equations", "equations-of-circles"],
+  ["solving-systems-of-nonlinear-equations"],
   ["A-REI.C.7", "A-REI.D.11"],
   [
     kp(
-      "a-circle-and-a-line",
-      t("A circle and a horizontal or vertical line", "圆与水平线或竖直线"),
+      "reading-solutions-from-a-graph",
+      t("Reading the solutions from a graph", "从图象读出解"),
       t(
-        "Each solution of a system is a point on both graphs, so the number of solutions is the number of points where the graphs cross or touch. The circle $x^{2} + y^{2} = r^{2}$ reaches from $-r$ to $r$ in each direction. A horizontal line $y = k$ cuts it twice when $|k| < r$, touches it once when $|k| = r$, and misses it when $|k| > r$; a vertical line $x = k$ behaves the same way.",
-        "方程组的每个解都是两个图象上共同的点，所以解的个数就是图象相交或相切的点的个数。圆 $x^{2} + y^{2} = r^{2}$ 在每个方向上都从 $-r$ 延伸到 $r$。水平线 $y = k$ 在 $|k| < r$ 时与它交于两点，$|k| = r$ 时与它切于一点，$|k| > r$ 时与它不相交；竖直线 $x = k$ 的情况相同。",
+        "Each solution of a system is a point that lies on the graph of every equation, so once the graphs are drawn, the solutions are the points where they cross. Read the coordinates of each crossing point from the grid, then substitute them into both equations to confirm that the reading is exact.",
+        "方程组的每个解都是同时位于每个方程图象上的点，所以画出图象后，解就是图象的交点。从网格上读出每个交点的坐标，再代入两个方程，确认读数准确。",
       ),
       (rng) => {
-        const r = rng.int(2, 9);
-        const kind = rng.int(0, 2);
-        const k = rng.sign() * (kind === 0 ? rng.int(0, r - 1) : kind === 1 ? r : rng.int(r + 1, r + 6));
-        const answer = kind === 0 ? 2 : kind === 1 ? 1 : 0;
-        const v = rng.pick(["x", "y"]);
-        return numberProblem({
-          prompt: t(
-            `How many real solutions does the system $x^{2} + y^{2} = ${r * r}$, $${v} = ${k}$ have?`,
-            `方程组 $x^{2} + y^{2} = ${r * r}$，$${v} = ${k}$ 有多少个实数解？`,
-          ),
-          answer,
-          form: "integer",
-          wrong: [0, 1, 2, 4],
-          solution: t(
-            `The circle has radius $${r}$. Since $|${k}| ${kind === 0 ? "<" : kind === 1 ? "=" : ">"} ${r}$, the line ${kind === 0 ? "crosses the circle twice" : kind === 1 ? "touches the circle once" : "misses the circle"}, so there ${answer === 1 ? "is $1$ solution" : `are $${answer}$ solutions`}.`,
-            `圆的半径为 $${r}$。因为 $|${k}| ${kind === 0 ? "<" : kind === 1 ? "=" : ">"} ${r}$，这条直线${kind === 0 ? "与圆交于两点" : kind === 1 ? "与圆切于一点" : "与圆不相交"}，所以有 $${answer}$ 个解。`,
-          ),
-        });
+        const a = rng.pick([1, -1]);
+        const h = rng.int(-2, 2);
+        const v = a > 0 ? rng.int(-6, -1) : rng.int(1, 6);
+        const f = (x: number) => a * (x - h) ** 2 + v;
+        const [x1, x2] = rng
+          .sample([-3, -2, -1, 1, 2, 3], 2)
+          .map((d) => h + d)
+          .sort((p, q) => p - q) as [number, number];
+        const m = a * (x1 + x2 - 2 * h);
+        const b = f(x1) - m * x1;
+        const parabola = vertexForm(a, h, v);
+        const line = linear(m, b);
+        return {
+          ...pointProblem({
+            prompt: t(
+              `The graphs of the equations of the system $y = ${parabola}$, $y = ${line}$ are shown. Which solution has the greater $x$-coordinate?`,
+              `图中是方程组 $y = ${parabola}$，$y = ${line}$ 中两个方程的图象。哪个解的 $x$ 坐标较大？`,
+            ),
+            answer: [x2, f(x2)],
+            wrong: [
+              [x1, f(x1)],
+              [f(x2), x2],
+              [h, v],
+            ],
+            solution: t(
+              `The graphs cross at $(${x1}, ${f(x1)})$ and $(${x2}, ${f(x2)})$, and the second has the greater $x$-coordinate. Check it in both equations: $${vertexForm(a, h, v).replace(/x/g, paren(x2))} = ${f(x2)}$ and $${lineAt(m, b, x2)} = ${f(x2)}$.`,
+              `两个图象交于 $(${x1}, ${f(x1)})$ 和 $(${x2}, ${f(x2)})$，后者的 $x$ 坐标较大。代入两个方程检验：$${vertexForm(a, h, v).replace(/x/g, paren(x2))} = ${f(x2)}$，$${lineAt(m, b, x2)} = ${f(x2)}$。`,
+            ),
+          }),
+          figure: {
+            svg: plane(systemsView, [
+              { kind: "curve", f },
+              { kind: "line", a: [0, b], b: [1, m + b], accent: true },
+            ]),
+            alt: t(
+              `The parabola y = ${plain(parabola)} and the line y = ${plain(line)} drawn on the same grid.`,
+              `在同一网格中画出的抛物线 y = ${plain(parabola)} 与直线 y = ${plain(line)}。`,
+            ),
+          },
+        };
       },
-      circleAndLinesFigure,
     ),
     kp(
       "a-parabola-and-a-horizontal-line",
@@ -1502,6 +1555,87 @@ const solvingSystemsOfNonlinearEquationsUsingGraphs = topic(
     kp(
       "checking-an-intersection-point",
       t("Checking an intersection point", "检验交点"),
+      t(
+        "A point that looks like an intersection on a graph is a solution only if its coordinates satisfy both equations exactly. To decide which listed point solves the system $y = x^{2} - 3$, $y = x - 1$, substitute each into both: $(2, 1)$ gives $2^{2} - 3 = 1$ and $2 - 1 = 1$, so it is a solution, while $(-2, 1)$ lies on the parabola but the line gives $-2 - 1 = -3$ there.",
+        "图象上看起来像交点的点，只有当它的坐标恰好满足两个方程时才是解。要判断所列哪个点是方程组 $y = x^{2} - 3$，$y = x - 1$ 的解，把每个点代入两个方程：$(2, 1)$ 给出 $2^{2} - 3 = 1$ 和 $2 - 1 = 1$，所以它是解；而 $(-2, 1)$ 在抛物线上，但直线在该处给出 $-2 - 1 = -3$。",
+      ),
+      (rng) => {
+        const c = rng.int(-4, 3);
+        const [r1, r2] = rng.sample([-3, -2, -1, 0, 1, 2, 3], 2) as [number, number];
+        const m = r1 + r2;
+        const b = c - r1 * r2;
+        const onParabola = (x: number) => x * x + c;
+        const onLine = (x: number) => m * x + b;
+        const x0 = rng.pick([r1, r2]);
+        const y0 = onParabola(x0);
+        const others = [-3, -2, -1, 0, 1, 2, 3].filter((x) => x !== r1 && x !== r2);
+        const [x3, x4] = rng.sample(others, 2) as [number, number];
+        const pt = (x: number, y: number) => mathText(`(${x}, ${y})`);
+        const swapped = onParabola(y0) === x0 && onLine(y0) === x0 ? [] : [pt(y0, x0)];
+        const parabola = poly([1, "x^{2}"], [c, ""]);
+        const line = linear(m, b);
+        return pickChoice(
+          rng,
+          t(
+            `Which point is a solution of the system $y = ${parabola}$, $y = ${line}$?`,
+            `哪个点是方程组 $y = ${parabola}$，$y = ${line}$ 的解？`,
+          ),
+          pt(x0, y0),
+          [pt(x3, onParabola(x3)), pt(x4, onLine(x4)), ...swapped],
+          t(
+            `Substitute $(${x0}, ${y0})$: $${paren(x0)}^{2} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${y0}$ and $${lineAt(m, b, x0)} = ${y0}$, so it lies on both graphs. The point $(${x3}, ${onParabola(x3)})$ lies on the parabola, but the line gives $${onLine(x3)}$ at $x = ${x3}$; the point $(${x4}, ${onLine(x4)})$ lies on the line, but the parabola gives $${onParabola(x4)}$ at $x = ${x4}$.`,
+            `代入 $(${x0}, ${y0})$：$${paren(x0)}^{2} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${y0}$，且 $${lineAt(m, b, x0)} = ${y0}$，所以它在两个图象上。点 $(${x3}, ${onParabola(x3)})$ 在抛物线上，但直线在 $x = ${x3}$ 处给出 $${onLine(x3)}$；点 $(${x4}, ${onLine(x4)})$ 在直线上，但抛物线在 $x = ${x4}$ 处给出 $${onParabola(x4)}$。`,
+          ),
+        );
+      },
+      parabolaCheckFigure,
+    ),
+  ],
+);
+
+/** systemsWithACircleAndALine counts and checks the solutions of a system of a circle and a line. */
+const systemsWithACircleAndALine = topic(
+  "systems-with-a-circle-and-a-line",
+  t("Systems With a Circle and a Line", "圆与直线组成的方程组"),
+  t(
+    "Count the solutions of a system of a circle centered at the origin and a line by picturing where the line meets the circle, and check a point by testing it in both equations.",
+    "通过想象直线与以原点为圆心的圆的位置关系来数出方程组的解的个数，并把一个点代入两个方程来检验它是否为解。",
+  ),
+  ["solving-systems-of-nonlinear-equations-using-graphs", "equations-of-circles"],
+  ["A-REI.C.7"],
+  [
+    kp(
+      "a-circle-and-a-line",
+      t("A circle and a horizontal or vertical line", "圆与水平线或竖直线"),
+      t(
+        "Each solution of a system is a point on both graphs, so the number of solutions is the number of points where the graphs cross or touch. The circle $x^{2} + y^{2} = r^{2}$ reaches from $-r$ to $r$ in each direction. A horizontal line $y = k$ cuts it twice when $|k| < r$, touches it once when $|k| = r$, and misses it when $|k| > r$; a vertical line $x = k$ behaves the same way.",
+        "方程组的每个解都是两个图象上共同的点，所以解的个数就是图象相交或相切的点的个数。圆 $x^{2} + y^{2} = r^{2}$ 在每个方向上都从 $-r$ 延伸到 $r$。水平线 $y = k$ 在 $|k| < r$ 时与它交于两点，$|k| = r$ 时与它切于一点，$|k| > r$ 时与它不相交；竖直线 $x = k$ 的情况相同。",
+      ),
+      (rng) => {
+        const r = rng.int(2, 9);
+        const kind = rng.int(0, 2);
+        const k = rng.sign() * (kind === 0 ? rng.int(0, r - 1) : kind === 1 ? r : rng.int(r + 1, r + 6));
+        const answer = kind === 0 ? 2 : kind === 1 ? 1 : 0;
+        const v = rng.pick(["x", "y"]);
+        return numberProblem({
+          prompt: t(
+            `How many real solutions does the system $x^{2} + y^{2} = ${r * r}$, $${v} = ${k}$ have?`,
+            `方程组 $x^{2} + y^{2} = ${r * r}$，$${v} = ${k}$ 有多少个实数解？`,
+          ),
+          answer,
+          form: "integer",
+          wrong: [0, 1, 2, 4],
+          solution: t(
+            `The circle has radius $${r}$. Since $|${k}| ${kind === 0 ? "<" : kind === 1 ? "=" : ">"} ${r}$, the line ${kind === 0 ? "crosses the circle twice" : kind === 1 ? "touches the circle once" : "misses the circle"}, so there ${answer === 1 ? "is $1$ solution" : `are $${answer}$ solutions`}.`,
+            `圆的半径为 $${r}$。因为 $|${k}| ${kind === 0 ? "<" : kind === 1 ? "=" : ">"} ${r}$，这条直线${kind === 0 ? "与圆交于两点" : kind === 1 ? "与圆切于一点" : "与圆不相交"}，所以有 $${answer}$ 个解。`,
+          ),
+        });
+      },
+      circleAndLinesFigure,
+    ),
+    kp(
+      "checking-a-point-on-a-circle-and-a-line",
+      t("Checking a point on a circle and a line", "检验圆与直线的交点"),
       t(
         "A point that looks like an intersection on a graph is a solution only if its coordinates satisfy both equations exactly. To decide which listed point solves the system $x^{2} + y^{2} = 25$, $y = x + 1$, substitute each into both: $(3, 4)$ gives $9 + 16 = 25$ and $4 = 3 + 1$, so it is a solution, while $(4, 3)$ lies on the circle but not on the line.",
         "图象上看起来像交点的点，只有当它的坐标恰好满足两个方程时才是解。要判断所列哪个点是方程组 $x^{2} + y^{2} = 25$，$y = x + 1$ 的解，把每个点代入两个方程：$(3, 4)$ 给出 $9 + 16 = 25$ 和 $4 = 3 + 1$，所以它是解；而 $(4, 3)$ 在圆上却不在直线上。",
@@ -1581,4 +1715,5 @@ export const actNumberAlgebraTopics: readonly TopicDef[] = [
   modelingWithMatrixProducts,
   simplifyingRationalExpressionsWithSumsAndDifferencesOfCubes,
   solvingSystemsOfNonlinearEquationsUsingGraphs,
+  systemsWithACircleAndALine,
 ];
