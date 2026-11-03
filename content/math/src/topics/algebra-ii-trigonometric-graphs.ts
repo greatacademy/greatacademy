@@ -452,6 +452,25 @@ export const trigonometricRatiosOfQuadrantalAnglesOutsideTheStandardRange: Topic
   ],
 };
 
+/** unitCirclePairFigure draws the unit circle with the points at angles a and b degrees, the radius to each and a dashed segment joining them unless they are opposite; labels name the angles. */
+function unitCirclePairFigure(a: number, b: number, labels: readonly [string, string], alt: Text): Figure {
+  const on = (d: number): [number, number] => [Math.cos((d * Math.PI) / 180), Math.sin((d * Math.PI) / 180)];
+  const dir = (d: number) => (["ne", "nw", "sw", "se"] as const)[Math.floor((((d % 360) + 360) % 360) / 90)];
+  const [pa, pb] = [on(a), on(b)];
+  return {
+    svg: plane({ xMin: -1.5, xMax: 1.5, yMin: -1.5, yMax: 1.5, step: 0.5, labelEvery: 2 }, [
+      { kind: "circle", center: [0, 0], r: 1 },
+      { kind: "segment", a: [0, 0], b: pa },
+      { kind: "segment", a: [0, 0], b: pb, accent: true },
+      // Opposite points already lie on one line through the origin.
+      ...(Math.abs(b - a) === 180 ? [] : [{ kind: "segment", a: pa, b: pb, dashed: true } as const]),
+      { kind: "point", at: pa, label: labels[0], dir: dir(a) },
+      { kind: "point", at: pb, label: labels[1], dir: dir(b), accent: true },
+    ]),
+    alt,
+  };
+}
+
 /** specialTable is the table of the points on the unit circle at the special angles of Quadrant I. */
 const specialTable = t(
   "| $\\theta$ | $30^\\circ = \\frac{\\pi}{6}$ | $45^\\circ = \\frac{\\pi}{4}$ | $60^\\circ = \\frac{\\pi}{3}$ |\n| :--- | :---: | :---: | :---: |\n| $(\\cos \\theta, \\sin \\theta)$ | $\\left(\\frac{\\sqrt{3}}{2}, \\frac{1}{2}\\right)$ | $\\left(\\frac{\\sqrt{2}}{2}, \\frac{\\sqrt{2}}{2}\\right)$ | $\\left(\\frac{1}{2}, \\frac{\\sqrt{3}}{2}\\right)$ |",
@@ -489,6 +508,15 @@ export const findingTrigonometricRatiosOfSpecialAnglesUsingTheUnitCircle: TopicD
           "\n\n以它们为参考角的角，与单位圆的交点只在坐标符号上不同，符号由象限决定。对 $150^\\circ$：在第二象限，参考角 $30^\\circ$，交点为 $\\left(-\\frac{\\sqrt{3}}{2}, \\frac{1}{2}\\right)$，所以\n\n$$\\cos 150^\\circ = -\\frac{\\sqrt{3}}{2}, \\qquad \\tan 150^\\circ = \\frac{1/2}{-\\sqrt{3}/2} = -\\frac{\\sqrt{3}}{3}.$$",
         ),
       ),
+      figure: unitCirclePairFigure(
+        30,
+        150,
+        ["30°", "150°"],
+        t(
+          "The unit circle with the points at 30° and 150°. They are mirror images across the y-axis, joined by a dashed horizontal segment: the same height 1/2, with x-coordinates √3/2 and −√3/2.",
+          "单位圆上 30° 与 150° 处的点。它们关于 y 轴对称，由一条水平虚线相连：高度都是 1/2，横坐标分别为 √3/2 和 −√3/2。",
+        ),
+      ),
       generate: (rng) => valueProblem(rng.pick<Fn>(["sin", "cos", "tan"]), rng.pick(specials), false),
     },
     {
@@ -497,6 +525,15 @@ export const findingTrigonometricRatiosOfSpecialAnglesUsingTheUnitCircle: TopicD
       explanation: t(
         "In radians the special angles are the multiples of $\\frac{\\pi}{6}$ and $\\frac{\\pi}{4}$. Find the quadrant and the reference angle, which is $\\frac{\\pi}{6}$, $\\frac{\\pi}{4}$ or $\\frac{\\pi}{3}$. For $\\frac{5\\pi}{4}$: $\\pi < \\frac{5\\pi}{4} < \\frac{3\\pi}{2}$, Quadrant III, reference angle $\\frac{5\\pi}{4} - \\pi = \\frac{\\pi}{4}$, so the point is $\\left(-\\frac{\\sqrt{2}}{2}, -\\frac{\\sqrt{2}}{2}\\right)$ and $\\sin \\frac{5\\pi}{4} = -\\frac{\\sqrt{2}}{2}$, $\\tan \\frac{5\\pi}{4} = 1$.",
         "用弧度表示时，特殊角是 $\\frac{\\pi}{6}$ 与 $\\frac{\\pi}{4}$ 的倍数。先求象限和参考角，参考角是 $\\frac{\\pi}{6}$、$\\frac{\\pi}{4}$ 或 $\\frac{\\pi}{3}$。对 $\\frac{5\\pi}{4}$：$\\pi < \\frac{5\\pi}{4} < \\frac{3\\pi}{2}$，在第三象限，参考角 $\\frac{5\\pi}{4} - \\pi = \\frac{\\pi}{4}$，交点为 $\\left(-\\frac{\\sqrt{2}}{2}, -\\frac{\\sqrt{2}}{2}\\right)$，所以 $\\sin \\frac{5\\pi}{4} = -\\frac{\\sqrt{2}}{2}$，$\\tan \\frac{5\\pi}{4} = 1$。",
+      ),
+      figure: unitCirclePairFigure(
+        45,
+        225,
+        ["π/4", "5π/4"],
+        t(
+          "The unit circle with the points at π/4 and 5π/4, on one line through the origin: the second point is the first turned half a circle, with both coordinates negated, (−√2/2, −√2/2).",
+          "单位圆上 π/4 与 5π/4 处的点，在同一条过原点的直线上：第二个点是第一个点转过半圈，两个坐标都变号，为 (−√2/2, −√2/2)。",
+        ),
       ),
       generate: (rng) => valueProblem(rng.pick<Fn>(["sin", "cos", "tan"]), rng.pick(specials), true),
     },
