@@ -670,6 +670,19 @@ export const equationsOfCircles: TopicDef = {
 // Completing the square
 // ---------------------------------------------------------------------------
 
+/** completedSquareFigure shows x² + y² − 6x + 4y − 12 = 0, the circle with center (3, −2) and radius 5. */
+const completedSquareFigure = exampleFigure(
+  { xMin: -3, xMax: 9, yMin: -8, yMax: 4 },
+  [
+    ...planeCircle(3, -2, 5),
+    { kind: "segment", a: [3, -2], b: [8, -2] },
+    { kind: "label", at: [5.5, -2], text: "5", dir: "s" },
+    { kind: "point", at: [3, -2], label: "(3, −2)", dir: "nw" },
+  ],
+  "The circle x² + y² − 6x + 4y − 12 = 0, which completing the square turns into (x − 3)² + (y + 2)² = 25: center (3, −2) and radius 5.",
+  "圆 x² + y² − 6x + 4y − 12 = 0，配方后化为 (x − 3)² + (y + 2)² = 25：圆心为 (3, −2)，半径为 5。",
+);
+
 /** completion writes the steps that turn x² + y² + Dx + Ey + F = 0, with D = −2h and E = −2k, into standard form. */
 function completion(h: number, k: number, F: number): string {
   const r2 = h * h + k * k - F;
@@ -708,6 +721,7 @@ export const determiningCirclePropertiesByCompletingTheSquare: TopicDef = {
         "Expanding the standard form gives the **general form** $x^{2} + y^{2} + Dx + Ey + F = 0$. To go back, complete the square in $x$ and in $y$, adding the same numbers to both sides:\n\n$$x^{2} + y^{2} - 6x + 4y - 12 = 0$$\n\n$$(x^{2} - 6x + 9) + (y^{2} + 4y + 4) = 12 + 9 + 4$$\n\n$$(x - 3)^{2} + (y + 2)^{2} = 25$$\n\nThe center is $(3, -2)$ and the radius is $5$. Each center coordinate is minus half the coefficient of its variable.",
         "把标准方程展开得到**一般方程** $x^{2} + y^{2} + Dx + Ey + F = 0$。要化回标准方程，就对 $x$ 和 $y$ 分别配方，两边加上相同的数：\n\n$$x^{2} + y^{2} - 6x + 4y - 12 = 0$$\n\n$$(x^{2} - 6x + 9) + (y^{2} + 4y + 4) = 12 + 9 + 4$$\n\n$$(x - 3)^{2} + (y + 2)^{2} = 25$$\n\n圆心是 $(3, -2)$，半径是 $5$。圆心的每个坐标都是对应变量系数一半的相反数。",
       ),
+      figure: completedSquareFigure,
       keyPrerequisites: ["completing-the-square"],
       generate(rng) {
         const [h, k] = pickCenter(rng, 8);
