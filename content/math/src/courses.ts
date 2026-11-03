@@ -15634,6 +15634,7 @@ export const actMathFundamentals: CourseDef = {
             "combining-rules-of-exponents-with-algebraic-expressions",
             "rewriting-radical-expressions-using-the-laws-of-exponents",
             "solving-exponential-equations",
+            "solving-exponential-equations-with-a-quadratic-exponent",
             "solving-exponential-equations-with-fractional-solutions",
             "solving-exponential-equations-using-the-zero-product-property",
             "creating-exponential-growth-expressions",
@@ -15825,6 +15826,7 @@ export const actMathFundamentals: CourseDef = {
             "piecewise-functions",
             "arithmetic-of-functions",
             "function-composition",
+            "reasoning-with-nested-function-composition",
             "describing-function-composition",
             "introduction-to-inverse-functions",
             "one-to-one-functions",
@@ -15900,6 +15902,7 @@ export const actMathFundamentals: CourseDef = {
             "solving-exponential-decay-problems",
             "linear-vs-exponential-growth-and-decay",
             "quadratic-vs-exponential-models",
+            "deciding-which-function-eventually-exceeds-the-others",
           ],
         },
         {
@@ -15977,7 +15980,7 @@ export const actMathFundamentals: CourseDef = {
         },
         {
           title: t("Introduction to Sequences", "数列入门"),
-          topics: ["introduction-to-sequences", "recursive-sequences"],
+          topics: ["introduction-to-sequences", "recursive-sequences", "computing-terms-from-nonstandard-recurrences"],
         },
         {
           title: t("Arithmetic Sequences", "等差数列"),
