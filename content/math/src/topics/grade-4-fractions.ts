@@ -1851,15 +1851,26 @@ function fractionWordKP(id: string, subtract: boolean, k: number): KnowledgePoin
   return {
     id,
     title: k === 0 ? t("Measured amounts", "度量的数量") : t("Parts of a whole", "整体的一部分"),
-    explanation: subtract
-      ? t(
-          'Questions like "how much more" or "how much is left" ask for a difference. Subtract the smaller amount from the larger, keep the denominator, and simplify the answer.\n\n"How much more" asks for a difference: $\\frac{7}{8} - \\frac{3}{8} = \\frac{4}{8} = \\frac{1}{2}$.',
-          '"多多少""还剩多少"这样的问题求的是差。用较大的量减去较小的量，分母不变，再把结果化简。\n\n"多多少"求的是差：$\\frac{7}{8} - \\frac{3}{8} = \\frac{4}{8} = \\frac{1}{2}$。',
-        )
-      : t(
-          'In a word problem, decide first which operation the question asks for. Words like "in all" or "altogether" ask for a sum, so add the fractions: add the numerators and keep the denominator.\n\n"In all" asks for a sum: $\\frac{3}{10} + \\frac{4}{10} = \\frac{7}{10}$.',
-          '解应用题，先判断问题要求用哪种运算。"一共""总共"求的是和，所以把分数相加：分母不变，分子相加。\n\n"一共"求的是和：$\\frac{3}{10} + \\frac{4}{10} = \\frac{7}{10}$。',
-        ),
+    explanation:
+      k === 1
+        ? subtract
+          ? t(
+              'When a story starts with part of one whole, such as a pan or a fence, and some of it is given away or used, the question "what fraction is left" asks for a difference. Both fractions name parts of the same whole, so subtract the numerators and keep the denominator.\n\n$\\frac{5}{6}$ of a pan of brownies, $\\frac{2}{6}$ of the pan given away: $\\frac{5}{6} - \\frac{2}{6} = \\frac{3}{6} = \\frac{1}{2}$ of the pan is left.',
+              '故事从同一个整体（比如一盘点心、一段栅栏）的一部分开始，送掉或用掉其中一些，问"还剩几分之几"，求的是差。两个分数都是同一个整体的几分之几，所以分母不变，分子相减。\n\n一盘布朗尼还剩 $\\frac{5}{6}$，送掉这盘的 $\\frac{2}{6}$：还剩这盘的 $\\frac{5}{6} - \\frac{2}{6} = \\frac{3}{6} = \\frac{1}{2}$。',
+            )
+          : t(
+              "When two parts of the same whole, such as a fence or a garden, are finished at different times, the fraction of the whole that is done is their sum. Add the numerators, keep the denominator, and check that the answer is not more than one whole.\n\n$\\frac{2}{9}$ of a fence on Monday and $\\frac{4}{9}$ on Tuesday: $\\frac{2}{9} + \\frac{4}{9} = \\frac{6}{9} = \\frac{2}{3}$ of the fence is painted.",
+              "同一个整体（比如一段栅栏、一块菜地）的两部分分两次完成，完成的总量是两部分的和。分母不变，分子相加，并检查结果不超过一个整体。\n\n星期一刷了栅栏的 $\\frac{2}{9}$，星期二刷了 $\\frac{4}{9}$：一共刷了 $\\frac{2}{9} + \\frac{4}{9} = \\frac{6}{9} = \\frac{2}{3}$。",
+            )
+        : subtract
+          ? t(
+              'Questions like "how much more" or "how much is left" ask for a difference. Subtract the smaller amount from the larger, keep the denominator, and simplify the answer.\n\n"How much more" asks for a difference: $\\frac{7}{8} - \\frac{3}{8} = \\frac{4}{8} = \\frac{1}{2}$.',
+              '"多多少""还剩多少"这样的问题求的是差。用较大的量减去较小的量，分母不变，再把结果化简。\n\n"多多少"求的是差：$\\frac{7}{8} - \\frac{3}{8} = \\frac{4}{8} = \\frac{1}{2}$。',
+            )
+          : t(
+              'In a word problem, decide first which operation the question asks for. Words like "in all" or "altogether" ask for a sum, so add the fractions: add the numerators and keep the denominator.\n\n"In all" asks for a sum: $\\frac{3}{10} + \\frac{4}{10} = \\frac{7}{10}$.',
+              '解应用题，先判断问题要求用哪种运算。"一共""总共"求的是和，所以把分数相加：分母不变，分子相加。\n\n"一共"求的是和：$\\frac{3}{10} + \\frac{4}{10} = \\frac{7}{10}$。',
+            ),
     generate(rng) {
       const name = rng.pick(names);
       const [a, b, d] = subtract ? likeDifference(rng, 12) : likeSum(rng, k === 0 ? 2 : 1);
@@ -2307,15 +2318,25 @@ function mixedWordKP(id: string, subtract: boolean, regroup: boolean): Knowledge
         ? t("Borrowing a whole", "借一个整体")
         : t("Regrouping into a whole", "进位成整体")
       : t("Without regrouping", "不需要进位或借位"),
-    explanation: subtract
-      ? t(
-          "When an amount is taken away or two amounts are compared, subtract the mixed numbers. If the first fraction is too small, borrow one whole or use improper fractions.\n\nA board $5\\frac{1}{4}$ feet long has $1\\frac{3}{4}$ feet cut off: $5\\frac{1}{4} - 1\\frac{3}{4} = 3\\frac{2}{4} = 3\\frac{1}{2}$ feet are left.",
-          "拿走一部分或比较两个量时，把带分数相减。如果第一个分数部分不够减，就借一个整体，或者化成假分数再算。\n\n一块 $5\\frac{1}{4}$ 英尺长的木板锯掉 $1\\frac{3}{4}$ 英尺：还剩 $5\\frac{1}{4} - 1\\frac{3}{4} = 3\\frac{1}{2}$ 英尺。",
-        )
-      : t(
-          "When two amounts are put together, add the mixed numbers: add the whole numbers and the fractions. If the fractions make $1$ or more, carry the whole into the whole-number part.\n\n$2\\frac{3}{8}$ miles and then $1\\frac{7}{8}$ miles: $3\\frac{10}{8} = 4\\frac{2}{8} = 4\\frac{1}{4}$ miles in all.",
-          "两个量合在一起，就把带分数相加：整数部分相加，分数部分相加。分数部分满 $1$ 时，向整数部分进一。\n\n先走 $2\\frac{3}{8}$ 英里，再走 $1\\frac{7}{8}$ 英里：一共 $3\\frac{10}{8} = 4\\frac{1}{4}$ 英里。",
-        ),
+    explanation: !regroup
+      ? subtract
+        ? t(
+            "When an amount is taken away and the first fraction is at least as large as the second, subtract the whole numbers and subtract the fractions separately; no borrowing is needed.\n\nA rope $4\\frac{5}{6}$ yards long has $1\\frac{1}{6}$ yards cut off: $4\\frac{5}{6} - 1\\frac{1}{6} = 3\\frac{4}{6} = 3\\frac{2}{3}$ yards are left.",
+            "拿走一部分时，如果第一个分数部分不小于第二个，就整数部分减整数部分、分数部分减分数部分，不需要借位。\n\n一根 $4\\frac{5}{6}$ 码长的绳子剪掉 $1\\frac{1}{6}$ 码：还剩 $4\\frac{5}{6} - 1\\frac{1}{6} = 3\\frac{4}{6} = 3\\frac{2}{3}$ 码。",
+          )
+        : t(
+            "When two amounts are put together and their fractions add to less than one whole, add the whole numbers and add the fractions separately; nothing needs to be carried.\n\n$1\\frac{2}{8}$ cups and then $2\\frac{3}{8}$ cups of flour: $1\\frac{2}{8} + 2\\frac{3}{8} = 3\\frac{5}{8}$ cups in all.",
+            "两个量合在一起，如果分数部分相加不满一个整体，就整数部分加整数部分、分数部分加分数部分，不需要进位。\n\n先放 $1\\frac{2}{8}$ 杯面粉，再放 $2\\frac{3}{8}$ 杯：一共 $1\\frac{2}{8} + 2\\frac{3}{8} = 3\\frac{5}{8}$ 杯。",
+          )
+      : subtract
+        ? t(
+            "When an amount is taken away or two amounts are compared, subtract the mixed numbers. If the first fraction is too small, borrow one whole or use improper fractions.\n\nA board $5\\frac{1}{4}$ feet long has $1\\frac{3}{4}$ feet cut off: $5\\frac{1}{4} - 1\\frac{3}{4} = 3\\frac{2}{4} = 3\\frac{1}{2}$ feet are left.",
+            "拿走一部分或比较两个量时，把带分数相减。如果第一个分数部分不够减，就借一个整体，或者化成假分数再算。\n\n一块 $5\\frac{1}{4}$ 英尺长的木板锯掉 $1\\frac{3}{4}$ 英尺：还剩 $5\\frac{1}{4} - 1\\frac{3}{4} = 3\\frac{1}{2}$ 英尺。",
+          )
+        : t(
+            "When two amounts are put together, add the mixed numbers: add the whole numbers and the fractions. If the fractions make $1$ or more, carry the whole into the whole-number part.\n\n$2\\frac{3}{8}$ miles and then $1\\frac{7}{8}$ miles: $3\\frac{10}{8} = 4\\frac{2}{8} = 4\\frac{1}{4}$ miles in all.",
+            "两个量合在一起，就把带分数相加：整数部分相加，分数部分相加。分数部分满 $1$ 时，向整数部分进一。\n\n先走 $2\\frac{3}{8}$ 英里，再走 $1\\frac{7}{8}$ 英里：一共 $3\\frac{10}{8} = 4\\frac{1}{4}$ 英里。",
+          ),
     generate(rng) {
       const name = rng.pick(names);
       const p = mixedPair(rng, subtract ? (regroup ? "subBorrow" : "sub") : regroup ? "addRegroup" : "add");
