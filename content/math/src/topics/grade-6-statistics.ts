@@ -416,124 +416,127 @@ const measurements: readonly Measurements[] = [
   },
 ];
 
-export const theMeanOfADataSet = topic(
-  "the-mean-of-a-data-set",
-  t("The Mean of a Data Set", "数据集的平均数"),
-  t(
-    "The mean of a data set is the sum of the values divided by the number of values. Since mean = sum ÷ count, the sum is mean × count: a team that scores a mean of 15 points over 4 games scores 60 points in all. When a value is added, find the new sum and divide by the new count; averaging the old mean with the new value gives the wrong answer.",
-    "一组数据的平均数等于各数据之和除以数据个数。由于平均数 = 总和 ÷ 个数，所以总和 = 平均数 × 个数：一支球队 4 场比赛平均每场得 15 分，一共得 60 分。加入一个新数据时，先求新的总和，再除以新的个数；把原平均数和新数据再平均是错误的。",
+export const theMeanOfADataSet: TopicDef = {
+  ...topic(
+    "the-mean-of-a-data-set",
+    t("The Mean of a Data Set", "数据集的平均数"),
+    t(
+      "The mean of a data set is the sum of the values divided by the number of values. Since mean = sum ÷ count, the sum is mean × count: a team that scores a mean of 15 points over 4 games scores 60 points in all. When a value is added, find the new sum and divide by the new count; averaging the old mean with the new value gives the wrong answer.",
+      "一组数据的平均数等于各数据之和除以数据个数。由于平均数 = 总和 ÷ 个数，所以总和 = 平均数 × 个数：一支球队 4 场比赛平均每场得 15 分，一共得 60 分。加入一个新数据时，先求新的总和，再除以新的个数；把原平均数和新数据再平均是错误的。",
+    ),
+    ["mean-of-a-data-set", "introduction-to-statistics"],
+    ["6.SP.A.3", "6.SP.B.5.C"],
+    [
+      {
+        id: "the-mean-of-measurements",
+        title: t("The mean of measurements", "测量数据的平均数"),
+        explanation: t(
+          "Rainfall of $1.2, 0.4, 2.0, 0.6$ inches on four days: the sum is $4.2$, so the mean is $4.2 \\div 4 = 1.05$ inches. Line up the decimal points when adding, and divide by the number of values, not by the number of nonzero ones or one less.",
+          "四天的降雨量是 $1.2, 0.4, 2.0, 0.6$ 英寸：和是 $4.2$，所以平均数是 $4.2 \\div 4 = 1.05$ 英寸。相加时小数点要对齐，并且要除以数据的个数。",
+        ),
+        generate(rng) {
+          const ctx = rng.pick(measurements);
+          for (;;) {
+            const n = rng.int(4, 6);
+            const xs = tenthsData(rng, n, ctx.lo, ctx.hi);
+            const m = Q.of(sum(xs), 10 * n);
+            if (!clean(m)) continue;
+            const total = Q.of(sum(xs), 10);
+            const med = median(xs).div(Q.of(10));
+            return numberProblem({
+              prompt: t(`${ctx.en(n)} $${tenthsList(xs)}$. Find the mean.`, `${ctx.zh(n)} $${tenthsList(xs)}$。求平均数。`),
+              answer: m,
+              form: "decimal",
+              wrong: [total, ...[total.div(Q.of(n - 1)), med].filter(isTerminating)],
+              solution: t(
+                `Add the ${n} values and divide by ${n}:${steps(`\\frac{${tenthsList(xs).replaceAll(", ", " + ")}}{${n}} = \\frac{${dec(total)}}{${n}} = ${dec(m)}`)}`,
+                `把 ${n} 个数相加，再除以 ${n}：${steps(`\\frac{${tenthsList(xs).replaceAll(", ", " + ")}}{${n}} = \\frac{${dec(total)}}{${n}} = ${dec(m)}`)}`,
+              ),
+            });
+          }
+        },
+      },
+      {
+        id: "the-total-from-the-mean",
+        title: t("The total from the mean", "由平均数求总和"),
+        explanation: t(
+          "If the mean of $n$ values is $m$, the values add up to $n \\times m$: it is as if every value were equal to the mean. Leo ran a mean of $3.5$ km a day for $6$ days, so he ran $6 \\times 3.5 = 21$ km in all.",
+          "如果 $n$ 个数据的平均数是 $m$，它们的和就是 $n \\times m$：相当于每个数据都等于平均数。Leo 连续 $6$ 天平均每天跑 $3.5$ 千米，所以他一共跑了 $6 \\times 3.5 = 21$ 千米。",
+        ),
+        generate(rng) {
+          const story = rng.pick([
+            (n: number, m: string) =>
+              t(
+                `A basketball team scored a mean of $${m}$ points per game over ${n} games. How many points did the team score in all?`,
+                `一支篮球队 ${n} 场比赛平均每场得 $${m}$ 分。这支球队一共得了多少分？`,
+              ),
+            (n: number, m: string) =>
+              t(
+                `${names[n % names.length]} ran a mean of $${m}$ kilometers a day for ${n} days. How many kilometers is that in all?`,
+                `${names[n % names.length]} 连续 ${n} 天平均每天跑 $${m}$ 千米。一共跑了多少千米？`,
+              ),
+            (n: number, m: string) =>
+              t(
+                `Over ${n} weeks, a class collected a mean of $${m}$ kilograms of paper per week for recycling. How many kilograms did the class collect in all?`,
+                `一个班 ${n} 周里平均每周收集 $${m}$ 千克废纸用于回收。这个班一共收集了多少千克？`,
+              ),
+          ]);
+          const decimal = rng.bool(0.6);
+          for (;;) {
+            const n = rng.int(3, 9);
+            const m10 = rng.int(15, 400);
+            if ((m10 * n) % 10 !== 0 || (m10 % 10 !== 0) !== decimal) continue;
+            const m = Q.of(m10, 10);
+            return numberProblem({
+              prompt: story(n, dec(m)),
+              answer: m.mul(Q.of(n)),
+              form: "decimal",
+              wrong: [m, m.add(Q.of(n)), ...[m.div(Q.of(n))].filter(clean)],
+              solution: t(
+                `The mean is the total divided by ${n}, so the total is the mean times ${n}:${steps(`${n} \\times ${dec(m)} = ${dec(m.mul(Q.of(n)))}`)}`,
+                `平均数等于总和除以 ${n}，所以总和等于平均数乘 ${n}：${steps(`${n} \\times ${dec(m)} = ${dec(m.mul(Q.of(n)))}`)}`,
+              ),
+            });
+          }
+        },
+      },
+      {
+        id: "adding-a-value",
+        title: t("Adding a value", "加入一个数据"),
+        explanation: t(
+          "The mean of $4$ quiz scores is $80$, and a fifth score of $90$ is added. The four scores add up to $4 \\times 80 = 320$, so the five add up to $320 + 90 = 410$, and the new mean is $410 \\div 5 = 82$. It is not $\\frac{80 + 90}{2} = 85$: that would count the new score as much as the four old ones together.",
+          "$4$ 次小测验成绩的平均数是 $80$，又加入第五个成绩 $90$。原来四个成绩之和是 $4 \\times 80 = 320$，五个成绩之和是 $320 + 90 = 410$，新的平均数是 $410 \\div 5 = 82$。不是 $\\frac{80 + 90}{2} = 85$：那样算等于把新成绩看得和原来四个成绩加起来一样重。",
+        ),
+        generate(rng) {
+          for (;;) {
+            const n = rng.int(3, 7);
+            const m = rng.int(60, 90);
+            const d = rng.nonZero(-10, 10);
+            if (((n + 1) * d) % 2 !== 0) continue;
+            const m2 = Q.of(2 * m + d, 2);
+            const x = m2.mul(Q.of(n + 1)).sub(Q.of(n * m));
+            if (!x.isInteger() || x.cmp(Q.of(40)) < 0 || x.cmp(Q.of(100)) > 0) continue;
+            const xs = Number(x.n);
+            return numberProblem({
+              prompt: t(
+                `The mean of ${n} quiz scores is $${m}$. One more score, $${xs}$, is added. What is the mean of all ${n + 1} scores?`,
+                `${n} 次小测验成绩的平均数是 $${m}$。又加入一个成绩 $${xs}$。全部 ${n + 1} 个成绩的平均数是多少？`,
+              ),
+              answer: m2,
+              form: "decimal",
+              wrong: [Q.of(m + xs, 2), ...[Q.of(n * m + xs, n)].filter(clean), n * m + xs],
+              solution: t(
+                `The ${n} scores add up to $${n} \\times ${m} = ${n * m}$, so all ${n + 1} add up to $${n * m} + ${xs} = ${n * m + xs}$:${steps(`\\frac{${n * m + xs}}{${n + 1}} = ${dec(m2)}`)}`,
+                `原来 ${n} 个成绩之和是 $${n} \\times ${m} = ${n * m}$，所以全部 ${n + 1} 个成绩之和是 $${n * m} + ${xs} = ${n * m + xs}$：${steps(`\\frac{${n * m + xs}}{${n + 1}} = ${dec(m2)}`)}`,
+              ),
+            });
+          }
+        },
+      },
+    ],
   ),
-  ["mean-of-a-data-set", "introduction-to-statistics"],
-  ["6.SP.A.3", "6.SP.B.5.C"],
-  [
-    {
-      id: "the-mean-of-measurements",
-      title: t("The mean of measurements", "测量数据的平均数"),
-      explanation: t(
-        "Rainfall of $1.2, 0.4, 2.0, 0.6$ inches on four days: the sum is $4.2$, so the mean is $4.2 \\div 4 = 1.05$ inches. Line up the decimal points when adding, and divide by the number of values, not by the number of nonzero ones or one less.",
-        "四天的降雨量是 $1.2, 0.4, 2.0, 0.6$ 英寸：和是 $4.2$，所以平均数是 $4.2 \\div 4 = 1.05$ 英寸。相加时小数点要对齐，并且要除以数据的个数。",
-      ),
-      generate(rng) {
-        const ctx = rng.pick(measurements);
-        for (;;) {
-          const n = rng.int(4, 6);
-          const xs = tenthsData(rng, n, ctx.lo, ctx.hi);
-          const m = Q.of(sum(xs), 10 * n);
-          if (!clean(m)) continue;
-          const total = Q.of(sum(xs), 10);
-          const med = median(xs).div(Q.of(10));
-          return numberProblem({
-            prompt: t(`${ctx.en(n)} $${tenthsList(xs)}$. Find the mean.`, `${ctx.zh(n)} $${tenthsList(xs)}$。求平均数。`),
-            answer: m,
-            form: "decimal",
-            wrong: [total, ...[total.div(Q.of(n - 1)), med].filter(isTerminating)],
-            solution: t(
-              `Add the ${n} values and divide by ${n}:${steps(`\\frac{${tenthsList(xs).replaceAll(", ", " + ")}}{${n}} = \\frac{${dec(total)}}{${n}} = ${dec(m)}`)}`,
-              `把 ${n} 个数相加，再除以 ${n}：${steps(`\\frac{${tenthsList(xs).replaceAll(", ", " + ")}}{${n}} = \\frac{${dec(total)}}{${n}} = ${dec(m)}`)}`,
-            ),
-          });
-        }
-      },
-    },
-    {
-      id: "the-total-from-the-mean",
-      title: t("The total from the mean", "由平均数求总和"),
-      explanation: t(
-        "If the mean of $n$ values is $m$, the values add up to $n \\times m$: it is as if every value were equal to the mean. Leo ran a mean of $3.5$ km a day for $6$ days, so he ran $6 \\times 3.5 = 21$ km in all.",
-        "如果 $n$ 个数据的平均数是 $m$，它们的和就是 $n \\times m$：相当于每个数据都等于平均数。Leo 连续 $6$ 天平均每天跑 $3.5$ 千米，所以他一共跑了 $6 \\times 3.5 = 21$ 千米。",
-      ),
-      generate(rng) {
-        const story = rng.pick([
-          (n: number, m: string) =>
-            t(
-              `A basketball team scored a mean of $${m}$ points per game over ${n} games. How many points did the team score in all?`,
-              `一支篮球队 ${n} 场比赛平均每场得 $${m}$ 分。这支球队一共得了多少分？`,
-            ),
-          (n: number, m: string) =>
-            t(
-              `${names[n % names.length]} ran a mean of $${m}$ kilometers a day for ${n} days. How many kilometers is that in all?`,
-              `${names[n % names.length]} 连续 ${n} 天平均每天跑 $${m}$ 千米。一共跑了多少千米？`,
-            ),
-          (n: number, m: string) =>
-            t(
-              `Over ${n} weeks, a class collected a mean of $${m}$ kilograms of paper per week for recycling. How many kilograms did the class collect in all?`,
-              `一个班 ${n} 周里平均每周收集 $${m}$ 千克废纸用于回收。这个班一共收集了多少千克？`,
-            ),
-        ]);
-        const decimal = rng.bool(0.6);
-        for (;;) {
-          const n = rng.int(3, 9);
-          const m10 = rng.int(15, 400);
-          if ((m10 * n) % 10 !== 0 || (m10 % 10 !== 0) !== decimal) continue;
-          const m = Q.of(m10, 10);
-          return numberProblem({
-            prompt: story(n, dec(m)),
-            answer: m.mul(Q.of(n)),
-            form: "decimal",
-            wrong: [m, m.add(Q.of(n)), ...[m.div(Q.of(n))].filter(clean)],
-            solution: t(
-              `The mean is the total divided by ${n}, so the total is the mean times ${n}:${steps(`${n} \\times ${dec(m)} = ${dec(m.mul(Q.of(n)))}`)}`,
-              `平均数等于总和除以 ${n}，所以总和等于平均数乘 ${n}：${steps(`${n} \\times ${dec(m)} = ${dec(m.mul(Q.of(n)))}`)}`,
-            ),
-          });
-        }
-      },
-    },
-    {
-      id: "adding-a-value",
-      title: t("Adding a value", "加入一个数据"),
-      explanation: t(
-        "The mean of $4$ quiz scores is $80$, and a fifth score of $90$ is added. The four scores add up to $4 \\times 80 = 320$, so the five add up to $320 + 90 = 410$, and the new mean is $410 \\div 5 = 82$. It is not $\\frac{80 + 90}{2} = 85$: that would count the new score as much as the four old ones together.",
-        "$4$ 次小测验成绩的平均数是 $80$，又加入第五个成绩 $90$。原来四个成绩之和是 $4 \\times 80 = 320$，五个成绩之和是 $320 + 90 = 410$，新的平均数是 $410 \\div 5 = 82$。不是 $\\frac{80 + 90}{2} = 85$：那样算等于把新成绩看得和原来四个成绩加起来一样重。",
-      ),
-      generate(rng) {
-        for (;;) {
-          const n = rng.int(3, 7);
-          const m = rng.int(60, 90);
-          const d = rng.nonZero(-10, 10);
-          if (((n + 1) * d) % 2 !== 0) continue;
-          const m2 = Q.of(2 * m + d, 2);
-          const x = m2.mul(Q.of(n + 1)).sub(Q.of(n * m));
-          if (!x.isInteger() || x.cmp(Q.of(40)) < 0 || x.cmp(Q.of(100)) > 0) continue;
-          const xs = Number(x.n);
-          return numberProblem({
-            prompt: t(
-              `The mean of ${n} quiz scores is $${m}$. One more score, $${xs}$, is added. What is the mean of all ${n + 1} scores?`,
-              `${n} 次小测验成绩的平均数是 $${m}$。又加入一个成绩 $${xs}$。全部 ${n + 1} 个成绩的平均数是多少？`,
-            ),
-            answer: m2,
-            form: "decimal",
-            wrong: [Q.of(m + xs, 2), ...[Q.of(n * m + xs, n)].filter(clean), n * m + xs],
-            solution: t(
-              `The ${n} scores add up to $${n} \\times ${m} = ${n * m}$, so all ${n + 1} add up to $${n * m} + ${xs} = ${n * m + xs}$:${steps(`\\frac{${n * m + xs}}{${n + 1}} = ${dec(m2)}`)}`,
-              `原来 ${n} 个成绩之和是 $${n} \\times ${m} = ${n * m}$，所以全部 ${n + 1} 个成绩之和是 $${n * m} + ${xs} = ${n * m + xs}$：${steps(`\\frac{${n * m + xs}}{${n + 1}} = ${dec(m2)}`)}`,
-            ),
-          });
-        }
-      },
-    },
-  ],
-);
+  encompasses: [{ topic: "mean-of-a-data-set", weight: 1 }],
+};
 
 export const theMedianOfADataSet = topic(
   "the-median-of-a-data-set",

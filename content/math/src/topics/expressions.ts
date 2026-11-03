@@ -26,7 +26,10 @@ export const evaluatingExpressions: TopicDef = {
   title: t("Evaluating Algebraic Expressions", "代数式求值"),
   summary: t("Substitute integers for variables and evaluate.", "用整数代入变量并求值。"),
   prerequisites: ["order-of-operations-with-integers"],
-  encompasses: [{ topic: "order-of-operations-with-integers", weight: 0.6 }],
+  encompasses: [
+    { topic: "order-of-operations-with-integers", weight: 0.6 },
+    { topic: "evaluating-algebraic-expressions", weight: 0.8, nonAncestor: true },
+  ],
   xp: 12,
   standards: ["CCSS.6.EE.A.2.C"],
   knowledgePoints: [
@@ -242,6 +245,7 @@ export const simplifyingExpressions: TopicDef = {
   encompasses: [
     { topic: "combining-like-terms", weight: 0.8 },
     { topic: "distributive-property", weight: 0.8 },
+    { topic: "simplifying-linear-expressions", weight: 0.8, nonAncestor: true },
   ],
   xp: 12,
   standards: ["CCSS.7.EE.A.1"],

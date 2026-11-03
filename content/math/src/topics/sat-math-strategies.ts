@@ -92,13 +92,13 @@ export const satLinearSystemsUnknownConstants: TopicDef = {
 /** satEquatingPolynomialCoefficients solves polynomial identities by equating coefficients. */
 export const satEquatingPolynomialCoefficients: TopicDef = {
   id: "sat-equating-polynomial-coefficients",
-  title: t("Equating Polynomial Coefficients", "多项式待定系数法"),
+  title: t("Equating Polynomial Coefficients in SAT Problems", "SAT 题中的多项式待定系数法"),
   summary: t(
     "Find unknown coefficients and constants in polynomial identities by expanding and equating corresponding terms.",
     "通过展开并比较同类项系数，求解多项式恒等式中的未知系数与常数。",
   ),
-  prerequisites: ["multiplying-binomials"],
-  encompasses: [],
+  prerequisites: ["equating-polynomial-coefficients"],
+  encompasses: [{ topic: "equating-polynomial-coefficients", weight: 1 }],
   xp: 8,
   standards: ["CCSS.HSA.SSE.A.2"],
   knowledgePoints: [
