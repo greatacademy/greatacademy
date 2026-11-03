@@ -590,6 +590,63 @@ export const theMagnitudeOfAVector: TopicDef = {
 
 // ─── 5.16.4 Problem Solving Using Vector Diagrams ───────────────────────────
 
+/** vectorLoopFigure shows quadrilateral ABCD with arrows AB, BC, CD and DA running once around it. */
+const vectorLoopFigure: Figure = (() => {
+  const [a, b, c, d]: Point[] = [
+    [0, 0],
+    [5, -0.5],
+    [6, 3],
+    [1.5, 3.5],
+  ];
+  return {
+    svg: sketch([
+      ...vectorArrow(a!, b!),
+      ...vectorArrow(b!, c!),
+      ...vectorArrow(c!, d!),
+      ...vectorArrow(d!, a!, { accent: true }),
+      { kind: "label", at: a!, text: "A", dir: "sw" },
+      { kind: "label", at: b!, text: "B", dir: "se" },
+      { kind: "label", at: c!, text: "C", dir: "ne" },
+      { kind: "label", at: d!, text: "D", dir: "nw" },
+    ]),
+    alt: t(
+      "Quadrilateral ABCD with arrows from A to B, B to C, C to D and D back to A, each starting where the last ends. The loop returns to its start, so the four vectors add up to the zero vector.",
+      "四边形 ABCD，箭头依次从 A 到 B、B 到 C、C 到 D，再从 D 回到 A，每条都从上一条的终点出发。回路回到起点，所以四个向量之和为零向量。",
+    ),
+  };
+})();
+
+/** trapezoidVectorsFigure shows trapezoid ABCD with a = AB, b = AD, DC = k·a parallel to AB and the diagonal AC = b + k·a. */
+const trapezoidVectorsFigure: Figure = (() => {
+  const [a, b, c, d]: Point[] = [
+    [0, 0],
+    [3, 0],
+    [7, 3],
+    [1, 3],
+  ];
+  return {
+    svg: sketch([
+      { kind: "segment", a: b!, b: c! },
+      ...vectorArrow(a!, b!),
+      ...vectorArrow(a!, d!),
+      ...vectorArrow(d!, c!),
+      ...vectorArrow(a!, c!, { accent: true }),
+      { kind: "side", a: a!, b: b!, text: "a" },
+      { kind: "side", a: d!, b: a!, text: "b" },
+      { kind: "side", a: c!, b: d!, text: "ka" },
+      { kind: "label", at: [2.8, 1.2], text: "b + ka", dir: "nw" },
+      { kind: "label", at: a!, text: "A", dir: "sw" },
+      { kind: "label", at: b!, text: "B", dir: "se" },
+      { kind: "label", at: c!, text: "C", dir: "ne" },
+      { kind: "label", at: d!, text: "D", dir: "nw" },
+    ]),
+    alt: t(
+      "Trapezoid ABCD with base AB the vector a, side AD the vector b, and the longer parallel base DC the vector ka. The highlighted diagonal from A to C goes along AD and then DC, so it is b + ka.",
+      "梯形 ABCD：底 AB 是向量 a，腰 AD 是向量 b，较长的平行底边 DC 是向量 ka。高亮的对角线从 A 到 C，先沿 AD 再沿 DC，所以它等于 b + ka。",
+    ),
+  };
+})();
+
 /** problemSolvingUsingVectorDiagrams covers closed loops and geometric vector decomposition. */
 export const problemSolvingUsingVectorDiagrams: TopicDef = {
   id: "problem-solving-using-vector-diagrams",
@@ -610,6 +667,7 @@ export const problemSolvingUsingVectorDiagrams: TopicDef = {
         "For any closed polygon with vertices $A_1, A_2, \\dots, A_n$ in order, the sum of directed vectors around the closed perimeter is the zero vector:\n\n$$\\vec{A_1 A_2} + \\vec{A_2 A_3} + \\dots + \\vec{A_n A_1} = \\mathbf{0}$$\n\nIn $\\triangle ABC$, $\\vec{AB} + \\vec{BC} + \\vec{CA} = \\mathbf{0}$, which implies $\\vec{CA} = -(\\vec{AB} + \\vec{BC})$.",
         "对于任意顶点依次为 $A_1, A_2, \\dots, A_n$ 的闭合多边形，沿周长依次相连的向量之和为零向量：\n\n$$\\vec{A_1 A_2} + \\vec{A_2 A_3} + \\dots + \\vec{A_n A_1} = \\mathbf{0}$$\n\n在 $\\triangle ABC$ 中，$\\vec{AB} + \\vec{BC} + \\vec{CA} = \\mathbf{0}$，从而 $\\vec{CA} = -(\\vec{AB} + \\vec{BC})$。",
       ),
+      figure: vectorLoopFigure,
       generate(rng) {
         const polyShape = rng.pick([
           { pts: ["A", "B", "C"], n: 3 },
@@ -670,6 +728,7 @@ export const problemSolvingUsingVectorDiagrams: TopicDef = {
         "In a trapezoid $ABCD$ where base $DC$ is parallel to base $AB$ with $\\vec{DC} = k\\vec{AB}$, side and diagonal vectors can be decomposed using the boundary vectors $\\mathbf{a} = \\vec{AB}$ and $\\mathbf{b} = \\vec{AD}$:\n\n$$\\vec{AC} = \\vec{AD} + \\vec{DC} = \\mathbf{b} + k\\mathbf{a}$$",
         "在梯形 $ABCD$ 中，底边 $DC$ 平行于底边 $AB$ 且 $\\vec{DC} = k\\vec{AB}$。对角线向量可分解为基底向量 $\\mathbf{a} = \\vec{AB}$ 和 $\\mathbf{b} = \\vec{AD}$：\n\n$$\\vec{AC} = \\vec{AD} + \\vec{DC} = \\mathbf{b} + k\\mathbf{a}$$",
       ),
+      figure: trapezoidVectorsFigure,
       generate(rng) {
         const polyNames = [
           ["A", "B", "C", "D"],
