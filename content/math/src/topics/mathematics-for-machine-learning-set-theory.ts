@@ -1,6 +1,6 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { plane, Q } from "@ga/subject-math";
 import { numberProblem } from "../problems.ts";
 
 export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
@@ -195,8 +195,8 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
     id: "finding-argmax-and-argmin-from-tables-and-graphs",
     title: t("Finding Argmax and Argmin From Tables and Graphs", "从表格与图象中求 Argmax 与 Argmin"),
     summary: t(
-      "Identifying the input argument that optimizes an objective function given by a discrete table of values or evaluations.",
-      "从离散数值表格或评估数据中识别使目标函数达到最优的自变量输入值。",
+      "Identifying the input argument that optimizes an objective function given by a discrete table of values or by a graph.",
+      "从离散数值表格或图象中识别使目标函数达到最优的自变量输入值。",
     ),
     prerequisites: ["argmax-and-argmin-notation"],
     encompasses: [],
@@ -259,6 +259,49 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
               `查阅表格，${isMin ? "最小损失" : "最大准确率"}为 $${optVal}$，在 $x = ${optArg}$ 处取得。因此 $\\operatorname{${isMin ? "argmin" : "argmax"}}_{x} = ${optArg}$。`,
             ),
           });
+        },
+      },
+      {
+        id: "reading-argmax-argmin-from-graphs",
+        title: t("Reading argmax and argmin from graphs", "从图象中读出 argmax 与 argmin"),
+        explanation: t(
+          "On a graph of $L(x)$, the minimum value is the height of the lowest point, and $\\operatorname{argmin}_x L(x)$ is that point's $x$-coordinate: read across to the horizontal axis, not up to the vertical one. Likewise, $\\operatorname{argmax}$ is the $x$-coordinate of the highest point.",
+          "在 $L(x)$ 的图象上，最小值是最低点的高度，而 $\\operatorname{argmin}_x L(x)$ 是该点的横坐标：要向横轴读数，而不是向纵轴读数。同样，$\\operatorname{argmax}$ 是最高点的横坐标。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const n = rng.int(5, 7);
+          const ys = rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 9], n);
+          const isMin = rng.bool();
+          const best = ys.indexOf(isMin ? Math.min(...ys) : Math.max(...ys));
+          const pts = ys.map((y, i) => [i + 1, y] as const);
+          const figure = {
+            svg: plane({ xMin: 0, xMax: 8, yMin: 0, yMax: 10, labelEvery: 1 }, [
+              ...pts.slice(1).map(([x, y], i) => ({ kind: "segment" as const, a: pts[i]!, b: [x, y] as const })),
+              ...pts.map((at) => ({ kind: "point" as const, at })),
+            ]),
+            alt: t(
+              `A graph of ${isMin ? "the loss" : "the score"} at x = 1 to ${n}, with values ${ys.join(", ")}.`,
+              `${isMin ? "损失" : "得分"}在 x = 1 到 ${n} 处的图象，取值依次为 ${ys.join("、")}。`,
+            ),
+          };
+          const name = isMin ? "argmin" : "argmax";
+          const f = isMin ? "\\mathcal{L}(x)" : "\\mathcal{S}(x)";
+          const value = ys[best]!;
+          return {
+            ...numberProblem({
+              prompt: t(
+                `The graph shows ${isMin ? "a loss" : "a score"} $${f}$ at the inputs $x = 1, 2, \\ldots, ${n}$. Find $\\operatorname{${name}}_{x} ${f}$.`,
+                `图象给出了${isMin ? "损失" : "得分"} $${f}$ 在输入 $x = 1, 2, \\ldots, ${n}$ 处的值。求 $\\operatorname{${name}}_{x} ${f}$。`,
+              ),
+              answer: best + 1,
+              wrong: [value, best === 0 ? 2 : best, ys.indexOf(isMin ? Math.max(...ys) : Math.min(...ys)) + 1],
+              solution: t(
+                `The ${isMin ? "lowest" : "highest"} point is $(${best + 1}, ${value})$. The ${name} is its $x$-coordinate, $${best + 1}$; the ${isMin ? "minimum" : "maximum"} value itself is $${value}$.`,
+                `${isMin ? "最低" : "最高"}点是 $(${best + 1}, ${value})$。${name} 是它的横坐标 $${best + 1}$；${isMin ? "最小" : "最大"}值本身是 $${value}$。`,
+              ),
+            }),
+            figure,
+          };
         },
       },
     ],
