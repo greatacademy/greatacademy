@@ -118,4 +118,19 @@ describe("plane", () => {
     expect(svg.match(/<circle/g)).toHaveLength(2);
     expect(figureIssue({ svg, alt })).toBeUndefined();
   });
+
+  it("draw circles and shade inside or outside a disk", () => {
+    const inside = plane(view, [
+      { kind: "circle", center: [0, 0], r: 3 },
+      { kind: "region", halfPlanes: [[0, 1, 0]], disk: { center: [0, 0], r: 3 } },
+    ]);
+    // The circle lies inside the view, so it is one closed polyline; the shaded half-disk is one polygon.
+    expect(inside.match(/<polyline/g)).toHaveLength(1);
+    expect(inside.match(/<polygon class="accent"/g)).toHaveLength(1);
+    expect(figureIssue({ svg: inside, alt })).toBeUndefined();
+    const outside = plane(view, [{ kind: "region", halfPlanes: [], disk: { center: [0, 0], r: 3, outside: true } }]);
+    expect(outside).toContain('fill-rule="evenodd"');
+    expect(outside.match(/Z/g)).toHaveLength(2);
+    expect(figureIssue({ svg: outside, alt })).toBeUndefined();
+  });
 });

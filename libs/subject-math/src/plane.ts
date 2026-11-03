@@ -17,6 +17,13 @@ export interface PlaneView {
 /** HalfPlane [a, b, c] is the set of points with a·x + b·y + c ≥ 0. */
 export type HalfPlane = readonly [number, number, number];
 
+/** Disk is the inside of the circle with center and radius r, or its outside when outside is set. */
+export interface Disk {
+  readonly center: Point;
+  readonly r: number;
+  readonly outside?: boolean;
+}
+
 /** PlaneMark is one element of a graph in the coordinate plane. */
 export type PlaneMark =
   /** curve draws y = f(x) for x from from to to (the whole view by default), broken where it leaves the view or f is not finite. */
@@ -40,8 +47,10 @@ export type PlaneMark =
       readonly dir?: Compass;
       readonly accent?: boolean;
     }
-  /** region shades the part of the view where every half-plane holds. */
-  | { readonly kind: "region"; readonly halfPlanes: readonly HalfPlane[] }
+  /** circle draws the circle with center and radius r. */
+  | { readonly kind: "circle"; readonly center: Point; readonly r: number; readonly accent?: boolean; readonly dashed?: boolean }
+  /** region shades the part of the view where every half-plane holds, and inside or outside the disk if one is given. */
+  | { readonly kind: "region"; readonly halfPlanes: readonly HalfPlane[]; readonly disk?: Disk }
   | { readonly kind: "label"; readonly at: Point; readonly text: string; readonly dir: Compass };
 
 const size = 260;
@@ -75,6 +84,11 @@ function clipPolygon(points: readonly Point[], [a, b, c]: HalfPlane): Point[] {
     }
   }
   return out;
+}
+
+/** circlePoints approximates the circle with center c and radius r by a counterclockwise polygon. */
+function circlePoints([cx, cy]: Point, r: number, n = 144): Point[] {
+  return Array.from({ length: n }, (_, i): Point => [cx + r * Math.cos((2 * Math.PI * i) / n), cy + r * Math.sin((2 * Math.PI * i) / n)]);
 }
 
 /** clipSegment clips the segment from p to q to the view (Liang–Barsky), or returns undefined when it misses it. */
@@ -154,12 +168,48 @@ export function plane(view: PlaneView, marks: readonly PlaneMark[]): string {
     [xMax, yMax],
     [xMin, yMax],
   ];
+  const edges: HalfPlane[] = [
+    [1, 0, -xMin],
+    [-1, 0, xMax],
+    [0, 1, -yMin],
+    [0, -1, yMax],
+  ];
   for (const m of marks) {
     switch (m.kind) {
       case "region": {
-        const poly = m.halfPlanes.reduce<Point[]>((acc, hp) => clipPolygon(acc, hp), corners);
-        if (poly.length >= 3)
-          regions += `<polygon class="accent" points="${poly.map((p) => `${sx(p[0])},${sy(p[1])}`).join(" ")}" fill="currentColor" fill-opacity="0.15" stroke="none"/>`;
+        const clip = (start: readonly Point[]) =>
+          [...m.halfPlanes, ...edges].reduce<Point[]>((acc, hp) => clipPolygon(acc, hp), [...start]);
+        const pts = (poly: readonly Point[], sep: string) => poly.map((p) => `${sx(p[0])},${sy(p[1])}`).join(sep);
+        const disk = m.disk && clip(circlePoints(m.disk.center, m.disk.r));
+        const outer = m.disk && !m.disk.outside ? (disk ?? []) : clip(corners);
+        if (outer.length < 3) break;
+        if (m.disk?.outside && disk && disk.length >= 3) {
+          // Outside a disk is the half-plane region with the disk cut out as an even-odd hole.
+          regions += `<path class="accent" d="M${pts(outer, "L")}ZM${pts(disk, "L")}Z" fill="currentColor" fill-opacity="0.15" fill-rule="evenodd" stroke="none"/>`;
+        } else {
+          regions += `<polygon class="accent" points="${pts(outer, " ")}" fill="currentColor" fill-opacity="0.15" stroke="none"/>`;
+        }
+        break;
+      }
+      case "circle": {
+        const pts = circlePoints(m.center, m.r);
+        let run: Point[] = [];
+        const flush = () => {
+          if (run.length >= 2) body += polyline(run, m);
+          run = [];
+        };
+        for (let i = 0; i < pts.length; i++) {
+          const seg = clipSegment(pts[i]!, pts[(i + 1) % pts.length]!, view);
+          if (!seg) {
+            flush();
+            continue;
+          }
+          const q = pts[(i + 1) % pts.length]!;
+          if (run.length === 0) run.push(seg[0]);
+          run.push(seg[1]);
+          if (Math.hypot(seg[1][0] - q[0], seg[1][1] - q[1]) > 1e-9) flush();
+        }
+        flush();
         break;
       }
       case "curve": {
