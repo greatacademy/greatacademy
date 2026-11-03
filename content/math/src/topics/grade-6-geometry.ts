@@ -589,6 +589,44 @@ interface Enclosure {
   readonly ask: Text;
 }
 
+/** betweenFigure draws an L by W rectangle with an l by w rectangle inside it at offset, the region between shaded; unknown leaves the inner sides unlabeled. */
+function betweenFigure(L: number, W: number, l: number, w: number, offset: Point, u: string, unknown = false): Figure {
+  const outer = rectangle(L, W);
+  const inner: Point[] = rectangle(l, w).map(([px, py]) => [px + offset[0], py + offset[1]]);
+  return fig(
+    [
+      { kind: "shade", points: outer, holes: [inner] },
+      { kind: "polygon", points: outer },
+      { kind: "polygon", points: inner, accent: true },
+      ...sides(outer, [`${L} ${u}`, `${W} ${u}`, null, null]),
+      // Listed clockwise, the inner rectangle's side labels fall inside it, clear of the outer sides.
+      ...(unknown ? [] : sides([...inner].reverse(), [`${l} ${u}`, `${w} ${u}`, null, null])),
+    ],
+    unknown
+      ? `A ${L} ${u} by ${W} ${u} rectangle with a smaller rectangle cut out of it; the region left is shaded.`
+      : `A ${L} ${u} by ${W} ${u} rectangle with a ${l} ${u} by ${w} ${u} rectangle inside it; the region between them is shaded.`,
+    unknown
+      ? `一个 ${L} ${u} 乘 ${W} ${u} 的长方形，里面剪去了一个较小的长方形；剩下的区域涂有阴影。`
+      : `一个 ${L} ${u} 乘 ${W} ${u} 的长方形，里面有一个 ${l} ${u} 乘 ${w} ${u} 的长方形；两者之间的区域涂有阴影。`,
+  );
+}
+
+/** triangleBetweenFigure draws an L by W rectangle with a triangle on its bottom side up to apex, the region outside the triangle shaded. */
+function triangleBetweenFigure(L: number, W: number, apex: Point, u: string): Figure {
+  const tri: Point[] = [[0, 0], [L, 0], apex];
+  return fig(
+    [
+      { kind: "shade", points: rectangle(L, W), holes: [tri] },
+      { kind: "polygon", points: rectangle(L, W) },
+      { kind: "polygon", points: tri, accent: true },
+      ...sides(rectangle(L, W), [`${L} ${u}`, `${W} ${u}`, null, null]),
+      ...height(apex, [apex[0], 0], [L, 0], `${apex[1]} ${u}`),
+    ],
+    `A ${L} ${u} by ${W} ${u} rectangle with a triangle on its bottom side whose height is ${apex[1]} ${u}; the part of the rectangle outside the triangle is shaded.`,
+    `一个 ${L} ${u} 乘 ${W} ${u} 的长方形，里面的三角形以它的下边为底，高 ${apex[1]} ${u}；长方形在三角形外面的部分涂有阴影。`,
+  );
+}
+
 export const findingAreasBetweenShapes = topic(
   "finding-areas-between-shapes",
   t("Finding Areas Between Shapes", "求图形之间的面积"),
@@ -603,14 +641,16 @@ export const findingAreasBetweenShapes = topic(
       id: "a-rectangle-inside-a-rectangle",
       title: t("A rectangle inside a rectangle", "长方形里的长方形"),
       explanation: t(
-        "A $9$ in by $12$ in photo is mounted on a $13$ in by $16$ in board. The board left uncovered is $13 \\times 16 - 9 \\times 12 = 208 - 108 = 100\\text{ in}^2$.",
-        "一张 $9$ 英寸乘 $12$ 英寸的照片贴在 $13$ 英寸乘 $16$ 英寸的板上。板上露出的部分是 $13 \\times 16 - 9 \\times 12 = 208 - 108 = 100\\text{ in}^2$。",
+        "When one rectangle lies inside another, the region between them is what is left of the outer rectangle once the inner one is taken away, so its area is the outer area minus the inner area. Where the inner rectangle sits does not matter, only its size.\n\nA $9$ in by $12$ in photo is mounted on a $13$ in by $16$ in board, as shown. The board left uncovered is $13 \\times 16 - 9 \\times 12 = 208 - 108 = 100\\text{ in}^2$.",
+        "当一个长方形位于另一个长方形内部时，它们之间的区域就是外面的长方形去掉里面的长方形后剩下的部分，所以它的面积等于外面的面积减去里面的面积。里面的长方形放在哪里并不重要，只与它的大小有关。\n\n如图，一张 $9$ 英寸乘 $12$ 英寸的照片贴在 $13$ 英寸乘 $16$ 英寸的板上。板上露出的部分是 $13 \\times 16 - 9 \\times 12 = 208 - 108 = 100\\text{ in}^2$。",
       ),
+      figure: betweenFigure(16, 13, 12, 9, [2, 2], "in"),
       generate(rng) {
         const L = rng.int(10, 24);
         const W = rng.int(8, Math.min(L, 18));
-        const l = rng.int(2, L - 4);
-        const w = rng.int(2, W - 4);
+        // The inner rectangle is wide and tall enough to hold its side labels.
+        const l = rng.int(4, L - 4);
+        const w = rng.int(3, W - 4);
         const u = rng.pick(["m", "ft"] as const);
         const stories: Enclosure[] = [
           {
@@ -645,16 +685,7 @@ export const findingAreasBetweenShapes = topic(
               `用外面的面积减去里面的面积：${steps(`${L} \\times ${W} - ${l} \\times ${w} = ${L * W} - ${l * w} = ${area}\\text{ ${u}}^2`)}`,
             ),
           }),
-          figure: fig(
-            [
-              { kind: "polygon", points: outer },
-              { kind: "polygon", points: inner, accent: true },
-              ...sides(outer, [`${L} ${u}`, `${W} ${u}`, null, null]),
-              ...sides(inner, [null, null, `${l} ${u}`, `${w} ${u}`]),
-            ],
-            `A ${L} ${u} by ${W} ${u} rectangle with a ${l} ${u} by ${w} ${u} rectangle inside it.`,
-            `一个 ${L} ${u} 乘 ${W} ${u} 的长方形，里面有一个 ${l} ${u} 乘 ${w} ${u} 的长方形。`,
-          ),
+          figure: betweenFigure(L, W, l, w, [x, y], u),
         };
       },
     },
@@ -662,9 +693,10 @@ export const findingAreasBetweenShapes = topic(
       id: "a-triangle-inside-a-rectangle",
       title: t("A triangle inside a rectangle", "长方形里的三角形"),
       explanation: t(
-        "A rectangle is $12$ cm by $8$ cm, and a triangle inside it has the bottom of the rectangle as its base and a height of $5$ cm. The part of the rectangle outside the triangle has area $12 \\times 8 - \\frac{1}{2} \\times 12 \\times 5 = 96 - 30 = 66\\text{ cm}^2$.",
-        "一个长方形长 $12$ 厘米、宽 $8$ 厘米，里面的三角形以长方形的下边为底，高 $5$ 厘米。长方形在三角形外面的部分，面积是 $12 \\times 8 - \\frac{1}{2} \\times 12 \\times 5 = 96 - 30 = 66\\text{ cm}^2$。",
+        "The inner shape need not be a rectangle: subtract whatever area formula fits it. A triangle drawn on the bottom side of a rectangle has that side as its base, so only its height is needed.\n\nA rectangle is $12$ cm by $8$ cm, and a triangle inside it has the bottom of the rectangle as its base and a height of $5$ cm, as shown. The part of the rectangle outside the triangle has area $12 \\times 8 - \\frac{1}{2} \\times 12 \\times 5 = 96 - 30 = 66\\text{ cm}^2$.",
+        "里面的图形不一定是长方形：用适合它的面积公式减去即可。画在长方形下边上的三角形以这条边为底，所以只需要知道它的高。\n\n如图，一个长方形长 $12$ 厘米、宽 $8$ 厘米，里面的三角形以长方形的下边为底，高 $5$ 厘米。长方形在三角形外面的部分，面积是 $12 \\times 8 - \\frac{1}{2} \\times 12 \\times 5 = 96 - 30 = 66\\text{ cm}^2$。",
       ),
+      figure: triangleBetweenFigure(12, 8, [7, 5], "cm"),
       generate(rng) {
         const u = pickUnit(rng);
         const L = rng.int(6, 18);
@@ -687,16 +719,59 @@ export const findingAreasBetweenShapes = topic(
               `用长方形的面积减去三角形的面积：${steps(`${L} \\times ${W} - \\frac{1}{2} \\times ${L} \\times ${h} = ${L * W} - ${tri.toLatex()} = ${result(area)}\\text{ ${u}}^2`)}`,
             ),
           }),
-          figure: fig(
-            [
-              { kind: "polygon", points: rectangle(L, W) },
-              { kind: "polygon", points: [[0, 0], [L, 0], apex], accent: true },
-              ...sides(rectangle(L, W), [`${L} ${u}`, `${W} ${u}`, null, null]),
-              ...height(apex, [apex[0], 0], [L, 0], `${h} ${u}`),
-            ],
-            `A ${L} ${u} by ${W} ${u} rectangle with a triangle on its bottom side whose height is ${h} ${u}.`,
-            `一个 ${L} ${u} 乘 ${W} ${u} 的长方形，里面的三角形以它的下边为底，高 ${h} ${u}。`,
-          ),
+          figure: triangleBetweenFigure(L, W, apex, u),
+        };
+      },
+    },
+    {
+      id: "a-missing-length-from-the-area-between",
+      title: t("A missing length from the area between", "由之间的面积求未知长度"),
+      explanation: t(
+        "When the area between two shapes is known, undo the subtraction: the inner area is the outer area minus the area between. Then find the missing length from the inner area.\n\nA square is cut out of a $9$ cm by $7$ cm card, leaving $47\\text{ cm}^2$. The square's area is $9 \\times 7 - 47 = 63 - 47 = 16\\text{ cm}^2$, so its side is $4$ cm, since $4 \\times 4 = 16$.",
+        "已知两个图形之间的面积时，把减法倒过来：里面的面积等于外面的面积减去之间的面积。再由里面的面积求出未知的长度。\n\n从一张 $9$ 厘米乘 $7$ 厘米的卡片上剪去一个正方形，剩下 $47\\text{ cm}^2$。正方形的面积是 $9 \\times 7 - 47 = 63 - 47 = 16\\text{ cm}^2$，因为 $4 \\times 4 = 16$，所以它的边长是 $4$ 厘米。",
+      ),
+      generate(rng) {
+        const u = pickUnit(rng);
+        const L = rng.int(9, 18);
+        const W = rng.int(7, Math.min(L, 14));
+        if (rng.bool()) {
+          const side = rng.int(2, W - 3);
+          const between = L * W - side * side;
+          return {
+            ...numberProblem({
+              prompt: t(
+                `A square is cut out of a $${L}$ ${u} by $${W}$ ${u} rectangle, leaving the shaded region with an area of $${between}\\text{ ${u}}^2$. What is the side length of the square?`,
+                `从一个长 $${L}$ ${u}、宽 $${W}$ ${u} 的长方形中剪去一个正方形，剩下的阴影部分面积为 $${between}\\text{ ${u}}^2$。正方形的边长是多少？`,
+              ),
+              answer: side,
+              unit: u,
+              wrong: [side * side, Q.of(side * side, 2), L - side],
+              solution: t(
+                `The square's area is the rectangle's area minus the shaded area:${steps(`${L} \\times ${W} - ${between} = ${L * W} - ${between} = ${side * side}\\text{ ${u}}^2`)}Since $${side} \\times ${side} = ${side * side}$, the side length is $${side}$ ${u}.`,
+                `正方形的面积等于长方形的面积减去阴影部分的面积：${steps(`${L} \\times ${W} - ${between} = ${L * W} - ${between} = ${side * side}\\text{ ${u}}^2`)}因为 $${side} \\times ${side} = ${side * side}$，所以边长是 $${side}$ ${u}。`,
+              ),
+            }),
+            figure: betweenFigure(L, W, side, side, [rng.int(1, L - side - 1), rng.int(1, W - side - 1)], u, true),
+          };
+        }
+        const w = rng.int(2, W - 3);
+        const l = rng.int(w, L - 3);
+        const between = L * W - l * w;
+        return {
+          ...numberProblem({
+            prompt: t(
+              `A rectangle $${w}$ ${u} wide is cut out of a $${L}$ ${u} by $${W}$ ${u} rectangle, leaving the shaded region with an area of $${between}\\text{ ${u}}^2$. How long is the rectangle that was cut out?`,
+              `从一个长 $${L}$ ${u}、宽 $${W}$ ${u} 的长方形中剪去一个宽 $${w}$ ${u} 的长方形，剩下的阴影部分面积为 $${between}\\text{ ${u}}^2$。剪去的长方形有多长？`,
+            ),
+            answer: l,
+            unit: u,
+            wrong: [l * w, Q.of(between, w), L - w],
+            solution: t(
+              `The cut-out rectangle's area is the outer area minus the shaded area:${steps(`${L} \\times ${W} - ${between} = ${L * W} - ${between} = ${l * w}\\text{ ${u}}^2`, `${l * w} \\div ${w} = ${l}`)}It is $${l}$ ${u} long.`,
+              `剪去的长方形的面积等于外面的面积减去阴影部分的面积：${steps(`${L} \\times ${W} - ${between} = ${L * W} - ${between} = ${l * w}\\text{ ${u}}^2`, `${l * w} \\div ${w} = ${l}`)}它长 $${l}$ ${u}。`,
+            ),
+          }),
+          figure: betweenFigure(L, W, l, w, [rng.int(1, L - l - 1), rng.int(1, W - w - 1)], u, true),
         };
       },
     },
