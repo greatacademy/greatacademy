@@ -43,6 +43,13 @@ The report lists outline topics missing from each course and the findings of heu
 
 - Claim improvement work by course and check in *Notes* (for example "explanations"), and follow the rules above for files and commits.
 - Every knowledge point explains its idea in at least 15 words of prose, and `content/math/src/content.test.ts` enforces this for every course; new knowledge points must meet it too.
+- Every topic written by hand has at least two knowledge points; topics built by factories (`proofKp`, `placeValueKPs` and the like) get theirs from the factory. Solutions say why each step is taken, not only the result.
+- These findings are known false positives; review them only after a content change:
+  - *two-option choice*: Yes/No questions.
+  - *visual topic without a figure*: titles that say "graphing calculator" or "significant figures", where the problems use tables or no picture.
+  - *canonical answer appears in the prompt*: questions where the answer is an equal quantity named in the prompt, such as $\sin T = \cos S$ or $\varnothing$ in the input instructions.
+  - *topic in no course*: older topics whose ids must stay. Most are computed foundations, because course topics list them as prerequisites.
+  - *duplicate topic titles*: `units-of-time` and `units-of-time-and-elapsed-time`, and `mean-of-a-data-set` and `the-mean-of-a-data-set`, are different topics with one outline title, and no course contains both.
 
 ## Board
 
