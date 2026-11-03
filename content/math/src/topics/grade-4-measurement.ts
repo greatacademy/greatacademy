@@ -1400,6 +1400,44 @@ const shapes: readonly Shape[] = [
   { name: t("a regular octagon", "正八边形"), right: 0, parallel: 4 },
 ];
 
+/** triangleKindsFigure shows an acute, a right and an obtuse triangle side by side, marking every angle of the first, the right angle of the second and the obtuse angle of the third. */
+const triangleKindsFigure: Figure = (() => {
+  const acute: Point[] = [
+    [0, 0],
+    [4, 0],
+    [1.6, 3],
+  ];
+  const right: Point[] = [
+    [6, 0],
+    [9.5, 0],
+    [6, 3],
+  ];
+  const obtuse: Point[] = [
+    [12, 0],
+    [17, 0],
+    [11, 2],
+  ];
+  const corners = (p: readonly Point[], i: number): [Point, Point, Point] => [p[i]!, p[(i + 1) % 3]!, p[(i + 2) % 3]!];
+  const marks: Mark[] = [
+    { kind: "polygon", points: acute },
+    { kind: "polygon", points: right },
+    { kind: "polygon", points: obtuse },
+    ...[0, 1, 2].map((i): Mark => {
+      const [v, a, b] = corners(acute, i);
+      return { kind: "arc", vertex: v, from: a, to: b };
+    }),
+    { kind: "right", vertex: right[0]!, from: right[1]!, to: right[2]! },
+    { kind: "arc", vertex: obtuse[0]!, from: obtuse[1]!, to: obtuse[2]!, accent: true },
+  ];
+  return {
+    svg: sketch(marks),
+    alt: t(
+      "Three triangles side by side: an acute triangle with all three angles marked as less than a right angle, a right triangle with its right angle marked, and an obtuse triangle with its one angle greater than a right angle marked.",
+      "三个三角形并排：锐角三角形，三个角都标出且都小于直角；直角三角形，标出它的直角；钝角三角形，标出它唯一一个大于直角的角。",
+    ),
+  };
+})();
+
 export const classifyingFiguresBasedOnAngles = topic(
   "classifying-figures-based-on-angles",
   t("Classifying Figures Based on Angles", "按角给图形分类"),
@@ -1417,6 +1455,7 @@ export const classifyingFiguresBasedOnAngles = topic(
         "A triangle is named by its largest angle. If one angle is greater than $90^\\circ$ it is obtuse, if one angle is exactly $90^\\circ$ it is right, and if all three are less than $90^\\circ$ it is acute. A triangle can have at most one right or obtuse angle.\n\nA triangle with angles $30^\\circ$, $45^\\circ$ and $105^\\circ$ has an obtuse angle, so it is an obtuse triangle.",
         "三角形按最大的角来分类：有一个角大于 $90^\\circ$ 的是钝角三角形，有一个角等于 $90^\\circ$ 的是直角三角形，三个角都小于 $90^\\circ$ 的是锐角三角形。一个三角形最多只有一个直角或钝角。\n\n三个角分别是 $30^\\circ$、$45^\\circ$、$105^\\circ$ 的三角形有一个钝角，所以是钝角三角形。",
       ),
+      figure: triangleKindsFigure,
       generate(rng) {
         const k = rng.int(0, 2);
         const big = [rng.int(61, 89), 90, rng.int(91, 150)][k]!;
