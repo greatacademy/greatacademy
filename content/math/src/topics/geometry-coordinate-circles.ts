@@ -162,6 +162,111 @@ function viewAround(h: number, k: number, r: number): PlaneView {
   return { xMin, xMax, yMin, yMax, labelEvery: Math.max(xMax - xMin, yMax - yMin) > 14 ? 2 : 1 };
 }
 
+/** exampleFigure draws a worked example in the coordinate plane. */
+const exampleFigure = (view: PlaneView, marks: readonly PlaneMark[], en: string, zh: string): Figure => ({
+  svg: plane(view, marks),
+  alt: t(en, zh),
+});
+
+/** throughAPointFigure shows x² + y² = 34 and its radius to (−3, 5). */
+const throughAPointFigure = exampleFigure(
+  { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
+  [
+    ...planeCircle(0, 0, Math.sqrt(34)),
+    { kind: "segment", a: [0, 0], b: [-3, 5] },
+    { kind: "point", at: [0, 0] },
+    { kind: "point", at: [-3, 5], label: "(−3, 5)", dir: "w" },
+  ],
+  "The circle x² + y² = 34 centered at the origin, with its radius drawn to the point (−3, 5) on the circle.",
+  "以原点为圆心的圆 x² + y² = 34，画出了到圆上点 (−3, 5) 的半径。",
+);
+
+/** centerAndPointFigure shows the circle about (2, −1) through (5, 3), with the legs 3 and 4 of its radius. */
+const centerAndPointFigure = exampleFigure(
+  { xMin: -4, xMax: 8, yMin: -7, yMax: 5 },
+  [
+    ...planeCircle(2, -1, 5),
+    { kind: "segment", a: [2, -1], b: [5, 3] },
+    { kind: "segment", a: [2, -1], b: [5, -1], dashed: true },
+    { kind: "segment", a: [5, -1], b: [5, 3], dashed: true },
+    { kind: "label", at: [3.5, -1], text: "3", dir: "s" },
+    { kind: "label", at: [5, 1], text: "4", dir: "e" },
+    { kind: "point", at: [2, -1], label: "(2, −1)", dir: "sw" },
+    { kind: "point", at: [5, 3], label: "P(5, 3)", dir: "ne" },
+  ],
+  "The circle with center (2, −1) through P(5, 3). The radius to P is the hypotenuse of a right triangle with a horizontal leg of 3 and a vertical leg of 4, so the radius is 5.",
+  "圆心为 (2, −1)、经过 P(5, 3) 的圆。到 P 的半径是一个直角三角形的斜边，该三角形的水平直角边为 3，竖直直角边为 4，所以半径为 5。",
+);
+
+/** diameterFigure shows the circle with diameter from (−1, 2) to (5, 10) and its center (2, 6). */
+const diameterFigure = exampleFigure(
+  { xMin: -4, xMax: 8, yMin: 0, yMax: 12, labelEvery: 2 },
+  [
+    ...planeCircle(2, 6, 5),
+    { kind: "segment", a: [-1, 2], b: [5, 10] },
+    { kind: "point", at: [-1, 2], label: "A(−1, 2)", dir: "w" },
+    { kind: "point", at: [5, 10], label: "B(5, 10)", dir: "e" },
+    { kind: "point", at: [2, 6], label: "(2, 6)", dir: "e" },
+  ],
+  "The circle with diameter AB from A(−1, 2) to B(5, 10); its center (2, 6) is the midpoint of AB.",
+  "以 A(−1, 2) 到 B(5, 10) 的线段 AB 为直径的圆；圆心 (2, 6) 是 AB 的中点。",
+);
+
+/** xInterceptsFigure shows (x − 2)² + (y + 3)² = 25 crossing the x-axis at −2 and 6. */
+const xInterceptsFigure = exampleFigure(
+  { xMin: -4, xMax: 8, yMin: -9, yMax: 3 },
+  [
+    ...planeCircle(2, -3, 5),
+    { kind: "point", at: [2, -3], label: "(2, −3)", dir: "s" },
+    { kind: "point", at: [-2, 0], label: "−2", dir: "nw" },
+    { kind: "point", at: [6, 0], label: "6", dir: "ne" },
+  ],
+  "The circle (x − 2)² + (y + 3)² = 25 with center (2, −3); it crosses the x-axis at x = −2 and x = 6.",
+  "圆 (x − 2)² + (y + 3)² = 25，圆心为 (2, −3)；它与 x 轴交于 x = −2 和 x = 6。",
+);
+
+/** slantedLineFigure shows x² + y² = 25 and y = x + 1 meeting at (−4, −3) and (3, 4). */
+const slantedLineFigure = exampleFigure(
+  { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
+  [
+    ...planeCircle(0, 0, 5),
+    { kind: "line", a: [0, 1], b: [1, 2] },
+    { kind: "point", at: [-4, -3], label: "(−4, −3)", dir: "w" },
+    { kind: "point", at: [3, 4], label: "(3, 4)", dir: "w" },
+  ],
+  "The circle x² + y² = 25 and the line y = x + 1, which meet at (−4, −3) and (3, 4).",
+  "圆 x² + y² = 25 与直线 y = x + 1 交于 (−4, −3) 和 (3, 4)。",
+);
+
+/** tangentFigure shows the tangent y = −(3/4)x + 9 to (x − 1)² + (y − 2)² = 25 at P(4, 6), perpendicular to the radius. */
+const tangentFigure = exampleFigure(
+  { xMin: -5, xMax: 9, yMin: -4, yMax: 10, labelEvery: 2 },
+  [
+    ...planeCircle(1, 2, 5),
+    { kind: "segment", a: [1, 2], b: [4, 6] },
+    { kind: "line", a: [0, 9], b: [4, 6] },
+    { kind: "point", at: [1, 2], label: "(1, 2)", dir: "s" },
+    { kind: "point", at: [4, 6], label: "P(4, 6)", dir: "e" },
+  ],
+  "The circle with center (1, 2) and radius 5, the radius to P(4, 6) with slope 4/3, and the tangent line at P, which is perpendicular to that radius and has slope −3/4.",
+  "圆心为 (1, 2)、半径为 5 的圆，到 P(4, 6) 的半径（斜率为 4/3），以及在 P 处的切线，它与该半径垂直，斜率为 −3/4。",
+);
+
+/** axisTangentsFigure shows the vertical tangent x = 1 and the horizontal tangent y = −2 to (x + 2)² + (y − 1)² = 9. */
+const axisTangentsFigure = exampleFigure(
+  { xMin: -6, xMax: 3, yMin: -4, yMax: 5 },
+  [
+    ...planeCircle(-2, 1, 3),
+    { kind: "line", a: [1, 0], b: [1, 1], dashed: true },
+    { kind: "line", a: [0, -2], b: [1, -2], dashed: true },
+    { kind: "point", at: [-2, 1], label: "(−2, 1)", dir: "n" },
+    { kind: "point", at: [1, 1], label: "(1, 1)", dir: "e" },
+    { kind: "point", at: [-2, -2], label: "(−2, −2)", dir: "sw" },
+  ],
+  "The circle with center (−2, 1) and radius 3, with the dashed vertical tangent x = 1 at its rightmost point (1, 1) and the dashed horizontal tangent y = −2 at its lowest point (−2, −2).",
+  "圆心为 (−2, 1)、半径为 3 的圆，在最右点 (1, 1) 处画出了竖直切线 x = 1（虚线），在最低点 (−2, −2) 处画出了水平切线 y = −2（虚线）。",
+);
+
 const insideOnOutside: readonly Text[] = [
   t("Inside the circle", "在圆内"),
   t("On the circle", "在圆上"),
@@ -393,6 +498,7 @@ export const equationsOfCirclesCenteredAtTheOrigin: TopicDef = {
         "A circle centered at the origin that passes through $(a, b)$ has $r^{2} = a^{2} + b^{2}$: substitute the point into $x^{2} + y^{2} = r^{2}$. Through $(-3, 5)$:\n\n$$r^{2} = (-3)^{2} + 5^{2} = 34, \\qquad x^{2} + y^{2} = 34.$$\n\nThere is no need to find $r$ itself.",
         "圆心在原点且经过 $(a, b)$ 的圆满足 $r^{2} = a^{2} + b^{2}$：把这个点代入 $x^{2} + y^{2} = r^{2}$。经过 $(-3, 5)$ 时：\n\n$$r^{2} = (-3)^{2} + 5^{2} = 34, \\qquad x^{2} + y^{2} = 34.$$\n\n不必求出 $r$ 本身。",
       ),
+      figure: throughAPointFigure,
       generate(rng) {
         const a = rng.int(-9, 9);
         const b = a === 0 ? rng.nonZero(-9, 9) : rng.int(-9, 9);
@@ -500,6 +606,7 @@ export const equationsOfCircles: TopicDef = {
         "If the circle passes through a point $P$, then $r^{2}$ is the squared distance from the center to $P$. For center $(2, -1)$ and $P(5, 3)$:\n\n$$r^{2} = (5 - 2)^{2} + (3 - (-1))^{2} = 9 + 16 = 25,$$\n\nso the circle is $(x - 2)^{2} + (y + 1)^{2} = 25$. The center goes into the equation, not the point.",
         "若圆经过点 $P$，则 $r^{2}$ 是圆心到 $P$ 的距离的平方。圆心为 $(2, -1)$、$P(5, 3)$ 时：\n\n$$r^{2} = (5 - 2)^{2} + (3 - (-1))^{2} = 9 + 16 = 25,$$\n\n所以圆的方程是 $(x - 2)^{2} + (y + 1)^{2} = 25$。代入方程的是圆心，而不是这个点。",
       ),
+      figure: centerAndPointFigure,
       generate(rng) {
         const [h, k] = pickCenter(rng, 8);
         const dx = rng.int(-7, 7);
@@ -533,6 +640,7 @@ export const equationsOfCircles: TopicDef = {
         "The center of a circle is the midpoint of every diameter. The **midpoint** of the segment from $(x_1, y_1)$ to $(x_2, y_2)$ averages the coordinates:\n\n$$M = \\left(\\frac{x_1 + x_2}{2}, \\frac{y_1 + y_2}{2}\\right).$$\n\nFor the diameter from $A(-1, 2)$ to $B(5, 10)$, the center is $(2, 6)$, and $r^{2}$ is the squared distance from the center to $A$: $(-1 - 2)^{2} + (2 - 6)^{2} = 25$. The circle is $(x - 2)^{2} + (y - 6)^{2} = 25$. (The squared length of the whole diameter, $100$, is $4r^{2}$, not $r^{2}$.)",
         "圆心是每条直径的中点。从 $(x_1, y_1)$ 到 $(x_2, y_2)$ 的线段的**中点**取坐标的平均数：\n\n$$M = \\left(\\frac{x_1 + x_2}{2}, \\frac{y_1 + y_2}{2}\\right).$$\n\n对从 $A(-1, 2)$ 到 $B(5, 10)$ 的直径，圆心是 $(2, 6)$，$r^{2}$ 是圆心到 $A$ 的距离的平方：$(-1 - 2)^{2} + (2 - 6)^{2} = 25$。圆的方程是 $(x - 2)^{2} + (y - 6)^{2} = 25$。（整条直径长度的平方 $100$ 是 $4r^{2}$，不是 $r^{2}$。）",
       ),
+      figure: diameterFigure,
       generate(rng) {
         const [h, k] = [rng.int(-6, 6), rng.int(-6, 6)];
         const dx = rng.int(-6, 6);
@@ -797,6 +905,7 @@ export const calculatingCircleIntercepts: TopicDef = {
         "$x$ 轴上的点满足 $y = 0$。把 $y = 0$ 代入圆的方程并解出 $x$。对 $(x - 2)^{2} + (y + 3)^{2} = 25$：\n\n$$(x - 2)^{2} + 3^{2} = 25 \\;\\Rightarrow\\; (x - 2)^{2} = 16 \\;\\Rightarrow\\; x - 2 = \\pm 4,$$\n\n所以 $x$ 轴截距是 $x = 6$ 和 $x = -2$。若平方项等于 $0$，圆与坐标轴只有一个公共点；若等于负数，圆与坐标轴没有交点。",
       ),
       keyPrerequisites: ["solving-equations-with-square-roots"],
+      figure: xInterceptsFigure,
       generate: (rng) => interceptProblem(rng, "x"),
     },
     {
@@ -918,6 +1027,7 @@ export const intersectionsOfCirclesWithLines: TopicDef = {
         "求 $y = mx + b$ 与圆的交点时，把圆的方程中的 $y$ 换成 $mx + b$。展开得到关于 $x$ 的一元二次方程，它的解就是交点的 $x$ 坐标。对 $y = x + 1$ 和 $x^{2} + y^{2} = 25$：\n\n$$x^{2} + (x + 1)^{2} = 25 \\;\\Rightarrow\\; 2x^{2} + 2x - 24 = 0 \\;\\Rightarrow\\; x^{2} + x - 12 = 0,$$\n\n$$(x + 4)(x - 3) = 0,$$\n\n所以 $x = -4$ 或 $x = 3$，由直线得交点 $(-4, -3)$ 和 $(3, 4)$。",
       ),
       keyPrerequisites: ["solving-systems-of-nonlinear-equations"],
+      figure: slantedLineFigure,
       generate(rng) {
         const { r2, p, q, m, b } = rng.pick(chordLines);
         const line = si(m, b);
@@ -1006,6 +1116,7 @@ export const equationsOfTangentLinesToCircles: TopicDef = {
         "**切线**与圆恰好有一个公共点，即切点。切线**垂直于过切点的半径**，所以切线的斜率是这条半径斜率的负倒数。\n\n圆 $(x - 1)^{2} + (y - 2)^{2} = 25$ 的圆心是 $(1, 2)$。在 $P(4, 6)$ 处，半径的斜率是 $\\frac{6 - 2}{4 - 1} = \\frac{4}{3}$，所以过 $P$ 的切线斜率是 $-\\frac{3}{4}$。",
       ),
       keyPrerequisites: ["perpendicular-lines-in-the-coordinate-plane"],
+      figure: tangentFigure,
       generate(rng) {
         const [h, k] = [rng.int(-6, 6), rng.int(-6, 6)];
         const [dx, dy] = pickOffset(rng);
@@ -1065,6 +1176,7 @@ export const equationsOfTangentLinesToCircles: TopicDef = {
         "At the highest and lowest points of a circle the radius is vertical, so the tangent is **horizontal**; at the leftmost and rightmost points the radius is horizontal, so the tangent is **vertical**.\n\nThe circle $(x + 2)^{2} + (y - 1)^{2} = 9$ has center $(-2, 1)$ and radius $3$. At its rightmost point $(1, 1)$ the tangent is the vertical line $x = 1$; at its lowest point $(-2, -2)$ the tangent is $y = -2$.",
         "在圆的最高点和最低点，半径是竖直的，所以切线是**水平**的；在最左点和最右点，半径是水平的，所以切线是**竖直**的。\n\n圆 $(x + 2)^{2} + (y - 1)^{2} = 9$ 的圆心是 $(-2, 1)$，半径是 $3$。在最右点 $(1, 1)$ 的切线是竖直线 $x = 1$；在最低点 $(-2, -2)$ 的切线是 $y = -2$。",
       ),
+      figure: axisTangentsFigure,
       generate(rng) {
         const [h, k] = [rng.int(-7, 7), rng.int(-7, 7)];
         const r = rng.int(1, 9);
