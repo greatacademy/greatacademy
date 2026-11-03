@@ -148,8 +148,8 @@ export const addingFractionsAndWholeNumbersUsingModels = topic(
       id: "whole-number-plus-proper-fraction-models",
       title: t("A whole number plus a proper fraction", "整数加真分数"),
       explanation: t(
-        "$3$ shaded bars and $\\frac{2}{5}$ of another bar show $3 + \\frac{2}{5} = 3\\frac{2}{5}$.",
-        "涂满的 $3$ 个长条再加另一个长条的 $\\frac{2}{5}$，表示 $3 + \\frac{2}{5} = 3\\frac{2}{5}$。",
+        "In a bar model, each fully shaded bar is $1$ whole and a partly shaded bar is a fraction. Count the full bars for the whole-number part and read the partial bar for the fraction. $3$ full bars and $\\frac{2}{5}$ of another show $3 + \\frac{2}{5} = 3\\frac{2}{5}$.",
+        "在长条模型中，每个涂满的长条表示 $1$ 个整体，只涂了一部分的长条表示一个分数。数涂满的长条得到整数部分，再读出部分涂色的长条得到分数部分。涂满的 $3$ 个长条再加另一个长条的 $\\frac{2}{5}$，表示 $3 + \\frac{2}{5} = 3\\frac{2}{5}$。",
       ),
       generate(rng) {
         const w = rng.int(1, 4);
@@ -173,8 +173,8 @@ export const addingFractionsAndWholeNumbersUsingModels = topic(
       id: "whole-number-plus-improper-fraction-models",
       title: t("A whole number plus an improper fraction", "整数加假分数"),
       explanation: t(
-        "$1 + \\frac{7}{3}$: the $\\frac{7}{3}$ fills $2$ more bars with $\\frac{1}{3}$ left, so the sum is $3\\frac{1}{3}$.",
-        "$1 + \\frac{7}{3}$：$\\frac{7}{3}$ 又涂满 $2$ 个长条，还剩 $\\frac{1}{3}$，所以和是 $3\\frac{1}{3}$。",
+        "An improper fraction is more than one whole, so in a model it fills some bars completely and part of another. Count those full bars together with the whole number. For $1 + \\frac{7}{3}$: $\\frac{7}{3}$ is $2$ full bars of thirds with $\\frac{1}{3}$ more. With the $1$ whole, that is $3$ full bars and $\\frac{1}{3}$, so the sum is $3\\frac{1}{3}$.",
+        "假分数比 1 大，所以在模型中它会涂满几个长条，再涂一部分。把这些涂满的长条和整数部分合在一起数。计算 $1 + \\frac{7}{3}$：$\\frac{7}{3}$ 涂满 $2$ 个长条，还多 $\\frac{1}{3}$。加上原来的 $1$，一共是 $3$ 个满条和 $\\frac{1}{3}$，所以和是 $3\\frac{1}{3}$。",
       ),
       generate(rng) {
         const w = rng.int(1, 3);
@@ -216,8 +216,8 @@ export const addingFractionsAndWholeNumbers = topic(
       id: "adding-whole-numbers-and-mixed-numbers",
       title: t("Whole numbers and mixed numbers", "整数加带分数"),
       explanation: t(
-        "$7 + 3\\frac{5}{8} = 10\\frac{5}{8}$: add the whole numbers $7 + 3 = 10$.",
-        "$7 + 3\\frac{5}{8} = 10\\frac{5}{8}$：整数部分相加，$7 + 3 = 10$。",
+        "A mixed number is a whole number plus a fraction. To add a whole number to it, add the whole numbers and keep the fraction as it is. $7 + 3\\frac{5}{8} = 10\\frac{5}{8}$, because $7 + 3 = 10$ and the $\\frac{5}{8}$ does not change. The whole number is not added to the numerator.",
+        "带分数由整数部分和分数部分组成。整数加带分数时，把整数部分相加，分数部分不变。$7 + 3\\frac{5}{8} = 10\\frac{5}{8}$，因为 $7 + 3 = 10$，$\\frac{5}{8}$ 不变。注意整数不能加到分子上。",
       ),
       generate(rng) {
         const w = rng.int(1, 15);
@@ -239,8 +239,8 @@ export const addingFractionsAndWholeNumbers = topic(
       id: "adding-whole-numbers-and-improper-fractions",
       title: t("Whole numbers and improper fractions", "整数加假分数"),
       explanation: t(
-        "$4 + \\frac{11}{3} = 4 + 3\\frac{2}{3} = 7\\frac{2}{3}$.",
-        "$4 + \\frac{11}{3} = 4 + 3\\frac{2}{3} = 7\\frac{2}{3}$。",
+        "First write the improper fraction as a mixed number by dividing the numerator by the denominator. Then add the whole numbers and keep the fraction part.\n\n$\\frac{11}{3}$ is $11 \\div 3 = 3 \\text{ R } 2$, which is $3\\frac{2}{3}$. So $4 + \\frac{11}{3} = 4 + 3\\frac{2}{3} = 7\\frac{2}{3}$.",
+        "先把假分数化成带分数：用分子除以分母。再把整数部分相加，分数部分不变。\n\n$\\frac{11}{3}$：$11 \\div 3 = 3 \\cdots\\cdots 2$，即 $3\\frac{2}{3}$。所以 $4 + \\frac{11}{3} = 4 + 3\\frac{2}{3} = 7\\frac{2}{3}$。",
       ),
       generate(rng) {
         const w = rng.int(1, 12);
@@ -276,8 +276,8 @@ export const subtractingFractionsAndWholeNumbersUsingModels = topic(
       id: "one-minus-a-fraction-model",
       title: t("Taking a fraction from 1", "从 1 中减去分数"),
       explanation: t(
-        "$1 - \\frac{3}{8}$: one bar cut into $8$ parts with $3$ crossed out leaves $\\frac{5}{8}$.",
-        "$1 - \\frac{3}{8}$：一个长条平均分成 $8$ 份，划掉 $3$ 份，剩下 $\\frac{5}{8}$。",
+        "To take a fraction from $1$, cut one whole bar into as many equal parts as the denominator, cross out the parts being taken away and count what is left. For $1 - \\frac{3}{8}$: the bar has $8$ eighths, $3$ are crossed out, and $8 - 3 = 5$ eighths are left. So $1 - \\frac{3}{8} = \\frac{5}{8}$.",
+        "从 $1$ 里减去一个分数：把一个长条按分母平均分成几份，划掉要减去的份数，数一数还剩几份。计算 $1 - \\frac{3}{8}$：长条有 $8$ 个八分之一，划掉 $3$ 份，还剩 $8 - 3 = 5$ 份。所以 $1 - \\frac{3}{8} = \\frac{5}{8}$。",
       ),
       generate(rng) {
         const [a, d] = properFraction(rng, 12, 3);
@@ -300,8 +300,8 @@ export const subtractingFractionsAndWholeNumbersUsingModels = topic(
       id: "whole-number-minus-a-fraction-model",
       title: t("Taking a fraction from a whole number", "从整数中减去分数"),
       explanation: t(
-        "$3 - \\frac{2}{5}$: $2$ bars stay whole and $\\frac{3}{5}$ of the last bar is left, so the answer is $2\\frac{3}{5}$.",
-        "$3 - \\frac{2}{5}$：$2$ 个长条完整，最后一个长条剩下 $\\frac{3}{5}$，所以结果是 $2\\frac{3}{5}$。",
+        "When taking a fraction from a whole number, only one bar needs to be cut; the other bars stay whole. For $3 - \\frac{2}{5}$: cut the last bar into fifths and cross out $2$, leaving $\\frac{3}{5}$ of it. The other $2$ bars are untouched, so the answer is $2\\frac{3}{5}$. The answer is not $3\\frac{3}{5}$, because one whole was used up.",
+        "从整数里减去一个分数时，只需要把一个长条分开，其余的长条保持完整。计算 $3 - \\frac{2}{5}$：把最后一个长条分成五份，划掉 $2$ 份，剩下 $\\frac{3}{5}$；另外 $2$ 个长条不动，所以结果是 $2\\frac{3}{5}$。答案不是 $3\\frac{3}{5}$，因为有一个整体被拆开用掉了。",
       ),
       generate(rng) {
         const w = rng.int(2, 4);
@@ -338,8 +338,8 @@ export const subtractingFractionsAndWholeNumbers = topic(
       id: "whole-number-minus-a-fraction",
       title: t("A whole number minus a fraction", "整数减分数"),
       explanation: t(
-        "$8 - \\frac{2}{9} = 7\\frac{9}{9} - \\frac{2}{9} = 7\\frac{7}{9}$.",
-        "$8 - \\frac{2}{9} = 7\\frac{9}{9} - \\frac{2}{9} = 7\\frac{7}{9}$。",
+        "A whole number has no fraction part to subtract from, so borrow $1$ from it and write that $1$ as a fraction with the same denominator. $8 = 7 + 1 = 7\\frac{9}{9}$. Now subtract the fractions: $8 - \\frac{2}{9} = 7\\frac{9}{9} - \\frac{2}{9} = 7\\frac{7}{9}$.",
+        "整数没有分数部分可以直接减，所以先从整数中拿出 $1$，把这个 $1$ 写成分母相同的分数：$8 = 7 + 1 = 7\\frac{9}{9}$。再把分数相减：$8 - \\frac{2}{9} = 7\\frac{9}{9} - \\frac{2}{9} = 7\\frac{7}{9}$。",
       ),
       generate(rng) {
         const w = rng.int(2, 15);
@@ -360,8 +360,8 @@ export const subtractingFractionsAndWholeNumbers = topic(
       id: "subtracting-with-mixed-numbers-and-whole-numbers",
       title: t("Mixed numbers and whole numbers", "带分数与整数相减"),
       explanation: t(
-        "$9\\frac{3}{4} - 5 = 4\\frac{3}{4}$, and $6 - 2\\frac{1}{3} = 5\\frac{3}{3} - 2\\frac{1}{3} = 3\\frac{2}{3}$.",
-        "$9\\frac{3}{4} - 5 = 4\\frac{3}{4}$；$6 - 2\\frac{1}{3} = 5\\frac{3}{3} - 2\\frac{1}{3} = 3\\frac{2}{3}$。",
+        "When a whole number is taken from a mixed number, subtract the whole numbers and keep the fraction: $9\\frac{3}{4} - 5 = 4\\frac{3}{4}$.\n\nWhen a mixed number is taken from a whole number, borrow $1$ and write it as a fraction first: $6 = 5\\frac{3}{3}$, so $6 - 2\\frac{1}{3} = 5\\frac{3}{3} - 2\\frac{1}{3} = 3\\frac{2}{3}$.",
+        "带分数减整数时，整数部分相减，分数部分不变：$9\\frac{3}{4} - 5 = 4\\frac{3}{4}$。\n\n整数减带分数时，先从整数中拿出 $1$ 写成分数：$6 = 5\\frac{3}{3}$，所以 $6 - 2\\frac{1}{3} = 5\\frac{3}{3} - 2\\frac{1}{3} = 3\\frac{2}{3}$。",
       ),
       generate(rng) {
         const [a, d] = properFraction(rng, 12, 3);
@@ -450,8 +450,8 @@ export const estimatingSumsAndDifferencesOfFractions = topic(
       id: "estimating-with-benchmarks",
       title: t("Estimating a sum or difference", "估算和或差"),
       explanation: t(
-        "$\\frac{11}{12} - \\frac{3}{7}$ is about $1 - \\frac{1}{2} = \\frac{1}{2}$.",
-        "$\\frac{11}{12} - \\frac{3}{7}$ 约等于 $1 - \\frac{1}{2} = \\frac{1}{2}$。",
+        "To estimate, replace each fraction with the closest benchmark: $0$, $\\frac{1}{2}$ or $1$. A fraction is close to $0$ when its numerator is much smaller than its denominator, close to $\\frac{1}{2}$ when the numerator is about half the denominator, and close to $1$ when the two are nearly equal. $\\frac{11}{12}$ is close to $1$ and $\\frac{3}{7}$ is close to $\\frac{1}{2}$, so $\\frac{11}{12} - \\frac{3}{7}$ is about $1 - \\frac{1}{2} = \\frac{1}{2}$.",
+        "估算时，把每个分数换成最接近的基准数：$0$、$\\frac{1}{2}$ 或 $1$。分子比分母小很多时接近 $0$；分子约是分母的一半时接近 $\\frac{1}{2}$；分子和分母差不多时接近 $1$。$\\frac{11}{12}$ 接近 $1$，$\\frac{3}{7}$ 接近 $\\frac{1}{2}$，所以 $\\frac{11}{12} - \\frac{3}{7}$ 约等于 $1 - \\frac{1}{2} = \\frac{1}{2}$。",
       ),
       generate(rng) {
         const sub = rng.bool();
@@ -576,8 +576,8 @@ export const addingFractionsWithUnlikeDenominatorsUsingModels = topic(
       id: "adding-related-denominators-with-models",
       title: t("One denominator divides the other", "一个分母是另一个的倍数"),
       explanation: t(
-        "$\\frac{1}{4} + \\frac{3}{8}$: cut each fourth in half, so $\\frac{1}{4} = \\frac{2}{8}$ and the sum is $\\frac{5}{8}$.",
-        "$\\frac{1}{4} + \\frac{3}{8}$：把每个四分之一再平分，$\\frac{1}{4} = \\frac{2}{8}$，和是 $\\frac{5}{8}$。",
+        "Fractions can only be added when their parts are the same size. If one denominator divides the other, cut the bigger parts into smaller ones so both bars use the same parts. For $\\frac{1}{4} + \\frac{3}{8}$: cutting each fourth in half turns $\\frac{1}{4}$ into $\\frac{2}{8}$. Now count eighths: $\\frac{2}{8} + \\frac{3}{8} = \\frac{5}{8}$.",
+        "只有每份大小相同的分数才能直接相加。如果一个分母是另一个分母的因数，就把较大的份再平分，使两个长条的每份一样大。计算 $\\frac{1}{4} + \\frac{3}{8}$：把每个四分之一再平分成两份，$\\frac{1}{4}$ 就变成 $\\frac{2}{8}$。再数八分之一的份数：$\\frac{2}{8} + \\frac{3}{8} = \\frac{5}{8}$。",
       ),
       generate(rng) {
         const p = relatedPair(rng);
@@ -588,8 +588,8 @@ export const addingFractionsWithUnlikeDenominatorsUsingModels = topic(
       id: "adding-unrelated-denominators-with-models",
       title: t("Unrelated denominators", "分母不成倍数关系"),
       explanation: t(
-        "$\\frac{2}{3} + \\frac{1}{4}$: cut both bars into twelfths: $\\frac{8}{12} + \\frac{3}{12} = \\frac{11}{12}$.",
-        "$\\frac{2}{3} + \\frac{1}{4}$：把两个长条都分成十二份：$\\frac{8}{12} + \\frac{3}{12} = \\frac{11}{12}$。",
+        "If neither denominator divides the other, cut both bars into a size that fits both, such as the product of the denominators. For $\\frac{2}{3} + \\frac{1}{4}$, use twelfths: each third becomes $4$ twelfths and each fourth becomes $3$ twelfths. So $\\frac{2}{3} = \\frac{8}{12}$ and $\\frac{1}{4} = \\frac{3}{12}$, and the sum is $\\frac{11}{12}$. Adding the tops and bottoms to get $\\frac{3}{7}$ is wrong.",
+        "如果两个分母互相都不能整除，就把两个长条都分成同样大小的份，比如以两个分母的乘积为分母。计算 $\\frac{2}{3} + \\frac{1}{4}$ 时用十二分之一：每个三分之一是 $4$ 个十二分之一，每个四分之一是 $3$ 个十二分之一。所以 $\\frac{2}{3} = \\frac{8}{12}$，$\\frac{1}{4} = \\frac{3}{12}$，和是 $\\frac{11}{12}$。把分子、分母分别相加得到 $\\frac{3}{7}$ 是错误的。",
       ),
       generate(rng) {
         const p = unrelatedPair(rng);
@@ -621,8 +621,8 @@ export const subtractingFractionsWithUnlikeDenominatorsUsingModels = topic(
       id: "subtracting-related-denominators-with-models",
       title: t("One denominator divides the other", "一个分母是另一个的倍数"),
       explanation: t(
-        "$\\frac{5}{6} - \\frac{1}{3} = \\frac{5}{6} - \\frac{2}{6} = \\frac{3}{6} = \\frac{1}{2}$.",
-        "$\\frac{5}{6} - \\frac{1}{3} = \\frac{5}{6} - \\frac{2}{6} = \\frac{3}{6} = \\frac{1}{2}$。",
+        "To subtract fractions, both must be counted in parts of the same size. When one denominator divides the other, rewrite the fraction with the smaller denominator. For $\\frac{5}{6} - \\frac{1}{3}$: each third is $2$ sixths, so $\\frac{1}{3} = \\frac{2}{6}$. Then $\\frac{5}{6} - \\frac{2}{6} = \\frac{3}{6} = \\frac{1}{2}$.",
+        "分数相减时，两个分数的每份必须一样大。一个分母是另一个分母的因数时，把分母较小的分数改写。计算 $\\frac{5}{6} - \\frac{1}{3}$：每个三分之一是 $2$ 个六分之一，所以 $\\frac{1}{3} = \\frac{2}{6}$。于是 $\\frac{5}{6} - \\frac{2}{6} = \\frac{3}{6} = \\frac{1}{2}$。",
       ),
       generate(rng) {
         const p = orderedPair(rng, true);
@@ -633,8 +633,8 @@ export const subtractingFractionsWithUnlikeDenominatorsUsingModels = topic(
       id: "subtracting-unrelated-denominators-with-models",
       title: t("Unrelated denominators", "分母不成倍数关系"),
       explanation: t(
-        "$\\frac{4}{5} - \\frac{1}{2} = \\frac{8}{10} - \\frac{5}{10} = \\frac{3}{10}$.",
-        "$\\frac{4}{5} - \\frac{1}{2} = \\frac{8}{10} - \\frac{5}{10} = \\frac{3}{10}$。",
+        "When the denominators are unrelated, cut both bars into parts that fit both, then take away. For $\\frac{4}{5} - \\frac{1}{2}$, use tenths: $\\frac{4}{5} = \\frac{8}{10}$ and $\\frac{1}{2} = \\frac{5}{10}$. Taking $5$ tenths from $8$ tenths leaves $\\frac{3}{10}$.",
+        "两个分母没有倍数关系时，把两个长条都分成能同时适用的份，再相减。计算 $\\frac{4}{5} - \\frac{1}{2}$ 时用十分之一：$\\frac{4}{5} = \\frac{8}{10}$，$\\frac{1}{2} = \\frac{5}{10}$。从 $8$ 个十分之一里拿走 $5$ 个，还剩 $\\frac{3}{10}$。",
       ),
       generate(rng) {
         const p = orderedPair(rng, false);
@@ -658,8 +658,8 @@ export const addingFractionsWithUnlikeDenominators = topic(
       id: "adding-with-related-denominators",
       title: t("One denominator divides the other", "一个分母是另一个的倍数"),
       explanation: t(
-        "$\\frac{2}{5} + \\frac{7}{10} = \\frac{4}{10} + \\frac{7}{10} = \\frac{11}{10} = 1\\frac{1}{10}$.",
-        "$\\frac{2}{5} + \\frac{7}{10} = \\frac{4}{10} + \\frac{7}{10} = \\frac{11}{10} = 1\\frac{1}{10}$。",
+        "If one denominator is a multiple of the other, use the larger one as the common denominator. Multiply the numerator and denominator of the other fraction by the same number to get an equivalent fraction, then add the numerators.\n\nFor $\\frac{2}{5} + \\frac{7}{10}$: $\\frac{2}{5} = \\frac{4}{10}$, so the sum is $\\frac{4}{10} + \\frac{7}{10} = \\frac{11}{10} = 1\\frac{1}{10}$.",
+        "如果一个分母是另一个分母的倍数，就用较大的分母作公分母。把另一个分数的分子和分母同乘一个数，得到相等的分数，再把分子相加。\n\n计算 $\\frac{2}{5} + \\frac{7}{10}$：$\\frac{2}{5} = \\frac{4}{10}$，所以和是 $\\frac{4}{10} + \\frac{7}{10} = \\frac{11}{10} = 1\\frac{1}{10}$。",
       ),
       generate: (rng) => pairProblem(relatedPair(rng), false),
     },
@@ -667,8 +667,8 @@ export const addingFractionsWithUnlikeDenominators = topic(
       id: "adding-with-the-least-common-denominator",
       title: t("Using the least common denominator", "用最小公分母"),
       explanation: t(
-        "$\\frac{3}{8} + \\frac{5}{6}$: the least common denominator is $24$, so the sum is $\\frac{9}{24} + \\frac{20}{24} = \\frac{29}{24} = 1\\frac{5}{24}$.",
-        "$\\frac{3}{8} + \\frac{5}{6}$：最小公分母是 $24$，所以和是 $\\frac{9}{24} + \\frac{20}{24} = \\frac{29}{24} = 1\\frac{5}{24}$。",
+        "To add fractions with unlike denominators, rewrite them with a common denominator. The least common denominator is the least common multiple of the denominators. Change each fraction to an equivalent one, add the numerators, and keep the denominator.\n\nFor $\\frac{3}{8} + \\frac{5}{6}$: the least common multiple of $8$ and $6$ is $24$. $\\frac{3}{8} = \\frac{9}{24}$ and $\\frac{5}{6} = \\frac{20}{24}$, so the sum is $\\frac{29}{24} = 1\\frac{5}{24}$.",
+        "异分母分数相加，先把它们化成同分母分数。最小公分母就是各分母的最小公倍数。把每个分数化成相等的分数，分子相加，分母不变。\n\n计算 $\\frac{3}{8} + \\frac{5}{6}$：$8$ 和 $6$ 的最小公倍数是 $24$。$\\frac{3}{8} = \\frac{9}{24}$，$\\frac{5}{6} = \\frac{20}{24}$，所以和是 $\\frac{29}{24} = 1\\frac{5}{24}$。",
       ),
       generate: (rng) => pairProblem(unrelatedPair(rng), false),
     },
@@ -689,8 +689,8 @@ export const subtractingFractionsWithUnlikeDenominators = topic(
       id: "subtracting-with-related-denominators",
       title: t("One denominator divides the other", "一个分母是另一个的倍数"),
       explanation: t(
-        "$\\frac{11}{12} - \\frac{1}{4} = \\frac{11}{12} - \\frac{3}{12} = \\frac{8}{12} = \\frac{2}{3}$.",
-        "$\\frac{11}{12} - \\frac{1}{4} = \\frac{11}{12} - \\frac{3}{12} = \\frac{8}{12} = \\frac{2}{3}$。",
+        "When one denominator is a multiple of the other, rewrite the fraction with the smaller denominator using the larger one. Then subtract the numerators and simplify if you can.\n\nFor $\\frac{11}{12} - \\frac{1}{4}$: $\\frac{1}{4} = \\frac{3}{12}$, so $\\frac{11}{12} - \\frac{3}{12} = \\frac{8}{12} = \\frac{2}{3}$.",
+        "一个分母是另一个分母的倍数时，用较大的分母改写分母较小的分数，再把分子相减，能约分的要约分。\n\n计算 $\\frac{11}{12} - \\frac{1}{4}$：$\\frac{1}{4} = \\frac{3}{12}$，所以 $\\frac{11}{12} - \\frac{3}{12} = \\frac{8}{12} = \\frac{2}{3}$。",
       ),
       generate: (rng) => pairProblem(orderedPair(rng, true), true),
     },
@@ -698,8 +698,8 @@ export const subtractingFractionsWithUnlikeDenominators = topic(
       id: "subtracting-with-the-least-common-denominator",
       title: t("Using the least common denominator", "用最小公分母"),
       explanation: t(
-        "$\\frac{7}{9} - \\frac{1}{6} = \\frac{14}{18} - \\frac{3}{18} = \\frac{11}{18}$.",
-        "$\\frac{7}{9} - \\frac{1}{6} = \\frac{14}{18} - \\frac{3}{18} = \\frac{11}{18}$。",
+        "Rewrite both fractions over the least common denominator, the least common multiple of the denominators. Then subtract the numerators and keep the denominator.\n\nFor $\\frac{7}{9} - \\frac{1}{6}$: the least common multiple of $9$ and $6$ is $18$. $\\frac{7}{9} = \\frac{14}{18}$ and $\\frac{1}{6} = \\frac{3}{18}$, so the difference is $\\frac{11}{18}$.",
+        "先把两个分数都化成以最小公分母（各分母的最小公倍数）为分母的分数，再把分子相减，分母不变。\n\n计算 $\\frac{7}{9} - \\frac{1}{6}$：$9$ 和 $6$ 的最小公倍数是 $18$。$\\frac{7}{9} = \\frac{14}{18}$，$\\frac{1}{6} = \\frac{3}{18}$，所以差是 $\\frac{11}{18}$。",
       ),
       generate: (rng) => pairProblem(orderedPair(rng, false), true),
     },
@@ -780,8 +780,8 @@ export const addingAndSubtractingFractionsWithUnlikeDenominatorsWordProblems = t
       id: "adding-fractions-in-word-problems",
       title: t("Joining amounts", "合并两个量"),
       explanation: t(
-        "$\\frac{1}{2}$ cup of milk and $\\frac{2}{3}$ cup of water make $\\frac{3}{6} + \\frac{4}{6} = \\frac{7}{6} = 1\\frac{1}{6}$ cups.",
-        "$\\frac{1}{2}$ 杯牛奶和 $\\frac{2}{3}$ 杯水合起来是 $\\frac{3}{6} + \\frac{4}{6} = \\frac{7}{6} = 1\\frac{1}{6}$ 杯。",
+        'When a problem puts two amounts together ("in all", "altogether", "total"), add them. With unlike denominators, find a common denominator first.\n\n$\\frac{1}{2}$ cup of milk and $\\frac{2}{3}$ cup of water make $\\frac{3}{6} + \\frac{4}{6} = \\frac{7}{6} = 1\\frac{1}{6}$ cups.',
+        '题目把两个量合在一起（"一共""总共""合起来"）时，用加法。分母不同时，先通分。\n\n$\\frac{1}{2}$ 杯牛奶和 $\\frac{2}{3}$ 杯水合起来是 $\\frac{3}{6} + \\frac{4}{6} = \\frac{7}{6} = 1\\frac{1}{6}$ 杯。',
       ),
       generate(rng) {
         const p = rng.bool() ? relatedPair(rng) : unrelatedPair(rng);
@@ -800,8 +800,8 @@ export const addingAndSubtractingFractionsWithUnlikeDenominatorsWordProblems = t
       id: "subtracting-fractions-in-word-problems",
       title: t("What is left, or how much more", "还剩多少或多多少"),
       explanation: t(
-        "$\\frac{5}{6}$ liter minus $\\frac{1}{4}$ liter leaves $\\frac{10}{12} - \\frac{3}{12} = \\frac{7}{12}$ liter.",
-        "$\\frac{5}{6}$ 升减去 $\\frac{1}{4}$ 升，还剩 $\\frac{10}{12} - \\frac{3}{12} = \\frac{7}{12}$ 升。",
+        "When a problem asks how much is left or how much more one amount is than another, subtract the smaller amount from the larger. Use a common denominator first.\n\n$\\frac{5}{6}$ liter minus $\\frac{1}{4}$ liter leaves $\\frac{10}{12} - \\frac{3}{12} = \\frac{7}{12}$ liter.",
+        '题目问"还剩多少"或"多多少"时，用较大的量减去较小的量。先通分再减。\n\n$\\frac{5}{6}$ 升减去 $\\frac{1}{4}$ 升，还剩 $\\frac{10}{12} - \\frac{3}{12} = \\frac{7}{12}$ 升。',
       ),
       generate(rng) {
         const p = orderedPair(rng, rng.bool());
@@ -909,8 +909,8 @@ export const addingMixedNumbersWithUnlikeDenominators = topic(
       id: "adding-unlike-mixed-numbers-without-regrouping",
       title: t("Without regrouping", "不需要进位"),
       explanation: t(
-        "$3\\frac{1}{4} + 2\\frac{1}{3} = 3\\frac{3}{12} + 2\\frac{4}{12} = 5\\frac{7}{12}$.",
-        "$3\\frac{1}{4} + 2\\frac{1}{3} = 3\\frac{3}{12} + 2\\frac{4}{12} = 5\\frac{7}{12}$。",
+        "To add mixed numbers with unlike denominators, rewrite the fraction parts over a common denominator. Then add the whole numbers and add the fractions. If the fractions add to less than $1$, nothing needs regrouping.\n\nFor $3\\frac{1}{4} + 2\\frac{1}{3}$: $\\frac{1}{4} = \\frac{3}{12}$ and $\\frac{1}{3} = \\frac{4}{12}$. So the sum is $3\\frac{3}{12} + 2\\frac{4}{12} = 5\\frac{7}{12}$.",
+        "异分母带分数相加，先把分数部分通分，再把整数部分和分数部分分别相加。分数部分的和小于 $1$ 时，不需要进位。\n\n计算 $3\\frac{1}{4} + 2\\frac{1}{3}$：$\\frac{1}{4} = \\frac{3}{12}$，$\\frac{1}{3} = \\frac{4}{12}$。所以和是 $3\\frac{3}{12} + 2\\frac{4}{12} = 5\\frac{7}{12}$。",
       ),
       generate: (rng) => mixedProblem(mixedPair(rng, false, false), false),
     },
@@ -918,8 +918,8 @@ export const addingMixedNumbersWithUnlikeDenominators = topic(
       id: "adding-unlike-mixed-numbers-with-regrouping",
       title: t("With regrouping", "需要进位"),
       explanation: t(
-        "$1\\frac{5}{6} + 2\\frac{1}{2} = 1\\frac{5}{6} + 2\\frac{3}{6} = 3\\frac{8}{6} = 4\\frac{1}{3}$.",
-        "$1\\frac{5}{6} + 2\\frac{1}{2} = 1\\frac{5}{6} + 2\\frac{3}{6} = 3\\frac{8}{6} = 4\\frac{1}{3}$。",
+        "Rewrite the fractions over a common denominator, then add the whole numbers and the fractions. If the fraction part comes out greater than or equal to $1$, regroup: take a whole out of it and add it to the whole-number part.\n\nFor $1\\frac{5}{6} + 2\\frac{1}{2}$: $\\frac{1}{2} = \\frac{3}{6}$, so the sum is $3\\frac{8}{6}$. Since $\\frac{8}{6} = 1\\frac{2}{6}$, regroup to get $4\\frac{2}{6} = 4\\frac{1}{3}$.",
+        "先把分数部分通分，再把整数部分和分数部分分别相加。如果分数部分的和大于或等于 $1$，就要进位：从中取出一个整体，加到整数部分上。\n\n计算 $1\\frac{5}{6} + 2\\frac{1}{2}$：$\\frac{1}{2} = \\frac{3}{6}$，和是 $3\\frac{8}{6}$。因为 $\\frac{8}{6} = 1\\frac{2}{6}$，进位后得 $4\\frac{2}{6} = 4\\frac{1}{3}$。",
       ),
       generate: (rng) => mixedProblem(mixedPair(rng, false, true), false),
     },
@@ -940,8 +940,8 @@ export const subtractingMixedNumbersWithUnlikeDenominators = topic(
       id: "subtracting-unlike-mixed-numbers-without-regrouping",
       title: t("Without regrouping", "不需要退位"),
       explanation: t(
-        "$6\\frac{3}{4} - 2\\frac{1}{6} = 6\\frac{9}{12} - 2\\frac{2}{12} = 4\\frac{7}{12}$.",
-        "$6\\frac{3}{4} - 2\\frac{1}{6} = 6\\frac{9}{12} - 2\\frac{2}{12} = 4\\frac{7}{12}$。",
+        "Rewrite the fraction parts over a common denominator. If the first fraction is at least as large as the second, subtract the whole numbers and the fractions separately.\n\nFor $6\\frac{3}{4} - 2\\frac{1}{6}$: the common denominator is $12$, so $6\\frac{9}{12} - 2\\frac{2}{12} = 4\\frac{7}{12}$.",
+        "先把分数部分通分。如果被减数的分数部分不小于减数的分数部分，就把整数部分和分数部分分别相减。\n\n计算 $6\\frac{3}{4} - 2\\frac{1}{6}$：公分母是 $12$，所以 $6\\frac{9}{12} - 2\\frac{2}{12} = 4\\frac{7}{12}$。",
       ),
       generate: (rng) => mixedProblem(mixedPair(rng, true, false), true),
     },
@@ -949,8 +949,8 @@ export const subtractingMixedNumbersWithUnlikeDenominators = topic(
       id: "subtracting-unlike-mixed-numbers-with-regrouping",
       title: t("With regrouping", "需要退位"),
       explanation: t(
-        "$4\\frac{1}{3} - 1\\frac{3}{4} = 4\\frac{4}{12} - 1\\frac{9}{12} = 3\\frac{16}{12} - 1\\frac{9}{12} = 2\\frac{7}{12}$.",
-        "$4\\frac{1}{3} - 1\\frac{3}{4} = 4\\frac{4}{12} - 1\\frac{9}{12} = 3\\frac{16}{12} - 1\\frac{9}{12} = 2\\frac{7}{12}$。",
+        "After finding a common denominator, the first fraction may be too small to subtract from. Then regroup: take $1$ from the whole number and add it to the fraction as a full set of parts.\n\nFor $4\\frac{1}{3} - 1\\frac{3}{4}$: in twelfths this is $4\\frac{4}{12} - 1\\frac{9}{12}$. Since $4 < 9$, regroup $4\\frac{4}{12}$ as $3\\frac{16}{12}$. Then $3\\frac{16}{12} - 1\\frac{9}{12} = 2\\frac{7}{12}$.",
+        "通分以后，被减数的分数部分可能不够减。这时要退位：从整数部分拿出 $1$，化成分数加到分数部分上。\n\n计算 $4\\frac{1}{3} - 1\\frac{3}{4}$：化成十二分之几是 $4\\frac{4}{12} - 1\\frac{9}{12}$。因为 $4 < 9$，把 $4\\frac{4}{12}$ 改写成 $3\\frac{16}{12}$。于是 $3\\frac{16}{12} - 1\\frac{9}{12} = 2\\frac{7}{12}$。",
       ),
       generate: (rng) => mixedProblem(mixedPair(rng, true, true), true),
     },
@@ -988,8 +988,8 @@ export const subtractingMixedNumbersWithUnlikeDenominatorsUsingImproperFractions
       id: "subtracting-unlike-mixed-numbers-as-improper-fractions",
       title: t("Subtracting as improper fractions", "化成假分数相减"),
       explanation: t(
-        "$2\\frac{1}{2} - 1\\frac{4}{5} = \\frac{5}{2} - \\frac{9}{5} = \\frac{25}{10} - \\frac{18}{10} = \\frac{7}{10}$.",
-        "$2\\frac{1}{2} - 1\\frac{4}{5} = \\frac{5}{2} - \\frac{9}{5} = \\frac{25}{10} - \\frac{18}{10} = \\frac{7}{10}$。",
+        "Another way to subtract mixed numbers is to write both as improper fractions first, so no regrouping is needed. Multiply the whole number by the denominator and add the numerator. Then use a common denominator and subtract.\n\n$2\\frac{1}{2} - 1\\frac{4}{5} = \\frac{5}{2} - \\frac{9}{5} = \\frac{25}{10} - \\frac{18}{10} = \\frac{7}{10}$.",
+        "带分数相减的另一种方法是先把两个带分数都化成假分数，这样就不需要退位。用整数部分乘分母，再加分子。然后通分相减。\n\n$2\\frac{1}{2} - 1\\frac{4}{5} = \\frac{5}{2} - \\frac{9}{5} = \\frac{25}{10} - \\frac{18}{10} = \\frac{7}{10}$。",
       ),
       generate(rng) {
         const m = mixedPair(rng, true, true);
@@ -1009,8 +1009,8 @@ export const subtractingMixedNumbersWithUnlikeDenominatorsUsingImproperFractions
       id: "differences-less-than-one",
       title: t("Differences less than 1", "差小于 1"),
       explanation: t(
-        "$4\\frac{1}{6} - 3\\frac{3}{4} = \\frac{25}{6} - \\frac{15}{4} = \\frac{50}{12} - \\frac{45}{12} = \\frac{5}{12}$.",
-        "$4\\frac{1}{6} - 3\\frac{3}{4} = \\frac{25}{6} - \\frac{15}{4} = \\frac{50}{12} - \\frac{45}{12} = \\frac{5}{12}$。",
+        "When two mixed numbers are close, their difference can be less than $1$. Writing both as improper fractions handles this without regrouping, and the answer is a proper fraction with no whole-number part.\n\n$4\\frac{1}{6} - 3\\frac{3}{4} = \\frac{25}{6} - \\frac{15}{4} = \\frac{50}{12} - \\frac{45}{12} = \\frac{5}{12}$.",
+        "两个带分数很接近时，它们的差可能小于 $1$。把它们都化成假分数再相减，不必退位，结果是一个没有整数部分的真分数。\n\n$4\\frac{1}{6} - 3\\frac{3}{4} = \\frac{25}{6} - \\frac{15}{4} = \\frac{50}{12} - \\frac{45}{12} = \\frac{5}{12}$。",
       ),
       generate(rng) {
         const base = mixedPair(rng, true, true);
@@ -1042,8 +1042,8 @@ export const addingAndSubtractingMixedNumbersWithUnlikeDenominatorsWordProblems 
       id: "adding-mixed-numbers-in-word-problems",
       title: t("Joining amounts", "合并两个量"),
       explanation: t(
-        "$1\\frac{1}{3}$ miles and $2\\frac{1}{2}$ miles make $1\\frac{2}{6} + 2\\frac{3}{6} = 3\\frac{5}{6}$ miles.",
-        "$1\\frac{1}{3}$ 英里和 $2\\frac{1}{2}$ 英里一共是 $1\\frac{2}{6} + 2\\frac{3}{6} = 3\\frac{5}{6}$ 英里。",
+        'When a problem combines two amounts ("in all", "altogether", "total"), add the mixed numbers. Use a common denominator for the fractions, and regroup if they add to $1$ or more.\n\n$1\\frac{1}{3}$ miles and $2\\frac{1}{2}$ miles make $1\\frac{2}{6} + 2\\frac{3}{6} = 3\\frac{5}{6}$ miles.',
+        '题目把两个量合在一起（"一共""总共"）时，把带分数相加。分数部分先通分，和满 $1$ 时要进位。\n\n$1\\frac{1}{3}$ 英里和 $2\\frac{1}{2}$ 英里一共是 $1\\frac{2}{6} + 2\\frac{3}{6} = 3\\frac{5}{6}$ 英里。',
       ),
       generate(rng) {
         const m = mixedPair(rng, false, rng.bool());
@@ -1062,8 +1062,8 @@ export const addingAndSubtractingMixedNumbersWithUnlikeDenominatorsWordProblems 
       id: "subtracting-mixed-numbers-in-word-problems",
       title: t("What is left, or how much more", "还剩多少或多多少"),
       explanation: t(
-        "$5\\frac{1}{4}$ meters minus $2\\frac{1}{2}$ meters leaves $4\\frac{5}{4} - 2\\frac{2}{4} = 2\\frac{3}{4}$ meters.",
-        "$5\\frac{1}{4}$ 米减去 $2\\frac{1}{2}$ 米，还剩 $4\\frac{5}{4} - 2\\frac{2}{4} = 2\\frac{3}{4}$ 米。",
+        "When a problem asks how much is left or how much more, subtract the mixed numbers. After finding a common denominator, regroup if the first fraction is too small.\n\n$5\\frac{1}{4}$ meters minus $2\\frac{1}{2}$ meters: in fourths, $5\\frac{1}{4} - 2\\frac{2}{4}$. Since $1 < 2$, regroup to $4\\frac{5}{4}$. So $4\\frac{5}{4} - 2\\frac{2}{4} = 2\\frac{3}{4}$ meters.",
+        '题目问"还剩多少"或"多多少"时，把带分数相减。通分后，如果被减数的分数部分不够减，就要退位。\n\n$5\\frac{1}{4}$ 米减去 $2\\frac{1}{2}$ 米：化成四分之几是 $5\\frac{1}{4} - 2\\frac{2}{4}$。因为 $1 < 2$，退位成 $4\\frac{5}{4}$。所以 $4\\frac{5}{4} - 2\\frac{2}{4} = 2\\frac{3}{4}$ 米。',
       ),
       generate(rng) {
         const m = mixedPair(rng, true, rng.bool());
@@ -1098,8 +1098,8 @@ export const multiplyingFractionsByUnitFractionsUsingModels = topic(
       id: "unit-fraction-times-unit-fraction-models",
       title: t("A unit fraction of a unit fraction", "单位分数乘单位分数"),
       explanation: t(
-        "$\\frac{1}{2} \\times \\frac{1}{4}$: the twice-shaded part is $1$ of $8$ small rectangles, so the product is $\\frac{1}{8}$.",
-        "$\\frac{1}{2} \\times \\frac{1}{4}$：涂了两次的部分是 $8$ 个小长方形中的 $1$ 个，所以积是 $\\frac{1}{8}$。",
+        "To model $\\frac{1}{2} \\times \\frac{1}{4}$, cut a square into $4$ columns and shade $1$ of them, then cut it into $2$ rows and shade $1$. The part shaded twice is the product. The square now has $2 \\times 4 = 8$ small rectangles and $1$ of them is shaded twice, so $\\frac{1}{2} \\times \\frac{1}{4} = \\frac{1}{8}$. Taking a part of a part gives something smaller than either.",
+        "表示 $\\frac{1}{2} \\times \\frac{1}{4}$ 时，把一个正方形分成 $4$ 列，涂其中 $1$ 列；再把它分成 $2$ 行，涂其中 $1$ 行。涂了两次的部分就是积。正方形被分成 $2 \\times 4 = 8$ 个小长方形，其中 $1$ 个涂了两次，所以 $\\frac{1}{2} \\times \\frac{1}{4} = \\frac{1}{8}$。取一部分的一部分，结果比原来的两个分数都小。",
       ),
       generate(rng) {
         const d = rng.int(2, 8);
@@ -1126,8 +1126,8 @@ export const multiplyingFractionsByUnitFractionsUsingModels = topic(
       id: "unit-fraction-times-fraction-models",
       title: t("A unit fraction of a fraction", "分数乘单位分数"),
       explanation: t(
-        "$\\frac{1}{3} \\times \\frac{3}{4}$: $3$ of the $12$ small rectangles are shaded twice, so the product is $\\frac{3}{12} = \\frac{1}{4}$.",
-        "$\\frac{1}{3} \\times \\frac{3}{4}$：$12$ 个小长方形中有 $3$ 个涂了两次，所以积是 $\\frac{3}{12} = \\frac{1}{4}$。",
+        "In the area model, the denominators set the grid and the numerators set how many columns and rows are shaded. For $\\frac{1}{3} \\times \\frac{3}{4}$: shade $3$ of $4$ columns and $1$ of $3$ rows. The grid has $12$ small rectangles, and $1 \\times 3 = 3$ are shaded twice. So the product is $\\frac{3}{12} = \\frac{1}{4}$.",
+        "在面积模型中，分母决定把正方形分成几行几列，分子决定涂几行几列。计算 $\\frac{1}{3} \\times \\frac{3}{4}$：在 $4$ 列中涂 $3$ 列，在 $3$ 行中涂 $1$ 行。一共有 $12$ 个小长方形，其中 $1 \\times 3 = 3$ 个涂了两次，所以积是 $\\frac{3}{12} = \\frac{1}{4}$。",
       ),
       generate(rng) {
         const [a, d] = properFraction(rng, 8, 3);
@@ -1167,8 +1167,8 @@ export const multiplyingFractionsUsingModels = topic(
       id: "fraction-times-fraction-models",
       title: t("Reading the product from the model", "从模型中读出积"),
       explanation: t(
-        "$\\frac{2}{5} \\times \\frac{2}{3}$: $4$ of the $15$ small rectangles are shaded twice, so the product is $\\frac{4}{15}$.",
-        "$\\frac{2}{5} \\times \\frac{2}{3}$：$15$ 个小长方形中有 $4$ 个涂了两次，所以积是 $\\frac{4}{15}$。",
+        "Read the product from the area model in two counts. The total number of small rectangles is the denominator, and the number shaded twice is the numerator. For $\\frac{2}{5} \\times \\frac{2}{3}$: the grid is $5 \\times 3 = 15$ rectangles and $2 \\times 2 = 4$ are shaded twice, so the product is $\\frac{4}{15}$. This is why you multiply the numerators and multiply the denominators.",
+        "从面积模型读出积要数两次：小长方形的总数是分母，涂了两次的个数是分子。计算 $\\frac{2}{5} \\times \\frac{2}{3}$：一共有 $5 \\times 3 = 15$ 个小长方形，其中 $2 \\times 2 = 4$ 个涂了两次，所以积是 $\\frac{4}{15}$。这就是分数相乘时分子乘分子、分母乘分母的道理。",
       ),
       generate(rng) {
         const [a, d] = properFraction(rng, 6, 2);
@@ -1195,8 +1195,8 @@ export const multiplyingFractionsUsingModels = topic(
       id: "choosing-the-model-for-a-product",
       title: t("Which product the model shows", "模型表示哪个乘法"),
       explanation: t(
-        "A square with $3$ of $5$ columns and $1$ of $2$ rows shaded shows $\\frac{1}{2} \\times \\frac{3}{5} = \\frac{3}{10}$.",
-        "一个正方形 $5$ 列中涂了 $3$ 列、$2$ 行中涂了 $1$ 行，表示 $\\frac{1}{2} \\times \\frac{3}{5} = \\frac{3}{10}$。",
+        "To tell which product a model shows, read each direction as a fraction. The shaded columns over all the columns give one factor, and the shaded rows over all the rows give the other. A square with $3$ of $5$ columns and $1$ of $2$ rows shaded shows $\\frac{1}{2} \\times \\frac{3}{5}$, and the $3$ doubly shaded parts out of $10$ give $\\frac{3}{10}$.",
+        "判断模型表示哪个乘法时，把每个方向读成一个分数：涂色的列数比总列数是一个因数，涂色的行数比总行数是另一个因数。一个正方形 $5$ 列中涂了 $3$ 列、$2$ 行中涂了 $1$ 行，表示 $\\frac{1}{2} \\times \\frac{3}{5}$；$10$ 份中有 $3$ 份涂了两次，积是 $\\frac{3}{10}$。",
       ),
       generate(rng) {
         let a: number;
@@ -1266,8 +1266,8 @@ export const multiplyingFractionsWordProblems = topic(
       id: "fraction-of-a-fraction-in-context",
       title: t("A fraction of a fraction", "一个分数的几分之几"),
       explanation: t(
-        "$\\frac{1}{2}$ of $\\frac{3}{5}$ mile is $\\frac{1}{2} \\times \\frac{3}{5} = \\frac{3}{10}$ mile.",
-        "$\\frac{3}{5}$ 英里的 $\\frac{1}{2}$ 是 $\\frac{1}{2} \\times \\frac{3}{5} = \\frac{3}{10}$ 英里。",
+        '"A fraction of" an amount means multiply. When the amount is itself a fraction, multiply the two fractions: numerators times numerators, denominators times denominators. $\\frac{1}{2}$ of $\\frac{3}{5}$ mile is $\\frac{1}{2} \\times \\frac{3}{5} = \\frac{3}{10}$ mile. The answer is smaller than $\\frac{3}{5}$, which makes sense because it is only part of it.',
+        '"某个量的几分之几"用乘法。如果这个量本身也是分数，就把两个分数相乘：分子乘分子，分母乘分母。$\\frac{3}{5}$ 英里的 $\\frac{1}{2}$ 是 $\\frac{1}{2} \\times \\frac{3}{5} = \\frac{3}{10}$ 英里。结果比 $\\frac{3}{5}$ 小，这是合理的，因为只取了它的一部分。',
       ),
       generate(rng) {
         const [a, b] = properFraction(rng, 8, 2);
@@ -1290,8 +1290,8 @@ export const multiplyingFractionsWordProblems = topic(
       id: "fraction-of-a-whole-amount-in-context",
       title: t("A fraction of a whole amount", "一个整数的几分之几"),
       explanation: t(
-        "$\\frac{3}{8}$ of $20$ pounds is $\\frac{3}{8} \\times 20 = \\frac{60}{8} = 7\\frac{1}{2}$ pounds.",
-        "$20$ 磅的 $\\frac{3}{8}$ 是 $\\frac{3}{8} \\times 20 = \\frac{60}{8} = 7\\frac{1}{2}$ 磅。",
+        "To find a fraction of a whole amount, multiply the fraction by the amount: multiply the whole number by the numerator and divide by the denominator. $\\frac{3}{8}$ of $20$ pounds is $\\frac{3}{8} \\times 20 = \\frac{60}{8} = 7\\frac{1}{2}$ pounds. You can also divide first: $20 \\div 8 = 2\\frac{1}{2}$, and $3 \\times 2\\frac{1}{2} = 7\\frac{1}{2}$.",
+        "求一个整数量的几分之几，用分数乘这个量：用整数乘分子，再除以分母。$20$ 磅的 $\\frac{3}{8}$ 是 $\\frac{3}{8} \\times 20 = \\frac{60}{8} = 7\\frac{1}{2}$ 磅。也可以先除后乘：$20 \\div 8 = 2\\frac{1}{2}$，$3 \\times 2\\frac{1}{2} = 7\\frac{1}{2}$。",
       ),
       generate(rng) {
         const [a, b] = properFraction(rng, 10, 3);
@@ -1340,8 +1340,8 @@ export const multiplyingFractionsBySwappingDenominators = topic(
       id: "swapping-denominators",
       title: t("Swapping the denominators", "交换分母"),
       explanation: t(
-        "$\\frac{5}{6} \\times \\frac{3}{10} = \\frac{5}{10} \\times \\frac{3}{6}$, which simplifies to $\\frac{1}{2} \\times \\frac{1}{2}$.",
-        "$\\frac{5}{6} \\times \\frac{3}{10} = \\frac{5}{10} \\times \\frac{3}{6}$，约分后是 $\\frac{1}{2} \\times \\frac{1}{2}$。",
+        "When multiplying fractions, the numerators are multiplied together and so are the denominators, so you may swap the two denominators without changing the product. This helps when each new fraction simplifies. $\\frac{5}{6} \\times \\frac{3}{10} = \\frac{5}{10} \\times \\frac{3}{6}$, and each of these simplifies to $\\frac{1}{2}$, giving $\\frac{1}{2} \\times \\frac{1}{2}$.",
+        "分数相乘时，分子和分子相乘，分母和分母相乘，所以交换两个分母，积不变。如果交换后每个分数都能约分，计算就更简便。$\\frac{5}{6} \\times \\frac{3}{10} = \\frac{5}{10} \\times \\frac{3}{6}$，两个分数都能约分成 $\\frac{1}{2}$，得到 $\\frac{1}{2} \\times \\frac{1}{2}$。",
       ),
       generate(rng) {
         const { a, b, c, d } = swapFriendly(rng);
@@ -1361,8 +1361,8 @@ export const multiplyingFractionsBySwappingDenominators = topic(
       id: "multiplying-after-swapping",
       title: t("Multiplying after swapping", "交换后再相乘"),
       explanation: t(
-        "$\\frac{7}{12} \\times \\frac{4}{21} = \\frac{7}{21} \\times \\frac{4}{12} = \\frac{1}{3} \\times \\frac{1}{3} = \\frac{1}{9}$.",
-        "$\\frac{7}{12} \\times \\frac{4}{21} = \\frac{7}{21} \\times \\frac{4}{12} = \\frac{1}{3} \\times \\frac{1}{3} = \\frac{1}{9}$。",
+        "Swap the denominators when that lets each fraction simplify, then simplify and multiply. The numbers stay small, so there is less to reduce at the end.\n\n$\\frac{7}{12} \\times \\frac{4}{21} = \\frac{7}{21} \\times \\frac{4}{12} = \\frac{1}{3} \\times \\frac{1}{3} = \\frac{1}{9}$.",
+        "如果交换分母后每个分数都能约分，就先交换、约分，再相乘。这样数字较小，最后也不用再约分很多。\n\n$\\frac{7}{12} \\times \\frac{4}{21} = \\frac{7}{21} \\times \\frac{4}{12} = \\frac{1}{3} \\times \\frac{1}{3} = \\frac{1}{9}$。",
       ),
       generate(rng) {
         const { a, b, c, d } = swapFriendly(rng);
@@ -1413,8 +1413,8 @@ export const multiplyingMixedNumbersByWholeNumbers = topic(
       id: "multiplying-a-mixed-number-by-a-whole-number",
       title: t("Finding the product", "求积"),
       explanation: t(
-        "$4 \\times 1\\frac{2}{3} = 4 \\times \\frac{5}{3} = \\frac{20}{3} = 6\\frac{2}{3}$.",
-        "$4 \\times 1\\frac{2}{3} = 4 \\times \\frac{5}{3} = \\frac{20}{3} = 6\\frac{2}{3}$。",
+        "Write the mixed number as an improper fraction, multiply its numerator by the whole number, and change the result back to a mixed number.\n\n$4 \\times 1\\frac{2}{3} = 4 \\times \\frac{5}{3} = \\frac{20}{3} = 6\\frac{2}{3}$. Multiplying only the whole-number part, $4 \\times 1 = 4$, would leave out $4 \\times \\frac{2}{3}$.",
+        "先把带分数化成假分数，用整数乘分子，再把结果化回带分数。\n\n$4 \\times 1\\frac{2}{3} = 4 \\times \\frac{5}{3} = \\frac{20}{3} = 6\\frac{2}{3}$。如果只用整数乘整数部分，$4 \\times 1 = 4$，就漏掉了 $4 \\times \\frac{2}{3}$。",
       ),
       generate(rng) {
         const n = rng.int(2, 9);
@@ -1437,8 +1437,8 @@ export const multiplyingMixedNumbersByWholeNumbers = topic(
       id: "mixed-number-times-whole-number-word-problems",
       title: t("Word problems", "应用题"),
       explanation: t(
-        "$5$ boards, each $2\\frac{1}{2}$ feet long, measure $5 \\times 2\\frac{1}{2} = 12\\frac{1}{2}$ feet in all.",
-        "$5$ 块木板，每块长 $2\\frac{1}{2}$ 英尺，一共长 $5 \\times 2\\frac{1}{2} = 12\\frac{1}{2}$ 英尺。",
+        "When several equal amounts are each a mixed number, multiply the number of items by the amount of each. $5$ boards, each $2\\frac{1}{2}$ feet long, measure $5 \\times 2\\frac{1}{2} = 5 \\times \\frac{5}{2} = \\frac{25}{2} = 12\\frac{1}{2}$ feet in all.",
+        "几个相同的量、每个量是带分数时，用个数乘每个的量。$5$ 块木板，每块长 $2\\frac{1}{2}$ 英尺，一共长 $5 \\times 2\\frac{1}{2} = 5 \\times \\frac{5}{2} = \\frac{25}{2} = 12\\frac{1}{2}$ 英尺。",
       ),
       generate(rng) {
         const n = rng.int(2, 9);
@@ -1495,8 +1495,8 @@ export const multiplyingMixedNumbersByFractions = topic(
       id: "fraction-times-mixed-number",
       title: t("Finding the product", "求积"),
       explanation: t(
-        "$\\frac{3}{4} \\times 2\\frac{1}{5} = \\frac{3}{4} \\times \\frac{11}{5} = \\frac{33}{20} = 1\\frac{13}{20}$.",
-        "$\\frac{3}{4} \\times 2\\frac{1}{5} = \\frac{3}{4} \\times \\frac{11}{5} = \\frac{33}{20} = 1\\frac{13}{20}$。",
+        "Change the mixed number to an improper fraction, then multiply numerators and denominators. Write an improper answer as a mixed number.\n\n$\\frac{3}{4} \\times 2\\frac{1}{5} = \\frac{3}{4} \\times \\frac{11}{5} = \\frac{33}{20} = 1\\frac{13}{20}$.",
+        "先把带分数化成假分数，再分子乘分子、分母乘分母。结果是假分数时化成带分数。\n\n$\\frac{3}{4} \\times 2\\frac{1}{5} = \\frac{3}{4} \\times \\frac{11}{5} = \\frac{33}{20} = 1\\frac{13}{20}$。",
       ),
       generate(rng) {
         const [a, b] = properFraction(rng, 9, 2);
@@ -1519,8 +1519,8 @@ export const multiplyingMixedNumbersByFractions = topic(
       id: "simplifying-before-multiplying-mixed-numbers",
       title: t("Simplifying before multiplying", "先约分再相乘"),
       explanation: t(
-        "$\\frac{5}{6} \\times 2\\frac{2}{5} = \\frac{5}{6} \\times \\frac{12}{5}$: the $5$s cancel and $12 \\div 6 = 2$, so the product is $2$.",
-        "$\\frac{5}{6} \\times 2\\frac{2}{5} = \\frac{5}{6} \\times \\frac{12}{5}$：两个 $5$ 约去，$12 \\div 6 = 2$，所以积是 $2$。",
+        "After writing the mixed number as an improper fraction, look for a numerator and a denominator that share a factor and divide both by it before multiplying. This keeps the numbers small.\n\n$\\frac{5}{6} \\times 2\\frac{2}{5} = \\frac{5}{6} \\times \\frac{12}{5}$. The $5$s cancel, and $12$ and $6$ share the factor $6$, leaving $\\frac{1}{1} \\times \\frac{2}{1} = 2$.",
+        "把带分数化成假分数后，看看哪个分子和哪个分母有公因数，先约分再相乘，这样数字较小。\n\n$\\frac{5}{6} \\times 2\\frac{2}{5} = \\frac{5}{6} \\times \\frac{12}{5}$。两个 $5$ 约去，$12$ 和 $6$ 用公因数 $6$ 约分，剩下 $\\frac{1}{1} \\times \\frac{2}{1} = 2$。",
       ),
       generate(rng) {
         for (;;) {
@@ -1560,8 +1560,8 @@ export const multiplyingMixedNumbers = topic(
       id: "multiplying-two-mixed-numbers",
       title: t("Finding the product", "求积"),
       explanation: t(
-        "$2\\frac{1}{3} \\times 1\\frac{1}{2} = \\frac{7}{3} \\times \\frac{3}{2} = \\frac{21}{6} = 3\\frac{1}{2}$.",
-        "$2\\frac{1}{3} \\times 1\\frac{1}{2} = \\frac{7}{3} \\times \\frac{3}{2} = \\frac{21}{6} = 3\\frac{1}{2}$。",
+        "To multiply two mixed numbers, write both as improper fractions, multiply, and simplify. Do not multiply the whole parts and the fraction parts separately: $2 \\times 1 + \\frac{1}{3} \\times \\frac{1}{2}$ misses the cross products.\n\n$2\\frac{1}{3} \\times 1\\frac{1}{2} = \\frac{7}{3} \\times \\frac{3}{2} = \\frac{21}{6} = 3\\frac{1}{2}$.",
+        "两个带分数相乘，先都化成假分数，再相乘并约分。不能把整数部分和分数部分分别相乘：$2 \\times 1 + \\frac{1}{3} \\times \\frac{1}{2}$ 漏掉了交叉相乘的部分。\n\n$2\\frac{1}{3} \\times 1\\frac{1}{2} = \\frac{7}{3} \\times \\frac{3}{2} = \\frac{21}{6} = 3\\frac{1}{2}$。",
       ),
       generate(rng) {
         const w1 = rng.int(1, 4);
@@ -1585,8 +1585,8 @@ export const multiplyingMixedNumbers = topic(
       id: "squaring-and-larger-mixed-numbers",
       title: t("Larger mixed numbers", "较大的带分数"),
       explanation: t(
-        "$3\\frac{1}{4} \\times 2\\frac{2}{5} = \\frac{13}{4} \\times \\frac{12}{5} = \\frac{156}{20} = 7\\frac{4}{5}$.",
-        "$3\\frac{1}{4} \\times 2\\frac{2}{5} = \\frac{13}{4} \\times \\frac{12}{5} = \\frac{156}{20} = 7\\frac{4}{5}$。",
+        "Larger mixed numbers work the same way, but the numerators grow, so simplify before multiplying when you can. In $3\\frac{1}{4} \\times 2\\frac{2}{5} = \\frac{13}{4} \\times \\frac{12}{5}$, the $12$ and $4$ share a factor $4$: this becomes $\\frac{13}{1} \\times \\frac{3}{5} = \\frac{39}{5} = 7\\frac{4}{5}$. Multiplying first gives $\\frac{156}{20}$, which simplifies to the same answer.",
+        "较大的带分数也用同样的方法，只是分子会变大，所以能约分时先约分再乘。$3\\frac{1}{4} \\times 2\\frac{2}{5} = \\frac{13}{4} \\times \\frac{12}{5}$ 中，$12$ 和 $4$ 有公因数 $4$，约分后是 $\\frac{13}{1} \\times \\frac{3}{5} = \\frac{39}{5} = 7\\frac{4}{5}$。先乘得 $\\frac{156}{20}$，约分后结果相同。",
       ),
       generate(rng) {
         const w1 = rng.int(2, 6);
@@ -1623,8 +1623,8 @@ export const multiplyingMixedNumbersWordProblems = topic(
       id: "rates-with-mixed-numbers",
       title: t("Amounts per unit", "每单位的量"),
       explanation: t(
-        "Walking $3\\frac{1}{2}$ miles per hour for $1\\frac{1}{2}$ hours covers $\\frac{7}{2} \\times \\frac{3}{2} = \\frac{21}{4} = 5\\frac{1}{4}$ miles.",
-        "每小时走 $3\\frac{1}{2}$ 英里，走 $1\\frac{1}{2}$ 小时，一共走 $\\frac{7}{2} \\times \\frac{3}{2} = \\frac{21}{4} = 5\\frac{1}{4}$ 英里。",
+        "An amount per unit times the number of units gives the total, even when both are mixed numbers. Distance is speed times time: walking $3\\frac{1}{2}$ miles per hour for $1\\frac{1}{2}$ hours covers $\\frac{7}{2} \\times \\frac{3}{2} = \\frac{21}{4} = 5\\frac{1}{4}$ miles.",
+        "每单位的量乘单位数等于总量，即使两个数都是带分数也一样。路程等于速度乘时间：每小时走 $3\\frac{1}{2}$ 英里，走 $1\\frac{1}{2}$ 小时，一共走 $\\frac{7}{2} \\times \\frac{3}{2} = \\frac{21}{4} = 5\\frac{1}{4}$ 英里。",
       ),
       generate(rng) {
         const w1 = rng.int(1, 6);
@@ -1663,8 +1663,8 @@ export const multiplyingMixedNumbersWordProblems = topic(
       id: "areas-and-scaling-with-mixed-numbers",
       title: t("Areas and scaling", "面积与放缩"),
       explanation: t(
-        "A rug $2\\frac{1}{2}$ yards by $1\\frac{1}{3}$ yards has area $\\frac{5}{2} \\times \\frac{4}{3} = \\frac{20}{6} = 3\\frac{1}{3}$ square yards.",
-        "长 $2\\frac{1}{2}$ 码、宽 $1\\frac{1}{3}$ 码的地毯，面积是 $\\frac{5}{2} \\times \\frac{4}{3} = \\frac{20}{6} = 3\\frac{1}{3}$ 平方码。",
+        "The area of a rectangle is length times width, also when the sides are mixed numbers. Write each side as an improper fraction and multiply. A rug $2\\frac{1}{2}$ yards by $1\\frac{1}{3}$ yards has area $\\frac{5}{2} \\times \\frac{4}{3} = \\frac{20}{6} = 3\\frac{1}{3}$ square yards.",
+        "长方形的面积等于长乘宽，边长是带分数时也一样。把每条边化成假分数再相乘。长 $2\\frac{1}{2}$ 码、宽 $1\\frac{1}{3}$ 码的地毯，面积是 $\\frac{5}{2} \\times \\frac{4}{3} = \\frac{20}{6} = 3\\frac{1}{3}$ 平方码。",
       ),
       generate(rng) {
         const w1 = rng.int(1, 6);
@@ -1743,8 +1743,8 @@ export const connectingFractionMultiplicationAndArea = topic(
       id: "counting-tiles-in-a-fractional-rectangle",
       title: t("Counting tiles", "数小块"),
       explanation: t(
-        "A $\\frac{2}{3}$ by $\\frac{3}{4}$ rectangle is covered by $2 \\times 3 = 6$ tiles of size $\\frac{1}{3}$ by $\\frac{1}{4}$, so its area is $\\frac{6}{12} = \\frac{1}{2}$.",
-        "长 $\\frac{3}{4}$、宽 $\\frac{2}{3}$ 的长方形由 $2 \\times 3 = 6$ 个 $\\frac{1}{3}$ 乘 $\\frac{1}{4}$ 的小块铺满，所以面积是 $\\frac{6}{12} = \\frac{1}{2}$。",
+        "A rectangle with fractional sides can be covered by small tiles whose sides are unit fractions. For a $\\frac{2}{3}$ by $\\frac{3}{4}$ rectangle, use tiles $\\frac{1}{3}$ by $\\frac{1}{4}$: $2$ fit one way and $3$ the other, so $2 \\times 3 = 6$ tiles. A whole unit square holds $3 \\times 4 = 12$ such tiles, so each tile is $\\frac{1}{12}$ and the area is $\\frac{6}{12} = \\frac{1}{2}$, the same as $\\frac{2}{3} \\times \\frac{3}{4}$.",
+        "边长是分数的长方形，可以用边长为分数单位的小块铺满。长 $\\frac{3}{4}$、宽 $\\frac{2}{3}$ 的长方形，用 $\\frac{1}{3}$ 乘 $\\frac{1}{4}$ 的小块：一边放 $2$ 块，另一边放 $3$ 块，共 $2 \\times 3 = 6$ 块。一个单位正方形能放 $3 \\times 4 = 12$ 块，每块是 $\\frac{1}{12}$，所以面积是 $\\frac{6}{12} = \\frac{1}{2}$，正好等于 $\\frac{2}{3} \\times \\frac{3}{4}$。",
       ),
       generate(rng) {
         const [c, b] = properFraction(rng, 6, 2);
@@ -1784,8 +1784,8 @@ export const findingAreasUsingFractionMultiplication = topic(
       id: "areas-with-fraction-sides",
       title: t("Fraction side lengths", "边长是分数"),
       explanation: t(
-        "A $\\frac{5}{6}$ m by $\\frac{3}{4}$ m rectangle has area $\\frac{15}{24} = \\frac{5}{8}$ m².",
-        "长 $\\frac{5}{6}$ 米、宽 $\\frac{3}{4}$ 米的长方形面积是 $\\frac{15}{24} = \\frac{5}{8}$ 平方米。",
+        "The area of a rectangle with fraction side lengths is still length times width. Multiply the fractions and simplify. A rectangle $\\frac{5}{6}$ meter by $\\frac{3}{4}$ meter has area $\\frac{5}{6} \\times \\frac{3}{4} = \\frac{15}{24} = \\frac{5}{8}$ square meter. The area is smaller than either side because both sides are less than $1$.",
+        "边长是分数的长方形，面积仍然是长乘宽。把两个分数相乘并约分。长 $\\frac{5}{6}$ 米、宽 $\\frac{3}{4}$ 米的长方形，面积是 $\\frac{5}{6} \\times \\frac{3}{4} = \\frac{15}{24} = \\frac{5}{8}$ 平方米。因为两条边都小于 $1$，面积比任何一条边的数值都小。",
       ),
       generate(rng) {
         const [a, b] = properFraction(rng, 10, 2);
@@ -1809,8 +1809,8 @@ export const findingAreasUsingFractionMultiplication = topic(
       id: "areas-with-mixed-number-sides",
       title: t("Mixed number side lengths", "边长是带分数"),
       explanation: t(
-        "A $3\\frac{1}{2}$ ft by $2\\frac{1}{4}$ ft rectangle has area $\\frac{7}{2} \\times \\frac{9}{4} = \\frac{63}{8} = 7\\frac{7}{8}$ ft².",
-        "长 $3\\frac{1}{2}$ 英尺、宽 $2\\frac{1}{4}$ 英尺的长方形面积是 $\\frac{7}{2} \\times \\frac{9}{4} = \\frac{63}{8} = 7\\frac{7}{8}$ 平方英尺。",
+        "When the sides are mixed numbers, write them as improper fractions, multiply, and write the answer as a mixed number. A rectangle $3\\frac{1}{2}$ feet by $2\\frac{1}{4}$ feet has area $\\frac{7}{2} \\times \\frac{9}{4} = \\frac{63}{8} = 7\\frac{7}{8}$ square feet. Area is measured in square units.",
+        "边长是带分数时，先化成假分数再相乘，最后把结果写成带分数。长 $3\\frac{1}{2}$ 英尺、宽 $2\\frac{1}{4}$ 英尺的长方形，面积是 $\\frac{7}{2} \\times \\frac{9}{4} = \\frac{63}{8} = 7\\frac{7}{8}$ 平方英尺。面积的单位是平方单位。",
       ),
       generate(rng) {
         const w1 = rng.int(1, 6);
@@ -1858,8 +1858,8 @@ export const fractionMultiplicationNumberSense = topic(
       id: "comparing-a-product-with-a-factor",
       title: t("Comparing a product with a factor", "积与因数比较"),
       explanation: t(
-        "$\\frac{7}{8} \\times 250$ is less than $250$, because $\\frac{7}{8}$ is less than $1$.",
-        "$\\frac{7}{8} \\times 250$ 小于 $250$，因为 $\\frac{7}{8}$ 小于 $1$。",
+        "You can tell how a product compares with a number without multiplying. Multiplying by a fraction less than $1$ makes the number smaller, multiplying by $1$ leaves it the same, and multiplying by a number greater than $1$ makes it larger. $\\frac{7}{8} \\times 250$ is less than $250$ because $\\frac{7}{8} < 1$.",
+        "不用计算也能判断积和一个数的大小关系：乘一个小于 $1$ 的分数，结果变小；乘 $1$，结果不变；乘一个大于 $1$ 的数，结果变大。$\\frac{7}{8} \\times 250$ 小于 $250$，因为 $\\frac{7}{8} < 1$。",
       ),
       generate(rng) {
         const n = rng.int(12, 900);
@@ -1895,8 +1895,8 @@ export const fractionMultiplicationNumberSense = topic(
       id: "choosing-the-greatest-product",
       title: t("The greatest or least product", "最大或最小的积"),
       explanation: t(
-        "Of $\\frac{2}{3} \\times 45$, $\\frac{5}{4} \\times 45$ and $1 \\times 45$, the greatest is $\\frac{5}{4} \\times 45$, since $\\frac{5}{4}$ is the greatest factor.",
-        "在 $\\frac{2}{3} \\times 45$、$\\frac{5}{4} \\times 45$、$1 \\times 45$ 中，$\\frac{5}{4} \\times 45$ 最大，因为 $\\frac{5}{4}$ 是最大的因数。",
+        "When every product multiplies the same number, the one with the greatest other factor is the greatest. Compare the factors with $1$: a factor greater than $1$ beats $1$, which beats any factor less than $1$. Of $\\frac{2}{3} \\times 45$, $\\frac{5}{4} \\times 45$ and $1 \\times 45$, the greatest is $\\frac{5}{4} \\times 45$, because $\\frac{5}{4} > 1 > \\frac{2}{3}$.",
+        "几个积都乘同一个数时，另一个因数最大的那个积最大。把这些因数和 $1$ 比较：大于 $1$ 的比 $1$ 大，$1$ 又比小于 $1$ 的大。在 $\\frac{2}{3} \\times 45$、$\\frac{5}{4} \\times 45$、$1 \\times 45$ 中，$\\frac{5}{4} \\times 45$ 最大，因为 $\\frac{5}{4} > 1 > \\frac{2}{3}$。",
       ),
       generate(rng) {
         const n = rng.int(12, 300);
@@ -1944,8 +1944,8 @@ export const interpretingFractionDivisionUsingAreaModels = topic(
       id: "how-many-unit-fractions-in-wholes",
       title: t("How many parts are in the wholes", "整数里有多少个几分之一"),
       explanation: t(
-        "$2 \\div \\frac{1}{3}$: $2$ bars cut into thirds make $6$ thirds, so $2 \\div \\frac{1}{3} = 6$.",
-        "$2 \\div \\frac{1}{3}$：$2$ 个长条都分成三份，共 $6$ 个三分之一，所以 $2 \\div \\frac{1}{3} = 6$。",
+        "Dividing by a unit fraction asks how many of those parts fit. Cut every whole into that many parts and count them all. For $2 \\div \\frac{1}{3}$: each whole has $3$ thirds, so $2$ wholes have $2 \\times 3 = 6$ thirds. So $2 \\div \\frac{1}{3} = 6$, which is more than $2$ because the parts are small.",
+        "除以一个分数单位，问的是能分出多少个这样的小份。把每个整体都分成这么多份，再数一共有几份。计算 $2 \\div \\frac{1}{3}$：每个整体有 $3$ 个三分之一，$2$ 个整体有 $2 \\times 3 = 6$ 个三分之一。所以 $2 \\div \\frac{1}{3} = 6$；因为每份很小，结果比 $2$ 大。",
       ),
       generate(rng) {
         const w = rng.int(1, 4);
@@ -1972,8 +1972,8 @@ export const interpretingFractionDivisionUsingAreaModels = topic(
       id: "choosing-the-division-for-a-model",
       title: t("Which division the model shows", "模型表示哪个除法"),
       explanation: t(
-        "A bar with $\\frac{1}{2}$ shaded and the shaded part cut into $3$ equal rows shows $\\frac{1}{2} \\div 3 = \\frac{1}{6}$.",
-        "一个长条涂色 $\\frac{1}{2}$，涂色部分又平均分成 $3$ 行，表示 $\\frac{1}{2} \\div 3 = \\frac{1}{6}$。",
+        "A model can show a fraction shared into equal shares. The amount shaded first is the number being divided, the number of equal pieces it is cut into is the divisor, and one piece is the quotient. A bar with $\\frac{1}{2}$ shaded and that half cut into $3$ equal pieces shows $\\frac{1}{2} \\div 3$. Each piece is $\\frac{1}{6}$ of the whole bar.",
+        "模型可以表示把一个分数平均分成几份：先涂色的部分是被除数，它被平均分成的份数是除数，其中一份就是商。一个长条涂了 $\\frac{1}{2}$，再把这一半平均分成 $3$ 份，表示 $\\frac{1}{2} \\div 3$。每一份是整个长条的 $\\frac{1}{6}$。",
       ),
       generate(rng) {
         const d = rng.int(2, 8);
@@ -2031,8 +2031,8 @@ export const dividingWholeNumbersByUnitFractionsUsingModels = topic(
       id: "counting-unit-fractions-in-a-model",
       title: t("Counting parts in the model", "数模型中的份数"),
       explanation: t(
-        "$3 \\div \\frac{1}{5}$: $3$ bars, each with $5$ fifths, hold $15$ fifths.",
-        "$3 \\div \\frac{1}{5}$：$3$ 个长条，每个有 $5$ 个五分之一，共 $15$ 个五分之一。",
+        "To divide a whole number by a unit fraction with a model, cut each whole bar into that many equal parts and count all the parts. For $3 \\div \\frac{1}{5}$: each bar holds $5$ fifths, and $3$ bars hold $3 \\times 5 = 15$ fifths. So $3 \\div \\frac{1}{5} = 15$.",
+        "用模型计算整数除以分数单位时，把每个长条都平均分成相应的份数，再数一共有几份。计算 $3 \\div \\frac{1}{5}$：每个长条有 $5$ 个五分之一，$3$ 个长条共有 $3 \\times 5 = 15$ 个五分之一。所以 $3 \\div \\frac{1}{5} = 15$。",
       ),
       generate(rng) {
         const w = rng.int(2, 5);
@@ -2056,8 +2056,8 @@ export const dividingWholeNumbersByUnitFractionsUsingModels = topic(
       id: "unit-fraction-servings-with-models",
       title: t("Servings and pieces", "分份问题"),
       explanation: t(
-        "$2$ cups of soup in $\\frac{1}{4}$-cup servings make $2 \\div \\frac{1}{4} = 8$ servings.",
-        "$2$ 杯汤，每份 $\\frac{1}{4}$ 杯，可以分成 $2 \\div \\frac{1}{4} = 8$ 份。",
+        '"How many servings" questions are division: the total amount divided by the size of one serving. With a unit-fraction serving, each whole gives as many servings as the denominator. $2$ cups of soup in $\\frac{1}{4}$-cup servings: each cup makes $4$ servings, so $2 \\div \\frac{1}{4} = 8$ servings.',
+        '"能分成几份"的问题用除法：总量除以每份的量。每份是分数单位时，每个整体能分出的份数等于分母。$2$ 杯汤，每份 $\\frac{1}{4}$ 杯：每杯能分 $4$ 份，所以 $2 \\div \\frac{1}{4} = 8$ 份。',
       ),
       generate(rng) {
         const w = rng.int(2, 5);
@@ -2093,7 +2093,10 @@ export const dividingWholeNumbersByUnitFractions = topic(
     {
       id: "whole-number-divided-by-unit-fraction",
       title: t("Finding the quotient", "求商"),
-      explanation: t("$9 \\div \\frac{1}{6} = 9 \\times 6 = 54$.", "$9 \\div \\frac{1}{6} = 9 \\times 6 = 54$。"),
+      explanation: t(
+        "Each whole contains as many unit fractions as the denominator, so dividing a whole number by a unit fraction is the same as multiplying by the denominator. $9 \\div \\frac{1}{6} = 9 \\times 6 = 54$, because each of the $9$ wholes holds $6$ sixths. Dividing $9$ by $6$ instead would give the wrong answer.",
+        "每个整体里含有的分数单位个数等于分母，所以整数除以分数单位，就等于乘分母。$9 \\div \\frac{1}{6} = 9 \\times 6 = 54$，因为 $9$ 个整体中每个都有 $6$ 个六分之一。如果算成 $9$ 除以 $6$ 就错了。",
+      ),
       generate(rng) {
         const w = rng.int(2, 20);
         const d = rng.int(2, 12);
@@ -2113,8 +2116,8 @@ export const dividingWholeNumbersByUnitFractions = topic(
       id: "unit-fraction-divisors-in-word-problems",
       title: t("Word problems", "应用题"),
       explanation: t(
-        "$6$ pounds of nuts in $\\frac{1}{3}$-pound bags fill $6 \\div \\frac{1}{3} = 18$ bags.",
-        "$6$ 磅坚果，每袋装 $\\frac{1}{3}$ 磅，能装 $6 \\div \\frac{1}{3} = 18$ 袋。",
+        "When a total is split into pieces of a unit-fraction size, divide the total by the piece size, which means multiplying by the denominator. $6$ pounds of nuts in $\\frac{1}{3}$-pound bags fill $6 \\div \\frac{1}{3} = 6 \\times 3 = 18$ bags.",
+        "把一个总量分成每份是分数单位大小的若干份时，用总量除以每份的量，也就是乘分母。$6$ 磅坚果，每袋装 $\\frac{1}{3}$ 磅，能装 $6 \\div \\frac{1}{3} = 6 \\times 3 = 18$ 袋。",
       ),
       generate(rng) {
         const w = rng.int(2, 15);
@@ -2167,8 +2170,8 @@ export const dividingUnitFractionsByWholeNumbersUsingModels = topic(
       id: "reading-a-share-from-the-model",
       title: t("Reading a share from the model", "从模型中读出每份"),
       explanation: t(
-        "$\\frac{1}{4} \\div 3$: the whole bar is cut into $4 \\times 3 = 12$ pieces, so the darker piece is $\\frac{1}{12}$.",
-        "$\\frac{1}{4} \\div 3$：整个长条被分成 $4 \\times 3 = 12$ 块，所以颜色最深的一块是 $\\frac{1}{12}$。",
+        "To find the size of one share, count how many pieces the whole bar has after the cutting. For $\\frac{1}{4} \\div 3$: the bar is cut into fourths, and one fourth is cut into $3$ pieces. Cutting every fourth that way would make $4 \\times 3 = 12$ pieces, so the darker piece is $\\frac{1}{12}$ of the bar.",
+        "要求一份的大小，就看分完以后整个长条一共能分成几块。计算 $\\frac{1}{4} \\div 3$：长条先分成四份，其中一份再分成 $3$ 块。如果每个四分之一都这样分，就有 $4 \\times 3 = 12$ 块，所以颜色最深的一块是整个长条的 $\\frac{1}{12}$。",
       ),
       generate(rng) {
         const d = rng.int(2, 8);
@@ -2195,8 +2198,8 @@ export const dividingUnitFractionsByWholeNumbersUsingModels = topic(
       id: "sharing-a-unit-fraction-with-models",
       title: t("Sharing a part", "平均分一部分"),
       explanation: t(
-        "$\\frac{1}{2}$ of a pizza shared among $4$ people gives each $\\frac{1}{8}$ of the pizza.",
-        "把 $\\frac{1}{2}$ 个比萨饼平均分给 $4$ 个人，每人分得 $\\frac{1}{8}$ 个。",
+        "Sharing a part of something among several people makes each share smaller than that part. Think of the whole: $\\frac{1}{2}$ of a pizza shared among $4$ people is the same as cutting the whole pizza into $2 \\times 4 = 8$ equal pieces and giving each person one. Each gets $\\frac{1}{8}$ of the pizza.",
+        "把某物的一部分再分给几个人，每人分到的比这一部分还少。从整体来想：把 $\\frac{1}{2}$ 个比萨饼平均分给 $4$ 个人，相当于把整个比萨饼平均切成 $2 \\times 4 = 8$ 块，每人一块。每人分得 $\\frac{1}{8}$ 个。",
       ),
       generate(rng) {
         const d = rng.int(2, 6);
@@ -2232,7 +2235,10 @@ export const dividingUnitFractionsByWholeNumbers = topic(
     {
       id: "unit-fraction-divided-by-whole-number",
       title: t("Finding the quotient", "求商"),
-      explanation: t("$\\frac{1}{8} \\div 4 = \\frac{1}{32}$.", "$\\frac{1}{8} \\div 4 = \\frac{1}{32}$。"),
+      explanation: t(
+        "Dividing a unit fraction by a whole number cuts each part into that many smaller parts, so the denominator is multiplied by the whole number. $\\frac{1}{8} \\div 4 = \\frac{1}{8 \\times 4} = \\frac{1}{32}$. The answer is smaller than $\\frac{1}{8}$; a common mistake is to get $\\frac{1}{2}$ by dividing $8$ by $4$.",
+        "分数单位除以整数，相当于把每一份再分成这么多更小的份，所以分母要乘这个整数。$\\frac{1}{8} \\div 4 = \\frac{1}{8 \\times 4} = \\frac{1}{32}$。结果比 $\\frac{1}{8}$ 小。常见的错误是用 $8$ 除以 $4$，得到 $\\frac{1}{2}$。",
+      ),
       generate(rng) {
         const d = rng.int(2, 12);
         const n = rng.int(2, 9);
@@ -2252,8 +2258,8 @@ export const dividingUnitFractionsByWholeNumbers = topic(
       id: "missing-numbers-in-unit-fraction-division",
       title: t("Finding a missing number", "求未知数"),
       explanation: t(
-        "$\\frac{1}{6} \\div \\square = \\frac{1}{42}$: since $6 \\times 7 = 42$, the missing number is $7$.",
-        "$\\frac{1}{6} \\div \\square = \\frac{1}{42}$：因为 $6 \\times 7 = 42$，所以方框中是 $7$。",
+        "Since dividing $\\frac{1}{a}$ by a whole number $n$ gives $\\frac{1}{a \\times n}$, a missing divisor is found by asking what times the old denominator gives the new one. For $\\frac{1}{6} \\div \\square = \\frac{1}{42}$: $6 \\times 7 = 42$, so the missing number is $7$.",
+        "因为 $\\frac{1}{a}$ 除以整数 $n$ 得 $\\frac{1}{a \\times n}$，所以求未知的除数时，要问：原来的分母乘几得到新的分母？对于 $\\frac{1}{6} \\div \\square = \\frac{1}{42}$：$6 \\times 7 = 42$，所以方框中是 $7$。",
       ),
       generate(rng) {
         const d = rng.int(2, 12);
@@ -2290,8 +2296,8 @@ export const reciprocals = topic(
       id: "reciprocals-of-fractions",
       title: t("Reciprocals of fractions", "分数的倒数"),
       explanation: t(
-        "The reciprocal of $\\frac{4}{9}$ is $\\frac{9}{4}$, since $\\frac{4}{9} \\times \\frac{9}{4} = 1$.",
-        "$\\frac{4}{9}$ 的倒数是 $\\frac{9}{4}$，因为 $\\frac{4}{9} \\times \\frac{9}{4} = 1$。",
+        "Two numbers are reciprocals when their product is $1$. To find the reciprocal of a fraction, swap its numerator and denominator. The reciprocal of $\\frac{4}{9}$ is $\\frac{9}{4}$, since $\\frac{4}{9} \\times \\frac{9}{4} = \\frac{36}{36} = 1$.",
+        "乘积是 $1$ 的两个数互为倒数。求一个分数的倒数，就把它的分子和分母交换位置。$\\frac{4}{9}$ 的倒数是 $\\frac{9}{4}$，因为 $\\frac{4}{9} \\times \\frac{9}{4} = \\frac{36}{36} = 1$。",
       ),
       generate(rng) {
         const [a, b] = properFraction(rng, 15, 2);
@@ -2313,8 +2319,8 @@ export const reciprocals = topic(
       id: "reciprocals-of-whole-and-mixed-numbers",
       title: t("Reciprocals of whole numbers and mixed numbers", "整数和带分数的倒数"),
       explanation: t(
-        "The reciprocal of $5$ is $\\frac{1}{5}$. For $1\\frac{2}{3} = \\frac{5}{3}$, the reciprocal is $\\frac{3}{5}$.",
-        "$5$ 的倒数是 $\\frac{1}{5}$。$1\\frac{2}{3} = \\frac{5}{3}$，它的倒数是 $\\frac{3}{5}$。",
+        "A whole number is a fraction with denominator $1$, so its reciprocal is $1$ over the number: the reciprocal of $5 = \\frac{5}{1}$ is $\\frac{1}{5}$. For a mixed number, first write it as an improper fraction, then swap: $1\\frac{2}{3} = \\frac{5}{3}$, so its reciprocal is $\\frac{3}{5}$. Swapping only the fraction part, to get $1\\frac{3}{2}$, is a common mistake.",
+        "整数可以看作分母是 $1$ 的分数，所以它的倒数是 $1$ 分之这个数：$5 = \\frac{5}{1}$ 的倒数是 $\\frac{1}{5}$。带分数要先化成假分数再交换分子分母：$1\\frac{2}{3} = \\frac{5}{3}$，它的倒数是 $\\frac{3}{5}$。只交换分数部分、写成 $1\\frac{3}{2}$ 是常见的错误。",
       ),
       generate(rng) {
         if (rng.bool()) {
@@ -2362,8 +2368,8 @@ export const dividingWholeNumbersByFractionsUsingModelsWholeNumberResults = topi
       id: "counting-groups-in-a-model",
       title: t("Counting groups in the model", "数模型中的组数"),
       explanation: t(
-        "$3 \\div \\frac{3}{4}$: $3$ bars hold $12$ fourths, which make $12 \\div 3 = 4$ groups of $\\frac{3}{4}$.",
-        "$3 \\div \\frac{3}{4}$：$3$ 个长条共有 $12$ 个四分之一，每 $3$ 个一组，共 $12 \\div 3 = 4$ 组。",
+        "Dividing by a fraction asks how many groups of that size fit. Cut the wholes into parts named by the denominator, then group the parts by the numerator. For $3 \\div \\frac{3}{4}$: $3$ bars hold $3 \\times 4 = 12$ fourths. Groups of $3$ fourths make $12 \\div 3 = 4$ groups, so $3 \\div \\frac{3}{4} = 4$.",
+        "除以一个分数，问的是能分出几组这么大的量。先按分母把整体分成小份，再按分子把小份分组。计算 $3 \\div \\frac{3}{4}$：$3$ 个长条共有 $3 \\times 4 = 12$ 个四分之一，每 $3$ 个一组，共 $12 \\div 3 = 4$ 组，所以 $3 \\div \\frac{3}{4} = 4$。",
       ),
       generate(rng) {
         for (;;) {
@@ -2394,8 +2400,8 @@ export const dividingWholeNumbersByFractionsUsingModelsWholeNumberResults = topi
       id: "whole-number-groups-in-word-problems",
       title: t("Word problems", "应用题"),
       explanation: t(
-        "$6$ cups of flour in batches of $\\frac{3}{4}$ cup make $6 \\div \\frac{3}{4} = 24 \\div 3 = 8$ batches.",
-        "$6$ 杯面粉，每份用 $\\frac{3}{4}$ 杯，可以做 $6 \\div \\frac{3}{4} = 24 \\div 3 = 8$ 份。",
+        "When a total is used in equal fractional amounts, divide the total by one amount. Count small parts first, then group them. $6$ cups of flour in batches of $\\frac{3}{4}$ cup: $6$ cups are $24$ fourths, and each batch uses $3$ fourths, so $6 \\div \\frac{3}{4} = 24 \\div 3 = 8$ batches.",
+        "把一个总量按相同的分数量分配时，用总量除以每份的量。先数小份，再分组。$6$ 杯面粉，每份用 $\\frac{3}{4}$ 杯：$6$ 杯是 $24$ 个四分之一，每份用 $3$ 个四分之一，所以 $6 \\div \\frac{3}{4} = 24 \\div 3 = 8$ 份。",
       ),
       generate(rng) {
         for (;;) {
@@ -2433,8 +2439,8 @@ export const dividingWholeNumbersByFractionsUsingModelsFractionalResults = topic
       id: "partial-groups-in-a-model",
       title: t("Groups and a part of a group", "整组和不满一组的部分"),
       explanation: t(
-        "$3 \\div \\frac{2}{5}$: $15$ fifths make $7$ groups of $2$ and $1$ fifth more, which is $\\frac{1}{2}$ of a group. So $3 \\div \\frac{2}{5} = 7\\frac{1}{2}$.",
-        "$3 \\div \\frac{2}{5}$：$15$ 个五分之一分成 $7$ 组（每组 $2$ 个），还剩 $1$ 个，是一组的 $\\frac{1}{2}$。所以 $3 \\div \\frac{2}{5} = 7\\frac{1}{2}$。",
+        "Sometimes the parts do not make a whole number of groups. The leftover parts are a fraction of a group: leftover parts over parts per group. For $3 \\div \\frac{2}{5}$: $3$ wholes are $15$ fifths. Groups of $2$ fifths make $7$ groups with $1$ fifth left, and $1$ out of $2$ is $\\frac{1}{2}$ of a group. So $3 \\div \\frac{2}{5} = 7\\frac{1}{2}$.",
+        "有时小份不能正好分成整数组，剩下的小份是一组的几分之几：剩下的份数比每组的份数。计算 $3 \\div \\frac{2}{5}$：$3$ 个整体是 $15$ 个五分之一，每 $2$ 个一组，分成 $7$ 组还剩 $1$ 个，$1$ 是 $2$ 的 $\\frac{1}{2}$，即半组。所以 $3 \\div \\frac{2}{5} = 7\\frac{1}{2}$。",
       ),
       generate(rng) {
         for (;;) {
@@ -2466,8 +2472,8 @@ export const dividingWholeNumbersByFractionsUsingModelsFractionalResults = topic
       id: "partial-groups-in-word-problems",
       title: t("Word problems", "应用题"),
       explanation: t(
-        "$5$ yards of fabric in $\\frac{2}{3}$-yard pieces: $15$ thirds make $7\\frac{1}{2}$ pieces.",
-        "$5$ 码布，每块 $\\frac{2}{3}$ 码：$15$ 个三分之一可以做 $7\\frac{1}{2}$ 块。",
+        "In a word problem, the leftover after making full groups becomes a fraction of one more group. $5$ yards of fabric in $\\frac{2}{3}$-yard pieces: $5$ yards are $15$ thirds. That makes $7$ pieces of $2$ thirds with $1$ third left, which is half a piece. So there are $5 \\div \\frac{2}{3} = 7\\frac{1}{2}$ pieces.",
+        "在应用题中，分完整组后剩下的部分，是另一组的几分之几。$5$ 码布，每块 $\\frac{2}{3}$ 码：$5$ 码是 $15$ 个三分之一，可以做 $7$ 块（每块 $2$ 个三分之一），还剩 $1$ 个三分之一，是半块。所以一共是 $5 \\div \\frac{2}{3} = 7\\frac{1}{2}$ 块。",
       ),
       generate(rng) {
         for (;;) {
@@ -2505,7 +2511,10 @@ export const dividingWholeNumbersByFractions = topic(
     {
       id: "rewriting-division-as-multiplication",
       title: t("Rewriting as multiplication", "化成乘法"),
-      explanation: t("$8 \\div \\frac{3}{7} = 8 \\times \\frac{7}{3}$.", "$8 \\div \\frac{3}{7} = 8 \\times \\frac{7}{3}$。"),
+      explanation: t(
+        "Dividing by a fraction is the same as multiplying by its reciprocal. Keep the first number, change $\\div$ to $\\times$, and flip the fraction you divide by. So $8 \\div \\frac{3}{7} = 8 \\times \\frac{7}{3}$. Only the divisor is flipped, never the number being divided.",
+        "除以一个分数，等于乘这个分数的倒数。被除数不变，把 $\\div$ 改成 $\\times$，再把除数的分子分母交换。所以 $8 \\div \\frac{3}{7} = 8 \\times \\frac{7}{3}$。只有除数要变成倒数，被除数不变。",
+      ),
       generate(rng) {
         const w = rng.int(2, 15);
         const [a, b] = properFraction(rng, 12, 3);
@@ -2526,8 +2535,8 @@ export const dividingWholeNumbersByFractions = topic(
       id: "whole-number-divided-by-fraction",
       title: t("Finding the quotient", "求商"),
       explanation: t(
-        "$10 \\div \\frac{4}{3} = 10 \\times \\frac{3}{4} = \\frac{30}{4} = 7\\frac{1}{2}$.",
-        "$10 \\div \\frac{4}{3} = 10 \\times \\frac{3}{4} = \\frac{30}{4} = 7\\frac{1}{2}$。",
+        "To divide a whole number by a fraction, multiply by the reciprocal of the fraction and simplify. $10 \\div \\frac{4}{3} = 10 \\times \\frac{3}{4} = \\frac{30}{4} = 7\\frac{1}{2}$. Dividing by a number greater than $1$ makes the answer smaller than $10$, which is a quick check.",
+        "整数除以分数，就乘这个分数的倒数，再化简。$10 \\div \\frac{4}{3} = 10 \\times \\frac{3}{4} = \\frac{30}{4} = 7\\frac{1}{2}$。除以一个大于 $1$ 的数，结果比 $10$ 小，可以用来快速检查。",
       ),
       generate(rng) {
         const w = rng.int(2, 20);
@@ -2563,8 +2572,8 @@ export const dividingFractionsByWholeNumbersUsingModels = topic(
       id: "fraction-shares-from-models",
       title: t("Reading a share from the model", "从模型中读出每份"),
       explanation: t(
-        "$\\frac{2}{3} \\div 4$: the bar is cut into $12$ pieces, and one share is the $2$ darker pieces: $\\frac{2}{12} = \\frac{1}{6}$.",
-        "$\\frac{2}{3} \\div 4$：长条被分成 $12$ 块，一份是颜色最深的 $2$ 块：$\\frac{2}{12} = \\frac{1}{6}$。",
+        "To divide a fraction into equal shares with a model, cut each of its parts into as many pieces as there are shares. For $\\frac{2}{3} \\div 4$: cut each third into $4$ pieces, so the bar has $3 \\times 4 = 12$ pieces. The $\\frac{2}{3}$ is $8$ pieces, and one of $4$ shares is $2$ pieces: $\\frac{2}{12} = \\frac{1}{6}$ of the bar.",
+        "用模型把一个分数平均分成几份时，把它的每一小份都再分成份数那么多块。计算 $\\frac{2}{3} \\div 4$：每个三分之一分成 $4$ 块，整个长条就有 $3 \\times 4 = 12$ 块。$\\frac{2}{3}$ 是 $8$ 块，平均分成 $4$ 份，每份 $2$ 块，是整个长条的 $\\frac{2}{12} = \\frac{1}{6}$。",
       ),
       generate(rng) {
         const [a, d] = properFraction(rng, 6, 3);
@@ -2591,8 +2600,8 @@ export const dividingFractionsByWholeNumbersUsingModels = topic(
       id: "sharing-fractions-evenly",
       title: t("When the numerator divides evenly", "分子能被整除时"),
       explanation: t(
-        "$\\frac{6}{7} \\div 3$: $6$ sevenths in $3$ equal shares is $2$ sevenths each, so the answer is $\\frac{2}{7}$.",
-        "$\\frac{6}{7} \\div 3$：把 $6$ 个七分之一平均分成 $3$ 份，每份 $2$ 个七分之一，所以结果是 $\\frac{2}{7}$。",
+        "When the numerator divides evenly by the whole number, share the parts directly: divide the numerator and keep the denominator. $\\frac{6}{7} \\div 3$ shares $6$ sevenths into $3$ equal groups, and each group gets $2$ sevenths. So $\\frac{6}{7} \\div 3 = \\frac{2}{7}$.",
+        "分子能被整数整除时，可以直接分小份：分子除以整数，分母不变。$\\frac{6}{7} \\div 3$ 是把 $6$ 个七分之一平均分成 $3$ 组，每组 $2$ 个七分之一。所以 $\\frac{6}{7} \\div 3 = \\frac{2}{7}$。",
       ),
       generate(rng) {
         for (;;) {
@@ -2634,8 +2643,8 @@ export const dividingFractionsByWholeNumbers = topic(
       id: "fraction-divided-by-whole-number",
       title: t("Finding the quotient", "求商"),
       explanation: t(
-        "$\\frac{3}{4} \\div 5 = \\frac{3}{4} \\times \\frac{1}{5} = \\frac{3}{20}$.",
-        "$\\frac{3}{4} \\div 5 = \\frac{3}{4} \\times \\frac{1}{5} = \\frac{3}{20}$。",
+        "Dividing by a whole number is the same as multiplying by its reciprocal, $1$ over that number. So the denominator is multiplied by the whole number. $\\frac{3}{4} \\div 5 = \\frac{3}{4} \\times \\frac{1}{5} = \\frac{3}{20}$. The answer is smaller than $\\frac{3}{4}$, as it should be when sharing among $5$.",
+        "除以一个整数，等于乘它的倒数，即乘 $1$ 分之这个整数，所以分母乘这个整数。$\\frac{3}{4} \\div 5 = \\frac{3}{4} \\times \\frac{1}{5} = \\frac{3}{20}$。平均分给 $5$ 份，结果当然比 $\\frac{3}{4}$ 小。",
       ),
       generate(rng) {
         const [a, b] = properFraction(rng, 12, 2);
@@ -2657,8 +2666,8 @@ export const dividingFractionsByWholeNumbers = topic(
       id: "mixed-number-divided-by-whole-number",
       title: t("Dividing a mixed number", "带分数除以整数"),
       explanation: t(
-        "$2\\frac{1}{2} \\div 3 = \\frac{5}{2} \\times \\frac{1}{3} = \\frac{5}{6}$.",
-        "$2\\frac{1}{2} \\div 3 = \\frac{5}{2} \\times \\frac{1}{3} = \\frac{5}{6}$。",
+        "To divide a mixed number by a whole number, write the mixed number as an improper fraction first. Then multiply by the reciprocal of the whole number.\n\n$2\\frac{1}{2} \\div 3 = \\frac{5}{2} \\times \\frac{1}{3} = \\frac{5}{6}$.",
+        "带分数除以整数，先把带分数化成假分数，再乘这个整数的倒数。\n\n$2\\frac{1}{2} \\div 3 = \\frac{5}{2} \\times \\frac{1}{3} = \\frac{5}{6}$。",
       ),
       generate(rng) {
         const w = rng.int(1, 5);
@@ -2695,8 +2704,8 @@ export const dividingFractionsAndWholeNumbersWordProblems = topic(
       id: "sharing-a-fraction-in-word-problems",
       title: t("Sharing a fractional amount", "平均分一个分数量"),
       explanation: t(
-        "$\\frac{2}{3}$ of a cake shared by $4$ people gives each $\\frac{2}{3} \\div 4 = \\frac{2}{12} = \\frac{1}{6}$ of the cake.",
-        "把 $\\frac{2}{3}$ 个蛋糕平均分给 $4$ 个人，每人分得 $\\frac{2}{3} \\div 4 = \\frac{2}{12} = \\frac{1}{6}$ 个。",
+        "When a fractional amount is shared equally, divide the fraction by the number of shares. The answer is the size of one share as a part of the whole. $\\frac{2}{3}$ of a cake shared by $4$ people gives each $\\frac{2}{3} \\div 4 = \\frac{2}{12} = \\frac{1}{6}$ of the cake.",
+        "把一个分数量平均分成几份时，用这个分数除以份数，结果是每份占整体的几分之几。把 $\\frac{2}{3}$ 个蛋糕平均分给 $4$ 个人，每人分得 $\\frac{2}{3} \\div 4 = \\frac{2}{12} = \\frac{1}{6}$ 个。",
       ),
       generate(rng) {
         const [a, d] = properFraction(rng, 10, 2);
@@ -2718,8 +2727,8 @@ export const dividingFractionsAndWholeNumbersWordProblems = topic(
       id: "portions-of-a-whole-amount",
       title: t("Counting portions", "求份数"),
       explanation: t(
-        "$9$ meters of rope in $\\frac{3}{4}$-meter pieces makes $9 \\div \\frac{3}{4} = 9 \\times \\frac{4}{3} = 12$ pieces.",
-        "$9$ 米绳子，每段 $\\frac{3}{4}$ 米，可以剪成 $9 \\div \\frac{3}{4} = 9 \\times \\frac{4}{3} = 12$ 段。",
+        "When a whole amount is cut into pieces of a fractional size, divide the whole amount by the piece size: multiply by its reciprocal. $9$ meters of rope in $\\frac{3}{4}$-meter pieces makes $9 \\div \\frac{3}{4} = 9 \\times \\frac{4}{3} = 12$ pieces. Telling the two kinds of problem apart matters: sharing among people divides by a whole number, while cutting into pieces of a given size divides by a fraction.",
+        "把一个整数量剪成每段是分数长度的若干段时，用总量除以每段的长度，即乘它的倒数。$9$ 米绳子，每段 $\\frac{3}{4}$ 米，可以剪成 $9 \\div \\frac{3}{4} = 9 \\times \\frac{4}{3} = 12$ 段。要分清两类问题：平均分给几个人是除以整数，按给定长度来剪是除以分数。",
       ),
       generate(rng) {
         const w = rng.int(2, 15);
@@ -2754,8 +2763,8 @@ export const dividingFractionsUsingModels = topic(
       id: "fraction-divided-by-unit-fraction-models",
       title: t("Dividing by a smaller unit fraction", "除以较小的单位分数"),
       explanation: t(
-        "$\\frac{2}{3} \\div \\frac{1}{6}$: $\\frac{2}{3} = \\frac{4}{6}$, which holds $4$ sixths, so the quotient is $4$.",
-        "$\\frac{2}{3} \\div \\frac{1}{6}$：$\\frac{2}{3} = \\frac{4}{6}$，里面有 $4$ 个六分之一，所以商是 $4$。",
+        "To divide by a smaller unit fraction, write the first fraction in those smaller parts and count them. For $\\frac{2}{3} \\div \\frac{1}{6}$: each third is $2$ sixths, so $\\frac{2}{3} = \\frac{4}{6}$. It holds $4$ sixths, so the quotient is $4$.",
+        "除以一个更小的分数单位时，把被除数改写成这种小份，再数有几份。计算 $\\frac{2}{3} \\div \\frac{1}{6}$：每个三分之一是 $2$ 个六分之一，所以 $\\frac{2}{3} = \\frac{4}{6}$，里面有 $4$ 个六分之一，商是 $4$。",
       ),
       generate(rng) {
         const b = rng.int(2, 6);
@@ -2784,8 +2793,8 @@ export const dividingFractionsUsingModels = topic(
       id: "fraction-divided-by-fraction-models",
       title: t("Quotients that are fractions", "商是分数"),
       explanation: t(
-        "$\\frac{1}{2} \\div \\frac{2}{3}$: in sixths, $\\frac{3}{6} \\div \\frac{4}{6}$ is $3$ of the $4$ parts of a group, so the quotient is $\\frac{3}{4}$.",
-        "$\\frac{1}{2} \\div \\frac{2}{3}$：化成六分之几，$\\frac{3}{6} \\div \\frac{4}{6}$ 是一组 $4$ 份中的 $3$ 份，所以商是 $\\frac{3}{4}$。",
+        "Write both fractions with a common denominator so they are counted in the same parts. Then the quotient compares the numerators: how many groups of the second fit into the first. For $\\frac{1}{2} \\div \\frac{2}{3}$: in sixths this is $\\frac{3}{6} \\div \\frac{4}{6}$. A group is $4$ sixths and there are only $3$, so the quotient is $\\frac{3}{4}$ of a group.",
+        "先把两个分数通分，用同样大小的小份来数。这时商就是比较分子：被除数里能放下几组除数。计算 $\\frac{1}{2} \\div \\frac{2}{3}$：化成六分之几是 $\\frac{3}{6} \\div \\frac{4}{6}$。一组是 $4$ 个六分之一，而只有 $3$ 个，所以商是一组的 $\\frac{3}{4}$。",
       ),
       generate(rng) {
         for (;;) {

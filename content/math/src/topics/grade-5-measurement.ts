@@ -179,8 +179,14 @@ export const convertingMetricUnitsOfLengthToLargerUnits = topic(
       { big: cm, small: mm, factor: 10 },
       { big: m, small: mm, factor: 1000 },
     ],
-    t("$600$ cm $= 600 \\div 100 = 6$ m.", "$600$ 厘米 $= 600 \\div 100 = 6$ 米。"),
-    t("$1{,}250$ m $= 1.25$ km.", "$1250$ 米 $= 1.25$ 千米。"),
+    t(
+      "A larger unit holds many smaller units, so the number of larger units is smaller: divide by how many small units make one large unit. $100$ cm make $1$ m and $1{,}000$ m make $1$ km.\n\n$600$ cm $= 600 \\div 100 = 6$ m.",
+      "一个大单位包含许多小单位，所以换成大单位后数值变小：用小单位的数量除以进率。$100$ 厘米是 $1$ 米，$1000$ 米是 $1$ 千米。\n\n$600$ 厘米 $= 600 \\div 100 = 6$ 米。",
+    ),
+    t(
+      "When the amount is not a whole number of larger units, the answer is a decimal. Dividing by $10$, $100$ or $1{,}000$ moves the decimal point left one, two or three places.\n\n$1{,}250$ m $= 1{,}250 \\div 1{,}000 = 1.25$ km.",
+      "如果不是整数个大单位，结果就是小数。除以 $10$、$100$ 或 $1000$，小数点就向左移动一位、两位或三位。\n\n$1250$ 米 $= 1250 \\div 1000 = 1.25$ 千米。",
+    ),
   ),
 );
 
@@ -200,8 +206,14 @@ export const convertingCustomaryUnitsOfLengthToLargerUnits = topic(
       { big: yd, small: ft, factor: 3 },
       { big: yd, small: inch, factor: 36 },
     ],
-    t("$96$ in $= 96 \\div 12 = 8$ ft.", "$96$ 英寸 $= 96 \\div 12 = 8$ 英尺。"),
-    t("$10$ ft $= 3$ yd $1$ ft $= 3\\frac{1}{3}$ yd.", "$10$ 英尺 $= 3$ 码 $1$ 英尺 $= 3\\frac{1}{3}$ 码。"),
+    t(
+      "To change to a larger customary unit, divide by the number of smaller units in one larger unit: $12$ in $= 1$ ft, $3$ ft $= 1$ yd.\n\n$96$ in $= 96 \\div 12 = 8$ ft. Multiplying by $12$ would give more feet than inches, which cannot be right.",
+      "换成较大的英制单位时，用较小单位的数量除以进率：$12$ 英寸 $= 1$ 英尺，$3$ 英尺 $= 1$ 码。\n\n$96$ 英寸 $= 96 \\div 12 = 8$ 英尺。如果乘 $12$，英尺数就比英寸数还多，这显然不对。",
+    ),
+    t(
+      "When the division leaves a remainder, the remainder is a part of the larger unit: remainder over the conversion factor.\n\n$10$ ft $\\div 3 = 3$ with $1$ left, so $10$ ft $= 3$ yd $1$ ft $= 3\\frac{1}{3}$ yd.",
+      "除法有余数时，余数是一个大单位的一部分：用余数比进率。\n\n$10$ 英尺 $\\div 3$ 得 $3$ 余 $1$，所以 $10$ 英尺 $= 3$ 码 $1$ 英尺 $= 3\\frac{1}{3}$ 码。",
+    ),
   ),
 );
 
@@ -227,8 +239,14 @@ export const convertingUnitsOfVolumeToLargerUnits = topic(
       { big: pt, small: cup, factor: 2 },
       { big: gal, small: pt, factor: 8 },
     ],
-    t("$20$ qt $= 20 \\div 4 = 5$ gal.", "$20$ 夸脱 $= 20 \\div 4 = 5$ 加仑。"),
-    t("$2{,}750$ mL $= 2.75$ L.", "$2750$ 毫升 $= 2.75$ 升。"),
+    t(
+      "To change a volume to a larger unit, divide by the number of smaller units in one larger unit: $2$ pt $= 1$ qt, $4$ qt $= 1$ gal, $1{,}000$ mL $= 1$ L.\n\n$20$ qt $= 20 \\div 4 = 5$ gal.",
+      "把容积换成较大的单位时，用较小单位的数量除以进率：$2$ 品脱 $= 1$ 夸脱，$4$ 夸脱 $= 1$ 加仑，$1000$ 毫升 $= 1$ 升。\n\n$20$ 夸脱 $= 20 \\div 4 = 5$ 加仑。",
+    ),
+    t(
+      "If the amount is not a whole number of larger units, write the answer as a decimal for metric units, or as a mixed number for customary units.\n\n$2{,}750$ mL $= 2{,}750 \\div 1{,}000 = 2.75$ L.",
+      "如果不是整数个大单位，公制单位的结果写成小数，英制单位的结果写成带分数。\n\n$2750$ 毫升 $= 2750 \\div 1000 = 2.75$ 升。",
+    ),
   ),
 );
 
@@ -251,8 +269,14 @@ export const convertingUnitsOfMassToLargerUnits = topic(
       { big: kg, small: g, factor: 1000 },
       { big: lb, small: oz, factor: 16 },
     ],
-    t("$80$ oz $= 80 \\div 16 = 5$ lb.", "$80$ 盎司 $= 80 \\div 16 = 5$ 磅。"),
-    t("$36$ oz $= 2$ lb $4$ oz $= 2\\frac{1}{4}$ lb.", "$36$ 盎司 $= 2$ 磅 $4$ 盎司 $= 2\\frac{1}{4}$ 磅。"),
+    t(
+      "To change a mass to a larger unit, divide by the conversion factor: $16$ oz $= 1$ lb, $1{,}000$ g $= 1$ kg.\n\n$80$ oz $= 80 \\div 16 = 5$ lb.",
+      "把质量换成较大的单位时，除以进率：$16$ 盎司 $= 1$ 磅，$1000$ 克 $= 1$ 千克。\n\n$80$ 盎司 $= 80 \\div 16 = 5$ 磅。",
+    ),
+    t(
+      "Divide by the conversion factor; a remainder is a fraction of the larger unit.\n\n$36$ oz $\\div 16 = 2$ with $4$ left, so $36$ oz $= 2$ lb $4$ oz $= 2\\frac{4}{16}$ lb $= 2\\frac{1}{4}$ lb.",
+      "除以进率，余数是大单位的几分之几。\n\n$36$ 盎司 $\\div 16$ 得 $2$ 余 $4$，所以 $36$ 盎司 $= 2$ 磅 $4$ 盎司 $= 2\\frac{4}{16}$ 磅 $= 2\\frac{1}{4}$ 磅。",
+    ),
   ),
 );
 
@@ -273,10 +297,13 @@ export const convertingUnitsOfTimeToLargerUnits = topic(
       { big: hour, small: minute, factor: 60 },
       { big: minute, small: second, factor: 60 },
     ],
-    t("$300$ s $= 300 \\div 60 = 5$ min.", "$300$ 秒 $= 300 \\div 60 = 5$ 分钟。"),
     t(
-      "$15$ min $= \\frac{15}{60} = \\frac{1}{4}$ h, so $135$ min $= 2\\frac{1}{4}$ h.",
-      "$15$ 分钟 $= \\frac{15}{60} = \\frac{1}{4}$ 小时，所以 $135$ 分钟 $= 2\\frac{1}{4}$ 小时。",
+      "To change a time to a larger unit, divide by the conversion factor: $60$ s $= 1$ min, $60$ min $= 1$ h, $24$ h $= 1$ day.\n\n$300$ s $= 300 \\div 60 = 5$ min.",
+      "把时间换成较大的单位时，除以进率：$60$ 秒 $= 1$ 分，$60$ 分 $= 1$ 小时，$24$ 小时 $= 1$ 天。\n\n$300$ 秒 $= 300 \\div 60 = 5$ 分钟。",
+    ),
+    t(
+      "A remainder of minutes is a fraction of an hour: the minutes over $60$, simplified. Time units are not based on $10$, so $2$ h $15$ min is not $2.15$ h.\n\n$135$ min $\\div 60 = 2$ with $15$ left, and $\\frac{15}{60} = \\frac{1}{4}$, so $135$ min $= 2\\frac{1}{4}$ h.",
+      "剩下的分钟数是一小时的几分之几：用分钟数比 $60$，再约分。时间单位不是十进制，所以 $2$ 小时 $15$ 分不是 $2.15$ 小时。\n\n$135$ 分钟 $\\div 60$ 得 $2$ 余 $15$，$\\frac{15}{60} = \\frac{1}{4}$，所以 $135$ 分钟 $= 2\\frac{1}{4}$ 小时。",
     ),
   ),
 );
@@ -479,8 +506,8 @@ export const describingTheCoordinatePlane = topic(
       id: "locating-points-in-the-first-quadrant",
       title: t("Locating a point", "找到给定坐标的点"),
       explanation: t(
-        "The point $(6, 2)$ is $6$ right and $2$ up. The point $(2, 6)$ is $2$ right and $6$ up, a different point.",
-        "点 $(6, 2)$ 在向右 $6$、向上 $2$ 的位置。点 $(2, 6)$ 在向右 $2$、向上 $6$ 的位置，是另一个点。",
+        "An ordered pair $(x, y)$ gives directions from the origin $(0, 0)$: the first number says how far to go right, the second how far to go up. The order matters.\n\nThe point $(6, 2)$ is $6$ right and $2$ up. The point $(2, 6)$ is $2$ right and $6$ up, a different point.",
+        "有序数对 $(x, y)$ 说明从原点 $(0, 0)$ 出发怎么走：第一个数表示向右走多远，第二个数表示向上走多远。顺序不能颠倒。\n\n点 $(6, 2)$ 在向右 $6$、向上 $2$ 的位置。点 $(2, 6)$ 在向右 $2$、向上 $6$ 的位置，是另一个点。",
       ),
       generate(rng) {
         const [a, b] = gridPoint(rng, 1);
@@ -547,8 +574,8 @@ export const solvingRealWorldProblemsUsingCoordinates = topic(
       id: "moving-from-a-point",
       title: t("Moving from a point", "从一个点移动"),
       explanation: t(
-        "From $(2, 6)$, going $5$ right and $3$ down leads to $(2 + 5, 6 - 3) = (7, 3)$.",
-        "从 $(2, 6)$ 向右走 $5$、向下走 $3$，到达 $(2 + 5, 6 - 3) = (7, 3)$。",
+        "Moving right or left changes only the $x$-coordinate; moving up or down changes only the $y$-coordinate. Add for right and up, subtract for left and down. On a map, east is right and north is up.\n\nFrom $(2, 6)$, going $5$ right and $3$ down leads to $(2 + 5, 6 - 3) = (7, 3)$.",
+        "向左右移动只改变 $x$ 坐标，向上下移动只改变 $y$ 坐标。向右、向上用加法，向左、向下用减法。在地图上，东是右，北是上。\n\n从 $(2, 6)$ 向右走 $5$、向下走 $3$，到达 $(2 + 5, 6 - 3) = (7, 3)$。",
       ),
       generate(rng) {
         const c = rng.pick(gridContexts);
@@ -587,8 +614,8 @@ export const solvingRealWorldProblemsUsingCoordinates = topic(
       id: "distances-along-grid-lines",
       title: t("Distances along a grid line", "沿网格线的距离"),
       explanation: t(
-        "$(3, 8)$ and $(3, 1)$ have the same $x$-coordinate, so they are on a vertical line, $8 - 1 = 7$ units apart.",
-        "$(3, 8)$ 和 $(3, 1)$ 的 $x$ 坐标相同，所以在同一条竖直线上，相距 $8 - 1 = 7$ 个单位。",
+        "Two points with the same $x$-coordinate are on a vertical line, and their distance is the difference of the $y$-coordinates. With the same $y$-coordinate, subtract the $x$-coordinates. Subtract the smaller from the larger.\n\n$(3, 8)$ and $(3, 1)$ have the same $x$-coordinate, so they are $8 - 1 = 7$ units apart.",
+        "$x$ 坐标相同的两个点在同一条竖直线上，距离是 $y$ 坐标之差；$y$ 坐标相同时，用 $x$ 坐标相减。都是用大数减小数。\n\n$(3, 8)$ 和 $(3, 1)$ 的 $x$ 坐标相同，所以相距 $8 - 1 = 7$ 个单位。",
       ),
       generate(rng) {
         const c = rng.pick(gridContexts);
@@ -713,8 +740,8 @@ export const coordinatePlanesAsMaps = topic(
       id: "walking-distances-on-a-map",
       title: t("Walking along the grid", "沿网格行走的路程"),
       explanation: t(
-        "From $(1, 6)$ to $(5, 2)$ along the grid is $4$ blocks across and $4$ blocks down: $8$ blocks.",
-        "沿网格从 $(1, 6)$ 走到 $(5, 2)$，横向 $4$ 个街区，向下 $4$ 个街区：共 $8$ 个街区。",
+        "When you can walk only along grid lines, the shortest walk is the distance across plus the distance up or down. Find each by subtracting coordinates, then add.\n\nFrom $(1, 6)$ to $(5, 2)$: across $5 - 1 = 4$ blocks and down $6 - 2 = 4$ blocks, so $4 + 4 = 8$ blocks.",
+        "只能沿网格线走时，最短路程是横向距离加上纵向距离。分别用坐标相减求出两段，再相加。\n\n从 $(1, 6)$ 走到 $(5, 2)$：横向 $5 - 1 = 4$ 个街区，向下 $6 - 2 = 4$ 个街区，共 $4 + 4 = 8$ 个街区。",
       ),
       generate(rng) {
         const spots = mapOf(rng, 3);
@@ -777,8 +804,8 @@ export const connectingPatterns = topic(
       id: "relating-corresponding-terms",
       title: t("How many times as large", "是几倍"),
       explanation: t(
-        "A: $0, 4, 8, 12$. B: $0, 12, 24, 36$. Each term of B is $3$ times the matching term of A, since $12 = 3 \\times 4$.",
-        "A：$0, 4, 8, 12$。B：$0, 12, 24, 36$。B 的每一项都是 A 中对应项的 $3$ 倍，因为 $12 = 3 \\times 4$。",
+        "To relate two patterns that both start at $0$, compare matching terms: divide a term of one pattern by the matching term of the other. If the answer is the same every time, that is the relationship.\n\nA: $0, 4, 8, 12$. B: $0, 12, 24, 36$. Each term of B is $3$ times the matching term of A, since $12 = 3 \\times 4$, $24 = 3 \\times 8$ and $36 = 3 \\times 12$.",
+        "比较两个都从 $0$ 开始的数列时，看对应的项：用一个数列的项除以另一个数列中对应的项。如果每次结果都一样，这就是它们的关系。\n\nA：$0, 4, 8, 12$。B：$0, 12, 24, 36$。B 的每一项都是 A 中对应项的 $3$ 倍，因为 $12 = 3 \\times 4$，$24 = 3 \\times 8$，$36 = 3 \\times 12$。",
       ),
       generate(rng) {
         const { a, b, k } = patternPair(rng);
@@ -802,8 +829,8 @@ export const connectingPatterns = topic(
       id: "finding-a-matching-term",
       title: t("Finding the matching term", "求对应的项"),
       explanation: t(
-        "A adds $2$ and B adds $10$, so each term of B is $5$ times A's. When A is $16$, B is $5 \\times 16 = 80$.",
-        "A 每次加 $2$，B 每次加 $10$，所以 B 的每一项是 A 中对应项的 $5$ 倍。当 A 是 $16$ 时，B 是 $5 \\times 16 = 80$。",
+        "When both patterns start at $0$, compare the amounts they add each step. The ratio of these amounts is the factor between every pair of matching terms. Use it to find a term without listing them all.\n\nA adds $2$ and B adds $10$, so each term of B is $10 \\div 2 = 5$ times A's. When A is $16$, B is $5 \\times 16 = 80$.",
+        "两个数列都从 $0$ 开始时，比较它们每次加的数。这两个数的倍数关系，就是每对对应项之间的倍数关系。用它可以直接求出某一项，不必一项一项列出来。\n\nA 每次加 $2$，B 每次加 $10$，所以 B 的每一项是 A 中对应项的 $10 \\div 2 = 5$ 倍。当 A 是 $16$ 时，B 是 $5 \\times 16 = 80$。",
       ),
       generate(rng) {
         const { a, b, k } = patternPair(rng);
@@ -841,8 +868,8 @@ export const comparingPatterns = topic(
       id: "forming-ordered-pairs-from-patterns",
       title: t("Forming ordered pairs", "组成有序数对"),
       explanation: t(
-        "A: $0, 3, 6, 9$ and B: $0, 4, 8, 12$. The fourth pair is $(9, 12)$.",
-        "A：$0, 3, 6, 9$，B：$0, 4, 8, 12$。第四个数对是 $(9, 12)$。",
+        "List both patterns side by side and pair the terms in the same position: the term from A comes first, the term from B second. Count positions from the first term, which is $0$ in both.\n\nA: $0, 3, 6, 9$ and B: $0, 4, 8, 12$. The fourth pair is $(9, 12)$.",
+        "把两个数列并排列出，位置相同的项组成数对：A 的项写在前面，B 的项写在后面。从第一项（两者都是 $0$）开始数位置。\n\nA：$0, 3, 6, 9$，B：$0, 4, 8, 12$。第四个数对是 $(9, 12)$。",
       ),
       generate(rng) {
         const a = rng.int(1, 6);
@@ -921,8 +948,8 @@ export const graphingPatterns = topic(
       id: "continuing-a-graphed-pattern",
       title: t("The next point", "下一个点"),
       explanation: t(
-        "Points $(1, 0)$, $(3, 3)$, $(5, 6)$ go $2$ right and $3$ up each time, so the next point is $(7, 9)$.",
-        "点 $(1, 0)$、$(3, 3)$、$(5, 6)$ 每次向右 $2$、向上 $3$，所以下一个点是 $(7, 9)$。",
+        "Find how the $x$-coordinate and the $y$-coordinate change from one point to the next. Apply the same changes to the last point to get the next one.\n\nPoints $(1, 0)$, $(3, 3)$, $(5, 6)$ go $2$ right and $3$ up each time, so the next point is $(5 + 2, 6 + 3) = (7, 9)$.",
+        "找出相邻两点的 $x$ 坐标和 $y$ 坐标各变化了多少，再对最后一个点做同样的变化，就得到下一个点。\n\n点 $(1, 0)$、$(3, 3)$、$(5, 6)$ 每次向右 $2$、向上 $3$，所以下一个点是 $(5 + 2, 6 + 3) = (7, 9)$。",
       ),
       generate(rng) {
         let a: number;
@@ -1107,8 +1134,8 @@ export const understandingVolumeUsingUnitCubes = topic(
       id: "layers-of-unit-cubes",
       title: t("Layers of cubes", "一层一层地数"),
       explanation: t(
-        "A box holds $60$ unit cubes in $5$ equal layers, so each layer has $60 \\div 5 = 12$ cubes.",
-        "一个长方体用 $5$ 层同样的单位立方体共 $60$ 个填满，所以每层有 $60 \\div 5 = 12$ 个。",
+        "A box packed with unit cubes is a stack of equal layers. The number of cubes is the number in one layer times the number of layers, and the cubes in one layer are length times width.\n\nA box holds $60$ unit cubes in $5$ equal layers, so each layer has $60 \\div 5 = 12$ cubes.",
+        "用单位立方体填满的长方体，可以看作几层同样的立方体叠起来。立方体总数等于每层的个数乘层数，每层的个数等于长乘宽。\n\n一个长方体用 $5$ 层同样的单位立方体共 $60$ 个填满，所以每层有 $60 \\div 5 = 12$ 个。",
       ),
       generate(rng) {
         const [l, w, h] = [rng.int(2, 9), rng.int(2, 6), rng.int(2, 9)];
@@ -1211,8 +1238,8 @@ export const unitsOfAreaAndVolume = topic(
       id: "telling-what-a-measurement-measures",
       title: t("Length, area or volume", "长度、面积还是体积"),
       explanation: t(
-        "$36 \\text{ ft}^3$ is a volume, $36 \\text{ ft}^2$ is an area and $36 \\text{ ft}$ is a length.",
-        "$36 \\text{ ft}^3$ 是体积，$36 \\text{ ft}^2$ 是面积，$36 \\text{ ft}$ 是长度。",
+        "The unit tells what is measured. A plain unit measures length, a unit squared ($^2$) measures area, and a unit cubed ($^3$) measures volume.\n\n$36 \\text{ ft}^3$ is a volume, $36 \\text{ ft}^2$ is an area and $36 \\text{ ft}$ is a length.",
+        "看单位就知道量的是什么。普通的长度单位量长度，带平方（$^2$）的单位量面积，带立方（$^3$）的单位量体积。\n\n$36 \\text{ ft}^3$ 是体积，$36 \\text{ ft}^2$ 是面积，$36 \\text{ ft}$ 是长度。",
       ),
       generate(rng) {
         const u = rng.pick(lengthUnits);
@@ -1262,8 +1289,8 @@ export const volumesOfRightRectangularPrisms = topic(
       id: "volume-from-edge-lengths",
       title: t("Length × width × height", "长 × 宽 × 高"),
       explanation: t(
-        "A box $6$ in by $2$ in by $5$ in has volume $6 \\times 2 \\times 5 = 60 \\text{ in}^3$.",
-        "长 $6$ in、宽 $2$ in、高 $5$ in 的长方体，体积是 $6 \\times 2 \\times 5 = 60 \\text{ in}^3$。",
+        "The volume of a box is length times width times height, because length times width counts the cubes in one layer and the height counts the layers. The answer is in cubic units.\n\nA box $6$ in by $2$ in by $5$ in has volume $6 \\times 2 \\times 5 = 60 \\text{ in}^3$. Adding the edges instead gives $13$, which is not a volume.",
+        "长方体的体积等于长乘宽乘高：长乘宽是一层的立方体个数，高是层数。结果用立方单位表示。\n\n长 $6$ in、宽 $2$ in、高 $5$ in 的长方体，体积是 $6 \\times 2 \\times 5 = 60 \\text{ in}^3$。如果把三条棱相加得 $13$，那不是体积。",
       ),
       generate(rng) {
         const u = rng.pick(lengthUnits);
@@ -1351,8 +1378,8 @@ export const volumesOfRightRectangularPrismsWordProblems = topic(
       id: "volumes-of-containers",
       title: t("Volumes of containers", "容器的体积"),
       explanation: t(
-        "A sandbox $6$ ft long, $4$ ft wide and $2$ ft deep holds $6 \\times 4 \\times 2 = 48 \\text{ ft}^3$ of sand.",
-        "长 $6$ 英尺、宽 $4$ 英尺、深 $2$ 英尺的沙坑能装 $6 \\times 4 \\times 2 = 48 \\text{ ft}^3$ 沙子。",
+        "How much a box-shaped container holds is its volume: multiply length, width and depth (the height). Give the answer in cubic units.\n\nA sandbox $6$ ft long, $4$ ft wide and $2$ ft deep holds $6 \\times 4 \\times 2 = 48 \\text{ ft}^3$ of sand.",
+        "长方体容器能装多少，就是它的容积：用长、宽、深（即高）相乘，结果用立方单位表示。\n\n长 $6$ 英尺、宽 $4$ 英尺、深 $2$ 英尺的沙坑能装 $6 \\times 4 \\times 2 = 48 \\text{ ft}^3$ 沙子。",
       ),
       generate(rng) {
         const c = rng.pick(containers);
@@ -1378,8 +1405,8 @@ export const volumesOfRightRectangularPrismsWordProblems = topic(
       id: "volumes-of-combined-boxes",
       title: t("Two boxes together", "两个长方体组合"),
       explanation: t(
-        "A solid made of a $5 \\times 3 \\times 2$ box and a $2 \\times 3 \\times 4$ box has volume $30 + 24 = 54$ cubic units.",
-        "由 $5 \\times 3 \\times 2$ 和 $2 \\times 3 \\times 4$ 两个长方体组成的物体，体积是 $30 + 24 = 54$ 立方单位。",
+        "When a solid is made of boxes that do not overlap, find each box's volume and add them.\n\nA solid made of a $5 \\times 3 \\times 2$ box and a $2 \\times 3 \\times 4$ box has volume $30 + 24 = 54$ cubic units.",
+        "一个物体由几个不重叠的长方体组成时，分别求出每个长方体的体积，再相加。\n\n由 $5 \\times 3 \\times 2$ 和 $2 \\times 3 \\times 4$ 两个长方体组成的物体，体积是 $30 + 24 = 54$ 立方单位。",
       ),
       generate(rng) {
         const u = rng.pick(lengthUnits);
@@ -1453,7 +1480,10 @@ export const polygons = topic(
     {
       id: "naming-polygons-from-figures",
       title: t("Naming a drawn polygon", "说出图中多边形的名称"),
-      explanation: t("A figure with $6$ straight sides is a hexagon.", "有 $6$ 条边的图形是六边形。"),
+      explanation: t(
+        "A polygon is named by its number of straight sides: $3$ triangle, $4$ quadrilateral, $5$ pentagon, $6$ hexagon, $8$ octagon. Count the sides carefully, marking where you started.\n\nA figure with $6$ straight sides is a hexagon.",
+        "多边形按边数命名：$3$ 条边是三角形，$4$ 条是四边形，$5$ 条是五边形，$6$ 条是六边形，$8$ 条是八边形。数边的时候要记住从哪里开始数。\n\n有 $6$ 条边的图形是六边形。",
+      ),
       generate(rng) {
         const n = rng.int(3, 10);
         const others = [n - 1, n + 1, n + 2, n - 2].filter((k) => k >= 3 && k <= 10);
@@ -1768,8 +1798,8 @@ export const rectanglesRhombusesAndSquares = topic(
       id: "perimeters-of-special-quadrilaterals",
       title: t("Perimeter from one or two sides", "由一两条边求周长"),
       explanation: t(
-        "A rhombus with one side $7$ cm has perimeter $4 \\times 7 = 28$ cm.",
-        "一条边长 $7$ 厘米的菱形，周长是 $4 \\times 7 = 28$ 厘米。",
+        "Perimeter is the total length around a shape. A rhombus and a square have four equal sides, so the perimeter is $4$ times one side. A rectangle has two pairs of equal sides, so it is $2 \\times$ (length $+$ width).\n\nA rhombus with one side $7$ cm has perimeter $4 \\times 7 = 28$ cm.",
+        "周长是围成图形一周的总长度。菱形和正方形的四条边都相等，周长是边长的 $4$ 倍。长方形有两组相等的边，周长是 $2 \\times$（长 $+$ 宽）。\n\n一条边长 $7$ 厘米的菱形，周长是 $4 \\times 7 = 28$ 厘米。",
       ),
       generate(rng) {
         const kind = rng.pick<QuadKind>(["square", "rectangle", "rhombus"]);
@@ -1809,8 +1839,8 @@ export const rectanglesRhombusesAndSquares = topic(
       id: "sides-from-perimeters",
       title: t("A side from the perimeter", "由周长求边长"),
       explanation: t(
-        "A square with perimeter $36$ in has sides of $36 \\div 4 = 9$ in.",
-        "周长 $36$ 英寸的正方形，边长是 $36 \\div 4 = 9$ 英寸。",
+        "Work backward from the perimeter. For a square, divide it by $4$. For a rectangle, half the perimeter is length plus width, so subtract the known side from half the perimeter.\n\nA square with perimeter $36$ in has sides of $36 \\div 4 = 9$ in.",
+        "根据周长倒推边长。正方形用周长除以 $4$。长方形周长的一半是长与宽的和，所以用周长的一半减去已知的边。\n\n周长 $36$ 英寸的正方形，边长是 $36 \\div 4 = 9$ 英寸。",
       ),
       generate(rng) {
         const kind = rng.pick<QuadKind>(["square", "rectangle", "rhombus"]);
@@ -1867,8 +1897,8 @@ export const perimetersOfShapes = topic(
       id: "adding-decimal-side-lengths",
       title: t("Adding the sides", "把各边相加"),
       explanation: t(
-        "A quadrilateral with sides $3.2$, $4$, $2.75$ and $5.1$ cm has perimeter $15.05$ cm.",
-        "边长为 $3.2$、$4$、$2.75$、$5.1$ 厘米的四边形，周长是 $15.05$ 厘米。",
+        "Add all the side lengths. With decimals, line up the decimal points, writing zeros so every number has the same number of places.\n\nA quadrilateral with sides $3.2$, $4$, $2.75$ and $5.1$ cm: $3.20 + 4.00 + 2.75 + 5.10 = 15.05$ cm.",
+        "把所有边长相加。小数相加时要把小数点对齐，添 $0$ 使小数位数相同。\n\n边长为 $3.2$、$4$、$2.75$、$5.1$ 厘米的四边形：$3.20 + 4.00 + 2.75 + 5.10 = 15.05$ 厘米。",
       ),
       generate(rng) {
         const n = rng.int(3, 5);
@@ -1998,8 +2028,8 @@ export const classifyingQuadrilaterals = topic(
       id: "naming-from-a-description",
       title: t("Naming from a description", "根据描述命名"),
       explanation: t(
-        "A quadrilateral with sides $6, 4, 6, 4$ and four right angles is a rectangle.",
-        "边长依次为 $6, 4, 6, 4$ 且有四个直角的四边形是长方形。",
+        "Use the sides and angles to find the most specific name. Four right angles make a rectangle; four equal sides make a rhombus; both together make a square. Two pairs of parallel sides without either property make a parallelogram.\n\nA quadrilateral with sides $6, 4, 6, 4$ and four right angles is a rectangle. It is not a square, since its sides are not all equal.",
+        "根据边和角找出最准确的名称。四个角都是直角的是长方形；四条边都相等的是菱形；两者都满足的是正方形。两组对边分别平行、但不满足上面条件的是平行四边形。\n\n边长依次为 $6, 4, 6, 4$ 且有四个直角的四边形是长方形。它不是正方形，因为四条边不都相等。",
       ),
       generate(rng) {
         const kind = rng.pick(quadKinds);

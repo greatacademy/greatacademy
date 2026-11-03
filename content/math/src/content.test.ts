@@ -6,6 +6,11 @@ import { mathTextIssue } from "./sampling.ts";
 
 const rawMath = /\^|_[A-Za-z0-9{]|sqrt\(/;
 
+// Courses whose explanations have been written out in words; the others join as they are.
+const explainedCourses = ["5th-grade-math"];
+const minProseWords = 15;
+const proseWords = (text: string) => text.replace(/\$\$[\s\S]*?\$\$|\$[^$]*\$/g, " ").match(/[A-Za-z]{2,}/g)?.length ?? 0;
+
 describe("math content", () => {
   it("compiles without warnings", () => {
     try {
@@ -31,5 +36,18 @@ describe("math content", () => {
       for (const kp of topic.knowledgePoints) check(`${topic.id}#${kp.id} explanation`, kp.explanation);
     }
     expect(issues).toEqual([]);
+  });
+
+  it("explains the knowledge points of explained courses in words, not only in symbols", () => {
+    const subject = compileMath();
+    const thin: string[] = [];
+    for (const id of explainedCourses) {
+      for (const topicId of subject.courses.get(id)?.topics ?? []) {
+        for (const kp of subject.topics.get(topicId)?.knowledgePoints ?? []) {
+          if (proseWords(kp.explanation.en) < minProseWords) thin.push(`${topicId}#${kp.id}`);
+        }
+      }
+    }
+    expect(thin).toEqual([]);
   });
 });

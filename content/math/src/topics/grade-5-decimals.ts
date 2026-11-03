@@ -133,8 +133,8 @@ export const thePlaceValueSystemWithDecimals = topic(
       id: "value-of-a-digit-in-a-decimal",
       title: t("The value of a digit", "数字表示的值"),
       explanation: t(
-        "In $8.156$, the digit $5$ is in the hundredths place, so it is worth $0.05$.",
-        "在 $8.156$ 中，数字 $5$ 在百分位上，表示 $0.05$。",
+        "Each place to the right of the decimal point is worth one tenth of the place to its left: tenths, then hundredths, then thousandths. A digit's value is the digit times its place. In $8.156$ the $5$ is in the hundredths place, so it is worth $5 \\times 0.01 = 0.05$, not $5$ or $0.5$.",
+        "小数点右边的每一位，都是它左边一位的十分之一：依次是十分位、百分位、千分位。一个数字表示的值等于这个数字乘它所在数位的计数单位。在 $8.156$ 中，$5$ 在百分位上，表示 $5 \\times 0.01 = 0.05$，而不是 $5$ 或 $0.5$。",
       ),
       generate(rng) {
         const k = rng.int(1, 3);
@@ -155,8 +155,8 @@ export const thePlaceValueSystemWithDecimals = topic(
       id: "naming-decimal-places",
       title: t("Naming the place of a digit", "说出数字所在的数位"),
       explanation: t(
-        "In $40.629$, the $9$ is in the thousandths place and the $6$ is in the tenths place.",
-        "在 $40.629$ 中，$9$ 在千分位上，$6$ 在十分位上。",
+        "Count places from the decimal point. The first place to the right is the tenths, the second is the hundredths and the third is the thousandths. To the left are the ones, tens and hundreds. In $40.629$ the $6$ is in the tenths place and the $9$ is in the thousandths place.",
+        "从小数点开始数位。小数点右边第一位是十分位，第二位是百分位，第三位是千分位；左边依次是个位、十位、百位。在 $40.629$ 中，$6$ 在十分位上，$9$ 在千分位上。",
       ),
       generate(rng) {
         const k = rng.int(-1, 3);
@@ -221,8 +221,8 @@ export const comparingPlaceValuesWithDecimals = topic(
       id: "units-in-a-larger-place",
       title: t("Smaller units in a larger place", "大单位里有多少小单位"),
       explanation: t(
-        "$1$ tenth is $10$ hundredths, so $7$ tenths is $70$ hundredths, or $700$ thousandths.",
-        "$1$ 个十分之一是 $10$ 个百分之一，所以 $7$ 个十分之一是 $70$ 个百分之一，也就是 $700$ 个千分之一。",
+        "Each place is worth $10$ of the place to its right. So $1$ tenth is $10$ hundredths, and $1$ hundredth is $10$ thousandths. To change tenths into hundredths, multiply by $10$; into thousandths, multiply by $100$. $7$ tenths is $70$ hundredths, or $700$ thousandths.",
+        "每一位的计数单位都是它右边一位的 $10$ 倍。所以 $1$ 个十分之一是 $10$ 个百分之一，$1$ 个百分之一是 $10$ 个千分之一。把十分之一换成百分之一，个数乘 $10$；换成千分之一，个数乘 $100$。$7$ 个十分之一是 $70$ 个百分之一，也就是 $700$ 个千分之一。",
       ),
       generate(rng) {
         const i = rng.int(0, 2);
@@ -266,8 +266,8 @@ export const readingAndWritingDecimalsWrittenInWords = topic(
       id: "writing-decimals-from-words",
       title: t("From words to digits", "根据读法写小数"),
       explanation: t(
-        '"Twelve and six hundredths" is $12.06$: the $6$ goes in the hundredths place.',
-        '"十二点零六"写作 $12.06$：$6$ 在百分位上。',
+        'In English, "and" marks the decimal point. The whole number comes before it, and the last word tells the place of the last digit: tenths means one decimal place, hundredths two, thousandths three. "Twelve and six hundredths" needs two decimal places with the $6$ in the second, so it is $12.06$, not $12.6$.',
+        '读小数时，小数点左边的整数部分按整数读，"点"表示小数点，小数部分按顺序逐个读出数字，遇到 $0$ 也要读出来。写小数时就反过来：把读出的数字依次写在小数点右边。"十二点零六"小数部分是 $0$ 和 $6$，写作 $12.06$，而不是 $12.6$。',
       ),
       generate(rng) {
         const p = rng.int(1, 3);
@@ -289,7 +289,10 @@ export const readingAndWritingDecimalsWrittenInWords = topic(
     {
       id: "reading-decimals-in-words",
       title: t("From digits to words", "读出小数"),
-      explanation: t('$5.072$ is read "five and seventy-two thousandths".', '$5.072$ 读作"五点零七二"。'),
+      explanation: t(
+        'To read a decimal in words, read the whole number, say "and" for the decimal point, read the digits after the point as one number, and finish with the place of the last digit. $5.072$ has three decimal places, so it is "five and seventy-two thousandths".',
+        '读小数时，先按整数读出小数点左边的部分，"点"读小数点，小数点右边的数字按顺序一个一个地读出来。$5.072$ 读作"五点零七二"，其中的 $0$ 不能省略。',
+      ),
       generate(rng) {
         const p = rng.int(2, 3);
         const whole = rng.int(0, 99);
@@ -351,7 +354,10 @@ export const convertingDecimalsFromStandardToExpandedForm = topic(
     {
       id: "expanded-form-with-decimals",
       title: t("Expanded form with decimals", "用小数写展开式"),
-      explanation: t("$26.04 = 20 + 6 + 0.04$.", "$26.04 = 20 + 6 + 0.04$。"),
+      explanation: t(
+        "Expanded form writes a number as the sum of the values of its digits. Write each nonzero digit as its value, using its place, and skip the zeros. In $26.04$: the $2$ is worth $20$, the $6$ is worth $6$, the $0$ adds nothing and the $4$ is worth $0.04$. So $26.04 = 20 + 6 + 0.04$.",
+        "展开式是把一个数写成各个数字所表示的值的和。按每个非零数字所在的数位写出它的值，$0$ 可以省去。在 $26.04$ 中，$2$ 表示 $20$，$6$ 表示 $6$，十分位上的 $0$ 不用写，$4$ 表示 $0.04$。所以 $26.04 = 20 + 6 + 0.04$。",
+      ),
       generate(rng) {
         const p = rng.int(2, 3);
         const n = nonZeroEnd(rng, rng.int(p + 1, p + 2));
@@ -375,8 +381,8 @@ export const convertingDecimalsFromStandardToExpandedForm = topic(
       id: "expanded-form-with-fractions",
       title: t("Expanded form with fractions", "用分数写展开式"),
       explanation: t(
-        "$3.58 = 3 \\times 1 + 5 \\times \\frac{1}{10} + 8 \\times \\frac{1}{100}$.",
-        "$3.58 = 3 \\times 1 + 5 \\times \\frac{1}{10} + 8 \\times \\frac{1}{100}$。",
+        "Expanded form can also show each place as a fraction: tenths are $\\frac{1}{10}$, hundredths are $\\frac{1}{100}$. Write each digit times the value of its place and add.\n\n$3.58 = 3 \\times 1 + 5 \\times \\frac{1}{10} + 8 \\times \\frac{1}{100}$. The $5$ goes with $\\frac{1}{10}$ because it is in the first place after the point.",
+        "展开式也可以把每个数位写成分数：十分位是 $\\frac{1}{10}$，百分位是 $\\frac{1}{100}$。把每个数字乘它所在数位的值，再相加。\n\n$3.58 = 3 \\times 1 + 5 \\times \\frac{1}{10} + 8 \\times \\frac{1}{100}$。$5$ 在小数点后第一位，所以和 $\\frac{1}{10}$ 相乘。",
       ),
       generate(rng) {
         const p = rng.int(2, 3);
@@ -413,7 +419,10 @@ export const convertingDecimalsFromExpandedToStandardForm = topic(
     {
       id: "standard-form-from-expanded-decimals",
       title: t("Every place filled", "每个数位都有数"),
-      explanation: t("$7 + 0.2 + 0.06 + 0.001 = 7.261$.", "$7 + 0.2 + 0.06 + 0.001 = 7.261$。"),
+      explanation: t(
+        "To write expanded form as one decimal, put each digit in the place its value names: ones, tenths, hundredths, thousandths. $7 + 0.2 + 0.06 + 0.001$ has $7$ ones, $2$ tenths, $6$ hundredths and $1$ thousandth, so it is $7.261$.",
+        "把展开式写成一个小数时，按每一项的值把数字放到相应的数位上：个位、十分位、百分位、千分位。$7 + 0.2 + 0.06 + 0.001$ 有 $7$ 个一、$2$ 个十分之一、$6$ 个百分之一和 $1$ 个千分之一，所以是 $7.261$。",
+      ),
       generate(rng) {
         for (;;) {
           const p = rng.int(2, 3);
@@ -432,8 +441,8 @@ export const convertingDecimalsFromExpandedToStandardForm = topic(
       id: "standard-form-with-missing-places",
       title: t("Missing places and mixed order", "缺少数位或顺序打乱"),
       explanation: t(
-        "$0.009 + 6 + 0.4 = 6.409$: there are no hundredths, so that place is $0$.",
-        "$0.009 + 6 + 0.4 = 6.409$：百分位上没有数，所以写 $0$。",
+        "The parts may come in any order, and a place may be missing. Sort them by place, and write $0$ in any place that has no part, so the other digits stay in their places.\n\n$0.009 + 6 + 0.4 = 6.409$: there are no hundredths, so that place is $0$. Leaving it out would give $6.49$, which is a different number.",
+        "展开式中各项的顺序可能打乱，也可能缺少某个数位。按数位排好，缺少的数位写 $0$ 占位，其他数字才能留在正确的位置上。\n\n$0.009 + 6 + 0.4 = 6.409$：百分位上没有数，所以写 $0$。如果漏掉这个 $0$，就成了 $6.49$，是另一个数。",
       ),
       generate(rng) {
         for (;;) {
@@ -471,7 +480,10 @@ export const equivalentDecimals = topic(
     {
       id: "recognizing-equivalent-decimals",
       title: t("Recognizing equal decimals", "判断相等的小数"),
-      explanation: t("$2.5 = 2.50$, but $2.5 \\ne 2.05$.", "$2.5 = 2.50$，但 $2.5 \\ne 2.05$。"),
+      explanation: t(
+        "Writing zeros at the end of a decimal does not change its value, because no new tenths or hundredths are added. A zero placed between the point and a digit does change it, because it moves that digit to a smaller place.\n\n$2.5 = 2.50$, but $2.5 \\ne 2.05$: in $2.05$ the $5$ is in the hundredths place.",
+        "在小数的末尾添上 $0$，小数的大小不变，因为没有增加任何十分之一或百分之一。但在小数点和数字之间加 $0$，大小就变了，因为那个数字被移到了更小的数位上。\n\n$2.5 = 2.50$，但 $2.5 \\ne 2.05$：在 $2.05$ 中，$5$ 在百分位上。",
+      ),
       generate(rng) {
         const p = rng.int(1, 2);
         const n = nonZeroEnd(rng, p + rng.int(0, 2));
@@ -489,7 +501,10 @@ export const equivalentDecimals = topic(
     {
       id: "rewriting-in-smaller-units",
       title: t("Rewriting in thousandths", "改写成千分之几"),
-      explanation: t("$0.7 = 0.700 = \\frac{700}{1000}$.", "$0.7 = 0.700 = \\frac{700}{1000}$。"),
+      explanation: t(
+        "Adding zeros at the end lets you write a decimal in smaller units. A decimal with three places counts thousandths, so the digits after the point form the numerator over $1000$.\n\n$0.7 = 0.700 = \\frac{700}{1000}$, since $7$ tenths are $700$ thousandths.",
+        "在末尾添 $0$，可以把小数改写成更小的计数单位。三位小数表示千分之几，所以小数点后面的数字就是分母为 $1000$ 的分数的分子。\n\n$0.7 = 0.700 = \\frac{700}{1000}$，因为 $7$ 个十分之一是 $700$ 个千分之一。",
+      ),
       generate(rng) {
         const p = rng.int(1, 2);
         const n = nonZeroEnd(rng, rng.int(1, p));
@@ -526,8 +541,8 @@ export const comparingDecimals = topic(
       id: "comparing-two-decimals",
       title: t("Comparing two decimals", "比较两个小数"),
       explanation: t(
-        "$3.09 < 3.1$, because $3.09$ has $0$ tenths and $3.10$ has $1$.",
-        "$3.09 < 3.1$，因为 $3.09$ 的十分位是 $0$，$3.10$ 的十分位是 $1$。",
+        "To compare decimals, line up the decimal points and compare digits place by place from the left. The first place where the digits differ decides. Do not compare by the number of digits: a longer decimal is not always larger.\n\n$3.09 < 3.1$, because $3.09$ has $0$ tenths and $3.10$ has $1$.",
+        "比较小数时，把小数点对齐，从左往右一位一位地比。第一个数字不同的数位决定大小。不能看小数的位数多少：位数多的小数不一定大。\n\n$3.09 < 3.1$，因为 $3.09$ 的十分位是 $0$，$3.10$ 的十分位是 $1$。",
       ),
       generate(rng) {
         const w = rng.int(0, 20);
@@ -557,8 +572,8 @@ export const comparingDecimals = topic(
       id: "greatest-and-least-decimal",
       title: t("The greatest or least decimal", "最大或最小的小数"),
       explanation: t(
-        "Of $0.6$, $0.58$, $0.605$ and $0.06$, the greatest is $0.605$.",
-        "在 $0.6$、$0.58$、$0.605$、$0.06$ 中，最大的是 $0.605$。",
+        "To find the greatest or least of several decimals, add zeros so they all have the same number of places, then compare them place by place.\n\nOf $0.6$, $0.58$, $0.605$ and $0.06$, write $0.600$, $0.580$, $0.605$ and $0.060$. The tenths are $6, 5, 6, 0$; between the two with $6$ tenths, $0.605$ has more thousandths. So the greatest is $0.605$.",
+        "要找几个小数中最大或最小的，先在末尾添 $0$，使它们的小数位数相同，再逐位比较。\n\n$0.6$、$0.58$、$0.605$、$0.06$ 写成 $0.600$、$0.580$、$0.605$、$0.060$。十分位分别是 $6, 5, 6, 0$；两个十分位是 $6$ 的数中，$0.605$ 的千分位更大。所以最大的是 $0.605$。",
       ),
       generate(rng) {
         const w = rng.int(0, 9);
@@ -644,8 +659,8 @@ export const roundingDownDecimals = topic(
       id: "rounding-down-to-whole-numbers-and-tenths",
       title: t("To a whole number or a tenth", "到个位或十分位"),
       explanation: t(
-        "$8.342 \\approx 8.3$ to the nearest tenth, since the hundredths digit $4$ is less than $5$.",
-        "$8.342$ 四舍五入到十分位约是 $8.3$，因为百分位上的 $4$ 小于 $5$。",
+        "To round, look at the digit just to the right of the place you round to. If it is less than $5$, keep the rounding digit and drop everything after it.\n\n$8.342 \\approx 8.3$ to the nearest tenth, since the hundredths digit $4$ is less than $5$. Rounding to the nearest whole number looks at the tenths digit instead.",
+        "四舍五入时，看要保留的数位右边一位上的数字。如果小于 $5$，保留的数位不变，后面的数字全部舍去。\n\n$8.342$ 四舍五入到十分位约是 $8.3$，因为百分位上的 $4$ 小于 $5$。如果是保留到整数，就要看十分位上的数字。",
       ),
       generate(rng) {
         const k = rng.int(0, 1);
@@ -655,7 +670,10 @@ export const roundingDownDecimals = topic(
     {
       id: "rounding-down-to-hundredths",
       title: t("To a hundredth", "到百分位"),
-      explanation: t("$0.563 \\approx 0.56$ to the nearest hundredth.", "$0.563$ 四舍五入到百分位约是 $0.56$。"),
+      explanation: t(
+        "To round to the nearest hundredth, keep two decimal places and look at the thousandths digit. If it is $4$ or less, the hundredths digit stays the same.\n\n$0.563 \\approx 0.56$ to the nearest hundredth, since the thousandths digit is $3$.",
+        "保留到百分位，就是保留两位小数，看千分位上的数字。如果是 $4$ 或更小，百分位上的数字不变。\n\n$0.563$ 四舍五入到百分位约是 $0.56$，因为千分位上是 $3$。",
+      ),
       generate: (rng) => roundingProblem(decimalToRound(rng, 2, false), 3, 2),
     },
   ],
@@ -675,8 +693,8 @@ export const roundingUpDecimals = topic(
       id: "rounding-up-to-a-place",
       title: t("Rounding up", "进一"),
       explanation: t(
-        "$2.375 \\approx 2.38$ to the nearest hundredth, since the thousandths digit is $5$.",
-        "$2.375$ 四舍五入到百分位约是 $2.38$，因为千分位上是 $5$。",
+        "If the digit to the right of the rounding place is $5$ or more, add $1$ to the rounding digit and drop the digits after it.\n\n$2.375 \\approx 2.38$ to the nearest hundredth, since the thousandths digit is $5$.",
+        "如果要保留的数位右边一位上的数字是 $5$ 或更大，就在保留的数位上加 $1$，再把后面的数字舍去。\n\n$2.375$ 四舍五入到百分位约是 $2.38$，因为千分位上是 $5$。",
       ),
       generate(rng) {
         const k = rng.int(0, 2);
@@ -687,8 +705,8 @@ export const roundingUpDecimals = topic(
       id: "rounding-up-through-nines",
       title: t("Rounding up a 9", "保留位是 9 时进一"),
       explanation: t(
-        "$5.97 \\approx 6.0$ to the nearest tenth: $9$ tenths plus $1$ tenth make a whole.",
-        "$5.97$ 四舍五入到十分位约是 $6.0$：$9$ 个十分之一加 $1$ 个十分之一满一。",
+        "When the rounding digit is $9$ and you round up, it becomes $10$: write $0$ in that place and carry $1$ to the place on its left. Keep the $0$ to show the place you rounded to.\n\n$5.97 \\approx 6.0$ to the nearest tenth: $9$ tenths plus $1$ tenth make a whole.",
+        "如果要保留的数位上是 $9$，又需要进一，它就变成 $10$：这一位写 $0$，向左边一位进 $1$。末尾的 $0$ 要保留，表示精确到了哪一位。\n\n$5.97$ 四舍五入到十分位约是 $6.0$：$9$ 个十分之一加 $1$ 个十分之一满一。",
       ),
       generate(rng) {
         const k = rng.int(0, 2);
@@ -721,8 +739,8 @@ export const significantFigures = topic(
       id: "rounding-to-one-significant-figure",
       title: t("One significant figure", "保留 1 位有效数字"),
       explanation: t(
-        "$7{,}462 \\approx 7{,}000$ to $1$ significant figure, and $865 \\approx 900$.",
-        "$7{,}462$ 保留 $1$ 位有效数字约是 $7{,}000$，$865$ 约是 $900$。",
+        "The first significant figure is the first nonzero digit from the left. To round to $1$ significant figure, keep that digit, round it using the next digit, and fill the other places before the decimal point with zeros.\n\n$7{,}462 \\approx 7{,}000$ to $1$ significant figure, and $865 \\approx 900$ because the next digit $6$ is $5$ or more.",
+        "从左边第一个不是 $0$ 的数字起，就是第一位有效数字。保留 $1$ 位有效数字，就保留这个数字，根据下一位四舍五入，其余的整数数位用 $0$ 补足。\n\n$7{,}462$ 保留 $1$ 位有效数字约是 $7{,}000$；$865$ 约是 $900$，因为下一位 $6$ 不小于 $5$。",
       ),
       generate(rng) {
         const n = randomWithDigits(rng, rng.int(3, 5));
@@ -748,8 +766,8 @@ export const significantFigures = topic(
       id: "rounding-to-several-significant-figures",
       title: t("Two or three significant figures", "保留 2 或 3 位有效数字"),
       explanation: t(
-        "$36{,}281 \\approx 36{,}000$ to $2$ significant figures and $36{,}300$ to $3$.",
-        "$36{,}281$ 保留 $2$ 位有效数字约是 $36{,}000$，保留 $3$ 位约是 $36{,}300$。",
+        "To round to several significant figures, count that many digits from the first nonzero digit, round using the next digit, and replace the rest with zeros so the number keeps its size.\n\n$36{,}281 \\approx 36{,}000$ to $2$ significant figures and $36{,}300$ to $3$.",
+        "保留几位有效数字，就从第一个非零数字起数出几位，根据下一位四舍五入，后面的数位用 $0$ 补足，使数的大小不变。\n\n$36{,}281$ 保留 $2$ 位有效数字约是 $36{,}000$，保留 $3$ 位约是 $36{,}300$。",
       ),
       generate(rng) {
         const s = rng.int(2, 3);
@@ -795,8 +813,8 @@ export const significantFiguresWithDecimals = topic(
       id: "significant-figures-of-small-decimals",
       title: t("Decimals less than 1", "小于 1 的小数"),
       explanation: t(
-        "$0.00586 \\approx 0.0059$ to $2$ significant figures: the zeros in front are not counted.",
-        "$0.00586$ 保留 $2$ 位有效数字约是 $0.0059$：前面的 0 不算有效数字。",
+        "In a decimal less than $1$, the zeros in front only show the place; they are not significant. Start counting at the first nonzero digit.\n\n$0.00586 \\approx 0.0059$ to $2$ significant figures: the significant figures are $5$ and $8$, and the next digit $6$ rounds the $8$ up to $9$.",
+        "小于 $1$ 的小数，前面的 $0$ 只用来占位，不是有效数字。从第一个非零数字开始数。\n\n$0.00586$ 保留 $2$ 位有效数字约是 $0.0059$：有效数字是 $5$ 和 $8$，下一位是 $6$，所以 $8$ 进一变成 $9$。",
       ),
       generate(rng) {
         const s = rng.int(1, 3);
@@ -818,7 +836,10 @@ export const significantFiguresWithDecimals = topic(
     {
       id: "significant-figures-of-larger-decimals",
       title: t("Decimals greater than 1", "大于 1 的小数"),
-      explanation: t("$14.276 \\approx 14.3$ to $3$ significant figures.", "$14.276$ 保留 $3$ 位有效数字约是 $14.3$。"),
+      explanation: t(
+        "In a decimal greater than $1$, the digits before the point count too. Count from the first digit on the left, then round.\n\n$14.276 \\approx 14.3$ to $3$ significant figures: the first three are $1$, $4$, $2$, and the next digit $7$ rounds the $2$ up to $3$.",
+        "大于 $1$ 的小数，小数点前面的数字也是有效数字。从左边第一个数字起数，再四舍五入。\n\n$14.276$ 保留 $3$ 位有效数字约是 $14.3$：前三位是 $1$、$4$、$2$，下一位是 $7$，所以 $2$ 进一变成 $3$。",
+      ),
       generate(rng) {
         const s = rng.int(2, 4);
         const p = rng.int(2, 3);
@@ -864,7 +885,10 @@ export const estimatingDecimalAdditionAndSubtraction = topic(
     {
       id: "estimating-decimal-sums",
       title: t("Estimating sums", "估算和"),
-      explanation: t("$7.62 + 15.3 \\approx 8 + 15 = 23$.", "$7.62 + 15.3 \\approx 8 + 15 = 23$。"),
+      explanation: t(
+        "To estimate a sum, round each number to the nearest whole number first, then add the rounded numbers. The estimate tells you about how big the exact answer is.\n\n$7.62 + 15.3 \\approx 8 + 15 = 23$.",
+        "估算和时，先把每个数四舍五入到整数，再把近似数相加。估算结果可以告诉你准确答案大约是多少。\n\n$7.62 + 15.3 \\approx 8 + 15 = 23$。",
+      ),
       generate(rng) {
         const pa = rng.int(1, 2);
         const pb = rng.int(1, 2);
@@ -890,7 +914,10 @@ export const estimatingDecimalAdditionAndSubtraction = topic(
     {
       id: "estimating-decimal-differences",
       title: t("Estimating differences", "估算差"),
-      explanation: t("$52.18 - 9.7 \\approx 52 - 10 = 42$.", "$52.18 - 9.7 \\approx 52 - 10 = 42$。"),
+      explanation: t(
+        "To estimate a difference, round each number to the nearest whole number, then subtract. Round each number on its own, by looking at its tenths digit.\n\n$52.18 - 9.7 \\approx 52 - 10 = 42$.",
+        "估算差时，把每个数四舍五入到整数，再相减。每个数都根据自己的十分位单独取近似值。\n\n$52.18 - 9.7 \\approx 52 - 10 = 42$。",
+      ),
       generate(rng) {
         const pa = rng.int(1, 2);
         const pb = rng.int(1, 2);
@@ -960,8 +987,8 @@ export const addingDecimals = topic(
       id: "adding-tenths",
       title: t("Adding tenths", "一位小数相加"),
       explanation: t(
-        "$4.7 + 2.6 = 7.3$: $7$ tenths and $6$ tenths make $13$ tenths, which is $1$ one and $3$ tenths.",
-        "$4.7 + 2.6 = 7.3$：$7$ 个十分之一加 $6$ 个十分之一是 $13$ 个十分之一，即 $1$ 个一和 $3$ 个十分之一。",
+        "Add decimals like whole numbers, lining up the decimal points so tenths add to tenths and ones to ones. When the tenths add to $10$ or more, regroup $10$ tenths as $1$ one.\n\n$4.7 + 2.6 = 7.3$: $7$ tenths and $6$ tenths make $13$ tenths, which is $1$ one and $3$ tenths.",
+        "小数加法和整数加法一样，只是要把小数点对齐，使十分位和十分位相加、个位和个位相加。十分位相加满 $10$，就向个位进 $1$。\n\n$4.7 + 2.6 = 7.3$：$7$ 个十分之一加 $6$ 个十分之一是 $13$ 个十分之一，即 $1$ 个一和 $3$ 个十分之一。",
       ),
       generate(rng) {
         const a = nonZeroEnd(rng, rng.int(2, 3));
@@ -977,7 +1004,10 @@ export const addingDecimals = topic(
     {
       id: "adding-hundredths",
       title: t("Adding hundredths", "两位小数相加"),
-      explanation: t("$12.58 + 6.67 = 19.25$.", "$12.58 + 6.67 = 19.25$。"),
+      explanation: t(
+        "Line up the decimal points and add from the right, starting with the hundredths. Carry when a place adds to $10$ or more, then put the decimal point in the answer under the others.\n\n$12.58 + 6.67$: hundredths $8 + 7 = 15$, write $5$ carry $1$; tenths $5 + 6 + 1 = 12$, write $2$ carry $1$; ones $2 + 6 + 1 = 9$; tens $1$. So the sum is $19.25$.",
+        "把小数点对齐，从最右边的百分位开始加。哪一位满 $10$ 就向前一位进 $1$，得数的小数点要和上面的小数点对齐。\n\n$12.58 + 6.67$：百分位 $8 + 7 = 15$，写 $5$ 进 $1$；十分位 $5 + 6 + 1 = 12$，写 $2$ 进 $1$；个位 $2 + 6 + 1 = 9$；十位 $1$。所以和是 $19.25$。",
+      ),
       generate(rng) {
         const a = nonZeroEnd(rng, rng.int(3, 4));
         const b = nonZeroEnd(rng, rng.int(3, 4));
@@ -1005,7 +1035,10 @@ export const additionWithUnequalNumbersOfDecimals = topic(
     {
       id: "adding-decimals-with-different-places",
       title: t("Different numbers of decimal places", "小数位数不同"),
-      explanation: t("$6.5 + 1.238 = 6.500 + 1.238 = 7.738$.", "$6.5 + 1.238 = 6.500 + 1.238 = 7.738$。"),
+      explanation: t(
+        "When the decimals have different numbers of places, write zeros at the end so they match. This keeps the digits lined up by place. Lining up the last digits instead of the decimal points is a common mistake.\n\n$6.5 + 1.238 = 6.500 + 1.238 = 7.738$.",
+        "小数位数不同时，在末尾添 $0$ 使位数相同，这样数字才能按数位对齐。把末尾的数字对齐而不是把小数点对齐，是常见的错误。\n\n$6.5 + 1.238 = 6.500 + 1.238 = 7.738$。",
+      ),
       generate(rng) {
         const pa = rng.int(1, 2);
         const pb = rng.int(pa + 1, 3);
@@ -1023,7 +1056,10 @@ export const additionWithUnequalNumbersOfDecimals = topic(
     {
       id: "adding-whole-numbers-and-decimals",
       title: t("A whole number and a decimal", "整数加小数"),
-      explanation: t("$14 + 2.09 = 14.00 + 2.09 = 16.09$.", "$14 + 2.09 = 14.00 + 2.09 = 16.09$。"),
+      explanation: t(
+        "A whole number has its decimal point at the end, after the ones digit. Write the point and zeros, then line up the points and add.\n\n$14 + 2.09 = 14.00 + 2.09 = 16.09$. The $14$ lines up with the ones and tens, not with the hundredths.",
+        "整数的小数点在个位的后面。先写上小数点并补 $0$，再把小数点对齐相加。\n\n$14 + 2.09 = 14.00 + 2.09 = 16.09$。$14$ 要和个位、十位对齐，而不是和百分位对齐。",
+      ),
       generate(rng) {
         const w = rng.int(2, 60);
         const p = rng.int(1, 3);
@@ -1052,7 +1088,10 @@ export const subtractingDecimals = topic(
     {
       id: "subtracting-tenths",
       title: t("Subtracting tenths", "一位小数相减"),
-      explanation: t("$8.2 - 3.6 = 4.6$: regroup $1$ one as $10$ tenths.", "$8.2 - 3.6 = 4.6$：从个位借 $1$ 当作 $10$ 个十分之一。"),
+      explanation: t(
+        "Subtract decimals like whole numbers, with the decimal points lined up. When a digit is too small to subtract from, regroup $1$ from the place on its left.\n\n$8.2 - 3.6 = 4.6$: $2$ tenths is less than $6$ tenths, so regroup $1$ one as $10$ tenths. Then $12 - 6 = 6$ tenths and $7 - 3 = 4$ ones.",
+        "小数减法和整数减法一样，要把小数点对齐。哪一位不够减，就从左边一位退 $1$。\n\n$8.2 - 3.6 = 4.6$：$2$ 个十分之一不够减 $6$ 个十分之一，从个位退 $1$ 当作 $10$ 个十分之一。于是十分位 $12 - 6 = 6$，个位 $7 - 3 = 4$。",
+      ),
       generate(rng) {
         const a = nonZeroEnd(rng, rng.int(2, 3));
         const b = nonZeroEnd(rng, 2);
@@ -1068,7 +1107,10 @@ export const subtractingDecimals = topic(
     {
       id: "subtracting-hundredths",
       title: t("Subtracting hundredths", "两位小数相减"),
-      explanation: t("$15.03 - 6.48 = 8.55$.", "$15.03 - 6.48 = 8.55$。"),
+      explanation: t(
+        "Line up the decimal points and subtract from the hundredths. If a place has a $0$ to regroup from, regroup from the next place to its left first.\n\n$15.03 - 6.48$: hundredths $3 < 8$, and the tenths digit is $0$, so regroup $1$ one as $10$ tenths, then $1$ tenth as $10$ hundredths. Then $13 - 8 = 5$, $9 - 4 = 5$, $14 - 6 = 8$. So the difference is $8.55$.",
+        "把小数点对齐，从百分位开始减。如果需要退位的那一位是 $0$，就先从更左边的一位退位。\n\n$15.03 - 6.48$：百分位 $3 < 8$，十分位是 $0$，所以先从个位退 $1$ 变成 $10$ 个十分之一，再从十分位退 $1$ 变成 $10$ 个百分之一。于是 $13 - 8 = 5$，$9 - 4 = 5$，$14 - 6 = 8$。差是 $8.55$。",
+      ),
       generate(rng) {
         const a = nonZeroEnd(rng, rng.int(3, 4));
         const b = nonZeroEnd(rng, 3);
@@ -1097,7 +1139,10 @@ export const subtractionWithUnequalNumbersOfDecimals = topic(
     {
       id: "subtracting-decimals-with-different-places",
       title: t("Different numbers of decimal places", "小数位数不同"),
-      explanation: t("$6.4 - 2.83 = 6.40 - 2.83 = 3.57$.", "$6.4 - 2.83 = 6.40 - 2.83 = 3.57$。"),
+      explanation: t(
+        "If the first number has fewer decimal places, write zeros at its end so there is something to subtract from in every place. Then line up the points and subtract.\n\n$6.4 - 2.83 = 6.40 - 2.83 = 3.57$. Without the zero it is easy to bring the $3$ down instead of subtracting it.",
+        "如果被减数的小数位数较少，就在它的末尾添 $0$，使每一位都有数可减。然后把小数点对齐相减。\n\n$6.4 - 2.83 = 6.40 - 2.83 = 3.57$。不添 $0$，就容易把 $3$ 直接抄下来，而不是减去它。",
+      ),
       generate(rng) {
         for (;;) {
           const pa = rng.int(1, 2);
@@ -1118,7 +1163,10 @@ export const subtractionWithUnequalNumbersOfDecimals = topic(
     {
       id: "subtracting-decimals-from-whole-numbers",
       title: t("A whole number minus a decimal", "整数减小数"),
-      explanation: t("$12 - 4.37 = 12.00 - 4.37 = 7.63$.", "$12 - 4.37 = 12.00 - 4.37 = 7.63$。"),
+      explanation: t(
+        "To subtract a decimal from a whole number, write a decimal point after the whole number and add zeros, then subtract with regrouping.\n\n$12 - 4.37 = 12.00 - 4.37 = 7.63$.",
+        "整数减小数时，在整数后面点上小数点并添 $0$，再按退位减法计算。\n\n$12 - 4.37 = 12.00 - 4.37 = 7.63$。",
+      ),
       generate(rng) {
         const p = rng.int(1, 2);
         const b = nonZeroEnd(rng, p + 1);
@@ -1162,7 +1210,10 @@ export const estimatingDecimalAdditionWithBenchmarks = topic(
     {
       id: "adding-decimals-near-benchmarks",
       title: t("Benchmarks 0, 0.5 and 1", "基准数 0、0.5、1"),
-      explanation: t("$0.07 + 0.52 \\approx 0 + 0.5 = 0.5$.", "$0.07 + 0.52 \\approx 0 + 0.5 = 0.5$。"),
+      explanation: t(
+        "For decimals between $0$ and $1$, replace each one by the closest of $0$, $0.5$ and $1$, then add. This shows quickly about how large the sum is.\n\n$0.07 + 0.52 \\approx 0 + 0.5 = 0.5$, since $0.07$ is close to $0$ and $0.52$ is close to $0.5$.",
+        "对于 $0$ 到 $1$ 之间的小数，把每个数看作 $0$、$0.5$、$1$ 中离它最近的那个，再相加，很快就能知道和大约是多少。\n\n$0.07 + 0.52 \\approx 0 + 0.5 = 0.5$，因为 $0.07$ 接近 $0$，$0.52$ 接近 $0.5$。",
+      ),
       generate(rng) {
         const k1 = rng.int(0, 2);
         const k2 = rng.int(0, 2);
@@ -1186,7 +1237,10 @@ export const estimatingDecimalAdditionWithBenchmarks = topic(
     {
       id: "adding-decimals-to-the-nearest-half",
       title: t("Rounding to the nearest half", '近似到最接近的"几点五"'),
-      explanation: t("$6.53 + 2.96 \\approx 6.5 + 3 = 9.5$.", "$6.53 + 2.96 \\approx 6.5 + 3 = 9.5$。"),
+      explanation: t(
+        "Rounding to the nearest half means choosing the closest whole number or whole number and a half. Round each number that way, then add.\n\n$6.53 + 2.96 \\approx 6.5 + 3 = 9.5$.",
+        "精确到半个，就是取离它最近的整数或整数加 $0.5$。把每个数这样取近似值，再相加。\n\n$6.53 + 2.96 \\approx 6.5 + 3 = 9.5$。",
+      ),
       generate(rng) {
         const k1 = rng.int(0, 2);
         const k2 = rng.int(0, 2);
@@ -1226,7 +1280,10 @@ export const estimatingDecimalSubtractionWithBenchmarks = topic(
     {
       id: "subtracting-decimals-near-benchmarks",
       title: t("Benchmarks 0, 0.5 and 1", "基准数 0、0.5、1"),
-      explanation: t("$0.96 - 0.08 \\approx 1 - 0 = 1$.", "$0.96 - 0.08 \\approx 1 - 0 = 1$。"),
+      explanation: t(
+        "Replace each decimal between $0$ and $1$ by the closest of $0$, $0.5$ and $1$, then subtract.\n\n$0.96 - 0.08 \\approx 1 - 0 = 1$, since $0.96$ is close to $1$ and $0.08$ is close to $0$.",
+        "把 $0$ 到 $1$ 之间的每个小数看作 $0$、$0.5$、$1$ 中离它最近的那个，再相减。\n\n$0.96 - 0.08 \\approx 1 - 0 = 1$，因为 $0.96$ 接近 $1$，$0.08$ 接近 $0$。",
+      ),
       generate(rng) {
         let k1 = rng.int(0, 2);
         let k2 = rng.int(0, 2);
@@ -1252,7 +1309,10 @@ export const estimatingDecimalSubtractionWithBenchmarks = topic(
     {
       id: "subtracting-decimals-to-the-nearest-half",
       title: t("Rounding to the nearest half", '近似到最接近的"几点五"'),
-      explanation: t("$12.47 - 3.98 \\approx 12.5 - 4 = 8.5$.", "$12.47 - 3.98 \\approx 12.5 - 4 = 8.5$。"),
+      explanation: t(
+        "Round each number to the nearest whole number or half, then subtract the rounded numbers.\n\n$12.47 - 3.98 \\approx 12.5 - 4 = 8.5$, since $12.47$ is closest to $12.5$ and $3.98$ is closest to $4$.",
+        "把每个数取到最近的整数或整数加 $0.5$，再把近似数相减。\n\n$12.47 - 3.98 \\approx 12.5 - 4 = 8.5$，因为 $12.47$ 最接近 $12.5$，$3.98$ 最接近 $4$。",
+      ),
       generate(rng) {
         const k1 = rng.int(0, 2);
         const k2 = rng.int(0, 2);
@@ -1355,8 +1415,8 @@ export const multiplyingDecimalsByPowersOfTenUsingPlaceValue = topic(
       id: "multiplying-decimals-by-ten",
       title: t("Multiplying by 10", "乘 10"),
       explanation: t(
-        "$0.58 \\times 10 = 5.8$: $5$ tenths become $5$ ones and $8$ hundredths become $8$ tenths.",
-        "$0.58 \\times 10 = 5.8$：$5$ 个十分之一变成 $5$ 个一，$8$ 个百分之一变成 $8$ 个十分之一。",
+        "Multiplying by $10$ makes every digit worth $10$ times as much, so each digit moves one place to the left.\n\n$0.58 \\times 10 = 5.8$: $5$ tenths become $5$ ones and $8$ hundredths become $8$ tenths.",
+        "乘 $10$，每个数字表示的值都扩大到原来的 $10$ 倍，所以每个数字都向左移动一位。\n\n$0.58 \\times 10 = 5.8$：$5$ 个十分之一变成 $5$ 个一，$8$ 个百分之一变成 $8$ 个十分之一。",
       ),
       generate(rng) {
         const p = rng.int(1, 3);
@@ -1367,8 +1427,8 @@ export const multiplyingDecimalsByPowersOfTenUsingPlaceValue = topic(
       id: "multiplying-decimals-by-hundred-and-thousand",
       title: t("Multiplying by 100 and 1000", "乘 100 和 1000"),
       explanation: t(
-        "$2.6 \\times 1000 = 2600$: each digit moves three places to the left.",
-        "$2.6 \\times 1000 = 2600$：每个数字都向左移动三位。",
+        "Multiplying by $100$ moves each digit two places to the left, and multiplying by $1000$ moves it three places, one for each zero. Fill empty places before the decimal point with zeros.\n\n$2.6 \\times 1000 = 2600$: each digit moves three places to the left, so the $2$ becomes $2$ thousands and the $6$ becomes $6$ hundreds.",
+        "乘 $100$，每个数字向左移动两位；乘 $1000$，向左移动三位，有几个 $0$ 就移动几位。小数点前空出的数位用 $0$ 补足。\n\n$2.6 \\times 1000 = 2600$：每个数字都向左移动三位，$2$ 变成 $2$ 个千，$6$ 变成 $6$ 个百。",
       ),
       generate(rng) {
         const p = rng.int(1, 3);
@@ -1391,7 +1451,10 @@ export const multiplyingDecimalsByPowersOfTenUsingDecimalPointPlacement = topic(
     {
       id: "moving-the-decimal-point-to-multiply",
       title: t("Moving the decimal point", "移动小数点"),
-      explanation: t("$0.0365 \\times 1000 = 36.5$.", "$0.0365 \\times 1000 = 36.5$。"),
+      explanation: t(
+        "A quick way to multiply by $10$, $100$ or $1000$: move the decimal point to the right as many places as there are zeros. Drop zeros at the front, and add zeros at the end if you run out of digits.\n\n$0.0365 \\times 1000 = 36.5$: the point moves three places to the right.",
+        "乘 $10$、$100$ 或 $1000$ 的简便方法：$1$ 后面有几个 $0$，就把小数点向右移动几位。前面多余的 $0$ 去掉，位数不够时在末尾添 $0$。\n\n$0.0365 \\times 1000 = 36.5$：小数点向右移动三位。",
+      ),
       generate(rng) {
         const p = rng.int(1, 4);
         return shiftProblem(nonZeroEnd(rng, rng.int(Math.max(1, p - 1), p + 2)), p, powerOfTen(rng), true, true);
@@ -1401,8 +1464,8 @@ export const multiplyingDecimalsByPowersOfTenUsingDecimalPointPlacement = topic(
       id: "finding-the-power-of-ten-in-a-product",
       title: t("Finding the power of ten", "求乘的是 10、100 还是 1000"),
       explanation: t(
-        "$0.072 \\times \\square = 72$: the point moved three places, so the missing number is $1000$.",
-        "$0.072 \\times \\square = 72$：小数点移动了三位，所以方框中是 $1000$。",
+        "To find which power of ten was used, count how many places the decimal point moved to the right. One place means $10$, two places $100$, three places $1000$.\n\n$0.072 \\times \\square = 72$: the point moved three places, so the missing number is $1000$.",
+        "要找出乘的是 $10$、$100$ 还是 $1000$，就数一数小数点向右移动了几位：一位是 $10$，两位是 $100$，三位是 $1000$。\n\n$0.072 \\times \\square = 72$：小数点移动了三位，所以方框中是 $1000$。",
       ),
       generate(rng) {
         const p = rng.int(1, 3);
@@ -1425,7 +1488,10 @@ export const estimatingDecimalMultiplication = topic(
     {
       id: "estimating-a-decimal-times-a-whole-number",
       title: t("A decimal times a whole number", "小数乘整数"),
-      explanation: t("$8.7 \\times 6 \\approx 9 \\times 6 = 54$.", "$8.7 \\times 6 \\approx 9 \\times 6 = 54$。"),
+      explanation: t(
+        "To estimate a product, round the decimal to the nearest whole number and multiply. The estimate also helps you check where the decimal point goes in an exact answer.\n\n$8.7 \\times 6 \\approx 9 \\times 6 = 54$.",
+        "估算积时，把小数四舍五入到整数再相乘。估算结果也可以帮你检查准确答案的小数点位置是否正确。\n\n$8.7 \\times 6 \\approx 9 \\times 6 = 54$。",
+      ),
       generate(rng) {
         const a = decimalNotHalf(rng, 1, 12, 1);
         const w = rng.int(2, 12);
@@ -1448,7 +1514,10 @@ export const estimatingDecimalMultiplication = topic(
     {
       id: "estimating-a-decimal-times-a-decimal",
       title: t("A decimal times a decimal", "小数乘小数"),
-      explanation: t("$5.3 \\times 2.8 \\approx 5 \\times 3 = 15$.", "$5.3 \\times 2.8 \\approx 5 \\times 3 = 15$。"),
+      explanation: t(
+        "When both factors are decimals, round each to the nearest whole number, then multiply.\n\n$5.3 \\times 2.8 \\approx 5 \\times 3 = 15$. The exact product, $14.84$, is close to $15$.",
+        "两个因数都是小数时，把每个数都四舍五入到整数，再相乘。\n\n$5.3 \\times 2.8 \\approx 5 \\times 3 = 15$。准确的积是 $14.84$，和 $15$ 很接近。",
+      ),
       generate(rng) {
         const pa = rng.int(1, 2);
         const a = decimalNotHalf(rng, 1, 12, pa);
@@ -1512,8 +1581,8 @@ export const multiplyingADecimalByAOneDigitWholeNumber = topic(
       id: "tenths-times-one-digit",
       title: t("Tenths times a one-digit number", "一位小数乘一位数"),
       explanation: t(
-        "$3.6 \\times 7$: $36 \\times 7 = 252$, so the product is $25.2$.",
-        "$3.6 \\times 7$：$36 \\times 7 = 252$，所以积是 $25.2$。",
+        "Multiply as if there were no decimal point, then put the point back. The product has as many decimal places as the decimal factor.\n\n$3.6 \\times 7$: $36 \\times 7 = 252$. $3.6$ has one decimal place, so the product is $25.2$. A quick check: $4 \\times 7 = 28$ is close.",
+        "先不看小数点，按整数相乘，再点上小数点。因数中有几位小数，积就有几位小数。\n\n$3.6 \\times 7$：$36 \\times 7 = 252$。$3.6$ 有一位小数，所以积是 $25.2$。检查一下：$4 \\times 7 = 28$，很接近。",
       ),
       generate: (rng) => productProblem(nonZeroEnd(rng, rng.int(2, 3)), 1, rng.int(2, 9), 0),
     },
@@ -1521,8 +1590,8 @@ export const multiplyingADecimalByAOneDigitWholeNumber = topic(
       id: "hundredths-times-one-digit",
       title: t("Hundredths and thousandths times a one-digit number", "两三位小数乘一位数"),
       explanation: t(
-        "$0.48 \\times 6$: $48 \\times 6 = 288$, so the product is $2.88$.",
-        "$0.48 \\times 6$：$48 \\times 6 = 288$，所以积是 $2.88$。",
+        "Multiply the digits as whole numbers, then count the decimal places in the decimal factor and give the product the same number.\n\n$0.48 \\times 6$: $48 \\times 6 = 288$. $0.48$ has two decimal places, so the product is $2.88$.",
+        "把数字当作整数相乘，再数一数小数因数有几位小数，积也点出几位小数。\n\n$0.48 \\times 6$：$48 \\times 6 = 288$。$0.48$ 有两位小数，所以积是 $2.88$。",
       ),
       generate(rng) {
         const p = rng.int(2, 3);
@@ -1546,8 +1615,8 @@ export const multiplyingADecimalByAMultiDigitWholeNumber = topic(
       id: "decimal-times-two-digit-number",
       title: t("Times a two-digit number", "乘两位数"),
       explanation: t(
-        "$1.25 \\times 16$: $125 \\times 16 = 2000$, so the product is $20.00 = 20$.",
-        "$1.25 \\times 16$：$125 \\times 16 = 2000$，所以积是 $20.00 = 20$。",
+        "Multiply as whole numbers, then place the decimal point by counting the decimal places in the decimal factor. Count the places before dropping any zeros at the end.\n\n$1.25 \\times 16$: $125 \\times 16 = 2000$. Two decimal places give $20.00$, which is $20$.",
+        "先按整数相乘，再根据小数因数的位数点小数点。要先点小数点，再去掉末尾的 $0$。\n\n$1.25 \\times 16$：$125 \\times 16 = 2000$。点出两位小数是 $20.00$，即 $20$。",
       ),
       generate(rng) {
         const p = rng.int(1, 2);
@@ -1558,8 +1627,8 @@ export const multiplyingADecimalByAMultiDigitWholeNumber = topic(
       id: "decimal-times-three-digit-number",
       title: t("Times a three-digit number", "乘三位数"),
       explanation: t(
-        "$0.36 \\times 125$: $36 \\times 125 = 4500$, so the product is $45.00 = 45$.",
-        "$0.36 \\times 125$：$36 \\times 125 = 4500$，所以积是 $45.00 = 45$。",
+        "The method is the same for a three-digit whole number: multiply as whole numbers, then give the product as many decimal places as the decimal factor.\n\n$0.36 \\times 125$: $36 \\times 125 = 4500$. Two decimal places give $45.00 = 45$. Dropping the zeros first and then counting two places would give $0.45$, which is wrong.",
+        "乘三位数也是同样的方法：按整数相乘，再根据小数因数的位数点小数点。\n\n$0.36 \\times 125$：$36 \\times 125 = 4500$。点出两位小数是 $45.00 = 45$。如果先去掉末尾的 $0$ 再点两位小数，就会错得 $0.45$。",
       ),
       generate(rng) {
         const p = rng.int(1, 3);
@@ -1583,8 +1652,8 @@ export const multiplyingTwoDigitDecimals = topic(
       id: "tenths-times-tenths",
       title: t("Tenths times tenths", "一位小数乘一位小数"),
       explanation: t(
-        "$4.5 \\times 1.2$: $45 \\times 12 = 540$, so the product is $5.40 = 5.4$.",
-        "$4.5 \\times 1.2$：$45 \\times 12 = 540$，所以积是 $5.40 = 5.4$。",
+        "When both factors are decimals, multiply as whole numbers, then add the decimal places of the two factors: the product has that many. Tenths times tenths gives hundredths.\n\n$4.5 \\times 1.2$: $45 \\times 12 = 540$. There are $1 + 1 = 2$ decimal places, so the product is $5.40 = 5.4$.",
+        "两个因数都是小数时，先按整数相乘，再把两个因数的小数位数相加，积就有这么多位小数。十分之几乘十分之几得百分之几。\n\n$4.5 \\times 1.2$：$45 \\times 12 = 540$。共有 $1 + 1 = 2$ 位小数，所以积是 $5.40 = 5.4$。",
       ),
       generate: (rng) => productProblem(nonZeroEnd(rng, 2), 1, nonZeroEnd(rng, rng.int(1, 2)), 1),
     },
@@ -1592,8 +1661,8 @@ export const multiplyingTwoDigitDecimals = topic(
       id: "hundredths-times-tenths",
       title: t("Hundredths times tenths", "两位小数乘一位小数"),
       explanation: t(
-        "$0.25 \\times 0.6$: $25 \\times 6 = 150$, so the product is $0.150 = 0.15$.",
-        "$0.25 \\times 0.6$：$25 \\times 6 = 150$，所以积是 $0.150 = 0.15$。",
+        "Count all the decimal places in both factors. Hundredths times tenths gives thousandths, so the product has three decimal places; write zeros in front if needed.\n\n$0.25 \\times 0.6$: $25 \\times 6 = 150$. There are $2 + 1 = 3$ decimal places, so the product is $0.150 = 0.15$.",
+        "把两个因数的小数位数加起来。百分之几乘十分之几得千分之几，所以积有三位小数；位数不够时在前面补 $0$。\n\n$0.25 \\times 0.6$：$25 \\times 6 = 150$。共有 $2 + 1 = 3$ 位小数，所以积是 $0.150 = 0.15$。",
       ),
       generate: (rng) => productProblem(nonZeroEnd(rng, 2), 2, nonZeroEnd(rng, rng.int(1, 2)), 1),
     },
@@ -1614,8 +1683,8 @@ export const multiplyingTwoDigitDecimalsByThreeDigitDecimals = topic(
       id: "three-digit-decimal-times-tenths",
       title: t("Times tenths", "乘一位小数"),
       explanation: t(
-        "$3.14 \\times 2.5$: $314 \\times 25 = 7850$, so the product is $7.850 = 7.85$.",
-        "$3.14 \\times 2.5$：$314 \\times 25 = 7850$，所以积是 $7.850 = 7.85$。",
+        "Multiply the digits as whole numbers, then count the decimal places in both factors together.\n\n$3.14 \\times 2.5$: $314 \\times 25 = 7850$. There are $2 + 1 = 3$ decimal places, so the product is $7.850 = 7.85$. Check: $3 \\times 2.5 = 7.5$ is close.",
+        "把数字当作整数相乘，再把两个因数的小数位数加在一起。\n\n$3.14 \\times 2.5$：$314 \\times 25 = 7850$。共有 $2 + 1 = 3$ 位小数，所以积是 $7.850 = 7.85$。检查：$3 \\times 2.5 = 7.5$，很接近。",
       ),
       generate: (rng) => productProblem(nonZeroEnd(rng, 3), rng.int(1, 2), nonZeroEnd(rng, 2), 1),
     },
@@ -1623,8 +1692,8 @@ export const multiplyingTwoDigitDecimalsByThreeDigitDecimals = topic(
       id: "three-digit-decimal-times-hundredths",
       title: t("Times hundredths", "乘两位小数"),
       explanation: t(
-        "$12.6 \\times 0.35$: $126 \\times 35 = 4410$, so the product is $4.410 = 4.41$.",
-        "$12.6 \\times 0.35$：$126 \\times 35 = 4410$，所以积是 $4.410 = 4.41$。",
+        "The rule is the same: the product has as many decimal places as both factors together.\n\n$12.6 \\times 0.35$: $126 \\times 35 = 4410$. There are $1 + 2 = 3$ decimal places, so the product is $4.410 = 4.41$. Multiplying by $0.35$, which is less than $1$, gives less than $12.6$.",
+        "规则相同：积的小数位数等于两个因数的小数位数之和。\n\n$12.6 \\times 0.35$：$126 \\times 35 = 4410$。共有 $1 + 2 = 3$ 位小数，所以积是 $4.410 = 4.41$。乘小于 $1$ 的 $0.35$，积比 $12.6$ 小。",
       ),
       generate: (rng) => productProblem(nonZeroEnd(rng, 3), rng.int(1, 3), nonZeroEnd(rng, 2), 2),
     },
@@ -1645,8 +1714,8 @@ export const multiplyingThreeDigitDecimals = topic(
       id: "three-digit-decimals-with-two-places",
       title: t("Both with two decimal places", "都是两位小数"),
       explanation: t(
-        "$1.25 \\times 2.08$: $125 \\times 208 = 26000$, so the product is $2.6000 = 2.6$.",
-        "$1.25 \\times 2.08$：$125 \\times 208 = 26000$，所以积是 $2.6000 = 2.6$。",
+        "Multiply as whole numbers, place the decimal point using the total number of decimal places, and only then drop zeros at the end.\n\n$1.25 \\times 2.08$: $125 \\times 208 = 26000$. There are $2 + 2 = 4$ decimal places, so the product is $2.6000 = 2.6$.",
+        "先按整数相乘，根据小数位数的总和点上小数点，然后才去掉末尾的 $0$。\n\n$1.25 \\times 2.08$：$125 \\times 208 = 26000$。共有 $2 + 2 = 4$ 位小数，所以积是 $2.6000 = 2.6$。",
       ),
       generate: (rng) => productProblem(nonZeroEnd(rng, 3), 2, nonZeroEnd(rng, 3), 2),
     },
@@ -1654,8 +1723,8 @@ export const multiplyingThreeDigitDecimals = topic(
       id: "three-digit-decimals-with-mixed-places",
       title: t("Different decimal places", "小数位数不同"),
       explanation: t(
-        "$0.125 \\times 3.44$: $125 \\times 344 = 43000$, so the product is $0.43000 = 0.43$.",
-        "$0.125 \\times 3.44$：$125 \\times 344 = 43000$，所以积是 $0.43000 = 0.43$。",
+        "Add the decimal places of the two factors even when they differ, and count them from the right of the whole-number product.\n\n$0.125 \\times 3.44$: $125 \\times 344 = 43000$. There are $3 + 2 = 5$ decimal places, so the product is $0.43000 = 0.43$.",
+        "即使两个因数的小数位数不同，也把它们相加，再从整数积的右边数出这么多位点小数点。\n\n$0.125 \\times 3.44$：$125 \\times 344 = 43000$。共有 $3 + 2 = 5$ 位小数，所以积是 $0.43000 = 0.43$。",
       ),
       generate: (rng) => productProblem(nonZeroEnd(rng, 3), rng.int(1, 3), nonZeroEnd(rng, 3), rng.int(1, 3)),
     },
@@ -1679,8 +1748,8 @@ export const dividingDecimalsByPowersOfTenUsingPlaceValue = topic(
       id: "dividing-decimals-by-ten",
       title: t("Dividing by 10", "除以 10"),
       explanation: t(
-        "$6.2 \\div 10 = 0.62$: $6$ ones become $6$ tenths and $2$ tenths become $2$ hundredths.",
-        "$6.2 \\div 10 = 0.62$：$6$ 个一变成 $6$ 个十分之一，$2$ 个十分之一变成 $2$ 个百分之一。",
+        "Dividing by $10$ makes every digit worth one tenth as much, so each digit moves one place to the right.\n\n$6.2 \\div 10 = 0.62$: $6$ ones become $6$ tenths and $2$ tenths become $2$ hundredths.",
+        "除以 $10$，每个数字表示的值都缩小到原来的十分之一，所以每个数字都向右移动一位。\n\n$6.2 \\div 10 = 0.62$：$6$ 个一变成 $6$ 个十分之一，$2$ 个十分之一变成 $2$ 个百分之一。",
       ),
       generate(rng) {
         const p = rng.int(0, 2);
@@ -1691,8 +1760,8 @@ export const dividingDecimalsByPowersOfTenUsingPlaceValue = topic(
       id: "dividing-decimals-by-hundred-and-thousand",
       title: t("Dividing by 100 and 1000", "除以 100 和 1000"),
       explanation: t(
-        "$45.3 \\div 100 = 0.453$: each digit moves two places to the right.",
-        "$45.3 \\div 100 = 0.453$：每个数字都向右移动两位。",
+        "Dividing by $100$ moves each digit two places to the right, and dividing by $1000$ moves it three places. Write a $0$ in the ones place if it becomes empty.\n\n$45.3 \\div 100 = 0.453$: each digit moves two places to the right, so the $4$ tens become $4$ tenths.",
+        "除以 $100$，每个数字向右移动两位；除以 $1000$，向右移动三位。个位空出来时写 $0$。\n\n$45.3 \\div 100 = 0.453$：每个数字都向右移动两位，$4$ 个十变成 $4$ 个十分之一。",
       ),
       generate(rng) {
         const p = rng.int(0, 2);
@@ -1715,7 +1784,10 @@ export const dividingDecimalsByPowersOfTenUsingDecimalPointPlacement = topic(
     {
       id: "moving-the-decimal-point-to-divide",
       title: t("Moving the decimal point", "移动小数点"),
-      explanation: t("$8.6 \\div 1000 = 0.0086$.", "$8.6 \\div 1000 = 0.0086$。"),
+      explanation: t(
+        "To divide by $10$, $100$ or $1000$, move the decimal point to the left as many places as there are zeros. If there are not enough digits, write zeros in front.\n\n$8.6 \\div 1000 = 0.0086$: moving the point three places left needs two extra zeros before the $8$.",
+        "除以 $10$、$100$ 或 $1000$，$1$ 后面有几个 $0$，就把小数点向左移动几位。位数不够时在前面补 $0$。\n\n$8.6 \\div 1000 = 0.0086$：小数点向左移动三位，要在 $8$ 前面补两个 $0$。",
+      ),
       generate(rng) {
         const p = rng.int(0, 2);
         return shiftProblem(nonZeroEnd(rng, rng.int(1, 4)), p, powerOfTen(rng), false, true);
@@ -1725,8 +1797,8 @@ export const dividingDecimalsByPowersOfTenUsingDecimalPointPlacement = topic(
       id: "finding-the-power-of-ten-in-a-quotient",
       title: t("Finding the power of ten", "求除以的是 10、100 还是 1000"),
       explanation: t(
-        "$52 \\div \\square = 0.052$: the point moved three places, so the missing number is $1000$.",
-        "$52 \\div \\square = 0.052$：小数点移动了三位，所以方框中是 $1000$。",
+        "Count how many places the decimal point moved to the left. That many zeros after the $1$ gives the divisor.\n\n$52 \\div \\square = 0.052$: the point moved three places, so the missing number is $1000$.",
+        "数一数小数点向左移动了几位，$1$ 后面写几个 $0$，就是除数。\n\n$52 \\div \\square = 0.052$：小数点移动了三位，所以方框中是 $1000$。",
       ),
       generate(rng) {
         const p = rng.int(0, 2);
@@ -1749,7 +1821,10 @@ export const estimatingDecimalDivision = topic(
     {
       id: "estimating-a-decimal-divided-by-a-whole-number",
       title: t("Dividing by a whole number", "除以整数"),
-      explanation: t("$55.3 \\div 7 \\approx 56 \\div 7 = 8$.", "$55.3 \\div 7 \\approx 56 \\div 7 = 8$。"),
+      explanation: t(
+        "To estimate a quotient, change the decimal to a nearby compatible number: one the divisor divides evenly, using a basic fact you know.\n\n$55.3 \\div 7 \\approx 56 \\div 7 = 8$, because $56$ is close to $55.3$ and $7 \\times 8 = 56$.",
+        "估算商时，把小数换成一个相近的、能被除数整除的数，这样可以用熟悉的乘法口诀来算。\n\n$55.3 \\div 7 \\approx 56 \\div 7 = 8$，因为 $56$ 接近 $55.3$，而且 $7 \\times 8 = 56$。",
+      ),
       generate(rng) {
         const d = rng.int(3, 9);
         const q = rng.int(3, 12);
@@ -1771,7 +1846,10 @@ export const estimatingDecimalDivision = topic(
     {
       id: "estimating-a-decimal-divided-by-a-decimal",
       title: t("Dividing by a decimal", "除以小数"),
-      explanation: t("$35.6 \\div 4.1 \\approx 36 \\div 4 = 9$.", "$35.6 \\div 4.1 \\approx 36 \\div 4 = 9$。"),
+      explanation: t(
+        "When both numbers are decimals, round the divisor to a nearby whole number, then pick a compatible number for the dividend.\n\n$35.6 \\div 4.1 \\approx 36 \\div 4 = 9$.",
+        "两个数都是小数时，先把除数取成相近的整数，再把被除数换成与它相容的数。\n\n$35.6 \\div 4.1 \\approx 36 \\div 4 = 9$。",
+      ),
       generate(rng) {
         const d = rng.int(2, 9);
         const q = rng.int(2, 12);
@@ -1819,8 +1897,8 @@ export const dividingDecimalsUsingPlaceValueStrategies = topic(
       id: "dividing-tenths",
       title: t("Dividing tenths", "除十分之几"),
       explanation: t(
-        "$4.8 \\div 8 = 0.6$, since $48$ tenths $\\div 8 = 6$ tenths.",
-        "$4.8 \\div 8 = 0.6$，因为 $48$ 个十分之一 $\\div 8 = 6$ 个十分之一。",
+        "Think of the decimal as a number of tenths, divide that whole number, and the answer is in tenths.\n\n$4.8 \\div 8 = 0.6$, since $48$ tenths $\\div 8 = 6$ tenths.",
+        "把小数看作若干个十分之一，用这个整数去除，得到的也是十分之一的个数。\n\n$4.8 \\div 8 = 0.6$，因为 $48$ 个十分之一 $\\div 8 = 6$ 个十分之一。",
       ),
       generate(rng) {
         const d = rng.int(2, 9);
@@ -1839,8 +1917,8 @@ export const dividingDecimalsUsingPlaceValueStrategies = topic(
       id: "dividing-hundredths",
       title: t("Dividing hundredths", "除百分之几"),
       explanation: t(
-        "$0.63 \\div 9 = 0.07$, since $63$ hundredths $\\div 9 = 7$ hundredths.",
-        "$0.63 \\div 9 = 0.07$，因为 $63$ 个百分之一 $\\div 9 = 7$ 个百分之一。",
+        "Think of the decimal as a number of hundredths and divide. The answer is in hundredths, so it needs two decimal places.\n\n$0.63 \\div 9 = 0.07$, since $63$ hundredths $\\div 9 = 7$ hundredths. Writing $0.7$ would mean $7$ tenths, which is ten times too large.",
+        "把小数看作若干个百分之一再除，得数也是百分之一的个数，所以要写两位小数。\n\n$0.63 \\div 9 = 0.07$，因为 $63$ 个百分之一 $\\div 9 = 7$ 个百分之一。写成 $0.7$ 就成了 $7$ 个十分之一，大了 $10$ 倍。",
       ),
       generate(rng) {
         const d = rng.int(2, 9);
@@ -1888,7 +1966,10 @@ export const divisionOfWholeNumbersWithDecimalQuotients = topic(
     {
       id: "decimal-quotients-with-one-digit-divisors",
       title: t("One-digit divisors", "除数是一位数"),
-      explanation: t("$23 \\div 8 = 2.875$.", "$23 \\div 8 = 2.875$。"),
+      explanation: t(
+        "When a whole-number division leaves a remainder, you can keep going: write a decimal point and a $0$ after the dividend, bring the $0$ down, and continue dividing until nothing is left. Put the decimal point in the quotient right above the one in the dividend.\n\n$23 \\div 8 = 2$ remainder $7$; $70 \\div 8 = 8$ remainder $6$; $60 \\div 8 = 7$ remainder $4$; $40 \\div 8 = 5$. So $23 \\div 8 = 2.875$.",
+        "整数除法有余数时，可以继续除：在被除数后面点上小数点并添 $0$，把 $0$ 落下来继续除，直到没有余数。商的小数点要和被除数的小数点对齐。\n\n$23 \\div 8$ 商 $2$ 余 $7$；$70 \\div 8$ 商 $8$ 余 $6$；$60 \\div 8$ 商 $7$ 余 $4$；$40 \\div 8 = 5$。所以 $23 \\div 8 = 2.875$。",
+      ),
       generate(rng) {
         const d = rng.pick([2, 4, 5, 8]);
         let n = rng.int(3, 200);
@@ -1906,7 +1987,10 @@ export const divisionOfWholeNumbersWithDecimalQuotients = topic(
     {
       id: "decimal-quotients-with-two-digit-divisors",
       title: t("Two-digit divisors", "除数是两位数"),
-      explanation: t("$63 \\div 12 = 5.25$.", "$63 \\div 12 = 5.25$。"),
+      explanation: t(
+        "With a two-digit divisor, divide the same way. After the whole-number part, add a decimal point and zeros to the dividend and keep dividing the remainders.\n\n$63 \\div 12 = 5$ remainder $3$; $30 \\div 12 = 2$ remainder $6$; $60 \\div 12 = 5$. So $63 \\div 12 = 5.25$.",
+        "除数是两位数时方法相同。整数部分除完后，在被除数后面点上小数点、添 $0$，继续用余数往下除。\n\n$63 \\div 12$ 商 $5$ 余 $3$；$30 \\div 12$ 商 $2$ 余 $6$；$60 \\div 12 = 5$。所以 $63 \\div 12 = 5.25$。",
+      ),
       generate(rng) {
         for (;;) {
           const d = rng.int(12, 50);
@@ -1946,7 +2030,10 @@ export const divisionOfWholeNumbersWithDecimalQuotientsAndRounding = topic(
     {
       id: "rounding-quotients-to-tenths",
       title: t("To the nearest tenth", "保留一位小数"),
-      explanation: t("$17 \\div 6 = 2.83\\ldots \\approx 2.8$.", "$17 \\div 6 = 2.83\\cdots \\approx 2.8$。"),
+      explanation: t(
+        "Some divisions never come out even. To round the quotient to the nearest tenth, divide to one more place, the hundredths, then round.\n\n$17 \\div 6 = 2.83\\ldots \\approx 2.8$, because the hundredths digit $3$ is less than $5$.",
+        "有些除法永远除不尽。要把商保留到十分位，就要多除一位，算到百分位，再四舍五入。\n\n$17 \\div 6 = 2.83\\cdots \\approx 2.8$，因为百分位上的 $3$ 小于 $5$。",
+      ),
       generate(rng) {
         const d = rng.pick([3, 6, 7, 9, 11, 12]);
         let n = rng.int(2, 150);
@@ -1967,7 +2054,10 @@ export const divisionOfWholeNumbersWithDecimalQuotientsAndRounding = topic(
     {
       id: "rounding-quotients-to-hundredths",
       title: t("To the nearest hundredth", "保留两位小数"),
-      explanation: t("$5 \\div 7 = 0.714\\ldots \\approx 0.71$.", "$5 \\div 7 = 0.714\\cdots \\approx 0.71$。"),
+      explanation: t(
+        "To round to the nearest hundredth, divide to the thousandths, then round using the thousandths digit.\n\n$5 \\div 7 = 0.714\\ldots \\approx 0.71$, because the thousandths digit $4$ is less than $5$.",
+        "保留到百分位，就要除到千分位，再根据千分位上的数字四舍五入。\n\n$5 \\div 7 = 0.714\\cdots \\approx 0.71$，因为千分位上的 $4$ 小于 $5$。",
+      ),
       generate(rng) {
         const d = rng.pick([3, 6, 7, 9, 11, 12, 13]);
         let n = rng.int(1, 100);
@@ -2010,7 +2100,10 @@ export const dividingDecimalsUsingTheStandardAlgorithm = topic(
     {
       id: "decimal-divided-by-one-digit-number",
       title: t("One-digit divisors", "除数是一位数"),
-      explanation: t("$17.5 \\div 7 = 2.5$.", "$17.5 \\div 7 = 2.5$。"),
+      explanation: t(
+        "To divide a decimal by a whole number, use long division as usual and put the decimal point in the quotient straight above the decimal point in the dividend.\n\n$17.5 \\div 7$: $17 \\div 7 = 2$ remainder $3$; bring down the $5$ to get $35$, and $35 \\div 7 = 5$. With the point above the dividend's point, the quotient is $2.5$.",
+        "小数除以整数，按整数除法的方法列竖式，商的小数点要和被除数的小数点对齐。\n\n$17.5 \\div 7$：$17 \\div 7$ 商 $2$ 余 $3$；落下 $5$ 得 $35$，$35 \\div 7 = 5$。商的小数点对齐被除数的小数点，商是 $2.5$。",
+      ),
       generate(rng) {
         const d = rng.int(2, 9);
         const p = rng.int(1, 2);
@@ -2027,7 +2120,10 @@ export const dividingDecimalsUsingTheStandardAlgorithm = topic(
     {
       id: "decimal-divided-by-two-digit-number",
       title: t("Two-digit divisors", "除数是两位数"),
-      explanation: t("$31.2 \\div 12 = 2.6$.", "$31.2 \\div 12 = 2.6$。"),
+      explanation: t(
+        "With a two-digit divisor, divide as usual and line up the decimal point in the quotient with the one in the dividend.\n\n$31.2 \\div 12$: $31 \\div 12 = 2$ remainder $7$; bring down the $2$ to get $72$, and $72 \\div 12 = 6$. So $31.2 \\div 12 = 2.6$.",
+        "除数是两位数时，照常列竖式，商的小数点和被除数的小数点对齐。\n\n$31.2 \\div 12$：$31 \\div 12$ 商 $2$ 余 $7$；落下 $2$ 得 $72$，$72 \\div 12 = 6$。所以 $31.2 \\div 12 = 2.6$。",
+      ),
       generate(rng) {
         const d = rng.int(11, 40);
         const p = rng.int(1, 2);
@@ -2092,8 +2188,8 @@ export const dividingThreeDigitDecimalsByTwoDigitDecimals = topic(
       id: "making-the-divisor-a-whole-number",
       title: t("Making the divisor whole", "把除数变成整数"),
       explanation: t(
-        "$0.756 \\div 0.36 = 75.6 \\div 36$: both numbers are multiplied by $100$.",
-        "$0.756 \\div 0.36 = 75.6 \\div 36$：两个数都乘 $100$。",
+        "Multiplying both numbers in a division by the same number does not change the quotient. So when the divisor is a decimal, multiply both by $10$ or $100$ to make the divisor a whole number, moving both decimal points the same number of places.\n\n$0.756 \\div 0.36 = 75.6 \\div 36$: both numbers are multiplied by $100$. Moving only the divisor's point is a common mistake.",
+        "被除数和除数同时乘同一个数，商不变。所以除数是小数时，把两个数同时乘 $10$ 或 $100$，使除数变成整数，两个小数点移动相同的位数。\n\n$0.756 \\div 0.36 = 75.6 \\div 36$：两个数都乘 $100$。只移动除数的小数点是常见的错误。",
       ),
       generate(rng) {
         const { a, pa, e, pe } = decimalQuotient(rng, 2, [3]);
@@ -2120,7 +2216,10 @@ export const dividingThreeDigitDecimalsByTwoDigitDecimals = topic(
     {
       id: "dividing-by-a-two-digit-decimal",
       title: t("Finding the quotient", "求商"),
-      explanation: t("$9.12 \\div 2.4 = 91.2 \\div 24 = 3.8$.", "$9.12 \\div 2.4 = 91.2 \\div 24 = 3.8$。"),
+      explanation: t(
+        "First move both decimal points the same number of places to make the divisor a whole number. Then divide by the whole number and put the quotient's point above the new point in the dividend.\n\n$9.12 \\div 2.4 = 91.2 \\div 24$. Then $91 \\div 24 = 3$ remainder $19$, and $192 \\div 24 = 8$, so the quotient is $3.8$.",
+        "先把被除数和除数的小数点向右移动相同的位数，使除数变成整数。再按除数是整数的方法除，商的小数点和被除数新的小数点对齐。\n\n$9.12 \\div 2.4 = 91.2 \\div 24$。$91 \\div 24$ 商 $3$ 余 $19$，$192 \\div 24 = 8$，所以商是 $3.8$。",
+      ),
       generate(rng) {
         const { a, pa, e, pe, q } = decimalQuotient(rng, 2, [3]);
         return decProblem(
@@ -2147,7 +2246,10 @@ export const dividingFourDigitAndFiveDigitDecimals = topic(
     {
       id: "dividing-four-digit-decimals",
       title: t("Four-digit dividends", "被除数是四位数字"),
-      explanation: t("$20.16 \\div 0.48 = 2016 \\div 48 = 42$.", "$20.16 \\div 0.48 = 2016 \\div 48 = 42$。"),
+      explanation: t(
+        "Count the decimal places in the divisor and move both points that many places to the right. Sometimes the dividend becomes a whole number too.\n\n$20.16 \\div 0.48$: the divisor has two places, so multiply both by $100$: $2016 \\div 48 = 42$.",
+        "数一数除数有几位小数，就把两个数的小数点都向右移动几位。有时被除数也会变成整数。\n\n$20.16 \\div 0.48$：除数有两位小数，两个数都乘 $100$：$2016 \\div 48 = 42$。",
+      ),
       generate(rng) {
         const { a, pa, e, pe, q } = decimalQuotient(rng, 2, [4]);
         return decProblem(
@@ -2161,7 +2263,10 @@ export const dividingFourDigitAndFiveDigitDecimals = topic(
     {
       id: "dividing-five-digit-decimals",
       title: t("Five-digit dividends", "被除数是五位数字"),
-      explanation: t("$148.35 \\div 4.3 = 1483.5 \\div 43 = 34.5$.", "$148.35 \\div 4.3 = 1483.5 \\div 43 = 34.5$。"),
+      explanation: t(
+        "Make the divisor a whole number by moving both points, then use long division. A longer dividend just means more steps.\n\n$148.35 \\div 4.3 = 1483.5 \\div 43$. Then $148 \\div 43 = 3$ remainder $19$; $193 \\div 43 = 4$ remainder $21$; $215 \\div 43 = 5$. So the quotient is $34.5$.",
+        "先移动两个小数点，使除数变成整数，再列竖式计算。被除数位数多，只是步骤多一些。\n\n$148.35 \\div 4.3 = 1483.5 \\div 43$。$148 \\div 43$ 商 $3$ 余 $19$；$193 \\div 43$ 商 $4$ 余 $21$；$215 \\div 43 = 5$。所以商是 $34.5$。",
+      ),
       generate(rng) {
         const { a, pa, e, pe, q } = decimalQuotient(rng, rng.int(2, 3), [5]);
         return decProblem(
@@ -2194,7 +2299,10 @@ export const powersOfTen = topic(
     {
       id: "evaluating-and-writing-powers-of-ten",
       title: t("Powers of ten and their values", "10 的乘方与它的值"),
-      explanation: t("$10^4 = 10{,}000$, and $10 \\times 10 \\times 10 = 10^3$.", "$10^4 = 10{,}000$，$10 \\times 10 \\times 10 = 10^3$。"),
+      explanation: t(
+        "A power of ten such as $10^4$ means $10$ multiplied by itself $4$ times. The exponent tells how many tens are multiplied, which is also the number of zeros after the $1$.\n\n$10^4 = 10{,}000$, and $10 \\times 10 \\times 10 = 10^3$.",
+        "像 $10^4$ 这样的 $10$ 的乘方，表示 $4$ 个 $10$ 相乘。指数表示有几个 $10$ 相乘，也就是 $1$ 后面有几个 $0$。\n\n$10^4 = 10{,}000$，$10 \\times 10 \\times 10 = 10^3$。",
+      ),
       generate(rng) {
         const k = rng.int(1, 9);
         const kind = rng.int(0, 2);
@@ -2228,7 +2336,10 @@ export const powersOfTen = topic(
     {
       id: "comparing-powers-of-ten",
       title: t("How many times as large", "是几倍"),
-      explanation: t("$10^5$ is $10^2 = 100$ times as large as $10^3$.", "$10^5$ 是 $10^3$ 的 $10^2 = 100$ 倍。"),
+      explanation: t(
+        "Each extra factor of $10$ makes a number $10$ times as large. So to compare two powers of ten, subtract the exponents: the larger is $10$ to that difference times the smaller.\n\n$10^5$ is $10^2 = 100$ times as large as $10^3$, since $5 - 3 = 2$. Dividing the exponents instead is a common mistake.",
+        "每多乘一个 $10$，数就扩大到原来的 $10$ 倍。所以比较两个 $10$ 的乘方时，用指数相减：大的数是小的数的 $10$ 的（指数差）次方倍。\n\n$10^5$ 是 $10^3$ 的 $10^2 = 100$ 倍，因为 $5 - 3 = 2$。把指数相除是常见的错误。",
+      ),
       generate(rng) {
         const b = rng.int(1, 7);
         const a = rng.int(b + 1, 8);
@@ -2263,7 +2374,10 @@ export const multiplyingNumbersByPowersOfTenWithExponents = topic(
     {
       id: "whole-number-times-a-power-of-ten",
       title: t("Finding the product", "求积"),
-      explanation: t("$604 \\times 10^2 = 60{,}400$.", "$604 \\times 10^2 = 60{,}400$。"),
+      explanation: t(
+        "Multiplying a whole number by $10^n$ writes $n$ zeros at its end, because each factor of $10$ moves every digit one place to the left.\n\n$604 \\times 10^2 = 60{,}400$: two zeros are written after $604$.",
+        "整数乘 $10^n$，就在它的末尾添上 $n$ 个 $0$，因为每乘一个 $10$，每个数字都向左移动一位。\n\n$604 \\times 10^2 = 60{,}400$：在 $604$ 后面添两个 $0$。",
+      ),
       generate(rng) {
         const n = rng.int(2, 999);
         const k = rng.int(1, 5);
@@ -2283,8 +2397,8 @@ export const multiplyingNumbersByPowersOfTenWithExponents = topic(
       id: "finding-the-exponent-in-a-product",
       title: t("Finding the exponent", "求指数"),
       explanation: t(
-        "$48 \\times 10^{\\square} = 480{,}000$: four zeros were written, so the exponent is $4$.",
-        "$48 \\times 10^{\\square} = 480{,}000$：添了四个 0，所以指数是 $4$。",
+        "To find the missing exponent, compare the product with the starting number and count the zeros that were written at the end.\n\n$48 \\times 10^{\\square} = 480{,}000$: four zeros were written, so the exponent is $4$.",
+        "求未知的指数时，把积和原来的数比较，数一数末尾添了几个 $0$。\n\n$48 \\times 10^{\\square} = 480{,}000$：添了四个 $0$，所以指数是 $4$。",
       ),
       generate(rng) {
         const n = nonZeroEnd(rng, rng.int(1, 3));
@@ -2320,7 +2434,10 @@ export const multiplyingDecimalsByPowersOfTenWithExponents = topic(
     {
       id: "decimal-times-a-power-of-ten-with-an-exponent",
       title: t("Finding the product", "求积"),
-      explanation: t("$2.85 \\times 10^4 = 28{,}500$.", "$2.85 \\times 10^4 = 28{,}500$。"),
+      explanation: t(
+        "Multiplying a decimal by $10^n$ moves the decimal point $n$ places to the right. Write zeros at the end if you run out of digits.\n\n$2.85 \\times 10^4 = 28{,}500$: moving the point four places uses the $8$ and $5$ and then needs two zeros.",
+        "小数乘 $10^n$，小数点向右移动 $n$ 位。数字不够时在末尾添 $0$。\n\n$2.85 \\times 10^4 = 28{,}500$：小数点向右移动四位，移过 $8$ 和 $5$ 后还要添两个 $0$。",
+      ),
       generate(rng) {
         const p = rng.int(1, 3);
         const n = nonZeroEnd(rng, rng.int(Math.max(1, p - 1), p + 2));
@@ -2341,8 +2458,8 @@ export const multiplyingDecimalsByPowersOfTenWithExponents = topic(
       id: "finding-the-exponent-for-a-decimal",
       title: t("Finding the exponent", "求指数"),
       explanation: t(
-        "$0.072 \\times 10^{\\square} = 720$: the point moved four places, so the exponent is $4$.",
-        "$0.072 \\times 10^{\\square} = 720$：小数点移动了四位，所以指数是 $4$。",
+        "Count how many places the decimal point moved to the right; that number is the exponent.\n\n$0.072 \\times 10^{\\square} = 720$: the point moved four places, so the exponent is $4$. Counting only the zeros in $720$ would give the wrong answer.",
+        "数一数小数点向右移动了几位，这个数就是指数。\n\n$0.072 \\times 10^{\\square} = 720$：小数点移动了四位，所以指数是 $4$。只数 $720$ 末尾的 $0$ 会得出错误的答案。",
       ),
       generate(rng) {
         const p = rng.int(1, 3);
@@ -2383,7 +2500,10 @@ export const introductionToExponents = topic(
     {
       id: "writing-repeated-multiplication-as-a-power",
       title: t("Writing a product as a power", "把连乘写成乘方"),
-      explanation: t("$7 \\times 7 \\times 7 = 7^3$.", "$7 \\times 7 \\times 7 = 7^3$。"),
+      explanation: t(
+        "When the same number is multiplied again and again, write it as a power. The repeated number is the base, and the exponent counts how many times it appears.\n\n$7 \\times 7 \\times 7 = 7^3$: the base is $7$ and it appears $3$ times. It is not $7 \\times 3$.",
+        "同一个数连乘时，可以写成乘方。相乘的那个数是底数，指数表示它出现了几次。\n\n$7 \\times 7 \\times 7 = 7^3$：底数是 $7$，出现了 $3$ 次。它不等于 $7 \\times 3$。",
+      ),
       generate(rng) {
         const b = rng.int(2, 12);
         const e = rng.int(2, 6);
@@ -2403,7 +2523,10 @@ export const introductionToExponents = topic(
     {
       id: "expanding-a-power",
       title: t("Writing a power as a product", "把乘方写成连乘"),
-      explanation: t("$4^5 = 4 \\times 4 \\times 4 \\times 4 \\times 4$.", "$4^5 = 4 \\times 4 \\times 4 \\times 4 \\times 4$。"),
+      explanation: t(
+        "To write a power as a product, write the base as many times as the exponent says, with multiplication signs between.\n\n$4^5 = 4 \\times 4 \\times 4 \\times 4 \\times 4$. A common mistake is to read it as $4 \\times 5$ or $5 \\times 5 \\times 5 \\times 5$.",
+        "把乘方写成乘法时，指数是几，就把底数写几次，中间用乘号连接。\n\n$4^5 = 4 \\times 4 \\times 4 \\times 4 \\times 4$。常见的错误是把它看成 $4 \\times 5$ 或 $5 \\times 5 \\times 5 \\times 5$。",
+      ),
       generate(rng) {
         const b = rng.int(2, 12);
         const e = rng.int(2, 6);
@@ -2448,7 +2571,10 @@ export const evaluatingExponents = topic(
     {
       id: "evaluating-squares-and-cubes",
       title: t("Squares and cubes", "平方和立方"),
-      explanation: t("$12^2 = 144$ and $4^3 = 64$.", "$12^2 = 144$，$4^3 = 64$。"),
+      explanation: t(
+        "A square, exponent $2$, is a number times itself. A cube, exponent $3$, is a number used three times as a factor. Multiply step by step.\n\n$12^2 = 12 \\times 12 = 144$ and $4^3 = 4 \\times 4 \\times 4 = 16 \\times 4 = 64$.",
+        "平方（指数为 $2$）是一个数乘它自己；立方（指数为 $3$）是三个相同的数相乘。一步一步地乘。\n\n$12^2 = 12 \\times 12 = 144$，$4^3 = 4 \\times 4 \\times 4 = 16 \\times 4 = 64$。",
+      ),
       generate(rng) {
         if (rng.bool(0.65)) return powerProblem(rng.int(2, 20), 2);
         return powerProblem(rng.int(2, 10), 3);
@@ -2457,7 +2583,10 @@ export const evaluatingExponents = topic(
     {
       id: "evaluating-small-powers",
       title: t("Other small powers", "其他较小的乘方"),
-      explanation: t("$3^4 = 81$, $8^1 = 8$ and $1^6 = 1$.", "$3^4 = 81$，$8^1 = 8$，$1^6 = 1$。"),
+      explanation: t(
+        "Multiply the base by itself as many times as the exponent says. Any number to the first power is itself, and $1$ to any power is $1$.\n\n$3^4 = 3 \\times 3 \\times 3 \\times 3 = 81$, $8^1 = 8$ and $1^6 = 1$.",
+        "指数是几，就把几个底数相乘。任何数的一次方都等于它本身，$1$ 的任何次方都等于 $1$。\n\n$3^4 = 3 \\times 3 \\times 3 \\times 3 = 81$，$8^1 = 8$，$1^6 = 1$。",
+      ),
       generate(rng) {
         const kind = rng.int(0, 2);
         if (kind === 0) {
@@ -2513,7 +2642,10 @@ export const evaluatingLargerExponents = topic(
     {
       id: "evaluating-larger-powers-of-small-bases",
       title: t("Larger exponents", "较大的指数"),
-      explanation: t("$2^8 = 256$: $2, 4, 8, 16, 32, 64, 128, 256$.", "$2^8 = 256$：$2, 4, 8, 16, 32, 64, 128, 256$。"),
+      explanation: t(
+        "For a larger exponent, multiply by the base one step at a time and keep a running product, counting the steps.\n\n$2^8 = 256$: $2, 4, 8, 16, 32, 64, 128, 256$, eight numbers for eight factors of $2$.",
+        "指数较大时，一次乘一个底数，记住每一步的积，并数清乘了几次。\n\n$2^8 = 256$：$2, 4, 8, 16, 32, 64, 128, 256$，八个 $2$ 相乘，正好写出八个数。",
+      ),
       generate(rng) {
         const [b, e] = rng.pick(largePowers);
         return powerProblem(b, e);
@@ -2522,7 +2654,10 @@ export const evaluatingLargerExponents = topic(
     {
       id: "evaluating-powers-of-two-digit-bases",
       title: t("Two-digit bases", "底数是两位数"),
-      explanation: t("$25^2 = 625$ and $12^3 = 1728$.", "$25^2 = 625$，$12^3 = 1728$。"),
+      explanation: t(
+        "For a two-digit base, multiply with the standard algorithm, then multiply the result by the base again for a cube.\n\n$25^2 = 25 \\times 25 = 625$ and $12^3 = 144 \\times 12 = 1728$.",
+        "底数是两位数时，用竖式相乘；求立方时，再用结果乘一次底数。\n\n$25^2 = 25 \\times 25 = 625$，$12^3 = 144 \\times 12 = 1728$。",
+      ),
       generate(rng) {
         if (rng.bool(0.7)) return powerProblem(rng.int(11, 30), 2);
         return powerProblem(rng.int(11, 15), 3);
@@ -2544,7 +2679,10 @@ export const evaluatingExponentsWithFractionalBases = topic(
     {
       id: "powers-of-fractions",
       title: t("Powers of fractions", "分数的乘方"),
-      explanation: t("$\\left(\\frac{3}{4}\\right)^2 = \\frac{9}{16}$.", "$\\left(\\frac{3}{4}\\right)^2 = \\frac{9}{16}$。"),
+      explanation: t(
+        "A power of a fraction multiplies the fraction by itself, so raise both the numerator and the denominator to that power.\n\n$\\left(\\frac{3}{4}\\right)^2 = \\frac{3}{4} \\times \\frac{3}{4} = \\frac{9}{16}$. Squaring only the numerator, to get $\\frac{9}{4}$, is a common mistake.",
+        "分数的乘方是这个分数连乘，所以分子和分母都要乘方。\n\n$\\left(\\frac{3}{4}\\right)^2 = \\frac{3}{4} \\times \\frac{3}{4} = \\frac{9}{16}$。只把分子平方、得到 $\\frac{9}{4}$，是常见的错误。",
+      ),
       generate(rng) {
         for (;;) {
           const b = rng.int(2, 10);
@@ -2569,8 +2707,8 @@ export const evaluatingExponentsWithFractionalBases = topic(
       id: "products-with-powers-of-fractions",
       title: t("A whole number times a power of a fraction", "整数乘分数的乘方"),
       explanation: t(
-        "$18 \\times \\left(\\frac{1}{3}\\right)^2 = 18 \\times \\frac{1}{9} = 2$.",
-        "$18 \\times \\left(\\frac{1}{3}\\right)^2 = 18 \\times \\frac{1}{9} = 2$。",
+        "Work out the power first, then multiply. Multiplying a whole number by a unit fraction divides it by the denominator.\n\n$18 \\times \\left(\\frac{1}{3}\\right)^2 = 18 \\times \\frac{1}{9} = 2$.",
+        "先算乘方，再算乘法。整数乘一个分数单位，就是用分母去除这个整数。\n\n$18 \\times \\left(\\frac{1}{3}\\right)^2 = 18 \\times \\frac{1}{9} = 2$。",
       ),
       generate(rng) {
         for (;;) {
@@ -2610,7 +2748,10 @@ export const evaluatingExponentsWithDecimalBases = topic(
     {
       id: "powers-of-decimals-less-than-one",
       title: t("Decimals less than 1", "小于 1 的小数"),
-      explanation: t("$0.4^2 = 0.16$ and $0.1^3 = 0.001$.", "$0.4^2 = 0.16$，$0.1^3 = 0.001$。"),
+      explanation: t(
+        "Multiply the digits as whole numbers, then count decimal places: the product has as many as all the factors together. Powers of a decimal less than $1$ get smaller.\n\n$0.4^2 = 0.16$, since $4 \\times 4 = 16$ with $2$ decimal places, and $0.1^3 = 0.001$ with $3$. Writing $0.4^2 = 0.16$ as $1.6$ or $0.8$ is a common mistake.",
+        "先把数字当作整数相乘，再数小数位数：积的小数位数等于所有因数的小数位数之和。小于 $1$ 的小数，乘方后会变小。\n\n$0.4^2 = 0.16$，因为 $4 \\times 4 = 16$，有 $2$ 位小数；$0.1^3 = 0.001$，有 $3$ 位小数。把 $0.4^2$ 算成 $1.6$ 或 $0.8$ 是常见的错误。",
+      ),
       generate(rng) {
         const p = rng.bool(0.7) ? 1 : 2;
         const n = rng.int(1, 9);
@@ -2630,7 +2771,10 @@ export const evaluatingExponentsWithDecimalBases = topic(
     {
       id: "powers-of-decimals-greater-than-one",
       title: t("Decimals greater than 1", "大于 1 的小数"),
-      explanation: t("$1.5^2 = 2.25$ and $1.1^3 = 1.331$.", "$1.5^2 = 2.25$，$1.1^3 = 1.331$。"),
+      explanation: t(
+        "Multiply step by step, placing the decimal point after each multiplication by counting decimal places.\n\n$1.5^2 = 2.25$, since $15 \\times 15 = 225$ with $2$ places. $1.1^3 = 1.21 \\times 1.1 = 1.331$, with $3$ places.",
+        "一步一步地乘，每乘一次都数小数位数来点小数点。\n\n$1.5^2 = 2.25$，因为 $15 \\times 15 = 225$，有 $2$ 位小数。$1.1^3 = 1.21 \\times 1.1 = 1.331$，有 $3$ 位小数。",
+      ),
       generate(rng) {
         const n = nonZeroEnd(rng, 2);
         const e = n <= 13 ? rng.int(2, 3) : 2;
@@ -2662,7 +2806,10 @@ export const comparingExponents = topic(
     {
       id: "comparing-two-powers",
       title: t("Comparing two powers", "比较两个乘方"),
-      explanation: t("$3^4 = 81 > 4^3 = 64$.", "$3^4 = 81 > 4^3 = 64$。"),
+      explanation: t(
+        "To compare powers, find the value of each, then compare the values. A larger base or a larger exponent alone does not decide it.\n\n$3^4 = 81$ and $4^3 = 64$, so $3^4 > 4^3$.",
+        "比较乘方的大小，先分别求出它们的值，再比较。只看底数大或指数大是不能决定的。\n\n$3^4 = 81$，$4^3 = 64$，所以 $3^4 > 4^3$。",
+      ),
       generate(rng) {
         let a: number;
         let b: number;
@@ -2698,8 +2845,8 @@ export const comparingExponents = topic(
       id: "greatest-of-several-powers",
       title: t("The greatest power", "最大的乘方"),
       explanation: t(
-        "Of $2^6$, $6^2$ and $4^3$: $64$, $36$ and $64$, so $2^6$ and $4^3$ are equal and greatest.",
-        "$2^6$、$6^2$、$4^3$ 的值是 $64$、$36$、$64$，所以 $2^6$ 和 $4^3$ 相等且最大。",
+        "Evaluate every power, then pick the greatest value. Different powers can have the same value.\n\nOf $2^6$, $6^2$ and $4^3$, the values are $64$, $36$ and $64$, so $2^6$ and $4^3$ are equal and greatest.",
+        "把每个乘方都算出来，再找出最大的值。不同的乘方可能相等。\n\n$2^6$、$6^2$、$4^3$ 的值是 $64$、$36$、$64$，所以 $2^6$ 和 $4^3$ 相等且最大。",
       ),
       generate(rng) {
         for (;;) {
@@ -2740,7 +2887,10 @@ export const evaluatingWholeNumberExpressionsContainingExponents = topic(
     {
       id: "exponents-in-the-order-of-operations",
       title: t("Exponents before multiplying", "先算乘方"),
-      explanation: t("$40 - 3^2 \\times 4 = 40 - 9 \\times 4 = 40 - 36 = 4$.", "$40 - 3^2 \\times 4 = 40 - 9 \\times 4 = 40 - 36 = 4$。"),
+      explanation: t(
+        "In the order of operations, exponents come before multiplication and division, which come before addition and subtraction.\n\n$40 - 3^2 \\times 4$: first $3^2 = 9$, then $9 \\times 4 = 36$, then $40 - 36 = 4$. Working left to right, $40 - 3 = 37$, would be wrong.",
+        "运算顺序是：先算乘方，再算乘除，最后算加减。\n\n$40 - 3^2 \\times 4$：先算 $3^2 = 9$，再算 $9 \\times 4 = 36$，最后 $40 - 36 = 4$。如果从左往右先算 $40 - 3 = 37$，就错了。",
+      ),
       generate(rng) {
         const b = rng.int(2, 6);
         const e = rng.int(2, b <= 3 ? 4 : 2);
@@ -2765,7 +2915,10 @@ export const evaluatingWholeNumberExpressionsContainingExponents = topic(
     {
       id: "exponents-with-parentheses",
       title: t("Parentheses and exponents", "括号与乘方"),
-      explanation: t("$(4 + 2)^2 - 10 = 6^2 - 10 = 36 - 10 = 26$.", "$(4 + 2)^2 - 10 = 6^2 - 10 = 36 - 10 = 26$。"),
+      explanation: t(
+        "Work inside parentheses first, then the exponent, then the rest. An exponent outside the parentheses applies to the whole value inside.\n\n$(4 + 2)^2 - 10 = 6^2 - 10 = 36 - 10 = 26$. Squaring each number separately, $16 + 4$, gives the wrong value.",
+        "先算括号里面的，再算乘方，最后算其余部分。括号外面的指数作用于括号内的整个结果。\n\n$(4 + 2)^2 - 10 = 6^2 - 10 = 36 - 10 = 26$。把两个数分别平方再相加，即 $16 + 4$，就错了。",
+      ),
       generate(rng) {
         const x = rng.int(1, 6);
         const y = rng.int(1, 6);

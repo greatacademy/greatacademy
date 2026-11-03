@@ -376,8 +376,8 @@ export const evaluatingWholeNumberExpressionsWithParentheses = topic(
       id: "one-pair-of-parentheses",
       title: t("One pair of parentheses", "一对小括号"),
       explanation: t(
-        "$(17 + 8) \\times 4 = 25 \\times 4 = 100$. Without the parentheses the multiplication would come first.",
-        "$(17 + 8) \\times 4 = 25 \\times 4 = 100$。如果没有括号，就要先算乘法。",
+        "Parentheses mark the part to work out first, even when it is an addition and the rest is a multiplication. Find the value inside the parentheses, then finish the expression:\n\n$$(17 + 8) \\times 4 = 25 \\times 4 = 100.$$\n\nWithout the parentheses the multiplication would come first: $17 + 8 \\times 4 = 17 + 32 = 49$, a different answer.",
+        "小括号表示要先算的部分，即使括号里是加法、括号外是乘法，也要先算括号里面。先求出括号里的值，再算完整个算式：\n\n$$(17 + 8) \\times 4 = 25 \\times 4 = 100。$$\n\n如果没有括号，就要先算乘法：$17 + 8 \\times 4 = 17 + 32 = 49$，结果不一样。",
       ),
       generate: (rng) => bracketedProblem(oneParenthesis(rng)),
     },
@@ -385,8 +385,8 @@ export const evaluatingWholeNumberExpressionsWithParentheses = topic(
       id: "brackets-and-parentheses",
       title: t("Brackets and parentheses", "中括号和小括号"),
       explanation: t(
-        "$3 \\times [20 - (4 + 9)] = 3 \\times [20 - 13] = 3 \\times 7 = 21$. Start with the parentheses inside the brackets.",
-        "$3 \\times [20 - (4 + 9)] = 3 \\times [20 - 13] = 3 \\times 7 = 21$。先算中括号里的小括号。",
+        "When parentheses sit inside brackets, work from the inside out: first the parentheses, then the rest of the brackets, then everything outside. Inside each grouping, multiplication and division still come before addition and subtraction.\n\n$$3 \\times [20 - (4 + 9)] = 3 \\times [20 - 13] = 3 \\times 7 = 21.$$",
+        "中括号里套着小括号时，要从里往外算：先算小括号，再算中括号里剩下的部分，最后算括号外面。在每一层括号里，仍然先乘除、后加减。\n\n$$3 \\times [20 - (4 + 9)] = 3 \\times [20 - 13] = 3 \\times 7 = 21。$$",
       ),
       generate: (rng) => bracketedProblem(nestedGroups(rng)),
     },
@@ -637,8 +637,8 @@ export const creatingWholeNumberExpressionsFromTerminology = topic(
       id: "evaluating-a-description",
       title: t("Evaluating a description", "按描述计算"),
       explanation: t(
-        '"Twice the difference of 20 and 6" is $2 \\times (20 - 6) = 2 \\times 14 = 28$. Write the expression first, then evaluate it.',
-        '"20 与 6 的差的 2 倍" 是 $2 \\times (20 - 6) = 2 \\times 14 = 28$。先列出算式，再计算。',
+        'Turn the words into an expression first, then evaluate it. "Sum" means add, "difference" means subtract, "product" means multiply and "quotient" means divide. When a description says "twice the difference", the difference must be found first, so it goes in parentheses:\n\n$$2 \\times (20 - 6) = 2 \\times 14 = 28.$$',
+        '先把文字改写成算式，再计算。"和"表示加，"差"表示减，"积"表示乘，"商"表示除。像"差的 2 倍"这样的说法，要先求差，所以差要放在括号里：\n\n$$2 \\times (20 - 6) = 2 \\times 14 = 28。$$',
       ),
       generate(rng) {
         const p = termPhrase(rng);
@@ -674,8 +674,8 @@ export const additiveComparisonsOfWholeNumberExpressions = topic(
       id: "how-much-greater",
       title: t("How much greater", "大多少"),
       explanation: t(
-        "$(512 \\times 46) + 30$ is $30$ greater than $512 \\times 46$: both contain $512 \\times 46$, and the first adds $30$.",
-        "$(512 \\times 46) + 30$ 比 $512 \\times 46$ 大 $30$：两个算式都含有 $512 \\times 46$，前一个又加了 $30$。",
+        "You can compare two expressions without calculating them when they share a part. Look for the part they have in common and see what one adds on top of it. $(512 \\times 46) + 30$ is $512 \\times 46$ with $30$ more, so it is $30$ greater, whatever $512 \\times 46$ equals.",
+        "两个算式含有相同的部分时，不必算出结果也能比较。先找出共同的部分，再看其中一个在它的基础上多加了什么。$(512 \\times 46) + 30$ 是在 $512 \\times 46$ 上再加 $30$，所以无论 $512 \\times 46$ 等于多少，它都大 $30$。",
       ),
       generate(rng) {
         const e = bigExpression(rng);
@@ -697,8 +697,8 @@ export const additiveComparisonsOfWholeNumberExpressions = topic(
       id: "comparing-sums-of-the-same-parts",
       title: t("Sums with a common part", "含有相同部分的和"),
       explanation: t(
-        "$A = 1{,}362 + 485 + 70$ and $B = 1{,}362 + 485$. $A$ has an extra $70$, so $A$ is $70$ greater than $B$.",
-        "$A = 1{,}362 + 485 + 70$，$B = 1{,}362 + 485$。$A$ 多了一个 $70$，所以 $A$ 比 $B$ 大 $70$。",
+        "When two sums share the same parts, cross out what they have in common and compare what is left. $A = 1{,}362 + 485 + 70$ and $B = 1{,}362 + 485$ both contain $1{,}362 + 485$. Only $A$ has the extra $70$, so $A$ is $70$ greater than $B$. There is no need to add up either sum.",
+        "两个和含有相同的部分时，把共同的部分划掉，比较剩下的部分。$A = 1{,}362 + 485 + 70$ 和 $B = 1{,}362 + 485$ 都含有 $1{,}362 + 485$，只有 $A$ 多了一个 $70$，所以 $A$ 比 $B$ 大 $70$。两个和都不必算出来。",
       ),
       generate(rng) {
         const [x, y, k] = [rng.int(1000, 9000), rng.int(100, 900), rng.int(5, 95)];
@@ -935,8 +935,8 @@ export const comparingNegativeNumbers = topic(
       id: "finding-the-least-and-greatest",
       title: t("The least and the greatest", "最小和最大"),
       explanation: t(
-        "Of $-7$, $3$, $-12$ and $0$, the least is $-12$ (farthest left) and the greatest is $3$.",
-        "在 $-7$、$3$、$-12$、$0$ 中，最小的是 $-12$（最靠左），最大的是 $3$。",
+        "On a number line, numbers grow from left to right, so the least number is the one farthest left and the greatest is the one farthest right. Every negative number is less than $0$, and among negative numbers the one with the larger digits is farther left. Of $-7$, $3$, $-12$ and $0$, the least is $-12$ and the greatest is $3$. A common mistake is to pick $-7$ as less than $-12$ because $7 < 12$.",
+        "在数轴上，数从左往右越来越大，所以最小的数在最左边，最大的数在最右边。负数都比 $0$ 小；在负数中，负号后面的数越大，位置越靠左。在 $-7$、$3$、$-12$、$0$ 中，最小的是 $-12$，最大的是 $3$。常见的错误是因为 $7 < 12$ 就认为 $-7$ 比 $-12$ 小。",
       ),
       generate(rng) {
         let xs: number[];
@@ -981,8 +981,8 @@ export const multiplyingNumbersByPowersOfTenUsingPlaceValue = topic(
       id: "multiplying-by-a-power-of-ten",
       title: t("Multiplying by 10, 100 or 1,000", "乘 10、100 或 1,000"),
       explanation: t(
-        "$4{,}050 \\times 1{,}000$: each digit moves three places left, so the result is $4{,}050{,}000$.",
-        "$4{,}050 \\times 1{,}000$：每个数字向左移三位，结果是 $4{,}050{,}000$。",
+        "Multiplying by $10$ makes each digit worth ten times as much, so every digit moves one place to the left and a zero fills the ones place. Multiplying by $100$ moves the digits two places, and by $1{,}000$ three places. So $4{,}050 \\times 1{,}000 = 4{,}050{,}000$: the digits $4$, $0$, $5$, $0$ keep their order and three zeros are added on the right.",
+        "乘 $10$ 时，每个数字表示的值都变成原来的十倍，所以每个数字都向左移动一位，个位补一个 $0$。乘 $100$ 向左移两位，乘 $1{,}000$ 向左移三位。所以 $4{,}050 \\times 1{,}000 = 4{,}050{,}000$：数字 $4$、$0$、$5$、$0$ 的顺序不变，右边添上三个 $0$。",
       ),
       generate(rng) {
         const n = rng.bool() ? randomWithDigits(rng, rng.int(2, 4)) : randomWithDigits(rng, rng.int(1, 3)) * 10;
@@ -1004,8 +1004,8 @@ export const multiplyingNumbersByPowersOfTenUsingPlaceValue = topic(
       id: "finding-the-missing-factor",
       title: t("Finding the missing factor", "求未知因数"),
       explanation: t(
-        "$56 \\times \\square = 56{,}000$: the digits moved three places, so $\\square = 1{,}000$. And $\\square \\times 100 = 7{,}300$ gives $\\square = 73$.",
-        "$56 \\times \\square = 56{,}000$：数字移动了三位，所以 $\\square = 1{,}000$。又如 $\\square \\times 100 = 7{,}300$，得 $\\square = 73$。",
+        "Compare the number before and after to see how many places the digits moved. Each place is one factor of $10$. In $56 \\times \\square = 56{,}000$ the digits $56$ moved three places to the left, so $\\square = 1{,}000$. If the power of ten is given instead, move the digits back: $\\square \\times 100 = 7{,}300$ means $\\square$ is $7{,}300$ with the digits moved two places right, which is $73$.",
+        "比较乘之前和乘之后的数，看数字移动了几位，每移动一位就是乘一个 $10$。在 $56 \\times \\square = 56{,}000$ 中，数字 $56$ 向左移动了三位，所以 $\\square = 1{,}000$。如果已知的是 10 的幂，就把数字移回去：$\\square \\times 100 = 7{,}300$，把 $7{,}300$ 的数字向右移两位，得 $\\square = 73$。",
       ),
       generate(rng) {
         const n = randomWithDigits(rng, rng.int(2, 4));
@@ -1095,8 +1095,8 @@ export const twoDigitByOneDigitMultiplication = topic(
       id: "multiplying-with-the-standard-algorithm",
       title: t("The standard algorithm", "竖式计算"),
       explanation: t(
-        "$58 \\times 7$: $7 \\times 8 = 56$, write $6$ and carry $5$. Then $7 \\times 5 + 5 = 40$. So $58 \\times 7 = 406$.",
-        "$58 \\times 7$：$7 \\times 8 = 56$，写 $6$ 进 $5$；再算 $7 \\times 5 + 5 = 40$。所以 $58 \\times 7 = 406$。",
+        "In the standard algorithm, multiply the ones digit first. Write the ones digit of that product and carry the tens to the next column. Then multiply the tens digit and add the carry.\n\nFor $58 \\times 7$: $7 \\times 8 = 56$, write $6$ and carry $5$. Then $7 \\times 5 = 35$, plus the carried $5$ is $40$. So $58 \\times 7 = 406$. Forgetting to add the carry would give $356$.",
+        "用竖式计算时，先用一位数乘个位，把积的个位写下来，十位上的数进到下一位；再乘十位，并加上进位。\n\n计算 $58 \\times 7$：$7 \\times 8 = 56$，写 $6$ 进 $5$；$7 \\times 5 = 35$，加上进位的 $5$ 得 $40$。所以 $58 \\times 7 = 406$。如果忘了加进位，就会错算成 $356$。",
       ),
       generate: (rng) => oneDigitProduct(rng, 2),
     },
@@ -1104,8 +1104,8 @@ export const twoDigitByOneDigitMultiplication = topic(
       id: "two-digit-by-one-digit-word-problems",
       title: t("Word problems", "应用题"),
       explanation: t(
-        "$8$ rows of $36$ chairs hold $36 \\times 8 = 288$ chairs.",
-        "$8$ 排椅子，每排 $36$ 把，一共 $36 \\times 8 = 288$ 把。",
+        "When a problem has equal groups, multiply the size of one group by the number of groups. Find the two numbers first: here $8$ rows is the number of groups and $36$ chairs is the size of each row. Then multiply: $36 \\times 8 = 288$ chairs in all.",
+        "题目里有几个相同的组时，用每组的数量乘组数。先找出这两个数：$8$ 排是组数，每排 $36$ 把是每组的数量。再相乘：一共 $36 \\times 8 = 288$ 把椅子。",
       ),
       generate(rng) {
         const n = rng.int(12, 99);
@@ -1137,8 +1137,8 @@ export const threeAndFourDigitByOneDigitMultiplication = topic(
       id: "three-digit-by-one-digit",
       title: t("Three-digit numbers", "三位数乘一位数"),
       explanation: t(
-        "$436 \\times 7 = 3{,}052$: $42$, write $2$ carry $4$; $21 + 4 = 25$, write $5$ carry $2$; $28 + 2 = 30$.",
-        "$436 \\times 7 = 3{,}052$：$42$，写 $2$ 进 $4$；$21 + 4 = 25$，写 $5$ 进 $2$；$28 + 2 = 30$。",
+        "Multiply each digit by the one-digit number, from right to left. After each step, write one digit and carry the rest to the next column, where it is added after multiplying.\n\nFor $436 \\times 7$: $7 \\times 6 = 42$, write $2$ carry $4$. $7 \\times 3 = 21$, plus $4$ is $25$, write $5$ carry $2$. $7 \\times 4 = 28$, plus $2$ is $30$. So $436 \\times 7 = 3{,}052$.",
+        "从右往左，用一位数依次乘每一位。每一步写下一个数字，其余进到下一位，乘完下一位后再加上。\n\n计算 $436 \\times 7$：$7 \\times 6 = 42$，写 $2$ 进 $4$；$7 \\times 3 = 21$，加 $4$ 得 $25$，写 $5$ 进 $2$；$7 \\times 4 = 28$，加 $2$ 得 $30$。所以 $436 \\times 7 = 3{,}052$。",
       ),
       generate: (rng) => oneDigitProduct(rng, 3),
     },
@@ -1146,8 +1146,8 @@ export const threeAndFourDigitByOneDigitMultiplication = topic(
       id: "four-digit-by-one-digit",
       title: t("Four-digit numbers", "四位数乘一位数"),
       explanation: t(
-        "$5{,}208 \\times 6 = 31{,}248$. A zero digit still gets the carry: $6 \\times 0 + 4 = 4$.",
-        "$5{,}208 \\times 6 = 31{,}248$。遇到 0 时也要加上进位：$6 \\times 0 + 4 = 4$。",
+        "A four-digit number is multiplied the same way, one column at a time from the right, carrying as you go. Be careful with a zero digit: its product is $0$, but the carry from the column before must still be added.\n\nFor $5{,}208 \\times 6$: $6 \\times 8 = 48$, write $8$ carry $4$. $6 \\times 0 + 4 = 4$. $6 \\times 2 = 12$, write $2$ carry $1$. $6 \\times 5 + 1 = 31$. So $5{,}208 \\times 6 = 31{,}248$.",
+        "四位数乘一位数也是从右往左一位一位地乘，边乘边进位。遇到 $0$ 要小心：$0$ 乘任何数都得 $0$，但前一位的进位仍要加上。\n\n计算 $5{,}208 \\times 6$：$6 \\times 8 = 48$，写 $8$ 进 $4$；$6 \\times 0 + 4 = 4$；$6 \\times 2 = 12$，写 $2$ 进 $1$；$6 \\times 5 + 1 = 31$。所以 $5{,}208 \\times 6 = 31{,}248$。",
       ),
       generate: (rng) => oneDigitProduct(rng, 4),
     },
@@ -1167,13 +1167,19 @@ export const fiveAndSixDigitByOneDigitMultiplication = topic(
     {
       id: "five-digit-by-one-digit",
       title: t("Five-digit numbers", "五位数乘一位数"),
-      explanation: t("$30{,}457 \\times 8 = 243{,}656$.", "$30{,}457 \\times 8 = 243{,}656$。"),
+      explanation: t(
+        "Longer numbers use the same steps as shorter ones: multiply each digit from right to left, write one digit and carry the rest. Keep the columns lined up and add every carry.\n\nFor $30{,}457 \\times 8$: $8 \\times 7 = 56$ (write $6$, carry $5$); $8 \\times 5 + 5 = 45$ (write $5$, carry $4$); $8 \\times 4 + 4 = 36$ (write $6$, carry $3$); $8 \\times 0 + 3 = 3$; $8 \\times 3 = 24$. So $30{,}457 \\times 8 = 243{,}656$.",
+        "位数多的数，乘法步骤和位数少时一样：从右往左依次乘每一位，写下一个数字，其余进位。注意数位要对齐，每次的进位都要加上。\n\n计算 $30{,}457 \\times 8$：$8 \\times 7 = 56$（写 $6$ 进 $5$）；$8 \\times 5 + 5 = 45$（写 $5$ 进 $4$）；$8 \\times 4 + 4 = 36$（写 $6$ 进 $3$）；$8 \\times 0 + 3 = 3$；$8 \\times 3 = 24$。所以 $30{,}457 \\times 8 = 243{,}656$。",
+      ),
       generate: (rng) => oneDigitProduct(rng, 5),
     },
     {
       id: "six-digit-by-one-digit",
       title: t("Six-digit numbers", "六位数乘一位数"),
-      explanation: t("$215{,}806 \\times 4 = 863{,}224$.", "$215{,}806 \\times 4 = 863{,}224$。"),
+      explanation: t(
+        "A six-digit number takes six steps, one for each digit, but each step is the same: multiply, add the carry, write one digit, carry the rest. A zero digit still passes its carry along.\n\nFor $215{,}806 \\times 4$: $24$ (write $4$, carry $2$); $0 + 2 = 2$; $32$ (write $2$, carry $3$); $20 + 3 = 23$ (write $3$, carry $2$); $4 + 2 = 6$; $8$. So $215{,}806 \\times 4 = 863{,}224$. Estimate to check: $200{,}000 \\times 4 = 800{,}000$ is close.",
+        "六位数要乘六次，每一位乘一次，但每一步都一样：相乘，加进位，写下一个数字，其余进位。遇到 $0$ 时也要把进位传下去。\n\n计算 $215{,}806 \\times 4$：$24$（写 $4$ 进 $2$）；$0 + 2 = 2$；$32$（写 $2$ 进 $3$）；$20 + 3 = 23$（写 $3$ 进 $2$）；$4 + 2 = 6$；$8$。所以 $215{,}806 \\times 4 = 863{,}224$。可以用估算检查：$200{,}000 \\times 4 = 800{,}000$，结果接近。",
+      ),
       generate: (rng) => oneDigitProduct(rng, 6),
     },
   ],
@@ -1207,8 +1213,8 @@ export const twoDigitByTwoDigitMultiplication = topic(
       id: "partial-product-of-the-tens-digit",
       title: t("The partial product of the tens digit", "十位数字的部分积"),
       explanation: t(
-        "In $64 \\times 27$, the tens digit $2$ stands for $20$, so its partial product is $64 \\times 20 = 1{,}280$, not $128$.",
-        "在 $64 \\times 27$ 中，十位上的 $2$ 表示 $20$，所以它的部分积是 $64 \\times 20 = 1{,}280$，而不是 $128$。",
+        "In the standard algorithm, each digit of the second factor gives its own partial product. The tens digit stands for tens, so multiply by its full value. In $64 \\times 27$ the $2$ means $20$, and its partial product is $64 \\times 20 = 1{,}280$. That is why the second row of the algorithm starts with a $0$ in the ones place. Writing $64 \\times 2 = 128$ without the zero is the most common mistake.",
+        "用竖式计算时，第二个因数的每一位都会得到一个部分积。十位上的数表示几个十，所以要乘它实际表示的值。在 $64 \\times 27$ 中，$2$ 表示 $20$，它的部分积是 $64 \\times 20 = 1{,}280$。所以竖式第二行的个位要写 $0$（或空出来）。最常见的错误是写成 $64 \\times 2 = 128$，漏掉了 $0$。",
       ),
       generate(rng) {
         const n = twoDigitNoZero(rng);
@@ -1233,8 +1239,8 @@ export const twoDigitByTwoDigitMultiplication = topic(
       id: "multiplying-two-digit-numbers",
       title: t("Finding the product", "求积"),
       explanation: t(
-        "$38 \\times 45$: $38 \\times 5 = 190$ and $38 \\times 40 = 1{,}520$, so $38 \\times 45 = 190 + 1{,}520 = 1{,}710$.",
-        "$38 \\times 45$：$38 \\times 5 = 190$，$38 \\times 40 = 1{,}520$，所以 $38 \\times 45 = 190 + 1{,}520 = 1{,}710$。",
+        "Split the second factor into tens and ones, find a partial product for each, and add them.\n\nFor $38 \\times 45$: the ones give $38 \\times 5 = 190$ and the tens give $38 \\times 40 = 1{,}520$. Adding the partial products, $38 \\times 45 = 190 + 1{,}520 = 1{,}710$. To check, estimate $40 \\times 45 = 1{,}800$, which is close.",
+        "把第二个因数分成几个十和几个一，分别求出部分积，再把它们相加。\n\n计算 $38 \\times 45$：个位得 $38 \\times 5 = 190$，十位得 $38 \\times 40 = 1{,}520$。把部分积相加，$38 \\times 45 = 190 + 1{,}520 = 1{,}710$。可以估算检查：$40 \\times 45 = 1{,}800$，结果接近。",
       ),
       generate: (rng) => multiDigitProduct(rng.int(12, 99), twoDigitNoZero(rng)),
     },
@@ -1254,13 +1260,19 @@ export const multiDigitByTwoDigitMultiplication = topic(
     {
       id: "three-digit-by-two-digit",
       title: t("Three-digit by two-digit", "三位数乘两位数"),
-      explanation: t("$407 \\times 36 = 2{,}442 + 12{,}210 = 14{,}652$.", "$407 \\times 36 = 2{,}442 + 12{,}210 = 14{,}652$。"),
+      explanation: t(
+        "Multiply the whole first number by the ones digit, then by the tens digit (which stands for tens), and add the two partial products.\n\nFor $407 \\times 36$: $407 \\times 6 = 2{,}442$ and $407 \\times 30 = 12{,}210$. So $407 \\times 36 = 2{,}442 + 12{,}210 = 14{,}652$. The zero in $407$ still needs its carry in each row.",
+        "先用个位上的数去乘整个第一个数，再用十位上的数（表示几个十）去乘，最后把两个部分积相加。\n\n计算 $407 \\times 36$：$407 \\times 6 = 2{,}442$，$407 \\times 30 = 12{,}210$。所以 $407 \\times 36 = 2{,}442 + 12{,}210 = 14{,}652$。每一行中，$407$ 里的 $0$ 那一位都别忘了加进位。",
+      ),
       generate: (rng) => multiDigitProduct(randomWithDigits(rng, 3), twoDigitNoZero(rng)),
     },
     {
       id: "four-digit-by-two-digit",
       title: t("Four-digit by two-digit", "四位数乘两位数"),
-      explanation: t("$2{,}315 \\times 42 = 4{,}630 + 92{,}600 = 97{,}230$.", "$2{,}315 \\times 42 = 4{,}630 + 92{,}600 = 97{,}230$。"),
+      explanation: t(
+        "A four-digit number times a two-digit number still has two partial products: one for the ones digit and one for the tens digit. Line up the columns and add.\n\nFor $2{,}315 \\times 42$: $2{,}315 \\times 2 = 4{,}630$ and $2{,}315 \\times 40 = 92{,}600$. So $2{,}315 \\times 42 = 4{,}630 + 92{,}600 = 97{,}230$. Estimate to check: $2{,}000 \\times 40 = 80{,}000$, so the answer is near $100{,}000$, not near $10{,}000$.",
+        "四位数乘两位数，仍然只有两个部分积：一个来自个位，一个来自十位。数位对齐后相加。\n\n计算 $2{,}315 \\times 42$：$2{,}315 \\times 2 = 4{,}630$，$2{,}315 \\times 40 = 92{,}600$。所以 $2{,}315 \\times 42 = 4{,}630 + 92{,}600 = 97{,}230$。可以估算检查：$2{,}000 \\times 40 = 80{,}000$，结果应接近 $100{,}000$，而不是 $10{,}000$。",
+      ),
       generate: (rng) => multiDigitProduct(randomWithDigits(rng, 4), twoDigitNoZero(rng)),
     },
   ],
@@ -1280,8 +1292,8 @@ export const threeDigitByThreeDigitMultiplication = topic(
       id: "partial-product-of-the-hundreds-digit",
       title: t("The partial product of the hundreds digit", "百位数字的部分积"),
       explanation: t(
-        "In $326 \\times 241$, the hundreds digit $2$ stands for $200$: its partial product is $326 \\times 200 = 65{,}200$.",
-        "在 $326 \\times 241$ 中，百位上的 $2$ 表示 $200$，它的部分积是 $326 \\times 200 = 65{,}200$。",
+        "The hundreds digit stands for hundreds, so its partial product is the first factor times that many hundreds. In $326 \\times 241$ the $2$ means $200$, and its partial product is $326 \\times 200 = 65{,}200$. In the algorithm this row ends in two zeros. Writing $326 \\times 2 = 652$ in that row would be off by a factor of $100$.",
+        "百位上的数表示几个百，所以它的部分积是第一个因数乘这么多个百。在 $326 \\times 241$ 中，$2$ 表示 $200$，部分积是 $326 \\times 200 = 65{,}200$。在竖式里，这一行末尾有两个 $0$。如果这一行写成 $326 \\times 2 = 652$，就小了 $100$ 倍。",
       ),
       generate(rng) {
         const n = randomWithDigits(rng, 3);
@@ -1306,8 +1318,8 @@ export const threeDigitByThreeDigitMultiplication = topic(
       id: "multiplying-three-digit-numbers",
       title: t("Finding the product", "求积"),
       explanation: t(
-        "$152 \\times 304 = 608 + 0 + 45{,}600 = 46{,}208$. A zero digit gives a partial product of $0$.",
-        "$152 \\times 304 = 608 + 0 + 45{,}600 = 46{,}208$。数字 0 对应的部分积是 0。",
+        "Find one partial product for each digit of the second factor (ones, tens, hundreds) and add them. A zero digit gives a partial product of $0$, so that row can be skipped.\n\nFor $152 \\times 304$: the ones give $152 \\times 4 = 608$, the tens give $0$, and the hundreds give $152 \\times 300 = 45{,}600$. So $152 \\times 304 = 608 + 45{,}600 = 46{,}208$.",
+        "第二个因数的每一位（个位、十位、百位）各得到一个部分积，再把它们相加。某一位是 $0$ 时，部分积是 $0$，这一行可以省去。\n\n计算 $152 \\times 304$：个位得 $152 \\times 4 = 608$，十位得 $0$，百位得 $152 \\times 300 = 45{,}600$。所以 $152 \\times 304 = 608 + 45{,}600 = 46{,}208$。",
       ),
       generate: (rng) => multiDigitProduct(randomWithDigits(rng, 3), randomWithDigits(rng, 3)),
     },
@@ -1367,8 +1379,8 @@ export const twoDigitByOneDigitDivision = topic(
       id: "two-digit-dividends-without-remainders",
       title: t("Without a remainder", "没有余数"),
       explanation: t(
-        "$96 \\div 4$: $9 \\div 4 \\to 2$, $9 - 8 = 1$; bring down $6$: $16 \\div 4 = 4$. So $96 \\div 4 = 24$.",
-        "$96 \\div 4$：$9 \\div 4$ 商 2，$9 - 8 = 1$；落下 6：$16 \\div 4 = 4$。所以 $96 \\div 4 = 24$。",
+        "Long division works one digit at a time from the left. Divide, multiply, subtract, then bring down the next digit and repeat.\n\nFor $96 \\div 4$: $9 \\div 4$ is $2$, and $9 - 8 = 1$. Bring down $6$ to make $16$; $16 \\div 4 = 4$. So $96 \\div 4 = 24$. Check by multiplying: $24 \\times 4 = 96$.",
+        "除法竖式从最高位开始，一位一位地除：除、乘、减，再落下下一位，重复这几步。\n\n计算 $96 \\div 4$：$9 \\div 4$ 商 $2$，$9 - 8 = 1$；落下 $6$ 得 $16$，$16 \\div 4 = 4$。所以 $96 \\div 4 = 24$。用乘法验算：$24 \\times 4 = 96$。",
       ),
       generate(rng) {
         const d = rng.int(2, 9);
@@ -1379,8 +1391,8 @@ export const twoDigitByOneDigitDivision = topic(
       id: "two-digit-dividends-with-remainders",
       title: t("With a remainder", "有余数"),
       explanation: t(
-        "$79 \\div 3$: $7 \\div 3 \\to 2$, $7 - 6 = 1$; bring down $9$: $19 \\div 3 \\to 6$, $19 - 18 = 1$. So $79 \\div 3 = 26 \\text{ R } 1$.",
-        "$79 \\div 3$：$7 \\div 3$ 商 2，$7 - 6 = 1$；落下 9：$19 \\div 3$ 商 6，$19 - 18 = 1$。所以 $79 \\div 3 = 26 \\cdots\\cdots 1$。",
+        "Divide the same way as without a remainder. When no digits are left to bring down, whatever is left after the last subtraction is the remainder. It must be less than the divisor.\n\nFor $79 \\div 3$: $7 \\div 3$ is $2$, $7 - 6 = 1$; bring down $9$ to make $19$; $19 \\div 3$ is $6$, $19 - 18 = 1$. So $79 \\div 3 = 26 \\text{ R } 1$. Check: $26 \\times 3 + 1 = 79$.",
+        "和没有余数时一样地除。没有数位可以落下时，最后一次相减剩下的数就是余数，余数一定比除数小。\n\n计算 $79 \\div 3$：$7 \\div 3$ 商 $2$，$7 - 6 = 1$；落下 $9$ 得 $19$，$19 \\div 3$ 商 $6$，$19 - 18 = 1$。所以 $79 \\div 3 = 26 \\cdots\\cdots 1$。验算：$26 \\times 3 + 1 = 79$。",
       ),
       generate(rng) {
         const d = rng.int(3, 9);
@@ -1404,8 +1416,8 @@ export const threeDigitByOneDigitDivision = topic(
       id: "three-digit-dividends-without-remainders",
       title: t("Without a remainder", "没有余数"),
       explanation: t(
-        "$728 \\div 7$: $7 \\div 7 \\to 1$; $2 \\div 7 \\to 0$; $28 \\div 7 \\to 4$. So $728 \\div 7 = 104$.",
-        "$728 \\div 7$：$7 \\div 7$ 商 1；$2 \\div 7$ 商 0；$28 \\div 7$ 商 4。所以 $728 \\div 7 = 104$。",
+        "Divide digit by digit from the left. If a step's number is smaller than the divisor, write $0$ in the quotient for that place and bring down the next digit. Skipping that $0$ is the most common mistake.\n\nFor $728 \\div 7$: $7 \\div 7$ is $1$. Then $2 \\div 7$ is $0$, so write $0$. Bring down $8$ to make $28$; $28 \\div 7 = 4$. So $728 \\div 7 = 104$, not $14$.",
+        "从最高位起一位一位地除。如果某一步的数比除数小，就在商的这一位写 $0$，再落下下一位。漏写这个 $0$ 是最常见的错误。\n\n计算 $728 \\div 7$：$7 \\div 7$ 商 $1$；$2 \\div 7$ 不够商 1，商 $0$；落下 $8$ 得 $28$，$28 \\div 7 = 4$。所以 $728 \\div 7 = 104$，而不是 $14$。",
       ),
       generate(rng) {
         const d = rng.int(2, 9);
@@ -1416,8 +1428,8 @@ export const threeDigitByOneDigitDivision = topic(
       id: "three-digit-dividends-with-remainders",
       title: t("With a remainder", "有余数"),
       explanation: t(
-        "$457 \\div 6$: $45 \\div 6 \\to 7$, $45 - 42 = 3$; $37 \\div 6 \\to 6$, $37 - 36 = 1$. So $457 \\div 6 = 76 \\text{ R } 1$.",
-        "$457 \\div 6$：$45 \\div 6$ 商 7，$45 - 42 = 3$；$37 \\div 6$ 商 6，$37 - 36 = 1$。所以 $457 \\div 6 = 76 \\cdots\\cdots 1$。",
+        "If the first digit is smaller than the divisor, start with the first two digits. Then divide, multiply, subtract and bring down as usual. What is left at the end is the remainder.\n\nFor $457 \\div 6$: $4$ is less than $6$, so start with $45$. $45 \\div 6$ is $7$, $45 - 42 = 3$. Bring down $7$ to make $37$; $37 \\div 6$ is $6$, $37 - 36 = 1$. So $457 \\div 6 = 76 \\text{ R } 1$.",
+        "如果最高位比除数小，就先用前两位去除。然后照常除、乘、减、落下，最后剩下的就是余数。\n\n计算 $457 \\div 6$：$4$ 比 $6$ 小，先看 $45$。$45 \\div 6$ 商 $7$，$45 - 42 = 3$；落下 $7$ 得 $37$，$37 \\div 6$ 商 $6$，$37 - 36 = 1$。所以 $457 \\div 6 = 76 \\cdots\\cdots 1$。",
       ),
       generate(rng) {
         const d = rng.int(3, 9);
@@ -1440,7 +1452,10 @@ export const fourDigitByOneDigitDivision = topic(
     {
       id: "four-digit-dividends-without-remainders",
       title: t("Without a remainder", "没有余数"),
-      explanation: t("$4{,}235 \\div 5 = 847$.", "$4{,}235 \\div 5 = 847$。"),
+      explanation: t(
+        "A four-digit dividend uses the same steps, repeated once more: divide, multiply, subtract, bring down.\n\nFor $4{,}235 \\div 5$: $4$ is less than $5$, so start with $42$. $42 \\div 5$ is $8$, $42 - 40 = 2$. Bring down $3$: $23 \\div 5$ is $4$, $23 - 20 = 3$. Bring down $5$: $35 \\div 5 = 7$. So $4{,}235 \\div 5 = 847$. Check: $847 \\times 5 = 4{,}235$.",
+        "被除数是四位数时，步骤相同，只是多重复一次：除、乘、减、落下。\n\n计算 $4{,}235 \\div 5$：$4$ 比 $5$ 小，先看 $42$。$42 \\div 5$ 商 $8$，$42 - 40 = 2$；落下 $3$，$23 \\div 5$ 商 $4$，$23 - 20 = 3$；落下 $5$，$35 \\div 5 = 7$。所以 $4{,}235 \\div 5 = 847$。验算：$847 \\times 5 = 4{,}235$。",
+      ),
       generate(rng) {
         const d = rng.int(2, 9);
         return exactDivision(dividend(rng, d, 4, true), d);
@@ -1449,7 +1464,10 @@ export const fourDigitByOneDigitDivision = topic(
     {
       id: "four-digit-dividends-with-remainders",
       title: t("With a remainder", "有余数"),
-      explanation: t("$6{,}053 \\div 4 = 1{,}513 \\text{ R } 1$.", "$6{,}053 \\div 4 = 1{,}513 \\cdots\\cdots 1$。"),
+      explanation: t(
+        "Divide step by step, and remember to write $0$ in the quotient whenever a step is too small to divide. The amount left after the last digit is the remainder.\n\nFor $6{,}053 \\div 4$: $6 \\div 4$ is $1$, remainder $2$. Bring down $0$: $20 \\div 4 = 5$. Bring down $5$: $5 \\div 4$ is $1$, remainder $1$. Bring down $3$: $13 \\div 4$ is $3$, remainder $1$. So $6{,}053 \\div 4 = 1{,}513 \\text{ R } 1$. Check: $1{,}513 \\times 4 + 1 = 6{,}053$.",
+        "一步一步地除，某一步不够除时记得在商的这一位写 $0$。除完最后一位后剩下的就是余数。\n\n计算 $6{,}053 \\div 4$：$6 \\div 4$ 商 $1$ 余 $2$；落下 $0$，$20 \\div 4 = 5$；落下 $5$，$5 \\div 4$ 商 $1$ 余 $1$；落下 $3$，$13 \\div 4$ 商 $3$ 余 $1$。所以 $6{,}053 \\div 4 = 1{,}513 \\cdots\\cdots 1$。验算：$1{,}513 \\times 4 + 1 = 6{,}053$。",
+      ),
       generate(rng) {
         const d = rng.int(3, 9);
         return remainderDivision(rng, dividend(rng, d, 4, false), d);
@@ -1478,8 +1496,8 @@ export const usingFractionsToRepresentDivisionOfWholeNumbers = topic(
       id: "quotients-as-mixed-numbers",
       title: t("Writing a quotient as a mixed number", "把商写成带分数"),
       explanation: t(
-        "$23 \\div 4$: $4 \\times 5 = 20$ and $3$ are left, so $23 \\div 4 = 5\\frac{3}{4}$.",
-        "$23 \\div 4$：$4 \\times 5 = 20$，余 3，所以 $23 \\div 4 = 5\\frac{3}{4}$。",
+        "A division can be written as a fraction: $23 \\div 4 = \\frac{23}{4}$. To write it as a mixed number, find how many whole times the divisor fits and what is left. The remainder becomes the numerator, and the divisor stays as the denominator.\n\n$4 \\times 5 = 20$ and $23 - 20 = 3$, so $23 \\div 4 = 5\\frac{3}{4}$.",
+        "除法可以写成分数：$23 \\div 4 = \\frac{23}{4}$。要写成带分数，先看除数能整除几次、还剩多少：余数作分子，除数作分母。\n\n$4 \\times 5 = 20$，$23 - 20 = 3$，所以 $23 \\div 4 = 5\\frac{3}{4}$。",
       ),
       generate(rng) {
         let a: number;
@@ -1505,8 +1523,8 @@ export const usingFractionsToRepresentDivisionOfWholeNumbers = topic(
       id: "fair-shares-as-fractions-or-mixed-numbers",
       title: t("Fair shares", "平均分"),
       explanation: t(
-        "$4$ friends share $7$ pizzas equally. Each gets $7 \\div 4 = \\frac{7}{4} = 1\\frac{3}{4}$ pizzas.",
-        "$4$ 个朋友平均分 $7$ 个比萨饼，每人分得 $7 \\div 4 = \\frac{7}{4} = 1\\frac{3}{4}$ 个。",
+        "Sharing equally is division. The amount being shared is divided by the number of people, and the answer can be a fraction or a mixed number. When $4$ friends share $7$ pizzas, each gets $7 \\div 4 = \\frac{7}{4} = 1\\frac{3}{4}$ pizzas: one whole pizza and three quarters of another. Be careful not to flip it: $\\frac{4}{7}$ would be the share if $7$ people shared $4$ pizzas.",
+        "平均分就是除法：用要分的总量除以人数，结果可以是分数或带分数。$4$ 个朋友平均分 $7$ 个比萨饼，每人分得 $7 \\div 4 = \\frac{7}{4} = 1\\frac{3}{4}$ 个，也就是一整个再加另一个的四分之三。注意不要颠倒：$\\frac{4}{7}$ 是 $7$ 个人分 $4$ 个比萨饼时每人分到的量。",
       ),
       generate(rng) {
         let a: number;
@@ -1552,8 +1570,8 @@ export const dividingNumbersByOneDigitNumbersWithRounding = topic(
       id: "rounding-a-quotient-to-a-whole-number",
       title: t("Rounding a quotient", "商取整数近似值"),
       explanation: t(
-        "$250 \\div 7 = 35 \\text{ R } 5$. Half of $7$ is $3\\frac{1}{2}$, and $5$ is more, so $250 \\div 7$ rounded to the nearest whole number is $36$.",
-        "$250 \\div 7 = 35 \\cdots\\cdots 5$。$7$ 的一半是 $3\\frac{1}{2}$，$5$ 比它大，所以 $250 \\div 7$ 四舍五入到整数是 $36$。",
+        "To round a quotient to the nearest whole number, look at the remainder. If it is less than half the divisor, keep the quotient. If it is half or more, round up by $1$.\n\n$250 \\div 7 = 35 \\text{ R } 5$. Half of $7$ is $3\\frac{1}{2}$, and $5$ is more than that, so the quotient is closer to $36$. Rounded, $250 \\div 7 \\approx 36$.",
+        "把商四舍五入到整数时，要看余数：余数小于除数的一半，商不变；余数等于或大于除数的一半，商加 $1$。\n\n$250 \\div 7 = 35 \\cdots\\cdots 5$。$7$ 的一半是 $3\\frac{1}{2}$，$5$ 比它大，所以商更接近 $36$。四舍五入后 $250 \\div 7 \\approx 36$。",
       ),
       generate(rng) {
         let n: number;
@@ -1720,8 +1738,8 @@ export const dividingNumbersByOneDigitNumbersInterpretingTheRemainder = topic(
       id: "solving-remainder-word-problems",
       title: t("Solving the problem", "解答应用题"),
       explanation: t(
-        "$1{,}250$ people ride a ferry that carries $8$ at a time. $1{,}250 \\div 8 = 156 \\text{ R } 2$, so $157$ trips are needed.",
-        "$1{,}250$ 人乘渡船，每次能载 $8$ 人。$1{,}250 \\div 8 = 156 \\cdots\\cdots 2$，所以需要 $157$ 趟。",
+        "In a word problem, decide what the remainder means before answering. If everyone must be carried, the leftover people need one more trip, so round up. If the question asks how many complete groups can be made, the leftover is not enough for another group, so drop it.\n\n$1{,}250$ people ride a ferry that carries $8$ at a time: $1{,}250 \\div 8 = 156 \\text{ R } 2$. The $2$ people left still need a trip, so $157$ trips are needed.",
+        "在应用题中，先想清楚余数表示什么，再作答。如果所有人都要运走，剩下的人还需要再运一趟，就要把商加 1；如果问最多能组成几个完整的组，剩下的不够再组成一组，就把余数舍去。\n\n$1{,}250$ 人乘渡船，每次能载 $8$ 人：$1{,}250 \\div 8 = 156 \\cdots\\cdots 2$。剩下的 $2$ 人还要再运一趟，所以需要 $157$ 趟。",
       ),
       generate(rng) {
         const s = rng.pick(remainderStories);
@@ -1759,8 +1777,8 @@ export const dividingByTwoDigitNumbersByConnectingMultiplicationAndDivision = to
       id: "using-a-multiplication-fact",
       title: t("Using a multiplication fact", "利用乘法算式"),
       explanation: t(
-        "Since $34 \\times 6 = 204$, the division $204 \\div 34$ equals $6$, and $204 \\div 6 = 34$.",
-        "因为 $34 \\times 6 = 204$，所以 $204 \\div 34 = 6$，$204 \\div 6 = 34$。",
+        "Multiplication and division undo each other. A multiplication fact gives two division facts: divide the product by either factor to get the other factor. Since $34 \\times 6 = 204$, we know $204 \\div 34 = 6$ and $204 \\div 6 = 34$.",
+        "乘法和除法互为逆运算。由一个乘法算式可以得到两个除法算式：用积除以其中一个因数，就得到另一个因数。因为 $34 \\times 6 = 204$，所以 $204 \\div 34 = 6$，$204 \\div 6 = 34$。",
       ),
       generate(rng) {
         const d = rng.int(11, 99);
@@ -1785,8 +1803,8 @@ export const dividingByTwoDigitNumbersByConnectingMultiplicationAndDivision = to
       id: "finding-a-one-digit-quotient",
       title: t("Finding a one-digit quotient", "求一位数的商"),
       explanation: t(
-        "$312 \\div 52$: round to $300 \\div 50 = 6$, then check $52 \\times 6 = 312$. So $312 \\div 52 = 6$.",
-        "$312 \\div 52$：估算 $300 \\div 50 = 6$，再验证 $52 \\times 6 = 312$。所以 $312 \\div 52 = 6$。",
+        "To divide by a two-digit number, estimate the quotient with rounded numbers, then check it by multiplying. If the product is too big, try one less; if the difference is still at least the divisor, try one more.\n\nFor $312 \\div 52$: $300 \\div 50 = 6$, and $52 \\times 6 = 312$ exactly. So $312 \\div 52 = 6$.",
+        "除数是两位数时，先把数取整估算商，再用乘法验证。如果乘积太大，就把商减 1；如果相减后剩下的数仍不小于除数，就把商加 1。\n\n计算 $312 \\div 52$：$300 \\div 50 = 6$，验证 $52 \\times 6 = 312$，正好相等。所以 $312 \\div 52 = 6$。",
       ),
       generate(rng) {
         const d = rng.int(12, 98);
@@ -1820,8 +1838,8 @@ export const dividingByTwoDigitNumbersWithRemaindersByConnectingMultiplicationAn
       id: "greatest-multiple-that-fits",
       title: t("The greatest multiple that fits", "不超过被除数的最大倍数"),
       explanation: t(
-        "The greatest multiple of $26$ that is at most $190$ is $26 \\times 7 = 182$, since $26 \\times 8 = 208$ is too big.",
-        "不超过 $190$ 的 $26$ 的最大倍数是 $26 \\times 7 = 182$，因为 $26 \\times 8 = 208$ 太大了。",
+        "To find the greatest multiple of a number that fits under a limit, try multiples until one goes over, then step back one. For $26$ and $190$: $26 \\times 7 = 182$ is not more than $190$, but $26 \\times 8 = 208$ is too big. So the greatest multiple of $26$ that is at most $190$ is $182$. This is the step that gives the quotient in a division.",
+        "要找不超过某个数的最大倍数，就逐个试倍数，直到超过为止，再退回一个。对于 $26$ 和 $190$：$26 \\times 7 = 182$ 不超过 $190$，而 $26 \\times 8 = 208$ 太大了。所以不超过 $190$ 的 $26$ 的最大倍数是 $182$。除法求商时用的正是这一步。",
       ),
       generate(rng) {
         const d = rng.int(12, 98);
@@ -1846,8 +1864,8 @@ export const dividingByTwoDigitNumbersWithRemaindersByConnectingMultiplicationAn
       id: "quotient-and-remainder-for-two-digit-divisors",
       title: t("The quotient and the remainder", "商和余数"),
       explanation: t(
-        "$190 \\div 26$: $26 \\times 7 = 182$ and $190 - 182 = 8$, so $190 \\div 26 = 7 \\text{ R } 8$.",
-        "$190 \\div 26$：$26 \\times 7 = 182$，$190 - 182 = 8$，所以 $190 \\div 26 = 7 \\cdots\\cdots 8$。",
+        "The quotient is how many times the divisor fits, and the remainder is what is left over. Find the greatest multiple of the divisor that fits into the dividend, then subtract.\n\nFor $190 \\div 26$: $26 \\times 7 = 182$ fits but $26 \\times 8 = 208$ does not. $190 - 182 = 8$, so $190 \\div 26 = 7 \\text{ R } 8$. The remainder must be less than $26$; if it is not, the quotient is too small.",
+        "商是除数能放进被除数的次数，余数是剩下的部分。先找出不超过被除数的除数的最大倍数，再相减。\n\n计算 $190 \\div 26$：$26 \\times 7 = 182$ 不超过 $190$，而 $26 \\times 8 = 208$ 超过了。$190 - 182 = 8$，所以 $190 \\div 26 = 7 \\cdots\\cdots 8$。余数必须小于 $26$；如果不是，说明商小了。",
       ),
       generate(rng) {
         const d = rng.int(12, 98);
@@ -1919,8 +1937,8 @@ export const multiDigitByTwoDigitDivisionUsingPartialQuotients = topic(
       id: "partial-quotients-without-remainders",
       title: t("Without a remainder", "没有余数"),
       explanation: t(
-        "$936 \\div 24$: $936 - 720 = 216$ ($24 \\times 30$), $216 - 216 = 0$ ($24 \\times 9$). So the quotient is $30 + 9 = 39$.",
-        "$936 \\div 24$：$936 - 720 = 216$（$24 \\times 30$），$216 - 216 = 0$（$24 \\times 9$）。所以商是 $30 + 9 = 39$。",
+        "With partial quotients, take away easy multiples of the divisor (such as $10$, $20$ or $30$ times it) until nothing is left, then add up how many times you took it away.\n\nFor $936 \\div 24$: take away $24 \\times 30 = 720$, leaving $216$; then take away $24 \\times 9 = 216$, leaving $0$. The quotient is $30 + 9 = 39$.",
+        "用部分商法时，从被除数中一次次减去除数的简单倍数（比如 $10$ 倍、$20$ 倍、$30$ 倍），直到减完，再把每次减去的倍数加起来。\n\n计算 $936 \\div 24$：先减去 $24 \\times 30 = 720$，剩 $216$；再减去 $24 \\times 9 = 216$，剩 $0$。商是 $30 + 9 = 39$。",
       ),
       generate(rng) {
         const d = rng.int(11, 45);
@@ -1938,8 +1956,8 @@ export const multiDigitByTwoDigitDivisionUsingPartialQuotients = topic(
       id: "partial-quotients-with-remainders",
       title: t("With a remainder", "有余数"),
       explanation: t(
-        "$1{,}000 \\div 32$: $1{,}000 - 960 = 40$ ($32 \\times 30$), $40 - 32 = 8$ ($32 \\times 1$). So $1{,}000 \\div 32 = 31 \\text{ R } 8$.",
-        "$1{,}000 \\div 32$：$1{,}000 - 960 = 40$（$32 \\times 30$），$40 - 32 = 8$（$32 \\times 1$）。所以 $1{,}000 \\div 32 = 31 \\cdots\\cdots 8$。",
+        "Take away multiples of the divisor until what is left is smaller than the divisor. That leftover is the remainder, and the sum of the multiples is the quotient.\n\nFor $1{,}000 \\div 32$: take away $32 \\times 30 = 960$, leaving $40$; take away $32 \\times 1 = 32$, leaving $8$. Since $8 < 32$, stop. So $1{,}000 \\div 32 = 31 \\text{ R } 8$.",
+        "一次次减去除数的倍数，直到剩下的数比除数小。剩下的就是余数，减去的倍数之和就是商。\n\n计算 $1{,}000 \\div 32$：减去 $32 \\times 30 = 960$，剩 $40$；减去 $32 \\times 1 = 32$，剩 $8$。因为 $8 < 32$，就停下。所以 $1{,}000 \\div 32 = 31 \\cdots\\cdots 8$。",
       ),
       generate(rng) {
         const d = rng.int(11, 45);
@@ -1972,8 +1990,8 @@ export const threeDigitByTwoDigitDivision = topic(
       id: "three-digit-by-two-digit-without-remainders",
       title: t("Without a remainder", "没有余数"),
       explanation: t(
-        "$672 \\div 21$: $67 \\div 21 \\to 3$, $67 - 63 = 4$; $42 \\div 21 \\to 2$. So $672 \\div 21 = 32$.",
-        "$672 \\div 21$：$67 \\div 21$ 商 3，$67 - 63 = 4$；$42 \\div 21$ 商 2。所以 $672 \\div 21 = 32$。",
+        "With a two-digit divisor, start with the first two digits of the dividend (or three, if two are too small). Estimate each digit of the quotient, multiply, subtract and bring down.\n\nFor $672 \\div 21$: $67 \\div 21$ is $3$, and $67 - 63 = 4$. Bring down $2$ to make $42$; $42 \\div 21 = 2$. So $672 \\div 21 = 32$. Check: $32 \\times 21 = 672$.",
+        "除数是两位数时，先看被除数的前两位（不够除就看前三位）。逐位估商，再乘、减、落下。\n\n计算 $672 \\div 21$：$67 \\div 21$ 商 $3$，$67 - 63 = 4$；落下 $2$ 得 $42$，$42 \\div 21 = 2$。所以 $672 \\div 21 = 32$。验算：$32 \\times 21 = 672$。",
       ),
       generate(rng) {
         const d = rng.int(11, 99);
@@ -1984,8 +2002,8 @@ export const threeDigitByTwoDigitDivision = topic(
       id: "three-digit-by-two-digit-with-remainders",
       title: t("With a remainder", "有余数"),
       explanation: t(
-        "$700 \\div 23$: $70 \\div 23 \\to 3$, $70 - 69 = 1$; $10 \\div 23 \\to 0$. So $700 \\div 23 = 30 \\text{ R } 10$.",
-        "$700 \\div 23$：$70 \\div 23$ 商 3，$70 - 69 = 1$；$10 \\div 23$ 商 0。所以 $700 \\div 23 = 30 \\cdots\\cdots 10$。",
+        "Divide as usual. If after bringing down a digit the number is still smaller than the divisor, write $0$ in the quotient; that number is then the remainder.\n\nFor $700 \\div 23$: $70 \\div 23$ is $3$, and $70 - 69 = 1$. Bring down $0$ to make $10$, which is less than $23$, so the next quotient digit is $0$. So $700 \\div 23 = 30 \\text{ R } 10$, not $3 \\text{ R } 10$.",
+        "照常去除。如果落下一位后，这个数仍比除数小，就在商的这一位写 $0$，这个数就是余数。\n\n计算 $700 \\div 23$：$70 \\div 23$ 商 $3$，$70 - 69 = 1$；落下 $0$ 得 $10$，比 $23$ 小，商的这一位写 $0$。所以 $700 \\div 23 = 30 \\cdots\\cdots 10$，而不是 $3 \\cdots\\cdots 10$。",
       ),
       generate(rng) {
         const d = rng.int(11, 99);
@@ -2008,7 +2026,10 @@ export const fourDigitByTwoDigitDivision = topic(
     {
       id: "four-digit-by-two-digit-without-remainders",
       title: t("Without a remainder", "没有余数"),
-      explanation: t("$5{,}658 \\div 23 = 246$.", "$5{,}658 \\div 23 = 246$。"),
+      explanation: t(
+        "A four-digit dividend divided by a two-digit number follows the same cycle: estimate a quotient digit, multiply, subtract, bring down the next digit.\n\nFor $5{,}658 \\div 23$: $56 \\div 23$ is $2$, $56 - 46 = 10$. Bring down $5$: $105 \\div 23$ is $4$, $105 - 92 = 13$. Bring down $8$: $138 \\div 23 = 6$. So $5{,}658 \\div 23 = 246$.",
+        '四位数除以两位数，同样按"估商、乘、减、落下"的顺序循环进行。\n\n计算 $5{,}658 \\div 23$：$56 \\div 23$ 商 $2$，$56 - 46 = 10$；落下 $5$，$105 \\div 23$ 商 $4$，$105 - 92 = 13$；落下 $8$，$138 \\div 23 = 6$。所以 $5{,}658 \\div 23 = 246$。',
+      ),
       generate(rng) {
         const d = rng.int(11, 99);
         return exactDivision(dividend(rng, d, 4, true), d);
@@ -2017,7 +2038,10 @@ export const fourDigitByTwoDigitDivision = topic(
     {
       id: "four-digit-by-two-digit-with-remainders",
       title: t("With a remainder", "有余数"),
-      explanation: t("$8{,}000 \\div 47 = 170 \\text{ R } 10$.", "$8{,}000 \\div 47 = 170 \\cdots\\cdots 10$。"),
+      explanation: t(
+        "Work through every digit of the dividend. When a step is too small to divide, write $0$ in the quotient. What is left at the end is the remainder, and it must be less than the divisor.\n\nFor $8{,}000 \\div 47$: $80 \\div 47$ is $1$, $80 - 47 = 33$. Bring down $0$: $330 \\div 47$ is $7$, $330 - 329 = 1$. Bring down $0$: $10$ is less than $47$, so write $0$. So $8{,}000 \\div 47 = 170 \\text{ R } 10$.",
+        "被除数的每一位都要除到。某一步不够除时，商的这一位写 $0$。最后剩下的就是余数，余数必须小于除数。\n\n计算 $8{,}000 \\div 47$：$80 \\div 47$ 商 $1$，$80 - 47 = 33$；落下 $0$，$330 \\div 47$ 商 $7$，$330 - 329 = 1$；落下 $0$ 得 $10$，比 $47$ 小，商写 $0$。所以 $8{,}000 \\div 47 = 170 \\cdots\\cdots 10$。",
+      ),
       generate(rng) {
         const d = rng.int(11, 99);
         return remainderDivision(rng, dividend(rng, d, 4, false), d);
