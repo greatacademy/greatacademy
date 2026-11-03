@@ -15456,6 +15456,8 @@ export const actMathFundamentals: CourseDef = {
             "slope-of-a-line",
             "slope-intercept-form",
             "properties-of-lines-in-slope-intercept-form",
+            "reasoning-from-incomplete-linear-graphs",
+
             "point-slope-form",
             "standard-form",
             "properties-of-lines-in-standard-form",
@@ -16242,6 +16244,8 @@ export const actMathFundamentals: CourseDef = {
             "problem-solving-with-inscribed-angles",
             "thales-theorem",
             "equilateral-triangles-inscribed-in-circles",
+            "reasoning-from-inscribed-special-polygons",
+
             "angles-in-inscribed-right-triangles",
             "areas-of-inscribed-triangles",
             "further-angles-in-inscribed-right-triangles",
@@ -16476,6 +16480,8 @@ export const actMathFundamentals: CourseDef = {
             "equivalent-ratios",
             "writing-ratios-using-fractions",
             "reasoning-with-equivalent-ratios",
+            "scaling-a-mix-after-converting-units",
+
             "further-reasoning-with-equivalent-ratios",
             "fractions-of-fractions",
             "reasoning-with-multi-stage-fractional-amounts",
@@ -16538,6 +16544,7 @@ export const actMathFundamentals: CourseDef = {
             "converting-units-of-length-to-larger-units-using-long-division",
             "unit-conversions-using-units-of-time",
             "converting-units-of-time-to-smaller-units",
+            "taking-a-part-of-a-converted-duration",
             "converting-units-of-area",
             "converting-units-of-area-to-larger-units",
             "units-in-formulas",
