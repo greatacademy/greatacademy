@@ -62,6 +62,50 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "combining-indicators",
+        title: t("Combining indicators with products and complements", "用乘积与补组合示性函数"),
+        explanation: t(
+          "Indicators follow the logic of their predicates through ordinary arithmetic. A product is $1$ only when both factors are $1$, and subtracting from $1$ swaps $0$ and $1$:\n$$\\mathbb{I}[P]\\,\\mathbb{I}[Q] = \\mathbb{I}[P \\text{ and } Q], \\qquad 1 - \\mathbb{I}[P] = \\mathbb{I}[\\text{not } P].$$\nSo $\\sum_{x=1}^{10} \\mathbb{I}[x \\ge 4]\\,\\mathbb{I}[x \\text{ is even}]$ counts the even numbers from $4$ to $10$, which gives $4$, and $\\sum_{x=1}^{10} (1 - \\mathbb{I}[x \\ge 4]) = 3$ counts $1, 2, 3$.",
+          "示性函数通过普通算术遵循其谓词的逻辑。乘积只有在两个因子都为 $1$ 时才为 $1$，用 $1$ 去减则交换 $0$ 与 $1$：\n$$\\mathbb{I}[P]\\,\\mathbb{I}[Q] = \\mathbb{I}[P \\text{ 且 } Q], \\qquad 1 - \\mathbb{I}[P] = \\mathbb{I}[\\text{非 } P].$$\n所以 $\\sum_{x=1}^{10} \\mathbb{I}[x \\ge 4]\\,\\mathbb{I}[x \\text{ 为偶数}]$ 统计从 $4$ 到 $10$ 的偶数，结果为 $4$；而 $\\sum_{x=1}^{10} (1 - \\mathbb{I}[x \\ge 4]) = 3$ 统计的是 $1, 2, 3$。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const n = rng.int(12, 40);
+          const lo = rng.int(2, Math.floor(n / 2));
+          const hi = rng.int(lo + 3, n - 1);
+          const m = rng.pick([2, 3, 4, 5]);
+          const kind = rng.int(0, 2);
+          const xs = Array.from({ length: n }, (_, i) => i + 1);
+          const mult = (x: number) => x % m === 0;
+          const pick = [(x: number) => x >= lo && x <= hi, (x: number) => x >= lo && mult(x), (x: number) => !(x >= lo && x <= hi)][kind]!;
+          const ans = xs.filter(pick).length;
+          const multTex = t(`${m} \\mid x`, `${m} \\mid x`);
+          const body = [
+            `\\mathbb{I}[x \\ge ${lo}]\\,\\mathbb{I}[x \\le ${hi}]`,
+            `\\mathbb{I}[x \\ge ${lo}]\\,\\mathbb{I}[${multTex.en}]`,
+            `\\big(1 - \\mathbb{I}[${lo} \\le x \\le ${hi}]\\big)`,
+          ][kind]!;
+          const count = [
+            t(`the integers from $${lo}$ to $${hi}$`, `从 $${lo}$ 到 $${hi}$ 的整数`),
+            t(`the multiples of $${m}$ from $${lo}$ to $${n}$`, `从 $${lo}$ 到 $${n}$ 中 $${m}$ 的倍数`),
+            t(`the integers from $1$ to $${n}$ outside $[${lo}, ${hi}]$`, `从 $1$ 到 $${n}$ 中不在 $[${lo}, ${hi}]$ 内的整数`),
+          ][kind]!;
+          const inRange = hi - lo + 1;
+          return numberProblem({
+            prompt: t(
+              `Evaluate $\\displaystyle\\sum_{x=1}^{${n}} ${body}$${kind === 1 ? `, where $${m} \\mid x$ means $${m}$ divides $x$` : ""}.`,
+              `求 $\\displaystyle\\sum_{x=1}^{${n}} ${body}$ 的值${kind === 1 ? `，其中 $${m} \\mid x$ 表示 $${m}$ 整除 $x$` : ""}。`,
+            ),
+            answer: ans,
+            form: "integer",
+            wrong: [kind === 2 ? inRange : n - ans, kind === 1 ? n - lo + 1 : inRange - 1, ans + 1],
+            solution: t(
+              `The summand is $1$ exactly for ${count.en}, and $0$ otherwise, so the sum counts them: $${ans}$.`,
+              `被加项恰好在${count["zh-CN"]}处为 $1$，其余为 $0$，所以和就是它们的个数：$${ans}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -136,6 +180,36 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "bounds-of-alternating-sets",
+        title: t("Supremum and infimum of alternating sets", "交错集合的上确界与下确界"),
+        explanation: t(
+          "When the terms of a set alternate around a value, look at the two sides separately. For $S = \\left\\{ c + \\frac{(-1)^n k}{n} : n \\in \\mathbb{N}^+ \\right\\}$ with $k > 0$, the odd terms $c - k, c - \\frac{k}{3}, \\dots$ rise toward $c$ from below and the even terms $c + \\frac{k}{2}, c + \\frac{k}{4}, \\dots$ fall toward $c$ from above.\n\nSo the largest element is the first even term and the smallest is the first odd term: $\\sup S = \\max S = c + \\frac{k}{2}$ and $\\inf S = \\min S = c - k$. The limit $c$ is neither.",
+          "当集合中的项围绕某个值交错时，分别观察两侧。对 $S = \\left\\{ c + \\frac{(-1)^n k}{n} : n \\in \\mathbb{N}^+ \\right\\}$（$k > 0$），奇数项 $c - k, c - \\frac{k}{3}, \\dots$ 从下方增大趋向 $c$，偶数项 $c + \\frac{k}{2}, c + \\frac{k}{4}, \\dots$ 从上方减小趋向 $c$。\n\n所以最大元素是第一个偶数项，最小元素是第一个奇数项：$\\sup S = \\max S = c + \\frac{k}{2}$，$\\inf S = \\min S = c - k$。极限 $c$ 两者都不是。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const c = rng.int(-5, 8);
+          const k = rng.int(1, 9);
+          const askSup = rng.bool();
+          const sup = Q.of(c).add(Q.of(k, 2));
+          const inf = Q.of(c - k);
+          const ans = askSup ? sup : inf;
+          const cTex = c === 0 ? "" : `${c} + `;
+          return numberProblem({
+            prompt: t(
+              `Let $S = \\left\\{ ${cTex}\\frac{(-1)^n \\cdot ${k}}{n} : n \\in \\mathbb{N}^+ \\right\\}$. Find $${askSup ? "\\sup S" : "\\inf S"}$.`,
+              `设 $S = \\left\\{ ${cTex}\\frac{(-1)^n \\cdot ${k}}{n} : n \\in \\mathbb{N}^+ \\right\\}$。求 $${askSup ? "\\sup S" : "\\inf S"}$。`,
+            ),
+            answer: ans,
+            form: "fraction",
+            wrong: [Q.of(c), askSup ? Q.of(c + k) : Q.of(c).sub(Q.of(k, 2)), askSup ? inf : sup],
+            solution: t(
+              `The odd terms are $${inf.toLatex()}, \\dots$, increasing toward $${c}$; the even terms are $${sup.toLatex()}, \\dots$, decreasing toward $${c}$. So $\\sup S = ${sup.toLatex()}$ (at $n = 2$) and $\\inf S = ${inf.toLatex()}$ (at $n = 1$).`,
+              `奇数项为 $${inf.toLatex()}, \\dots$，增大趋向 $${c}$；偶数项为 $${sup.toLatex()}, \\dots$，减小趋向 $${c}$。所以 $\\sup S = ${sup.toLatex()}$（在 $n = 2$ 处），$\\inf S = ${inf.toLatex()}$（在 $n = 1$ 处）。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -183,6 +257,37 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
               isMin
                 ? `由于 $a = ${a} > 0$，平方项 $(x ${hStr})^2 \\ge 0$ 在 $x = ${h}$ 时取最小值 $0$，对应的最小值为 $f(${h}) = ${k}$。因此 $\\operatorname{argmin}_{x \\in \\mathbb{R}} f(x) = ${h}$。`
                 : `由于 $a = ${a} > 0$，非正项 $-${aStr}(x ${hStr})^2 \\le 0$ 在 $x = ${h}$ 时取得最大值 $0$，对应的最大值为 $f(${h}) = ${k}$。因此 $\\operatorname{argmax}_{x \\in \\mathbb{R}} f(x) = ${h}$。`,
+            ),
+          });
+        },
+      },
+      {
+        id: "argmin-over-the-integers",
+        title: t("Arg min over a restricted domain", "受限定义域上的 arg min"),
+        explanation: t(
+          "The domain written under $\\operatorname{argmin}$ matters: restricting it can move the minimizer. For a parabola that opens upward, the value grows with distance from the vertex in both directions, so over the integers the minimizer is the integer nearest the vertex.\n\nFor $g(x) = (3x - 7)^2$, the real minimizer is $x = \\frac{7}{3} \\approx 2.33$, but $\\operatorname{argmin}_{x \\in \\mathbb{Z}} g(x) = 2$, since $g(2) = 1 < g(3) = 4$. Rounding the vertex works here; simply taking the floor or ceiling does not always.",
+          "写在 $\\operatorname{argmin}$ 下面的定义域很重要：限制定义域可能改变最小值点。开口向上的抛物线，函数值随着离顶点越远而越大，所以在整数上的最小值点是离顶点最近的整数。\n\n对 $g(x) = (3x - 7)^2$，实数最小值点为 $x = \\frac{7}{3} \\approx 2.33$，但 $\\operatorname{argmin}_{x \\in \\mathbb{Z}} g(x) = 2$，因为 $g(2) = 1 < g(3) = 4$。这里把顶点四舍五入是对的；直接向下或向上取整则不一定对。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const q = rng.pick([3, 4, 5, 6, 7]);
+          const p = rng.pick(
+            Array.from({ length: 12 * q }, (_, i) => i - 4 * q).filter((v) => v % q !== 0 && 2 * (((v % q) + q) % q) !== q),
+          );
+          const nearest = Math.round(p / q);
+          const other = p / q > nearest ? nearest + 1 : nearest - 1;
+          const g = (x: number) => (q * x - p) ** 2;
+          const pTex = p < 0 ? `+ ${-p}` : `- ${p}`;
+          return numberProblem({
+            prompt: t(
+              `Find $\\operatorname{argmin}_{x \\in \\mathbb{Z}} \\,(${q}x ${pTex})^2$.`,
+              `求 $\\operatorname{argmin}_{x \\in \\mathbb{Z}} \\,(${q}x ${pTex})^2$。`,
+            ),
+            answer: nearest,
+            form: "integer",
+            wrong: [other, 0, p],
+            solution: t(
+              `The real minimizer is $x = ${Q.of(p, q).toLatex()}$, between $${Math.min(nearest, other)}$ and $${Math.max(nearest, other)}$. Comparing, $g(${nearest}) = ${g(nearest)}$ and $g(${other}) = ${g(other)}$, so the integer minimizer is $${nearest}$.`,
+              `实数最小值点为 $x = ${Q.of(p, q).toLatex()}$，位于 $${Math.min(nearest, other)}$ 与 $${Math.max(nearest, other)}$ 之间。比较得 $g(${nearest}) = ${g(nearest)}$，$g(${other}) = ${g(other)}$，所以整数最小值点为 $${nearest}$。`,
             ),
           });
         },

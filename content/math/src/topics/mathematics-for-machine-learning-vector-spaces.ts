@@ -90,6 +90,40 @@ export const mathematicsForMachineLearningVectorSpaceTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "summing-a-hadamard-product",
+        title: t("Summing the entries of a Hadamard product", "阿达马积各元素之和"),
+        explanation: t(
+          "Adding up all entries of $A \\odot B$ gives the Frobenius inner product of the two matrices,\n$$\\langle A, B \\rangle_F = \\sum_{i,j} A_{ij}B_{ij} = \\operatorname{tr}(A^T B),$$\nthe matrix version of the dot product. It is not the sum of the entries of the matrix product $AB$. For $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$ and $B = \\begin{pmatrix} 2 & 0 \\\\ 1 & -1 \\end{pmatrix}$, $A \\odot B = \\begin{pmatrix} 2 & 0 \\\\ 3 & -4 \\end{pmatrix}$, whose entries sum to $1$.",
+          "把 $A \\odot B$ 的所有元素相加，得到两个矩阵的弗罗贝尼乌斯内积\n$$\\langle A, B \\rangle_F = \\sum_{i,j} A_{ij}B_{ij} = \\operatorname{tr}(A^T B),$$\n即点积的矩阵版本。它不是矩阵乘积 $AB$ 的元素之和。对 $A = \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}$ 与 $B = \\begin{pmatrix} 2 & 0 \\\\ 1 & -1 \\end{pmatrix}$，$A \\odot B = \\begin{pmatrix} 2 & 0 \\\\ 3 & -4 \\end{pmatrix}$，其元素之和为 $1$。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const rows = 2;
+          const cols = rng.int(2, 3);
+          const entry = () => rng.int(-5, 6);
+          const A = Array.from({ length: rows }, () => Array.from({ length: cols }, entry));
+          const B = Array.from({ length: rows }, () => Array.from({ length: cols }, entry));
+          const fmt = (M: number[][]) => `\\begin{pmatrix} ${M.map((r) => r.join(" & ")).join(" \\\\ ")} \\end{pmatrix}`;
+          const prods = A.flatMap((r, i) => r.map((v, j) => v * B[i]![j]!));
+          const ans = prods.reduce((s, v) => s + v, 0);
+          const sumA = A.flat().reduce((s, v) => s + v, 0);
+          const sumB = B.flat().reduce((s, v) => s + v, 0);
+          const diag = A.reduce((s, r, i) => s + r[i]! * B[i]![i]!, 0);
+          return numberProblem({
+            prompt: t(
+              `For $A = ${fmt(A)}$ and $B = ${fmt(B)}$, find the sum of all entries of $A \\odot B$.`,
+              `对 $A = ${fmt(A)}$ 与 $B = ${fmt(B)}$，求 $A \\odot B$ 所有元素之和。`,
+            ),
+            answer: ans,
+            form: "integer",
+            wrong: [sumA * sumB, sumA + sumB, diag],
+            solution: t(
+              `Multiply matching entries: $${prods.map((v) => (v < 0 ? `(${v})` : `${v}`)).join(" + ")} = ${ans}$.`,
+              `对应元素相乘再相加：$${prods.map((v) => (v < 0 ? `(${v})` : `${v}`)).join(" + ")} = ${ans}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -218,6 +252,43 @@ export const mathematicsForMachineLearningVectorSpaceTopics: TopicDef[] = [
             solution: t(
               `Summing the absolute differences coordinate by coordinate gives $D_1(\\mathbf{x}, \\mathbf{y}) = ${x.map((xi, i) => `|${xi} - (${y[i]})|`).join(" + ")} = ${manhattan}$.`,
               `逐坐标计算绝对差值并求和得 $D_1(\\mathbf{x}, \\mathbf{y}) = ${x.map((xi, i) => `|${xi} - (${y[i]})|`).join(" + ")} = ${manhattan}$。`,
+            ),
+          });
+        },
+      },
+      {
+        id: "minkowski-distance-of-order-three",
+        title: t("Minkowski distances of higher order", "高阶闵可夫斯基距离"),
+        explanation: t(
+          "For an order $p$ other than $1$ or $2$, apply the definition directly: raise each absolute difference to the $p$-th power, add, and take the $p$-th root,\n$$D_p(\\mathbf{x}, \\mathbf{y}) = \\Big(\\sum_i |x_i - y_i|^p\\Big)^{1/p}.$$\nFor differences $3, 4, 5$ and $p = 3$: $27 + 64 + 125 = 216$, and $\\sqrt[3]{216} = 6$. As $p$ grows the largest difference dominates, so $D_1 \\ge D_2 \\ge D_3 \\ge \\dots \\ge D_\\infty$: here $12 \\ge 7.07 \\ge 6 \\ge 5$.",
+          "当阶数 $p$ 不是 $1$ 或 $2$ 时，直接用定义：把每个差的绝对值取 $p$ 次方，相加，再开 $p$ 次方，\n$$D_p(\\mathbf{x}, \\mathbf{y}) = \\Big(\\sum_i |x_i - y_i|^p\\Big)^{1/p}.$$\n对差 $3, 4, 5$ 与 $p = 3$：$27 + 64 + 125 = 216$，$\\sqrt[3]{216} = 6$。随着 $p$ 增大，最大的差起主导作用，所以 $D_1 \\ge D_2 \\ge D_3 \\ge \\dots \\ge D_\\infty$：这里 $12 \\ge 7.07 \\ge 6 \\ge 5$。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const [diffs, dist] = rng.pick([
+            [[3, 4, 5], 6],
+            [[1, 6, 8], 9],
+            [[6, 8, 10], 12],
+            [[2, 12, 16], 18],
+            [[9, 12, 15], 18],
+            [[3, 10, 18], 19],
+            [[7, 14, 17], 20],
+          ] as const);
+          const order = rng.shuffle([0, 1, 2]);
+          const x = [0, 1, 2].map(() => rng.int(-9, 12));
+          const y = x.map((v, i) => v - (rng.bool() ? 1 : -1) * diffs[order[i]!]!);
+          const abs = x.map((v, i) => Math.abs(v - y[i]!));
+          const cubes = abs.map((v) => v ** 3);
+          return numberProblem({
+            prompt: t(
+              `Find the Minkowski distance of order $3$, $D_3(\\mathbf{x}, \\mathbf{y}) = \\left(\\sum_i |x_i - y_i|^3\\right)^{1/3}$, between $\\mathbf{x} = (${x.join(", ")})$ and $\\mathbf{y} = (${y.join(", ")})$.`,
+              `求 $\\mathbf{x} = (${x.join(", ")})$ 与 $\\mathbf{y} = (${y.join(", ")})$ 之间的 $3$ 阶闵可夫斯基距离 $D_3(\\mathbf{x}, \\mathbf{y}) = \\left(\\sum_i |x_i - y_i|^3\\right)^{1/3}$。`,
+            ),
+            answer: dist,
+            form: "integer",
+            wrong: [abs.reduce((s, v) => s + v, 0), Math.max(...abs), Math.round(abs.reduce((s, v) => s + v, 0) / 3)],
+            solution: t(
+              `The absolute differences are $${abs.join(", ")}$. Their cubes sum to $${cubes.join(" + ")} = ${dist ** 3}$, and $\\sqrt[3]{${dist ** 3}} = ${dist}$.`,
+              `差的绝对值为 $${abs.join(", ")}$。它们的立方和为 $${cubes.join(" + ")} = ${dist ** 3}$，且 $\\sqrt[3]{${dist ** 3}} = ${dist}$。`,
             ),
           });
         },
