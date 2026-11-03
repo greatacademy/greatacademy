@@ -1,6 +1,6 @@
-import type { Problem, Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { type Coefficient, gcd, Q } from "@ga/subject-math";
+import { type Coefficient, gcd, plane, Q } from "@ga/subject-math";
 
 import { choiceProblem, numberProblem } from "../problems.ts";
 
@@ -40,6 +40,51 @@ const _triples: readonly (readonly [number, number, number])[] = [
   [15, 8, 17],
 ];
 
+const halfPi = Math.PI / 2;
+
+/** arcsinFigure graphs y = arcsin x from (−1, −π/2) to (1, π/2). */
+const arcsinFigure: Figure = {
+  svg: plane({ xMin: -2, xMax: 2, yMin: -2, yMax: 2, step: 0.5, labelEvery: 2 }, [
+    { kind: "curve", f: Math.asin, from: -1, to: 1, accent: true },
+    { kind: "point", at: [-1, -halfPi], label: "(−1, −π/2)", dir: "se" },
+    { kind: "point", at: [0, 0] },
+    { kind: "point", at: [1, halfPi], label: "(1, π/2)", dir: "nw" },
+  ]),
+  alt: t(
+    "The graph of y = arcsin x, an increasing curve from (−1, −π/2) through the origin to (1, π/2); it exists only for x from −1 to 1.",
+    "y = arcsin x 的图象：一条从 (−1, −π/2) 经过原点上升到 (1, π/2) 的曲线，只在 x 从 −1 到 1 时存在。",
+  ),
+};
+
+/** arccosFigure graphs y = arccos x from (−1, π) to (1, 0). */
+const arccosFigure: Figure = {
+  svg: plane({ xMin: -2, xMax: 2, yMin: -0.5, yMax: 3.5, step: 0.5, labelEvery: 2 }, [
+    { kind: "curve", f: Math.acos, from: -1, to: 1, accent: true },
+    { kind: "point", at: [-1, Math.PI], label: "(−1, π)", dir: "w" },
+    { kind: "point", at: [0, halfPi], label: "(0, π/2)", dir: "ne" },
+    { kind: "point", at: [1, 0], label: "(1, 0)", dir: "ne" },
+  ]),
+  alt: t(
+    "The graph of y = arccos x, a decreasing curve from (−1, π) through (0, π/2) to (1, 0); it exists only for x from −1 to 1.",
+    "y = arccos x 的图象：一条从 (−1, π) 经过 (0, π/2) 下降到 (1, 0) 的曲线，只在 x 从 −1 到 1 时存在。",
+  ),
+};
+
+/** arctanFigure graphs y = arctan x between its horizontal asymptotes y = ±π/2. */
+const arctanFigure: Figure = {
+  svg: plane({ xMin: -6, xMax: 6, yMin: -2.5, yMax: 2.5, step: 0.5, labelEvery: 4 }, [
+    { kind: "curve", f: Math.atan, accent: true },
+    { kind: "line", a: [0, halfPi], b: [1, halfPi], dashed: true },
+    { kind: "line", a: [0, -halfPi], b: [1, -halfPi], dashed: true },
+    { kind: "label", at: [-6, halfPi], text: "y = π/2", dir: "ne" },
+    { kind: "label", at: [6, -halfPi], text: "y = −π/2", dir: "sw" },
+  ]),
+  alt: t(
+    "The graph of y = arctan x, an increasing curve through the origin that levels off toward the dashed horizontal asymptotes y = −π/2 on the left and y = π/2 on the right.",
+    "y = arctan x 的图象：一条经过原点的上升曲线，向左趋近虚线所示的水平渐近线 y = −π/2，向右趋近 y = π/2。",
+  ),
+};
+
 // ─── 4.9.1 Graphing the inverse sine function ───────────────────────────────
 
 /** graphingTheInverseSineFunction covers domain, range, and properties of arcsin. */
@@ -62,6 +107,7 @@ export const graphingTheInverseSineFunction: TopicDef = {
         "Because $\\sin x$ is not one-to-one on the whole real line, its domain is restricted to $\\left[-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right]$ to define its inverse. Therefore, $y = \\arcsin x$ has:\n\n- **Domain**: $[-1, 1]$\n- **Range**: $\\left[-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right]$",
         "由于 $\\sin x$ 在整个实数集上不是单调一一对应的，将其定义域限制在 $\\left[-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right]$ 上以定义反函数。因此 $y = \\arcsin x$ 的：\n\n- **定义域**：$[-1, 1]$\n- **值域**：$\\left[-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right]$",
       ),
+      figure: arcsinFigure,
       generate(rng) {
         const type = rng.pick(["scaled", "shifted", "linear", "range"] as const);
         if (type === "scaled") {
@@ -189,6 +235,7 @@ export const graphingTheInverseCosineFunction: TopicDef = {
         "Cosine takes every value many times, so to have an inverse it is restricted to an interval where it takes each value exactly once. To invert $\\cos x$, its domain is restricted to $[0, \\pi]$. Therefore, $y = \\arccos x$ has:\n\n- **Domain**: $[-1, 1]$\n- **Range**: $[0, \\pi]$",
         "余弦函数的每个值都会取到很多次，所以要有反函数，就把它限制在每个值恰好取到一次的区间上。为了使 $\\cos x$ 具有反函数，将其定义域限制在 $[0, \\pi]$。因此 $y = \\arccos x$ 的：\n\n- **定义域**：$[-1, 1]$\n- **值域**：$[0, \\pi]$",
       ),
+      figure: arccosFigure,
       generate(rng) {
         const type = rng.pick(["scaled", "shifted", "linear", "range"] as const);
         if (type === "scaled") {
@@ -313,6 +360,7 @@ export const graphingTheInverseTangentFunction: TopicDef = {
         "Tangent repeats its values, so it is restricted to one branch between two asymptotes, and its inverse takes any real input to an angle in that branch. By restricting $\\tan x$ to $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$, the inverse tangent function $y = \\arctan x$ has:\n\n- **Domain**: $(-\\infty, \\infty)$\n- **Range**: $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$",
         "正切函数的值会重复，所以把它限制在两条渐近线之间的一支上，它的反函数把任意实数对应到这一支中的一个角。通过将 $\\tan x$ 的定义域限制在 $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$ 上，反正切函数 $y = \\arctan x$ 的：\n\n- **定义域**：$(-\\infty, \\infty)$\n- **值域**：$\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$",
       ),
+      figure: arctanFigure,
       generate(rng) {
         const type = rng.pick(["domain", "range-scaled", "range-shifted"] as const);
         if (type === "domain") {
