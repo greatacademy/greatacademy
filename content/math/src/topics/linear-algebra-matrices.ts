@@ -109,8 +109,8 @@ export const cramersRuleFor2x2SystemsOfLinearEquations: TopicDef = {
       id: "cramers-rule-2x2-solution",
       title: t("Cramer's rule for 2x2 systems", "克莱姆法则求解二元系统"),
       explanation: t(
-        "For the system $\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$, let $D = \\det\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} = ad - bc$. If $D \\ne 0$, the unique solution is given by $x = \\frac{D_x}{D}$ and $y = \\frac{D_y}{D}$, where $D_x = \\det\\begin{pmatrix} e & b \\\\ f & d \\end{pmatrix} = ed - bf$ and $D_y = \\det\\begin{pmatrix} a & e \\\\ c & f \\end{pmatrix} = af - ec$.",
-        "对于方程组 $\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$，记系数行列式 $D = \\det\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} = ad - bc$。若 $D \\ne 0$，则方程组有唯一解：$x = \\frac{D_x}{D}$ 与 $y = \\frac{D_y}{D}$，其中 $D_x = \\det\\begin{pmatrix} e & b \\\\ f & d \\end{pmatrix} = ed - bf$，$D_y = \\det\\begin{pmatrix} a & e \\\\ c & f \\end{pmatrix} = af - ec$。",
+        "Each variable equals a ratio of determinants, where the top determinant replaces that variable's column of coefficients by the column of constants. For the system $\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$, let $D = \\det\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} = ad - bc$. If $D \\ne 0$, the unique solution is given by $x = \\frac{D_x}{D}$ and $y = \\frac{D_y}{D}$, where $D_x = \\det\\begin{pmatrix} e & b \\\\ f & d \\end{pmatrix} = ed - bf$ and $D_y = \\det\\begin{pmatrix} a & e \\\\ c & f \\end{pmatrix} = af - ec$.",
+        "每个变量都等于两个行列式之比，分子的行列式是把该变量的系数列换成常数列得到的。对于方程组 $\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$，记系数行列式 $D = \\det\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} = ad - bc$。若 $D \\ne 0$，则方程组有唯一解：$x = \\frac{D_x}{D}$ 与 $y = \\frac{D_y}{D}$，其中 $D_x = \\det\\begin{pmatrix} e & b \\\\ f & d \\end{pmatrix} = ed - bf$，$D_y = \\det\\begin{pmatrix} a & e \\\\ c & f \\end{pmatrix} = af - ec$。",
       ),
       generate(rng) {
         const xVal = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
@@ -414,8 +414,8 @@ export const basicPropertiesOfDeterminants: TopicDef = {
       id: "determinant-basic-properties",
       title: t("Properties of determinants: transpose, product, and scaling", "转置、矩阵乘积与数乘的行列式性质"),
       explanation: t(
-        "For $n \\times n$ square matrices $A$ and $B$, and scalar $k$: (1) $\\det(A^T) = \\det(A)$; (2) $\\det(AB) = \\det(A)\\det(B)$; (3) $\\det(kA) = k^n \\det(A)$, since factor $k$ scales all $n$ rows.",
-        "对于 $n \\times n$ 方阵 $A$ 和 $B$ 以及标量 $k$：(1) $\\det(A^T) = \\det(A)$；(2) $\\det(AB) = \\det(A)\\det(B)$；(3) $\\det(kA) = k^n \\det(A)$，因为数乘 $k$ 会将矩阵的全部 $n$ 行同时乘以 $k$。",
+        "Multiplying a whole matrix by a scalar multiplies every row by it, so the determinant picks up one factor of the scalar for each row. For $n \\times n$ square matrices $A$ and $B$, and scalar $k$: (1) $\\det(A^T) = \\det(A)$; (2) $\\det(AB) = \\det(A)\\det(B)$; (3) $\\det(kA) = k^n \\det(A)$, since factor $k$ scales all $n$ rows.",
+        "用一个数乘整个矩阵相当于每一行都乘以它，所以行列式对每一行都多出一个这样的因子。对于 $n \\times n$ 方阵 $A$ 和 $B$ 以及标量 $k$：(1) $\\det(A^T) = \\det(A)$；(2) $\\det(AB) = \\det(A)\\det(B)$；(3) $\\det(kA) = k^n \\det(A)$，因为数乘 $k$ 会将矩阵的全部 $n$ 行同时乘以 $k$。",
       ),
       generate(rng) {
         const n = rng.pick([2, 3, 4]);
@@ -2548,8 +2548,8 @@ export const luFactorizationOf2x2Matrices: TopicDef = {
       id: "lu-factorization-2x2",
       title: t("Computing the LU factorization of a 2x2 matrix", "二阶矩阵的 LU 分解计算"),
       explanation: t(
-        "For a $2 \\times 2$ matrix $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ with $a \\ne 0$, Gaussian elimination uses multiplier $l_{21} = \\frac{c}{a}$ in the operation $R_2 - l_{21} R_1 \\to R_2$. This yields $A = L U$, where $L = \\begin{pmatrix} 1 & 0 \\\\ l_{21} & 1 \\end{pmatrix}$ and $U = \\begin{pmatrix} a & b \\\\ 0 & d - l_{21} b \\end{pmatrix}$.",
-        "对于 $a \\ne 0$ 的二阶矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，高斯消元法利用乘子 $l_{21} = \\frac{c}{a}$ 进行行变换 $R_2 - l_{21} R_1 \\to R_2$。这给出分解 $A = L U$，其中 $L = \\begin{pmatrix} 1 & 0 \\\\ l_{21} & 1 \\end{pmatrix}$，$U = \\begin{pmatrix} a & b \\\\ 0 & d - l_{21} b \\end{pmatrix}$。",
+        "The lower factor records the multiplier used to eliminate the entry below the pivot, and the upper factor is the matrix left after elimination. For a $2 \\times 2$ matrix $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ with $a \\ne 0$, Gaussian elimination uses multiplier $l_{21} = \\frac{c}{a}$ in the operation $R_2 - l_{21} R_1 \\to R_2$. This yields $A = L U$, where $L = \\begin{pmatrix} 1 & 0 \\\\ l_{21} & 1 \\end{pmatrix}$ and $U = \\begin{pmatrix} a & b \\\\ 0 & d - l_{21} b \\end{pmatrix}$.",
+        "下三角因子记录了消去主元下方元素时用的乘数，上三角因子是消元后剩下的矩阵。对于 $a \\ne 0$ 的二阶矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，高斯消元法利用乘子 $l_{21} = \\frac{c}{a}$ 进行行变换 $R_2 - l_{21} R_1 \\to R_2$。这给出分解 $A = L U$，其中 $L = \\begin{pmatrix} 1 & 0 \\\\ l_{21} & 1 \\end{pmatrix}$，$U = \\begin{pmatrix} a & b \\\\ 0 & d - l_{21} b \\end{pmatrix}$。",
       ),
       generate(rng) {
         const a = rng.pick([1, 2, 3]);

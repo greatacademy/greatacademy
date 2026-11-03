@@ -173,8 +173,8 @@ export const dotProductInNDimensionalEuclideanSpace: TopicDef = {
       id: "compute-dot-product-rn",
       title: t("Computing the Dot Product in ℝⁿ", "计算 ℝⁿ 中的点积"),
       explanation: t(
-        "The dot product of two vectors $u = (u_1, \\dots, u_n)$ and $v = (v_1, \\dots, v_n)$ in $\\mathbb{R}^n$ is $u \\cdot v = \\sum_{i=1}^n u_i v_i = u_1 v_1 + u_2 v_2 + \\dots + u_n v_n$.",
-        "$\\mathbb{R}^n$ 中两个向量 $u = (u_1, \\dots, u_n)$ 与 $v = (v_1, \\dots, v_n)$ 的点积定义为 $u \\cdot v = \\sum_{i=1}^n u_i v_i = u_1 v_1 + u_2 v_2 + \\dots + u_n v_n$。",
+        "The dot product multiplies matching entries and adds the products, giving a number that measures how much two vectors point in the same direction. The dot product of two vectors $u = (u_1, \\dots, u_n)$ and $v = (v_1, \\dots, v_n)$ in $\\mathbb{R}^n$ is $u \\cdot v = \\sum_{i=1}^n u_i v_i = u_1 v_1 + u_2 v_2 + \\dots + u_n v_n$.",
+        "点积把对应分量相乘再把积相加，得到的数衡量两个向量指向相同方向的程度。$\\mathbb{R}^n$ 中两个向量 $u = (u_1, \\dots, u_n)$ 与 $v = (v_1, \\dots, v_n)$ 的点积定义为 $u \\cdot v = \\sum_{i=1}^n u_i v_i = u_1 v_1 + u_2 v_2 + \\dots + u_n v_n$。",
       ),
       generate: (rng: Rng): Problem => {
         const dim = rng.pick([4, 5]);
@@ -224,8 +224,8 @@ export const normOfAVectorInNDimensionalEuclideanSpace: TopicDef = {
       id: "euclidean-norm-rn",
       title: t("Euclidean Norm in ℝⁿ", "ℝⁿ 中的欧几里得范数"),
       explanation: t(
-        "The Euclidean norm (or magnitude) of a vector $v = (v_1, \\dots, v_n) \\in \\mathbb{R}^n$ is $|v| = \\sqrt{v \\cdot v} = \\sqrt{v_1^2 + \\dots + v_n^2}$.",
-        "向量 $v = (v_1, \\dots, v_n) \\in \\mathbb{R}^n$ 的欧几里得范数（长度）定义为 $|v| = \\sqrt{v \\cdot v} = \\sqrt{v_1^2 + \\dots + v_n^2}$。",
+        "The norm extends the Pythagorean theorem to any number of dimensions: square every entry, add the squares, and take the square root. The Euclidean norm (or magnitude) of a vector $v = (v_1, \\dots, v_n) \\in \\mathbb{R}^n$ is $|v| = \\sqrt{v \\cdot v} = \\sqrt{v_1^2 + \\dots + v_n^2}$.",
+        "范数把勾股定理推广到任意维数：把每个分量平方，把平方相加，再开平方。向量 $v = (v_1, \\dots, v_n) \\in \\mathbb{R}^n$ 的欧几里得范数（长度）定义为 $|v| = \\sqrt{v \\cdot v} = \\sqrt{v_1^2 + \\dots + v_n^2}$。",
       ),
       generate: (rng: Rng): Problem => {
         const templates: readonly (readonly [readonly [number, number, number, number], number])[] = [
@@ -347,8 +347,8 @@ export const innerProductInVectorSpacesOverTheComplexNumbers: TopicDef = {
       id: "complex-inner-product-evaluation",
       title: t("Evaluating Complex Inner Products in ℂⁿ", "计算 ℂⁿ 中的复内积"),
       explanation: t(
-        "In $\\mathbb{C}^n$, the standard inner product is $\\langle u, v \\rangle = \\sum_{k=1}^n u_k \\overline{v_k}$. It satisfies conjugate symmetry $\\langle u, v \\rangle = \\overline{\\langle v, u \\rangle}$ and conjugate homogeneity $\\langle u, c v \\rangle = \\bar{c} \\langle u, v \\rangle$.",
-        "在 $\\mathbb{C}^n$ 中，标准内积定义为 $\\langle u, v \\rangle = \\sum_{k=1}^n u_k \\overline{v_k}$。它满足共轭对称性 $\\langle u, v \\rangle = \\overline{\\langle v, u \\rangle}$ 与共轭齐次性 $\\langle u, c v \\rangle = \\bar{c} \\langle u, v \\rangle$。",
+        "Conjugating the entries of the second vector makes the inner product of a vector with itself a nonnegative real number, so lengths still make sense. In $\\mathbb{C}^n$, the standard inner product is $\\langle u, v \\rangle = \\sum_{k=1}^n u_k \\overline{v_k}$. It satisfies conjugate symmetry $\\langle u, v \\rangle = \\overline{\\langle v, u \\rangle}$ and conjugate homogeneity $\\langle u, c v \\rangle = \\bar{c} \\langle u, v \\rangle$.",
+        "对第二个向量的分量取共轭，使向量与自身的内积成为非负实数，这样长度仍然有意义。在 $\\mathbb{C}^n$ 中，标准内积定义为 $\\langle u, v \\rangle = \\sum_{k=1}^n u_k \\overline{v_k}$。它满足共轭对称性 $\\langle u, v \\rangle = \\overline{\\langle v, u \\rangle}$ 与共轭齐次性 $\\langle u, c v \\rangle = \\bar{c} \\langle u, v \\rangle$。",
       ),
       generate: (rng: Rng): Problem => {
         const a1 = rng.int(-3, 3);
@@ -470,8 +470,8 @@ export const orthogonalVectorsInEuclideanSpaces: TopicDef = {
       id: "solve-orthogonal-parameter-rn",
       title: t("Solving for Orthogonality in ℝⁿ", "求解满足正交性的参数"),
       explanation: t(
-        "Two vectors $u, v \\in \\mathbb{R}^n$ are orthogonal if and only if their dot product is zero: $u \\cdot v = 0$.",
-        "两个向量 $u, v \\in \\mathbb{R}^n$ 正交当且仅当其点积为零：$u \\cdot v = 0$。",
+        "Set the dot product equal to zero, which gives a linear equation in the unknown entry, and solve it. Two vectors $u, v \\in \\mathbb{R}^n$ are orthogonal if and only if their dot product is zero: $u \\cdot v = 0$.",
+        "令点积等于零，得到关于未知分量的一次方程，再解出它。两个向量 $u, v \\in \\mathbb{R}^n$ 正交当且仅当其点积为零：$u \\cdot v = 0$。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
@@ -1185,8 +1185,8 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesOrthogonalBases: Top
       id: "projecting-onto-subspace-orthogonal-basis",
       title: t("Orthogonal Projection onto a Subspace via Orthogonal Basis", "利用正交基求解子空间上的正交投影"),
       explanation: t(
-        "Let $W = \\operatorname{span}\\{u_1, \\dots, u_k\\}$ where $\\{u_1, \\dots, u_k\\}$ is an orthogonal basis. The orthogonal projection of $y$ onto $W$ is $\\hat{y} = \\operatorname{proj}_W(y) = \\sum_{i=1}^k \\frac{y \\cdot u_i}{u_i \\cdot u_i} u_i$.",
-        "设 $W = \\operatorname{span}\\{u_1, \\dots, u_k\\}$，其中 $\\{u_1, \\dots, u_k\\}$ 是一组正交基。向量 $y$ 在 $W$ 上的正交投影为 $\\hat{y} = \\operatorname{proj}_W(y) = \\sum_{i=1}^k \\frac{y \\cdot u_i}{u_i \\cdot u_i} u_i$。",
+        "With an orthogonal basis, the projection onto the subspace is simply the sum of the projections onto each basis vector separately. Let $W = \\operatorname{span}\\{u_1, \\dots, u_k\\}$ where $\\{u_1, \\dots, u_k\\}$ is an orthogonal basis. The orthogonal projection of $y$ onto $W$ is $\\hat{y} = \\operatorname{proj}_W(y) = \\sum_{i=1}^k \\frac{y \\cdot u_i}{u_i \\cdot u_i} u_i$.",
+        "有了正交基，在子空间上的投影就等于在每个基向量上分别投影后的和。设 $W = \\operatorname{span}\\{u_1, \\dots, u_k\\}$，其中 $\\{u_1, \\dots, u_k\\}$ 是一组正交基。向量 $y$ 在 $W$ 上的正交投影为 $\\hat{y} = \\operatorname{proj}_W(y) = \\sum_{i=1}^k \\frac{y \\cdot u_i}{u_i \\cdot u_i} u_i$。",
       ),
       generate: (rng: Rng): Problem => {
         const u1 = [1, 1, 0, 0];
@@ -1575,8 +1575,8 @@ export const qrFactorization: TopicDef = {
       id: "qr-decomposition-r-matrix",
       title: t("Upper Triangular Factor R in QR Decomposition", "QR 分解中的上三角矩阵 R"),
       explanation: t(
-        "If $A = [a_1 \\ a_2]$ has linearly independent columns, its $QR$ factorization $A = QR$ produces an upper triangular matrix $R = \\begin{pmatrix} r_{11} & r_{12} \\\\ 0 & r_{22} \\end{pmatrix}$, where $r_{11} = |a_1|$, $r_{12} = q_1 \\cdot a_2$, and $r_{22} = |a_2 - r_{12} q_1| > 0$.",
-        "若 $A = [a_1 \\ a_2]$ 的各列线性无关，其 $QR$ 分解 $A = QR$ 产生的上三角矩阵为 $R = \\begin{pmatrix} r_{11} & r_{12} \\\\ 0 & r_{22} \\end{pmatrix}$，其中 $r_{11} = |a_1|$，$r_{12} = q_1 \\cdot a_2$ 且 $r_{22} = |a_2 - r_{12} q_1| > 0$。",
+        "The entries of the upper triangular factor are the dot products of the orthonormal vectors with the original columns, recording how each column was built. If $A = [a_1 \\ a_2]$ has linearly independent columns, its $QR$ factorization $A = QR$ produces an upper triangular matrix $R = \\begin{pmatrix} r_{11} & r_{12} \\\\ 0 & r_{22} \\end{pmatrix}$, where $r_{11} = |a_1|$, $r_{12} = q_1 \\cdot a_2$, and $r_{22} = |a_2 - r_{12} q_1| > 0$.",
+        "上三角因子的元素是标准正交向量与原来各列的点积，记录了每一列是怎样构成的。若 $A = [a_1 \\ a_2]$ 的各列线性无关，其 $QR$ 分解 $A = QR$ 产生的上三角矩阵为 $R = \\begin{pmatrix} r_{11} & r_{12} \\\\ 0 & r_{22} \\end{pmatrix}$，其中 $r_{11} = |a_1|$，$r_{12} = q_1 \\cdot a_2$ 且 $r_{22} = |a_2 - r_{12} q_1| > 0$。",
       ),
       generate: (rng: Rng): Problem => {
         const a1Candidates = [

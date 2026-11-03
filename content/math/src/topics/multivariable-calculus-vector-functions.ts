@@ -230,8 +230,8 @@ export const integrationRulesForVectorValuedFunctions: TopicDef = {
       id: "evaluating-definite-integrals-of-vector-functions",
       title: t("Evaluating definite integrals of vector functions", "计算向量值函数的定积分"),
       explanation: t(
-        "The definite integral of a vector-valued function is evaluated component by component:\n\n$$\\int_a^b \\mathbf{r}(t)\\,dt = \\left\\langle \\int_a^b x(t)\\,dt, \\int_a^b y(t)\\,dt, \\int_a^b z(t)\\,dt \\right\\rangle.$$",
-        "向量值函数的定积分逐个分量分别进行积分计算：\n\n$$\\int_a^b \\mathbf{r}(t)\\,dt = \\left\\langle \\int_a^b x(t)\\,dt, \\int_a^b y(t)\\,dt, \\int_a^b z(t)\\,dt \\right\\rangle。$$",
+        "Each component is an ordinary function of the parameter, so integrate each one over the interval and collect the results as a vector. The definite integral of a vector-valued function is evaluated component by component:\n\n$$\\int_a^b \\mathbf{r}(t)\\,dt = \\left\\langle \\int_a^b x(t)\\,dt, \\int_a^b y(t)\\,dt, \\int_a^b z(t)\\,dt \\right\\rangle.$$",
+        "每个分量都是参数的普通函数，所以把每个分量在区间上积分，再把结果组成一个向量。向量值函数的定积分逐个分量分别进行积分计算：\n\n$$\\int_a^b \\mathbf{r}(t)\\,dt = \\left\\langle \\int_a^b x(t)\\,dt, \\int_a^b y(t)\\,dt, \\int_a^b z(t)\\,dt \\right\\rangle。$$",
       ),
       generate(rng: Rng): Problem {
         const aCoeff = rng.pick([2, 4, 6, 8, 10]);
@@ -297,8 +297,8 @@ export const theArcLengthOfAVectorValuedFunction: TopicDef = {
       id: "computing-arc-length-of-a-space-curve",
       title: t("Computing the arc length of a space curve", "计算空间曲线的弧长"),
       explanation: t(
-        "For a smooth space curve $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$, the arc length from $t = a$ to $t = b$ is given by:\n\n$$L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt = \\int_a^b \\sqrt{[x'(t)]^2 + [y'(t)]^2 + [z'(t)]^2}\\,dt.$$",
-        "对于光滑空间曲线 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$，从 $t = a$ 到 $t = b$ 的弧长为：\n\n$$L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt = \\int_a^b \\sqrt{[x'(t)]^2 + [y'(t)]^2 + [z'(t)]^2}\\,dt。$$",
+        "The speed is the length of the velocity vector, and integrating the speed over the time interval adds up the distance travelled along the curve. For a smooth space curve $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$, the arc length from $t = a$ to $t = b$ is given by:\n\n$$L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt = \\int_a^b \\sqrt{[x'(t)]^2 + [y'(t)]^2 + [z'(t)]^2}\\,dt.$$",
+        "速率是速度向量的长度，把速率在时间区间上积分，就把沿曲线走过的路程加了起来。对于光滑空间曲线 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$，从 $t = a$ 到 $t = b$ 的弧长为：\n\n$$L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt = \\int_a^b \\sqrt{[x'(t)]^2 + [y'(t)]^2 + [z'(t)]^2}\\,dt。$$",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
@@ -408,8 +408,8 @@ export const unitTangentVectors: TopicDef = {
       id: "calculating-unit-tangent-vectors",
       title: t("Calculating unit tangent vectors", "计算单位切向量"),
       explanation: t(
-        "The unit tangent vector $\\mathbf{T}(t)$ is obtained by normalizing the velocity vector:\n\n$$\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}.$$",
-        "单位切向量 $\\mathbf{T}(t)$ 通过对速度向量进行单位化得到：\n\n$$\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}。$$",
+        "Dividing the velocity by its length keeps only its direction, giving a vector of length one that points along the curve in the direction of motion. The unit tangent vector $\\mathbf{T}(t)$ is obtained by normalizing the velocity vector:\n\n$$\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}.$$",
+        "把速度除以它的长度只保留方向，得到一个长度为 1、沿曲线指向运动方向的向量。单位切向量 $\\mathbf{T}(t)$ 通过对速度向量进行单位化得到：\n\n$$\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}。$$",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
@@ -786,8 +786,8 @@ export const findingCurvatureUsingTheCrossProduct: TopicDef = {
       id: "computing-curvature-via-cross-product",
       title: t("Computing curvature via cross product", "通过叉积计算曲率"),
       explanation: t(
-        "For any smooth three-dimensional curve $\\mathbf{r}(t)$, the curvature can be computed directly without finding $\\mathbf{T}(t)$:\n\n$$\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}.$$",
-        "对于任意光滑三维空间曲线 $\\mathbf{r}(t)$，无需先求出 $\\mathbf{T}(t)$，可直接利用叉积公式计算曲率：\n\n$$\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}。$$",
+        "Curvature measures how quickly the direction of the curve turns, and the cross product of velocity and acceleration captures that turning without normalizing first. For any smooth three-dimensional curve $\\mathbf{r}(t)$, the curvature can be computed directly without finding $\\mathbf{T}(t)$:\n\n$$\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}.$$",
+        "曲率衡量曲线方向转动的快慢，速度与加速度的叉积不必先单位化就能反映这种转动。对于任意光滑三维空间曲线 $\\mathbf{r}(t)$，无需先求出 $\\mathbf{T}(t)$，可直接利用叉积公式计算曲率：\n\n$$\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 8);
@@ -896,8 +896,8 @@ export const theCurvatureOfAPlaneCurve: TopicDef = {
       id: "computing-curvature-of-function-graphs",
       title: t("Computing curvature of function graphs", "计算显式函数图像的曲率"),
       explanation: t(
-        "For a plane curve given as the graph of a function $y = f(x)$, the curvature formula reduces to:\n\n$$\\kappa(x) = \\frac{|f''(x)|}{\\left[1 + (f'(x))^2\\right]^{3/2}}.$$",
-        "对于由显式函数图像 $y = f(x)$ 给出的平面曲线，曲率公式简化为：\n\n$$\\kappa(x) = \\frac{|f''(x)|}{\\left[1 + (f'(x))^2\\right]^{3/2}}。$$",
+        "For a graph the second derivative measures bending, and dividing by a power of one plus the square of the slope corrects for how steep the graph is. For a plane curve given as the graph of a function $y = f(x)$, the curvature formula reduces to:\n\n$$\\kappa(x) = \\frac{|f''(x)|}{\\left[1 + (f'(x))^2\\right]^{3/2}}.$$",
+        "对于函数图像，二阶导数衡量弯曲程度，再除以 1 加斜率平方的某次幂，以修正图像陡峭程度的影响。对于由显式函数图像 $y = f(x)$ 给出的平面曲线，曲率公式简化为：\n\n$$\\kappa(x) = \\frac{|f''(x)|}{\\left[1 + (f'(x))^2\\right]^{3/2}}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 40);
@@ -950,8 +950,8 @@ export const vectorFields: TopicDef = {
       id: "evaluating-vector-fields-at-points",
       title: t("Evaluating vector fields at points", "在各点处求向量场的值"),
       explanation: t(
-        "A vector field in $\\mathbb{R}^3$ is a function $\\mathbf{F}$ that assigns to each point $(x, y, z)$ a three-dimensional vector:\n\n$$\\mathbf{F}(x, y, z) = P(x, y, z)\\mathbf{i} + Q(x, y, z)\\mathbf{j} + R(x, y, z)\\mathbf{k} = \\langle P, Q, R \\rangle.$$",
-        "$\\mathbb{R}^3$ 中的向量场是一个函数 $\\mathbf{F}$，它为空间中的每个点 $(x, y, z)$ 赋予一个三维向量：\n\n$$\\mathbf{F}(x, y, z) = P(x, y, z)\\mathbf{i} + Q(x, y, z)\\mathbf{j} + R(x, y, z)\\mathbf{k} = \\langle P, Q, R \\rangle。$$",
+        "To evaluate a vector field, substitute the coordinates of the point into each component formula to get the vector attached to that point. A vector field in $\\mathbb{R}^3$ is a function $\\mathbf{F}$ that assigns to each point $(x, y, z)$ a three-dimensional vector:\n\n$$\\mathbf{F}(x, y, z) = P(x, y, z)\\mathbf{i} + Q(x, y, z)\\mathbf{j} + R(x, y, z)\\mathbf{k} = \\langle P, Q, R \\rangle.$$",
+        "求向量场的值时，把点的坐标代入每个分量公式，就得到附着在该点的向量。$\\mathbb{R}^3$ 中的向量场是一个函数 $\\mathbf{F}$，它为空间中的每个点 $(x, y, z)$ 赋予一个三维向量：\n\n$$\\mathbf{F}(x, y, z) = P(x, y, z)\\mathbf{i} + Q(x, y, z)\\mathbf{j} + R(x, y, z)\\mathbf{k} = \\langle P, Q, R \\rangle。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -1092,8 +1092,8 @@ export const gradientVectorFields: TopicDef = {
       id: "computing-gradient-fields",
       title: t("Computing gradient fields", "计算梯度向量场"),
       explanation: t(
-        "If $f(x, y, z)$ is a scalar function, its gradient vector field $\\nabla f$ is defined by:\n\n$$\\nabla f = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y}, \\frac{\\partial f}{\\partial z} \\right\\rangle.$$",
-        "若 $f(x, y, z)$ 为标量函数，其梯度向量场 $\\nabla f$ 定义为：\n\n$$\\nabla f = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y}, \\frac{\\partial f}{\\partial z} \\right\\rangle。$$",
+        "The gradient collects the partial derivatives into a vector, which at each point points in the direction in which the function increases fastest. If $f(x, y, z)$ is a scalar function, its gradient vector field $\\nabla f$ is defined by:\n\n$$\\nabla f = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y}, \\frac{\\partial f}{\\partial z} \\right\\rangle.$$",
+        "梯度把各个偏导数组成一个向量，它在每一点都指向函数增长最快的方向。若 $f(x, y, z)$ 为标量函数，其梯度向量场 $\\nabla f$ 定义为：\n\n$$\\nabla f = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y}, \\frac{\\partial f}{\\partial z} \\right\\rangle。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -1415,8 +1415,8 @@ export const theDivergenceOfAVectorField: TopicDef = {
       id: "computing-the-divergence-of-a-vector-field",
       title: t("Computing the divergence of a vector field", "计算向量场的散度"),
       explanation: t(
-        "For a three-dimensional vector field $\\mathbf{F} = \\langle P, Q, R \\rangle$, the divergence is the scalar field:\n\n$$\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = \\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}.$$",
-        "对于三维向量场 $\\mathbf{F} = \\langle P, Q, R \\rangle$，散度是由下式给出的标量场：\n\n$$\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = \\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}。$$",
+        "Divergence adds the rate of change of each component in its own direction, measuring how much the field spreads out from a point. For a three-dimensional vector field $\\mathbf{F} = \\langle P, Q, R \\rangle$, the divergence is the scalar field:\n\n$$\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = \\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}.$$",
+        "散度把每个分量沿自身方向的变化率加起来，衡量向量场从一点向外发散的程度。对于三维向量场 $\\mathbf{F} = \\langle P, Q, R \\rangle$，散度是由下式给出的标量场：\n\n$$\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = \\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -1475,8 +1475,8 @@ export const propertiesOfTheDivergenceOperator: TopicDef = {
       id: "solenoidal-fields-and-divergence-properties",
       title: t("Solenoidal fields and divergence properties", "无散场与散度性质"),
       explanation: t(
-        "A vector field $\\mathbf{F}$ is called **solenoidal** or **incompressible** if $\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = 0$ everywhere.",
-        "若向量场 $\\mathbf{F}$ 处处满足 $\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = 0$，则称其为**无散场**或**不可压缩场**。",
+        "A field with zero divergence neither creates nor destroys flow at any point, like an incompressible fluid that only moves around. A vector field $\\mathbf{F}$ is called **solenoidal** or **incompressible** if $\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = 0$ everywhere.",
+        "散度为零的向量场在任何一点既不产生也不消灭流量，就像只会流动的不可压缩流体。若向量场 $\\mathbf{F}$ 处处满足 $\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = 0$，则称其为**无散场**或**不可压缩场**。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
@@ -1528,8 +1528,8 @@ export const theCurlOfAVectorField: TopicDef = {
       id: "computing-the-curl-of-a-vector-field",
       title: t("Computing the curl of a vector field", "计算向量场的旋度"),
       explanation: t(
-        "For a vector field $\\mathbf{F} = \\langle P, Q, R \\rangle$ in $\\mathbb{R}^3$, the curl is defined by the formal determinant:\n\n$$\\operatorname{curl}\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ \\frac{\\partial}{\\partial x} & \\frac{\\partial}{\\partial y} & \\frac{\\partial}{\\partial z} \\\\ P & Q & R \\end{vmatrix} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle.$$",
-        "对于 $\\mathbb{R}^3$ 中的向量场 $\\mathbf{F} = \\langle P, Q, R \\rangle$，旋度通过形式行列式定义：\n\n$$\\operatorname{curl}\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ \\frac{\\partial}{\\partial x} & \\frac{\\partial}{\\partial y} & \\frac{\\partial}{\\partial z} \\\\ P & Q & R \\end{vmatrix} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle。$$",
+        "Curl measures how much a field rotates around each point, and the determinant pattern is a convenient way to remember its three components. For a vector field $\\mathbf{F} = \\langle P, Q, R \\rangle$ in $\\mathbb{R}^3$, the curl is defined by the formal determinant:\n\n$$\\operatorname{curl}\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ \\frac{\\partial}{\\partial x} & \\frac{\\partial}{\\partial y} & \\frac{\\partial}{\\partial z} \\\\ P & Q & R \\end{vmatrix} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle.$$",
+        "旋度衡量向量场绕每一点旋转的程度，行列式的形式是记住它三个分量的方便方法。对于 $\\mathbb{R}^3$ 中的向量场 $\\mathbf{F} = \\langle P, Q, R \\rangle$，旋度通过形式行列式定义：\n\n$$\\operatorname{curl}\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ \\frac{\\partial}{\\partial x} & \\frac{\\partial}{\\partial y} & \\frac{\\partial}{\\partial z} \\\\ P & Q & R \\end{vmatrix} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);

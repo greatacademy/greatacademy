@@ -339,8 +339,8 @@ export const levelSurfaces: TopicDef = {
       id: "finding-equations-of-level-surfaces",
       title: t("Finding equations of level surfaces", "求等值面方程"),
       explanation: t(
-        "A **level surface** of a three-variable function $w = F(x, y, z)$ consists of all points in $\\mathbb{R}^3$ where $F(x, y, z) = c$ for a constant $c$.",
-        "三元函数 $w = F(x, y, z)$ 的**等值面**由使 $F(x, y, z) = c$（$c$ 为常数）的所有三维空间点构成。",
+        "A level surface is the three dimensional version of a contour line: all the points where the function takes one fixed value. A **level surface** of a three-variable function $w = F(x, y, z)$ consists of all points in $\\mathbb{R}^3$ where $F(x, y, z) = c$ for a constant $c$.",
+        "等值面是等高线的三维版本：函数取同一个固定值的所有点。三元函数 $w = F(x, y, z)$ 的**等值面**由使 $F(x, y, z) = c$（$c$ 为常数）的所有三维空间点构成。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -450,8 +450,8 @@ export const ellipsoids: TopicDef = {
       id: "intercepts-and-semi-axes-of-ellipsoids",
       title: t("Intercepts and semi-axes of ellipsoids", "椭球面的截距与半轴长"),
       explanation: t(
-        "For the ellipsoid $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$, the semi-axes lengths are $a, b, c$. The positive $x$-intercept occurs at $(a, 0, 0)$.",
-        "对于椭球面 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$，其半轴长分别为 $a, b, c$。正 $x$ 截距点位于 $(a, 0, 0)$。",
+        "Setting two of the coordinates to zero shows where the ellipsoid crosses each axis, and those crossing distances are the semi axes. For the ellipsoid $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$, the semi-axes lengths are $a, b, c$. The positive $x$-intercept occurs at $(a, 0, 0)$.",
+        "令其中两个坐标为零，就能看出椭球面与各坐标轴的交点，这些交点到原点的距离就是半轴长。对于椭球面 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$，其半轴长分别为 $a, b, c$。正 $x$ 截距点位于 $(a, 0, 0)$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 9);
@@ -587,8 +587,8 @@ export const ellipticCones: TopicDef = {
       id: "analyzing-traces-of-elliptic-cones",
       title: t("Analyzing traces of elliptic cones", "分析椭圆锥面的截痕"),
       explanation: t(
-        "For the cone $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$, intersecting with horizontal planes $z = k$ yields the ellipse $\\frac{x^2}{(ak)^2} + \\frac{y^2}{(bk)^2} = 1$ with semi-axes $a|k|$ and $b|k|$.",
-        "对于椭圆锥面 $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$，与水平面 $z = k$ 相交得到椭圆 $\\frac{x^2}{(ak)^2} + \\frac{y^2}{(bk)^2} = 1$，其半轴长分别为 $a|k|$ 和 $b|k|$。",
+        "Slicing a surface with a plane shows its cross sections; for a cone, horizontal slices are ellipses that grow as the plane moves away from the vertex. For the cone $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$, intersecting with horizontal planes $z = k$ yields the ellipse $\\frac{x^2}{(ak)^2} + \\frac{y^2}{(bk)^2} = 1$ with semi-axes $a|k|$ and $b|k|$.",
+        "用平面截曲面可以看到它的截面；对于锥面，水平截面是椭圆，平面离顶点越远，椭圆越大。对于椭圆锥面 $z^2 = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$，与水平面 $z = k$ 相交得到椭圆 $\\frac{x^2}{(ak)^2} + \\frac{y^2}{(bk)^2} = 1$，其半轴长分别为 $a|k|$ 和 $b|k|$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 6);
@@ -694,8 +694,8 @@ export const intersectionsOfLinesAndPlanesWithSurfaces: TopicDef = {
       id: "calculating-radius-of-circular-traces",
       title: t("Calculating the radius of circular traces", "计算圆形截痕的半径"),
       explanation: t(
-        "Intersecting the sphere $x^2 + y^2 + z^2 = R^2$ with the plane $z = h$ (where $|h| < R$) produces the circle $x^2 + y^2 = R^2 - h^2$ with radius $r = \\sqrt{R^2 - h^2}$.",
-        "用平面 $z = h$（其中 $|h| < R$）截球面 $x^2 + y^2 + z^2 = R^2$，得到的交线为圆 $x^2 + y^2 = R^2 - h^2$，其半径为 $r = \\sqrt{R^2 - h^2}$。",
+        "Substituting the height of the plane into the equation of the sphere leaves the equation of a circle, whose radius shrinks as the plane moves away from the center. Intersecting the sphere $x^2 + y^2 + z^2 = R^2$ with the plane $z = h$ (where $|h| < R$) produces the circle $x^2 + y^2 = R^2 - h^2$ with radius $r = \\sqrt{R^2 - h^2}$.",
+        "把平面的高度代入球面方程，就得到一个圆的方程，平面离球心越远，圆的半径越小。用平面 $z = h$（其中 $|h| < R$）截球面 $x^2 + y^2 + z^2 = R^2$，得到的交线为圆 $x^2 + y^2 = R^2 - h^2$，其半径为 $r = \\sqrt{R^2 - h^2}$。",
       ),
       generate(rng: Rng): Problem {
         const [h0, r0, R0] = rng.pick(pythagoreanTriples);
@@ -887,8 +887,8 @@ export const computingPartialDerivativesUsingTheRulesOfDifferentiation: TopicDef
       id: "symbolic-partial-differentiation",
       title: t("Symbolic partial differentiation", "符号偏导数计算"),
       explanation: t(
-        "Apply standard differentiation rules while treating inactive variables as constant multipliers or independent constants:\n\n$$\\frac{\\partial}{\\partial x}[x^m y^n] = m x^{m-1} y^n, \\quad \\frac{\\partial}{\\partial y}[x^m y^n] = n x^m y^{n-1}.$$",
-        "在将非目标变量视为常数乘子或常数项的同时，应用标准求导法则：\n\n$$\\frac{\\partial}{\\partial x}[x^m y^n] = m x^{m-1} y^n, \\quad \\frac{\\partial}{\\partial y}[x^m y^n] = n x^m y^{n-1}。$$",
+        "A partial derivative measures change in one variable while the others are held fixed, so treat every other variable exactly as you would treat a constant. Apply standard differentiation rules while treating inactive variables as constant multipliers or independent constants:\n\n$$\\frac{\\partial}{\\partial x}[x^m y^n] = m x^{m-1} y^n, \\quad \\frac{\\partial}{\\partial y}[x^m y^n] = n x^m y^{n-1}.$$",
+        "偏导数衡量只改变一个变量而其他变量固定时的变化，所以把其他变量完全当作常数来处理。在将非目标变量视为常数乘子或常数项的同时，应用标准求导法则：\n\n$$\\frac{\\partial}{\\partial x}[x^m y^n] = m x^{m-1} y^n, \\quad \\frac{\\partial}{\\partial y}[x^m y^n] = n x^m y^{n-1}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
@@ -1060,8 +1060,8 @@ export const higherOrderPartialDerivatives: TopicDef = {
       id: "computing-second-pure-partial-derivatives",
       title: t("Computing second pure partial derivatives", "计算二阶纯偏导数"),
       explanation: t(
-        "The second pure partial derivative $f_{xx}$ is defined as:\n\n$$f_{xx} = \\frac{\\partial^2 f}{\\partial x^2} = \\frac{\\partial}{\\partial x}\\left(\\frac{\\partial f}{\\partial x}\\right).$$",
-        "二阶纯偏导数 $f_{xx}$ 定义为：\n\n$$f_{xx} = \\frac{\\partial^2 f}{\\partial x^2} = \\frac{\\partial}{\\partial x}\\left(\\frac{\\partial f}{\\partial x}\\right)。$$",
+        "Differentiate the first partial derivative again with respect to the same variable, still treating the other variables as constants. The second pure partial derivative $f_{xx}$ is defined as:\n\n$$f_{xx} = \\frac{\\partial^2 f}{\\partial x^2} = \\frac{\\partial}{\\partial x}\\left(\\frac{\\partial f}{\\partial x}\\right).$$",
+        "把一阶偏导数再对同一个变量求导，仍然把其他变量当作常数。二阶纯偏导数 $f_{xx}$ 定义为：\n\n$$f_{xx} = \\frac{\\partial^2 f}{\\partial x^2} = \\frac{\\partial}{\\partial x}\\left(\\frac{\\partial f}{\\partial x}\\right)。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -1175,8 +1175,8 @@ export const tangentPlanesToSurfaces: TopicDef = {
       id: "finding-equations-of-tangent-planes",
       title: t("Finding equations of tangent planes", "求切平面方程"),
       explanation: t(
-        "For a differentiable function $z = f(x, y)$, the tangent plane at $(x_0, y_0, z_0)$ has equation:\n\n$$z - z_0 = f_x(x_0, y_0)(x - x_0) + f_y(x_0, y_0)(y - y_0).$$",
-        "对于可微函数 $z = f(x, y)$，其在点 $(x_0, y_0, z_0)$ 处的切平面方程为：\n\n$$z - z_0 = f_x(x_0, y_0)(x - x_0) + f_y(x_0, y_0)(y - y_0)。$$",
+        "The tangent plane is the flat surface that best matches the graph at a point, and its tilt in each direction is given by the partial derivatives there. For a differentiable function $z = f(x, y)$, the tangent plane at $(x_0, y_0, z_0)$ has equation:\n\n$$z - z_0 = f_x(x_0, y_0)(x - x_0) + f_y(x_0, y_0)(y - y_0).$$",
+        "切平面是在一点处与图像最贴合的平面，它在各方向上的倾斜程度由该点的偏导数给出。对于可微函数 $z = f(x, y)$，其在点 $(x_0, y_0, z_0)$ 处的切平面方程为：\n\n$$z - z_0 = f_x(x_0, y_0)(x - x_0) + f_y(x_0, y_0)(y - y_0)。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -1246,8 +1246,8 @@ export const linearizationOfMultivariableFunctions: TopicDef = {
       id: "computing-linearizations",
       title: t("Computing linearizations", "计算线性化表达式"),
       explanation: t(
-        "The **linearization** of $f(x, y)$ at $(a, b)$ is:\n\n$$L(x, y) = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b).$$",
-        "函数 $f(x, y)$ 在点 $(a, b)$ 处的**线性化**为：\n\n$$L(x, y) = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b)。$$",
+        "The linearization is the tangent plane written as a function, and it gives good estimates of the function at points near the center. The **linearization** of $f(x, y)$ at $(a, b)$ is:\n\n$$L(x, y) = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b).$$",
+        "线性化就是写成函数形式的切平面，它可以很好地估计中心附近各点的函数值。函数 $f(x, y)$ 在点 $(a, b)$ 处的**线性化**为：\n\n$$L(x, y) = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b)。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -1304,8 +1304,8 @@ export const differentiatingUnderTheIntegralSign: TopicDef = {
       id: "applying-leibniz-integral-rule",
       title: t("Applying Leibniz's Integral Rule", "应用莱布尼茨积分法则"),
       explanation: t(
-        "**Leibniz's Rule**: For continuous $\\frac{\\partial f}{\\partial t}$:\n\n$$\\frac{d}{dt} \\int_a^b f(x, t)\\,dx = \\int_a^b \\frac{\\partial f}{\\partial t}(x, t)\\,dx.$$",
-        "**莱布尼茨法则**：当 $\\frac{\\partial f}{\\partial t}$ 连续时：\n\n$$\\frac{d}{dt} \\int_a^b f(x, t)\\,dx = \\int_a^b \\frac{\\partial f}{\\partial t}(x, t)\\,dx。$$",
+        "When the limits are fixed, the derivative with respect to a parameter can be taken inside the integral, differentiating the integrand partially. **Leibniz's Rule**: For continuous $\\frac{\\partial f}{\\partial t}$:\n\n$$\\frac{d}{dt} \\int_a^b f(x, t)\\,dx = \\int_a^b \\frac{\\partial f}{\\partial t}(x, t)\\,dx.$$",
+        "当积分限固定时，对参数的导数可以移到积分号里面，对被积函数求偏导数。**莱布尼茨法则**：当 $\\frac{\\partial f}{\\partial t}$ 连续时：\n\n$$\\frac{d}{dt} \\int_a^b f(x, t)\\,dx = \\int_a^b \\frac{\\partial f}{\\partial t}(x, t)\\,dx。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -1363,8 +1363,8 @@ export const theGradientVector: TopicDef = {
       id: "calculating-the-gradient-vector",
       title: t("Calculating the gradient vector", "计算梯度向量"),
       explanation: t(
-        "For a scalar function $f(x, y)$, the gradient vector is:\n\n$$\\nabla f(x, y) = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y} \\right\\rangle.$$",
-        "对于标量函数 $f(x, y)$，梯度向量为：\n\n$$\\nabla f(x, y) = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y} \\right\\rangle。$$",
+        "Find each partial derivative and list them in order as the components of a vector, then substitute the point if one is given. For a scalar function $f(x, y)$, the gradient vector is:\n\n$$\\nabla f(x, y) = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y} \\right\\rangle.$$",
+        "求出每个偏导数，把它们依次作为向量的分量；如果给定了点，再代入该点。对于标量函数 $f(x, y)$，梯度向量为：\n\n$$\\nabla f(x, y) = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y} \\right\\rangle。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -1559,8 +1559,8 @@ export const tangentPlanesToLevelSurfaces: TopicDef = {
       id: "computing-tangent-planes-to-implicit-surfaces",
       title: t("Computing tangent planes to implicit surfaces", "计算隐式曲面的切平面"),
       explanation: t(
-        "For an implicitly defined surface $F(x, y, z) = k$, the tangent plane at $(x_0, y_0, z_0)$ has normal $\\nabla F(x_0, y_0, z_0) = \\langle F_x, F_y, F_z \\rangle$:\n\n$$F_x(x_0, y_0, z_0)(x - x_0) + F_y(x_0, y_0, z_0)(y - y_0) + F_z(x_0, y_0, z_0)(z - z_0) = 0.$$",
-        "对于隐式曲面 $F(x, y, z) = k$，其在点 $(x_0, y_0, z_0)$ 处的切平面以 $\\nabla F(x_0, y_0, z_0) = \\langle F_x, F_y, F_z \\rangle$ 为法向量：\n\n$$F_x(x_0, y_0, z_0)(x - x_0) + F_y(x_0, y_0, z_0)(y - y_0) + F_z(x_0, y_0, z_0)(z - z_0) = 0。$$",
+        "The gradient is perpendicular to every level surface, so the gradient at the point serves as the normal vector of the tangent plane. For an implicitly defined surface $F(x, y, z) = k$, the tangent plane at $(x_0, y_0, z_0)$ has normal $\\nabla F(x_0, y_0, z_0) = \\langle F_x, F_y, F_z \\rangle$:\n\n$$F_x(x_0, y_0, z_0)(x - x_0) + F_y(x_0, y_0, z_0)(y - y_0) + F_z(x_0, y_0, z_0)(z - z_0) = 0.$$",
+        "梯度垂直于每个等值面，所以该点处的梯度可以作为切平面的法向量。对于隐式曲面 $F(x, y, z) = k$，其在点 $(x_0, y_0, z_0)$ 处的切平面以 $\\nabla F(x_0, y_0, z_0) = \\langle F_x, F_y, F_z \\rangle$ 为法向量：\n\n$$F_x(x_0, y_0, z_0)(x - x_0) + F_y(x_0, y_0, z_0)(y - y_0) + F_z(x_0, y_0, z_0)(z - z_0) = 0。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -1626,8 +1626,8 @@ export const directionalDerivatives: TopicDef = {
       id: "computing-directional-derivatives",
       title: t("Computing directional derivatives", "计算方向导数"),
       explanation: t(
-        "For a differentiable function $f(x, y)$ and a unit vector $\\mathbf{u} = \\langle u_1, u_2 \\rangle$:\n\n$$D_{\\mathbf{u}} f(x_0, y_0) = \\nabla f(x_0, y_0) \\cdot \\mathbf{u} = f_x(x_0, y_0)u_1 + f_y(x_0, y_0)u_2.$$",
-        "对于可微函数 $f(x, y)$ 和单位向量 $\\mathbf{u} = \\langle u_1, u_2 \\rangle$：\n\n$$D_{\\mathbf{u}} f(x_0, y_0) = \\nabla f(x_0, y_0) \\cdot \\mathbf{u} = f_x(x_0, y_0)u_1 + f_y(x_0, y_0)u_2。$$",
+        "The rate of change in any direction is the dot product of the gradient with a unit vector in that direction, so normalize the direction first. For a differentiable function $f(x, y)$ and a unit vector $\\mathbf{u} = \\langle u_1, u_2 \\rangle$:\n\n$$D_{\\mathbf{u}} f(x_0, y_0) = \\nabla f(x_0, y_0) \\cdot \\mathbf{u} = f_x(x_0, y_0)u_1 + f_y(x_0, y_0)u_2.$$",
+        "沿任意方向的变化率等于梯度与该方向单位向量的点积，所以要先把方向单位化。对于可微函数 $f(x, y)$ 和单位向量 $\\mathbf{u} = \\langle u_1, u_2 \\rangle$：\n\n$$D_{\\mathbf{u}} f(x_0, y_0) = \\nabla f(x_0, y_0) \\cdot \\mathbf{u} = f_x(x_0, y_0)u_1 + f_y(x_0, y_0)u_2。$$",
       ),
       generate(rng: Rng): Problem {
         const [u1Int, u2Int, mag] = rng.pick(pythagoreanTriples);
@@ -1749,8 +1749,8 @@ export const theMultivariableChainRule: TopicDef = {
       id: "computing-derivatives-via-multivariable-chain-rule",
       title: t("Computing derivatives via the multivariable chain rule", "利用多元链式法则求导"),
       explanation: t(
-        "If $z = f(x, y)$ is differentiable and $x = g(t)$, $y = h(t)$ are differentiable functions of $t$, then:\n\n$$\\frac{dz}{dt} = \\frac{\\partial z}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial z}{\\partial y}\\frac{dy}{dt}.$$",
-        "若 $z = f(x, y)$ 可微，且 $x = g(t)$、$y = h(t)$ 为 $t$ 的可微函数，则：\n\n$$\\frac{dz}{dt} = \\frac{\\partial z}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial z}{\\partial y}\\frac{dy}{dt}。$$",
+        "When each input depends on a parameter, the total rate of change adds the contribution of each input: its partial derivative times its own rate. If $z = f(x, y)$ is differentiable and $x = g(t)$, $y = h(t)$ are differentiable functions of $t$, then:\n\n$$\\frac{dz}{dt} = \\frac{\\partial z}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial z}{\\partial y}\\frac{dy}{dt}.$$",
+        "当每个输入都依赖于一个参数时，总变化率是各个输入贡献的和：偏导数乘以该输入自身的变化率。若 $z = f(x, y)$ 可微，且 $x = g(t)$、$y = h(t)$ 为 $t$ 的可微函数，则：\n\n$$\\frac{dz}{dt} = \\frac{\\partial z}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial z}{\\partial y}\\frac{dy}{dt}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -1806,8 +1806,8 @@ export const theMultivariableChainRuleWithPolarCoordinates: TopicDef = {
       id: "radial-derivatives-in-polar-coordinates",
       title: t("Radial derivatives in polar coordinates", "极坐标下的径向导数"),
       explanation: t(
-        "For $z = f(x, y)$ with $x = r\\cos\\theta$ and $y = r\\sin\\theta$, applying the chain rule yields:\n\n$$\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial r} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta.$$",
-        "对于 $z = f(x, y)$（其中 $x = r\\cos\\theta$，$y = r\\sin\\theta$），由链式法则可得：\n\n$$\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial r} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta。$$",
+        "Changing the radius moves the point in both the horizontal and vertical directions, so the chain rule adds both partial derivatives with the right weights. For $z = f(x, y)$ with $x = r\\cos\\theta$ and $y = r\\sin\\theta$, applying the chain rule yields:\n\n$$\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial r} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta.$$",
+        "改变半径会使点在水平和竖直两个方向上移动，所以链式法则要把两个偏导数按相应的权重加起来。对于 $z = f(x, y)$（其中 $x = r\\cos\\theta$，$y = r\\sin\\theta$），由链式法则可得：\n\n$$\\frac{\\partial z}{\\partial r} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial r} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial r} = \\frac{\\partial z}{\\partial x}\\cos\\theta + \\frac{\\partial z}{\\partial y}\\sin\\theta。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -1865,8 +1865,8 @@ export const theMultivariableChainRuleInVectorForm: TopicDef = {
       id: "gradient-dot-product-formula-for-chain-rule",
       title: t("Gradient dot product formula for the chain rule", "链式法则的梯度点积公式"),
       explanation: t(
-        "If $w = f(\\mathbf{r}(t))$ where $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$, then the chain rule compactly reads:\n\n$$\\frac{dw}{dt} = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t).$$",
-        "若 $w = f(\\mathbf{r}(t))$，其中 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$，则链式法则简洁地表示为：\n\n$$\\frac{dw}{dt} = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)。$$",
+        "Along a curve, the rate of change of the function is the gradient dotted with the velocity of the curve, combining all the partial derivative terms at once. If $w = f(\\mathbf{r}(t))$ where $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$, then the chain rule compactly reads:\n\n$$\\frac{dw}{dt} = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t).$$",
+        "沿一条曲线，函数的变化率等于梯度与曲线速度的点积，一次就合并了所有偏导数项。若 $w = f(\\mathbf{r}(t))$，其中 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$，则链式法则简洁地表示为：\n\n$$\\frac{dw}{dt} = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)。$$",
       ),
       generate(rng: Rng): Problem {
         const grad: Vec3 = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
@@ -1918,8 +1918,8 @@ export const differentials: TopicDef = {
       id: "approximating-changes-using-differentials",
       title: t("Approximating changes using differentials", "利用全微分估计变化量"),
       explanation: t(
-        "For a differentiable function $z = f(x, y)$, the **total differential** is:\n\n$$dz = \\frac{\\partial z}{\\partial x}\\,dx + \\frac{\\partial z}{\\partial y}\\,dy.$$ For small increments $\\Delta x$ and $\\Delta y$, $\\Delta z \\approx dz$.",
-        "对于可微函数 $z = f(x, y)$，其**全微分**为：\n\n$$dz = \\frac{\\partial z}{\\partial x}\\,dx + \\frac{\\partial z}{\\partial y}\\,dy。$$ 当增量 $\\Delta x$ 与 $\\Delta y$ 较小时，$\\Delta z \\approx dz$。",
+        "For small changes in the inputs, the change in the output is approximately each partial derivative times the change in its input, all added together. For a differentiable function $z = f(x, y)$, the **total differential** is:\n\n$$dz = \\frac{\\partial z}{\\partial x}\\,dx + \\frac{\\partial z}{\\partial y}\\,dy.$$ For small increments $\\Delta x$ and $\\Delta y$, $\\Delta z \\approx dz$.",
+        "当输入的变化很小时，输出的变化近似等于每个偏导数乘以相应输入的变化，再全部加起来。对于可微函数 $z = f(x, y)$，其**全微分**为：\n\n$$dz = \\frac{\\partial z}{\\partial x}\\,dx + \\frac{\\partial z}{\\partial y}\\,dy。$$ 当增量 $\\Delta x$ 与 $\\Delta y$ 较小时，$\\Delta z \\approx dz$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -1985,8 +1985,8 @@ export const affineTransformations: TopicDef = {
       id: "evaluating-affine-transformations-on-points",
       title: t("Evaluating affine transformations on points", "计算点在仿射变换下的像"),
       explanation: t(
-        "An affine transformation $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ is represented as:\n\n$$T(x, y) = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} + \\begin{pmatrix} e \\\\ f \\end{pmatrix} = (ax + by + e, cx + dy + f).$$",
-        "仿射变换 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 表示为：\n\n$$T(x, y) = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} + \\begin{pmatrix} e \\\\ f \\end{pmatrix} = (ax + by + e, cx + dy + f)。$$",
+        "An affine transformation multiplies by a matrix and then adds a fixed vector, so it can stretch, rotate and shift the plane all at once. An affine transformation $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ is represented as:\n\n$$T(x, y) = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} + \\begin{pmatrix} e \\\\ f \\end{pmatrix} = (ax + by + e, cx + dy + f).$$",
+        "仿射变换先乘以一个矩阵再加上一个固定向量，所以可以同时伸缩、旋转和平移平面。仿射变换 $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 表示为：\n\n$$T(x, y) = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} + \\begin{pmatrix} e \\\\ f \\end{pmatrix} = (ax + by + e, cx + dy + f)。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -2053,8 +2053,8 @@ export const theImageOfAnAffineTransformation: TopicDef = {
       id: "area-scaling-by-affine-maps",
       title: t("Area scaling by affine maps", "仿射映射的面积缩放因子"),
       explanation: t(
-        "For an affine transformation $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ in $\\mathbb{R}^2$, the area of the image $T(S)$ of a region $S$ is:\n\n$$\\operatorname{Area}(T(S)) = |\\det(A)| \\cdot \\operatorname{Area}(S).$$",
-        "对于 $\\mathbb{R}^2$ 中的仿射变换 $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$，区域 $S$ 的像 $T(S)$ 的面积为：\n\n$$\\operatorname{Area}(T(S)) = |\\det(A)| \\cdot \\operatorname{Area}(S)。$$",
+        "The shift does not change areas, while the matrix multiplies every area by the absolute value of its determinant. For an affine transformation $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ in $\\mathbb{R}^2$, the area of the image $T(S)$ of a region $S$ is:\n\n$$\\operatorname{Area}(T(S)) = |\\det(A)| \\cdot \\operatorname{Area}(S).$$",
+        "平移不改变面积，而矩阵把每个面积乘以其行列式的绝对值。对于 $\\mathbb{R}^2$ 中的仿射变换 $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$，区域 $S$ 的像 $T(S)$ 的面积为：\n\n$$\\operatorname{Area}(T(S)) = |\\det(A)| \\cdot \\operatorname{Area}(S)。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -2107,8 +2107,8 @@ export const theInverseOfAnAffineTransformation: TopicDef = {
       id: "inverting-affine-maps",
       title: t("Inverting affine maps", "求仿射变换的逆像"),
       explanation: t(
-        "To invert $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$, first subtract the translation $\\mathbf{y} - \\mathbf{b}$, then apply the matrix inverse $A^{-1}$:\n\n$$T^{-1}(\\mathbf{y}) = A^{-1}(\\mathbf{y} - \\mathbf{b}).$$",
-        "求 $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ 的逆变换，先减去平移量 $\\mathbf{y} - \\mathbf{b}$，再乘以矩阵逆 $A^{-1}$：\n\n$$T^{-1}(\\mathbf{y}) = A^{-1}(\\mathbf{y} - \\mathbf{b})。$$",
+        "To undo the map, reverse its steps in the opposite order: first remove the shift, then undo the matrix with its inverse. To invert $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$, first subtract the translation $\\mathbf{y} - \\mathbf{b}$, then apply the matrix inverse $A^{-1}$:\n\n$$T^{-1}(\\mathbf{y}) = A^{-1}(\\mathbf{y} - \\mathbf{b}).$$",
+        "要撤销这个映射，就按相反的顺序倒推每一步：先去掉平移，再用逆矩阵撤销矩阵的作用。求 $T(\\mathbf{x}) = A\\mathbf{x} + \\mathbf{b}$ 的逆变换，先减去平移量 $\\mathbf{y} - \\mathbf{b}$，再乘以矩阵逆 $A^{-1}$：\n\n$$T^{-1}(\\mathbf{y}) = A^{-1}(\\mathbf{y} - \\mathbf{b})。$$",
       ),
       generate(rng: Rng): Problem {
         // Simple diagonal scaling and shift: T(x, y) = (a*x + e, d*y + f)
@@ -2170,8 +2170,8 @@ export const nonlinearTransformationsOfPlaneRegions: TopicDef = {
       id: "mapping-points-under-nonlinear-transformations",
       title: t("Mapping points under nonlinear transformations", "计算点在非线性变换下的像"),
       explanation: t(
-        "A nonlinear transformation maps a point $(x, y)$ to $(u, v)$ via nonlinear formulas such as $u = x^2 - y^2$ and $v = 2xy$.",
-        "非线性变换通过非线性公式（如 $u = x^2 - y^2$ 与 $v = 2xy$）将点 $(x, y)$ 映射为 $(u, v)$。",
+        "A nonlinear transformation has no single matrix, so find the image of a point by substituting its coordinates into the formulas directly. A nonlinear transformation maps a point $(x, y)$ to $(u, v)$ via nonlinear formulas such as $u = x^2 - y^2$ and $v = 2xy$.",
+        "非线性变换没有单一的矩阵，所以要把点的坐标直接代入公式来求像点。非线性变换通过非线性公式（如 $u = x^2 - y^2$ 与 $v = 2xy$）将点 $(x, y)$ 映射为 $(u, v)$。",
       ),
       generate(rng: Rng): Problem {
         const x0 = rng.int(1, 5);
@@ -2232,8 +2232,8 @@ export const polarCoordinateTransformations: TopicDef = {
       id: "jacobian-of-polar-coordinate-transformation",
       title: t("Jacobian of polar coordinate transformation", "极坐标变换的雅可比行列式"),
       explanation: t(
-        "For $x = r\\cos\\theta$ and $y = r\\sin\\theta$, the Jacobian matrix and its determinant are:\n\n$$J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)} = \\begin{vmatrix} \\cos\\theta & -r\\sin\\theta \\\\ \\sin\\theta & r\\cos\\theta \\end{vmatrix} = r(\\cos^2\\theta + \\sin^2\\theta) = r.$$",
-        "对于 $x = r\\cos\\theta$ 与 $y = r\\sin\\theta$，其雅可比矩阵及行列式为：\n\n$$J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)} = \\begin{vmatrix} \\cos\\theta & -r\\sin\\theta \\\\ \\sin\\theta & r\\cos\\theta \\end{vmatrix} = r(\\cos^2\\theta + \\sin^2\\theta) = r。$$",
+        "The Jacobian determinant measures how much a small rectangle in the new coordinates is stretched, and for polar coordinates it equals the radius. For $x = r\\cos\\theta$ and $y = r\\sin\\theta$, the Jacobian matrix and its determinant are:\n\n$$J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)} = \\begin{vmatrix} \\cos\\theta & -r\\sin\\theta \\\\ \\sin\\theta & r\\cos\\theta \\end{vmatrix} = r(\\cos^2\\theta + \\sin^2\\theta) = r.$$",
+        "雅可比行列式衡量新坐标中的小矩形被拉伸了多少，对极坐标来说它等于半径。对于 $x = r\\cos\\theta$ 与 $y = r\\sin\\theta$，其雅可比矩阵及行列式为：\n\n$$J = \\frac{\\partial(x, y)}{\\partial(r, \\theta)} = \\begin{vmatrix} \\cos\\theta & -r\\sin\\theta \\\\ \\sin\\theta & r\\cos\\theta \\end{vmatrix} = r(\\cos^2\\theta + \\sin^2\\theta) = r。$$",
       ),
       generate(rng: Rng): Problem {
         const r0 = rng.int(2, 35);
@@ -2343,8 +2343,8 @@ export const theJacobian: TopicDef = {
       id: "calculating-2d-jacobian-determinants",
       title: t("Calculating 2D Jacobian determinants", "计算二维雅可比行列式"),
       explanation: t(
-        "For a transformation $x = g(u, v)$ and $y = h(u, v)$, the **Jacobian determinant** is:\n\n$$J = \\frac{\\partial(x, y)}{\\partial(u, v)} = \\begin{vmatrix} \\frac{\\partial x}{\\partial u} & \\frac{\\partial x}{\\partial v} \\\\ \\frac{\\partial y}{\\partial u} & \\frac{\\partial y}{\\partial v} \\end{vmatrix} = \\frac{\\partial x}{\\partial u}\\frac{\\partial y}{\\partial v} - \\frac{\\partial x}{\\partial v}\\frac{\\partial y}{\\partial u}.$$",
-        "对于变换 $x = g(u, v)$ 与 $y = h(u, v)$，其**雅可比行列式**为：\n\n$$J = \\frac{\\partial(x, y)}{\\partial(u, v)} = \\begin{vmatrix} \\frac{\\partial x}{\\partial u} & \\frac{\\partial x}{\\partial v} \\\\ \\frac{\\partial y}{\\partial u} & \\frac{\\partial y}{\\partial v} \\end{vmatrix} = \\frac{\\partial x}{\\partial u}\\frac{\\partial y}{\\partial v} - \\frac{\\partial x}{\\partial v}\\frac{\\partial y}{\\partial u}。$$",
+        "Arrange the partial derivatives of the old coordinates with respect to the new ones in a matrix, and take its determinant. For a transformation $x = g(u, v)$ and $y = h(u, v)$, the **Jacobian determinant** is:\n\n$$J = \\frac{\\partial(x, y)}{\\partial(u, v)} = \\begin{vmatrix} \\frac{\\partial x}{\\partial u} & \\frac{\\partial x}{\\partial v} \\\\ \\frac{\\partial y}{\\partial u} & \\frac{\\partial y}{\\partial v} \\end{vmatrix} = \\frac{\\partial x}{\\partial u}\\frac{\\partial y}{\\partial v} - \\frac{\\partial x}{\\partial v}\\frac{\\partial y}{\\partial u}.$$",
+        "把旧坐标对新坐标的偏导数排成一个矩阵，再求它的行列式。对于变换 $x = g(u, v)$ 与 $y = h(u, v)$，其**雅可比行列式**为：\n\n$$J = \\frac{\\partial(x, y)}{\\partial(u, v)} = \\begin{vmatrix} \\frac{\\partial x}{\\partial u} & \\frac{\\partial x}{\\partial v} \\\\ \\frac{\\partial y}{\\partial u} & \\frac{\\partial y}{\\partial v} \\end{vmatrix} = \\frac{\\partial x}{\\partial u}\\frac{\\partial y}{\\partial v} - \\frac{\\partial x}{\\partial v}\\frac{\\partial y}{\\partial u}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -2451,8 +2451,8 @@ export const theJacobianOfAThreeDimensionalTransformation: TopicDef = {
       id: "cylindrical-and-spherical-jacobians",
       title: t("Cylindrical and spherical Jacobians", "柱坐标与球坐标的雅可比行列式"),
       explanation: t(
-        "Standard 3D coordinate Jacobians:\n\n- **Cylindrical coordinates** ($x = r\\cos\\theta, y = r\\sin\\theta, z = z$): $J = \\frac{\\partial(x, y, z)}{\\partial(r, \\theta, z)} = r$.\n- **Spherical coordinates** ($x = \\rho\\sin\\phi\\cos\\theta, y = \\rho\\sin\\phi\\sin\\theta, z = \\rho\\cos\\phi$): $J = \\rho^2\\sin\\phi$.",
-        "标准三维坐标变换的雅可比行列式：\n\n- **柱坐标** ($x = r\\cos\\theta, y = r\\sin\\theta, z = z$)：$J = \\frac{\\partial(x, y, z)}{\\partial(r, \\theta, z)} = r$。\n- **球坐标** ($x = \\rho\\sin\\phi\\cos\\theta, y = \\rho\\sin\\phi\\sin\\theta, z = \\rho\\cos\\phi$)：$J = \\rho^2\\sin\\phi$。",
+        "These factors are the volume scaling of the coordinate systems, and they must appear in any triple integral after changing coordinates. Standard 3D coordinate Jacobians:\n\n- **Cylindrical coordinates** ($x = r\\cos\\theta, y = r\\sin\\theta, z = z$): $J = \\frac{\\partial(x, y, z)}{\\partial(r, \\theta, z)} = r$.\n- **Spherical coordinates** ($x = \\rho\\sin\\phi\\cos\\theta, y = \\rho\\sin\\phi\\sin\\theta, z = \\rho\\cos\\phi$): $J = \\rho^2\\sin\\phi$.",
+        "这些因子是坐标系的体积缩放因子，换坐标后的任何三重积分中都必须出现它们。标准三维坐标变换的雅可比行列式：\n\n- **柱坐标** ($x = r\\cos\\theta, y = r\\sin\\theta, z = z$)：$J = \\frac{\\partial(x, y, z)}{\\partial(r, \\theta, z)} = r$。\n- **球坐标** ($x = \\rho\\sin\\phi\\cos\\theta, y = \\rho\\sin\\phi\\sin\\theta, z = \\rho\\cos\\phi$)：$J = \\rho^2\\sin\\phi$。",
       ),
       generate(rng: Rng): Problem {
         const isCylindrical = rng.bool();
@@ -2526,8 +2526,8 @@ export const theDerivativeOfAMultivariableFunction: TopicDef = {
       id: "evaluating-jacobian-matrix-entries",
       title: t("Evaluating Jacobian matrix entries", "计算雅可比矩阵的元素"),
       explanation: t(
-        "For $\\mathbf{F}(x, y) = \\langle f_1(x, y), f_2(x, y) \\rangle$, the derivative is the $2 \\times 2$ Jacobian matrix:\n\n$$D\\mathbf{F}(x, y) = \\begin{pmatrix} \\frac{\\partial f_1}{\\partial x} & \\frac{\\partial f_1}{\\partial y} \\\\ \\frac{\\partial f_2}{\\partial x} & \\frac{\\partial f_2}{\\partial y} \\end{pmatrix}.$$",
-        "对于 $\\mathbf{F}(x, y) = \\langle f_1(x, y), f_2(x, y) \\rangle$，其导数为 $2 \\times 2$ 雅可比矩阵：\n\n$$D\\mathbf{F}(x, y) = \\begin{pmatrix} \\frac{\\partial f_1}{\\partial x} & \\frac{\\partial f_1}{\\partial y} \\\\ \\frac{\\partial f_2}{\\partial x} & \\frac{\\partial f_2}{\\partial y} \\end{pmatrix}。$$",
+        "Each row of the Jacobian matrix holds the partial derivatives of one component, so it plays the role of the derivative for a function with vector outputs. For $\\mathbf{F}(x, y) = \\langle f_1(x, y), f_2(x, y) \\rangle$, the derivative is the $2 \\times 2$ Jacobian matrix:\n\n$$D\\mathbf{F}(x, y) = \\begin{pmatrix} \\frac{\\partial f_1}{\\partial x} & \\frac{\\partial f_1}{\\partial y} \\\\ \\frac{\\partial f_2}{\\partial x} & \\frac{\\partial f_2}{\\partial y} \\end{pmatrix}.$$",
+        "雅可比矩阵的每一行是一个分量的偏导数，所以它对输出为向量的函数起着导数的作用。对于 $\\mathbf{F}(x, y) = \\langle f_1(x, y), f_2(x, y) \\rangle$，其导数为 $2 \\times 2$ 雅可比矩阵：\n\n$$D\\mathbf{F}(x, y) = \\begin{pmatrix} \\frac{\\partial f_1}{\\partial x} & \\frac{\\partial f_1}{\\partial y} \\\\ \\frac{\\partial f_2}{\\partial x} & \\frac{\\partial f_2}{\\partial y} \\end{pmatrix}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -2582,8 +2582,8 @@ export const theSecondDerivativeOfAMultivariableFunction: TopicDef = {
       id: "computing-hessian-determinants",
       title: t("Computing Hessian determinants", "计算黑塞矩阵行列式"),
       explanation: t(
-        "For a scalar function $f(x, y)$, the **Hessian matrix** and its determinant are:\n\n$$H(x, y) = \\begin{pmatrix} f_{xx} & f_{xy} \\\\ f_{yx} & f_{yy} \\end{pmatrix}, \\quad D = \\det(H) = f_{xx}f_{yy} - (f_{xy})^2.$$",
-        "对于标量函数 $f(x, y)$，其**黑塞矩阵**及其行列式为：\n\n$$H(x, y) = \\begin{pmatrix} f_{xx} & f_{xy} \\\\ f_{yx} & f_{yy} \\end{pmatrix}, \\quad D = \\det(H) = f_{xx}f_{yy} - (f_{xy})^2。$$",
+        "The Hessian collects the second partial derivatives, and its determinant at a critical point helps decide whether that point is a maximum, a minimum or a saddle. For a scalar function $f(x, y)$, the **Hessian matrix** and its determinant are:\n\n$$H(x, y) = \\begin{pmatrix} f_{xx} & f_{xy} \\\\ f_{yx} & f_{yy} \\end{pmatrix}, \\quad D = \\det(H) = f_{xx}f_{yy} - (f_{xy})^2.$$",
+        "黑塞矩阵汇集了二阶偏导数，它在临界点处的行列式有助于判断该点是极大值、极小值还是鞍点。对于标量函数 $f(x, y)$，其**黑塞矩阵**及其行列式为：\n\n$$H(x, y) = \\begin{pmatrix} f_{xx} & f_{xy} \\\\ f_{yx} & f_{yy} \\end{pmatrix}, \\quad D = \\det(H) = f_{xx}f_{yy} - (f_{xy})^2。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -2639,8 +2639,8 @@ export const secondDegreeTaylorPolynomialsOfMultivariableFunctions: TopicDef = {
       id: "constructing-multivariable-taylor-polynomials",
       title: t("Constructing multivariable Taylor polynomials", "构造多元泰勒多项式"),
       explanation: t(
-        "The quadratic Taylor polynomial of $f(x, y)$ centered at $(0, 0)$ is:\n\n$$P_2(x, y) = f(0, 0) + f_x(0, 0)x + f_y(0, 0)y + \\frac{1}{2}f_{xx}(0, 0)x^2 + f_{xy}(0, 0)xy + \\frac{1}{2}f_{yy}(0, 0)y^2.$$",
-        "函数 $f(x, y)$ 在 $(0, 0)$ 处的二阶泰勒多项式为：\n\n$$P_2(x, y) = f(0, 0) + f_x(0, 0)x + f_y(0, 0)y + \\frac{1}{2}f_{xx}(0, 0)x^2 + f_{xy}(0, 0)xy + \\frac{1}{2}f_{yy}(0, 0)y^2。$$",
+        "A quadratic Taylor polynomial in two variables matches the value, the first partial derivatives and the second partial derivatives of the function at the center. The quadratic Taylor polynomial of $f(x, y)$ centered at $(0, 0)$ is:\n\n$$P_2(x, y) = f(0, 0) + f_x(0, 0)x + f_y(0, 0)y + \\frac{1}{2}f_{xx}(0, 0)x^2 + f_{xy}(0, 0)xy + \\frac{1}{2}f_{yy}(0, 0)y^2.$$",
+        "二元二次泰勒多项式在中心处与函数的值、一阶偏导数和二阶偏导数都一致。函数 $f(x, y)$ 在 $(0, 0)$ 处的二阶泰勒多项式为：\n\n$$P_2(x, y) = f(0, 0) + f_x(0, 0)x + f_y(0, 0)y + \\frac{1}{2}f_{xx}(0, 0)x^2 + f_{xy}(0, 0)xy + \\frac{1}{2}f_{yy}(0, 0)y^2。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -2902,8 +2902,8 @@ export const lagrangeMultipliersWithOneConstraint: TopicDef = {
       id: "optimizing-linear-functions-on-circles-using-lagrange",
       title: t("Optimizing linear functions on circles using Lagrange", "利用拉格朗日法在圆上优化线性函数"),
       explanation: t(
-        "To find the maximum of $f(x, y) = ax + by$ subject to $x^2 + y^2 = r^2$, apply $\\nabla f = \\lambda \\nabla g$:\n\n$$\\langle a, b \\rangle = \\lambda \\langle 2x, 2y \\rangle \\implies \\text{Max value} = r\\sqrt{a^2 + b^2}.$$",
-        "在约束条件 $x^2 + y^2 = r^2$ 下求 $f(x, y) = ax + by$ 的最大值，应用 $\\nabla f = \\lambda \\nabla g$：\n\n$$\\langle a, b \\rangle = \\lambda \\langle 2x, 2y \\rangle \\implies \\text{最大值} = r\\sqrt{a^2 + b^2}。$$",
+        "At an extreme point on the constraint, the gradient of the function is parallel to the gradient of the constraint, which gives equations for the point. To find the maximum of $f(x, y) = ax + by$ subject to $x^2 + y^2 = r^2$, apply $\\nabla f = \\lambda \\nabla g$:\n\n$$\\langle a, b \\rangle = \\lambda \\langle 2x, 2y \\rangle \\implies \\text{Max value} = r\\sqrt{a^2 + b^2}.$$",
+        "在约束上的极值点处，函数的梯度与约束的梯度平行，由此得到求该点的方程。在约束条件 $x^2 + y^2 = r^2$ 下求 $f(x, y) = ax + by$ 的最大值，应用 $\\nabla f = \\lambda \\nabla g$：\n\n$$\\langle a, b \\rangle = \\lambda \\langle 2x, 2y \\rangle \\implies \\text{最大值} = r\\sqrt{a^2 + b^2}。$$",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
@@ -3071,8 +3071,8 @@ export const newtonsMethodForMultivariableFunctions: TopicDef = {
       id: "performing-multivariable-newton-step",
       title: t("Performing a multivariable Newton step", "执行多元牛顿迭代步"),
       explanation: t(
-        "To solve $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$, Newton's iteration update solves $J(\\mathbf{x}_0)\\Delta \\mathbf{x} = -\\mathbf{F}(\\mathbf{x}_0)$ and updates $\\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta \\mathbf{x}$.",
-        "求解 $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$ 时，牛顿迭代步通过求解线性方程组 $J(\\mathbf{x}_0)\\Delta \\mathbf{x} = -\\mathbf{F}(\\mathbf{x}_0)$，并更新 $\\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta \\mathbf{x}$。",
+        "The multivariable step replaces the function by its linearization and solves the resulting linear system to move toward a root. To solve $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$, Newton's iteration update solves $J(\\mathbf{x}_0)\\Delta \\mathbf{x} = -\\mathbf{F}(\\mathbf{x}_0)$ and updates $\\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta \\mathbf{x}$.",
+        "多元牛顿法的一步用线性化代替函数，解出所得的线性方程组，从而向根靠近。求解 $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$ 时，牛顿迭代步通过求解线性方程组 $J(\\mathbf{x}_0)\\Delta \\mathbf{x} = -\\mathbf{F}(\\mathbf{x}_0)$，并更新 $\\mathbf{x}_1 = \\mathbf{x}_0 + \\Delta \\mathbf{x}$。",
       ),
       generate(rng: Rng): Problem {
         // Linear system: F(x, y) = (a*x - c, b*y - d)

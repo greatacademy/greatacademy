@@ -81,8 +81,8 @@ export const vectorsInNDimensionalEuclideanSpace: TopicDef = {
       id: "rn-vectors-addition",
       title: t("Vector addition in ℝⁿ", "ℝⁿ 中的向量加法"),
       explanation: t(
-        "Vectors in ℝⁿ are added componentwise: if u = (u₁, ..., uₙ)ᵀ and v = (v₁, ..., vₙ)ᵀ, then u + v = (u₁ + v₁, ..., uₙ + vₙ)ᵀ.",
-        "ℝⁿ 中的向量加法是按分量进行的：若 u = (u₁, ..., uₙ)ᵀ 且 v = (v₁, ..., vₙ)ᵀ，则 u + v = (u₁ + v₁, ..., uₙ + vₙ)ᵀ。",
+        "Adding vectors works the same way in any number of dimensions: add the entries in the same position and leave the others alone. Vectors in ℝⁿ are added componentwise: if u = (u₁, ..., uₙ)ᵀ and v = (v₁, ..., vₙ)ᵀ, then u + v = (u₁ + v₁, ..., uₙ + vₙ)ᵀ.",
+        "在任意维数中向量加法都一样：把相同位置的分量相加，互不影响。ℝⁿ 中的向量加法是按分量进行的：若 u = (u₁, ..., uₙ)ᵀ 且 v = (v₁, ..., vₙ)ᵀ，则 u + v = (u₁ + v₁, ..., uₙ + vₙ)ᵀ。",
       ),
       generate(rng) {
         const n = 4;
@@ -116,8 +116,8 @@ export const vectorsInNDimensionalEuclideanSpace: TopicDef = {
       id: "rn-vectors-scalar-multiplication",
       title: t("Scalar multiplication in ℝⁿ", "ℝⁿ 中的标量乘法与线性组合"),
       explanation: t(
-        "For a scalar c and vector u in ℝⁿ, c u = (c u₁, ..., c uₙ)ᵀ. A linear combination c u + d v is computed componentwise.",
-        "对于标量 c 与向量 u ∈ ℝⁿ，c u = (c u₁, ..., c uₙ)ᵀ。线性组合 c u + d v 逐分量计算。",
+        "A scalar multiplies every entry of a vector, and a linear combination is formed by scaling each vector and then adding the results entry by entry. For a scalar c and vector u in ℝⁿ, c u = (c u₁, ..., c uₙ)ᵀ. A linear combination c u + d v is computed componentwise.",
+        "数乘向量就是用这个数乘向量的每个分量，线性组合则是先把每个向量数乘，再把结果逐个分量相加。对于标量 c 与向量 u ∈ ℝⁿ，c u = (c u₁, ..., c uₙ)ᵀ。线性组合 c u + d v 逐分量计算。",
       ),
       generate(rng) {
         const c = rng.nonZero(-3, 3);
@@ -172,8 +172,8 @@ export const linearCombinationsOfVectorsInNDimensionalEuclideanSpace: TopicDef =
       id: "compute-linear-combination-3-vectors",
       title: t("Computing a linear combination of vectors", "计算多个向量的线性组合"),
       explanation: t(
-        "A linear combination of vectors v₁, ..., vₖ with weights c₁, ..., cₖ is the vector c₁v₁ + ... + cₖvₖ.",
-        "向量组 v₁, ..., vₖ 关于权重 c₁, ..., cₖ 的线性组合为向量 c₁v₁ + ... + cₖvₖ。",
+        "Scale each vector by its weight first, then add the scaled vectors one entry at a time to get a single vector. A linear combination of vectors v₁, ..., vₖ with weights c₁, ..., cₖ is the vector c₁v₁ + ... + cₖvₖ.",
+        "先用权重数乘每个向量，再把数乘后的向量逐个分量相加，得到一个向量。向量组 v₁, ..., vₖ 关于权重 c₁, ..., cₖ 的线性组合为向量 c₁v₁ + ... + cₖvₖ。",
       ),
       generate(rng) {
         const c1 = rng.nonZero(-3, 3);
@@ -665,8 +665,8 @@ export const subspacesOfNDimensionalSpace: TopicDef = {
       id: "span-is-subspace-property",
       title: t("The span of vectors is always a subspace", "向量组的张成空间必为子空间"),
       explanation: t(
-        "For any set of vectors {v₁, ..., vₖ} in ℝⁿ, Span{v₁, ..., vₖ} is always a subspace of ℝⁿ.",
-        "对 ℝⁿ 中任意向量组 {v₁, ..., vₖ}，其张成空间 Span{v₁, ..., vₖ} 恒为 ℝⁿ 的子空间。",
+        "Adding two combinations of the vectors or scaling one gives another combination, and the zero vector is the combination with all weights zero. For any set of vectors {v₁, ..., vₖ} in ℝⁿ, Span{v₁, ..., vₖ} is always a subspace of ℝⁿ.",
+        "两个向量组合相加或一个组合数乘后仍是这些向量的组合，零向量就是所有权重都为零的组合。对 ℝⁿ 中任意向量组 {v₁, ..., vₖ}，其张成空间 Span{v₁, ..., vₖ} 恒为 ℝⁿ 的子空间。",
       ),
       generate(rng) {
         const k = rng.int(2, 12);
@@ -824,8 +824,8 @@ export const theColumnSpaceOfAMatrix: TopicDef = {
       id: "column-space-ambient-space-dimension",
       title: t("Ambient space of Col(A)", "列空间 Col(A) 的所在空间"),
       explanation: t(
-        "For an $m \\times n$ matrix $A$, each column has $m$ entries, so $\\operatorname{Col}(A)$ is a subspace of $\\mathbb{R}^m$.",
-        "对于 $m \\times n$ 矩阵 $A$，每个列向量有 $m$ 个分量，因此列空间 $\\operatorname{Col}(A)$ 是 $\\mathbb{R}^m$ 的子空间。",
+        "The column space is built from the columns, so it lives in the space whose dimension is the number of rows, the length of each column. For an $m \\times n$ matrix $A$, each column has $m$ entries, so $\\operatorname{Col}(A)$ is a subspace of $\\mathbb{R}^m$.",
+        "列空间由各列构成，所以它位于维数等于行数，也就是每列长度的空间中。对于 $m \\times n$ 矩阵 $A$，每个列向量有 $m$ 个分量，因此列空间 $\\operatorname{Col}(A)$ 是 $\\mathbb{R}^m$ 的子空间。",
       ),
       generate(rng) {
         const m = rng.int(2, 10);
@@ -851,8 +851,8 @@ export const theColumnSpaceOfAMatrix: TopicDef = {
       id: "membership-in-column-space",
       title: t("Determining if b is in Col(A)", "判定向量 b 是否属于列空间 Col(A)"),
       explanation: t(
-        "A vector $\\mathbf{b}$ is in $\\operatorname{Col}(A)$ if and only if the linear system $A\\mathbf{x} = \\mathbf{b}$ has a solution (is consistent).",
-        "向量 $\\mathbf{b}$ 属于列空间 $\\operatorname{Col}(A)$，当且仅当线性方程组 $A\\mathbf{x} = \\mathbf{b}$ 有解（即方程组相容）。",
+        "Every product of the matrix with a vector is a combination of its columns, so a vector is in the column space exactly when the system can be solved. A vector $\\mathbf{b}$ is in $\\operatorname{Col}(A)$ if and only if the linear system $A\\mathbf{x} = \\mathbf{b}$ has a solution (is consistent).",
+        "矩阵与向量的每个乘积都是它各列的组合，所以一个向量在列空间中，当且仅当方程组有解。向量 $\\mathbf{b}$ 属于列空间 $\\operatorname{Col}(A)$，当且仅当线性方程组 $A\\mathbf{x} = \\mathbf{b}$ 有解（即方程组相容）。",
       ),
       generate(rng) {
         const inCol = rng.bool();
@@ -937,8 +937,8 @@ export const theNullSpaceOfAMatrix: TopicDef = {
       id: "null-space-ambient-space",
       title: t("Ambient space of Null(A)", "零空间 Null(A) 的所在空间"),
       explanation: t(
-        "For an $m \\times n$ matrix $A$, the equation $A\\mathbf{x} = \\mathbf{0}$ requires $\\mathbf{x}$ to have $n$ components, so $\\operatorname{Null}(A)$ is a subspace of $\\mathbb{R}^n$.",
-        "对于 $m \\times n$ 矩阵 $A$，方程 $A\\mathbf{x} = \\mathbf{0}$ 中的未知向量 $\\mathbf{x}$ 有 $n$ 个分量，因此 $\\operatorname{Null}(A)$ 是 $\\mathbb{R}^n$ 的子空间。",
+        "The null space consists of inputs to the matrix, so its vectors have as many entries as the matrix has columns. For an $m \\times n$ matrix $A$, the equation $A\\mathbf{x} = \\mathbf{0}$ requires $\\mathbf{x}$ to have $n$ components, so $\\operatorname{Null}(A)$ is a subspace of $\\mathbb{R}^n$.",
+        "零空间由矩阵的输入向量组成，所以其中的向量的分量个数等于矩阵的列数。对于 $m \\times n$ 矩阵 $A$，方程 $A\\mathbf{x} = \\mathbf{0}$ 中的未知向量 $\\mathbf{x}$ 有 $n$ 个分量，因此 $\\operatorname{Null}(A)$ 是 $\\mathbb{R}^n$ 的子空间。",
       ),
       generate(rng) {
         const m = rng.int(2, 10);
@@ -964,8 +964,8 @@ export const theNullSpaceOfAMatrix: TopicDef = {
       id: "test-membership-in-null-space",
       title: t("Testing membership in Null(A)", "检验向量是否属于零空间 Null(A)"),
       explanation: t(
-        "A vector $\\mathbf{v}$ belongs to $\\operatorname{Null}(A)$ if and only if $A\\mathbf{v} = \\mathbf{0}$.",
-        "向量 $\\mathbf{v}$ 属于 $\\operatorname{Null}(A)$，当且仅当 $A\\mathbf{v} = \\mathbf{0}$。",
+        "To test a vector, multiply the matrix by it; the vector is in the null space only if every entry of the product is zero. A vector $\\mathbf{v}$ belongs to $\\operatorname{Null}(A)$ if and only if $A\\mathbf{v} = \\mathbf{0}$.",
+        "要检验一个向量，用矩阵乘它；只有当乘积的每个分量都是零时，这个向量才在零空间中。向量 $\\mathbf{v}$ 属于 $\\operatorname{Null}(A)$，当且仅当 $A\\mathbf{v} = \\mathbf{0}$。",
       ),
       generate(rng) {
         const inNull = rng.bool();
@@ -1035,8 +1035,8 @@ export const findingABasisOfASpan: TopicDef = {
       id: "basis-definition-criteria",
       title: t("Criteria for a basis of a subspace", "子空间基的判定准则"),
       explanation: t(
-        "A set of vectors $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_k\\}$ is a basis for a subspace $H$ if (1) $\\mathcal{B}$ is linearly independent and (2) $\\operatorname{Span}(\\mathcal{B}) = H$.",
-        "向量组 $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_k\\}$ 是子空间 $H$ 的一组基，当且仅当：(1) $\\mathcal{B}$ 线性无关；(2) $\\operatorname{Span}(\\mathcal{B}) = H$。",
+        "A basis has enough vectors to build every vector of the subspace and no extra ones, so each vector has exactly one set of coordinates. A set of vectors $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_k\\}$ is a basis for a subspace $H$ if (1) $\\mathcal{B}$ is linearly independent and (2) $\\operatorname{Span}(\\mathcal{B}) = H$.",
+        "基有足够的向量来构造子空间中的每个向量，而且没有多余的向量，所以每个向量的坐标都是唯一的。向量组 $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_k\\}$ 是子空间 $H$ 的一组基，当且仅当：(1) $\\mathcal{B}$ 线性无关；(2) $\\operatorname{Span}(\\mathcal{B}) = H$。",
       ),
       generate(rng) {
         const k = rng.int(2, 8);
@@ -1280,8 +1280,8 @@ export const findingABasisOfTheNullSpaceOfAMatrix: TopicDef = {
       id: "basis-null-space-multiple-free-vars",
       title: t("Basis of Null(A) with two free variables", "含两个自由变量的 Null(A) 的基"),
       explanation: t(
-        "With $k$ free variables, the parametric vector form is $\\mathbf{x} = s_1 \\mathbf{v}_1 + \\dots + s_k \\mathbf{v}_k$. The vectors $\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ form a basis for $\\operatorname{Null}(A)$.",
-        "有 $k$ 个自由未知量时，通解的参数向量形式为 $\\mathbf{x} = s_1 \\mathbf{v}_1 + \\dots + s_k \\mathbf{v}_k$。向量组 $\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ 即构成 $\\operatorname{Null}(A)$ 的一组基。",
+        "Each free variable contributes one vector, found by setting that variable to one and the other free variables to zero, and these vectors are automatically independent. With $k$ free variables, the parametric vector form is $\\mathbf{x} = s_1 \\mathbf{v}_1 + \\dots + s_k \\mathbf{v}_k$. The vectors $\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ form a basis for $\\operatorname{Null}(A)$.",
+        "每个自由变量贡献一个向量，方法是令该变量为 1、其他自由变量为 0，这些向量自然是线性无关的。有 $k$ 个自由未知量时，通解的参数向量形式为 $\\mathbf{x} = s_1 \\mathbf{v}_1 + \\dots + s_k \\mathbf{v}_k$。向量组 $\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ 即构成 $\\operatorname{Null}(A)$ 的一组基。",
       ),
       generate(rng) {
         const a = rng.nonZero(-3, 3);
@@ -1344,8 +1344,8 @@ export const expressingTheCoordinatesOfAVectorInAGivenBasis: TopicDef = {
       id: "find-coordinates-2d-basis",
       title: t("Finding coordinate vector [x]_ℬ in ℝ²", "在 ℝ² 中求解坐标向量 [x]_ℬ"),
       explanation: t(
-        "If ℬ = {b₁, b₂} is a basis of ℝ², the coordinates c₁, c₂ of x satisfy c₁b₁ + c₂b₂ = x, written [x]_ℬ = (c₁, c₂)ᵀ.",
-        "若 ℬ = {b₁, b₂} 是 ℝ² 的一组基，则 x 在基 ℬ 下的坐标 c₁, c₂ 满足 c₁b₁ + c₂b₂ = x，记作 [x]_ℬ = (c₁, c₂)ᵀ。",
+        "Finding coordinates means finding the weights that build the vector from the basis vectors, which is a small linear system to solve. If ℬ = {b₁, b₂} is a basis of ℝ², the coordinates c₁, c₂ of x satisfy c₁b₁ + c₂b₂ = x, written [x]_ℬ = (c₁, c₂)ᵀ.",
+        "求坐标就是求出用基向量构造该向量所需的权重，这是一个需要求解的小型线性方程组。若 ℬ = {b₁, b₂} 是 ℝ² 的一组基，则 x 在基 ℬ 下的坐标 c₁, c₂ 满足 c₁b₁ + c₂b₂ = x，记作 [x]_ℬ = (c₁, c₂)ᵀ。",
       ),
       generate(rng) {
         const c1 = rng.int(-4, 4);
@@ -1379,8 +1379,8 @@ export const expressingTheCoordinatesOfAVectorInAGivenBasis: TopicDef = {
       id: "reconstruct-vector-from-coordinates",
       title: t("Reconstructing a vector from its coordinate vector", "根据坐标向量还原向量"),
       explanation: t(
-        "Given [x]_ℬ = (c₁, ..., cₙ)ᵀ and basis ℬ = {b₁, ..., bₙ}, the vector is x = c₁b₁ + ... + cₙbₙ.",
-        "已知 [x]_ℬ = (c₁, ..., cₙ)ᵀ 与基 ℬ = {b₁, ..., bₙ}，该向量可通过线性组合还原：x = c₁b₁ + ... + cₙbₙ。",
+        "Coordinates are the weights of the basis vectors, so multiply each basis vector by its coordinate and add the results. Given [x]_ℬ = (c₁, ..., cₙ)ᵀ and basis ℬ = {b₁, ..., bₙ}, the vector is x = c₁b₁ + ... + cₙbₙ.",
+        "坐标就是基向量的权重，所以把每个基向量乘以对应的坐标，再把结果相加。已知 [x]_ℬ = (c₁, ..., cₙ)ᵀ 与基 ℬ = {b₁, ..., bₙ}，该向量可通过线性组合还原：x = c₁b₁ + ... + cₙbₙ。",
       ),
       generate(rng) {
         const c1 = rng.int(-3, 3);
@@ -1442,8 +1442,8 @@ export const writingVectorsInDifferentBases: TopicDef = {
       id: "matrix-pb-relation",
       title: t("The change-of-basis matrix P_ℬ", "基矩阵 P_ℬ 的构造与性质"),
       explanation: t(
-        "For a basis ℬ = {b₁, ..., bₙ} of ℝⁿ, the matrix P_ℬ = [b₁ ... bₙ] transforms ℬ-coordinates into standard coordinates: x = P_ℬ [x]_ℬ.",
-        "对于 ℝⁿ 的基 ℬ = {b₁, ..., bₙ}，矩阵 P_ℬ = [b₁ ... bₙ] 将 ℬ-坐标转换为标准坐标：x = P_ℬ [x]_ℬ。",
+        "Multiplying the matrix of basis vectors by a coordinate vector forms the weighted sum of the basis vectors, which is the vector itself. For a basis ℬ = {b₁, ..., bₙ} of ℝⁿ, the matrix P_ℬ = [b₁ ... bₙ] transforms ℬ-coordinates into standard coordinates: x = P_ℬ [x]_ℬ.",
+        "用基向量组成的矩阵乘以坐标向量，就得到基向量的加权和，也就是这个向量本身。对于 ℝⁿ 的基 ℬ = {b₁, ..., bₙ}，矩阵 P_ℬ = [b₁ ... bₙ] 将 ℬ-坐标转换为标准坐标：x = P_ℬ [x]_ℬ。",
       ),
       generate(rng) {
         const b1 = [rng.nonZero(-3, 3), rng.int(-2, 2)];
@@ -1503,8 +1503,8 @@ export const writingVectorsInDifferentBases: TopicDef = {
       id: "solve-coords-using-inverse-pb",
       title: t("Converting standard coordinates to ℬ-coordinates", "利用逆矩阵将标准坐标转换为 ℬ-坐标"),
       explanation: t(
-        "To find the coordinates of x relative to ℬ, invert P_ℬ: [x]_ℬ = P_ℬ⁻¹ x.",
-        "求解向量 x 关于基 ℬ 的坐标向量，使用基矩阵的逆：[x]_ℬ = P_ℬ⁻¹ x。",
+        "Because the basis vectors are independent, their matrix is invertible, and multiplying by the inverse undoes the conversion from coordinates to the vector. To find the coordinates of x relative to ℬ, invert P_ℬ: [x]_ℬ = P_ℬ⁻¹ x.",
+        "由于基向量线性无关，它们组成的矩阵可逆，乘以逆矩阵就把从坐标到向量的转换倒了回来。求解向量 x 关于基 ℬ 的坐标向量，使用基矩阵的逆：[x]_ℬ = P_ℬ⁻¹ x。",
       ),
       generate(rng) {
         const a = rng.nonZero(-4, 4);
@@ -1558,8 +1558,8 @@ export const theChangeOfCoordinatesMatrix: TopicDef = {
       id: "construct-change-of-basis-matrix",
       title: t("Columns of the change-of-coordinates matrix", "过渡矩阵的列结构"),
       explanation: t(
-        "The change-of-coordinates matrix from the basis $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_n\\}$ to the basis $\\mathcal{C}$ is $P_{\\mathcal{C} \\leftarrow \\mathcal{B}} = \\begin{bmatrix} [\\mathbf{b}_1]_{\\mathcal{C}} & \\cdots & [\\mathbf{b}_n]_{\\mathcal{C}} \\end{bmatrix}$.",
-        "从基 $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_n\\}$ 到基 $\\mathcal{C}$ 的过渡矩阵为 $P_{\\mathcal{C} \\leftarrow \\mathcal{B}} = \\begin{bmatrix} [\\mathbf{b}_1]_{\\mathcal{C}} & \\cdots & [\\mathbf{b}_n]_{\\mathcal{C}} \\end{bmatrix}$，每一列是 $\\mathcal{B}$ 中的基向量在基 $\\mathcal{C}$ 下的坐标。",
+        "Each column of the change of coordinates matrix tells you how one old basis vector is written in terms of the new basis. The change-of-coordinates matrix from the basis $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_n\\}$ to the basis $\\mathcal{C}$ is $P_{\\mathcal{C} \\leftarrow \\mathcal{B}} = \\begin{bmatrix} [\\mathbf{b}_1]_{\\mathcal{C}} & \\cdots & [\\mathbf{b}_n]_{\\mathcal{C}} \\end{bmatrix}$.",
+        "坐标变换矩阵的每一列说明一个旧基向量怎样用新基表示。从基 $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_n\\}$ 到基 $\\mathcal{C}$ 的过渡矩阵为 $P_{\\mathcal{C} \\leftarrow \\mathcal{B}} = \\begin{bmatrix} [\\mathbf{b}_1]_{\\mathcal{C}} & \\cdots & [\\mathbf{b}_n]_{\\mathcal{C}} \\end{bmatrix}$，每一列是 $\\mathcal{B}$ 中的基向量在基 $\\mathcal{C}$ 下的坐标。",
       ),
       generate(rng) {
         const a = rng.nonZero(-4, 4);
@@ -1601,8 +1601,8 @@ export const theChangeOfCoordinatesMatrix: TopicDef = {
       id: "apply-change-of-coordinates-matrix",
       title: t("Applying the change-of-coordinates matrix", "计算变换后的坐标向量"),
       explanation: t(
-        "To find $[\\mathbf{x}]_{\\mathcal{C}}$ given $[\\mathbf{x}]_{\\mathcal{B}}$ and $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$, compute the matrix-vector product $[\\mathbf{x}]_{\\mathcal{C}} = P_{\\mathcal{C} \\leftarrow \\mathcal{B}} [\\mathbf{x}]_{\\mathcal{B}}$.",
-        "已知 $[\\mathbf{x}]_{\\mathcal{B}}$ 与过渡矩阵 $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$ 时，通过矩阵乘法求 $[\\mathbf{x}]_{\\mathcal{C}}$：$[\\mathbf{x}]_{\\mathcal{C}} = P_{\\mathcal{C} \\leftarrow \\mathcal{B}} [\\mathbf{x}]_{\\mathcal{B}}$。",
+        "Once the matrix is known, converting coordinates is just one product of the matrix with the old coordinate vector. To find $[\\mathbf{x}]_{\\mathcal{C}}$ given $[\\mathbf{x}]_{\\mathcal{B}}$ and $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$, compute the matrix-vector product $[\\mathbf{x}]_{\\mathcal{C}} = P_{\\mathcal{C} \\leftarrow \\mathcal{B}} [\\mathbf{x}]_{\\mathcal{B}}$.",
+        "一旦知道这个矩阵，转换坐标就只是用它乘以旧坐标向量。已知 $[\\mathbf{x}]_{\\mathcal{B}}$ 与过渡矩阵 $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$ 时，通过矩阵乘法求 $[\\mathbf{x}]_{\\mathcal{C}}$：$[\\mathbf{x}]_{\\mathcal{C}} = P_{\\mathcal{C} \\leftarrow \\mathcal{B}} [\\mathbf{x}]_{\\mathcal{B}}$。",
       ),
       generate(rng) {
         const p11 = rng.int(-2, 2);
@@ -1797,8 +1797,8 @@ export const theDimensionOfASpan: TopicDef = {
       id: "compute-dim-of-span",
       title: t("Computing dim(Span{v₁, ..., vₖ})", "计算 Span{v₁, ..., vₖ} 的维数"),
       explanation: t(
-        "The dimension of Span{v₁, ..., vₖ} equals the number of pivot columns in the matrix [v₁ ... vₖ].",
-        "Span{v₁, ..., vₖ} 的维数等于以这些向量为列构成的矩阵 [v₁ ... vₖ] 的主元列个数。",
+        "Row reduction shows which vectors are combinations of earlier ones, and the remaining pivot columns form a basis of the span. The dimension of Span{v₁, ..., vₖ} equals the number of pivot columns in the matrix [v₁ ... vₖ].",
+        "行化简可以看出哪些向量是前面向量的组合，剩下的主元列构成张成空间的一组基。Span{v₁, ..., vₖ} 的维数等于以这些向量为列构成的矩阵 [v₁ ... vₖ] 的主元列个数。",
       ),
       generate(rng) {
         const pivots = rng.pick([1, 2, 3]);
@@ -1895,8 +1895,8 @@ export const theRankOfAMatrix: TopicDef = {
       id: "properties-of-matrix-rank",
       title: t("Fundamental properties of rank", "矩阵秩的基本性质"),
       explanation: t(
-        "For any $m \\times n$ matrix $A$: (1) $\\operatorname{rank}(A) \\le \\min(m, n)$; (2) $\\operatorname{rank}(A^T) = \\operatorname{rank}(A)$ (row rank equals column rank).",
-        "对任意 $m \\times n$ 矩阵 $A$：(1) $\\operatorname{rank}(A) \\le \\min(m, n)$；(2) $\\operatorname{rank}(A^T) = \\operatorname{rank}(A)$（行秩等于列秩）。",
+        "The rank counts independent columns and also independent rows, so it can never exceed either the number of rows or the number of columns. For any $m \\times n$ matrix $A$: (1) $\\operatorname{rank}(A) \\le \\min(m, n)$; (2) $\\operatorname{rank}(A^T) = \\operatorname{rank}(A)$ (row rank equals column rank).",
+        "秩既是线性无关列的个数，也是线性无关行的个数，所以它不会超过行数，也不会超过列数。对任意 $m \\times n$ 矩阵 $A$：(1) $\\operatorname{rank}(A) \\le \\min(m, n)$；(2) $\\operatorname{rank}(A^T) = \\operatorname{rank}(A)$（行秩等于列秩）。",
       ),
       generate(rng) {
         const m = rng.int(2, 12);
@@ -2016,8 +2016,8 @@ export const theInvertibleMatrixTheoremInTermsOfDimensionRankAndNullity: TopicDe
       id: "imt-rank-conditions-n-by-n",
       title: t("Invertibility statements for rank and nullity", "秩与零度视角的方阵可逆等价命题"),
       explanation: t(
-        "For an $n \\times n$ matrix $A$, the following are equivalent: (1) $A$ is invertible; (2) $\\operatorname{rank}(A) = n$; (3) $\\operatorname{nullity}(A) = 0$; (4) $\\operatorname{Col}(A) = \\mathbb{R}^n$; (5) $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$.",
-        "对 $n \\times n$ 矩阵 $A$，以下条件相互等价：(1) $A$ 可逆；(2) $\\operatorname{rank}(A) = n$；(3) $\\operatorname{nullity}(A) = 0$；(4) $\\operatorname{Col}(A) = \\mathbb{R}^n$；(5) $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$。",
+        "For a square matrix, having a pivot in every column, full rank and a zero null space all express the same fact: the matrix is invertible. For an $n \\times n$ matrix $A$, the following are equivalent: (1) $A$ is invertible; (2) $\\operatorname{rank}(A) = n$; (3) $\\operatorname{nullity}(A) = 0$; (4) $\\operatorname{Col}(A) = \\mathbb{R}^n$; (5) $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$.",
+        "对于方阵，每列都有主元、满秩和零空间只含零向量都表达同一个事实：矩阵可逆。对 $n \\times n$ 矩阵 $A$，以下条件相互等价：(1) $A$ 可逆；(2) $\\operatorname{rank}(A) = n$；(3) $\\operatorname{nullity}(A) = 0$；(4) $\\operatorname{Col}(A) = \\mathbb{R}^n$；(5) $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$。",
       ),
       generate(rng) {
         const n = rng.int(3, 30);
@@ -2086,8 +2086,8 @@ export const theRankNullityTheorem: TopicDef = {
       id: "rank-nullity-computation",
       title: t("Rank-Nullity formula computation", "应用秩-零度公式进行计算"),
       explanation: t(
-        "For an $m \\times n$ matrix $A$, $\\operatorname{rank}(A) + \\operatorname{nullity}(A) = n$: every column is either a pivot column or corresponds to a free variable.",
-        "对于 $m \\times n$ 矩阵 $A$，$\\operatorname{rank}(A) + \\operatorname{nullity}(A) = n$：每一列要么是主元列，要么对应一个自由未知量。",
+        "The theorem splits the columns into those with pivots, which give the rank, and those with free variables, which give the nullity. For an $m \\times n$ matrix $A$, $\\operatorname{rank}(A) + \\operatorname{nullity}(A) = n$: every column is either a pivot column or corresponds to a free variable.",
+        "这个定理把各列分成有主元的列和对应自由变量的列，前者给出秩，后者给出零度。对于 $m \\times n$ 矩阵 $A$，$\\operatorname{rank}(A) + \\operatorname{nullity}(A) = n$：每一列要么是主元列，要么对应一个自由未知量。",
       ),
       generate(rng) {
         const m = rng.int(3, 10);
@@ -2115,8 +2115,8 @@ export const theRankNullityTheorem: TopicDef = {
       id: "rank-nullity-homogeneous-system-analysis",
       title: t("Solution space dimension of homogeneous systems", "齐次线性方程组解空间的维数"),
       explanation: t(
-        "A homogeneous system $A\\mathbf{x} = \\mathbf{0}$ of $m$ linear equations in $n$ variables has a solution space of dimension $n - \\operatorname{rank}(A)$.",
-        "含 $n$ 个未知量、$m$ 个方程的齐次线性方程组 $A\\mathbf{x} = \\mathbf{0}$，其解空间的维数等于 $n - \\operatorname{rank}(A)$。",
+        "Each free variable adds one dimension to the solution space, and the number of free variables is the number of variables minus the rank. A homogeneous system $A\\mathbf{x} = \\mathbf{0}$ of $m$ linear equations in $n$ variables has a solution space of dimension $n - \\operatorname{rank}(A)$.",
+        "每个自由变量为解空间增加一维，自由变量的个数等于变量个数减去秩。含 $n$ 个未知量、$m$ 个方程的齐次线性方程组 $A\\mathbf{x} = \\mathbf{0}$，其解空间的维数等于 $n - \\operatorname{rank}(A)$。",
       ),
       generate(rng) {
         const m = rng.int(3, 12);
@@ -2451,8 +2451,8 @@ export const linearIndependenceInAbstractVectorSpaces: TopicDef = {
       id: "independence-of-matrices-m22",
       title: t("Linear independence of matrices in M_{2×2}", "M_{2×2} 中矩阵组的线性相关性"),
       explanation: t(
-        "A set of matrices {A₁, ..., Aₖ} is linearly independent if c₁A₁ + ... + cₖAₖ = O implies all scalars cᵢ = 0.",
-        "若 c₁A₁ + ... + cₖAₖ = O 蕴含所有标量 cᵢ = 0，则矩阵组 {A₁, ..., Aₖ} 线性无关。",
+        "Matrices form a vector space too, so independence is tested exactly as for vectors, by setting a combination equal to the zero matrix and solving for the weights. A set of matrices {A₁, ..., Aₖ} is linearly independent if c₁A₁ + ... + cₖAₖ = O implies all scalars cᵢ = 0.",
+        "矩阵也构成向量空间，所以检验线性无关的方法与向量完全相同：令组合等于零矩阵，求出权重。若 c₁A₁ + ... + cₖAₖ = O 蕴含所有标量 cᵢ = 0，则矩阵组 {A₁, ..., Aₖ} 线性无关。",
       ),
       generate(rng) {
         const isDep = rng.bool();
@@ -2718,8 +2718,8 @@ export const theCoordinatesOfAVectorRelativeToABasisInAbstractVectorSpaces: Topi
       id: "polynomial-coordinate-vector",
       title: t("Coordinate vector of a polynomial in ℙ₂", "ℙ₂ 中多项式的坐标向量"),
       explanation: t(
-        "For the ordered standard basis ℬ = {1, t, t²} of ℙ₂, the polynomial p(t) = a₀ + a₁t + a₂t² has coordinate vector [p]_ℬ = (a₀, a₁, a₂)ᵀ.",
-        "对于 ℙ₂ 的有序标准基 ℬ = {1, t, t²}，多项式 p(t) = a₀ + a₁t + a₂t² 的坐标向量为 [p]_ℬ = (a₀, a₁, a₂)ᵀ。",
+        "Relative to the standard basis of powers, the coordinates of a polynomial are just its coefficients listed in order of increasing degree. For the ordered standard basis ℬ = {1, t, t²} of ℙ₂, the polynomial p(t) = a₀ + a₁t + a₂t² has coordinate vector [p]_ℬ = (a₀, a₁, a₂)ᵀ.",
+        "相对于由幂组成的标准基，多项式的坐标就是按次数从低到高排列的系数。对于 ℙ₂ 的有序标准基 ℬ = {1, t, t²}，多项式 p(t) = a₀ + a₁t + a₂t² 的坐标向量为 [p]_ℬ = (a₀, a₁, a₂)ᵀ。",
       ),
       generate(rng) {
         const a0 = rng.int(-5, 5);
@@ -2752,8 +2752,8 @@ export const theCoordinatesOfAVectorRelativeToABasisInAbstractVectorSpaces: Topi
       id: "matrix-coordinate-vector-m22",
       title: t("Coordinate vector of a 2×2 matrix", "2×2 矩阵在标准基下的坐标向量"),
       explanation: t(
-        "For $M_{2 \\times 2}$ with the standard ordered basis $\\mathcal{B} = \\{E_{11}, E_{12}, E_{21}, E_{22}\\}$, the matrix $M = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ has coordinate vector $[M]_{\\mathcal{B}} = (a, b, c, d)^T$ in $\\mathbb{R}^4$.",
-        "在 $M_{2 \\times 2}$ 中，关于标准有序基 $\\mathcal{B} = \\{E_{11}, E_{12}, E_{21}, E_{22}\\}$，矩阵 $M = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ 的坐标向量为 $\\mathbb{R}^4$ 中的 $[M]_{\\mathcal{B}} = (a, b, c, d)^T$。",
+        "Each standard basis matrix has a single one in one position, so the coordinates of a matrix are its entries read row by row. For $M_{2 \\times 2}$ with the standard ordered basis $\\mathcal{B} = \\{E_{11}, E_{12}, E_{21}, E_{22}\\}$, the matrix $M = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ has coordinate vector $[M]_{\\mathcal{B}} = (a, b, c, d)^T$ in $\\mathbb{R}^4$.",
+        "每个标准基矩阵只在一个位置上有 1，所以矩阵的坐标就是按行读出的各个元素。在 $M_{2 \\times 2}$ 中，关于标准有序基 $\\mathcal{B} = \\{E_{11}, E_{12}, E_{21}, E_{22}\\}$，矩阵 $M = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ 的坐标向量为 $\\mathbb{R}^4$ 中的 $[M]_{\\mathcal{B}} = (a, b, c, d)^T$。",
       ),
       generate(rng) {
         const a = rng.int(-4, 4);

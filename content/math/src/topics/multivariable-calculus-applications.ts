@@ -28,8 +28,8 @@ export const velocityAndAccelerationAsFunctionsOfDisplacement: TopicDef = {
       id: "relating-acceleration-to-velocity-and-displacement",
       title: t("Relating acceleration to velocity and displacement", "建立加速度、速度与位移之间的链式法则关系"),
       explanation: t(
-        "By the chain rule, $a = \\frac{dv}{dt} = \\frac{dv}{dx}\\frac{dx}{dt} = v\\frac{dv}{dx}$. For $v(x) = c x^2$, the derivative is $v'(x) = 2cx$, so $a(x) = (cx^2)(2cx) = 2c^2 x^3$.",
-        "由链式法则，$a = \\frac{dv}{dt} = \\frac{dv}{dx}\\frac{dx}{dt} = v\\frac{dv}{dx}$。对于 $v(x) = c x^2$，导数为 $v'(x) = 2cx$，故 $a(x) = (cx^2)(2cx) = 2c^2 x^3$。",
+        "When acceleration is given in terms of position rather than time, the chain rule rewrites it as velocity times the derivative of velocity with respect to position. By the chain rule, $a = \\frac{dv}{dt} = \\frac{dv}{dx}\\frac{dx}{dt} = v\\frac{dv}{dx}$. For $v(x) = c x^2$, the derivative is $v'(x) = 2cx$, so $a(x) = (cx^2)(2cx) = 2c^2 x^3$.",
+        "当加速度用位置而不是时间表示时，链式法则把它改写成速度乘以速度对位置的导数。由链式法则，$a = \\frac{dv}{dt} = \\frac{dv}{dx}\\frac{dx}{dt} = v\\frac{dv}{dx}$。对于 $v(x) = c x^2$，导数为 $v'(x) = 2cx$，故 $a(x) = (cx^2)(2cx) = 2c^2 x^3$。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(2, 7);
@@ -86,8 +86,8 @@ export const determiningPropertiesOfObjectsDescribedAsFunctionsOfDisplacement: T
       id: "integrating-equations-of-motion-with-displacement-dependence",
       title: t("Integrating equations of motion with displacement dependence", "积分含位移依赖的运动微分方程"),
       explanation: t(
-        "From $a(x) = v \\frac{dv}{dx}$, separating variables gives $v\\,dv = a(x)\\,dx$. Integrating from $x = 0$ (starting from rest, $v(0) = 0$) to $x_1$ gives $\\frac{1}{2}v(x_1)^2 = \\int_0^{x_1} a(x)\\,dx$, so $v(x_1)^2 = 2 \\int_0^{x_1} a(x)\\,dx$.",
-        "由 $a(x) = v \\frac{dv}{dx}$，分离变量得 $v\\,dv = a(x)\\,dx$。从 $x = 0$（初速为零 $v(0) = 0$）积分到 $x_1$ 可得 $\\frac{1}{2}v(x_1)^2 = \\int_0^{x_1} a(x)\\,dx$，即 $v(x_1)^2 = 2 \\int_0^{x_1} a(x)\\,dx$。",
+        "Separating the variables and integrating gives half the square of the velocity in terms of position, which is an energy equation. From $a(x) = v \\frac{dv}{dx}$, separating variables gives $v\\,dv = a(x)\\,dx$. Integrating from $x = 0$ (starting from rest, $v(0) = 0$) to $x_1$ gives $\\frac{1}{2}v(x_1)^2 = \\int_0^{x_1} a(x)\\,dx$, so $v(x_1)^2 = 2 \\int_0^{x_1} a(x)\\,dx$.",
+        "分离变量并积分后得到用位置表示的速度平方的一半，这是一个能量方程。由 $a(x) = v \\frac{dv}{dx}$，分离变量得 $v\\,dv = a(x)\\,dx$。从 $x = 0$（初速为零 $v(0) = 0$）积分到 $x_1$ 可得 $\\frac{1}{2}v(x_1)^2 = \\int_0^{x_1} a(x)\\,dx$，即 $v(x_1)^2 = 2 \\int_0^{x_1} a(x)\\,dx$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 8);
@@ -199,8 +199,8 @@ export const theWorkEnergyPrinciple: TopicDef = {
       id: "computing-work-and-kinetic-energy-changes",
       title: t("Computing work and kinetic energy changes", "计算合外力做功与动能变化"),
       explanation: t(
-        "The work-energy theorem states $W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\frac{1}{2}m v_2^2 - \\frac{1}{2}m v_1^2$. For an even mass $m = 2k$, $W = k(v_2^2 - v_1^2)$.",
-        "动能定理指出 $W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\frac{1}{2}m v_2^2 - \\frac{1}{2}m v_1^2$。对于偶数质量 $m = 2k$，做功为 $W = k(v_2^2 - v_1^2)$。",
+        "The work done by the net force along a path equals the change in kinetic energy, so you can find one from the other. The work-energy theorem states $W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\frac{1}{2}m v_2^2 - \\frac{1}{2}m v_1^2$. For an even mass $m = 2k$, $W = k(v_2^2 - v_1^2)$.",
+        "合力沿路径所做的功等于动能的变化，所以可以由其中一个求出另一个。动能定理指出 $W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\frac{1}{2}m v_2^2 - \\frac{1}{2}m v_1^2$。对于偶数质量 $m = 2k$，做功为 $W = k(v_2^2 - v_1^2)$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(1, 4);
@@ -310,8 +310,8 @@ export const theAverageValueOfAMultivariableFunction: TopicDef = {
       id: "calculating-average-values-over-planar-domains",
       title: t("Calculating average values over planar domains", "计算平面区域上多元函数的平均值"),
       explanation: t(
-        "For $f(x, y) = ax + by$ on a rectangle $[0, W] \\times [0, H]$, the integral is $\\iint_D (ax + by)\\,dA = a \\frac{W^2}{2} H + b W \\frac{H^2}{2}$. Dividing by $\\text{Area}(D) = W H$ yields $f_{\\text{avg}} = a \\frac{W}{2} + b \\frac{H}{2}$.",
-        "对于定义在矩形 $[0, W] \\times [0, H]$ 上的函数 $f(x, y) = ax + by$，其二重积分为 $\\iint_D (ax + by)\\,dA = a \\frac{W^2}{2} H + b W \\frac{H^2}{2}$。除以底面面积 $\\text{Area}(D) = W H$ 得平均值 $f_{\\text{avg}} = a \\frac{W}{2} + b \\frac{H}{2}$。",
+        "The average value of a function over a region is its integral over the region divided by the area of the region. For $f(x, y) = ax + by$ on a rectangle $[0, W] \\times [0, H]$, the integral is $\\iint_D (ax + by)\\,dA = a \\frac{W^2}{2} H + b W \\frac{H^2}{2}$. Dividing by $\\text{Area}(D) = W H$ yields $f_{\\text{avg}} = a \\frac{W}{2} + b \\frac{H}{2}$.",
+        "函数在区域上的平均值等于它在该区域上的积分除以区域的面积。对于定义在矩形 $[0, W] \\times [0, H]$ 上的函数 $f(x, y) = ax + by$，其二重积分为 $\\iint_D (ax + by)\\,dA = a \\frac{W^2}{2} H + b W \\frac{H^2}{2}$。除以底面面积 $\\text{Area}(D) = W H$ 得平均值 $f_{\\text{avg}} = a \\frac{W}{2} + b \\frac{H}{2}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
@@ -367,8 +367,8 @@ export const densityMassAndChargeOfPlaneLaminas: TopicDef = {
       id: "calculating-total-mass-and-charge-from-area-density",
       title: t("Calculating total mass and charge from area density", "由面密度积分计算薄片总质量与总电荷"),
       explanation: t(
-        "Given area density $\\rho(x, y) = ax + b$ on $[0, W] \\times [0, H]$, the total mass is $M = \\int_0^H dy \\int_0^W (ax + b)\\,dx = H [a \\frac{W^2}{2} + bW]$.",
-        "对于在矩形 $[0, W] \\times [0, H]$ 上面密度为 $\\rho(x, y) = ax + b$ 的薄片，总质量为 $M = \\int_0^H dy \\int_0^W (ax + b)\\,dx = H [a \\frac{W^2}{2} + bW]$。",
+        "Density is mass per unit area, so integrating the density over the region adds up the mass of all the small pieces. Given area density $\\rho(x, y) = ax + b$ on $[0, W] \\times [0, H]$, the total mass is $M = \\int_0^H dy \\int_0^W (ax + b)\\,dx = H [a \\frac{W^2}{2} + bW]$.",
+        "密度是单位面积的质量，所以把密度在区域上积分，就把所有小块的质量加了起来。对于在矩形 $[0, W] \\times [0, H]$ 上面密度为 $\\rho(x, y) = ax + b$ 的薄片，总质量为 $M = \\int_0^H dy \\int_0^W (ax + b)\\,dx = H [a \\frac{W^2}{2} + bW]$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -421,8 +421,8 @@ export const momentsAndCenterOfMass: TopicDef = {
       id: "defining-moments-and-center-of-mass-coordinates",
       title: t("Defining moments and center of mass coordinates", "一阶矩与质心坐标的定义"),
       explanation: t(
-        "The first moment about the $y$-axis is $M_y = \\iint_D x \\rho(x, y)\\,dA$. For a uniform lamina ($\\rho = 1$) over $[0, W] \\times [0, H]$, $M_y = \\int_0^H dy \\int_0^W x\\,dx = H \\frac{W^2}{2}$.",
-        "薄片对 $y$ 轴的一阶矩为 $M_y = \\iint_D x \\rho(x, y)\\,dA$。对于矩形 $[0, W] \\times [0, H]$ 上的均匀薄片（$\\rho = 1$），$M_y = \\int_0^H dy \\int_0^W x\\,dx = H \\frac{W^2}{2}$。",
+        "A moment weights each piece of mass by its distance from an axis, and dividing the moment by the total mass gives the coordinate of the center of mass. The first moment about the $y$-axis is $M_y = \\iint_D x \\rho(x, y)\\,dA$. For a uniform lamina ($\\rho = 1$) over $[0, W] \\times [0, H]$, $M_y = \\int_0^H dy \\int_0^W x\\,dx = H \\frac{W^2}{2}$.",
+        "力矩用每一小块质量到轴的距离对它加权，把力矩除以总质量就得到质心的坐标。薄片对 $y$ 轴的一阶矩为 $M_y = \\iint_D x \\rho(x, y)\\,dA$。对于矩形 $[0, W] \\times [0, H]$ 上的均匀薄片（$\\rho = 1$），$M_y = \\int_0^H dy \\int_0^W x\\,dx = H \\frac{W^2}{2}$。",
       ),
       generate(rng: Rng): Problem {
         const halfW = rng.int(1, 6);
@@ -523,8 +523,8 @@ export const momentsAndCentersOfMassOfPlaneLaminas: TopicDef = {
       id: "two-dimensional-center-of-mass-calculations",
       title: t("Two-dimensional center of mass calculations", "二维平面薄片质心坐标的计算"),
       explanation: t(
-        "For a rectangle $[0, W] \\times [0, H]$ with density $\\rho(x, y) = c x$, the $x$-centroid coordinate is $\\bar{x} = \\frac{\\int_0^W x^2 dx}{\\int_0^W x dx} = \\frac{\\frac{1}{3}W^3}{\\frac{1}{2}W^2} = \\frac{2}{3}W$. When $W = 3w$, $\\bar{x} = 2w$.",
-        "对于在矩形 $[0, W] \\times [0, H]$ 上面密度为 $\\rho(x, y) = c x$ 的薄片，质心横坐标为 $\\bar{x} = \\frac{\\int_0^W x^2 dx}{\\int_0^W x dx} = \\frac{\\frac{1}{3}W^3}{\\frac{1}{2}W^2} = \\frac{2}{3}W$。若 $W = 3w$，则 $\\bar{x} = 2w$。",
+        "When the density increases in one direction, the center of mass shifts toward the denser side, away from the geometric center. For a rectangle $[0, W] \\times [0, H]$ with density $\\rho(x, y) = c x$, the $x$-centroid coordinate is $\\bar{x} = \\frac{\\int_0^W x^2 dx}{\\int_0^W x dx} = \\frac{\\frac{1}{3}W^3}{\\frac{1}{2}W^2} = \\frac{2}{3}W$. When $W = 3w$, $\\bar{x} = 2w$.",
+        "当密度沿某个方向增大时，质心会偏离几何中心，向密度较大的一侧移动。对于在矩形 $[0, W] \\times [0, H]$ 上面密度为 $\\rho(x, y) = c x$ 的薄片，质心横坐标为 $\\bar{x} = \\frac{\\int_0^W x^2 dx}{\\int_0^W x dx} = \\frac{\\frac{1}{3}W^3}{\\frac{1}{2}W^2} = \\frac{2}{3}W$。若 $W = 3w$，则 $\\bar{x} = 2w$。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 5);
@@ -581,8 +581,8 @@ export const momentsOfInertiaOfLaminasAboutTheCoordinateAxes: TopicDef = {
       id: "evaluating-moments-of-inertia-about-axes",
       title: t("Evaluating moments of inertia about axes", "计算薄片对坐标轴的转动惯量"),
       explanation: t(
-        "For a uniform rectangular lamina $[0, W] \\times [0, H]$ with $\\rho = 1$, the moment of inertia about the $x$-axis is $I_x = \\int_0^W dx \\int_0^H y^2\\,dy = W \\frac{H^3}{3}$.",
-        "对于在 $[0, W] \\times [0, H]$ 上面密度为 $\\rho = 1$ 的均匀矩形薄片，对 $x$ 轴的转动惯量为 $I_x = \\int_0^W dx \\int_0^H y^2\\,dy = W \\frac{H^3}{3}$。",
+        "A moment of inertia weights each piece of mass by the square of its distance from the axis, measuring how hard the object is to rotate. For a uniform rectangular lamina $[0, W] \\times [0, H]$ with $\\rho = 1$, the moment of inertia about the $x$-axis is $I_x = \\int_0^W dx \\int_0^H y^2\\,dy = W \\frac{H^3}{3}$.",
+        "转动惯量用每一小块质量到轴的距离的平方对它加权，衡量物体转动的难易程度。对于在 $[0, W] \\times [0, H]$ 上面密度为 $\\rho = 1$ 的均匀矩形薄片，对 $x$ 轴的转动惯量为 $I_x = \\int_0^W dx \\int_0^H y^2\\,dy = W \\frac{H^3}{3}$。",
       ),
       generate(rng: Rng): Problem {
         const W = rng.int(2, 8);
@@ -810,8 +810,8 @@ export const probabilityDensityFunctionsOfContinuousRandomVariables: TopicDef = 
       id: "normalizing-multivariable-probability-density-functions",
       title: t("Normalizing multivariable probability density functions", "多元概率密度函数的归一化条件与常数确定"),
       explanation: t(
-        "For a uniform joint density $f(x, y) = C$ supported on the rectangle $[0, a] \\times [0, b]$, normalization requires $\\iint_D C\\,dA = C(ab) = 1$, so $C = \\frac{1}{ab}$, or $1/C = ab$.",
-        "对于在矩形 $[0, a] \\times [0, b]$ 上均匀分布的联合概率密度 $f(x, y) = C$，由归一化条件 $\\iint_D C\\,dA = C(ab) = 1$，得 $C = \\frac{1}{ab}$，即常数倒数为 $1/C = ab$。",
+        "A joint density must have total integral one over its support, so the constant is chosen to make the volume under the density equal to one. For a uniform joint density $f(x, y) = C$ supported on the rectangle $[0, a] \\times [0, b]$, normalization requires $\\iint_D C\\,dA = C(ab) = 1$, so $C = \\frac{1}{ab}$, or $1/C = ab$.",
+        "联合密度在其支撑集上的总积分必须为 1，所以要选择常数使密度下方的体积等于 1。对于在矩形 $[0, a] \\times [0, b]$ 上均匀分布的联合概率密度 $f(x, y) = C$，由归一化条件 $\\iint_D C\\,dA = C(ab) = 1$，得 $C = \\frac{1}{ab}$，即常数倒数为 $1/C = ab$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 9);
@@ -866,8 +866,8 @@ export const calculatingProbabilitiesWithContinuousRandomVariables: TopicDef = {
       id: "evaluating-joint-probabilities-via-double-integrals",
       title: t("Evaluating joint probabilities via double integrals", "通过二重积分计算联合概率"),
       explanation: t(
-        "If $(X, Y)$ is uniformly distributed with joint density $f(x, y) = \\frac{1}{W H}$ on $[0, W] \\times [0, H]$, the probability $P(X \\le x_1, Y \\le y_1) = \\frac{x_1 y_1}{W H}$.",
-        "若 $(X, Y)$ 在 $[0, W] \\times [0, H]$ 上均匀分布，联合概率密度为 $f(x, y) = \\frac{1}{W H}$，则概率为 $P(X \\le x_1, Y \\le y_1) = \\frac{x_1 y_1}{W H}$。",
+        "The probability that a random point lands in a region is the integral of the joint density over that region, which for a uniform density is a ratio of areas. If $(X, Y)$ is uniformly distributed with joint density $f(x, y) = \\frac{1}{W H}$ on $[0, W] \\times [0, H]$, the probability $P(X \\le x_1, Y \\le y_1) = \\frac{x_1 y_1}{W H}$.",
+        "随机点落在某个区域内的概率等于联合密度在该区域上的积分，对于均匀密度，这是面积之比。若 $(X, Y)$ 在 $[0, W] \\times [0, H]$ 上均匀分布，联合概率密度为 $f(x, y) = \\frac{1}{W H}$，则概率为 $P(X \\le x_1, Y \\le y_1) = \\frac{x_1 y_1}{W H}$。",
       ),
       generate(rng: Rng): Problem {
         const x1 = rng.int(1, 4);
@@ -924,8 +924,8 @@ export const continuousRandomVariablesOverInfiniteDomains: TopicDef = {
       id: "integrating-joint-densities-over-unbounded-regions",
       title: t("Integrating joint densities over unbounded regions", "在无界区域上计算联合概率密度的反常二重积分"),
       explanation: t(
-        "For independent exponential decay $f(x, y) = c e^{-ax - by}$ over $x \\ge 0, y \\ge 0$, the improper integral is $\\int_0^\\infty dx \\int_0^\\infty c e^{-ax - by} dy = c \\left(\\frac{1}{a}\\right)\\left(\\frac{1}{b}\\right) = \\frac{c}{ab}$.",
-        "对于在第一象限 $x \\ge 0, y \\ge 0$ 上的指数衰减函数 $f(x, y) = c e^{-ax - by}$，其反常二重积分为 $\\int_0^\\infty dx \\int_0^\\infty c e^{-ax - by} dy = c \\left(\\frac{1}{a}\\right)\\left(\\frac{1}{b}\\right) = \\frac{c}{ab}$。",
+        "When the density factors into a function of each variable, the double integral over the quadrant splits into a product of two single improper integrals. For independent exponential decay $f(x, y) = c e^{-ax - by}$ over $x \\ge 0, y \\ge 0$, the improper integral is $\\int_0^\\infty dx \\int_0^\\infty c e^{-ax - by} dy = c \\left(\\frac{1}{a}\\right)\\left(\\frac{1}{b}\\right) = \\frac{c}{ab}$.",
+        "当密度可以分解为各变量函数的乘积时，第一象限上的二重积分可以拆成两个一元反常积分的乘积。对于在第一象限 $x \\ge 0, y \\ge 0$ 上的指数衰减函数 $f(x, y) = c e^{-ax - by}$，其反常二重积分为 $\\int_0^\\infty dx \\int_0^\\infty c e^{-ax - by} dy = c \\left(\\frac{1}{a}\\right)\\left(\\frac{1}{b}\\right) = \\frac{c}{ab}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 6);
@@ -979,8 +979,8 @@ export const jointDistributionsForDiscreteRandomVariables: TopicDef = {
       id: "marginal-probabilities-and-joint-pmf-sums",
       title: t("Marginal probabilities and joint pmf sums", "联合概率分布列的求和与边际概率"),
       explanation: t(
-        "For a $2 \\times 2$ joint distribution table with probabilities $P(X=x, Y=y)$, the marginal probability is $P(X = x_1) = P(X=x_1, Y=y_1) + P(X=x_1, Y=y_2)$.",
-        "对于包含概率 $P(X=x, Y=y)$ 的 $2 \\times 2$ 联合分布列，边际概率为行（或列）之和：$P(X = x_1) = P(X=x_1, Y=y_1) + P(X=x_1, Y=y_2)$。",
+        "To find the probability for one variable alone, add the joint probabilities over every value of the other variable, which is a row or column sum of the table. For a $2 \\times 2$ joint distribution table with probabilities $P(X=x, Y=y)$, the marginal probability is $P(X = x_1) = P(X=x_1, Y=y_1) + P(X=x_1, Y=y_2)$.",
+        "要求单个变量的概率，就把另一个变量所有取值下的联合概率加起来，也就是表格中一行或一列的和。对于包含概率 $P(X=x, Y=y)$ 的 $2 \\times 2$ 联合分布列，边际概率为行（或列）之和：$P(X = x_1) = P(X=x_1, Y=y_1) + P(X=x_1, Y=y_2)$。",
       ),
       generate(rng: Rng): Problem {
         const p11 = rng.int(10, 30); // in percent
@@ -1035,8 +1035,8 @@ export const jointDistributionsForContinuousRandomVariables: TopicDef = {
       id: "marginal-densities-and-independence-of-continuous-variables",
       title: t("Marginal densities and independence of continuous variables", "连续型随机变量边际密度的积分求解"),
       explanation: t(
-        "The marginal probability density function of $X$ is $f_X(x) = \\int_{-\\infty}^\\infty f(x, y)\\,dy$. For $f(x, y) = c(x + a)$ on $[0, 1] \\times [0, 1]$, $f_X(x) = \\int_0^1 c(x + a)\\,dy = c(x + a)$.",
-        "随机变量 $X$ 的边际概率密度函数为 $f_X(x) = \\int_{-\\infty}^\\infty f(x, y)\\,dy$。对于在 $[0, 1] \\times [0, 1]$ 上的联合密度 $f(x, y) = c(x + a)$，$f_X(x) = \\int_0^1 c(x + a)\\,dy = c(x + a)$。",
+        "Integrating out the other variable gives the marginal density, and the variables are independent when the joint density equals the product of the marginals. The marginal probability density function of $X$ is $f_X(x) = \\int_{-\\infty}^\\infty f(x, y)\\,dy$. For $f(x, y) = c(x + a)$ on $[0, 1] \\times [0, 1]$, $f_X(x) = \\int_0^1 c(x + a)\\,dy = c(x + a)$.",
+        "把另一个变量积分掉就得到边缘密度，当联合密度等于边缘密度之积时，两个变量相互独立。随机变量 $X$ 的边际概率密度函数为 $f_X(x) = \\int_{-\\infty}^\\infty f(x, y)\\,dy$。对于在 $[0, 1] \\times [0, 1]$ 上的联合密度 $f(x, y) = c(x + a)$，$f_X(x) = \\int_0^1 c(x + a)\\,dy = c(x + a)$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);

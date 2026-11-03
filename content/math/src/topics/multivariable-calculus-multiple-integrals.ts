@@ -44,8 +44,8 @@ export const doubleSummations: TopicDef = {
       id: "evaluating-separable-double-summations",
       title: t("Evaluating separable double summations", "计算可分离的二重求和"),
       explanation: t(
-        "For a linear summand $\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj)$, sum each term independently using $\\sum_{k=1}^N k = \\frac{N(N+1)}{2}$:\n\n$$\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj) = a n \\frac{m(m+1)}{2} + b m \\frac{n(n+1)}{2}.$$",
-        "对于线性求和项 $\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj)$，利用 $\\sum_{k=1}^N k = \\frac{N(N+1)}{2}$ 独立求和：\n\n$$\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj) = a n \\frac{m(m+1)}{2} + b m \\frac{n(n+1)}{2}。$$",
+        "When the summand is a sum of a term depending on one index and a term depending on the other, each part can be summed on its own. For a linear summand $\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj)$, sum each term independently using $\\sum_{k=1}^N k = \\frac{N(N+1)}{2}$:\n\n$$\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj) = a n \\frac{m(m+1)}{2} + b m \\frac{n(n+1)}{2}.$$",
+        "当被加项是只依赖于一个下标的项与只依赖于另一个下标的项之和时，每一部分可以分别求和。对于线性求和项 $\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj)$，利用 $\\sum_{k=1}^N k = \\frac{N(N+1)}{2}$ 独立求和：\n\n$$\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj) = a n \\frac{m(m+1)}{2} + b m \\frac{n(n+1)}{2}。$$",
       ),
       generate(rng: Rng): Problem {
         const m = rng.int(2, 6);
@@ -100,8 +100,8 @@ export const partitionsOfIntervals: TopicDef = {
       id: "mesh-of-regular-interval-partitions",
       title: t("Mesh of regular interval partitions", "等距区间分割的网格模"),
       explanation: t(
-        "A regular partition of $[a, b]$ into $n$ subintervals has equal widths $\\Delta x = \\frac{b - a}{n}$. The norm (or mesh) is $\\|P\\| = \\Delta x$.",
-        "将区间 $[a, b]$ 进行 $n$ 等分所得的等距分割，各子区间宽度均为 $\\Delta x = \\frac{b - a}{n}$。分割的模（网格模）即为 $\\|P\\| = \\Delta x$。",
+        "The mesh of a partition is the width of its widest piece, so for equal pieces it is simply the length of the interval divided by the number of pieces. A regular partition of $[a, b]$ into $n$ subintervals has equal widths $\\Delta x = \\frac{b - a}{n}$. The norm (or mesh) is $\\|P\\| = \\Delta x$.",
+        "分割的细度是最宽小段的宽度，所以对于等分的情形，它就是区间长度除以段数。将区间 $[a, b]$ 进行 $n$ 等分所得的等距分割，各子区间宽度均为 $\\Delta x = \\frac{b - a}{n}$。分割的模（网格模）即为 $\\|P\\| = \\Delta x$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-5, 5);
@@ -153,8 +153,8 @@ export const calculatingDoubleSummationsOverPartitions: TopicDef = {
       id: "area-of-subrectangles-in-grid-partitions",
       title: t("Area of subrectangles in grid partitions", "网格分割中子矩形的面积"),
       explanation: t(
-        "For $R = [a, b] \\times [c, d]$ partitioned by $m$ divisions in $x$ and $n$ divisions in $y$, each subrectangle has area:\n\n$$\\Delta A = \\Delta x \\Delta y = \\left(\\frac{b - a}{m}\\right)\\left(\\frac{d - c}{n}\\right).$$",
-        "对于被 $x$ 方向 $m$ 等分、$y$ 方向 $n$ 等分的矩形 $R = [a, b] \\times [c, d]$，每个子矩形的面积为：\n\n$$\\Delta A = \\Delta x \\Delta y = \\left(\\frac{b - a}{m}\\right)\\left(\\frac{d - c}{n}\\right)。$$",
+        "Each small rectangle has the width of one horizontal piece and the height of one vertical piece, so its area is their product. For $R = [a, b] \\times [c, d]$ partitioned by $m$ divisions in $x$ and $n$ divisions in $y$, each subrectangle has area:\n\n$$\\Delta A = \\Delta x \\Delta y = \\left(\\frac{b - a}{m}\\right)\\left(\\frac{d - c}{n}\\right).$$",
+        "每个小矩形的宽是一个水平小段的宽度，高是一个竖直小段的长度，所以面积是两者的乘积。对于被 $x$ 方向 $m$ 等分、$y$ 方向 $n$ 等分的矩形 $R = [a, b] \\times [c, d]$，每个子矩形的面积为：\n\n$$\\Delta A = \\Delta x \\Delta y = \\left(\\frac{b - a}{m}\\right)\\left(\\frac{d - c}{n}\\right)。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(0, 4);
@@ -326,8 +326,8 @@ export const lowerRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
       id: "lower-sum-with-unequal-subinterval-widths",
       title: t("Lower sum with unequal subinterval widths", "非等距子区间下的下黎曼和"),
       explanation: t(
-        "For a partition with cut points $x = [0, x_1, x_2]$ and $y = [0, y_1, y_2]$, the lower sum of an increasing function $f(x, y) = ax + by$ is:\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta x_i \\Delta y_j.$$",
-        "对于分割节点为 $x = [0, x_1, x_2]$ 与 $y = [0, y_1, y_2]$ 的非等距分割，单调递增函数 $f(x, y) = ax + by$ 的下黎曼和为：\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta x_i \\Delta y_j。$$",
+        "A lower sum uses the smallest value of the function on each small rectangle, which for an increasing function is at the corner nearest the origin. For a partition with cut points $x = [0, x_1, x_2]$ and $y = [0, y_1, y_2]$, the lower sum of an increasing function $f(x, y) = ax + by$ is:\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta x_i \\Delta y_j.$$",
+        "下和在每个小矩形上取函数的最小值，对于增函数，最小值在离原点最近的角上。对于分割节点为 $x = [0, x_1, x_2]$ 与 $y = [0, y_1, y_2]$ 的非等距分割，单调递增函数 $f(x, y) = ax + by$ 的下黎曼和为：\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta x_i \\Delta y_j。$$",
       ),
       generate(rng: Rng): Problem {
         const x1 = rng.int(1, 3);
@@ -544,8 +544,8 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
       id: "evaluating-iterated-integrals-over-rectangles",
       title: t("Evaluating iterated integrals over rectangles", "计算矩形区域上的二次积分"),
       explanation: t(
-        "For $R = [a, b] \\times [c, d]$, evaluate by integrating with respect to $y$ then $x$:\n\n$$\\iint_R (px + qy)\\,dA = \\int_a^b \\left[\\int_c^d (px + qy)\\,dy\\right]dx = p\\frac{b^2 - a^2}{2}(d - c) + q(b - a)\\frac{d^2 - c^2}{2}.$$",
-        "对于 $R = [a, b] \\times [c, d]$，先对 $y$ 积分再对 $x$ 积分：\n\n$$\\iint_R (px + qy)\\,dA = \\int_a^b \\left[\\int_c^d (px + qy)\\,dy\\right]dx = p\\frac{b^2 - a^2}{2}(d - c) + q(b - a)\\frac{d^2 - c^2}{2}。$$",
+        "Integrate with respect to one variable while treating the other as a constant, then integrate the result with respect to the remaining variable. For $R = [a, b] \\times [c, d]$, evaluate by integrating with respect to $y$ then $x$:\n\n$$\\iint_R (px + qy)\\,dA = \\int_a^b \\left[\\int_c^d (px + qy)\\,dy\\right]dx = p\\frac{b^2 - a^2}{2}(d - c) + q(b - a)\\frac{d^2 - c^2}{2}.$$",
+        "先对一个变量积分，把另一个变量当作常数，再对所得结果关于剩下的变量积分。对于 $R = [a, b] \\times [c, d]$，先对 $y$ 积分再对 $x$ 积分：\n\n$$\\iint_R (px + qy)\\,dA = \\int_a^b \\left[\\int_c^d (px + qy)\\,dy\\right]dx = p\\frac{b^2 - a^2}{2}(d - c) + q(b - a)\\frac{d^2 - c^2}{2}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(0, 3);
@@ -603,8 +603,8 @@ export const doubleIntegralsOverNonRectangularDomains: TopicDef = {
       id: "integrating-over-triangular-domains",
       title: t("Integrating over triangular domains", "在三角形区域上求二重积分"),
       explanation: t(
-        "For a triangular region $T$ bounded by $x = 0$, $y = 0$, and $x + y = c$ ($c > 0$):\n\n$$\\iint_T ax\\,dA = \\int_0^c \\int_0^{c - x} ax\\,dy\\,dx = \\int_0^c ax(c - x)\\,dx = a\\frac{c^3}{6}.$$",
-        "对于由 $x = 0$、$y = 0$ 与 $x + y = c$（$c > 0$）所围成的三角形区域 $T$：\n\n$$\\iint_T ax\\,dA = \\int_0^c \\int_0^{c - x} ax\\,dy\\,dx = \\int_0^c ax(c - x)\\,dx = a\\frac{c^3}{6}。$$",
+        "Over a triangle the inner limits depend on the outer variable, because the height of the region changes as you move across it. For a triangular region $T$ bounded by $x = 0$, $y = 0$, and $x + y = c$ ($c > 0$):\n\n$$\\iint_T ax\\,dA = \\int_0^c \\int_0^{c - x} ax\\,dy\\,dx = \\int_0^c ax(c - x)\\,dx = a\\frac{c^3}{6}.$$",
+        "在三角形区域上，内层积分限依赖于外层变量，因为区域的高度随位置而变化。对于由 $x = 0$、$y = 0$ 与 $x + y = c$（$c > 0$）所围成的三角形区域 $T$：\n\n$$\\iint_T ax\\,dA = \\int_0^c \\int_0^{c - x} ax\\,dy\\,dx = \\int_0^c ax(c - x)\\,dx = a\\frac{c^3}{6}。$$",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(2, 10);
@@ -657,8 +657,8 @@ export const propertiesOfDoubleIntegrals: TopicDef = {
       id: "linearity-and-decomposition-of-double-integrals",
       title: t("Linearity and decomposition of double integrals", "二重积分的线性性与区域分解性"),
       explanation: t(
-        "By linearity of the double integral:\n\n$$\\iint_R (\\alpha f(x, y) + \\beta g(x, y))\\,dA = \\alpha \\iint_R f(x, y)\\,dA + \\beta \\iint_R g(x, y)\\,dA.$$",
-        "由二重积分的线性性质：\n\n$$\\iint_R (\\alpha f(x, y) + \\beta g(x, y))\\,dA = \\alpha \\iint_R f(x, y)\\,dA + \\beta \\iint_R g(x, y)\\,dA。$$",
+        "Double integrals are linear just like single integrals, so known integrals of separate functions combine with the same coefficients. By linearity of the double integral:\n\n$$\\iint_R (\\alpha f(x, y) + \\beta g(x, y))\\,dA = \\alpha \\iint_R f(x, y)\\,dA + \\beta \\iint_R g(x, y)\\,dA.$$",
+        "二重积分和单积分一样是线性的，所以各个函数的已知积分可以按相同的系数组合。由二重积分的线性性质：\n\n$$\\iint_R (\\alpha f(x, y) + \\beta g(x, y))\\,dA = \\alpha \\iint_R f(x, y)\\,dA + \\beta \\iint_R g(x, y)\\,dA。$$",
       ),
       generate(rng: Rng): Problem {
         const I1 = rng.nonZero(-8, 8);
@@ -708,8 +708,8 @@ export const typeIAndIiRegionsInTwoDimensionalSpace: TopicDef = {
       id: "identifying-type-i-and-type-ii-regions",
       title: t("Identifying Type I and Type II regions", "识别 X-型与 Y-型区域"),
       explanation: t(
-        "A region $D$ is **Type I** if $D = \\{(x, y) : a \\le x \\le b, g_1(x) \\le y \\le g_2(x)\\}$. It is **Type II** if $D = \\{(x, y) : c \\le y \\le d, h_1(y) \\le x \\le h_2(y)\\}$.",
-        "若区域可表示为 $D = \\{(x, y) : a \\le x \\le b, g_1(x) \\le y \\le g_2(x)\\}$，则称为 **X-型区域（Type I）**。若可表示为 $D = \\{(x, y) : c \\le y \\le d, h_1(y) \\le x \\le h_2(y)\\}$，则称为 **Y-型区域（Type II）**。",
+        "A region is described with vertical strips when its top and bottom are graphs of functions of the horizontal variable, and with horizontal strips in the opposite case. A region $D$ is **Type I** if $D = \\{(x, y) : a \\le x \\le b, g_1(x) \\le y \\le g_2(x)\\}$. It is **Type II** if $D = \\{(x, y) : c \\le y \\le d, h_1(y) \\le x \\le h_2(y)\\}$.",
+        "当区域的上下边界是水平变量的函数图像时，用竖直条带描述它；反之则用水平条带。若区域可表示为 $D = \\{(x, y) : a \\le x \\le b, g_1(x) \\le y \\le g_2(x)\\}$，则称为 **X-型区域（Type I）**。若可表示为 $D = \\{(x, y) : c \\le y \\le d, h_1(y) \\le x \\le h_2(y)\\}$，则称为 **Y-型区域（Type II）**。",
       ),
       generate(rng: Rng): Problem {
         const isType1 = rng.bool();
@@ -772,8 +772,8 @@ export const doubleIntegralsOverTypeIRegions: TopicDef = {
       id: "evaluating-double-integrals-over-parabolic-regions",
       title: t("Evaluating double integrals over parabolic regions", "在抛物线区域上计算二重积分"),
       explanation: t(
-        "For $D = \\{(x, y) : 0 \\le x \\le a, 0 \\le y \\le bx\\}$:\n\n$$\\iint_D kx\\,dA = \\int_0^a \\left[\\int_0^{bx} kx\\,dy\\right]dx = \\int_0^a bkx^2\\,dx = bk\\frac{a^3}{3}.$$",
-        "对于区域 $D = \\{(x, y) : 0 \\le x \\le a, 0 \\le y \\le bx\\}$：\n\n$$\\iint_D kx\\,dA = \\int_0^a \\left[\\int_0^{bx} kx\\,dy\\right]dx = \\int_0^a bkx^2\\,dx = bk\\frac{a^3}{3}。$$",
+        "Integrate first in the direction whose limits are functions, then integrate the resulting function of the outer variable over its constant limits. For $D = \\{(x, y) : 0 \\le x \\le a, 0 \\le y \\le bx\\}$:\n\n$$\\iint_D kx\\,dA = \\int_0^a \\left[\\int_0^{bx} kx\\,dy\\right]dx = \\int_0^a bkx^2\\,dx = bk\\frac{a^3}{3}.$$",
+        "先沿积分限为函数的方向积分，再把所得关于外层变量的函数在常数限上积分。对于区域 $D = \\{(x, y) : 0 \\le x \\le a, 0 \\le y \\le bx\\}$：\n\n$$\\iint_D kx\\,dA = \\int_0^a \\left[\\int_0^{bx} kx\\,dy\\right]dx = \\int_0^a bkx^2\\,dx = bk\\frac{a^3}{3}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
@@ -825,8 +825,8 @@ export const doubleIntegralsOverTypeIiRegions: TopicDef = {
       id: "evaluating-double-integrals-with-horizontal-strips",
       title: t("Evaluating double integrals with horizontal strips", "利用水平微元条计算 Y-型二重积分"),
       explanation: t(
-        "For $D = \\{(x, y) : 0 \\le y \\le b, 0 \\le x \\le ay\\}$:\n\n$$\\iint_D ky\\,dA = \\int_0^b \\left[\\int_0^{ay} ky\\,dx\\right]dy = \\int_0^b aky^2\\,dy = ak\\frac{b^3}{3}.$$",
-        "对于区域 $D = \\{(x, y) : 0 \\le y \\le b, 0 \\le x \\le ay\\}$：\n\n$$\\iint_D ky\\,dA = \\int_0^b \\left[\\int_0^{ay} ky\\,dx\\right]dy = \\int_0^b aky^2\\,dy = ak\\frac{b^3}{3}。$$",
+        "When the region is bounded on the left and right by functions of the vertical variable, integrate with respect to the horizontal variable first. For $D = \\{(x, y) : 0 \\le y \\le b, 0 \\le x \\le ay\\}$:\n\n$$\\iint_D ky\\,dA = \\int_0^b \\left[\\int_0^{ay} ky\\,dx\\right]dy = \\int_0^b aky^2\\,dy = ak\\frac{b^3}{3}.$$",
+        "当区域的左右边界是竖直变量的函数时，先对水平变量积分。对于区域 $D = \\{(x, y) : 0 \\le y \\le b, 0 \\le x \\le ay\\}$：\n\n$$\\iint_D ky\\,dA = \\int_0^b \\left[\\int_0^{ay} ky\\,dx\\right]dy = \\int_0^b aky^2\\,dy = ak\\frac{b^3}{3}。$$",
       ),
       generate(rng: Rng): Problem {
         const b = rng.int(1, 6);
@@ -881,8 +881,8 @@ export const doubleIntegralsOverPartitionedRegions: TopicDef = {
       id: "evaluating-double-integrals-by-domain-decomposition",
       title: t("Evaluating double integrals by domain decomposition", "通过区域分割计算二重积分"),
       explanation: t(
-        "If $R = R_1 \\cup R_2$ with disjoint interiors, then $\\iint_R f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$. For two adjacent rectangles $R_1 = [0, c] \\times [0, h_1]$ and $R_2 = [c, d] \\times [0, h_2]$:\n\n$$\\iint_R k\\,dA = k\\left(c h_1 + (d - c)h_2\\right).$$",
-        "若 $R = R_1 \\cup R_2$ 且内部不相交，则 $\\iint_R f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$。对于两个相邻矩形 $R_1 = [0, c] \\times [0, h_1]$ 与 $R_2 = [c, d] \\times [0, h_2]$：\n\n$$\\iint_R k\\,dA = k\\left(c h_1 + (d - c)h_2\\right)。$$",
+        "Splitting a region into simpler pieces lets you use convenient limits on each, and the integral over the whole is the sum of the pieces. If $R = R_1 \\cup R_2$ with disjoint interiors, then $\\iint_R f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$. For two adjacent rectangles $R_1 = [0, c] \\times [0, h_1]$ and $R_2 = [c, d] \\times [0, h_2]$:\n\n$$\\iint_R k\\,dA = k\\left(c h_1 + (d - c)h_2\\right).$$",
+        "把区域分成更简单的几部分，每部分都可以用方便的积分限，整体上的积分就是各部分积分的和。若 $R = R_1 \\cup R_2$ 且内部不相交，则 $\\iint_R f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$。对于两个相邻矩形 $R_1 = [0, c] \\times [0, h_1]$ 与 $R_2 = [c, d] \\times [0, h_2]$：\n\n$$\\iint_R k\\,dA = k\\left(c h_1 + (d - c)h_2\\right)。$$",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 5);
@@ -939,8 +939,8 @@ export const changingTheOrderOfIntegrationInDoubleIntegrals: TopicDef = {
       id: "reversing-order-to-enable-integration",
       title: t("Reversing order to enable integration", "交换积分次序以求值"),
       explanation: t(
-        "The integral $\\int_0^a \\int_y^a x^2\\,dx\\,dy$ is evaluated by reversing the order:\n\n$$\\int_0^a \\left[\\int_0^x x^2\\,dy\\right]dx = \\int_0^a x^3\\,dx = \\frac{a^4}{4}.$$",
-        "积分 $\\int_0^a \\int_y^a x^2\\,dx\\,dy$ 可通过交换积分次序计算：\n\n$$\\int_0^a \\left[\\int_0^x x^2\\,dy\\right]dx = \\int_0^a x^3\\,dx = \\frac{a^4}{4}。$$",
+        "Sketch the region and describe it the other way around; the new order of integration can make an impossible inner integral easy. The integral $\\int_0^a \\int_y^a x^2\\,dx\\,dy$ is evaluated by reversing the order:\n\n$$\\int_0^a \\left[\\int_0^x x^2\\,dy\\right]dx = \\int_0^a x^3\\,dx = \\frac{a^4}{4}.$$",
+        "画出区域并换一种方式描述它；新的积分次序可以使原来无法计算的内层积分变得容易。积分 $\\int_0^a \\int_y^a x^2\\,dx\\,dy$ 可通过交换积分次序计算：\n\n$$\\int_0^a \\left[\\int_0^x x^2\\,dy\\right]dx = \\int_0^a x^3\\,dx = \\frac{a^4}{4}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 35);
@@ -997,8 +997,8 @@ export const repeatedIntegralsInThreeDimensions: TopicDef = {
       id: "evaluating-iterated-triple-integrals",
       title: t("Evaluating iterated triple integrals", "计算三次积分"),
       explanation: t(
-        "Evaluate $\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx$ successively from $z$, to $y$, to $x$:\n\n$$\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx = abc\\frac{a + b + c}{2}.$$",
-        "按 $z$、$y$、$x$ 的顺序依次计算三次积分 $\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx$：\n\n$$\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx = abc\\frac{a + b + c}{2}。$$",
+        "A triple integral is evaluated from the inside out, one variable at a time, treating the variables not yet integrated as constants. Evaluate $\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx$ successively from $z$, to $y$, to $x$:\n\n$$\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx = abc\\frac{a + b + c}{2}.$$",
+        "三重积分由内向外逐个变量计算，把还没有积分的变量当作常数。按 $z$、$y$、$x$ 的顺序依次计算三次积分 $\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx$：\n\n$$\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx = abc\\frac{a + b + c}{2}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -1189,8 +1189,8 @@ export const tripleIntegralsOverTypeIRegions: TopicDef = {
       id: "integrating-under-a-surface-over-a-rectangle",
       title: t("Integrating under a surface over a rectangle", "在矩形投影上计算曲顶柱体的体积积分"),
       explanation: t(
-        "For $E$ bounded by $0 \\le x \\le a$, $0 \\le y \\le b$, and $0 \\le z \\le cxy$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxy} 1\\,dz\\,dy\\,dx = c\\frac{a^2 b^2}{4}.$$",
-        "对于由 $0 \\le x \\le a$、$0 \\le y \\le b$ 与 $0 \\le z \\le cxy$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxy} 1\\,dz\\,dy\\,dx = c\\frac{a^2 b^2}{4}。$$",
+        "Integrating the constant one over a solid gives its volume, and the inner integral in the vertical direction gives the height of the solid above each point. For $E$ bounded by $0 \\le x \\le a$, $0 \\le y \\le b$, and $0 \\le z \\le cxy$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxy} 1\\,dz\\,dy\\,dx = c\\frac{a^2 b^2}{4}.$$",
+        "在立体上积分常数 1 得到它的体积，竖直方向的内层积分给出立体在每一点上方的高度。对于由 $0 \\le x \\le a$、$0 \\le y \\le b$ 与 $0 \\le z \\le cxy$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxy} 1\\,dz\\,dy\\,dx = c\\frac{a^2 b^2}{4}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -1241,8 +1241,8 @@ export const tripleIntegralsOverTypeIiRegions: TopicDef = {
       id: "integrating-with-respect-to-y-first",
       title: t("Integrating with respect to y first", "先对 y 积分的三重积分计算"),
       explanation: t(
-        "For $E$ bounded by $0 \\le x \\le a$, $0 \\le z \\le b$, and $0 \\le y \\le cxz$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxz} 1\\,dy\\,dz\\,dx = c\\frac{a^2 b^2}{4}.$$",
-        "对于由 $0 \\le x \\le a$、$0 \\le z \\le b$ 与 $0 \\le y \\le cxz$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxz} 1\\,dy\\,dz\\,dx = c\\frac{a^2 b^2}{4}。$$",
+        "When the solid is bounded by surfaces given as functions for that variable, integrate in that direction first to get the thickness of the solid. For $E$ bounded by $0 \\le x \\le a$, $0 \\le z \\le b$, and $0 \\le y \\le cxz$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxz} 1\\,dy\\,dz\\,dx = c\\frac{a^2 b^2}{4}.$$",
+        "当立体由以该变量表示的曲面围成时，先沿那个方向积分，得到立体的厚度。对于由 $0 \\le x \\le a$、$0 \\le z \\le b$ 与 $0 \\le y \\le cxz$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxz} 1\\,dy\\,dz\\,dx = c\\frac{a^2 b^2}{4}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -1293,8 +1293,8 @@ export const tripleIntegralsOverTypeIiiRegions: TopicDef = {
       id: "integrating-with-respect-to-x-first",
       title: t("Integrating with respect to x first", "先对 x 积分的三重积分计算"),
       explanation: t(
-        "For $E$ bounded by $0 \\le y \\le a$, $0 \\le z \\le b$, and $0 \\le x \\le cyz$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cyz} 1\\,dx\\,dz\\,dy = c\\frac{a^2 b^2}{4}.$$",
-        "对于由 $0 \\le y \\le a$、$0 \\le z \\le b$ 与 $0 \\le x \\le cyz$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cyz} 1\\,dx\\,dz\\,dy = c\\frac{a^2 b^2}{4}。$$",
+        "Choose the innermost variable to be the one whose bounds are given as functions of the other two, so the limits are easy to write. For $E$ bounded by $0 \\le y \\le a$, $0 \\le z \\le b$, and $0 \\le x \\le cyz$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cyz} 1\\,dx\\,dz\\,dy = c\\frac{a^2 b^2}{4}.$$",
+        "选择边界由另外两个变量的函数给出的那个变量作为最内层变量，这样积分限容易写出。对于由 $0 \\le y \\le a$、$0 \\le z \\le b$ 与 $0 \\le x \\le cyz$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cyz} 1\\,dx\\,dz\\,dy = c\\frac{a^2 b^2}{4}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -1342,8 +1342,8 @@ export const calculatingVolumesOfSolidsUsingTripleIntegrals: TopicDef = {
       id: "volume-of-a-standard-simplex",
       title: t("Volume of a standard simplex", "标准四面体的体积"),
       explanation: t(
-        "The tetrahedron bounded by the coordinate planes and $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$ ($a, b, c > 0$) has volume:\n\n$$\\text{Vol}(E) = \\iiint_E 1\\,dV = \\frac{abc}{6}.$$",
-        "由坐标平面与平面 $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$（$a, b, c > 0$）围成的四面体的体积为：\n\n$$\\text{Vol}(E) = \\iiint_E 1\\,dV = \\frac{abc}{6}。$$",
+        "A tetrahedron cut off by a plane from the corner of the first octant has one sixth of the volume of the box with the same intercepts. The tetrahedron bounded by the coordinate planes and $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$ ($a, b, c > 0$) has volume:\n\n$$\\text{Vol}(E) = \\iiint_E 1\\,dV = \\frac{abc}{6}.$$",
+        "被平面从第一卦限的角上截下的四面体，体积是具有相同截距的长方体体积的六分之一。由坐标平面与平面 $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$（$a, b, c > 0$）围成的四面体的体积为：\n\n$$\\text{Vol}(E) = \\iiint_E 1\\,dV = \\frac{abc}{6}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 7);
@@ -1401,8 +1401,8 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingProjection: T
       id: "reprojecting-triple-integrals-from-xy-to-xz-plane",
       title: t("Reprojecting triple integrals from xy to xz plane", "将三重积分从 xy 投影转为 xz 投影"),
       explanation: t(
-        "For a wedge $0 \\le x \\le a$, $0 \\le y \\le b$, $0 \\le z \\le 1 - x/a$, projecting onto the $xz$-plane gives region $0 \\le z \\le 1, 0 \\le x \\le a(1 - z)$. Then $\\iiint_E 1\\,dV = \\int_0^1 \\int_0^{a(1-z)} \\int_0^b 1\\,dy\\,dx\\,dz = \\frac{ab}{2}$.",
-        "对于楔形体 $0 \\le x \\le a$、$0 \\le y \\le b$、$0 \\le z \\le 1 - x/a$，向 $xz$ 平面投影得到平面区域 $0 \\le z \\le 1, 0 \\le x \\le a(1 - z)$。积分化为 $\\iiint_E 1\\,dV = \\int_0^1 \\int_0^{a(1-z)} \\int_0^b 1\\,dy\\,dx\\,dz = \\frac{ab}{2}$。",
+        "The same solid can be projected onto different coordinate planes, and choosing the plane that makes the boundaries simplest leads to easier limits. For a wedge $0 \\le x \\le a$, $0 \\le y \\le b$, $0 \\le z \\le 1 - x/a$, projecting onto the $xz$-plane gives region $0 \\le z \\le 1, 0 \\le x \\le a(1 - z)$. Then $\\iiint_E 1\\,dV = \\int_0^1 \\int_0^{a(1-z)} \\int_0^b 1\\,dy\\,dx\\,dz = \\frac{ab}{2}$.",
+        "同一个立体可以投影到不同的坐标平面上，选择使边界最简单的平面，积分限就更容易。对于楔形体 $0 \\le x \\le a$、$0 \\le y \\le b$、$0 \\le z \\le 1 - x/a$，向 $xz$ 平面投影得到平面区域 $0 \\le z \\le 1, 0 \\le x \\le a(1 - z)$。积分化为 $\\iiint_E 1\\,dV = \\int_0^1 \\int_0^{a(1-z)} \\int_0^b 1\\,dy\\,dx\\,dz = \\frac{ab}{2}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
@@ -1457,8 +1457,8 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingRegion: Topic
       id: "permuting-limits-of-integration-in-iterated-integrals",
       title: t("Permuting limits of integration in iterated integrals", "置换三次积分中的积分限"),
       explanation: t(
-        "To evaluate $\\int_0^a \\int_0^b \\int_z^a x\\,dx\\,dy\\,dz$, swap the $x$ and $z$ integrations: $0 \\le z \\le x \\le a \\iff 0 \\le x \\le a, 0 \\le z \\le x$:\n\n$$\\int_0^b \\int_0^a \\int_0^x x\\,dz\\,dx\\,dy = \\int_0^b \\int_0^a x^2\\,dx\\,dy = b\\frac{a^3}{3}.$$",
-        "计算 $\\int_0^a \\int_0^b \\int_z^a x\\,dx\\,dy\\,dz$ 时，对调 $x$ 与 $z$ 的积分次序：$0 \\le z \\le x \\le a \\iff 0 \\le x \\le a, 0 \\le z \\le x$：\n\n$$\\int_0^b \\int_0^a \\int_0^x x\\,dz\\,dx\\,dy = \\int_0^b \\int_0^a x^2\\,dx\\,dy = b\\frac{a^3}{3}。$$",
+        "To change the order, describe the same region with the variables nested differently, reading the new limits from the inequalities that define the region. To evaluate $\\int_0^a \\int_0^b \\int_z^a x\\,dx\\,dy\\,dz$, swap the $x$ and $z$ integrations: $0 \\le z \\le x \\le a \\iff 0 \\le x \\le a, 0 \\le z \\le x$:\n\n$$\\int_0^b \\int_0^a \\int_0^x x\\,dz\\,dx\\,dy = \\int_0^b \\int_0^a x^2\\,dx\\,dy = b\\frac{a^3}{3}.$$",
+        "要交换次序，就用不同的嵌套方式描述同一个区域，从定义区域的不等式中读出新的积分限。计算 $\\int_0^a \\int_0^b \\int_z^a x\\,dx\\,dy\\,dz$ 时，对调 $x$ 与 $z$ 的积分次序：$0 \\le z \\le x \\le a \\iff 0 \\le x \\le a, 0 \\le z \\le x$：\n\n$$\\int_0^b \\int_0^a \\int_0^x x\\,dz\\,dx\\,dy = \\int_0^b \\int_0^a x^2\\,dx\\,dy = b\\frac{a^3}{3}。$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -1524,8 +1524,8 @@ export const doubleIntegralsInPlanePolarCoordinates: TopicDef = {
       id: "integrating-radial-functions-over-disks",
       title: t("Integrating radial functions over disks", "在圆盘上积分径向函数"),
       explanation: t(
-        "For a disk $D$ of radius $R$ centered at the origin, the integral of $x^2 + y^2 = r^2$ is:\n\n$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^R r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^R = \\frac{\\pi R^4}{2}.$$",
-        "对于以原点为中心、半径为 $R$ 的圆盘 $D$，$x^2 + y^2 = r^2$ 的二重积分为：\n\n$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^R r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^R = \\frac{\\pi R^4}{2}。$$",
+        "In polar coordinates a disk has constant limits and the area element carries an extra factor of the radius, so radial functions become simple to integrate. For a disk $D$ of radius $R$ centered at the origin, the integral of $x^2 + y^2 = r^2$ is:\n\n$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^R r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^R = \\frac{\\pi R^4}{2}.$$",
+        "在极坐标中，圆盘的积分限是常数，面积微元多一个半径因子，所以径向函数变得容易积分。对于以原点为中心、半径为 $R$ 的圆盘 $D$，$x^2 + y^2 = r^2$ 的二重积分为：\n\n$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^R r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^R = \\frac{\\pi R^4}{2}。$$",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 35);
@@ -1576,8 +1576,8 @@ export const doubleIntegralsBetweenPolarCurves: TopicDef = {
       id: "integrating-over-annular-polar-regions",
       title: t("Integrating over annular polar regions", "在圆环扇形区域上的极坐标二重积分"),
       explanation: t(
-        "For an annular sector $r_1 \\le r \\le r_2$ and $0 \\le \\theta \\le \\frac{\\pi}{k}$, the area divided by $\\pi$ is:\n\n$$\\frac{1}{\\pi}\\iint_R 1\\,dA = \\frac{1}{\\pi}\\int_0^{\\pi/k} \\int_{r_1}^{r_2} r\\,dr\\,d\\theta = \\frac{r_2^2 - r_1^2}{2k}.$$",
-        "对于圆环扇形区域 $r_1 \\le r \\le r_2$ 且 $0 \\le \\theta \\le \\frac{\\pi}{k}$，其面积除以 $\\pi$ 为：\n\n$$\\frac{1}{\\pi}\\iint_R 1\\,dA = \\frac{1}{\\pi}\\int_0^{\\pi/k} \\int_{r_1}^{r_2} r\\,dr\\,d\\theta = \\frac{r_2^2 - r_1^2}{2k}。$$",
+        "An annular sector is a rectangle in polar coordinates, with the radius between two values and the angle between two values. For an annular sector $r_1 \\le r \\le r_2$ and $0 \\le \\theta \\le \\frac{\\pi}{k}$, the area divided by $\\pi$ is:\n\n$$\\frac{1}{\\pi}\\iint_R 1\\,dA = \\frac{1}{\\pi}\\int_0^{\\pi/k} \\int_{r_1}^{r_2} r\\,dr\\,d\\theta = \\frac{r_2^2 - r_1^2}{2k}.$$",
+        "环形扇区在极坐标中是一个矩形，半径和角度都介于两个值之间。对于圆环扇形区域 $r_1 \\le r \\le r_2$ 且 $0 \\le \\theta \\le \\frac{\\pi}{k}$，其面积除以 $\\pi$ 为：\n\n$$\\frac{1}{\\pi}\\iint_R 1\\,dA = \\frac{1}{\\pi}\\int_0^{\\pi/k} \\int_{r_1}^{r_2} r\\,dr\\,d\\theta = \\frac{r_2^2 - r_1^2}{2k}。$$",
       ),
       generate(rng: Rng): Problem {
         const r1 = rng.int(1, 5);
@@ -1636,8 +1636,8 @@ export const computingAreasUsingAChangeOfVariables: TopicDef = {
       id: "area-of-elliptical-regions-via-affine-substitution",
       title: t("Area of elliptical regions via affine substitution", "通过仿射代换求椭圆区域面积"),
       explanation: t(
-        "Under the transformation $x = au, y = bv$, the unit disk $u^2 + v^2 \\le 1$ maps to the ellipse $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} \\le 1$. The Jacobian is $J = ab$, so $\\text{Area}(E) = \\pi ab$.",
-        "在变换 $x = au, y = bv$ 下，单位圆盘 $u^2 + v^2 \\le 1$ 被映射为椭圆 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} \\le 1$。雅可比行列式为 $J = ab$，因此椭圆面积为 $\\text{Area}(E) = \\pi ab$。",
+        "Stretching the unit disk by different factors along the axes produces an ellipse, and its area is the area of the disk times the product of the factors. Under the transformation $x = au, y = bv$, the unit disk $u^2 + v^2 \\le 1$ maps to the ellipse $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} \\le 1$. The Jacobian is $J = ab$, so $\\text{Area}(E) = \\pi ab$.",
+        "沿两轴按不同比例拉伸单位圆盘就得到椭圆，它的面积等于圆盘面积乘以两个比例的乘积。在变换 $x = au, y = bv$ 下，单位圆盘 $u^2 + v^2 \\le 1$ 被映射为椭圆 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} \\le 1$。雅可比行列式为 $J = ab$，因此椭圆面积为 $\\text{Area}(E) = \\pi ab$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 10);
@@ -1692,8 +1692,8 @@ export const computingDoubleIntegralsUsingAChangeOfVariables: TopicDef = {
       id: "integrating-over-parallelograms-via-linear-coordinates",
       title: t("Integrating over parallelograms via linear coordinates", "通过线性坐标代换在平行四边形上积分"),
       explanation: t(
-        "For a region $R$ bounded by $0 \\le x + y \\le U$ and $0 \\le x - y \\le V$, set $u = x + y, v = x - y$. The Jacobian determinant is $\\frac{\\partial(u, v)}{\\partial(x, y)} = -2 \\implies |J(u, v)| = \\frac{1}{2}$. Thus $\\iint_R 1\\,dA = \\frac{UV}{2}$.",
-        "对于由 $0 \\le x + y \\le U$ 与 $0 \\le x - y \\le V$ 所围成的平行四边形区域 $R$，令 $u = x + y, v = x - y$。雅可比行列式为 $\\frac{\\partial(u, v)}{\\partial(x, y)} = -2 \\implies |J(u, v)| = \\frac{1}{2}$。故其面积为 $\\iint_R 1\\,dA = \\frac{UV}{2}$。",
+        "New coordinates built from the boundary lines turn the parallelogram into a rectangle, and the Jacobian factor corrects for the change in area. For a region $R$ bounded by $0 \\le x + y \\le U$ and $0 \\le x - y \\le V$, set $u = x + y, v = x - y$. The Jacobian determinant is $\\frac{\\partial(u, v)}{\\partial(x, y)} = -2 \\implies |J(u, v)| = \\frac{1}{2}$. Thus $\\iint_R 1\\,dA = \\frac{UV}{2}$.",
+        "由边界直线构造的新坐标把平行四边形变成矩形，雅可比因子修正面积的变化。对于由 $0 \\le x + y \\le U$ 与 $0 \\le x - y \\le V$ 所围成的平行四边形区域 $R$，令 $u = x + y, v = x - y$。雅可比行列式为 $\\frac{\\partial(u, v)}{\\partial(x, y)} = -2 \\implies |J(u, v)| = \\frac{1}{2}$。故其面积为 $\\iint_R 1\\,dA = \\frac{UV}{2}$。",
       ),
       generate(rng: Rng): Problem {
         const U = rng.int(2, 12);
@@ -1752,8 +1752,8 @@ export const cylindricalPolarCoordinates: TopicDef = {
       id: "converting-cartesian-points-to-cylindrical-coordinates",
       title: t("Converting Cartesian points to cylindrical coordinates", "将直角坐标转换为柱坐标"),
       explanation: t(
-        "To convert $(x, y, z)$ to cylindrical coordinates $(r, \\theta, z)$, compute $r = \\sqrt{x^2 + y^2}$, $\\tan\\theta = \\frac{y}{x}$, and retain $z$.",
-        "将直角坐标 $(x, y, z)$ 转换为柱坐标 $(r, \\theta, z)$：$r = \\sqrt{x^2 + y^2}$，$\\tan\\theta = \\frac{y}{x}$，且 $z$ 坐标保持不变。",
+        "Cylindrical coordinates use polar coordinates in the horizontal plane and keep the height unchanged, so find the radius and angle from the first two coordinates. To convert $(x, y, z)$ to cylindrical coordinates $(r, \\theta, z)$, compute $r = \\sqrt{x^2 + y^2}$, $\\tan\\theta = \\frac{y}{x}$, and retain $z$.",
+        "柱坐标在水平面内使用极坐标，高度保持不变，所以由前两个坐标求出半径和角度。将直角坐标 $(x, y, z)$ 转换为柱坐标 $(r, \\theta, z)$：$r = \\sqrt{x^2 + y^2}$，$\\tan\\theta = \\frac{y}{x}$，且 $z$ 坐标保持不变。",
       ),
       generate(rng: Rng): Problem {
         const [a0, b0, c0] = rng.pick(pythagoreanTriples);
@@ -2025,8 +2025,8 @@ export const tripleIntegralsInCylindricalPolarCoordinates: TopicDef = {
       id: "volume-of-cylindrical-solid-via-triple-integral",
       title: t("Volume of cylindrical solid via triple integral", "利用柱坐标三重积分计算圆柱体体积"),
       explanation: t(
-        "For a cylinder bounded by $r \\le R$ and $0 \\le z \\le H$, the volume divided by $\\pi$ is:\n\n$$\\frac{\\text{Vol}(E)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^R \\int_0^H r\\,dz\\,dr\\,d\\theta = R^2 H.$$",
-        "对于由 $r \\le R$ 与 $0 \\le z \\le H$ 所界定的圆柱体，其体积除以 $\\pi$ 为：\n\n$$\\frac{\\text{Vol}(E)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^R \\int_0^H r\\,dz\\,dr\\,d\\theta = R^2 H。$$",
+        "In cylindrical coordinates a cylinder has constant limits for all three variables, and the extra factor of the radius gives the familiar volume formula. For a cylinder bounded by $r \\le R$ and $0 \\le z \\le H$, the volume divided by $\\pi$ is:\n\n$$\\frac{\\text{Vol}(E)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^R \\int_0^H r\\,dz\\,dr\\,d\\theta = R^2 H.$$",
+        "在柱坐标中，圆柱体三个变量的积分限都是常数，多出的半径因子给出熟悉的体积公式。对于由 $r \\le R$ 与 $0 \\le z \\le H$ 所界定的圆柱体，其体积除以 $\\pi$ 为：\n\n$$\\frac{\\text{Vol}(E)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^R \\int_0^H r\\,dz\\,dr\\,d\\theta = R^2 H。$$",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 10);
@@ -2087,8 +2087,8 @@ export const tripleIntegralsInSphericalPolarCoordinates: TopicDef = {
       id: "volume-of-spherical-ball-via-triple-integral",
       title: t("Volume of spherical ball via triple integral", "利用球面坐标三重积分计算球体体积"),
       explanation: t(
-        "For a sphere of radius $R$ ($\\rho \\le R$):\n\n$$\\frac{\\text{Vol}(B)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^\\pi \\int_0^R \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta = \\frac{4}{3}R^3.$$",
-        "对于半径为 $R$ 的球体（$\\rho \\le R$）：\n\n$$\\frac{\\text{Vol}(B)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^\\pi \\int_0^R \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta = \\frac{4}{3}R^3。$$",
+        "In spherical coordinates a ball has constant limits, and the volume element includes the square of the distance times the sine of the polar angle. For a sphere of radius $R$ ($\\rho \\le R$):\n\n$$\\frac{\\text{Vol}(B)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^\\pi \\int_0^R \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta = \\frac{4}{3}R^3.$$",
+        "在球坐标中，球体的积分限都是常数，体积微元包含距离的平方乘以极角的正弦。对于半径为 $R$ 的球体（$\\rho \\le R$）：\n\n$$\\frac{\\text{Vol}(B)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^\\pi \\int_0^R \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta = \\frac{4}{3}R^3。$$",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 35);
@@ -2148,8 +2148,8 @@ export const computingTripleIntegralsUsingAChangeOfVariables: TopicDef = {
       id: "volume-of-ellipsoids-via-scaled-spherical-coordinates",
       title: t("Volume of ellipsoids via scaled spherical coordinates", "通过伸缩坐标代换计算椭球体体积"),
       explanation: t(
-        "The ellipsoid $E: \\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} \\le 1$ transforms to the unit ball under $x = au, y = bv, z = cw$ with Jacobian $J = abc$. The volume is $\\text{Vol}(E) = \\frac{4}{3}\\pi abc$.",
-        "作伸缩变换 $x = au, y = bv, z = cw$，椭球体 $E: \\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} \\le 1$ 转化为单位球体，其雅可比行列式为 $J = abc$。因此椭球体体积为 $\\text{Vol}(E) = \\frac{4}{3}\\pi abc$。",
+        "Scaling each coordinate turns the ellipsoid into a unit ball, so its volume is the volume of the ball times the product of the three scale factors. The ellipsoid $E: \\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} \\le 1$ transforms to the unit ball under $x = au, y = bv, z = cw$ with Jacobian $J = abc$. The volume is $\\text{Vol}(E) = \\frac{4}{3}\\pi abc$.",
+        "对每个坐标进行缩放把椭球体变成单位球，所以它的体积等于球的体积乘以三个缩放比例的乘积。作伸缩变换 $x = au, y = bv, z = cw$，椭球体 $E: \\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} \\le 1$ 转化为单位球体，其雅可比行列式为 $J = abc$。因此椭球体体积为 $\\text{Vol}(E) = \\frac{4}{3}\\pi abc$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 6);

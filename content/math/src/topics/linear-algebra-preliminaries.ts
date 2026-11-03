@@ -774,8 +774,8 @@ export const describingSetsUsingSetBuilderNotation: TopicDef = {
       id: "interval-subsets-of-reals",
       title: t("Interval subsets of the real numbers", "实数集中的区间与构建符"),
       explanation: t(
-        "Intervals on the real line $\\mathbb{R}$ correspond directly to inequalities in set-builder notation: $(a, b] = \\{x \\in \\mathbb{R} \\mid a < x \\le b\\}$, $[a, b] = \\{x \\in \\mathbb{R} \\mid a \\le x \\le b\\}$, and $[a, \\infty) = \\{x \\in \\mathbb{R} \\mid x \\ge a\\}$.",
-        "实数轴 $\\mathbb{R}$ 上的区间直接对应集合构建符中的不等式：$(a, b] = \\{x \\in \\mathbb{R} \\mid a < x \\le b\\}$，$[a, b] = \\{x \\in \\mathbb{R} \\mid a \\le x \\le b\\}$，以及 $[a, \\infty) = \\{x \\in \\mathbb{R} \\mid x \\ge a\\}$。",
+        "A round bracket means the endpoint is left out and a square bracket means it is included, so each interval is a compact way of writing a pair of inequalities. Intervals on the real line $\\mathbb{R}$ correspond directly to inequalities in set-builder notation: $(a, b] = \\{x \\in \\mathbb{R} \\mid a < x \\le b\\}$, $[a, b] = \\{x \\in \\mathbb{R} \\mid a \\le x \\le b\\}$, and $[a, \\infty) = \\{x \\in \\mathbb{R} \\mid x \\ge a\\}$.",
+        "圆括号表示不包含端点，方括号表示包含端点，所以每个区间都是一对不等式的简洁写法。实数轴 $\\mathbb{R}$ 上的区间直接对应集合构建符中的不等式：$(a, b] = \\{x \\in \\mathbb{R} \\mid a < x \\le b\\}$，$[a, b] = \\{x \\in \\mathbb{R} \\mid a \\le x \\le b\\}$，以及 $[a, \\infty) = \\{x \\in \\mathbb{R} \\mid x \\ge a\\}$。",
       ),
       generate(rng) {
         const a = rng.int(-9, 5);
@@ -1301,8 +1301,8 @@ export const theDifferenceOfSets: TopicDef = {
       id: "properties-of-set-difference",
       title: t("Properties of set difference", "差集的性质"),
       explanation: t(
-        "Important properties of set difference include: $A \\setminus A = \\emptyset$, $A \\setminus \\emptyset = A$, $(A \\setminus B) \\cap B = \\emptyset$, and $A \\setminus B = A \\iff A \\cap B = \\emptyset$. Also, $A \\setminus (A \\setminus B) = A \\cap B$. The symmetric difference is $(A \\setminus B) \\cup (B \\setminus A)$.",
-        "差集的重要运算性质包括：$A \\setminus A = \\emptyset$，$A \\setminus \\emptyset = A$，$(A \\setminus B) \\cap B = \\emptyset$，以及 $A \\setminus B = A \\iff A \\cap B = \\emptyset$。此外还有 $A \\setminus (A \\setminus B) = A \\cap B$。对称差集定义为 $(A \\setminus B) \\cup (B \\setminus A)$。",
+        "The difference of two sets keeps the elements of the first set that are not in the second, so it never shares any element with the second set. Important properties of set difference include: $A \\setminus A = \\emptyset$, $A \\setminus \\emptyset = A$, $(A \\setminus B) \\cap B = \\emptyset$, and $A \\setminus B = A \\iff A \\cap B = \\emptyset$. Also, $A \\setminus (A \\setminus B) = A \\cap B$. The symmetric difference is $(A \\setminus B) \\cup (B \\setminus A)$.",
+        "两个集合的差保留第一个集合中不属于第二个集合的元素，所以它与第二个集合没有公共元素。差集的重要运算性质包括：$A \\setminus A = \\emptyset$，$A \\setminus \\emptyset = A$，$(A \\setminus B) \\cap B = \\emptyset$，以及 $A \\setminus B = A \\iff A \\cap B = \\emptyset$。此外还有 $A \\setminus (A \\setminus B) = A \\cap B$。对称差集定义为 $(A \\setminus B) \\cup (B \\setminus A)$。",
       ),
       generate(rng) {
         const pool = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
@@ -1861,8 +1861,8 @@ export const theParametricEquationsOfALine: TopicDef = {
       id: "deriving-parametric-equations-of-a-line",
       title: t("Deriving parametric equations of a line", "求直线的参数方程"),
       explanation: t(
-        "Breaking the vector equation $\\mathbf{r}(t) = \\langle x_0, y_0, z_0 \\rangle + t \\langle a, b, c \\rangle$ into scalar components gives the parametric equations of the line:\n\n$$x = x_0 + at, \\quad y = y_0 + bt, \\quad z = z_0 + ct, \\quad t \\in \\mathbb{R}$$",
-        "将直线的向量方程 $\\mathbf{r}(t) = \\langle x_0, y_0, z_0 \\rangle + t \\langle a, b, c \\rangle$ 按分量展开，即得到直线的参数方程：\n\n$$x = x_0 + at, \\quad y = y_0 + bt, \\quad z = z_0 + ct, \\quad t \\in \\mathbb{R}$$",
+        "A line is fixed by one point and a direction, and each coordinate of a point on it is the starting coordinate plus a multiple of the matching direction component. Breaking the vector equation $\\mathbf{r}(t) = \\langle x_0, y_0, z_0 \\rangle + t \\langle a, b, c \\rangle$ into scalar components gives the parametric equations of the line:\n\n$$x = x_0 + at, \\quad y = y_0 + bt, \\quad z = z_0 + ct, \\quad t \\in \\mathbb{R}$$",
+        "一条直线由一个点和一个方向确定，直线上点的每个坐标都等于起点坐标加上相应方向分量的倍数。将直线的向量方程 $\\mathbf{r}(t) = \\langle x_0, y_0, z_0 \\rangle + t \\langle a, b, c \\rangle$ 按分量展开，即得到直线的参数方程：\n\n$$x = x_0 + at, \\quad y = y_0 + bt, \\quad z = z_0 + ct, \\quad t \\in \\mathbb{R}$$",
       ),
       generate(rng) {
         const x0 = rng.int(-6, 6);
@@ -1950,8 +1950,8 @@ export const theCartesianEquationOfALine: TopicDef = {
       id: "symmetric-equations-of-a-line",
       title: t("Symmetric equations of a line", "空间直线的点向式对称方程"),
       explanation: t(
-        "Eliminating parameter $t$ from $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$ (with $a, b, c \\neq 0$) yields the symmetric equations of the line:\n\n$$\\frac{x - x_0}{a} = \\frac{y - y_0}{b} = \\frac{z - z_0}{c}$$",
-        "从参数方程 $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$（$a, b, c \\neq 0$）中消去参数 $t$，得到直线的对称式（点向式）方程：\n\n$$\\frac{x - x_0}{a} = \\frac{y - y_0}{b} = \\frac{z - z_0}{c}$$",
+        "Solving each parametric equation for the parameter and setting the results equal removes the parameter, leaving equations in the coordinates alone. Eliminating parameter $t$ from $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$ (with $a, b, c \\neq 0$) yields the symmetric equations of the line:\n\n$$\\frac{x - x_0}{a} = \\frac{y - y_0}{b} = \\frac{z - z_0}{c}$$",
+        "从每个参数方程中解出参数并令它们相等，就消去了参数，只剩下关于坐标的方程。从参数方程 $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$（$a, b, c \\neq 0$）中消去参数 $t$，得到直线的对称式（点向式）方程：\n\n$$\\frac{x - x_0}{a} = \\frac{y - y_0}{b} = \\frac{z - z_0}{c}$$",
       ),
       generate(rng) {
         const x0 = rng.int(-5, 5);
@@ -2137,8 +2137,8 @@ export const theCartesianEquationOfAPlane: TopicDef = {
       id: "general-linear-equation-of-a-plane",
       title: t("General linear equation of a plane", "平面的一般方程"),
       explanation: t(
-        "Expanding $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$ gives the general linear equation of a plane in $\\mathbb{R}^3$:\n\n$$Ax + By + Cz + D = 0, \\quad \\text{where } D = -(Ax_0 + By_0 + Cz_0)$$",
-        "展开点法式方程 $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$，得到三维空间平面的线性一般方程：\n\n$$Ax + By + Cz + D = 0, \\quad \\text{其中 } D = -(Ax_0 + By_0 + Cz_0)$$",
+        "A plane is the set of points whose displacement from a fixed point is perpendicular to a normal vector, and the coefficients of the equation are that normal vector's components. Expanding $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$ gives the general linear equation of a plane in $\\mathbb{R}^3$:\n\n$$Ax + By + Cz + D = 0, \\quad \\text{where } D = -(Ax_0 + By_0 + Cz_0)$$",
+        "平面是到一个定点的位移与法向量垂直的点的集合，方程的系数就是法向量的各个分量。展开点法式方程 $\\mathbf{n} \\cdot (\\mathbf{r} - \\mathbf{r}_0) = A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$，得到三维空间平面的线性一般方程：\n\n$$Ax + By + Cz + D = 0, \\quad \\text{其中 } D = -(Ax_0 + By_0 + Cz_0)$$",
       ),
       generate(rng) {
         const A = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
@@ -2417,8 +2417,8 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
       id: "point-plane-distance-formula",
       title: t("Point-plane distance formula", "点到平面的距离计算"),
       explanation: t(
-        "The shortest perpendicular distance from a point $P_0(x_0, y_0, z_0)$ to the plane $Ax + By + Cz + D = 0$ is given by the formula:\n\n$$d = \\frac{|Ax_0 + By_0 + Cz_0 + D|}{\\sqrt{A^2 + B^2 + C^2}}$$",
-        "从空间点 $P_0(x_0, y_0, z_0)$ 到平面 $Ax + By + Cz + D = 0$ 的最短垂直距离公式为：\n\n$$d = \\frac{|Ax_0 + By_0 + Cz_0 + D|}{\\sqrt{A^2 + B^2 + C^2}}$$",
+        "The shortest path from a point to a plane runs along the normal direction, so the distance is the size of the projection onto the unit normal. The shortest perpendicular distance from a point $P_0(x_0, y_0, z_0)$ to the plane $Ax + By + Cz + D = 0$ is given by the formula:\n\n$$d = \\frac{|Ax_0 + By_0 + Cz_0 + D|}{\\sqrt{A^2 + B^2 + C^2}}$$",
+        "从点到平面的最短路径沿法线方向，所以距离等于在单位法向量上投影的大小。从空间点 $P_0(x_0, y_0, z_0)$ 到平面 $Ax + By + Cz + D = 0$ 的最短垂直距离公式为：\n\n$$d = \\frac{|Ax_0 + By_0 + Cz_0 + D|}{\\sqrt{A^2 + B^2 + C^2}}$$",
       ),
       generate(rng) {
         const quadruples: readonly [number, number, number, number][] = [
@@ -2462,8 +2462,8 @@ export const theShortestDistanceBetweenAPlaneAndAPoint: TopicDef = {
       id: "distance-between-parallel-planes",
       title: t("Distance between parallel planes", "两平行平面间的距离"),
       explanation: t(
-        "The distance between two parallel planes $\\Pi_1: Ax + By + Cz + D_1 = 0$ and $\\Pi_2: Ax + By + Cz + D_2 = 0$ is:\n\n$$d = \\frac{|D_1 - D_2|}{\\sqrt{A^2 + B^2 + C^2}}$$",
-        "两平行平面 $\\Pi_1: Ax + By + Cz + D_1 = 0$ 与 $\\Pi_2: Ax + By + Cz + D_2 = 0$ 之间的距离公式为：\n\n$$d = \\frac{|D_1 - D_2|}{\\sqrt{A^2 + B^2 + C^2}}$$",
+        "Parallel planes share a normal vector, so the distance between them is the distance from any point of one plane to the other. The distance between two parallel planes $\\Pi_1: Ax + By + Cz + D_1 = 0$ and $\\Pi_2: Ax + By + Cz + D_2 = 0$ is:\n\n$$d = \\frac{|D_1 - D_2|}{\\sqrt{A^2 + B^2 + C^2}}$$",
+        "平行平面有相同的法向量，所以它们之间的距离等于一个平面上任意一点到另一个平面的距离。两平行平面 $\\Pi_1: Ax + By + Cz + D_1 = 0$ 与 $\\Pi_2: Ax + By + Cz + D_2 = 0$ 之间的距离公式为：\n\n$$d = \\frac{|D_1 - D_2|}{\\sqrt{A^2 + B^2 + C^2}}$$",
       ),
       generate(rng) {
         const quadruples: readonly [number, number, number, number][] = [

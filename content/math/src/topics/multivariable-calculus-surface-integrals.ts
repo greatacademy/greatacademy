@@ -23,8 +23,8 @@ export const parametricSurfaces: TopicDef = {
       id: "evaluating-and-identifying-parametric-surfaces",
       title: t("Evaluating and identifying parametric surfaces", "计算并识别参数曲面"),
       explanation: t(
-        "A parametric surface $\\mathbf{r}(u, v) = \\langle x(u, v), y(u, v), z(u, v) \\rangle$ maps pairs $(u, v) \\in D$ to points in $\\mathbb{R}^3$. For example, $\\mathbf{r}(u, v) = \\langle a u, b v, c u + d v \\rangle$ describes a plane.",
-        "参数曲面 $\\mathbf{r}(u, v) = \\langle x(u, v), y(u, v), z(u, v) \\rangle$ 将参数对 $(u, v) \\in D$ 映射到 $\\mathbb{R}^3$ 中的空间点。例如 $\\mathbf{r}(u, v) = \\langle a u, b v, c u + d v \\rangle$ 描述一个平面。",
+        "A parametric surface assigns a point in space to each pair of parameters, and eliminating the parameters often reveals a familiar equation. A parametric surface $\\mathbf{r}(u, v) = \\langle x(u, v), y(u, v), z(u, v) \\rangle$ maps pairs $(u, v) \\in D$ to points in $\\mathbb{R}^3$. For example, $\\mathbf{r}(u, v) = \\langle a u, b v, c u + d v \\rangle$ describes a plane.",
+        "参数曲面给每一对参数指定空间中的一个点，消去参数常常能得到熟悉的方程。参数曲面 $\\mathbf{r}(u, v) = \\langle x(u, v), y(u, v), z(u, v) \\rangle$ 将参数对 $(u, v) \\in D$ 映射到 $\\mathbb{R}^3$ 中的空间点。例如 $\\mathbf{r}(u, v) = \\langle a u, b v, c u + d v \\rangle$ 描述一个平面。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 9);
@@ -76,8 +76,8 @@ export const tangentPlanesToParametricSurfaces: TopicDef = {
       id: "finding-normal-vectors-and-tangent-planes-for-parametric-surfaces",
       title: t("Finding normal vectors and tangent planes for parametric surfaces", "求参数曲面的法向量与切平面"),
       explanation: t(
-        "For $\\mathbf{r}(u, v) = \\langle u, v, a u^2 + b v^2 \\rangle$, the tangent vectors are $\\mathbf{r}_u = \\langle 1, 0, 2au \\rangle$ and $\\mathbf{r}_v = \\langle 0, 1, 2bv \\rangle$. The normal vector is $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle -2au, -2bv, 1 \\rangle$.",
-        "对于 $\\mathbf{r}(u, v) = \\langle u, v, a u^2 + b v^2 \\rangle$，切向量为 $\\mathbf{r}_u = \\langle 1, 0, 2au \\rangle$ 和 $\\mathbf{r}_v = \\langle 0, 1, 2bv \\rangle$。其法向量为 $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle -2au, -2bv, 1 \\rangle$。",
+        "The partial derivatives with respect to the two parameters are tangent to the surface, so their cross product is a normal vector. For $\\mathbf{r}(u, v) = \\langle u, v, a u^2 + b v^2 \\rangle$, the tangent vectors are $\\mathbf{r}_u = \\langle 1, 0, 2au \\rangle$ and $\\mathbf{r}_v = \\langle 0, 1, 2bv \\rangle$. The normal vector is $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle -2au, -2bv, 1 \\rangle$.",
+        "对两个参数的偏导数都与曲面相切，所以它们的叉积是一个法向量。对于 $\\mathbf{r}(u, v) = \\langle u, v, a u^2 + b v^2 \\rangle$，切向量为 $\\mathbf{r}_u = \\langle 1, 0, 2au \\rangle$ 和 $\\mathbf{r}_v = \\langle 0, 1, 2bv \\rangle$。其法向量为 $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle -2au, -2bv, 1 \\rangle$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
@@ -129,8 +129,8 @@ export const parametrizationsOfEllipsoidsAndCones: TopicDef = {
       id: "parameterizing-ellipsoidal-and-conical-surfaces",
       title: t("Parameterizing ellipsoidal and conical surfaces", "椭球面与锥面的参数方程表示"),
       explanation: t(
-        "A cone $z^2 = k^2(x^2 + y^2)$ can be parameterized by $\\mathbf{r}(u, v) = \\langle u \\cos v, u \\sin v, k u \\rangle$ where $u \\ge 0$ is the radial distance and $v \\in [0, 2\\pi)$ is the angle.",
-        "圆锥面 $z^2 = k^2(x^2 + y^2)$ 可参数化为 $\\mathbf{r}(u, v) = \\langle u \\cos v, u \\sin v, k u \\rangle$，其中 $u \\ge 0$ 为径向距离，$v \\in [0, 2\\pi)$ 为方位角。",
+        "Use polar style parameters for the horizontal position, then express the height from the equation of the surface. A cone $z^2 = k^2(x^2 + y^2)$ can be parameterized by $\\mathbf{r}(u, v) = \\langle u \\cos v, u \\sin v, k u \\rangle$ where $u \\ge 0$ is the radial distance and $v \\in [0, 2\\pi)$ is the angle.",
+        "用类似极坐标的参数表示水平位置，再由曲面方程表示出高度。圆锥面 $z^2 = k^2(x^2 + y^2)$ 可参数化为 $\\mathbf{r}(u, v) = \\langle u \\cos v, u \\sin v, k u \\rangle$，其中 $u \\ge 0$ 为径向距离，$v \\in [0, 2\\pi)$ 为方位角。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 9);
@@ -172,8 +172,8 @@ export const parametrizationsOfParaboloidsAndHyperboloids: TopicDef = {
       id: "parameterizing-paraboloids-and-hyperbolic-surfaces",
       title: t("Parameterizing paraboloids and hyperbolic surfaces", "抛物面与双曲面的极坐标参数化"),
       explanation: t(
-        "For a paraboloid $z = a(x^2 + y^2)$, setting $x = u \\cos v$ and $y = u \\sin v$ yields $z = a u^2$. The surface is $\\mathbf{r}(u, v) = \\langle u \\cos v, u \\sin v, a u^2 \\rangle$.",
-        "对于抛物面 $z = a(x^2 + y^2)$，令 $x = u \\cos v$，$y = u \\sin v$，可得 $z = a u^2$。参数方程为 $\\mathbf{r}(u, v) = \\langle u \\cos v, u \\sin v, a u^2 \\rangle$。",
+        "Writing the horizontal coordinates in polar form makes the sum of their squares a single parameter squared, which simplifies the height. For a paraboloid $z = a(x^2 + y^2)$, setting $x = u \\cos v$ and $y = u \\sin v$ yields $z = a u^2$. The surface is $\\mathbf{r}(u, v) = \\langle u \\cos v, u \\sin v, a u^2 \\rangle$.",
+        "把水平坐标写成极坐标形式，使它们的平方和变成一个参数的平方，从而化简高度。对于抛物面 $z = a(x^2 + y^2)$，令 $x = u \\cos v$，$y = u \\sin v$，可得 $z = a u^2$。参数方程为 $\\mathbf{r}(u, v) = \\langle u \\cos v, u \\sin v, a u^2 \\rangle$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
@@ -218,8 +218,8 @@ export const parametrizationsOfCylinders: TopicDef = {
       id: "parameterizing-cylindrical-surfaces",
       title: t("Parameterizing cylindrical surfaces", "圆柱面的柱坐标参数化"),
       explanation: t(
-        "For $\\mathbf{r}(u, v) = \\langle R \\cos u, R \\sin u, v \\rangle$, the tangent vectors are $\\mathbf{r}_u = \\langle -R \\sin u, R \\cos u, 0 \\rangle$ and $\\mathbf{r}_v = \\langle 0, 0, 1 \\rangle$. The normal vector is $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle R \\cos u, R \\sin u, 0 \\rangle$ with magnitude $\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = R$.",
-        "对于 $\\mathbf{r}(u, v) = \\langle R \\cos u, R \\sin u, v \\rangle$，切向量为 $\\mathbf{r}_u = \\langle -R \\sin u, R \\cos u, 0 \\rangle$，$\\mathbf{r}_v = \\langle 0, 0, 1 \\rangle$。其法向量为 $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle R \\cos u, R \\sin u, 0 \\rangle$，模长恒为 $\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = R$。",
+        "A cylinder keeps a fixed distance from its axis, so one parameter is the angle around the axis and the other is the height along it. For $\\mathbf{r}(u, v) = \\langle R \\cos u, R \\sin u, v \\rangle$, the tangent vectors are $\\mathbf{r}_u = \\langle -R \\sin u, R \\cos u, 0 \\rangle$ and $\\mathbf{r}_v = \\langle 0, 0, 1 \\rangle$. The normal vector is $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle R \\cos u, R \\sin u, 0 \\rangle$ with magnitude $\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = R$.",
+        "圆柱面到轴的距离固定，所以一个参数是绕轴的角度，另一个是沿轴的高度。对于 $\\mathbf{r}(u, v) = \\langle R \\cos u, R \\sin u, v \\rangle$，切向量为 $\\mathbf{r}_u = \\langle -R \\sin u, R \\cos u, 0 \\rangle$，$\\mathbf{r}_v = \\langle 0, 0, 1 \\rangle$。其法向量为 $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle R \\cos u, R \\sin u, 0 \\rangle$，模长恒为 $\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = R$。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 15);
@@ -446,8 +446,8 @@ export const surfaceIntegralsOverParametricSurfaces: TopicDef = {
       id: "evaluating-scalar-surface-integrals-over-parametric-surfaces",
       title: t("Evaluating scalar surface integrals over parametric surfaces", "计算参数曲面上的标量函数曲面积分"),
       explanation: t(
-        "For a constant function $g(x, y, z) = k$, the surface integral $\\iint_S k\\,dS$ simply equals $k \\times \\text{Area}(S)$.",
-        "对于常数函数 $g(x, y, z) = k$，第一型曲面积分 $\\iint_S k\\,dS$ 等于 $k \\times \\text{Area}(S)$。",
+        "The surface integral weights the function by small pieces of area, which is the length of the cross product of the two tangent vectors. For a constant function $g(x, y, z) = k$, the surface integral $\\iint_S k\\,dS$ simply equals $k \\times \\text{Area}(S)$.",
+        "曲面积分用小块面积对函数加权，小块面积等于两个切向量叉积的长度。对于常数函数 $g(x, y, z) = k$，第一型曲面积分 $\\iint_S k\\,dS$ 等于 $k \\times \\text{Area}(S)$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 8);
@@ -500,8 +500,8 @@ export const surfaceIntegralsOverCartesianSurfaces: TopicDef = {
       id: "integrating-scalar-functions-over-graphs-z-equals-g-of-x-y",
       title: t("Integrating scalar functions over graphs z = g(x, y)", "在显式图像曲面上计算标量函数积分"),
       explanation: t(
-        "When integrating $f(x, y, z) = c$ over a planar surface $z = 2x + 2y$ where $\\sqrt{1 + g_x^2 + g_y^2} = 3$, the integral is $\\iint_S c\\,dS = 3c \\times \\text{Area}(D)$.",
-        "在平面 $z = 2x + 2y$（根式系数 $\\sqrt{1 + g_x^2 + g_y^2} = 3$）上积分常数 $f(x, y, z) = c$ 时，积分值为 $\\iint_S c\\,dS = 3c \\times \\text{Area}(D)$。",
+        "For a graph, the area element is the area in the horizontal plane times the square root of one plus the squares of the two partial derivatives. When integrating $f(x, y, z) = c$ over a planar surface $z = 2x + 2y$ where $\\sqrt{1 + g_x^2 + g_y^2} = 3$, the integral is $\\iint_S c\\,dS = 3c \\times \\text{Area}(D)$.",
+        "对于函数图像，面积微元等于水平面上的面积乘以 1 加两个偏导数平方和的平方根。在平面 $z = 2x + 2y$（根式系数 $\\sqrt{1 + g_x^2 + g_y^2} = 3$）上积分常数 $f(x, y, z) = c$ 时，积分值为 $\\iint_S c\\,dS = 3c \\times \\text{Area}(D)$。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(2, 9);
@@ -724,8 +724,8 @@ export const calculatingFluxThroughCartesianSurfaces: TopicDef = {
       id: "flux-through-explicit-surfaces-z-equals-g-of-x-y",
       title: t("Flux through explicit surfaces z = g(x, y)", "显式曲面 z = g(x, y) 上的通量计算公式"),
       explanation: t(
-        "For $\\mathbf{F} = \\langle P, Q, R \\rangle$ and surface $z = g(x, y)$ oriented upward, the normal differential is $d\\mathbf{S} = \\langle -g_x, -g_y, 1 \\rangle dA$. Thus $\\mathbf{F} \\cdot d\\mathbf{S} = (-P g_x - Q g_y + R)\\,dA$.",
-        "对于向量场 $\\mathbf{F} = \\langle P, Q, R \\rangle$ 与向上定向的曲面 $z = g(x, y)$，法向向量微元为 $d\\mathbf{S} = \\langle -g_x, -g_y, 1 \\rangle dA$。因此 $\\mathbf{F} \\cdot d\\mathbf{S} = (-P g_x - Q g_y + R)\\,dA$。",
+        "For an upward oriented graph, the normal vector comes from the partial derivatives, and the flux is the double integral of the field dotted with it. For $\\mathbf{F} = \\langle P, Q, R \\rangle$ and surface $z = g(x, y)$ oriented upward, the normal differential is $d\\mathbf{S} = \\langle -g_x, -g_y, 1 \\rangle dA$. Thus $\\mathbf{F} \\cdot d\\mathbf{S} = (-P g_x - Q g_y + R)\\,dA$.",
+        "对于向上定向的函数图像，法向量来自偏导数，通量就是向量场与它点积的二重积分。对于向量场 $\\mathbf{F} = \\langle P, Q, R \\rangle$ 与向上定向的曲面 $z = g(x, y)$，法向向量微元为 $d\\mathbf{S} = \\langle -g_x, -g_y, 1 \\rangle dA$。因此 $\\mathbf{F} \\cdot d\\mathbf{S} = (-P g_x - Q g_y + R)\\,dA$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -845,8 +845,8 @@ export const theDivergenceTheorem: TopicDef = {
       id: "applying-the-divergence-theorem-in-three-dimensions",
       title: t("Applying the Divergence Theorem in three dimensions", "在三维空间中应用高斯散度定理"),
       explanation: t(
-        "The Divergence Theorem converts a closed surface flux integral into a triple integral: $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iiint_E \\text{div}\\,\\mathbf{F}\\,dV$.",
-        "高斯散度定理将闭合曲面的通量积分转化为区域上的三重积分：$\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iiint_E \\text{div}\\,\\mathbf{F}\\,dV$。",
+        "The total flow out through a closed surface equals the total divergence inside, so a hard surface integral can become an easier triple integral. The Divergence Theorem converts a closed surface flux integral into a triple integral: $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iiint_E \\text{div}\\,\\mathbf{F}\\,dV$.",
+        "穿过闭曲面向外的总流量等于内部散度的总和，所以困难的曲面积分可以化为更容易的三重积分。高斯散度定理将闭合曲面的通量积分转化为区域上的三重积分：$\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iiint_E \\text{div}\\,\\mathbf{F}\\,dV$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -904,8 +904,8 @@ export const stokesTheorem: TopicDef = {
       id: "evaluating-line-and-surface-integrals-via-stokes-theorem",
       title: t("Evaluating line and surface integrals via Stokes' Theorem", "利用斯托克斯定理计算环量与旋度通量"),
       explanation: t(
-        "For $\\mathbf{F} = \\langle -a y, a x, 0 \\rangle$, the curl is $\\text{curl}\\,\\mathbf{F} = \\langle 0, 0, 2a \\rangle$. For a flat surface $S$ in the $xy$-plane with upward normal $\\mathbf{k}$, $\\iint_S (\\text{curl}\\,\\mathbf{F}) \\cdot d\\mathbf{S} = 2a \\times \\text{Area}(S)$.",
-        "对于向量场 $\\mathbf{F} = \\langle -a y, a x, 0 \\rangle$，其旋度为 $\\text{curl}\\,\\mathbf{F} = \\langle 0, 0, 2a \\rangle$。对于 $xy$ 平面内向上定向的平面片 $S$，$\\iint_S (\\text{curl}\\,\\mathbf{F}) \\cdot d\\mathbf{S} = 2a \\times \\text{Area}(S)$。",
+        "Stokes' theorem says the circulation around a boundary curve equals the flux of the curl through any surface it bounds, so choose the easier one. For $\\mathbf{F} = \\langle -a y, a x, 0 \\rangle$, the curl is $\\text{curl}\\,\\mathbf{F} = \\langle 0, 0, 2a \\rangle$. For a flat surface $S$ in the $xy$-plane with upward normal $\\mathbf{k}$, $\\iint_S (\\text{curl}\\,\\mathbf{F}) \\cdot d\\mathbf{S} = 2a \\times \\text{Area}(S)$.",
+        "斯托克斯公式说明，沿边界曲线的环量等于旋度穿过它所围任意曲面的通量，所以选择更容易计算的一个。对于向量场 $\\mathbf{F} = \\langle -a y, a x, 0 \\rangle$，其旋度为 $\\text{curl}\\,\\mathbf{F} = \\langle 0, 0, 2a \\rangle$。对于 $xy$ 平面内向上定向的平面片 $S$，$\\iint_S (\\text{curl}\\,\\mathbf{F}) \\cdot d\\mathbf{S} = 2a \\times \\text{Area}(S)$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);

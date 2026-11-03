@@ -23,6 +23,8 @@ const explainedCourses = [
   "calculus-ii",
   "ap-calculus-ab",
   "ap-calculus-bc",
+  "linear-algebra",
+  "multivariable-calculus",
   "integrated-math-i",
   "integrated-math-ii",
   "integrated-math-iii",

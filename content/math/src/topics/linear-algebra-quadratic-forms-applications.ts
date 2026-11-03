@@ -805,8 +805,8 @@ export const canonicalFormOfAQuadraticFormUsingLagrangesMethod: TopicDef = {
       id: "lagrange-completing-the-square",
       title: t("Lagrange Reduction by Completing the Square", "拉格朗日配方法"),
       explanation: t(
-        "Lagrange's method repeatedly completes the square on each variable to eliminate cross-product terms: $a x_1^2 + 2b x_1 x_2 + c x_2^2 = a\\left(x_1 + \\frac{b}{a} x_2\\right)^2 + \\left(c - \\frac{b^2}{a}\\right) x_2^2 = d_1 y_1^2 + d_2 y_2^2$.",
-        "拉格朗日配方法通过逐个变量配方以消除交叉项：$a x_1^2 + 2b x_1 x_2 + c x_2^2 = a\\left(x_1 + \\frac{b}{a} x_2\\right)^2 + \\left(c - \\frac{b^2}{a}\\right) x_2^2 = d_1 y_1^2 + d_2 y_2^2$。",
+        "Completing the square on one variable at a time removes the cross terms, rewriting the quadratic form as a weighted sum of squares. Lagrange's method repeatedly completes the square on each variable to eliminate cross-product terms: $a x_1^2 + 2b x_1 x_2 + c x_2^2 = a\\left(x_1 + \\frac{b}{a} x_2\\right)^2 + \\left(c - \\frac{b^2}{a}\\right) x_2^2 = d_1 y_1^2 + d_2 y_2^2$.",
+        "一次对一个变量配方可以消去交叉项，把二次型改写成平方的加权和。拉格朗日配方法通过逐个变量配方以消除交叉项：$a x_1^2 + 2b x_1 x_2 + c x_2^2 = a\\left(x_1 + \\frac{b}{a} x_2\\right)^2 + \\left(c - \\frac{b^2}{a}\\right) x_2^2 = d_1 y_1^2 + d_2 y_2^2$。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.nonZero(-3, 3);
@@ -1236,8 +1236,8 @@ export const constrainedOptimizationOfQuadraticFormsDeterminingWhereExtremaAreAt
       id: "where-extrema-are-attained",
       title: t("Unit Vectors for Constrained Extrema", "取条件极值的单位向量"),
       explanation: t(
-        "The maximum (minimum) of $x^T A x$ subject to $\\|x\\| = 1$ is attained at normalized eigenvectors corresponding to $\\lambda_{\\max}$ (respectively $\\lambda_{\\min}$).",
-        "二次型 $x^T A x$ 在 $\\|x\\| = 1$ 约束下的最大值（或最小值）在对应于最大特征值 $\\lambda_{\\max}$（或最小特征值 $\\lambda_{\\min}$）的单位特征向量处取得。",
+        "On the unit sphere the quadratic form is largest in the direction of the eigenvector for the largest eigenvalue and smallest for the smallest one. The maximum (minimum) of $x^T A x$ subject to $\\|x\\| = 1$ is attained at normalized eigenvectors corresponding to $\\lambda_{\\max}$ (respectively $\\lambda_{\\min}$).",
+        "在单位球面上，二次型在最大特征值对应的特征向量方向上最大，在最小特征值对应的方向上最小。二次型 $x^T A x$ 在 $\\|x\\| = 1$ 约束下的最大值（或最小值）在对应于最大特征值 $\\lambda_{\\max}$（或最小特征值 $\\lambda_{\\min}$）的单位特征向量处取得。",
       ),
       generate: (rng: Rng): Problem => {
         const m = rng.int(-4, 5);

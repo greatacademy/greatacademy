@@ -293,8 +293,8 @@ export const kernelOfALinearTransformation: TopicDef = {
       id: "determining-kernel-of-linear-transformation",
       title: t("Determining the Kernel of a Linear Transformation", "确定线性变换的核"),
       explanation: t(
-        "Find the set of all vectors that are mapped to zero under a linear transformation.",
-        "求解在线性变换下映射为零向量的所有向量集合。",
+        "The kernel is always a subspace of the domain, and you find it by setting the output equal to zero and solving the resulting equations for the input. Find the set of all vectors that are mapped to zero under a linear transformation.",
+        "核总是定义域的子空间，求它时令输出等于零，再解出输入满足的方程。求解在线性变换下映射为零向量的所有向量集合。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(1, 6);
@@ -344,7 +344,10 @@ export const imageAndRankOfALinearTransformation: TopicDef = {
     {
       id: "computing-rank-of-linear-transformation",
       title: t("Computing the Rank of a Linear Transformation", "计算线性变换的秩"),
-      explanation: t("Determine the dimension of the image of a linear transformation.", "确定线性变换像空间的维数（秩）。"),
+      explanation: t(
+        "The rank of a transformation is the dimension of its range, which equals the rank of any matrix that represents it. Determine the dimension of the image of a linear transformation.",
+        "变换的秩是值域的维数，它等于表示这个变换的任意矩阵的秩。确定线性变换像空间的维数（秩）。",
+      ),
       generate: (rng: Rng): Problem => {
         const d1 = rng.int(1, 5);
         const d2 = rng.int(1, 5);
@@ -539,8 +542,8 @@ export const rankNullityTheoremInTermsOfLinearTransformations: TopicDef = {
       id: "calculating-via-rank-nullity-theorem",
       title: t("Calculating via Rank-Nullity Theorem", "利用秩-零度定理计算"),
       explanation: t(
-        "For a linear transformation $T: V \\to W$, compute $\\operatorname{rank}(T) = \\dim(V) - \\operatorname{nullity}(T)$.",
-        "对线性变换 $T: V \\to W$，利用 $\\operatorname{rank}(T) = \\dim(V) - \\operatorname{nullity}(T)$ 计算其秩。",
+        "The dimension of the domain is shared between the vectors sent to zero and the dimension of the image, so knowing two of the three numbers gives the third. For a linear transformation $T: V \\to W$, compute $\\operatorname{rank}(T) = \\dim(V) - \\operatorname{nullity}(T)$.",
+        "定义域的维数分成被映射到零的部分和像的维数两部分，所以知道三个数中的两个就能求出第三个。对线性变换 $T: V \\to W$，利用 $\\operatorname{rank}(T) = \\dim(V) - \\operatorname{nullity}(T)$ 计算其秩。",
       ),
       generate: (rng: Rng): Problem => {
         const dimV = rng.int(4, 9);
@@ -586,8 +589,8 @@ export const matrixOfALinearTransformationRelativeToABasis: TopicDef = {
       id: "matrix-relative-to-basis-computation",
       title: t("Matrix Relative to a Basis Computation", "计算关于基的矩阵"),
       explanation: t(
-        "Form the matrix $[T]_B$ whose columns are the coordinate vectors $[T(\\mathbf{b}_j)]_B$.",
-        "构造各列为坐标向量 $[T(\\mathbf{b}_j)]_B$ 的矩阵 $[T]_B$。",
+        "To build the matrix, apply the transformation to each basis vector, write the result in coordinates, and use those coordinates as the columns. Form the matrix $[T]_B$ whose columns are the coordinate vectors $[T(\\mathbf{b}_j)]_B$.",
+        "构造矩阵时，把变换作用在每个基向量上，把结果写成坐标，再用这些坐标作为矩阵的列。构造各列为坐标向量 $[T(\\mathbf{b}_j)]_B$ 的矩阵 $[T]_B$。",
       ),
       generate: (rng: Rng): Problem => {
         const c1 = rng.int(-5, 5);
@@ -688,8 +691,8 @@ export const connectionsBetweenMatrixRepresentationsOfALinearTransformation: Top
       id: "similarity-under-change-of-basis",
       title: t("Similarity Under Change of Basis", "基变换下的相似关系"),
       explanation: t(
-        "Apply the formula $[T]_C = P^{-1} [T]_B P$, where $P$ is the change-of-basis matrix from $C$ to $B$.",
-        "应用公式 $[T]_C = P^{-1} [T]_B P$，其中 $P$ 为从基 $C$ 到基 $B$ 的过渡矩阵。",
+        "The two matrices describe the same transformation in different coordinates, so converting coordinates before and after relates them by a similarity. Apply the formula $[T]_C = P^{-1} [T]_B P$, where $P$ is the change-of-basis matrix from $C$ to $B$.",
+        "两个矩阵在不同坐标下描述同一个变换，所以在变换前后转换坐标，就把它们用相似关系联系起来。应用公式 $[T]_C = P^{-1} [T]_B P$，其中 $P$ 为从基 $C$ 到基 $B$ 的过渡矩阵。",
       ),
       generate: (rng: Rng): Problem => {
         const trace = rng.int(-8, 8);
@@ -746,8 +749,8 @@ export const linearMapsBetweenTwoDifferentVectorSpaces: TopicDef = {
       id: "evaluating-maps-between-distinct-spaces",
       title: t("Evaluating Maps Between Distinct Spaces", "在不同空间之间求值线性映射"),
       explanation: t(
-        "Evaluate linear transformations from $\\mathbb{P}_2$ to $\\mathbb{R}^2$ or between other distinct spaces.",
-        "求从 $\\mathbb{P}_2$ 到 $\\mathbb{R}^2$ 等不同空间之间的线性映射的值。",
+        "A linear transformation can take inputs from one kind of space, such as polynomials, and produce outputs in another, so apply its rule directly to the given input. Evaluate linear transformations from $\\mathbb{P}_2$ to $\\mathbb{R}^2$ or between other distinct spaces.",
+        "线性变换可以从一种空间（例如多项式空间）取输入，在另一种空间中给出输出，所以直接把它的规则用于给定的输入。求从 $\\mathbb{P}_2$ 到 $\\mathbb{R}^2$ 等不同空间之间的线性映射的值。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(1, 3);
@@ -806,8 +809,8 @@ export const matrixOfALinearMapRelativeToTwoBases: TopicDef = {
       id: "matrix-with-two-bases-computation",
       title: t("Matrix with Two Bases Computation", "双基矩阵表示的计算"),
       explanation: t(
-        "Construct $[T]_{C \\leftarrow B}$, whose columns are the $C$-coordinate vectors of the images of the $B$-basis vectors.",
-        "构造矩阵 $[T]_{C \\leftarrow B}$，其各列为基 $B$ 中向量的像在基 $C$ 下的坐标向量。",
+        "When the domain and codomain have different bases, apply the transformation to each input basis vector and write each result in coordinates of the output basis. Construct $[T]_{C \\leftarrow B}$, whose columns are the $C$-coordinate vectors of the images of the $B$-basis vectors.",
+        "当定义域和值域用不同的基时，把变换作用在每个输入基向量上，再把每个结果写成输出基下的坐标。构造矩阵 $[T]_{C \\leftarrow B}$，其各列为基 $B$ 中向量的像在基 $C$ 下的坐标向量。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(2, 6);
@@ -875,8 +878,8 @@ export const eigenvaluesAndEigenvectorsOfA2x2Matrix: TopicDef = {
       id: "eigenpair-definition-2x2",
       title: t("Eigenpair Definition for 2x2 Matrices", "2x2 矩阵特征对的定义"),
       explanation: t(
-        "Verify whether a given vector is an eigenvector and find its corresponding eigenvalue.",
-        "检验给定向量是否为特征向量并求解其对应的特征值。",
+        "An eigenvector is a nonzero vector that the matrix only stretches or shrinks, so multiplying it by the matrix gives a multiple of itself. Verify whether a given vector is an eigenvector and find its corresponding eigenvalue.",
+        "特征向量是只被矩阵拉伸或缩短的非零向量，所以用矩阵乘它会得到它自身的倍数。检验给定向量是否为特征向量并求解其对应的特征值。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5])!;
@@ -923,8 +926,8 @@ export const calculatingTheEigenvaluesOfA2x2Matrix: TopicDef = {
       id: "solving-characteristic-polynomial-2x2",
       title: t("Solving the Characteristic Polynomial of a 2x2 Matrix", "求解 2x2 矩阵的特征多项式"),
       explanation: t(
-        "Find the real eigenvalues of a $2 \\times 2$ matrix from its trace and determinant.",
-        "利用矩阵的迹和行列式求 $2 \\times 2$ 矩阵的实特征值。",
+        "The eigenvalues are the numbers that make the matrix minus that multiple of the identity singular, which happens when its determinant is zero. Find the real eigenvalues of a $2 \\times 2$ matrix from its trace and determinant.",
+        "特征值就是使矩阵减去单位矩阵相应倍数后变为奇异的数，也就是使其行列式为零的数。利用矩阵的迹和行列式求 $2 \\times 2$ 矩阵的实特征值。",
       ),
       generate: (rng: Rng): Problem => {
         const l1 = rng.int(-5, 2);
@@ -969,8 +972,8 @@ export const calculatingTheEigenvectorsOfA2x2Matrix: TopicDef = {
       id: "solving-for-eigenvector-2x2",
       title: t("Solving for an Eigenvector of a 2x2 Matrix", "求解 2x2 矩阵的特征向量"),
       explanation: t(
-        "Find the nontrivial solutions of $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ for a $2 \\times 2$ matrix.",
-        "求 $2 \\times 2$ 矩阵方程 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ 的非零解。",
+        "For each eigenvalue the matrix minus that multiple of the identity has a nonzero null space, and any nonzero vector in it is an eigenvector. Find the nontrivial solutions of $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ for a $2 \\times 2$ matrix.",
+        "对每个特征值，矩阵减去单位矩阵的相应倍数后有非零的零空间，其中任何非零向量都是特征向量。求 $2 \\times 2$ 矩阵方程 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ 的非零解。",
       ),
       generate: (rng: Rng): Problem => {
         const l1 = rng.int(-4, 4);
@@ -1026,8 +1029,8 @@ export const characteristicEquationOfAMatrix: TopicDef = {
       id: "characteristic-equation-expansion",
       title: t("Characteristic Equation Expansion", "特征方程的展开"),
       explanation: t(
-        "Express the characteristic equation in the standard form $\\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$.",
-        "将特征方程写为标准形式 $\\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$。",
+        "Expanding the determinant of a two by two matrix minus a multiple of the identity always produces the trace and the determinant as the coefficients. Express the characteristic equation in the standard form $\\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$.",
+        "展开二阶矩阵减去单位矩阵倍数后的行列式，得到的系数总是迹和行列式。将特征方程写为标准形式 $\\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-4, 5);
@@ -1079,8 +1082,8 @@ export const cayleyHamiltonTheorem: TopicDef = {
       id: "applying-cayley-hamilton-to-powers",
       title: t("Applying Cayley-Hamilton to Matrix Powers", "将凯莱-哈密顿定理应用于矩阵幂"),
       explanation: t(
-        "Substitute $A$ into its characteristic polynomial to compute $A^2 = \\operatorname{tr}(A)A - \\det(A)I$.",
-        "将矩阵 $A$ 代入其特征多项式，计算 $A^2 = \\operatorname{tr}(A)A - \\det(A)I$。",
+        "Every square matrix satisfies its own characteristic equation, so its square can be written using only the matrix itself and the identity. Substitute $A$ into its characteristic polynomial to compute $A^2 = \\operatorname{tr}(A)A - \\det(A)I$.",
+        "每个方阵都满足它自己的特征方程，所以它的平方可以只用矩阵本身和单位矩阵来表示。将矩阵 $A$ 代入其特征多项式，计算 $A^2 = \\operatorname{tr}(A)A - \\det(A)I$。",
       ),
       generate: (rng: Rng): Problem => {
         const tr = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5])!;
@@ -1123,8 +1126,8 @@ export const calculatingTheEigenvectorsOfA3x3MatrixWithDistinctEigenvalues: Topi
       id: "eigenvectors-3x3-distinct-eigenvalues",
       title: t("Eigenvectors of 3x3 Matrix with Distinct Eigenvalues", "3x3 矩阵在相异特征值下的特征向量"),
       explanation: t(
-        "Solve $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ for a $3 \\times 3$ matrix with distinct eigenvalues.",
-        "对具有互异特征值的 $3 \\times 3$ 矩阵，求解方程 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$。",
+        "With distinct eigenvalues, each one gives a one dimensional null space, so row reduce to find one free variable and read off the eigenvector. Solve $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$ for a $3 \\times 3$ matrix with distinct eigenvalues.",
+        "当特征值互不相同时，每个特征值对应一维的零空间，所以行化简后找到一个自由变量，就能读出特征向量。对具有互异特征值的 $3 \\times 3$ 矩阵，求解方程 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$。",
       ),
       generate: (rng: Rng): Problem => {
         const l1 = rng.int(1, 3);
@@ -1179,8 +1182,8 @@ export const calculatingTheEigenvectorsOfA3x3MatrixInTheGeneralCase: TopicDef = 
       id: "geometric-multiplicity-3x3",
       title: t("Geometric Multiplicity of 3x3 Matrices", "3x3 矩阵的几何重数"),
       explanation: t(
-        "Compute $\\operatorname{nullity}(A - \\lambda I)$ to find the geometric multiplicity of a repeated eigenvalue.",
-        "计算 $\\operatorname{nullity}(A - \\lambda I)$，得到重特征值的几何重数。",
+        "The geometric multiplicity counts the independent eigenvectors for an eigenvalue, and it can be smaller than the number of times the eigenvalue is repeated. Compute $\\operatorname{nullity}(A - \\lambda I)$ to find the geometric multiplicity of a repeated eigenvalue.",
+        "几何重数是一个特征值对应的线性无关特征向量的个数，它可能小于该特征值重复的次数。计算 $\\operatorname{nullity}(A - \\lambda I)$，得到重特征值的几何重数。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-3, 3);
@@ -1242,8 +1245,8 @@ export const invertibleMatrixTheoremInTermsOfEigenvalues: TopicDef = {
       id: "zero-eigenvalue-invertibility-test",
       title: t("Zero Eigenvalue Invertibility Test", "零特征值可逆性判据"),
       explanation: t(
-        "Relate matrix invertibility to the absence of zero from the spectrum.",
-        "将矩阵的可逆性与其特征值谱中不含零联系起来。",
+        "Zero is an eigenvalue exactly when some nonzero vector is sent to zero, which is exactly when the matrix fails to be invertible. Relate matrix invertibility to the absence of zero from the spectrum.",
+        "零是特征值当且仅当某个非零向量被映射到零，而这正是矩阵不可逆的情形。将矩阵的可逆性与其特征值谱中不含零联系起来。",
       ),
       generate: (rng: Rng): Problem => {
         const l1 = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9])!;
@@ -1288,8 +1291,8 @@ export const diagonalizingA2x2Matrix: TopicDef = {
       id: "factorization-a-equals-pdp-inv-2x2",
       title: t("Factorization A = PDP^{-1} for 2x2 Matrices", "2x2 矩阵的 A = PDP^{-1} 分解"),
       explanation: t(
-        "Form $P$ and $D$ such that $A = PDP^{-1}$ for a diagonalizable $2 \\times 2$ matrix.",
-        "构造矩阵 $P$ 与 $D$，使得可对角化的 $2 \\times 2$ 矩阵满足 $A = PDP^{-1}$。",
+        "Put the eigenvectors as the columns of one matrix and the matching eigenvalues on the diagonal of another, keeping them in the same order. Form $P$ and $D$ such that $A = PDP^{-1}$ for a diagonalizable $2 \\times 2$ matrix.",
+        "把特征向量作为一个矩阵的列，把对应的特征值放在另一个矩阵的对角线上，并保持相同的顺序。构造矩阵 $P$ 与 $D$，使得可对角化的 $2 \\times 2$ 矩阵满足 $A = PDP^{-1}$。",
       ),
       generate: (rng: Rng): Problem => {
         const l1 = rng.int(1, 3);
@@ -1388,8 +1391,8 @@ export const propertiesOfDiagonalization: TopicDef = {
       id: "computing-matrix-powers-diagonalization",
       title: t("Computing Matrix Powers via Diagonalization", "通过对角化计算矩阵幂"),
       explanation: t(
-        "Apply $A^k = P D^k P^{-1}$ to compute high powers of a diagonalizable matrix.",
-        "应用 $A^k = P D^k P^{-1}$ 计算可对角化矩阵的高次幂。",
+        "In the factorization the inner factors cancel when multiplied repeatedly, so only the diagonal matrix is raised to the power, which just raises each entry. Apply $A^k = P D^k P^{-1}$ to compute high powers of a diagonalizable matrix.",
+        "在分解式中反复相乘时，中间的因子相互抵消，所以只需对对角矩阵求幂，也就是对每个对角元素求幂。应用 $A^k = P D^k P^{-1}$ 计算可对角化矩阵的高次幂。",
       ),
       generate: (rng: Rng): Problem => {
         const l1 = rng.int(2, 4);
@@ -1444,8 +1447,8 @@ export const diagonalizingA3x3MatrixWithDistinctEigenvalues: TopicDef = {
       id: "diagonalizing-3x3-distinct-eigenvalues-kp",
       title: t("Diagonalizing 3x3 Matrices with Distinct Eigenvalues", "对角化具有相异特征值的 3x3 矩阵"),
       explanation: t(
-        "Assemble the eigenvectors as the columns of $P$ so that $P^{-1} A P = D$.",
-        "将特征向量组合为 $P$ 的各列，使得 $P^{-1} A P = D$。",
+        "Eigenvectors for distinct eigenvalues are always independent, so a three by three matrix with three distinct eigenvalues can always be diagonalized. Assemble the eigenvectors as the columns of $P$ so that $P^{-1} A P = D$.",
+        "属于不同特征值的特征向量总是线性无关的，所以有三个不同特征值的三阶矩阵总能对角化。将特征向量组合为 $P$ 的各列，使得 $P^{-1} A P = D$。",
       ),
       generate: (rng: Rng): Problem => {
         const l1 = rng.int(1, 3);
@@ -1555,8 +1558,8 @@ export const diagonalizingA3x3MatrixInTheGeneralCase: TopicDef = {
       id: "diagonalizability-criterion-3x3",
       title: t("Diagonalizability Criterion for 3x3 Matrices", "3x3 矩阵可对角化判据"),
       explanation: t(
-        "Check whether geometric multiplicity equals algebraic multiplicity for each eigenvalue.",
-        "检验每个特征值的几何重数是否等于代数重数。",
+        "A matrix is diagonalizable when it has enough independent eigenvectors to form a basis, which fails if some repeated eigenvalue has too few. Check whether geometric multiplicity equals algebraic multiplicity for each eigenvalue.",
+        "当矩阵有足够多的线性无关特征向量构成一组基时，它就可以对角化；如果某个重复特征值的特征向量太少就不行。检验每个特征值的几何重数是否等于代数重数。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-3, 3);
@@ -1644,8 +1647,8 @@ export const vectorsOverTheComplexNumbers: TopicDef = {
       id: "complex-vector-decomposition",
       title: t("Complex Vector Decomposition", "复向量的分解"),
       explanation: t(
-        "Express a complex vector $\\mathbf{v} \\in \\mathbb{C}^n$ as $\\mathbf{v} = \\operatorname{Re}(\\mathbf{v}) + i \\operatorname{Im}(\\mathbf{v})$ and find its conjugate.",
-        "将复向量 $\\mathbf{v} \\in \\mathbb{C}^n$ 表示为 $\\mathbf{v} = \\operatorname{Re}(\\mathbf{v}) + i \\operatorname{Im}(\\mathbf{v})$ 并求其复共轭。",
+        "Splitting each entry into its real and imaginary parts writes a complex vector as a real vector plus i times another real vector. Express a complex vector $\\mathbf{v} \\in \\mathbb{C}^n$ as $\\mathbf{v} = \\operatorname{Re}(\\mathbf{v}) + i \\operatorname{Im}(\\mathbf{v})$ and find its conjugate.",
+        "把每个分量拆成实部和虚部，就把复向量写成一个实向量加上 i 乘以另一个实向量。将复向量 $\\mathbf{v} \\in \\mathbb{C}^n$ 表示为 $\\mathbf{v} = \\operatorname{Re}(\\mathbf{v}) + i \\operatorname{Im}(\\mathbf{v})$ 并求其复共轭。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-6, 6);
@@ -1717,8 +1720,8 @@ export const matricesOverTheComplexNumbers: TopicDef = {
       id: "conjugate-transpose-complex-matrix",
       title: t("Conjugate Transpose of a Complex Matrix", "复矩阵的共轭转置"),
       explanation: t(
-        "Calculate the conjugate transpose $A^* = \\bar{A}^T$ of a $2 \\times 2$ complex matrix.",
-        "计算 $2 \\times 2$ 复矩阵的共轭转置 $A^* = \\bar{A}^T$。",
+        "The conjugate transpose combines two operations: swap rows and columns, and replace every entry by its complex conjugate. Calculate the conjugate transpose $A^* = \\bar{A}^T$ of a $2 \\times 2$ complex matrix.",
+        "共轭转置结合了两个操作：交换行与列，并把每个元素换成它的共轭复数。计算 $2 \\times 2$ 复矩阵的共轭转置 $A^* = \\bar{A}^T$。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-3, 3);
@@ -1810,8 +1813,8 @@ export const findingComplexEigenvaluesOfReal2x2Matrices: TopicDef = {
       id: "computing-complex-eigenvalues-2x2-kp",
       title: t("Computing Complex Eigenvalues of 2x2 Matrices", "计算 2x2 矩阵的复特征值"),
       explanation: t(
-        "Solve the characteristic quadratic equation when $\\operatorname{tr}(A)^2 - 4\\det(A) < 0$.",
-        "在 $\\operatorname{tr}(A)^2 - 4\\det(A) < 0$ 时求解特征二次方程。",
+        "When the characteristic quadratic has a negative discriminant, the quadratic formula gives a pair of complex conjugate eigenvalues. Solve the characteristic quadratic equation when $\\operatorname{tr}(A)^2 - 4\\det(A) < 0$.",
+        "当特征二次方程的判别式为负时，求根公式给出一对共轭复特征值。在 $\\operatorname{tr}(A)^2 - 4\\det(A) < 0$ 时求解特征二次方程。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-4, 4);
@@ -1857,8 +1860,8 @@ export const findingComplexEigenvectorsOfReal2x2Matrices: TopicDef = {
       id: "solving-for-complex-eigenvector-2x2-kp",
       title: t("Solving for Complex Eigenvectors of 2x2 Matrices", "求解 2x2 矩阵的复特征向量"),
       explanation: t(
-        "Find the nonzero solutions in $\\mathbb{C}^2$ of $(A - (a + bi)I)\\mathbf{v} = \\mathbf{0}$.",
-        "在 $\\mathbb{C}^2$ 中求方程 $(A - (a + bi)I)\\mathbf{v} = \\mathbf{0}$ 的非零解。",
+        "The two rows of the shifted matrix are complex multiples of each other, so one row is enough to find an eigenvector. Find the nonzero solutions in $\\mathbb{C}^2$ of $(A - (a + bi)I)\\mathbf{v} = \\mathbf{0}$.",
+        "平移后的矩阵的两行互为复数倍，所以只用一行就能求出特征向量。在 $\\mathbb{C}^2$ 中求方程 $(A - (a + bi)I)\\mathbf{v} = \\mathbf{0}$ 的非零解。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-3, 3);
@@ -1907,8 +1910,8 @@ export const rotationScalingMatrices: TopicDef = {
       id: "rotation-scaling-scale-factor",
       title: t("Rotation-Scaling Scale Factor", "旋转缩放矩阵的缩放因子"),
       explanation: t(
-        "Compute the square of the scaling factor, $r^2 = a^2 + b^2$, for a rotation-scaling matrix.",
-        "计算旋转缩放矩阵缩放因子的平方 $r^2 = a^2 + b^2$。",
+        "A rotation scaling matrix multiplies lengths by a fixed factor while it rotates, and that factor is the modulus of the complex eigenvalue. Compute the square of the scaling factor, $r^2 = a^2 + b^2$, for a rotation-scaling matrix.",
+        "旋转缩放矩阵在旋转的同时把长度乘以一个固定的因子，这个因子就是复特征值的模。计算旋转缩放矩阵缩放因子的平方 $r^2 = a^2 + b^2$。",
       ),
       generate: (rng: Rng): Problem => {
         const [baseA, baseB, r] = rng.pick(pythagoreanTriples)!;
@@ -1955,8 +1958,8 @@ export const reducingReal2x2MatricesToRotationScalingForm: TopicDef = {
       id: "constructing-rotation-scaling-basis",
       title: t("Constructing the Rotation-Scaling Basis", "构造旋转缩放基"),
       explanation: t(
-        "Assemble $P = \\begin{bmatrix} \\operatorname{Re}(\\mathbf{v}) & \\operatorname{Im}(\\mathbf{v}) \\end{bmatrix}$ for an eigenvector $\\mathbf{v}$ of the eigenvalue $a - bi$.",
-        "利用特征值 $a - bi$ 的特征向量 $\\mathbf{v}$ 构造矩阵 $P = \\begin{bmatrix} \\operatorname{Re}(\\mathbf{v}) & \\operatorname{Im}(\\mathbf{v}) \\end{bmatrix}$。",
+        "Using the real and imaginary parts of a complex eigenvector as a basis turns the matrix into a rotation scaling matrix with real entries. Assemble $P = \\begin{bmatrix} \\operatorname{Re}(\\mathbf{v}) & \\operatorname{Im}(\\mathbf{v}) \\end{bmatrix}$ for an eigenvector $\\mathbf{v}$ of the eigenvalue $a - bi$.",
+        "用复特征向量的实部和虚部作为基，就能把矩阵化为实元素的旋转缩放矩阵。利用特征值 $a - bi$ 的特征向量 $\\mathbf{v}$ 构造矩阵 $P = \\begin{bmatrix} \\operatorname{Re}(\\mathbf{v}) & \\operatorname{Im}(\\mathbf{v}) \\end{bmatrix}$。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(-3, 3);
@@ -2011,8 +2014,8 @@ export const blockDiagonalizationOfNxNMatrices: TopicDef = {
       id: "real-canonical-block-structure",
       title: t("Real Canonical Block Structure", "实标准型的分块结构"),
       explanation: t(
-        "Determine the block diagonal structure from real and complex conjugate pairs of eigenvalues.",
-        "根据实特征值与共轭复特征值对确定分块对角结构。",
+        "Each real eigenvalue gives a single diagonal entry, while each pair of complex conjugate eigenvalues gives a two by two rotation scaling block. Determine the block diagonal structure from real and complex conjugate pairs of eigenvalues.",
+        "每个实特征值给出一个对角元素，而每对共轭复特征值给出一个二阶旋转缩放块。根据实特征值与共轭复特征值对确定分块对角结构。",
       ),
       generate: (rng: Rng): Problem => {
         // kind: 0 three real eigenvalues (3 × 3), 1 one real and a pair (3 × 3), 2 two pairs (4 × 4), 3 two real and a pair (4 × 4).
@@ -2073,8 +2076,8 @@ export const nilpotentAndIdempotentMatrices: TopicDef = {
       id: "nilpotent-idempotent-eigenvalues",
       title: t("Eigenvalues of Nilpotent and Idempotent Matrices", "幂零与幂等矩阵的特征值"),
       explanation: t(
-        "Recognize that nilpotent matrices have only eigenvalue 0, and idempotent matrices have only eigenvalues 0 and 1.",
-        "认识到幂零矩阵的特征值只能为 0，而幂等矩阵的特征值只能为 0 或 1。",
+        "Applying the defining equation to an eigenvector turns it into an equation for the eigenvalue, which limits the values the eigenvalue can take. Recognize that nilpotent matrices have only eigenvalue 0, and idempotent matrices have only eigenvalues 0 and 1.",
+        "把定义方程作用在特征向量上，就得到关于特征值的方程，从而限制了特征值可能的取值。认识到幂零矩阵的特征值只能为 0，而幂等矩阵的特征值只能为 0 或 1。",
       ),
       generate: (rng: Rng): Problem => {
         const n = rng.int(2, 8);
@@ -2122,8 +2125,8 @@ export const generalizedEigenvectors: TopicDef = {
       id: "generalized-eigenvector-definition-kp",
       title: t("Generalized Eigenvector Definition", "广义特征向量的定义"),
       explanation: t(
-        "Identify the defining condition $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$ for a generalized eigenvector.",
-        "识别广义特征向量的定义条件 $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$。",
+        "When there are too few eigenvectors, generalized eigenvectors are sent to zero by a higher power of the shifted matrix and fill out the basis. Identify the defining condition $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$ for a generalized eigenvector.",
+        "当特征向量不够时，广义特征向量会被平移矩阵的更高次幂映射到零，从而补足一组基。识别广义特征向量的定义条件 $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-5, 5);
@@ -2173,8 +2176,8 @@ export const ranksOfGeneralizedEigenvectors: TopicDef = {
       id: "determining-rank-of-generalized-vector",
       title: t("Determining the Rank of a Generalized Vector", "确定广义特征向量的阶"),
       explanation: t(
-        "Find the smallest positive integer $k$ such that $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$.",
-        "求满足 $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$ 的最小正整数 $k$。",
+        "Apply the shifted matrix repeatedly to the vector and count how many applications it takes to reach the zero vector. Find the smallest positive integer $k$ such that $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$.",
+        "反复用平移后的矩阵作用于这个向量，数出需要作用多少次才能得到零向量。求满足 $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$ 的最小正整数 $k$。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-3, 3);
@@ -2231,8 +2234,8 @@ export const findingGeneralizedEigenvectorsOfSpecificRanks: TopicDef = {
       id: "solving-for-rank-2-generalized-eigenvector-kp",
       title: t("Solving for Rank-2 Generalized Eigenvectors", "求解 2 阶广义特征向量"),
       explanation: t(
-        "Solve $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$, where $\\mathbf{v}_1$ is an ordinary eigenvector.",
-        "求解 $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$，其中 $\\mathbf{v}_1$ 为普通特征向量。",
+        "A generalized eigenvector of rank two is a vector that the shifted matrix sends to an ordinary eigenvector, so solve a linear system with that eigenvector on the right. Solve $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$, where $\\mathbf{v}_1$ is an ordinary eigenvector.",
+        "二阶广义特征向量被平移矩阵映射为一个普通特征向量，所以要解右边为该特征向量的线性方程组。求解 $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$，其中 $\\mathbf{v}_1$ 为普通特征向量。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-5, 5);
@@ -2292,7 +2295,10 @@ export const jordanBlocksAndJordanMatrices: TopicDef = {
     {
       id: "jordan-block-structure-definition",
       title: t("Jordan Block Structure Definition", "若尔当块的结构定义"),
-      explanation: t("Identify Jordan blocks and block diagonal Jordan matrices.", "识别若尔当块及分块对角的若尔当矩阵。"),
+      explanation: t(
+        "A Jordan block has one eigenvalue repeated down the diagonal and ones just above it, and a Jordan matrix places such blocks along the diagonal. Identify Jordan blocks and block diagonal Jordan matrices.",
+        "若尔当块的对角线上是同一个重复的特征值，紧挨着对角线上方是 1，若尔当矩阵则把这样的块沿对角线排列。识别若尔当块及分块对角的若尔当矩阵。",
+      ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-8, 8);
         const isDim2 = rng.bool();
@@ -2471,8 +2477,8 @@ export const jordanCanonicalFormOfA2x2Matrix: TopicDef = {
       id: "determining-jordan-form-2x2-kp",
       title: t("Determining the Jordan Form of a 2x2 Matrix", "确定 2x2 矩阵的若尔当标准型"),
       explanation: t(
-        "Distinguish diagonalizable $2 \\times 2$ matrices from those similar to a single Jordan block $\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}$.",
-        "区分可对角化的 $2 \\times 2$ 矩阵与相似于单个若尔当块 $\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}$ 的矩阵。",
+        "A two by two matrix with a repeated eigenvalue is diagonalizable only if it is already a multiple of the identity; otherwise it is similar to a single Jordan block. Distinguish diagonalizable $2 \\times 2$ matrices from those similar to a single Jordan block $\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}$.",
+        "有重复特征值的二阶矩阵只有本身就是单位矩阵的倍数时才能对角化，否则它与一个若尔当块相似。区分可对角化的 $2 \\times 2$ 矩阵与相似于单个若尔当块 $\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}$ 的矩阵。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-4, 4);
@@ -2551,8 +2557,8 @@ export const jordanCanonicalDecompositionOfA2x2Matrix: TopicDef = {
       id: "jordan-decomposition-2x2-computation",
       title: t("Jordan Decomposition Computation for 2x2 Matrices", "2x2 矩阵的若尔当分解计算"),
       explanation: t(
-        "Find $P = \\begin{bmatrix} \\mathbf{v}_1 & \\mathbf{v}_2 \\end{bmatrix}$ satisfying $(A - \\lambda I)\\mathbf{v}_1 = \\mathbf{0}$ and $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$.",
-        "求满足 $(A - \\lambda I)\\mathbf{v}_1 = \\mathbf{0}$ 与 $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$ 的矩阵 $P = \\begin{bmatrix} \\mathbf{v}_1 & \\mathbf{v}_2 \\end{bmatrix}$。",
+        "The first column is an eigenvector and the second is a generalized eigenvector that the shifted matrix sends to the first, forming a chain. Find $P = \\begin{bmatrix} \\mathbf{v}_1 & \\mathbf{v}_2 \\end{bmatrix}$ satisfying $(A - \\lambda I)\\mathbf{v}_1 = \\mathbf{0}$ and $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$.",
+        "第一列是特征向量，第二列是被平移矩阵映射到第一列的广义特征向量，它们构成一条链。求满足 $(A - \\lambda I)\\mathbf{v}_1 = \\mathbf{0}$ 与 $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$ 的矩阵 $P = \\begin{bmatrix} \\mathbf{v}_1 & \\mathbf{v}_2 \\end{bmatrix}$。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-3, 3);
@@ -2643,8 +2649,8 @@ export const jordanCanonicalFormOfA3x3Matrix: TopicDef = {
       id: "jordan-blocks-partition-3x3",
       title: t("Jordan Blocks Partition for 3x3 Matrices", "3x3 矩阵的若尔当块划分"),
       explanation: t(
-        "Determine whether $J$ is $J_3(\\lambda)$, $\\operatorname{diag}(J_2(\\lambda), J_1(\\lambda))$, or $\\operatorname{diag}(J_1(\\lambda), J_1(\\lambda), J_1(\\lambda))$.",
-        "判定若尔当标准型 $J$ 是 $J_3(\\lambda)$、$\\operatorname{diag}(J_2(\\lambda), J_1(\\lambda))$ 还是 $\\operatorname{diag}(J_1(\\lambda), J_1(\\lambda), J_1(\\lambda))$。",
+        "The number of blocks equals the number of independent eigenvectors, so the geometric multiplicity tells you how the three dimensions split into blocks. Determine whether $J$ is $J_3(\\lambda)$, $\\operatorname{diag}(J_2(\\lambda), J_1(\\lambda))$, or $\\operatorname{diag}(J_1(\\lambda), J_1(\\lambda), J_1(\\lambda))$.",
+        "块的个数等于线性无关特征向量的个数，所以几何重数告诉你三个维度怎样分成若干块。判定若尔当标准型 $J$ 是 $J_3(\\lambda)$、$\\operatorname{diag}(J_2(\\lambda), J_1(\\lambda))$ 还是 $\\operatorname{diag}(J_1(\\lambda), J_1(\\lambda), J_1(\\lambda))$。",
       ),
       generate: (rng: Rng): Problem => {
         const c = rng.int(-9, 9);
@@ -2766,8 +2772,8 @@ export const jordanCanonicalDecompositionOfA3x3Matrix: TopicDef = {
       id: "jordan-chain-relations-3x3",
       title: t("Jordan Chain Relations for 3x3 Matrices", "3x3 矩阵若尔当链的关系"),
       explanation: t(
-        "Identify the relations between column vectors of P corresponding to a size-3 Jordan block.",
-        "识别对应 3 阶若尔当块的变换矩阵 P 各列向量之间的链式关系。",
+        "In a chain the shifted matrix sends each column to the one before it, and sends the first column, an ordinary eigenvector, to zero. Identify the relations between column vectors of P corresponding to a size-3 Jordan block.",
+        "在一条链中，平移后的矩阵把每一列映射到前一列，并把第一列（一个普通特征向量）映射到零。识别对应 3 阶若尔当块的变换矩阵 P 各列向量之间的链式关系。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(-15, 15);
@@ -2821,8 +2827,8 @@ export const matrixFunctions: TopicDef = {
       id: "evaluating-functions-on-jordan-blocks-kp",
       title: t("Evaluating Functions on Jordan Blocks", "在若尔当块上求值矩阵函数"),
       explanation: t(
-        "Apply $f\\left(\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}\\right) = \\begin{bmatrix} f(\\lambda) & f'(\\lambda) \\\\ 0 & f(\\lambda) \\end{bmatrix}$.",
-        "应用公式 $f\\left(\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}\\right) = \\begin{bmatrix} f(\\lambda) & f'(\\lambda) \\\\ 0 & f(\\lambda) \\end{bmatrix}$。",
+        "The one above the diagonal acts like a small step, so a function of a Jordan block brings in the derivative of the function above the diagonal, as in a Taylor expansion. Apply $f\\left(\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}\\right) = \\begin{bmatrix} f(\\lambda) & f'(\\lambda) \\\\ 0 & f(\\lambda) \\end{bmatrix}$.",
+        "对角线上方的 1 像一个小步长，所以若尔当块的函数会在对角线上方引入函数的导数，就像泰勒展开一样。应用公式 $f\\left(\\begin{bmatrix} \\lambda & 1 \\\\ 0 & \\lambda \\end{bmatrix}\\right) = \\begin{bmatrix} f(\\lambda) & f'(\\lambda) \\\\ 0 & f(\\lambda) \\end{bmatrix}$。",
       ),
       generate: (rng: Rng): Problem => {
         const lambda = rng.int(1, 8);
