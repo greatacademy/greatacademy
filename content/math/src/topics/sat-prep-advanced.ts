@@ -1,6 +1,6 @@
-import type { KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { num, poly, Q } from "@ga/subject-math";
+import { type Mark, num, type Point, poly, Q, sketch } from "@ga/subject-math";
 
 import { numberProblem, solutionsProblem, steps } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -31,8 +31,8 @@ function topic(
 }
 
 /** kp builds a KnowledgePointDef. */
-function kp(id: string, title: Text, explanation: Text, generate: (rng: Rng) => Problem): KnowledgePointDef {
-  return { id, title, explanation, generate };
+function kp(id: string, title: Text, explanation: Text, generate: (rng: Rng) => Problem, figure?: Figure): KnowledgePointDef {
+  return figure ? { id, title, explanation, figure, generate } : { id, title, explanation, generate };
 }
 
 /** distinct drops the values equal to the answer or to an earlier value. */
@@ -664,6 +664,53 @@ const linearContexts: readonly LinearContext[] = [
   },
 ];
 
+/** axes draws the two axes of a model graph, named x and y, out to (w, h). */
+const axes = (w: number, h: number, x: string, y: string): Mark[] => [
+  { kind: "segment", a: [0, 0], b: [w, 0] },
+  { kind: "segment", a: [0, 0], b: [0, h] },
+  { kind: "label", at: [w, 0], text: x, dir: "e" },
+  { kind: "label", at: [0, h], text: y, dir: "n" },
+];
+
+/** costModelFigure graphs C = 25n + 40 (drawn 25 to a unit up), marking the intercept 40 and a slope step of 1 across and 25 up. */
+const costModelFigure: Figure = {
+  svg: sketch([
+    ...axes(5, 6, "n", "C"),
+    { kind: "segment", a: [0, 1.6], b: [4.2, 5.8] },
+    { kind: "segment", a: [2, 3.6], b: [3, 3.6], dashed: true },
+    { kind: "segment", a: [3, 3.6], b: [3, 4.6], dashed: true },
+    { kind: "dot", at: [0, 1.6] },
+    { kind: "label", at: [0, 1.6], text: "40", dir: "w" },
+    { kind: "label", at: [2.5, 3.6], text: "1", dir: "s" },
+    { kind: "label", at: [3, 4.1], text: "25", dir: "e" },
+  ]),
+  alt: t(
+    "The graph of C = 25n + 40 is a line that starts at 40 on the C-axis and rises 25 for each step of 1 in n.",
+    "C = 25n + 40 的图象是一条直线，从 C 轴上的 40 开始，n 每增加 1，C 上升 25。",
+  ),
+};
+
+/** heightModelFigure graphs h(t) = −16t² + 64t + 80 (drawn 32 to a unit up), marking the h-intercept, the vertex and the t-intercept. */
+const heightModelFigure: Figure = {
+  svg: sketch([
+    ...axes(6, 5.5, "t", "h"),
+    ...Array.from({ length: 40 }, (_, i): Mark => {
+      const at = (t: number): Point => [t, (-16 * t * t + 64 * t + 80) / 32];
+      return { kind: "segment", a: at((5 * i) / 40), b: at((5 * (i + 1)) / 40) };
+    }),
+    { kind: "dot", at: [0, 2.5] },
+    { kind: "dot", at: [2, 4.5] },
+    { kind: "dot", at: [5, 0] },
+    { kind: "label", at: [0, 2.5], text: "(0, 80)", dir: "w" },
+    { kind: "label", at: [2, 4.5], text: "(2, 144)", dir: "n" },
+    { kind: "label", at: [5, 0], text: "(5, 0)", dir: "s" },
+  ]),
+  alt: t(
+    "The graph of h(t) = −16t² + 64t + 80 starts at the launch height (0, 80), rises to the vertex (2, 144), the maximum height, and meets the t-axis at (5, 0), when the object lands.",
+    "h(t) = −16t² + 64t + 80 的图象从发射高度 (0, 80) 开始，上升到顶点 (2, 144)，即最大高度，再在 (5, 0) 与 t 轴相交，此时物体落地。",
+  ),
+};
+
 /** identifyingGraphPropertiesInModelingContexts matches intercepts, slopes and vertices of model graphs with their meanings. */
 export const identifyingGraphPropertiesInModelingContexts = topic(
   "identifying-graph-properties-in-modeling-contexts",
@@ -707,6 +754,7 @@ export const identifyingGraphPropertiesInModelingContexts = topic(
               ),
         );
       },
+      costModelFigure,
     ),
     kp(
       "features-of-a-projectile-graph",
@@ -752,6 +800,7 @@ export const identifyingGraphPropertiesInModelingContexts = topic(
           ),
         );
       },
+      heightModelFigure,
     ),
   ],
 );
