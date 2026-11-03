@@ -166,7 +166,7 @@ function classOf(freqs: readonly number[], k: number): number {
 }
 
 /** histogramSvg draws bars over consecutive classes of equal width, with the class edges below and a frequency scale on the left. */
-function histogramSvg(edges: readonly number[], freqs: readonly number[]): string {
+export function histogramSvg(edges: readonly number[], freqs: readonly number[]): string {
   const top = Math.max(...freqs);
   // A gridline at every whole number, so each bar height can be read exactly; labels every step.
   const step = top <= 12 ? 2 : 5;

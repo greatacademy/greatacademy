@@ -1,7 +1,8 @@
-import type { TopicDef } from "@ga/content";
+import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
 import { choiceProblem, numberProblem } from "../problems.ts";
+import { histogramSvg } from "./grade-7-statistics.ts";
 
 /** ratioTablesAndTapeDiagrams uses tables and tape diagrams to solve equivalent ratio problems. */
 export const ratioTablesAndTapeDiagrams: TopicDef = {
@@ -487,6 +488,27 @@ export const relativeFrequencyTables: TopicDef = {
   ],
 };
 
+/** contestEdges are the class edges of the contest scores in the histogram knowledge points. */
+const contestEdges = [0, 20, 40, 60, 80, 100];
+
+/** contestFigure draws contest scores as a histogram, with alt text giving each bar. */
+function contestFigure(freqs: readonly number[]): Figure {
+  const bars = freqs.map((f, i) => [contestEdges[i]!, contestEdges[i + 1]!, f] as const);
+  return {
+    svg: histogramSvg(contestEdges, freqs),
+    alt: t(
+      `Histogram of contest scores: ${bars.map(([a, b, f]) => `${f} students from ${a} to ${b}`).join(", ")}.`,
+      `竞赛成绩直方图：${bars.map(([a, b, f]) => `${a} 到 ${b} 分有 ${f} 名学生`).join("，")}。`,
+    ),
+  };
+}
+
+/** contestFreqs draws five bar heights for the contest histogram, all different so the tallest and shortest bars are clear. */
+const contestFreqs = (rng: Rng) => rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 5);
+
+/** histogramExample is the histogram drawn with the knowledge-point explanations. */
+const histogramExample = contestFigure([3, 7, 10, 6, 2]);
+
 /** histograms reads and interprets frequency distributions in histograms. */
 export const histograms: TopicDef = {
   id: "histograms",
@@ -504,33 +526,91 @@ export const histograms: TopicDef = {
       id: "reading-histograms",
       title: t("Reading Frequencies from Histograms", "识读直方图的频数"),
       explanation: t(
-        "A **histogram** groups continuous or numerical data into contiguous intervals (bins). The height of each bar represents the frequency (count) of data points falling in that bin.",
-        "**直方图**将连续或离散数值数据划分为连续的区间（组）。每根柱子的高度表示落在该区间内的数据点频数（计数）。",
+        "A **histogram** groups numerical data into intervals of equal width, called bins, that sit side by side with no gaps. The height of each bar is the frequency: how many data values fall in that bin. In the histogram shown, the bar over $40$ to $60$ reaches $10$, so $10$ students scored at least $40$ but less than $60$. To count the values in several bins, add their bar heights.",
+        "**直方图**把数值数据分成宽度相等、彼此相邻且没有空隙的区间，称为组。每根柱子的高度是频数：落在该组中的数据个数。在图中的直方图里，$40$ 到 $60$ 上方的柱子高到 $10$，所以有 $10$ 名学生的成绩不低于 $40$ 且低于 $60$。要统计几个组中数据的个数，就把这些柱子的高度相加。",
       ),
+      figure: histogramExample,
       generate(rng) {
-        const c1 = rng.int(3, 10);
-        const c2 = rng.int(4, 15);
-        const c3 = rng.int(6, 20);
-        const c4 = rng.int(3, 12);
-        const c5 = rng.int(1, 8);
-
+        const freqs = contestFreqs(rng);
+        const [c1, c2, c3, c4, c5] = freqs as [number, number, number, number, number];
         const answer = c3 + c4 + c5;
-        const prompt = t(
-          `A histogram displays the scores of a math contest across five bins: $0$–$19$ ($${c1}$ students), $20$–$39$ ($${c2}$ students), $40$–$59$ ($${c3}$ students), $60$–$79$ ($${c4}$ students), and $80$–$99$ ($${c5}$ students). How many students scored $40$ or higher?`,
-          `一张直方图显示了一次数学竞赛的成绩分布，分为五个区间：$0$–$19$（$${c1}$ 名学生）、$20$–$39$（$${c2}$ 名学生）、$40$–$59$（$${c3}$ 名学生）、$60$–$79$（$${c4}$ 名学生）与 $80$–$99$（$${c5}$ 名学生）。有多少名学生的成绩在 $40$ 分及以上？`,
-        );
-        const solution = t(
-          `Add the frequencies of the bins for scores of $40$ and above: $${c3} + ${c4} + ${c5} = ${answer}$ students.`,
-          `将 $40$ 分及以上各个区间的频数相加：$${c3} + ${c4} + ${c5} = ${answer}$ 名学生。`,
-        );
-
-        return numberProblem({
-          prompt,
-          answer,
-          form: "integer",
-          wrong: [answer - c5, c1 + c2, c3 + c4],
-          solution,
-        });
+        return {
+          ...numberProblem({
+            prompt: t(
+              "The histogram shows the scores of the students in a math contest. Each bin includes its left edge but not its right edge. How many students scored $40$ or higher?",
+              "直方图显示了一次数学竞赛中学生的成绩。每组包含左端点，不包含右端点。有多少名学生的成绩在 $40$ 分及以上？",
+            ),
+            answer,
+            form: "integer",
+            wrong: [c4 + c5, c1 + c2, c3 + c4],
+            solution: t(
+              `The bins from $40$ up are $40$ to $60$, $60$ to $80$ and $80$ to $100$, with bar heights $${c3}$, $${c4}$ and $${c5}$. Add them: $${c3} + ${c4} + ${c5} = ${answer}$ students.`,
+              `从 $40$ 分起的组是 $40$ 到 $60$、$60$ 到 $80$ 和 $80$ 到 $100$，柱子高度分别为 $${c3}$、$${c4}$ 和 $${c5}$。相加：$${c3} + ${c4} + ${c5} = ${answer}$ 名学生。`,
+            ),
+          }),
+          figure: contestFigure(freqs),
+        };
+      },
+    },
+    {
+      id: "total-count-from-a-histogram",
+      title: t("Finding the total count", "求数据总数"),
+      explanation: t(
+        "Every data value falls in exactly one bin, so the total number of values is the sum of all the bar heights. In the histogram shown, $3 + 7 + 10 + 6 + 2 = 28$ students took the contest. A histogram does not show the individual values, only how many fall in each bin, so the total is found by adding, not by counting bars.",
+        "每个数据恰好落在一个组中，所以数据总数等于所有柱子高度之和。在图中的直方图里，参加竞赛的学生有 $3 + 7 + 10 + 6 + 2 = 28$ 名。直方图不显示各个具体数据，只显示每组有多少个数据，所以总数要靠把高度相加求得，而不是数柱子的根数。",
+      ),
+      figure: histogramExample,
+      generate(rng) {
+        const freqs = contestFreqs(rng);
+        const answer = freqs.reduce((a, b) => a + b, 0);
+        return {
+          ...numberProblem({
+            prompt: t(
+              "The histogram shows the scores of the students in a math contest. How many students took the contest?",
+              "直方图显示了一次数学竞赛中学生的成绩。共有多少名学生参加了竞赛？",
+            ),
+            answer,
+            form: "integer",
+            wrong: [freqs.length, Math.max(...freqs), answer - freqs[0]!],
+            solution: t(
+              `Add the heights of all the bars: $${freqs.join(" + ")} = ${answer}$ students.`,
+              `把所有柱子的高度相加：$${freqs.join(" + ")} = ${answer}$ 名学生。`,
+            ),
+          }),
+          figure: contestFigure(freqs),
+        };
+      },
+    },
+    {
+      id: "comparing-bins",
+      title: t("Comparing bins", "比较各组"),
+      explanation: t(
+        "The tallest bar marks the bin that holds the most data values, and the shortest bar the bin that holds the fewest. In the histogram shown, the tallest bar is over $40$ to $60$, so more students scored in that range than in any other; the shortest is over $80$ to $100$. To compare two bins, subtract their bar heights.",
+        "最高的柱子标出包含数据最多的组，最矮的柱子标出包含数据最少的组。在图中的直方图里，最高的柱子在 $40$ 到 $60$ 上方，所以成绩在这个范围内的学生比其他任何范围都多；最矮的柱子在 $80$ 到 $100$ 上方。要比较两个组，就把它们的柱子高度相减。",
+      ),
+      figure: histogramExample,
+      generate(rng) {
+        const freqs = contestFreqs(rng);
+        const most = freqs.indexOf(Math.max(...freqs));
+        const fewest = freqs.indexOf(Math.min(...freqs));
+        const answer = freqs[most]! - freqs[fewest]!;
+        const bin = (i: number) => `$${contestEdges[i]}$–$${contestEdges[i + 1]}$`;
+        return {
+          ...numberProblem({
+            prompt: t(
+              "The histogram shows the scores of the students in a math contest. How many more students scored in the bin with the most students than in the bin with the fewest?",
+              "直方图显示了一次数学竞赛中学生的成绩。人数最多的组比人数最少的组多多少名学生？",
+            ),
+            answer,
+            form: "integer",
+            wrong: [freqs[most]!, freqs[most]! + freqs[fewest]!, Math.abs(most - fewest)],
+            solution: t(
+              `The tallest bar is over ${bin(most)} with height $${freqs[most]}$, and the shortest is over ${bin(fewest)} with height $${freqs[fewest]}$. The difference is $${freqs[most]} - ${freqs[fewest]} = ${answer}$ students.`,
+              `最高的柱子在 ${bin(most)} 上方，高度为 $${freqs[most]}$；最矮的在 ${bin(fewest)} 上方，高度为 $${freqs[fewest]}$。相差 $${freqs[most]} - ${freqs[fewest]} = ${answer}$ 名学生。`,
+            ),
+          }),
+          figure: contestFigure(freqs),
+        };
       },
     },
   ],
