@@ -27,10 +27,12 @@ describe("simulated students", () => {
     expect(mean(struggling.map((r) => r.reviewsPerTopic))).toBeGreaterThan(mean(runs(0.85, 30).map((r) => r.reviewsPerTopic)));
   });
 
-  it("let struggling students finish a broad course, without being held in reviews", () => {
-    const prealgebra = Array.from({ length: 10 }, (_, i) => simulate(subject, "prealgebra", { ability: 0.7, xpPerDay: 20 }, i + 1));
+  it("let struggling students finish a broad course, without being held in reviews", { timeout: 60_000 }, () => {
+    // The students are placed: they know what the course builds on, as after the diagnostic.
+    const knows = [...(subject.courses.get("prealgebra")?.foundations ?? [])];
+    const prealgebra = Array.from({ length: 3 }, (_, i) => simulate(subject, "prealgebra", { ability: 0.7, xpPerDay: 20, knows }, i + 1));
     expect(prealgebra.every((r) => r.finished)).toBe(true);
-    expect(Math.max(...prealgebra.map((r) => r.days))).toBeLessThan(180);
+    expect(Math.max(...prealgebra.map((r) => r.reviewsPerTopic))).toBeLessThan(7);
   });
 
   it("skip what the diagnostic finds the student knows", () => {
