@@ -50,6 +50,11 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
               `一枚质地均匀的硬币抛掷 $n = ${n}$ 次。设得到正面朝上的次数为 $X$，则 $X \\sim \\text{Binomial}\\left(${n}, \\frac{1}{2}\\right)$。求至多获得 $${k}$ 次正面朝上的概率 $P(X \\le ${k}) = F(${k})$。`,
             ),
             answer: Q.of(sumComb, totalOutcomes),
+            wrong: [
+              Q.of(sumComb - comb(n, k), totalOutcomes),
+              Q.of(comb(n, k), totalOutcomes),
+              Q.of(totalOutcomes - sumComb, totalOutcomes),
+            ],
             solution: t(
               `The probability is $P(X \\le ${k}) = \\sum_{j=0}^{${k}} \\binom{${n}}{j} \\left(\\frac{1}{2}\\right)^{${n}} = \\frac{1}{${totalOutcomes}} \\sum_{j=0}^{${k}} \\binom{${n}}{j}$. The sum of binomial coefficients is $${sumComb}$, so $F(${k}) = \\frac{${sumComb}}{${totalOutcomes}}${lowestTerms(sumComb, totalOutcomes)}$.`,
               `该概率为 $P(X \\le ${k}) = \\sum_{j=0}^{${k}} \\binom{${n}}{j} \\left(\\frac{1}{2}\\right)^{${n}} = \\frac{1}{${totalOutcomes}} \\sum_{j=0}^{${k}} \\binom{${n}}{j}$。二项式系数之和为 $${sumComb}$，因此 $F(${k}) = \\frac{${sumComb}}{${totalOutcomes}}${lowestTerms(sumComb, totalOutcomes)}$。`,
@@ -90,6 +95,11 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
               `设 $X \\sim \\text{Binomial}\\left(${n}, \\frac{1}{2}\\right)$，其累积概率为 $F(${k}) = P(X \\le ${k}) = \\frac{${sumComb}}{${totalOutcomes}}$。求右尾概率 $P(X > ${k})$。`,
             ),
             answer: Q.of(tailComb, totalOutcomes),
+            wrong: [
+              Q.of(sumComb, totalOutcomes),
+              Q.of(tailComb - comb(n, k + 1), totalOutcomes),
+              Q.of(tailComb + comb(n, k), totalOutcomes),
+            ],
             solution: t(
               `Using the complement rule: $P(X > ${k}) = 1 - P(X \\le ${k}) = 1 - \\frac{${sumComb}}{${totalOutcomes}} = \\frac{${tailComb}}{${totalOutcomes}}${lowestTerms(tailComb, totalOutcomes)}$.`,
               `利用对立事件概率法则：$P(X > ${k}) = 1 - P(X \\le ${k}) = 1 - \\frac{${sumComb}}{${totalOutcomes}} = \\frac{${tailComb}}{${totalOutcomes}}${lowestTerms(tailComb, totalOutcomes)}$。`,
@@ -131,6 +141,7 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
               `设 $X \\sim \\text{Poisson}(${lambda})$。累积概率 $P(X \\le 2)$ 可表示为 $C e^{-${lambda}}$ 的形式。求系数 $C = 1 + \\lambda + \\frac{\\lambda^2}{2}$ 的有理数值。`,
             ),
             answer: Q.of(num, den),
+            wrong: [1 + lambda + lambda * lambda, 1 + lambda, Q.of(lambda * lambda, 2)],
             solution: t(
               `$P(X \\le 2) = P(X = 0) + P(X = 1) + P(X = 2) = e^{-${lambda}} \\left(1 + ${lambda} + \\frac{${lambda}^2}{2}\\right) = e^{-${lambda}} \\left( \\frac{2 + ${2 * lambda} + ${lambda * lambda}}{2} \\right) = \\frac{${num}}{2} e^{-${lambda}}$.`,
               `$P(X \\le 2) = P(X = 0) + P(X = 1) + P(X = 2) = e^{-${lambda}} \\left(1 + ${lambda} + \\frac{${lambda}^2}{2}\\right) = \\frac{${num}}{2} e^{-${lambda}}$。`,
@@ -210,6 +221,11 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
               `设 $X$ 表示为了获得 $r = ${r}$ 次成功所需的独立伯努利试验次数，其中每次试验成功的概率为 $p = ${p.toLatex()}$，即 $X \\sim \\text{NegativeBinomial}(${r}, ${p.toLatex()})$。求 $${askVar ? "\\operatorname{Var}(X)" : "E[X]"}$ 的精确有理数值。`,
             ),
             answer: ans,
+            wrong: [
+              ...(askVar
+                ? [mean, Q.of(r).mul(Q.one.sub(p)).div(p), mean.mul(mean)]
+                : [Q.of(r).mul(p), Q.of(r).mul(Q.one.sub(p)).div(p), Q.one.div(p)]),
+            ],
             solution: t(
               askVar
                 ? `$\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2} = \\frac{${r} \\left(1 - ${p.toLatex()}\\right)}{\\left(${p.toLatex()}\\right)^2} = ${ans.toLatex()}$.`

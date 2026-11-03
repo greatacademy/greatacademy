@@ -38,6 +38,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
               `从标准差为 $\\sigma = ${sigma}$ 的正态总体中抽取容量为 $n = ${n}$ 的随机样本。取临界值 $z_{\\alpha/2} = ${z}$，计算误差范围 $E = z_{\\alpha/2} \\frac{\\sigma}{\\sqrt{n}}$。`,
             ),
             answer: margin,
+            wrong: [Q.of(z * sigma, n), z * sigma, Q.of(sigma, k)],
             solution: t(
               `$E = z_{\\alpha/2} \\frac{\\sigma}{\\sqrt{n}} = ${z} \\times \\frac{${sigma}}{\\sqrt{${n}}} = ${z} \\times \\frac{${sigma}}{${k}} = ${margin}$.`,
               `$E = z_{\\alpha/2} \\frac{\\sigma}{\\sqrt{n}} = ${z} \\times \\frac{${sigma}}{\\sqrt{${n}}} = ${z} \\times \\frac{${sigma}}{${k}} = ${margin}$。`,
@@ -76,6 +77,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
               `研究人员根据容量为 $n = ${n}$ 的样本，为方差未知的正态总体均值构建 $95\\%$ 置信区间。所使用的学生 $t$ 分布的自由度 $\\nu$ 是多少？`,
             ),
             answer: n - 1,
+            wrong: [n, n - 2, n + 1],
             solution: t(
               `The degrees of freedom for a one-sample $t$-interval is $\\nu = n - 1 = ${n} - 1 = ${n - 1}$.`,
               `单样本 $t$ 置信区间的自由度为 $\\nu = n - 1 = ${n} - 1 = ${n - 1}$。`,
@@ -175,6 +177,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
               `在容量为 $n = ${n}$ 的样本中，样本比例为 $\\hat{p} = \\frac{${numP}}{${denP}}$。求样本比例的估计方差 $\\widehat{\\text{Var}}(\\hat{p}) = \\frac{\\hat{p}(1 - \\hat{p})}{n}$。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(num, 100), Q.of(numP, denP * n), Q.of(num * n, 100)],
             solution: t(
               `$\\widehat{\\text{Var}}(\\hat{p}) = \\frac{\\frac{${numP}}{${denP}} \\left(1 - \\frac{${numP}}{${denP}}\\right)}{${n}} = \\frac{${numP} \\times ${denP - numP}}{100 \\times ${n}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `$\\widehat{\\text{Var}}(\\hat{p}) = \\frac{\\frac{${numP}}{${denP}} \\left(1 - \\frac{${numP}}{${denP}}\\right)}{${n}} = \\frac{${numP} \\times ${denP - numP}}{100 \\times ${n}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -334,6 +337,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
               `来自两个总体的独立样本容量分别为 $n_1 = ${n1}$ 与 $n_2 = ${n2}$，已知总体方差分别为 $\\sigma_1^2 = ${v1}$ 与 $\\sigma_2^2 = ${v2}$。求样本均值之差的标准误差平方 $\\text{SE}^2 = \\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}$。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(v1 + v2, n1 + n2), Q.of(v1 - v2, n1 - n2 === 0 ? 1 : n1 - n2), Q.of(v1 * v2, n1 * n2)],
             solution: t(
               `$\\text{SE}^2 = \\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2} = \\frac{${v1}}{${n1}} + \\frac{${v2}}{${n2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `$\\text{SE}^2 = \\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2} = \\frac{${v1}}{${n1}} + \\frac{${v2}}{${n2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -376,6 +380,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
               `从方差未知但假定相等的正态总体中分别抽取容量为 $n_1 = ${n1}$ 与 $n_2 = ${n2}$ 的独立样本。合并 $t$ 统计量的自由度 $\\nu = n_1 + n_2 - 2$ 是多少？`,
             ),
             answer: n1 + n2 - 2,
+            wrong: [n1 + n2 - 1, n1 + n2, Math.min(n1, n2) - 1],
             solution: t(
               `$\\nu = n_1 + n_2 - 2 = ${n1} + ${n2} - 2 = ${n1 + n2 - 2}$.`,
               `$\\nu = n_1 + n_2 - 2 = ${n1} + ${n2} - 2 = ${n1 + n2 - 2}$。`,
@@ -425,6 +430,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
               `两个独立样本的容量分别为 $n_1 = ${n1}$ 与 $n_2 = ${n2}$，样本方差分别为 $s_1^2 = ${s1Sq}$ 与 $s_2^2 = ${s2Sq}$。在不等方差的韦尔奇 $t$ 程序下，计算标准误差的平方 $\\text{SE}^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}$。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(s1Sq + s2Sq, n1 + n2), Q.of(s1Sq * n1 + s2Sq * n2, den), Q.of(s1Sq + s2Sq, den)],
             solution: t(
               `$\\text{SE}^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2} = \\frac{${s1Sq}}{${n1}} + \\frac{${s2Sq}}{${n2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `$\\text{SE}^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2} = \\frac{${s1Sq}}{${n1}} + \\frac{${s2Sq}}{${n2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -467,6 +473,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
               `抽取容量为 $n = ${n}$ 的配对样本，已知差值总体的标准差为 $\\sigma_d = ${sigmaD}$。取临界值 $z_{\\alpha/2} = ${z}$，计算误差范围 $E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}}$。`,
             ),
             answer: margin,
+            wrong: [Q.of(z * sigmaD, n), z * sigmaD, Q.of(sigmaD, k)],
             solution: t(
               `$E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}} = ${z} \\times \\frac{${sigmaD}}{\\sqrt{${n}}} = ${z} \\times \\frac{${sigmaD}}{${k}} = ${margin}$.`,
               `$E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}} = ${z} \\times \\frac{${sigmaD}}{\\sqrt{${n}}} = ${z} \\times \\frac{${sigmaD}}{${k}} = ${margin}$。`,
@@ -516,6 +523,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
               `在包含 $n = ${n}$ 对受试对象的配对样本研究中，各对差值 $d_i = x_{1i} - x_{2i}$ 分别为：$${diffStr}$。计算样本平均差值 $\\bar{d} = \\frac{1}{n} \\sum_{i=1}^n d_i$。`,
             ),
             answer: Q.of(sumD, n),
+            wrong: [Q.of(sumD, n - 1), sumD, Q.of(sumD, n + 1)],
             solution: t(
               `The sum of paired differences is $\\sum d_i = ${sumD}$. Thus $\\bar{d} = \\frac{${sumD}}{${n}}${lowestTerms(sumD, n)}$.`,
               `配对差值之和为 $\\sum d_i = ${sumD}$。因此 $\\bar{d} = \\frac{${sumD}}{${n}}${lowestTerms(sumD, n)}$。`,
@@ -559,6 +567,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
               `容量分别为 $n_1 = ${n1}$ 与 $n_2 = ${n2}$ 的两个独立样本，样本比例分别为 $\\hat{p}_1 = \\frac{1}{2}$ 与 $\\hat{p}_2 = \\frac{1}{2}$。求两者之差的估计方差 $\\widehat{\\text{Var}}(\\hat{p}_1 - \\hat{p}_2) = \\frac{\\hat{p}_1(1 - \\hat{p}_1)}{n_1} + \\frac{\\hat{p}_2(1 - \\hat{p}_2)}{n_2}$。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(1, 4 * num), Q.of(num, 2 * n1 * n2), Q.of(1, 4 * n1)],
             solution: t(
               `Since $\\hat{p}_1(1 - \\hat{p}_1) = \\frac{1}{4}$ and $\\hat{p}_2(1 - \\hat{p}_2) = \\frac{1}{4}$, $\\widehat{\\text{Var}}(\\hat{p}_1 - \\hat{p}_2) = \\frac{1}{4(${n1})} + \\frac{1}{4(${n2})} = \\frac{${n1} + ${n2}}{4(${n1})(${n2})} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `由于 $\\hat{p}_1(1 - \\hat{p}_1) = \\frac{1}{4}$ 且 $\\hat{p}_2(1 - \\hat{p}_2) = \\frac{1}{4}$，故 $\\widehat{\\text{Var}}(\\hat{p}_1 - \\hat{p}_2) = \\frac{1}{4(${n1})} + \\frac{1}{4(${n2})} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -602,6 +611,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
               `已知总体标准差 $\\sigma = ${sigma}$，取临界值 $z_{\\alpha/2} = ${z}$，若期望将总体均值的误差范围控制在 $E = ${E}$ 之内，计算所需的样本容量 $n = \\left(\\frac{z_{\\alpha/2} \\sigma}{E}\\right)^2$。`,
             ),
             answer: requiredN,
+            wrong: [base, z * base, base * base + 1],
             solution: t(
               `$n = \\left(\\frac{${z} \\times ${sigma}}{${E}}\\right)^2 = (${base})^2 = ${requiredN}$.`,
               `$n = \\left(\\frac{${z} \\times ${sigma}}{${E}}\\right)^2 = (${base})^2 = ${requiredN}$。`,
@@ -643,6 +653,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
               `研究人员计算得到假定无限总体下的样本容量为 $n_0 = ${n0}$。实际有限总体容量为 $N = ${N}$。计算经校正后的必要样本容量 $n = \\frac{N n_0}{n_0 + N - 1}$ 的精确有理数值。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(num, n0 + N), Q.of(n0 * (N - 1), N), n0],
             solution: t(
               `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -685,6 +696,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
               `取临界值 $z_{\\alpha/2} = 2$ 并采用最保守的规划值 $p = 0.5$，若要将总体比例的误差范围控制在 $E = \\frac{1}{${k}}$ 之内，计算所需的样本容量 $n = \\frac{z_{\\alpha/2}^2 p(1 - p)}{E^2}$。`,
             ),
             answer: n,
+            wrong: [4 * n, 2 * n, k],
             solution: t(
               `With $p = 0.5$, $p(1 - p) = \\frac{1}{4}$. Thus $n = \\frac{2^2 \\left(\\frac{1}{4}\\right)}{(1/${k})^2} = \\frac{1}{1/${k * k}} = ${n}$.`,
               `取 $p = 0.5$ 时，$p(1 - p) = \\frac{1}{4}$。因此 $n = \\frac{2^2 \\left(\\frac{1}{4}\\right)}{(1/${k})^2} = \\frac{1}{1/${k * k}} = ${n}$。`,
@@ -729,6 +741,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
               `初始比例样本容量计算结果为 $n_0 = ${n0}$。实际有限总体包含 $N = ${N}$ 个个体。求经有限校正后的样本容量 $n = \\frac{N n_0}{n_0 + N - 1}$ 的精确有理数值。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(num, n0 + N), Q.of(n0 * (N - 1), N), n0],
             solution: t(
               `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,

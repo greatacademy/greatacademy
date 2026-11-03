@@ -41,6 +41,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
               `已知样本观测值数据：$${listStr}$，计算样本均值 $\\bar{x} = \\frac{1}{n} \\sum_{i=1}^n x_i$。`,
             ),
             answer: Q.of(sum, n),
+            wrong: [Q.of(sum, n - 1), sum, Q.of(sum, n + 1)],
             solution: t(
               `The sample size is $n = ${n}$ and the sum is $\\sum x_i = ${sum}$. Thus $\\bar{x} = \\frac{${sum}}{${n}}${lowestTerms(sum, n)}$.`,
               `样本容量为 $n = ${n}$，观测值总和为 $\\sum x_i = ${sum}$。因此 $\\bar{x} = \\frac{${sum}}{${n}}${lowestTerms(sum, n)}$。`,
@@ -80,6 +81,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
               `从均值 $\\mu = ${mu}$、标准差 $\\sigma = 8$ 的总体中抽取容量为 $n = ${n}$ 的随机样本。样本均值的数学期望 $E[\\bar{X}]$ 是多少？`,
             ),
             answer: mu,
+            wrong: [Q.of(mu, n), mu * n, Q.of(8, n)],
             solution: t(
               `The sample mean is an unbiased estimator of the population mean: $E[\\bar{X}] = \\mu = ${mu}$, regardless of sample size $n$.`,
               `样本均值是总体均值的无偏估计量：无论样本容量 $n$ 为何值，均有 $E[\\bar{X}] = \\mu = ${mu}$。`,
@@ -126,6 +128,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
               `计算样本数据集 $${listStr}$ 的无偏样本方差 $s^2 = \\frac{1}{n - 1} \\sum_{i=1}^n (x_i - \\bar{x})^2$。`,
             ),
             answer: Q.of(ss, 2),
+            wrong: [Q.of(ss, 3), ss, Q.of(ss, 4)],
             solution: t(
               `The sample mean is $\\bar{x} = ${mean}$. The deviations from the mean are $${d1}, ${d2}, ${d3}$, with sum of squared deviations $\\sum (x_i - \\bar{x})^2 = (${d1})^2 + (${d2})^2 + (${d3})^2 = ${ss}$. Dividing by $n - 1 = 2$ yields $s^2 = \\frac{${ss}}{2}${lowestTerms(ss, 2)}$.`,
               `样本均值为 $\\bar{x} = ${mean}$。各离均差分别为 $${d1}, ${d2}, ${d3}$，离均差平方和为 $\\sum (x_i - \\bar{x})^2 = (${d1})^2 + (${d2})^2 + (${d3})^2 = ${ss}$。除以 $n - 1 = 2$ 得到 $s^2 = \\frac{${ss}}{2}${lowestTerms(ss, 2)}$。`,
@@ -171,6 +174,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
               `从具有相同方差的总体中抽取的两个独立样本，样本容量分别为 $n_1 = ${n1}$ 与 $n_2 = ${n2}$，样本方差分别为 $s_1^2 = ${s1Sq}$ 与 $s_2^2 = ${s2Sq}$。计算合并样本方差 $s_p^2$。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(s1Sq + s2Sq, 2), Q.of(n1 * s1Sq + n2 * s2Sq, n1 + n2), Q.of(num, den + 2)],
             solution: t(
               `$s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2} = \\frac{(${df1})(${s1Sq}) + (${df2})(${s2Sq})}{${df1} + ${df2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `$s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2} = \\frac{(${df1})(${s1Sq}) + (${df2})(${s2Sq})}{${df1} + ${df2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -211,6 +215,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
               `从标准差为 $\\sigma = ${sigma}$ 的总体中随机抽取容量为 $n = ${n}$ 的样本。求样本均值的标准误差 $\\text{SE}(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}}$。`,
             ),
             answer: Q.of(sigma, k),
+            wrong: [Q.of(sigma, n), sigma * k, Q.of(sigma * sigma, n)],
             solution: t(
               `$\\text{SE}(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}} = \\frac{${sigma}}{\\sqrt{${n}}} = \\frac{${sigma}}{${k}}${lowestTerms(sigma, k)}$.`,
               `$\\text{SE}(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}} = \\frac{${sigma}}{\\sqrt{${n}}} = \\frac{${sigma}}{${k}}${lowestTerms(sigma, k)}$。`,
@@ -303,6 +308,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
               `在容量为 $N = ${popSize}$ 的有限总体中，支持某项政策的真实总体选民比例为 $p = \\frac{${num}}{${den}}$。现不放回抽取容量为 $n = ${n}$ 的随机样本。求样本比例的数学期望 $E[\\hat{p}]$。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(num * n, den * popSize), Q.of(n, popSize), Q.of(den - num, den)],
             solution: t(
               `The sample proportion $\\hat{p} = \\frac{X}{n}$ is an unbiased estimator of $p$: $E[\\hat{p}] = p = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `样本比例 $\\hat{p} = \\frac{X}{n}$ 是 $p$ 的无偏估计量：$E[\\hat{p}] = p = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -342,6 +348,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
               `从泊松分布 $\\text{Poisson}(\\lambda)$ 中抽取容量为 $n = ${n}$ 的随机样本，其观测值总和为 $\\sum_{i=1}^{${n}} x_i = ${sum}$。求比率参数 $\\lambda$ 的矩估计值 $\\hat{\\lambda}$。`,
             ),
             answer: Q.of(sum, n),
+            wrong: [Q.of(n, sum), Q.of(sum, n - 1), sum],
             solution: t(
               `Setting the population first moment equal to the sample first moment: $E[X] = \\lambda = \\bar{x} = \\frac{\\sum x_i}{n} = \\frac{${sum}}{${n}}$. Thus $\\hat{\\lambda} = \\frac{${sum}}{${n}}${lowestTerms(sum, n)}$.`,
               `令总体一阶原点矩等于样本一阶原点矩：$E[X] = \\lambda = \\bar{x} = \\frac{\\sum x_i}{n} = \\frac{${sum}}{${n}}$。因此 $\\hat{\\lambda} = \\frac{${sum}}{${n}}${lowestTerms(sum, n)}$。`,
@@ -380,6 +387,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
               `从均匀分布 $X \\sim U(0, \\theta)$ 中抽取随机样本，计算得到样本均值为 $\\bar{x} = ${mean}$。利用矩估计法求未知参数 $\\theta$ 的估计值 $\\hat{\\theta}$。`,
             ),
             answer: 2 * mean,
+            wrong: [mean, Q.of(mean, 2), mean * mean],
             solution: t(
               `For $X \\sim U(0, \\theta)$, the theoretical mean is $E[X] = \\frac{\\theta}{2}$. Equating $E[X] = \\bar{x}$ gives $\\frac{\\hat{\\theta}}{2} = ${mean} \\implies \\hat{\\theta} = 2(${mean}) = ${2 * mean}$.`,
               `对于 $X \\sim U(0, \\theta)$，理论均值为 $E[X] = \\frac{\\theta}{2}$。令 $E[X] = \\bar{x}$ 得 $\\frac{\\hat{\\theta}}{2} = ${mean} \\implies \\hat{\\theta} = 2(${mean}) = ${2 * mean}$。`,
@@ -474,6 +482,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
               `从均值 $\\mu = ${mu}$、标准差 $\\sigma = ${sigma}$ 的总体中抽取容量为 $n = ${n}$ 的样本。求样本均值 $\\bar{x} = ${xBar}$ 所对应的标准化 $z$ 分数。`,
             ),
             answer: z,
+            wrong: [Q.of(diff, sigma), diff, z * k],
             solution: t(
               `The standard error is $\\text{SE} = \\frac{\\sigma}{\\sqrt{n}} = \\frac{${sigma}}{${k}} = ${se}$. The $z$-score is $z = \\frac{\\bar{x} - \\mu}{\\text{SE}} = \\frac{${xBar} - ${mu}}{${se}} = \\frac{${diff}}{${se}} = ${z}$.`,
               `标准误差为 $\\text{SE} = \\frac{\\sigma}{\\sqrt{n}} = \\frac{${sigma}}{${k}} = ${se}$。标准化 $z$ 分数为 $z = \\frac{\\bar{x} - \\mu}{\\text{SE}} = \\frac{${xBar} - ${mu}}{${se}} = \\frac{${diff}}{${se}} = ${z}$。`,
@@ -515,6 +524,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
               `从容量为 $N = ${N}$ 的有限总体中不放回抽取容量为 $n = ${n}$ 的随机样本。求有限总体校正因子平方 $\\frac{N - n}{N - 1}$ 的有理数值。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(n, N), Q.of(num, N), Q.of(N - n - 1, N - 1)],
             solution: t(
               `$\\text{FPC}^2 = \\frac{N - n}{N - 1} = \\frac{${N} - ${n}}{${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `$\\text{FPC}^2 = \\frac{N - n}{N - 1} = \\frac{${N} - ${n}}{${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -554,6 +564,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
               `在抽检的 $n = ${n}$ 个零部件中，恰好有 $x = ${x}$ 个符合全部质量规范。求总体合格比例的点估计值 $\\hat{p} = \\frac{x}{n}$。`,
             ),
             answer: Q.of(x, n),
+            wrong: [Q.of(n - x, n), Q.of(x, n - x), Q.of(n, x)],
             solution: t(
               `The point estimate is the ratio of successes to trials: $\\hat{p} = \\frac{x}{n} = \\frac{${x}}{${n}}${lowestTerms(x, n)}$.`,
               `点估计值为成功频数与试验次数之比：$\\hat{p} = \\frac{x}{n} = \\frac{${x}}{${n}}${lowestTerms(x, n)}$。`,
@@ -660,6 +671,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
           return numberProblem({
             prompt: t(`Evaluate the product expression $\\prod_{i=1}^{${n}} ${c}$.`, `计算连乘表达式 $\\prod_{i=1}^{${n}} ${c}$ 的值。`),
             answer: ans,
+            wrong: [c * n, c ** (n - 1), n ** c],
             solution: t(
               `Multiplying the constant $c = ${c}$ across $n = ${n}$ factors yields $c^n = ${c}^{${n}} = ${ans}$.`,
               `将常数 $c = ${c}$ 进行 $n = ${n}$ 次连乘得到 $c^n = ${c}^{${n}} = ${ans}$。`,
@@ -902,6 +914,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
               `对 $n = ${n}$ 个失效元件的寿命观测服从指数分布 $\\text{Exp}(\\lambda)$。观测到的总寿命为 $\\sum_{i=1}^{${n}} x_i = ${sum}$。求比率参数的极大似然估计值 $\\hat{\\lambda}$。`,
             ),
             answer: Q.of(n, sum),
+            wrong: [Q.of(sum, n), Q.of(n - 1, sum), Q.of(1, sum)],
             solution: t(
               `Solving the score equation $\\frac{d}{d\\lambda} \\ln L(\\lambda) = \\frac{n}{\\lambda} - \\sum x_i = 0$ yields $\\hat{\\lambda} = \\frac{n}{\\sum x_i} = \\frac{${n}}{${sum}}${lowestTerms(n, sum)}$.`,
               `求解得分方程 $\\frac{d}{d\\lambda} \\ln L(\\lambda) = \\frac{n}{\\lambda} - \\sum x_i = 0$ 得 $\\hat{\\lambda} = \\frac{n}{\\sum x_i} = \\frac{${n}}{${sum}}${lowestTerms(n, sum)}$。`,

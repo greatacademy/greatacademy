@@ -52,6 +52,7 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
               `对 $n = ${n}$ 个样本按两项指标进行排序，得到相应的等级配对 $(R(X_i), R(Y_i))$ 为：${pairsStr}。假设没有并列秩，计算斯皮尔曼等级相关系数 $r_s = 1 - \\frac{6 \\sum_{i=1}^n d_i^2}{n(n^2 - 1)}$ 的精确有理数值，其中 $d_i = R(X_i) - R(Y_i)$。`,
             ),
             answer: ans,
+            wrong: [Q.of(denom + num, denom), Q.of(num, denom), Q.of(n * n * n - 6 * sumDSq, n * n * n)],
             solution: t(
               `The rank differences $d_i$ are $${diffs.join(", ")}$. The sum of squared differences is $\\sum d_i^2 = ${sumDSq}$. With $n = ${n}$, the denominator is $n(n^2 - 1) = ${n}(${n * n - 1}) = ${denom}$. Thus $r_s = 1 - \\frac{6(${sumDSq})}{${denom}} = 1 - \\frac{${num}}{${denom}} = ${ans.toLatex()}$.`,
               `等级差 $d_i$ 分别为 $${diffs.join(", ")}$。差值平方和为 $\\sum d_i^2 = ${sumDSq}$。当 $n = ${n}$ 时，分母为 $n(n^2 - 1) = ${n}(${n * n - 1}) = ${denom}$。因此 $r_s = 1 - \\frac{6(${sumDSq})}{${denom}} = 1 - \\frac{${num}}{${denom}} = ${ans.toLatex()}$。`,
@@ -93,6 +94,7 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
               `在样本量为 $n$ 的一元线性回归分析中，残差标准误差为 $s_e = ${se}$，自变量的离差平方和为 $S_{xx} = \\sum (x_i - \\bar{x})^2 = ${sxx}$。计算斜率标准误差 $s_{b_1} = \\frac{s_e}{\\sqrt{S_{xx}}}$ 的精确有理数值。`,
             ),
             answer: ans,
+            wrong: [Q.of(se, sxx), Q.of(se * se, sxx), se * k],
             solution: t(
               `$s_{b_1} = \\frac{s_e}{\\sqrt{S_{xx}}} = \\frac{${se}}{\\sqrt{${sxx}}} = \\frac{${se}}{${k}} = ${ans.toLatex()}$.`,
               `$s_{b_1} = \\frac{s_e}{\\sqrt{S_{xx}}} = \\frac{${se}}{\\sqrt{${sxx}}} = \\frac{${se}}{${k}} = ${ans.toLatex()}$。`,
@@ -138,6 +140,7 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
               `对 $n = ${n}$ 个数据点拟合的一元线性回归中，自变量样本均值为 $\\bar{x} = ${xBar}$，自变量离差平方和为 $S_{xx} = ${sxx}$，残差均方为 $s_e^2 = ${seSq}$。计算截距的标准误差平方 $s_{b_0}^2 = s_e^2 \\left( \\frac{1}{n} + \\frac{\\bar{x}^2}{S_{xx}} \\right)$ 的精确有理数值。`,
             ),
             answer: ans,
+            wrong: [Q.of(seSq, n), inner, Q.of(seSq * xBar * xBar, sxx)],
             solution: t(
               `$\\frac{1}{n} + \\frac{\\bar{x}^2}{S_{xx}} = \\frac{1}{${n}} + \\frac{${xBar * xBar}}{${sxx}} = ${inner.toLatex()}$. Multiplying by $s_e^2 = ${seSq}$ gives $s_{b_0}^2 = ${seSq} \\times ${inner.toLatex()} = ${ans.toLatex()}$.`,
               `$\\frac{1}{n} + \\frac{\\bar{x}^2}{S_{xx}} = \\frac{1}{${n}} + \\frac{${xBar * xBar}}{${sxx}} = ${inner.toLatex()}$。乘以 $s_e^2 = ${seSq}$ 得到 $s_{b_0}^2 = ${seSq} \\times ${inner.toLatex()} = ${ans.toLatex()}$。`,

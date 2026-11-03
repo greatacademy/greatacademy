@@ -47,6 +47,13 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
               `一个包含 $k = 3$ 个类别的试验记录了观测频数 $O_1 = ${o1}$、$O_2 = ${o2}$、$O_3 = ${o3}$，理论期望频数分别为 $E_1 = ${e1}$、$E_2 = ${e2}$、$E_3 = ${e3}$。计算卡方检验统计量 $\\chi^2 = \\sum_{i=1}^3 \\frac{(O_i - E_i)^2}{E_i}$ 的精确有理数值。`,
             ),
             answer: ans,
+            wrong: [
+              Q.of(d1 * d1 + d2 * d2 + d3 * d3, e1 + e2 + e3),
+              Q.of(d1 * d1, o1)
+                .add(Q.of(d2 * d2, o2))
+                .add(Q.of(d3 * d3, o3)),
+              term1.add(term2),
+            ],
             solution: t(
               `The component terms are $\\frac{(${o1} - ${e1})^2}{${e1}} = \\frac{${d1 * d1}}{${e1}}$, $\\frac{(${o2} - ${e2})^2}{${e2}} = \\frac{${d2 * d2}}{${e2}}$, and $\\frac{(${o3} - ${e3})^2}{${e3}} = \\frac{${d3 * d3}}{${e3}}$. Their sum is $\\chi^2 = ${ans.toLatex()}$ (with $\\nu = 3 - 1 = 2$ degrees of freedom).`,
               `各分项分别为 $\\frac{(${o1} - ${e1})^2}{${e1}} = \\frac{${d1 * d1}}{${e1}}$、$\\frac{(${o2} - ${e2})^2}{${e2}} = \\frac{${d2 * d2}}{${e2}}$ 以及 $\\frac{(${o3} - ${e3})^2}{${e3}} = \\frac{${d3 * d3}}{${e3}}$。其总和为 $\\chi^2 = ${ans.toLatex()}$（自由度 $\\nu = 3 - 1 = 2$）。`,
@@ -100,6 +107,7 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
               `共 $N = ${N}$ 组容量为 $n = ${n}$ 的独立批次用于检验是否符合 $\\text{Binomial}(${n}, 0.5)$ 模型。计算观测到恰好 $x = ${x}$ 次成功的期望频数 $E_{${x}} = N \\cdot P(X = ${x})$。`,
             ),
             answer: expected,
+            wrong: [Q.of(N, n + 1), mult, Q.of(N * x, n)],
             solution: t(
               `$P(X = ${x}) = \\binom{${n}}{${x}} (0.5)^${x} (0.5)^{${n - x}} = \\frac{${nChooseX}}{${denProb}}$. Thus $E_{${x}} = ${N} \\times \\frac{${nChooseX}}{${denProb}} = ${expected}$.`,
               `$P(X = ${x}) = \\binom{${n}}{${x}} (0.5)^${x} (0.5)^{${n - x}} = \\frac{${nChooseX}}{${denProb}}$。因此 $E_{${x}} = ${N} \\times \\frac{${nChooseX}}{${denProb}} = ${expected}$。`,
@@ -140,6 +148,7 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
               `一个包含 $N = ${N}$ 个观测值的计数数据样本被整理为 $k = ${k}$ 个频数区间，以检验是否服从泊松分布。率参数 $\\lambda$ 是通过样本均值 $\\bar{x}$ 从样本数据中估计得到的。所得卡方拟合优度检验统计量具有多少个自由度 $\\nu$？`,
             ),
             answer: df,
+            wrong: [k - 1, k - 3, k],
             solution: t(
               `With $k = ${k}$ categories and $m = 1$ parameter ($\\lambda$) estimated from the data, the degrees of freedom are $\\nu = k - 1 - m = ${k} - 1 - 1 = ${df}$.`,
               `包含 $k = ${k}$ 个分类类别且有 $m = 1$ 个参数（$\\lambda$）从数据中估计时，自由度为 $\\nu = k - 1 - m = ${k} - 1 - 1 = ${df}$。`,
@@ -180,6 +189,7 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
               `将包含 $N = ${N}$ 个观测值的连续数据集划分为 $k = ${k}$ 个等宽子区间，以检验其是否符合 $[0, 1]$ 上的连续均匀分布。在 $H_0$ 下，每个子区间的期望频数 $E_i$ 是多少？`,
             ),
             answer: perBin,
+            wrong: [k, N, Q.of(N, k - 1)],
             solution: t(
               `Under the uniform distribution, every equal subinterval has probability $p_i = \\frac{1}{${k}}$. Thus each bin has expected count $E_i = N p_i = \\frac{${N}}{${k}} = ${perBin}$.`,
               `在均匀分布下，每个等宽子区间的理论概率均为 $p_i = \\frac{1}{${k}}$。因此每个区间的期望频数为 $E_i = N p_i = \\frac{${N}}{${k}} = ${perBin}$。`,
@@ -220,6 +230,7 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
               `一个包含 $N = ${N}$ 个数据点的样本被划分为 $k = ${k}$ 个组区间，以检验是否符合正态分布。总体均值 $\\mu$ 与标准差 $\\sigma$ 均通过样本统计量 $\\bar{x}$ 和 $s$ 从数据中估计。求卡方检验统计量的自由度 $\\nu$。`,
             ),
             answer: df,
+            wrong: [k - 1, k - 2, k - 4],
             solution: t(
               `Since $m = 2$ parameters ($\\mu$ and $\\sigma$) are estimated from the sample, the degrees of freedom are $\\nu = k - 1 - m = ${k} - 1 - 2 = ${df}$.`,
               `由于从样本中估计了 $m = 2$ 个参数（$\\mu$ 与 $\\sigma$），自由度为 $\\nu = k - 1 - m = ${k} - 1 - 2 = ${df}$。`,
@@ -266,6 +277,7 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
               `在总样本量为 $N = ${grandTotal}$ 的 $r \\times c = ${r} \\times ${c}$ 列联表中，第 1 行的边际合计为 $R_1 = ${rTotal}$，第 1 列的边际合计为 $C_1 = ${cTotal}$。在变量相互独立的原假设下，求期望单元格频数 $E_{11} = \\frac{R_1 C_1}{N}$ 的精确有理数值。`,
             ),
             answer: ans,
+            wrong: [Q.of(rTotal + cTotal, grandTotal), Q.of(rTotal * cTotal, r * c), Q.of(rTotal, grandTotal)],
             solution: t(
               `$E_{11} = \\frac{R_1 C_1}{N} = \\frac{${rTotal} \\times ${cTotal}}{${grandTotal}} = \\frac{${rTotal * cTotal}}{${grandTotal}} = ${ans.toLatex()}$ (with $(r - 1)(c - 1) = (${r} - 1)(${c} - 1) = ${df}$ degrees of freedom).`,
               `$E_{11} = \\frac{R_1 C_1}{N} = \\frac{${rTotal} \\times ${cTotal}}{${grandTotal}} = \\frac{${rTotal * cTotal}}{${grandTotal}} = ${ans.toLatex()}$（自由度为 $(r - 1)(c - 1) = (${r} - 1)(${c} - 1) = ${df}$）。`,
@@ -306,6 +318,7 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
               `设 $X_1, X_2, \\dots, X_{${n}}$ 为来自 $[0, 1]$ 上连续均匀分布的容量为 $n = ${n}$ 的随机样本，按升序排列为 $X_{(1)} \\le X_{(2)} \\le \\dots \\le X_{(${n})}$。求第 $k = ${k}$ 个顺序统计量的数学期望 $E[X_{(${k})}]$ 的精确有理数值。`,
             ),
             answer: ans,
+            wrong: [Q.of(k, n), Q.of(k - 1, n), Q.of(k + 1, n + 1)],
             solution: t(
               `For a sample of size $n$ from $\\text{Uniform}(0, 1)$, the $k$-th order statistic follows a $\\text{Beta}(k, n - k + 1)$ distribution, giving $E[X_{(k)}] = \\frac{k}{n + 1} = \\frac{${k}}{${n} + 1} = ${ans.toLatex()}$.`,
               `对于来自 $\\text{Uniform}(0, 1)$ 的容量为 $n$ 的样本，第 $k$ 个顺序统计量服从 $\\text{Beta}(k, n - k + 1)$ 分布，其数学期望为 $E[X_{(k)}] = \\frac{k}{n + 1} = \\frac{${k}}{${n} + 1} = ${ans.toLatex()}$。`,

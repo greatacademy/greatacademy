@@ -92,6 +92,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `随机变量 $X \\sim \\text{Binomial}\\left(${n}, \\frac{${pFrac.num}}{${pFrac.den}}\\right)$ 用正态分布 $N(\\mu, \\sigma^2)$ 近似。求方差 $\\sigma^2 = np(1 - p)$。`,
             ),
             answer: variance,
+            wrong: [mean, variance * pFrac.den, n],
             solution: t(
               `The variance of the approximating normal distribution is $\\sigma^2 = n p (1 - p) = ${n} \\cdot \\frac{${pFrac.num}}{${pFrac.den}} \\cdot \\frac{${pFrac.den - pFrac.num}}{${pFrac.den}} = ${variance}$.`,
               `近似正态分布的方差为 $\\sigma^2 = n p (1 - p) = ${n} \\cdot \\frac{${pFrac.num}}{${pFrac.den}} \\cdot \\frac{${pFrac.den - pFrac.num}}{${pFrac.den}} = ${variance}$。`,
@@ -131,6 +132,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `泊松随机变量 $X \\sim \\text{Poisson}(${lambda})$ 用正态分布 $N(\\mu, \\sigma^2)$ 近似。求其标准差 $\\sigma = \\sqrt{\\lambda}$。`,
             ),
             answer: k,
+            wrong: [lambda, 2 * k, Q.of(lambda, 2)],
             solution: t(
               `For a Poisson distribution, $\\mu = \\lambda = ${lambda}$ and $\\sigma^2 = \\lambda = ${lambda}$. Thus, the standard deviation is $\\sigma = \\sqrt{${lambda}} = ${k}$.`,
               `对于泊松分布，$\\mu = \\lambda = ${lambda}$ 且 $\\sigma^2 = \\lambda = ${lambda}$。因此标准差为 $\\sigma = \\sqrt{${lambda}} = ${k}$。`,
@@ -212,6 +214,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `连续随机变量 $X$ 在区间 $[${a}, ${b}]$ 上服从均匀分布，记作 $X \\sim U(${a}, ${b})$。求该区间上概率密度函数 $f(x)$ 的恒定值。`,
             ),
             answer: Q.of(1, width),
+            wrong: [width, Q.of(1, b), Q.of(2, width)],
             solution: t(
               `The density is $f(x) = \\frac{1}{b - a} = \\frac{1}{${b} - ${a}} = \\frac{1}{${width}}${lowestTerms(1, width)}$.`,
               `概率密度函数为 $f(x) = \\frac{1}{b - a} = \\frac{1}{${b} - ${a}} = \\frac{1}{${width}}${lowestTerms(1, width)}$。`,
@@ -240,6 +243,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `设 $X \\sim U(${a}, ${b})$。求概率 $P(${c} \\le X \\le ${d})$。`,
             ),
             answer: Q.of(subWidth, width),
+            wrong: [Q.of(subWidth, b), Q.of(d, b), Q.of(width - subWidth, width)],
             solution: t(
               `$P(${c} \\le X \\le ${d}) = \\frac{d - c}{b - a} = \\frac{${d} - ${c}}{${b} - ${a}} = \\frac{${subWidth}}{${width}}${lowestTerms(subWidth, width)}$.`,
               `$P(${c} \\le X \\le ${d}) = \\frac{d - c}{b - a} = \\frac{${d} - ${c}}{${b} - ${a}} = \\frac{${subWidth}}{${width}}${lowestTerms(subWidth, width)}$。`,
@@ -280,6 +284,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `求连续型随机变量 $X \\sim U(${a}, ${b})$ 的数学期望 $E[X]$。`,
             ),
             answer: Q.of(a + b, 2),
+            wrong: [a + b, Q.of(width, 2), Q.of(b - a, 2)],
             solution: t(
               `The mean of $U(a, b)$ is the midpoint $E[X] = \\frac{a + b}{2} = \\frac{${a} + ${paren(b)}}{2} = \\frac{${a + b}}{2}${lowestTerms(a + b, 2)}$.`,
               `$U(a, b)$ 的均值为区间中点 $E[X] = \\frac{a + b}{2} = \\frac{${a} + ${paren(b)}}{2} = \\frac{${a + b}}{2}${lowestTerms(a + b, 2)}$。`,
@@ -306,6 +311,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `求连续型随机变量 $X \\sim U(${a}, ${b})$ 的方差 $\\text{Var}(X)$。`,
             ),
             answer: Q.of(numerator, 12),
+            wrong: [Q.of(numerator, 2), Q.of(width, 12), Q.of(numerator, 4)],
             solution: t(
               `The variance of a continuous uniform variable on $[a, b]$ is $\\text{Var}(X) = \\frac{(b - a)^2}{12} = \\frac{(${b} - ${a})^2}{12} = \\frac{${numerator}}{12}${lowestTerms(numerator, 12)}$.`,
               `区间 $[a, b]$ 上连续均匀变量的方差为 $\\text{Var}(X) = \\frac{(b - a)^2}{12} = \\frac{(${b} - ${a})^2}{12} = \\frac{${numerator}}{12}${lowestTerms(numerator, 12)}$。`,
@@ -348,6 +354,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `某通勤公交车在 $0$ 到 $${maxWait}$ 分钟之间的某一随机时刻到达车站，服从均匀分布。已知一名乘客已经等待了 $${c}$ 分钟而公交车仍未到达，该乘客总等待时间超过 $${d}$ 分钟的条件概率是多少？`,
             ),
             answer: Q.of(remainingExceed, remainingTotal),
+            wrong: [Q.of(remainingExceed, maxWait), Q.of(d - c, remainingTotal), Q.of(maxWait - d + c, maxWait)],
             solution: t(
               `Let $X \\sim U(0, ${maxWait})$. The conditional probability is $P(X > ${d} \\mid X > ${c}) = \\frac{P(X > ${d})}{P(X > ${c})} = \\frac{${maxWait} - ${d}}{${maxWait} - ${c}} = \\frac{${remainingExceed}}{${remainingTotal}}${lowestTerms(remainingExceed, remainingTotal)}$.`,
               `设 $X \\sim U(0, ${maxWait})$。所求条件概率为 $P(X > ${d} \\mid X > ${c}) = \\frac{P(X > ${d})}{P(X > ${c})} = \\frac{${maxWait} - ${d}}{${maxWait} - ${c}} = \\frac{${remainingExceed}}{${remainingTotal}}${lowestTerms(remainingExceed, remainingTotal)}$。`,
@@ -377,6 +384,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `某软件构建所需时间在 $${a}$ 到 $${b}$ 秒之间服从均匀分布：$T \\sim U(${a}, ${b})$。求时间阈值 $t$，使得恰好有 $\\frac{${num}}{${den}}$ 的构建在至多 $t$ 秒内完成（即 $P(T \\le t) = \\frac{${num}}{${den}}$）。`,
             ),
             answer: cutoff,
+            wrong: [step * num, b - step * num, a + num],
             solution: t(
               `Using the CDF $F(t) = \\frac{t - a}{b - a}$: $\\frac{t - ${a}}{${width}} = \\frac{${num}}{${den}} \\implies t = ${a} + \\frac{${num}}{${den}} (${width}) = ${a} + ${step * num} = ${cutoff}$.`,
               `利用累积分布函数 $F(t) = \\frac{t - a}{b - a}$：$\\frac{t - ${a}}{${width}} = \\frac{${num}}{${den}} \\implies t = ${a} + \\frac{${num}}{${den}} (${width}) = ${a} + ${step * num} = ${cutoff}$。`,
@@ -502,6 +510,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `某呼叫中心接收来电的到达间隔时间服从指数分布，平均每次来电间隔为 $${mean}$ 分钟。求其比率参数 $\\lambda$（单位：次/分钟）。`,
             ),
             answer: Q.of(1, mean),
+            wrong: [mean, Q.of(1, mean * mean), Q.of(2, mean)],
             solution: t(
               `The mean of an exponential distribution is $E[X] = \\frac{1}{\\lambda}$. Therefore, $\\lambda = \\frac{1}{E[X]} = \\frac{1}{${mean}}${lowestTerms(1, mean)}$.`,
               `指数分布的数学期望为 $E[X] = \\frac{1}{\\lambda}$。因此，$\\lambda = \\frac{1}{E[X]} = \\frac{1}{${mean}}${lowestTerms(1, mean)}$。`,
@@ -574,6 +583,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `设 $X \\sim \\text{Exp}(${lambda})$。求其标准差 $\\text{SD}(X) = \\sqrt{\\text{Var}(X)}$。`,
             ),
             answer: Q.of(1, lambda),
+            wrong: [lambda, Q.of(1, lambda * lambda), Q.of(1, 2 * lambda)],
             solution: t(
               `For an exponential random variable with rate $\\lambda = ${lambda}$, the variance is $\\text{Var}(X) = \\frac{1}{\\lambda^2} = \\frac{1}{${lambda * lambda}}$. Taking the square root gives $\\text{SD}(X) = \\frac{1}{\\lambda} = \\frac{1}{${lambda}}${lowestTerms(1, lambda)}$.`,
               `对于比率为 $\\lambda = ${lambda}$ 的指数随机变量，方差为 $\\text{Var}(X) = \\frac{1}{\\lambda^2} = \\frac{1}{${lambda * lambda}}$。开平方得标准差 $\\text{SD}(X) = \\frac{1}{\\lambda} = \\frac{1}{${lambda}}${lowestTerms(1, lambda)}$。`,
@@ -598,6 +608,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `对于 $X \\sim \\text{Exp}(${lambda})$，计算二阶原点矩 $E[X^2]$。`,
             ),
             answer: Q.of(2, den),
+            wrong: [Q.of(1, den), Q.of(2, lambda), Q.of(1, lambda)],
             solution: t(
               `$E[X^2] = \\text{Var}(X) + (E[X])^2 = \\frac{1}{\\lambda^2} + \\frac{1}{\\lambda^2} = \\frac{2}{\\lambda^2} = \\frac{2}{${lambda}^2} = \\frac{2}{${den}}${lowestTerms(2, den)}$.`,
               `$E[X^2] = \\text{Var}(X) + (E[X])^2 = \\frac{1}{\\lambda^2} + \\frac{1}{\\lambda^2} = \\frac{2}{\\lambda^2} = \\frac{2}{${lambda}^2} = \\frac{2}{${den}}${lowestTerms(2, den)}$。`,
@@ -639,6 +650,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
           return numberProblem({
             prompt: t(`Evaluate the ratio $\\frac{\\Gamma(${n})}{\\Gamma(${m})}$.`, `计算比值 $\\frac{\\Gamma(${n})}{\\Gamma(${m})}$。`),
             answer: prod,
+            wrong: [prod * n, n - m, Q.of(n, m)],
             solution: t(
               `Since $\\Gamma(n) = (n - 1)!$, we have $\\frac{\\Gamma(${n})}{\\Gamma(${m})} = \\frac{${n - 1}!}{${m - 1}!} = ${prod}$.`,
               `因为 $\\Gamma(n) = (n - 1)!$，所以 $\\frac{\\Gamma(${n})}{\\Gamma(${m})} = \\frac{${n - 1}!}{${m - 1}!} = ${prod}$。`,
@@ -672,6 +684,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `利用递推公式 $\\Gamma(\\alpha + 1) = \\alpha \\Gamma(\\alpha)$，计算比值 $\\frac{\\Gamma\\left(\\frac{${numA}}{2}\\right)}{\\Gamma\\left(\\frac{${numB}}{2}\\right)}$。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(numA, numB), Q.of(num, den * 2), Q.of(numA - 2, 2)],
             solution: t(
               `Repeatedly applying $\\Gamma(\\alpha + 1) = \\alpha \\Gamma(\\alpha)$ gives $\\frac{\\Gamma\\left(\\frac{${numA}}{2}\\right)}{\\Gamma\\left(\\frac{${numB}}{2}\\right)} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `反复应用 $\\Gamma(\\alpha + 1) = \\alpha \\Gamma(\\alpha)$ 得 $\\frac{\\Gamma\\left(\\frac{${numA}}{2}\\right)}{\\Gamma\\left(\\frac{${numB}}{2}\\right)} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -712,6 +725,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `随机变量 $X \\sim \\text{Gamma}(\\alpha = ${alpha}, \\beta = ${beta})$ 的形状参数为 $\\alpha = ${alpha}$，比率参数为 $\\beta = ${beta}$。求其方差 $\\text{Var}(X) = \\frac{\\alpha}{\\beta^2}$。`,
             ),
             answer: Q.of(alpha, varDen),
+            wrong: [Q.of(alpha, beta), alpha * beta, alpha * beta * beta],
             solution: t(
               `The variance of $\\text{Gamma}(\\alpha, \\beta)$ is $\\text{Var}(X) = \\frac{\\alpha}{\\beta^2} = \\frac{${alpha}}{${beta}^2} = \\frac{${alpha}}{${varDen}}${lowestTerms(alpha, varDen)}$.`,
               `$\\text{Gamma}(\\alpha, \\beta)$ 的方差为 $\\text{Var}(X) = \\frac{\\alpha}{\\beta^2} = \\frac{${alpha}}{${beta}^2} = \\frac{${alpha}}{${varDen}}${lowestTerms(alpha, varDen)}$。`,
@@ -820,6 +834,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `随机变量服从自由度为 $k = ${k}$ 的卡方分布：$X \\sim \\chi^2(${k})$。求其方差 $\\text{Var}(X)$。`,
             ),
             answer: 2 * k,
+            wrong: [k, k * k, 4 * k],
             solution: t(
               `For a Chi-square distribution with $k$ degrees of freedom, the mean is $E[X] = k = ${k}$ and the variance is $\\text{Var}(X) = 2k = 2(${k}) = ${2 * k}$.`,
               `对于自由度为 $k$ 的卡方分布，均值为 $E[X] = k = ${k}$，方差为 $\\text{Var}(X) = 2k = 2(${k}) = ${2 * k}$。`,
@@ -892,6 +907,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `求服从自由度为 $\\nu = ${nu}$ 的学生 $t$ 分布的随机变量 $T$ 的方差 $\\text{Var}(T)$。`,
             ),
             answer: Q.of(nu, nu - 2),
+            wrong: [Q.of(nu, nu - 1), Q.of(nu - 2, nu), 1],
             solution: t(
               `For a $t$-distribution with $\\nu > 2$ degrees of freedom, the variance is $\\text{Var}(T) = \\frac{\\nu}{\\nu - 2} = \\frac{${nu}}{${nu} - 2} = \\frac{${nu}}{${nu - 2}}${lowestTerms(nu, nu - 2)}$.`,
               `对于自由度 $\\nu > 2$ 的 $t$ 分布，方差为 $\\text{Var}(T) = \\frac{\\nu}{\\nu - 2} = \\frac{${nu}}{${nu} - 2} = \\frac{${nu}}{${nu - 2}}${lowestTerms(nu, nu - 2)}$。`,
@@ -967,6 +983,7 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
               `求服从 $F$ 分布的随机变量 $X \\sim F(d_1 = ${d1}, d_2 = ${d2})$ 的数学期望 $E[X]$。`,
             ),
             answer: Q.of(d2, d2 - 2),
+            wrong: [Q.of(d1, d2 - 2), Q.of(d2, d2 + 2), Q.of(d2 - 2, d2)],
             solution: t(
               `For an $F$-distribution with degrees of freedom $(d_1, d_2)$ where $d_2 > 2$, the expected value depends only on $d_2$: $E[X] = \\frac{d_2}{d_2 - 2} = \\frac{${d2}}{${d2} - 2} = \\frac{${d2}}{${d2 - 2}}${lowestTerms(d2, d2 - 2)}$.`,
               `对于自由度为 $(d_1, d_2)$ 且 $d_2 > 2$ 的 $F$ 分布，其期望值仅取决于 $d_2$：$E[X] = \\frac{d_2}{d_2 - 2} = \\frac{${d2}}{${d2} - 2} = \\frac{${d2}}{${d2 - 2}}${lowestTerms(d2, d2 - 2)}$。`,

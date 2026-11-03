@@ -36,6 +36,7 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
               `设连续型随机变量 $X$ 的概率密度函数为 $f(x) = \\frac{2x}{${den}}$（$0 \\le x \\le ${b}$），其他位置 $f(x) = 0$。求累积分布函数在 $x = ${x0}$ 处的值 $F(${x0}) = P(X \\le ${x0})$。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(2 * x0, den), Q.of(den - num, den), Q.of(x0, b)],
             solution: t(
               `Integrate the PDF: $F(x) = \\int_0^x \\frac{2t}{${den}}\\,dt = \\frac{x^2}{${den}}$. At $x = ${x0}$, $F(${x0}) = \\frac{${x0}^2}{${den}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `对概率密度函数积分：$F(x) = \\int_0^x \\frac{2t}{${den}}\\,dt = \\frac{x^2}{${den}}$。在 $x = ${x0}$ 处，$F(${x0}) = \\frac{${x0}^2}{${den}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -63,6 +64,7 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
               `设连续型随机变量 $X$ 的累积分布函数为 $F(x) = \\frac{x^3}{${b3}}$（$0 \\le x \\le ${b}$）。求概率 $P(${a} \\le X \\le ${c})$。`,
             ),
             answer: Q.of(num, b3),
+            wrong: [Q.of(c * c * c, b3), Q.of(c * c * c + a * a * a, b3), Q.of(c - a, b)],
             solution: t(
               `$P(${a} \\le X \\le ${c}) = F(${c}) - F(${a}) = \\frac{${c}^3}{${b3}} - \\frac{${a}^3}{${b3}} = \\frac{${num}}{${b3}}${lowestTerms(num, b3)}$.`,
               `$P(${a} \\le X \\le ${c}) = F(${c}) - F(${a}) = \\frac{${c}^3}{${b3}} - \\frac{${a}^3}{${b3}} = \\frac{${num}}{${b3}}${lowestTerms(num, b3)}$。`,
@@ -102,6 +104,7 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
               `连续型随机变量 $X$ 服从帕累托分布，其概率密度函数为 $f(x) = \\frac{${x0}}{x^2}$（$x \\ge ${x0}$），其他位置为 $0$。求 $X$ 的中位数 $m$。`,
             ),
             answer: median,
+            wrong: [x0, 3 * x0, Q.of(3 * x0, 2)],
             solution: t(
               `The CDF for $x \\ge ${x0}$ is $F(x) = \\int_{${x0}}^x \\frac{${x0}}{t^2}\\,dt = 1 - \\frac{${x0}}{x}$. Setting $F(m) = \\frac{1}{2}$ gives $1 - \\frac{${x0}}{m} = \\frac{1}{2} \\implies m = 2 \\cdot ${x0} = ${median}$.`,
               `当 $x \\ge ${x0}$ 时，累积分布函数为 $F(x) = \\int_{${x0}}^x \\frac{${x0}}{t^2}\\,dt = 1 - \\frac{${x0}}{x}$。令 $F(m) = \\frac{1}{2}$ 得 $1 - \\frac{${x0}}{m} = \\frac{1}{2} \\implies m = 2 \\cdot ${x0} = ${median}$。`,
@@ -129,6 +132,7 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
               `设连续型随机变量 $X$ 的累积分布函数为 $F(x) = \\frac{x^2}{${b * b}}$（$0 \\le x \\le ${b}$）。求 $X$ 的第 $${p}$ 百分位数。`,
             ),
             answer: xp,
+            wrong: [Q.of(p * b, 100), b - xp, k],
             solution: t(
               `Setting $F(x) = \\frac{x^2}{${b * b}} = \\frac{${p}}{100}$ yields $x^2 = \\frac{${p} \\cdot ${b * b}}{100} = ${xp * xp} \\implies x = ${xp}$.`,
               `令 $F(x) = \\frac{x^2}{${b * b}} = \\frac{${p}}{100}$ 得 $x^2 = \\frac{${p} \\cdot ${b * b}}{100} = ${xp * xp} \\implies x = ${xp}$。`,
@@ -169,6 +173,7 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
               `设连续型随机变量 $X$ 的概率密度函数为 $f(x) = C x^2 (${b} - x)$（$0 \\le x \\le ${b}$），其中 $C > 0$ 为归一化常数。求 $X$ 的众数。`,
             ),
             answer: mode,
+            wrong: [k, Q.of(3 * k, 2), b],
             solution: t(
               `Maximizing $g(x) = x^2 (${b} - x) = ${b} x^2 - x^3$ gives $g'(x) = x(2 \\cdot ${b} - 3x) = 0$. On $(0, ${b})$, the maximum occurs at $x = \\frac{2 \\cdot ${b}}{3} = ${mode}$.`,
               `使 $g(x) = x^2 (${b} - x) = ${b} x^2 - x^3$ 最大的点满足 $g'(x) = x(2 \\cdot ${b} - 3x) = 0$。在 $(0, ${b})$ 内，最大值点为 $x = \\frac{2 \\cdot ${b}}{3} = ${mode}$。`,
@@ -192,6 +197,7 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
               `设连续型随机变量 $X$ 在 $[0, \\infty)$ 上的概率密度函数为 $f(x) = ${k * k} x e^{-${k} x}$。求 $X$ 的众数。`,
             ),
             answer: Q.of(1, k),
+            wrong: [k, Q.of(2, k), Q.of(1, k * k)],
             solution: t(
               `Differentiating $f(x) = ${k * k} x e^{-${k} x}$ gives $f'(x) = ${k * k} e^{-${k} x}(1 - ${k} x) = 0 \\implies x = \\frac{1}{${k}}${lowestTerms(1, k)}$.`,
               `对 $f(x) = ${k * k} x e^{-${k} x}$ 求导得 $f'(x) = ${k * k} e^{-${k} x}(1 - ${k} x) = 0 \\implies x = \\frac{1}{${k}}${lowestTerms(1, k)}$。`,
@@ -267,6 +273,7 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
               `离散整值随机变量 $X$ 由区间 $[0, ${L}]$ 上均匀分布的连续型随机变量 $Y$（密度为 $f(y) = \\frac{1}{${L}}$）近似。应用连续性校正，求 $P(${a} \\le X \\le ${b})$ 的近似概率。`,
             ),
             answer: Q.of(count, L),
+            wrong: [Q.of(count - 1, L), Q.of(count + 1, L), Q.of(1, L)],
             solution: t(
               `$P(${a} \\le X \\le ${b}) \\approx \\int_{${a - 0.5}}^{${b + 0.5}} \\frac{1}{${L}}\\,dy = \\frac{(${b + 0.5}) - (${a - 0.5})}{${L}} = \\frac{${count}}{${L}}${lowestTerms(count, L)}$.`,
               `$P(${a} \\le X \\le ${b}) \\approx \\int_{${a - 0.5}}^{${b + 0.5}} \\frac{1}{${L}}\\,dy = \\frac{(${b + 0.5}) - (${a - 0.5})}{${L}} = \\frac{${count}}{${L}}${lowestTerms(count, L)}$。`,
@@ -342,6 +349,7 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
               `连续型随机变量 $X$ 在 $[0, ${b}]$ 上的累积分布函数为 $F(x) = \\frac{x^2}{${b * b}}$。在一次模拟实验中，伪随机数生成器产生抽样值 $u = \\frac{${uNum}}{100}$。求模拟观测值 $x = F^{-1}(u)$。`,
             ),
             answer: xSim,
+            wrong: [Q.of(uNum * b, 100), b - xSim, k],
             solution: t(
               `Setting $F(x) = \\frac{x^2}{${b * b}} = \\frac{${uNum}}{100} \\implies x^2 = ${mult * mult * uNum} \\implies x = ${xSim}$.`,
               `令 $F(x) = \\frac{x^2}{${b * b}} = \\frac{${uNum}}{100} \\implies x^2 = ${mult * mult * uNum} \\implies x = ${xSim}$。`,
@@ -387,6 +395,7 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
               `设 $X$ 服从区间 $[0, ${b}]$ 上的均匀分布，其 CDF 为 $F_X(x) = \\frac{x}{${b}}$（$0 \\le x \\le ${b}$）。定义 $Y = ${a} X + ${c}$。求 $F_Y(${y0}) = P(Y \\le ${y0})$ 的值。`,
             ),
             answer: Q.of(k, b),
+            wrong: [Q.of(y0, b), Q.of(y0 - c, b), Q.of(b - k, b)],
             solution: t(
               `$P(Y \\le ${y0}) = P(${a} X + ${c} \\le ${y0}) = P\\left(X \\le \\frac{${y0 - c}}{${a}}\\right) = P(X \\le ${k}) = \\frac{${k}}{${b}}${lowestTerms(k, b)}$.`,
               `$P(Y \\le ${y0}) = P(${a} X + ${c} \\le ${y0}) = P\\left(X \\le \\frac{${y0 - c}}{${a}}\\right) = P(X \\le ${k}) = \\frac{${k}}{${b}}${lowestTerms(k, b)}$。`,
@@ -413,6 +422,7 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
               `设随机变量 $X$ 服从 $(0, ${b})$ 上的均匀分布，密度为 $f_X(x) = \\frac{1}{${b}}$。令 $Y = X^2$。应用分布函数法，求 $Y$ 的概率密度函数在 $y = ${y0}$ 处的值 $f_Y(${y0})$。`,
             ),
             answer: Q.of(1, den),
+            wrong: [Q.of(1, b), Q.of(1, b * m), Q.of(m, b)],
             solution: t(
               `$F_Y(y) = P(X^2 \\le y) = \\frac{\\sqrt{y}}{${b}}$. Differentiating gives $f_Y(y) = \\frac{1}{${2 * b}\\sqrt{y}}$. At $y = ${y0}$, $f_Y(${y0}) = \\frac{1}{${2 * b} \\cdot ${m}} = \\frac{1}{${den}}${lowestTerms(1, den)}$.`,
               `$F_Y(y) = P(X^2 \\le y) = \\frac{\\sqrt{y}}{${b}}$。求导得 $f_Y(y) = \\frac{1}{${2 * b}\\sqrt{y}}$。在 $y = ${y0}$ 处，$f_Y(${y0}) = \\frac{1}{${2 * b} \\cdot ${m}} = \\frac{1}{${den}}${lowestTerms(1, den)}$。`,
@@ -490,6 +500,7 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
               `设 $X$ 服从 $(0, ${b})$ 上的均匀分布，密度为 $f_X(x) = \\frac{1}{${b}}$。令 $Y = \\frac{${c}}{X}$。求概率密度函数 $f_Y(y)$ 在 $y = \\frac{${k * c}}{${b}}$ 处的值。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(1, b), Q.of(1, k), Q.of(k * k * c, b)],
             solution: t(
               `With $x = \\frac{${c}}{y}$, $\\left|\\frac{dx}{dy}\\right| = \\frac{${c}}{y^2}$. So $f_Y(y) = \\frac{${c}}{${b} y^2}$. At $y = \\frac{${k * c}}{${b}}$, $f_Y(y) = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `由 $x = \\frac{${c}}{y}$ 得 $\\left|\\frac{dx}{dy}\\right| = \\frac{${c}}{y^2}$。因此 $f_Y(y) = \\frac{${c}}{${b} y^2}$。在 $y = \\frac{${k * c}}{${b}}$ 处，$f_Y(y) = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -530,6 +541,7 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
               `设 $X$ 服从区间 $[-${a}, ${a}]$ 上的均匀分布。定义 $Y = X^2$。求 $F_Y(${y0}) = P(Y \\le ${y0})$ 的值。`,
             ),
             answer: Q.of(m, a),
+            wrong: [Q.of(m, 2 * a), Q.of(y0, 2 * a), Q.of(a - m, a)],
             solution: t(
               `$P(Y \\le ${y0}) = P(-${m} \\le X \\le ${m}) = \\frac{2 \\cdot ${m}}{2 \\cdot ${a}} = \\frac{${m}}{${a}}${lowestTerms(m, a)}$.`,
               `$P(Y \\le ${y0}) = P(-${m} \\le X \\le ${m}) = \\frac{2 \\cdot ${m}}{2 \\cdot ${a}} = \\frac{${m}}{${a}}${lowestTerms(m, a)}$。`,
@@ -556,6 +568,7 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
               `设 $X$ 服从区间 $[-${a}, ${a}]$ 上的均匀分布，且令 $Y = X^2$。求概率密度函数 $f_Y(y)$ 在 $y = ${y0}$ 处的值。`,
             ),
             answer: Q.of(1, den),
+            wrong: [Q.of(1, a * m), Q.of(1, 2 * a), Q.of(1, 4 * a * m)],
             solution: t(
               `$F_Y(y) = \\frac{\\sqrt{y}}{${a}} \\implies f_Y(y) = \\frac{1}{2 \\cdot ${a} \\sqrt{y}}$. At $y = ${y0}$, $f_Y(${y0}) = \\frac{1}{${2 * a} \\cdot ${m}} = \\frac{1}{${den}}${lowestTerms(1, den)}$.`,
               `$F_Y(y) = \\frac{\\sqrt{y}}{${a}} \\implies f_Y(y) = \\frac{1}{2 \\cdot ${a} \\sqrt{y}}$。在 $y = ${y0}$ 处，$f_Y(${y0}) = \\frac{1}{${2 * a} \\cdot ${m}} = \\frac{1}{${den}}${lowestTerms(1, den)}$。`,

@@ -40,6 +40,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `设连续型随机变量 $X$ 的概率密度函数为 $f(x) = \\frac{2x}{${b * b}}$（$0 \\le x \\le ${b}$），其他位置为 $0$。求 $n = ${n}$ 阶原点矩 $E[X^{${n}}]$。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(bPow, den), Q.of(2 * bPow, n + 1), Q.of(bPow, n + 1)],
             solution: t(
               `Compute by definition: $E[X^{${n}}] = \\int_0^{${b}} x^{${n}} \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^{${n + 2}}}{${n + 2}} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}^{${n}}}{${n + 2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `按定义积分：$E[X^{${n}}] = \\int_0^{${b}} x^{${n}} \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^{${n + 2}}}{${n + 2}} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}^{${n}}}{${n + 2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -66,6 +67,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
                 `设连续型随机变量 $X$ 服从区间 $[0, ${b}]$ 上的均匀分布，其均值为 $\\mu = ${b}/2$。求其中心矩 $E[(X - \\mu)^{${power}}]$。`,
               ),
               answer: 0,
+              wrong: [Q.of(b, 2), 1, Q.of(b * b, 12)],
               solution: t(
                 `Since the uniform distribution is symmetric about its mean $\\mu = ${b}/2$, all odd central moments are zero. Thus $E[(X - \\mu)^{${power}}] = 0$.`,
                 `由于均匀分布关于其均值 $\\mu = ${b}/2$ 对称，所有奇数阶中心矩均为零。因此 $E[(X - \\mu)^{${power}}] = 0$。`,
@@ -79,6 +81,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `设连续型随机变量 $X$ 服从区间 $[0, ${b}]$ 上的均匀分布。求其二阶中心矩 $E[(X - \\mu)^2]$（即方差）。`,
             ),
             answer: Q.of(b * b, 12),
+            wrong: [Q.of(b * b, 3), Q.of(b * b, 4), Q.of(b, 12)],
             solution: t(
               `For a continuous uniform distribution on $[0, ${b}]$, the variance is $\\text{Var}(X) = \\frac{b^2}{12} = \\frac{${b * b}}{12}${lowestTerms(b * b, 12)}$.`,
               `对于区间 $[0, ${b}]$ 上的连续型均匀分布，其方差为 $\\text{Var}(X) = \\frac{b^2}{12} = \\frac{${b * b}}{12}${lowestTerms(b * b, 12)}$。`,
@@ -117,6 +120,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `设连续型随机变量 $X$ 的概率密度函数为 $f(x) = \\frac{2x}{${b * b}}$（$0 \\le x \\le ${b}$），其他位置为 $0$。求其期望值 $E[X]$。`,
             ),
             answer: Q.of(2 * b, 3),
+            wrong: [Q.of(b, 2), Q.of(b, 3), Q.of(b * b, 2)],
             solution: t(
               `$E[X] = \\int_0^{${b}} x \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^3}{3} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}}{3} = \\frac{${2 * b}}{3}${lowestTerms(2 * b, 3)}$.`,
               `$E[X] = \\int_0^{${b}} x \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^3}{3} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}}{3} = \\frac{${2 * b}}{3}${lowestTerms(2 * b, 3)}$。`,
@@ -140,6 +144,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `某电子元件的寿命服从速率参数为 $\\lambda = ${lambda}$ 的指数分布（$x \\ge 0$ 时 $f(x) = ${lambda} e^{-${lambda} x}$）。求其期望寿命 $E[X]$。`,
             ),
             answer: Q.of(1, lambda),
+            wrong: [lambda, Q.of(1, lambda * lambda), Q.of(2, lambda)],
             solution: t(
               `Using integration by parts, $E[X] = \\int_0^\\infty x (${lambda} e^{-${lambda} x}) dx = \\frac{1}{${lambda}}${lowestTerms(1, lambda)}$.`,
               `通过分部积分求得：$E[X] = \\int_0^\\infty x (${lambda} e^{-${lambda} x}) dx = \\frac{1}{${lambda}}${lowestTerms(1, lambda)}$。`,
@@ -179,6 +184,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `设 $X$ 的概率密度函数为 $f(x) = \\frac{2x}{${b * b}}$（$0 \\le x \\le ${b}$），其他位置为 $0$。计算方差 $\\text{Var}(X)$。`,
             ),
             answer: Q.of(varNum, 18),
+            wrong: [Q.of(b * b, 2), Q.of(b * b, 12), Q.of(b * b, 9)],
             solution: t(
               `First compute $E[X] = \\frac{2 \\cdot ${b}}{3} = \\frac{${2 * b}}{3}$ and $E[X^2] = \\int_0^{${b}} \\frac{2x^3}{${b * b}} dx = \\frac{${b}^2}{2} = \\frac{${b * b}}{2}$. Then $\\text{Var}(X) = E[X^2] - (E[X])^2 = \\frac{${b * b}}{2} - \\frac{${4 * b * b}}{9} = \\frac{${varNum}}{18}${lowestTerms(varNum, 18)}$.`,
               `先求 $E[X] = \\frac{2 \\cdot ${b}}{3} = \\frac{${2 * b}}{3}$ 及 $E[X^2] = \\int_0^{${b}} \\frac{2x^3}{${b * b}} dx = \\frac{${b * b}}{2}$。则 $\\text{Var}(X) = E[X^2] - (E[X])^2 = \\frac{${b * b}}{2} - \\frac{${4 * b * b}}{9} = \\frac{${varNum}}{18}${lowestTerms(varNum, 18)}$。`,
@@ -202,6 +208,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `随机变量 $X$ 服从参数为 $\\lambda = ${lambda}$ 的指数分布（$x \\ge 0$ 时 $f(x) = ${lambda} e^{-${lambda} x}$）。求 $\\text{Var}(X)$。`,
             ),
             answer: Q.of(1, lambda * lambda),
+            wrong: [Q.of(1, lambda), lambda * lambda, Q.of(2, lambda * lambda)],
             solution: t(
               `For an exponential random variable with parameter $\\lambda = ${lambda}$, the variance is $\\text{Var}(X) = \\frac{1}{\\lambda^2} = \\frac{1}{${lambda * lambda}}${lowestTerms(1, lambda * lambda)}$.`,
               `对于参数为 $\\lambda = ${lambda}$ 的指数随机变量，其方差为 $\\text{Var}(X) = \\frac{1}{\\lambda^2} = \\frac{1}{${lambda * lambda}}${lowestTerms(1, lambda * lambda)}$。`,
@@ -242,6 +249,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `设 $X$ 服从区间 $[0, ${b}]$ 上的均匀分布，密度为 $f(x) = \\frac{1}{${b}}$（$0 \\le x \\le ${b}$）。应用 LOTUS 法则，求 $E[${c} X^2]$。`,
             ),
             answer: Q.of(num, 3),
+            wrong: [Q.of(c * b * b, 4), Q.of(c * c * b * b, 3), Q.of(c * b, 2)],
             solution: t(
               `Apply LOTUS: $E[${c} X^2] = \\int_0^{${b}} ${c} x^2 \\left(\\frac{1}{${b}}\\right) dx = \\frac{${c}}{${b}} \\left[ \\frac{x^3}{3} \\right]_0^{${b}} = \\frac{${c} \\cdot ${b}^2}{3} = \\frac{${num}}{3}${lowestTerms(num, 3)}$.`,
               `应用 LOTUS 法则：$E[${c} X^2] = \\int_0^{${b}} ${c} x^2 \\left(\\frac{1}{${b}}\\right) dx = \\frac{${c}}{${b}} \\left[ \\frac{x^3}{3} \\right]_0^{${b}} = \\frac{${c} \\cdot ${b}^2}{3} = \\frac{${num}}{3}${lowestTerms(num, 3)}$。`,
@@ -265,6 +273,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `随机变量 $X$ 的概率密度函数为 $f(x) = \\frac{2}{x^3}$（$x \\ge 1$），其他位置为 $0$。应用 LOTUS 法则，计算期望值 $E[${k} X]$。`,
             ),
             answer: 2 * k,
+            wrong: [k, 4 * k, Q.of(2 * k, 3)],
             solution: t(
               `$E[${k} X] = \\int_1^\\infty (${k} x) \\frac{2}{x^3} dx = \\int_1^\\infty \\frac{${2 * k}}{x^2} dx = \\left[ -\\frac{${2 * k}}{x} \\right]_1^\\infty = 0 - (-${2 * k}) = ${2 * k}$.`,
               `$E[${k} X] = \\int_1^\\infty (${k} x) \\frac{2}{x^3} dx = \\int_1^\\infty \\frac{${2 * k}}{x^2} dx = \\left[ -\\frac{${2 * k}}{x} \\right]_1^\\infty = 0 - (-${2 * k}) = ${2 * k}$。`,
@@ -304,6 +313,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `随机变量 $X$ 的矩母函数为 $M_X(t) = \\left( \\frac{${a}}{${a} - t} \\right)^{${b}}$（$t < ${a}$）。求 $M_X(0)$ 的值。`,
             ),
             answer: 1,
+            wrong: [0, a, Q.of(a, b)],
             solution: t(
               `For any valid moment-generating function, $M_X(0) = E[e^{0 \\cdot X}] = E[1] = 1$. Substituting $t = 0$ gives $\\left( \\frac{${a}}{${a}} \\right)^{${b}} = 1^{${b}} = 1$.`,
               `对于任何合法的矩母函数，必有 $M_X(0) = E[e^{0 \\cdot X}] = E[1] = 1$。代入 $t = 0$ 亦得 $\\left( \\frac{${a}}{${a}} \\right)^{${b}} = 1$。`,
@@ -383,6 +393,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `连续型随机变量 $X$ 的矩母函数为 $M_X(t) = (1 - ${theta} t)^{-${k}}$（$t < \\frac{1}{${theta}}$）。求 $E[X] = M_X'(0)$。`,
             ),
             answer: mean,
+            wrong: [k, theta, Q.of(k, theta)],
             solution: t(
               `Differentiate with respect to $t$: $M_X'(t) = -${k} (1 - ${theta} t)^{-${k + 1}} (-${theta}) = ${k * theta} (1 - ${theta} t)^{-${k + 1}}$. Evaluating at $t = 0$ gives $M_X'(0) = ${mean}$.`,
               `对 $t$ 求导：$M_X'(t) = -${k} (1 - ${theta} t)^{-${k + 1}} (-${theta}) = ${k * theta} (1 - ${theta} t)^{-${k + 1}}$。在 $t = 0$ 处求值得到 $M_X'(0) = ${mean}$。`,
@@ -409,6 +420,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `随机变量 $X$ 的矩母函数为 $M_X(t) = (1 - ${theta} t)^{-${k}}$（$t < \\frac{1}{${theta}}$）。求二阶原点矩 $E[X^2] = M_X''(0)$。`,
             ),
             answer: secondMoment,
+            wrong: [k * k * theta * theta, k * (k + 1) * theta, k * theta * theta],
             solution: t(
               `Since $M_X'(t) = ${k * theta}(1 - ${theta} t)^{-${k + 1}}$, the second derivative is $M_X''(t) = ${k * (k + 1) * theta * theta}(1 - ${theta} t)^{-${k + 2}}$. At $t = 0$, $E[X^2] = M_X''(0) = ${secondMoment}$.`,
               `由 $M_X'(t) = ${k * theta}(1 - ${theta} t)^{-${k + 1}}$ 求导得 $M_X''(t) = ${k * (k + 1) * theta * theta}(1 - ${theta} t)^{-${k + 2}}$。在 $t = 0$ 处求得 $E[X^2] = M_X''(0) = ${secondMoment}$。`,
@@ -449,6 +461,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `设 $X$ 的矩母函数为 $M_X(t) = (1 - ${theta} t)^{-${k}}$。计算方差 $\\text{Var}(X) = M_X''(0) - (M_X'(0))^2$。`,
             ),
             answer: variance,
+            wrong: [k * theta, k * k * theta * theta, k * (k + 1) * theta * theta],
             solution: t(
               `$E[X] = M_X'(0) = ${k * theta}$ and $E[X^2] = M_X''(0) = ${k * (k + 1) * theta * theta}$. Thus $\\text{Var}(X) = ${k * (k + 1) * theta * theta} - (${k * theta})^2 = ${variance}$.`,
               `$E[X] = M_X'(0) = ${k * theta}$，且 $E[X^2] = M_X''(0) = ${k * (k + 1) * theta * theta}$。因此 $\\text{Var}(X) = ${k * (k + 1) * theta * theta} - (${k * theta})^2 = ${variance}$。`,
@@ -473,6 +486,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `随机变量 $X$ 的矩母函数为 $M_X(t) = e^{${lambda}(e^t - 1)}$。求其标准差 $\\sigma = \\sqrt{\\text{Var}(X)}$。`,
             ),
             answer: sigma,
+            wrong: [lambda, lambda * lambda + lambda, 2 * sigma],
             solution: t(
               `For $M_X(t) = e^{\\lambda(e^t - 1)}$, $M_X'(0) = \\lambda = ${lambda}$ and $M_X''(0) = \\lambda^2 + \\lambda$. Thus $\\text{Var}(X) = \\lambda = ${lambda}$, and the standard deviation is $\\sigma = \\sqrt{${lambda}} = ${sigma}$.`,
               `对于 $M_X(t) = e^{\\lambda(e^t - 1)}$，有 $M_X'(0) = \\lambda = ${lambda}$ 且 $M_X''(0) = \\lambda^2 + \\lambda$。故 $\\text{Var}(X) = \\lambda = ${lambda}$，标准差为 $\\sigma = \\sqrt{${lambda}} = ${sigma}$。`,
@@ -717,6 +731,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `设 $X_1$ 与 $X_2$ 为相互独立的泊松随机变量，其矩母函数分别为 $M_{X_1}(t) = e^{${lambda1}(e^t - 1)}$ 与 $M_{X_2}(t) = e^{${lambda2}(e^t - 1)}$。两者的和 $S = X_1 + X_2$ 的矩母函数为 $M_S(t) = e^{\\lambda_S(e^t - 1)}$。求 $\\lambda_S$。`,
             ),
             answer: sumLambda,
+            wrong: [lambda1 * lambda2, Math.max(lambda1, lambda2), Q.of(sumLambda, 2)],
             solution: t(
               `By independence, $M_S(t) = M_{X_1}(t) M_{X_2}(t) = e^{${lambda1}(e^t - 1)} e^{${lambda2}(e^t - 1)} = e^{(${lambda1} + ${lambda2})(e^t - 1)} = e^{${sumLambda}(e^t - 1)}$. Thus $\\lambda_S = ${sumLambda}$.`,
               `由独立性可知 $M_S(t) = M_{X_1}(t) M_{X_2}(t) = e^{${lambda1}(e^t - 1)} e^{${lambda2}(e^t - 1)} = e^{${sumLambda}(e^t - 1)}$，故 $\\lambda_S = ${sumLambda}$。`,
@@ -758,6 +773,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `随机变量 $X$ 的矩母函数为 $M_X(t) = (${q} + ${p} e^t)^{${n}}$。由唯一性定理识别该分布并计算其均值 $E[X] = n p$。`,
             ),
             answer: Q.parse(String(mean)),
+            wrong: [Q.parse(String(Number((n * q).toFixed(2)))), n, Q.parse(String(Number((n * p * q).toFixed(2))))],
             solution: t(
               `The MGF matches the form $(q + p e^t)^n$ of a $\\text{Binomial}(${n}, ${p})$ distribution. Its expected value is $E[X] = n p = ${n} \\cdot ${p} = ${mean}$.`,
               `该矩母函数符合二项分布 $\\text{Binomial}(${n}, ${p})$ 的标准形式 $(q + p e^t)^n$。其期望值为 $E[X] = n p = ${n} \\cdot ${p} = ${mean}$。`,
@@ -785,6 +801,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
               `设 $X_1, \\dots, X_{${n}}$ 为独立同分布的指数随机变量，各自的矩母函数为 $M(t) = \\frac{${lambda}}{${lambda} - t}$。由矩母函数唯一性定理，和 $S = \\sum_{i=1}^{${n}} X_i$ 的矩母函数为 $M_S(t) = \\left( \\frac{${lambda}}{${lambda} - t} \\right)^{${n}}$。求和的均值 $E[S]$。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(1, lambda), Q.of(n, lambda * lambda), n * lambda],
             solution: t(
               `The MGF uniquely identifies $S$ as a $\\text{Gamma}(${n}, ${lambda})$ random variable. Its expected value is $E[S] = \\frac{n}{\\lambda} = \\frac{${n}}{${lambda}}${lowestTerms(n, lambda)}$.`,
               `该矩母函数唯一对应伽马分布 $\\text{Gamma}(${n}, ${lambda})$。其期望值为 $E[S] = \\frac{n}{\\lambda} = \\frac{${n}}{${lambda}}${lowestTerms(n, lambda)}$。`,

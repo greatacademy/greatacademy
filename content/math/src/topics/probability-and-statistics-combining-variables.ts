@@ -41,6 +41,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `离散随机变量 $X \\in \\{0, 1\\}$ 与 $Y \\in \\{0, 1\\}$ 的联合概率分布律由 $P(0, 0) = \\frac{${a}}{${total}}$、$P(0, 1) = \\frac{${b}}{${total}}$、$P(1, 0) = \\frac{${c}}{${total}}$ 及 $P(1, 1) = \\frac{${d}}{${total}}$ 给出。求联合累积分布函数值 $F_{X,Y}(0, 1) = P(X \\le 0, Y \\le 1)$。`,
             ),
             answer: Q.of(sumVal, total),
+            wrong: [Q.of(b, total), Q.of(a, total), Q.of(a + c, total)],
             solution: t(
               `By definition, $F_{X,Y}(0, 1) = P(X \\le 0, Y \\le 1) = P(0, 0) + P(0, 1) = \\frac{${a}}{${total}} + \\frac{${b}}{${total}} = \\frac{${sumVal}}{${total}}${lowestTerms(sumVal, total)}$.`,
               `根据定义，$F_{X,Y}(0, 1) = P(X \\le 0, Y \\le 1) = P(0, 0) + P(0, 1) = \\frac{${a}}{${total}} + \\frac{${b}}{${total}} = \\frac{${sumVal}}{${total}}${lowestTerms(sumVal, total)}$。`,
@@ -85,6 +86,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `对于离散随机变量 $X$ 与 $Y$，$X = ${xVal}$ 且 $Y \\in \\{1, 2, 3\\}$ 时的联合概率分别为 $P(${xVal}, 1) = \\frac{${p1}}{${total}}$、$P(${xVal}, 2) = \\frac{${p2}}{${total}}$ 及 $P(${xVal}, 3) = \\frac{${p3}}{${total}}$，其余 $y$ 取值处概率均为 $0$。求边际概率 $P(X = ${xVal})$。`,
             ),
             answer: Q.of(margX, total),
+            wrong: [Q.of(p1, total), Q.of(margX, 3 * total), Q.of(other, total)],
             solution: t(
               `The marginal probability is $P(X = ${xVal}) = \\sum_{y} P(${xVal}, y) = \\frac{${p1}}{${total}} + \\frac{${p2}}{${total}} + \\frac{${p3}}{${total}} = \\frac{${margX}}{${total}}${lowestTerms(margX, total)}$.`,
               `边际概率为 $P(X = ${xVal}) = \\sum_{y} P(${xVal}, y) = \\frac{${p1}}{${total}} + \\frac{${p2}}{${total}} + \\frac{${p3}}{${total}} = \\frac{${margX}}{${total}}${lowestTerms(margX, total)}$。`,
@@ -128,6 +130,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `设 $X$ 与 $Y$ 为相互独立的离散型随机变量，其边际概率分别为 $P(X = 2) = \\frac{${numA}}{${denA}}$ 与 $P(Y = 3) = \\frac{${numB}}{${denB}}$。求联合概率 $P(X = 2, Y = 3)$。`,
             ),
             answer: Q.of(jointNum, jointDen),
+            wrong: [Q.of(numA + numB, denA + denB), Q.of(numA * denB + numB * denA, jointDen), Q.of(numA, denA)],
             solution: t(
               `Since $X$ and $Y$ are independent, $P(X = 2, Y = 3) = P(X = 2) \\cdot P(Y = 3) = \\frac{${numA}}{${denA}} \\times \\frac{${numB}}{${denB}} = \\frac{${jointNum}}{${jointDen}}${lowestTerms(jointNum, jointDen)}$.`,
               `由于 $X$ 与 $Y$ 相互独立，$P(X = 2, Y = 3) = P(X = 2) \\cdot P(Y = 3) = \\frac{${numA}}{${denA}} \\times \\frac{${numB}}{${denB}} = \\frac{${jointNum}}{${jointDen}}${lowestTerms(jointNum, jointDen)}$。`,
@@ -169,6 +172,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `设 $P(X = 1) = \\frac{${margVal}}{${denom}}$，且联合概率 $P(X = 1, Y = 2) = \\frac{${jointVal}}{${denom}}$。求条件概率 $P(Y = 2 \\mid X = 1)$。`,
             ),
             answer: Q.of(jointVal, margVal),
+            wrong: [Q.of(jointVal, denom), Q.of(margVal, jointVal), Q.of(jointVal * margVal, denom * denom)],
             solution: t(
               `The conditional probability is $P(Y = 2 \\mid X = 1) = \\frac{P(X = 1, Y = 2)}{P(X = 1)} = \\frac{${jointVal}/${denom}}{${margVal}/${denom}} = \\frac{${jointVal}}{${margVal}}${lowestTerms(jointVal, margVal)}$.`,
               `条件概率为 $P(Y = 2 \\mid X = 1) = \\frac{P(X = 1, Y = 2)}{P(X = 1)} = \\frac{${jointVal}/${denom}}{${margVal}/${denom}} = \\frac{${jointVal}}{${margVal}}${lowestTerms(jointVal, margVal)}$。`,
@@ -217,6 +221,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `求 $n = ${n}$ 次试验中分别取得频数 $x = ${x}$、$y = ${y}$ 和 $z = ${z}$ 的多项式系数：$\\frac{${n}!}{${x}! \\, ${y}! \\, ${z}!}$。`,
             ),
             answer: coeff,
+            wrong: [fact(n), fact(n) / fact(x), x * y * z],
             solution: t(
               `$\\frac{${n}!}{${x}! \\, ${y}! \\, ${z}!} = \\frac{${fact(n)}}{${fact(x)} \\times ${fact(y)} \\times ${fact(z)}} = ${coeff}$.`,
               `$\\frac{${n}!}{${x}! \\, ${y}! \\, ${z}!} = \\frac{${fact(n)}}{${fact(x)} \\times ${fact(y)} \\times ${fact(z)}} = ${coeff}$。`,
@@ -323,6 +328,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `连续随机变量 $X$ 与 $Y$ 在矩形支撑集 $0 \\le x \\le ${a}$ 且 $0 \\le y \\le ${b}$ 上的联合概率密度函数为 $f(x, y) = \\frac{4}{${a * a * b * b}} x y$。其边际密度函数具有形式 $f_X(x) = k x$（$0 \\le x \\le ${a}$）。求系数 $k$ 的有理数值。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(4, a * a * b * b), Q.of(2, b * b), Q.of(4, a * a)],
             solution: t(
               `Integrate out $y$: $f_X(x) = \\int_0^{${b}} \\frac{4}{${a * a * b * b}} x y \\, dy = \\frac{4 x}{${a * a * b * b}} \\left[\\frac{y^2}{2}\\right]_0^{${b}} = \\frac{4 x}{${a * a * b * b}} \\cdot \\frac{${b * b}}{2} = \\frac{2}{${a * a}} x$. Thus $k = \\frac{2}{${den}}${lowestTerms(2, den)}$.`,
               `对 $y$ 积分：$f_X(x) = \\int_0^{${b}} \\frac{4}{${a * a * b * b}} x y \\, dy = \\frac{4 x}{${a * a * b * b}} \\left[\\frac{y^2}{2}\\right]_0^{${b}} = \\frac{2}{${a * a}} x$。因此 $k = \\frac{2}{${den}}${lowestTerms(2, den)}$。`,
@@ -423,6 +429,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `连续随机变量 $X$ 与 $Y$ 在三角形区域 $0 \\le y \\le x \\le 1$ 上的联合概率密度函数为 $f(x, y) = 2$。已知 $X = \\frac{${numX}}{${denX}}$，求条件概率密度函数 $f_{Y \\mid X}\\left(y \\;\\middle|\\; X = \\frac{${numX}}{${denX}}\\right)$ 在区间 $0 \\le y \\le \\frac{${numX}}{${denX}}$ 上的恒定值。`,
             ),
             answer: Q.of(denX, numX),
+            wrong: [Q.of(numX, denX), Q.of(2 * denX, numX), 2],
             solution: t(
               `The marginal density of $X$ is $f_X(x) = \\int_0^x 2 \\, dy = 2x$. Thus the conditional density is $f_{Y \\mid X}(y \\mid x) = \\frac{f(x, y)}{f_X(x)} = \\frac{2}{2x} = \\frac{1}{x}$. Evaluating at $x = \\frac{${numX}}{${denX}}$ gives $\\frac{1}{${numX}/${denX}} = \\frac{${denX}}{${numX}}${lowestTerms(denX, numX)}$.`,
               `$X$ 的边际密度为 $f_X(x) = \\int_0^x 2 \\, dy = 2x$。因此条件密度为 $f_{Y \\mid X}(y \\mid x) = \\frac{f(x, y)}{f_X(x)} = \\frac{2}{2x} = \\frac{1}{x}$。在 $x = \\frac{${numX}}{${denX}}$ 处求值得到 $\\frac{1}{${numX}/${denX}} = \\frac{${denX}}{${numX}}${lowestTerms(denX, numX)}$。`,
@@ -468,6 +475,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `设 $(X, Y)$ 在单位正方形 $[0, 1] \\times [0, 1]$ 上服从均匀分布（即 $f(x, y) = 1$）。计算联合累积分布函数值 $F_{X,Y}\\left(\\frac{${numX}}{${denX}}, \\frac{${numY}}{${denY}}\\right)$。`,
             ),
             answer: Q.of(ansNum, ansDen),
+            wrong: [Q.of(numX * denY + numY * denX, ansDen), Q.of(numX + numY, denX + denY), Q.of(numX, denX)],
             solution: t(
               `$F_{X,Y}(x, y) = \\int_0^x \\int_0^y 1 \\, dv \\, du = x y$. Thus $F_{X,Y}\\left(\\frac{${numX}}{${denX}}, \\frac{${numY}}{${denY}}\\right) = \\frac{${numX}}{${denX}} \\times \\frac{${numY}}{${denY}} = \\frac{${ansNum}}{${ansDen}}${lowestTerms(ansNum, ansDen)}$.`,
               `$F_{X,Y}(x, y) = \\int_0^x \\int_0^y 1 \\, dv \\, du = x y$。因此 $F_{X,Y}\\left(\\frac{${numX}}{${denX}}, \\frac{${numY}}{${denY}}\\right) = \\frac{${numX}}{${denX}} \\times \\frac{${numY}}{${denY}} = \\frac{${ansNum}}{${ansDen}}${lowestTerms(ansNum, ansDen)}$。`,
@@ -637,6 +645,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `设 $X \\sim \\text{Binomial}(${n1}, 0.3)$ 与 $Y \\sim \\text{Binomial}(${n2}, 0.3)$ 为相互独立的随机变量。其和 $S = X + Y$ 服从二项分布 $\\text{Binomial}(n, 0.3)$。求试验次数参数 $n$。`,
             ),
             answer: nSum,
+            wrong: [Math.max(n1, n2), n1 * n2, Q.of(nSum * 3, 10)],
             solution: t(
               `The sum of independent binomial random variables with common parameter $p$ has number of trials equal to the sum of the individual trial counts: $n = n_1 + n_2 = ${n1} + ${n2} = ${nSum}$.`,
               `具有相同参数 $p$ 的独立二项随机变量之和的试验次数等于各自试验次数之和：$n = n_1 + n_2 = ${n1} + ${n2} = ${nSum}$。`,
@@ -677,6 +686,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `设 $X \\sim \\text{Poisson}(${l1})$ 与 $Y \\sim \\text{Poisson}(${l2})$ 为相互独立的随机变量。求其和 $S = X + Y \\sim \\text{Poisson}(\\lambda)$ 的参数 $\\lambda$。`,
             ),
             answer: lSum,
+            wrong: [l1 * l2, Q.of(lSum, 2), Math.abs(l1 - l2)],
             solution: t(
               `By the reproductive property of the Poisson distribution, the sum of independent Poisson variables is Poisson with parameter $\\lambda = \\lambda_1 + \\lambda_2 = ${l1} + ${l2} = ${lSum}$.`,
               `由泊松分布的可加性，独立泊松随机变量之和服从泊松分布，其参数为 $\\lambda = \\lambda_1 + \\lambda_2 = ${l1} + ${l2} = ${lSum}$。`,
@@ -719,6 +729,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `设 $X \\sim N(10, ${v1})$ 与 $Y \\sim N(20, ${v2})$ 为相互独立的正态随机变量。求线性组合 $W = ${a}X - ${b}Y$ 的方差。`,
             ),
             answer: varTotal,
+            wrong: [a * a * v1 - b * b * v2, a * v1 + b * v2, a * v1 - b * v2],
             solution: t(
               `Since $X$ and $Y$ are independent, $\\text{Var}(${a}X - ${b}Y) = ${a}^2 \\text{Var}(X) + (-${b})^2 \\text{Var}(Y) = ${a * a}(${v1}) + ${b * b}(${v2}) = ${a * a * v1} + ${b * b * v2} = ${varTotal}$.`,
               `由于 $X$ 与 $Y$ 相互独立，$\\text{Var}(${a}X - ${b}Y) = ${a}^2 \\text{Var}(X) + (-${b})^2 \\text{Var}(Y) = ${a * a}(${v1}) + ${b * b}(${v2}) = ${a * a * v1} + ${b * b * v2} = ${varTotal}$。`,
@@ -763,6 +774,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `设 $X_1 \\sim N(${m1}, 4)$、$X_2 \\sim N(${m2}, 9)$ 与 $X_3 \\sim N(${m3}, 16)$ 为相互独立的正态随机变量。求线性组合 $W = ${c1} X_1 + ${c2} X_2 - ${c3} X_3$ 的期望值。`,
             ),
             answer: meanTotal,
+            wrong: [c1 * m1 + c2 * m2 + c3 * m3, m1 + m2 - m3, c1 * m1 + c2 * m2],
             solution: t(
               `By linearity of expectation, $E[W] = ${c1} E[X_1] + ${c2} E[X_2] - ${c3} E[X_3] = ${c1}(${m1}) + ${c2}(${m2}) - ${c3}(${m3}) = ${meanTotal}$.`,
               `由期望的线性性质，$E[W] = ${c1} E[X_1] + ${c2} E[X_2] - ${c3} E[X_3] = ${c1}(${m1}) + ${c2}(${m2}) - ${c3}(${m3}) = ${meanTotal}$。`,
@@ -802,6 +814,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `设 $X_1, X_2, \\dots, X_{${n}}$ 为独立同分布的正态随机变量，每个变量的方差均为 $\\sigma^2 = ${sigmaSq}$。求样本均值 $\\bar{X} = \\frac{1}{${n}} \\sum_{i=1}^{${n}} X_i$ 的方差。`,
             ),
             answer: Q.of(sigmaSq, n),
+            wrong: [sigmaSq, Q.of(sigmaSq, n * n), sigmaSq * n],
             solution: t(
               `The variance of the sample mean is $\\text{Var}(\\bar{X}) = \\frac{\\sigma^2}{n} = \\frac{${sigmaSq}}{${n}}${lowestTerms(sigmaSq, n)}$.`,
               `样本均值的方差为 $\\text{Var}(\\bar{X}) = \\frac{\\sigma^2}{n} = \\frac{${sigmaSq}}{${n}}${lowestTerms(sigmaSq, n)}$。`,
@@ -842,6 +855,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `已知 $X$ 与 $Y$ 为相互独立的随机变量，满足 $E[X] = ${eX}$ 与 $E[Y] = ${eY}$。计算期望值 $E[XY]$。`,
             ),
             answer: prod,
+            wrong: [eX + eY, eX * eY + 1, eY - eX],
             solution: t(
               `Because $X$ and $Y$ are independent, $E[XY] = E[X] \\cdot E[Y] = (${eX})(${eY}) = ${prod}$.`,
               `由于 $X$ 与 $Y$ 相互独立，因此 $E[XY] = E[X] \\cdot E[Y] = (${eX})(${eY}) = ${prod}$。`,
@@ -882,6 +896,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `设 $X$ 与 $Y$ 为相互独立的随机变量，其实际方差分别为 $\\text{Var}(X) = ${v1}$ 与 $\\text{Var}(Y) = ${v2}$。求 $\\text{Var}(X - Y)$。`,
             ),
             answer: vTotal,
+            wrong: [v1 - v2, v2 - v1, v1 + v2 + 2],
             solution: t(
               `For independent variables, $\\text{Var}(X - Y) = \\text{Var}(X) + (-1)^2 \\text{Var}(Y) = \\text{Var}(X) + \\text{Var}(Y) = ${v1} + ${v2} = ${vTotal}$.`,
               `对于相互独立的随机变量，$\\text{Var}(X - Y) = \\text{Var}(X) + (-1)^2 \\text{Var}(Y) = \\text{Var}(X) + \\text{Var}(Y) = ${v1} + ${v2} = ${vTotal}$。`,
@@ -927,6 +942,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `离散随机变量 $X \\in \\{1, 2\\}$ 与 $Y \\in \\{1, 2\\}$ 的联合分布由 $P(1, 1) = \\frac{${p11}}{${total}}$、$P(1, 2) = \\frac{${p12}}{${total}}$、$P(2, 1) = \\frac{${p21}}{${total}}$ 及 $P(2, 2) = \\frac{${p22}}{${total}}$ 给出。计算数学期望 $E[XY]$。`,
             ),
             answer: Q.of(num, total),
+            wrong: [Q.of(p11 + p12 + p21 + p22, total), Q.of(p11 + 4 * p22, total), Q.of(num, 4 * total)],
             solution: t(
               `$E[XY] = \\sum_{x} \\sum_{y} xy P(x, y) = 1(1)\\frac{${p11}}{${total}} + 1(2)\\frac{${p12}}{${total}} + 2(1)\\frac{${p21}}{${total}} + 2(2)\\frac{${p22}}{${total}} = \\frac{${num}}{${total}}${lowestTerms(num, total)}$.`,
               `$E[XY] = \\sum_{x} \\sum_{y} xy P(x, y) = 1(1)\\frac{${p11}}{${total}} + 1(2)\\frac{${p12}}{${total}} + 2(1)\\frac{${p21}}{${total}} + 2(2)\\frac{${p22}}{${total}} = \\frac{${num}}{${total}}${lowestTerms(num, total)}$。`,
@@ -970,6 +986,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `已知 $X = 1$ 条件下，随机变量 $Y$ 在 $\\{1, 3\\}$ 上取值的条件概率分别为 $P(Y = 1 \\mid X = 1) = \\frac{${w1}}{${totalW}}$ 与 $P(Y = 3 \\mid X = 1) = \\frac{${w2}}{${totalW}}$。求条件期望 $E[Y \\mid X = 1]$。`,
             ),
             answer: Q.of(num, totalW),
+            wrong: [Q.of(w1 + w2, totalW), 2, Q.of(3 * w1 + w2, totalW)],
             solution: t(
               `$E[Y \\mid X = 1] = 1 \\cdot P(Y = 1 \\mid X = 1) + 3 \\cdot P(Y = 3 \\mid X = 1) = 1 \\left(\\frac{${w1}}{${totalW}}\\right) + 3 \\left(\\frac{${w2}}{${totalW}}\\right) = \\frac{${num}}{${totalW}}${lowestTerms(num, totalW)}$.`,
               `$E[Y \\mid X = 1] = 1 \\cdot P(Y = 1 \\mid X = 1) + 3 \\cdot P(Y = 3 \\mid X = 1) = 1 \\left(\\frac{${w1}}{${totalW}}\\right) + 3 \\left(\\frac{${w2}}{${totalW}}\\right) = \\frac{${num}}{${totalW}}${lowestTerms(num, totalW)}$。`,
@@ -1012,6 +1029,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `已知 $X = 0$ 条件下，$Y$ 分别以等条件概率 $\\frac{1}{2}$ 取值 $0$ 和 $${2 * k}$。求条件方差 $\\text{Var}(Y \\mid X = 0)$。`,
             ),
             answer: varVal,
+            wrong: [k, 2 * k * k, 4 * k * k],
             solution: t(
               `$E[Y \\mid X = 0] = \\frac{1}{2}(0) + \\frac{1}{2}(${2 * k}) = ${k}$. $E[Y^2 \\mid X = 0] = \\frac{1}{2}(0^2) + \\frac{1}{2}(${4 * k * k}) = ${2 * k * k}$. Thus $\\text{Var}(Y \\mid X = 0) = E[Y^2 \\mid X = 0] - (E[Y \\mid X = 0])^2 = ${2 * k * k} - ${k}^2 = ${varVal}$.`,
               `$E[Y \\mid X = 0] = \\frac{1}{2}(0) + \\frac{1}{2}(${2 * k}) = ${k}$。$E[Y^2 \\mid X = 0] = \\frac{1}{2}(0^2) + \\frac{1}{2}(${4 * k * k}) = ${2 * k * k}$。因此 $\\text{Var}(Y \\mid X = 0) = E[Y^2 \\mid X = 0] - (E[Y \\mid X = 0])^2 = ${2 * k * k} - ${k}^2 = ${varVal}$。`,
@@ -1118,6 +1136,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `某系统以 $\\frac{${p1.num}}{${p1.den}}$ 的概率处于状态 1，以 $\\frac{${p1.den - p1.num}}{${p1.den}}$ 的概率处于状态 2。条件平均响应时间分别为 $E[T \\mid \\text{状态 1}] = ${e1}$ ms 与 $E[T \\mid \\text{状态 2}] = ${e2}$ ms。求总平均响应时间 $E[T]$。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(e1 + e2, 2), Q.of(e1 * (p1.den - p1.num) + e2 * p1.num, den), e1 + e2],
             solution: t(
               `By the Law of Total Expectation, $E[T] = E[T \\mid \\text{State 1}] P(\\text{State 1}) + E[T \\mid \\text{State 2}] P(\\text{State 2}) = ${e1} \\left(\\frac{${p1.num}}{${p1.den}}\\right) + ${e2} \\left(\\frac{${p1.den - p1.num}}{${p1.den}}\\right) = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `由全期望公式，$E[T] = E[T \\mid \\text{状态 1}] P(\\text{状态 1}) + E[T \\mid \\text{状态 2}] P(\\text{状态 2}) = ${e1} \\left(\\frac{${p1.num}}{${p1.den}}\\right) + ${e2} \\left(\\frac{${p1.den - p1.num}}{${p1.den}}\\right) = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -1159,6 +1178,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `已知 $E[X] = ${eX}$、$E[Y] = ${eY}$ 且 $E[XY] = ${eXY}$。计算协方差 $\\text{Cov}(X, Y)$。`,
             ),
             answer: cov,
+            wrong: [eXY, eXY + eX * eY, eX * eY - eXY],
             solution: t(
               `$\\text{Cov}(X, Y) = E[XY] - E[X] E[Y] = ${eXY} - (${eX})(${eY}) = ${eXY} - ${eX * eY} = ${cov}$.`,
               `$\\text{Cov}(X, Y) = E[XY] - E[X] E[Y] = ${eXY} - (${eX})(${eY}) = ${eXY} - ${eX * eY} = ${cov}$。`,
@@ -1200,6 +1220,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `两个相关的随机变量满足方差 $\\text{Var}(X) = ${vx}$、$\\text{Var}(Y) = ${vy}$ 及协方差 $\\text{Cov}(X, Y) = ${cov}$。求两者之和的方差 $\\text{Var}(X + Y)$。`,
             ),
             answer: totalVar,
+            wrong: [vx + vy, vx + vy + cov, vx + vy - 2 * cov],
             solution: t(
               `$\\text{Var}(X + Y) = \\text{Var}(X) + \\text{Var}(Y) + 2\\text{Cov}(X, Y) = ${vx} + ${vy} + 2(${cov}) = ${totalVar}$.`,
               `$\\text{Var}(X + Y) = \\text{Var}(X) + \\text{Var}(Y) + 2\\text{Cov}(X, Y) = ${vx} + ${vy} + 2(${cov}) = ${totalVar}$。`,
@@ -1240,6 +1261,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `随机向量 $(X_1, X_2)^T$ 的协方差矩阵为 $\\Sigma = \\begin{pmatrix} ${v1} & ${cov} \\\\ ${cov} & ${v2} \\end{pmatrix}$。求迹 $\\text{tr}(\\Sigma) = \\text{Var}(X_1) + \\text{Var}(X_2)$。`,
             ),
             answer: v1 + v2,
+            wrong: [v1 + v2 + 2 * cov, v1 * v2 - cov * cov, v1 + v2 + cov],
             solution: t(
               `The trace is the sum of diagonal entries, which represent the variances of the individual variables: $\\text{tr}(\\Sigma) = ${v1} + ${v2} = ${v1 + v2}$.`,
               `矩阵的迹是对角线元素之和，对应每个变量的方差之和：$\\text{tr}(\\Sigma) = ${v1} + ${v2} = ${v1 + v2}$。`,
@@ -1282,6 +1304,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `两个随机变量 $X$ 与 $Y$ 的标准差分别为 $\\sigma_X = ${sx}$ 与 $\\sigma_Y = ${sy}$，协方差为 $\\text{Cov}(X, Y) = ${cov}$。求相关系数 $\\rho(X, Y)$。`,
             ),
             answer: Q.of(cov, sx * sy),
+            wrong: [Q.of(cov, sx * sx * sy * sy), Q.of(cov, sx + sy), Q.of(cov, sx * sy * sy)],
             solution: t(
               `$\\rho(X, Y) = \\frac{\\text{Cov}(X, Y)}{\\sigma_X \\sigma_Y} = \\frac{${cov}}{(${sx})(${sy})} = \\frac{${cov}}{${sx * sy}}${lowestTerms(cov, sx * sy)}$.`,
               `$\\rho(X, Y) = \\frac{\\text{Cov}(X, Y)}{\\sigma_X \\sigma_Y} = \\frac{${cov}}{(${sx})(${sy})} = \\frac{${cov}}{${sx * sy}}${lowestTerms(cov, sx * sy)}$。`,

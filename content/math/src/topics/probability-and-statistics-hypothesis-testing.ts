@@ -140,6 +140,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
               `在 $n = ${n}$ 个观测周期内，共观测到 $K = ${k}$ 次事件。检验 $H_0: \\lambda = ${lambda0}$ 对 $H_1: \\lambda \\neq ${lambda0}$。计算标准化检验统计量 $z = \\frac{K - n\\lambda_0}{\\sqrt{n\\lambda_0}}$。`,
             ),
             answer: z,
+            wrong: [d * m, -d, Q.of(d, m)],
             solution: t(
               `The expected count under $H_0$ is $n\\lambda_0 = ${n} \\times ${lambda0} = ${expected}$, so $\\sqrt{n\\lambda_0} = ${m}$. The test statistic is $z = \\frac{${k} - ${expected}}{${m}} = \\frac{${d * m}}{${m}} = ${z}$.`,
               `在 $H_0$ 下的期望事件数为 $n\\lambda_0 = ${n} \\times ${lambda0} = ${expected}$，故 $\\sqrt{n\\lambda_0} = ${m}$。检验统计量为 $z = \\frac{${k} - ${expected}}{${m}} = \\frac{${d * m}}{${m}} = ${z}$。`,
@@ -464,6 +465,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
               `从已知标准差 $\\sigma = ${sigma}$ 的正态总体中抽取容量为 $n = ${n}$ 的随机样本，得样本均值 $\\bar{x} = ${xBar}$。为检验 $H_0: \\mu = ${mu0}$，计算检验统计量 $z = \\frac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}}$。`,
             ),
             answer: z,
+            wrong: [Q.of(d * s, sigma), d * s, d * k],
             solution: t(
               `The standard error is $\\frac{\\sigma}{\\sqrt{n}} = \\frac{${sigma}}{\\sqrt{${n}}} = \\frac{${sigma}}{${k}} = ${s}$. Thus $z = \\frac{${xBar} - ${mu0}}{${s}} = \\frac{${d * s}}{${s}} = ${z}$.`,
               `标准误差为 $\\frac{\\sigma}{\\sqrt{n}} = \\frac{${sigma}}{\\sqrt{${n}}} = \\frac{${sigma}}{${k}} = ${s}$。因此 $z = \\frac{${xBar} - ${mu0}}{${s}} = \\frac{${d * s}}{${s}} = ${z}$。`,
@@ -512,6 +514,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
               `从正态总体中抽取容量为 $n = ${n}$ 的随机样本，得样本均值 $\\bar{x} = ${xBar}$ 及样本标准差 $s = ${s}$。为检验 $H_0: \\mu = ${mu0}$，计算检验统计量 $t = \\frac{\\bar{x} - \\mu_0}{s / \\sqrt{n}}$ 的值。`,
             ),
             answer: tVal,
+            wrong: [Q.of(d * mult, s), d * mult, d * k],
             solution: t(
               `The estimated standard error is $\\frac{s}{\\sqrt{n}} = \\frac{${s}}{\\sqrt{${n}}} = \\frac{${s}}{${k}} = ${mult}$. Thus $t = \\frac{${xBar} - ${mu0}}{${mult}} = \\frac{${d * mult}}{${mult}} = ${tVal}$ (with $\\nu = ${n} - 1 = ${n - 1}$ degrees of freedom).`,
               `估计标准误差为 $\\frac{s}{\\sqrt{n}} = \\frac{${s}}{\\sqrt{${n}}} = \\frac{${s}}{${k}} = ${mult}$。因此 $t = \\frac{${xBar} - ${mu0}}{${mult}} = \\frac{${d * mult}}{${mult}} = ${tVal}$（自由度 $\\nu = ${n} - 1 = ${n - 1}$）。`,
@@ -555,6 +558,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
               `从正态分布中抽取容量为 $n = ${n}$ 的随机样本，测得样本方差 $s^2 = ${sSq}$。检验 $H_0: \\sigma^2 = ${sigma0Sq}$。求检验统计量 $\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2}$ 的精确有理数值。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(n * sSq, sigma0Sq), Q.of(sSq, sigma0Sq), Q.of(df * sigma0Sq, sSq)],
             solution: t(
               `$\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2} = \\frac{(${n} - 1)(${sSq})}{${sigma0Sq}} = \\frac{${df} \\times ${sSq}}{${sigma0Sq}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `$\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2} = \\frac{(${n} - 1)(${sSq})}{${sigma0Sq}} = \\frac{${df} \\times ${sSq}}{${sigma0Sq}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -613,6 +617,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
               `从两个正态总体抽取的独立样本均值分别为 $\\bar{x}_1 = ${xBar1}$（$n_1 = ${n1}$，$\\sigma_1^2 = ${sig1Sq}$）和 $\\bar{x}_2 = ${xBar2}$（$n_2 = ${n2}$，$\\sigma_2^2 = ${sig2Sq}$）。为检验 $H_0: \\mu_1 - \\mu_2 = 0$，计算检验统计量 $z = \\frac{\\bar{x}_1 - \\bar{x}_2}{\\sqrt{\\sigma_1^2/n_1 + \\sigma_2^2/n_2}}$。`,
             ),
             answer: d,
+            wrong: [diff, -d, Q.of(diff, choice.se * choice.se)],
             solution: t(
               `$\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2} = \\frac{${sig1Sq}}{${n1}} + \\frac{${sig2Sq}}{${n2}} = ${choice.v1} + ${choice.v2} = ${choice.se * choice.se}$, so $\\text{SE} = ${choice.se}$. The test statistic is $z = \\frac{${xBar1} - ${xBar2}}{${choice.se}} = \\frac{${diff}}{${choice.se}} = ${d}$.`,
               `$\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2} = \\frac{${sig1Sq}}{${n1}} + \\frac{${sig2Sq}}{${n2}} = ${choice.v1} + ${choice.v2} = ${choice.se * choice.se}$，故 $\\text{SE} = ${choice.se}$。检验统计量为 $z = \\frac{${xBar1} - ${xBar2}}{${choice.se}} = \\frac{${diff}}{${choice.se}} = ${d}$。`,
@@ -661,6 +666,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
               `两个独立样本的容量分别为 $n_1 = ${n1}$（方差 $s_1^2 = ${s1Sq}$）和 $n_2 = ${n2}$（方差 $s_2^2 = ${s2Sq}$）。在方差齐性假定下，求合并样本方差 $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$ 的精确有理数值。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(s1Sq + s2Sq, 2), Q.of(n1 * s1Sq + n2 * s2Sq, n1 + n2), Q.of(num, den + 2)],
             solution: t(
               `$s_p^2 = \\frac{(${df1})(${s1Sq}) + (${df2})(${s2Sq})}{${df1} + ${df2}} = \\frac{${df1 * s1Sq} + ${df2 * s2Sq}}{${den}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `$s_p^2 = \\frac{(${df1})(${s1Sq}) + (${df2})(${s2Sq})}{${df1} + ${df2}} = \\frac{${df1 * s1Sq} + ${df2 * s2Sq}}{${den}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -703,6 +709,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
               `在比较两个独立总体的韦尔奇 $t$ 检验中，样本 1 具有 $n_1 = ${n1}$、$s_1^2 = ${s1Sq}$，样本 2 具有 $n_2 = ${n2}$、$s_2^2 = ${s2Sq}$。计算标准误差平方 $\\text{SE}^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}$ 的精确有理数值。`,
             ),
             answer: ans,
+            wrong: [Q.of(s1Sq + s2Sq, n1 + n2), Q.of(s1Sq * n1 + s2Sq * n2, n1 * n2), Q.of(s1Sq, n1).sub(Q.of(s2Sq, n2))],
             solution: t(
               `$\\text{SE}^2 = \\frac{${s1Sq}}{${n1}} + \\frac{${s2Sq}}{${n2}} = ${ans.toLatex()}$.`,
               `$\\text{SE}^2 = \\frac{${s1Sq}}{${n1}} + \\frac{${s2Sq}}{${n2}} = ${ans.toLatex()}$。`,
@@ -746,6 +753,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
               `样本 1 在 $n_1 = ${n1}$ 次试验中有 $x_1 = ${x1}$ 次成功，样本 2 在 $n_2 = ${n2}$ 次试验中有 $x_2 = ${x2}$ 次成功。检验 $H_0: p_1 = p_2$ 时，求合并样本比例 $\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2}$ 的精确有理数值。`,
             ),
             answer: Q.of(num, den),
+            wrong: [Q.of(x1, n1).add(Q.of(x2, n2)), Q.of(x1 * n2 + x2 * n1, 2 * n1 * n2), Q.of(num, n1 * n2)],
             solution: t(
               `$\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2} = \\frac{${x1} + ${x2}}{${n1} + ${n2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `$\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2} = \\frac{${x1} + ${x2}}{${n1} + ${n2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
@@ -789,6 +797,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
               `容量为 $n = ${n}$ 的配对差值样本均值为 $\\bar{d} = ${dBar}$。已知差值总体的标准差为 $\\sigma_d = ${sigmaD}$。检验 $H_0: \\mu_d = 0$。计算检验统计量 $z = \\frac{\\bar{d}}{\\sigma_d / \\sqrt{n}}$。`,
             ),
             answer: d,
+            wrong: [Q.of(dBar, sigmaD), dBar, d * k],
             solution: t(
               `The standard error is $\\frac{\\sigma_d}{\\sqrt{n}} = \\frac{${sigmaD}}{\\sqrt{${n}}} = \\frac{${sigmaD}}{${k}} = ${s}$. The test statistic is $z = \\frac{${dBar}}{${s}} = ${d}$.`,
               `标准误差为 $\\frac{\\sigma_d}{\\sqrt{n}} = \\frac{${sigmaD}}{\\sqrt{${n}}} = \\frac{${sigmaD}}{${k}} = ${s}$。检验统计量为 $z = \\frac{${dBar}}{${s}} = ${d}$。`,
@@ -832,6 +841,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
               `容量为 $n = ${n}$ 的配对差值样本均值为 $\\bar{d} = ${dBar}$，样本标准差为 $s_d = ${sD}$。检验 $H_0: \\mu_d = 0$。计算检验统计量 $t = \\frac{\\bar{d}}{s_d / \\sqrt{n}}$。`,
             ),
             answer: d,
+            wrong: [Q.of(dBar, sD), dBar, d * k],
             solution: t(
               `The estimated standard error is $\\frac{s_d}{\\sqrt{n}} = \\frac{${sD}}{\\sqrt{${n}}} = \\frac{${sD}}{${k}} = ${s}$. The test statistic is $t = \\frac{${dBar}}{${s}} = ${d}$ (with $\\nu = ${n - 1}$ degrees of freedom).`,
               `估计标准误差为 $\\frac{s_d}{\\sqrt{n}} = \\frac{${sD}}{\\sqrt{${n}}} = \\frac{${sD}}{${k}} = ${s}$。检验统计量为 $t = \\frac{${dBar}}{${s}} = ${d}$（自由度 $\\nu = ${n - 1}$）。`,
@@ -873,6 +883,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
               `来自正态总体的独立样本容量分别为 $n_1 = ${n1}$ 与 $n_2 = ${n2}$，样本方差分别为 $s_1^2 = ${s1Sq}$ 与 $s_2^2 = ${s2Sq}$。为检验 $H_0: \\sigma_1^2 = \\sigma_2^2$ 对 $H_1: \\sigma_1^2 > \\sigma_2^2$，求检验统计量 $F = \\frac{s_1^2}{s_2^2}$ 的精确有理数值。`,
             ),
             answer: Q.of(s1Sq, s2Sq),
+            wrong: [Q.of(s2Sq, s1Sq), Q.of((n1 - 1) * s1Sq, (n2 - 1) * s2Sq), s1Sq - s2Sq],
             solution: t(
               `$F = \\frac{s_1^2}{s_2^2} = \\frac{${s1Sq}}{${s2Sq}} = ${Q.of(s1Sq, s2Sq).toLatex()}$ (with numerator $\\nu_1 = ${n1 - 1}$ and denominator $\\nu_2 = ${n2 - 1}$ degrees of freedom).`,
               `$F = \\frac{s_1^2}{s_2^2} = \\frac{${s1Sq}}{${s2Sq}} = ${Q.of(s1Sq, s2Sq).toLatex()}$（分子自由度 $\\nu_1 = ${n1 - 1}$，分母自由度 $\\nu_2 = ${n2 - 1}$）。`,
@@ -986,6 +997,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
                 `在单因素方差分析研究中，组间平方和为 $SSB = ${ssb}$，组内平方和为 $SSW = ${ssw}$。求总平方和 $SST$。`,
               ),
               answer: sst,
+              wrong: [ssb * ssw, ssw - ssb, Math.max(ssb, ssw)],
               solution: t(
                 `By the ANOVA identity, $SST = SSB + SSW = ${ssb} + ${ssw} = ${sst}$.`,
                 `根据方差分析恒等式，$SST = SSB + SSW = ${ssb} + ${ssw} = ${sst}$。`,
@@ -998,6 +1010,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
                 `在单因素方差分析研究中，总平方和为 $SST = ${sst}$，组内平方和为 $SSW = ${ssw}$。求组间平方和 $SSB$。`,
               ),
               answer: ssb,
+              wrong: [sst + ssw, ssw - sst, ssw],
               solution: t(`$SSB = SST - SSW = ${sst} - ${ssw} = ${ssb}$.`, `$SSB = SST - SSW = ${sst} - ${ssw} = ${ssb}$。`),
             });
           } else {
@@ -1007,6 +1020,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
                 `在单因素方差分析研究中，总平方和为 $SST = ${sst}$，组间平方和为 $SSB = ${ssb}$. 求组内平方和 $SSW$。`,
               ),
               answer: ssw,
+              wrong: [sst + ssb, ssb - sst, ssb],
               solution: t(`$SSW = SST - SSB = ${sst} - ${ssb} = ${ssw}$.`, `$SSW = SST - SSB = ${sst} - ${ssb} = ${ssw}$。`),
             });
           }
@@ -1051,6 +1065,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
               `某单因素方差分析比较 $k = ${k}$ 个处理组，全部组共计 $N = ${N}$ 个观测值。已知平方和为 $SSB = ${ssb}$ 与 $SSW = ${ssw}$。计算该方差分析检验统计量 $F = \\frac{MSB}{MSW} = \\frac{SSB / (k - 1)}{SSW / (N - k)}$ 的精确有理数值。`,
             ),
             answer: Q.of(msB, msW),
+            wrong: [Q.of(ssb, ssw), Q.of(msW, msB), Q.of(ssb * dfW, ssw * (dfB + 1))],
             solution: t(
               `The mean squares are $MSB = \\frac{SSB}{k - 1} = \\frac{${ssb}}{${dfB}} = ${msB}$ and $MSW = \\frac{SSW}{N - k} = \\frac{${ssw}}{${dfW}} = ${msW}$. Thus $F = \\frac{MSB}{MSW} = \\frac{${msB}}{${msW}} = ${Q.of(msB, msW).toLatex()}$.`,
               `均方分别为 $MSB = \\frac{SSB}{k - 1} = \\frac{${ssb}}{${dfB}} = ${msB}$ 以及 $MSW = \\frac{SSW}{N - k} = \\frac{${ssw}}{${dfW}} = ${msW}$。因此 $F = \\frac{MSB}{MSW} = \\frac{${msB}}{${msW}} = ${Q.of(msB, msW).toLatex()}$。`,
