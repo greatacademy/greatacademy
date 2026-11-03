@@ -116,8 +116,8 @@ export const dividingFractionsWordProblems = topic(
       id: "how-many-portions-of-a-fraction",
       title: t("How many portions?", "有几份？"),
       explanation: t(
-        "$\\frac{3}{4}$ cup in $\\frac{3}{8}$-cup servings: $\\frac{3}{4} \\div \\frac{3}{8} = \\frac{3}{4} \\times \\frac{8}{3} = 2$ servings.",
-        "$\\frac{3}{4}$ 杯，每份 $\\frac{3}{8}$ 杯：$\\frac{3}{4} \\div \\frac{3}{8} = \\frac{3}{4} \\times \\frac{8}{3} = 2$ 份。",
+        '"How many portions" means divide the total by the size of one portion. To divide by a fraction, multiply by its reciprocal.\n\n$\\frac{3}{4}$ cup in $\\frac{3}{8}$-cup servings: $\\frac{3}{4} \\div \\frac{3}{8} = \\frac{3}{4} \\times \\frac{8}{3} = 2$ servings.',
+        '"能分成几份"就是用总量除以每份的量。除以一个分数，等于乘它的倒数。\n\n$\\frac{3}{4}$ 杯，每份 $\\frac{3}{8}$ 杯：$\\frac{3}{4} \\div \\frac{3}{8} = \\frac{3}{4} \\times \\frac{8}{3} = 2$ 份。',
       ),
       generate(rng) {
         const s = rng.pick(portionStories);
@@ -146,8 +146,8 @@ export const dividingFractionsWordProblems = topic(
       id: "how-much-in-one-unit",
       title: t("How much for one unit?", "每个单位是多少？"),
       explanation: t(
-        "$\\frac{3}{4}$ mile in $\\frac{1}{2}$ hour: $\\frac{3}{4} \\div \\frac{1}{2} = \\frac{3}{4} \\times 2 = 1\\frac{1}{2}$ miles per hour.",
-        "$\\frac{1}{2}$ 小时走 $\\frac{3}{4}$ 英里：$\\frac{3}{4} \\div \\frac{1}{2} = \\frac{3}{4} \\times 2 = 1\\frac{1}{2}$ 英里/小时。",
+        '"How much for one unit" is a unit rate: divide the amount by the number of units, even when that number is a fraction. Dividing by a fraction less than $1$ gives a larger number.\n\n$\\frac{3}{4}$ mile in $\\frac{1}{2}$ hour: $\\frac{3}{4} \\div \\frac{1}{2} = \\frac{3}{4} \\times 2 = 1\\frac{1}{2}$ miles per hour.',
+        '"每一个单位是多少"是求单位量：用总量除以单位数，即使单位数是分数也一样。除以小于 $1$ 的分数，结果会变大。\n\n$\\frac{1}{2}$ 小时走 $\\frac{3}{4}$ 英里：$\\frac{3}{4} \\div \\frac{1}{2} = \\frac{3}{4} \\times 2 = 1\\frac{1}{2}$ 英里/小时。',
       ),
       generate(rng) {
         const [a, b] = properFraction(rng, 10, 2);
@@ -221,8 +221,8 @@ export const findingSideLengthsUsingFractionDivision = topic(
       id: "side-from-a-fractional-area",
       title: t("Fractional area and side", "面积和边长都是分数"),
       explanation: t(
-        "Area $\\frac{3}{4}$ ft², width $\\frac{1}{2}$ ft: length $= \\frac{3}{4} \\div \\frac{1}{2} = \\frac{3}{2} = 1\\frac{1}{2}$ ft.",
-        "面积 $\\frac{3}{4}$ 平方英尺，宽 $\\frac{1}{2}$ 英尺：长 $= \\frac{3}{4} \\div \\frac{1}{2} = \\frac{3}{2} = 1\\frac{1}{2}$ 英尺。",
+        "The area of a rectangle is length times width, so a missing side is the area divided by the known side. Divide by multiplying by the reciprocal.\n\nArea $\\frac{3}{4}$ square foot, width $\\frac{1}{2}$ foot: length $= \\frac{3}{4} \\div \\frac{1}{2} = \\frac{3}{4} \\times 2 = \\frac{3}{2} = 1\\frac{1}{2}$ feet.",
+        "长方形的面积等于长乘宽，所以未知的边长等于面积除以已知的边长。除以分数就乘它的倒数。\n\n面积 $\\frac{3}{4}$ 平方英尺，宽 $\\frac{1}{2}$ 英尺：长 $= \\frac{3}{4} \\div \\frac{1}{2} = \\frac{3}{4} \\times 2 = \\frac{3}{2} = 1\\frac{1}{2}$ 英尺。",
       ),
       generate(rng) {
         const [a, b] = properFraction(rng, 8, 2);
@@ -252,8 +252,8 @@ export const findingSideLengthsUsingFractionDivision = topic(
       id: "side-from-a-whole-area",
       title: t("Whole-number area", "面积是整数"),
       explanation: t(
-        "Area $6$ ft², width $\\frac{3}{4}$ ft: length $= 6 \\div \\frac{3}{4} = 6 \\times \\frac{4}{3} = 8$ ft.",
-        "面积 $6$ 平方英尺，宽 $\\frac{3}{4}$ 英尺：长 $= 6 \\div \\frac{3}{4} = 6 \\times \\frac{4}{3} = 8$ 英尺。",
+        "Divide the area by the known side, multiplying by its reciprocal. When the known side is less than $1$, the other side is longer than the area's number.\n\nArea $6$ square feet, width $\\frac{3}{4}$ foot: length $= 6 \\div \\frac{3}{4} = 6 \\times \\frac{4}{3} = 8$ feet.",
+        "用面积除以已知的边长，即乘它的倒数。已知边长小于 $1$ 时，求出的边长比面积的数值还大。\n\n面积 $6$ 平方英尺，宽 $\\frac{3}{4}$ 英尺：长 $= 6 \\div \\frac{3}{4} = 6 \\times \\frac{4}{3} = 8$ 英尺。",
       ),
       generate(rng) {
         const [a, b] = properFraction(rng, 8, 2);
@@ -299,8 +299,8 @@ export const dividingMixedNumbersByWholeNumbers = topic(
       id: "mixed-by-whole-fraction-result",
       title: t("Results less than 1", "结果小于 1"),
       explanation: t(
-        "$2\\frac{1}{4} \\div 3 = \\frac{9}{4} \\times \\frac{1}{3} = \\frac{9}{12} = \\frac{3}{4}$.",
-        "$2\\frac{1}{4} \\div 3 = \\frac{9}{4} \\times \\frac{1}{3} = \\frac{9}{12} = \\frac{3}{4}$。",
+        "Write the mixed number as an improper fraction, then multiply by the reciprocal of the whole number, which is $1$ over it. Simplify the result.\n\n$2\\frac{1}{4} \\div 3 = \\frac{9}{4} \\times \\frac{1}{3} = \\frac{9}{12} = \\frac{3}{4}$.",
+        "先把带分数化成假分数，再乘整数的倒数，即 $1$ 分之这个整数，最后约分。\n\n$2\\frac{1}{4} \\div 3 = \\frac{9}{4} \\times \\frac{1}{3} = \\frac{9}{12} = \\frac{3}{4}$。",
       ),
       generate(rng) {
         const a = mixedNumber(rng, 3, 6);
@@ -312,8 +312,8 @@ export const dividingMixedNumbersByWholeNumbers = topic(
       id: "mixed-by-whole-mixed-result",
       title: t("Results greater than 1", "结果大于 1"),
       explanation: t(
-        "$7\\frac{1}{2} \\div 2 = \\frac{15}{2} \\times \\frac{1}{2} = \\frac{15}{4} = 3\\frac{3}{4}$.",
-        "$7\\frac{1}{2} \\div 2 = \\frac{15}{2} \\times \\frac{1}{2} = \\frac{15}{4} = 3\\frac{3}{4}$。",
+        "Change the mixed number to an improper fraction, multiply by the reciprocal of the whole number, and write an improper result as a mixed number.\n\n$7\\frac{1}{2} \\div 2 = \\frac{15}{2} \\times \\frac{1}{2} = \\frac{15}{4} = 3\\frac{3}{4}$. Dividing only the whole part, $7 \\div 2$, and keeping $\\frac{1}{2}$ is a common mistake.",
+        "把带分数化成假分数，乘整数的倒数，结果是假分数时化成带分数。\n\n$7\\frac{1}{2} \\div 2 = \\frac{15}{2} \\times \\frac{1}{2} = \\frac{15}{4} = 3\\frac{3}{4}$。只用整数部分除以 $2$ 而保留 $\\frac{1}{2}$ 是常见的错误。",
       ),
       generate(rng) {
         const n = rng.int(2, 4);
@@ -339,8 +339,8 @@ export const dividingMixedNumbersByFractions = topic(
       id: "mixed-by-fraction-whole-result",
       title: t("Whole-number results", "结果是整数"),
       explanation: t(
-        "$2\\frac{1}{4} \\div \\frac{3}{4} = \\frac{9}{4} \\times \\frac{4}{3} = 3$: there are $3$ three-quarters in $2\\frac{1}{4}$.",
-        "$2\\frac{1}{4} \\div \\frac{3}{4} = \\frac{9}{4} \\times \\frac{4}{3} = 3$：$2\\frac{1}{4}$ 里有 $3$ 个 $\\frac{3}{4}$。",
+        "Write the mixed number as an improper fraction, then multiply by the reciprocal of the fraction. The answer counts how many of the fraction fit into the mixed number.\n\n$2\\frac{1}{4} \\div \\frac{3}{4} = \\frac{9}{4} \\times \\frac{4}{3} = 3$: there are $3$ three-quarters in $2\\frac{1}{4}$.",
+        "先把带分数化成假分数，再乘除数的倒数。结果表示带分数里有几个这样的分数。\n\n$2\\frac{1}{4} \\div \\frac{3}{4} = \\frac{9}{4} \\times \\frac{4}{3} = 3$：$2\\frac{1}{4}$ 里有 $3$ 个 $\\frac{3}{4}$。",
       ),
       generate(rng) {
         const [p, q] = properFraction(rng, 8, 2);
@@ -354,8 +354,8 @@ export const dividingMixedNumbersByFractions = topic(
       id: "mixed-by-fraction-any-result",
       title: t("Any result", "一般情况"),
       explanation: t(
-        "$3\\frac{1}{3} \\div \\frac{4}{5} = \\frac{10}{3} \\times \\frac{5}{4} = \\frac{50}{12} = 4\\frac{1}{6}$.",
-        "$3\\frac{1}{3} \\div \\frac{4}{5} = \\frac{10}{3} \\times \\frac{5}{4} = \\frac{50}{12} = 4\\frac{1}{6}$。",
+        "Change the mixed number to an improper fraction, multiply by the reciprocal of the divisor, then simplify and write the answer as a mixed number.\n\n$3\\frac{1}{3} \\div \\frac{4}{5} = \\frac{10}{3} \\times \\frac{5}{4} = \\frac{50}{12} = 4\\frac{2}{12} = 4\\frac{1}{6}$.",
+        "把带分数化成假分数，乘除数的倒数，再约分并写成带分数。\n\n$3\\frac{1}{3} \\div \\frac{4}{5} = \\frac{10}{3} \\times \\frac{5}{4} = \\frac{50}{12} = 4\\frac{2}{12} = 4\\frac{1}{6}$。",
       ),
       generate(rng) {
         const a = mixedNumber(rng, 5, 8);
@@ -380,8 +380,8 @@ export const dividingWholeNumbersByMixedNumbers = topic(
       id: "whole-by-mixed-whole-result",
       title: t("Whole-number results", "结果是整数"),
       explanation: t(
-        "$10 \\div 2\\frac{1}{2} = 10 \\div \\frac{5}{2} = 10 \\times \\frac{2}{5} = 4$.",
-        "$10 \\div 2\\frac{1}{2} = 10 \\div \\frac{5}{2} = 10 \\times \\frac{2}{5} = 4$。",
+        "To divide by a mixed number, first write it as an improper fraction. Then multiply by its reciprocal.\n\n$10 \\div 2\\frac{1}{2} = 10 \\div \\frac{5}{2} = 10 \\times \\frac{2}{5} = 4$. Flipping the mixed number without changing it to an improper fraction first gives a wrong reciprocal.",
+        "除以带分数时，先把带分数化成假分数，再乘它的倒数。\n\n$10 \\div 2\\frac{1}{2} = 10 \\div \\frac{5}{2} = 10 \\times \\frac{2}{5} = 4$。不先化成假分数就直接颠倒，得到的倒数是错的。",
       ),
       generate(rng) {
         const b = mixedNumber(rng, 3, 5);
@@ -398,8 +398,8 @@ export const dividingWholeNumbersByMixedNumbers = topic(
       id: "whole-by-mixed-any-result",
       title: t("Any result", "一般情况"),
       explanation: t(
-        "$7 \\div 1\\frac{3}{4} = 7 \\times \\frac{4}{7} = 4$, and $5 \\div 1\\frac{1}{3} = 5 \\times \\frac{3}{4} = \\frac{15}{4} = 3\\frac{3}{4}$.",
-        "$7 \\div 1\\frac{3}{4} = 7 \\times \\frac{4}{7} = 4$；$5 \\div 1\\frac{1}{3} = 5 \\times \\frac{3}{4} = \\frac{15}{4} = 3\\frac{3}{4}$。",
+        "Write the mixed number as an improper fraction, multiply by its reciprocal, and change an improper answer to a mixed number.\n\n$7 \\div 1\\frac{3}{4} = 7 \\times \\frac{4}{7} = 4$, and $5 \\div 1\\frac{1}{3} = 5 \\times \\frac{3}{4} = \\frac{15}{4} = 3\\frac{3}{4}$.",
+        "把带分数化成假分数，乘它的倒数，结果是假分数时化成带分数。\n\n$7 \\div 1\\frac{3}{4} = 7 \\times \\frac{4}{7} = 4$；$5 \\div 1\\frac{1}{3} = 5 \\times \\frac{3}{4} = \\frac{15}{4} = 3\\frac{3}{4}$。",
       ),
       generate(rng) {
         const b = mixedNumber(rng, 3, 8);
@@ -424,8 +424,8 @@ export const dividingFractionsByMixedNumbers = topic(
       id: "fraction-by-mixed",
       title: t("Dividing a fraction by a mixed number", "分数除以带分数"),
       explanation: t(
-        "$\\frac{3}{4} \\div 1\\frac{1}{2} = \\frac{3}{4} \\times \\frac{2}{3} = \\frac{6}{12} = \\frac{1}{2}$.",
-        "$\\frac{3}{4} \\div 1\\frac{1}{2} = \\frac{3}{4} \\times \\frac{2}{3} = \\frac{6}{12} = \\frac{1}{2}$。",
+        "Change the mixed-number divisor to an improper fraction, then multiply by its reciprocal and simplify. Since the divisor is greater than $1$, the answer is smaller than the fraction you started with.\n\n$\\frac{3}{4} \\div 1\\frac{1}{2} = \\frac{3}{4} \\div \\frac{3}{2} = \\frac{3}{4} \\times \\frac{2}{3} = \\frac{6}{12} = \\frac{1}{2}$.",
+        "先把作除数的带分数化成假分数，再乘它的倒数并约分。因为除数大于 $1$，结果比原来的分数小。\n\n$\\frac{3}{4} \\div 1\\frac{1}{2} = \\frac{3}{4} \\div \\frac{3}{2} = \\frac{3}{4} \\times \\frac{2}{3} = \\frac{6}{12} = \\frac{1}{2}$。",
       ),
       generate(rng) {
         const [p, q] = properFraction(rng, 10, 2);
@@ -475,8 +475,8 @@ export const dividingMixedNumbers = topic(
       id: "mixed-by-mixed-whole-result",
       title: t("Whole-number results", "结果是整数"),
       explanation: t(
-        "$3\\frac{3}{4} \\div 1\\frac{1}{4} = \\frac{15}{4} \\times \\frac{4}{5} = 3$.",
-        "$3\\frac{3}{4} \\div 1\\frac{1}{4} = \\frac{15}{4} \\times \\frac{4}{5} = 3$。",
+        "To divide two mixed numbers, write both as improper fractions, then multiply the first by the reciprocal of the second.\n\n$3\\frac{3}{4} \\div 1\\frac{1}{4} = \\frac{15}{4} \\div \\frac{5}{4} = \\frac{15}{4} \\times \\frac{4}{5} = 3$.",
+        "两个带分数相除，先都化成假分数，再用第一个数乘第二个数的倒数。\n\n$3\\frac{3}{4} \\div 1\\frac{1}{4} = \\frac{15}{4} \\div \\frac{5}{4} = \\frac{15}{4} \\times \\frac{4}{5} = 3$。",
       ),
       generate(rng) {
         const b = mixedNumber(rng, 2, 6);
@@ -490,8 +490,8 @@ export const dividingMixedNumbers = topic(
       id: "mixed-by-mixed-any-result",
       title: t("Any result", "一般情况"),
       explanation: t(
-        "$2\\frac{1}{2} \\div 1\\frac{1}{3} = \\frac{5}{2} \\times \\frac{3}{4} = \\frac{15}{8} = 1\\frac{7}{8}$.",
-        "$2\\frac{1}{2} \\div 1\\frac{1}{3} = \\frac{5}{2} \\times \\frac{3}{4} = \\frac{15}{8} = 1\\frac{7}{8}$。",
+        "Write both as improper fractions, multiply by the reciprocal of the divisor, and write the result as a mixed number in simplest form. Do not divide the whole parts and the fraction parts separately.\n\n$2\\frac{1}{2} \\div 1\\frac{1}{3} = \\frac{5}{2} \\times \\frac{3}{4} = \\frac{15}{8} = 1\\frac{7}{8}$.",
+        "两个都化成假分数，乘除数的倒数，结果写成最简带分数。不能把整数部分和分数部分分别相除。\n\n$2\\frac{1}{2} \\div 1\\frac{1}{3} = \\frac{5}{2} \\times \\frac{3}{4} = \\frac{15}{8} = 1\\frac{7}{8}$。",
       ),
       generate(rng) {
         const a = mixedNumber(rng, 6, 6);
@@ -517,8 +517,8 @@ export const dividingMixedNumbersWordProblems = topic(
       id: "servings-of-a-mixed-size",
       title: t("How many servings?", "有几份？"),
       explanation: t(
-        "$7\\frac{1}{2}$ cups in $1\\frac{1}{2}$-cup servings: $\\frac{15}{2} \\times \\frac{2}{3} = 5$ servings.",
-        "$7\\frac{1}{2}$ 杯，每份 $1\\frac{1}{2}$ 杯：$\\frac{15}{2} \\times \\frac{2}{3} = 5$ 份。",
+        "To find how many servings fit, divide the total by the size of one serving. Change both mixed numbers to improper fractions and multiply by the reciprocal.\n\n$7\\frac{1}{2}$ cups in $1\\frac{1}{2}$-cup servings: $\\frac{15}{2} \\div \\frac{3}{2} = \\frac{15}{2} \\times \\frac{2}{3} = 5$ servings.",
+        "求能分成几份，用总量除以每份的量。把两个带分数都化成假分数，再乘除数的倒数。\n\n$7\\frac{1}{2}$ 杯，每份 $1\\frac{1}{2}$ 杯：$\\frac{15}{2} \\div \\frac{3}{2} = \\frac{15}{2} \\times \\frac{2}{3} = 5$ 份。",
       ),
       generate(rng) {
         const each = mixedNumber(rng, 2, 4);
@@ -547,8 +547,8 @@ export const dividingMixedNumbersWordProblems = topic(
       id: "rate-from-mixed-numbers",
       title: t("Finding a rate", "求速度"),
       explanation: t(
-        "$3\\frac{3}{4}$ miles in $1\\frac{1}{4}$ hours: $\\frac{15}{4} \\times \\frac{4}{5} = 3$ miles per hour.",
-        "$1\\frac{1}{4}$ 小时走 $3\\frac{3}{4}$ 英里：$\\frac{15}{4} \\times \\frac{4}{5} = 3$ 英里/小时。",
+        "A rate such as miles per hour is the distance divided by the time. With mixed numbers, change both to improper fractions first, then multiply by the reciprocal of the time.\n\n$3\\frac{3}{4}$ miles in $1\\frac{1}{4}$ hours: $\\frac{15}{4} \\div \\frac{5}{4} = \\frac{15}{4} \\times \\frac{4}{5} = 3$ miles per hour.",
+        "每小时走多少英里这样的速度，等于路程除以时间。是带分数时，先都化成假分数，再乘时间的倒数。\n\n$1\\frac{1}{4}$ 小时走 $3\\frac{3}{4}$ 英里：$\\frac{15}{4} \\div \\frac{5}{4} = \\frac{15}{4} \\times \\frac{4}{5} = 3$ 英里/小时。",
       ),
       generate(rng) {
         const time = mixedNumber(rng, 2, 4);
@@ -594,8 +594,8 @@ export const estimatingMultiDigitDivisionWithDecimals = topic(
       id: "compatible-numbers-for-decimal-division",
       title: t("Estimating with compatible numbers", "用相容数估算"),
       explanation: t(
-        "$362.4 \\div 8.9$: $8.9$ is close to $9$ and $362.4$ is close to $360$, which $9$ divides. So the quotient is about $40$.",
-        "$362.4 \\div 8.9$：$8.9$ 接近 $9$，$362.4$ 接近能被 $9$ 整除的 $360$。所以商大约是 $40$。",
+        "To estimate a decimal division, round the divisor to a nearby whole number, then change the dividend to a nearby number that it divides evenly.\n\n$362.4 \\div 8.9$: $8.9$ is close to $9$, and $362.4$ is close to $360$, which $9$ divides. So the quotient is about $360 \\div 9 = 40$.",
+        "估算小数除法时，先把除数取成相近的整数，再把被除数换成一个相近的、能被它整除的数。\n\n$362.4 \\div 8.9$：$8.9$ 接近 $9$，$362.4$ 接近能被 $9$ 整除的 $360$。所以商大约是 $360 \\div 9 = 40$。",
       ),
       generate(rng) {
         const d = rng.int(3, 9);
@@ -619,8 +619,8 @@ export const estimatingMultiDigitDivisionWithDecimals = topic(
       id: "placing-the-decimal-point-by-estimating",
       title: t("Checking an answer with an estimate", "用估算检验答案"),
       explanation: t(
-        "$47.25 \\div 6.3 \\approx 48 \\div 6 = 8$, so of $0.75$, $7.5$ and $75$, the quotient must be $7.5$.",
-        "$47.25 \\div 6.3 \\approx 48 \\div 6 = 8$，所以在 $0.75$、$7.5$、$75$ 中，商一定是 $7.5$。",
+        "An estimate tells you how big the quotient should be, so you can tell where its decimal point goes. Pick the answer closest to the estimate.\n\n$47.25 \\div 6.3 \\approx 48 \\div 6 = 8$, so of $0.75$, $7.5$ and $75$, the quotient must be $7.5$.",
+        "估算可以告诉你商大约有多大，从而判断小数点的位置。选择最接近估算结果的答案。\n\n$47.25 \\div 6.3 \\approx 48 \\div 6 = 8$，所以在 $0.75$、$7.5$、$75$ 中，商一定是 $7.5$。",
       ),
       generate(rng) {
         const b = Q.of(rng.int(21, 89), 10);
@@ -696,8 +696,8 @@ export const interpretingNegativeNumbers = topic(
       id: "writing-a-situation-as-an-integer",
       title: t("Writing a situation as a number", "用数表示情境"),
       explanation: t(
-        "$200$ meters below sea level is $-200$; $35$ meters above sea level is $35$.",
-        "海平面以下 $200$ 米记作 $-200$；海拔 $35$ 米记作 $35$。",
+        "Positive and negative numbers describe amounts in opposite directions from zero. Choose which direction is positive, and the other is negative. Above sea level, gains and deposits are usually positive; below sea level, losses and withdrawals are negative.\n\n$200$ meters below sea level is $-200$; $35$ meters above sea level is $35$.",
+        "正数和负数表示从 $0$ 出发方向相反的量。规定一个方向为正，相反的方向就为负。通常海平面以上、收入、存入记作正数；海平面以下、支出、取出记作负数。\n\n海平面以下 $200$ 米记作 $-200$；海拔 $35$ 米记作 $35$。",
       ),
       generate(rng) {
         const c = rng.pick(contexts);
@@ -721,8 +721,8 @@ export const interpretingNegativeNumbers = topic(
       id: "meaning-of-the-opposite",
       title: t("The meaning of the opposite", "相反意义的量"),
       explanation: t(
-        "If $+15$ means $15$ meters above sea level, then $-15$ means $15$ meters below sea level.",
-        "如果 $+15$ 表示海拔 $15$ 米，那么 $-15$ 表示海平面以下 $15$ 米。",
+        "A number and its opposite are the same distance from zero in opposite directions, so they describe the same amount with the opposite meaning.\n\nIf $+15$ means $15$ meters above sea level, then $-15$ means $15$ meters below sea level.",
+        "一个数和它的相反数离 $0$ 的距离相同、方向相反，所以它们表示同样多的量，但意义相反。\n\n如果 $+15$ 表示海拔 $15$ 米，那么 $-15$ 表示海平面以下 $15$ 米。",
       ),
       generate(rng) {
         const c = rng.pick(contexts);
@@ -789,8 +789,8 @@ export const interpretingAbsoluteValue = topic(
       id: "comparing-debts",
       title: t("Absolute value and order", "绝对值与大小"),
       explanation: t(
-        "Balances $-40$ and $-25$: $-40 < -25$, but $|-40| = 40 > 25 = |-25|$, so the balance of $-40$ is the greater debt.",
-        "余额 $-40$ 与 $-25$：$-40 < -25$，但 $|-40| = 40 > 25 = |-25|$，所以余额 $-40$ 欠得更多。",
+        "A negative balance is a debt, and its absolute value is the size of the debt. So the smaller balance is the larger debt: order the numbers by value, but compare debts by absolute value.\n\nBalances $-40$ and $-25$: $-40 < -25$, but $|-40| = 40 > 25 = |-25|$, so the balance of $-40$ is the greater debt.",
+        "余额为负表示欠债，它的绝对值就是欠债的多少。所以余额越小，欠得越多：比较余额看数的大小，比较欠债看绝对值。\n\n余额 $-40$ 与 $-25$：$-40 < -25$，但 $|-40| = 40 > 25 = |-25|$，所以余额 $-40$ 欠得更多。",
       ),
       generate(rng) {
         const [x, y] = rng.sample([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 75], 2) as [number, number];
@@ -890,8 +890,8 @@ export const naturalNumbersIntegersAndRationalNumbers = topic(
       id: "finding-the-non-integer",
       title: t("Which is not an integer?", "哪个不是整数？"),
       explanation: t(
-        "$\\frac{12}{4} = 3$ and $-\\frac{6}{3} = -2$ are integers in disguise; $\\frac{7}{2} = 3.5$ is not an integer.",
-        "$\\frac{12}{4} = 3$、$-\\frac{6}{3} = -2$ 实际上是整数；$\\frac{7}{2} = 3.5$ 不是整数。",
+        "An integer is a whole number or its opposite. A fraction is an integer only if it simplifies to a whole number, so divide the numerator by the denominator to check.\n\n$\\frac{12}{4} = 3$ and $-\\frac{6}{3} = -2$ are integers in disguise; $\\frac{7}{2} = 3.5$ is not an integer.",
+        "整数包括正整数、$0$ 和负整数。一个分数只有化简后是整数时才是整数，所以用分子除以分母来检验。\n\n$\\frac{12}{4} = 3$、$-\\frac{6}{3} = -2$ 实际上是整数；$\\frac{7}{2} = 3.5$ 不是整数。",
       ),
       generate(rng) {
         const d = rng.int(2, 6);
@@ -955,8 +955,8 @@ export const identifyingRationalNumbersOnANumberLine = topic(
       id: "reading-a-rational-number",
       title: t("Reading a point", "读出点表示的数"),
       explanation: t(
-        "With $4$ parts per unit, a point $1$ part to the left of $-2$ is $-2\\frac{1}{4}$.",
-        "每个单位分成 $4$ 份，$-2$ 左边 $1$ 份的点是 $-2\\frac{1}{4}$。",
+        "Count how many equal parts each unit is split into; that is the denominator. Then count parts from the nearest labeled integer. To the left of a negative integer, the number becomes more negative.\n\nWith $4$ parts per unit, a point $1$ part to the left of $-2$ is $-2\\frac{1}{4}$, not $-1\\frac{3}{4}$.",
+        "先数每个单位被平均分成几份，这就是分母。再从最近的整数开始数份数。在负整数的左边，数会变得更小。\n\n每个单位分成 $4$ 份，$-2$ 左边 $1$ 份的点是 $-2\\frac{1}{4}$，而不是 $-1\\frac{3}{4}$。",
       ),
       generate(rng) {
         const d = rng.pick([2, 3, 4, 5]);
@@ -1046,8 +1046,8 @@ export const comparingRationalNumbers = topic(
       id: "comparing-two-rational-numbers",
       title: t("Comparing two numbers", "比较两个数"),
       explanation: t(
-        "$-\\frac{3}{4}$ or $-0.7$? $-\\frac{3}{4} = -0.75$, which is left of $-0.7$, so $-\\frac{3}{4} < -0.7$.",
-        "$-\\frac{3}{4}$ 与 $-0.7$：$-\\frac{3}{4} = -0.75$，在 $-0.7$ 的左边，所以 $-\\frac{3}{4} < -0.7$。",
+        "On a number line, a number to the left is smaller. To compare a fraction and a decimal, write both as decimals first. With negative numbers, the one farther from zero is smaller.\n\n$-\\frac{3}{4}$ or $-0.7$? $-\\frac{3}{4} = -0.75$, which is left of $-0.7$, so $-\\frac{3}{4} < -0.7$.",
+        "在数轴上，左边的数小。比较分数和小数时，先都化成小数。负数离 $0$ 越远，数越小。\n\n$-\\frac{3}{4}$ 与 $-0.7$：$-\\frac{3}{4} = -0.75$，在 $-0.7$ 的左边，所以 $-\\frac{3}{4} < -0.7$。",
       ),
       generate(rng) {
         const a = randomRational(rng);
@@ -1071,8 +1071,8 @@ export const comparingRationalNumbers = topic(
       id: "comparing-rational-numbers-in-context",
       title: t("Comparing in context", "在情境中比较"),
       explanation: t(
-        "At $-4.5^\\circ$C and $-4\\frac{1}{4}^\\circ$C, the colder temperature is the smaller number: $-4.5 < -4.25$.",
-        "$-4.5^\\circ$C 与 $-4\\frac{1}{4}^\\circ$C 相比，更冷的是较小的数：$-4.5 < -4.25$。",
+        "For temperatures, a lower number means colder. Write both temperatures in the same form, then the smaller number is the colder one.\n\nAt $-4.5^\\circ$C and $-4\\frac{1}{4}^\\circ$C, write $-4\\frac{1}{4} = -4.25$. The colder temperature is the smaller number: $-4.5 < -4.25$.",
+        "对于气温，数越小越冷。先把两个温度写成同一种形式，较小的那个更冷。\n\n$-4.5^\\circ$C 与 $-4\\frac{1}{4}^\\circ$C：$-4\\frac{1}{4} = -4.25$。更冷的是较小的数：$-4.5 < -4.25$。",
       ),
       generate(rng) {
         const a = Q.of(-rng.int(11, 99), 10);
@@ -1129,8 +1129,8 @@ export const orderingRationalNumbers = topic(
       id: "ordering-least-to-greatest",
       title: t("Least to greatest", "从小到大排列"),
       explanation: t(
-        "$0.4$, $-1.8$, $\\frac{3}{4}$, $-2\\frac{1}{2}$ are $0.4$, $-1.8$, $0.75$, $-2.5$, so the order is $-2\\frac{1}{2}, -1.8, 0.4, \\frac{3}{4}$.",
-        "$0.4$、$-1.8$、$\\frac{3}{4}$、$-2\\frac{1}{2}$ 分别是 $0.4$、$-1.8$、$0.75$、$-2.5$，所以顺序是 $-2\\frac{1}{2}, -1.8, 0.4, \\frac{3}{4}$。",
+        "Write every number as a decimal, then place them in order as on a number line: negatives first, the one farthest from zero first, then the positives.\n\n$0.4$, $-1.8$, $\\frac{3}{4}$, $-2\\frac{1}{2}$ are $0.4$, $-1.8$, $0.75$, $-2.5$, so the order is $-2\\frac{1}{2}, -1.8, 0.4, \\frac{3}{4}$.",
+        "把每个数都化成小数，再像在数轴上一样排序：先排负数，离 $0$ 最远的最小，然后是正数。\n\n$0.4$、$-1.8$、$\\frac{3}{4}$、$-2\\frac{1}{2}$ 分别是 $0.4$、$-1.8$、$0.75$、$-2.5$，所以从小到大是 $-2\\frac{1}{2}, -1.8, 0.4, \\frac{3}{4}$。",
       ),
       generate(rng) {
         const xs = distinctRationals(rng, 4);
@@ -1157,8 +1157,8 @@ export const orderingRationalNumbers = topic(
       id: "finding-the-least",
       title: t("Finding the least", "找出最小的数"),
       explanation: t(
-        "Among $-1.6$, $-1\\frac{2}{3}$, $-\\frac{3}{2}$: they are about $-1.6$, $-1.67$ and $-1.5$, so $-1\\frac{2}{3}$ is the least.",
-        "$-1.6$、$-1\\frac{2}{3}$、$-\\frac{3}{2}$ 约为 $-1.6$、$-1.67$、$-1.5$，所以 $-1\\frac{2}{3}$ 最小。",
+        "To find the least number, write them all as decimals, rounding long ones, and look for the one farthest left on the number line. Among negatives, the one with the largest absolute value is the least.\n\nAmong $-1.6$, $-1\\frac{2}{3}$, $-\\frac{3}{2}$: they are about $-1.6$, $-1.67$ and $-1.5$, so $-1\\frac{2}{3}$ is the least.",
+        "找最小的数时，把它们都化成小数（除不尽的取近似值），看哪个在数轴上最靠左。负数中，绝对值最大的那个最小。\n\n$-1.6$、$-1\\frac{2}{3}$、$-\\frac{3}{2}$ 约为 $-1.6$、$-1.67$、$-1.5$，所以 $-1\\frac{2}{3}$ 最小。",
       ),
       generate(rng) {
         const xs = distinctRationals(rng, 4);
@@ -1220,8 +1220,8 @@ export const theCartesianCoordinateSystem = topic(
       id: "naming-the-quadrant",
       title: t("Naming the quadrant", "判断所在象限"),
       explanation: t(
-        "$(-3, 5)$ has a negative $x$ and positive $y$: Quadrant II. $(4, 0)$ is on the $x$-axis.",
-        "$(-3, 5)$ 的 $x$ 为负、$y$ 为正：第二象限。$(4, 0)$ 在 $x$ 轴上。",
+        "The axes split the plane into four quadrants, numbered counterclockwise from the upper right. The signs tell the quadrant: I is $(+, +)$, II is $(-, +)$, III is $(-, -)$, IV is $(+, -)$. A point with a $0$ coordinate lies on an axis, not in a quadrant.\n\n$(-3, 5)$ has a negative $x$ and positive $y$, so it is in Quadrant II. $(4, 0)$ is on the $x$-axis.",
+        "坐标轴把平面分成四个象限，从右上方开始按逆时针方向编号。坐标的正负决定象限：第一象限 $(+, +)$，第二象限 $(-, +)$，第三象限 $(-, -)$，第四象限 $(+, -)$。有一个坐标是 $0$ 的点在坐标轴上，不属于任何象限。\n\n$(-3, 5)$ 的 $x$ 为负、$y$ 为正，在第二象限。$(4, 0)$ 在 $x$ 轴上。",
       ),
       generate(rng) {
         const onAxis = rng.bool(0.15);
@@ -1336,8 +1336,8 @@ export const rationalNumbersInTheCoordinatePlane = topic(
       id: "choosing-the-point-with-given-coordinates",
       title: t("Finding a point", "找出给定坐标的点"),
       explanation: t(
-        "$(-1\\frac{1}{2}, 2)$ is $1\\frac{1}{2}$ units left of the $y$-axis and $2$ units above the $x$-axis.",
-        "$(-1\\frac{1}{2}, 2)$ 在 $y$ 轴左边 $1\\frac{1}{2}$ 个单位、$x$ 轴上方 $2$ 个单位处。",
+        "The $x$-coordinate tells how far right (positive) or left (negative) of the $y$-axis the point is; the $y$-coordinate tells how far up or down from the $x$-axis. Read the scale on the grid before counting lines.\n\n$(-1\\frac{1}{2}, 2)$ is $1\\frac{1}{2}$ units left of the $y$-axis and $2$ units above the $x$-axis.",
+        "$x$ 坐标表示点在 $y$ 轴右边（正）或左边（负）多远；$y$ 坐标表示点在 $x$ 轴上方或下方多远。数网格线之前，先看清每格代表多少。\n\n$(-1\\frac{1}{2}, 2)$ 在 $y$ 轴左边 $1\\frac{1}{2}$ 个单位、$x$ 轴上方 $2$ 个单位处。",
       ),
       generate(rng) {
         const hx = rng.nonZero(-7, 7);
@@ -1396,8 +1396,8 @@ export const reflectionsOfPointsInTheCoordinatePlane = topic(
       id: "reflecting-across-an-axis",
       title: t("Reflecting across one axis", "关于一条坐标轴对称"),
       explanation: t(
-        "Across the $x$-axis, $(-2, 5)$ goes to $(-2, -5)$; across the $y$-axis it goes to $(2, 5)$.",
-        "$(-2, 5)$ 关于 $x$ 轴的对称点是 $(-2, -5)$；关于 $y$ 轴的对称点是 $(2, 5)$。",
+        "Reflecting across the $x$-axis flips a point up or down, so the $y$-coordinate changes sign and $x$ stays. Reflecting across the $y$-axis flips it left or right, so the $x$-coordinate changes sign and $y$ stays.\n\nAcross the $x$-axis, $(-2, 5)$ goes to $(-2, -5)$; across the $y$-axis it goes to $(2, 5)$.",
+        "关于 $x$ 轴对称，点上下翻转，$y$ 坐标变成相反数，$x$ 坐标不变。关于 $y$ 轴对称，点左右翻转，$x$ 坐标变成相反数，$y$ 坐标不变。\n\n$(-2, 5)$ 关于 $x$ 轴的对称点是 $(-2, -5)$；关于 $y$ 轴的对称点是 $(2, 5)$。",
       ),
       generate(rng) {
         const x = nonZero(rng, 9);

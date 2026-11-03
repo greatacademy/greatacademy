@@ -71,8 +71,8 @@ export const identifyingSolutionsToLinearEquations = topic(
       id: "checking-a-value",
       title: t("Checking a value", "检验一个值"),
       explanation: t(
-        "Is $n = 6$ a solution of $4n - 5 = 19$? $4 \\times 6 - 5 = 24 - 5 = 19$, so yes.",
-        "$n = 6$ 是 $4n - 5 = 19$ 的解吗？$4 \\times 6 - 5 = 24 - 5 = 19$，所以是。",
+        "A solution makes the equation true. To check a value, substitute it for the variable and work out both sides; it is a solution only if the two sides are equal.\n\nIs $n = 6$ a solution of $4n - 5 = 19$? $4 \\times 6 - 5 = 24 - 5 = 19$, so yes.",
+        "方程的解能使等式成立。检验一个值时，把它代入方程，分别算出两边；两边相等，它才是解。\n\n$n = 6$ 是 $4n - 5 = 19$ 的解吗？$4 \\times 6 - 5 = 24 - 5 = 19$，所以是。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -101,8 +101,8 @@ export const identifyingSolutionsToLinearEquations = topic(
       id: "choosing-the-solution",
       title: t("Choosing the solution from a list", "从几个值中选出解"),
       explanation: t(
-        "Which of $2, 3, 4, 5$ solves $5(x - 1) = 15$? Try each: only $x = 4$ gives $5 \\times 3 = 15$.",
-        "$2, 3, 4, 5$ 中哪个是 $5(x - 1) = 15$ 的解？逐个代入：只有 $x = 4$ 时 $5 \\times 3 = 15$。",
+        "To find the solution in a list, substitute each value in turn and keep the one that makes both sides equal.\n\nWhich of $2, 3, 4, 5$ solves $5(x - 1) = 15$? Try each: only $x = 4$ gives $5 \\times 3 = 15$.",
+        "从几个数中找方程的解，就把它们一个一个代入，找出使两边相等的那个。\n\n$2, 3, 4, 5$ 中哪个是 $5(x - 1) = 15$ 的解？逐个代入：只有 $x = 4$ 时 $5 \\times 3 = 15$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -148,8 +148,8 @@ export const oneStepAdditionEquations = topic(
       id: "whole-numbers",
       title: t("Whole numbers", "整数"),
       explanation: t(
-        "$x + 12 = 30$: subtract $12$ from both sides, $x = 30 - 12 = 18$. Check: $18 + 12 = 30$.",
-        "$x + 12 = 30$：两边同时减去 $12$，$x = 30 - 12 = 18$。检验：$18 + 12 = 30$。",
+        "To solve an equation, get the variable alone by undoing what was done to it, doing the same to both sides so they stay equal. Subtraction undoes addition.\n\n$x + 12 = 30$: subtract $12$ from both sides, $x = 30 - 12 = 18$. Check: $18 + 12 = 30$.",
+        "解方程，就是用逆运算让字母单独留在一边，等式两边要做同样的运算，才能保持相等。减法是加法的逆运算。\n\n$x + 12 = 30$：两边同时减去 $12$，$x = 30 - 12 = 18$。检验：$18 + 12 = 30$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -175,8 +175,8 @@ export const oneStepAdditionEquations = topic(
       id: "decimals-and-fractions",
       title: t("Decimals and fractions", "小数和分数"),
       explanation: t(
-        "$x + 2.6 = 7.1$ gives $x = 7.1 - 2.6 = 4.5$, and $x + \\frac{1}{4} = \\frac{5}{6}$ gives $x = \\frac{5}{6} - \\frac{1}{4} = \\frac{7}{12}$.",
-        "$x + 2.6 = 7.1$，得 $x = 7.1 - 2.6 = 4.5$；$x + \\frac{1}{4} = \\frac{5}{6}$，得 $x = \\frac{5}{6} - \\frac{1}{4} = \\frac{7}{12}$。",
+        "The method is the same with decimals and fractions: subtract the added number from both sides. For fractions, use a common denominator.\n\n$x + 2.6 = 7.1$ gives $x = 7.1 - 2.6 = 4.5$, and $x + \\frac{1}{4} = \\frac{5}{6}$ gives $x = \\frac{10}{12} - \\frac{3}{12} = \\frac{7}{12}$.",
+        "有小数和分数时方法一样：两边同时减去加上的那个数。分数要先通分。\n\n$x + 2.6 = 7.1$，得 $x = 7.1 - 2.6 = 4.5$；$x + \\frac{1}{4} = \\frac{5}{6}$，得 $x = \\frac{10}{12} - \\frac{3}{12} = \\frac{7}{12}$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -215,8 +215,8 @@ export const oneStepSubtractionEquations = topic(
       id: "subtracting-a-number",
       title: t("A number is subtracted", "减去一个数"),
       explanation: t(
-        "$x - 3.5 = 8$: add $3.5$ to both sides, $x = 8 + 3.5 = 11.5$. Check: $11.5 - 3.5 = 8$.",
-        "$x - 3.5 = 8$：两边同时加上 $3.5$，$x = 8 + 3.5 = 11.5$。检验：$11.5 - 3.5 = 8$。",
+        "When a number is subtracted from the variable, add it to both sides to undo the subtraction.\n\n$x - 3.5 = 8$: add $3.5$ to both sides, $x = 8 + 3.5 = 11.5$. Check: $11.5 - 3.5 = 8$.",
+        "字母减去一个数时，两边同时加上这个数，抵消减法。\n\n$x - 3.5 = 8$：两边同时加上 $3.5$，$x = 8 + 3.5 = 11.5$。检验：$11.5 - 3.5 = 8$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -242,8 +242,8 @@ export const oneStepSubtractionEquations = topic(
       id: "subtracting-the-variable",
       title: t("The variable is subtracted", "减去的是变量"),
       explanation: t(
-        "$20 - x = 6$: adding $x$ to both sides gives $20 = 6 + x$, so $x = 20 - 6 = 14$. Adding $20 + 6$ would be a mistake: check $20 - 26 \\ne 6$.",
-        "$20 - x = 6$：两边同时加上 $x$，得 $20 = 6 + x$，所以 $x = 20 - 6 = 14$。如果算成 $20 + 6$ 就错了：检验 $20 - 26 \\ne 6$。",
+        "When the variable is subtracted from a number, add the variable to both sides so it is no longer subtracted, then subtract to get it alone.\n\n$20 - x = 6$: adding $x$ to both sides gives $20 = 6 + x$, so $x = 20 - 6 = 14$. Adding $20 + 6$ would be a mistake: check $20 - 26 \\ne 6$.",
+        "一个数减去字母时，两边同时加上这个字母，使它不再被减，再用减法求出字母。\n\n$20 - x = 6$：两边同时加上 $x$，得 $20 = 6 + x$，所以 $x = 20 - 6 = 14$。如果算成 $20 + 6$ 就错了：检验 $20 - 26 \\ne 6$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -281,8 +281,8 @@ export const oneStepMultiplicationEquations = topic(
       id: "whole-number-solutions",
       title: t("Whole-number solutions", "解是整数"),
       explanation: t(
-        "$8n = 56$: divide both sides by $8$, $n = 56 \\div 8 = 7$. Check: $8 \\times 7 = 56$.",
-        "$8n = 56$：两边同时除以 $8$，$n = 56 \\div 8 = 7$。检验：$8 \\times 7 = 56$。",
+        "When the variable is multiplied by a number, divide both sides by that number. Division undoes multiplication.\n\n$8n = 56$: divide both sides by $8$, $n = 56 \\div 8 = 7$. Check: $8 \\times 7 = 56$.",
+        "字母乘一个数时，两边同时除以这个数。除法是乘法的逆运算。\n\n$8n = 56$：两边同时除以 $8$，$n = 56 \\div 8 = 7$。检验：$8 \\times 7 = 56$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -307,8 +307,8 @@ export const oneStepMultiplicationEquations = topic(
       id: "decimal-coefficients-and-solutions",
       title: t("Decimals", "含小数"),
       explanation: t(
-        "$4x = 10$ gives $x = 10 \\div 4 = 2.5$, and $0.6x = 4.2$ gives $x = 4.2 \\div 0.6 = 7$.",
-        "$4x = 10$，得 $x = 10 \\div 4 = 2.5$；$0.6x = 4.2$，得 $x = 4.2 \\div 0.6 = 7$。",
+        "Divide both sides by the coefficient, even when the answer or the coefficient is a decimal. To divide by a decimal, move both decimal points until the divisor is whole.\n\n$4x = 10$ gives $x = 10 \\div 4 = 2.5$, and $0.6x = 4.2$ gives $x = 4.2 \\div 0.6 = 42 \\div 6 = 7$.",
+        "两边同时除以系数，即使系数或结果是小数也一样。除以小数时，把两个小数点同时移动，使除数变成整数。\n\n$4x = 10$，得 $x = 10 \\div 4 = 2.5$；$0.6x = 4.2$，得 $x = 4.2 \\div 0.6 = 42 \\div 6 = 7$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -362,8 +362,8 @@ export const oneStepMultiplicationEquationsContainingFractions = topic(
       id: "fraction-coefficients",
       title: t("A fraction times the variable", "分数乘变量"),
       explanation: t(
-        "$\\frac{3}{4}m = 12$: multiply both sides by $\\frac{4}{3}$, $m = 12 \\times \\frac{4}{3} = 16$. Check: $\\frac{3}{4} \\times 16 = 12$.",
-        "$\\frac{3}{4}m = 12$：两边同时乘 $\\frac{4}{3}$，$m = 12 \\times \\frac{4}{3} = 16$。检验：$\\frac{3}{4} \\times 16 = 12$。",
+        "When the coefficient is a fraction, multiply both sides by its reciprocal. This is the same as dividing by the fraction, and it leaves $1$ times the variable.\n\n$\\frac{3}{4}m = 12$: multiply both sides by $\\frac{4}{3}$, $m = 12 \\times \\frac{4}{3} = 16$. Check: $\\frac{3}{4} \\times 16 = 12$.",
+        "系数是分数时，两边同时乘它的倒数。这和除以这个分数一样，左边就只剩下字母。\n\n$\\frac{3}{4}m = 12$：两边同时乘 $\\frac{4}{3}$，$m = 12 \\times \\frac{4}{3} = 16$。检验：$\\frac{3}{4} \\times 16 = 12$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -388,8 +388,8 @@ export const oneStepMultiplicationEquationsContainingFractions = topic(
       id: "fractional-solutions",
       title: t("Fractional solutions", "解是分数"),
       explanation: t(
-        "$\\frac{2}{3}x = \\frac{4}{5}$: $x = \\frac{4}{5} \\times \\frac{3}{2} = \\frac{12}{10} = \\frac{6}{5}$.",
-        "$\\frac{2}{3}x = \\frac{4}{5}$：$x = \\frac{4}{5} \\times \\frac{3}{2} = \\frac{12}{10} = \\frac{6}{5}$。",
+        "Multiply both sides by the reciprocal of the coefficient, then simplify. The solution may be a fraction.\n\n$\\frac{2}{3}x = \\frac{4}{5}$: $x = \\frac{4}{5} \\times \\frac{3}{2} = \\frac{12}{10} = \\frac{6}{5}$.",
+        "两边同时乘系数的倒数，再约分。方程的解可能是分数。\n\n$\\frac{2}{3}x = \\frac{4}{5}$：$x = \\frac{4}{5} \\times \\frac{3}{2} = \\frac{12}{10} = \\frac{6}{5}$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -427,8 +427,8 @@ export const oneStepDivisionEquations = topic(
       id: "whole-numbers",
       title: t("Whole numbers", "整数"),
       explanation: t(
-        "$\\frac{n}{7} = 8$: multiply both sides by $7$, $n = 8 \\times 7 = 56$.",
-        "$\\frac{n}{7} = 8$：两边同时乘 $7$，$n = 8 \\times 7 = 56$。",
+        "When the variable is divided by a number, multiply both sides by that number. Multiplication undoes division.\n\n$\\frac{n}{7} = 8$: multiply both sides by $7$, $n = 8 \\times 7 = 56$. Dividing $8$ by $7$ instead is a common mistake.",
+        "字母除以一个数时，两边同时乘这个数。乘法是除法的逆运算。\n\n$\\frac{n}{7} = 8$：两边同时乘 $7$，$n = 8 \\times 7 = 56$。用 $8$ 除以 $7$ 是常见的错误。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -452,8 +452,8 @@ export const oneStepDivisionEquations = topic(
       id: "decimal-and-fraction-quotients",
       title: t("Decimals and fractions", "小数和分数"),
       explanation: t(
-        "$\\frac{x}{4} = 2.5$ gives $x = 2.5 \\times 4 = 10$, and $\\frac{x}{3} = \\frac{2}{5}$ gives $x = \\frac{2}{5} \\times 3 = \\frac{6}{5}$.",
-        "$\\frac{x}{4} = 2.5$，得 $x = 2.5 \\times 4 = 10$；$\\frac{x}{3} = \\frac{2}{5}$，得 $x = \\frac{2}{5} \\times 3 = \\frac{6}{5}$。",
+        "When the variable is divided by a number, multiply both sides by that number, even when the other side is a decimal or a fraction.\n\n$\\frac{x}{4} = 2.5$ gives $x = 2.5 \\times 4 = 10$, and $\\frac{x}{3} = \\frac{2}{5}$ gives $x = \\frac{2}{5} \\times 3 = \\frac{6}{5}$.",
+        "字母除以一个数时，两边同时乘这个数，即使另一边是小数或分数也一样。\n\n$\\frac{x}{4} = 2.5$，得 $x = 2.5 \\times 4 = 10$；$\\frac{x}{3} = \\frac{2}{5}$，得 $x = \\frac{2}{5} \\times 3 = \\frac{6}{5}$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -667,8 +667,8 @@ export const modelingRealWorldProblemsUsingOneStepEquations = topic(
       id: "additive-situations",
       title: t("Adding and subtracting", "加法和减法情境"),
       explanation: t(
-        "“After spending $\\$12$, Ana has $\\$30$ left”: what she had minus $12$ is $30$, so $m - 12 = 30$, not $m + 12 = 30$.",
-        "“花了 $\\$12$ 后还剩 $\\$30$”：原有的钱减去 $12$ 等于 $30$，所以是 $m - 12 = 30$，而不是 $m + 12 = 30$。",
+        'To write an equation, say in words what happens to the unknown, then write it in symbols. Spending, giving away or losing means subtract; receiving or adding on means add.\n\n"After spending $\\$12$, Ana has $\\$30$ left": what she had minus $12$ is $30$, so $m - 12 = 30$, not $m + 12 = 30$.',
+        '列方程时，先用语言说出未知数经历了什么，再写成式子。花掉、送出、减少用减法；得到、增加用加法。\n\n"花了 $\\$12$ 后还剩 $\\$30$"：原有的钱减去 $12$ 等于 $30$，所以是 $m - 12 = 30$，而不是 $m + 12 = 30$。',
       ),
       generate(rng) {
         return modelProblem(rng, rng.pick(additiveSituations(rng)));
@@ -678,8 +678,8 @@ export const modelingRealWorldProblemsUsingOneStepEquations = topic(
       id: "multiplicative-situations",
       title: t("Multiplying and dividing", "乘法和除法情境"),
       explanation: t(
-        "“A ribbon cut into $4$ equal pieces of $9$ inches”: the length divided by $4$ is $9$, so $\\frac{r}{4} = 9$.",
-        "“一条丝带剪成 $4$ 段，每段 $9$ 英寸”：全长除以 $4$ 等于 $9$，所以 $\\frac{r}{4} = 9$。",
+        'Splitting a whole into equal parts means divide; several equal groups means multiply. Write what happens to the unknown, and set it equal to the known result.\n\n"A ribbon cut into $4$ equal pieces of $9$ inches": the length divided by $4$ is $9$, so $\\frac{r}{4} = 9$.',
+        '把整体平均分成几份用除法，几个相同的组合起来用乘法。写出未知数经过的运算，让它等于已知的结果。\n\n"一条丝带剪成 $4$ 段，每段 $9$ 英寸"：全长除以 $4$ 等于 $9$，所以 $\\frac{r}{4} = 9$。',
       ),
       generate(rng) {
         return modelProblem(rng, rng.pick(multiplicativeSituations(rng)));
@@ -702,8 +702,8 @@ export const solvingRealWorldProblemsUsingOneStepEquations = topic(
       id: "additive-situations",
       title: t("Adding and subtracting", "加法和减法情境"),
       explanation: t(
-        "$p - 14 = 23$ for the passengers before a stop: $p = 23 + 14 = 37$.",
-        "到站前的乘客数满足 $p - 14 = 23$：$p = 23 + 14 = 37$。",
+        "Write the equation for the situation, then solve it by doing the inverse operation to both sides. Check that the answer makes sense in the story.\n\n$14$ passengers got off and $23$ are left: $p - 14 = 23$, so $p = 23 + 14 = 37$ passengers were on before the stop.",
+        "先根据情境列方程，再在两边做逆运算求解。最后检查答案在情境中是否合理。\n\n下车 $14$ 人后还有 $23$ 人：$p - 14 = 23$，所以 $p = 23 + 14 = 37$，到站前车上有 $37$ 人。",
       ),
       generate(rng) {
         return solveProblem(rng.pick(additiveSituations(rng)));
@@ -713,8 +713,8 @@ export const solvingRealWorldProblemsUsingOneStepEquations = topic(
       id: "multiplicative-situations",
       title: t("Multiplying and dividing", "乘法和除法情境"),
       explanation: t(
-        "$\\frac{3}{4}$ of a class is $18$ students: $\\frac{3}{4}c = 18$, so $c = 18 \\times \\frac{4}{3} = 24$.",
-        "全班的 $\\frac{3}{4}$ 是 $18$ 人：$\\frac{3}{4}c = 18$，所以 $c = 18 \\times \\frac{4}{3} = 24$。",
+        "Write the equation, then undo the multiplication or division. For a fraction of an unknown total, multiply both sides by the reciprocal of the fraction.\n\n$\\frac{3}{4}$ of a class is $18$ students: $\\frac{3}{4}c = 18$, so $c = 18 \\times \\frac{4}{3} = 24$. The class is larger than $18$, as it should be.",
+        "先列方程，再用逆运算抵消乘法或除法。已知一个未知总数的几分之几时，两边同时乘这个分数的倒数。\n\n全班的 $\\frac{3}{4}$ 是 $18$ 人：$\\frac{3}{4}c = 18$，所以 $c = 18 \\times \\frac{4}{3} = 24$。全班人数比 $18$ 多，这是合理的。",
       ),
       generate(rng) {
         return solveProblem(rng.pick(multiplicativeSituations(rng)));
@@ -749,8 +749,8 @@ export const identifyingSolutionsToLinearInequalities = topic(
       id: "testing-a-value",
       title: t("Testing a value", "检验一个值"),
       explanation: t(
-        "Is $7$ a solution of $x \\le 7$? Yes, $7 \\le 7$ is true. Is it a solution of $x < 7$? No, $7 < 7$ is false.",
-        "$7$ 是 $x \\le 7$ 的解吗？是，$7 \\le 7$ 成立。它是 $x < 7$ 的解吗？不是，$7 < 7$ 不成立。",
+        "A value is a solution of an inequality if substituting it makes the inequality true. The symbols $\\le$ and $\\ge$ include equality; $<$ and $>$ do not.\n\nIs $7$ a solution of $x \\le 7$? Yes, $7 \\le 7$ is true. Is it a solution of $x < 7$? No, $7 < 7$ is false.",
+        "把一个值代入不等式，如果不等式成立，它就是不等式的解。$\\le$ 和 $\\ge$ 包括相等的情况，$<$ 和 $>$ 不包括。\n\n$7$ 是 $x \\le 7$ 的解吗？是，$7 \\le 7$ 成立。它是 $x < 7$ 的解吗？不是，$7 < 7$ 不成立。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -778,8 +778,8 @@ export const identifyingSolutionsToLinearInequalities = topic(
       id: "testing-values-in-an-inequality-with-an-operation",
       title: t("Inequalities with an operation", "含运算的不等式"),
       explanation: t(
-        "Which of $3, 4, 5, 6$ is a solution of $2x + 1 > 11$? Substituting gives $7, 9, 11, 13$, and only $13 > 11$, so $x = 6$.",
-        "$3, 4, 5, 6$ 中哪个是 $2x + 1 > 11$ 的解？代入得 $7, 9, 11, 13$，只有 $13 > 11$，所以是 $x = 6$。",
+        "Substitute each value, work out the expression, and check whether the comparison is true.\n\nWhich of $3, 4, 5, 6$ is a solution of $2x + 1 > 11$? Substituting gives $7, 9, 11, 13$, and only $13 > 11$, so $x = 6$. The value $5$ gives exactly $11$, which is not greater than $11$.",
+        "把每个值代入，算出式子的值，再看不等关系是否成立。\n\n$3, 4, 5, 6$ 中哪个是 $2x + 1 > 11$ 的解？代入得 $7, 9, 11, 13$，只有 $13 > 11$，所以是 $x = 6$。$5$ 代入正好得 $11$，并不大于 $11$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -925,8 +925,8 @@ export const modelingRealWorldProblemsUsingInequalities = topic(
       id: "translating-inequality-words",
       title: t("At least, at most, more than, fewer than", "至少、至多、多于、少于"),
       explanation: t(
-        "“Riders must be at least $48$ inches tall” is $h \\ge 48$. “Fewer than $20$ people” is $p < 20$.",
-        "“乘客身高必须至少 $48$ 英寸”是 $h \\ge 48$。“少于 $20$ 人”是 $p < 20$。",
+        '"At least" means greater than or equal to ($\\ge$), and "at most" or "cannot exceed" means less than or equal to ($\\le$). "More than" and "fewer than" leave out equality ($>$ and $<$).\n\n"Riders must be at least $48$ inches tall" is $h \\ge 48$. "Fewer than $20$ people" is $p < 20$.',
+        '"至少"表示大于或等于（$\\ge$），"至多""不超过"表示小于或等于（$\\le$）。"多于""少于"不包括相等（$>$ 和 $<$）。\n\n"乘客身高必须至少 $48$ 英寸"是 $h \\ge 48$。"少于 $20$ 人"是 $p < 20$。',
       ),
       generate(rng) {
         const cs: Constraint[] = [
@@ -1014,8 +1014,8 @@ export const modelingRealWorldProblemsUsingInequalities = topic(
       id: "inequalities-with-a-rate",
       title: t("Totals with a price or rate", "含单价或速率的总量"),
       explanation: t(
-        "With $\\$50$ to spend on $\\$8$ tickets, the cost of $t$ tickets is $8t$, and it can be at most $50$: $8t \\le 50$.",
-        "有 $\\$50$ 买每张 $\\$8$ 的票，$t$ 张票共 $8t$ 美元，最多是 $50$：$8t \\le 50$。",
+        "Write the total as the price or rate times the unknown number, then compare it with the limit using the right symbol.\n\nWith $\\$50$ to spend on $\\$8$ tickets, the cost of $t$ tickets is $8t$, and it can be at most $50$: $8t \\le 50$.",
+        "把总量写成单价或单位量乘未知的个数，再用合适的符号和限制的量比较。\n\n有 $\\$50$ 买每张 $\\$8$ 的票，$t$ 张票共 $8t$ 美元，最多是 $50$：$8t \\le 50$。",
       ),
       generate(rng) {
         const a = rng.int(3, 15);
@@ -1142,8 +1142,8 @@ export const introductionToTwoVariableEquations = topic(
       id: "finding-the-dependent-variable",
       title: t("Finding the dependent variable", "求因变量"),
       explanation: t(
-        "If $d = 55t$, then after $3$ hours $d = 55 \\times 3 = 165$ miles.",
-        "如果 $d = 55t$，那么 $3$ 小时后 $d = 55 \\times 3 = 165$ 英里。",
+        "In an equation with two variables, the dependent variable is worked out from the independent one. Substitute the value of the independent variable and evaluate.\n\nIf $d = 55t$, then after $3$ hours $d = 55 \\times 3 = 165$ miles.",
+        "在含两个字母的方程中，因变量由自变量决定。把自变量的值代入，算出因变量。\n\n如果 $d = 55t$，那么 $3$ 小时后 $d = 55 \\times 3 = 165$ 英里。",
       ),
       generate(rng) {
         const r = rng.pick(relations(rng));
@@ -1207,8 +1207,8 @@ export const twoVariableEquationsSolvingForTheIndependentVariable = topic(
       id: "proportional-equations",
       title: t("Equations of the form y = kx", "形如 y = kx 的方程"),
       explanation: t(
-        "$e = 18h$ and $e = 126$: $18h = 126$, so $h = 126 \\div 18 = 7$ hours.",
-        "$e = 18h$，$e = 126$：$18h = 126$，所以 $h = 126 \\div 18 = 7$ 小时。",
+        "When the dependent variable is known, substitute it and solve the one-step equation that remains. For $y = kx$, divide by $k$.\n\n$e = 18h$ and $e = 126$: $18h = 126$, so $h = 126 \\div 18 = 7$ hours.",
+        "已知因变量时，把它代入，再解剩下的一步方程。对于 $y = kx$，两边同时除以 $k$。\n\n$e = 18h$，$e = 126$：$18h = 126$，所以 $h = 126 \\div 18 = 7$ 小时。",
       ),
       generate(rng) {
         const r = rng.pick(relations(rng).filter((x) => x.b === 0));
@@ -1230,8 +1230,8 @@ export const twoVariableEquationsSolvingForTheIndependentVariable = topic(
       id: "additive-equations",
       title: t("Equations of the form y = x + b", "形如 y = x + b 的方程"),
       explanation: t(
-        "Ben is always $4$ years older than Ava: $b = a + 4$. When $b = 15$, $a = 15 - 4 = 11$.",
-        "Ben 总是比 Ava 大 $4$ 岁：$b = a + 4$。当 $b = 15$ 时，$a = 15 - 4 = 11$。",
+        "For an equation like $y = x + b$, substitute the known value of $y$ and subtract $b$ from both sides.\n\nBen is always $4$ years older than Ava: $b = a + 4$. When $b = 15$, $a = 15 - 4 = 11$.",
+        "对于 $y = x + b$ 这样的方程，把已知的 $y$ 代入，再两边同时减去 $b$。\n\nBen 总是比 Ava 大 $4$ 岁：$b = a + 4$。当 $b = 15$ 时，$a = 15 - 4 = 11$。",
       ),
       generate(rng) {
         const d = rng.int(2, 9);
@@ -1278,8 +1278,8 @@ export const analyzingTwoVariableEquationsUsingTables = topic(
       id: "completing-a-table",
       title: t("Completing a table", "补全表格"),
       explanation: t(
-        "For $y = 3x + 1$ and $x = 5$, the missing entry is $y = 3 \\times 5 + 1 = 16$.",
-        "对于 $y = 3x + 1$，当 $x = 5$ 时，缺少的值是 $y = 3 \\times 5 + 1 = 16$。",
+        "Each column of the table is a pair of values that fits the equation. To fill in a missing $y$, substitute that column's $x$ into the equation.\n\nFor $y = 3x + 1$ and $x = 5$, the missing entry is $y = 3 \\times 5 + 1 = 16$.",
+        "表中每一列都是满足方程的一对值。要填空缺的 $y$，就把这一列的 $x$ 代入方程。\n\n对于 $y = 3x + 1$，当 $x = 5$ 时，缺少的值是 $y = 3 \\times 5 + 1 = 16$。",
       ),
       generate(rng) {
         const k = rng.int(2, 9);
@@ -1384,8 +1384,8 @@ export const analyzingTwoVariableEquationsUsingGraphs = topic(
       id: "reading-values-from-a-graph",
       title: t("Reading values", "读取数值"),
       explanation: t(
-        "On the graph of $y = 2x + 1$, the point above $x = 4$ is $(4, 9)$, so $y = 9$ when $x = 4$.",
-        "在 $y = 2x + 1$ 的图像上，$x = 4$ 正上方的点是 $(4, 9)$，所以当 $x = 4$ 时，$y = 9$。",
+        "Every point on the graph of an equation is a pair $(x, y)$ that fits it. To read $y$ for a given $x$, go to that $x$ on the horizontal axis, move up or down to the line, then read across to the vertical axis.\n\nOn the graph of $y = 2x + 1$, the point above $x = 4$ is $(4, 9)$, so $y = 9$ when $x = 4$.",
+        "方程图像上的每个点 $(x, y)$ 都满足方程。要读出某个 $x$ 对应的 $y$，先在横轴上找到这个 $x$，向上或向下找到直线上的点，再横着看纵轴上的值。\n\n在 $y = 2x + 1$ 的图像上，$x = 4$ 正上方的点是 $(4, 9)$，所以当 $x = 4$ 时，$y = 9$。",
       ),
       generate(rng) {
         const k = rng.int(1, 5);
@@ -1416,8 +1416,8 @@ export const analyzingTwoVariableEquationsUsingGraphs = topic(
       id: "writing-the-equation-from-a-graph",
       title: t("Writing the equation", "写出方程"),
       explanation: t(
-        "A line through $(0, 0)$, $(1, 4)$ and $(2, 8)$ has $y = 4x$. A line through $(0, 3)$, $(1, 5)$ and $(2, 7)$ starts at $3$ and rises $2$ per unit, so $y = 2x + 3$.",
-        "经过 $(0, 0)$、$(1, 4)$、$(2, 8)$ 的直线是 $y = 4x$。经过 $(0, 3)$、$(1, 5)$、$(2, 7)$ 的直线从 $3$ 出发，每个单位上升 $2$，所以是 $y = 2x + 3$。",
+        "Read where the line crosses the $y$-axis, which is the value at $x = 0$, and how much $y$ rises each time $x$ goes up by $1$. Then $y$ is the rise times $x$ plus the starting value.\n\nA line through $(0, 0)$, $(1, 4)$ and $(2, 8)$ has $y = 4x$. A line through $(0, 3)$, $(1, 5)$ and $(2, 7)$ starts at $3$ and rises $2$ per unit, so $y = 2x + 3$.",
+        "先读出直线与 $y$ 轴的交点（即 $x = 0$ 时的值），再看 $x$ 每增加 $1$，$y$ 增加多少。$y$ 就等于每次增加的量乘 $x$，再加上起始值。\n\n经过 $(0, 0)$、$(1, 4)$、$(2, 8)$ 的直线是 $y = 4x$。经过 $(0, 3)$、$(1, 5)$、$(2, 7)$ 的直线从 $3$ 出发，每个单位上升 $2$，所以是 $y = 2x + 3$。",
       ),
       generate(rng) {
         const k = rng.int(1, 5);

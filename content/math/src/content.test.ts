@@ -7,7 +7,7 @@ import { mathTextIssue } from "./sampling.ts";
 const rawMath = /\^|_[A-Za-z0-9{]|sqrt\(/;
 
 // Courses whose explanations have been written out in words; the others join as they are.
-const explainedCourses = ["5th-grade-math"];
+const explainedCourses = ["5th-grade-math", "6th-grade-math"];
 const minProseWords = 15;
 const proseWords = (text: string) => text.replace(/\$\$[\s\S]*?\$\$|\$[^$]*\$/g, " ").match(/[A-Za-z]{2,}/g)?.length ?? 0;
 

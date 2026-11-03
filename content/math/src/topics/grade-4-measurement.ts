@@ -1350,8 +1350,8 @@ export const classifyingFiguresBasedOnAngles = topic(
       id: "classifying-triangles-by-angles",
       title: t("Triangles", "三角形"),
       explanation: t(
-        "A triangle with angles $30^\\circ$, $45^\\circ$ and $105^\\circ$ has an obtuse angle, so it is an obtuse triangle.",
-        "三个角分别是 $30^\\circ$、$45^\\circ$、$105^\\circ$ 的三角形有一个钝角，所以是钝角三角形。",
+        "A triangle is named by its largest angle. If one angle is greater than $90^\\circ$ it is obtuse, if one angle is exactly $90^\\circ$ it is right, and if all three are less than $90^\\circ$ it is acute. A triangle can have at most one right or obtuse angle.\n\nA triangle with angles $30^\\circ$, $45^\\circ$ and $105^\\circ$ has an obtuse angle, so it is an obtuse triangle.",
+        "三角形按最大的角来分类：有一个角大于 $90^\\circ$ 的是钝角三角形，有一个角等于 $90^\\circ$ 的是直角三角形，三个角都小于 $90^\\circ$ 的是锐角三角形。一个三角形最多只有一个直角或钝角。\n\n三个角分别是 $30^\\circ$、$45^\\circ$、$105^\\circ$ 的三角形有一个钝角，所以是钝角三角形。",
       ),
       generate(rng) {
         const k = rng.int(0, 2);
@@ -1379,8 +1379,8 @@ export const classifyingFiguresBasedOnAngles = topic(
       id: "counting-right-angles-in-shapes",
       title: t("Right angles in shapes", "图形中的直角"),
       explanation: t(
-        "A rectangle and a square each have $4$ right angles; a right triangle has exactly $1$.",
-        "长方形和正方形各有 $4$ 个直角；直角三角形恰好有 $1$ 个。",
+        "To count right angles in several shapes, find how many each shape has, multiply by the number of copies, and add. Rectangles and squares have $4$ right angles, a right triangle has exactly $1$, and a regular pentagon or hexagon has none, since its angles are larger than $90^\\circ$.\n\n$2$ squares and $3$ right triangles have $2 \\times 4 + 3 \\times 1 = 11$ right angles.",
+        "数几个图形中一共有多少个直角时，先找出每种图形有几个直角，乘这种图形的个数，再相加。长方形和正方形有 $4$ 个直角，直角三角形恰好有 $1$ 个，正五边形和正六边形没有直角，因为它们的角都大于 $90^\\circ$。\n\n$2$ 个正方形和 $3$ 个直角三角形一共有 $2 \\times 4 + 3 \\times 1 = 11$ 个直角。",
       ),
       generate(rng) {
         const [s1, s2] = rng.sample(shapes, 2);

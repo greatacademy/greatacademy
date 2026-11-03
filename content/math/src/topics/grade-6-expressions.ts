@@ -363,8 +363,8 @@ export const evaluatingLinearExpressions = topic(
       id: "whole-number-values",
       title: t("Whole-number values", "代入整数"),
       explanation: t(
-        "For $n = 6$: $4n + 5 = 4 \\times 6 + 5 = 29$ and $4(n + 5) = 4 \\times 11 = 44$.",
-        "当 $n = 6$ 时：$4n + 5 = 4 \\times 6 + 5 = 29$，$4(n + 5) = 4 \\times 11 = 44$。",
+        "To evaluate an expression, replace the variable by its value and follow the order of operations: parentheses first, then multiplication, then addition. A number written next to a variable means multiply.\n\nFor $n = 6$: $4n + 5 = 4 \\times 6 + 5 = 29$, but $4(n + 5) = 4 \\times 11 = 44$, because the parentheses are added first.",
+        "求代数式的值，就把字母换成它的值，再按运算顺序计算：先算括号，再算乘法，最后算加法。数字写在字母前面表示相乘。\n\n当 $n = 6$ 时：$4n + 5 = 4 \\times 6 + 5 = 29$；而 $4(n + 5) = 4 \\times 11 = 44$，因为要先算括号里的加法。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -389,8 +389,8 @@ export const evaluatingLinearExpressions = topic(
       id: "fraction-and-decimal-values",
       title: t("Fraction and decimal values", "代入分数和小数"),
       explanation: t(
-        "For $x = \\frac{1}{2}$: $6x + 1 = 6 \\times \\frac{1}{2} + 1 = 3 + 1 = 4$. For $x = 2.5$: $4x - 3 = 10 - 3 = 7$.",
-        "当 $x = \\frac{1}{2}$ 时：$6x + 1 = 6 \\times \\frac{1}{2} + 1 = 3 + 1 = 4$。当 $x = 2.5$ 时：$4x - 3 = 10 - 3 = 7$。",
+        "Fraction and decimal values are substituted the same way. Multiply first, then add or subtract.\n\nFor $x = \\frac{1}{2}$: $6x + 1 = 6 \\times \\frac{1}{2} + 1 = 3 + 1 = 4$. For $x = 2.5$: $4x - 3 = 10 - 3 = 7$.",
+        "字母的值是分数或小数时，也同样代入。先算乘法，再算加减。\n\n当 $x = \\frac{1}{2}$ 时：$6x + 1 = 6 \\times \\frac{1}{2} + 1 = 3 + 1 = 4$。当 $x = 2.5$ 时：$4x - 3 = 10 - 3 = 7$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -442,8 +442,8 @@ export const evaluatingAlgebraicExpressions = topic(
       id: "expressions-with-exponents",
       title: t("Expressions with exponents", "含指数的代数式"),
       explanation: t(
-        "$x^2$ means $x \\times x$, not $2x$. For $x = 5$: $x^2 - 3x = 25 - 15 = 10$, and $(x + 1)^2 = 6^2 = 36$.",
-        "$x^2$ 表示 $x \\times x$，不是 $2x$。当 $x = 5$ 时：$x^2 - 3x = 25 - 15 = 10$，$(x + 1)^2 = 6^2 = 36$。",
+        "Substitute the value, then work out exponents before multiplying or adding. $x^2$ means $x \\times x$, not $2x$, and in $6x^2$ only $x$ is squared.\n\nFor $x = 5$: $x^2 - 3x = 25 - 15 = 10$, and $(x + 1)^2 = 6^2 = 36$.",
+        "代入后，先算乘方，再算乘法和加减。$x^2$ 表示 $x \\times x$，不是 $2x$；在 $6x^2$ 中，只有 $x$ 平方。\n\n当 $x = 5$ 时：$x^2 - 3x = 25 - 15 = 10$，$(x + 1)^2 = 6^2 = 36$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -475,8 +475,8 @@ export const evaluatingAlgebraicExpressions = topic(
       id: "expressions-with-two-variables",
       title: t("Two variables and formulas", "两个变量与公式"),
       explanation: t(
-        "Substitute each value for its own letter. The area of a triangle is $A = \\frac{1}{2}bh$; for $b = 10$ and $h = 7$, $A = \\frac{1}{2} \\times 10 \\times 7 = 35$.",
-        "把每个值代入对应的字母。三角形面积 $A = \\frac{1}{2}bh$；当 $b = 10$，$h = 7$ 时，$A = \\frac{1}{2} \\times 10 \\times 7 = 35$。",
+        "Substitute each value for its own letter, then follow the order of operations. Formulas are expressions like this, with letters that stand for measurements.\n\nThe area of a triangle is $A = \\frac{1}{2}bh$; for $b = 10$ and $h = 7$, $A = \\frac{1}{2} \\times 10 \\times 7 = 35$.",
+        "把每个值代入对应的字母，再按运算顺序计算。公式也是这样的代数式，字母表示各种量。\n\n三角形面积 $A = \\frac{1}{2}bh$；当 $b = 10$，$h = 7$ 时，$A = \\frac{1}{2} \\times 10 \\times 7 = 35$。",
       ),
       generate(rng) {
         const kind = rng.int(0, 3);
@@ -655,8 +655,8 @@ export const identifyingCoefficientsAndConstants = topic(
       id: "finding-a-coefficient",
       title: t("Finding a coefficient", "找系数"),
       explanation: t(
-        "In $x + 4 - 7y$, the coefficient of $x$ is $1$ and the coefficient of $y$ is $-7$. In $\\frac{2}{3}m$, the coefficient is $\\frac{2}{3}$.",
-        "在 $x + 4 - 7y$ 中，$x$ 的系数是 $1$，$y$ 的系数是 $-7$。在 $\\frac{2}{3}m$ 中，系数是 $\\frac{2}{3}$。",
+        "The coefficient of a variable is the number multiplied by it, including its sign. A variable written alone has coefficient $1$, and one with only a minus sign has coefficient $-1$.\n\nIn $x + 4 - 7y$, the coefficient of $x$ is $1$ and the coefficient of $y$ is $-7$. In $\\frac{2}{3}m$, the coefficient is $\\frac{2}{3}$.",
+        "字母的系数是与它相乘的数，包括前面的符号。单独一个字母的系数是 $1$，只带负号的字母系数是 $-1$。\n\n在 $x + 4 - 7y$ 中，$x$ 的系数是 $1$，$y$ 的系数是 $-7$。在 $\\frac{2}{3}m$ 中，系数是 $\\frac{2}{3}$。",
       ),
       generate(rng) {
         const [u, v] = twoVars(rng);
@@ -693,8 +693,8 @@ export const identifyingCoefficientsAndConstants = topic(
       id: "finding-the-constant-term",
       title: t("Finding the constant term", "找常数项"),
       explanation: t(
-        "The constant term has no variable. In $3x - 9$, the constant term is $-9$, since $3x - 9 = 3x + (-9)$.",
-        "常数项不含变量。在 $3x - 9$ 中，常数项是 $-9$，因为 $3x - 9 = 3x + (-9)$。",
+        "The constant term is the term with no variable. Its sign belongs to it: subtracting a number is the same as adding its opposite.\n\nIn $3x - 9$, the constant term is $-9$, since $3x - 9 = 3x + (-9)$.",
+        "常数项是不含字母的项。它前面的符号属于它：减去一个数等于加上它的相反数。\n\n在 $3x - 9$ 中，常数项是 $-9$，因为 $3x - 9 = 3x + (-9)$。",
       ),
       generate(rng) {
         const [u, v] = twoVars(rng);
@@ -763,8 +763,8 @@ export const identifyingLikeTermsInLinearExpressions = topic(
       id: "like-terms-in-an-expression",
       title: t("Like terms in an expression", "代数式中的同类项"),
       explanation: t(
-        "In $4x + 5y - 2 + 3x$, the terms $4x$ and $3x$ are like terms. $5y$ and $-2$ have no like terms.",
-        "在 $4x + 5y - 2 + 3x$ 中，$4x$ 与 $3x$ 是同类项。$5y$ 和 $-2$ 没有同类项。",
+        "Like terms have exactly the same variable part; only their coefficients may differ. Constants are like terms with each other.\n\nIn $4x + 5y - 2 + 3x$, the terms $4x$ and $3x$ are like terms. $5y$ and $-2$ have no like terms.",
+        "同类项是所含字母完全相同的项，只有系数可以不同。常数项与常数项也是同类项。\n\n在 $4x + 5y - 2 + 3x$ 中，$4x$ 与 $3x$ 是同类项。$5y$ 和 $-2$ 没有同类项。",
       ),
       generate(rng) {
         const [u, v] = twoVars(rng);
@@ -809,8 +809,8 @@ export const theGreatestCommonFactorOfTwoLinearExpressions = topic(
       id: "gcf-of-terms-with-the-same-variable",
       title: t("Terms with the same variable", "含相同变量的项"),
       explanation: t(
-        "$12x = 6 \\cdot 2x$ and $18x = 6 \\cdot 3x$, and $2$ and $3$ share no factor, so the GCF is $6x$.",
-        "$12x = 6 \\cdot 2x$，$18x = 6 \\cdot 3x$，$2$ 与 $3$ 没有公因数，所以最大公因数是 $6x$。",
+        "To find the greatest common factor of two terms with the same variable, find the GCF of the coefficients and keep the shared variable.\n\n$12x = 6 \\cdot 2x$ and $18x = 6 \\cdot 3x$, and $2$ and $3$ share no factor, so the GCF is $6x$.",
+        "求两个含相同字母的项的最大公因数，先求系数的最大公因数，再带上相同的字母。\n\n$12x = 6 \\cdot 2x$，$18x = 6 \\cdot 3x$，$2$ 与 $3$ 没有公因数，所以最大公因数是 $6x$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -888,8 +888,8 @@ export const simplifyingLinearExpressions = topic(
       id: "combining-like-terms-in-one-variable",
       title: t("One variable", "含一个变量"),
       explanation: t(
-        "$6m + 4 + m - 1$: the $m$-terms give $6m + m = 7m$ and the constants give $4 - 1 = 3$, so the expression is $7m + 3$.",
-        "$6m + 4 + m - 1$：$m$ 的项合并为 $6m + m = 7m$，常数合并为 $4 - 1 = 3$，所以结果是 $7m + 3$。",
+        "To simplify, combine like terms: add the coefficients of the variable terms, and add the constants separately. A variable alone counts as $1$ of it.\n\n$6m + 4 + m - 1$: the $m$-terms give $6m + m = 7m$ and the constants give $4 - 1 = 3$, so the expression is $7m + 3$.",
+        "化简时要合并同类项：把含字母的项的系数相加，常数项另外相加。单独一个字母算作 $1$ 个。\n\n$6m + 4 + m - 1$：$m$ 的项合并为 $6m + m = 7m$，常数合并为 $4 - 1 = 3$，所以结果是 $7m + 3$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -918,8 +918,8 @@ export const simplifyingLinearExpressions = topic(
       id: "combining-like-terms-in-two-variables",
       title: t("Two variables", "含两个变量"),
       explanation: t(
-        "$5a + 2b - 3a + 4b = (5 - 3)a + (2 + 4)b = 2a + 6b$. The result has two terms because $a$ and $b$ are not like terms.",
-        "$5a + 2b - 3a + 4b = (5 - 3)a + (2 + 4)b = 2a + 6b$。$a$ 和 $b$ 不是同类项，所以结果有两项。",
+        "Combine the terms for each variable separately; terms with different variables cannot be combined.\n\n$5a + 2b - 3a + 4b = (5 - 3)a + (2 + 4)b = 2a + 6b$. The result has two terms because $a$ and $b$ are not like terms; writing $8ab$ is a mistake.",
+        "每个字母的项分别合并；字母不同的项不能合并。\n\n$5a + 2b - 3a + 4b = (5 - 3)a + (2 + 4)b = 2a + 6b$。$a$ 和 $b$ 不是同类项，所以结果有两项；写成 $8ab$ 是错误的。",
       ),
       generate(rng) {
         const [u, v] = twoVars(rng);
@@ -972,8 +972,8 @@ export const applyingTheDistributiveLawToLinearExpressions = topic(
       id: "expanding-parentheses",
       title: t("Expanding parentheses", "去括号"),
       explanation: t(
-        "$5(3n - 2) = 5 \\cdot 3n - 5 \\cdot 2 = 15n - 10$. Multiply both terms, and keep the minus sign.",
-        "$5(3n - 2) = 5 \\cdot 3n - 5 \\cdot 2 = 15n - 10$。两项都要乘，并保留减号。",
+        "The distributive law says the number outside the parentheses multiplies every term inside. Multiply each term and keep its sign.\n\n$5(3n - 2) = 5 \\cdot 3n - 5 \\cdot 2 = 15n - 10$. Multiplying only the first term, to get $15n - 2$, is the most common mistake.",
+        "乘法分配律：括号外的数要乘括号里的每一项。每一项都乘，并保留它的符号。\n\n$5(3n - 2) = 5 \\cdot 3n - 5 \\cdot 2 = 15n - 10$。只乘第一项、得到 $15n - 2$，是最常见的错误。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -999,8 +999,8 @@ export const applyingTheDistributiveLawToLinearExpressions = topic(
       id: "expanding-and-combining",
       title: t("Expanding, then combining", "去括号后合并"),
       explanation: t(
-        "$2(x + 3) + 4x = 2x + 6 + 4x = 6x + 6$. Expand first, then combine like terms.",
-        "$2(x + 3) + 4x = 2x + 6 + 4x = 6x + 6$。先去括号，再合并同类项。",
+        "When an expression has parentheses and other terms, expand the parentheses first, then combine like terms.\n\n$2(x + 3) + 4x = 2x + 6 + 4x = 6x + 6$.",
+        "式子中既有括号又有其他项时，先用分配律去括号，再合并同类项。\n\n$2(x + 3) + 4x = 2x + 6 + 4x = 6x + 6$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -1042,8 +1042,8 @@ export const factoringLinearExpressions = topic(
       id: "factoring-out-the-gcf",
       title: t("Factoring out the GCF", "提取最大公因数"),
       explanation: t(
-        "$15n - 10$: the GCF of $15$ and $10$ is $5$, so $15n - 10 = 5(3n - 2)$.",
-        "$15n - 10$：$15$ 与 $10$ 的最大公因数是 $5$，所以 $15n - 10 = 5(3n - 2)$。",
+        "Factoring undoes the distributive law. Find the GCF of all the terms, write it outside the parentheses, and divide each term by it to get what goes inside. Check by expanding.\n\n$15n - 10$: the GCF of $15$ and $10$ is $5$, so $15n - 10 = 5(3n - 2)$.",
+        "因式分解是分配律的逆运算。先求所有项的最大公因数，写在括号外面，再用它去除每一项，得到括号里的式子。展开可以检验。\n\n$15n - 10$：$15$ 与 $10$ 的最大公因数是 $5$，所以 $15n - 10 = 5(3n - 2)$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -1075,8 +1075,8 @@ export const factoringLinearExpressions = topic(
       id: "factoring-two-variable-expressions",
       title: t("Two variables", "含两个变量"),
       explanation: t(
-        "$8a + 12b + 4$: the GCF of $8$, $12$ and $4$ is $4$, so $8a + 12b + 4 = 4(2a + 3b + 1)$.",
-        "$8a + 12b + 4$：$8$、$12$、$4$ 的最大公因数是 $4$，所以 $8a + 12b + 4 = 4(2a + 3b + 1)$。",
+        "Find the GCF of all the coefficients and the constant. Divide every term by it, and do not drop a term that becomes $1$.\n\n$8a + 12b + 4$: the GCF of $8$, $12$ and $4$ is $4$, so $8a + 12b + 4 = 4(2a + 3b + 1)$.",
+        "求所有系数和常数项的最大公因数，用它去除每一项。某一项除完得 $1$ 时，这个 $1$ 不能丢。\n\n$8a + 12b + 4$：$8$、$12$、$4$ 的最大公因数是 $4$，所以 $8a + 12b + 4 = 4(2a + 3b + 1)$。",
       ),
       generate(rng) {
         const [u, v] = twoVars(rng);
@@ -1125,8 +1125,8 @@ export const identifyingEquivalentExpressions = topic(
       id: "choosing-an-equivalent-expression",
       title: t("Choosing an equivalent expression", "选出等价的代数式"),
       explanation: t(
-        "$4(2m + 3) = 8m + 12$, which can also be written $12 + 8m$ or $2(4m + 6)$. $8m + 3$ is not equivalent: the $3$ was not multiplied.",
-        "$4(2m + 3) = 8m + 12$，也可以写成 $12 + 8m$ 或 $2(4m + 6)$。$8m + 3$ 不等价：$3$ 没有乘 $4$。",
+        "Equivalent expressions have the same value for every value of the variable. To find one, simplify both into the same form, for example by expanding and combining.\n\n$4(2m + 3) = 8m + 12$, which can also be written $12 + 8m$ or $2(4m + 6)$. $8m + 3$ is not equivalent: the $3$ was not multiplied.",
+        "等价的代数式对字母的任何值都相等。判断时把它们化成同一种形式，比如去括号并合并同类项。\n\n$4(2m + 3) = 8m + 12$，也可以写成 $12 + 8m$ 或 $2(4m + 6)$。$8m + 3$ 不等价：$3$ 没有乘 $4$。",
       ),
       generate(rng) {
         const v = pickVar(rng);
@@ -1156,8 +1156,8 @@ export const identifyingEquivalentExpressions = topic(
       id: "deciding-whether-expressions-are-equivalent",
       title: t("Are they equivalent?", "它们等价吗？"),
       explanation: t(
-        "Is $2(x + 5) + 3x$ equivalent to $5x + 5$? Simplify: $2x + 10 + 3x = 5x + 10$, which is not $5x + 5$. Check with $x = 0$: $10 \\ne 5$.",
-        "$2(x + 5) + 3x$ 与 $5x + 5$ 等价吗？化简：$2x + 10 + 3x = 5x + 10$，不是 $5x + 5$。用 $x = 0$ 检验：$10 \\ne 5$。",
+        "Simplify both expressions and compare. If they differ, substituting a value shows it: the two give different results.\n\nIs $2(x + 5) + 3x$ equivalent to $5x + 5$? Simplify: $2x + 10 + 3x = 5x + 10$, which is not $5x + 5$. Check with $x = 0$: $10 \\ne 5$.",
+        "把两个式子都化简再比较。如果不同，代入一个值就能看出来：两个式子的结果不相等。\n\n$2(x + 5) + 3x$ 与 $5x + 5$ 等价吗？化简：$2x + 10 + 3x = 5x + 10$，不是 $5x + 5$。用 $x = 0$ 检验：$10 \\ne 5$。",
       ),
       generate(rng) {
         const v = pickVar(rng);

@@ -2573,8 +2573,8 @@ export const estimatingMultiDigitDivision: TopicDef = {
       id: "estimating-the-quotient",
       title: t("Estimating the quotient", "估算商"),
       explanation: t(
-        "Once you have compatible numbers, divide with a basic fact and zeros: $4{,}150 \\div 6 \\approx 4{,}200 \\div 6 = 700$, because $42 \\div 6 = 7$.",
-        "找到相容数后，用口诀和添 $0$ 的方法相除：$4{,}150 \\div 6 \\approx 4{,}200 \\div 6 = 700$，因为 $42 \\div 6 = 7$。",
+        "To estimate a quotient, replace the dividend by a nearby number that the divisor divides evenly, using a basic fact. Then divide the basic fact and write the zeros back.\n\n$4{,}150 \\div 6 \\approx 4{,}200 \\div 6 = 700$, because $42 \\div 6 = 7$ and $4{,}200$ has two more zeros than $42$.",
+        "估算商时，把被除数换成一个相近的、能用乘法口诀被除数整除的数。先用口诀相除，再把 $0$ 添回去。\n\n$4{,}150 \\div 6 \\approx 4{,}200 \\div 6 = 700$，因为 $42 \\div 6 = 7$，而 $4{,}200$ 比 $42$ 多两个 $0$。",
       ),
       generate(rng) {
         const d = rng.int(3, 9);

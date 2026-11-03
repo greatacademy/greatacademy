@@ -89,8 +89,8 @@ export const equivalentRatios = topic(
       id: "scaling-a-ratio",
       title: t("Finding a missing term", "求缺少的项"),
       explanation: t(
-        "In $2 : 3 = 8 : \\square$, the first term was multiplied by $4$, so the second must be too: $3 \\times 4 = 12$.",
-        "在 $2 : 3 = 8 : \\square$ 中，前项乘了 $4$，后项也要乘 $4$：$3 \\times 4 = 12$。",
+        "Equivalent ratios are made by multiplying or dividing both terms by the same number. To find a missing term, see what one term was multiplied by, and do the same to the other. Adding the same number to both terms does not give an equivalent ratio.\n\nIn $2 : 3 = 8 : \\square$, the first term was multiplied by $4$, so the second must be too: $3 \\times 4 = 12$.",
+        "比的前项和后项同时乘或除以同一个数，得到的比与原来相等。求未知项时，先看已知的一项乘了几，另一项也乘几。前后项同时加上同一个数，得到的比并不相等。\n\n在 $2 : 3 = 8 : \\square$ 中，前项乘了 $4$，后项也要乘 $4$：$3 \\times 4 = 12$。",
       ),
       generate(rng) {
         const [a, b] = coprimePair(rng, 1, 9);
@@ -162,8 +162,8 @@ export const writingRatiosUsingFractions = topic(
       id: "part-to-part-as-a-fraction",
       title: t("Part to part", "部分与部分"),
       explanation: t(
-        "With $6$ cats and $9$ dogs, the ratio of cats to dogs is $6 : 9 = \\frac{6}{9} = \\frac{2}{3}$.",
-        "有 $6$ 只猫和 $9$ 只狗，猫与狗的比是 $6 : 9 = \\frac{6}{9} = \\frac{2}{3}$。",
+        "A ratio $a : b$ can be written as the fraction $\\frac{a}{b}$, with the first quantity named on top. Then simplify it like any fraction. The order matters: the ratio of cats to dogs puts cats on top.\n\nWith $6$ cats and $9$ dogs, the ratio of cats to dogs is $6 : 9 = \\frac{6}{9} = \\frac{2}{3}$.",
+        "比 $a : b$ 可以写成分数 $\\frac{a}{b}$，先说到的量作分子，然后像分数一样约分。顺序很重要：猫与狗的比，猫的数量作分子。\n\n有 $6$ 只猫和 $9$ 只狗，猫与狗的比是 $6 : 9 = \\frac{6}{9} = \\frac{2}{3}$。",
       ),
       generate(rng) {
         const th = rng.pick(things);
@@ -231,8 +231,8 @@ export const comparingRatios = topic(
       id: "comparing-ratios-as-fractions",
       title: t("Comparing as fractions", "化成分数比较"),
       explanation: t(
-        "$3 : 4$ and $5 : 7$: $\\frac{3}{4} = \\frac{21}{28}$ and $\\frac{5}{7} = \\frac{20}{28}$, so $3 : 4 > 5 : 7$.",
-        "$3 : 4$ 与 $5 : 7$：$\\frac{3}{4} = \\frac{21}{28}$，$\\frac{5}{7} = \\frac{20}{28}$，所以 $3 : 4 > 5 : 7$。",
+        "To compare two ratios, write each as a fraction and compare the fractions, for example by giving them a common denominator.\n\n$3 : 4$ and $5 : 7$: $\\frac{3}{4} = \\frac{21}{28}$ and $\\frac{5}{7} = \\frac{20}{28}$. Since $21 > 20$, $3 : 4 > 5 : 7$.",
+        "比较两个比的大小时，把它们都写成分数，再比较分数，比如先通分。\n\n$3 : 4$ 与 $5 : 7$：$\\frac{3}{4} = \\frac{21}{28}$，$\\frac{5}{7} = \\frac{20}{28}$。因为 $21 > 20$，所以 $3 : 4 > 5 : 7$。",
       ),
       generate(rng) {
         let a: number, b: number, c: number, d: number;
@@ -300,7 +300,10 @@ export const approximatingRatios = topic(
     {
       id: "nearest-simple-ratio",
       title: t("The nearest simple ratio", "最接近的简单比"),
-      explanation: t("$41 : 59$ is close to $40 : 60 = 2 : 3$.", "$41 : 59$ 接近 $40 : 60 = 2 : 3$。"),
+      explanation: t(
+        "To approximate a ratio, round both terms to nearby numbers that share a large common factor, then simplify. The rounded ratio should be close in value to the original.\n\n$41 : 59$ is close to $40 : 60$, and dividing both by $20$ gives $2 : 3$.",
+        "求一个比的近似比时，把前后项都取成相近的、有较大公因数的数，再化简。近似的比应该和原来的比大小接近。\n\n$41 : 59$ 接近 $40 : 60$，前后项都除以 $20$，得 $2 : 3$。",
+      ),
       generate(rng) {
         const [p, q] = coprimePair(rng, 1, 5);
         const k = rng.pick([10, 20, 25, 50]);
@@ -368,8 +371,8 @@ export const reasoningWithEquivalentRatios = topic(
       id: "scaling-from-one-quantity",
       title: t("Finding one quantity from the other", "由一个量求另一个量"),
       explanation: t(
-        "Ratio $3 : 4$, $12$ boys: $12 = 3 \\times 4$, so girls $= 4 \\times 4 = 16$.",
-        "比为 $3 : 4$，男生 $12$ 名：$12 = 3 \\times 4$，所以女生 $= 4 \\times 4 = 16$ 名。",
+        "When one quantity is known, find what its ratio term was multiplied by, then multiply the other term by the same number.\n\nThe ratio of boys to girls is $3 : 4$ and there are $12$ boys. Since $12 = 3 \\times 4$, the ratio was scaled by $4$, so there are $4 \\times 4 = 16$ girls.",
+        "已知其中一个量时，先求出它对应的比的项乘了几，再把另一项也乘这个数。\n\n男生与女生的比是 $3 : 4$，男生有 $12$ 名。因为 $12 = 3 \\times 4$，比扩大了 $4$ 倍，所以女生有 $4 \\times 4 = 16$ 名。",
       ),
       generate(rng) {
         const th = rng.pick(things);
@@ -394,8 +397,8 @@ export const reasoningWithEquivalentRatios = topic(
       id: "scaling-from-the-total",
       title: t("Finding a part from the total", "由总数求部分"),
       explanation: t(
-        "Ratio $3 : 4$, $28$ in all: there are $3 + 4 = 7$ equal parts, each $28 \\div 7 = 4$. So $3 \\times 4 = 12$ boys and $4 \\times 4 = 16$ girls.",
-        "比为 $3 : 4$，共 $28$ 人：共 $3 + 4 = 7$ 份，每份 $28 \\div 7 = 4$ 人。所以男生 $3 \\times 4 = 12$ 名，女生 $4 \\times 4 = 16$ 名。",
+        "When the total is known, add the ratio terms to find how many equal parts the total is split into. Divide to find one part, then multiply by each term.\n\nRatio $3 : 4$, $28$ in all: there are $3 + 4 = 7$ equal parts, each $28 \\div 7 = 4$. So there are $3 \\times 4 = 12$ boys and $4 \\times 4 = 16$ girls. Dividing $28$ by $3$ or $4$ alone is a common mistake.",
+        "已知总数时，先把比的各项相加，得到总数被平均分成几份。用除法求出一份，再分别乘各项。\n\n比为 $3 : 4$，共 $28$ 人：共 $3 + 4 = 7$ 份，每份 $28 \\div 7 = 4$ 人。所以男生 $3 \\times 4 = 12$ 名，女生 $4 \\times 4 = 16$ 名。直接用 $28$ 除以 $3$ 或 $4$ 是常见的错误。",
       ),
       generate(rng) {
         const th = rng.pick(things);
@@ -517,8 +520,8 @@ export const ratioTables = topic(
       id: "completing-a-ratio-table",
       title: t("Completing a ratio table", "补全比例表"),
       explanation: t(
-        "In a table with columns $2, 4, 6$ over $5, 10, \\square$, the bottom row is always $\\frac{5}{2}$ times the top, so $\\square = 15$.",
-        "表中上行为 $2, 4, 6$，下行为 $5, 10, \\square$，下行总是上行的 $\\frac{5}{2}$ 倍，所以 $\\square = 15$。",
+        "In a ratio table every column shows an equivalent ratio, so the bottom row is always the same multiple of the top row. Find that multiple from a complete column, then use it for the missing entry.\n\nWith $2, 4, 6$ on top and $5, 10, \\square$ below, the bottom row is $\\frac{5}{2}$ times the top, so $\\square = 6 \\times \\frac{5}{2} = 15$.",
+        "比例表中每一列都是相等的比，所以下行总是上行的同一个倍数。先用一列完整的数求出这个倍数，再用它求出空缺的数。\n\n上行为 $2, 4, 6$，下行为 $5, 10, \\square$，下行是上行的 $\\frac{5}{2}$ 倍，所以 $\\square = 6 \\times \\frac{5}{2} = 15$。",
       ),
       generate(rng) {
         const mix = rng.pick(mixes);
@@ -632,8 +635,8 @@ export const graphingRatios = topic(
       id: "points-on-a-ratio-graph",
       title: t("Which point belongs on the graph?", "哪个点在图像上？"),
       explanation: t(
-        "For the ratio $2 : 3$, the point $(8, 12)$ belongs on the graph because $8 : 12 = 2 : 3$; the point $(8, 9)$ does not.",
-        "对于比 $2 : 3$，点 $(8, 12)$ 在图像上，因为 $8 : 12 = 2 : 3$；点 $(8, 9)$ 不在。",
+        "The points on a ratio graph are pairs $(x, y)$ in the same ratio, so they all lie on one straight line through $(0, 0)$. To test a point, check that its coordinates form an equivalent ratio.\n\nFor the ratio $2 : 3$, the point $(8, 12)$ belongs on the graph because $8 : 12 = 2 : 3$; the point $(8, 9)$ does not.",
+        "比的图像上的点 $(x, y)$ 都是相等的比，所以它们都在一条经过 $(0, 0)$ 的直线上。判断一个点是否在图像上，就看它的两个坐标组成的比是否与原来的比相等。\n\n对于比 $2 : 3$，点 $(8, 12)$ 在图像上，因为 $8 : 12 = 2 : 3$；点 $(8, 9)$ 不在。",
       ),
       generate(rng) {
         const [a, b] = coprimePair(rng, 1, 7);
@@ -695,8 +698,8 @@ export const tapeDiagrams = topic(
       id: "tape-diagrams-with-a-total",
       title: t("Tape diagrams with a total", "已知总数的线段图"),
       explanation: t(
-        "A: $3$ boxes, B: $5$ boxes, total $40$. $8$ boxes $= 40$, so one box $= 5$ and B $= 25$.",
-        "A：$3$ 格，B：$5$ 格，共 $40$。$8$ 格 $= 40$，每格 $= 5$，所以 B $= 25$。",
+        "In a tape diagram each box is the same size. When the total is given, count all the boxes, divide the total by that count to get one box, then multiply by the boxes asked for.\n\nA has $3$ boxes, B has $5$ boxes, and the total is $40$. The $8$ boxes make $40$, so one box is $5$ and B is $5 \\times 5 = 25$.",
+        "线段图中每一格大小相同。已知总数时，先数出一共有几格，用总数除以格数得到一格，再乘所求的格数。\n\nA 有 $3$ 格，B 有 $5$ 格，共 $40$。$8$ 格是 $40$，每格是 $5$，所以 B 是 $5 \\times 5 = 25$。",
       ),
       generate(rng) {
         const [a, b] = coprimePair(rng, 1, 7);
@@ -726,8 +729,8 @@ export const tapeDiagrams = topic(
       id: "tape-diagrams-with-a-difference",
       title: t("Tape diagrams with a difference", "已知差的线段图"),
       explanation: t(
-        "A: $3$ boxes, B: $5$ boxes, and B is $12$ more than A. The $2$ extra boxes are $12$, so one box $= 6$ and A $= 18$.",
-        "A：$3$ 格，B：$5$ 格，B 比 A 多 $12$。多出的 $2$ 格是 $12$，每格 $= 6$，所以 A $= 18$。",
+        "When the difference is given, count only the extra boxes: they are what makes one tape longer. Divide the difference by the extra boxes to get one box.\n\nA has $3$ boxes, B has $5$ boxes, and B is $12$ more than A. The $2$ extra boxes are $12$, so one box is $6$ and A is $3 \\times 6 = 18$.",
+        "已知相差多少时，只看多出来的格子，正是它们让一段比另一段长。用差除以多出的格数，就得到一格。\n\nA 有 $3$ 格，B 有 $5$ 格，B 比 A 多 $12$。多出的 $2$ 格是 $12$，每格是 $6$，所以 A 是 $3 \\times 6 = 18$。",
       ),
       generate(rng) {
         let a: number, b: number;
@@ -789,8 +792,8 @@ export const solvingProblemsUsingUnitRates = topic(
       id: "scaling-with-the-unit-rate",
       title: t("Using the unit price", "用单价计算"),
       explanation: t(
-        "$5$ notebooks cost $\\$15$: one costs $\\$15 \\div 5 = \\$3$, so $8$ cost $8 \\times \\$3 = \\$24$.",
-        "$5$ 本笔记本 $\\$15$：每本 $\\$15 \\div 5 = \\$3$，所以 $8$ 本 $8 \\times \\$3 = \\$24$。",
+        "A unit rate is the amount for one unit. Find it by dividing, then multiply it by the number of units you need.\n\n$5$ notebooks cost $\\$15$, so one costs $\\$15 \\div 5 = \\$3$, and $8$ notebooks cost $8 \\times \\$3 = \\$24$.",
+        "单位量是每一个单位对应的量。先用除法求出单位量，再乘需要的单位数。\n\n$5$ 本笔记本 $\\$15$，每本 $\\$15 \\div 5 = \\$3$，所以 $8$ 本 $8 \\times \\$3 = \\$24$。",
       ),
       generate(rng) {
         const it = rng.pick(items);
@@ -865,8 +868,8 @@ export const speedAsAUnitRate = topic(
       id: "finding-a-speed",
       title: t("Finding a speed", "求速度"),
       explanation: t(
-        "$150$ miles in $3$ hours: $150 \\div 3 = 50$ miles per hour.",
-        "$3$ 小时行驶 $150$ 英里：$150 \\div 3 = 50$ 英里/小时。",
+        "Speed is a unit rate: the distance traveled in one unit of time. Divide the distance by the time.\n\n$150$ miles in $3$ hours is $150 \\div 3 = 50$ miles per hour.",
+        "速度是一种单位量：单位时间内所行的路程。用路程除以时间。\n\n$3$ 小时行驶 $150$ 英里，速度是 $150 \\div 3 = 50$ 英里/小时。",
       ),
       generate(rng) {
         const kind = rng.pick([
@@ -916,8 +919,8 @@ export const speedAsAUnitRate = topic(
       id: "using-a-speed",
       title: t("Using a speed", "用速度求路程或时间"),
       explanation: t(
-        "At $50$ miles per hour, $5$ hours cover $50 \\times 5 = 250$ miles, and $400$ miles take $400 \\div 50 = 8$ hours.",
-        "以 $50$ 英里/小时的速度，$5$ 小时行驶 $50 \\times 5 = 250$ 英里，$400$ 英里需要 $400 \\div 50 = 8$ 小时。",
+        "From a speed you can find a distance or a time. Distance is speed times time; time is distance divided by speed.\n\nAt $50$ miles per hour, $5$ hours cover $50 \\times 5 = 250$ miles, and $400$ miles take $400 \\div 50 = 8$ hours.",
+        "知道速度，就能求路程或时间：路程 = 速度 × 时间，时间 = 路程 ÷ 速度。\n\n以 $50$ 英里/小时的速度，$5$ 小时行驶 $50 \\times 5 = 250$ 英里，$400$ 英里需要 $400 \\div 50 = 8$ 小时。",
       ),
       generate(rng) {
         const v = rng.int(4, 15) * 5;
@@ -1000,7 +1003,10 @@ export const understandingPercentagesUsingModels = topic(
     {
       id: "percent-from-a-hundred-grid",
       title: t("Percent on a hundred grid", "百格图中的百分数"),
-      explanation: t("$42$ of $100$ squares shaded is $42\\%$.", "$100$ 格中涂色 $42$ 格，就是 $42\\%$。"),
+      explanation: t(
+        'Percent means "out of $100$". A hundred grid has $100$ equal squares, so the number of shaded squares is the percent.\n\n$42$ of $100$ squares shaded is $42\\%$.',
+        '百分数表示"每一百份中占几份"。百格图有 $100$ 个相等的小方格，涂色的格数就是百分数。\n\n$100$ 格中涂色 $42$ 格，就是 $42\\%$。',
+      ),
       generate(rng) {
         const n = rng.int(3, 97);
         return {
@@ -1023,8 +1029,8 @@ export const understandingPercentagesUsingModels = topic(
       id: "percent-from-a-bar-model",
       title: t("Percent on a bar model", "长条模型中的百分数"),
       explanation: t(
-        "A bar of $5$ equal parts with $2$ shaded shows $\\frac{2}{5} = \\frac{40}{100} = 40\\%$.",
-        "长条平均分成 $5$ 份，涂色 $2$ 份，表示 $\\frac{2}{5} = \\frac{40}{100} = 40\\%$。",
+        "When a bar is not cut into $100$ parts, write the shaded part as a fraction, then rewrite it with denominator $100$. The numerator is the percent.\n\nA bar of $5$ equal parts with $2$ shaded shows $\\frac{2}{5} = \\frac{40}{100} = 40\\%$.",
+        "长条没有分成 $100$ 份时，先把涂色部分写成分数，再化成分母是 $100$ 的分数，分子就是百分数。\n\n长条平均分成 $5$ 份，涂色 $2$ 份，表示 $\\frac{2}{5} = \\frac{40}{100} = 40\\%$。",
       ),
       generate(rng) {
         const d = rng.pick([2, 4, 5, 10, 20, 25]);
@@ -1074,7 +1080,10 @@ export const convertingBetweenPercentagesAndFractions = topic(
     {
       id: "percent-to-fraction",
       title: t("Percent to fraction", "百分数化成分数"),
-      explanation: t("$35\\% = \\frac{35}{100} = \\frac{7}{20}$.", "$35\\% = \\frac{35}{100} = \\frac{7}{20}$。"),
+      explanation: t(
+        "To write a percent as a fraction, put the number over $100$ and simplify by dividing the numerator and denominator by a common factor.\n\n$35\\% = \\frac{35}{100}$, and dividing both by $5$ gives $\\frac{7}{20}$.",
+        "把百分数化成分数，就把百分号前的数写成分母是 $100$ 的分数，再用公因数约分。\n\n$35\\% = \\frac{35}{100}$，分子分母同时除以 $5$，得 $\\frac{7}{20}$。",
+      ),
       generate(rng) {
         let p: number;
         do p = rng.int(1, 99);
@@ -1096,8 +1105,8 @@ export const convertingBetweenPercentagesAndFractions = topic(
       id: "fraction-to-percent",
       title: t("Fraction to percent", "分数化成百分数"),
       explanation: t(
-        "$\\frac{3}{4} = \\frac{75}{100} = 75\\%$, multiplying the numerator and denominator by $25$.",
-        "$\\frac{3}{4} = \\frac{75}{100} = 75\\%$（分子分母同乘 $25$）。",
+        "To write a fraction as a percent, make an equivalent fraction with denominator $100$; the numerator is the percent. Multiply the numerator and denominator by the same number.\n\n$\\frac{3}{4} = \\frac{75}{100} = 75\\%$, multiplying the numerator and denominator by $25$.",
+        "把分数化成百分数，就把它化成分母是 $100$ 的分数，分子就是百分数。分子分母要乘同一个数。\n\n$\\frac{3}{4} = \\frac{75}{100} = 75\\%$（分子分母同乘 $25$）。",
       ),
       generate(rng) {
         const { k, d, pct } = nicePercent(rng);
@@ -1131,8 +1140,8 @@ export const convertingBetweenPercentagesAndDecimals = topic(
       id: "percent-to-decimal",
       title: t("Percent to decimal", "百分数化成小数"),
       explanation: t(
-        "Divide by $100$, moving the decimal point two places left: $45\\% = 0.45$, $7\\% = 0.07$, $130\\% = 1.3$.",
-        "除以 $100$，小数点向左移两位：$45\\% = 0.45$，$7\\% = 0.07$，$130\\% = 1.3$。",
+        "A percent is a number of hundredths, so to write it as a decimal divide by $100$: move the decimal point two places to the left, writing zeros if needed.\n\n$45\\% = 0.45$, $7\\% = 0.07$ and $130\\% = 1.3$. Writing $7\\%$ as $0.7$ is a common mistake.",
+        "百分数表示百分之几，所以化成小数就除以 $100$：小数点向左移动两位，位数不够时补 $0$。\n\n$45\\% = 0.45$，$7\\% = 0.07$，$130\\% = 1.3$。把 $7\\%$ 写成 $0.7$ 是常见的错误。",
       ),
       generate(rng) {
         const tenths = rng.pick([rng.int(1, 9) * 10, rng.int(11, 99) * 10, rng.int(101, 250) * 10, rng.int(10, 999)]);
@@ -1155,8 +1164,8 @@ export const convertingBetweenPercentagesAndDecimals = topic(
       id: "decimal-to-percent",
       title: t("Decimal to percent", "小数化成百分数"),
       explanation: t(
-        "Multiply by $100$, moving the decimal point two places right: $0.6 = 60\\%$, $0.035 = 3.5\\%$, $1.25 = 125\\%$.",
-        "乘 $100$，小数点向右移两位：$0.6 = 60\\%$，$0.035 = 3.5\\%$，$1.25 = 125\\%$。",
+        "To write a decimal as a percent, multiply by $100$: move the decimal point two places to the right and add the percent sign.\n\n$0.6 = 60\\%$, $0.035 = 3.5\\%$ and $1.25 = 125\\%$. A number greater than $1$ is more than $100\\%$.",
+        "把小数化成百分数，就乘 $100$：小数点向右移动两位，再添上百分号。\n\n$0.6 = 60\\%$，$0.035 = 3.5\\%$，$1.25 = 125\\%$。大于 $1$ 的数化成百分数后大于 $100\\%$。",
       ),
       generate(rng) {
         const n = rng.pick([rng.int(1, 9) * 10, rng.int(1, 99), rng.int(101, 250), rng.int(1, 99) * 10 + rng.int(1, 9)]);
@@ -1210,8 +1219,8 @@ export const comparingFractionsPercentsAndDecimals = topic(
       id: "comparing-two-forms",
       title: t("Comparing two numbers", "比较两个数"),
       explanation: t(
-        "$\\frac{2}{5}$ or $38\\%$? $\\frac{2}{5} = 40\\% > 38\\%$.",
-        "$\\frac{2}{5}$ 与 $38\\%$：$\\frac{2}{5} = 40\\% > 38\\%$。",
+        "To compare numbers written in different forms, first write them in the same form, such as both as percents or both as decimals, then compare.\n\n$\\frac{2}{5}$ or $38\\%$? $\\frac{2}{5} = \\frac{40}{100} = 40\\%$, and $40\\% > 38\\%$, so $\\frac{2}{5}$ is greater.",
+        "比较不同形式的数时，先把它们化成同一种形式，比如都化成百分数或都化成小数，再比较。\n\n$\\frac{2}{5}$ 与 $38\\%$：$\\frac{2}{5} = \\frac{40}{100} = 40\\%$，$40\\% > 38\\%$，所以 $\\frac{2}{5}$ 大。",
       ),
       generate(rng) {
         const { pct } = nicePercent(rng);
@@ -1236,8 +1245,8 @@ export const comparingFractionsPercentsAndDecimals = topic(
       id: "finding-the-greatest",
       title: t("Finding the greatest", "找出最大的数"),
       explanation: t(
-        "Among $0.7$, $\\frac{3}{4}$ and $72\\%$: they are $70\\%$, $75\\%$ and $72\\%$, so $\\frac{3}{4}$ is the greatest.",
-        "$0.7$、$\\frac{3}{4}$、$72\\%$ 分别是 $70\\%$、$75\\%$、$72\\%$，所以 $\\frac{3}{4}$ 最大。",
+        "To find the greatest of several numbers in different forms, write all of them in one form and compare.\n\nAmong $0.7$, $\\frac{3}{4}$ and $72\\%$: they are $70\\%$, $75\\%$ and $72\\%$, so $\\frac{3}{4}$ is the greatest.",
+        "在几个不同形式的数中找最大的，先把它们都化成同一种形式，再比较。\n\n$0.7$、$\\frac{3}{4}$、$72\\%$ 分别是 $70\\%$、$75\\%$、$72\\%$，所以 $\\frac{3}{4}$ 最大。",
       ),
       generate(rng) {
         const { pct } = nicePercent(rng);
@@ -1290,8 +1299,8 @@ export const findingAPercentageGivenTwoNumbers = topic(
       id: "percent-of-a-small-whole",
       title: t("Wholes that divide 100", "整体能整除 100"),
       explanation: t(
-        "$7$ out of $20$: $\\frac{7}{20} = \\frac{35}{100} = 35\\%$.",
-        "$20$ 中的 $7$：$\\frac{7}{20} = \\frac{35}{100} = 35\\%$。",
+        "To find what percent one number is of another, write the part over the whole as a fraction, then rewrite it with denominator $100$. The part goes on top.\n\n$7$ out of $20$: $\\frac{7}{20} = \\frac{35}{100} = 35\\%$, multiplying both by $5$.",
+        "求一个数是另一个数的百分之几，先把部分比整体写成分数，再化成分母是 $100$ 的分数。部分作分子。\n\n$20$ 中的 $7$：$\\frac{7}{20} = \\frac{35}{100} = 35\\%$（分子分母同乘 $5$）。",
       ),
       generate(rng) {
         const whole = rng.pick([2, 4, 5, 10, 20, 25, 50]);
@@ -1314,8 +1323,8 @@ export const findingAPercentageGivenTwoNumbers = topic(
       id: "percent-of-a-larger-whole",
       title: t("Larger wholes", "较大的整体"),
       explanation: t(
-        "$12$ out of $40$: $\\frac{12}{40} = \\frac{3}{10} = \\frac{30}{100} = 30\\%$. Simplify first if the denominator does not divide $100$.",
-        "$40$ 中的 $12$：$\\frac{12}{40} = \\frac{3}{10} = \\frac{30}{100} = 30\\%$。分母不能整除 $100$ 时先约分。",
+        "Write the part over the whole. If the denominator does not divide $100$, simplify the fraction first, then rewrite it out of $100$.\n\n$12$ out of $40$: $\\frac{12}{40} = \\frac{3}{10} = \\frac{30}{100} = 30\\%$.",
+        "把部分比整体写成分数。如果分母不能整除 $100$，先约分，再化成分母是 $100$ 的分数。\n\n$40$ 中的 $12$：$\\frac{12}{40} = \\frac{3}{10} = \\frac{30}{100} = 30\\%$。",
       ),
       generate(rng) {
         const { whole, pct, part } = percentWhole(rng, false);
@@ -1351,8 +1360,8 @@ export const findingPartOfANumberGivenAWholeAndAPercentage = topic(
       id: "benchmark-percents-of-a-number",
       title: t("Benchmark percents", "常用百分数"),
       explanation: t(
-        "$25\\%$ of $80$ is $\\frac{1}{4}$ of $80$, which is $20$. $75\\%$ of $80$ is three times that: $60$.",
-        "$80$ 的 $25\\%$ 是 $80$ 的 $\\frac{1}{4}$，即 $20$；$80$ 的 $75\\%$ 是它的 3 倍：$60$。",
+        "Some percents are simple fractions: $50\\%$ is $\\frac{1}{2}$, $25\\%$ is $\\frac{1}{4}$, $10\\%$ is $\\frac{1}{10}$. Use the fraction to find that percent of a number quickly.\n\n$25\\%$ of $80$ is $\\frac{1}{4}$ of $80$, which is $20$. $75\\%$ of $80$ is three times that: $60$.",
+        "有些百分数就是简单的分数：$50\\%$ 是 $\\frac{1}{2}$，$25\\%$ 是 $\\frac{1}{4}$，$10\\%$ 是 $\\frac{1}{10}$。用这些分数可以很快求出一个数的百分之几。\n\n$80$ 的 $25\\%$ 是 $80$ 的 $\\frac{1}{4}$，即 $20$；$80$ 的 $75\\%$ 是它的 $3$ 倍：$60$。",
       ),
       generate(rng) {
         const { whole, pct, part } = percentWhole(rng, true);
@@ -1373,8 +1382,8 @@ export const findingPartOfANumberGivenAWholeAndAPercentage = topic(
       id: "any-percent-of-a-number",
       title: t("Any percent", "任意百分数"),
       explanation: t(
-        "$35\\%$ of $60$: $10\\%$ of $60$ is $6$ and $5\\%$ is $3$, so $35\\%$ is $3 \\times 6 + 3 = 21$. Or $\\frac{35}{100} \\times 60 = 21$.",
-        "$60$ 的 $35\\%$：$10\\%$ 是 $6$，$5\\%$ 是 $3$，所以 $35\\%$ 是 $3 \\times 6 + 3 = 21$。也可以算 $\\frac{35}{100} \\times 60 = 21$。",
+        "To find any percent of a number, multiply the number by the percent written as a fraction over $100$. You can also build it from $10\\%$ and $5\\%$.\n\n$35\\%$ of $60$: $10\\%$ of $60$ is $6$ and $5\\%$ is $3$, so $35\\%$ is $3 \\times 6 + 3 = 21$. Or $\\frac{35}{100} \\times 60 = 21$.",
+        "求一个数的百分之几，用这个数乘写成分母为 $100$ 的分数。也可以用 $10\\%$ 和 $5\\%$ 来拼。\n\n$60$ 的 $35\\%$：$10\\%$ 是 $6$，$5\\%$ 是 $3$，所以 $35\\%$ 是 $3 \\times 6 + 3 = 21$。也可以算 $\\frac{35}{100} \\times 60 = 21$。",
       ),
       generate(rng) {
         const { whole, pct, part } = percentWhole(rng, false);
@@ -1407,8 +1416,8 @@ export const findingATotalGivenAPartAndAPercentage = topic(
       id: "total-from-a-benchmark-percent",
       title: t("Benchmark percents", "常用百分数"),
       explanation: t(
-        "$15$ is $25\\%$ of what? $25\\%$ is a quarter, so the whole is $4 \\times 15 = 60$.",
-        "$15$ 是多少的 $25\\%$？$25\\%$ 是四分之一，所以整体是 $4 \\times 15 = 60$。",
+        "When a part and its percent are known, work back to $100\\%$. If the percent is a simple fraction of the whole, multiply the part by the number of those fractions in a whole.\n\n$15$ is $25\\%$ of what? $25\\%$ is a quarter, and four quarters make the whole, so the whole is $4 \\times 15 = 60$.",
+        "已知部分和它所占的百分数，要倒推出 $100\\%$。如果这个百分数是整体的一个简单分数，就用部分乘整体中含有这种分数的个数。\n\n$15$ 是多少的 $25\\%$？$25\\%$ 是四分之一，四个四分之一是整体，所以整体是 $4 \\times 15 = 60$。",
       ),
       generate(rng) {
         const { whole, pct, part } = percentWhole(rng, true);
@@ -1428,8 +1437,8 @@ export const findingATotalGivenAPartAndAPercentage = topic(
       id: "total-from-any-percent",
       title: t("Any percent", "任意百分数"),
       explanation: t(
-        "$21$ is $35\\%$ of what? $35\\%$ is $21$, so $5\\%$ is $3$ and $100\\%$ is $20 \\times 3 = 60$.",
-        "$21$ 是多少的 $35\\%$？$35\\%$ 是 $21$，所以 $5\\%$ 是 $3$，$100\\%$ 是 $20 \\times 3 = 60$。",
+        "Divide the part to find a small percent such as $1\\%$ or $5\\%$, then multiply up to $100\\%$. Multiplying the part by the percent instead gives a smaller number, which cannot be the whole.\n\n$21$ is $35\\%$ of what? $35\\%$ is $21$, so $5\\%$ is $21 \\div 7 = 3$ and $100\\%$ is $20 \\times 3 = 60$.",
+        "先用部分除以合适的数，求出 $1\\%$ 或 $5\\%$ 这样的小百分数，再乘到 $100\\%$。如果用部分乘百分数，得数会更小，不可能是整体。\n\n$21$ 是多少的 $35\\%$？$35\\%$ 是 $21$，所以 $5\\%$ 是 $21 \\div 7 = 3$，$100\\%$ 是 $20 \\times 3 = 60$。",
       ),
       generate(rng) {
         const { whole, pct, part } = percentWhole(rng, false);
@@ -1467,8 +1476,8 @@ export const findingAPercentageGivenTwoNumbersWordProblems = topic(
       id: "test-score-percent",
       title: t("Scores and results", "得分与结果"),
       explanation: t(
-        "$18$ correct out of $24$: $\\frac{18}{24} = \\frac{3}{4} = 75\\%$.",
-        "$24$ 题中答对 $18$ 题：$\\frac{18}{24} = \\frac{3}{4} = 75\\%$。",
+        "A score as a percent is the number correct over the number possible, rewritten out of $100$. Simplify first if that helps.\n\n$18$ correct out of $24$: $\\frac{18}{24} = \\frac{3}{4} = \\frac{75}{100} = 75\\%$.",
+        "把成绩写成百分数，就用答对的数比总数，再化成分母是 $100$ 的分数。能约分时先约分。\n\n$24$ 题中答对 $18$ 题：$\\frac{18}{24} = \\frac{3}{4} = \\frac{75}{100} = 75\\%$。",
       ),
       generate(rng) {
         const { whole, pct, part } = percentWhole(rng, rng.bool());
@@ -1537,8 +1546,8 @@ export const findingPartOfANumberGivenAWholeAndAPercentageWordProblems = topic(
       id: "part-of-a-group",
       title: t("Part of a group", "一组中的一部分"),
       explanation: t(
-        "$40\\%$ of $30$ students walk: $\\frac{40}{100} \\times 30 = 12$.",
-        "$30$ 名学生中 $40\\%$ 步行：$\\frac{40}{100} \\times 30 = 12$。",
+        "To find how many in a group have some property, multiply the group size by the percent written over $100$.\n\n$40\\%$ of $30$ students walk: $\\frac{40}{100} \\times 30 = 12$ students.",
+        "求一群中具有某种特点的有多少，就用总数乘写成分母为 $100$ 的百分数。\n\n$30$ 名学生中 $40\\%$ 步行：$\\frac{40}{100} \\times 30 = 12$ 名。",
       ),
       generate(rng) {
         const { whole, pct, part } = percentWhole(rng, rng.bool());
@@ -1558,8 +1567,8 @@ export const findingPartOfANumberGivenAWholeAndAPercentageWordProblems = topic(
       id: "the-rest-of-a-group",
       title: t("The rest of a group", "其余部分"),
       explanation: t(
-        "If $40\\%$ of $30$ students walk, the other $60\\%$ do not: $\\frac{60}{100} \\times 30 = 18$.",
-        "$30$ 名学生中 $40\\%$ 步行，其余 $60\\%$ 不步行：$\\frac{60}{100} \\times 30 = 18$。",
+        "The whole group is $100\\%$. If a question asks about those who do not have the property, subtract the percent from $100\\%$ first, then take that percent of the group.\n\nIf $40\\%$ of $30$ students walk, the other $60\\%$ do not: $\\frac{60}{100} \\times 30 = 18$ students.",
+        "整个群体是 $100\\%$。如果问的是不具有这个特点的有多少，就先用 $100\\%$ 减去这个百分数，再求总数的百分之几。\n\n$30$ 名学生中 $40\\%$ 步行，其余 $60\\%$ 不步行：$\\frac{60}{100} \\times 30 = 18$ 名。",
       ),
       generate(rng) {
         const { whole, pct, part } = percentWhole(rng, rng.bool());
@@ -1599,8 +1608,8 @@ export const convertingUnitsOfLengthToLargerUnitsUsingLongDivision = topic(
       id: "quotient-and-remainder-units",
       title: t("Larger and smaller units", "大单位与小单位"),
       explanation: t(
-        "$1{,}000$ in: $1{,}000 \\div 12 = 83$ R $4$, so it is $83$ ft $4$ in.",
-        "$1000$ 英寸：$1000 \\div 12 = 83$ 余 $4$，所以是 $83$ 英尺 $4$ 英寸。",
+        "To change to a larger unit, divide by the conversion factor using long division. The quotient is the number of larger units and the remainder is what is left in the smaller unit.\n\n$1{,}000$ in: $1{,}000 \\div 12 = 83 \\text{ R } 4$, so it is $83$ ft $4$ in.",
+        "换成较大的单位时，用竖式除以进率。商是大单位的个数，余数是剩下的小单位的个数。\n\n$1000$ 英寸：$1000 \\div 12 = 83\\cdots\\cdots 4$，所以是 $83$ 英尺 $4$ 英寸。",
       ),
       generate(rng) {
         const c = rng.pick([
@@ -1633,8 +1642,8 @@ export const convertingUnitsOfLengthToLargerUnitsUsingLongDivision = topic(
       id: "converting-to-a-mixed-number-of-larger-units",
       title: t("Writing the result as a mixed number", "把结果写成带分数"),
       explanation: t(
-        "$1{,}000$ in $= 83$ ft $4$ in, and $4$ in is $\\frac{4}{12} = \\frac{1}{3}$ ft, so $1{,}000$ in $= 83\\frac{1}{3}$ ft.",
-        "$1000$ 英寸 $= 83$ 英尺 $4$ 英寸，$4$ 英寸是 $\\frac{4}{12} = \\frac{1}{3}$ 英尺，所以 $1000$ 英寸 $= 83\\frac{1}{3}$ 英尺。",
+        "To write the result as a mixed number, keep the quotient as the whole part and write the remainder as a fraction of one larger unit: remainder over the conversion factor, simplified.\n\n$1{,}000$ in $= 83$ ft $4$ in, and $4$ in is $\\frac{4}{12} = \\frac{1}{3}$ ft, so $1{,}000$ in $= 83\\frac{1}{3}$ ft.",
+        "把结果写成带分数时，商作整数部分，余数写成一个大单位的几分之几：余数比进率，再约分。\n\n$1000$ 英寸 $= 83$ 英尺 $4$ 英寸，$4$ 英寸是 $\\frac{4}{12} = \\frac{1}{3}$ 英尺，所以 $1000$ 英寸 $= 83\\frac{1}{3}$ 英尺。",
       ),
       generate(rng) {
         const c = rng.pick([

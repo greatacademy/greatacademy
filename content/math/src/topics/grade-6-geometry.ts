@@ -166,8 +166,8 @@ export const areasOfRectangles = topic(
       id: "missing-side-length",
       title: t("A missing side length", "求未知边长"),
       explanation: t(
-        "A rectangle has area $7\\frac{1}{2}\\text{ m}^2$ and length $3$ m. Since $A = lw$, the width is $7\\frac{1}{2} \\div 3 = \\frac{15}{2} \\times \\frac{1}{3} = \\frac{5}{2} = 2\\frac{1}{2}$ m.",
-        "一个长方形的面积是 $7\\frac{1}{2}\\text{ m}^2$，长是 $3$ 米。因为 $A = lw$，所以宽是 $7\\frac{1}{2} \\div 3 = \\frac{15}{2} \\times \\frac{1}{3} = \\frac{5}{2} = 2\\frac{1}{2}$ 米。",
+        "The area of a rectangle is length times width, so a missing side is the area divided by the known side. With mixed numbers, write them as improper fractions first.\n\nA rectangle has area $7\\frac{1}{2}\\text{ m}^2$ and length $3$ m. Since $A = lw$, the width is $7\\frac{1}{2} \\div 3 = \\frac{15}{2} \\times \\frac{1}{3} = \\frac{5}{2} = 2\\frac{1}{2}$ m.",
+        "长方形的面积等于长乘宽，所以未知的边长等于面积除以已知的边长。有带分数时，先化成假分数。\n\n一个长方形的面积是 $7\\frac{1}{2}\\text{ m}^2$，长是 $3$ 米。因为 $A = lw$，所以宽是 $7\\frac{1}{2} \\div 3 = \\frac{15}{2} \\times \\frac{1}{3} = \\frac{5}{2} = 2\\frac{1}{2}$ 米。",
       ),
       generate(rng) {
         const u = pickUnit(rng);
@@ -1150,8 +1150,8 @@ export const volumesOfRectangularPrismsWithFractionalEdgeLengths = topic(
       id: "multiplying-the-edge-lengths",
       title: t("Multiplying the edge lengths", "棱长相乘"),
       explanation: t(
-        "A box $3\\frac{1}{2}$ in by $2$ in by $1\\frac{1}{4}$ in has volume $\\frac{7}{2} \\times 2 \\times \\frac{5}{4} = \\frac{70}{8} = 8\\frac{3}{4}\\text{ in}^3$.",
-        "长 $3\\frac{1}{2}$ 英寸、宽 $2$ 英寸、高 $1\\frac{1}{4}$ 英寸的箱子，体积是 $\\frac{7}{2} \\times 2 \\times \\frac{5}{4} = \\frac{70}{8} = 8\\frac{3}{4}\\text{ in}^3$。",
+        "The volume of a box is length times width times height, also with fractional edges. Write mixed numbers as improper fractions, multiply, and simplify before or after.\n\nA box $3\\frac{1}{2}$ in by $2$ in by $1\\frac{1}{4}$ in has volume $\\frac{7}{2} \\times 2 \\times \\frac{5}{4} = \\frac{70}{8} = 8\\frac{3}{4}\\text{ in}^3$.",
+        "长方体的体积等于长乘宽乘高，棱长是分数时也一样。把带分数化成假分数后相乘，可以先约分也可以最后约分。\n\n长 $3\\frac{1}{2}$ 英寸、宽 $2$ 英寸、高 $1\\frac{1}{4}$ 英寸的箱子，体积是 $\\frac{7}{2} \\times 2 \\times \\frac{5}{4} = \\frac{70}{8} = 8\\frac{3}{4}\\text{ in}^3$。",
       ),
       generate(rng) {
         const u = pickUnit(rng);
@@ -1253,8 +1253,8 @@ export const volumesOfRectangularPrismsWithFractionalEdgeLengthsWordProblems = t
       id: "volumes-of-containers",
       title: t("How much a container holds", "容器能装多少"),
       explanation: t(
-        "A sandbox $4\\frac{1}{2}$ ft by $3$ ft with sand $\\frac{2}{3}$ ft deep holds $\\frac{9}{2} \\times 3 \\times \\frac{2}{3} = 9\\text{ ft}^3$ of sand.",
-        "一个长 $4\\frac{1}{2}$ 英尺、宽 $3$ 英尺的沙坑，沙子深 $\\frac{2}{3}$ 英尺，共有 $\\frac{9}{2} \\times 3 \\times \\frac{2}{3} = 9\\text{ ft}^3$ 沙子。",
+        "How much a box-shaped container holds is its volume: multiply the three dimensions. If it is only filled to some depth, use that depth as the height.\n\nA sandbox $4\\frac{1}{2}$ ft by $3$ ft with sand $\\frac{2}{3}$ ft deep holds $\\frac{9}{2} \\times 3 \\times \\frac{2}{3} = 9\\text{ ft}^3$ of sand.",
+        "长方体容器能装多少就是求体积：把三个尺寸相乘。如果只装到一定深度，就用这个深度作高。\n\n一个长 $4\\frac{1}{2}$ 英尺、宽 $3$ 英尺的沙坑，沙子深 $\\frac{2}{3}$ 英尺，共有 $\\frac{9}{2} \\times 3 \\times \\frac{2}{3} = 9\\text{ ft}^3$ 沙子。",
       ),
       generate(rng) {
         const [l, w, h] = edges(rng);
@@ -1366,8 +1366,8 @@ export const distancesBetweenPointsInTheCoordinatePlane = topic(
       id: "point-at-a-given-distance",
       title: t("A point at a given distance", "求给定距离处的点"),
       explanation: t(
-        "Point $B$ is $6$ units below $A(3, 2)$. Moving down changes only the $y$-coordinate: $2 - 6 = -4$, so $B = (3, -4)$.",
-        "点 $B$ 在 $A(3, 2)$ 下方 $6$ 个单位。向下移动只改变纵坐标：$2 - 6 = -4$，所以 $B = (3, -4)$。",
+        "Moving up or down changes only the $y$-coordinate, and moving left or right changes only the $x$-coordinate. Add for up and right, subtract for down and left.\n\nPoint $B$ is $6$ units below $A(3, 2)$. Moving down changes only the $y$-coordinate: $2 - 6 = -4$, so $B = (3, -4)$.",
+        "上下移动只改变纵坐标，左右移动只改变横坐标。向上、向右用加法，向下、向左用减法。\n\n点 $B$ 在 $A(3, 2)$ 下方 $6$ 个单位。向下移动只改变纵坐标：$2 - 6 = -4$，所以 $B = (3, -4)$。",
       ),
       generate(rng) {
         const [x, y] = [rng.int(-8, 8), rng.int(-8, 8)];
@@ -1436,8 +1436,8 @@ export const polygonsInTheCoordinatePlane = topic(
       id: "side-lengths-from-vertices",
       title: t("Side lengths from the vertices", "由顶点求边长"),
       explanation: t(
-        "Rectangle $ABCD$ has vertices $A(-3, -2)$, $B(5, -2)$, $C(5, 4)$ and $D(-3, 4)$. Side $BC$ is vertical, from $y = -2$ to $y = 4$, so it is $2 + 4 = 6$ units long.",
-        "长方形 $ABCD$ 的顶点是 $A(-3, -2)$、$B(5, -2)$、$C(5, 4)$ 和 $D(-3, 4)$。边 $BC$ 是竖直的，从 $y = -2$ 到 $y = 4$，所以长 $2 + 4 = 6$ 个单位。",
+        "A side whose endpoints share an $x$-coordinate is vertical; its length is the distance between the $y$-coordinates. When they have opposite signs, add their absolute values, since the side crosses the axis.\n\nRectangle $ABCD$ has vertices $A(-3, -2)$, $B(5, -2)$, $C(5, 4)$ and $D(-3, 4)$. Side $BC$ is vertical, from $y = -2$ to $y = 4$, so it is $2 + 4 = 6$ units long.",
+        "两个端点横坐标相同的边是竖直的，它的长度是两个纵坐标之间的距离。两个坐标符号相反时，把它们的绝对值相加，因为这条边跨过了坐标轴。\n\n长方形 $ABCD$ 的顶点是 $A(-3, -2)$、$B(5, -2)$、$C(5, 4)$ 和 $D(-3, 4)$。边 $BC$ 是竖直的，从 $y = -2$ 到 $y = 4$，所以长 $2 + 4 = 6$ 个单位。",
       ),
       generate(rng) {
         const [x1, x2] = [rng.int(-9, 2), rng.int(1, 9)];
@@ -1537,8 +1537,8 @@ export const findingAreasAndPerimetersInTheCoordinatePlane = topic(
       id: "perimeters-of-rectangles-from-vertices",
       title: t("Perimeters of rectangles", "长方形的周长"),
       explanation: t(
-        "Rectangle $A(-5, 2)$, $B(3, 2)$, $C(3, 7)$, $D(-5, 7)$: $AB = 5 + 3 = 8$ and $BC = 7 - 2 = 5$, so the perimeter is $2(8 + 5) = 26$ units.",
-        "长方形 $A(-5, 2)$、$B(3, 2)$、$C(3, 7)$、$D(-5, 7)$：$AB = 5 + 3 = 8$，$BC = 7 - 2 = 5$，所以周长是 $2(8 + 5) = 26$ 个单位。",
+        "Find the length of one horizontal side and one vertical side from the coordinates, then the perimeter is $2 \\times$ (length $+$ width).\n\nRectangle $A(-5, 2)$, $B(3, 2)$, $C(3, 7)$, $D(-5, 7)$: $AB = 5 + 3 = 8$ and $BC = 7 - 2 = 5$, so the perimeter is $2(8 + 5) = 26$ units.",
+        "根据坐标求出一条横边和一条竖边的长度，周长就是 $2 \\times$（长 $+$ 宽）。\n\n长方形 $A(-5, 2)$、$B(3, 2)$、$C(3, 7)$、$D(-5, 7)$：$AB = 5 + 3 = 8$，$BC = 7 - 2 = 5$，所以周长是 $2(8 + 5) = 26$ 个单位。",
       ),
       generate(rng) {
         const [x1, x2] = [rng.int(-9, 3), rng.int(-2, 9)];
