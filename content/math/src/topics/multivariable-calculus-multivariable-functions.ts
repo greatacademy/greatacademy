@@ -1,6 +1,6 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly, Q } from "@ga/subject-math";
+import { paren, poly, Q } from "@ga/subject-math";
 
 import { choiceProblem, equationProblem, expressionProblem, numberProblem, pointProblem, steps, vectorLatex } from "../problems.ts";
 
@@ -194,20 +194,17 @@ export const openAndClosedSets: TopicDef = {
         let reason: Text;
 
         if (kind === 0) {
-          desc = t(`$\\{(x, y) : ${r1 * r1} < x^2 + y^2 < ${r2 * r2}\\}$`, `$\\{(x, y) : ${r1 * r1} < x^2 + y^2 < ${r2 * r2}\\}$`);
+          desc = t(`\\{(x, y) : ${r1 * r1} < x^2 + y^2 < ${r2 * r2}\\}`, `\\{(x, y) : ${r1 * r1} < x^2 + y^2 < ${r2 * r2}\\}`);
           right = t("Open set", "开集");
           wrong = [t("Closed set", "闭集"), t("Neither open nor closed", "既非开集亦非闭集")];
           reason = t("Both boundary circles are excluded by strict inequalities.", "两个边界圆均被严格不等式排除在外。");
         } else if (kind === 1) {
-          desc = t(
-            `$\\{(x, y) : ${r1 * r1} \\le x^2 + y^2 \\le ${r2 * r2}\\}$`,
-            `$\\{(x, y) : ${r1 * r1} \\le x^2 + y^2 \\le ${r2 * r2}\\}$`,
-          );
+          desc = t(`\\{(x, y) : ${r1 * r1} \\le x^2 + y^2 \\le ${r2 * r2}\\}`, `\\{(x, y) : ${r1 * r1} \\le x^2 + y^2 \\le ${r2 * r2}\\}`);
           right = t("Closed set", "闭集");
           wrong = [t("Open set", "开集"), t("Neither open nor closed", "既非开集亦非闭集")];
           reason = t("Both boundary circles are included by non-strict inequalities.", "两个边界圆均通过非严格不等式包含在集合中。");
         } else {
-          desc = t(`$\\{(x, y) : ${r1 * r1} < x^2 + y^2 \\le ${r2 * r2}\\}$`, `$\\{(x, y) : ${r1 * r1} < x^2 + y^2 \\le ${r2 * r2}\\}$`);
+          desc = t(`\\{(x, y) : ${r1 * r1} < x^2 + y^2 \\le ${r2 * r2}\\}`, `\\{(x, y) : ${r1 * r1} < x^2 + y^2 \\le ${r2 * r2}\\}`);
           right = t("Neither open nor closed", "既非开集亦非闭集");
           wrong = [t("Open set", "开集"), t("Closed set", "闭集")];
           reason = t("It contains the outer boundary circle but not the inner boundary circle.", "它包含外边界圆但不包含内边界圆。");
@@ -854,13 +851,13 @@ export const introductionToPartialDerivatives: TopicDef = {
             `Treat $y$ as a constant and differentiate with respect to $x$:\n\n` +
               `$$f_x(x, y) = \\frac{\\partial}{\\partial x}\\left(${poly([a, "x^2y"], [b, "xy^2"])}\\right) = ${poly([2 * a, "xy"], [b, "y^2"])}.$$`,
             `Substitute $(x, y) = (${x0}, ${y0})$:\n\n` +
-              `$$f_x(${x0}, ${y0}) = 2(${a})(${x0})(${y0}) + (${b})(${y0})^2 = ${2 * a * x0 * y0} + ${b * y0 * y0} = ${ans}.$$`,
+              `$$f_x(${x0}, ${y0}) = 2(${a})(${x0})(${y0}) + (${b})(${y0})^2 = ${2 * a * x0 * y0} + ${paren(b * y0 * y0)} = ${ans}.$$`,
           ),
           steps(
             `将 $y$ 视为常数对 $x$ 求导：\n\n` +
               `$$f_x(x, y) = \\frac{\\partial}{\\partial x}\\left(${poly([a, "x^2y"], [b, "xy^2"])}\\right) = ${poly([2 * a, "xy"], [b, "y^2"])}。$$`,
             `代入点 $(x, y) = (${x0}, ${y0})$：\n\n` +
-              `$$f_x(${x0}, ${y0}) = 2(${a})(${x0})(${y0}) + (${b})(${y0})^2 = ${2 * a * x0 * y0} + ${b * y0 * y0} = ${ans}。$$`,
+              `$$f_x(${x0}, ${y0}) = 2(${a})(${x0})(${y0}) + (${b})(${y0})^2 = ${2 * a * x0 * y0} + ${paren(b * y0 * y0)} = ${ans}。$$`,
           ),
         );
         return numberProblem({
@@ -1143,12 +1140,12 @@ export const equalityOfMixedPartialDerivatives: TopicDef = {
           steps(
             `Compute $f_x(x, y) = \\frac{\\partial}{\\partial x}\\left(${poly([a, "x^2y^2"], [b, "xy"])}\\right) = ${poly([2 * a, "xy^2"], [b, "y"])}$.`,
             `Differentiate with respect to $y$: $f_{xy}(x, y) = \\frac{\\partial}{\\partial y}\\left(${poly([2 * a, "xy^2"], [b, "y"])}\\right) = ${poly([4 * a, "xy"], [b, ""])}$.`,
-            `Substitute $(x, y) = (${x0}, ${y0})$: $f_{xy}(${x0}, ${y0}) = 4(${a})(${x0})(${y0}) + ${b} = ${ans}$.`,
+            `Substitute $(x, y) = (${x0}, ${y0})$: $f_{xy}(${x0}, ${y0}) = 4(${a})(${x0})(${y0}) + ${paren(b)} = ${ans}$.`,
           ),
           steps(
             `计算 $f_x(x, y) = \\frac{\\partial}{\\partial x}\\left(${poly([a, "x^2y^2"], [b, "xy"])}\\right) = ${poly([2 * a, "xy^2"], [b, "y"])}$。`,
             `对 $y$ 求偏导：$f_{xy}(x, y) = \\frac{\\partial}{\\partial y}\\left(${poly([2 * a, "xy^2"], [b, "y"])}\\right) = ${poly([4 * a, "xy"], [b, ""])}$。`,
-            `代入点 $(x, y) = (${x0}, ${y0})$：$f_{xy}(${x0}, ${y0}) = 4(${a})(${x0})(${y0}) + ${b} = ${ans}$。`,
+            `代入点 $(x, y) = (${x0}, ${y0})$：$f_{xy}(${x0}, ${y0}) = 4(${a})(${x0})(${y0}) + ${paren(b)} = ${ans}$。`,
           ),
         );
         return numberProblem({
@@ -1207,14 +1204,14 @@ export const tangentPlanesToSurfaces: TopicDef = {
             `Compute partial derivatives:\n\n` +
               `$f_x = 2(${a})x = ${2 * a}x \\implies f_x(${x0}, ${y0}) = ${fx}$\n\n` +
               `$f_y = 2(${b})y = ${2 * b}y \\implies f_y(${x0}, ${y0}) = ${fy}$`,
-            `Apply the tangent plane formula: $z - (${z0}) = ${fx}(x - (${x0})) + ${fy}(y - (${y0}))$.`,
+            `Apply the tangent plane formula: $z - (${z0}) = ${fx}(x - (${x0})) + ${paren(fy)}(y - (${y0}))$.`,
             `Rearrange to standard form: $${answer}$.`,
           ),
           steps(
             `计算偏导数：\n\n` +
               `$f_x = 2(${a})x = ${2 * a}x \\implies f_x(${x0}, ${y0}) = ${fx}$\n\n` +
               `$f_y = 2(${b})y = ${2 * b}y \\implies f_y(${x0}, ${y0}) = ${fy}$`,
-            `应用切平面公式：$z - (${z0}) = ${fx}(x - (${x0})) + ${fy}(y - (${y0}))$。`,
+            `应用切平面公式：$z - (${z0}) = ${fx}(x - (${x0})) + ${paren(fy)}(y - (${y0}))$。`,
             `整理为标准形式：$${answer}$。`,
           ),
         );
@@ -1269,13 +1266,13 @@ export const linearizationOfMultivariableFunctions: TopicDef = {
         const solution = t(
           steps(
             `Evaluate $f(0, 0) = ${c}$.`,
-            `Compute partial derivatives: $f_x(x, y) = 2x + ${a} \\implies f_x(0, 0) = ${a}$.`,
+            `Compute partial derivatives: $f_x(x, y) = ${poly([2, "x"], [a, ""])} \\implies f_x(0, 0) = ${a}$.`,
             `$f_y(x, y) = ${b} \\implies f_y(0, 0) = ${b}$.`,
             `Form the linearization: $L(x, y) = f(0, 0) + f_x(0, 0)x + f_y(0, 0)y = ${ans}$.`,
           ),
           steps(
             `计算 $f(0, 0) = ${c}$。`,
-            `求偏导数：$f_x(x, y) = 2x + ${a} \\implies f_x(0, 0) = ${a}$。`,
+            `求偏导数：$f_x(x, y) = ${poly([2, "x"], [a, ""])} \\implies f_x(0, 0) = ${a}$。`,
             `$f_y(x, y) = ${b} \\implies f_y(0, 0) = ${b}$。`,
             `写出线性化表达式：$L(x, y) = f(0, 0) + f_x(0, 0)x + f_y(0, 0)y = ${ans}$。`,
           ),
@@ -1390,15 +1387,15 @@ export const theGradientVector: TopicDef = {
         const solution = t(
           steps(
             `Compute the partial derivatives:\n\n` +
-              `$f_x = 2(${a})x + ${c}y = ${poly([2 * a, "x"], [c, "y"])}$\n\n` +
-              `$f_y = 2(${b})y + ${c}x = ${poly([2 * b, "y"], [c, "x"])}$`,
+              `$f_x = 2(${a})x + ${c === 1 ? "" : paren(c)}y = ${poly([2 * a, "x"], [c, "y"])}$\n\n` +
+              `$f_y = 2(${b})y + ${c === 1 ? "" : paren(c)}x = ${poly([2 * b, "y"], [c, "x"])}$`,
             `Evaluate at $(${x0}, ${y0})$:\n\n` + `$f_x(${x0}, ${y0}) = ${ansX}, \\quad f_y(${x0}, ${y0}) = ${ansY}$`,
             `The gradient vector is $\\nabla f(${x0}, ${y0}) = \\langle ${ansX}, ${ansY} \\rangle$.`,
           ),
           steps(
             `计算偏导数：\n\n` +
-              `$f_x = 2(${a})x + ${c}y = ${poly([2 * a, "x"], [c, "y"])}$\n\n` +
-              `$f_y = 2(${b})y + ${c}x = ${poly([2 * b, "y"], [c, "x"])}$`,
+              `$f_x = 2(${a})x + ${c === 1 ? "" : paren(c)}y = ${poly([2 * a, "x"], [c, "y"])}$\n\n` +
+              `$f_y = 2(${b})y + ${c === 1 ? "" : paren(c)}x = ${poly([2 * b, "y"], [c, "x"])}$`,
             `代入点 $(${x0}, ${y0})$：\n\n` + `$f_x(${x0}, ${y0}) = ${ansX}, \\quad f_y(${x0}, ${y0}) = ${ansY}$`,
             `梯度向量为 $\\nabla f(${x0}, ${y0}) = \\langle ${ansX}, ${ansY} \\rangle$。`,
           ),
@@ -1526,12 +1523,12 @@ export const tangentLinesToLevelCurves: TopicDef = {
         const solution = t(
           steps(
             `The normal vector to the curve is the gradient: $\\nabla f(${x0}, ${y0}) = \\langle ${A}, ${B} \\rangle$.`,
-            `The tangent line equation is $${A}(x - (${x0})) + ${B}(y - (${y0})) = 0$.`,
+            `The tangent line equation is $${A}(x - (${x0})) + ${paren(B)}(y - (${y0})) = 0$.`,
             `Rearranging yields $${answer}$.`,
           ),
           steps(
             `曲线的法向量为梯度：$\\nabla f(${x0}, ${y0}) = \\langle ${A}, ${B} \\rangle$。`,
-            `切线方程为 $${A}(x - (${x0})) + ${B}(y - (${y0})) = 0$。`,
+            `切线方程为 $${A}(x - (${x0})) + ${paren(B)}(y - (${y0})) = 0$。`,
             `整理得到 $${answer}$。`,
           ),
         );
@@ -1588,13 +1585,13 @@ export const tangentPlanesToLevelSurfaces: TopicDef = {
           steps(
             `Compute the gradient: $\\nabla F = \\langle ${2 * a}x, ${2 * b}y, ${2 * c}z \\rangle$.`,
             `At $(${pt[0]}, ${pt[1]}, ${pt[2]})$, $\\nabla F = \\langle ${A}, ${B}, ${C} \\rangle$.`,
-            `The tangent plane is $${A}(x - (${pt[0]})) + ${B}(y - (${pt[1]})) + ${C}(z - (${pt[2]})) = 0$.`,
+            `The tangent plane is $${A}(x - (${pt[0]})) + ${paren(B)}(y - (${pt[1]})) + ${paren(C)}(z - (${pt[2]})) = 0$.`,
             `Simplifying gives $${answer}$.`,
           ),
           steps(
             `计算梯度：$\\nabla F = \\langle ${2 * a}x, ${2 * b}y, ${2 * c}z \\rangle$。`,
             `在点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$ 处，$\\nabla F = \\langle ${A}, ${B}, ${C} \\rangle$。`,
-            `切平面方程为 $${A}(x - (${pt[0]})) + ${B}(y - (${pt[1]})) + ${C}(z - (${pt[2]})) = 0$。`,
+            `切平面方程为 $${A}(x - (${pt[0]})) + ${paren(B)}(y - (${pt[1]})) + ${paren(C)}(z - (${pt[2]})) = 0$。`,
             `化简得 $${answer}$。`,
           ),
         );
@@ -1655,12 +1652,12 @@ export const directionalDerivatives: TopicDef = {
           steps(
             `Compute the gradient: $\\nabla f(${x0}, ${y0}) = \\langle 2(${a})(${x0}), 2(${b})(${y0}) \\rangle = \\langle ${fx}, ${fy} \\rangle$.`,
             `Compute the dot product with $\\mathbf{u}$:\n\n` +
-              `$$D_{\\mathbf{u}} f = \\langle ${fx}, ${fy} \\rangle \\cdot \\left\\langle \\frac{${u1Int}}{${mag}}, \\frac{${u2Int}}{${mag}} \\right\\rangle = ${fx}\\left(\\frac{${u1Int}}{${mag}}\\right) + ${fy}\\left(\\frac{${u2Int}}{${mag}}\\right) = ${ans.toLatex()}.$$`,
+              `$$D_{\\mathbf{u}} f = \\langle ${fx}, ${fy} \\rangle \\cdot \\left\\langle \\frac{${u1Int}}{${mag}}, \\frac{${u2Int}}{${mag}} \\right\\rangle = ${fx}\\left(\\frac{${u1Int}}{${mag}}\\right) + ${paren(fy)}\\left(\\frac{${u2Int}}{${mag}}\\right) = ${ans.toLatex()}.$$`,
           ),
           steps(
             `计算梯度：$\\nabla f(${x0}, ${y0}) = \\langle 2(${a})(${x0}), 2(${b})(${y0}) \\rangle = \\langle ${fx}, ${fy} \\rangle$。`,
             `计算与 $\\mathbf{u}$ 的点积：\n\n` +
-              `$$D_{\\mathbf{u}} f = \\langle ${fx}, ${fy} \\rangle \\cdot \\left\\langle \\frac{${u1Int}}{${mag}}, \\frac{${u2Int}}{${mag}} \\right\\rangle = ${fx}\\left(\\frac{${u1Int}}{${mag}}\\right) + ${fy}\\left(\\frac{${u2Int}}{${mag}}\\right) = ${ans.toLatex()}。$$`,
+              `$$D_{\\mathbf{u}} f = \\langle ${fx}, ${fy} \\rangle \\cdot \\left\\langle \\frac{${u1Int}}{${mag}}, \\frac{${u2Int}}{${mag}} \\right\\rangle = ${fx}\\left(\\frac{${u1Int}}{${mag}}\\right) + ${paren(fy)}\\left(\\frac{${u2Int}}{${mag}}\\right) = ${ans.toLatex()}。$$`,
           ),
         );
         return numberProblem({
@@ -1773,13 +1770,13 @@ export const theMultivariableChainRule: TopicDef = {
             `Apply the chain rule: $\\frac{dz}{dt} = \\frac{\\partial z}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial z}{\\partial y}\\frac{dy}{dt}$.`,
             `Compute partial derivatives: $\\frac{\\partial z}{\\partial x} = ${2 * a}x$, $\\frac{\\partial z}{\\partial y} = ${2 * b}y$.`,
             `Compute derivatives with respect to $t$: $\\frac{dx}{dt} = 2t$, $\\frac{dy}{dt} = ${k}$.`,
-            `At $t = 1$, $x = 1$ and $y = ${k}$, so $\\frac{dz}{dt} = (${2 * a}(1))(2(1)) + (${2 * b}(${k}))(${k}) = ${4 * a} + ${2 * b * k * k} = ${ans}$.`,
+            `At $t = 1$, $x = 1$ and $y = ${k}$, so $\\frac{dz}{dt} = (${2 * a}(1))(2(1)) + (${2 * b}(${k}))(${k}) = ${4 * a} + ${paren(2 * b * k * k)} = ${ans}$.`,
           ),
           steps(
             `应用复合函数求导法则：$\\frac{dz}{dt} = \\frac{\\partial z}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial z}{\\partial y}\\frac{dy}{dt}$。`,
             `计算偏导数：$\\frac{\\partial z}{\\partial x} = ${2 * a}x$，$\\frac{\\partial z}{\\partial y} = ${2 * b}y$。`,
             `对 $t$ 求导：$\\frac{dx}{dt} = 2t$，$\\frac{dy}{dt} = ${k}$。`,
-            `在 $t = 1$ 时，$x = 1$ 且 $y = ${k}$，故 $\\frac{dz}{dt} = (${2 * a}(1))(2(1)) + (${2 * b}(${k}))(${k}) = ${4 * a} + ${2 * b * k * k} = ${ans}$。`,
+            `在 $t = 1$ 时，$x = 1$ 且 $y = ${k}$，故 $\\frac{dz}{dt} = (${2 * a}(1))(2(1)) + (${2 * b}(${k}))(${k}) = ${4 * a} + ${paren(2 * b * k * k)} = ${ans}$。`,
           ),
         );
         return numberProblem({
@@ -2013,14 +2010,14 @@ export const affineTransformations: TopicDef = {
         const solution = t(
           steps(
             `Substitute $x = ${x0}$ and $y = ${y0}$ into the transformation:`,
-            `$u = ${a}(${x0}) + ${b}(${y0}) + ${e} = ${u}$`,
-            `$v = ${cCoeff}(${x0}) + ${d}(${y0}) + ${f} = ${v}$`,
+            `$u = ${a}(${x0}) + ${paren(b)}(${y0}) + ${paren(e)} = ${u}$`,
+            `$v = ${cCoeff}(${x0}) + ${paren(d)}(${y0}) + ${paren(f)} = ${v}$`,
             `The image is $(u, v) = ${v2L(answer)}$.`,
           ),
           steps(
             `将 $x = ${x0}$ 和 $y = ${y0}$ 代入变换公式：`,
-            `$u = ${a}(${x0}) + ${b}(${y0}) + ${e} = ${u}$`,
-            `$v = ${cCoeff}(${x0}) + ${d}(${y0}) + ${f} = ${v}$`,
+            `$u = ${a}(${x0}) + ${paren(b)}(${y0}) + ${paren(e)} = ${u}$`,
+            `$v = ${cCoeff}(${x0}) + ${paren(d)}(${y0}) + ${paren(f)} = ${v}$`,
             `得到像为 $(u, v) = ${v2L(answer)}$。`,
           ),
         );
@@ -2131,13 +2128,13 @@ export const theInverseOfAnAffineTransformation: TopicDef = {
         );
         const solution = t(
           steps(
-            `Set $u = ${poly([aVal, "x"], [e, ""])} = ${u0} \\implies ${aVal}x = ${u0 - e} \\implies x = ${x0}$.`,
-            `Set $v = ${poly([dVal, "y"], [f, ""])} = ${v0} \\implies ${dVal}y = ${v0 - f} \\implies y = ${y0}$.`,
+            `Set $u = ${poly([aVal, "x"], [e, ""])} = ${u0} \\implies ${poly([aVal, "x"])} = ${u0 - e} \\implies x = ${x0}$.`,
+            `Set $v = ${poly([dVal, "y"], [f, ""])} = ${v0} \\implies ${poly([dVal, "y"])} = ${v0 - f} \\implies y = ${y0}$.`,
             `The pre-image is $(x, y) = (${x0}, ${y0})$.`,
           ),
           steps(
-            `令 $u = ${poly([aVal, "x"], [e, ""])} = ${u0} \\implies ${aVal}x = ${u0 - e} \\implies x = ${x0}$。`,
-            `令 $v = ${poly([dVal, "y"], [f, ""])} = ${v0} \\implies ${dVal}y = ${v0 - f} \\implies y = ${y0}$。`,
+            `令 $u = ${poly([aVal, "x"], [e, ""])} = ${u0} \\implies ${poly([aVal, "x"])} = ${u0 - e} \\implies x = ${x0}$。`,
+            `令 $v = ${poly([dVal, "y"], [f, ""])} = ${v0} \\implies ${poly([dVal, "y"])} = ${v0 - f} \\implies y = ${y0}$。`,
             `原像为 $(x, y) = (${x0}, ${y0})$。`,
           ),
         );
@@ -2725,14 +2722,14 @@ export const globalVsLocalExtremaAndCriticalPointsOfMultivariableFunctions: Topi
         const solution = t(
           steps(
             `Compute partial derivatives:\n\n` +
-              `$f_x = ${2 * a}x + ${cTerm} = 0 \\implies x = ${x0}$\n\n` +
-              `$f_y = ${2 * b}y + ${dTerm} = 0 \\implies y = ${y0}$`,
+              `$f_x = ${poly([2 * a, "x"], [cTerm, ""])} = 0 \\implies x = ${x0}$\n\n` +
+              `$f_y = ${poly([2 * b, "y"], [dTerm, ""])} = 0 \\implies y = ${y0}$`,
             `The unique critical point is $(x, y) = (${x0}, ${y0})$.`,
           ),
           steps(
             `求偏导数并令其为零：\n\n` +
-              `$f_x = ${2 * a}x + ${cTerm} = 0 \\implies x = ${x0}$\n\n` +
-              `$f_y = ${2 * b}y + ${dTerm} = 0 \\implies y = ${y0}$`,
+              `$f_x = ${poly([2 * a, "x"], [cTerm, ""])} = 0 \\implies x = ${x0}$\n\n` +
+              `$f_y = ${poly([2 * b, "y"], [dTerm, ""])} = 0 \\implies y = ${y0}$`,
             `唯一的临界点为 $(x, y) = (${x0}, ${y0})$。`,
           ),
         );
@@ -3159,13 +3156,13 @@ export const newtonsMethodForOptimizingMultivariableFunctions: TopicDef = {
         );
         const solution = t(
           steps(
-            `The gradient is $\\nabla f(x, y) = \\langle ${2 * a}x + ${cCoeff}, ${2 * b}y + ${dCoeff} \\rangle$. At $(0, 0)$, $\\nabla f(0, 0) = \\langle ${cCoeff}, ${dCoeff} \\rangle$.`,
+            `The gradient is $\\nabla f(x, y) = \\langle ${poly([2 * a, "x"], [cCoeff, ""])}, ${poly([2 * b, "y"], [dCoeff, ""])} \\rangle$. At $(0, 0)$, $\\nabla f(0, 0) = \\langle ${cCoeff}, ${dCoeff} \\rangle$.`,
             `The Hessian matrix is constant: $H = \\begin{pmatrix} ${2 * a} & 0 \\\\ 0 & ${2 * b} \\end{pmatrix}$.`,
             `Solve $H\\Delta \\mathbf{x} = -\\nabla f(0, 0) = \\langle ${-cCoeff}, ${-dCoeff} \\rangle \\implies \\Delta x = ${xTarget}, \\Delta y = ${yTarget}$.`,
             `The next point is $(x_1, y_1) = (0, 0) + (${xTarget}, ${yTarget}) = ${v2L(answer)}$.`,
           ),
           steps(
-            `梯度为 $\\nabla f(x, y) = \\langle ${2 * a}x + ${cCoeff}, ${2 * b}y + ${dCoeff} \\rangle$。在 $(0, 0)$ 处，$\\nabla f(0, 0) = \\langle ${cCoeff}, ${dCoeff} \\rangle$。`,
+            `梯度为 $\\nabla f(x, y) = \\langle ${poly([2 * a, "x"], [cCoeff, ""])}, ${poly([2 * b, "y"], [dCoeff, ""])} \\rangle$。在 $(0, 0)$ 处，$\\nabla f(0, 0) = \\langle ${cCoeff}, ${dCoeff} \\rangle$。`,
             `黑塞矩阵为常数矩阵：$H = \\begin{pmatrix} ${2 * a} & 0 \\\\ 0 & ${2 * b} \\end{pmatrix}$。`,
             `求解 $H\\Delta \\mathbf{x} = -\\nabla f(0, 0) = \\langle ${-cCoeff}, ${-dCoeff} \\rangle \\implies \\Delta x = ${xTarget}, \\Delta y = ${yTarget}$。`,
             `下一步迭代点为 $(x_1, y_1) = (0, 0) + (${xTarget}, ${yTarget}) = ${v2L(answer)}$。`,

@@ -1640,6 +1640,7 @@ const qTex = (a: number) => piTex(q(a, 4));
 
 /** monotonyProblem asks whether f increases or decreases on an interval of length π/4 between key points. */
 function monotonyProblem(rng: Rng, f: Fn): Problem {
+  if ((f === "tan" || f === "cot") && rng.int(0, 2) === 0) return acrossAsymptoteProblem(rng, f);
   const { pieces, period } = fnData[f];
   const P = 2 * period;
   const a = rng.int(-16, 15);
@@ -1670,6 +1671,24 @@ function monotonyProblem(rng: Rng, f: Fn): Problem {
         `The interval $\\left(${qTex(a0)}, ${qTex(a0 + 1)}\\right)$ lies inside $\\left(${qTex(lo)}, ${qTex(hi)}\\right)$, on which $y = \\${f} x$ is ${word.en}. So it is ${word.en} on $${iTex}$.`,
         `区间 $\\left(${qTex(a0)}, ${qTex(a0 + 1)}\\right)$ 包含在 $\\left(${qTex(lo)}, ${qTex(hi)}\\right)$ 内，$y = \\${f} x$ 在其上${word["zh-CN"]}。所以它在 $${iTex}$ 上${word["zh-CN"]}。`,
       ),
+    ),
+  });
+}
+
+/** acrossAsymptoteProblem asks about tangent or cotangent on an interval that contains an asymptote, where it is neither increasing nor decreasing. */
+function acrossAsymptoteProblem(rng: Rng, f: "tan" | "cot"): Problem {
+  const u = (f === "tan" ? 2 : 0) + 4 * rng.int(-2, 1);
+  const iTex = `\\left(${qTex(u - 1)}, ${qTex(u + 1)}\\right)`;
+  const [left, right] = f === "tan" ? [1, -1] : [-1, 1];
+  const values = `\\${f}\\left(${qTex(u - 1)}\\right) = ${left} ${f === "tan" ? ">" : "<"} \\${f}\\left(${qTex(u + 1)}\\right) = ${right}`;
+  const [rise, side] = f === "tan" ? [t("rises", "上升"), t("increasing", "递增")] : [t("falls", "下降"), t("decreasing", "递减")];
+  return choiceProblem({
+    prompt: t(`Is $y = \\${f} x$ increasing or decreasing on the interval $${iTex}$?`, `$y = \\${f} x$ 在区间 $${iTex}$ 上递增还是递减？`),
+    options: [...monotonyOptions, t("Neither", "都不是")],
+    correct: 2,
+    solution: t(
+      `The asymptote $x = ${qTex(u)}$ lies inside $${iTex}$. The graph ${rise.en} on each side of it, but $${values}$, so $y = \\${f} x$ is not ${side.en} across the asymptote: it is neither increasing nor decreasing on $${iTex}$.`,
+      `渐近线 $x = ${qTex(u)}$ 在 $${iTex}$ 内。图象在它两侧都${rise["zh-CN"]}，但 $${values}$，所以 $y = \\${f} x$ 跨过渐近线时并不${side["zh-CN"]}：它在 $${iTex}$ 上既不递增也不递减。`,
     ),
   });
 }
@@ -1933,8 +1952,8 @@ export const describingPropertiesOfTheCotangentFunction: TopicDef = {
       "对整数 $k$，$y = \\cot x$ 在 $\\cos x = 0$ 处有**零点** $x = \\frac{\\pi}{2} + k\\pi$，在 $\\sin x = 0$ 处有**竖直渐近线** $x = k\\pi$：恰好是正切的渐近线和零点所在。它没有最大值和最小值。\n\n求 $-\\pi \\le x < 0$ 内的零点，取 $k = -1$：$x = \\frac{\\pi}{2} - \\pi = -\\frac{\\pi}{2}$。",
     ),
     monotony: t(
-      "On each branch, $(k\\pi, \\pi + k\\pi)$, the graph of $y = \\cot x$ falls from $\\infty$ to $-\\infty$: cotangent is **decreasing** on every interval between consecutive asymptotes, and never increasing.\n\nOn $\\left(-\\frac{\\pi}{2}, -\\frac{\\pi}{4}\\right)$: add $\\pi$ to get $\\left(\\frac{\\pi}{2}, \\frac{3\\pi}{4}\\right)$, inside $(0, \\pi)$, so cotangent is decreasing there.",
-      "在每一支 $(k\\pi, \\pi + k\\pi)$ 上，$y = \\cot x$ 的图象从 $\\infty$ 降到 $-\\infty$：余切在相邻两条渐近线之间的每个区间上都**递减**，从不递增。\n\n在 $\\left(-\\frac{\\pi}{2}, -\\frac{\\pi}{4}\\right)$ 上：加 $\\pi$ 得 $\\left(\\frac{\\pi}{2}, \\frac{3\\pi}{4}\\right)$，在 $(0, \\pi)$ 内，所以余切在那里递减。",
+      "On each branch, $(k\\pi, \\pi + k\\pi)$, the graph of $y = \\cot x$ falls from $\\infty$ to $-\\infty$: cotangent is **decreasing** on every interval between consecutive asymptotes, and never increasing. (It is not decreasing across an asymptote: $\\cot\\left(-\\frac{\\pi}{4}\\right) = -1 < \\cot \\frac{\\pi}{4} = 1$.)\n\nOn $\\left(-\\frac{\\pi}{2}, -\\frac{\\pi}{4}\\right)$: add $\\pi$ to get $\\left(\\frac{\\pi}{2}, \\frac{3\\pi}{4}\\right)$, inside $(0, \\pi)$, so cotangent is decreasing there.",
+      "在每一支 $(k\\pi, \\pi + k\\pi)$ 上，$y = \\cot x$ 的图象从 $\\infty$ 降到 $-\\infty$：余切在相邻两条渐近线之间的每个区间上都**递减**，从不递增。（跨过渐近线时不是递减的：$\\cot\\left(-\\frac{\\pi}{4}\\right) = -1 < \\cot \\frac{\\pi}{4} = 1$。）\n\n在 $\\left(-\\frac{\\pi}{2}, -\\frac{\\pi}{4}\\right)$ 上：加 $\\pi$ 得 $\\left(\\frac{\\pi}{2}, \\frac{3\\pi}{4}\\right)$，在 $(0, \\pi)$ 内，所以余切在那里递减。",
     ),
   }),
 };

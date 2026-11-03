@@ -125,8 +125,8 @@ export const finiteLinearSeries: TopicDef = {
           answer: value,
           wrong: [brute(m + 1, n, f), brute(1, n, f), brute(m, n - 1, f), value + b],
           solution: t(
-            `There are $${n - m + 1}$ terms: $${sumTex(1, n, body)} - ${sumTex(1, m - 1, body)} = ${brute(1, n, f)} - ${brute(1, m - 1, f)} = ${value}$.`,
-            `共有 $${n - m + 1}$ 项：$${sumTex(1, n, body)} - ${sumTex(1, m - 1, body)} = ${brute(1, n, f)} - ${brute(1, m - 1, f)} = ${value}$。`,
+            `There are $${n - m + 1}$ terms: $${sumTex(1, n, body)} - ${sumTex(1, m - 1, body)} = ${brute(1, n, f)} - ${pn(brute(1, m - 1, f))} = ${value}$.`,
+            `共有 $${n - m + 1}$ 项：$${sumTex(1, n, body)} - ${sumTex(1, m - 1, body)} = ${brute(1, n, f)} - ${pn(brute(1, m - 1, f))} = ${value}$。`,
           ),
         });
       },
@@ -412,8 +412,8 @@ export const theGeneralizedBinomialTheorem: TopicDef = {
               .mul(Q.of(fact(k))),
           ],
           solution: t(
-            `The $${xk(k)}$ term is $\\binom{${r.toLatex()}}{${k}}(${c}x)^{${k}} = ${genChoose(r, k).toLatex()} \\cdot ${pq(Q.of(c).pow(k))}${xk(k)}$, so the coefficient is $${value.toLatex()}$.`,
-            `$${xk(k)}$ 项为 $\\binom{${r.toLatex()}}{${k}}(${c}x)^{${k}} = ${genChoose(r, k).toLatex()} \\cdot ${pq(Q.of(c).pow(k))}${xk(k)}$，所以系数为 $${value.toLatex()}$。`,
+            `The $${xk(k)}$ term is $\\binom{${r.toLatex()}}{${k}}(${poly([[c, "x"]])})^{${k}} = ${genChoose(r, k).toLatex()} \\cdot ${Q.of(c).pow(k).eq(Q.one) ? "" : pq(Q.of(c).pow(k))}${xk(k)}$, so the coefficient is $${value.toLatex()}$.`,
+            `$${xk(k)}$ 项为 $\\binom{${r.toLatex()}}{${k}}(${poly([[c, "x"]])})^{${k}} = ${genChoose(r, k).toLatex()} \\cdot ${Q.of(c).pow(k).eq(Q.one) ? "" : pq(Q.of(c).pow(k))}${xk(k)}$，所以系数为 $${value.toLatex()}$。`,
           ),
         });
       },

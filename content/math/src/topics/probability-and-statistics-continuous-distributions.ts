@@ -1,7 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q } from "@ga/subject-math";
-import { choiceProblem, numberProblem } from "../problems.ts";
+import { paren, Q } from "@ga/subject-math";
+import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
 
 /** Topics for Unit 4: Continuous Probability Distributions (new topics). */
 export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = [
@@ -68,8 +68,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "normal-approximation-parameters",
         title: t("Computing mean and variance for normal approximation of binomial", "计算二项分布正态近似的均值与方差"),
         explanation: t(
-          "For X ~ Binomial(n, p), the approximating normal distribution has mean μ = np and variance σ^2 = np(1-p).",
-          "对于 X ~ Binomial(n, p)，近似正态分布的均值为 μ = np，方差为 σ^2 = np(1-p)。",
+          "For $X \\sim \\text{Binomial}(n, p)$, the approximating normal distribution has mean $\\mu = np$ and variance $\\sigma^2 = np(1 - p)$.",
+          "对于 $X \\sim \\text{Binomial}(n, p)$，近似正态分布的均值为 $\\mu = np$，方差为 $\\sigma^2 = np(1 - p)$。",
         ),
         generate: (rng: Rng): Problem => {
           // Choose n and p such that np and np(1-p) are clean
@@ -118,8 +118,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "poisson-normal-approx-standard-deviation",
         title: t("Standard deviation of the approximating normal distribution", "近似正态分布的标准差"),
         explanation: t(
-          "For X ~ Poisson(λ), both the mean and variance are λ, so the standard deviation is σ = √λ.",
-          "对于 X ~ Poisson(λ)，其均值和方差均为 λ，因此标准差为 σ = √λ。",
+          "For $X \\sim \\text{Poisson}(\\lambda)$, both the mean and the variance are $\\lambda$, so the standard deviation is $\\sigma = \\sqrt{\\lambda}$.",
+          "对于 $X \\sim \\text{Poisson}(\\lambda)$，其均值和方差均为 $\\lambda$，因此标准差为 $\\sigma = \\sqrt{\\lambda}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(4, 50);
@@ -213,8 +213,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
             ),
             answer: Q.of(1, width),
             solution: t(
-              `The density is $f(x) = \\frac{1}{b - a} = \\frac{1}{${b} - ${a}} = \\frac{1}{${width}}$.`,
-              `概率密度函数为 $f(x) = \\frac{1}{b - a} = \\frac{1}{${b} - ${a}} = \\frac{1}{${width}}$。`,
+              `The density is $f(x) = \\frac{1}{b - a} = \\frac{1}{${b} - ${a}} = \\frac{1}{${width}}${lowestTerms(1, width)}$.`,
+              `概率密度函数为 $f(x) = \\frac{1}{b - a} = \\frac{1}{${b} - ${a}} = \\frac{1}{${width}}${lowestTerms(1, width)}$。`,
             ),
           });
         },
@@ -241,8 +241,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
             ),
             answer: Q.of(subWidth, width),
             solution: t(
-              `$P(${c} \\le X \\le ${d}) = \\frac{d - c}{b - a} = \\frac{${d} - ${c}}{${b} - ${a}} = \\frac{${subWidth}}{${width}}$.`,
-              `$P(${c} \\le X \\le ${d}) = \\frac{d - c}{b - a} = \\frac{${d} - ${c}}{${b} - ${a}} = \\frac{${subWidth}}{${width}}$。`,
+              `$P(${c} \\le X \\le ${d}) = \\frac{d - c}{b - a} = \\frac{${d} - ${c}}{${b} - ${a}} = \\frac{${subWidth}}{${width}}${lowestTerms(subWidth, width)}$.`,
+              `$P(${c} \\le X \\le ${d}) = \\frac{d - c}{b - a} = \\frac{${d} - ${c}}{${b} - ${a}} = \\frac{${subWidth}}{${width}}${lowestTerms(subWidth, width)}$。`,
             ),
           });
         },
@@ -281,8 +281,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
             ),
             answer: Q.of(a + b, 2),
             solution: t(
-              `The mean of $U(a, b)$ is the midpoint $E[X] = \\frac{a + b}{2} = \\frac{${a} + ${b}}{2} = \\frac{${a + b}}{2}$.`,
-              `$U(a, b)$ 的均值为区间中点 $E[X] = \\frac{a + b}{2} = \\frac{${a} + ${b}}{2} = \\frac{${a + b}}{2}$。`,
+              `The mean of $U(a, b)$ is the midpoint $E[X] = \\frac{a + b}{2} = \\frac{${a} + ${paren(b)}}{2} = \\frac{${a + b}}{2}${lowestTerms(a + b, 2)}$.`,
+              `$U(a, b)$ 的均值为区间中点 $E[X] = \\frac{a + b}{2} = \\frac{${a} + ${paren(b)}}{2} = \\frac{${a + b}}{2}${lowestTerms(a + b, 2)}$。`,
             ),
           });
         },
@@ -290,7 +290,10 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
       {
         id: "continuous-uniform-variance",
         title: t("Variance of a continuous uniform distribution", "连续均匀分布的方差"),
-        explanation: t("For X ~ U(a, b), the variance is Var(X) = (b - a)^2 / 12.", "对于 X ~ U(a, b)，方差为 Var(X) = (b - a)^2 / 12。"),
+        explanation: t(
+          "For $X \\sim U(a, b)$, the variance is $\\operatorname{Var}(X) = \\frac{(b - a)^2}{12}$.",
+          "对于 $X \\sim U(a, b)$，方差为 $\\operatorname{Var}(X) = \\frac{(b - a)^2}{12}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(0, 15);
           const width = rng.int(2, 30);
@@ -304,8 +307,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
             ),
             answer: Q.of(numerator, 12),
             solution: t(
-              `The variance of a continuous uniform variable on $[a, b]$ is $\\text{Var}(X) = \\frac{(b - a)^2}{12} = \\frac{(${b} - ${a})^2}{12} = \\frac{${numerator}}{12}$.`,
-              `区间 $[a, b]$ 上连续均匀变量的方差为 $\\text{Var}(X) = \\frac{(b - a)^2}{12} = \\frac{(${b} - ${a})^2}{12} = \\frac{${numerator}}{12}$。`,
+              `The variance of a continuous uniform variable on $[a, b]$ is $\\text{Var}(X) = \\frac{(b - a)^2}{12} = \\frac{(${b} - ${a})^2}{12} = \\frac{${numerator}}{12}${lowestTerms(numerator, 12)}$.`,
+              `区间 $[a, b]$ 上连续均匀变量的方差为 $\\text{Var}(X) = \\frac{(b - a)^2}{12} = \\frac{(${b} - ${a})^2}{12} = \\frac{${numerator}}{12}${lowestTerms(numerator, 12)}$。`,
             ),
           });
         },
@@ -346,8 +349,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
             ),
             answer: Q.of(remainingExceed, remainingTotal),
             solution: t(
-              `Let $X \\sim U(0, ${maxWait})$. The conditional probability is $P(X > ${d} \\mid X > ${c}) = \\frac{P(X > ${d})}{P(X > ${c})} = \\frac{${maxWait} - ${d}}{${maxWait} - ${c}} = \\frac{${remainingExceed}}{${remainingTotal}}$.`,
-              `设 $X \\sim U(0, ${maxWait})$。所求条件概率为 $P(X > ${d} \\mid X > ${c}) = \\frac{P(X > ${d})}{P(X > ${c})} = \\frac{${maxWait} - ${d}}{${maxWait} - ${c}} = \\frac{${remainingExceed}}{${remainingTotal}}$。`,
+              `Let $X \\sim U(0, ${maxWait})$. The conditional probability is $P(X > ${d} \\mid X > ${c}) = \\frac{P(X > ${d})}{P(X > ${c})} = \\frac{${maxWait} - ${d}}{${maxWait} - ${c}} = \\frac{${remainingExceed}}{${remainingTotal}}${lowestTerms(remainingExceed, remainingTotal)}$.`,
+              `设 $X \\sim U(0, ${maxWait})$。所求条件概率为 $P(X > ${d} \\mid X > ${c}) = \\frac{P(X > ${d})}{P(X > ${c})} = \\frac{${maxWait} - ${d}}{${maxWait} - ${c}} = \\frac{${remainingExceed}}{${remainingTotal}}${lowestTerms(remainingExceed, remainingTotal)}$。`,
             ),
           });
         },
@@ -356,8 +359,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "uniform-quantile-cutoff",
         title: t("Finding quantiles for continuous uniform distributions", "求解连续均匀分布的分位数阈值"),
         explanation: t(
-          "For X ~ U(a, b), the value x_p satisfying P(X ≤ x_p) = p is x_p = a + p(b - a).",
-          "对于 X ~ U(a, b)，满足 P(X ≤ x_p) = p 的值由分位数公式给出：x_p = a + p(b - a)。",
+          "For $X \\sim U(a, b)$, the value $x_p$ satisfying $P(X \\le x_p) = p$ is $x_p = a + p(b - a)$.",
+          "对于 $X \\sim U(a, b)$，满足 $P(X \\le x_p) = p$ 的值为 $x_p = a + p(b - a)$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(5, 30);
@@ -400,8 +403,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "exponential-cdf-evaluation",
         title: t("Evaluating survival and cumulative probabilities of exponential distribution", "计算指数分布的生存概率与累积概率"),
         explanation: t(
-          "For X ~ Exp(λ), the survival probability is P(X > x) = e^{-λ x} and the CDF is P(X ≤ x) = 1 - e^{-λ x}.",
-          "对于 X ~ Exp(λ)，其生存概率为 P(X > x) = e^{-λ x}，累积分布函数为 P(X ≤ x) = 1 - e^{-λ x}。",
+          "For $X \\sim \\text{Exp}(\\lambda)$, the survival probability is $P(X > x) = e^{-\\lambda x}$ and the CDF is $P(X \\le x) = 1 - e^{-\\lambda x}$.",
+          "对于 $X \\sim \\text{Exp}(\\lambda)$，其生存概率为 $P(X > x) = e^{-\\lambda x}$，累积分布函数为 $P(X \\le x) = 1 - e^{-\\lambda x}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 10);
@@ -500,8 +503,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
             ),
             answer: Q.of(1, mean),
             solution: t(
-              `The mean of an exponential distribution is $E[X] = \\frac{1}{\\lambda}$. Therefore, $\\lambda = \\frac{1}{E[X]} = \\frac{1}{${mean}}$.`,
-              `指数分布的数学期望为 $E[X] = \\frac{1}{\\lambda}$。因此，$\\lambda = \\frac{1}{E[X]} = \\frac{1}{${mean}}$。`,
+              `The mean of an exponential distribution is $E[X] = \\frac{1}{\\lambda}$. Therefore, $\\lambda = \\frac{1}{E[X]} = \\frac{1}{${mean}}${lowestTerms(1, mean)}$.`,
+              `指数分布的数学期望为 $E[X] = \\frac{1}{\\lambda}$。因此，$\\lambda = \\frac{1}{E[X]} = \\frac{1}{${mean}}${lowestTerms(1, mean)}$。`,
             ),
           });
         },
@@ -510,8 +513,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "exponential-median-formula",
         title: t("Identifying the median of an exponential distribution", "确定指数分布的中位数表达式"),
         explanation: t(
-          "For X ~ Exp(λ), the median m satisfies 1 - e^{-λ m} = 0.5, so m = ln(2) / λ.",
-          "对于 X ~ Exp(λ)，中位数 m 满足 1 - e^{-λ m} = 0.5，因此 m = ln(2) / λ。",
+          "For $X \\sim \\text{Exp}(\\lambda)$, the median $m$ satisfies $1 - e^{-\\lambda m} = 0.5$, so $m = \\frac{\\ln 2}{\\lambda}$.",
+          "对于 $X \\sim \\text{Exp}(\\lambda)$，中位数 $m$ 满足 $1 - e^{-\\lambda m} = 0.5$，因此 $m = \\frac{\\ln 2}{\\lambda}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(3, 30);
@@ -559,8 +562,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "exponential-mean-and-sd-equality",
         title: t("Standard deviation of an exponential random variable", "指数随机变量的标准差"),
         explanation: t(
-          "For X ~ Exp(λ), Var(X) = 1/λ^2, so the standard deviation is SD(X) = 1/λ, equal to its mean.",
-          "对于 X ~ Exp(λ)，方差为 Var(X) = 1/λ^2，因此标准差为 SD(X) = 1/λ，恰好等于其期望值。",
+          "For $X \\sim \\text{Exp}(\\lambda)$, $\\operatorname{Var}(X) = \\frac{1}{\\lambda^2}$, so the standard deviation is $\\operatorname{SD}(X) = \\frac{1}{\\lambda}$, equal to the mean.",
+          "对于 $X \\sim \\text{Exp}(\\lambda)$，方差为 $\\operatorname{Var}(X) = \\frac{1}{\\lambda^2}$，因此标准差为 $\\operatorname{SD}(X) = \\frac{1}{\\lambda}$，恰好等于其期望值。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 40);
@@ -572,8 +575,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
             ),
             answer: Q.of(1, lambda),
             solution: t(
-              `For an exponential random variable with rate $\\lambda = ${lambda}$, the variance is $\\text{Var}(X) = \\frac{1}{\\lambda^2} = \\frac{1}{${lambda * lambda}}$. Taking the square root gives $\\text{SD}(X) = \\frac{1}{\\lambda} = \\frac{1}{${lambda}}$.`,
-              `对于比率为 $\\lambda = ${lambda}$ 的指数随机变量，方差为 $\\text{Var}(X) = \\frac{1}{\\lambda^2} = \\frac{1}{${lambda * lambda}}$。开平方得标准差 $\\text{SD}(X) = \\frac{1}{\\lambda} = \\frac{1}{${lambda}}$。`,
+              `For an exponential random variable with rate $\\lambda = ${lambda}$, the variance is $\\text{Var}(X) = \\frac{1}{\\lambda^2} = \\frac{1}{${lambda * lambda}}$. Taking the square root gives $\\text{SD}(X) = \\frac{1}{\\lambda} = \\frac{1}{${lambda}}${lowestTerms(1, lambda)}$.`,
+              `对于比率为 $\\lambda = ${lambda}$ 的指数随机变量，方差为 $\\text{Var}(X) = \\frac{1}{\\lambda^2} = \\frac{1}{${lambda * lambda}}$。开平方得标准差 $\\text{SD}(X) = \\frac{1}{\\lambda} = \\frac{1}{${lambda}}${lowestTerms(1, lambda)}$。`,
             ),
           });
         },
@@ -582,8 +585,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "exponential-second-moment",
         title: t("Calculating the second raw moment of an exponential distribution", "计算指数分布的二阶原点矩"),
         explanation: t(
-          "For X ~ Exp(λ), E[X^2] = Var(X) + (E[X])^2 = 1/λ^2 + 1/λ^2 = 2/λ^2.",
-          "对于 X ~ Exp(λ)，E[X^2] = Var(X) + (E[X])^2 = 1/λ^2 + 1/λ^2 = 2/λ^2。",
+          "For $X \\sim \\text{Exp}(\\lambda)$, $E[X^2] = \\operatorname{Var}(X) + (E[X])^2 = \\frac{1}{\\lambda^2} + \\frac{1}{\\lambda^2} = \\frac{2}{\\lambda^2}$.",
+          "对于 $X \\sim \\text{Exp}(\\lambda)$，$E[X^2] = \\operatorname{Var}(X) + (E[X])^2 = \\frac{1}{\\lambda^2} + \\frac{1}{\\lambda^2} = \\frac{2}{\\lambda^2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(1, 50);
@@ -596,8 +599,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
             ),
             answer: Q.of(2, den),
             solution: t(
-              `$E[X^2] = \\text{Var}(X) + (E[X])^2 = \\frac{1}{\\lambda^2} + \\frac{1}{\\lambda^2} = \\frac{2}{\\lambda^2} = \\frac{2}{${lambda}^2} = \\frac{2}{${den}}$.`,
-              `$E[X^2] = \\text{Var}(X) + (E[X])^2 = \\frac{1}{\\lambda^2} + \\frac{1}{\\lambda^2} = \\frac{2}{\\lambda^2} = \\frac{2}{${lambda}^2} = \\frac{2}{${den}}$。`,
+              `$E[X^2] = \\text{Var}(X) + (E[X])^2 = \\frac{1}{\\lambda^2} + \\frac{1}{\\lambda^2} = \\frac{2}{\\lambda^2} = \\frac{2}{${lambda}^2} = \\frac{2}{${den}}${lowestTerms(2, den)}$.`,
+              `$E[X^2] = \\text{Var}(X) + (E[X])^2 = \\frac{1}{\\lambda^2} + \\frac{1}{\\lambda^2} = \\frac{2}{\\lambda^2} = \\frac{2}{${lambda}^2} = \\frac{2}{${den}}${lowestTerms(2, den)}$。`,
             ),
           });
         },
@@ -647,8 +650,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "gamma-function-half-integer",
         title: t("Applying recurrence for half-integer Gamma values", "应用递推公式计算半整数伽马函数比值"),
         explanation: t(
-          "Using Γ(α+1) = α Γ(α), Γ(a + 1/2) / Γ(b + 1/2) = ∏_{k=b}^{a-1} (k + 1/2).",
-          "利用 Γ(α+1) = α Γ(α)，可得 Γ(a + 1/2) / Γ(b + 1/2) = ∏_{k=b}^{a-1} (k + 1/2)。",
+          "Using $\\Gamma(\\alpha + 1) = \\alpha \\Gamma(\\alpha)$, $\\frac{\\Gamma(a + \\frac{1}{2})}{\\Gamma(b + \\frac{1}{2})} = \\prod_{k=b}^{a-1} \\left(k + \\frac{1}{2}\\right)$.",
+          "利用 $\\Gamma(\\alpha + 1) = \\alpha \\Gamma(\\alpha)$，可得 $\\frac{\\Gamma(a + \\frac{1}{2})}{\\Gamma(b + \\frac{1}{2})} = \\prod_{k=b}^{a-1} \\left(k + \\frac{1}{2}\\right)$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(1, 20);
@@ -670,8 +673,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
             ),
             answer: Q.of(num, den),
             solution: t(
-              `Repeatedly applying $\\Gamma(\\alpha + 1) = \\alpha \\Gamma(\\alpha)$ gives $\\frac{\\Gamma\\left(\\frac{${numA}}{2}\\right)}{\\Gamma\\left(\\frac{${numB}}{2}\\right)} = \\frac{${num}}{${den}}$.`,
-              `反复应用 $\\Gamma(\\alpha + 1) = \\alpha \\Gamma(\\alpha)$ 得 $\\frac{\\Gamma\\left(\\frac{${numA}}{2}\\right)}{\\Gamma\\left(\\frac{${numB}}{2}\\right)} = \\frac{${num}}{${den}}$。`,
+              `Repeatedly applying $\\Gamma(\\alpha + 1) = \\alpha \\Gamma(\\alpha)$ gives $\\frac{\\Gamma\\left(\\frac{${numA}}{2}\\right)}{\\Gamma\\left(\\frac{${numB}}{2}\\right)} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `反复应用 $\\Gamma(\\alpha + 1) = \\alpha \\Gamma(\\alpha)$ 得 $\\frac{\\Gamma\\left(\\frac{${numA}}{2}\\right)}{\\Gamma\\left(\\frac{${numB}}{2}\\right)} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -695,8 +698,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "gamma-distribution-mean-variance",
         title: t("Computing the mean and variance of a Gamma distribution", "计算伽马分布的期望与方差"),
         explanation: t(
-          "For X ~ Gamma(α, β) with shape α and rate β, E[X] = α / β and Var(X) = α / β^2.",
-          "对于形状参数为 α、比率参数为 β 的伽马分布 X ~ Gamma(α, β)，其均值为 E[X] = α / β，方差为 Var(X) = α / β^2。",
+          "For $X \\sim \\text{Gamma}(\\alpha, \\beta)$ with shape $\\alpha$ and rate $\\beta$, $E[X] = \\frac{\\alpha}{\\beta}$ and $\\operatorname{Var}(X) = \\frac{\\alpha}{\\beta^2}$.",
+          "对于形状参数为 $\\alpha$、比率参数为 $\\beta$ 的伽马分布 $X \\sim \\text{Gamma}(\\alpha, \\beta)$，其均值为 $E[X] = \\frac{\\alpha}{\\beta}$，方差为 $\\operatorname{Var}(X) = \\frac{\\alpha}{\\beta^2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const alpha = rng.int(2, 12);
@@ -710,8 +713,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
             ),
             answer: Q.of(alpha, varDen),
             solution: t(
-              `The variance of $\\text{Gamma}(\\alpha, \\beta)$ is $\\text{Var}(X) = \\frac{\\alpha}{\\beta^2} = \\frac{${alpha}}{${beta}^2} = \\frac{${alpha}}{${varDen}}$.`,
-              `$\\text{Gamma}(\\alpha, \\beta)$ 的方差为 $\\text{Var}(X) = \\frac{\\alpha}{\\beta^2} = \\frac{${alpha}}{${beta}^2} = \\frac{${alpha}}{${varDen}}$。`,
+              `The variance of $\\text{Gamma}(\\alpha, \\beta)$ is $\\text{Var}(X) = \\frac{\\alpha}{\\beta^2} = \\frac{${alpha}}{${beta}^2} = \\frac{${alpha}}{${varDen}}${lowestTerms(alpha, varDen)}$.`,
+              `$\\text{Gamma}(\\alpha, \\beta)$ 的方差为 $\\text{Var}(X) = \\frac{\\alpha}{\\beta^2} = \\frac{${alpha}}{${beta}^2} = \\frac{${alpha}}{${varDen}}${lowestTerms(alpha, varDen)}$。`,
             ),
           });
         },
@@ -771,8 +774,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "chi-square-sum-of-normals",
         title: t("Definition of Chi-square as sum of squared standard normals", "卡方分布作为标准正态变量平方和的定义"),
         explanation: t(
-          "If Z_1, ..., Z_k are independent N(0, 1) variables, then ∑_{i=1}^k Z_i^2 ~ χ^2(k).",
-          "若 Z_1, ..., Z_k 相互独立且服从 N(0, 1)，则 ∑_{i=1}^k Z_i^2 ~ χ^2(k)。",
+          "If $Z_1, \\dots, Z_k$ are independent $N(0, 1)$ variables, then $\\sum_{i=1}^k Z_i^2 \\sim \\chi^2(k)$.",
+          "若 $Z_1, \\dots, Z_k$ 相互独立且服从 $N(0, 1)$，则 $\\sum_{i=1}^k Z_i^2 \\sim \\chi^2(k)$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 30);
@@ -804,7 +807,10 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
       {
         id: "chi-square-mean-and-variance",
         title: t("Moments of a Chi-square distribution", "卡方分布的数字特征"),
-        explanation: t("For X ~ χ^2(k), E[X] = k and Var(X) = 2k.", "对于 X ~ χ^2(k)，期望为 E[X] = k，方差为 Var(X) = 2k。"),
+        explanation: t(
+          "For $X \\sim \\chi^2(k)$, $E[X] = k$ and $\\operatorname{Var}(X) = 2k$.",
+          "对于 $X \\sim \\chi^2(k)$，期望为 $E[X] = k$，方差为 $\\operatorname{Var}(X) = 2k$。",
+        ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(3, 50);
 
@@ -840,8 +846,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "t-distribution-ratio-definition",
         title: t("Formulation of the Student's t ratio", "学生 t 分布的比值构造形式"),
         explanation: t(
-          "T = Z / √(V / ν) where Z ~ N(0, 1) and V ~ χ^2(ν) are independent.",
-          "T = Z / √(V / ν)，其中 Z ~ N(0, 1) 与 V ~ χ^2(ν) 相互独立。",
+          "$T = \\frac{Z}{\\sqrt{V / \\nu}}$, where $Z \\sim N(0, 1)$ and $V \\sim \\chi^2(\\nu)$ are independent.",
+          "$T = \\frac{Z}{\\sqrt{V / \\nu}}$，其中 $Z \\sim N(0, 1)$ 与 $V \\sim \\chi^2(\\nu)$ 相互独立。",
         ),
         generate: (rng: Rng): Problem => {
           const nu = rng.int(2, 35);
@@ -873,7 +879,10 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
       {
         id: "t-distribution-variance",
         title: t("Variance of the Student's t-distribution", "学生 t 分布的方差"),
-        explanation: t("For T ~ t(ν) with ν > 2, Var(T) = ν / (ν - 2).", "对于自由度 ν > 2 的 T ~ t(ν)，方差为 Var(T) = ν / (ν - 2)。"),
+        explanation: t(
+          "For $T \\sim t(\\nu)$ with $\\nu > 2$, $\\operatorname{Var}(T) = \\frac{\\nu}{\\nu - 2}$.",
+          "对于自由度 $\\nu > 2$ 的 $T \\sim t(\\nu)$，方差为 $\\operatorname{Var}(T) = \\frac{\\nu}{\\nu - 2}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const nu = rng.int(3, 40);
 
@@ -884,8 +893,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
             ),
             answer: Q.of(nu, nu - 2),
             solution: t(
-              `For a $t$-distribution with $\\nu > 2$ degrees of freedom, the variance is $\\text{Var}(T) = \\frac{\\nu}{\\nu - 2} = \\frac{${nu}}{${nu} - 2} = \\frac{${nu}}{${nu - 2}}$.`,
-              `对于自由度 $\\nu > 2$ 的 $t$ 分布，方差为 $\\text{Var}(T) = \\frac{\\nu}{\\nu - 2} = \\frac{${nu}}{${nu} - 2} = \\frac{${nu}}{${nu - 2}}$。`,
+              `For a $t$-distribution with $\\nu > 2$ degrees of freedom, the variance is $\\text{Var}(T) = \\frac{\\nu}{\\nu - 2} = \\frac{${nu}}{${nu} - 2} = \\frac{${nu}}{${nu - 2}}${lowestTerms(nu, nu - 2)}$.`,
+              `对于自由度 $\\nu > 2$ 的 $t$ 分布，方差为 $\\text{Var}(T) = \\frac{\\nu}{\\nu - 2} = \\frac{${nu}}{${nu} - 2} = \\frac{${nu}}{${nu - 2}}${lowestTerms(nu, nu - 2)}$。`,
             ),
           });
         },
@@ -909,8 +918,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "f-distribution-ratio-definition",
         title: t("Defining the F-ratio from independent Chi-squares", "由独立卡方变量定义 F 比值"),
         explanation: t(
-          "F = (U / d1) / (V / d2) where U ~ χ^2(d1) and V ~ χ^2(d2) are independent.",
-          "F = (U / d1) / (V / d2)，其中 U ~ χ^2(d1) 与 V ~ χ^2(d2) 相互独立。",
+          "$F = \\frac{U / d_1}{V / d_2}$, where $U \\sim \\chi^2(d_1)$ and $V \\sim \\chi^2(d_2)$ are independent.",
+          "$F = \\frac{U / d_1}{V / d_2}$，其中 $U \\sim \\chi^2(d_1)$ 与 $V \\sim \\chi^2(d_2)$ 相互独立。",
         ),
         generate: (rng: Rng): Problem => {
           const d1 = rng.int(2, 20);
@@ -959,8 +968,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
             ),
             answer: Q.of(d2, d2 - 2),
             solution: t(
-              `For an $F$-distribution with degrees of freedom $(d_1, d_2)$ where $d_2 > 2$, the expected value depends only on $d_2$: $E[X] = \\frac{d_2}{d_2 - 2} = \\frac{${d2}}{${d2} - 2} = \\frac{${d2}}{${d2 - 2}}$.`,
-              `对于自由度为 $(d_1, d_2)$ 且 $d_2 > 2$ 的 $F$ 分布，其期望值仅取决于 $d_2$：$E[X] = \\frac{d_2}{d_2 - 2} = \\frac{${d2}}{${d2} - 2} = \\frac{${d2}}{${d2 - 2}}$。`,
+              `For an $F$-distribution with degrees of freedom $(d_1, d_2)$ where $d_2 > 2$, the expected value depends only on $d_2$: $E[X] = \\frac{d_2}{d_2 - 2} = \\frac{${d2}}{${d2} - 2} = \\frac{${d2}}{${d2 - 2}}${lowestTerms(d2, d2 - 2)}$.`,
+              `对于自由度为 $(d_1, d_2)$ 且 $d_2 > 2$ 的 $F$ 分布，其期望值仅取决于 $d_2$：$E[X] = \\frac{d_2}{d_2 - 2} = \\frac{${d2}}{${d2} - 2} = \\frac{${d2}}{${d2 - 2}}${lowestTerms(d2, d2 - 2)}$。`,
             ),
           });
         },

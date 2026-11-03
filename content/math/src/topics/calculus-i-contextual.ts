@@ -2,7 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 
-import { functionProblem, numberProblem } from "../problems.ts";
+import { article, functionProblem, numberProblem } from "../problems.ts";
 import { lim, oneOf, type Poly, pAt, par, pDer, pLatex, rounded, table } from "./calculus-common.ts";
 
 // Calculus I unit 6: Contextual Applications of Differentiation, modules 6.14 to 6.17.
@@ -962,7 +962,7 @@ export const calculatingRelatedRatesUsingThePythagoreanTheorem: TopicDef = {
         const answer = v.mul(Q.of(x0, y0));
         return numberProblem({
           prompt: t(
-            `A $${c}$ m ladder leans against a vertical wall. Its foot slides away from the wall at $${v.toLatex()}$ m/s. How fast is the top sliding down the wall, in m/s, when the foot is $${x0}$ m from the wall?`,
+            `${article(c, true)} $${c}$ m ladder leans against a vertical wall. Its foot slides away from the wall at $${v.toLatex()}$ m/s. How fast is the top sliding down the wall, in m/s, when the foot is $${x0}$ m from the wall?`,
             `一架长 $${c}$ m 的梯子靠在竖直的墙上，梯脚以 $${v.toLatex()}$ m/s 的速率离墙滑开。当梯脚离墙 $${x0}$ m 时，梯顶沿墙下滑的速率是多少（m/s）？`,
           ),
           answer,
@@ -1034,7 +1034,7 @@ export const calculatingRelatedRatesUsingSimilarTriangles: TopicDef = {
         const n = (q: Q) => decimal(q);
         return numberProblem({
           prompt: t(
-            `A person $${n(h)}$ m tall walks away from a $${n(H)}$ m lamppost at $${n(v)}$ m/s. How fast is the length of their shadow increasing, in m/s?`,
+            `A person $${n(h)}$ m tall walks away from ${article(n(H))} $${n(H)}$ m lamppost at $${n(v)}$ m/s. How fast is the length of their shadow increasing, in m/s?`,
             `一个身高 $${n(h)}$ m 的人以 $${n(v)}$ m/s 的速度从高 $${n(H)}$ m 的路灯下走开。他的影子长度增加的速率是多少（m/s）？`,
           ),
           answer,
@@ -1062,7 +1062,7 @@ export const calculatingRelatedRatesUsingSimilarTriangles: TopicDef = {
         const n = (q: Q) => decimal(q);
         return numberProblem({
           prompt: t(
-            `A person $${n(h)}$ m tall walks away from a $${n(H)}$ m lamppost at $${n(v)}$ m/s. How fast is the tip of their shadow moving away from the lamppost, in m/s?`,
+            `A person $${n(h)}$ m tall walks away from ${article(n(H))} $${n(H)}$ m lamppost at $${n(v)}$ m/s. How fast is the tip of their shadow moving away from the lamppost, in m/s?`,
             `一个身高 $${n(h)}$ m 的人以 $${n(v)}$ m/s 的速度从高 $${n(H)}$ m 的路灯下走开。他的影子顶端远离灯柱的速度是多少（m/s）？`,
           ),
           answer,

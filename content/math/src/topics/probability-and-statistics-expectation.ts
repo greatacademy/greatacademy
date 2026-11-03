@@ -1,7 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-import { choiceProblem, numberProblem } from "../problems.ts";
+import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
 
 /** Topics for Unit 2: Expectation (new topics). */
 export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
@@ -21,8 +21,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "raw-moments-of-continuous-random-variables",
         title: t("Calculating the n-th raw moment", "计算连续型随机变量的 n 阶原点矩"),
         explanation: t(
-          "For f(x) = (k+1) x^k / b^{k+1} on [0, b], the n-th moment is E[X^n] = ∫_0^b x^n ((k+1) x^k / b^{k+1}) dx = (k+1) b^n / (k+n+1).",
-          "对于在 [0, b] 上密度为 f(x) = (k+1) x^k / b^{k+1} 的分布，其 n 阶原点矩为 E[X^n] = ∫_0^b x^n ((k+1) x^k / b^{k+1}) dx = (k+1) b^n / (k+n+1)。",
+          "For $f(x) = \\frac{(k+1)x^k}{b^{k+1}}$ on $[0, b]$, the $n$-th moment is $E[X^n] = \\int_0^b x^n \\frac{(k+1)x^k}{b^{k+1}} \\, dx = \\frac{(k+1)b^n}{k+n+1}$.",
+          "对于在 $[0, b]$ 上密度为 $f(x) = \\frac{(k+1)x^k}{b^{k+1}}$ 的分布，其 $n$ 阶原点矩为 $E[X^n] = \\int_0^b x^n \\frac{(k+1)x^k}{b^{k+1}} \\, dx = \\frac{(k+1)b^n}{k+n+1}$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(2, 35);
@@ -41,8 +41,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `Compute by definition: $E[X^{${n}}] = \\int_0^{${b}} x^{${n}} \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^{${n + 2}}}{${n + 2}} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}^{${n}}}{${n + 2}} = \\frac{${num}}{${den}}$.`,
-              `按定义积分：$E[X^{${n}}] = \\int_0^{${b}} x^{${n}} \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^{${n + 2}}}{${n + 2}} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}^{${n}}}{${n + 2}} = \\frac{${num}}{${den}}$。`,
+              `Compute by definition: $E[X^{${n}}] = \\int_0^{${b}} x^{${n}} \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^{${n + 2}}}{${n + 2}} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}^{${n}}}{${n + 2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `按定义积分：$E[X^{${n}}] = \\int_0^{${b}} x^{${n}} \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^{${n + 2}}}{${n + 2}} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}^{${n}}}{${n + 2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -51,8 +51,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "central-moments-of-continuous-random-variables",
         title: t("Central moments of symmetric distributions", "对称分布的中心矩"),
         explanation: t(
-          "For a continuous distribution symmetric about μ, any odd central moment is zero: E[(X - μ)^{2k+1}] = 0. The second central moment is the variance.",
-          "对于关于 μ 对称的连续型分布，所有奇数阶中心矩均为零：E[(X - μ)^{2k+1}] = 0。二阶中心矩即为方差。",
+          "For a continuous distribution symmetric about $\\mu$, every odd central moment is zero: $E[(X - \\mu)^{2k+1}] = 0$. The second central moment is the variance.",
+          "对于关于 $\\mu$ 对称的连续型分布，所有奇数阶中心矩均为零：$E[(X - \\mu)^{2k+1}] = 0$。二阶中心矩即为方差。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(2, 40);
@@ -80,8 +80,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
             ),
             answer: Q.of(b * b, 12),
             solution: t(
-              `For a continuous uniform distribution on $[0, ${b}]$, the variance is $\\text{Var}(X) = \\frac{b^2}{12} = \\frac{${b * b}}{12}$.`,
-              `对于区间 $[0, ${b}]$ 上的连续型均匀分布，其方差为 $\\text{Var}(X) = \\frac{b^2}{12} = \\frac{${b * b}}{12}$。`,
+              `For a continuous uniform distribution on $[0, ${b}]$, the variance is $\\text{Var}(X) = \\frac{b^2}{12} = \\frac{${b * b}}{12}${lowestTerms(b * b, 12)}$.`,
+              `对于区间 $[0, ${b}]$ 上的连续型均匀分布，其方差为 $\\text{Var}(X) = \\frac{b^2}{12} = \\frac{${b * b}}{12}${lowestTerms(b * b, 12)}$。`,
             ),
           });
         },
@@ -105,8 +105,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "expected-value-of-polynomial-pdf",
         title: t("Evaluating the expectation of a polynomial density", "求解多项式型密度的期望值"),
         explanation: t(
-          "For f(x) = (k+1) x^k / b^{k+1} on [0, b], E[X] = (k+1) b / (k+2). For f(x) = 2x / b^2, E[X] = 2b/3.",
-          "对于在 [0, b] 上密度为 f(x) = (k+1) x^k / b^{k+1} 的随机变量，E[X] = (k+1) b / (k+2)。对 f(x) = 2x / b^2，E[X] = 2b/3。",
+          "For $f(x) = \\frac{(k+1)x^k}{b^{k+1}}$ on $[0, b]$, $E[X] = \\frac{(k+1)b}{k+2}$. For $f(x) = \\frac{2x}{b^2}$, $E[X] = \\frac{2b}{3}$.",
+          "对于在 $[0, b]$ 上密度为 $f(x) = \\frac{(k+1)x^k}{b^{k+1}}$ 的随机变量，$E[X] = \\frac{(k+1)b}{k+2}$。对 $f(x) = \\frac{2x}{b^2}$，$E[X] = \\frac{2b}{3}$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(3, 45);
@@ -118,8 +118,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
             ),
             answer: Q.of(2 * b, 3),
             solution: t(
-              `$E[X] = \\int_0^{${b}} x \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^3}{3} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}}{3} = \\frac{${2 * b}}{3}$.`,
-              `$E[X] = \\int_0^{${b}} x \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^3}{3} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}}{3} = \\frac{${2 * b}}{3}$。`,
+              `$E[X] = \\int_0^{${b}} x \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^3}{3} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}}{3} = \\frac{${2 * b}}{3}${lowestTerms(2 * b, 3)}$.`,
+              `$E[X] = \\int_0^{${b}} x \\left(\\frac{2x}{${b * b}}\\right) dx = \\frac{2}{${b * b}} \\left[ \\frac{x^3}{3} \\right]_0^{${b}} = \\frac{2 \\cdot ${b}}{3} = \\frac{${2 * b}}{3}${lowestTerms(2 * b, 3)}$。`,
             ),
           });
         },
@@ -128,8 +128,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "expected-value-of-exponential-pdf",
         title: t("Expected value of an exponential distribution", "指数分布的期望值"),
         explanation: t(
-          "For an exponential distribution with rate parameter λ (PDF f(x) = λ e^{-λ x} for x ≥ 0), the expected value is E[X] = 1/λ.",
-          "对于速率参数为 λ 的指数分布（在 x ≥ 0 上密度为 f(x) = λ e^{-λ x}），期望值为 E[X] = 1/λ。",
+          "For an exponential distribution with rate $\\lambda$ (density $f(x) = \\lambda e^{-\\lambda x}$ for $x \\ge 0$), the expected value is $E[X] = \\frac{1}{\\lambda}$.",
+          "对于速率参数为 $\\lambda$ 的指数分布（在 $x \\ge 0$ 上密度为 $f(x) = \\lambda e^{-\\lambda x}$），期望值为 $E[X] = \\frac{1}{\\lambda}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 40);
@@ -141,8 +141,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
             ),
             answer: Q.of(1, lambda),
             solution: t(
-              `Using integration by parts, $E[X] = \\int_0^\\infty x (${lambda} e^{-${lambda} x}) dx = \\frac{1}{${lambda}}$.`,
-              `通过分部积分求得：$E[X] = \\int_0^\\infty x (${lambda} e^{-${lambda} x}) dx = \\frac{1}{${lambda}}$。`,
+              `Using integration by parts, $E[X] = \\int_0^\\infty x (${lambda} e^{-${lambda} x}) dx = \\frac{1}{${lambda}}${lowestTerms(1, lambda)}$.`,
+              `通过分部积分求得：$E[X] = \\int_0^\\infty x (${lambda} e^{-${lambda} x}) dx = \\frac{1}{${lambda}}${lowestTerms(1, lambda)}$。`,
             ),
           });
         },
@@ -166,8 +166,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "variance-calculation-via-moments",
         title: t("Computing variance using the shortcut formula", "利用矩的简化公式计算方差"),
         explanation: t(
-          "Var(X) = E[X^2] - (E[X])^2. For f(x) = 2x / b^2 on [0, b], E[X] = 2b/3, E[X^2] = b^2/2, so Var(X) = b^2/2 - 4b^2/9 = b^2 / 18.",
-          "Var(X) = E[X^2] - (E[X])^2。对 [0, b] 上的 f(x) = 2x / b^2，E[X] = 2b/3，E[X^2] = b^2/2，故 Var(X) = b^2/2 - 4b^2/9 = b^2 / 18。",
+          "$\\operatorname{Var}(X) = E[X^2] - (E[X])^2$. For $f(x) = \\frac{2x}{b^2}$ on $[0, b]$, $E[X] = \\frac{2b}{3}$ and $E[X^2] = \\frac{b^2}{2}$, so $\\operatorname{Var}(X) = \\frac{b^2}{2} - \\frac{4b^2}{9} = \\frac{b^2}{18}$.",
+          "$\\operatorname{Var}(X) = E[X^2] - (E[X])^2$。对 $[0, b]$ 上的 $f(x) = \\frac{2x}{b^2}$，$E[X] = \\frac{2b}{3}$，$E[X^2] = \\frac{b^2}{2}$，故 $\\operatorname{Var}(X) = \\frac{b^2}{2} - \\frac{4b^2}{9} = \\frac{b^2}{18}$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(3, 35);
@@ -180,8 +180,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
             ),
             answer: Q.of(varNum, 18),
             solution: t(
-              `First compute $E[X] = \\frac{2 \\cdot ${b}}{3} = \\frac{${2 * b}}{3}$ and $E[X^2] = \\int_0^{${b}} \\frac{2x^3}{${b * b}} dx = \\frac{${b}^2}{2} = \\frac{${b * b}}{2}$. Then $\\text{Var}(X) = E[X^2] - (E[X])^2 = \\frac{${b * b}}{2} - \\frac{${4 * b * b}}{9} = \\frac{${varNum}}{18}$.`,
-              `先求 $E[X] = \\frac{2 \\cdot ${b}}{3} = \\frac{${2 * b}}{3}$ 及 $E[X^2] = \\int_0^{${b}} \\frac{2x^3}{${b * b}} dx = \\frac{${b * b}}{2}$。则 $\\text{Var}(X) = E[X^2] - (E[X])^2 = \\frac{${b * b}}{2} - \\frac{${4 * b * b}}{9} = \\frac{${varNum}}{18}$。`,
+              `First compute $E[X] = \\frac{2 \\cdot ${b}}{3} = \\frac{${2 * b}}{3}$ and $E[X^2] = \\int_0^{${b}} \\frac{2x^3}{${b * b}} dx = \\frac{${b}^2}{2} = \\frac{${b * b}}{2}$. Then $\\text{Var}(X) = E[X^2] - (E[X])^2 = \\frac{${b * b}}{2} - \\frac{${4 * b * b}}{9} = \\frac{${varNum}}{18}${lowestTerms(varNum, 18)}$.`,
+              `先求 $E[X] = \\frac{2 \\cdot ${b}}{3} = \\frac{${2 * b}}{3}$ 及 $E[X^2] = \\int_0^{${b}} \\frac{2x^3}{${b * b}} dx = \\frac{${b * b}}{2}$。则 $\\text{Var}(X) = E[X^2] - (E[X])^2 = \\frac{${b * b}}{2} - \\frac{${4 * b * b}}{9} = \\frac{${varNum}}{18}${lowestTerms(varNum, 18)}$。`,
             ),
           });
         },
@@ -190,8 +190,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "variance-of-exponential-random-variables",
         title: t("Variance of an exponential distribution", "指数分布的方差"),
         explanation: t(
-          "For an exponential distribution with rate parameter λ, E[X] = 1/λ and E[X^2] = 2/λ^2. Hence Var(X) = 2/λ^2 - (1/λ)^2 = 1/λ^2.",
-          "对于速率参数为 λ 的指数分布，E[X] = 1/λ 且 E[X^2] = 2/λ^2。因此 Var(X) = 2/λ^2 - (1/λ)^2 = 1/λ^2。",
+          "For an exponential distribution with rate $\\lambda$, $E[X] = \\frac{1}{\\lambda}$ and $E[X^2] = \\frac{2}{\\lambda^2}$. Hence $\\operatorname{Var}(X) = \\frac{2}{\\lambda^2} - \\left(\\frac{1}{\\lambda}\\right)^2 = \\frac{1}{\\lambda^2}$.",
+          "对于速率参数为 $\\lambda$ 的指数分布，$E[X] = \\frac{1}{\\lambda}$ 且 $E[X^2] = \\frac{2}{\\lambda^2}$。因此 $\\operatorname{Var}(X) = \\frac{2}{\\lambda^2} - \\left(\\frac{1}{\\lambda}\\right)^2 = \\frac{1}{\\lambda^2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 30);
@@ -203,8 +203,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
             ),
             answer: Q.of(1, lambda * lambda),
             solution: t(
-              `For an exponential random variable with parameter $\\lambda = ${lambda}$, the variance is $\\text{Var}(X) = \\frac{1}{\\lambda^2} = \\frac{1}{${lambda * lambda}}$.`,
-              `对于参数为 $\\lambda = ${lambda}$ 的指数随机变量，其方差为 $\\text{Var}(X) = \\frac{1}{\\lambda^2} = \\frac{1}{${lambda * lambda}}$。`,
+              `For an exponential random variable with parameter $\\lambda = ${lambda}$, the variance is $\\text{Var}(X) = \\frac{1}{\\lambda^2} = \\frac{1}{${lambda * lambda}}${lowestTerms(1, lambda * lambda)}$.`,
+              `对于参数为 $\\lambda = ${lambda}$ 的指数随机变量，其方差为 $\\text{Var}(X) = \\frac{1}{\\lambda^2} = \\frac{1}{${lambda * lambda}}${lowestTerms(1, lambda * lambda)}$。`,
             ),
           });
         },
@@ -228,8 +228,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "lotus-for-polynomial-functions",
         title: t("Applying LOTUS to powers of uniform variables", "对均匀分布的幂函数应用 LOTUS 法则"),
         explanation: t(
-          "For X ~ Uniform(0, b) with density 1/b, LOTUS states that E[c X^2] = ∫_0^b c x^2 (1/b) dx = c b^2 / 3.",
-          "对于在 [0, b] 上密度为 1/b 的均匀分布 X，由 LOTUS 法则可得 E[c X^2] = ∫_0^b c x^2 (1/b) dx = c b^2 / 3。",
+          "For $X \\sim \\text{Uniform}(0, b)$ with density $\\frac{1}{b}$, LOTUS gives $E[cX^2] = \\int_0^b c x^2 \\cdot \\frac{1}{b} \\, dx = \\frac{cb^2}{3}$.",
+          "对于在 $[0, b]$ 上密度为 $\\frac{1}{b}$ 的均匀分布 $X$，由 LOTUS 法则可得 $E[cX^2] = \\int_0^b c x^2 \\cdot \\frac{1}{b} \\, dx = \\frac{cb^2}{3}$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(2, 25);
@@ -243,8 +243,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
             ),
             answer: Q.of(num, 3),
             solution: t(
-              `Apply LOTUS: $E[${c} X^2] = \\int_0^{${b}} ${c} x^2 \\left(\\frac{1}{${b}}\\right) dx = \\frac{${c}}{${b}} \\left[ \\frac{x^3}{3} \\right]_0^{${b}} = \\frac{${c} \\cdot ${b}^2}{3} = \\frac{${num}}{3}$.`,
-              `应用 LOTUS 法则：$E[${c} X^2] = \\int_0^{${b}} ${c} x^2 \\left(\\frac{1}{${b}}\\right) dx = \\frac{${c}}{${b}} \\left[ \\frac{x^3}{3} \\right]_0^{${b}} = \\frac{${c} \\cdot ${b}^2}{3} = \\frac{${num}}{3}$。`,
+              `Apply LOTUS: $E[${c} X^2] = \\int_0^{${b}} ${c} x^2 \\left(\\frac{1}{${b}}\\right) dx = \\frac{${c}}{${b}} \\left[ \\frac{x^3}{3} \\right]_0^{${b}} = \\frac{${c} \\cdot ${b}^2}{3} = \\frac{${num}}{3}${lowestTerms(num, 3)}$.`,
+              `应用 LOTUS 法则：$E[${c} X^2] = \\int_0^{${b}} ${c} x^2 \\left(\\frac{1}{${b}}\\right) dx = \\frac{${c}}{${b}} \\left[ \\frac{x^3}{3} \\right]_0^{${b}} = \\frac{${c} \\cdot ${b}^2}{3} = \\frac{${num}}{3}${lowestTerms(num, 3)}$。`,
             ),
           });
         },
@@ -253,8 +253,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "lotus-for-inverse-powers",
         title: t("Applying LOTUS on unbounded supports", "在无界支撑集上应用 LOTUS 法则"),
         explanation: t(
-          "For f(x) = 2/x^3 (x ≥ 1), E[k X] = ∫_1^∞ k x (2/x^3) dx = ∫_1^∞ (2k / x^2) dx = 2k.",
-          "对于 f(x) = 2/x^3（x ≥ 1），E[k X] = ∫_1^∞ k x (2/x^3) dx = ∫_1^∞ (2k / x^2) dx = 2k。",
+          "For $f(x) = \\frac{2}{x^3}$ ($x \\ge 1$), $E[kX] = \\int_1^\\infty kx \\cdot \\frac{2}{x^3} \\, dx = \\int_1^\\infty \\frac{2k}{x^2} \\, dx = 2k$.",
+          "对于 $f(x) = \\frac{2}{x^3}$（$x \\ge 1$），$E[kX] = \\int_1^\\infty kx \\cdot \\frac{2}{x^3} \\, dx = \\int_1^\\infty \\frac{2k}{x^2} \\, dx = 2k$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 35);
@@ -291,8 +291,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "evaluating-mgf-at-zero",
         title: t("Evaluating the MGF at t = 0", "计算矩母函数在 t = 0 处的值"),
         explanation: t(
-          "For any random variable X whose MGF exists, M_X(0) = E[e^0] = E[1] = 1.",
-          "对任意矩母函数存在的随机变量 X，均有 M_X(0) = E[e^0] = E[1] = 1。",
+          "For any random variable $X$ whose MGF exists, $M_X(0) = E[e^0] = E[1] = 1$.",
+          "对任意矩母函数存在的随机变量 $X$，均有 $M_X(0) = E[e^0] = E[1] = 1$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(2, 20);
@@ -315,8 +315,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "mgf-of-finite-discrete-variable",
         title: t("MGF of a two-point discrete distribution", "两点离散分布的矩母函数"),
         explanation: t(
-          "For X taking values 0 and k with P(X = 0) = 1 - p and P(X = k) = p, M_X(t) = E[e^{tX}] = (1 - p) + p e^{kt}.",
-          "若 X 取值 0 与 k，概率分别为 1 - p 与 p，则 M_X(t) = E[e^{tX}] = (1 - p) + p e^{kt}。",
+          "For $X$ taking the values $0$ and $k$ with $P(X = 0) = 1 - p$ and $P(X = k) = p$, $M_X(t) = E[e^{tX}] = (1 - p) + pe^{kt}$.",
+          "若 $X$ 取值 $0$ 与 $k$，概率分别为 $1 - p$ 与 $p$，则 $M_X(t) = E[e^{tX}] = (1 - p) + pe^{kt}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 30);
@@ -368,8 +368,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "first-moment-via-mgf-derivative",
         title: t("Finding E[X] via the first derivative of the MGF", "利用矩母函数一阶导数求期望 E[X]"),
         explanation: t(
-          "Differentiating M_X(t) once and evaluating at t = 0 yields the first moment: E[X] = M_X'(0).",
-          "对矩母函数 M_X(t) 求一阶导数并在 t = 0 处取值，即可得到一阶原点矩：E[X] = M_X'(0)。",
+          "Differentiating $M_X(t)$ once and evaluating at $t = 0$ yields the first moment: $E[X] = M_X'(0)$.",
+          "对矩母函数 $M_X(t)$ 求一阶导数并在 $t = 0$ 处取值，即得一阶原点矩：$E[X] = M_X'(0)$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 10);
@@ -394,8 +394,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "second-moment-via-mgf-derivative",
         title: t("Finding E[X^2] via the second derivative of the MGF", "利用矩母函数二阶导数求二阶矩 E[X^2]"),
         explanation: t(
-          "Differentiating M_X(t) twice and evaluating at t = 0 yields the second moment: E[X^2] = M_X''(0).",
-          "对矩母函数求二阶导数并在 t = 0 处取值，即可得到二阶原点矩：E[X^2] = M_X''(0)。",
+          "Differentiating $M_X(t)$ twice and evaluating at $t = 0$ yields the second moment: $E[X^2] = M_X''(0)$.",
+          "对矩母函数 $M_X(t)$ 求二阶导数并在 $t = 0$ 处取值，即得二阶原点矩：$E[X^2] = M_X''(0)$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 8);
@@ -435,8 +435,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "variance-from-mgf-derivatives",
         title: t("Evaluating variance from MGF derivatives", "由矩母函数导数计算方差"),
         explanation: t(
-          "For M_X(t) = (1 - θ t)^{-k}, E[X] = k θ and E[X^2] = k(k+1) θ^2. Hence Var(X) = k(k+1) θ^2 - (k θ)^2 = k θ^2.",
-          "对于 M_X(t) = (1 - θ t)^{-k}，E[X] = k θ，E[X^2] = k(k+1) θ^2。因此 Var(X) = k(k+1) θ^2 - (k θ)^2 = k θ^2。",
+          "For $M_X(t) = (1 - \\theta t)^{-k}$, $E[X] = k\\theta$ and $E[X^2] = k(k+1)\\theta^2$. Hence $\\operatorname{Var}(X) = k(k+1)\\theta^2 - (k\\theta)^2 = k\\theta^2$.",
+          "对于 $M_X(t) = (1 - \\theta t)^{-k}$，$E[X] = k\\theta$，$E[X^2] = k(k+1)\\theta^2$。因此 $\\operatorname{Var}(X) = k(k+1)\\theta^2 - (k\\theta)^2 = k\\theta^2$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 10);
@@ -460,8 +460,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "standard-deviation-from-poisson-mgf",
         title: t("Standard deviation from an exponential-type or Poisson MGF", "由泊松型矩母函数计算标准差"),
         explanation: t(
-          "For a Poisson random variable with MGF M_X(t) = e^{λ(e^t - 1)}, Var(X) = λ, so the standard deviation is σ = √λ.",
-          "对于矩母函数为 M_X(t) = e^{λ(e^t - 1)} 的泊松随机变量，Var(X) = λ，标准差为 σ = √λ。",
+          "For a Poisson random variable with MGF $M_X(t) = e^{\\lambda(e^t - 1)}$, $\\operatorname{Var}(X) = \\lambda$, so the standard deviation is $\\sigma = \\sqrt{\\lambda}$.",
+          "对于矩母函数为 $M_X(t) = e^{\\lambda(e^t - 1)}$ 的泊松随机变量，$\\operatorname{Var}(X) = \\lambda$，标准差为 $\\sigma = \\sqrt{\\lambda}$。",
         ),
         generate: (rng: Rng): Problem => {
           const sigma = rng.int(2, 45);
@@ -499,8 +499,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "mgf-of-binomial-distribution",
         title: t("Identifying the MGF of a Binomial distribution", "识别二项分布的矩母函数"),
         explanation: t(
-          "For X ~ Binomial(n, p), each trial has MGF (1 - p + p e^t). By independence of trials, M_X(t) = (1 - p + p e^t)^n.",
-          "对于 X ~ Binomial(n, p)，各独立试验的矩母函数为 (1 - p + p e^t)，故总矩母函数为 M_X(t) = (1 - p + p e^t)^n。",
+          "For $X \\sim \\text{Binomial}(n, p)$, each trial has MGF $1 - p + pe^t$. By the independence of the trials, $M_X(t) = (1 - p + pe^t)^n$.",
+          "对于 $X \\sim \\text{Binomial}(n, p)$，每次试验的矩母函数为 $1 - p + pe^t$，由试验的独立性得 $M_X(t) = (1 - p + pe^t)^n$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(5, 30);
@@ -536,8 +536,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "mgf-of-poisson-distribution",
         title: t("Deriving the MGF of a Poisson distribution", "推导泊松分布的矩母函数"),
         explanation: t(
-          "For X ~ Poisson(λ), M_X(t) = ∑_{k=0}^∞ e^{tk} (e^{-λ} λ^k / k!) = e^{-λ} ∑_{k=0}^∞ (λ e^t)^k / k! = e^{-λ} e^{λ e^t} = e^{λ(e^t - 1)}.",
-          "对于 X ~ Poisson(λ)，M_X(t) = ∑_{k=0}^∞ e^{tk} (e^{-λ} λ^k / k!) = e^{-λ} e^{λ e^t} = e^{λ(e^t - 1)}。",
+          "For $X \\sim \\text{Poisson}(\\lambda)$, $M_X(t) = \\sum_{k=0}^\\infty e^{tk} \\frac{e^{-\\lambda} \\lambda^k}{k!} = e^{-\\lambda} \\sum_{k=0}^\\infty \\frac{(\\lambda e^t)^k}{k!} = e^{-\\lambda} e^{\\lambda e^t} = e^{\\lambda(e^t - 1)}$.",
+          "对于 $X \\sim \\text{Poisson}(\\lambda)$，$M_X(t) = \\sum_{k=0}^\\infty e^{tk} \\frac{e^{-\\lambda} \\lambda^k}{k!} = e^{-\\lambda} \\sum_{k=0}^\\infty \\frac{(\\lambda e^t)^k}{k!} = e^{-\\lambda} e^{\\lambda e^t} = e^{\\lambda(e^t - 1)}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 50);
@@ -584,8 +584,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "mgf-of-exponential-distribution",
         title: t("Deriving the MGF of an exponential distribution", "推导指数分布的矩母函数"),
         explanation: t(
-          "For X ~ Exp(λ), M_X(t) = ∫_0^∞ e^{tx} λ e^{-λ x} dx = λ ∫_0^∞ e^{-(λ - t)x} dx = λ / (λ - t) for t < λ.",
-          "对于 X ~ Exp(λ)，在 t < λ 时，M_X(t) = ∫_0^∞ e^{tx} λ e^{-λ x} dx = λ / (λ - t)。",
+          "For $X \\sim \\text{Exp}(\\lambda)$ and $t < \\lambda$, $M_X(t) = \\int_0^\\infty e^{tx} \\lambda e^{-\\lambda x} \\, dx = \\lambda \\int_0^\\infty e^{-(\\lambda - t)x} \\, dx = \\frac{\\lambda}{\\lambda - t}$.",
+          "对于 $X \\sim \\text{Exp}(\\lambda)$，在 $t < \\lambda$ 时，$M_X(t) = \\int_0^\\infty e^{tx} \\lambda e^{-\\lambda x} \\, dx = \\lambda \\int_0^\\infty e^{-(\\lambda - t)x} \\, dx = \\frac{\\lambda}{\\lambda - t}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 50);
@@ -617,8 +617,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "mgf-of-continuous-uniform-distribution",
         title: t("Deriving the MGF of a uniform distribution", "推导均匀分布的矩母函数"),
         explanation: t(
-          "For X ~ Uniform(0, b), M_X(t) = ∫_0^b e^{tx} (1/b) dx = (e^{bt} - 1) / (bt).",
-          "对于 X ~ Uniform(0, b)，M_X(t) = ∫_0^b e^{tx} (1/b) dx = (e^{bt} - 1) / (bt)。",
+          "For $X \\sim \\text{Uniform}(0, b)$, $M_X(t) = \\int_0^b e^{tx} \\cdot \\frac{1}{b} \\, dx = \\frac{e^{bt} - 1}{bt}$.",
+          "对于 $X \\sim \\text{Uniform}(0, b)$，$M_X(t) = \\int_0^b e^{tx} \\cdot \\frac{1}{b} \\, dx = \\frac{e^{bt} - 1}{bt}$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(2, 50);
@@ -668,8 +668,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "mgf-of-linear-transformation",
         title: t("MGF of a linear transformation Y = aX + b", "线性变换 Y = aX + b 的矩母函数"),
         explanation: t(
-          "For Y = a X + b, M_Y(t) = E[e^{t(aX + b)}] = E[e^{bt} e^{(at)X}] = e^{bt} M_X(at).",
-          "对于 Y = a X + b，有 M_Y(t) = E[e^{t(aX + b)}] = e^{bt} M_X(at)。",
+          "For $Y = aX + b$, $M_Y(t) = E[e^{t(aX + b)}] = E[e^{bt} e^{(at)X}] = e^{bt} M_X(at)$.",
+          "对于 $Y = aX + b$，有 $M_Y(t) = E[e^{t(aX + b)}] = E[e^{bt} e^{(at)X}] = e^{bt} M_X(at)$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(2, 12);
@@ -703,8 +703,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "mgf-of-sum-of-independent-variables",
         title: t("MGF of a sum of independent random variables", "独立随机变量和的矩母函数"),
         explanation: t(
-          "If X_1 and X_2 are independent, M_{X_1 + X_2}(t) = E[e^{t(X_1 + X_2)}] = E[e^{t X_1}] E[e^{t X_2}] = M_{X_1}(t) M_{X_2}(t).",
-          "若 X_1 与 X_2 相互独立，则 M_{X_1 + X_2}(t) = E[e^{t(X_1 + X_2)}] = E[e^{t X_1}] E[e^{t X_2}] = M_{X_1}(t) M_{X_2}(t)。",
+          "If $X_1$ and $X_2$ are independent, $M_{X_1 + X_2}(t) = E[e^{t(X_1 + X_2)}] = E[e^{tX_1}] \\, E[e^{tX_2}] = M_{X_1}(t) \\, M_{X_2}(t)$.",
+          "若 $X_1$ 与 $X_2$ 相互独立，则 $M_{X_1 + X_2}(t) = E[e^{t(X_1 + X_2)}] = E[e^{tX_1}] \\, E[e^{tX_2}] = M_{X_1}(t) \\, M_{X_2}(t)$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda1 = rng.int(2, 15);
@@ -743,8 +743,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "recognizing-distribution-from-mgf",
         title: t("Identifying a distribution from its MGF", "根据矩母函数识别概率分布"),
         explanation: t(
-          "By the uniqueness property, an MGF of the form (q + p e^t)^n uniquely identifies a Binomial(n, p) distribution, and e^{λ(e^t - 1)} identifies Poisson(λ).",
-          "由唯一性定理，形式为 (q + p e^t)^n 的矩母函数唯一确定 Binomial(n, p) 分布，而 e^{λ(e^t - 1)} 唯一确定 Poisson(λ) 分布。",
+          "By the uniqueness property, an MGF of the form $(q + pe^t)^n$ identifies the $\\text{Binomial}(n, p)$ distribution, and $e^{\\lambda(e^t - 1)}$ identifies $\\text{Poisson}(\\lambda)$.",
+          "由唯一性定理，形如 $(q + pe^t)^n$ 的矩母函数唯一确定 $\\text{Binomial}(n, p)$ 分布，而 $e^{\\lambda(e^t - 1)}$ 唯一确定 $\\text{Poisson}(\\lambda)$ 分布。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(4, 30);
@@ -769,8 +769,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "sum-of-independent-distributions-via-mgf",
         title: t("Deriving distribution of sums via MGF uniqueness", "应用矩母函数唯一性确定和的分布"),
         explanation: t(
-          "If independent X_i ~ Exp(λ), the sum S_n = ∑_{i=1}^n X_i has MGF (λ / (λ - t))^n, which uniquely identifies a Gamma(n, λ) distribution.",
-          "若独立随机变量 X_i ~ Exp(λ)，则和 S_n = ∑_{i=1}^n X_i 的矩母函数为 (λ / (λ - t))^n，唯一对应 Gamma(n, λ) 分布。",
+          "If the $X_i \\sim \\text{Exp}(\\lambda)$ are independent, the sum $S_n = \\sum_{i=1}^n X_i$ has MGF $\\left(\\frac{\\lambda}{\\lambda - t}\\right)^n$, which identifies the $\\text{Gamma}(n, \\lambda)$ distribution.",
+          "若独立随机变量 $X_i \\sim \\text{Exp}(\\lambda)$，则和 $S_n = \\sum_{i=1}^n X_i$ 的矩母函数为 $\\left(\\frac{\\lambda}{\\lambda - t}\\right)^n$，唯一对应 $\\text{Gamma}(n, \\lambda)$ 分布。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(2, 10);
@@ -786,8 +786,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `The MGF uniquely identifies $S$ as a $\\text{Gamma}(${n}, ${lambda})$ random variable. Its expected value is $E[S] = \\frac{n}{\\lambda} = \\frac{${n}}{${lambda}}$.`,
-              `该矩母函数唯一对应伽马分布 $\\text{Gamma}(${n}, ${lambda})$。其期望值为 $E[S] = \\frac{n}{\\lambda} = \\frac{${n}}{${lambda}}$。`,
+              `The MGF uniquely identifies $S$ as a $\\text{Gamma}(${n}, ${lambda})$ random variable. Its expected value is $E[S] = \\frac{n}{\\lambda} = \\frac{${n}}{${lambda}}${lowestTerms(n, lambda)}$.`,
+              `该矩母函数唯一对应伽马分布 $\\text{Gamma}(${n}, ${lambda})$。其期望值为 $E[S] = \\frac{n}{\\lambda} = \\frac{${n}}{${lambda}}${lowestTerms(n, lambda)}$。`,
             ),
           });
         },

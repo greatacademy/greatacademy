@@ -151,6 +151,7 @@ function diagonalSlope(rng: Rng) {
     const [r, dr] = cosine ? [a, -2 * b * s2] : [a + b * s2, 0];
     const tex = `${a} ${signed(b, cosine ? "\\cos 2\\theta" : "\\sin 2\\theta")}`;
     const [dx, dy] = derivatives(r, dr, c, s);
+    const pr = r < 0 ? `(${r})` : `${r}`;
     if (dx === 0) continue;
     const answer = Q.of(dy, dx);
     return numberProblem({
@@ -161,8 +162,8 @@ function diagonalSlope(rng: Rng) {
       answer,
       wrong: [...(dy === 0 ? [] : [Q.of(dx, dy)]), Q.of(dr), Q.of(c * s)],
       solution: t(
-        `At $\\theta = ${angle}$: $r = ${r}$ and $r' = ${dr}$, while $\\cos\\theta = ${c < 0 ? "-" : ""}\\frac{\\sqrt{2}}{2}$ and $\\sin\\theta = ${s < 0 ? "-" : ""}\\frac{\\sqrt{2}}{2}$. In $${polarSlopeFormula}$ the factor $\\frac{\\sqrt{2}}{2}$ cancels, leaving $\\frac{${dr} \\cdot (${s}) + ${r} \\cdot (${c})}{${dr} \\cdot (${c}) - ${r} \\cdot (${s})} = \\frac{${dy}}{${dx}} = ${answer.toLatex()}$.`,
-        `在 $\\theta = ${angle}$ 处：$r = ${r}$，$r' = ${dr}$，$\\cos\\theta = ${c < 0 ? "-" : ""}\\frac{\\sqrt{2}}{2}$，$\\sin\\theta = ${s < 0 ? "-" : ""}\\frac{\\sqrt{2}}{2}$。在 $${polarSlopeFormula}$ 中因子 $\\frac{\\sqrt{2}}{2}$ 约去，得 $\\frac{${dr} \\cdot (${s}) + ${r} \\cdot (${c})}{${dr} \\cdot (${c}) - ${r} \\cdot (${s})} = \\frac{${dy}}{${dx}} = ${answer.toLatex()}$。`,
+        `At $\\theta = ${angle}$: $r = ${r}$ and $r' = ${dr}$, while $\\cos\\theta = ${c < 0 ? "-" : ""}\\frac{\\sqrt{2}}{2}$ and $\\sin\\theta = ${s < 0 ? "-" : ""}\\frac{\\sqrt{2}}{2}$. In $${polarSlopeFormula}$ the factor $\\frac{\\sqrt{2}}{2}$ cancels, leaving $\\frac{${dr} \\cdot (${s}) + ${pr} \\cdot (${c})}{${dr} \\cdot (${c}) - ${pr} \\cdot (${s})} = \\frac{${dy}}{${dx}} = ${answer.toLatex()}$.`,
+        `在 $\\theta = ${angle}$ 处：$r = ${r}$，$r' = ${dr}$，$\\cos\\theta = ${c < 0 ? "-" : ""}\\frac{\\sqrt{2}}{2}$，$\\sin\\theta = ${s < 0 ? "-" : ""}\\frac{\\sqrt{2}}{2}$。在 $${polarSlopeFormula}$ 中因子 $\\frac{\\sqrt{2}}{2}$ 约去，得 $\\frac{${dr} \\cdot (${s}) + ${pr} \\cdot (${c})}{${dr} \\cdot (${c}) - ${pr} \\cdot (${s})} = \\frac{${dy}}{${dx}} = ${answer.toLatex()}$。`,
       ),
     });
   }

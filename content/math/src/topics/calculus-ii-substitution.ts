@@ -400,8 +400,8 @@ export const calculatingDefiniteIntegralsUsingSubstitution: TopicDef = {
             Q.of(k * (u1 ** (m + 1) - u0 ** (m + 1)), 2 * m),
           ],
           solution: t(
-            `Let $u = ${inner}$, so $du = 2x \\, dx$; $x = ${x0}$ gives $u = ${u0}$ and $x = ${x1}$ gives $u = ${u1}$. The integral is $${coef(Q.of(k, 2))}\\int_{${u0}}^{${u1}} u^{${m}} \\, du = ${Q.of(k, 2 * (m + 1)).toLatex()}\\left(${u1}^{${m + 1}} - ${u0}^{${m + 1}}\\right) = ${value.toLatex()}$.`,
-            `令 $u = ${inner}$，则 $du = 2x \\, dx$；$x = ${x0}$ 时 $u = ${u0}$，$x = ${x1}$ 时 $u = ${u1}$。积分等于 $${coef(Q.of(k, 2))}\\int_{${u0}}^{${u1}} u^{${m}} \\, du = ${Q.of(k, 2 * (m + 1)).toLatex()}\\left(${u1}^{${m + 1}} - ${u0}^{${m + 1}}\\right) = ${value.toLatex()}$。`,
+            `Let $u = ${inner}$, so $du = 2x \\, dx$; $x = ${x0}$ gives $u = ${u0}$ and $x = ${x1}$ gives $u = ${u1}$. The integral is $${coef(Q.of(k, 2))}\\int_{${u0}}^{${u1}} u${m === 1 ? "" : `^{${m}}`} \\, du = ${Q.of(k, 2 * (m + 1)).toLatex()}\\left(${u1}^{${m + 1}} - ${u0}^{${m + 1}}\\right) = ${value.toLatex()}$.`,
+            `令 $u = ${inner}$，则 $du = 2x \\, dx$；$x = ${x0}$ 时 $u = ${u0}$，$x = ${x1}$ 时 $u = ${u1}$。积分等于 $${coef(Q.of(k, 2))}\\int_{${u0}}^{${u1}} u${m === 1 ? "" : `^{${m}}`} \\, du = ${Q.of(k, 2 * (m + 1)).toLatex()}\\left(${u1}^{${m + 1}} - ${u0}^{${m + 1}}\\right) = ${value.toLatex()}$。`,
           ),
         });
       },

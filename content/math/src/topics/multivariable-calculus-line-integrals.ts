@@ -1,6 +1,6 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly, Q } from "@ga/subject-math";
+import { paren, poly, Q } from "@ga/subject-math";
 import { choiceProblem, numberProblem, steps } from "../problems.ts";
 
 /** Pythagorean triples for clean coordinates. */
@@ -485,13 +485,13 @@ export const lineIntegralsOfScalarFunctionsOverEllipses: TopicDef = {
         const solution = t(
           steps(
             `The ellipse is symmetric with respect to the $y$-axis (under $x \\mapsto -x$).`,
-            `The integrand $f(x, y) = ${c}x^3$ is odd with respect to $x$: $f(-x, y) = -f(x, y)$.`,
-            `Therefore, the contributions from opposite points cancel identically, giving $\\oint_C ${c}x^3\\,ds = 0$.`,
+            `The integrand $f(x, y) = ${poly([c, "x^3"])}$ is odd with respect to $x$: $f(-x, y) = -f(x, y)$.`,
+            `Therefore, the contributions from opposite points cancel identically, giving $\\oint_C ${poly([c, "x^3"])}\\,ds = 0$.`,
           ),
           steps(
             `椭圆关于 $y$ 轴对称（在变换 $x \\mapsto -x$ 下保持不变）。`,
-            `被积函数 $f(x, y) = ${c}x^3$ 关于 $x$ 是奇函数：$f(-x, y) = -f(x, y)$。`,
-            `因此关于 $y$ 轴对称的对应点贡献互相抵消，得 $\\oint_C ${c}x^3\\,ds = 0$。`,
+            `被积函数 $f(x, y) = ${poly([c, "x^3"])}$ 关于 $x$ 是奇函数：$f(-x, y) = -f(x, y)$。`,
+            `因此关于 $y$ 轴对称的对应点贡献互相抵消，得 $\\oint_C ${poly([c, "x^3"])}\\,ds = 0$。`,
           ),
         );
         return numberProblem({
@@ -757,19 +757,19 @@ export const sumsOfLineIntegralsWithRespectToXAndYOverParametricCurves: TopicDef
         const ans = Q.of(num, 2);
 
         const prompt = t(
-          `Evaluate $\\int_C (${poly([a, "y"])}\\,dx + ${poly([b, "x"])}\\,dy)$ along the segment from $(0, 0)$ to $(${xEnd}, ${yEnd})$.`,
-          `计算曲线积分 $\\int_C (${poly([a, "y"])}\\,dx + ${poly([b, "x"])}\\,dy)$，其中 $C$ 为从 $(0, 0)$ 到 $(${xEnd}, ${yEnd})$ 的线段。`,
+          `Evaluate $\\int_C (${poly([a, "y\\,dx"], [b, "x\\,dy"])})$ along the segment from $(0, 0)$ to $(${xEnd}, ${yEnd})$.`,
+          `计算曲线积分 $\\int_C (${poly([a, "y\\,dx"], [b, "x\\,dy"])})$，其中 $C$ 为从 $(0, 0)$ 到 $(${xEnd}, ${yEnd})$ 的线段。`,
         );
         const solution = t(
           steps(
-            `Parametrize the line segment: $x(t) = ${xEnd}t, y(t) = ${yEnd}t$ for $0 \\le t \\le 1$.`,
+            `Parametrize the line segment: $x(t) = ${poly([xEnd, "t"])}, y(t) = ${poly([yEnd, "t"])}$ for $0 \\le t \\le 1$.`,
             `Differentials are $dx = ${xEnd}\\,dt$ and $dy = ${yEnd}\\,dt$.`,
-            `Substitute into the integrand:\n\n$$\\int_0^1 \\left[(${a})(${yEnd}t)(${xEnd}) + (${b})(${xEnd}t)(${yEnd})\\right]dt = ${(a + b) * xEnd * yEnd} \\int_0^1 t\\,dt = \\frac{${num}}{2} = ${ans.toLatex()}.$$ `,
+            `Substitute into the integrand:\n\n$$\\int_0^1 \\left[(${a})(${poly([yEnd, "t"])})(${xEnd}) + (${b})(${poly([xEnd, "t"])})(${yEnd})\\right]dt = ${(a + b) * xEnd * yEnd} \\int_0^1 t\\,dt = \\frac{${num}}{2} = ${ans.toLatex()}.$$ `,
           ),
           steps(
-            `参数化线段：$x(t) = ${xEnd}t, y(t) = ${yEnd}t$（$0 \\le t \\le 1$）。`,
+            `参数化线段：$x(t) = ${poly([xEnd, "t"])}, y(t) = ${poly([yEnd, "t"])}$（$0 \\le t \\le 1$）。`,
             `微分元为 $dx = ${xEnd}\\,dt$ 与 $dy = ${yEnd}\\,dt$。`,
-            `代入被积式：\n\n$$\\int_0^1 \\left[(${a})(${yEnd}t)(${xEnd}) + (${b})(${xEnd}t)(${yEnd})\\right]dt = ${(a + b) * xEnd * yEnd} \\int_0^1 t\\,dt = \\frac{${num}}{2} = ${ans.toLatex()}。$$ `,
+            `代入被积式：\n\n$$\\int_0^1 \\left[(${a})(${poly([yEnd, "t"])})(${xEnd}) + (${b})(${poly([xEnd, "t"])})(${yEnd})\\right]dt = ${(a + b) * xEnd * yEnd} \\int_0^1 t\\,dt = \\frac{${num}}{2} = ${ans.toLatex()}。$$ `,
           ),
         );
         return numberProblem({
@@ -826,11 +826,11 @@ export const sumsOfLineIntegralsWithRespectToXAndY: TopicDef = {
         const solution = t(
           steps(
             `Along the horizontal segment $y = ${y0}$, $y$ is constant and $x$ varies from $${x1}$ to $${x2}$.`,
-            `Integrate directly: $\\int_{${x1}}^{${x2}} ${a}x\\,dx = ${a} \\left[\\frac{x^2}{2}\\right]_{${x1}}^{${x2}} = ${a} \\frac{${x2 * x2} - ${x1 * x1}}{2} = \\frac{${num}}{2} = ${ans.toLatex()}$.`,
+            `Integrate directly: $\\int_{${x1}}^{${x2}} ${poly([a, "x"])}\\,dx = ${a === 1 ? "" : a === -1 ? "-" : a} \\left[\\frac{x^2}{2}\\right]_{${x1}}^{${x2}} = ${a === 1 ? "" : a === -1 ? "-" : a} \\frac{${x2 * x2} - ${x1 * x1}}{2} = \\frac{${num}}{2}${num % 2 === 1 ? "" : ` = ${ans.toLatex()}`}$.`,
           ),
           steps(
             `在水平线段 $y = ${y0}$ 上，$y$ 为常数，$x$ 从 $${x1}$ 变到 $${x2}$。`,
-            `直接积分：$\\int_{${x1}}^{${x2}} ${a}x\\,dx = ${a} \\left[\\frac{x^2}{2}\\right]_{${x1}}^{${x2}} = ${a} \\frac{${x2 * x2} - ${x1 * x1}}{2} = \\frac{${num}}{2} = ${ans.toLatex()}$。`,
+            `直接积分：$\\int_{${x1}}^{${x2}} ${poly([a, "x"])}\\,dx = ${a === 1 ? "" : a === -1 ? "-" : a} \\left[\\frac{x^2}{2}\\right]_{${x1}}^{${x2}} = ${a === 1 ? "" : a === -1 ? "-" : a} \\frac{${x2 * x2} - ${x1 * x1}}{2} = \\frac{${num}}{2}${num % 2 === 1 ? "" : ` = ${ans.toLatex()}`}$。`,
           ),
         );
         return numberProblem({
@@ -893,15 +893,15 @@ export const lineIntegralsOfVectorValuedFunctionsOverParametricCurves: TopicDef 
         const solution = t(
           steps(
             `Find velocity: $\\mathbf{r}'(t) = \\langle 1, 2t \\rangle$.`,
-            `Evaluate field along curve: $\\mathbf{F}(\\mathbf{r}(t)) = \\langle ${a}t^2, ${b}t \\rangle$.`,
-            `Compute dot product: $\\mathbf{F} \\cdot \\mathbf{r}'(t) = (${a}t^2)(1) + (${b}t)(2t) = ${a + 2 * b}t^2$.`,
-            `Integrate: $\\int_0^{${T}} ${a + 2 * b}t^2\\,dt = ${a + 2 * b} \\left[\\frac{t^3}{3}\\right]_0^{${T}} = \\frac{${num}}{3} = ${ans.toLatex()}$.`,
+            `Evaluate field along curve: $\\mathbf{F}(\\mathbf{r}(t)) = \\langle ${poly([a, "t^2"])}, ${poly([b, "t"])} \\rangle$.`,
+            `Compute dot product: $\\mathbf{F} \\cdot \\mathbf{r}'(t) = (${poly([a, "t^2"])})(1) + (${poly([b, "t"])})(2t) = ${poly([a + 2 * b, "t^2"])}$.`,
+            `Integrate: $\\int_0^{${T}} ${poly([a + 2 * b, "t^2"])}\\,dt = ${a + 2 * b} \\left[\\frac{t^3}{3}\\right]_0^{${T}} = \\frac{${num}}{3} = ${ans.toLatex()}$.`,
           ),
           steps(
             `求速度向量：$\\mathbf{r}'(t) = \\langle 1, 2t \\rangle$。`,
-            `将曲线代入向量场：$\\mathbf{F}(\\mathbf{r}(t)) = \\langle ${a}t^2, ${b}t \\rangle$。`,
-            `计算点积：$\\mathbf{F} \\cdot \\mathbf{r}'(t) = (${a}t^2)(1) + (${b}t)(2t) = ${a + 2 * b}t^2$。`,
-            `定积分求值：$\\int_0^{${T}} ${a + 2 * b}t^2\\,dt = ${a + 2 * b} \\left[\\frac{t^3}{3}\\right]_0^{${T}} = \\frac{${num}}{3} = ${ans.toLatex()}$。`,
+            `将曲线代入向量场：$\\mathbf{F}(\\mathbf{r}(t)) = \\langle ${poly([a, "t^2"])}, ${poly([b, "t"])} \\rangle$。`,
+            `计算点积：$\\mathbf{F} \\cdot \\mathbf{r}'(t) = (${poly([a, "t^2"])})(1) + (${poly([b, "t"])})(2t) = ${poly([a + 2 * b, "t^2"])}$。`,
+            `定积分求值：$\\int_0^{${T}} ${poly([a + 2 * b, "t^2"])}\\,dt = ${a + 2 * b} \\left[\\frac{t^3}{3}\\right]_0^{${T}} = \\frac{${num}}{3} = ${ans.toLatex()}$。`,
           ),
         );
         return numberProblem({
@@ -945,19 +945,19 @@ export const lineIntegralsOfVectorValuedFunctionsOverGeneralCurves: TopicDef = {
         const ans = c * a * a * a;
 
         const prompt = t(
-          `Evaluate the line integral $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F}(x, y) = \\langle y, x \\rangle$ along the parabola $y = ${c}x^2$ from $(0, 0)$ to $(${a}, ${c * a * a})$.`,
-          `计算向量线积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$，其中 $\\mathbf{F}(x, y) = \\langle y, x \\rangle$，路径 $C$ 为抛物线 $y = ${c}x^2$ 从 $(0, 0)$ 到 $(${a}, ${c * a * a})$。`,
+          `Evaluate the line integral $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F}(x, y) = \\langle y, x \\rangle$ along the parabola $y = ${poly([c, "x^2"])}$ from $(0, 0)$ to $(${a}, ${c * a * a})$.`,
+          `计算向量线积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$，其中 $\\mathbf{F}(x, y) = \\langle y, x \\rangle$，路径 $C$ 为抛物线 $y = ${poly([c, "x^2"])}$ 从 $(0, 0)$ 到 $(${a}, ${c * a * a})$。`,
         );
         const solution = t(
           steps(
-            `Parametrize with $x$: $\\mathbf{r}(x) = \\langle x, ${c}x^2 \\rangle$, so $d\\mathbf{r} = \\langle 1, ${2 * c}x \\rangle dx$.`,
-            `Compute the dot product: $\\mathbf{F} \\cdot d\\mathbf{r} = (${c}x^2)(1) + (x)(${2 * c}x) = ${3 * c}x^2$.`,
-            `Integrate: $\\int_0^{${a}} ${3 * c}x^2\\,dx = ${c}[x^3]_0^{${a}} = ${c}(${a}^3) = ${ans}$.`,
+            `Parametrize with $x$: $\\mathbf{r}(x) = \\langle x, ${poly([c, "x^2"])} \\rangle$, so $d\\mathbf{r} = \\langle 1, ${poly([2 * c, "x"])} \\rangle dx$.`,
+            `Compute the dot product: $\\mathbf{F} \\cdot d\\mathbf{r} = (${poly([c, "x^2"])})(1) + (x)(${poly([2 * c, "x"])}) = ${poly([3 * c, "x^2"])}$.`,
+            `Integrate: $\\int_0^{${a}} ${poly([3 * c, "x^2"])}\\,dx = ${c}[x^3]_0^{${a}} = ${c}(${a}^3) = ${ans}$.`,
           ),
           steps(
-            `以 $x$ 为参数：$\\mathbf{r}(x) = \\langle x, ${c}x^2 \\rangle$，故 $d\\mathbf{r} = \\langle 1, ${2 * c}x \\rangle dx$。`,
-            `计算点积：$\\mathbf{F} \\cdot d\\mathbf{r} = (${c}x^2)(1) + (x)(${2 * c}x) = ${3 * c}x^2$。`,
-            `积分求值：$\\int_0^{${a}} ${3 * c}x^2\\,dx = ${c}[x^3]_0^{${a}} = ${c}(${a}^3) = ${ans}$。`,
+            `以 $x$ 为参数：$\\mathbf{r}(x) = \\langle x, ${poly([c, "x^2"])} \\rangle$，故 $d\\mathbf{r} = \\langle 1, ${poly([2 * c, "x"])} \\rangle dx$。`,
+            `计算点积：$\\mathbf{F} \\cdot d\\mathbf{r} = (${poly([c, "x^2"])})(1) + (x)(${poly([2 * c, "x"])}) = ${poly([3 * c, "x^2"])}$。`,
+            `积分求值：$\\int_0^{${a}} ${poly([3 * c, "x^2"])}\\,dx = ${c}[x^3]_0^{${a}} = ${c}(${a}^3) = ${ans}$。`,
           ),
         );
         return numberProblem({
@@ -1190,14 +1190,14 @@ export const theFundamentalTheoremOfLineIntegrals: TopicDef = {
         const solution = t(
           steps(
             `By the Fundamental Theorem of Line Integrals, $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$.`,
-            `Evaluate at endpoint $B$: $f(${x2}, ${y2}) = ${a}(${x2})^2 + ${b}(${y2})^2 = ${fB}$.`,
-            `Evaluate at starting point $A$: $f(${x1}, ${y1}) = ${a}(${x1})^2 + ${b}(${y1})^2 = ${fA}$.`,
+            `Evaluate at endpoint $B$: $f(${x2}, ${y2}) = ${a}(${x2})^2 + ${paren(b)}(${y2})^2 = ${fB}$.`,
+            `Evaluate at starting point $A$: $f(${x1}, ${y1}) = ${a}(${x1})^2 + ${paren(b)}(${y1})^2 = ${fA}$.`,
             `Compute the difference: $f(B) - f(A) = ${fB} - (${fA}) = ${ans}$.`,
           ),
           steps(
             `由曲线积分基本定理，$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$。`,
-            `终点 $B$ 处的函数值：$f(${x2}, ${y2}) = ${a}(${x2})^2 + ${b}(${y2})^2 = ${fB}$。`,
-            `起点 $A$ 处的函数值：$f(${x1}, ${y1}) = ${a}(${x1})^2 + ${b}(${y1})^2 = ${fA}$。`,
+            `终点 $B$ 处的函数值：$f(${x2}, ${y2}) = ${a}(${x2})^2 + ${paren(b)}(${y2})^2 = ${fB}$。`,
+            `起点 $A$ 处的函数值：$f(${x1}, ${y1}) = ${a}(${x1})^2 + ${paren(b)}(${y1})^2 = ${fA}$。`,
             `两值相减：$f(B) - f(A) = ${fB} - (${fA}) = ${ans}$。`,
           ),
         );
@@ -1243,20 +1243,20 @@ export const pathIndependenceOfLineIntegrals: TopicDef = {
         const ans = fB - fA;
 
         const prompt = t(
-          `Since $\\mathbf{F} = \\nabla (${a}x^2 + ${b}y^2)$ is conservative, the line integral $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ is path independent. Evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ along any path starting at $A(${x1}, ${y1})$ and ending at $B(${x2}, ${y2})$.`,
-          `已知 $\\mathbf{F} = \\nabla (${a}x^2 + ${b}y^2)$ 为保守场，曲线积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 具有路径无关性。求沿任意起点为 $A(${x1}, ${y1})$、终点为 $B(${x2}, ${y2})$ 的路径积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 的值。`,
+          `Since $\\mathbf{F} = \\nabla (${poly([a, "x^2"], [b, "y^2"])})$ is conservative, the line integral $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ is path independent. Evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ along any path starting at $A(${x1}, ${y1})$ and ending at $B(${x2}, ${y2})$.`,
+          `已知 $\\mathbf{F} = \\nabla (${poly([a, "x^2"], [b, "y^2"])})$ 为保守场，曲线积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 具有路径无关性。求沿任意起点为 $A(${x1}, ${y1})$、终点为 $B(${x2}, ${y2})$ 的路径积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 的值。`,
         );
         const solution = t(
           steps(
             `Because $\\mathbf{F} = \\nabla f$ with $f(x, y) = ${a}x^2 + ${b}y^2$, path independence allows evaluating $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(B) - f(A)$.`,
-            `Evaluate $f$ at the terminal point $B(${x2}, ${y2})$: $f(${x2}, ${y2}) = ${a}(${x2})^2 + ${b}(${y2})^2 = ${fB}$.`,
-            `Evaluate $f$ at the initial point $A(${x1}, ${y1})$: $f(${x1}, ${y1}) = ${a}(${x1})^2 + ${b}(${y1})^2 = ${fA}$.`,
+            `Evaluate $f$ at the terminal point $B(${x2}, ${y2})$: $f(${x2}, ${y2}) = ${a}(${x2})^2 + ${paren(b)}(${y2})^2 = ${fB}$.`,
+            `Evaluate $f$ at the initial point $A(${x1}, ${y1})$: $f(${x1}, ${y1}) = ${a}(${x1})^2 + ${paren(b)}(${y1})^2 = ${fA}$.`,
             `Subtract: $f(B) - f(A) = ${fB} - ${fA} = ${ans}$.`,
           ),
           steps(
             `由于 $\\mathbf{F} = \\nabla f$（其中 $f(x, y) = ${a}x^2 + ${b}y^2$），由路径无关性可知 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(B) - f(A)$。`,
-            `计算终点 $B(${x2}, ${y2})$ 处的势函数值：$f(${x2}, ${y2}) = ${a}(${x2})^2 + ${b}(${y2})^2 = ${fB}$。`,
-            `计算起点 $A(${x1}, ${y1})$ 处的势函数值：$f(${x1}, ${y1}) = ${a}(${x1})^2 + ${b}(${y1})^2 = ${fA}$。`,
+            `计算终点 $B(${x2}, ${y2})$ 处的势函数值：$f(${x2}, ${y2}) = ${a}(${x2})^2 + ${paren(b)}(${y2})^2 = ${fB}$。`,
+            `计算起点 $A(${x1}, ${y1})$ 处的势函数值：$f(${x1}, ${y1}) = ${a}(${x1})^2 + ${paren(b)}(${y1})^2 = ${fA}$。`,
             `相减得：$f(B) - f(A) = ${fB} - ${fA} = ${ans}$。`,
           ),
         );
@@ -1363,16 +1363,16 @@ export const calculatingPotentialFunctionsForLineIntegrals: TopicDef = {
         );
         const solution = t(
           steps(
-            `Integrate $P$ with respect to $x$: $f(x, y) = \\int (${P_desc})dx = ${a}x^2 + ${b}xy + g(y)$.`,
-            `Differentiate with respect to $y$: $f_y = ${b}x + g'(y) = ${Q_desc} \\implies g'(y) = ${2 * c}y \\implies g(y) = ${c}y^2$.`,
+            `Integrate $P$ with respect to $x$: $f(x, y) = \\int (${P_desc})dx = ${poly([a, "x^2"], [b, "xy"])} + g(y)$.`,
+            `Differentiate with respect to $y$: $f_y = ${poly([b, "x"])} + g'(y) = ${Q_desc} \\implies g'(y) = ${poly([2 * c, "y"])} \\implies g(y) = ${poly([c, "y^2"])}$.`,
             `The potential is $f(x, y) = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$ (up to a constant).`,
-            `Apply the Fundamental Theorem: $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(${x0}, ${y0}) - f(0, 0) = ${a}(${x0})^2 + ${b}(${x0})(${y0}) + ${c}(${y0})^2 = ${ans}$.`,
+            `Apply the Fundamental Theorem: $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(${x0}, ${y0}) - f(0, 0) = ${a}(${x0})^2 + ${paren(b)}(${x0})(${y0}) + ${paren(c)}(${y0})^2 = ${ans}$.`,
           ),
           steps(
-            `对 $x$ 偏积分：$f(x, y) = \\int (${P_desc})dx = ${a}x^2 + ${b}xy + g(y)$。`,
-            `对 $y$ 求偏导：$f_y = ${b}x + g'(y) = ${Q_desc} \\implies g'(y) = ${2 * c}y \\implies g(y) = ${c}y^2$。`,
+            `对 $x$ 偏积分：$f(x, y) = \\int (${P_desc})dx = ${poly([a, "x^2"], [b, "xy"])} + g(y)$。`,
+            `对 $y$ 求偏导：$f_y = ${poly([b, "x"])} + g'(y) = ${Q_desc} \\implies g'(y) = ${poly([2 * c, "y"])} \\implies g(y) = ${poly([c, "y^2"])}$。`,
             `求得势函数为 $f(x, y) = ${poly([a, "x^2"], [b, "xy"], [c, "y^2"])}$（差一任意常数）。`,
-            `应用基本定理：$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(${x0}, ${y0}) - f(0, 0) = ${a}(${x0})^2 + ${b}(${x0})(${y0}) + ${c}(${y0})^2 = ${ans}$。`,
+            `应用基本定理：$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(${x0}, ${y0}) - f(0, 0) = ${a}(${x0})^2 + ${paren(b)}(${x0})(${y0}) + ${paren(c)}(${y0})^2 = ${ans}$。`,
           ),
         );
         return numberProblem({
@@ -1724,17 +1724,17 @@ export const greensTheoremInFluxDivergenceForm: TopicDef = {
         const ans = div * area;
 
         const prompt = t(
-          `Find the outward flux $\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds$ of $\\mathbf{F}(x, y) = \\langle ${a}x, ${b}y \\rangle$ across the boundary of the rectangle $D = [0, ${W}] \\times [0, ${H}]$.`,
-          `计算向量场 $\\mathbf{F}(x, y) = \\langle ${a}x, ${b}y \\rangle$ 穿过矩形 $D = [0, ${W}] \\times [0, ${H}]$ 边界向外的总通量 $\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds$。`,
+          `Find the outward flux $\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds$ of $\\mathbf{F}(x, y) = \\langle ${poly([a, "x"])}, ${poly([b, "y"])} \\rangle$ across the boundary of the rectangle $D = [0, ${W}] \\times [0, ${H}]$.`,
+          `计算向量场 $\\mathbf{F}(x, y) = \\langle ${poly([a, "x"])}, ${poly([b, "y"])} \\rangle$ 穿过矩形 $D = [0, ${W}] \\times [0, ${H}]$ 边界向外的总通量 $\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds$。`,
         );
         const solution = t(
           steps(
-            `Calculate the divergence: $\\text{div}\\,\\mathbf{F} = \\frac{\\partial}{\\partial x}(${a}x) + \\frac{\\partial}{\\partial y}(${b}y) = ${a} + ${b} = ${div}$.`,
+            `Calculate the divergence: $\\text{div}\\,\\mathbf{F} = \\frac{\\partial}{\\partial x}(${poly([a, "x"])}) + \\frac{\\partial}{\\partial y}(${poly([b, "y"])}) = ${a} + ${b} = ${div}$.`,
             `Apply the 2D Divergence Theorem: $\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\iint_D \\text{div}\\,\\mathbf{F}\\,dA = ${div} \\times \\text{Area}(D)$.`,
             `The area is $${W} \\times ${H} = ${area}$, so the outward flux is $${div} \\times ${area} = ${ans}$.`,
           ),
           steps(
-            `计算散度：$\\text{div}\\,\\mathbf{F} = \\frac{\\partial}{\\partial x}(${a}x) + \\frac{\\partial}{\\partial y}(${b}y) = ${a} + ${b} = ${div}$。`,
+            `计算散度：$\\text{div}\\,\\mathbf{F} = \\frac{\\partial}{\\partial x}(${poly([a, "x"])}) + \\frac{\\partial}{\\partial y}(${poly([b, "y"])}) = ${a} + ${b} = ${div}$。`,
             `应用二维散度定理：$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\iint_D \\text{div}\\,\\mathbf{F}\\,dA = ${div} \\times \\text{Area}(D)$。`,
             `矩形面积为 $${W} \\times ${H} = ${area}$，故向外总通量为 $${div} \\times ${area} = ${ans}$。`,
           ),

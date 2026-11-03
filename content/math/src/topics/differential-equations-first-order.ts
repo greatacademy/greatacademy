@@ -1,6 +1,6 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { poly, Q } from "@ga/subject-math";
 import { numberProblem, steps } from "../problems.ts";
 
 /** Pythagorean triples for clean magnitudes. */
@@ -55,18 +55,18 @@ export const introductionToFirstOrderLinearOdes: TopicDef = {
         const ans = Q.of(b, a * x0);
 
         const prompt = t(
-          `Convert the differential equation $(${a}x)y' + ${b}y = ${c}x^2$ into standard form $y' + P(x)y = Q(x)$, and evaluate $P(${x0})$.`,
-          `将微分方程 $(${a}x)y' + ${b}y = ${c}x^2$ 化为标准形式 $y' + P(x)y = Q(x)$，并计算 $P(${x0})$ 的值。`,
+          `Convert the differential equation $(${poly([a, "x"])})y' + ${poly([b, "y"])} = ${poly([c, "x^2"])}$ into standard form $y' + P(x)y = Q(x)$, and evaluate $P(${x0})$.`,
+          `将微分方程 $(${poly([a, "x"])})y' + ${poly([b, "y"])} = ${poly([c, "x^2"])}$ 化为标准形式 $y' + P(x)y = Q(x)$，并计算 $P(${x0})$ 的值。`,
         );
         const solution = t(
           steps(
-            `Divide the equation by the leading coefficient $(${a}x)$: $y' + \\frac{${b}}{${a}x}y = \\frac{${c}}{${a}}x$.`,
-            `Identify the coefficient function: $P(x) = \\frac{${b}}{${a}x}$.`,
+            `Divide the equation by the leading coefficient $(${poly([a, "x"])})$: $y' + \\frac{${b}}{${poly([a, "x"])}}y = \\frac{${c}}{${a}}x$.`,
+            `Identify the coefficient function: $P(x) = \\frac{${b}}{${poly([a, "x"])}}$.`,
             `Evaluate at $x = ${x0}$: $P(${x0}) = \\frac{${b}}{${a}(${x0})} = \\frac{${b}}{${a * x0}} = ${ans.toLatex()}$.`,
           ),
           steps(
-            `方程两边同除以首项系数 $(${a}x)$：$y' + \\frac{${b}}{${a}x}y = \\frac{${c}}{${a}}x$。`,
-            `确定系数函数：$P(x) = \\frac{${b}}{${a}x}$。`,
+            `方程两边同除以首项系数 $(${poly([a, "x"])})$：$y' + \\frac{${b}}{${poly([a, "x"])}}y = \\frac{${c}}{${a}}x$。`,
+            `确定系数函数：$P(x) = \\frac{${b}}{${poly([a, "x"])}}$。`,
             `代入 $x = ${x0}$ 求值：$P(${x0}) = \\frac{${b}}{${a}(${x0})} = \\frac{${b}}{${a * x0}} = ${ans.toLatex()}$。`,
           ),
         );
@@ -162,20 +162,20 @@ export const solvingFirstOrderLinearOdesWithExponentialForcing: TopicDef = {
         const b = A * (a + k);
 
         const prompt = t(
-          `Find the coefficient $A$ of the particular solution $y_p(x) = A e^{${k}x}$ to the differential equation $y' + ${a}y = ${b}e^{${k}x}$.`,
-          `求微分方程 $y' + ${a}y = ${b}e^{${k}x}$ 的特解 $y_p(x) = A e^{${k}x}$ 的系数 $A$。`,
+          `Find the coefficient $A$ of the particular solution $y_p(x) = A e^{${poly([k, "x"])}}$ to the differential equation $y' + ${poly([a, "y"])} = ${b}e^{${poly([k, "x"])}}$.`,
+          `求微分方程 $y' + ${poly([a, "y"])} = ${b}e^{${poly([k, "x"])}}$ 的特解 $y_p(x) = A e^{${poly([k, "x"])}}$ 的系数 $A$。`,
         );
         const solution = t(
           steps(
-            `Assume a particular solution of the form $y_p(x) = A e^{${k}x}$.`,
-            `Differentiate: $y_p'(x) = ${k}A e^{${k}x}$.`,
-            `Substitute into the ODE: $(${k}A e^{${k}x}) + ${a}(A e^{${k}x}) = (${k + a})A e^{${k}x} = ${b}e^{${k}x}$.`,
+            `Assume a particular solution of the form $y_p(x) = A e^{${poly([k, "x"])}}$.`,
+            `Differentiate: $y_p'(x) = ${k}A e^{${poly([k, "x"])}}$.`,
+            `Substitute into the ODE: $(${k}A e^{${poly([k, "x"])}}) + ${a}(A e^{${poly([k, "x"])}}) = (${k + a})A e^{${poly([k, "x"])}} = ${b}e^{${poly([k, "x"])}}$.`,
             `Equate coefficients: $(${k + a})A = ${b} \\implies A = \\frac{${b}}{${k + a}} = ${A}$.`,
           ),
           steps(
-            `设特解形式为 $y_p(x) = A e^{${k}x}$。`,
-            `求导：$y_p'(x) = ${k}A e^{${k}x}$。`,
-            `代入微分方程：$(${k}A e^{${k}x}) + ${a}(A e^{${k}x}) = (${k + a})A e^{${k}x} = ${b}e^{${k}x}$。`,
+            `设特解形式为 $y_p(x) = A e^{${poly([k, "x"])}}$。`,
+            `求导：$y_p'(x) = ${k}A e^{${poly([k, "x"])}}$。`,
+            `代入微分方程：$(${k}A e^{${poly([k, "x"])}}) + ${a}(A e^{${poly([k, "x"])}}) = (${k + a})A e^{${poly([k, "x"])}} = ${b}e^{${poly([k, "x"])}}$。`,
             `对比系数：$(${k + a})A = ${b} \\implies A = \\frac{${b}}{${k + a}} = ${A}$。`,
           ),
         );
@@ -329,17 +329,17 @@ export const solvingFirstOrderOdesBySubstitution: TopicDef = {
         const ans = a + b * v0 * v0;
 
         const prompt = t(
-          `Under the substitution $v = ${a}x + ${b}y$, the equation $y' = (${a}x + ${b}y)^2$ transforms into $\\frac{dv}{dx} = g(v)$. Evaluate $g(${v0})$.`,
-          `通过变量代换 $v = ${a}x + ${b}y$，方程 $y' = (${a}x + ${b}y)^2$ 化为 $\\frac{dv}{dx} = g(v)$。计算 $g(${v0})$ 的值。`,
+          `Under the substitution $v = ${poly([a, "x"])} + ${poly([b, "y"])}$, the equation $y' = (${poly([a, "x"])} + ${poly([b, "y"])})^2$ transforms into $\\frac{dv}{dx} = g(v)$. Evaluate $g(${v0})$.`,
+          `通过变量代换 $v = ${poly([a, "x"])} + ${poly([b, "y"])}$，方程 $y' = (${poly([a, "x"])} + ${poly([b, "y"])})^2$ 化为 $\\frac{dv}{dx} = g(v)$。计算 $g(${v0})$ 的值。`,
         );
         const solution = t(
           steps(
-            `Differentiate $v = ${a}x + ${b}y$ with respect to $x$: $\\frac{dv}{dx} = ${a} + ${b}\\frac{dy}{dx}$.`,
+            `Differentiate $v = ${poly([a, "x"])} + ${poly([b, "y"])}$ with respect to $x$: $\\frac{dv}{dx} = ${a} + ${b}\\frac{dy}{dx}$.`,
             `Substitute $y' = v^2$: $\\frac{dv}{dx} = ${a} + ${b}v^2 = g(v)$.`,
             `Evaluate at $v = ${v0}$: $g(${v0}) = ${a} + ${b}(${v0})^2 = ${a} + ${b}(${v0 * v0}) = ${ans}$.`,
           ),
           steps(
-            `对 $v = ${a}x + ${b}y$ 关于 $x$ 求导：$\\frac{dv}{dx} = ${a} + ${b}\\frac{dy}{dx}$。`,
+            `对 $v = ${poly([a, "x"])} + ${poly([b, "y"])}$ 关于 $x$ 求导：$\\frac{dv}{dx} = ${a} + ${b}\\frac{dy}{dx}$。`,
             `代入 $y' = v^2$：$\\frac{dv}{dx} = ${a} + ${b}v^2 = g(v)$。`,
             `代入 $v = ${v0}$ 求值：$g(${v0}) = ${a} + ${b}(${v0})^2 = ${ans}$。`,
           ),
@@ -496,18 +496,18 @@ export const homogeneousFunctions: TopicDef = {
         const b = rng.int(2, 7);
 
         const prompt = t(
-          `Determine the degree of homogeneity $n$ of the function $f(x, y) = ${a}x^${p}y^${q} + ${b}x^${n}$.`,
-          `确定函数 $f(x, y) = ${a}x^${p}y^${q} + ${b}x^${n}$ 的齐次次数 $n$。`,
+          `Determine the degree of homogeneity $n$ of the function $f(x, y) = ${poly([a, "x"])}^${poly([p, "y"])}^${q} + ${poly([b, "x"])}^${n}$.`,
+          `确定函数 $f(x, y) = ${poly([a, "x"])}^${poly([p, "y"])}^${q} + ${poly([b, "x"])}^${n}$ 的齐次次数 $n$。`,
         );
         const solution = t(
           steps(
             `Substitute $tx$ for $x$ and $ty$ for $y$: $f(tx, ty) = ${a}(tx)^${p}(ty)^${q} + ${b}(tx)^${n}$.`,
-            `Factor out powers of $t$: $f(tx, ty) = t^{${p}+${q}}(${a}x^${p}y^${q}) + t^${n}(${b}x^${n}) = t^${n} f(x, y)$.`,
+            `Factor out powers of $t$: $f(tx, ty) = t^{${p}+${q}}(${poly([a, "x"])}^${poly([p, "y"])}^${q}) + t^${n}(${poly([b, "x"])}^${n}) = t^${n} f(x, y)$.`,
             `By definition of homogeneity, the degree is $n = ${n}$.`,
           ),
           steps(
             `将 $x$ 替换为 $tx$，$y$ 替换为 $ty$：$f(tx, ty) = ${a}(tx)^${p}(ty)^${q} + ${b}(tx)^${n}$。`,
-            `提取 $t$ 的公因子：$f(tx, ty) = t^{${p}+${q}}(${a}x^${p}y^${q}) + t^${n}(${b}x^${n}) = t^${n} f(x, y)$。`,
+            `提取 $t$ 的公因子：$f(tx, ty) = t^{${p}+${q}}(${poly([a, "x"])}^${poly([p, "y"])}^${q}) + t^${n}(${poly([b, "x"])}^${n}) = t^${n} f(x, y)$。`,
             `根据齐次函数定义，其齐次次数为 $n = ${n}$。`,
           ),
         );
@@ -602,18 +602,18 @@ export const exactDifferentialEquations: TopicDef = {
         const ans = 2 * a * x0 + 2 * b * y0;
 
         const prompt = t(
-          `For the differential equation $(${2 * a}xy + ${b}y^2)\\,dx + (${a}x^2 + ${2 * b}xy)\\,dy = 0$, evaluate the partial derivative $\\frac{\\partial M}{\\partial y}$ at $(x, y) = (${x0}, ${y0})$.`,
-          `对于微分方程 $(${2 * a}xy + ${b}y^2)\\,dx + (${a}x^2 + ${2 * b}xy)\\,dy = 0$，计算偏导数 $\\frac{\\partial M}{\\partial y}$ 在点 $(x, y) = (${x0}, ${y0})$ 处的值。`,
+          `For the differential equation $(${poly([2 * a, "xy"])} + ${poly([b, "y^2"])})\\,dx + (${poly([a, "x^2"])} + ${poly([2 * b, "xy"])})\\,dy = 0$, evaluate the partial derivative $\\frac{\\partial M}{\\partial y}$ at $(x, y) = (${x0}, ${y0})$.`,
+          `对于微分方程 $(${poly([2 * a, "xy"])} + ${poly([b, "y^2"])})\\,dx + (${poly([a, "x^2"])} + ${poly([2 * b, "xy"])})\\,dy = 0$，计算偏导数 $\\frac{\\partial M}{\\partial y}$ 在点 $(x, y) = (${x0}, ${y0})$ 处的值。`,
         );
         const solution = t(
           steps(
-            `Identify $M(x, y) = ${2 * a}xy + ${b}y^2$.`,
-            `Differentiate with respect to $y$: $\\frac{\\partial M}{\\partial y} = ${2 * a}x + ${2 * b}y$.`,
+            `Identify $M(x, y) = ${poly([2 * a, "xy"])} + ${poly([b, "y^2"])}$.`,
+            `Differentiate with respect to $y$: $\\frac{\\partial M}{\\partial y} = ${poly([2 * a, "x"])} + ${poly([2 * b, "y"])}$.`,
             `Evaluate at $(${x0}, ${y0})$: $${2 * a}(${x0}) + ${2 * b}(${y0}) = ${2 * a * x0} + ${2 * b * y0} = ${ans}$.`,
           ),
           steps(
-            `确定 $M(x, y) = ${2 * a}xy + ${b}y^2$。`,
-            `对 $y$ 求偏导：$\\frac{\\partial M}{\\partial y} = ${2 * a}x + ${2 * b}y$。`,
+            `确定 $M(x, y) = ${poly([2 * a, "xy"])} + ${poly([b, "y^2"])}$。`,
+            `对 $y$ 求偏导：$\\frac{\\partial M}{\\partial y} = ${poly([2 * a, "x"])} + ${poly([2 * b, "y"])}$。`,
             `代入点 $(${x0}, ${y0})$：$${2 * a}(${x0}) + ${2 * b}(${y0}) = ${ans}$。`,
           ),
         );
@@ -710,20 +710,20 @@ export const bernoulliDifferentialEquations: TopicDef = {
         const coeffV = factor * a;
 
         const prompt = t(
-          `Under the substitution $v = y^{1 - ${n}}$, the Bernoulli equation $y' + ${a}y = 4y^{${n}}$ transforms into $v' + C v = D$. Find the coefficient $C$ of $v$.`,
-          `通过变量代换 $v = y^{1 - ${n}}$，伯努利方程 $y' + ${a}y = 4y^{${n}}$ 转化为线性方程 $v' + C v = D$。求其中 $v$ 的系数 $C$。`,
+          `Under the substitution $v = y^{1 - ${n}}$, the Bernoulli equation $y' + ${poly([a, "y"])} = 4y^{${n}}$ transforms into $v' + C v = D$. Find the coefficient $C$ of $v$.`,
+          `通过变量代换 $v = y^{1 - ${n}}$，伯努利方程 $y' + ${poly([a, "y"])} = 4y^{${n}}$ 转化为线性方程 $v' + C v = D$。求其中 $v$ 的系数 $C$。`,
         );
         const solution = t(
           steps(
-            `Multiply the Bernoulli equation by $y^{-${n}}$: $y^{-${n}}y' + ${a}y^{1-${n}} = 4$.`,
-            `Let $v = y^{1-${n}}$. Differentiate: $v' = (1 - ${n})y^{-${n}}y' = ${factor}y^{-${n}}y'$.`,
-            `Multiply the entire equation by $(1 - ${n}) = ${factor}$: $v' + ${factor}(${a})v = ${factor}(4)$.`,
+            `Multiply the Bernoulli equation by $y^{-${n}}$: $y^{-${n}}y' + ${poly([a, "y^{1"])}-${n}} = 4$.`,
+            `Let $v = y^{1-${n}}$. Differentiate: $v' = (1 - ${n})y^{-${n}}y' = ${poly([factor, "y"])}^{-${n}}y'$.`,
+            `Multiply the entire equation by $(1 - ${n}) = ${factor}$: $v' + (${factor})(${a})v = (${factor})(4)$.`,
             `The coefficient of $v$ is $C = ${factor} \\times ${a} = ${coeffV}$.`,
           ),
           steps(
-            `方程两端同乘 $y^{-${n}}$：$y^{-${n}}y' + ${a}y^{1-${n}} = 4$。`,
-            `令 $v = y^{1-${n}}$，求导得 $v' = (1 - ${n})y^{-${n}}y' = ${factor}y^{-${n}}y'$。`,
-            `原式同乘 $(1 - ${n}) = ${factor}$ 得：$v' + ${factor}(${a})v = ${factor}(4)$。`,
+            `方程两端同乘 $y^{-${n}}$：$y^{-${n}}y' + ${poly([a, "y^{1"])}-${n}} = 4$。`,
+            `令 $v = y^{1-${n}}$，求导得 $v' = (1 - ${n})y^{-${n}}y' = ${poly([factor, "y"])}^{-${n}}y'$。`,
+            `原式同乘 $(1 - ${n}) = ${factor}$ 得：$v' + (${factor})(${a})v = (${factor})(4)$。`,
             `因此 $v$ 的系数为 $C = ${factor} \\times ${a} = ${coeffV}$。`,
           ),
         );

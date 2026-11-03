@@ -2,7 +2,7 @@ import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
 
-import { numberProblem } from "../problems.ts";
+import { article, numberProblem } from "../problems.ts";
 import { range } from "./methods-of-proof-common.ts";
 
 // Discrete Mathematics unit 3, part 1: discrete random variables and their distributions.
@@ -1132,7 +1132,7 @@ function poissonStory(rng: Rng): PoissonStory {
       rate,
       per: t("per hour", "每小时"),
       over: over / 60,
-      span: t(`a $${over}$-minute period`, `$${over}$ 分钟内`),
+      span: t(`${article(over)} $${over}$-minute period`, `$${over}$ 分钟内`),
       what: t("Calls arrive at a help desk", "求助热线来电"),
     };
   }
@@ -1164,7 +1164,7 @@ function poissonStory(rng: Rng): PoissonStory {
     rate,
     per: t("per metre", "每米"),
     over,
-    span: t(`a $${over}$-metre length`, `$${over}$ 米长的一段中`),
+    span: t(`${article(over)} $${over}$-metre length`, `$${over}$ 米长的一段中`),
     what: t("Flaws appear in a cable", "电缆上出现瑕疵"),
   };
 }

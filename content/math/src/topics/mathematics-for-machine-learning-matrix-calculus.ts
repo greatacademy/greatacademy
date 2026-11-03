@@ -1,6 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { numberProblem } from "../problems.ts";
+import { paren, poly } from "@ga/subject-math";
+import { article, numberProblem } from "../problems.ts";
 
 export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
   // 9.28.7 Gradients With Respect to a Variable Subset
@@ -19,8 +20,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
         id: "evaluating-subset-gradients",
         title: t("Evaluating gradients with respect to parameter subsets", "求关于参数子集的梯度"),
         explanation: t(
-          "For f(w, b) = ||y - (Xw + b 1)||^2, holding bias b constant gives ∇_w f = -2 X^T (y - (Xw + b 1)).",
-          "对于 f(w, b) = ||y - (Xw + b 1)||^2，固定偏置 b 时有 ∇_w f = -2 X^T (y - (Xw + b 1))。",
+          "For $f(\\mathbf{w}, b) = \\|\\mathbf{y} - (X\\mathbf{w} + b\\mathbf{1})\\|^2$, holding the bias $b$ constant gives $\\nabla_{\\mathbf{w}} f = -2X^T(\\mathbf{y} - (X\\mathbf{w} + b\\mathbf{1}))$.",
+          "对于 $f(\\mathbf{w}, b) = \\|\\mathbf{y} - (X\\mathbf{w} + b\\mathbf{1})\\|^2$，固定偏置 $b$ 时有 $\\nabla_{\\mathbf{w}} f = -2X^T(\\mathbf{y} - (X\\mathbf{w} + b\\mathbf{1}))$。",
         ),
         generate: (rng: Rng): Problem => {
           // f(x1, x2, y1, y2) = a*x1*y1 + b*x2*y2 + c*x1^2 + d*x2^2 + e*y1^2
@@ -71,8 +72,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
         id: "evaluating-total-derivatives-on-vectors",
         title: t("Applying total derivatives to direction vectors", "将全导数作用于方向向量"),
         explanation: t(
-          "Df(x)(v) = J_f(x) v is the directional differential, which linearly approximates f(x + v) - f(x).",
-          "Df(x)(v) = J_f(x) v 为方向微分，线性逼近 f(x + v) - f(x)。",
+          "$D\\mathbf{f}(\\mathbf{x})(\\mathbf{v}) = J_{\\mathbf{f}}(\\mathbf{x}) \\mathbf{v}$ is the directional differential, which linearly approximates $\\mathbf{f}(\\mathbf{x} + \\mathbf{v}) - \\mathbf{f}(\\mathbf{x})$.",
+          "$D\\mathbf{f}(\\mathbf{x})(\\mathbf{v}) = J_{\\mathbf{f}}(\\mathbf{x}) \\mathbf{v}$ 为方向微分，它线性逼近 $\\mathbf{f}(\\mathbf{x} + \\mathbf{v}) - \\mathbf{f}(\\mathbf{x})$。",
         ),
         generate: (rng: Rng): Problem => {
           // f: R^2 -> R^2: f1(x, y) = a*x^2 + b*y, f2(x, y) = c*x*y + d
@@ -102,13 +103,13 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Let $\\mathbf{f}: \\mathbb{R}^2 \\to \\mathbb{R}^2$ be given by $\\mathbf{f}(x, y) = \\begin{bmatrix} ${a}x^2 + ${b}y \\\\[3pt] ${c}xy + ${d} \\end{bmatrix}$. Find the ${askComponent === 1 ? "first" : "second"} component of the total differential $D\\mathbf{f}(\\mathbf{x}_0)(\\mathbf{v}) = J_{\\mathbf{f}}(\\mathbf{x}_0) \\mathbf{v}$ at $\\mathbf{x}_0 = (${x0}, ${y0})$ in the direction $\\mathbf{v} = \\begin{bmatrix} ${v1} \\\\[3pt] ${v2} \\end{bmatrix}$.`,
-              `设映射 $\\mathbf{f}: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 为 $\\mathbf{f}(x, y) = \\begin{bmatrix} ${a}x^2 + ${b}y \\\\[3pt] ${c}xy + ${d} \\end{bmatrix}$。在点 $\\mathbf{x}_0 = (${x0}, ${y0})$ 处，求全微分 $D\\mathbf{f}(\\mathbf{x}_0)(\\mathbf{v}) = J_{\\mathbf{f}}(\\mathbf{x}_0) \\mathbf{v}$ 沿方向 $\\mathbf{v} = \\begin{bmatrix} ${v1} \\\\[3pt] ${v2} \\end{bmatrix}$ 的第 ${askComponent === 1 ? "一" : "二"}个分量。`,
+              `Let $\\mathbf{f}: \\mathbb{R}^2 \\to \\mathbb{R}^2$ be given by $\\mathbf{f}(x, y) = \\begin{bmatrix} ${poly([a, "x^2"], [b, "y"])} \\\\[3pt] ${poly([c, "xy"], [d, ""])} \\end{bmatrix}$. Find the ${askComponent === 1 ? "first" : "second"} component of the total differential $D\\mathbf{f}(\\mathbf{x}_0)(\\mathbf{v}) = J_{\\mathbf{f}}(\\mathbf{x}_0) \\mathbf{v}$ at $\\mathbf{x}_0 = (${x0}, ${y0})$ in the direction $\\mathbf{v} = \\begin{bmatrix} ${v1} \\\\[3pt] ${v2} \\end{bmatrix}$.`,
+              `设映射 $\\mathbf{f}: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 为 $\\mathbf{f}(x, y) = \\begin{bmatrix} ${poly([a, "x^2"], [b, "y"])} \\\\[3pt] ${poly([c, "xy"], [d, ""])} \\end{bmatrix}$。在点 $\\mathbf{x}_0 = (${x0}, ${y0})$ 处，求全微分 $D\\mathbf{f}(\\mathbf{x}_0)(\\mathbf{v}) = J_{\\mathbf{f}}(\\mathbf{x}_0) \\mathbf{v}$ 沿方向 $\\mathbf{v} = \\begin{bmatrix} ${v1} \\\\[3pt] ${v2} \\end{bmatrix}$ 的第 ${askComponent === 1 ? "一" : "二"}个分量。`,
             ),
             answer: ans,
             solution: t(
-              `The Jacobian matrix is $J_{\\mathbf{f}}(x, y) = \\begin{bmatrix} 2(${a})x & ${b} \\\\ ${c}y & ${c}x \\end{bmatrix}$. At $\\mathbf{x}_0 = (${x0}, ${y0})$, $J_{\\mathbf{f}}(\\mathbf{x}_0) = \\begin{bmatrix} ${j11} & ${j12} \\\\ ${j21} & ${j22} \\end{bmatrix}$. Multiplying by $\\mathbf{v}$ yields $D\\mathbf{f}(\\mathbf{x}_0)(\\mathbf{v}) = \\begin{bmatrix} (${j11})(${v1}) + (${j12})(${v2}) \\\\[3pt] (${j21})(${v1}) + (${j22})(${v2}) \\end{bmatrix} = \\begin{bmatrix} ${res1} \\\\[3pt] ${res2} \\end{bmatrix}$. The requested component is $${ans}$.`,
-              `雅可比矩阵为 $J_{\\mathbf{f}}(x, y) = \\begin{bmatrix} 2(${a})x & ${b} \\\\ ${c}y & ${c}x \\end{bmatrix}$。在点 $\\mathbf{x}_0 = (${x0}, ${y0})$ 处，有 $J_{\\mathbf{f}}(\\mathbf{x}_0) = \\begin{bmatrix} ${j11} & ${j12} \\\\ ${j21} & ${j22} \\end{bmatrix}$。与 $\\mathbf{v}$ 相乘得 $D\\mathbf{f}(\\mathbf{x}_0)(\\mathbf{v}) = \\begin{bmatrix} (${j11})(${v1}) + (${j12})(${v2}) \\\\[3pt] (${j21})(${v1}) + (${j22})(${v2}) \\end{bmatrix} = \\begin{bmatrix} ${res1} \\\\[3pt] ${res2} \\end{bmatrix}$。所求分量为 $${ans}$。`,
+              `The Jacobian matrix is $J_{\\mathbf{f}}(x, y) = \\begin{bmatrix} 2(${a})x & ${b} \\\\ ${poly([c, "y"])} & ${poly([c, "x"])} \\end{bmatrix}$. At $\\mathbf{x}_0 = (${x0}, ${y0})$, $J_{\\mathbf{f}}(\\mathbf{x}_0) = \\begin{bmatrix} ${j11} & ${j12} \\\\ ${j21} & ${j22} \\end{bmatrix}$. Multiplying by $\\mathbf{v}$ yields $D\\mathbf{f}(\\mathbf{x}_0)(\\mathbf{v}) = \\begin{bmatrix} (${j11})(${v1}) + (${j12})(${v2}) \\\\[3pt] (${j21})(${v1}) + (${j22})(${v2}) \\end{bmatrix} = \\begin{bmatrix} ${res1} \\\\[3pt] ${res2} \\end{bmatrix}$. The requested component is $${ans}$.`,
+              `雅可比矩阵为 $J_{\\mathbf{f}}(x, y) = \\begin{bmatrix} 2(${a})x & ${b} \\\\ ${poly([c, "y"])} & ${poly([c, "x"])} \\end{bmatrix}$。在点 $\\mathbf{x}_0 = (${x0}, ${y0})$ 处，有 $J_{\\mathbf{f}}(\\mathbf{x}_0) = \\begin{bmatrix} ${j11} & ${j12} \\\\ ${j21} & ${j22} \\end{bmatrix}$。与 $\\mathbf{v}$ 相乘得 $D\\mathbf{f}(\\mathbf{x}_0)(\\mathbf{v}) = \\begin{bmatrix} (${j11})(${v1}) + (${j12})(${v2}) \\\\[3pt] (${j21})(${v1}) + (${j22})(${v2}) \\end{bmatrix} = \\begin{bmatrix} ${res1} \\\\[3pt] ${res2} \\end{bmatrix}$。所求分量为 $${ans}$。`,
             ),
           });
         },
@@ -132,8 +133,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
         id: "multiplying-jacobians-chain-rule",
         title: t("Computing Jacobian of composite functions via matrix multiplication", "通过矩阵乘法计算复合映射的雅可比矩阵"),
         explanation: t(
-          "J_{g ∘ f}(x) = J_g(y) J_f(x) where y = f(x). Entry (i, j) is ∑_k (J_g)_{ik} (J_f)_{kj}.",
-          "J_{g ∘ f}(x) = J_g(y) J_f(x)，其中 y = f(x)。第 (i, j) 个元素为 ∑_k (J_g)_{ik} (J_f)_{kj}。",
+          "$J_{g \\circ f}(\\mathbf{x}) = J_g(\\mathbf{y}) \\, J_f(\\mathbf{x})$, where $\\mathbf{y} = f(\\mathbf{x})$. Entry $(i, j)$ is $\\sum_k (J_g)_{ik} (J_f)_{kj}$.",
+          "$J_{g \\circ f}(\\mathbf{x}) = J_g(\\mathbf{y}) \\, J_f(\\mathbf{x})$，其中 $\\mathbf{y} = f(\\mathbf{x})$。第 $(i, j)$ 个元素为 $\\sum_k (J_g)_{ik} (J_f)_{kj}$。",
         ),
         generate: (rng: Rng): Problem => {
           // 2x2 Jacobians
@@ -189,8 +190,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
         id: "evaluating-quadratic-form-vector-gradients",
         title: t("Evaluating gradients of quadratic forms and linear terms", "求二次型与线性项关于向量的梯度"),
         explanation: t(
-          "For f(x) = x^T A x + b^T x, ∇_x f(x) = (A + A^T) x + b.",
-          "对于 f(x) = x^T A x + b^T x，∇_x f(x) = (A + A^T) x + b。",
+          "For $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x} + \\mathbf{b}^T \\mathbf{x}$, $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = (A + A^T)\\mathbf{x} + \\mathbf{b}$.",
+          "对于 $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x} + \\mathbf{b}^T \\mathbf{x}$，$\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = (A + A^T)\\mathbf{x} + \\mathbf{b}$。",
         ),
         generate: (rng: Rng): Problem => {
           // Symmetric 2x2 matrix A = [[a, b], [b, c]]
@@ -223,8 +224,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
             ),
             answer: ans,
             solution: t(
-              `Since $A$ is symmetric, $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2 A \\mathbf{x} + \\mathbf{b} = 2 ${aMat} ${xVec} + ${bVec} = \\begin{bmatrix} 2(${a * x1 + b * x2}) + ${b1} \\\\[3pt] 2(${b * x1 + c * x2}) + ${b2} \\end{bmatrix} = \\begin{bmatrix} ${g1} \\\\[3pt] ${g2} \\end{bmatrix}$. The requested component is $${ans}$.`,
-              `由于 $A$ 是对称矩阵，$\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2 A \\mathbf{x} + \\mathbf{b} = 2 ${aMat} ${xVec} + ${bVec} = \\begin{bmatrix} 2(${a * x1 + b * x2}) + ${b1} \\\\[3pt] 2(${b * x1 + c * x2}) + ${b2} \\end{bmatrix} = \\begin{bmatrix} ${g1} \\\\[3pt] ${g2} \\end{bmatrix}$。所求分量为 $${ans}$。`,
+              `Since $A$ is symmetric, $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2 A \\mathbf{x} + \\mathbf{b} = 2 ${aMat} ${xVec} + ${bVec} = \\begin{bmatrix} 2(${a * x1 + b * x2}) + ${paren(b1)} \\\\[3pt] 2(${b * x1 + c * x2}) + ${paren(b2)} \\end{bmatrix} = \\begin{bmatrix} ${g1} \\\\[3pt] ${g2} \\end{bmatrix}$. The requested component is $${ans}$.`,
+              `由于 $A$ 是对称矩阵，$\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2 A \\mathbf{x} + \\mathbf{b} = 2 ${aMat} ${xVec} + ${bVec} = \\begin{bmatrix} 2(${a * x1 + b * x2}) + ${paren(b1)} \\\\[3pt] 2(${b * x1 + c * x2}) + ${paren(b2)} \\end{bmatrix} = \\begin{bmatrix} ${g1} \\\\[3pt] ${g2} \\end{bmatrix}$。所求分量为 $${ans}$。`,
             ),
           });
         },
@@ -248,8 +249,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
         id: "evaluating-least-squares-gradients",
         title: t("Evaluating gradients of least-squares objective functions", "计算最小二乘目标函数的梯度"),
         explanation: t(
-          "For f(x) = ||Ax - b||^2 = (Ax - b)^T (Ax - b), ∇_x f = 2 A^T (Ax - b).",
-          "对于 f(x) = ||Ax - b||^2 = (Ax - b)^T (Ax - b)，∇_x f = 2 A^T (Ax - b)。",
+          "For $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2 = (A\\mathbf{x} - \\mathbf{b})^T (A\\mathbf{x} - \\mathbf{b})$, $\\nabla_{\\mathbf{x}} f = 2A^T(A\\mathbf{x} - \\mathbf{b})$.",
+          "对于 $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2 = (A\\mathbf{x} - \\mathbf{b})^T (A\\mathbf{x} - \\mathbf{b})$，$\\nabla_{\\mathbf{x}} f = 2A^T(A\\mathbf{x} - \\mathbf{b})$。",
         ),
         generate: (rng: Rng): Problem => {
           // A is 2x2, b is 2x1, x is 2x1
@@ -312,8 +313,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
         id: "evaluating-matrix-derivative-identities",
         title: t("Evaluating matrix gradients of bilinear forms and traces", "计算双线性形式与迹的矩阵梯度"),
         explanation: t(
-          "∇_X (a^T X b) = a b^T. Entry (i, j) of ∇_X (a^T X b) is a_i b_j.",
-          "∇_X (a^T X b) = a b^T。∇_X (a^T X b) 的第 (i, j) 个元素为 a_i b_j。",
+          "$\\nabla_X (\\mathbf{a}^T X \\mathbf{b}) = \\mathbf{a} \\mathbf{b}^T$, so entry $(i, j)$ of $\\nabla_X (\\mathbf{a}^T X \\mathbf{b})$ is $a_i b_j$.",
+          "$\\nabla_X (\\mathbf{a}^T X \\mathbf{b}) = \\mathbf{a} \\mathbf{b}^T$，因此 $\\nabla_X (\\mathbf{a}^T X \\mathbf{b})$ 的第 $(i, j)$ 个元素为 $a_i b_j$。",
         ),
         generate: (rng: Rng): Problem => {
           const m = rng.int(2, 3);
@@ -333,7 +334,7 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Let $f(X) = \\mathbf{a}^T X \\mathbf{b}$ for an $${m} \\times ${n}$ matrix $X$, where $${aVec}$ and $${bVec}$. Using the matrix gradient identity $\\nabla_X (\\mathbf{a}^T X \\mathbf{b}) = \\mathbf{a} \\mathbf{b}^T$, find the entry in row $${row}$, column $${col}$ of the gradient matrix $\\nabla_X f$.`,
+              `Let $f(X) = \\mathbf{a}^T X \\mathbf{b}$ for ${article(m)} $${m} \\times ${n}$ matrix $X$, where $${aVec}$ and $${bVec}$. Using the matrix gradient identity $\\nabla_X (\\mathbf{a}^T X \\mathbf{b}) = \\mathbf{a} \\mathbf{b}^T$, find the entry in row $${row}$, column $${col}$ of the gradient matrix $\\nabla_X f$.`,
               `设 $f(X) = \\mathbf{a}^T X \\mathbf{b}$，其中 $X$ 为 $${m} \\times ${n}$ 矩阵，$${aVec}$ 且 $${bVec}$。利用矩阵梯度公式 $\\nabla_X (\\mathbf{a}^T X \\mathbf{b}) = \\mathbf{a} \\mathbf{b}^T$，求梯度矩阵 $\\nabla_X f$ 的第 $${row}$ 行第 $${col}$ 列元素。`,
             ),
             answer: ans,

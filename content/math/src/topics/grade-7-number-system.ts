@@ -1361,11 +1361,12 @@ export const multiplyingAndDividingWithZero = topic(
           `\\frac{0}{${show(a, kind)}}`,
         ];
         const undefinedValue = shape === 3;
-        const options = zeroOptions(a, kind);
+        const [zero, ...rest] = zeroOptions(a, kind);
+        const options = [...rng.shuffle([zero!, ...rest.slice(0, 2)]), undefinedText];
         return choiceProblem({
           prompt: t(`What is the value of $${exprs[shape]}$?`, `$${exprs[shape]}$ 的值是多少？`),
           options,
-          correct: undefinedValue ? 3 : 0,
+          correct: undefinedValue ? 3 : options.indexOf(zero!),
           solution: undefinedValue
             ? t(
                 `Division by $0$ is not defined: no number times $0$ gives $${show(a, kind)}$.`,
@@ -1592,8 +1593,8 @@ export const interpretingProductsAndQuotientsOfRationalNumbers = topic(
   "interpreting-products-and-quotients-of-rational-numbers",
   t("Interpreting Products and Quotients of Rational Numbers", "理解有理数的乘积与商"),
   t(
-    "A repeated loss is a product with a negative factor: losing $4.50 a week for 6 weeks is 6 × (−4.50). A total change shared equally is a quotient: a drop of 18 degrees over 6 hours is (−18) ÷ 6 per hour. The sign of a product or quotient depends only on how many negative numbers it has.",
-    "重复的减少可以用含负因数的乘积表示：连续 6 周每周减少 $4.50 是 6 × (−4.50)。平均分配总变化量用商表示：6 小时下降 18 度，每小时是 (−18) ÷ 6。乘积或商的符号只取决于其中负数的个数。",
+    "A repeated loss is a product with a negative factor: losing \\$4.50 a week for 6 weeks is 6 × (−4.50). A total change shared equally is a quotient: a drop of 18 degrees over 6 hours is (−18) ÷ 6 per hour. The sign of a product or quotient depends only on how many negative numbers it has.",
+    "重复的减少可以用含负因数的乘积表示：连续 6 周每周减少 \\$4.50 是 6 × (−4.50)。平均分配总变化量用商表示：6 小时下降 18 度，每小时是 (−18) ÷ 6。乘积或商的符号只取决于其中负数的个数。",
   ),
   ["dividing-with-negative-numbers"],
   ["7.NS.A.2a", "7.NS.A.2b"],
@@ -1894,8 +1895,8 @@ export const solvingProblemsUsingTheFourOperationsOnRationalNumbers = topic(
   "solving-problems-using-the-four-operations-on-rational-numbers",
   t("Solving Problems Using the Four Operations on Rational Numbers", "用有理数四则运算解决问题"),
   t(
-    "Many problems combine operations: a balance of $45.80 after three withdrawals of $18.25 and a deposit of $30 is 45.80 + 3 × (−18.25) + 30 = $21.05. The mean of several signed numbers is their sum divided by how many there are.",
-    "很多问题要综合运用几种运算：余额 $45.80，取款 3 次每次 $18.25，再存入 $30，结果是 45.80 + 3 × (−18.25) + 30 = $21.05。几个带符号的数的平均数是它们的和除以个数。",
+    "Many problems combine operations: a balance of \\$45.80 after three withdrawals of \\$18.25 and a deposit of \\$30 is 45.80 + 3 × (−18.25) + 30 = \\$21.05. The mean of several signed numbers is their sum divided by how many there are.",
+    "很多问题要综合运用几种运算：余额 \\$45.80，取款 3 次每次 \\$18.25，再存入 \\$30，结果是 45.80 + 3 × (−18.25) + 30 = \\$21.05。几个带符号的数的平均数是它们的和除以个数。",
   ),
   [
     "solving-problems-using-multiplication-and-division-of-rational-numbers",

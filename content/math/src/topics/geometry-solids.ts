@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, dec, type Mark, num, type Point, Q, radical, simplifyRadical, sketch } from "@ga/subject-math";
 
-import { choiceProblem, expressionProblem, numberProblem, radicalProblem, solutionsProblem, steps, yesNo } from "../problems.ts";
+import { article, choiceProblem, expressionProblem, numberProblem, radicalProblem, solutionsProblem, steps, yesNo } from "../problems.ts";
 
 const units = ["cm", "m", "in", "ft"] as const;
 
@@ -329,8 +329,8 @@ function pyramid(n: number): Shape {
   return { n, polygon: t(en, zh), adjective, name: t(`${adjective} pyramid`, `${zhDigits[n]}棱锥`) };
 }
 
-/** article is "a" or "an" before an English word. */
-const article = (word: string) => (/^[aeiou]/.test(word) ? "an" : "a");
+/** wordArticle is "a" or "an" before an English word. */
+const wordArticle = (word: string) => (/^[aeiou]/.test(word) ? "an" : "a");
 
 /** shapeOptions offers a prism and a pyramid on n sides and on another number of sides, in random order, with the index of want. */
 function shapeOptions(rng: Rng, want: Shape, kind: "prism" | "pyramid"): { options: Text[]; correct: number } {
@@ -461,7 +461,7 @@ export const identifyingThreeDimensionalShapes: TopicDef = {
                   `它有 $${2 * n}$ 个顶点：两个平行的${p["zh-CN"]}底面上各有 $${n}$ 个。`,
                 )
               : t(
-                  `It has $${n + 1}$ vertices: $${n}$ around ${article(shape.adjective)} ${shape.adjective} base and one apex above it.`,
+                  `It has $${n + 1}$ vertices: $${n}$ around ${wordArticle(shape.adjective)} ${shape.adjective} base and one apex above it.`,
                   `它有 $${n + 1}$ 个顶点：${p["zh-CN"]}底面上有 $${n}$ 个，上方还有一个顶点。`,
                 );
         }
@@ -476,11 +476,11 @@ export const identifyingThreeDimensionalShapes: TopicDef = {
           solution:
             kind === "prism"
               ? t(
-                  `Two parallel congruent bases joined by rectangles make a prism, and its bases are ${p.en}s: it is ${article(shape.name.en)} ${shape.name.en}.`,
+                  `Two parallel congruent bases joined by rectangles make a prism, and its bases are ${p.en}s: it is ${wordArticle(shape.name.en)} ${shape.name.en}.`,
                   `由长方形连接的两个平行且全等的底面说明它是棱柱，底面是${p["zh-CN"]}，所以它是${shape.name["zh-CN"]}。`,
                 )
               : t(
-                  `One base with triangles meeting at an apex makes a pyramid, and its base is ${article(p.en)} ${p.en}: it is ${article(shape.name.en)} ${shape.name.en}.`,
+                  `One base with triangles meeting at an apex makes a pyramid, and its base is ${wordArticle(p.en)} ${p.en}: it is ${wordArticle(shape.name.en)} ${shape.name.en}.`,
                   `一个底面加上交于一点的三角形说明它是棱锥，底面是${p["zh-CN"]}，所以它是${shape.name["zh-CN"]}。`,
                 ),
         });
@@ -528,8 +528,8 @@ export const identifyingThreeDimensionalShapes: TopicDef = {
         const all = rng.shuffle([odd, ...rest]);
         const listEn = `${all
           .slice(0, 3)
-          .map((s) => `${article(s.en)} ${s.en}`)
-          .join(", ")} and ${article(all[3]!.en)} ${all[3]!.en}`;
+          .map((s) => `${wordArticle(s.en)} ${s.en}`)
+          .join(", ")} and ${wordArticle(all[3]!.en)} ${all[3]!.en}`;
         const listZh = `${all
           .slice(0, 3)
           .map((s) => s["zh-CN"])
@@ -545,11 +545,11 @@ export const identifyingThreeDimensionalShapes: TopicDef = {
           correct: all.indexOf(odd),
           solution: askPolyhedron
             ? t(
-                `Every face of ${article(odd.en)} ${odd.en} is a polygon, so it is a polyhedron; the other three have curved surfaces.`,
+                `Every face of ${wordArticle(odd.en)} ${odd.en} is a polygon, so it is a polyhedron; the other three have curved surfaces.`,
                 `${odd["zh-CN"]}的每个面都是多边形，所以它是多面体；另外三个都有曲面。`,
               )
             : t(
-                `${article(odd.en) === "a" ? "A" : "An"} ${odd.en} has a curved surface, so it is not a polyhedron; the other three have only polygon faces.`,
+                `${wordArticle(odd.en) === "a" ? "A" : "An"} ${odd.en} has a curved surface, so it is not a polyhedron; the other three have only polygon faces.`,
                 `${odd["zh-CN"]}有曲面，所以不是多面体；另外三个的面都是多边形。`,
               ),
         });
@@ -562,7 +562,7 @@ export const identifyingThreeDimensionalShapes: TopicDef = {
 function solidName(n: number, kind: "prism" | "pyramid"): Text {
   if (n <= 8) {
     const s = kind === "prism" ? prism(n) : pyramid(n);
-    return t(`${article(s.name.en)} ${s.name.en}`, s.name["zh-CN"]);
+    return t(`${wordArticle(s.name.en)} ${s.name.en}`, s.name["zh-CN"]);
   }
   return kind === "prism"
     ? t(`a prism whose bases have $${n}$ sides`, `底面有 $${n}$ 条边的棱柱`)
@@ -728,11 +728,11 @@ export const netsOfPolyhedrons: TopicDef = {
             solution:
               kind === "prism"
                 ? t(
-                    `The net has two ${p.en}s and a strip of $${n}$ rectangles, so it folds into ${article(shape.name.en)} ${shape.name.en}.`,
+                    `The net has two ${p.en}s and a strip of $${n}$ rectangles, so it folds into ${wordArticle(shape.name.en)} ${shape.name.en}.`,
                     `展开图有两个${p["zh-CN"]}和一排 $${n}$ 个长方形，所以折起来是${shape.name["zh-CN"]}。`,
                   )
                 : t(
-                    `The net has one ${p.en} with a triangle on each of its $${n}$ sides, so it folds into ${article(shape.name.en)} ${shape.name.en}.`,
+                    `The net has one ${p.en} with a triangle on each of its $${n}$ sides, so it folds into ${wordArticle(shape.name.en)} ${shape.name.en}.`,
                     `展开图有一个${p["zh-CN"]}，它的 $${n}$ 条边上各有一个三角形，所以折起来是${shape.name["zh-CN"]}。`,
                   ),
           }),
@@ -2048,7 +2048,7 @@ export const volumesOfRectangularSolids: TopicDef = {
         const hole = a * b * h;
         return numberProblem({
           prompt: t(
-            `A block $${l} \\times ${w} \\times ${h}$ ${u} has a hole with a $${a} \\times ${b}$ ${u} rectangular cross-section cut straight through it, from top to bottom ($${h}$ ${u}). Find the volume of what remains.`,
+            `A block $${l} \\times ${w} \\times ${h}$ ${u} has a hole with ${article(a)} $${a} \\times ${b}$ ${u} rectangular cross-section cut straight through it, from top to bottom ($${h}$ ${u}). Find the volume of what remains.`,
             `一个 $${l} \\times ${w} \\times ${h}$ ${u} 的木块被从上到下（$${h}$ ${u}）直直地挖穿一个横截面为 $${a} \\times ${b}$ ${u} 长方形的孔。求剩下部分的体积。`,
           ),
           answer: big - hole,

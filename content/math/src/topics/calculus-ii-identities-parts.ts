@@ -763,8 +763,8 @@ export const introductionToIntegrationByParts: TopicDef = {
             `${poly([k, "x"])}${e}`,
             answer,
             [plusC([Q.of(k, a), `x${e}`], [Q.of(k, a * a), e]), plusC([Q.of(k, 2 * a), `x^{2}${e}`]), plusC([Q.of(k, a), `x${e}`])],
-            `Take $u = x$, $dv = ${e} \\, dx$, so $v = ${Q.of(1, a).toLatex()}${e}$. Then $\\int ${poly([k, "x"])}${e} \\, dx = ${coef(Q.of(k, a))}x${e} - ${coef(Q.of(k, a))}\\int ${e} \\, dx = ${answer}$.`,
-            `取 $u = x$，$dv = ${e} \\, dx$，则 $v = ${Q.of(1, a).toLatex()}${e}$。于是 $\\int ${poly([k, "x"])}${e} \\, dx = ${coef(Q.of(k, a))}x${e} - ${coef(Q.of(k, a))}\\int ${e} \\, dx = ${answer}$。`,
+            `Take $u = x$, $dv = ${e} \\, dx$, so $v = ${Q.of(1, a).toLatex()}${e}$. Then $\\int ${poly([k, "x"])}${e} \\, dx = ${coef(Q.of(k, a))}x${e} ${k * a < 0 ? "+" : "-"} ${coef(Q.of(Math.abs(k), Math.abs(a)))}\\int ${e} \\, dx = ${answer}$.`,
+            `取 $u = x$，$dv = ${e} \\, dx$，则 $v = ${Q.of(1, a).toLatex()}${e}$。于是 $\\int ${poly([k, "x"])}${e} \\, dx = ${coef(Q.of(k, a))}x${e} ${k * a < 0 ? "+" : "-"} ${coef(Q.of(Math.abs(k), Math.abs(a)))}\\int ${e} \\, dx = ${answer}$。`,
           );
         }
         const a = rng.int(1, 4);

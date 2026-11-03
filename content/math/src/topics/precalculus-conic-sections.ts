@@ -1179,10 +1179,10 @@ export const equationsOfHyperbolasCenteredAtTheOrigin: TopicDef = {
             horizontal ? `\\frac{x^{2}}{${b2}} - \\frac{y^{2}}{${a2}} = 1` : `\\frac{y^{2}}{${b2}} - \\frac{x^{2}}{${a2}} = 1`,
           ],
           solution: t(
-            `Since the vertices are on the ${horizontal ? "x" : "y"}-axis, the positive term is ${horizontal ? "x^{2}" : "y^{2}"} with denominator $a^{2} = ${a2}$:${steps(
+            `Since the vertices are on the $${horizontal ? "x" : "y"}$-axis, the positive term is $${horizontal ? "x^{2}" : "y^{2}"}$ with denominator $a^{2} = ${a2}$:${steps(
               correct,
             )}`,
-            `因为顶点在 ${horizontal ? "x" : "y"} 轴上，所以正项是 ${horizontal ? "x^{2}" : "y^{2}"}，分母为 $a^{2} = ${a2}$：${steps(
+            `因为顶点在 $${horizontal ? "x" : "y"}$ 轴上，所以正项是 $${horizontal ? "x^{2}" : "y^{2}"}$，分母为 $a^{2} = ${a2}$：${steps(
               correct,
             )}`,
           ),
@@ -1497,8 +1497,8 @@ export const findingInterceptsAndIntersectionsOfHyperbolas: TopicDef = {
           t("No intercepts on either axis", "与两条坐标轴均无交点"),
         ];
         const solution = t(
-          `For $${eqStr}$, the positive term yields real intercepts on the ${horizontal ? "x" : "y"}-axis at ${horizontal ? `(\\pm ${a}, 0)` : `(0, \\pm ${a})`}. Setting the other variable to $0$ gives no real solutions.`,
-          `对于 $${eqStr}$，正项变量在 ${horizontal ? "x" : "y"} 轴上产生实数截距 ${horizontal ? `(\\pm ${a}, 0)` : `(0, \\pm ${a})`}，而令另一变量为 $0$ 时无实数解。`,
+          `For $${eqStr}$, the positive term yields real intercepts on the $${horizontal ? "x" : "y"}$-axis at $${horizontal ? `(\\pm ${a}, 0)` : `(0, \\pm ${a})`}$. Setting the other variable to $0$ gives no real solutions.`,
+          `对于 $${eqStr}$，正项变量在 $${horizontal ? "x" : "y"}$ 轴上产生实数截距 $${horizontal ? `(\\pm ${a}, 0)` : `(0, \\pm ${a})`}$，而令另一变量为 $0$ 时无实数解。`,
         );
         return makeChoiceTexts(rng, prompt, correct, distractors, solution);
       },

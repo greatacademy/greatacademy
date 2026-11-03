@@ -2,7 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, pointProblem, vectorLatex } from "../problems.ts";
+import { article, choiceProblem, numberProblem, pointProblem, vectorLatex } from "../problems.ts";
 
 // Precalculus Unit 6 Part 2: Matrix Inverses, Systems, and Linear Transformations in the Plane
 // Modules 6.24 and 6.25 (17 topics total).
@@ -1844,7 +1844,7 @@ export const rightAngleRotationsAsLinearTransformations: TopicDef = {
             answer: [xp, yp],
             vector: true,
             solution: t(
-              `Under a $${angle}^\\circ$ counterclockwise rotation, $\\begin{pmatrix} x \\\\ y \\end{pmatrix} \\mapsto \\begin{pmatrix} ${angle === 90 ? "-y \\\\ x" : angle === 180 ? "-x \\\\ -y" : "y \\\\ -x"} \\end{pmatrix}$.\nSubstituting $x = ${x}, y = ${y}$ yields $T(\\mathbf{v}) = ${vectorLatex([xp, yp])}$.`,
+              `Under ${article(angle)} $${angle}^\\circ$ counterclockwise rotation, $\\begin{pmatrix} x \\\\ y \\end{pmatrix} \\mapsto \\begin{pmatrix} ${angle === 90 ? "-y \\\\ x" : angle === 180 ? "-x \\\\ -y" : "y \\\\ -x"} \\end{pmatrix}$.\nSubstituting $x = ${x}, y = ${y}$ yields $T(\\mathbf{v}) = ${vectorLatex([xp, yp])}$.`,
               `在逆时针旋转 $${angle}^\\circ$ 变换下，$\\begin{pmatrix} x \\\\ y \\end{pmatrix} \\mapsto \\begin{pmatrix} ${angle === 90 ? "-y \\\\ x" : angle === 180 ? "-x \\\\ -y" : "y \\\\ -x"} \\end{pmatrix}$。\n代入 $x = ${x}, y = ${y}$，得到像向量 $T(\\mathbf{v}) = ${vectorLatex([xp, yp])}$。`,
             ),
             wrong: [w1, w2, w3, w4],
@@ -1859,7 +1859,7 @@ export const rightAngleRotationsAsLinearTransformations: TopicDef = {
           answer: [xp, yp],
           vars: ["x", "y"],
           solution: t(
-            `Under a $${angle}^\\circ$ counterclockwise rotation, $(x, y) \\mapsto (${angle === 90 ? "-y, x" : angle === 180 ? "-x, -y" : "y, -x"})$.\nSubstituting $x = ${x}, y = ${y}$ yields $(${xp}, ${yp})$.`,
+            `Under ${article(angle)} $${angle}^\\circ$ counterclockwise rotation, $(x, y) \\mapsto (${angle === 90 ? "-y, x" : angle === 180 ? "-x, -y" : "y, -x"})$.\nSubstituting $x = ${x}, y = ${y}$ yields $(${xp}, ${yp})$.`,
             `在逆时针旋转 $${angle}^\\circ$ 变换下，$(x, y) \\mapsto (${angle === 90 ? "-y, x" : angle === 180 ? "-x, -y" : "y, -x"})$。\n代入 $x = ${x}, y = ${y}$，得到像点坐标 $(${xp}, ${yp})$。`,
           ),
           wrong: [w1, w2, w3, w4],
@@ -2922,8 +2922,8 @@ export const areaScaleFactorsOfLinearTransformations: TopicDef = {
           ),
           answer: newArea,
           solution: t(
-            `Calculate the determinant: $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$.\n\nThe area scale factor is $|\\det(A)| = |${det}| = ${absDet}$.\n\nThus, the transformed area is ${absDet} \\times ${origArea} = ${newArea}.`,
-            `计算行列式：$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$。\n\n面积缩放因子为 $|\\det(A)| = |${det}| = ${absDet}$。\n\n因此变换后的面积为 ${absDet} \\times ${origArea} = ${newArea}。`,
+            `Calculate the determinant: $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$.\n\nThe area scale factor is $|\\det(A)| = |${det}| = ${absDet}$.\n\nThus, the transformed area is $${absDet} \\times ${origArea} = ${newArea}$.`,
+            `计算行列式：$\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$。\n\n面积缩放因子为 $|\\det(A)| = |${det}| = ${absDet}$。\n\n因此变换后的面积为 $${absDet} \\times ${origArea} = ${newArea}$。`,
           ),
           wrong: [w1, w2, w3, w4],
         });

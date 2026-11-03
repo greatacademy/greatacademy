@@ -21,8 +21,8 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
         id: "evaluating-spearmans-rank-correlation",
         title: t("Computing Spearman's rank correlation coefficient", "计算斯皮尔曼等级相关系数"),
         explanation: t(
-          "When there are no tied ranks, r_s = 1 - 6 ∑ d_i^2 / (n(n^2 - 1)).",
-          "当没有结线（并列秩）时，r_s = 1 - 6 ∑ d_i^2 / (n(n^2 - 1))。",
+          "When there are no tied ranks, $r_s = 1 - \\frac{6 \\sum_i d_i^2}{n(n^2 - 1)}$.",
+          "当没有并列秩时，$r_s = 1 - \\frac{6 \\sum_i d_i^2}{n(n^2 - 1)}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(4, 7);
@@ -77,7 +77,10 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
       {
         id: "evaluating-regression-slope-standard-error",
         title: t("Computing standard error of the regression slope", "计算回归斜率的标准误差"),
-        explanation: t("s_{b_1} = s_e / √S_{xx}.", "s_{b_1} = s_e / √S_{xx}。"),
+        explanation: t(
+          "The standard error of the slope is $s_{b_1} = \\frac{s_e}{\\sqrt{S_{xx}}}$.",
+          "斜率的标准误差为 $s_{b_1} = \\frac{s_e}{\\sqrt{S_{xx}}}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 10);
           const sxx = k * k; // sqrt(Sxx) = k
@@ -115,7 +118,10 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
       {
         id: "evaluating-regression-intercept-variance",
         title: t("Computing squared standard error of the regression intercept", "计算回归截距的标准误差平方"),
-        explanation: t("s_{b_0}^2 = s_e^2 (1/n + x̄^2 / S_{xx}).", "s_{b_0}^2 = s_e^2 (1/n + x̄^2 / S_{xx})。"),
+        explanation: t(
+          "The estimated variance of the intercept is $s_{b_0}^2 = s_e^2 \\left(\\frac{1}{n} + \\frac{\\bar{x}^2}{S_{xx}}\\right)$.",
+          "截距的方差估计为 $s_{b_0}^2 = s_e^2 \\left(\\frac{1}{n} + \\frac{\\bar{x}^2}{S_{xx}}\\right)$。",
+        ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(6, 30);
           const xBar = rng.int(1, 10);

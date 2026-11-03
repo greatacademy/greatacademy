@@ -470,8 +470,8 @@ function irreducibleIntegral(rng: Rng, a: number) {
       withC(poly([A, lnAbs(a)]), poly([Q.of(B, 2), lnQ]), arctanTerm(Q.of(C), m)),
       withC(poly([A, lnAbs(a)]), poly([Q.of(C, 2), lnQ]), arctanTerm(Q.of(B, m), m)),
     ],
-    `Partial fractions: $${recip(A, a)} + \\frac{${linear(B, C)}}{${irreducible(c)}}$. Then $\\int \\frac{${B}x}{${irreducible(c)}} \\, dx = ${poly([Q.of(B, 2), lnQ])}$ and $\\int \\frac{${C}}{${irreducible(c)}} \\, dx = ${arctanTerm(Q.of(C, m), m)}$, so the integral is $${answer}$.`,
-    `部分分式：$${recip(A, a)} + \\frac{${linear(B, C)}}{${irreducible(c)}}$。而 $\\int \\frac{${B}x}{${irreducible(c)}} \\, dx = ${poly([Q.of(B, 2), lnQ])}$，$\\int \\frac{${C}}{${irreducible(c)}} \\, dx = ${arctanTerm(Q.of(C, m), m)}$，所以积分为 $${answer}$。`,
+    `Partial fractions: $${recip(A, a)} + \\frac{${linear(B, C)}}{${irreducible(c)}}$. Then $\\int \\frac{${linear(B, 0)}}{${irreducible(c)}} \\, dx = ${poly([Q.of(B, 2), lnQ])}$ and $\\int \\frac{${C}}{${irreducible(c)}} \\, dx = ${arctanTerm(Q.of(C, m), m)}$, so the integral is $${answer}$.`,
+    `部分分式：$${recip(A, a)} + \\frac{${linear(B, C)}}{${irreducible(c)}}$。而 $\\int \\frac{${linear(B, 0)}}{${irreducible(c)}} \\, dx = ${poly([Q.of(B, 2), lnQ])}$，$\\int \\frac{${C}}{${irreducible(c)}} \\, dx = ${arctanTerm(Q.of(C, m), m)}$，所以积分为 $${answer}$。`,
   );
 }
 

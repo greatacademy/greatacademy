@@ -1272,7 +1272,7 @@ export const convertingFromPolarCoordinatesToCartesianCoordinates: TopicDef = {
           [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
           t(
             `Compute radius:\n$$r = \\sqrt{x^2 + y^2} = ${item.r}$$\nDetermine angle $\\theta$ from $\\tan\\theta = y/x$ and quadrant analysis:\n$$\\theta = ${item.th}$$\nThus $(r, \\theta) = ${rightChoice}$.`,
-            `计算极径：\n$$r = \\sqrt{x^2 + y^2} = ${item.r}$$\n根据 $\\tan\\theta = y/x$ 结合所在象限确定极角：\n$$\\theta = ${item.th}$$\n因此极坐标为 ${rightChoice}。`,
+            `计算极径：\n$$r = \\sqrt{x^2 + y^2} = ${item.r}$$\n根据 $\\tan\\theta = y/x$ 结合所在象限确定极角：\n$$\\theta = ${item.th}$$\n因此极坐标为 $${rightChoice}$。`,
           ),
         );
       },
@@ -1654,8 +1654,8 @@ export const polarEquationsOfRadialLines: TopicDef = {
           return oneOf(
             rng,
             t(
-              `Convert the Cartesian line ${item.eq} into a polar equation of the form $\\theta = \\alpha$ with $0 \\le \\alpha < \\pi$.`,
-              `将直角坐标直线 ${item.eq} 转化为形如 $\\theta = \\alpha$（$0 \\le \\alpha < \\pi$）的极坐标方程。`,
+              `Convert the Cartesian line $${item.eq}$ into a polar equation of the form $\\theta = \\alpha$ with $0 \\le \\alpha < \\pi$.`,
+              `将直角坐标直线 $${item.eq}$ 转化为形如 $\\theta = \\alpha$（$0 \\le \\alpha < \\pi$）的极坐标方程。`,
             ),
             t(`$\\theta = ${item.reducedAlpha}$`, `$\\theta = ${item.reducedAlpha}$`),
             [
@@ -1664,8 +1664,8 @@ export const polarEquationsOfRadialLines: TopicDef = {
               t(`$\\theta = 0$`, `$\\theta = 0$`),
             ],
             t(
-              `The slope of ${item.eq} is $\\tan\\alpha$. For $0 \\le \\alpha < \\pi$, $\\theta = ${item.reducedAlpha}$.`,
-              `直线 ${item.eq} 的斜率为 $\\tan\\alpha$。在 $0 \\le \\alpha < \\pi$ 内，$\\theta = ${item.reducedAlpha}$。`,
+              `The slope of $${item.eq}$ is $\\tan\\alpha$. For $0 \\le \\alpha < \\pi$, $\\theta = ${item.reducedAlpha}$.`,
+              `直线 $${item.eq}$ 的斜率为 $\\tan\\alpha$。在 $0 \\le \\alpha < \\pi$ 内，$\\theta = ${item.reducedAlpha}$。`,
             ),
           );
         }
@@ -1680,8 +1680,8 @@ export const polarEquationsOfRadialLines: TopicDef = {
           t(`$${item.eq}$`, `$${item.eq}$`),
           [t(`$${item.bad1}$`, `$${item.bad1}$`), t(`$${item.bad2}$`, `$${item.bad2}$`), t(`$x = 0$`, `$x = 0$`)],
           t(
-            `Take tangent of both sides: $\\tan\\theta = \\tan\\left(${angleTex}\\right)$.\nSince $\\tan\\theta = y/x$, we obtain $y = (\\tan\\left(${angleTex}\\right))x$, which simplifies to ${item.eq}.`,
-            `两边取正切得：$\\tan\\theta = \\tan\\left(${angleTex}\\right)$。\n由于 $\\tan\\theta = y/x$，化简即得 ${item.eq}。`,
+            `Take tangent of both sides: $\\tan\\theta = \\tan\\left(${angleTex}\\right)$.\nSince $\\tan\\theta = y/x$, we obtain $y = (\\tan\\left(${angleTex}\\right))x$, which simplifies to $${item.eq}$.`,
+            `两边取正切得：$\\tan\\theta = \\tan\\left(${angleTex}\\right)$。\n由于 $\\tan\\theta = y/x$，化简即得 $${item.eq}$。`,
           ),
         );
       },

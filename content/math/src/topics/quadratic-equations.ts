@@ -1589,13 +1589,13 @@ const solutionCountOptions: readonly Text[] = [
 ];
 
 /** discriminantText explains the number of solutions from b² − 4ac. */
-function discriminantText(a: number, b: number, c: number, lead = ""): Text {
+function discriminantText(a: number, b: number, c: number, lead: Text): Text {
   const d = b * b - 4 * a * c;
   const paren = (n: number) => (n < 0 ? `(${n})` : String(n));
   const calc = `b^{2} - 4ac = ${paren(b)}^{2} - 4 \\cdot ${paren(a)} \\cdot ${paren(c)} = ${d}`;
   return t(
-    `${lead}${steps(calc)}${d > 0 ? "The discriminant is positive, so there are two real solutions." : d === 0 ? "The discriminant is zero, so there is exactly one real solution." : "The discriminant is negative, so there is no real solution."}`,
-    `${lead}${steps(calc)}${d > 0 ? "判别式为正，所以有两个实数解。" : d === 0 ? "判别式为零，所以恰有一个实数解。" : "判别式为负，所以没有实数解。"}`,
+    `${lead.en}${steps(calc)}${d > 0 ? "The discriminant is positive, so there are two real solutions." : d === 0 ? "The discriminant is zero, so there is exactly one real solution." : "The discriminant is negative, so there is no real solution."}`,
+    `${lead["zh-CN"]}${steps(calc)}${d > 0 ? "判别式为正，所以有两个实数解。" : d === 0 ? "判别式为零，所以恰有一个实数解。" : "判别式为负，所以没有实数解。"}`,
   );
 }
 
@@ -1656,7 +1656,12 @@ export const theDiscriminantOfAQuadraticEquation: TopicDef = {
           answer: d,
           form: "integer",
           wrong: [b * b + 4 * a * c, -b * b - 4 * a * c, b - 4 * a * c, a * a - 4 * b * c],
-          solution: discriminantText(a, b, c, `Here $a = ${a}$, $b = ${b}$ and $c = ${c}$:`),
+          solution: discriminantText(
+            a,
+            b,
+            c,
+            t(`Here $a = ${a}$, $b = ${b}$ and $c = ${c}$:`, `这里 $a = ${a}$，$b = ${b}$，$c = ${c}$：`),
+          ),
         });
       },
     },
@@ -1674,7 +1679,7 @@ export const theDiscriminantOfAQuadraticEquation: TopicDef = {
           prompt: t(`How many real solutions does $${quad(a, b, c)} = 0$ have?`, `方程 $${quad(a, b, c)} = 0$ 有几个实数解？`),
           options: solutionCountOptions,
           correct: sign + 1,
-          solution: discriminantText(a, b, c, "Compute the discriminant:"),
+          solution: discriminantText(a, b, c, t("Compute the discriminant:", "计算判别式：")),
         });
       },
     },
@@ -1703,7 +1708,7 @@ export const theDiscriminantOfAQuadraticEquation: TopicDef = {
           prompt: t(`How many real solutions does $${eq}$ have?`, `方程 $${eq}$ 有几个实数解？`),
           options: solutionCountOptions,
           correct: sign + 1,
-          solution: discriminantText(a, b, c, `In standard form, $${quad(a, b, c)} = 0$:`),
+          solution: discriminantText(a, b, c, t(`In standard form, $${quad(a, b, c)} = 0$:`, `化为一般式 $${quad(a, b, c)} = 0$：`)),
         });
       },
     },

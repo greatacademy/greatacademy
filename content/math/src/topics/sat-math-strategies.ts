@@ -193,30 +193,40 @@ export const satMarginOfErrorInterpretation: TopicDef = {
         "增大随机调查的样本容量会减小误差范围，使估计更加精确；减小样本容量则会增大误差范围。",
       ),
       generate(rng) {
-        const n1 = rng.int(3, 8) * 100;
-        const n2 = n1 * rng.pick([2, 4]);
+        const small = rng.int(3, 8) * 100;
+        const large = small * rng.pick([2, 4]);
+        const grows = rng.bool();
+        const [n1, n2] = grows ? [small, large] : [large, small];
         const e1 = rng.int(4, 7);
 
-        const options = [
-          t("The margin of error will decrease.", "误差范围会减小。"),
-          t("The margin of error will increase.", "误差范围会增大。"),
+        const decrease = t("The margin of error will decrease.", "误差范围会减小。");
+        const increase = t("The margin of error will increase.", "误差范围会增大。");
+        const correct = grows ? decrease : increase;
+        const options = rng.shuffle([
+          decrease,
+          increase,
           t("The margin of error will remain exactly the same.", "误差范围保持完全不变。"),
           t("The sample estimate will necessarily become 100%.", "样本估计值必然变为 100%。"),
-        ];
+        ]);
 
         const prompt = t(
-          `A researcher conducts a poll with $${n1}$ randomly selected adults and reports a margin of error of $${e1}\\%$. If a second identical poll is conducted with a larger sample of $${n2}$ adults from the same population, how is the margin of error expected to change?`,
-          `研究人员对随机抽选的 $${n1}$ 名成年人进行民意调查，报告的误差范围为 $${e1}\\%$。如果从同一总体中抽取更大的样本（$${n2}$ 人）进行第二次相同调查，预期的误差范围将如何变化？`,
+          `A researcher conducts a poll with $${n1}$ randomly selected adults and reports a margin of error of $${e1}\\%$. If a second identical poll is conducted with a ${grows ? "larger" : "smaller"} sample of $${n2}$ adults from the same population, how is the margin of error expected to change?`,
+          `研究人员对随机抽选的 $${n1}$ 名成年人进行民意调查，报告的误差范围为 $${e1}\\%$。如果从同一总体中抽取${grows ? "更大" : "更小"}的样本（$${n2}$ 人）进行第二次相同调查，预期的误差范围将如何变化？`,
         );
-        const solution = t(
-          `Increasing the sample size from $${n1}$ to $${n2}$ provides more information and reduces sampling variability, which decreases the margin of error.`,
-          `将样本容量从 $${n1}$ 增大至 $${n2}$ 提供了更多信息并降低了抽样波动性，从而减小了误差范围。`,
-        );
+        const solution = grows
+          ? t(
+              `Increasing the sample size from $${n1}$ to $${n2}$ provides more information and reduces sampling variability, which decreases the margin of error.`,
+              `将样本容量从 $${n1}$ 增大至 $${n2}$ 提供了更多信息并降低了抽样波动性，从而减小了误差范围。`,
+            )
+          : t(
+              `Decreasing the sample size from $${n1}$ to $${n2}$ provides less information and increases sampling variability, which increases the margin of error.`,
+              `将样本容量从 $${n1}$ 减小至 $${n2}$ 提供的信息更少，抽样波动性增大，从而增大了误差范围。`,
+            );
 
         return choiceProblem({
           prompt,
           options,
-          correct: 0,
+          correct: options.indexOf(correct),
           solution,
         });
       },

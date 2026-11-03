@@ -894,11 +894,15 @@ export const provingSurjectivity: TopicDef = {
             `$f(x) = ${tex}$ maps $\\mathbb{R} \\setminus \\{${c}\\}$ onto $\\mathbb{R} \\setminus \\{${p}\\}$. Given $y \\ne ${p}$, which $x$ satisfies $f(x) = y$?`,
             `$f(x) = ${tex}$ 把 $\\mathbb{R} \\setminus \\{${c}\\}$ 映满 $\\mathbb{R} \\setminus \\{${p}\\}$。给定 $y \\ne ${p}$，哪个 $x$ 满足 $f(x) = y$？`,
           ),
-          math(`x = \\dfrac{${c}y}{y - ${p}}`),
-          [math(`x = \\dfrac{${p}y}{y - ${c}}`), math(`x = \\dfrac{${c}y}{${p} - y}`), math(`x = \\dfrac{y - ${p}}{${c}y}`)],
+          math(`x = \\dfrac{${c === 1 ? "" : c}y}{y - ${p}}`),
+          [
+            math(`x = \\dfrac{${p}y}{y - ${c}}`),
+            math(`x = \\dfrac{${c === 1 ? "" : c}y}{${p} - y}`),
+            math(`x = \\dfrac{y - ${p}}{${c === 1 ? "" : c}y}`),
+          ],
           t(
-            `$${p}x = y(x - ${c}) \\iff x(y - ${p}) = ${c}y \\iff x = \\dfrac{${c}y}{y - ${p}}$, defined because $y \\ne ${p}$.`,
-            `$${p}x = y(x - ${c}) \\iff x(y - ${p}) = ${c}y \\iff x = \\dfrac{${c}y}{y - ${p}}$，因为 $y \\ne ${p}$，所以有意义。`,
+            `$${p}x = y(x - ${c}) \\iff x(y - ${p}) = ${c === 1 ? "" : c}y \\iff x = \\dfrac{${c === 1 ? "" : c}y}{y - ${p}}$, defined because $y \\ne ${p}$.`,
+            `$${p}x = y(x - ${c}) \\iff x(y - ${p}) = ${c === 1 ? "" : c}y \\iff x = \\dfrac{${c === 1 ? "" : c}y}{y - ${p}}$，因为 $y \\ne ${p}$，所以有意义。`,
           ),
         );
       },

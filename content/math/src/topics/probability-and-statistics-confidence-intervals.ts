@@ -1,7 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-import { choiceProblem, numberProblem } from "../problems.ts";
+import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
 
 /** Topics for Unit 7: Confidence Intervals (new topics). */
 export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
@@ -20,7 +20,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
       {
         id: "margin-of-error-known-variance",
         title: t("Calculating the margin of error with known variance", "计算已知总体方差下的误差范围"),
-        explanation: t("The margin of error is E = z_{α/2} (σ / √n).", "误差范围为 E = z_{α/2} (σ / √n)。"),
+        explanation: t(
+          "The margin of error is $E = z_{\\alpha/2} \\frac{\\sigma}{\\sqrt{n}}$.",
+          "误差范围为 $E = z_{\\alpha/2} \\frac{\\sigma}{\\sqrt{n}}$。",
+        ),
         generate: (rng: Rng): Problem => {
           // Choose clean values: n = k^2, z = 2 (approx 95%) or z = 3 (approx 99.7%)
           const k = rng.int(2, 10);
@@ -170,8 +173,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `$\\widehat{\\text{Var}}(\\hat{p}) = \\frac{\\frac{${numP}}{${denP}} \\left(1 - \\frac{${numP}}{${denP}}\\right)}{${n}} = \\frac{${numP} \\times ${denP - numP}}{100 \\times ${n}} = \\frac{${num}}{${den}}$.`,
-              `$\\widehat{\\text{Var}}(\\hat{p}) = \\frac{\\frac{${numP}}{${denP}} \\left(1 - \\frac{${numP}}{${denP}}\\right)}{${n}} = \\frac{${numP} \\times ${denP - numP}}{100 \\times ${n}} = \\frac{${num}}{${den}}$。`,
+              `$\\widehat{\\text{Var}}(\\hat{p}) = \\frac{\\frac{${numP}}{${denP}} \\left(1 - \\frac{${numP}}{${denP}}\\right)}{${n}} = \\frac{${numP} \\times ${denP - numP}}{100 \\times ${n}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `$\\widehat{\\text{Var}}(\\hat{p}) = \\frac{\\frac{${numP}}{${denP}} \\left(1 - \\frac{${numP}}{${denP}}\\right)}{${n}} = \\frac{${numP} \\times ${denP - numP}}{100 \\times ${n}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -194,7 +197,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
       {
         id: "fpc-proportion-standard-error-formula",
         title: t("Formulating the standard error with FPC for proportions", "构建含 FPC 的样本比例标准误差表达式"),
-        explanation: t("SE(p̂) = √[ (p̂(1 - p̂) / n) * ((N - n) / (N - 1)) ].", "SE(p̂) = √[ (p̂(1 - p̂) / n) * ((N - n) / (N - 1)) ]。"),
+        explanation: t(
+          "$SE(\\hat{p}) = \\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{n} \\cdot \\frac{N - n}{N - 1}}$.",
+          "$SE(\\hat{p}) = \\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{n} \\cdot \\frac{N - n}{N - 1}}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const N = rng.int(300, 1500);
           const n = rng.int(30, 150);
@@ -247,8 +253,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "chi-square-variance-confidence-bounds",
         title: t("Identifying endpoints for variance confidence intervals", "确定方差置信区间的上下限构造"),
         explanation: t(
-          "The interval is [(n-1)s^2 / χ^2_{upper}, (n-1)s^2 / χ^2_{lower}]. Note that the larger critical value produces the lower bound.",
-          "区间为 [(n-1)s^2 / χ^2_{upper}, (n-1)s^2 / χ^2_{lower}]。注意较大的卡方临界值对应于置信下限。",
+          "The interval is $\\left[\\frac{(n-1)s^2}{\\chi^2_{\\text{upper}}}, \\frac{(n-1)s^2}{\\chi^2_{\\text{lower}}}\\right]$. Note that the larger critical value produces the lower bound.",
+          "区间为 $\\left[\\frac{(n-1)s^2}{\\chi^2_{\\text{upper}}}, \\frac{(n-1)s^2}{\\chi^2_{\\text{lower}}}\\right]$。注意较大的卡方临界值对应置信下限。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(6, 40);
@@ -306,7 +312,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
       {
         id: "two-mean-known-variance-se",
         title: t("Evaluating the standard error of difference between two independent means", "计算两个独立均值之差的标准误差"),
-        explanation: t("SE = √(σ1^2 / n1 + σ2^2 / n2).", "SE = √(σ1^2 / n1 + σ2^2 / n2)。"),
+        explanation: t(
+          "The standard error is $SE = \\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}$.",
+          "标准误差为 $SE = \\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const v1 = rng.int(10, 80);
           const n1 = rng.int(5, 40);
@@ -323,8 +332,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `$\\text{SE}^2 = \\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2} = \\frac{${v1}}{${n1}} + \\frac{${v2}}{${n2}} = \\frac{${num}}{${den}}$.`,
-              `$\\text{SE}^2 = \\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2} = \\frac{${v1}}{${n1}} + \\frac{${v2}}{${n2}} = \\frac{${num}}{${den}}$。`,
+              `$\\text{SE}^2 = \\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2} = \\frac{${v1}}{${n1}} + \\frac{${v2}}{${n2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `$\\text{SE}^2 = \\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2} = \\frac{${v1}}{${n1}} + \\frac{${v2}}{${n2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -395,7 +404,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
       {
         id: "welch-standard-error-formula",
         title: t("Formulating the standard error for Welch's t interval", "构建韦尔奇 t 区间的标准误差公式"),
-        explanation: t("Welch's standard error is SE = √(s1^2 / n1 + s2^2 / n2).", "韦尔奇标准误差公式为 SE = √(s1^2 / n1 + s2^2 / n2)。"),
+        explanation: t(
+          "Welch's standard error is $SE = \\sqrt{\\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}}$.",
+          "韦尔奇标准误差为 $SE = \\sqrt{\\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const s1Sq = rng.int(10, 50);
           const n1 = rng.int(5, 30);
@@ -411,8 +423,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `$\\text{SE}^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2} = \\frac{${s1Sq}}{${n1}} + \\frac{${s2Sq}}{${n2}} = \\frac{${num}}{${den}}$.`,
-              `$\\text{SE}^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2} = \\frac{${s1Sq}}{${n1}} + \\frac{${s2Sq}}{${n2}} = \\frac{${num}}{${den}}$。`,
+              `$\\text{SE}^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2} = \\frac{${s1Sq}}{${n1}} + \\frac{${s2Sq}}{${n2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `$\\text{SE}^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2} = \\frac{${s1Sq}}{${n1}} + \\frac{${s2Sq}}{${n2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -435,7 +447,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
       {
         id: "paired-known-variance-margin-of-error",
         title: t("Computing the margin of error for paired samples with known variance", "计算已知方差下配对样本的误差范围"),
-        explanation: t("E = z_{α/2} (σ_d / √n).", "E = z_{α/2} (σ_d / √n)。"),
+        explanation: t(
+          "The margin of error is $E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}}$.",
+          "误差范围为 $E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 8);
           const n = k * k;
@@ -477,7 +492,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
       {
         id: "paired-differences-mean-calculation",
         title: t("Computing the mean difference d̄ from paired observations", "根据配对观测值计算平均差值 d̄"),
-        explanation: t("d̄ = (1/n) ∑ (x_1i - x_2i).", "d̄ = (1/n) ∑ (x_1i - x_2i)。"),
+        explanation: t(
+          "The mean difference is $\\bar{d} = \\frac{1}{n} \\sum_i (x_{1i} - x_{2i})$.",
+          "差值的均值为 $\\bar{d} = \\frac{1}{n} \\sum_i (x_{1i} - x_{2i})$。",
+        ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(4, 8);
           const diffs: number[] = [];
@@ -496,8 +514,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             ),
             answer: Q.of(sumD, n),
             solution: t(
-              `The sum of paired differences is $\\sum d_i = ${sumD}$. Thus $\\bar{d} = \\frac{${sumD}}{${n}}$.`,
-              `配对差值之和为 $\\sum d_i = ${sumD}$。因此 $\\bar{d} = \\frac{${sumD}}{${n}}$。`,
+              `The sum of paired differences is $\\sum d_i = ${sumD}$. Thus $\\bar{d} = \\frac{${sumD}}{${n}}${lowestTerms(sumD, n)}$.`,
+              `配对差值之和为 $\\sum d_i = ${sumD}$。因此 $\\bar{d} = \\frac{${sumD}}{${n}}${lowestTerms(sumD, n)}$。`,
             ),
           });
         },
@@ -520,7 +538,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
       {
         id: "two-proportion-variance-evaluation",
         title: t("Evaluating the estimated variance of difference between two proportions", "计算两个比例之差的估计方差"),
-        explanation: t("Var(p̂1 - p̂2) = p̂1(1 - p̂1)/n1 + p̂2(1 - p̂2)/n2.", "Var(p̂1 - p̂2) = p̂1(1 - p̂1)/n1 + p̂2(1 - p̂2)/n2。"),
+        explanation: t(
+          "$\\operatorname{Var}(\\hat{p}_1 - \\hat{p}_2) = \\frac{\\hat{p}_1(1 - \\hat{p}_1)}{n_1} + \\frac{\\hat{p}_2(1 - \\hat{p}_2)}{n_2}$.",
+          "$\\operatorname{Var}(\\hat{p}_1 - \\hat{p}_2) = \\frac{\\hat{p}_1(1 - \\hat{p}_1)}{n_1} + \\frac{\\hat{p}_2(1 - \\hat{p}_2)}{n_2}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(50, 200);
           const n2 = rng.int(50, 200);
@@ -536,8 +557,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `Since $\\hat{p}_1(1 - \\hat{p}_1) = \\frac{1}{4}$ and $\\hat{p}_2(1 - \\hat{p}_2) = \\frac{1}{4}$, $\\widehat{\\text{Var}}(\\hat{p}_1 - \\hat{p}_2) = \\frac{1}{4(${n1})} + \\frac{1}{4(${n2})} = \\frac{${n1} + ${n2}}{4(${n1})(${n2})} = \\frac{${num}}{${den}}$.`,
-              `由于 $\\hat{p}_1(1 - \\hat{p}_1) = \\frac{1}{4}$ 且 $\\hat{p}_2(1 - \\hat{p}_2) = \\frac{1}{4}$，故 $\\widehat{\\text{Var}}(\\hat{p}_1 - \\hat{p}_2) = \\frac{1}{4(${n1})} + \\frac{1}{4(${n2})} = \\frac{${num}}{${den}}$。`,
+              `Since $\\hat{p}_1(1 - \\hat{p}_1) = \\frac{1}{4}$ and $\\hat{p}_2(1 - \\hat{p}_2) = \\frac{1}{4}$, $\\widehat{\\text{Var}}(\\hat{p}_1 - \\hat{p}_2) = \\frac{1}{4(${n1})} + \\frac{1}{4(${n2})} = \\frac{${n1} + ${n2}}{4(${n1})(${n2})} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `由于 $\\hat{p}_1(1 - \\hat{p}_1) = \\frac{1}{4}$ 且 $\\hat{p}_2(1 - \\hat{p}_2) = \\frac{1}{4}$，故 $\\widehat{\\text{Var}}(\\hat{p}_1 - \\hat{p}_2) = \\frac{1}{4(${n1})} + \\frac{1}{4(${n2})} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -561,8 +582,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "evaluating-required-sample-size-mean",
         title: t("Calculating required sample size for mean estimation", "计算均值估计所需的样本容量"),
         explanation: t(
-          "n = (z σ / E)^2. Always round up to the next integer if not exact.",
-          "n = (z σ / E)^2。若计算结果非整数，总是向上取整。",
+          "$n = \\left(\\frac{z \\sigma}{E}\\right)^2$. Always round up to the next integer if the result is not exact.",
+          "$n = \\left(\\frac{z \\sigma}{E}\\right)^2$。若计算结果不是整数，总是向上取整。",
         ),
         generate: (rng: Rng): Problem => {
           const z = rng.pick([2, 3]);
@@ -603,7 +624,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
       {
         id: "evaluating-finite-sample-size-means",
         title: t("Computing adjusted sample size for finite populations", "计算有限总体的校正样本容量"),
-        explanation: t("n = (N n_0) / (n_0 + N - 1).", "n = (N n_0) / (n_0 + N - 1)。"),
+        explanation: t(
+          "With the finite population correction, $n = \\frac{N n_0}{n_0 + N - 1}$.",
+          "经有限总体校正，$n = \\frac{N n_0}{n_0 + N - 1}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const N = rng.int(200, 1000);
           const n0 = rng.int(50, 200);
@@ -617,8 +641,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}$.`,
-              `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}$。`,
+              `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -642,8 +666,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "conservative-sample-size-proportion",
         title: t("Conservative sample size calculation with p = 0.5", "采用 p = 0.5 的保守样本容量计算"),
         explanation: t(
-          "p(1 - p) is maximized at p = 0.5 where p(1 - p) = 0.25 = 1/4, giving n = z^2 / (4 E^2).",
-          "p(1 - p) 在 p = 0.5 处取得最大值 0.25 = 1/4，因此最保守容量为 n = z^2 / (4 E^2)。",
+          "$p(1 - p)$ is maximized at $p = 0.5$, where $p(1 - p) = 0.25 = \\frac{1}{4}$, giving $n = \\frac{z^2}{4E^2}$.",
+          "$p(1 - p)$ 在 $p = 0.5$ 处取得最大值 $0.25 = \\frac{1}{4}$，因此最保守的样本容量为 $n = \\frac{z^2}{4E^2}$。",
         ),
         generate: (rng: Rng): Problem => {
           // E = 1/k where k in [10, 50]
@@ -654,7 +678,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Using $z_{\\alpha/2} = 2$ and the conservative planning value $p = 0.5$, calculate the required sample size $n = \\frac{z_{\\alpha/2}^2 p(1 - p)}{E^2}$ to estimate a population proportion within a margin of error $E = \\frac{1}{${k}}$.`,
+              `Using $z_{\\alpha/2} = 2$ and the conservative planning value $p = 0.5$, calculate the required sample size $n = \\frac{z_{\\alpha/2}^2 p(1 - p)}{E^2}$ to estimate a population proportion within a margin of error $E = \\frac{1}{${k}}${lowestTerms(1, k)}$.`,
               `取临界值 $z_{\\alpha/2} = 2$ 并采用最保守的规划值 $p = 0.5$，若要将总体比例的误差范围控制在 $E = \\frac{1}{${k}}$ 之内，计算所需的样本容量 $n = \\frac{z_{\\alpha/2}^2 p(1 - p)}{E^2}$。`,
             ),
             answer: n,
@@ -686,7 +710,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
       {
         id: "evaluating-finite-sample-size-proportions",
         title: t("Computing FPC-adjusted sample size for proportions", "计算比例估计的有限总体校正样本容量"),
-        explanation: t("n = (N n_0) / (n_0 + N - 1).", "n = (N n_0) / (n_0 + N - 1)。"),
+        explanation: t(
+          "With the finite population correction, $n = \\frac{N n_0}{n_0 + N - 1}$.",
+          "经有限总体校正，$n = \\frac{N n_0}{n_0 + N - 1}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const N = rng.int(300, 2000);
           const n0 = rng.int(100, 400);
@@ -700,8 +727,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}$.`,
-              `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}$。`,
+              `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },

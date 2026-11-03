@@ -1,6 +1,6 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { poly, Q } from "@ga/subject-math";
 
 import { numberProblem } from "../problems.ts";
 import { range } from "./methods-of-proof-common.ts";
@@ -730,6 +730,8 @@ export const secondOrderRecurrenceRelationsWithPolynomialForcing: TopicDef = {
           .div(Q.of(D));
         const askE = rng.bool();
         const rec = `${rec2(p, q)}${term(alpha, "n")}${term(beta, "")}`;
+        const substituted = `${poly([p, "(c(n - 1) + e)"], [q, "(c(n - 2) + e)"])}${term(alpha, "n")}${term(beta, "")}`;
+        const constants = `${poly([D, "e"])} = ${poly([beta, ""], [-(p + 2 * q), "c"])}`;
         return numberProblem({
           prompt: t(
             `$a_n = ${rec}$ has a particular solution of the form $a_n = cn + e$. Find $${askE ? "e" : "c"}$.`,
@@ -746,8 +748,8 @@ export const secondOrderRecurrenceRelationsWithPolynomialForcing: TopicDef = {
               ]
             : [Q.of(-alpha, D), Q.of(alpha).mul(Q.of(D)), Q.of(alpha)],
           solution: t(
-            `Substitute $cn + e$: $cn + e = ${pn(p)}(c(n - 1) + e) + ${pn(q)}(c(n - 2) + e)${term(alpha, "n")}${term(beta, "")}$. The $n$ terms give $${D}c = ${alpha}$, so $c = ${c.toLatex()}$. The constants give $${D}e = ${beta} - ${pn(p + 2 * q)}c$, so $e = ${e.toLatex()}$.`,
-            `代入 $cn + e$：$cn + e = ${pn(p)}(c(n - 1) + e) + ${pn(q)}(c(n - 2) + e)${term(alpha, "n")}${term(beta, "")}$。比较 $n$ 的系数得 $${D}c = ${alpha}$，所以 $c = ${c.toLatex()}$。比较常数项得 $${D}e = ${beta} - ${pn(p + 2 * q)}c$，所以 $e = ${e.toLatex()}$。`,
+            `Substitute $cn + e$: $cn + e = ${substituted}$. The $n$ terms give $${poly([D, "c"])} = ${alpha}$, so $c = ${c.toLatex()}$. The constants give $${constants}$, so $e = ${e.toLatex()}$.`,
+            `代入 $cn + e$：$cn + e = ${substituted}$。比较 $n$ 的系数得 $${poly([D, "c"])} = ${alpha}$，所以 $c = ${c.toLatex()}$。比较常数项得 $${constants}$，所以 $e = ${e.toLatex()}$。`,
           ),
         });
       },
@@ -1221,8 +1223,8 @@ export const generatingFunctionsForInhomogeneousRecurrenceRelations: TopicDef = 
           answer: value,
           wrong: [c, c + a0, a0 - c, c - r * a0],
           solution: t(
-            `$(${oneMinus(r)})G(x) = ${a0} + \\frac{${c}x}{1 - x}$, so $G(x) = \\frac{${a0}(1 - x) + ${pn(c)}x}{(1 - x)(${oneMinus(r)})}$ and $b = ${c} - ${pn(a0)} = ${value}$.`,
-            `$(${oneMinus(r)})G(x) = ${a0} + \\frac{${c}x}{1 - x}$，所以 $G(x) = \\frac{${a0}(1 - x) + ${pn(c)}x}{(1 - x)(${oneMinus(r)})}$，$b = ${c} - ${pn(a0)} = ${value}$。`,
+            `$(${oneMinus(r)})G(x) = ${a0} + \\frac{${poly([c, "x"])}}{1 - x}$, so $G(x) = \\frac{${poly([a0, "(1 - x)"], [c, "x"])}}{(1 - x)(${oneMinus(r)})}$ and $b = ${c} - ${pn(a0)} = ${value}$.`,
+            `$(${oneMinus(r)})G(x) = ${a0} + \\frac{${poly([c, "x"])}}{1 - x}$，所以 $G(x) = \\frac{${poly([a0, "(1 - x)"], [c, "x"])}}{(1 - x)(${oneMinus(r)})}$，$b = ${c} - ${pn(a0)} = ${value}$。`,
           ),
         });
       },

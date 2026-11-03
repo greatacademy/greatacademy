@@ -20,7 +20,10 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
       {
         id: "evaluating-chi-square-goodness-of-fit-statistic",
         title: t("Computing the chi-square goodness-of-fit test statistic", "计算卡方拟合优度检验统计量"),
-        explanation: t("χ^2 = ∑_{i=1}^k (O_i - E_i)^2 / E_i.", "χ^2 = ∑_{i=1}^k (O_i - E_i)^2 / E_i。"),
+        explanation: t(
+          "The test statistic is $\\chi^2 = \\sum_{i=1}^k \\frac{(O_i - E_i)^2}{E_i}$.",
+          "检验统计量为 $\\chi^2 = \\sum_{i=1}^k \\frac{(O_i - E_i)^2}{E_i}$。",
+        ),
         generate: (rng: Rng): Problem => {
           // 3 categories with clean numbers
           const e1 = rng.int(20, 80);
@@ -69,7 +72,10 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
       {
         id: "binomial-expected-cell-count",
         title: t("Computing expected cell counts under a binomial model", "计算二项模型下的期望频数"),
-        explanation: t("E_x = N (n choose x) p^x (1 - p)^{n-x}.", "E_x = N (n choose x) p^x (1 - p)^{n-x}。"),
+        explanation: t(
+          "The expected count for the cell $x$ is $E_x = N \\binom{n}{x} p^x (1 - p)^{n-x}$.",
+          "取值 $x$ 对应的期望频数为 $E_x = N \\binom{n}{x} p^x (1 - p)^{n-x}$。",
+        ),
         generate: (rng: Rng): Problem => {
           // n = 2 or 3, p = 1/2 or 1/4
           const n = rng.pick([2, 3]);
@@ -159,7 +165,10 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
       {
         id: "continuous-uniform-equal-bins-expected",
         title: t("Computing expected bin frequencies for uniform models", "计算均匀分布模型的期望区间频数"),
-        explanation: t("E_i = N / k for k equal-probability bins.", "对 k 个等概率区间，E_i = N / k。"),
+        explanation: t(
+          "With $k$ equal-probability bins, each expected count is $E_i = \\frac{N}{k}$.",
+          "对 $k$ 个等概率区间，每个期望频数为 $E_i = \\frac{N}{k}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(4, 10);
           const perBin = rng.int(15, 60);
@@ -236,7 +245,10 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
       {
         id: "contingency-table-expected-cell-calc",
         title: t("Computing expected cell frequency in a contingency table", "计算列联表中的期望单元格频数"),
-        explanation: t("E_{ij} = (R_i C_j) / N.", "E_{ij} = (R_i C_j) / N。"),
+        explanation: t(
+          "The expected count in row $i$ and column $j$ is $E_{ij} = \\frac{R_i C_j}{N}$.",
+          "第 $i$ 行第 $j$ 列的期望频数为 $E_{ij} = \\frac{R_i C_j}{N}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const r = rng.int(2, 4);
           const c = rng.int(2, 4);
@@ -280,8 +292,8 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
         id: "uniform-order-statistic-expectation",
         title: t("Expected value of order statistics for standard uniform distribution", "标准均匀分布顺序统计量的数学期望"),
         explanation: t(
-          "For X_i ~ Uniform(0, 1) i.i.d., E[X_{(k)}] = k / (n + 1).",
-          "对于 X_i ~ Uniform(0, 1) 独立同分布，E[X_{(k)}] = k / (n + 1)。",
+          "For i.i.d. $X_i \\sim \\text{Uniform}(0, 1)$, $E[X_{(k)}] = \\frac{k}{n + 1}$.",
+          "对于独立同分布的 $X_i \\sim \\text{Uniform}(0, 1)$，$E[X_{(k)}] = \\frac{k}{n + 1}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(3, 20);

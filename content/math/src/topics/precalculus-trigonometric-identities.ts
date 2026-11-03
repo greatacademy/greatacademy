@@ -626,8 +626,8 @@ export const furtherEvaluatingExpressionsContainingInverseTrigonometricFunctions
           answer: ans,
           wrong,
           solution: t(
-            `Draw a reference right triangle with side lengths $${a}$, $${b}$, and $${c}$. The ratio is ${ans.toLatex()}.`,
-            `绘制边长为 $${a}$、$${b}$ 与 $${c}$ 的参考直角三角形，比值为 ${ans.toLatex()}。`,
+            `Draw a reference right triangle with side lengths $${a}$, $${b}$, and $${c}$. The ratio is $${ans.toLatex()}$.`,
+            `绘制边长为 $${a}$、$${b}$ 与 $${c}$ 的参考直角三角形，比值为 $${ans.toLatex()}$。`,
           ),
           form: "fraction",
         });
@@ -706,8 +706,8 @@ export const simplifyingExpressionsUsingBasicTrigonometricIdentities: TopicDef =
       id: "reciprocal-and-quotient-products",
       title: t("Products of reciprocal and quotient expressions", "倒数与商关系的乘积"),
       explanation: t(
-        "Express everything in terms of sine and cosine to simplify products:\\n\\n$$\\\\tan \\\\theta \\\\cos \\\\theta = \\\\left(\\\\frac{\\\\sin \\\\theta}{\\\\cos \\\\theta}\\\\right) \\\\cos \\\\theta = \\\\sin \\\\theta, \\\\quad \\\\sin \\\\theta \\\\csc \\\\theta = \\\\sin \\\\theta \\\\left(\\\\frac{1}{\\\\sin \\\\theta}\\\\right) = 1$$",
-        "将式子全部化为正弦与余弦进行化简：\\n\\n$$\\\\tan \\\\theta \\\\cos \\\\theta = \\\\left(\\\\frac{\\\\sin \\\\theta}{\\\\cos \\\\theta}\\\\right) \\\\cos \\\\theta = \\\\sin \\\\theta, \\\\quad \\\\sin \\\\theta \\\\csc \\\\theta = \\\\sin \\\\theta \\\\left(\\\\frac{1}{\\\\sin \\\\theta}\\\\right) = 1$$",
+        "Express everything in terms of sine and cosine to simplify products:\n\n$$\\tan \\theta \\cos \\theta = \\left(\\frac{\\sin \\theta}{\\cos \\theta}\\right) \\cos \\theta = \\sin \\theta, \\quad \\sin \\theta \\csc \\theta = \\sin \\theta \\left(\\frac{1}{\\sin \\theta}\\right) = 1$$",
+        "将式子全部化为正弦与余弦进行化简：\n\n$$\\tan \\theta \\cos \\theta = \\left(\\frac{\\sin \\theta}{\\cos \\theta}\\right) \\cos \\theta = \\sin \\theta, \\quad \\sin \\theta \\csc \\theta = \\sin \\theta \\left(\\frac{1}{\\sin \\theta}\\right) = 1$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "\\beta", "u"]);
@@ -738,8 +738,8 @@ export const simplifyingExpressionsUsingBasicTrigonometricIdentities: TopicDef =
       id: "simplifying-trig-fractions",
       title: t("Simplifying trigonometric fractions", "化简三角分式"),
       explanation: t(
-        "Fractions can be reduced by writing tangent, cotangent, secant, and cosecant in terms of sine and cosine:\\n\\n$$\\\\frac{\\\\tan \\\\theta}{\\\\sec \\\\theta} = \\\\frac{\\\\sin \\\\theta / \\\\cos \\\\theta}{1 / \\\\cos \\\\theta} = \\\\sin \\\\theta$$",
-        "通过将正切、余切、正割和余割转化为正弦和余弦来约简分式：\\n\\n$$\\\\frac{\\\\tan \\\\theta}{\\\\sec \\\\theta} = \\\\frac{\\\\sin \\\\theta / \\\\cos \\\\theta}{1 / \\\\cos \\\\theta} = \\\\sin \\\\theta$$",
+        "Fractions can be reduced by writing tangent, cotangent, secant, and cosecant in terms of sine and cosine:\n\n$$\\frac{\\tan \\theta}{\\sec \\theta} = \\frac{\\sin \\theta / \\cos \\theta}{1 / \\cos \\theta} = \\sin \\theta$$",
+        "通过将正切、余切、正割和余割转化为正弦和余弦来约简分式：\n\n$$\\frac{\\tan \\theta}{\\sec \\theta} = \\frac{\\sin \\theta / \\cos \\theta}{1 / \\cos \\theta} = \\sin \\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "\\beta", "u"]);
@@ -800,8 +800,8 @@ export const simplifyingExpressionsUsingThePythagoreanIdentity: TopicDef = {
       id: "direct-pythagorean-simplification",
       title: t("Direct Pythagorean substitution", "直接利用平方关系代换"),
       explanation: t(
-        "From $\\\\sin^{2}\\\\theta + \\\\cos^{2}\\\\theta = 1$, we have:\\n\\n$$1 - \\\\sin^{2}\\\\theta = \\\\cos^{2}\\\\theta, \\\\quad 1 - \\\\cos^{2}\\\\theta = \\\\sin^{2}\\\\theta$$",
-        "由 $\\\\sin^{2}\\\\theta + \\\\cos^{2}\\\\theta = 1$ 可得：\\n\\n$$1 - \\\\sin^{2}\\\\theta = \\\\cos^{2}\\\\theta, \\\\quad 1 - \\\\cos^{2}\\\\theta = \\\\sin^{2}\\\\theta$$",
+        "From $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$, we have:\n\n$$1 - \\sin^{2}\\theta = \\cos^{2}\\theta, \\quad 1 - \\cos^{2}\\theta = \\sin^{2}\\theta$$",
+        "由 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ 可得：\n\n$$1 - \\sin^{2}\\theta = \\cos^{2}\\theta, \\quad 1 - \\cos^{2}\\theta = \\sin^{2}\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -828,8 +828,8 @@ export const simplifyingExpressionsUsingThePythagoreanIdentity: TopicDef = {
       id: "products-yielding-the-pythagorean-identity",
       title: t("Conjugate products yielding Pythagorean identity", "共轭乘积化简"),
       explanation: t(
-        "Multiplying conjugates gives a difference of squares:\\n\\n$$(1 - \\\\cos\\\\theta)(1 + \\\\cos\\\\theta) = 1 - \\\\cos^{2}\\\\theta = \\\\sin^{2}\\\\theta, \\\\quad (1 - \\\\sin\\\\theta)(1 + \\\\sin\\\\theta) = 1 - \\\\sin^{2}\\\\theta = \\\\cos^{2}\\\\theta$$",
-        "共轭因式相乘形成平方差：\\n\\n$$(1 - \\\\cos\\\\theta)(1 + \\\\cos\\\\theta) = 1 - \\\\cos^{2}\\\\theta = \\\\sin^{2}\\\\theta, \\\\quad (1 - \\\\sin\\\\theta)(1 + \\\\sin\\\\theta) = 1 - \\\\sin^{2}\\\\theta = \\\\cos^{2}\\\\theta$$",
+        "Multiplying conjugates gives a difference of squares:\n\n$$(1 - \\cos\\theta)(1 + \\cos\\theta) = 1 - \\cos^{2}\\theta = \\sin^{2}\\theta, \\quad (1 - \\sin\\theta)(1 + \\sin\\theta) = 1 - \\sin^{2}\\theta = \\cos^{2}\\theta$$",
+        "共轭因式相乘形成平方差：\n\n$$(1 - \\cos\\theta)(1 + \\cos\\theta) = 1 - \\cos^{2}\\theta = \\sin^{2}\\theta, \\quad (1 - \\sin\\theta)(1 + \\sin\\theta) = 1 - \\sin^{2}\\theta = \\cos^{2}\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -875,8 +875,8 @@ export const alternateFormsOfThePythagoreanIdentity: TopicDef = {
       id: "difference-of-squares-higher-powers",
       title: t("Factoring higher powers of sine and cosine", "正弦与余弦高次幂的因式分解"),
       explanation: t(
-        "Recognize differences of squares in higher powers:\\n\\n$$\\\\sin^{4}\\\\theta - \\\\cos^{4}\\\\theta = (\\\\sin^{2}\\\\theta - \\\\cos^{2}\\\\theta)(\\\\sin^{2}\\\\theta + \\\\cos^{2}\\\\theta) = \\\\sin^{2}\\\\theta - \\\\cos^{2}\\\\theta$$",
-        "识别高次幂中的平方差公式：\\n\\n$$\\\\sin^{4}\\\\theta - \\\\cos^{4}\\\\theta = (\\\\sin^{2}\\\\theta - \\\\cos^{2}\\\\theta)(\\\\sin^{2}\\\\theta + \\\\cos^{2}\\\\theta) = \\\\sin^{2}\\\\theta - \\\\cos^{2}\\\\theta$$",
+        "Recognize differences of squares in higher powers:\n\n$$\\sin^{4}\\theta - \\cos^{4}\\theta = (\\sin^{2}\\theta - \\cos^{2}\\theta)(\\sin^{2}\\theta + \\cos^{2}\\theta) = \\sin^{2}\\theta - \\cos^{2}\\theta$$",
+        "识别高次幂中的平方差公式：\n\n$$\\sin^{4}\\theta - \\cos^{4}\\theta = (\\sin^{2}\\theta - \\cos^{2}\\theta)(\\sin^{2}\\theta + \\cos^{2}\\theta) = \\sin^{2}\\theta - \\cos^{2}\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -920,8 +920,8 @@ export const alternateFormsOfThePythagoreanIdentity: TopicDef = {
       id: "fractions-with-pythagorean-substitutions",
       title: t("Pythagorean substitutions in fractions", "分式中的勾股恒等式代换"),
       explanation: t(
-        "Substitute $1 - \\\\cos^{2}\\\\theta = \\\\sin^{2}\\\\theta$ to cancel common factors in fractions:\\n\\n$$\\\\frac{1 - \\\\cos^{2}\\\\theta}{\\\\sin \\\\theta} = \\\\frac{\\\\sin^{2}\\\\theta}{\\\\sin \\\\theta} = \\\\sin \\\\theta$$",
-        "代换 $1 - \\\\cos^{2}\\\\theta = \\\\sin^{2}\\\\theta$ 以约去分式中的公因式：\\n\\n$$\\\\frac{1 - \\\\cos^{2}\\\\theta}{\\\\sin \\\\theta} = \\\\frac{\\\\sin^{2}\\\\theta}{\\\\sin \\\\theta} = \\\\sin \\\\theta$$",
+        "Substitute $1 - \\cos^{2}\\theta = \\sin^{2}\\theta$ to cancel common factors in fractions:\n\n$$\\frac{1 - \\cos^{2}\\theta}{\\sin \\theta} = \\frac{\\sin^{2}\\theta}{\\sin \\theta} = \\sin \\theta$$",
+        "代换 $1 - \\cos^{2}\\theta = \\sin^{2}\\theta$ 以约去分式中的公因式：\n\n$$\\frac{1 - \\cos^{2}\\theta}{\\sin \\theta} = \\frac{\\sin^{2}\\theta}{\\sin \\theta} = \\sin \\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -972,8 +972,8 @@ export const simplifyingExpressionsUsingTheSecantTangentIdentity: TopicDef = {
       id: "direct-secant-tangent-substitutions",
       title: t("Direct secant-tangent substitution", "直接利用正割-正切关系代换"),
       explanation: t(
-        "Dividing $\\\\sin^{2}\\\\theta + \\\\cos^{2}\\\\theta = 1$ by $\\\\cos^{2}\\\\theta$ yields $1 + \\\\tan^{2}\\\\theta = \\\\sec^{2}\\\\theta$. Therefore:\\n\\n$$\\\\sec^{2}\\\\theta - \\\\tan^{2}\\\\theta = 1, \\\\quad \\\\sec^{2}\\\\theta - 1 = \\\\tan^{2}\\\\theta$$",
-        "将 $\\\\sin^{2}\\\\theta + \\\\cos^{2}\\\\theta = 1$ 两边同除以 $\\\\cos^{2}\\\\theta$ 得 $1 + \\\\tan^{2}\\\\theta = \\\\sec^{2}\\\\theta$。因此：\\n\\n$$\\\\sec^{2}\\\\theta - \\\\tan^{2}\\\\theta = 1, \\\\quad \\\\sec^{2}\\\\theta - 1 = \\\\tan^{2}\\\\theta$$",
+        "Dividing $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ by $\\cos^{2}\\theta$ yields $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$. Therefore:\n\n$$\\sec^{2}\\theta - \\tan^{2}\\theta = 1, \\quad \\sec^{2}\\theta - 1 = \\tan^{2}\\theta$$",
+        "将 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ 两边同除以 $\\cos^{2}\\theta$ 得 $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$。因此：\n\n$$\\sec^{2}\\theta - \\tan^{2}\\theta = 1, \\quad \\sec^{2}\\theta - 1 = \\tan^{2}\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -1001,8 +1001,8 @@ export const simplifyingExpressionsUsingTheSecantTangentIdentity: TopicDef = {
       id: "secant-tangent-fractions",
       title: t("Fractions involving secant and tangent", "含正割与正切的分式"),
       explanation: t(
-        "Fractions containing $\\\\sec^{2}\\\\theta - 1$ or $\\\\sec^{2}\\\\theta - \\\\tan^{2}\\\\theta$ can be simplified directly:\\n\\n$$\\\\frac{\\\\sec^{2}\\\\theta - 1}{\\\\tan \\\\theta} = \\\\frac{\\\\tan^{2}\\\\theta}{\\\\tan \\\\theta} = \\\\tan \\\\theta$$",
-        "含 $\\\\sec^{2}\\\\theta - 1$ 或 $\\\\sec^{2}\\\\theta - \\\\tan^{2}\\\\theta$ 的分式可直接化简：\\n\\n$$\\\\frac{\\\\sec^{2}\\\\theta - 1}{\\\\tan \\\\theta} = \\\\frac{\\\\tan^{2}\\\\theta}{\\\\tan \\\\theta} = \\\\tan \\\\theta$$",
+        "Fractions containing $\\sec^{2}\\theta - 1$ or $\\sec^{2}\\theta - \\tan^{2}\\theta$ can be simplified directly:\n\n$$\\frac{\\sec^{2}\\theta - 1}{\\tan \\theta} = \\frac{\\tan^{2}\\theta}{\\tan \\theta} = \\tan \\theta$$",
+        "含 $\\sec^{2}\\theta - 1$ 或 $\\sec^{2}\\theta - \\tan^{2}\\theta$ 的分式可直接化简：\n\n$$\\frac{\\sec^{2}\\theta - 1}{\\tan \\theta} = \\frac{\\tan^{2}\\theta}{\\tan \\theta} = \\tan \\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -1053,8 +1053,8 @@ export const alternateFormsOfTheSecantTangentIdentity: TopicDef = {
       id: "factoring-secant-tangent-powers",
       title: t("Factoring higher powers of secant and tangent", "正割与正切高次幂的因式分解"),
       explanation: t(
-        "Using difference of squares:\\n\\n$$\\\\sec^{4}\\\\theta - \\\\tan^{4}\\\\theta = (\\\\sec^{2}\\\\theta - \\\\tan^{2}\\\\theta)(\\\\sec^{2}\\\\theta + \\\\tan^{2}\\\\theta) = \\\\sec^{2}\\\\theta + \\\\tan^{2}\\\\theta$$",
-        "应用平方差公式：\\n\\n$$\\\\sec^{4}\\\\theta - \\\\tan^{4}\\\\theta = (\\\\sec^{2}\\\\theta - \\\\tan^{2}\\\\theta)(\\\\sec^{2}\\\\theta + \\\\tan^{2}\\\\theta) = \\\\sec^{2}\\\\theta + \\\\tan^{2}\\\\theta$$",
+        "Using difference of squares:\n\n$$\\sec^{4}\\theta - \\tan^{4}\\theta = (\\sec^{2}\\theta - \\tan^{2}\\theta)(\\sec^{2}\\theta + \\tan^{2}\\theta) = \\sec^{2}\\theta + \\tan^{2}\\theta$$",
+        "应用平方差公式：\n\n$$\\sec^{4}\\theta - \\tan^{4}\\theta = (\\sec^{2}\\theta - \\tan^{2}\\theta)(\\sec^{2}\\theta + \\tan^{2}\\theta) = \\sec^{2}\\theta + \\tan^{2}\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -1093,8 +1093,8 @@ export const alternateFormsOfTheSecantTangentIdentity: TopicDef = {
       id: "secant-tangent-reciprocal-relationships",
       title: t("Conjugate reciprocal relationship", "共轭因式的倒数关系"),
       explanation: t(
-        "Since $(\\\\sec\\\\theta - \\\\tan\\\\theta)(\\\\sec\\\\theta + \\\\tan\\\\theta) = 1$, the factors are reciprocals of each other:\\n\\n$$\\\\frac{1}{\\\\sec\\\\theta + \\\\tan\\\\theta} = \\\\sec\\\\theta - \\\\tan\\\\theta$$",
-        "因为 $(\\\\sec\\\\theta - \\\\tan\\\\theta)(\\\\sec\\\\theta + \\\\tan\\\\theta) = 1$，所以它们互为倒数：\\n\\n$$\\\\frac{1}{\\\\sec\\\\theta + \\\\tan\\\\theta} = \\\\sec\\\\theta - \\\\tan\\\\theta$$",
+        "Since $(\\sec\\theta - \\tan\\theta)(\\sec\\theta + \\tan\\theta) = 1$, the factors are reciprocals of each other:\n\n$$\\frac{1}{\\sec\\theta + \\tan\\theta} = \\sec\\theta - \\tan\\theta$$",
+        "因为 $(\\sec\\theta - \\tan\\theta)(\\sec\\theta + \\tan\\theta) = 1$，所以它们互为倒数：\n\n$$\\frac{1}{\\sec\\theta + \\tan\\theta} = \\sec\\theta - \\tan\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "\\beta", "u"]);
@@ -1147,8 +1147,8 @@ export const simplifyingTrigonometricExpressionsUsingTheCotangentCosecantIdentit
       id: "cotangent-cosecant-basic",
       title: t("Basic cotangent-cosecant substitutions", "余切-余割基本代换"),
       explanation: t(
-        "Dividing $\\\\sin^{2}\\\\theta + \\\\cos^{2}\\\\theta = 1$ by $\\\\sin^{2}\\\\theta$ gives $1 + \\\\cot^{2}\\\\theta = \\\\csc^{2}\\\\theta$. Thus:\\n\\n$$\\\\csc^{2}\\\\theta - \\\\cot^{2}\\\\theta = 1, \\\\quad \\\\csc^{2}\\\\theta - 1 = \\\\cot^{2}\\\\theta$$",
-        "将 $\\\\sin^{2}\\\\theta + \\\\cos^{2}\\\\theta = 1$ 两边除以 $\\\\sin^{2}\\\\theta$ 得到 $1 + \\\\cot^{2}\\\\theta = \\\\csc^{2}\\\\theta$。因此：\\n\\n$$\\\\csc^{2}\\\\theta - \\\\cot^{2}\\\\theta = 1, \\\\quad \\\\csc^{2}\\\\theta - 1 = \\\\cot^{2}\\\\theta$$",
+        "Dividing $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ by $\\sin^{2}\\theta$ gives $1 + \\cot^{2}\\theta = \\csc^{2}\\theta$. Thus:\n\n$$\\csc^{2}\\theta - \\cot^{2}\\theta = 1, \\quad \\csc^{2}\\theta - 1 = \\cot^{2}\\theta$$",
+        "将 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ 两边除以 $\\sin^{2}\\theta$ 得到 $1 + \\cot^{2}\\theta = \\csc^{2}\\theta$。因此：\n\n$$\\csc^{2}\\theta - \\cot^{2}\\theta = 1, \\quad \\csc^{2}\\theta - 1 = \\cot^{2}\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "\\beta"]);
@@ -1177,8 +1177,8 @@ export const simplifyingTrigonometricExpressionsUsingTheCotangentCosecantIdentit
       id: "cotangent-cosecant-fractions",
       title: t("Cotangent-cosecant fractions and reciprocals", "余切-余割分式与倒数关系"),
       explanation: t(
-        "In fractions, $\\\\frac{\\\\csc^{2}\\\\theta - 1}{\\\\cot \\\\theta} = \\\\frac{\\\\cot^{2}\\\\theta}{\\\\cot \\\\theta} = \\\\cot \\\\theta$, and $\\\\frac{1}{\\\\csc\\\\theta + \\\\cot\\\\theta} = \\\\csc\\\\theta - \\\\cot\\\\theta$.",
-        "在分式中，$\\\\frac{\\\\csc^{2}\\\\theta - 1}{\\\\cot \\\\theta} = \\\\frac{\\\\cot^{2}\\\\theta}{\\\\cot \\\\theta} = \\\\cot \\\\theta$，且 $\\\\frac{1}{\\\\csc\\\\theta + \\\\cot\\\\theta} = \\\\csc\\\\theta - \\\\cot\\\\theta$。",
+        "In fractions, $\\frac{\\csc^{2}\\theta - 1}{\\cot \\theta} = \\frac{\\cot^{2}\\theta}{\\cot \\theta} = \\cot \\theta$, and $\\frac{1}{\\csc\\theta + \\cot\\theta} = \\csc\\theta - \\cot\\theta$.",
+        "在分式中，$\\frac{\\csc^{2}\\theta - 1}{\\cot \\theta} = \\frac{\\cot^{2}\\theta}{\\cot \\theta} = \\cot \\theta$，且 $\\frac{1}{\\csc\\theta + \\cot\\theta} = \\csc\\theta - \\cot\\theta$。",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "\\beta", "u"]);
@@ -1224,8 +1224,8 @@ export const simplifyingTrigonometricExpressionsUsingCofunctionIdentities: Topic
       id: "cofunction-identities-basic",
       title: t("Cofunction identities in radians", "弧度制下的余角恒等式"),
       explanation: t(
-        "Complementary angles satisfy:\\n\\n$$\\\\sin\\\\left(\\\\frac{\\\\pi}{2} - \\\\theta\\\\right) = \\\\cos\\\\theta, \\\\quad \\\\cos\\\\left(\\\\frac{\\\\pi}{2} - \\\\theta\\\\right) = \\\\sin\\\\theta, \\\\quad \\\\tan\\\\left(\\\\frac{\\\\pi}{2} - \\\\theta\\\\right) = \\\\cot\\\\theta$$",
-        "互余的两个角满足：\\n\\n$$\\\\sin\\\\left(\\\\frac{\\\\pi}{2} - \\\\theta\\\\right) = \\\\cos\\\\theta, \\\\quad \\\\cos\\\\left(\\\\frac{\\\\pi}{2} - \\\\theta\\\\right) = \\\\sin\\\\theta, \\\\quad \\\\tan\\\\left(\\\\frac{\\\\pi}{2} - \\\\theta\\\\right) = \\\\cot\\\\theta$$",
+        "Complementary angles satisfy:\n\n$$\\sin\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cos\\theta, \\quad \\cos\\left(\\frac{\\pi}{2} - \\theta\\right) = \\sin\\theta, \\quad \\tan\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cot\\theta$$",
+        "互余的两个角满足：\n\n$$\\sin\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cos\\theta, \\quad \\cos\\left(\\frac{\\pi}{2} - \\theta\\right) = \\sin\\theta, \\quad \\tan\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cot\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "\\beta", "u"]);
@@ -1252,8 +1252,8 @@ export const simplifyingTrigonometricExpressionsUsingCofunctionIdentities: Topic
       id: "cofunction-identities-in-degree-expressions",
       title: t("Cofunction identities with numerical angles", "数字角度中的余角恒等式"),
       explanation: t(
-        "Since $\\\\sin(90^{\\\\circ} - x) = \\\\cos x$, ratios of complementary angles are equal: $\\\\sin(70^{\\\\circ}) = \\\\cos(20^{\\\\circ})$, so $\\\\frac{\\\\sin(70^{\\\\circ})}{\\\\cos(20^{\\\\circ})} = 1$.",
-        "因为 $\\\\sin(90^{\\\\circ} - x) = \\\\cos x$，互余角的对应三角比相等：$\\\\sin(70^{\\\\circ}) = \\\\cos(20^{\\\\circ})$，因此 $\\\\frac{\\\\sin(70^{\\\\circ})}{\\\\cos(20^{\\\\circ})} = 1$。",
+        "Since $\\sin(90^{\\circ} - x) = \\cos x$, ratios of complementary angles are equal: $\\sin(70^{\\circ}) = \\cos(20^{\\circ})$, so $\\frac{\\sin(70^{\\circ})}{\\cos(20^{\\circ})} = 1$.",
+        "因为 $\\sin(90^{\\circ} - x) = \\cos x$，互余角的对应三角比相等：$\\sin(70^{\\circ}) = \\cos(20^{\\circ})$，因此 $\\frac{\\sin(70^{\\circ})}{\\cos(20^{\\circ})} = 1$。",
       ),
       generate(rng) {
         const deg = rng.int(10, 80);
@@ -1263,11 +1263,11 @@ export const simplifyingTrigonometricExpressionsUsingCofunctionIdentities: Topic
           return oneOf(
             rng,
             t(
-              `Simplify $\\\\frac{\\\\sin(${deg}^{\\\\circ})}{\\\\cos(${comp}^{\\\\circ})}$.`,
-              `化简 $\\\\frac{\\\\sin(${deg}^{\\\\circ})}{\\\\cos(${comp}^{\\\\circ})}$。`,
+              `Simplify $\\frac{\\sin(${deg}^{\\circ})}{\\cos(${comp}^{\\circ})}$.`,
+              `化简 $\\frac{\\sin(${deg}^{\\circ})}{\\cos(${comp}^{\\circ})}$。`,
             ),
             t("$1$", "$1$"),
-            [t("$0$", "$0$"), t("$-1$", "$-1$"), t(`$\\\\tan(${deg}^{\\\\circ})$`, `$\\\\tan(${deg}^{\\\\circ})$`)],
+            [t("$0$", "$0$"), t("$-1$", "$-1$"), t(`$\\tan(${deg}^{\\circ})$`, `$\\tan(${deg}^{\\circ})$`)],
             t(
               `Since $\\cos(${comp}^\\circ) = \\cos(90^\\circ - ${deg}^\\circ) = \\sin(${deg}^\\circ)$, the ratio is $1$.`,
               `因为 $\\cos(${comp}^\\circ) = \\cos(90^\\circ - ${deg}^\\circ) = \\sin(${deg}^\\circ)$，所以商等于 $1$。`,
@@ -1277,12 +1277,9 @@ export const simplifyingTrigonometricExpressionsUsingCofunctionIdentities: Topic
         if (kind === "tanCot") {
           return oneOf(
             rng,
-            t(
-              `Simplify $\\\\tan(${deg}^{\\\\circ}) \\\\tan(${comp}^{\\\\circ})$.`,
-              `化简 $\\\\tan(${deg}^{\\\\circ}) \\\\tan(${comp}^{\\\\circ})$。`,
-            ),
+            t(`Simplify $\\tan(${deg}^{\\circ}) \\tan(${comp}^{\\circ})$.`, `化简 $\\tan(${deg}^{\\circ}) \\tan(${comp}^{\\circ})$。`),
             t("$1$", "$1$"),
-            [t("$0$", "$0$"), t("$-1$", "$-1$"), t(`$\\\\tan^{2}(${deg}^{\\\\circ})$`, `$\\\\tan^{2}(${deg}^{\\\\circ})$`)],
+            [t("$0$", "$0$"), t("$-1$", "$-1$"), t(`$\\tan^{2}(${deg}^{\\circ})$`, `$\\tan^{2}(${deg}^{\\circ})$`)],
             t(
               `Since $\\tan(${comp}^\\circ) = \\cot(${deg}^\\circ) = \\frac{1}{\\tan(${deg}^\\circ)}$, the product is $1$.`,
               `因为 $\\tan(${comp}^\\circ) = \\cot(${deg}^\\circ) = \\frac{1}{\\tan(${deg}^\\circ)}$，所以乘积等于 $1$。`,
@@ -1291,12 +1288,9 @@ export const simplifyingTrigonometricExpressionsUsingCofunctionIdentities: Topic
         }
         return oneOf(
           rng,
-          t(
-            `Simplify $\\\\sin(${deg}^{\\\\circ}) - \\\\cos(${comp}^{\\\\circ})$.`,
-            `化简 $\\\\sin(${deg}^{\\\\circ}) - \\\\cos(${comp}^{\\\\circ})$。`,
-          ),
+          t(`Simplify $\\sin(${deg}^{\\circ}) - \\cos(${comp}^{\\circ})$.`, `化简 $\\sin(${deg}^{\\circ}) - \\cos(${comp}^{\\circ})$。`),
           t("$0$", "$0$"),
-          [t("$1$", "$1$"), t("$-1$", "$-1$"), t(`$2\\\\sin(${deg}^{\\\\circ})$`, `$2\\\\sin(${deg}^{\\\\circ})$`)],
+          [t("$1$", "$1$"), t("$-1$", "$-1$"), t(`$2\\sin(${deg}^{\\circ})$`, `$2\\sin(${deg}^{\\circ})$`)],
           t(
             `Since $\\sin(${deg}^\\circ) = \\cos(${comp}^\\circ)$, the difference is $0$.`,
             `因为 $\\sin(${deg}^\\circ) = \\cos(${comp}^\\circ)$，所以两项相减等于 $0$。`,
@@ -1326,8 +1320,8 @@ export const theSumAndDifferenceFormulasForSine: TopicDef = {
       id: "sine-sum-difference-formulas",
       title: t("Sine sum and difference identities", "正弦和差公式形式"),
       explanation: t(
-        "The angle addition and subtraction formulas for sine are:\\n\\n$$\\\\sin(\\\\alpha + \\\\beta) = \\\\sin \\\\alpha \\\\cos \\\\beta + \\\\cos \\\\alpha \\\\sin \\\\beta, \\\\quad \\\\sin(\\\\alpha - \\\\beta) = \\\\sin \\\\alpha \\\\cos \\\\beta - \\\\cos \\\\alpha \\\\sin \\\\beta$$",
-        "正弦的和差角公式为：\\n\\n$$\\\\sin(\\\\alpha + \\\\beta) = \\\\sin \\\\alpha \\\\cos \\\\beta + \\\\cos \\\\alpha \\\\sin \\\\beta, \\\\quad \\\\sin(\\\\alpha - \\\\beta) = \\\\sin \\\\alpha \\\\cos \\\\beta - \\\\cos \\\\alpha \\\\sin \\\\beta$$",
+        "The angle addition and subtraction formulas for sine are:\n\n$$\\sin(\\alpha + \\beta) = \\sin \\alpha \\cos \\beta + \\cos \\alpha \\sin \\beta, \\quad \\sin(\\alpha - \\beta) = \\sin \\alpha \\cos \\beta - \\cos \\alpha \\sin \\beta$$",
+        "正弦的和差角公式为：\n\n$$\\sin(\\alpha + \\beta) = \\sin \\alpha \\cos \\beta + \\cos \\alpha \\sin \\beta, \\quad \\sin(\\alpha - \\beta) = \\sin \\alpha \\cos \\beta - \\cos \\alpha \\sin \\beta$$",
       ),
       generate(rng) {
         const isSum = rng.bool();
@@ -1338,14 +1332,14 @@ export const theSumAndDifferenceFormulasForSine: TopicDef = {
         return oneOf(
           rng,
           t(
-            `Simplify $\\\\sin(${a}^{\\\\circ})\\\\cos(${b}^{\\\\circ}) ${opStr} \\\\cos(${a}^{\\\\circ})\\\\sin(${b}^{\\\\circ})$.`,
-            `化简 $\\\\sin(${a}^{\\\\circ})\\\\cos(${b}^{\\\\circ}) ${opStr} \\\\cos(${a}^{\\\\circ})\\\\sin(${b}^{\\\\circ})$。`,
+            `Simplify $\\sin(${a}^{\\circ})\\cos(${b}^{\\circ}) ${opStr} \\cos(${a}^{\\circ})\\sin(${b}^{\\circ})$.`,
+            `化简 $\\sin(${a}^{\\circ})\\cos(${b}^{\\circ}) ${opStr} \\cos(${a}^{\\circ})\\sin(${b}^{\\circ})$。`,
           ),
-          t(`$\\\\sin(${resAngle}^{\\\\circ})$`, `$\\\\sin(${resAngle}^{\\\\circ})$`),
+          t(`$\\sin(${resAngle}^{\\circ})$`, `$\\sin(${resAngle}^{\\circ})$`),
           [
-            t(`$\\\\cos(${resAngle}^{\\\\circ})$`, `$\\\\cos(${resAngle}^{\\\\circ})$`),
-            t(`$\\\\sin(${a + b + 10}^{\\\\circ})$`, `$\\\\sin(${a + b + 10}^{\\\\circ})$`),
-            t(`$\\\\cos(${Math.abs(a - b)}^{\\\\circ})$`, `$\\\\cos(${Math.abs(a - b)}^{\\\\circ})$`),
+            t(`$\\cos(${resAngle}^{\\circ})$`, `$\\cos(${resAngle}^{\\circ})$`),
+            t(`$\\sin(${a + b + 10}^{\\circ})$`, `$\\sin(${a + b + 10}^{\\circ})$`),
+            t(`$\\cos(${Math.abs(a - b)}^{\\circ})$`, `$\\cos(${Math.abs(a - b)}^{\\circ})$`),
           ],
           t(
             `By the sine ${isSum ? "sum" : "difference"} formula, $\\sin(\\alpha ${opStr} \\beta) = \\sin \\alpha \\cos \\beta ${opStr} \\cos \\alpha \\sin \\beta$, which gives $\\sin(${resAngle}^\\circ)$.`,
@@ -1358,8 +1352,8 @@ export const theSumAndDifferenceFormulasForSine: TopicDef = {
       id: "collapsing-sine-to-special-values",
       title: t("Evaluating collapsed sine formulas", "正弦和差公式计算特殊角"),
       explanation: t(
-        "Collapsing expressions can yield special angles:\\n\\n$$\\\\sin(40^{\\\\circ})\\\\cos(20^{\\\\circ}) + \\\\cos(40^{\\\\circ})\\\\sin(20^{\\\\circ}) = \\\\sin(60^{\\\\circ}) = \\\\frac{\\\\sqrt{3}}{2}$$",
-        "将式子合并为单个正弦后可直接求出特殊角的值：\\n\\n$$\\\\sin(40^{\\\\circ})\\\\cos(20^{\\\\circ}) + \\\\cos(40^{\\\\circ})\\\\sin(20^{\\\\circ}) = \\\\sin(60^{\\\\circ}) = \\\\frac{\\\\sqrt{3}}{2}$$",
+        "Collapsing expressions can yield special angles:\n\n$$\\sin(40^{\\circ})\\cos(20^{\\circ}) + \\cos(40^{\\circ})\\sin(20^{\\circ}) = \\sin(60^{\\circ}) = \\frac{\\sqrt{3}}{2}$$",
+        "将式子合并为单个正弦后可直接求出特殊角的值：\n\n$$\\sin(40^{\\circ})\\cos(20^{\\circ}) + \\cos(40^{\\circ})\\sin(20^{\\circ}) = \\sin(60^{\\circ}) = \\frac{\\sqrt{3}}{2}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1394,8 +1388,8 @@ export const theSumAndDifferenceFormulasForSine: TopicDef = {
         return oneOf(
           rng,
           t(
-            `Find the exact value of $\\\\sin(${item.a}^{\\\\circ})\\\\cos(${item.b}^{\\\\circ}) ${opStr} \\\\cos(${item.a}^{\\\\circ})\\\\sin(${item.b}^{\\\\circ})$.`,
-            `求 $\\\\sin(${item.a}^{\\\\circ})\\\\cos(${item.b}^{\\\\circ}) ${opStr} \\\\cos(${item.a}^{\\\\circ})\\\\sin(${item.b}^{\\\\circ})$ 的精确值。`,
+            `Find the exact value of $\\sin(${item.a}^{\\circ})\\cos(${item.b}^{\\circ}) ${opStr} \\cos(${item.a}^{\\circ})\\sin(${item.b}^{\\circ})$.`,
+            `求 $\\sin(${item.a}^{\\circ})\\cos(${item.b}^{\\circ}) ${opStr} \\cos(${item.a}^{\\circ})\\sin(${item.b}^{\\circ})$ 的精确值。`,
           ),
           t(`$${item.ans}$`, `$${item.ans}$`),
           [
@@ -1433,8 +1427,8 @@ export const theSumAndDifferenceFormulasForCosine: TopicDef = {
       id: "cosine-sum-difference-formulas",
       title: t("Cosine sum and difference identities", "余弦和差公式形式"),
       explanation: t(
-        "Note the sign flip in cosine formulas:\\n\\n$$\\\\cos(\\\\alpha + \\\\beta) = \\\\cos \\\\alpha \\\\cos \\\\beta - \\\\sin \\\\alpha \\\\sin \\\\beta, \\\\quad \\\\cos(\\\\alpha - \\\\beta) = \\\\cos \\\\alpha \\\\cos \\\\beta + \\\\sin \\\\alpha \\\\sin \\\\beta$$",
-        "注意余弦和差公式中的正负号反转：\\n\\n$$\\\\cos(\\\\alpha + \\\\beta) = \\\\cos \\\\alpha \\\\cos \\\\beta - \\\\sin \\\\alpha \\\\sin \\\\beta, \\\\quad \\\\cos(\\\\alpha - \\\\beta) = \\\\cos \\\\alpha \\\\cos \\\\beta + \\\\sin \\\\alpha \\\\sin \\\\beta$$",
+        "Note the sign flip in cosine formulas:\n\n$$\\cos(\\alpha + \\beta) = \\cos \\alpha \\cos \\beta - \\sin \\alpha \\sin \\beta, \\quad \\cos(\\alpha - \\beta) = \\cos \\alpha \\cos \\beta + \\sin \\alpha \\sin \\beta$$",
+        "注意余弦和差公式中的正负号反转：\n\n$$\\cos(\\alpha + \\beta) = \\cos \\alpha \\cos \\beta - \\sin \\alpha \\sin \\beta, \\quad \\cos(\\alpha - \\beta) = \\cos \\alpha \\cos \\beta + \\sin \\alpha \\sin \\beta$$",
       ),
       generate(rng) {
         const isSum = rng.bool();
@@ -1445,14 +1439,14 @@ export const theSumAndDifferenceFormulasForCosine: TopicDef = {
         return oneOf(
           rng,
           t(
-            `Simplify $\\\\cos(${a}^{\\\\circ})\\\\cos(${b}^{\\\\circ}) ${signStr} \\\\sin(${a}^{\\\\circ})\\\\sin(${b}^{\\\\circ})$.`,
-            `化简 $\\\\cos(${a}^{\\\\circ})\\\\cos(${b}^{\\\\circ}) ${signStr} \\\\sin(${a}^{\\\\circ})\\\\sin(${b}^{\\\\circ})$。`,
+            `Simplify $\\cos(${a}^{\\circ})\\cos(${b}^{\\circ}) ${signStr} \\sin(${a}^{\\circ})\\sin(${b}^{\\circ})$.`,
+            `化简 $\\cos(${a}^{\\circ})\\cos(${b}^{\\circ}) ${signStr} \\sin(${a}^{\\circ})\\sin(${b}^{\\circ})$。`,
           ),
-          t(`$\\\\cos(${resAngle}^{\\\\circ})$`, `$\\\\cos(${resAngle}^{\\\\circ})$`),
+          t(`$\\cos(${resAngle}^{\\circ})$`, `$\\cos(${resAngle}^{\\circ})$`),
           [
-            t(`$\\\\sin(${resAngle}^{\\\\circ})$`, `$\\\\sin(${resAngle}^{\\\\circ})$`),
-            t(`$\\\\cos(${a + b + 15}^{\\\\circ})$`, `$\\\\cos(${a + b + 15}^{\\\\circ})$`),
-            t(`$\\\\sin(${Math.abs(a - b)}^{\\\\circ})$`, `$\\\\sin(${Math.abs(a - b)}^{\\\\circ})$`),
+            t(`$\\sin(${resAngle}^{\\circ})$`, `$\\sin(${resAngle}^{\\circ})$`),
+            t(`$\\cos(${a + b + 15}^{\\circ})$`, `$\\cos(${a + b + 15}^{\\circ})$`),
+            t(`$\\sin(${Math.abs(a - b)}^{\\circ})$`, `$\\sin(${Math.abs(a - b)}^{\\circ})$`),
           ],
           t(
             `By the cosine ${isSum ? "sum" : "difference"} formula (remembering the sign flip), this equals $\\cos(${resAngle}^\\circ)$.`,
@@ -1465,8 +1459,8 @@ export const theSumAndDifferenceFormulasForCosine: TopicDef = {
       id: "collapsing-cosine-to-special-values",
       title: t("Evaluating collapsed cosine formulas", "余弦和差公式计算特殊角"),
       explanation: t(
-        "Collapsing terms with the cosine formula:\\n\\n$$\\\\cos(70^{\\\\circ})\\\\cos(10^{\\\\circ}) + \\\\sin(70^{\\\\circ})\\\\sin(10^{\\\\circ}) = \\\\cos(60^{\\\\circ}) = \\\\frac{1}{2}$$",
-        "利用余弦和差公式合并求特殊角：\\n\\n$$\\\\cos(70^{\\\\circ})\\\\cos(10^{\\\\circ}) + \\\\sin(70^{\\\\circ})\\\\sin(10^{\\\\circ}) = \\\\cos(60^{\\\\circ}) = \\\\frac{1}{2}$$",
+        "Collapsing terms with the cosine formula:\n\n$$\\cos(70^{\\circ})\\cos(10^{\\circ}) + \\sin(70^{\\circ})\\sin(10^{\\circ}) = \\cos(60^{\\circ}) = \\frac{1}{2}$$",
+        "利用余弦和差公式合并求特殊角：\n\n$$\\cos(70^{\\circ})\\cos(10^{\\circ}) + \\sin(70^{\\circ})\\sin(10^{\\circ}) = \\cos(60^{\\circ}) = \\frac{1}{2}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1501,8 +1495,8 @@ export const theSumAndDifferenceFormulasForCosine: TopicDef = {
         return oneOf(
           rng,
           t(
-            `Find the exact value of $\\\\cos(${item.a}^{\\\\circ})\\\\cos(${item.b}^{\\\\circ}) ${signStr} \\\\sin(${item.a}^{\\\\circ})\\\\sin(${item.b}^{\\\\circ})$.`,
-            `求 $\\\\cos(${item.a}^{\\\\circ})\\\\cos(${item.b}^{\\\\circ}) ${signStr} \\\\sin(${item.a}^{\\\\circ})\\\\sin(${item.b}^{\\\\circ})$ 的精确值。`,
+            `Find the exact value of $\\cos(${item.a}^{\\circ})\\cos(${item.b}^{\\circ}) ${signStr} \\sin(${item.a}^{\\circ})\\sin(${item.b}^{\\circ})$.`,
+            `求 $\\cos(${item.a}^{\\circ})\\cos(${item.b}^{\\circ}) ${signStr} \\sin(${item.a}^{\\circ})\\sin(${item.b}^{\\circ})$ 的精确值。`,
           ),
           t(`$${item.ans}$`, `$${item.ans}$`),
           [
@@ -1540,8 +1534,8 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
       id: "tangent-sum-difference-formulas",
       title: t("Tangent sum and difference identities", "正切和差公式形式"),
       explanation: t(
-        "The angle addition and subtraction formulas for tangent are:\\n\\n$$\\\\tan(\\\\alpha + \\\\beta) = \\\\frac{\\\\tan\\\\alpha + \\\\tan\\\\beta}{1 - \\\\tan\\\\alpha\\\\tan\\\\beta}, \\\\quad \\\\tan(\\\\alpha - \\\\beta) = \\\\frac{\\\\tan\\\\alpha - \\\\tan\\\\beta}{1 + \\\\tan\\\\alpha\\\\tan\\\\beta}$$",
-        "正切的和差角公式为：\\n\\n$$\\\\tan(\\\\alpha + \\\\beta) = \\\\frac{\\\\tan\\\\alpha + \\\\tan\\\\beta}{1 - \\\\tan\\\\alpha\\\\tan\\\\beta}, \\\\quad \\\\tan(\\\\alpha - \\\\beta) = \\\\frac{\\\\tan\\\\alpha - \\\\tan\\\\beta}{1 + \\\\tan\\\\alpha\\\\tan\\\\beta}$$",
+        "The angle addition and subtraction formulas for tangent are:\n\n$$\\tan(\\alpha + \\beta) = \\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}, \\quad \\tan(\\alpha - \\beta) = \\frac{\\tan\\alpha - \\tan\\beta}{1 + \\tan\\alpha\\tan\\beta}$$",
+        "正切的和差角公式为：\n\n$$\\tan(\\alpha + \\beta) = \\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}, \\quad \\tan(\\alpha - \\beta) = \\frac{\\tan\\alpha - \\tan\\beta}{1 + \\tan\\alpha\\tan\\beta}$$",
       ),
       generate(rng) {
         const isSum = rng.bool();
@@ -1553,14 +1547,14 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
         return oneOf(
           rng,
           t(
-            `Simplify $\\\\frac{\\\\tan(${a}^{\\\\circ}) ${topSign} \\\\tan(${b}^{\\\\circ})}{1 ${botSign} \\\\tan(${a}^{\\\\circ})\\\\tan(${b}^{\\\\circ})}$.`,
-            `化简 $\\\\frac{\\\\tan(${a}^{\\\\circ}) ${topSign} \\\\tan(${b}^{\\\\circ})}{1 ${botSign} \\\\tan(${a}^{\\\\circ})\\\\tan(${b}^{\\\\circ})}$。`,
+            `Simplify $\\frac{\\tan(${a}^{\\circ}) ${topSign} \\tan(${b}^{\\circ})}{1 ${botSign} \\tan(${a}^{\\circ})\\tan(${b}^{\\circ})}$.`,
+            `化简 $\\frac{\\tan(${a}^{\\circ}) ${topSign} \\tan(${b}^{\\circ})}{1 ${botSign} \\tan(${a}^{\\circ})\\tan(${b}^{\\circ})}$。`,
           ),
-          t(`$\\\\tan(${resAngle}^{\\\\circ})$`, `$\\\\tan(${resAngle}^{\\\\circ})$`),
+          t(`$\\tan(${resAngle}^{\\circ})$`, `$\\tan(${resAngle}^{\\circ})$`),
           [
-            t(`$\\\\cot(${resAngle}^{\\\\circ})$`, `$\\\\cot(${resAngle}^{\\\\circ})$`),
-            t(`$\\\\tan(${a + b + 10}^{\\\\circ})$`, `$\\\\tan(${a + b + 10}^{\\\\circ})$`),
-            t(`$\\\\tan(${Math.abs(a - b)}^{\\\\circ})$`, `$\\\\tan(${Math.abs(a - b)}^{\\\\circ})$`),
+            t(`$\\cot(${resAngle}^{\\circ})$`, `$\\cot(${resAngle}^{\\circ})$`),
+            t(`$\\tan(${a + b + 10}^{\\circ})$`, `$\\tan(${a + b + 10}^{\\circ})$`),
+            t(`$\\tan(${Math.abs(a - b)}^{\\circ})$`, `$\\tan(${Math.abs(a - b)}^{\\circ})$`),
           ],
           t(
             `By the tangent ${isSum ? "sum" : "difference"} formula, the expression equals $\\tan(${resAngle}^\\circ)$.`,
@@ -1573,8 +1567,8 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
       id: "collapsing-tangent-to-special-values",
       title: t("Evaluating collapsed tangent formulas", "正切和差公式计算特殊角"),
       explanation: t(
-        "Collapsing tangent expressions to special angles:\\n\\n$$\\\\frac{\\\\tan(50^{\\\\circ}) - \\\\tan(20^{\\\\circ})}{1 + \\\\tan(50^{\\\\circ})\\\\tan(20^{\\\\circ})} = \\\\tan(30^{\\\\circ}) = \\\\frac{\\\\sqrt{3}}{3}$$",
-        "利用正切公式合并求特殊角：\\n\\n$$\\\\frac{\\\\tan(50^{\\\\circ}) - \\\\tan(20^{\\\\circ})}{1 + \\\\tan(50^{\\\\circ})\\\\tan(20^{\\\\circ})} = \\\\tan(30^{\\\\circ}) = \\\\frac{\\\\sqrt{3}}{3}$$",
+        "Collapsing tangent expressions to special angles:\n\n$$\\frac{\\tan(50^{\\circ}) - \\tan(20^{\\circ})}{1 + \\tan(50^{\\circ})\\tan(20^{\\circ})} = \\tan(30^{\\circ}) = \\frac{\\sqrt{3}}{3}$$",
+        "利用正切公式合并求特殊角：\n\n$$\\frac{\\tan(50^{\\circ}) - \\tan(20^{\\circ})}{1 + \\tan(50^{\\circ})\\tan(20^{\\circ})} = \\tan(30^{\\circ}) = \\frac{\\sqrt{3}}{3}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1610,8 +1604,8 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
         return oneOf(
           rng,
           t(
-            `Find the exact value of $\\\\frac{\\\\tan(${item.a}^{\\\\circ}) ${topSign} \\\\tan(${item.b}^{\\\\circ})}{1 ${botSign} \\\\tan(${item.a}^{\\\\circ})\\\\tan(${item.b}^{\\\\circ})}$.`,
-            `求 $\\\\frac{\\\\tan(${item.a}^{\\\\circ}) ${topSign} \\\\tan(${item.b}^{\\\\circ})}{1 ${botSign} \\\\tan(${item.a}^{\\\\circ})\\\\tan(${item.b}^{\\\\circ})}$ 的精确值。`,
+            `Find the exact value of $\\frac{\\tan(${item.a}^{\\circ}) ${topSign} \\tan(${item.b}^{\\circ})}{1 ${botSign} \\tan(${item.a}^{\\circ})\\tan(${item.b}^{\\circ})}$.`,
+            `求 $\\frac{\\tan(${item.a}^{\\circ}) ${topSign} \\tan(${item.b}^{\\circ})}{1 ${botSign} \\tan(${item.a}^{\\circ})\\tan(${item.b}^{\\circ})}$ 的精确值。`,
           ),
           t(`$${item.ans}$`, `$${item.ans}$`),
           [t("$1$", "$1$"), t("$\\sqrt{3}$", "$\\sqrt{3}$"), t("$\\frac{\\sqrt{3}}{3}$", "$\\frac{\\sqrt{3}}{3}$"), t("$0$", "$0$")].filter(
@@ -1646,8 +1640,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
       id: "exact-sine-of-fifteen-and-seventy-five",
       title: t("Exact sine of 15° and 75°", "15° 与 75° 的正弦精确值"),
       explanation: t(
-        "Using $75^{\\\\circ} = 45^{\\\\circ} + 30^{\\\\circ}$ and $15^{\\\\circ} = 45^{\\\\circ} - 30^{\\\\circ}$:\\n\\n$$\\\\sin(75^{\\\\circ}) = \\\\sin(45^{\\\\circ})\\\\cos(30^{\\\\circ}) + \\\\cos(45^{\\\\circ})\\\\sin(30^{\\\\circ}) = \\\\frac{\\\\sqrt{2}}{2}\\\\frac{\\\\sqrt{3}}{2} + \\\\frac{\\\\sqrt{2}}{2}\\\\frac{1}{2} = \\\\frac{\\\\sqrt{6} + \\\\sqrt{2}}{4}$$\\n\\n$$\\\\sin(15^{\\\\circ}) = \\\\frac{\\\\sqrt{6} - \\\\sqrt{2}}{4}$$",
-        "由 $75^{\\\\circ} = 45^{\\\\circ} + 30^{\\\\circ}$ 以及 $15^{\\\\circ} = 45^{\\\\circ} - 30^{\\\\circ}$：\\n\\n$$\\\\sin(75^{\\\\circ}) = \\\\frac{\\\\sqrt{6} + \\\\sqrt{2}}{4}, \\\\quad \\\\sin(15^{\\\\circ}) = \\\\frac{\\\\sqrt{6} - \\\\sqrt{2}}{4}$$",
+        "Using $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ and $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$:\n\n$$\\sin(75^{\\circ}) = \\sin(45^{\\circ})\\cos(30^{\\circ}) + \\cos(45^{\\circ})\\sin(30^{\\circ}) = \\frac{\\sqrt{2}}{2}\\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{2}}{2}\\frac{1}{2} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$\n\n$$\\sin(15^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
+        "由 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ 以及 $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$：\n\n$$\\sin(75^{\\circ}) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin(15^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1694,8 +1688,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
       id: "exact-sine-in-radians-twelfths",
       title: t("Exact sine for radian multiples of π/12", "π/12 弧度倍角处的正弦精确值"),
       explanation: t(
-        "In radians, $\\\\frac{5\\\\pi}{12} = 75^{\\\\circ}$ and $\\\\frac{\\\\pi}{12} = 15^{\\\\circ}$:\\n\\n$$\\\\sin\\\\left(\\\\frac{5\\\\pi}{12}\\\\right) = \\\\frac{\\\\sqrt{6} + \\\\sqrt{2}}{4}, \\\\quad \\\\sin\\\\left(\\\\frac{\\\\pi}{12}\\\\right) = \\\\frac{\\\\sqrt{6} - \\\\sqrt{2}}{4}$$",
-        "在弧度制下，$\\\\frac{5\\\\pi}{12} = 75^{\\\\circ}$，$\\\\frac{\\\\pi}{12} = 15^{\\\\circ}$：\\n\\n$$\\\\sin\\\\left(\\\\frac{5\\\\pi}{12}\\\\right) = \\\\frac{\\\\sqrt{6} + \\\\sqrt{2}}{4}, \\\\quad \\\\sin\\\\left(\\\\frac{\\\\pi}{12}\\\\right) = \\\\frac{\\\\sqrt{6} - \\\\sqrt{2}}{4}$$",
+        "In radians, $\\frac{5\\pi}{12} = 75^{\\circ}$ and $\\frac{\\pi}{12} = 15^{\\circ}$:\n\n$$\\sin\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
+        "在弧度制下，$\\frac{5\\pi}{12} = 75^{\\circ}$，$\\frac{\\pi}{12} = 15^{\\circ}$：\n\n$$\\sin\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1756,8 +1750,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
       id: "exact-cosine-of-fifteen-and-seventy-five",
       title: t("Exact cosine of 15° and 75°", "15° 与 75° 的余弦精确值"),
       explanation: t(
-        "Using $75^{\\\\circ} = 45^{\\\\circ} + 30^{\\\\circ}$ and $15^{\\\\circ} = 45^{\\\\circ} - 30^{\\\\circ}$:\\n\\n$$\\\\cos(75^{\\\\circ}) = \\\\cos(45^{\\\\circ})\\\\cos(30^{\\\\circ}) - \\\\sin(45^{\\\\circ})\\\\sin(30^{\\\\circ}) = \\\\frac{\\\\sqrt{6} - \\\\sqrt{2}}{4}$$\\n\\n$$\\\\cos(15^{\\\\circ}) = \\\\frac{\\\\sqrt{6} + \\\\sqrt{2}}{4}$$",
-        "由 $75^{\\\\circ} = 45^{\\\\circ} + 30^{\\\\circ}$ 与 $15^{\\\\circ} = 45^{\\\\circ} - 30^{\\\\circ}$：\\n\\n$$\\\\cos(75^{\\\\circ}) = \\\\frac{\\\\sqrt{6} - \\\\sqrt{2}}{4}, \\\\quad \\\\cos(15^{\\\\circ}) = \\\\frac{\\\\sqrt{6} + \\\\sqrt{2}}{4}$$",
+        "Using $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ and $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$:\n\n$$\\cos(75^{\\circ}) = \\cos(45^{\\circ})\\cos(30^{\\circ}) - \\sin(45^{\\circ})\\sin(30^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$\n\n$$\\cos(15^{\\circ}) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
+        "由 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ 与 $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$：\n\n$$\\cos(75^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\cos(15^{\\circ}) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1792,7 +1786,7 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
         const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
         return oneOf(
           rng,
-          t(`Find the exact value of $\\\\displaystyle ${promptStr}$.`, `求 $\\\\displaystyle ${promptStr}$ 的精确值。`),
+          t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
           t(
@@ -1806,8 +1800,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
       id: "exact-cosine-in-radians-twelfths",
       title: t("Exact cosine for radian multiples of π/12", "π/12 弧度倍角处的余弦精确值"),
       explanation: t(
-        "For angles in radians:\\n\\n$$\\\\cos\\\\left(\\\\frac{5\\\\pi}{12}\\\\right) = \\\\frac{\\\\sqrt{6} - \\\\sqrt{2}}{4}, \\\\quad \\\\cos\\\\left(\\\\frac{\\\\pi}{12}\\\\right) = \\\\frac{\\\\sqrt{6} + \\\\sqrt{2}}{4}$$",
-        "对于弧度制下的角：\\n\\n$$\\\\cos\\\\left(\\\\frac{5\\\\pi}{12}\\\\right) = \\\\frac{\\\\sqrt{6} - \\\\sqrt{2}}{4}, \\\\quad \\\\cos\\\\left(\\\\frac{\\\\pi}{12}\\\\right) = \\\\frac{\\\\sqrt{6} + \\\\sqrt{2}}{4}$$",
+        "For angles in radians:\n\n$$\\cos\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\cos\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
+        "对于弧度制下的角：\n\n$$\\cos\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\cos\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1836,7 +1830,7 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
         const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}\\cdot\\left(${w}\\right)$`));
         return oneOf(
           rng,
-          t(`Find the exact value of $\\\\displaystyle ${promptStr}$.`, `求 $\\\\displaystyle ${promptStr}$ 的精确值。`),
+          t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.slice(0, 3).map((w) => t(w, w)),
           t(
@@ -1868,8 +1862,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForTangent: TopicDe
       id: "exact-tangent-fifteen-seventy-five",
       title: t("Exact tangent of 15° and 75°", "15° 与 75° 的正切精确值"),
       explanation: t(
-        "Using $75^{\\\\circ} = 45^{\\\\circ} + 30^{\\\\circ}$:\\n\\n$$\\\\tan(75^{\\\\circ}) = \\\\frac{\\\\tan 45^{\\\\circ} + \\\\tan 30^{\\\\circ}}{1 - \\\\tan 45^{\\\\circ}\\\\tan 30^{\\\\circ}} = \\\\frac{1 + 1/\\\\sqrt{3}}{1 - 1/\\\\sqrt{3}} = \\\\frac{\\\\sqrt{3} + 1}{\\\\sqrt{3} - 1} = 2 + \\\\sqrt{3}$$\\n\\nSimilarly, $\\\\tan(15^{\\\\circ}) = 2 - \\\\sqrt{3}$.",
-        "由 $75^{\\\\circ} = 45^{\\\\circ} + 30^{\\\\circ}$：\\n\\n$$\\\\tan(75^{\\\\circ}) = 2 + \\\\sqrt{3}, \\\\quad \\\\tan(15^{\\\\circ}) = 2 - \\\\sqrt{3}$$",
+        "Using $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$:\n\n$$\\tan(75^{\\circ}) = \\frac{\\tan 45^{\\circ} + \\tan 30^{\\circ}}{1 - \\tan 45^{\\circ}\\tan 30^{\\circ}} = \\frac{1 + 1/\\sqrt{3}}{1 - 1/\\sqrt{3}} = \\frac{\\sqrt{3} + 1}{\\sqrt{3} - 1} = 2 + \\sqrt{3}$$\n\nSimilarly, $\\tan(15^{\\circ}) = 2 - \\sqrt{3}$.",
+        "由 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$：\n\n$$\\tan(75^{\\circ}) = 2 + \\sqrt{3}, \\quad \\tan(15^{\\circ}) = 2 - \\sqrt{3}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1895,7 +1889,7 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForTangent: TopicDe
         const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}(${w})$`));
         return oneOf(
           rng,
-          t(`Find the exact value of $\\\\displaystyle ${promptStr}$.`, `求 $\\\\displaystyle ${promptStr}$ 的精确值。`),
+          t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
           t(
@@ -1909,8 +1903,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForTangent: TopicDe
       id: "exact-tangent-in-radians",
       title: t("Exact tangent in radians", "弧度制下的正切精确值"),
       explanation: t(
-        "In radians:\\n\\n$$\\\\tan\\\\left(\\\\frac{5\\\\pi}{12}\\\\right) = 2 + \\\\sqrt{3}, \\\\quad \\\\tan\\\\left(\\\\frac{\\\\pi}{12}\\\\right) = 2 - \\\\sqrt{3}$$",
-        "在弧度制下：\\n\\n$$\\\\tan\\\\left(\\\\frac{5\\\\pi}{12}\\\\right) = 2 + \\\\sqrt{3}, \\\\quad \\\\tan\\\\left(\\\\frac{\\\\pi}{12}\\\\right) = 2 - \\\\sqrt{3}$$",
+        "In radians:\n\n$$\\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}, \\quad \\tan\\left(\\frac{\\pi}{12}\\right) = 2 - \\sqrt{3}$$",
+        "在弧度制下：\n\n$$\\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}, \\quad \\tan\\left(\\frac{\\pi}{12}\\right) = 2 - \\sqrt{3}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1934,7 +1928,7 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForTangent: TopicDe
         const wrongStr = wrongList.map((w) => (mult === 1 ? `$${w}$` : `$${mult}(${w})$`));
         return oneOf(
           rng,
-          t(`Find the exact value of $\\\\displaystyle ${promptStr}$.`, `求 $\\\\displaystyle ${promptStr}$ 的精确值。`),
+          t(`Find the exact value of $\\displaystyle ${promptStr}$.`, `求 $\\displaystyle ${promptStr}$ 的精确值。`),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.slice(0, 3).map((w) => t(w, w)),
           t(
@@ -1966,8 +1960,8 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
       id: "amplitude-of-linear-combination",
       title: t("Amplitude of a sum of sine and cosine", "正弦与余弦线性组合的振幅"),
       explanation: t(
-        "For $f(x) = A \\\\sin x + B \\\\cos x$, the maximum value (amplitude) is $R = \\\\sqrt{A^{2} + B^{2}}$. For $3\\\\sin x + 4\\\\cos x$:\\n\\n$$R = \\\\sqrt{3^{2} + 4^{2}} = 5$$",
-        "对于 $f(x) = A \\\\sin x + B \\\\cos x$，其最大值（振幅）为 $R = \\\\sqrt{A^{2} + B^{2}}$。以 $3\\\\sin x + 4\\\\cos x$ 为例：\\n\\n$$R = \\\\sqrt{3^{2} + 4^{2}} = 5$$",
+        "For $f(x) = A \\sin x + B \\cos x$, the maximum value (amplitude) is $R = \\sqrt{A^{2} + B^{2}}$. For $3\\sin x + 4\\cos x$:\n\n$$R = \\sqrt{3^{2} + 4^{2}} = 5$$",
+        "对于 $f(x) = A \\sin x + B \\cos x$，其最大值（振幅）为 $R = \\sqrt{A^{2} + B^{2}}$。以 $3\\sin x + 4\\cos x$ 为例：\n\n$$R = \\sqrt{3^{2} + 4^{2}} = 5$$",
       ),
       generate(rng) {
         const allTriples = [
@@ -1995,8 +1989,8 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
         const sign = rng.pick(["+", "-"]);
         return numberProblem({
           prompt: t(
-            `Find the amplitude (maximum value) of $f(${v}) = ${a}\\\\sin ${v} ${sign} ${b}\\\\cos ${v}$.`,
-            `求 $f(${v}) = ${a}\\\\sin ${v} ${sign} ${b}\\\\cos ${v}$ 的振幅（最大值）。`,
+            `Find the amplitude (maximum value) of $f(${v}) = ${a}\\sin ${v} ${sign} ${b}\\cos ${v}$.`,
+            `求 $f(${v}) = ${a}\\sin ${v} ${sign} ${b}\\cos ${v}$ 的振幅（最大值）。`,
           ),
           answer: c,
           wrong: [a + b, Math.abs(a - b), c + k],
@@ -2011,8 +2005,8 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
       id: "amplitude-phase-form-exact",
       title: t("Complete amplitude-phase form", "完整的振幅-初相表达式"),
       explanation: t(
-        "Rewrite using the auxiliary angle:\\n\\n$$\\\\sqrt{3}\\\\sin x + \\\\cos x = 2\\\\left(\\\\frac{\\\\sqrt{3}}{2}\\\\sin x + \\\\frac{1}{2}\\\\cos x\\\\right) = 2\\\\sin\\\\left(x + \\\\frac{\\\\pi}{6}\\\\right)$$",
-        "利用辅助角改写：\\n\\n$$\\\\sqrt{3}\\\\sin x + \\\\cos x = 2\\\\left(\\\\frac{\\\\sqrt{3}}{2}\\\\sin x + \\\\frac{1}{2}\\\\cos x\\\\right) = 2\\\\sin\\\\left(x + \\\\frac{\\\\pi}{6}\\\\right)$$",
+        "Rewrite using the auxiliary angle:\n\n$$\\sqrt{3}\\sin x + \\cos x = 2\\left(\\frac{\\sqrt{3}}{2}\\sin x + \\frac{1}{2}\\cos x\\right) = 2\\sin\\left(x + \\frac{\\pi}{6}\\right)$$",
+        "利用辅助角改写：\n\n$$\\sqrt{3}\\sin x + \\cos x = 2\\left(\\frac{\\sqrt{3}}{2}\\sin x + \\frac{1}{2}\\cos x\\right) = 2\\sin\\left(x + \\frac{\\pi}{6}\\right)$$",
       ),
       generate(rng) {
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
@@ -2076,7 +2070,7 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
         ]);
         return oneOf(
           rng,
-          t(`Write $${item.expr}$ in the form $R\\\\sin(${v} + \\\\phi)$.`, `将 $${item.expr}$ 化为 $R\\\\sin(${v} + \\\\phi)$ 的形式。`),
+          t(`Write $${item.expr}$ in the form $R\\sin(${v} + \\phi)$.`, `将 $${item.expr}$ 化为 $R\\sin(${v} + \\phi)$ 的形式。`),
           t(`$${item.ans}$`, `$${item.ans}$`),
           item.wrong.map((w) => t(`$${w}$`, `$${w}$`)),
           t(
@@ -2108,8 +2102,8 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
       id: "double-angle-formula-for-sine-statement",
       title: t("The double-angle formula for sine", "正弦二倍角公式的陈述"),
       explanation: t(
-        "Applying the addition formula with both angles equal gives:\\n\\n$$\\sin(2\\theta) = \\sin(\\theta + \\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$",
-        "将和角公式中两个角取相同值，即得：\\n\\n$$\\sin(2\\theta) = \\sin(\\theta + \\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$",
+        "Applying the addition formula with both angles equal gives:\n\n$$\\sin(2\\theta) = \\sin(\\theta + \\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$",
+        "将和角公式中两个角取相同值，即得：\n\n$$\\sin(2\\theta) = \\sin(\\theta + \\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u", "A"]);
@@ -2169,8 +2163,8 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
       id: "evaluating-sin-double-angle",
       title: t("Evaluating sin(2θ) from given values", "由已知值求 sin(2θ)"),
       explanation: t(
-        "If $\\sin\\theta = \\frac{3}{5}$ and $\\theta$ is in the first quadrant, then $\\cos\\theta = \\frac{4}{5}$ (from the Pythagorean identity) and:\\n\\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\frac{4}{5} = \\frac{24}{25}$$",
-        "若 $\\sin\\theta = \\frac{3}{5}$ 且 $\\theta$ 在第一象限，则由勾股恒等式得 $\\cos\\theta = \\frac{4}{5}$，从而：\\n\\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\frac{4}{5} = \\frac{24}{25}$$",
+        "If $\\sin\\theta = \\frac{3}{5}$ and $\\theta$ is in the first quadrant, then $\\cos\\theta = \\frac{4}{5}$ (from the Pythagorean identity) and:\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\frac{4}{5} = \\frac{24}{25}$$",
+        "若 $\\sin\\theta = \\frac{3}{5}$ 且 $\\theta$ 在第一象限，则由勾股恒等式得 $\\cos\\theta = \\frac{4}{5}$，从而：\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\frac{4}{5} = \\frac{24}{25}$$",
       ),
       generate(rng) {
         const [a, b, c] = rng.pick([
@@ -2275,8 +2269,8 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
       id: "verifying-double-angle-sine-identities",
       title: t("Verifying identities with sin(2θ)", "利用 sin(2θ) 验证恒等式"),
       explanation: t(
-        "To verify $\\frac{\\sin(2\\theta)}{\\sin\\theta} = 2\\cos\\theta$, substitute and simplify the left side:\\n\\n$$\\frac{\\sin(2\\theta)}{\\sin\\theta} = \\frac{2\\sin\\theta\\cos\\theta}{\\sin\\theta} = 2\\cos\\theta \\checkmark$$",
-        "为验证 $\\frac{\\sin(2\\theta)}{\\sin\\theta} = 2\\cos\\theta$，代入并化简左边：\\n\\n$$\\frac{\\sin(2\\theta)}{\\sin\\theta} = \\frac{2\\sin\\theta\\cos\\theta}{\\sin\\theta} = 2\\cos\\theta \\checkmark$$",
+        "To verify $\\frac{\\sin(2\\theta)}{\\sin\\theta} = 2\\cos\\theta$, substitute and simplify the left side:\n\n$$\\frac{\\sin(2\\theta)}{\\sin\\theta} = \\frac{2\\sin\\theta\\cos\\theta}{\\sin\\theta} = 2\\cos\\theta \\checkmark$$",
+        "为验证 $\\frac{\\sin(2\\theta)}{\\sin\\theta} = 2\\cos\\theta$，代入并化简左边：\n\n$$\\frac{\\sin(2\\theta)}{\\sin\\theta} = \\frac{2\\sin\\theta\\cos\\theta}{\\sin\\theta} = 2\\cos\\theta \\checkmark$$",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -2372,8 +2366,8 @@ export const usingTheDoubleAngleFormulaForSineWithThePythagoreanTheorem: TopicDe
       id: "sin-double-angle-from-cos-only",
       title: t("Finding sin(2θ) from cos(θ) in a given quadrant", "由 cos(θ) 在给定象限求 sin(2θ)"),
       explanation: t(
-        "If $\\cos\\theta = -\\frac{4}{5}$ and $\\theta$ is in quadrant II, then $\\sin\\theta = \\frac{3}{5}$ (positive in QII) and:\\n\\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$",
-        "若 $\\cos\\theta = -\\frac{4}{5}$ 且 $\\theta$ 在第二象限，则 $\\sin\\theta = \\frac{3}{5}$（第二象限正弦为正），从而：\\n\\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$",
+        "If $\\cos\\theta = -\\frac{4}{5}$ and $\\theta$ is in quadrant II, then $\\sin\\theta = \\frac{3}{5}$ (positive in QII) and:\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$",
+        "若 $\\cos\\theta = -\\frac{4}{5}$ 且 $\\theta$ 在第二象限，则 $\\sin\\theta = \\frac{3}{5}$（第二象限正弦为正），从而：\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$",
       ),
       generate(rng) {
         const [a, b, c] = rng.pick([
@@ -2441,8 +2435,8 @@ export const theDoubleAngleFormulaForCosine: TopicDef = {
       id: "three-forms-of-cos-double-angle",
       title: t("The three forms of the cosine double-angle formula", "余弦二倍角公式的三种形式"),
       explanation: t(
-        "From $\\cos(\\alpha+\\beta) = \\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta$ with $\\alpha=\\beta=\\theta$:\\n\\n$$\\cos(2\\theta) = \\cos^2\\theta - \\sin^2\\theta = 2\\cos^2\\theta - 1 = 1 - 2\\sin^2\\theta$$\\n\\nThe last two forms use $\\sin^2\\theta + \\cos^2\\theta = 1$.",
-        "由余弦和角公式令 $\\alpha=\\beta=\\theta$，得：\\n\\n$$\\cos(2\\theta) = \\cos^2\\theta - \\sin^2\\theta = 2\\cos^2\\theta - 1 = 1 - 2\\sin^2\\theta$$\\n\\n后两种形式利用了 $\\sin^2\\theta + \\cos^2\\theta = 1$。",
+        "From $\\cos(\\alpha+\\beta) = \\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta$ with $\\alpha=\\beta=\\theta$:\n\n$$\\cos(2\\theta) = \\cos^2\\theta - \\sin^2\\theta = 2\\cos^2\\theta - 1 = 1 - 2\\sin^2\\theta$$\n\nThe last two forms use $\\sin^2\\theta + \\cos^2\\theta = 1$.",
+        "由余弦和角公式令 $\\alpha=\\beta=\\theta$，得：\n\n$$\\cos(2\\theta) = \\cos^2\\theta - \\sin^2\\theta = 2\\cos^2\\theta - 1 = 1 - 2\\sin^2\\theta$$\n\n后两种形式利用了 $\\sin^2\\theta + \\cos^2\\theta = 1$。",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -2504,8 +2498,8 @@ export const theDoubleAngleFormulaForCosine: TopicDef = {
       id: "evaluating-cos-double-angle",
       title: t("Evaluating cos(2θ) from a given value", "由已知值求 cos(2θ)"),
       explanation: t(
-        "If $\\sin\\theta = \\frac{5}{13}$, use the form $1 - 2\\sin^2\\theta$ (only sine needed):\\n\\n$$\\cos(2\\theta) = 1 - 2\\left(\\frac{5}{13}\\right)^2 = 1 - \\frac{50}{169} = \\frac{119}{169}$$",
-        "若 $\\sin\\theta = \\frac{5}{13}$，使用只含正弦的形式 $1 - 2\\sin^2\\theta$：\\n\\n$$\\cos(2\\theta) = 1 - 2\\left(\\frac{5}{13}\\right)^2 = 1 - \\frac{50}{169} = \\frac{119}{169}$$",
+        "If $\\sin\\theta = \\frac{5}{13}$, use the form $1 - 2\\sin^2\\theta$ (only sine needed):\n\n$$\\cos(2\\theta) = 1 - 2\\left(\\frac{5}{13}\\right)^2 = 1 - \\frac{50}{169} = \\frac{119}{169}$$",
+        "若 $\\sin\\theta = \\frac{5}{13}$，使用只含正弦的形式 $1 - 2\\sin^2\\theta$：\n\n$$\\cos(2\\theta) = 1 - 2\\left(\\frac{5}{13}\\right)^2 = 1 - \\frac{50}{169} = \\frac{119}{169}$$",
       ),
       generate(rng) {
         const [a, b, c] = rng.pick([
@@ -2582,8 +2576,8 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulasForCosin
       id: "choosing-form-for-cos-identity",
       title: t("Choosing the right form of cos(2θ) for verification", "选择合适的 cos(2θ) 形式来验证恒等式"),
       explanation: t(
-        "To show $1 + \\cos(2\\theta) = 2\\cos^2\\theta$, substitute $\\cos(2\\theta) = 2\\cos^2\\theta - 1$:\\n\\n$$1 + (2\\cos^2\\theta - 1) = 2\\cos^2\\theta \\checkmark$$",
-        "为证明 $1 + \\cos(2\\theta) = 2\\cos^2\\theta$，代入 $\\cos(2\\theta) = 2\\cos^2\\theta - 1$：\\n\\n$$1 + (2\\cos^2\\theta - 1) = 2\\cos^2\\theta \\checkmark$$",
+        "To show $1 + \\cos(2\\theta) = 2\\cos^2\\theta$, substitute $\\cos(2\\theta) = 2\\cos^2\\theta - 1$:\n\n$$1 + (2\\cos^2\\theta - 1) = 2\\cos^2\\theta \\checkmark$$",
+        "为证明 $1 + \\cos(2\\theta) = 2\\cos^2\\theta$，代入 $\\cos(2\\theta) = 2\\cos^2\\theta - 1$：\n\n$$1 + (2\\cos^2\\theta - 1) = 2\\cos^2\\theta \\checkmark$$",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -2676,8 +2670,8 @@ export const findingExactValuesOfTrigonometricExpressionsUsingTheDoubleAngleForm
       id: "evaluating-cos-2theta-at-special-angles",
       title: t("Evaluating cos(2θ) at special angles", "在特殊角处求 cos(2θ)"),
       explanation: t(
-        "Use a known double angle:\\n\\n$$\\cos\\left(\\frac{\\pi}{3}\\right) = \\cos\\left(2\\cdot\\frac{\\pi}{6}\\right) = 2\\cos^2\\frac{\\pi}{6} - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2} \\checkmark$$",
-        "利用已知的二倍角：\\n\\n$$\\cos\\left(\\frac{\\pi}{3}\\right) = \\cos\\left(2\\cdot\\frac{\\pi}{6}\\right) = 2\\cos^2\\frac{\\pi}{6} - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2} \\checkmark$$",
+        "Use a known double angle:\n\n$$\\cos\\left(\\frac{\\pi}{3}\\right) = \\cos\\left(2\\cdot\\frac{\\pi}{6}\\right) = 2\\cos^2\\frac{\\pi}{6} - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2} \\checkmark$$",
+        "利用已知的二倍角：\n\n$$\\cos\\left(\\frac{\\pi}{3}\\right) = \\cos\\left(2\\cdot\\frac{\\pi}{6}\\right) = 2\\cos^2\\frac{\\pi}{6} - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2} \\checkmark$$",
       ),
       generate(rng) {
         const items = [
@@ -2788,8 +2782,8 @@ export const findingExactValuesOfTrigonometricExpressionsUsingTheDoubleAngleForm
         return oneOf(
           rng,
           t(
-            `Find the exact value of $\\\\displaystyle ${promptStr}$ using double-angle properties.`,
-            `利用二倍角性质求 $\\\\displaystyle ${promptStr}$ 的精确值。`,
+            `Find the exact value of $\\displaystyle ${promptStr}$ using double-angle properties.`,
+            `利用二倍角性质求 $\\displaystyle ${promptStr}$ 的精确值。`,
           ),
           t(`$${ansStr}$`, `$${ansStr}$`),
           wrongStr.map((w) => t(w, w)),
@@ -2827,8 +2821,8 @@ export const simplifyingExpressionsUsingTheDoubleAngleFormulaForTangent: TopicDe
       id: "tan-double-angle-formula",
       title: t("The double-angle formula for tangent", "正切的二倍角公式"),
       explanation: t(
-        "From the addition formula with $A=B=\\theta$:\\n\\n$$\\tan(2\\theta) = \\frac{2\\tan\\theta}{1 - \\tan^2\\theta}$$\\n\\nExample: if $\\tan\\theta = \\frac{1}{2}$, then $\\tan(2\\theta) = \\frac{2\\cdot\\frac{1}{2}}{1 - \\frac{1}{4}} = \\frac{1}{\\frac{3}{4}} = \\frac{4}{3}$.",
-        "由和角公式令 $A=B=\\theta$，得：\\n\\n$$\\tan(2\\theta) = \\frac{2\\tan\\theta}{1 - \\tan^2\\theta}$$\\n\\n例如，若 $\\tan\\theta = \\frac{1}{2}$，则 $\\tan(2\\theta) = \\frac{2\\cdot\\frac{1}{2}}{1 - \\frac{1}{4}} = \\frac{1}{\\frac{3}{4}} = \\frac{4}{3}$。",
+        "From the addition formula with $A=B=\\theta$:\n\n$$\\tan(2\\theta) = \\frac{2\\tan\\theta}{1 - \\tan^2\\theta}$$\n\nExample: if $\\tan\\theta = \\frac{1}{2}$, then $\\tan(2\\theta) = \\frac{2\\cdot\\frac{1}{2}}{1 - \\frac{1}{4}} = \\frac{1}{\\frac{3}{4}} = \\frac{4}{3}$.",
+        "由和角公式令 $A=B=\\theta$，得：\n\n$$\\tan(2\\theta) = \\frac{2\\tan\\theta}{1 - \\tan^2\\theta}$$\n\n例如，若 $\\tan\\theta = \\frac{1}{2}$，则 $\\tan(2\\theta) = \\frac{2\\cdot\\frac{1}{2}}{1 - \\frac{1}{4}} = \\frac{1}{\\frac{3}{4}} = \\frac{4}{3}$。",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -2871,8 +2865,8 @@ export const simplifyingExpressionsUsingTheDoubleAngleFormulaForTangent: TopicDe
       id: "tan-double-angle-rewriting",
       title: t("Rewriting products as tan double-angle", "将乘积改写为正切二倍角"),
       explanation: t(
-        "To simplify $\\dfrac{2\\tan x}{1 - \\tan^2 x}$, recognize the double-angle pattern:\\n\\n$$\\frac{2\\tan x}{1 - \\tan^2 x} = \\tan(2x)$$",
-        "化简 $\\dfrac{2\\tan x}{1 - \\tan^2 x}$ 时，识别二倍角模式：\\n\\n$$\\frac{2\\tan x}{1 - \\tan^2 x} = \\tan(2x)$$",
+        "To simplify $\\dfrac{2\\tan x}{1 - \\tan^2 x}$, recognize the double-angle pattern:\n\n$$\\frac{2\\tan x}{1 - \\tan^2 x} = \\tan(2x)$$",
+        "化简 $\\dfrac{2\\tan x}{1 - \\tan^2 x}$ 时，识别二倍角模式：\n\n$$\\frac{2\\tan x}{1 - \\tan^2 x} = \\tan(2x)$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "\\alpha", "u"]);
@@ -2922,8 +2916,8 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForTangen
       id: "verifying-tan-double-angle-identities",
       title: t("Verifying identities involving tan(2θ)", "验证含 tan(2θ) 的恒等式"),
       explanation: t(
-        "Verify $\\tan(2\\theta) = \\dfrac{2}{\\cot\\theta - \\tan\\theta}$:\\n\\n$$\\frac{2}{\\cot\\theta - \\tan\\theta} = \\frac{2}{\\frac{\\cos\\theta}{\\sin\\theta} - \\frac{\\sin\\theta}{\\cos\\theta}} = \\frac{2}{\\frac{\\cos^2\\theta - \\sin^2\\theta}{\\sin\\theta\\cos\\theta}} = \\frac{2\\sin\\theta\\cos\\theta}{\\cos^2\\theta - \\sin^2\\theta} = \\frac{\\sin(2\\theta)}{\\cos(2\\theta)} = \\tan(2\\theta) \\checkmark$$",
-        "验证 $\\tan(2\\theta) = \\dfrac{2}{\\cot\\theta - \\tan\\theta}$：\\n\\n$$\\frac{2}{\\cot\\theta - \\tan\\theta} = \\frac{2}{\\frac{\\cos\\theta}{\\sin\\theta} - \\frac{\\sin\\theta}{\\cos\\theta}} = \\frac{2}{\\frac{\\cos^2\\theta - \\sin^2\\theta}{\\sin\\theta\\cos\\theta}} = \\frac{2\\sin\\theta\\cos\\theta}{\\cos^2\\theta - \\sin^2\\theta} = \\frac{\\sin(2\\theta)}{\\cos(2\\theta)} = \\tan(2\\theta) \\checkmark$$",
+        "Verify $\\tan(2\\theta) = \\dfrac{2}{\\cot\\theta - \\tan\\theta}$:\n\n$$\\frac{2}{\\cot\\theta - \\tan\\theta} = \\frac{2}{\\frac{\\cos\\theta}{\\sin\\theta} - \\frac{\\sin\\theta}{\\cos\\theta}} = \\frac{2}{\\frac{\\cos^2\\theta - \\sin^2\\theta}{\\sin\\theta\\cos\\theta}} = \\frac{2\\sin\\theta\\cos\\theta}{\\cos^2\\theta - \\sin^2\\theta} = \\frac{\\sin(2\\theta)}{\\cos(2\\theta)} = \\tan(2\\theta) \\checkmark$$",
+        "验证 $\\tan(2\\theta) = \\dfrac{2}{\\cot\\theta - \\tan\\theta}$：\n\n$$\\frac{2}{\\cot\\theta - \\tan\\theta} = \\frac{2}{\\frac{\\cos\\theta}{\\sin\\theta} - \\frac{\\sin\\theta}{\\cos\\theta}} = \\frac{2}{\\frac{\\cos^2\\theta - \\sin^2\\theta}{\\sin\\theta\\cos\\theta}} = \\frac{2\\sin\\theta\\cos\\theta}{\\cos^2\\theta - \\sin^2\\theta} = \\frac{\\sin(2\\theta)}{\\cos(2\\theta)} = \\tan(2\\theta) \\checkmark$$",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);

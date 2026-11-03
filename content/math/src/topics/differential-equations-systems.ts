@@ -1,5 +1,6 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { poly } from "@ga/subject-math";
 import { numberProblem, steps } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -85,21 +86,21 @@ export const expressingHomogeneousOdesAsFirstOrderSystems: TopicDef = {
         const ans = q;
 
         const prompt = t(
-          `Convert the second-order linear ODE $y'' + ${p}y' + ${q}y = 0$ into a first-order system $\\mathbf{x}' = A \\mathbf{x}$ using $x_1 = y$ and $x_2 = y'$. Find the determinant $\\det(A)$ of the resulting companion matrix $A$.`,
-          `通过令 $x_1 = y$ 与 $x_2 = y'$，将二阶线性微分方程 $y'' + ${p}y' + ${q}y = 0$ 转化为一阶微分方程组 $\\mathbf{x}' = A \\mathbf{x}$。求友矩阵 $A$ 的行列式 $\\det(A)$。`,
+          `Convert the second-order linear ODE $y'' + ${poly([p, "y'"])} + ${poly([q, "y"])} = 0$ into a first-order system $\\mathbf{x}' = A \\mathbf{x}$ using $x_1 = y$ and $x_2 = y'$. Find the determinant $\\det(A)$ of the resulting companion matrix $A$.`,
+          `通过令 $x_1 = y$ 与 $x_2 = y'$，将二阶线性微分方程 $y'' + ${poly([p, "y'"])} + ${poly([q, "y"])} = 0$ 转化为一阶微分方程组 $\\mathbf{x}' = A \\mathbf{x}$。求友矩阵 $A$ 的行列式 $\\det(A)$。`,
         );
         const solution = t(
           steps(
             `Define $x_1 = y$ and $x_2 = y'$. Then $x_1' = x_2$.`,
-            `From the ODE, $y'' = -${q}y - ${p}y' \\implies x_2' = -${q}x_1 - ${p}x_2$.`,
+            `From the ODE, $y'' = -${poly([q, "y"])} - ${poly([p, "y'"])} \\implies x_2' = -${poly([q, "x"])}_1 - ${poly([p, "x"])}_2$.`,
             `The companion matrix is $A = \\begin{pmatrix} 0 & 1 \\\\ -${q} & -${p} \\end{pmatrix}$.`,
-            `Compute the determinant: $\\det(A) = (0)(-${p}) - (1)(-${q}) = ${q} = ${ans}$.`,
+            `Compute the determinant: $\\det(A) = (0)(-${p}) - (1)(-${q}) = ${ans}$.`,
           ),
           steps(
             `设状态变量 $x_1 = y$，$x_2 = y'$。则第一状态方程为 $x_1' = x_2$。`,
-            `由原微分方程移项得 $y'' = -${q}y - ${p}y' \\implies x_2' = -${q}x_1 - ${p}x_2$。`,
+            `由原微分方程移项得 $y'' = -${poly([q, "y"])} - ${poly([p, "y'"])} \\implies x_2' = -${poly([q, "x"])}_1 - ${poly([p, "x"])}_2$。`,
             `对应的友矩阵为 $A = \\begin{pmatrix} 0 & 1 \\\\ -${q} & -${p} \\end{pmatrix}$。`,
-            `计算行列式：$\\det(A) = (0)(-${p}) - (1)(-${q}) = ${q} = ${ans}$。`,
+            `计算行列式：$\\det(A) = (0)(-${p}) - (1)(-${q}) = ${ans}$。`,
           ),
         );
 
@@ -665,16 +666,16 @@ export const phasePlanesAndPhasePortraits: TopicDef = {
         const ans = b;
 
         const prompt = t(
-          `For the linear autonomous system $x' = ${a}x$ and $y' = ${b}y$, evaluate the trajectory slope $\\frac{dy}{dx}$ at the point $(x, y) = (1, ${a})$ in the phase plane.`,
-          `对于线性自自治方程组 $x' = ${a}x$ 与 $y' = ${b}y$，计算相平面上在点 $(x, y) = (1, ${a})$ 处的轨迹切线斜率 $\\frac{dy}{dx}$。`,
+          `For the linear autonomous system $x' = ${poly([a, "x"])}$ and $y' = ${poly([b, "y"])}$, evaluate the trajectory slope $\\frac{dy}{dx}$ at the point $(x, y) = (1, ${a})$ in the phase plane.`,
+          `对于线性自自治方程组 $x' = ${poly([a, "x"])}$ 与 $y' = ${poly([b, "y"])}$，计算相平面上在点 $(x, y) = (1, ${a})$ 处的轨迹切线斜率 $\\frac{dy}{dx}$。`,
         );
         const solution = t(
           steps(
-            `Apply the chain rule for the parametric trajectory: $\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${b}y}{${a}x}$.`,
+            `Apply the chain rule for the parametric trajectory: $\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${poly([b, "y"])}}{${poly([a, "x"])}}$.`,
             `Substitute $(x, y) = (1, ${a})$: $\\frac{dy}{dx} = \\frac{${b}(${a})}{${a}(1)} = \\frac{${b * a}}{${a}} = ${ans}$.`,
           ),
           steps(
-            `由参数曲线求导法则：$\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${b}y}{${a}x}$。`,
+            `由参数曲线求导法则：$\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${poly([b, "y"])}}{${poly([a, "x"])}}$。`,
             `代入点 $(x, y) = (1, ${a})$：$\\frac{dy}{dx} = \\frac{${b}(${a})}{${a}(1)} = \\frac{${b * a}}{${a}} = ${ans}$。`,
           ),
         );

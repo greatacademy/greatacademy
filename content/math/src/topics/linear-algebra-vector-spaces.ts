@@ -1,7 +1,8 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { paren, poly } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, pointProblem } from "../problems.ts";
+import { article, choiceProblem, numberProblem, pointProblem } from "../problems.ts";
 
 /** colVecLatex renders a column vector in LaTeX. */
 function colVecLatex(v: readonly (number | string)[]): string {
@@ -813,14 +814,14 @@ export const theColumnSpaceOfAMatrix: TopicDef = {
       id: "column-space-ambient-space-dimension",
       title: t("Ambient space of Col(A)", "列空间 Col(A) 的所在空间"),
       explanation: t(
-        "For an m × n matrix A, each column has m entries, so Col(A) is a subspace of ℝᵐ.",
-        "对于 m × n 矩阵 A，其每个列向量包含 m 个分量，因此列空间 Col(A) 是 ℝᵐ 的子空间。",
+        "For an $m \\times n$ matrix $A$, each column has $m$ entries, so $\\operatorname{Col}(A)$ is a subspace of $\\mathbb{R}^m$.",
+        "对于 $m \\times n$ 矩阵 $A$，每个列向量有 $m$ 个分量，因此列空间 $\\operatorname{Col}(A)$ 是 $\\mathbb{R}^m$ 的子空间。",
       ),
       generate(rng) {
         const m = rng.int(2, 10);
         const n = rng.int(2, 10);
         const prompt = t(
-          `Let $A$ be a $${m} \\times ${n}$ matrix. The column space $\\text{Col}(A)$ is a subspace of which Euclidean space?`,
+          `Let $A$ be ${article(m)} $${m} \\times ${n}$ matrix. The column space $\\text{Col}(A)$ is a subspace of which Euclidean space?`,
           `设 $A$ 为一个 $${m} \\times ${n}$ 矩阵。其列空间 $\\text{Col}(A)$ 是哪一个欧几里得空间的子空间？`,
         );
         const right = t(`$\\mathbb{R}^${m}$`, `$\\mathbb{R}^${m}$`);
@@ -840,8 +841,8 @@ export const theColumnSpaceOfAMatrix: TopicDef = {
       id: "membership-in-column-space",
       title: t("Determining if b is in Col(A)", "判定向量 b 是否属于列空间 Col(A)"),
       explanation: t(
-        "A vector b is in Col(A) if and only if the linear system Ax = b has a solution (i.e. is consistent).",
-        "向量 b 属于列空间 Col(A)，当且仅当线性方程组 Ax = b 有解（即方程组相容）。",
+        "A vector $\\mathbf{b}$ is in $\\operatorname{Col}(A)$ if and only if the linear system $A\\mathbf{x} = \\mathbf{b}$ has a solution (is consistent).",
+        "向量 $\\mathbf{b}$ 属于列空间 $\\operatorname{Col}(A)$，当且仅当线性方程组 $A\\mathbf{x} = \\mathbf{b}$ 有解（即方程组相容）。",
       ),
       generate(rng) {
         const inCol = rng.bool();
@@ -926,14 +927,14 @@ export const theNullSpaceOfAMatrix: TopicDef = {
       id: "null-space-ambient-space",
       title: t("Ambient space of Null(A)", "零空间 Null(A) 的所在空间"),
       explanation: t(
-        "For an m × n matrix A, the equation Ax = 0 requires x to have n components, so Null(A) is a subspace of ℝⁿ.",
-        "对于 m × n 矩阵 A，方程 Ax = 0 中未知向量 x 必有 n 个分量，因此 Null(A) 是 ℝⁿ 的子空间。",
+        "For an $m \\times n$ matrix $A$, the equation $A\\mathbf{x} = \\mathbf{0}$ requires $\\mathbf{x}$ to have $n$ components, so $\\operatorname{Null}(A)$ is a subspace of $\\mathbb{R}^n$.",
+        "对于 $m \\times n$ 矩阵 $A$，方程 $A\\mathbf{x} = \\mathbf{0}$ 中的未知向量 $\\mathbf{x}$ 有 $n$ 个分量，因此 $\\operatorname{Null}(A)$ 是 $\\mathbb{R}^n$ 的子空间。",
       ),
       generate(rng) {
         const m = rng.int(2, 10);
         const n = rng.int(2, 10);
         const prompt = t(
-          `Let $A$ be an $${m} \\times ${n}$ matrix. In which Euclidean space does the null space $\\text{Null}(A)$ reside?`,
+          `Let $A$ be ${article(m)} $${m} \\times ${n}$ matrix. In which Euclidean space does the null space $\\text{Null}(A)$ reside?`,
           `设 $A$ 为一个 $${m} \\times ${n}$ 矩阵。其零空间 $\\text{Null}(A)$ 是哪一个空间的子空间？`,
         );
         const right = t(`$\\mathbb{R}^${n}$`, `$\\mathbb{R}^${n}$`);
@@ -952,7 +953,10 @@ export const theNullSpaceOfAMatrix: TopicDef = {
     {
       id: "test-membership-in-null-space",
       title: t("Testing membership in Null(A)", "检验向量是否属于零空间 Null(A)"),
-      explanation: t("A vector v belongs to Null(A) if and only if Av = 0.", "向量 v 属于 Null(A) 当且仅当 Av = 0。"),
+      explanation: t(
+        "A vector $\\mathbf{v}$ belongs to $\\operatorname{Null}(A)$ if and only if $A\\mathbf{v} = \\mathbf{0}$.",
+        "向量 $\\mathbf{v}$ 属于 $\\operatorname{Null}(A)$，当且仅当 $A\\mathbf{v} = \\mathbf{0}$。",
+      ),
       generate(rng) {
         const inNull = rng.bool();
         const k1 = rng.int(-2, 2);
@@ -1021,14 +1025,14 @@ export const findingABasisOfASpan: TopicDef = {
       id: "basis-definition-criteria",
       title: t("Criteria for a basis of a subspace", "子空间基的判定准则"),
       explanation: t(
-        "A set of vectors ℬ = {b₁, ..., bₖ} is a basis for a subspace H if: 1. ℬ is linearly independent; and 2. Span(ℬ) = H.",
-        "向量集 ℬ = {b₁, ..., bₖ} 是子空间 H 的一组基，当且仅当满足：1. ℬ 线性无关；2. Span(ℬ) = H（张成 H）。",
+        "A set of vectors $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_k\\}$ is a basis for a subspace $H$ if (1) $\\mathcal{B}$ is linearly independent and (2) $\\operatorname{Span}(\\mathcal{B}) = H$.",
+        "向量组 $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_k\\}$ 是子空间 $H$ 的一组基，当且仅当：(1) $\\mathcal{B}$ 线性无关；(2) $\\operatorname{Span}(\\mathcal{B}) = H$。",
       ),
       generate(rng) {
         const k = rng.int(2, 8);
         const n = rng.int(k, 12);
         const prompt = t(
-          `Let $H$ be a $${k}$-dimensional subspace of $\\mathbb{R}^${n}$. What two conditions must a set of vectors $\\mathcal{B} = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_${k}\\}$ satisfy to be a basis for $H$?`,
+          `Let $H$ be ${article(k)} $${k}$-dimensional subspace of $\\mathbb{R}^${n}$. What two conditions must a set of vectors $\\mathcal{B} = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_${k}\\}$ satisfy to be a basis for $H$?`,
           `设 $H$ 为 $\\mathbb{R}^${n}$ 的一个 $${k}$ 维子空间。向量组 $\\mathcal{B} = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_${k}\\}$ 成为 $H$ 的一组基必须满足哪两个条件？`,
         );
         const right = t(
@@ -1111,8 +1115,8 @@ export const findingABasisOfTheColumnSpaceOfAMatrix: TopicDef = {
       id: "basis-col-a-original-pivot-columns",
       title: t("Pivot columns of A form a basis for Col(A)", "原矩阵的主元列构成 Col(A) 的基"),
       explanation: t(
-        "Row operations preserve linear dependence relations among columns. The pivot columns of the original matrix A (not the echelon form) form a basis for Col(A).",
-        "初等行变换保持列向量之间的线性相关关系。原矩阵 A（而非阶梯形矩阵）中对应于主元列的列向量构成 Col(A) 的一组基。",
+        "Row operations preserve the linear dependence relations among the columns. The pivot columns of the original matrix $A$ (not of its echelon form) form a basis for $\\operatorname{Col}(A)$.",
+        "初等行变换保持列向量之间的线性相关关系。原矩阵 $A$（而非其阶梯形）中的主元列构成 $\\operatorname{Col}(A)$ 的一组基。",
       ),
       generate(rng) {
         const k1 = rng.int(-2, 2);
@@ -1156,14 +1160,14 @@ export const findingABasisOfTheColumnSpaceOfAMatrix: TopicDef = {
       id: "why-original-columns-not-echelon",
       title: t("Why original columns must be used for Col(A)", "为什么必须使用原矩阵的列向量"),
       explanation: t(
-        "Row operations change the column space of a matrix: Col(A) ≠ Col(RREF(A)) in general, although their dimensions and column dependence relations are identical.",
-        "初等行变换通常会改变矩阵的列空间：一般情况下 Col(A) ≠ Col(RREF(A))，尽管两者的维数与列相关关系完全相同。",
+        "Row operations change the column space of a matrix: in general $\\operatorname{Col}(A) \\ne \\operatorname{Col}(\\operatorname{RREF}(A))$, although their dimensions and column dependence relations are the same.",
+        "初等行变换通常会改变矩阵的列空间：一般情况下 $\\operatorname{Col}(A) \\ne \\operatorname{Col}(\\operatorname{RREF}(A))$，尽管两者的维数与列相关关系完全相同。",
       ),
       generate(rng) {
         const m = rng.int(3, 8);
         const n = rng.int(3, 8);
         const prompt = t(
-          `For a $${m} \\times ${n}$ matrix $A$ and its echelon form $R$, why must we select pivot columns of the original matrix $A$ (instead of the columns of $R$) to form a basis for $\\text{Col}(A)$?`,
+          `For ${article(m)} $${m} \\times ${n}$ matrix $A$ and its echelon form $R$, why must we select pivot columns of the original matrix $A$ (instead of the columns of $R$) to form a basis for $\\text{Col}(A)$?`,
           `对于 $${m} \\times ${n}$ 矩阵 $A$ 及其阶梯形 $R$，在求 $\\text{Col}(A)$ 的基时，为什么必须选取原矩阵 $A$ 的主元列（而不是 $R$ 的列）？`,
         );
         const right = t(
@@ -1205,8 +1209,8 @@ export const findingABasisOfTheNullSpaceOfAMatrix: TopicDef = {
       id: "basis-null-space-single-free-var",
       title: t("Basis of Null(A) with one free variable", "含一个自由变量的 Null(A) 的基"),
       explanation: t(
-        "For Ax = 0 with one free variable x₃, expressing the basic variables in terms of x₃ yields x = x₃ v. The single vector v forms a basis for Null(A).",
-        "对于含一个自由未知量 x₃ 的齐次方程组 Ax = 0，将主元未知量用 x₃ 表示得到 x = x₃ v。该向量 v 即构成 Null(A) 的一组基。",
+        "For $A\\mathbf{x} = \\mathbf{0}$ with one free variable $x_3$, writing the basic variables in terms of $x_3$ gives $\\mathbf{x} = x_3 \\mathbf{v}$. The single vector $\\mathbf{v}$ forms a basis for $\\operatorname{Null}(A)$.",
+        "对于只含一个自由未知量 $x_3$ 的齐次方程组 $A\\mathbf{x} = \\mathbf{0}$，将主元未知量用 $x_3$ 表示，得到 $\\mathbf{x} = x_3 \\mathbf{v}$。向量 $\\mathbf{v}$ 即构成 $\\operatorname{Null}(A)$ 的一组基。",
       ),
       generate(rng) {
         const c1 = rng.nonZero(-3, 3);
@@ -1250,8 +1254,8 @@ export const findingABasisOfTheNullSpaceOfAMatrix: TopicDef = {
       id: "basis-null-space-multiple-free-vars",
       title: t("Basis of Null(A) with two free variables", "含两个自由变量的 Null(A) 的基"),
       explanation: t(
-        "When there are k free variables, the parametric vector form decomposes as x = s₁v₁ + ... + sₖvₖ. The vectors {v₁, ..., vₖ} form a basis for Null(A).",
-        "当有 k 个自由未知量时，通解分解为 x = s₁v₁ + ... + sₖvₖ。向量组 {v₁, ..., vₖ} 即构成 Null(A) 的一组基。",
+        "With $k$ free variables, the parametric vector form is $\\mathbf{x} = s_1 \\mathbf{v}_1 + \\dots + s_k \\mathbf{v}_k$. The vectors $\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ form a basis for $\\operatorname{Null}(A)$.",
+        "有 $k$ 个自由未知量时，通解的参数向量形式为 $\\mathbf{x} = s_1 \\mathbf{v}_1 + \\dots + s_k \\mathbf{v}_k$。向量组 $\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ 即构成 $\\operatorname{Null}(A)$ 的一组基。",
       ),
       generate(rng) {
         const a = rng.nonZero(-3, 3);
@@ -1528,8 +1532,8 @@ export const theChangeOfCoordinatesMatrix: TopicDef = {
       id: "construct-change-of-basis-matrix",
       title: t("Columns of the change-of-coordinates matrix", "过渡矩阵的列结构"),
       explanation: t(
-        "The change-of-coordinates matrix from basis ℬ = {b₁, ..., bₙ} to basis 𝒞 is P_{𝒞 ← ℬ} = [ [b₁]_𝒞  ...  [bₙ]_𝒞 ].",
-        "从基 ℬ = {b₁, ..., bₙ} 到基 𝒞 的过渡矩阵为 P_{𝒞 ← ℬ} = [ [b₁]_𝒞  ...  [bₙ]_𝒞 ]，每一列是 ℬ 中的基向量在基 𝒞 下的坐标。",
+        "The change-of-coordinates matrix from the basis $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_n\\}$ to the basis $\\mathcal{C}$ is $P_{\\mathcal{C} \\leftarrow \\mathcal{B}} = \\begin{bmatrix} [\\mathbf{b}_1]_{\\mathcal{C}} & \\cdots & [\\mathbf{b}_n]_{\\mathcal{C}} \\end{bmatrix}$.",
+        "从基 $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_n\\}$ 到基 $\\mathcal{C}$ 的过渡矩阵为 $P_{\\mathcal{C} \\leftarrow \\mathcal{B}} = \\begin{bmatrix} [\\mathbf{b}_1]_{\\mathcal{C}} & \\cdots & [\\mathbf{b}_n]_{\\mathcal{C}} \\end{bmatrix}$，每一列是 $\\mathcal{B}$ 中的基向量在基 $\\mathcal{C}$ 下的坐标。",
       ),
       generate(rng) {
         const a = rng.nonZero(-4, 4);
@@ -1571,8 +1575,8 @@ export const theChangeOfCoordinatesMatrix: TopicDef = {
       id: "apply-change-of-coordinates-matrix",
       title: t("Applying the change-of-coordinates matrix", "计算变换后的坐标向量"),
       explanation: t(
-        "To find [x]_𝒞 given [x]_ℬ and P_{𝒞 ← ℬ}, compute the matrix-vector product [x]_𝒞 = P_{𝒞 ← ℬ} [x]_ℬ.",
-        "已知 [x]_ℬ 与过渡矩阵 P_{𝒞 ← ℬ} 时，通过矩阵乘法求 [x]_𝒞：[x]_𝒞 = P_{𝒞 ← ℬ} [x]_ℬ。",
+        "To find $[\\mathbf{x}]_{\\mathcal{C}}$ given $[\\mathbf{x}]_{\\mathcal{B}}$ and $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$, compute the matrix-vector product $[\\mathbf{x}]_{\\mathcal{C}} = P_{\\mathcal{C} \\leftarrow \\mathcal{B}} [\\mathbf{x}]_{\\mathcal{B}}$.",
+        "已知 $[\\mathbf{x}]_{\\mathcal{B}}$ 与过渡矩阵 $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$ 时，通过矩阵乘法求 $[\\mathbf{x}]_{\\mathcal{C}}$：$[\\mathbf{x}]_{\\mathcal{C}} = P_{\\mathcal{C} \\leftarrow \\mathcal{B}} [\\mathbf{x}]_{\\mathcal{B}}$。",
       ),
       generate(rng) {
         const p11 = rng.int(-2, 2);
@@ -1631,8 +1635,8 @@ export const changingABasisUsingTheChangeOfCoordinatesMatrix: TopicDef = {
       id: "inverse-transition-matrix-property",
       title: t("The inverse of a transition matrix", "过渡矩阵的逆矩阵性质"),
       explanation: t(
-        "The transition matrix from 𝒞 back to ℬ is the inverse of the transition matrix from ℬ to 𝒞: P_{ℬ ← 𝒞} = (P_{𝒞 ← ℬ})⁻¹.",
-        "从基 𝒞 到基 ℬ 的过渡矩阵等于从 ℬ 到 𝒞 的过渡矩阵的逆矩阵：P_{ℬ ← 𝒞} = (P_{𝒞 ← ℬ})⁻¹。",
+        "The transition matrix from $\\mathcal{C}$ back to $\\mathcal{B}$ is the inverse of the transition matrix from $\\mathcal{B}$ to $\\mathcal{C}$: $P_{\\mathcal{B} \\leftarrow \\mathcal{C}} = (P_{\\mathcal{C} \\leftarrow \\mathcal{B}})^{-1}$.",
+        "从基 $\\mathcal{C}$ 到基 $\\mathcal{B}$ 的过渡矩阵等于从 $\\mathcal{B}$ 到 $\\mathcal{C}$ 的过渡矩阵的逆矩阵：$P_{\\mathcal{B} \\leftarrow \\mathcal{C}} = (P_{\\mathcal{C} \\leftarrow \\mathcal{B}})^{-1}$。",
       ),
       generate(rng) {
         const k = rng.nonZero(-15, 15);
@@ -1683,8 +1687,8 @@ export const changingABasisUsingTheChangeOfCoordinatesMatrix: TopicDef = {
       id: "row-reduction-change-of-basis",
       title: t("Computing transition matrix via row reduction", "通过增广矩阵行化简求过渡矩阵"),
       explanation: t(
-        "To find P_{𝒞 ← ℬ} for bases ℬ and 𝒞 in ℝⁿ, row reduce the augmented matrix [C | B] until the left side is the identity matrix: [C | B] ~ [I | P_{𝒞 ← ℬ}].",
-        "在 ℝⁿ 中求基 ℬ 到基 𝒞 的过渡矩阵 P_{𝒞 ← ℬ}，可对增广矩阵 [C | B] 进行初等行变换，化简至左侧为单位阵：[C | B] ~ [I | P_{𝒞 ← ℬ}]。",
+        "To find $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$ for bases $\\mathcal{B}$ and $\\mathcal{C}$ of $\\mathbb{R}^n$, row reduce the augmented matrix $[C \\mid B]$ until the left side is the identity matrix: $[C \\mid B] \\sim [I \\mid P_{\\mathcal{C} \\leftarrow \\mathcal{B}}]$.",
+        "在 $\\mathbb{R}^n$ 中求基 $\\mathcal{B}$ 到基 $\\mathcal{C}$ 的过渡矩阵 $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$，可对增广矩阵 $[C \\mid B]$ 进行初等行变换，化简至左侧为单位阵：$[C \\mid B] \\sim [I \\mid P_{\\mathcal{C} \\leftarrow \\mathcal{B}}]$。",
       ),
       generate(rng) {
         const n = rng.int(2, 35);
@@ -1741,8 +1745,8 @@ export const theDimensionOfASpan: TopicDef = {
       id: "dimension-definition-invariance",
       title: t("Dimension as basis cardinality", "维数作为基向量个数的唯一性"),
       explanation: t(
-        "The dimension of a non-zero subspace H, denoted dim(H), is the number of vectors in any basis for H. The zero subspace {0} has dimension 0.",
-        "非零子空间 H 的维数（记作 dim(H)）是 H 的任意一组基中所含向量的个数。零子空间 {0} 的维数规定为 0。",
+        "The dimension of a nonzero subspace $H$, written $\\dim(H)$, is the number of vectors in any basis for $H$. The zero subspace $\\{\\mathbf{0}\\}$ has dimension $0$.",
+        "非零子空间 $H$ 的维数（记作 $\\dim(H)$）是 $H$ 的任意一组基中所含向量的个数。零子空间 $\\{\\mathbf{0}\\}$ 的维数规定为 $0$。",
       ),
       generate(rng) {
         const k = rng.int(2, 30);
@@ -1837,15 +1841,15 @@ export const theRankOfAMatrix: TopicDef = {
       id: "rank-from-pivot-positions",
       title: t("Rank as number of pivot positions", "秩作为主元位置个数"),
       explanation: t(
-        "The rank of a matrix A, denoted rank(A), is the dimension of the column space Col(A), which equals the number of pivot columns in any row echelon form of A.",
-        "矩阵 A 的秩记作 rank(A)，是列空间 Col(A) 的维数，等于 A 的任意行阶梯形中主元列的个数。",
+        "The rank of a matrix $A$, written $\\operatorname{rank}(A)$, is the dimension of the column space $\\operatorname{Col}(A)$, which equals the number of pivot columns in any echelon form of $A$.",
+        "矩阵 $A$ 的秩记作 $\\operatorname{rank}(A)$，是列空间 $\\operatorname{Col}(A)$ 的维数，等于 $A$ 的任意阶梯形中主元列的个数。",
       ),
       generate(rng) {
         const rows = rng.int(3, 10);
         const cols = rng.int(3, 10);
         const r = rng.int(1, Math.min(rows, cols));
         const prompt = t(
-          `A $${rows} \\times ${cols}$ matrix $A$ has reduced row echelon form containing exactly $${r}$ pivot positions (non-zero rows). What is $\\text{rank}(A)$?`,
+          `${article(rows, true)} $${rows} \\times ${cols}$ matrix $A$ has reduced row echelon form containing exactly $${r}$ pivot positions (non-zero rows). What is $\\text{rank}(A)$?`,
           `一个 $${rows} \\times ${cols}$ 矩阵 $A$ 的简化行阶梯形中恰好有 $${r}$ 个主元位置（非零行）。矩阵 $A$ 的秩 $\\text{rank}(A)$ 是多少？`,
         );
         const solution = t(
@@ -1865,15 +1869,15 @@ export const theRankOfAMatrix: TopicDef = {
       id: "properties-of-matrix-rank",
       title: t("Fundamental properties of rank", "矩阵秩的基本性质"),
       explanation: t(
-        "For any m × n matrix A: 1. rank(A) ≤ min(m, n); 2. rank(Aᵀ) = rank(A) (row rank equals column rank).",
-        "对任意 m × n 矩阵 A：1. rank(A) ≤ min(m, n)；2. rank(Aᵀ) = rank(A)（行秩等于列秩）。",
+        "For any $m \\times n$ matrix $A$: (1) $\\operatorname{rank}(A) \\le \\min(m, n)$; (2) $\\operatorname{rank}(A^T) = \\operatorname{rank}(A)$ (row rank equals column rank).",
+        "对任意 $m \\times n$ 矩阵 $A$：(1) $\\operatorname{rank}(A) \\le \\min(m, n)$；(2) $\\operatorname{rank}(A^T) = \\operatorname{rank}(A)$（行秩等于列秩）。",
       ),
       generate(rng) {
         const m = rng.int(2, 12);
         const n = rng.int(2, 12);
         const minMN = Math.min(m, n);
         const prompt = t(
-          `What is the maximum possible rank of a $${m} \\times ${n}$ matrix $A$?`,
+          `What is the maximum possible rank of ${article(m)} $${m} \\times ${n}$ matrix $A$?`,
           `一个 $${m} \\times ${n}$ 矩阵 $A$ 的秩最大可能为多少？`,
         );
         const solution = t(
@@ -1912,8 +1916,8 @@ export const theDimensionOfTheNullSpaceOfAMatrix: TopicDef = {
       id: "nullity-from-free-variables",
       title: t("Nullity equals the number of free variables", "零度等于自由未知量的个数"),
       explanation: t(
-        "The dimension of Null(A), called the nullity of A, is equal to the number of free variables in the homogeneous equation Ax = 0.",
-        "Null(A) 的维数称为矩阵 A 的零度（nullity），等于齐次线性方程组 Ax = 0 中自由未知量的个数。",
+        "The dimension of $\\operatorname{Null}(A)$, called the nullity of $A$, equals the number of free variables in the homogeneous equation $A\\mathbf{x} = \\mathbf{0}$.",
+        "$\\operatorname{Null}(A)$ 的维数称为矩阵 $A$ 的零度，等于齐次线性方程组 $A\\mathbf{x} = \\mathbf{0}$ 中自由未知量的个数。",
       ),
       generate(rng) {
         const n = rng.int(4, 15);
@@ -1940,14 +1944,14 @@ export const theDimensionOfTheNullSpaceOfAMatrix: TopicDef = {
       id: "nullity-zero-and-uniqueness",
       title: t("Nullity 0 and linear independence", "零度为 0 与线性无关的等价性"),
       explanation: t(
-        "nullity(A) = 0 if and only if Null(A) = {0}, which means Ax = 0 has only the trivial solution and the columns of A are linearly independent.",
-        "nullity(A) = 0 当且仅当 Null(A) = {0}，这等价于 Ax = 0 仅有零解，且矩阵 A 的列向量线性无关。",
+        "$\\operatorname{nullity}(A) = 0$ if and only if $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$, which means $A\\mathbf{x} = \\mathbf{0}$ has only the trivial solution and the columns of $A$ are linearly independent.",
+        "$\\operatorname{nullity}(A) = 0$ 当且仅当 $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$，即 $A\\mathbf{x} = \\mathbf{0}$ 只有零解，且 $A$ 的列向量线性无关。",
       ),
       generate(rng) {
         const m = rng.int(3, 10);
         const n = rng.int(2, m);
         const prompt = t(
-          `What does $\\text{nullity}(A) = 0$ imply about a $${m} \\times ${n}$ matrix $A$?`,
+          `What does $\\text{nullity}(A) = 0$ imply about ${article(m)} $${m} \\times ${n}$ matrix $A$?`,
           `对于一个 $${m} \\times ${n}$ 矩阵 $A$，$\\text{nullity}(A) = 0$ 意味着什么？`,
         );
         const right = t(
@@ -1986,13 +1990,13 @@ export const theInvertibleMatrixTheoremInTermsOfDimensionRankAndNullity: TopicDe
       id: "imt-rank-conditions-n-by-n",
       title: t("Invertibility statements for rank and nullity", "秩与零度视角的方阵可逆等价命题"),
       explanation: t(
-        "For an n × n matrix A, the following are equivalent: 1. A is invertible; 2. rank(A) = n; 3. nullity(A) = 0; 4. Col(A) = ℝⁿ; 5. Null(A) = {0}.",
-        "对 n 阶方阵 A，以下条件相互等价：1. A 可逆；2. rank(A) = n；3. nullity(A) = 0；4. Col(A) = ℝⁿ；5. Null(A) = {0}。",
+        "For an $n \\times n$ matrix $A$, the following are equivalent: (1) $A$ is invertible; (2) $\\operatorname{rank}(A) = n$; (3) $\\operatorname{nullity}(A) = 0$; (4) $\\operatorname{Col}(A) = \\mathbb{R}^n$; (5) $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$.",
+        "对 $n \\times n$ 矩阵 $A$，以下条件相互等价：(1) $A$ 可逆；(2) $\\operatorname{rank}(A) = n$；(3) $\\operatorname{nullity}(A) = 0$；(4) $\\operatorname{Col}(A) = \\mathbb{R}^n$；(5) $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$。",
       ),
       generate(rng) {
         const n = rng.int(3, 30);
         const prompt = t(
-          `Let $A$ be an $${n} \\times ${n}$ square matrix. Which of the following conditions is equivalent to $A$ being invertible?`,
+          `Let $A$ be ${article(n)} $${n} \\times ${n}$ square matrix. Which of the following conditions is equivalent to $A$ being invertible?`,
           `设 $A$ 为一个 $${n} \\times ${n}$ 方阵。下列哪一个条件与 $A$ 可逆等价？`,
         );
         const right = t(`$\\text{rank}(A) = ${n}$ and $\\text{nullity}(A) = 0$`, `$\\text{rank}(A) = ${n}$ 且 $\\text{nullity}(A) = 0$`);
@@ -2012,15 +2016,15 @@ export const theInvertibleMatrixTheoremInTermsOfDimensionRankAndNullity: TopicDe
       id: "imt-singular-matrix-deductions",
       title: t("Deductions for non-invertible square matrices", "奇异矩阵的维数推论"),
       explanation: t(
-        "If an n × n matrix has rank(A) < n, then nullity(A) ≥ 1, det(A) = 0, its columns are linearly dependent and do not span ℝⁿ.",
-        "若 n 阶方阵的秩 rank(A) < n，则必有 nullity(A) ≥ 1，det(A) = 0，其列向量线性相关且不能张成 ℝⁿ。",
+        "If an $n \\times n$ matrix has $\\operatorname{rank}(A) < n$, then $\\operatorname{nullity}(A) \\ge 1$ and $\\det(A) = 0$, and its columns are linearly dependent and do not span $\\mathbb{R}^n$.",
+        "若 $n \\times n$ 矩阵满足 $\\operatorname{rank}(A) < n$，则 $\\operatorname{nullity}(A) \\ge 1$，$\\det(A) = 0$，其列向量线性相关且不能张成 $\\mathbb{R}^n$。",
       ),
       generate(rng) {
         const n = rng.int(3, 15);
         const r = rng.int(1, n - 1);
         const nullity = n - r;
         const prompt = t(
-          `An $${n} \\times ${n}$ matrix $A$ has $\\text{rank}(A) = ${r}$. Which statement must be true?`,
+          `${article(n, true)} $${n} \\times ${n}$ matrix $A$ has $\\text{rank}(A) = ${r}$. Which statement must be true?`,
           `一个 $${n} \\times ${n}$ 方阵 $A$ 满足 $\\text{rank}(A) = ${r}$。下列哪个断言必定成立？`,
         );
         const right = t(`$\\text{nullity}(A) = ${nullity}$, and $A$ is not invertible`, `$\\text{nullity}(A) = ${nullity}$，且 $A$ 不可逆`);
@@ -2056,8 +2060,8 @@ export const theRankNullityTheorem: TopicDef = {
       id: "rank-nullity-computation",
       title: t("Rank-Nullity formula computation", "应用秩-零度公式进行计算"),
       explanation: t(
-        "For an m × n matrix A, rank(A) + nullity(A) = n. Every column is either a pivot column or corresponds to a free variable.",
-        "对于 m × n 矩阵 A，rank(A) + nullity(A) = n。矩阵的每一列要么是主元列，要么对应一个自由未知量。",
+        "For an $m \\times n$ matrix $A$, $\\operatorname{rank}(A) + \\operatorname{nullity}(A) = n$: every column is either a pivot column or corresponds to a free variable.",
+        "对于 $m \\times n$ 矩阵 $A$，$\\operatorname{rank}(A) + \\operatorname{nullity}(A) = n$：每一列要么是主元列，要么对应一个自由未知量。",
       ),
       generate(rng) {
         const m = rng.int(3, 10);
@@ -2085,8 +2089,8 @@ export const theRankNullityTheorem: TopicDef = {
       id: "rank-nullity-homogeneous-system-analysis",
       title: t("Solution space dimension of homogeneous systems", "齐次线性方程组解空间的维数"),
       explanation: t(
-        "A homogeneous system of m linear equations in n variables Ax = 0 has a solution space of dimension n - rank(A).",
-        "含 n 个未知量的 m 个方程构成的齐次线性方程组 Ax = 0，其解空间的维数等于 n - rank(A)。",
+        "A homogeneous system $A\\mathbf{x} = \\mathbf{0}$ of $m$ linear equations in $n$ variables has a solution space of dimension $n - \\operatorname{rank}(A)$.",
+        "含 $n$ 个未知量、$m$ 个方程的齐次线性方程组 $A\\mathbf{x} = \\mathbf{0}$，其解空间的维数等于 $n - \\operatorname{rank}(A)$。",
       ),
       generate(rng) {
         const m = rng.int(3, 12);
@@ -2134,8 +2138,8 @@ export const introductionToAbstractVectorSpaces: TopicDef = {
       id: "abstract-vectors-elements",
       title: t("Objects in abstract vector spaces", "抽象向量空间中的元素与运算"),
       explanation: t(
-        "In abstract linear algebra, 'vectors' are elements of any set with addition and scalar multiplication satisfying vector space axioms, such as polynomials in ℙₙ or matrices in M_{m×n}.",
-        "在抽象线性代数中，'向量'指任何满足向量空间公理的集合中的元素，包括多项式空间 ℙₙ 中的多项式或矩阵空间 M_{m×n} 中的矩阵。",
+        'In abstract linear algebra, "vectors" are the elements of any set with an addition and a scalar multiplication satisfying the vector space axioms, such as polynomials in $\\mathbb{P}_n$ or matrices in $M_{m \\times n}$.',
+        '在抽象线性代数中，"向量"指任何满足向量空间公理的集合中的元素，例如多项式空间 $\\mathbb{P}_n$ 中的多项式或矩阵空间 $M_{m \\times n}$ 中的矩阵。',
       ),
       generate(rng) {
         const n = rng.int(2, 30);
@@ -2163,8 +2167,8 @@ export const introductionToAbstractVectorSpaces: TopicDef = {
       id: "zero-vector-in-abstract-spaces",
       title: t("The zero vector in abstract spaces", "抽象空间中的零向量"),
       explanation: t(
-        "Every vector space V has a unique zero vector 0 satisfying v + 0 = v for all v in V. In ℙₙ it is the zero polynomial 0, in M_{m×n} it is the m×n zero matrix O, and in C[a, b] it is the constant zero function f(x) = 0.",
-        "每个向量空间 V 都有唯一的零向量 0，满足 v + 0 = v。在 ℙₙ 中为零多项式 0，在 M_{m×n} 中为零矩阵 O，在 C[a, b] 中为恒零函数 f(x) = 0。",
+        "Every vector space $V$ has a unique zero vector $\\mathbf{0}$ satisfying $\\mathbf{v} + \\mathbf{0} = \\mathbf{v}$ for all $\\mathbf{v} \\in V$. In $\\mathbb{P}_n$ it is the zero polynomial $0$, in $M_{m \\times n}$ it is the $m \\times n$ zero matrix $O$, and in $C[a, b]$ it is the constant zero function $f(x) = 0$.",
+        "每个向量空间 $V$ 都有唯一的零向量 $\\mathbf{0}$，对所有 $\\mathbf{v} \\in V$ 满足 $\\mathbf{v} + \\mathbf{0} = \\mathbf{v}$。在 $\\mathbb{P}_n$ 中为零多项式 $0$，在 $M_{m \\times n}$ 中为 $m \\times n$ 零矩阵 $O$，在 $C[a, b]$ 中为恒零函数 $f(x) = 0$。",
       ),
       generate(rng) {
         const space = rng.pick(["matrices", "functions", "polynomials"]);
@@ -2259,8 +2263,8 @@ export const definingAbstractVectorSpaces: TopicDef = {
         const sc2 = rng.nonZero(-5, 5);
         if (type === "distrib-vector") {
           const prompt = t(
-            `Which vector space axiom is demonstrated by the identity $${sc1}(\\mathbf{u} + \\mathbf{v}) = ${sc1}\\mathbf{u} + ${sc1}\\mathbf{v}$ for scalar $c = ${sc1}$ and vectors $\\mathbf{u}, \\mathbf{v}$?`,
-            `等式 $${sc1}(\\mathbf{u} + \\mathbf{v}) = ${sc1}\\mathbf{u} + ${sc1}\\mathbf{v}$ 对标量 $c = ${sc1}$ 与向量 $\\mathbf{u}, \\mathbf{v}$ 成立，体现了哪条向量空间公理？`,
+            `Which vector space axiom is demonstrated by the identity $${sc1}(\\mathbf{u} + \\mathbf{v}) = ${poly([sc1, "\\mathbf{u}"], [sc1, "\\mathbf{v}"])}$ for scalar $c = ${sc1}$ and vectors $\\mathbf{u}, \\mathbf{v}$?`,
+            `等式 $${sc1}(\\mathbf{u} + \\mathbf{v}) = ${poly([sc1, "\\mathbf{u}"], [sc1, "\\mathbf{v}"])}$ 对标量 $c = ${sc1}$ 与向量 $\\mathbf{u}, \\mathbf{v}$ 成立，体现了哪条向量空间公理？`,
           );
           const right = t(`Distributivity of scalar multiplication with respect to vector addition`, `标量乘法对向量加法的分配律`);
           const wrong = [
@@ -2276,8 +2280,8 @@ export const definingAbstractVectorSpaces: TopicDef = {
         }
         if (type === "distrib-scalar") {
           const prompt = t(
-            `Which vector space axiom is demonstrated by $(${sc1} + ${sc2})\\mathbf{u} = ${sc1}\\mathbf{u} + ${sc2}\\mathbf{u}$ for scalars $c = ${sc1}, d = ${sc2}$ and vector $\\mathbf{u}$?`,
-            `等式 $(${sc1} + ${sc2})\\mathbf{u} = ${sc1}\\mathbf{u} + ${sc2}\\mathbf{u}$ 对标量 $c = ${sc1}, d = ${sc2}$ 与向量 $\\mathbf{u}$ 成立，体现了哪条向量空间公理？`,
+            `Which vector space axiom is demonstrated by $(${sc1} + ${paren(sc2)})\\mathbf{u} = ${poly([sc1, "\\mathbf{u}"], [sc2, "\\mathbf{u}"])}$ for scalars $c = ${sc1}, d = ${sc2}$ and vector $\\mathbf{u}$?`,
+            `等式 $(${sc1} + ${paren(sc2)})\\mathbf{u} = ${poly([sc1, "\\mathbf{u}"], [sc2, "\\mathbf{u}"])}$ 对标量 $c = ${sc1}, d = ${sc2}$ 与向量 $\\mathbf{u}$ 成立，体现了哪条向量空间公理？`,
           );
           const right = t(`Distributivity of scalar multiplication with respect to scalar addition`, `标量乘法对标量加法的分配律`);
           const wrong = [
@@ -2335,8 +2339,8 @@ export const definingAbstractVectorSpaces: TopicDef = {
       generate(rng) {
         const k = rng.nonZero(-25, 25);
         const prompt = t(
-          `On $\\mathbb{R}^2$, define vector addition non-standardly by $(x, y) \\oplus (u, v) = (x + u + ${k}, y + v)$, and define scalar multiplication as usual. Which vector space axiom fails?`,
-          `在 $\\mathbb{R}^2$ 上，向量加法非标准地定义为 $(x, y) \\oplus (u, v) = (x + u + ${k}, y + v)$，标量乘法采用通常定义。哪条向量空间公理不成立？`,
+          `On $\\mathbb{R}^2$, define vector addition non-standardly by $(x, y) \\oplus (u, v) = (${poly([1, "x"], [1, "u"], [k, ""])}, y + v)$, and define scalar multiplication as usual. Which vector space axiom fails?`,
+          `在 $\\mathbb{R}^2$ 上，向量加法非标准地定义为 $(x, y) \\oplus (u, v) = (${poly([1, "x"], [1, "u"], [k, ""])}, y + v)$，标量乘法采用通常定义。哪条向量空间公理不成立？`,
         );
         const right = t(
           `Distributivity of scalar multiplication over vector addition ($c(\\mathbf{u} \\oplus \\mathbf{v}) = c\\mathbf{u} \\oplus c\\mathbf{v}$) fails`,
@@ -2532,8 +2536,8 @@ export const subspacesOfAbstractVectorSpaces: TopicDef = {
       id: "subspaces-of-matrix-spaces",
       title: t("Subspaces of matrix spaces M_{n×n}", "矩阵空间 M_{n×n} 的子空间"),
       explanation: t(
-        "Subsets of M_{n×n} defined by linear constraints, such as symmetric matrices (Aᵀ = A), diagonal matrices, or matrices with zero trace (tr(A) = 0), form subspaces. Invertible matrices do NOT form a subspace (not closed under addition, no zero matrix).",
-        "由线性条件定义的 M_{n×n} 子集（如对称矩阵 Aᵀ = A、对角矩阵或零迹矩阵 tr(A) = 0）构成子空间。可逆矩阵不构成子空间（对加法不封闭，且不含零矩阵）。",
+        "Subsets of $M_{n \\times n}$ defined by linear constraints, such as the symmetric matrices ($A^T = A$), the diagonal matrices, or the matrices with zero trace ($\\operatorname{tr}(A) = 0$), form subspaces. The invertible matrices do not form a subspace: they are not closed under addition and do not contain the zero matrix.",
+        "由线性条件定义的 $M_{n \\times n}$ 子集（如对称矩阵 $A^T = A$、对角矩阵或零迹矩阵 $\\operatorname{tr}(A) = 0$）构成子空间。可逆矩阵不构成子空间：它们对加法不封闭，且不含零矩阵。",
       ),
       generate(rng) {
         const n = rng.int(2, 35);
@@ -2586,8 +2590,8 @@ export const basesInAbstractVectorSpaces: TopicDef = {
       id: "standard-bases-abstract",
       title: t("Standard bases for ℙₙ and M_{2×2}", "ℙₙ 与 M_{2×2} 的标准基"),
       explanation: t(
-        "The standard basis for ℙₙ is {1, t, t², ..., tⁿ}, containing n + 1 polynomials. The standard basis for M_{2×2} consists of the four elementary matrices E₁₁, E₁₂, E₂₁, E₂₂.",
-        "多项式空间 ℙₙ 的标准基为 {1, t, t², ..., tⁿ}，共含 n + 1 个多项式。矩阵空间 M_{2×2} 的标准基由 4 个单位元素矩阵 E₁₁, E₁₂, E₂₁, E₂₂ 组成。",
+        "The standard basis for $\\mathbb{P}_n$ is $\\{1, t, t^2, \\dots, t^n\\}$, which contains $n + 1$ polynomials. The standard basis for $M_{2 \\times 2}$ consists of the four elementary matrices $E_{11}, E_{12}, E_{21}, E_{22}$.",
+        "多项式空间 $\\mathbb{P}_n$ 的标准基为 $\\{1, t, t^2, \\dots, t^n\\}$，共含 $n + 1$ 个多项式。矩阵空间 $M_{2 \\times 2}$ 的标准基由 $4$ 个基本矩阵 $E_{11}, E_{12}, E_{21}, E_{22}$ 组成。",
       ),
       generate(rng) {
         const n = rng.int(2, 40);
@@ -2715,8 +2719,8 @@ export const theCoordinatesOfAVectorRelativeToABasisInAbstractVectorSpaces: Topi
       id: "matrix-coordinate-vector-m22",
       title: t("Coordinate vector of a 2×2 matrix", "2×2 矩阵在标准基下的坐标向量"),
       explanation: t(
-        "For M_{2×2} with standard ordered basis ℬ = {E₁₁, E₁₂, E₂₁, E₂₂}, the matrix [[a, b], [c, d]] has coordinate vector [M]_ℬ = (a, b, c, d)ᵀ in ℝ⁴.",
-        "在 M_{2×2} 中，关于标准有序基 ℬ = {E₁₁, E₁₂, E₂₁, E₂₂}，矩阵 [[a, b], [c, d]] 的坐标向量为 ℝ⁴ 中的 (a, b, c, d)ᵀ。",
+        "For $M_{2 \\times 2}$ with the standard ordered basis $\\mathcal{B} = \\{E_{11}, E_{12}, E_{21}, E_{22}\\}$, the matrix $M = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ has coordinate vector $[M]_{\\mathcal{B}} = (a, b, c, d)^T$ in $\\mathbb{R}^4$.",
+        "在 $M_{2 \\times 2}$ 中，关于标准有序基 $\\mathcal{B} = \\{E_{11}, E_{12}, E_{21}, E_{22}\\}$，矩阵 $M = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ 的坐标向量为 $\\mathbb{R}^4$ 中的 $[M]_{\\mathcal{B}} = (a, b, c, d)^T$。",
       ),
       generate(rng) {
         const a = rng.int(-4, 4);
@@ -2769,8 +2773,8 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
       id: "dimension-formula-abstract-spaces",
       title: t("Dimension formulas for ℙₙ and M_{m×n}", "ℙₙ 与 M_{m×n} 的维数公式"),
       explanation: t(
-        "dim(ℙₙ) = n + 1 because its standard basis {1, t, ..., tⁿ} has n + 1 elements. For matrix spaces, dim(M_{m×n}) = mn. For symmetric n×n matrices, the dimension is n(n + 1)/2.",
-        "dim(ℙₙ) = n + 1，因为其标准基 {1, t, ..., tⁿ} 包含 n + 1 个元素。矩阵空间的维数为 dim(M_{m×n}) = mn。对于 n 阶对称矩阵子空间，维数为 n(n + 1)/2。",
+        "$\\dim(\\mathbb{P}_n) = n + 1$ because its standard basis $\\{1, t, \\dots, t^n\\}$ has $n + 1$ elements. For matrix spaces, $\\dim(M_{m \\times n}) = mn$. For the symmetric $n \\times n$ matrices, the dimension is $\\frac{n(n + 1)}{2}$.",
+        "$\\dim(\\mathbb{P}_n) = n + 1$，因为其标准基 $\\{1, t, \\dots, t^n\\}$ 包含 $n + 1$ 个元素。矩阵空间的维数为 $\\dim(M_{m \\times n}) = mn$。$n$ 阶对称矩阵子空间的维数为 $\\frac{n(n + 1)}{2}$。",
       ),
       generate(rng) {
         const choice = rng.pick(["polynomials", "matrices", "symmetric"]);
@@ -2835,8 +2839,8 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
       id: "finite-vs-infinite-dimensional",
       title: t("Finite vs infinite-dimensional vector spaces", "有限维与无限维向量空间"),
       explanation: t(
-        "A vector space is finite-dimensional if it is spanned by a finite set of vectors. Otherwise, it is infinite-dimensional, such as the space ℙ of all polynomials, C[a, b], or C^∞(ℝ).",
-        "若向量空间可由有限个向量张成，则为有限维空间；否则为无限维空间，例如所有多项式的空间 ℙ、连续函数空间 C[a, b] 以及光滑函数空间 C^∞(ℝ)。",
+        "A vector space is finite-dimensional if it is spanned by a finite set of vectors. Otherwise it is infinite-dimensional, such as the space $\\mathbb{P}$ of all polynomials, $C[a, b]$, or $C^\\infty(\\mathbb{R})$.",
+        "若向量空间可由有限个向量张成，则为有限维空间；否则为无限维空间，例如所有多项式的空间 $\\mathbb{P}$、连续函数空间 $C[a, b]$ 以及光滑函数空间 $C^\\infty(\\mathbb{R})$。",
       ),
       generate(rng) {
         const a = rng.int(-5, 0);

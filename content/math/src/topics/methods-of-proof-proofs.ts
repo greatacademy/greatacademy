@@ -967,7 +967,7 @@ export const provingDivisibilityByContrapositive: TopicDef = {
         const d = rng.int(2, 9);
         const a = rng.pick(range(1, 6).filter((x) => x % d !== 0));
         const b = rng.int(1, 5) * d;
-        const expr = `${term(a, "n^2")} + ${b}n`;
+        const expr = `${term(a, "n^2")} + ${term(b, "n")}`;
         const z = (x: string, y: string) => t(`$\\text{if } ${x} \\text{ then } ${y}$`, `$\\text{若 } ${x} \\text{，则 } ${y}$`);
         const right = z(`${d} \\mid n`, `${d} \\mid ${expr}`);
         return oneOf(
@@ -996,7 +996,7 @@ export const provingDivisibilityByContrapositive: TopicDef = {
         const d = rng.int(2, 9);
         const a = rng.int(1, 5);
         const b = rng.int(1, 9);
-        const expr = `${term(a, "n^2")} + ${b}n`;
+        const expr = `${term(a, "n^2")} + ${term(b, "n")}`;
         const inner = (x: number, y: number) => `${term(x, "j^2")}${plus(y, "j")}`;
         return oneOf(
           rng,
@@ -1212,9 +1212,9 @@ export const provingPropertiesOfIrrationalsByContradiction: TopicDef = {
         const a = rng.int(-9, 9);
         const b = rng.int(1, 7);
         const lhs = `${a === 0 ? "" : `${a} + `}${b === 1 ? "" : b}\\sqrt{${p}}`;
-        const num = a === 0 ? "m" : `m ${a > 0 ? "-" : "+"} ${Math.abs(a)}n`;
+        const num = a === 0 ? "m" : `m ${a > 0 ? "-" : "+"} ${term(Math.abs(a), "n")}`;
         const den = b === 1 ? "n" : `${b}n`;
-        const numBad = a === 0 ? `m - n` : `m ${a > 0 ? "+" : "-"} ${Math.abs(a)}n`;
+        const numBad = a === 0 ? `m - n` : `m ${a > 0 ? "+" : "-"} ${term(Math.abs(a), "n")}`;
         return oneOf(
           rng,
           t(

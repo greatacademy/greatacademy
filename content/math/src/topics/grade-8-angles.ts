@@ -964,8 +964,8 @@ const problemSolvingWithAnglesOfTriangles = topic(
           unit: "°",
           wrong: [part, q * part, largest ? p * part : r * part, ...(Number.isInteger(360 / s) ? [k * (360 / s)] : [])],
           solution: t(
-            `Write the angles as $${p}x$, $${q}x$ and $${r}x$; they add up to $180^\\circ$:${steps(`${p}x + ${q}x + ${r}x = 180`, `${s}x = 180`, `x = ${part}`)}The ${largest ? "largest" : "smallest"} angle is $${k}x = ${k} \\cdot ${part} = ${degTex(answer)}$.`,
-            `把三个角写成 $${p}x$、$${q}x$、$${r}x$，它们的和为 $180^\\circ$：${steps(`${p}x + ${q}x + ${r}x = 180`, `${s}x = 180`, `x = ${part}`)}${largest ? "最大" : "最小"}的角是 $${k}x = ${k} \\cdot ${part} = ${degTex(answer)}$。`,
+            `Write the angles as $${linear(p, 0)}$, $${linear(q, 0)}$ and $${linear(r, 0)}$; they add up to $180^\\circ$:${steps(`${linear(p, 0)} + ${linear(q, 0)} + ${linear(r, 0)} = 180`, `${s}x = 180`, `x = ${part}`)}The ${largest ? "largest" : "smallest"} angle is $${k === 1 ? `x = ${degTex(answer)}` : `${k}x = ${k} \\cdot ${part} = ${degTex(answer)}`}$.`,
+            `把三个角写成 $${linear(p, 0)}$、$${linear(q, 0)}$、$${linear(r, 0)}$，它们的和为 $180^\\circ$：${steps(`${linear(p, 0)} + ${linear(q, 0)} + ${linear(r, 0)} = 180`, `${s}x = 180`, `x = ${part}`)}${largest ? "最大" : "最小"}的角是 $${k === 1 ? `x = ${degTex(answer)}` : `${k}x = ${k} \\cdot ${part} = ${degTex(answer)}`}$。`,
           ),
         });
       },

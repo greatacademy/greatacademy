@@ -20,8 +20,8 @@ export const mathematicsForMachineLearningContinuousConditioningTopics: TopicDef
         id: "evaluating-continuous-conditional-expectation",
         title: t("Evaluating conditional expectation for continuous distributions", "计算连续分布的条件期望"),
         explanation: t(
-          "f_{X|Y}(x | y) = f(x, y) / f_Y(y). Then E[X | Y = y] = ∫ x f_{X|Y}(x | y) dx. If X | Y = y ~ Uniform(0, y), E[X | Y = y] = y / 2.",
-          "f_{X|Y}(x | y) = f(x, y) / f_Y(y)。从而 E[X | Y = y] = ∫ x f_{X|Y}(x | y) dx。若 X | Y = y ~ Uniform(0, y)，则 E[X | Y = y] = y / 2。",
+          "$f_{X \\mid Y}(x \\mid y) = \\frac{f(x, y)}{f_Y(y)}$, and then $E[X \\mid Y = y] = \\int x \\, f_{X \\mid Y}(x \\mid y) \\, dx$. If $X \\mid Y = y \\sim \\text{Uniform}(0, y)$, then $E[X \\mid Y = y] = \\frac{y}{2}$.",
+          "$f_{X \\mid Y}(x \\mid y) = \\frac{f(x, y)}{f_Y(y)}$，从而 $E[X \\mid Y = y] = \\int x \\, f_{X \\mid Y}(x \\mid y) \\, dx$。若 $X \\mid Y = y \\sim \\text{Uniform}(0, y)$，则 $E[X \\mid Y = y] = \\frac{y}{2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const kind = rng.int(0, 1);
@@ -92,8 +92,8 @@ export const mathematicsForMachineLearningContinuousConditioningTopics: TopicDef
         id: "evaluating-continuous-conditional-variance",
         title: t("Evaluating conditional variance for continuous distributions", "计算连续分布的条件方差"),
         explanation: t(
-          "For X | Y = y ~ Uniform(0, y), the conditional variance is Var(X | Y = y) = y^2 / 12.",
-          "若 X | Y = y ~ Uniform(0, y)，则条件方差为 Var(X | Y = y) = y^2 / 12。",
+          "For $X \\mid Y = y \\sim \\text{Uniform}(0, y)$, the conditional variance is $\\operatorname{Var}(X \\mid Y = y) = \\frac{y^2}{12}$.",
+          "若 $X \\mid Y = y \\sim \\text{Uniform}(0, y)$，则条件方差为 $\\operatorname{Var}(X \\mid Y = y) = \\frac{y^2}{12}$。",
         ),
         generate: (rng: Rng): Problem => {
           // X | Y = y is Uniform(0, c * y) for c in {1, 2, 3}

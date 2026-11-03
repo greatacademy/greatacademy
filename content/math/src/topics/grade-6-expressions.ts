@@ -271,7 +271,7 @@ export const constructingAlgebraicExpressions = topic(
   "constructing-algebraic-expressions",
   t("Constructing Algebraic Expressions", "列代数式"),
   t(
-    "To write an expression for a situation, decide which operation each part describes. If pencils cost $2 each and a notebook costs $5, then p pencils and a notebook cost 2p + 5 dollars. Use parentheses for a sum or difference that is found first: “3 times the sum of x and 4” is 3(x + 4).",
+    "To write an expression for a situation, decide which operation each part describes. If pencils cost \\$2 each and a notebook costs \\$5, then p pencils and a notebook cost 2p + 5 dollars. Use parentheses for a sum or difference that is found first: “3 times the sum of x and 4” is 3(x + 4).",
     "为情境列代数式时，先判断每一部分对应哪种运算。铅笔每支 2 美元、笔记本 5 美元，那么 p 支铅笔和一本笔记本共 2p + 5 美元。需要先算的和或差要加括号：“x 与 4 的和的 3 倍”是 3(x + 4)。",
   ),
   ["introduction-to-algebraic-expressions"],

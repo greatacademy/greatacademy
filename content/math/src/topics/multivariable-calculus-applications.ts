@@ -1,6 +1,6 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { poly, Q } from "@ga/subject-math";
 import { numberProblem, steps } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -150,20 +150,20 @@ export const theComponentsOfAcceleration: TopicDef = {
         const aN = k * k * R;
 
         const prompt = t(
-          `A particle traverses the helix $\\mathbf{r}(t) = \\langle ${R} \\cos(${k}t), ${R} \\sin(${k}t), ${c}t \\rangle$. Find the magnitude of the normal component of acceleration $a_N$.`,
-          `一质点沿螺旋线 $\\mathbf{r}(t) = \\langle ${R} \\cos(${k}t), ${R} \\sin(${k}t), ${c}t \\rangle$ 运动。求加速度法向分量的模长 $a_N$。`,
+          `A particle traverses the helix $\\mathbf{r}(t) = \\langle ${R} \\cos(${poly([k, "t"])}), ${R} \\sin(${poly([k, "t"])}), ${poly([c, "t"])} \\rangle$. Find the magnitude of the normal component of acceleration $a_N$.`,
+          `一质点沿螺旋线 $\\mathbf{r}(t) = \\langle ${R} \\cos(${poly([k, "t"])}), ${R} \\sin(${poly([k, "t"])}), ${poly([c, "t"])} \\rangle$ 运动。求加速度法向分量的模长 $a_N$。`,
         );
         const solution = t(
           steps(
-            `Compute velocity: $\\mathbf{v}(t) = \\mathbf{r}'(t) = \\langle -${k * R} \\sin(${k}t), ${k * R} \\cos(${k}t), ${c} \\rangle$.`,
+            `Compute velocity: $\\mathbf{v}(t) = \\mathbf{r}'(t) = \\langle -${k * R} \\sin(${poly([k, "t"])}), ${k * R} \\cos(${poly([k, "t"])}), ${c} \\rangle$.`,
             `The speed is $v = \\|\\mathbf{v}(t)\\| = \\sqrt{(${k * R})^2 + ${c}^2}$, which is constant, so tangential acceleration $a_T = \\frac{dv}{dt} = 0$.`,
-            `Compute acceleration: $\\mathbf{a}(t) = \\mathbf{r}''(t) = \\langle -${k * k * R} \\cos(${k}t), -${k * k * R} \\sin(${k}t), 0 \\rangle$.`,
-            `Because $a_T = 0$, $a_N = \\|\\mathbf{a}(t)\\| = \\sqrt{(-${k * k * R} \\cos(${k}t))^2 + (-${k * k * R} \\sin(${k}t))^2} = ${aN}$.`,
+            `Compute acceleration: $\\mathbf{a}(t) = \\mathbf{r}''(t) = \\langle -${k * k * R} \\cos(${poly([k, "t"])}), -${k * k * R} \\sin(${poly([k, "t"])}), 0 \\rangle$.`,
+            `Because $a_T = 0$, $a_N = \\|\\mathbf{a}(t)\\| = \\sqrt{(-${k * k * R} \\cos(${poly([k, "t"])}))^2 + (-${k * k * R} \\sin(${poly([k, "t"])}))^2} = ${aN}$.`,
           ),
           steps(
-            `计算速度向量：$\\mathbf{v}(t) = \\mathbf{r}'(t) = \\langle -${k * R} \\sin(${k}t), ${k * R} \\cos(${k}t), ${c} \\rangle$。`,
+            `计算速度向量：$\\mathbf{v}(t) = \\mathbf{r}'(t) = \\langle -${k * R} \\sin(${poly([k, "t"])}), ${k * R} \\cos(${poly([k, "t"])}), ${c} \\rangle$。`,
             `速率为 $v = \\|\\mathbf{v}(t)\\| = \\sqrt{(${k * R})^2 + ${c}^2}$ 为常数，故切向加速度 $a_T = \\frac{dv}{dt} = 0$。`,
-            `计算加速度向量：$\\mathbf{a}(t) = \\mathbf{r}''(t) = \\langle -${k * k * R} \\cos(${k}t), -${k * k * R} \\sin(${k}t), 0 \\rangle$。`,
+            `计算加速度向量：$\\mathbf{a}(t) = \\mathbf{r}''(t) = \\langle -${k * k * R} \\cos(${poly([k, "t"])}), -${k * k * R} \\sin(${poly([k, "t"])}), 0 \\rangle$。`,
             `由 $a_T = 0$，法向加速度大小为 $a_N = \\|\\mathbf{a}(t)\\| = ${aN}$。`,
           ),
         );
@@ -379,18 +379,18 @@ export const densityMassAndChargeOfPlaneLaminas: TopicDef = {
         const mass = H * (a * halfW * W + b * W);
 
         const prompt = t(
-          `Find the total mass $M$ of a planar lamina occupying the rectangle $D = [0, ${W}] \\times [0, ${H}]$ with density function $\\rho(x, y) = ${a}x + ${b}$.`,
-          `求占据矩形区域 $D = [0, ${W}] \\times [0, ${H}]$、面密度为 $\\rho(x, y) = ${a}x + ${b}$ 的平面薄片的总质量 $M$。`,
+          `Find the total mass $M$ of a planar lamina occupying the rectangle $D = [0, ${W}] \\times [0, ${H}]$ with density function $\\rho(x, y) = ${poly([a, "x"])} + ${b}$.`,
+          `求占据矩形区域 $D = [0, ${W}] \\times [0, ${H}]$、面密度为 $\\rho(x, y) = ${poly([a, "x"])} + ${b}$ 的平面薄片的总质量 $M$。`,
         );
         const solution = t(
           steps(
-            `Total mass is given by $M = \\iint_D \\rho(x, y)\\,dA = \\int_0^{${H}} dy \\int_0^{${W}} (${a}x + ${b})\\,dx$.`,
-            `Integrate with respect to $x$: $\\left[\\frac{${a}}{2}x^2 + ${b}x\\right]_0^{${W}} = ${a}\\left(\\frac{${W}^2}{2}\\right) + ${b}(${W}) = ${a * halfW * W} + ${b * W} = ${a * halfW * W + b * W}$.`,
+            `Total mass is given by $M = \\iint_D \\rho(x, y)\\,dA = \\int_0^{${H}} dy \\int_0^{${W}} (${poly([a, "x"])} + ${b})\\,dx$.`,
+            `Integrate with respect to $x$: $\\left[\\frac{${a}}{2}x^2 + ${poly([b, "x"])}\\right]_0^{${W}} = ${a}\\left(\\frac{${W}^2}{2}\\right) + ${b}(${W}) = ${a * halfW * W} + ${b * W} = ${a * halfW * W + b * W}$.`,
             `Integrate with respect to $y$: multiply by $H = ${H}$: $M = (${a * halfW * W + b * W}) \\times ${H} = ${mass}$.`,
           ),
           steps(
-            `总质量公式为 $M = \\iint_D \\rho(x, y)\\,dA = \\int_0^{${H}} dy \\int_0^{${W}} (${a}x + ${b})\\,dx$。`,
-            `对 $x$ 积分：$\\left[\\frac{${a}}{2}x^2 + ${b}x\\right]_0^{${W}} = ${a * halfW * W + b * W}$。`,
+            `总质量公式为 $M = \\iint_D \\rho(x, y)\\,dA = \\int_0^{${H}} dy \\int_0^{${W}} (${poly([a, "x"])} + ${b})\\,dx$。`,
+            `对 $x$ 积分：$\\left[\\frac{${a}}{2}x^2 + ${poly([b, "x"])}\\right]_0^{${W}} = ${a * halfW * W + b * W}$。`,
             `对 $y$ 积分：乘以高 $H = ${H}$ 得 $M = (${a * halfW * W + b * W}) \\times ${H} = ${mass}$。`,
           ),
         );
@@ -421,7 +421,7 @@ export const momentsAndCenterOfMass: TopicDef = {
       id: "defining-moments-and-center-of-mass-coordinates",
       title: t("Defining moments and center of mass coordinates", "一阶矩与质心坐标的定义"),
       explanation: t(
-        "The first moment about the $y$-axis is $M_y = \\iint_D x \\rho(x, y)\\,dA$. For a uniform lamina ($\\\\rho = 1$) over $[0, W] \\times [0, H]$, $M_y = \\int_0^H dy \\int_0^W x\\,dx = H \\frac{W^2}{2}$.",
+        "The first moment about the $y$-axis is $M_y = \\iint_D x \\rho(x, y)\\,dA$. For a uniform lamina ($\\rho = 1$) over $[0, W] \\times [0, H]$, $M_y = \\int_0^H dy \\int_0^W x\\,dx = H \\frac{W^2}{2}$.",
         "薄片对 $y$ 轴的一阶矩为 $M_y = \\iint_D x \\rho(x, y)\\,dA$。对于矩形 $[0, W] \\times [0, H]$ 上的均匀薄片（$\\rho = 1$），$M_y = \\int_0^H dy \\int_0^W x\\,dx = H \\frac{W^2}{2}$。",
       ),
       generate(rng: Rng): Problem {
@@ -483,17 +483,17 @@ export const momentsAndCentersOfMassOfThinRods: TopicDef = {
         const mass = kappa * L * L;
 
         const prompt = t(
-          `A thin straight rod occupies the interval $[0, ${L}]$ with linear density $\\lambda(x) = ${k}x$. Find the total mass $m$ of the rod.`,
-          `一根细直棒占据区间 $[0, ${L}]$，其线密度为 $\\lambda(x) = ${k}x$。求该细棒的总质量 $m$。`,
+          `A thin straight rod occupies the interval $[0, ${L}]$ with linear density $\\lambda(x) = ${poly([k, "x"])}$. Find the total mass $m$ of the rod.`,
+          `一根细直棒占据区间 $[0, ${L}]$，其线密度为 $\\lambda(x) = ${poly([k, "x"])}$。求该细棒的总质量 $m$。`,
         );
         const solution = t(
           steps(
-            `Total mass is obtained by integrating the linear density: $m = \\int_0^{${L}} \\lambda(x)\\,dx = \\int_0^{${L}} ${k}x\\,dx$.`,
-            `Evaluate the integral: $m = \\left[${kappa}x^2\\right]_0^{${L}} = ${kappa}(${L})^2 = ${kappa}(${L * L}) = ${mass}$.`,
+            `Total mass is obtained by integrating the linear density: $m = \\int_0^{${L}} \\lambda(x)\\,dx = \\int_0^{${L}} ${poly([k, "x"])}\\,dx$.`,
+            `Evaluate the integral: $m = \\left[${poly([kappa, "x^2"])}\\right]_0^{${L}} = ${kappa}(${L})^2 = ${kappa}(${L * L}) = ${mass}$.`,
           ),
           steps(
-            `总质量由对线密度积分求得：$m = \\int_0^{${L}} \\lambda(x)\\,dx = \\int_0^{${L}} ${k}x\\,dx$。`,
-            `定积分求值：$m = \\left[${kappa}x^2\\right]_0^{${L}} = ${kappa}(${L})^2 = ${mass}$。`,
+            `总质量由对线密度积分求得：$m = \\int_0^{${L}} \\lambda(x)\\,dx = \\int_0^{${L}} ${poly([k, "x"])}\\,dx$。`,
+            `定积分求值：$m = \\left[${poly([kappa, "x^2"])}\\right]_0^{${L}} = ${kappa}(${L})^2 = ${mass}$。`,
           ),
         );
         return numberProblem({
@@ -534,18 +534,18 @@ export const momentsAndCentersOfMassOfPlaneLaminas: TopicDef = {
         const xBar = 2 * w;
 
         const prompt = t(
-          `Find the $x$-coordinate of the center of mass $\\bar{x}$ of the planar lamina occupying $D = [0, ${W}] \\times [0, ${H}]$ with density $\\rho(x, y) = ${c}x$.`,
-          `求占据矩形区域 $D = [0, ${W}] \\times [0, ${H}]$、面密度为 $\\rho(x, y) = ${c}x$ 的平面薄片质心的横坐标 $\\bar{x}$。`,
+          `Find the $x$-coordinate of the center of mass $\\bar{x}$ of the planar lamina occupying $D = [0, ${W}] \\times [0, ${H}]$ with density $\\rho(x, y) = ${poly([c, "x"])}$.`,
+          `求占据矩形区域 $D = [0, ${W}] \\times [0, ${H}]$、面密度为 $\\rho(x, y) = ${poly([c, "x"])}$ 的平面薄片质心的横坐标 $\\bar{x}$。`,
         );
         const solution = t(
           steps(
-            `The total mass is $M = \\iint_D ${c}x\\,dA = ${c} H \\int_0^{${W}} x\\,dx = ${c} H \\left(\\frac{${W}^2}{2}\\right)$.`,
-            `The moment about the $y$-axis is $M_y = \\iint_D x(${c}x)\\,dA = ${c} H \\int_0^{${W}} x^2\\,dx = ${c} H \\left(\\frac{${W}^3}{3}\\right)$.`,
+            `The total mass is $M = \\iint_D ${poly([c, "x"])}\\,dA = ${c} H \\int_0^{${W}} x\\,dx = ${c} H \\left(\\frac{${W}^2}{2}\\right)$.`,
+            `The moment about the $y$-axis is $M_y = \\iint_D x(${poly([c, "x"])})\\,dA = ${c} H \\int_0^{${W}} x^2\\,dx = ${c} H \\left(\\frac{${W}^3}{3}\\right)$.`,
             `Compute $\\bar{x} = \\frac{M_y}{M} = \\frac{\\frac{1}{3}W^3}{\\frac{1}{2}W^2} = \\frac{2}{3}W = \\frac{2}{3}(${W}) = ${xBar}$.`,
           ),
           steps(
-            `总质量为 $M = \\iint_D ${c}x\\,dA = ${c} H \\int_0^{${W}} x\\,dx = ${c} H \\frac{${W}^2}{2}$。`,
-            `对 $y$ 轴一阶矩为 $M_y = \\iint_D x(${c}x)\\,dA = ${c} H \\int_0^{${W}} x^2\\,dx = ${c} H \\frac{${W}^3}{3}$。`,
+            `总质量为 $M = \\iint_D ${poly([c, "x"])}\\,dA = ${c} H \\int_0^{${W}} x\\,dx = ${c} H \\frac{${W}^2}{2}$。`,
+            `对 $y$ 轴一阶矩为 $M_y = \\iint_D x(${poly([c, "x"])})\\,dA = ${c} H \\int_0^{${W}} x^2\\,dx = ${c} H \\frac{${W}^3}{3}$。`,
             `计算质心横坐标：$\\bar{x} = \\frac{M_y}{M} = \\frac{2}{3}W = \\frac{2}{3}(${W}) = ${xBar}$。`,
           ),
         );

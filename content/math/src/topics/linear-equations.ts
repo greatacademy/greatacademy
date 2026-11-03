@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { dec, linear, num, poly, Q, relSymbol } from "@ga/subject-math";
 
 import {
+  article,
   choiceProblem,
   type ExpressionProblem,
   expressionProblem,
@@ -1018,7 +1019,10 @@ const linearContexts: readonly LinearContext[] = [
     vMeaning: t("the number of months", "会员的月数"),
     totalMeaning: t("the total cost of the membership", "会员的总费用"),
     describe: (f, r) =>
-      t(`A gym charges a $\\$${f}$ sign-up fee plus $\\$${r}$ per month.`, `一家健身房收取 $${f}$ 元入会费，另外每月收费 $${r}$ 元。`),
+      t(
+        `A gym charges ${article(f)} $\\$${f}$ sign-up fee plus $\\$${r}$ per month.`,
+        `一家健身房收取 $${f}$ 元入会费，另外每月收费 $${r}$ 元。`,
+      ),
     findV: (n) =>
       t(`Leo has paid $\\$${n}$ in total. For how many months has he been a member?`, `小李一共付了 $${n}$ 元。他当了几个月的会员？`),
   },
@@ -1036,7 +1040,7 @@ const linearContexts: readonly LinearContext[] = [
     totalMeaning: t("the total bill", "账单的总额"),
     describe: (f, r) =>
       t(
-        `A plumber charges a $\\$${f}$ call-out fee plus $\\$${r}$ per hour of work.`,
+        `A plumber charges ${article(f)} $\\$${f}$ call-out fee plus $\\$${r}$ per hour of work.`,
         `一位水管工每次上门收取 $${f}$ 元出车费，另外每工作一小时收费 $${r}$ 元。`,
       ),
     findV: (n) =>
@@ -2132,7 +2136,7 @@ export const mixtureProblems: TopicDef = {
           const [p, q, r, v, x] = rng.pick(mixTwo);
           return numberProblem({
             prompt: t(
-              `How many liters of a $${p}\\%$ ${s.en} must be added to $${v}$ liters of a $${q}\\%$ ${s.en} to make a $${r}\\%$ ${s.en}?`,
+              `How many liters of ${article(p)} $${p}\\%$ ${s.en} must be added to $${v}$ liters of ${article(q)} $${q}\\%$ ${s.en} to make ${article(r)} $${r}\\%$ ${s.en}?`,
               `需要在 $${v}$ 升浓度为 $${q}\\%$ 的${s.zh}中加入多少升浓度为 $${p}\\%$ 的${s.zh}，才能得到浓度为 $${r}\\%$ 的${s.zh}？`,
             ),
             answer: x,
@@ -2146,7 +2150,7 @@ export const mixtureProblems: TopicDef = {
         const [p, q, r, total, x] = rng.pick(mixTotal);
         return numberProblem({
           prompt: t(
-            `A chemist mixes a $${p}\\%$ ${s.en} with a $${q}\\%$ ${s.en} to make $${total}$ liters of a $${r}\\%$ ${s.en}. How many liters of the $${p}\\%$ ${s.en} does she use?`,
+            `A chemist mixes ${article(p)} $${p}\\%$ ${s.en} with ${article(q)} $${q}\\%$ ${s.en} to make $${total}$ liters of ${article(r)} $${r}\\%$ ${s.en}. How many liters of the $${p}\\%$ ${s.en} does she use?`,
             `一位化学家把浓度为 $${p}\\%$ 和 $${q}\\%$ 的${s.zh}混合，配成 $${total}$ 升浓度为 $${r}\\%$ 的${s.zh}。她用了多少升浓度为 $${p}\\%$ 的${s.zh}？`,
           ),
           answer: x,
@@ -2171,7 +2175,7 @@ export const mixtureProblems: TopicDef = {
           const [p, r, v, x] = rng.pick(dilutions);
           return numberProblem({
             prompt: t(
-              `How many liters of water must be added to $${v}$ liters of a $${p}\\%$ ${s.en} to dilute it to $${r}\\%$?`,
+              `How many liters of water must be added to $${v}$ liters of ${article(p)} $${p}\\%$ ${s.en} to dilute it to $${r}\\%$?`,
               `需要在 $${v}$ 升浓度为 $${p}\\%$ 的${s.zh}中加入多少升水，才能把浓度稀释为 $${r}\\%$？`,
             ),
             answer: x,
@@ -2185,7 +2189,7 @@ export const mixtureProblems: TopicDef = {
         const [p, r, v, x] = rng.pick(concentrations);
         return numberProblem({
           prompt: t(
-            `How many liters of ${s.pure.en} must be added to $${v}$ liters of a $${p}\\%$ ${s.en} to raise the concentration to $${r}\\%$?`,
+            `How many liters of ${s.pure.en} must be added to $${v}$ liters of ${article(p)} $${p}\\%$ ${s.en} to raise the concentration to $${r}\\%$?`,
             `需要在 $${v}$ 升浓度为 $${p}\\%$ 的${s.zh}中加入多少升${s.pure["zh-CN"]}，才能把浓度提高到 $${r}\\%$？`,
           ),
           answer: x,

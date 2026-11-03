@@ -1,7 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
-import { choiceProblem, numberProblem } from "../problems.ts";
+import { article, choiceProblem, numberProblem } from "../problems.ts";
 
 // Precalculus unit 6: Matrices (Part 1: Matrix Algebra and Determinants,
 // modules 6.21, 6.22, and 6.23).
@@ -467,7 +467,7 @@ export const addingAndSubtractingMatrices: TopicDef = {
               ),
             ],
             t(
-              `Both matrices have dimension $${m1} \\times ${n1}$. Since their dimensions match, $A + B$ is defined and produces an $${m1} \\times ${n1}$ matrix.`,
+              `Both matrices have dimension $${m1} \\times ${n1}$. Since their dimensions match, $A + B$ is defined and produces ${article(m1)} $${m1} \\times ${n1}$ matrix.`,
               `两个矩阵的维度均为 $${m1} \\times ${n1}$。由于维度完全相同，因此 $A + B$ 有定义，运算结果为 $${m1} \\times ${n1}$ 矩阵。`,
             ),
           );
@@ -896,7 +896,7 @@ export const theTransposeOfAMatrix: TopicDef = {
             t(`$${matLatex(negAT)}$`, `$${matLatex(negAT)}$`),
           ],
           t(
-            `Row $i$ of $A$ becomes column $i$ of $A^T$. The $${m} \\times ${n}$ matrix transposes into an $${n} \\times ${m}$ matrix: $A^T = ${atLatex}$.`,
+            `Row $i$ of $A$ becomes column $i$ of $A^T$. The $${m} \\times ${n}$ matrix transposes into ${article(n)} $${n} \\times ${m}$ matrix: $A^T = ${atLatex}$.`,
             `矩阵 $A$ 的第 $i$ 行变为 $A^T$ 的第 $i$ 列。$${m} \\times ${n}$ 矩阵转置后成为 $${n} \\times ${m}$ 矩阵：$A^T = ${atLatex}$。`,
           ),
         );

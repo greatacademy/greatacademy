@@ -1,5 +1,6 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { poly } from "@ga/subject-math";
 import { numberProblem, steps } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -141,17 +142,17 @@ export const introductionToSecondOrderLinearOdes: TopicDef = {
         const ans = -p * y1 - q * y0;
 
         const prompt = t(
-          `Consider the second-order homogeneous differential equation $y'' + ${p}y' + ${q}y = 0$ subject to initial conditions $y(0) = ${y0}$ and $y'(0) = ${y1}$. Find the initial second derivative $y''(0)$.`,
-          `考虑二阶齐次微分方程 $y'' + ${p}y' + ${q}y = 0$，初始条件为 $y(0) = ${y0}$ 和 $y'(0) = ${y1}$。求初始二阶导数值 $y''(0)$。`,
+          `Consider the second-order homogeneous differential equation $y'' + ${poly([p, "y'"])} + ${poly([q, "y"])} = 0$ subject to initial conditions $y(0) = ${y0}$ and $y'(0) = ${y1}$. Find the initial second derivative $y''(0)$.`,
+          `考虑二阶齐次微分方程 $y'' + ${poly([p, "y'"])} + ${poly([q, "y"])} = 0$，初始条件为 $y(0) = ${y0}$ 和 $y'(0) = ${y1}$。求初始二阶导数值 $y''(0)$。`,
         );
         const solution = t(
           steps(
-            `Rearrange the differential equation to isolate $y''$: $y'' = -${p}y' - ${q}y$.`,
+            `Rearrange the differential equation to isolate $y''$: $y'' = -${poly([p, "y'"])} - ${poly([q, "y"])}$.`,
             `Substitute the initial values $y(0) = ${y0}$ and $y'(0) = ${y1}$: $y''(0) = -${p}(${y1}) - ${q}(${y0})$.`,
             `Calculate: $y''(0) = -${p * y1} - ${q * y0} = ${ans}$.`,
           ),
           steps(
-            `将微分方程移项解出最高阶导数 $y''$：$y'' = -${p}y' - ${q}y$。`,
+            `将微分方程移项解出最高阶导数 $y''$：$y'' = -${poly([p, "y'"])} - ${poly([q, "y"])}$。`,
             `代入初始条件 $y(0) = ${y0}$ 与 $y'(0) = ${y1}$：$y''(0) = -${p}(${y1}) - ${q}(${y0})$。`,
             `计算得出：$y''(0) = -${p * y1} - ${q * y0} = ${ans}$。`,
           ),
@@ -716,18 +717,18 @@ export const secondOrderInhomogeneousOdesWithPolynomialForcing: TopicDef = {
         const ans = A;
 
         const prompt = t(
-          `Find the coefficient $A$ of the linear term in the particular solution $y_p(x) = A x + B$ to the inhomogeneous ODE $y'' + ${b}y' + ${c}y = ${K}x$.`,
-          `对于非齐次微分方程 $y'' + ${b}y' + ${c}y = ${K}x$，设其一次多项式特解为 $y_p(x) = A x + B$。求线性项系数 $A$ 的值。`,
+          `Find the coefficient $A$ of the linear term in the particular solution $y_p(x) = A x + B$ to the inhomogeneous ODE $y'' + ${poly([b, "y'"])} + ${poly([c, "y"])} = ${poly([K, "x"])}$.`,
+          `对于非齐次微分方程 $y'' + ${poly([b, "y'"])} + ${poly([c, "y"])} = ${poly([K, "x"])}$，设其一次多项式特解为 $y_p(x) = A x + B$。求线性项系数 $A$ 的值。`,
         );
         const solution = t(
           steps(
             `Compute derivatives: $y_p' = A$ and $y_p'' = 0$.`,
-            `Substitute into the ODE: $0 + ${b}(A) + ${c}(Ax + B) = ${K}x$.`,
+            `Substitute into the ODE: $0 + ${b}(A) + ${c}(Ax + B) = ${poly([K, "x"])}$.`,
             `Equate coefficients of $x$: $${c}A = ${K} \\implies A = \\frac{${K}}{${c}} = ${ans}$.`,
           ),
           steps(
             `求导：$y_p' = A$，$y_p'' = 0$。`,
-            `代入原方程：$0 + ${b}(A) + ${c}(Ax + B) = ${K}x$。`,
+            `代入原方程：$0 + ${b}(A) + ${c}(Ax + B) = ${poly([K, "x"])}$。`,
             `对比一次项系数：$${c}A = ${K} \\implies A = \\frac{${K}}{${c}} = ${ans}$。`,
           ),
         );
@@ -777,19 +778,19 @@ export const secondOrderInhomogeneousOdesWithExponentialForcing: TopicDef = {
         const ans = A;
 
         const prompt = t(
-          `Find the amplitude $A$ of the particular solution $y_p(x) = A e^{${m}x}$ to the differential equation $y'' + ${b}y' + ${c}y = ${K}e^{${m}x}$.`,
-          `求微分方程 $y'' + ${b}y' + ${c}y = ${K}e^{${m}x}$ 的特解 $y_p(x) = A e^{${m}x}$ 的振幅系数 $A$。`,
+          `Find the amplitude $A$ of the particular solution $y_p(x) = A e^{${poly([m, "x"])}}$ to the differential equation $y'' + ${poly([b, "y'"])} + ${poly([c, "y"])} = ${K}e^{${poly([m, "x"])}}$.`,
+          `求微分方程 $y'' + ${poly([b, "y'"])} + ${poly([c, "y"])} = ${K}e^{${poly([m, "x"])}}$ 的特解 $y_p(x) = A e^{${poly([m, "x"])}}$ 的振幅系数 $A$。`,
         );
         const solution = t(
           steps(
-            `Compute derivatives of $y_p = A e^{${m}x}$: $y_p' = ${m}A e^{${m}x}$ and $y_p'' = ${m * m}A e^{${m}x}$.`,
-            `Substitute into the differential equation: $(${m * m} + ${b}(${m}) + ${c}) A e^{${m}x} = ${K}e^{${m}x}$.`,
+            `Compute derivatives of $y_p = A e^{${poly([m, "x"])}}$: $y_p' = ${m}A e^{${poly([m, "x"])}}$ and $y_p'' = ${m * m}A e^{${poly([m, "x"])}}$.`,
+            `Substitute into the differential equation: $(${m * m} + ${b}(${m}) + ${c}) A e^{${poly([m, "x"])}} = ${K}e^{${poly([m, "x"])}}$.`,
             `Evaluate $P(${m}) = ${m * m} + ${b * m} + ${c} = ${Pm}$.`,
             `Solve for $A$: $A = \\frac{${K}}{${Pm}} = ${ans}$.`,
           ),
           steps(
-            `对特解 $y_p = A e^{${m}x}$ 求导：$y_p' = ${m}A e^{${m}x}$，$y_p'' = ${m * m}A e^{${m}x}$。`,
-            `代入微分方程：$(${m * m} + ${b}(${m}) + ${c}) A e^{${m}x} = ${K}e^{${m}x}$。`,
+            `对特解 $y_p = A e^{${poly([m, "x"])}}$ 求导：$y_p' = ${m}A e^{${poly([m, "x"])}}$，$y_p'' = ${m * m}A e^{${poly([m, "x"])}}$。`,
+            `代入微分方程：$(${m * m} + ${b}(${m}) + ${c}) A e^{${poly([m, "x"])}} = ${K}e^{${poly([m, "x"])}}$。`,
             `计算特征多项式的值：$P(${m}) = ${m * m} + ${b * m} + ${c} = ${Pm}$。`,
             `解出待定系数 $A$：$A = \\frac{${K}}{${Pm}} = ${ans}$。`,
           ),
@@ -839,19 +840,19 @@ export const secondOrderInhomogeneousOdesWithSinusoidalForcing: TopicDef = {
         const ans = A;
 
         const prompt = t(
-          `Find the amplitude $A$ of the particular solution $y_p(x) = A \\cos(${omega}x)$ to the differential equation $y'' + ${omega0 * omega0}y = ${F0}\\cos(${omega}x)$.`,
-          `求微分方程 $y'' + ${omega0 * omega0}y = ${F0}\\cos(${omega}x)$ 的特解 $y_p(x) = A \\cos(${omega}x)$ 的振幅系数 $A$。`,
+          `Find the amplitude $A$ of the particular solution $y_p(x) = A \\cos(${poly([omega, "x"])})$ to the differential equation $y'' + ${poly([omega0 * omega0, "y"])} = ${F0}\\cos(${poly([omega, "x"])})$.`,
+          `求微分方程 $y'' + ${poly([omega0 * omega0, "y"])} = ${F0}\\cos(${poly([omega, "x"])})$ 的特解 $y_p(x) = A \\cos(${poly([omega, "x"])})$ 的振幅系数 $A$。`,
         );
         const solution = t(
           steps(
-            `Substitute $y_p = A\\cos(${omega}x)$: $y_p'' = -${omega * omega}A\\cos(${omega}x)$.`,
-            `Plug into the equation: $[-${omega * omega} + ${omega0 * omega0}] A\\cos(${omega}x) = ${F0}\\cos(${omega}x)$.`,
+            `Substitute $y_p = A\\cos(${poly([omega, "x"])})$: $y_p'' = -${omega * omega}A\\cos(${poly([omega, "x"])})$.`,
+            `Plug into the equation: $[-${omega * omega} + ${omega0 * omega0}] A\\cos(${poly([omega, "x"])}) = ${F0}\\cos(${poly([omega, "x"])})$.`,
             `Evaluate the coefficient difference: $${omega0 * omega0} - ${omega * omega} = ${denom}$.`,
             `Solve for $A$: $A = \\frac{${F0}}{${denom}} = ${ans}$.`,
           ),
           steps(
-            `将特解 $y_p = A\\cos(${omega}x)$ 求二阶导：$y_p'' = -${omega * omega}A\\cos(${omega}x)$。`,
-            `代入原方程：$[-${omega * omega} + ${omega0 * omega0}] A\\cos(${omega}x) = ${F0}\\cos(${omega}x)$。`,
+            `将特解 $y_p = A\\cos(${poly([omega, "x"])})$ 求二阶导：$y_p'' = -${omega * omega}A\\cos(${poly([omega, "x"])})$。`,
+            `代入原方程：$[-${omega * omega} + ${omega0 * omega0}] A\\cos(${poly([omega, "x"])}) = ${F0}\\cos(${poly([omega, "x"])})$。`,
             `计算系数差：$${omega0 * omega0} - ${omega * omega} = ${denom}$。`,
             `解出待定振幅 $A$：$A = \\frac{${F0}}{${denom}} = ${ans}$。`,
           ),
@@ -1150,21 +1151,21 @@ export const variationOfParametersForFirstOrderLinearOdes: TopicDef = {
         const ans = K;
 
         const prompt = t(
-          `Apply variation of parameters to $y' + ${a}y = ${K}e^{-${a}x}$ by setting $y(x) = u(x) e^{-${a}x}$. Find the derivative $u'(x)$.`,
-          `利用常数变易法求解 $y' + ${a}y = ${K}e^{-${a}x}$，设 $y(x) = u(x) e^{-${a}x}$。求导函数 $u'(x)$ 的常数值。`,
+          `Apply variation of parameters to $y' + ${poly([a, "y"])} = ${K}e^{-${poly([a, "x"])}}$ by setting $y(x) = u(x) e^{-${poly([a, "x"])}}$. Find the derivative $u'(x)$.`,
+          `利用常数变易法求解 $y' + ${poly([a, "y"])} = ${K}e^{-${poly([a, "x"])}}$，设 $y(x) = u(x) e^{-${poly([a, "x"])}}$。求导函数 $u'(x)$ 的常数值。`,
         );
         const solution = t(
           steps(
-            `Compute $y'(x) = u'(x)e^{-${a}x} - ${a}u(x)e^{-${a}x}$.`,
-            `Substitute into $y' + ${a}y$: $[u'e^{-${a}x} - ${a}ue^{-${a}x}] + ${a}[ue^{-${a}x}] = ${K}e^{-${a}x}$.`,
-            `The terms in $u$ cancel: $u'(x)e^{-${a}x} = ${K}e^{-${a}x}$.`,
-            `Multiply by $e^{${a}x}$: $u'(x) = ${ans}$.`,
+            `Compute $y'(x) = u'(x)e^{-${poly([a, "x"])}} - ${a}u(x)e^{-${poly([a, "x"])}}$.`,
+            `Substitute into $y' + ${poly([a, "y"])}$: $[u'e^{-${poly([a, "x"])}} - ${a}ue^{-${poly([a, "x"])}}] + ${a}[ue^{-${poly([a, "x"])}}] = ${K}e^{-${poly([a, "x"])}}$.`,
+            `The terms in $u$ cancel: $u'(x)e^{-${poly([a, "x"])}} = ${K}e^{-${poly([a, "x"])}}$.`,
+            `Multiply by $e^{${poly([a, "x"])}}$: $u'(x) = ${ans}$.`,
           ),
           steps(
-            `求导：$y'(x) = u'(x)e^{-${a}x} - ${a}u(x)e^{-${a}x}$。`,
-            `代入方程 $y' + ${a}y$：$[u'e^{-${a}x} - ${a}ue^{-${a}x}] + ${a}[ue^{-${a}x}] = ${K}e^{-${a}x}$。`,
-            `关于 $u$ 的项相互抵消：$u'(x)e^{-${a}x} = ${K}e^{-${a}x}$。`,
-            `两端乘以 $e^{${a}x}$：$u'(x) = ${ans}$。`,
+            `求导：$y'(x) = u'(x)e^{-${poly([a, "x"])}} - ${a}u(x)e^{-${poly([a, "x"])}}$。`,
+            `代入方程 $y' + ${poly([a, "y"])}$：$[u'e^{-${poly([a, "x"])}} - ${a}ue^{-${poly([a, "x"])}}] + ${a}[ue^{-${poly([a, "x"])}}] = ${K}e^{-${poly([a, "x"])}}$。`,
+            `关于 $u$ 的项相互抵消：$u'(x)e^{-${poly([a, "x"])}} = ${K}e^{-${poly([a, "x"])}}$。`,
+            `两端乘以 $e^{${poly([a, "x"])}}$：$u'(x) = ${ans}$。`,
           ),
         );
 

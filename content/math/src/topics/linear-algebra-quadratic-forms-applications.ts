@@ -2,7 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, pointProblem, solutionsProblem } from "../problems.ts";
+import { article, choiceProblem, numberProblem, pointProblem, solutionsProblem } from "../problems.ts";
 
 // Linear Algebra Units 7 & 8: Diagonalization of Symmetric Matrices, Quadratic Forms,
 // Quadratic Forms in Euclidean Space, Singular Value Decomposition, Linear Least-Squares,
@@ -304,7 +304,7 @@ export const diagonalizationOf3x3SymmetricMatrices: TopicDef = {
       title: t("Eigenvalues and Orthogonal Diagonalization of a 3x3 Symmetric Matrix", "3x3 对称矩阵的特征值与正交对角化"),
       explanation: t(
         "A $3 \\times 3$ real symmetric matrix has 3 real eigenvalues (counting multiplicity). An orthonormal basis of $\\mathbb{R}^3$ consisting of eigenvectors of $A$ can always be constructed, using the Gram-Schmidt process on any repeated eigenspace.",
-        "3x3 实对称矩阵具有 3 个实特征值（计重数）。总能构造由其特征向量组成的 $\\mathbb{R}^3$ 标准正交基；当出现重特征值时，可对其特征子空间使用施密特正交化。",
+        "$3 \\times 3$ 实对称矩阵具有 $3$ 个实特征值（计重数）。总能构造由其特征向量组成的 $\\mathbb{R}^3$ 标准正交基；当出现重特征值时，可对其特征子空间使用施密特正交化。",
       ),
       generate: (rng: Rng): Problem => {
         const m = rng.int(-4, 4);
@@ -824,8 +824,8 @@ export const canonicalFormOfAQuadraticFormUsingLagrangesMethod: TopicDef = {
         );
 
         const solution = t(
-          `Complete the square in $x_1$:\n\n$$Q(x_1, x_2) = ${a}(x_1 ${kTerm})^2 - ${a * k * k}x_2^2 + (${c})x_2^2 = ${a}y_1^2 ${formatSignedTerm(rem, "y_2^2")}.$$\n\nHence $(d_1, d_2) = (${a}, ${rem})$.`,
-          `对 $x_1$ 配方：\n\n$$Q(x_1, x_2) = ${a}(x_1 ${kTerm})^2 - ${a * k * k}x_2^2 + (${c})x_2^2 = ${a}y_1^2 ${formatSignedTerm(rem, "y_2^2")}。$$\n\n故系数对为 $(d_1, d_2) = (${a}, ${rem})$。`,
+          `Complete the square in $x_1$:\n\n$$Q(x_1, x_2) = ${formatFirstTerm(a, `(x_1 ${kTerm})^2`)} ${formatSignedTerm(-a * k * k, "x_2^2")} + (${c})x_2^2 = ${formatFirstTerm(a, "y_1^2")} ${formatSignedTerm(rem, "y_2^2")}.$$\n\nHence $(d_1, d_2) = (${a}, ${rem})$.`,
+          `对 $x_1$ 配方：\n\n$$Q(x_1, x_2) = ${formatFirstTerm(a, `(x_1 ${kTerm})^2`)} ${formatSignedTerm(-a * k * k, "x_2^2")} + (${c})x_2^2 = ${formatFirstTerm(a, "y_1^2")} ${formatSignedTerm(rem, "y_2^2")}。$$\n\n故系数对为 $(d_1, d_2) = (${a}, ${rem})$。`,
         );
 
         return pointProblem({
@@ -1303,7 +1303,7 @@ export const singularValuesOfAMatrix: TopicDef = {
         const rank = rng.int(1, Math.min(m, n));
 
         const prompt = t(
-          `Let $A$ be a $${m} \\times ${n}$ real matrix with $\\operatorname{rank}(A) = ${rank}$. How many strictly positive singular values does $A$ have?`,
+          `Let $A$ be ${article(m)} $${m} \\times ${n}$ real matrix with $\\operatorname{rank}(A) = ${rank}$. How many strictly positive singular values does $A$ have?`,
           `设 $A$ 为秩为 $${rank}$ 的 $${m} \\times ${n}$ 实矩阵。矩阵 $A$ 恰有多少个严格大于零的奇异值？`,
         );
 

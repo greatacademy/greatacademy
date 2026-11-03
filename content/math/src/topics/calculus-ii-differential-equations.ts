@@ -1775,8 +1775,8 @@ export const analyzingSlopeFieldsForNonautonomousDifferentialEquations: TopicDef
             answer: d,
             wrong: [-d === d ? d + 1 : -d, -c / b, c],
             solution: t(
-              `Substituting, the left side is $${m}$ and the right side is $${neg(a)}x + ${neg(b)}(${linear(m, 0)} + d) + ${neg(c)} = ${poly([b, "d"], [c, ""])}$. So $${m} = ${poly([b, "d"], [c, ""])}$ and $d = ${d}$.`,
-              `代入后左边为 $${m}$，右边为 $${neg(a)}x + ${neg(b)}(${linear(m, 0)} + d) + ${neg(c)} = ${poly([b, "d"], [c, ""])}$。所以 $${m} = ${poly([b, "d"], [c, ""])}$，$d = ${d}$。`,
+              `Substituting, the left side is $${m}$ and the right side is $${poly([a, "x"])} + ${neg(b)}(${linear(m, 0)} + d) + ${neg(c)} = ${poly([b, "d"], [c, ""])}$. So $${m} = ${poly([b, "d"], [c, ""])}$ and $d = ${d}$.`,
+              `代入后左边为 $${m}$，右边为 $${poly([a, "x"])} + ${neg(b)}(${linear(m, 0)} + d) + ${neg(c)} = ${poly([b, "d"], [c, ""])}$。所以 $${m} = ${poly([b, "d"], [c, ""])}$，$d = ${d}$。`,
             ),
           }),
           figure: slopeField(field),

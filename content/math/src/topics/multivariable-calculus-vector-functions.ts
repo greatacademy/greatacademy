@@ -1,6 +1,6 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly, Q, type RealSet } from "@ga/subject-math";
+import { paren, poly, Q, type RealSet } from "@ga/subject-math";
 
 import {
   choiceProblem,
@@ -253,14 +253,14 @@ export const integrationRulesForVectorValuedFunctions: TopicDef = {
             `Integrate each component from $0$ to $${k}$:\n\n` +
               `$$\\int_{0}^{${k}} ${poly([aCoeff, "t"])}\\,dt = \\left[ ${poly([aCoeff / 2, "t^2"])} \\right]_{0}^{${k}} = ${intX}$$`,
             `$$\\int_{0}^{${k}} ${poly([bCoeff, "t^2"])}\\,dt = \\left[ ${poly([bCoeff / 3, "t^3"])} \\right]_{0}^{${k}} = ${intY}$$`,
-            `$$\\int_{0}^{${k}} ${cCoeff}\\,dt = \\left[ ${cCoeff}t \\right]_{0}^{${k}} = ${intZ}$$`,
+            `$$\\int_{0}^{${k}} ${cCoeff}\\,dt = \\left[ ${poly([cCoeff, "t"])} \\right]_{0}^{${k}} = ${intZ}$$`,
             `Combine the components to get the vector $${v3L(answer)}$.`,
           ),
           steps(
             `对每个分量在 $0$ 到 $${k}$ 上积分：\n\n` +
               `$$\\int_{0}^{${k}} ${poly([aCoeff, "t"])}\\,dt = \\left[ ${poly([aCoeff / 2, "t^2"])} \\right]_{0}^{${k}} = ${intX}$$`,
             `$$\\int_{0}^{${k}} ${poly([bCoeff, "t^2"])}\\,dt = \\left[ ${poly([bCoeff / 3, "t^3"])} \\right]_{0}^{${k}} = ${intY}$$`,
-            `$$\\int_{0}^{${k}} ${cCoeff}\\,dt = \\left[ ${cCoeff}t \\right]_{0}^{${k}} = ${intZ}$$`,
+            `$$\\int_{0}^{${k}} ${cCoeff}\\,dt = \\left[ ${poly([cCoeff, "t"])} \\right]_{0}^{${k}} = ${intZ}$$`,
             `合并各分量得到向量 $${v3L(answer)}$。`,
           ),
         );
@@ -640,13 +640,13 @@ export const theOsculatingPlane: TopicDef = {
           steps(
             `The point on the curve is $(x_0, y_0, z_0) = (${a}, 0, ${d})$.`,
             `The normal vector to the osculating plane is $\\mathbf{n} = \\langle 0, -${b}, ${a} \\rangle$.`,
-            `The plane equation is $0(x - ${a}) + (-${b})(y - 0) + ${a}(z - ${d}) = 0$.`,
+            `The plane equation is $0(x - ${paren(a)}) + ${paren(-b)}(y - 0) + ${a}(z - ${paren(d)}) = 0$.`,
             `Simplifying gives $${answer}$.`,
           ),
           steps(
             `曲线上对应点为 $(x_0, y_0, z_0) = (${a}, 0, ${d})$。`,
             `密切平面的法向量为 $\\mathbf{n} = \\langle 0, -${b}, ${a} \\rangle$。`,
-            `平面方程为 $0(x - ${a}) + (-${b})(y - 0) + ${a}(z - ${d}) = 0$。`,
+            `平面方程为 $0(x - ${paren(a)}) + ${paren(-b)}(y - 0) + ${a}(z - ${paren(d)}) = 0$。`,
             `化简得 $${answer}$。`,
           ),
         );
@@ -971,14 +971,14 @@ export const vectorFields: TopicDef = {
         const solution = t(
           steps(
             `Substitute $x = ${pt[0]}$, $y = ${pt[1]}$, and $z = ${pt[2]}$ into each component:`,
-            `$P = ${a}(${pt[0]}) + ${b}(${pt[1]}) = ${ansX}$`,
+            `$P = ${a}(${pt[0]}) + ${paren(b)}(${pt[1]}) = ${ansX}$`,
             `$Q = ${c}(${pt[1]})(${pt[2]}) = ${ansY}$`,
             `$R = ${pt[0]} - (${pt[2]}) = ${ansZ}$`,
             `The resulting vector is $${v3L(answer)}$.`,
           ),
           steps(
             `将 $x = ${pt[0]}$、$y = ${pt[1]}$ 和 $z = ${pt[2]}$ 代入各分量：`,
-            `$P = ${a}(${pt[0]}) + ${b}(${pt[1]}) = ${ansX}$`,
+            `$P = ${a}(${pt[0]}) + ${paren(b)}(${pt[1]}) = ${ansX}$`,
             `$Q = ${c}(${pt[1]})(${pt[2]}) = ${ansY}$`,
             `$R = ${pt[0]} - (${pt[2]}) = ${ansZ}$`,
             `最终得到的向量为 $${v3L(answer)}$。`,
@@ -1437,7 +1437,7 @@ export const theDivergenceOfAVectorField: TopicDef = {
               `$\\frac{\\partial Q}{\\partial y} = ${2 * b}y$\n\n` +
               `$\\frac{\\partial R}{\\partial z} = ${2 * c}z$`,
             `Sum the partial derivatives: $\\operatorname{div}\\mathbf{F} = ${poly([2 * a, "x"], [2 * b, "y"], [2 * c, "z"])}$.`,
-            `Substitute $(${pt[0]}, ${pt[1]}, ${pt[2]})$: $\\operatorname{div}\\mathbf{F}(${pt[0]}, ${pt[1]}, ${pt[2]}) = ${2 * a}(${pt[0]}) + ${2 * b}(${pt[1]}) + ${2 * c}(${pt[2]}) = ${ans}$.`,
+            `Substitute $(${pt[0]}, ${pt[1]}, ${pt[2]})$: $\\operatorname{div}\\mathbf{F}(${pt[0]}, ${pt[1]}, ${pt[2]}) = ${2 * a}(${pt[0]}) + ${paren(2 * b)}(${pt[1]}) + ${paren(2 * c)}(${pt[2]}) = ${ans}$.`,
           ),
           steps(
             `求各分量的偏导数：\n\n` +
@@ -1445,7 +1445,7 @@ export const theDivergenceOfAVectorField: TopicDef = {
               `$\\frac{\\partial Q}{\\partial y} = ${2 * b}y$\n\n` +
               `$\\frac{\\partial R}{\\partial z} = ${2 * c}z$`,
             `将偏导数相加：$\\operatorname{div}\\mathbf{F} = ${poly([2 * a, "x"], [2 * b, "y"], [2 * c, "z"])}$。`,
-            `代入点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$：$\\operatorname{div}\\mathbf{F}(${pt[0]}, ${pt[1]}, ${pt[2]}) = ${2 * a}(${pt[0]}) + ${2 * b}(${pt[1]}) + ${2 * c}(${pt[2]}) = ${ans}$。`,
+            `代入点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$：$\\operatorname{div}\\mathbf{F}(${pt[0]}, ${pt[1]}, ${pt[2]}) = ${2 * a}(${pt[0]}) + ${paren(2 * b)}(${pt[1]}) + ${paren(2 * c)}(${pt[2]}) = ${ans}$。`,
           ),
         );
         return numberProblem({
@@ -1547,22 +1547,22 @@ export const theCurlOfAVectorField: TopicDef = {
         const answer: Vec3 = [ansX, ansY, ansZ];
 
         const prompt = t(
-          `Calculate the curl $\\operatorname{curl}\\mathbf{F}$ of the vector field $\\mathbf{F}(x, y, z) = \\langle ${a}yz, ${b}xz, ${c}xy \\rangle$ at the point $(${pt[0]}, ${pt[1]}, ${pt[2]})$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
-          `计算向量场 $\\mathbf{F}(x, y, z) = \\langle ${a}yz, ${b}xz, ${c}xy \\rangle$ 在点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$ 处的旋度 $\\operatorname{curl}\\mathbf{F}$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
+          `Calculate the curl $\\operatorname{curl}\\mathbf{F}$ of the vector field $\\mathbf{F}(x, y, z) = \\langle ${poly([a, "yz"])}, ${poly([b, "xz"])}, ${poly([c, "xy"])} \\rangle$ at the point $(${pt[0]}, ${pt[1]}, ${pt[2]})$. Express your answer as a vector $\\langle x, y, z \\rangle$.`,
+          `计算向量场 $\\mathbf{F}(x, y, z) = \\langle ${poly([a, "yz"])}, ${poly([b, "xz"])}, ${poly([c, "xy"])} \\rangle$ 在点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$ 处的旋度 $\\operatorname{curl}\\mathbf{F}$。结果以向量 $\\langle x, y, z \\rangle$ 表示。`,
         );
         const solution = t(
           steps(
             `Apply the curl formula $\\nabla \\times \\mathbf{F} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle$:`,
-            `$\\mathbf{i}$-component: $\\frac{\\partial}{\\partial y}(${c}xy) - \\frac{\\partial}{\\partial z}(${b}xz) = ${c}x - ${b}x = (${c - b})x$`,
-            `$\\mathbf{j}$-component: $\\frac{\\partial}{\\partial z}(${a}yz) - \\frac{\\partial}{\\partial x}(${c}xy) = ${a}y - ${c}y = (${a - c})y$`,
-            `$\\mathbf{k}$-component: $\\frac{\\partial}{\\partial x}(${b}xz) - \\frac{\\partial}{\\partial y}(${a}yz) = ${b}z - ${a}z = (${b - a})z$`,
+            `$\\mathbf{i}$-component: $\\frac{\\partial}{\\partial y}(${poly([c, "xy"])}) - \\frac{\\partial}{\\partial z}(${poly([b, "xz"])}) = ${poly([c, "x"], [-b, "x"])} = ${poly([c - b, "x"])}$`,
+            `$\\mathbf{j}$-component: $\\frac{\\partial}{\\partial z}(${poly([a, "yz"])}) - \\frac{\\partial}{\\partial x}(${poly([c, "xy"])}) = ${poly([a, "y"], [-c, "y"])} = ${poly([a - c, "y"])}$`,
+            `$\\mathbf{k}$-component: $\\frac{\\partial}{\\partial x}(${poly([b, "xz"])}) - \\frac{\\partial}{\\partial y}(${poly([a, "yz"])}) = ${poly([b, "z"], [-a, "z"])} = ${poly([b - a, "z"])}$`,
             `Evaluate at $(${pt[0]}, ${pt[1]}, ${pt[2]})$ to obtain $${v3L(answer)}$.`,
           ),
           steps(
             `应用旋度公式 $\\nabla \\times \\mathbf{F} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle$：`,
-            `$\\mathbf{i}$ 分量：$\\frac{\\partial}{\\partial y}(${c}xy) - \\frac{\\partial}{\\partial z}(${b}xz) = ${c}x - ${b}x = (${c - b})x$`,
-            `$\\mathbf{j}$ 分量：$\\frac{\\partial}{\\partial z}(${a}yz) - \\frac{\\partial}{\\partial x}(${c}xy) = ${a}y - ${c}y = (${a - c})y$`,
-            `$\\mathbf{k}$ 分量：$\\frac{\\partial}{\\partial x}(${b}xz) - \\frac{\\partial}{\\partial y}(${a}yz) = ${b}z - ${a}z = (${b - a})z$`,
+            `$\\mathbf{i}$ 分量：$\\frac{\\partial}{\\partial y}(${poly([c, "xy"])}) - \\frac{\\partial}{\\partial z}(${poly([b, "xz"])}) = ${poly([c, "x"], [-b, "x"])} = ${poly([c - b, "x"])}$`,
+            `$\\mathbf{j}$ 分量：$\\frac{\\partial}{\\partial z}(${poly([a, "yz"])}) - \\frac{\\partial}{\\partial x}(${poly([c, "xy"])}) = ${poly([a, "y"], [-c, "y"])} = ${poly([a - c, "y"])}$`,
+            `$\\mathbf{k}$ 分量：$\\frac{\\partial}{\\partial x}(${poly([b, "xz"])}) - \\frac{\\partial}{\\partial y}(${poly([a, "yz"])}) = ${poly([b, "z"], [-a, "z"])} = ${poly([b - a, "z"])}$`,
             `在点 $(${pt[0]}, ${pt[1]}, ${pt[2]})$ 处求值得到 $${v3L(answer)}$。`,
           ),
         );
@@ -1617,7 +1617,7 @@ export const propertiesOfTheCurlOperator: TopicDef = {
               `$\\mathbf{i}$-component: $\\frac{\\partial}{\\partial y}(3z^2) - \\frac{\\partial}{\\partial z}(kx) = 0 - 0 = 0$.\n\n` +
               `$\\mathbf{j}$-component: $\\frac{\\partial}{\\partial z}(${poly([a, "y"])}) - \\frac{\\partial}{\\partial x}(3z^2) = 0 - 0 = 0$.\n\n` +
               `$\\mathbf{k}$-component: $\\frac{\\partial}{\\partial x}(kx) - \\frac{\\partial}{\\partial y}(${poly([a, "y"])}) = k - (${a})$.`,
-            `For $\\operatorname{curl}\\mathbf{F} = \\mathbf{0}$, the $\\mathbf{k}$-component must vanish: $k - ${a} = 0 \\implies k = ${ans}$.`,
+            `For $\\operatorname{curl}\\mathbf{F} = \\mathbf{0}$, the $\\mathbf{k}$-component must vanish: $${poly([1, "k"], [-a, ""])} = 0 \\implies k = ${ans}$.`,
           ),
           steps(
             `当 $\\operatorname{curl}\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\mathbf{0}$ 时，向量场为无旋场。`,
@@ -1625,7 +1625,7 @@ export const propertiesOfTheCurlOperator: TopicDef = {
               `$\\mathbf{i}$ 分量：$\\frac{\\partial}{\\partial y}(3z^2) - \\frac{\\partial}{\\partial z}(kx) = 0 - 0 = 0$。\n\n` +
               `$\\mathbf{j}$ 分量：$\\frac{\\partial}{\\partial z}(${poly([a, "y"])}) - \\frac{\\partial}{\\partial x}(3z^2) = 0 - 0 = 0$。\n\n` +
               `$\\mathbf{k}$ 分量：$\\frac{\\partial}{\\partial x}(kx) - \\frac{\\partial}{\\partial y}(${poly([a, "y"])}) = k - (${a})$。`,
-            `要使 $\\operatorname{curl}\\mathbf{F} = \\mathbf{0}$，$\\mathbf{k}$ 分量必须为零：$k - ${a} = 0 \\implies k = ${ans}$。`,
+            `要使 $\\operatorname{curl}\\mathbf{F} = \\mathbf{0}$，$\\mathbf{k}$ 分量必须为零：$${poly([1, "k"], [-a, ""])} = 0 \\implies k = ${ans}$。`,
           ),
         );
         return numberProblem({

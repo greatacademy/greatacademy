@@ -318,16 +318,14 @@ export const classifyingRationalAndIrrationalNumbers: TopicDef = {
         const fracDen = rng.int(2, 10);
         const decVal = `0.${rng.int(12, 98)}`;
 
-        const options = [
-          t(`$\\sqrt{${nonSquare}}$`, `$\\sqrt{${nonSquare}}$`),
-          t(`$\\sqrt{${perfectSquare}}$`, `$\\sqrt{${perfectSquare}}$`),
-          t(`$\\frac{${fracNum}}{${fracDen}}$`, `$\\frac{${fracNum}}{${fracDen}}$`),
-          t(`$${decVal}$`, `$${decVal}$`),
-        ];
+        const irrational = `\\sqrt{${nonSquare}}`;
+        const numbers = rng.shuffle([irrational, `\\sqrt{${perfectSquare}}`, `\\frac{${fracNum}}{${fracDen}}`, decVal]);
+        const options = numbers.map((x) => t(`$${x}$`, `$${x}$`));
+        const [a, b, c, d] = numbers.map((x) => `$${x}$`);
 
         const prompt = t(
-          `Which of the following numbers is irrational: $\\sqrt{${nonSquare}}$, $\\sqrt{${perfectSquare}}$, $\\frac{${fracNum}}{${fracDen}}$, or $${decVal}$?`,
-          `下列哪个数是无理数：$\\sqrt{${nonSquare}}$、$\\sqrt{${perfectSquare}}$、$\\frac{${fracNum}}{${fracDen}}$ 还是 $${decVal}$？`,
+          `Which of the following numbers is irrational: ${a}, ${b}, ${c}, or ${d}?`,
+          `下列哪个数是无理数：${a}、${b}、${c} 还是 ${d}？`,
         );
         const solution = t(
           `$\\sqrt{${nonSquare}}$ is irrational because $${nonSquare}$ is not a perfect square. The other options are rational: $\\sqrt{${perfectSquare}} = ${Math.round(Math.sqrt(perfectSquare))}$, $\\frac{${fracNum}}{${fracDen}}$ is a ratio of integers, and terminating decimals are rational.`,
@@ -337,7 +335,7 @@ export const classifyingRationalAndIrrationalNumbers: TopicDef = {
         return choiceProblem({
           prompt,
           options,
-          correct: 0,
+          correct: numbers.indexOf(irrational),
           solution,
         });
       },
@@ -566,16 +564,13 @@ export const linearVsNonlinearFunctions: TopicDef = {
         const nonlinear2 = `y = \\frac{${b}}{x}`;
         const nonlinear3 = `y = ${m}^x`;
 
-        const options = [
-          t(`$${linearEq}$`, `$${linearEq}$`),
-          t(`$${nonlinear1}$`, `$${nonlinear1}$`),
-          t(`$${nonlinear2}$`, `$${nonlinear2}$`),
-          t(`$${nonlinear3}$`, `$${nonlinear3}$`),
-        ];
+        const equations = rng.shuffle([linearEq, nonlinear1, nonlinear2, nonlinear3]);
+        const options = equations.map((e) => t(`$${e}$`, `$${e}$`));
+        const [a, b2, c, d] = equations.map((e) => `$${e}$`);
 
         const prompt = t(
-          `Which of the following equations represents a linear function: $${linearEq}$, $${nonlinear1}$, $${nonlinear2}$, or $${nonlinear3}$?`,
-          `下列哪个方程表示一次函数：$${linearEq}$、$${nonlinear1}$、$${nonlinear2}$ 还是 $${nonlinear3}$？`,
+          `Which of the following equations represents a linear function: ${a}, ${b2}, ${c}, or ${d}?`,
+          `下列哪个方程表示一次函数：${a}、${b2}、${c} 还是 ${d}？`,
         );
         const solution = t(
           `$${linearEq}$ is in the slope-intercept form $y = mx + b$ with constant slope $m = ${m}$, so it is a linear function. The others are nonlinear because they contain $x^2$, $\\frac{1}{x}$, or $x$ in the exponent.`,
@@ -585,7 +580,7 @@ export const linearVsNonlinearFunctions: TopicDef = {
         return choiceProblem({
           prompt,
           options,
-          correct: 0,
+          correct: equations.indexOf(linearEq),
           solution,
         });
       },

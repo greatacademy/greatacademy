@@ -581,7 +581,25 @@ export const irreduciblePolynomialsOverTheRealAndComplexNumbers: TopicDef = {
         const disc = b * b - 4 * c;
         const f = polyTex([c, b, 1]);
         const cubic = polyTex([rng.int(-9, 9), rng.int(-5, 5), rng.int(-3, 3), 1]);
+        const k = rng.int(1, 9);
+        const r = rng.nonZero(-9, 9);
         const facts: Fact[] = [
+          {
+            prompt: t(
+              `Is $${polyTex([k, 0, 1])}$ irreducible over $\\mathbb{R}$?`,
+              `$${polyTex([k, 0, 1])}$ 在 $\\mathbb{R}$ 上不可约吗？`,
+            ),
+            holds: true,
+            reason: t(
+              `$x^2 + ${k} > 0$ for every real $x$, so it has no real roots, and a real quadratic without real roots is irreducible over $\\mathbb{R}$.`,
+              `对每个实数 $x$ 都有 $x^2 + ${k} > 0$，所以它没有实根，而没有实根的实系数二次多项式在 $\\mathbb{R}$ 上不可约。`,
+            ),
+          },
+          {
+            prompt: t(`Is $${polyTex([r, 1])}$ irreducible over $\\mathbb{C}$?`, `$${polyTex([r, 1])}$ 在 $\\mathbb{C}$ 上不可约吗？`),
+            holds: true,
+            reason: t("A polynomial of degree $1$ is irreducible over every field.", "一次多项式在任何域上都不可约。"),
+          },
           {
             prompt: t(`Is $${f}$ irreducible over $\\mathbb{R}$?`, `$${f}$ 在 $\\mathbb{R}$ 上不可约吗？`),
             holds: disc < 0,
@@ -615,7 +633,8 @@ export const irreduciblePolynomialsOverTheRealAndComplexNumbers: TopicDef = {
             ),
           },
         ];
-        return factProblem(rng.pick(facts));
+        const holds = rng.bool();
+        return factProblem(rng.pick(facts.filter((fact) => fact.holds === holds)));
       },
     },
     {
@@ -1142,8 +1161,8 @@ export const invertingQuaternions: TopicDef = {
           answer: Q.of(c, nrm),
           wrong: [Q.of(-c, nrm), Q.of(x[comp]!, nrm), Q.of(c, Math.round(Math.sqrt(nrm)) || 1)],
           solution: t(
-            `$q^{-1} = \\frac{\\bar q}{N(q)} = \\frac{${qTex(qConj(x))}}{${nrm}}$, so ${compOf(comp, "q^{-1}")[0]} is $\\frac{${c}}{${nrm}}$.`,
-            `$q^{-1} = \\frac{\\bar q}{N(q)} = \\frac{${qTex(qConj(x))}}{${nrm}}$，所以${compOf(comp, "q^{-1}")[1]}为 $\\frac{${c}}{${nrm}}$。`,
+            `$q^{-1} = \\frac{\\bar q}{N(q)} = \\frac{${qTex(qConj(x))}}{${nrm}}$, so ${compOf(comp, "q^{-1}")[0]} is $${Q.of(c, nrm).toLatex()}$.`,
+            `$q^{-1} = \\frac{\\bar q}{N(q)} = \\frac{${qTex(qConj(x))}}{${nrm}}$，所以${compOf(comp, "q^{-1}")[1]}为 $${Q.of(c, nrm).toLatex()}$。`,
           ),
         });
       },

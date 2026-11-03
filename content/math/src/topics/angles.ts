@@ -2,7 +2,7 @@ import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, type Mark, type Point, sketch } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, steps } from "../problems.ts";
+import { article, choiceProblem, numberProblem, steps } from "../problems.ts";
 
 const rad = (d: number) => (d * Math.PI) / 180;
 
@@ -209,7 +209,7 @@ export const complementaryAndSupplementaryAngles: TopicDef = {
         );
         if (rng.bool()) {
           return numberProblem({
-            prompt: t(`What is the complement of a $${a}^\\circ$ angle?`, `$${a}^\\circ$ 的角的余角是多少度？`),
+            prompt: t(`What is the complement of ${article(a)} $${a}^\\circ$ angle?`, `$${a}^\\circ$ 的角的余角是多少度？`),
             answer: 90 - a,
             form: "integer",
             unit: "°",
@@ -245,7 +245,7 @@ export const complementaryAndSupplementaryAngles: TopicDef = {
         const wrong = [...(a < 90 ? [90 - a] : []), a, 360 - a];
         if (rng.bool()) {
           return numberProblem({
-            prompt: t(`What is the supplement of a $${a}^\\circ$ angle?`, `$${a}^\\circ$ 的角的补角是多少度？`),
+            prompt: t(`What is the supplement of ${article(a)} $${a}^\\circ$ angle?`, `$${a}^\\circ$ 的角的补角是多少度？`),
             answer: 180 - a,
             form: "integer",
             unit: "°",

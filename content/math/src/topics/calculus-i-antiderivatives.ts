@@ -70,7 +70,7 @@ export const theAntiderivative: TopicDef = {
             ? [
                 poly([a * (b + 1), `x^{${b}}`]),
                 poly([a, `x^{${b + 1}}`], [c, ""]),
-                [poly([a * (b + 1) * b, `x^{${b - 1}}`]), poly([a * (b + 1), `x^{${b + 1}}`]), poly([a, `x^{${b + 1}}`], [c, "x"])],
+                [poly([a * (b + 1) * b, xPow(b - 1)]), poly([a * (b + 1), `x^{${b + 1}}`]), poly([a, `x^{${b + 1}}`], [c, "x"])],
               ]
             : kind === 1
               ? [

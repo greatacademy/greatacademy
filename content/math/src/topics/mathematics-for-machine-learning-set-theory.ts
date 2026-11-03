@@ -19,8 +19,8 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
         id: "evaluating-indicator-functions-for-predicates",
         title: t("Evaluating indicator functions of predicates", "计算谓词的示性函数"),
         explanation: t(
-          "\\mathbb{I}[P(x)] = 1 if P(x) holds, and 0 otherwise. Summing indicators counts how many elements satisfy the predicate: \\sum_{i=1}^n \\mathbb{I}[P(x_i)].",
-          "若 P(x) 成立则 \\mathbb{I}[P(x)] = 1，否则为 0。对示性函数求和等于满足谓词条件的元素总数：\\sum_{i=1}^n \\mathbb{I}[P(x_i)]。",
+          "$\\mathbb{I}[P(x)] = 1$ if $P(x)$ holds, and $0$ otherwise. Summing indicators counts how many elements satisfy the predicate: $\\sum_{i=1}^n \\mathbb{I}[P(x_i)]$.",
+          "若 $P(x)$ 成立则 $\\mathbb{I}[P(x)] = 1$，否则为 $0$。对示性函数求和等于满足谓词条件的元素总数：$\\sum_{i=1}^n \\mathbb{I}[P(x_i)]$。",
         ),
         generate: (rng: Rng): Problem => {
           const kind = rng.int(0, 1);
@@ -150,8 +150,8 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
         id: "evaluating-argmax-and-argmin-functions",
         title: t("Evaluating argmax and argmin of parameterized functions", "计算参数化函数的 argmax 与 argmin"),
         explanation: t(
-          "For f(x) = -a(x - h)^2 + k (with a > 0), max f(x) = k and argmax_x f(x) = h. For g(x) = a(x - h)^2 + k, min g(x) = k and argmin_x g(x) = h.",
-          "对于 f(x) = -a(x - h)^2 + k（a > 0），max f(x) = k 且 argmax_x f(x) = h。对于 g(x) = a(x - h)^2 + k，min g(x) = k 且 argmin_x g(x) = h。",
+          "For $f(x) = -a(x - h)^2 + k$ with $a > 0$, $\\max f(x) = k$ and $\\operatorname{argmax}_x f(x) = h$. For $g(x) = a(x - h)^2 + k$, $\\min g(x) = k$ and $\\operatorname{argmin}_x g(x) = h$.",
+          "对于 $f(x) = -a(x - h)^2 + k$（$a > 0$），$\\max f(x) = k$ 且 $\\operatorname{argmax}_x f(x) = h$。对于 $g(x) = a(x - h)^2 + k$，$\\min g(x) = k$ 且 $\\operatorname{argmin}_x g(x) = h$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(1, 5);
@@ -200,8 +200,8 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
         id: "identifying-tabular-argmax-argmin",
         title: t("Identifying argmax and argmin from tables", "根据表格数据求 argmax 与 argmin"),
         explanation: t(
-          "To find argmin_x L(x) from a table of pairs (x, L(x)), inspect the values L(x), locate the minimum value, and return the corresponding argument x.",
-          "要从数对 (x, L(x)) 的表格中求 argmin_x L(x)，先查阅 L(x) 的取值，找出最小值，然后返回对应的输入自变量 x。",
+          "To find $\\operatorname{argmin}_x L(x)$ from a table of pairs $(x, L(x))$, inspect the values $L(x)$, locate the minimum value, and return the corresponding argument $x$.",
+          "要从数对 $(x, L(x))$ 的表格中求 $\\operatorname{argmin}_x L(x)$，先查看 $L(x)$ 的取值，找出最小值，然后返回对应的自变量 $x$。",
         ),
         generate: (rng: Rng): Problem => {
           // Table of hyperparameter values (e.g. depth d in 1..6) and loss values
@@ -236,15 +236,15 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
 
           // Format markdown table
           const header = isMin
-            ? "| $x$ | Loss $\\mathcal{L}(x)$ |\n|:---:|:---:|"
-            : "| $x$ | Accuracy $\\mathcal{A}(x)$ (%) |\n|:---:|:---:|";
+            ? t("| $x$ | Loss $\\mathcal{L}(x)$ |", "| $x$ | 损失 $\\mathcal{L}(x)$ |")
+            : t("| $x$ | Accuracy $\\mathcal{A}(x)$ (%) |", "| $x$ | 准确率 $\\mathcal{A}(x)$ (%) |");
           const rows = xs.map((x, i) => `| $${x}$ | $${losses[i]}$ |`).join("\n");
-          const tableStr = `${header}\n${rows}`;
+          const table = (h: string) => `${h}\n|:---:|:---:|\n${rows}`;
 
           return numberProblem({
             prompt: t(
-              `The table below reports the validation ${isMin ? "loss $\\mathcal{L}(x)$" : "accuracy $\\mathcal{A}(x)$"} for different values of a parameter $x$:\n\n${tableStr}\n\nFind $x^* = \\operatorname{${isMin ? "argmin" : "argmax"}}_{x} ${isMin ? "\\mathcal{L}(x)" : "\\mathcal{A}(x)"}$.`,
-              `下表记录了不同参数值 $x$ 对应的验证${isMin ? "损失 $\\mathcal{L}(x)$" : "准确率 $\\mathcal{A}(x)$"}：\n\n${tableStr}\n\n求 $x^* = \\operatorname{${isMin ? "argmin" : "argmax"}}_{x} ${isMin ? "\\mathcal{L}(x)" : "\\mathcal{A}(x)"}$。`,
+              `The table below reports the validation ${isMin ? "loss $\\mathcal{L}(x)$" : "accuracy $\\mathcal{A}(x)$"} for different values of a parameter $x$:\n\n${table(header.en)}\n\nFind $x^* = \\operatorname{${isMin ? "argmin" : "argmax"}}_{x} ${isMin ? "\\mathcal{L}(x)" : "\\mathcal{A}(x)"}$.`,
+              `下表记录了不同参数值 $x$ 对应的验证${isMin ? "损失 $\\mathcal{L}(x)$" : "准确率 $\\mathcal{A}(x)$"}：\n\n${table(header["zh-CN"])}\n\n求 $x^* = \\operatorname{${isMin ? "argmin" : "argmax"}}_{x} ${isMin ? "\\mathcal{L}(x)" : "\\mathcal{A}(x)"}$。`,
             ),
             answer: optArg,
             solution: t(

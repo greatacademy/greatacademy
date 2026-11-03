@@ -79,6 +79,11 @@ function fmtTerm(coeff: number, v: string, p: number): string {
   return `${coeff}${inner}`;
 }
 
+// joinTerms adds terms, writing "a + -b" as "a - b".
+function joinTerms(terms: readonly string[]): string {
+  return terms.reduce((acc, s) => (acc === "" ? s : s.startsWith("-") ? `${acc} - ${s.slice(1)}` : `${acc} + ${s}`), "");
+}
+
 function fmtSub(a: number, b: number): string {
   return b < 0 ? `${a} - (${b})` : `${a} - ${b}`;
 }
@@ -519,9 +524,9 @@ export const equivalentSets: TopicDef = {
           ),
           t(`$${setBStr}$`, `$${setBStr}$`),
           [
-            t(`\\{${a}, ${b}\\}`, `\\{${a}, ${b}\\}`),
-            t(`\\{${a}, ${b}, ${c}, ${extra}\\}`, `\\{${a}, ${b}, ${c}, ${extra}\\}`),
-            t(`\\{${a + 1}, ${b + 1}, ${c + 1}\\}`, `\\{${a + 1}, ${b + 1}, ${c + 1}\\}`),
+            t(`$\\{${a}, ${b}\\}$`, `$\\{${a}, ${b}\\}$`),
+            t(`$\\{${a}, ${b}, ${c}, ${extra}\\}$`, `$\\{${a}, ${b}, ${c}, ${extra}\\}$`),
+            t(`$\\{${a + 1}, ${b + 1}, ${c + 1}\\}$`, `$\\{${a + 1}, ${b + 1}, ${c + 1}\\}$`),
           ],
           t(
             `By the Axiom of Extensionality, two sets are equal if and only if they have the same elements. The order of elements does not matter, so $${setBStr} = ${setAStr}$.`,
@@ -772,9 +777,9 @@ export const describingSetsUsingSetBuilderNotation: TopicDef = {
             ),
             t(`$\\{x \\in \\mathbb{R} \\mid ${a} < x \\le ${b}\\}$`, `$\\{x \\in \\mathbb{R} \\mid ${a} < x \\le ${b}\\}$`),
             [
-              t(`\\{x \\in \\mathbb{R} \\mid ${a} \\le x \\le ${b}\\}`, `\\{x \\in \\mathbb{R} \\mid ${a} \\le x \\le ${b}\\}`),
-              t(`\\{x \\in \\mathbb{R} \\mid ${a} < x < ${b}\\}`, `\\{x \\in \\mathbb{R} \\mid ${a} < x < ${b}\\}`),
-              t(`\\{x \\in \\mathbb{Z} \\mid ${a} < x \\le ${b}\\}`, `\\{x \\in \\mathbb{Z} \\mid ${a} < x \\le ${b}\\}`),
+              t(`$\\{x \\in \\mathbb{R} \\mid ${a} \\le x \\le ${b}\\}$`, `$\\{x \\in \\mathbb{R} \\mid ${a} \\le x \\le ${b}\\}$`),
+              t(`$\\{x \\in \\mathbb{R} \\mid ${a} < x < ${b}\\}$`, `$\\{x \\in \\mathbb{R} \\mid ${a} < x < ${b}\\}$`),
+              t(`$\\{x \\in \\mathbb{Z} \\mid ${a} < x \\le ${b}\\}$`, `$\\{x \\in \\mathbb{Z} \\mid ${a} < x \\le ${b}\\}$`),
             ],
             t(
               `The parenthesis at $${a}$ indicates that $${a}$ is excluded ($x > ${a}$), and the bracket at $${b}$ indicates that $${b}$ is included ($x \\le ${b}$). Thus $( ${a}, ${b} ] = \\{x \\in \\mathbb{R} \\mid ${a} < x \\le ${b}\\}$.`,
@@ -790,9 +795,9 @@ export const describingSetsUsingSetBuilderNotation: TopicDef = {
             ),
             t(`$\\{x \\in \\mathbb{R} \\mid ${a} \\le x \\le ${b}\\}$`, `$\\{x \\in \\mathbb{R} \\mid ${a} \\le x \\le ${b}\\}$`),
             [
-              t(`\\{x \\in \\mathbb{R} \\mid ${a} < x < ${b}\\}`, `\\{x \\in \\mathbb{R} \\mid ${a} < x < ${b}\\}`),
-              t(`\\{x \\in \\mathbb{R} \\mid ${a} \\le x < ${b}\\}`, `\\{x \\in \\mathbb{R} \\mid ${a} \\le x < ${b}\\}`),
-              t(`\\{x \\in \\mathbb{Z} \\mid ${a} \\le x \\le ${b}\\}`, `\\{x \\in \\mathbb{Z} \\mid ${a} \\le x \\le ${b}\\}`),
+              t(`$\\{x \\in \\mathbb{R} \\mid ${a} < x < ${b}\\}$`, `$\\{x \\in \\mathbb{R} \\mid ${a} < x < ${b}\\}$`),
+              t(`$\\{x \\in \\mathbb{R} \\mid ${a} \\le x < ${b}\\}$`, `$\\{x \\in \\mathbb{R} \\mid ${a} \\le x < ${b}\\}$`),
+              t(`$\\{x \\in \\mathbb{Z} \\mid ${a} \\le x \\le ${b}\\}$`, `$\\{x \\in \\mathbb{Z} \\mid ${a} \\le x \\le ${b}\\}$`),
             ],
             t(
               `Brackets at both endpoints denote inclusion of both $${a}$ and $${b}$ on the real line: $[ ${a}, ${b} ] = \\{x \\in \\mathbb{R} \\mid ${a} \\le x \\le ${b}\\}$.`,
@@ -808,9 +813,9 @@ export const describingSetsUsingSetBuilderNotation: TopicDef = {
             ),
             t(`$\\{x \\in \\mathbb{R} \\mid ${a} < x < ${b}\\}$`, `$\\{x \\in \\mathbb{R} \\mid ${a} < x < ${b}\\}$`),
             [
-              t(`\\{x \\in \\mathbb{R} \\mid ${a} \\le x \\le ${b}\\}`, `\\{x \\in \\mathbb{R} \\mid ${a} \\le x \\le ${b}\\}`),
-              t(`\\{x \\in \\mathbb{R} \\mid ${a} < x \\le ${b}\\}`, `\\{x \\in \\mathbb{R} \\mid ${a} < x \\le ${b}\\}`),
-              t(`\\{x \\in \\mathbb{Z} \\mid ${a} < x < ${b}\\}`, `\\{x \\in \\mathbb{Z} \\mid ${a} < x < ${b}\\}`),
+              t(`$\\{x \\in \\mathbb{R} \\mid ${a} \\le x \\le ${b}\\}$`, `$\\{x \\in \\mathbb{R} \\mid ${a} \\le x \\le ${b}\\}$`),
+              t(`$\\{x \\in \\mathbb{R} \\mid ${a} < x \\le ${b}\\}$`, `$\\{x \\in \\mathbb{R} \\mid ${a} < x \\le ${b}\\}$`),
+              t(`$\\{x \\in \\mathbb{Z} \\mid ${a} < x < ${b}\\}$`, `$\\{x \\in \\mathbb{Z} \\mid ${a} < x < ${b}\\}$`),
             ],
             t(
               `Parentheses at both endpoints denote strict inequality: $( ${a}, ${b} ) = \\{x \\in \\mathbb{R} \\mid ${a} < x < ${b}\\}$.`,
@@ -907,20 +912,20 @@ export const describingPlanarRegionsUsingSetBuilderNotation: TopicDef = {
           ),
           [
             t(
-              `\\{(x, y) \\in \\mathbb{R}^2 \\mid ${hStr} + ${kStr} < ${r}\\}`,
-              `\\{(x, y) \\in \\mathbb{R}^2 \\mid ${hStr} + ${kStr} < ${r}\\}`,
+              `$\\{(x, y) \\in \\mathbb{R}^2 \\mid ${hStr} + ${kStr} < ${r}\\}$`,
+              `$\\{(x, y) \\in \\mathbb{R}^2 \\mid ${hStr} + ${kStr} < ${r}\\}$`,
             ),
             t(
-              `\\{(x, y) \\in \\mathbb{R}^2 \\mid ${hStr} + ${kStr} = ${rSq}\\}`,
-              `\\{(x, y) \\in \\mathbb{R}^2 \\mid ${hStr} + ${kStr} = ${rSq}\\}`,
+              `$\\{(x, y) \\in \\mathbb{R}^2 \\mid ${hStr} + ${kStr} = ${rSq}\\}$`,
+              `$\\{(x, y) \\in \\mathbb{R}^2 \\mid ${hStr} + ${kStr} = ${rSq}\\}$`,
             ),
             t(
-              `\\{(x, y) \\in \\mathbb{R}^2 \\mid ${hStr} + ${kStr} \\ge ${rSq}\\}`,
-              `\\{(x, y) \\in \\mathbb{R}^2 \\mid ${hStr} + ${kStr} \\ge ${rSq}\\}`,
+              `$\\{(x, y) \\in \\mathbb{R}^2 \\mid ${hStr} + ${kStr} \\ge ${rSq}\\}$`,
+              `$\\{(x, y) \\in \\mathbb{R}^2 \\mid ${hStr} + ${kStr} \\ge ${rSq}\\}$`,
             ),
           ],
           t(
-            `The distance from $(x, y)$ to $(h, k)$ is $\\sqrt{(x - h)^2 + (y - k)^2}$. For a closed disk of radius $r = ${r}$, the condition is $\\text{distance} \\le r$, or $(x - ${h})^2 + (y - ${k})^2 \\le ${r}^2 = ${rSq}$.`,
+            `The distance from $(x, y)$ to $(h, k)$ is $\\sqrt{(x - h)^2 + (y - k)^2}$. For a closed disk of radius $r = ${r}$, the condition is $\\text{distance} \\le r$, or $${hStr} + ${kStr} \\le ${r}^2 = ${rSq}$.`,
             `点 $(x, y)$ 到圆心 $(h, k)$ 的距离为 $\\sqrt{(x - h)^2 + (y - k)^2}$。闭圆盘要求该距离小于等于半径 $r = ${r}$，平方后即为 $${hStr} + ${kStr} \\le ${rSq}$。`,
           ),
         );
@@ -1684,7 +1689,7 @@ export const setsAndFunctions: TopicDef = {
         const domain = [1, 2, 3, 4];
         const rangeVals = domain.map((x) => c * x + d);
         const rangeStr = `\\{${rangeVals.join(", ")}\\}`;
-        const fnExpr = d === 0 ? `${c}x` : d > 0 ? `${c}x + ${d}` : `${c}x - ${-d}`;
+        const fnExpr = poly([c, "x"], [d, ""]);
         return solutionsProblem({
           prompt: t(
             `Let $f: \\{1, 2, 3, 4\\} \\to \\mathbb{Z}$ be defined by $f(x) = ${fnExpr}$. List all elements of the range of $f$.`,
@@ -1960,7 +1965,7 @@ export const theCartesianEquationOfALine: TopicDef = {
           return `\\frac{${num}}{${dir}}`;
         };
         const rightEq = `${symPart(x0, a, "x")} = ${symPart(y0, b, "y")}, \\quad z = ${z0}`;
-        const wrong1 = `${symPart(x0, a, "x")} = ${symPart(y0, b, "y")} = \\frac{z - ${z0}}{0}`;
+        const wrong1 = `${symPart(x0, a, "x")} = ${symPart(y0, b, "y")} = \\frac{${z0 < 0 ? `z + ${-z0}` : `z - ${z0}`}}{0}`;
         const wrong2 = `${symPart(x0, a, "x")} = ${symPart(y0, b, "y")}, \\quad z = 0`;
         const wrong3 = `${symPart(x0, a, "x")} = ${symPart(y0, b, "y")}, \\quad z = ${x0}`;
 
@@ -2119,8 +2124,8 @@ export const theCartesianEquationOfAPlane: TopicDef = {
           ),
           answer: rightEq,
           solution: t(
-            `Substitute into $A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$:\n\n$$${fmtTerm(A, "x", x0)} + ${fmtTerm(B, "y", y0)} + ${fmtTerm(C, "z", z0)} = 0 \\implies ${rightEq}$$`,
-            `代入点法式方程 $A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$：\n\n$$${fmtTerm(A, "x", x0)} + ${fmtTerm(B, "y", y0)} + ${fmtTerm(C, "z", z0)} = 0 \\implies ${rightEq}$$`,
+            `Substitute into $A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$:\n\n$$${joinTerms([fmtTerm(A, "x", x0), fmtTerm(B, "y", y0), fmtTerm(C, "z", z0)])} = 0 \\implies ${rightEq}$$`,
+            `代入点法式方程 $A(x - x_0) + B(y - y_0) + C(z - z_0) = 0$：\n\n$$${joinTerms([fmtTerm(A, "x", x0), fmtTerm(B, "y", y0), fmtTerm(C, "z", z0)])} = 0 \\implies ${rightEq}$$`,
           ),
           wrong: [wrong1, wrong2, wrong3],
         });
@@ -2514,7 +2519,7 @@ export const theIntersectionBetweenALineAndAPlane: TopicDef = {
         const w3: Vec3 = [xInt, yInt - 1, zInt];
 
         const constTerm = A * x0 + B * y0 + C * z0 + D;
-        const eqStep = constTerm < 0 ? `${denom}t - ${-constTerm} = 0` : constTerm > 0 ? `${denom}t + ${constTerm} = 0` : `${denom}t = 0`;
+        const eqStep = `${poly([denom, "t"], [constTerm, ""])} = 0`;
 
         return pointProblem({
           prompt: t(
@@ -2571,8 +2576,8 @@ export const theIntersectionBetweenALineAndAPlane: TopicDef = {
               t("The line is perpendicular to the plane", "直线与平面垂直"),
             ],
             t(
-              `The dot product $\\mathbf{n} \\cdot \\mathbf{v} = (${A})(${B}) + (${B})(-${A}) + (${C})(0) = 0$, so the line is parallel to the plane. Testing initial point $P_0${pt3Latex(p0)}$ in the plane equation gives $0 = 0$. Thus the line lies entirely within the plane.`,
-              `法向量与方向向量的点积为 $\\mathbf{n} \\cdot \\mathbf{v} = (${A})(${B}) + (${B})(-${A}) + (${C})(0) = 0$，说明直线平行于平面。将直线的基准点 $P_0${pt3Latex(p0)}$ 代入平面方程满足等式，因此整条直线完全包含在平面内。`,
+              `The dot product $\\mathbf{n} \\cdot \\mathbf{v} = (${A})(${B}) + (${B})(${-A}) + (${C})(0) = 0$, so the line is parallel to the plane. Testing initial point $P_0${pt3Latex(p0)}$ in the plane equation gives $0 = 0$. Thus the line lies entirely within the plane.`,
+              `法向量与方向向量的点积为 $\\mathbf{n} \\cdot \\mathbf{v} = (${A})(${B}) + (${B})(${-A}) + (${C})(0) = 0$，说明直线平行于平面。将直线的基准点 $P_0${pt3Latex(p0)}$ 代入平面方程满足等式，因此整条直线完全包含在平面内。`,
             ),
           );
         } else {
@@ -2589,7 +2594,7 @@ export const theIntersectionBetweenALineAndAPlane: TopicDef = {
               t("The line is perpendicular to the plane", "直线与平面垂直"),
             ],
             t(
-              `The dot product $\\mathbf{n} \\cdot \\mathbf{v} = (${A})(${B}) + (${B})(-${A}) + (${C})(0) = 0$, so the line is parallel to the plane. Substituting $P_0${pt3Latex(p0)}$ does not satisfy the plane equation. Thus the line is strictly parallel to the plane with no points of intersection.`,
+              `The dot product $\\mathbf{n} \\cdot \\mathbf{v} = (${A})(${B}) + (${B})(${-A}) + (${C})(0) = 0$, so the line is parallel to the plane. Substituting $P_0${pt3Latex(p0)}$ does not satisfy the plane equation. Thus the line is strictly parallel to the plane with no points of intersection.`,
               `点积 $\\mathbf{n} \\cdot \\mathbf{v} = 0$ 说明方向向量垂直于法向量（直线平行于平面）。将基准点代入平面方程不成立，因此直线与平面严格平行，无交点。`,
             ),
           );

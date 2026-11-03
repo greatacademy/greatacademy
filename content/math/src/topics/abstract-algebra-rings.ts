@@ -1,5 +1,6 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { poly } from "@ga/subject-math";
 
 import { numberProblem } from "../problems.ts";
 import { divisors, type Fact, factProblem, gcd, lcm, mod, modInverse, phi, texChoice } from "./abstract-algebra-common.ts";
@@ -1364,8 +1365,8 @@ export const polynomialQuotientRings: TopicDef = {
           answer: askConst ? r0 : r1,
           wrong: askConst ? [mod(a * d, p), mod(a * d - c * b * e, p), r1] : [mod(a * e, p), mod(b * e, p), r0],
           solution: t(
-            `Replace $x^2$ by $${c}$: $(${polyTex([a, b])})(${polyTex([d, e])}) = ${a * d} + ${a * e + b * d}x + ${b * e}x^2 = ${a * d + c * b * e} + ${a * e + b * d}x \\equiv ${r0} + ${r1}x$.`,
-            `把 $x^2$ 换成 $${c}$：$(${polyTex([a, b])})(${polyTex([d, e])}) = ${a * d} + ${a * e + b * d}x + ${b * e}x^2 = ${a * d + c * b * e} + ${a * e + b * d}x \\equiv ${r0} + ${r1}x$。`,
+            `Replace $x^2$ by $${c}$: $(${polyTex([a, b])})(${polyTex([d, e])}) = ${poly([a * d, ""], [a * e + b * d, "x"], [b * e, "x^2"])} = ${poly([a * d + c * b * e, ""], [a * e + b * d, "x"])} \\equiv ${poly([r0, ""], [r1, "x"])}$.`,
+            `把 $x^2$ 换成 $${c}$：$(${polyTex([a, b])})(${polyTex([d, e])}) = ${poly([a * d, ""], [a * e + b * d, "x"], [b * e, "x^2"])} = ${poly([a * d + c * b * e, ""], [a * e + b * d, "x"])} \\equiv ${poly([r0, ""], [r1, "x"])}$。`,
           ),
         });
       },
@@ -1524,10 +1525,16 @@ export const ringHomomorphismsBetweenResidueRings: TopicDef = {
         "从 $\\mathbb{Z}_6$ 到 $\\mathbb{Z}_{12}$ 的 $x \\mapsto 4x$ 是环同态：$6 \\cdot 4 = 24 \\equiv 0$，$4^2 = 16 \\equiv 4 \\pmod{12}$。$x \\mapsto 3x$ 不是：$9 \\not\\equiv 3$。",
       ),
       generate(rng) {
-        const m = rng.int(2, 30);
-        const n = rng.int(6, 30);
-        const good = range(1, n - 1).filter((k) => residueHom(k, m, n));
-        const k = good.length > 0 && rng.bool() ? rng.pick(good) : rng.int(1, n - 1);
+        const want = rng.bool();
+        let m: number;
+        let n: number;
+        let good: number[];
+        do {
+          m = rng.int(2, 30);
+          n = rng.int(6, 30);
+          good = range(1, n - 1).filter((k) => residueHom(k, m, n));
+        } while (want && good.length === 0);
+        const k = want ? rng.pick(good) : rng.pick(range(1, n - 1).filter((j) => !good.includes(j)));
         const add = mod(m * k, n) === 0;
         const mult = mod(k * k - k, n) === 0;
         const holds = add && mult;

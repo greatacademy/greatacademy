@@ -344,10 +344,11 @@ export const closurePropertiesOfPolynomials: TopicDef = {
       ),
       keyPrerequisites: ["the-remainder-theorem"],
       generate(rng) {
-        const op = rng.pick(["+", "-", "\\cdot", "\\div", "\\div", "\\div"] as const);
+        const closed = rng.bool();
+        const op = closed ? rng.pick(["+", "-", "\\cdot", "\\div"] as const) : ("\\div" as const);
         const s = rng.nonZero(-6, 6);
         const q: P = [-s, 1];
-        const exact = op === "\\div" && rng.bool();
+        const exact = op === "\\div" && closed;
         const quad = () => [rng.int(-9, 9), rng.int(-9, 9), rng.nonZero(-3, 3)];
         let p = exact ? mulP(q, [rng.nonZero(-7, 7), rng.nonZero(-3, 3)]) : quad();
         while (op === "\\div" && !exact && at(p, s) === 0) p = quad();

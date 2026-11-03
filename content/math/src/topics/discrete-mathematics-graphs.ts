@@ -1,7 +1,7 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
-import { choiceProblem, numberProblem, yesNo } from "../problems.ts";
+import { article, choiceProblem, numberProblem, yesNo } from "../problems.ts";
 import {
   allPairs,
   bfs,
@@ -723,7 +723,10 @@ export const regularGraphs: TopicDef = {
         const m = (n * r) / 2;
         if (rng.bool())
           return numberProblem({
-            prompt: t(`How many edges does a $${r}$-regular graph on $${n}$ vertices have?`, `$${n}$ 个顶点的 $${r}$-正则图有多少条边？`),
+            prompt: t(
+              `How many edges does ${article(r)} $${r}$-regular graph on $${n}$ vertices have?`,
+              `$${n}$ 个顶点的 $${r}$-正则图有多少条边？`,
+            ),
             answer: m,
             wrong: [n * r, n + r, m + n],
             solution: t(`$\\frac{${n} \\cdot ${r}}{2} = ${m}$.`, `$\\frac{${n} \\cdot ${r}}{2} = ${m}$。`),

@@ -141,11 +141,10 @@ function relationKP(id: string, conversions: readonly Conversion[]): KnowledgePo
     generate(rng) {
       const c = rng.pick(conversions);
       const a = rng.int(1, 9);
-      let b: number;
-      do b = rng.int(1, 12) * Math.max(1, Math.round(c.factor / 10)) + rng.int(0, 1) * rng.int(1, 9);
-      while (b === a * c.factor);
       const big = a * c.factor;
-      const rel = big < b ? 0 : 2;
+      const rel = rng.int(0, 2);
+      const step = rng.int(1, c.factor - 1);
+      const b = rel === 0 ? big + step : rel === 1 ? big : big - step;
       const x = `\\text{${amountEn(a, c.big)}}`;
       const y = `\\text{${amountEn(b, c.small)}}`;
       const xz = `\\text{${amountZh(a, c.big)}}`;
@@ -155,8 +154,8 @@ function relationKP(id: string, conversions: readonly Conversion[]): KnowledgePo
         options: ["<", "=", ">"].map((s) => same(`$${s}$`)),
         correct: rel,
         solution: t(
-          `$1$ ${c.big.one.en} is $${tex(c.factor)}$ ${c.small.many.en}, so ${amountEn(a, c.big)} is ${amountEn(big, c.small)}, which is ${rel === 0 ? "less" : "more"} than ${amountEn(b, c.small)}.`,
-          `$1$ ${c.big.one["zh-CN"]}是 $${tex(c.factor)}$ ${c.small.one["zh-CN"]}，所以 ${amountZh(a, c.big)}是 ${amountZh(big, c.small)}，${rel === 0 ? "小于" : "大于"} ${amountZh(b, c.small)}。`,
+          `$1$ ${c.big.one.en} is $${tex(c.factor)}$ ${c.small.many.en}, so ${amountEn(a, c.big)} is ${amountEn(big, c.small)}, which is ${["less than", "equal to", "more than"][rel]} ${amountEn(b, c.small)}.`,
+          `$1$ ${c.big.one["zh-CN"]}是 $${tex(c.factor)}$ ${c.small.one["zh-CN"]}，所以 ${amountZh(a, c.big)}是 ${amountZh(big, c.small)}，${["小于", "等于", "大于"][rel]} ${amountZh(b, c.small)}。`,
         ),
       });
     },

@@ -779,7 +779,7 @@ export const solvingProblemsUsingUnitRates = topic(
   "solving-problems-using-unit-rates",
   t("Solving Problems Using Unit Rates", "用单位率解决问题"),
   t(
-    "Find the unit rate first, then multiply. If 5 notebooks cost $15, one costs $3, so 8 cost $24. To find the better buy, compare the price of one item at each store.",
+    "Find the unit rate first, then multiply. If 5 notebooks cost \\$15, one costs \\$3, so 8 cost \\$24. To find the better buy, compare the price of one item at each store.",
     "先求单位率，再相乘。5 本笔记本 15 美元，那么每本 3 美元，8 本就是 24 美元。比较哪家更划算，就比较每家单价。",
   ),
   ["unit-rates", "ratio-tables"],

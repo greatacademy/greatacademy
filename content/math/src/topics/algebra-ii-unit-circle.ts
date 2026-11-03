@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, type Compass, dec, gcd, type Mark, type Point, Q, q, radical, simplifyRadical, sketch } from "@ga/subject-math";
 
-import { choiceProblem, expressionProblem, numberProblem, radicalProblem, steps, yesNo } from "../problems.ts";
+import { article, choiceProblem, expressionProblem, numberProblem, radicalProblem, steps, yesNo } from "../problems.ts";
 
 // Algebra II, unit 8: the unit circle — angles in standard position (positive,
 // negative, coterminal, reference angles), the unit-circle definition of the
@@ -581,7 +581,7 @@ export const anglesInTheCoordinatePlane: TopicDef = {
         return {
           ...numberProblem({
             prompt: t(
-              `The terminal side of an angle $\\theta$ in standard position lies in ${quadrantName(quadrantOfDeg(a.phi) as Quadrant).en} and makes a $${a.alpha}^\\circ$ angle with ${axis.en}, as shown. Find $\\theta$, where $0^\\circ < \\theta < 360^\\circ$.`,
+              `The terminal side of an angle $\\theta$ in standard position lies in ${quadrantName(quadrantOfDeg(a.phi) as Quadrant).en} and makes ${article(a.alpha)} $${a.alpha}^\\circ$ angle with ${axis.en}, as shown. Find $\\theta$, where $0^\\circ < \\theta < 360^\\circ$.`,
               `如图，标准位置的角 $\\theta$ 的终边在${quadrantName(quadrantOfDeg(a.phi) as Quadrant)["zh-CN"]}，与 ${axis["zh-CN"]}成 $${a.alpha}^\\circ$ 角。求 $\\theta$（$0^\\circ < \\theta < 360^\\circ$）。`,
             ),
             answer: a.phi,
@@ -649,7 +649,7 @@ export const negativeAnglesInTheCoordinatePlane: TopicDef = {
         return {
           ...numberProblem({
             prompt: t(
-              `The terminal side of an angle $\\theta$ in standard position lies in ${quadrantName(quadrantOfDeg(a.phi) as Quadrant).en} and makes a $${a.alpha}^\\circ$ angle with ${axis.en}, as shown. Find $\\theta$, where $-360^\\circ < \\theta < 0^\\circ$.`,
+              `The terminal side of an angle $\\theta$ in standard position lies in ${quadrantName(quadrantOfDeg(a.phi) as Quadrant).en} and makes ${article(a.alpha)} $${a.alpha}^\\circ$ angle with ${axis.en}, as shown. Find $\\theta$, where $-360^\\circ < \\theta < 0^\\circ$.`,
               `如图，标准位置的角 $\\theta$ 的终边在${quadrantName(quadrantOfDeg(a.phi) as Quadrant)["zh-CN"]}，与 ${axis["zh-CN"]}成 $${a.alpha}^\\circ$ 角。求 $\\theta$（$-360^\\circ < \\theta < 0^\\circ$）。`,
             ),
             answer,

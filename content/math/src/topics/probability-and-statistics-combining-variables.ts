@@ -1,7 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-import { choiceProblem, numberProblem } from "../problems.ts";
+import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
 
 /** Topics for Unit 5: Combining Random Variables (new topics). */
 export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
@@ -42,8 +42,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(sumVal, total),
             solution: t(
-              `By definition, $F_{X,Y}(0, 1) = P(X \\le 0, Y \\le 1) = P(0, 0) + P(0, 1) = \\frac{${a}}{${total}} + \\frac{${b}}{${total}} = \\frac{${sumVal}}{${total}}$.`,
-              `根据定义，$F_{X,Y}(0, 1) = P(X \\le 0, Y \\le 1) = P(0, 0) + P(0, 1) = \\frac{${a}}{${total}} + \\frac{${b}}{${total}} = \\frac{${sumVal}}{${total}}$。`,
+              `By definition, $F_{X,Y}(0, 1) = P(X \\le 0, Y \\le 1) = P(0, 0) + P(0, 1) = \\frac{${a}}{${total}} + \\frac{${b}}{${total}} = \\frac{${sumVal}}{${total}}${lowestTerms(sumVal, total)}$.`,
+              `根据定义，$F_{X,Y}(0, 1) = P(X \\le 0, Y \\le 1) = P(0, 0) + P(0, 1) = \\frac{${a}}{${total}} + \\frac{${b}}{${total}} = \\frac{${sumVal}}{${total}}${lowestTerms(sumVal, total)}$。`,
             ),
           });
         },
@@ -67,8 +67,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "calculating-discrete-marginal-pmf",
         title: t("Summing rows to compute marginal probabilities", "通过行或列求和计算边际概率"),
         explanation: t(
-          "p_X(x) = ∑_y p(x, y) sums joint probabilities across all y.",
-          "p_X(x) = ∑_y p(x, y) 表示对所有可能出现的 y 对联合概率求和。",
+          "The marginal pmf $p_X(x) = \\sum_y p(x, y)$ sums the joint probabilities over all $y$.",
+          "边际分布律 $p_X(x) = \\sum_y p(x, y)$ 是对所有 $y$ 的联合概率求和。",
         ),
         generate: (rng: Rng): Problem => {
           const p1 = rng.int(1, 5);
@@ -86,8 +86,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(margX, total),
             solution: t(
-              `The marginal probability is $P(X = ${xVal}) = \\sum_{y} P(${xVal}, y) = \\frac{${p1}}{${total}} + \\frac{${p2}}{${total}} + \\frac{${p3}}{${total}} = \\frac{${margX}}{${total}}$.`,
-              `边际概率为 $P(X = ${xVal}) = \\sum_{y} P(${xVal}, y) = \\frac{${p1}}{${total}} + \\frac{${p2}}{${total}} + \\frac{${p3}}{${total}} = \\frac{${margX}}{${total}}$。`,
+              `The marginal probability is $P(X = ${xVal}) = \\sum_{y} P(${xVal}, y) = \\frac{${p1}}{${total}} + \\frac{${p2}}{${total}} + \\frac{${p3}}{${total}} = \\frac{${margX}}{${total}}${lowestTerms(margX, total)}$.`,
+              `边际概率为 $P(X = ${xVal}) = \\sum_{y} P(${xVal}, y) = \\frac{${p1}}{${total}} + \\frac{${p2}}{${total}} + \\frac{${p3}}{${total}} = \\frac{${margX}}{${total}}${lowestTerms(margX, total)}$。`,
             ),
           });
         },
@@ -126,8 +126,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(jointNum, jointDen),
             solution: t(
-              `Since $X$ and $Y$ are independent, $P(X = 2, Y = 3) = P(X = 2) \\cdot P(Y = 3) = \\frac{${numA}}{${denA}} \\times \\frac{${numB}}{${denB}} = \\frac{${jointNum}}{${jointDen}}$.`,
-              `由于 $X$ 与 $Y$ 相互独立，$P(X = 2, Y = 3) = P(X = 2) \\cdot P(Y = 3) = \\frac{${numA}}{${denA}} \\times \\frac{${numB}}{${denB}} = \\frac{${jointNum}}{${jointDen}}$。`,
+              `Since $X$ and $Y$ are independent, $P(X = 2, Y = 3) = P(X = 2) \\cdot P(Y = 3) = \\frac{${numA}}{${denA}} \\times \\frac{${numB}}{${denB}} = \\frac{${jointNum}}{${jointDen}}${lowestTerms(jointNum, jointDen)}$.`,
+              `由于 $X$ 与 $Y$ 相互独立，$P(X = 2, Y = 3) = P(X = 2) \\cdot P(Y = 3) = \\frac{${numA}}{${denA}} \\times \\frac{${numB}}{${denB}} = \\frac{${jointNum}}{${jointDen}}${lowestTerms(jointNum, jointDen)}$。`,
             ),
           });
         },
@@ -164,8 +164,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(jointVal, margVal),
             solution: t(
-              `The conditional probability is $P(Y = 2 \\mid X = 1) = \\frac{P(X = 1, Y = 2)}{P(X = 1)} = \\frac{${jointVal}/${denom}}{${margVal}/${denom}} = \\frac{${jointVal}}{${margVal}}$.`,
-              `条件概率为 $P(Y = 2 \\mid X = 1) = \\frac{P(X = 1, Y = 2)}{P(X = 1)} = \\frac{${jointVal}/${denom}}{${margVal}/${denom}} = \\frac{${jointVal}}{${margVal}}$。`,
+              `The conditional probability is $P(Y = 2 \\mid X = 1) = \\frac{P(X = 1, Y = 2)}{P(X = 1)} = \\frac{${jointVal}/${denom}}{${margVal}/${denom}} = \\frac{${jointVal}}{${margVal}}${lowestTerms(jointVal, margVal)}$.`,
+              `条件概率为 $P(Y = 2 \\mid X = 1) = \\frac{P(X = 1, Y = 2)}{P(X = 1)} = \\frac{${jointVal}/${denom}}{${margVal}/${denom}} = \\frac{${jointVal}}{${margVal}}${lowestTerms(jointVal, margVal)}$。`,
             ),
           });
         },
@@ -237,8 +237,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "multinomial-marginal-binomial",
         title: t("Recognizing that each marginal of a multinomial distribution is binomial", "多项分布的每个边际分布均为二项分布"),
         explanation: t(
-          "For (X_1, ..., X_k) ~ Multinomial(n, p_1, ..., p_k), each component X_i follows Binomial(n, p_i).",
-          "若 (X_1, ..., X_k) ~ Multinomial(n, p_1, ..., p_k)，则每个单独分量 X_i 均服从二项分布 Binomial(n, p_i)。",
+          "For $(X_1, \\dots, X_k) \\sim \\text{Multinomial}(n, p_1, \\dots, p_k)$, each component $X_i$ follows $\\text{Binomial}(n, p_i)$.",
+          "若 $(X_1, \\dots, X_k) \\sim \\text{Multinomial}(n, p_1, \\dots, p_k)$，则每个分量 $X_i$ 均服从二项分布 $\\text{Binomial}(n, p_i)$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(10, 100);
@@ -298,8 +298,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "integrating-marginal-density-constant",
         title: t("Evaluating marginal density coefficients", "计算边际密度函数的系数"),
         explanation: t(
-          "For f(x, y) = c(x + y) on [0, 1] x [0, 1], f_X(x) = c(x + 1/2).",
-          "对于在 [0, 1] x [0, 1] 上的 f(x, y) = c(x + y)，边际密度为 f_X(x) = c(x + 1/2)。",
+          "For $f(x, y) = c(x + y)$ on $[0, 1] \\times [0, 1]$, $f_X(x) = c\\left(x + \\frac{1}{2}\\right)$.",
+          "对于 $[0, 1] \\times [0, 1]$ 上的 $f(x, y) = c(x + y)$，边际密度为 $f_X(x) = c\\left(x + \\frac{1}{2}\\right)$。",
         ),
         generate: (rng: Rng): Problem => {
           // f(x, y) = c * x * y on [0, a] x [0, b]
@@ -318,8 +318,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `Integrate out $y$: $f_X(x) = \\int_0^{${b}} \\frac{4}{${a * a * b * b}} x y \\, dy = \\frac{4 x}{${a * a * b * b}} \\left[\\frac{y^2}{2}\\right]_0^{${b}} = \\frac{4 x}{${a * a * b * b}} \\cdot \\frac{${b * b}}{2} = \\frac{2}{${a * a}} x$. Thus $k = \\frac{2}{${den}}$.`,
-              `对 $y$ 积分：$f_X(x) = \\int_0^{${b}} \\frac{4}{${a * a * b * b}} x y \\, dy = \\frac{4 x}{${a * a * b * b}} \\left[\\frac{y^2}{2}\\right]_0^{${b}} = \\frac{2}{${a * a}} x$。因此 $k = \\frac{2}{${den}}$。`,
+              `Integrate out $y$: $f_X(x) = \\int_0^{${b}} \\frac{4}{${a * a * b * b}} x y \\, dy = \\frac{4 x}{${a * a * b * b}} \\left[\\frac{y^2}{2}\\right]_0^{${b}} = \\frac{4 x}{${a * a * b * b}} \\cdot \\frac{${b * b}}{2} = \\frac{2}{${a * a}} x$. Thus $k = \\frac{2}{${den}}${lowestTerms(2, den)}$.`,
+              `对 $y$ 积分：$f_X(x) = \\int_0^{${b}} \\frac{4}{${a * a * b * b}} x y \\, dy = \\frac{4 x}{${a * a * b * b}} \\left[\\frac{y^2}{2}\\right]_0^{${b}} = \\frac{2}{${a * a}} x$。因此 $k = \\frac{2}{${den}}${lowestTerms(2, den)}$。`,
             ),
           });
         },
@@ -398,7 +398,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "evaluating-conditional-density",
         title: t("Evaluating the conditional density at a given value", "计算给定条件下的条件概率密度值"),
-        explanation: t("f_{Y|X}(y|x) = f(x, y) / f_X(x).", "f_{Y|X}(y|x) = f(x, y) / f_X(x)。"),
+        explanation: t(
+          "The conditional density is $f_{Y \\mid X}(y \\mid x) = \\frac{f(x, y)}{f_X(x)}$.",
+          "条件密度为 $f_{Y \\mid X}(y \\mid x) = \\frac{f(x, y)}{f_X(x)}$。",
+        ),
         generate: (rng: Rng): Problem => {
           // f(x, y) = 2 for 0 <= y <= x <= 1
           // f_X(x) = int_0^x 2 dy = 2x
@@ -415,8 +418,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(denX, numX),
             solution: t(
-              `The marginal density of $X$ is $f_X(x) = \\int_0^x 2 \\, dy = 2x$. Thus the conditional density is $f_{Y \\mid X}(y \\mid x) = \\frac{f(x, y)}{f_X(x)} = \\frac{2}{2x} = \\frac{1}{x}$. Evaluating at $x = \\frac{${numX}}{${denX}}$ gives $\\frac{1}{${numX}/${denX}} = \\frac{${denX}}{${numX}}$.`,
-              `$X$ 的边际密度为 $f_X(x) = \\int_0^x 2 \\, dy = 2x$。因此条件密度为 $f_{Y \\mid X}(y \\mid x) = \\frac{f(x, y)}{f_X(x)} = \\frac{2}{2x} = \\frac{1}{x}$。在 $x = \\frac{${numX}}{${denX}}$ 处求值得到 $\\frac{1}{${numX}/${denX}} = \\frac{${denX}}{${numX}}$。`,
+              `The marginal density of $X$ is $f_X(x) = \\int_0^x 2 \\, dy = 2x$. Thus the conditional density is $f_{Y \\mid X}(y \\mid x) = \\frac{f(x, y)}{f_X(x)} = \\frac{2}{2x} = \\frac{1}{x}$. Evaluating at $x = \\frac{${numX}}{${denX}}$ gives $\\frac{1}{${numX}/${denX}} = \\frac{${denX}}{${numX}}${lowestTerms(denX, numX)}$.`,
+              `$X$ 的边际密度为 $f_X(x) = \\int_0^x 2 \\, dy = 2x$。因此条件密度为 $f_{Y \\mid X}(y \\mid x) = \\frac{f(x, y)}{f_X(x)} = \\frac{2}{2x} = \\frac{1}{x}$。在 $x = \\frac{${numX}}{${denX}}$ 处求值得到 $\\frac{1}{${numX}/${denX}} = \\frac{${denX}}{${numX}}${lowestTerms(denX, numX)}$。`,
             ),
           });
         },
@@ -440,8 +443,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "evaluating-joint-continuous-cdf",
         title: t("Evaluating double integral of joint density for CDF", "通过联合密度的二重积分计算累积分布函数值"),
         explanation: t(
-          "F(x, y) = P(X ≤ x, Y ≤ y) = ∫_{-∞}^x ∫_{-∞}^y f(u, v) dv du.",
-          "F(x, y) = P(X ≤ x, Y ≤ y) = ∫_{-∞}^x ∫_{-∞}^y f(u, v) dv du。",
+          "The joint CDF is $F(x, y) = P(X \\le x, Y \\le y) = \\int_{-\\infty}^x \\int_{-\\infty}^y f(u, v) \\, dv \\, du$.",
+          "联合分布函数为 $F(x, y) = P(X \\le x, Y \\le y) = \\int_{-\\infty}^x \\int_{-\\infty}^y f(u, v) \\, dv \\, du$。",
         ),
         generate: (rng: Rng): Problem => {
           // f(x, y) = 1 on [0, 1] x [0, 1]
@@ -460,8 +463,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(ansNum, ansDen),
             solution: t(
-              `$F_{X,Y}(x, y) = \\int_0^x \\int_0^y 1 \\, dv \\, du = x y$. Thus $F_{X,Y}\\left(\\frac{${numX}}{${denX}}, \\frac{${numY}}{${denY}}\\right) = \\frac{${numX}}{${denX}} \\times \\frac{${numY}}{${denY}} = \\frac{${ansNum}}{${ansDen}}$.`,
-              `$F_{X,Y}(x, y) = \\int_0^x \\int_0^y 1 \\, dv \\, du = x y$。因此 $F_{X,Y}\\left(\\frac{${numX}}{${denX}}, \\frac{${numY}}{${denY}}\\right) = \\frac{${numX}}{${denX}} \\times \\frac{${numY}}{${denY}} = \\frac{${ansNum}}{${ansDen}}$。`,
+              `$F_{X,Y}(x, y) = \\int_0^x \\int_0^y 1 \\, dv \\, du = x y$. Thus $F_{X,Y}\\left(\\frac{${numX}}{${denX}}, \\frac{${numY}}{${denY}}\\right) = \\frac{${numX}}{${denX}} \\times \\frac{${numY}}{${denY}} = \\frac{${ansNum}}{${ansDen}}${lowestTerms(ansNum, ansDen)}$.`,
+              `$F_{X,Y}(x, y) = \\int_0^x \\int_0^y 1 \\, dv \\, du = x y$。因此 $F_{X,Y}\\left(\\frac{${numX}}{${denX}}, \\frac{${numY}}{${denY}}\\right) = \\frac{${numX}}{${denX}} \\times \\frac{${numY}}{${denY}} = \\frac{${ansNum}}{${ansDen}}${lowestTerms(ansNum, ansDen)}$。`,
             ),
           });
         },
@@ -542,8 +545,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "bivariate-normal-zero-correlation-independence",
         title: t("Zero correlation implies independence for bivariate normal variables", "二元正态变量零相关即独立"),
         explanation: t(
-          "For jointly normal random variables, Cov(X, Y) = 0 (or ρ = 0) is necessary and sufficient for independence.",
-          "对于联合正态随机变量，协方差为 0（或相关系数 ρ = 0）是两者相互独立的充要条件。",
+          "For jointly normal random variables, $\\operatorname{Cov}(X, Y) = 0$ (or $\\rho = 0$) is necessary and sufficient for independence.",
+          "对于联合正态随机变量，$\\operatorname{Cov}(X, Y) = 0$（或 $\\rho = 0$）是两者相互独立的充要条件。",
         ),
         generate: (rng: Rng): Problem => {
           const muX = rng.int(1, 25);
@@ -614,8 +617,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "sum-of-independent-binomials-same-p",
         title: t("Adding independent binomial variables with identical p", "具有相同成功概率的独立二项变量求和"),
         explanation: t(
-          "If X ~ Binomial(n1, p) and Y ~ Binomial(n2, p) are independent, then X + Y ~ Binomial(n1 + n2, p).",
-          "若独立变量 X ~ Binomial(n1, p) 且 Y ~ Binomial(n2, p)，则 X + Y ~ Binomial(n1 + n2, p)。",
+          "If $X \\sim \\text{Binomial}(n_1, p)$ and $Y \\sim \\text{Binomial}(n_2, p)$ are independent, then $X + Y \\sim \\text{Binomial}(n_1 + n_2, p)$.",
+          "若 $X \\sim \\text{Binomial}(n_1, p)$ 与 $Y \\sim \\text{Binomial}(n_2, p)$ 相互独立，则 $X + Y \\sim \\text{Binomial}(n_1 + n_2, p)$。",
         ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(5, 50);
@@ -654,8 +657,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "sum-of-independent-poisson-parameters",
         title: t("Adding independent Poisson variables", "独立泊松变量求和"),
         explanation: t(
-          "For independent X ~ Poisson(λ1) and Y ~ Poisson(λ2), X + Y ~ Poisson(λ1 + λ2).",
-          "若独立变量 X ~ Poisson(λ1) 且 Y ~ Poisson(λ2)，则 X + Y ~ Poisson(λ1 + λ2)。",
+          "For independent $X \\sim \\text{Poisson}(\\lambda_1)$ and $Y \\sim \\text{Poisson}(\\lambda_2)$, $X + Y \\sim \\text{Poisson}(\\lambda_1 + \\lambda_2)$.",
+          "若 $X \\sim \\text{Poisson}(\\lambda_1)$ 与 $Y \\sim \\text{Poisson}(\\lambda_2)$ 相互独立，则 $X + Y \\sim \\text{Poisson}(\\lambda_1 + \\lambda_2)$。",
         ),
         generate: (rng: Rng): Problem => {
           const l1 = rng.int(2, 40);
@@ -694,8 +697,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "variance-of-two-normal-linear-combination",
         title: t("Variance of linear combination of two independent normals", "两个独立正态变量线性组合的方差"),
         explanation: t(
-          "Var(aX + bY) = a^2 Var(X) + b^2 Var(Y) when X and Y are independent.",
-          "当 X 与 Y 独立时，Var(aX + bY) = a^2 Var(X) + b^2 Var(Y)。",
+          "$\\operatorname{Var}(aX + bY) = a^2 \\operatorname{Var}(X) + b^2 \\operatorname{Var}(Y)$ when $X$ and $Y$ are independent.",
+          "当 $X$ 与 $Y$ 独立时，$\\operatorname{Var}(aX + bY) = a^2 \\operatorname{Var}(X) + b^2 \\operatorname{Var}(Y)$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(1, 8);
@@ -735,7 +738,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "mean-of-multiple-normal-combination",
         title: t("Mean of a general linear combination of normal variables", "多个正态变量一般线性组合的均值"),
-        explanation: t("E[∑ c_i X_i] = ∑ c_i E[X_i].", "E[∑ c_i X_i] = ∑ c_i E[X_i]。"),
+        explanation: t(
+          "Expectation is linear: $E\\left[\\sum_i c_i X_i\\right] = \\sum_i c_i E[X_i]$.",
+          "期望是线性的：$E\\left[\\sum_i c_i X_i\\right] = \\sum_i c_i E[X_i]$。",
+        ),
         generate: (rng: Rng): Problem => {
           const c1 = rng.int(1, 4);
           const c2 = rng.int(1, 4);
@@ -777,8 +783,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "sample-mean-variance-iid-normal",
         title: t("Variance of the sample mean for i.i.d. normal variables", "独立同分布正态样本均值的方差"),
         explanation: t(
-          "For X_1, ..., X_n i.i.d. N(μ, σ^2), Var(X̄) = σ^2 / n.",
-          "对于独立同分布的 X_1, ..., X_n ~ N(μ, σ^2)，样本均值的方差为 Var(X̄) = σ^2 / n。",
+          "For $X_1, \\dots, X_n$ i.i.d. $N(\\mu, \\sigma^2)$, $\\operatorname{Var}(\\bar{X}) = \\frac{\\sigma^2}{n}$.",
+          "对于独立同分布的 $X_1, \\dots, X_n \\sim N(\\mu, \\sigma^2)$，样本均值的方差为 $\\operatorname{Var}(\\bar{X}) = \\frac{\\sigma^2}{n}$。",
         ),
         generate: (rng: Rng): Problem => {
           const sigmaSq = rng.int(10, 100);
@@ -791,8 +797,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(sigmaSq, n),
             solution: t(
-              `The variance of the sample mean is $\\text{Var}(\\bar{X}) = \\frac{\\sigma^2}{n} = \\frac{${sigmaSq}}{${n}}$.`,
-              `样本均值的方差为 $\\text{Var}(\\bar{X}) = \\frac{\\sigma^2}{n} = \\frac{${sigmaSq}}{${n}}$。`,
+              `The variance of the sample mean is $\\text{Var}(\\bar{X}) = \\frac{\\sigma^2}{n} = \\frac{${sigmaSq}}{${n}}${lowestTerms(sigmaSq, n)}$.`,
+              `样本均值的方差为 $\\text{Var}(\\bar{X}) = \\frac{\\sigma^2}{n} = \\frac{${sigmaSq}}{${n}}${lowestTerms(sigmaSq, n)}$。`,
             ),
           });
         },
@@ -852,7 +858,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "sum-of-variances-independent",
         title: t("Computing variance of sum of independent variables", "计算独立随机变量和的方差"),
-        explanation: t("For independent variables, Var(X + Y) = Var(X) + Var(Y).", "对于相互独立的变量，Var(X + Y) = Var(X) + Var(Y)。"),
+        explanation: t(
+          "For independent variables, $\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y)$.",
+          "对于相互独立的变量，$\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y)$。",
+        ),
         generate: (rng: Rng): Problem => {
           const v1 = rng.int(5, 50);
           const v2 = rng.int(5, 50);
@@ -889,7 +898,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "evaluating-discrete-joint-expectation",
         title: t("Evaluating E[XY] from a discrete probability table", "根据离散概率表计算 E[XY]"),
-        explanation: t("E[XY] = ∑_x ∑_y x y p(x, y).", "E[XY] = ∑_x ∑_y x y p(x, y)。"),
+        explanation: t("$E[XY] = \\sum_x \\sum_y xy \\, p(x, y)$.", "$E[XY] = \\sum_x \\sum_y xy \\, p(x, y)$。"),
         generate: (rng: Rng): Problem => {
           const p11 = rng.int(1, 5);
           const p12 = rng.int(1, 5);
@@ -907,8 +916,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(num, total),
             solution: t(
-              `$E[XY] = \\sum_{x} \\sum_{y} xy P(x, y) = 1(1)\\frac{${p11}}{${total}} + 1(2)\\frac{${p12}}{${total}} + 2(1)\\frac{${p21}}{${total}} + 2(2)\\frac{${p22}}{${total}} = \\frac{${num}}{${total}}$.`,
-              `$E[XY] = \\sum_{x} \\sum_{y} xy P(x, y) = 1(1)\\frac{${p11}}{${total}} + 1(2)\\frac{${p12}}{${total}} + 2(1)\\frac{${p21}}{${total}} + 2(2)\\frac{${p22}}{${total}} = \\frac{${num}}{${total}}$。`,
+              `$E[XY] = \\sum_{x} \\sum_{y} xy P(x, y) = 1(1)\\frac{${p11}}{${total}} + 1(2)\\frac{${p12}}{${total}} + 2(1)\\frac{${p21}}{${total}} + 2(2)\\frac{${p22}}{${total}} = \\frac{${num}}{${total}}${lowestTerms(num, total)}$.`,
+              `$E[XY] = \\sum_{x} \\sum_{y} xy P(x, y) = 1(1)\\frac{${p11}}{${total}} + 1(2)\\frac{${p12}}{${total}} + 2(1)\\frac{${p21}}{${total}} + 2(2)\\frac{${p22}}{${total}} = \\frac{${num}}{${total}}${lowestTerms(num, total)}$。`,
             ),
           });
         },
@@ -931,7 +940,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "evaluating-discrete-conditional-expectation",
         title: t("Calculating conditional expectation from conditional PMF", "根据条件概率质量函数计算条件期望"),
-        explanation: t("E[Y | X = x] = ∑_y y P(Y = y | X = x).", "E[Y | X = x] = ∑_y y P(Y = y | X = x)。"),
+        explanation: t(
+          "$E[Y \\mid X = x] = \\sum_y y \\, P(Y = y \\mid X = x)$.",
+          "$E[Y \\mid X = x] = \\sum_y y \\, P(Y = y \\mid X = x)$。",
+        ),
         generate: (rng: Rng): Problem => {
           const w1 = rng.int(1, 5);
           const w2 = rng.int(1, 5);
@@ -947,8 +959,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(num, totalW),
             solution: t(
-              `$E[Y \\mid X = 1] = 1 \\cdot P(Y = 1 \\mid X = 1) + 3 \\cdot P(Y = 3 \\mid X = 1) = 1 \\left(\\frac{${w1}}{${totalW}}\\right) + 3 \\left(\\frac{${w2}}{${totalW}}\\right) = \\frac{${num}}{${totalW}}$.`,
-              `$E[Y \\mid X = 1] = 1 \\cdot P(Y = 1 \\mid X = 1) + 3 \\cdot P(Y = 3 \\mid X = 1) = 1 \\left(\\frac{${w1}}{${totalW}}\\right) + 3 \\left(\\frac{${w2}}{${totalW}}\\right) = \\frac{${num}}{${totalW}}$。`,
+              `$E[Y \\mid X = 1] = 1 \\cdot P(Y = 1 \\mid X = 1) + 3 \\cdot P(Y = 3 \\mid X = 1) = 1 \\left(\\frac{${w1}}{${totalW}}\\right) + 3 \\left(\\frac{${w2}}{${totalW}}\\right) = \\frac{${num}}{${totalW}}${lowestTerms(num, totalW)}$.`,
+              `$E[Y \\mid X = 1] = 1 \\cdot P(Y = 1 \\mid X = 1) + 3 \\cdot P(Y = 3 \\mid X = 1) = 1 \\left(\\frac{${w1}}{${totalW}}\\right) + 3 \\left(\\frac{${w2}}{${totalW}}\\right) = \\frac{${num}}{${totalW}}${lowestTerms(num, totalW)}$。`,
             ),
           });
         },
@@ -971,7 +983,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "evaluating-conditional-variance-discrete",
         title: t("Computing conditional variance using moments", "利用条件矩计算条件方差"),
-        explanation: t("Var(Y | X = x) = E[Y^2 | X = x] - (E[Y | X = x])^2.", "Var(Y | X = x) = E[Y^2 | X = x] - (E[Y | X = x])^2。"),
+        explanation: t(
+          "$\\operatorname{Var}(Y \\mid X = x) = E[Y^2 \\mid X = x] - (E[Y \\mid X = x])^2$.",
+          "$\\operatorname{Var}(Y \\mid X = x) = E[Y^2 \\mid X = x] - (E[Y \\mid X = x])^2$。",
+        ),
         generate: (rng: Rng): Problem => {
           // Let Y | X = x take values 0 with prob 1/2 and 2*k with prob 1/2
           const k = rng.int(1, 40);
@@ -1068,7 +1083,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "evaluating-law-of-total-expectation",
         title: t("Computing overall mean via conditional expectations", "通过条件期望加权计算总体均值"),
-        explanation: t("E[Y] = ∑_x E[Y | X = x] P(X = x).", "E[Y] = ∑_x E[Y | X = x] P(X = x)。"),
+        explanation: t(
+          "By the law of total expectation, $E[Y] = \\sum_x E[Y \\mid X = x] \\, P(X = x)$.",
+          "由全期望公式，$E[Y] = \\sum_x E[Y \\mid X = x] \\, P(X = x)$。",
+        ),
         generate: (rng: Rng): Problem => {
           const e1 = rng.int(10, 40);
           const e2 = rng.int(50, 90);
@@ -1089,8 +1107,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `By the Law of Total Expectation, $E[T] = E[T \\mid \\text{State 1}] P(\\text{State 1}) + E[T \\mid \\text{State 2}] P(\\text{State 2}) = ${e1} \\left(\\frac{${p1.num}}{${p1.den}}\\right) + ${e2} \\left(\\frac{${p1.den - p1.num}}{${p1.den}}\\right) = \\frac{${num}}{${den}}$.`,
-              `由全期望公式，$E[T] = E[T \\mid \\text{状态 1}] P(\\text{状态 1}) + E[T \\mid \\text{状态 2}] P(\\text{状态 2}) = ${e1} \\left(\\frac{${p1.num}}{${p1.den}}\\right) + ${e2} \\left(\\frac{${p1.den - p1.num}}{${p1.den}}\\right) = \\frac{${num}}{${den}}$。`,
+              `By the Law of Total Expectation, $E[T] = E[T \\mid \\text{State 1}] P(\\text{State 1}) + E[T \\mid \\text{State 2}] P(\\text{State 2}) = ${e1} \\left(\\frac{${p1.num}}{${p1.den}}\\right) + ${e2} \\left(\\frac{${p1.den - p1.num}}{${p1.den}}\\right) = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `由全期望公式，$E[T] = E[T \\mid \\text{状态 1}] P(\\text{状态 1}) + E[T \\mid \\text{状态 2}] P(\\text{状态 2}) = ${e1} \\left(\\frac{${p1.num}}{${p1.den}}\\right) + ${e2} \\left(\\frac{${p1.den - p1.num}}{${p1.den}}\\right) = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -1113,7 +1131,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "evaluating-covariance-formula",
         title: t("Computing covariance from expectations", "根据期望值计算协方差"),
-        explanation: t("Cov(X, Y) = E[XY] - E[X] E[Y].", "Cov(X, Y) = E[XY] - E[X] E[Y]。"),
+        explanation: t("$\\operatorname{Cov}(X, Y) = E[XY] - E[X] \\, E[Y]$.", "$\\operatorname{Cov}(X, Y) = E[XY] - E[X] \\, E[Y]$。"),
         generate: (rng: Rng): Problem => {
           const eX = rng.int(2, 10);
           const eY = rng.int(2, 10);
@@ -1151,7 +1169,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "evaluating-variance-with-covariance",
         title: t("Computing variance of a sum using the covariance term", "利用协方差项计算随机变量和的方差"),
-        explanation: t("Var(X + Y) = Var(X) + Var(Y) + 2 Cov(X, Y).", "Var(X + Y) = Var(X) + Var(Y) + 2 Cov(X, Y)。"),
+        explanation: t(
+          "$\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y) + 2\\operatorname{Cov}(X, Y)$.",
+          "$\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y) + 2\\operatorname{Cov}(X, Y)$。",
+        ),
         generate: (rng: Rng): Problem => {
           const vx = rng.int(5, 30);
           const vy = rng.int(5, 30);
@@ -1190,8 +1211,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "covariance-matrix-symmetry-and-entries",
         title: t("Identifying diagonal and off-diagonal entries of covariance matrix", "识别协方差矩阵的对角与非对角元素"),
         explanation: t(
-          "The diagonal contains variances Var(X_i), and off-diagonal entries are Cov(X_i, X_j) = Cov(X_j, X_i).",
-          "对角元为方差 Var(X_i)，非对角元为协方差 Cov(X_i, X_j) = Cov(X_j, X_i)。",
+          "The diagonal holds the variances $\\operatorname{Var}(X_i)$, and the off-diagonal entries are $\\operatorname{Cov}(X_i, X_j) = \\operatorname{Cov}(X_j, X_i)$.",
+          "对角元为方差 $\\operatorname{Var}(X_i)$，非对角元为协方差 $\\operatorname{Cov}(X_i, X_j) = \\operatorname{Cov}(X_j, X_i)$。",
         ),
         generate: (rng: Rng): Problem => {
           const v1 = rng.int(4, 25);
@@ -1229,7 +1250,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "computing-correlation-coefficient",
         title: t("Evaluating the correlation coefficient from covariance and standard deviations", "根据协方差与标准差计算相关系数"),
-        explanation: t("ρ(X, Y) = Cov(X, Y) / (σ_X σ_Y).", "ρ(X, Y) = Cov(X, Y) / (σ_X σ_Y)。"),
+        explanation: t(
+          "$\\rho(X, Y) = \\frac{\\operatorname{Cov}(X, Y)}{\\sigma_X \\sigma_Y}$.",
+          "$\\rho(X, Y) = \\frac{\\operatorname{Cov}(X, Y)}{\\sigma_X \\sigma_Y}$。",
+        ),
         generate: (rng: Rng): Problem => {
           // Choose clean values: sx, sy, cov
           const sx = rng.int(2, 10);
@@ -1244,8 +1268,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(cov, sx * sy),
             solution: t(
-              `$\\rho(X, Y) = \\frac{\\text{Cov}(X, Y)}{\\sigma_X \\sigma_Y} = \\frac{${cov}}{(${sx})(${sy})} = \\frac{${cov}}{${sx * sy}}$.`,
-              `$\\rho(X, Y) = \\frac{\\text{Cov}(X, Y)}{\\sigma_X \\sigma_Y} = \\frac{${cov}}{(${sx})(${sy})} = \\frac{${cov}}{${sx * sy}}$。`,
+              `$\\rho(X, Y) = \\frac{\\text{Cov}(X, Y)}{\\sigma_X \\sigma_Y} = \\frac{${cov}}{(${sx})(${sy})} = \\frac{${cov}}{${sx * sy}}${lowestTerms(cov, sx * sy)}$.`,
+              `$\\rho(X, Y) = \\frac{\\text{Cov}(X, Y)}{\\sigma_X \\sigma_Y} = \\frac{${cov}}{(${sx})(${sy})} = \\frac{${cov}}{${sx * sy}}${lowestTerms(cov, sx * sy)}$。`,
             ),
           });
         },

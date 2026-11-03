@@ -1,7 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-import { choiceProblem, numberProblem } from "../problems.ts";
+import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
 
 /** Topics for Unit 1: Probability & Random Variables (new topics). */
 export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
@@ -21,8 +21,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "evaluating-cdf-from-pdf",
         title: t("Evaluating the CDF of a continuous random variable", "由概率密度函数计算累积分布函数值"),
         explanation: t(
-          "For a continuous random variable X with PDF f(x) on [0, b], the CDF is F(x) = ∫_0^x f(t) dt. At any point x_0, F(x_0) represents P(X ≤ x_0).",
-          "对于在区间 [0, b] 上具有概率密度函数 f(x) 的连续型随机变量 X，其累积分布函数为 F(x) = ∫_0^x f(t) dt。在任意点 x_0 处，F(x_0) 表示 P(X ≤ x_0)。",
+          "For a continuous random variable $X$ with PDF $f(x)$ on $[0, b]$, the CDF is $F(x) = \\int_0^x f(t) \\, dt$. At any point $x_0$, $F(x_0)$ is $P(X \\le x_0)$.",
+          "对于在区间 $[0, b]$ 上具有概率密度函数 $f(x)$ 的连续型随机变量 $X$，其累积分布函数为 $F(x) = \\int_0^x f(t) \\, dt$。在任意点 $x_0$ 处，$F(x_0)$ 表示 $P(X \\le x_0)$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(4, 30);
@@ -37,8 +37,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `Integrate the PDF: $F(x) = \\int_0^x \\frac{2t}{${den}}\\,dt = \\frac{x^2}{${den}}$. At $x = ${x0}$, $F(${x0}) = \\frac{${x0}^2}{${den}} = \\frac{${num}}{${den}}$.`,
-              `对概率密度函数积分：$F(x) = \\int_0^x \\frac{2t}{${den}}\\,dt = \\frac{x^2}{${den}}$。在 $x = ${x0}$ 处，$F(${x0}) = \\frac{${x0}^2}{${den}} = \\frac{${num}}{${den}}$。`,
+              `Integrate the PDF: $F(x) = \\int_0^x \\frac{2t}{${den}}\\,dt = \\frac{x^2}{${den}}$. At $x = ${x0}$, $F(${x0}) = \\frac{${x0}^2}{${den}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `对概率密度函数积分：$F(x) = \\int_0^x \\frac{2t}{${den}}\\,dt = \\frac{x^2}{${den}}$。在 $x = ${x0}$ 处，$F(${x0}) = \\frac{${x0}^2}{${den}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -64,8 +64,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(num, b3),
             solution: t(
-              `$P(${a} \\le X \\le ${c}) = F(${c}) - F(${a}) = \\frac{${c}^3}{${b3}} - \\frac{${a}^3}{${b3}} = \\frac{${num}}{${b3}}$.`,
-              `$P(${a} \\le X \\le ${c}) = F(${c}) - F(${a}) = \\frac{${c}^3}{${b3}} - \\frac{${a}^3}{${b3}} = \\frac{${num}}{${b3}}$。`,
+              `$P(${a} \\le X \\le ${c}) = F(${c}) - F(${a}) = \\frac{${c}^3}{${b3}} - \\frac{${a}^3}{${b3}} = \\frac{${num}}{${b3}}${lowestTerms(num, b3)}$.`,
+              `$P(${a} \\le X \\le ${c}) = F(${c}) - F(${a}) = \\frac{${c}^3}{${b3}} - \\frac{${a}^3}{${b3}} = \\frac{${num}}{${b3}}${lowestTerms(num, b3)}$。`,
             ),
           });
         },
@@ -89,8 +89,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "median-of-continuous-random-variable",
         title: t("Finding the median of a continuous distribution", "求解连续型分布的中位数"),
         explanation: t(
-          "The median m of a continuous random variable X satisfies F(m) = 1/2, or equivalently ∫_{-∞}^m f(t) dt = 1/2.",
-          "连续型随机变量 X 的中位数 m 满足方程 F(m) = 1/2，或等价地 ∫_{-∞}^m f(t) dt = 1/2。",
+          "The median $m$ of a continuous random variable $X$ satisfies $F(m) = \\frac{1}{2}$, or equivalently $\\int_{-\\infty}^m f(t) \\, dt = \\frac{1}{2}$.",
+          "连续型随机变量 $X$ 的中位数 $m$ 满足 $F(m) = \\frac{1}{2}$，或等价地 $\\int_{-\\infty}^m f(t) \\, dt = \\frac{1}{2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const x0 = rng.int(2, 35);
@@ -113,8 +113,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "quartiles-and-percentiles-of-continuous-random-variable",
         title: t("Computing percentiles and quartiles", "计算百分位数与四分位数"),
         explanation: t(
-          "The p-th percentile x_p satisfies F(x_p) = p. For F(x) = x^2 / b^2 on [0, b], setting x_p^2 / b^2 = p yields x_p = b √p.",
-          "第 p 百分位数 x_p 满足 F(x_p) = p。对于区间 [0, b] 上的 F(x) = x^2 / b^2，令 x_p^2 / b^2 = p 可得 x_p = b √p。",
+          "The $p$-th quantile $x_p$ satisfies $F(x_p) = p$. For $F(x) = \\frac{x^2}{b^2}$ on $[0, b]$, setting $\\frac{x_p^2}{b^2} = p$ yields $x_p = b\\sqrt{p}$.",
+          "$p$ 分位数 $x_p$ 满足 $F(x_p) = p$。对于区间 $[0, b]$ 上的 $F(x) = \\frac{x^2}{b^2}$，令 $\\frac{x_p^2}{b^2} = p$ 可得 $x_p = b\\sqrt{p}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.pick([3, 4, 5, 6, 7, 8, 9]);
@@ -180,8 +180,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "mode-of-exponential-weighted-pdf",
         title: t("Mode of a gamma-type or exponentially damped PDF", "伽马型或指数衰减型密度的众数"),
         explanation: t(
-          "For f(x) = C x e^{-k x} (x ≥ 0), differentiation gives f'(x) = C e^{-k x}(1 - k x). The unique maximum occurs at x = 1/k.",
-          "对于 f(x) = C x e^{-k x}（x ≥ 0），对其求导得 f'(x) = C e^{-k x}(1 - k x)。唯一最大值点出现在 x = 1/k 处。",
+          "For $f(x) = Cxe^{-kx}$ ($x \\ge 0$), differentiation gives $f'(x) = Ce^{-kx}(1 - kx)$. The unique maximum occurs at $x = \\frac{1}{k}$.",
+          "对于 $f(x) = Cxe^{-kx}$（$x \\ge 0$），求导得 $f'(x) = Ce^{-kx}(1 - kx)$。唯一最大值点为 $x = \\frac{1}{k}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 30);
@@ -193,8 +193,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(1, k),
             solution: t(
-              `Differentiating $f(x) = ${k * k} x e^{-${k} x}$ gives $f'(x) = ${k * k} e^{-${k} x}(1 - ${k} x) = 0 \\implies x = \\frac{1}{${k}}$.`,
-              `对 $f(x) = ${k * k} x e^{-${k} x}$ 求导得 $f'(x) = ${k * k} e^{-${k} x}(1 - ${k} x) = 0 \\implies x = \\frac{1}{${k}}$。`,
+              `Differentiating $f(x) = ${k * k} x e^{-${k} x}$ gives $f'(x) = ${k * k} e^{-${k} x}(1 - ${k} x) = 0 \\implies x = \\frac{1}{${k}}${lowestTerms(1, k)}$.`,
+              `对 $f(x) = ${k * k} x e^{-${k} x}$ 求导得 $f'(x) = ${k * k} e^{-${k} x}(1 - ${k} x) = 0 \\implies x = \\frac{1}{${k}}${lowestTerms(1, k)}$。`,
             ),
           });
         },
@@ -252,8 +252,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "calculating-probability-with-continuity-correction",
         title: t("Evaluating probability with continuity correction", "利用连续性校正计算近似概率"),
         explanation: t(
-          "For an approximating continuous variable Y with constant density 1/L, P(a ≤ X ≤ b) ≈ ∫_{a-0.5}^{b+0.5} (1/L) dy = (b - a + 1)/L.",
-          "若近似连续型随机变量 Y 具有均匀密度 1/L，则 P(a ≤ X ≤ b) ≈ ∫_{a-0.5}^{b+0.5} (1/L) dy = (b - a + 1)/L。",
+          "For an approximating continuous variable $Y$ with constant density $\\frac{1}{L}$, $P(a \\le X \\le b) \\approx \\int_{a - 0.5}^{b + 0.5} \\frac{1}{L} \\, dy = \\frac{b - a + 1}{L}$.",
+          "若近似连续型随机变量 $Y$ 具有恒定密度 $\\frac{1}{L}$，则 $P(a \\le X \\le b) \\approx \\int_{a - 0.5}^{b + 0.5} \\frac{1}{L} \\, dy = \\frac{b - a + 1}{L}$。",
         ),
         generate: (rng: Rng): Problem => {
           const L = rng.int(40, 150);
@@ -268,8 +268,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(count, L),
             solution: t(
-              `$P(${a} \\le X \\le ${b}) \\approx \\int_{${a - 0.5}}^{${b + 0.5}} \\frac{1}{${L}}\\,dy = \\frac{(${b + 0.5}) - (${a - 0.5})}{${L}} = \\frac{${count}}{${L}}$.`,
-              `$P(${a} \\le X \\le ${b}) \\approx \\int_{${a - 0.5}}^{${b + 0.5}} \\frac{1}{${L}}\\,dy = \\frac{(${b + 0.5}) - (${a - 0.5})}{${L}} = \\frac{${count}}{${L}}$。`,
+              `$P(${a} \\le X \\le ${b}) \\approx \\int_{${a - 0.5}}^{${b + 0.5}} \\frac{1}{${L}}\\,dy = \\frac{(${b + 0.5}) - (${a - 0.5})}{${L}} = \\frac{${count}}{${L}}${lowestTerms(count, L)}$.`,
+              `$P(${a} \\le X \\le ${b}) \\approx \\int_{${a - 0.5}}^{${b + 0.5}} \\frac{1}{${L}}\\,dy = \\frac{(${b + 0.5}) - (${a - 0.5})}{${L}} = \\frac{${count}}{${L}}${lowestTerms(count, L)}$。`,
             ),
           });
         },
@@ -293,8 +293,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "inverse-transform-sampling-method",
         title: t("Deriving the inverse CDF transformation", "推导逆累积分布函数变换"),
         explanation: t(
-          "If U ~ Uniform(0, 1), then X = F^{-1}(U) has cumulative distribution function F(x). Solving u = F(x) for x yields the simulation formula.",
-          "若 U ~ Uniform(0, 1)，则 X = F^{-1}(U) 的累积分布函数为 F(x)。解方程 u = F(x) 即可求得模拟公式。",
+          "If $U \\sim \\text{Uniform}(0, 1)$, then $X = F^{-1}(U)$ has cumulative distribution function $F(x)$. Solving $u = F(x)$ for $x$ yields the simulation formula.",
+          "若 $U \\sim \\text{Uniform}(0, 1)$，则 $X = F^{-1}(U)$ 的累积分布函数为 $F(x)$。由 $u = F(x)$ 解出 $x$ 即得模拟公式。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 50);
@@ -326,8 +326,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "simulating-observations-from-uniform-draws",
         title: t("Computing a simulated value from a uniform draw", "由均匀分布抽样计算模拟值"),
         explanation: t(
-          "Given a CDF F(x) = x^2 / b^2 and a uniform draw u, the simulated observation is x = b √u.",
-          "给定 CDF F(x) = x^2 / b^2 及均匀抽样值 u，模拟观测值为 x = b √u。",
+          "Given the CDF $F(x) = \\frac{x^2}{b^2}$ and a uniform draw $u$, the simulated observation is $x = b\\sqrt{u}$.",
+          "给定累积分布函数 $F(x) = \\frac{x^2}{b^2}$ 及均匀抽样值 $u$，模拟观测值为 $x = b\\sqrt{u}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.pick([2, 3, 4, 5, 6, 7, 8, 9]);
@@ -371,8 +371,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "evaluating-cdf-of-transformed-variable",
         title: t("Evaluating the CDF of a linear transformation", "计算线性变换后随机变量的累积分布函数"),
         explanation: t(
-          "For X ~ Uniform(0, b) and Y = a X + c with a > 0, F_Y(y) = P(a X + c ≤ y) = P(X ≤ (y - c)/a) = (y - c)/(a b).",
-          "若 X ~ Uniform(0, b) 且 Y = a X + c（a > 0），则 F_Y(y) = P(a X + c ≤ y) = P(X ≤ (y - c)/a) = (y - c)/(a b)。",
+          "For $X \\sim \\text{Uniform}(0, b)$ and $Y = aX + c$ with $a > 0$, $F_Y(y) = P(aX + c \\le y) = P\\left(X \\le \\frac{y - c}{a}\\right) = \\frac{y - c}{ab}$.",
+          "若 $X \\sim \\text{Uniform}(0, b)$ 且 $Y = aX + c$（$a > 0$），则 $F_Y(y) = P(aX + c \\le y) = P\\left(X \\le \\frac{y - c}{a}\\right) = \\frac{y - c}{ab}$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(4, 25);
@@ -388,8 +388,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(k, b),
             solution: t(
-              `$P(Y \\le ${y0}) = P(${a} X + ${c} \\le ${y0}) = P\\left(X \\le \\frac{${y0 - c}}{${a}}\\right) = P(X \\le ${k}) = \\frac{${k}}{${b}}$.`,
-              `$P(Y \\le ${y0}) = P(${a} X + ${c} \\le ${y0}) = P\\left(X \\le \\frac{${y0 - c}}{${a}}\\right) = P(X \\le ${k}) = \\frac{${k}}{${b}}$。`,
+              `$P(Y \\le ${y0}) = P(${a} X + ${c} \\le ${y0}) = P\\left(X \\le \\frac{${y0 - c}}{${a}}\\right) = P(X \\le ${k}) = \\frac{${k}}{${b}}${lowestTerms(k, b)}$.`,
+              `$P(Y \\le ${y0}) = P(${a} X + ${c} \\le ${y0}) = P\\left(X \\le \\frac{${y0 - c}}{${a}}\\right) = P(X \\le ${k}) = \\frac{${k}}{${b}}${lowestTerms(k, b)}$。`,
             ),
           });
         },
@@ -398,8 +398,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "pdf-via-distribution-function-method",
         title: t("Deriving the PDF by differentiating the CDF", "通过对 CDF 求导推导概率密度函数"),
         explanation: t(
-          "For Y = X^2 where X ~ Uniform(0, b), F_Y(y) = P(X ≤ √y) = √y / b, so differentiating gives f_Y(y) = 1 / (2 b √y) for 0 < y < b^2.",
-          "对于 X ~ Uniform(0, b) 且 Y = X^2，F_Y(y) = P(X ≤ √y) = √y / b，求导得 f_Y(y) = 1 / (2 b √y)（0 < y < b^2）。",
+          "For $Y = X^2$ with $X \\sim \\text{Uniform}(0, b)$, $F_Y(y) = P(X \\le \\sqrt{y}) = \\frac{\\sqrt{y}}{b}$, so differentiating gives $f_Y(y) = \\frac{1}{2b\\sqrt{y}}$ for $0 < y < b^2$.",
+          "对于 $X \\sim \\text{Uniform}(0, b)$ 且 $Y = X^2$，$F_Y(y) = P(X \\le \\sqrt{y}) = \\frac{\\sqrt{y}}{b}$，求导得 $f_Y(y) = \\frac{1}{2b\\sqrt{y}}$（$0 < y < b^2$）。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(3, 20);
@@ -414,8 +414,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(1, den),
             solution: t(
-              `$F_Y(y) = P(X^2 \\le y) = \\frac{\\sqrt{y}}{${b}}$. Differentiating gives $f_Y(y) = \\frac{1}{${2 * b}\\sqrt{y}}$. At $y = ${y0}$, $f_Y(${y0}) = \\frac{1}{${2 * b} \\cdot ${m}} = \\frac{1}{${den}}$.`,
-              `$F_Y(y) = P(X^2 \\le y) = \\frac{\\sqrt{y}}{${b}}$。求导得 $f_Y(y) = \\frac{1}{${2 * b}\\sqrt{y}}$。在 $y = ${y0}$ 处，$f_Y(${y0}) = \\frac{1}{${2 * b} \\cdot ${m}} = \\frac{1}{${den}}$。`,
+              `$F_Y(y) = P(X^2 \\le y) = \\frac{\\sqrt{y}}{${b}}$. Differentiating gives $f_Y(y) = \\frac{1}{${2 * b}\\sqrt{y}}$. At $y = ${y0}$, $f_Y(${y0}) = \\frac{1}{${2 * b} \\cdot ${m}} = \\frac{1}{${den}}${lowestTerms(1, den)}$.`,
+              `$F_Y(y) = P(X^2 \\le y) = \\frac{\\sqrt{y}}{${b}}$。求导得 $f_Y(y) = \\frac{1}{${2 * b}\\sqrt{y}}$。在 $y = ${y0}$ 处，$f_Y(${y0}) = \\frac{1}{${2 * b} \\cdot ${m}} = \\frac{1}{${den}}${lowestTerms(1, den)}$。`,
             ),
           });
         },
@@ -439,8 +439,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "change-of-variables-scale-transformation",
         title: t("Applying the change-of-variables formula for scaling", "应用变量代换公式求解尺度变换"),
         explanation: t(
-          "If Y = c X (c > 0), then x = y/c and |dx/dy| = 1/c. Hence f_Y(y) = (1/c) f_X(y/c).",
-          "若 Y = c X（c > 0），则 x = y/c 且 |dx/dy| = 1/c。因此 f_Y(y) = (1/c) f_X(y/c)。",
+          "If $Y = cX$ with $c > 0$, then $x = \\frac{y}{c}$ and $\\left|\\frac{dx}{dy}\\right| = \\frac{1}{c}$. Hence $f_Y(y) = \\frac{1}{c} f_X\\left(\\frac{y}{c}\\right)$.",
+          "若 $Y = cX$（$c > 0$），则 $x = \\frac{y}{c}$ 且 $\\left|\\frac{dx}{dy}\\right| = \\frac{1}{c}$。因此 $f_Y(y) = \\frac{1}{c} f_X\\left(\\frac{y}{c}\\right)$。",
         ),
         generate: (rng: Rng): Problem => {
           const c = rng.int(2, 10);
@@ -474,8 +474,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "evaluating-transformed-density-at-a-point",
         title: t("Evaluating the transformed density at a point", "计算变换后密度函数在特定点的值"),
         explanation: t(
-          "For Y = c / X where X ~ Uniform(0, b), x = c / y and |dx/dy| = c / y^2. The density is f_Y(y) = c / (b y^2) for y > c/b.",
-          "对于 X ~ Uniform(0, b) 且 Y = c / X，x = c / y 且 |dx/dy| = c / y^2。密度函数为 f_Y(y) = c / (b y^2)（y > c/b）。",
+          "For $Y = \\frac{c}{X}$ with $X \\sim \\text{Uniform}(0, b)$, $x = \\frac{c}{y}$ and $\\left|\\frac{dx}{dy}\\right| = \\frac{c}{y^2}$. The density is $f_Y(y) = \\frac{c}{by^2}$ for $y > \\frac{c}{b}$.",
+          "对于 $X \\sim \\text{Uniform}(0, b)$ 且 $Y = \\frac{c}{X}$，$x = \\frac{c}{y}$ 且 $\\left|\\frac{dx}{dy}\\right| = \\frac{c}{y^2}$。密度函数为 $f_Y(y) = \\frac{c}{by^2}$（$y > \\frac{c}{b}$）。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(2, 10);
@@ -486,13 +486,13 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Let $X$ be uniformly distributed on $(0, ${b})$ with density $f_X(x) = \\frac{1}{${b}}$. Let $Y = \\frac{${c}}{X}$. Find the value of the PDF $f_Y(y)$ at $y = \\frac{${k * c}}{${b}}$.`,
+              `Let $X$ be uniformly distributed on $(0, ${b})$ with density $f_X(x) = \\frac{1}{${b}}$. Let $Y = \\frac{${c}}{X}$. Find the value of the PDF $f_Y(y)$ at $y = \\frac{${k * c}}{${b}}${lowestTerms(k * c, b)}$.`,
               `设 $X$ 服从 $(0, ${b})$ 上的均匀分布，密度为 $f_X(x) = \\frac{1}{${b}}$。令 $Y = \\frac{${c}}{X}$。求概率密度函数 $f_Y(y)$ 在 $y = \\frac{${k * c}}{${b}}$ 处的值。`,
             ),
             answer: Q.of(num, den),
             solution: t(
-              `With $x = \\frac{${c}}{y}$, $\\left|\\frac{dx}{dy}\\right| = \\frac{${c}}{y^2}$. So $f_Y(y) = \\frac{${c}}{${b} y^2}$. At $y = \\frac{${k * c}}{${b}}$, $f_Y(y) = \\frac{${num}}{${den}}$.`,
-              `由 $x = \\frac{${c}}{y}$ 得 $\\left|\\frac{dx}{dy}\\right| = \\frac{${c}}{y^2}$。因此 $f_Y(y) = \\frac{${c}}{${b} y^2}$。在 $y = \\frac{${k * c}}{${b}}$ 处，$f_Y(y) = \\frac{${num}}{${den}}$。`,
+              `With $x = \\frac{${c}}{y}$, $\\left|\\frac{dx}{dy}\\right| = \\frac{${c}}{y^2}$. So $f_Y(y) = \\frac{${c}}{${b} y^2}$. At $y = \\frac{${k * c}}{${b}}$, $f_Y(y) = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `由 $x = \\frac{${c}}{y}$ 得 $\\left|\\frac{dx}{dy}\\right| = \\frac{${c}}{y^2}$。因此 $f_Y(y) = \\frac{${c}}{${b} y^2}$。在 $y = \\frac{${k * c}}{${b}}$ 处，$f_Y(y) = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -516,8 +516,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "many-to-one-cdf-formulation",
         title: t("Formulating the CDF for symmetric quadratic transformations", "求解对称二次变换的累积分布函数"),
         explanation: t(
-          "For X ~ Uniform(-a, a) and Y = X^2, the event {Y ≤ y} corresponds to {-√y ≤ X ≤ √y}. Thus F_Y(y) = (√y - (-√y)) / (2a) = √y / a for 0 < y < a^2.",
-          "若 X ~ Uniform(-a, a) 且 Y = X^2，则事件 {Y ≤ y} 对应 {-√y ≤ X ≤ √y}。因此在 0 < y < a^2 上，F_Y(y) = (√y - (-√y)) / (2a) = √y / a。",
+          "For $X \\sim \\text{Uniform}(-a, a)$ and $Y = X^2$, the event $\\{Y \\le y\\}$ is $\\{-\\sqrt{y} \\le X \\le \\sqrt{y}\\}$. Thus $F_Y(y) = \\frac{\\sqrt{y} - (-\\sqrt{y})}{2a} = \\frac{\\sqrt{y}}{a}$ for $0 < y < a^2$.",
+          "若 $X \\sim \\text{Uniform}(-a, a)$ 且 $Y = X^2$，则事件 $\\{Y \\le y\\}$ 即 $\\{-\\sqrt{y} \\le X \\le \\sqrt{y}\\}$。因此在 $0 < y < a^2$ 上，$F_Y(y) = \\frac{\\sqrt{y} - (-\\sqrt{y})}{2a} = \\frac{\\sqrt{y}}{a}$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(3, 25);
@@ -531,8 +531,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(m, a),
             solution: t(
-              `$P(Y \\le ${y0}) = P(-${m} \\le X \\le ${m}) = \\frac{2 \\cdot ${m}}{2 \\cdot ${a}} = \\frac{${m}}{${a}}$.`,
-              `$P(Y \\le ${y0}) = P(-${m} \\le X \\le ${m}) = \\frac{2 \\cdot ${m}}{2 \\cdot ${a}} = \\frac{${m}}{${a}}$。`,
+              `$P(Y \\le ${y0}) = P(-${m} \\le X \\le ${m}) = \\frac{2 \\cdot ${m}}{2 \\cdot ${a}} = \\frac{${m}}{${a}}${lowestTerms(m, a)}$.`,
+              `$P(Y \\le ${y0}) = P(-${m} \\le X \\le ${m}) = \\frac{2 \\cdot ${m}}{2 \\cdot ${a}} = \\frac{${m}}{${a}}${lowestTerms(m, a)}$。`,
             ),
           });
         },
@@ -541,8 +541,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "many-to-one-pdf-derivation",
         title: t("Differentiating the CDF for a many-to-one transformation", "对多对一变换的 CDF 求导得到概率密度"),
         explanation: t(
-          "Differentiating F_Y(y) = √y / a gives f_Y(y) = 1 / (2 a √y) for 0 < y < a^2.",
-          "对 F_Y(y) = √y / a 求导得到 f_Y(y) = 1 / (2 a √y)（0 < y < a^2）。",
+          "Differentiating $F_Y(y) = \\frac{\\sqrt{y}}{a}$ gives $f_Y(y) = \\frac{1}{2a\\sqrt{y}}$ for $0 < y < a^2$.",
+          "对 $F_Y(y) = \\frac{\\sqrt{y}}{a}$ 求导得 $f_Y(y) = \\frac{1}{2a\\sqrt{y}}$（$0 < y < a^2$）。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(3, 20);
@@ -557,8 +557,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
             ),
             answer: Q.of(1, den),
             solution: t(
-              `$F_Y(y) = \\frac{\\sqrt{y}}{${a}} \\implies f_Y(y) = \\frac{1}{2 \\cdot ${a} \\sqrt{y}}$. At $y = ${y0}$, $f_Y(${y0}) = \\frac{1}{${2 * a} \\cdot ${m}} = \\frac{1}{${den}}$.`,
-              `$F_Y(y) = \\frac{\\sqrt{y}}{${a}} \\implies f_Y(y) = \\frac{1}{2 \\cdot ${a} \\sqrt{y}}$。在 $y = ${y0}$ 处，$f_Y(${y0}) = \\frac{1}{${2 * a} \\cdot ${m}} = \\frac{1}{${den}}$。`,
+              `$F_Y(y) = \\frac{\\sqrt{y}}{${a}} \\implies f_Y(y) = \\frac{1}{2 \\cdot ${a} \\sqrt{y}}$. At $y = ${y0}$, $f_Y(${y0}) = \\frac{1}{${2 * a} \\cdot ${m}} = \\frac{1}{${den}}${lowestTerms(1, den)}$.`,
+              `$F_Y(y) = \\frac{\\sqrt{y}}{${a}} \\implies f_Y(y) = \\frac{1}{2 \\cdot ${a} \\sqrt{y}}$。在 $y = ${y0}$ 处，$f_Y(${y0}) = \\frac{1}{${2 * a} \\cdot ${m}} = \\frac{1}{${den}}${lowestTerms(1, den)}$。`,
             ),
           });
         },

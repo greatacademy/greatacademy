@@ -1,7 +1,7 @@
 import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
-import { numberProblem } from "../problems.ts";
+import { article, numberProblem } from "../problems.ts";
 import { factProblem, gcd, lcm, mod, phi, texChoice, textChoice } from "./abstract-algebra-common.ts";
 import { range } from "./methods-of-proof-common.ts";
 
@@ -461,7 +461,7 @@ export const theOrderOfACycle: TopicDef = {
           answer: value,
           wrong: [k, gcd(k, m), m % k],
           solution: t(
-            `$\\sigma$ is a $${k}$-cycle, so $\\sigma^{${m}}$ has order $\\frac{${k}}{\\gcd(${k}, ${m})} = ${value}$.`,
+            `$\\sigma$ is ${article(k)} $${k}$-cycle, so $\\sigma^{${m}}$ has order $\\frac{${k}}{\\gcd(${k}, ${m})} = ${value}$.`,
             `$\\sigma$ 是 $${k}$-轮换，所以 $\\sigma^{${m}}$ 的阶为 $\\frac{${k}}{\\gcd(${k}, ${m})} = ${value}$。`,
           ),
         });
@@ -736,11 +736,11 @@ export const theAlternatingGroupOnNSymbols: TopicDef = {
           solution:
             k % 2 === 1
               ? t(
-                  `A $${k}$-cycle is a product of $${k - 1}$ transpositions, so it is even. All $${count}$ of the $${k}$-cycles in $S_{${n}}$ lie in $A_{${n}}$.`,
+                  `${article(k, true)} $${k}$-cycle is a product of $${k - 1}$ transpositions, so it is even. All $${count}$ of the $${k}$-cycles in $S_{${n}}$ lie in $A_{${n}}$.`,
                   `$${k}$-轮换是 $${k - 1}$ 个对换之积，是偶置换。$S_{${n}}$ 中全部 $${count}$ 个 $${k}$-轮换都在 $A_{${n}}$ 中。`,
                 )
               : t(
-                  `A $${k}$-cycle is a product of $${k - 1}$ transpositions, so it is odd, and none lie in $A_{${n}}$.`,
+                  `${article(k, true)} $${k}$-cycle is a product of $${k - 1}$ transpositions, so it is odd, and none lie in $A_{${n}}$.`,
                   `$${k}$-轮换是 $${k - 1}$ 个对换之积，是奇置换，所以都不在 $A_{${n}}$ 中。`,
                 ),
         });

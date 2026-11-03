@@ -1,5 +1,6 @@
 import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { poly } from "@ga/subject-math";
 
 import { numberProblem, yesNo } from "../problems.ts";
 import { oneOf } from "./calculus-common.ts";
@@ -1153,7 +1154,7 @@ export const strongInductionAndRecurrenceRelations: TopicDef = {
         const base = (x: number) => (x < 0 ? `(${x})` : `${x}`);
         const form = (x: number, u: number, y: number, v: number) =>
           `${x} \\cdot ${base(u)}^n ${y < 0 ? "-" : "+"} ${Math.abs(y)} \\cdot ${base(v)}^n`;
-        const rec = `a_n = ${p === 1 ? "" : p === -1 ? "-" : p}a_{n-1} ${q < 0 ? "-" : "+"} ${Math.abs(q)}a_{n-2}`;
+        const rec = `a_n = ${poly([p, "a_{n-1}"], [q, "a_{n-2}"])}`;
         return oneOf(
           rng,
           t(
@@ -1168,8 +1169,8 @@ export const strongInductionAndRecurrenceRelations: TopicDef = {
             math(`a_n = ${form(A, r + 1, B, s + 1)}`),
           ],
           t(
-            `$${base(r)}$ and $${base(s)}$ are the roots of $x^2 = ${p}x ${q < 0 ? "-" : "+"} ${Math.abs(q)}$, so the formula satisfies the recurrence, and it gives $a_0 = ${a0}$, $a_1 = ${a1}$. By strong induction it holds for all $n$.`,
-            `$${base(r)}$ 与 $${base(s)}$ 是 $x^2 = ${p}x ${q < 0 ? "-" : "+"} ${Math.abs(q)}$ 的根，所以公式满足递推关系，且给出 $a_0 = ${a0}$，$a_1 = ${a1}$。由强归纳法，它对所有 $n$ 成立。`,
+            `$${base(r)}$ and $${base(s)}$ are the roots of $x^2 = ${poly([p, "x"], [q, ""])}$, so the formula satisfies the recurrence, and it gives $a_0 = ${a0}$, $a_1 = ${a1}$. By strong induction it holds for all $n$.`,
+            `$${base(r)}$ 与 $${base(s)}$ 是 $x^2 = ${poly([p, "x"], [q, ""])}$ 的根，所以公式满足递推关系，且给出 $a_0 = ${a0}$，$a_1 = ${a1}$。由强归纳法，它对所有 $n$ 成立。`,
           ),
         );
       },

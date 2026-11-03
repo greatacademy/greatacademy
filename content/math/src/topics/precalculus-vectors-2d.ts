@@ -1559,19 +1559,19 @@ export const calculatingTheDirectionOfCartesianVectorsIn2d: TopicDef = {
         const kSurd = k === 1 ? "\\sqrt{3}" : `${k}\\sqrt{3}`;
         const cases = [
           // Q2
-          { vec: `\\langle -${k}, ${k} \\rangle`, theta: 135, quad: "II", ref: 45 },
-          { vec: `\\langle -${kSurd}, ${k} \\rangle`, theta: 150, quad: "II", ref: 30 },
-          { vec: `\\langle -${k}, ${kSurd} \\rangle`, theta: 120, quad: "II", ref: 60 },
-          { vec: `\\langle -${k}, 0 \\rangle`, theta: 180, quad: "negative x-axis", ref: 0 },
+          { vec: `\\langle -${k}, ${k} \\rangle`, theta: 135, quad: t("in Quadrant II", "第二象限"), ref: 45 },
+          { vec: `\\langle -${kSurd}, ${k} \\rangle`, theta: 150, quad: t("in Quadrant II", "第二象限"), ref: 30 },
+          { vec: `\\langle -${k}, ${kSurd} \\rangle`, theta: 120, quad: t("in Quadrant II", "第二象限"), ref: 60 },
+          { vec: `\\langle -${k}, 0 \\rangle`, theta: 180, quad: t("on the negative $x$-axis", "$x$ 轴负半轴上"), ref: 0 },
           // Q3
-          { vec: `\\langle -${k}, -${k} \\rangle`, theta: 225, quad: "III", ref: 45 },
-          { vec: `\\langle -${kSurd}, -${k} \\rangle`, theta: 210, quad: "III", ref: 30 },
-          { vec: `\\langle -${k}, -${kSurd} \\rangle`, theta: 240, quad: "III", ref: 60 },
-          { vec: `\\langle 0, -${k} \\rangle`, theta: 270, quad: "negative y-axis", ref: 0 },
+          { vec: `\\langle -${k}, -${k} \\rangle`, theta: 225, quad: t("in Quadrant III", "第三象限"), ref: 45 },
+          { vec: `\\langle -${kSurd}, -${k} \\rangle`, theta: 210, quad: t("in Quadrant III", "第三象限"), ref: 30 },
+          { vec: `\\langle -${k}, -${kSurd} \\rangle`, theta: 240, quad: t("in Quadrant III", "第三象限"), ref: 60 },
+          { vec: `\\langle 0, -${k} \\rangle`, theta: 270, quad: t("on the negative $y$-axis", "$y$ 轴负半轴上"), ref: 0 },
           // Q4
-          { vec: `\\langle ${k}, -${k} \\rangle`, theta: 315, quad: "IV", ref: 45 },
-          { vec: `\\langle ${kSurd}, -${k} \\rangle`, theta: 330, quad: "IV", ref: 30 },
-          { vec: `\\langle ${k}, -${kSurd} \\rangle`, theta: 300, quad: "IV", ref: 60 },
+          { vec: `\\langle ${k}, -${k} \\rangle`, theta: 315, quad: t("in Quadrant IV", "第四象限"), ref: 45 },
+          { vec: `\\langle ${kSurd}, -${k} \\rangle`, theta: 330, quad: t("in Quadrant IV", "第四象限"), ref: 30 },
+          { vec: `\\langle ${k}, -${kSurd} \\rangle`, theta: 300, quad: t("in Quadrant IV", "第四象限"), ref: 60 },
         ];
         const pick = rng.pick(cases);
         const { vec, theta, quad, ref } = pick;
@@ -1590,8 +1590,8 @@ export const calculatingTheDirectionOfCartesianVectorsIn2d: TopicDef = {
           form: "integer",
           wrong: wrongAngles,
           solution: t(
-            `The vector terminates in ${quad}. With reference angle $\\alpha = ${ref}^\\circ$, the standard direction angle is $\\theta = ${theta}^\\circ$.`,
-            `该向量位于 ${quad}。参考角为 $\\alpha = ${ref}^\\circ$，因此标准方向角为 $\\theta = ${theta}^\\circ$。`,
+            `The vector lies ${quad.en}. With reference angle $\\alpha = ${ref}^\\circ$, the standard direction angle is $\\theta = ${theta}^\\circ$.`,
+            `该向量位于${quad["zh-CN"]}。参考角为 $\\alpha = ${ref}^\\circ$，因此标准方向角为 $\\theta = ${theta}^\\circ$。`,
           ),
         });
       },

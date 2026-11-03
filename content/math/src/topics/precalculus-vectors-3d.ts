@@ -1249,8 +1249,8 @@ export const propertiesOfTheCrossProduct: TopicDef = {
             vector: true,
             wrong: [smul3(-factor, w), smul3(a * b, w), [0, 0, 0]],
             solution: t(
-              `By anti-commutativity and scalar associativity:\n\n$$(${aStr}) \\times (${bStr}) = ${a * b}(\\mathbf{v} \\times \\mathbf{u}) = -${a * b}(\\mathbf{u} \\times \\mathbf{v}) = ${factor}${vec3Latex(w)} = ${vec3Latex(ans)}$$`,
-              `根据反交换律与数乘结合律：\n\n$$(${aStr}) \\times (${bStr}) = ${a * b}(\\mathbf{v} \\times \\mathbf{u}) = -${a * b}(\\mathbf{u} \\times \\mathbf{v}) = ${factor}${vec3Latex(w)} = ${vec3Latex(ans)}$$`,
+              `By anti-commutativity and scalar associativity:\n\n$$(${aStr}) \\times (${bStr}) = ${poly([a * b, "(\\mathbf{v} \\times \\mathbf{u})"])} = ${poly([-a * b, "(\\mathbf{u} \\times \\mathbf{v})"])} = ${factor}${vec3Latex(w)} = ${vec3Latex(ans)}$$`,
+              `根据反交换律与数乘结合律：\n\n$$(${aStr}) \\times (${bStr}) = ${poly([a * b, "(\\mathbf{v} \\times \\mathbf{u})"])} = ${poly([-a * b, "(\\mathbf{u} \\times \\mathbf{v})"])} = ${factor}${vec3Latex(w)} = ${vec3Latex(ans)}$$`,
             ),
           });
         }

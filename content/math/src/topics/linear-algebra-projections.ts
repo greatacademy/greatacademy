@@ -2,7 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
-import { choiceProblem, expressionProblem, numberProblem, pointProblem } from "../problems.ts";
+import { article, choiceProblem, expressionProblem, numberProblem, pointProblem } from "../problems.ts";
 
 /** gcd computes the greatest common divisor of two integers. */
 function gcd(a: number, b: number): number {
@@ -1037,7 +1037,7 @@ export const fourFundamentalSubspacesOfAMatrix: TopicDef = {
         const answerVal = askColComp ? m - r : n - r;
 
         const prompt = t(
-          `Let $A$ be a $${m} \\times ${n}$ matrix with rank $r = ${r}$. What is the dimension of $${targetSpace}$?`,
+          `Let $A$ be ${article(m)} $${m} \\times ${n}$ matrix with rank $r = ${r}$. What is the dimension of $${targetSpace}$?`,
           `设 $A$ 为一个秩 $r = ${r}$ 的 $${m} \\times ${n}$ 矩阵。求 $${targetZh}$ 的维数。`,
         );
 
@@ -1375,7 +1375,7 @@ export const projectionMatricesLinearTransformationsAndTheirProperties: TopicDef
         const power = rng.pick([2023, 2024, 2025, 2026, 2027]);
 
         const prompt = t(
-          `Let $P$ be the $n \\times n$ standard matrix of an orthogonal projection onto a $${k}$-dimensional subspace $W \\subseteq \\mathbb{R}^${n}$.\nWhat is the trace $\\operatorname{tr}(P^{${power}})$?`,
+          `Let $P$ be the $n \\times n$ standard matrix of an orthogonal projection onto ${article(k)} $${k}$-dimensional subspace $W \\subseteq \\mathbb{R}^${n}$.\nWhat is the trace $\\operatorname{tr}(P^{${power}})$?`,
           `设 $P$ 为将 $\\mathbb{R}^${n}$ 中的向量正交投影到 $${k}$ 维子空间 $W$ 上的投影矩阵。\n求矩阵幂的迹 $\\operatorname{tr}(P^{${power}})$ 的值。`,
         );
 

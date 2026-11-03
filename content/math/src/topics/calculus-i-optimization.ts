@@ -2,7 +2,7 @@ import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 
-import { numberProblem, solutionsProblem } from "../problems.ts";
+import { article, numberProblem, solutionsProblem } from "../problems.ts";
 import { oneOf, type Poly, pAt, par, pDer, pLatex, rounded } from "./calculus-common.ts";
 
 // Calculus I unit 7: Analytical Applications of Differentiation, modules 7.21 and 7.22.
@@ -237,7 +237,7 @@ export const optimizationProblemsInvolvingBoxesAndTrays: TopicDef = {
           .sub(x);
         return numberProblem({
           prompt: t(
-            `An open tray is made from a $${a}$ cm by $${b}$ cm sheet by cutting equal squares from the corners and folding up the sides. What side length of the cut squares, in cm, gives the largest volume?`,
+            `An open tray is made from ${article(a)} $${a}$ cm by $${b}$ cm sheet by cutting equal squares from the corners and folding up the sides. What side length of the cut squares, in cm, gives the largest volume?`,
             `从 $${a}$ 厘米 $\\times$ $${b}$ 厘米的纸板四角剪去相同的正方形，再把四边折起，做成一个开口托盘。剪去的正方形边长为多少厘米时容积最大？`,
           ),
           answer: x,

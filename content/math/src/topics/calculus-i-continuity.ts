@@ -1068,7 +1068,7 @@ export const continuityOfFunctions: TopicDef = {
             ),
           ],
           [
-            `e^{${c}x} + \\sin ${k}x`,
+            `e^{${c === 1 ? "" : c === -1 ? "-" : c}x} + \\sin ${k}x`,
             true,
             t(
               `Exponential and sine functions are continuous everywhere, and so is their sum.`,
@@ -1083,7 +1083,7 @@ export const continuityOfFunctions: TopicDef = {
           [`\\frac{${c}}{\\sin x}`, false, t(`The denominator is $0$ at $x = 0$.`, `分母在 $x = 0$ 处为 $0$。`)],
           [`\\frac{x^{2} - ${k}}{e^{x} - 1}`, false, t(`The denominator is $0$ at $x = 0$.`, `分母在 $x = 0$ 处为 $0$。`)],
           [
-            `|x - ${k}| + ${poly([c, "x^{3}"])}`,
+            `|x - ${k}| ${c < 0 ? "-" : "+"} ${poly([Math.abs(c), "x^{3}"])}`,
             true,
             t(`Absolute values and polynomials are continuous everywhere.`, `绝对值函数与多项式处处连续。`),
           ],

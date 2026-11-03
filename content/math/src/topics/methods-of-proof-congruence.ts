@@ -877,8 +877,8 @@ export const solvingLinearCongruences: TopicDef = {
         const value = mod(inv * b, n);
         return numberProblem({
           prompt: t(
-            `Solve $${cong(`${a}x`, b, n)}$ for the residue $x \\in \\{0, 1, \\dots, ${n - 1}\\}$.`,
-            `求解 $${cong(`${a}x`, b, n)}$，答案写成剩余 $x \\in \\{0, 1, \\dots, ${n - 1}\\}$。`,
+            `Solve $${cong(`${a === 1 ? "" : a}x`, b, n)}$ for the residue $x \\in \\{0, 1, \\dots, ${n - 1}\\}$.`,
+            `求解 $${cong(`${a === 1 ? "" : a}x`, b, n)}$，答案写成剩余 $x \\in \\{0, 1, \\dots, ${n - 1}\\}$。`,
           ),
           answer: value,
           wrong: [inv, mod(b - a, n), mod(a * b, n)],
@@ -906,8 +906,8 @@ export const solvingLinearCongruences: TopicDef = {
         const count = b % d === 0 ? d : 0;
         return numberProblem({
           prompt: t(
-            `How many solutions $x \\in \\{0, 1, \\dots, ${n - 1}\\}$ does $${cong(`${a}x`, b, n)}$ have?`,
-            `$${cong(`${a}x`, b, n)}$ 在 $\\{0, 1, \\dots, ${n - 1}\\}$ 中有多少个解？`,
+            `How many solutions $x \\in \\{0, 1, \\dots, ${n - 1}\\}$ does $${cong(`${a === 1 ? "" : a}x`, b, n)}$ have?`,
+            `$${cong(`${a === 1 ? "" : a}x`, b, n)}$ 在 $\\{0, 1, \\dots, ${n - 1}\\}$ 中有多少个解？`,
           ),
           answer: count,
           wrong: [1, count === 0 ? d : 0, n / d],
@@ -967,14 +967,14 @@ export const solvingAdvancedLinearCongruences: TopicDef = {
         const sols = range(0, d - 1).map((k) => x0 + k * m);
         return setProblem({
           prompt: t(
-            `Find all solutions $x \\in \\{0, 1, \\dots, ${n - 1}\\}$ of $${cong(`${a}x`, b, n)}$.`,
-            `求 $${cong(`${a}x`, b, n)}$ 在 $\\{0, 1, \\dots, ${n - 1}\\}$ 中的全部解。`,
+            `Find all solutions $x \\in \\{0, 1, \\dots, ${n - 1}\\}$ of $${cong(`${a === 1 ? "" : a}x`, b, n)}$.`,
+            `求 $${cong(`${a === 1 ? "" : a}x`, b, n)}$ 在 $\\{0, 1, \\dots, ${n - 1}\\}$ 中的全部解。`,
           ),
           values: sols,
           wrong: [[x0], sols.map((s) => mod(s + 1, n))],
           solution: t(
-            `$\\gcd(${a}, ${n}) = ${d}$: divide by $${d}$ to get $${cong(`${a1}x`, b1, m)}$, so $${cong("x", x0, m)}$. Modulo $${n}$: $${setTex(sols)}$.`,
-            `$\\gcd(${a}, ${n}) = ${d}$：两边除以 $${d}$ 得 $${cong(`${a1}x`, b1, m)}$，所以 $${cong("x", x0, m)}$。模 $${n}$：$${setTex(sols)}$。`,
+            `$\\gcd(${a}, ${n}) = ${d}$: divide by $${d}$ to get $${cong(`${a1 === 1 ? "" : a1}x`, b1, m)}$, so $${cong("x", x0, m)}$. Modulo $${n}$: $${setTex(sols)}$.`,
+            `$\\gcd(${a}, ${n}) = ${d}$：两边除以 $${d}$ 得 $${cong(`${a1 === 1 ? "" : a1}x`, b1, m)}$，所以 $${cong("x", x0, m)}$。模 $${n}$：$${setTex(sols)}$。`,
           ),
         });
       },
@@ -999,14 +999,14 @@ export const solvingAdvancedLinearCongruences: TopicDef = {
         const value = mod(inverseMod(ra, n) * rb, n);
         return numberProblem({
           prompt: t(
-            `Solve $${cong(`${a}x`, b, n)}$ for the residue $x \\in \\{0, 1, \\dots, ${n - 1}\\}$.`,
-            `求解 $${cong(`${a}x`, b, n)}$，答案写成剩余 $x \\in \\{0, 1, \\dots, ${n - 1}\\}$。`,
+            `Solve $${cong(`${a === 1 ? "" : a}x`, b, n)}$ for the residue $x \\in \\{0, 1, \\dots, ${n - 1}\\}$.`,
+            `求解 $${cong(`${a === 1 ? "" : a}x`, b, n)}$，答案写成剩余 $x \\in \\{0, 1, \\dots, ${n - 1}\\}$。`,
           ),
           answer: value,
           wrong: [mod(inverseMod(ra, n) * -b, n), mod(inverseMod(ra, n) * Math.abs(b % n), n), mod(value + 1, n)],
           solution: t(
-            `$${a} \\equiv ${ra}$ and $${b} \\equiv ${rb}$, so $${cong(`${ra}x`, rb, n)}$, and $x \\equiv ${inverseMod(ra, n)} \\cdot ${rb} \\equiv ${value}$.`,
-            `$${a} \\equiv ${ra}$，$${b} \\equiv ${rb}$，所以 $${cong(`${ra}x`, rb, n)}$，于是 $x \\equiv ${inverseMod(ra, n)} \\cdot ${rb} \\equiv ${value}$。`,
+            `$${a} \\equiv ${ra}$ and $${b} \\equiv ${rb}$, so $${cong(`${ra === 1 ? "" : ra}x`, rb, n)}$, and $x \\equiv ${inverseMod(ra, n)} \\cdot ${rb} \\equiv ${value}$.`,
+            `$${a} \\equiv ${ra}$，$${b} \\equiv ${rb}$，所以 $${cong(`${ra === 1 ? "" : ra}x`, rb, n)}$，于是 $x \\equiv ${inverseMod(ra, n)} \\cdot ${rb} \\equiv ${value}$。`,
           ),
         });
       },
@@ -1130,8 +1130,8 @@ export const provingPropertiesOfLinearCongruences: TopicDef = {
         return oneOf(
           rng,
           t(
-            `Given $${a} \\cdot ${par(s)} + ${n} \\cdot ${par(tt)} = 1$, which residue solves $${cong(`${a}x`, b, n)}$?`,
-            `已知 $${a} \\cdot ${par(s)} + ${n} \\cdot ${par(tt)} = 1$，哪个剩余是 $${cong(`${a}x`, b, n)}$ 的解？`,
+            `Given $${a} \\cdot ${par(s)} + ${n} \\cdot ${par(tt)} = 1$, which residue solves $${cong(`${a === 1 ? "" : a}x`, b, n)}$?`,
+            `已知 $${a} \\cdot ${par(s)} + ${n} \\cdot ${par(tt)} = 1$，哪个剩余是 $${cong(`${a === 1 ? "" : a}x`, b, n)}$ 的解？`,
           ),
           math(`x = ${value}`),
           [mod(tt * b, n), mod(s + b, n), mod(-s * b, n), mod(s, n)].filter((w) => w !== value).map((w) => math(`x = ${w}`)),
@@ -1158,8 +1158,8 @@ export const provingPropertiesOfLinearCongruences: TopicDef = {
         return oneOf(
           rng,
           t(
-            `Suppose $${cong(`${a}x`, "b", n)}$ and $${cong(`${a}y`, "b", n)}$, so $${n} \\mid ${a}(x - y)$. What can we conclude?`,
-            `设 $${cong(`${a}x`, "b", n)}$ 且 $${cong(`${a}y`, "b", n)}$，所以 $${n} \\mid ${a}(x - y)$。可以得出什么结论？`,
+            `Suppose $${cong(`${a === 1 ? "" : a}x`, "b", n)}$ and $${cong(`${a}y`, "b", n)}$, so $${n} \\mid ${a}(x - y)$. What can we conclude?`,
+            `设 $${cong(`${a === 1 ? "" : a}x`, "b", n)}$ 且 $${cong(`${a}y`, "b", n)}$，所以 $${n} \\mid ${a}(x - y)$。可以得出什么结论？`,
           ),
           coprime ? math(cong("x", "y", n)) : math(cong("x", "y", n / g)),
           coprime

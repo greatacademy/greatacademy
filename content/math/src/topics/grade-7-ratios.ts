@@ -2,7 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { t } from "@ga/content";
 import { dec, type PlaneMark, plane, Q } from "@ga/subject-math";
 
-import { choiceProblem, expressionProblem, mixedLatex, numberProblem, yesNo } from "../problems.ts";
+import { article, choiceProblem, expressionProblem, mixedLatex, numberProblem, yesNo } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
 
 // 7th Grade Math: unit prices and unit rates with fractions and mixed numbers, proportional relationships in
@@ -96,8 +96,8 @@ export const findingUnitPrices = topic(
   "finding-unit-prices",
   t("Finding Unit Prices", "求单价"),
   t(
-    "A unit price is the price of one item or of one unit of measure: price ÷ quantity. A pack of 6 bars for $8.10 costs $8.10 ÷ 6 = $1.35 per bar, and 2.5 pounds for $11.25 cost $11.25 ÷ 2.5 = $4.50 per pound.",
-    "单价是一件物品或一个计量单位的价格：总价 ÷ 数量。6 根燕麦棒一包 $8.10，每根 $8.10 ÷ 6 = $1.35；2.5 磅售价 $11.25，每磅 $11.25 ÷ 2.5 = $4.50。",
+    "A unit price is the price of one item or of one unit of measure: price ÷ quantity. A pack of 6 bars for \\$8.10 costs \\$8.10 ÷ 6 = \\$1.35 per bar, and 2.5 pounds for \\$11.25 cost \\$11.25 ÷ 2.5 = \\$4.50 per pound.",
+    "单价是一件物品或一个计量单位的价格：总价 ÷ 数量。6 根燕麦棒一包 \\$8.10，每根 \\$8.10 ÷ 6 = \\$1.35；2.5 磅售价 \\$11.25，每磅 \\$11.25 ÷ 2.5 = \\$4.50。",
   ),
   ["solving-problems-using-unit-rates", "dividing-decimals-using-the-standard-algorithm"],
   ["7.RP.A.1"],
@@ -173,8 +173,8 @@ export const workingWithUnitPrices = topic(
   "working-with-unit-prices",
   t("Working With Unit Prices", "运用单价"),
   t(
-    "Cost = unit price × quantity, and quantity = cost ÷ unit price. At $2.40 per pound, 3.5 pounds cost $8.40; at $3.60 per gallon, $27 buys 7.5 gallons.",
-    "总价 = 单价 × 数量，数量 = 总价 ÷ 单价。每磅 $2.40，3.5 磅要 $8.40；每加仑 $3.60，$27 能买 7.5 加仑。",
+    "Cost = unit price × quantity, and quantity = cost ÷ unit price. At \\$2.40 per pound, 3.5 pounds cost \\$8.40; at \\$3.60 per gallon, \\$27 buys 7.5 gallons.",
+    "总价 = 单价 × 数量，数量 = 总价 ÷ 单价。每磅 \\$2.40，3.5 磅要 \\$8.40；每加仑 \\$3.60，\\$27 能买 7.5 加仑。",
   ),
   ["finding-unit-prices", "multiplying-two-digit-decimals"],
   ["7.RP.A.1"],
@@ -244,9 +244,6 @@ const sizedGoods: readonly { readonly en: string; readonly zh: string }[] = [
   { en: "bag of trail mix", zh: "什锦果仁" },
 ];
 
-/** article is "An" before a number read with a leading vowel sound (8, 11, 18, 80–89) and "A" otherwise. */
-const article = (n: number) => (/^(8|11|18)(\d?)$/.test(String(n)) && !(n >= 100) ? "An" : "A");
-
 /** solvingMultiStepUnitPriceProblems compares unit prices and combines several purchases. */
 export const solvingMultiStepUnitPriceProblems = topic(
   "solving-multi-step-unit-price-problems",
@@ -277,7 +274,7 @@ export const solvingMultiStepUnitPriceProblems = topic(
         const correct = ua < ub ? 0 : 1;
         return choiceProblem({
           prompt: t(
-            `${article(na)} ${na}-ounce ${g.en} costs $${usd(na * ua)}$ and ${article(nb).toLowerCase()} ${nb}-ounce ${g.en} costs $${usd(nb * ub)}$. Which is the better buy?`,
+            `${article(na, true)} ${na}-ounce ${g.en} costs $${usd(na * ua)}$ and ${article(nb)} ${nb}-ounce ${g.en} costs $${usd(nb * ub)}$. Which is the better buy?`,
             `${na} 盎司装的${g.zh}售价 $${usd(na * ua)}$，${nb} 盎司装的${g.zh}售价 $${usd(nb * ub)}$。哪种更划算？`,
           ),
           options: [
@@ -1131,7 +1128,7 @@ function situation(rng: Rng): Situation {
     case 5:
       return {
         text: t(
-          `A gym charges a $\\$${b * 5}$ joining fee and $\\$${k + 10}$ per month. Is the total cost proportional to the number of months?`,
+          `A gym charges ${article(b * 5)} $\\$${b * 5}$ joining fee and $\\$${k + 10}$ per month. Is the total cost proportional to the number of months?`,
           `一家健身房收 $\\$${b * 5}$ 入会费，另每月 $\\$${k + 10}$。总费用与月数成正比例吗？`,
         ),
         proportional: false,
@@ -1148,8 +1145,8 @@ function situation(rng: Rng): Situation {
         ),
         proportional: false,
         why: t(
-          `The height is $y = ${b + 20} - ${(k % 3) + 1}x$. It decreases from ${b + 20}, and at time $0$ it is not $0$, so it is not proportional.`,
-          `高度 $y = ${b + 20} - ${(k % 3) + 1}x$，从 ${b + 20} 开始减少，时间为 $0$ 时高度不为 $0$，所以不成正比例。`,
+          `The height is $y = ${b + 20} - ${k % 3 === 0 ? "" : (k % 3) + 1}x$. It decreases from ${b + 20}, and at time $0$ it is not $0$, so it is not proportional.`,
+          `高度 $y = ${b + 20} - ${k % 3 === 0 ? "" : (k % 3) + 1}x$，从 ${b + 20} 开始减少，时间为 $0$ 时高度不为 $0$，所以不成正比例。`,
         ),
       };
     default:
@@ -1677,8 +1674,8 @@ export const findingOriginalValuesFromPercentageIncreases = topic(
   "finding-original-values-from-percentage-increases",
   t("Finding Original Values From Percentage Increases", "由百分比增加求原值"),
   t(
-    "After a p% increase, the new value is (100 + p)% of the original x. So if a price is $276 after a 15% increase, 1.15x = 276 and x = 276 ÷ 1.15 = 240. Subtracting 15% of 276 does not give the original.",
-    "增加 p% 后，新值是原值 x 的 (100 + p)%。所以如果价格上涨 15% 后是 $276，那么 1.15x = 276，x = 276 ÷ 1.15 = 240。减去 276 的 15% 得不到原值。",
+    "After a p% increase, the new value is (100 + p)% of the original x. So if a price is \\$276 after a 15% increase, 1.15x = 276 and x = 276 ÷ 1.15 = 240. Subtracting 15% of 276 does not give the original.",
+    "增加 p% 后，新值是原值 x 的 (100 + p)%。所以如果价格上涨 15% 后是 \\$276，那么 1.15x = 276，x = 276 ÷ 1.15 = 240。减去 276 的 15% 得不到原值。",
   ),
   ["applying-percentage-increases", "finding-a-total-given-a-part-and-a-percentage"],
   ["7.RP.A.3"],
@@ -1921,8 +1918,8 @@ export const percentagesInCommerceAndFinance = topic(
   "percentages-in-commerce-and-finance",
   t("Percentages in Commerce and Finance", "商业与理财中的百分比"),
   t(
-    "Sales tax and tips are percentages added to a price; discounts are percentages taken off. A $40 item with 8% tax costs $40 × 1.08 = $43.20; with a 25% discount it costs $40 × 0.75 = $30.",
-    "销售税和小费是加在价格上的百分比；折扣是从价格中减去的百分比。$40 的商品加 8% 的税是 $40 × 1.08 = $43.20；打 25% 的折扣是 $40 × 0.75 = $30。",
+    "Sales tax and tips are percentages added to a price; discounts are percentages taken off. A \\$40 item with 8% tax costs \\$40 × 1.08 = \\$43.20; with a 25% discount it costs \\$40 × 0.75 = \\$30.",
+    "销售税和小费是加在价格上的百分比；折扣是从价格中减去的百分比。\\$40 的商品加 8% 的税是 \\$40 × 1.08 = \\$43.20；打 25% 的折扣是 \\$40 × 0.75 = \\$30。",
   ),
   ["applying-percentage-decreases"],
   ["7.RP.A.3"],
@@ -1996,11 +1993,11 @@ export const percentagesInCommerceAndFinance = topic(
         return numberProblem({
           prompt: total
             ? t(
-                `A restaurant bill is $\\$${d}$. The diners leave a $${r}\\%$ tip. How much do they pay in all, in dollars?`,
+                `A restaurant bill is $\\$${d}$. The diners leave ${article(r)} $${r}\\%$ tip. How much do they pay in all, in dollars?`,
                 `餐馆账单是 $\\$${d}$，顾客另付 $${r}\\%$ 的小费。他们一共付多少美元？`,
               )
             : t(
-                `A restaurant bill is $\\$${d}$. How much is a $${r}\\%$ tip, in dollars?`,
+                `A restaurant bill is $\\$${d}$. How much is ${article(r)} $${r}\\%$ tip, in dollars?`,
                 `餐馆账单是 $\\$${d}$。$${r}\\%$ 的小费是多少美元？`,
               ),
           answer: total ? cq(d * 100 + tip) : cq(tip),
@@ -2074,7 +2071,7 @@ export const furtherPercentagesInCommerceAndFinance = topic(
         const comm = (sales * r) / 100;
         return numberProblem({
           prompt: t(
-            `${name} earns $\\$${base}$ a week plus a $${r}\\%$ commission on sales. This week ${name} sold $\\$${sales}$ worth of goods. How much did ${name} earn this week, in dollars?`,
+            `${name} earns $\\$${base}$ a week plus ${article(r)} $${r}\\%$ commission on sales. This week ${name} sold $\\$${sales}$ worth of goods. How much did ${name} earn this week, in dollars?`,
             `${name} 每周底薪 $\\$${base}$，另加销售额 $${r}\\%$ 的佣金。这周 ${name} 的销售额是 $\\$${sales}$。${name} 这周挣了多少美元？`,
           ),
           answer: base + comm,
@@ -2118,7 +2115,7 @@ export const furtherPercentagesInCommerceAndFinance = topic(
         const tax = d * r;
         return numberProblem({
           prompt: t(
-            `The sales tax on a $\\$${d}$ ${it.en} is $${usd(tax)}$. What is the sales tax rate?`,
+            `The sales tax on ${article(d)} $\\$${d}$ ${it.en} is $${usd(tax)}$. What is the sales tax rate?`,
             `$\\$${d}$ 的${it.zhNoun}要交 $${usd(tax)}$ 的销售税。销售税率是多少？`,
           ),
           answer: r,
@@ -2139,8 +2136,8 @@ export const solvingMultipartCommerceAndFinancePercentageProblems = topic(
   "solving-multipart-commerce-and-finance-percentage-problems",
   t("Solving Multipart Commerce and Finance Percentage Problems", "解多步商业与理财百分比问题"),
   t(
-    "Apply the percentages one at a time, each to the amount it applies to: a 20% discount and then 8% tax on $50 give $50 × 0.8 = $40 and then $40 × 1.08 = $43.20. Subtracting 20% − 8% = 12% at once would be wrong.",
-    "逐个应用百分比，每个都作用在它所对应的金额上：$50 先打 20% 的折扣，再加 8% 的税，得 $50 × 0.8 = $40，再 $40 × 1.08 = $43.20。一次减去 20% − 8% = 12% 是错误的。",
+    "Apply the percentages one at a time, each to the amount it applies to: a 20% discount and then 8% tax on \\$50 give \\$50 × 0.8 = \\$40 and then \\$40 × 1.08 = \\$43.20. Subtracting 20% − 8% = 12% at once would be wrong.",
+    "逐个应用百分比，每个都作用在它所对应的金额上：\\$50 先打 20% 的折扣，再加 8% 的税，得 \\$50 × 0.8 = \\$40，再 \\$40 × 1.08 = \\$43.20。一次减去 20% − 8% = 12% 是错误的。",
   ),
   ["further-percentages-in-commerce-and-finance", "applying-percentages-in-succession"],
   ["7.RP.A.3", "7.EE.B.3"],
@@ -2161,7 +2158,7 @@ export const solvingMultipartCommerceAndFinancePercentageProblems = topic(
         const total = sale * (100 + r);
         return numberProblem({
           prompt: t(
-            `A ${it.en} regularly costs $\\$${d}$. It is on sale for $${p}\\%$ off, and a $${r}\\%$ sales tax is added to the sale price. What is the total cost, in dollars?`,
+            `A ${it.en} regularly costs $\\$${d}$. It is on sale for $${p}\\%$ off, and ${article(r)} $${r}\\%$ sales tax is added to the sale price. What is the total cost, in dollars?`,
             `${it.zh}原价 $\\$${d}$，现在优惠 $${p}\\%$，并按优惠后的价格加收 $${r}\\%$ 的销售税。总共要付多少美元？`,
           ),
           answer: cq(total),
@@ -2248,8 +2245,8 @@ export const calculatingSimpleInterest = topic(
   "calculating-simple-interest",
   t("Calculating Simple Interest", "计算单利"),
   t(
-    "Simple interest is I = Prt: the principal P times the yearly rate r (as a decimal) times the time t in years. $500 at 4% for 3 years earns 500 × 0.04 × 3 = $60, for a balance of $560.",
-    "单利 I = Prt：本金 P 乘年利率 r（化成小数）再乘年数 t。$500 按 4% 存 3 年，利息是 500 × 0.04 × 3 = $60，本息共 $560。",
+    "Simple interest is I = Prt: the principal P times the yearly rate r (as a decimal) times the time t in years. \\$500 at 4% for 3 years earns 500 × 0.04 × 3 = \\$60, for a balance of \\$560.",
+    "单利 I = Prt：本金 P 乘年利率 r（化成小数）再乘年数 t。\\$500 按 4% 存 3 年，利息是 500 × 0.04 × 3 = \\$60，本息共 \\$560。",
   ),
   ["percentages-in-commerce-and-finance"],
   ["7.RP.A.3", "7.EE.B.3"],

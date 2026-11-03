@@ -1,7 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-import { choiceProblem, numberProblem } from "../problems.ts";
+import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
 
 /** Topics for Unit 6: Parametric Inference (new topics). */
 export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
@@ -21,8 +21,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "sample-mean-calculation",
         title: t("Calculating the sample mean from raw data", "根据原始数据计算样本均值"),
         explanation: t(
-          "Sum all observations and divide by sample size n: x̄ = (∑ x_i) / n.",
-          "将所有观测值相加并除以样本容量 n：x̄ = (∑ x_i) / n。",
+          "Sum all observations and divide by the sample size $n$: $\\bar{x} = \\frac{1}{n} \\sum_i x_i$.",
+          "将所有观测值相加并除以样本容量 $n$：$\\bar{x} = \\frac{1}{n} \\sum_i x_i$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(4, 7);
@@ -42,8 +42,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
             ),
             answer: Q.of(sum, n),
             solution: t(
-              `The sample size is $n = ${n}$ and the sum is $\\sum x_i = ${sum}$. Thus $\\bar{x} = \\frac{${sum}}{${n}}$.`,
-              `样本容量为 $n = ${n}$，观测值总和为 $\\sum x_i = ${sum}$。因此 $\\bar{x} = \\frac{${sum}}{${n}}$。`,
+              `The sample size is $n = ${n}$ and the sum is $\\sum x_i = ${sum}$. Thus $\\bar{x} = \\frac{${sum}}{${n}}${lowestTerms(sum, n)}$.`,
+              `样本容量为 $n = ${n}$，观测值总和为 $\\sum x_i = ${sum}$。因此 $\\bar{x} = \\frac{${sum}}{${n}}${lowestTerms(sum, n)}$。`,
             ),
           });
         },
@@ -105,7 +105,10 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
       {
         id: "sample-variance-calculation-small-n",
         title: t("Calculating sample variance with n - 1 divisor", "用除数 n - 1 计算样本方差"),
-        explanation: t("S^2 = (1/(n-1)) [∑ x_i^2 - n x̄^2].", "S^2 = (1/(n-1)) [∑ x_i^2 - n x̄^2]。"),
+        explanation: t(
+          "$S^2 = \\frac{1}{n - 1} \\left[\\sum_i x_i^2 - n\\bar{x}^2\\right]$.",
+          "$S^2 = \\frac{1}{n - 1} \\left[\\sum_i x_i^2 - n\\bar{x}^2\\right]$。",
+        ),
         generate: (rng: Rng): Problem => {
           // Choose a mean and deviations so calculations are clean
           const mean = rng.int(5, 20);
@@ -124,8 +127,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
             ),
             answer: Q.of(ss, 2),
             solution: t(
-              `The sample mean is $\\bar{x} = ${mean}$. The deviations from the mean are $${d1}, ${d2}, ${d3}$, with sum of squared deviations $\\sum (x_i - \\bar{x})^2 = ${d1}^2 + ${d2}^2 + ${d3}^2 = ${ss}$. Dividing by $n - 1 = 2$ yields $s^2 = \\frac{${ss}}{2}$.`,
-              `样本均值为 $\\bar{x} = ${mean}$。各离均差分别为 $${d1}, ${d2}, ${d3}$，离均差平方和为 $\\sum (x_i - \\bar{x})^2 = ${d1}^2 + ${d2}^2 + ${d3}^2 = ${ss}$。除以 $n - 1 = 2$ 得到 $s^2 = \\frac{${ss}}{2}$。`,
+              `The sample mean is $\\bar{x} = ${mean}$. The deviations from the mean are $${d1}, ${d2}, ${d3}$, with sum of squared deviations $\\sum (x_i - \\bar{x})^2 = (${d1})^2 + (${d2})^2 + (${d3})^2 = ${ss}$. Dividing by $n - 1 = 2$ yields $s^2 = \\frac{${ss}}{2}${lowestTerms(ss, 2)}$.`,
+              `样本均值为 $\\bar{x} = ${mean}$。各离均差分别为 $${d1}, ${d2}, ${d3}$，离均差平方和为 $\\sum (x_i - \\bar{x})^2 = (${d1})^2 + (${d2})^2 + (${d3})^2 = ${ss}$。除以 $n - 1 = 2$ 得到 $s^2 = \\frac{${ss}}{2}${lowestTerms(ss, 2)}$。`,
             ),
           });
         },
@@ -148,7 +151,10 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
       {
         id: "pooled-variance-evaluation",
         title: t("Computing pooled variance from two independent samples", "根据两个独立样本计算合并方差"),
-        explanation: t("s_p^2 = ((n1 - 1)s1^2 + (n2 - 1)s2^2) / (n1 + n2 - 2).", "s_p^2 = ((n1 - 1)s1^2 + (n2 - 1)s2^2) / (n1 + n2 - 2)。"),
+        explanation: t(
+          "The pooled variance is $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$.",
+          "合并方差为 $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(5, 20);
           const n2 = rng.int(5, 20);
@@ -166,8 +172,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `$s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2} = \\frac{(${df1})(${s1Sq}) + (${df2})(${s2Sq})}{${df1} + ${df2}} = \\frac{${num}}{${den}}$.`,
-              `$s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2} = \\frac{(${df1})(${s1Sq}) + (${df2})(${s2Sq})}{${df1} + ${df2}} = \\frac{${num}}{${den}}$。`,
+              `$s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2} = \\frac{(${df1})(${s1Sq}) + (${df2})(${s2Sq})}{${df1} + ${df2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `$s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2} = \\frac{(${df1})(${s1Sq}) + (${df2})(${s2Sq})}{${df1} + ${df2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -191,8 +197,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "standard-error-of-the-mean",
         title: t("Evaluating the standard error of the sample mean", "计算样本均值的标准误差"),
         explanation: t(
-          "SE(X̄) = σ / √n decreases inversely with the square root of sample size.",
-          "SE(X̄) = σ / √n 与样本容量的平方根成反比递减。",
+          "$SE(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}}$ decreases in inverse proportion to the square root of the sample size.",
+          "$SE(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}}$ 与样本容量的平方根成反比。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 12);
@@ -206,8 +212,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
             ),
             answer: Q.of(sigma, k),
             solution: t(
-              `$\\text{SE}(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}} = \\frac{${sigma}}{\\sqrt{${n}}} = \\frac{${sigma}}{${k}}$.`,
-              `$\\text{SE}(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}} = \\frac{${sigma}}{\\sqrt{${n}}} = \\frac{${sigma}}{${k}}$。`,
+              `$\\text{SE}(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}} = \\frac{${sigma}}{\\sqrt{${n}}} = \\frac{${sigma}}{${k}}${lowestTerms(sigma, k)}$.`,
+              `$\\text{SE}(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}} = \\frac{${sigma}}{\\sqrt{${n}}} = \\frac{${sigma}}{${k}}${lowestTerms(sigma, k)}$。`,
             ),
           });
         },
@@ -231,8 +237,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "exact-normality-of-sample-mean",
         title: t("Exact normality of X̄ from normal populations", "正态总体下样本均值的严格正态性"),
         explanation: t(
-          "For any n ≥ 1, X̄ ~ N(μ, σ^2/n) holds exactly without requiring large n.",
-          "对任意样本容量 n ≥ 1，X̄ ~ N(μ, σ^2/n) 均精确成立，无需大样本条件。",
+          "For a normal population and any $n \\ge 1$, $\\bar{X} \\sim N\\left(\\mu, \\frac{\\sigma^2}{n}\\right)$ holds exactly, without requiring a large $n$.",
+          "对正态总体与任意样本容量 $n \\ge 1$，$\\bar{X} \\sim N\\left(\\mu, \\frac{\\sigma^2}{n}\\right)$ 均精确成立，无需大样本条件。",
         ),
         generate: (rng: Rng): Problem => {
           const mu = rng.int(50, 150);
@@ -295,8 +301,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `The sample proportion $\\hat{p} = \\frac{X}{n}$ is an unbiased estimator of $p$: $E[\\hat{p}] = p = \\frac{${num}}{${den}}$.`,
-              `样本比例 $\\hat{p} = \\frac{X}{n}$ 是 $p$ 的无偏估计量：$E[\\hat{p}] = p = \\frac{${num}}{${den}}$。`,
+              `The sample proportion $\\hat{p} = \\frac{X}{n}$ is an unbiased estimator of $p$: $E[\\hat{p}] = p = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `样本比例 $\\hat{p} = \\frac{X}{n}$ 是 $p$ 的无偏估计量：$E[\\hat{p}] = p = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -320,8 +326,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "method-of-moments-poisson-or-exp",
         title: t("Estimating parameter using the first sample moment", "利用一阶样本矩估计未知参数"),
         explanation: t(
-          "For X ~ Poisson(λ), E[X] = λ, so the method of moments estimator is λ̂ = x̄.",
-          "对于 X ~ Poisson(λ)，理论均值为 E[X] = λ，故矩估计量为 λ̂ = x̄。",
+          "For $X \\sim \\text{Poisson}(\\lambda)$, $E[X] = \\lambda$, so the method of moments estimator is $\\hat{\\lambda} = \\bar{x}$.",
+          "对于 $X \\sim \\text{Poisson}(\\lambda)$，$E[X] = \\lambda$，故矩估计量为 $\\hat{\\lambda} = \\bar{x}$。",
         ),
         generate: (rng: Rng): Problem => {
           const sum = rng.int(40, 200);
@@ -334,8 +340,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
             ),
             answer: Q.of(sum, n),
             solution: t(
-              `Setting the population first moment equal to the sample first moment: $E[X] = \\lambda = \\bar{x} = \\frac{\\sum x_i}{n} = \\frac{${sum}}{${n}}$. Thus $\\hat{\\lambda} = \\frac{${sum}}{${n}}$.`,
-              `令总体一阶原点矩等于样本一阶原点矩：$E[X] = \\lambda = \\bar{x} = \\frac{\\sum x_i}{n} = \\frac{${sum}}{${n}}$。因此 $\\hat{\\lambda} = \\frac{${sum}}{${n}}$。`,
+              `Setting the population first moment equal to the sample first moment: $E[X] = \\lambda = \\bar{x} = \\frac{\\sum x_i}{n} = \\frac{${sum}}{${n}}$. Thus $\\hat{\\lambda} = \\frac{${sum}}{${n}}${lowestTerms(sum, n)}$.`,
+              `令总体一阶原点矩等于样本一阶原点矩：$E[X] = \\lambda = \\bar{x} = \\frac{\\sum x_i}{n} = \\frac{${sum}}{${n}}$。因此 $\\hat{\\lambda} = \\frac{${sum}}{${n}}${lowestTerms(sum, n)}$。`,
             ),
           });
         },
@@ -394,8 +400,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "clt-convergence-distribution",
         title: t("Asymptotic distribution of the standardized mean under CLT", "中心极限定理下标准化均值的渐近分布"),
         explanation: t(
-          "As n → ∞, (X̄ - μ) / (σ / √n) ➔ N(0, 1) for any population with finite variance σ^2.",
-          "当 n → ∞ 时，对任意方差 σ^2 有限的总体，(X̄ - μ) / (σ / √n) 依分布收敛至 N(0, 1)。",
+          "As $n \\to \\infty$, $\\frac{\\bar{X} - \\mu}{\\sigma / \\sqrt{n}}$ converges in distribution to $N(0, 1)$ for any population with finite variance $\\sigma^2$.",
+          "当 $n \\to \\infty$ 时，对任意方差 $\\sigma^2$ 有限的总体，$\\frac{\\bar{X} - \\mu}{\\sigma / \\sqrt{n}}$ 依分布收敛至 $N(0, 1)$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(30, 200);
@@ -498,8 +504,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `$\\text{FPC}^2 = \\frac{N - n}{N - 1} = \\frac{${N} - ${n}}{${N} - 1} = \\frac{${num}}{${den}}$.`,
-              `$\\text{FPC}^2 = \\frac{N - n}{N - 1} = \\frac{${N} - ${n}}{${N} - 1} = \\frac{${num}}{${den}}$。`,
+              `$\\text{FPC}^2 = \\frac{N - n}{N - 1} = \\frac{${N} - ${n}}{${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `$\\text{FPC}^2 = \\frac{N - n}{N - 1} = \\frac{${N} - ${n}}{${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -534,8 +540,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
             ),
             answer: Q.of(x, n),
             solution: t(
-              `The point estimate is the ratio of successes to trials: $\\hat{p} = \\frac{x}{n} = \\frac{${x}}{${n}}$.`,
-              `点估计值为成功频数与试验次数之比：$\\hat{p} = \\frac{x}{n} = \\frac{${x}}{${n}}$。`,
+              `The point estimate is the ratio of successes to trials: $\\hat{p} = \\frac{x}{n} = \\frac{${x}}{${n}}${lowestTerms(x, n)}$.`,
+              `点估计值为成功频数与试验次数之比：$\\hat{p} = \\frac{x}{n} = \\frac{${x}}{${n}}${lowestTerms(x, n)}$。`,
             ),
           });
         },
@@ -626,7 +632,10 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
       {
         id: "evaluating-product-constant-powers",
         title: t("Evaluating products of powers and constants", "计算常数与幂次的连乘式"),
-        explanation: t("∏_{i=1}^n (c x_i) = c^n ∏_{i=1}^n x_i.", "∏_{i=1}^n (c x_i) = c^n ∏_{i=1}^n x_i。"),
+        explanation: t(
+          "A constant factor comes out of a product as a power: $\\prod_{i=1}^n (c x_i) = c^n \\prod_{i=1}^n x_i$.",
+          "常数因子以幂的形式提出连乘：$\\prod_{i=1}^n (c x_i) = c^n \\prod_{i=1}^n x_i$。",
+        ),
         generate: (rng: Rng): Problem => {
           const c = rng.int(2, 15);
           const n = rng.int(2, 6);
@@ -662,8 +671,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "bernoulli-likelihood-formulation",
         title: t("Formulating the Bernoulli likelihood function", "构建伯努利似然函数"),
         explanation: t(
-          "For n independent Bernoulli trials with k successes, L(p) = p^k (1 - p)^{n - k}.",
-          "对含有 k 次成功的 n 次独立伯努利试验，似然函数为 L(p) = p^k (1 - p)^{n - k}。",
+          "For $n$ independent Bernoulli trials with $k$ successes, $L(p) = p^k (1 - p)^{n - k}$.",
+          "对含有 $k$ 次成功的 $n$ 次独立伯努利试验，似然函数为 $L(p) = p^k (1 - p)^{n - k}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = 2 * rng.int(3, 15) + 1; // odd n guarantees k !== n - k
@@ -761,8 +770,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "exponential-likelihood-formulation",
         title: t("Formulating the likelihood function for an exponential sample", "构建指数分布样本的似然函数"),
         explanation: t(
-          "For X_i ~ Exp(λ), L(λ) = ∏ λ e^{-λ x_i} = λ^n e^{-λ ∑ x_i}.",
-          "对于 X_i ~ Exp(λ)，似然函数为 L(λ) = ∏ λ e^{-λ x_i} = λ^n e^{-λ ∑ x_i}。",
+          "For $X_i \\sim \\text{Exp}(\\lambda)$, $L(\\lambda) = \\prod_i \\lambda e^{-\\lambda x_i} = \\lambda^n e^{-\\lambda \\sum_i x_i}$.",
+          "对于 $X_i \\sim \\text{Exp}(\\lambda)$，似然函数为 $L(\\lambda) = \\prod_i \\lambda e^{-\\lambda x_i} = \\lambda^n e^{-\\lambda \\sum_i x_i}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(3, 50);
@@ -809,7 +818,10 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
       {
         id: "exponential-log-likelihood-expression",
         title: t("Deriving the log-likelihood function of an exponential sample", "推导指数分布样本的对数似然函数"),
-        explanation: t("ln L(λ) = n ln(λ) - λ ∑ x_i.", "ln L(λ) = n ln(λ) - λ ∑ x_i。"),
+        explanation: t(
+          "Taking logarithms, $\\ln L(\\lambda) = n \\ln \\lambda - \\lambda \\sum_i x_i$.",
+          "取对数得 $\\ln L(\\lambda) = n \\ln \\lambda - \\lambda \\sum_i x_i$。",
+        ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(4, 50);
 
@@ -859,8 +871,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "mle-of-exponential-distribution",
         title: t("Evaluating the MLE of the rate parameter for exponential data", "计算指数分布比率参数的极大似然估计"),
         explanation: t(
-          "Setting d/dλ [n ln λ - λ ∑ x_i] = n/λ - ∑ x_i = 0 yields λ̂ = n / ∑ x_i = 1 / x̄.",
-          "令 d/dλ [n ln λ - λ ∑ x_i] = n/λ - ∑ x_i = 0，解得 λ̂ = n / ∑ x_i = 1 / x̄。",
+          "Setting $\\frac{d}{d\\lambda}\\left[n \\ln \\lambda - \\lambda \\sum_i x_i\\right] = \\frac{n}{\\lambda} - \\sum_i x_i = 0$ yields $\\hat{\\lambda} = \\frac{n}{\\sum_i x_i} = \\frac{1}{\\bar{x}}$.",
+          "令 $\\frac{d}{d\\lambda}\\left[n \\ln \\lambda - \\lambda \\sum_i x_i\\right] = \\frac{n}{\\lambda} - \\sum_i x_i = 0$，解得 $\\hat{\\lambda} = \\frac{n}{\\sum_i x_i} = \\frac{1}{\\bar{x}}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(5, 50);
@@ -873,8 +885,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
             ),
             answer: Q.of(n, sum),
             solution: t(
-              `Solving the score equation $\\frac{d}{d\\lambda} \\ln L(\\lambda) = \\frac{n}{\\lambda} - \\sum x_i = 0$ yields $\\hat{\\lambda} = \\frac{n}{\\sum x_i} = \\frac{${n}}{${sum}}$.`,
-              `求解得分方程 $\\frac{d}{d\\lambda} \\ln L(\\lambda) = \\frac{n}{\\lambda} - \\sum x_i = 0$ 得 $\\hat{\\lambda} = \\frac{n}{\\sum x_i} = \\frac{${n}}{${sum}}$。`,
+              `Solving the score equation $\\frac{d}{d\\lambda} \\ln L(\\lambda) = \\frac{n}{\\lambda} - \\sum x_i = 0$ yields $\\hat{\\lambda} = \\frac{n}{\\sum x_i} = \\frac{${n}}{${sum}}${lowestTerms(n, sum)}$.`,
+              `求解得分方程 $\\frac{d}{d\\lambda} \\ln L(\\lambda) = \\frac{n}{\\lambda} - \\sum x_i = 0$ 得 $\\hat{\\lambda} = \\frac{n}{\\sum x_i} = \\frac{${n}}{${sum}}${lowestTerms(n, sum)}$。`,
             ),
           });
         },

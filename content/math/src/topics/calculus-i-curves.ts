@@ -795,8 +795,8 @@ export const approximatingTheRootsOfANumberUsingLocalLinearity: TopicDef = {
             Q.of(a ** n).sub(Q.of(n * a ** (n - 1)).mul(h)),
           ],
           solution: t(
-            `$f'(x) = ${n}x^{${n - 1}}$, so $f'(${a}) = ${n * a ** (n - 1)}$ and $(${x.toNumber()})^{${n}} \\approx ${a ** n} + ${n * a ** (n - 1)}(${h.toNumber()}) = ${answer.toNumber()}$.`,
-            `$f'(x) = ${n}x^{${n - 1}}$，所以 $f'(${a}) = ${n * a ** (n - 1)}$，$(${x.toNumber()})^{${n}} \\approx ${a ** n} + ${n * a ** (n - 1)}(${h.toNumber()}) = ${answer.toNumber()}$。`,
+            `$f'(x) = ${n}x${n === 2 ? "" : `^{${n - 1}}`}$, so $f'(${a}) = ${n * a ** (n - 1)}$ and $(${x.toNumber()})^{${n}} \\approx ${a ** n} + ${n * a ** (n - 1)}(${h.toNumber()}) = ${answer.toNumber()}$.`,
+            `$f'(x) = ${n}x${n === 2 ? "" : `^{${n - 1}}`}$，所以 $f'(${a}) = ${n * a ** (n - 1)}$，$(${x.toNumber()})^{${n}} \\approx ${a ** n} + ${n * a ** (n - 1)}(${h.toNumber()}) = ${answer.toNumber()}$。`,
           ),
         });
       },

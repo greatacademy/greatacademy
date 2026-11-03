@@ -1,6 +1,6 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly, Q } from "@ga/subject-math";
+import { paren, poly, Q } from "@ga/subject-math";
 import { choiceProblem, numberProblem, steps } from "../problems.ts";
 
 /** Pythagorean triples for clean coordinates. */
@@ -63,14 +63,14 @@ export const doubleSummations: TopicDef = {
         );
         const solution = t(
           steps(
-            `Distribute the summation: $\\sum_{i=1}^{${m}} \\sum_{j=1}^{${n}} (${poly([a, "i"], [b, "j"])}) = ${a} \\sum_{j=1}^{${n}} \\left(\\sum_{i=1}^{${m}} i\\right) + ${b} \\sum_{i=1}^{${m}} \\left(\\sum_{j=1}^{${n}} j\\right)$.`,
+            `Distribute the summation: $\\sum_{i=1}^{${m}} \\sum_{j=1}^{${n}} (${poly([a, "i"], [b, "j"])}) = ${poly([a, `\\sum_{j=1}^{${n}} \\left(\\sum_{i=1}^{${m}} i\\right)`], [b, `\\sum_{i=1}^{${m}} \\left(\\sum_{j=1}^{${n}} j\\right)`])}$.`,
             `Compute the single sums: $\\sum_{i=1}^{${m}} i = \\frac{${m}(${m + 1})}{2} = ${sumI}$ and $\\sum_{j=1}^{${n}} j = \\frac{${n}(${n + 1})}{2} = ${sumJ}$.`,
-            `Combine with outer limits: $${a}(${n})(${sumI}) + ${b}(${m})(${sumJ}) = ${a * n * sumI} + (${b * m * sumJ}) = ${ans}$.`,
+            `Combine with outer limits: $${a}(${n})(${sumI}) + ${paren(b)}(${m})(${sumJ}) = ${a * n * sumI} + (${b * m * sumJ}) = ${ans}$.`,
           ),
           steps(
-            `展开求和式：$\\sum_{i=1}^{${m}} \\sum_{j=1}^{${n}} (${poly([a, "i"], [b, "j"])}) = ${a} \\sum_{j=1}^{${n}} \\left(\\sum_{i=1}^{${m}} i\\right) + ${b} \\sum_{i=1}^{${m}} \\left(\\sum_{j=1}^{${n}} j\\right)$。`,
+            `展开求和式：$\\sum_{i=1}^{${m}} \\sum_{j=1}^{${n}} (${poly([a, "i"], [b, "j"])}) = ${poly([a, `\\sum_{j=1}^{${n}} \\left(\\sum_{i=1}^{${m}} i\\right)`], [b, `\\sum_{i=1}^{${m}} \\left(\\sum_{j=1}^{${n}} j\\right)`])}$。`,
             `计算一重和：$\\sum_{i=1}^{${m}} i = \\frac{${m}(${m + 1})}{2} = ${sumI}$ 且 $\\sum_{j=1}^{${n}} j = \\frac{${n}(${n + 1})}{2} = ${sumJ}$。`,
-            `代入外层项：$${a}(${n})(${sumI}) + ${b}(${m})(${sumJ}) = ${a * n * sumI} + (${b * m * sumJ}) = ${ans}$。`,
+            `代入外层项：$${a}(${n})(${sumI}) + ${paren(b)}(${m})(${sumJ}) = ${a * n * sumI} + (${b * m * sumJ}) = ${ans}$。`,
           ),
         );
         return numberProblem({
@@ -567,13 +567,13 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
         const solution = t(
           steps(
             `Set up the iterated integral by Fubini's theorem:\n\n$$\\int_{${a}}^{${b}} \\int_{${c}}^{${d}} (${poly([p, "x"], [q, "y"])})\\,dy\\,dx$$`,
-            `Integrate with respect to $y$:\n\n$$\\left[${poly([p, "xy"], [q, "\\frac{y^2}{2}"])}\\right]_{${c}}^{${d}} = ${p}(x)(${d - c}) + ${q}\\frac{${d * d - c * c}}{2} = ${p * (d - c)}x + ${Q.of(q * (d * d - c * c), 2).toLatex()}.$$ `,
-            `Integrate with respect to $x$ from $${a}$ to $${b}$:\n\n$$\\int_{${a}}^{${b}} \\left(${p * (d - c)}x + ${Q.of(q * (d * d - c * c), 2).toLatex()}\\right) dx = ${ans.toLatex()}.$$ `,
+            `Integrate with respect to $y$:\n\n$$\\left[${poly([p, "xy"], [q, "\\frac{y^2}{2}"])}\\right]_{${c}}^{${d}} = ${p}(${d - c})x + ${paren(q)} \\cdot \\frac{${d * d - c * c}}{2} = ${poly([p * (d - c), "x"], [Q.of(q * (d * d - c * c), 2), ""])}.$$ `,
+            `Integrate with respect to $x$ from $${a}$ to $${b}$:\n\n$$\\int_{${a}}^{${b}} \\left(${poly([p * (d - c), "x"], [Q.of(q * (d * d - c * c), 2), ""])}\\right) dx = ${ans.toLatex()}.$$ `,
           ),
           steps(
             `由富比尼定理建立二次积分：\n\n$$\\int_{${a}}^{${b}} \\int_{${c}}^{${d}} (${poly([p, "x"], [q, "y"])})\\,dy\\,dx$$`,
-            `先对 $y$ 积分：\n\n$$\\left[${poly([p, "xy"], [q, "\\frac{y^2}{2}"])}\\right]_{${c}}^{${d}} = ${p}(x)(${d - c}) + ${q}\\frac{${d * d - c * c}}{2} = ${p * (d - c)}x + ${Q.of(q * (d * d - c * c), 2).toLatex()}。$$ `,
-            `再对 $x$ 从 $${a}$ 积到 $${b}$：\n\n$$\\int_{${a}}^{${b}} \\left(${p * (d - c)}x + ${Q.of(q * (d * d - c * c), 2).toLatex()}\\right) dx = ${ans.toLatex()}。$$ `,
+            `先对 $y$ 积分：\n\n$$\\left[${poly([p, "xy"], [q, "\\frac{y^2}{2}"])}\\right]_{${c}}^{${d}} = ${p}(${d - c})x + ${paren(q)} \\cdot \\frac{${d * d - c * c}}{2} = ${poly([p * (d - c), "x"], [Q.of(q * (d * d - c * c), 2), ""])}。$$ `,
+            `再对 $x$ 从 $${a}$ 积到 $${b}$：\n\n$$\\int_{${a}}^{${b}} \\left(${poly([p * (d - c), "x"], [Q.of(q * (d * d - c * c), 2), ""])}\\right) dx = ${ans.toLatex()}。$$ `,
           ),
         );
         return numberProblem({
@@ -673,12 +673,12 @@ export const propertiesOfDoubleIntegrals: TopicDef = {
         );
         const solution = t(
           steps(
-            `Apply linearity: $\\iint_R (${alpha}f + ${beta}g)\\,dA = ${alpha}\\iint_R f\\,dA + ${beta}\\iint_R g\\,dA$.`,
-            `Substitute the given integral values:\n\n$$${alpha}(${I1}) + ${beta}(${I2}) = ${alpha * I1} + (${beta * I2}) = ${ans}.$$ `,
+            `Apply linearity: $\\iint_R (${poly([alpha, "f"], [beta, "g"])})\\,dA = ${poly([alpha, "\\iint_R f\\,dA"], [beta, "\\iint_R g\\,dA"])}$.`,
+            `Substitute the given integral values:\n\n$$${alpha}(${I1}) + ${paren(beta)}(${I2}) = ${alpha * I1} + (${beta * I2}) = ${ans}.$$ `,
           ),
           steps(
-            `应用线性性质：$\\iint_R (${alpha}f + ${beta}g)\\,dA = ${alpha}\\iint_R f\\,dA + ${beta}\\iint_R g\\,dA$。`,
-            `代入已知积分值：\n\n$$${alpha}(${I1}) + ${beta}(${I2}) = ${alpha * I1} + (${beta * I2}) = ${ans}。$$ `,
+            `应用线性性质：$\\iint_R (${poly([alpha, "f"], [beta, "g"])})\\,dA = ${poly([alpha, "\\iint_R f\\,dA"], [beta, "\\iint_R g\\,dA"])}$。`,
+            `代入已知积分值：\n\n$$${alpha}(${I1}) + ${paren(beta)}(${I2}) = ${alpha * I1} + (${beta * I2}) = ${ans}。$$ `,
           ),
         );
         return numberProblem({
@@ -723,25 +723,25 @@ export const typeIAndIiRegionsInTwoDimensionalSpace: TopicDef = {
 
         if (isType1) {
           desc = t(
-            `\\{(x, y) : 0 \\le x \\le ${a}, ${b}x^2 \\le y \\le ${b * a}x\\}`,
-            `\\{(x, y) : 0 \\le x \\le ${a}, ${b}x^2 \\le y \\le ${b * a}x\\}`,
+            `\\{(x, y) : 0 \\le x \\le ${a}, ${poly([b, "x^2"])} \\le y \\le ${poly([b * a, "x"])}\\}`,
+            `\\{(x, y) : 0 \\le x \\le ${a}, ${poly([b, "x^2"])} \\le y \\le ${poly([b * a, "x"])}\\}`,
           );
           right = t("Type I (X-simple)", "X-型区域（Type I）");
           wrong = [t("Type II (Y-simple)", "Y-型区域（Type II）"), t("Neither Type I nor Type II", "既非 X-型亦非 Y-型")];
           solText = t(
-            `The variable $x$ lies between constant bounds $0 \\le x \\le ${a}$, and $y$ is bounded between two functions of $x$: $g_1(x) = ${b}x^2$ and $g_2(x) = ${b * a}x$.`,
-            `变量 $x$ 具有常数界 $0 \\le x \\le ${a}$，而 $y$ 夹在 $x$ 的两个函数 $g_1(x) = ${b}x^2$ 与 $g_2(x) = ${b * a}x$ 之间。`,
+            `The variable $x$ lies between constant bounds $0 \\le x \\le ${a}$, and $y$ is bounded between two functions of $x$: $g_1(x) = ${poly([b, "x^2"])}$ and $g_2(x) = ${poly([b * a, "x"])}$.`,
+            `变量 $x$ 具有常数界 $0 \\le x \\le ${a}$，而 $y$ 夹在 $x$ 的两个函数 $g_1(x) = ${poly([b, "x^2"])}$ 与 $g_2(x) = ${poly([b * a, "x"])}$ 之间。`,
           );
         } else {
           desc = t(
-            `\\{(x, y) : 0 \\le y \\le ${a}, ${b}y^2 \\le x \\le ${b * a}y\\}`,
-            `\\{(x, y) : 0 \\le y \\le ${a}, ${b}y^2 \\le x \\le ${b * a}y\\}`,
+            `\\{(x, y) : 0 \\le y \\le ${a}, ${poly([b, "y^2"])} \\le x \\le ${poly([b * a, "y"])}\\}`,
+            `\\{(x, y) : 0 \\le y \\le ${a}, ${poly([b, "y^2"])} \\le x \\le ${poly([b * a, "y"])}\\}`,
           );
           right = t("Type II (Y-simple)", "Y-型区域（Type II）");
           wrong = [t("Type I (X-simple)", "X-型区域（Type I）"), t("Neither Type I nor Type II", "既非 X-型亦非 Y-型")];
           solText = t(
-            `The variable $y$ lies between constant bounds $0 \\le y \\le ${a}$, and $x$ is bounded between two functions of $y$: $h_1(y) = ${b}y^2$ and $h_2(y) = ${b * a}y$.`,
-            `变量 $y$ 具有常数界 $0 \\le y \\le ${a}$，而 $x$ 夹在 $y$ 的两个函数 $h_1(y) = ${b}y^2$ 与 $h_2(y) = ${b * a}y$ 之间。`,
+            `The variable $y$ lies between constant bounds $0 \\le y \\le ${a}$, and $x$ is bounded between two functions of $y$: $h_1(y) = ${poly([b, "y^2"])}$ and $h_2(y) = ${poly([b * a, "y"])}$.`,
+            `变量 $y$ 具有常数界 $0 \\le y \\le ${a}$，而 $x$ 夹在 $y$ 的两个函数 $h_1(y) = ${poly([b, "y^2"])}$ 与 $h_2(y) = ${poly([b * a, "y"])}$ 之间。`,
           );
         }
 
@@ -1015,13 +1015,13 @@ export const repeatedIntegralsInThreeDimensions: TopicDef = {
         const solution = t(
           steps(
             `Integrate with respect to $z$:\n\n$$\\int_0^{${c}} (x + y + z)\\,dz = \\left[(x + y)z + \\frac{z^2}{2}\\right]_0^{${c}} = ${c}(x + y) + \\frac{${c * c}}{2}.$$`,
-            `Integrate with respect to $y$ from $0$ to $${b}$:\n\n$$\\int_0^{${b}} \\left(${c}x + ${c}y + \\frac{${c * c}}{2}\\right)dy = ${b * c}x + ${c}\\frac{${b * b}}{2} + \\frac{${b * c * c}}{2} = ${b * c}x + \\frac{${b * c}(${b + c})}{2}.$$`,
-            `Integrate with respect to $x$ from $0$ to $${a}$:\n\n$$\\int_0^{${a}} \\left(${b * c}x + \\frac{${b * c}(${b + c})}{2}\\right)dx = ${b * c}\\frac{${a * a}}{2} + ${a}\\frac{${b * c}(${b + c})}{2} = \\frac{${num}}{2} = ${ans.toLatex()}.$$ `,
+            `Integrate with respect to $y$ from $0$ to $${b}$:\n\n$$\\int_0^{${b}} \\left(${poly([c, "x"])} + ${poly([c, "y"])} + \\frac{${c * c}}{2}\\right)dy = ${poly([b * c, "x"])} + ${c}\\frac{${b * b}}{2} + \\frac{${b * c * c}}{2} = ${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}.$$`,
+            `Integrate with respect to $x$ from $0$ to $${a}$:\n\n$$\\int_0^{${a}} \\left(${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}\\right)dx = ${b * c}\\frac{${a * a}}{2} + ${a}\\frac{${b * c}(${b + c})}{2} = \\frac{${num}}{2} = ${ans.toLatex()}.$$ `,
           ),
           steps(
             `先对 $z$ 积分：\n\n$$\\int_0^{${c}} (x + y + z)\\,dz = \\left[(x + y)z + \\frac{z^2}{2}\\right]_0^{${c}} = ${c}(x + y) + \\frac{${c * c}}{2}。$$`,
-            `再对 $y$ 从 $0$ 积到 $${b}$：\n\n$$\\int_0^{${b}} \\left(${c}x + ${c}y + \\frac{${c * c}}{2}\\right)dy = ${b * c}x + ${c}\\frac{${b * b}}{2} + \\frac{${b * c * c}}{2} = ${b * c}x + \\frac{${b * c}(${b + c})}{2}。$$`,
-            `最后对 $x$ 从 $0$ 积到 $${a}$：\n\n$$\\int_0^{${a}} \\left(${b * c}x + \\frac{${b * c}(${b + c})}{2}\\right)dx = ${b * c}\\frac{${a * a}}{2} + ${a}\\frac{${b * c}(${b + c})}{2} = \\frac{${num}}{2} = ${ans.toLatex()}。$$ `,
+            `再对 $y$ 从 $0$ 积到 $${b}$：\n\n$$\\int_0^{${b}} \\left(${poly([c, "x"])} + ${poly([c, "y"])} + \\frac{${c * c}}{2}\\right)dy = ${poly([b * c, "x"])} + ${c}\\frac{${b * b}}{2} + \\frac{${b * c * c}}{2} = ${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}。$$`,
+            `最后对 $x$ 从 $0$ 积到 $${a}$：\n\n$$\\int_0^{${a}} \\left(${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}\\right)dx = ${b * c}\\frac{${a * a}}{2} + ${a}\\frac{${b * c}(${b + c})}{2} = \\frac{${num}}{2} = ${ans.toLatex()}。$$ `,
           ),
         );
         return numberProblem({
@@ -1120,8 +1120,8 @@ export const typeIIiAndIiiRegionsInThreeDimensionalSpace: TopicDef = {
 
         if (choice === 1) {
           desc = t(
-            `\\{(x, y, z) : (x, y) \\in D, 0 \\le z \\le ${a}x^2 + ${b}y^2\\}`,
-            `\\{(x, y, z) : (x, y) \\in D, 0 \\le z \\le ${a}x^2 + ${b}y^2\\}`,
+            `\\{(x, y, z) : (x, y) \\in D, 0 \\le z \\le ${poly([a, "x^2"])} + ${poly([b, "y^2"])}\\}`,
+            `\\{(x, y, z) : (x, y) \\in D, 0 \\le z \\le ${poly([a, "x^2"])} + ${poly([b, "y^2"])}\\}`,
           );
           right = t("Type I (bounded in z)", "Type I 型（z 处于两曲面之间）");
           wrong = [
@@ -1134,8 +1134,8 @@ export const typeIIiAndIiiRegionsInThreeDimensionalSpace: TopicDef = {
           );
         } else if (choice === 2) {
           desc = t(
-            `\\{(x, y, z) : (x, z) \\in D, 0 \\le y \\le ${a}x^2 + ${b}z^2\\}`,
-            `\\{(x, y, z) : (x, z) \\in D, 0 \\le y \\le ${a}x^2 + ${b}z^2\\}`,
+            `\\{(x, y, z) : (x, z) \\in D, 0 \\le y \\le ${poly([a, "x^2"])} + ${poly([b, "z^2"])}\\}`,
+            `\\{(x, y, z) : (x, z) \\in D, 0 \\le y \\le ${poly([a, "x^2"])} + ${poly([b, "z^2"])}\\}`,
           );
           right = t("Type II (bounded in y)", "Type II 型（y 处于两曲面之间）");
           wrong = [
@@ -1148,8 +1148,8 @@ export const typeIIiAndIiiRegionsInThreeDimensionalSpace: TopicDef = {
           );
         } else {
           desc = t(
-            `\\{(x, y, z) : (y, z) \\in D, 0 \\le x \\le ${a}y^2 + ${b}z^2\\}`,
-            `\\{(x, y, z) : (y, z) \\in D, 0 \\le x \\le ${a}y^2 + ${b}z^2\\}`,
+            `\\{(x, y, z) : (y, z) \\in D, 0 \\le x \\le ${poly([a, "y^2"])} + ${poly([b, "z^2"])}\\}`,
+            `\\{(x, y, z) : (y, z) \\in D, 0 \\le x \\le ${poly([a, "y^2"])} + ${poly([b, "z^2"])}\\}`,
           );
           right = t("Type III (bounded in x)", "Type III 型（x 处于两曲面之间）");
           wrong = [

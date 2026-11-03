@@ -1,7 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-import { choiceProblem, numberProblem } from "../problems.ts";
+import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
 
 /** Topics for Unit 8: Hypothesis Testing (new topics). */
 export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
@@ -21,8 +21,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "formulating-null-and-alternative-hypotheses",
         title: t("Formulating null and alternative hypotheses", "建立原假设与备择假设"),
         explanation: t(
-          "The null hypothesis always includes equality (H_0: μ = μ_0). The alternative hypothesis specifies the direction of the effect: two-tailed (μ ≠ μ_0), right-tailed (μ > μ_0), or left-tailed (μ < μ_0).",
-          "原假设始终包含等号（H_0: μ = μ_0）。备择假设指明效应方向：双尾（μ ≠ μ_0）、右尾（μ > μ_0）或左尾（μ < μ_0）。",
+          "The null hypothesis always includes equality ($H_0: \\mu = \\mu_0$). The alternative hypothesis states the direction of the effect: two-tailed ($\\mu \\ne \\mu_0$), right-tailed ($\\mu > \\mu_0$), or left-tailed ($\\mu < \\mu_0$).",
+          "原假设始终包含等号（$H_0: \\mu = \\mu_0$）。备择假设指明效应方向：双尾（$\\mu \\ne \\mu_0$）、右尾（$\\mu > \\mu_0$）或左尾（$\\mu < \\mu_0$）。",
         ),
         generate: (rng: Rng): Problem => {
           const mu0 = rng.int(20, 300);
@@ -120,8 +120,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "poisson-normal-test-statistic",
         title: t("Computing the standardized test statistic for Poisson rate", "计算泊松发生率的标准化检验统计量"),
         explanation: t(
-          "Under H_0, E[K] = nλ_0 and Var(K) = nλ_0, so Z = (K - nλ_0) / √(nλ_0).",
-          "在 H_0 下，E[K] = nλ_0 且 Var(K) = nλ_0，故 Z = (K - nλ_0) / √(nλ_0)。",
+          "Under $H_0$, $E[K] = n\\lambda_0$ and $\\operatorname{Var}(K) = n\\lambda_0$, so $Z = \\frac{K - n\\lambda_0}{\\sqrt{n\\lambda_0}}$.",
+          "在 $H_0$ 下，$E[K] = n\\lambda_0$ 且 $\\operatorname{Var}(K) = n\\lambda_0$，故 $Z = \\frac{K - n\\lambda_0}{\\sqrt{n\\lambda_0}}$。",
         ),
         generate: (rng: Rng): Problem => {
           const m = rng.int(4, 15);
@@ -165,7 +165,10 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
       {
         id: "evaluating-left-tailed-critical-region",
         title: t("Evaluating left-tailed test decisions", "评估左尾检验的决策"),
-        explanation: t("If z_calc ≤ -z_α, reject H_0; otherwise fail to reject H_0.", "若 z_calc ≤ -z_α，则拒绝 H_0；否则不拒绝 H_0。"),
+        explanation: t(
+          "If $z_{\\text{calc}} \\le -z_\\alpha$, reject $H_0$; otherwise fail to reject $H_0$.",
+          "若 $z_{\\text{calc}} \\le -z_\\alpha$，则拒绝 $H_0$；否则不拒绝 $H_0$。",
+        ),
         generate: (rng: Rng): Problem => {
           const levels = [
             { alpha: "0.05", zCrit: -1.645 },
@@ -224,7 +227,10 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
       {
         id: "evaluating-right-tailed-critical-region",
         title: t("Evaluating right-tailed test decisions", "评估右尾检验的决策"),
-        explanation: t("If z_calc ≥ z_α, reject H_0; otherwise fail to reject H_0.", "若 z_calc ≥ z_α，则拒绝 H_0；否则不拒绝 H_0。"),
+        explanation: t(
+          "If $z_{\\text{calc}} \\ge z_\\alpha$, reject $H_0$; otherwise fail to reject $H_0$.",
+          "若 $z_{\\text{calc}} \\ge z_\\alpha$，则拒绝 $H_0$；否则不拒绝 $H_0$。",
+        ),
         generate: (rng: Rng): Problem => {
           const levels = [
             { alpha: "0.05", zCrit: 1.645 },
@@ -284,8 +290,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "evaluating-two-tailed-critical-region",
         title: t("Evaluating two-tailed test decisions", "评估双尾检验的决策"),
         explanation: t(
-          "If |z_calc| ≥ z_{α/2}, reject H_0; otherwise fail to reject H_0.",
-          "若 |z_calc| ≥ z_{α/2}，则拒绝 H_0；否则不拒绝 H_0。",
+          "If $|z_{\\text{calc}}| \\ge z_{\\alpha/2}$, reject $H_0$; otherwise fail to reject $H_0$.",
+          "若 $|z_{\\text{calc}}| \\ge z_{\\alpha/2}$，则拒绝 $H_0$；否则不拒绝 $H_0$。",
         ),
         generate: (rng: Rng): Problem => {
           const levels = [
@@ -362,8 +368,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "defining-type-i-and-ii-errors",
         title: t("Distinguishing Type I and Type II errors", "区分第一类与第二类错误"),
         explanation: t(
-          "Type I: False positive (reject true H_0). Type II: False negative (fail to reject false H_0).",
-          "第一类错误：假阳性（拒绝了真实的 H_0）。第二类错误：假阴性（未能拒绝虚假的 H_0）。",
+          "Type I error: a false positive (rejecting a true $H_0$). Type II error: a false negative (failing to reject a false $H_0$).",
+          "第一类错误：假阳性（拒绝了真实的 $H_0$）。第二类错误：假阴性（未能拒绝错误的 $H_0$）。",
         ),
         generate: (rng: Rng): Problem => {
           const scenarios = [
@@ -438,7 +444,10 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
       {
         id: "one-mean-known-variance-z-statistic",
         title: t("Computing the one-sample z-test statistic", "计算单样本 z 检验统计量"),
-        explanation: t("z = (x̄ - μ_0) / (σ / √n).", "z = (x̄ - μ_0) / (σ / √n)。"),
+        explanation: t(
+          "The test statistic is $z = \\frac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}}$.",
+          "检验统计量为 $z = \\frac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(3, 12);
           const n = k * k;
@@ -483,7 +492,10 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
       {
         id: "one-mean-unknown-variance-t-statistic",
         title: t("Computing the one-sample t-test statistic", "计算单样本 t 检验统计量"),
-        explanation: t("t = (x̄ - μ_0) / (s / √n) with df = n - 1.", "t = (x̄ - μ_0) / (s / √n)，自由度为 df = n - 1。"),
+        explanation: t(
+          "The test statistic is $t = \\frac{\\bar{x} - \\mu_0}{s / \\sqrt{n}}$ with $df = n - 1$.",
+          "检验统计量为 $t = \\frac{\\bar{x} - \\mu_0}{s / \\sqrt{n}}$，自由度 $df = n - 1$。",
+        ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 10);
           const n = k * k;
@@ -525,7 +537,10 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
       {
         id: "one-variance-chi-square-statistic",
         title: t("Computing the chi-square statistic for one variance", "计算单方差的卡方检验统计量"),
-        explanation: t("χ^2 = (n - 1)s^2 / σ_0^2.", "χ^2 = (n - 1)s^2 / σ_0^2。"),
+        explanation: t(
+          "The test statistic is $\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2}$.",
+          "检验统计量为 $\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(10, 50);
           const df = n - 1;
@@ -541,8 +556,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `$\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2} = \\frac{(${n} - 1)(${sSq})}{${sigma0Sq}} = \\frac{${df} \\times ${sSq}}{${sigma0Sq}} = \\frac{${num}}{${den}}$.`,
-              `$\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2} = \\frac{(${n} - 1)(${sSq})}{${sigma0Sq}} = \\frac{${df} \\times ${sSq}}{${sigma0Sq}} = \\frac{${num}}{${den}}$。`,
+              `$\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2} = \\frac{(${n} - 1)(${sSq})}{${sigma0Sq}} = \\frac{${df} \\times ${sSq}}{${sigma0Sq}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `$\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2} = \\frac{(${n} - 1)(${sSq})}{${sigma0Sq}} = \\frac{${df} \\times ${sSq}}{${sigma0Sq}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -569,8 +584,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "two-mean-known-variance-z-statistic",
         title: t("Computing the two-sample z-test statistic", "计算双样本 z 检验统计量"),
         explanation: t(
-          "z = ((x̄_1 - x̄_2) - Δ_0) / SE, where SE = √(σ_1^2/n_1 + σ_2^2/n_2).",
-          "z = ((x̄_1 - x̄_2) - Δ_0) / SE，其中 SE = √(σ_1^2/n_1 + σ_2^2/n_2)。",
+          "$z = \\frac{(\\bar{x}_1 - \\bar{x}_2) - \\Delta_0}{SE}$, where $SE = \\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}$.",
+          "$z = \\frac{(\\bar{x}_1 - \\bar{x}_2) - \\Delta_0}{SE}$，其中 $SE = \\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}$。",
         ),
         generate: (rng: Rng): Problem => {
           const pairs = [
@@ -627,8 +642,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "pooled-variance-calculation",
         title: t("Computing pooled sample variance", "计算合并样本方差"),
         explanation: t(
-          "s_p^2 = ((n_1 - 1)s_1^2 + (n_2 - 1)s_2^2) / (n_1 + n_2 - 2).",
-          "s_p^2 = ((n_1 - 1)s_1^2 + (n_2 - 1)s_2^2) / (n_1 + n_2 - 2)。",
+          "The pooled variance is $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$.",
+          "合并方差为 $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(6, 25);
@@ -647,8 +662,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `$s_p^2 = \\frac{(${df1})(${s1Sq}) + (${df2})(${s2Sq})}{${df1} + ${df2}} = \\frac{${df1 * s1Sq} + ${df2 * s2Sq}}{${den}} = \\frac{${num}}{${den}}$.`,
-              `$s_p^2 = \\frac{(${df1})(${s1Sq}) + (${df2})(${s2Sq})}{${df1} + ${df2}} = \\frac{${df1 * s1Sq} + ${df2 * s2Sq}}{${den}} = \\frac{${num}}{${den}}$。`,
+              `$s_p^2 = \\frac{(${df1})(${s1Sq}) + (${df2})(${s2Sq})}{${df1} + ${df2}} = \\frac{${df1 * s1Sq} + ${df2 * s2Sq}}{${den}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `$s_p^2 = \\frac{(${df1})(${s1Sq}) + (${df2})(${s2Sq})}{${df1} + ${df2}} = \\frac{${df1 * s1Sq} + ${df2 * s2Sq}}{${den}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -671,7 +686,10 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
       {
         id: "welch-test-standard-error",
         title: t("Computing standard error for Welch's t-test", "计算韦尔奇 t 检验的标准误差平方"),
-        explanation: t("SE^2 = s_1^2 / n_1 + s_2^2 / n_2.", "SE^2 = s_1^2 / n_1 + s_2^2 / n_2。"),
+        explanation: t(
+          "Welch's squared standard error is $SE^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}$.",
+          "韦尔奇标准误差的平方为 $SE^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(8, 40);
           const n2 = rng.int(8, 40);
@@ -710,7 +728,10 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
       {
         id: "pooled-sample-proportion-calculation",
         title: t("Computing the pooled sample proportion", "计算合并样本比例"),
-        explanation: t("p̂ = (x_1 + x_2) / (n_1 + n_2).", "p̂ = (x_1 + x_2) / (n_1 + n_2)。"),
+        explanation: t(
+          "The pooled sample proportion is $\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2}$.",
+          "合并样本比例为 $\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(40, 200);
           const n2 = rng.int(40, 200);
@@ -726,8 +747,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
             ),
             answer: Q.of(num, den),
             solution: t(
-              `$\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2} = \\frac{${x1} + ${x2}}{${n1} + ${n2}} = \\frac{${num}}{${den}}$.`,
-              `$\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2} = \\frac{${x1} + ${x2}}{${n1} + ${n2}} = \\frac{${num}}{${den}}$。`,
+              `$\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2} = \\frac{${x1} + ${x2}}{${n1} + ${n2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `$\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2} = \\frac{${x1} + ${x2}}{${n1} + ${n2}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
             ),
           });
         },
@@ -750,7 +771,10 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
       {
         id: "paired-z-test-statistic-calculation",
         title: t("Computing the paired z-test statistic", "计算配对 z 检验统计量"),
-        explanation: t("z = (d̄ - Δ_0) / (σ_d / √n).", "z = (d̄ - Δ_0) / (σ_d / √n)。"),
+        explanation: t(
+          "The test statistic is $z = \\frac{\\bar{d} - \\Delta_0}{\\sigma_d / \\sqrt{n}}$.",
+          "检验统计量为 $z = \\frac{\\bar{d} - \\Delta_0}{\\sigma_d / \\sqrt{n}}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(3, 10);
           const n = k * k;
@@ -790,7 +814,10 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
       {
         id: "paired-t-test-statistic-calculation",
         title: t("Computing the paired t-test statistic", "计算配对 t 检验统计量"),
-        explanation: t("t = (d̄ - Δ_0) / (s_d / √n) with df = n - 1.", "t = (d̄ - Δ_0) / (s_d / √n)，自由度 df = n - 1。"),
+        explanation: t(
+          "$t = \\frac{\\bar{d} - \\Delta_0}{s_d / \\sqrt{n}}$ with $df = n - 1$.",
+          "$t = \\frac{\\bar{d} - \\Delta_0}{s_d / \\sqrt{n}}$，自由度 $df = n - 1$。",
+        ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 8);
           const n = k * k;
@@ -830,7 +857,7 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
       {
         id: "f-test-statistic-calculation",
         title: t("Computing the F-test statistic for two variances", "计算两方差的 F 检验统计量"),
-        explanation: t("F = s_1^2 / s_2^2.", "F = s_1^2 / s_2^2。"),
+        explanation: t("The test statistic is $F = \\frac{s_1^2}{s_2^2}$.", "检验统计量为 $F = \\frac{s_1^2}{s_2^2}$。"),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(10, 40);
           const n2 = rng.int(10, 40);

@@ -93,6 +93,20 @@ export function numberProblem(p: NumberProblem): Problem {
   };
 }
 
+/** article picks "a" or "an" by how a number or symbol is read aloud: an 8, an 18, a 7, an x; start capitalizes it. */
+export function article(x: number | string, start = false): string {
+  const s = String(x);
+  const digits = /^\d+/.exec(s)?.[0];
+  const an = digits ? digits.startsWith("8") || (/^1[18]/.test(digits) && digits.length % 3 === 2) : /^[aefhilmnorsx]/i.test(s);
+  return start ? (an ? "An" : "A") : an ? "an" : "a";
+}
+
+/** lowestTerms continues a fraction with its value in lowest terms when that reads differently: lowestTerms(8, 14) is " = \\frac{4}{7}", lowestTerms(4, 7) is "". */
+export function lowestTerms(num: number, den: number): string {
+  const value = Q.of(num, den).toLatex();
+  return value === `\\frac{${num}}{${den}}` ? "" : ` = ${value}`;
+}
+
 /** unitLatex writes a unit after a number: "^{\\circ}" for degrees, "\\text{ cm}^{2}" for "cm^2". */
 export function unitLatex(unit: string): string {
   if (unit === "°") return "^{\\circ}";

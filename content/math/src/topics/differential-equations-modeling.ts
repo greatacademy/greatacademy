@@ -535,7 +535,7 @@ export const modelingRlCircuitsWithFirstOrderOdes: TopicDef = {
       id: "rl-circuit-transient-and-steady-state-current",
       title: t("Steady-state current in an RL circuit", "RL 串联电路的稳态电流"),
       explanation: t(
-        "For an RL circuit governed by $L\\frac{di}{dt} + Ri = V_0$, the current is $i(t) = \\frac{V_0}{R}(1 - e^{-Rt/L})$. As $t \\to \\infty$, the inductor acts as a short circuit ($\\\\frac{di}{dt} = 0$), giving steady-state current $i_\\infty = \\frac{V_0}{R}$.",
+        "For an RL circuit governed by $L\\frac{di}{dt} + Ri = V_0$, the current is $i(t) = \\frac{V_0}{R}(1 - e^{-Rt/L})$. As $t \\to \\infty$, the inductor acts as a short circuit ($\\frac{di}{dt} = 0$), giving steady-state current $i_\\infty = \\frac{V_0}{R}$.",
         "对于由 $L\\frac{di}{dt} + Ri = V_0$ 描述的 RL 电路，通解为 $i(t) = \\frac{V_0}{R}(1 - e^{-Rt/L})$。当 $t \\to \\infty$ 时，电感相当于短路导线（$\\frac{di}{dt} = 0$），稳态电流为 $i_\\infty = \\frac{V_0}{R}$。",
       ),
       generate(rng: Rng): Problem {

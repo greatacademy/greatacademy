@@ -1029,8 +1029,8 @@ export const furtherPropertiesOfInfiniteSeries: TopicDef = {
         const right = kind === 2 ? 2 : kind === 3 ? 0 : 1;
         const why = [
           t(
-            `If $${sigmaInf(`(${body})`)}$ converged, then $${sigmaInf("b_n")} = \\frac{1}{${d}}\\left(${sigmaInf(`(${body})`)} - ${c}${sigmaInf("a_n")}\\right)$ would converge too.`,
-            `若 $${sigmaInf(`(${body})`)}$ 收敛，则 $${sigmaInf("b_n")} = \\frac{1}{${d}}\\left(${sigmaInf(`(${body})`)} - ${c}${sigmaInf("a_n")}\\right)$ 也收敛，矛盾。`,
+            `If $${sigmaInf(`(${body})`)}$ converged, then $${sigmaInf("b_n")} = \\frac{1}{${d}}\\left(${poly([1, sigmaInf(`(${body})`)], [-c, sigmaInf("a_n")])}\\right)$ would converge too.`,
+            `若 $${sigmaInf(`(${body})`)}$ 收敛，则 $${sigmaInf("b_n")} = \\frac{1}{${d}}\\left(${poly([1, sigmaInf(`(${body})`)], [-c, sigmaInf("a_n")])}\\right)$ 也收敛，矛盾。`,
           ),
           t(
             `A nonzero multiple of a divergent series diverges: if $${sigmaInf(body)}$ converged, so would $\\frac{1}{${d}}$ times it.`,

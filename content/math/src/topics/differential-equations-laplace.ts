@@ -1,5 +1,6 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { poly } from "@ga/subject-math";
 import { numberProblem, steps } from "../problems.ts";
 
 /** Topics for Unit 5: Laplace Transforms in Differential Equations. */
@@ -90,8 +91,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
           const ans = rightVal - leftVal;
 
           const prompt = t(
-            `Consider the piecewise continuous function $f(t) = \\begin{cases} ${m}t + ${b}, & 0 \\le t < ${c} \\\\ ${k}t^2, & t \\ge ${c} \\end{cases}$. Find the jump magnitude $\\Delta f(${c}) = \\lim_{t \\to ${c}^+} f(t) - \\lim_{t \\to ${c}^-} f(t)$.`,
-            `考虑分段连续函数 $f(t) = \\begin{cases} ${m}t + ${b}, & 0 \\le t < ${c} \\\\ ${k}t^2, & t \\ge ${c} \\end{cases}$。计算在 $t = ${c}$ 处的跳跃量 $\\Delta f(${c}) = \\lim_{t \\to ${c}^+} f(t) - \\lim_{t \\to ${c}^-} f(t)$。`,
+            `Consider the piecewise continuous function $f(t) = \\begin{cases} ${poly([m, "t"])} + ${b}, & 0 \\le t < ${c} \\\\ ${poly([k, "t^2"])}, & t \\ge ${c} \\end{cases}$. Find the jump magnitude $\\Delta f(${c}) = \\lim_{t \\to ${c}^+} f(t) - \\lim_{t \\to ${c}^-} f(t)$.`,
+            `考虑分段连续函数 $f(t) = \\begin{cases} ${poly([m, "t"])} + ${b}, & 0 \\le t < ${c} \\\\ ${poly([k, "t^2"])}, & t \\ge ${c} \\end{cases}$。计算在 $t = ${c}$ 处的跳跃量 $\\Delta f(${c}) = \\lim_{t \\to ${c}^+} f(t) - \\lim_{t \\to ${c}^-} f(t)$。`,
           );
           const solution = t(
             steps(

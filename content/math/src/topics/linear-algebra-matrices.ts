@@ -1,8 +1,8 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { paren, poly, Q } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, pointProblem } from "../problems.ts";
+import { article, choiceProblem, numberProblem, pointProblem } from "../problems.ts";
 
 // Linear Algebra Unit 2: Matrices, Gaussian Elimination, Determinants,
 // Elementary Matrices, and LU Factorization (Modules 2.4, 2.5, 2.6, 2.7, 2.8).
@@ -285,7 +285,7 @@ export const theDeterminantOfAnNxnMatrix: TopicDef = {
         const parityZh = invCount % 2 === 0 ? "偶" : "奇";
 
         const prompt = t(
-          `In the Leibniz formula for the determinant of a $${n} \\times ${n}$ matrix $A = (a_{ij})$, consider the permutation $\\sigma = (${p.join(", ")})$. What is its number of inversions $\\text{inv}(\\sigma)$ and signature $\\text{sgn}(\\sigma)$?`,
+          `In the Leibniz formula for the determinant of ${article(n)} $${n} \\times ${n}$ matrix $A = (a_{ij})$, consider the permutation $\\sigma = (${p.join(", ")})$. What is its number of inversions $\\text{inv}(\\sigma)$ and signature $\\text{sgn}(\\sigma)$?`,
           `在 $${n} \\times ${n}$ 矩阵 $A = (a_{ij})$ 的行列式莱布尼茨展开式中，考虑置换 $\\sigma = (${p.join(", ")})$。它的逆序数 $\\text{inv}(\\sigma)$ 和符号 $\\text{sgn}(\\sigma)$ 分别是多少？`,
         );
 
@@ -1110,9 +1110,9 @@ $$A = ${matLatex(A)}$$`,
           ],
           t(
             `The operation $${opStr}$ replaces row 2 by row 2 minus $${k}$ times row 1 entry by entry:
-$[${r2.join(", ")}] - ${k}[${r1.join(", ")}] = [${newR2.join(", ")}]$. Rows 1 and 3 are unchanged.`,
+$[${r2.join(", ")}] - ${paren(k)}[${r1.join(", ")}] = [${newR2.join(", ")}]$. Rows 1 and 3 are unchanged.`,
             `变换 $${opStr}$ 将第 2 行替换为第 2 行减去第 1 行的 $${k}$ 倍：
-$[${r2.join(", ")}] - ${k}[${r1.join(", ")}] = [${newR2.join(", ")}]$。第 1 行与第 3 行保持不变。`,
+$[${r2.join(", ")}] - ${paren(k)}[${r1.join(", ")}] = [${newR2.join(", ")}]$。第 1 行与第 3 行保持不变。`,
           ),
         );
       },
@@ -1578,10 +1578,10 @@ $$${augLatex(U, bVec)}$$`,
           [t(`$$${wrong1Str}$$`, `$$${wrong1Str}$$`), t(`$$${wrong2Str}$$`, `$$${wrong2Str}$$`), t(`$$${wrong3Str}$$`, `$$${wrong3Str}$$`)],
           t(
             `With free variable $z = t$, row 2 gives $y + (${u23})t = ${b2} \\implies y = ${y0} ${vyStr}$.
-Substituting into row 1 gives $x + (${u12})(${y0} - ${u23}t) + (${u13})t = ${b1} \\implies x = ${x0} ${vxStr}$.
+Substituting into row 1 gives $x + (${u12})(${poly([y0, ""], [-u23, "t"])}) + (${u13})t = ${b1} \\implies x = ${x0} ${vxStr}$.
 Writing in vector form gives $$${rightStr}$$.`,
             `设自由变量 $z = t$，由第 2 行得 $y + (${u23})t = ${b2} \\implies y = ${y0} ${vyStr}$。
-代入第 1 行得 $x + (${u12})(${y0} - ${u23}t) + (${u13})t = ${b1} \\implies x = ${x0} ${vxStr}$。
+代入第 1 行得 $x + (${u12})(${poly([y0, ""], [-u23, "t"])}) + (${u13})t = ${b1} \\implies x = ${x0} ${vxStr}$。
 整理成向量形式即为 $$${rightStr}$$。`,
           ),
         );
@@ -1705,7 +1705,7 @@ export const gaussianEliminationForNxmSystemsOfEquations: TopicDef = {
           prompt,
           answer: freeCount,
           solution: t(
-            `In an $${m} \\times ${n}$ system with rank $r = ${r}$, the number of pivot columns (basic variables) is $r = ${r}$. The remaining $n - r$ columns correspond to free variables. Here $n = ${n}$ and $r = ${r}$, so the number of free variables is $n - r = ${n} - ${r} = ${freeCount}$.`,
+            `In ${article(m)} $${m} \\times ${n}$ system with rank $r = ${r}$, the number of pivot columns (basic variables) is $r = ${r}$. The remaining $n - r$ columns correspond to free variables. Here $n = ${n}$ and $r = ${r}$, so the number of free variables is $n - r = ${n} - ${r} = ${freeCount}$.`,
             `在秩为 $r = ${r}$ 的 $${m} \\times ${n}$ 系统中，主元列（基本变量）的个数为 $r = ${r}$。其余 $n - r$ 列均对应自由变量。此处 $n = ${n}$ 且 $r = ${r}$，故自由变量个数为 $n - r = ${n} - ${r} = ${freeCount}$。`,
           ),
           wrong: [r, m - r, n - m, freeCount + 1, Math.max(0, freeCount - 1)],
@@ -1903,9 +1903,9 @@ $$E = ${matLatex(E)}, \\quad A = ${matLatex(A)}$$`,
             t(`$$${matLatex(wrongR1)}$$`, `$$${matLatex(wrongR1)}$$`),
           ],
           t(
-            `Left-multiplying by $E = \\begin{pmatrix} 1 & 0 \\\\ ${-k} & 1 \\end{pmatrix}$ executes the row operation $R_2 - ${k} R_1 \\to R_2$ on matrix $A$:
+            `Left-multiplying by $E = \\begin{pmatrix} 1 & 0 \\\\ ${-k} & 1 \\end{pmatrix}$ executes the row operation $${poly([1, "R_2"], [-k, "R_1"])} \\to R_2$ on matrix $A$:
 Row 2 becomes $[${a21} - (${k})(${a11}), ${a22} - (${k})(${a12})] = [${a21 - k * a11}, ${a22 - k * a12}]$. Thus $E A = ${matLatex(EA)}$.`,
-            `左乘矩阵 $E = \\begin{pmatrix} 1 & 0 \\\\ ${-k} & 1 \\end{pmatrix}$ 等价于对矩阵 $A$ 实施行变换 $R_2 - ${k} R_1 \\to R_2$：
+            `左乘矩阵 $E = \\begin{pmatrix} 1 & 0 \\\\ ${-k} & 1 \\end{pmatrix}$ 等价于对矩阵 $A$ 实施行变换 $${poly([1, "R_2"], [-k, "R_1"])} \\to R_2$：
 第 2 行变为 $[${a21} - (${k})(${a11}), ${a22} - (${k})(${a12})] = [${a21 - k * a11}, ${a22 - k * a12}]$。因此 $E A = ${matLatex(EA)}$。`,
           ),
         );
@@ -2371,7 +2371,7 @@ export const findingTheInverseOfAnNxnSquareMatrixUsingRowOperations: TopicDef = 
         const a2 = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
         const a3 = rng.pick([-3, -1, 2, 5]);
         const prompt = t(
-          `During the Gauss-Jordan inversion of an $${n} \\times ${n}$ matrix $A$ with first row $[${a1}, ${a2}, ${a3}, \\dots]$, forward elimination produces a row of zeros in the left block of $[A \\mid I_{${n}}]$. What conclusion must follow?`,
+          `During the Gauss-Jordan inversion of ${article(n)} $${n} \\times ${n}$ matrix $A$ with first row $[${a1}, ${a2}, ${a3}, \\dots]$, forward elimination produces a row of zeros in the left block of $[A \\mid I_{${n}}]$. What conclusion must follow?`,
           `在对首行为 $[${a1}, ${a2}, ${a3}, \\dots]$ 的 $${n} \\times ${n}$ 矩阵 $A$ 实施高斯-约当求逆消元 $[A \\mid I_{${n}}]$ 的过程中，若左侧部分出现了一行全零行，可以得出什么结论？`,
         );
         const rightText = t("Matrix $A$ is singular and has no inverse", "矩阵 $A$ 是奇异矩阵，没有逆矩阵（不可逆）");

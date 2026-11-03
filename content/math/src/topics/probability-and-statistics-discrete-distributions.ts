@@ -1,7 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-import { choiceProblem, numberProblem } from "../problems.ts";
+import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
 
 /** Topics for Unit 3: Discrete Probability Distributions (new topics). */
 export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
@@ -21,8 +21,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
         id: "evaluating-binomial-cdf-small-n",
         title: t("Evaluating the CDF for a symmetric Binomial variable", "计算对称二项分布的累积分布函数值"),
         explanation: t(
-          "For X ~ Binomial(n, 1/2), each outcome has probability (1/2)^n, so F(k) = (1/2^n) ∑_{j=0}^k C(n, j).",
-          "对于 X ~ Binomial(n, 1/2)，每个可能结果的基本概率为 (1/2)^n，故 F(k) = (1/2^n) ∑_{j=0}^k C(n, j)。",
+          "For $X \\sim \\text{Binomial}(n, \\frac{1}{2})$, each outcome has probability $\\left(\\frac{1}{2}\\right)^n$, so $F(k) = \\frac{1}{2^n} \\sum_{j=0}^k \\binom{n}{j}$.",
+          "对于 $X \\sim \\text{Binomial}(n, \\frac{1}{2})$，每个结果的概率为 $\\left(\\frac{1}{2}\\right)^n$，故 $F(k) = \\frac{1}{2^n} \\sum_{j=0}^k \\binom{n}{j}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(3, 12);
@@ -51,8 +51,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
             ),
             answer: Q.of(sumComb, totalOutcomes),
             solution: t(
-              `The probability is $P(X \\le ${k}) = \\sum_{j=0}^{${k}} \\binom{${n}}{j} \\left(\\frac{1}{2}\\right)^{${n}} = \\frac{1}{${totalOutcomes}} \\sum_{j=0}^{${k}} \\binom{${n}}{j}$. The sum of binomial coefficients is $${sumComb}$, so $F(${k}) = \\frac{${sumComb}}{${totalOutcomes}}$.`,
-              `该概率为 $P(X \\le ${k}) = \\sum_{j=0}^{${k}} \\binom{${n}}{j} \\left(\\frac{1}{2}\\right)^{${n}} = \\frac{1}{${totalOutcomes}} \\sum_{j=0}^{${k}} \\binom{${n}}{j}$。二项式系数之和为 $${sumComb}$，因此 $F(${k}) = \\frac{${sumComb}}{${totalOutcomes}}$。`,
+              `The probability is $P(X \\le ${k}) = \\sum_{j=0}^{${k}} \\binom{${n}}{j} \\left(\\frac{1}{2}\\right)^{${n}} = \\frac{1}{${totalOutcomes}} \\sum_{j=0}^{${k}} \\binom{${n}}{j}$. The sum of binomial coefficients is $${sumComb}$, so $F(${k}) = \\frac{${sumComb}}{${totalOutcomes}}${lowestTerms(sumComb, totalOutcomes)}$.`,
+              `该概率为 $P(X \\le ${k}) = \\sum_{j=0}^{${k}} \\binom{${n}}{j} \\left(\\frac{1}{2}\\right)^{${n}} = \\frac{1}{${totalOutcomes}} \\sum_{j=0}^{${k}} \\binom{${n}}{j}$。二项式系数之和为 $${sumComb}$，因此 $F(${k}) = \\frac{${sumComb}}{${totalOutcomes}}${lowestTerms(sumComb, totalOutcomes)}$。`,
             ),
           });
         },
@@ -91,8 +91,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
             ),
             answer: Q.of(tailComb, totalOutcomes),
             solution: t(
-              `Using the complement rule: $P(X > ${k}) = 1 - P(X \\le ${k}) = 1 - \\frac{${sumComb}}{${totalOutcomes}} = \\frac{${tailComb}}{${totalOutcomes}}$.`,
-              `利用对立事件概率法则：$P(X > ${k}) = 1 - P(X \\le ${k}) = 1 - \\frac{${sumComb}}{${totalOutcomes}} = \\frac{${tailComb}}{${totalOutcomes}}$。`,
+              `Using the complement rule: $P(X > ${k}) = 1 - P(X \\le ${k}) = 1 - \\frac{${sumComb}}{${totalOutcomes}} = \\frac{${tailComb}}{${totalOutcomes}}${lowestTerms(tailComb, totalOutcomes)}$.`,
+              `利用对立事件概率法则：$P(X > ${k}) = 1 - P(X \\le ${k}) = 1 - \\frac{${sumComb}}{${totalOutcomes}} = \\frac{${tailComb}}{${totalOutcomes}}${lowestTerms(tailComb, totalOutcomes)}$。`,
             ),
           });
         },
@@ -116,8 +116,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
         id: "evaluating-poisson-cdf-sum",
         title: t("Evaluating the polynomial factor of a Poisson CDF", "计算泊松累积分布函数的多项式因子"),
         explanation: t(
-          "For X ~ Poisson(λ), P(X ≤ 2) = e^{-λ} (1 + λ + λ^2 / 2).",
-          "对于 X ~ Poisson(λ)，P(X ≤ 2) = e^{-λ} (1 + λ + λ^2 / 2)。",
+          "For $X \\sim \\text{Poisson}(\\lambda)$, $P(X \\le 2) = e^{-\\lambda}\\left(1 + \\lambda + \\frac{\\lambda^2}{2}\\right)$.",
+          "对于 $X \\sim \\text{Poisson}(\\lambda)$，$P(X \\le 2) = e^{-\\lambda}\\left(1 + \\lambda + \\frac{\\lambda^2}{2}\\right)$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(1, 30);
@@ -142,8 +142,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
         id: "poisson-at-least-one-event",
         title: t("Calculating the probability of at least one event", "计算至少发生一次事件的概率表达式"),
         explanation: t(
-          "For X ~ Poisson(λ), the probability of at least one occurrence is P(X ≥ 1) = 1 - P(X = 0) = 1 - e^{-λ}.",
-          "对于 X ~ Poisson(λ)，至少发生一次的概率为 P(X ≥ 1) = 1 - P(X = 0) = 1 - e^{-λ}。",
+          "For $X \\sim \\text{Poisson}(\\lambda)$, the probability of at least one occurrence is $P(X \\ge 1) = 1 - P(X = 0) = 1 - e^{-\\lambda}$.",
+          "对于 $X \\sim \\text{Poisson}(\\lambda)$，至少发生一次的概率为 $P(X \\ge 1) = 1 - P(X = 0) = 1 - e^{-\\lambda}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 40);
@@ -189,7 +189,10 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
       {
         id: "evaluating-negative-binomial-mean-and-variance",
         title: t("Evaluating the mean and variance of a negative binomial variable", "计算负二项分布的均值与方差"),
-        explanation: t("E[X] = r / p and Var(X) = r(1 - p) / p^2.", "E[X] = r / p 且 Var(X) = r(1 - p) / p^2。"),
+        explanation: t(
+          "For the number of trials $X$ needed to reach $r$ successes, $E[X] = \\frac{r}{p}$ and $\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2}$.",
+          "对于获得 $r$ 次成功所需的试验次数 $X$，$E[X] = \\frac{r}{p}$，$\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const r = rng.int(2, 10);
           const pDenom = rng.pick([2, 3, 4, 5, 10]);

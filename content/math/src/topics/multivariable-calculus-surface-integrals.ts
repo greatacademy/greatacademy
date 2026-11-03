@@ -1,5 +1,6 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { poly } from "@ga/subject-math";
 import { numberProblem, steps } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -738,18 +739,18 @@ export const calculatingFluxThroughCartesianSurfaces: TopicDef = {
         const flux = dot * W * H;
 
         const prompt = t(
-          `Find the upward flux $\\iint_S \\mathbf{F} \\cdot d\\mathbf{S}$ of $\\mathbf{F} = \\langle ${P}, ${Q}, ${R} \\rangle$ through the plane $z = ${a}x + ${b}y$ above the rectangle $[0, ${W}] \\times [0, ${H}]$.`,
-          `计算向量场 $\\mathbf{F} = \\langle ${P}, ${Q}, ${R} \\rangle$ 穿过位于矩形 $[0, ${W}] \\times [0, ${H}]$ 上方的平面 $z = ${a}x + ${b}y$（向上定向）的通量 $\\iint_S \\mathbf{F} \\cdot d\\mathbf{S}$。`,
+          `Find the upward flux $\\iint_S \\mathbf{F} \\cdot d\\mathbf{S}$ of $\\mathbf{F} = \\langle ${P}, ${Q}, ${R} \\rangle$ through the plane $z = ${poly([a, "x"])} + ${poly([b, "y"])}$ above the rectangle $[0, ${W}] \\times [0, ${H}]$.`,
+          `计算向量场 $\\mathbf{F} = \\langle ${P}, ${Q}, ${R} \\rangle$ 穿过位于矩形 $[0, ${W}] \\times [0, ${H}]$ 上方的平面 $z = ${poly([a, "x"])} + ${poly([b, "y"])}$（向上定向）的通量 $\\iint_S \\mathbf{F} \\cdot d\\mathbf{S}$。`,
         );
         const solution = t(
           steps(
-            `For $z = g(x, y) = ${a}x + ${b}y$, the partials are $g_x = ${a}$ and $g_y = ${b}$.`,
+            `For $z = g(x, y) = ${poly([a, "x"])} + ${poly([b, "y"])}$, the partials are $g_x = ${a}$ and $g_y = ${b}$.`,
             `The upward normal differential is $d\\mathbf{S} = \\langle -g_x, -g_y, 1 \\rangle dA = \\langle -${a}, -${b}, 1 \\rangle dA$.`,
             `Compute the dot product: $\\mathbf{F} \\cdot d\\mathbf{S} = [(${P})(-${a}) + (${Q})(-${b}) + (${R})(1)] dA = (${-P * a - Q * b + R}) dA = ${dot} dA$.`,
             `Integrate over the rectangle of area $W \\times H = ${W * H}$: $\\text{Flux} = ${dot} \\times ${W * H} = ${flux}$.`,
           ),
           steps(
-            `对于平面 $z = g(x, y) = ${a}x + ${b}y$，偏导数为 $g_x = ${a}$，$g_y = ${b}$。`,
+            `对于平面 $z = g(x, y) = ${poly([a, "x"])} + ${poly([b, "y"])}$，偏导数为 $g_x = ${a}$，$g_y = ${b}$。`,
             `向上向量微元为 $d\\mathbf{S} = \\langle -g_x, -g_y, 1 \\rangle dA = \\langle -${a}, -${b}, 1 \\rangle dA$。`,
             `做点积运算：$\\mathbf{F} \\cdot d\\mathbf{S} = [(${P})(-${a}) + (${Q})(-${b}) + (${R})(1)] dA = ${dot} dA$。`,
             `在面积为 $W \\times H = ${W * H}$ 的矩形上积分：通量为 $${dot} \\times ${W * H} = ${flux}$。`,
@@ -796,8 +797,8 @@ export const calculatingFluxThroughClosedSurfaces: TopicDef = {
         const flux = (a + b + c) * vol;
 
         const prompt = t(
-          `Find the total outward flux $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S}$ of $\\mathbf{F} = \\langle ${a}x, ${b}y, ${c}z \\rangle$ across the closed surface of the box $[0, ${L}] \\times [0, ${W}] \\times [0, ${H}]$.`,
-          `计算向量场 $\\mathbf{F} = \\langle ${a}x, ${b}y, ${c}z \\rangle$ 穿过长方体 $[0, ${L}] \\times [0, ${W}] \\times [0, ${H}]$ 闭合外表面的总外向通量 $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S}$。`,
+          `Find the total outward flux $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S}$ of $\\mathbf{F} = \\langle ${poly([a, "x"])}, ${poly([b, "y"])}, ${poly([c, "z"])} \\rangle$ across the closed surface of the box $[0, ${L}] \\times [0, ${W}] \\times [0, ${H}]$.`,
+          `计算向量场 $\\mathbf{F} = \\langle ${poly([a, "x"])}, ${poly([b, "y"])}, ${poly([c, "z"])} \\rangle$ 穿过长方体 $[0, ${L}] \\times [0, ${W}] \\times [0, ${H}]$ 闭合外表面的总外向通量 $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S}$。`,
         );
         const solution = t(
           steps(
@@ -859,18 +860,18 @@ export const theDivergenceTheorem: TopicDef = {
         const ans = div * vol;
 
         const prompt = t(
-          `Use the Divergence Theorem to find the outward flux $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S}$ of $\\mathbf{F} = \\langle ${a}x + y^2, ${b}y + z^2, ${c}z + x^2 \\rangle$ across the boundary of the box $E = [0, ${L}] \\times [0, ${W}] \\times [0, ${H}]$.`,
-          `利用高斯散度定理求向量场 $\\mathbf{F} = \\langle ${a}x + y^2, ${b}y + z^2, ${c}z + x^2 \\rangle$ 穿过长方体 $E = [0, ${L}] \\times [0, ${W}] \\times [0, ${H}]$ 闭合边界的外向通量 $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S}$。`,
+          `Use the Divergence Theorem to find the outward flux $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S}$ of $\\mathbf{F} = \\langle ${poly([a, "x"])} + y^2, ${poly([b, "y"])} + z^2, ${poly([c, "z"])} + x^2 \\rangle$ across the boundary of the box $E = [0, ${L}] \\times [0, ${W}] \\times [0, ${H}]$.`,
+          `利用高斯散度定理求向量场 $\\mathbf{F} = \\langle ${poly([a, "x"])} + y^2, ${poly([b, "y"])} + z^2, ${poly([c, "z"])} + x^2 \\rangle$ 穿过长方体 $E = [0, ${L}] \\times [0, ${W}] \\times [0, ${H}]$ 闭合边界的外向通量 $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S}$。`,
         );
         const solution = t(
           steps(
-            `Calculate the divergence: $\\text{div}\\,\\mathbf{F} = \\frac{\\partial}{\\partial x}(${a}x + y^2) + \\frac{\\partial}{\\partial y}(${b}y + z^2) + \\frac{\\partial}{\\partial z}(${c}z + x^2) = ${a} + ${b} + ${c} = ${div}$.`,
+            `Calculate the divergence: $\\text{div}\\,\\mathbf{F} = \\frac{\\partial}{\\partial x}(${poly([a, "x"])} + y^2) + \\frac{\\partial}{\\partial y}(${poly([b, "y"])} + z^2) + \\frac{\\partial}{\\partial z}(${poly([c, "z"])} + x^2) = ${a} + ${b} + ${c} = ${div}$.`,
             `By the Divergence Theorem, $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iiint_E \\text{div}\\,\\mathbf{F}\\,dV = \\iiint_E ${div}\\,dV$.`,
             `The volume of the box is $L \\times W \\times H = ${L} \\times ${W} \\times ${H} = ${vol}$.`,
             `Compute the integral: $${div} \\times ${vol} = ${ans}$.`,
           ),
           steps(
-            `计算向量场的散度：$\\text{div}\\,\\mathbf{F} = \\frac{\\partial}{\\partial x}(${a}x + y^2) + \\frac{\\partial}{\\partial y}(${b}y + z^2) + \\frac{\\partial}{\\partial z}(${c}z + x^2) = ${a} + ${b} + ${c} = ${div}$。`,
+            `计算向量场的散度：$\\text{div}\\,\\mathbf{F} = \\frac{\\partial}{\\partial x}(${poly([a, "x"])} + y^2) + \\frac{\\partial}{\\partial y}(${poly([b, "y"])} + z^2) + \\frac{\\partial}{\\partial z}(${poly([c, "z"])} + x^2) = ${a} + ${b} + ${c} = ${div}$。`,
             `由高斯散度定理，$\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iiint_E \\text{div}\\,\\mathbf{F}\\,dV = ${div} \\iiint_E 1\\,dV$。`,
             `长方体体积为 $L \\times W \\times H = ${L} \\times ${W} \\times ${H} = ${vol}$。`,
             `相乘得：$${div} \\times ${vol} = ${ans}$。`,
@@ -915,18 +916,18 @@ export const stokesTheorem: TopicDef = {
         const ans = curlZ * area;
 
         const prompt = t(
-          `Use Stokes' Theorem to evaluate $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle -${a}y, ${a}x, 0 \\rangle$ along the counterclockwise boundary $C$ of the rectangle $[0, ${W}] \\times [0, ${H}]$ in the $xy$-plane.`,
-          `利用斯托克斯定理计算 $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$，其中 $\\mathbf{F} = \\langle -${a}y, ${a}x, 0 \\rangle$，$C$ 为 $xy$ 平面内矩形 $[0, ${W}] \\times [0, ${H}]$ 的逆时针边界。`,
+          `Use Stokes' Theorem to evaluate $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle -${poly([a, "y"])}, ${poly([a, "x"])}, 0 \\rangle$ along the counterclockwise boundary $C$ of the rectangle $[0, ${W}] \\times [0, ${H}]$ in the $xy$-plane.`,
+          `利用斯托克斯定理计算 $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$，其中 $\\mathbf{F} = \\langle -${poly([a, "y"])}, ${poly([a, "x"])}, 0 \\rangle$，$C$ 为 $xy$ 平面内矩形 $[0, ${W}] \\times [0, ${H}]$ 的逆时针边界。`,
         );
         const solution = t(
           steps(
-            `Calculate the curl of $\\mathbf{F}$: $\\text{curl}\\,\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\langle 0, 0, \\frac{\\partial}{\\partial x}(${a}x) - \\frac{\\partial}{\\partial y}(-${a}y) \\rangle = \\langle 0, 0, ${a} - (-${a}) \\rangle = \\langle 0, 0, ${curlZ} \\rangle$.`,
+            `Calculate the curl of $\\mathbf{F}$: $\\text{curl}\\,\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\langle 0, 0, \\frac{\\partial}{\\partial x}(${poly([a, "x"])}) - \\frac{\\partial}{\\partial y}(-${poly([a, "y"])}) \\rangle = \\langle 0, 0, ${a} - (-${a}) \\rangle = \\langle 0, 0, ${curlZ} \\rangle$.`,
             `By Stokes' Theorem, $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_S (\\text{curl}\\,\\mathbf{F}) \\cdot \\mathbf{k}\\,dS$.`,
             `Since the normal is $\\mathbf{k}$, $(\\text{curl}\\,\\mathbf{F}) \\cdot \\mathbf{k} = ${curlZ}$.`,
             `Multiply by the area of the rectangle $W \\times H = ${W} \\times ${H} = ${area}$: $${curlZ} \\times ${area} = ${ans}$.`,
           ),
           steps(
-            `计算向量场的旋度：$\\text{curl}\\,\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\langle 0, 0, \\frac{\\partial}{\\partial x}(${a}x) - \\frac{\\partial}{\\partial y}(-${a}y) \\rangle = \\langle 0, 0, ${curlZ} \\rangle$。`,
+            `计算向量场的旋度：$\\text{curl}\\,\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\langle 0, 0, \\frac{\\partial}{\\partial x}(${poly([a, "x"])}) - \\frac{\\partial}{\\partial y}(-${poly([a, "y"])}) \\rangle = \\langle 0, 0, ${curlZ} \\rangle$。`,
             `由斯托克斯定理，$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_S (\\text{curl}\\,\\mathbf{F}) \\cdot \\mathbf{k}\\,dS$。`,
             `平面向上的法向为 $\\mathbf{k}$，点积为 $(\\text{curl}\\,\\mathbf{F}) \\cdot \\mathbf{k} = ${curlZ}$。`,
             `乘以矩形面积 $W \\times H = ${W} \\times ${H} = ${area}$：$${curlZ} \\times ${area} = ${ans}$。`,

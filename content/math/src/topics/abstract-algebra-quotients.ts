@@ -2,7 +2,7 @@ import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
-import { numberProblem } from "../problems.ts";
+import { article, numberProblem } from "../problems.ts";
 import {
   divisors,
   type Fact,
@@ -1445,10 +1445,11 @@ export const theCenterOfAGroup: TopicDef = {
         "由于 $sr^k = r^{-k}s$，旋转 $r^k$ 仅当 $r^k = r^{-k}$，即 $2k \\equiv 0 \\pmod n$ 时与 $s$ 可交换。$n \\ge 3$ 时反射 $r^ks$ 从不与 $r$ 可交换。",
       ),
       generate(rng) {
-        const n = rng.int(3, 24);
-        const reflection = rng.bool(0.25);
-        const k = n % 2 === 0 && rng.bool(0.4) ? n / 2 : rng.int(1, n - 1);
-        const holds = !reflection && mod(2 * k, n) === 0;
+        const holds = rng.bool();
+        const n = holds ? 2 * rng.int(2, 12) : rng.int(3, 24);
+        const reflection = !holds && rng.bool(0.4);
+        let k = holds ? n / 2 : rng.int(1, n - 1);
+        while (!holds && !reflection && mod(2 * k, n) === 0) k = rng.int(1, n - 1);
         return factProblem({
           prompt: t(
             `Is $${reflection ? `r^{${k}}s` : `r^{${k}}`}$ in the center of the dihedral group $D_{${n}}$ of order $${2 * n}$?`,
@@ -1547,7 +1548,7 @@ export const theCentralizerOfASubgroup: TopicDef = {
           solution:
             k === n
               ? t(
-                  `An $${n}$-cycle in $S_{${n}}$ commutes only with its $${n}$ powers.`,
+                  `${article(n, true)} $${n}$-cycle in $S_{${n}}$ commutes only with its $${n}$ powers.`,
                   `$S_{${n}}$ 中的 $${n}$-轮换只与它的 $${n}$ 个幂可交换。`,
                 )
               : t(

@@ -2013,11 +2013,17 @@ export const systemsOfLinearInequalities: TopicDef = {
       ),
       generate(rng) {
         const [q1, q2] = crossingPair(rng, allOps);
-        const x = rng.int(-4, 4);
-        const v1 = q1.m.mul(Q.of(x)).add(Q.of(q1.b));
-        const v2 = q2.m.mul(Q.of(x)).add(Q.of(q2.b));
-        const base = rng.pick([v1, v2]);
-        const y = base.isInteger() ? base.add(Q.of(rng.int(-2, 2))) : Q.of(Math.round(base.toNumber()) + rng.int(-1, 1));
+        const want = rng.bool();
+        let x: number;
+        let y: Q;
+        let tries = 0;
+        do {
+          x = rng.int(-4, 4);
+          const v1 = q1.m.mul(Q.of(x)).add(Q.of(q1.b));
+          const v2 = q2.m.mul(Q.of(x)).add(Q.of(q2.b));
+          const base = rng.pick([v1, v2]);
+          y = base.isInteger() ? base.add(Q.of(rng.int(-2, 2))) : Q.of(Math.round(base.toNumber()) + rng.int(-1, 1));
+        } while ((satisfies(q1, x, y) && satisfies(q2, x, y)) !== want && ++tries < 40);
         const [ok1, ok2] = [satisfies(q1, x, y), satisfies(q2, x, y)];
         const [c1, c2] = [checkPoint(q1, x, y), checkPoint(q2, x, y)];
         const ok = ok1 && ok2;

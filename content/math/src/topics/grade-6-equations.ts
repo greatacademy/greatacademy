@@ -657,7 +657,7 @@ export const modelingRealWorldProblemsUsingOneStepEquations = topic(
   "modeling-real-world-problems-using-one-step-equations",
   t("Modeling Real-World Problems Using One-Step Equations", "用一步方程表示实际问题"),
   t(
-    "To model a situation with an equation, name the unknown with a variable and write the relationship the story describes. If a plant grew 5 cm and is now 30 cm tall, its starting height h satisfies h + 5 = 30. If 6 equal tickets cost $48, the price p satisfies 6p = 48.",
+    "To model a situation with an equation, name the unknown with a variable and write the relationship the story describes. If a plant grew 5 cm and is now 30 cm tall, its starting height h satisfies h + 5 = 30. If 6 equal tickets cost \\$48, the price p satisfies 6p = 48.",
     "用方程表示情境时，先用变量表示未知量，再写出题目描述的数量关系。一株植物长高了 5 厘米，现在高 30 厘米，原来的高度 h 满足 h + 5 = 30。6 张同价的票共 48 美元，单价 p 满足 6p = 48。",
   ),
   ["one-step-subtraction-equations", "one-step-division-equations", "constructing-algebraic-expressions"],
@@ -915,7 +915,7 @@ export const modelingRealWorldProblemsUsingInequalities = topic(
   "modeling-real-world-problems-using-inequalities",
   t("Modeling Real-World Problems Using Inequalities", "用不等式表示实际问题"),
   t(
-    "Words such as “at least”, “at most”, “more than” and “fewer than” describe inequalities. “At least 48” includes 48, so it is ≥ 48; “at most 30” is ≤ 30; “more than 12” is > 12; “fewer than 5” is < 5. When each item has a cost, the total cost is the price times the number of items: at most $50 for tickets at $8 each is 8t ≤ 50.",
+    "Words such as “at least”, “at most”, “more than” and “fewer than” describe inequalities. “At least 48” includes 48, so it is ≥ 48; “at most 30” is ≤ 30; “more than 12” is > 12; “fewer than 5” is < 5. When each item has a cost, the total cost is the price times the number of items: at most \\$50 for tickets at \\$8 each is 8t ≤ 50.",
     "“至少”“至多”“多于”“少于”等词语描述的是不等关系。“至少 48”包括 48，所以是 ≥ 48；“至多 30”是 ≤ 30；“多于 12”是 > 12；“少于 5”是 < 5。每件物品有价格时，总价是单价乘件数：每张票 8 美元，最多花 50 美元，就是 8t ≤ 50。",
   ),
   ["representing-inequalities-on-number-lines", "constructing-algebraic-expressions"],

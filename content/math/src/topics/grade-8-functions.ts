@@ -2,7 +2,7 @@ import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content
 import { same, t } from "@ga/content";
 import { linear, num, type PlaneMark, plane, Q } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, pointLatex, steps, yesNo } from "../problems.ts";
+import { article, choiceProblem, numberProblem, pointLatex, steps, yesNo } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
 
 // 8th Grade Math, functions: describing a relationship from its graph, telling linear functions from nonlinear ones,
@@ -401,7 +401,7 @@ const situations: readonly Situation[] = [
   },
   {
     setup: t("A taxi charges a fixed fee plus the same amount for every mile.", "一辆出租车收取固定费用，另外每英里收取相同的费用。"),
-    at: (x, y) => t(`A $${x}$-mile ride costs $${y}$ dollars`, `乘坐 $${x}$ 英里需要 $${y}$ 美元`),
+    at: (x, y) => t(`${article(x, true)} $${x}$-mile ride costs $${y}$ dollars`, `乘坐 $${x}$ 英里需要 $${y}$ 美元`),
     start: t("What is the fixed fee, in dollars?", "固定费用是多少美元？"),
     input: t("distance", "路程"),
     rate: t("dollars per mile", "美元每英里"),

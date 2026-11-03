@@ -2,7 +2,7 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@g
 import { same, t } from "@ga/content";
 import { dec, type Mark, type PlaneMark, type PlaneView, type Point, plane, Q, radical, sketch } from "@ga/subject-math";
 
-import { choiceProblem, numberProblem, pointLatex, radicalProblem, steps, yesNo } from "../problems.ts";
+import { article, choiceProblem, numberProblem, pointLatex, radicalProblem, steps, yesNo } from "../problems.ts";
 import {
   arc,
   boxMarks,
@@ -615,12 +615,12 @@ const stories: readonly Story[] = [
     ask: (want, v, u, uz) =>
       want === "rise"
         ? t(
-            `A $${v.hyp}$-${u} ladder leans against a wall with its foot $${v.run}$ ${u} from the wall. How high up the wall does the ladder reach?`,
+            `${article(v.hyp, true)} $${v.hyp}$-${u} ladder leans against a wall with its foot $${v.run}$ ${u} from the wall. How high up the wall does the ladder reach?`,
             `一架长 $${v.hyp}$ ${uz}的梯子靠在墙上，梯脚离墙 $${v.run}$ ${uz}。梯子顶端离地面多高？`,
           )
         : want === "run"
           ? t(
-              `A $${v.hyp}$-${u} ladder leans against a wall and reaches $${v.rise}$ ${u} up the wall. How far is the foot of the ladder from the wall?`,
+              `${article(v.hyp, true)} $${v.hyp}$-${u} ladder leans against a wall and reaches $${v.rise}$ ${u} up the wall. How far is the foot of the ladder from the wall?`,
               `一架长 $${v.hyp}$ ${uz}的梯子靠在墙上，顶端离地面 $${v.rise}$ ${uz}。梯脚离墙多远？`,
             )
           : t(
@@ -635,16 +635,16 @@ const stories: readonly Story[] = [
     ask: (want, v, u, uz) =>
       want === "hyp"
         ? t(
-            `A wire runs from the top of a $${v.rise}$-${u} pole to a stake in the ground $${v.run}$ ${u} from the foot of the pole. How long is the wire?`,
+            `A wire runs from the top of ${article(v.rise)} $${v.rise}$-${u} pole to a stake in the ground $${v.run}$ ${u} from the foot of the pole. How long is the wire?`,
             `一根拉线从一根高 $${v.rise}$ ${uz}的电线杆顶端拉到地面上的木桩，木桩离杆脚 $${v.run}$ ${uz}。拉线有多长？`,
           )
         : want === "rise"
           ? t(
-              `A $${v.hyp}$-${u} wire runs from the top of a pole to a stake in the ground $${v.run}$ ${u} from the foot of the pole. How tall is the pole?`,
+              `${article(v.hyp, true)} $${v.hyp}$-${u} wire runs from the top of a pole to a stake in the ground $${v.run}$ ${u} from the foot of the pole. How tall is the pole?`,
               `一根长 $${v.hyp}$ ${uz}的拉线从电线杆顶端拉到地面上的木桩，木桩离杆脚 $${v.run}$ ${uz}。电线杆有多高？`,
             )
           : t(
-              `A $${v.hyp}$-${u} wire runs from the top of a $${v.rise}$-${u} pole to a stake in the ground. How far is the stake from the foot of the pole?`,
+              `${article(v.hyp, true)} $${v.hyp}$-${u} wire runs from the top of ${article(v.rise)} $${v.rise}$-${u} pole to a stake in the ground. How far is the stake from the foot of the pole?`,
               `一根长 $${v.hyp}$ ${uz}的拉线从一根高 $${v.rise}$ ${uz}的电线杆顶端拉到地面上的木桩。木桩离杆脚多远？`,
             ),
   },

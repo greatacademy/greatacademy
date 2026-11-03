@@ -503,8 +503,8 @@ export const theProductRuleForExponents = topic(
             positive(Q.of(a + b), sumF),
           ],
           solution: t(
-            `Multiply the coefficients and add the exponents of each variable:${steps(`${a * b}x^{${m} + ${signed(n)}}${p + q ? `y^{${p} + ${q}}` : ""} = ${answer}`)}`,
-            `系数相乘，同一个字母的指数相加：${steps(`${a * b}x^{${m} + ${signed(n)}}${p + q ? `y^{${p} + ${q}}` : ""} = ${answer}`)}`,
+            `Multiply the coefficients and add the exponents of each variable:${steps(`${a * b === 1 ? "" : a * b === -1 ? "-" : a * b}x^{${m} + ${signed(n)}}${p + q ? `y^{${p} + ${q}}` : ""} = ${answer}`)}`,
+            `系数相乘，同一个字母的指数相加：${steps(`${a * b === 1 ? "" : a * b === -1 ? "-" : a * b}x^{${m} + ${signed(n)}}${p + q ? `y^{${p} + ${q}}` : ""} = ${answer}`)}`,
           ),
         });
       },

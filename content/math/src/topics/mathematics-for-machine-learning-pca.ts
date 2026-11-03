@@ -20,8 +20,8 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
         id: "evaluating-pca-total-variance",
         title: t("Computing total variance and proportion of variance explained", "计算总方差与方差解释比例"),
         explanation: t(
-          "Total variance is Tr(S) = ∑ λ_i. The proportion of variance explained by the first k components is (∑_{i=1}^k λ_i) / (∑_{i=1}^d λ_i).",
-          "总方差为 Tr(S) = ∑ λ_i。前 k 个主成分所解释的方差比例为 (∑_{i=1}^k λ_i) / (∑_{i=1}^d λ_i)。",
+          "The total variance is $\\operatorname{Tr}(S) = \\sum_i \\lambda_i$. The proportion of variance explained by the first $k$ components is $\\frac{\\sum_{i=1}^k \\lambda_i}{\\sum_{i=1}^d \\lambda_i}$.",
+          "总方差为 $\\operatorname{Tr}(S) = \\sum_i \\lambda_i$。前 $k$ 个主成分所解释的方差比例为 $\\frac{\\sum_{i=1}^k \\lambda_i}{\\sum_{i=1}^d \\lambda_i}$。",
         ),
         generate: (rng: Rng): Problem => {
           const kind = rng.int(0, 1);
@@ -89,8 +89,8 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
         id: "finding-principal-component-eigenvalues",
         title: t("Finding dominant eigenvalues of covariance matrices", "求协方差矩阵的主特征值"),
         explanation: t(
-          "For a 2x2 covariance matrix S, eigenvalues solve det(S - λI) = 0. The first principal component has variance λ_1 = max(λ_1, λ_2).",
-          "对于 2x2 协方差矩阵 S，特征值由方程 det(S - λI) = 0 确定。第一主成分的方差为最大特征值 λ_1。",
+          "For a $2 \\times 2$ covariance matrix $S$, the eigenvalues solve $\\det(S - \\lambda I) = 0$. The first principal component has the larger eigenvalue as its variance: $\\lambda_1 = \\max(\\lambda_1, \\lambda_2)$.",
+          "对于 $2 \\times 2$ 协方差矩阵 $S$，特征值由 $\\det(S - \\lambda I) = 0$ 确定。第一主成分的方差为较大的特征值 $\\lambda_1 = \\max(\\lambda_1, \\lambda_2)$。",
         ),
         generate: (rng: Rng): Problem => {
           // Construct 2x2 symmetric matrix with integer eigenvalues
@@ -150,8 +150,8 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
         id: "svd-singular-value-to-pca-variance",
         title: t("Relating singular values of centered data to principal component variances", "由中心化数据的奇异值计算主成分方差"),
         explanation: t(
-          "λ_i = σ_i^2 / (n - 1). Given singular value σ_i of centered X_c of size n × d, the variance along the i-th principal component is σ_i^2 / (n - 1).",
-          "λ_i = σ_i^2 / (n - 1)。已知容量为 n × d 的中心化数据矩阵 X_c 的奇异值 σ_i，沿第 i 个主成分的方差为 σ_i^2 / (n - 1)。",
+          "Given the singular value $\\sigma_i$ of the centered $n \\times d$ data matrix $X_c$, the variance along the $i$-th principal component is $\\lambda_i = \\frac{\\sigma_i^2}{n - 1}$.",
+          "已知 $n \\times d$ 中心化数据矩阵 $X_c$ 的奇异值 $\\sigma_i$，沿第 $i$ 个主成分的方差为 $\\lambda_i = \\frac{\\sigma_i^2}{n - 1}$。",
         ),
         generate: (rng: Rng): Problem => {
           const sampleN = rng.int(21, 201);
@@ -192,8 +192,8 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
         id: "computing-principal-component-scores",
         title: t("Computing principal component projection scores", "计算主成分投影得分"),
         explanation: t(
-          "z_1 = v_1^T x_c = ∑_{i=1}^d v_{1i} x_{ci}. The projected score z_1 represents the coordinate along the principal axis.",
-          "z_1 = v_1^T x_c = ∑_{i=1}^d v_{1i} x_{ci}。投影得分 z_1 表示沿主成分轴的坐标。",
+          "$z_1 = \\mathbf{v}_1^T \\mathbf{x}_c = \\sum_{i=1}^d v_{1i} x_{ci}$. The projected score $z_1$ is the coordinate along the first principal axis.",
+          "$z_1 = \\mathbf{v}_1^T \\mathbf{x}_c = \\sum_{i=1}^d v_{1i} x_{ci}$。投影得分 $z_1$ 表示沿第一主成分轴的坐标。",
         ),
         generate: (rng: Rng): Problem => {
           // Unit vector with integer / simple rational components

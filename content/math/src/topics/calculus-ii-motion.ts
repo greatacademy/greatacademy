@@ -1,6 +1,6 @@
 import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { paren, Q } from "@ga/subject-math";
 
 import { functionProblem, numberProblem } from "../problems.ts";
 import { oneOf, type Poly, pAt, pDer, pLatex } from "./calculus-common.ts";
@@ -54,8 +54,8 @@ function velocityAtATime(rng: Rng) {
     unit: "m/s",
     wrong: [change, pAt(a, T), v0 + pAt(a, T) * T],
     solution: t(
-      `$v(${T}) = v(0) + ${int(0, T, `(${tL(a)})`, "t")} = ${v0} + ${bracketT(a, 0, T)} = ${v0} + ${change.toLatex()} = ${answer}$ m/s.`,
-      `$v(${T}) = v(0) + ${int(0, T, `(${tL(a)})`, "t")} = ${v0} + ${bracketT(a, 0, T)} = ${v0} + ${change.toLatex()} = ${answer}$ 米/秒。`,
+      `$v(${T}) = v(0) + ${int(0, T, `(${tL(a)})`, "t")} = ${v0} + ${bracketT(a, 0, T)} = ${v0} + ${paren(change)} = ${answer}$ m/s.`,
+      `$v(${T}) = v(0) + ${int(0, T, `(${tL(a)})`, "t")} = ${v0} + ${bracketT(a, 0, T)} = ${v0} + ${paren(change)} = ${answer}$ 米/秒。`,
     ),
   });
 }
