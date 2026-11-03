@@ -313,7 +313,7 @@ export const equationsWithVariablesOnBothSides: TopicDef = {
 
 export const equationsWithParentheses: TopicDef = {
   id: "equations-with-parentheses",
-  title: t("Equations with Parentheses", "含括号的方程"),
+  title: t("Solving Linear Equations Using the Distributive Property", "用分配律解一次方程"),
   summary: t("Expand parentheses, then solve linear equations.", "先去括号，再解一元一次方程。"),
   prerequisites: ["equations-with-variables-on-both-sides", "simplifying-expressions"],
   encompasses: [

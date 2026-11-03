@@ -892,7 +892,7 @@ const endsInZeroFacts = [
 
 export const multiplyingNumbersEndingInZeros: TopicDef = {
   id: "multiplying-numbers-ending-in-zeros",
-  title: t("Multiplying Numbers Ending in Zeros", "末尾有 0 的数相乘"),
+  title: t("Multiplying Whole Numbers Ending in Zeros", "末尾有 0 的整数乘法"),
   summary: t(
     "Multiply numbers such as 30 × 400 with a basic fact and the pattern of zeros.",
     "用乘法口诀和添 0 的规律计算 30 × 400 这样的乘法。",
@@ -985,7 +985,7 @@ export const multiplyingNumbersEndingInZeros: TopicDef = {
 
 export const multiplyingUsingRepeatedAddition: TopicDef = {
   id: "multiplying-using-repeated-addition",
-  title: t("Multiplying Using Repeated Addition", "用连加做乘法"),
+  title: t("Multiplying Numbers Using Repeated Addition", "用连加做乘法"),
   summary: t(
     "Multiply by adding equal groups, and use a known product to find the next one.",
     "通过把相同的数连加来做乘法，并用已知的积求下一个积。",
@@ -1074,7 +1074,7 @@ export const multiplyingUsingRepeatedAddition: TopicDef = {
 
 export const multiplyingUsingRepeatedSubtraction: TopicDef = {
   id: "multiplying-using-repeated-subtraction",
-  title: t("Multiplying Using Repeated Subtraction", "用减去一组的方法做乘法"),
+  title: t("Multiplying Numbers Using Repeated Subtraction", "用连减做乘法"),
   summary: t(
     "Multiply by a number just below a ten or hundred by taking away a group: 9 × 24 = 10 × 24 − 24.",
     "乘一个接近整十或整百的数时，先多乘再减去一组：9 × 24 = 10 × 24 − 24。",
@@ -2316,7 +2316,7 @@ export const interpretingRemaindersInContext: TopicDef = {
 
 export const dividingBy10100And1000: TopicDef = {
   id: "dividing-by-10-100-and-1000",
-  title: t("Dividing by 10, 100, and 1,000", "除以 10、100 和 1,000"),
+  title: t("Dividing by 10, 100, and 1,000 Using the Pattern of Zeros", "用 0 的规律除以 10、100 和 1000"),
   summary: t(
     "Divide numbers ending in zeros by 10, 100 and 1,000, and by numbers such as 60 and 400.",
     "用末尾有 0 的数除以 10、100、1,000，以及除以 60、400 这样的数。",
@@ -2385,7 +2385,7 @@ export const dividingBy10100And1000: TopicDef = {
 
 export const dividingByOneDigitNumbersUsingMultiplication: TopicDef = {
   id: "dividing-by-one-digit-numbers-using-multiplication",
-  title: t("Dividing by One-Digit Numbers Using Multiplication", "用乘法做一位数除法"),
+  title: t("Dividing by One-Digit Numbers by Connecting Multiplication and Division", "联系乘法和除法除以一位数"),
   summary: t("Divide a two-digit number by a one-digit number by finding the missing factor.", "通过求未知因数，计算两位数除以一位数。"),
   prerequisites: ["relationship-between-multiplication-and-division", "two-digit-by-one-digit-multiplication-using-place-value"],
   encompasses: [
@@ -2447,7 +2447,7 @@ export const dividingByOneDigitNumbersUsingMultiplication: TopicDef = {
 
 export const dividingUsingPlaceValueStrategies: TopicDef = {
   id: "dividing-using-place-value-strategies",
-  title: t("Dividing Using Place-Value Strategies", "用数位策略做除法"),
+  title: t("Dividing Numbers Using Place-Value Strategies", "用位值策略做除法"),
   summary: t(
     "Divide a multi-digit number by a one-digit number by splitting the dividend into parts that divide evenly.",
     "把被除数拆成能整除的几部分，计算多位数除以一位数。",

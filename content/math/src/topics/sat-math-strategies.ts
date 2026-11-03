@@ -6,7 +6,7 @@ import { choiceProblem, numberProblem } from "../problems.ts";
 /** satLinearSystemsUnknownConstants finds unknown coefficients in linear systems with special solution sets. */
 export const satLinearSystemsUnknownConstants: TopicDef = {
   id: "sat-linear-systems-unknown-constants",
-  title: t("Linear Systems with Unknown Constants", "含未知常数的线性方程组"),
+  title: t("Determining Unknown Parameters in Systems of Linear Equations", "确定线性方程组中的未知参数"),
   summary: t(
     "Determine unknown constants that result in a linear system having no solution or infinitely many solutions.",
     "求解使线性方程组无解或有无穷多解的未知常数。",
@@ -237,7 +237,7 @@ export const satMarginOfErrorInterpretation: TopicDef = {
 /** satExponentialModelRewriting interprets growth factors and rewritten exponential equations. */
 export const satExponentialModelRewriting: TopicDef = {
   id: "sat-exponential-model-rewriting",
-  title: t("Rewriting Exponential Growth and Decay Models", "改写指数增长与衰减模型"),
+  title: t("Working With Equivalent Forms of Exponential Functions", "指数函数的等价形式"),
   summary: t(
     "Rewrite exponential equations and interpret percent growth or decay rates over different time periods.",
     "改写指数方程并解释不同时间周期下的百分比增长率或衰减率。",
