@@ -974,8 +974,8 @@ export const determiningUnknownParametersInQuadraticEquationsWithNoRealSolutions
       id: "no-real-solutions-coefficient-of-x",
       title: t("A parameter in the coefficient of $x$", "参数在一次项系数中"),
       explanation: t(
-        "For $2x^{2} + kx + 8 = 0$ to have no real solutions:\n\n$$k^{2} - 4 \\cdot 2 \\cdot 8 < 0 \\implies k^{2} < 64 \\implies -8 < k < 8$$\n\nThe answer is $(-8, 8)$.",
-        "要使 $2x^{2} + kx + 8 = 0$ 没有实数解：\n\n$$k^{2} - 4 \\cdot 2 \\cdot 8 < 0 \\implies k^{2} < 64 \\implies -8 < k < 8$$\n\n答案是 $(-8, 8)$。",
+        "A quadratic equation has no real solutions exactly when its discriminant $b^{2} - 4ac$ is negative. When the unknown parameter sits in the coefficient of $x$, the condition becomes an inequality in that parameter, which you solve like any other quadratic inequality.\n\nFor $2x^{2} + kx + 8 = 0$ to have no real solutions:\n\n$$k^{2} - 4 \\cdot 2 \\cdot 8 < 0 \\implies k^{2} < 64 \\implies -8 < k < 8$$\n\nThe answer is $(-8, 8)$.",
+        "二次方程没有实数解，当且仅当它的判别式 $b^{2} - 4ac$ 为负。当未知参数出现在 $x$ 的系数中时，这个条件就成为关于参数的不等式，像解其他二次不等式一样求解即可。\n\n要使 $2x^{2} + kx + 8 = 0$ 没有实数解：\n\n$$k^{2} - 4 \\cdot 2 \\cdot 8 < 0 \\implies k^{2} < 64 \\implies -8 < k < 8$$\n\n答案是 $(-8, 8)$。",
       ),
       generate: (rng) => linearParameter(rng, "none"),
     },

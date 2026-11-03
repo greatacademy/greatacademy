@@ -197,6 +197,10 @@ import { radicalExpressionTopics } from "./topics/radical-expressions.ts";
 import { radicalTopics } from "./topics/radicals.ts";
 import { rationalExpressionTopics } from "./topics/rational-expressions.ts";
 import { ratioTopics } from "./topics/ratios.ts";
+import { satFundamentalsAdvancedTopics } from "./topics/sat-fundamentals-advanced.ts";
+import { satFundamentalsAlgebraTopics } from "./topics/sat-fundamentals-algebra.ts";
+import { satFundamentalsDataTopics } from "./topics/sat-fundamentals-data.ts";
+import { satFundamentalsGeometryTopics } from "./topics/sat-fundamentals-geometry.ts";
 import { satMathStrategyTopics } from "./topics/sat-math-strategies.ts";
 import { sequenceTopics } from "./topics/sequences.ts";
 import { statisticsTopics } from "./topics/statistics.ts";
@@ -406,6 +410,10 @@ export const math: SubjectDef = {
     ...mathematicsForMachineLearningMatrixCalculusTopics,
     ...mathematicsForMachineLearningContinuousConditioningTopics,
     ...grade6to8FoundationTopics,
+    ...satFundamentalsAlgebraTopics,
+    ...satFundamentalsGeometryTopics,
+    ...satFundamentalsAdvancedTopics,
+    ...satFundamentalsDataTopics,
     ...satMathStrategyTopics,
   ],
   courses: mathCourses,
