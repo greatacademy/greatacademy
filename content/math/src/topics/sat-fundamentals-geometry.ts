@@ -1403,6 +1403,54 @@ export const compositeSolids = topic(
 // ---------------------------------------------------------------------------
 // Circles and trigonometry
 
+/** radiusTriangleFigure shows two radii OA and OB with central angle θ and the chord AB, marking the equal radii and the equal base angles. */
+const radiusTriangleFigure: Figure = (() => {
+  const [a, b] = [on(200, 3), on(320, 3)];
+  return {
+    svg: sketch([
+      circleAt(3),
+      { kind: "polygon", points: [[0, 0], a, b] },
+      { kind: "ticks", a: [0, 0], b: a, count: 1 },
+      { kind: "ticks", a: [0, 0], b: b, count: 1 },
+      { kind: "arc", vertex: [0, 0], from: a, to: b, label: "θ", accent: true },
+      { kind: "arc", vertex: a, from: b, to: [0, 0] },
+      { kind: "arc", vertex: b, from: [0, 0], to: a },
+      { kind: "label", at: [0, 0], text: "O", dir: "n" },
+      { kind: "label", at: a, text: "A", dir: "sw" },
+      { kind: "label", at: b, text: "B", dir: "se" },
+    ]),
+    alt: t(
+      "A circle with center O and points A and B on it. The radii OA and OB are marked equal and form a central angle θ; triangle OAB is isosceles, with equal base angles at A and B.",
+      "以 O 为圆心的圆上有点 A、B。半径 OA 与 OB 标记为相等，夹圆心角 θ；△OAB 是等腰三角形，A、B 处的两个底角相等。",
+    ),
+  };
+})();
+
+/** chord120Figure shows a 120° central angle split by the perpendicular from the center into two 30-60-90 triangles. */
+const chord120Figure: Figure = (() => {
+  const [a, b] = [on(210, 3), on(330, 3)];
+  const m: Point = [0, -1.5];
+  return {
+    svg: sketch([
+      circleAt(3),
+      { kind: "polygon", points: [[0, 0], a, b] },
+      { kind: "segment", a: [0, 0], b: m, dashed: true },
+      { kind: "right", vertex: m, from: b, to: [0, 0] },
+      { kind: "arc", vertex: [0, 0], from: m, to: b, label: "60°", accent: true },
+      { kind: "side", a: [0, 0], b: a, text: "r" },
+      { kind: "label", at: [0, -0.75], text: "r/2", dir: "w" },
+      { kind: "label", at: [1.3, -1.5], text: "r√3/2", dir: "s" },
+      { kind: "label", at: [0, 0], text: "O", dir: "n" },
+      { kind: "label", at: a, text: "A", dir: "sw" },
+      { kind: "label", at: b, text: "B", dir: "se" },
+    ]),
+    alt: t(
+      "A circle with center O and a chord AB whose central angle is 120°. The perpendicular from O to AB bisects the angle and the chord, making two 30-60-90 triangles with hypotenuse r, short leg r/2 and long leg r√3/2, so AB = r√3.",
+      "以 O 为圆心的圆中，弦 AB 所对的圆心角为 120°。从 O 向 AB 作垂线，平分该角和弦，得到两个 30-60-90 三角形：斜边 r，短直角边 r/2，长直角边 r√3/2，所以 AB = r√3。",
+    ),
+  };
+})();
+
 /** isoscelesTrianglesInCircles uses the isosceles triangle formed by two radii and a chord. */
 export const isoscelesTrianglesInCircles = topic(
   "isosceles-triangles-in-circles",
@@ -1444,6 +1492,7 @@ export const isoscelesTrianglesInCircles = topic(
           ),
         });
       },
+      radiusTriangleFigure,
     ),
     kp(
       "chord-lengths-from-special-angles",
@@ -1480,6 +1529,7 @@ export const isoscelesTrianglesInCircles = topic(
           ),
         });
       },
+      chord120Figure,
     ),
   ],
 );
