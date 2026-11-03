@@ -261,6 +261,106 @@ export const solvingProblemsDescribingCongruentTriangles = topic(
   ],
 );
 
+/** criteriaFigure marks the three equal parts each congruence criterion uses on one triangle: SSS, SAS, ASA and AAS. */
+const criteriaFigure: Figure = (() => {
+  const marks: Mark[] = [];
+  const parts: readonly (readonly ["side" | "angle", number])[][] = [
+    [
+      ["side", 0],
+      ["side", 1],
+      ["side", 2],
+    ],
+    [
+      ["side", 0],
+      ["angle", 1],
+      ["side", 1],
+    ],
+    [
+      ["angle", 0],
+      ["side", 0],
+      ["angle", 1],
+    ],
+    [
+      ["angle", 0],
+      ["angle", 1],
+      ["side", 1],
+    ],
+  ];
+  ["SSS", "SAS", "ASA", "AAS"].forEach((name, i) => {
+    const o = i * 5.5;
+    const v: Point[] = [
+      [o, 0],
+      [o + 4, 0],
+      [o + 1.2, 2.8],
+    ];
+    marks.push({ kind: "polygon", points: v }, { kind: "label", at: [o + 2, -0.4], text: name, dir: "s" });
+    let ticks = 0;
+    for (const [kind, j] of parts[i]!) {
+      const [p, q, r] = [v[j]!, v[(j + 1) % 3]!, v[(j + 2) % 3]!];
+      if (kind === "side") marks.push({ kind: "ticks", a: p, b: q, count: ++ticks });
+      else marks.push({ kind: "arc", vertex: p, from: q, to: r });
+    }
+  });
+  return {
+    svg: sketch(marks),
+    alt: t(
+      "Four triangles marking the equal parts each criterion uses: SSS, all three sides; SAS, two sides and the angle between them; ASA, two angles and the side between them; AAS, two angles and a side not between them.",
+      "四个三角形，标出每种判定所用的相等部分：SSS，三条边；SAS，两边及其夹角；ASA，两角及其夹边；AAS，两角及其中一角的对边。",
+    ),
+  };
+})();
+
+/** similarPairFigure draws △ABC ∼ △DEF, the second 1.5 times the first, with equal angles marked. */
+const similarPairFigure: Figure = (() => {
+  const base: Point[] = [
+    [0, 0],
+    [4, 0],
+    [1, 2.6],
+  ];
+  const big: Point[] = base.map(([x, y]) => [6 + 1.5 * x, 1.5 * y]);
+  const tri = (v: Point[], names: string): Mark[] => [
+    { kind: "polygon", points: v },
+    { kind: "arc", vertex: v[0]!, from: v[1]!, to: v[2]! },
+    { kind: "arc", vertex: v[1]!, from: v[2]!, to: v[0]!, accent: true },
+    { kind: "label", at: v[0]!, text: names[0]!, dir: "s" },
+    { kind: "label", at: v[1]!, text: names[1]!, dir: "s" },
+    { kind: "label", at: v[2]!, text: names[2]!, dir: "n" },
+  ];
+  return {
+    svg: sketch([...tri(base, "ABC"), ...tri(big, "DEF")]),
+    alt: t(
+      "Triangle ABC and the larger similar triangle DEF, 1.5 times its size, in the same position; angles A and D are equal, and so are angles B and E.",
+      "三角形 ABC 与放大 1.5 倍、摆放方式相同的相似三角形 DEF；角 A 与角 D 相等，角 B 与角 E 也相等。",
+    ),
+  };
+})();
+
+/** parallelCutFigure draws △ABC with D on AB and E on AC, DE parallel to BC. */
+const parallelCutFigure: Figure = {
+  svg: sketch([
+    {
+      kind: "polygon",
+      points: [
+        [0, 0],
+        [6, 0],
+        [2, 4.5],
+      ],
+    },
+    { kind: "segment", a: [0.8, 1.8], b: [4.4, 1.8] },
+    { kind: "label", at: [2, 4.5], text: "A", dir: "n" },
+    { kind: "label", at: [0, 0], text: "B", dir: "s" },
+    { kind: "label", at: [6, 0], text: "C", dir: "s" },
+    { kind: "label", at: [0.8, 1.8], text: "D", dir: "w" },
+    { kind: "label", at: [4.4, 1.8], text: "E", dir: "e" },
+    { kind: "arrows", a: [0.8, 1.8], b: [4.4, 1.8], count: 1 },
+    { kind: "arrows", a: [0, 0], b: [6, 0], count: 1 },
+  ]),
+  alt: t(
+    "Triangle ABC with D on AB and E on AC; DE is parallel to BC, cutting off the smaller triangle ADE.",
+    "三角形 ABC，D 在 AB 上，E 在 AC 上；DE 平行于 BC，截出较小的三角形 ADE。",
+  ),
+};
+
 /** reasoningAboutCongruentTriangles decides which criterion shows two triangles congruent and what follows. */
 export const reasoningAboutCongruentTriangles = topic(
   "reasoning-about-congruent-triangles",
@@ -314,6 +414,7 @@ export const reasoningAboutCongruentTriangles = topic(
           ),
         );
       },
+      criteriaFigure,
     ),
     kp(
       "what-congruence-implies",
@@ -357,6 +458,7 @@ export const reasoningAboutCongruentTriangles = topic(
           ),
         );
       },
+      congruentPairFigure,
     ),
   ],
 );
@@ -490,6 +592,7 @@ export const solvingAngleProblemsFromDescriptionsOfSimilarTriangles = topic(
           ),
         });
       },
+      similarPairFigure,
     ),
     kp(
       "angles-given-by-expressions",
@@ -571,6 +674,7 @@ export const reasoningAboutSimilarTriangles = topic(
           ),
         });
       },
+      similarPairFigure,
     ),
     kp(
       "a-parallel-line-in-a-triangle",
@@ -609,6 +713,7 @@ export const reasoningAboutSimilarTriangles = topic(
           ),
         });
       },
+      parallelCutFigure,
     ),
   ],
 );
