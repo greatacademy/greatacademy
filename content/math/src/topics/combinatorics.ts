@@ -1004,6 +1004,7 @@ export const treeDiagramsForDependentEventsApplications: TopicDef = {
         'For "at least one", it is usually quickest to use the complement: the only path that has none is the path with the other outcome both times.\n\nA bag holds $5$ red and $3$ blue marbles, and two are drawn without replacement. No red means blue, then blue: $\\frac{3}{8} \\cdot \\frac{2}{7} = \\frac{6}{56} = \\frac{3}{28}$. So\n\n$$P(\\text{at least one red}) = 1 - \\frac{3}{28} = \\frac{25}{28}.$$',
         "求“至少一个”时，通常用对立事件最快：一个也没有的路径只有一条，就是两次都是另一种结果。\n\n袋子里有 $5$ 颗红弹珠和 $3$ 颗蓝弹珠，不放回地取两颗。没有红色就是“蓝、蓝”：$\\frac{3}{8} \\cdot \\frac{2}{7} = \\frac{6}{56} = \\frac{3}{28}$。所以\n\n$$P(\\text{至少一颗红色}) = 1 - \\frac{3}{28} = \\frac{25}{28}.$$",
       ),
+      figure: bagTree(bags[0]!, 5, 3),
       generate(rng) {
         const bag = rng.pick(bags);
         const x = rng.int(2, 9);
@@ -1040,8 +1041,24 @@ export const treeDiagramsForDependentEventsApplications: TopicDef = {
       id: "reversing-a-condition",
       title: t("Reversing a condition", "反过来的条件"),
       explanation: t(
-        "A tree gives $P(B \\mid A)$, but a question may ask for $P(A \\mid B)$. Use the definition of conditional probability, with the law of total probability for the denominator:\n\n$$P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)} = \\frac{P(A) \\cdot P(B \\mid A)}{P(A) \\cdot P(B \\mid A) + P(A') \\cdot P(B \\mid A')}.$$\n\nIf $10\\%$ of people have an illness, and a test is positive for $90\\%$ of the ill and $20\\%$ of the others, then\n\n$$P(\\text{ill} \\mid +) = \\frac{0.1 \\cdot 0.9}{0.1 \\cdot 0.9 + 0.9 \\cdot 0.2} = \\frac{0.09}{0.27} = \\frac{1}{3}.$$\n\nMost positive results come from the many healthy people.",
-        "树状图给出的是 $P(B \\mid A)$，但问题可能问 $P(A \\mid B)$。这时用条件概率的定义，分母用全概率公式：\n\n$$P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)} = \\frac{P(A) \\cdot P(B \\mid A)}{P(A) \\cdot P(B \\mid A) + P(A') \\cdot P(B \\mid A')}.$$\n\n若 $10\\%$ 的人患有某种疾病，检测对患病者有 $90\\%$ 呈阳性，对其他人有 $20\\%$ 呈阳性，则\n\n$$P(\\text{患病} \\mid +) = \\frac{0.1 \\cdot 0.9}{0.1 \\cdot 0.9 + 0.9 \\cdot 0.2} = \\frac{0.09}{0.27} = \\frac{1}{3}.$$\n\n大多数阳性结果来自人数众多的健康人。",
+        "A tree gives $P(B \\mid A)$, but a question may ask for $P(A \\mid B)$. Use the definition of conditional probability, with the law of total probability for the denominator:\n\n$$P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)} = \\frac{P(A) \\cdot P(B \\mid A)}{P(A) \\cdot P(B \\mid A) + P(A') \\cdot P(B \\mid A')}.$$\n\nIn the tree, $A$ is having an illness and $B$ is testing positive. If $10\\%$ of people have an illness, and a test is positive for $90\\%$ of the ill and $20\\%$ of the others, then\n\n$$P(\\text{ill} \\mid +) = \\frac{0.1 \\cdot 0.9}{0.1 \\cdot 0.9 + 0.9 \\cdot 0.2} = \\frac{0.09}{0.27} = \\frac{1}{3}.$$\n\nMost positive results come from the many healthy people.",
+        "树状图给出的是 $P(B \\mid A)$，但问题可能问 $P(A \\mid B)$。这时用条件概率的定义，分母用全概率公式：\n\n$$P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)} = \\frac{P(A) \\cdot P(B \\mid A)}{P(A) \\cdot P(B \\mid A) + P(A') \\cdot P(B \\mid A')}.$$\n\n树状图中，$A$ 表示患病，$B$ 表示检测呈阳性。若 $10\\%$ 的人患有某种疾病，检测对患病者有 $90\\%$ 呈阳性，对其他人有 $20\\%$ 呈阳性，则\n\n$$P(\\text{患病} \\mid +) = \\frac{0.1 \\cdot 0.9}{0.1 \\cdot 0.9 + 0.9 \\cdot 0.2} = \\frac{0.09}{0.27} = \\frac{1}{3}.$$\n\n大多数阳性结果来自人数众多的健康人。",
+      ),
+      figure: treeFigure(
+        [
+          { label: "A", p: "0.1" },
+          { label: "A′", p: "0.9" },
+        ],
+        [
+          [
+            { label: "B", p: "0.9" },
+            { label: "B′", p: "0.1" },
+          ],
+          [
+            { label: "B", p: "0.2" },
+            { label: "B′", p: "0.8" },
+          ],
+        ],
       ),
       generate(rng) {
         const s = rng.pick(splits);
