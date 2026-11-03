@@ -9585,6 +9585,7 @@ export const multivariableCalculus: CourseDef = {
           topics: [
             "defining-vector-valued-functions",
             "the-domain-of-a-vector-valued-function",
+            "limits-of-vector-valued-functions",
             "continuity-and-differentiability-of-vector-valued-functions",
             "differentiation-rules-for-vector-valued-functions",
             "integration-rules-for-vector-valued-functions",

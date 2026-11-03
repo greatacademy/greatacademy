@@ -63,7 +63,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Integrated Math I, II, III (Honors) | Prealgebra | done | | Assigned slot **E**. 3 courses (227, 331, 278 topics) providing an accelerated integrated pathway |
 | Mathematical Foundations I, II, III | — | done | | Assigned slot **E**. 3 courses (358, 355, 323 topics) for adult foundational and calculus preparation |
 | AP Calculus AB, AP Calculus BC | Calculus I, Calculus II | done | | 9 units (212 topics) and 16 units (305 topics) (revision complete) |
-| Multivariable Calculus | Linear Algebra | done | | 6 units, 193 topics |
+| Multivariable Calculus | Linear Algebra | done | | 6 units, 194 topics |
 | Differential Equations | Multivariable Calculus | done | | 7 units, 159 topics (24 reused, 135 new) |
 | Probability & Statistics | Multivariable Calculus | done | | 10 units, 181 topics (53 reused, 128 new) |
 | Mathematics for Machine Learning | Calculus II, Linear Algebra | done | | 12 units, 301 topics (283 reused, 18 new) |

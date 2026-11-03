@@ -108,6 +108,198 @@ export const theDomainOfAVectorValuedFunction: TopicDef = {
   ],
 };
 
+/** tMinus writes t − a, or t + |a| when a is negative. */
+const tMinus = (a: number) => poly([1, "t"], [-a, ""]);
+
+/** limitsOfVectorValuedFunctions takes limits of vector-valued functions component by component. */
+export const limitsOfVectorValuedFunctions: TopicDef = {
+  id: "limits-of-vector-valued-functions",
+  title: t("Limits of Vector-Valued Functions", "向量值函数的极限"),
+  summary: t(
+    "The limit of a vector-valued function is the vector of the limits of its components, and it exists only when every component has a limit.",
+    "向量值函数的极限是其各分量极限组成的向量；只有每个分量都有极限时，它的极限才存在。",
+  ),
+  prerequisites: ["the-domain-of-a-vector-valued-function", "special-limits-involving-cosine"],
+  encompasses: [{ topic: "defining-vector-valued-functions", weight: 0.3 }],
+  xp: 10,
+  knowledgePoints: [
+    {
+      id: "limits-component-by-component",
+      title: t("Limits component by component", "逐个分量求极限"),
+      explanation: t(
+        "A vector $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$ approaches a vector $\\mathbf{L}$ exactly when each component approaches the matching component of $\\mathbf{L}$, so the limit is taken one component at a time, each with the techniques for ordinary limits:\n\n$$\\lim_{t \\to a} \\mathbf{r}(t) = \\left\\langle \\lim_{t \\to a} x(t), \\lim_{t \\to a} y(t), \\lim_{t \\to a} z(t) \\right\\rangle.$$\n\nFor $\\mathbf{r}(t) = \\left\\langle \\frac{t^{2} - 9}{t - 3}, 2t^{2}, \\sqrt{t + 1} \\right\\rangle$ at $t = 3$, the first component is $\\frac{0}{0}$, but it equals $t + 3$ for $t \\ne 3$, so its limit is $6$; the others are continuous and give $18$ and $2$. The limit is $\\langle 6, 18, 2 \\rangle$.",
+        "向量 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$ 趋于向量 $\\mathbf{L}$，恰好是每个分量都趋于 $\\mathbf{L}$ 的对应分量，所以极限要逐个分量求，每个分量都用普通极限的方法：\n\n$$\\lim_{t \\to a} \\mathbf{r}(t) = \\left\\langle \\lim_{t \\to a} x(t), \\lim_{t \\to a} y(t), \\lim_{t \\to a} z(t) \\right\\rangle。$$\n\n对 $\\mathbf{r}(t) = \\left\\langle \\frac{t^{2} - 9}{t - 3}, 2t^{2}, \\sqrt{t + 1} \\right\\rangle$ 在 $t = 3$ 处，第一个分量是 $\\frac{0}{0}$ 型，但当 $t \\ne 3$ 时它等于 $t + 3$，所以极限是 $6$；其余分量连续，分别给出 $18$ 和 $2$。极限是 $\\langle 6, 18, 2 \\rangle$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-4, 4);
+        const r = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5].filter((v) => v !== a));
+        const c = rng.nonZero(-3, 3);
+        const d = rng.int(-6, 6);
+        const root = rng.int(1, 4);
+        const m = root * root - a;
+        const top = poly([1, "t^{2}"], [-(a + r), "t"], [a * r, ""]);
+        const second = poly([c, "t^{2}"], [d, ""]);
+        const inside = poly([1, "t"], [m, ""]);
+        const y = c * a * a + d;
+        const answer = [a - r, y, root];
+        const r3 = `\\left\\langle \\frac{${top}}{${tMinus(a)}}, ${second}, \\sqrt{${inside}} \\right\\rangle`;
+        return pointProblem({
+          prompt: t(
+            `Let $\\mathbf{r}(t) = ${r3}$. Find $\\lim\\limits_{t \\to ${a}} \\mathbf{r}(t)$. Enter the vector as $\\langle a, b, c \\rangle$.`,
+            `设 $\\mathbf{r}(t) = ${r3}$。求 $\\lim\\limits_{t \\to ${a}} \\mathbf{r}(t)$。按 $\\langle a, b, c \\rangle$ 的形式输入向量。`,
+          ),
+          answer,
+          vector: true,
+          wrong: [
+            [a + r, y, root],
+            [0, y, root],
+            [a - r, y, root * root],
+            [root, y, a - r],
+          ],
+          solution: t(
+            steps(
+              `Take the limit of each component as $t \\to ${a}$.`,
+              `The first is $\\frac{0}{0}$ at $t = ${a}$; factor and cancel: $\\frac{(${tMinus(a)})(${tMinus(r)})}{${tMinus(a)}} = ${tMinus(r)} \\to ${a} - ${paren(r)} = ${a - r}$.`,
+              `The second is a polynomial: $${c} \\cdot ${paren(a)}^{2} + ${paren(d)} = ${y}$.`,
+              `The third is continuous at $t = ${a}$: $\\sqrt{${a} + ${paren(m)}} = \\sqrt{${root * root}} = ${root}$.`,
+              `So the limit is $${vectorLatex(answer)}$.`,
+            ),
+            steps(
+              `对每个分量求 $t \\to ${a}$ 时的极限。`,
+              `第一个分量在 $t = ${a}$ 处是 $\\frac{0}{0}$ 型；分解并约分：$\\frac{(${tMinus(a)})(${tMinus(r)})}{${tMinus(a)}} = ${tMinus(r)} \\to ${a} - ${paren(r)} = ${a - r}$。`,
+              `第二个分量是多项式：$${c} \\cdot ${paren(a)}^{2} + ${paren(d)} = ${y}$。`,
+              `第三个分量在 $t = ${a}$ 处连续：$\\sqrt{${a} + ${paren(m)}} = \\sqrt{${root * root}} = ${root}$。`,
+              `所以极限是 $${vectorLatex(answer)}$。`,
+            ),
+          ),
+        });
+      },
+    },
+    {
+      id: "trigonometric-components",
+      title: t("Components with special limits", "含特殊极限的分量"),
+      explanation: t(
+        "A component that is $\\frac{0}{0}$ at the point may need a special limit rather than factoring. At $t = 0$, $\\frac{\\sin kt}{t} = k \\cdot \\frac{\\sin kt}{kt} \\to k$ and $\\frac{1 - \\cos t}{t} \\to 0$. So\n\n$$\\lim_{t \\to 0} \\left\\langle \\frac{\\sin 3t}{t}, \\frac{1 - \\cos t}{t}, 5\\cos t \\right\\rangle = \\langle 3, 0, 5 \\rangle.$$",
+        "在该点为 $\\frac{0}{0}$ 型的分量，可能需要用特殊极限而不是因式分解。在 $t = 0$ 处，$\\frac{\\sin kt}{t} = k \\cdot \\frac{\\sin kt}{kt} \\to k$，$\\frac{1 - \\cos t}{t} \\to 0$。所以\n\n$$\\lim_{t \\to 0} \\left\\langle \\frac{\\sin 3t}{t}, \\frac{1 - \\cos t}{t}, 5\\cos t \\right\\rangle = \\langle 3, 0, 5 \\rangle。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const k = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
+        const m = rng.nonZero(-6, 6);
+        const order = rng.shuffle([0, 1, 2]);
+        const parts = [
+          `\\frac{\\sin ${k < 0 ? `(${k}t)` : `${k}t`}}{t}`,
+          `\\frac{1 - \\cos t}{t}`,
+          `${m === 1 ? "" : m === -1 ? "-" : m}\\cos t`,
+        ];
+        const values = [k, 0, m];
+        const answer = order.map((i) => values[i]!);
+        const with_ = (v: readonly (number | Q)[]) => order.map((i) => v[i]!);
+        const r3 = `\\left\\langle ${order.map((i) => parts[i]).join(", ")} \\right\\rangle`;
+        return pointProblem({
+          prompt: t(
+            `Let $\\mathbf{r}(t) = ${r3}$. Find $\\lim\\limits_{t \\to 0} \\mathbf{r}(t)$. Enter the vector as $\\langle a, b, c \\rangle$.`,
+            `设 $\\mathbf{r}(t) = ${r3}$。求 $\\lim\\limits_{t \\to 0} \\mathbf{r}(t)$。按 $\\langle a, b, c \\rangle$ 的形式输入向量。`,
+          ),
+          answer,
+          vector: true,
+          wrong: [with_([1, 0, m]), with_([k, 1, m]), with_([0, 0, m]), with_([Q.of(1, k), 0, m])],
+          solution: t(
+            `Take each limit as $t \\to 0$. $\\frac{\\sin ${k < 0 ? `(${k}t)` : `${k}t`}}{t} = ${k} \\cdot \\frac{\\sin ${k < 0 ? `(${k}t)` : `${k}t`}}{${k}t} \\to ${k}$, since $\\frac{\\sin u}{u} \\to 1$ as $u \\to 0$. $\\frac{1 - \\cos t}{t} \\to 0$. $${parts[2]} \\to ${m}$, since cosine is continuous and $\\cos 0 = 1$. So the limit is $${vectorLatex(answer)}$.`,
+            `逐个求 $t \\to 0$ 时的极限。$\\frac{\\sin ${k < 0 ? `(${k}t)` : `${k}t`}}{t} = ${k} \\cdot \\frac{\\sin ${k < 0 ? `(${k}t)` : `${k}t`}}{${k}t} \\to ${k}$，因为 $u \\to 0$ 时 $\\frac{\\sin u}{u} \\to 1$。$\\frac{1 - \\cos t}{t} \\to 0$。$${parts[2]} \\to ${m}$，因为余弦函数连续且 $\\cos 0 = 1$。所以极限是 $${vectorLatex(answer)}$。`,
+          ),
+        });
+      },
+    },
+    {
+      id: "when-the-limit-does-not-exist",
+      title: t("When the limit does not exist", "极限不存在的情形"),
+      explanation: t(
+        "Because the limit is taken component by component, $\\lim_{t \\to a} \\mathbf{r}(t)$ exists only if every component has a limit at $a$. One component that grows without bound, such as $\\frac{1}{t - 2}$ at $t = 2$, or that approaches different values from the two sides, such as $\\frac{|t - 2|}{t - 2}$, is enough to make the limit of the whole vector fail to exist, however well the other components behave. A $\\frac{0}{0}$ component, by contrast, often has a limit.",
+        "由于极限是逐个分量求的，只有每个分量在 $a$ 处都有极限时，$\\lim_{t \\to a} \\mathbf{r}(t)$ 才存在。只要有一个分量无界增长（例如 $\\frac{1}{t - 2}$ 在 $t = 2$ 处），或者从两侧趋于不同的值（例如 $\\frac{|t - 2|}{t - 2}$），整个向量的极限就不存在，无论其他分量多么正常。相反，$\\frac{0}{0}$ 型的分量往往有极限。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 5);
+        const ta = tMinus(a);
+        const c = rng.nonZero(-4, 4);
+        /** Part is a component with its limit at t = a written out, or the reason it has none. */
+        type Part = { readonly tex: string; readonly why: Text };
+        const good: Part[] = [
+          {
+            tex: `\\frac{t^{2} - ${a * a}}{${ta}}`,
+            why: t(
+              `$\\frac{t^{2} - ${a * a}}{${ta}} = t + ${a} \\to ${2 * a}$`,
+              `$\\frac{t^{2} - ${a * a}}{${ta}} = t + ${a} \\to ${2 * a}$`,
+            ),
+          },
+          {
+            tex: `\\frac{\\sin(${ta})}{${ta}}`,
+            why: t(`$\\frac{\\sin(${ta})}{${ta}} \\to 1$`, `$\\frac{\\sin(${ta})}{${ta}} \\to 1$`),
+          },
+          {
+            tex: `\\frac{(${ta})^{2}}{${ta}}`,
+            why: t(`$\\frac{(${ta})^{2}}{${ta}} = ${ta} \\to 0$`, `$\\frac{(${ta})^{2}}{${ta}} = ${ta} \\to 0$`),
+          },
+          {
+            tex: `\\frac{1}{t + ${a}}`,
+            why: t(`$\\frac{1}{t + ${a}} \\to \\frac{1}{${2 * a}}$`, `$\\frac{1}{t + ${a}} \\to \\frac{1}{${2 * a}}$`),
+          },
+          {
+            tex: poly([c, "t^{2}"]),
+            why: t(`$${poly([c, "t^{2}"])} \\to ${c * a * a}$`, `$${poly([c, "t^{2}"])} \\to ${c * a * a}$`),
+          },
+        ];
+        const bad: Part[] = [
+          {
+            tex: `\\frac{${c}}{${ta}}`,
+            why: t(`$\\frac{${c}}{${ta}}$ is unbounded`, `$\\frac{${c}}{${ta}}$ 无界`),
+          },
+          {
+            tex: `\\frac{|${ta}|}{${ta}}`,
+            why: t(
+              `$\\frac{|${ta}|}{${ta}}$ is $-1$ on the left and $1$ on the right`,
+              `$\\frac{|${ta}|}{${ta}}$ 在左侧为 $-1$，在右侧为 $1$`,
+            ),
+          },
+          {
+            tex: `\\frac{t}{(${ta})^{2}}`,
+            why: t(`$\\frac{t}{(${ta})^{2}}$ grows without bound`, `$\\frac{t}{(${ta})^{2}}$ 无界增长`),
+          },
+        ];
+        const broken = rng.bool(0.8) ? rng.int(0, 2) : 3;
+        const parts = rng.sample(good, broken === 3 ? 3 : 2);
+        if (broken < 3) parts.splice(broken, 0, rng.pick(bad));
+        const options = [
+          t("The first component", "第一个分量"),
+          t("The second component", "第二个分量"),
+          t("The third component", "第三个分量"),
+          t("None: the limit exists", "没有：极限存在"),
+        ];
+        const r3 = `\\left\\langle ${parts.map((q) => q.tex).join(", ")} \\right\\rangle`;
+        const fine = parts.filter((_, i) => i !== broken).map((q) => q.why);
+        const join = (lang: "en" | "zh-CN") => fine.map((w) => w[lang]).join(lang === "en" ? " and " : "，");
+        return choiceProblem({
+          prompt: t(
+            `Let $\\mathbf{r}(t) = ${r3}$. Which component keeps $\\lim\\limits_{t \\to ${a}} \\mathbf{r}(t)$ from existing?`,
+            `设 $\\mathbf{r}(t) = ${r3}$。哪个分量使 $\\lim\\limits_{t \\to ${a}} \\mathbf{r}(t)$ 不存在？`,
+          ),
+          options,
+          correct: broken,
+          solution:
+            broken === 3
+              ? t(
+                  `Every component has a limit as $t \\to ${a}$: ${join("en")}. So the limit exists.`,
+                  `当 $t \\to ${a}$ 时每个分量都有极限：${join("zh-CN")}。所以极限存在。`,
+                )
+              : t(
+                  `As $t \\to ${a}$, ${parts[broken]!.why.en}, so that component has no limit, and neither does $\\mathbf{r}(t)$, even though ${join("en")}.`,
+                  `当 $t \\to ${a}$ 时，${parts[broken]!.why["zh-CN"]}，所以这个分量没有极限，$\\mathbf{r}(t)$ 也没有极限，尽管${join("zh-CN")}。`,
+                ),
+        });
+      },
+    },
+  ],
+};
+
 /** continuityAndDifferentiabilityOfVectorValuedFunctions explores continuity and differentiability componentwise. */
 export const continuityAndDifferentiabilityOfVectorValuedFunctions: TopicDef = {
   id: "continuity-and-differentiability-of-vector-valued-functions",
@@ -1646,6 +1838,7 @@ export const propertiesOfTheCurlOperator: TopicDef = {
 /** multivariableCalculusVectorFunctionTopics contains all Unit 1 topics of Multivariable Calculus. */
 export const multivariableCalculusVectorFunctionTopics: readonly TopicDef[] = [
   theDomainOfAVectorValuedFunction,
+  limitsOfVectorValuedFunctions,
   continuityAndDifferentiabilityOfVectorValuedFunctions,
   differentiationRulesForVectorValuedFunctions,
   integrationRulesForVectorValuedFunctions,
