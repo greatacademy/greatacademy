@@ -1361,6 +1361,33 @@ export const focalDistancePropertiesOfEllipsesAndHyperbolas = topic(
 /** opposite names the side of triangle ABC opposite each vertex. */
 const opposite = { A: "BC", B: "AC", C: "AB" } as const;
 
+/** longestSideFigure shows triangle ABC with AB = 7, BC = 9 and AC = 5, the longest side BC and the largest angle A opposite it highlighted. */
+const longestSideFigure: Figure = (() => {
+  const [b, c]: Point[] = [
+    [0, 0],
+    [9, 0],
+  ];
+  const ax = 105 / 18;
+  const a: Point = [ax, Math.sqrt(49 - ax * ax)];
+  return {
+    svg: sketch([
+      { kind: "polygon", points: [a, b!, c!] },
+      { kind: "segment", a: b!, b: c!, accent: true },
+      { kind: "arc", vertex: a, from: c!, to: b!, accent: true },
+      { kind: "side", a: b!, b: c!, text: "9" },
+      { kind: "side", a: c!, b: a, text: "5" },
+      { kind: "side", a, b: b!, text: "7" },
+      { kind: "label", at: a, text: "A", dir: "n" },
+      { kind: "label", at: b!, text: "B", dir: "sw" },
+      { kind: "label", at: c!, text: "C", dir: "se" },
+    ]),
+    alt: t(
+      "Triangle ABC with AB = 7, BC = 9 and AC = 5. The longest side, BC, is highlighted, and so is the angle at A, the vertex it does not touch, which is the largest angle.",
+      "△ABC 中 AB = 7，BC = 9，AC = 5。最长边 BC 被高亮，它不经过的顶点 A 处的角也被高亮，这是最大的角。",
+    ),
+  };
+})();
+
 /** sideAngleRelationshipsInTriangles orders the sides of a triangle by the angles opposite them, and the reverse. */
 export const sideAngleRelationshipsInTriangles = topic(
   "side-angle-relationships-in-triangles",
@@ -1445,6 +1472,7 @@ export const sideAngleRelationshipsInTriangles = topic(
           ),
         );
       },
+      longestSideFigure,
     ),
   ],
 );
