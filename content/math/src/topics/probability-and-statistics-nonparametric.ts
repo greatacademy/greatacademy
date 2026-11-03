@@ -21,8 +21,8 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
         id: "evaluating-chi-square-goodness-of-fit-statistic",
         title: t("Computing the chi-square goodness-of-fit test statistic", "计算卡方拟合优度检验统计量"),
         explanation: t(
-          "The test statistic is $\\chi^2 = \\sum_{i=1}^k \\frac{(O_i - E_i)^2}{E_i}$.",
-          "检验统计量为 $\\chi^2 = \\sum_{i=1}^k \\frac{(O_i - E_i)^2}{E_i}$。",
+          "Each category contributes its squared gap between observed and expected counts, scaled by the expected count, and large totals signal a poor fit. The test statistic is $\\chi^2 = \\sum_{i=1}^k \\frac{(O_i - E_i)^2}{E_i}$.",
+          "每个类别贡献观测数与期望数之差的平方，再除以期望数，总和很大时说明拟合不好。检验统计量为 $\\chi^2 = \\sum_{i=1}^k \\frac{(O_i - E_i)^2}{E_i}$。",
         ),
         generate: (rng: Rng): Problem => {
           // 3 categories with clean numbers
@@ -73,8 +73,8 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
         id: "binomial-expected-cell-count",
         title: t("Computing expected cell counts under a binomial model", "计算二项模型下的期望频数"),
         explanation: t(
-          "The expected count for the cell $x$ is $E_x = N \\binom{n}{x} p^x (1 - p)^{n-x}$.",
-          "取值 $x$ 对应的期望频数为 $E_x = N \\binom{n}{x} p^x (1 - p)^{n-x}$。",
+          "The expected count for a value is the total number of observations times the model's probability of that value. The expected count for the cell $x$ is $E_x = N \\binom{n}{x} p^x (1 - p)^{n-x}$.",
+          "某个取值的期望计数等于观测总数乘以模型给出的该值概率。取值 $x$ 对应的期望频数为 $E_x = N \\binom{n}{x} p^x (1 - p)^{n-x}$。",
         ),
         generate: (rng: Rng): Problem => {
           // n = 2 or 3, p = 1/2 or 1/4
@@ -126,8 +126,8 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
         id: "poisson-gof-df-calculation",
         title: t("Degrees of freedom when estimating the Poisson parameter", "估计泊松参数时的自由度计算"),
         explanation: t(
-          "df = k - 1 - m, where m is the number of estimated parameters (m = 1 for λ).",
-          "df = k - 1 - m，其中 m 为估计的参数个数（对 λ 有 m = 1）。",
+          "Each parameter estimated from the data makes the expected counts fit more closely, so one degree of freedom is lost for each. df = k - 1 - m, where m is the number of estimated parameters (m = 1 for λ).",
+          "每个由数据估计的参数都使期望计数拟合得更紧，所以每估计一个参数就失去一个自由度。df = k - 1 - m，其中 m 为估计的参数个数（对 λ 有 m = 1）。",
         ),
         generate: (rng: Rng): Problem => {
           const N = rng.int(100, 1000);
@@ -166,8 +166,8 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
         id: "continuous-uniform-equal-bins-expected",
         title: t("Computing expected bin frequencies for uniform models", "计算均匀分布模型的期望区间频数"),
         explanation: t(
-          "With $k$ equal-probability bins, each expected count is $E_i = \\frac{N}{k}$.",
-          "对 $k$ 个等概率区间，每个期望频数为 $E_i = \\frac{N}{k}$。",
+          "When the bins have equal probability under the model, the observations are expected to be shared equally among them. With $k$ equal-probability bins, each expected count is $E_i = \\frac{N}{k}$.",
+          "当各组在模型下的概率相等时，观测值预期会平均分配到各组中。对 $k$ 个等概率区间，每个期望频数为 $E_i = \\frac{N}{k}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(4, 10);
@@ -206,8 +206,8 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
         id: "normal-gof-df-calculation",
         title: t("Degrees of freedom for normal goodness-of-fit test", "正态拟合优度检验的自由度"),
         explanation: t(
-          "df = k - 1 - 2 = k - 3 when μ and σ are estimated from the sample.",
-          "当 μ 与 σ 均由样本估计时，df = k - 1 - 2 = k - 3。",
+          "Estimating both the mean and the standard deviation uses up two degrees of freedom, in addition to the one lost because the counts must add to the total. df = k - 1 - 2 = k - 3 when μ and σ are estimated from the sample.",
+          "估计均值和标准差会用掉两个自由度，此外计数之和必须等于总数，还要再失去一个自由度。当 μ 与 σ 均由样本估计时，df = k - 1 - 2 = k - 3。",
         ),
         generate: (rng: Rng): Problem => {
           const N = rng.int(100, 1000);
@@ -246,8 +246,8 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
         id: "contingency-table-expected-cell-calc",
         title: t("Computing expected cell frequency in a contingency table", "计算列联表中的期望单元格频数"),
         explanation: t(
-          "The expected count in row $i$ and column $j$ is $E_{ij} = \\frac{R_i C_j}{N}$.",
-          "第 $i$ 行第 $j$ 列的期望频数为 $E_{ij} = \\frac{R_i C_j}{N}$。",
+          "If the row and column variables are independent, each cell should receive the row share times the column share of the total. The expected count in row $i$ and column $j$ is $E_{ij} = \\frac{R_i C_j}{N}$.",
+          "如果行变量与列变量相互独立，每个格子应得到总数中行比例与列比例的乘积。第 $i$ 行第 $j$ 列的期望频数为 $E_{ij} = \\frac{R_i C_j}{N}$。",
         ),
         generate: (rng: Rng): Problem => {
           const r = rng.int(2, 4);
@@ -292,8 +292,8 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
         id: "uniform-order-statistic-expectation",
         title: t("Expected value of order statistics for standard uniform distribution", "标准均匀分布顺序统计量的数学期望"),
         explanation: t(
-          "For i.i.d. $X_i \\sim \\text{Uniform}(0, 1)$, $E[X_{(k)}] = \\frac{k}{n + 1}$.",
-          "对于独立同分布的 $X_i \\sim \\text{Uniform}(0, 1)$，$E[X_{(k)}] = \\frac{k}{n + 1}$。",
+          "Sorted uniform values tend to divide the interval into equal gaps, so the expected value of the k-th smallest is k parts out of one more than the sample size. For i.i.d. $X_i \\sim \\text{Uniform}(0, 1)$, $E[X_{(k)}] = \\frac{k}{n + 1}$.",
+          "排序后的均匀取值倾向于把区间分成相等的间隔，所以第 k 小值的期望是样本量加 1 等份中的 k 份。对于独立同分布的 $X_i \\sim \\text{Uniform}(0, 1)$，$E[X_{(k)}] = \\frac{k}{n + 1}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(3, 20);

@@ -21,8 +21,8 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
         id: "evaluating-spearmans-rank-correlation",
         title: t("Computing Spearman's rank correlation coefficient", "计算斯皮尔曼等级相关系数"),
         explanation: t(
-          "When there are no tied ranks, $r_s = 1 - \\frac{6 \\sum_i d_i^2}{n(n^2 - 1)}$.",
-          "当没有并列秩时，$r_s = 1 - \\frac{6 \\sum_i d_i^2}{n(n^2 - 1)}$。",
+          "Spearman's coefficient replaces the data by their ranks, so it measures whether the variables move in the same order rather than along a straight line. When there are no tied ranks, $r_s = 1 - \\frac{6 \\sum_i d_i^2}{n(n^2 - 1)}$.",
+          "斯皮尔曼系数用秩代替数据，所以它衡量的是变量是否按相同的顺序变化，而不是是否沿直线变化。当没有并列秩时，$r_s = 1 - \\frac{6 \\sum_i d_i^2}{n(n^2 - 1)}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(4, 7);

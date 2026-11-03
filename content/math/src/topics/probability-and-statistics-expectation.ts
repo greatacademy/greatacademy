@@ -291,8 +291,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "evaluating-mgf-at-zero",
         title: t("Evaluating the MGF at t = 0", "计算矩母函数在 t = 0 处的值"),
         explanation: t(
-          "For any random variable $X$ whose MGF exists, $M_X(0) = E[e^0] = E[1] = 1$.",
-          "对任意矩母函数存在的随机变量 $X$，均有 $M_X(0) = E[e^0] = E[1] = 1$。",
+          "At zero the exponential inside the expectation is always one, so every moment generating function equals one there, which is a quick check on any formula. For any random variable $X$ whose MGF exists, $M_X(0) = E[e^0] = E[1] = 1$.",
+          "在零处期望中的指数总是 1，所以每个矩母函数在那里都等于 1，这可以快速检验任何公式。对任意矩母函数存在的随机变量 $X$，均有 $M_X(0) = E[e^0] = E[1] = 1$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(2, 20);
@@ -315,8 +315,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "mgf-of-finite-discrete-variable",
         title: t("MGF of a two-point discrete distribution", "两点离散分布的矩母函数"),
         explanation: t(
-          "For $X$ taking the values $0$ and $k$ with $P(X = 0) = 1 - p$ and $P(X = k) = p$, $M_X(t) = E[e^{tX}] = (1 - p) + pe^{kt}$.",
-          "若 $X$ 取值 $0$ 与 $k$，概率分别为 $1 - p$ 与 $p$，则 $M_X(t) = E[e^{tX}] = (1 - p) + pe^{kt}$。",
+          "For a variable with finitely many values, the moment generating function is a weighted sum of exponentials, one for each value. For $X$ taking the values $0$ and $k$ with $P(X = 0) = 1 - p$ and $P(X = k) = p$, $M_X(t) = E[e^{tX}] = (1 - p) + pe^{kt}$.",
+          "对于只取有限个值的变量，矩母函数是指数函数的加权和，每个取值对应一项。若 $X$ 取值 $0$ 与 $k$，概率分别为 $1 - p$ 与 $p$，则 $M_X(t) = E[e^{tX}] = (1 - p) + pe^{kt}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 30);
@@ -368,8 +368,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "first-moment-via-mgf-derivative",
         title: t("Finding E[X] via the first derivative of the MGF", "利用矩母函数一阶导数求期望 E[X]"),
         explanation: t(
-          "Differentiating $M_X(t)$ once and evaluating at $t = 0$ yields the first moment: $E[X] = M_X'(0)$.",
-          "对矩母函数 $M_X(t)$ 求一阶导数并在 $t = 0$ 处取值，即得一阶原点矩：$E[X] = M_X'(0)$。",
+          "Differentiating the exponential brings down a factor of the variable, so the first derivative at zero is the mean. Differentiating $M_X(t)$ once and evaluating at $t = 0$ yields the first moment: $E[X] = M_X'(0)$.",
+          "对指数函数求导会带下一个变量因子，所以在零处的一阶导数就是均值。对矩母函数 $M_X(t)$ 求一阶导数并在 $t = 0$ 处取值，即得一阶原点矩：$E[X] = M_X'(0)$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 10);
@@ -394,8 +394,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "second-moment-via-mgf-derivative",
         title: t("Finding E[X^2] via the second derivative of the MGF", "利用矩母函数二阶导数求二阶矩 E[X^2]"),
         explanation: t(
-          "Differentiating $M_X(t)$ twice and evaluating at $t = 0$ yields the second moment: $E[X^2] = M_X''(0)$.",
-          "对矩母函数 $M_X(t)$ 求二阶导数并在 $t = 0$ 处取值，即得二阶原点矩：$E[X^2] = M_X''(0)$。",
+          "Each derivative brings down another factor of the variable, so the second derivative at zero is the mean of the square. Differentiating $M_X(t)$ twice and evaluating at $t = 0$ yields the second moment: $E[X^2] = M_X''(0)$.",
+          "每求一次导数就多带下一个变量因子，所以在零处的二阶导数是平方的均值。对矩母函数 $M_X(t)$ 求二阶导数并在 $t = 0$ 处取值，即得二阶原点矩：$E[X^2] = M_X''(0)$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 8);
@@ -435,8 +435,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "variance-from-mgf-derivatives",
         title: t("Evaluating variance from MGF derivatives", "由矩母函数导数计算方差"),
         explanation: t(
-          "For $M_X(t) = (1 - \\theta t)^{-k}$, $E[X] = k\\theta$ and $E[X^2] = k(k+1)\\theta^2$. Hence $\\operatorname{Var}(X) = k(k+1)\\theta^2 - (k\\theta)^2 = k\\theta^2$.",
-          "对于 $M_X(t) = (1 - \\theta t)^{-k}$，$E[X] = k\\theta$，$E[X^2] = k(k+1)\\theta^2$。因此 $\\operatorname{Var}(X) = k(k+1)\\theta^2 - (k\\theta)^2 = k\\theta^2$。",
+          "Find the first two moments from the derivatives at zero, then subtract the square of the first from the second. For $M_X(t) = (1 - \\theta t)^{-k}$, $E[X] = k\\theta$ and $E[X^2] = k(k+1)\\theta^2$. Hence $\\operatorname{Var}(X) = k(k+1)\\theta^2 - (k\\theta)^2 = k\\theta^2$.",
+          "由在零处的导数求出前两阶矩，再用二阶矩减去一阶矩的平方。对于 $M_X(t) = (1 - \\theta t)^{-k}$，$E[X] = k\\theta$，$E[X^2] = k(k+1)\\theta^2$。因此 $\\operatorname{Var}(X) = k(k+1)\\theta^2 - (k\\theta)^2 = k\\theta^2$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 10);
@@ -460,8 +460,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "standard-deviation-from-poisson-mgf",
         title: t("Standard deviation from an exponential-type or Poisson MGF", "由泊松型矩母函数计算标准差"),
         explanation: t(
-          "For a Poisson random variable with MGF $M_X(t) = e^{\\lambda(e^t - 1)}$, $\\operatorname{Var}(X) = \\lambda$, so the standard deviation is $\\sigma = \\sqrt{\\lambda}$.",
-          "对于矩母函数为 $M_X(t) = e^{\\lambda(e^t - 1)}$ 的泊松随机变量，$\\operatorname{Var}(X) = \\lambda$，标准差为 $\\sigma = \\sqrt{\\lambda}$。",
+          "The derivatives of the Poisson generating function show that its mean and variance are both the rate, so the standard deviation is the square root of the rate. For a Poisson random variable with MGF $M_X(t) = e^{\\lambda(e^t - 1)}$, $\\operatorname{Var}(X) = \\lambda$, so the standard deviation is $\\sigma = \\sqrt{\\lambda}$.",
+          "泊松矩母函数的导数表明它的均值和方差都等于速率，所以标准差是速率的平方根。对于矩母函数为 $M_X(t) = e^{\\lambda(e^t - 1)}$ 的泊松随机变量，$\\operatorname{Var}(X) = \\lambda$，标准差为 $\\sigma = \\sqrt{\\lambda}$。",
         ),
         generate: (rng: Rng): Problem => {
           const sigma = rng.int(2, 45);
@@ -499,8 +499,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "mgf-of-binomial-distribution",
         title: t("Identifying the MGF of a Binomial distribution", "识别二项分布的矩母函数"),
         explanation: t(
-          "For $X \\sim \\text{Binomial}(n, p)$, each trial has MGF $1 - p + pe^t$. By the independence of the trials, $M_X(t) = (1 - p + pe^t)^n$.",
-          "对于 $X \\sim \\text{Binomial}(n, p)$，每次试验的矩母函数为 $1 - p + pe^t$，由试验的独立性得 $M_X(t) = (1 - p + pe^t)^n$。",
+          "A binomial variable is a sum of independent trials, and the generating function of a sum of independent variables is the product of theirs. For $X \\sim \\text{Binomial}(n, p)$, each trial has MGF $1 - p + pe^t$. By the independence of the trials, $M_X(t) = (1 - p + pe^t)^n$.",
+          "二项变量是独立试验之和，而独立变量之和的矩母函数等于它们矩母函数的乘积。对于 $X \\sim \\text{Binomial}(n, p)$，每次试验的矩母函数为 $1 - p + pe^t$，由试验的独立性得 $M_X(t) = (1 - p + pe^t)^n$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(5, 30);
@@ -536,8 +536,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "mgf-of-poisson-distribution",
         title: t("Deriving the MGF of a Poisson distribution", "推导泊松分布的矩母函数"),
         explanation: t(
-          "For $X \\sim \\text{Poisson}(\\lambda)$, $M_X(t) = \\sum_{k=0}^\\infty e^{tk} \\frac{e^{-\\lambda} \\lambda^k}{k!} = e^{-\\lambda} \\sum_{k=0}^\\infty \\frac{(\\lambda e^t)^k}{k!} = e^{-\\lambda} e^{\\lambda e^t} = e^{\\lambda(e^t - 1)}$.",
-          "对于 $X \\sim \\text{Poisson}(\\lambda)$，$M_X(t) = \\sum_{k=0}^\\infty e^{tk} \\frac{e^{-\\lambda} \\lambda^k}{k!} = e^{-\\lambda} \\sum_{k=0}^\\infty \\frac{(\\lambda e^t)^k}{k!} = e^{-\\lambda} e^{\\lambda e^t} = e^{\\lambda(e^t - 1)}$。",
+          "Combining the exponential factor with the power in each term turns the sum into the exponential series, which has a closed form. For $X \\sim \\text{Poisson}(\\lambda)$, $M_X(t) = \\sum_{k=0}^\\infty e^{tk} \\frac{e^{-\\lambda} \\lambda^k}{k!} = e^{-\\lambda} \\sum_{k=0}^\\infty \\frac{(\\lambda e^t)^k}{k!} = e^{-\\lambda} e^{\\lambda e^t} = e^{\\lambda(e^t - 1)}$.",
+          "把每一项中的指数因子与幂合并，就把这个和变成了指数级数，它有封闭形式。对于 $X \\sim \\text{Poisson}(\\lambda)$，$M_X(t) = \\sum_{k=0}^\\infty e^{tk} \\frac{e^{-\\lambda} \\lambda^k}{k!} = e^{-\\lambda} \\sum_{k=0}^\\infty \\frac{(\\lambda e^t)^k}{k!} = e^{-\\lambda} e^{\\lambda e^t} = e^{\\lambda(e^t - 1)}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 50);
@@ -584,8 +584,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "mgf-of-exponential-distribution",
         title: t("Deriving the MGF of an exponential distribution", "推导指数分布的矩母函数"),
         explanation: t(
-          "For $X \\sim \\text{Exp}(\\lambda)$ and $t < \\lambda$, $M_X(t) = \\int_0^\\infty e^{tx} \\lambda e^{-\\lambda x} \\, dx = \\lambda \\int_0^\\infty e^{-(\\lambda - t)x} \\, dx = \\frac{\\lambda}{\\lambda - t}$.",
-          "对于 $X \\sim \\text{Exp}(\\lambda)$，在 $t < \\lambda$ 时，$M_X(t) = \\int_0^\\infty e^{tx} \\lambda e^{-\\lambda x} \\, dx = \\lambda \\int_0^\\infty e^{-(\\lambda - t)x} \\, dx = \\frac{\\lambda}{\\lambda - t}$。",
+          "The integral combines two exponentials into one, and it converges only when the parameter is less than the rate, so the formula holds only there. For $X \\sim \\text{Exp}(\\lambda)$ and $t < \\lambda$, $M_X(t) = \\int_0^\\infty e^{tx} \\lambda e^{-\\lambda x} \\, dx = \\lambda \\int_0^\\infty e^{-(\\lambda - t)x} \\, dx = \\frac{\\lambda}{\\lambda - t}$.",
+          "这个积分把两个指数函数合成一个，只有当参数小于速率时才收敛，所以公式只在那里成立。对于 $X \\sim \\text{Exp}(\\lambda)$，在 $t < \\lambda$ 时，$M_X(t) = \\int_0^\\infty e^{tx} \\lambda e^{-\\lambda x} \\, dx = \\lambda \\int_0^\\infty e^{-(\\lambda - t)x} \\, dx = \\frac{\\lambda}{\\lambda - t}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 50);
@@ -617,8 +617,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "mgf-of-continuous-uniform-distribution",
         title: t("Deriving the MGF of a uniform distribution", "推导均匀分布的矩母函数"),
         explanation: t(
-          "For $X \\sim \\text{Uniform}(0, b)$, $M_X(t) = \\int_0^b e^{tx} \\cdot \\frac{1}{b} \\, dx = \\frac{e^{bt} - 1}{bt}$.",
-          "对于 $X \\sim \\text{Uniform}(0, b)$，$M_X(t) = \\int_0^b e^{tx} \\cdot \\frac{1}{b} \\, dx = \\frac{e^{bt} - 1}{bt}$。",
+          "Integrating the exponential against the constant density gives a difference of exponentials divided by the parameter and the length of the interval. For $X \\sim \\text{Uniform}(0, b)$, $M_X(t) = \\int_0^b e^{tx} \\cdot \\frac{1}{b} \\, dx = \\frac{e^{bt} - 1}{bt}$.",
+          "把指数函数与常数密度一起积分，得到指数之差除以参数与区间长度之积。对于 $X \\sim \\text{Uniform}(0, b)$，$M_X(t) = \\int_0^b e^{tx} \\cdot \\frac{1}{b} \\, dx = \\frac{e^{bt} - 1}{bt}$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(2, 50);
@@ -668,8 +668,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "mgf-of-linear-transformation",
         title: t("MGF of a linear transformation Y = aX + b", "线性变换 Y = aX + b 的矩母函数"),
         explanation: t(
-          "For $Y = aX + b$, $M_Y(t) = E[e^{t(aX + b)}] = E[e^{bt} e^{(at)X}] = e^{bt} M_X(at)$.",
-          "对于 $Y = aX + b$，有 $M_Y(t) = E[e^{t(aX + b)}] = E[e^{bt} e^{(at)X}] = e^{bt} M_X(at)$。",
+          "A shift contributes an exponential factor in front, while a scale replaces the parameter by the scaled parameter inside the original function. For $Y = aX + b$, $M_Y(t) = E[e^{t(aX + b)}] = E[e^{bt} e^{(at)X}] = e^{bt} M_X(at)$.",
+          "平移在前面贡献一个指数因子，而缩放则在原函数中把参数换成缩放后的参数。对于 $Y = aX + b$，有 $M_Y(t) = E[e^{t(aX + b)}] = E[e^{bt} e^{(at)X}] = e^{bt} M_X(at)$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(2, 12);
@@ -703,8 +703,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "mgf-of-sum-of-independent-variables",
         title: t("MGF of a sum of independent random variables", "独立随机变量和的矩母函数"),
         explanation: t(
-          "If $X_1$ and $X_2$ are independent, $M_{X_1 + X_2}(t) = E[e^{t(X_1 + X_2)}] = E[e^{tX_1}] \\, E[e^{tX_2}] = M_{X_1}(t) \\, M_{X_2}(t)$.",
-          "若 $X_1$ 与 $X_2$ 相互独立，则 $M_{X_1 + X_2}(t) = E[e^{t(X_1 + X_2)}] = E[e^{tX_1}] \\, E[e^{tX_2}] = M_{X_1}(t) \\, M_{X_2}(t)$。",
+          "Independence lets the expectation of a product split into a product of expectations, so the generating functions of independent variables multiply. If $X_1$ and $X_2$ are independent, $M_{X_1 + X_2}(t) = E[e^{t(X_1 + X_2)}] = E[e^{tX_1}] \\, E[e^{tX_2}] = M_{X_1}(t) \\, M_{X_2}(t)$.",
+          "独立性使乘积的期望可以拆成期望的乘积，所以独立变量的矩母函数相乘。若 $X_1$ 与 $X_2$ 相互独立，则 $M_{X_1 + X_2}(t) = E[e^{t(X_1 + X_2)}] = E[e^{tX_1}] \\, E[e^{tX_2}] = M_{X_1}(t) \\, M_{X_2}(t)$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda1 = rng.int(2, 15);
@@ -743,8 +743,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "recognizing-distribution-from-mgf",
         title: t("Identifying a distribution from its MGF", "根据矩母函数识别概率分布"),
         explanation: t(
-          "By the uniqueness property, an MGF of the form $(q + pe^t)^n$ identifies the $\\text{Binomial}(n, p)$ distribution, and $e^{\\lambda(e^t - 1)}$ identifies $\\text{Poisson}(\\lambda)$.",
-          "由唯一性定理，形如 $(q + pe^t)^n$ 的矩母函数唯一确定 $\\text{Binomial}(n, p)$ 分布，而 $e^{\\lambda(e^t - 1)}$ 唯一确定 $\\text{Poisson}(\\lambda)$ 分布。",
+          "A moment generating function determines the distribution uniquely, so matching its form to a known one identifies the distribution and its parameters. By the uniqueness property, an MGF of the form $(q + pe^t)^n$ identifies the $\\text{Binomial}(n, p)$ distribution, and $e^{\\lambda(e^t - 1)}$ identifies $\\text{Poisson}(\\lambda)$.",
+          "矩母函数唯一确定分布，所以把它的形式与已知形式相对照，就能确定分布及其参数。由唯一性定理，形如 $(q + pe^t)^n$ 的矩母函数唯一确定 $\\text{Binomial}(n, p)$ 分布，而 $e^{\\lambda(e^t - 1)}$ 唯一确定 $\\text{Poisson}(\\lambda)$ 分布。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(4, 30);
@@ -769,8 +769,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "sum-of-independent-distributions-via-mgf",
         title: t("Deriving distribution of sums via MGF uniqueness", "应用矩母函数唯一性确定和的分布"),
         explanation: t(
-          "If the $X_i \\sim \\text{Exp}(\\lambda)$ are independent, the sum $S_n = \\sum_{i=1}^n X_i$ has MGF $\\left(\\frac{\\lambda}{\\lambda - t}\\right)^n$, which identifies the $\\text{Gamma}(n, \\lambda)$ distribution.",
-          "若独立随机变量 $X_i \\sim \\text{Exp}(\\lambda)$，则和 $S_n = \\sum_{i=1}^n X_i$ 的矩母函数为 $\\left(\\frac{\\lambda}{\\lambda - t}\\right)^n$，唯一对应 $\\text{Gamma}(n, \\lambda)$ 分布。",
+          "Multiply the generating functions of the independent pieces, then recognize the product as the generating function of a known distribution. If the $X_i \\sim \\text{Exp}(\\lambda)$ are independent, the sum $S_n = \\sum_{i=1}^n X_i$ has MGF $\\left(\\frac{\\lambda}{\\lambda - t}\\right)^n$, which identifies the $\\text{Gamma}(n, \\lambda)$ distribution.",
+          "把各个独立部分的矩母函数相乘，再认出这个乘积是某个已知分布的矩母函数。若独立随机变量 $X_i \\sim \\text{Exp}(\\lambda)$，则和 $S_n = \\sum_{i=1}^n X_i$ 的矩母函数为 $\\left(\\frac{\\lambda}{\\lambda - t}\\right)^n$，唯一对应 $\\text{Gamma}(n, \\lambda)$ 分布。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(2, 10);

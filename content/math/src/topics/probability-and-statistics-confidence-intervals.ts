@@ -102,8 +102,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "fpc-confidence-interval-margin-reduction",
         title: t("Understanding the narrowing effect of FPC on confidence intervals", "理解 FPC 对置信区间的收窄效应"),
         explanation: t(
-          "Because √((N - n) / (N - 1)) < 1, the FPC narrows the margin of error and yields a more precise interval.",
-          "因为 √((N - n) / (N - 1)) < 1，有限总体校正使误差范围变窄，从而得到更精确的置信区间。",
+          "Because the correction factor is less than one, sampling a large fraction of the population gives a narrower interval than the usual formula. Because √((N - n) / (N - 1)) < 1, the FPC narrows the margin of error and yields a more precise interval.",
+          "由于修正因子小于 1，抽取总体中很大一部分时，得到的区间比通常公式给出的更窄。因为 √((N - n) / (N - 1)) < 1，有限总体校正使误差范围变窄，从而得到更精确的置信区间。",
         ),
         generate: (rng: Rng): Problem => {
           const N = rng.int(200, 1000);
@@ -201,8 +201,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "fpc-proportion-standard-error-formula",
         title: t("Formulating the standard error with FPC for proportions", "构建含 FPC 的样本比例标准误差表达式"),
         explanation: t(
-          "$SE(\\hat{p}) = \\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{n} \\cdot \\frac{N - n}{N - 1}}$.",
-          "$SE(\\hat{p}) = \\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{n} \\cdot \\frac{N - n}{N - 1}}$。",
+          "The standard error of a proportion is corrected in the same way as for a mean, by multiplying the variance by the finite population factor. $SE(\\hat{p}) = \\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{n} \\cdot \\frac{N - n}{N - 1}}$.",
+          "比例的标准误与均值的修正方法相同，都是把方差乘以有限总体修正因子。$SE(\\hat{p}) = \\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{n} \\cdot \\frac{N - n}{N - 1}}$。",
         ),
         generate: (rng: Rng): Problem => {
           const N = rng.int(300, 1500);
@@ -256,8 +256,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "chi-square-variance-confidence-bounds",
         title: t("Identifying endpoints for variance confidence intervals", "确定方差置信区间的上下限构造"),
         explanation: t(
-          "The interval is $\\left[\\frac{(n-1)s^2}{\\chi^2_{\\text{upper}}}, \\frac{(n-1)s^2}{\\chi^2_{\\text{lower}}}\\right]$. Note that the larger critical value produces the lower bound.",
-          "区间为 $\\left[\\frac{(n-1)s^2}{\\chi^2_{\\text{upper}}}, \\frac{(n-1)s^2}{\\chi^2_{\\text{lower}}}\\right]$。注意较大的卡方临界值对应置信下限。",
+          "Dividing by the larger chi square value gives the lower bound and by the smaller value gives the upper bound, because the statistic is inverted. The interval is $\\left[\\frac{(n-1)s^2}{\\chi^2_{\\text{upper}}}, \\frac{(n-1)s^2}{\\chi^2_{\\text{lower}}}\\right]$. Note that the larger critical value produces the lower bound.",
+          "除以较大的卡方值得到下限，除以较小的卡方值得到上限，因为统计量被倒了过来。区间为 $\\left[\\frac{(n-1)s^2}{\\chi^2_{\\text{upper}}}, \\frac{(n-1)s^2}{\\chi^2_{\\text{lower}}}\\right]$。注意较大的卡方临界值对应置信下限。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(6, 40);
@@ -363,8 +363,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "pooled-t-degrees-of-freedom",
         title: t("Degrees of freedom for pooled two-sample t interval", "合并双样本 t 置信区间的自由度"),
         explanation: t(
-          "The degrees of freedom for pooled two-sample t is ν = n1 + n2 - 2.",
-          "合并双样本 t 检验/置信区间的自由度为 ν = n1 + n2 - 2。",
+          "Each sample loses one degree of freedom for its own mean, so the pooled degrees of freedom are the total sample size minus two. The degrees of freedom for pooled two-sample t is ν = n1 + n2 - 2.",
+          "每个样本因估计自己的均值而失去一个自由度，所以合并后的自由度是总样本量减 2。合并双样本 t 检验/置信区间的自由度为 ν = n1 + n2 - 2。",
         ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(8, 35);
@@ -408,8 +408,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "welch-standard-error-formula",
         title: t("Formulating the standard error for Welch's t interval", "构建韦尔奇 t 区间的标准误差公式"),
         explanation: t(
-          "Welch's standard error is $SE = \\sqrt{\\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}}$.",
-          "韦尔奇标准误差为 $SE = \\sqrt{\\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}}$。",
+          "When the variances may differ, the standard error of the difference simply adds the two estimated variances of the sample means. Welch's standard error is $SE = \\sqrt{\\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}}$.",
+          "当方差可能不同时，差的标准误只需把两个样本均值的估计方差相加。韦尔奇标准误差为 $SE = \\sqrt{\\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}}$。",
         ),
         generate: (rng: Rng): Problem => {
           const s1Sq = rng.int(10, 50);
@@ -451,8 +451,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "paired-known-variance-margin-of-error",
         title: t("Computing the margin of error for paired samples with known variance", "计算已知方差下配对样本的误差范围"),
         explanation: t(
-          "The margin of error is $E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}}$.",
-          "误差范围为 $E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}}$。",
+          "Pairing turns the two samples into a single sample of differences, so the margin of error uses the standard deviation of those differences. The margin of error is $E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}}$.",
+          "配对把两个样本变成一个差值样本，所以误差范围使用这些差值的标准差。误差范围为 $E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 8);
@@ -496,8 +496,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "paired-differences-mean-calculation",
         title: t("Computing the mean difference d̄ from paired observations", "根据配对观测值计算平均差值 d̄"),
         explanation: t(
-          "The mean difference is $\\bar{d} = \\frac{1}{n} \\sum_i (x_{1i} - x_{2i})$.",
-          "差值的均值为 $\\bar{d} = \\frac{1}{n} \\sum_i (x_{1i} - x_{2i})$。",
+          "Subtract within each pair first, then average the differences; this removes the variation between subjects. The mean difference is $\\bar{d} = \\frac{1}{n} \\sum_i (x_{1i} - x_{2i})$.",
+          "先在每一对内部相减，再对差值求平均；这样就消除了个体之间的差异。差值的均值为 $\\bar{d} = \\frac{1}{n} \\sum_i (x_{1i} - x_{2i})$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(4, 8);
@@ -542,8 +542,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "two-proportion-variance-evaluation",
         title: t("Evaluating the estimated variance of difference between two proportions", "计算两个比例之差的估计方差"),
         explanation: t(
-          "$\\operatorname{Var}(\\hat{p}_1 - \\hat{p}_2) = \\frac{\\hat{p}_1(1 - \\hat{p}_1)}{n_1} + \\frac{\\hat{p}_2(1 - \\hat{p}_2)}{n_2}$.",
-          "$\\operatorname{Var}(\\hat{p}_1 - \\hat{p}_2) = \\frac{\\hat{p}_1(1 - \\hat{p}_1)}{n_1} + \\frac{\\hat{p}_2(1 - \\hat{p}_2)}{n_2}$。",
+          "The two sample proportions are independent, so the variance of their difference is the sum of their estimated variances. $\\operatorname{Var}(\\hat{p}_1 - \\hat{p}_2) = \\frac{\\hat{p}_1(1 - \\hat{p}_1)}{n_1} + \\frac{\\hat{p}_2(1 - \\hat{p}_2)}{n_2}$.",
+          "两个样本比例相互独立，所以它们之差的方差是各自估计方差之和。$\\operatorname{Var}(\\hat{p}_1 - \\hat{p}_2) = \\frac{\\hat{p}_1(1 - \\hat{p}_1)}{n_1} + \\frac{\\hat{p}_2(1 - \\hat{p}_2)}{n_2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(50, 200);
@@ -585,8 +585,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "evaluating-required-sample-size-mean",
         title: t("Calculating required sample size for mean estimation", "计算均值估计所需的样本容量"),
         explanation: t(
-          "$n = \\left(\\frac{z \\sigma}{E}\\right)^2$. Always round up to the next integer if the result is not exact.",
-          "$n = \\left(\\frac{z \\sigma}{E}\\right)^2$。若计算结果不是整数，总是向上取整。",
+          "Solving the margin of error formula for the sample size shows how many observations are needed, and you round up so the target is met. $n = \\left(\\frac{z \\sigma}{E}\\right)^2$. Always round up to the next integer if the result is not exact.",
+          "从误差范围公式中解出样本量，就知道需要多少个观测值；要向上取整，以保证达到目标。$n = \\left(\\frac{z \\sigma}{E}\\right)^2$。若计算结果不是整数，总是向上取整。",
         ),
         generate: (rng: Rng): Problem => {
           const z = rng.pick([2, 3]);
@@ -628,8 +628,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "evaluating-finite-sample-size-means",
         title: t("Computing adjusted sample size for finite populations", "计算有限总体的校正样本容量"),
         explanation: t(
-          "With the finite population correction, $n = \\frac{N n_0}{n_0 + N - 1}$.",
-          "经有限总体校正，$n = \\frac{N n_0}{n_0 + N - 1}$。",
+          "Start from the sample size for an infinite population, then reduce it, since a small population needs fewer observations for the same precision. With the finite population correction, $n = \\frac{N n_0}{n_0 + N - 1}$.",
+          "先从无限总体所需的样本量出发，再把它缩小，因为小总体达到同样精度所需的观测更少。经有限总体校正，$n = \\frac{N n_0}{n_0 + N - 1}$。",
         ),
         generate: (rng: Rng): Problem => {
           const N = rng.int(200, 1000);
@@ -669,8 +669,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "conservative-sample-size-proportion",
         title: t("Conservative sample size calculation with p = 0.5", "采用 p = 0.5 的保守样本容量计算"),
         explanation: t(
-          "$p(1 - p)$ is maximized at $p = 0.5$, where $p(1 - p) = 0.25 = \\frac{1}{4}$, giving $n = \\frac{z^2}{4E^2}$.",
-          "$p(1 - p)$ 在 $p = 0.5$ 处取得最大值 $0.25 = \\frac{1}{4}$，因此最保守的样本容量为 $n = \\frac{z^2}{4E^2}$。",
+          "Without a prior estimate of the proportion, using one half gives the largest possible variance, so the sample size is large enough whatever the true proportion. $p(1 - p)$ is maximized at $p = 0.5$, where $p(1 - p) = 0.25 = \\frac{1}{4}$, giving $n = \\frac{z^2}{4E^2}$.",
+          "在没有比例的先验估计时，取二分之一会给出最大的方差，所以无论真实比例是多少，样本量都足够。$p(1 - p)$ 在 $p = 0.5$ 处取得最大值 $0.25 = \\frac{1}{4}$，因此最保守的样本容量为 $n = \\frac{z^2}{4E^2}$。",
         ),
         generate: (rng: Rng): Problem => {
           // E = 1/k where k in [10, 50]
@@ -714,8 +714,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "evaluating-finite-sample-size-proportions",
         title: t("Computing FPC-adjusted sample size for proportions", "计算比例估计的有限总体校正样本容量"),
         explanation: t(
-          "With the finite population correction, $n = \\frac{N n_0}{n_0 + N - 1}$.",
-          "经有限总体校正，$n = \\frac{N n_0}{n_0 + N - 1}$。",
+          "The same adjustment applies to proportions: compute the usual sample size first and then correct it for the population size. With the finite population correction, $n = \\frac{N n_0}{n_0 + N - 1}$.",
+          "同样的调整也适用于比例：先算出通常的样本量，再根据总体大小修正它。经有限总体校正，$n = \\frac{N n_0}{n_0 + N - 1}$。",
         ),
         generate: (rng: Rng): Problem => {
           const N = rng.int(300, 2000);

@@ -190,8 +190,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
         id: "evaluating-negative-binomial-mean-and-variance",
         title: t("Evaluating the mean and variance of a negative binomial variable", "计算负二项分布的均值与方差"),
         explanation: t(
-          "For the number of trials $X$ needed to reach $r$ successes, $E[X] = \\frac{r}{p}$ and $\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2}$.",
-          "对于获得 $r$ 次成功所需的试验次数 $X$，$E[X] = \\frac{r}{p}$，$\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2}$。",
+          "Identify the number of successes needed and the success probability, then multiply the geometric mean and variance by the number of successes. For the number of trials $X$ needed to reach $r$ successes, $E[X] = \\frac{r}{p}$ and $\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2}$.",
+          "确定所需的成功次数和成功概率，再把几何分布的均值和方差乘以成功次数。对于获得 $r$ 次成功所需的试验次数 $X$，$E[X] = \\frac{r}{p}$，$\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const r = rng.int(2, 10);

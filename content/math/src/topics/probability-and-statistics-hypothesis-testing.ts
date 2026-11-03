@@ -120,8 +120,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "poisson-normal-test-statistic",
         title: t("Computing the standardized test statistic for Poisson rate", "计算泊松发生率的标准化检验统计量"),
         explanation: t(
-          "Under $H_0$, $E[K] = n\\lambda_0$ and $\\operatorname{Var}(K) = n\\lambda_0$, so $Z = \\frac{K - n\\lambda_0}{\\sqrt{n\\lambda_0}}$.",
-          "在 $H_0$ 下，$E[K] = n\\lambda_0$ 且 $\\operatorname{Var}(K) = n\\lambda_0$，故 $Z = \\frac{K - n\\lambda_0}{\\sqrt{n\\lambda_0}}$。",
+          "Under the null hypothesis the total count has mean and variance both equal to the expected count, so standardize with its square root. Under $H_0$, $E[K] = n\\lambda_0$ and $\\operatorname{Var}(K) = n\\lambda_0$, so $Z = \\frac{K - n\\lambda_0}{\\sqrt{n\\lambda_0}}$.",
+          "在原假设下，总计数的均值和方差都等于期望计数，所以用它的平方根来标准化。在 $H_0$ 下，$E[K] = n\\lambda_0$ 且 $\\operatorname{Var}(K) = n\\lambda_0$，故 $Z = \\frac{K - n\\lambda_0}{\\sqrt{n\\lambda_0}}$。",
         ),
         generate: (rng: Rng): Problem => {
           const m = rng.int(4, 15);
@@ -166,8 +166,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "evaluating-left-tailed-critical-region",
         title: t("Evaluating left-tailed test decisions", "评估左尾检验的决策"),
         explanation: t(
-          "If $z_{\\text{calc}} \\le -z_\\alpha$, reject $H_0$; otherwise fail to reject $H_0$.",
-          "若 $z_{\\text{calc}} \\le -z_\\alpha$，则拒绝 $H_0$；否则不拒绝 $H_0$。",
+          "A left tailed test looks for evidence that the parameter is smaller than claimed, so only a statistic far enough to the left leads to rejection. If $z_{\\text{calc}} \\le -z_\\alpha$, reject $H_0$; otherwise fail to reject $H_0$.",
+          "左尾检验寻找参数小于声称值的证据，所以只有统计量足够靠左时才拒绝原假设。若 $z_{\\text{calc}} \\le -z_\\alpha$，则拒绝 $H_0$；否则不拒绝 $H_0$。",
         ),
         generate: (rng: Rng): Problem => {
           const levels = [
@@ -228,8 +228,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "evaluating-right-tailed-critical-region",
         title: t("Evaluating right-tailed test decisions", "评估右尾检验的决策"),
         explanation: t(
-          "If $z_{\\text{calc}} \\ge z_\\alpha$, reject $H_0$; otherwise fail to reject $H_0$.",
-          "若 $z_{\\text{calc}} \\ge z_\\alpha$，则拒绝 $H_0$；否则不拒绝 $H_0$。",
+          "A right tailed test looks for evidence that the parameter is larger than claimed, so only a statistic far enough to the right leads to rejection. If $z_{\\text{calc}} \\ge z_\\alpha$, reject $H_0$; otherwise fail to reject $H_0$.",
+          "右尾检验寻找参数大于声称值的证据，所以只有统计量足够靠右时才拒绝原假设。若 $z_{\\text{calc}} \\ge z_\\alpha$，则拒绝 $H_0$；否则不拒绝 $H_0$。",
         ),
         generate: (rng: Rng): Problem => {
           const levels = [
@@ -290,8 +290,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "evaluating-two-tailed-critical-region",
         title: t("Evaluating two-tailed test decisions", "评估双尾检验的决策"),
         explanation: t(
-          "If $|z_{\\text{calc}}| \\ge z_{\\alpha/2}$, reject $H_0$; otherwise fail to reject $H_0$.",
-          "若 $|z_{\\text{calc}}| \\ge z_{\\alpha/2}$，则拒绝 $H_0$；否则不拒绝 $H_0$。",
+          "A two tailed test splits the significance level between both tails, so a statistic far enough in either direction leads to rejection. If $|z_{\\text{calc}}| \\ge z_{\\alpha/2}$, reject $H_0$; otherwise fail to reject $H_0$.",
+          "双尾检验把显著性水平平分到两个尾部，所以统计量在任一方向上足够远都会拒绝原假设。若 $|z_{\\text{calc}}| \\ge z_{\\alpha/2}$，则拒绝 $H_0$；否则不拒绝 $H_0$。",
         ),
         generate: (rng: Rng): Problem => {
           const levels = [
@@ -445,8 +445,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "one-mean-known-variance-z-statistic",
         title: t("Computing the one-sample z-test statistic", "计算单样本 z 检验统计量"),
         explanation: t(
-          "The test statistic is $z = \\frac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}}$.",
-          "检验统计量为 $z = \\frac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}}$。",
+          "The statistic counts how many standard errors the sample mean lies from the hypothesized mean, using the known population standard deviation. The test statistic is $z = \\frac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}}$.",
+          "这个统计量用已知的总体标准差，计算样本均值离假设均值有多少个标准误。检验统计量为 $z = \\frac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(3, 12);
@@ -493,8 +493,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "one-mean-unknown-variance-t-statistic",
         title: t("Computing the one-sample t-test statistic", "计算单样本 t 检验统计量"),
         explanation: t(
-          "The test statistic is $t = \\frac{\\bar{x} - \\mu_0}{s / \\sqrt{n}}$ with $df = n - 1$.",
-          "检验统计量为 $t = \\frac{\\bar{x} - \\mu_0}{s / \\sqrt{n}}$，自由度 $df = n - 1$。",
+          "When the population standard deviation is unknown, the sample standard deviation replaces it, and the statistic follows a t distribution instead. The test statistic is $t = \\frac{\\bar{x} - \\mu_0}{s / \\sqrt{n}}$ with $df = n - 1$.",
+          "当总体标准差未知时，用样本标准差代替它，统计量改为服从 t 分布。检验统计量为 $t = \\frac{\\bar{x} - \\mu_0}{s / \\sqrt{n}}$，自由度 $df = n - 1$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 10);
@@ -538,8 +538,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "one-variance-chi-square-statistic",
         title: t("Computing the chi-square statistic for one variance", "计算单方差的卡方检验统计量"),
         explanation: t(
-          "The test statistic is $\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2}$.",
-          "检验统计量为 $\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2}$。",
+          "Scaling the sample variance by its degrees of freedom and dividing by the hypothesized variance gives a statistic with a chi square distribution. The test statistic is $\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2}$.",
+          "把样本方差乘以自由度再除以假设的方差，得到一个服从卡方分布的统计量。检验统计量为 $\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(10, 50);
@@ -584,8 +584,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "two-mean-known-variance-z-statistic",
         title: t("Computing the two-sample z-test statistic", "计算双样本 z 检验统计量"),
         explanation: t(
-          "$z = \\frac{(\\bar{x}_1 - \\bar{x}_2) - \\Delta_0}{SE}$, where $SE = \\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}$.",
-          "$z = \\frac{(\\bar{x}_1 - \\bar{x}_2) - \\Delta_0}{SE}$，其中 $SE = \\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}$。",
+          "Compare the observed difference of means with the hypothesized difference, measured in standard errors of the difference. $z = \\frac{(\\bar{x}_1 - \\bar{x}_2) - \\Delta_0}{SE}$, where $SE = \\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}$.",
+          "把观测到的均值之差与假设的差进行比较，用差的标准误来度量。$z = \\frac{(\\bar{x}_1 - \\bar{x}_2) - \\Delta_0}{SE}$，其中 $SE = \\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}$。",
         ),
         generate: (rng: Rng): Problem => {
           const pairs = [
@@ -642,8 +642,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "pooled-variance-calculation",
         title: t("Computing pooled sample variance", "计算合并样本方差"),
         explanation: t(
-          "The pooled variance is $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$.",
-          "合并方差为 $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$。",
+          "The pooled variance is a weighted average of the two sample variances, giving more weight to the larger sample. The pooled variance is $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$.",
+          "合并方差是两个样本方差的加权平均，较大的样本权重更大。合并方差为 $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(6, 25);
@@ -687,8 +687,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "welch-test-standard-error",
         title: t("Computing standard error for Welch's t-test", "计算韦尔奇 t 检验的标准误差平方"),
         explanation: t(
-          "Welch's squared standard error is $SE^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}$.",
-          "韦尔奇标准误差的平方为 $SE^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}$。",
+          "Welch's test does not assume equal variances, so each sample contributes its own estimated variance of the mean. Welch's squared standard error is $SE^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}$.",
+          "韦尔奇检验不假设方差相等，所以每个样本都贡献各自的均值估计方差。韦尔奇标准误差的平方为 $SE^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(8, 40);
@@ -729,8 +729,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "pooled-sample-proportion-calculation",
         title: t("Computing the pooled sample proportion", "计算合并样本比例"),
         explanation: t(
-          "The pooled sample proportion is $\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2}$.",
-          "合并样本比例为 $\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2}$。",
+          "Under the null hypothesis the two proportions are equal, so the best estimate of the common value combines the successes and the sample sizes. The pooled sample proportion is $\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2}$.",
+          "在原假设下两个比例相等，所以公共值的最佳估计是把成功数和样本量分别合并。合并样本比例为 $\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(40, 200);
@@ -772,8 +772,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "paired-z-test-statistic-calculation",
         title: t("Computing the paired z-test statistic", "计算配对 z 检验统计量"),
         explanation: t(
-          "The test statistic is $z = \\frac{\\bar{d} - \\Delta_0}{\\sigma_d / \\sqrt{n}}$.",
-          "检验统计量为 $z = \\frac{\\bar{d} - \\Delta_0}{\\sigma_d / \\sqrt{n}}$。",
+          "With paired data the test works on the differences alone, standardizing their mean with the known standard deviation of the differences. The test statistic is $z = \\frac{\\bar{d} - \\Delta_0}{\\sigma_d / \\sqrt{n}}$.",
+          "对于配对数据，检验只针对差值进行，用差值的已知标准差对其均值标准化。检验统计量为 $z = \\frac{\\bar{d} - \\Delta_0}{\\sigma_d / \\sqrt{n}}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(3, 10);
@@ -815,8 +815,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "paired-t-test-statistic-calculation",
         title: t("Computing the paired t-test statistic", "计算配对 t 检验统计量"),
         explanation: t(
-          "$t = \\frac{\\bar{d} - \\Delta_0}{s_d / \\sqrt{n}}$ with $df = n - 1$.",
-          "$t = \\frac{\\bar{d} - \\Delta_0}{s_d / \\sqrt{n}}$，自由度 $df = n - 1$。",
+          "When the standard deviation of the differences is estimated from the data, the statistic follows a t distribution with one less than the number of pairs. $t = \\frac{\\bar{d} - \\Delta_0}{s_d / \\sqrt{n}}$ with $df = n - 1$.",
+          "当差值的标准差由数据估计时，统计量服从自由度为对数减 1 的 t 分布。$t = \\frac{\\bar{d} - \\Delta_0}{s_d / \\sqrt{n}}$，自由度 $df = n - 1$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 8);
@@ -857,7 +857,10 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
       {
         id: "f-test-statistic-calculation",
         title: t("Computing the F-test statistic for two variances", "计算两方差的 F 检验统计量"),
-        explanation: t("The test statistic is $F = \\frac{s_1^2}{s_2^2}$.", "检验统计量为 $F = \\frac{s_1^2}{s_2^2}$。"),
+        explanation: t(
+          "If the two population variances are equal, the ratio of the sample variances should be near one, and the F distribution says how far from one is unusual. The test statistic is $F = \\frac{s_1^2}{s_2^2}$.",
+          "如果两个总体方差相等，样本方差之比应接近 1，F 分布说明偏离 1 多远才算异常。检验统计量为 $F = \\frac{s_1^2}{s_2^2}$。",
+        ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(10, 40);
           const n2 = rng.int(10, 40);
@@ -966,7 +969,10 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
       {
         id: "anova-sum-of-squares-identity-calc",
         title: t("Computing missing sums of squares in ANOVA", "计算方差分析中缺失的平方和"),
-        explanation: t("SST = SSB + SSW.", "SST = SSB + SSW。"),
+        explanation: t(
+          "The total variation splits exactly into variation between the group means and variation within the groups, so any two give the third. SST = SSB + SSW.",
+          "总变差恰好分成组间均值的变差和组内的变差，所以知道其中两个就能求出第三个。SST = SSB + SSW。",
+        ),
         generate: (rng: Rng): Problem => {
           const ssb = rng.int(50, 600);
           const ssw = rng.int(80, 1200);
@@ -1025,8 +1031,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
         id: "one-way-anova-f-statistic-calc",
         title: t("Computing the one-way ANOVA F-statistic", "计算单因素方差分析的 F 检验统计量"),
         explanation: t(
-          "F = MSB / MSW, where MSB = SSB / (k - 1) and MSW = SSW / (N - k).",
-          "F = MSB / MSW，其中 MSB = SSB / (k - 1) 且 MSW = SSW / (N - k)。",
+          "Dividing each sum of squares by its degrees of freedom gives a mean square, and a large ratio of between to within suggests the group means differ. F = MSB / MSW, where MSB = SSB / (k - 1) and MSW = SSW / (N - k).",
+          "把每个平方和除以其自由度得到均方，组间与组内均方之比很大时，说明各组均值存在差异。F = MSB / MSW，其中 MSB = SSB / (k - 1) 且 MSW = SSW / (N - k)。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(3, 6);

@@ -878,8 +878,8 @@ export const meanAndVarianceOfTheBernoulliDistribution: TopicDef = {
       id: "variance-of-a-bernoulli-variable",
       title: t("The variance", "方差"),
       explanation: t(
-        "For $X \\sim \\operatorname{Bernoulli}(0.3)$: $E(X) = 0.3$ and $\\operatorname{Var}(X) = 0.3 \\cdot 0.7 = 0.21$.",
-        "对 $X \\sim \\operatorname{Bernoulli}(0.3)$：$E(X) = 0.3$，$\\operatorname{Var}(X) = 0.3 \\cdot 0.7 = 0.21$。",
+        "A Bernoulli variable takes only the values zero and one, so its square equals itself, and the variance is the success probability times the failure probability. For $X \\sim \\operatorname{Bernoulli}(0.3)$: $E(X) = 0.3$ and $\\operatorname{Var}(X) = 0.3 \\cdot 0.7 = 0.21$.",
+        "伯努利变量只取 0 和 1，所以它的平方等于它自己，方差就是成功概率乘以失败概率。对 $X \\sim \\operatorname{Bernoulli}(0.3)$：$E(X) = 0.3$，$\\operatorname{Var}(X) = 0.3 \\cdot 0.7 = 0.21$。",
       ),
       generate(rng) {
         const s = bernoulliStory(rng);
@@ -902,8 +902,8 @@ export const meanAndVarianceOfTheBernoulliDistribution: TopicDef = {
       id: "bernoulli-parameter-from-the-variance",
       title: t("The parameter from the variance", "由方差求参数"),
       explanation: t(
-        "If $\\operatorname{Var}(X) = \\frac{6}{25}$ and $p < \\frac{1}{2}$, solve $p(1 - p) = \\frac{6}{25}$: $p = \\frac{2}{5}$ or $\\frac{3}{5}$, so $p = \\frac{2}{5}$.",
-        "若 $\\operatorname{Var}(X) = \\frac{6}{25}$ 且 $p < \\frac{1}{2}$，解 $p(1 - p) = \\frac{6}{25}$：$p = \\frac{2}{5}$ 或 $\\frac{3}{5}$，所以 $p = \\frac{2}{5}$。",
+        "The variance equation is a quadratic in the parameter with two symmetric solutions, so extra information is needed to choose between them. If $\\operatorname{Var}(X) = \\frac{6}{25}$ and $p < \\frac{1}{2}$, solve $p(1 - p) = \\frac{6}{25}$: $p = \\frac{2}{5}$ or $\\frac{3}{5}$, so $p = \\frac{2}{5}$.",
+        "方差方程是关于参数的二次方程，有两个对称的解，所以需要额外的信息来在两者之间选择。若 $\\operatorname{Var}(X) = \\frac{6}{25}$ 且 $p < \\frac{1}{2}$，解 $p(1 - p) = \\frac{6}{25}$：$p = \\frac{2}{5}$ 或 $\\frac{3}{5}$，所以 $p = \\frac{2}{5}$。",
       ),
       generate(rng) {
         const d = rng.int(3, 12);
@@ -1266,8 +1266,8 @@ export const meanAndVarianceOfThePoissonDistribution: TopicDef = {
       id: "moments-of-a-poisson-variable",
       title: t("Moments", "矩"),
       explanation: t(
-        "For $X \\sim \\operatorname{Po}(3)$: $E(X) = \\operatorname{Var}(X) = 3$, so $E(X^2) = 3 + 9 = 12$ and $\\operatorname{Var}(2X + 1) = 4 \\cdot 3 = 12$.",
-        "对 $X \\sim \\operatorname{Po}(3)$：$E(X) = \\operatorname{Var}(X) = 3$，所以 $E(X^2) = 3 + 9 = 12$，$\\operatorname{Var}(2X + 1) = 4 \\cdot 3 = 12$。",
+        "The mean and the variance of a Poisson variable are both equal to the rate, which makes its other moments easy to compute. For $X \\sim \\operatorname{Po}(3)$: $E(X) = \\operatorname{Var}(X) = 3$, so $E(X^2) = 3 + 9 = 12$ and $\\operatorname{Var}(2X + 1) = 4 \\cdot 3 = 12$.",
+        "泊松变量的均值和方差都等于速率，这使它的其他矩都很容易计算。对 $X \\sim \\operatorname{Po}(3)$：$E(X) = \\operatorname{Var}(X) = 3$，所以 $E(X^2) = 3 + 9 = 12$，$\\operatorname{Var}(2X + 1) = 4 \\cdot 3 = 12$。",
       ),
       generate(rng) {
         const lambda = Q.of(rng.int(1, 40), rng.pick([1, 2, 10]));
@@ -1302,8 +1302,8 @@ export const meanAndVarianceOfThePoissonDistribution: TopicDef = {
       id: "poisson-mean-from-a-ratio",
       title: t("The mean from a ratio of probabilities", "由概率之比求均值"),
       explanation: t(
-        "If $P(X = 2) = P(X = 3)$ for $X \\sim \\operatorname{Po}(\\lambda)$, then $e^{-\\lambda}\\frac{\\lambda^2}{2} = e^{-\\lambda}\\frac{\\lambda^3}{6}$, so $\\lambda = 3$, which is also the variance.",
-        "若 $X \\sim \\operatorname{Po}(\\lambda)$ 满足 $P(X = 2) = P(X = 3)$，则 $e^{-\\lambda}\\frac{\\lambda^2}{2} = e^{-\\lambda}\\frac{\\lambda^3}{6}$，所以 $\\lambda = 3$，这也是方差。",
+        "Writing out both probabilities and dividing cancels the exponential factor, leaving a simple equation for the rate. If $P(X = 2) = P(X = 3)$ for $X \\sim \\operatorname{Po}(\\lambda)$, then $e^{-\\lambda}\\frac{\\lambda^2}{2} = e^{-\\lambda}\\frac{\\lambda^3}{6}$, so $\\lambda = 3$, which is also the variance.",
+        "把两个概率都写出来再相除，指数因子被约去，只剩下一个关于速率的简单方程。若 $X \\sim \\operatorname{Po}(\\lambda)$ 满足 $P(X = 2) = P(X = 3)$，则 $e^{-\\lambda}\\frac{\\lambda^2}{2} = e^{-\\lambda}\\frac{\\lambda^3}{6}$，所以 $\\lambda = 3$，这也是方差。",
       ),
       generate(rng) {
         const k = rng.int(0, 4);
@@ -1347,8 +1347,8 @@ export const thePoissonApproximationOfTheBinomialDistribution: TopicDef = {
       id: "choosing-the-approximating-mean",
       title: t("The approximating mean", "近似分布的均值"),
       explanation: t(
-        "For $X \\sim B(500, 0.004)$, use $\\operatorname{Po}(500 \\cdot 0.004) = \\operatorname{Po}(2)$.",
-        "对 $X \\sim B(500, 0.004)$，用 $\\operatorname{Po}(500 \\cdot 0.004) = \\operatorname{Po}(2)$ 近似。",
+        "When there are many trials with a small success probability, a Poisson distribution with the same mean approximates the binomial well. For $X \\sim B(500, 0.004)$, use $\\operatorname{Po}(500 \\cdot 0.004) = \\operatorname{Po}(2)$.",
+        "当试验次数很多而成功概率很小时，均值相同的泊松分布可以很好地近似二项分布。对 $X \\sim B(500, 0.004)$，用 $\\operatorname{Po}(500 \\cdot 0.004) = \\operatorname{Po}(2)$ 近似。",
       ),
       generate(rng) {
         const n = rng.pick([200, 250, 400, 500, 800, 1000, 2000]);
@@ -1423,8 +1423,8 @@ export const meanAndVarianceOfTheGeometricDistribution: TopicDef = {
       id: "variance-of-a-geometric-variable",
       title: t("The variance", "方差"),
       explanation: t(
-        "For $X \\sim \\operatorname{Geo}(\\frac{1}{4})$: $\\operatorname{Var}(X) = \\frac{3/4}{1/16} = 12$.",
-        "对 $X \\sim \\operatorname{Geo}(\\frac{1}{4})$：$\\operatorname{Var}(X) = \\frac{3/4}{1/16} = 12$。",
+        "The waiting time for the first success varies more when success is rare, so the variance grows quickly as the success probability shrinks. For $X \\sim \\operatorname{Geo}(\\frac{1}{4})$: $\\operatorname{Var}(X) = \\frac{3/4}{1/16} = 12$.",
+        "成功越罕见，首次成功的等待时间波动越大，所以随着成功概率减小，方差增长得很快。对 $X \\sim \\operatorname{Geo}(\\frac{1}{4})$：$\\operatorname{Var}(X) = \\frac{3/4}{1/16} = 12$。",
       ),
       generate(rng) {
         const p = Q.of(rng.int(1, 4), rng.int(5, 12));
@@ -1447,8 +1447,8 @@ export const meanAndVarianceOfTheGeometricDistribution: TopicDef = {
       id: "geometric-variance-from-the-mean",
       title: t("The variance from the mean", "由均值求方差"),
       explanation: t(
-        "If $E(X) = 5$, then $p = \\frac{1}{5}$ and $\\operatorname{Var}(X) = \\frac{4/5}{1/25} = 20$. In general $\\operatorname{Var}(X) = \\mu^2 - \\mu$.",
-        "若 $E(X) = 5$，则 $p = \\frac{1}{5}$，$\\operatorname{Var}(X) = \\frac{4/5}{1/25} = 20$。一般地，$\\operatorname{Var}(X) = \\mu^2 - \\mu$。",
+        "The mean of a geometric variable is the reciprocal of the success probability, so the mean determines the parameter and hence the variance. If $E(X) = 5$, then $p = \\frac{1}{5}$ and $\\operatorname{Var}(X) = \\frac{4/5}{1/25} = 20$. In general $\\operatorname{Var}(X) = \\mu^2 - \\mu$.",
+        "几何变量的均值是成功概率的倒数，所以均值确定了参数，从而也确定了方差。若 $E(X) = 5$，则 $p = \\frac{1}{5}$，$\\operatorname{Var}(X) = \\frac{4/5}{1/25} = 20$。一般地，$\\operatorname{Var}(X) = \\mu^2 - \\mu$。",
       ),
       generate(rng) {
         const mu = Q.of(rng.int(3, 30), rng.pick([1, 1, 2]));
@@ -1535,8 +1535,8 @@ export const theNegativeBinomialDistribution: TopicDef = {
       id: "mean-and-variance-of-the-negative-binomial-distribution",
       title: t("Mean and variance", "均值与方差"),
       explanation: t(
-        "Waiting for $r$ successes is $r$ geometric waits in a row, so $E(X) = \\frac{r}{p}$ and $\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2}$. For $r = 3$, $p = \\frac{1}{4}$: $E(X) = 12$ and $\\operatorname{Var}(X) = 36$.",
-        "等待 $r$ 次成功相当于连续 $r$ 次几何等待，所以 $E(X) = \\frac{r}{p}$，$\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2}$。$r = 3$，$p = \\frac{1}{4}$ 时：$E(X) = 12$，$\\operatorname{Var}(X) = 36$。",
+        "Waiting for several successes is a sum of independent geometric waits, so both the mean and the variance are that many times those of one wait. Waiting for $r$ successes is $r$ geometric waits in a row, so $E(X) = \\frac{r}{p}$ and $\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2}$. For $r = 3$, $p = \\frac{1}{4}$: $E(X) = 12$ and $\\operatorname{Var}(X) = 36$.",
+        "等待若干次成功是若干次独立几何等待之和，所以均值和方差都是一次等待的相应倍数。等待 $r$ 次成功相当于连续 $r$ 次几何等待，所以 $E(X) = \\frac{r}{p}$，$\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2}$。$r = 3$，$p = \\frac{1}{4}$ 时：$E(X) = 12$，$\\operatorname{Var}(X) = 36$。",
       ),
       generate(rng) {
         const p = rng.pick(PS);
@@ -1645,8 +1645,8 @@ export const modelingWithTheNegativeBinomialDistribution: TopicDef = {
       id: "expected-attempts-in-context",
       title: t("Expected attempts", "期望尝试次数"),
       explanation: t(
-        "A salesperson closing $30\\%$ of calls needs on average $\\frac{5}{0.3} \\approx 16.67$ calls for $5$ sales.",
-        "成交率为 $30\\%$ 的销售员，平均需要 $\\frac{5}{0.3} \\approx 16.67$ 次通话才能成交 $5$ 笔。",
+        "Each success takes on average the reciprocal of the success rate in attempts, so several successes take that many times as long. A salesperson closing $30\\%$ of calls needs on average $\\frac{5}{0.3} \\approx 16.67$ calls for $5$ sales.",
+        "每次成功平均需要成功率倒数那么多次尝试，所以若干次成功需要相应倍数的次数。成交率为 $30\\%$ 的销售员，平均需要 $\\frac{5}{0.3} \\approx 16.67$ 次通话才能成交 $5$ 笔。",
       ),
       generate(rng) {
         const s = negBinStory(rng);

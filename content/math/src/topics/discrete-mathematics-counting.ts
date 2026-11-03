@@ -482,8 +482,8 @@ export const kPermutationsOfNWithRepetition: TopicDef = {
       id: "counting-sequences-with-repetition",
       title: t("Counting sequences", "计数序列"),
       explanation: t(
-        "A $4$-digit PIN uses digits $0$–$9$ with repeats allowed: $10^4 = 10000$ PINs. Each position is chosen independently.",
-        "$4$ 位 PIN 码使用数字 $0$–$9$，允许重复：共 $10^4 = 10000$ 个。每个位置都独立选择。",
+        "When repeats are allowed, every position has the same number of choices, so the multiplication principle gives that number raised to the length of the sequence. A $4$-digit PIN uses digits $0$–$9$ with repeats allowed: $10^4 = 10000$ PINs. Each position is chosen independently.",
+        "允许重复时，每个位置的选择数都相同，所以由乘法原理，总数是这个选择数的序列长度次幂。$4$ 位 PIN 码使用数字 $0$–$9$，允许重复：共 $10^4 = 10000$ 个。每个位置都独立选择。",
       ),
       generate(rng) {
         const kind = rng.int(0, 2);
@@ -519,8 +519,8 @@ export const kPermutationsOfNWithRepetition: TopicDef = {
       id: "sequences-with-a-repeated-symbol",
       title: t("Sequences with a repeat", "含重复符号的序列"),
       explanation: t(
-        "Of the $10^4$ four-digit PINs, $10 \\cdot 9 \\cdot 8 \\cdot 7 = 5040$ have all digits different, so $10000 - 5040 = 4960$ have a repeated digit.",
-        "在 $10^4$ 个四位 PIN 码中，各位互不相同的有 $10 \\cdot 9 \\cdot 8 \\cdot 7 = 5040$ 个，所以有重复数字的有 $10000 - 5040 = 4960$ 个。",
+        "Counting sequences with at least one repeat directly is messy, so count those with no repeats and subtract from the total. Of the $10^4$ four-digit PINs, $10 \\cdot 9 \\cdot 8 \\cdot 7 = 5040$ have all digits different, so $10000 - 5040 = 4960$ have a repeated digit.",
+        "直接数至少有一个重复的序列很麻烦，所以先数没有重复的序列，再从总数中减去。在 $10^4$ 个四位 PIN 码中，各位互不相同的有 $10 \\cdot 9 \\cdot 8 \\cdot 7 = 5040$ 个，所以有重复数字的有 $10000 - 5040 = 4960$ 个。",
       ),
       generate(rng) {
         const n = rng.int(4, 10);
@@ -566,8 +566,8 @@ export const combinationsWithRepetition: TopicDef = {
       id: "stars-and-bars",
       title: t("Stars and bars", "隔板法"),
       explanation: t(
-        "Choosing $5$ donuts from $3$ flavors is placing $5$ stars and $2$ bars in a row, like $\\star\\star|\\star|\\star\\star$: $\\binom{7}{2} = 21$ ways.",
-        "从 $3$ 种口味中选 $5$ 个甜甜圈，相当于把 $5$ 颗星和 $2$ 根隔板排成一行，如 $\\star\\star|\\star|\\star\\star$：共 $\\binom{7}{2} = 21$ 种。",
+        "Choosing items with repetition when order does not matter is the same as arranging stars for items and bars for the dividers between types. Choosing $5$ donuts from $3$ flavors is placing $5$ stars and $2$ bars in a row, like $\\star\\star|\\star|\\star\\star$: $\\binom{7}{2} = 21$ ways.",
+        "在不计顺序、允许重复的情况下选取物品，等同于用星号代表物品、用竖线代表类别之间的分隔来排列。从 $3$ 种口味中选 $5$ 个甜甜圈，相当于把 $5$ 颗星和 $2$ 根隔板排成一行，如 $\\star\\star|\\star|\\star\\star$：共 $\\binom{7}{2} = 21$ 种。",
       ),
       generate(rng) {
         const n = rng.int(3, 8);

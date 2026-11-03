@@ -118,8 +118,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "poisson-normal-approx-standard-deviation",
         title: t("Standard deviation of the approximating normal distribution", "近似正态分布的标准差"),
         explanation: t(
-          "For $X \\sim \\text{Poisson}(\\lambda)$, both the mean and the variance are $\\lambda$, so the standard deviation is $\\sigma = \\sqrt{\\lambda}$.",
-          "对于 $X \\sim \\text{Poisson}(\\lambda)$，其均值和方差均为 $\\lambda$，因此标准差为 $\\sigma = \\sqrt{\\lambda}$。",
+          "A Poisson variable with a large rate looks roughly normal, with the same mean and variance, so its standard deviation is the square root of the rate. For $X \\sim \\text{Poisson}(\\lambda)$, both the mean and the variance are $\\lambda$, so the standard deviation is $\\sigma = \\sqrt{\\lambda}$.",
+          "速率很大的泊松变量大致呈正态分布，均值和方差相同，所以标准差是速率的平方根。对于 $X \\sim \\text{Poisson}(\\lambda)$，其均值和方差均为 $\\lambda$，因此标准差为 $\\sigma = \\sqrt{\\lambda}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(4, 50);
@@ -142,8 +142,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "poisson-normal-continuity-z-score",
         title: t("Formulating the continuity-corrected z-score for Poisson", "构建泊松分布连续性校正的 z 值表达式"),
         explanation: t(
-          "To approximate P(X ≤ c) for Poisson(λ), the continuity correction gives z = (c + 0.5 - λ) / √λ.",
-          "为近似 Poisson(λ) 的 P(X ≤ c)，应用连续性校正得到标准化变量 z = (c + 0.5 - λ) / √λ。",
+          "Add one half to the cutoff before standardizing, because the count at the cutoff occupies the interval reaching half a unit beyond it. To approximate P(X ≤ c) for Poisson(λ), the continuity correction gives z = (c + 0.5 - λ) / √λ.",
+          "标准化之前先给分界值加上二分之一，因为分界值处的计数占据了延伸到其后半个单位的区间。为近似 Poisson(λ) 的 P(X ≤ c)，应用连续性校正得到标准化变量 z = (c + 0.5 - λ) / √λ。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(25, 100);
@@ -698,8 +698,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "gamma-distribution-mean-variance",
         title: t("Computing the mean and variance of a Gamma distribution", "计算伽马分布的期望与方差"),
         explanation: t(
-          "For $X \\sim \\text{Gamma}(\\alpha, \\beta)$ with shape $\\alpha$ and rate $\\beta$, $E[X] = \\frac{\\alpha}{\\beta}$ and $\\operatorname{Var}(X) = \\frac{\\alpha}{\\beta^2}$.",
-          "对于形状参数为 $\\alpha$、比率参数为 $\\beta$ 的伽马分布 $X \\sim \\text{Gamma}(\\alpha, \\beta)$，其均值为 $E[X] = \\frac{\\alpha}{\\beta}$，方差为 $\\operatorname{Var}(X) = \\frac{\\alpha}{\\beta^2}$。",
+          "A gamma variable with whole number shape is a sum of independent exponential waits, which explains why its mean and variance grow with the shape. For $X \\sim \\text{Gamma}(\\alpha, \\beta)$ with shape $\\alpha$ and rate $\\beta$, $E[X] = \\frac{\\alpha}{\\beta}$ and $\\operatorname{Var}(X) = \\frac{\\alpha}{\\beta^2}$.",
+          "形状参数为整数的伽马变量是若干个独立指数等待之和，这解释了为什么它的均值和方差随形状参数增大。对于形状参数为 $\\alpha$、比率参数为 $\\beta$ 的伽马分布 $X \\sim \\text{Gamma}(\\alpha, \\beta)$，其均值为 $E[X] = \\frac{\\alpha}{\\beta}$，方差为 $\\operatorname{Var}(X) = \\frac{\\alpha}{\\beta^2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const alpha = rng.int(2, 12);
@@ -723,8 +723,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "gamma-sum-of-exponentials",
         title: t("Gamma distribution as a sum of independent exponentials", "伽马分布作为独立指数变量之和"),
         explanation: t(
-          "The sum of n independent and identically distributed Exp(λ) variables follows Gamma(n, λ).",
-          "n 个独立同分布的 Exp(λ) 随机变量之和服从伽马分布 Gamma(n, λ)。",
+          "Waiting for several events of a Poisson process means adding the independent exponential gaps between them, which gives a gamma distribution. The sum of n independent and identically distributed Exp(λ) variables follows Gamma(n, λ).",
+          "等待泊松过程中的若干个事件，就是把它们之间独立的指数间隔加起来，结果服从伽马分布。n 个独立同分布的 Exp(λ) 随机变量之和服从伽马分布 Gamma(n, λ)。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(2, 15);
@@ -918,8 +918,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "f-distribution-ratio-definition",
         title: t("Defining the F-ratio from independent Chi-squares", "由独立卡方变量定义 F 比值"),
         explanation: t(
-          "$F = \\frac{U / d_1}{V / d_2}$, where $U \\sim \\chi^2(d_1)$ and $V \\sim \\chi^2(d_2)$ are independent.",
-          "$F = \\frac{U / d_1}{V / d_2}$，其中 $U \\sim \\chi^2(d_1)$ 与 $V \\sim \\chi^2(d_2)$ 相互独立。",
+          "The F distribution compares two independent estimates of variance, each scaled by its degrees of freedom, by taking their ratio. $F = \\frac{U / d_1}{V / d_2}$, where $U \\sim \\chi^2(d_1)$ and $V \\sim \\chi^2(d_2)$ are independent.",
+          "F 分布通过取比值来比较两个独立的方差估计，每个估计都除以它的自由度。$F = \\frac{U / d_1}{V / d_2}$，其中 $U \\sim \\chi^2(d_1)$ 与 $V \\sim \\chi^2(d_2)$ 相互独立。",
         ),
         generate: (rng: Rng): Problem => {
           const d1 = rng.int(2, 20);
@@ -954,8 +954,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "f-distribution-mean",
         title: t("Mean of the F-distribution", "F 分布的均值"),
         explanation: t(
-          "For X ~ F(d1, d2) with d2 > 2, E[X] = d2 / (d2 - 2), depending only on denominator degrees of freedom.",
-          "对于 d2 > 2 的 X ~ F(d1, d2)，其均值仅由分母自由度决定：E[X] = d2 / (d2 - 2)。",
+          "The mean of an F variable depends only on the denominator degrees of freedom, and it is slightly greater than one, approaching one for large samples. For X ~ F(d1, d2) with d2 > 2, E[X] = d2 / (d2 - 2), depending only on denominator degrees of freedom.",
+          "F 变量的均值只取决于分母的自由度，它略大于 1，样本很大时趋于 1。对于 d2 > 2 的 X ~ F(d1, d2)，其均值仅由分母自由度决定：E[X] = d2 / (d2 - 2)。",
         ),
         generate: (rng: Rng): Problem => {
           const d1 = rng.int(1, 20);

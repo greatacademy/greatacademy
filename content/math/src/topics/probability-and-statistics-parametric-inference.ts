@@ -152,8 +152,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "pooled-variance-evaluation",
         title: t("Computing pooled variance from two independent samples", "根据两个独立样本计算合并方差"),
         explanation: t(
-          "The pooled variance is $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$.",
-          "合并方差为 $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$。",
+          "When two populations share a variance, combine the samples by weighting each sample variance by its degrees of freedom. The pooled variance is $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$.",
+          "当两个总体方差相同时，用各自的自由度对样本方差加权来合并两个样本。合并方差为 $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(5, 20);
@@ -329,8 +329,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "method-of-moments-poisson-or-exp",
         title: t("Estimating parameter using the first sample moment", "利用一阶样本矩估计未知参数"),
         explanation: t(
-          "For $X \\sim \\text{Poisson}(\\lambda)$, $E[X] = \\lambda$, so the method of moments estimator is $\\hat{\\lambda} = \\bar{x}$.",
-          "对于 $X \\sim \\text{Poisson}(\\lambda)$，$E[X] = \\lambda$，故矩估计量为 $\\hat{\\lambda} = \\bar{x}$。",
+          "The method of moments sets the sample mean equal to the theoretical mean and solves for the parameter. For $X \\sim \\text{Poisson}(\\lambda)$, $E[X] = \\lambda$, so the method of moments estimator is $\\hat{\\lambda} = \\bar{x}$.",
+          "矩估计法令样本均值等于理论均值，再解出参数。对于 $X \\sim \\text{Poisson}(\\lambda)$，$E[X] = \\lambda$，故矩估计量为 $\\hat{\\lambda} = \\bar{x}$。",
         ),
         generate: (rng: Rng): Problem => {
           const sum = rng.int(40, 200);
@@ -367,7 +367,10 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
       {
         id: "method-of-moments-uniform-zero-theta",
         title: t("Method of moments for continuous uniform U(0, θ)", "连续均匀分布 U(0, θ) 的矩估计"),
-        explanation: t("For X ~ U(0, θ), E[X] = θ / 2, so θ̂ = 2 x̄.", "对于 X ~ U(0, θ)，理论均值为 E[X] = θ / 2，因此矩估计量为 θ̂ = 2 x̄。"),
+        explanation: t(
+          "The mean of a uniform distribution starting at zero is half its upper endpoint, so doubling the sample mean estimates that endpoint. For X ~ U(0, θ), E[X] = θ / 2, so θ̂ = 2 x̄.",
+          "从零开始的均匀分布的均值是上端点的一半，所以把样本均值加倍就能估计这个端点。对于 X ~ U(0, θ)，理论均值为 E[X] = θ / 2，因此矩估计量为 θ̂ = 2 x̄。",
+        ),
         generate: (rng: Rng): Problem => {
           const mean = rng.int(10, 60);
 
@@ -451,7 +454,10 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
       {
         id: "clt-standardized-z-score",
         title: t("Computing the z-score for a sample mean under CLT", "利用 CLT 计算样本均值的标准化 z 分数"),
-        explanation: t("z = (x̄ - μ) / (σ / √n).", "z = (x̄ - μ) / (σ / √n)。"),
+        explanation: t(
+          "Standardizing measures how many standard errors the sample mean lies from the population mean, which the central limit theorem treats as standard normal. z = (x̄ - μ) / (σ / √n).",
+          "标准化衡量样本均值离总体均值有多少个标准误，中心极限定理把它视为标准正态分布。z = (x̄ - μ) / (σ / √n)。",
+        ),
         generate: (rng: Rng): Problem => {
           const mu = rng.int(40, 100);
           const k = rng.int(2, 8);
@@ -493,7 +499,10 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
       {
         id: "evaluating-fpc-factor-squared",
         title: t("Evaluating the squared finite population correction factor", "计算有限总体校正因子的平方值"),
-        explanation: t("The squared FPC factor is (N - n) / (N - 1).", "有限总体校正因子的平方为 (N - n) / (N - 1)。"),
+        explanation: t(
+          "When sampling without replacement from a small population, each draw tells you more, so the variance is multiplied by this correction factor below one. The squared FPC factor is (N - n) / (N - 1).",
+          "从小总体中不放回抽样时，每次抽取提供的信息更多，所以方差要乘以这个小于 1 的修正因子。有限总体校正因子的平方为 (N - n) / (N - 1)。",
+        ),
         generate: (rng: Rng): Problem => {
           const N = rng.int(100, 500);
           const n = rng.int(10, 80);

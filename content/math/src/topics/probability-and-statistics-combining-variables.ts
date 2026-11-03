@@ -195,8 +195,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "trinomial-coefficient-evaluation",
         title: t("Computing the trinomial coefficient n! / (x! y! z!)", "计算三项式系数 n! / (x! y! z!)"),
         explanation: t(
-          "The number of ways to divide n items into groups of sizes x, y, z is n! / (x! y! z!).",
-          "将 n 个不同物品分成大小为 x, y, z 的三组的方法数为多项式系数 n! / (x! y! z!)。",
+          "Arrange all the items in order, then divide by the orderings within each group, since items in the same group are not distinguished. The number of ways to divide n items into groups of sizes x, y, z is n! / (x! y! z!).",
+          "先把所有物品排成一列，再除以每组内部的排列数，因为同一组中的物品不加区分。将 n 个不同物品分成大小为 x, y, z 的三组的方法数为多项式系数 n! / (x! y! z!)。",
         ),
         generate: (rng: Rng): Problem => {
           const x = rng.int(1, 4);
@@ -243,8 +243,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "multinomial-marginal-binomial",
         title: t("Recognizing that each marginal of a multinomial distribution is binomial", "多项分布的每个边际分布均为二项分布"),
         explanation: t(
-          "For $(X_1, \\dots, X_k) \\sim \\text{Multinomial}(n, p_1, \\dots, p_k)$, each component $X_i$ follows $\\text{Binomial}(n, p_i)$.",
-          "若 $(X_1, \\dots, X_k) \\sim \\text{Multinomial}(n, p_1, \\dots, p_k)$，则每个分量 $X_i$ 均服从二项分布 $\\text{Binomial}(n, p_i)$。",
+          "Focusing on one category and lumping all others together as failure turns each trial into a success or failure, so each count is binomial. For $(X_1, \\dots, X_k) \\sim \\text{Multinomial}(n, p_1, \\dots, p_k)$, each component $X_i$ follows $\\text{Binomial}(n, p_i)$.",
+          "只关注一个类别，把其他类别都归为失败，每次试验就变成成功或失败，所以每个计数都服从二项分布。若 $(X_1, \\dots, X_k) \\sim \\text{Multinomial}(n, p_1, \\dots, p_k)$，则每个分量 $X_i$ 均服从二项分布 $\\text{Binomial}(n, p_i)$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(10, 100);
@@ -623,8 +623,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "sum-of-independent-binomials-same-p",
         title: t("Adding independent binomial variables with identical p", "具有相同成功概率的独立二项变量求和"),
         explanation: t(
-          "If $X \\sim \\text{Binomial}(n_1, p)$ and $Y \\sim \\text{Binomial}(n_2, p)$ are independent, then $X + Y \\sim \\text{Binomial}(n_1 + n_2, p)$.",
-          "若 $X \\sim \\text{Binomial}(n_1, p)$ 与 $Y \\sim \\text{Binomial}(n_2, p)$ 相互独立，则 $X + Y \\sim \\text{Binomial}(n_1 + n_2, p)$。",
+          "Two sets of independent trials with the same success probability can be combined into one longer set, so the total is binomial with the trials added. If $X \\sim \\text{Binomial}(n_1, p)$ and $Y \\sim \\text{Binomial}(n_2, p)$ are independent, then $X + Y \\sim \\text{Binomial}(n_1 + n_2, p)$.",
+          "两组成功概率相同的独立试验可以合并成更长的一组，所以总数服从试验次数相加的二项分布。若 $X \\sim \\text{Binomial}(n_1, p)$ 与 $Y \\sim \\text{Binomial}(n_2, p)$ 相互独立，则 $X + Y \\sim \\text{Binomial}(n_1 + n_2, p)$。",
         ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(5, 50);
@@ -663,8 +663,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "sum-of-independent-poisson-parameters",
         title: t("Adding independent Poisson variables", "独立泊松变量求和"),
         explanation: t(
-          "For independent $X \\sim \\text{Poisson}(\\lambda_1)$ and $Y \\sim \\text{Poisson}(\\lambda_2)$, $X + Y \\sim \\text{Poisson}(\\lambda_1 + \\lambda_2)$.",
-          "若 $X \\sim \\text{Poisson}(\\lambda_1)$ 与 $Y \\sim \\text{Poisson}(\\lambda_2)$ 相互独立，则 $X + Y \\sim \\text{Poisson}(\\lambda_1 + \\lambda_2)$。",
+          "Counting events from two independent sources together is still a Poisson count, with the two rates added. For independent $X \\sim \\text{Poisson}(\\lambda_1)$ and $Y \\sim \\text{Poisson}(\\lambda_2)$, $X + Y \\sim \\text{Poisson}(\\lambda_1 + \\lambda_2)$.",
+          "把两个独立来源的事件合起来计数，仍是泊松计数，速率为两者之和。若 $X \\sim \\text{Poisson}(\\lambda_1)$ 与 $Y \\sim \\text{Poisson}(\\lambda_2)$ 相互独立，则 $X + Y \\sim \\text{Poisson}(\\lambda_1 + \\lambda_2)$。",
         ),
         generate: (rng: Rng): Problem => {
           const l1 = rng.int(2, 40);
