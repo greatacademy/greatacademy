@@ -62,6 +62,33 @@ export const velocityAndAccelerationAsFunctionsOfDisplacement: TopicDef = {
         });
       },
     },
+    {
+      id: "acceleration-from-the-square-of-the-speed",
+      title: t("Acceleration from the square of the speed", "由速度平方求加速度"),
+      explanation: t(
+        "Since $\\frac{d}{dx}(v^2) = 2v\\frac{dv}{dx}$, the relation $a = v\\frac{dv}{dx}$ can be written as\n\n$$a = \\frac{1}{2}\\frac{d}{dx}\\left(v^2\\right).$$\n\nThis form is convenient when $v^2$ is given as a function of position, as it is in energy calculations: differentiate $v^2$, halve the result, and there is no square root to deal with.",
+        "由于 $\\frac{d}{dx}(v^2) = 2v\\frac{dv}{dx}$，关系 $a = v\\frac{dv}{dx}$ 可写成\n\n$$a = \\frac{1}{2}\\frac{d}{dx}\\left(v^2\\right)。$$\n\n当 $v^2$ 以位置的函数给出时（如能量计算中），这种形式很方便：对 $v^2$ 求导再取一半，无需处理平方根。",
+      ),
+      generate(rng: Rng): Problem {
+        const p = rng.nonZero(-4, 4);
+        const q = rng.int(-6, 6);
+        const r = rng.int(10, 40);
+        const x0 = rng.int(1, 4);
+        const ans = Q.of(2 * p * x0 + q, 2);
+        return numberProblem({
+          prompt: t(
+            `A particle moving along the $x$-axis has $v^2 = ${poly([p, "x^2"], [q, "x"], [r, ""])}$ (in m²/s²). Find its acceleration at $x = ${x0}$.`,
+            `沿 $x$ 轴运动的质点满足 $v^2 = ${poly([p, "x^2"], [q, "x"], [r, ""])}$（单位 m²/s²）。求它在 $x = ${x0}$ 处的加速度。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(2 * p * x0 + q), Q.of(p * x0 * x0 + q * x0 + r, 2), ans.neg()],
+          solution: t(
+            `$\\frac{d}{dx}(v^2) = ${poly([2 * p, "x"], [q, ""])}$, so $a = \\frac{1}{2}(${poly([2 * p, "x"], [q, ""])})$, which at $x = ${x0}$ is $${ans.toLatex()}$.`,
+            `$\\frac{d}{dx}(v^2) = ${poly([2 * p, "x"], [q, ""])}$，所以 $a = \\frac{1}{2}(${poly([2 * p, "x"], [q, ""])})$，在 $x = ${x0}$ 处为 $${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -121,6 +148,39 @@ export const determiningPropertiesOfObjectsDescribedAsFunctionsOfDisplacement: T
         });
       },
     },
+    {
+      id: "the-amplitude-of-a-restoring-force-motion",
+      title: t("The amplitude of motion under a restoring acceleration", "回复加速度下运动的振幅"),
+      explanation: t(
+        "For $a(x) = -\\omega^2 x$, separating $v\\,dv = -\\omega^2 x\\,dx$ and integrating from $x = 0$, where the speed is $v_0$, gives\n\n$$v^2 = v_0^2 - \\omega^2 x^2.$$\n\nThe particle stops and turns back where $v = 0$, at $x = \\pm\\frac{v_0}{\\omega}$. So the amplitude of the oscillation is $A = \\frac{v_0}{\\omega}$.",
+        "对 $a(x) = -\\omega^2 x$，分离 $v\\,dv = -\\omega^2 x\\,dx$ 并从速率为 $v_0$ 的 $x = 0$ 处积分，得\n\n$$v^2 = v_0^2 - \\omega^2 x^2。$$\n\n质点在 $v = 0$ 处停下并折返，即 $x = \\pm\\frac{v_0}{\\omega}$。所以振动的振幅为 $A = \\frac{v_0}{\\omega}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const w = rng.int(2, 6);
+        const A = rng.int(1, 8);
+        const v0 = w * A;
+        const ask = rng.int(0, 1) === 0;
+        const x1 = rng.int(0, A - 1);
+        const ans = ask ? A : v0 * v0 - w * w * x1 * x1;
+        return numberProblem({
+          prompt: ask
+            ? t(
+                `A particle has acceleration $a = -${w * w}x$ and passes $x = 0$ with speed $${v0}$ m/s. How far from the origin does it get?`,
+                `质点的加速度为 $a = -${w * w}x$，以 $${v0}$ m/s 的速率经过 $x = 0$。它离原点最远多少？`,
+              )
+            : t(
+                `A particle has acceleration $a = -${w * w}x$ and passes $x = 0$ with speed $${v0}$ m/s. Find $v^2$ at $x = ${x1}$.`,
+                `质点的加速度为 $a = -${w * w}x$，以 $${v0}$ m/s 的速率经过 $x = 0$。求 $x = ${x1}$ 处的 $v^2$。`,
+              ),
+          answer: ans,
+          wrong: ask ? [Q.of(v0, w * w), v0, w * A * A] : [v0 * v0 + w * w * x1 * x1, v0 * v0 - w * x1 * x1, v0 - w * x1],
+          solution: t(
+            `$v^2 = ${v0 * v0} - ${w * w}x^2$. ${ask ? `It vanishes at $x = \\frac{${v0}}{${w}} = ${A}$, so the particle reaches $${A}$ m.` : `At $x = ${x1}$ this is $${ans}$.`}`,
+            `$v^2 = ${v0 * v0} - ${w * w}x^2$。${ask ? `它在 $x = \\frac{${v0}}{${w}} = ${A}$ 处为零，所以质点最远到达 $${A}$ m。` : `在 $x = ${x1}$ 处为 $${ans}$。`}`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -172,6 +232,39 @@ export const theComponentsOfAcceleration: TopicDef = {
           solution,
           answer: aN,
           wrong: [k * R, 2 * k * R, aN + k],
+        });
+      },
+    },
+    {
+      id: "tangential-acceleration-from-velocity-and-acceleration-vectors",
+      title: t("Tangential acceleration from $\\mathbf{v}$ and $\\mathbf{a}$", "由 $\\mathbf{v}$ 与 $\\mathbf{a}$ 求切向加速度"),
+      explanation: t(
+        "At any instant the acceleration splits as $\\mathbf{a} = a_T\\mathbf{T} + a_N\\mathbf{N}$. The tangential part is the projection of $\\mathbf{a}$ onto the direction of motion,\n\n$$a_T = \\frac{\\mathbf{v} \\cdot \\mathbf{a}}{\\|\\mathbf{v}\\|},$$\n\nand it equals the rate of change of speed. A positive $a_T$ means the particle is speeding up, a negative one that it is slowing down. The normal part then follows from $a_N = \\sqrt{\\|\\mathbf{a}\\|^2 - a_T^2}$.",
+        "任一时刻加速度都可分解为 $\\mathbf{a} = a_T\\mathbf{T} + a_N\\mathbf{N}$。切向部分是 $\\mathbf{a}$ 在运动方向上的投影，\n\n$$a_T = \\frac{\\mathbf{v} \\cdot \\mathbf{a}}{\\|\\mathbf{v}\\|},$$\n\n它等于速率的变化率。$a_T$ 为正表示质点在加速，为负表示在减速。法向部分随后由 $a_N = \\sqrt{\\|\\mathbf{a}\\|^2 - a_T^2}$ 求出。",
+      ),
+      generate(rng: Rng): Problem {
+        const triples: [number[], number][] = [
+          [[1, 2, 2], 3],
+          [[2, 3, 6], 7],
+          [[1, 4, 8], 9],
+          [[4, 4, 7], 9],
+        ];
+        const [p, n] = rng.pick(triples);
+        const v = rng.shuffle(p.map((x) => (rng.int(0, 1) === 0 ? x : -x)));
+        const a = [rng.int(-4, 4), rng.int(-4, 4), rng.nonZero(-4, 4)];
+        const dot = v.reduce((s, x, i) => s + x * a[i]!, 0);
+        const ans = Q.of(dot, n);
+        return numberProblem({
+          prompt: t(
+            `At some instant a particle has velocity $\\mathbf{v} = \\langle ${v.join(", ")} \\rangle$ and acceleration $\\mathbf{a} = \\langle ${a.join(", ")} \\rangle$. Find the tangential component $a_T$.`,
+            `某一时刻质点的速度为 $\\mathbf{v} = \\langle ${v.join(", ")} \\rangle$，加速度为 $\\mathbf{a} = \\langle ${a.join(", ")} \\rangle$。求切向分量 $a_T$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(dot), Q.of(dot, n * n), ans.neg()],
+          solution: t(
+            `$\\mathbf{v} \\cdot \\mathbf{a} = ${dot}$ and $\\|\\mathbf{v}\\| = ${n}$, so $a_T = ${ans.toLatex()}$.`,
+            `$\\mathbf{v} \\cdot \\mathbf{a} = ${dot}$，$\\|\\mathbf{v}\\| = ${n}$，所以 $a_T = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -235,6 +328,33 @@ export const theWorkEnergyPrinciple: TopicDef = {
         });
       },
     },
+    {
+      id: "final-speed-from-the-work-done",
+      title: t("Final speed from the work done", "由所做的功求末速率"),
+      explanation: t(
+        "The work–energy principle $W = \\frac{1}{2}mv_2^2 - \\frac{1}{2}mv_1^2$ can be run backwards: if the net work done on the object is known, then\n\n$$v_2 = \\sqrt{v_1^2 + \\frac{2W}{m}}.$$\n\nPositive work raises the speed and negative work lowers it. Only the total work matters, not the shape of the path or how the force varied along it.",
+        "功能原理 $W = \\frac{1}{2}mv_2^2 - \\frac{1}{2}mv_1^2$ 可以反过来用：若已知对物体所做的净功，则\n\n$$v_2 = \\sqrt{v_1^2 + \\frac{2W}{m}}。$$\n\n正功使速率增大，负功使速率减小。只有总功有关，与路径形状或力沿路径如何变化无关。",
+      ),
+      generate(rng: Rng): Problem {
+        const m = 2 * rng.int(1, 5);
+        const v1 = rng.int(1, 9);
+        let v2 = rng.int(1, 12);
+        if (v2 === v1) v2 += 1;
+        const W = (m * (v2 * v2 - v1 * v1)) / 2;
+        return numberProblem({
+          prompt: t(
+            `An object of mass $${m}$ kg moving at $${v1}$ m/s has $${W}$ J of net work done on it. Find its final speed in m/s.`,
+            `质量为 $${m}$ kg、速率为 $${v1}$ m/s 的物体受到 $${W}$ J 的净功。求它的末速率（m/s）。`,
+          ),
+          answer: v2,
+          wrong: [v1 + Math.round((2 * W) / m), v2 * v2, Math.abs(v2 - v1)],
+          solution: t(
+            `$v_2^2 = ${v1 * v1} + \\frac{2(${W})}{${m}} = ${v2 * v2}$, so $v_2 = ${v2}$ m/s.`,
+            `$v_2^2 = ${v1 * v1} + \\frac{2(${W})}{${m}} = ${v2 * v2}$，所以 $v_2 = ${v2}$ m/s。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -284,6 +404,31 @@ export const circularMotionAboutTheOrigin: TopicDef = {
           solution,
           answer: Fc,
           wrong: [m * w * R, Fc + m * w, 2 * Fc],
+        });
+      },
+    },
+    {
+      id: "centripetal-acceleration-from-the-period",
+      title: t("Centripetal acceleration from the period", "由周期求向心加速度"),
+      explanation: t(
+        "For uniform motion $\\mathbf{r}(t) = R\\langle \\cos \\omega t, \\sin \\omega t \\rangle$, differentiating twice gives $\\mathbf{a} = -\\omega^2\\mathbf{r}$, which points to the center with size $\\omega^2R$. One revolution takes the period $T = \\frac{2\\pi}{\\omega}$, so\n\n$$\\|\\mathbf{a}\\| = \\omega^2 R = \\frac{4\\pi^2 R}{T^2}.$$\n\nHalving the period quadruples the acceleration, while doubling the radius only doubles it.",
+        "对匀速圆周运动 $\\mathbf{r}(t) = R\\langle \\cos \\omega t, \\sin \\omega t \\rangle$，求两次导数得 $\\mathbf{a} = -\\omega^2\\mathbf{r}$，它指向圆心，大小为 $\\omega^2R$。转一圈用时为周期 $T = \\frac{2\\pi}{\\omega}$，所以\n\n$$\\|\\mathbf{a}\\| = \\omega^2 R = \\frac{4\\pi^2 R}{T^2}。$$\n\n周期减半使加速度变为四倍，而半径加倍只使它加倍。",
+      ),
+      generate(rng: Rng): Problem {
+        const R = rng.int(1, 12);
+        const T = rng.int(1, 6);
+        const k = Q.of(4 * R, T * T);
+        return numberProblem({
+          prompt: t(
+            `A particle moves uniformly around a circle of radius $${R}$ m, completing one revolution every $${T}$ s. Its centripetal acceleration is $k\\pi^2$ m/s². Find $k$.`,
+            `质点沿半径 $${R}$ m 的圆匀速运动，每 $${T}$ s 转一圈。它的向心加速度为 $k\\pi^2$ m/s²。求 $k$。`,
+          ),
+          answer: k,
+          wrong: [Q.of(2 * R, T), Q.of(4 * R, T), Q.of(R, T * T)],
+          solution: t(
+            `$\\omega = \\frac{2\\pi}{${T}}$, so $\\|\\mathbf{a}\\| = \\omega^2R = \\frac{4\\pi^2 \\cdot ${R}}{${T * T}}$ and $k = ${k.toLatex()}$.`,
+            `$\\omega = \\frac{2\\pi}{${T}}$，所以 $\\|\\mathbf{a}\\| = \\omega^2R = \\frac{4\\pi^2 \\cdot ${R}}{${T * T}}$，$k = ${k.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -348,6 +493,32 @@ export const theAverageValueOfAMultivariableFunction: TopicDef = {
         });
       },
     },
+    {
+      id: "average-value-over-a-disk",
+      title: t("The average value over a disk", "圆盘上的平均值"),
+      explanation: t(
+        "The average of $f$ over a region $D$ is $\\frac{1}{\\operatorname{Area}(D)}\\iint_D f\\,dA$. On a disk of radius $R$ polar coordinates make radial functions easy: $\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi}\\int_0^R r^2 \\cdot r\\,dr\\,d\\theta = \\frac{\\pi R^4}{2}$, and dividing by $\\pi R^2$ gives an average of $\\frac{R^2}{2}$. A constant added to $f$ is added to its average.",
+        "$f$ 在区域 $D$ 上的平均值为 $\\frac{1}{\\operatorname{Area}(D)}\\iint_D f\\,dA$。在半径为 $R$ 的圆盘上，极坐标使径向函数容易计算：$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi}\\int_0^R r^2 \\cdot r\\,dr\\,d\\theta = \\frac{\\pi R^4}{2}$，除以 $\\pi R^2$ 得平均值 $\\frac{R^2}{2}$。给 $f$ 加一个常数，平均值也加上这个常数。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-4, 4);
+        const b = rng.int(-6, 6);
+        const R = rng.int(1, 5);
+        const ans = Q.of(a * R * R + 2 * b, 2);
+        return numberProblem({
+          prompt: t(
+            `Find the average value of $f(x, y) = ${poly([a, "(x^2 + y^2)"], [b, ""])}$ over the disk $x^2 + y^2 \\le ${R * R}$.`,
+            `求 $f(x, y) = ${poly([a, "(x^2 + y^2)"], [b, ""])}$ 在圆盘 $x^2 + y^2 \\le ${R * R}$ 上的平均值。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(a * R * R + b), Q.of(a * R * R + 3 * b, 3), Q.of(a * R * R * R * R + 2 * b, 2)],
+          solution: t(
+            `The average of $x^2 + y^2$ over the disk is $\\frac{R^2}{2} = ${Q.of(R * R, 2).toLatex()}$, so the average of $f$ is $${a < 0 ? `(${a})` : a} \\cdot ${Q.of(R * R, 2).toLatex()} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${ans.toLatex()}$.`,
+            `$x^2 + y^2$ 在圆盘上的平均值为 $\\frac{R^2}{2} = ${Q.of(R * R, 2).toLatex()}$，所以 $f$ 的平均值为 $${a < 0 ? `(${a})` : a} \\cdot ${Q.of(R * R, 2).toLatex()} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -399,6 +570,39 @@ export const densityMassAndChargeOfPlaneLaminas: TopicDef = {
           solution,
           answer: mass,
           wrong: [W * H, mass + H, 2 * mass],
+        });
+      },
+    },
+    {
+      id: "charge-on-a-triangular-plate",
+      title: t("Charge on a triangular plate", "三角形板上的电荷"),
+      explanation: t(
+        "Total charge is the double integral of the charge density, $Q = \\iint_D \\sigma(x, y)\\,dA$, just as mass is the integral of mass density. For the triangle $0 \\le y \\le x \\le L$, integrate $y$ first from $0$ to $x$:\n\n$$\\iint_D \\sigma\\,dA = \\int_0^L \\int_0^x \\sigma(x, y)\\,dy\\,dx.$$\n\nWith $\\sigma = cx$ the inner integral is $cx^2$, and the total is $\\frac{cL^3}{3}$.",
+        "总电荷是电荷密度的二重积分 $Q = \\iint_D \\sigma(x, y)\\,dA$，正如质量是质量密度的积分。对三角形 $0 \\le y \\le x \\le L$，先对 $y$ 从 $0$ 积到 $x$：\n\n$$\\iint_D \\sigma\\,dA = \\int_0^L \\int_0^x \\sigma(x, y)\\,dy\\,dx。$$\n\n若 $\\sigma = cx$，内层积分为 $cx^2$，总量为 $\\frac{cL^3}{3}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const L = rng.int(1, 6);
+        const c = rng.int(1, 6);
+        const useY = rng.int(0, 1) === 1;
+        // ∫0^L ∫0^x c y dy dx = c L^3 / 6.
+        const ans = useY ? Q.of(c * L * L * L, 6) : Q.of(c * L * L * L, 3);
+        const sigma = useY ? poly([c, "y"]) : poly([c, "x"]);
+        return numberProblem({
+          prompt: t(
+            `A plate occupies the triangle $0 \\le y \\le x \\le ${L}$ with charge density $\\sigma(x, y) = ${sigma}$ C/m². Find the total charge.`,
+            `一块板占据三角形 $0 \\le y \\le x \\le ${L}$，电荷密度为 $\\sigma(x, y) = ${sigma}$ C/m²。求总电荷。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(c * L * L, 2), useY ? Q.of(c * L * L * L, 3) : Q.of(c * L * L * L, 6), Q.of(c * L * L * L, 2)],
+          solution: useY
+            ? t(
+                `$\\int_0^x ${sigma}\\,dy = ${Q.of(c, 2).toLatex()}x^2$, and $\\int_0^{${L}} ${Q.of(c, 2).toLatex()}x^2\\,dx = ${ans.toLatex()}$.`,
+                `$\\int_0^x ${sigma}\\,dy = ${Q.of(c, 2).toLatex()}x^2$，$\\int_0^{${L}} ${Q.of(c, 2).toLatex()}x^2\\,dx = ${ans.toLatex()}$。`,
+              )
+            : t(
+                `$\\int_0^x ${sigma}\\,dy = ${poly([c, "x^2"])}$, and $\\int_0^{${L}} ${poly([c, "x^2"])}\\,dx = ${ans.toLatex()}$.`,
+                `$\\int_0^x ${sigma}\\,dy = ${poly([c, "x^2"])}$，$\\int_0^{${L}} ${poly([c, "x^2"])}\\,dx = ${ans.toLatex()}$。`,
+              ),
         });
       },
     },
@@ -454,6 +658,46 @@ export const momentsAndCenterOfMass: TopicDef = {
         });
       },
     },
+    {
+      id: "center-of-mass-of-point-masses",
+      title: t("The center of mass of point masses", "质点组的质心"),
+      explanation: t(
+        "For point masses $m_i$ at $(x_i, y_i)$, the moments about the axes are $M_y = \\sum m_i x_i$ and $M_x = \\sum m_i y_i$, and the center of mass is\n\n$$\\bar{x} = \\frac{M_y}{m}, \\qquad \\bar{y} = \\frac{M_x}{m}, \\qquad m = \\sum m_i.$$\n\nNote the crossed labels: the moment about the $y$-axis uses the $x$-coordinates, because $x$ is the distance from that axis.",
+        "对位于 $(x_i, y_i)$ 的质点 $m_i$，关于两轴的矩为 $M_y = \\sum m_i x_i$ 与 $M_x = \\sum m_i y_i$，质心为\n\n$$\\bar{x} = \\frac{M_y}{m}, \\qquad \\bar{y} = \\frac{M_x}{m}, \\qquad m = \\sum m_i。$$\n\n注意下标是交叉的：关于 $y$ 轴的矩用 $x$ 坐标，因为 $x$ 是到该轴的距离。",
+      ),
+      generate(rng: Rng): Problem {
+        const ms = [rng.int(1, 5), rng.int(1, 5), rng.int(1, 5)];
+        const pts = ms.map(() => [rng.int(-4, 5), rng.int(-4, 5)] as const);
+        const askX = rng.int(0, 1) === 0;
+        const m = ms[0]! + ms[1]! + ms[2]!;
+        const mom = ms.reduce((s, mi, i) => s + mi * pts[i]![askX ? 0 : 1], 0);
+        const ans = Q.of(mom, m);
+        const list = ms.map((mi, i) => `$${mi}$ kg at $(${pts[i]![0]}, ${pts[i]![1]})$`);
+        const listZh = ms.map((mi, i) => `$(${pts[i]![0]}, ${pts[i]![1]})$ 处 $${mi}$ kg`);
+        return numberProblem({
+          prompt: t(
+            `Point masses are placed as follows: ${list.join(", ")}. Find $${askX ? "\\bar{x}" : "\\bar{y}"}$ of the center of mass.`,
+            `质点放置如下：${listZh.join("，")}。求质心的 $${askX ? "\\bar{x}" : "\\bar{y}"}$。`,
+          ),
+          answer: ans,
+          wrong: [
+            Q.of(
+              pts.reduce((s, p) => s + p[askX ? 0 : 1], 0),
+              3,
+            ),
+            Q.of(
+              ms.reduce((s, mi, i) => s + mi * pts[i]![askX ? 1 : 0], 0),
+              m,
+            ),
+            Q.of(mom),
+          ],
+          solution: t(
+            `$m = ${m}$ and $${askX ? "M_y" : "M_x"} = ${ms.map((mi, i) => `${mi}(${pts[i]![askX ? 0 : 1]})`).join(" + ")} = ${mom}$, so $${askX ? "\\bar{x}" : "\\bar{y}"} = ${ans.toLatex()}$.`,
+            `$m = ${m}$，$${askX ? "M_y" : "M_x"} = ${ms.map((mi, i) => `${mi}(${pts[i]![askX ? 0 : 1]})`).join(" + ")} = ${mom}$，所以 $${askX ? "\\bar{x}" : "\\bar{y}"} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -501,6 +745,35 @@ export const momentsAndCentersOfMassOfThinRods: TopicDef = {
           solution,
           answer: mass,
           wrong: [k * L, mass + k, 2 * mass],
+        });
+      },
+    },
+    {
+      id: "center-of-mass-of-a-rod-with-linear-density",
+      title: t("The center of mass of a rod with varying density", "变密度细杆的质心"),
+      explanation: t(
+        "A rod on $[0, L]$ with linear density $\\lambda(x)$ has mass $m = \\int_0^L \\lambda\\,dx$ and moment $M_0 = \\int_0^L x\\lambda\\,dx$ about the origin. Its center of mass is $\\bar{x} = \\frac{M_0}{m}$. When the density increases along the rod, $\\bar{x}$ moves past the midpoint $\\frac{L}{2}$ toward the heavier end.",
+        "位于 $[0, L]$、线密度为 $\\lambda(x)$ 的细杆，质量为 $m = \\int_0^L \\lambda\\,dx$，关于原点的矩为 $M_0 = \\int_0^L x\\lambda\\,dx$。质心为 $\\bar{x} = \\frac{M_0}{m}$。当密度沿杆增大时，$\\bar{x}$ 越过中点 $\\frac{L}{2}$ 移向较重的一端。",
+      ),
+      generate(rng: Rng): Problem {
+        const L = rng.int(1, 6);
+        const k = rng.int(1, 4);
+        const c = rng.int(1, 5);
+        // m = kL^2/2 + cL, M0 = kL^3/3 + cL^2/2.
+        const m = Q.of(k * L * L + 2 * c * L, 2);
+        const M0 = Q.of(2 * k * L * L * L + 3 * c * L * L, 6);
+        const ans = M0.div(m);
+        return numberProblem({
+          prompt: t(
+            `A rod occupies $[0, ${L}]$ with linear density $\\lambda(x) = ${poly([k, "x"], [c, ""])}$ kg/m. Find its center of mass $\\bar{x}$.`,
+            `细杆占据 $[0, ${L}]$，线密度为 $\\lambda(x) = ${poly([k, "x"], [c, ""])}$ kg/m。求其质心 $\\bar{x}$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(L, 2), M0, Q.of(2 * L, 3)],
+          solution: t(
+            `$m = ${m.toLatex()}$ and $M_0 = \\int_0^{${L}} x(${poly([k, "x"], [c, ""])})\\,dx = ${M0.toLatex()}$, so $\\bar{x} = ${ans.toLatex()}$.`,
+            `$m = ${m.toLatex()}$，$M_0 = \\int_0^{${L}} x(${poly([k, "x"], [c, ""])})\\,dx = ${M0.toLatex()}$，所以 $\\bar{x} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -554,6 +827,41 @@ export const momentsAndCentersOfMassOfPlaneLaminas: TopicDef = {
           solution,
           answer: xBar,
           wrong: [w, W, xBar + 1],
+        });
+      },
+    },
+    {
+      id: "centroid-of-the-region-under-a-parabola",
+      title: t("The centroid of the region under a parabola", "抛物线下区域的形心"),
+      explanation: t(
+        "For a uniform lamina under $y = f(x)$ on $[0, a]$, the area is $A = \\int_0^a f\\,dx$ and the moments come from integrating thin vertical strips:\n\n$$M_y = \\int_0^a x f(x)\\,dx, \\qquad M_x = \\int_0^a \\frac{f(x)^2}{2}\\,dx.$$\n\nThe factor $\\frac{1}{2}$ appears because each strip's own center sits at height $\\frac{f(x)}{2}$. Then $\\bar{x} = \\frac{M_y}{A}$ and $\\bar{y} = \\frac{M_x}{A}$.",
+        "对 $[0, a]$ 上 $y = f(x)$ 下方的均匀薄板，面积为 $A = \\int_0^a f\\,dx$，矩由竖直细条积分得到：\n\n$$M_y = \\int_0^a x f(x)\\,dx, \\qquad M_x = \\int_0^a \\frac{f(x)^2}{2}\\,dx。$$\n\n出现因子 $\\frac{1}{2}$ 是因为每个细条自身的中心在高度 $\\frac{f(x)}{2}$ 处。于是 $\\bar{x} = \\frac{M_y}{A}$，$\\bar{y} = \\frac{M_x}{A}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const c = rng.int(1, 5);
+        const a = rng.int(1, 6);
+        const askX = rng.int(0, 1) === 0;
+        // A = c a^3/3, M_y = c a^4/4, M_x = c^2 a^5/10.
+        const ans = askX ? Q.of(3 * a, 4) : Q.of(3 * c * a * a, 10);
+        const f = poly([c, "x^2"]);
+        return numberProblem({
+          prompt: t(
+            `Find $${askX ? "\\bar{x}" : "\\bar{y}"}$ for the uniform lamina bounded by $y = ${f}$, $y = 0$ and $x = ${a}$.`,
+            `求由 $y = ${f}$、$y = 0$ 与 $x = ${a}$ 围成的均匀薄板的 $${askX ? "\\bar{x}" : "\\bar{y}"}$。`,
+          ),
+          answer: ans,
+          wrong: askX
+            ? [Q.of(a, 2), Q.of(2 * a, 3), Q.of(3 * a * a, 4)]
+            : [Q.of(3 * c * a * a, 5), Q.of(c * a * a, 2), Q.of(3 * c * a * a, 20)],
+          solution: askX
+            ? t(
+                `$A = ${Q.of(c * a * a * a, 3).toLatex()}$ and $M_y = \\int_0^{${a}} ${poly([c, "x^3"])}\\,dx = ${Q.of(c * a ** 4, 4).toLatex()}$, so $\\bar{x} = ${ans.toLatex()}$.`,
+                `$A = ${Q.of(c * a * a * a, 3).toLatex()}$，$M_y = \\int_0^{${a}} ${poly([c, "x^3"])}\\,dx = ${Q.of(c * a ** 4, 4).toLatex()}$，所以 $\\bar{x} = ${ans.toLatex()}$。`,
+              )
+            : t(
+                `$A = ${Q.of(c * a * a * a, 3).toLatex()}$ and $M_x = \\int_0^{${a}} \\frac{${c * c}x^4}{2}\\,dx = ${Q.of(c * c * a ** 5, 10).toLatex()}$, so $\\bar{y} = ${ans.toLatex()}$.`,
+                `$A = ${Q.of(c * a * a * a, 3).toLatex()}$，$M_x = \\int_0^{${a}} \\frac{${c * c}x^4}{2}\\,dx = ${Q.of(c * c * a ** 5, 10).toLatex()}$，所以 $\\bar{y} = ${ans.toLatex()}$。`,
+              ),
         });
       },
     },
@@ -616,6 +924,35 @@ export const momentsOfInertiaOfLaminasAboutTheCoordinateAxes: TopicDef = {
         });
       },
     },
+    {
+      id: "the-polar-moment-of-inertia",
+      title: t("The polar moment of inertia", "极转动惯量"),
+      explanation: t(
+        "The moment of inertia about the origin, for rotation in the plane of the lamina, is $I_0 = \\iint_D (x^2 + y^2)\\rho\\,dA$. Since $x^2 + y^2$ splits into two pieces, it is the sum of the moments about the two axes:\n\n$$I_0 = I_x + I_y.$$\n\nFor a uniform rectangle $[0, W] \\times [0, H]$ of density $\\rho$, $I_x = \\frac{\\rho WH^3}{3}$ and $I_y = \\frac{\\rho W^3H}{3}$.",
+        "关于原点、在薄板所在平面内转动的转动惯量为 $I_0 = \\iint_D (x^2 + y^2)\\rho\\,dA$。由于 $x^2 + y^2$ 分成两部分，它是关于两轴转动惯量之和：\n\n$$I_0 = I_x + I_y。$$\n\n对密度为 $\\rho$ 的均匀矩形 $[0, W] \\times [0, H]$，$I_x = \\frac{\\rho WH^3}{3}$，$I_y = \\frac{\\rho W^3H}{3}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const W = rng.int(1, 5);
+        let H = rng.int(1, 5);
+        if (H === W) H += 1;
+        const rho = rng.int(1, 4);
+        const Ix = Q.of(rho * W * H ** 3, 3);
+        const Iy = Q.of(rho * W ** 3 * H, 3);
+        const ans = Ix.add(Iy);
+        return numberProblem({
+          prompt: t(
+            `Find the polar moment of inertia $I_0$ of the rectangle $[0, ${W}] \\times [0, ${H}]$ with constant density $\\rho = ${rho}$.`,
+            `求常密度 $\\rho = ${rho}$ 的矩形 $[0, ${W}] \\times [0, ${H}]$ 的极转动惯量 $I_0$。`,
+          ),
+          answer: ans,
+          wrong: [Ix, Iy, Q.of(rho * W * H * (W * W + H * H), 12)],
+          solution: t(
+            `$I_x = \\frac{${rho} \\cdot ${W} \\cdot ${H}^3}{3} = ${Ix.toLatex()}$ and $I_y = \\frac{${rho} \\cdot ${W}^3 \\cdot ${H}}{3} = ${Iy.toLatex()}$, so $I_0 = ${ans.toLatex()}$.`,
+            `$I_x = \\frac{${rho} \\cdot ${W} \\cdot ${H}^3}{3} = ${Ix.toLatex()}$，$I_y = \\frac{${rho} \\cdot ${W}^3 \\cdot ${H}}{3} = ${Iy.toLatex()}$，所以 $I_0 = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -670,6 +1007,32 @@ export const momentsOfInertiaOfLaminasAboutOtherAxes: TopicDef = {
           solution,
           answer: Iend,
           wrong: [M * L * L, Iend + M, 2 * Iend],
+        });
+      },
+    },
+    {
+      id: "moment-of-inertia-about-a-line-outside-the-lamina",
+      title: t("Moment of inertia about a line outside the lamina", "关于薄板外直线的转动惯量"),
+      explanation: t(
+        "The moment of inertia about any line integrates the squared distance to that line. For the horizontal line $y = -d$, a point at height $y$ is at distance $y + d$, so for a uniform rectangle $[0, W] \\times [0, H]$\n\n$$I = \\int_0^W \\int_0^H (y + d)^2\\,dy\\,dx = \\frac{W\\left[(H + d)^3 - d^3\\right]}{3}.$$\n\nThe substitution $u = y + d$ makes the inner integral immediate.",
+        "关于任意直线的转动惯量是对到该直线距离的平方积分。对水平线 $y = -d$，高度为 $y$ 的点到它的距离为 $y + d$，所以对均匀矩形 $[0, W] \\times [0, H]$\n\n$$I = \\int_0^W \\int_0^H (y + d)^2\\,dy\\,dx = \\frac{W\\left[(H + d)^3 - d^3\\right]}{3}。$$\n\n代换 $u = y + d$ 使内层积分一步可得。",
+      ),
+      generate(rng: Rng): Problem {
+        const W = rng.int(1, 5);
+        const H = rng.int(1, 4);
+        const d = rng.int(1, 4);
+        const ans = Q.of(W * ((H + d) ** 3 - d ** 3), 3);
+        return numberProblem({
+          prompt: t(
+            `Find the moment of inertia of the uniform lamina $[0, ${W}] \\times [0, ${H}]$ (density $1$) about the line $y = -${d}$.`,
+            `求均匀薄板 $[0, ${W}] \\times [0, ${H}]$（密度为 $1$）关于直线 $y = -${d}$ 的转动惯量。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(W * H ** 3, 3), Q.of(W * (H + d) ** 3, 3), Q.of(W * ((H - d) ** 3 + d ** 3), 3)],
+          solution: t(
+            `$\\int_0^{${H}} (y + ${d})^2\\,dy = \\frac{${H + d}^3 - ${d}^3}{3} = ${Q.of((H + d) ** 3 - d ** 3, 3).toLatex()}$; times the width $${W}$ gives $${ans.toLatex()}$.`,
+            `$\\int_0^{${H}} (y + ${d})^2\\,dy = \\frac{${H + d}^3 - ${d}^3}{3} = ${Q.of((H + d) ** 3 - d ** 3, 3).toLatex()}$；乘以宽度 $${W}$ 得 $${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -730,6 +1093,33 @@ export const calculatingTheRadiusOfGyrationOfAPlaneLamina: TopicDef = {
         });
       },
     },
+    {
+      id: "radius-of-gyration-of-a-rod-with-power-density",
+      title: t("Radius of gyration with a power-law density", "幂律密度下的回转半径"),
+      explanation: t(
+        "The radius of gyration $k$ is the distance at which the whole mass, concentrated at one point, would give the same moment of inertia: $k^2 = \\frac{I}{m}$. For a rod on $[0, L]$ with density $\\lambda = cx^n$, about the end at the origin,\n\n$$m = \\frac{cL^{n+1}}{n+1}, \\qquad I = \\frac{cL^{n+3}}{n+3}, \\qquad k^2 = \\frac{n+1}{n+3}L^2.$$\n\nThe constant $c$ cancels, and more mass toward the far end makes $k$ closer to $L$.",
+        "回转半径 $k$ 是把全部质量集中在一点时、给出相同转动惯量的距离：$k^2 = \\frac{I}{m}$。对 $[0, L]$ 上密度 $\\lambda = cx^n$ 的细杆，关于原点处的端点，\n\n$$m = \\frac{cL^{n+1}}{n+1}, \\qquad I = \\frac{cL^{n+3}}{n+3}, \\qquad k^2 = \\frac{n+1}{n+3}L^2。$$\n\n常数 $c$ 约去，质量越集中在远端，$k$ 越接近 $L$。",
+      ),
+      generate(rng: Rng): Problem {
+        const n = rng.int(0, 4);
+        const L = rng.int(1, 6);
+        const c = rng.int(1, 5);
+        const ans = Q.of((n + 1) * L * L, n + 3);
+        const dens = n === 0 ? `${c}` : `${c === 1 ? "" : c}x${n === 1 ? "" : `^${n}`}`;
+        return numberProblem({
+          prompt: t(
+            `A rod on $[0, ${L}]$ has linear density $\\lambda(x) = ${dens}$. Find the square of its radius of gyration $k^2$ about the end at $x = 0$.`,
+            `$[0, ${L}]$ 上的细杆线密度为 $\\lambda(x) = ${dens}$。求它关于 $x = 0$ 处端点的回转半径的平方 $k^2$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(L * L, 3), Q.of((n + 1) * L * L, n + 2), Q.of(c * (n + 1) * L * L, n + 3)],
+          solution: t(
+            `$m = \\frac{${c} \\cdot ${L}^{${n + 1}}}{${n + 1}}$ and $I = \\frac{${c} \\cdot ${L}^{${n + 3}}}{${n + 3}}$, so $k^2 = \\frac{I}{m} = \\frac{${n + 1}}{${n + 3}} \\cdot ${L * L} = ${ans.toLatex()}$.`,
+            `$m = \\frac{${c} \\cdot ${L}^{${n + 1}}}{${n + 1}}$，$I = \\frac{${c} \\cdot ${L}^{${n + 3}}}{${n + 3}}$，所以 $k^2 = \\frac{I}{m} = \\frac{${n + 1}}{${n + 3}} \\cdot ${L * L} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -784,6 +1174,35 @@ export const theParallelAxisTheorem: TopicDef = {
           solution,
           answer: ans,
           wrong: [Icm + M * d, ans + M, ans - d],
+        });
+      },
+    },
+    {
+      id: "moving-between-two-parallel-axes",
+      title: t("Moving between two axes that miss the center of mass", "在两条不过质心的平行轴之间换算"),
+      explanation: t(
+        "The parallel axis theorem $I = I_{\\text{cm}} + Md^2$ always goes through the center of mass. To move from one off-center axis at distance $d_1$ to another at distance $d_2$, first go back to the center of mass and then out again:\n\n$$I_2 = I_1 - Md_1^2 + Md_2^2.$$\n\nAdding $M(d_2 - d_1)^2$ directly is a common mistake; it is only right when $d_1 = 0$.",
+        "平行轴定理 $I = I_{\\text{cm}} + Md^2$ 总是经过质心。从距质心 $d_1$ 的一条轴换到距质心 $d_2$ 的另一条轴，要先回到质心再移出去：\n\n$$I_2 = I_1 - Md_1^2 + Md_2^2。$$\n\n直接加上 $M(d_2 - d_1)^2$ 是常见错误，只有当 $d_1 = 0$ 时才对。",
+      ),
+      generate(rng: Rng): Problem {
+        const M = rng.int(1, 6);
+        const Icm = rng.int(2, 20);
+        const d1 = rng.int(1, 3);
+        let d2 = rng.int(1, 5);
+        if (d2 === d1) d2 += 1;
+        const I1 = Icm + M * d1 * d1;
+        const ans = Icm + M * d2 * d2;
+        return numberProblem({
+          prompt: t(
+            `A body of mass $${M}$ kg has moment of inertia $${I1}$ kg·m² about an axis $${d1}$ m from its center of mass. Find its moment of inertia about a parallel axis $${d2}$ m from the center of mass.`,
+            `质量为 $${M}$ kg 的物体关于距质心 $${d1}$ m 的轴的转动惯量为 $${I1}$ kg·m²。求它关于距质心 $${d2}$ m 的平行轴的转动惯量。`,
+          ),
+          answer: ans,
+          wrong: [I1 + M * (d2 - d1) ** 2, I1 + M * d2 * d2, Icm],
+          solution: t(
+            `$I_{\\text{cm}} = ${I1} - ${M}(${d1})^2 = ${Icm}$, so $I_2 = ${Icm} + ${M}(${d2})^2 = ${ans}$ kg·m².`,
+            `$I_{\\text{cm}} = ${I1} - ${M}(${d1})^2 = ${Icm}$，所以 $I_2 = ${Icm} + ${M}(${d2})^2 = ${ans}$ kg·m²。`,
+          ),
         });
       },
     },
@@ -842,6 +1261,35 @@ export const probabilityDensityFunctionsOfContinuousRandomVariables: TopicDef = 
         });
       },
     },
+    {
+      id: "normalizing-a-non-uniform-joint-density",
+      title: t("Normalizing a non-uniform joint density", "非均匀联合密度的归一化"),
+      explanation: t(
+        "A joint density must be nonnegative and integrate to $1$ over its domain. When it is given up to a constant, $f(x, y) = C\\,g(x, y)$, compute $\\iint_D g\\,dA$ and set $C = \\frac{1}{\\iint_D g\\,dA}$. For a product such as $g = xy$ on a rectangle the double integral factors: $\\int_0^a\\int_0^b xy\\,dy\\,dx = \\frac{a^2}{2} \\cdot \\frac{b^2}{2}$.",
+        "联合密度必须非负，且在定义域上积分为 $1$。若它只给到相差一个常数，$f(x, y) = C\\,g(x, y)$，就计算 $\\iint_D g\\,dA$ 并令 $C = \\frac{1}{\\iint_D g\\,dA}$。对矩形上的乘积 $g = xy$，二重积分可以分解：$\\int_0^a\\int_0^b xy\\,dy\\,dx = \\frac{a^2}{2} \\cdot \\frac{b^2}{2}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 5);
+        const b = rng.int(1, 5);
+        const sum = rng.int(0, 1) === 1;
+        // ∫∫ (x + y) over [0,a]×[0,b] = (a^2 b + a b^2) / 2.
+        const total = sum ? Q.of(a * a * b + a * b * b, 2) : Q.of(a * a * b * b, 4);
+        const ans = Q.one.div(total);
+        const g = sum ? "(x + y)" : "xy";
+        return numberProblem({
+          prompt: t(
+            `$f(x, y) = C${g}$ is a joint density on $[0, ${a}] \\times [0, ${b}]$. Find $C$.`,
+            `$f(x, y) = C${g}$ 是 $[0, ${a}] \\times [0, ${b}]$ 上的联合密度。求 $C$。`,
+          ),
+          answer: ans,
+          wrong: [total, Q.of(1, a * b), sum ? Q.of(1, a * a * b * b) : Q.of(2, a * a * b * b)],
+          solution: t(
+            `$\\iint ${g}\\,dA = ${total.toLatex()}$, so $C = ${ans.toLatex()}$.`,
+            `$\\iint ${g}\\,dA = ${total.toLatex()}$，所以 $C = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -897,6 +1345,31 @@ export const calculatingProbabilitiesWithContinuousRandomVariables: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(x1, W), Q.of(y1, H), ans.mul(Q.of(2))],
+        });
+      },
+    },
+    {
+      id: "probability-that-a-sum-is-small",
+      title: t("The probability that $X + Y$ is small", "$X + Y$ 较小的概率"),
+      explanation: t(
+        "For a uniform distribution on a region, a probability is the area of the event divided by the total area. If $(X, Y)$ is uniform on the square $[0, L]^2$ and $0 \\le s \\le L$, the event $X + Y \\le s$ is the triangle with legs $s$, so\n\n$$P(X + Y \\le s) = \\frac{s^2/2}{L^2} = \\frac{s^2}{2L^2}.$$\n\nDrawing the line $x + y = s$ first shows which shape the event has; for $s > L$ the region is no longer a triangle.",
+        "对区域上的均匀分布，概率是事件的面积除以总面积。若 $(X, Y)$ 在正方形 $[0, L]^2$ 上均匀分布且 $0 \\le s \\le L$，事件 $X + Y \\le s$ 是两直角边为 $s$ 的三角形，所以\n\n$$P(X + Y \\le s) = \\frac{s^2/2}{L^2} = \\frac{s^2}{2L^2}。$$\n\n先画出直线 $x + y = s$ 就能看出事件的形状；当 $s > L$ 时区域不再是三角形。",
+      ),
+      generate(rng: Rng): Problem {
+        const L = rng.int(2, 8);
+        const s = rng.int(1, L);
+        const ans = Q.of(s * s, 2 * L * L);
+        return numberProblem({
+          prompt: t(
+            `$(X, Y)$ is uniformly distributed on the square $[0, ${L}] \\times [0, ${L}]$. Find $P(X + Y \\le ${s})$.`,
+            `$(X, Y)$ 在正方形 $[0, ${L}] \\times [0, ${L}]$ 上均匀分布。求 $P(X + Y \\le ${s})$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(s * s, L * L), Q.of(s, 2 * L), Q.of(s, L)],
+          solution: t(
+            `The event is a triangle of area $\\frac{${s}^2}{2} = ${Q.of(s * s, 2).toLatex()}$ inside a square of area $${L * L}$, so the probability is $${ans.toLatex()}$.`,
+            `事件是面积为 $\\frac{${s}^2}{2} = ${Q.of(s * s, 2).toLatex()}$ 的三角形，位于面积为 $${L * L}$ 的正方形内，所以概率为 $${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -960,6 +1433,33 @@ export const continuousRandomVariablesOverInfiniteDomains: TopicDef = {
         });
       },
     },
+    {
+      id: "probability-that-one-exponential-variable-is-smaller",
+      title: t("The probability that one exponential variable comes first", "一个指数变量先发生的概率"),
+      explanation: t(
+        "For $f(x, y) = ab\\,e^{-ax - by}$ on $x, y \\ge 0$, the event $X < Y$ is the unbounded region above the line $y = x$. Integrate $y$ from $x$ to $\\infty$ first, which gives $a e^{-(a + b)x}$, and then $x$ from $0$ to $\\infty$:\n\n$$P(X < Y) = \\int_0^\\infty a e^{-(a+b)x}\\,dx = \\frac{a}{a + b}.$$\n\nThe variable with the larger rate tends to happen first.",
+        "对 $x, y \\ge 0$ 上的 $f(x, y) = ab\\,e^{-ax - by}$，事件 $X < Y$ 是直线 $y = x$ 上方的无界区域。先把 $y$ 从 $x$ 积到 $\\infty$，得 $a e^{-(a + b)x}$，再把 $x$ 从 $0$ 积到 $\\infty$：\n\n$$P(X < Y) = \\int_0^\\infty a e^{-(a+b)x}\\,dx = \\frac{a}{a + b}。$$\n\n速率较大的变量往往先发生。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 6);
+        let b = rng.int(1, 6);
+        if (b === a) b += 1;
+        const askX = rng.int(0, 1) === 0;
+        const ans = askX ? Q.of(a, a + b) : Q.of(b, a + b);
+        return numberProblem({
+          prompt: t(
+            `$(X, Y)$ has joint density $f(x, y) = ${a * b}e^{-${a === 1 ? "" : a}x - ${b === 1 ? "" : b}y}$ for $x, y \\ge 0$. Find $P(${askX ? "X < Y" : "Y < X"})$.`,
+            `$(X, Y)$ 的联合密度为 $f(x, y) = ${a * b}e^{-${a === 1 ? "" : a}x - ${b === 1 ? "" : b}y}$（$x, y \\ge 0$）。求 $P(${askX ? "X < Y" : "Y < X"})$。`,
+          ),
+          answer: ans,
+          wrong: [askX ? Q.of(b, a + b) : Q.of(a, a + b), Q.of(1, 2), askX ? Q.of(a, b) : Q.of(b, a)],
+          solution: t(
+            `$P(${askX ? "X < Y" : "Y < X"}) = \\frac{${askX ? a : b}}{${a} + ${b}} = ${ans.toLatex()}$.`,
+            `$P(${askX ? "X < Y" : "Y < X"}) = \\frac{${askX ? a : b}}{${a} + ${b}} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1008,6 +1508,41 @@ export const jointDistributionsForDiscreteRandomVariables: TopicDef = {
           solution,
           answer: pX1,
           wrong: [p11, p12, 100 - pX1],
+        });
+      },
+    },
+    {
+      id: "conditional-probability-from-a-joint-table",
+      title: t("Conditional probability from a joint table", "由联合分布表求条件概率"),
+      explanation: t(
+        "A conditional probability restricts attention to one row or column of the joint table and rescales it to total $1$:\n\n$$P(X = x \\mid Y = y) = \\frac{P(X = x, Y = y)}{P(Y = y)}.$$\n\nThe denominator is the marginal $P(Y = y)$, found by adding the column for $Y = y$. Dividing by the total of all the entries instead gives the joint probability, not the conditional one.",
+        "条件概率只看联合分布表的一行或一列，并把它重新缩放使总和为 $1$：\n\n$$P(X = x \\mid Y = y) = \\frac{P(X = x, Y = y)}{P(Y = y)}。$$\n\n分母是边缘概率 $P(Y = y)$，由 $Y = y$ 那一列相加得到。若除以所有元素之和，得到的是联合概率而不是条件概率。",
+      ),
+      generate(rng: Rng): Problem {
+        const p11 = rng.int(1, 4) * 5;
+        const p12 = rng.int(1, 4) * 5;
+        const p21 = rng.int(1, 4) * 5;
+        const p22 = 100 - p11 - p12 - p21;
+        const x = rng.int(1, 2);
+        const y = rng.int(1, 2);
+        const table = [
+          [p11, p12],
+          [p21, p22],
+        ];
+        const num = table[x - 1]![y - 1]!;
+        const den = table[0]![y - 1]! + table[1]![y - 1]!;
+        const ans = Q.of(num, den);
+        return numberProblem({
+          prompt: t(
+            `$X, Y \\in \\{1, 2\\}$ with $P(1, 1) = ${p11}\\%$, $P(1, 2) = ${p12}\\%$, $P(2, 1) = ${p21}\\%$ and $P(2, 2) = ${p22}\\%$, where $P(i, j) = P(X = i, Y = j)$. Find $P(X = ${x} \\mid Y = ${y})$.`,
+            `$X, Y \\in \\{1, 2\\}$，$P(1, 1) = ${p11}\\%$，$P(1, 2) = ${p12}\\%$，$P(2, 1) = ${p21}\\%$，$P(2, 2) = ${p22}\\%$，其中 $P(i, j) = P(X = i, Y = j)$。求 $P(X = ${x} \\mid Y = ${y})$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(num, 100), Q.of(num, table[x - 1]![0]! + table[x - 1]![1]!), Q.of(den - num, den)],
+          solution: t(
+            `$P(Y = ${y}) = ${table[0]![y - 1]!}\\% + ${table[1]![y - 1]!}\\% = ${den}\\%$, so $P(X = ${x} \\mid Y = ${y}) = \\frac{${num}}{${den}} = ${ans.toLatex()}$.`,
+            `$P(Y = ${y}) = ${table[0]![y - 1]!}\\% + ${table[1]![y - 1]!}\\% = ${den}\\%$，所以 $P(X = ${x} \\mid Y = ${y}) = \\frac{${num}}{${den}} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1065,6 +1600,36 @@ export const jointDistributionsForContinuousRandomVariables: TopicDef = {
           solution,
           answer: ans,
           wrong: [c * a, c * xVal, ans + c],
+        });
+      },
+    },
+    {
+      id: "expected-value-from-a-product-density",
+      title: t("An expected value from a joint density", "由联合密度求期望"),
+      explanation: t(
+        "The expected value of $X$ under a joint density is $E[X] = \\iint x\\,f(x, y)\\,dA$. For the density $f(x, y) = (m + 1)(n + 1)x^my^n$ on the unit square, the $y$-integral contributes a factor $1$, leaving\n\n$$E[X] = (m + 1)\\int_0^1 x^{m+1}\\,dx = \\frac{m + 1}{m + 2},$$\n\nand likewise $E[Y] = \\frac{n + 1}{n + 2}$. A larger exponent pushes the mean toward $1$.",
+        "在联合密度下 $X$ 的期望为 $E[X] = \\iint x\\,f(x, y)\\,dA$。对单位正方形上的密度 $f(x, y) = (m + 1)(n + 1)x^my^n$，对 $y$ 的积分给出因子 $1$，剩下\n\n$$E[X] = (m + 1)\\int_0^1 x^{m+1}\\,dx = \\frac{m + 1}{m + 2},$$\n\n同样 $E[Y] = \\frac{n + 1}{n + 2}$。指数越大，均值越靠近 $1$。",
+      ),
+      generate(rng: Rng): Problem {
+        const m = rng.int(1, 5);
+        let n = rng.int(1, 5);
+        if (n === m) n = (m % 5) + 1;
+        const askX = rng.int(0, 1) === 0;
+        const e = askX ? m : n;
+        const ans = Q.of(e + 1, e + 2);
+        const xp = m === 1 ? "x" : `x^${m}`;
+        const yp = n === 1 ? "y" : `y^${n}`;
+        return numberProblem({
+          prompt: t(
+            `$(X, Y)$ has joint density $f(x, y) = ${(m + 1) * (n + 1)}${xp}${yp}$ on $[0, 1] \\times [0, 1]$. Find $E[${askX ? "X" : "Y"}]$.`,
+            `$(X, Y)$ 在 $[0, 1] \\times [0, 1]$ 上的联合密度为 $f(x, y) = ${(m + 1) * (n + 1)}${xp}${yp}$。求 $E[${askX ? "X" : "Y"}]$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(askX ? n + 1 : m + 1, askX ? n + 2 : m + 2), Q.of(1, 2), Q.of(e + 1, e + 3)],
+          solution: t(
+            `The marginal density of ${askX ? "$X$" : "$Y$"} is $${e + 1}${askX ? (m === 1 ? "x" : `x^${m}`) : n === 1 ? "y" : `y^${n}`}$, so $E[${askX ? "X" : "Y"}] = ${e + 1}\\int_0^1 ${askX ? "x" : "y"}^{${e + 1}}\\,d${askX ? "x" : "y"} = ${ans.toLatex()}$.`,
+            `${askX ? "$X$" : "$Y$"} 的边缘密度为 $${e + 1}${askX ? (m === 1 ? "x" : `x^${m}`) : n === 1 ? "y" : `y^${n}`}$，所以 $E[${askX ? "X" : "Y"}] = ${e + 1}\\int_0^1 ${askX ? "x" : "y"}^{${e + 1}}\\,d${askX ? "x" : "y"} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
