@@ -355,8 +355,8 @@ export const additionAndSubtractionInScientificNotation = topic(
       id: "subtracting-with-the-same-power",
       title: t("Subtracting with the same power of ten", "10 的指数相同的减法"),
       explanation: t(
-        "$5.2 \\times 10^{-3} - 4.7 \\times 10^{-3} = (5.2 - 4.7) \\times 10^{-3} = 0.5 \\times 10^{-3}$. Since $0.5 < 1$, write it as $5 \\times 10^{-1} \\times 10^{-3} = 5 \\times 10^{-4}$: the exponent goes down by $1$.",
-        "$5.2 \\times 10^{-3} - 4.7 \\times 10^{-3} = (5.2 - 4.7) \\times 10^{-3} = 0.5 \\times 10^{-3}$。由于 $0.5 < 1$，写成 $5 \\times 10^{-1} \\times 10^{-3} = 5 \\times 10^{-4}$：指数减小 $1$。",
+        "When two numbers in scientific notation have the same power of ten, subtract the coefficients and keep the power. If the new coefficient is less than $1$, move the decimal point and lower the exponent so that the coefficient is at least $1$ and less than $10$.\n\n$5.2 \\times 10^{-3} - 4.7 \\times 10^{-3} = (5.2 - 4.7) \\times 10^{-3} = 0.5 \\times 10^{-3}$. Since $0.5 < 1$, write it as $5 \\times 10^{-1} \\times 10^{-3} = 5 \\times 10^{-4}$: the exponent goes down by $1$.",
+        "两个科学记数法表示的数，如果 10 的指数相同，就把系数相减，10 的幂不变。如果新系数小于 $1$，就移动小数点并减小指数，使系数大于或等于 $1$ 且小于 $10$。\n\n$5.2 \\times 10^{-3} - 4.7 \\times 10^{-3} = (5.2 - 4.7) \\times 10^{-3} = 0.5 \\times 10^{-3}$。由于 $0.5 < 1$，写成 $5 \\times 10^{-1} \\times 10^{-3} = 5 \\times 10^{-4}$：指数减小 $1$。",
       ),
       generate(rng) {
         const n = rng.bool(0.3) ? rng.int(-7, -2) : rng.int(2, 11);
@@ -479,8 +479,8 @@ export const subtractionInScientificNotationWithDifferentPowersOfTen = topic(
       id: "subtracting-with-different-powers",
       title: t("Matching the powers", "统一 10 的指数"),
       explanation: t(
-        "$5.6 \\times 10^{7} - 3.4 \\times 10^{5}$: write $3.4 \\times 10^{5} = 0.034 \\times 10^{7}$, then subtract: $(5.6 - 0.034) \\times 10^{7} = 5.566 \\times 10^{7}$.",
-        "$5.6 \\times 10^{7} - 3.4 \\times 10^{5}$：写成 $3.4 \\times 10^{5} = 0.034 \\times 10^{7}$，再相减：$(5.6 - 0.034) \\times 10^{7} = 5.566 \\times 10^{7}$。",
+        "Coefficients can only be subtracted when the powers of ten match. Rewrite the number with the smaller power so it uses the larger power: each step up in the exponent moves its decimal point one place to the left. Then subtract the coefficients.\n\n$5.6 \\times 10^{7} - 3.4 \\times 10^{5}$: write $3.4 \\times 10^{5} = 0.034 \\times 10^{7}$, then subtract: $(5.6 - 0.034) \\times 10^{7} = 5.566 \\times 10^{7}$.",
+        "只有 10 的指数相同时才能把系数相减。把指数较小的数改写成用较大的 10 的幂表示：指数每增加 $1$，系数的小数点向左移一位。然后把系数相减。\n\n$5.6 \\times 10^{7} - 3.4 \\times 10^{5}$：写成 $3.4 \\times 10^{5} = 0.034 \\times 10^{7}$，再相减：$(5.6 - 0.034) \\times 10^{7} = 5.566 \\times 10^{7}$。",
       ),
       generate(rng) {
         const [x, y] = pair(rng, [1, 3]);
@@ -525,8 +525,8 @@ export const furtherAdditionInScientificNotationWithDifferentPowersOfTen = topic
       id: "adding-with-negative-exponents",
       title: t("Negative exponents", "负整数指数"),
       explanation: t(
-        "$3.5 \\times 10^{-4} + 2.1 \\times 10^{-6}$: the larger power is $10^{-4}$, and $-4 - (-6) = 2$, so $2.1 \\times 10^{-6} = 0.021 \\times 10^{-4}$. The sum is $3.521 \\times 10^{-4}$.",
-        "$3.5 \\times 10^{-4} + 2.1 \\times 10^{-6}$：较大的幂是 $10^{-4}$，而 $-4 - (-6) = 2$，所以 $2.1 \\times 10^{-6} = 0.021 \\times 10^{-4}$。和为 $3.521 \\times 10^{-4}$。",
+        "With negative exponents, the larger power of ten is the one whose exponent is closer to zero. Rewrite the other number with that power by moving its decimal point left as many places as the exponents differ, then add the coefficients.\n\n$3.5 \\times 10^{-4} + 2.1 \\times 10^{-6}$: the larger power is $10^{-4}$, and $-4 - (-6) = 2$, so $2.1 \\times 10^{-6} = 0.021 \\times 10^{-4}$. The sum is $3.521 \\times 10^{-4}$.",
+        "指数是负数时，较大的 10 的幂是指数更接近零的那个。把另一个数改写成用这个幂表示：两个指数相差几，小数点就向左移几位，然后把系数相加。\n\n$3.5 \\times 10^{-4} + 2.1 \\times 10^{-6}$：较大的幂是 $10^{-4}$，而 $-4 - (-6) = 2$，所以 $2.1 \\times 10^{-6} = 0.021 \\times 10^{-4}$。和为 $3.521 \\times 10^{-4}$。",
       ),
       generate(rng) {
         const m = rng.int(-9, -2);
@@ -539,8 +539,8 @@ export const furtherAdditionInScientificNotationWithDifferentPowersOfTen = topic
       id: "sums-that-reach-the-next-power",
       title: t("Sums that reach the next power", "和进到更高的幂"),
       explanation: t(
-        "$9.6 \\times 10^{5} + 7 \\times 10^{4} = 9.6 \\times 10^{5} + 0.7 \\times 10^{5} = 10.3 \\times 10^{5}$. Since $10.3 \\ge 10$, write it as $1.03 \\times 10^{6}$.",
-        "$9.6 \\times 10^{5} + 7 \\times 10^{4} = 9.6 \\times 10^{5} + 0.7 \\times 10^{5} = 10.3 \\times 10^{5}$。由于 $10.3 \\ge 10$，写成 $1.03 \\times 10^{6}$。",
+        "After adding the coefficients, the sum can be $10$ or more, which is not allowed in scientific notation. Divide the coefficient by $10$ and raise the exponent by $1$; the value stays the same.\n\n$9.6 \\times 10^{5} + 7 \\times 10^{4} = 9.6 \\times 10^{5} + 0.7 \\times 10^{5} = 10.3 \\times 10^{5}$. Since $10.3 \\ge 10$, write it as $1.03 \\times 10^{6}$.",
+        "系数相加后，和可能大于或等于 $10$，这在科学记数法中是不允许的。把系数除以 $10$，同时把指数加 $1$，数值保持不变。\n\n$9.6 \\times 10^{5} + 7 \\times 10^{4} = 9.6 \\times 10^{5} + 0.7 \\times 10^{5} = 10.3 \\times 10^{5}$。由于 $10.3 \\ge 10$，写成 $1.03 \\times 10^{6}$。",
       ),
       generate(rng) {
         const m = rng.bool(0.3) ? rng.int(-6, -1) : rng.int(3, 11);
@@ -568,8 +568,8 @@ export const multiplyingNumbersInScientificNotation = topic(
       id: "multiplying-with-small-products",
       title: t("Products less than 10", "因数之积小于 10"),
       explanation: t(
-        "$(2 \\times 10^{5})(3.1 \\times 10^{-2}) = (2 \\times 3.1) \\times 10^{5 + (-2)} = 6.2 \\times 10^{3}$. The powers of ten follow the product rule, so the exponents are added.",
-        "$(2 \\times 10^{5})(3.1 \\times 10^{-2}) = (2 \\times 3.1) \\times 10^{5 + (-2)} = 6.2 \\times 10^{3}$。10 的幂按同底数幂的乘法计算，所以指数相加。",
+        "To multiply numbers in scientific notation, multiply the coefficients together and multiply the powers of ten together. When the product of the coefficients is less than $10$, the answer is already in scientific notation.\n\n$(2 \\times 10^{5})(3.1 \\times 10^{-2}) = (2 \\times 3.1) \\times 10^{5 + (-2)} = 6.2 \\times 10^{3}$. The powers of ten follow the product rule, so the exponents are added.",
+        "科学记数法表示的数相乘时，系数与系数相乘，10 的幂与 10 的幂相乘。如果系数之积小于 $10$，结果已经是科学记数法。\n\n$(2 \\times 10^{5})(3.1 \\times 10^{-2}) = (2 \\times 3.1) \\times 10^{5 + (-2)} = 6.2 \\times 10^{3}$。10 的幂按同底数幂的乘法计算，所以指数相加。",
       ),
       generate(rng) {
         const a = Q.of(rng.pick([2, 3, 4, 1.5, 2.5, 1.2].map((v) => v * 10)), 10);
@@ -645,8 +645,8 @@ export const dividingNumbersInScientificNotation = topic(
       id: "dividing-with-quotients-of-at-least-one",
       title: t("Quotients of 1 or more", "因数之商大于或等于 1"),
       explanation: t(
-        "$\\frac{8.4 \\times 10^{9}}{2 \\times 10^{3}} = \\frac{8.4}{2} \\times 10^{9 - 3} = 4.2 \\times 10^{6}$. Subtract the exponent of the divisor from the exponent of the dividend.",
-        "$\\frac{8.4 \\times 10^{9}}{2 \\times 10^{3}} = \\frac{8.4}{2} \\times 10^{9 - 3} = 4.2 \\times 10^{6}$。用被除数的指数减去除数的指数。",
+        "To divide numbers in scientific notation, divide the coefficients and divide the powers of ten. When the quotient of the coefficients is at least $1$, the answer is already in scientific notation.\n\n$\\frac{8.4 \\times 10^{9}}{2 \\times 10^{3}} = \\frac{8.4}{2} \\times 10^{9 - 3} = 4.2 \\times 10^{6}$. Subtract the exponent of the divisor from the exponent of the dividend.",
+        "科学记数法表示的数相除时，系数与系数相除，10 的幂与 10 的幂相除。如果系数之商大于或等于 $1$，结果已经是科学记数法。\n\n$\\frac{8.4 \\times 10^{9}}{2 \\times 10^{3}} = \\frac{8.4}{2} \\times 10^{9 - 3} = 4.2 \\times 10^{6}$。用被除数的指数减去除数的指数。",
       ),
       generate(rng) {
         const b = Q.of(rng.pick([12, 15, 2, 25, 3, 4].map((v) => (v < 10 ? v * 10 : v))), 10);
@@ -676,8 +676,8 @@ export const dividingNumbersInScientificNotation = topic(
       id: "dividing-with-quotients-less-than-one",
       title: t("Quotients less than 1", "因数之商小于 1"),
       explanation: t(
-        "$\\frac{2.4 \\times 10^{5}}{6 \\times 10^{2}} = 0.4 \\times 10^{3}$. Since $0.4 < 1$, write $0.4 = 4 \\times 10^{-1}$, so the quotient is $4 \\times 10^{2}$.",
-        "$\\frac{2.4 \\times 10^{5}}{6 \\times 10^{2}} = 0.4 \\times 10^{3}$。由于 $0.4 < 1$，写成 $0.4 = 4 \\times 10^{-1}$，所以商为 $4 \\times 10^{2}$。",
+        "When the quotient of the coefficients is less than $1$, it is not yet scientific notation. Multiply the coefficient by $10$ and lower the exponent by $1$ to keep the same value.\n\n$\\frac{2.4 \\times 10^{5}}{6 \\times 10^{2}} = 0.4 \\times 10^{3}$. Since $0.4 < 1$, write $0.4 = 4 \\times 10^{-1}$, so the quotient is $4 \\times 10^{2}$.",
+        "如果系数之商小于 $1$，结果还不是科学记数法。把系数乘以 $10$，同时把指数减 $1$，数值保持不变。\n\n$\\frac{2.4 \\times 10^{5}}{6 \\times 10^{2}} = 0.4 \\times 10^{3}$。由于 $0.4 < 1$，写成 $0.4 = 4 \\times 10^{-1}$，所以商为 $4 \\times 10^{2}$。",
       ),
       generate(rng) {
         const b = Q.of(rng.int(4, 9));

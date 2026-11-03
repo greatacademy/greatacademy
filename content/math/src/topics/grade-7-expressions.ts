@@ -171,8 +171,8 @@ export const distributingTheNegativeSignInALinearExpression = topic(
       id: "removing-a-negative-sign",
       title: t("Removing a negative sign before parentheses", "去掉括号前的负号"),
       explanation: t(
-        "$-(\\ldots)$ is $-1 \\cdot (\\ldots)$. Distribute the $-1$: every term changes sign, not only the first.\n\n$$-(4n - 7) = -4n + 7, \\qquad -(-2x + y - 3) = 2x - y + 3.$$",
-        "$-(\\ldots)$ 就是 $-1 \\cdot (\\ldots)$。把 $-1$ 分配到每一项：每一项都变号，而不只是第一项。\n\n$$-(4n - 7) = -4n + 7, \\qquad -(-2x + y - 3) = 2x - y + 3.$$",
+        "A negative sign in front of parentheses means the opposite of everything inside.\n\n$-(\\ldots)$ is $-1 \\cdot (\\ldots)$. Distribute the $-1$: every term changes sign, not only the first.\n\n$$-(4n - 7) = -4n + 7, \\qquad -(-2x + y - 3) = 2x - y + 3.$$",
+        "括号前的负号表示括号内全部内容的相反数。\n\n$-(\\ldots)$ 就是 $-1 \\cdot (\\ldots)$。把 $-1$ 分配到每一项：每一项都变号，而不只是第一项。\n\n$$-(4n - 7) = -4n + 7, \\qquad -(-2x + y - 3) = 2x - y + 3.$$",
       ),
       keyPrerequisites: ["distributive-property"],
       generate(rng) {
@@ -246,8 +246,8 @@ export const simplifyingLinearExpressionsUsingTheDistributiveLaw = topic(
       id: "two-groups",
       title: t("Two groups of parentheses", "两组括号"),
       explanation: t(
-        "Expand each group separately, then collect the variable terms and the constants:\n\n$$3(2x - 1) + 4(x + 5) = 6x - 3 + 4x + 20 = 10x + 17.$$",
-        "分别展开每一组括号，再把含变量的项和常数项分别合并：\n\n$$3(2x - 1) + 4(x + 5) = 6x - 3 + 4x + 20 = 10x + 17.$$",
+        "When an expression has several groups in parentheses, each multiplier applies only to its own group, and a negative multiplier changes the sign of each term in its group.\n\nExpand each group separately, then collect the variable terms and the constants:\n\n$$3(2x - 1) + 4(x + 5) = 6x - 3 + 4x + 20 = 10x + 17.$$",
+        "当式子中有几组括号时，每个乘数只作用于它自己的那组括号；乘数是负数时，那组括号里每一项都要变号。\n\n分别展开每一组括号，再把含变量的项和常数项分别合并：\n\n$$3(2x - 1) + 4(x + 5) = 6x - 3 + 4x + 20 = 10x + 17.$$",
       ),
       keyPrerequisites: ["the-distributive-law-with-three-terms", "combining-like-terms"],
       generate(rng) {

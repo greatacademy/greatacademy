@@ -327,8 +327,8 @@ export const equationsWithParentheses: TopicDef = {
       id: "expand-then-solve",
       title: t("Expanding, then solving", "先展开，再求解"),
       explanation: t(
-        "When the variable is inside parentheses, expand with the distributive property first, then solve:\n\n$$-3(x - 4) = 21 \\;\\Rightarrow\\; -3x + 12 = 21 \\;\\Rightarrow\\; -3x = 9 \\;\\Rightarrow\\; x = -3.$$",
-        "变量在括号里时，先用分配律展开，再求解：\n\n$$-3(x - 4) = 21 \\;\\Rightarrow\\; -3x + 12 = 21 \\;\\Rightarrow\\; -3x = 9 \\;\\Rightarrow\\; x = -3.$$",
+        "A number multiplying a group must multiply every term inside it, including its sign. Once the parentheses are gone, the equation is an ordinary two-step equation.\n\nWhen the variable is inside parentheses, expand with the distributive property first, then solve:\n\n$$-3(x - 4) = 21 \\;\\Rightarrow\\; -3x + 12 = 21 \\;\\Rightarrow\\; -3x = 9 \\;\\Rightarrow\\; x = -3.$$",
+        "括号前的数要乘括号内的每一项，包括它的符号。去掉括号后，方程就成了普通的两步方程。\n\n变量在括号里时，先用分配律展开，再求解：\n\n$$-3(x - 4) = 21 \\;\\Rightarrow\\; -3x + 12 = 21 \\;\\Rightarrow\\; -3x = 9 \\;\\Rightarrow\\; x = -3.$$",
       ),
       keyPrerequisites: ["distributive-property", "two-step-equations"],
       generate(rng) {

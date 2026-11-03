@@ -812,8 +812,8 @@ export const theSegmentAdditionPostulate = topic(
       id: "segment-addition-with-algebra",
       title: t("Segment addition with algebra", "用方程解线段加法问题"),
       explanation: t(
-        "$B$ lies on $\\overline{AC}$, $AB = 2x + 3$, $BC = 3x - 1$ and $AC = 32$. Then $(2x + 3) + (3x - 1) = 32$, so $5x + 2 = 32$, $5x = 30$ and $x = 6$. The parts are $AB = 15$ and $BC = 17$, and $15 + 17 = 32$ checks.",
-        "$B$ 在 $\\overline{AC}$ 上，$AB = 2x + 3$，$BC = 3x - 1$，$AC = 32$。则 $(2x + 3) + (3x - 1) = 32$，所以 $5x + 2 = 32$，$5x = 30$，$x = 6$。两部分是 $AB = 15$ 和 $BC = 17$，$15 + 17 = 32$，检验正确。",
+        "By the segment addition postulate, if $B$ lies on $\\overline{AC}$, then $AB + BC = AC$. When the lengths are expressions, write that equation, solve for the variable, and substitute back to find each length.\n\n$B$ lies on $\\overline{AC}$, $AB = 2x + 3$, $BC = 3x - 1$ and $AC = 32$. Then $(2x + 3) + (3x - 1) = 32$, so $5x + 2 = 32$, $5x = 30$ and $x = 6$. The parts are $AB = 15$ and $BC = 17$, and $15 + 17 = 32$ checks.",
+        "由线段加法公设，若 $B$ 在 $\\overline{AC}$ 上，则 $AB + BC = AC$。当长度用式子表示时，列出这个方程，解出未知数，再代回去求出每段长度。\n\n$B$ 在 $\\overline{AC}$ 上，$AB = 2x + 3$，$BC = 3x - 1$，$AC = 32$。则 $(2x + 3) + (3x - 1) = 32$，所以 $5x + 2 = 32$，$5x = 30$，$x = 6$。两部分是 $AB = 15$ 和 $BC = 17$，$15 + 17 = 32$，检验正确。",
       ),
       generate(rng) {
         const x = rng.int(2, 12);
@@ -1352,8 +1352,8 @@ export const complementaryAngles = topic(
       id: "equations-for-complementary-angles",
       title: t("Equations for complementary angles", "互余的角的方程"),
       explanation: t(
-        "If $\\angle P$ and $\\angle Q$ are complementary with $m\\angle P = (2x + 10)^\\circ$ and $m\\angle Q = (3x + 5)^\\circ$, then\n\n$$(2x + 10) + (3x + 5) = 90 \\;\\Rightarrow\\; 5x + 15 = 90 \\;\\Rightarrow\\; x = 15,$$\n\nand $m\\angle P = 2 \\cdot 15 + 10 = 40^\\circ$.",
-        "若 $\\angle P$ 与 $\\angle Q$ 互余，$m\\angle P = (2x + 10)^\\circ$，$m\\angle Q = (3x + 5)^\\circ$，则\n\n$$(2x + 10) + (3x + 5) = 90 \\;\\Rightarrow\\; 5x + 15 = 90 \\;\\Rightarrow\\; x = 15,$$\n\n$m\\angle P = 2 \\cdot 15 + 10 = 40^\\circ$。",
+        "Complementary angles add up to $90^\\circ$. When their measures are given as expressions, set the sum of the expressions equal to $90$, solve for the variable, and substitute it back to find each angle.\n\nIf $\\angle P$ and $\\angle Q$ are complementary with $m\\angle P = (2x + 10)^\\circ$ and $m\\angle Q = (3x + 5)^\\circ$, then\n\n$$(2x + 10) + (3x + 5) = 90 \\;\\Rightarrow\\; 5x + 15 = 90 \\;\\Rightarrow\\; x = 15,$$\n\nand $m\\angle P = 2 \\cdot 15 + 10 = 40^\\circ$.",
+        "互余的两个角之和是 $90^\\circ$。当角的度数用式子表示时，令两个式子之和等于 $90$，解出未知数，再代回去求出每个角。\n\n若 $\\angle P$ 与 $\\angle Q$ 互余，$m\\angle P = (2x + 10)^\\circ$，$m\\angle Q = (3x + 5)^\\circ$，则\n\n$$(2x + 10) + (3x + 5) = 90 \\;\\Rightarrow\\; 5x + 15 = 90 \\;\\Rightarrow\\; x = 15,$$\n\n$m\\angle P = 2 \\cdot 15 + 10 = 40^\\circ$。",
       ),
       generate: (rng) => pairAlgebraProblem(rng, complementary),
     },
@@ -1393,8 +1393,8 @@ export const supplementaryAngles = topic(
       id: "equations-for-supplementary-angles",
       title: t("Equations for supplementary angles", "互补的角的方程"),
       explanation: t(
-        "If $\\angle P$ and $\\angle Q$ are supplementary with $m\\angle P = (4x - 6)^\\circ$ and $m\\angle Q = (2x + 6)^\\circ$, then\n\n$$(4x - 6) + (2x + 6) = 180 \\;\\Rightarrow\\; 6x = 180 \\;\\Rightarrow\\; x = 30,$$\n\nand $m\\angle P = 4 \\cdot 30 - 6 = 114^\\circ$.",
-        "若 $\\angle P$ 与 $\\angle Q$ 互补，$m\\angle P = (4x - 6)^\\circ$，$m\\angle Q = (2x + 6)^\\circ$，则\n\n$$(4x - 6) + (2x + 6) = 180 \\;\\Rightarrow\\; 6x = 180 \\;\\Rightarrow\\; x = 30,$$\n\n$m\\angle P = 4 \\cdot 30 - 6 = 114^\\circ$。",
+        "Supplementary angles add up to $180^\\circ$. When their measures are given as expressions, set the sum of the expressions equal to $180$, solve for the variable, and substitute it back to find each angle.\n\nIf $\\angle P$ and $\\angle Q$ are supplementary with $m\\angle P = (4x - 6)^\\circ$ and $m\\angle Q = (2x + 6)^\\circ$, then\n\n$$(4x - 6) + (2x + 6) = 180 \\;\\Rightarrow\\; 6x = 180 \\;\\Rightarrow\\; x = 30,$$\n\nand $m\\angle P = 4 \\cdot 30 - 6 = 114^\\circ$.",
+        "互补的两个角之和是 $180^\\circ$。当角的度数用式子表示时，令两个式子之和等于 $180$，解出未知数，再代回去求出每个角。\n\n若 $\\angle P$ 与 $\\angle Q$ 互补，$m\\angle P = (4x - 6)^\\circ$，$m\\angle Q = (2x + 6)^\\circ$，则\n\n$$(4x - 6) + (2x + 6) = 180 \\;\\Rightarrow\\; 6x = 180 \\;\\Rightarrow\\; x = 30,$$\n\n$m\\angle P = 4 \\cdot 30 - 6 = 114^\\circ$。",
       ),
       generate: (rng) => pairAlgebraProblem(rng, supplementary),
     },

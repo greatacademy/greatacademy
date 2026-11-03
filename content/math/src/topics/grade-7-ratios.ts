@@ -106,8 +106,8 @@ export const findingUnitPrices = topic(
       id: "price-of-one-item",
       title: t("The price of one item", "一件物品的价格"),
       explanation: t(
-        "A pack of $6$ granola bars costs $\\$8.10$. One bar costs $\\$8.10 \\div 6 = \\$1.35$.",
-        "$6$ 根燕麦棒一包，售价 $\\$8.10$。每根 $\\$8.10 \\div 6 = \\$1.35$。",
+        "The unit price is the cost of one item. Divide the total price by the number of items in the package. Comparing unit prices shows which package is the better buy.\n\nA pack of $6$ granola bars costs $\\$8.10$. One bar costs $\\$8.10 \\div 6 = \\$1.35$.",
+        "单价是一件商品的价钱。用总价除以包装里商品的件数，就得到单价。比较单价可以看出哪种包装更划算。\n\n$6$ 根燕麦棒一包，售价 $\\$8.10$。每根 $\\$8.10 \\div 6 = \\$1.35$。",
       ),
       generate(rng) {
         const g = rng.pick(goods);
@@ -133,8 +133,8 @@ export const findingUnitPrices = topic(
       id: "price-per-unit-of-measure",
       title: t("The price per unit of measure", "每个计量单位的价格"),
       explanation: t(
-        "$2.5$ pounds of cheese cost $\\$11.25$. The price per pound is $\\$11.25 \\div 2.5 = \\$112.5 \\div 25 = \\$4.50$.",
-        "$2.5$ 磅奶酪售价 $\\$11.25$。每磅价格是 $\\$11.25 \\div 2.5 = \\$112.5 \\div 25 = \\$4.50$。",
+        "For goods sold by weight or volume, the unit price is the cost of one pound, one ounce or one liter. Divide the total price by the amount bought, even when the amount is a decimal.\n\n$2.5$ pounds of cheese cost $\\$11.25$. The price per pound is $\\$11.25 \\div 2.5 = \\$112.5 \\div 25 = \\$4.50$.",
+        "按重量或体积出售的商品，单价是每磅、每盎司或每升的价钱。用总价除以购买的数量，即使数量是小数也一样。\n\n$2.5$ 磅奶酪售价 $\\$11.25$。每磅价格是 $\\$11.25 \\div 2.5 = \\$112.5 \\div 25 = \\$4.50$。",
       ),
       generate(rng) {
         const b = rng.pick(bulks);
@@ -183,8 +183,8 @@ export const workingWithUnitPrices = topic(
       id: "cost-from-a-unit-price",
       title: t("Finding a cost", "求总价"),
       explanation: t(
-        "Grapes cost $\\$2.40$ per pound, so $3.5$ pounds cost $3.5 \\times \\$2.40 = \\$8.40$.",
-        "葡萄每磅 $\\$2.40$，所以 $3.5$ 磅要 $3.5 \\times \\$2.40 = \\$8.40$。",
+        "Once the unit price is known, the cost of any amount is the unit price times the number of units. A larger amount costs proportionally more.\n\nGrapes cost $\\$2.40$ per pound, so $3.5$ pounds cost $3.5 \\times \\$2.40 = \\$8.40$.",
+        "知道单价后，任意数量的价钱等于单价乘数量。数量越大，价钱按比例越多。\n\n葡萄每磅 $\\$2.40$，所以 $3.5$ 磅要 $3.5 \\times \\$2.40 = \\$8.40$。",
       ),
       generate(rng) {
         const b = rng.pick(bulks);
@@ -210,8 +210,8 @@ export const workingWithUnitPrices = topic(
       id: "quantity-for-a-budget",
       title: t("How much can you buy?", "能买多少？"),
       explanation: t(
-        "Gasoline costs $\\$3.60$ per gallon, so $\\$27$ buys $27 \\div 3.6 = 270 \\div 36 = 7.5$ gallons.",
-        "汽油每加仑 $\\$3.60$，所以 $\\$27$ 能买 $27 \\div 3.6 = 270 \\div 36 = 7.5$ 加仑。",
+        "To find how much a budget buys, divide the money available by the unit price. The quotient is the number of units, and it can be a decimal for goods sold by measure.\n\nGasoline costs $\\$3.60$ per gallon, so $\\$27$ buys $27 \\div 3.6 = 270 \\div 36 = 7.5$ gallons.",
+        "要求一笔钱能买多少，就用这笔钱除以单价。商就是能买到的数量；按计量出售的商品，数量可以是小数。\n\n汽油每加仑 $\\$3.60$，所以 $\\$27$ 能买 $27 \\div 3.6 = 270 \\div 36 = 7.5$ 加仑。",
       ),
       generate(rng) {
         const b = rng.pick(budgetGoods);
@@ -294,8 +294,8 @@ export const solvingMultiStepUnitPriceProblems = topic(
       id: "savings-at-the-cheaper-store",
       title: t("How much is saved?", "节省多少钱？"),
       explanation: t(
-        "Store A sells $4$ cans for $\\$5.00$ ($\\$1.25$ each); store B sells $6$ cans for $\\$6.90$ ($\\$1.15$ each). On $12$ cans, store B saves $12 \\times \\$0.10 = \\$1.20$.",
-        "A 店 $4$ 罐 $\\$5.00$（每罐 $\\$1.25$）；B 店 $6$ 罐 $\\$6.90$（每罐 $\\$1.15$）。买 $12$ 罐，在 B 店节省 $12 \\times \\$0.10 = \\$1.20$。",
+        "To compare two offers, find the unit price at each store first. The difference of the unit prices is the saving on each item; multiply it by the number of items to find the total saving.\n\nStore A sells $4$ cans for $\\$5.00$ ($\\$1.25$ each); store B sells $6$ cans for $\\$6.90$ ($\\$1.15$ each). On $12$ cans, store B saves $12 \\times \\$0.10 = \\$1.20$.",
+        "比较两种售价时，先分别求出每家店的单价。单价之差就是每件商品省下的钱，再乘商品的件数，就得到一共节省的钱。\n\nA 店 $4$ 罐 $\\$5.00$（每罐 $\\$1.25$）；B 店 $6$ 罐 $\\$6.90$（每罐 $\\$1.15$）。买 $12$ 罐，在 B 店节省 $12 \\times \\$0.10 = \\$1.20$。",
       ),
       generate(rng) {
         const g = rng.pick(goods);
@@ -328,8 +328,8 @@ export const solvingMultiStepUnitPriceProblems = topic(
       id: "cost-of-a-mixed-purchase",
       title: t("The cost of a mixed purchase", "买几种东西的总价"),
       explanation: t(
-        "Apples cost $\\$1.20$ per pound and pears $\\$1.80$ per pound. $2.5$ pounds of apples and $1.5$ pounds of pears cost $2.5 \\times \\$1.20 + 1.5 \\times \\$1.80 = \\$3.00 + \\$2.70 = \\$5.70$.",
-        "苹果每磅 $\\$1.20$，梨每磅 $\\$1.80$。$2.5$ 磅苹果和 $1.5$ 磅梨共 $2.5 \\times \\$1.20 + 1.5 \\times \\$1.80 = \\$3.00 + \\$2.70 = \\$5.70$。",
+        "When a purchase includes several goods, find the cost of each good separately by multiplying its unit price by its amount. Then add those costs to get the total.\n\nApples cost $\\$1.20$ per pound and pears $\\$1.80$ per pound. $2.5$ pounds of apples and $1.5$ pounds of pears cost $2.5 \\times \\$1.20 + 1.5 \\times \\$1.80 = \\$3.00 + \\$2.70 = \\$5.70$.",
+        "一次购买几种商品时，先分别用每种商品的单价乘它的数量，求出各自的价钱，再把这些价钱加起来得到总价。\n\n苹果每磅 $\\$1.20$，梨每磅 $\\$1.80$。$2.5$ 磅苹果和 $1.5$ 磅梨共 $2.5 \\times \\$1.20 + 1.5 \\times \\$1.80 = \\$3.00 + \\$2.70 = \\$5.70$。",
       ),
       generate(rng) {
         const [fa, fb] = rng.sample(
@@ -508,8 +508,8 @@ export const unitRatesAssociatedWithRatiosOfFractions = topic(
       id: "a-fraction-per-a-fraction",
       title: t("A fraction per a fraction", "分数除以分数"),
       explanation: t(
-        "A hiker walks $\\frac{2}{3}$ mile in $\\frac{1}{4}$ hour. Per hour: $\\frac{2}{3} \\div \\frac{1}{4} = \\frac{2}{3} \\times 4 = \\frac{8}{3} = 2\\frac{2}{3}$ miles.",
-        "徒步者 $\\frac{1}{4}$ 小时走 $\\frac{2}{3}$ 英里。每小时：$\\frac{2}{3} \\div \\frac{1}{4} = \\frac{2}{3} \\times 4 = \\frac{8}{3} = 2\\frac{2}{3}$ 英里。",
+        "A unit rate is the amount of one quantity for one unit of the other. Divide the first quantity by the second, even when both are fractions, by multiplying by the reciprocal of the divisor.\n\nA hiker walks $\\frac{2}{3}$ mile in $\\frac{1}{4}$ hour. Per hour: $\\frac{2}{3} \\div \\frac{1}{4} = \\frac{2}{3} \\times 4 = \\frac{8}{3} = 2\\frac{2}{3}$ miles.",
+        "单位率是另一个量每一个单位所对应的量。用第一个量除以第二个量；即使两个量都是分数也一样，除以一个分数就是乘它的倒数。\n\n徒步者 $\\frac{1}{4}$ 小时走 $\\frac{2}{3}$ 英里。每小时：$\\frac{2}{3} \\div \\frac{1}{4} = \\frac{2}{3} \\times 4 = \\frac{8}{3} = 2\\frac{2}{3}$ 英里。",
       ),
       generate(rng) {
         const ctx = rng.pick(rateContexts);
@@ -525,8 +525,8 @@ export const unitRatesAssociatedWithRatiosOfFractions = topic(
       id: "a-fraction-and-a-whole-number",
       title: t("A fraction and a whole number", "分数与整数"),
       explanation: t(
-        "$\\frac{3}{4}$ gallon in $3$ minutes is $\\frac{3}{4} \\div 3 = \\frac{1}{4}$ gallon per minute. $6$ gallons in $\\frac{3}{4}$ minute is $6 \\div \\frac{3}{4} = 6 \\times \\frac{4}{3} = 8$ gallons per minute.",
-        "$3$ 分钟 $\\frac{3}{4}$ 加仑，每分钟 $\\frac{3}{4} \\div 3 = \\frac{1}{4}$ 加仑。$\\frac{3}{4}$ 分钟 $6$ 加仑，每分钟 $6 \\div \\frac{3}{4} = 6 \\times \\frac{4}{3} = 8$ 加仑。",
+        "The unit rate is always the quantity being measured divided by the quantity that should become one unit. Dividing by a whole number makes the amount smaller, while dividing by a fraction less than one makes it larger.\n\n$\\frac{3}{4}$ gallon in $3$ minutes is $\\frac{3}{4} \\div 3 = \\frac{1}{4}$ gallon per minute. $6$ gallons in $\\frac{3}{4}$ minute is $6 \\div \\frac{3}{4} = 6 \\times \\frac{4}{3} = 8$ gallons per minute.",
+        "单位率总是用要计量的量除以要化为一个单位的量。除以一个整数会使数变小，而除以一个小于 $1$ 的分数会使数变大。\n\n$3$ 分钟 $\\frac{3}{4}$ 加仑，每分钟 $\\frac{3}{4} \\div 3 = \\frac{1}{4}$ 加仑。$\\frac{3}{4}$ 分钟 $6$ 加仑，每分钟 $6 \\div \\frac{3}{4} = 6 \\times \\frac{4}{3} = 8$ 加仑。",
       ),
       generate(rng) {
         const ctx = rng.pick(rateContexts);
@@ -553,8 +553,8 @@ export const unitRatesAssociatedWithRatiosOfMixedNumbers = topic(
       id: "a-mixed-number-and-a-fraction",
       title: t("A mixed number and a fraction or whole number", "带分数与分数或整数"),
       explanation: t(
-        "$2\\frac{1}{2}$ miles in $\\frac{1}{2}$ hour: $\\frac{5}{2} \\div \\frac{1}{2} = \\frac{5}{2} \\times 2 = 5$ miles per hour.",
-        "$\\frac{1}{2}$ 小时走 $2\\frac{1}{2}$ 英里：$\\frac{5}{2} \\div \\frac{1}{2} = \\frac{5}{2} \\times 2 = 5$ 英里/小时。",
+        "To find a unit rate with mixed numbers, first write each mixed number as an improper fraction. Then divide as with any fractions, multiplying by the reciprocal of the divisor.\n\n$2\\frac{1}{2}$ miles in $\\frac{1}{2}$ hour: $\\frac{5}{2} \\div \\frac{1}{2} = \\frac{5}{2} \\times 2 = 5$ miles per hour.",
+        "求含带分数的单位率时，先把每个带分数化成假分数，再像普通分数那样相除，即乘除数的倒数。\n\n$\\frac{1}{2}$ 小时走 $2\\frac{1}{2}$ 英里：$\\frac{5}{2} \\div \\frac{1}{2} = \\frac{5}{2} \\times 2 = 5$ 英里/小时。",
       ),
       generate(rng) {
         const ctx = rng.pick(rateContexts);
@@ -684,8 +684,8 @@ export const solvingUnitRateProblemsUsingRatiosOfMixedNumbers = topic(
       id: "amount-for-a-mixed-number",
       title: t("Finding an amount", "求对应的量"),
       explanation: t(
-        "$2\\frac{1}{4}$ miles in $\\frac{3}{4}$ hour is $3$ miles per hour, so $2\\frac{1}{2}$ hours give $3 \\times \\frac{5}{2} = 7\\frac{1}{2}$ miles.",
-        "$\\frac{3}{4}$ 小时走 $2\\frac{1}{4}$ 英里，即每小时 $3$ 英里，所以 $2\\frac{1}{2}$ 小时走 $3 \\times \\frac{5}{2} = 7\\frac{1}{2}$ 英里。",
+        "First find the unit rate, the amount for one unit. Then multiply the unit rate by the given number of units, writing any mixed number as an improper fraction.\n\n$2\\frac{1}{4}$ miles in $\\frac{3}{4}$ hour is $3$ miles per hour, so $2\\frac{1}{2}$ hours give $3 \\times \\frac{5}{2} = 7\\frac{1}{2}$ miles.",
+        "先求出单位率，即每一个单位对应的量，再用单位率乘给定的单位数。遇到带分数时先化成假分数。\n\n$\\frac{3}{4}$ 小时走 $2\\frac{1}{4}$ 英里，即每小时 $3$ 英里，所以 $2\\frac{1}{2}$ 小时走 $3 \\times \\frac{5}{2} = 7\\frac{1}{2}$ 英里。",
       ),
       generate(rng) {
         const ctx = rng.pick(rateContexts);
@@ -699,8 +699,8 @@ export const solvingUnitRateProblemsUsingRatiosOfMixedNumbers = topic(
       id: "the-other-quantity-for-a-mixed-number",
       title: t("Using the rate the other way round", "反过来用单位率"),
       explanation: t(
-        "$2\\frac{1}{4}$ miles in $\\frac{3}{4}$ hour is $\\frac{3}{4} \\div \\frac{9}{4} = \\frac{1}{3}$ hour per mile, so $9$ miles take $9 \\times \\frac{1}{3} = 3$ hours.",
-        "$\\frac{3}{4}$ 小时走 $2\\frac{1}{4}$ 英里，即每英里 $\\frac{3}{4} \\div \\frac{9}{4} = \\frac{1}{3}$ 小时，所以 $9$ 英里需要 $9 \\times \\frac{1}{3} = 3$ 小时。",
+        "Every ratio has two unit rates, one for each quantity. To find how much of the second quantity goes with a given amount of the first, use the rate of the second quantity per unit of the first.\n\n$2\\frac{1}{4}$ miles in $\\frac{3}{4}$ hour is $\\frac{3}{4} \\div \\frac{9}{4} = \\frac{1}{3}$ hour per mile, so $9$ miles take $9 \\times \\frac{1}{3} = 3$ hours.",
+        "每个比都有两个单位率，每个量各对应一个。要求给定的第一个量对应多少第二个量，就用每一单位第一个量所对应的第二个量的单位率。\n\n$\\frac{3}{4}$ 小时走 $2\\frac{1}{4}$ 英里，即每英里 $\\frac{3}{4} \\div \\frac{9}{4} = \\frac{1}{3}$ 小时，所以 $9$ 英里需要 $9 \\times \\frac{1}{3} = 3$ 小时。",
       ),
       generate(rng) {
         const ctx = rng.pick(rateContexts);
@@ -794,8 +794,8 @@ export const understandingProportionalRelationshipsUsingTables = topic(
       id: "constant-of-proportionality-from-a-table",
       title: t("The constant of proportionality", "求比例常数"),
       explanation: t(
-        "For $x: 2, 4, 6$ and $y: 5, 10, 15$, $k = \\frac{y}{x} = \\frac{5}{2}$, so $y = \\frac{5}{2}x$. Note that $k$ is $y$ divided by $x$, not $x$ divided by $y$.",
-        "对于 $x: 2, 4, 6$，$y: 5, 10, 15$，$k = \\frac{y}{x} = \\frac{5}{2}$，所以 $y = \\frac{5}{2}x$。注意 $k$ 是 $y$ 除以 $x$，不是 $x$ 除以 $y$。",
+        "In a proportional relationship, the ratio of $y$ to $x$ is the same for every pair in the table. That common ratio is the constant of proportionality $k$, and the relationship is $y = kx$.\n\nFor $x: 2, 4, 6$ and $y: 5, 10, 15$, $k = \\frac{y}{x} = \\frac{5}{2}$, so $y = \\frac{5}{2}x$. Note that $k$ is $y$ divided by $x$, not $x$ divided by $y$.",
+        "在正比例关系中，表格里每一对数的 $y$ 与 $x$ 之比都相同。这个相同的比就是比例常数 $k$，关系式是 $y = kx$。\n\n对于 $x: 2, 4, 6$，$y: 5, 10, 15$，$k = \\frac{y}{x} = \\frac{5}{2}$，所以 $y = \\frac{5}{2}x$。注意 $k$ 是 $y$ 除以 $x$，不是 $x$ 除以 $y$。",
       ),
       generate(rng) {
         const k = smallRate(rng);
@@ -819,8 +819,8 @@ export const understandingProportionalRelationshipsUsingTables = topic(
       id: "completing-a-proportional-table",
       title: t("Completing a proportional table", "补全正比例表格"),
       explanation: t(
-        "For $x: 2, 4, 10$ and $y: 5, 10, \\square$: $k = \\frac{5}{2}$, so the missing $y$ is $\\frac{5}{2} \\times 10 = 25$. To find a missing $x$, divide its $y$ by $k$.",
-        "对于 $x: 2, 4, 10$，$y: 5, 10, \\square$：$k = \\frac{5}{2}$，所以缺少的 $y$ 是 $\\frac{5}{2} \\times 10 = 25$。求缺少的 $x$，就用对应的 $y$ 除以 $k$。",
+        "To fill in a proportional table, first find the constant of proportionality from a complete pair. Every missing value then follows from $y = kx$.\n\nFor $x: 2, 4, 10$ and $y: 5, 10, \\square$: $k = \\frac{5}{2}$, so the missing $y$ is $\\frac{5}{2} \\times 10 = 25$. To find a missing $x$, divide its $y$ by $k$.",
+        "补全正比例关系的表格时，先由一对完整的数求出比例常数，再用 $y = kx$ 求出每个缺少的值。\n\n对于 $x: 2, 4, 10$，$y: 5, 10, \\square$：$k = \\frac{5}{2}$，所以缺少的 $y$ 是 $\\frac{5}{2} \\times 10 = 25$。求缺少的 $x$，就用对应的 $y$ 除以 $k$。",
       ),
       generate(rng) {
         const k = smallRate(rng);
@@ -975,8 +975,8 @@ export const understandingProportionalRelationshipsUsingGraphs = topic(
       id: "constant-of-proportionality-from-a-graph",
       title: t("The constant of proportionality from a graph", "由图像求比例常数"),
       explanation: t(
-        "The line of a proportional relationship passes through $(6, 4)$. Then $k = \\frac{4}{6} = \\frac{2}{3}$, and the equation is $y = \\frac{2}{3}x$.",
-        "某正比例关系的直线经过 $(6, 4)$。那么 $k = \\frac{4}{6} = \\frac{2}{3}$，方程是 $y = \\frac{2}{3}x$。",
+        "The graph of a proportional relationship is a straight line through the origin. Read any point on the line other than the origin; its $y$ divided by its $x$ is the constant of proportionality.\n\nThe line of a proportional relationship passes through $(6, 4)$. Then $k = \\frac{4}{6} = \\frac{2}{3}$, and the equation is $y = \\frac{2}{3}x$.",
+        "正比例关系的图像是一条经过原点的直线。读出直线上原点以外的任意一点，用它的 $y$ 除以 $x$，就是比例常数。\n\n某正比例关系的直线经过 $(6, 4)$。那么 $k = \\frac{4}{6} = \\frac{2}{3}$，方程是 $y = \\frac{2}{3}x$。",
       ),
       generate(rng) {
         const k = smallRate(rng, 6, 6);
@@ -1179,8 +1179,8 @@ export const understandingProportionalRelationshipsFromDescriptions = topic(
       id: "is-the-situation-proportional",
       title: t("Is the situation proportional?", "情境是否成正比例？"),
       explanation: t(
-        "Tickets at $\\$8$ each: cost $y = 8x$, proportional. A taxi at $\\$3$ plus $\\$2$ per mile: $y = 2x + 3$, not proportional, because the $\\$3$ is paid even for $0$ miles.",
-        "每张票 $\\$8$：总价 $y = 8x$，成正比例。出租车起步价 $\\$3$，每英里 $\\$2$：$y = 2x + 3$，不成正比例，因为路程为 $0$ 也要付 $\\$3$。",
+        "A situation is proportional when one quantity is always the same multiple of the other, so zero of one goes with zero of the other. A fixed starting amount, such as a fee paid up front, breaks proportionality.\n\nTickets at $\\$8$ each: cost $y = 8x$, proportional. A taxi at $\\$3$ plus $\\$2$ per mile: $y = 2x + 3$, not proportional, because the $\\$3$ is paid even for $0$ miles.",
+        "如果一个量总是另一个量的同一倍数，这个情境就是正比例关系，此时一个量为零，另一个量也为零。固定的起始量，比如预先支付的费用，会使它不成正比例。\n\n每张票 $\\$8$：总价 $y = 8x$，成正比例。出租车起步价 $\\$3$，每英里 $\\$2$：$y = 2x + 3$，不成正比例，因为路程为 $0$ 也要付 $\\$3$。",
       ),
       generate(rng) {
         const s = situation(rng);
@@ -1191,8 +1191,8 @@ export const understandingProportionalRelationshipsFromDescriptions = topic(
       id: "writing-the-equation-of-a-proportional-relationship",
       title: t("Writing the equation", "写出方程"),
       explanation: t(
-        "Pears cost $\\$1.25$ per pound, so the cost of $x$ pounds is $y = 1.25x$. If instead $4$ pounds cost $\\$5$, first find $k = 5 \\div 4 = 1.25$.",
-        "梨每磅 $\\$1.25$，所以 $x$ 磅的价钱是 $y = 1.25x$。如果已知 $4$ 磅 $\\$5$，就先求 $k = 5 \\div 4 = 1.25$。",
+        "The equation of a proportional relationship is $y = kx$, where $k$ is the amount of $y$ for one unit of $x$. If a rate is not given directly, divide a known $y$ by its $x$ to find $k$.\n\nPears cost $\\$1.25$ per pound, so the cost of $x$ pounds is $y = 1.25x$. If instead $4$ pounds cost $\\$5$, first find $k = 5 \\div 4 = 1.25$.",
+        "正比例关系的方程是 $y = kx$，其中 $k$ 是每一个单位的 $x$ 所对应的 $y$。如果没有直接给出单位率，就用已知的 $y$ 除以对应的 $x$ 求 $k$。\n\n梨每磅 $\\$1.25$，所以 $x$ 磅的价钱是 $y = 1.25x$。如果已知 $4$ 磅 $\\$5$，就先求 $k = 5 \\div 4 = 1.25$。",
       ),
       generate(rng) {
         const b = rng.pick(bulks.slice(0, 5));
@@ -1278,8 +1278,8 @@ export const interpretingDataFromProportionalRelationships = topic(
       id: "using-the-equation-in-context",
       title: t("Using the equation", "运用方程"),
       explanation: t(
-        "If $y = 14.5x$ gives the pay for $x$ hours, $6$ hours pay $14.5 \\times 6 = \\$87$, and earning $\\$116$ takes $116 \\div 14.5 = 8$ hours.",
-        "如果 $y = 14.5x$ 表示工作 $x$ 小时的工资，那么 $6$ 小时挣 $14.5 \\times 6 = \\$87$，挣 $\\$116$ 需要 $116 \\div 14.5 = 8$ 小时。",
+        "The equation $y = kx$ works in both directions. To find $y$ for a given $x$, multiply by $k$; to find the $x$ that gives a certain $y$, divide by $k$.\n\nIf $y = 14.5x$ gives the pay for $x$ hours, $6$ hours pay $14.5 \\times 6 = \\$87$, and earning $\\$116$ takes $116 \\div 14.5 = 8$ hours.",
+        "方程 $y = kx$ 可以双向使用。已知 $x$ 求 $y$，就乘 $k$；已知 $y$ 求对应的 $x$，就除以 $k$。\n\n如果 $y = 14.5x$ 表示工作 $x$ 小时的工资，那么 $6$ 小时挣 $14.5 \\times 6 = \\$87$，挣 $\\$116$ 需要 $116 \\div 14.5 = 8$ 小时。",
       ),
       generate(rng) {
         const job = rng.pick(jobs);
@@ -1524,8 +1524,8 @@ export const applyingPercentageIncreases = topic(
       id: "increasing-a-quantity",
       title: t("Increasing a quantity", "增加一个量"),
       explanation: t(
-        "A $\\$240$ price increases by $15\\%$: the increase is $0.15 \\times 240 = 36$, so the new price is $240 + 36 = \\$276$.",
-        "$\\$240$ 的价格上涨 $15\\%$：上涨的量是 $0.15 \\times 240 = 36$，所以新价格是 $240 + 36 = \\$276$。",
+        "To increase a quantity by a percentage, find that percentage of the quantity and add it to the original. The same result comes from multiplying by $1$ plus the rate written as a decimal.\n\nA $\\$240$ price increases by $15\\%$: the increase is $0.15 \\times 240 = 36$, so the new price is $240 + 36 = \\$276$.",
+        "把一个量增加百分之几，先求出这个量的百分之几，再加到原来的量上。也可以直接乘以 $1$ 加上用小数表示的增长率，结果相同。\n\n$\\$240$ 的价格上涨 $15\\%$：上涨的量是 $0.15 \\times 240 = 36$，所以新价格是 $240 + 36 = \\$276$。",
       ),
       generate: (rng) => changeProblem(rng, true),
     },
@@ -1547,8 +1547,8 @@ export const applyingPercentageDecreases = topic(
       id: "the-multiplier-for-a-decrease",
       title: t("The multiplier for a decrease", "减少时乘的数"),
       explanation: t(
-        "Decreasing by $15\\%$ leaves $100\\% - 15\\% = 85\\%$ of the original, so multiply by $0.85$, not by $0.15$.",
-        "减少 $15\\%$ 后剩下原来的 $100\\% - 15\\% = 85\\%$，所以乘 $0.85$，而不是 $0.15$。",
+        "After a decrease, what remains is the whole, $100\\%$, minus the percentage taken away. Write that remaining percentage as a decimal; multiplying by it gives the new value in one step.\n\nDecreasing by $15\\%$ leaves $100\\% - 15\\% = 85\\%$ of the original, so multiply by $0.85$, not by $0.15$.",
+        "减少之后，剩下的是整体 $100\\%$ 减去减少的百分数。把剩下的百分数写成小数，乘它就能一步得到新的值。\n\n减少 $15\\%$ 后剩下原来的 $100\\% - 15\\% = 85\\%$，所以乘 $0.85$，而不是 $0.15$。",
       ),
       generate: (rng) => multiplierProblem(rng, false),
     },
@@ -1556,8 +1556,8 @@ export const applyingPercentageDecreases = topic(
       id: "decreasing-a-quantity",
       title: t("Decreasing a quantity", "减少一个量"),
       explanation: t(
-        "A town of $240$ residents shrinks by $15\\%$: it loses $0.15 \\times 240 = 36$ residents, leaving $240 - 36 = 204$.",
-        "一个 $240$ 人的镇人口减少 $15\\%$：减少 $0.15 \\times 240 = 36$ 人，剩下 $240 - 36 = 204$ 人。",
+        "To decrease a quantity by a percentage, find that percentage of the quantity and subtract it from the original. The same result comes from multiplying by $1$ minus the rate.\n\nA town of $240$ residents shrinks by $15\\%$: it loses $0.15 \\times 240 = 36$ residents, leaving $240 - 36 = 204$.",
+        "把一个量减少百分之几，先求出这个量的百分之几，再从原来的量中减去。也可以直接乘以 $1$ 减去减少率，结果相同。\n\n一个 $240$ 人的镇人口减少 $15\\%$：减少 $0.15 \\times 240 = 36$ 人，剩下 $240 - 36 = 204$ 人。",
       ),
       generate: (rng) => changeProblem(rng, false),
     },
@@ -1603,8 +1603,8 @@ export const calculatingPercentageChange = topic(
       id: "percentage-increase",
       title: t("Percentage increase", "增加的百分比"),
       explanation: t(
-        "A price rises from $\\$80$ to $\\$92$. The increase is $\\$12$, and $\\frac{12}{80} = 0.15$, an increase of $15\\%$.",
-        "价格从 $\\$80$ 涨到 $\\$92$。上涨 $\\$12$，$\\frac{12}{80} = 0.15$，即上涨了 $15\\%$。",
+        "The percentage change compares the amount of change with the original value. Divide the increase by the original, not by the new value, and write the result as a percentage.\n\nA price rises from $\\$80$ to $\\$92$. The increase is $\\$12$, and $\\frac{12}{80} = 0.15$, an increase of $15\\%$.",
+        "百分比变化是把变化的量与原来的值相比较。用增加的量除以原来的值，而不是除以新的值，再把结果写成百分数。\n\n价格从 $\\$80$ 涨到 $\\$92$。上涨 $\\$12$，$\\frac{12}{80} = 0.15$，即上涨了 $15\\%$。",
       ),
       generate: (rng) => percentChangeProblem(rng, true),
     },
@@ -1683,15 +1683,18 @@ export const findingOriginalValuesFromPercentageIncreases = topic(
     {
       id: "the-equation-for-the-original-after-an-increase",
       title: t("Writing the equation", "列方程"),
-      explanation: t("A number increased by $15\\%$ gives $276$: $1.15x = 276$.", "一个数增加 $15\\%$ 后得 $276$：$1.15x = 276$。"),
+      explanation: t(
+        "Call the unknown original value $x$. An increase multiplies it by $1$ plus the rate, so the new value equals that multiplier times $x$.\n\nA number increased by $15\\%$ gives $276$: $1.15x = 276$.",
+        "设未知的原来的值为 $x$。增加相当于把它乘以 $1$ 加上增长率，所以新的值等于这个倍数乘 $x$。\n\n一个数增加 $15\\%$ 后得 $276$：$1.15x = 276$。",
+      ),
       generate: (rng) => originalEquationProblem(rng, true),
     },
     {
       id: "original-value-after-an-increase",
       title: t("Finding the original value", "求原值"),
       explanation: t(
-        "After a $15\\%$ increase a price is $\\$276$: $1.15x = 276$, so $x = 276 \\div 1.15 = \\$240$.",
-        "上涨 $15\\%$ 后价格是 $\\$276$：$1.15x = 276$，所以 $x = 276 \\div 1.15 = \\$240$。",
+        "To undo an increase, divide the new value by the multiplier. Subtracting the percentage of the new value does not work, because the percentage was taken of the original.\n\nAfter a $15\\%$ increase a price is $\\$276$: $1.15x = 276$, so $x = 276 \\div 1.15 = \\$240$.",
+        "要还原一次增加，就用新的值除以倍数。从新的值中减去它的百分之几是不对的，因为百分数是针对原来的值算的。\n\n上涨 $15\\%$ 后价格是 $\\$276$：$1.15x = 276$，所以 $x = 276 \\div 1.15 = \\$240$。",
       ),
       generate: (rng) => originalProblem(rng, true),
     },
@@ -1713,8 +1716,8 @@ export const findingOriginalValuesFromPercentageDecreases = topic(
       id: "the-equation-for-the-original-after-a-decrease",
       title: t("Writing the equation", "列方程"),
       explanation: t(
-        "A number decreased by $15\\%$ gives $204$: $0.85x = 204$, not $0.15x = 204$.",
-        "一个数减少 $15\\%$ 后得 $204$：$0.85x = 204$，而不是 $0.15x = 204$。",
+        "Call the unknown original value $x$. A decrease leaves $1$ minus the rate of it, so the new value equals that multiplier times $x$.\n\nA number decreased by $15\\%$ gives $204$: $0.85x = 204$, not $0.15x = 204$.",
+        "设未知的原来的值为 $x$。减少后剩下它的 $1$ 减去减少率，所以新的值等于这个倍数乘 $x$。\n\n一个数减少 $15\\%$ 后得 $204$：$0.85x = 204$，而不是 $0.15x = 204$。",
       ),
       generate: (rng) => originalEquationProblem(rng, false),
     },
@@ -1722,8 +1725,8 @@ export const findingOriginalValuesFromPercentageDecreases = topic(
       id: "original-value-after-a-decrease",
       title: t("Finding the original value", "求原值"),
       explanation: t(
-        "After a $15\\%$ decrease a town has $204$ residents: $0.85x = 204$, so $x = 204 \\div 0.85 = 240$.",
-        "减少 $15\\%$ 后某镇有 $204$ 人：$0.85x = 204$，所以 $x = 204 \\div 0.85 = 240$。",
+        "To undo a decrease, divide the new value by the multiplier for the part that remains. Adding the percentage back to the new value does not give the original.\n\nAfter a $15\\%$ decrease a town has $204$ residents: $0.85x = 204$, so $x = 204 \\div 0.85 = 240$.",
+        "要还原一次减少，就用新的值除以剩下部分的倍数。把百分之几加回到新的值上，得不到原来的值。\n\n减少 $15\\%$ 后某镇有 $204$ 人：$0.85x = 204$，所以 $x = 204 \\div 0.85 = 240$。",
       ),
       generate: (rng) => originalProblem(rng, false),
     },
@@ -1749,8 +1752,8 @@ export const applyingPercentagesInSuccession = topic(
       id: "value-after-two-changes",
       title: t("The value after two changes", "两次变化后的值"),
       explanation: t(
-        "$500$ increased by $20\\%$ is $500 \\times 1.2 = 600$; then decreased by $10\\%$ it is $600 \\times 0.9 = 540$.",
-        "$500$ 增加 $20\\%$ 得 $500 \\times 1.2 = 600$；再减少 $10\\%$ 得 $600 \\times 0.9 = 540$。",
+        "When one percentage change follows another, the second change applies to the new value, not to the original. Multiply by one multiplier, then by the next.\n\n$500$ increased by $20\\%$ is $500 \\times 1.2 = 600$; then decreased by $10\\%$ it is $600 \\times 0.9 = 540$.",
+        "一次百分比变化之后再发生另一次变化时，第二次变化是针对新的值，而不是原来的值。先乘第一个倍数，再乘第二个倍数。\n\n$500$ 增加 $20\\%$ 得 $500 \\times 1.2 = 600$；再减少 $10\\%$ 得 $600 \\times 0.9 = 540$。",
       ),
       generate(rng) {
         const n = 100 * rng.int(2, 9);
@@ -1780,8 +1783,8 @@ export const applyingPercentagesInSuccession = topic(
       id: "overall-percentage-change",
       title: t("The overall percentage change", "总体百分比变化"),
       explanation: t(
-        "A $20\\%$ increase and then a $10\\%$ increase multiply by $1.2 \\times 1.1 = 1.32$: an overall increase of $32\\%$, not $30\\%$.",
-        "先增加 $20\\%$ 再增加 $10\\%$，相当于乘 $1.2 \\times 1.1 = 1.32$：总体增加 $32\\%$，而不是 $30\\%$。",
+        "The overall effect of successive changes is the product of their multipliers. Subtract $1$ from that product and write it as a percentage to get the overall change. Adding the percentages gives the wrong answer.\n\nA $20\\%$ increase and then a $10\\%$ increase multiply by $1.2 \\times 1.1 = 1.32$: an overall increase of $32\\%$, not $30\\%$.",
+        "连续几次变化的总效果是各个倍数的乘积。把这个乘积减去 $1$，再写成百分数，就是总体的变化。直接把百分数相加是错误的。\n\n先增加 $20\\%$ 再增加 $10\\%$，相当于乘 $1.2 \\times 1.1 = 1.32$：总体增加 $32\\%$，而不是 $30\\%$。",
       ),
       generate(rng) {
         const what = rng.pick([
@@ -1928,8 +1931,8 @@ export const percentagesInCommerceAndFinance = topic(
       id: "sales-tax",
       title: t("Sales tax", "销售税"),
       explanation: t(
-        "A $\\$40$ item with $8\\%$ sales tax: the tax is $0.08 \\times 40 = \\$3.20$, so the total is $\\$43.20$.",
-        "$\\$40$ 的商品，销售税 $8\\%$：税是 $0.08 \\times 40 = \\$3.20$，所以共 $\\$43.20$。",
+        "Sales tax is a percentage of the price that is added on top of it. Find the tax by multiplying the price by the tax rate, then add it to the price for the total.\n\nA $\\$40$ item with $8\\%$ sales tax: the tax is $0.08 \\times 40 = \\$3.20$, so the total is $\\$43.20$.",
+        "销售税是按价格的百分之几加收的钱。用价格乘税率求出税，再加到价格上得到总额。\n\n$\\$40$ 的商品，销售税 $8\\%$：税是 $0.08 \\times 40 = \\$3.20$，所以共 $\\$43.20$。",
       ),
       generate(rng) {
         const it = rng.pick(purchases);
@@ -1955,8 +1958,8 @@ export const percentagesInCommerceAndFinance = topic(
       id: "discounts",
       title: t("Discounts", "折扣"),
       explanation: t(
-        "A $\\$40$ item is $25\\%$ off: the discount is $0.25 \\times 40 = \\$10$, so the sale price is $\\$30$.",
-        "$\\$40$ 的商品优惠 $25\\%$：优惠 $0.25 \\times 40 = \\$10$，所以售价 $\\$30$。",
+        "A discount is a percentage of the original price that is taken off. Find the discount by multiplying the price by the rate, then subtract it to get the sale price.\n\nA $\\$40$ item is $25\\%$ off: the discount is $0.25 \\times 40 = \\$10$, so the sale price is $\\$30$.",
+        "折扣是从原价中减去原价的百分之几。用原价乘折扣率求出优惠的钱，再从原价中减去，得到售价。\n\n$\\$40$ 的商品优惠 $25\\%$：优惠 $0.25 \\times 40 = \\$10$，所以售价 $\\$30$。",
       ),
       generate(rng) {
         const it = rng.pick(purchases);
@@ -1982,8 +1985,8 @@ export const percentagesInCommerceAndFinance = topic(
       id: "tips",
       title: t("Tips", "小费"),
       explanation: t(
-        "An $18\\%$ tip on a $\\$45$ bill is $0.18 \\times 45 = \\$8.10$, so the total is $\\$53.10$.",
-        "$\\$45$ 的账单付 $18\\%$ 的小费：$0.18 \\times 45 = \\$8.10$，所以共 $\\$53.10$。",
+        "A tip is a percentage of the bill that is paid in addition to it. Multiply the bill by the tip rate to find the tip, then add it to the bill.\n\nAn $18\\%$ tip on a $\\$45$ bill is $0.18 \\times 45 = \\$8.10$, so the total is $\\$53.10$.",
+        "小费是在账单之外另付的账单的百分之几。用账单金额乘小费率求出小费，再加到账单上。\n\n$\\$45$ 的账单付 $18\\%$ 的小费：$0.18 \\times 45 = \\$8.10$，所以共 $\\$53.10$。",
       ),
       generate(rng) {
         const d = rng.int(15, 120);
@@ -2033,8 +2036,8 @@ export const furtherPercentagesInCommerceAndFinance = topic(
       id: "markups",
       title: t("Markups", "加价"),
       explanation: t(
-        "A store pays $\\$24$ for a lamp and marks it up by $75\\%$. The retail price is $24 \\times 1.75 = \\$42$.",
-        "商店以 $\\$24$ 购进一盏台灯，加价 $75\\%$。零售价是 $24 \\times 1.75 = \\$42$。",
+        "A markup is the percentage a store adds to what it paid in order to set its selling price. The retail price is the cost plus the markup, which is the cost times $1$ plus the markup rate.\n\nA store pays $\\$24$ for a lamp and marks it up by $75\\%$. The retail price is $24 \\times 1.75 = \\$42$.",
+        "加价是商店在进价上加的百分之几，以此定出售价。零售价等于进价加上加价，也就是进价乘以 $1$ 加上加价率。\n\n商店以 $\\$24$ 购进一盏台灯，加价 $75\\%$。零售价是 $24 \\times 1.75 = \\$42$。",
       ),
       generate(rng) {
         const it = rng.pick(purchases);
@@ -2060,8 +2063,8 @@ export const furtherPercentagesInCommerceAndFinance = topic(
       id: "commission",
       title: t("Commission", "佣金"),
       explanation: t(
-        "A salesperson earns $\\$300$ a week plus $5\\%$ commission. On $\\$4{,}000$ of sales, the commission is $0.05 \\times 4000 = \\$200$, so the pay is $\\$500$.",
-        "一名销售员每周底薪 $\\$300$，另加 $5\\%$ 的佣金。销售额 $\\$4{,}000$ 时，佣金是 $0.05 \\times 4000 = \\$200$，所以工资是 $\\$500$。",
+        "A commission is a percentage of the sales that a salesperson earns. Multiply the sales by the commission rate, and add any base pay to find the total earnings.\n\nA salesperson earns $\\$300$ a week plus $5\\%$ commission. On $\\$4{,}000$ of sales, the commission is $0.05 \\times 4000 = \\$200$, so the pay is $\\$500$.",
+        "佣金是销售员按销售额的百分之几得到的报酬。用销售额乘佣金率，再加上底薪，得到总收入。\n\n一名销售员每周底薪 $\\$300$，另加 $5\\%$ 的佣金。销售额 $\\$4{,}000$ 时，佣金是 $0.05 \\times 4000 = \\$200$，所以工资是 $\\$500$。",
       ),
       generate(rng) {
         const name = rng.pick(names);
@@ -2088,8 +2091,8 @@ export const furtherPercentagesInCommerceAndFinance = topic(
       id: "finding-a-percentage-rate",
       title: t("Finding the rate", "求百分率"),
       explanation: t(
-        "A $\\$60$ jacket is on sale for $\\$45$. The discount is $\\$15$, and $\\frac{15}{60} = 25\\%$. A $\\$2.40$ tax on a $\\$30$ purchase is a rate of $\\frac{2.40}{30} = 8\\%$.",
-        "原价 $\\$60$ 的夹克现价 $\\$45$。优惠了 $\\$15$，$\\frac{15}{60} = 25\\%$。$\\$30$ 的商品交税 $\\$2.40$，税率是 $\\frac{2.40}{30} = 8\\%$。",
+        "To find a rate, divide the amount of the tax, tip, discount or markup by the amount it was calculated from, usually the original price. Then write the quotient as a percentage.\n\nA $\\$60$ jacket is on sale for $\\$45$. The discount is $\\$15$, and $\\frac{15}{60} = 25\\%$. A $\\$2.40$ tax on a $\\$30$ purchase is a rate of $\\frac{2.40}{30} = 8\\%$.",
+        "求比率时，用税、小费、折扣或加价的金额除以计算它所依据的金额，通常是原价，再把商写成百分数。\n\n原价 $\\$60$ 的夹克现价 $\\$45$。优惠了 $\\$15$，$\\frac{15}{60} = 25\\%$。$\\$30$ 的商品交税 $\\$2.40$，税率是 $\\frac{2.40}{30} = 8\\%$。",
       ),
       generate(rng) {
         const it = rng.pick(purchases);
@@ -2146,8 +2149,8 @@ export const solvingMultipartCommerceAndFinancePercentageProblems = topic(
       id: "discount-then-tax",
       title: t("A discount, then tax", "先打折，再加税"),
       explanation: t(
-        "A $\\$50$ item is $20\\%$ off, and $8\\%$ tax is added to the sale price: $50 \\times 0.8 = \\$40$, then $40 \\times 1.08 = \\$43.20$.",
-        "$\\$50$ 的商品优惠 $20\\%$，再按售价加 $8\\%$ 的税：$50 \\times 0.8 = \\$40$，再 $40 \\times 1.08 = \\$43.20$。",
+        "When a discount and a tax both apply, the order matters for what each percentage is taken of. The discount comes off the original price, and the tax is then charged on the sale price.\n\nA $\\$50$ item is $20\\%$ off, and $8\\%$ tax is added to the sale price: $50 \\times 0.8 = \\$40$, then $40 \\times 1.08 = \\$43.20$.",
+        "同时有折扣和税时，要弄清每个百分数针对的是哪个金额。折扣从原价中减去，税则按折后的售价计算。\n\n$\\$50$ 的商品优惠 $20\\%$，再按售价加 $8\\%$ 的税：$50 \\times 0.8 = \\$40$，再 $40 \\times 1.08 = \\$43.20$。",
       ),
       generate(rng) {
         const it = rng.pick(purchases);
@@ -2175,8 +2178,8 @@ export const solvingMultipartCommerceAndFinancePercentageProblems = topic(
       id: "markup-then-discount",
       title: t("A markup, then a discount", "先加价，再打折"),
       explanation: t(
-        "A store pays $\\$40$ for a backpack, marks it up $50\\%$ to $\\$60$, and later sells it at $20\\%$ off: $60 \\times 0.8 = \\$48$. Its profit is $\\$48 - \\$40 = \\$8$.",
-        "商店以 $\\$40$ 购进一个背包，加价 $50\\%$ 定价 $\\$60$，后来打 $20\\%$ 的折扣出售：$60 \\times 0.8 = \\$48$。利润是 $\\$48 - \\$40 = \\$8$。",
+        "A markup raises the cost to a selling price, and a later discount is taken of that selling price, not of the cost. The profit is the final price minus what the store paid.\n\nA store pays $\\$40$ for a backpack, marks it up $50\\%$ to $\\$60$, and later sells it at $20\\%$ off: $60 \\times 0.8 = \\$48$. Its profit is $\\$48 - \\$40 = \\$8$.",
+        "加价把进价提高到售价，之后的折扣是按这个售价计算的，而不是按进价。利润等于最终的售价减去商店的进价。\n\n商店以 $\\$40$ 购进一个背包，加价 $50\\%$ 定价 $\\$60$，后来打 $20\\%$ 的折扣出售：$60 \\times 0.8 = \\$48$。利润是 $\\$48 - \\$40 = \\$8$。",
       ),
       generate(rng) {
         const it = rng.pick(purchases);
@@ -2211,8 +2214,8 @@ export const solvingMultipartCommerceAndFinancePercentageProblems = topic(
       id: "comparing-two-offers",
       title: t("Comparing two offers", "比较两种优惠"),
       explanation: t(
-        "On an $\\$80$ item, $30\\%$ off saves $0.3 \\times 80 = \\$24$, more than a coupon for $\\$20$ off. So the $30\\%$ discount gives the lower price.",
-        "$\\$80$ 的商品，优惠 $30\\%$ 能省 $0.3 \\times 80 = \\$24$，比 $\\$20$ 的优惠券省得多。所以 $30\\%$ 的折扣价格更低。",
+        "To compare a percentage discount with a fixed amount off, turn the percentage into a dollar amount for the given price. The offer that saves more money gives the lower price.\n\nOn an $\\$80$ item, $30\\%$ off saves $0.3 \\times 80 = \\$24$, more than a coupon for $\\$20$ off. So the $30\\%$ discount gives the lower price.",
+        "比较按百分比的折扣与直接减去固定金额的优惠时，先把百分比折扣换算成这个价格下省下的钱。省得多的优惠，价格更低。\n\n$\\$80$ 的商品，优惠 $30\\%$ 能省 $0.3 \\times 80 = \\$24$，比 $\\$20$ 的优惠券省得多。所以 $30\\%$ 的折扣价格更低。",
       ),
       generate(rng) {
         const it = rng.pick(purchases);
@@ -2255,8 +2258,8 @@ export const calculatingSimpleInterest = topic(
       id: "interest-earned",
       title: t("Interest earned", "求利息"),
       explanation: t(
-        "$\\$500$ at $4\\%$ simple interest for $3$ years: $I = 500 \\times 0.04 \\times 3 = \\$60$. For $18$ months, use $t = 1.5$.",
-        "$\\$500$ 按 $4\\%$ 的单利存 $3$ 年：$I = 500 \\times 0.04 \\times 3 = \\$60$。存 $18$ 个月时 $t = 1.5$。",
+        "Simple interest is earned only on the original amount, the principal. It equals the principal times the yearly rate times the time in years, $I = Prt$. Write months as a fraction of a year.\n\n$\\$500$ at $4\\%$ simple interest for $3$ years: $I = 500 \\times 0.04 \\times 3 = \\$60$. For $18$ months, use $t = 1.5$.",
+        "单利只按原来的本金计算。利息等于本金乘年利率再乘以年数，即 $I = Prt$。时间是月数时，要化成年数。\n\n$\\$500$ 按 $4\\%$ 的单利存 $3$ 年：$I = 500 \\times 0.04 \\times 3 = \\$60$。存 $18$ 个月时 $t = 1.5$。",
       ),
       generate(rng) {
         const p = 100 * rng.int(2, 50);
@@ -2291,8 +2294,8 @@ export const calculatingSimpleInterest = topic(
       id: "balance-with-simple-interest",
       title: t("The balance after some years", "本息和"),
       explanation: t(
-        "$\\$500$ at $4\\%$ for $3$ years earns $\\$60$ of interest, so the account holds $500 + 60 = \\$560$.",
-        "$\\$500$ 按 $4\\%$ 存 $3$ 年得利息 $\\$60$，所以账户里有 $500 + 60 = \\$560$。",
+        "The balance of an account is the principal plus the interest it has earned. Find the interest with $I = Prt$ first, then add it to the principal.\n\n$\\$500$ at $4\\%$ for $3$ years earns $\\$60$ of interest, so the account holds $500 + 60 = \\$560$.",
+        "账户的余额等于本金加上得到的利息。先用 $I = Prt$ 求出利息，再加到本金上。\n\n$\\$500$ 按 $4\\%$ 存 $3$ 年得利息 $\\$60$，所以账户里有 $500 + 60 = \\$560$。",
       ),
       generate(rng) {
         const name = rng.pick(names);
@@ -2319,8 +2322,8 @@ export const calculatingSimpleInterest = topic(
       id: "finding-the-interest-rate",
       title: t("Finding the interest rate", "求利率"),
       explanation: t(
-        "$\\$800$ earns $\\$96$ of simple interest in $3$ years: $96 = 800 \\times r \\times 3 = 2400r$, so $r = 0.04 = 4\\%$.",
-        "$\\$800$ 存 $3$ 年得单利 $\\$96$：$96 = 800 \\times r \\times 3 = 2400r$，所以 $r = 0.04 = 4\\%$。",
+        "When the interest, the principal and the time are known, substitute them into $I = Prt$ and solve for the rate $r$. Write the rate as a percentage.\n\n$\\$800$ earns $\\$96$ of simple interest in $3$ years: $96 = 800 \\times r \\times 3 = 2400r$, so $r = 0.04 = 4\\%$.",
+        "已知利息、本金和时间时，把它们代入 $I = Prt$，解出利率 $r$，再把利率写成百分数。\n\n$\\$800$ 存 $3$ 年得单利 $\\$96$：$96 = 800 \\times r \\times 3 = 2400r$，所以 $r = 0.04 = 4\\%$。",
       ),
       generate(rng) {
         const p = 100 * rng.int(2, 50);

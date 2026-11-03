@@ -110,8 +110,8 @@ export const subtractingAPositiveNumberFromASmallerPositiveNumber = topic(
       id: "smaller-minus-larger",
       title: t("Subtracting a larger number", "减去较大的数"),
       explanation: t(
-        "$4 - 9$: start at $4$ and move $9$ units left. Moving $4$ units reaches $0$, and $5$ more reach $-5$. So $4 - 9 = -(9 - 4) = -5$.",
-        "$4 - 9$：从 $4$ 出发向左移动 $9$ 个单位。移动 $4$ 个单位到 $0$，再移动 $5$ 个单位到 $-5$。所以 $4 - 9 = -(9 - 4) = -5$。",
+        "Subtracting a positive number means moving left on the number line. When the number taken away is larger, the result passes zero and becomes negative: it is the opposite of the larger number minus the smaller one.\n\n$4 - 9$: start at $4$ and move $9$ units left. Moving $4$ units reaches $0$, and $5$ more reach $-5$. So $4 - 9 = -(9 - 4) = -5$.",
+        "减去一个正数，就是在数轴上向左移动。减去的数更大时，结果会越过零变成负数，它等于大数减小数的相反数。\n\n$4 - 9$：从 $4$ 出发向左移动 $9$ 个单位。移动 $4$ 个单位到 $0$，再移动 $5$ 个单位到 $-5$。所以 $4 - 9 = -(9 - 4) = -5$。",
       ),
       generate(rng) {
         const a = rng.int(1, 30);
@@ -132,8 +132,8 @@ export const subtractingAPositiveNumberFromASmallerPositiveNumber = topic(
       id: "smaller-minus-larger-in-context",
       title: t("Going below zero in context", "实际情境中低于零"),
       explanation: t(
-        "The temperature is $4^{\\circ}\\text{C}$ and falls by $9^{\\circ}\\text{C}$: $4 - 9 = -5$, so it is $-5^{\\circ}\\text{C}$.",
-        "气温是 $4^{\\circ}\\text{C}$，下降了 $9^{\\circ}\\text{C}$：$4 - 9 = -5$，所以是 $-5^{\\circ}\\text{C}$。",
+        "A drop, a loss or a withdrawal that is larger than the starting amount takes the value below zero. Subtract as usual; the answer is negative, and its size is how far below zero the value ends up.\n\nThe temperature is $4^{\\circ}\\text{C}$ and falls by $9^{\\circ}\\text{C}$: $4 - 9 = -5$, so it is $-5^{\\circ}\\text{C}$.",
+        "下降、亏损或取款的量大于原来的量时，结果会低于零。照常相减，答案是负数，它的大小表示比零低多少。\n\n气温是 $4^{\\circ}\\text{C}$，下降了 $9^{\\circ}\\text{C}$：$4 - 9 = -5$，所以是 $-5^{\\circ}\\text{C}$。",
       ),
       generate(rng) {
         const a = rng.int(1, 25);
@@ -181,8 +181,8 @@ export const subtractingAPositiveNumberFromANegativeNumber = topic(
       id: "negative-minus-positive",
       title: t("A negative number minus a positive number", "负数减正数"),
       explanation: t(
-        "$-4 - 7$: start at $-4$ and move $7$ units left to $-11$. The distances add: $-(4 + 7) = -11$.",
-        "$-4 - 7$：从 $-4$ 出发向左移动 $7$ 个单位，到达 $-11$。两段距离相加：$-(4 + 7) = -11$。",
+        "Starting from a negative number and subtracting a positive one moves further left, away from zero. The result is negative, and its distance from zero is the sum of the two distances.\n\n$-4 - 7$: start at $-4$ and move $7$ units left to $-11$. The distances add: $-(4 + 7) = -11$.",
+        "从一个负数出发再减去一个正数，会继续向左移动，离零更远。结果是负数，它到零的距离等于两段距离之和。\n\n$-4 - 7$：从 $-4$ 出发向左移动 $7$ 个单位，到达 $-11$。两段距离相加：$-(4 + 7) = -11$。",
       ),
       generate(rng) {
         const a = rng.int(1, 40);
@@ -203,8 +203,8 @@ export const subtractingAPositiveNumberFromANegativeNumber = topic(
       id: "negative-minus-positive-in-context",
       title: t("Going further below zero", "在零以下继续下降"),
       explanation: t(
-        "A diver at $-12$ meters descends $7$ more meters: $-12 - 7 = -19$ meters.",
-        "潜水员在 $-12$ 米处，又下潜 $7$ 米：$-12 - 7 = -19$ 米。",
+        "When a quantity is already below zero, such as a depth or a debt, a further decrease makes it more negative. Subtract the decrease from the negative starting value.\n\nA diver at $-12$ meters descends $7$ more meters: $-12 - 7 = -19$ meters.",
+        "当一个量已经低于零时，比如深度或欠款，再减少会使它变得更负。用负的起始值减去减少的量。\n\n潜水员在 $-12$ 米处，又下潜 $7$ 米：$-12 - 7 = -19$ 米。",
       ),
       generate(rng) {
         const a = rng.int(2, 30);
@@ -252,8 +252,8 @@ export const subtractingAPositiveFractionFromASmallerFraction = topic(
       id: "smaller-fraction-minus-larger-fraction",
       title: t("Fractions", "分数"),
       explanation: t(
-        "$\\frac{1}{4} - \\frac{2}{3} = \\frac{3}{12} - \\frac{8}{12} = -\\frac{5}{12}$.",
-        "$\\frac{1}{4} - \\frac{2}{3} = \\frac{3}{12} - \\frac{8}{12} = -\\frac{5}{12}$。",
+        "To subtract fractions, first rewrite them with a common denominator. If the fraction being subtracted is larger, the difference is negative: subtract the smaller numerator from the larger and put a negative sign in front.\n\n$\\frac{1}{4} - \\frac{2}{3} = \\frac{3}{12} - \\frac{8}{12} = -\\frac{5}{12}$.",
+        "分数相减时，先通分。如果减数更大，差就是负数：用较大的分子减去较小的分子，再在前面加上负号。\n\n$\\frac{1}{4} - \\frac{2}{3} = \\frac{3}{12} - \\frac{8}{12} = -\\frac{5}{12}$。",
       ),
       generate(rng) {
         let a: Q, b: Q;
@@ -278,8 +278,8 @@ export const subtractingAPositiveFractionFromASmallerFraction = topic(
       id: "smaller-mixed-number-minus-larger-mixed-number",
       title: t("Whole and mixed numbers", "整数与带分数"),
       explanation: t(
-        "$2 - 3\\frac{1}{2} = -\\left(3\\frac{1}{2} - 2\\right) = -1\\frac{1}{2}$, and $1\\frac{1}{4} - 2\\frac{2}{3} = -\\left(2\\frac{8}{12} - 1\\frac{3}{12}\\right) = -1\\frac{5}{12}$.",
-        "$2 - 3\\frac{1}{2} = -\\left(3\\frac{1}{2} - 2\\right) = -1\\frac{1}{2}$；$1\\frac{1}{4} - 2\\frac{2}{3} = -\\left(2\\frac{8}{12} - 1\\frac{3}{12}\\right) = -1\\frac{5}{12}$。",
+        "When a smaller mixed number has a larger one taken from it, the result is negative. Subtract the smaller mixed number from the larger one, regrouping if needed, and make the answer negative.\n\n$2 - 3\\frac{1}{2} = -\\left(3\\frac{1}{2} - 2\\right) = -1\\frac{1}{2}$, and $1\\frac{1}{4} - 2\\frac{2}{3} = -\\left(2\\frac{8}{12} - 1\\frac{3}{12}\\right) = -1\\frac{5}{12}$.",
+        "用较小的带分数减去较大的带分数，结果是负数。先用大的带分数减去小的带分数，必要时借位，再把答案写成负数。\n\n$2 - 3\\frac{1}{2} = -\\left(3\\frac{1}{2} - 2\\right) = -1\\frac{1}{2}$；$1\\frac{1}{4} - 2\\frac{2}{3} = -\\left(2\\frac{8}{12} - 1\\frac{3}{12}\\right) = -1\\frac{5}{12}$。",
       ),
       generate(rng) {
         let a: Q, b: Q;
@@ -318,8 +318,8 @@ export const subtractingAPositiveDecimalFromASmallerDecimal = topic(
       id: "smaller-decimal-minus-larger-decimal",
       title: t("Decimals", "小数"),
       explanation: t(
-        "$2.3 - 5.75 = -(5.75 - 2.30) = -3.45$. Write $2.3$ as $2.30$ so that the place values line up.",
-        "$2.3 - 5.75 = -(5.75 - 2.30) = -3.45$。把 $2.3$ 写成 $2.30$，使数位对齐。",
+        "When the decimal being subtracted is larger, the difference is negative. Line up the decimal points, subtract the smaller decimal from the larger, and write a negative sign in front of the result.\n\n$2.3 - 5.75 = -(5.75 - 2.30) = -3.45$. Write $2.3$ as $2.30$ so that the place values line up.",
+        "减数是较大的小数时，差是负数。把小数点对齐，用大的小数减去小的小数，再在结果前写上负号。\n\n$2.3 - 5.75 = -(5.75 - 2.30) = -3.45$。把 $2.3$ 写成 $2.30$，使数位对齐。",
       ),
       generate(rng) {
         let a: Q, b: Q;
@@ -346,8 +346,8 @@ export const subtractingAPositiveDecimalFromASmallerDecimal = topic(
       id: "smaller-decimal-minus-larger-decimal-in-context",
       title: t("Decimals in context", "实际情境中的小数"),
       explanation: t(
-        "A balance of $\\$12.50$ with a $\\$20.75$ purchase becomes $12.50 - 20.75 = -8.25$ dollars.",
-        "余额 $\\$12.50$，消费 $\\$20.75$ 后变为 $12.50 - 20.75 = -8.25$ 美元。",
+        "When spending is more than the money available, the balance drops below zero. A negative balance shows how much is owed.\n\nA balance of $\\$12.50$ with a $\\$20.75$ purchase becomes $12.50 - 20.75 = -8.25$ dollars.",
+        "花的钱比现有的钱多时，余额会低于零。负的余额表示欠了多少钱。\n\n余额 $\\$12.50$，消费 $\\$20.75$ 后变为 $12.50 - 20.75 = -8.25$ 美元。",
       ),
       generate(rng) {
         if (rng.bool()) {
@@ -419,8 +419,8 @@ export const addingAPositiveNumberToANegativeNumber = topic(
       id: "negative-plus-positive-integers",
       title: t("Integers", "整数"),
       explanation: t(
-        "$-8 + 3$: from $-8$ move $3$ right to $-5$. $-3 + 8$: from $-3$ move $8$ right, past $0$, to $5$.",
-        "$-8 + 3$：从 $-8$ 向右移动 $3$ 到 $-5$。$-3 + 8$：从 $-3$ 向右移动 $8$，越过 $0$，到 $5$。",
+        "Adding a positive number moves right on the number line. Starting from a negative number, the sum stays negative if the move is shorter than the distance to zero, and becomes positive if it is longer.\n\n$-8 + 3$: from $-8$ move $3$ right to $-5$. $-3 + 8$: from $-3$ move $8$ right, past $0$, to $5$.",
+        "加上一个正数，就是在数轴上向右移动。从负数出发时，如果移动的距离比到零的距离短，和仍是负数；如果更长，和就是正数。\n\n$-8 + 3$：从 $-8$ 向右移动 $3$ 到 $-5$。$-3 + 8$：从 $-3$ 向右移动 $8$，越过 $0$，到 $5$。",
       ),
       generate(rng) {
         let a: number, b: number;
@@ -445,8 +445,8 @@ export const addingAPositiveNumberToANegativeNumber = topic(
       id: "negative-plus-positive-rationals",
       title: t("Fractions and decimals", "分数与小数"),
       explanation: t(
-        "$-2.75 + 1.5 = -(2.75 - 1.5) = -1.25$, and $-\\frac{1}{3} + \\frac{3}{4} = \\frac{3}{4} - \\frac{1}{3} = \\frac{5}{12}$.",
-        "$-2.75 + 1.5 = -(2.75 - 1.5) = -1.25$；$-\\frac{1}{3} + \\frac{3}{4} = \\frac{3}{4} - \\frac{1}{3} = \\frac{5}{12}$。",
+        "To add numbers with different signs, subtract the smaller absolute value from the larger one. The sum takes the sign of the number with the larger absolute value.\n\n$-2.75 + 1.5 = -(2.75 - 1.5) = -1.25$, and $-\\frac{1}{3} + \\frac{3}{4} = \\frac{3}{4} - \\frac{1}{3} = \\frac{5}{12}$.",
+        "符号不同的两个数相加，用较大的绝对值减去较小的绝对值，和的符号与绝对值较大的数相同。\n\n$-2.75 + 1.5 = -(2.75 - 1.5) = -1.25$；$-\\frac{1}{3} + \\frac{3}{4} = \\frac{3}{4} - \\frac{1}{3} = \\frac{5}{12}$。",
       ),
       generate(rng) {
         const kind = rationalKind(rng);
@@ -485,7 +485,10 @@ export const addingANegativeNumber = topic(
     {
       id: "positive-plus-negative",
       title: t("A positive number plus a negative number", "正数加负数"),
-      explanation: t("$5 + (-8) = 5 - 8 = -3$ and $9 + (-4) = 9 - 4 = 5$.", "$5 + (-8) = 5 - 8 = -3$；$9 + (-4) = 9 - 4 = 5$。"),
+      explanation: t(
+        "Adding a negative number has the same effect as subtracting its absolute value: it moves left on the number line. So rewrite the sum as a subtraction and work it out.\n\n$5 + (-8) = 5 - 8 = -3$ and $9 + (-4) = 9 - 4 = 5$.",
+        "加上一个负数，与减去它的绝对值效果相同，都是在数轴上向左移动。所以把加法改写成减法再计算。\n\n$5 + (-8) = 5 - 8 = -3$；$9 + (-4) = 9 - 4 = 5$。",
+      ),
       generate(rng) {
         const kind: Kind = rng.bool(0.6) ? "fraction" : "decimal";
         let a: Q, b: Q;
@@ -547,7 +550,10 @@ export const subtractingANegativeNumber = topic(
     {
       id: "subtracting-a-negative-integer",
       title: t("Integers", "整数"),
-      explanation: t("$5 - (-3) = 5 + 3 = 8$ and $-9 - (-4) = -9 + 4 = -5$.", "$5 - (-3) = 5 + 3 = 8$；$-9 - (-4) = -9 + 4 = -5$。"),
+      explanation: t(
+        "Subtracting a negative number is the same as adding its opposite, a positive number. Change the subtraction to addition and the negative number to positive, then add.\n\n$5 - (-3) = 5 + 3 = 8$ and $-9 - (-4) = -9 + 4 = -5$.",
+        "减去一个负数，等于加上它的相反数，也就是一个正数。把减法改成加法，把负数改成正数，再相加。\n\n$5 - (-3) = 5 + 3 = 8$；$-9 - (-4) = -9 + 4 = -5$。",
+      ),
       generate(rng) {
         const a = rng.nonZero(-30, 30);
         const b = rng.int(1, 30);
@@ -568,8 +574,8 @@ export const subtractingANegativeNumber = topic(
       id: "subtracting-a-negative-rational",
       title: t("Fractions and decimals", "分数与小数"),
       explanation: t(
-        "$-\\frac{1}{2} - \\left(-\\frac{3}{4}\\right) = -\\frac{1}{2} + \\frac{3}{4} = \\frac{1}{4}$, and $1.2 - (-0.85) = 1.2 + 0.85 = 2.05$.",
-        "$-\\frac{1}{2} - \\left(-\\frac{3}{4}\\right) = -\\frac{1}{2} + \\frac{3}{4} = \\frac{1}{4}$；$1.2 - (-0.85) = 1.2 + 0.85 = 2.05$。",
+        "The rule for subtracting a negative is the same for fractions and decimals: subtracting a negative number means adding its opposite. Rewrite, then add as usual.\n\n$-\\frac{1}{2} - \\left(-\\frac{3}{4}\\right) = -\\frac{1}{2} + \\frac{3}{4} = \\frac{1}{4}$, and $1.2 - (-0.85) = 1.2 + 0.85 = 2.05$.",
+        "分数和小数减去负数的规则相同：减去一个负数，就是加上它的相反数。先改写，再照常相加。\n\n$-\\frac{1}{2} - \\left(-\\frac{3}{4}\\right) = -\\frac{1}{2} + \\frac{3}{4} = \\frac{1}{4}$；$1.2 - (-0.85) = 1.2 + 0.85 = 2.05$。",
       ),
       generate(rng) {
         const kind = rationalKind(rng);
@@ -595,8 +601,8 @@ export const subtractingANegativeNumber = topic(
       id: "differences-across-zero",
       title: t("Differences across zero", "跨越零的差"),
       explanation: t(
-        "The high temperature was $7^{\\circ}\\text{C}$ and the low $-5^{\\circ}\\text{C}$. The high was $7 - (-5) = 12$ degrees warmer.",
-        "最高气温 $7^{\\circ}\\text{C}$，最低气温 $-5^{\\circ}\\text{C}$。最高气温比最低气温高 $7 - (-5) = 12$ 度。",
+        "The difference between a positive and a negative value, such as a high and a low temperature, is the higher value minus the lower one. Subtracting the negative adds the two distances from zero.\n\nThe high temperature was $7^{\\circ}\\text{C}$ and the low $-5^{\\circ}\\text{C}$. The high was $7 - (-5) = 12$ degrees warmer.",
+        "一个正值与一个负值之差，比如最高气温与最低气温之差，等于较大的值减去较小的值。减去负数相当于把两段到零的距离相加。\n\n最高气温 $7^{\\circ}\\text{C}$，最低气温 $-5^{\\circ}\\text{C}$。最高气温比最低气温高 $7 - (-5) = 12$ 度。",
       ),
       generate(rng) {
         const hi = rng.int(1, 30);
@@ -648,8 +654,8 @@ export const additiveInversesOfNumbers = topic(
       id: "finding-the-additive-inverse",
       title: t("Finding the additive inverse", "求相反数"),
       explanation: t(
-        "The additive inverse of $-\\frac{2}{5}$ is $\\frac{2}{5}$, since $-\\frac{2}{5} + \\frac{2}{5} = 0$. It is not the reciprocal $-\\frac{5}{2}$.",
-        "$-\\frac{2}{5}$ 的相反数是 $\\frac{2}{5}$，因为 $-\\frac{2}{5} + \\frac{2}{5} = 0$。它不是倒数 $-\\frac{5}{2}$。",
+        "The additive inverse of a number, also called its opposite, is the number that adds with it to zero. It has the same absolute value and the opposite sign.\n\nThe additive inverse of $-\\frac{2}{5}$ is $\\frac{2}{5}$, since $-\\frac{2}{5} + \\frac{2}{5} = 0$. It is not the reciprocal $-\\frac{5}{2}$.",
+        "一个数的加法逆元，也叫相反数，是与它相加得零的数。它的绝对值与原数相同，符号相反。\n\n$-\\frac{2}{5}$ 的相反数是 $\\frac{2}{5}$，因为 $-\\frac{2}{5} + \\frac{2}{5} = 0$。它不是倒数 $-\\frac{5}{2}$。",
       ),
       generate(rng) {
         const kind = rationalKind(rng);
@@ -671,8 +677,8 @@ export const additiveInversesOfNumbers = topic(
       id: "using-additive-inverses-in-a-sum",
       title: t("Inverses cancel in a sum", "相反数在求和中抵消"),
       explanation: t(
-        "In $-\\frac{4}{9} + 13 + \\frac{4}{9}$, the terms $-\\frac{4}{9}$ and $\\frac{4}{9}$ add to $0$, so the sum is $13$.",
-        "在 $-\\frac{4}{9} + 13 + \\frac{4}{9}$ 中，$-\\frac{4}{9}$ 与 $\\frac{4}{9}$ 相加得 $0$，所以和是 $13$。",
+        "A number and its opposite add to zero, so in a sum they cancel each other. Look for opposite pairs first; the order of terms in a sum can be changed freely.\n\nIn $-\\frac{4}{9} + 13 + \\frac{4}{9}$, the terms $-\\frac{4}{9}$ and $\\frac{4}{9}$ add to $0$, so the sum is $13$.",
+        "一个数与它的相反数相加得零，所以在加法中它们互相抵消。先找出互为相反数的一对；加法中各项的顺序可以随意调换。\n\n在 $-\\frac{4}{9} + 13 + \\frac{4}{9}$ 中，$-\\frac{4}{9}$ 与 $\\frac{4}{9}$ 相加得 $0$，所以和是 $13$。",
       ),
       generate(rng) {
         const kind = rationalKind(rng);
@@ -716,8 +722,8 @@ export const interpretingAdditiveOppositesAndAdditionUsingAbsoluteValue = topic(
       id: "locating-a-sum-on-the-number-line",
       title: t("Where is p + q?", "p + q 在哪里？"),
       explanation: t(
-        "$3.5 + (-6)$ is $|-6| = 6$ units to the left of $3.5$, at $-2.5$.",
-        "$3.5 + (-6)$ 在 $3.5$ 左边 $|-6| = 6$ 个单位处，即 $-2.5$。",
+        "The sum $p + q$ lies at distance $|q|$ from $p$ on the number line: to the right of $p$ when $q$ is positive and to the left when $q$ is negative.\n\n$3.5 + (-6)$ is $|-6| = 6$ units to the left of $3.5$, at $-2.5$.",
+        "在数轴上，和 $p + q$ 与 $p$ 的距离是 $|q|$：$q$ 是正数时在 $p$ 的右边，$q$ 是负数时在 $p$ 的左边。\n\n$3.5 + (-6)$ 在 $3.5$ 左边 $|-6| = 6$ 个单位处，即 $-2.5$。",
       ),
       generate(rng) {
         const kind: Kind = rng.bool() ? "fraction" : "decimal";
@@ -748,8 +754,8 @@ export const interpretingAdditiveOppositesAndAdditionUsingAbsoluteValue = topic(
       id: "distance-between-rational-numbers",
       title: t("The distance between two numbers", "两数之间的距离"),
       explanation: t(
-        "The distance between $-4.5$ and $2.25$ is $|2.25 - (-4.5)| = |6.75| = 6.75$.",
-        "$-4.5$ 与 $2.25$ 之间的距离是 $|2.25 - (-4.5)| = |6.75| = 6.75$。",
+        "The distance between two numbers on the number line is the absolute value of their difference. Subtract in either order and take the absolute value; a distance is never negative.\n\nThe distance between $-4.5$ and $2.25$ is $|2.25 - (-4.5)| = |6.75| = 6.75$.",
+        "数轴上两个数之间的距离，等于它们之差的绝对值。用哪个数减哪个数都可以，再取绝对值；距离永远不是负数。\n\n$-4.5$ 与 $2.25$ 之间的距离是 $|2.25 - (-4.5)| = |6.75| = 6.75$。",
       ),
       generate(rng) {
         const kind: Kind = rng.pick(["fraction", "mixed", "decimal"] as const);
@@ -793,8 +799,8 @@ export const solvingProblemsUsingAdditionAndSubtractionOfRationalNumbers = topic
       id: "a-sequence-of-changes",
       title: t("A sequence of changes", "连续的变化"),
       explanation: t(
-        "At 6 a.m. it was $-3.5^{\\circ}\\text{C}$. It rose $8.25$ degrees by noon and fell $6.5$ degrees by evening: $-3.5 + 8.25 - 6.5 = -1.75^{\\circ}\\text{C}$.",
-        "早上 6 点气温是 $-3.5^{\\circ}\\text{C}$，到中午上升了 $8.25$ 度，到傍晚又下降了 $6.5$ 度：$-3.5 + 8.25 - 6.5 = -1.75^{\\circ}\\text{C}$。",
+        "Write each change as a signed number: rises and gains are positive, falls and losses are negative. Starting from the first value, add the changes in order.\n\nAt 6 a.m. it was $-3.5^{\\circ}\\text{C}$. It rose $8.25$ degrees by noon and fell $6.5$ degrees by evening: $-3.5 + 8.25 - 6.5 = -1.75^{\\circ}\\text{C}$.",
+        "把每次变化写成带符号的数：上升和增加为正，下降和减少为负。从起始值开始，依次加上各次变化。\n\n早上 6 点气温是 $-3.5^{\\circ}\\text{C}$，到中午上升了 $8.25$ 度，到傍晚又下降了 $6.5$ 度：$-3.5 + 8.25 - 6.5 = -1.75^{\\circ}\\text{C}$。",
       ),
       generate(rng) {
         const start = decQ(rng, 1, 1, 120).neg();
@@ -820,8 +826,8 @@ export const solvingProblemsUsingAdditionAndSubtractionOfRationalNumbers = topic
       id: "differences-of-signed-quantities",
       title: t("Comparing signed quantities", "比较带符号的量"),
       explanation: t(
-        "A hill is $8\\frac{1}{2}$ m above sea level and a cave floor is $3\\frac{1}{4}$ m below it. The difference is $8\\frac{1}{2} - \\left(-3\\frac{1}{4}\\right) = 11\\frac{3}{4}$ m.",
-        "山丘高出海平面 $8\\frac{1}{2}$ 米，洞底低于海平面 $3\\frac{1}{4}$ 米。高度差是 $8\\frac{1}{2} - \\left(-3\\frac{1}{4}\\right) = 11\\frac{3}{4}$ 米。",
+        "Give values above a reference level, such as sea level, positive signs and values below it negative signs. The difference between two levels is the higher one minus the lower one.\n\nA hill is $8\\frac{1}{2}$ m above sea level and a cave floor is $3\\frac{1}{4}$ m below it. The difference is $8\\frac{1}{2} - \\left(-3\\frac{1}{4}\\right) = 11\\frac{3}{4}$ m.",
+        "在某个基准之上的值，比如高于海平面，记为正；低于基准的值记为负。两个高度之差等于较高的减去较低的。\n\n山丘高出海平面 $8\\frac{1}{2}$ 米，洞底低于海平面 $3\\frac{1}{4}$ 米。高度差是 $8\\frac{1}{2} - \\left(-3\\frac{1}{4}\\right) = 11\\frac{3}{4}$ 米。",
       ),
       generate(rng) {
         const kind: Kind = rng.bool() ? "mixed" : "decimal";
@@ -878,8 +884,8 @@ export const multiplyingPositiveNumbersWithNegativeNumbers = topic(
       id: "positive-times-negative-integers",
       title: t("Integers", "整数"),
       explanation: t(
-        "$3 \\times (-4) = (-4) + (-4) + (-4) = -12$, and $(-6) \\times 5 = -30$.",
-        "$3 \\times (-4) = (-4) + (-4) + (-4) = -12$；$(-6) \\times 5 = -30$。",
+        "Multiplying by a positive whole number means repeated addition, and adding several negative numbers gives a negative result. So a positive times a negative is negative, whichever order the factors come in.\n\n$3 \\times (-4) = (-4) + (-4) + (-4) = -12$, and $(-6) \\times 5 = -30$.",
+        "乘一个正整数就是重复相加，而几个负数相加结果是负数。所以正数乘负数得负数，与因数的顺序无关。\n\n$3 \\times (-4) = (-4) + (-4) + (-4) = -12$；$(-6) \\times 5 = -30$。",
       ),
       generate(rng) {
         const a = rng.int(2, 15);
@@ -902,8 +908,8 @@ export const multiplyingPositiveNumbersWithNegativeNumbers = topic(
       id: "positive-times-negative-rationals",
       title: t("Fractions and decimals", "分数与小数"),
       explanation: t(
-        "$\\left(-\\frac{2}{3}\\right) \\times \\frac{9}{4} = -\\frac{18}{12} = -\\frac{3}{2}$, and $0.4 \\times (-2.5) = -1$.",
-        "$\\left(-\\frac{2}{3}\\right) \\times \\frac{9}{4} = -\\frac{18}{12} = -\\frac{3}{2}$；$0.4 \\times (-2.5) = -1$。",
+        "The sign rule holds for fractions and decimals too: when one factor is positive and the other negative, the product is negative. Multiply the absolute values, then attach the negative sign.\n\n$\\left(-\\frac{2}{3}\\right) \\times \\frac{9}{4} = -\\frac{18}{12} = -\\frac{3}{2}$, and $0.4 \\times (-2.5) = -1$.",
+        "分数和小数同样遵守符号法则：一个因数为正、另一个为负时，积为负数。先把绝对值相乘，再加上负号。\n\n$\\left(-\\frac{2}{3}\\right) \\times \\frac{9}{4} = -\\frac{18}{12} = -\\frac{3}{2}$；$0.4 \\times (-2.5) = -1$。",
       ),
       generate(rng) {
         const kind: Kind = rng.pick(["fraction", "decimal", "mixed"] as const);
@@ -945,8 +951,8 @@ export const multiplyingNegativeNumbers = topic(
       id: "two-negative-factors",
       title: t("Two negative factors", "两个负因数"),
       explanation: t(
-        "$(-3) \\times (-4) = 12$ and $\\left(-\\frac{1}{2}\\right) \\times \\left(-\\frac{4}{5}\\right) = \\frac{2}{5}$: the product of two negatives is positive.",
-        "$(-3) \\times (-4) = 12$；$\\left(-\\frac{1}{2}\\right) \\times \\left(-\\frac{4}{5}\\right) = \\frac{2}{5}$：两个负数的积是正数。",
+        "The product of two negative numbers is positive. Multiplying by a negative number reverses the sign, so reversing a negative sign makes the result positive. Multiply the absolute values and keep the result positive.\n\n$(-3) \\times (-4) = 12$ and $\\left(-\\frac{1}{2}\\right) \\times \\left(-\\frac{4}{5}\\right) = \\frac{2}{5}$: the product of two negatives is positive.",
+        "两个负数的积是正数。乘一个负数会改变符号，而负号再改变一次就变成正的。把绝对值相乘，结果取正。\n\n$(-3) \\times (-4) = 12$；$\\left(-\\frac{1}{2}\\right) \\times \\left(-\\frac{4}{5}\\right) = \\frac{2}{5}$：两个负数的积是正数。",
       ),
       generate(rng) {
         const kind: Kind = rng.pick(["fraction", "fraction", "decimal"] as const);
@@ -970,8 +976,8 @@ export const multiplyingNegativeNumbers = topic(
       id: "several-factors",
       title: t("Several factors", "多个因数"),
       explanation: t(
-        "$(-2) \\times 3 \\times (-1) \\times (-5)$ has three negative factors, an odd number, so it is negative: $-(2 \\times 3 \\times 1 \\times 5) = -30$.",
-        "$(-2) \\times 3 \\times (-1) \\times (-5)$ 有三个负因数，是奇数个，所以积为负：$-(2 \\times 3 \\times 1 \\times 5) = -30$。",
+        "In a product of several numbers, each pair of negative factors gives a positive. Count the negative factors: an even number of them makes the product positive, and an odd number makes it negative.\n\n$(-2) \\times 3 \\times (-1) \\times (-5)$ has three negative factors, an odd number, so it is negative: $-(2 \\times 3 \\times 1 \\times 5) = -30$.",
+        "几个数相乘时，每两个负因数相乘得正数。数一数负因数的个数：偶数个时积为正，奇数个时积为负。\n\n$(-2) \\times 3 \\times (-1) \\times (-5)$ 有三个负因数，是奇数个，所以积为负：$-(2 \\times 3 \\times 1 \\times 5) = -30$。",
       ),
       generate(rng) {
         const n = rng.int(3, 4);
@@ -1010,8 +1016,8 @@ export const dividingWithNegativeNumbers = topic(
       id: "dividing-signed-integers",
       title: t("Dividing integers", "整数相除"),
       explanation: t(
-        "$\\frac{-36}{9} = -4$, $36 \\div (-9) = -4$ and $\\frac{-36}{-9} = 4$.",
-        "$\\frac{-36}{9} = -4$，$36 \\div (-9) = -4$，$\\frac{-36}{-9} = 4$。",
+        "Division follows the same sign rules as multiplication, since it undoes multiplication. If the two numbers have the same sign the quotient is positive; if their signs differ it is negative.\n\n$\\frac{-36}{9} = -4$, $36 \\div (-9) = -4$ and $\\frac{-36}{-9} = 4$.",
+        "除法是乘法的逆运算，所以符号法则与乘法相同。两个数同号，商为正；异号，商为负。\n\n$\\frac{-36}{9} = -4$，$36 \\div (-9) = -4$，$\\frac{-36}{-9} = 4$。",
       ),
       generate(rng) {
         const q = rng.int(2, 15);
@@ -1041,8 +1047,8 @@ export const dividingWithNegativeNumbers = topic(
       id: "finding-a-missing-factor",
       title: t("Finding a missing factor", "求缺少的因数"),
       explanation: t(
-        "$(-6) \\times \\square = 42$: $\\square = 42 \\div (-6) = -7$.",
-        "$(-6) \\times \\square = 42$：$\\square = 42 \\div (-6) = -7$。",
+        "A missing factor is found by division: divide the product by the known factor. Then check the sign of the answer with the multiplication rules.\n\n$(-6) \\times \\square = 42$: $\\square = 42 \\div (-6) = -7$.",
+        "求未知的因数用除法：用积除以已知的因数。然后用乘法的符号法则检验答案的符号。\n\n$(-6) \\times \\square = 42$：$\\square = 42 \\div (-6) = -7$。",
       ),
       generate(rng) {
         const f = rng.nonZero(-12, 12);
@@ -1085,8 +1091,8 @@ export const equivalentFractionsWithNegativeNumbers = topic(
       id: "where-the-negative-sign-goes",
       title: t("Where the negative sign goes", "负号的位置"),
       explanation: t(
-        "$-\\frac{3}{4} = \\frac{-3}{4} = \\frac{3}{-4}$, but $\\frac{-3}{-4} = \\frac{3}{4}$.",
-        "$-\\frac{3}{4} = \\frac{-3}{4} = \\frac{3}{-4}$，但 $\\frac{-3}{-4} = \\frac{3}{4}$。",
+        "A fraction is a division, so one negative sign makes it negative wherever it is placed: in front, in the numerator or in the denominator. Two negative signs cancel and make the fraction positive.\n\n$-\\frac{3}{4} = \\frac{-3}{4} = \\frac{3}{-4}$, but $\\frac{-3}{-4} = \\frac{3}{4}$.",
+        "分数表示除法，所以只有一个负号时，不论它写在分数前面、分子上还是分母上，分数都是负的。两个负号互相抵消，分数为正。\n\n$-\\frac{3}{4} = \\frac{-3}{4} = \\frac{3}{-4}$，但 $\\frac{-3}{-4} = \\frac{3}{4}$。",
       ),
       generate(rng) {
         let p: number, q: number;
@@ -1119,8 +1125,8 @@ export const equivalentFractionsWithNegativeNumbers = topic(
       id: "simplifying-fractions-with-negative-signs",
       title: t("Simplifying", "约分"),
       explanation: t(
-        "$\\frac{15}{-20} = -\\frac{15}{20} = -\\frac{3}{4}$ and $\\frac{-12}{-18} = \\frac{12}{18} = \\frac{2}{3}$.",
-        "$\\frac{15}{-20} = -\\frac{15}{20} = -\\frac{3}{4}$；$\\frac{-12}{-18} = \\frac{12}{18} = \\frac{2}{3}$。",
+        "To simplify a fraction with negative signs, first decide the sign of the whole fraction, then simplify the absolute values by dividing by their greatest common factor.\n\n$\\frac{15}{-20} = -\\frac{15}{20} = -\\frac{3}{4}$ and $\\frac{-12}{-18} = \\frac{12}{18} = \\frac{2}{3}$.",
+        "化简带负号的分数时，先确定整个分数的符号，再用分子分母绝对值的最大公因数去约分。\n\n$\\frac{15}{-20} = -\\frac{15}{20} = -\\frac{3}{4}$；$\\frac{-12}{-18} = \\frac{12}{18} = \\frac{2}{3}$。",
       ),
       generate(rng) {
         let p: number, q: number;
@@ -1168,8 +1174,8 @@ export const dividingWithNegativeDecimalsAndFractions = topic(
       id: "dividing-signed-fractions",
       title: t("Fractions and mixed numbers", "分数与带分数"),
       explanation: t(
-        "$-\\frac{2}{3} \\div \\frac{4}{5} = -\\frac{2}{3} \\times \\frac{5}{4} = -\\frac{10}{12} = -\\frac{5}{6}$.",
-        "$-\\frac{2}{3} \\div \\frac{4}{5} = -\\frac{2}{3} \\times \\frac{5}{4} = -\\frac{10}{12} = -\\frac{5}{6}$。",
+        "To divide by a fraction, multiply by its reciprocal. Decide the sign with the usual rule, same signs positive and different signs negative, then simplify.\n\n$-\\frac{2}{3} \\div \\frac{4}{5} = -\\frac{2}{3} \\times \\frac{5}{4} = -\\frac{10}{12} = -\\frac{5}{6}$.",
+        "除以一个分数，等于乘它的倒数。按通常的法则确定符号，同号为正、异号为负，再化简。\n\n$-\\frac{2}{3} \\div \\frac{4}{5} = -\\frac{2}{3} \\times \\frac{5}{4} = -\\frac{10}{12} = -\\frac{5}{6}$。",
       ),
       generate(rng) {
         const kind: Kind = rng.bool(0.7) ? "fraction" : "mixed";
@@ -1201,8 +1207,8 @@ export const dividingWithNegativeDecimalsAndFractions = topic(
       id: "dividing-signed-decimals",
       title: t("Decimals", "小数"),
       explanation: t(
-        "$-4.8 \\div 0.6 = -48 \\div 6 = -8$: multiplying both numbers by $10$ does not change the quotient.",
-        "$-4.8 \\div 0.6 = -48 \\div 6 = -8$：把两个数都乘 $10$，商不变。",
+        "To divide decimals, multiply both numbers by the same power of ten until the divisor is a whole number. The sign of the quotient follows the same rule as for integers.\n\n$-4.8 \\div 0.6 = -48 \\div 6 = -8$: multiplying both numbers by $10$ does not change the quotient.",
+        "小数相除时，把两个数同时乘以 $10$ 的同一个幂，直到除数变成整数。商的符号与整数除法的法则相同。\n\n$-4.8 \\div 0.6 = -48 \\div 6 = -8$：把两个数都乘 $10$，商不变。",
       ),
       generate(rng) {
         const d = decQ(rng, 1, 2, 30);
@@ -1273,8 +1279,8 @@ export const reciprocalsOfRationalNumbers = topic(
       id: "reciprocals-of-negative-fractions-and-mixed-numbers",
       title: t("Fractions and mixed numbers", "分数与带分数"),
       explanation: t(
-        "$-2\\frac{1}{3} = -\\frac{7}{3}$, so its reciprocal is $-\\frac{3}{7}$: $\\left(-\\frac{7}{3}\\right) \\times \\left(-\\frac{3}{7}\\right) = 1$. The sign stays negative.",
-        "$-2\\frac{1}{3} = -\\frac{7}{3}$，所以它的倒数是 $-\\frac{3}{7}$：$\\left(-\\frac{7}{3}\\right) \\times \\left(-\\frac{3}{7}\\right) = 1$。符号仍为负。",
+        "The reciprocal of a number is the number that multiplies with it to $1$. Write a mixed number as an improper fraction and flip it. A negative number has a negative reciprocal, because the product must be positive.\n\n$-2\\frac{1}{3} = -\\frac{7}{3}$, so its reciprocal is $-\\frac{3}{7}$: $\\left(-\\frac{7}{3}\\right) \\times \\left(-\\frac{3}{7}\\right) = 1$. The sign stays negative.",
+        "一个数的倒数是与它相乘得 $1$ 的数。先把带分数化成假分数，再把分子分母颠倒。负数的倒数也是负数，因为两数之积必须是正数。\n\n$-2\\frac{1}{3} = -\\frac{7}{3}$，所以它的倒数是 $-\\frac{3}{7}$：$\\left(-\\frac{7}{3}\\right) \\times \\left(-\\frac{3}{7}\\right) = 1$。符号仍为负。",
       ),
       generate(rng) {
         const kind: Kind = rng.pick(["fraction", "mixed", "fraction"] as const);
@@ -1302,8 +1308,8 @@ export const reciprocalsOfRationalNumbers = topic(
       id: "reciprocals-of-decimals",
       title: t("Decimals", "小数"),
       explanation: t(
-        "$-0.25 = -\\frac{1}{4}$, so its reciprocal is $-4$. $1.25 = \\frac{5}{4}$, so its reciprocal is $\\frac{4}{5} = 0.8$.",
-        "$-0.25 = -\\frac{1}{4}$，所以它的倒数是 $-4$。$1.25 = \\frac{5}{4}$，所以它的倒数是 $\\frac{4}{5} = 0.8$。",
+        "To find the reciprocal of a decimal, first write the decimal as a fraction in simplest form. Then flip the fraction and keep the sign.\n\n$-0.25 = -\\frac{1}{4}$, so its reciprocal is $-4$. $1.25 = \\frac{5}{4}$, so its reciprocal is $\\frac{4}{5} = 0.8$.",
+        "求小数的倒数，先把小数化成最简分数，再把分子分母颠倒，符号不变。\n\n$-0.25 = -\\frac{1}{4}$，所以它的倒数是 $-4$。$1.25 = \\frac{5}{4}$，所以它的倒数是 $\\frac{4}{5} = 0.8$。",
       ),
       generate(rng) {
         const s = rng.pick(reciprocalDecimals);
@@ -1346,8 +1352,8 @@ export const multiplyingAndDividingWithZero = topic(
       id: "a-single-operation-with-zero",
       title: t("One operation with zero", "与零的一次运算"),
       explanation: t(
-        "$0 \\div (-7) = 0$ because $(-7) \\times 0 = 0$. But $-7 \\div 0$ is not defined, because no number times $0$ equals $-7$.",
-        "$0 \\div (-7) = 0$，因为 $(-7) \\times 0 = 0$。但 $-7 \\div 0$ 没有意义，因为没有哪个数乘 $0$ 等于 $-7$。",
+        "Any number times zero is zero, and zero divided by any nonzero number is zero. Dividing by zero is not defined, because no number can be multiplied by zero to give a nonzero result.\n\n$0 \\div (-7) = 0$ because $(-7) \\times 0 = 0$. But $-7 \\div 0$ is not defined, because no number times $0$ equals $-7$.",
+        "任何数乘零都得零，零除以任何非零的数也得零。除以零没有意义，因为没有一个数乘零能得到非零的结果。\n\n$0 \\div (-7) = 0$，因为 $(-7) \\times 0 = 0$。但 $-7 \\div 0$ 没有意义，因为没有哪个数乘 $0$ 等于 $-7$。",
       ),
       generate(rng) {
         const kind: Kind = rng.pick(["fraction", "fraction", "decimal"] as const);
@@ -1436,8 +1442,8 @@ export const fractionsOfFractions = topic(
       id: "a-fraction-of-a-fraction",
       title: t("A fraction of a fraction", "分数的几分之几"),
       explanation: t(
-        "$\\frac{2}{3}$ of $\\frac{3}{5}$ is $\\frac{2}{3} \\times \\frac{3}{5} = \\frac{6}{15} = \\frac{2}{5}$.",
-        "$\\frac{3}{5}$ 的 $\\frac{2}{3}$ 是 $\\frac{2}{3} \\times \\frac{3}{5} = \\frac{6}{15} = \\frac{2}{5}$。",
+        "Taking a fraction of an amount means multiplying by that fraction. So a fraction of a fraction is their product: multiply the numerators and multiply the denominators, then simplify.\n\n$\\frac{2}{3}$ of $\\frac{3}{5}$ is $\\frac{2}{3} \\times \\frac{3}{5} = \\frac{6}{15} = \\frac{2}{5}$.",
+        "求一个量的几分之几，就是乘这个分数。所以一个分数的几分之几是两个分数之积：分子乘分子，分母乘分母，再化简。\n\n$\\frac{3}{5}$ 的 $\\frac{2}{3}$ 是 $\\frac{2}{3} \\times \\frac{3}{5} = \\frac{6}{15} = \\frac{2}{5}$。",
       ),
       generate(rng) {
         let a: Q, b: Q;
@@ -1500,8 +1506,8 @@ export const fractionsOfFractions = topic(
       id: "a-fraction-of-a-fraction-of-a-quantity",
       title: t("A fraction of a fraction of a quantity", "一个量的几分之几的几分之几"),
       explanation: t(
-        "$\\frac{2}{3}$ of $\\frac{3}{4}$ of $48$ liters is $\\frac{2}{3} \\times \\frac{3}{4} \\times 48 = \\frac{1}{2} \\times 48 = 24$ liters.",
-        "$48$ 升的 $\\frac{3}{4}$ 的 $\\frac{2}{3}$ 是 $\\frac{2}{3} \\times \\frac{3}{4} \\times 48 = \\frac{1}{2} \\times 48 = 24$ 升。",
+        "Each fraction of a fraction is another multiplication, so the whole chain becomes one product. Multiply the fractions first, simplifying where you can, then multiply by the quantity.\n\n$\\frac{2}{3}$ of $\\frac{3}{4}$ of $48$ liters is $\\frac{2}{3} \\times \\frac{3}{4} \\times 48 = \\frac{1}{2} \\times 48 = 24$ liters.",
+        "每次求几分之几都是一次乘法，所以整串运算就是一个乘积。可以先把分数相乘并约分，再乘这个量。\n\n$48$ 升的 $\\frac{3}{4}$ 的 $\\frac{2}{3}$ 是 $\\frac{2}{3} \\times \\frac{3}{4} \\times 48 = \\frac{1}{2} \\times 48 = 24$ 升。",
       ),
       generate(rng) {
         const a = properQ(rng, 6);
@@ -1603,8 +1609,8 @@ export const interpretingProductsAndQuotientsOfRationalNumbers = topic(
       id: "choosing-the-expression-for-a-situation",
       title: t("Choosing the expression", "选择式子"),
       explanation: t(
-        "A diver descends $4.5$ meters per minute for $6$ minutes: the change is $6 \\times (-4.5)$. A stock loses $\\$18$ over $6$ days: the change per day is $(-18) \\div 6$.",
-        "潜水员每分钟下潜 $4.5$ 米，持续 $6$ 分钟：变化量是 $6 \\times (-4.5)$。某只股票 $6$ 天下跌 $\\$18$：每天的变化量是 $(-18) \\div 6$。",
+        "A repeated change is a product: the number of times times the signed change each time. Sharing a total change equally is a quotient: the signed total divided by the number of parts.\n\nA diver descends $4.5$ meters per minute for $6$ minutes: the change is $6 \\times (-4.5)$. A stock loses $\\$18$ over $6$ days: the change per day is $(-18) \\div 6$.",
+        "重复发生的变化用乘法表示：次数乘每次带符号的变化量。把总变化平均分开用除法表示：带符号的总量除以份数。\n\n潜水员每分钟下潜 $4.5$ 米，持续 $6$ 分钟：变化量是 $6 \\times (-4.5)$。某只股票 $6$ 天下跌 $\\$18$：每天的变化量是 $(-18) \\div 6$。",
       ),
       generate(rng) {
         const s = rateSituation(rng);
@@ -1615,8 +1621,8 @@ export const interpretingProductsAndQuotientsOfRationalNumbers = topic(
       id: "the-sign-of-a-product-or-quotient",
       title: t("The sign of a product or quotient", "积或商的符号"),
       explanation: t(
-        "$(-3.2) \\times 5 \\div (-0.4) \\times (-7)$ has three negative numbers, an odd number, so its value is negative.",
-        "$(-3.2) \\times 5 \\div (-0.4) \\times (-7)$ 中有三个负数，是奇数个，所以它的值是负数。",
+        "For a mix of multiplications and divisions, the sign depends only on how many negative numbers there are. An even count gives a positive value and an odd count gives a negative value.\n\n$(-3.2) \\times 5 \\div (-0.4) \\times (-7)$ has three negative numbers, an odd number, so its value is negative.",
+        "乘除混合运算的符号只取决于负数的个数。偶数个时值为正，奇数个时值为负。\n\n$(-3.2) \\times 5 \\div (-0.4) \\times (-7)$ 中有三个负数，是奇数个，所以它的值是负数。",
       ),
       generate(rng) {
         const n = rng.int(3, 5);
@@ -1725,8 +1731,8 @@ export const evaluatingRationalNumberExpressionsWithoutExponents = topic(
       id: "integer-expressions",
       title: t("Integers", "整数"),
       explanation: t(
-        "$4 - (-3) \\times 5$: multiply first, $(-3) \\times 5 = -15$, then $4 - (-15) = 19$. Working left to right instead gives the wrong value $35$.",
-        "$4 - (-3) \\times 5$：先算乘法，$(-3) \\times 5 = -15$，再算 $4 - (-15) = 19$。如果从左到右计算，会得到错误的 $35$。",
+        "The order of operations is the same with negative numbers: work inside parentheses first, then multiply and divide from left to right, then add and subtract from left to right. Apply the sign rules at each step.\n\n$4 - (-3) \\times 5$: multiply first, $(-3) \\times 5 = -15$, then $4 - (-15) = 19$. Working left to right instead gives the wrong value $35$.",
+        "有负数时运算顺序不变：先算括号内的，再从左到右算乘除，最后从左到右算加减。每一步都要用符号法则。\n\n$4 - (-3) \\times 5$：先算乘法，$(-3) \\times 5 = -15$，再算 $4 - (-15) = 19$。如果从左到右计算，会得到错误的 $35$。",
       ),
       generate(rng) {
         const e = orderedExpression(rng, () => Q.of(rng.nonZero(-9, 9)), "fraction");
@@ -1743,8 +1749,8 @@ export const evaluatingRationalNumberExpressionsWithoutExponents = topic(
       id: "fraction-and-decimal-expressions",
       title: t("Fractions and decimals", "分数与小数"),
       explanation: t(
-        "$2.5 - 1.5 \\times (-4) = 2.5 - (-6) = 8.5$, and $-\\frac{1}{2} + \\frac{3}{4} \\times \\left(-\\frac{2}{3}\\right) = -\\frac{1}{2} + \\left(-\\frac{1}{2}\\right) = -1$.",
-        "$2.5 - 1.5 \\times (-4) = 2.5 - (-6) = 8.5$；$-\\frac{1}{2} + \\frac{3}{4} \\times \\left(-\\frac{2}{3}\\right) = -\\frac{1}{2} + \\left(-\\frac{1}{2}\\right) = -1$。",
+        "Fractions and decimals follow the same order of operations as integers: multiply and divide before adding and subtracting. Keep track of the sign of every intermediate result.\n\n$2.5 - 1.5 \\times (-4) = 2.5 - (-6) = 8.5$, and $-\\frac{1}{2} + \\frac{3}{4} \\times \\left(-\\frac{2}{3}\\right) = -\\frac{1}{2} + \\left(-\\frac{1}{2}\\right) = -1$.",
+        "分数和小数的运算顺序与整数相同：先乘除，后加减。注意每个中间结果的符号。\n\n$2.5 - 1.5 \\times (-4) = 2.5 - (-6) = 8.5$；$-\\frac{1}{2} + \\frac{3}{4} \\times \\left(-\\frac{2}{3}\\right) = -\\frac{1}{2} + \\left(-\\frac{1}{2}\\right) = -1$。",
       ),
       generate(rng) {
         const kind: Kind = rng.bool() ? "fraction" : "decimal";
@@ -1789,8 +1795,8 @@ export const solvingProblemsUsingMultiplicationAndDivisionOfRationalNumbers = to
       id: "total-change-at-a-constant-rate",
       title: t("The total change", "总变化量"),
       explanation: t(
-        "The temperature falls $2.5$ degrees per hour for $4$ hours: the change is $4 \\times (-2.5) = -10$ degrees.",
-        "气温每小时下降 $2.5$ 度，持续 $4$ 小时：变化量是 $4 \\times (-2.5) = -10$ 度。",
+        "When something changes by the same amount each time, the total change is the rate times the number of times. A decrease is a negative rate, so the total change is negative.\n\nThe temperature falls $2.5$ degrees per hour for $4$ hours: the change is $4 \\times (-2.5) = -10$ degrees.",
+        "当一个量每次变化相同的量时，总变化等于每次的变化量乘次数。减少用负数表示，所以总变化是负数。\n\n气温每小时下降 $2.5$ 度，持续 $4$ 小时：变化量是 $4 \\times (-2.5) = -10$ 度。",
       ),
       generate(rng) {
         const n = rng.int(2, 12);
@@ -1825,8 +1831,8 @@ export const solvingProblemsUsingMultiplicationAndDivisionOfRationalNumbers = to
       id: "average-change-per-unit",
       title: t("The change per unit", "每单位的变化量"),
       explanation: t(
-        "Over $6$ days a stock's price changed by $-\\$13.50$. On average it changed by $(-13.50) \\div 6 = -\\$2.25$ per day.",
-        "某只股票 $6$ 天内价格变化了 $-\\$13.50$。平均每天变化 $(-13.50) \\div 6 = -\\$2.25$。",
+        "The average change per unit of time is the total change divided by the number of units. A negative total change gives a negative average, meaning a decrease each time on average.\n\nOver $6$ days a stock's price changed by $-\\$13.50$. On average it changed by $(-13.50) \\div 6 = -\\$2.25$ per day.",
+        "每单位时间的平均变化等于总变化除以单位数。总变化为负时，平均变化也为负，表示平均每次都在减少。\n\n某只股票 $6$ 天内价格变化了 $-\\$13.50$。平均每天变化 $(-13.50) \\div 6 = -\\$2.25$。",
       ),
       generate(rng) {
         const n = rng.int(2, 10);
@@ -1859,8 +1865,8 @@ export const solvingProblemsUsingMultiplicationAndDivisionOfRationalNumbers = to
       id: "time-for-a-total-change",
       title: t("How long does it take?", "需要多长时间？"),
       explanation: t(
-        "A pond's water level falls $0.75$ cm per day. A change of $-6$ cm takes $(-6) \\div (-0.75) = 8$ days.",
-        "池塘水位每天下降 $0.75$ 厘米。水位变化 $-6$ 厘米需要 $(-6) \\div (-0.75) = 8$ 天。",
+        "To find how long a total change takes, divide the total change by the change per unit of time. Both are negative for a decrease, so the time comes out positive.\n\nA pond's water level falls $0.75$ cm per day. A change of $-6$ cm takes $(-6) \\div (-0.75) = 8$ days.",
+        "要求总变化需要多长时间，就用总变化除以每单位时间的变化。减少时两者都是负数，所以时间是正数。\n\n池塘水位每天下降 $0.75$ 厘米。水位变化 $-6$ 厘米需要 $(-6) \\div (-0.75) = 8$ 天。",
       ),
       generate(rng) {
         const r = rng.pick([Q.of(1, 4), Q.of(1, 2), Q.of(3, 4), Q.of(5, 4), Q.of(3, 2), Q.of(5, 2), Q.of(2, 5), Q.of(6, 5), Q.of(8, 5)]);
@@ -1908,8 +1914,8 @@ export const solvingProblemsUsingTheFourOperationsOnRationalNumbers = topic(
       id: "a-balance-after-several-transactions",
       title: t("A balance after several transactions", "多次收支后的余额"),
       explanation: t(
-        "$\\$45.80$, then three withdrawals of $\\$18.25$ and a deposit of $\\$30$: $45.80 + 3 \\times (-18.25) + 30 = 45.80 - 54.75 + 30 = 21.05$ dollars.",
-        "余额 $\\$45.80$，取款三次每次 $\\$18.25$，再存入 $\\$30$：$45.80 + 3 \\times (-18.25) + 30 = 45.80 - 54.75 + 30 = 21.05$ 美元。",
+        "Write deposits as positive numbers and withdrawals as negative numbers. Repeated equal transactions can be multiplied, and everything is then added to the starting balance.\n\n$\\$45.80$, then three withdrawals of $\\$18.25$ and a deposit of $\\$30$: $45.80 + 3 \\times (-18.25) + 30 = 45.80 - 54.75 + 30 = 21.05$ dollars.",
+        "把存款写成正数，取款写成负数。重复的相同交易可以用乘法，然后把所有交易都加到起始余额上。\n\n余额 $\\$45.80$，取款三次每次 $\\$18.25$，再存入 $\\$30$：$45.80 + 3 \\times (-18.25) + 30 = 45.80 - 54.75 + 30 = 21.05$ 美元。",
       ),
       generate(rng) {
         const name = rng.pick(names);
@@ -1938,8 +1944,8 @@ export const solvingProblemsUsingTheFourOperationsOnRationalNumbers = topic(
       id: "the-mean-of-signed-numbers",
       title: t("The mean of signed numbers", "带符号数的平均数"),
       explanation: t(
-        "The low temperatures on four days were $-6$, $2$, $-3.5$ and $-4.5$ degrees. The mean is $(-6 + 2 - 3.5 - 4.5) \\div 4 = -12 \\div 4 = -3$ degrees.",
-        "四天的最低气温分别是 $-6$、$2$、$-3.5$ 和 $-4.5$ 度。平均数是 $(-6 + 2 - 3.5 - 4.5) \\div 4 = -12 \\div 4 = -3$ 度。",
+        "The mean of a set of numbers is their sum divided by how many there are, and this works for negative numbers too. Add the signed values carefully, then divide.\n\nThe low temperatures on four days were $-6$, $2$, $-3.5$ and $-4.5$ degrees. The mean is $(-6 + 2 - 3.5 - 4.5) \\div 4 = -12 \\div 4 = -3$ degrees.",
+        "一组数的平均数等于它们的和除以个数，对负数也一样。仔细把带符号的数相加，再相除。\n\n四天的最低气温分别是 $-6$、$2$、$-3.5$ 和 $-4.5$ 度。平均数是 $(-6 + 2 - 3.5 - 4.5) \\div 4 = -12 \\div 4 = -3$ 度。",
       ),
       generate(rng) {
         const n = rng.int(4, 6);
@@ -1984,8 +1990,8 @@ export const solvingMultistepProblemsWithRationalNumbers = topic(
       id: "multistep-elevation-problems",
       title: t("Elevations with fractions", "含分数的海拔问题"),
       explanation: t(
-        "A diver at $-12\\frac{1}{2}$ m rises $3$ times by $2\\frac{3}{4}$ m and then sinks $5\\frac{1}{4}$ m: $-12\\frac{1}{2} + 3 \\times 2\\frac{3}{4} - 5\\frac{1}{4} = -9\\frac{1}{2}$ m.",
-        "潜水员在 $-12\\frac{1}{2}$ 米处，上升 $3$ 次，每次 $2\\frac{3}{4}$ 米，然后下沉 $5\\frac{1}{4}$ 米：$-12\\frac{1}{2} + 3 \\times 2\\frac{3}{4} - 5\\frac{1}{4} = -9\\frac{1}{2}$ 米。",
+        "Write the starting position and each movement as a signed number, with up as positive and down as negative. Combine them into one expression and evaluate it with the order of operations.\n\nA diver at $-12\\frac{1}{2}$ m rises $3$ times by $2\\frac{3}{4}$ m and then sinks $5\\frac{1}{4}$ m: $-12\\frac{1}{2} + 3 \\times 2\\frac{3}{4} - 5\\frac{1}{4} = -9\\frac{1}{2}$ m.",
+        "把起始位置和每次移动都写成带符号的数，向上为正，向下为负。把它们合成一个算式，按运算顺序计算。\n\n潜水员在 $-12\\frac{1}{2}$ 米处，上升 $3$ 次，每次 $2\\frac{3}{4}$ 米，然后下沉 $5\\frac{1}{4}$ 米：$-12\\frac{1}{2} + 3 \\times 2\\frac{3}{4} - 5\\frac{1}{4} = -9\\frac{1}{2}$ 米。",
       ),
       generate(rng) {
         let start: Q, n: number, up: Q, down: Q, end: Q;
@@ -2021,8 +2027,8 @@ export const solvingMultistepProblemsWithRationalNumbers = topic(
       id: "profit-and-loss",
       title: t("Profit and loss", "盈利与亏损"),
       explanation: t(
-        "A club pays $\\$85.50$ for supplies and sells $24$ cups of lemonade at $\\$1.75$ each, then splits the result among $3$ members: $(24 \\times 1.75 - 85.50) \\div 3 = -14.50$ dollars each, a loss.",
-        "一个社团花 $\\$85.50$ 买材料，卖出 $24$ 杯柠檬水，每杯 $\\$1.75$，然后由 $3$ 名成员平分结果：每人 $(24 \\times 1.75 - 85.50) \\div 3 = -14.50$ 美元，即亏损。",
+        "Profit is income minus costs. Write the whole situation as one expression; a negative result means the costs were larger, which is a loss.\n\nA club pays $\\$85.50$ for supplies and sells $24$ cups of lemonade at $\\$1.75$ each, then splits the result among $3$ members: $(24 \\times 1.75 - 85.50) \\div 3 = -14.50$ dollars each, a loss.",
+        "利润等于收入减去成本。把整个情境写成一个算式；结果是负数表示成本更高，即亏损。\n\n一个社团花 $\\$85.50$ 买材料，卖出 $24$ 杯柠檬水，每杯 $\\$1.75$，然后由 $3$ 名成员平分结果：每人 $(24 \\times 1.75 - 85.50) \\div 3 = -14.50$ 美元，即亏损。",
       ),
       generate(rng) {
         const k = rng.int(2, 5);
@@ -2098,8 +2104,8 @@ export const rationalNumbersAsFiniteOrRepeatingDecimals = topic(
       id: "writing-a-fraction-as-a-terminating-decimal",
       title: t("Terminating decimals", "化成有限小数"),
       explanation: t(
-        "$-\\frac{3}{8} = -(3 \\div 8) = -0.375$. The decimal is not $-3.8$: the fraction bar means division.",
-        "$-\\frac{3}{8} = -(3 \\div 8) = -0.375$。它不是 $-3.8$：分数线表示除法。",
+        "To write a fraction as a decimal, divide the numerator by the denominator. If the division ends with no remainder, the decimal terminates. A negative fraction gives a negative decimal.\n\n$-\\frac{3}{8} = -(3 \\div 8) = -0.375$. The decimal is not $-3.8$: the fraction bar means division.",
+        "把分数化成小数，就用分子除以分母。如果除到没有余数为止，得到的就是有限小数。负分数化成的小数也是负数。\n\n$-\\frac{3}{8} = -(3 \\div 8) = -0.375$。它不是 $-3.8$：分数线表示除法。",
       ),
       generate(rng) {
         const d = rng.pick([4, 8, 16, 20, 25, 40, 50, 80]);
@@ -2158,8 +2164,8 @@ export const rationalNumbersAsFiniteOrRepeatingDecimals = topic(
       id: "writing-a-repeating-decimal",
       title: t("Writing a repeating decimal", "写出循环小数"),
       explanation: t(
-        "$\\frac{5}{11} = 0.454545\\ldots = 0.\\overline{45}$, and $\\frac{1}{6} = 0.1666\\ldots = 0.1\\overline{6}$: the bar covers only the digits that repeat.",
-        "$\\frac{5}{11} = 0.454545\\ldots = 0.\\overline{45}$；$\\frac{1}{6} = 0.1666\\ldots = 0.1\\overline{6}$：循环节上的横线只覆盖重复的数字。",
+        "When the division never ends, the remainders start to repeat, and so do the digits of the decimal. Write the repeating block once with a bar over it. Digits that come before the repeating block are written without the bar.\n\n$\\frac{5}{11} = 0.454545\\ldots = 0.\\overline{45}$, and $\\frac{1}{6} = 0.1666\\ldots = 0.1\\overline{6}$: the bar covers only the digits that repeat.",
+        "如果除法永远除不尽，余数会开始重复，小数的数字也随之重复。把重复的一组数字写一次，并在上面画一条横线。重复部分之前的数字不画横线。\n\n$\\frac{5}{11} = 0.454545\\ldots = 0.\\overline{45}$；$\\frac{1}{6} = 0.1666\\ldots = 0.1\\overline{6}$：循环节上的横线只覆盖重复的数字。",
       ),
       generate(rng) {
         const d = rng.pick(repeatingDenominators);
@@ -2237,8 +2243,8 @@ export const squaringRationalNumbers = topic(
       id: "squaring-negative-fractions",
       title: t("Fractions and integers", "分数与整数"),
       explanation: t(
-        "$\\left(-\\frac{3}{4}\\right)^{2} = \\left(-\\frac{3}{4}\\right) \\times \\left(-\\frac{3}{4}\\right) = \\frac{9}{16}$. Square both the numerator and the denominator.",
-        "$\\left(-\\frac{3}{4}\\right)^{2} = \\left(-\\frac{3}{4}\\right) \\times \\left(-\\frac{3}{4}\\right) = \\frac{9}{16}$。分子分母都要平方。",
+        "Squaring a number means multiplying it by itself. A negative number times itself is positive, so every square is positive or zero. For a fraction, square the numerator and the denominator.\n\n$\\left(-\\frac{3}{4}\\right)^{2} = \\left(-\\frac{3}{4}\\right) \\times \\left(-\\frac{3}{4}\\right) = \\frac{9}{16}$. Square both the numerator and the denominator.",
+        "平方就是一个数乘它自己。负数乘负数为正，所以任何数的平方都是正数或零。分数的平方要把分子和分母都平方。\n\n$\\left(-\\frac{3}{4}\\right)^{2} = \\left(-\\frac{3}{4}\\right) \\times \\left(-\\frac{3}{4}\\right) = \\frac{9}{16}$。分子分母都要平方。",
       ),
       generate(rng) {
         const b = rng.bool(0.25) ? Q.of(-rng.int(2, 20)) : smallBase(rng, "fraction", 2);
@@ -2249,8 +2255,8 @@ export const squaringRationalNumbers = topic(
       id: "squaring-decimals",
       title: t("Decimals", "小数"),
       explanation: t(
-        "$(-0.3)^{2} = 0.09$, not $0.9$: tenths times tenths are hundredths.",
-        "$(-0.3)^{2} = 0.09$，而不是 $0.9$：十分位乘十分位得百分位。",
+        "To square a decimal, multiply it by itself. The square has twice as many decimal places as the number, because the decimal places of the two factors add.\n\n$(-0.3)^{2} = 0.09$, not $0.9$: tenths times tenths are hundredths.",
+        "小数的平方就是它乘它自己。平方的小数位数是原数的两倍，因为两个因数的小数位数要相加。\n\n$(-0.3)^{2} = 0.09$，而不是 $0.9$：十分位乘十分位得百分位。",
       ),
       generate(rng) {
         return powerProblem(smallBase(rng, "decimal", 2), 2, "decimal");
@@ -2310,8 +2316,8 @@ export const cubingRationalNumbers = topic(
       id: "cubing-fractions",
       title: t("Fractions and integers", "分数与整数"),
       explanation: t(
-        "$\\left(-\\frac{2}{3}\\right)^{3} = \\left(-\\frac{2}{3}\\right) \\times \\left(-\\frac{2}{3}\\right) \\times \\left(-\\frac{2}{3}\\right) = -\\frac{8}{27}$.",
-        "$\\left(-\\frac{2}{3}\\right)^{3} = \\left(-\\frac{2}{3}\\right) \\times \\left(-\\frac{2}{3}\\right) \\times \\left(-\\frac{2}{3}\\right) = -\\frac{8}{27}$。",
+        "Cubing a number means using it as a factor three times. A negative number cubed stays negative, because three negative factors give a negative product. Cube both the numerator and the denominator.\n\n$\\left(-\\frac{2}{3}\\right)^{3} = \\left(-\\frac{2}{3}\\right) \\times \\left(-\\frac{2}{3}\\right) \\times \\left(-\\frac{2}{3}\\right) = -\\frac{8}{27}$.",
+        "立方就是把一个数作为因数连乘三次。负数的立方仍是负数，因为三个负因数相乘积为负。分数的立方要把分子和分母都立方。\n\n$\\left(-\\frac{2}{3}\\right)^{3} = \\left(-\\frac{2}{3}\\right) \\times \\left(-\\frac{2}{3}\\right) \\times \\left(-\\frac{2}{3}\\right) = -\\frac{8}{27}$。",
       ),
       generate(rng) {
         const b = rng.bool(0.2) ? Q.of(-rng.int(2, 10)) : smallBase(rng, "fraction", 3);
@@ -2322,8 +2328,8 @@ export const cubingRationalNumbers = topic(
       id: "cubing-decimals",
       title: t("Decimals", "小数"),
       explanation: t(
-        "$(-0.2)^{3} = -0.008$: three factors of tenths give thousandths, and three negative factors give a negative result.",
-        "$(-0.2)^{3} = -0.008$：三个十分位因数相乘得千分位，三个负因数相乘结果为负。",
+        "The cube of a decimal has three times as many decimal places as the number. Its sign is the sign of the number itself, since an odd number of negative factors is negative.\n\n$(-0.2)^{3} = -0.008$: three factors of tenths give thousandths, and three negative factors give a negative result.",
+        "小数的立方的小数位数是原数的三倍。它的符号与原数相同，因为奇数个负因数相乘积为负。\n\n$(-0.2)^{3} = -0.008$：三个十分位因数相乘得千分位，三个负因数相乘结果为负。",
       ),
       generate(rng) {
         return powerProblem(smallBase(rng, "decimal", 3), 3, "decimal");
@@ -2347,8 +2353,8 @@ export const exponentsWithRationalBases = topic(
       id: "higher-powers-of-rational-numbers",
       title: t("Higher powers", "高次幂"),
       explanation: t(
-        "$\\left(-\\frac{1}{2}\\right)^{5} = -\\frac{1}{32}$ (five negative factors) and $(-0.1)^{4} = 0.0001$ (four negative factors).",
-        "$\\left(-\\frac{1}{2}\\right)^{5} = -\\frac{1}{32}$（五个负因数）；$(-0.1)^{4} = 0.0001$（四个负因数）。",
+        "A power with exponent $n$ multiplies the base by itself $n$ times. A negative base raised to an even power is positive, and raised to an odd power is negative.\n\n$\\left(-\\frac{1}{2}\\right)^{5} = -\\frac{1}{32}$ (five negative factors) and $(-0.1)^{4} = 0.0001$ (four negative factors).",
+        "指数为 $n$ 的乘方是把底数连乘 $n$ 次。负数的偶次幂是正数，奇次幂是负数。\n\n$\\left(-\\frac{1}{2}\\right)^{5} = -\\frac{1}{32}$（五个负因数）；$(-0.1)^{4} = 0.0001$（四个负因数）。",
       ),
       generate(rng) {
         const n = rng.int(4, 6);
@@ -2413,8 +2419,8 @@ export const evaluatingExpressionsWithPositiveIntegerExponents = topic(
       id: "integer-expressions-with-exponents",
       title: t("Integers", "整数"),
       explanation: t(
-        "$(-2)^{3} + 4 \\times 3^{2} = -8 + 4 \\times 9 = -8 + 36 = 28$, and $10 - 3^{2} \\times (-2) = 10 - 9 \\times (-2) = 28$.",
-        "$(-2)^{3} + 4 \\times 3^{2} = -8 + 4 \\times 9 = -8 + 36 = 28$；$10 - 3^{2} \\times (-2) = 10 - 9 \\times (-2) = 28$。",
+        "Exponents come before multiplication and division in the order of operations. Evaluate every power first, paying attention to whether the negative sign is inside the parentheses, then multiply and divide, then add and subtract.\n\n$(-2)^{3} + 4 \\times 3^{2} = -8 + 4 \\times 9 = -8 + 36 = 28$, and $10 - 3^{2} \\times (-2) = 10 - 9 \\times (-2) = 28$.",
+        "在运算顺序中，乘方先于乘除。先算出每个乘方，注意负号是否在括号里面，再算乘除，最后算加减。\n\n$(-2)^{3} + 4 \\times 3^{2} = -8 + 4 \\times 9 = -8 + 36 = 28$；$10 - 3^{2} \\times (-2) = 10 - 9 \\times (-2) = 28$。",
       ),
       generate(rng) {
         const a = rng.int(2, 5);
@@ -2468,8 +2474,8 @@ export const evaluatingExpressionsWithPositiveIntegerExponents = topic(
       id: "rational-expressions-with-exponents",
       title: t("Fractions and decimals", "分数与小数"),
       explanation: t(
-        "$\\left(-\\frac{1}{2}\\right)^{2} - \\frac{3}{4} = \\frac{1}{4} - \\frac{3}{4} = -\\frac{1}{2}$, and $(-0.5)^{3} \\times 8 = -0.125 \\times 8 = -1$.",
-        "$\\left(-\\frac{1}{2}\\right)^{2} - \\frac{3}{4} = \\frac{1}{4} - \\frac{3}{4} = -\\frac{1}{2}$；$(-0.5)^{3} \\times 8 = -0.125 \\times 8 = -1$。",
+        "Fractions and decimals use the same order: powers first, then multiplication and division, then addition and subtraction. A negative base in parentheses raised to an even power gives a positive value.\n\n$\\left(-\\frac{1}{2}\\right)^{2} - \\frac{3}{4} = \\frac{1}{4} - \\frac{3}{4} = -\\frac{1}{2}$, and $(-0.5)^{3} \\times 8 = -0.125 \\times 8 = -1$.",
+        "分数和小数的运算顺序相同：先乘方，再乘除，最后加减。括号里的负数作底数，偶次幂的值为正。\n\n$\\left(-\\frac{1}{2}\\right)^{2} - \\frac{3}{4} = \\frac{1}{4} - \\frac{3}{4} = -\\frac{1}{2}$；$(-0.5)^{3} \\times 8 = -0.125 \\times 8 = -1$。",
       ),
       generate(rng) {
         const kind: Kind = rng.bool() ? "fraction" : "decimal";

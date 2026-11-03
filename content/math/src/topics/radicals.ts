@@ -173,8 +173,8 @@ export const simplifyingSquareRoots: TopicDef = {
       id: "multiplying-square-roots",
       title: t("Multiplying square roots", "根式的乘法"),
       explanation: t(
-        "Multiply the coefficients, multiply the numbers under the roots, then simplify:\n\n$$2\\sqrt{6} \\cdot 5\\sqrt{10} = 10\\sqrt{60} = 10 \\cdot 2\\sqrt{15} = 20\\sqrt{15}$$",
-        "系数相乘，根号内的数相乘，然后化简：\n\n$$2\\sqrt{6} \\cdot 5\\sqrt{10} = 10\\sqrt{60} = 10 \\cdot 2\\sqrt{15} = 20\\sqrt{15}$$",
+        "For nonnegative numbers, the product of two square roots is the square root of the product, $\\sqrt{a} \\cdot \\sqrt{b} = \\sqrt{ab}$. The number in front of each root is a factor too, so it multiplies with the other coefficients.\n\nMultiply the coefficients, multiply the numbers under the roots, then simplify:\n\n$$2\\sqrt{6} \\cdot 5\\sqrt{10} = 10\\sqrt{60} = 10 \\cdot 2\\sqrt{15} = 20\\sqrt{15}$$",
+        "对非负数，两个平方根之积等于积的平方根：$\\sqrt{a} \\cdot \\sqrt{b} = \\sqrt{ab}$。根号前面的数也是因数，要与其他系数相乘。\n\n系数相乘，根号内的数相乘，然后化简：\n\n$$2\\sqrt{6} \\cdot 5\\sqrt{10} = 10\\sqrt{60} = 10 \\cdot 2\\sqrt{15} = 20\\sqrt{15}$$",
       ),
       generate(rng) {
         let p: number;

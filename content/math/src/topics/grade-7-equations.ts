@@ -358,8 +358,8 @@ export const solvingLinearEquationsWithDecimalCoefficients = topic(
       id: "hundredths-on-both-sides",
       title: t("Hundredths and variables on both sides", "两位小数且两边都有变量"),
       explanation: t(
-        "With hundredths, multiply every term on both sides by $100$, then solve as usual:\n\n$$0.25x + 1.5 = 0.1x + 3 \\;\\xrightarrow{\\times 100}\\; 25x + 150 = 10x + 300 \\;\\Rightarrow\\; 15x = 150 \\;\\Rightarrow\\; x = 10.$$",
-        "含两位小数时，把两边的每一项都乘以 $100$，再照常求解：\n\n$$0.25x + 1.5 = 0.1x + 3 \\;\\xrightarrow{\\times 100}\\; 25x + 150 = 10x + 300 \\;\\Rightarrow\\; 15x = 150 \\;\\Rightarrow\\; x = 10.$$",
+        "Multiplying both sides of an equation by the same number keeps it balanced, so decimals can be cleared first. Choose the power of ten that matches the most decimal places in any term.\n\nWith hundredths, multiply every term on both sides by $100$, then solve as usual:\n\n$$0.25x + 1.5 = 0.1x + 3 \\;\\xrightarrow{\\times 100}\\; 25x + 150 = 10x + 300 \\;\\Rightarrow\\; 15x = 150 \\;\\Rightarrow\\; x = 10.$$",
+        "方程两边同时乘同一个数，方程仍然成立，所以可以先去掉小数。所乘的 $10$ 的幂要与各项中最多的小数位数相对应。\n\n含两位小数时，把两边的每一项都乘以 $100$，再照常求解：\n\n$$0.25x + 1.5 = 0.1x + 3 \\;\\xrightarrow{\\times 100}\\; 25x + 150 = 10x + 300 \\;\\Rightarrow\\; 15x = 150 \\;\\Rightarrow\\; x = 10.$$",
       ),
       generate(rng) {
         const [a, c] = rng.sample(niceDecimals, 2) as [Q, Q];
@@ -676,8 +676,8 @@ export const solvingTwoVariableEquations = topic(
       id: "finding-the-missing-coordinate",
       title: t("Finding the missing coordinate", "求缺少的坐标"),
       explanation: t(
-        "$(-2, y)$ is a solution of $4x - 3y = 10$. Substitute $x = -2$ and solve for $y$:\n\n$$4(-2) - 3y = 10 \\;\\Rightarrow\\; -8 - 3y = 10 \\;\\Rightarrow\\; -3y = 18 \\;\\Rightarrow\\; y = -6.$$",
-        "$(-2, y)$ 是 $4x - 3y = 10$ 的解。代入 $x = -2$，再解出 $y$：\n\n$$4(-2) - 3y = 10 \\;\\Rightarrow\\; -8 - 3y = 10 \\;\\Rightarrow\\; -3y = 18 \\;\\Rightarrow\\; y = -6.$$",
+        "An ordered pair is a solution of an equation in two variables when its coordinates make the equation true. If one coordinate is known, substitute it, and the equation becomes one with a single variable.\n\n$(-2, y)$ is a solution of $4x - 3y = 10$. Substitute $x = -2$ and solve for $y$:\n\n$$4(-2) - 3y = 10 \\;\\Rightarrow\\; -8 - 3y = 10 \\;\\Rightarrow\\; -3y = 18 \\;\\Rightarrow\\; y = -6.$$",
+        "如果一个有序数对的坐标能使二元方程成立，它就是方程的解。已知一个坐标时，把它代入，方程就变成只含一个未知数的方程。\n\n$(-2, y)$ 是 $4x - 3y = 10$ 的解。代入 $x = -2$，再解出 $y$：\n\n$$4(-2) - 3y = 10 \\;\\Rightarrow\\; -8 - 3y = 10 \\;\\Rightarrow\\; -3y = 18 \\;\\Rightarrow\\; y = -6.$$",
       ),
       keyPrerequisites: ["two-step-equations"],
       generate(rng) {

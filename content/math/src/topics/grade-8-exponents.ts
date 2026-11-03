@@ -343,8 +343,8 @@ export const evaluatingExpressionsWithIntegerExponents = topic(
       id: "numerical-expressions-with-integer-exponents",
       title: t("Numerical expressions", "数的式子"),
       explanation: t(
-        "In $3 \\cdot 2^{-2} + 5^{0}$, evaluate the powers first: $2^{-2} = \\frac{1}{4}$ and $5^{0} = 1$. Then $3 \\cdot \\frac{1}{4} + 1 = \\frac{7}{4}$. A negative exponent never makes the value negative.",
-        "在 $3 \\cdot 2^{-2} + 5^{0}$ 中先算乘方：$2^{-2} = \\frac{1}{4}$，$5^{0} = 1$。于是 $3 \\cdot \\frac{1}{4} + 1 = \\frac{7}{4}$。负整数指数不会使值变成负数。",
+        "A negative exponent means the reciprocal of the positive power, $a^{-n} = \\frac{1}{a^{n}}$, and any nonzero number to the power zero is $1$. Evaluate every power first, then multiply, divide, add and subtract in the usual order.\n\nIn $3 \\cdot 2^{-2} + 5^{0}$, evaluate the powers first: $2^{-2} = \\frac{1}{4}$ and $5^{0} = 1$. Then $3 \\cdot \\frac{1}{4} + 1 = \\frac{7}{4}$. A negative exponent never makes the value negative.",
+        "负整数指数表示正整数次幂的倒数，$a^{-n} = \\frac{1}{a^{n}}$；任何非零数的零次幂都等于 $1$。先算出每个乘方，再按通常的顺序进行乘除和加减。\n\n在 $3 \\cdot 2^{-2} + 5^{0}$ 中先算乘方：$2^{-2} = \\frac{1}{4}$，$5^{0} = 1$。于是 $3 \\cdot \\frac{1}{4} + 1 = \\frac{7}{4}$。负整数指数不会使值变成负数。",
       ),
       generate(rng) {
         const [b, k] = [rng.pick([2, 3, 4, 5, 10]), rng.int(1, 3)];
@@ -644,8 +644,8 @@ export const thePowerRuleForExponents = topic(
       id: "powers-of-powers-of-variables",
       title: t("Powers of powers of variables", "字母的幂的乘方"),
       explanation: t(
-        "$(x^{3})^{-2} = x^{3 \\cdot (-2)} = x^{-6} = \\frac{1}{x^{6}}$, and $(x^{4})^{2} \\cdot x^{-3} = x^{8} \\cdot x^{-3} = x^{5}$. Apply the power rule first, then combine with the product rule.",
-        "$(x^{3})^{-2} = x^{3 \\cdot (-2)} = x^{-6} = \\frac{1}{x^{6}}$，$(x^{4})^{2} \\cdot x^{-3} = x^{8} \\cdot x^{-3} = x^{5}$。先用幂的乘方法则，再用同底数幂的乘法合并。",
+        "When a power is raised to another power, keep the base and multiply the exponents: $(x^{m})^{n} = x^{mn}$. This works for negative exponents too. After that, combine powers of the same base by adding their exponents.\n\n$(x^{3})^{-2} = x^{3 \\cdot (-2)} = x^{-6} = \\frac{1}{x^{6}}$, and $(x^{4})^{2} \\cdot x^{-3} = x^{8} \\cdot x^{-3} = x^{5}$. Apply the power rule first, then combine with the product rule.",
+        "幂的乘方，底数不变，指数相乘：$(x^{m})^{n} = x^{mn}$。指数是负数时也成立。之后，同底数的幂相乘时把指数相加。\n\n$(x^{3})^{-2} = x^{3 \\cdot (-2)} = x^{-6} = \\frac{1}{x^{6}}$，$(x^{4})^{2} \\cdot x^{-3} = x^{8} \\cdot x^{-3} = x^{5}$。先用幂的乘方法则，再用同底数幂的乘法合并。",
       ),
       generate(rng) {
         const [m, n] = [rng.bool(0.3) ? -rng.int(1, 5) : rng.int(2, 6), rng.bool(0.4) ? -rng.int(2, 4) : rng.int(2, 5)];
@@ -786,8 +786,8 @@ export const thePowerOfQuotientRuleForExponents = topic(
       id: "powers-of-fractions",
       title: t("Powers of fractions", "分数的乘方"),
       explanation: t(
-        "$\\left(\\frac{2}{3}\\right)^{4} = \\frac{2^{4}}{3^{4}} = \\frac{16}{81}$: raise the denominator as well as the numerator. With a negative exponent, flip first: $\\left(\\frac{2}{5}\\right)^{-2} = \\left(\\frac{5}{2}\\right)^{2} = \\frac{25}{4}$.",
-        "$\\left(\\frac{2}{3}\\right)^{4} = \\frac{2^{4}}{3^{4}} = \\frac{16}{81}$：分母和分子一样都要乘方。指数为负数时先颠倒：$\\left(\\frac{2}{5}\\right)^{-2} = \\left(\\frac{5}{2}\\right)^{2} = \\frac{25}{4}$。",
+        "To raise a fraction to a power, raise both the numerator and the denominator to that power: $\\left(\\frac{a}{b}\\right)^{n} = \\frac{a^{n}}{b^{n}}$. A negative exponent flips the fraction, so $\\left(\\frac{a}{b}\\right)^{-n} = \\left(\\frac{b}{a}\\right)^{n}$.\n\n$\\left(\\frac{2}{3}\\right)^{4} = \\frac{2^{4}}{3^{4}} = \\frac{16}{81}$: raise the denominator as well as the numerator. With a negative exponent, flip first: $\\left(\\frac{2}{5}\\right)^{-2} = \\left(\\frac{5}{2}\\right)^{2} = \\frac{25}{4}$.",
+        "分数的乘方，把分子和分母分别乘方：$\\left(\\frac{a}{b}\\right)^{n} = \\frac{a^{n}}{b^{n}}$。负整数指数会把分数颠倒，所以 $\\left(\\frac{a}{b}\\right)^{-n} = \\left(\\frac{b}{a}\\right)^{n}$。\n\n$\\left(\\frac{2}{3}\\right)^{4} = \\frac{2^{4}}{3^{4}} = \\frac{16}{81}$：分母和分子一样都要乘方。指数为负数时先颠倒：$\\left(\\frac{2}{5}\\right)^{-2} = \\left(\\frac{5}{2}\\right)^{2} = \\frac{25}{4}$。",
       ),
       generate(rng) {
         const f0 = rng.pick([Q.of(1, 2), Q.of(2, 3), Q.of(3, 4), Q.of(1, 3), Q.of(2, 5), Q.of(3, 5), Q.of(4, 5), Q.of(5, 3), Q.of(3, 2)]);
@@ -814,8 +814,8 @@ export const thePowerOfQuotientRuleForExponents = topic(
       id: "powers-of-algebraic-fractions",
       title: t("Powers of algebraic fractions", "字母分式的乘方"),
       explanation: t(
-        "$\\left(\\frac{x^{2}}{3y}\\right)^{3} = \\frac{(x^{2})^{3}}{3^{3}y^{3}} = \\frac{x^{6}}{27y^{3}}$. Raise every factor of the numerator and of the denominator, including the number $3$.",
-        "$\\left(\\frac{x^{2}}{3y}\\right)^{3} = \\frac{(x^{2})^{3}}{3^{3}y^{3}} = \\frac{x^{6}}{27y^{3}}$。分子和分母的每个因数都要乘方，包括数 $3$。",
+        "A fraction with variables is raised to a power the same way as a numerical one. Each factor on top and each factor on the bottom gets the exponent, and a factor that is already a power has its exponents multiplied.\n\n$\\left(\\frac{x^{2}}{3y}\\right)^{3} = \\frac{(x^{2})^{3}}{3^{3}y^{3}} = \\frac{x^{6}}{27y^{3}}$. Raise every factor of the numerator and of the denominator, including the number $3$.",
+        "含字母的分式乘方与数的分数乘方方法相同：分子的每个因数和分母的每个因数都要乘方，本身已经是幂的因数则把指数相乘。\n\n$\\left(\\frac{x^{2}}{3y}\\right)^{3} = \\frac{(x^{2})^{3}}{3^{3}y^{3}} = \\frac{x^{6}}{27y^{3}}$。分子和分母的每个因数都要乘方，包括数 $3$。",
       ),
       generate(rng) {
         const [a, c] = [rng.pick([1, 2, 3]), rng.pick([2, 3, 5])];

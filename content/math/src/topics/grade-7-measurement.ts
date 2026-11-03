@@ -502,8 +502,8 @@ export const relatingTheCircumferenceAndAreaOfACircle = topic(
       id: "area-from-circumference",
       title: t("Area from the circumference", "由周长求面积"),
       explanation: t(
-        "A circle has a circumference of $31.4$ cm. Using $3.14$ for $\\pi$:\n\n$$r = \\frac{C}{2\\pi} = \\frac{31.4}{6.28} = 5\\text{ cm}, \\qquad A = \\pi r^2 = 3.14 \\cdot 25 = 78.5\\text{ cm}^2.$$\n\nUse the radius, not the diameter, in $\\pi r^2$.",
-        "一个圆的周长是 $31.4$ cm。取 $\\pi$ 为 $3.14$：\n\n$$r = \\frac{C}{2\\pi} = \\frac{31.4}{6.28} = 5\\text{ cm}, \\qquad A = \\pi r^2 = 3.14 \\cdot 25 = 78.5\\text{ cm}^2.$$\n\n$\\pi r^2$ 中用的是半径，不是直径。",
+        "The radius links the circumference and the area of a circle. From the circumference, find the radius with $r = \\frac{C}{2\\pi}$, then use it in the area formula $A = \\pi r^2$.\n\nA circle has a circumference of $31.4$ cm. Using $3.14$ for $\\pi$:\n\n$$r = \\frac{C}{2\\pi} = \\frac{31.4}{6.28} = 5\\text{ cm}, \\qquad A = \\pi r^2 = 3.14 \\cdot 25 = 78.5\\text{ cm}^2.$$\n\nUse the radius, not the diameter, in $\\pi r^2$.",
+        "半径把圆的周长和面积联系起来。由周长用 $r = \\frac{C}{2\\pi}$ 求出半径，再代入面积公式 $A = \\pi r^2$。\n\n一个圆的周长是 $31.4$ cm。取 $\\pi$ 为 $3.14$：\n\n$$r = \\frac{C}{2\\pi} = \\frac{31.4}{6.28} = 5\\text{ cm}, \\qquad A = \\pi r^2 = 3.14 \\cdot 25 = 78.5\\text{ cm}^2.$$\n\n$\\pi r^2$ 中用的是半径，不是直径。",
       ),
       generate(rng) {
         const r = rng.int(2, 15);

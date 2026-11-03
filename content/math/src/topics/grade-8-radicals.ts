@@ -477,8 +477,8 @@ export const theQuotientRuleForRadicals = topic(
       id: "quotients-that-are-rational",
       title: t("Quotients that are rational", "商为有理数"),
       explanation: t(
-        "$\\frac{\\sqrt{75}}{\\sqrt{3}} = \\sqrt{\\frac{75}{3}} = \\sqrt{25} = 5$. The quotient under the root can also be a fraction: $\\frac{\\sqrt{50}}{\\sqrt{8}} = \\sqrt{\\frac{50}{8}} = \\sqrt{\\frac{25}{4}} = \\frac{5}{2}$.",
-        "$\\frac{\\sqrt{75}}{\\sqrt{3}} = \\sqrt{\\frac{75}{3}} = \\sqrt{25} = 5$。根号内的商也可以是分数：$\\frac{\\sqrt{50}}{\\sqrt{8}} = \\sqrt{\\frac{50}{8}} = \\sqrt{\\frac{25}{4}} = \\frac{5}{2}$。",
+        "For positive numbers, the quotient of two square roots is the square root of the quotient, $\\frac{\\sqrt{a}}{\\sqrt{b}} = \\sqrt{\\frac{a}{b}}$. If that quotient is a perfect square, or a fraction of perfect squares, the root is a rational number.\n\n$\\frac{\\sqrt{75}}{\\sqrt{3}} = \\sqrt{\\frac{75}{3}} = \\sqrt{25} = 5$. The quotient under the root can also be a fraction: $\\frac{\\sqrt{50}}{\\sqrt{8}} = \\sqrt{\\frac{50}{8}} = \\sqrt{\\frac{25}{4}} = \\frac{5}{2}$.",
+        "对正数，两个平方根之商等于商的平方根：$\\frac{\\sqrt{a}}{\\sqrt{b}} = \\sqrt{\\frac{a}{b}}$。如果这个商是完全平方数，或者是两个完全平方数之比，开方的结果就是有理数。\n\n$\\frac{\\sqrt{75}}{\\sqrt{3}} = \\sqrt{\\frac{75}{3}} = \\sqrt{25} = 5$。根号内的商也可以是分数：$\\frac{\\sqrt{50}}{\\sqrt{8}} = \\sqrt{\\frac{50}{8}} = \\sqrt{\\frac{25}{4}} = \\frac{5}{2}$。",
       ),
       generate(rng) {
         const m = rng.pick([2, 3, 5, 6, 7]);
@@ -504,8 +504,8 @@ export const theQuotientRuleForRadicals = topic(
       id: "quotients-in-simplest-form",
       title: t("Quotients in simplest radical form", "商化为最简根式"),
       explanation: t(
-        "$\\frac{\\sqrt{90}}{\\sqrt{5}} = \\sqrt{18}$, which still has the square factor $9$: $\\sqrt{18} = \\sqrt{9} \\cdot \\sqrt{2} = 3\\sqrt{2}$.",
-        "$\\frac{\\sqrt{90}}{\\sqrt{5}} = \\sqrt{18}$，根号内还有平方因数 $9$：$\\sqrt{18} = \\sqrt{9} \\cdot \\sqrt{2} = 3\\sqrt{2}$。",
+        "After combining the roots into one, the number under the root may still have a square factor. Take that factor out as its square root, so that no square factor other than $1$ is left under the root.\n\n$\\frac{\\sqrt{90}}{\\sqrt{5}} = \\sqrt{18}$, which still has the square factor $9$: $\\sqrt{18} = \\sqrt{9} \\cdot \\sqrt{2} = 3\\sqrt{2}$.",
+        "把两个根式合成一个后，根号内的数可能还有平方因数。把这个平方因数开方后移到根号外，使根号内不再含有 $1$ 以外的平方因数。\n\n$\\frac{\\sqrt{90}}{\\sqrt{5}} = \\sqrt{18}$，根号内还有平方因数 $9$：$\\sqrt{18} = \\sqrt{9} \\cdot \\sqrt{2} = 3\\sqrt{2}$。",
       ),
       generate(rng) {
         const b = rng.pick([2, 3, 5, 6, 7]);
@@ -743,8 +743,8 @@ export const solvingRadicalEquationsWithCubeRoots = topic(
       id: "expressions-under-the-cube-root",
       title: t("Expressions under the cube root", "立方根号内是式子"),
       explanation: t(
-        "$\\sqrt[3]{3x - 2} = -2$: cubing both sides gives $3x - 2 = -8$, so $3x = -6$ and $x = -2$. Check: $\\sqrt[3]{3 \\cdot (-2) - 2} = \\sqrt[3]{-8} = -2$.",
-        "$\\sqrt[3]{3x - 2} = -2$：两边立方得 $3x - 2 = -8$，所以 $3x = -6$，$x = -2$。检验：$\\sqrt[3]{3 \\cdot (-2) - 2} = \\sqrt[3]{-8} = -2$。",
+        "Cubing undoes a cube root, so cube both sides to remove the root and then solve the equation that is left. A cube root can be negative, so a negative right side is allowed. Check the solution in the original equation.\n\n$\\sqrt[3]{3x - 2} = -2$: cubing both sides gives $3x - 2 = -8$, so $3x = -6$ and $x = -2$. Check: $\\sqrt[3]{3 \\cdot (-2) - 2} = \\sqrt[3]{-8} = -2$.",
+        "立方运算可以抵消立方根，所以两边同时立方，去掉根号，再解剩下的方程。立方根可以是负数，所以右边是负数也可以。最后把解代回原方程检验。\n\n$\\sqrt[3]{3x - 2} = -2$：两边立方得 $3x - 2 = -8$，所以 $3x = -6$，$x = -2$。检验：$\\sqrt[3]{3 \\cdot (-2) - 2} = \\sqrt[3]{-8} = -2$。",
       ),
       generate(rng) {
         const a = rng.int(1, 5);

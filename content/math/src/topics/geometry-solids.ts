@@ -3496,8 +3496,8 @@ export const volumesOfSpheres: TopicDef = {
       id: "volume-of-a-hemisphere",
       title: t("Volume of a hemisphere", "半球的体积"),
       explanation: t(
-        "A hemisphere is half a sphere, so its volume is\n\n$$V = \\frac{1}{2} \\cdot \\frac{4}{3}\\pi r^3 = \\frac{2}{3}\\pi r^3.$$\n\nA hemispherical bowl with radius $6$ cm holds $\\frac{2}{3}\\pi \\cdot 216 = 144\\pi\\text{ cm}^3$.",
-        "半球是球的一半，所以它的体积是\n\n$$V = \\frac{1}{2} \\cdot \\frac{4}{3}\\pi r^3 = \\frac{2}{3}\\pi r^3.$$\n\n半径 $6$ 厘米的半球形碗能装 $\\frac{2}{3}\\pi \\cdot 216 = 144\\pi\\text{ cm}^3$。",
+        "Cutting a sphere through its center gives two equal halves called hemispheres. Each half holds half of the sphere's volume, and the radius of the hemisphere is the radius of the sphere.\n\nA hemisphere is half a sphere, so its volume is\n\n$$V = \\frac{1}{2} \\cdot \\frac{4}{3}\\pi r^3 = \\frac{2}{3}\\pi r^3.$$\n\nA hemispherical bowl with radius $6$ cm holds $\\frac{2}{3}\\pi \\cdot 216 = 144\\pi\\text{ cm}^3$.",
+        "过球心把球切开，得到两个相等的半球。每个半球的体积是球的体积的一半，半球的半径就是球的半径。\n\n半球是球的一半，所以它的体积是\n\n$$V = \\frac{1}{2} \\cdot \\frac{4}{3}\\pi r^3 = \\frac{2}{3}\\pi r^3.$$\n\n半径 $6$ 厘米的半球形碗能装 $\\frac{2}{3}\\pi \\cdot 216 = 144\\pi\\text{ cm}^3$。",
       ),
       generate(rng) {
         const u = pickUnit(rng);
