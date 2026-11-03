@@ -75,6 +75,41 @@ export const mathematicsForMachineLearningContinuousConditioningTopics: TopicDef
           });
         },
       },
+      {
+        id: "the-law-of-total-expectation",
+        title: t("Averaging a conditional expectation", "对条件期望再求平均"),
+        explanation: t(
+          "The conditional expectation $E[X \\mid Y]$ is itself a random variable, a function of $Y$. Averaging it over $Y$ recovers the plain mean:\n$$E[X] = E\\big[E[X \\mid Y]\\big] = \\int E[X \\mid Y = y]\\, f_Y(y)\\, dy.$$\nThis is often easier than finding the marginal density of $X$. If $Y \\sim \\operatorname{Uniform}(0, 4)$ and $X \\mid Y = y \\sim \\operatorname{Uniform}(0, y)$, then $E[X \\mid Y] = \\frac{Y}{2}$, so $E[X] = \\frac{E[Y]}{2} = \\frac{2}{2} = 1$.",
+          "条件期望 $E[X \\mid Y]$ 本身是一个随机变量，是 $Y$ 的函数。对 $Y$ 求它的平均就得到普通的均值：\n$$E[X] = E\\big[E[X \\mid Y]\\big] = \\int E[X \\mid Y = y]\\, f_Y(y)\\, dy.$$\n这通常比求 $X$ 的边缘密度更容易。若 $Y \\sim \\operatorname{Uniform}(0, 4)$，$X \\mid Y = y \\sim \\operatorname{Uniform}(0, y)$，则 $E[X \\mid Y] = \\frac{Y}{2}$，所以 $E[X] = \\frac{E[Y]}{2} = \\frac{2}{2} = 1$。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const lo = rng.int(0, 4);
+          const hi = lo + rng.int(1, 6);
+          const k = rng.pick([1, 2, 3]);
+          const shift = rng.int(-3, 5);
+          const uniform = rng.bool();
+          // E[X | Y] = (k Y) / 2 + shift for X | Y ~ Uniform(shift, k Y + shift), or k Y + shift for a normal.
+          const slope = uniform ? Q.of(k, 2) : Q.of(k);
+          const meanY = Q.of(lo + hi, 2);
+          const ans = slope.mul(meanY).add(Q.of(shift));
+          const top = shift === 0 ? (k === 1 ? "y" : `${k}y`) : `${k === 1 ? "y" : `${k}y`} ${shift < 0 ? "-" : "+"} ${Math.abs(shift)}`;
+          const cond = uniform ? `\\operatorname{Uniform}(${shift}, ${top})` : `\\mathcal{N}(${top},\\ 1)`;
+          const condMean = uniform ? `\\frac{${shift} + (${top})}{2}` : top;
+          return numberProblem({
+            prompt: t(
+              `Let $Y \\sim \\operatorname{Uniform}(${lo}, ${hi})$ and, given $Y = y$, let $X \\mid Y = y \\sim ${cond}$. Find $E[X]$.`,
+              `设 $Y \\sim \\operatorname{Uniform}(${lo}, ${hi})$，且在 $Y = y$ 的条件下 $X \\mid Y = y \\sim ${cond}$。求 $E[X]$。`,
+            ),
+            answer: ans,
+            form: "fraction",
+            wrong: [meanY, slope.mul(Q.of(hi)).add(Q.of(shift)), slope.mul(meanY)],
+            solution: t(
+              `$E[X \\mid Y = y] = ${condMean}$, which is linear in $y$ with slope $${slope.toLatex()}$. With $E[Y] = ${meanY.toLatex()}$, $E[X] = E\\big[E[X \\mid Y]\\big] = ${slope.toLatex()} \\cdot ${meanY.toLatex()}${shift === 0 ? "" : ` ${shift < 0 ? "-" : "+"} ${Math.abs(shift)}`} = ${ans.toLatex()}$.`,
+              `$E[X \\mid Y = y] = ${condMean}$，它是 $y$ 的线性函数，斜率为 $${slope.toLatex()}$。由 $E[Y] = ${meanY.toLatex()}$，得 $E[X] = E\\big[E[X \\mid Y]\\big] = ${slope.toLatex()} \\cdot ${meanY.toLatex()}${shift === 0 ? "" : ` ${shift < 0 ? "-" : "+"} ${Math.abs(shift)}`} = ${ans.toLatex()}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -120,6 +155,38 @@ export const mathematicsForMachineLearningContinuousConditioningTopics: TopicDef
             solution: t(
               `For a uniform random variable on $(0, ${upperLimitStr})$, the variance is $\\frac{(${upperLimitStr} - 0)^2}{12} = \\frac{${upperFormula}}{12}$. Evaluating at $y = ${y0.toLatex()}$ yields $\\operatorname{Var}\\left(X \\mid Y = ${y0.toLatex()}\\right) = \\frac{${cSq} \\left(${y0.toLatex()}\\right)^2}{12} = ${ans.toLatex()}$.`,
               `对于区间 $(0, ${upperLimitStr})$ 上的均匀分布随机变量，其方差为 $\\frac{(${upperLimitStr} - 0)^2}{12} = \\frac{${upperFormula}}{12}$。在 $y = ${y0.toLatex()}$ 处求值得 $\\operatorname{Var}\\left(X \\mid Y = ${y0.toLatex()}\\right) = \\frac{${cSq} \\left(${y0.toLatex()}\\right)^2}{12} = ${ans.toLatex()}$。`,
+            ),
+          });
+        },
+      },
+      {
+        id: "the-law-of-total-variance",
+        title: t("Combining conditional variances with the law of total variance", "用全方差公式合成条件方差"),
+        explanation: t(
+          "The overall variance of $X$ has two sources: the spread of $X$ around its conditional mean, and the spread of that conditional mean as $Y$ varies:\n$$\\operatorname{Var}(X) = E\\big[\\operatorname{Var}(X \\mid Y)\\big] + \\operatorname{Var}\\big(E[X \\mid Y]\\big).$$\nIf $Y \\sim \\operatorname{Uniform}(0, 6)$ and $X \\mid Y = y \\sim \\mathcal{N}(2y,\\ 5)$, the first term is $5$ and the second is $\\operatorname{Var}(2Y) = 4 \\cdot \\frac{6^2}{12} = 12$, so $\\operatorname{Var}(X) = 17$. Leaving out either term gives too small an answer.",
+          "$X$ 的总方差有两个来源：$X$ 围绕条件均值的分散程度，以及条件均值随 $Y$ 变化时的分散程度：\n$$\\operatorname{Var}(X) = E\\big[\\operatorname{Var}(X \\mid Y)\\big] + \\operatorname{Var}\\big(E[X \\mid Y]\\big).$$\n若 $Y \\sim \\operatorname{Uniform}(0, 6)$，$X \\mid Y = y \\sim \\mathcal{N}(2y,\\ 5)$，则第一项为 $5$，第二项为 $\\operatorname{Var}(2Y) = 4 \\cdot \\frac{6^2}{12} = 12$，所以 $\\operatorname{Var}(X) = 17$。漏掉任何一项都会使答案偏小。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const width = rng.int(1, 8);
+          const lo = rng.int(0, 3);
+          const hi = lo + width;
+          const a = rng.pick([1, 2, 3, 4]);
+          const s2 = rng.int(1, 9);
+          const varY = Q.of(width * width, 12);
+          const between = varY.mul(Q.of(a * a));
+          const ans = between.add(Q.of(s2));
+          const mean = a === 1 ? "y" : `${a}y`;
+          return numberProblem({
+            prompt: t(
+              `Let $Y \\sim \\operatorname{Uniform}(${lo}, ${hi})$ and $X \\mid Y = y \\sim \\mathcal{N}(${mean},\\ ${s2})$, where the second parameter is the variance. Find $\\operatorname{Var}(X)$.`,
+              `设 $Y \\sim \\operatorname{Uniform}(${lo}, ${hi})$，$X \\mid Y = y \\sim \\mathcal{N}(${mean},\\ ${s2})$，其中第二个参数为方差。求 $\\operatorname{Var}(X)$。`,
+            ),
+            answer: ans,
+            form: "fraction",
+            wrong: [Q.of(s2), between, varY.mul(Q.of(a)).add(Q.of(s2))],
+            solution: t(
+              `$E[\\operatorname{Var}(X \\mid Y)] = ${s2}$. $E[X \\mid Y] = ${mean}$, so $\\operatorname{Var}(E[X \\mid Y]) = ${a * a} \\cdot \\frac{${width}^2}{12} = ${between.toLatex()}$. Adding, $\\operatorname{Var}(X) = ${s2} + ${between.toLatex()} = ${ans.toLatex()}$.`,
+              `$E[\\operatorname{Var}(X \\mid Y)] = ${s2}$。$E[X \\mid Y] = ${mean}$，所以 $\\operatorname{Var}(E[X \\mid Y]) = ${a * a} \\cdot \\frac{${width}^2}{12} = ${between.toLatex()}$。相加得 $\\operatorname{Var}(X) = ${s2} + ${between.toLatex()} = ${ans.toLatex()}$。`,
             ),
           });
         },
