@@ -159,6 +159,23 @@ const parametricCircleFigure: Figure = {
   ),
 };
 
+/** concentricCirclesFigure shows the circles r = 1, 2 and 3 about the pole, with a radius of r = 3 at the angle θ = π/3. */
+const concentricCirclesFigure: Figure = {
+  svg: plane({ xMin: -4, xMax: 4, yMin: -4, yMax: 4 }, [
+    { kind: "circle", center: [0, 0], r: 1 },
+    { kind: "circle", center: [0, 0], r: 2 },
+    { kind: "circle", center: [0, 0], r: 3, accent: true },
+    { kind: "segment", a: [0, 0], b: [1.5, 1.5 * Math.sqrt(3)], accent: true },
+    { kind: "label", at: [0.75, 0.75 * Math.sqrt(3)], text: "3", dir: "nw" },
+    { kind: "label", at: [1.25, 0.2], text: "θ", dir: "ne" },
+    { kind: "point", at: [1.5, 1.5 * Math.sqrt(3)] },
+  ]),
+  alt: t(
+    "Three circles centered at the pole, r = 1, r = 2 and r = 3, the last one highlighted. A radius of length 3 from the pole at the angle θ reaches the circle r = 3: every angle gives a point at distance 3.",
+    "三个以极点为圆心的圆 r = 1、r = 2 与 r = 3，最后一个突出显示。从极点出发、与极轴成角 θ、长为 3 的半径到达圆 r = 3：每个角都给出一个到极点距离为 3 的点。",
+  ),
+};
+
 /** cosineCircleFigure shows r = 4 cos θ, the circle with center (2, 0) and radius 2 through the pole. */
 const cosineCircleFigure: Figure = {
   svg: plane({ xMin: -2, xMax: 6, yMin: -3, yMax: 3 }, [
@@ -1414,8 +1431,8 @@ export const polarEquationsOfCirclesCenteredAtTheOrigin: TopicDef = {
   id: "polar-equations-of-circles-centered-at-the-origin",
   title: t("Polar Equations of Circles Centered at the Origin", "以极点为圆心的圆的极坐标方程"),
   summary: t(
-    "Analyze polar equations of circles centered at the pole in the form r = a, understand families of concentric circles, and convert to Cartesian form x² + y² = a².",
-    "掌握以极点为圆心的圆的极坐标方程 r = a，理解同心圆族，并实现与直角坐标方程 x² + y² = a² 的互化。",
+    "Analyze polar equations of circles centered at the pole in the form $r = a$, understand families of concentric circles, and convert to Cartesian form $x^2 + y^2 = a^2$.",
+    "掌握以极点为圆心的圆的极坐标方程 $r = a$，理解同心圆族，并实现与直角坐标方程 $x^2 + y^2 = a^2$ 的互化。",
   ),
   prerequisites: ["introduction-to-polar-coordinates"],
   encompasses: [{ topic: "introduction-to-polar-coordinates", weight: 0.4 }],
@@ -1429,6 +1446,7 @@ export const polarEquationsOfCirclesCenteredAtTheOrigin: TopicDef = {
         "The polar equation $r = a$ (where $a \\ne 0$) states that every point on the graph is at directed distance $|a|$ from the pole, for every angle $\\theta$:\n- The graph is a circle centered at the pole $(0, 0)$ with radius $R = |a|$.\n- The equation $r = -a$ produces the identical circle, because $(-a, \\theta) = (a, \\theta + \\pi)$.\n- Varying $a$ generates a family of concentric circles centered at the origin.",
         "极坐标方程 $r = a$（其中 $a \\ne 0$）表示平面上所有与极点的距离均为 $|a|$ 的点构成的集合：\n- 其图形是以极点 $(0, 0)$ 为圆心、半径为 $R = |a|$ 的圆。\n- 方程 $r = -a$ 表示完全相同的圆，因为 $(-a, \\theta) = (a, \\theta + \\pi)$。\n- 改变常数 $a$ 的值，可得到以极点为中心的同心圆族。",
       ),
+      figure: concentricCirclesFigure,
       generate(rng) {
         const a = rng.pick([
           -18, -16, -15, -14, -13, -12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18,
