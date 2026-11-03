@@ -66,8 +66,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
         id: "binomial-tail-probability-via-cdf",
         title: t("Computing tail probabilities using the CDF complement", "利用累积分布函数余概率计算右尾概率"),
         explanation: t(
-          "The probability of exceeding a value is the complement of being at most that value, which is often easier to compute. For any integer random variable X, the probability of exceeding k is P(X > k) = 1 - P(X ≤ k) = 1 - F(k).",
-          "超过某个值的概率是不超过该值的概率的补，后者往往更容易计算。对任意整值随机变量 X，严格大于 k 的概率由余事件给出：P(X > k) = 1 - P(X ≤ k) = 1 - F(k)。",
+          "The probability of exceeding a value is the complement of being at most that value, which is often easier to compute. For any integer random variable $X$, the probability of exceeding $k$ is $P(X > k) = 1 - P(X \\le k) = 1 - F(k)$.",
+          "超过某个值的概率是不超过该值的概率的补，后者往往更容易计算。对任意整值随机变量 $X$，严格大于 $k$ 的概率由余事件给出：$P(X > k) = 1 - P(X \\le k) = 1 - F(k)$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(4, 12);

@@ -21,8 +21,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "continuity-correction-intervals",
         title: t("Applying continuity correction to discrete events", "对离散事件应用连续性校正"),
         explanation: t(
-          "When a continuous distribution approximates whole number counts, extend each boundary by one half so that every included count keeps its full interval. For discrete X, P(X ≤ k) is approximated by P(Y ≤ k + 0.5) and P(X ≥ k) by P(Y ≥ k - 0.5) for continuous normal Y.",
-          "当用连续分布近似整数计数时，把每个边界延伸二分之一，使每个被包含的计数保有完整的区间。对于离散随机变量 X，P(X ≤ k) 用连续正态变量 Y 的 P(Y ≤ k + 0.5) 近似，P(X ≥ k) 用 P(Y ≥ k - 0.5) 近似。",
+          "When a continuous distribution approximates whole number counts, extend each boundary by one half so that every included count keeps its full interval. For discrete $X$, $P(X \\le k)$ is approximated by $P(Y \\le k + 0.5)$ and $P(X \\ge k)$ by $P(Y \\ge k - 0.5)$ for continuous normal $Y$.",
+          "当用连续分布近似整数计数时，把每个边界延伸二分之一，使每个被包含的计数保有完整的区间。对于离散随机变量 $X$，$P(X \\le k)$ 用连续正态变量 $Y$ 的 $P(Y \\le k + 0.5)$ 近似，$P(X \\ge k)$ 用 $P(Y \\ge k - 0.5)$ 近似。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(10, 80);
@@ -144,8 +144,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "poisson-normal-continuity-z-score",
         title: t("Formulating the continuity-corrected z-score for Poisson", "构建泊松分布连续性校正的 z 值表达式"),
         explanation: t(
-          "Add one half to the cutoff before standardizing, because the count at the cutoff occupies the interval reaching half a unit beyond it. To approximate P(X ≤ c) for Poisson(λ), the continuity correction gives z = (c + 0.5 - λ) / √λ.",
-          "标准化之前先给分界值加上二分之一，因为分界值处的计数占据了延伸到其后半个单位的区间。为近似 Poisson(λ) 的 P(X ≤ c)，应用连续性校正得到标准化变量 z = (c + 0.5 - λ) / √λ。",
+          "Add one half to the cutoff before standardizing, because the count at the cutoff occupies the interval reaching half a unit beyond it. To approximate $P(X \\le c)$ for $\\text{Poisson}(\\lambda)$, the continuity correction gives $z = \\dfrac{c + 0.5 - \\lambda}{\\sqrt{\\lambda}}$.",
+          "标准化之前先给分界值加上二分之一，因为分界值处的计数占据了延伸到其后半个单位的区间。为近似 $\\text{Poisson}(\\lambda)$ 的 $P(X \\le c)$，应用连续性校正得到标准化变量 $z = \\dfrac{c + 0.5 - \\lambda}{\\sqrt{\\lambda}}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(25, 100);
@@ -200,8 +200,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "continuous-uniform-pdf-value",
         title: t("Evaluating the density of a continuous uniform distribution", "计算连续均匀分布的概率密度值"),
         explanation: t(
-          "A uniform density is constant over its interval, and its height is set so that the rectangle under it has area one. For X ~ U(a, b), the probability density function is f(x) = 1 / (b - a) for a ≤ x ≤ b and 0 elsewhere.",
-          "均匀密度在其区间上是常数，它的高度使下方矩形的面积为 1。对于 X ~ U(a, b)，在 a ≤ x ≤ b 时概率密度函数为 f(x) = 1 / (b - a)，在其他区间为 0。",
+          "A uniform density is constant over its interval, and its height is set so that the rectangle under it has area one. For $X \\sim U(a, b)$, the probability density function is $f(x) = \\dfrac{1}{b - a}$ for $a \\le x \\le b$ and $0$ elsewhere.",
+          "均匀密度在其区间上是常数，它的高度使下方矩形的面积为 1。对于 $X \\sim U(a, b)$，在 $a \\le x \\le b$ 时概率密度函数为 $f(x) = \\dfrac{1}{b - a}$，在其他区间为 $0$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(0, 15);
@@ -226,8 +226,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "continuous-uniform-interval-probability",
         title: t("Computing subinterval probabilities for uniform distributions", "计算均匀分布子区间上的概率"),
         explanation: t(
-          "For a uniform variable, probability is proportional to length, so the chance of a subinterval is its length divided by the whole length. For X ~ U(a, b) and a ≤ c < d ≤ b, P(c ≤ X ≤ d) = (d - c) / (b - a).",
-          "对于均匀变量，概率与长度成正比，所以子区间的概率等于它的长度除以整个区间的长度。对于 X ~ U(a, b) 且 a ≤ c < d ≤ b，概率为 P(c ≤ X ≤ d) = (d - c) / (b - a)。",
+          "For a uniform variable, probability is proportional to length, so the chance of a subinterval is its length divided by the whole length. For $X \\sim U(a, b)$ and $a \\le c < d \\le b$, $P(c \\le X \\le d) = \\dfrac{d - c}{b - a}$.",
+          "对于均匀变量，概率与长度成正比，所以子区间的概率等于它的长度除以整个区间的长度。对于 $X \\sim U(a, b)$ 且 $a \\le c < d \\le b$，概率为 $P(c \\le X \\le d) = \\dfrac{d - c}{b - a}$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(1, 10);
@@ -338,8 +338,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "uniform-conditional-probability",
         title: t("Conditional probability in a uniform model", "均匀分布模型中的条件概率"),
         explanation: t(
-          "Given that the value exceeds a point, it is uniform on the remaining part of the interval, so the conditional probability is again a ratio of lengths. For X ~ U(a, b) and a ≤ c < d ≤ b, P(X > d | X > c) = (b - d) / (b - c).",
-          "在已知取值超过某点的条件下，它在区间剩下的部分上仍是均匀的，所以条件概率仍是长度之比。对于 X ~ U(a, b) 且 a ≤ c < d ≤ b，条件概率为 P(X > d | X > c) = (b - d) / (b - c)。",
+          "Given that the value exceeds a point, it is uniform on the remaining part of the interval, so the conditional probability is again a ratio of lengths. For $X \\sim U(a, b)$ and $a \\le c < d \\le b$, $P(X > d \\mid X > c) = \\dfrac{b - d}{b - c}$.",
+          "在已知取值超过某点的条件下，它在区间剩下的部分上仍是均匀的，所以条件概率仍是长度之比。对于 $X \\sim U(a, b)$ 且 $a \\le c < d \\le b$，条件概率为 $P(X > d \\mid X > c) = \\dfrac{b - d}{b - c}$。",
         ),
         generate: (rng: Rng): Problem => {
           const maxWait = rng.int(15, 60); // [0, maxWait]
@@ -498,8 +498,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "exponential-rate-from-mean",
         title: t("Determining the rate parameter from expected duration", "根据平均持续时间确定比率参数"),
         explanation: t(
-          "The rate counts how many events happen per unit of time on average, so it is the reciprocal of the average time between events. If the average time between events is μ, the rate parameter is λ = 1 / μ.",
-          "速率表示单位时间内平均发生多少次事件，所以它是两次事件之间平均时间的倒数。若事件发生的平均间隔时间为 μ，则比率参数为 λ = 1 / μ。",
+          "The rate counts how many events happen per unit of time on average, so it is the reciprocal of the average time between events. If the average time between events is $\\mu$, the rate parameter is $\\lambda = 1/\\mu$.",
+          "速率表示单位时间内平均发生多少次事件，所以它是两次事件之间平均时间的倒数。若事件发生的平均间隔时间为 $\\mu$，则比率参数为 $\\lambda = 1/\\mu$。",
         ),
         generate: (rng: Rng): Problem => {
           const mean = rng.int(2, 50);
@@ -635,8 +635,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "gamma-function-integer-values",
         title: t("Evaluating Gamma function ratios for positive integers", "计算正整数伽马函数的比值"),
         explanation: t(
-          "The gamma function extends the factorial, shifted by one, so ratios of its values at integers become ratios of factorials that mostly cancel. For positive integers, Γ(n) = (n - 1)!, so Γ(n) / Γ(m) = (n - 1)! / (m - 1)!.",
-          "伽马函数推广了阶乘（相差一位），所以它在整数处的值之比就是阶乘之比，大部分可以约去。对正整数，Γ(n) = (n - 1)!，因此 Γ(n) / Γ(m) = (n - 1)! / (m - 1)!。",
+          "The gamma function extends the factorial, shifted by one, so ratios of its values at integers become ratios of factorials that mostly cancel. For positive integers, $\\Gamma(n) = (n - 1)!$, so $\\dfrac{\\Gamma(n)}{\\Gamma(m)} = \\dfrac{(n - 1)!}{(m - 1)!}$.",
+          "伽马函数推广了阶乘（相差一位），所以它在整数处的值之比就是阶乘之比，大部分可以约去。对正整数，$\\Gamma(n) = (n - 1)!$，因此 $\\dfrac{\\Gamma(n)}{\\Gamma(m)} = \\dfrac{(n - 1)!}{(m - 1)!}$。",
         ),
         generate: (rng: Rng): Problem => {
           const m = rng.int(2, 25);
@@ -737,8 +737,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "gamma-sum-of-exponentials",
         title: t("Gamma distribution as a sum of independent exponentials", "伽马分布作为独立指数变量之和"),
         explanation: t(
-          "Waiting for several events of a Poisson process means adding the independent exponential gaps between them, which gives a gamma distribution. The sum of n independent and identically distributed Exp(λ) variables follows Gamma(n, λ).",
-          "等待泊松过程中的若干个事件，就是把它们之间独立的指数间隔加起来，结果服从伽马分布。n 个独立同分布的 Exp(λ) 随机变量之和服从伽马分布 Gamma(n, λ)。",
+          "Waiting for several events of a Poisson process means adding the independent exponential gaps between them, which gives a gamma distribution. The sum of $n$ independent and identically distributed $\\text{Exp}(\\lambda)$ variables follows $\\text{Gamma}(n, \\lambda)$.",
+          "等待泊松过程中的若干个事件，就是把它们之间独立的指数间隔加起来，结果服从伽马分布。$n$ 个独立同分布的 $\\text{Exp}(\\lambda)$ 随机变量之和服从伽马分布 $\\text{Gamma}(n, \\lambda)$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(2, 15);

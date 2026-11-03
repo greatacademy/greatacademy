@@ -2365,8 +2365,8 @@ export const definingAbstractVectorSpaces: TopicDef = {
       id: "verify-nonstandard-operations",
       title: t("Testing non-standard operations", "检验非标准运算是否满足公理"),
       explanation: t(
-        "When addition or scalar multiplication is redefined non-standardly, one or more axioms may fail. For example, if c(x, y) = (cx, 0), the identity axiom 1u = u fails when y ≠ 0.",
-        "当重新定义非标准的加法或数乘时，某些公理可能不成立。例如若定义 c(x, y) = (cx, 0)，当 y ≠ 0 时单位元公理 1u = u 将失效。",
+        "When addition or scalar multiplication is redefined non-standardly, one or more axioms may fail. For example, if $c(x, y) = (cx, 0)$, the identity axiom $1\\mathbf{u} = \\mathbf{u}$ fails when $y \\neq 0$.",
+        "当重新定义非标准的加法或数乘时，某些公理可能不成立。例如若定义 $c(x, y) = (cx, 0)$，当 $y \\neq 0$ 时单位元公理 $1\\mathbf{u} = \\mathbf{u}$ 将失效。",
       ),
       generate(rng) {
         const k = rng.nonZero(-25, 25);

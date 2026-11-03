@@ -48,8 +48,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "calculating-probabilities-using-cdf",
         title: t("Calculating interval probabilities using the CDF", "利用累积分布函数计算区间概率"),
         explanation: t(
-          "For any continuous random variable with CDF F(x), the probability that X falls in [a, c] is given by P(a ≤ X ≤ c) = F(c) - F(a).",
-          "对于具有累积分布函数 F(x) 的连续型随机变量，X 落在区间 [a, c] 内的概率由 P(a ≤ X ≤ c) = F(c) - F(a) 给出。",
+          "For any continuous random variable with CDF $F(x)$, the probability that $X$ falls in $[a, c]$ is given by $P(a \\le X \\le c) = F(c) - F(a)$.",
+          "对于具有累积分布函数 $F(x)$ 的连续型随机变量，$X$ 落在区间 $[a, c]$ 内的概率由 $P(a \\le X \\le c) = F(c) - F(a)$ 给出。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(4, 25);
@@ -224,8 +224,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "continuity-correction-interval",
         title: t("Identifying continuity-corrected intervals", "确定连续性校正后的区间"),
         explanation: t(
-          "When a continuous distribution approximates a discrete one, each whole number is spread over the interval of width one centered on it. Each discrete integer k occupies the continuous interval [k - 0.5, k + 0.5]. Thus P(a ≤ X ≤ b) maps to [a - 0.5, b + 0.5], while P(X ≥ a) maps to [a - 0.5, ∞).",
-          "当用连续分布近似离散分布时，每个整数都被摊开到以它为中心、宽度为 1 的区间上。每个离散整数 k 对应连续区间 [k - 0.5, k + 0.5]。因此 P(a ≤ X ≤ b) 对应连续区间 [a - 0.5, b + 0.5]，而 P(X ≥ a) 对应 [a - 0.5, ∞)。",
+          "When a continuous distribution approximates a discrete one, each whole number is spread over the interval of width one centered on it. Each discrete integer $k$ occupies the continuous interval $[k - 0.5, k + 0.5]$. Thus $P(a \\le X \\le b)$ maps to $[a - 0.5, b + 0.5]$, while $P(X \\ge a)$ maps to $[a - 0.5, \\infty)$.",
+          "当用连续分布近似离散分布时，每个整数都被摊开到以它为中心、宽度为 1 的区间上。每个离散整数 $k$ 对应连续区间 $[k - 0.5, k + 0.5]$。因此 $P(a \\le X \\le b)$ 对应连续区间 $[a - 0.5, b + 0.5]$，而 $P(X \\ge a)$ 对应 $[a - 0.5, \\infty)$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(10, 50);

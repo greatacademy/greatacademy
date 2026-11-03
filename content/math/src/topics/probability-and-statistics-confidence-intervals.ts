@@ -65,8 +65,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "t-confidence-interval-degrees-of-freedom",
         title: t("Identifying degrees of freedom for one-sample t confidence interval", "确定单样本 t 置信区间的自由度"),
         explanation: t(
-          "For a single sample of size n with unknown variance, the t critical value uses degrees of freedom ν = n - 1.",
-          "对于未知方差的容量为 n 的单样本，t 临界值采用自由度 ν = n - 1。",
+          "For a single sample of size $n$ with unknown variance, the $t$ critical value uses degrees of freedom $\\nu = n - 1$, because estimating the mean from the sample uses up one degree of freedom.",
+          "对于未知方差的容量为 $n$ 的单样本，$t$ 临界值采用自由度 $\\nu = n - 1$，因为用样本估计均值用掉了一个自由度。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(5, 60);
@@ -104,8 +104,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "fpc-confidence-interval-margin-reduction",
         title: t("Understanding the narrowing effect of FPC on confidence intervals", "理解 FPC 对置信区间的收窄效应"),
         explanation: t(
-          "Because the correction factor is less than one, sampling a large fraction of the population gives a narrower interval than the usual formula. Because √((N - n) / (N - 1)) < 1, the FPC narrows the margin of error and yields a more precise interval.",
-          "由于修正因子小于 1，抽取总体中很大一部分时，得到的区间比通常公式给出的更窄。因为 √((N - n) / (N - 1)) < 1，有限总体校正使误差范围变窄，从而得到更精确的置信区间。",
+          "Because the correction factor is less than one, sampling a large fraction of the population gives a narrower interval than the usual formula. Because $\\sqrt{\\dfrac{N - n}{N - 1}} < 1$, the FPC narrows the margin of error and yields a more precise interval.",
+          "由于修正因子小于 1，抽取总体中很大一部分时，得到的区间比通常公式给出的更窄。因为 $\\sqrt{\\dfrac{N - n}{N - 1}} < 1$，有限总体校正使误差范围变窄，从而得到更精确的置信区间。",
         ),
         generate: (rng: Rng): Problem => {
           const N = rng.int(200, 1000);
@@ -160,8 +160,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "wald-proportion-variance-evaluation",
         title: t("Evaluating the estimated variance of the sample proportion", "计算样本比例的估计方差"),
         explanation: t(
-          "The true variance of a sample proportion depends on the unknown proportion, so the estimate substitutes the sample proportion for it. The estimated variance of p̂ is p̂(1 - p̂) / n.",
-          "样本比例的真实方差依赖于未知的比例，所以估计时用样本比例代替它。样本比例 p̂ 的估计方差为 p̂(1 - p̂) / n。",
+          "The true variance of a sample proportion depends on the unknown proportion, so the estimate substitutes the sample proportion for it. The estimated variance of $\\hat{p}$ is $\\dfrac{\\hat{p}(1 - \\hat{p})}{n}$.",
+          "样本比例的真实方差依赖于未知的比例，所以估计时用样本比例代替它。样本比例 $\\hat{p}$ 的估计方差为 $\\dfrac{\\hat{p}(1 - \\hat{p})}{n}$。",
         ),
         generate: (rng: Rng): Problem => {
           const numP = rng.int(1, 9);
@@ -364,8 +364,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "pooled-t-degrees-of-freedom",
         title: t("Degrees of freedom for pooled two-sample t interval", "合并双样本 t 置信区间的自由度"),
         explanation: t(
-          "Each sample loses one degree of freedom for its own mean, so the pooled degrees of freedom are the total sample size minus two. The degrees of freedom for pooled two-sample t is ν = n1 + n2 - 2.",
-          "每个样本因估计自己的均值而失去一个自由度，所以合并后的自由度是总样本量减 2。合并双样本 t 检验/置信区间的自由度为 ν = n1 + n2 - 2。",
+          "Each sample loses one degree of freedom for its own mean, so the pooled degrees of freedom are the total sample size minus two. The degrees of freedom for the pooled two-sample $t$ is $\\nu = n_1 + n_2 - 2$.",
+          "每个样本因估计自己的均值而失去一个自由度，所以合并后的自由度是总样本量减 2。合并双样本 $t$ 检验或置信区间的自由度为 $\\nu = n_1 + n_2 - 2$。",
         ),
         generate: (rng: Rng): Problem => {
           const n1 = rng.int(8, 35);

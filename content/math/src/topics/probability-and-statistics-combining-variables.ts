@@ -21,8 +21,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "evaluating-joint-discrete-cdf",
         title: t("Evaluating the joint CDF from a probability mass table", "根据概率质量表计算联合累积分布函数值"),
         explanation: t(
-          "The joint cumulative distribution function at a point is the total probability of the lower left corner of the table, where both variables are at most the given values. Sum p(u, v) for all pairs (u, v) with u ≤ x and v ≤ y.",
-          "联合累积分布函数在一点的值是表格左下角部分的总概率，即两个变量都不超过给定值的部分。将所有满足 u ≤ x 且 v ≤ y 的点 (u, v) 处的联合概率 p(u, v) 求和。",
+          "The joint cumulative distribution function at a point is the total probability of the lower left corner of the table, where both variables are at most the given values. Sum $p(u, v)$ for all pairs $(u, v)$ with $u \\le x$ and $v \\le y$.",
+          "联合累积分布函数在一点的值是表格左下角部分的总概率，即两个变量都不超过给定值的部分。将所有满足 $u \\le x$ 且 $v \\le y$ 的点 $(u, v)$ 处的联合概率 $p(u, v)$ 求和。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(1, 4);
@@ -502,8 +502,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "joint-cdf-rectangular-probability",
         title: t("Expressing rectangular probability in terms of the joint CDF", "用联合累积分布函数表示矩形区域上的概率"),
         explanation: t(
-          "Subtracting the two strips removes their overlap twice, so the corner region must be added back once, as in inclusion and exclusion. P(a < X ≤ b, c < Y ≤ d) = F(b, d) - F(a, d) - F(b, c) + F(a, c).",
-          "减去两个条带时它们的重叠部分被减了两次，所以要把角上的区域加回一次，这与容斥原理一样。P(a < X ≤ b, c < Y ≤ d) = F(b, d) - F(a, d) - F(b, c) + F(a, c)。",
+          "Subtracting the two strips removes their overlap twice, so the corner region must be added back once, as in inclusion and exclusion.\n\n$$P(a < X \\le b,\\ c < Y \\le d) = F(b, d) - F(a, d) - F(b, c) + F(a, c)$$",
+          "减去两个条带时它们的重叠部分被减了两次，所以要把角上的区域加回一次，这与容斥原理一样。\n\n$$P(a < X \\le b,\\ c < Y \\le d) = F(b, d) - F(a, d) - F(b, c) + F(a, c)$$",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(1, 3);

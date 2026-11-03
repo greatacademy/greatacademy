@@ -68,8 +68,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "sampling-distribution-unbiased-expectation",
         title: t("Expected value of the sample mean statistic", "样本均值统计量的数学期望"),
         explanation: t(
-          "The sample mean varies from sample to sample, but on average it hits the population mean exactly, which is what unbiased means. For any population with mean μ, the expected value of the sample mean is E[X̄] = μ (unbiasedness).",
-          "样本均值随样本不同而变化，但平均来说它恰好等于总体均值，这就是无偏的含义。对任意均值为 μ 的总体，样本均值的期望值满足 E[X̄] = μ（无偏性）。",
+          "The sample mean varies from sample to sample, but on average it hits the population mean exactly, which is what unbiased means. For any population with mean $\\mu$, the expected value of the sample mean is $E[\\bar{X}] = \\mu$ (unbiasedness).",
+          "样本均值随样本不同而变化，但平均来说它恰好等于总体均值，这就是无偏的含义。对任意均值为 $\\mu$ 的总体，样本均值的期望值满足 $E[\\bar{X}] = \\mu$（无偏性）。",
         ),
         generate: (rng: Rng): Problem => {
           const mu = rng.int(10, 90);
@@ -293,8 +293,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "sample-proportion-unbiasedness",
         title: t("Expectation of sample proportion estimator", "样本比例估计量的数学期望"),
         explanation: t(
-          "Each sampled item is equally likely to be any member of the population, so on average the sample proportion equals the population proportion. E[p̂] = p is unbiased regardless of population size N.",
-          "每个抽到的个体都同样可能是总体中的任何成员，所以平均来说样本比例等于总体比例。无论总体容量 N 为何值，样本比例均满足无偏性 E[p̂] = p。",
+          "Each sampled item is equally likely to be any member of the population, so on average the sample proportion equals the population proportion. The estimate is unbiased, $E[\\hat{p}] = p$, whatever the population size $N$.",
+          "每个抽到的个体都同样可能是总体中的任何成员，所以平均来说样本比例等于总体比例。无论总体容量 $N$ 为何值，样本比例均满足无偏性 $E[\\hat{p}] = p$。",
         ),
         generate: (rng: Rng): Problem => {
           const num = rng.int(1, 9);
@@ -375,8 +375,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "method-of-moments-uniform-zero-theta",
         title: t("Method of moments for the continuous uniform $U(0, \\theta)$", "连续均匀分布 $U(0, \\theta)$ 的矩估计"),
         explanation: t(
-          "The mean of a uniform distribution starting at zero is half its upper endpoint, so doubling the sample mean estimates that endpoint. For X ~ U(0, θ), E[X] = θ / 2, so θ̂ = 2 x̄.",
-          "从零开始的均匀分布的均值是上端点的一半，所以把样本均值加倍就能估计这个端点。对于 X ~ U(0, θ)，理论均值为 E[X] = θ / 2，因此矩估计量为 θ̂ = 2 x̄。",
+          "The mean of a uniform distribution starting at zero is half its upper endpoint, so doubling the sample mean estimates that endpoint. For $X \\sim U(0, \\theta)$, $E[X] = \\theta/2$, so $\\hat{\\theta} = 2\\bar{x}$.",
+          "从零开始的均匀分布的均值是上端点的一半，所以把样本均值加倍就能估计这个端点。对于 $X \\sim U(0, \\theta)$，理论均值为 $E[X] = \\theta/2$，因此矩估计量为 $\\hat{\\theta} = 2\\bar{x}$。",
         ),
         generate: (rng: Rng): Problem => {
           const mean = rng.int(10, 60);
@@ -463,8 +463,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "clt-standardized-z-score",
         title: t("Computing the z-score for a sample mean under CLT", "利用 CLT 计算样本均值的标准化 z 分数"),
         explanation: t(
-          "Standardizing measures how many standard errors the sample mean lies from the population mean, which the central limit theorem treats as standard normal. z = (x̄ - μ) / (σ / √n).",
-          "标准化衡量样本均值离总体均值有多少个标准误，中心极限定理把它视为标准正态分布。z = (x̄ - μ) / (σ / √n)。",
+          "Standardizing measures how many standard errors the sample mean lies from the population mean, which the central limit theorem treats as standard normal.\n\n$$z = \\frac{\\bar{x} - \\mu}{\\sigma / \\sqrt{n}}$$",
+          "标准化衡量样本均值离总体均值有多少个标准误，中心极限定理把它视为标准正态分布。\n\n$$z = \\frac{\\bar{x} - \\mu}{\\sigma / \\sqrt{n}}$$",
         ),
         generate: (rng: Rng): Problem => {
           const mu = rng.int(40, 100);
@@ -551,8 +551,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "evaluating-sample-proportion-point-estimate",
         title: t("Calculating the point estimate of a proportion", "计算总体比例的点估计值"),
         explanation: t(
-          "The natural estimate of a population proportion is the fraction of the sample that has the property. p̂ = x / n.",
-          "总体比例的自然估计是样本中具有该性质的个体所占的比例。p̂ = x / n。",
+          "The natural estimate of a population proportion is the fraction of the sample that has the property: $\\hat{p} = x/n$, where $x$ counts the sample members with it and $n$ is the sample size.",
+          "总体比例的自然估计是样本中具有该性质的个体所占的比例：$\\hat{p} = x/n$，其中 $x$ 是样本中具有该性质的个数，$n$ 是样本容量。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(50, 400);

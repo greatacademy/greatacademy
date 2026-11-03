@@ -134,8 +134,8 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
         id: "poisson-gof-df-calculation",
         title: t("Degrees of freedom when estimating the Poisson parameter", "估计泊松参数时的自由度计算"),
         explanation: t(
-          "Each parameter estimated from the data makes the expected counts fit more closely, so one degree of freedom is lost for each. df = k - 1 - m, where m is the number of estimated parameters (m = 1 for λ).",
-          "每个由数据估计的参数都使期望计数拟合得更紧，所以每估计一个参数就失去一个自由度。df = k - 1 - m，其中 m 为估计的参数个数（对 λ 有 m = 1）。",
+          "Each parameter estimated from the data makes the expected counts fit more closely, so one degree of freedom is lost for each. With $k$ categories, $\\text{df} = k - 1 - m$, where $m$ is the number of estimated parameters ($m = 1$ for $\\lambda$).",
+          "每个由数据估计的参数都使期望计数拟合得更紧，所以每估计一个参数就失去一个自由度。有 $k$ 个类别时，$\\text{df} = k - 1 - m$，其中 $m$ 为估计的参数个数（对 $\\lambda$ 有 $m = 1$）。",
         ),
         generate: (rng: Rng): Problem => {
           const N = rng.int(100, 1000);
@@ -216,8 +216,8 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
         id: "normal-gof-df-calculation",
         title: t("Degrees of freedom for normal goodness-of-fit test", "正态拟合优度检验的自由度"),
         explanation: t(
-          "Estimating both the mean and the standard deviation uses up two degrees of freedom, in addition to the one lost because the counts must add to the total. df = k - 1 - 2 = k - 3 when μ and σ are estimated from the sample.",
-          "估计均值和标准差会用掉两个自由度，此外计数之和必须等于总数，还要再失去一个自由度。当 μ 与 σ 均由样本估计时，df = k - 1 - 2 = k - 3。",
+          "Estimating both the mean and the standard deviation uses up two degrees of freedom, in addition to the one lost because the counts must add to the total. With $k$ categories, $\\text{df} = k - 1 - 2 = k - 3$ when $\\mu$ and $\\sigma$ are estimated from the sample.",
+          "估计均值和标准差会用掉两个自由度，此外计数之和必须等于总数，还要再失去一个自由度。有 $k$ 个类别且 $\\mu$ 与 $\\sigma$ 均由样本估计时，$\\text{df} = k - 1 - 2 = k - 3$。",
         ),
         generate: (rng: Rng): Problem => {
           const N = rng.int(100, 1000);
