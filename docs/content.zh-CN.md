@@ -170,9 +170,11 @@ const prealgebra: CourseDef = {
 - 带有不合规定的图形（§4）；
 - 指定了未知判定器；
 - 选择题：选项少于两个、选项重复，或期望下标越界；
-- 标准答案被判定器拒绝，或某个错误答案被判定器接受。
+- 标准答案被判定器拒绝，或某个错误答案被判定器接受；
+- 给出选项 `textIssue(text, locale)` 时：题面、解答或选项被该函数报告有问题，学科可借此执行自己的书写规则；
+- 给出选项 `maxPositionShare` 时：选择题的正确选项落在同一位置的样本超过该比例。
 
-不同题面少于 `minDistinct` 个时发出警告；图形不同的题面算作不同。每个内容包都在测试中运行 `compileSubject` 和 `sampleGenerators`，因此运行时会拒绝的内容无法合入。选项 `shard: { index, count }` 只抽样从第 `index` 个起每隔 `count` 个的主题，内容包可以借此把抽样分到 Vitest 并行运行的多个测试文件中；`content/math` 分成四份。
+不同题面少于 `minDistinct` 个时发出警告；图形不同的题面算作不同。每个内容包都在测试中运行 `compileSubject` 和 `sampleGenerators`，因此运行时会拒绝的内容无法合入。选项 `shard: { index, count }` 只抽样从第 `index` 个起每隔 `count` 个的主题，内容包可以借此把抽样分到 Vitest 并行运行的多个测试文件中；`content/math` 分成四份，并传入自己的 `textIssue`（`$` 成对、数学模式外无 LaTeX、无连写正负号、中文中无成串英文）和 0.8 的 `maxPositionShare`。
 
 ## 9. 提供题目
 

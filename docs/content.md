@@ -170,9 +170,11 @@ The compiled graph provides:
 - carries a figure that is not well formed (§4);
 - names an unknown checker;
 - for a choice: has fewer than two options, repeated options, or an expected index out of range;
-- has a canonical response its checker rejects, or a wrong response its checker accepts.
+- has a canonical response its checker rejects, or a wrong response its checker accepts;
+- with the option `textIssue(text, locale)`: produces a prompt, solution or option that the function reports, so a subject can enforce its own writing rules;
+- with the option `maxPositionShare`: for a choice, puts the expected option at one position in more than that share of the samples.
 
-It warns when fewer than `minDistinct` distinct prompts appear; prompts with different figures count as distinct. Every content package runs `compileSubject` and `sampleGenerators` in its tests, so content cannot be merged in a state the runtime would reject. The option `shard: { index, count }` samples only every `count`-th topic starting at `index`, so a package can split sampling across test files that Vitest runs in parallel; `content/math` uses four.
+It warns when fewer than `minDistinct` distinct prompts appear; prompts with different figures count as distinct. Every content package runs `compileSubject` and `sampleGenerators` in its tests, so content cannot be merged in a state the runtime would reject. The option `shard: { index, count }` samples only every `count`-th topic starting at `index`, so a package can split sampling across test files that Vitest runs in parallel; `content/math` uses four, and passes its own `textIssue` (balanced `$`, no LaTeX outside math, no doubled signs, no English runs in Chinese) and a `maxPositionShare` of 0.8.
 
 ## 9. Serving Problems
 

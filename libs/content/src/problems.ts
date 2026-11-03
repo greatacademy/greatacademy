@@ -1,8 +1,8 @@
 import type { CompiledSubject, Issue } from "./compile.ts";
 import { type Figure, figureIssue } from "./figure.ts";
 import { createRng } from "./rng.ts";
-import type { Text } from "./text.ts";
-import { isText } from "./text.ts";
+import type { Locale, Text } from "./text.ts";
+import { isText, locales } from "./text.ts";
 import type { Problem, TopicDef } from "./types.ts";
 
 /** ProblemRef identifies a problem instance: the knowledge point that generates it and its seed. */
@@ -41,13 +41,18 @@ export interface SampleOptions {
   readonly minDistinct?: number;
   /** shard limits sampling to the topics at positions index, index + count, … so that test files can sample in parallel. */
   readonly shard?: { readonly index: number; readonly count: number };
+  /** textIssue reports what is wrong with a prompt, solution or option in one locale, if anything, so that a subject can enforce its own writing rules. */
+  readonly textIssue?: (text: string, locale: Locale) => string | undefined;
+  /** maxPositionShare is the largest share of a choice generator's samples whose answer may sit at one option position before an error. */
+  readonly maxPositionShare?: number;
 }
 
 /**
  * sampleGenerators runs every knowledge point's generator over many seeds and
  * reports generators that throw, are not deterministic, produce invalid texts,
  * use unknown checkers, reject their canonical response, accept a listed wrong
- * response, or lack variety.
+ * response, break the subject's writing rules, keep the answer at one option
+ * position, or lack variety.
  */
 export function sampleGenerators(subject: CompiledSubject, options: SampleOptions = {}): Issue[] {
   const samples = options.samples ?? 200;
@@ -58,15 +63,21 @@ export function sampleGenerators(subject: CompiledSubject, options: SampleOption
     topic.knowledgePoints.forEach((kp, index) => {
       const path = `topic ${topic.id} › kp ${kp.id}`;
       const prompts = new Set<string>();
+      const positions = new Map<number, number>();
       for (let seed = 1; seed <= samples; seed++) {
-        const found = checkSample(subject, topic, index, seed);
+        const found = checkSample(subject, topic, index, seed, options.textIssue);
         if (found) {
           issues.push({ severity: "error", path: `${path} › seed ${seed}`, message: found });
           return;
         }
         const p = generateProblem(subject, { topic: topic.id, kp: index, seed });
         prompts.add(JSON.stringify([p.prompt, p.figure?.svg]));
+        if (p.answer.input.kind === "choice")
+          positions.set(p.answer.expected as number, (positions.get(p.answer.expected as number) ?? 0) + 1);
       }
+      const top = Math.max(0, ...positions.values());
+      if (options.maxPositionShare !== undefined && top > options.maxPositionShare * samples)
+        issues.push({ severity: "error", path, message: `the answer sits at one option position in ${top} of ${samples} samples` });
       if (prompts.size < minDistinct)
         issues.push({ severity: "warning", path, message: `only ${prompts.size} distinct prompts in ${samples} samples` });
     });
@@ -74,7 +85,13 @@ export function sampleGenerators(subject: CompiledSubject, options: SampleOption
   return issues;
 }
 
-function checkSample(subject: CompiledSubject, topic: TopicDef, kp: number, seed: number): string | undefined {
+function checkSample(
+  subject: CompiledSubject,
+  topic: TopicDef,
+  kp: number,
+  seed: number,
+  textIssue: SampleOptions["textIssue"],
+): string | undefined {
   let a: Problem;
   let b: Problem;
   try {
@@ -90,6 +107,15 @@ function checkSample(subject: CompiledSubject, topic: TopicDef, kp: number, seed
     for (const s of [a.prompt[locale], a.solution[locale]]) {
       if (/NaN|undefined|Infinity|\[object Object\]/.test(s))
         return `text contains ${s.match(/NaN|undefined|Infinity|\[object Object\]/)![0]}`;
+    }
+  }
+  if (textIssue) {
+    const texts = [a.prompt, a.solution, ...(a.answer.input.kind === "choice" ? a.answer.input.options : [])];
+    for (const locale of locales) {
+      for (const text of texts.filter(isText)) {
+        const found = textIssue(text[locale], locale);
+        if (found) return `${found}: ${text[locale]}`;
+      }
     }
   }
   const figure = a.figure && figureIssue(a.figure);

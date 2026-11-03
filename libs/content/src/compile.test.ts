@@ -175,6 +175,32 @@ describe("sampleGenerators", () => {
     expect(sampleGenerators(s, { samples: 5, shard: { index: 1, count: 2 } }).map((i) => i.path)).toEqual(["topic b › kp kp"]);
   });
 
+  it("reports texts that break the subject's writing rules", () => {
+    const issues = sampleGenerators(
+      withGenerator(() => problem(1)),
+      {
+        samples: 5,
+        textIssue: (text, locale) => (locale === "en" && text.includes("1") ? "no ones" : undefined),
+      },
+    );
+    expect(issues.map((i) => i.message)[0]).toMatch(/^no ones: /);
+  });
+
+  it("reports choice answers that keep to one position", () => {
+    const choice = (expected: number): Problem => ({
+      ...problem(1),
+      answer: { checker: "choice", expected, input: { kind: "choice", options: [same("a"), same("b")] } },
+      canonical: String(expected),
+      wrong: [String(1 - expected)],
+    });
+    const fixed = withGenerator(() => choice(0));
+    expect(sampleGenerators(fixed, { samples: 10, maxPositionShare: 0.8 }).map((i) => i.message)).toContain(
+      "the answer sits at one option position in 10 of 10 samples",
+    );
+    const varied = withGenerator((rng) => choice(rng.int(0, 1)));
+    expect(sampleGenerators(varied, { samples: 40, maxPositionShare: 0.8 }).filter((i) => i.severity === "error")).toEqual([]);
+  });
+
   it("warns about generators without variety", () => {
     const issues = sampleGenerators(
       withGenerator(() => problem(1)),
