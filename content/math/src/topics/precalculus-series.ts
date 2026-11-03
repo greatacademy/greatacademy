@@ -1,6 +1,6 @@
-import type { Problem, Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
-import { dec, linear, num, poly, Q } from "@ga/subject-math";
+import { dec, linear, num, poly, Q, svgDocument } from "@ga/subject-math";
 
 import { choiceProblem, expressionProblem, numberProblem, steps } from "../problems.ts";
 
@@ -1922,6 +1922,23 @@ export const modelingFinancialProblemsUsingGeometricSeries: TopicDef = {
 
 // The binomial theorem.
 
+/** pascalFigure writes rows 0 to 6 of Pascal's triangle, with the row number n on the left; the entries listed as [row, k] in marked are highlighted, and axis draws the dashed line of symmetry. */
+function pascalFigure(marked: readonly (readonly [number, number])[], alt: Text, axis = false): Figure {
+  const [cx, dx, dy, top] = [175, 30, 26, 22];
+  let body = axis ? `<line x1="${cx}" y1="${top - 14}" x2="${cx}" y2="${top + 6 * dy + 10}" stroke-dasharray="4 3" stroke-width="1"/>` : "";
+  for (let n = 0; n <= 6; n++) {
+    const y = top + n * dy;
+    body += `<text x="22" y="${y + 4}" stroke="none" fill="currentColor" font-size="10" font-style="italic">n = ${n}</text>`;
+    for (let k = 0; k <= n; k++) {
+      const x = cx + (k - n / 2) * dx;
+      const hit = marked.some(([r, c]) => r === n && c === k);
+      if (hit) body += `<circle class="accent" cx="${x}" cy="${y}" r="11" stroke-width="2"/>`;
+      body += `<text x="${x}" y="${y + 4}" stroke="none" fill="currentColor">${choose(n, k)}</text>`;
+    }
+  }
+  return { svg: svgDocument(top + 6 * dy + 16, body), alt };
+}
+
 /** pascalsTriangleAndTheBinomialCoefficients connects the entries of Pascal's triangle to binomial coefficients. */
 export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
   id: "pascals-triangle-and-the-binomial-coefficients",
@@ -1944,6 +1961,13 @@ export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
       explanation: t(
         "Number the rows of Pascal's triangle from $0$, so that row $n$ starts $1, n$. The entries of row $n$ are the **binomial coefficients**\n\n$$\\binom{n}{0}, \\binom{n}{1}, \\binom{n}{2}, \\ldots, \\binom{n}{n}$$\n\nso the $j$th number in row $n$ is $\\binom{n}{j - 1}$. For example row $5$ is $1, 5, 10, 10, 5, 1$, and its $3$rd number is $\\binom{5}{2} = 10$. This lets you find any entry without writing the rows above it: the $4$th number in row $12$ is $\\binom{12}{3} = 220$.",
         "杨辉三角的行从 $0$ 开始编号，第 $n$ 行以 $1, n$ 开头。第 $n$ 行的数就是**二项式系数**\n\n$$\\binom{n}{0}, \\binom{n}{1}, \\binom{n}{2}, \\ldots, \\binom{n}{n}$$\n\n所以第 $n$ 行的第 $j$ 个数是 $\\binom{n}{j - 1}$。例如第 $5$ 行是 $1, 5, 10, 10, 5, 1$，其中第 $3$ 个数是 $\\binom{5}{2} = 10$。这样不必写出上面各行就能求出任意一个数：第 $12$ 行的第 $4$ 个数是 $\\binom{12}{3} = 220$。",
+      ),
+      figure: pascalFigure(
+        [[5, 2]],
+        t(
+          "Rows 0 to 6 of Pascal's triangle: 1; 1 1; 1 2 1; 1 3 3 1; 1 4 6 4 1; 1 5 10 10 5 1; 1 6 15 20 15 6 1. The 3rd number of row 5, 10, is circled: it is C(5, 2).",
+          "杨辉三角的第 0 行到第 6 行：1；1 1；1 2 1；1 3 3 1；1 4 6 4 1；1 5 10 10 5 1；1 6 15 20 15 6 1。第 5 行的第 3 个数 10 被圈出：它是 C(5, 2)。",
+        ),
       ),
       generate(rng) {
         const n = rng.int(7, 16);
@@ -1970,6 +1994,17 @@ export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
       explanation: t(
         "Each entry of Pascal's triangle is the sum of the two entries above it. In binomial coefficients this is **Pascal's rule**:\n\n$$\\binom{n}{k} + \\binom{n}{k+1} = \\binom{n+1}{k+1}$$\n\nFor example $\\binom{9}{3} + \\binom{9}{4} = 84 + 126 = 210 = \\binom{10}{4}$. The rule also gives one of the two upper entries from the lower one: $\\binom{9}{4} = \\binom{10}{4} - \\binom{9}{3}$.",
         "杨辉三角中每个数都等于它上方两个数之和。用二项式系数表示，就是**帕斯卡法则**：\n\n$$\\binom{n}{k} + \\binom{n}{k+1} = \\binom{n+1}{k+1}$$\n\n例如 $\\binom{9}{3} + \\binom{9}{4} = 84 + 126 = 210 = \\binom{10}{4}$。这个法则也可以由下面的数求出上面两个数中的一个：$\\binom{9}{4} = \\binom{10}{4} - \\binom{9}{3}$。",
+      ),
+      figure: pascalFigure(
+        [
+          [5, 2],
+          [5, 3],
+          [6, 3],
+        ],
+        t(
+          "Rows 0 to 6 of Pascal's triangle with 10 and 10 in row 5 circled together with the 20 below them in row 6: 10 + 10 = 20, so C(5, 2) + C(5, 3) = C(6, 3).",
+          "杨辉三角的第 0 行到第 6 行，第 5 行的 10 和 10 与它们下方第 6 行的 20 一起被圈出：10 + 10 = 20，即 C(5, 2) + C(5, 3) = C(6, 3)。",
+        ),
       ),
       generate(rng) {
         const n = rng.int(10, 20);
@@ -2013,6 +2048,17 @@ export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
       explanation: t(
         "Each row of Pascal's triangle reads the same from both ends, because choosing $k$ objects from $n$ is the same as choosing the $n - k$ to leave out:\n\n$$\\binom{n}{k} = \\binom{n}{n - k}$$\n\nSo if $\\binom{n}{3} = \\binom{n}{8}$ with $3 \\ne 8$, the two lower numbers add to $n$: $n = 3 + 8 = 11$.",
         "杨辉三角的每一行从两端读起都一样，因为从 $n$ 个物体中选出 $k$ 个，等同于选出不要的 $n - k$ 个：\n\n$$\\binom{n}{k} = \\binom{n}{n - k}$$\n\n所以若 $\\binom{n}{3} = \\binom{n}{8}$ 且 $3 \\ne 8$，则下面的两个数之和是 $n$：$n = 3 + 8 = 11$。",
+      ),
+      figure: pascalFigure(
+        [
+          [6, 2],
+          [6, 4],
+        ],
+        t(
+          "Rows 0 to 6 of Pascal's triangle with a dashed vertical line of symmetry down the middle. In row 6 the two 15s, C(6, 2) and C(6, 4), are circled: they are mirror images, and 2 + 4 = 6.",
+          "杨辉三角的第 0 行到第 6 行，中间有一条竖直的虚线对称轴。第 6 行的两个 15，即 C(6, 2) 和 C(6, 4)，被圈出：它们互为镜像，且 2 + 4 = 6。",
+        ),
+        true,
       ),
       generate(rng) {
         const a = rng.int(1, 9);
