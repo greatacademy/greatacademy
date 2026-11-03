@@ -175,6 +175,39 @@ export const convergenceOfGeometricSequences: TopicDef = {
         );
       },
     },
+    {
+      id: "rewriting-as-a-geometric-sequence",
+      title: t("Rewriting a quotient of powers as $c \\cdot r^n$", "把幂的商改写成 $c \\cdot r^n$"),
+      explanation: t(
+        "A quotient of powers such as $\\frac{3^{n+1}}{4^{n}}$ is a geometric sequence once it is rewritten as $c \\cdot r^{n}$: $\\frac{3^{n+1}}{4^{n}} = 3 \\cdot \\left(\\frac{3}{4}\\right)^{n}$. Its ratio is $\\frac{3}{4}$, so it tends to $0$. Likewise $\\frac{2 \\cdot 5^{n+2}}{2^{n}} = 50 \\left(\\frac{5}{2}\\right)^{n} \\to \\infty$. Pull the extra factors of the base out first, then judge the ratio.",
+        "像 $\\frac{3^{n+1}}{4^{n}}$ 这样的幂的商，改写成 $c \\cdot r^{n}$ 后就是等比数列：$\\frac{3^{n+1}}{4^{n}} = 3 \\cdot \\left(\\frac{3}{4}\\right)^{n}$。公比为 $\\frac{3}{4}$，所以趋于 $0$。同样，$\\frac{2 \\cdot 5^{n+2}}{2^{n}} = 50 \\left(\\frac{5}{2}\\right)^{n} \\to \\infty$。先把底数多出的因子提出来，再判断公比。",
+      ),
+      generate(rng) {
+        const b = rng.pick([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7]);
+        const d = rng.bool(0.15) ? Math.abs(b) : rng.int(2, 7);
+        const s = rng.int(1, 2);
+        const p = rng.nonZero(-4, 4);
+        const c = p * b ** s;
+        const r = Q.of(b, d);
+        const v = r.toNumber();
+        const right: LimitValue = Math.abs(v) < 1 ? Q.zero : v === 1 ? Q.of(c) : v > 1 ? (c > 0 ? "inf" : "-inf") : "dne";
+        const base = b < 0 ? `(${b})` : `${b}`;
+        const expr = `\\frac{${term(p, `${base}^{n + ${s}}`)}}{${d}^{n}}`;
+        const rewritten = `${c} ${powN(r)}`;
+        return limitChoice(
+          rng,
+          t(`Find $${limN} ${expr}$.`, `求 $${limN} ${expr}$。`),
+          right,
+          [Q.of(c), Q.zero, Q.of(p)],
+          t(
+            `Rewrite it as $${expr} = ${rewritten}$, a geometric sequence with ratio $r = ${r.toLatex()}$. ${Math.abs(v) < 1 ? "Since $|r| < 1$, the terms tend to $0$" : v === 1 ? `Since $r = 1$, every term equals $${c}$` : v > 1 ? `Since $r > 1$, the terms grow without bound with the sign of $${c}$` : "Since $r \\le -1$, the terms alternate in sign without shrinking"}; ${limitWord(right).en}.`,
+            `改写为 $${expr} = ${rewritten}$，这是公比 $r = ${r.toLatex()}$ 的等比数列。${Math.abs(v) < 1 ? "因为 $|r| < 1$，各项趋于 $0$" : v === 1 ? `因为 $r = 1$，每一项都等于 $${c}$` : v > 1 ? `因为 $r > 1$，各项按 $${c}$ 的符号无界增长` : "因为 $r \\le -1$，各项正负交替且不变小"}；${limitWord(right)["zh-CN"]}。`,
+          ),
+          undefined,
+          true,
+        );
+      },
+    },
   ],
 };
 
@@ -404,6 +437,34 @@ export const determiningLimitsOfSequencesUsingRelativeMagnitudes: TopicDef = {
         });
       },
     },
+    {
+      id: "a-dominant-term-under-a-root",
+      title: t("A dominant term under a square root", "根号下的主导项"),
+      explanation: t(
+        "Under a square root, the dominant part is the square root of the dominant term inside: for large $n$, $\\sqrt{9n^{4} + 5n}$ behaves like $\\sqrt{9n^{4}} = 3n^{2}$. So $\\frac{\\sqrt{9n^{4} + 5n}}{2n^{2} - \\ln n}$ behaves like $\\frac{3n^{2}}{2n^{2}}$ and tends to $\\frac{3}{2}$. Dividing the numerator by $n^{2}$ is the same as dividing inside the root by $n^{4}$.",
+        "在根号下，占主导的部分是根号内主导项的平方根：$n$ 很大时，$\\sqrt{9n^{4} + 5n}$ 的表现与 $\\sqrt{9n^{4}} = 3n^{2}$ 相同。所以 $\\frac{\\sqrt{9n^{4} + 5n}}{2n^{2} - \\ln n}$ 的表现与 $\\frac{3n^{2}}{2n^{2}}$ 相同，趋于 $\\frac{3}{2}$。分子除以 $n^{2}$，相当于在根号内除以 $n^{4}$。",
+      ),
+      generate(rng) {
+        const pw = (e: number) => (e === 1 ? "n" : `n^{${e}}`);
+        const a = rng.int(1, 6);
+        const k = rng.int(1, 3);
+        const j = rng.int(0, 2 * k - 1);
+        const q = rng.int(1, 9);
+        const inside = plus(term(a * a, pw(2 * k)), term(rng.nonZero(-9, 9), j === 0 ? "" : pw(j)));
+        const lower = k === 1 ? "\\ln n" : rng.pick(["\\ln n", pw(k - 1)]);
+        const bottom = plus(term(q, pw(k)), term(rng.nonZero(-5, 5), lower));
+        const answer = Q.of(a, q);
+        return numberProblem({
+          prompt: t(`Find $${limN} \\frac{\\sqrt{${inside}}}{${bottom}}$.`, `求 $${limN} \\frac{\\sqrt{${inside}}}{${bottom}}$。`),
+          answer,
+          wrong: [Q.of(a * a, q), Q.of(q, a), Q.zero],
+          solution: t(
+            `Inside the root the dominant term is $${a * a}${pw(2 * k)}$, so the numerator behaves like $\\sqrt{${a * a}${pw(2 * k)}} = ${term(a, pw(k))}$. The denominator's dominant term is $${term(q, pw(k))}$. Dividing both by $${pw(k)}$, the limit is $\\frac{${a}}{${q}} = ${answer.toLatex()}$.`,
+            `根号内的主导项是 $${a * a}${pw(2 * k)}$，所以分子的表现与 $\\sqrt{${a * a}${pw(2 * k)}} = ${term(a, pw(k))}$ 相同。分母的主导项是 $${term(q, pw(k))}$。分子分母同除以 $${pw(k)}$，极限为 $\\frac{${a}}{${q}} = ${answer.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -458,6 +519,37 @@ export const furtherDeterminingLimitsOfSequencesUsingRelativeMagnitudes: TopicDe
           right,
           [Q.of(p, q), Q.zero],
           t(`By $${hierarchy}$, ${why.en}; ${limitWord(right).en}.`, `由 $${hierarchy}$，${why["zh-CN"]}；${limitWord(right)["zh-CN"]}。`),
+        );
+      },
+    },
+    {
+      id: "comparing-terms-of-the-same-kind",
+      title: t("Comparing terms of the same kind", "比较同类的项"),
+      explanation: t(
+        "Terms of the same kind are ordered too. Among exponentials the larger base wins, since $\\frac{2^{n}}{3^{n}} = \\left(\\frac{2}{3}\\right)^{n} \\to 0$; among powers of $n$ the larger exponent wins, since $\\frac{n^{2}}{n^{3}} = \\frac{1}{n} \\to 0$. So $\\frac{5 \\cdot 4^{n} + n}{3^{n} + n^{2}} \\to \\infty$, while $\\frac{n^{2} + 1}{4n^{3} - \\ln n} \\to 0$.",
+        "同类的项之间也有快慢之分。指数项中底数大的增长更快，因为 $\\frac{2^{n}}{3^{n}} = \\left(\\frac{2}{3}\\right)^{n} \\to 0$；$n$ 的幂中指数大的增长更快，因为 $\\frac{n^{2}}{n^{3}} = \\frac{1}{n} \\to 0$。所以 $\\frac{5 \\cdot 4^{n} + n}{3^{n} + n^{2}} \\to \\infty$，而 $\\frac{n^{2} + 1}{4n^{3} - \\ln n} \\to 0$。",
+      ),
+      generate(rng) {
+        const exponential = rng.bool();
+        const [b, c] = [rng.int(2, 7), rng.int(2, 7)];
+        const p = rng.nonZero(-9, 9);
+        const q = rng.nonZero(-9, 9);
+        const lead = (v: number) => (exponential ? `${v}^{n}` : `n^{${v}}`);
+        const top = plus(term(p, lead(b)), term(rng.nonZero(-5, 5), exponential ? "n^{2}" : "\\ln n"));
+        const bottom = plus(term(q, lead(c)), term(rng.int(1, 5), exponential ? "n" : ""));
+        const right: LimitValue = b < c ? Q.zero : b > c ? (p * q > 0 ? "inf" : "-inf") : Q.of(p, q);
+        const kind = exponential
+          ? t("exponentials, the larger base", "指数项中底数大的")
+          : t("powers of $n$, the larger exponent", "$n$ 的幂中指数大的");
+        return limitChoice(
+          rng,
+          t(`Find $${limN} \\frac{${top}}{${bottom}}$.`, `求 $${limN} \\frac{${top}}{${bottom}}$。`),
+          right,
+          [Q.of(p, q), Q.zero],
+          t(
+            `The dominant terms are $${lead(b)}$ above and $${lead(c)}$ below. Among ${kind.en} grows faster, so ${b < c ? "the denominator wins" : b > c ? `the numerator wins and the sign is that of $\\frac{${p}}{${q}}$` : `they match and the limit is the ratio $\\frac{${p}}{${q}}$`}; ${limitWord(right).en}.`,
+            `分子的主导项是 $${lead(b)}$，分母的是 $${lead(c)}$。${kind["zh-CN"]}增长更快，所以${b < c ? "分母占优" : b > c ? `分子占优，符号与 $\\frac{${p}}{${q}}$ 相同` : `两者相同，极限为系数之比 $\\frac{${p}}{${q}}$`}；${limitWord(right)["zh-CN"]}。`,
+          ),
         );
       },
     },
@@ -632,6 +724,37 @@ export const identifyingMonotonicSequencesUsingDifferentiation: TopicDef = {
             `由商的求导法则，$f'(x) = \\frac{${k * k} - x^{2}}{(x^{2} + ${k * k})^{2}}$，在 $0 < x < ${k}$ 时为正，在 $x > ${k}$ 时为负。所以各项增大到 $a_{${k}}$，之后递减：$N = ${k}$。`,
           ),
         });
+      },
+    },
+    {
+      id: "monotonic-quotients-of-linear-terms",
+      title: t("Quotients of linear terms", "一次式之商"),
+      explanation: t(
+        "For $a_n = \\frac{pn + q}{rn + s}$ with $rn + s > 0$, the quotient rule gives $f'(x) = \\frac{ps - qr}{(rx + s)^{2}}$. The denominator is positive, so the sign of $ps - qr$ decides for every $n$ at once: the sequence is increasing when $ps - qr > 0$ and decreasing when $ps - qr < 0$. For $\\frac{2n + 1}{n + 3}$, $ps - qr = 6 - 1 = 5 > 0$, so it increases toward its limit $2$.",
+        "对 $a_n = \\frac{pn + q}{rn + s}$（$rn + s > 0$），由商的求导法则 $f'(x) = \\frac{ps - qr}{(rx + s)^{2}}$。分母为正，所以 $ps - qr$ 的符号对所有 $n$ 一次性决定了结果：$ps - qr > 0$ 时数列递增，$ps - qr < 0$ 时数列递减。对 $\\frac{2n + 1}{n + 3}$，$ps - qr = 6 - 1 = 5 > 0$，所以它递增并趋于极限 $2$。",
+      ),
+      generate(rng) {
+        let [p, q, r, s] = [0, 0, 0, 0];
+        do [p, q, r, s] = [rng.int(1, 9), rng.nonZero(-9, 9), rng.int(1, 9), rng.int(1, 9)];
+        while (p * s === q * r);
+        const det = p * s - q * r;
+        const an = `\\frac{${linear(p, q, "n")}}{${linear(r, s, "n")}}`;
+        const increasing = t("It is increasing.", "递增。");
+        const decreasing = t("It is decreasing.", "递减。");
+        return oneOf(
+          rng,
+          t(`Is the sequence $a_n = ${an}$, $n \\ge 1$, increasing or decreasing?`, `数列 $a_n = ${an}$（$n \\ge 1$）是递增还是递减？`),
+          det > 0 ? increasing : decreasing,
+          [
+            det > 0 ? decreasing : increasing,
+            t("It increases and then decreases.", "先增后减。"),
+            t("It decreases and then increases.", "先减后增。"),
+          ],
+          t(
+            `With $f(x) = \\frac{${linear(p, q, "x")}}{${linear(r, s, "x")}}$, $f'(x) = \\frac{${p} \\cdot ${s} - (${q}) \\cdot ${r}}{(${linear(r, s, "x")})^{2}} = \\frac{${det}}{(${linear(r, s, "x")})^{2}}$, which is ${det > 0 ? "positive" : "negative"} for every $x \\ge 1$. So the sequence is ${det > 0 ? "increasing" : "decreasing"}.`,
+            `设 $f(x) = \\frac{${linear(p, q, "x")}}{${linear(r, s, "x")}}$，则 $f'(x) = \\frac{${p} \\cdot ${s} - (${q}) \\cdot ${r}}{(${linear(r, s, "x")})^{2}} = \\frac{${det}}{(${linear(r, s, "x")})^{2}}$，对每个 $x \\ge 1$ 都${det > 0 ? "为正" : "为负"}。所以数列${det > 0 ? "递增" : "递减"}。`,
+          ),
+        );
       },
     },
   ],
@@ -950,6 +1073,36 @@ export const propertiesOfInfiniteSeries: TopicDef = {
         });
       },
     },
+    {
+      id: "a-series-recovered-from-a-combination",
+      title: t("A series recovered from a combination", "由线性组合求出某个级数"),
+      explanation: t(
+        "Linearity also runs backward. If $\\sum (a_n + 2b_n) = 7$ and $\\sum a_n = 3$ both converge, then $\\sum 2b_n = 7 - 3 = 4$, so $\\sum b_n = 2$ and, for instance, $\\sum 5b_n = 10$. Subtract the known series first, then divide by the coefficient, then scale to what is asked.",
+        "线性性质也可以反过来用。若 $\\sum (a_n + 2b_n) = 7$ 与 $\\sum a_n = 3$ 都收敛，则 $\\sum 2b_n = 7 - 3 = 4$，所以 $\\sum b_n = 2$，例如 $\\sum 5b_n = 10$。先减去已知的级数，再除以系数，最后按所求的倍数放大。",
+      ),
+      generate(rng) {
+        const A = Q.of(rng.nonZero(-12, 12), rng.pick([1, 1, 2]));
+        const B = Q.of(rng.nonZero(-12, 12), rng.pick([1, 1, 3]));
+        const k = rng.pick([1, 2, 3, -1, -2]);
+        const c = rng.pick([2, 3, 4, 5, -2, -3]);
+        const S = A.add(B.mul(Q.of(k)));
+        const answer = B.mul(Q.of(c));
+        // A negative multiple goes in parentheses so the sum does not read as a negated sum.
+        const times = (m: number) => (m < 0 ? `(${term(m, "b_n")})` : term(m, "b_n"));
+        return numberProblem({
+          prompt: t(
+            `Given that $${sigmaInf(`(${plus("a_n", term(k, "b_n"))})`)} = ${S.toLatex()}$ and $${sigmaInf("a_n")} = ${A.toLatex()}$, find $${sigmaInf(times(c))}$.`,
+            `已知 $${sigmaInf(`(${plus("a_n", term(k, "b_n"))})`)} = ${S.toLatex()}$，$${sigmaInf("a_n")} = ${A.toLatex()}$，求 $${sigmaInf(times(c))}$。`,
+          ),
+          answer,
+          wrong: [S.sub(A).mul(Q.of(c)), S.add(A).div(Q.of(k)).mul(Q.of(c)), B, S.sub(A).div(Q.of(c))],
+          solution: t(
+            `Subtracting, $${sigmaInf(times(k))} = ${S.toLatex()} - ${parenQ(A)} = ${S.sub(A).toLatex()}$, so $${sigmaInf("b_n")} = ${B.toLatex()}$ and $${sigmaInf(times(c))} = ${c} \\cdot ${parenQ(B)} = ${answer.toLatex()}$.`,
+            `相减得 $${sigmaInf(times(k))} = ${S.toLatex()} - ${parenQ(A)} = ${S.sub(A).toLatex()}$，所以 $${sigmaInf("b_n")} = ${B.toLatex()}$，$${sigmaInf(times(c))} = ${c} \\cdot ${parenQ(B)} = ${answer.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1189,6 +1342,47 @@ export const findingTheSumOfAnInfiniteGeometricSeries: TopicDef = {
           solution: t(
             `The first term is $a = ${g.a.toLatex()}$ and the common ratio is $r = ${g.r.toLatex()}$, with $|r| < 1$. So $S = \\frac{${g.a.toLatex()}}{1 - ${parenQ(g.r)}} = ${answer.toLatex()}$.`,
             `首项 $a = ${g.a.toLatex()}$，公比 $r = ${g.r.toLatex()}$，且 $|r| < 1$。所以 $S = \\frac{${g.a.toLatex()}}{1 - ${parenQ(g.r)}} = ${answer.toLatex()}$。`,
+          ),
+        });
+      },
+    },
+    {
+      id: "a-missing-term-or-ratio-from-the-sum",
+      title: t("A first term or ratio from the sum", "由和求首项或公比"),
+      explanation: t(
+        "Since $S = \\frac{a}{1 - r}$, knowing two of $S$, $a$ and $r$ gives the third. Solving for $r$: $1 - r = \\frac{a}{S}$, so $r = 1 - \\frac{a}{S}$. A geometric series with first term $6$ and sum $9$ has $r = 1 - \\frac{6}{9} = \\frac{1}{3}$. Solving for $a$: $a = S(1 - r)$. Check that the ratio found has $|r| < 1$, or the series has no sum.",
+        "由 $S = \\frac{a}{1 - r}$，已知 $S$、$a$、$r$ 中的两个就能求出第三个。解出 $r$：$1 - r = \\frac{a}{S}$，所以 $r = 1 - \\frac{a}{S}$。首项为 $6$、和为 $9$ 的等比级数 $r = 1 - \\frac{6}{9} = \\frac{1}{3}$。解出 $a$：$a = S(1 - r)$。要检查求得的公比满足 $|r| < 1$，否则级数没有和。",
+      ),
+      generate(rng) {
+        const den = rng.int(2, 6);
+        const r = Q.of(rng.nonZero(1 - den, den - 1), den);
+        const a = Q.of(rng.nonZero(-12, 12));
+        const S = a.div(Q.one.sub(r));
+        if (rng.bool())
+          return numberProblem({
+            prompt: t(
+              `An infinite geometric series has first term $${a.toLatex()}$ and sum $${S.toLatex()}$. Find its common ratio $r$.`,
+              `一个无穷等比级数的首项为 $${a.toLatex()}$，和为 $${S.toLatex()}$。求它的公比 $r$。`,
+            ),
+            answer: r,
+            solveFor: "r",
+            wrong: [a.div(S), Q.one.add(a.div(S)), S.div(a)],
+            solution: t(
+              `From $S = \\frac{a}{1 - r}$, $1 - r = \\frac{a}{S} = ${a.div(S).toLatex()}$, so $r = ${r.toLatex()}$, and $|r| < 1$ as it must be.`,
+              `由 $S = \\frac{a}{1 - r}$ 得 $1 - r = \\frac{a}{S} = ${a.div(S).toLatex()}$，所以 $r = ${r.toLatex()}$，且满足 $|r| < 1$。`,
+            ),
+          });
+        return numberProblem({
+          prompt: t(
+            `An infinite geometric series has common ratio $${r.toLatex()}$ and sum $${S.toLatex()}$. Find its first term $a$.`,
+            `一个无穷等比级数的公比为 $${r.toLatex()}$，和为 $${S.toLatex()}$。求它的首项 $a$。`,
+          ),
+          answer: a,
+          solveFor: "a",
+          wrong: [S.mul(Q.one.add(r)), S.mul(r), S.div(Q.one.sub(r))],
+          solution: t(
+            `From $S = \\frac{a}{1 - r}$, $a = S(1 - r) = ${S.toLatex()} \\cdot \\left(1 - ${parenQ(r)}\\right) = ${a.toLatex()}$.`,
+            `由 $S = \\frac{a}{1 - r}$ 得 $a = S(1 - r) = ${S.toLatex()} \\cdot \\left(1 - ${parenQ(r)}\\right) = ${a.toLatex()}$。`,
           ),
         });
       },
