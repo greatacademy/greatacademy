@@ -115,6 +115,25 @@ function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solu
   return choiceProblem({ prompt, options: order.map((i) => options[i]!), correct: order.indexOf(0), solution });
 }
 
+/** symFromEigen is the symmetric matrix with eigenvalue l1 on (1, k) and l2 on (-k, 1); l1 - l2 must be a multiple of 1 + k^2. */
+function symFromEigen(l1: number, l2: number, k: number): Mat2 {
+  const n = 1 + k * k;
+  const off = (k * (l1 - l2)) / n;
+  return [
+    [(l1 + l2 * k * k) / n, off],
+    [off, (l1 * k * k + l2) / n],
+  ];
+}
+
+/** pickEigenPair draws distinct integer eigenvalues l1, l2 and a slope k in {1, 2} that make symFromEigen integral. */
+function pickEigenPair(rng: Rng, lo: number, hi: number): [number, number, number] {
+  const k = rng.int(1, 2);
+  const n = 1 + k * k;
+  const l1 = rng.int(lo, hi);
+  const steps = rng.pick([-2, -1, 1, 2]);
+  return [l1, l1 + steps * n, k];
+}
+
 // ════════════════════════════════════════════════════════════════════════════
 // MODULE 7.25: DIAGONALIZATION OF SYMMETRIC MATRICES
 // ════════════════════════════════════════════════════════════════════════════
@@ -167,6 +186,49 @@ export const symmetricMatrices: TopicDef = {
             [u1, u2],
             [-u2, u1],
           ],
+        });
+      },
+    },
+    {
+      id: "making-a-matrix-symmetric",
+      title: t("Making a matrix symmetric", "使矩阵成为对称矩阵"),
+      explanation: t(
+        "A square matrix is symmetric when $A^T = A$, that is, $a_{ij} = a_{ji}$ for every pair of positions mirrored across the main diagonal. The diagonal entries are unrestricted. To make a matrix with an unknown entry symmetric, set that entry equal to its mirror image and solve the resulting equation.",
+        "方阵满足 $A^T = A$，即关于主对角线对称的每对位置都有 $a_{ij} = a_{ji}$ 时，称为对称矩阵。对角元不受限制。要让含未知元的矩阵对称，令该元等于它的镜像元并解所得方程。",
+      ),
+      generate(rng: Rng): Problem {
+        const p = rng.pick([2, 3, 4, -2, -3]);
+        const x = rng.nonZero(-5, 5);
+        const q = rng.int(-6, 6);
+        const v = p * x + q;
+        const pos = rng.int(0, 2);
+        const others = [rng.int(-5, 9), rng.int(-5, 9), rng.int(-5, 9)];
+        const expr = `${p}x ${q === 0 ? "" : q > 0 ? `+ ${q}` : `- ${-q}`}`.trim();
+        const m: string[][] = [
+          [String(others[0]), "", ""],
+          ["", String(others[1]), ""],
+          ["", "", String(others[2])],
+        ];
+        const e = [rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6)];
+        const pairs = [
+          [0, 1],
+          [0, 2],
+          [1, 2],
+        ] as const;
+        pairs.forEach(([i, j], idx) => {
+          m[i]![j] = idx === pos ? expr : String(e[idx]);
+          m[j]![i] = idx === pos ? String(v) : String(e[idx]);
+        });
+        const [i, j] = pairs[pos]!;
+        const latex = `\\begin{pmatrix} ${m.map((r) => r.join(" & ")).join(" \\\\ ")} \\end{pmatrix}`;
+        return numberProblem({
+          prompt: t(`Find $x$ so that $${latex}$ is symmetric.`, `求 $x$，使 $${latex}$ 为对称矩阵。`),
+          answer: x,
+          wrong: [v - q, -x, Q.of(v, p), Q.of(v + q, p)],
+          solution: t(
+            `Symmetry requires $a_{${i + 1}${j + 1}} = a_{${j + 1}${i + 1}}$: $${expr} = ${v}$, so $x = ${x}$.`,
+            `对称要求 $a_{${i + 1}${j + 1}} = a_{${j + 1}${i + 1}}$：$${expr} = ${v}$，所以 $x = ${x}$。`,
+          ),
         });
       },
     },
@@ -284,6 +346,55 @@ export const diagonalizationOf2x2SymmetricMatrices: TopicDef = {
         return oneOf(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "rebuilding-a-symmetric-matrix-from-its-eigen-data",
+      title: t("Rebuilding a symmetric matrix from $P$ and $D$", "由 $P$ 与 $D$ 还原对称矩阵"),
+      explanation: t(
+        "An orthogonal diagonalization $A = PDP^T$ can be run backwards. If the unit eigenvectors are $\\frac{1}{\\sqrt{n}}(1, k)$ for $\\lambda_1$ and $\\frac{1}{\\sqrt{n}}(-k, 1)$ for $\\lambda_2$, with $n = 1 + k^2$, then multiplying out gives\n\n$$A = \\frac{1}{n}\\begin{pmatrix} \\lambda_1 + k^2\\lambda_2 & k(\\lambda_1 - \\lambda_2) \\\\ k(\\lambda_1 - \\lambda_2) & k^2\\lambda_1 + \\lambda_2 \\end{pmatrix}.$$\n\nThe result is automatically symmetric, and its trace is $\\lambda_1 + \\lambda_2$.",
+        "正交对角化 $A = PDP^T$ 可以反过来用。若 $\\lambda_1$ 的单位特征向量为 $\\frac{1}{\\sqrt{n}}(1, k)$，$\\lambda_2$ 的为 $\\frac{1}{\\sqrt{n}}(-k, 1)$，$n = 1 + k^2$，则乘开得\n\n$$A = \\frac{1}{n}\\begin{pmatrix} \\lambda_1 + k^2\\lambda_2 & k(\\lambda_1 - \\lambda_2) \\\\ k(\\lambda_1 - \\lambda_2) & k^2\\lambda_1 + \\lambda_2 \\end{pmatrix}。$$\n\n结果自然是对称的，迹为 $\\lambda_1 + \\lambda_2$。",
+      ),
+      generate(rng: Rng): Problem {
+        const [l1, l2, k] = pickEigenPair(rng, -4, 6);
+        const A = symFromEigen(l1, l2, k);
+        const n = 1 + k * k;
+        const ans = [A[0][0], A[0][1], A[1][1]] as const;
+        return pointProblem({
+          prompt: t(
+            `A symmetric matrix $A = PDP^T$ has $P = \\frac{1}{\\sqrt{${n}}}${mat2Latex([
+              [1, -k],
+              [k, 1],
+            ])}$ and $D = ${mat2Latex([
+              [l1, 0],
+              [0, l2],
+            ])}$. Enter $(a_{11}, a_{12}, a_{22})$.`,
+            `对称矩阵 $A = PDP^T$，$P = \\frac{1}{\\sqrt{${n}}}${mat2Latex([
+              [1, -k],
+              [k, 1],
+            ])}$，$D = ${mat2Latex([
+              [l1, 0],
+              [0, l2],
+            ])}$。输入 $(a_{11}, a_{12}, a_{22})$。`,
+          ),
+          answer: ans,
+          vars: ["a_{11}", "a_{12}", "a_{22}"],
+          wrong: [
+            [A[1][1], A[0][1], A[0][0]],
+            [A[0][0], -A[0][1], A[1][1]],
+            [l1, 0, l2],
+          ],
+          solution: t(
+            `$A = \\frac{1}{${n}}${mat2Latex([
+              [l1 + l2 * k * k, k * (l1 - l2)],
+              [k * (l1 - l2), l1 * k * k + l2],
+            ])} = ${mat2Latex(A)}$. Check: the trace is $${A[0][0] + A[1][1]} = ${l1} + ${l2 < 0 ? `(${l2})` : l2}$.`,
+            `$A = \\frac{1}{${n}}${mat2Latex([
+              [l1 + l2 * k * k, k * (l1 - l2)],
+              [k * (l1 - l2), l1 * k * k + l2],
+            ])} = ${mat2Latex(A)}$。检验：迹为 $${A[0][0] + A[1][1]} = ${l1} + ${l2 < 0 ? `(${l2})` : l2}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -344,6 +455,52 @@ export const diagonalizationOf3x3SymmetricMatrices: TopicDef = {
             [l1, l2, -c].sort((x, y) => x - y).map(String),
             [m - 2 * k, m + 2 * k, c].sort((x, y) => x - y).map(String),
           ],
+        });
+      },
+    },
+    {
+      id: "the-third-eigenvector-of-a-3x3-symmetric-matrix",
+      title: t("The third eigenvector by orthogonality", "用正交性求第三个特征向量"),
+      explanation: t(
+        "Eigenvectors of a symmetric matrix that belong to different eigenvalues are orthogonal. So if a $3 \\times 3$ symmetric matrix has three distinct eigenvalues and two of its eigenvectors $\\mathbf{v}_1, \\mathbf{v}_2$ are known, the third eigenvector must be orthogonal to both. The cross product $\\mathbf{v}_1 \\times \\mathbf{v}_2$ is such a vector, and any nonzero multiple of it works.",
+        "对称矩阵属于不同特征值的特征向量相互正交。所以若 $3 \\times 3$ 对称矩阵有三个不同特征值，且已知其中两个特征向量 $\\mathbf{v}_1, \\mathbf{v}_2$，则第三个特征向量必与二者都正交。叉积 $\\mathbf{v}_1 \\times \\mathbf{v}_2$ 就是这样的向量，它的任意非零倍数都可以。",
+      ),
+      generate(rng: Rng): Problem {
+        let v1: [number, number, number] = [1, rng.nonZero(-2, 2), rng.int(-2, 2)];
+        let v2: [number, number, number] = [0, 0, 0];
+        let c: [number, number, number] = [0, 0, 0];
+        for (let tries = 0; tries < 20; tries++) {
+          const a = rng.int(-2, 2);
+          const b = rng.nonZero(-2, 2);
+          // v2 = (x, a, b) with v1 · v2 = 0 fixes x.
+          const x = -(v1[1] * a + v1[2] * b);
+          v2 = [x, a, b];
+          c = [v1[1] * v2[2] - v1[2] * v2[1], v1[2] * v2[0] - v1[0] * v2[2], v1[0] * v2[1] - v1[1] * v2[0]];
+          if (c[0] !== 0) break;
+          v1 = [1, v1[1], v1[2] + 1];
+        }
+        if (c[0] === 0) {
+          v1 = [1, 1, 0];
+          v2 = [1, -1, 1];
+          c = [1, -1, -2];
+        }
+        const ans = [Q.of(1), Q.of(c[1], c[0]), Q.of(c[2], c[0])];
+        return pointProblem({
+          prompt: t(
+            `A $3 \\times 3$ symmetric matrix has three distinct eigenvalues, and $${vec3Latex(v1)}$ and $${vec3Latex(v2)}$ are eigenvectors for two of them. Find the eigenvector for the third eigenvalue scaled so that its first component is $1$.`,
+            `某 $3 \\times 3$ 对称矩阵有三个不同特征值，$${vec3Latex(v1)}$ 与 $${vec3Latex(v2)}$ 是其中两个特征值的特征向量。求第三个特征值的特征向量，并缩放使其第一个分量为 $1$。`,
+          ),
+          answer: ans,
+          vector: true,
+          vars: ["x_1", "x_2", "x_3"],
+          wrong: [
+            [Q.of(1), Q.of(-c[1], c[0]), Q.of(-c[2], c[0])],
+            [Q.of(1), Q.of(c[2], c[0]), Q.of(c[1], c[0])],
+          ],
+          solution: t(
+            `The third eigenvector is orthogonal to both, so take $\\mathbf{v}_1 \\times \\mathbf{v}_2 = ${vec3Latex(c)}$ and divide by $${c[0]}$.`,
+            `第三个特征向量与二者都正交，取 $\\mathbf{v}_1 \\times \\mathbf{v}_2 = ${vec3Latex(c)}$，再除以 $${c[0]}$。`,
+          ),
         });
       },
     },
@@ -452,6 +609,38 @@ export const spectralTheorem: TopicDef = {
         );
 
         return oneOf(rng, prompt, right, wrong, solution);
+      },
+    },
+    {
+      id: "applying-a-spectral-decomposition-to-a-vector",
+      title: t("Applying a spectral decomposition to a vector", "用谱分解作用于向量"),
+      explanation: t(
+        "The spectral theorem writes a symmetric matrix as $A = \\lambda_1\\mathbf{u}_1\\mathbf{u}_1^T + \\lambda_2\\mathbf{u}_2\\mathbf{u}_2^T$ with orthonormal eigenvectors $\\mathbf{u}_1, \\mathbf{u}_2$. To apply $A$ to a vector, write the vector in the eigenvector basis: if $\\mathbf{x} = \\alpha\\mathbf{v}_1 + \\beta\\mathbf{v}_2$ with eigenvectors $\\mathbf{v}_1, \\mathbf{v}_2$, then $A\\mathbf{x} = \\lambda_1\\alpha\\mathbf{v}_1 + \\lambda_2\\beta\\mathbf{v}_2$. Each component is simply scaled by its eigenvalue.",
+        "谱定理把对称矩阵写成 $A = \\lambda_1\\mathbf{u}_1\\mathbf{u}_1^T + \\lambda_2\\mathbf{u}_2\\mathbf{u}_2^T$，$\\mathbf{u}_1, \\mathbf{u}_2$ 为标准正交特征向量。要把 $A$ 作用于向量，先把向量写在特征向量基下：若 $\\mathbf{x} = \\alpha\\mathbf{v}_1 + \\beta\\mathbf{v}_2$，$\\mathbf{v}_1, \\mathbf{v}_2$ 为特征向量，则 $A\\mathbf{x} = \\lambda_1\\alpha\\mathbf{v}_1 + \\lambda_2\\beta\\mathbf{v}_2$。每个分量只是按其特征值缩放。",
+      ),
+      generate(rng: Rng): Problem {
+        const [l1, l2, k] = pickEigenPair(rng, -3, 5);
+        const al = rng.nonZero(-3, 3);
+        const be = rng.nonZero(-3, 3);
+        const x = [al - k * be, al * k + be] as const;
+        const ax = [l1 * al - l2 * k * be, l1 * al * k + l2 * be] as const;
+        return pointProblem({
+          prompt: t(
+            `A symmetric matrix $A$ has eigenvalue $${l1}$ with eigenvector $${vec2Latex([1, k])}$ and eigenvalue $${l2}$ with eigenvector $${vec2Latex([-k, 1])}$. Find $A\\mathbf{x}$ for $\\mathbf{x} = ${vec2Latex(x)}$.`,
+            `对称矩阵 $A$ 有特征值 $${l1}$，特征向量 $${vec2Latex([1, k])}$，以及特征值 $${l2}$，特征向量 $${vec2Latex([-k, 1])}$。对 $\\mathbf{x} = ${vec2Latex(x)}$ 求 $A\\mathbf{x}$。`,
+          ),
+          answer: ax,
+          vector: true,
+          wrong: [
+            [l1 * x[0], l2 * x[1]],
+            [l2 * al - l1 * k * be, l2 * al * k + l1 * be],
+            [(l1 + l2) * x[0], (l1 + l2) * x[1]],
+          ],
+          solution: t(
+            `$\\mathbf{x} = ${al}${vec2Latex([1, k])} + ${be < 0 ? `(${be})` : be}${vec2Latex([-k, 1])}$, so $A\\mathbf{x} = ${l1 * al}${vec2Latex([1, k])} + ${l2 * be < 0 ? `(${l2 * be})` : l2 * be}${vec2Latex([-k, 1])} = ${vec2Latex(ax)}$.`,
+            `$\\mathbf{x} = ${al}${vec2Latex([1, k])} + ${be < 0 ? `(${be})` : be}${vec2Latex([-k, 1])}$，所以 $A\\mathbf{x} = ${l1 * al}${vec2Latex([1, k])} + ${l2 * be < 0 ? `(${l2 * be})` : l2 * be}${vec2Latex([-k, 1])} = ${vec2Latex(ax)}$。`,
+          ),
+        });
       },
     },
   ],
@@ -564,6 +753,37 @@ export const bilinearForms: TopicDef = {
         return oneOf(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "evaluating-a-bilinear-form-from-its-matrix",
+      title: t("Evaluating a bilinear form from its matrix", "由矩阵计算双线性型的值"),
+      explanation: t(
+        "A bilinear form on $\\mathbb{R}^2$ with matrix $A$ is $B(\\mathbf{x}, \\mathbf{y}) = \\mathbf{x}^T A\\mathbf{y} = \\sum_{i, j} a_{ij}x_iy_j$. To evaluate it, first compute $A\\mathbf{y}$ and then take the dot product with $\\mathbf{x}$. When $A$ is not symmetric, swapping the arguments can change the value, since $B(\\mathbf{y}, \\mathbf{x}) = \\mathbf{x}^T A^T\\mathbf{y}$.",
+        "$\\mathbb{R}^2$ 上矩阵为 $A$ 的双线性型为 $B(\\mathbf{x}, \\mathbf{y}) = \\mathbf{x}^T A\\mathbf{y} = \\sum_{i, j} a_{ij}x_iy_j$。计算时先求 $A\\mathbf{y}$，再与 $\\mathbf{x}$ 作点积。当 $A$ 不对称时，交换两个自变量可能改变值，因为 $B(\\mathbf{y}, \\mathbf{x}) = \\mathbf{x}^T A^T\\mathbf{y}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const A: Mat2 = [
+          [rng.int(-4, 4), rng.int(-4, 4)],
+          [rng.int(-4, 4), rng.int(-4, 4)],
+        ];
+        const x = [rng.nonZero(-3, 3), rng.int(-3, 3)] as const;
+        const y = [rng.int(-3, 3), rng.nonZero(-3, 3)] as const;
+        const Ay = [A[0][0] * y[0] + A[0][1] * y[1], A[1][0] * y[0] + A[1][1] * y[1]] as const;
+        const ans = x[0] * Ay[0] + x[1] * Ay[1];
+        const swapped = y[0] * (A[0][0] * x[0] + A[0][1] * x[1]) + y[1] * (A[1][0] * x[0] + A[1][1] * x[1]);
+        return numberProblem({
+          prompt: t(
+            `$B(\\mathbf{x}, \\mathbf{y}) = \\mathbf{x}^T A\\mathbf{y}$ with $A = ${mat2Latex(A)}$. Find $B(\\mathbf{x}, \\mathbf{y})$ for $\\mathbf{x} = ${vec2Latex(x)}$ and $\\mathbf{y} = ${vec2Latex(y)}$.`,
+            `$B(\\mathbf{x}, \\mathbf{y}) = \\mathbf{x}^T A\\mathbf{y}$，$A = ${mat2Latex(A)}$。对 $\\mathbf{x} = ${vec2Latex(x)}$ 与 $\\mathbf{y} = ${vec2Latex(y)}$ 求 $B(\\mathbf{x}, \\mathbf{y})$。`,
+          ),
+          answer: ans,
+          wrong: [swapped, Ay[0] + Ay[1], -ans, x[0] * y[0] + x[1] * y[1]],
+          solution: t(
+            `$A\\mathbf{y} = ${vec2Latex(Ay)}$, so $B(\\mathbf{x}, \\mathbf{y}) = ${x[0]} \\cdot ${Ay[0] < 0 ? `(${Ay[0]})` : Ay[0]} + ${x[1] < 0 ? `(${x[1]})` : x[1]} \\cdot ${Ay[1] < 0 ? `(${Ay[1]})` : Ay[1]} = ${ans}$.`,
+            `$A\\mathbf{y} = ${vec2Latex(Ay)}$，所以 $B(\\mathbf{x}, \\mathbf{y}) = ${x[0]} \\cdot ${Ay[0] < 0 ? `(${Ay[0]})` : Ay[0]} + ${x[1] < 0 ? `(${x[1]})` : x[1]} \\cdot ${Ay[1] < 0 ? `(${Ay[1]})` : Ay[1]} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -668,6 +888,45 @@ export const quadraticForms: TopicDef = {
         );
 
         return oneOf(rng, prompt, right, wrong, solution);
+      },
+    },
+    {
+      id: "reading-coefficients-of-a-quadratic-form-from-its-matrix",
+      title: t("Reading coefficients of a quadratic form from its matrix", "从矩阵读出二次型的系数"),
+      explanation: t(
+        "For a symmetric $3 \\times 3$ matrix $A$, the quadratic form $Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$ expands to\n\n$$Q = a_{11}x_1^2 + a_{22}x_2^2 + a_{33}x_3^2 + 2a_{12}x_1x_2 + 2a_{13}x_1x_3 + 2a_{23}x_2x_3.$$\n\nA square term takes its diagonal entry directly, while a cross term $x_ix_j$ collects both $a_{ij}$ and $a_{ji}$, so its coefficient is $2a_{ij}$.",
+        "对 $3 \\times 3$ 对称矩阵 $A$，二次型 $Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$ 展开为\n\n$$Q = a_{11}x_1^2 + a_{22}x_2^2 + a_{33}x_3^2 + 2a_{12}x_1x_2 + 2a_{13}x_1x_3 + 2a_{23}x_2x_3。$$\n\n平方项直接取对角元，而交叉项 $x_ix_j$ 同时汇集 $a_{ij}$ 与 $a_{ji}$，所以系数为 $2a_{ij}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const d = [rng.int(-5, 6), rng.int(-5, 6), rng.int(-5, 6)];
+        const o = [rng.nonZero(-4, 4), rng.nonZero(-4, 4), rng.nonZero(-4, 4)];
+        const A: Mat3 = [
+          [d[0]!, o[0]!, o[1]!],
+          [o[0]!, d[1]!, o[2]!],
+          [o[1]!, o[2]!, d[2]!],
+        ];
+        const terms = [
+          { name: "x_1x_2", v: 2 * o[0]!, e: o[0]!, at: "a_{12}" },
+          { name: "x_1x_3", v: 2 * o[1]!, e: o[1]!, at: "a_{13}" },
+          { name: "x_2x_3", v: 2 * o[2]!, e: o[2]!, at: "a_{23}" },
+          { name: "x_2^2", v: d[1]!, e: d[1]!, at: "a_{22}" },
+        ];
+        const term = rng.pick(terms);
+        const cross = term.name !== "x_2^2";
+        return numberProblem({
+          prompt: t(
+            `$Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$ with $A = ${mat3Latex(A)}$. What is the coefficient of $${term.name}$ in $Q$?`,
+            `$Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$，$A = ${mat3Latex(A)}$。$Q$ 中 $${term.name}$ 的系数是多少？`,
+          ),
+          answer: term.v,
+          wrong: cross ? [term.e, term.e * 4, -term.v] : [2 * term.v, d[0]!, d[2]!],
+          solution: cross
+            ? t(
+                `The cross term collects $a_{ij}$ and $a_{ji}$: its coefficient is $2${term.at} = 2 \\cdot ${term.e < 0 ? `(${term.e})` : term.e} = ${term.v}$.`,
+                `交叉项汇集 $a_{ij}$ 与 $a_{ji}$：系数为 $2${term.at} = 2 \\cdot ${term.e < 0 ? `(${term.e})` : term.e} = ${term.v}$。`,
+              )
+            : t(`A square term takes its diagonal entry: $${term.at} = ${term.v}$.`, `平方项取对角元：$${term.at} = ${term.v}$。`),
+        });
       },
     },
   ],
@@ -786,6 +1045,36 @@ export const changeOfVariablesInQuadraticForms: TopicDef = {
         return oneOf(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "substituting-a-shear-into-a-quadratic-form",
+      title: t("Substituting a shear into a quadratic form", "将剪切变换代入二次型"),
+      explanation: t(
+        "A change of variables can be carried out by direct substitution as well as by $B = P^TAP$. Under $x_1 = y_1 + ky_2$, $x_2 = y_2$, the form $Q = ax_1^2 + bx_1x_2 + cx_2^2$ becomes\n\n$$a(y_1 + ky_2)^2 + b(y_1 + ky_2)y_2 + cy_2^2 = ay_1^2 + (2ak + b)y_1y_2 + (ak^2 + bk + c)y_2^2.$$\n\nChoosing $k = -\\frac{b}{2a}$ removes the cross term, which is exactly completing the square.",
+        "变量替换既可以用 $B = P^TAP$，也可以直接代入。在 $x_1 = y_1 + ky_2$，$x_2 = y_2$ 下，$Q = ax_1^2 + bx_1x_2 + cx_2^2$ 变为\n\n$$a(y_1 + ky_2)^2 + b(y_1 + ky_2)y_2 + cy_2^2 = ay_1^2 + (2ak + b)y_1y_2 + (ak^2 + bk + c)y_2^2。$$\n\n取 $k = -\\frac{b}{2a}$ 可消去交叉项，这正是配方。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-3, 4);
+        const b = rng.nonZero(-6, 6);
+        const c = rng.int(-5, 5);
+        const k = rng.nonZero(-3, 3);
+        const askCross = rng.int(0, 1) === 0;
+        const cross = 2 * a * k + b;
+        const sq = a * k * k + b * k + c;
+        const sub = `x_1 = y_1 ${formatAddVar(k, "y_2")}`;
+        return numberProblem({
+          prompt: t(
+            `Substitute $${sub}$, $x_2 = y_2$ into $Q = ${formatQuadratic(a, b, c)}$. What is the coefficient of $${askCross ? "y_1y_2" : "y_2^2"}$?`,
+            `把 $${sub}$，$x_2 = y_2$ 代入 $Q = ${formatQuadratic(a, b, c)}$。$${askCross ? "y_1y_2" : "y_2^2"}$ 的系数是多少？`,
+          ),
+          answer: askCross ? cross : sq,
+          wrong: askCross ? [a * k + b, 2 * a * k, b, cross + 2 * a] : [a * k * k + c, a * k + b * k + c, sq - b * k, c],
+          solution: t(
+            `Expanding, the $y_1y_2$ coefficient is $2(${a})(${k}) + ${b < 0 ? `(${b})` : b} = ${cross}$ and the $y_2^2$ coefficient is $${a}(${k})^2 + ${b < 0 ? `(${b})` : b}(${k}) + ${c < 0 ? `(${c})` : c} = ${sq}$.`,
+            `展开后，$y_1y_2$ 的系数为 $2(${a})(${k}) + ${b < 0 ? `(${b})` : b} = ${cross}$，$y_2^2$ 的系数为 $${a}(${k})^2 + ${b < 0 ? `(${b})` : b}(${k}) + ${c < 0 ? `(${c})` : c} = ${sq}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -839,6 +1128,34 @@ export const canonicalFormOfAQuadraticFormUsingLagrangesMethod: TopicDef = {
             [rem, a],
             [a, c - a * k],
           ],
+        });
+      },
+    },
+    {
+      id: "lagranges-method-with-no-square-terms",
+      title: t("Lagrange's method when there are no square terms", "没有平方项时的拉格朗日配方法"),
+      explanation: t(
+        "Completing the square needs a square term to start from. When the form is a pure product such as $Q = kx_1x_2$, first create squares with $x_1 = y_1 + cy_2$, $x_2 = y_1 - cy_2$:\n\n$$kx_1x_2 = k(y_1 + cy_2)(y_1 - cy_2) = ky_1^2 - kc^2y_2^2.$$\n\nThe result is already canonical, with one positive and one negative coefficient.",
+        "配方需要一个平方项作为起点。当二次型是纯乘积如 $Q = kx_1x_2$ 时，先用 $x_1 = y_1 + cy_2$，$x_2 = y_1 - cy_2$ 造出平方：\n\n$$kx_1x_2 = k(y_1 + cy_2)(y_1 - cy_2) = ky_1^2 - kc^2y_2^2。$$\n\n结果已是标准形，一个系数为正、一个为负。",
+      ),
+      generate(rng: Rng): Problem {
+        const k = rng.nonZero(-9, 9);
+        const c = rng.int(1, 3);
+        const askFirst = rng.int(0, 1) === 0;
+        const d1 = k;
+        const d2 = -k * c * c;
+        const cy = c === 1 ? "y_2" : `${c}y_2`;
+        return numberProblem({
+          prompt: t(
+            `Substitute $x_1 = y_1 + ${cy}$, $x_2 = y_1 - ${cy}$ into $Q = ${formatFirstTerm(k, "x_1x_2")}$ to get $d_1y_1^2 + d_2y_2^2$. Find $${askFirst ? "d_1" : "d_2"}$.`,
+            `把 $x_1 = y_1 + ${cy}$，$x_2 = y_1 - ${cy}$ 代入 $Q = ${formatFirstTerm(k, "x_1x_2")}$，得到 $d_1y_1^2 + d_2y_2^2$。求 $${askFirst ? "d_1" : "d_2"}$。`,
+          ),
+          answer: askFirst ? d1 : d2,
+          wrong: askFirst ? [-k, 2 * k, k * c * c] : [k * c * c, -k * c, -k],
+          solution: t(
+            `$(y_1 + ${cy})(y_1 - ${cy}) = y_1^2 - ${c * c === 1 ? "" : c * c}y_2^2$, so $Q = ${formatDiagonalForm(d1, d2)}$ and $${askFirst ? "d_1" : "d_2"} = ${askFirst ? d1 : d2}$.`,
+            `$(y_1 + ${cy})(y_1 - ${cy}) = y_1^2 - ${c * c === 1 ? "" : c * c}y_2^2$，所以 $Q = ${formatDiagonalForm(d1, d2)}$，$${askFirst ? "d_1" : "d_2"} = ${askFirst ? d1 : d2}$。`,
+          ),
         });
       },
     },
@@ -899,6 +1216,39 @@ export const canonicalFormOfAQuadraticFormUsingOrthogonalTransformations: TopicD
         );
 
         return oneOf(rng, prompt, right, wrong, solution);
+      },
+    },
+    {
+      id: "invariants-of-the-orthogonal-canonical-form",
+      title: t("Trace and determinant of the canonical form", "标准形的迹与行列式"),
+      explanation: t(
+        "Under an orthogonal transformation the canonical form is $\\lambda_1y_1^2 + \\lambda_2y_2^2$, where $\\lambda_1, \\lambda_2$ are the eigenvalues of the symmetric matrix $A$. Similar matrices share trace and determinant, so without finding the eigenvalues:\n\n$$\\lambda_1 + \\lambda_2 = a_{11} + a_{22}, \\qquad \\lambda_1\\lambda_2 = a_{11}a_{22} - a_{12}^2.$$\n\nFor $Q = ax_1^2 + bx_1x_2 + cx_2^2$ remember that $a_{12} = \\frac{b}{2}$.",
+        "在正交变换下标准形为 $\\lambda_1y_1^2 + \\lambda_2y_2^2$，$\\lambda_1, \\lambda_2$ 是对称矩阵 $A$ 的特征值。相似矩阵有相同的迹与行列式，所以不必求特征值：\n\n$$\\lambda_1 + \\lambda_2 = a_{11} + a_{22}, \\qquad \\lambda_1\\lambda_2 = a_{11}a_{22} - a_{12}^2。$$\n\n对 $Q = ax_1^2 + bx_1x_2 + cx_2^2$，记住 $a_{12} = \\frac{b}{2}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-5, 6);
+        const c = rng.int(-5, 6);
+        const h = rng.nonZero(-4, 4);
+        const b = 2 * h;
+        const askSum = rng.int(0, 1) === 0;
+        const ans = askSum ? a + c : a * c - h * h;
+        return numberProblem({
+          prompt: t(
+            `An orthogonal transformation reduces $Q = ${formatQuadratic(a, b, c)}$ to $\\lambda_1y_1^2 + \\lambda_2y_2^2$. Find $${askSum ? "\\lambda_1 + \\lambda_2" : "\\lambda_1\\lambda_2"}$.`,
+            `正交变换把 $Q = ${formatQuadratic(a, b, c)}$ 化为 $\\lambda_1y_1^2 + \\lambda_2y_2^2$。求 $${askSum ? "\\lambda_1 + \\lambda_2" : "\\lambda_1\\lambda_2"}$。`,
+          ),
+          answer: ans,
+          wrong: askSum ? [a + c + b, a * c - h * h, a - c] : [a * c - b * b, a * c + h * h, a + c],
+          solution: askSum
+            ? t(
+                `$\\lambda_1 + \\lambda_2 = \\operatorname{tr}A = ${a} + ${c < 0 ? `(${c})` : c} = ${ans}$.`,
+                `$\\lambda_1 + \\lambda_2 = \\operatorname{tr}A = ${a} + ${c < 0 ? `(${c})` : c} = ${ans}$。`,
+              )
+            : t(
+                `$a_{12} = ${h}$, so $\\lambda_1\\lambda_2 = \\det A = ${a} \\cdot ${c < 0 ? `(${c})` : c} - ${h < 0 ? `(${h})` : h}^2 = ${ans}$.`,
+                `$a_{12} = ${h}$，所以 $\\lambda_1\\lambda_2 = \\det A = ${a} \\cdot ${c < 0 ? `(${c})` : c} - ${h < 0 ? `(${h})` : h}^2 = ${ans}$。`,
+              ),
+        });
       },
     },
   ],
@@ -988,6 +1338,60 @@ export const positiveDefiniteAndNegativeDefiniteQuadraticForms: TopicDef = {
         return oneOf(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "sylvesters-criterion-for-three-variables",
+      title: t("Sylvester's criterion in three variables", "三元二次型的西尔维斯特判据"),
+      explanation: t(
+        "Sylvester's criterion classifies a symmetric matrix by its leading principal minors $D_1 = a_{11}$, $D_2 = \\det$ of the top-left $2 \\times 2$ block, and $D_3 = \\det A$. The form is positive definite exactly when $D_1, D_2, D_3 > 0$, and negative definite exactly when the signs alternate $D_1 < 0$, $D_2 > 0$, $D_3 < 0$. If $D_3 \\ne 0$ and neither pattern holds, the form is indefinite.",
+        "西尔维斯特判据用顺序主子式 $D_1 = a_{11}$、左上 $2 \\times 2$ 块的行列式 $D_2$ 与 $D_3 = \\det A$ 来分类对称矩阵。二次型正定当且仅当 $D_1, D_2, D_3 > 0$；负定当且仅当符号交替 $D_1 < 0$，$D_2 > 0$，$D_3 < 0$。若 $D_3 \\ne 0$ 且两种模式都不满足，则二次型不定。",
+      ),
+      generate(rng: Rng): Problem {
+        const kind = rng.int(0, 2);
+        const off = [rng.int(-2, 2), rng.int(-2, 2), rng.int(-2, 2)];
+        let diag = [rng.int(5, 8), rng.int(5, 8), rng.int(5, 8)];
+        if (kind === 2) diag = [rng.int(1, 4), -rng.int(1, 4), rng.int(1, 4)];
+        const s = kind === 1 ? -1 : 1;
+        const A: number[][] = [
+          [s * diag[0]!, s * off[0]!, s * off[1]!],
+          [s * off[0]!, s * diag[1]!, s * off[2]!],
+          [s * off[1]!, s * off[2]!, s * diag[2]!],
+        ];
+        const minors = () => {
+          const r = A as unknown as Mat3;
+          const d2 = r[0][0] * r[1][1] - r[0][1] * r[1][0];
+          const d3 =
+            r[0][0] * (r[1][1] * r[2][2] - r[1][2] * r[2][1]) -
+            r[0][1] * (r[1][0] * r[2][2] - r[1][2] * r[2][0]) +
+            r[0][2] * (r[1][0] * r[2][1] - r[1][1] * r[2][0]);
+          return [r[0][0], d2, d3] as const;
+        };
+        let D = minors();
+        while (D[2] === 0) {
+          A[2]![2]! += 1;
+          D = minors();
+        }
+        const pd = D[0] > 0 && D[1] > 0 && D[2] > 0;
+        const nd = D[0] < 0 && D[1] > 0 && D[2] < 0;
+        const P = t("Positive definite", "正定");
+        const N = t("Negative definite", "负定");
+        const I = t("Indefinite", "不定");
+        const S = t("Positive semidefinite but not definite", "半正定但不正定");
+        const right = pd ? P : nd ? N : I;
+        return oneOf(
+          rng,
+          t(
+            `Classify the quadratic form $\\mathbf{x}^T A\\mathbf{x}$ with $A = ${mat3Latex(A as unknown as Mat3)}$.`,
+            `判定二次型 $\\mathbf{x}^T A\\mathbf{x}$ 的类型，$A = ${mat3Latex(A as unknown as Mat3)}$。`,
+          ),
+          right,
+          [P, N, I, S].filter((o) => o !== right),
+          t(
+            `The leading principal minors are $D_1 = ${D[0]}$, $D_2 = ${D[1]}$, $D_3 = ${D[2]}$, so the form is ${pd ? "positive definite" : nd ? "negative definite" : "indefinite"}.`,
+            `顺序主子式为 $D_1 = ${D[0]}$，$D_2 = ${D[1]}$，$D_3 = ${D[2]}$，所以二次型${pd ? "正定" : nd ? "负定" : "不定"}。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -1050,6 +1454,47 @@ export const reducingAQuadraticCurveToItsPrincipalAxes: TopicDef = {
         );
 
         return oneOf(rng, prompt, right, wrong, solution);
+      },
+    },
+    {
+      id: "semi-axes-of-an-ellipse-from-its-principal-axes",
+      title: t("Semi-axes of an ellipse from its principal axes", "由主轴形式求椭圆的半轴"),
+      explanation: t(
+        "Rotating to principal axes turns $ax^2 + 2hxy + cy^2 = d$ into $\\lambda_1y_1^2 + \\lambda_2y_2^2 = d$, where $\\lambda_1, \\lambda_2$ are the eigenvalues of $\\begin{pmatrix} a & h \\\\ h & c \\end{pmatrix}$. When both eigenvalues and $d$ are positive, this is an ellipse with semi-axes $\\sqrt{d/\\lambda_1}$ and $\\sqrt{d/\\lambda_2}$. The smaller eigenvalue gives the longer, major semi-axis.",
+        "旋转到主轴把 $ax^2 + 2hxy + cy^2 = d$ 化为 $\\lambda_1y_1^2 + \\lambda_2y_2^2 = d$，其中 $\\lambda_1, \\lambda_2$ 是 $\\begin{pmatrix} a & h \\\\ h & c \\end{pmatrix}$ 的特征值。当两个特征值与 $d$ 都为正时，这是半轴为 $\\sqrt{d/\\lambda_1}$ 与 $\\sqrt{d/\\lambda_2}$ 的椭圆。较小的特征值给出较长的半长轴。",
+      ),
+      generate(rng: Rng): Problem {
+        const [r1, r2, k] = rng.pick([
+          [1, 3, 1],
+          [3, 5, 1],
+          [1, 5, 1],
+          [2, 4, 1],
+          [2, 6, 1],
+          [4, 6, 1],
+          [1, 4, 2],
+          [2, 3, 2],
+          [1, 6, 2],
+          [4, 6, 2],
+        ] as const);
+        const swap = rng.int(0, 1) === 1;
+        const [l1, l2] = swap ? [r2 * r2, r1 * r1] : [r1 * r1, r2 * r2];
+        const A = symFromEigen(l1, l2, k);
+        const m = rng.int(1, 2);
+        const d = (r1 * r2 * m) ** 2;
+        const major = r2 * m;
+        const minor = r1 * m;
+        return numberProblem({
+          prompt: t(
+            `The curve $${formatQuadratic(A[0][0], 2 * A[0][1], A[1][1], "x", "y")} = ${d}$ has eigenvalues $${l1}$ and $${l2}$ for its matrix. Find the length of its major semi-axis.`,
+            `曲线 $${formatQuadratic(A[0][0], 2 * A[0][1], A[1][1], "x", "y")} = ${d}$ 的矩阵特征值为 $${l1}$ 与 $${l2}$。求其半长轴的长度。`,
+          ),
+          answer: major,
+          wrong: [minor, Q.of(d, r1 * r1), r2, 2 * major],
+          solution: t(
+            `In principal axes the curve is $${formatDiagonalForm(l1, l2)} = ${d}$. The semi-axes are $\\sqrt{${d}/${l1}} = ${Math.sqrt(d / l1)}$ and $\\sqrt{${d}/${l2}} = ${Math.sqrt(d / l2)}$, so the major semi-axis is $${major}$.`,
+            `在主轴下曲线为 $${formatDiagonalForm(l1, l2)} = ${d}$。半轴为 $\\sqrt{${d}/${l1}} = ${Math.sqrt(d / l1)}$ 与 $\\sqrt{${d}/${l2}} = ${Math.sqrt(d / l2)}$，所以半长轴为 $${major}$。`,
+          ),
+        });
       },
     },
   ],
@@ -1158,6 +1603,50 @@ export const classifyingQuadraticCurves: TopicDef = {
         return oneOf(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "classifying-a-conic-by-its-discriminant",
+      title: t("Classifying a conic by its discriminant", "用判别式分类二次曲线"),
+      explanation: t(
+        "For a non-degenerate curve $ax^2 + bxy + cy^2 + dx + ey + f = 0$, only the quadratic part decides the type. Its matrix $\\begin{pmatrix} a & b/2 \\\\ b/2 & c \\end{pmatrix}$ has determinant $ac - \\frac{b^2}{4}$, so the sign of $b^2 - 4ac$ tells whether the eigenvalues have the same sign:\n- $b^2 - 4ac < 0$: an ellipse,\n- $b^2 - 4ac > 0$: a hyperbola,\n- $b^2 - 4ac = 0$: a parabola.\n\nThe linear terms only shift the curve.",
+        "对非退化曲线 $ax^2 + bxy + cy^2 + dx + ey + f = 0$，只有二次部分决定类型。其矩阵 $\\begin{pmatrix} a & b/2 \\\\ b/2 & c \\end{pmatrix}$ 的行列式为 $ac - \\frac{b^2}{4}$，所以 $b^2 - 4ac$ 的符号说明特征值是否同号：\n- $b^2 - 4ac < 0$：椭圆，\n- $b^2 - 4ac > 0$：双曲线，\n- $b^2 - 4ac = 0$：抛物线。\n\n一次项只是平移曲线。",
+      ),
+      generate(rng: Rng): Problem {
+        const kind = rng.int(0, 2);
+        let a = rng.int(1, 5);
+        let b = rng.nonZero(-6, 6);
+        let c = rng.int(1, 5);
+        if (kind === 0) {
+          while (b * b - 4 * a * c >= 0) c += 1;
+        } else if (kind === 1) {
+          while (b * b - 4 * a * c <= 0) b += b > 0 ? 1 : -1;
+        } else {
+          const p = rng.int(1, 3);
+          const q = rng.nonZero(-3, 3);
+          [a, b, c] = [p * p, 2 * p * q, q * q];
+        }
+        const d = rng.nonZero(-5, 5);
+        const e = rng.nonZero(-5, 5);
+        const disc = b * b - 4 * a * c;
+        const E = t("An ellipse", "椭圆");
+        const H = t("A hyperbola", "双曲线");
+        const Pa = t("A parabola", "抛物线");
+        const right = disc < 0 ? E : disc > 0 ? H : Pa;
+        const lhs = `${formatQuadratic(a, b, c, "x", "y")} ${formatSignedTerm(d, "x")} ${formatSignedTerm(e, "y")}`;
+        return oneOf(
+          rng,
+          t(
+            `Assuming it is non-degenerate, what kind of curve is $${lhs} = ${rng.int(1, 9)}$?`,
+            `假设曲线非退化，$${lhs} = ${rng.int(1, 9)}$ 是哪种曲线？`,
+          ),
+          right,
+          [E, H, Pa].filter((o) => o !== right),
+          t(
+            `$b^2 - 4ac = ${b * b} - ${4 * a * c} = ${disc}$, which is ${disc < 0 ? "negative, so it is an ellipse" : disc > 0 ? "positive, so it is a hyperbola" : "zero, so it is a parabola"}.`,
+            `$b^2 - 4ac = ${b * b} - ${4 * a * c} = ${disc}$，${disc < 0 ? "为负，所以是椭圆" : disc > 0 ? "为正，所以是双曲线" : "为零，所以是抛物线"}。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -1214,6 +1703,35 @@ export const constrainedOptimizationOfQuadraticForms: TopicDef = {
             ])}$。其特征值为 $\\lambda_1 = ${lMin}$ 和 $\\lambda_2 = ${lMax}$。在 $\\|x\\| = 1$ 约束下的${extremaWordZh}为 $\\lambda = ${targetValue}$。`,
           ),
           wrong: [findMax ? lMin : lMax, m, 2 * k],
+        });
+      },
+    },
+    {
+      id: "extrema-of-a-quadratic-form-on-a-circle-of-radius-r",
+      title: t("Extrema of a quadratic form on a circle of radius $r$", "二次型在半径为 $r$ 的圆上的最值"),
+      explanation: t(
+        "On the unit circle the maximum and minimum of $Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$ are the largest and smallest eigenvalues of $A$. A quadratic form is homogeneous of degree 2, so $Q(r\\mathbf{u}) = r^2Q(\\mathbf{u})$. On the circle $\\|\\mathbf{x}\\| = r$ the extremes are therefore $r^2\\lambda_{\\max}$ and $r^2\\lambda_{\\min}$.",
+        "在单位圆上，$Q(\\mathbf{x}) = \\mathbf{x}^T A\\mathbf{x}$ 的最大值与最小值是 $A$ 的最大与最小特征值。二次型是 2 次齐次的，所以 $Q(r\\mathbf{u}) = r^2Q(\\mathbf{u})$。因此在圆 $\\|\\mathbf{x}\\| = r$ 上，最值为 $r^2\\lambda_{\\max}$ 与 $r^2\\lambda_{\\min}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const [l1, l2, k] = pickEigenPair(rng, -4, 6);
+        const A = symFromEigen(l1, l2, k);
+        const r = rng.int(2, 4);
+        const findMax = rng.int(0, 1) === 0;
+        const lam = findMax ? Math.max(l1, l2) : Math.min(l1, l2);
+        const other = findMax ? Math.min(l1, l2) : Math.max(l1, l2);
+        const ans = r * r * lam;
+        return numberProblem({
+          prompt: t(
+            `Find the ${findMax ? "maximum" : "minimum"} of $Q = ${formatQuadratic(A[0][0], 2 * A[0][1], A[1][1])}$ subject to $x_1^2 + x_2^2 = ${r * r}$.`,
+            `在 $x_1^2 + x_2^2 = ${r * r}$ 的约束下求 $Q = ${formatQuadratic(A[0][0], 2 * A[0][1], A[1][1])}$ 的${findMax ? "最大值" : "最小值"}。`,
+          ),
+          answer: ans,
+          wrong: [lam, r * lam, r * r * other, other],
+          solution: t(
+            `The matrix $${mat2Latex(A)}$ has eigenvalues $${l1}$ and $${l2}$. On the unit circle the ${findMax ? "maximum" : "minimum"} is $${lam}$, and scaling to radius $${r}$ multiplies it by $${r * r}$: $${ans}$.`,
+            `矩阵 $${mat2Latex(A)}$ 的特征值为 $${l1}$ 与 $${l2}$。在单位圆上${findMax ? "最大值" : "最小值"}为 $${lam}$，缩放到半径 $${r}$ 乘以 $${r * r}$：$${ans}$。`,
+          ),
         });
       },
     },
@@ -1275,6 +1793,39 @@ export const constrainedOptimizationOfQuadraticFormsDeterminingWhereExtremaAreAt
         return oneOf(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "where-a-diagonal-form-in-three-variables-is-extreme",
+      title: t("Where a diagonal form in three variables is extreme", "三元对角二次型在何处取最值"),
+      explanation: t(
+        "For a diagonal form $Q = d_1x_1^2 + d_2x_2^2 + d_3x_3^2$ on the unit sphere, $Q$ is a weighted average of the $d_i$ with weights $x_i^2$ that sum to $1$. It is largest when all the weight sits on the largest coefficient, that is, at $\\pm\\mathbf{e}_i$ for that $i$, and smallest at $\\pm\\mathbf{e}_j$ for the smallest coefficient. Any vector that spreads the weight gives a value in between.",
+        "对单位球面上的对角二次型 $Q = d_1x_1^2 + d_2x_2^2 + d_3x_3^2$，$Q$ 是各 $d_i$ 以 $x_i^2$ 为权（和为 $1$）的加权平均。当全部权重落在最大系数上，即在该 $i$ 的 $\\pm\\mathbf{e}_i$ 处，$Q$ 最大；在最小系数的 $\\pm\\mathbf{e}_j$ 处最小。任何分散权重的向量给出介于其间的值。",
+      ),
+      generate(rng: Rng): Problem {
+        const d = rng.shuffle([rng.int(-6, -1), rng.int(0, 3), rng.int(4, 9)]);
+        const findMax = rng.int(0, 1) === 0;
+        const target = findMax ? d.indexOf(Math.max(...d)) : d.indexOf(Math.min(...d));
+        const e = (i: number) => `\\mathbf{e}_${i + 1}`;
+        const opt = (s: string) => t(`$${s}$`, `$${s}$`);
+        const others = [0, 1, 2].filter((i) => i !== target).map((i) => opt(e(i)));
+        const q = `${formatFirstTerm(d[0]!, "x_1^2")} ${formatSignedTerm(d[1]!, "x_2^2")} ${formatSignedTerm(d[2]!, "x_3^2")}`.replace(
+          /\s+/g,
+          " ",
+        );
+        return oneOf(
+          rng,
+          t(
+            `On the unit sphere, where does $Q = ${q}$ attain its ${findMax ? "maximum" : "minimum"}?`,
+            `在单位球面上，$Q = ${q}$ 在何处取得${findMax ? "最大值" : "最小值"}？`,
+          ),
+          opt(`\\pm${e(target)}`),
+          [...others.map((o) => t(`$\\pm${o.en.slice(1)}`, `$\\pm${o["zh-CN"].slice(1)}`)), opt("\\frac{1}{\\sqrt{3}}(1, 1, 1)")],
+          t(
+            `The ${findMax ? "largest" : "smallest"} coefficient is $${d[target]}$, on $x_${target + 1}^2$, so the ${findMax ? "maximum" : "minimum"} $${d[target]}$ is attained at $\\pm${e(target)}$.`,
+            `${findMax ? "最大" : "最小"}系数为 $x_${target + 1}^2$ 的 $${d[target]}$，所以${findMax ? "最大值" : "最小值"} $${d[target]}$ 在 $\\pm${e(target)}$ 处取得。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -1315,6 +1866,61 @@ export const singularValuesOfAMatrix: TopicDef = {
             `任意矩阵 $A$ 的严格大于零（非零）的奇异值个数恰好等于其矩阵的秩 $\\operatorname{rank}(A)$。因此，$A$ 拥有 $${rank}$ 个正奇异值。`,
           ),
           wrong: [m, n, Math.min(m, n), Math.max(0, rank - 1)],
+        });
+      },
+    },
+    {
+      id: "singular-values-from-the-eigenvalues-of-ata",
+      title: t("Singular values from the eigenvalues of $A^TA$", "由 $A^TA$ 的特征值求奇异值"),
+      explanation: t(
+        "The singular values of $A$ are the square roots of the eigenvalues of $A^TA$, listed as $\\sigma_1 \\ge \\sigma_2 \\ge \\cdots \\ge 0$. They connect to familiar quantities: $\\sigma_1 = \\max_{\\|\\mathbf{x}\\| = 1}\\|A\\mathbf{x}\\|$, and for a square matrix $\\sigma_1\\sigma_2\\cdots\\sigma_n = |\\det A|$, because $\\det(A^TA) = (\\det A)^2$.",
+        "$A$ 的奇异值是 $A^TA$ 特征值的平方根，按 $\\sigma_1 \\ge \\sigma_2 \\ge \\cdots \\ge 0$ 排列。它们与熟悉的量相联系：$\\sigma_1 = \\max_{\\|\\mathbf{x}\\| = 1}\\|A\\mathbf{x}\\|$；对方阵有 $\\sigma_1\\sigma_2\\cdots\\sigma_n = |\\det A|$，因为 $\\det(A^TA) = (\\det A)^2$。",
+      ),
+      generate(rng: Rng): Problem {
+        const s1 = rng.int(3, 9);
+        const s2 = rng.int(1, s1 - 1);
+        const kind = rng.int(0, 2);
+        const e1 = s1 * s1;
+        const e2 = s2 * s2;
+        if (kind === 0) {
+          return numberProblem({
+            prompt: t(
+              `For a $2 \\times 2$ matrix $A$, the eigenvalues of $A^TA$ are $${e1}$ and $${e2}$. Find the largest value of $\\|A\\mathbf{x}\\|$ over unit vectors $\\mathbf{x}$.`,
+              `对 $2 \\times 2$ 矩阵 $A$，$A^TA$ 的特征值为 $${e1}$ 与 $${e2}$。求单位向量 $\\mathbf{x}$ 上 $\\|A\\mathbf{x}\\|$ 的最大值。`,
+            ),
+            answer: s1,
+            wrong: [e1, s2, s1 + s2, e2],
+            solution: t(
+              `The largest singular value is $\\sigma_1 = \\sqrt{${e1}} = ${s1}$, and that is the maximum stretch $\\|A\\mathbf{x}\\|$.`,
+              `最大奇异值为 $\\sigma_1 = \\sqrt{${e1}} = ${s1}$，这就是最大伸缩 $\\|A\\mathbf{x}\\|$。`,
+            ),
+          });
+        }
+        if (kind === 1) {
+          return numberProblem({
+            prompt: t(
+              `For a $2 \\times 2$ matrix $A$, the eigenvalues of $A^TA$ are $${e1}$ and $${e2}$. Find $|\\det A|$.`,
+              `对 $2 \\times 2$ 矩阵 $A$，$A^TA$ 的特征值为 $${e1}$ 与 $${e2}$。求 $|\\det A|$。`,
+            ),
+            answer: s1 * s2,
+            wrong: [e1 * e2, s1 + s2, e1 + e2, s1 * s1 - s2 * s2],
+            solution: t(
+              `The singular values are $${s1}$ and $${s2}$, and $|\\det A| = \\sigma_1\\sigma_2 = ${s1 * s2}$.`,
+              `奇异值为 $${s1}$ 与 $${s2}$，$|\\det A| = \\sigma_1\\sigma_2 = ${s1 * s2}$。`,
+            ),
+          });
+        }
+        return numberProblem({
+          prompt: t(
+            `A $2 \\times 2$ matrix $A$ has singular values $${s1}$ and $${s2}$. Find $\\det(A^TA)$.`,
+            `$2 \\times 2$ 矩阵 $A$ 的奇异值为 $${s1}$ 与 $${s2}$。求 $\\det(A^TA)$。`,
+          ),
+          answer: e1 * e2,
+          wrong: [s1 * s2, e1 + e2, 2 * s1 * s2],
+          solution: t(
+            `$A^TA$ has eigenvalues $\\sigma_1^2 = ${e1}$ and $\\sigma_2^2 = ${e2}$, so its determinant is $${e1 * e2}$.`,
+            `$A^TA$ 的特征值为 $\\sigma_1^2 = ${e1}$ 与 $\\sigma_2^2 = ${e2}$，所以其行列式为 $${e1 * e2}$。`,
+          ),
         });
       },
     },
@@ -1374,6 +1980,56 @@ export const computingTheSingularValuesOfAMatrix: TopicDef = {
           values: [String(c), String(d)],
           solution,
           wrong: [[String(c * c), String(d * d)], [String(c), String(c + d)], [String(d)], [String(c)]],
+        });
+      },
+    },
+    {
+      id: "singular-values-of-a-scaled-rotation-and-a-rank-one-matrix",
+      title: t("Singular values through $A^TA$", "通过 $A^TA$ 计算奇异值"),
+      explanation: t(
+        "To compute singular values, form $A^TA$, find its eigenvalues and take square roots. For $A = \\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$, $A^TA = (a^2 + b^2)I$, so both singular values equal $\\sqrt{a^2 + b^2}$: the matrix rotates and scales uniformly. For a matrix whose second row is zero, $A^TA = \\mathbf{r}\\mathbf{r}^T$ for the first row $\\mathbf{r}$, which has eigenvalues $\\|\\mathbf{r}\\|^2$ and $0$.",
+        "计算奇异值时，构造 $A^TA$，求其特征值再开平方。对 $A = \\begin{pmatrix} a & -b \\\\ b & a \\end{pmatrix}$，$A^TA = (a^2 + b^2)I$，所以两个奇异值都等于 $\\sqrt{a^2 + b^2}$：矩阵作旋转并均匀缩放。对第二行为零的矩阵，$A^TA = \\mathbf{r}\\mathbf{r}^T$（$\\mathbf{r}$ 为第一行），特征值为 $\\|\\mathbf{r}\\|^2$ 与 $0$。",
+      ),
+      generate(rng: Rng): Problem {
+        const [p, q, c] = rng.pick([
+          [3, 4, 5],
+          [5, 12, 13],
+          [6, 8, 10],
+          [8, 15, 17],
+          [4, 3, 5],
+          [12, 5, 13],
+          [7, 24, 25],
+          [24, 7, 25],
+          [9, 12, 15],
+          [15, 8, 17],
+        ] as const);
+        const sp = rng.pick([1, -1]);
+        const rot = rng.int(0, 1) === 0;
+        const A: Mat2 = rot
+          ? [
+              [p, -sp * q],
+              [sp * q, p],
+            ]
+          : [
+              [p, sp * q],
+              [0, 0],
+            ];
+        return numberProblem({
+          prompt: t(
+            `Find the ${rot ? "smallest" : "largest"} singular value of $A = ${mat2Latex(A)}$.`,
+            `求 $A = ${mat2Latex(A)}$ 的${rot ? "最小" : "最大"}奇异值。`,
+          ),
+          answer: c,
+          wrong: rot ? [0, c * c, p, q] : [c * c, p + q, p, 0],
+          solution: rot
+            ? t(
+                `$A^TA = ${c * c}I$, so both eigenvalues are $${c * c}$ and both singular values are $${c}$; the smallest is $${c}$.`,
+                `$A^TA = ${c * c}I$，两个特征值都是 $${c * c}$，两个奇异值都是 $${c}$；最小的为 $${c}$。`,
+              )
+            : t(
+                `$A^TA$ has eigenvalues $${p * p} + ${q * q} = ${c * c}$ and $0$, so the singular values are $${c}$ and $0$; the largest is $${c}$.`,
+                `$A^TA$ 的特征值为 $${p * p} + ${q * q} = ${c * c}$ 与 $0$，所以奇异值为 $${c}$ 与 $0$；最大的为 $${c}$。`,
+              ),
         });
       },
     },
@@ -1477,6 +2133,40 @@ export const singularValueDecompositionOf2x2Matrices: TopicDef = {
         return oneOf(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "frobenius-norm-and-determinant-from-singular-values",
+      title: t("Matrix quantities from the singular values", "由奇异值求矩阵的量"),
+      explanation: t(
+        "In $A = U\\Sigma V^T$ the factors $U$ and $V$ are orthogonal, so they preserve lengths and change neither $\\operatorname{tr}(A^TA)$ nor $|\\det A|$. Since $A^TA = V\\Sigma^2V^T$:\n\n$$\\|A\\|_F^2 = \\sum_{i,j} a_{ij}^2 = \\operatorname{tr}(A^TA) = \\sigma_1^2 + \\sigma_2^2, \\qquad |\\det A| = \\sigma_1\\sigma_2.$$\n\nSo the sum of squares of all entries can be read off from the singular values, and vice versa.",
+        "在 $A = U\\Sigma V^T$ 中，$U$ 与 $V$ 正交，保持长度，不改变 $\\operatorname{tr}(A^TA)$ 与 $|\\det A|$。由于 $A^TA = V\\Sigma^2V^T$：\n\n$$\\|A\\|_F^2 = \\sum_{i,j} a_{ij}^2 = \\operatorname{tr}(A^TA) = \\sigma_1^2 + \\sigma_2^2, \\qquad |\\det A| = \\sigma_1\\sigma_2。$$\n\n所以全部元素的平方和可以由奇异值读出，反之亦然。",
+      ),
+      generate(rng: Rng): Problem {
+        const A: Mat2 = [
+          [rng.int(-5, 5), rng.int(-5, 5)],
+          [rng.int(-5, 5), rng.nonZero(-5, 5)],
+        ];
+        const fro = A[0][0] ** 2 + A[0][1] ** 2 + A[1][0] ** 2 + A[1][1] ** 2;
+        const det = A[0][0] * A[1][1] - A[0][1] * A[1][0];
+        const askSum = rng.int(0, 1) === 0;
+        return numberProblem({
+          prompt: t(
+            `$A = ${mat2Latex(A)}$ has singular values $\\sigma_1 \\ge \\sigma_2$. Find $${askSum ? "\\sigma_1^2 + \\sigma_2^2" : "\\sigma_1\\sigma_2"}$ without computing the SVD.`,
+            `$A = ${mat2Latex(A)}$ 的奇异值为 $\\sigma_1 \\ge \\sigma_2$。不计算奇异值分解，求 $${askSum ? "\\sigma_1^2 + \\sigma_2^2" : "\\sigma_1\\sigma_2"}$。`,
+          ),
+          answer: askSum ? fro : Math.abs(det),
+          wrong: askSum ? [A[0][0] + A[1][1], det * det, fro - 2 * det] : [det * det, fro, A[0][0] * A[1][1] + A[0][1] * A[1][0]],
+          solution: askSum
+            ? t(
+                `$\\sigma_1^2 + \\sigma_2^2 = \\|A\\|_F^2$, the sum of the squares of the entries: $${fro}$.`,
+                `$\\sigma_1^2 + \\sigma_2^2 = \\|A\\|_F^2$，即各元素平方和：$${fro}$。`,
+              )
+            : t(
+                `$\\sigma_1\\sigma_2 = |\\det A| = |${det}| = ${Math.abs(det)}$.`,
+                `$\\sigma_1\\sigma_2 = |\\det A| = |${det}| = ${Math.abs(det)}$。`,
+              ),
+        });
+      },
+    },
   ],
 };
 
@@ -1523,6 +2213,44 @@ export const singularValueDecompositionOf2x2MatricesWithZeroOrRepeatedEigenvalue
         );
 
         return oneOf(rng, prompt, right, wrong, solution);
+      },
+    },
+    {
+      id: "the-nonzero-singular-value-of-a-rank-one-matrix",
+      title: t("The nonzero singular value of a rank-one matrix", "秩一矩阵的非零奇异值"),
+      explanation: t(
+        "A rank-one matrix is an outer product $A = \\mathbf{u}\\mathbf{v}^T$. Then $A^TA = \\|\\mathbf{u}\\|^2\\mathbf{v}\\mathbf{v}^T$, whose only nonzero eigenvalue is $\\|\\mathbf{u}\\|^2\\|\\mathbf{v}\\|^2$. So the singular values are\n\n$$\\sigma_1 = \\|\\mathbf{u}\\|\\,\\|\\mathbf{v}\\|, \\qquad \\sigma_2 = 0,$$\n\nwith $\\frac{\\mathbf{u}}{\\|\\mathbf{u}\\|}$ and $\\frac{\\mathbf{v}}{\\|\\mathbf{v}\\|}$ as the first left and right singular vectors.",
+        "秩一矩阵是外积 $A = \\mathbf{u}\\mathbf{v}^T$。于是 $A^TA = \\|\\mathbf{u}\\|^2\\mathbf{v}\\mathbf{v}^T$，唯一的非零特征值为 $\\|\\mathbf{u}\\|^2\\|\\mathbf{v}\\|^2$。所以奇异值为\n\n$$\\sigma_1 = \\|\\mathbf{u}\\|\\,\\|\\mathbf{v}\\|, \\qquad \\sigma_2 = 0,$$\n\n$\\frac{\\mathbf{u}}{\\|\\mathbf{u}\\|}$ 与 $\\frac{\\mathbf{v}}{\\|\\mathbf{v}\\|}$ 为第一个左、右奇异向量。",
+      ),
+      generate(rng: Rng): Problem {
+        const triples = [
+          [3, 4, 5],
+          [4, 3, 5],
+          [5, 12, 13],
+          [12, 5, 13],
+          [1, 0, 1],
+          [0, 2, 2],
+        ] as const;
+        const [p, q, r] = rng.pick(triples);
+        const [a, b, c] = rng.pick(triples.slice(0, 4));
+        const s = rng.pick([1, -1]);
+        const A: Mat2 = [
+          [p * a, s * p * b],
+          [q * a, s * q * b],
+        ];
+        const ans = r * c;
+        return numberProblem({
+          prompt: t(
+            `$A = ${mat2Latex(A)}$ has rank $1$. Find its largest singular value.`,
+            `$A = ${mat2Latex(A)}$ 的秩为 $1$。求其最大奇异值。`,
+          ),
+          answer: ans,
+          wrong: [ans * ans, r + c, Math.abs(A[0][0]) + Math.abs(A[1][1]), c],
+          solution: t(
+            `$A = ${vec2Latex([p, q])}\\begin{pmatrix} ${a} & ${s * b} \\end{pmatrix}$, so $\\sigma_1 = ${r} \\cdot ${c} = ${ans}$ and $\\sigma_2 = 0$.`,
+            `$A = ${vec2Latex([p, q])}\\begin{pmatrix} ${a} & ${s * b} \\end{pmatrix}$，所以 $\\sigma_1 = ${r} \\cdot ${c} = ${ans}$，$\\sigma_2 = 0$。`,
+          ),
+        });
       },
     },
   ],
@@ -1637,6 +2365,44 @@ export const singularValueDecompositionOfLargerMatrices: TopicDef = {
         return oneOf(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "the-error-of-a-truncated-svd",
+      title: t("The error of a truncated SVD", "截断奇异值分解的误差"),
+      explanation: t(
+        "Keeping the first $k$ terms of $A = \\sum_i \\sigma_i\\mathbf{u}_i\\mathbf{v}_i^T$ gives the best rank-$k$ approximation $A_k$. The error $A - A_k = \\sum_{i > k}\\sigma_i\\mathbf{u}_i\\mathbf{v}_i^T$ has singular values $\\sigma_{k+1}, \\sigma_{k+2}, \\dots$, so\n\n$$\\|A - A_k\\|_2 = \\sigma_{k+1}, \\qquad \\|A - A_k\\|_F^2 = \\sigma_{k+1}^2 + \\sigma_{k+2}^2 + \\cdots.$$",
+        "保留 $A = \\sum_i \\sigma_i\\mathbf{u}_i\\mathbf{v}_i^T$ 的前 $k$ 项得到最佳秩 $k$ 逼近 $A_k$。误差 $A - A_k = \\sum_{i > k}\\sigma_i\\mathbf{u}_i\\mathbf{v}_i^T$ 的奇异值为 $\\sigma_{k+1}, \\sigma_{k+2}, \\dots$，所以\n\n$$\\|A - A_k\\|_2 = \\sigma_{k+1}, \\qquad \\|A - A_k\\|_F^2 = \\sigma_{k+1}^2 + \\sigma_{k+2}^2 + \\cdots。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const s4 = rng.int(1, 3);
+        const s3 = s4 + rng.int(1, 3);
+        const s2 = s3 + rng.int(1, 3);
+        const s1 = s2 + rng.int(1, 4);
+        const sig = [s1, s2, s3, s4];
+        const k = rng.int(1, 2);
+        const fro = rng.int(0, 1) === 0;
+        const rest = sig.slice(k);
+        const ans = fro ? rest.reduce((x, y) => x + y * y, 0) : sig[k]!;
+        return numberProblem({
+          prompt: t(
+            `A matrix has singular values $${sig.join(", ")}$. Let $A_${k}$ be its best rank-$${k}$ approximation from the SVD. Find $${fro ? `\\|A - A_${k}\\|_F^2` : `\\|A - A_${k}\\|_2`}$.`,
+            `某矩阵的奇异值为 $${sig.join(", ")}$。设 $A_${k}$ 为由奇异值分解得到的最佳秩 $${k}$ 逼近。求 $${fro ? `\\|A - A_${k}\\|_F^2` : `\\|A - A_${k}\\|_2`}$。`,
+          ),
+          answer: ans,
+          wrong: fro
+            ? [rest.reduce((x, y) => x + y, 0), sig[k]! ** 2, sig.slice(k + 1).reduce((x, y) => x + y * y, 0)]
+            : [sig[k - 1]!, sig[k + 1]!, rest.reduce((x, y) => x + y, 0)],
+          solution: fro
+            ? t(
+                `The discarded singular values are $${rest.join(", ")}$, so the squared Frobenius error is $${rest.map((x) => `${x}^2`).join(" + ")} = ${ans}$.`,
+                `舍弃的奇异值为 $${rest.join(", ")}$，所以 Frobenius 误差的平方为 $${rest.map((x) => `${x}^2`).join(" + ")} = ${ans}$。`,
+              )
+            : t(
+                `The spectral-norm error is the first discarded singular value, $\\sigma_${k + 1} = ${ans}$.`,
+                `谱范数误差是第一个被舍弃的奇异值 $\\sigma_${k + 1} = ${ans}$。`,
+              ),
+        });
+      },
+    },
   ],
 };
 
@@ -1743,6 +2509,33 @@ export const singularValueDecompositionAndThePseudoinverseMatrix: TopicDef = {
         return oneOf(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "the-pseudoinverse-of-a-column-vector",
+      title: t("The pseudoinverse of a single column", "单列矩阵的伪逆"),
+      explanation: t(
+        "A nonzero column $\\mathbf{a}$ has SVD $\\mathbf{a} = \\mathbf{u}\\,\\sigma\\,[1]$ with $\\sigma = \\|\\mathbf{a}\\|$ and $\\mathbf{u} = \\mathbf{a}/\\|\\mathbf{a}\\|$. Inverting the nonzero singular value and transposing gives\n\n$$\\mathbf{a}^+ = \\frac{\\mathbf{a}^T}{\\|\\mathbf{a}\\|^2}.$$\n\nSo $\\mathbf{a}^+\\mathbf{b} = \\frac{\\mathbf{a} \\cdot \\mathbf{b}}{\\mathbf{a} \\cdot \\mathbf{a}}$, which is the least-squares solution of $\\mathbf{a}x = \\mathbf{b}$.",
+        "非零列 $\\mathbf{a}$ 的奇异值分解为 $\\mathbf{a} = \\mathbf{u}\\,\\sigma\\,[1]$，$\\sigma = \\|\\mathbf{a}\\|$，$\\mathbf{u} = \\mathbf{a}/\\|\\mathbf{a}\\|$。把非零奇异值取倒数再转置得\n\n$$\\mathbf{a}^+ = \\frac{\\mathbf{a}^T}{\\|\\mathbf{a}\\|^2}。$$\n\n所以 $\\mathbf{a}^+\\mathbf{b} = \\frac{\\mathbf{a} \\cdot \\mathbf{b}}{\\mathbf{a} \\cdot \\mathbf{a}}$，即 $\\mathbf{a}x = \\mathbf{b}$ 的最小二乘解。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = [rng.nonZero(-3, 3), rng.int(-3, 3), rng.nonZero(-3, 3)] as const;
+        const b = [rng.int(-5, 5), rng.int(-5, 5), rng.int(-5, 5)] as const;
+        const dot = a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+        const nn = a[0] ** 2 + a[1] ** 2 + a[2] ** 2;
+        const ans = Q.of(dot, nn);
+        return numberProblem({
+          prompt: t(
+            `Let $A = ${vec3Latex(a)}$, a $3 \\times 1$ matrix. Find $A^+\\mathbf{b}$ for $\\mathbf{b} = ${vec3Latex(b)}$.`,
+            `设 $A = ${vec3Latex(a)}$ 为 $3 \\times 1$ 矩阵。对 $\\mathbf{b} = ${vec3Latex(b)}$ 求 $A^+\\mathbf{b}$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(dot), Q.of(nn, dot === 0 ? 1 : dot), Q.of(dot, nn * nn), ans.neg()],
+          solution: t(
+            `$A^+ = \\frac{1}{${nn}}A^T$, so $A^+\\mathbf{b} = \\frac{${dot}}{${nn}}${ans.isInteger() || ans.d !== BigInt(nn) ? ` = ${ans.toLatex()}` : ""}$.`,
+            `$A^+ = \\frac{1}{${nn}}A^T$，所以 $A^+\\mathbf{b} = \\frac{${dot}}{${nn}}${ans.isInteger() || ans.d !== BigInt(nn) ? ` = ${ans.toLatex()}` : ""}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1814,6 +2607,43 @@ export const leastSquaresSolutionOfALinearSystemWithoutCollinearity: TopicDef = 
         });
       },
     },
+    {
+      id: "least-squares-with-orthogonal-columns",
+      title: t("Least squares with orthogonal columns", "列正交时的最小二乘"),
+      explanation: t(
+        "The normal equations $A^TA\\hat{\\mathbf{x}} = A^T\\mathbf{b}$ become very simple when the columns of $A$ are orthogonal: $A^TA$ is diagonal, and each unknown is found separately,\n\n$$\\hat{x}_i = \\frac{\\mathbf{a}_i \\cdot \\mathbf{b}}{\\mathbf{a}_i \\cdot \\mathbf{a}_i}.$$\n\nFor example, the columns $(1, 1, 1)$ and $(-1, 0, 1)$ are orthogonal, which is why centered $x$-values make straight-line fits easy.",
+        "当 $A$ 的列正交时，正规方程 $A^TA\\hat{\\mathbf{x}} = A^T\\mathbf{b}$ 变得非常简单：$A^TA$ 是对角的，每个未知数可以单独求出，\n\n$$\\hat{x}_i = \\frac{\\mathbf{a}_i \\cdot \\mathbf{b}}{\\mathbf{a}_i \\cdot \\mathbf{a}_i}。$$\n\n例如列 $(1, 1, 1)$ 与 $(-1, 0, 1)$ 正交，这就是中心化的 $x$ 值让直线拟合变容易的原因。",
+      ),
+      generate(rng: Rng): Problem {
+        const s = rng.int(1, 2);
+        const A: Mat3x2 = [
+          [1, -s],
+          [1, 0],
+          [1, s],
+        ];
+        const b = [rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6)] as const;
+        const x1 = Q.of(b[0] + b[1] + b[2], 3);
+        const x2 = Q.of(s * (b[2] - b[0]), 2 * s * s);
+        return pointProblem({
+          prompt: t(
+            `Find the least-squares solution $\\hat{\\mathbf{x}}$ of $A\\mathbf{x} = \\mathbf{b}$ with $A = ${mat3x2Latex(A)}$ and $\\mathbf{b} = ${vec3Latex(b)}$.`,
+            `求 $A\\mathbf{x} = \\mathbf{b}$ 的最小二乘解 $\\hat{\\mathbf{x}}$，$A = ${mat3x2Latex(A)}$，$\\mathbf{b} = ${vec3Latex(b)}$。`,
+          ),
+          answer: [x1, x2],
+          vector: true,
+          vars: ["x_1", "x_2"],
+          wrong: [
+            [Q.of(b[0] + b[1] + b[2]), Q.of(s * (b[2] - b[0]))],
+            [x1, Q.of(s * (b[2] - b[0]), s * s)],
+            [Q.of(b[1]), x2],
+          ],
+          solution: t(
+            `The columns are orthogonal, so $\\hat{x}_1 = \\frac{${b[0] + b[1] + b[2]}}{3}$ and $\\hat{x}_2 = \\frac{${s * (b[2] - b[0])}}{${2 * s * s}}$, giving $\\hat{\\mathbf{x}} = \\langle ${x1.toLatex()}, ${x2.toLatex()} \\rangle$.`,
+            `各列正交，所以 $\\hat{x}_1 = \\frac{${b[0] + b[1] + b[2]}}{3}$，$\\hat{x}_2 = \\frac{${s * (b[2] - b[0])}}{${2 * s * s}}$，得 $\\hat{\\mathbf{x}} = \\langle ${x1.toLatex()}, ${x2.toLatex()} \\rangle$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1866,6 +2696,47 @@ export const leastSquaresSolutionOfALinearSystemWithCollinearity: TopicDef = {
         );
 
         return oneOf(rng, prompt, right, wrong, solution);
+      },
+    },
+    {
+      id: "counting-least-squares-solutions",
+      title: t("How many least-squares solutions?", "最小二乘解有几个？"),
+      explanation: t(
+        "Every system $A\\mathbf{x} = \\mathbf{b}$ has at least one least-squares solution, because the projection of $\\mathbf{b}$ onto the column space always exists. The solution is unique exactly when the columns of $A$ are linearly independent, so that $A^TA$ is invertible. When the columns are collinear or otherwise dependent, any vector in the null space can be added, and there are infinitely many least-squares solutions.",
+        "每个方程组 $A\\mathbf{x} = \\mathbf{b}$ 至少有一个最小二乘解，因为 $\\mathbf{b}$ 在列空间上的投影总存在。解唯一当且仅当 $A$ 的列线性无关，此时 $A^TA$ 可逆。当列共线或以其他方式相关时，可以加上零空间中的任意向量，最小二乘解有无穷多个。",
+      ),
+      generate(rng: Rng): Problem {
+        const c = [rng.nonZero(-4, 4), rng.int(-4, 4), rng.nonZero(-4, 4)];
+        const dependent = rng.int(0, 1) === 0;
+        const m = rng.pick([-3, -2, 2, 3]);
+        const d = dependent ? c.map((x) => m * x) : [c[0]! * m, c[1]! * m + rng.nonZero(-2, 2), c[2]! * m];
+        const A: Mat3x2 = [
+          [c[0]!, d[0]!],
+          [c[1]!, d[1]!],
+          [c[2]!, d[2]!],
+        ];
+        const b = [rng.int(-5, 5), rng.int(-5, 5), rng.int(-5, 5)] as const;
+        const one = t("Exactly one", "恰好一个");
+        const inf = t("Infinitely many", "无穷多个");
+        const none = t("None", "没有");
+        return oneOf(
+          rng,
+          t(
+            `How many least-squares solutions does $A\\mathbf{x} = \\mathbf{b}$ have for $A = ${mat3x2Latex(A)}$ and $\\mathbf{b} = ${vec3Latex(b)}$?`,
+            `对 $A = ${mat3x2Latex(A)}$ 与 $\\mathbf{b} = ${vec3Latex(b)}$，$A\\mathbf{x} = \\mathbf{b}$ 有几个最小二乘解？`,
+          ),
+          dependent ? inf : one,
+          [dependent ? one : inf, none],
+          dependent
+            ? t(
+                `The second column is $${m}$ times the first, so the columns are dependent and $A^TA$ is singular. A least-squares solution exists, and adding multiples of $\\langle ${-m}, 1 \\rangle$ gives infinitely many.`,
+                `第二列是第一列的 $${m}$ 倍，列相关，$A^TA$ 奇异。最小二乘解存在，加上 $\\langle ${-m}, 1 \\rangle$ 的倍数得到无穷多个。`,
+              )
+            : t(
+                "The columns are not multiples of each other, so they are independent, $A^TA$ is invertible, and the least-squares solution is unique.",
+                "两列不成倍数，所以线性无关，$A^TA$ 可逆，最小二乘解唯一。",
+              ),
+        );
       },
     },
   ],
@@ -1932,6 +2803,40 @@ export const findingALeastSquaresSolutionUsingQrFactorization: TopicDef = {
         });
       },
     },
+    {
+      id: "the-right-hand-side-qtb-in-qr-least-squares",
+      title: t("The right-hand side $Q^T\\mathbf{b}$ in QR least squares", "QR 最小二乘中的右端 $Q^T\\mathbf{b}$"),
+      explanation: t(
+        "With $A = QR$, where $Q$ has orthonormal columns, the normal equations reduce to the triangular system $R\\hat{\\mathbf{x}} = Q^T\\mathbf{b}$. The right-hand side is just the dot products of $\\mathbf{b}$ with the columns of $Q$. For instance, the columns $\\frac12(1, 1, 1, 1)$ and $\\frac12(1, -1, 1, -1)$ are orthonormal, and $Q^T\\mathbf{b}$ is half the sum and half the alternating sum of the entries of $\\mathbf{b}$.",
+        "对 $A = QR$（$Q$ 的列标准正交），正规方程化为三角方程组 $R\\hat{\\mathbf{x}} = Q^T\\mathbf{b}$。右端就是 $\\mathbf{b}$ 与 $Q$ 各列的点积。例如列 $\\frac12(1, 1, 1, 1)$ 与 $\\frac12(1, -1, 1, -1)$ 标准正交，$Q^T\\mathbf{b}$ 为 $\\mathbf{b}$ 各分量之和的一半与交错和的一半。",
+      ),
+      generate(rng: Rng): Problem {
+        const b = [rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6), rng.int(-6, 6)] as const;
+        const alt = rng.int(0, 1) === 0;
+        const c2 = alt ? [1, -1, 1, -1] : [1, 1, -1, -1];
+        const s1 = b[0] + b[1] + b[2] + b[3];
+        const s2 = c2[0]! * b[0] + c2[1]! * b[1] + c2[2]! * b[2] + c2[3]! * b[3];
+        const ans = [Q.of(s1, 2), Q.of(s2, 2)];
+        const col = (v: readonly number[]) => `\\begin{pmatrix} ${v.join(" \\\\ ")} \\end{pmatrix}`;
+        return pointProblem({
+          prompt: t(
+            `In a QR least-squares solve, $Q = \\frac12\\begin{pmatrix} ${[0, 1, 2, 3].map((i) => `1 & ${c2[i]}`).join(" \\\\ ")} \\end{pmatrix}$. Find $Q^T\\mathbf{b}$ for $\\mathbf{b} = ${col(b)}$.`,
+            `在 QR 最小二乘求解中，$Q = \\frac12\\begin{pmatrix} ${[0, 1, 2, 3].map((i) => `1 & ${c2[i]}`).join(" \\\\ ")} \\end{pmatrix}$。对 $\\mathbf{b} = ${col(b)}$ 求 $Q^T\\mathbf{b}$。`,
+          ),
+          answer: ans,
+          vector: true,
+          wrong: [
+            [s1, s2],
+            [Q.of(s1, 4), Q.of(s2, 4)],
+            [Q.of(s2, 2), Q.of(s1, 2)],
+          ],
+          solution: t(
+            `The first entry is $\\frac12(${b.map((x, i) => (i === 0 ? String(x) : x < 0 ? `- ${-x}` : `+ ${x}`)).join(" ")}) = ${ans[0]!.toLatex()}$, and the second is $\\frac12$ times the signed sum $${s2}$, which is $${ans[1]!.toLatex()}$.`,
+            `第一个分量为 $\\frac12(${b.map((x, i) => (i === 0 ? String(x) : x < 0 ? `- ${-x}` : `+ ${x}`)).join(" ")}) = ${ans[0]!.toLatex()}$，第二个是带符号和 $${s2}$ 的 $\\frac12$，即 $${ans[1]!.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1990,6 +2895,34 @@ export const weightedLeastSquares: TopicDef = {
             ])}$。计算 $A^T \\Omega A = (${a1})^2(${w1Sq}) + (${a2})^2(${w2Sq}) = ${a1 * a1 * w1Sq} + ${a2 * a2 * w2Sq} = ${atOmegaA}$。`,
           ),
           wrong: [a1 * a1 + a2 * a2, atOmegaA + 2, atOmegaA - 2, a1 * w1 + a2 * w2],
+        });
+      },
+    },
+    {
+      id: "a-weighted-least-squares-constant-fit",
+      title: t("Fitting a constant by weighted least squares", "用加权最小二乘拟合常数"),
+      explanation: t(
+        "Weighted least squares minimizes $\\sum_i w_i(y_i - \\hat{y}_i)^2$, solving $A^TWA\\hat{\\mathbf{x}} = A^TW\\mathbf{y}$. For the constant model $y = c$, $A$ is a column of ones, and the solution is the weighted mean\n\n$$\\hat{c} = \\frac{\\sum_i w_iy_i}{\\sum_i w_i}.$$\n\nObservations with larger weights pull the estimate toward themselves.",
+        "加权最小二乘最小化 $\\sum_i w_i(y_i - \\hat{y}_i)^2$，求解 $A^TWA\\hat{\\mathbf{x}} = A^TW\\mathbf{y}$。对常数模型 $y = c$，$A$ 是全 1 列，解为加权平均\n\n$$\\hat{c} = \\frac{\\sum_i w_iy_i}{\\sum_i w_i}。$$\n\n权重较大的观测把估计拉向自己。",
+      ),
+      generate(rng: Rng): Problem {
+        const y = [rng.int(-5, 9), rng.int(-5, 9), rng.int(-5, 9)];
+        const w = [rng.int(1, 5), rng.int(1, 5), rng.int(1, 5)];
+        if (w[0] === w[1] && w[1] === w[2]) w[2] = w[2]! + 1;
+        const num = w[0]! * y[0]! + w[1]! * y[1]! + w[2]! * y[2]!;
+        const den = w[0]! + w[1]! + w[2]!;
+        const ans = Q.of(num, den);
+        return numberProblem({
+          prompt: t(
+            `Fit $y = c$ to the observations $y_1 = ${y[0]}$, $y_2 = ${y[1]}$, $y_3 = ${y[2]}$ by weighted least squares with weights $w_1 = ${w[0]}$, $w_2 = ${w[1]}$, $w_3 = ${w[2]}$. Find $\\hat{c}$.`,
+            `用权重 $w_1 = ${w[0]}$，$w_2 = ${w[1]}$，$w_3 = ${w[2]}$ 的加权最小二乘把 $y = c$ 拟合到观测 $y_1 = ${y[0]}$，$y_2 = ${y[1]}$，$y_3 = ${y[2]}$。求 $\\hat{c}$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(y[0]! + y[1]! + y[2]!, 3), Q.of(num), Q.of(num, 3), Q.of(w[2]! * y[0]! + w[1]! * y[1]! + w[0]! * y[2]!, den)],
+          solution: t(
+            `$\\hat{c} = \\frac{${w[0]} \\cdot ${y[0]! < 0 ? `(${y[0]})` : y[0]} + ${w[1]} \\cdot ${y[1]! < 0 ? `(${y[1]})` : y[1]} + ${w[2]} \\cdot ${y[2]! < 0 ? `(${y[2]})` : y[2]}}{${den}} = ${ans.toLatex()}$.`,
+            `$\\hat{c} = \\frac{${w[0]} \\cdot ${y[0]! < 0 ? `(${y[0]})` : y[0]} + ${w[1]} \\cdot ${y[1]! < 0 ? `(${y[1]})` : y[1]} + ${w[2]} \\cdot ${y[2]! < 0 ? `(${y[2]})` : y[2]}}{${den}} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -2067,6 +3000,43 @@ export const markovChains: TopicDef = {
         });
       },
     },
+    {
+      id: "a-two-step-transition-probability",
+      title: t("A two-step transition probability", "两步转移概率"),
+      explanation: t(
+        "With a column-stochastic matrix $P$, the entry $p_{ij}$ is the probability of moving from state $j$ to state $i$ in one step. Two steps correspond to $P^2$, and summing over the intermediate state $k$ gives\n\n$$(P^2)_{ij} = \\sum_k p_{ik}\\,p_{kj}.$$\n\nFor two states, the probability of being in state 1 two steps after starting there is $p_{11}^2 + p_{12}p_{21}$: stay twice, or leave and come back.",
+        "对列随机矩阵 $P$，元素 $p_{ij}$ 是一步从状态 $j$ 转到状态 $i$ 的概率。两步对应 $P^2$，对中间状态 $k$ 求和得\n\n$$(P^2)_{ij} = \\sum_k p_{ik}\\,p_{kj}。$$\n\n对两个状态，从状态 1 出发两步后仍在状态 1 的概率为 $p_{11}^2 + p_{12}p_{21}$：两次都停留，或离开后再回来。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 9);
+        const b = rng.int(1, 9);
+        const p11 = Q.of(10 - a, 10);
+        const p21 = Q.of(a, 10);
+        const p12 = Q.of(b, 10);
+        const p22 = Q.of(10 - b, 10);
+        const toTwo = rng.int(0, 1) === 1;
+        const ans = toTwo ? p21.mul(p11).add(p22.mul(p21)) : p11.mul(p11).add(p12.mul(p21));
+        const P = `\\begin{pmatrix} ${p11.toLatex()} & ${p12.toLatex()} \\\\ ${p21.toLatex()} & ${p22.toLatex()} \\end{pmatrix}`;
+        return numberProblem({
+          prompt: t(
+            `A Markov chain has column-stochastic transition matrix $P = ${P}$. Starting in state 1, what is the probability of being in state ${toTwo ? 2 : 1} after two steps?`,
+            `某马尔可夫链的列随机转移矩阵为 $P = ${P}$。从状态 1 出发，两步后处于状态 ${toTwo ? 2 : 1} 的概率是多少？`,
+          ),
+          answer: ans,
+          form: "decimal",
+          wrong: toTwo ? [p21, p21.mul(p21), p21.mul(p11)] : [p11, p11.mul(p11), p12.mul(p21)],
+          solution: toTwo
+            ? t(
+                `$(P^2)_{21} = p_{21}p_{11} + p_{22}p_{21} = ${p21.toLatex()} \\cdot ${p11.toLatex()} + ${p22.toLatex()} \\cdot ${p21.toLatex()} = ${ans.toLatex()}$.`,
+                `$(P^2)_{21} = p_{21}p_{11} + p_{22}p_{21} = ${p21.toLatex()} \\cdot ${p11.toLatex()} + ${p22.toLatex()} \\cdot ${p21.toLatex()} = ${ans.toLatex()}$。`,
+              )
+            : t(
+                `$(P^2)_{11} = p_{11}^2 + p_{12}p_{21} = \\left(${p11.toLatex()}\\right)^2 + ${p12.toLatex()} \\cdot ${p21.toLatex()} = ${ans.toLatex()}$.`,
+                `$(P^2)_{11} = p_{11}^2 + p_{12}p_{21} = \\left(${p11.toLatex()}\\right)^2 + ${p12.toLatex()} \\cdot ${p21.toLatex()} = ${ans.toLatex()}$。`,
+              ),
+        });
+      },
+    },
   ],
 };
 
@@ -2112,6 +3082,38 @@ export const steadyStateVectors: TopicDef = {
             `稳态方程 $(P - I) q = 0$ 给出 $-\\frac{${aNum}}{${denom}} q_1 + \\frac{${bNum}}{${denom}} q_2 = 0$，化简得 $${aNum} q_1 = ${bNum} q_2$。结合概率条件 $q_1 + q_2 = 1$，代入 $q_2 = \\frac{${aNum}}{${bNum}} q_1$ 得 $\\left(1 + \\frac{${aNum}}{${bNum}}\\right) q_1 = 1$，解得 $q_1 = \\frac{${bNum}}{${sum}} = ${q1.toLatex()}$。`,
           ),
           wrong: [q2, Q.of(1, 2), Q.of(aNum, denom)],
+        });
+      },
+    },
+    {
+      id: "the-steady-state-of-a-three-state-chain-by-balance",
+      title: t("The steady state of a three-state chain by balance", "用平衡关系求三状态链的稳态"),
+      explanation: t(
+        "In a chain on states $1, 2, 3$ that only moves between neighbors, in the long run the flow across each cut must balance: $\\pi_1 p_{21} = \\pi_2 p_{12}$ and $\\pi_2 p_{32} = \\pi_3 p_{23}$, where $p_{ij}$ is the probability of moving from $j$ to $i$. So $\\pi$ is proportional to\n\n$$\\left(1,\\ \\frac{p_{21}}{p_{12}},\\ \\frac{p_{21}p_{32}}{p_{12}p_{23}}\\right),$$\n\nand dividing by the sum makes the entries add to $1$.",
+        "在只在相邻状态间移动的三状态链 $1, 2, 3$ 中，长期来看穿过每个割的流量必须平衡：$\\pi_1 p_{21} = \\pi_2 p_{12}$，$\\pi_2 p_{32} = \\pi_3 p_{23}$，其中 $p_{ij}$ 是从 $j$ 转到 $i$ 的概率。所以 $\\pi$ 与\n\n$$\\left(1,\\ \\frac{p_{21}}{p_{12}},\\ \\frac{p_{21}p_{32}}{p_{12}p_{23}}\\right)$$\n\n成比例，除以总和使各分量之和为 $1$。",
+      ),
+      generate(rng: Rng): Problem {
+        const up1 = rng.int(1, 5);
+        const down2 = rng.int(1, 4);
+        const up2 = rng.int(1, 4);
+        const down3 = rng.int(1, 5);
+        const r2 = Q.of(up1, down2);
+        const r3 = Q.of(up1 * up2, down2 * down3);
+        const total = Q.one.add(r2).add(r3);
+        const which = rng.int(1, 3);
+        const ans = (which === 1 ? Q.one : which === 2 ? r2 : r3).div(total);
+        const pct = (n: number) => `${n * 10}\\%`;
+        return numberProblem({
+          prompt: t(
+            `A chain moves each step from state 1 to 2 with probability $${pct(up1)}$; from 2 to 1 with probability $${pct(down2)}$ and from 2 to 3 with probability $${pct(up2)}$; from 3 to 2 with probability $${pct(down3)}$; otherwise it stays. Find the long-run probability of state ${which}.`,
+            `某链每一步从状态 1 转到 2 的概率为 $${pct(up1)}$；从 2 转到 1 的概率为 $${pct(down2)}$，从 2 转到 3 的概率为 $${pct(up2)}$；从 3 转到 2 的概率为 $${pct(down3)}$；否则停留。求状态 ${which} 的长期概率。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(1, 3), Q.one.div(total), r3.div(total), r2.div(total), Q.of(up1, up1 + down2)],
+          solution: t(
+            `Balance gives $\\pi_2 = ${r2.toLatex()}\\,\\pi_1$ and $\\pi_3 = ${up2 === down3 ? "" : `${Q.of(up2, down3).toLatex()}\\,`}\\pi_2 = ${r3.toLatex()}\\,\\pi_1$. The weights $1, ${r2.toLatex()}, ${r3.toLatex()}$ sum to $${total.toLatex()}$, so $\\pi_${which} = ${ans.toLatex()}$.`,
+            `平衡给出 $\\pi_2 = ${r2.toLatex()}\\,\\pi_1$，$\\pi_3 = ${up2 === down3 ? "" : `${Q.of(up2, down3).toLatex()}\\,`}\\pi_2 = ${r3.toLatex()}\\,\\pi_1$。权重 $1, ${r2.toLatex()}, ${r3.toLatex()}$ 之和为 $${total.toLatex()}$，所以 $\\pi_${which} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -2176,6 +3178,37 @@ export const linearRegressionWithMatrices: TopicDef = {
             [-beta0, beta1],
             [beta0 + 1, beta1 - 1],
           ],
+        });
+      },
+    },
+    {
+      id: "the-entries-of-xtx-and-xty",
+      title: t("The entries of $X^TX$ and $X^T\\mathbf{y}$", "$X^TX$ 与 $X^T\\mathbf{y}$ 的元素"),
+      explanation: t(
+        "For the line $y = \\beta_0 + \\beta_1x$ the design matrix $X$ has a column of ones and a column of $x$-values. Its normal equations $X^TX\\boldsymbol{\\beta} = X^T\\mathbf{y}$ are built from simple sums:\n\n$$X^TX = \\begin{pmatrix} n & \\sum x_i \\\\ \\sum x_i & \\sum x_i^2 \\end{pmatrix}, \\qquad X^T\\mathbf{y} = \\begin{pmatrix} \\sum y_i \\\\ \\sum x_iy_i \\end{pmatrix}.$$\n\nComputing these four sums is the main work of a straight-line fit.",
+        "对直线 $y = \\beta_0 + \\beta_1x$，设计矩阵 $X$ 有一列 1 与一列 $x$ 值。其正规方程 $X^TX\\boldsymbol{\\beta} = X^T\\mathbf{y}$ 由简单的和构成：\n\n$$X^TX = \\begin{pmatrix} n & \\sum x_i \\\\ \\sum x_i & \\sum x_i^2 \\end{pmatrix}, \\qquad X^T\\mathbf{y} = \\begin{pmatrix} \\sum y_i \\\\ \\sum x_iy_i \\end{pmatrix}。$$\n\n计算这四个和是直线拟合的主要工作。",
+      ),
+      generate(rng: Rng): Problem {
+        const n = rng.int(3, 4);
+        const xs = Array.from({ length: n }, () => rng.int(-3, 5));
+        const ys = Array.from({ length: n }, () => rng.int(-4, 8));
+        const pts = xs.map((x, i) => `(${x}, ${ys[i]})`).join(", ");
+        const kind = rng.int(0, 2);
+        const sx = xs.reduce((a, b) => a + b, 0);
+        const sxx = xs.reduce((a, b) => a + b * b, 0);
+        const sxy = xs.reduce((a, x, i) => a + x * ys[i]!, 0);
+        const name = ["the $(2, 2)$ entry of $X^TX$", "the $(1, 2)$ entry of $X^TX$", "the second entry of $X^T\\mathbf{y}$"][kind]!;
+        const nameZh = ["$X^TX$ 的 $(2, 2)$ 元", "$X^TX$ 的 $(1, 2)$ 元", "$X^T\\mathbf{y}$ 的第二个分量"][kind]!;
+        const ans = [sxx, sx, sxy][kind]!;
+        const formula = ["\\sum x_i^2", "\\sum x_i", "\\sum x_iy_i"][kind]!;
+        return numberProblem({
+          prompt: t(
+            `For fitting $y = \\beta_0 + \\beta_1x$ to the points $${pts}$, find ${name}.`,
+            `用直线 $y = \\beta_0 + \\beta_1x$ 拟合点 $${pts}$，求${nameZh}。`,
+          ),
+          answer: ans,
+          wrong: [sx * sx, sxx, sx, sxy, n, ys.reduce((a, b) => a + b, 0)].filter((w) => w !== ans).slice(0, 4),
+          solution: t(`That entry is $${formula} = ${ans}$.`, `该元素为 $${formula} = ${ans}$。`),
         });
       },
     },
@@ -2281,6 +3314,39 @@ export const polynomialRegressionWithMatrices: TopicDef = {
         return oneOf(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "a-quadratic-fit-through-three-points-interpolates",
+      title: t("A quadratic fit to three points", "三点的二次拟合"),
+      explanation: t(
+        "Fitting $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ to three points with distinct $x$-values gives a square, invertible design matrix. The least-squares solution then solves $X\\boldsymbol{\\beta} = \\mathbf{y}$ exactly, so the parabola passes through all three points. For $x = -h, 0, h$:\n\n$$\\beta_0 = y_0, \\qquad \\beta_1 = \\frac{y_h - y_{-h}}{2h}, \\qquad \\beta_2 = \\frac{y_h + y_{-h} - 2y_0}{2h^2}.$$",
+        "用 $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ 拟合 $x$ 值互不相同的三个点，设计矩阵是可逆方阵。此时最小二乘解恰好满足 $X\\boldsymbol{\\beta} = \\mathbf{y}$，抛物线经过全部三点。对 $x = -h, 0, h$：\n\n$$\\beta_0 = y_0, \\qquad \\beta_1 = \\frac{y_h - y_{-h}}{2h}, \\qquad \\beta_2 = \\frac{y_h + y_{-h} - 2y_0}{2h^2}。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const h = rng.int(1, 2);
+        const ym = rng.int(-6, 8);
+        const y0 = rng.int(-6, 8);
+        const yp = rng.int(-6, 8);
+        const which = rng.int(1, 2);
+        const b1 = Q.of(yp - ym, 2 * h);
+        const b2 = Q.of(yp + ym - 2 * y0, 2 * h * h);
+        const ans = which === 1 ? b1 : b2;
+        return numberProblem({
+          prompt: t(
+            `Fit $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ by least squares to $(${-h}, ${ym})$, $(0, ${y0})$, $(${h}, ${yp})$. Find $\\beta_${which}$.`,
+            `用最小二乘把 $y = \\beta_0 + \\beta_1x + \\beta_2x^2$ 拟合到 $(${-h}, ${ym})$、$(0, ${y0})$、$(${h}, ${yp})$。求 $\\beta_${which}$。`,
+          ),
+          answer: ans,
+          wrong:
+            which === 1
+              ? [Q.of(yp - ym), Q.of(yp - ym, h), b2]
+              : [Q.of(yp + ym - 2 * y0), Q.of(yp + ym - 2 * y0, h * h), Q.of(yp + ym - y0, 2 * h * h), b1],
+          solution: t(
+            `Three points with distinct $x$ give an exact fit. Then $\\beta_1 = \\frac{${yp} - ${ym < 0 ? `(${ym})` : ym}}{${2 * h}} = ${b1.toLatex()}$ and $\\beta_2 = \\frac{${yp} + ${ym < 0 ? `(${ym})` : ym} - 2 \\cdot ${y0 < 0 ? `(${y0})` : y0}}{${2 * h * h}} = ${b2.toLatex()}$.`,
+            `$x$ 互不相同的三点给出精确拟合。于是 $\\beta_1 = \\frac{${yp} - ${ym < 0 ? `(${ym})` : ym}}{${2 * h}} = ${b1.toLatex()}$，$\\beta_2 = \\frac{${yp} + ${ym < 0 ? `(${ym})` : ym} - 2 \\cdot ${y0 < 0 ? `(${y0})` : y0}}{${2 * h * h}} = ${b2.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -2320,6 +3386,34 @@ export const multipleLinearRegressionWithMatrices: TopicDef = {
             `利用迹的循环性质，$\\operatorname{tr}(H) = \\operatorname{tr}(X (X^T X)^{-1} X^T) = \\operatorname{tr}((X^T X)^{-1} X^T X) = \\operatorname{tr}(I_p) = p$。由于共有 $p = ${p}$ 个参数，故帽子矩阵的迹为 $${p}$。`,
           ),
           wrong: [n, n - p, p - 1, 1],
+        });
+      },
+    },
+    {
+      id: "a-fitted-value-and-residual-in-multiple-regression",
+      title: t("A fitted value and residual in multiple regression", "多元回归中的拟合值与残差"),
+      explanation: t(
+        "Once $\\hat{\\boldsymbol{\\beta}} = (X^TX)^{-1}X^T\\mathbf{y}$ is known, the fitted values are $\\hat{\\mathbf{y}} = X\\hat{\\boldsymbol{\\beta}}$: each row of $X$, $(1, x_{i1}, x_{i2})$, is dotted with $\\hat{\\boldsymbol{\\beta}}$. The residual of an observation is $e_i = y_i - \\hat{y}_i$, positive when the observation lies above the fitted plane and negative when it lies below.",
+        "求得 $\\hat{\\boldsymbol{\\beta}} = (X^TX)^{-1}X^T\\mathbf{y}$ 后，拟合值为 $\\hat{\\mathbf{y}} = X\\hat{\\boldsymbol{\\beta}}$：$X$ 的每一行 $(1, x_{i1}, x_{i2})$ 与 $\\hat{\\boldsymbol{\\beta}}$ 作点积。观测的残差为 $e_i = y_i - \\hat{y}_i$，观测在拟合平面上方时为正，下方时为负。",
+      ),
+      generate(rng: Rng): Problem {
+        const b = [rng.nonZero(-5, 8), rng.nonZero(-4, 4), rng.nonZero(-4, 4)] as const;
+        const x1 = rng.int(0, 6);
+        const x2 = rng.int(-3, 5);
+        const yhat = b[0] + b[1] * x1 + b[2] * x2;
+        const y = yhat + rng.nonZero(-5, 5);
+        const ans = y - yhat;
+        return numberProblem({
+          prompt: t(
+            `A fitted model is $\\hat{y} = ${b[0]} ${formatAddVar(b[1], "x_1")} ${formatAddVar(b[2], "x_2")}$. Find the residual of the observation $x_1 = ${x1}$, $x_2 = ${x2}$, $y = ${y}$.`,
+            `拟合模型为 $\\hat{y} = ${b[0]} ${formatAddVar(b[1], "x_1")} ${formatAddVar(b[2], "x_2")}$。求观测 $x_1 = ${x1}$，$x_2 = ${x2}$，$y = ${y}$ 的残差。`,
+          ),
+          answer: ans,
+          wrong: [-ans, yhat, y - b[0], y - (b[1] * x1 + b[2] * x2)],
+          solution: t(
+            `$\\hat{y} = ${b[0]} + ${b[1] < 0 ? `(${b[1]})` : b[1]} \\cdot ${x1} + ${b[2] < 0 ? `(${b[2]})` : b[2]} \\cdot ${x2 < 0 ? `(${x2})` : x2} = ${yhat}$, so $e = ${y} - ${yhat < 0 ? `(${yhat})` : yhat} = ${ans}$.`,
+            `$\\hat{y} = ${b[0]} + ${b[1] < 0 ? `(${b[1]})` : b[1]} \\cdot ${x1} + ${b[2] < 0 ? `(${b[2]})` : b[2]} \\cdot ${x2 < 0 ? `(${x2})` : x2} = ${yhat}$，所以 $e = ${y} - ${yhat < 0 ? `(${yhat})` : yhat} = ${ans}$。`,
+          ),
         });
       },
     },
