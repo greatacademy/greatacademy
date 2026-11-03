@@ -736,48 +736,57 @@ export const theAlternatingSeriesTest: TopicDef = {
       },
     },
     {
-      id: "the-alternating-series-error-bound",
-      title: t("The alternating series error bound", "交错级数的误差估计"),
+      id: "terms-that-decrease-eventually",
+      title: t("Terms that decrease only eventually", "最终才递减的项"),
       explanation: t(
-        "When the alternating series test applies, the sum lies between any two consecutive partial sums, so stopping after $N$ terms leaves an error of at most the first term left out: $|S - S_N| \\le b_{N+1}$. For $\\sum \\frac{(-1)^{n+1}}{n^{2}}$, the error of $S_{9}$ is at most $b_{10} = \\frac{1}{100}$. To make the error less than $\\frac{1}{400}$, take $N$ with $(N + 1)^{2} > 400$, so $N = 20$.",
-        "交错级数判别法适用时，级数的和总在相邻两个部分和之间，所以只取前 $N$ 项时，误差不超过第一个被略去的项：$|S - S_N| \\le b_{N+1}$。对 $\\sum \\frac{(-1)^{n+1}}{n^{2}}$，$S_{9}$ 的误差至多为 $b_{10} = \\frac{1}{100}$。要使误差小于 $\\frac{1}{400}$，取满足 $(N + 1)^{2} > 400$ 的 $N$，即 $N = 20$。",
+        "The alternating series test only needs $b_n$ to decrease from some point on, since the first few terms do not affect convergence. $b_n = \\frac{n}{n^{2} + 10}$ rises until $n = 3$ and then falls to $0$, so $\\sum (-1)^{n} \\frac{n}{n^{2} + 10}$ converges. Check eventual decrease with the derivative of $f(x)$, and check $b_n \\to 0$ separately: $\\frac{n^{2}}{n^{2} + 10}$ decreases to nothing but $1$, so that series diverges.",
+        "交错级数判别法只要求 $b_n$ 从某一项起递减，因为开头有限项不影响敛散性。$b_n = \\frac{n}{n^{2} + 10}$ 在 $n = 3$ 之前增大，之后递减趋于 $0$，所以 $\\sum (-1)^{n} \\frac{n}{n^{2} + 10}$ 收敛。用 $f(x)$ 的导数检查最终是否递减，并单独检查 $b_n \\to 0$：$\\frac{n^{2}}{n^{2} + 10}$ 趋于 $1$ 而不是 $0$，所以那个级数发散。",
       ),
       generate(rng) {
-        if (rng.bool()) {
-          const c = rng.int(1, 5);
-          const p = rng.int(1, 3);
-          const N = rng.int(3, 12);
-          const pw = (v: string) => (p === 1 ? v : `${v}^{${p}}`);
-          const answer = Q.of(c, (N + 1) ** p);
-          return numberProblem({
-            prompt: t(
-              `The sum $S$ of $${sigma(`\\frac{(-1)^{n+1} \\cdot ${c}}{${pw("n")}}`)}$ is approximated by the partial sum $S_{${N}}$. What upper bound does the alternating series error bound give for $|S - S_{${N}}|$?`,
-              `用部分和 $S_{${N}}$ 近似 $${sigma(`\\frac{(-1)^{n+1} \\cdot ${c}}{${pw("n")}}`)}$ 的和 $S$。由交错级数的误差估计，$|S - S_{${N}}|$ 的上界是多少？`,
+        const k = rng.int(2, 40);
+        const c = rng.int(1, 9);
+        const kind = rng.int(0, 3);
+        const cases = [
+          {
+            b: `\\frac{${term(c, "n")}}{n^{2} + ${k}}`,
+            ok: true,
+            why: t(
+              `$f(x) = \\frac{${term(c, "x")}}{x^{2} + ${k}}$ has $f'(x) = \\frac{${c}(${k} - x^{2})}{(x^{2} + ${k})^{2}} < 0$ for $x > \\sqrt{${k}}$, so $b_n$ decreases eventually, and $b_n \\to 0$`,
+              `$f(x) = \\frac{${term(c, "x")}}{x^{2} + ${k}}$ 满足当 $x > \\sqrt{${k}}$ 时 $f'(x) = \\frac{${c}(${k} - x^{2})}{(x^{2} + ${k})^{2}} < 0$，所以 $b_n$ 最终递减，且 $b_n \\to 0$`,
             ),
-            answer,
-            form: "fraction",
-            wrong: [Q.of(c, N ** p), Q.of(c, (N + 2) ** p), Q.of(1, (N + 1) ** p)].filter((w) => !w.eq(answer)),
-            solution: t(
-              `The terms $b_n = \\frac{${c}}{${pw("n")}}$ decrease to $0$, so the error is at most the first term left out: $b_{${N + 1}} = \\frac{${c}}{${pw(`${N + 1}`)}} = ${answer.toLatex()}$.`,
-              `$b_n = \\frac{${c}}{${pw("n")}}$ 递减趋于 $0$，所以误差不超过第一个被略去的项：$b_{${N + 1}} = \\frac{${c}}{${pw(`${N + 1}`)}} = ${answer.toLatex()}$。`,
+          },
+          {
+            b: `\\frac{\\sqrt{n}}{${shift(k)}}`,
+            ok: true,
+            why: t(
+              `$f(x) = \\frac{\\sqrt{x}}{${linear(1, k, "x")}}$ has $f'(x) = \\frac{${k} - x}{2\\sqrt{x}(${linear(1, k, "x")})^{2}} < 0$ for $x > ${k}$, so $b_n$ decreases eventually, and $b_n \\to 0$`,
+              `$f(x) = \\frac{\\sqrt{x}}{${linear(1, k, "x")}}$ 满足当 $x > ${k}$ 时 $f'(x) = \\frac{${k} - x}{2\\sqrt{x}(${linear(1, k, "x")})^{2}} < 0$，所以 $b_n$ 最终递减，且 $b_n \\to 0$`,
             ),
-          });
-        }
-        const m = rng.int(5, 40);
-        const M = m * m;
-        return numberProblem({
-          prompt: t(
-            `Using the alternating series error bound, what is the smallest $N$ for which $S_N$ is guaranteed to approximate the sum of $${sigma("\\frac{(-1)^{n+1}}{n^{2}}")}$ with error less than $\\frac{1}{${M}}$?`,
-            `利用交错级数的误差估计，保证 $S_N$ 近似 $${sigma("\\frac{(-1)^{n+1}}{n^{2}}")}$ 的和时误差小于 $\\frac{1}{${M}}$ 的最小 $N$ 是多少？`,
+          },
+          {
+            b: `\\frac{${c} \\ln n}{n}`,
+            ok: true,
+            why: t(
+              `$f(x) = \\frac{${c} \\ln x}{x}$ has $f'(x) = \\frac{${c}(1 - \\ln x)}{x^{2}} < 0$ for $x > e$, so $b_n$ decreases from $n = 3$ on, and $b_n \\to 0$`,
+              `$f(x) = \\frac{${c} \\ln x}{x}$ 满足当 $x > e$ 时 $f'(x) = \\frac{${c}(1 - \\ln x)}{x^{2}} < 0$，所以 $b_n$ 从 $n = 3$ 起递减，且 $b_n \\to 0$`,
+            ),
+          },
+          {
+            b: `\\frac{${term(c, "n^{2}")}}{n^{2} + ${k}}`,
+            ok: false,
+            why: t(`$b_n \\to ${c} \\neq 0$, so the terms do not tend to $0$`, `$b_n \\to ${c} \\neq 0$，各项不趋于 $0$`),
+          },
+        ];
+        const x = cases[kind]!;
+        return verdict(
+          rng,
+          sigma(`(-1)^{n} ${x.b}`),
+          x.ok,
+          t(
+            `${x.why.en}. ${x.ok ? "By the alternating series test, the series converges." : "By the $n$th term test, the series diverges."}`,
+            `${x.why["zh-CN"]}。${x.ok ? "由交错级数判别法，级数收敛。" : "由第 $n$ 项判别法，级数发散。"}`,
           ),
-          answer: m,
-          solveFor: "N",
-          wrong: [m - 1, m + 1, M, M - 1],
-          solution: t(
-            `The error is at most $b_{N+1} = \\frac{1}{(N + 1)^{2}}$, which is less than $\\frac{1}{${M}}$ when $(N + 1)^{2} > ${M}$, that is $N + 1 > ${m}$. So $N = ${m}$.`,
-            `误差不超过 $b_{N+1} = \\frac{1}{(N + 1)^{2}}$，当 $(N + 1)^{2} > ${M}$，即 $N + 1 > ${m}$ 时它小于 $\\frac{1}{${M}}$。所以 $N = ${m}$。`,
-          ),
-        });
+        );
       },
     },
   ],
@@ -1266,6 +1275,41 @@ export const determiningConvergenceParametersForInfiniteSeries: TopicDef = {
         });
       },
     },
+    {
+      id: "parameters-in-geometric-series",
+      title: t("Parameters in geometric series", "等比级数中的参数"),
+      explanation: t(
+        "Write the term as $c \\cdot r^{n}$, where the ratio $r$ depends on the parameter, and solve $|r| < 1$. For $p > 0$, $\\sum \\left(\\frac{3}{p}\\right)^{n}$ has $r = \\frac{3}{p}$, which is less than $1$ when $p > 3$. And $\\sum \\frac{p^{n}}{5^{n + 1}} = \\sum \\frac{1}{5}\\left(\\frac{p}{5}\\right)^{n}$ converges for $0 < p < 5$. At the boundary $r = 1$ the terms do not shrink, so the boundary is excluded.",
+        "把各项写成 $c \\cdot r^{n}$，其中公比 $r$ 依赖于参数，再解 $|r| < 1$。对 $p > 0$，$\\sum \\left(\\frac{3}{p}\\right)^{n}$ 的公比 $r = \\frac{3}{p}$，当 $p > 3$ 时小于 $1$。而 $\\sum \\frac{p^{n}}{5^{n + 1}} = \\sum \\frac{1}{5}\\left(\\frac{p}{5}\\right)^{n}$ 在 $0 < p < 5$ 时收敛。在边界 $r = 1$ 处各项不变小，所以边界不包括在内。",
+      ),
+      generate(rng) {
+        const k = rng.int(2, 12);
+        const m = rng.int(1, 4);
+        const below = rng.bool();
+        const value = Q.of(k, m);
+        const mp = m === 1 ? "p" : `${m}p`;
+        const tex = below ? `\\left(\\frac{${k}}{${mp}}\\right)^{n}` : `\\frac{(${mp})^{n}}{${k}^{n + 1}}`;
+        const r = below ? `\\frac{${k}}{${mp}}` : `\\frac{${mp}}{${k}}`;
+        return inequalityProblem({
+          prompt: t(
+            `For which positive values of $p$ does $${sigma(tex)}$ converge? Give an inequality for $p$.`,
+            `$p$ 取哪些正数值时 $${sigma(tex)}$ 收敛？写出关于 $p$ 的不等式。`,
+          ),
+          variable: "p",
+          op: below ? ">" : "<",
+          value,
+          wrong: [
+            [below ? ">=" : "<=", value],
+            [below ? "<" : ">", value],
+            [below ? ">" : "<", Q.of(k)],
+          ],
+          solution: t(
+            `This is a geometric series with ratio $r = ${r}$, which is positive. It converges when $${r} < 1$, that is $${below ? `p > ${value.toLatex()}` : `p < ${value.toLatex()}`}$.`,
+            `这是公比 $r = ${r}$ 的等比级数，公比为正。当 $${r} < 1$，即 $${below ? `p > ${value.toLatex()}` : `p < ${value.toLatex()}`}$ 时收敛。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1360,6 +1404,71 @@ export const selectingProceduresForAnalyzingInfiniteSeries: TopicDef = {
           t(
             `Which method settles the convergence of $${sigma(series)}$ most directly?`,
             `哪种方法最直接地判断 $${sigma(series)}$ 的敛散性？`,
+          ),
+          right,
+          others,
+          why,
+        );
+      },
+    },
+    {
+      id: "choosing-among-comparison-root-and-integral-tests",
+      title: t("Choosing among comparison, root and integral tests", "在比较、根值和积分判别法中选择"),
+      explanation: t(
+        "Some forms call for the remaining tests:\n\n- a quotient of polynomials, such as $\\frac{n + 1}{n^{3} + 5}$: **limit comparison** with $\\frac{1}{n^{2}}$.\n- a bounded factor over a $p$-series term, such as $\\frac{\\sin^{2} n}{n^{2}}$: direct **comparison**.\n- a whole expression raised to the $n$th power, such as $\\left(\\frac{2n}{3n + 1}\\right)^{n}$: the **root test**.\n- a term that is easy to integrate, such as $\\frac{1}{n (\\ln n)^{2}}$: the **integral test**.",
+        "有些形式要用其余的判别法：\n\n- 多项式之商，如 $\\frac{n + 1}{n^{3} + 5}$：与 $\\frac{1}{n^{2}}$ 作**极限比较**。\n- 有界因子乘以 $p$ 级数的项，如 $\\frac{\\sin^{2} n}{n^{2}}$：直接**比较**。\n- 整个式子的 $n$ 次幂，如 $\\left(\\frac{2n}{3n + 1}\\right)^{n}$：**根值判别法**。\n- 容易积分的项，如 $\\frac{1}{n (\\ln n)^{2}}$：**积分判别法**。",
+      ),
+      generate(rng) {
+        const more = {
+          limit: t("The limit comparison test", "极限比较判别法"),
+          comparison: t("The direct comparison test", "直接比较判别法"),
+          root: t("The root test", "根值判别法"),
+          integral: t("The integral test", "积分判别法"),
+        } as const;
+        const c = rng.int(1, 9);
+        const k = rng.int(2, 9);
+        const m = rng.int(2, 9);
+        const cases: readonly (readonly [string, Text, Text])[] = [
+          [
+            `\\frac{${linear(c, k, "n")}}{n^{3} + ${m}}`,
+            more.limit,
+            t(
+              "The terms are a quotient of polynomials that behaves like $\\frac{1}{n^{2}}$ but is not simply smaller or larger, so compare limits with $\\frac{1}{n^{2}}$.",
+              "各项是多项式之商，表现类似 $\\frac{1}{n^{2}}$，但不能直接比大小，所以与 $\\frac{1}{n^{2}}$ 作极限比较。",
+            ),
+          ],
+          [
+            `\\frac{\\sin^{2}(${k}n)}{n^{${rng.int(2, 4)}}}`,
+            more.comparison,
+            t(
+              "The factor $\\sin^{2}$ lies between $0$ and $1$, so the terms sit directly below a convergent $p$-series term.",
+              "因子 $\\sin^{2}$ 在 $0$ 与 $1$ 之间，所以各项直接小于一个收敛 $p$ 级数的项。",
+            ),
+          ],
+          [
+            `\\left(\\frac{${term(c, "n")}}{${linear(k, m, "n")}}\\right)^{n}`,
+            more.root,
+            t(
+              "The whole term is raised to the $n$th power, so its $n$th root is simply the expression inside.",
+              "整个项是 $n$ 次幂，所以它的 $n$ 次方根就是括号里的式子。",
+            ),
+          ],
+          [
+            `\\frac{${c}}{n (\\ln n)^{${k}}}`,
+            more.integral,
+            t(
+              `With $u = \\ln x$, $\\int \\frac{${c}}{x (\\ln x)^{${k}}} \\, dx$ is easy to evaluate, so the integral test settles it.`,
+              `令 $u = \\ln x$，$\\int \\frac{${c}}{x (\\ln x)^{${k}}} \\, dx$ 容易计算，所以用积分判别法。`,
+            ),
+          ],
+        ];
+        const [series, right, why] = rng.pick(cases);
+        const others = rng.shuffle([...Object.values(more), methods.ratio, methods.geometric].filter((x) => x !== right)).slice(0, 3);
+        return oneOf(
+          rng,
+          t(
+            `Which method settles the convergence of $${sigma(series, series.includes("\\ln") ? 2 : 1)}$ most directly?`,
+            `哪种方法最直接地判断 $${sigma(series, series.includes("\\ln") ? 2 : 1)}$ 的敛散性？`,
           ),
           right,
           others,
