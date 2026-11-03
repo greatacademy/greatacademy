@@ -69,8 +69,8 @@ export const vectorsInNDimensionalEuclideanSpace: TopicDef = {
   id: "vectors-in-n-dimensional-euclidean-space",
   title: t("Vectors in N-Dimensional Euclidean Space", "N 维欧几里得空间中的向量"),
   summary: t(
-    "Represent vectors in ℝⁿ as column vectors, perform componentwise vector addition, and calculate scalar multiples.",
-    "掌握将 ℝⁿ 中的向量表示为列向量，并进行分量加法与标量乘法运算。",
+    "Represent vectors in $\\mathbb{R}^n$ as column vectors, perform componentwise vector addition, and calculate scalar multiples.",
+    "掌握将 $\\mathbb{R}^n$ 中的向量表示为列向量，并进行分量加法与标量乘法运算。",
   ),
   prerequisites: ["addition-and-scalar-multiplication-of-cartesian-vectors-in-3d"],
   encompasses: [],
@@ -79,10 +79,10 @@ export const vectorsInNDimensionalEuclideanSpace: TopicDef = {
   knowledgePoints: [
     {
       id: "rn-vectors-addition",
-      title: t("Vector addition in ℝⁿ", "ℝⁿ 中的向量加法"),
+      title: t("Vector addition in $\\mathbb{R}^n$", "$\\mathbb{R}^n$ 中的向量加法"),
       explanation: t(
-        "Adding vectors works the same way in any number of dimensions: add the entries in the same position and leave the others alone. Vectors in ℝⁿ are added componentwise: if u = (u₁, ..., uₙ)ᵀ and v = (v₁, ..., vₙ)ᵀ, then u + v = (u₁ + v₁, ..., uₙ + vₙ)ᵀ.",
-        "在任意维数中向量加法都一样：把相同位置的分量相加，互不影响。ℝⁿ 中的向量加法是按分量进行的：若 u = (u₁, ..., uₙ)ᵀ 且 v = (v₁, ..., vₙ)ᵀ，则 u + v = (u₁ + v₁, ..., uₙ + vₙ)ᵀ。",
+        "Adding vectors works the same way in any number of dimensions: add the entries in the same position and leave the others alone. Vectors in $\\mathbb{R}^n$ are added componentwise: if $\\mathbf{u} = (u_1, \\dots, u_n)^T$ and $\\mathbf{v} = (v_1, \\dots, v_n)^T$, then $\\mathbf{u} + \\mathbf{v} = (u_1 + v_1, \\dots, u_n + v_n)^T$.",
+        "在任意维数中向量加法都一样：把相同位置的分量相加，互不影响。$\\mathbb{R}^n$ 中的向量加法是按分量进行的：若 $\\mathbf{u} = (u_1, \\dots, u_n)^T$ 且 $\\mathbf{v} = (v_1, \\dots, v_n)^T$，则 $\\mathbf{u} + \\mathbf{v} = (u_1 + v_1, \\dots, u_n + v_n)^T$。",
       ),
       generate(rng) {
         const n = 4;
@@ -114,10 +114,10 @@ export const vectorsInNDimensionalEuclideanSpace: TopicDef = {
     },
     {
       id: "rn-vectors-scalar-multiplication",
-      title: t("Scalar multiplication in ℝⁿ", "ℝⁿ 中的标量乘法与线性组合"),
+      title: t("Scalar multiplication in $\\mathbb{R}^n$", "$\\mathbb{R}^n$ 中的标量乘法与线性组合"),
       explanation: t(
-        "A scalar multiplies every entry of a vector, and a linear combination is formed by scaling each vector and then adding the results entry by entry. For a scalar c and vector u in ℝⁿ, c u = (c u₁, ..., c uₙ)ᵀ. A linear combination c u + d v is computed componentwise.",
-        "数乘向量就是用这个数乘向量的每个分量，线性组合则是先把每个向量数乘，再把结果逐个分量相加。对于标量 c 与向量 u ∈ ℝⁿ，c u = (c u₁, ..., c uₙ)ᵀ。线性组合 c u + d v 逐分量计算。",
+        "A scalar multiplies every entry of a vector, and a linear combination is formed by scaling each vector and then adding the results entry by entry. For a scalar $c$ and a vector $\\mathbf{u}$ in $\\mathbb{R}^n$, $c\\mathbf{u} = (cu_1, \\dots, cu_n)^T$. A linear combination $c\\mathbf{u} + d\\mathbf{v}$ is computed componentwise.",
+        "数乘向量就是用这个数乘向量的每个分量，线性组合则是先把每个向量数乘，再把结果逐个分量相加。对于标量 $c$ 与向量 $\\mathbf{u} \\in \\mathbb{R}^n$，$c\\mathbf{u} = (cu_1, \\dots, cu_n)^T$。线性组合 $c\\mathbf{u} + d\\mathbf{v}$ 逐分量计算。",
       ),
       generate(rng) {
         const c = rng.nonZero(-3, 3);
@@ -172,8 +172,8 @@ export const linearCombinationsOfVectorsInNDimensionalEuclideanSpace: TopicDef =
       id: "compute-linear-combination-3-vectors",
       title: t("Computing a linear combination of vectors", "计算多个向量的线性组合"),
       explanation: t(
-        "Scale each vector by its weight first, then add the scaled vectors one entry at a time to get a single vector. A linear combination of vectors v₁, ..., vₖ with weights c₁, ..., cₖ is the vector c₁v₁ + ... + cₖvₖ.",
-        "先用权重数乘每个向量，再把数乘后的向量逐个分量相加，得到一个向量。向量组 v₁, ..., vₖ 关于权重 c₁, ..., cₖ 的线性组合为向量 c₁v₁ + ... + cₖvₖ。",
+        "Scale each vector by its weight first, then add the scaled vectors one entry at a time to get a single vector. A linear combination of vectors $\\mathbf{v}_1, \\dots, \\mathbf{v}_k$ with weights $c_1, \\dots, c_k$ is the vector $c_1\\mathbf{v}_1 + \\dots + c_k\\mathbf{v}_k$.",
+        "先用权重数乘每个向量，再把数乘后的向量逐个分量相加，得到一个向量。向量组 $\\mathbf{v}_1, \\dots, \\mathbf{v}_k$ 关于权重 $c_1, \\dots, c_k$ 的线性组合为向量 $c_1\\mathbf{v}_1 + \\dots + c_k\\mathbf{v}_k$。",
       ),
       generate(rng) {
         const c1 = rng.nonZero(-3, 3);
@@ -219,8 +219,8 @@ export const linearCombinationsOfVectorsInNDimensionalEuclideanSpace: TopicDef =
       id: "determine-if-linear-combination",
       title: t("Determining if a vector is a linear combination", "判定向量是否为线性组合"),
       explanation: t(
-        "A vector b is a linear combination of v₁, ..., vₖ if and only if the vector equation c₁v₁ + ... + cₖvₖ = b has a solution, which corresponds to the augmented matrix [v₁ ... vₖ | b] being consistent.",
-        "向量 b 可由 v₁, ..., vₖ 线性表出，当且仅当方程 c₁v₁ + ... + cₖvₖ = b 有解，即增广矩阵 [v₁ ... vₖ | b] 相容。",
+        "A vector $\\mathbf{b}$ is a linear combination of $\\mathbf{v}_1, \\dots, \\mathbf{v}_k$ if and only if the vector equation $c_1\\mathbf{v}_1 + \\dots + c_k\\mathbf{v}_k = \\mathbf{b}$ has a solution, which corresponds to the augmented matrix $[\\mathbf{v}_1 \\ \\cdots \\ \\mathbf{v}_k \\mid \\mathbf{b}]$ being consistent.",
+        "向量 $\\mathbf{b}$ 可由 $\\mathbf{v}_1, \\dots, \\mathbf{v}_k$ 线性表出，当且仅当方程 $c_1\\mathbf{v}_1 + \\dots + c_k\\mathbf{v}_k = \\mathbf{b}$ 有解，即增广矩阵 $[\\mathbf{v}_1 \\ \\cdots \\ \\mathbf{v}_k \\mid \\mathbf{b}]$ 相容。",
       ),
       generate(rng) {
         const c1 = rng.nonZero(-3, 3);
@@ -305,8 +305,8 @@ export const linearSpanOfVectorsInNDimensionalEuclideanSpace: TopicDef = {
   id: "linear-span-of-vectors-in-n-dimensional-euclidean-space",
   title: t("Linear Span of Vectors in N-Dimensional Euclidean Space", "向量组的线性张成空间 (Span)"),
   summary: t(
-    "Define the span of a set of vectors as the collection of all linear combinations, test for membership in a span, and determine whether a set spans ℝⁿ.",
-    "掌握向量组的张成空间定义（所有线性组合的集合），判断向量是否属于张成空间，并判定是否张成 ℝⁿ。",
+    "Define the span of a set of vectors as the collection of all linear combinations, test for membership in a span, and determine whether a set spans $\\mathbb{R}^n$.",
+    "掌握向量组的张成空间定义（所有线性组合的集合），判断向量是否属于张成空间，并判定是否张成 $\\mathbb{R}^n$。",
   ),
   prerequisites: ["linear-combinations-of-vectors-in-n-dimensional-euclidean-space"],
   encompasses: [],
@@ -315,10 +315,10 @@ export const linearSpanOfVectorsInNDimensionalEuclideanSpace: TopicDef = {
   knowledgePoints: [
     {
       id: "membership-in-span",
-      title: t("Membership in Span{v₁, ..., vₖ}", "判定向量是否属于张成空间"),
+      title: t("Membership in $\\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$", "判定向量是否属于张成空间"),
       explanation: t(
-        "A vector w belongs to Span{v₁, ..., vₖ} if and only if w can be expressed as a linear combination of v₁, ..., vₖ.",
-        "向量 w 属于 Span{v₁, ..., vₖ}，当且仅当 w 可以表示为该向量组的一个线性组合。",
+        "A vector $\\mathbf{w}$ belongs to $\\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ if and only if $\\mathbf{w}$ can be expressed as a linear combination of $\\mathbf{v}_1, \\dots, \\mathbf{v}_k$. To decide, set up the vector equation with unknown weights, row reduce its augmented matrix, and check whether the system is consistent.",
+        "向量 $\\mathbf{w}$ 属于 $\\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$，当且仅当 $\\mathbf{w}$ 可以表示为该向量组的一个线性组合。判定时，写出含未知权重的向量方程，对其增广矩阵作行化简，检查方程组是否相容。",
       ),
       generate(rng) {
         const u1 = rng.int(-3, 3);
@@ -375,10 +375,10 @@ export const linearSpanOfVectorsInNDimensionalEuclideanSpace: TopicDef = {
     },
     {
       id: "spanning-entire-space",
-      title: t("Spanning all of ℝⁿ", "判定向量组是否张成整个空间 ℝⁿ"),
+      title: t("Spanning all of $\\mathbb{R}^n$", "判定向量组是否张成整个空间 $\\mathbb{R}^n$"),
       explanation: t(
-        "A set of k vectors in ℝⁿ spans ℝⁿ if and only if the matrix with these vectors as columns has a pivot position in every row (which requires k ≥ n).",
-        "ℝⁿ 中的 k 个向量张成 ℝⁿ，当且仅当以这组向量为列的矩阵每一行都有主元（这要求 k ≥ n）。",
+        "A set of $k$ vectors in $\\mathbb{R}^n$ spans $\\mathbb{R}^n$ if and only if the matrix with these vectors as columns has a pivot position in every row (which requires $k \\ge n$).",
+        "$\\mathbb{R}^n$ 中的 $k$ 个向量张成 $\\mathbb{R}^n$，当且仅当以这组向量为列的矩阵每一行都有主元（这要求 $k \\ge n$）。",
       ),
       generate(rng) {
         const type = rng.pick(["less-vectors", "dependent-three", "spans-three"]);
@@ -461,8 +461,8 @@ export const linearDependenceAndIndependence: TopicDef = {
   id: "linear-dependence-and-independence",
   title: t("Linear Dependence and Independence", "向量组的线性相关与线性无关"),
   summary: t(
-    "Define linear independence via c₁v₁ + ... + cₖvₖ = 0 having only the trivial solution, and detect linear dependence through pivot columns or non-trivial relations.",
-    "通过齐次方程 c₁v₁ + ... + cₖvₖ = 0 仅有零解定义线性无关，并通过主元列或非平凡线性关系判定线性相关性。",
+    "Define linear independence via $c_1\\mathbf{v}_1 + \\dots + c_k\\mathbf{v}_k = \\mathbf{0}$ having only the trivial solution, and detect linear dependence through pivot columns or non-trivial relations.",
+    "通过齐次方程 $c_1\\mathbf{v}_1 + \\dots + c_k\\mathbf{v}_k = \\mathbf{0}$ 仅有零解定义线性无关，并通过主元列或非平凡线性关系判定线性相关性。",
   ),
   prerequisites: ["linear-span-of-vectors-in-n-dimensional-euclidean-space"],
   encompasses: [],
@@ -473,8 +473,8 @@ export const linearDependenceAndIndependence: TopicDef = {
       id: "test-linear-independence",
       title: t("Testing linear independence of a vector set", "检验向量组的线性相关性"),
       explanation: t(
-        "A set of vectors {v₁, ..., vₖ} is linearly independent if c₁v₁ + ... + cₖvₖ = 0 has only the trivial solution c₁ = ... = cₖ = 0. If a non-trivial solution exists, the set is linearly dependent.",
-        "若 c₁v₁ + ... + cₖvₖ = 0 仅有零解 c₁ = ... = cₖ = 0，则向量组 {v₁, ..., vₖ} 线性无关；若存在非全零解，则线性相关。",
+        "A set of vectors $\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ is linearly independent if $c_1\\mathbf{v}_1 + \\dots + c_k\\mathbf{v}_k = \\mathbf{0}$ has only the trivial solution $c_1 = \\dots = c_k = 0$. If a non-trivial solution exists, the set is linearly dependent.",
+        "若 $c_1\\mathbf{v}_1 + \\dots + c_k\\mathbf{v}_k = \\mathbf{0}$ 仅有零解 $c_1 = \\dots = c_k = 0$，则向量组 $\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ 线性无关；若存在非全零解，则线性相关。",
       ),
       generate(rng) {
         const isDep = rng.bool();
@@ -539,8 +539,8 @@ export const linearDependenceAndIndependence: TopicDef = {
       id: "linear-dependence-relation-finding",
       title: t("Finding a linear dependence relation", "寻找线性相关关系的非平凡权值"),
       explanation: t(
-        "If a vector in a set is a linear combination of the others, rearranging yields a linear dependence relation a₁v₁ + ... + aₖvₖ = 0 with not all weights zero.",
-        "若向量组中某个向量是其余向量的线性组合，移项即可得到非平凡线性相关关系 a₁v₁ + ... + aₖvₖ = 0。",
+        "If a vector in a set is a linear combination of the others, rearranging yields a linear dependence relation $a_1\\mathbf{v}_1 + \\dots + a_k\\mathbf{v}_k = \\mathbf{0}$ with not all weights zero.",
+        "若向量组中某个向量是其余向量的线性组合，移项即可得到非平凡线性相关关系 $a_1\\mathbf{v}_1 + \\dots + a_k\\mathbf{v}_k = \\mathbf{0}$。",
       ),
       generate(rng) {
         const c1 = rng.nonZero(-3, 3);
@@ -611,8 +611,8 @@ export const subspacesOfNDimensionalSpace: TopicDef = {
   id: "subspaces-of-n-dimensional-space",
   title: t("Subspaces of N-Dimensional Space", "N 维空间子空间的定义与判定"),
   summary: t(
-    "Verify whether a subset H of ℝⁿ is a subspace by checking the three axioms: containing the zero vector, closure under addition, and closure under scalar multiplication.",
-    "通过验证包含零向量、加法封闭和标量乘法封闭这三个公理，判定 ℝⁿ 的子集是否构成子空间。",
+    "Verify whether a subset $H$ of $\\mathbb{R}^n$ is a subspace by checking the three axioms: containing the zero vector, closure under addition, and closure under scalar multiplication.",
+    "通过验证包含零向量、加法封闭和标量乘法封闭这三个公理，判定 $\\mathbb{R}^n$ 的子集是否构成子空间。",
   ),
   prerequisites: ["linear-span-of-vectors-in-n-dimensional-euclidean-space"],
   encompasses: [],
@@ -623,8 +623,8 @@ export const subspacesOfNDimensionalSpace: TopicDef = {
       id: "subspace-three-axioms-check",
       title: t("Checking the three subspace axioms", "子空间三公理的检验"),
       explanation: t(
-        "A subset H of ℝⁿ is a subspace if and only if: 1. The zero vector 0 is in H; 2. For all u, v in H, u + v is in H; 3. For all u in H and scalar c, cu is in H.",
-        "ℝⁿ 的非空子集 H 构成子空间当且仅当满足：1. 零向量 0 ∈ H；2. 对任意 u, v ∈ H，u + v ∈ H（加法封闭）；3. 对任意 u ∈ H 及标量 c，cu ∈ H（数乘封闭）。",
+        "A subset $H$ of $\\mathbb{R}^n$ is a subspace if and only if: 1. The zero vector $\\mathbf{0}$ is in $H$; 2. For all $\\mathbf{u}, \\mathbf{v}$ in $H$, $\\mathbf{u} + \\mathbf{v}$ is in $H$; 3. For all $\\mathbf{u}$ in $H$ and every scalar $c$, $c\\mathbf{u}$ is in $H$.",
+        "$\\mathbb{R}^n$ 的非空子集 $H$ 构成子空间当且仅当满足：1. 零向量 $\\mathbf{0} \\in H$；2. 对任意 $\\mathbf{u}, \\mathbf{v} \\in H$，$\\mathbf{u} + \\mathbf{v} \\in H$（加法封闭）；3. 对任意 $\\mathbf{u} \\in H$ 及标量 $c$，$c\\mathbf{u} \\in H$（数乘封闭）。",
       ),
       generate(rng) {
         const a = rng.nonZero(-5, 5);
@@ -665,8 +665,8 @@ export const subspacesOfNDimensionalSpace: TopicDef = {
       id: "span-is-subspace-property",
       title: t("The span of vectors is always a subspace", "向量组的张成空间必为子空间"),
       explanation: t(
-        "Adding two combinations of the vectors or scaling one gives another combination, and the zero vector is the combination with all weights zero. For any set of vectors {v₁, ..., vₖ} in ℝⁿ, Span{v₁, ..., vₖ} is always a subspace of ℝⁿ.",
-        "两个向量组合相加或一个组合数乘后仍是这些向量的组合，零向量就是所有权重都为零的组合。对 ℝⁿ 中任意向量组 {v₁, ..., vₖ}，其张成空间 Span{v₁, ..., vₖ} 恒为 ℝⁿ 的子空间。",
+        "Adding two combinations of the vectors or scaling one gives another combination, and the zero vector is the combination with all weights zero. For any set of vectors $\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ in $\\mathbb{R}^n$, $\\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ is always a subspace of $\\mathbb{R}^n$.",
+        "两个向量组合相加或一个组合数乘后仍是这些向量的组合，零向量就是所有权重都为零的组合。对 $\\mathbb{R}^n$ 中任意向量组 $\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$，其张成空间 $\\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ 恒为 $\\mathbb{R}^n$ 的子空间。",
       ),
       generate(rng) {
         const k = rng.int(2, 12);
@@ -699,8 +699,8 @@ export const subspacesOfNDimensionalSpaceGeometricInterpretation: TopicDef = {
   id: "subspaces-of-n-dimensional-space-geometric-interpretation",
   title: t("Subspaces of N-Dimensional Space: Geometric Interpretation", "子空间的几何意义"),
   summary: t(
-    "Interpret subspaces of ℝⁿ geometrically as points, lines, planes, and hyperplanes passing through the origin.",
-    "从几何角度理解 ℝⁿ 的子空间：过原点的单点、直线、平面及超平面。",
+    "Interpret subspaces of $\\mathbb{R}^n$ geometrically as points, lines, planes, and hyperplanes passing through the origin.",
+    "从几何角度理解 $\\mathbb{R}^n$ 的子空间：过原点的单点、直线、平面及超平面。",
   ),
   prerequisites: ["subspaces-of-n-dimensional-space"],
   encompasses: [],
@@ -709,10 +709,10 @@ export const subspacesOfNDimensionalSpaceGeometricInterpretation: TopicDef = {
   knowledgePoints: [
     {
       id: "geometric-subspaces-in-r3",
-      title: t("Geometric classification of subspaces in ℝ³", "ℝ³ 中子空间的几何分类"),
+      title: t("Geometric classification of subspaces in $\\mathbb{R}^3$", "$\\mathbb{R}^3$ 中子空间的几何分类"),
       explanation: t(
-        "The only subspaces of ℝ³ are: the origin {0} (0-D), any line through the origin (1-D), any plane through the origin (2-D), and ℝ³ itself (3-D).",
-        "ℝ³ 的子空间仅有四类几何对象：零向量单点 {0}（0 维）、过原点的任意直线（1 维）、过原点的任意平面（2 维）以及整个 ℝ³（3 维）。",
+        "The only subspaces of $\\mathbb{R}^3$ are: the origin $\\{\\mathbf{0}\\}$ (dimension $0$), any line through the origin (dimension $1$), any plane through the origin (dimension $2$), and $\\mathbb{R}^3$ itself (dimension $3$).",
+        "$\\mathbb{R}^3$ 的子空间仅有四类几何对象：零向量单点 $\\{\\mathbf{0}\\}$（$0$ 维）、过原点的任意直线（$1$ 维）、过原点的任意平面（$2$ 维）以及整个 $\\mathbb{R}^3$（$3$ 维）。",
       ),
       generate(rng) {
         const dim = rng.pick([1, 2]);
@@ -780,10 +780,10 @@ export const subspacesOfNDimensionalSpaceGeometricInterpretation: TopicDef = {
     },
     {
       id: "hyperplane-subspaces-rn",
-      title: t("Hyperplanes through the origin in ℝⁿ", "ℝⁿ 中过原点的超平面子空间"),
+      title: t("Hyperplanes through the origin in $\\mathbb{R}^n$", "$\\mathbb{R}^n$ 中过原点的超平面子空间"),
       explanation: t(
-        "In ℝⁿ, a single linear equation a₁x₁ + ... + aₙxₙ = k defines an (n-1)-dimensional hyperplane. It is a subspace if and only if k = 0.",
-        "在 ℝⁿ 中，单一线性方程 a₁x₁ + ... + aₙxₙ = k 定义一个 (n-1) 维超平面。它构成子空间当且仅当常数项 k = 0。",
+        "In $\\mathbb{R}^n$, a single linear equation $a_1x_1 + \\dots + a_nx_n = k$ with not all $a_i$ zero defines an $(n - 1)$-dimensional hyperplane. It is a subspace if and only if $k = 0$.",
+        "在 $\\mathbb{R}^n$ 中，系数不全为零的单一线性方程 $a_1x_1 + \\dots + a_nx_n = k$ 定义一个 $(n - 1)$ 维超平面。它构成子空间当且仅当常数项 $k = 0$。",
       ),
       generate(rng) {
         const n = rng.int(4, 6);
@@ -1074,8 +1074,8 @@ export const findingABasisOfASpan: TopicDef = {
       id: "extract-basis-from-spanning-set",
       title: t("Extracting a basis from a spanning set", "从张成向量组中提取基"),
       explanation: t(
-        "To find a basis for W = Span{v₁, ..., vₖ}, form the matrix with these vectors as columns and row reduce. The columns corresponding to the pivot columns form a basis for W.",
-        "求 W = Span{v₁, ..., vₖ} 的基，将这些向量作为列构成矩阵并进行行化简，主元所在的原列向量即构成 W 的一组基。",
+        "To find a basis for $W = \\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$, form the matrix with these vectors as columns and row reduce. The original vectors in the pivot columns form a basis for $W$.",
+        "求 $W = \\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ 的基，将这些向量作为列构成矩阵并进行行化简，主元所在的原列向量即构成 $W$ 的一组基。",
       ),
       generate(rng) {
         const a = rng.nonZero(-3, 3);
@@ -1332,8 +1332,8 @@ export const expressingTheCoordinatesOfAVectorInAGivenBasis: TopicDef = {
   id: "expressing-the-coordinates-of-a-vector-in-a-given-basis",
   title: t("Expressing the Coordinates of a Vector in a Given Basis", "向量在给定基下的坐标"),
   summary: t(
-    "Calculate the coordinate vector [x]_ℬ of a vector x relative to an ordered basis ℬ, and reconstruct x from its coordinates.",
-    "计算向量 x 在有序基 ℬ 下的坐标向量 [x]_ℬ，并根据坐标向量还原向量 x。",
+    "Calculate the coordinate vector $[\\mathbf{x}]_{\\mathcal{B}}$ of a vector $\\mathbf{x}$ relative to an ordered basis $\\mathcal{B}$, and reconstruct $\\mathbf{x}$ from its coordinates.",
+    "计算向量 $\\mathbf{x}$ 在有序基 $\\mathcal{B}$ 下的坐标向量 $[\\mathbf{x}]_{\\mathcal{B}}$，并根据坐标向量还原向量 $\\mathbf{x}$。",
   ),
   prerequisites: ["finding-a-basis-of-a-span"],
   encompasses: [],
@@ -1342,10 +1342,13 @@ export const expressingTheCoordinatesOfAVectorInAGivenBasis: TopicDef = {
   knowledgePoints: [
     {
       id: "find-coordinates-2d-basis",
-      title: t("Finding coordinate vector [x]_ℬ in ℝ²", "在 ℝ² 中求解坐标向量 [x]_ℬ"),
+      title: t(
+        "Finding the coordinate vector $[\\mathbf{x}]_{\\mathcal{B}}$ in $\\mathbb{R}^2$",
+        "在 $\\mathbb{R}^2$ 中求坐标向量 $[\\mathbf{x}]_{\\mathcal{B}}$",
+      ),
       explanation: t(
-        "Finding coordinates means finding the weights that build the vector from the basis vectors, which is a small linear system to solve. If ℬ = {b₁, b₂} is a basis of ℝ², the coordinates c₁, c₂ of x satisfy c₁b₁ + c₂b₂ = x, written [x]_ℬ = (c₁, c₂)ᵀ.",
-        "求坐标就是求出用基向量构造该向量所需的权重，这是一个需要求解的小型线性方程组。若 ℬ = {b₁, b₂} 是 ℝ² 的一组基，则 x 在基 ℬ 下的坐标 c₁, c₂ 满足 c₁b₁ + c₂b₂ = x，记作 [x]_ℬ = (c₁, c₂)ᵀ。",
+        "Finding coordinates means finding the weights that build the vector from the basis vectors, which is a small linear system to solve. If $\\mathcal{B} = \\{\\mathbf{b}_1, \\mathbf{b}_2\\}$ is a basis of $\\mathbb{R}^2$, the coordinates $c_1, c_2$ of $\\mathbf{x}$ satisfy $c_1\\mathbf{b}_1 + c_2\\mathbf{b}_2 = \\mathbf{x}$, written $[\\mathbf{x}]_{\\mathcal{B}} = (c_1, c_2)^T$.",
+        "求坐标就是求出用基向量构造该向量所需的权重，这是一个需要求解的小型线性方程组。若 $\\mathcal{B} = \\{\\mathbf{b}_1, \\mathbf{b}_2\\}$ 是 $\\mathbb{R}^2$ 的一组基，则 $\\mathbf{x}$ 在基 $\\mathcal{B}$ 下的坐标 $c_1, c_2$ 满足 $c_1\\mathbf{b}_1 + c_2\\mathbf{b}_2 = \\mathbf{x}$，记作 $[\\mathbf{x}]_{\\mathcal{B}} = (c_1, c_2)^T$。",
       ),
       generate(rng) {
         const c1 = rng.int(-4, 4);
@@ -1379,8 +1382,8 @@ export const expressingTheCoordinatesOfAVectorInAGivenBasis: TopicDef = {
       id: "reconstruct-vector-from-coordinates",
       title: t("Reconstructing a vector from its coordinate vector", "根据坐标向量还原向量"),
       explanation: t(
-        "Coordinates are the weights of the basis vectors, so multiply each basis vector by its coordinate and add the results. Given [x]_ℬ = (c₁, ..., cₙ)ᵀ and basis ℬ = {b₁, ..., bₙ}, the vector is x = c₁b₁ + ... + cₙbₙ.",
-        "坐标就是基向量的权重，所以把每个基向量乘以对应的坐标，再把结果相加。已知 [x]_ℬ = (c₁, ..., cₙ)ᵀ 与基 ℬ = {b₁, ..., bₙ}，该向量可通过线性组合还原：x = c₁b₁ + ... + cₙbₙ。",
+        "Coordinates are the weights of the basis vectors, so multiply each basis vector by its coordinate and add the results. Given $[\\mathbf{x}]_{\\mathcal{B}} = (c_1, \\dots, c_n)^T$ and the basis $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_n\\}$, the vector is $\\mathbf{x} = c_1\\mathbf{b}_1 + \\dots + c_n\\mathbf{b}_n$.",
+        "坐标就是基向量的权重，所以把每个基向量乘以对应的坐标，再把结果相加。已知 $[\\mathbf{x}]_{\\mathcal{B}} = (c_1, \\dots, c_n)^T$ 与基 $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_n\\}$，该向量可通过线性组合还原：$\\mathbf{x} = c_1\\mathbf{b}_1 + \\dots + c_n\\mathbf{b}_n$。",
       ),
       generate(rng) {
         const c1 = rng.int(-3, 3);
@@ -1430,8 +1433,8 @@ export const writingVectorsInDifferentBases: TopicDef = {
   id: "writing-vectors-in-different-bases",
   title: t("Writing Vectors in Different Bases", "不同基下的向量坐标表示"),
   summary: t(
-    "Relate standard coordinates to coordinates in a basis ℬ using the change-of-basis matrix P_ℬ = [b₁ ... bₙ], satisfying x = P_ℬ [x]_ℬ and [x]_ℬ = P_ℬ⁻¹ x.",
-    "利用基矩阵 P_ℬ = [b₁ ... bₙ] 建立标准坐标与基 ℬ 下坐标的关系：x = P_ℬ [x]_ℬ 以及 [x]_ℬ = P_ℬ⁻¹ x。",
+    "Relate standard coordinates to coordinates in a basis $\\mathcal{B}$ using the change-of-basis matrix $P_{\\mathcal{B}} = [\\mathbf{b}_1 \\ \\cdots \\ \\mathbf{b}_n]$, satisfying $\\mathbf{x} = P_{\\mathcal{B}}[\\mathbf{x}]_{\\mathcal{B}}$ and $[\\mathbf{x}]_{\\mathcal{B}} = P_{\\mathcal{B}}^{-1}\\mathbf{x}$.",
+    "利用基矩阵 $P_{\\mathcal{B}} = [\\mathbf{b}_1 \\ \\cdots \\ \\mathbf{b}_n]$ 建立标准坐标与基 $\\mathcal{B}$ 下坐标的关系：$\\mathbf{x} = P_{\\mathcal{B}}[\\mathbf{x}]_{\\mathcal{B}}$ 以及 $[\\mathbf{x}]_{\\mathcal{B}} = P_{\\mathcal{B}}^{-1}\\mathbf{x}$。",
   ),
   prerequisites: ["expressing-the-coordinates-of-a-vector-in-a-given-basis"],
   encompasses: [],
@@ -1440,10 +1443,10 @@ export const writingVectorsInDifferentBases: TopicDef = {
   knowledgePoints: [
     {
       id: "matrix-pb-relation",
-      title: t("The change-of-basis matrix P_ℬ", "基矩阵 P_ℬ 的构造与性质"),
+      title: t("The change-of-basis matrix $P_{\\mathcal{B}}$", "基矩阵 $P_{\\mathcal{B}}$ 的构造与性质"),
       explanation: t(
-        "Multiplying the matrix of basis vectors by a coordinate vector forms the weighted sum of the basis vectors, which is the vector itself. For a basis ℬ = {b₁, ..., bₙ} of ℝⁿ, the matrix P_ℬ = [b₁ ... bₙ] transforms ℬ-coordinates into standard coordinates: x = P_ℬ [x]_ℬ.",
-        "用基向量组成的矩阵乘以坐标向量，就得到基向量的加权和，也就是这个向量本身。对于 ℝⁿ 的基 ℬ = {b₁, ..., bₙ}，矩阵 P_ℬ = [b₁ ... bₙ] 将 ℬ-坐标转换为标准坐标：x = P_ℬ [x]_ℬ。",
+        "Multiplying the matrix of basis vectors by a coordinate vector forms the weighted sum of the basis vectors, which is the vector itself. For a basis $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_n\\}$ of $\\mathbb{R}^n$, the matrix $P_{\\mathcal{B}} = [\\mathbf{b}_1 \\ \\cdots \\ \\mathbf{b}_n]$ transforms $\\mathcal{B}$-coordinates into standard coordinates: $\\mathbf{x} = P_{\\mathcal{B}}[\\mathbf{x}]_{\\mathcal{B}}$.",
+        "用基向量组成的矩阵乘以坐标向量，就得到基向量的加权和，也就是这个向量本身。对于 $\\mathbb{R}^n$ 的基 $\\mathcal{B} = \\{\\mathbf{b}_1, \\dots, \\mathbf{b}_n\\}$，矩阵 $P_{\\mathcal{B}} = [\\mathbf{b}_1 \\ \\cdots \\ \\mathbf{b}_n]$ 将 $\\mathcal{B}$-坐标转换为标准坐标：$\\mathbf{x} = P_{\\mathcal{B}}[\\mathbf{x}]_{\\mathcal{B}}$。",
       ),
       generate(rng) {
         const b1 = [rng.nonZero(-3, 3), rng.int(-2, 2)];
@@ -1501,10 +1504,10 @@ export const writingVectorsInDifferentBases: TopicDef = {
     },
     {
       id: "solve-coords-using-inverse-pb",
-      title: t("Converting standard coordinates to ℬ-coordinates", "利用逆矩阵将标准坐标转换为 ℬ-坐标"),
+      title: t("Converting standard coordinates to $\\mathcal{B}$-coordinates", "利用逆矩阵将标准坐标转换为 $\\mathcal{B}$-坐标"),
       explanation: t(
-        "Because the basis vectors are independent, their matrix is invertible, and multiplying by the inverse undoes the conversion from coordinates to the vector. To find the coordinates of x relative to ℬ, invert P_ℬ: [x]_ℬ = P_ℬ⁻¹ x.",
-        "由于基向量线性无关，它们组成的矩阵可逆，乘以逆矩阵就把从坐标到向量的转换倒了回来。求解向量 x 关于基 ℬ 的坐标向量，使用基矩阵的逆：[x]_ℬ = P_ℬ⁻¹ x。",
+        "Because the basis vectors are independent, their matrix is invertible, and multiplying by the inverse undoes the conversion from coordinates to the vector. To find the coordinates of $\\mathbf{x}$ relative to $\\mathcal{B}$, invert $P_{\\mathcal{B}}$: $[\\mathbf{x}]_{\\mathcal{B}} = P_{\\mathcal{B}}^{-1}\\mathbf{x}$.",
+        "由于基向量线性无关，它们组成的矩阵可逆，乘以逆矩阵就把从坐标到向量的转换倒了回来。求向量 $\\mathbf{x}$ 关于基 $\\mathcal{B}$ 的坐标向量，使用基矩阵的逆：$[\\mathbf{x}]_{\\mathcal{B}} = P_{\\mathcal{B}}^{-1}\\mathbf{x}$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-4, 4);
@@ -1592,7 +1595,7 @@ export const theChangeOfCoordinatesMatrix: TopicDef = {
         ];
         const solution = t(
           `By definition, the columns of the change-of-coordinates matrix $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$ are the coordinate vectors of the original basis vectors $\\mathbf{b}_j$ relative to the target basis $\\mathcal{C}$.`,
-          `按定义，从基 ℬ 到基 𝒞 的过渡矩阵 $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$，其第 $j$ 列是原基向量 $\\mathbf{b}_j$ 在新基 𝒞 下的坐标向量 $[\\mathbf{b}_j]_{\\mathcal{C}}$。`,
+          `按定义，从基 $\\mathcal{B}$ 到基 $\\mathcal{C}$ 的过渡矩阵 $P_{\\mathcal{C} \\leftarrow \\mathcal{B}}$，其第 $j$ 列是原基向量 $\\mathbf{b}_j$ 在新基 $\\mathcal{C}$ 下的坐标向量 $[\\mathbf{b}_j]_{\\mathcal{C}}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -1795,10 +1798,13 @@ export const theDimensionOfASpan: TopicDef = {
     },
     {
       id: "compute-dim-of-span",
-      title: t("Computing dim(Span{v₁, ..., vₖ})", "计算 Span{v₁, ..., vₖ} 的维数"),
+      title: t(
+        "Computing $\\dim \\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$",
+        "计算 $\\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ 的维数",
+      ),
       explanation: t(
-        "Row reduction shows which vectors are combinations of earlier ones, and the remaining pivot columns form a basis of the span. The dimension of Span{v₁, ..., vₖ} equals the number of pivot columns in the matrix [v₁ ... vₖ].",
-        "行化简可以看出哪些向量是前面向量的组合，剩下的主元列构成张成空间的一组基。Span{v₁, ..., vₖ} 的维数等于以这些向量为列构成的矩阵 [v₁ ... vₖ] 的主元列个数。",
+        "Row reduction shows which vectors are combinations of earlier ones, and the remaining pivot columns form a basis of the span. The dimension of $\\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ equals the number of pivot columns in the matrix $[\\mathbf{v}_1 \\ \\cdots \\ \\mathbf{v}_k]$.",
+        "行化简可以看出哪些向量是前面向量的组合，剩下的主元列构成张成空间的一组基。$\\operatorname{Span}\\{\\mathbf{v}_1, \\dots, \\mathbf{v}_k\\}$ 的维数等于以这些向量为列构成的矩阵 $[\\mathbf{v}_1 \\ \\cdots \\ \\mathbf{v}_k]$ 的主元列个数。",
       ),
       generate(rng) {
         const pivots = rng.pick([1, 2, 3]);
@@ -1855,8 +1861,8 @@ export const theRankOfAMatrix: TopicDef = {
   id: "the-rank-of-a-matrix",
   title: t("The Rank of a Matrix", "矩阵的秩"),
   summary: t(
-    "Define the rank of a matrix as dim(Col(A)), equal to the number of pivot positions, and understand properties such as rank(A) ≤ min(m, n) and rank(Aᵀ) = rank(A).",
-    "掌握矩阵的秩定义为 dim(Col(A))（即阶梯形的主元个数），理解 rank(A) ≤ min(m, n) 与 rank(Aᵀ) = rank(A) 等性质。",
+    "Define the rank of a matrix as $\\dim \\operatorname{Col}(A)$, equal to the number of pivot positions, and understand properties such as $\\operatorname{rank}(A) \\le \\min(m, n)$ and $\\operatorname{rank}(A^T) = \\operatorname{rank}(A)$.",
+    "掌握矩阵的秩定义为 $\\dim \\operatorname{Col}(A)$（即阶梯形的主元个数），理解 $\\operatorname{rank}(A) \\le \\min(m, n)$ 与 $\\operatorname{rank}(A^T) = \\operatorname{rank}(A)$ 等性质。",
   ),
   prerequisites: ["finding-a-basis-of-the-column-space-of-a-matrix"],
   encompasses: [],
@@ -2004,8 +2010,8 @@ export const theInvertibleMatrixTheoremInTermsOfDimensionRankAndNullity: TopicDe
   id: "the-invertible-matrix-theorem-in-terms-of-dimension-rank-and-nullity",
   title: t("The Invertible Matrix Theorem in Terms of Dimension, Rank and Nullity", "可逆矩阵等价命题（秩与维数角度）"),
   summary: t(
-    "Characterize the invertibility of an n × n matrix in terms of rank(A) = n, nullity(A) = 0, Col(A) = ℝⁿ, and Null(A) = {0}.",
-    "从 rank(A) = n、nullity(A) = 0、Col(A) = ℝⁿ 及 Null(A) = {0} 等秩与维数的角度表述 n 阶方阵的可逆等价条件。",
+    "Characterize the invertibility of an $n \\times n$ matrix in terms of $\\operatorname{rank}(A) = n$, $\\operatorname{nullity}(A) = 0$, $\\operatorname{Col}(A) = \\mathbb{R}^n$, and $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$.",
+    "从 $\\operatorname{rank}(A) = n$、$\\operatorname{nullity}(A) = 0$、$\\operatorname{Col}(A) = \\mathbb{R}^n$ 及 $\\operatorname{Null}(A) = \\{\\mathbf{0}\\}$ 等秩与维数的角度表述 $n$ 阶方阵的可逆等价条件。",
   ),
   prerequisites: ["the-rank-of-a-matrix", "the-dimension-of-the-null-space-of-a-matrix"],
   encompasses: [],
@@ -2402,10 +2408,10 @@ export const linearIndependenceInAbstractVectorSpaces: TopicDef = {
   knowledgePoints: [
     {
       id: "independence-of-polynomials",
-      title: t("Linear independence of polynomials in ℙ₂", "ℙ₂ 中多项式组的线性相关性"),
+      title: t("Linear independence of polynomials in $\\mathbb{P}_2$", "$\\mathbb{P}_2$ 中多项式组的线性相关性"),
       explanation: t(
-        "Polynomials p₁, ..., pₖ are linearly independent if c₁p₁(t) + ... + cₖpₖ(t) = 0 for all t implies c₁ = ... = cₖ = 0. Equating coefficients of like powers yields a linear system.",
-        "若由 c₁p₁(t) + ... + cₖpₖ(t) ≡ 0 能推出 c₁ = ... = cₖ = 0，则多项式组线性无关。通过比较同次项系数可转化为常系数线性方程组。",
+        "Polynomials $p_1, \\dots, p_k$ are linearly independent if $c_1p_1(t) + \\dots + c_kp_k(t) = 0$ for all $t$ implies $c_1 = \\dots = c_k = 0$. Equating coefficients of like powers yields a linear system.",
+        "若由 $c_1p_1(t) + \\dots + c_kp_k(t) \\equiv 0$ 能推出 $c_1 = \\dots = c_k = 0$，则多项式组线性无关。通过比较同次项系数可转化为常系数线性方程组。",
       ),
       generate(rng) {
         const isDep = rng.bool();
@@ -2451,8 +2457,8 @@ export const linearIndependenceInAbstractVectorSpaces: TopicDef = {
       id: "independence-of-matrices-m22",
       title: t("Linear independence of matrices in M_{2×2}", "M_{2×2} 中矩阵组的线性相关性"),
       explanation: t(
-        "Matrices form a vector space too, so independence is tested exactly as for vectors, by setting a combination equal to the zero matrix and solving for the weights. A set of matrices {A₁, ..., Aₖ} is linearly independent if c₁A₁ + ... + cₖAₖ = O implies all scalars cᵢ = 0.",
-        "矩阵也构成向量空间，所以检验线性无关的方法与向量完全相同：令组合等于零矩阵，求出权重。若 c₁A₁ + ... + cₖAₖ = O 蕴含所有标量 cᵢ = 0，则矩阵组 {A₁, ..., Aₖ} 线性无关。",
+        "Matrices form a vector space too, so independence is tested exactly as for vectors, by setting a combination equal to the zero matrix and solving for the weights. A set of matrices $\\{A_1, \\dots, A_k\\}$ is linearly independent if $c_1A_1 + \\dots + c_kA_k = O$ implies all scalars $c_i = 0$.",
+        "矩阵也构成向量空间，所以检验线性无关的方法与向量完全相同：令组合等于零矩阵，求出权重。若 $c_1A_1 + \\dots + c_kA_k = O$ 蕴含所有标量 $c_i = 0$，则矩阵组 $\\{A_1, \\dots, A_k\\}$ 线性无关。",
       ),
       generate(rng) {
         const isDep = rng.bool();
@@ -2532,10 +2538,10 @@ export const subspacesOfAbstractVectorSpaces: TopicDef = {
   knowledgePoints: [
     {
       id: "subspaces-of-polynomial-spaces",
-      title: t("Subspaces of ℙₙ", "ℙₙ 的子空间判定"),
+      title: t("Subspaces of $\\mathbb{P}_n$", "$\\mathbb{P}_n$ 的子空间判定"),
       explanation: t(
-        "A subset of ℙₙ defined by homogeneous linear conditions on evaluations or derivatives (e.g. p(0) = 0 or p'(1) = 0) is a subspace. Subsets with non-zero values (e.g. p(0) = 1) or fixed degree conditions are not.",
-        "由函数值或导数的齐次线性条件（如 p(0) = 0 或 p'(1) = 0）定义的 ℙₙ 子集是子空间。非齐次条件（如 p(0) = 1）或固定次数条件则不是子空间。",
+        "A subset of $\\mathbb{P}_n$ defined by homogeneous linear conditions on values or derivatives (such as $p(0) = 0$ or $p'(1) = 0$) is a subspace. Subsets defined by non-zero values (such as $p(0) = 1$) or by an exact degree are not.",
+        "由函数值或导数的齐次线性条件（如 $p(0) = 0$ 或 $p'(1) = 0$）定义的 $\\mathbb{P}_n$ 子集是子空间。由非零函数值（如 $p(0) = 1$）或固定次数定义的子集则不是子空间。",
       ),
       generate(rng) {
         const x0 = rng.int(-5, 5);
@@ -2621,7 +2627,7 @@ export const basesInAbstractVectorSpaces: TopicDef = {
   knowledgePoints: [
     {
       id: "standard-bases-abstract",
-      title: t("Standard bases for ℙₙ and M_{2×2}", "ℙₙ 与 M_{2×2} 的标准基"),
+      title: t("Standard bases for $\\mathbb{P}_n$ and $M_{2 \\times 2}$", "$\\mathbb{P}_n$ 与 $M_{2 \\times 2}$ 的标准基"),
       explanation: t(
         "The standard basis for $\\mathbb{P}_n$ is $\\{1, t, t^2, \\dots, t^n\\}$, which contains $n + 1$ polynomials. The standard basis for $M_{2 \\times 2}$ consists of the four elementary matrices $E_{11}, E_{12}, E_{21}, E_{22}$.",
         "多项式空间 $\\mathbb{P}_n$ 的标准基为 $\\{1, t, t^2, \\dots, t^n\\}$，共含 $n + 1$ 个多项式。矩阵空间 $M_{2 \\times 2}$ 的标准基由 $4$ 个基本矩阵 $E_{11}, E_{12}, E_{21}, E_{22}$ 组成。",
@@ -2649,10 +2655,10 @@ export const basesInAbstractVectorSpaces: TopicDef = {
     },
     {
       id: "verify-basis-in-polynomial-space",
-      title: t("Verifying a basis for ℙ₂", "验证 ℙ₂ 的一组非标准基"),
+      title: t("Verifying a basis for $\\mathbb{P}_2$", "验证 $\\mathbb{P}_2$ 的一组非标准基"),
       explanation: t(
-        "A set of 3 polynomials in ℙ₂ forms a basis if and only if they are linearly independent (which in turn guarantees they span the 3-dimensional space ℙ₂).",
-        "ℙ₂ 中的 3 个多项式构成基，当且仅当它们线性无关（这也保证了它们必能张成 3 维空间 ℙ₂）。",
+        "A set of $3$ polynomials in $\\mathbb{P}_2$ forms a basis if and only if they are linearly independent (which in turn guarantees they span the $3$-dimensional space $\\mathbb{P}_2$).",
+        "$\\mathbb{P}_2$ 中的 $3$ 个多项式构成基，当且仅当它们线性无关（这也保证了它们必能张成 $3$ 维空间 $\\mathbb{P}_2$）。",
       ),
       generate(rng) {
         const isBasis = rng.bool();
@@ -2706,8 +2712,8 @@ export const theCoordinatesOfAVectorRelativeToABasisInAbstractVectorSpaces: Topi
   id: "the-coordinates-of-a-vector-relative-to-a-basis-in-abstract-vector-spaces",
   title: t("The Coordinates of a Vector Relative to a Basis in Abstract Vector Spaces", "抽象向量在基下的坐标映射"),
   summary: t(
-    "Determine coordinate vectors [v]_ℬ ∈ ℝⁿ for polynomials and matrices relative to ordered bases, illustrating the coordinate isomorphism.",
-    "求解多项式与矩阵在有序基下的坐标向量 [v]_ℬ ∈ ℝⁿ，理解坐标同构映射。",
+    "Determine coordinate vectors $[\\mathbf{v}]_{\\mathcal{B}} \\in \\mathbb{R}^n$ for polynomials and matrices relative to ordered bases, illustrating the coordinate isomorphism.",
+    "求解多项式与矩阵在有序基下的坐标向量 $[\\mathbf{v}]_{\\mathcal{B}} \\in \\mathbb{R}^n$，理解坐标同构映射。",
   ),
   prerequisites: ["bases-in-abstract-vector-spaces"],
   encompasses: [],
@@ -2716,10 +2722,10 @@ export const theCoordinatesOfAVectorRelativeToABasisInAbstractVectorSpaces: Topi
   knowledgePoints: [
     {
       id: "polynomial-coordinate-vector",
-      title: t("Coordinate vector of a polynomial in ℙ₂", "ℙ₂ 中多项式的坐标向量"),
+      title: t("Coordinate vector of a polynomial in $\\mathbb{P}_2$", "$\\mathbb{P}_2$ 中多项式的坐标向量"),
       explanation: t(
-        "Relative to the standard basis of powers, the coordinates of a polynomial are just its coefficients listed in order of increasing degree. For the ordered standard basis ℬ = {1, t, t²} of ℙ₂, the polynomial p(t) = a₀ + a₁t + a₂t² has coordinate vector [p]_ℬ = (a₀, a₁, a₂)ᵀ.",
-        "相对于由幂组成的标准基，多项式的坐标就是按次数从低到高排列的系数。对于 ℙ₂ 的有序标准基 ℬ = {1, t, t²}，多项式 p(t) = a₀ + a₁t + a₂t² 的坐标向量为 [p]_ℬ = (a₀, a₁, a₂)ᵀ。",
+        "Relative to the standard basis of powers, the coordinates of a polynomial are just its coefficients listed in order of increasing degree. For the ordered standard basis $\\mathcal{B} = \\{1, t, t^2\\}$ of $\\mathbb{P}_2$, the polynomial $p(t) = a_0 + a_1t + a_2t^2$ has coordinate vector $[p]_{\\mathcal{B}} = (a_0, a_1, a_2)^T$.",
+        "相对于由幂组成的标准基，多项式的坐标就是按次数从低到高排列的系数。对于 $\\mathbb{P}_2$ 的有序标准基 $\\mathcal{B} = \\{1, t, t^2\\}$，多项式 $p(t) = a_0 + a_1t + a_2t^2$ 的坐标向量为 $[p]_{\\mathcal{B}} = (a_0, a_1, a_2)^T$。",
       ),
       generate(rng) {
         const a0 = rng.int(-5, 5);
@@ -2804,7 +2810,7 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
   knowledgePoints: [
     {
       id: "dimension-formula-abstract-spaces",
-      title: t("Dimension formulas for ℙₙ and M_{m×n}", "ℙₙ 与 M_{m×n} 的维数公式"),
+      title: t("Dimension formulas for $\\mathbb{P}_n$ and $M_{m \\times n}$", "$\\mathbb{P}_n$ 与 $M_{m \\times n}$ 的维数公式"),
       explanation: t(
         "$\\dim(\\mathbb{P}_n) = n + 1$ because its standard basis $\\{1, t, \\dots, t^n\\}$ has $n + 1$ elements. For matrix spaces, $\\dim(M_{m \\times n}) = mn$. For the symmetric $n \\times n$ matrices, the dimension is $\\frac{n(n + 1)}{2}$.",
         "$\\dim(\\mathbb{P}_n) = n + 1$，因为其标准基 $\\{1, t, \\dots, t^n\\}$ 包含 $n + 1$ 个元素。矩阵空间的维数为 $\\dim(M_{m \\times n}) = mn$。$n$ 阶对称矩阵子空间的维数为 $\\frac{n(n + 1)}{2}$。",
