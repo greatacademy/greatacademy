@@ -1,6 +1,6 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { type PlaneView, plane, Q, svgDocument } from "@ga/subject-math";
+import { type Mark, type PlaneView, type Point, plane, Q, sketch, svgDocument } from "@ga/subject-math";
 
 import { numberProblem, radicalProblem, steps } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -33,8 +33,8 @@ function topic(
 }
 
 /** kp builds a KnowledgePointDef. */
-function kp(id: string, title: Text, explanation: Text, generate: (rng: Rng) => Problem): KnowledgePointDef {
-  return { id, title, explanation, generate };
+function kp(id: string, title: Text, explanation: Text, generate: (rng: Rng) => Problem, figure?: Figure): KnowledgePointDef {
+  return figure ? { id, title, explanation, figure, generate } : { id, title, explanation, generate };
 }
 
 /** distinct drops the values equal to the answer or to an earlier value. */
@@ -153,6 +153,26 @@ const polygonNames = [
   { n: 12, en: "dodecagon", zh: "正十二边形" },
 ] as const;
 
+/** regularPolygonFigure draws a regular n-gon cut by segments from its center into n congruent triangles, with the apothem a to the bottom side of side s. */
+function regularPolygonFigure(n: number, alt: Text): Figure {
+  const at = (k: number): Point => {
+    const d = -Math.PI / 2 - Math.PI / n + (2 * Math.PI * k) / n;
+    return [3 * Math.cos(d), 3 * Math.sin(d)];
+  };
+  const pts = Array.from({ length: n }, (_, k) => at(k));
+  const m: Point = [0, pts[0]![1]];
+  const marks: Mark[] = [
+    { kind: "polygon", points: pts },
+    ...pts.map((p): Mark => ({ kind: "segment", a: [0, 0], b: p, dashed: true })),
+    { kind: "segment", a: [0, 0], b: m, accent: true },
+    { kind: "right", vertex: m, from: pts[1]!, to: [0, 0] },
+    { kind: "dot", at: [0, 0] },
+    { kind: "label", at: [0, m[1] / 2], text: "a", dir: "e", italic: true },
+    { kind: "side", a: pts[0]!, b: pts[1]!, text: "s" },
+  ];
+  return { svg: sketch(marks), alt };
+}
+
 /** areasOfRegularPolygons finds areas of regular polygons from the apothem and the perimeter. */
 export const areasOfRegularPolygons = topic(
   "areas-of-regular-polygons",
@@ -197,6 +217,13 @@ export const areasOfRegularPolygons = topic(
           ),
         });
       },
+      regularPolygonFigure(
+        8,
+        t(
+          "A regular octagon with side s, cut by dashed segments from its center into 8 congruent triangles. The apothem a runs from the center to the middle of the bottom side, meeting it at a right angle, and is the height of each triangle.",
+          "一个边长为 s 的正八边形，被从中心出发的虚线分成 8 个全等三角形。边心距 a 从中心垂直连到底边中点，是每个三角形的高。",
+        ),
+      ),
     ),
     kp(
       "area-of-a-regular-hexagon",
@@ -234,6 +261,13 @@ export const areasOfRegularPolygons = topic(
               ),
         });
       },
+      regularPolygonFigure(
+        6,
+        t(
+          "A regular hexagon with side s, cut by dashed segments from its center into 6 equilateral triangles with side s. The apothem a is the height of one of them, from the center to the middle of the bottom side.",
+          "一个边长为 s 的正六边形，被从中心出发的虚线分成 6 个边长为 s 的等边三角形。边心距 a 是其中一个三角形的高，从中心连到底边中点。",
+        ),
+      ),
     ),
   ],
 );
