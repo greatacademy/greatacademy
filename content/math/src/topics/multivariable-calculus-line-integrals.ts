@@ -1632,6 +1632,97 @@ export const greensTheoremInCirculationCurlForm: TopicDef = {
   ],
 };
 
+/** greensTheoremInPolarCoordinates evaluates the curl double integral of Green's theorem in polar coordinates. */
+export const greensTheoremInPolarCoordinates: TopicDef = {
+  id: "greens-theorem-in-polar-coordinates",
+  title: t("Green's Theorem in Polar Coordinates", "极坐标下的格林公式"),
+  summary: t(
+    "When $D$ is a disk or an annulus, the double integral in Green's theorem is easiest in polar coordinates: $\\oint_C (P\\,dx + Q\\,dy) = \\int_0^{2\\pi}\\int (Q_x - P_y)\\,r\\,dr\\,d\\theta$.",
+    "当 $D$ 是圆盘或圆环时，格林公式中的二重积分用极坐标计算最方便：$\\oint_C (P\\,dx + Q\\,dy) = \\int_0^{2\\pi}\\int (Q_x - P_y)\\,r\\,dr\\,d\\theta$。",
+  ),
+  prerequisites: ["greens-theorem-in-circulation-curl-form", "double-integrals-in-plane-polar-coordinates"],
+  encompasses: [
+    { topic: "greens-theorem-in-circulation-curl-form", weight: 0.5 },
+    { topic: "double-integrals-in-plane-polar-coordinates", weight: 0.4 },
+  ],
+  xp: 10,
+  knowledgePoints: [
+    {
+      id: "greens-theorem-over-a-disk-in-polar-coordinates",
+      title: t("Circulation around a circle", "沿圆周的环量"),
+      explanation: t(
+        "For $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$ the curl integrand is $Q_x - P_y = 3a x^2 + 3a y^2 = 3a r^2$. Over the disk of radius $R$, remember the factor $r$ in $dA = r\\,dr\\,d\\theta$:\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_0^R 3a r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{3a R^4}{4} = \\frac{3a\\pi R^4}{2}.$$",
+        "对 $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$，旋度被积函数为 $Q_x - P_y = 3a x^2 + 3a y^2 = 3a r^2$。在半径为 $R$ 的圆盘上积分时，别忘了 $dA = r\\,dr\\,d\\theta$ 中的因子 $r$：\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_0^R 3a r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{3a R^4}{4} = \\frac{3a\\pi R^4}{2}。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const a = 2 * rng.int(1, 3);
+        const p = rng.int(2, 6);
+        const q = rng.int(2, 6);
+        const R = rng.int(1, 3);
+        const ans = (3 * a * R ** 4) / 2;
+        const prompt = t(
+          `Let $C$ be the circle $x^2 + y^2 = ${R * R}$, oriented counterclockwise, and $\\mathbf{F}(x, y) = \\langle ${p}x - ${a}y^3, ${a}x^3 + ${q}y \\rangle$. Use Green's theorem and polar coordinates to find $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$.`,
+          `设 $C$ 为逆时针方向的圆周 $x^2 + y^2 = ${R * R}$，$\\mathbf{F}(x, y) = \\langle ${p}x - ${a}y^3, ${a}x^3 + ${q}y \\rangle$。利用格林公式和极坐标求 $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
+        );
+        const solution = t(
+          steps(
+            `The curl integrand is $Q_x - P_y = ${3 * a}x^2 + ${3 * a}y^2 = ${3 * a}r^2$; the terms $${p}x$ and $${q}y$ contribute nothing.`,
+            `The region is the disk $0 \\le r \\le ${R}$, $0 \\le \\theta \\le 2\\pi$, with $dA = r\\,dr\\,d\\theta$.`,
+            `$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_0^{${R}} ${3 * a}r^3\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${3 * a} \\cdot ${R ** 4}}{4} = ${ans}\\pi$.`,
+            `Dividing by $\\pi$ gives $${ans}$.`,
+          ),
+          steps(
+            `旋度被积函数为 $Q_x - P_y = ${3 * a}x^2 + ${3 * a}y^2 = ${3 * a}r^2$；$${p}x$ 与 $${q}y$ 两项不起作用。`,
+            `区域是圆盘 $0 \\le r \\le ${R}$，$0 \\le \\theta \\le 2\\pi$，且 $dA = r\\,dr\\,d\\theta$。`,
+            `$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_0^{${R}} ${3 * a}r^3\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${3 * a} \\cdot ${R ** 4}}{4} = ${ans}\\pi$。`,
+            `除以 $\\pi$ 得 $${ans}$。`,
+          ),
+        );
+        // Forgetting the factor r gives 2aR^3; Q_x + P_y gives 0; dropping the 1/4 gives 6aR^4.
+        return numberProblem({ prompt, solution, answer: ans, wrong: [2 * a * R ** 3, 0, 6 * a * R ** 4] });
+      },
+    },
+    {
+      id: "greens-theorem-over-an-annulus-in-polar-coordinates",
+      title: t("Circulation around the boundary of an annulus", "沿圆环边界的环量"),
+      explanation: t(
+        "The positively oriented boundary of the annulus $r_1 \\le r \\le r_2$ is the outer circle counterclockwise together with the inner circle clockwise. Green's theorem still applies, with $r$ running from $r_1$ to $r_2$:\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_{r_1}^{r_2} (Q_x - P_y)\\,r\\,dr\\,d\\theta.$$ For $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$ this is $\\frac{3a\\pi}{2}(r_2^4 - r_1^4)$.",
+        "圆环 $r_1 \\le r \\le r_2$ 的正向边界由逆时针方向的外圆和顺时针方向的内圆组成。格林公式依然成立，只是 $r$ 从 $r_1$ 积到 $r_2$：\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_{r_1}^{r_2} (Q_x - P_y)\\,r\\,dr\\,d\\theta。$$ 对 $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$，结果为 $\\frac{3a\\pi}{2}(r_2^4 - r_1^4)$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = 2 * rng.int(1, 2);
+        const p = rng.int(2, 6);
+        const q = rng.int(2, 6);
+        const r1 = rng.int(1, 2);
+        const r2 = rng.int(r1 + 1, 3);
+        const diff = r2 ** 4 - r1 ** 4;
+        const ans = (3 * a * diff) / 2;
+        const prompt = t(
+          `Let $D$ be the annulus $${r1 * r1} \\le x^2 + y^2 \\le ${r2 * r2}$ and $C$ its positively oriented boundary. For $\\mathbf{F}(x, y) = \\langle ${p}x - ${a}y^3, ${a}x^3 + ${q}y \\rangle$, use Green's theorem and polar coordinates to find $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$.`,
+          `设 $D$ 为圆环 $${r1 * r1} \\le x^2 + y^2 \\le ${r2 * r2}$，$C$ 为它的正向边界。对 $\\mathbf{F}(x, y) = \\langle ${p}x - ${a}y^3, ${a}x^3 + ${q}y \\rangle$，利用格林公式和极坐标求 $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
+        );
+        const solution = t(
+          steps(
+            `The curl integrand is $Q_x - P_y = ${3 * a}x^2 + ${3 * a}y^2 = ${3 * a}r^2$; the terms $${p}x$ and $${q}y$ contribute nothing.`,
+            `The annulus is $${r1} \\le r \\le ${r2}$, $0 \\le \\theta \\le 2\\pi$, with $dA = r\\,dr\\,d\\theta$.`,
+            `$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_{${r1}}^{${r2}} ${3 * a}r^3\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${3 * a}(${r2 ** 4} - ${r1 ** 4})}{4} = ${ans}\\pi$.`,
+            `Dividing by $\\pi$ gives $${ans}$.`,
+          ),
+          steps(
+            `旋度被积函数为 $Q_x - P_y = ${3 * a}x^2 + ${3 * a}y^2 = ${3 * a}r^2$；$${p}x$ 与 $${q}y$ 两项不起作用。`,
+            `圆环为 $${r1} \\le r \\le ${r2}$，$0 \\le \\theta \\le 2\\pi$，且 $dA = r\\,dr\\,d\\theta$。`,
+            `$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_{${r1}}^{${r2}} ${3 * a}r^3\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${3 * a}(${r2 ** 4} - ${r1 ** 4})}{4} = ${ans}\\pi$。`,
+            `除以 $\\pi$ 得 $${ans}$。`,
+          ),
+        );
+        // Using only the outer circle, adding the inner disk, or forgetting the factor r.
+        const wrong = [(3 * a * r2 ** 4) / 2, (3 * a * (r2 ** 4 + r1 ** 4)) / 2, 2 * a * (r2 ** 3 - r1 ** 3)];
+        return numberProblem({ prompt, solution, answer: ans, wrong: wrong.filter((w) => w !== ans) });
+      },
+    },
+  ],
+};
+
 /** calculatingAreasUsingGreensTheorem evaluates areas via boundary line integrals. */
 export const calculatingAreasUsingGreensTheorem: TopicDef = {
   id: "calculating-areas-using-greens-theorem",
@@ -1852,6 +1943,7 @@ export const multivariableCalculusLineIntegralTopics: readonly TopicDef[] = [
   // 4.23 Green's Theorem
   circulationAndFluxAcrossSimpleClosedPlaneCurves,
   greensTheoremInCirculationCurlForm,
+  greensTheoremInPolarCoordinates,
   calculatingAreasUsingGreensTheorem,
   greensTheoremInFluxDivergenceForm,
   greensTheoremOnRegionsWithHoles,

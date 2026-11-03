@@ -9807,6 +9807,7 @@ export const multivariableCalculus: CourseDef = {
           topics: [
             "circulation-and-flux-across-simple-closed-plane-curves",
             "greens-theorem-in-circulation-curl-form",
+            "greens-theorem-in-polar-coordinates",
             "calculating-areas-using-greens-theorem",
             "greens-theorem-in-flux-divergence-form",
             "greens-theorem-on-regions-with-holes",
@@ -12255,6 +12256,7 @@ export const mathematicalMethodsForThePhysicalSciencesII: CourseDef = {
           topics: [
             "circulation-and-flux-across-simple-closed-plane-curves",
             "greens-theorem-in-circulation-curl-form",
+            "greens-theorem-in-polar-coordinates",
             "calculating-areas-using-greens-theorem",
             "greens-theorem-in-flux-divergence-form",
             "greens-theorem-on-regions-with-holes",
