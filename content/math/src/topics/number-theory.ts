@@ -157,6 +157,44 @@ export const primeAndCompositeNumbers: TopicDef = {
         });
       },
     },
+    {
+      id: "spotting-the-prime",
+      title: t("Spotting the prime among odd numbers", "在奇数中找出质数"),
+      explanation: t(
+        "Odd numbers that do not end in $5$ often look prime, but many are products of larger primes such as $7 \\cdot 13 = 91$ or $3 \\cdot 19 = 57$. Check each candidate against $3$ (digit sum), $7$, $11$, $13$, and so on, up to its square root.\n\nAmong $51, 57, 87, 89$: $51 = 3 \\cdot 17$, $57 = 3 \\cdot 19$ and $87 = 3 \\cdot 29$ all have digit sums divisible by $3$, while $89$ has no prime factor up to $\\sqrt{89} < 10$, so $89$ is the prime.",
+        "不以 $5$ 结尾的奇数常常看起来像质数，但其中很多是较大质数的乘积，例如 $7 \\cdot 13 = 91$、$3 \\cdot 19 = 57$。把每个候选数依次用 $3$（看数字和）、$7$、$11$、$13$ 等去试，直到它的平方根为止。\n\n在 $51, 57, 87, 89$ 中：$51 = 3 \\cdot 17$、$57 = 3 \\cdot 19$、$87 = 3 \\cdot 29$ 的数字和都能被 $3$ 整除，而 $89$ 没有不超过 $\\sqrt{89} < 10$ 的质因数，所以 $89$ 是质数。",
+      ),
+      generate(rng) {
+        const oddPrime = (n: number) => n % 2 !== 0 && n % 5 !== 0;
+        const range = Array.from({ length: 170 }, (_, i) => i + 30).filter(oddPrime);
+        const prime = rng.pick(range.filter(isPrime));
+        const fakes = rng.sample(
+          range.filter((n) => !isPrime(n)),
+          3,
+        );
+        const numbers = rng.shuffle([prime, ...fakes]);
+        const why = fakes
+          .slice()
+          .sort((x, y) => x - y)
+          .map((n) => {
+            const [p] = primeFactors(n)[0]!;
+            return `${n} = ${p} \\cdot ${n / p}`;
+          })
+          .join(",\\ ");
+        return choiceProblem({
+          prompt: t(
+            `Which of these numbers is prime: ${numbers.map((n) => `$${n}$`).join(", ")}?`,
+            `下列哪个数是质数：${numbers.map((n) => `$${n}$`).join("、")}？`,
+          ),
+          options: numbers.map((n) => t(`$${n}$`, `$${n}$`)),
+          correct: numbers.indexOf(prime),
+          solution: t(
+            `$${why}$, so those are composite. No prime up to $\\sqrt{${prime}}$ divides $${prime}$, so $${prime}$ is prime.`,
+            `$${why}$，所以它们是合数。不超过 $\\sqrt{${prime}}$ 的质数都不能整除 $${prime}$，所以 $${prime}$ 是质数。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -195,6 +233,51 @@ export const primeFactorization: TopicDef = {
             `从最小的质数开始反复相除：${steps(...divisions(n))}所以 $${n} = ${answer}$。`,
           ),
         });
+      },
+    },
+    {
+      id: "exponents-in-a-factorization",
+      title: t("Reading exponents and prime factors", "读出指数与质因数"),
+      explanation: t(
+        "The exponent of a prime in a factorization says how many times that prime divides the number. To find it, divide by the prime again and again until the quotient is no longer divisible: for $360$, $360 \\div 2 = 180$, $180 \\div 2 = 90$, $90 \\div 2 = 45$, and $45$ is odd, so the exponent of $2$ is $3$. In full, $360 = 2^{3} \\cdot 3^{2} \\cdot 5$.\n\nThe same factorization answers other questions directly: the largest prime factor of $360$ is $5$, and it has $3$ different prime factors.",
+        "质因数分解中某个质数的指数，表示这个质数能整除该数多少次。求指数时，用这个质数反复去除，直到商不能再被整除：对 $360$，$360 \\div 2 = 180$，$180 \\div 2 = 90$，$90 \\div 2 = 45$，而 $45$ 是奇数，所以 $2$ 的指数为 $3$。完整地写，$360 = 2^{3} \\cdot 3^{2} \\cdot 5$。\n\n同一个分解式还能直接回答其他问题：$360$ 的最大质因数是 $5$，它有 $3$ 个不同的质因数。",
+      ),
+      generate(rng) {
+        for (;;) {
+          const e2 = rng.int(0, 5);
+          const e3 = rng.int(0, 3);
+          const e5 = rng.int(0, 2);
+          const other = rng.pick([1, 1, 7, 11, 13]);
+          const n = 2 ** e2 * 3 ** e3 * 5 ** e5 * other;
+          if (n < 40 || n > 2000) continue;
+          const fs = primeFactors(n);
+          if (fs.length < 2) continue;
+          const kind = rng.int(0, 2);
+          const p = rng.pick(fs.map(([q]) => q));
+          const exp = fs.find(([q]) => q === p)![1];
+          const largest = fs[fs.length - 1]![0];
+          const answer = [exp, largest, fs.length][kind]!;
+          const total = fs.reduce((s, [, e]) => s + e, 0);
+          const prompt = [
+            t(`What is the exponent of $${p}$ in the prime factorization of $${n}$?`, `$${n}$ 的质因数分解中，$${p}$ 的指数是多少？`),
+            t(`What is the largest prime factor of $${n}$?`, `$${n}$ 的最大质因数是多少？`),
+            t(`How many different prime factors does $${n}$ have?`, `$${n}$ 有几个不同的质因数？`),
+          ][kind]!;
+          return numberProblem({
+            prompt,
+            answer,
+            form: "integer",
+            wrong: [
+              [exp + 1, exp - 1, fs.length],
+              [n / largest, fs[0]![0], total],
+              [total, fs.length + 1, exp],
+            ][kind]!.filter((w) => w > 0 && w !== answer),
+            solution: t(
+              `${steps(...divisions(n))}So $${n} = ${factorizationLatex(fs)}$, and the answer is $${answer}$.`,
+              `${steps(...divisions(n))}所以 $${n} = ${factorizationLatex(fs)}$，答案为 $${answer}$。`,
+            ),
+          });
+        }
       },
     },
   ],
@@ -243,6 +326,44 @@ export const greatestCommonFactor: TopicDef = {
         });
       },
     },
+    {
+      id: "gcf-in-word-problems",
+      title: t("Equal groups with nothing left over", "均分且没有剩余"),
+      explanation: t(
+        "When two collections must be split into the same number of identical groups with nothing left over, the number of groups must divide both amounts. The **greatest** number of groups is therefore the GCF.\n\nWith $24$ pencils and $36$ erasers, the GCF is $12$: make $12$ kits, each with $24 \\div 12 = 2$ pencils and $36 \\div 12 = 3$ erasers. A larger number of kits, such as $24$, would leave erasers that cannot be shared equally.",
+        "当两批物品要分成相同个数的完全一样的组，并且没有剩余时，份数必须同时整除两个数量。所以**最多**能分成的组数就是最大公因数。\n\n有 $24$ 支铅笔和 $36$ 块橡皮，最大公因数是 $12$：可以装 $12$ 份，每份有 $24 \\div 12 = 2$ 支铅笔和 $36 \\div 12 = 3$ 块橡皮。份数再多，比如 $24$ 份，橡皮就不能平均分了。",
+      ),
+      generate(rng) {
+        const [a, b] = pair(rng);
+        const g = gcd(a, b);
+        const [x, xZh, y, yZh, kit, kitZh] = rng.pick([
+          ["red roses", "朵红玫瑰", "white roses", "朵白玫瑰", "bouquets", "花束"],
+          ["apples", "个苹果", "oranges", "个橙子", "gift bags", "礼品袋"],
+          ["boys", "名男生", "girls", "名女生", "teams", "队伍"],
+          ["pencils", "支铅笔", "erasers", "块橡皮", "kits", "文具包"],
+        ] as const);
+        const askEach = rng.bool();
+        const answer = askEach ? a / g : g;
+        return numberProblem({
+          prompt: askEach
+            ? t(
+                `There are $${a}$ ${x} and $${b}$ ${y}. They are shared out into as many identical ${kit} as possible with nothing left over. How many ${x} are in each of the ${kit}?`,
+                `有 $${a}$ ${xZh}和 $${b}$ ${yZh}，要分装成尽可能多的相同${kitZh}，没有剩余。每份${kitZh}里有多少${xZh.slice(1)}？`,
+              )
+            : t(
+                `There are $${a}$ ${x} and $${b}$ ${y}. What is the greatest number of identical ${kit} that can be made using all of them, with nothing left over?`,
+                `有 $${a}$ ${xZh}和 $${b}$ ${yZh}，全部用完且没有剩余，最多能分成多少份相同的${kitZh}？`,
+              ),
+          answer,
+          form: "integer",
+          wrong: askEach ? [g, b / g, a / primeFactors(g)[0]![0]] : [lcm(a, b), a / g, primeFactors(g)[0]![0]],
+          solution: t(
+            `The number of groups must divide both $${a}$ and $${b}$, so the most groups is the greatest common factor, $${g}$.${askEach ? ` Each group then has $${a} \\div ${g} = ${a / g}$ ${x}.` : ""}`,
+            `份数必须同时整除 $${a}$ 和 $${b}$，所以最多的份数是最大公因数 $${g}$。${askEach ? `于是每份有 $${a} \\div ${g} = ${a / g}$ ${xZh}。` : ""}`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -273,6 +394,37 @@ export const leastCommonMultiple: TopicDef = {
           solution: t(
             `${steps(factorLine(a), factorLine(b))}Take every prime with its larger exponent: the least common multiple is $${factorizationLatex(primeFactors(m))} = ${m}$.`,
             `${steps(factorLine(a), factorLine(b))}每个质数取较大的指数：最小公倍数是 $${factorizationLatex(primeFactors(m))} = ${m}$。`,
+          ),
+        });
+      },
+    },
+    {
+      id: "lcm-in-word-problems",
+      title: t("When repeating events line up", "周期事件何时重合"),
+      explanation: t(
+        "Events that repeat every $a$ and every $b$ units happen together at the common multiples of $a$ and $b$. The first time they coincide again is the LCM.\n\nIf one bus leaves every $12$ minutes and another every $18$ minutes, and both leave at $8{:}00$, they next leave together after $\\operatorname{lcm}(12, 18) = 36$ minutes, at $8{:}36$. Waiting $12 \\cdot 18 = 216$ minutes would also work, but it is not the first time.",
+        "每隔 $a$ 个单位和每隔 $b$ 个单位重复一次的事件，在 $a$ 与 $b$ 的公倍数处同时发生。它们第一次再次重合的时刻就是最小公倍数。\n\n若一路公交每 $12$ 分钟发一班，另一路每 $18$ 分钟发一班，两路都在 $8{:}00$ 发车，则下一次同时发车是在 $\\operatorname{lcm}(12, 18) = 36$ 分钟后，即 $8{:}36$。等 $12 \\cdot 18 = 216$ 分钟也会同时发车，但那不是第一次。",
+      ),
+      generate(rng) {
+        const [a, b] = pair(rng);
+        const m = lcm(a, b);
+        const [one, other, unit, oneZh, otherZh, unitZh, unitWordZh] = rng.pick([
+          ["One lighthouse flashes", "another", "seconds", "一座灯塔每", "另一座每", "秒闪光一次", "秒"],
+          ["One bus leaves the station", "another", "minutes", "一路公交每", "另一路每", "分钟发车一次", "分钟"],
+          ["One runner passes the start line", "another", "seconds", "一名跑步者每", "另一名每", "秒经过起点一次", "秒"],
+          ["One machine needs servicing", "another", "days", "一台机器每", "另一台每", "天需要保养一次", "天"],
+        ] as const);
+        return numberProblem({
+          prompt: t(
+            `${one} every $${a}$ ${unit} and ${other} every $${b}$ ${unit}. Both did so at the same moment just now. After how many ${unit} will they next do so at the same moment?`,
+            `${oneZh} $${a}$ ${unitZh}，${otherZh} $${b}$ ${unitZh}。刚才两者同时发生。至少再过多少${unitWordZh}它们会再次同时发生？`,
+          ),
+          answer: m,
+          form: "integer",
+          wrong: [a * b, gcd(a, b), a + b],
+          solution: t(
+            `They coincide at the common multiples of $${a}$ and $${b}$; the first is $\\operatorname{lcm}(${a}, ${b}) = ${m}$ ${unit}.`,
+            `它们在 $${a}$ 与 $${b}$ 的公倍数处重合；第一个是 $\\operatorname{lcm}(${a}, ${b}) = ${m}$ ${unitWordZh}。`,
           ),
         });
       },
