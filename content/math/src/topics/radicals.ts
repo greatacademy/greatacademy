@@ -310,6 +310,39 @@ export const rationalizingDenominators: TopicDef = {
         });
       },
     },
+    {
+      id: "square-roots-of-fractions",
+      title: t("Square roots of fractions", "分数的平方根"),
+      explanation: t(
+        "The square root of a fraction is the quotient of the square roots, $\\sqrt{\\frac{p}{q}} = \\frac{\\sqrt{p}}{\\sqrt{q}}$, which still has a root in the denominator. Multiply the numerator and the denominator by $\\sqrt{q}$, then simplify the root on top:\n\n$$\\sqrt{\\frac{5}{8}} = \\frac{\\sqrt{5}}{\\sqrt{8}} = \\frac{\\sqrt{5} \\cdot \\sqrt{8}}{8} = \\frac{\\sqrt{40}}{8} = \\frac{2\\sqrt{10}}{8} = \\frac{\\sqrt{10}}{4}$$\n\nSimplifying $\\sqrt{8} = 2\\sqrt{2}$ first and multiplying by $\\sqrt{2}$ gives the same result with smaller numbers.",
+        "分数的平方根等于平方根的商，$\\sqrt{\\frac{p}{q}} = \\frac{\\sqrt{p}}{\\sqrt{q}}$，此时分母中仍有根式。将分子、分母同乘以 $\\sqrt{q}$，再化简分子中的根式：\n\n$$\\sqrt{\\frac{5}{8}} = \\frac{\\sqrt{5}}{\\sqrt{8}} = \\frac{\\sqrt{5} \\cdot \\sqrt{8}}{8} = \\frac{\\sqrt{40}}{8} = \\frac{2\\sqrt{10}}{8} = \\frac{\\sqrt{10}}{4}$$\n\n也可以先把 $\\sqrt{8}$ 化成 $2\\sqrt{2}$，再乘以 $\\sqrt{2}$，结果相同而数更小。",
+      ),
+      generate(rng) {
+        for (;;) {
+          const q = rng.pick([2, 3, 5, 6, 7, 8, 10, 12, 18, 20, 27, 50]);
+          const p = rng.int(1, 15);
+          if (gcd(p, q) !== 1 || [4, 9].includes(p)) continue;
+          const [k, m] = simplifyRadical(p * q);
+          if (m === 1) continue;
+          const c = Q.of(k, q);
+          const rp = p === 1 ? "1" : root(1, p);
+          const quotient = p > 1 && rng.bool(0.5);
+          const shown = quotient ? `\\frac{${rp}}{${root(1, q)}}` : `\\sqrt{\\frac{${p}}{${q}}}`;
+          const tail = k === 1 ? "" : ` = \\frac{${root(k, m)}}{${q}}`;
+          const end = radical(c, m) === `\\frac{${root(k, m)}}{${q}}` ? "" : ` = ${radical(c, m)}`;
+          const work = `${quotient ? "" : `\\sqrt{\\frac{${p}}{${q}}} = `}\\frac{${rp}}{${root(1, q)}} = \\frac{${rp} \\cdot ${root(1, q)}}{${q}} = \\frac{${root(1, p * q)}}{${q}}${tail}${end}`;
+          return radicalProblem({
+            prompt: t(`Simplify, with no root in the denominator: $${shown}$.`, `化简，使分母中不含根式：$${shown}$。`),
+            answer: [c, m],
+            wrong: [`\\frac{${rp}}{${q}}`, ...(p > 1 ? [radical(Q.of(p, q), q)] : []), radical(Q.of(k), m)],
+            solution: t(
+              `Write the root of the quotient as a quotient of roots and multiply the numerator and the denominator by $\\sqrt{${q}}$:${steps(work)}`,
+              `把商的平方根写成平方根的商，分子、分母同乘以 $\\sqrt{${q}}$：${steps(work)}`,
+            ),
+          });
+        }
+      },
+    },
   ],
 };
 

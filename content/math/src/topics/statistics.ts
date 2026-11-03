@@ -297,6 +297,49 @@ export const meanAbsoluteDeviation: TopicDef = {
         }
       },
     },
+    {
+      id: "the-mad-from-a-frequency-table",
+      title: t("The MAD from a frequency table", "由频数表求平均绝对偏差"),
+      explanation: t(
+        "When a frequency table lists the data, each value counts as many times as its frequency, both in the mean and in the distances. With $N$ values in all:\n\n1. the mean is $\\frac{\\sum f \\cdot x}{N}$;\n2. each value $x$ contributes its distance $|x - \\text{mean}|$ once for each of its $f$ copies;\n3. the MAD is $\\frac{\\sum f \\cdot |x - \\text{mean}|}{N}$.\n\nFor the values $1, 3, 5$ with frequencies $2, 1, 1$: $N = 4$, the mean is $\\frac{2 + 3 + 5}{4} = 2.5$, and the MAD is $\\frac{2 \\cdot 1.5 + 0.5 + 2.5}{4} = 1.5$. Dividing by the number of distinct values instead of by $N$ is the usual mistake.",
+        "当数据由频数表给出时，每个数值按其频数重复计入，计算平均数和距离时都是如此。设共有 $N$ 个数据：\n\n1. 平均数为 $\\frac{\\sum f \\cdot x}{N}$；\n2. 数值 $x$ 的 $f$ 个副本各贡献一次距离 $|x - \\text{平均数}|$；\n3. 平均绝对偏差为 $\\frac{\\sum f \\cdot |x - \\text{平均数}|}{N}$。\n\n例如数值 $1, 3, 5$ 的频数为 $2, 1, 1$：$N = 4$，平均数为 $\\frac{2 + 3 + 5}{4} = 2.5$，平均绝对偏差为 $\\frac{2 \\cdot 1.5 + 0.5 + 2.5}{4} = 1.5$。常见错误是除以不同数值的个数而不是 $N$。",
+      ),
+      generate(rng) {
+        for (;;) {
+          const k = rng.pick([3, 4]);
+          const start = rng.int(0, 20);
+          const xs: number[] = [];
+          for (let i = 0, x = start; i < k; i++) {
+            xs.push(x);
+            x += rng.int(1, 4);
+          }
+          const fs = xs.map(() => rng.int(1, 6));
+          const n = sum(fs);
+          const total = sum(xs.map((x, i) => x * (fs[i] ?? 0)));
+          if (total % n !== 0) continue;
+          const m = total / n;
+          const d = xs.map((x) => Math.abs(x - m));
+          const fd = d.map((v, i) => v * (fs[i] ?? 0));
+          const mad = Q.of(sum(fd), n);
+          if (mad.isZero() || !isTerminating(mad)) continue;
+          const table = `$$\\begin{array}{c|${"c".repeat(k)}} x & ${xs.join(" & ")} \\\\ \\hline f & ${fs.join(" & ")} \\end{array}$$`;
+          const products = d.map((v, i) => `${fs[i]} \\cdot ${v}`).join(" + ");
+          return numberProblem({
+            prompt: t(
+              `The frequency table shows how often each value $x$ occurs in a data set. Find the mean absolute deviation.${table}`,
+              `频数表给出了数据中每个数值 $x$ 出现的次数 $f$。求平均绝对偏差。${table}`,
+            ),
+            answer: mad,
+            form: "decimal",
+            wrong: [Q.of(sum(d), k), Q.of(sum(fd), k), Q.of(sum(d), n), sum(fd)],
+            solution: t(
+              `There are $N = ${fs.join(" + ")} = ${n}$ values, with mean $\\frac{${total}}{${n}} = ${m}$. The distances from the mean are $${list(d)}$; weight each by its frequency:${steps(`\\text{MAD} = \\frac{${products}}{${n}} = \\frac{${sum(fd)}}{${n}} = ${dec(mad)}`)}`,
+              `共有 $N = ${fs.join(" + ")} = ${n}$ 个数据，平均数为 $\\frac{${total}}{${n}} = ${m}$。各数值到平均数的距离为 $${list(d)}$，按频数加权：${steps(`\\text{MAD} = \\frac{${products}}{${n}} = \\frac{${sum(fd)}}{${n}} = ${dec(mad)}`)}`,
+            ),
+          });
+        }
+      },
+    },
   ],
 };
 

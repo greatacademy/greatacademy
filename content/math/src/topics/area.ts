@@ -605,6 +605,55 @@ export const areaOfTrapezoids: TopicDef = {
         }
       },
     },
+    {
+      id: "a-missing-base-or-height",
+      title: t("A missing base or height", "求未知的底或高"),
+      explanation: t(
+        "The formula $A = \\tfrac{1}{2} (b_1 + b_2) h$ also finds a missing length once the area is known. Doubling the area undoes the $\\tfrac{1}{2}$: $2A = (b_1 + b_2) h$. Then\n\n- for the height, divide by the sum of the bases: $h = \\frac{2A}{b_1 + b_2}$;\n- for a base, divide by the height and subtract the other base: $b_2 = \\frac{2A}{h} - b_1$.\n\nA trapezoid of area $45\\text{ cm}^2$, height $6$ cm and one base $7$ cm has $b_1 + b_2 = \\frac{90}{6} = 15$, so the other base is $8$ cm.",
+        "已知面积时，公式 $A = \\tfrac{1}{2} (b_1 + b_2) h$ 也能求出未知的长度。面积乘以 $2$ 消去 $\\tfrac{1}{2}$：$2A = (b_1 + b_2) h$。于是\n\n- 求高：除以两底之和，$h = \\frac{2A}{b_1 + b_2}$；\n- 求底：除以高，再减去另一条底，$b_2 = \\frac{2A}{h} - b_1$。\n\n面积为 $45\\text{ cm}^2$、高为 $6$ cm、一条底为 $7$ cm 的梯形，$b_1 + b_2 = \\frac{90}{6} = 15$，所以另一条底为 $8$ cm。",
+      ),
+      generate(rng) {
+        const u = pickUnit(rng);
+        for (;;) {
+          const top = rng.int(2, 14);
+          const bottom = top + rng.int(1, 12);
+          const h = rng.int(2, 12);
+          if (((top + bottom) * h) % 2 === 1) continue;
+          const a = ((top + bottom) * h) / 2;
+          if (rng.bool(0.4)) {
+            return numberProblem({
+              prompt: t(
+                `A trapezoid has bases $${tex(top, u)}$ and $${tex(bottom, u)}$ and area $${tex(a, u, 2)}$. Find its height.`,
+                `一个梯形的两底分别为 $${tex(top, u)}$ 和 $${tex(bottom, u)}$，面积为 $${tex(a, u, 2)}$。求它的高。`,
+              ),
+              answer: h,
+              form: "integer",
+              unit: u,
+              wrong: [2 * h, a / (top + bottom), a - top - bottom].filter((w) => Number.isInteger(w) && w > 0),
+              solution: t(
+                `Double the area and divide by the sum of the bases:${steps(`h = \\frac{2A}{b_1 + b_2} = \\frac{2 \\cdot ${a}}{${top} + ${bottom}} = \\frac{${2 * a}}{${top + bottom}} = ${tex(h, u)}`)}`,
+                `面积乘以 $2$，再除以两底之和：${steps(`h = \\frac{2A}{b_1 + b_2} = \\frac{2 \\cdot ${a}}{${top} + ${bottom}} = \\frac{${2 * a}}{${top + bottom}} = ${tex(h, u)}`)}`,
+              ),
+            });
+          }
+          const [known, missing] = rng.bool(0.5) ? [top, bottom] : [bottom, top];
+          return numberProblem({
+            prompt: t(
+              `A trapezoid has area $${tex(a, u, 2)}$ and height $${tex(h, u)}$. One base is $${tex(known, u)}$. Find the other base.`,
+              `一个梯形的面积为 $${tex(a, u, 2)}$，高为 $${tex(h, u)}$，一条底为 $${tex(known, u)}$。求另一条底。`,
+            ),
+            answer: missing,
+            form: "integer",
+            unit: u,
+            wrong: [top + bottom, a / h - known, (2 * a) / h, (2 * a) / h + known].filter((w) => Number.isInteger(w) && w > 0),
+            solution: t(
+              `Double the area and divide by the height to get the sum of the bases, then subtract the known base:${steps(`b_1 + b_2 = \\frac{2A}{h} = \\frac{${2 * a}}{${h}} = ${top + bottom}`, `b_2 = ${top + bottom} - ${known} = ${tex(missing, u)}`)}`,
+              `面积乘以 $2$ 再除以高，得到两底之和，再减去已知的底：${steps(`b_1 + b_2 = \\frac{2A}{h} = \\frac{${2 * a}}{${h}} = ${top + bottom}`, `b_2 = ${top + bottom} - ${known} = ${tex(missing, u)}`)}`,
+            ),
+          });
+        }
+      },
+    },
   ],
 };
 
