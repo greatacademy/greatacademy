@@ -1072,6 +1072,40 @@ function sideList(sides: readonly number[], unit: string): Text {
   return t(`$${a}$, $${b}$ and $${c}$`, `$${a}$、$${b}$、$${c}$`);
 }
 
+/** triangleInequalityFigure shows three sets of segments over a long side: 4, 6 and 9 closing into a triangle, 3 and 5 lying flat along 8, and 2 and 4 failing to reach across 9. */
+const triangleInequalityFigure: Figure = (() => {
+  const c: Point = [61 / 18, Math.sqrt(16 - (61 / 18) ** 2)];
+  const marks: Mark[] = [
+    { kind: "polygon", points: [[0, 0], [9, 0], c] },
+    { kind: "side", a: [0, 0], b: [9, 0], text: "9" },
+    { kind: "side", a: [9, 0], b: c, text: "6" },
+    { kind: "side", a: c, b: [0, 0], text: "4" },
+    { kind: "label", at: [4.5, -2], text: "4 + 6 > 9", dir: "s" },
+    { kind: "segment", a: [12, 0], b: [20, 0] },
+    { kind: "side", a: [12, 0], b: [20, 0], text: "8" },
+    { kind: "segment", a: [12, 0.3], b: [15, 0.3], accent: true },
+    { kind: "segment", a: [15, 0.3], b: [20, 0.3], accent: true },
+    { kind: "dot", at: [15, 0.3] },
+    { kind: "side", a: [15, 0.3], b: [12, 0.3], text: "3" },
+    { kind: "side", a: [20, 0.3], b: [15, 0.3], text: "5" },
+    { kind: "label", at: [16, -2], text: "3 + 5 = 8", dir: "s" },
+    { kind: "segment", a: [23, 0], b: [32, 0] },
+    { kind: "side", a: [23, 0], b: [32, 0], text: "9" },
+    { kind: "segment", a: [23, 0], b: [24, Math.sqrt(3)], accent: true },
+    { kind: "segment", a: [32, 0], b: [30, 2 * Math.sqrt(3)], accent: true },
+    { kind: "side", a: [24, Math.sqrt(3)], b: [23, 0], text: "2" },
+    { kind: "side", a: [32, 0], b: [30, 2 * Math.sqrt(3)], text: "4" },
+    { kind: "label", at: [27.5, -2], text: "2 + 4 < 9", dir: "s" },
+  ];
+  return {
+    svg: sketch(marks),
+    alt: t(
+      "Three cases side by side. Sides 4 and 6 meet above a side of 9 and close into a triangle, since 4 + 6 > 9. Sides 3 and 5 lie flat along a side of 8, since 3 + 5 = 8. Sides 2 and 4 rise from the ends of a side of 9 but cannot meet, since 2 + 4 < 9.",
+      "三种情形并排。长 4 和 6 的两边在长 9 的边上方相交，围成三角形，因为 4 + 6 > 9。长 3 和 5 的两边平躺在长 8 的边上，因为 3 + 5 = 8。长 2 和 4 的两边从长 9 的边两端立起，却无法相交，因为 2 + 4 < 9。",
+    ),
+  };
+})();
+
 const theTriangleInequality = topic(
   "the-triangle-inequality",
   t("The Triangle Inequality", "三角形三边关系"),
@@ -1089,6 +1123,7 @@ const theTriangleInequality = topic(
         "The **triangle inequality**: in every triangle, any two sides add up to more than the third. To test three lengths, it is enough to check that the **two shorter** ones add up to more than the **longest**.\n\n- $4$, $6$, $9$: $4 + 6 = 10 > 9$, so they form a triangle.\n- $3$, $5$, $8$: $3 + 5 = 8$, not more than $8$; the two short sides would lie flat along the long one, so they do not form a triangle.\n- $2$, $4$, $9$: $2 + 4 = 6 < 9$; the short sides cannot reach.",
         "**三角形三边关系**：任何三角形中，任意两边之和大于第三边。检验三条线段时，只需检查**较短的两条**之和是否大于**最长的一条**。\n\n- $4$、$6$、$9$：$4 + 6 = 10 > 9$，能组成三角形。\n- $3$、$5$、$8$：$3 + 5 = 8$，不大于 $8$；两条短边只能平躺在长边上，不能组成三角形。\n- $2$、$4$、$9$：$2 + 4 = 6 < 9$；两条短边够不着。",
       ),
+      figure: triangleInequalityFigure,
       generate(rng) {
         const kind = rng.pick(["yes", "yes", "flat", "short"] as const);
         const a = rng.int(2, 12);
