@@ -1,6 +1,6 @@
-import type { Rng, TopicDef } from "@ga/content";
+import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly, Q } from "@ga/subject-math";
+import { type Mark, type Point, poly, Q, sketch } from "@ga/subject-math";
 
 import { article, numberProblem, solutionsProblem } from "../problems.ts";
 import { oneOf, type Poly, pAt, par, pDer, pLatex, rounded } from "./calculus-common.ts";
@@ -106,6 +106,31 @@ export const solvingOptimizationProblemsUsingDerivatives: TopicDef = {
   ],
 };
 
+const sectorPoint = (a: number, r = 4): Point => [r * Math.cos(a), r * Math.sin(a)];
+
+/** sectorFigure shows a sector of radius r and angle θ radians, whose arc has length rθ; drawn at the best angle, θ = 2. */
+const sectorFigure: Figure = {
+  svg: sketch([
+    { kind: "segment", a: [0, 0], b: sectorPoint(0.6) },
+    { kind: "segment", a: [0, 0], b: sectorPoint(2.6) },
+    ...Array.from(
+      { length: 40 },
+      (_, i): Mark => ({
+        kind: "segment",
+        a: sectorPoint(0.6 + (2 * i) / 40),
+        b: sectorPoint(0.6 + (2 * (i + 1)) / 40),
+      }),
+    ),
+    { kind: "arc", vertex: [0, 0], from: sectorPoint(0.6), to: sectorPoint(2.6), label: "θ" },
+    { kind: "side", a: sectorPoint(0.6), b: [0, 0], text: "r" },
+    { kind: "side", a: [0, 0], b: sectorPoint(2.6), text: "r" },
+    { kind: "label", at: sectorPoint(1.6), text: "rθ", dir: "n" },
+  ]),
+  alt: t(
+    "A sector of radius r with central angle θ radians; its arc has length rθ and its perimeter is 2r + rθ.",
+    "半径为 r、圆心角为 θ 弧度的扇形；弧长为 rθ，周长为 2r + rθ。",
+  ),
+};
 /** optimizationProblemsInvolvingSectorsOfCircles optimizes sectors with a fixed perimeter. */
 export const optimizationProblemsInvolvingSectorsOfCircles: TopicDef = {
   id: "optimization-problems-involving-sectors-of-circles",
@@ -123,6 +148,7 @@ export const optimizationProblemsInvolvingSectorsOfCircles: TopicDef = {
         "A sector of radius $r$ and angle $\\theta$ (in radians) has arc length $r\\theta$, perimeter $P = 2r + r\\theta$ and area $A = \\frac{1}{2}r^{2}\\theta$. With $P$ fixed, $r\\theta = P - 2r$, so $A(r) = \\frac{1}{2}r(P - 2r)$. Then $A'(r) = \\frac{P}{2} - 2r = 0$ at $r = \\frac{P}{4}$, where $\\theta = 2$.",
         "半径为 $r$、圆心角为 $\\theta$（弧度）的扇形，弧长为 $r\\theta$，周长 $P = 2r + r\\theta$，面积 $A = \\frac{1}{2}r^{2}\\theta$。$P$ 固定时，$r\\theta = P - 2r$，所以 $A(r) = \\frac{1}{2}r(P - 2r)$。$A'(r) = \\frac{P}{2} - 2r = 0$ 于 $r = \\frac{P}{4}$，此时 $\\theta = 2$。",
       ),
+      figure: sectorFigure,
       generate(rng) {
         const P = 4 * rng.int(2, 30);
         const askAngle = rng.bool(0.3);
@@ -153,6 +179,7 @@ export const optimizationProblemsInvolvingSectorsOfCircles: TopicDef = {
         "Once the best radius is found, substitute back. With perimeter $P$, the best sector has $r = \\frac{P}{4}$ and $\\theta = 2$, so $A = \\frac{1}{2}\\left(\\frac{P}{4}\\right)^{2} \\cdot 2 = \\frac{P^{2}}{16}$.",
         "求出最佳半径后代回。周长为 $P$ 时，最佳扇形 $r = \\frac{P}{4}$，$\\theta = 2$，所以 $A = \\frac{1}{2}\\left(\\frac{P}{4}\\right)^{2} \\cdot 2 = \\frac{P^{2}}{16}$。",
       ),
+      figure: sectorFigure,
       generate(rng) {
         const P = 4 * rng.int(2, 30);
         const r = P / 4;
