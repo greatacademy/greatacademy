@@ -1501,6 +1501,22 @@ const LOG_DIGITS: Record<number, number> = { 2: 301, 3: 477, 4: 602, 5: 699, 6: 
 /** pow10 writes 10^k as a decimal. */
 const pow10 = (k: number) => dec(k >= 0 ? Q.of(10 ** k) : Q.of(1, 10 ** -k));
 
+/** semiLogFigure plots log y against x for y = 5, 15, 45, 135 (on a line) and y = 5, 15, 25, 35 (bending down). */
+const semiLogFigure: Figure = {
+  svg: plane({ xMin: 0, xMax: 4, yMin: 0, yMax: 2.5, step: 0.5, labelEvery: 2 }, [
+    { kind: "line", a: [0, Math.log10(5)], b: [1, Math.log10(15)], accent: true, dashed: true },
+    ...[5, 15, 45, 135].map((y, x): PlaneMark => ({ kind: "point", at: [x, Math.log10(y)], accent: true })),
+    ...[25, 35].map((y, i): PlaneMark => ({ kind: "point", at: [i + 2, Math.log10(y)], open: true })),
+    { kind: "label", at: [3, Math.log10(135)], text: "5, 15, 45, 135", dir: "w" },
+    { kind: "label", at: [3, Math.log10(35)], text: "5, 15, 25, 35", dir: "se" },
+    { kind: "label", at: [0, 2.4], text: "log y", dir: "e" },
+  ]),
+  alt: t(
+    "A semi-log plot of log y against x for x = 0, 1, 2, 3. The values 5, 15, 45, 135 (filled points) lie on one dashed straight line; the values 5, 15, 25, 35 share the first two points, but their last two (open points) fall below the line, bending down.",
+    "x = 0, 1, 2, 3 时 log y 关于 x 的半对数图。数据 5, 15, 45, 135（实心点）位于一条虚直线上；数据 5, 15, 25, 35 与它共用前两个点，但后两个点（空心点）落在直线下方，向下弯曲。",
+  ),
+};
+
 /** semiLogScatterPlots teaches straightening exponential data with a logarithmic axis. */
 const semiLogScatterPlots: TopicDef = {
   id: "semi-log-scatter-plots",
@@ -1612,6 +1628,7 @@ const semiLogScatterPlots: TopicDef = {
         "On a semi-log plot equal steps in $x$ give equal steps in $\\log y$ exactly when $y$ is multiplied by the same factor at each step. So exponential data, with a constant ratio between consecutive $y$-values, lie on a straight line; linear data (constant differences) and quadratic data do not.\n\nFor $x = 0, 1, 2, 3$, the values $y = 5, 15, 45, 135$ (ratio $3$) give a straight semi-log plot; $y = 5, 15, 25, 35$ do not.",
         "在半对数图上，当且仅当每一步 $y$ 都乘以同一个因子时，$x$ 的等步长才对应 $\\log y$ 的等步长。所以指数型数据（相邻 $y$ 值之比为常数）位于一条直线上；线性数据（差为常数）和二次数据则不然。\n\n对 $x = 0, 1, 2, 3$，数据 $y = 5, 15, 45, 135$（比为 $3$）的半对数图是直线；$y = 5, 15, 25, 35$ 则不是。",
       ),
+      figure: semiLogFigure,
       generate(rng) {
         const a = rng.int(1, 6);
         const r = rng.pick([2, 3, 4, 5]);
