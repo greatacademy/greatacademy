@@ -81,6 +81,32 @@ export const doubleSummations: TopicDef = {
         });
       },
     },
+    {
+      id: "separable-double-sums-of-products",
+      title: t("Separable double sums of products", "可分离的乘积型二重求和"),
+      explanation: t(
+        "When the summand is a product of a factor depending only on $i$ and a factor depending only on $j$, the double sum splits into a product of two single sums:\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} c\\,ij = c\\left(\\sum_{i=1}^{m} i\\right)\\left(\\sum_{j=1}^{n} j\\right) = c \\cdot \\frac{m(m+1)}{2} \\cdot \\frac{n(n+1)}{2}.$$\n\nThis works because the inner sum treats $i$ as a constant that can be pulled out.",
+        "当被加项是只依赖 $i$ 的因子与只依赖 $j$ 的因子之积时，二重求和可拆成两个单重求和之积：\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} c\\,ij = c\\left(\\sum_{i=1}^{m} i\\right)\\left(\\sum_{j=1}^{n} j\\right) = c \\cdot \\frac{m(m+1)}{2} \\cdot \\frac{n(n+1)}{2}。$$\n\n这是因为内层求和把 $i$ 当作常数，可以提出。",
+      ),
+      generate(rng: Rng): Problem {
+        const c = rng.int(1, 5);
+        const m = rng.int(2, 6);
+        const n = rng.int(2, 6);
+        const si = (m * (m + 1)) / 2;
+        const sj = (n * (n + 1)) / 2;
+        const ans = c * si * sj;
+        const term = c === 1 ? "ij" : `${c}ij`;
+        return numberProblem({
+          prompt: t(`Evaluate $\\sum_{i=1}^{${m}} \\sum_{j=1}^{${n}} ${term}$.`, `计算 $\\sum_{i=1}^{${m}} \\sum_{j=1}^{${n}} ${term}$。`),
+          answer: ans,
+          wrong: [c * si * n, c * m * sj, c * (si + sj), c * m * n],
+          solution: t(
+            `The sum separates: $${c === 1 ? "" : `${c} \\cdot `}\\left(\\sum_{i=1}^{${m}} i\\right)\\left(\\sum_{j=1}^{${n}} j\\right) = ${c === 1 ? "" : `${c} \\cdot `}${si} \\cdot ${sj} = ${ans}$.`,
+            `求和可分离：$${c === 1 ? "" : `${c} \\cdot `}\\left(\\sum_{i=1}^{${m}} i\\right)\\left(\\sum_{j=1}^{${n}} j\\right) = ${c === 1 ? "" : `${c} \\cdot `}${si} \\cdot ${sj} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -131,6 +157,36 @@ export const partitionsOfIntervals: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(L), ans.mul(Q.of(2)), Q.of(b - a + 1, n)],
+        });
+      },
+    },
+    {
+      id: "the-norm-of-an-irregular-partition",
+      title: t("The norm of an irregular partition", "非等分划分的范数"),
+      explanation: t(
+        "A partition $P = \\{x_0, x_1, \\dots, x_n\\}$ of $[a, b]$ need not have equal pieces. Its norm $\\|P\\|$ is the length of the longest subinterval, $\\max_i (x_i - x_{i-1})$. Refining a partition can only keep or shrink the norm, and $\\|P\\| \\to 0$ is what makes Riemann sums converge to the integral.",
+        "区间 $[a, b]$ 的划分 $P = \\{x_0, x_1, \\dots, x_n\\}$ 不必等分。它的范数 $\\|P\\|$ 是最长子区间的长度 $\\max_i (x_i - x_{i-1})$。加细划分只会使范数保持或变小，而 $\\|P\\| \\to 0$ 正是黎曼和收敛到积分的条件。",
+      ),
+      generate(rng: Rng): Problem {
+        const start = rng.int(-4, 3);
+        const gaps = Array.from({ length: rng.int(3, 5) }, () => rng.pick([1, 2, 3, 4, 5].map((g) => g / 2)));
+        const pts = [start];
+        for (const g of gaps) pts.push(pts[pts.length - 1]! + g);
+        const max = Math.max(...gaps);
+        const min = Math.min(...gaps);
+        const fmt = (x: number) => Q.of(Math.round(x * 2), 2).toLatex();
+        const total = pts[pts.length - 1]! - start;
+        return numberProblem({
+          prompt: t(
+            `Find the norm $\\|P\\|$ of the partition $P = \\{${pts.map(fmt).join(", ")}\\}$ of $[${fmt(start)}, ${fmt(pts[pts.length - 1]!)}]$.`,
+            `求区间 $[${fmt(start)}, ${fmt(pts[pts.length - 1]!)}]$ 的划分 $P = \\{${pts.map(fmt).join(", ")}\\}$ 的范数 $\\|P\\|$。`,
+          ),
+          answer: Q.of(Math.round(max * 2), 2),
+          wrong: [Q.of(Math.round(min * 2), 2), Q.of(Math.round(total * 2), 2 * gaps.length), gaps.length],
+          solution: t(
+            `The subinterval lengths are $${gaps.map((g) => fmt(g)).join(", ")}$. The longest is $${fmt(max)}$, so $\\|P\\| = ${fmt(max)}$.`,
+            `各子区间长度为 $${gaps.map((g) => fmt(g)).join(", ")}$。最长的是 $${fmt(max)}$，所以 $\\|P\\| = ${fmt(max)}$。`,
+          ),
         });
       },
     },
@@ -187,6 +243,35 @@ export const calculatingDoubleSummationsOverPartitions: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(Lx * Ly), ans.mul(Q.of(2)), Q.of(Lx + Ly, m + n)],
+        });
+      },
+    },
+    {
+      id: "a-double-riemann-sum-with-upper-right-corners",
+      title: t("A double Riemann sum with upper-right corners", "取右上角的二重黎曼和"),
+      explanation: t(
+        "A double Riemann sum adds $f(x_i^*, y_j^*)\\,\\Delta A$ over every subrectangle. On $[0, m] \\times [0, n]$ with unit squares, the upper-right corner of square $(i, j)$ is $(i, j)$ and $\\Delta A = 1$, so for $f(x, y) = x + y$\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} (i + j) = n\\sum_{i=1}^{m} i + m\\sum_{j=1}^{n} j.$$\n\nEach single sum is counted once for every value of the other index.",
+        "二重黎曼和对每个子矩形累加 $f(x_i^*, y_j^*)\\,\\Delta A$。在 $[0, m] \\times [0, n]$ 上用单位正方形划分时，第 $(i, j)$ 个正方形的右上角为 $(i, j)$，且 $\\Delta A = 1$，所以对 $f(x, y) = x + y$ 有\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} (i + j) = n\\sum_{i=1}^{m} i + m\\sum_{j=1}^{n} j。$$\n\n每个单重求和都对另一个指标的每个取值计算一次。",
+      ),
+      generate(rng: Rng): Problem {
+        const m = rng.int(2, 6);
+        const n = rng.int(2, 6);
+        const c = rng.int(1, 3);
+        const si = (m * (m + 1)) / 2;
+        const sj = (n * (n + 1)) / 2;
+        const ans = c * (n * si + m * sj);
+        const f = c === 1 ? "x + y" : `${c}(x + y)`;
+        return numberProblem({
+          prompt: t(
+            `$R = [0, ${m}] \\times [0, ${n}]$ is divided into unit squares. Find the Riemann sum of $f(x, y) = ${f}$ using the upper-right corner of each square as the sample point.`,
+            `把 $R = [0, ${m}] \\times [0, ${n}]$ 分成单位正方形。以每个正方形的右上角为样本点，求 $f(x, y) = ${f}$ 的黎曼和。`,
+          ),
+          answer: ans,
+          wrong: [ans - 2 * c * m * n, c * (si + sj), ans - c * m * n, c * m * n * (m + n)],
+          solution: t(
+            `$\\Delta A = 1$, so the sum is $${c === 1 ? "" : c}\\sum_{i=1}^{${m}}\\sum_{j=1}^{${n}} (i + j) = ${c === 1 ? "" : `${c}`}(${n} \\cdot ${si} + ${m} \\cdot ${sj}) = ${ans}$.`,
+            `$\\Delta A = 1$，所以和为 $${c === 1 ? "" : c}\\sum_{i=1}^{${m}}\\sum_{j=1}^{${n}} (i + j) = ${c === 1 ? "" : `${c}`}(${n} \\cdot ${si} + ${m} \\cdot ${sj}) = ${ans}$。`,
+          ),
         });
       },
     },
@@ -249,6 +334,34 @@ export const approximatingVolumesUsingLowerRiemannSums: TopicDef = {
         });
       },
     },
+    {
+      id: "a-lower-sum-for-a-product-function",
+      title: t("A lower sum for $cxy$", "函数 $cxy$ 的下和"),
+      explanation: t(
+        "For $f(x, y) = cxy$ with $c > 0$ on the first quadrant, $f$ increases in both variables, so its minimum on each subsquare is at the lower-left corner. With an $m \\times m$ regular partition of $[0, mh]^2$, the corners are $(ih, jh)$ for $i, j = 0, \\dots, m - 1$, and\n\n$$L = \\sum_{i=0}^{m-1}\\sum_{j=0}^{m-1} c(ih)(jh)\\,h^2 = ch^4\\left(\\frac{m(m-1)}{2}\\right)^2.$$",
+        "对第一象限上的 $f(x, y) = cxy$（$c > 0$），$f$ 关于两个变量都递增，所以在每个小正方形上的最小值在左下角取得。对 $[0, mh]^2$ 作 $m \\times m$ 等分，各角点为 $(ih, jh)$，$i, j = 0, \\dots, m - 1$，于是\n\n$$L = \\sum_{i=0}^{m-1}\\sum_{j=0}^{m-1} c(ih)(jh)\\,h^2 = ch^4\\left(\\frac{m(m-1)}{2}\\right)^2。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const c = rng.int(1, 5);
+        const m = rng.int(2, 4);
+        const h = rng.int(1, 2);
+        const lo = (m * (m - 1)) / 2;
+        const hi = (m * (m + 1)) / 2;
+        const ans = c * h ** 4 * lo * lo;
+        return numberProblem({
+          prompt: t(
+            `Find the lower Riemann sum of $f(x, y) = ${c === 1 ? "" : c}xy$ over $[0, ${m * h}] \\times [0, ${m * h}]$ using a regular $${m} \\times ${m}$ partition.`,
+            `用 $${m} \\times ${m}$ 等分划分，求 $f(x, y) = ${c === 1 ? "" : c}xy$ 在 $[0, ${m * h}] \\times [0, ${m * h}]$ 上的下黎曼和。`,
+          ),
+          answer: ans,
+          wrong: [c * h ** 4 * hi * hi, c * h ** 2 * lo * lo, c * h ** 4 * lo * hi],
+          solution: t(
+            `Each square has side $${h}$ and the minimum is at the lower-left corner, so $L = ${c} \\cdot ${h}^4 \\left(\\sum_{i=0}^{${m - 1}} i\\right)^2 = ${c} \\cdot ${h ** 4} \\cdot ${lo}^2 = ${ans}$.`,
+            `每个正方形边长为 $${h}$，最小值在左下角，所以 $L = ${c} \\cdot ${h}^4 \\left(\\sum_{i=0}^{${m - 1}} i\\right)^2 = ${c} \\cdot ${h ** 4} \\cdot ${lo}^2 = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -304,6 +417,34 @@ export const approximatingVolumesUsingUpperRiemannSums: TopicDef = {
           solution,
           answer: ans,
           wrong: [ans + 4, ans - 4, ans - 2 * a],
+        });
+      },
+    },
+    {
+      id: "an-upper-sum-for-a-sum-of-squares",
+      title: t("An upper sum for $c(x^2 + y^2)$", "函数 $c(x^2 + y^2)$ 的上和"),
+      explanation: t(
+        "For $f(x, y) = c(x^2 + y^2)$ with $c > 0$ on the first quadrant, the maximum on each subsquare is at the upper-right corner. With an $m \\times m$ regular partition of $[0, mh]^2$ the corners are $(ih, jh)$ for $i, j = 1, \\dots, m$, and\n\n$$U = \\sum_{i=1}^{m}\\sum_{j=1}^{m} c(i^2 + j^2)h^2 \\cdot h^2 = ch^4 \\cdot 2m\\sum_{i=1}^{m} i^2.$$\n\nThe factor $2m$ appears because each square $i^2$ is counted once for every $j$, and symmetrically for $j^2$.",
+        "对第一象限上的 $f(x, y) = c(x^2 + y^2)$（$c > 0$），每个小正方形上的最大值在右上角。对 $[0, mh]^2$ 作 $m \\times m$ 等分，角点为 $(ih, jh)$，$i, j = 1, \\dots, m$，于是\n\n$$U = \\sum_{i=1}^{m}\\sum_{j=1}^{m} c(i^2 + j^2)h^2 \\cdot h^2 = ch^4 \\cdot 2m\\sum_{i=1}^{m} i^2。$$\n\n出现因子 $2m$ 是因为每个 $i^2$ 对每个 $j$ 都计算一次，$j^2$ 同理。",
+      ),
+      generate(rng: Rng): Problem {
+        const c = rng.int(1, 4);
+        const m = rng.int(2, 5);
+        const h = rng.int(1, 2);
+        const s2 = (m * (m + 1) * (2 * m + 1)) / 6;
+        const s2lo = ((m - 1) * m * (2 * m - 1)) / 6;
+        const ans = c * h ** 4 * 2 * m * s2;
+        return numberProblem({
+          prompt: t(
+            `Find the upper Riemann sum of $f(x, y) = ${c === 1 ? "x^2 + y^2" : `${c}(x^2 + y^2)`}$ over $[0, ${m * h}] \\times [0, ${m * h}]$ using a regular $${m} \\times ${m}$ partition.`,
+            `用 $${m} \\times ${m}$ 等分划分，求 $f(x, y) = ${c === 1 ? "x^2 + y^2" : `${c}(x^2 + y^2)`}$ 在 $[0, ${m * h}] \\times [0, ${m * h}]$ 上的上黎曼和。`,
+          ),
+          answer: ans,
+          wrong: [c * h ** 4 * 2 * m * s2lo, c * h ** 2 * 2 * m * s2, c * h ** 4 * m * s2, c * h ** 4 * 2 * s2],
+          solution: t(
+            `The maximum on each square is at the upper-right corner, so $U = ${c} \\cdot ${h}^4 \\cdot 2 \\cdot ${m} \\sum_{i=1}^{${m}} i^2 = ${c} \\cdot ${h ** 4} \\cdot ${2 * m} \\cdot ${s2} = ${ans}$.`,
+            `每个正方形上的最大值在右上角，所以 $U = ${c} \\cdot ${h}^4 \\cdot 2 \\cdot ${m} \\sum_{i=1}^{${m}} i^2 = ${c} \\cdot ${h ** 4} \\cdot ${2 * m} \\cdot ${s2} = ${ans}$。`,
+          ),
         });
       },
     },
@@ -385,6 +526,35 @@ export const lowerRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
         });
       },
     },
+    {
+      id: "a-lower-sum-for-xy-over-an-irregular-grid",
+      title: t("A lower sum for $cxy$ over an irregular grid", "不规则网格上 $cxy$ 的下和"),
+      explanation: t(
+        "On a general partition each subrectangle $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ has its own area $\\Delta x_i\\,\\Delta y_j$. For $f(x, y) = cxy$ with $c > 0$ on $[0, x_2] \\times [0, y_2]$, the minimum on each piece is at its lower-left corner $(x_{i-1}, y_{j-1})$. Every piece touching an axis has minimum $0$, so only the piece $[x_1, x_2] \\times [y_1, y_2]$ contributes:\n\n$$L = c\\,x_1y_1(x_2 - x_1)(y_2 - y_1).$$",
+        "在一般划分中，每个子矩形 $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ 的面积为 $\\Delta x_i\\,\\Delta y_j$。对 $[0, x_2] \\times [0, y_2]$ 上的 $f(x, y) = cxy$（$c > 0$），每块上的最小值在左下角 $(x_{i-1}, y_{j-1})$。贴着坐标轴的块最小值为 $0$，所以只有 $[x_1, x_2] \\times [y_1, y_2]$ 有贡献：\n\n$$L = c\\,x_1y_1(x_2 - x_1)(y_2 - y_1)。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const c = rng.int(1, 3);
+        const x1 = rng.int(1, 3);
+        const x2 = x1 + rng.int(1, 3);
+        const y1 = rng.int(1, 3);
+        const y2 = y1 + rng.int(1, 3);
+        const ans = c * x1 * y1 * (x2 - x1) * (y2 - y1);
+        const upper = c * (x1 * x1 + x2 * (x2 - x1)) * (y1 * y1 + y2 * (y2 - y1));
+        return numberProblem({
+          prompt: t(
+            `Find the lower Riemann sum of $f(x, y) = ${c === 1 ? "" : c}xy$ on $[0, ${x2}] \\times [0, ${y2}]$ for the partition with $x \\in \\{0, ${x1}, ${x2}\\}$ and $y \\in \\{0, ${y1}, ${y2}\\}$.`,
+            `对 $x \\in \\{0, ${x1}, ${x2}\\}$、$y \\in \\{0, ${y1}, ${y2}\\}$ 的划分，求 $f(x, y) = ${c === 1 ? "" : c}xy$ 在 $[0, ${x2}] \\times [0, ${y2}]$ 上的下黎曼和。`,
+          ),
+          answer: ans,
+          wrong: [upper, c * x1 * y1 * x2 * y2, c * x2 * y2 * (x2 - x1) * (y2 - y1), c * x1 * y1],
+          solution: t(
+            `Only the piece $[${x1}, ${x2}] \\times [${y1}, ${y2}]$ has a nonzero minimum, $f(${x1}, ${y1}) = ${c * x1 * y1}$, and its area is $${x2 - x1} \\cdot ${y2 - y1}$. So $L = ${c * x1 * y1} \\cdot ${(x2 - x1) * (y2 - y1)} = ${ans}$.`,
+            `只有 $[${x1}, ${x2}] \\times [${y1}, ${y2}]$ 这一块的最小值非零，为 $f(${x1}, ${y1}) = ${c * x1 * y1}$，面积为 $${x2 - x1} \\cdot ${y2 - y1}$。所以 $L = ${c * x1 * y1} \\cdot ${(x2 - x1) * (y2 - y1)} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -462,6 +632,36 @@ export const upperRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
         });
       },
     },
+    {
+      id: "an-upper-sum-for-xy-over-an-irregular-grid",
+      title: t("An upper sum for $cxy$ over an irregular grid", "不规则网格上 $cxy$ 的上和"),
+      explanation: t(
+        "For $f(x, y) = cxy$ with $c > 0$ the maximum on each subrectangle is at its upper-right corner $(x_i, y_j)$. Because $f$ is a product, the upper sum factors into one sum for $x$ and one for $y$:\n\n$$U = c\\left(\\sum_i x_i\\,\\Delta x_i\\right)\\left(\\sum_j y_j\\,\\Delta y_j\\right).$$\n\nThis saves computing every subrectangle separately.",
+        "对 $f(x, y) = cxy$（$c > 0$），每个子矩形上的最大值在右上角 $(x_i, y_j)$。由于 $f$ 是乘积，上和可分解为 $x$ 的和与 $y$ 的和之积：\n\n$$U = c\\left(\\sum_i x_i\\,\\Delta x_i\\right)\\left(\\sum_j y_j\\,\\Delta y_j\\right)。$$\n\n这样无需逐个计算每个子矩形。",
+      ),
+      generate(rng: Rng): Problem {
+        const c = rng.int(1, 3);
+        const x1 = rng.int(1, 3);
+        const x2 = x1 + rng.int(1, 3);
+        const y1 = rng.int(1, 3);
+        const y2 = y1 + rng.int(1, 3);
+        const sx = x1 * x1 + x2 * (x2 - x1);
+        const sy = y1 * y1 + y2 * (y2 - y1);
+        const ans = c * sx * sy;
+        return numberProblem({
+          prompt: t(
+            `Find the upper Riemann sum of $f(x, y) = ${c === 1 ? "" : c}xy$ on $[0, ${x2}] \\times [0, ${y2}]$ for the partition with $x \\in \\{0, ${x1}, ${x2}\\}$ and $y \\in \\{0, ${y1}, ${y2}\\}$.`,
+            `对 $x \\in \\{0, ${x1}, ${x2}\\}$、$y \\in \\{0, ${y1}, ${y2}\\}$ 的划分，求 $f(x, y) = ${c === 1 ? "" : c}xy$ 在 $[0, ${x2}] \\times [0, ${y2}]$ 上的上黎曼和。`,
+          ),
+          answer: ans,
+          wrong: [c * x1 * y1 * (x2 - x1) * (y2 - y1), c * x2 * x2 * y2 * y2, c * (x1 + x2) * (y1 + y2), c * sx * y2],
+          solution: t(
+            `$\\sum_i x_i\\,\\Delta x_i = ${x1} \\cdot ${x1} + ${x2} \\cdot ${x2 - x1} = ${sx}$ and $\\sum_j y_j\\,\\Delta y_j = ${y1} \\cdot ${y1} + ${y2} \\cdot ${y2 - y1} = ${sy}$, so $U = ${c} \\cdot ${sx} \\cdot ${sy} = ${ans}$.`,
+            `$\\sum_i x_i\\,\\Delta x_i = ${x1} \\cdot ${x1} + ${x2} \\cdot ${x2 - x1} = ${sx}$，$\\sum_j y_j\\,\\Delta y_j = ${y1} \\cdot ${y1} + ${y2} \\cdot ${y2 - y1} = ${sy}$，所以 $U = ${c} \\cdot ${sx} \\cdot ${sy} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -518,6 +718,33 @@ export const definingDoubleIntegralsUsingLowerAndUpperRiemannSums: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(num), ans.mul(Q.of(2)), ans.div(Q.of(2))],
+        });
+      },
+    },
+    {
+      id: "the-gap-between-upper-and-lower-sums-for-xy",
+      title: t("The gap between upper and lower sums for $cxy$", "$cxy$ 上和与下和之差"),
+      explanation: t(
+        "A function is integrable when $U(f, P_n) - L(f, P_n) \\to 0$. For $f(x, y) = cxy$ on $[0, a] \\times [0, b]$ with an $n \\times n$ regular partition, each piece contributes $c(x_iy_j - x_{i-1}y_{j-1})\\Delta A$. Summing $ij - (i-1)(j-1) = i + j - 1$ over all $i, j$ gives $n^3$, so\n\n$$U - L = \\frac{c\\,a^2b^2}{n^4} \\cdot n^3 = \\frac{c\\,a^2b^2}{n},$$\n\nwhich tends to $0$ as $n \\to \\infty$.",
+        "当 $U(f, P_n) - L(f, P_n) \\to 0$ 时函数可积。对 $[0, a] \\times [0, b]$ 上的 $f(x, y) = cxy$ 作 $n \\times n$ 等分，每块贡献 $c(x_iy_j - x_{i-1}y_{j-1})\\Delta A$。对所有 $i, j$ 求 $ij - (i-1)(j-1) = i + j - 1$ 的和得 $n^3$，所以\n\n$$U - L = \\frac{c\\,a^2b^2}{n^4} \\cdot n^3 = \\frac{c\\,a^2b^2}{n},$$\n\n当 $n \\to \\infty$ 时趋于 $0$。",
+      ),
+      generate(rng: Rng): Problem {
+        const c = rng.int(1, 3);
+        const a = rng.int(1, 4);
+        const b = rng.int(1, 4);
+        const n = rng.int(2, 6);
+        const ans = Q.of(c * a * a * b * b, n);
+        return numberProblem({
+          prompt: t(
+            `For $f(x, y) = ${c === 1 ? "" : c}xy$ on $[0, ${a}] \\times [0, ${b}]$, find $U(f, P) - L(f, P)$ for the regular $${n} \\times ${n}$ partition $P$.`,
+            `对 $[0, ${a}] \\times [0, ${b}]$ 上的 $f(x, y) = ${c === 1 ? "" : c}xy$，求 $${n} \\times ${n}$ 等分划分 $P$ 的 $U(f, P) - L(f, P)$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(c * a * a * b * b, n * n), Q.of(c * a * b, n), Q.of(c * a * a * b * b, 4), Q.of(2 * c * a * a * b * b, n)],
+          solution: t(
+            `$U - L = \\dfrac{c\\,a^2b^2}{n} = \\dfrac{${c} \\cdot ${a * a} \\cdot ${b * b}}{${n}} = ${ans.toLatex()}$.`,
+            `$U - L = \\dfrac{c\\,a^2b^2}{n} = \\dfrac{${c} \\cdot ${a * a} \\cdot ${b * b}}{${n}} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -584,6 +811,38 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
         });
       },
     },
+    {
+      id: "separable-double-integrals-of-monomials",
+      title: t("Separable double integrals of monomials", "单项式的可分离二重积分"),
+      explanation: t(
+        "When the integrand is a product $g(x)h(y)$ and the region is a rectangle, Fubini's theorem lets the double integral split into a product of single integrals:\n\n$$\\iint_{[0, a] \\times [0, b]} c\\,x^py^q\\,dA = c\\cdot\\frac{a^{p+1}}{p+1}\\cdot\\frac{b^{q+1}}{q+1}.$$\n\nThis only works on rectangles, where the limits of one variable do not depend on the other.",
+        "当被积函数是乘积 $g(x)h(y)$ 且区域为矩形时，由富比尼定理，二重积分可拆成单重积分之积：\n\n$$\\iint_{[0, a] \\times [0, b]} c\\,x^py^q\\,dA = c\\cdot\\frac{a^{p+1}}{p+1}\\cdot\\frac{b^{q+1}}{q+1}。$$\n\n这只适用于矩形区域，因为此时一个变量的积分限不依赖另一个变量。",
+      ),
+      generate(rng: Rng): Problem {
+        const c = rng.int(1, 4);
+        const p = rng.int(1, 2);
+        const q = rng.int(1, 3);
+        const a = rng.int(1, 3);
+        const b = rng.int(1, 3);
+        const ix = Q.of(a ** (p + 1), p + 1);
+        const iy = Q.of(b ** (q + 1), q + 1);
+        const ans = ix.mul(iy).mul(Q.of(c));
+        const mono = (v: string, e: number) => (e === 1 ? v : `${v}^{${e}}`);
+        const integrand = `${c === 1 ? "" : c}${mono("x", p)}${mono("y", q)}`;
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\iint_R ${integrand}\\,dA$ over $R = [0, ${a}] \\times [0, ${b}]$.`,
+            `计算 $\\iint_R ${integrand}\\,dA$，其中 $R = [0, ${a}] \\times [0, ${b}]$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(c * a ** (p + 1) * b ** (q + 1)), Q.of(c * a ** p * b ** q), ans.mul(Q.of(p + 1, p + 2))],
+          solution: t(
+            `$${c === 1 ? "" : `${c} \\cdot `}\\int_0^{${a}} ${mono("x", p)}\\,dx \\cdot \\int_0^{${b}} ${mono("y", q)}\\,dy = ${c === 1 ? "" : `${c} \\cdot `}${ix.toLatex()} \\cdot ${iy.toLatex()} = ${ans.toLatex()}$.`,
+            `$${c === 1 ? "" : `${c} \\cdot `}\\int_0^{${a}} ${mono("x", p)}\\,dx \\cdot \\int_0^{${b}} ${mono("y", q)}\\,dy = ${c === 1 ? "" : `${c} \\cdot `}${ix.toLatex()} \\cdot ${iy.toLatex()} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -638,6 +897,31 @@ export const doubleIntegralsOverNonRectangularDomains: TopicDef = {
         });
       },
     },
+    {
+      id: "integrating-over-the-region-between-a-line-and-a-parabola",
+      title: t("Integrating between a line and a parabola", "在直线与抛物线之间积分"),
+      explanation: t(
+        "To integrate over the region between $y = x^2$ and $y = kx$, first find where the curves meet: $x^2 = kx$ gives $x = 0$ and $x = k$. For $0 \\le x \\le k$ the line lies above the parabola, so\n\n$$\\iint_D c\\,dA = \\int_0^k \\int_{x^2}^{kx} c\\,dy\\,dx = c\\int_0^k (kx - x^2)\\,dx = \\frac{ck^3}{6}.$$",
+        "要在 $y = x^2$ 与 $y = kx$ 之间的区域上积分，先求交点：$x^2 = kx$ 得 $x = 0$ 和 $x = k$。在 $0 \\le x \\le k$ 上直线在抛物线上方，所以\n\n$$\\iint_D c\\,dA = \\int_0^k \\int_{x^2}^{kx} c\\,dy\\,dx = c\\int_0^k (kx - x^2)\\,dx = \\frac{ck^3}{6}。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const k = rng.int(1, 6);
+        const c = rng.int(1, 6);
+        const ans = Q.of(c * k ** 3, 6);
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\iint_D ${c}\\,dA$, where $D$ is the region between $y = x^2$ and $y = ${k === 1 ? "" : k}x$.`,
+            `计算 $\\iint_D ${c}\\,dA$，其中 $D$ 是 $y = x^2$ 与 $y = ${k === 1 ? "" : k}x$ 之间的区域。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(c * k ** 3, 2), Q.of(c * k ** 3, 3), ans.neg(), Q.of(c * k ** 2, 6)],
+          solution: t(
+            `The curves meet at $x = 0$ and $x = ${k}$. So $\\int_0^{${k}} ${c}(${k === 1 ? "" : k}x - x^2)\\,dx = ${c}\\left(\\frac{${k ** 3}}{2} - \\frac{${k ** 3}}{3}\\right) = ${ans.toLatex()}$.`,
+            `两曲线交于 $x = 0$ 和 $x = ${k}$。所以 $\\int_0^{${k}} ${c}(${k === 1 ? "" : k}x - x^2)\\,dx = ${c}\\left(\\frac{${k ** 3}}{2} - \\frac{${k ** 3}}{3}\\right) = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -686,6 +970,37 @@ export const propertiesOfDoubleIntegrals: TopicDef = {
           solution,
           answer: ans,
           wrong: [alpha * I1 - beta * I2, -ans, ans + alpha + beta],
+        });
+      },
+    },
+    {
+      id: "adding-a-constant-to-the-integrand",
+      title: t("Adding a constant to the integrand", "被积函数加上常数"),
+      explanation: t(
+        "Linearity says $\\iint_R (\\alpha f + k)\\,dA = \\alpha\\iint_R f\\,dA + k\\iint_R 1\\,dA$. The integral of the constant $1$ is the area of $R$, so a constant $k$ adds $k \\cdot \\operatorname{Area}(R)$, not just $k$. On a rectangle $[a, b] \\times [c, d]$ the area is $(b - a)(d - c)$.",
+        "由线性性，$\\iint_R (\\alpha f + k)\\,dA = \\alpha\\iint_R f\\,dA + k\\iint_R 1\\,dA$。常数 $1$ 的积分是 $R$ 的面积，所以常数 $k$ 贡献的是 $k \\cdot \\operatorname{Area}(R)$，而不只是 $k$。矩形 $[a, b] \\times [c, d]$ 的面积为 $(b - a)(d - c)$。",
+      ),
+      generate(rng: Rng): Problem {
+        const I = rng.nonZero(-8, 8);
+        const alpha = rng.pick([-3, -2, 2, 3, 4]);
+        const k = rng.nonZero(-4, 4);
+        const a = rng.int(-2, 2);
+        const b = a + rng.int(1, 4);
+        const c = rng.int(-2, 2);
+        const d = c + rng.int(1, 3);
+        const area = (b - a) * (d - c);
+        const ans = alpha * I + k * area;
+        return numberProblem({
+          prompt: t(
+            `$R = [${a}, ${b}] \\times [${c}, ${d}]$ and $\\iint_R f\\,dA = ${I}$. Find $\\iint_R (${poly([alpha, "f"], [k, ""])})\\,dA$.`,
+            `$R = [${a}, ${b}] \\times [${c}, ${d}]$，且 $\\iint_R f\\,dA = ${I}$。求 $\\iint_R (${poly([alpha, "f"], [k, ""])})\\,dA$。`,
+          ),
+          answer: ans,
+          wrong: [alpha * I + k, alpha * (I + k * area), alpha * I, I + k * area],
+          solution: t(
+            `$\\operatorname{Area}(R) = ${b - a} \\cdot ${d - c} = ${area}$, so the integral is $${alpha} \\cdot ${paren(I)} + ${paren(k)} \\cdot ${area} = ${ans}$.`,
+            `$\\operatorname{Area}(R) = ${b - a} \\cdot ${d - c} = ${area}$，所以积分为 $${alpha} \\cdot ${paren(I)} + ${paren(k)} \\cdot ${area} = ${ans}$。`,
+          ),
         });
       },
     },
@@ -753,6 +1068,36 @@ export const typeIAndIiRegionsInTwoDimensionalSpace: TopicDef = {
         return pickChoice(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "rewriting-a-type-i-triangle-as-type-ii",
+      title: t("Rewriting a Type I triangle as Type II", "把 Type I 三角形改写为 Type II"),
+      explanation: t(
+        "The triangle $\\{0 \\le x \\le a,\\ 0 \\le y \\le mx\\}$ is Type I. To describe it as Type II, read off the full range of $y$, which is $0 \\le y \\le ma$, and then solve the slanted side for $x$: $y = mx$ gives $x = \\frac{y}{m}$. A horizontal line at height $y$ enters the triangle at $x = \\frac{y}{m}$ and leaves at $x = a$, so the region is $\\{0 \\le y \\le ma,\\ \\frac{y}{m} \\le x \\le a\\}$.",
+        "三角形 $\\{0 \\le x \\le a,\\ 0 \\le y \\le mx\\}$ 是 Type I 型。要写成 Type II 型，先读出 $y$ 的完整范围 $0 \\le y \\le ma$，再把斜边解出 $x$：由 $y = mx$ 得 $x = \\frac{y}{m}$。高度为 $y$ 的水平线在 $x = \\frac{y}{m}$ 进入三角形、在 $x = a$ 离开，所以区域为 $\\{0 \\le y \\le ma,\\ \\frac{y}{m} \\le x \\le a\\}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const m = rng.int(2, 6);
+        const a = rng.int(1, 6);
+        const set = (y: string, x: string) => t(`$\\{${y},\\ ${x}\\}$`, `$\\{${y},\\ ${x}\\}$`);
+        return pickChoice(
+          rng,
+          t(
+            `Describe $D = \\{(x, y) : 0 \\le x \\le ${a},\\ 0 \\le y \\le ${m}x\\}$ as a Type II region.`,
+            `把 $D = \\{(x, y) : 0 \\le x \\le ${a},\\ 0 \\le y \\le ${m}x\\}$ 写成 Type II 型区域。`,
+          ),
+          set(`0 \\le y \\le ${m * a}`, `\\frac{y}{${m}} \\le x \\le ${a}`),
+          [
+            set(`0 \\le y \\le ${m * a}`, `0 \\le x \\le \\frac{y}{${m}}`),
+            set(`0 \\le y \\le ${a}`, `\\frac{y}{${m}} \\le x \\le ${a}`),
+            set(`0 \\le y \\le ${m * a}`, `${m}y \\le x \\le ${a}`),
+          ],
+          t(
+            `$y$ runs from $0$ to $${m} \\cdot ${a} = ${m * a}$. At height $y$, $x$ runs from the line $x = \\frac{y}{${m}}$ to $x = ${a}$.`,
+            `$y$ 从 $0$ 到 $${m} \\cdot ${a} = ${m * a}$。在高度 $y$ 处，$x$ 从直线 $x = \\frac{y}{${m}}$ 到 $x = ${a}$。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -806,6 +1151,31 @@ export const doubleIntegralsOverTypeIRegions: TopicDef = {
         });
       },
     },
+    {
+      id: "integrating-xy-over-a-type-i-triangle",
+      title: t("Integrating $cxy$ over a Type I triangle", "在 Type I 三角形上积分 $cxy$"),
+      explanation: t(
+        "For a Type I region the inner integral runs in $y$ between two functions of $x$, and the outer integral runs in $x$ between constants. Over the triangle $0 \\le x \\le a$, $0 \\le y \\le x$:\n\n$$\\int_0^a \\int_0^x c\\,xy\\,dy\\,dx = \\int_0^a c\\,x \\cdot \\frac{x^2}{2}\\,dx = \\frac{ca^4}{8}.$$\n\nThe inner result is a function of $x$ alone, which the outer integral then finishes.",
+        "对 Type I 型区域，内层对 $y$ 积分，上下限是 $x$ 的函数；外层对 $x$ 在常数之间积分。在三角形 $0 \\le x \\le a$，$0 \\le y \\le x$ 上：\n\n$$\\int_0^a \\int_0^x c\\,xy\\,dy\\,dx = \\int_0^a c\\,x \\cdot \\frac{x^2}{2}\\,dx = \\frac{ca^4}{8}。$$\n\n内层结果只依赖 $x$，再由外层积分完成。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 6);
+        const c = rng.int(1, 5);
+        const ans = Q.of(c * a ** 4, 8);
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\iint_D ${c === 1 ? "" : c}xy\\,dA$, where $D = \\{(x, y) : 0 \\le x \\le ${a},\\ 0 \\le y \\le x\\}$.`,
+            `计算 $\\iint_D ${c === 1 ? "" : c}xy\\,dA$，其中 $D = \\{(x, y) : 0 \\le x \\le ${a},\\ 0 \\le y \\le x\\}$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(c * a ** 4, 4), Q.of(c * a ** 3, 6), Q.of(c * a ** 4, 2), Q.of(c * a ** 4, 6)],
+          solution: t(
+            `Inner: $\\int_0^x ${c === 1 ? "" : c}xy\\,dy = \\frac{${c === 1 ? "" : c}x^3}{2}$. Outer: $\\int_0^{${a}} \\frac{${c === 1 ? "" : c}x^3}{2}\\,dx = \\frac{${c} \\cdot ${a ** 4}}{8} = ${ans.toLatex()}$.`,
+            `内层：$\\int_0^x ${c === 1 ? "" : c}xy\\,dy = \\frac{${c === 1 ? "" : c}x^3}{2}$。外层：$\\int_0^{${a}} \\frac{${c === 1 ? "" : c}x^3}{2}\\,dx = \\frac{${c} \\cdot ${a ** 4}}{8} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -856,6 +1226,31 @@ export const doubleIntegralsOverTypeIiRegions: TopicDef = {
           solution,
           answer: ans,
           wrong: [ans * 2, ans - a * b, ans + a * b],
+        });
+      },
+    },
+    {
+      id: "integrating-x-over-a-type-ii-parabolic-region",
+      title: t("Integrating $cx$ over a Type II parabolic region", "在 Type II 抛物线区域上积分 $cx$"),
+      explanation: t(
+        "For a Type II region the inner integral runs in $x$ between two functions of $y$. Over $0 \\le y \\le b$, $0 \\le x \\le y^2$:\n\n$$\\int_0^b \\int_0^{y^2} c\\,x\\,dx\\,dy = \\int_0^b \\frac{c\\,y^4}{2}\\,dy = \\frac{cb^5}{10}.$$\n\nIntegrating in $x$ first avoids splitting the region, because its left and right boundaries are single curves in $y$.",
+        "对 Type II 型区域，内层对 $x$ 积分，上下限是 $y$ 的函数。在 $0 \\le y \\le b$，$0 \\le x \\le y^2$ 上：\n\n$$\\int_0^b \\int_0^{y^2} c\\,x\\,dx\\,dy = \\int_0^b \\frac{c\\,y^4}{2}\\,dy = \\frac{cb^5}{10}。$$\n\n先对 $x$ 积分无需拆分区域，因为左右边界都是关于 $y$ 的单一曲线。",
+      ),
+      generate(rng: Rng): Problem {
+        const b = rng.int(1, 5);
+        const c = rng.int(1, 6);
+        const ans = Q.of(c * b ** 5, 10);
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\iint_D ${c === 1 ? "" : c}x\\,dA$, where $D = \\{(x, y) : 0 \\le y \\le ${b},\\ 0 \\le x \\le y^2\\}$.`,
+            `计算 $\\iint_D ${c === 1 ? "" : c}x\\,dA$，其中 $D = \\{(x, y) : 0 \\le y \\le ${b},\\ 0 \\le x \\le y^2\\}$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(c * b ** 5, 5), Q.of(c * b ** 3, 6), Q.of(c * b ** 4, 8), Q.of(c * b ** 5, 2)],
+          solution: t(
+            `Inner: $\\int_0^{y^2} ${c === 1 ? "" : c}x\\,dx = \\frac{${c === 1 ? "" : c}y^4}{2}$. Outer: $\\int_0^{${b}} \\frac{${c === 1 ? "" : c}y^4}{2}\\,dy = \\frac{${c} \\cdot ${b ** 5}}{10} = ${ans.toLatex()}$.`,
+            `内层：$\\int_0^{y^2} ${c === 1 ? "" : c}x\\,dx = \\frac{${c === 1 ? "" : c}y^4}{2}$。外层：$\\int_0^{${b}} \\frac{${c === 1 ? "" : c}y^4}{2}\\,dy = \\frac{${c} \\cdot ${b ** 5}}{10} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -920,6 +1315,36 @@ export const doubleIntegralsOverPartitionedRegions: TopicDef = {
         });
       },
     },
+    {
+      id: "integrating-x-over-an-l-shaped-region",
+      title: t("Integrating $cx$ over an L-shaped region", "在 L 形区域上积分 $cx$"),
+      explanation: t(
+        "When a region splits into pieces that overlap only along edges, the integral over the region is the sum of the integrals over the pieces: $\\iint_{R_1 \\cup R_2} f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$. For a non-constant integrand each piece must be integrated with its own limits. For $f = cx$ on $[p, q] \\times [0, h]$ the integral is $c\\,\\frac{q^2 - p^2}{2}\\,h$.",
+        "当区域可分成只在边上重叠的几块时，区域上的积分等于各块积分之和：$\\iint_{R_1 \\cup R_2} f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$。对非常数被积函数，每块都要用自己的积分限。对 $[p, q] \\times [0, h]$ 上的 $f = cx$，积分为 $c\\,\\frac{q^2 - p^2}{2}\\,h$。",
+      ),
+      generate(rng: Rng): Problem {
+        const c = rng.int(1, 4);
+        const a = rng.int(1, 3);
+        const b = a + rng.int(1, 3);
+        const h1 = rng.int(2, 5);
+        const h2 = rng.int(1, h1 - 1);
+        const i1 = Q.of(c * a * a * h1, 2);
+        const i2 = Q.of(c * (b * b - a * a) * h2, 2);
+        const ans = i1.add(i2);
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\iint_R ${c === 1 ? "" : c}x\\,dA$ over the L-shaped region $R = R_1 \\cup R_2$ with $R_1 = [0, ${a}] \\times [0, ${h1}]$ and $R_2 = [${a}, ${b}] \\times [0, ${h2}]$.`,
+            `计算 L 形区域 $R = R_1 \\cup R_2$ 上的 $\\iint_R ${c === 1 ? "" : c}x\\,dA$，其中 $R_1 = [0, ${a}] \\times [0, ${h1}]$，$R_2 = [${a}, ${b}] \\times [0, ${h2}]$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(c * b * b * h1, 2), Q.of(c * b * b * h2, 2), Q.of(c * (a * a * h1 + b * b * h2), 2), i1],
+          solution: t(
+            `$\\iint_{R_1} = ${c} \\cdot \\frac{${a * a}}{2} \\cdot ${h1} = ${i1.toLatex()}$ and $\\iint_{R_2} = ${c} \\cdot \\frac{${b * b} - ${a * a}}{2} \\cdot ${h2} = ${i2.toLatex()}$. The total is $${ans.toLatex()}$.`,
+            `$\\iint_{R_1} = ${c} \\cdot \\frac{${a * a}}{2} \\cdot ${h1} = ${i1.toLatex()}$，$\\iint_{R_2} = ${c} \\cdot \\frac{${b * b} - ${a * a}}{2} \\cdot ${h2} = ${i2.toLatex()}$。总和为 $${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -971,6 +1396,31 @@ export const changingTheOrderOfIntegrationInDoubleIntegrals: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(a * a * a * a, 2), Q.of(a * a * a * a, 3), ans.mul(Q.of(2))],
+        });
+      },
+    },
+    {
+      id: "reversing-an-integral-with-a-square-root-limit",
+      title: t("Reversing an integral with a square-root limit", "交换含平方根积分限的积分次序"),
+      explanation: t(
+        "The integral $\\int_0^{a^2} \\int_{\\sqrt{y}}^{a} f\\,dx\\,dy$ covers the region $\\sqrt{y} \\le x \\le a$, $0 \\le y \\le a^2$. Squaring $x = \\sqrt{y}$ gives $y = x^2$, so the same region is $0 \\le x \\le a$, $0 \\le y \\le x^2$. Sketching the region before changing the limits is the safest way to get them right. Reversing the order gives\n\n$$\\int_0^a \\int_0^{x^2} f\\,dy\\,dx.$$",
+        "积分 $\\int_0^{a^2} \\int_{\\sqrt{y}}^{a} f\\,dx\\,dy$ 覆盖区域 $\\sqrt{y} \\le x \\le a$，$0 \\le y \\le a^2$。把 $x = \\sqrt{y}$ 两边平方得 $y = x^2$，所以同一区域是 $0 \\le x \\le a$，$0 \\le y \\le x^2$。换限之前先画出区域是最稳妥的做法。交换次序得\n\n$$\\int_0^a \\int_0^{x^2} f\\,dy\\,dx。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 5);
+        const c = rng.int(1, 6);
+        const ans = Q.of(c * a ** 4, 4);
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\int_0^{${a * a}} \\int_{\\sqrt{y}}^{${a}} ${c === 1 ? "" : c}x\\,dx\\,dy$ by reversing the order of integration.`,
+            `交换积分次序，计算 $\\int_0^{${a * a}} \\int_{\\sqrt{y}}^{${a}} ${c === 1 ? "" : c}x\\,dx\\,dy$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(c * a ** 3, 3), Q.of(c * a ** 4, 2), Q.of(c * a ** 4, 8), Q.of(c * a ** 3, 4)],
+          solution: t(
+            `The region is $0 \\le x \\le ${a}$, $0 \\le y \\le x^2$. So $\\int_0^{${a}} \\int_0^{x^2} ${c === 1 ? "" : c}x\\,dy\\,dx = \\int_0^{${a}} ${c === 1 ? "" : c}x^3\\,dx = \\frac{${c} \\cdot ${a ** 4}}{4} = ${ans.toLatex()}$.`,
+            `区域为 $0 \\le x \\le ${a}$，$0 \\le y \\le x^2$。所以 $\\int_0^{${a}} \\int_0^{x^2} ${c === 1 ? "" : c}x\\,dy\\,dx = \\int_0^{${a}} ${c === 1 ? "" : c}x^3\\,dx = \\frac{${c} \\cdot ${a ** 4}}{4} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1032,6 +1482,31 @@ export const repeatedIntegralsInThreeDimensions: TopicDef = {
         });
       },
     },
+    {
+      id: "a-repeated-integral-with-nested-variable-limits",
+      title: t("A repeated integral with nested limits", "积分限嵌套的累次积分"),
+      explanation: t(
+        "In a repeated triple integral the limits may depend on the outer variables. Work from the inside out: integrate in $z$ first, then $y$, then $x$. For\n\n$$\\int_0^a \\int_0^x \\int_0^y c\\,dz\\,dy\\,dx = c\\int_0^a \\int_0^x y\\,dy\\,dx = c\\int_0^a \\frac{x^2}{2}\\,dx = \\frac{ca^3}{6},$$\n\neach step leaves a function of the remaining variables only.",
+        "在累次三重积分中，积分限可以依赖外层变量。由内向外计算：先对 $z$，再对 $y$，最后对 $x$。对\n\n$$\\int_0^a \\int_0^x \\int_0^y c\\,dz\\,dy\\,dx = c\\int_0^a \\int_0^x y\\,dy\\,dx = c\\int_0^a \\frac{x^2}{2}\\,dx = \\frac{ca^3}{6},$$\n\n每一步都只剩下其余变量的函数。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 6);
+        const c = rng.int(1, 6);
+        const ans = Q.of(c * a ** 3, 6);
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\int_0^{${a}} \\int_0^x \\int_0^y ${c}\\,dz\\,dy\\,dx$.`,
+            `计算 $\\int_0^{${a}} \\int_0^x \\int_0^y ${c}\\,dz\\,dy\\,dx$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(c * a ** 3), Q.of(c * a ** 3, 2), Q.of(c * a ** 3, 3), Q.of(c * a ** 2, 2)],
+          solution: t(
+            `Inner: $\\int_0^y ${c}\\,dz = ${c === 1 ? "" : c}y$. Middle: $\\int_0^x ${c === 1 ? "" : c}y\\,dy = \\frac{${c === 1 ? "" : c}x^2}{2}$. Outer: $\\int_0^{${a}} \\frac{${c === 1 ? "" : c}x^2}{2}\\,dx = \\frac{${c} \\cdot ${a ** 3}}{6} = ${ans.toLatex()}$.`,
+            `内层：$\\int_0^y ${c}\\,dz = ${c === 1 ? "" : c}y$。中层：$\\int_0^x ${c === 1 ? "" : c}y\\,dy = \\frac{${c === 1 ? "" : c}x^2}{2}$。外层：$\\int_0^{${a}} \\frac{${c === 1 ? "" : c}x^2}{2}\\,dx = \\frac{${c} \\cdot ${a ** 3}}{6} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1083,6 +1558,33 @@ export const tripleIntegralsOverRectangularDomains: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(prod * prod, 4), Q.of(prod * prod, 2), ans.mul(Q.of(2))],
+        });
+      },
+    },
+    {
+      id: "a-triple-integral-of-a-single-variable-over-a-box",
+      title: t("Integrating $cx^2$ over a box", "在长方体上积分 $cx^2$"),
+      explanation: t(
+        "If the integrand depends on only one variable, integrating the other two over a box simply multiplies by the lengths of their intervals:\n\n$$\\iiint_{[0, a] \\times [0, b] \\times [0, d]} c\\,x^2\\,dV = c\\cdot\\frac{a^3}{3}\\cdot b \\cdot d.$$\n\nThe factor $bd$ is the area of the cross-section perpendicular to the $x$-axis.",
+        "若被积函数只依赖一个变量，在长方体上对另外两个变量积分就相当于乘以它们区间的长度：\n\n$$\\iiint_{[0, a] \\times [0, b] \\times [0, d]} c\\,x^2\\,dV = c\\cdot\\frac{a^3}{3}\\cdot b \\cdot d。$$\n\n因子 $bd$ 是垂直于 $x$ 轴的截面面积。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 4);
+        const b = rng.int(1, 4);
+        const d = rng.int(1, 4);
+        const c = rng.int(1, 3);
+        const ans = Q.of(c * a ** 3 * b * d, 3);
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\iiint_B ${c === 1 ? "" : c}x^2\\,dV$ over the box $B = [0, ${a}] \\times [0, ${b}] \\times [0, ${d}]$.`,
+            `计算 $\\iiint_B ${c === 1 ? "" : c}x^2\\,dV$，其中长方体 $B = [0, ${a}] \\times [0, ${b}] \\times [0, ${d}]$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(c * a ** 3, 3), Q.of(c * a ** 2 * b * d), Q.of(c * a ** 3 * b * d), Q.of(c * a ** 2 * b * d, 2)],
+          solution: t(
+            `$${c === 1 ? "" : `${c} \\cdot `}\\int_0^{${a}} x^2\\,dx \\cdot ${b} \\cdot ${d} = ${c === 1 ? "" : `${c} \\cdot `}\\frac{${a ** 3}}{3} \\cdot ${b * d} = ${ans.toLatex()}$.`,
+            `$${c === 1 ? "" : `${c} \\cdot `}\\int_0^{${a}} x^2\\,dx \\cdot ${b} \\cdot ${d} = ${c === 1 ? "" : `${c} \\cdot `}\\frac{${a ** 3}}{3} \\cdot ${b * d} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1170,6 +1672,35 @@ export const typeIIiAndIiiRegionsInThreeDimensionalSpace: TopicDef = {
         return pickChoice(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "the-projection-of-a-tetrahedron-for-each-region-type",
+      title: t("The projection of a tetrahedron for each region type", "按区域类型取四面体的投影"),
+      explanation: t(
+        "The tetrahedron cut from the first octant by $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$ is of all three types. Viewing it as Type I means projecting onto the $xy$-plane, Type II onto the $xz$-plane, and Type III onto the $yz$-plane. Each projection is a right triangle whose legs are the two intercepts in that plane, so its area is half their product, for example $\\frac{ab}{2}$ in the $xy$-plane.",
+        "平面 $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$ 在第一卦限截出的四面体同时属于三种类型。视为 Type I 型时投影到 $xy$ 平面，Type II 型投影到 $xz$ 平面，Type III 型投影到 $yz$ 平面。每个投影都是直角三角形，两条直角边是该平面内的两个截距，所以面积为两者乘积的一半，例如在 $xy$ 平面上为 $\\frac{ab}{2}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 6);
+        const b = rng.int(1, 6);
+        const c = rng.int(1, 6);
+        const kind = rng.int(1, 3);
+        const [plane, u, v] = kind === 1 ? ["xy", a, b] : kind === 2 ? ["xz", a, c] : ["yz", b, c];
+        const roman = ["I", "II", "III"][kind - 1]!;
+        const ans = Q.of(u * v, 2);
+        return numberProblem({
+          prompt: t(
+            `$E$ is the tetrahedron bounded by the coordinate planes and $\\frac{x}{${a}} + \\frac{y}{${b}} + \\frac{z}{${c}} = 1$. Viewed as a Type ${roman} region, $E$ lies over a region $D$ in a coordinate plane. Find the area of $D$.`,
+            `$E$ 是由坐标平面与 $\\frac{x}{${a}} + \\frac{y}{${b}} + \\frac{z}{${c}} = 1$ 围成的四面体。视为 Type ${roman} 型区域时，$E$ 位于某个坐标平面内区域 $D$ 的上方。求 $D$ 的面积。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(a * b, 2), Q.of(a * c, 2), Q.of(b * c, 2), Q.of(a * b * c, 6), Q.of(u * v)],
+          solution: t(
+            `Type ${roman} projects onto the $${plane}$-plane, where $D$ is a right triangle with legs $${u}$ and $${v}$. Its area is $\\frac{${u} \\cdot ${v}}{2} = ${ans.toLatex()}$.`,
+            `Type ${roman} 型投影到 $${plane}$ 平面，$D$ 是直角边为 $${u}$ 和 $${v}$ 的直角三角形，面积为 $\\frac{${u} \\cdot ${v}}{2} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1219,6 +1750,32 @@ export const tripleIntegralsOverTypeIRegions: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(num, 2), Q.of(num), ans.mul(Q.of(2))],
+        });
+      },
+    },
+    {
+      id: "integrating-a-constant-under-a-slanted-plane",
+      title: t("Integrating a constant under a slanted plane", "在斜平面下积分常数"),
+      explanation: t(
+        "For a Type I solid $E = \\{(x, y) \\in D,\\ 0 \\le z \\le u(x, y)\\}$, integrating $k$ in $z$ first gives $k\\,u(x, y)$, which is then integrated over $D$. Under the plane $z = x + y$ above $[0, a] \\times [0, b]$:\n\n$$\\iiint_E k\\,dV = k\\iint_D (x + y)\\,dA = k\\left(\\frac{a^2b}{2} + \\frac{ab^2}{2}\\right).$$",
+        "对 Type I 型立体 $E = \\{(x, y) \\in D,\\ 0 \\le z \\le u(x, y)\\}$，先对 $z$ 积分常数 $k$ 得 $k\\,u(x, y)$，再在 $D$ 上积分。在 $[0, a] \\times [0, b]$ 上方、平面 $z = x + y$ 下方：\n\n$$\\iiint_E k\\,dV = k\\iint_D (x + y)\\,dA = k\\left(\\frac{a^2b}{2} + \\frac{ab^2}{2}\\right)。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 4);
+        const b = rng.int(1, 4);
+        const k = rng.int(2, 5);
+        const ans = Q.of(k * (a * a * b + a * b * b), 2);
+        return numberProblem({
+          prompt: t(
+            `$E$ lies above $D = [0, ${a}] \\times [0, ${b}]$ and below $z = x + y$. Evaluate $\\iiint_E ${k}\\,dV$.`,
+            `$E$ 位于 $D = [0, ${a}] \\times [0, ${b}]$ 上方、$z = x + y$ 下方。计算 $\\iiint_E ${k}\\,dV$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(k * (a * a * b + a * b * b)), Q.of(k * a * b * (a + b)), Q.of(k * (a + b), 2), Q.of(k * (a * a + b * b), 2)],
+          solution: t(
+            `$\\iiint_E ${k}\\,dV = ${k}\\iint_D (x + y)\\,dA = ${k}\\left(\\frac{${a * a} \\cdot ${b}}{2} + \\frac{${a} \\cdot ${b * b}}{2}\\right) = ${ans.toLatex()}$.`,
+            `$\\iiint_E ${k}\\,dV = ${k}\\iint_D (x + y)\\,dA = ${k}\\left(\\frac{${a * a} \\cdot ${b}}{2} + \\frac{${a} \\cdot ${b * b}}{2}\\right) = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1274,6 +1831,38 @@ export const tripleIntegralsOverTypeIiRegions: TopicDef = {
         });
       },
     },
+    {
+      id: "integrating-y-over-a-type-ii-solid",
+      title: t("Integrating $cy$ over a Type II solid", "在 Type II 型立体上积分 $cy$"),
+      explanation: t(
+        "For a Type II solid the inner integral runs in $y$, between two surfaces that depend on $x$ and $z$, and the outer double integral runs over the projection $D$ in the $xz$-plane. For $0 \\le y \\le kx$ over $D = [0, a] \\times [0, b]$ in $x$ and $z$:\n\n$$\\iint_D \\int_0^{kx} c\\,y\\,dy\\,dA = \\iint_D \\frac{c\\,k^2x^2}{2}\\,dA = \\frac{c\\,k^2a^3b}{6}.$$",
+        "对 Type II 型立体，内层对 $y$ 积分，上下限是依赖 $x$ 和 $z$ 的曲面；外层在 $xz$ 平面的投影 $D$ 上作二重积分。对 $0 \\le y \\le kx$，$D$ 为 $x$、$z$ 的 $[0, a] \\times [0, b]$：\n\n$$\\iint_D \\int_0^{kx} c\\,y\\,dy\\,dA = \\iint_D \\frac{c\\,k^2x^2}{2}\\,dA = \\frac{c\\,k^2a^3b}{6}。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 3);
+        const b = rng.int(1, 4);
+        const k = rng.int(1, 3);
+        const c = rng.int(1, 3);
+        const ans = Q.of(c * k * k * a ** 3 * b, 6);
+        return numberProblem({
+          prompt: t(
+            `$E = \\{(x, y, z) : 0 \\le x \\le ${a},\\ 0 \\le z \\le ${b},\\ 0 \\le y \\le ${k === 1 ? "" : k}x\\}$. Evaluate $\\iiint_E ${c === 1 ? "" : c}y\\,dV$.`,
+            `$E = \\{(x, y, z) : 0 \\le x \\le ${a},\\ 0 \\le z \\le ${b},\\ 0 \\le y \\le ${k === 1 ? "" : k}x\\}$。计算 $\\iiint_E ${c === 1 ? "" : c}y\\,dV$。`,
+          ),
+          answer: ans,
+          wrong: [
+            Q.of(c * k * a * a * b, 2),
+            Q.of(c * k * k * a ** 3 * b, 2),
+            Q.of(c * k * k * a ** 3 * b, 3),
+            Q.of(c * k * k * a * a * b, 4),
+          ],
+          solution: t(
+            `Inner: $\\int_0^{${k === 1 ? "" : k}x} ${c === 1 ? "" : c}y\\,dy = \\frac{${c * k * k === 1 ? "" : c * k * k}x^2}{2}$. Then $\\int_0^{${b}} \\int_0^{${a}} \\frac{${c * k * k === 1 ? "" : c * k * k}x^2}{2}\\,dx\\,dz = \\frac{${c * k * k} \\cdot ${a ** 3}}{6} \\cdot ${b} = ${ans.toLatex()}$.`,
+            `内层：$\\int_0^{${k === 1 ? "" : k}x} ${c === 1 ? "" : c}y\\,dy = \\frac{${c * k * k === 1 ? "" : c * k * k}x^2}{2}$。再算 $\\int_0^{${b}} \\int_0^{${a}} \\frac{${c * k * k === 1 ? "" : c * k * k}x^2}{2}\\,dx\\,dz = \\frac{${c * k * k} \\cdot ${a ** 3}}{6} \\cdot ${b} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1326,6 +1915,32 @@ export const tripleIntegralsOverTypeIiiRegions: TopicDef = {
         });
       },
     },
+    {
+      id: "integrating-x-over-a-type-iii-solid",
+      title: t("Integrating $x$ over a Type III solid", "在 Type III 型立体上积分 $x$"),
+      explanation: t(
+        "For a Type III solid the inner integral runs in $x$, between surfaces that depend on $y$ and $z$, and the outer double integral runs over the projection $D$ in the $yz$-plane. For $0 \\le x \\le ky$ over $D = [0, a] \\times [0, b]$ in $y$ and $z$:\n\n$$\\iint_D \\int_0^{ky} x\\,dx\\,dA = \\iint_D \\frac{k^2y^2}{2}\\,dA = \\frac{k^2a^3b}{6}.$$\n\nIt is the Type II computation with the roles of $x$ and $y$ exchanged.",
+        "对 Type III 型立体，内层对 $x$ 积分，上下限是依赖 $y$ 和 $z$ 的曲面；外层在 $yz$ 平面的投影 $D$ 上作二重积分。对 $0 \\le x \\le ky$，$D$ 为 $y$、$z$ 的 $[0, a] \\times [0, b]$：\n\n$$\\iint_D \\int_0^{ky} x\\,dx\\,dA = \\iint_D \\frac{k^2y^2}{2}\\,dA = \\frac{k^2a^3b}{6}。$$\n\n这就是把 Type II 计算中 $x$ 与 $y$ 的角色互换。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 4);
+        const b = rng.int(1, 4);
+        const k = rng.int(1, 3);
+        const ans = Q.of(k * k * a ** 3 * b, 6);
+        return numberProblem({
+          prompt: t(
+            `$E = \\{(x, y, z) : 0 \\le y \\le ${a},\\ 0 \\le z \\le ${b},\\ 0 \\le x \\le ${k === 1 ? "" : k}y\\}$. Evaluate $\\iiint_E x\\,dV$.`,
+            `$E = \\{(x, y, z) : 0 \\le y \\le ${a},\\ 0 \\le z \\le ${b},\\ 0 \\le x \\le ${k === 1 ? "" : k}y\\}$。计算 $\\iiint_E x\\,dV$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(k * a * a * b, 2), Q.of(k * k * a ** 3 * b, 2), Q.of(k * k * a * a * b, 4), Q.of(k * a ** 3 * b, 6)],
+          solution: t(
+            `Inner: $\\int_0^{${k === 1 ? "" : k}y} x\\,dx = \\frac{${k * k === 1 ? "" : k * k}y^2}{2}$. Then $\\int_0^{${b}} \\int_0^{${a}} \\frac{${k * k === 1 ? "" : k * k}y^2}{2}\\,dy\\,dz = \\frac{${k * k} \\cdot ${a ** 3}}{6} \\cdot ${b} = ${ans.toLatex()}$.`,
+            `内层：$\\int_0^{${k === 1 ? "" : k}y} x\\,dx = \\frac{${k * k === 1 ? "" : k * k}y^2}{2}$。再算 $\\int_0^{${b}} \\int_0^{${a}} \\frac{${k * k === 1 ? "" : k * k}y^2}{2}\\,dy\\,dz = \\frac{${k * k} \\cdot ${a ** 3}}{6} \\cdot ${b} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1374,6 +1989,31 @@ export const calculatingVolumesOfSolidsUsingTripleIntegrals: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(a * b * c, 2), Q.of(a * b * c, 3), ans.mul(Q.of(2))],
+        });
+      },
+    },
+    {
+      id: "the-volume-under-a-paraboloid-over-a-rectangle",
+      title: t("The volume under a paraboloid over a rectangle", "矩形上方抛物面下的体积"),
+      explanation: t(
+        "The volume of a solid $E$ is $\\iiint_E 1\\,dV$. For the solid above $[0, a] \\times [0, b]$ and below $z = x^2 + y^2$, the $z$-integral gives the height of the surface, leaving\n\n$$V = \\int_0^a \\int_0^b (x^2 + y^2)\\,dy\\,dx = \\frac{a^3b}{3} + \\frac{ab^3}{3}.$$\n\nEach term comes from one square in the integrand, multiplied by the length of the other side.",
+        "立体 $E$ 的体积为 $\\iiint_E 1\\,dV$。对 $[0, a] \\times [0, b]$ 上方、$z = x^2 + y^2$ 下方的立体，对 $z$ 积分得到曲面高度，于是\n\n$$V = \\int_0^a \\int_0^b (x^2 + y^2)\\,dy\\,dx = \\frac{a^3b}{3} + \\frac{ab^3}{3}。$$\n\n每一项来自被积函数中的一个平方项，再乘以另一边的长度。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 5);
+        const b = rng.int(1, 5);
+        const ans = Q.of(a ** 3 * b + a * b ** 3, 3);
+        return numberProblem({
+          prompt: t(
+            `Find the volume of the solid above $[0, ${a}] \\times [0, ${b}]$ in the $xy$-plane and below the paraboloid $z = x^2 + y^2$.`,
+            `求 $xy$ 平面上 $[0, ${a}] \\times [0, ${b}]$ 上方、抛物面 $z = x^2 + y^2$ 下方的立体体积。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(a ** 3 + b ** 3, 3), Q.of(a * b * (a * a + b * b)), Q.of(a ** 3 * b + a * b ** 3, 2), Q.of(a * a * b * b, 2)],
+          solution: t(
+            `$V = \\int_0^{${a}} \\int_0^{${b}} (x^2 + y^2)\\,dy\\,dx = \\frac{${a ** 3} \\cdot ${b}}{3} + \\frac{${a} \\cdot ${b ** 3}}{3} = ${ans.toLatex()}$.`,
+            `$V = \\int_0^{${a}} \\int_0^{${b}} (x^2 + y^2)\\,dy\\,dx = \\frac{${a ** 3} \\cdot ${b}}{3} + \\frac{${a} \\cdot ${b ** 3}}{3} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1430,6 +2070,31 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingProjection: T
           solution,
           answer: ans,
           wrong: [Q.of(a * b), Q.of(a * b, 3), ans.mul(Q.of(2))],
+        });
+      },
+    },
+    {
+      id: "the-volume-of-a-parabolic-cylinder-slab",
+      title: t("The volume of a parabolic cylinder slab", "抛物柱面板块的体积"),
+      explanation: t(
+        "Choosing the right projection can make a triple integral simple. The solid bounded by the parabolic cylinder $y = x^2$, the plane $y = a^2$, and the planes $z = 0$ and $z = h$ has a constant height $h$ over its projection onto the $xy$-plane. That projection is the region $x^2 \\le y \\le a^2$, whose area is $\\int_{-a}^{a} (a^2 - x^2)\\,dx = \\frac{4a^3}{3}$, so the volume is $\\frac{4a^3h}{3}$.",
+        "选择合适的投影可以让三重积分变简单。由抛物柱面 $y = x^2$、平面 $y = a^2$ 以及平面 $z = 0$、$z = h$ 围成的立体，在其 $xy$ 平面投影上高度恒为 $h$。投影区域为 $x^2 \\le y \\le a^2$，面积为 $\\int_{-a}^{a} (a^2 - x^2)\\,dx = \\frac{4a^3}{3}$，所以体积为 $\\frac{4a^3h}{3}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 4);
+        const h = rng.int(1, 8);
+        const ans = Q.of(4 * a ** 3 * h, 3);
+        return numberProblem({
+          prompt: t(
+            `Find the volume of the solid bounded by $y = x^2$, $y = ${a * a}$, $z = 0$, and $z = ${h}$.`,
+            `求由 $y = x^2$、$y = ${a * a}$、$z = 0$ 和 $z = ${h}$ 围成的立体体积。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(2 * a ** 3 * h, 3), Q.of(2 * a ** 3 * h), Q.of(4 * a ** 3, 3), Q.of(a ** 3 * h, 3)],
+          solution: t(
+            `The projection onto the $xy$-plane is $-${a} \\le x \\le ${a}$, $x^2 \\le y \\le ${a * a}$, with area $\\int_{-${a}}^{${a}} (${a * a} - x^2)\\,dx = ${Q.of(4 * a ** 3, 3).toLatex()}$. The height is $${h}$, so $V = ${ans.toLatex()}$.`,
+            `在 $xy$ 平面上的投影为 $-${a} \\le x \\le ${a}$，$x^2 \\le y \\le ${a * a}$，面积为 $\\int_{-${a}}^{${a}} (${a * a} - x^2)\\,dx = ${Q.of(4 * a ** 3, 3).toLatex()}$。高度为 $${h}$，所以 $V = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1495,6 +2160,36 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingRegion: Topic
         });
       },
     },
+    {
+      id: "reordering-the-limits-of-a-nested-triple-integral",
+      title: t("Reordering the limits of a nested triple integral", "重排嵌套三重积分的积分限"),
+      explanation: t(
+        "The integral $\\int_0^a \\int_0^x \\int_0^y f\\,dz\\,dy\\,dx$ covers the solid $0 \\le z \\le y \\le x \\le a$. Writing the chain of inequalities makes any other order easy to read off. For the order $dx\\,dy\\,dz$, the outermost variable $z$ runs from $0$ to $a$, then $y$ runs from $z$ to $a$, and finally $x$ runs from $y$ to $a$:\n\n$$\\int_0^a \\int_z^a \\int_y^a f\\,dx\\,dy\\,dz.$$",
+        "积分 $\\int_0^a \\int_0^x \\int_0^y f\\,dz\\,dy\\,dx$ 覆盖立体 $0 \\le z \\le y \\le x \\le a$。写出这串不等式后，任何其他次序都容易读出。对次序 $dx\\,dy\\,dz$，最外层 $z$ 从 $0$ 到 $a$，然后 $y$ 从 $z$ 到 $a$，最后 $x$ 从 $y$ 到 $a$：\n\n$$\\int_0^a \\int_z^a \\int_y^a f\\,dx\\,dy\\,dz。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 9);
+        const f = rng.pick(["x", "y", "z", "xy", "xz", "yz", "xyz"]);
+        const opt = (s: string) => t(`$${s}$`, `$${s}$`);
+        return pickChoice(
+          rng,
+          t(
+            `Rewrite $\\int_0^{${a}} \\int_0^x \\int_0^y ${f}\\,dz\\,dy\\,dx$ in the order $dx\\,dy\\,dz$.`,
+            `把 $\\int_0^{${a}} \\int_0^x \\int_0^y ${f}\\,dz\\,dy\\,dx$ 改写为 $dx\\,dy\\,dz$ 次序。`,
+          ),
+          opt(`\\int_0^{${a}} \\int_z^{${a}} \\int_y^{${a}} ${f}\\,dx\\,dy\\,dz`),
+          [
+            opt(`\\int_0^{${a}} \\int_0^z \\int_0^y ${f}\\,dx\\,dy\\,dz`),
+            opt(`\\int_0^{${a}} \\int_z^{${a}} \\int_0^y ${f}\\,dx\\,dy\\,dz`),
+            opt(`\\int_0^{${a}} \\int_0^{${a}} \\int_y^{${a}} ${f}\\,dx\\,dy\\,dz`),
+          ],
+          t(
+            `The solid is $0 \\le z \\le y \\le x \\le ${a}$. So $z$ runs over $[0, ${a}]$, $y$ over $[z, ${a}]$, and $x$ over $[y, ${a}]$.`,
+            `立体为 $0 \\le z \\le y \\le x \\le ${a}$。所以 $z$ 取 $[0, ${a}]$，$y$ 取 $[z, ${a}]$，$x$ 取 $[y, ${a}]$。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -1557,6 +2252,31 @@ export const doubleIntegralsInPlanePolarCoordinates: TopicDef = {
         });
       },
     },
+    {
+      id: "integrating-the-distance-from-the-origin-over-a-disk",
+      title: t("Integrating distance from the origin over a disk", "在圆盘上积分到原点的距离"),
+      explanation: t(
+        "In polar coordinates $\\sqrt{x^2 + y^2} = r$ and $dA = r\\,dr\\,d\\theta$, so the extra factor $r$ from the area element must not be forgotten. Over the disk of radius $R$:\n\n$$\\iint_D c\\sqrt{x^2 + y^2}\\,dA = \\int_0^{2\\pi} \\int_0^R c\\,r \\cdot r\\,dr\\,d\\theta = \\frac{2\\pi cR^3}{3}.$$",
+        "在极坐标中 $\\sqrt{x^2 + y^2} = r$，$dA = r\\,dr\\,d\\theta$，面积元中多出的因子 $r$ 不能忘记。在半径为 $R$ 的圆盘上：\n\n$$\\iint_D c\\sqrt{x^2 + y^2}\\,dA = \\int_0^{2\\pi} \\int_0^R c\\,r \\cdot r\\,dr\\,d\\theta = \\frac{2\\pi cR^3}{3}。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const R = rng.int(1, 6);
+        const c = rng.int(1, 5);
+        const ans = Q.of(2 * c * R ** 3, 3);
+        return numberProblem({
+          prompt: t(
+            `$D$ is the disk of radius $${R}$ centered at the origin. Find $\\frac{1}{\\pi}\\iint_D ${c === 1 ? "" : c}\\sqrt{x^2 + y^2}\\,dA$.`,
+            `$D$ 是以原点为圆心、半径为 $${R}$ 的圆盘。求 $\\frac{1}{\\pi}\\iint_D ${c === 1 ? "" : c}\\sqrt{x^2 + y^2}\\,dA$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(c * R * R), Q.of(c * R ** 3, 3), Q.of(c * R ** 4, 2), Q.of(2 * c * R * R, 3)],
+          solution: t(
+            `$\\int_0^{2\\pi} \\int_0^{${R}} ${c === 1 ? "" : c}r^2\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${c} \\cdot ${R ** 3}}{3}$. Dividing by $\\pi$ gives $${ans.toLatex()}$.`,
+            `$\\int_0^{2\\pi} \\int_0^{${R}} ${c === 1 ? "" : c}r^2\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${c} \\cdot ${R ** 3}}{3}$。除以 $\\pi$ 得 $${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1611,6 +2331,52 @@ export const doubleIntegralsBetweenPolarCurves: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(diffSq, k), Q.of(diffSq, 4 * k), ans.mul(Q.of(2))],
+        });
+      },
+    },
+    {
+      id: "areas-enclosed-by-classic-polar-curves",
+      title: t("Areas enclosed by classic polar curves", "经典极坐标曲线围成的面积"),
+      explanation: t(
+        "The area enclosed by $r = f(\\theta)$ is $\\frac{1}{2}\\int f(\\theta)^2\\,d\\theta$ over one full trace of the curve. Three standard results follow:\n\n- The circle $r = 2a\\cos\\theta$ (or $2a\\sin\\theta$) is traced once for $\\theta \\in [0, \\pi]$ and encloses $\\pi a^2$.\n- The cardioid $r = a(1 + \\cos\\theta)$ encloses $\\frac{3}{2}\\pi a^2$.\n- The rose $r = a\\cos(n\\theta)$ encloses $\\frac{\\pi a^2}{4}$ when $n$ is odd ($n$ petals) and $\\frac{\\pi a^2}{2}$ when $n$ is even ($2n$ petals).",
+        "曲线 $r = f(\\theta)$ 围成的面积是在曲线完整描一遍的范围上计算 $\\frac{1}{2}\\int f(\\theta)^2\\,d\\theta$。由此得三个标准结果：\n\n- 圆 $r = 2a\\cos\\theta$（或 $2a\\sin\\theta$）在 $\\theta \\in [0, \\pi]$ 上描一遍，面积为 $\\pi a^2$。\n- 心形线 $r = a(1 + \\cos\\theta)$ 面积为 $\\frac{3}{2}\\pi a^2$。\n- 玫瑰线 $r = a\\cos(n\\theta)$：$n$ 为奇数时（$n$ 瓣）面积为 $\\frac{\\pi a^2}{4}$，$n$ 为偶数时（$2n$ 瓣）面积为 $\\frac{\\pi a^2}{2}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 6);
+        const kind = rng.int(1, 3);
+        const trig = rng.pick(["\\cos", "\\sin"]);
+        const n = rng.int(2, 5);
+        const curve =
+          kind === 1
+            ? `r = ${2 * a}${trig}\\theta`
+            : kind === 2
+              ? `r = ${a === 1 ? "" : a}(1 + ${trig}\\theta)`
+              : `r = ${a === 1 ? "" : a}${trig}(${n}\\theta)`;
+        const ans = kind === 1 ? Q.of(a * a) : kind === 2 ? Q.of(3 * a * a, 2) : Q.of(a * a, n % 2 === 1 ? 4 : 2);
+        const name = kind === 1 ? ["circle", "圆"] : kind === 2 ? ["cardioid", "心形线"] : ["rose", "玫瑰线"];
+        const why =
+          kind === 1
+            ? t(
+                `$\\frac{1}{2}\\int_0^{\\pi} ${4 * a * a}${trig}^2\\theta\\,d\\theta = ${a * a}\\pi$.`,
+                `$\\frac{1}{2}\\int_0^{\\pi} ${4 * a * a}${trig}^2\\theta\\,d\\theta = ${a * a}\\pi$。`,
+              )
+            : kind === 2
+              ? t(
+                  `$\\frac{1}{2}\\int_0^{2\\pi} ${a * a}(1 + ${trig}\\theta)^2\\,d\\theta = \\frac{${a * a}}{2} \\cdot 3\\pi$.`,
+                  `$\\frac{1}{2}\\int_0^{2\\pi} ${a * a}(1 + ${trig}\\theta)^2\\,d\\theta = \\frac{${a * a}}{2} \\cdot 3\\pi$。`,
+                )
+              : t(
+                  `$n = ${n}$ is ${n % 2 === 1 ? `odd, so there are $${n}$ petals and the area is $\\frac{\\pi a^2}{4}$` : `even, so there are $${2 * n}$ petals and the area is $\\frac{\\pi a^2}{2}$`} with $a = ${a}$.`,
+                  `$n = ${n}$ 为${n % 2 === 1 ? `奇数，共 $${n}$ 瓣，面积为 $\\frac{\\pi a^2}{4}$` : `偶数，共 $${2 * n}$ 瓣，面积为 $\\frac{\\pi a^2}{2}$`}，其中 $a = ${a}$。`,
+                );
+        return numberProblem({
+          prompt: t(
+            `Find $\\frac{1}{\\pi}$ times the area enclosed by the ${name[0]} $${curve}$.`,
+            `求${name[1]} $${curve}$ 围成面积的 $\\frac{1}{\\pi}$ 倍。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(a * a), Q.of(4 * a * a), Q.of(3 * a * a, 2), Q.of(a * a, 2), Q.of(a * a, 4)],
+          solution: t(`${why.en} Dividing by $\\pi$ gives $${ans.toLatex()}$.`, `${why["zh-CN"]}除以 $\\pi$ 得 $${ans.toLatex()}$。`),
         });
       },
     },
@@ -1670,6 +2436,42 @@ export const computingAreasUsingAChangeOfVariables: TopicDef = {
         });
       },
     },
+    {
+      id: "the-area-of-a-parallelogram-from-a-linear-change-of-variables",
+      title: t("The area of a parallelogram by a change of variables", "用变量替换求平行四边形面积"),
+      explanation: t(
+        "A region $\\{0 \\le px + qy \\le U,\\ 0 \\le rx + sy \\le V\\}$ is a parallelogram. Substituting $u = px + qy$ and $v = rx + sy$ turns it into the rectangle $[0, U] \\times [0, V]$. Since $\\frac{\\partial(u, v)}{\\partial(x, y)} = ps - qr$, the Jacobian of the inverse map is $\\frac{1}{|ps - qr|}$, and\n\n$$\\operatorname{Area} = \\iint 1\\,dx\\,dy = \\frac{UV}{|ps - qr|}.$$",
+        "区域 $\\{0 \\le px + qy \\le U,\\ 0 \\le rx + sy \\le V\\}$ 是平行四边形。令 $u = px + qy$，$v = rx + sy$，它变为矩形 $[0, U] \\times [0, V]$。由于 $\\frac{\\partial(u, v)}{\\partial(x, y)} = ps - qr$，逆变换的雅可比行列式为 $\\frac{1}{|ps - qr|}$，于是\n\n$$\\operatorname{Area} = \\iint 1\\,dx\\,dy = \\frac{UV}{|ps - qr|}。$$",
+      ),
+      generate(rng: Rng): Problem {
+        let p = 1;
+        let q = 1;
+        let r = 1;
+        let s = 1;
+        while (p * s - q * r === 0) {
+          p = rng.int(1, 3);
+          q = rng.nonZero(-3, 3);
+          r = rng.nonZero(-3, 3);
+          s = rng.int(1, 3);
+        }
+        const det = p * s - q * r;
+        const U = rng.int(1, 6);
+        const V = rng.int(1, 6);
+        const ans = Q.of(U * V, Math.abs(det));
+        return numberProblem({
+          prompt: t(
+            `Find the area of the region $R = \\{(x, y) : 0 \\le ${poly([p, "x"], [q, "y"])} \\le ${U},\\ 0 \\le ${poly([r, "x"], [s, "y"])} \\le ${V}\\}$.`,
+            `求区域 $R = \\{(x, y) : 0 \\le ${poly([p, "x"], [q, "y"])} \\le ${U},\\ 0 \\le ${poly([r, "x"], [s, "y"])} \\le ${V}\\}$ 的面积。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(U * V * Math.abs(det)), Q.of(U * V), Q.of(U * V, Math.abs(p * s + q * r) || 1), Q.of(U * V, 2)],
+          solution: t(
+            `With $u = ${poly([p, "x"], [q, "y"])}$ and $v = ${poly([r, "x"], [s, "y"])}$, $\\frac{\\partial(u, v)}{\\partial(x, y)} = ${p} \\cdot ${s} - ${paren(q)} \\cdot ${paren(r)} = ${det}$. So $\\operatorname{Area} = \\frac{${U} \\cdot ${V}}{${Math.abs(det)}} = ${ans.toLatex()}$.`,
+            `令 $u = ${poly([p, "x"], [q, "y"])}$，$v = ${poly([r, "x"], [s, "y"])}$，则 $\\frac{\\partial(u, v)}{\\partial(x, y)} = ${p} \\cdot ${s} - ${paren(q)} \\cdot ${paren(r)} = ${det}$。所以 $\\operatorname{Area} = \\frac{${U} \\cdot ${V}}{${Math.abs(det)}} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1721,6 +2523,31 @@ export const computingDoubleIntegralsUsingAChangeOfVariables: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(U * V), Q.of(U * V, 4), ans.mul(Q.of(2))],
+        });
+      },
+    },
+    {
+      id: "integrating-x-plus-y-over-a-rotated-square",
+      title: t("Integrating $x + y$ with $u = x + y$, $v = x - y$", "用 $u = x + y$，$v = x - y$ 积分 $x + y$"),
+      explanation: t(
+        "With $u = x + y$ and $v = x - y$, we have $x = \\frac{u + v}{2}$ and $y = \\frac{u - v}{2}$, so $\\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{2}$ and $dA = \\frac{1}{2}\\,du\\,dv$. The region $0 \\le x + y \\le U$, $0 \\le x - y \\le V$ becomes the rectangle $[0, U] \\times [0, V]$, and the integrand $x + y$ becomes $u$:\n\n$$\\iint_R (x + y)\\,dA = \\frac{1}{2}\\int_0^V \\int_0^U u\\,du\\,dv = \\frac{U^2V}{4}.$$",
+        "令 $u = x + y$，$v = x - y$，则 $x = \\frac{u + v}{2}$，$y = \\frac{u - v}{2}$，所以 $\\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{2}$，$dA = \\frac{1}{2}\\,du\\,dv$。区域 $0 \\le x + y \\le U$，$0 \\le x - y \\le V$ 变为矩形 $[0, U] \\times [0, V]$，被积函数 $x + y$ 变为 $u$：\n\n$$\\iint_R (x + y)\\,dA = \\frac{1}{2}\\int_0^V \\int_0^U u\\,du\\,dv = \\frac{U^2V}{4}。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const U = rng.int(1, 6);
+        const V = rng.int(1, 6);
+        const ans = Q.of(U * U * V, 4);
+        return numberProblem({
+          prompt: t(
+            `Use $u = x + y$, $v = x - y$ to evaluate $\\iint_R (x + y)\\,dA$, where $R = \\{0 \\le x + y \\le ${U},\\ 0 \\le x - y \\le ${V}\\}$.`,
+            `用 $u = x + y$，$v = x - y$ 计算 $\\iint_R (x + y)\\,dA$，其中 $R = \\{0 \\le x + y \\le ${U},\\ 0 \\le x - y \\le ${V}\\}$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(U * U * V, 2), Q.of(U * U * V), Q.of(U * V, 2), Q.of(U * V * V, 4)],
+          solution: t(
+            `$dA = \\frac{1}{2}\\,du\\,dv$, so the integral is $\\frac{1}{2}\\int_0^{${V}} \\int_0^{${U}} u\\,du\\,dv = \\frac{1}{2} \\cdot \\frac{${U * U}}{2} \\cdot ${V} = ${ans.toLatex()}$.`,
+            `$dA = \\frac{1}{2}\\,du\\,dv$，所以积分为 $\\frac{1}{2}\\int_0^{${V}} \\int_0^{${U}} u\\,du\\,dv = \\frac{1}{2} \\cdot \\frac{${U * U}}{2} \\cdot ${V} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1784,6 +2611,39 @@ export const cylindricalPolarCoordinates: TopicDef = {
           solution,
           answer: ans,
           wrong: [r * r, Math.abs(z), x + y],
+        });
+      },
+    },
+    {
+      id: "converting-cylindrical-coordinates-to-x",
+      title: t("Converting cylindrical coordinates to $x$", "由柱坐标求 $x$"),
+      explanation: t(
+        "A point with cylindrical coordinates $(r, \\theta, z)$ has Cartesian coordinates $x = r\\cos\\theta$, $y = r\\sin\\theta$ and the same $z$. The value of $\\cos\\theta$ for standard angles such as $\\frac{\\pi}{3}$ or $\\frac{2\\pi}{3}$ gives the $x$-coordinate directly, and its sign follows the quadrant of $\\theta$.",
+        "柱坐标为 $(r, \\theta, z)$ 的点，其直角坐标为 $x = r\\cos\\theta$，$y = r\\sin\\theta$，$z$ 不变。对 $\\frac{\\pi}{3}$、$\\frac{2\\pi}{3}$ 等标准角，$\\cos\\theta$ 的值直接给出 $x$ 坐标，其符号由 $\\theta$ 所在象限决定。",
+      ),
+      generate(rng: Rng): Problem {
+        const angles = [
+          ["0", 1],
+          ["\\frac{\\pi}{3}", 0.5],
+          ["\\frac{\\pi}{2}", 0],
+          ["\\frac{2\\pi}{3}", -0.5],
+          ["\\pi", -1],
+          ["\\frac{4\\pi}{3}", -0.5],
+          ["\\frac{3\\pi}{2}", 0],
+          ["\\frac{5\\pi}{3}", 0.5],
+        ] as const;
+        const [th, cos] = rng.pick(angles);
+        const r = 2 * rng.int(1, 4);
+        const z = rng.int(-5, 5);
+        const ans = r * cos;
+        return numberProblem({
+          prompt: t(
+            `A point has cylindrical coordinates $(r, \\theta, z) = (${r}, ${th}, ${z})$. Find its $x$-coordinate.`,
+            `某点的柱坐标为 $(r, \\theta, z) = (${r}, ${th}, ${z})$。求它的 $x$ 坐标。`,
+          ),
+          answer: ans,
+          wrong: [-ans, r, z, ans === 0 ? r / 2 : ans * 2],
+          solution: t(`$x = r\\cos\\theta = ${r}\\cos ${th} = ${ans}$.`, `$x = r\\cos\\theta = ${r}\\cos ${th} = ${ans}$。`),
         });
       },
     },
@@ -1863,6 +2723,37 @@ export const surfacesInCylindricalPolarCoordinates: TopicDef = {
         return pickChoice(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "writing-cartesian-surfaces-in-cylindrical-coordinates",
+      title: t("Writing Cartesian surfaces in cylindrical coordinates", "把直角坐标曲面写成柱坐标"),
+      explanation: t(
+        "To convert a surface to cylindrical coordinates, replace $x^2 + y^2$ by $r^2$ and leave $z$ unchanged. For example, the cylinder $x^2 + y^2 = a^2$ becomes $r = a$, the paraboloid $z = k(x^2 + y^2)$ becomes $z = kr^2$, and the sphere $x^2 + y^2 + z^2 = a^2$ becomes $r^2 + z^2 = a^2$. A cone $z = k\\sqrt{x^2 + y^2}$ becomes $z = kr$, since $r \\ge 0$.",
+        "把曲面化为柱坐标时，用 $r^2$ 替换 $x^2 + y^2$，$z$ 不变。例如圆柱面 $x^2 + y^2 = a^2$ 变为 $r = a$，抛物面 $z = k(x^2 + y^2)$ 变为 $z = kr^2$，球面 $x^2 + y^2 + z^2 = a^2$ 变为 $r^2 + z^2 = a^2$。锥面 $z = k\\sqrt{x^2 + y^2}$ 变为 $z = kr$，因为 $r \\ge 0$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(2, 9);
+        const kind = rng.int(1, 4);
+        const opt = (s: string) => t(`$${s}$`, `$${s}$`);
+        const cart = [`x^2 + y^2 = ${a * a}`, `z = ${a}(x^2 + y^2)`, `x^2 + y^2 + z^2 = ${a * a}`, `z = ${a}\\sqrt{x^2 + y^2}`][kind - 1]!;
+        const right = [`r = ${a}`, `z = ${a}r^2`, `r^2 + z^2 = ${a * a}`, `z = ${a}r`][kind - 1]!;
+        const wrong = [
+          [`r = ${a * a}`, `r^2 = ${a}`, `\\theta = ${a}`],
+          [`z = ${a}r`, `z^2 = ${a}r^2`, `r = ${a}z^2`],
+          [`r + z = ${a}`, `r^2 = ${a * a}`, `r^2 + z^2 = ${a}`],
+          [`z = ${a}r^2`, `z^2 = ${a}r`, `r = ${a}z`],
+        ][kind - 1]!;
+        return pickChoice(
+          rng,
+          t(`Write the surface $${cart}$ in cylindrical coordinates.`, `把曲面 $${cart}$ 写成柱坐标方程。`),
+          opt(right),
+          wrong.map(opt),
+          t(
+            `Replace $x^2 + y^2$ by $r^2$ (and $\\sqrt{x^2 + y^2}$ by $r$) to get $${right}$.`,
+            `用 $r^2$ 替换 $x^2 + y^2$（用 $r$ 替换 $\\sqrt{x^2 + y^2}$），得 $${right}$。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -1927,6 +2818,34 @@ export const sphericalPolarCoordinates: TopicDef = {
           answer: ans,
           wrong: [ans * ans, x + y + z, ans + 2],
         });
+      },
+    },
+    {
+      id: "finding-the-polar-angle-phi-of-a-point",
+      title: t("Finding the angle $\\varphi$ of a point", "求点的极角 $\\varphi$"),
+      explanation: t(
+        "In spherical coordinates $\\varphi$ is the angle from the positive $z$-axis, with $0 \\le \\varphi \\le \\pi$, and $\\cos\\varphi = \\frac{z}{\\rho}$. A useful shortcut compares $z$ with $r = \\sqrt{x^2 + y^2}$: if $z = r$ then $\\varphi = \\frac{\\pi}{4}$, if $z = 0$ then $\\varphi = \\frac{\\pi}{2}$, and if $z = -r$ then $\\varphi = \\frac{3\\pi}{4}$.",
+        "在球坐标中，$\\varphi$ 是与 $z$ 轴正方向的夹角，$0 \\le \\varphi \\le \\pi$，且 $\\cos\\varphi = \\frac{z}{\\rho}$。一个实用的捷径是比较 $z$ 与 $r = \\sqrt{x^2 + y^2}$：若 $z = r$ 则 $\\varphi = \\frac{\\pi}{4}$，若 $z = 0$ 则 $\\varphi = \\frac{\\pi}{2}$，若 $z = -r$ 则 $\\varphi = \\frac{3\\pi}{4}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const [a, b, c] = rng.pick(pythagoreanTriples);
+        const x = a * rng.pick([-1, 1]);
+        const y = b * rng.pick([-1, 1]);
+        const kind = rng.int(0, 2);
+        const z = [c, 0, -c][kind]!;
+        const angles = ["\\frac{\\pi}{4}", "\\frac{\\pi}{2}", "\\frac{3\\pi}{4}"];
+        const opt = (s: string) => t(`$${s}$`, `$${s}$`);
+        const rho = kind === 1 ? `${c}` : `${c}\\sqrt{2}`;
+        return pickChoice(
+          rng,
+          t(`Find the spherical angle $\\varphi$ of the point $(${x}, ${y}, ${z})$.`, `求点 $(${x}, ${y}, ${z})$ 的球坐标角 $\\varphi$。`),
+          opt(angles[kind]!),
+          [...angles.filter((_, i) => i !== kind), kind === 1 ? "\\frac{\\pi}{3}" : "0"].map(opt),
+          t(
+            `$r = \\sqrt{${a * a} + ${b * b}} = ${c}$ and $\\rho = ${rho}$, so $\\cos\\varphi = \\frac{${z}}{${rho}}$ and $\\varphi = ${angles[kind]}$.`,
+            `$r = \\sqrt{${a * a} + ${b * b}} = ${c}$，$\\rho = ${rho}$，所以 $\\cos\\varphi = \\frac{${z}}{${rho}}$，$\\varphi = ${angles[kind]}$。`,
+          ),
+        );
       },
     },
   ],
@@ -1997,6 +2916,33 @@ export const surfacesInSphericalPolarCoordinates: TopicDef = {
         return pickChoice(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "spheres-through-the-origin-in-spherical-coordinates",
+      title: t("Spheres through the origin in spherical coordinates", "球坐标中过原点的球面"),
+      explanation: t(
+        "Multiplying $\\rho = k\\cos\\varphi$ by $\\rho$ gives $\\rho^2 = k\\rho\\cos\\varphi$, that is $x^2 + y^2 + z^2 = kz$. Completing the square gives $x^2 + y^2 + \\left(z - \\frac{k}{2}\\right)^2 = \\frac{k^2}{4}$, a sphere of radius $\\frac{k}{2}$ through the origin. In the same way $\\rho = k\\sin\\varphi\\cos\\theta$ is $x^2 + y^2 + z^2 = kx$ and $\\rho = k\\sin\\varphi\\sin\\theta$ is $x^2 + y^2 + z^2 = ky$, also spheres of radius $\\frac{k}{2}$.",
+        "把 $\\rho = k\\cos\\varphi$ 两边乘以 $\\rho$ 得 $\\rho^2 = k\\rho\\cos\\varphi$，即 $x^2 + y^2 + z^2 = kz$。配方得 $x^2 + y^2 + \\left(z - \\frac{k}{2}\\right)^2 = \\frac{k^2}{4}$，是过原点、半径为 $\\frac{k}{2}$ 的球面。同理，$\\rho = k\\sin\\varphi\\cos\\theta$ 即 $x^2 + y^2 + z^2 = kx$，$\\rho = k\\sin\\varphi\\sin\\theta$ 即 $x^2 + y^2 + z^2 = ky$，也都是半径为 $\\frac{k}{2}$ 的球面。",
+      ),
+      generate(rng: Rng): Problem {
+        const k = rng.int(1, 10);
+        const kind = rng.int(0, 2);
+        const form = ["\\cos\\varphi", "\\sin\\varphi\\cos\\theta", "\\sin\\varphi\\sin\\theta"][kind]!;
+        const v = ["z", "x", "y"][kind]!;
+        const ans = Q.of(k, 2);
+        return numberProblem({
+          prompt: t(
+            `The surface $\\rho = ${k === 1 ? "" : k}${form}$ is a sphere. Find its radius.`,
+            `曲面 $\\rho = ${k === 1 ? "" : k}${form}$ 是一个球面。求其半径。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(k), Q.of(k * k, 4), Q.of(k, 4), Q.of(2 * k)],
+          solution: t(
+            `Multiplying by $\\rho$ gives $x^2 + y^2 + z^2 = ${k === 1 ? "" : k}${v}$. Completing the square in $${v}$ gives radius $\\frac{${k}}{2}${ans.isInteger() ? ` = ${ans.toLatex()}` : ""}$.`,
+            `两边乘以 $\\rho$ 得 $x^2 + y^2 + z^2 = ${k === 1 ? "" : k}${v}$。对 $${v}$ 配方得半径为 $\\frac{${k}}{2}${ans.isInteger() ? ` = ${ans.toLatex()}` : ""}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -2056,6 +3002,31 @@ export const tripleIntegralsInCylindricalPolarCoordinates: TopicDef = {
           solution,
           answer: ans,
           wrong: [R * H, 2 * ans, ans + R * R],
+        });
+      },
+    },
+    {
+      id: "integrating-x-squared-plus-y-squared-over-a-cylinder",
+      title: t("Integrating $x^2 + y^2$ over a cylinder", "在圆柱体上积分 $x^2 + y^2$"),
+      explanation: t(
+        "In cylindrical coordinates $x^2 + y^2 = r^2$ and $dV = r\\,dz\\,dr\\,d\\theta$. Over the solid cylinder $r \\le R$, $0 \\le z \\le H$:\n\n$$\\iiint_E (x^2 + y^2)\\,dV = \\int_0^{2\\pi} \\int_0^R \\int_0^H r^2 \\cdot r\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{R^4}{4} \\cdot H = \\frac{\\pi R^4H}{2}.$$\n\nThis is the moment of inertia of the cylinder about its axis.",
+        "在柱坐标中 $x^2 + y^2 = r^2$，$dV = r\\,dz\\,dr\\,d\\theta$。在实心圆柱 $r \\le R$，$0 \\le z \\le H$ 上：\n\n$$\\iiint_E (x^2 + y^2)\\,dV = \\int_0^{2\\pi} \\int_0^R \\int_0^H r^2 \\cdot r\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{R^4}{4} \\cdot H = \\frac{\\pi R^4H}{2}。$$\n\n这就是圆柱体绕其轴的转动惯量。",
+      ),
+      generate(rng: Rng): Problem {
+        const R = rng.int(1, 4);
+        const H = rng.int(1, 7);
+        const ans = Q.of(R ** 4 * H, 2);
+        return numberProblem({
+          prompt: t(
+            `$E$ is the solid cylinder $x^2 + y^2 \\le ${R * R}$, $0 \\le z \\le ${H}$. Find $\\frac{1}{\\pi}\\iiint_E (x^2 + y^2)\\,dV$.`,
+            `$E$ 是实心圆柱 $x^2 + y^2 \\le ${R * R}$，$0 \\le z \\le ${H}$。求 $\\frac{1}{\\pi}\\iiint_E (x^2 + y^2)\\,dV$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(2 * R ** 3 * H, 3), Q.of(R ** 4 * H), Q.of(R * R * H), Q.of(R ** 4 * H, 4)],
+          solution: t(
+            `$\\int_0^{2\\pi} \\int_0^{${R}} \\int_0^{${H}} r^3\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${R ** 4}}{4} \\cdot ${H}$. Dividing by $\\pi$ gives $${ans.toLatex()}$.`,
+            `$\\int_0^{2\\pi} \\int_0^{${R}} \\int_0^{${H}} r^3\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${R ** 4}}{4} \\cdot ${H}$。除以 $\\pi$ 得 $${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -2120,6 +3091,31 @@ export const tripleIntegralsInSphericalPolarCoordinates: TopicDef = {
         });
       },
     },
+    {
+      id: "integrating-the-squared-distance-over-a-ball",
+      title: t("Integrating the squared distance over a ball", "在球体上积分距离的平方"),
+      explanation: t(
+        "In spherical coordinates $x^2 + y^2 + z^2 = \\rho^2$ and $dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$. Over the ball $\\rho \\le R$ the angular integrals give $\\int_0^{2\\pi}\\int_0^{\\pi} \\sin\\varphi\\,d\\varphi\\,d\\theta = 4\\pi$, so\n\n$$\\iiint_B c(x^2 + y^2 + z^2)\\,dV = 4\\pi c\\int_0^R \\rho^4\\,d\\rho = \\frac{4\\pi cR^5}{5}.$$\n\nThe factor $4\\pi$ is the total solid angle around the origin, and the extra $\\rho^2$ from the volume element raises the power of $\\rho$ from $2$ to $4$.",
+        "在球坐标中 $x^2 + y^2 + z^2 = \\rho^2$，$dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$。在球体 $\\rho \\le R$ 上，角度积分为 $\\int_0^{2\\pi}\\int_0^{\\pi} \\sin\\varphi\\,d\\varphi\\,d\\theta = 4\\pi$，所以\n\n$$\\iiint_B c(x^2 + y^2 + z^2)\\,dV = 4\\pi c\\int_0^R \\rho^4\\,d\\rho = \\frac{4\\pi cR^5}{5}。$$\n\n因子 $4\\pi$ 是绕原点的全部立体角，体积元中额外的 $\\rho^2$ 把 $\\rho$ 的次数从 $2$ 提高到 $4$。",
+      ),
+      generate(rng: Rng): Problem {
+        const R = rng.int(1, 5);
+        const c = rng.int(1, 6);
+        const ans = Q.of(4 * c * R ** 5, 5);
+        return numberProblem({
+          prompt: t(
+            `$B$ is the ball $x^2 + y^2 + z^2 \\le ${R * R}$. Find $\\frac{1}{\\pi}\\iiint_B ${c === 1 ? "" : c}(x^2 + y^2 + z^2)\\,dV$.`,
+            `$B$ 是球体 $x^2 + y^2 + z^2 \\le ${R * R}$。求 $\\frac{1}{\\pi}\\iiint_B ${c === 1 ? "" : c}(x^2 + y^2 + z^2)\\,dV$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(4 * c * R ** 3, 3), Q.of(c * R ** 4), Q.of(2 * c * R ** 5, 5), Q.of(4 * c * R ** 4, 5)],
+          solution: t(
+            `The angular integrals give $4\\pi$ and $\\int_0^{${R}} ${c === 1 ? "" : c}\\rho^4\\,d\\rho = \\frac{${c} \\cdot ${R ** 5}}{5}$. Dividing $4\\pi \\cdot \\frac{${c * R ** 5}}{5}$ by $\\pi$ gives $${ans.toLatex()}$.`,
+            `角度积分为 $4\\pi$，且 $\\int_0^{${R}} ${c === 1 ? "" : c}\\rho^4\\,d\\rho = \\frac{${c} \\cdot ${R ** 5}}{5}$。把 $4\\pi \\cdot \\frac{${c * R ** 5}}{5}$ 除以 $\\pi$ 得 $${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -2181,6 +3177,39 @@ export const computingTripleIntegralsUsingAChangeOfVariables: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(prod, 3), ans.mul(Q.of(2)), Q.of(4 * prod)],
+        });
+      },
+    },
+    {
+      id: "the-volume-of-a-parallelepiped-by-a-linear-change-of-variables",
+      title: t("The volume of a parallelepiped by a change of variables", "用变量替换求平行六面体体积"),
+      explanation: t(
+        "A solid $\\{0 \\le u \\le U,\\ 0 \\le v \\le V,\\ 0 \\le w \\le W\\}$, where $u, v, w$ are linear in $x, y, z$, is a parallelepiped. The substitution maps it to a box of volume $UVW$, and $dV = \\left|\\frac{\\partial(u, v, w)}{\\partial(x, y, z)}\\right|^{-1} du\\,dv\\,dw$. So the volume is $\\frac{UVW}{|J|}$, where $J$ is the determinant of the coefficient matrix. For a triangular coefficient matrix $J$ is the product of the diagonal entries.",
+        "若 $u, v, w$ 是 $x, y, z$ 的线性函数，则立体 $\\{0 \\le u \\le U,\\ 0 \\le v \\le V,\\ 0 \\le w \\le W\\}$ 是平行六面体。替换把它映成体积为 $UVW$ 的长方体，且 $dV = \\left|\\frac{\\partial(u, v, w)}{\\partial(x, y, z)}\\right|^{-1} du\\,dv\\,dw$。所以体积为 $\\frac{UVW}{|J|}$，其中 $J$ 是系数矩阵的行列式。系数矩阵为三角矩阵时，$J$ 等于对角元素之积。",
+      ),
+      generate(rng: Rng): Problem {
+        const d1 = rng.int(1, 3);
+        const d2 = rng.int(1, 3);
+        const d3 = rng.int(1, 3);
+        const p = rng.nonZero(-2, 2);
+        const q = rng.int(-2, 2);
+        const r = rng.nonZero(-2, 2);
+        const U = rng.int(1, 4);
+        const V = rng.int(1, 4);
+        const W = rng.int(1, 4);
+        const J = d1 * d2 * d3;
+        const ans = Q.of(U * V * W, J);
+        return numberProblem({
+          prompt: t(
+            `Find the volume of $E = \\{0 \\le ${poly([d1, "x"], [p, "y"], [q, "z"])} \\le ${U},\\ 0 \\le ${poly([d2, "y"], [r, "z"])} \\le ${V},\\ 0 \\le ${poly([d3, "z"])} \\le ${W}\\}$.`,
+            `求 $E = \\{0 \\le ${poly([d1, "x"], [p, "y"], [q, "z"])} \\le ${U},\\ 0 \\le ${poly([d2, "y"], [r, "z"])} \\le ${V},\\ 0 \\le ${poly([d3, "z"])} \\le ${W}\\}$ 的体积。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(U * V * W * J), Q.of(U * V * W), Q.of(U * V * W, d1 + d2 + d3), Q.of(U * V * W, 6)],
+          solution: t(
+            `The coefficient matrix is triangular with determinant $J = ${d1} \\cdot ${d2} \\cdot ${d3} = ${J}$. So the volume is $\\frac{${U} \\cdot ${V} \\cdot ${W}}{${J}} = ${ans.toLatex()}$.`,
+            `系数矩阵为三角矩阵，行列式 $J = ${d1} \\cdot ${d2} \\cdot ${d3} = ${J}$。所以体积为 $\\frac{${U} \\cdot ${V} \\cdot ${W}}{${J}} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
