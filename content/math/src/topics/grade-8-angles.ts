@@ -1190,12 +1190,41 @@ function listOf(values: readonly string[]): Text {
   return t(en, `${values.slice(0, -1).join("、")} 和 ${values.at(-1)}`);
 }
 
+/** exteriorAnglesFigure shows a pentagon with each side extended at its far end, marking the exterior angles 70°, 85°, 60°, 90° and 55°. */
+const exteriorAnglesFigure: Figure = (() => {
+  // The vertices come from walking sides of lengths 4, 3, 3.2, 4.134 and 2.198, turning by each exterior angle.
+  const pts: Point[] = [
+    [0, 0],
+    [4, 0],
+    [5.026, 2.819],
+    [2.126, 4.171],
+    [-1.261, 1.8],
+  ];
+  const turns = [55, 70, 85, 60, 90];
+  const marks: Mark[] = [{ kind: "polygon", points: pts }];
+  pts.forEach((v, j) => {
+    const prev = pts[(j + 4) % 5]!;
+    const next = pts[(j + 1) % 5]!;
+    const len = Math.hypot(v[0] - prev[0], v[1] - prev[1]);
+    const out: Point = [v[0] + (1.4 * (v[0] - prev[0])) / len, v[1] + (1.4 * (v[1] - prev[1])) / len];
+    marks.push({ kind: "segment", a: v, b: out, dashed: true });
+    marks.push({ kind: "arc", vertex: v, from: out, to: next, label: `${turns[j]}°`, accent: true });
+  });
+  return {
+    svg: sketch(marks),
+    alt: t(
+      "A convex pentagon with each side extended past a vertex as a dashed ray. The exterior angles between each extension and the next side are 55°, 70°, 85°, 60° and 90°, which add up to 360°.",
+      "一个凸五边形，每条边在一个顶点处延长成虚线射线。每条延长线与下一条边所成的外角分别为 55°、70°、85°、60° 和 90°，它们的和是 360°。",
+    ),
+  };
+})();
+
 const exteriorAnglesOfPolygons = topic(
   "exterior-angles-of-polygons",
   t("Exterior Angles of Polygons", "多边形的外角"),
   t(
-    "The exterior angles of a convex polygon, one at each vertex, always add up to 360°, whatever the number of sides; use this to find missing exterior angles and to solve for unknowns.",
-    "凸多边形的外角（每个顶点取一个）之和总是 360°，与边数无关；利用这一点求未知的外角并解出未知数。",
+    "The exterior angles of a convex polygon, one at each vertex, always add up to $360^\\circ$, whatever the number of sides; use this to find missing exterior angles and to solve for unknowns.",
+    "凸多边形的外角（每个顶点取一个）之和总是 $360^\\circ$，与边数无关；利用这一点求未知的外角并解出未知数。",
   ),
   ["angles-of-polygons"],
   ["8.G.A.5"],
@@ -1207,6 +1236,7 @@ const exteriorAnglesOfPolygons = topic(
         "At each vertex of a convex polygon, extending one side makes an **exterior angle**, which forms a linear pair with the interior angle there. Walking once around the polygon, you turn by each exterior angle in turn and end up facing the way you started, so the exterior angles add up to $360^\\circ$, for any number of sides.\n\nIf a pentagon has exterior angles $70^\\circ$, $85^\\circ$, $60^\\circ$ and $90^\\circ$, the fifth is $360^\\circ - 305^\\circ = 55^\\circ$.",
         "在凸多边形的每个顶点处延长一条边，得到一个**外角**，它与该处的内角是邻补角。沿多边形走一圈，在每个顶点依次转过一个外角，最后回到出发时的朝向，所以无论多边形有几条边，外角和都是 $360^\\circ$。\n\n若一个五边形的四个外角为 $70^\\circ$、$85^\\circ$、$60^\\circ$、$90^\\circ$，则第五个外角是 $360^\\circ - 305^\\circ = 55^\\circ$。",
       ),
+      figure: exteriorAnglesFigure,
       generate(rng) {
         for (;;) {
           const n = rng.int(4, 7);
