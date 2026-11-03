@@ -1,7 +1,10 @@
-import type { Problem, Rng, TopicDef } from "@ga/content";
+import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly } from "@ga/subject-math";
-import { numberProblem, steps } from "../problems.ts";
+import { poly, Q } from "@ga/subject-math";
+import { choiceProblem, lowestTerms, numberProblem, steps, yesNo } from "../problems.ts";
+
+/** signed writes a number as a signed term: "+ 3" or "- 3". */
+const signed = (n: number): string => (n < 0 ? `- ${-n}` : `+ ${n}`);
 
 /** Topics for Unit 5: Laplace Transforms in Differential Equations. */
 export const differentialEquationsLaplaceTopics: TopicDef[] = [
@@ -56,6 +59,36 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
             solution,
             answer: ans,
             wrong: [a, b, Math.abs(a - b), a + b + c1, ans + 1, ans - 1],
+          });
+        },
+      },
+      {
+        id: "writing-a-piecewise-function-with-unit-steps",
+        title: t("Writing a piecewise function with unit steps", "用单位阶跃函数表示分段函数"),
+        explanation: t(
+          "A unit step $u(t - c)$ switches a term on at $t = c$. To build a function that takes the value $a$, then $b$ from $t = c_1$, then $d$ from $t = c_2$, start with $a$ and add each change at the moment it happens:\n\n$$f(t) = a + (b - a)u(t - c_1) + (d - b)u(t - c_2).$$\n\nEach coefficient is the size of the jump, new value minus old value, not the new value itself.",
+          "单位阶跃 $u(t - c)$ 在 $t = c$ 时接通一项。要构造一个先取值 $a$、从 $t = c_1$ 起取 $b$、从 $t = c_2$ 起取 $d$ 的函数，从 $a$ 开始，在每次变化发生时加上变化量：\n\n$$f(t) = a + (b - a)u(t - c_1) + (d - b)u(t - c_2).$$\n\n每个系数是跳跃的大小，即新值减旧值，而不是新值本身。",
+        ),
+        generate(rng: Rng): Problem {
+          const a = rng.int(-5, 9);
+          let b = rng.int(-5, 9);
+          if (b === a) b = a + 4;
+          let d = rng.int(-5, 9);
+          if (d === b) d = b - 3;
+          const c1 = rng.int(1, 4);
+          const c2 = c1 + rng.int(1, 5);
+          const ans = d - b;
+          return numberProblem({
+            prompt: t(
+              `$f(t) = ${a}$ for $0 \\le t < ${c1}$, $f(t) = ${b}$ for $${c1} \\le t < ${c2}$ and $f(t) = ${d}$ for $t \\ge ${c2}$. Writing $f(t) = A + Bu(t - ${c1}) + Cu(t - ${c2})$, find $C$.`,
+              `$0 \\le t < ${c1}$ 时 $f(t) = ${a}$，$${c1} \\le t < ${c2}$ 时 $f(t) = ${b}$，$t \\ge ${c2}$ 时 $f(t) = ${d}$。写成 $f(t) = A + Bu(t - ${c1}) + Cu(t - ${c2})$，求 $C$。`,
+            ),
+            answer: ans,
+            wrong: [d, d - a, b - a].filter((w) => w !== ans),
+            solution: t(
+              `At $t = ${c2}$ the value jumps from $${b}$ to $${d}$, so $C = ${d} - ${b < 0 ? `(${b})` : b} = ${ans}$.`,
+              `在 $t = ${c2}$ 处函数值从 $${b}$ 跳到 $${d}$，所以 $C = ${d} - ${b < 0 ? `(${b})` : b} = ${ans}$。`,
+            ),
           });
         },
       },
@@ -115,6 +148,38 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "recognizing-piecewise-continuous-functions",
+        title: t("Recognizing piecewise continuous functions", "识别分段连续函数"),
+        explanation: t(
+          "A function is piecewise continuous on $[0, T]$ when it has only finitely many discontinuities there and each one is a finite jump: both one-sided limits exist and are finite. Steps, floor functions and continuous functions qualify. A vertical asymptote such as $\\frac{1}{t - 2}$ does not, because the one-sided limits are infinite; neither does $\\sin\\frac{1}{t}$ near $0$, whose limit does not exist.",
+          "若函数在 $[0, T]$ 上只有有限个间断点，且每个都是有限跳跃（两侧单侧极限都存在且有限），则它在该区间上分段连续。阶跃函数、取整函数和连续函数都满足。像 $\\frac{1}{t - 2}$ 这样有铅直渐近线的函数不满足，因为单侧极限是无穷；$\\sin\\frac{1}{t}$ 在 $0$ 附近也不满足，因为其极限不存在。",
+        ),
+        generate(rng: Rng): Problem {
+          const c = rng.int(1, 6);
+          const T = c + rng.int(2, 6);
+          const k = rng.int(2, 9);
+          const cases: [string, boolean, Text][] = [
+            [`${k}\\lfloor t \\rfloor`, true, t("it jumps by a finite amount at each integer", "它在每个整数处有有限跳跃")],
+            [
+              `t^{2} + ${k}u(t - ${c})`,
+              true,
+              t(`its only discontinuity is a jump of $${k}$ at $t = ${c}$`, `它唯一的间断点是 $t = ${c}$ 处大小为 $${k}$ 的跳跃`),
+            ],
+            [`|t - ${c}|`, true, t("it is continuous", "它是连续的")],
+            [`\\frac{${k}}{t - ${c}}`, false, t(`it tends to infinity at $t = ${c}$`, `它在 $t = ${c}$ 处趋于无穷`)],
+            [`\\tan\\frac{\\pi t}{${2 * c}}`, false, t(`it tends to infinity at $t = ${c}$`, `它在 $t = ${c}$ 处趋于无穷`)],
+            [`\\sin\\frac{${k}}{t - ${c}}`, false, t(`it has no one-sided limits at $t = ${c}$`, `它在 $t = ${c}$ 处没有单侧极限`)],
+          ];
+          const [f, ok, why] = rng.pick(cases);
+          return choiceProblem({
+            prompt: t(`Is $f(t) = ${f}$ piecewise continuous on $[0, ${T}]$?`, `$f(t) = ${f}$ 在 $[0, ${T}]$ 上分段连续吗？`),
+            options: yesNo,
+            correct: ok ? 0 : 1,
+            solution: t(`${ok ? "Yes" : "No"}: ${why.en}.`, `${ok ? "是" : "不是"}：${why["zh-CN"]}。`),
+          });
+        },
+      },
     ],
   },
 
@@ -162,6 +227,32 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
             solution,
             answer: ans,
             wrong: [C, s, ans + s, ans * s, ans - 1, ans + 1],
+          });
+        },
+      },
+      {
+        id: "the-transform-of-an-exponential-from-the-definition",
+        title: t("The transform of an exponential from the definition", "由定义求指数函数的变换"),
+        explanation: t(
+          "For $f(t) = ce^{at}$,\n\n$$\\mathcal{L}\\{ce^{at}\\}(s) = \\int_0^\\infty ce^{(a - s)t}\\,dt = \\left[\\frac{ce^{(a - s)t}}{a - s}\\right]_0^\\infty = \\frac{c}{s - a},$$\n\nprovided $s > a$, so that $e^{(a - s)t} \\to 0$. For $s \\le a$ the integral diverges and the transform does not exist at that $s$.",
+          "对 $f(t) = ce^{at}$，\n\n$$\\mathcal{L}\\{ce^{at}\\}(s) = \\int_0^\\infty ce^{(a - s)t}\\,dt = \\left[\\frac{ce^{(a - s)t}}{a - s}\\right]_0^\\infty = \\frac{c}{s - a},$$\n\n前提是 $s > a$，使 $e^{(a - s)t} \\to 0$。当 $s \\le a$ 时积分发散，变换在该 $s$ 处不存在。",
+        ),
+        generate(rng: Rng): Problem {
+          const a = rng.int(-6, 6) || 2;
+          const s0 = Math.max(a, 0) + rng.int(1, 6);
+          const c = rng.int(2, 15);
+          const ans = Q.of(c, s0 - a);
+          return numberProblem({
+            prompt: t(
+              `Evaluate $\\int_0^\\infty ${c}e^{${a === 1 ? "" : a === -1 ? "-" : a}t}e^{-st}\\,dt$ at $s = ${s0}$.`,
+              `求 $\\int_0^\\infty ${c}e^{${a === 1 ? "" : a === -1 ? "-" : a}t}e^{-st}\\,dt$ 在 $s = ${s0}$ 处的值。`,
+            ),
+            answer: ans,
+            wrong: [Q.of(c, s0 + a || 2 * s0), Q.of(c, s0), Q.of(-c, s0 - a)].filter((v) => !v.eq(ans)),
+            solution: t(
+              `The integrand is $${c}e^{(${a} - s)t}$; since $s = ${s0} > ${a}$ it decays, and the integral is $\\frac{${c}}{s ${signed(-a)}} = \\frac{${c}}{${s0 - a}}${lowestTerms(c, s0 - a)}$.`,
+              `被积函数为 $${c}e^{(${a} - s)t}$；由于 $s = ${s0} > ${a}$，它衰减，积分为 $\\frac{${c}}{s ${signed(-a)}} = \\frac{${c}}{${s0 - a}}${lowestTerms(c, s0 - a)}$。`,
+            ),
           });
         },
       },
@@ -218,6 +309,35 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "evaluating-the-transform-of-a-sinusoidal-combination",
+        title: t("Evaluating the transform of a sinusoidal combination", "求正弦型组合的变换值"),
+        explanation: t(
+          "Linearity lets you transform term by term, using $\\mathcal{L}\\{\\sin bt\\} = \\frac{b}{s^{2} + b^{2}}$ and $\\mathcal{L}\\{\\cos bt\\} = \\frac{s}{s^{2} + b^{2}}$:\n\n$$\\mathcal{L}\\{p\\sin bt + q\\cos bt\\} = \\frac{pb + qs}{s^{2} + b^{2}}.$$\n\nNote the sine contributes $b$ in the numerator, and the cosine contributes $s$; swapping them is a common error.",
+          "线性性允许逐项变换，利用 $\\mathcal{L}\\{\\sin bt\\} = \\frac{b}{s^{2} + b^{2}}$ 与 $\\mathcal{L}\\{\\cos bt\\} = \\frac{s}{s^{2} + b^{2}}$：\n\n$$\\mathcal{L}\\{p\\sin bt + q\\cos bt\\} = \\frac{pb + qs}{s^{2} + b^{2}}.$$\n\n注意正弦在分子中贡献 $b$，余弦贡献 $s$；把两者弄反是常见错误。",
+        ),
+        generate(rng: Rng): Problem {
+          const p = rng.int(-6, 9) || 3;
+          const q = rng.int(-6, 9) || -2;
+          const b = rng.int(1, 5);
+          const s0 = rng.int(1, 6);
+          const den = s0 * s0 + b * b;
+          const ans = Q.of(p * b + q * s0, den);
+          const bt = b === 1 ? "t" : `${b}t`;
+          return numberProblem({
+            prompt: t(
+              `Let $F(s) = \\mathcal{L}\\{${p}\\sin ${bt} ${signed(q)}\\cos ${bt}\\}$. Find $F(${s0})$.`,
+              `设 $F(s) = \\mathcal{L}\\{${p}\\sin ${bt} ${signed(q)}\\cos ${bt}\\}$。求 $F(${s0})$。`,
+            ),
+            answer: ans,
+            wrong: [Q.of(p * s0 + q * b, den), Q.of(p + q, den), Q.of(p * b + q * s0, s0 * s0 - b * b || 1)].filter((v) => !v.eq(ans)),
+            solution: t(
+              `$F(s) = \\frac{${p} \\cdot ${b} ${signed(q)}s}{s^{2} + ${b * b}}$, so $F(${s0}) = \\frac{${p * b} ${signed(q * s0)}}{${den}} = ${ans.toLatex()}$.`,
+              `$F(s) = \\frac{${p} \\cdot ${b} ${signed(q)}s}{s^{2} + ${b * b}}$，所以 $F(${s0}) = \\frac{${p * b} ${signed(q * s0)}}{${den}} = ${ans.toLatex()}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -265,6 +385,31 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
             solution,
             answer: ans,
             wrong: [h + c, 2 * (h + c), h * (c + 1), ans - 1, ans + 1],
+          });
+        },
+      },
+      {
+        id: "the-transform-of-a-truncated-ramp",
+        title: t("The transform of a truncated ramp", "截断斜坡的变换"),
+        explanation: t(
+          "The ramp $kt$ switched off at $t = c$ is $kt - kt\\,u(t - c)$. To use the shift rule, rewrite $t = (t - c) + c$:\n\n$$kt\\,u(t - c) = k(t - c)u(t - c) + kc\\,u(t - c),$$\n\nso $\\mathcal{L}\\{f\\} = \\frac{k}{s^{2}} - e^{-cs}\\left(\\frac{k}{s^{2}} + \\frac{kc}{s}\\right)$. The second term inside the bracket comes from the height $kc$ of the drop at $t = c$.",
+          "在 $t = c$ 处关断的斜坡 $kt$ 可写为 $kt - kt\\,u(t - c)$。为使用平移法则，把 $t$ 写成 $(t - c) + c$：\n\n$$kt\\,u(t - c) = k(t - c)u(t - c) + kc\\,u(t - c),$$\n\n所以 $\\mathcal{L}\\{f\\} = \\frac{k}{s^{2}} - e^{-cs}\\left(\\frac{k}{s^{2}} + \\frac{kc}{s}\\right)$。括号中第二项来自 $t = c$ 处下降的高度 $kc$。",
+        ),
+        generate(rng: Rng): Problem {
+          const k = rng.int(1, 9);
+          const c = rng.int(1, 7);
+          const ans = k * c;
+          return numberProblem({
+            prompt: t(
+              `$f(t) = ${k === 1 ? "" : k}t$ for $0 \\le t < ${c}$ and $f(t) = 0$ for $t \\ge ${c}$. Its transform is $\\frac{${k}}{s^{2}} - e^{-${c === 1 ? "" : c}s}\\left(\\frac{A}{s^{2}} + \\frac{B}{s}\\right)$. Find $B$.`,
+              `$0 \\le t < ${c}$ 时 $f(t) = ${k === 1 ? "" : k}t$，$t \\ge ${c}$ 时 $f(t) = 0$。它的变换为 $\\frac{${k}}{s^{2}} - e^{-${c === 1 ? "" : c}s}\\left(\\frac{A}{s^{2}} + \\frac{B}{s}\\right)$。求 $B$。`,
+            ),
+            answer: ans,
+            wrong: [k, c, 0].filter((w) => w !== ans),
+            solution: t(
+              `$f = ${k}t - ${k}t\\,u(t - ${c})$ and $${k}t\\,u(t - ${c}) = ${k}(t - ${c})u(t - ${c}) + ${ans}u(t - ${c})$, so $A = ${k}$ and $B = ${ans}$.`,
+              `$f = ${k}t - ${k}t\\,u(t - ${c})$，且 $${k}t\\,u(t - ${c}) = ${k}(t - ${c})u(t - ${c}) + ${ans}u(t - ${c})$，所以 $A = ${k}$，$B = ${ans}$。`,
+            ),
           });
         },
       },
@@ -322,6 +467,36 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "transforms-of-t-times-a-sinusoid",
+        title: t("Transforms of $t$ times a sinusoid", "$t$ 乘正弦型函数的变换"),
+        explanation: t(
+          "Multiplying by $t$ corresponds to $-\\frac{d}{ds}$ of the transform. Differentiating the sine and cosine transforms gives\n\n$$\\mathcal{L}\\{t\\sin bt\\} = \\frac{2bs}{(s^{2} + b^{2})^{2}}, \\qquad \\mathcal{L}\\{t\\cos bt\\} = \\frac{s^{2} - b^{2}}{(s^{2} + b^{2})^{2}}.$$\n\nThe denominator is squared; keeping it unsquared is the usual slip.",
+          "乘以 $t$ 对应于对变换取 $-\\frac{d}{ds}$。对正弦与余弦的变换求导得\n\n$$\\mathcal{L}\\{t\\sin bt\\} = \\frac{2bs}{(s^{2} + b^{2})^{2}}, \\qquad \\mathcal{L}\\{t\\cos bt\\} = \\frac{s^{2} - b^{2}}{(s^{2} + b^{2})^{2}}.$$\n\n分母是平方；忘记平方是常见错误。",
+        ),
+        generate(rng: Rng): Problem {
+          const b = rng.int(1, 4);
+          const s0 = rng.int(1, 5);
+          const isSin = rng.bool(0.5);
+          const den = (s0 * s0 + b * b) ** 2;
+          const num = isSin ? 2 * b * s0 : s0 * s0 - b * b;
+          const ans = Q.of(num, den);
+          const bt = b === 1 ? "t" : `${b}t`;
+          const fn = isSin ? "\\sin" : "\\cos";
+          return numberProblem({
+            prompt: t(
+              `Find $\\mathcal{L}\\{t${fn} ${bt}\\}$ at $s = ${s0}$.`,
+              `求 $\\mathcal{L}\\{t${fn} ${bt}\\}$ 在 $s = ${s0}$ 处的值。`,
+            ),
+            answer: ans,
+            wrong: [Q.of(num, s0 * s0 + b * b), Q.of(isSin ? s0 * s0 - b * b : 2 * b * s0, den), Q.of(-num, den)].filter((v) => !v.eq(ans)),
+            solution: t(
+              `$\\mathcal{L}\\{t${fn} ${bt}\\} = ${isSin ? `\\frac{${2 * b}s}{(s^{2} + ${b * b})^{2}}` : `\\frac{s^{2} - ${b * b}}{(s^{2} + ${b * b})^{2}}`}$; at $s = ${s0}$ it is $\\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
+              `$\\mathcal{L}\\{t${fn} ${bt}\\} = ${isSin ? `\\frac{${2 * b}s}{(s^{2} + ${b * b})^{2}}` : `\\frac{s^{2} - ${b * b}}{(s^{2} + ${b * b})^{2}}`}$；在 $s = ${s0}$ 处为 $\\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -371,6 +546,37 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
             solution,
             answer: ans,
             wrong: [y0, y1, Math.abs(y0 - y1), y0 * y1, ans + 1, ans - 1],
+          });
+        },
+      },
+      {
+        id: "the-transform-of-a-second-derivative-at-a-point",
+        title: t("The transform of a second derivative at a point", "二阶导数的变换在某点的值"),
+        explanation: t(
+          "Applying the derivative rule twice gives\n\n$$\\mathcal{L}\\{y''\\}(s) = s^{2}Y(s) - sy(0) - y'(0).$$\n\nThe initial position is multiplied by $s$, the initial velocity is not. For example, if $Y(2) = 3$, $y(0) = 1$ and $y'(0) = 4$, then $\\mathcal{L}\\{y''\\}(2) = 12 - 2 - 4 = 6$.",
+          "两次应用导数法则得\n\n$$\\mathcal{L}\\{y''\\}(s) = s^{2}Y(s) - sy(0) - y'(0).$$\n\n初始位置乘以 $s$，初始速度不乘。例如，若 $Y(2) = 3$，$y(0) = 1$，$y'(0) = 4$，则 $\\mathcal{L}\\{y''\\}(2) = 12 - 2 - 4 = 6$。",
+        ),
+        generate(rng: Rng): Problem {
+          const s0 = rng.int(1, 6);
+          const Y = Q.of(rng.int(1, 12), rng.pick([1, 2, 4]));
+          const y0 = rng.int(-5, 8);
+          const v0 = rng.int(-5, 8);
+          const ans = Y.mul(Q.of(s0 * s0)).sub(Q.of(s0 * y0 + v0));
+          return numberProblem({
+            prompt: t(
+              `$Y(s) = \\mathcal{L}\\{y\\}$ satisfies $Y(${s0}) = ${Y.toLatex()}$, and $y(0) = ${y0}$, $y'(0) = ${v0}$. Find $\\mathcal{L}\\{y''\\}(${s0})$.`,
+              `$Y(s) = \\mathcal{L}\\{y\\}$ 满足 $Y(${s0}) = ${Y.toLatex()}$，且 $y(0) = ${y0}$，$y'(0) = ${v0}$。求 $\\mathcal{L}\\{y''\\}(${s0})$。`,
+            ),
+            answer: ans,
+            wrong: [
+              Y.mul(Q.of(s0 * s0)).sub(Q.of(y0 + s0 * v0)),
+              Y.mul(Q.of(s0 * s0)).sub(Q.of(y0 + v0)),
+              Y.mul(Q.of(s0)).sub(Q.of(y0)),
+            ].filter((v) => !v.eq(ans)),
+            solution: t(
+              `$\\mathcal{L}\\{y''\\}(${s0}) = ${s0}^{2} \\cdot ${Y.toLatex()} - ${s0} \\cdot ${y0 < 0 ? `(${y0})` : y0} - ${v0 < 0 ? `(${v0})` : v0} = ${ans.toLatex()}$.`,
+              `$\\mathcal{L}\\{y''\\}(${s0}) = ${s0}^{2} \\cdot ${Y.toLatex()} - ${s0} \\cdot ${y0 < 0 ? `(${y0})` : y0} - ${v0 < 0 ? `(${v0})` : v0} = ${ans.toLatex()}$。`,
+            ),
           });
         },
       },
@@ -428,6 +634,33 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "the-transform-of-an-accumulated-integral",
+        title: t("The transform of an accumulated integral", "累积积分的变换"),
+        explanation: t(
+          "Integration from $0$ to $t$ divides the transform by $s$: $\\mathcal{L}\\left\\{\\int_0^t f(\\tau)\\,d\\tau\\right\\} = \\frac{F(s)}{s}$. Combined with the shift rule for $\\tau e^{a\\tau}$,\n\n$$\\mathcal{L}\\left\\{\\int_0^t \\tau e^{a\\tau}\\,d\\tau\\right\\} = \\frac{1}{s(s - a)^{2}}.$$\n\nThis avoids integrating by parts before transforming.",
+          "从 $0$ 到 $t$ 的积分使变换除以 $s$：$\\mathcal{L}\\left\\{\\int_0^t f(\\tau)\\,d\\tau\\right\\} = \\frac{F(s)}{s}$。结合 $\\tau e^{a\\tau}$ 的平移法则，\n\n$$\\mathcal{L}\\left\\{\\int_0^t \\tau e^{a\\tau}\\,d\\tau\\right\\} = \\frac{1}{s(s - a)^{2}}.$$\n\n这样就不必在变换前先做分部积分。",
+        ),
+        generate(rng: Rng): Problem {
+          const a = rng.int(-4, 4) || 1;
+          const s0 = Math.max(a, 0) + rng.int(1, 4);
+          const c = rng.int(1, 9);
+          const ans = Q.of(c, s0 * (s0 - a) ** 2);
+          const ea = a === 1 ? "" : a === -1 ? "-" : `${a}`;
+          return numberProblem({
+            prompt: t(
+              `Find $\\mathcal{L}\\left\\{\\int_0^t ${c === 1 ? "" : c}\\tau e^{${ea}\\tau}\\,d\\tau\\right\\}$ at $s = ${s0}$.`,
+              `求 $\\mathcal{L}\\left\\{\\int_0^t ${c === 1 ? "" : c}\\tau e^{${ea}\\tau}\\,d\\tau\\right\\}$ 在 $s = ${s0}$ 处的值。`,
+            ),
+            answer: ans,
+            wrong: [Q.of(c, (s0 - a) ** 2), Q.of(c, s0 * (s0 - a)), Q.of(c, s0 * s0 * (s0 - a) ** 2)].filter((v) => !v.eq(ans)),
+            solution: t(
+              `$\\mathcal{L}\\{${c === 1 ? "" : c}\\tau e^{${ea}\\tau}\\} = \\frac{${c}}{(s ${signed(-a)})^{2}}$; dividing by $s$ and setting $s = ${s0}$ gives $\\frac{${c}}{${s0} \\cdot ${(s0 - a) ** 2}} = ${ans.toLatex()}$.`,
+              `$\\mathcal{L}\\{${c === 1 ? "" : c}\\tau e^{${ea}\\tau}\\} = \\frac{${c}}{(s ${signed(-a)})^{2}}$；除以 $s$ 并令 $s = ${s0}$ 得 $\\frac{${c}}{${s0} \\cdot ${(s0 - a) ** 2}} = ${ans.toLatex()}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -482,6 +715,36 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "inverting-by-completing-the-square",
+        title: t("Inverting by completing the square", "配方后求逆变换"),
+        explanation: t(
+          "When the denominator $s^{2} + ps + q$ has no real roots, complete the square: $s^{2} + ps + q = (s - a)^{2} + b^{2}$ with $a = -\\frac{p}{2}$ and $b^{2} = q - a^{2}$. The first shifting theorem then gives\n\n$$\\mathcal{L}^{-1}\\left\\{\\frac{c}{(s - a)^{2} + b^{2}}\\right\\} = \\frac{c}{b}e^{at}\\sin bt.$$\n\nThe factor $\\frac{1}{b}$ is needed because $\\mathcal{L}\\{\\sin bt\\} = \\frac{b}{s^{2} + b^{2}}$ carries $b$ in its numerator.",
+          "当分母 $s^{2} + ps + q$ 没有实根时，先配方：$s^{2} + ps + q = (s - a)^{2} + b^{2}$，其中 $a = -\\frac{p}{2}$，$b^{2} = q - a^{2}$。第一平移定理给出\n\n$$\\mathcal{L}^{-1}\\left\\{\\frac{c}{(s - a)^{2} + b^{2}}\\right\\} = \\frac{c}{b}e^{at}\\sin bt.$$\n\n需要因子 $\\frac{1}{b}$，因为 $\\mathcal{L}\\{\\sin bt\\} = \\frac{b}{s^{2} + b^{2}}$ 的分子中带有 $b$。",
+        ),
+        generate(rng: Rng): Problem {
+          const a = rng.int(-4, 4) || -1;
+          const b = rng.int(1, 5);
+          const c = rng.int(1, 12);
+          const p = -2 * a;
+          const q = a * a + b * b;
+          const ans = Q.of(c, b);
+          const ea = a === 1 ? "" : a === -1 ? "-" : `${a}`;
+          const bt = b === 1 ? "t" : `${b}t`;
+          return numberProblem({
+            prompt: t(
+              `$\\mathcal{L}^{-1}\\left\\{\\frac{${c}}{s^{2} ${signed(p)}s + ${q}}\\right\\} = Ke^{${ea}t}\\sin ${bt}$. Find $K$.`,
+              `$\\mathcal{L}^{-1}\\left\\{\\frac{${c}}{s^{2} ${signed(p)}s + ${q}}\\right\\} = Ke^{${ea}t}\\sin ${bt}$。求 $K$。`,
+            ),
+            answer: ans,
+            wrong: [Q.of(c), Q.of(c, b * b), Q.of(c * b)].filter((v) => !v.eq(ans)),
+            solution: t(
+              `$s^{2} ${signed(p)}s + ${q} = (s ${signed(-a)})^{2} + ${b}^{2}$, so the inverse is $\\frac{${c}}{${b}}e^{${ea}t}\\sin ${bt}$ and $K = ${ans.toLatex()}$.`,
+              `$s^{2} ${signed(p)}s + ${q} = (s ${signed(-a)})^{2} + ${b}^{2}$，所以逆变换为 $\\frac{${c}}{${b}}e^{${ea}t}\\sin ${bt}$，$K = ${ans.toLatex()}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -533,6 +796,32 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
             solution,
             answer: ans,
             wrong: [c * k, c, 2 * k, ans + 1, ans - 1],
+          });
+        },
+      },
+      {
+        id: "evaluating-a-delayed-inverse-transform",
+        title: t("Evaluating a delayed inverse transform", "求延迟逆变换的值"),
+        explanation: t(
+          "The factor $e^{-cs}$ delays a function by $c$: $\\mathcal{L}^{-1}\\{e^{-cs}F(s)\\} = f(t - c)u(t - c)$. So\n\n$$\\mathcal{L}^{-1}\\left\\{\\frac{ke^{-cs}}{s^{2}}\\right\\} = k(t - c)u(t - c),$$\n\nwhich is $0$ before $t = c$ and a ramp starting from $0$ afterwards. Forgetting to replace $t$ by $t - c$ gives $kt$ instead.",
+          "因子 $e^{-cs}$ 使函数延迟 $c$：$\\mathcal{L}^{-1}\\{e^{-cs}F(s)\\} = f(t - c)u(t - c)$。所以\n\n$$\\mathcal{L}^{-1}\\left\\{\\frac{ke^{-cs}}{s^{2}}\\right\\} = k(t - c)u(t - c),$$\n\n它在 $t = c$ 之前为 $0$，之后是从 $0$ 开始的斜坡。忘记把 $t$ 换成 $t - c$ 会得到 $kt$。",
+        ),
+        generate(rng: Rng): Problem {
+          const k = rng.int(1, 9);
+          const c = rng.int(1, 6);
+          const t1 = rng.bool(0.8) ? c + rng.int(1, 6) : rng.int(0, c - 1);
+          const ans = t1 >= c ? k * (t1 - c) : 0;
+          return numberProblem({
+            prompt: t(
+              `Let $f(t) = \\mathcal{L}^{-1}\\left\\{\\frac{${k}e^{-${c === 1 ? "" : c}s}}{s^{2}}\\right\\}$. Find $f(${t1})$.`,
+              `设 $f(t) = \\mathcal{L}^{-1}\\left\\{\\frac{${k}e^{-${c === 1 ? "" : c}s}}{s^{2}}\\right\\}$。求 $f(${t1})$。`,
+            ),
+            answer: ans,
+            wrong: [k * t1, k * (t1 + c), k * Math.abs(t1 - c)].filter((w) => w !== ans),
+            solution: t(
+              `$f(t) = ${k}(t - ${c})u(t - ${c})$. ${t1 >= c ? `At $t = ${t1} \\ge ${c}$: $f = ${k} \\cdot ${t1 - c} = ${ans}$.` : `At $t = ${t1} < ${c}$ the step is still off, so $f = 0$.`}`,
+              `$f(t) = ${k}(t - ${c})u(t - ${c})$。${t1 >= c ? `在 $t = ${t1} \\ge ${c}$ 处：$f = ${k} \\cdot ${t1 - c} = ${ans}$。` : `在 $t = ${t1} < ${c}$ 处阶跃尚未接通，所以 $f = 0$。`}`,
+            ),
           });
         },
       },
@@ -594,6 +883,36 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "a-partial-fraction-coefficient-by-the-cover-up-rule",
+        title: t("A partial-fraction coefficient by the cover-up rule", "用遮盖法求部分分式系数"),
+        explanation: t(
+          "For $F(s) = \\frac{\\alpha s + \\beta}{(s - p)(s - q)} = \\frac{A}{s - p} + \\frac{B}{s - q}$, cover up the factor $(s - p)$ and set $s = p$ in what remains:\n\n$$A = \\frac{\\alpha p + \\beta}{p - q}.$$\n\nThen $f(t) = Ae^{pt} + Be^{qt}$, so $A$ is the coefficient of $e^{pt}$ in the inverse transform.",
+          "对 $F(s) = \\frac{\\alpha s + \\beta}{(s - p)(s - q)} = \\frac{A}{s - p} + \\frac{B}{s - q}$，遮住因子 $(s - p)$，在剩余部分中令 $s = p$：\n\n$$A = \\frac{\\alpha p + \\beta}{p - q}.$$\n\n于是 $f(t) = Ae^{pt} + Be^{qt}$，所以 $A$ 是逆变换中 $e^{pt}$ 的系数。",
+        ),
+        generate(rng: Rng): Problem {
+          const p = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
+          let q = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
+          if (q === p) q = -p;
+          const al = rng.int(1, 9);
+          const be = rng.int(-9, 9) || 4;
+          const ans = Q.of(al * p + be, p - q);
+          const B = Q.of(al * q + be, q - p);
+          const fac = (r: number): string => (r === 0 ? "s" : `(s ${signed(-r)})`);
+          return numberProblem({
+            prompt: t(
+              `$\\mathcal{L}^{-1}\\left\\{\\frac{${al === 1 ? "" : al}s ${signed(be)}}{${fac(p)}${fac(q)}}\\right\\} = Ae^{${p}t} + Be^{${q}t}$. Find $A$.`,
+              `$\\mathcal{L}^{-1}\\left\\{\\frac{${al === 1 ? "" : al}s ${signed(be)}}{${fac(p)}${fac(q)}}\\right\\} = Ae^{${p}t} + Be^{${q}t}$。求 $A$。`,
+            ),
+            answer: ans,
+            wrong: [B, Q.of(al * p + be, q - p), Q.of(al * q + be, p - q)].filter((v) => !v.eq(ans)),
+            solution: t(
+              `Cover up $${fac(p)}$ and set $s = ${p}$: $A = \\frac{${al} \\cdot ${p < 0 ? `(${p})` : p} ${signed(be)}}{${p} - ${q < 0 ? `(${q})` : q}} = ${ans.toLatex()}$.`,
+              `遮住 $${fac(p)}$ 并令 $s = ${p}$：$A = \\frac{${al} \\cdot ${p < 0 ? `(${p})` : p} ${signed(be)}}{${p} - ${q < 0 ? `(${q})` : q}} = ${ans.toLatex()}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -645,6 +964,33 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
             solution,
             answer: ans,
             wrong: [K, a, ans * a, ans + a, ans - 1, ans + 1],
+          });
+        },
+      },
+      {
+        id: "the-transient-coefficient-from-partial-fractions",
+        title: t("The transient coefficient from partial fractions", "由部分分式求瞬态系数"),
+        explanation: t(
+          "Transforming $y' + ay = b$, $y(0) = y_0$ gives $(s + a)Y = y_0 + \\frac{b}{s}$, so\n\n$$Y(s) = \\frac{y_0}{s + a} + \\frac{b}{s(s + a)} = \\frac{b/a}{s} + \\frac{y_0 - b/a}{s + a}.$$\n\nInverting, $y(t) = \\frac{b}{a} + \\left(y_0 - \\frac{b}{a}\\right)e^{-at}$: the coefficient of $e^{-at}$ is the initial value minus the steady state.",
+          "对 $y' + ay = b$，$y(0) = y_0$ 取变换得 $(s + a)Y = y_0 + \\frac{b}{s}$，所以\n\n$$Y(s) = \\frac{y_0}{s + a} + \\frac{b}{s(s + a)} = \\frac{b/a}{s} + \\frac{y_0 - b/a}{s + a}.$$\n\n取逆变换得 $y(t) = \\frac{b}{a} + \\left(y_0 - \\frac{b}{a}\\right)e^{-at}$：$e^{-at}$ 的系数等于初值减去稳态值。",
+        ),
+        generate(rng: Rng): Problem {
+          const a = rng.int(1, 6);
+          const b = rng.int(1, 20);
+          const y0 = rng.int(-5, 10);
+          const ss = Q.of(b, a);
+          const ans = Q.of(y0).sub(ss);
+          return numberProblem({
+            prompt: t(
+              `Solve $y' + ${a === 1 ? "" : a}y = ${b}$, $y(0) = ${y0}$ with Laplace transforms. The solution has the form $y = C_1 + C_2e^{-${a === 1 ? "" : a}t}$. Find $C_2$.`,
+              `用拉普拉斯变换求解 $y' + ${a === 1 ? "" : a}y = ${b}$，$y(0) = ${y0}$。解的形式为 $y = C_1 + C_2e^{-${a === 1 ? "" : a}t}$。求 $C_2$。`,
+            ),
+            answer: ans,
+            wrong: [ss, Q.of(y0), ss.sub(Q.of(y0))].filter((v) => !v.eq(ans)),
+            solution: t(
+              `$Y = \\frac{${y0}}{s + ${a}} + \\frac{${b}}{s(s + ${a})}$, and $\\frac{${b}}{s(s + ${a})} = \\frac{${ss.toLatex()}}{s} - \\frac{${ss.toLatex()}}{s + ${a}}$. So $C_2 = ${y0} - ${ss.toLatex()} = ${ans.toLatex()}$.`,
+              `$Y = \\frac{${y0}}{s + ${a}} + \\frac{${b}}{s(s + ${a})}$，且 $\\frac{${b}}{s(s + ${a})} = \\frac{${ss.toLatex()}}{s} - \\frac{${ss.toLatex()}}{s + ${a}}$。所以 $C_2 = ${y0} - ${ss.toLatex()} = ${ans.toLatex()}$。`,
+            ),
           });
         },
       },
@@ -703,6 +1049,39 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "the-response-to-a-delayed-step-at-a-given-time",
+        title: t("The response to a delayed step at a given time", "延迟阶跃在给定时刻的响应"),
+        explanation: t(
+          "For $y' + ay = ku(t - c)$, $y(0) = 0$: $Y = \\frac{ke^{-cs}}{s(s + a)}$, and $\\frac{k}{s(s + a)}$ inverts to $\\frac{k}{a}\\left(1 - e^{-at}\\right)$. The factor $e^{-cs}$ delays this by $c$:\n\n$$y(t) = \\frac{k}{a}\\left(1 - e^{-a(t - c)}\\right)u(t - c).$$\n\nNothing happens before $t = c$; afterwards $y$ rises toward $\\frac{k}{a}$, reaching half of it at $t = c + \\frac{\\ln 2}{a}$.",
+          "对 $y' + ay = ku(t - c)$，$y(0) = 0$：$Y = \\frac{ke^{-cs}}{s(s + a)}$，而 $\\frac{k}{s(s + a)}$ 的逆变换为 $\\frac{k}{a}\\left(1 - e^{-at}\\right)$。因子 $e^{-cs}$ 使其延迟 $c$：\n\n$$y(t) = \\frac{k}{a}\\left(1 - e^{-a(t - c)}\\right)u(t - c).$$\n\n在 $t = c$ 之前什么也不发生；之后 $y$ 向 $\\frac{k}{a}$ 上升，在 $t = c + \\frac{\\ln 2}{a}$ 时达到它的一半。",
+        ),
+        generate(rng: Rng): Problem {
+          const a = rng.int(1, 6);
+          const k = rng.int(2, 30);
+          const c = rng.int(1, 6);
+          const m = rng.pick([2, 4]);
+          const ans = Q.of(k * (m - 1), a * m);
+          return numberProblem({
+            prompt: t(
+              `$y' + ${a === 1 ? "" : a}y = ${k}u(t - ${c})$ with $y(0) = 0$. Find $y\\left(${c} + \\frac{\\ln ${m}}{${a}}\\right)$.`,
+              `$y' + ${a === 1 ? "" : a}y = ${k}u(t - ${c})$，$y(0) = 0$。求 $y\\left(${c} + \\frac{\\ln ${m}}{${a}}\\right)$。`,
+            ),
+            answer: ans,
+            wrong: [Q.of(k, a), Q.of(k, a * m), Q.of(k * (m - 1), m)].filter((v) => !v.eq(ans)),
+            solution: t(
+              steps(
+                `$y(t) = \\frac{${k}}{${a}}\\left(1 - e^{-${a}(t - ${c})}\\right)u(t - ${c})$.`,
+                `At $t = ${c} + \\frac{\\ln ${m}}{${a}}$, $e^{-${a}(t - ${c})} = \\frac{1}{${m}}$, so $y = \\frac{${k}}{${a}} \\cdot \\frac{${m - 1}}{${m}} = ${ans.toLatex()}$.`,
+              ),
+              steps(
+                `$y(t) = \\frac{${k}}{${a}}\\left(1 - e^{-${a}(t - ${c})}\\right)u(t - ${c})$。`,
+                `当 $t = ${c} + \\frac{\\ln ${m}}{${a}}$ 时 $e^{-${a}(t - ${c})} = \\frac{1}{${m}}$，所以 $y = \\frac{${k}}{${a}} \\cdot \\frac{${m - 1}}{${m}} = ${ans.toLatex()}$。`,
+              ),
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -755,6 +1134,33 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
             solution,
             answer: ans,
             wrong: [v0, omega, omegaSq, ans * omega, ans - 1, ans + 1],
+          });
+        },
+      },
+      {
+        id: "a-coefficient-of-an-overdamped-solution",
+        title: t("A coefficient of an overdamped solution", "过阻尼解的系数"),
+        explanation: t(
+          "For $y'' + (p + q)y' + pqy = 0$, transforming gives\n\n$$Y(s) = \\frac{y_0s + v_0 + (p + q)y_0}{(s + p)(s + q)}, \\qquad y_0 = y(0),\\ v_0 = y'(0).$$\n\nThe cover-up rule at $s = -p$ gives the coefficient of $e^{-pt}$: $A = \\frac{qy_0 + v_0}{q - p}$. Note the $(p + q)y_0$ term in the numerator, which comes from transforming $y'$.",
+          "对 $y'' + (p + q)y' + pqy = 0$ 取变换得\n\n$$Y(s) = \\frac{y_0s + v_0 + (p + q)y_0}{(s + p)(s + q)}, \\qquad y_0 = y(0),\\ v_0 = y'(0).$$\n\n在 $s = -p$ 处用遮盖法得 $e^{-pt}$ 的系数：$A = \\frac{qy_0 + v_0}{q - p}$。注意分子中的 $(p + q)y_0$ 项，它来自对 $y'$ 的变换。",
+        ),
+        generate(rng: Rng): Problem {
+          const p = rng.int(1, 4);
+          const q = p + rng.int(1, 4);
+          const y0 = rng.int(-4, 6);
+          const v0 = rng.int(-6, 6);
+          const ans = Q.of(q * y0 + v0, q - p);
+          return numberProblem({
+            prompt: t(
+              `Solve $y'' + ${p + q}y' + ${p * q}y = 0$, $y(0) = ${y0}$, $y'(0) = ${v0}$ with Laplace transforms. Writing $y = Ae^{-${p === 1 ? "" : p}t} + Be^{-${q}t}$, find $A$.`,
+              `用拉普拉斯变换求解 $y'' + ${p + q}y' + ${p * q}y = 0$，$y(0) = ${y0}$，$y'(0) = ${v0}$。写成 $y = Ae^{-${p === 1 ? "" : p}t} + Be^{-${q}t}$，求 $A$。`,
+            ),
+            answer: ans,
+            wrong: [Q.of(v0 - p * y0, q - p), Q.of(q * y0 + v0, p - q), Q.of(p * y0 + v0, q - p)].filter((v) => !v.eq(ans)),
+            solution: t(
+              `$Y = \\frac{${y0}s ${signed(v0 + (p + q) * y0)}}{(s + ${p})(s + ${q})}$. Cover up $(s + ${p})$ and set $s = -${p}$: $A = \\frac{${-p * y0 + v0 + (p + q) * y0}}{${q - p}}${lowestTerms(q * y0 + v0, q - p)}$.`,
+              `$Y = \\frac{${y0}s ${signed(v0 + (p + q) * y0)}}{(s + ${p})(s + ${q})}$。遮住 $(s + ${p})$ 并令 $s = -${p}$：$A = \\frac{${-p * y0 + v0 + (p + q) * y0}}{${q - p}}${lowestTerms(q * y0 + v0, q - p)}$。`,
+            ),
           });
         },
       },
@@ -817,6 +1223,36 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "the-position-of-an-oscillator-after-a-delayed-step",
+        title: t("The position of an oscillator after a delayed step", "延迟阶跃后振子的位置"),
+        explanation: t(
+          "For $y'' + \\omega^{2}y = ku(t - c)$ starting at rest, $Y = \\frac{ke^{-cs}}{s(s^{2} + \\omega^{2})}$ and $\\frac{1}{s(s^{2} + \\omega^{2})} = \\frac{1}{\\omega^{2}}\\left(\\frac{1}{s} - \\frac{s}{s^{2} + \\omega^{2}}\\right)$, so\n\n$$y(t) = \\frac{k}{\\omega^{2}}\\left(1 - \\cos\\omega(t - c)\\right)u(t - c).$$\n\nThe oscillator swings between $0$ and $\\frac{2k}{\\omega^{2}}$, reaching the top half a period after the step.",
+          "对从静止开始的 $y'' + \\omega^{2}y = ku(t - c)$，$Y = \\frac{ke^{-cs}}{s(s^{2} + \\omega^{2})}$，且 $\\frac{1}{s(s^{2} + \\omega^{2})} = \\frac{1}{\\omega^{2}}\\left(\\frac{1}{s} - \\frac{s}{s^{2} + \\omega^{2}}\\right)$，所以\n\n$$y(t) = \\frac{k}{\\omega^{2}}\\left(1 - \\cos\\omega(t - c)\\right)u(t - c).$$\n\n振子在 $0$ 与 $\\frac{2k}{\\omega^{2}}$ 之间摆动，在阶跃后半个周期到达最高点。",
+        ),
+        generate(rng: Rng): Problem {
+          const w = rng.int(1, 5);
+          const k = rng.int(1, 12) * w;
+          const c = rng.int(1, 5);
+          const m = rng.pick([1, 2, 3, 1, 3]);
+          const cosv = m % 2 === 1 ? -1 : 1;
+          const ans = Q.of(k * (1 - cosv), w * w);
+          const tw = w === 1 ? "\\pi" : `\\frac{${m === 1 ? "" : m}\\pi}{${w}}`;
+          const tt = w === 1 ? `${c} + ${m === 1 ? "" : m}\\pi` : `${c} + ${tw}`;
+          return numberProblem({
+            prompt: t(
+              `$y'' + ${w * w === 1 ? "" : w * w}y = ${k}u(t - ${c})$ with $y(0) = y'(0) = 0$. Find $y(${tt})$.`,
+              `$y'' + ${w * w === 1 ? "" : w * w}y = ${k}u(t - ${c})$，$y(0) = y'(0) = 0$。求 $y(${tt})$。`,
+            ),
+            answer: ans,
+            wrong: [Q.of(k, w * w), Q.of(k * (1 + cosv), w * w), Q.of(2 * k, w)].filter((v) => !v.eq(ans)),
+            solution: t(
+              `$y(t) = \\frac{${k}}{${w * w}}\\left(1 - \\cos ${w === 1 ? "" : w}(t - ${c})\\right)$ for $t \\ge ${c}$. Here $${w === 1 ? "" : w}(t - ${c}) = ${m === 1 ? "" : m}\\pi$, whose cosine is $${cosv}$, so $y = ${ans.toLatex()}$.`,
+              `当 $t \\ge ${c}$ 时 $y(t) = \\frac{${k}}{${w * w}}\\left(1 - \\cos ${w === 1 ? "" : w}(t - ${c})\\right)$。此处 $${w === 1 ? "" : w}(t - ${c}) = ${m === 1 ? "" : m}\\pi$，其余弦为 $${cosv}$，所以 $y = ${ans.toLatex()}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -872,6 +1308,46 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "solving-a-triangular-system-in-the-s-domain",
+        title: t("Solving a triangular system in the $s$-domain", "在 $s$ 域中求解三角方程组"),
+        explanation: t(
+          "For $x_1' = ax_1 + bx_2$, $x_2' = dx_2$, transforming turns the system into algebra. Solve the second equation first, then substitute:\n\n$$X_2 = \\frac{x_2(0)}{s - d}, \\qquad X_1 = \\frac{x_1(0) + bX_2}{s - a}.$$\n\nThe coupling term $bX_2$ is the only way $x_2$ influences $x_1$; leaving it out treats the equations as independent.",
+          "对 $x_1' = ax_1 + bx_2$，$x_2' = dx_2$，取变换后方程组变为代数方程。先解第二个方程，再代入：\n\n$$X_2 = \\frac{x_2(0)}{s - d}, \\qquad X_1 = \\frac{x_1(0) + bX_2}{s - a}.$$\n\n耦合项 $bX_2$ 是 $x_2$ 影响 $x_1$ 的唯一途径；省略它就把两个方程当成了独立的。",
+        ),
+        generate(rng: Rng): Problem {
+          const a = rng.pick([-3, -2, -1, 1, 2, 3]);
+          let d = rng.pick([-3, -2, -1, 1, 2, 3]);
+          if (d === a) d = -a;
+          const co = (n: number): string => (n === 1 ? "" : n === -1 ? "-" : `${n}`);
+          const b = rng.int(-4, 5) || 2;
+          const x1 = rng.int(-3, 5);
+          const x2 = rng.int(1, 5);
+          const s0 = Math.max(a, d) + rng.int(1, 3);
+          const X2 = Q.of(x2, s0 - d);
+          const ans = Q.of(x1)
+            .add(Q.of(b).mul(X2))
+            .div(Q.of(s0 - a));
+          return numberProblem({
+            prompt: t(
+              `For $x_1' = ${co(a)}x_1 ${signed(b).replace(/ 1$/, " ")}x_2$, $x_2' = ${co(d)}x_2$ with $x_1(0) = ${x1}$, $x_2(0) = ${x2}$, find $X_1(${s0})$, where $X_1 = \\mathcal{L}\\{x_1\\}$.`,
+              `对 $x_1' = ${co(a)}x_1 ${signed(b).replace(/ 1$/, " ")}x_2$，$x_2' = ${co(d)}x_2$，$x_1(0) = ${x1}$，$x_2(0) = ${x2}$，求 $X_1(${s0})$，其中 $X_1 = \\mathcal{L}\\{x_1\\}$。`,
+            ),
+            answer: ans,
+            wrong: [
+              Q.of(x1, s0 - a),
+              X2,
+              Q.of(x1)
+                .add(Q.of(b * x2))
+                .div(Q.of(s0 - a)),
+            ].filter((v) => !v.eq(ans)),
+            solution: t(
+              `$X_2(${s0}) = \\frac{${x2}}{${s0} - ${d < 0 ? `(${d})` : d}} = ${X2.toLatex()}$, and $X_1(${s0}) = \\frac{${x1} + ${b < 0 ? `(${b})` : b} \\cdot ${X2.toLatex()}}{${s0 - a}} = ${ans.toLatex()}$.`,
+              `$X_2(${s0}) = \\frac{${x2}}{${s0} - ${d < 0 ? `(${d})` : d}} = ${X2.toLatex()}$，$X_1(${s0}) = \\frac{${x1} + ${b < 0 ? `(${b})` : b} \\cdot ${X2.toLatex()}}{${s0 - a}} = ${ans.toLatex()}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -923,6 +1399,32 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
             solution,
             answer: ans,
             wrong: [c1, a, ans * a, ans + a, ans - 1, ans + 1],
+          });
+        },
+      },
+      {
+        id: "the-long-run-value-of-a-cascade-by-the-final-value-theorem",
+        title: t("The long-run value of a cascade by the final value theorem", "用终值定理求级联系统的长期值"),
+        explanation: t(
+          "For the cascade $x_2' = -bx_2 + k$, $x_1' = -ax_1 + x_2$ starting at $0$, the transforms are\n\n$$X_2 = \\frac{k}{s(s + b)}, \\qquad X_1 = \\frac{X_2}{s + a} = \\frac{k}{s(s + a)(s + b)}.$$\n\nWhen the limit exists, the final value theorem gives $\\lim_{t \\to \\infty}x(t) = \\lim_{s \\to 0}sX(s)$, so $x_1 \\to \\frac{k}{ab}$ without inverting the transform.",
+          "对从 $0$ 出发的级联系统 $x_2' = -bx_2 + k$，$x_1' = -ax_1 + x_2$，变换为\n\n$$X_2 = \\frac{k}{s(s + b)}, \\qquad X_1 = \\frac{X_2}{s + a} = \\frac{k}{s(s + a)(s + b)}.$$\n\n当极限存在时，终值定理给出 $\\lim_{t \\to \\infty}x(t) = \\lim_{s \\to 0}sX(s)$，所以无需求逆变换即得 $x_1 \\to \\frac{k}{ab}$。",
+        ),
+        generate(rng: Rng): Problem {
+          const a = rng.int(1, 6);
+          const b = rng.int(1, 6);
+          const k = rng.int(2, 40);
+          const ans = Q.of(k, a * b);
+          return numberProblem({
+            prompt: t(
+              `$x_1' = -${a === 1 ? "" : a}x_1 + x_2$ and $x_2' = -${b === 1 ? "" : b}x_2 + ${k}$, with $x_1(0) = x_2(0) = 0$. Use the final value theorem to find $\\lim_{t \\to \\infty}x_1(t)$.`,
+              `$x_1' = -${a === 1 ? "" : a}x_1 + x_2$，$x_2' = -${b === 1 ? "" : b}x_2 + ${k}$，$x_1(0) = x_2(0) = 0$。用终值定理求 $\\lim_{t \\to \\infty}x_1(t)$。`,
+            ),
+            answer: ans,
+            wrong: [Q.of(k, b), Q.of(k, a), Q.of(k, a + b)].filter((v) => !v.eq(ans)),
+            solution: t(
+              `$X_1 = \\frac{${k}}{s(s + ${a})(s + ${b})}$, so $\\lim_{s \\to 0}sX_1 = \\frac{${k}}{${a} \\cdot ${b}} = ${ans.toLatex()}$.`,
+              `$X_1 = \\frac{${k}}{s(s + ${a})(s + ${b})}$，所以 $\\lim_{s \\to 0}sX_1 = \\frac{${k}}{${a} \\cdot ${b}} = ${ans.toLatex()}$。`,
+            ),
           });
         },
       },
