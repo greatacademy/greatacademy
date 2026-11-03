@@ -12,7 +12,7 @@ const side = (a: number) => poly([a, "x"]);
 
 export const oneStepEquationsAddition: TopicDef = {
   id: "one-step-equations-addition",
-  title: t("One-Step Equations: Addition and Subtraction", "一步方程：加减"),
+  title: t("Solving One-Step Addition and Subtraction Equations", "解一步加减法方程"),
   summary: t("Solve $x + a = b$ by doing the same to both sides.", "通过在两边做相同的运算解 $x + a = b$。"),
   prerequisites: ["evaluating-expressions"],
   encompasses: [{ topic: "subtracting-integers", weight: 0.5 }],
@@ -77,7 +77,7 @@ export const oneStepEquationsAddition: TopicDef = {
 
 export const oneStepEquationsMultiplication: TopicDef = {
   id: "one-step-equations-multiplication",
-  title: t("One-Step Equations: Multiplication and Division", "一步方程：乘除"),
+  title: t("Solving One-Step Multiplication and Division Equations", "解一步乘除法方程"),
   summary: t("Solve $ax = b$ and $\\frac{x}{a} = b$.", "解 $ax = b$ 与 $\\frac{x}{a} = b$。"),
   prerequisites: ["one-step-equations-addition"],
   encompasses: [
@@ -144,7 +144,7 @@ export const oneStepEquationsMultiplication: TopicDef = {
 
 export const twoStepEquations: TopicDef = {
   id: "two-step-equations",
-  title: t("Two-Step Equations", "两步方程"),
+  title: t("Solving Two-Step Equations", "解两步方程"),
   summary: t("Solve $ax + b = c$.", "解 $ax + b = c$。"),
   prerequisites: ["one-step-equations-multiplication"],
   encompasses: [
@@ -227,7 +227,7 @@ export const twoStepEquations: TopicDef = {
 
 export const equationsWithVariablesOnBothSides: TopicDef = {
   id: "equations-with-variables-on-both-sides",
-  title: t("Equations with Variables on Both Sides", "两边都有变量的方程"),
+  title: t("Solving Linear Equations With Variables on Both Sides", "解两边都有未知数的一次方程"),
   summary: t(
     "Solve $ax + b = cx + d$, and recognize equations with no solution or infinitely many.",
     "解 $ax + b = cx + d$，识别无解和有无穷多解的方程。",

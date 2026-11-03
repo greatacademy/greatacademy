@@ -673,7 +673,7 @@ export const thePowerRuleForExponents = topic(
 /** thePowerOfProductRuleForExponents raises a product to a power factor by factor. */
 export const thePowerOfProductRuleForExponents = topic(
   "the-power-of-product-rule-for-exponents",
-  t("The Power-of-a-Product Rule for Exponents", "积的乘方"),
+  t("The Power of Product Rule for Exponents", "积的乘方法则"),
   t(
     "A power of a product is the product of the powers of its factors: (ab)ⁿ = aⁿbⁿ. Every factor inside the parentheses is raised to the power, including the coefficient and its sign: (−2x³)² = 4x⁶.",
     "积的乘方等于各因数乘方的积：(ab)ⁿ = aⁿbⁿ。括号里的每个因数都要乘方，包括系数和它的符号：(−2x³)² = 4x⁶。",
@@ -774,7 +774,7 @@ export const thePowerOfProductRuleForExponents = topic(
 /** thePowerOfQuotientRuleForExponents raises a quotient to a power, numerator and denominator alike. */
 export const thePowerOfQuotientRuleForExponents = topic(
   "the-power-of-quotient-rule-for-exponents",
-  t("The Power-of-a-Quotient Rule for Exponents", "商的乘方"),
+  t("The Power of Quotient Rule for Exponents", "商的乘方法则"),
   t(
     "A power of a quotient is the quotient of the powers: (a/b)ⁿ = aⁿ/bⁿ. Both the numerator and the denominator are raised to the power. A negative exponent flips the fraction first: (a/b)⁻ⁿ = (b/a)ⁿ.",
     "商的乘方等于分子、分母分别乘方的商：(a/b)ⁿ = aⁿ/bⁿ。分子和分母都要乘方。负整数指数先把分数颠倒：(a/b)⁻ⁿ = (b/a)ⁿ。",

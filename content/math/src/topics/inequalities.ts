@@ -11,7 +11,7 @@ const holds = (l: number, op: InequalityOp, r: number) => ({ "<": l < r, "<=": l
 
 export const inequalitiesAndSolutions: TopicDef = {
   id: "inequalities-and-solutions",
-  title: t("Inequalities and Their Solutions", "不等式及其解"),
+  title: t("Inequalities", "不等式"),
   summary: t("Read and write inequalities, and check whether a number is a solution.", "读写不等式，判断一个数是否是不等式的解。"),
   prerequisites: ["evaluating-expressions"],
   encompasses: [{ topic: "integers-and-opposites", weight: 0.3 }],
@@ -91,7 +91,7 @@ export const inequalitiesAndSolutions: TopicDef = {
 
 export const solvingOneStepInequalities: TopicDef = {
   id: "solving-one-step-inequalities",
-  title: t("Solving One-Step Inequalities", "解一步不等式"),
+  title: t("Solving One-Step Linear Inequalities", "解一步一次不等式"),
   summary: t(
     "Solve inequalities in one step, reversing the symbol when multiplying or dividing by a negative number.",
     "一步解不等式；乘或除以负数时改变不等号方向。",
@@ -195,7 +195,7 @@ export const solvingOneStepInequalities: TopicDef = {
 
 export const solvingMultiStepInequalities: TopicDef = {
   id: "solving-multi-step-inequalities",
-  title: t("Solving Multi-Step Inequalities", "解多步不等式"),
+  title: t("Solving Two-Step Inequalities", "解两步不等式"),
   summary: t("Solve linear inequalities with several steps and variables on both sides.", "解需要多步、两边都有变量的一元一次不等式。"),
   prerequisites: ["solving-one-step-inequalities", "equations-with-variables-on-both-sides"],
   encompasses: [

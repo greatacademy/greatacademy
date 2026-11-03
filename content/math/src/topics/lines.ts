@@ -340,7 +340,7 @@ const slopeKinds: readonly Text[] = [t("Positive", "正数"), t("Negative", "负
 
 export const slopeOfALine: TopicDef = {
   id: "slope-of-a-line",
-  title: t("Slope of a Line", "直线的斜率"),
+  title: t("Calculating Slopes of Straight Lines", "计算直线的斜率"),
   summary: t("Find the slope of a line from its graph or from two of its points.", "由图像或直线上的两点求直线的斜率。"),
   prerequisites: ["the-coordinate-plane", "operations-with-rational-numbers"],
   encompasses: [
@@ -1386,7 +1386,7 @@ const smallSlopes: readonly Q[] = [-3, -2, -1, 1, 2, 3].map((n) => Q.of(n)).conc
 
 export const systemsOfLinearEquations: TopicDef = {
   id: "systems-of-linear-equations",
-  title: t("Systems of Linear Equations", "二元一次方程组"),
+  title: t("Introduction to Systems of Linear Equations", "线性方程组简介"),
   summary: t(
     "Check solutions of a system of two linear equations, and solve a system from its graph.",
     "检验二元一次方程组的解，并由图像求解方程组。",
@@ -2205,7 +2205,7 @@ export const consistencyAndDependency: TopicDef = {
 
 export const solvingSystemsBySubstitution: TopicDef = {
   id: "solving-systems-by-substitution",
-  title: t("Solving Systems by Substitution", "代入消元法"),
+  title: t("Solving Systems of Equations by Substitution", "用代入法解方程组"),
   summary: t(
     "Solve a system by substituting an expression for one variable into the other equation.",
     "把表示一个变量的式子代入另一个方程来解方程组。",

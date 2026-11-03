@@ -48,7 +48,7 @@ const angleKinds: readonly Text[] = [t("Acute", "锐角"), t("Right", "直角"),
 
 export const anglesAndAngleMeasures: TopicDef = {
   id: "angles-and-angle-measures",
-  title: t("Angles and Angle Measures", "角与角的度量"),
+  title: t("Angles and Measures of Angles", "角与角的度量"),
   summary: t("Classify angles by their measures, and add and subtract adjacent angles.", "按度数给角分类，并对相邻的角做加减。"),
   prerequisites: [],
   encompasses: [],
@@ -722,7 +722,7 @@ const apex = proofTriangle[2];
 
 export const anglesOfATriangle: TopicDef = {
   id: "angles-of-a-triangle",
-  title: t("Angles of a Triangle", "三角形的内角"),
+  title: t("Interior Angles of Triangles", "三角形的内角"),
   summary: t("Use the fact that the angles of a triangle add up to 180° to find unknown angles.", "利用三角形内角和为 180° 求未知角。"),
   prerequisites: ["parallel-lines-and-transversals"],
   encompasses: [{ topic: "complementary-and-supplementary-angles", weight: 0.3 }],
@@ -1132,7 +1132,7 @@ export const classifyingTriangles: TopicDef = {
 
 export const isoscelesTriangles: TopicDef = {
   id: "isosceles-triangles",
-  title: t("Isosceles and Equilateral Triangles", "等腰三角形与等边三角形"),
+  title: t("The Isosceles Triangle Theorem", "等腰三角形定理"),
   summary: t(
     "Use equal base angles to find the angles of isosceles and equilateral triangles.",
     "利用底角相等求等腰三角形和等边三角形的角。",
@@ -1305,7 +1305,7 @@ function interiorAngle(points: readonly Point[], i: number): number {
 
 export const anglesOfPolygons: TopicDef = {
   id: "angles-of-polygons",
-  title: t("Angles of Polygons", "多边形的内角"),
+  title: t("Interior Angles of Polygons", "多边形的内角"),
   summary: t(
     "Find the angle sum of a polygon, the angles of regular polygons, and missing angles.",
     "求多边形的内角和、正多边形的角以及未知角。",

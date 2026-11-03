@@ -101,7 +101,7 @@ const triples = [
 
 export const perimeter: TopicDef = {
   id: "perimeter",
-  title: t("Perimeter", "周长"),
+  title: t("The Perimeter of a Polygon", "多边形的周长"),
   summary: t("Find the perimeter of polygons, and a missing side from the perimeter.", "求多边形的周长，以及由周长求未知边长。"),
   prerequisites: [],
   encompasses: [],
@@ -220,7 +220,7 @@ export const perimeter: TopicDef = {
 
 export const areaOfRectanglesAndSquares: TopicDef = {
   id: "area-of-rectangles-and-squares",
-  title: t("Area of Rectangles and Squares", "长方形与正方形的面积"),
+  title: t("Areas of Rectangles and Squares", "长方形和正方形的面积"),
   summary: t(
     "Find the area of rectangles and squares, and a missing side from the area.",
     "求长方形和正方形的面积，以及由面积求未知边长。",
@@ -348,7 +348,7 @@ function parallelogramFigure(
 
 export const areaOfParallelograms: TopicDef = {
   id: "area-of-parallelograms",
-  title: t("Area of Parallelograms", "平行四边形的面积"),
+  title: t("Areas of Parallelograms", "平行四边形的面积"),
   summary: t("Find the area of a parallelogram from its base and height.", "由底和高求平行四边形的面积。"),
   prerequisites: ["area-of-rectangles-and-squares"],
   encompasses: [{ topic: "area-of-rectangles-and-squares", weight: 0.5 }],
@@ -546,7 +546,7 @@ export const areaOfTriangles: TopicDef = {
 
 export const areaOfTrapezoids: TopicDef = {
   id: "area-of-trapezoids",
-  title: t("Area of Trapezoids", "梯形的面积"),
+  title: t("Areas of Trapezoids", "梯形的面积"),
   summary: t("Find the area of a trapezoid from its two bases and its height.", "由上下底和高求梯形的面积。"),
   prerequisites: ["area-of-triangles"],
   encompasses: [{ topic: "area-of-triangles", weight: 0.4 }],
@@ -620,7 +620,7 @@ const lShape = (w: number, h: number, cw: number, ch: number): Point[] => [
 
 export const compositeShapes: TopicDef = {
   id: "composite-shapes",
-  title: t("Composite Shapes", "组合图形"),
+  title: t("Areas and Perimeters of Composite Shapes", "组合图形的面积和周长"),
   summary: t("Find the area and perimeter of shapes made of rectangles and triangles.", "求由长方形和三角形组成的图形的面积和周长。"),
   prerequisites: ["area-of-triangles"],
   encompasses: [
