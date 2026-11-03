@@ -2318,6 +2318,32 @@ const scales: readonly (readonly [number, number])[] = [
   [4, 5],
 ];
 
+/** twoCirclesFigure shows circle A of radius 6 beside circle B of diameter 20, drawn to scale, with their radii marked. */
+const twoCirclesFigure: Figure = (() => {
+  const k = 0.3;
+  const cb: Point = [7, 0];
+  return {
+    svg: sketch([
+      circleAt(6 * k),
+      circleAt(10 * k, cb),
+      { kind: "segment", a: O, b: on(0, 6 * k), accent: true },
+      { kind: "segment", a: on(180, 10 * k, cb), b: on(0, 10 * k, cb), dashed: true },
+      { kind: "segment", a: cb, b: on(0, 10 * k, cb), accent: true },
+      { kind: "dot", at: O },
+      { kind: "dot", at: cb },
+      { kind: "label", at: [0.9, 0], text: "6", dir: "n" },
+      { kind: "label", at: [cb[0] + 1.5, 0], text: "10", dir: "n" },
+      { kind: "label", at: [cb[0] - 1.5, 0], text: "20", dir: "s" },
+      { kind: "label", at: on(135, 6 * k), text: "A", dir: "nw" },
+      { kind: "label", at: on(135, 10 * k, cb), text: "B", dir: "nw" },
+    ]),
+    alt: t(
+      "Circle A with radius 6 beside the larger circle B, whose dashed diameter is 20, so its radius is 10. The radii 6 and 10 are highlighted: the scale factor from A to B is 10/6 = 5/3.",
+      "半径为 6 的圆 A，旁边是较大的圆 B，它的虚线直径为 20，所以半径为 10。半径 6 和 10 被高亮：从 A 到 B 的比例因子是 10/6 = 5/3。",
+    ),
+  };
+})();
+
 /** ratioTex writes a/b in lowest terms in LaTeX: "\frac{5}{3}", "2". */
 const ratioTex = (a: number, b: number) => q(a, b).toLatex();
 
@@ -2344,6 +2370,7 @@ export const circleSimilarity: TopicDef = {
         "Any two circles are **similar**: one can be moved and dilated onto the other. A circle is determined by its radius, so the scale factor from circle $A$ to circle $B$ is the ratio of the radii, or of the diameters:\n\n$$k = \\frac{r_B}{r_A} = \\frac{d_B}{d_A}.$$\n\nFrom a circle of radius $6$ to a circle of diameter $20$ (radius $10$), the scale factor is $\\frac{10}{6} = \\frac{5}{3}$. Compare radius with radius: $\\frac{20}{6}$ would be wrong.",
         "任意两个圆都**相似**：一个圆经过移动和放缩可以与另一个重合。圆由半径决定，所以从圆 $A$ 到圆 $B$ 的比例因子是半径之比，也是直径之比：\n\n$$k = \\frac{r_B}{r_A} = \\frac{d_B}{d_A}.$$\n\n从半径为 $6$ 的圆到直径为 $20$（半径 $10$）的圆，比例因子是 $\\frac{10}{6} = \\frac{5}{3}$。要用半径比半径：$\\frac{20}{6}$ 是错的。",
       ),
+      figure: twoCirclesFigure,
       generate(rng) {
         const [a, b] = rng.pick(scales);
         const m = rng.int(1, 6);
