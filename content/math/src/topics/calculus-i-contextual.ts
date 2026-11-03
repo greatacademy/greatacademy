@@ -1,6 +1,6 @@
-import type { Problem, Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly, Q } from "@ga/subject-math";
+import { type Mark, type Point, poly, Q, sketch } from "@ga/subject-math";
 
 import { article, functionProblem, numberProblem } from "../problems.ts";
 import { lim, oneOf, type Poly, pAt, par, pDer, pLatex, rounded, table } from "./calculus-common.ts";
@@ -1005,6 +1005,59 @@ export const calculatingRelatedRatesUsingThePythagoreanTheorem: TopicDef = {
   ],
 };
 
+/** lamppostFigure shows a post of height H, a person of height h at distance x and the shadow s, the light's ray grazing the head. */
+const lamppostFigure: Figure = {
+  svg: sketch([
+    { kind: "segment", a: [-0.5, 0], b: [6, 0] },
+    { kind: "segment", a: [0, 0], b: [0, 5] },
+    { kind: "segment", a: [3, 0], b: [3, 2] },
+    { kind: "segment", a: [0, 5], b: [5, 0], dashed: true },
+    { kind: "right", vertex: [3, 0], from: [5, 0], to: [3, 2] },
+    { kind: "side", a: [0, 5], b: [0, 0], text: "H" },
+    { kind: "side", a: [3, 0], b: [3, 2], text: "h" },
+    { kind: "side", a: [0, 0], b: [3, 0], text: "x" },
+    { kind: "side", a: [3, 0], b: [5, 0], text: "s" },
+  ]),
+  alt: t(
+    "A lamppost of height H and a person of height h at distance x from it; the ray from the lamp over the person's head reaches the ground at the end of the shadow s, forming two similar right triangles.",
+    "高为 H 的路灯和离它 x 远、身高为 h 的人；从灯经过人头顶的光线落在影子 s 的末端，形成两个相似的直角三角形。",
+  ),
+};
+
+const coneRim = (y: number, r: number): Point[] =>
+  Array.from({ length: 48 }, (_, i) => [r * Math.cos((i * Math.PI) / 24), y + 0.25 * r * Math.sin((i * Math.PI) / 24)]);
+
+/** coneFigure shows an inverted cone of radius R and height H holding water of depth h and surface radius r. */
+const coneFigure: Figure = {
+  svg: sketch([
+    {
+      kind: "shade",
+      points: [
+        [0, 0],
+        [1.2, 3],
+        [-1.2, 3],
+      ],
+    },
+    { kind: "shade", points: coneRim(3, 1.2) },
+    { kind: "polygon", points: coneRim(5, 2) },
+    { kind: "polygon", points: coneRim(3, 1.2) },
+    { kind: "segment", a: [0, 0], b: [2, 5] },
+    { kind: "segment", a: [0, 0], b: [-2, 5] },
+    { kind: "segment", a: [0, 0], b: [0, 5], dashed: true },
+    { kind: "segment", a: [0, 5], b: [2, 5], dashed: true },
+    { kind: "segment", a: [0, 3], b: [1.2, 3], dashed: true },
+    { kind: "segment", a: [3, 0], b: [3, 5] },
+    { kind: "segment", a: [-3, 0], b: [-3, 3] },
+    { kind: "label", at: [1, 5], text: "R", dir: "s" },
+    { kind: "label", at: [0.6, 3], text: "r", dir: "s" },
+    { kind: "label", at: [3, 2.5], text: "H", dir: "e" },
+    { kind: "label", at: [-3, 1.5], text: "h", dir: "w" },
+  ] satisfies Mark[]),
+  alt: t(
+    "An inverted cone with top radius R and height H holds water of depth h whose surface has radius r; the water forms a smaller cone similar to the whole.",
+    "顶面半径为 R、高为 H 的倒立圆锥中盛有深度为 h 的水，水面半径为 r；水形成一个与整个圆锥相似的小圆锥。",
+  ),
+};
 /** calculatingRelatedRatesUsingSimilarTriangles relates rates through similar triangles. */
 export const calculatingRelatedRatesUsingSimilarTriangles: TopicDef = {
   id: "calculating-related-rates-using-similar-triangles",
@@ -1025,6 +1078,7 @@ export const calculatingRelatedRatesUsingSimilarTriangles: TopicDef = {
         "A person of height $h$ walks away from a lamppost of height $H$. With $x$ the distance from the post and $s$ the shadow's length, similar triangles give $\\frac{s}{h} = \\frac{x + s}{H}$, so $s = \\frac{h}{H - h}x$ and\n\n$$\\frac{ds}{dt} = \\frac{h}{H - h}\\frac{dx}{dt}.$$",
         "身高为 $h$ 的人从高为 $H$ 的路灯下走开。设人离灯柱的距离为 $x$，影长为 $s$，由相似三角形得 $\\frac{s}{h} = \\frac{x + s}{H}$，所以 $s = \\frac{h}{H - h}x$，\n\n$$\\frac{ds}{dt} = \\frac{h}{H - h}\\frac{dx}{dt}.$$",
       ),
+      figure: lamppostFigure,
       generate(rng) {
         const h = Q.of(rng.pick([15, 16, 18, 20]), 10);
         const H = h.add(Q.of(rng.int(2, 8) * 5, 10));
@@ -1053,6 +1107,7 @@ export const calculatingRelatedRatesUsingSimilarTriangles: TopicDef = {
         "The tip of the shadow is $x + s = \\frac{H}{H - h}x$ from the post, so it moves at $\\frac{H}{H - h}\\frac{dx}{dt}$, faster than the person walks.",
         "影子的顶端离灯柱 $x + s = \\frac{H}{H - h}x$，所以它移动的速度为 $\\frac{H}{H - h}\\frac{dx}{dt}$，比人走得快。",
       ),
+      figure: lamppostFigure,
       generate(rng) {
         const h = Q.of(rng.pick([15, 16, 18, 20]), 10);
         const H = h.add(Q.of(rng.int(2, 8) * 5, 10));
@@ -1175,6 +1230,7 @@ export const calculatingRelatedRatesWithCones: TopicDef = {
         "In an inverted cone of radius $R$ and height $H$, water of depth $h$ has surface radius $r = \\frac{R}{H}h$ by similar triangles, so $V = \\frac{1}{3}\\pi\\left(\\frac{R}{H}\\right)^{2}h^{3}$ and\n\n$$\\frac{dV}{dt} = \\pi\\left(\\frac{R}{H}\\right)^{2}h^{2}\\frac{dh}{dt}.$$\n\nEliminate $r$ before differentiating, since $h$ is the variable whose rate is wanted.",
         "在半径为 $R$、高为 $H$ 的倒立圆锥中，深度为 $h$ 的水面半径由相似三角形得 $r = \\frac{R}{H}h$，所以 $V = \\frac{1}{3}\\pi\\left(\\frac{R}{H}\\right)^{2}h^{3}$，\n\n$$\\frac{dV}{dt} = \\pi\\left(\\frac{R}{H}\\right)^{2}h^{2}\\frac{dh}{dt}.$$\n\n求导前先消去 $r$，因为要求的是 $h$ 的变化率。",
       ),
+      figure: coneFigure,
       generate(rng) {
         const [R, H] = rng.pick([
           [2, 4],
@@ -1212,6 +1268,7 @@ export const calculatingRelatedRatesWithCones: TopicDef = {
         "If the depth's rate is known, $\\frac{dV}{dt} = \\pi\\left(\\frac{R}{H}\\right)^{2}h^{2}\\frac{dh}{dt}$ gives the rate at which the volume changes. A falling level gives a negative rate.",
         "已知深度的变化率时，由 $\\frac{dV}{dt} = \\pi\\left(\\frac{R}{H}\\right)^{2}h^{2}\\frac{dh}{dt}$ 求体积的变化率。液面下降时变化率为负。",
       ),
+      figure: coneFigure,
       generate(rng) {
         const [R, H] = rng.pick([
           [2, 4],
