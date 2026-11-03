@@ -70,6 +70,7 @@ libs/design/          设计 token、文案（en、zh-CN），以及为 Web 和�
 libs/math-ui/         React 组件：数学渲染与数学输入
 content/math/         编写的数学内容：知识点、课程
 tools/simulate/       模拟学生，用于调参和检验引擎
+tools/audit/          内容审计：大纲覆盖和启发式质量检查
 tools/catalog/        参考目录（Math Academy 课程骨架），用于规划内容
 docs/                 文档（英文 + 简体中文）
 ```
@@ -84,6 +85,7 @@ apps/web ──► libs/api ──► libs/db ──► libs/engine ──► li
    └──► content/math
 apps/mobile ──► libs/proto, libs/design, libs/math-ui
 tools/simulate ──► libs/engine, content/math
+tools/audit ──► libs/content, content/math
 ```
 
 - `libs/content` 不依赖仓库内任何库，它定义所有学科都要实现的类型。

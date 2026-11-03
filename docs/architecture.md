@@ -70,6 +70,7 @@ libs/design/          Design tokens, strings (en, zh-CN) and their generated for
 libs/math-ui/         React components: math rendering and math input
 content/math/         Authored mathematics content: topics, courses
 tools/simulate/       Simulated students for tuning and checking the engine
+tools/audit/          Content audit: outline coverage and heuristic quality checks
 tools/catalog/        Reference catalogs (the Math Academy course skeleton) for planning content
 docs/                 Documents (English + Simplified Chinese)
 ```
@@ -84,6 +85,7 @@ apps/web ──► libs/api ──► libs/db ──► libs/engine ──► li
    └──► content/math
 apps/mobile ──► libs/proto, libs/design, libs/math-ui
 tools/simulate ──► libs/engine, content/math
+tools/audit ──► libs/content, content/math
 ```
 
 - `libs/content` depends on nothing in the repository. It defines the types every subject implements.

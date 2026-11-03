@@ -32,6 +32,7 @@ libs/design/         Design tokens and strings
 libs/math-ui/        Math rendering and input components
 content/math/        Mathematics content
 tools/simulate/      Simulated students
+tools/audit/         Content audit
 tools/catalog/       Reference course catalogs
 ```
 
