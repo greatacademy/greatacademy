@@ -108,6 +108,39 @@ export const simpleClosedAndOrientedCurves: TopicDef = {
         return pickChoice(rng, prompt, right, wrong, solution);
       },
     },
+    {
+      id: "the-orientation-of-a-parametrized-ellipse",
+      title: t("The orientation of a parametrized ellipse", "参数化椭圆的定向"),
+      explanation: t(
+        "A parametrization gives a closed curve an orientation, the direction of increasing $t$. To decide it, check where the curve is at $t = 0$ and where it moves just after. For $\\mathbf{r}(t) = (a\\cos t, b\\sin t)$ with $a, b > 0$ the point starts at $(a, 0)$ and moves up into the first quadrant, which is counterclockwise. Changing the sign of one coordinate, or swapping $\\cos$ and $\\sin$, reverses the direction.",
+        "参数化赋予闭曲线一个定向，即 $t$ 增大的方向。判断方法是看 $t = 0$ 时曲线在哪里以及随后向哪里移动。对 $\\mathbf{r}(t) = (a\\cos t, b\\sin t)$（$a, b > 0$），点从 $(a, 0)$ 出发向上进入第一象限，即逆时针。改变一个坐标的符号，或交换 $\\cos$ 与 $\\sin$，都会反转方向。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 7);
+        const b = rng.int(1, 7);
+        const kind = rng.int(0, 3);
+        const x = [`${a}\\cos t`, `${a}\\cos t`, `${a}\\sin t`, `-${a}\\sin t`][kind]!;
+        const y = [`${b}\\sin t`, `-${b}\\sin t`, `${b}\\cos t`, `${b}\\cos t`][kind]!;
+        const ccw = kind === 0 || kind === 3;
+        const start = [`(${a}, 0)`, `(${a}, 0)`, `(0, ${b})`, `(0, ${b})`][kind]!;
+        const next = [t("upward", "向上"), t("downward", "向下"), t("to the right", "向右"), t("to the left", "向左")][kind]!;
+        const cc = t("Counterclockwise", "逆时针");
+        const cw = t("Clockwise", "顺时针");
+        return pickChoice(
+          rng,
+          t(
+            `In which direction does $\\mathbf{r}(t) = (${x}, ${y})$, $0 \\le t \\le 2\\pi$, trace its ellipse?`,
+            `$\\mathbf{r}(t) = (${x}, ${y})$，$0 \\le t \\le 2\\pi$，沿哪个方向描出椭圆？`,
+          ),
+          ccw ? cc : cw,
+          [ccw ? cw : cc],
+          t(
+            `At $t = 0$ the point is $${start}$, and as $t$ increases it moves ${next.en}, so the orientation is ${ccw ? "counterclockwise" : "clockwise"}.`,
+            `$t = 0$ 时点在 $${start}$，随 $t$ 增大它${next["zh-CN"]}移动，所以定向为${ccw ? "逆时针" : "顺时针"}。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -168,6 +201,32 @@ export const lineIntegralsOfScalarFunctions: TopicDef = {
         });
       },
     },
+    {
+      id: "a-scalar-line-integral-of-xy-along-a-segment",
+      title: t("A scalar line integral of $cxy$ along a segment", "沿线段计算 $cxy$ 的标量线积分"),
+      explanation: t(
+        "A scalar line integral adds up the values of $f$ weighted by arc length, so the first step is always to express both $f$ and $ds$ in terms of one parameter. Parametrize the segment from $(0, 0)$ to $(x_1, y_1)$ by $\\mathbf{r}(t) = (x_1t, y_1t)$ for $0 \\le t \\le 1$. Then $ds = \\|\\mathbf{r}'(t)\\|\\,dt = L\\,dt$ with $L = \\sqrt{x_1^2 + y_1^2}$, and\n\n$$\\int_C c\\,xy\\,ds = \\int_0^1 c\\,x_1y_1t^2 \\cdot L\\,dt = \\frac{c\\,x_1y_1L}{3}.$$",
+        "标量线积分按弧长加权累加 $f$ 的值，所以第一步总是把 $f$ 和 $ds$ 都用同一个参数表示。把从 $(0, 0)$ 到 $(x_1, y_1)$ 的线段参数化为 $\\mathbf{r}(t) = (x_1t, y_1t)$，$0 \\le t \\le 1$。则 $ds = \\|\\mathbf{r}'(t)\\|\\,dt = L\\,dt$，$L = \\sqrt{x_1^2 + y_1^2}$，且\n\n$$\\int_C c\\,xy\\,ds = \\int_0^1 c\\,x_1y_1t^2 \\cdot L\\,dt = \\frac{c\\,x_1y_1L}{3}。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const [p, q, L] = rng.pick(pythagoreanTriples.slice(0, 5));
+        const [x1, y1] = rng.int(0, 1) === 0 ? [p, q] : [q, p];
+        const c = rng.int(1, 3);
+        const ans = Q.of(c * x1 * y1 * L, 3);
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\int_C ${c === 1 ? "" : c}xy\\,ds$ along the segment $C$ from $(0, 0)$ to $(${x1}, ${y1})$.`,
+            `沿从 $(0, 0)$ 到 $(${x1}, ${y1})$ 的线段 $C$ 计算 $\\int_C ${c === 1 ? "" : c}xy\\,ds$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(c * x1 * y1, 3), Q.of(c * x1 * y1 * L, 2), Q.of(c * x1 * y1 * L), Q.of(c * x1 * y1 * L * L, 3)],
+          solution: t(
+            `With $\\mathbf{r}(t) = (${x1}t, ${y1}t)$, $ds = ${L}\\,dt$, so $\\int_0^1 ${c * x1 * y1}t^2 \\cdot ${L}\\,dt = \\frac{${c * x1 * y1 * L}}{3}${ans.isInteger() ? ` = ${ans.toLatex()}` : ""}$.`,
+            `取 $\\mathbf{r}(t) = (${x1}t, ${y1}t)$，$ds = ${L}\\,dt$，所以 $\\int_0^1 ${c * x1 * y1}t^2 \\cdot ${L}\\,dt = \\frac{${c * x1 * y1 * L}}{3}${ans.isInteger() ? ` = ${ans.toLatex()}` : ""}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -214,6 +273,34 @@ export const propertiesOfLineIntegralsOfScalarFunctions: TopicDef = {
           solution,
           answer: ans,
           wrong: [-ans, val, ans + alpha],
+        });
+      },
+    },
+    {
+      id: "linearity-of-scalar-line-integrals",
+      title: t("Linearity of scalar line integrals", "标量线积分的线性性"),
+      explanation: t(
+        "Scalar line integrals are linear in the integrand: $\\int_C (\\alpha f + \\beta g)\\,ds = \\alpha\\int_C f\\,ds + \\beta\\int_C g\\,ds$. A constant term $k$ contributes $k\\int_C ds = kL$, where $L$ is the length of $C$. Unlike line integrals of vector fields, these do not change sign when the curve is reversed, because $ds$ is always positive.",
+        "标量线积分关于被积函数是线性的：$\\int_C (\\alpha f + \\beta g)\\,ds = \\alpha\\int_C f\\,ds + \\beta\\int_C g\\,ds$。常数项 $k$ 贡献 $k\\int_C ds = kL$，$L$ 为 $C$ 的长度。与向量场的线积分不同，曲线反向时它们不变号，因为 $ds$ 总是正的。",
+      ),
+      generate(rng: Rng): Problem {
+        const F = rng.nonZero(-9, 9);
+        const G = rng.nonZero(-9, 9);
+        const L = rng.int(2, 9);
+        const alpha = rng.pick([-3, -2, 2, 3, 4]);
+        const k = rng.nonZero(-3, 3);
+        const ans = alpha * F + k * L;
+        return numberProblem({
+          prompt: t(
+            `A curve $C$ has length $${L}$, $\\int_C f\\,ds = ${F}$ and $\\int_C g\\,ds = ${G}$. Find $\\int_{-C} (${poly([alpha, "f"], [k, ""])})\\,ds$.`,
+            `曲线 $C$ 长为 $${L}$，$\\int_C f\\,ds = ${F}$，$\\int_C g\\,ds = ${G}$。求 $\\int_{-C} (${poly([alpha, "f"], [k, ""])})\\,ds$。`,
+          ),
+          answer: ans,
+          wrong: [-ans, alpha * F + k, alpha * F + k * G, alpha * F],
+          solution: t(
+            `Reversing the curve does not change a scalar line integral, so the value is $${alpha} \\cdot ${paren(F)} + ${paren(k)} \\cdot ${L} = ${ans}$.`,
+            `曲线反向不改变标量线积分，所以值为 $${alpha} \\cdot ${paren(F)} + ${paren(k)} \\cdot ${L} = ${ans}$。`,
+          ),
         });
       },
     },
@@ -273,6 +360,32 @@ export const lineIntegralsOfScalarFunctionsOverPathsExpressedAsFunctionsOfX: Top
           solution,
           answer: ans,
           wrong: [ans * 2, ans - c, ans + c],
+        });
+      },
+    },
+    {
+      id: "integrating-x-squared-along-a-line-through-the-origin",
+      title: t("Integrating $kx^2$ along a line $y = mx$", "沿直线 $y = mx$ 积分 $kx^2$"),
+      explanation: t(
+        "For a path $y = g(x)$, $a \\le x \\le b$, the arc length element is $ds = \\sqrt{1 + g'(x)^2}\\,dx$. On the line $y = \\frac{q}{p}x$ this is the constant $\\frac{L}{p}\\,dx$ with $L = \\sqrt{p^2 + q^2}$. So\n\n$$\\int_C k\\,x^2\\,ds = \\frac{kL}{p}\\int_0^p x^2\\,dx = \\frac{k\\,p^2L}{3}.$$",
+        "对路径 $y = g(x)$，$a \\le x \\le b$，弧长元素为 $ds = \\sqrt{1 + g'(x)^2}\\,dx$。在直线 $y = \\frac{q}{p}x$ 上它是常数 $\\frac{L}{p}\\,dx$，$L = \\sqrt{p^2 + q^2}$。所以\n\n$$\\int_C k\\,x^2\\,ds = \\frac{kL}{p}\\int_0^p x^2\\,dx = \\frac{k\\,p^2L}{3}。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const [m, n, L] = rng.pick(pythagoreanTriples.slice(0, 5));
+        const [p, q] = rng.int(0, 1) === 0 ? [m, n] : [n, m];
+        const k = rng.int(1, 3);
+        const ans = Q.of(k * p * p * L, 3);
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\int_C ${k === 1 ? "" : k}x^2\\,ds$ along $y = \\frac{${q}}{${p}}x$ from $x = 0$ to $x = ${p}$.`,
+            `沿 $y = \\frac{${q}}{${p}}x$ 从 $x = 0$ 到 $x = ${p}$ 计算 $\\int_C ${k === 1 ? "" : k}x^2\\,ds$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(k * p ** 3, 3), Q.of(k * p * p * q, 3), Q.of(k * p * p * L, 2), Q.of(k * p ** 3 * L, 3)],
+          solution: t(
+            `$ds = \\sqrt{1 + \\frac{${q * q}}{${p * p}}}\\,dx = \\frac{${L}}{${p}}\\,dx$, so $\\frac{${k * L}}{${p}}\\int_0^{${p}} x^2\\,dx = \\frac{${k * L}}{${p}} \\cdot \\frac{${p ** 3}}{3} = ${ans.toLatex()}$.`,
+            `$ds = \\sqrt{1 + \\frac{${q * q}}{${p * p}}}\\,dx = \\frac{${L}}{${p}}\\,dx$，所以 $\\frac{${k * L}}{${p}}\\int_0^{${p}} x^2\\,dx = \\frac{${k * L}}{${p}} \\cdot \\frac{${p ** 3}}{3} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -337,6 +450,32 @@ export const lineIntegralsOfScalarFunctionsOverPathsExpressedAsFunctionsOfY: Top
         });
       },
     },
+    {
+      id: "integrating-y-squared-along-a-line-x-equals-my",
+      title: t("Integrating $ky^2$ along a line $x = my$", "沿直线 $x = my$ 积分 $ky^2$"),
+      explanation: t(
+        "For a path $x = h(y)$, $c \\le y \\le d$, the arc length element is $ds = \\sqrt{1 + h'(y)^2}\\,dy$, and the integral is taken in $y$. On the line $x = \\frac{p}{q}y$ this is $\\frac{L}{q}\\,dy$ with $L = \\sqrt{p^2 + q^2}$, so\n\n$$\\int_C k\\,y^2\\,ds = \\frac{kL}{q}\\int_0^q y^2\\,dy = \\frac{k\\,q^2L}{3}.$$",
+        "对路径 $x = h(y)$，$c \\le y \\le d$，弧长元素为 $ds = \\sqrt{1 + h'(y)^2}\\,dy$，积分对 $y$ 进行。在直线 $x = \\frac{p}{q}y$ 上它是 $\\frac{L}{q}\\,dy$，$L = \\sqrt{p^2 + q^2}$，所以\n\n$$\\int_C k\\,y^2\\,ds = \\frac{kL}{q}\\int_0^q y^2\\,dy = \\frac{k\\,q^2L}{3}。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const [m, n, L] = rng.pick(pythagoreanTriples.slice(0, 5));
+        const [p, q] = rng.int(0, 1) === 0 ? [m, n] : [n, m];
+        const k = rng.int(1, 3);
+        const ans = Q.of(k * q * q * L, 3);
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\int_C ${k === 1 ? "" : k}y^2\\,ds$ along $x = \\frac{${p}}{${q}}y$ from $y = 0$ to $y = ${q}$.`,
+            `沿 $x = \\frac{${p}}{${q}}y$ 从 $y = 0$ 到 $y = ${q}$ 计算 $\\int_C ${k === 1 ? "" : k}y^2\\,ds$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(k * q ** 3, 3), Q.of(k * q * q * p, 3), Q.of(k * q * q * L, 2), Q.of(k * q ** 3 * L, 3)],
+          solution: t(
+            `$ds = \\sqrt{1 + \\frac{${p * p}}{${q * q}}}\\,dy = \\frac{${L}}{${q}}\\,dy$, so $\\frac{${k * L}}{${q}}\\int_0^{${q}} y^2\\,dy = \\frac{${k * L}}{${q}} \\cdot \\frac{${q ** 3}}{3} = ${ans.toLatex()}$.`,
+            `$ds = \\sqrt{1 + \\frac{${p * p}}{${q * q}}}\\,dy = \\frac{${L}}{${q}}\\,dy$，所以 $\\frac{${k * L}}{${q}}\\int_0^{${q}} y^2\\,dy = \\frac{${k * L}}{${q}} \\cdot \\frac{${q ** 3}}{3} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -391,6 +530,37 @@ export const lineIntegralsOfScalarFunctionsOverLineSegments: TopicDef = {
           solution,
           answer: ans,
           wrong: [c * (x1 + y1), ans + 2, ans + c],
+        });
+      },
+    },
+    {
+      id: "a-linear-function-along-a-segment-by-its-average-value",
+      title: t("A linear function along a segment by its average", "用平均值求线段上一次函数的积分"),
+      explanation: t(
+        "A linear function $f(x, y) = x + y$ changes at a constant rate along a straight segment, so its average value on the segment is its value at the midpoint. Hence\n\n$$\\int_C (x + y)\\,ds = f(\\text{midpoint}) \\cdot L,$$\n\nwhere $L$ is the length of the segment. This agrees with parametrizing $\\mathbf{r}(t) = P + t(Q - P)$ and integrating directly.",
+        "一次函数 $f(x, y) = x + y$ 沿直线段以恒定速率变化，所以它在线段上的平均值就是中点处的值。因此\n\n$$\\int_C (x + y)\\,ds = f(\\text{中点}) \\cdot L,$$\n\n其中 $L$ 是线段长度。这与参数化 $\\mathbf{r}(t) = P + t(Q - P)$ 后直接积分的结果一致。",
+      ),
+      generate(rng: Rng): Problem {
+        const [m, n, L] = rng.pick(pythagoreanTriples.slice(0, 5));
+        const [dx, dy] = rng.int(0, 1) === 0 ? [m, n] : [n, m];
+        const sx = rng.pick([-1, 1]);
+        const x0 = rng.int(-4, 4);
+        const y0 = rng.int(-4, 4);
+        const x1 = x0 + sx * dx;
+        const y1 = y0 + dy;
+        const mid = Q.of(x0 + x1 + y0 + y1, 2);
+        const ans = mid.mul(Q.of(L));
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\int_C (x + y)\\,ds$ along the segment $C$ from $(${x0}, ${y0})$ to $(${x1}, ${y1})$.`,
+            `沿从 $(${x0}, ${y0})$ 到 $(${x1}, ${y1})$ 的线段 $C$ 计算 $\\int_C (x + y)\\,ds$。`,
+          ),
+          answer: ans,
+          wrong: [mid, Q.of(x1 + y1).mul(Q.of(L)), Q.of(x0 + y0).mul(Q.of(L)), mid.mul(Q.of(dx + dy))],
+          solution: t(
+            `The length is $L = \\sqrt{${dx * dx} + ${dy * dy}} = ${L}$, and $x + y$ at the midpoint is $${mid.toLatex()}$. So the integral is $${mid.toLatex()} \\cdot ${L} = ${ans.toLatex()}$.`,
+            `长度为 $L = \\sqrt{${dx * dx} + ${dy * dy}} = ${L}$，中点处 $x + y = ${mid.toLatex()}$。所以积分为 $${mid.toLatex()} \\cdot ${L} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -471,6 +641,32 @@ export const lineIntegralsOfScalarFunctionsOverCircles: TopicDef = {
         });
       },
     },
+    {
+      id: "integrating-a-quadratic-density-around-a-circle",
+      title: t("Integrating $a + bx^2$ around a circle", "绕圆积分 $a + bx^2$"),
+      explanation: t(
+        "On a circle the arc length element is especially simple, because the speed of the standard parametrization is constant and equal to the radius. Parametrize the circle of radius $R$ by $(R\\cos t, R\\sin t)$, so $ds = R\\,dt$. A constant $a$ gives $a \\cdot 2\\pi R$. For $x^2$ use $\\int_0^{2\\pi} \\cos^2 t\\,dt = \\pi$:\n\n$$\\int_C x^2\\,ds = \\int_0^{2\\pi} R^2\\cos^2 t \\cdot R\\,dt = \\pi R^3.$$\n\nSo $\\int_C (a + bx^2)\\,ds = \\pi(2aR + bR^3)$.",
+        "在圆上弧长元素特别简单，因为标准参数化的速率是常数，等于半径。把半径为 $R$ 的圆参数化为 $(R\\cos t, R\\sin t)$，则 $ds = R\\,dt$。常数 $a$ 贡献 $a \\cdot 2\\pi R$。对 $x^2$，利用 $\\int_0^{2\\pi} \\cos^2 t\\,dt = \\pi$：\n\n$$\\int_C x^2\\,ds = \\int_0^{2\\pi} R^2\\cos^2 t \\cdot R\\,dt = \\pi R^3。$$\n\n所以 $\\int_C (a + bx^2)\\,ds = \\pi(2aR + bR^3)$。",
+      ),
+      generate(rng: Rng): Problem {
+        const R = rng.int(1, 4);
+        const a = rng.int(1, 5);
+        const b = rng.int(1, 4);
+        const ans = 2 * a * R + b * R ** 3;
+        return numberProblem({
+          prompt: t(
+            `$C$ is the circle $x^2 + y^2 = ${R * R}$. Find $\\frac{1}{\\pi}\\int_C (${poly([a, ""], [b, "x^2"])})\\,ds$.`,
+            `$C$ 是圆 $x^2 + y^2 = ${R * R}$。求 $\\frac{1}{\\pi}\\int_C (${poly([a, ""], [b, "x^2"])})\\,ds$。`,
+          ),
+          answer: ans,
+          wrong: [2 * a * R + 2 * b * R ** 3, a * R + b * R ** 3, 2 * a * R + b * R * R, 2 * (a + b * R * R) * R],
+          solution: t(
+            `$\\int_C ${a}\\,ds = ${a} \\cdot 2\\pi \\cdot ${R}$ and $\\int_C ${b === 1 ? "" : b}x^2\\,ds = ${b === 1 ? "" : b}\\pi \\cdot ${R}^3$. Dividing by $\\pi$ gives $${2 * a * R} + ${b * R ** 3} = ${ans}$.`,
+            `$\\int_C ${a}\\,ds = ${a} \\cdot 2\\pi \\cdot ${R}$，$\\int_C ${b === 1 ? "" : b}x^2\\,ds = ${b === 1 ? "" : b}\\pi \\cdot ${R}^3$。除以 $\\pi$ 得 $${2 * a * R} + ${b * R ** 3} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -541,6 +737,36 @@ export const lineIntegralsOfScalarFunctionsOverEllipses: TopicDef = {
         });
       },
     },
+    {
+      id: "spotting-a-zero-line-integral-on-an-ellipse-by-symmetry",
+      title: t("Spotting a zero integral on an ellipse by symmetry", "利用对称性识别椭圆上为零的积分"),
+      explanation: t(
+        "The arc length of an ellipse has no elementary formula, but symmetry can still decide some integrals. The ellipse $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$ is symmetric under $x \\mapsto -x$ and under $y \\mapsto -y$, and $ds$ is unchanged by these reflections. So $\\oint_C f\\,ds = 0$ whenever $f$ is odd in $x$ or odd in $y$, such as $x$, $xy^2$ or $y^3$. Functions like $x^2$ or $x^2 + y^4$ are positive and give a positive integral.",
+        "椭圆弧长没有初等公式，但对称性仍能确定某些积分。椭圆 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$ 关于 $x \\mapsto -x$ 和 $y \\mapsto -y$ 对称，且这些反射不改变 $ds$。所以只要 $f$ 关于 $x$ 或关于 $y$ 为奇函数，如 $x$、$xy^2$ 或 $y^3$，就有 $\\oint_C f\\,ds = 0$。像 $x^2$ 或 $x^2 + y^4$ 这样的正函数给出正的积分。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(2, 8);
+        let b = rng.int(2, 8);
+        if (b === a) b += 1;
+        const c = rng.int(2, 5);
+        const odd = rng.pick([`${c}xy^2`, `${c}x^3`, `${c}y^3`, `${c}x^2y`, `${c}xy^4`, `x^3 + ${c}y`]);
+        const even = rng.shuffle([`${c}x^2`, `${c}y^2 + 1`, `x^2y^2`, `${c} + x^4`, `${c}x^2 + y^2`]).slice(0, 3);
+        const o = (s: string) => t(`$f(x, y) = ${s}$`, `$f(x, y) = ${s}$`);
+        return pickChoice(
+          rng,
+          t(
+            `$C$ is the ellipse $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1$. For which function is $\\oint_C f\\,ds = 0$?`,
+            `$C$ 是椭圆 $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1$。对哪个函数有 $\\oint_C f\\,ds = 0$？`,
+          ),
+          o(odd),
+          even.map(o),
+          t(
+            `$${odd}$ is odd in $x$ or in $y$, so its values on symmetric halves of the ellipse cancel. The other functions are positive on most of the ellipse and never negative, so their integrals are positive.`,
+            `$${odd}$ 关于 $x$ 或 $y$ 是奇函数，在椭圆对称的两半上的值相互抵消。其他函数在椭圆上非负且大部分为正，积分为正。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -588,6 +814,35 @@ export const furtherPropertiesOfLineIntegralsOfScalarFunctions: TopicDef = {
           solution,
           answer: ans,
           wrong: [ans - i1, ans + i2, i1 + i2],
+        });
+      },
+    },
+    {
+      id: "a-scalar-line-integral-over-an-l-shaped-path",
+      title: t("A scalar line integral over an L-shaped path", "沿 L 形路径的标量线积分"),
+      explanation: t(
+        "A piecewise smooth path is integrated one smooth piece at a time: $\\int_{C_1 \\cup C_2} f\\,ds = \\int_{C_1} f\\,ds + \\int_{C_2} f\\,ds$. On a horizontal piece $ds = dx$ with $y$ fixed, and on a vertical piece $ds = dy$ with $x$ fixed. Each piece is parametrized in its own variable, and the pieces' contributions are added at the end.",
+        "分段光滑路径按光滑段逐段积分：$\\int_{C_1 \\cup C_2} f\\,ds = \\int_{C_1} f\\,ds + \\int_{C_2} f\\,ds$。在水平段上 $ds = dx$ 且 $y$ 固定，在竖直段上 $ds = dy$ 且 $x$ 固定。每一段用各自的变量参数化，最后把各段的贡献相加。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 8);
+        const b = rng.int(1, 8);
+        const k = rng.int(1, 3);
+        const c1 = Q.of(k * a * a, 2);
+        const c2 = Q.of(2 * k * a * b + k * b * b, 2);
+        const ans = c1.add(c2);
+        const f = k === 1 ? "x + y" : `${k}(x + y)`;
+        return numberProblem({
+          prompt: t(
+            `$C$ runs along the segment from $(0, 0)$ to $(${a}, 0)$ and then along the segment from $(${a}, 0)$ to $(${a}, ${b})$. Evaluate $\\int_C ${f}\\,ds$.`,
+            `$C$ 先沿从 $(0, 0)$ 到 $(${a}, 0)$ 的线段，再沿从 $(${a}, 0)$ 到 $(${a}, ${b})$ 的线段。计算 $\\int_C ${f}\\,ds$。`,
+          ),
+          answer: ans,
+          wrong: [c1, c2, Q.of(k * (a * a + b * b), 2), Q.of(k * (a + b) * (a + b))],
+          solution: t(
+            `On the first piece $y = 0$ and $ds = dx$: $\\int_0^{${a}} ${k === 1 ? "" : k}x\\,dx = ${c1.toLatex()}$. On the second $x = ${a}$ and $ds = dy$: $\\int_0^{${b}} ${k === 1 ? "" : k}(${a} + y)\\,dy = ${c2.toLatex()}$. The total is $${ans.toLatex()}$.`,
+            `第一段上 $y = 0$，$ds = dx$：$\\int_0^{${a}} ${k === 1 ? "" : k}x\\,dx = ${c1.toLatex()}$。第二段上 $x = ${a}$，$ds = dy$：$\\int_0^{${b}} ${k === 1 ? "" : k}(${a} + y)\\,dy = ${c2.toLatex()}$。总和为 $${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -643,6 +898,32 @@ export const lineIntegralsOfScalarFunctionsOverPolarCurves: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(a), ans.mul(Q.of(2)), ans.div(Q.of(2))],
+        });
+      },
+    },
+    {
+      id: "the-mass-of-a-cardioid-wire",
+      title: t("The mass of a cardioid-shaped wire", "心形线导线的质量"),
+      explanation: t(
+        "For a polar curve $r = r(\\theta)$, $ds = \\sqrt{r^2 + (dr/d\\theta)^2}\\,d\\theta$. For the cardioid $r = a(1 + \\cos\\theta)$,\n\n$$r^2 + r'^2 = a^2(2 + 2\\cos\\theta) = 4a^2\\cos^2\\tfrac{\\theta}{2},$$\n\nso $ds = 2a\\left|\\cos\\tfrac{\\theta}{2}\\right|d\\theta$ and the whole curve has length $\\int_0^{2\\pi} 2a\\left|\\cos\\tfrac{\\theta}{2}\\right|d\\theta = 8a$. The same holds for $a(1 - \\cos\\theta)$ and $a(1 \\pm \\sin\\theta)$, which are rotations of it. A wire of constant density $k$ along it has mass $8ak$.",
+        "对极坐标曲线 $r = r(\\theta)$，$ds = \\sqrt{r^2 + (dr/d\\theta)^2}\\,d\\theta$。对心形线 $r = a(1 + \\cos\\theta)$，\n\n$$r^2 + r'^2 = a^2(2 + 2\\cos\\theta) = 4a^2\\cos^2\\tfrac{\\theta}{2},$$\n\n所以 $ds = 2a\\left|\\cos\\tfrac{\\theta}{2}\\right|d\\theta$，整条曲线长 $\\int_0^{2\\pi} 2a\\left|\\cos\\tfrac{\\theta}{2}\\right|d\\theta = 8a$。$a(1 - \\cos\\theta)$ 与 $a(1 \\pm \\sin\\theta)$ 是它的旋转，结论相同。沿它的常密度 $k$ 导线质量为 $8ak$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 6);
+        const k = rng.int(1, 4);
+        const form = rng.pick(["1 + \\cos\\theta", "1 - \\cos\\theta", "1 + \\sin\\theta", "1 - \\sin\\theta"]);
+        const ans = 8 * a * k;
+        return numberProblem({
+          prompt: t(
+            `A wire of constant density $${k}$ lies along the cardioid $r = ${a === 1 ? "" : a}(${form})$, $0 \\le \\theta \\le 2\\pi$. Find its mass $\\int_C ${k}\\,ds$.`,
+            `常密度为 $${k}$ 的导线沿心形线 $r = ${a === 1 ? "" : a}(${form})$，$0 \\le \\theta \\le 2\\pi$。求其质量 $\\int_C ${k}\\,ds$。`,
+          ),
+          answer: ans,
+          wrong: [4 * a * k, 16 * a * k, 2 * a * k, 6 * a * k],
+          solution: t(
+            `$r^2 + r'^2 = ${a * a}(2 ${form[2]} 2${form.slice(4)})$, a perfect square in the half angle, and the total length is $8 \\cdot ${a} = ${8 * a}$. The mass is $${k} \\cdot ${8 * a} = ${ans}$.`,
+            `$r^2 + r'^2 = ${a * a}(2 ${form[2]} 2${form.slice(4)})$，整条曲线长 $8 \\cdot ${a} = ${8 * a}$。质量为 $${k} \\cdot ${8 * a} = ${ans}$。`,
+          ),
         });
       },
     },
@@ -708,6 +989,39 @@ export const lineIntegralsWithRespectToXAndY: TopicDef = {
         });
       },
     },
+    {
+      id: "x-dy-versus-y-dx-on-a-parametric-parabola",
+      title: t("$\\int x\\,dy$ versus $\\int y\\,dx$ on a parabola", "抛物线上的 $\\int x\\,dy$ 与 $\\int y\\,dx$"),
+      explanation: t(
+        "On a parametric curve $x = x(t)$, $y = y(t)$, replace $dx$ by $x'(t)\\,dt$ and $dy$ by $y'(t)\\,dt$. For $x = pt$, $y = qt^2$, $0 \\le t \\le 1$:\n\n$$\\int_C y\\,dx = \\int_0^1 qt^2 \\cdot p\\,dt = \\frac{pq}{3}, \\qquad \\int_C x\\,dy = \\int_0^1 pt \\cdot 2qt\\,dt = \\frac{2pq}{3}.$$\n\nThe two are different integrals; which differential appears matters.",
+        "在参数曲线 $x = x(t)$，$y = y(t)$ 上，把 $dx$ 换成 $x'(t)\\,dt$，把 $dy$ 换成 $y'(t)\\,dt$。对 $x = pt$，$y = qt^2$，$0 \\le t \\le 1$：\n\n$$\\int_C y\\,dx = \\int_0^1 qt^2 \\cdot p\\,dt = \\frac{pq}{3}, \\qquad \\int_C x\\,dy = \\int_0^1 pt \\cdot 2qt\\,dt = \\frac{2pq}{3}。$$\n\n二者是不同的积分，出现的是哪个微分很重要。",
+      ),
+      generate(rng: Rng): Problem {
+        const p = rng.nonZero(-5, 5);
+        const q = rng.nonZero(-5, 5);
+        const xdy = rng.int(0, 1) === 1;
+        const ans = Q.of(xdy ? 2 * p * q : p * q, 3);
+        const xt = p === 1 ? "t" : p === -1 ? "-t" : `${p}t`;
+        const yt = q === 1 ? "t^2" : q === -1 ? "-t^2" : `${q}t^2`;
+        return numberProblem({
+          prompt: t(
+            `$C$ is $x = ${xt}$, $y = ${yt}$, $0 \\le t \\le 1$. Evaluate $\\int_C ${xdy ? "x\\,dy" : "y\\,dx"}$.`,
+            `$C$ 为 $x = ${xt}$，$y = ${yt}$，$0 \\le t \\le 1$。计算 $\\int_C ${xdy ? "x\\,dy" : "y\\,dx"}$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(xdy ? p * q : 2 * p * q, 3), Q.of(p * q, 2), Q.of(p * q), ans.neg()],
+          solution: xdy
+            ? t(
+                `$dy = ${2 * q}t\\,dt$, so $\\int_0^1 (${poly([p, "t"])})(${poly([2 * q, "t"])})\\,dt = ${2 * p * q} \\cdot \\frac{1}{3} = ${ans.toLatex()}$.`,
+                `$dy = ${2 * q}t\\,dt$，所以 $\\int_0^1 (${poly([p, "t"])})(${poly([2 * q, "t"])})\\,dt = ${2 * p * q} \\cdot \\frac{1}{3} = ${ans.toLatex()}$。`,
+              )
+            : t(
+                `$dx = ${p}\\,dt$, so $\\int_0^1 (${poly([q, "t^2"])}) \\cdot ${paren(p)}\\,dt = ${p * q} \\cdot \\frac{1}{3} = ${ans.toLatex()}$.`,
+                `$dx = ${p}\\,dt$，所以 $\\int_0^1 (${poly([q, "t^2"])}) \\cdot ${paren(p)}\\,dt = ${p * q} \\cdot \\frac{1}{3} = ${ans.toLatex()}$。`,
+              ),
+        });
+      },
+    },
   ],
 };
 
@@ -751,6 +1065,36 @@ export const propertiesOfLineIntegralsWithRespectToXAndY: TopicDef = {
           solution,
           answer: ans,
           wrong: [val, 0, ans + 1],
+        });
+      },
+    },
+    {
+      id: "constant-coefficient-differentials-depend-only-on-endpoints",
+      title: t("$\\int_C k\\,dx + m\\,dy$ depends only on the endpoints", "$\\int_C k\\,dx + m\\,dy$ 只取决于端点"),
+      explanation: t(
+        "With constant coefficients, $\\int_C k\\,dx = k\\int_a^b x'(t)\\,dt = k\\,(x_B - x_A)$ for any path from $A$ to $B$, and similarly $\\int_C m\\,dy = m\\,(y_B - y_A)$. So\n\n$$\\int_C k\\,dx + m\\,dy = k\\,\\Delta x + m\\,\\Delta y,$$\n\nwhatever the shape of the path. Reversing the path changes the sign.",
+        "系数为常数时，对从 $A$ 到 $B$ 的任意路径，$\\int_C k\\,dx = k\\int_a^b x'(t)\\,dt = k\\,(x_B - x_A)$，同理 $\\int_C m\\,dy = m\\,(y_B - y_A)$。所以\n\n$$\\int_C k\\,dx + m\\,dy = k\\,\\Delta x + m\\,\\Delta y,$$\n\n与路径形状无关。路径反向则变号。",
+      ),
+      generate(rng: Rng): Problem {
+        const k = rng.nonZero(-6, 6);
+        const m = rng.nonZero(-6, 6);
+        const x0 = rng.int(-4, 4);
+        const y0 = rng.int(-4, 4);
+        let x1 = rng.int(-4, 4);
+        const y1 = rng.int(-4, 4);
+        if (x1 === x0) x1 += 2;
+        const ans = k * (x1 - x0) + m * (y1 - y0);
+        return numberProblem({
+          prompt: t(
+            `$C$ is an arc of a parabola from $(${x0}, ${y0})$ to $(${x1}, ${y1})$. Evaluate $\\int_C ${poly([k, "\\,dx"], [m, "\\,dy"])}$.`,
+            `$C$ 是从 $(${x0}, ${y0})$ 到 $(${x1}, ${y1})$ 的一段抛物线弧。计算 $\\int_C ${poly([k, "\\,dx"], [m, "\\,dy"])}$。`,
+          ),
+          answer: ans,
+          wrong: [-ans, k * (y1 - y0) + m * (x1 - x0), k * x1 + m * y1, k + m],
+          solution: t(
+            `The value depends only on the endpoints: $${k} \\cdot ${paren(x1 - x0)} + ${paren(m)} \\cdot ${paren(y1 - y0)} = ${ans}$.`,
+            `值只取决于端点：$${k} \\cdot ${paren(x1 - x0)} + ${paren(m)} \\cdot ${paren(y1 - y0)} = ${ans}$。`,
+          ),
         });
       },
     },
@@ -819,6 +1163,37 @@ export const sumsOfLineIntegralsWithRespectToXAndYOverParametricCurves: TopicDef
         });
       },
     },
+    {
+      id: "p-dx-plus-q-dy-along-a-sideways-parabola",
+      title: t("$P\\,dx + Q\\,dy$ along $x = t^2$, $y = t$", "沿 $x = t^2$，$y = t$ 计算 $P\\,dx + Q\\,dy$"),
+      explanation: t(
+        "Substitute the parametrization into both terms and add before integrating. For $x = t^2$, $y = t$ we have $dx = 2t\\,dt$ and $dy = dt$, so\n\n$$\\int_C a\\,y^2\\,dx + b\\,x\\,dy = \\int_0^c (2a t^3 + b t^2)\\,dt = \\frac{ac^4}{2} + \\frac{bc^3}{3}.$$",
+        "把参数化代入两项，相加后再积分。对 $x = t^2$，$y = t$，有 $dx = 2t\\,dt$，$dy = dt$，所以\n\n$$\\int_C a\\,y^2\\,dx + b\\,x\\,dy = \\int_0^c (2a t^3 + b t^2)\\,dt = \\frac{ac^4}{2} + \\frac{bc^3}{3}。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-5, 5);
+        const b = rng.nonZero(-5, 5);
+        const c = rng.int(1, 3);
+        const ans = Q.of(a * c ** 4, 2).add(Q.of(b * c ** 3, 3));
+        return numberProblem({
+          prompt: t(
+            `$C$ is $x = t^2$, $y = t$, $0 \\le t \\le ${c}$. Evaluate $\\int_C ${poly([a, "y^2\\,dx"], [b, "x\\,dy"])}$.`,
+            `$C$ 为 $x = t^2$，$y = t$，$0 \\le t \\le ${c}$。计算 $\\int_C ${poly([a, "y^2\\,dx"], [b, "x\\,dy"])}$。`,
+          ),
+          answer: ans,
+          wrong: [
+            Q.of(a * c ** 3, 3).add(Q.of(b * c ** 3, 3)),
+            Q.of(a * c ** 4, 4).add(Q.of(b * c ** 3, 3)),
+            Q.of(a * c ** 4, 2).add(Q.of(b * c ** 4, 2)),
+            ans.neg(),
+          ],
+          solution: t(
+            `$dx = 2t\\,dt$ and $dy = dt$, so the integrand is $${poly([2 * a, "t^3"], [b, "t^2"])}$. Integrating from $0$ to $${c}$ gives $${Q.of(a * c ** 4, 2).toLatex()} + ${paren(Q.of(b * c ** 3, 3))} = ${ans.toLatex()}$.`,
+            `$dx = 2t\\,dt$，$dy = dt$，被积式为 $${poly([2 * a, "t^3"], [b, "t^2"])}$。从 $0$ 积到 $${c}$ 得 $${Q.of(a * c ** 4, 2).toLatex()} + ${paren(Q.of(b * c ** 3, 3))} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -877,6 +1252,41 @@ export const sumsOfLineIntegralsWithRespectToXAndY: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(num), ans.neg(), ans.mul(Q.of(2))],
+        });
+      },
+    },
+    {
+      id: "p-dx-plus-q-dy-along-a-two-segment-path",
+      title: t("$P\\,dx + Q\\,dy$ along a two-segment path", "沿两段折线计算 $P\\,dx + Q\\,dy$"),
+      explanation: t(
+        "Split a polygonal path into segments. On a horizontal segment $dy = 0$, so only the $P\\,dx$ term survives, with $y$ held fixed. On a vertical segment $dx = 0$, so only $Q\\,dy$ survives, with $x$ held fixed. For $\\int_C p\\,y\\,dx + q\\,x\\,dy$ two paths between the same points can give different values, because the field $\\langle py, qx \\rangle$ is conservative only when $p = q$.",
+        "把折线路径拆成线段。水平线段上 $dy = 0$，只剩 $P\\,dx$ 项且 $y$ 固定；竖直线段上 $dx = 0$，只剩 $Q\\,dy$ 项且 $x$ 固定。对 $\\int_C p\\,y\\,dx + q\\,x\\,dy$，同样端点之间的两条路径可能给出不同的值，因为场 $\\langle py, qx \\rangle$ 只有在 $p = q$ 时才是保守的。",
+      ),
+      generate(rng: Rng): Problem {
+        const p = rng.nonZero(-5, 5);
+        let q = rng.nonZero(-5, 5);
+        if (q === p) q = -p;
+        const a = rng.int(1, 6);
+        const b = rng.int(1, 6);
+        const rightFirst = rng.int(0, 1) === 0;
+        const ans = rightFirst ? q * a * b : p * a * b;
+        const mid = rightFirst ? `(${a}, 0)` : `(0, ${b})`;
+        return numberProblem({
+          prompt: t(
+            `$C$ goes along segments from $(0, 0)$ to $${mid}$ to $(${a}, ${b})$. Evaluate $\\int_C ${poly([p, "y\\,dx"], [q, "x\\,dy"])}$.`,
+            `$C$ 沿线段从 $(0, 0)$ 到 $${mid}$ 再到 $(${a}, ${b})$。计算 $\\int_C ${poly([p, "y\\,dx"], [q, "x\\,dy"])}$。`,
+          ),
+          answer: ans,
+          wrong: [rightFirst ? p * a * b : q * a * b, (p + q) * a * b, 0, -ans],
+          solution: rightFirst
+            ? t(
+                `On the horizontal segment $y = 0$ and $dy = 0$, so it contributes $0$. On the vertical segment $x = ${a}$ and $dx = 0$: $\\int_0^{${b}} ${paren(q)} \\cdot ${a}\\,dy = ${ans}$.`,
+                `水平段上 $y = 0$，$dy = 0$，贡献 $0$。竖直段上 $x = ${a}$，$dx = 0$：$\\int_0^{${b}} ${paren(q)} \\cdot ${a}\\,dy = ${ans}$。`,
+              )
+            : t(
+                `On the vertical segment $x = 0$ and $dx = 0$, so it contributes $0$. On the horizontal segment $y = ${b}$ and $dy = 0$: $\\int_0^{${a}} ${paren(p)} \\cdot ${b}\\,dx = ${ans}$.`,
+                `竖直段上 $x = 0$，$dx = 0$，贡献 $0$。水平段上 $y = ${b}$，$dy = 0$：$\\int_0^{${a}} ${paren(p)} \\cdot ${b}\\,dx = ${ans}$。`,
+              ),
         });
       },
     },
@@ -951,6 +1361,42 @@ export const lineIntegralsOfVectorValuedFunctionsOverParametricCurves: TopicDef 
         });
       },
     },
+    {
+      id: "a-rotational-field-along-a-circular-arc",
+      title: t("A rotational field along a circular arc", "旋转场沿圆弧的线积分"),
+      explanation: t(
+        "To evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$, substitute the parametrization into the field, take the dot product with the velocity, and integrate in $t$. For $\\mathbf{r}(t) = (R\\cos t, R\\sin t)$, $\\mathbf{r}'(t) = (-R\\sin t, R\\cos t)$. The field $\\mathbf{F} = \\langle -ay, ax \\rangle$ at $\\mathbf{r}(t)$ is $(-aR\\sin t, aR\\cos t)$, so\n\n$$\\mathbf{F} \\cdot \\mathbf{r}'(t) = aR^2(\\sin^2 t + \\cos^2 t) = aR^2,$$\n\na constant. Over $0 \\le t \\le \\theta$ the integral is $aR^2\\theta$.",
+        "计算 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 时，把参数化代入场，与速度作点积，再对 $t$ 积分。对 $\\mathbf{r}(t) = (R\\cos t, R\\sin t)$，$\\mathbf{r}'(t) = (-R\\sin t, R\\cos t)$。场 $\\mathbf{F} = \\langle -ay, ax \\rangle$ 在 $\\mathbf{r}(t)$ 处为 $(-aR\\sin t, aR\\cos t)$，所以\n\n$$\\mathbf{F} \\cdot \\mathbf{r}'(t) = aR^2(\\sin^2 t + \\cos^2 t) = aR^2,$$\n\n为常数。在 $0 \\le t \\le \\theta$ 上积分为 $aR^2\\theta$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-4, 4);
+        const R = rng.int(1, 4);
+        const [num, den] = rng.pick([
+          [1, 2],
+          [1, 1],
+          [3, 2],
+          [2, 1],
+          [1, 3],
+          [2, 3],
+        ] as const);
+        const theta =
+          num === 1 && den === 1 ? "\\pi" : num === 1 ? `\\frac{\\pi}{${den}}` : den === 1 ? `${num}\\pi` : `\\frac{${num}\\pi}{${den}}`;
+        const ans = Q.of(a * R * R * num, den);
+        const F = `\\langle ${poly([-a, "y"])}, ${poly([a, "x"])} \\rangle`;
+        return numberProblem({
+          prompt: t(
+            `Let $\\mathbf{F} = ${F}$ and $\\mathbf{r}(t) = (${R === 1 ? "" : R}\\cos t, ${R === 1 ? "" : R}\\sin t)$, $0 \\le t \\le ${theta}$. Find $\\frac{1}{\\pi}\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$.`,
+            `设 $\\mathbf{F} = ${F}$，$\\mathbf{r}(t) = (${R === 1 ? "" : R}\\cos t, ${R === 1 ? "" : R}\\sin t)$，$0 \\le t \\le ${theta}$。求 $\\frac{1}{\\pi}\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(a * R * num, den), Q.of(2 * a * R * R * num, den), ans.neg(), Q.of(a * R * R)],
+          solution: t(
+            `$\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${a} \\cdot ${R * R}(\\sin^2 t + \\cos^2 t) = ${a * R * R}$, so the integral is $${a * R * R} \\cdot ${theta}$, and dividing by $\\pi$ gives $${ans.toLatex()}$.`,
+            `$\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${a} \\cdot ${R * R}(\\sin^2 t + \\cos^2 t) = ${a * R * R}$，积分为 $${a * R * R} \\cdot ${theta}$，除以 $\\pi$ 得 $${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1004,6 +1450,37 @@ export const lineIntegralsOfVectorValuedFunctionsOverGeneralCurves: TopicDef = {
           solution,
           answer: ans,
           wrong: [2 * ans, ans - c, ans + c],
+        });
+      },
+    },
+    {
+      id: "a-vector-line-integral-along-a-graph-y-equals-x-squared",
+      title: t("A vector line integral along $y = x^2$", "沿 $y = x^2$ 的向量线积分"),
+      explanation: t(
+        "A curve given as a graph needs no new parameter, and the whole integral becomes an ordinary integral in $x$. A graph $y = g(x)$ is parametrized by $x$ itself: $\\mathbf{r}(x) = (x, g(x))$, so $dx = dx$ and $dy = g'(x)\\,dx$. For $\\mathbf{F} = \\langle a\\,xy, b \\rangle$ along $y = x^2$ from $x = 0$ to $x = c$:\n\n$$\\int_C a\\,xy\\,dx + b\\,dy = \\int_0^c (a x^3 + 2b x)\\,dx = \\frac{ac^4}{4} + bc^2.$$",
+        "以图像给出的曲线不需要新参数，整个积分化为关于 $x$ 的普通积分。图像 $y = g(x)$ 以 $x$ 本身为参数：$\\mathbf{r}(x) = (x, g(x))$，于是 $dy = g'(x)\\,dx$。对 $\\mathbf{F} = \\langle a\\,xy, b \\rangle$ 沿 $y = x^2$ 从 $x = 0$ 到 $x = c$：\n\n$$\\int_C a\\,xy\\,dx + b\\,dy = \\int_0^c (a x^3 + 2b x)\\,dx = \\frac{ac^4}{4} + bc^2。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-4, 4);
+        const b = rng.nonZero(-5, 5);
+        const c = rng.int(1, 3);
+        const ans = Q.of(a * c ** 4, 4).add(Q.of(b * c * c));
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle ${poly([a, "xy"])}, ${b} \\rangle$ along $y = x^2$ from $(0, 0)$ to $(${c}, ${c * c})$.`,
+            `沿 $y = x^2$ 从 $(0, 0)$ 到 $(${c}, ${c * c})$，对 $\\mathbf{F} = \\langle ${poly([a, "xy"])}, ${b} \\rangle$ 计算 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
+          ),
+          answer: ans,
+          wrong: [
+            Q.of(a * c ** 4, 4).add(Q.of(b * c)),
+            Q.of(a * c ** 3, 3).add(Q.of(b * c * c)),
+            Q.of(a * c ** 4, 4),
+            Q.of(a * c ** 4, 4).add(Q.of(2 * b * c * c)),
+          ],
+          solution: t(
+            `With $y = x^2$, $dy = 2x\\,dx$, so the integrand is $${paren(a)}x \\cdot x^2 + ${paren(b)} \\cdot 2x = ${poly([a, "x^3"], [2 * b, "x"])}$. Integrating from $0$ to $${c}$ gives $${Q.of(a * c ** 4, 4).toLatex()} + ${paren(b * c * c)} = ${ans.toLatex()}$.`,
+            `由 $y = x^2$，$dy = 2x\\,dx$，被积式为 $${paren(a)}x \\cdot x^2 + ${paren(b)} \\cdot 2x = ${poly([a, "x^3"], [2 * b, "x"])}$。从 $0$ 积到 $${c}$ 得 $${Q.of(a * c ** 4, 4).toLatex()} + ${paren(b * c * c)} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1061,6 +1538,82 @@ export const interpretingLineIntegralsOfVectorValuedFunctions: TopicDef = {
         });
       },
     },
+    {
+      id: "the-sign-of-a-vector-line-integral",
+      title: t("The sign of a vector line integral", "向量线积分的符号"),
+      explanation: t(
+        "$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds$ adds up the component of $\\mathbf{F}$ along the direction of motion. It is positive when the field mostly pushes along the path, negative when it mostly pushes against it, and zero when the field is perpendicular to the path everywhere. A radial field $\\langle x, y \\rangle$ is perpendicular to every circle centered at the origin, and a rotational field $\\langle -y, x \\rangle$ is perpendicular to every ray from the origin.",
+        "$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds$ 累加 $\\mathbf{F}$ 沿运动方向的分量。场主要顺着路径推动时为正，主要逆着路径时为负，处处垂直于路径时为零。径向场 $\\langle x, y \\rangle$ 垂直于以原点为中心的每个圆，旋转场 $\\langle -y, x \\rangle$ 垂直于从原点出发的每条射线。",
+      ),
+      generate(rng: Rng): Problem {
+        const kind = rng.int(0, 3);
+        const k = rng.nonZero(-5, 5);
+        const R = rng.int(1, 6);
+        const pos = t("Positive", "正");
+        const neg = t("Negative", "负");
+        const zero = t("Zero", "零");
+        let prompt: Text;
+        let sign: number;
+        let why: Text;
+        if (kind === 0) {
+          const d = rng.nonZero(-6, 6);
+          const y0 = rng.int(-3, 3);
+          const y1 = y0 + rng.int(-3, 3);
+          prompt = t(
+            `$\\mathbf{F} = \\langle ${k}, 0 \\rangle$ and $C$ is the segment from $(0, ${y0})$ to $(${d}, ${y1})$.`,
+            `$\\mathbf{F} = \\langle ${k}, 0 \\rangle$，$C$ 为从 $(0, ${y0})$ 到 $(${d}, ${y1})$ 的线段。`,
+          );
+          sign = Math.sign(k * d);
+          why = t(
+            `The integral is $${k} \\cdot ${paren(d)} = ${k * d}$, the $x$-component times the change in $x$.`,
+            `积分为 $${k} \\cdot ${paren(d)} = ${k * d}$，即 $x$ 分量乘以 $x$ 的变化量。`,
+          );
+        } else if (kind === 1) {
+          prompt = t(
+            `$\\mathbf{F} = \\langle ${poly([k, "x"])}, ${poly([k, "y"])} \\rangle$ and $C$ is the circle $x^2 + y^2 = ${R * R}$ traversed counterclockwise.`,
+            `$\\mathbf{F} = \\langle ${poly([k, "x"])}, ${poly([k, "y"])} \\rangle$，$C$ 为逆时针方向的圆 $x^2 + y^2 = ${R * R}$。`,
+          );
+          sign = 0;
+          why = t(
+            "The field is radial, so it is perpendicular to the circle at every point and $\\mathbf{F} \\cdot \\mathbf{T} = 0$.",
+            "该场是径向的，在圆上每点都垂直于圆，$\\mathbf{F} \\cdot \\mathbf{T} = 0$。",
+          );
+        } else if (kind === 2) {
+          const cw = rng.int(0, 1) === 1;
+          prompt = t(
+            `$\\mathbf{F} = \\langle ${poly([-k, "y"])}, ${poly([k, "x"])} \\rangle$ and $C$ is the circle $x^2 + y^2 = ${R * R}$ traversed ${cw ? "clockwise" : "counterclockwise"}.`,
+            `$\\mathbf{F} = \\langle ${poly([-k, "y"])}, ${poly([k, "x"])} \\rangle$，$C$ 为${cw ? "顺时针" : "逆时针"}方向的圆 $x^2 + y^2 = ${R * R}$。`,
+          );
+          sign = Math.sign(k) * (cw ? -1 : 1);
+          why = t(
+            `$\\langle -y, x \\rangle$ points counterclockwise along the circle, so $\\mathbf{F} \\cdot \\mathbf{T} = ${k * (cw ? -1 : 1) * R}$ at every point and the integral is $${2 * k * (cw ? -1 : 1) * R * R}\\pi$.`,
+            `$\\langle -y, x \\rangle$ 沿圆逆时针指向，所以每点 $\\mathbf{F} \\cdot \\mathbf{T} = ${k * (cw ? -1 : 1) * R}$，积分为 $${2 * k * (cw ? -1 : 1) * R * R}\\pi$。`,
+          );
+        } else {
+          const end = R * rng.pick([1, 2, -1]);
+          prompt = t(
+            `$\\mathbf{F} = \\langle ${poly([-k, "y"])}, ${poly([k, "x"])} \\rangle$ and $C$ is the segment from $(0, 0)$ to $(${R}, ${end})$.`,
+            `$\\mathbf{F} = \\langle ${poly([-k, "y"])}, ${poly([k, "x"])} \\rangle$，$C$ 为从 $(0, 0)$ 到 $(${R}, ${end})$ 的线段。`,
+          );
+          sign = 0;
+          why = t(
+            "The segment lies on a ray from the origin, and the rotational field is perpendicular to every such ray.",
+            "该线段位于从原点出发的射线上，旋转场垂直于每条这样的射线。",
+          );
+        }
+        const right = sign > 0 ? pos : sign < 0 ? neg : zero;
+        return pickChoice(
+          rng,
+          t(
+            `${prompt.en} Is $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ positive, negative or zero?`,
+            `${prompt["zh-CN"]}$\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 为正、负还是零？`,
+          ),
+          right,
+          [pos, neg, zero].filter((o) => o !== right),
+          why,
+        );
+      },
+    },
   ],
 };
 
@@ -1111,6 +1664,33 @@ export const propertiesOfLineIntegralsOfVectorValuedFunctions: TopicDef = {
           solution,
           answer: ans,
           wrong: [val, 0, ans + 2],
+        });
+      },
+    },
+    {
+      id: "combining-reversal-additivity-and-linearity",
+      title: t("Combining reversal, additivity and linearity", "综合运用反向、可加性与线性"),
+      explanation: t(
+        "Three rules handle vector line integrals over combined paths: reversing a path changes the sign, $\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = -\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$; joining paths adds the integrals; and constants come out, $\\int_C \\alpha\\mathbf{F} \\cdot d\\mathbf{r} = \\alpha\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$. So\n\n$$\\int_{C_1 \\cup (-C_2)} \\alpha\\mathbf{F} \\cdot d\\mathbf{r} = \\alpha\\left(\\int_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\int_{C_2} \\mathbf{F} \\cdot d\\mathbf{r}\\right).$$",
+        "三条规则处理组合路径上的向量线积分：路径反向则变号，$\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = -\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$；路径相接则积分相加；常数可以提出，$\\int_C \\alpha\\mathbf{F} \\cdot d\\mathbf{r} = \\alpha\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。所以\n\n$$\\int_{C_1 \\cup (-C_2)} \\alpha\\mathbf{F} \\cdot d\\mathbf{r} = \\alpha\\left(\\int_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\int_{C_2} \\mathbf{F} \\cdot d\\mathbf{r}\\right)。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const A = rng.nonZero(-9, 9);
+        let B = rng.nonZero(-9, 9);
+        if (B === A) B += 1;
+        const alpha = rng.pick([-3, -2, 2, 3, 4, 5]);
+        const ans = alpha * (A - B);
+        return numberProblem({
+          prompt: t(
+            `$\\int_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} = ${A}$ and $\\int_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = ${B}$, where $C_1$ ends where $C_2$ ends. Find $\\int_{C_1 \\cup (-C_2)} ${alpha}\\mathbf{F} \\cdot d\\mathbf{r}$.`,
+            `$\\int_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} = ${A}$，$\\int_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = ${B}$，$C_1$ 与 $C_2$ 终点相同。求 $\\int_{C_1 \\cup (-C_2)} ${alpha}\\mathbf{F} \\cdot d\\mathbf{r}$。`,
+          ),
+          answer: ans,
+          wrong: [alpha * (A + B), -ans, A - B, alpha * (B - A) + 1],
+          solution: t(
+            `Reversing $C_2$ gives $${-B}$, so the integral is $${alpha}(${A} + ${paren(-B)}) = ${ans}$.`,
+            `把 $C_2$ 反向得 $${-B}$，所以积分为 $${alpha}(${A} + ${paren(-B)}) = ${ans}$。`,
+          ),
         });
       },
     },
@@ -1174,6 +1754,35 @@ export const workDoneByAForceField: TopicDef = {
           solution,
           answer: ans,
           wrong: [fx * dy + fy * dx, -ans, ans + 4],
+        });
+      },
+    },
+    {
+      id: "work-by-a-shear-force-along-a-segment",
+      title: t("Work by the force $\\langle ay, 0 \\rangle$ along a segment", "力 $\\langle ay, 0 \\rangle$ 沿线段做的功"),
+      explanation: t(
+        "Work is $W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r}$. For $\\mathbf{F} = \\langle ay, 0 \\rangle$ only the $dx$ term counts: $W = \\int_C a\\,y\\,dx$. On the segment $\\mathbf{r}(t) = (x_0 + t\\Delta x, y_0 + t\\Delta y)$, $0 \\le t \\le 1$,\n\n$$W = \\int_0^1 a(y_0 + t\\Delta y)\\,\\Delta x\\,dt = a\\,\\Delta x\\,\\frac{y_0 + y_1}{2}.$$\n\nThis field is not conservative, so another path between the same points can do different work.",
+        "功为 $W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。对 $\\mathbf{F} = \\langle ay, 0 \\rangle$，只有 $dx$ 项起作用：$W = \\int_C a\\,y\\,dx$。在线段 $\\mathbf{r}(t) = (x_0 + t\\Delta x, y_0 + t\\Delta y)$，$0 \\le t \\le 1$ 上，\n\n$$W = \\int_0^1 a(y_0 + t\\Delta y)\\,\\Delta x\\,dt = a\\,\\Delta x\\,\\frac{y_0 + y_1}{2}。$$\n\n这个场不是保守的，同样两点之间的另一条路径做的功可能不同。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-4, 4);
+        const x0 = rng.int(-3, 3);
+        const y0 = rng.int(-3, 4);
+        const dx = rng.nonZero(-5, 5);
+        const y1 = rng.int(-3, 5);
+        const x1 = x0 + dx;
+        const ans = Q.of(a * dx * (y0 + y1), 2);
+        return numberProblem({
+          prompt: t(
+            `Find the work done by $\\mathbf{F} = \\langle ${poly([a, "y"])}, 0 \\rangle$ on a particle moving along the segment from $(${x0}, ${y0})$ to $(${x1}, ${y1})$.`,
+            `求 $\\mathbf{F} = \\langle ${poly([a, "y"])}, 0 \\rangle$ 对沿从 $(${x0}, ${y0})$ 到 $(${x1}, ${y1})$ 的线段运动的质点所做的功。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(a * dx * y1), Q.of(a * dx * y0), Q.of(a * (y1 - y0) * (x0 + x1), 2), ans.neg()],
+          solution: t(
+            `$W = \\int_C ${poly([a, "y"])}\\,dx$. Along the segment $y$ averages $\\frac{${y0} + ${paren(y1)}}{2}$ and $\\Delta x = ${dx}$, so $W = ${a} \\cdot ${paren(dx)} \\cdot \\frac{${y0 + y1}}{2} = ${ans.toLatex()}$.`,
+            `$W = \\int_C ${poly([a, "y"])}\\,dx$。沿线段 $y$ 的平均值为 $\\frac{${y0} + ${paren(y1)}}{2}$，$\\Delta x = ${dx}$，所以 $W = ${a} \\cdot ${paren(dx)} \\cdot \\frac{${y0 + y1}}{2} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1248,6 +1857,39 @@ export const theFundamentalTheoremOfLineIntegrals: TopicDef = {
         });
       },
     },
+    {
+      id: "evaluating-a-gradient-integral-with-a-mixed-term",
+      title: t("A gradient integral with a mixed term", "含交叉项的梯度场积分"),
+      explanation: t(
+        "If $\\mathbf{F} = \\nabla f$ and $C$ runs from $A$ to $B$, then $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(B) - f(A)$, whatever the path. When $\\mathbf{F}$ is given by its components, first recognize the potential. For $f = ax^2y + by$ the gradient is $\\langle 2axy, ax^2 + b \\rangle$, so the integral of that field is a difference of two values of $ax^2y + by$.",
+        "若 $\\mathbf{F} = \\nabla f$ 且 $C$ 从 $A$ 到 $B$，则无论路径如何，$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = f(B) - f(A)$。当 $\\mathbf{F}$ 以分量给出时，先认出势函数。对 $f = ax^2y + by$，梯度为 $\\langle 2axy, ax^2 + b \\rangle$，所以该场的积分是 $ax^2y + by$ 两个值之差。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-3, 3);
+        const b = rng.nonZero(-5, 5);
+        const x0 = rng.int(-2, 2);
+        const y0 = rng.int(-2, 2);
+        const x1 = rng.int(-3, 3);
+        let y1 = rng.int(-3, 3);
+        if (x1 === x0 && y1 === y0) y1 += 1;
+        const f = (x: number, y: number) => a * x * x * y + b * y;
+        const fA = f(x0, y0);
+        const fB = f(x1, y1);
+        const ans = fB - fA;
+        return numberProblem({
+          prompt: t(
+            `$\\mathbf{F} = \\nabla f$ with $f(x, y) = ${poly([a, "x^2y"], [b, "y"])}$, so $\\mathbf{F} = \\langle ${poly([2 * a, "xy"])}, ${poly([a, "x^2"], [b, ""])} \\rangle$. Evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ along any path from $(${x0}, ${y0})$ to $(${x1}, ${y1})$.`,
+            `$\\mathbf{F} = \\nabla f$，$f(x, y) = ${poly([a, "x^2y"], [b, "y"])}$，即 $\\mathbf{F} = \\langle ${poly([2 * a, "xy"])}, ${poly([a, "x^2"], [b, ""])} \\rangle$。沿从 $(${x0}, ${y0})$ 到 $(${x1}, ${y1})$ 的任意路径计算 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
+          ),
+          answer: ans,
+          wrong: [-ans, fB + fA, fB, ans + b],
+          solution: t(
+            `$f(${x1}, ${y1}) = ${fB}$ and $f(${x0}, ${y0}) = ${fA}$, so the integral is $${fB} - ${paren(fA)} = ${ans}$.`,
+            `$f(${x1}, ${y1}) = ${fB}$，$f(${x0}, ${y0}) = ${fA}$，所以积分为 $${fB} - ${paren(fA)} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1307,6 +1949,35 @@ export const pathIndependenceOfLineIntegrals: TopicDef = {
         });
       },
     },
+    {
+      id: "testing-a-linear-field-for-path-independence",
+      title: t("Testing a field for path independence", "检验向量场的路径无关性"),
+      explanation: t(
+        "On the whole plane, which is simply connected, $\\int_C P\\,dx + Q\\,dy$ is path independent exactly when $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$ everywhere. For $\\mathbf{F} = \\langle ay + bx^2, cx + dy^3 \\rangle$ this means $a = c$: the terms $bx^2$ and $dy^3$ depend on one variable only and never affect the test.",
+        "在整个平面（单连通）上，$\\int_C P\\,dx + Q\\,dy$ 与路径无关当且仅当处处 $\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$。对 $\\mathbf{F} = \\langle ay + bx^2, cx + dy^3 \\rangle$，这意味着 $a = c$：项 $bx^2$ 与 $dy^3$ 只依赖一个变量，从不影响检验。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-5, 5);
+        const indep = rng.int(0, 1) === 0;
+        let c = indep ? a : rng.nonZero(-5, 5);
+        if (!indep && c === a) c = -a;
+        const b = rng.nonZero(-4, 4);
+        const d = rng.nonZero(-4, 4);
+        return pickChoice(
+          rng,
+          t(
+            `Is $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ independent of path in the plane for $\\mathbf{F} = \\langle ${poly([a, "y"], [b, "x^2"])}, ${poly([c, "x"], [d, "y^3"])} \\rangle$?`,
+            `对 $\\mathbf{F} = \\langle ${poly([a, "y"], [b, "x^2"])}, ${poly([c, "x"], [d, "y^3"])} \\rangle$，$\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 在平面上与路径无关吗？`,
+          ),
+          indep ? yesNo[0]! : yesNo[1]!,
+          [indep ? yesNo[1]! : yesNo[0]!],
+          t(
+            `$\\frac{\\partial P}{\\partial y} = ${a}$ and $\\frac{\\partial Q}{\\partial x} = ${c}$. ${indep ? "They agree on the whole plane, so the field is conservative and the integral is path independent." : "They differ, so the field is not conservative and the integral depends on the path."}`,
+            `$\\frac{\\partial P}{\\partial y} = ${a}$，$\\frac{\\partial Q}{\\partial x} = ${c}$。${indep ? "二者在整个平面上相等，所以场是保守的，积分与路径无关。" : "二者不等，所以场不是保守的，积分依赖于路径。"}`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -1354,6 +2025,33 @@ export const conservativeVectorFieldsAndClosedPaths: TopicDef = {
           solution,
           answer: ans,
           wrong: [a * R * R, 2 * a * R, b * R],
+        });
+      },
+    },
+    {
+      id: "a-nonzero-circulation-rules-out-a-potential",
+      title: t("A nonzero circulation rules out a potential", "非零环量说明不存在势函数"),
+      explanation: t(
+        "If $\\mathbf{F}$ is conservative, its circulation around every closed curve is $0$. So a single closed curve with nonzero circulation proves that $\\mathbf{F}$ has no potential. For $\\mathbf{F} = \\langle -ay, bx \\rangle$ around the counterclockwise circle of radius $R$, with $\\mathbf{r}(t) = (R\\cos t, R\\sin t)$,\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi} (aR^2\\sin^2 t + bR^2\\cos^2 t)\\,dt = (a + b)\\pi R^2.$$\n\nThis is nonzero unless $b = -a$, and $\\langle -ay, -ax \\rangle = \\nabla(-axy)$ is indeed conservative.",
+        "若 $\\mathbf{F}$ 是保守的，它沿每条闭曲线的环量都是 $0$。所以只要有一条闭曲线的环量不为零，就证明了 $\\mathbf{F}$ 没有势函数。对 $\\mathbf{F} = \\langle -ay, bx \\rangle$ 沿半径为 $R$ 的逆时针圆，$\\mathbf{r}(t) = (R\\cos t, R\\sin t)$，\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi} (aR^2\\sin^2 t + bR^2\\cos^2 t)\\,dt = (a + b)\\pi R^2。$$\n\n除非 $b = -a$，这都不为零；而 $\\langle -ay, -ax \\rangle = \\nabla(-axy)$ 确实是保守的。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-4, 4);
+        let b = rng.nonZero(-4, 4);
+        if (b === -a) b = a;
+        const R = rng.int(1, 4);
+        const ans = (a + b) * R * R;
+        return numberProblem({
+          prompt: t(
+            `Find $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle ${poly([-a, "y"])}, ${poly([b, "x"])} \\rangle$ around the circle $x^2 + y^2 = ${R * R}$, counterclockwise. A nonzero answer shows $\\mathbf{F}$ is not conservative.`,
+            `沿逆时针方向的圆 $x^2 + y^2 = ${R * R}$，对 $\\mathbf{F} = \\langle ${poly([-a, "y"])}, ${poly([b, "x"])} \\rangle$ 求 $\\frac{1}{\\pi}\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$。非零的结果说明 $\\mathbf{F}$ 不是保守的。`,
+          ),
+          answer: ans,
+          wrong: [0, (b - a) * R * R, 2 * (a + b) * R * R, (a + b) * R],
+          solution: t(
+            `$\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${poly([a * R * R, "\\sin^2 t"], [b * R * R, "\\cos^2 t"])}$, and each of $\\sin^2 t$, $\\cos^2 t$ integrates to $\\pi$ over a full turn. So the circulation is $${ans}\\pi$, and dividing by $\\pi$ gives $${ans}$.`,
+            `$\\mathbf{F} \\cdot \\mathbf{r}'(t) = ${poly([a * R * R, "\\sin^2 t"], [b * R * R, "\\cos^2 t"])}$，$\\sin^2 t$ 与 $\\cos^2 t$ 在一整圈上的积分都是 $\\pi$。所以环量为 $${ans}\\pi$，除以 $\\pi$ 得 $${ans}$。`,
+          ),
         });
       },
     },
@@ -1419,6 +2117,39 @@ export const calculatingPotentialFunctionsForLineIntegrals: TopicDef = {
           solution,
           answer: ans,
           wrong: [ans + 2, -ans, ans * 2],
+        });
+      },
+    },
+    {
+      id: "a-potential-function-with-a-cubic-term",
+      title: t("A potential function with a cubic term", "含三次项的势函数"),
+      explanation: t(
+        "To find $f$ with $\\nabla f = \\langle P, Q \\rangle$, integrate $P$ in $x$, which leaves an unknown $g(y)$, then match $f_y$ with $Q$. For $\\mathbf{F} = \\langle 3ax^2y + b, ax^3 + 2cy \\rangle$:\n\n$$f = \\int (3ax^2y + b)\\,dx = ax^3y + bx + g(y), \\qquad f_y = ax^3 + g'(y) = ax^3 + 2cy,$$\n\nso $g(y) = cy^2$ and $f = ax^3y + bx + cy^2$. The line integral from $A$ to $B$ is $f(B) - f(A)$.",
+        "要求 $f$ 使 $\\nabla f = \\langle P, Q \\rangle$，先把 $P$ 对 $x$ 积分，留下未知的 $g(y)$，再让 $f_y$ 与 $Q$ 一致。对 $\\mathbf{F} = \\langle 3ax^2y + b, ax^3 + 2cy \\rangle$：\n\n$$f = \\int (3ax^2y + b)\\,dx = ax^3y + bx + g(y), \\qquad f_y = ax^3 + g'(y) = ax^3 + 2cy,$$\n\n所以 $g(y) = cy^2$，$f = ax^3y + bx + cy^2$。从 $A$ 到 $B$ 的线积分为 $f(B) - f(A)$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-2, 2);
+        const b = rng.nonZero(-5, 5);
+        const c = rng.nonZero(-3, 3);
+        const x0 = rng.int(-2, 2);
+        const y0 = rng.int(-2, 2);
+        const x1 = rng.int(-2, 2);
+        let y1 = rng.int(-2, 3);
+        if (x1 === x0 && y1 === y0) y1 += 1;
+        const f = (x: number, y: number) => a * x ** 3 * y + b * x + c * y * y;
+        const ans = f(x1, y1) - f(x0, y0);
+        const g = (x: number, y: number) => a * x ** 3 * y + c * y * y;
+        return numberProblem({
+          prompt: t(
+            `$\\mathbf{F} = \\langle ${poly([3 * a, "x^2y"], [b, ""])}, ${poly([a, "x^3"], [2 * c, "y"])} \\rangle$. Find a potential function and evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ along any path from $(${x0}, ${y0})$ to $(${x1}, ${y1})$.`,
+            `$\\mathbf{F} = \\langle ${poly([3 * a, "x^2y"], [b, ""])}, ${poly([a, "x^3"], [2 * c, "y"])} \\rangle$。求势函数，并沿从 $(${x0}, ${y0})$ 到 $(${x1}, ${y1})$ 的任意路径计算 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
+          ),
+          answer: ans,
+          wrong: [-ans, g(x1, y1) - g(x0, y0), f(x1, y1) + f(x0, y0), ans + c],
+          solution: t(
+            `$f(x, y) = ${poly([a, "x^3y"], [b, "x"], [c, "y^2"])}$. Then $f(${x1}, ${y1}) = ${f(x1, y1)}$ and $f(${x0}, ${y0}) = ${f(x0, y0)}$, so the integral is $${ans}$.`,
+            `$f(x, y) = ${poly([a, "x^3y"], [b, "x"], [c, "y^2"])}$。于是 $f(${x1}, ${y1}) = ${f(x1, y1)}$，$f(${x0}, ${y0}) = ${f(x0, y0)}$，积分为 $${ans}$。`,
+          ),
         });
       },
     },
@@ -1490,6 +2221,35 @@ export const lineIntegralsOfConservativeVectorFieldsInThreeDimensions: TopicDef 
         });
       },
     },
+    {
+      id: "a-three-dimensional-potential-with-a-product-term",
+      title: t("A three-dimensional potential with a product term", "含乘积项的三维势函数"),
+      explanation: t(
+        "In space, $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$ just as in the plane. The field $\\mathbf{F} = \\langle ayz, axz, axy + 2bz \\rangle$ is the gradient of $f = axyz + bz^2$: differentiating $axyz$ gives $ayz$, $axz$ and $axy$, and $bz^2$ adds $2bz$ to the last component. So its line integral is a difference of two values of $axyz + bz^2$.",
+        "在空间中同样有 $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$。场 $\\mathbf{F} = \\langle ayz, axz, axy + 2bz \\rangle$ 是 $f = axyz + bz^2$ 的梯度：$axyz$ 的偏导为 $ayz$、$axz$ 与 $axy$，$bz^2$ 给最后一个分量加上 $2bz$。所以其线积分是 $axyz + bz^2$ 两个值之差。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-3, 3);
+        const b = rng.nonZero(-3, 3);
+        const P0 = [rng.int(-2, 2), rng.int(-2, 2), rng.int(-2, 2)] as const;
+        const P1 = [rng.int(-2, 3), rng.int(-2, 3), rng.int(1, 3)] as const;
+        const f = (p: readonly [number, number, number]) => a * p[0] * p[1] * p[2] + b * p[2] * p[2];
+        const ans = f(P1) - f(P0);
+        const pt = (p: readonly [number, number, number]) => `(${p[0]}, ${p[1]}, ${p[2]})`;
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle ${poly([a, "yz"])}, ${poly([a, "xz"])}, ${poly([a, "xy"], [2 * b, "z"])} \\rangle$ along any path from $${pt(P0)}$ to $${pt(P1)}$.`,
+            `沿从 $${pt(P0)}$ 到 $${pt(P1)}$ 的任意路径，对 $\\mathbf{F} = \\langle ${poly([a, "yz"])}, ${poly([a, "xz"])}, ${poly([a, "xy"], [2 * b, "z"])} \\rangle$ 计算 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
+          ),
+          answer: ans,
+          wrong: [-ans, f(P1), f(P1) + f(P0), ans + b * (P1[2] * P1[2] - P0[2] * P0[2])],
+          solution: t(
+            `$\\mathbf{F} = \\nabla f$ with $f = ${poly([a, "xyz"], [b, "z^2"])}$. $f${pt(P1)} = ${f(P1)}$ and $f${pt(P0)} = ${f(P0)}$, so the integral is $${ans}$.`,
+            `$\\mathbf{F} = \\nabla f$，$f = ${poly([a, "xyz"], [b, "z^2"])}$。$f${pt(P1)} = ${f(P1)}$，$f${pt(P0)} = ${f(P0)}$，积分为 $${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1541,6 +2301,34 @@ export const conservationOfMechanicalEnergy: TopicDef = {
           solution,
           answer: ans,
           wrong: [K1 + U2, U1 - U2, ans + 10],
+        });
+      },
+    },
+    {
+      id: "kinetic-energy-after-moving-through-a-conservative-field",
+      title: t("Kinetic energy after moving through a conservative field", "在保守场中运动后的动能"),
+      explanation: t(
+        "If the only force is $\\mathbf{F} = -\\nabla U$, its work from $A$ to $B$ is $U(A) - U(B)$, and by the work–energy theorem this equals the change in kinetic energy. So $K + U$ stays constant:\n\n$$K_B = K_A + U(A) - U(B), \\qquad K_A = \\tfrac12 m v_A^2.$$\n\nMoving to lower potential energy speeds the particle up.",
+        "若唯一的力是 $\\mathbf{F} = -\\nabla U$，它从 $A$ 到 $B$ 做的功为 $U(A) - U(B)$，由动能定理这等于动能的变化。所以 $K + U$ 保持不变：\n\n$$K_B = K_A + U(A) - U(B), \\qquad K_A = \\tfrac12 m v_A^2。$$\n\n移向较低势能时质点加速。",
+      ),
+      generate(rng: Rng): Problem {
+        const m = rng.pick([2, 4, 6]);
+        const v = rng.int(1, 5);
+        const KA = (m * v * v) / 2;
+        const UA = rng.int(-10, 20);
+        const UB = UA + rng.int(-15, KA - 1);
+        const ans = KA + UA - UB;
+        return numberProblem({
+          prompt: t(
+            `A particle of mass $${m}$ moves under a force $\\mathbf{F} = -\\nabla U$ alone. At $A$ its speed is $${v}$ and $U(A) = ${UA}$; at $B$, $U(B) = ${UB}$. Find its kinetic energy at $B$.`,
+            `质量为 $${m}$ 的质点仅受力 $\\mathbf{F} = -\\nabla U$ 作用。在 $A$ 处速率为 $${v}$，$U(A) = ${UA}$；在 $B$ 处 $U(B) = ${UB}$。求它在 $B$ 处的动能。`,
+          ),
+          answer: ans,
+          wrong: [KA + UB - UA, UA - UB, KA, m * v * v + UA - UB],
+          solution: t(
+            `$K_A = \\frac12 \\cdot ${m} \\cdot ${v}^2 = ${KA}$, and $K_B = K_A + U(A) - U(B) = ${KA} + ${paren(UA)} - ${paren(UB)} = ${ans}$.`,
+            `$K_A = \\frac12 \\cdot ${m} \\cdot ${v}^2 = ${KA}$，$K_B = K_A + U(A) - U(B) = ${KA} + ${paren(UA)} - ${paren(UB)} = ${ans}$。`,
+          ),
         });
       },
     },
@@ -2101,6 +2889,34 @@ export const circulationAndFluxAcrossSimpleClosedPlaneCurves: TopicDef = {
         });
       },
     },
+    {
+      id: "circulation-around-a-rectangle-edge-by-edge",
+      title: t("Circulation around a rectangle edge by edge", "逐边计算绕矩形的环量"),
+      explanation: t(
+        "The counterclockwise circulation $\\oint_C P\\,dx + Q\\,dy$ around the rectangle $[0, w] \\times [0, h]$ is the sum over its four edges. For $\\mathbf{F} = \\langle ay, bx \\rangle$: the bottom edge has $y = 0$ and the left edge has $x = 0$, so both give $0$. The right edge, going up at $x = w$, gives $\\int_0^h bw\\,dy = bwh$. The top edge, going left at $y = h$, gives $\\int_w^0 ah\\,dx = -awh$. The circulation is $(b - a)wh$.",
+        "绕矩形 $[0, w] \\times [0, h]$ 的逆时针环量 $\\oint_C P\\,dx + Q\\,dy$ 是四条边之和。对 $\\mathbf{F} = \\langle ay, bx \\rangle$：底边 $y = 0$，左边 $x = 0$，都贡献 $0$。右边在 $x = w$ 向上，贡献 $\\int_0^h bw\\,dy = bwh$。顶边在 $y = h$ 向左，贡献 $\\int_w^0 ah\\,dx = -awh$。环量为 $(b - a)wh$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-5, 5);
+        let b = rng.nonZero(-5, 5);
+        if (b === a) b = -a;
+        const w = rng.int(1, 6);
+        const h = rng.int(1, 6);
+        const ans = (b - a) * w * h;
+        return numberProblem({
+          prompt: t(
+            `Find the counterclockwise circulation of $\\mathbf{F} = \\langle ${poly([a, "y"])}, ${poly([b, "x"])} \\rangle$ around the boundary of the rectangle $0 \\le x \\le ${w}$, $0 \\le y \\le ${h}$.`,
+            `求 $\\mathbf{F} = \\langle ${poly([a, "y"])}, ${poly([b, "x"])} \\rangle$ 绕矩形 $0 \\le x \\le ${w}$，$0 \\le y \\le ${h}$ 边界的逆时针环量。`,
+          ),
+          answer: ans,
+          wrong: [(a + b) * w * h, (a - b) * w * h, b * w * h, (b - a) * (w + h)],
+          solution: t(
+            `Bottom and left edges give $0$. Right edge: $${paren(b)} \\cdot ${w} \\cdot ${h} = ${b * w * h}$. Top edge (leftward): $-${paren(a)} \\cdot ${h} \\cdot ${w} = ${-a * w * h}$. Total: $${ans}$.`,
+            `底边与左边贡献 $0$。右边：$${paren(b)} \\cdot ${w} \\cdot ${h} = ${b * w * h}$。顶边（向左）：$-${paren(a)} \\cdot ${h} \\cdot ${w} = ${-a * w * h}$。合计：$${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -2157,6 +2973,32 @@ export const greensTheoremInCirculationCurlForm: TopicDef = {
           solution,
           answer: ans,
           wrong: [area, k * (W + H), ans + area],
+        });
+      },
+    },
+    {
+      id: "circulation-around-a-circle-by-greens-theorem",
+      title: t("Circulation around a circle by Green's theorem", "用格林定理求绕圆的环量"),
+      explanation: t(
+        "Green's theorem turns a counterclockwise circulation into a double integral of the scalar curl:\n\n$$\\oint_C P\\,dx + Q\\,dy = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA.$$\n\nTerms such as $x^2$ in $P$ or $y^3$ in $Q$ drop out of the curl. For $P = -ay + x^2$, $Q = bx + y^3$ the curl is the constant $a + b$, so the circulation around a circle of radius $R$ is $(a + b)\\pi R^2$.",
+        "格林定理把逆时针环量化为标量旋度的二重积分：\n\n$$\\oint_C P\\,dx + Q\\,dy = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA。$$\n\n$P$ 中的 $x^2$ 或 $Q$ 中的 $y^3$ 这类项在旋度中消失。对 $P = -ay + x^2$，$Q = bx + y^3$，旋度为常数 $a + b$，所以绕半径 $R$ 的圆的环量为 $(a + b)\\pi R^2$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 5);
+        const b = rng.int(1, 5);
+        const R = rng.int(1, 4);
+        const ans = (a + b) * R * R;
+        return numberProblem({
+          prompt: t(
+            `Use Green's theorem to find $\\frac{1}{\\pi}\\oint_C (${poly([-a, "y"], [1, "x^2"])})\\,dx + (${poly([b, "x"], [1, "y^3"])})\\,dy$, where $C$ is the circle $x^2 + y^2 = ${R * R}$ counterclockwise.`,
+            `用格林定理求 $\\frac{1}{\\pi}\\oint_C (${poly([-a, "y"], [1, "x^2"])})\\,dx + (${poly([b, "x"], [1, "y^3"])})\\,dy$，$C$ 为逆时针方向的圆 $x^2 + y^2 = ${R * R}$。`,
+          ),
+          answer: ans,
+          wrong: [(b - a) * R * R, (a + b) * R, 2 * (a + b) * R * R, (a + b) * R * R + 2 * R],
+          solution: t(
+            `$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${b} - (-${a}) = ${a + b}$, and the disk has area $${R === 1 ? "" : R * R}\\pi$. So the circulation is $${ans}\\pi$, and dividing by $\\pi$ gives $${ans}$.`,
+            `$\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${b} - (-${a}) = ${a + b}$，圆盘面积为 $${R === 1 ? "" : R * R}\\pi$。所以环量为 $${ans}\\pi$，除以 $\\pi$ 得 $${ans}$。`,
+          ),
         });
       },
     },
@@ -2304,6 +3146,38 @@ export const calculatingAreasUsingGreensTheorem: TopicDef = {
         });
       },
     },
+    {
+      id: "the-area-of-a-triangle-from-a-boundary-integral",
+      title: t("The area of a triangle from a boundary integral", "用边界积分求三角形面积"),
+      explanation: t(
+        "Green's theorem gives the area of a region as $A = \\frac12\\oint_C x\\,dy - y\\,dx$ around its counterclockwise boundary. Along a segment through the origin, $x\\,dy - y\\,dx = 0$, because the point moves straight away from or toward the origin. For the triangle with vertices $(0, 0)$, $(a, b)$, $(c, d)$ only the edge from $(a, b)$ to $(c, d)$ contributes, and it gives $ad - bc$. So\n\n$$A = \\tfrac12(ad - bc)$$\n\nwhen the vertices are in counterclockwise order.",
+        "格林定理给出区域面积 $A = \\frac12\\oint_C x\\,dy - y\\,dx$，沿逆时针边界积分。沿过原点的线段，$x\\,dy - y\\,dx = 0$，因为点径直远离或接近原点。对顶点为 $(0, 0)$、$(a, b)$、$(c, d)$ 的三角形，只有从 $(a, b)$ 到 $(c, d)$ 的边有贡献，其值为 $ad - bc$。所以当顶点为逆时针顺序时\n\n$$A = \\tfrac12(ad - bc)。$$",
+      ),
+      generate(rng: Rng): Problem {
+        let a = rng.int(1, 6);
+        let b = rng.int(-3, 3);
+        let c = rng.int(-3, 4);
+        let d = rng.int(1, 6);
+        if (a * d - b * c <= 0) {
+          [a, b, c, d] = [a + 2, b, c, d + 2];
+          if (a * d - b * c <= 0) [b, c] = [0, 0];
+        }
+        const det = a * d - b * c;
+        const ans = Q.of(det, 2);
+        return numberProblem({
+          prompt: t(
+            `Use $A = \\frac12\\oint_C x\\,dy - y\\,dx$ to find the area of the triangle with vertices $(0, 0)$, $(${a}, ${b})$ and $(${c}, ${d})$.`,
+            `用 $A = \\frac12\\oint_C x\\,dy - y\\,dx$ 求顶点为 $(0, 0)$、$(${a}, ${b})$、$(${c}, ${d})$ 的三角形面积。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(det), Q.of(a * d + b * c, 2), Q.of(a * c + b * d, 2), Q.of(a * d, 2)],
+          solution: t(
+            `The two edges through the origin contribute $0$. The edge from $(${a}, ${b})$ to $(${c}, ${d})$ gives $${a} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${det}$. So $A = \\frac12 \\cdot ${det} = ${ans.toLatex()}$.`,
+            `过原点的两条边贡献 $0$。从 $(${a}, ${b})$ 到 $(${c}, ${d})$ 的边给出 $${a} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${det}$。所以 $A = \\frac12 \\cdot ${det} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -2369,6 +3243,32 @@ export const greensTheoremInFluxDivergenceForm: TopicDef = {
         });
       },
     },
+    {
+      id: "outward-flux-with-a-variable-divergence",
+      title: t("Outward flux with a variable divergence", "散度不为常数时的向外通量"),
+      explanation: t(
+        "In flux form, Green's theorem says the outward flux across a closed curve equals the integral of the divergence over the enclosed region:\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right) dA.$$\n\nWhen the divergence is not constant, evaluate the double integral as an iterated integral. For $\\mathbf{F} = \\langle x^2, ky \\rangle$ on $[0, w] \\times [0, h]$ the divergence is $2x + k$, and\n\n$$\\int_0^h \\int_0^w (2x + k)\\,dx\\,dy = w^2h + kwh.$$",
+        "通量形式的格林定理说，穿过闭曲线的向外通量等于散度在所围区域上的积分：\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right) dA。$$\n\n散度不是常数时，把二重积分化为累次积分。对 $\\mathbf{F} = \\langle x^2, ky \\rangle$ 在 $[0, w] \\times [0, h]$ 上，散度为 $2x + k$，\n\n$$\\int_0^h \\int_0^w (2x + k)\\,dx\\,dy = w^2h + kwh。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const k = rng.nonZero(-4, 5);
+        const w = rng.int(1, 5);
+        const h = rng.int(1, 5);
+        const ans = w * w * h + k * w * h;
+        return numberProblem({
+          prompt: t(
+            `Find the outward flux of $\\mathbf{F} = \\langle x^2, ${poly([k, "y"])} \\rangle$ across the boundary of the rectangle $0 \\le x \\le ${w}$, $0 \\le y \\le ${h}$.`,
+            `求 $\\mathbf{F} = \\langle x^2, ${poly([k, "y"])} \\rangle$ 穿过矩形 $0 \\le x \\le ${w}$，$0 \\le y \\le ${h}$ 边界的向外通量。`,
+          ),
+          answer: ans,
+          wrong: [k * w * h, 2 * w * w * h + k * w * h, (2 * w + k) * w * h, w * w * h - k * w * h],
+          solution: t(
+            `$\\nabla \\cdot \\mathbf{F} = ${poly([2, "x"], [k, ""])}$. Then $\\int_0^{${h}} \\int_0^{${w}} (${poly([2, "x"], [k, ""])})\\,dx\\,dy = ${h}(${w * w} + ${paren(k * w)}) = ${ans}$.`,
+            `$\\nabla \\cdot \\mathbf{F} = ${poly([2, "x"], [k, ""])}$。于是 $\\int_0^{${h}} \\int_0^{${w}} (${poly([2, "x"], [k, ""])})\\,dx\\,dy = ${h}(${w * w} + ${paren(k * w)}) = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -2425,6 +3325,34 @@ export const greensTheoremOnRegionsWithHoles: TopicDef = {
           solution,
           answer: ans,
           wrong: [0, -ans, 2 * ans],
+        });
+      },
+    },
+    {
+      id: "an-outer-circulation-from-an-inner-one",
+      title: t("Finding an outer circulation from an inner one", "由内边界环量求外边界环量"),
+      explanation: t(
+        "On an annulus $D$ between an inner circle $C_1$ and an outer circle $C_2$, both counterclockwise, Green's theorem reads\n\n$$\\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA,$$\n\nbecause the inner circle must be traversed clockwise to keep $D$ on the left. Even if $\\mathbf{F}$ is not defined at the origin, knowing the inner circulation and the curl on $D$ determines the outer one. With constant curl $c$ the right side is $c\\pi(r_2^2 - r_1^2)$.",
+        "在内圆 $C_1$ 与外圆 $C_2$（都取逆时针）之间的圆环 $D$ 上，格林定理为\n\n$$\\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA,$$\n\n因为内圆必须顺时针遍历才能使 $D$ 在左侧。即使 $\\mathbf{F}$ 在原点无定义，已知内环量和 $D$ 上的旋度就能确定外环量。旋度为常数 $c$ 时右边为 $c\\pi(r_2^2 - r_1^2)$。",
+      ),
+      generate(rng: Rng): Problem {
+        const r1 = rng.int(1, 3);
+        const r2 = r1 + rng.int(1, 3);
+        const c = rng.nonZero(-3, 4);
+        const m = rng.nonZero(-6, 6);
+        const ring = c * (r2 * r2 - r1 * r1);
+        const ans = m + ring;
+        return numberProblem({
+          prompt: t(
+            `$\\mathbf{F}$ is not defined at the origin, and $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${c}$ everywhere else. Its counterclockwise circulation around $x^2 + y^2 = ${r1 * r1}$ is $${m === 1 ? "" : m === -1 ? "-" : m}\\pi$. Find $\\frac{1}{\\pi}$ times its counterclockwise circulation around $x^2 + y^2 = ${r2 * r2}$.`,
+            `$\\mathbf{F}$ 在原点无定义，在其他地方 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = ${c}$。它绕 $x^2 + y^2 = ${r1 * r1}$ 的逆时针环量为 $${m === 1 ? "" : m === -1 ? "-" : m}\\pi$。求它绕 $x^2 + y^2 = ${r2 * r2}$ 的逆时针环量的 $\\frac{1}{\\pi}$ 倍。`,
+          ),
+          answer: ans,
+          wrong: [ring, m - ring, m + c * r2 * r2, m + c * (r2 * r2 + r1 * r1)],
+          solution: t(
+            `The annulus has area $(${r2 * r2} - ${r1 * r1})\\pi$, so $\\oint_{C_2} - \\oint_{C_1} = ${c} \\cdot ${r2 * r2 - r1 * r1}\\pi = ${ring}\\pi$. Then $\\oint_{C_2} = (${m} + ${paren(ring)})\\pi = ${ans}\\pi$, giving $${ans}$.`,
+            `圆环面积为 $(${r2 * r2} - ${r1 * r1})\\pi$，所以 $\\oint_{C_2} - \\oint_{C_1} = ${c} \\cdot ${r2 * r2 - r1 * r1}\\pi = ${ring}\\pi$。于是 $\\oint_{C_2} = (${m} + ${paren(ring)})\\pi = ${ans}\\pi$，结果为 $${ans}$。`,
+          ),
         });
       },
     },
