@@ -1,6 +1,6 @@
 import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q, svgDocument } from "@ga/subject-math";
+import { type PlaneView, plane, Q, svgDocument } from "@ga/subject-math";
 
 import { numberProblem, radicalProblem, steps } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -648,6 +648,70 @@ export const graphingSystemsOfLinearAndCircularInequalities = topic(
             `把每个点代入两个不等式检验：${pts.map(([x, y], i) => `$(${x}, ${y})$ ${ok[i] ? "两个都满足" : inCircle(x, y) ? "不满足直线不等式" : "不满足圆的不等式"}`).join("；")}。所以有 $${count}$ 个点满足不等式组。`,
           ),
         });
+      },
+    ),
+    kp(
+      "reading-a-system-from-its-graph",
+      t("Reading a system from its graph", "由图象读出不等式组"),
+      t(
+        "A shaded graph of a system answers two questions, one for each boundary. If the shading is inside the circle, the circle inequality uses $\\le$; if it is outside, $\\ge$. If the shading is above the line, the line inequality is $y \\ge mx + c$; if below, $y \\le mx + c$. Check the choice with any point of the shaded region, which must satisfy both inequalities.",
+        "不等式组的阴影图象对每条边界各回答一个问题。阴影在圆内，圆的不等式用 $\\le$；在圆外，用 $\\ge$。阴影在直线上方，直线的不等式是 $y \\ge mx + c$；在下方，是 $y \\le mx + c$。再用阴影区域中的任意一点检验：它必须同时满足两个不等式。",
+      ),
+      (rng) => {
+        for (;;) {
+          const h = rng.int(-2, 2);
+          const k = rng.int(-2, 2);
+          const rad = rng.int(3, 4);
+          const m = rng.pick([-2, -1, 0, 1, 2]);
+          const c = rng.int(-4, 4);
+          // The line must cut well through the circle, and must not lie on the x-axis.
+          if (Math.abs(m * h - k + c) / Math.hypot(m, 1) > rad - 1 || (m === 0 && c === 0)) continue;
+          const inside = rng.bool();
+          const above = rng.bool();
+          const inRegion = (x: number, y: number) =>
+            (inside ? (x - h) ** 2 + (y - k) ** 2 < rad * rad : (x - h) ** 2 + (y - k) ** 2 > rad * rad) &&
+            (above ? y > m * x + c : y < m * x + c);
+          const lattice: [number, number][] = [];
+          for (let x = -6; x <= 6; x++) for (let y = -6; y <= 6; y++) if (inRegion(x, y)) lattice.push([x, y]);
+          if (lattice.length === 0) continue;
+          const [px, py] = lattice[Math.floor(lattice.length / 2)]!;
+          const sys = (i: boolean, a: boolean) =>
+            t(
+              `$${circleTerm(h, k)} ${i ? "\\le" : "\\ge"} ${rad * rad}$ and $y ${a ? "\\ge" : "\\le"} ${lineTerm(m, c)}$`,
+              `$${circleTerm(h, k)} ${i ? "\\le" : "\\ge"} ${rad * rad}$ 且 $y ${a ? "\\ge" : "\\le"} ${lineTerm(m, c)}$`,
+            );
+          const view: PlaneView = { xMin: -7, xMax: 7, yMin: -7, yMax: 7 };
+          const lineAt = (x: number) => m * x + c;
+          const figure: Figure = {
+            svg: plane(view, [
+              { kind: "region", halfPlanes: [above ? [-m, 1, -c] : [m, -1, c]], disk: { center: [h, k], r: rad, outside: !inside } },
+              { kind: "circle", center: [h, k], r: rad, accent: true },
+              { kind: "line", a: [0, c], b: [1, lineAt(1)], accent: true },
+            ]),
+            alt: t(
+              `The circle with center (${h}, ${k}) and radius ${rad} and the line y = ${lineTerm(m, c).replace(/-/g, "−")}, with the region ${inside ? "inside" : "outside"} the circle and ${above ? "above" : "below"} the line shaded.`,
+              `以 (${h}, ${k}) 为圆心、${rad} 为半径的圆与直线 y = ${lineTerm(m, c).replace(/-/g, "−")}，圆${inside ? "内" : "外"}且直线${above ? "上方" : "下方"}的区域涂有阴影。`,
+            ),
+          };
+          const d = (px - h) ** 2 + (py - k) ** 2;
+          const part = (v: number, c: number) =>
+            c === 0 ? `${v < 0 ? `(${v})` : v}^{2}` : `(${v} ${c > 0 ? "-" : "+"} ${Math.abs(c)})^{2}`;
+          const plugged = `${part(px, h)} + ${part(py, k)}`;
+          return pickChoice(
+            rng,
+            t(
+              `The graph shows the circle $${circleTerm(h, k)} = ${rad * rad}$ and the line $y = ${lineTerm(m, c)}$. The shaded region, with its boundary, is the graph of which system?`,
+              `图中是圆 $${circleTerm(h, k)} = ${rad * rad}$ 与直线 $y = ${lineTerm(m, c)}$。阴影区域（含边界）是哪个不等式组的图象？`,
+            ),
+            sys(inside, above),
+            [sys(!inside, above), sys(inside, !above), sys(!inside, !above)],
+            t(
+              `The shading is ${inside ? "inside" : "outside"} the circle, so the circle inequality uses $${inside ? "\\le" : "\\ge"}$, and ${above ? "above" : "below"} the line, so $y ${above ? "\\ge" : "\\le"} ${lineTerm(m, c)}$. Check with the shaded point $(${px}, ${py})$: $${plugged} = ${d} ${inside ? "\\le" : "\\ge"} ${rad * rad}$ and $${py} ${above ? "\\ge" : "\\le"} ${lineAt(px)}$.`,
+              `阴影在圆${inside ? "内" : "外"}，所以圆的不等式用 $${inside ? "\\le" : "\\ge"}$；在直线${above ? "上方" : "下方"}，所以 $y ${above ? "\\ge" : "\\le"} ${lineTerm(m, c)}$。用阴影中的点 $(${px}, ${py})$ 检验：$${plugged} = ${d} ${inside ? "\\le" : "\\ge"} ${rad * rad}$，且 $${py} ${above ? "\\ge" : "\\le"} ${lineAt(px)}$。`,
+            ),
+            figure,
+          );
+        }
       },
     ),
     kp(
