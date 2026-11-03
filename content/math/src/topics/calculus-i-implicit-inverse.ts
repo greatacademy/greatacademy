@@ -1,6 +1,6 @@
-import type { Rng, TopicDef } from "@ga/content";
+import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly, Q } from "@ga/subject-math";
+import { type PlaneMark, plane, poly, Q } from "@ga/subject-math";
 
 import { functionProblem, numberProblem } from "../problems.ts";
 import { fracL, type Poly, pAt, par, pDer, pLatex, power, sumLatex, table } from "./calculus-common.ts";
@@ -151,6 +151,50 @@ const pythagorean: readonly (readonly [number, number])[] = [
   [1, 3],
 ];
 
+/** tangentFigure plots a curve with its tangent line at one point. */
+const tangentFigure = (marks: readonly PlaneMark[], en: string, zh: string): Figure => ({
+  svg: plane({ xMin: -6, xMax: 8, yMin: -6, yMax: 6, labelEvery: 2 }, marks),
+  alt: t(en, zh),
+});
+
+/** circleTangentFigure plots x² + y² = 25 with its tangent at (3, 4), perpendicular to the radius. */
+const circleTangentFigure = tangentFigure(
+  [
+    { kind: "circle", center: [0, 0], r: 5 },
+    { kind: "segment", a: [0, 0], b: [3, 4], dashed: true },
+    { kind: "line", a: [3, 4], b: [7, 1], accent: true },
+    { kind: "point", at: [3, 4], label: "(3, 4)", dir: "ne" },
+  ],
+  "The circle x² + y² = 25 and its tangent line at (3, 4), with slope −3/4, perpendicular to the radius to (3, 4), with slope 4/3.",
+  "圆 x² + y² = 25 及其在 (3, 4) 处的切线，斜率为 −3/4，与通往 (3, 4) 的半径（斜率 4/3）垂直。",
+);
+
+const half = (f: (x: number) => number, from: number, to: number): PlaneMark[] => [
+  { kind: "curve", f, from, to },
+  { kind: "curve", f: (x) => -f(x), from, to },
+];
+
+/** ellipseTangentFigure plots x² + 4y² = 20 with its tangent at (4, 1). */
+const ellipseTangentFigure = tangentFigure(
+  [
+    ...half((x) => Math.sqrt(Math.max(0, 20 - x * x)) / 2, -Math.sqrt(20), Math.sqrt(20)),
+    { kind: "line", a: [4, 1], b: [5, 0], accent: true },
+    { kind: "point", at: [4, 1], label: "(4, 1)", dir: "ne" },
+  ],
+  "The ellipse x² + 4y² = 20 and its tangent line at (4, 1), with slope −1.",
+  "椭圆 x² + 4y² = 20 及其在 (4, 1) 处的切线，斜率为 −1。",
+);
+
+/** parabolaTangentFigure plots x = y² with its tangent at (4, 2). */
+const parabolaTangentFigure = tangentFigure(
+  [
+    ...half((x) => Math.sqrt(Math.max(0, x)), 0, 8),
+    { kind: "line", a: [4, 2], b: [0, 1], accent: true },
+    { kind: "point", at: [4, 2], label: "(4, 2)", dir: "se" },
+  ],
+  "The sideways parabola x = y² and its tangent line at (4, 2), with slope 1/4.",
+  "开口向右的抛物线 x = y² 及其在 (4, 2) 处的切线，斜率为 1/4。",
+);
 /** calculatingSlopesOfCirclesEllipsesAndParabolas finds slopes of conics. */
 export const calculatingSlopesOfCirclesEllipsesAndParabolas: TopicDef = {
   id: "calculating-slopes-of-circles-ellipses-and-parabolas",
@@ -174,6 +218,7 @@ export const calculatingSlopesOfCirclesEllipsesAndParabolas: TopicDef = {
         "The tangent to a circle is perpendicular to the radius, and the implicit derivative confirms this: its slope is the negative reciprocal of the radius slope. For the circle $(x - h)^{2} + (y - k)^{2} = r^{2}$,\n\n$$2(x - h) + 2(y - k)\\frac{dy}{dx} = 0 \\implies \\frac{dy}{dx} = -\\frac{x - h}{y - k}.$$\n\nThe tangent line is perpendicular to the radius, whose slope is $\\frac{y - k}{x - h}$.",
         "圆的切线垂直于半径，隐函数求导也证实了这一点：切线斜率是半径斜率的负倒数。对圆 $(x - h)^{2} + (y - k)^{2} = r^{2}$，\n\n$$2(x - h) + 2(y - k)\\frac{dy}{dx} = 0 \\implies \\frac{dy}{dx} = -\\frac{x - h}{y - k}.$$\n\n切线与半径垂直，半径的斜率为 $\\frac{y - k}{x - h}$。",
       ),
+      figure: circleTangentFigure,
       generate(rng) {
         let [u, v] = rng.pick(pythagorean.filter(([, b]) => b !== 0));
         u *= rng.sign();
@@ -205,6 +250,7 @@ export const calculatingSlopesOfCirclesEllipsesAndParabolas: TopicDef = {
         "Differentiate both sides with respect to the horizontal variable, treating the vertical variable as a function of it, and then solve for the derivative. For $px^{2} + qy^{2} = r$, $2px + 2qy\\frac{dy}{dx} = 0$, so\n\n$$\\frac{dy}{dx} = -\\frac{px}{qy}.$$",
         "两边对水平变量求导，把竖直变量看作它的函数，再解出导数。对 $px^{2} + qy^{2} = r$，$2px + 2qy\\frac{dy}{dx} = 0$，所以\n\n$$\\frac{dy}{dx} = -\\frac{px}{qy}.$$",
       ),
+      figure: ellipseTangentFigure,
       generate(rng) {
         const [p, q] = rng.sample([1, 2, 3, 4, 5, 9, 16, 25], 2) as [number, number];
         const x0 = rng.nonZero(-3, 3);
@@ -232,6 +278,7 @@ export const calculatingSlopesOfCirclesEllipsesAndParabolas: TopicDef = {
         "A parabola that opens sideways is not a function of the horizontal variable, but implicit differentiation still gives the slope at each point. A parabola $x = ay^{2} + by + c$ opens left or right. Differentiating with respect to $x$:\n\n$$1 = (2ay + b)\\frac{dy}{dx} \\implies \\frac{dy}{dx} = \\frac{1}{2ay + b}.$$",
         "开口向左右的抛物线不是水平变量的函数，但隐函数求导仍能给出每一点处的斜率。抛物线 $x = ay^{2} + by + c$ 开口向左或向右。对 $x$ 求导：\n\n$$1 = (2ay + b)\\frac{dy}{dx} \\implies \\frac{dy}{dx} = \\frac{1}{2ay + b}.$$",
       ),
+      figure: parabolaTangentFigure,
       generate(rng) {
         const p: Poly = [rng.int(-5, 5), rng.int(-4, 4), rng.nonZero(-3, 3)];
         let y0 = rng.int(-3, 3);
