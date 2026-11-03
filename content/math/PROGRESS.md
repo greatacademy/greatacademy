@@ -42,7 +42,7 @@ pnpm nx run audit:audit -- /tmp/audit.md
 The report lists outline topics missing from each course and the findings of heuristic checks, such as explanations under 15 words of prose, terse solutions, knowledge points with no `wrong` responses and visual topics without a figure. Findings are leads, not errors: confirm each one before changing content. Regenerate the report before starting rather than reusing an old one.
 
 - Claim improvement work by course and check in *Notes* (for example "explanations"), and follow the rules above for files and commits.
-- When every knowledge point of a course explains its idea in words, add the course to `explainedCourses` in `content/math/src/content.test.ts`, so that the test keeps it that way.
+- Every knowledge point explains its idea in at least 15 words of prose, and `content/math/src/content.test.ts` enforces this for every course; new knowledge points must meet it too.
 
 ## Board
 
