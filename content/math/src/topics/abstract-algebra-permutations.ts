@@ -1,5 +1,6 @@
-import type { Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { type Compass, type Mark, type Point, sketch } from "@ga/subject-math";
 
 import { article, numberProblem } from "../problems.ts";
 import { factProblem, gcd, lcm, mod, phi, texChoice, textChoice } from "./abstract-algebra-common.ts";
@@ -770,15 +771,15 @@ export const theAlternatingGroupOnNSymbols: TopicDef = {
   ],
 };
 
-/** Figure is a plane figure with the sizes of its symmetry and rotation groups. */
-interface Figure {
+/** PlaneFigure is a plane figure with the sizes of its symmetry and rotation groups. */
+interface PlaneFigure {
   readonly name: Text;
   readonly symmetries: number;
   readonly rotations: number;
 }
 
 /** FIGURES are plane figures whose symmetry groups are not regular polygons. */
-const FIGURES: readonly Figure[] = [
+const FIGURES: readonly PlaneFigure[] = [
   { name: t("a rectangle that is not a square", "不是正方形的长方形"), symmetries: 4, rotations: 2 },
   { name: t("a rhombus that is not a square", "不是正方形的菱形"), symmetries: 4, rotations: 2 },
   {
@@ -791,6 +792,48 @@ const FIGURES: readonly Figure[] = [
   { name: t("an isosceles trapezoid that is not a rectangle", "不是长方形的等腰梯形"), symmetries: 2, rotations: 1 },
   { name: t("a kite that is not a rhombus", "不是菱形的筝形"), symmetries: 2, rotations: 1 },
 ];
+
+/** polygonVertex is vertex k (from 0) of a regular n-gon of radius 3 with vertex 0 at the top, counting counterclockwise. */
+const polygonVertex = (n: number, k: number, r = 3): Point => {
+  const a = Math.PI / 2 + (2 * Math.PI * k) / n;
+  return [r * Math.cos(a), r * Math.sin(a)];
+};
+
+/** hexagonSymmetryFigure shows a regular hexagon with its six lines of symmetry. */
+const hexagonSymmetryFigure: Figure = (() => {
+  const pts = Array.from({ length: 6 }, (_, k) => polygonVertex(6, k));
+  const lines: Mark[] = Array.from({ length: 6 }, (_, k): Mark => {
+    // Even k: the line through opposite vertices; odd k: the line through midpoints of opposite sides.
+    const a = Math.PI / 2 + (Math.PI * k) / 6;
+    const r = 3.6;
+    return { kind: "segment", a: [r * Math.cos(a), r * Math.sin(a)], b: [-r * Math.cos(a), -r * Math.sin(a)], dashed: true };
+  });
+  return {
+    svg: sketch([{ kind: "polygon", points: pts }, ...lines, { kind: "dot", at: [0, 0] }]),
+    alt: t(
+      "A regular hexagon with its 6 lines of symmetry dashed: 3 through opposite vertices and 3 through the midpoints of opposite sides. With the 6 rotations about the center, it has 12 symmetries.",
+      "一个正六边形，6 条对称轴用虚线画出：3 条过相对的顶点，3 条过相对边的中点。连同绕中心的 6 个旋转，它共有 12 个对称。",
+    ),
+  };
+})();
+
+/** pentagonReflectionFigure shows a regular pentagon labeled 1 to 5 counterclockwise with the line of reflection through vertex 1. */
+const pentagonReflectionFigure: Figure = (() => {
+  const pts = Array.from({ length: 5 }, (_, k) => polygonVertex(5, k));
+  const dirs: Compass[] = ["n", "w", "sw", "se", "e"];
+  return {
+    svg: sketch([
+      { kind: "polygon", points: pts },
+      { kind: "segment", a: [0, 3], b: [0, -3.4], dashed: true },
+      ...pts.map((p, k): Mark => ({ kind: "label", at: p, text: String(k + 1), dir: dirs[k]! })),
+      { kind: "dot", at: [0, 0] },
+    ]),
+    alt: t(
+      "A regular pentagon with vertices labeled 1 to 5 counterclockwise, vertex 1 at the top, and a dashed line of reflection through vertex 1 and the center. The reflection fixes 1 and swaps 2 with 5 and 3 with 4, so it sends i to 2 − i mod 5.",
+      "一个正五边形，顶点逆时针标为 1 到 5，顶点 1 在顶端；虚线是过顶点 1 和中心的对称轴。该反射保持 1 不动，交换 2 与 5、3 与 4，所以它把 i 映到 2 − i（模 5）。",
+    ),
+  };
+})();
 
 /** theSymmetryGroupOfAFigure counts symmetries of plane figures and computes their action on vertices. */
 export const theSymmetryGroupOfAFigure: TopicDef = {
@@ -812,6 +855,7 @@ export const theSymmetryGroupOfAFigure: TopicDef = {
         "A rectangle that is not a square has $4$ symmetries: the identity, the rotation by $180^\\circ$, and the reflections in its two lines of symmetry. A regular hexagon has $6$ rotations and $6$ reflections.",
         "不是正方形的长方形有 $4$ 个对称：恒等变换、旋转 $180^\\circ$，以及关于两条对称轴的反射。正六边形有 $6$ 个旋转和 $6$ 个反射。",
       ),
+      figure: hexagonSymmetryFigure,
       generate(rng) {
         const rotationsOnly = rng.bool();
         let name: Text;
@@ -850,6 +894,7 @@ export const theSymmetryGroupOfAFigure: TopicDef = {
         "Label the vertices of a regular $n$-gon $1, \\dots, n$ counterclockwise. The rotation by $\\frac{360k}{n}$ degrees counterclockwise sends vertex $i$ to vertex $i + k$ (mod $n$). The reflection in the line through vertex $1$ sends vertex $i$ to vertex $2 - i$ (mod $n$).",
         "把正 $n$ 边形的顶点逆时针标为 $1, \\dots, n$。逆时针旋转 $\\frac{360k}{n}$ 度把顶点 $i$ 映到顶点 $i + k$（模 $n$）。关于过顶点 $1$ 的直线的反射把顶点 $i$ 映到顶点 $2 - i$（模 $n$）。",
       ),
+      figure: pentagonReflectionFigure,
       generate(rng) {
         const n = rng.int(4, 12);
         const i = rng.int(2, n);
