@@ -2389,6 +2389,73 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
         return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol);
       },
     },
+    {
+      id: "sin-double-angle-inside-squares-and-factors",
+      title: t("Finding $\\sin 2\\theta$ inside squares and factored sums", "在平方与因式分解中找出 $\\sin 2\\theta$"),
+      explanation: t(
+        "Sometimes the product $2\\sin\\theta\\cos\\theta$ is hidden: it appears as the middle term of a squared binomial, or after a common factor is pulled out. Expand or factor first, use $\\sin^2\\theta + \\cos^2\\theta = 1$ for the rest, and then recognize the double angle:\n\n$$(\\sin\\theta + \\cos\\theta)^2 = \\sin^2\\theta + 2\\sin\\theta\\cos\\theta + \\cos^2\\theta = 1 + \\sin(2\\theta)$$",
+        "有时乘积 $2\\sin\\theta\\cos\\theta$ 是隐藏的：它出现在二项式平方的中间项里，或在提出公因式之后才出现。先展开或因式分解，其余部分用 $\\sin^2\\theta + \\cos^2\\theta = 1$ 化简，再认出二倍角：\n\n$$(\\sin\\theta + \\cos\\theta)^2 = \\sin^2\\theta + 2\\sin\\theta\\cos\\theta + \\cos^2\\theta = 1 + \\sin(2\\theta)$$",
+      ),
+      generate(rng) {
+        const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
+        const k = rng.pick([1, 2, 3, 4, 5]);
+        const arg = k === 1 ? v : `${k}${v}`;
+        const doubleArg = `${2 * k}${v}`;
+        const m = (s: string) => t(`$${s}$`, `$${s}$`);
+        const items = [
+          {
+            prompt: t(
+              `Which expression is equal to $(\\sin(${arg}) + \\cos(${arg}))^2$?`,
+              `哪个表达式等于 $(\\sin(${arg}) + \\cos(${arg}))^2$？`,
+            ),
+            ans: m(`1 + \\sin(${doubleArg})`),
+            wrong: [m(`1`), m(`1 - \\sin(${doubleArg})`), m(`\\sin(${doubleArg})`), m(`1 + 2\\sin(${doubleArg})`)],
+            sol: t(
+              `Expanding gives $\\sin^2(${arg}) + \\cos^2(${arg}) + 2\\sin(${arg})\\cos(${arg}) = 1 + \\sin(${doubleArg})$.`,
+              `展开得 $\\sin^2(${arg}) + \\cos^2(${arg}) + 2\\sin(${arg})\\cos(${arg}) = 1 + \\sin(${doubleArg})$。`,
+            ),
+          },
+          {
+            prompt: t(
+              `Which expression is equal to $(\\sin(${arg}) - \\cos(${arg}))^2$?`,
+              `哪个表达式等于 $(\\sin(${arg}) - \\cos(${arg}))^2$？`,
+            ),
+            ans: m(`1 - \\sin(${doubleArg})`),
+            wrong: [m(`1`), m(`1 + \\sin(${doubleArg})`), m(`-\\cos(${doubleArg})`), m(`1 - 2\\sin(${doubleArg})`)],
+            sol: t(
+              `Expanding gives $\\sin^2(${arg}) + \\cos^2(${arg}) - 2\\sin(${arg})\\cos(${arg}) = 1 - \\sin(${doubleArg})$.`,
+              `展开得 $\\sin^2(${arg}) + \\cos^2(${arg}) - 2\\sin(${arg})\\cos(${arg}) = 1 - \\sin(${doubleArg})$。`,
+            ),
+          },
+          {
+            prompt: t(
+              `Simplify $2\\sin(${arg})\\cos^3(${arg}) + 2\\sin^3(${arg})\\cos(${arg})$.`,
+              `化简 $2\\sin(${arg})\\cos^3(${arg}) + 2\\sin^3(${arg})\\cos(${arg})$。`,
+            ),
+            ans: m(`\\sin(${doubleArg})`),
+            wrong: [m(`\\sin^2(${doubleArg})`), m(`2\\sin(${doubleArg})`), m(`\\cos(${doubleArg})`)],
+            sol: t(
+              `Factor out $2\\sin(${arg})\\cos(${arg})$: it multiplies $\\cos^2(${arg}) + \\sin^2(${arg}) = 1$, leaving $\\sin(${doubleArg})$.`,
+              `提出 $2\\sin(${arg})\\cos(${arg})$：它乘以 $\\cos^2(${arg}) + \\sin^2(${arg}) = 1$，结果为 $\\sin(${doubleArg})$。`,
+            ),
+          },
+          {
+            prompt: t(
+              `Simplify $(\\sin(${arg}) + \\cos(${arg}))^2 - (\\sin(${arg}) - \\cos(${arg}))^2$.`,
+              `化简 $(\\sin(${arg}) + \\cos(${arg}))^2 - (\\sin(${arg}) - \\cos(${arg}))^2$。`,
+            ),
+            ans: m(`2\\sin(${doubleArg})`),
+            wrong: [m(`\\sin(${doubleArg})`), m(`0`), m(`2`), m(`4\\sin(${doubleArg})`)],
+            sol: t(
+              `The squares are $1 + \\sin(${doubleArg})$ and $1 - \\sin(${doubleArg})$, so the difference is $2\\sin(${doubleArg})$.`,
+              `两个平方分别是 $1 + \\sin(${doubleArg})$ 与 $1 - \\sin(${doubleArg})$，故差为 $2\\sin(${doubleArg})$。`,
+            ),
+          },
+        ];
+        const item = rng.pick(items);
+        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol);
+      },
+    },
   ],
 };
 
@@ -2453,6 +2520,41 @@ export const usingTheDoubleAngleFormulaForSineWithThePythagoreanTheorem: TopicDe
           solution: t(
             `In quadrant ${quadrant.quad}, $\\sin ${v} = ${quadrant.sinTex}$. So $\\sin(2${v}) = 2\\cdot${quadrant.sinTex}\\cdot(${quadrant.cosTex}) = ${ansFrac}$.`,
             `在第${quadrant.quadZh}象限，$\\sin ${v} = ${quadrant.sinTex}$。故 $\\sin(2${v}) = 2\\cdot${quadrant.sinTex}\\cdot(${quadrant.cosTex}) = ${ansFrac}$。`,
+          ),
+          form: "fraction",
+        });
+      },
+    },
+    {
+      id: "sin-double-angle-from-sin-only",
+      title: t("Finding $\\sin 2\\theta$ from $\\sin\\theta$ in a given quadrant", "由 $\\sin\\theta$ 在给定象限求 $\\sin 2\\theta$"),
+      explanation: t(
+        "When only the sine is given, the cosine comes from $\\cos^2\\theta = 1 - \\sin^2\\theta$, and the quadrant decides its sign. If $\\sin\\theta = -\\frac{5}{13}$ with $\\theta$ in quadrant III, then $\\cos^2\\theta = \\frac{144}{169}$ and the cosine is negative there, so $\\cos\\theta = -\\frac{12}{13}$:\n\n$$\\sin(2\\theta) = 2\\cdot\\left(-\\frac{5}{13}\\right)\\cdot\\left(-\\frac{12}{13}\\right) = \\frac{120}{169}$$",
+        "只给出正弦时，余弦由 $\\cos^2\\theta = 1 - \\sin^2\\theta$ 求出，所在象限决定它的符号。若 $\\sin\\theta = -\\frac{5}{13}$ 且 $\\theta$ 在第三象限，则 $\\cos^2\\theta = \\frac{144}{169}$，而第三象限余弦为负，故 $\\cos\\theta = -\\frac{12}{13}$：\n\n$$\\sin(2\\theta) = 2\\cdot\\left(-\\frac{5}{13}\\right)\\cdot\\left(-\\frac{12}{13}\\right) = \\frac{120}{169}$$",
+      ),
+      generate(rng) {
+        const [a, b, c] = rng.pick(_triples);
+        const v = rng.pick(["\\theta", "x", "\\beta"]);
+        const quadrant = rng.pick([
+          { sinSign: 1, cosSign: 1, quad: "I", quadZh: "一" },
+          { sinSign: 1, cosSign: -1, quad: "II", quadZh: "二" },
+          { sinSign: -1, cosSign: -1, quad: "III", quadZh: "三" },
+          { sinSign: -1, cosSign: 1, quad: "IV", quadZh: "四" },
+        ] as const);
+        const frac = (sign: number, n: number) => `${sign < 0 ? "-" : ""}\\frac{${n}}{${c}}`;
+        const sinTex = frac(quadrant.sinSign, a);
+        const cosTex = frac(quadrant.cosSign, b);
+        const ans = Q.of(2 * quadrant.sinSign * quadrant.cosSign * a * b, c * c);
+        return numberProblem({
+          prompt: t(
+            `If $\\sin ${v} = ${sinTex}$ and $${v}$ is in quadrant ${quadrant.quad}, find $\\sin(2${v})$.`,
+            `若 $\\sin ${v} = ${sinTex}$ 且 $${v}$ 在第${quadrant.quadZh}象限，求 $\\sin(2${v})$。`,
+          ),
+          answer: ans,
+          wrong: [ans.neg(), Q.of(2 * quadrant.sinSign * a, c), Q.of(2 * quadrant.sinSign * a * a, c * c)],
+          solution: t(
+            `$\\cos^2 ${v} = 1 - \\frac{${a * a}}{${c * c}} = \\frac{${b * b}}{${c * c}}$, and in quadrant ${quadrant.quad} the cosine is ${quadrant.cosSign > 0 ? "positive" : "negative"}, so $\\cos ${v} = ${cosTex}$. Then $\\sin(2${v}) = 2\\cdot(${sinTex})\\cdot(${cosTex}) = ${ans.toLatex()}$.`,
+            `$\\cos^2 ${v} = 1 - \\frac{${a * a}}{${c * c}} = \\frac{${b * b}}{${c * c}}$，第${quadrant.quadZh}象限余弦为${quadrant.cosSign > 0 ? "正" : "负"}，故 $\\cos ${v} = ${cosTex}$。于是 $\\sin(2${v}) = 2\\cdot(${sinTex})\\cdot(${cosTex}) = ${ans.toLatex()}$。`,
           ),
           form: "fraction",
         });
@@ -2690,6 +2792,78 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulasForCosin
         return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol);
       },
     },
+    {
+      id: "cos-double-angle-in-quotients",
+      title: t("Simplifying quotients that contain $\\cos 2\\theta$", "化简含 $\\cos 2\\theta$ 的分式"),
+      explanation: t(
+        "In a quotient, pick the form of $\\cos(2\\theta)$ that shares a factor with the other part, then cancel. The form $\\cos^2\\theta - \\sin^2\\theta$ factors as a difference of squares, so it cancels a sum or difference of sine and cosine:\n\n$$\\frac{\\cos(2\\theta)}{\\cos\\theta + \\sin\\theta} = \\frac{(\\cos\\theta - \\sin\\theta)(\\cos\\theta + \\sin\\theta)}{\\cos\\theta + \\sin\\theta} = \\cos\\theta - \\sin\\theta$$\n\nThe forms $1 - 2\\sin^2\\theta$ and $2\\cos^2\\theta - 1$ instead turn $1 \\pm \\cos(2\\theta)$ into a single square.",
+        "在分式中，选择与另一部分有公因式的 $\\cos(2\\theta)$ 形式，然后约分。形式 $\\cos^2\\theta - \\sin^2\\theta$ 可按平方差分解，因此能约去正弦与余弦的和或差：\n\n$$\\frac{\\cos(2\\theta)}{\\cos\\theta + \\sin\\theta} = \\frac{(\\cos\\theta - \\sin\\theta)(\\cos\\theta + \\sin\\theta)}{\\cos\\theta + \\sin\\theta} = \\cos\\theta - \\sin\\theta$$\n\n而形式 $1 - 2\\sin^2\\theta$ 与 $2\\cos^2\\theta - 1$ 则把 $1 \\pm \\cos(2\\theta)$ 变成单个平方。",
+      ),
+      generate(rng) {
+        const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
+        const k = rng.pick([1, 2, 3, 4, 5]);
+        const arg = k === 1 ? v : `${k}${v}`;
+        const doubleArg = `${2 * k}${v}`;
+        const m = (s: string) => t(`$${s}$`, `$${s}$`);
+        const s = `\\sin(${arg})`;
+        const c = `\\cos(${arg})`;
+        const items = [
+          {
+            prompt: t(`Simplify $\\dfrac{\\cos(${doubleArg})}{${c} + ${s}}$.`, `化简 $\\dfrac{\\cos(${doubleArg})}{${c} + ${s}}$。`),
+            ans: m(`${c} - ${s}`),
+            wrong: [m(`${c} + ${s}`), m(`${s} - ${c}`), m(`1`)],
+            sol: t(
+              `$\\cos(${doubleArg}) = (${c} - ${s})(${c} + ${s})$, so the quotient is $${c} - ${s}$.`,
+              `$\\cos(${doubleArg}) = (${c} - ${s})(${c} + ${s})$，故商为 $${c} - ${s}$。`,
+            ),
+          },
+          {
+            prompt: t(`Simplify $\\dfrac{\\cos(${doubleArg})}{${c} - ${s}}$.`, `化简 $\\dfrac{\\cos(${doubleArg})}{${c} - ${s}}$。`),
+            ans: m(`${c} + ${s}`),
+            wrong: [m(`${c} - ${s}`), m(`-${c} - ${s}`), m(`1`)],
+            sol: t(
+              `$\\cos(${doubleArg}) = (${c} - ${s})(${c} + ${s})$, so the quotient is $${c} + ${s}$.`,
+              `$\\cos(${doubleArg}) = (${c} - ${s})(${c} + ${s})$，故商为 $${c} + ${s}$。`,
+            ),
+          },
+          {
+            prompt: t(
+              `Simplify $\\dfrac{1 - \\cos(${doubleArg})}{1 + \\cos(${doubleArg})}$.`,
+              `化简 $\\dfrac{1 - \\cos(${doubleArg})}{1 + \\cos(${doubleArg})}$。`,
+            ),
+            ans: m(`\\tan^2(${arg})`),
+            wrong: [m(`\\cot^2(${arg})`), m(`\\tan(${arg})`), m(`\\tan^2(${doubleArg})`)],
+            sol: t(
+              `The top is $2\\sin^2(${arg})$ and the bottom is $2\\cos^2(${arg})$, so the quotient is $\\tan^2(${arg})$.`,
+              `分子为 $2\\sin^2(${arg})$，分母为 $2\\cos^2(${arg})$，故商为 $\\tan^2(${arg})$。`,
+            ),
+          },
+          {
+            prompt: t(
+              `Simplify $\\dfrac{1 - \\cos(${doubleArg})}{\\sin(${doubleArg})}$.`,
+              `化简 $\\dfrac{1 - \\cos(${doubleArg})}{\\sin(${doubleArg})}$。`,
+            ),
+            ans: m(`\\tan(${arg})`),
+            wrong: [m(`\\cot(${arg})`), m(`\\tan(${doubleArg})`), m(`\\sin(${arg})`)],
+            sol: t(
+              `$\\dfrac{2\\sin^2(${arg})}{2${s}${c}} = \\dfrac{${s}}{${c}} = \\tan(${arg})$.`,
+              `$\\dfrac{2\\sin^2(${arg})}{2${s}${c}} = \\dfrac{${s}}{${c}} = \\tan(${arg})$。`,
+            ),
+          },
+          {
+            prompt: t(`Simplify $\\cos^4(${arg}) - \\sin^4(${arg})$.`, `化简 $\\cos^4(${arg}) - \\sin^4(${arg})$。`),
+            ans: m(`\\cos(${doubleArg})`),
+            wrong: [m(`\\cos^2(${doubleArg})`), m(`1`), m(`\\cos(${4 * k}${v})`)],
+            sol: t(
+              `Factor: $(\\cos^2(${arg}) - \\sin^2(${arg}))(\\cos^2(${arg}) + \\sin^2(${arg})) = \\cos(${doubleArg})\\cdot 1$.`,
+              `分解：$(\\cos^2(${arg}) - \\sin^2(${arg}))(\\cos^2(${arg}) + \\sin^2(${arg})) = \\cos(${doubleArg})\\cdot 1$。`,
+            ),
+          },
+        ];
+        const item = rng.pick(items);
+        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol);
+      },
+    },
   ],
 };
 
@@ -2837,6 +3011,40 @@ export const findingExactValuesOfTrigonometricExpressionsUsingTheDoubleAngleForm
           wrongStr.map((w) => t(w, w)),
           t(`${item.sol} ✓`, `${item.sol} ✓`),
         );
+      },
+    },
+    {
+      id: "squares-from-a-known-cos-2theta",
+      title: t(
+        "Finding $\\cos^2\\theta$ or $\\sin^2\\theta$ from $\\cos 2\\theta$",
+        "由 $\\cos 2\\theta$ 求 $\\cos^2\\theta$ 或 $\\sin^2\\theta$",
+      ),
+      explanation: t(
+        "Solving the forms $\\cos(2\\theta) = 2\\cos^2\\theta - 1$ and $\\cos(2\\theta) = 1 - 2\\sin^2\\theta$ for the squares runs the formula in reverse:\n\n$$\\cos^2\\theta = \\frac{1 + \\cos(2\\theta)}{2}, \\qquad \\sin^2\\theta = \\frac{1 - \\cos(2\\theta)}{2}$$\n\nSo a known value of $\\cos(2\\theta)$ gives both squares exactly. If $\\cos(2\\theta) = \\frac{1}{3}$, then $\\cos^2\\theta = \\frac{1 + 1/3}{2} = \\frac{2}{3}$ and $\\sin^2\\theta = \\frac{1}{3}$; the two always add to $1$.",
+        "把 $\\cos(2\\theta) = 2\\cos^2\\theta - 1$ 与 $\\cos(2\\theta) = 1 - 2\\sin^2\\theta$ 解出平方项，就是逆用公式：\n\n$$\\cos^2\\theta = \\frac{1 + \\cos(2\\theta)}{2}, \\qquad \\sin^2\\theta = \\frac{1 - \\cos(2\\theta)}{2}$$\n\n因此已知 $\\cos(2\\theta)$ 的值就能精确求出两个平方。若 $\\cos(2\\theta) = \\frac{1}{3}$，则 $\\cos^2\\theta = \\frac{1 + 1/3}{2} = \\frac{2}{3}$，$\\sin^2\\theta = \\frac{1}{3}$；两者之和总是 $1$。",
+      ),
+      generate(rng) {
+        const v = rng.pick(["\\theta", "x", "\\alpha"]);
+        const d = rng.int(3, 9);
+        const n = rng.pick([-1, 1]) * rng.int(1, d - 1);
+        const given = Q.of(n, d);
+        const wantCos = rng.bool();
+        const one = Q.of(1);
+        const half = Q.of(1, 2);
+        const ans = (wantCos ? one.add(given) : one.sub(given)).mul(half);
+        const other = (wantCos ? one.sub(given) : one.add(given)).mul(half);
+        const sq = wantCos ? `\\cos^2 ${v}` : `\\sin^2 ${v}`;
+        const sign = wantCos ? "+" : "-";
+        return numberProblem({
+          prompt: t(`If $\\cos(2${v}) = ${given.toLatex()}$, find $${sq}$.`, `若 $\\cos(2${v}) = ${given.toLatex()}$，求 $${sq}$。`),
+          answer: ans,
+          wrong: [other, wantCos ? one.add(given) : one.sub(given), given.mul(half)].filter((w) => !w.eq(ans)),
+          solution: t(
+            `$${sq} = \\dfrac{1 ${sign} \\cos(2${v})}{2} = \\dfrac{1 ${sign} (${given.toLatex()})}{2} = ${ans.toLatex()}$.`,
+            `$${sq} = \\dfrac{1 ${sign} \\cos(2${v})}{2} = \\dfrac{1 ${sign} (${given.toLatex()})}{2} = ${ans.toLatex()}$。`,
+          ),
+          form: "fraction",
+        });
       },
     },
   ],
@@ -3036,6 +3244,71 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForTangen
           },
         ];
         const item = rng.pick(identities);
+        return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol);
+      },
+    },
+    {
+      id: "double-angles-in-terms-of-tangent",
+      title: t("Writing double angles in terms of $\\tan\\theta$", "用 $\\tan\\theta$ 表示二倍角"),
+      explanation: t(
+        "Dividing the top and bottom of an expression by $\\cos^2\\theta$ turns sines and cosines into tangents, and $1 + \\tan^2\\theta = \\sec^2\\theta$ handles the denominator. This verifies identities such as\n\n$$\\frac{2\\tan\\theta}{1 + \\tan^2\\theta} = \\frac{2\\tan\\theta}{\\sec^2\\theta} = 2\\cdot\\frac{\\sin\\theta}{\\cos\\theta}\\cdot\\cos^2\\theta = \\sin(2\\theta)$$\n\nCombining fractions over a common denominator also often produces $1 - \\tan^2\\theta$, the denominator of $\\tan(2\\theta)$.",
+        "把表达式的分子分母同除以 $\\cos^2\\theta$，正弦与余弦就变成正切，而 $1 + \\tan^2\\theta = \\sec^2\\theta$ 可以处理分母。由此可以验证如下恒等式：\n\n$$\\frac{2\\tan\\theta}{1 + \\tan^2\\theta} = \\frac{2\\tan\\theta}{\\sec^2\\theta} = 2\\cdot\\frac{\\sin\\theta}{\\cos\\theta}\\cdot\\cos^2\\theta = \\sin(2\\theta)$$\n\n把分式通分时，也常会得到 $\\tan(2\\theta)$ 的分母 $1 - \\tan^2\\theta$。",
+      ),
+      generate(rng) {
+        const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
+        const k = rng.pick([1, 2, 3, 4, 5]);
+        const arg = k === 1 ? v : `${k}${v}`;
+        const doubleArg = `${2 * k}${v}`;
+        const m = (s: string) => t(`$${s}$`, `$${s}$`);
+        const tn = `\\tan(${arg})`;
+        const items = [
+          {
+            prompt: t(
+              `Which expression is equal to $\\dfrac{2${tn}}{1 + \\tan^2(${arg})}$?`,
+              `哪个表达式等于 $\\dfrac{2${tn}}{1 + \\tan^2(${arg})}$？`,
+            ),
+            ans: m(`\\sin(${doubleArg})`),
+            wrong: [m(`\\tan(${doubleArg})`), m(`\\cos(${doubleArg})`), m(`2\\sin(${arg})`)],
+            sol: t(
+              `$1 + \\tan^2(${arg}) = \\sec^2(${arg})$, so the expression is $2\\sin(${arg})\\cos(${arg}) = \\sin(${doubleArg})$.`,
+              `$1 + \\tan^2(${arg}) = \\sec^2(${arg})$，故表达式为 $2\\sin(${arg})\\cos(${arg}) = \\sin(${doubleArg})$。`,
+            ),
+          },
+          {
+            prompt: t(
+              `Which expression is equal to $\\dfrac{1 - \\tan^2(${arg})}{1 + \\tan^2(${arg})}$?`,
+              `哪个表达式等于 $\\dfrac{1 - \\tan^2(${arg})}{1 + \\tan^2(${arg})}$？`,
+            ),
+            ans: m(`\\cos(${doubleArg})`),
+            wrong: [m(`\\cot(${doubleArg})`), m(`\\sin(${doubleArg})`), m(`1`)],
+            sol: t(
+              `Multiply top and bottom by $\\cos^2(${arg})$: $\\dfrac{\\cos^2(${arg}) - \\sin^2(${arg})}{\\cos^2(${arg}) + \\sin^2(${arg})} = \\cos(${doubleArg})$.`,
+              `分子分母同乘 $\\cos^2(${arg})$：$\\dfrac{\\cos^2(${arg}) - \\sin^2(${arg})}{\\cos^2(${arg}) + \\sin^2(${arg})} = \\cos(${doubleArg})$。`,
+            ),
+          },
+          {
+            prompt: t(
+              `Simplify $\\dfrac{1}{1 - ${tn}} - \\dfrac{1}{1 + ${tn}}$.`,
+              `化简 $\\dfrac{1}{1 - ${tn}} - \\dfrac{1}{1 + ${tn}}$。`,
+            ),
+            ans: m(`\\tan(${doubleArg})`),
+            wrong: [m(`2${tn}`), m(`0`), m(`\\sin(${doubleArg})`)],
+            sol: t(
+              `Over the common denominator $1 - \\tan^2(${arg})$ the numerator is $2${tn}$, giving $\\tan(${doubleArg})$.`,
+              `通分后分母为 $1 - \\tan^2(${arg})$，分子为 $2${tn}$，结果为 $\\tan(${doubleArg})$。`,
+            ),
+          },
+          {
+            prompt: t(`Simplify $\\tan(${doubleArg})\\,(1 - \\tan^2(${arg}))$.`, `化简 $\\tan(${doubleArg})\\,(1 - \\tan^2(${arg}))$。`),
+            ans: m(`2${tn}`),
+            wrong: [m(`${tn}`), m(`\\tan(${doubleArg})`), m(`2\\tan(${doubleArg})`)],
+            sol: t(
+              `$\\tan(${doubleArg}) = \\dfrac{2${tn}}{1 - \\tan^2(${arg})}$, so multiplying by the denominator leaves $2${tn}$.`,
+              `$\\tan(${doubleArg}) = \\dfrac{2${tn}}{1 - \\tan^2(${arg})}$，乘以分母后剩下 $2${tn}$。`,
+            ),
+          },
+        ];
+        const item = rng.pick(items);
         return oneOf(rng, item.prompt, item.ans, item.wrong, item.sol);
       },
     },
