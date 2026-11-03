@@ -1,6 +1,6 @@
-import type { KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { type PlaneMark, plane, Q } from "@ga/subject-math";
 
 import { expressionProblem, numberProblem, steps } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
@@ -32,8 +32,8 @@ function topic(
 }
 
 /** kp builds a KnowledgePointDef. */
-function kp(id: string, title: Text, explanation: Text, generate: (rng: Rng) => Problem): KnowledgePointDef {
-  return { id, title, explanation, generate };
+function kp(id: string, title: Text, explanation: Text, generate: (rng: Rng) => Problem, figure?: Figure): KnowledgePointDef {
+  return figure ? { id, title, explanation, generate, figure } : { id, title, explanation, generate };
 }
 
 /** distinct drops the values equal to the answer or to an earlier value. */
@@ -1360,7 +1360,73 @@ export const simplifyingRationalExpressionsWithSumsAndDifferencesOfCubes = topic
 );
 
 /** solvingSystemsOfNonlinearEquationsUsingGraphs counts and identifies the solutions of a system as the points where its graphs meet. */
-export const solvingSystemsOfNonlinearEquationsUsingGraphs = topic(
+export /** circleMarks draws the circle x² + y² = r² as its upper and lower halves. */
+function circleMarks(r: number): PlaneMark[] {
+  const half = (x: number) => Math.sqrt(Math.max(0, r * r - x * x));
+  return [
+    { kind: "curve", f: half, from: -r, to: r },
+    { kind: "curve", f: (x) => -half(x), from: -r, to: r },
+  ];
+}
+
+const systemsView = { xMin: -8, xMax: 8, yMin: -8, yMax: 8, labelEvery: 2 };
+
+/** circleAndLinesFigure shows x² + y² = 25 with lines that cross it twice, touch it once and miss it. */
+const circleAndLinesFigure: Figure = {
+  svg: plane(systemsView, [
+    ...circleMarks(5),
+    { kind: "line", a: [0, 3], b: [1, 3], accent: true },
+    { kind: "line", a: [0, 5], b: [1, 5], dashed: true },
+    { kind: "line", a: [0, 7], b: [1, 7], dashed: true },
+    { kind: "point", at: [-4, 3], accent: true },
+    { kind: "point", at: [4, 3], accent: true },
+    { kind: "point", at: [0, 5], accent: true },
+    { kind: "label", at: [8, 3], text: "y = 3", dir: "sw" },
+    { kind: "label", at: [8, 5], text: "y = 5", dir: "nw" },
+    { kind: "label", at: [8, 7], text: "y = 7", dir: "nw" },
+  ]),
+  alt: t(
+    "The circle x² + y² = 25 with three horizontal lines: y = 3 crosses it at (−4, 3) and (4, 3), y = 5 touches it at (0, 5), and y = 7 passes above it.",
+    "圆 x² + y² = 25 与三条水平线：y = 3 与它交于 (−4, 3) 和 (4, 3)，y = 5 在 (0, 5) 处与它相切，y = 7 从它上方经过。",
+  ),
+};
+
+/** parabolaAndLinesFigure shows y = (x − 1)² − 3 with lines that cross it twice, touch it once and miss it. */
+const parabolaAndLinesFigure: Figure = {
+  svg: plane(systemsView, [
+    { kind: "curve", f: (x) => (x - 1) ** 2 - 3 },
+    { kind: "line", a: [0, 1], b: [1, 1], accent: true },
+    { kind: "line", a: [0, -3], b: [1, -3], dashed: true },
+    { kind: "line", a: [0, -5], b: [1, -5], dashed: true },
+    { kind: "point", at: [-1, 1], accent: true },
+    { kind: "point", at: [3, 1], accent: true },
+    { kind: "point", at: [1, -3], accent: true },
+    { kind: "label", at: [8, 1], text: "y = 1", dir: "nw" },
+    { kind: "label", at: [8, -3], text: "y = −3", dir: "nw" },
+    { kind: "label", at: [8, -5], text: "y = −5", dir: "sw" },
+  ]),
+  alt: t(
+    "The upward parabola y = (x − 1)² − 3 with vertex (1, −3) and three horizontal lines: y = 1 crosses it at (−1, 1) and (3, 1), y = −3 touches it at the vertex, and y = −5 passes below it.",
+    "开口向上的抛物线 y = (x − 1)² − 3，顶点为 (1, −3)，以及三条水平线：y = 1 与它交于 (−1, 1) 和 (3, 1)，y = −3 在顶点处与它相切，y = −5 从它下方经过。",
+  ),
+};
+
+/** checkingPointFigure shows x² + y² = 25 and y = x + 1 meeting at (3, 4) and (−4, −3), with (4, 3) on the circle only. */
+const checkingPointFigure: Figure = {
+  svg: plane(systemsView, [
+    ...circleMarks(5),
+    { kind: "line", a: [0, 1], b: [1, 2], accent: true },
+    { kind: "point", at: [3, 4], accent: true, label: "(3, 4)", dir: "w" },
+    { kind: "point", at: [-4, -3], accent: true, label: "(−4, −3)", dir: "w" },
+    { kind: "point", at: [4, 3], open: true, label: "(4, 3)", dir: "e" },
+  ]),
+  alt: t(
+    "The circle x² + y² = 25 and the line y = x + 1, which meet at (3, 4) and (−4, −3); the point (4, 3) lies on the circle but not on the line.",
+    "圆 x² + y² = 25 与直线 y = x + 1 交于 (3, 4) 和 (−4, −3)；点 (4, 3) 在圆上，但不在直线上。",
+  ),
+};
+
+const solvingSystemsOfNonlinearEquationsUsingGraphs = topic(
   "solving-systems-of-nonlinear-equations-using-graphs",
   t("Solving Systems of Nonlinear Equations Using Graphs", "用图象解非线性方程组"),
   t(
@@ -1397,6 +1463,7 @@ export const solvingSystemsOfNonlinearEquationsUsingGraphs = topic(
           ),
         });
       },
+      circleAndLinesFigure,
     ),
     kp(
       "a-parabola-and-a-horizontal-line",
@@ -1430,6 +1497,7 @@ export const solvingSystemsOfNonlinearEquationsUsingGraphs = topic(
           ),
         });
       },
+      parabolaAndLinesFigure,
     ),
     kp(
       "checking-an-intersection-point",
@@ -1492,6 +1560,7 @@ export const solvingSystemsOfNonlinearEquationsUsingGraphs = topic(
           ),
         );
       },
+      checkingPointFigure,
     ),
   ],
 );
