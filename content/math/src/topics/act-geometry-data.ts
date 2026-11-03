@@ -68,7 +68,7 @@ const degenerateNames = [
 /** conicSectionsAsSlicesOfACone names the curve a plane cuts from a double cone by comparing angles. */
 export const conicSectionsAsSlicesOfACone = topic(
   "conic-sections-as-slices-of-a-cone",
-  t("Conic Sections as Slices of a Cone", "圆锥曲线：平面截圆锥"),
+  t("Naming the Curve Cut by a Plane Through a Right Circular Cone", "说出平面截直圆锥所得的曲线"),
   t(
     "Name the circle, ellipse, parabola or hyperbola a plane cuts from a double cone by comparing the angle of the plane with the angle of the cone, and the point or lines it cuts through the vertex.",
     "比较平面与圆锥的角度，说出平面截双圆锥所得的圆、椭圆、抛物线或双曲线，以及平面过顶点时截得的点或直线。",
@@ -176,7 +176,7 @@ function regularPolygonFigure(n: number, alt: Text): Figure {
 /** areasOfRegularPolygons finds areas of regular polygons from the apothem and the perimeter. */
 export const areasOfRegularPolygons = topic(
   "areas-of-regular-polygons",
-  t("Areas of Regular Polygons", "正多边形的面积"),
+  t("Finding the Area of a Regular Polygon From the Center-to-Side Distance", "由中心到边的距离求正多边形的面积"),
   t(
     "Find the area of a regular polygon as half the apothem times the perimeter, and the area of a regular hexagon from its side or apothem.",
     "用边心距与周长之积的一半求正多边形的面积，并由边长或边心距求正六边形的面积。",
@@ -287,7 +287,7 @@ const halfDiagonals = [
 /** areasOfRhombusesAndKites finds areas of rhombuses and kites from their perpendicular diagonals. */
 export const areasOfRhombusesAndKites = topic(
   "areas-of-rhombuses-and-kites",
-  t("Areas of Rhombuses and Kites", "菱形与筝形的面积"),
+  t("Finding the Area of a Rhombus or Kite From Its Perpendicular Diagonals", "由互相垂直的对角线求菱形或筝形的面积"),
   t(
     "Find the area of a rhombus or kite as half the product of its perpendicular diagonals, work back to a diagonal, and find the side of a rhombus from its diagonals.",
     "用互相垂直的两条对角线之积的一半求菱形或筝形的面积，由面积反求对角线，并由对角线求菱形的边长。",
@@ -412,7 +412,7 @@ function viewSvg(front: readonly number[], side: readonly number[]): string {
 /** volumesFromOrthographicViews counts the cubes in a stack from its views and finds its volume. */
 export const volumesFromOrthographicViews = topic(
   "volumes-from-orthographic-views",
-  t("Volumes From Orthographic Views", "由三视图求体积"),
+  t("Finding the Volume of a Cube Stack From Its Top, Front, and Side Views", "由俯视图、主视图和侧视图求立方体堆的体积"),
   t(
     "Find the volume of a stack of cubes from a top view labeled with heights, and the greatest number of cubes a stack can have given its front and side views.",
     "由标有高度的俯视图求一堆立方体的体积，并由主视图和侧视图求这堆立方体最多有多少个。",
@@ -509,7 +509,7 @@ export const volumesFromOrthographicViews = topic(
 /** spheresAndCubesInscribedInEachOther relates the dimensions of a sphere and a cube inscribed in one another. */
 export const spheresAndCubesInscribedInEachOther = topic(
   "spheres-and-cubes-inscribed-in-each-other",
-  t("Spheres and Cubes Inscribed in Each Other", "球与立方体的内切与外接"),
+  t("Relating Inscribed Spheres and Cubes", "内切与外接的球和立方体"),
   t(
     "Use the edge of a cube as the diameter of its inscribed sphere, and the space diagonal of a cube as the diameter of its circumscribed sphere.",
     "利用立方体的棱长等于其内切球的直径、立方体的体对角线等于其外接球的直径解题。",
@@ -858,7 +858,7 @@ const scopeConclusions = [
 /** classifyingStatisticalStudies tells censuses, sample surveys, experiments and observational studies apart and the conclusions each allows. */
 export const classifyingStatisticalStudies = topic(
   "classifying-statistical-studies",
-  t("Classifying Statistical Studies", "统计研究的分类"),
+  t("Classifying Studies as Censuses, Sample Surveys, or Experiments", "把研究分为普查、抽样调查或实验"),
   t(
     "Classify a study as a census, a sample survey, an experiment or an observational study, and tell which conclusions random sampling and random assignment allow.",
     "把研究分为普查、抽样调查、实验或观察研究，并说出随机抽样和随机分组各自允许得出的结论。",
@@ -981,7 +981,7 @@ const targetFractions = [
 /** adjustingOutcomesToATargetProbability finds how many outcomes to add, or how many there are, given a probability. */
 export const adjustingOutcomesToATargetProbability = topic(
   "adjusting-outcomes-to-a-target-probability",
-  t("Adjusting Outcomes to a Target Probability", "调整结果数以达到目标概率"),
+  t("Adjusting Setups to Hit a Target Probability", "调整设置以达到目标概率"),
   t(
     "Solve for the number of outcomes of a kind that gives a stated probability, and for how many to add to reach a target probability.",
     "求出使概率等于给定值的某类结果的个数，以及为达到目标概率需要添加的个数。",
@@ -1241,7 +1241,7 @@ const triples = [
 /** focalDistancePropertiesOfEllipsesAndHyperbolas uses the constant sum and difference of the distances to the foci. */
 export const focalDistancePropertiesOfEllipsesAndHyperbolas = topic(
   "focal-distance-properties-of-ellipses-and-hyperbolas",
-  t("Focal Distance Properties of Ellipses and Hyperbolas", "椭圆与双曲线的焦半径性质"),
+  t("Using the Focus-Sum and Focus-Difference Properties of Conics", "运用圆锥曲线的焦距和与焦距差性质"),
   t(
     "Use the fact that the distances from a point of an ellipse to its foci add to $2a$, and that the distances from a point of a hyperbola to its foci differ by $2a$.",
     "利用椭圆上一点到两焦点的距离之和为 $2a$、双曲线上一点到两焦点的距离之差为 $2a$ 的性质。",

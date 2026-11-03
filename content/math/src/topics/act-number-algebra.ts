@@ -69,7 +69,7 @@ function onesDigit(b: number, n: number): number {
 /** findingOnesDigitsOfPowers finds ones digits of large powers from the repeating cycle of ones digits. */
 export const findingOnesDigitsOfPowers = topic(
   "finding-ones-digits-of-powers",
-  t("Finding Ones Digits of Powers", "求幂的个位数字"),
+  t("Finding Ones Digits of Powers From Repeating Blocks", "利用循环节求幂的个位数字"),
   t(
     "Find the ones digit of a large power from the repeating block of ones digits of its powers, and combine ones digits in sums and products.",
     "利用幂的个位数字的循环规律求大指数幂的个位数字，并求和与积的个位数字。",
@@ -143,7 +143,7 @@ export const findingOnesDigitsOfPowers = topic(
 /** recoveringDigitsFromBaseExpansions finds the digits of a number written in powers of a base by repeated division. */
 export const recoveringDigitsFromBaseExpansions = topic(
   "recovering-digits-from-base-expansions",
-  t("Recovering Digits From Base Expansions", "由按幂展开的式子求数字"),
+  t("Recovering Restricted Digits in a Powers-of-a-Base Expansion", "由按幂展开的式子求受限的数字"),
   t(
     "Write a number as a sum of multiples of powers of a base with restricted digits, and recover those digits by division.",
     "把一个数写成某个底数的各次幂的倍数之和（系数受限制），并用除法求出这些系数。",
@@ -225,7 +225,7 @@ export const recoveringDigitsFromBaseExpansions = topic(
 /** countingIntegersWithinBounds counts the integers that satisfy compound inequalities and bounds on square roots. */
 export const countingIntegersWithinBounds = topic(
   "counting-integers-within-bounds",
-  t("Counting Integers Within Bounds", "计算范围内的整数个数"),
+  t("Finding Integers a Bound Allows", "求范围所允许的整数"),
   t(
     "Count the integers that satisfy a compound inequality or lie between bounds on a square root, paying attention to which endpoints are included.",
     "计算满足复合不等式或平方根范围的整数个数，注意端点是否包括在内。",
@@ -431,7 +431,7 @@ const propertyTerms = ["3", "5", "7", "x", "y", "2a", "4b", "9", "m", "n"];
 /** propertiesOfRealNumberOperations names the properties of addition and multiplication that statements illustrate. */
 export const propertiesOfRealNumberOperations = topic(
   "properties-of-real-number-operations",
-  t("Properties of Real-Number Operations", "实数运算的性质"),
+  t("Naming the Addition Property Illustrated by a Statement", "说出等式所体现的运算性质"),
   t(
     "Name the commutative, associative, distributive, identity and inverse properties illustrated by statements, and pick statements that illustrate a named property.",
     "说出等式所体现的交换律、结合律、分配律、单位元与逆元性质，并选出体现指定性质的等式。",
@@ -582,7 +582,7 @@ const constraints: readonly Constraint[] = [
 /** comparingQuantitiesUnderConstraints orders expressions and decides which statements must hold under a constraint. */
 export const comparingQuantitiesUnderConstraints = topic(
   "comparing-quantities-under-constraints",
-  t("Comparing Quantities Under Constraints", "在约束条件下比较大小"),
+  t("Comparing Quantities Under Given Constraints", "在给定约束条件下比较大小"),
   t(
     "Order powers, roots and reciprocals of a number known only to lie in an interval, and decide which statements must be true for variables in a given order.",
     "对只知道所在区间的数，比较它的幂、根和倒数的大小；对给定大小顺序的变量，判断哪些结论一定成立。",
@@ -652,7 +652,7 @@ export const comparingQuantitiesUnderConstraints = topic(
 /** slantAsymptotesOfRationalFunctions finds slant asymptotes by division and tells which kind of asymptote a function has. */
 export const slantAsymptotesOfRationalFunctions = topic(
   "slant-asymptotes-of-rational-functions",
-  t("Slant Asymptotes of Rational Functions", "有理函数的斜渐近线"),
+  t("Finding Slant Asymptotes of Rational Functions", "求有理函数的斜渐近线"),
   t(
     "Find the slant asymptote of a rational function whose numerator has degree one more than its denominator, and tell horizontal, slant and no asymptotes apart by degree.",
     "求分子次数比分母高一次的有理函数的斜渐近线，并根据次数区分水平渐近线、斜渐近线和没有这类渐近线的情况。",
@@ -738,7 +738,7 @@ export const slantAsymptotesOfRationalFunctions = topic(
 /** jointVariation solves joint and combined variation problems and finds how a quantity scales. */
 export const jointVariation = topic(
   "joint-variation",
-  t("Joint Variation", "联合变化"),
+  t("Scaling a Joint Variation", "联合变化中的按比例变化"),
   t(
     "Write and use equations for quantities that vary jointly with, or inversely with, several others, and find how a quantity changes when the others are scaled.",
     "为随其他几个量联合变化或反比变化的量写出并运用方程，并求出其他量按比例变化时这个量如何变化。",
@@ -892,7 +892,7 @@ const mat = (m: readonly (readonly (number | string)[])[]): string =>
 /** realNumberRestrictions finds the values for which a quotient or an even root is not a real number. */
 export const realNumberRestrictions = topic(
   "real-number-restrictions",
-  t("Real-Number Restrictions", "实数范围内的限制"),
+  t("Reasoning About Real-Number Restrictions", "关于实数范围限制的推理"),
   t(
     "Find the values of a variable for which an expression is not a real number: those that make a denominator zero, and those that put a negative number under a square root.",
     "求使一个式子不是实数的变量取值：使分母为零的值，以及使平方根下出现负数的值。",
@@ -1083,7 +1083,7 @@ export const evaluatingExpressionsUsingGivenRelations = topic(
 /** matrixEquations finds unknown entries from equal matrices and from scalar matrix equations. */
 export const matrixEquations = topic(
   "matrix-equations",
-  t("Matrix Equations", "矩阵方程"),
+  t("Finding Unknown Entries From a Scalar Matrix Equation", "由含数乘的矩阵方程求未知元素"),
   t(
     "Use the fact that equal matrices have equal entries to find unknowns, and solve equations such as $kX + B = C$ for an unknown matrix one entry at a time.",
     "利用相等矩阵的对应元素相等求未知数，并逐个元素地求解像 $kX + B = C$ 这样的未知矩阵方程。",
@@ -1267,7 +1267,7 @@ function cubeParts(p: number, q: number, plus: boolean) {
 /** simplifyingRationalExpressionsWithSumsAndDifferencesOfCubes cancels factors of sums and differences of cubes. */
 export const simplifyingRationalExpressionsWithSumsAndDifferencesOfCubes = topic(
   "simplifying-rational-expressions-with-sums-and-differences-of-cubes",
-  t("Simplifying Rational Expressions With Sums and Differences of Cubes", "化简含立方和与立方差的有理式"),
+  t("Simplifying Cubic Rational Expressions by Factoring", "通过因式分解化简三次有理式"),
   t(
     "Factor $a^{3} - b^{3} = (a - b)(a^{2} + ab + b^{2})$ and $a^{3} + b^{3} = (a + b)(a^{2} - ab + b^{2})$ in a rational expression, then cancel the common factors.",
     "在有理式中用 $a^{3} - b^{3} = (a - b)(a^{2} + ab + b^{2})$ 和 $a^{3} + b^{3} = (a + b)(a^{2} - ab + b^{2})$ 分解因式，再约去公因式。",
