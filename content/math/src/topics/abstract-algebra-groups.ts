@@ -1,6 +1,6 @@
-import type { Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { Q, svgDocument } from "@ga/subject-math";
 
 import { numberProblem } from "../problems.ts";
 import {
@@ -1521,6 +1521,32 @@ export const cayleyTables: TopicDef = {
   ],
 };
 
+/** cayleyFigure draws the Cayley diagram of ℤₙ with arrows x → x + g, its vertices 0, …, n − 1 on a circle; arrows listed in path are highlighted. */
+function cayleyFigure(n: number, g: number, path: readonly number[], alt: Text): Figure {
+  const [cx, cy, R, r] = [160, 115, 90, 12];
+  const fx = (x: number) => Math.round(x * 10) / 10;
+  const pos = Array.from({ length: n }, (_, i) => {
+    const a = -Math.PI / 2 + (2 * Math.PI * i) / n;
+    return [cx + R * Math.cos(a), cy + R * Math.sin(a)] as const;
+  });
+  let body = "";
+  for (let x = 0; x < n; x++) {
+    const [x1, y1] = pos[x]!;
+    const [x2, y2] = pos[(x + g) % n]!;
+    const len = Math.hypot(x2 - x1, y2 - y1);
+    const [ux, uy] = [(x2 - x1) / len, (y2 - y1) / len];
+    const [ex, ey] = [x2 - ux * r, y2 - uy * r];
+    const [bx, by] = [ex - ux * 8, ey - uy * 8];
+    const cls = path.includes(x) ? ' class="accent" stroke-width="2.5"' : "";
+    body += `<line${cls} x1="${fx(x1 + ux * r)}" y1="${fx(y1 + uy * r)}" x2="${fx(ex)}" y2="${fx(ey)}"/>`;
+    body += `<polygon${cls} fill="currentColor" points="${fx(ex)},${fx(ey)} ${fx(bx - uy * 3.5)},${fx(by + ux * 3.5)} ${fx(bx + uy * 3.5)},${fx(by - ux * 3.5)}"/>`;
+  }
+  for (const [i, [x, y]] of pos.entries()) {
+    body += `<circle cx="${fx(x)}" cy="${fx(y)}" r="${r}"/><text x="${fx(x)}" y="${fx(y + 4.5)}" stroke="none" fill="currentColor">${i}</text>`;
+  }
+  return { svg: svgDocument(230, body), alt };
+}
+
 /** cayleyDiagrams follows the arrows of Cayley diagrams of cyclic groups. */
 export const cayleyDiagrams: TopicDef = {
   id: "cayley-diagrams",
@@ -1540,6 +1566,15 @@ export const cayleyDiagrams: TopicDef = {
       explanation: t(
         "In the Cayley diagram of $\\mathbb{Z}_{10}$ with arrows $x \\to x + 3$, following $4$ arrows from $7$ adds $4 \\cdot 3 = 12$: you end at $(7 + 12) \\bmod 10 = 9$. Following an arrow backwards subtracts $3$.",
         "在箭头为 $x \\to x + 3$ 的 $\\mathbb{Z}_{10}$ 凯莱图中，从 $7$ 出发沿 $4$ 条箭头走，加上 $4 \\cdot 3 = 12$：终点为 $(7 + 12) \\bmod 10 = 9$。逆着箭头走则减去 $3$。",
+      ),
+      figure: cayleyFigure(
+        10,
+        3,
+        [7, 0, 3, 6],
+        t(
+          "The Cayley diagram of ℤ₁₀ with an arrow from each x to x + 3. The path of 4 arrows from 7 is highlighted: 7 → 0 → 3 → 6 → 9.",
+          "ℤ₁₀ 的凯莱图，每个 x 都有一条箭头指向 x + 3。从 7 出发的 4 条箭头的路径被高亮：7 → 0 → 3 → 6 → 9。",
+        ),
       ),
       generate(rng) {
         const n = rng.int(5, 16);
@@ -1569,6 +1604,15 @@ export const cayleyDiagrams: TopicDef = {
       explanation: t(
         "In $\\mathbb{Z}_{12}$ the arrows $x \\to x + 8$ form the cycles $0 \\to 8 \\to 4 \\to 0$, $1 \\to 9 \\to 5 \\to 1$, and so on: each has length equal to the order $3$ of $8$, so there are $\\frac{12}{3} = 4 = \\gcd(8, 12)$ cycles.",
         "在 $\\mathbb{Z}_{12}$ 中，箭头 $x \\to x + 8$ 构成圈 $0 \\to 8 \\to 4 \\to 0$、$1 \\to 9 \\to 5 \\to 1$ 等：每个圈的长度等于 $8$ 的阶 $3$，所以共有 $\\frac{12}{3} = 4 = \\gcd(8, 12)$ 个圈。",
+      ),
+      figure: cayleyFigure(
+        12,
+        8,
+        [0, 8, 4],
+        t(
+          "The Cayley diagram of ℤ₁₂ with an arrow from each x to x + 8. The arrows form 4 triangles, such as the highlighted cycle 0 → 8 → 4 → 0 and the cycle 1 → 9 → 5 → 1.",
+          "ℤ₁₂ 的凯莱图，每个 x 都有一条箭头指向 x + 8。箭头构成 4 个三角形，例如高亮的圈 0 → 8 → 4 → 0，以及圈 1 → 9 → 5 → 1。",
+        ),
       ),
       generate(rng) {
         const n = rng.int(6, 30);
