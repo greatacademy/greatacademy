@@ -82,6 +82,8 @@ export type Compass = "n" | "ne" | "e" | "se" | "s" | "sw" | "w" | "nw";
 export type Mark =
   | { readonly kind: "segment"; readonly a: Point; readonly b: Point; readonly accent?: boolean; readonly dashed?: boolean }
   | { readonly kind: "polygon"; readonly points: readonly Point[]; readonly accent?: boolean }
+  /** shade fills the region inside points but outside each of holes, with no outline. */
+  | { readonly kind: "shade"; readonly points: readonly Point[]; readonly holes?: readonly (readonly Point[])[] }
   /** arc marks the angle at vertex between the rays to from and to (the smaller one), with an optional label inside. */
   | {
       readonly kind: "arc";
@@ -149,6 +151,7 @@ export function sketch(marks: readonly Mark[]): string {
   const points = marks.flatMap((m): Point[] => {
     switch (m.kind) {
       case "polygon":
+      case "shade":
         return [...m.points];
       case "label":
       case "dot":
@@ -182,6 +185,12 @@ export function sketch(marks: readonly Mark[]): string {
         const [a, b] = [at(m.a), at(m.b)];
         const attrs = `${m.accent ? ' class="accent"' : ""}${m.dashed ? ' stroke-dasharray="5 4"' : ""}`;
         body += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"${attrs}/>`;
+        break;
+      }
+      case "shade": {
+        const ring = (ps: readonly Point[]) => `M${ps.map((q) => at(q).join(",")).join(" L")} Z`;
+        const d = [m.points, ...(m.holes ?? [])].map(ring).join(" ");
+        body += `<path class="accent" d="${d}" fill="currentColor" fill-opacity="0.2" fill-rule="evenodd" stroke="none"/>`;
         break;
       }
       case "polygon":

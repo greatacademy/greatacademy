@@ -41,6 +41,31 @@ describe("figures", () => {
     expect(figureIssue({ svg, alt })).toBeUndefined();
   });
 
+  it("shade a region with a hole left blank", () => {
+    const svg = sketch([
+      {
+        kind: "shade",
+        points: [
+          [0, 0],
+          [4, 0],
+          [4, 4],
+          [0, 4],
+        ],
+        holes: [
+          [
+            [1, 1],
+            [3, 1],
+            [3, 3],
+            [1, 3],
+          ],
+        ],
+      },
+    ]);
+    expect(svg).toContain('fill-rule="evenodd"');
+    expect(svg.match(/M[^"]*Z/g)![0]!.split("Z").length).toBe(3);
+    expect(figureIssue({ svg, alt })).toBeUndefined();
+  });
+
   it("mark right angles, equal sides and parallel lines", () => {
     const svg = sketch([
       {
