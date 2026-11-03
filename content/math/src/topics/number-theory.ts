@@ -248,7 +248,7 @@ export const greatestCommonFactor: TopicDef = {
 
 export const leastCommonMultiple: TopicDef = {
   id: "least-common-multiple",
-  title: t("Least Common Multiple", "最小公倍数"),
+  title: t("Least Common Multiples", "最小公倍数"),
   summary: t("Find the least common multiple of two numbers from their prime factorizations.", "用质因数分解求两个数的最小公倍数。"),
   prerequisites: ["prime-factorization"],
   encompasses: [{ topic: "prime-factorization", weight: 0.6 }],

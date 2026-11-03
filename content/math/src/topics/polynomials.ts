@@ -1603,7 +1603,7 @@ function coprimeMultiples(rng: Rng, g: number, k: number): number[] {
 
 export const greatestCommonFactorOfMonomials: TopicDef = {
   id: "greatest-common-factor-of-monomials",
-  title: t("The Greatest Common Factor of Monomials", "单项式的最大公因式"),
+  title: t("The Greatest Common Factor of Two Monomials", "两个单项式的最大公因式"),
   summary: t("Find the greatest common factor of two or three monomials.", "求两个或三个单项式的最大公因式。"),
   prerequisites: ["product-and-quotient-rules"],
   encompasses: [{ topic: "greatest-common-factor", weight: 0.5 }],

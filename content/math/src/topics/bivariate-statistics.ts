@@ -1341,7 +1341,7 @@ const causationOptions: readonly Text[] = [
 
 export const correlationAndCausation: TopicDef = {
   id: "correlation-and-causation",
-  title: t("Correlation and Causation", "相关与因果"),
+  title: t("Correlation vs. Causation", "相关与因果"),
   summary: t(
     "Recognize that correlation does not imply causation, find lurking variables, and tell when a study can show cause and effect.",
     "认识到相关不等于因果，找出潜在变量，并判断一项研究何时能说明因果关系。",

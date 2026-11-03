@@ -450,7 +450,7 @@ export const solvingPerfectSquareQuadraticEquations: TopicDef = {
 
 export const zeroProductRule: TopicDef = {
   id: "zero-product-rule",
-  title: t("The Zero Product Rule", "零乘积法则"),
+  title: t("The Zero Product Rule for Solving Quadratic Equations", "用零积法则解一元二次方程"),
   summary: t(
     "Solve equations of the form $(x - r)(x - s) = 0$: a product is zero only when a factor is zero.",
     "解形如 $(x - r)(x - s) = 0$ 的方程：乘积为零当且仅当某个因式为零。",

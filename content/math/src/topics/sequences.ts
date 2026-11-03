@@ -832,7 +832,7 @@ export const nthTermOfAnArithmeticSequence: TopicDef = {
 
 export const explicitAndRecursiveArithmeticFormulas: TopicDef = {
   id: "explicit-and-recursive-arithmetic-formulas",
-  title: t("Explicit and Recursive Formulas for Arithmetic Sequences", "等差数列的通项公式与递推公式"),
+  title: t("Translating Between Explicit and Recursive Formulas for Arithmetic Sequences", "等差数列通项公式与递推公式的互化"),
   summary: t(
     "Translate between the explicit and the recursive formula of an arithmetic sequence.",
     "在等差数列的通项公式与递推公式之间互相转换。",
@@ -919,7 +919,7 @@ const differenceSteps = (p: number, x: number, q: number, y: number) =>
 
 export const arithmeticSequencesFromTwoTerms: TopicDef = {
   id: "arithmetic-sequences-from-two-terms",
-  title: t("Arithmetic Sequences from Two Terms", "由两项确定等差数列"),
+  title: t("Finding the Nth Term of an Arithmetic Sequence Given Two Terms", "由两项求等差数列的第 n 项"),
   summary: t(
     "Find the common difference, the first term, the explicit formula and any term from two terms of an arithmetic sequence.",
     "由等差数列的两项求公差、首项、通项公式和任意一项。",
@@ -1025,7 +1025,7 @@ export const arithmeticSequencesFromTwoTerms: TopicDef = {
 
 export const indexOfATermInAnArithmeticSequence: TopicDef = {
   id: "index-of-a-term-in-an-arithmetic-sequence",
-  title: t("Indexes of Terms in Arithmetic Sequences", "等差数列中项的序号"),
+  title: t("Determining Indexes of Terms in Arithmetic Sequences", "确定等差数列中项的序号"),
   summary: t(
     "Find which term of an arithmetic sequence has a given value, and count the terms of a finite one.",
     "求等差数列中取给定值的是第几项，并数出有限等差数列的项数。",
@@ -1401,7 +1401,7 @@ const ratioSteps = (a1: Q, a2: Q) => steps(`r = \\frac{${a2.toLatex()}}{${a1.toL
 
 export const geometricSequences: TopicDef = {
   id: "geometric-sequences",
-  title: t("Geometric Sequences", "等比数列"),
+  title: t("Introduction to Geometric Sequences", "等比数列简介"),
   summary: t("Recognize geometric sequences, find the common ratio and continue the sequence.", "识别等比数列，求公比并写出后续的项。"),
   prerequisites: ["arithmetic-sequences", "operations-with-rational-numbers"],
   encompasses: [
@@ -1623,7 +1623,7 @@ export const nthTermOfAGeometricSequence: TopicDef = {
 
 export const recursiveFormulasForGeometricSequences: TopicDef = {
   id: "recursive-formulas-for-geometric-sequences",
-  title: t("Recursive Formulas for Geometric Sequences", "等比数列的递推公式"),
+  title: t("The Recursive Formula for a Geometric Sequence", "等比数列的递推公式"),
   summary: t(
     "Write and use $a_1 = \\ldots$, $a_n = r a_{n-1}$, and translate between explicit and recursive formulas.",
     "写出并运用 $a_1 = \\ldots$，$a_n = r a_{n-1}$，并在通项公式与递推公式之间转换。",
@@ -1796,7 +1796,7 @@ const givenGeometric = (s: ReturnType<typeof twoGeometricTerms>, en: string, zh:
 
 export const geometricSequencesFromTwoTerms: TopicDef = {
   id: "geometric-sequences-from-two-terms",
-  title: t("Geometric Sequences from Two Terms", "由两项确定等比数列"),
+  title: t("Finding the Common Ratio of a Geometric Sequence Given Two Terms", "由两项求等比数列的公比"),
   summary: t(
     "Find the common ratio, the first term and other terms from two terms of a geometric sequence.",
     "由等比数列的两项求公比、首项和其他项。",
@@ -1886,7 +1886,7 @@ const indexSteps = (a1: Q, r: Q, v: Q, k: number) =>
 
 export const indexOfATermInAGeometricSequence: TopicDef = {
   id: "index-of-a-term-in-a-geometric-sequence",
-  title: t("Indexes of Terms in Geometric Sequences", "等比数列中项的序号"),
+  title: t("Determining Indexes of Terms in Geometric Sequences", "确定等比数列中项的序号"),
   summary: t("Find which term of a geometric sequence has a given value.", "求等比数列中取给定值的是第几项。"),
   prerequisites: ["nth-term-of-a-geometric-sequence"],
   encompasses: [{ topic: "nth-term-of-a-geometric-sequence", weight: 0.5 }],

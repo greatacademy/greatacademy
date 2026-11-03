@@ -1601,7 +1601,7 @@ const halves = (rng: Rng, min: number, max: number) => frac(rng.int(2 * min, 2 *
 
 export const speedDistanceTime: TopicDef = {
   id: "speed-distance-time",
-  title: t("Speed, Distance and Time Problems", "速度、路程与时间问题"),
+  title: t("Speed, Distance, Time Problems", "速度、路程与时间问题"),
   summary: t(
     "Use $d = rt$ with consistent units, trips in two parts and average speed.",
     "使用单位一致的 $d = rt$，解决分两段的行程和平均速度问题。",
@@ -1755,7 +1755,7 @@ export const speedDistanceTime: TopicDef = {
 
 export const furtherSpeedDistanceTime: TopicDef = {
   id: "further-speed-distance-time",
-  title: t("Further Speed, Distance and Time Problems", "速度、路程与时间问题（进阶）"),
+  title: t("Further Speed, Distance, Time Problems", "速度、路程与时间问题进阶"),
   summary: t(
     "Solve problems about two movers approaching or catching up with each other, and round trips at different speeds.",
     "解决两个物体相向而行、追及以及不同速度往返的问题。",
@@ -1918,7 +1918,7 @@ const sharedTimes: readonly (readonly [number, number])[] = (() => {
 
 export const workProblems: TopicDef = {
   id: "work-problems",
-  title: t("Work Problems", "工作问题"),
+  title: t("Modeling Work Problems", "工作问题建模"),
   summary: t(
     "Add rates of work to solve problems about people or machines working together.",
     "把工作效率相加，解决多人或多台机器合作的问题。",
@@ -2108,7 +2108,7 @@ const concentrations: readonly (readonly [number, number, number, number])[] = (
 
 export const mixtureProblems: TopicDef = {
   id: "mixture-problems",
-  title: t("Mixture Problems", "混合问题"),
+  title: t("Modeling Mixture Problems", "混合问题建模"),
   summary: t(
     "Solve problems about mixing solutions of different concentrations and mixing items of different values.",
     "解决不同浓度溶液混合以及不同单价物品混合的问题。",

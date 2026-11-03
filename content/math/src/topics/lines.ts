@@ -1580,7 +1580,7 @@ function scaledSystem(rng: Rng): { e1: Lin; e2: Lin; elim: 0 | 1; sol: [number, 
 
 export const eliminationWithOneTransformation: TopicDef = {
   id: "elimination-with-one-transformation",
-  title: t("Elimination: One Transformation", "加减消元：变形一个方程"),
+  title: t("Solving Systems of Linear Equations Using Elimination: One Transformation", "用消元法解线性方程组：变形一个方程"),
   summary: t(
     "Multiply one equation by a number so that adding or subtracting eliminates a variable.",
     "把一个方程乘以一个数，使相加或相减能消去一个变量。",
@@ -1650,7 +1650,7 @@ function stubbornSystem(rng: Rng): { e1: Lin; e2: Lin; sol: [number, number] } {
 
 export const eliminationWithTwoTransformations: TopicDef = {
   id: "elimination-with-two-transformations",
-  title: t("Elimination: Two Transformations", "加减消元：变形两个方程"),
+  title: t("Solving Systems of Linear Equations Using Elimination: Two Transformations", "用消元法解线性方程组：变形两个方程"),
   summary: t(
     "Multiply both equations so that a variable's coefficients become opposites.",
     "两个方程分别乘以适当的数，使某个变量的系数互为相反数。",
@@ -1989,7 +1989,7 @@ function specialReason(e1: Lin, e2: Lin, kind: number, k: number): Text {
 
 export const systemsWithNoSolutionOrInfinitelyManySolutions: TopicDef = {
   id: "systems-with-no-solution-or-infinitely-many-solutions",
-  title: t("Systems with No Solution or Infinitely Many Solutions", "无解或有无穷多解的方程组"),
+  title: t("Systems of Equations With No Solutions and Infinitely Many Solutions", "无解与有无穷多解的方程组"),
   summary: t(
     "Recognize systems of linear equations with no solution or infinitely many solutions.",
     "识别无解或有无穷多个解的线性方程组。",
@@ -2555,7 +2555,7 @@ function purchase(rng: Rng): { p: Purchase; n: [number, number] } {
 
 export const modelingWithSystems: TopicDef = {
   id: "modeling-with-systems",
-  title: t("Modeling with Systems of Linear Equations", "用方程组建模"),
+  title: t("Modeling Using Systems of Linear Equations", "用线性方程组建模"),
   summary: t("Write and solve systems of equations for problems about two unknown quantities.", "为含两个未知量的问题列出并解方程组。"),
   prerequisites: ["solving-systems-by-substitution", "elimination-with-one-transformation"],
   encompasses: [
