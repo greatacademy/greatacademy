@@ -1,6 +1,10 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { dec, Q } from "@ga/subject-math";
 import { numberProblem, steps } from "../problems.ts";
+
+/** round2 rounds a measured value to two decimal places. */
+const round2 = (x: number): Q => Q.of(Math.round(x * 100), 100);
 
 // ---------------------------------------------------------------------------
 // 2.5 Applications of First-Order ODEs
@@ -64,6 +68,44 @@ export const modelingMixtureProblemsWithFirstOrderSeparableOdes: TopicDef = {
         });
       },
     },
+    {
+      id: "salt-remaining-after-a-given-time",
+      title: t("Salt remaining after a given time", "经过一段时间后剩余的盐"),
+      explanation: t(
+        "Separating $\\frac{dS}{dt} = -\\frac{r}{V}S$ gives $\\frac{dS}{S} = -\\frac{r}{V}\\,dt$, so $\\ln S = -\\frac{r}{V}t + C$ and\n\n$$S(t) = S_0 e^{-rt/V},$$\n\nwhere $S_0$ is the initial amount. The salt decays exponentially with rate constant $\\frac{r}{V}$, the fraction of the tank replaced each minute. A $100$-liter tank flushed at $5$ L/min starting with $20$ kg of salt holds $20e^{-0.05t}$ kg after $t$ minutes.",
+        "分离变量 $\\frac{dS}{dt} = -\\frac{r}{V}S$ 得 $\\frac{dS}{S} = -\\frac{r}{V}\\,dt$，所以 $\\ln S = -\\frac{r}{V}t + C$，即\n\n$$S(t) = S_0 e^{-rt/V},$$\n\n其中 $S_0$ 为初始含量。盐按指数衰减，速率常数 $\\frac{r}{V}$ 是每分钟被替换的容器比例。容积 $100$ 升、以 $5$ 升/分冲洗、初始含盐 $20$ 千克的水箱，$t$ 分钟后含盐 $20e^{-0.05t}$ 千克。",
+      ),
+      generate(rng: Rng): Problem {
+        const r = rng.int(2, 10);
+        const V = r * rng.pick([10, 20, 25, 40, 50]);
+        const S0 = rng.int(10, 80);
+        const t0 = rng.pick([5, 10, 15, 20, 30, 45, 60]);
+        const rate = Q.of(r, V);
+        const ans = round2(S0 * Math.exp((-r * t0) / V));
+        const expo = dec(rate.mul(Q.of(t0)));
+        return numberProblem({
+          prompt: t(
+            `A tank holds $${V}$ liters of brine containing $${S0}$ kg of salt. Pure water flows in at $${r}\\text{ L/min}$ and the well-mixed solution drains at the same rate. How much salt is in the tank after $${t0}$ minutes? Round to two decimal places.`,
+            `水箱中有 $${V}$ 升盐水，含盐 $${S0}$ 千克。纯水以 $${r}\\text{ 升/分}$ 流入，充分混合的溶液以相同速率流出。$${t0}$ 分钟后水箱中有多少千克盐？精确到两位小数。`,
+          ),
+          answer: ans,
+          form: "decimal",
+          wrong: [round2(S0 * (1 - Math.exp((-r * t0) / V))), round2(S0 * Math.exp(-t0 / V)), round2(S0 * (1 - (r * t0) / V))].filter(
+            (w) => w.sign() > 0,
+          ),
+          solution: t(
+            steps(
+              `The amount satisfies $\\frac{dS}{dt} = -\\frac{${r}}{${V}}S$, so $S(t) = ${S0}e^{-${dec(rate)}t}$.`,
+              `At $t = ${t0}$: $S(${t0}) = ${S0}e^{-${expo}} \\approx ${dec(ans)}\\text{ kg}$.`,
+            ),
+            steps(
+              `盐的含量满足 $\\frac{dS}{dt} = -\\frac{${r}}{${V}}S$，所以 $S(t) = ${S0}e^{-${dec(rate)}t}$。`,
+              `当 $t = ${t0}$ 时：$S(${t0}) = ${S0}e^{-${expo}} \\approx ${dec(ans)}\\text{ 千克}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -124,6 +166,46 @@ export const modelingMixtureProblemsWithFirstOrderLinearOdes: TopicDef = {
         });
       },
     },
+    {
+      id: "the-amount-at-a-given-time-with-inflowing-solute",
+      title: t("The amount at a given time with inflowing solute", "有溶质流入时某一时刻的含量"),
+      explanation: t(
+        "The linear equation $\\frac{dS}{dt} + \\frac{r}{V}S = rc_{\\text{in}}$ has the equilibrium $S_\\infty = Vc_{\\text{in}}$, and the gap from equilibrium decays exponentially:\n\n$$S(t) = S_\\infty + (S_0 - S_\\infty)e^{-rt/V}.$$\n\nFor a $200$-liter tank of pure water ($S_0 = 0$) fed $3$ g/L solution at $4$ L/min, $S_\\infty = 600$ g and $S(t) = 600(1 - e^{-0.02t})$. The amount climbs toward $S_\\infty$ when $S_0 < S_\\infty$ and falls toward it otherwise.",
+        "线性方程 $\\frac{dS}{dt} + \\frac{r}{V}S = rc_{\\text{in}}$ 的平衡值为 $S_\\infty = Vc_{\\text{in}}$，与平衡值的差按指数衰减：\n\n$$S(t) = S_\\infty + (S_0 - S_\\infty)e^{-rt/V}.$$\n\n例如 $200$ 升纯水（$S_0 = 0$），以 $4$ 升/分注入 $3$ 克/升的溶液，则 $S_\\infty = 600$ 克，$S(t) = 600(1 - e^{-0.02t})$。$S_0 < S_\\infty$ 时含量上升趋于 $S_\\infty$，否则下降趋于它。",
+      ),
+      generate(rng: Rng): Problem {
+        const r = rng.int(2, 10);
+        const V = r * rng.pick([10, 20, 25, 40, 50]);
+        const cin = rng.int(1, 8);
+        const Sinf = V * cin;
+        const S0 = rng.pick([0, 0, Math.round(Sinf / 4), Sinf * 2]);
+        const t0 = rng.pick([5, 10, 15, 20, 30, 60]);
+        const rate = Q.of(r, V);
+        const e = Math.exp((-r * t0) / V);
+        const ans = round2(Sinf + (S0 - Sinf) * e);
+        const expo = dec(rate.mul(Q.of(t0)));
+        const start = S0 === 0 ? t("pure water", "纯水") : t(`water containing $${S0}$ g of the chemical`, `含该化学物质 $${S0}$ 克的水`);
+        return numberProblem({
+          prompt: t(
+            `A tank holds $${V}$ liters of ${start.en}. A solution with concentration $${cin}\\text{ g/L}$ flows in at $${r}\\text{ L/min}$, and the well-mixed solution drains at the same rate. How many grams of the chemical are in the tank after $${t0}$ minutes? Round to two decimal places.`,
+            `水箱中有 $${V}$ 升${start["zh-CN"]}。浓度为 $${cin}\\text{ 克/升}$ 的溶液以 $${r}\\text{ 升/分}$ 流入，充分混合的溶液以相同速率流出。$${t0}$ 分钟后水箱中有多少克该化学物质？精确到两位小数。`,
+          ),
+          answer: ans,
+          form: "decimal",
+          wrong: [round2(Sinf), round2(Sinf * e), round2(S0 + r * cin * t0), round2(Sinf - S0 * e)].filter((w) => w.sign() > 0),
+          solution: t(
+            steps(
+              `The equilibrium is $S_\\infty = Vc_{\\text{in}} = ${V} \\cdot ${cin} = ${Sinf}$, and the rate constant is $\\frac{r}{V} = ${dec(rate)}$.`,
+              `$S(t) = ${Sinf} + (${S0} - ${Sinf})e^{-${dec(rate)}t}$, so $S(${t0}) = ${Sinf} ${S0 - Sinf < 0 ? "-" : "+"} ${Math.abs(S0 - Sinf)}e^{-${expo}} \\approx ${dec(ans)}\\text{ g}$.`,
+            ),
+            steps(
+              `平衡值为 $S_\\infty = Vc_{\\text{in}} = ${V} \\cdot ${cin} = ${Sinf}$，速率常数为 $\\frac{r}{V} = ${dec(rate)}$。`,
+              `$S(t) = ${Sinf} + (${S0} - ${Sinf})e^{-${dec(rate)}t}$，所以 $S(${t0}) = ${Sinf} ${S0 - Sinf < 0 ? "-" : "+"} ${Math.abs(S0 - Sinf)}e^{-${expo}} \\approx ${dec(ans)}\\text{ 克}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -178,6 +260,42 @@ export const orthogonalTrajectories: TopicDef = {
           solution,
           answer: ans,
           wrong: [k + 1, 2 * k, k * k],
+        });
+      },
+    },
+    {
+      id: "orthogonal-trajectories-of-exponential-curves",
+      title: t("Orthogonal trajectories of exponential curves", "指数曲线族的正交轨线"),
+      explanation: t(
+        "The recipe is always the same: differentiate the family, eliminate the constant so the slope is a function $f(x, y)$, replace $f$ by $-\\frac{1}{f}$, and solve.\n\nFor $y = Ce^{kx}$: $y' = kCe^{kx} = ky$. The trajectories satisfy $\\frac{dy}{dx} = -\\frac{1}{ky}$, so $ky\\,dy = -dx$ and $\\frac{k}{2}y^{2} = -x + K$, that is $y^{2} = -\\frac{2}{k}x + C'$: a family of parabolas opening away from the direction in which the exponentials grow.",
+        "方法总是相同的：对曲线族求导，消去常数使斜率成为 $f(x, y)$，把 $f$ 换成 $-\\frac{1}{f}$，再解方程。\n\n对 $y = Ce^{kx}$：$y' = kCe^{kx} = ky$。正交轨线满足 $\\frac{dy}{dx} = -\\frac{1}{ky}$，所以 $ky\\,dy = -dx$，$\\frac{k}{2}y^{2} = -x + K$，即 $y^{2} = -\\frac{2}{k}x + C'$：一族开口方向与指数增长方向相反的抛物线。",
+      ),
+      generate(rng: Rng): Problem {
+        const k = rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 8, 10]);
+        const n = rng.pick([1, 1, 2, 3]);
+        const kq = Q.of(k, n);
+        const ans = Q.of(-2).div(kq);
+        const kl = kq.toLatex();
+        const expo = kq.isInteger() ? (k === 1 ? "x" : k === -1 ? "-x" : `${k}x`) : `${kl}x`;
+        return numberProblem({
+          prompt: t(
+            `The orthogonal trajectories of the family $y = Ce^{${expo}}$ have the form $y^{2} = Bx + C'$. Find $B$.`,
+            `曲线族 $y = Ce^{${expo}}$ 的正交轨线形如 $y^{2} = Bx + C'$。求 $B$。`,
+          ),
+          answer: ans,
+          wrong: [ans.neg(), Q.of(-1).div(kq), kq.mul(Q.of(-2)), Q.of(2).mul(kq)],
+          solution: t(
+            steps(
+              `Differentiate: $y' = ${kl}Ce^{${expo}} = ${kl}y$.`,
+              `The trajectories satisfy $\\frac{dy}{dx} = -\\frac{1}{${kl}y}$, so $${kl}y\\,dy = -dx$.`,
+              `Integrate: $\\frac{${kl}}{2}y^{2} = -x + K$, so $y^{2} = ${ans.toLatex()}x + C'$ and $B = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `求导：$y' = ${kl}Ce^{${expo}} = ${kl}y$。`,
+              `正交轨线满足 $\\frac{dy}{dx} = -\\frac{1}{${kl}y}$，所以 $${kl}y\\,dy = -dx$。`,
+              `积分：$\\frac{${kl}}{2}y^{2} = -x + K$，所以 $y^{2} = ${ans.toLatex()}x + C'$，$B = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -239,6 +357,45 @@ export const inhibitedGrowthModelsWithFirstOrderOdes: TopicDef = {
         });
       },
     },
+    {
+      id: "the-size-at-a-given-time",
+      title: t("The size at a given time", "某一时刻的规模"),
+      explanation: t(
+        "Separating $\\frac{dy}{dt} = k(M - y)$ gives $\\frac{dy}{M - y} = k\\,dt$, so $-\\ln(M - y) = kt + C$. The gap to the capacity shrinks exponentially, and with $y(0) = y_0$:\n\n$$y(t) = M - (M - y_0)e^{-kt}.$$\n\nA fish of length $10$ cm growing toward $M = 60$ cm with $k = 0.2$ per year has length $60 - 50e^{-0.2t}$; after $5$ years that is $60 - 50e^{-1} \\approx 41.61$ cm.",
+        "分离变量 $\\frac{dy}{dt} = k(M - y)$ 得 $\\frac{dy}{M - y} = k\\,dt$，所以 $-\\ln(M - y) = kt + C$。与容量的差距按指数缩小，代入 $y(0) = y_0$：\n\n$$y(t) = M - (M - y_0)e^{-kt}.$$\n\n一条长 $10$ 厘米的鱼以 $k = 0.2$（每年）向 $M = 60$ 厘米生长，长度为 $60 - 50e^{-0.2t}$；$5$ 年后为 $60 - 50e^{-1} \\approx 41.61$ 厘米。",
+      ),
+      generate(rng: Rng): Problem {
+        const M = rng.int(5, 30) * 10;
+        const y0 = rng.int(0, Math.floor(M / 20)) * 10;
+        const k = Q.of(rng.int(1, 9), 10);
+        const t0 = rng.int(1, 10);
+        const kt = k.mul(Q.of(t0));
+        const ans = round2(M - (M - y0) * Math.exp(-kt.toNumber()));
+        return numberProblem({
+          prompt: t(
+            `A quantity grows according to $\\frac{dy}{dt} = ${dec(k)}(${M} - y)$ with $y(0) = ${y0}$. Find $y(${t0})$. Round to two decimal places.`,
+            `某量按 $\\frac{dy}{dt} = ${dec(k)}(${M} - y)$ 增长，且 $y(0) = ${y0}$。求 $y(${t0})$，精确到两位小数。`,
+          ),
+          answer: ans,
+          form: "decimal",
+          wrong: [
+            round2((M - y0) * Math.exp(-kt.toNumber())),
+            round2(M * (1 - Math.exp(-kt.toNumber()))),
+            round2(y0 + (M - y0) * kt.toNumber()),
+          ].filter((w) => w.sign() > 0 && w.cmp(Q.of(M)) < 0),
+          solution: t(
+            steps(
+              `The solution is $y(t) = M - (M - y_0)e^{-kt} = ${M} - ${M - y0}e^{-${dec(k)}t}$.`,
+              `At $t = ${t0}$: $y(${t0}) = ${M} - ${M - y0}e^{-${dec(kt)}} \\approx ${dec(ans)}$.`,
+            ),
+            steps(
+              `解为 $y(t) = M - (M - y_0)e^{-kt} = ${M} - ${M - y0}e^{-${dec(k)}t}$。`,
+              `当 $t = ${t0}$ 时：$y(${t0}) = ${M} - ${M - y0}e^{-${dec(kt)}} \\approx ${dec(ans)}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -290,6 +447,56 @@ export const inhibitedDecayModelsWithFirstOrderOdes: TopicDef = {
           solution,
           answer: ans,
           wrong: [ans + k, diff, k * Tval],
+        });
+      },
+    },
+    {
+      id: "predicting-temperatures-from-two-readings",
+      title: t("Predicting temperatures from two readings", "由两次读数预测温度"),
+      explanation: t(
+        "The solution of Newton's law of cooling is $T(t) = T_m + (T_0 - T_m)e^{-kt}$: the difference from the room temperature is multiplied by the same factor $e^{-kt_1}$ over every interval of length $t_1$. So one reading after $t_1$ minutes gives that factor without computing $k$:\n\n$$e^{-kt_1} = \\frac{T(t_1) - T_m}{T_0 - T_m},$$\n\nand after $n t_1$ minutes the difference is $(T_0 - T_m)\\left(e^{-kt_1}\\right)^{n}$. Coffee at $90^\\circ$ in a $20^\\circ$ room that reaches $55^\\circ$ in $10$ minutes has halved its difference, so after $20$ minutes it is $20 + 70 \\cdot \\frac{1}{4} = 37.5^\\circ$.",
+        "牛顿冷却定律的解为 $T(t) = T_m + (T_0 - T_m)e^{-kt}$：每经过长为 $t_1$ 的一段时间，与室温之差都乘以同一个因子 $e^{-kt_1}$。所以 $t_1$ 分钟后的一次读数就给出这个因子，无需求出 $k$：\n\n$$e^{-kt_1} = \\frac{T(t_1) - T_m}{T_0 - T_m},$$\n\n经过 $n t_1$ 分钟后，温差为 $(T_0 - T_m)\\left(e^{-kt_1}\\right)^{n}$。在 $20^\\circ$ 的房间里，$90^\\circ$ 的咖啡 $10$ 分钟后降到 $55^\\circ$，温差减半，所以 $20$ 分钟后为 $20 + 70 \\cdot \\frac{1}{4} = 37.5^\\circ$。",
+      ),
+      generate(rng: Rng): Problem {
+        const [p, q] = rng.pick([
+          [1, 2],
+          [1, 3],
+          [2, 3],
+          [3, 4],
+          [1, 4],
+          [4, 5],
+        ] as const);
+        const n = rng.int(2, 3);
+        const Tm = rng.int(15, 25);
+        const diff = q ** n * rng.int(1, Math.max(1, Math.floor(160 / q ** n)));
+        const T0 = Tm + diff;
+        const t1 = rng.pick([5, 8, 10, 12, 15, 20]);
+        const T1 = Tm + (diff * p) / q;
+        const ratio = Q.of(p, q);
+        const ans = Q.of(Tm).add(Q.of(diff).mul(ratio.pow(n)));
+        return numberProblem({
+          prompt: t(
+            `An object at $${T0}^\\circ\\text{C}$ is placed in a room kept at $${Tm}^\\circ\\text{C}$ and cools according to Newton's law of cooling. After $${t1}$ minutes its temperature is $${T1}^\\circ\\text{C}$. What is its temperature after $${n * t1}$ minutes?`,
+            `一个 $${T0}^\\circ\\text{C}$ 的物体放在保持 $${Tm}^\\circ\\text{C}$ 的房间里，按牛顿冷却定律降温。$${t1}$ 分钟后其温度为 $${T1}^\\circ\\text{C}$。$${n * t1}$ 分钟后其温度是多少？`,
+          ),
+          answer: ans,
+          unit: "°C",
+          wrong: [
+            Q.of(diff).mul(ratio.pow(n)),
+            Q.of(T0 - n * (T0 - T1)),
+            Q.of(Tm).add(Q.of(diff).mul(ratio).div(Q.of(n))),
+            Q.of(T1).mul(ratio.pow(n - 1)),
+          ].filter((w) => w.sign() > 0),
+          solution: t(
+            steps(
+              `The difference from room temperature starts at $${T0} - ${Tm} = ${diff}$ and is $${T1} - ${Tm} = ${(diff * p) / q}$ after $${t1}$ minutes, so each $${t1}$ minutes multiplies it by $e^{-${t1}k} = ${ratio.toLatex()}$.`,
+              `After $${n * t1}$ minutes: $T = ${Tm} + ${diff} \\left(${ratio.toLatex()}\\right)^{${n}} = ${ans.toLatex()}^\\circ\\text{C}$.`,
+            ),
+            steps(
+              `与室温之差开始时为 $${T0} - ${Tm} = ${diff}$，$${t1}$ 分钟后为 $${T1} - ${Tm} = ${(diff * p) / q}$，所以每 $${t1}$ 分钟温差乘以 $e^{-${t1}k} = ${ratio.toLatex()}$。`,
+              `$${n * t1}$ 分钟后：$T = ${Tm} + ${diff} \\left(${ratio.toLatex()}\\right)^{${n}} = ${ans.toLatex()}^\\circ\\text{C}$。`,
+            ),
+          ),
         });
       },
     },
@@ -356,6 +563,46 @@ export const fallingBodyProblemsWithLinearDrag: TopicDef = {
         });
       },
     },
+    {
+      id: "velocity-at-a-given-time-with-linear-drag",
+      title: t("Velocity at a given time with linear drag", "线性阻力下某一时刻的速度"),
+      explanation: t(
+        "Dividing $m\\frac{dv}{dt} = mg - bv$ by $m$ gives a linear equation whose solution from rest, $v(0) = 0$, is\n\n$$v(t) = v_{\\text{term}}\\left(1 - e^{-bt/m}\\right), \\qquad v_{\\text{term}} = \\frac{mg}{b}.$$\n\nThe speed approaches the terminal velocity, closing the gap by the factor $e^{-b/m}$ each second. A $70$ kg skydiver with $b = 14$ kg/s has $v_{\\text{term}} = 49$ m/s and $v(t) = 49(1 - e^{-0.2t})$.",
+        "把 $m\\frac{dv}{dt} = mg - bv$ 两边除以 $m$ 得到线性方程，从静止开始（$v(0) = 0$）的解为\n\n$$v(t) = v_{\\text{term}}\\left(1 - e^{-bt/m}\\right), \\qquad v_{\\text{term}} = \\frac{mg}{b}.$$\n\n速度趋于终端速度，与它的差距每秒乘以因子 $e^{-b/m}$。质量 $70$ 千克、$b = 14$ 千克/秒的跳伞者，$v_{\\text{term}} = 49$ 米/秒，$v(t) = 49(1 - e^{-0.2t})$。",
+      ),
+      generate(rng: Rng): Problem {
+        const m = rng.pick([5, 10, 20, 40, 50, 80, 100]);
+        const b = rng.pick([1, 2, 4, 5, 10, 20]);
+        const t0 = rng.int(2, 12);
+        const vt = Q.of(m * 98, b * 10);
+        const rate = Q.of(b, m);
+        const ans = round2(vt.toNumber() * (1 - Math.exp((-b * t0) / m)));
+        return numberProblem({
+          prompt: t(
+            `An object of mass $${m}\\text{ kg}$ is dropped from rest and falls with linear air resistance $${b}v\\text{ N}$. Taking $g = 9.8\\text{ m/s}^2$, find its speed after $${t0}$ seconds in $\\text{m/s}$. Round to two decimal places.`,
+            `质量为 $${m}\\text{ 千克}$ 的物体从静止释放，下落时受线性空气阻力 $${b}v\\text{ 牛}$。取 $g = 9.8\\text{ 米/秒}^2$，求 $${t0}$ 秒后的速度（米/秒），精确到两位小数。`,
+          ),
+          answer: ans,
+          form: "decimal",
+          wrong: [
+            round2(vt.toNumber()),
+            round2(9.8 * t0),
+            round2(vt.toNumber() * Math.exp((-b * t0) / m)),
+            round2(vt.toNumber() * (1 - Math.exp(-b * t0))),
+          ].filter((w) => w.sign() > 0),
+          solution: t(
+            steps(
+              `The terminal velocity is $v_{\\text{term}} = \\frac{mg}{b} = \\frac{${m} \\cdot 9.8}{${b}} = ${dec(vt)}$, and $\\frac{b}{m} = ${dec(rate)}$.`,
+              `$v(${t0}) = ${dec(vt)}\\left(1 - e^{-${dec(rate.mul(Q.of(t0)))}}\\right) \\approx ${dec(ans)}\\text{ m/s}$.`,
+            ),
+            steps(
+              `终端速度为 $v_{\\text{term}} = \\frac{mg}{b} = \\frac{${m} \\cdot 9.8}{${b}} = ${dec(vt)}$，$\\frac{b}{m} = ${dec(rate)}$。`,
+              `$v(${t0}) = ${dec(vt)}\\left(1 - e^{-${dec(rate.mul(Q.of(t0)))}}\\right) \\approx ${dec(ans)}\\text{ 米/秒}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -407,6 +654,46 @@ export const fallingBodyProblemsWithQuadraticDrag: TopicDef = {
           solution,
           answer: ans,
           wrong: [ans * ans, Math.round(W / c), ans + c],
+        });
+      },
+    },
+    {
+      id: "acceleration-at-a-given-speed",
+      title: t("Acceleration at a given speed", "给定速度时的加速度"),
+      explanation: t(
+        "Before terminal velocity is reached, the net force is not zero. Dividing $m\\frac{dv}{dt} = mg - cv^{2}$ by $m$ gives the acceleration at any speed:\n\n$$\\frac{dv}{dt} = g - \\frac{c}{m}v^{2} = g\\left(1 - \\frac{v^{2}}{v_{\\text{term}}^{2}}\\right).$$\n\nAt half the terminal speed the drag is a quarter of the weight, so the acceleration is $\\frac{3}{4}g$. A negative value means the object is moving faster than $v_{\\text{term}}$ and slowing down.",
+        "在达到终端速度之前，合力不为零。把 $m\\frac{dv}{dt} = mg - cv^{2}$ 两边除以 $m$，得到任意速度下的加速度：\n\n$$\\frac{dv}{dt} = g - \\frac{c}{m}v^{2} = g\\left(1 - \\frac{v^{2}}{v_{\\text{term}}^{2}}\\right).$$\n\n速度为终端速度的一半时，阻力是重力的四分之一，所以加速度为 $\\frac{3}{4}g$。若结果为负，说明物体比 $v_{\\text{term}}$ 快，正在减速。",
+      ),
+      generate(rng: Rng): Problem {
+        const m = rng.pick([2, 4, 5, 8, 10, 20, 25, 50]);
+        const c = rng.pick([1, 2, 4, 5]) * (rng.bool() ? 1 : 10);
+        const cq = Q.of(c, 100);
+        const vMax = Math.floor(Math.sqrt((9.8 * m) / cq.toNumber()));
+        const v = rng.int(1, Math.max(1, vMax - 1));
+        const ans = Q.of(98, 10).sub(cq.mul(Q.of(v * v)).div(Q.of(m)));
+        return numberProblem({
+          prompt: t(
+            `An object of mass $${m}\\text{ kg}$ falls with quadratic air resistance $${dec(cq)}v^{2}\\text{ N}$. Taking $g = 9.8\\text{ m/s}^2$, find its acceleration $\\frac{dv}{dt}$ in $\\text{m/s}^2$ at the moment its speed is $${v}\\text{ m/s}$.`,
+            `质量为 $${m}\\text{ 千克}$ 的物体下落时受二次空气阻力 $${dec(cq)}v^{2}\\text{ 牛}$。取 $g = 9.8\\text{ 米/秒}^2$，求速度为 $${v}\\text{ 米/秒}$ 时的加速度 $\\frac{dv}{dt}$（米/秒²）。`,
+          ),
+          answer: ans,
+          form: "decimal",
+          wrong: [
+            Q.of(98, 10).sub(cq.mul(Q.of(v * v))),
+            Q.of(98, 10).sub(cq.mul(Q.of(v)).div(Q.of(m))),
+            cq.mul(Q.of(v * v)).div(Q.of(m)),
+            Q.of(98, 10),
+          ],
+          solution: t(
+            steps(
+              `Divide Newton's second law by $m$: $\\frac{dv}{dt} = g - \\frac{c}{m}v^{2}$.`,
+              `$\\frac{dv}{dt} = 9.8 - \\frac{${dec(cq)} \\cdot ${v}^{2}}{${m}} = 9.8 - ${dec(cq.mul(Q.of(v * v)).div(Q.of(m)))} = ${dec(ans)}\\text{ m/s}^2$.`,
+            ),
+            steps(
+              `牛顿第二定律两边除以 $m$：$\\frac{dv}{dt} = g - \\frac{c}{m}v^{2}$。`,
+              `$\\frac{dv}{dt} = 9.8 - \\frac{${dec(cq)} \\cdot ${v}^{2}}{${m}} = 9.8 - ${dec(cq.mul(Q.of(v * v)).div(Q.of(m)))} = ${dec(ans)}\\text{ 米/秒}^2$。`,
+            ),
+          ),
         });
       },
     },
@@ -463,6 +750,48 @@ export const newtonsLawOfUniversalGravitation: TopicDef = {
         });
       },
     },
+    {
+      id: "the-altitude-for-a-given-gravity",
+      title: t("The altitude for a given gravity", "给定重力加速度对应的高度"),
+      explanation: t(
+        "Running the inverse-square law backwards finds where gravity has a given strength. From $g(r) = g_0\\left(\\frac{R}{r}\\right)^{2}$,\n\n$$r = R\\sqrt{\\frac{g_0}{g}},$$\n\nand the altitude above the surface is $h = r - R$. Gravity is a quarter of its surface value at $r = 2R$, an altitude of one planetary radius, and a ninth of it at $r = 3R$. The answer is a distance from the center first; subtracting $R$ is the step most often forgotten.",
+        "把平方反比定律反过来用，可以求出重力加速度为给定值的位置。由 $g(r) = g_0\\left(\\frac{R}{r}\\right)^{2}$，\n\n$$r = R\\sqrt{\\frac{g_0}{g}},$$\n\n距地表的高度为 $h = r - R$。重力加速度在 $r = 2R$（高度为一个行星半径）处是地表的四分之一，在 $r = 3R$ 处是九分之一。先求出的是到中心的距离，最常忘记的一步是减去 $R$。",
+      ),
+      generate(rng: Rng): Problem {
+        const R = rng.pick([1700, 2400, 3400, 6000, 6400, 7000]);
+        const [p, q] = rng.pick([
+          [2, 1],
+          [3, 1],
+          [4, 1],
+          [3, 2],
+          [5, 2],
+          [5, 4],
+          [5, 3],
+        ] as const);
+        const ratio = Q.of(q * q, p * p);
+        const r = Q.of(R * p, q);
+        const ans = r.sub(Q.of(R));
+        return numberProblem({
+          prompt: t(
+            `A planet has radius $${R}\\text{ km}$. At what altitude above its surface, in km, is the gravitational acceleration $${ratio.toLatex()}$ of its surface value?`,
+            `某行星半径为 $${R}\\text{ 千米}$。在距其表面多高（千米）处，重力加速度是表面值的 $${ratio.toLatex()}$？`,
+          ),
+          answer: ans,
+          unit: "km",
+          wrong: [r, Q.of(R).div(ratio).sub(Q.of(R)), Q.of(R).mul(ratio), Q.of(R).div(ratio)],
+          solution: t(
+            steps(
+              `From $\\frac{g}{g_0} = \\left(\\frac{R}{r}\\right)^{2} = ${ratio.toLatex()}$, $\\frac{r}{R} = ${Q.of(p, q).toLatex()}$, so $r = ${r.toLatex()}\\text{ km}$.`,
+              `The altitude is $h = r - R = ${r.toLatex()} - ${R} = ${ans.toLatex()}\\text{ km}$.`,
+            ),
+            steps(
+              `由 $\\frac{g}{g_0} = \\left(\\frac{R}{r}\\right)^{2} = ${ratio.toLatex()}$ 得 $\\frac{r}{R} = ${Q.of(p, q).toLatex()}$，所以 $r = ${r.toLatex()}\\text{ 千米}$。`,
+              `高度为 $h = r - R = ${r.toLatex()} - ${R} = ${ans.toLatex()}\\text{ 千米}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -513,6 +842,55 @@ export const modelingEscapeVelocityWithFirstOrderOdes: TopicDef = {
           solution,
           answer: ans,
           wrong: [product, Math.round(ans / 2), ans * 2],
+        });
+      },
+    },
+    {
+      id: "maximum-distance-below-escape-velocity",
+      title: t("The maximum distance below escape velocity", "低于逃逸速度时的最远距离"),
+      explanation: t(
+        "Integrating $v\\frac{dv}{dr} = -\\frac{g_0R^{2}}{r^{2}}$ from the surface, where $v = v_0$, to a general $r$ gives\n\n$$v^{2} = v_0^{2} - 2g_0R\\left(1 - \\frac{R}{r}\\right) = v_0^{2} - v_{\\text{esc}}^{2}\\left(1 - \\frac{R}{r}\\right).$$\n\nIf $v_0 < v_{\\text{esc}}$ the object stops where $v = 0$, at $\\frac{R}{r_{\\max}} = 1 - \\frac{v_0^{2}}{v_{\\text{esc}}^{2}}$. Launched at half the escape speed, it reaches $r_{\\max} = \\frac{R}{1 - 1/4} = \\frac{4}{3}R$ from the center.",
+        "从地表（$v = v_0$）到一般的 $r$ 积分 $v\\frac{dv}{dr} = -\\frac{g_0R^{2}}{r^{2}}$，得\n\n$$v^{2} = v_0^{2} - 2g_0R\\left(1 - \\frac{R}{r}\\right) = v_0^{2} - v_{\\text{esc}}^{2}\\left(1 - \\frac{R}{r}\\right).$$\n\n若 $v_0 < v_{\\text{esc}}$，物体在 $v = 0$ 处停下，此时 $\\frac{R}{r_{\\max}} = 1 - \\frac{v_0^{2}}{v_{\\text{esc}}^{2}}$。以逃逸速度的一半发射，它到达距中心 $r_{\\max} = \\frac{R}{1 - 1/4} = \\frac{4}{3}R$ 处。",
+      ),
+      generate(rng: Rng): Problem {
+        const [p, q] = rng.pick([
+          [1, 2],
+          [1, 3],
+          [2, 3],
+          [1, 4],
+          [3, 4],
+          [2, 5],
+          [3, 5],
+          [4, 5],
+        ] as const);
+        const R = rng.pick([1700, 2400, 3400, 6000, 6400]);
+        const k2 = Q.of(p * p, q * q);
+        const factor = Q.one.div(Q.one.sub(k2));
+        const ans = Q.of(R).mul(factor).sub(Q.of(R));
+        return numberProblem({
+          prompt: t(
+            `A probe is launched straight up from the surface of an airless planet of radius $${R}\\text{ km}$ at $${Q.of(p, q).toLatex()}$ of the escape velocity. Using $v\\frac{dv}{dr} = -\\frac{g_0R^{2}}{r^{2}}$, find the greatest altitude it reaches above the surface, in km.`,
+            `从半径为 $${R}\\text{ 千米}$ 的无大气行星表面竖直向上发射一个探测器，初速度为逃逸速度的 $${Q.of(p, q).toLatex()}$。利用 $v\\frac{dv}{dr} = -\\frac{g_0R^{2}}{r^{2}}$，求它距表面的最大高度（千米）。`,
+          ),
+          answer: ans,
+          unit: "km",
+          wrong: [
+            Q.of(R).mul(factor),
+            Q.of(R).mul(k2),
+            Q.of(R)
+              .div(Q.one.sub(Q.of(p, q)))
+              .sub(Q.of(R)),
+          ],
+          solution: t(
+            steps(
+              `With $v_0^{2} = ${k2.toLatex()}v_{\\text{esc}}^{2}$, the speed vanishes where $1 - \\frac{R}{r} = ${k2.toLatex()}$, that is $\\frac{R}{r_{\\max}} = ${Q.one.sub(k2).toLatex()}$.`,
+              `So $r_{\\max} = ${factor.toLatex()} \\cdot ${R} = ${Q.of(R).mul(factor).toLatex()}\\text{ km}$ and the altitude is $${Q.of(R).mul(factor).toLatex()} - ${R} = ${ans.toLatex()}\\text{ km}$.`,
+            ),
+            steps(
+              `由 $v_0^{2} = ${k2.toLatex()}v_{\\text{esc}}^{2}$，速度在 $1 - \\frac{R}{r} = ${k2.toLatex()}$ 处为零，即 $\\frac{R}{r_{\\max}} = ${Q.one.sub(k2).toLatex()}$。`,
+              `所以 $r_{\\max} = ${factor.toLatex()} \\cdot ${R} = ${Q.of(R).mul(factor).toLatex()}\\text{ 千米}$，高度为 $${Q.of(R).mul(factor).toLatex()} - ${R} = ${ans.toLatex()}\\text{ 千米}$。`,
+            ),
+          ),
         });
       },
     },
@@ -571,6 +949,44 @@ export const modelingRlCircuitsWithFirstOrderOdes: TopicDef = {
         });
       },
     },
+    {
+      id: "the-current-at-a-given-time",
+      title: t("The current at a given time", "某一时刻的电流"),
+      explanation: t(
+        "With $i(0) = 0$, the linear equation $L\\frac{di}{dt} + Ri = V_0$ has the solution\n\n$$i(t) = \\frac{V_0}{R}\\left(1 - e^{-Rt/L}\\right).$$\n\nThe **time constant** $\\tau = \\frac{L}{R}$ sets the pace: after one time constant the current has reached $1 - e^{-1} \\approx 63\\%$ of its steady value, and after five it is within $1\\%$. A $2$ H inductor with $R = 10\\ \\Omega$ has $\\tau = 0.2$ s.",
+        "当 $i(0) = 0$ 时，线性方程 $L\\frac{di}{dt} + Ri = V_0$ 的解为\n\n$$i(t) = \\frac{V_0}{R}\\left(1 - e^{-Rt/L}\\right).$$\n\n**时间常数** $\\tau = \\frac{L}{R}$ 决定变化快慢：经过一个时间常数，电流达到稳态值的 $1 - e^{-1} \\approx 63\\%$，经过五个时间常数后误差小于 $1\\%$。$2$ 亨的电感与 $R = 10\\ \\Omega$ 的电阻，$\\tau = 0.2$ 秒。",
+      ),
+      generate(rng: Rng): Problem {
+        const L = rng.pick([1, 2, 4, 5, 10]);
+        const R = rng.pick([2, 4, 5, 8, 10, 20]);
+        const iInf = rng.int(1, 12);
+        const V0 = iInf * R;
+        const t0 = Q.of(rng.int(1, 10), 10);
+        const rt = Q.of(R, L).mul(t0);
+        const ans = round2(iInf * (1 - Math.exp(-rt.toNumber())));
+        return numberProblem({
+          prompt: t(
+            `A series circuit has an inductor $L = ${L}\\text{ H}$, a resistor $R = ${R}\\ \\Omega$ and a constant voltage $V_0 = ${V0}\\text{ V}$, switched on at $t = 0$ with no current. Find the current at $t = ${dec(t0)}$ s in amperes. Round to two decimal places.`,
+            `串联电路中有电感 $L = ${L}\\text{ 亨}$、电阻 $R = ${R}\\ \\Omega$ 和恒定电压 $V_0 = ${V0}\\text{ 伏}$，在 $t = 0$ 时接通，初始电流为零。求 $t = ${dec(t0)}$ 秒时的电流（安），精确到两位小数。`,
+          ),
+          answer: ans,
+          form: "decimal",
+          wrong: [round2(iInf), round2(iInf * Math.exp(-rt.toNumber())), round2(iInf * (1 - Math.exp((-L * t0.toNumber()) / R)))].filter(
+            (w) => w.sign() > 0,
+          ),
+          solution: t(
+            steps(
+              `The steady current is $\\frac{V_0}{R} = \\frac{${V0}}{${R}} = ${iInf}$ A, and $\\frac{R}{L} = ${Q.of(R, L).toLatex()}$.`,
+              `$i(${dec(t0)}) = ${iInf}\\left(1 - e^{-${dec(rt)}}\\right) \\approx ${dec(ans)}\\text{ A}$.`,
+            ),
+            steps(
+              `稳态电流为 $\\frac{V_0}{R} = \\frac{${V0}}{${R}} = ${iInf}$ 安，$\\frac{R}{L} = ${Q.of(R, L).toLatex()}$。`,
+              `$i(${dec(t0)}) = ${iInf}\\left(1 - e^{-${dec(rt)}}\\right) \\approx ${dec(ans)}\\text{ 安}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -623,6 +1039,67 @@ export const modelingRcCircuitsWithFirstOrderOdes: TopicDef = {
           solution,
           answer: ans,
           wrong: [ans + R, Math.round(ans / 2), ans * 2],
+        });
+      },
+    },
+    {
+      id: "the-charge-while-discharging",
+      title: t("The charge while discharging", "放电过程中的电荷"),
+      explanation: t(
+        "With no voltage source, $R\\frac{dq}{dt} + \\frac{q}{C} = 0$ is separable, and a capacitor that starts with charge $q_0$ discharges as\n\n$$q(t) = q_0 e^{-t/(RC)}.$$\n\nThe time constant is $\\tau = RC$; with $R$ in $\\text{k}\\Omega$ and $C$ in $\\mu\\text{F}$, the product $RC$ is in milliseconds. The charge halves every $RC\\ln 2$, so a $10\\text{ k}\\Omega$, $5\\ \\mu\\text{F}$ circuit has $\\tau = 50$ ms and loses half its charge in about $34.66$ ms.",
+        "没有电源时，$R\\frac{dq}{dt} + \\frac{q}{C} = 0$ 可分离变量，初始电荷为 $q_0$ 的电容器按下式放电：\n\n$$q(t) = q_0 e^{-t/(RC)}.$$\n\n时间常数为 $\\tau = RC$；$R$ 以 $\\text{k}\\Omega$、$C$ 以 $\\mu\\text{F}$ 为单位时，$RC$ 的单位是毫秒。电荷每经过 $RC\\ln 2$ 减半，所以 $10\\text{ k}\\Omega$、$5\\ \\mu\\text{F}$ 的电路 $\\tau = 50$ 毫秒，约 $34.66$ 毫秒后电荷减半。",
+      ),
+      generate(rng: Rng): Problem {
+        const R = rng.pick([2, 4, 5, 10, 20, 25, 50]);
+        const C = rng.pick([1, 2, 4, 5, 10]);
+        const q0 = rng.int(2, 30) * 10;
+        const tau = R * C;
+        const askTime = rng.bool();
+        if (askTime) {
+          const n = rng.pick([2, 4, 5, 10]);
+          const ans = round2(tau * Math.log(n));
+          return numberProblem({
+            prompt: t(
+              `A capacitor $C = ${C}\\ \\mu\\text{F}$ holding charge $${q0}\\ \\mu\\text{C}$ discharges through a resistor $R = ${R}\\text{ k}\\Omega$. How many milliseconds does it take for the charge to fall to $\\frac{1}{${n}}$ of its initial value? Round to two decimal places.`,
+              `带电 $${q0}\\ \\mu\\text{C}$ 的电容器 $C = ${C}\\ \\mu\\text{F}$ 通过电阻 $R = ${R}\\text{ k}\\Omega$ 放电。电荷降到初始值的 $\\frac{1}{${n}}$ 需要多少毫秒？精确到两位小数。`,
+            ),
+            answer: ans,
+            form: "decimal",
+            wrong: [round2(tau / n), round2(tau * n), round2(Math.log(n) / tau)],
+            solution: t(
+              steps(
+                `$\\tau = RC = ${R} \\cdot ${C} = ${tau}$ ms, and $q(t) = ${q0}e^{-t/${tau}}$.`,
+                `Setting $e^{-t/${tau}} = \\frac{1}{${n}}$ gives $t = ${tau}\\ln ${n} \\approx ${dec(ans)}$ ms.`,
+              ),
+              steps(
+                `$\\tau = RC = ${R} \\cdot ${C} = ${tau}$ 毫秒，$q(t) = ${q0}e^{-t/${tau}}$。`,
+                `令 $e^{-t/${tau}} = \\frac{1}{${n}}$，得 $t = ${tau}\\ln ${n} \\approx ${dec(ans)}$ 毫秒。`,
+              ),
+            ),
+          });
+        }
+        const t0 = rng.int(1, 4) * (tau >= 20 ? 10 : 2);
+        const ans = round2(q0 * Math.exp(-t0 / tau));
+        return numberProblem({
+          prompt: t(
+            `A capacitor $C = ${C}\\ \\mu\\text{F}$ holding charge $${q0}\\ \\mu\\text{C}$ discharges through a resistor $R = ${R}\\text{ k}\\Omega$. Find the charge in $\\mu\\text{C}$ after $${t0}$ ms. Round to two decimal places.`,
+            `带电 $${q0}\\ \\mu\\text{C}$ 的电容器 $C = ${C}\\ \\mu\\text{F}$ 通过电阻 $R = ${R}\\text{ k}\\Omega$ 放电。求 $${t0}$ 毫秒后的电荷（$\\mu\\text{C}$），精确到两位小数。`,
+          ),
+          answer: ans,
+          form: "decimal",
+          wrong: [round2(q0 * (1 - Math.exp(-t0 / tau))), round2(q0 * Math.exp(-t0 * tau)), round2(q0 * Math.exp((-t0 * C) / R))].filter(
+            (w) => w.sign() > 0,
+          ),
+          solution: t(
+            steps(
+              `$\\tau = RC = ${R} \\cdot ${C} = ${tau}$ ms, and $q(t) = ${q0}e^{-t/${tau}}$.`,
+              `$q(${t0}) = ${q0}e^{-${dec(Q.of(t0, tau))}} \\approx ${dec(ans)}\\ \\mu\\text{C}$.`,
+            ),
+            steps(
+              `$\\tau = RC = ${R} \\cdot ${C} = ${tau}$ 毫秒，$q(t) = ${q0}e^{-t/${tau}}$。`,
+              `$q(${t0}) = ${q0}e^{-${dec(Q.of(t0, tau))}} \\approx ${dec(ans)}\\ \\mu\\text{C}$。`,
+            ),
+          ),
         });
       },
     },
