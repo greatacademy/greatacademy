@@ -46,6 +46,11 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
               `考虑标量目标函数 $f(\\mathbf{x}, \\mathbf{y}) = ${a} x_1 y_1 + ${b} x_2 y_2 + ${c} x_1^2 + ${d} x_2^2$，其中向量 $\\mathbf{x} = [x_1, x_2]^T$ 且 $\\mathbf{y} = [y_1, y_2]^T$。在点 $\\mathbf{x} = [${x1}, ${x2}]^T$ 和 $\\mathbf{y} = [${y1}, ${y2}]^T$ 处，求关于子变量 $\\mathbf{x}$ 的梯度向量 $\\nabla_{\\mathbf{x}} f(\\mathbf{x}, \\mathbf{y}) = \\begin{bmatrix} \\frac{\\partial f}{\\partial x_1} \\\\[3pt] \\frac{\\partial f}{\\partial x_2} \\end{bmatrix}$ 的第 $x_${askIndex}$ 个分量。`,
             ),
             answer: ans,
+            wrong: [
+              askIndex === 1 ? a * y1 + c * x1 : b * y2 + d * x2,
+              askIndex === 1 ? a * y1 : b * y2,
+              askIndex === 1 ? 2 * c * x1 : 2 * d * x2,
+            ],
             solution: t(
               `Holding $\\mathbf{y}$ constant, the partial derivative is $\\frac{\\partial f}{\\partial x_${askIndex}} = ${askIndex === 1 ? `${a} y_1 + 2(${c}) x_1` : `${b} y_2 + 2(${d}) x_2`}$. Substituting $x_${askIndex} = ${askIndex === 1 ? x1 : x2}$ and $y_${askIndex} = ${askIndex === 1 ? y1 : y2}$ yields $${ans}$.`,
               `固定 $\\mathbf{y}$ 时，偏导数为 $\\frac{\\partial f}{\\partial x_${askIndex}} = ${askIndex === 1 ? `${a} y_1 + 2(${c}) x_1` : `${b} y_2 + 2(${d}) x_2`}$。代入 $x_${askIndex} = ${askIndex === 1 ? x1 : x2}$ 和 $y_${askIndex} = ${askIndex === 1 ? y1 : y2}$ 计算得 $${ans}$。`,
@@ -107,6 +112,11 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
               `设映射 $\\mathbf{f}: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 为 $\\mathbf{f}(x, y) = \\begin{bmatrix} ${poly([a, "x^2"], [b, "y"])} \\\\[3pt] ${poly([c, "xy"], [d, ""])} \\end{bmatrix}$。在点 $\\mathbf{x}_0 = (${x0}, ${y0})$ 处，求全微分 $D\\mathbf{f}(\\mathbf{x}_0)(\\mathbf{v}) = J_{\\mathbf{f}}(\\mathbf{x}_0) \\mathbf{v}$ 沿方向 $\\mathbf{v} = \\begin{bmatrix} ${v1} \\\\[3pt] ${v2} \\end{bmatrix}$ 的第 ${askComponent === 1 ? "一" : "二"}个分量。`,
             ),
             answer: ans,
+            wrong: [
+              askComponent === 1 ? res2 : res1,
+              askComponent === 1 ? j11 * v1 + j21 * v2 : j12 * v1 + j22 * v2,
+              askComponent === 1 ? a * x0 * v1 + j12 * v2 : j21 * v2 + j22 * v1,
+            ],
             solution: t(
               `The Jacobian matrix is $J_{\\mathbf{f}}(x, y) = \\begin{bmatrix} 2(${a})x & ${b} \\\\ ${poly([c, "y"])} & ${poly([c, "x"])} \\end{bmatrix}$. At $\\mathbf{x}_0 = (${x0}, ${y0})$, $J_{\\mathbf{f}}(\\mathbf{x}_0) = \\begin{bmatrix} ${j11} & ${j12} \\\\ ${j21} & ${j22} \\end{bmatrix}$. Multiplying by $\\mathbf{v}$ yields $D\\mathbf{f}(\\mathbf{x}_0)(\\mathbf{v}) = \\begin{bmatrix} (${j11})(${v1}) + (${j12})(${v2}) \\\\[3pt] (${j21})(${v1}) + (${j22})(${v2}) \\end{bmatrix} = \\begin{bmatrix} ${res1} \\\\[3pt] ${res2} \\end{bmatrix}$. The requested component is $${ans}$.`,
               `雅可比矩阵为 $J_{\\mathbf{f}}(x, y) = \\begin{bmatrix} 2(${a})x & ${b} \\\\ ${poly([c, "y"])} & ${poly([c, "x"])} \\end{bmatrix}$。在点 $\\mathbf{x}_0 = (${x0}, ${y0})$ 处，有 $J_{\\mathbf{f}}(\\mathbf{x}_0) = \\begin{bmatrix} ${j11} & ${j12} \\\\ ${j21} & ${j22} \\end{bmatrix}$。与 $\\mathbf{v}$ 相乘得 $D\\mathbf{f}(\\mathbf{x}_0)(\\mathbf{v}) = \\begin{bmatrix} (${j11})(${v1}) + (${j12})(${v2}) \\\\[3pt] (${j21})(${v1}) + (${j22})(${v2}) \\end{bmatrix} = \\begin{bmatrix} ${res1} \\\\[3pt] ${res2} \\end{bmatrix}$。所求分量为 $${ans}$。`,
@@ -164,6 +174,11 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
               `设映射 $\\mathbf{f}: \\mathbb{R}^2 \\to \\mathbb{R}^2$ 与 $\\mathbf{g}: \\mathbb{R}^2 \\to \\mathbb{R}^2$。在点 $\\mathbf{x}_0$ 处，$\\mathbf{f}$ 的雅可比矩阵为 $J_{\\mathbf{f}}(\\mathbf{x}_0) = ${formatMat(jf)}$；在 $\\mathbf{y}_0 = \\mathbf{f}(\\mathbf{x}_0)$ 处，$\\mathbf{g}$ 的雅可比矩阵为 $J_{\\mathbf{g}}(\\mathbf{y}_0) = ${formatMat(jg)}$。设 $\\mathbf{h} = \\mathbf{g} \\circ \\mathbf{f}$。求复合映射雅可比矩阵 $J_{\\mathbf{h}}(\\mathbf{x}_0) = J_{\\mathbf{g}}(\\mathbf{y}_0) J_{\\mathbf{f}}(\\mathbf{x}_0)$ 第 $${targetRow}$ 行第 $${targetCol}$ 列的元素。`,
             ),
             answer: ans,
+            wrong: [
+              jf[r]![0]! * jg[0]![c]! + jf[r]![1]! * jg[1]![c]!,
+              jg[r]![c]! * jf[r]![c]!,
+              jg[r]![0]! * jf[c]![0]! + jg[r]![1]! * jf[c]![1]!,
+            ],
             solution: t(
               `By the chain rule for total derivatives, $J_{\\mathbf{h}} = J_{\\mathbf{g}} J_{\\mathbf{f}}$. Entry $(${targetRow}, ${targetCol})$ is the dot product of row $${targetRow}$ of $J_{\\mathbf{g}}$ and column $${targetCol}$ of $J_{\\mathbf{f}}$: $(${jg[r]![0]})(${jf[0]![c]}) + (${jg[r]![1]})(${jf[1]![c]}) = ${ans}$.`,
               `由全导数的链式法则，$J_{\\mathbf{h}} = J_{\\mathbf{g}} J_{\\mathbf{f}}$。第 $(${targetRow}, ${targetCol})$ 个元素为 $J_{\\mathbf{g}}$ 的第 $${targetRow}$ 行与 $J_{\\mathbf{f}}$ 的第 $${targetCol}$ 列的点积：$(${jg[r]![0]})(${jf[0]![c]}) + (${jg[r]![1]})(${jf[1]![c]}) = ${ans}$。`,
@@ -223,6 +238,11 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
               `设 $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x} + \\mathbf{b}^T \\mathbf{x}$，其中 $\\mathbf{x} \\in \\mathbb{R}^2$，$A = ${aMat}$ 且 $\\mathbf{b} = ${bVec}$。在 $\\mathbf{x} = ${xVec}$ 处计算梯度 $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2A\\mathbf{x} + \\mathbf{b}$，并给出其第 $x_${askIdx}$ 个分量。`,
             ),
             answer: ans,
+            wrong: [
+              askIdx === 1 ? a * x1 + b * x2 + b1 : b * x1 + c * x2 + b2,
+              askIdx === 1 ? g1 - b1 : g2 - b2,
+              askIdx === 1 ? 2 * a * x1 + b1 : 2 * c * x2 + b2,
+            ],
             solution: t(
               `Since $A$ is symmetric, $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2 A \\mathbf{x} + \\mathbf{b} = 2 ${aMat} ${xVec} + ${bVec} = \\begin{bmatrix} 2(${a * x1 + b * x2}) + ${paren(b1)} \\\\[3pt] 2(${b * x1 + c * x2}) + ${paren(b2)} \\end{bmatrix} = \\begin{bmatrix} ${g1} \\\\[3pt] ${g2} \\end{bmatrix}$. The requested component is $${ans}$.`,
               `由于 $A$ 是对称矩阵，$\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2 A \\mathbf{x} + \\mathbf{b} = 2 ${aMat} ${xVec} + ${bVec} = \\begin{bmatrix} 2(${a * x1 + b * x2}) + ${paren(b1)} \\\\[3pt] 2(${b * x1 + c * x2}) + ${paren(b2)} \\end{bmatrix} = \\begin{bmatrix} ${g1} \\\\[3pt] ${g2} \\end{bmatrix}$。所求分量为 $${ans}$。`,
@@ -287,6 +307,11 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
               `考虑最小二乘残差目标函数 $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2$，其中 $A = ${aMat}$ 且 $\\mathbf{b} = ${bVec}$。在点 $\\mathbf{x} = ${xVec}$ 处求梯度 $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = 2 A^T (A\\mathbf{x} - \\mathbf{b})$，并给出其第 $x_${askIdx}$ 个分量。`,
             ),
             answer: ans,
+            wrong: [
+              askIdx === 1 ? a11 * r1 + a21 * r2 : a12 * r1 + a22 * r2,
+              askIdx === 1 ? 2 * (a11 * r1 + a12 * r2) : 2 * (a21 * r1 + a22 * r2),
+              askIdx === 1 ? 2 * r1 : 2 * r2,
+            ],
             solution: t(
               `First, the residual vector is $\\mathbf{r} = A\\mathbf{x} - \\mathbf{b} = \\begin{bmatrix} (${a11})(${x1}) + (${a12})(${x2}) - (${b1}) \\\\[3pt] (${a21})(${x1}) + (${a22})(${x2}) - (${b2}) \\end{bmatrix} = \\begin{bmatrix} ${r1} \\\\[3pt] ${r2} \\end{bmatrix}$. Then $2 A^T \\mathbf{r} = 2 \\begin{bmatrix} ${a11} & ${a21} \\\\[3pt] ${a12} & ${a22} \\end{bmatrix} \\begin{bmatrix} ${r1} \\\\[3pt] ${r2} \\end{bmatrix} = \\begin{bmatrix} ${g1} \\\\[3pt] ${g2} \\end{bmatrix}$. Component $${askIdx}$ is $${ans}$.`,
               `首先计算残差向量 $\\mathbf{r} = A\\mathbf{x} - \\mathbf{b} = \\begin{bmatrix} (${a11})(${x1}) + (${a12})(${x2}) - (${b1}) \\\\[3pt] (${a21})(${x1}) + (${a22})(${x2}) - (${b2}) \\end{bmatrix} = \\begin{bmatrix} ${r1} \\\\[3pt] ${r2} \\end{bmatrix}$。然后计算 $2 A^T \\mathbf{r} = 2 \\begin{bmatrix} ${a11} & ${a21} \\\\[3pt] ${a12} & ${a22} \\end{bmatrix} \\begin{bmatrix} ${r1} \\\\[3pt] ${r2} \\end{bmatrix} = \\begin{bmatrix} ${g1} \\\\[3pt] ${g2} \\end{bmatrix}$。第 $${askIdx}$ 个分量为 $${ans}$。`,
@@ -338,6 +363,7 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
               `设 $f(X) = \\mathbf{a}^T X \\mathbf{b}$，其中 $X$ 为 $${m} \\times ${n}$ 矩阵，$${aVec}$ 且 $${bVec}$。利用矩阵梯度公式 $\\nabla_X (\\mathbf{a}^T X \\mathbf{b}) = \\mathbf{a} \\mathbf{b}^T$，求梯度矩阵 $\\nabla_X f$ 的第 $${row}$ 行第 $${col}$ 列元素。`,
             ),
             answer: ans,
+            wrong: [a[row - 1]! + b[col - 1]!, a.reduce((s, x) => s + x, 0) * b[col - 1]!, -ans],
             solution: t(
               `The gradient matrix is $\\nabla_X f = \\mathbf{a} \\mathbf{b}^T$. The entry at $(row, col) = (${row}, ${col})$ is $a_{${row}} b_{${col}} = (${a[row - 1]})(${b[col - 1]}) = ${ans}$.`,
               `梯度矩阵为 $\\nabla_X f = \\mathbf{a} \\mathbf{b}^T$。第 $(${row}, ${col})$ 个元素即为外积对应项 $a_{${row}} b_{${col}} = (${a[row - 1]})(${b[col - 1]}) = ${ans}$。`,

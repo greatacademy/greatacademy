@@ -39,6 +39,7 @@ export const mathematicsForMachineLearningContinuousConditioningTopics: TopicDef
                 `连续型随机变量 $(X, Y)$ 的联合概率密度函数在 $0 \\le x \\le y \\le 1$ 上为 $f(x, y) = 2$（其余区域为 $0$）。求条件期望 $E[X \\mid Y = ${y0.toLatex()}]$ 的精确值。`,
               ),
               answer: ans,
+              wrong: [y0, Q.of(1, 2), y0.mul(y0).div(Q.of(2))],
               solution: t(
                 `The marginal density of $Y$ for $0 \\le y \\le 1$ is $f_Y(y) = \\int_0^y 2\\,dx = 2y$. Thus the conditional density is $f_{X|Y}(x \\mid y) = \\frac{f(x, y)}{f_Y(y)} = \\frac{2}{2y} = \\frac{1}{y}$ for $0 \\le x \\le y$, so $X \\mid Y = y \\sim \\operatorname{Uniform}(0, y)$. Hence $E[X \\mid Y = y] = \\frac{y}{2}$. Evaluating at $y = ${y0.toLatex()}$ yields $E[X \\mid Y = ${y0.toLatex()}] = \\frac{1}{2} \\left(${y0.toLatex()}\\right) = ${ans.toLatex()}$.`,
                 `对于 $0 \\le y \\le 1$，$Y$ 的边际密度为 $f_Y(y) = \\int_0^y 2\\,dx = 2y$。因此条件密度为 $f_{X|Y}(x \\mid y) = \\frac{f(x, y)}{f_Y(y)} = \\frac{2}{2y} = \\frac{1}{y}$（$0 \\le x \\le y$），即 $X \\mid Y = y \\sim \\operatorname{Uniform}(0, y)$。故 $E[X \\mid Y = y] = \\frac{y}{2}$。在 $y = ${y0.toLatex()}$ 处求值得 $E[X \\mid Y = ${y0.toLatex()}] = \\frac{1}{2} \\left(${y0.toLatex()}\\right) = ${ans.toLatex()}$。`,
@@ -66,6 +67,7 @@ export const mathematicsForMachineLearningContinuousConditioningTopics: TopicDef
               `连续型随机变量 $(X, Y)$ 在单位正方形 $[0, 1] \\times [0, 1]$ 上的联合密度为 $f(x, y) = \\frac{2}{3}(x + 2y)$。计算条件期望 $E[X \\mid Y = ${yVal.toLatex()}]$ 的精确值。`,
             ),
             answer: ans,
+            wrong: [Q.of(1, 2), top.div(Q.of(3)), top.div(Q.of(1).add(Q.of(4).mul(yVal)))],
             solution: t(
               `The marginal density is $f_Y(y) = \\int_0^1 \\frac{2}{3}(x + 2y)\\,dx = \\frac{1}{3}(1 + 4y)$. The conditional density is $f_{X|Y}(x \\mid y) = \\frac{2(x + 2y)}{1 + 4y}$. Integrating gives $E[X \\mid Y = y] = \\int_0^1 x f_{X|Y}(x \\mid y)\\,dx = \\frac{2 + 6y}{3(1 + 4y)}$. Substituting $y = ${yVal.toLatex()}$ yields $E[X \\mid Y = ${yVal.toLatex()}] = ${ans.toLatex()}$.`,
               `边际密度为 $f_Y(y) = \\int_0^1 \\frac{2}{3}(x + 2y)\\,dx = \\frac{1}{3}(1 + 4y)$。条件密度为 $f_{X|Y}(x \\mid y) = \\frac{2(x + 2y)}{1 + 4y}$。积分得 $E[X \\mid Y = y] = \\int_0^1 x f_{X|Y}(x \\mid y)\\,dx = \\frac{2 + 6y}{3(1 + 4y)}$。代入 $y = ${yVal.toLatex()}$ 计算得 $E[X \\mid Y = ${yVal.toLatex()}] = ${ans.toLatex()}$。`,
@@ -114,6 +116,7 @@ export const mathematicsForMachineLearningContinuousConditioningTopics: TopicDef
               `已知连续随机变量 $(X, Y)$ 满足在给定 $Y = y$ 时 $X$ 的条件分布为 $X \\mid Y = y \\sim \\operatorname{Uniform}(0, ${upperLimitStr})$（其中 $0 < y < 1$）。计算条件方差 $\\operatorname{Var}\\left(X \\mid Y = ${y0.toLatex()}\\right)$ 的精确值。`,
             ),
             answer: ans,
+            wrong: [y0.mul(Q.of(c)).div(Q.of(12)), y0.mul(y0).mul(Q.of(cSq)).div(Q.of(4)), y0.mul(y0).mul(Q.of(cSq)).div(Q.of(3))],
             solution: t(
               `For a uniform random variable on $(0, ${upperLimitStr})$, the variance is $\\frac{(${upperLimitStr} - 0)^2}{12} = \\frac{${upperFormula}}{12}$. Evaluating at $y = ${y0.toLatex()}$ yields $\\operatorname{Var}\\left(X \\mid Y = ${y0.toLatex()}\\right) = \\frac{${cSq} \\left(${y0.toLatex()}\\right)^2}{12} = ${ans.toLatex()}$.`,
               `对于区间 $(0, ${upperLimitStr})$ 上的均匀分布随机变量，其方差为 $\\frac{(${upperLimitStr} - 0)^2}{12} = \\frac{${upperFormula}}{12}$。在 $y = ${y0.toLatex()}$ 处求值得 $\\operatorname{Var}\\left(X \\mid Y = ${y0.toLatex()}\\right) = \\frac{${cSq} \\left(${y0.toLatex()}\\right)^2}{12} = ${ans.toLatex()}$。`,

@@ -43,6 +43,7 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
                 `一个具有 $d = ${d}$ 个特征的数据集，其样本协方差矩阵 $S$ 的特征值为 $\\lambda = [${lambdas.join(", ")}]$。计算数据集的总方差 $\\operatorname{Tr}(S) = \\sum_{i=1}^{${d}} \\lambda_i$。`,
               ),
               answer: total,
+              wrong: [lambdas[0]!, Q.of(total, d), total - lambdas[d - 1]!],
               solution: t(
                 `The total variance equals the sum of the eigenvalues of the covariance matrix: $\\operatorname{Tr}(S) = ${lambdas.join(" + ")} = ${total}$.`,
                 `总方差等于协方差矩阵的所有特征值之和：$\\operatorname{Tr}(S) = ${lambdas.join(" + ")} = ${total}$。`,
@@ -63,6 +64,7 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
               `一个 3 维数据集的样本协方差矩阵具有特征值 $\\lambda_1 = ${lam1}$、$\\lambda_2 = ${lam2}$ 和 $\\lambda_3 = ${lam3}$。第一主成分解释了总方差的多少比例？以精确有理数 $\\frac{\\lambda_1}{\\sum_{i=1}^3 \\lambda_i}$ 形式作答。`,
             ),
             answer: prop,
+            wrong: [Q.of(lam1, lam2 + lam3), Q.of(lam2 + lam3, total), Q.of(1, 3)],
             solution: t(
               `Total variance is $\\sum_{i=1}^3 \\lambda_i = ${lam1} + ${lam2} + ${lam3} = ${total}$. The proportion explained by the first principal component is $\\frac{${lam1}}{${total}} = ${prop.toLatex()}$.`,
               `总方差为 $\\sum_{i=1}^3 \\lambda_i = ${lam1} + ${lam2} + ${lam3} = ${total}$。第一主成分解释的比例为 $\\frac{${lam1}}{${total}} = ${prop.toLatex()}$。`,
@@ -124,6 +126,7 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
               `一个 2 维数据集的样本协方差矩阵为 $S = \\begin{pmatrix} ${s11} & ${tr.s12} \\\\ ${tr.s12} & ${s22} \\end{pmatrix}$。通过计算 $S$ 的${askMax ? "较大" : "较小"}特征值，求${askMax ? "第一（主）" : "第二"}主成分方向上的方差 $\\lambda_${askMax ? "1" : "2"}$。`,
             ),
             answer: targetLambda,
+            wrong: [askMax ? actualL2 : actualL1, askMax ? s11 : s22, s11 + s22],
             solution: t(
               `The characteristic equation is $\\det(S - \\lambda I) = (${s11} - \\lambda)(${s22} - \\lambda) - (${tr.s12})^2 = \\lambda^2 - ${s11 + s22}\\lambda + ${s11 * s22 - tr.s12 * tr.s12} = 0$. Factoring gives $(\\lambda - ${actualL1})(\\lambda - ${actualL2}) = 0$, so the eigenvalues are $\\lambda_1 = ${actualL1}$ and $\\lambda_2 = ${actualL2}$. The requested eigenvalue is $${targetLambda}$.`,
               `特征方程为 $\\det(S - \\lambda I) = (${s11} - \\lambda)(${s22} - \\lambda) - (${tr.s12})^2 = \\lambda^2 - ${s11 + s22}\\lambda + ${s11 * s22 - tr.s12 * tr.s12} = 0$。因式分解得 $(\\lambda - ${actualL1})(\\lambda - ${actualL2}) = 0$，特征值为 $\\lambda_1 = ${actualL1}$ 与 $\\lambda_2 = ${actualL2}$。所求特征值为 $${targetLambda}$。`,
@@ -166,6 +169,7 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
               `包含 $n = ${sampleN}$ 个观测值的数据集经中心化后得到矩阵 $X_c$。其奇异值分解 $X_c = U \\Sigma V^T$ 求得的最大奇异值为 $\\sigma_1 = ${sigma}$。由公式 $\\lambda_1 = \\frac{\\sigma_1^2}{n - 1}$，求第一主成分的方差 $\\lambda_1$（以精确有理数形式作答）。`,
             ),
             answer: variance,
+            wrong: [sigmaSquared, Q.of(sigma, nMinus1), Q.of(sigmaSquared, sampleN)],
             solution: t(
               `Using the connection $\\lambda_1 = \\frac{\\sigma_1^2}{n - 1} = \\frac{${sigma}^2}{${sampleN} - 1} = \\frac{${sigmaSquared}}{${nMinus1}} = ${variance.toLatex()}$.`,
               `由公式 $\\lambda_1 = \\frac{\\sigma_1^2}{n - 1} = \\frac{${sigma}^2}{${sampleN} - 1} = \\frac{${sigmaSquared}}{${nMinus1}} = ${variance.toLatex()}$。`,
@@ -224,6 +228,7 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
               `在主成分分析中，中心化数据点为 $\\mathbf{x}_c = ${xLatex}$，第一主成分单位方向向量为 $${vLatex}$。计算第一主成分得分 $z_1 = \\mathbf{v}_1^T \\mathbf{x}_c$。`,
             ),
             answer: exactScore,
+            wrong: [dotVal, Q.of(a * xVal1 - b * xVal2, c), Q.of(dotVal, c * c)],
             solution: t(
               `$z_1 = \\mathbf{v}_1^T \\mathbf{x}_c = \\left(\\frac{${a}}{${c}}\\right)(${xVal1}) + \\left(\\frac{${b}}{${c}}\\right)(${xVal2}) = \\frac{${a * xVal1} + (${b * xVal2})}{${c}} = \\frac{${dotVal}}{${c}} = ${exactScore.toLatex()}$.`,
               `$z_1 = \\mathbf{v}_1^T \\mathbf{x}_c = \\left(\\frac{${a}}{${c}}\\right)(${xVal1}) + \\left(\\frac{${b}}{${c}}\\right)(${xVal2}) = \\frac{${a * xVal1} + (${b * xVal2})}{${c}} = \\frac{${dotVal}}{${c}} = ${exactScore.toLatex()}$。`,

@@ -1,5 +1,6 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { Q } from "@ga/subject-math";
 import { numberProblem } from "../problems.ts";
 
 export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
@@ -34,6 +35,7 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
                 `在二分类任务中，一个包含 $n = ${n}$ 个样本的数据集具有真实标签 $y_i \\in \\{0, 1\\}$ 和模型预测值 $\\hat{y}_i$。其中恰好有 $${numErrors}$ 个样本满足 $\\hat{y}_i \\neq y_i$。计算 0-1 分类损失 $L_{0\\text{-}1} = \\sum_{i=1}^{${n}} \\mathbb{I}[y_i \\neq \\hat{y}_i]$。`,
               ),
               answer: numErrors,
+              wrong: [n - numErrors, Q.of(numErrors, n), n],
               solution: t(
                 `Each misclassified sample contributes $\\mathbb{I}[y_i \\neq \\hat{y}_i] = 1$, and each correctly classified sample contributes $0$. Thus the total sum is $${numErrors}$.`,
                 `每个分类错误的样本贡献 $\\mathbb{I}[y_i \\neq \\hat{y}_i] = 1$，每个分类正确的样本贡献 $0$。因此总和为 $${numErrors}$。`,
@@ -52,6 +54,7 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
               `设谓词 $P(x)$ 为 $x \\ge ${threshold}$。计算和式 $S = \\sum_{x=1}^{${n}} \\mathbb{I}[x \\ge ${threshold}]$。`,
             ),
             answer: count,
+            wrong: [n - threshold, threshold - 1, n - threshold + 2],
             solution: t(
               `The predicate $x \\ge ${threshold}$ is satisfied for integers $x \\in \\{${threshold}, ${threshold + 1}, \\dots, ${n}\\}$. The number of such integers is $${n} - ${threshold} + 1 = ${count}$.`,
               `当整数 $x \\in \\{${threshold}, ${threshold + 1}, \\dots, ${n}\\}$ 时谓词 $x \\ge ${threshold}$ 成立。这样的整数共有 $${n} - ${threshold} + 1 = ${count}$ 个。`,
@@ -96,6 +99,7 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
                 `考虑实数集合 $S = \\left\\{ ${c} - \\frac{${k}}{n} : n \\in \\mathbb{N}^+ \\right\\} = \\left\\{ ${c - k}, ${c} - \\frac{${k}}{2}, ${c} - \\frac{${k}}{3}, \\dots \\right\\}$。求 $${askSup ? "\\sup(S)" : "\\inf(S)"}$ 的精确值。`,
               ),
               answer: ans,
+              wrong: [askSup ? c - k : c, Q.of(2 * c - k, 2), askSup ? c + k : c],
               solution: t(
                 askSup
                   ? `As $n \\to \\infty$, the terms strictly increase toward $${c}$. Every element in $S$ is strictly less than $${c}$, and for any $\\varepsilon > 0$, choosing $n > \\frac{${k}}{\\varepsilon}$ gives an element in $S$ greater than $${c} - \\varepsilon$. Thus $\\sup(S) = ${c}$.`
@@ -120,6 +124,7 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
               `考虑半开区间 $S = (${a}, ${b}]$。求 $${askSup ? "\\sup(S)" : "\\inf(S)"}$ 的精确值。`,
             ),
             answer: ans,
+            wrong: [askSup ? a : b, askSup ? b - 1 : a + 1, len],
             solution: t(
               askSup
                 ? `The maximum element of $(${a}, ${b}]$ is $${b}$, so $\\sup(S) = \\max(S) = ${b}$.`
@@ -170,6 +175,7 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
               `给定定义在所有 $x \\in \\mathbb{R}$ 上的目标函数 $f(x) = ${funcLatex}$，求 $x^* = \\operatorname{${isMin ? "argmin" : "argmax"}}_{x \\in \\mathbb{R}} f(x)$ 的值。`,
             ),
             answer: h,
+            wrong: [-h, k, -k],
             solution: t(
               isMin
                 ? `Since $a = ${a} > 0$, the squared term $(x ${hStr})^2 \\ge 0$ is minimized when $x = ${h}$, giving minimum value $f(${h}) = ${k}$. Therefore, $\\operatorname{argmin}_{x \\in \\mathbb{R}} f(x) = ${h}$.`
@@ -247,6 +253,7 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
               `下表记录了不同参数值 $x$ 对应的验证${isMin ? "损失 $\\mathcal{L}(x)$" : "准确率 $\\mathcal{A}(x)$"}：\n\n${table(header["zh-CN"])}\n\n求 $x^* = \\operatorname{${isMin ? "argmin" : "argmax"}}_{x} ${isMin ? "\\mathcal{L}(x)" : "\\mathcal{A}(x)"}$。`,
             ),
             answer: optArg,
+            wrong: [optVal, xs[(bestIdx + 1) % numRows]!, bestIdx + 1],
             solution: t(
               `Looking at the table, the ${isMin ? "minimum loss" : "maximum accuracy"} is $${optVal}$, which occurs at $x = ${optArg}$. Therefore, $\\operatorname{${isMin ? "argmin" : "argmax"}}_{x} = ${optArg}$.`,
               `查阅表格，${isMin ? "最小损失" : "最大准确率"}为 $${optVal}$，在 $x = ${optArg}$ 处取得。因此 $\\operatorname{${isMin ? "argmin" : "argmax"}}_{x} = ${optArg}$。`,
