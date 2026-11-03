@@ -14,6 +14,7 @@ import { abstractAlgebraRingTopics } from "./topics/abstract-algebra-rings.ts";
 import { abstractAlgebraSubgroupTopics } from "./topics/abstract-algebra-subgroups.ts";
 import { abstractAlgebraSylowTopics } from "./topics/abstract-algebra-sylow.ts";
 import { actFundamentalsAlgebraTopics } from "./topics/act-fundamentals-algebra.ts";
+import { actFundamentalsChanceConicsTopics } from "./topics/act-fundamentals-chance-conics.ts";
 import { actFundamentalsFunctionTopics } from "./topics/act-fundamentals-functions.ts";
 import { actFundamentalsGeometryTopics } from "./topics/act-fundamentals-geometry.ts";
 import { actFundamentalsModelingTopics } from "./topics/act-fundamentals-modeling.ts";
@@ -435,6 +436,7 @@ export const math: SubjectDef = {
     ...actFundamentalsFunctionTopics,
     ...actFundamentalsGeometryTopics,
     ...actFundamentalsModelingTopics,
+    ...actFundamentalsChanceConicsTopics,
     ...actGeometryDataTopics,
     ...satMathStrategyTopics,
   ],
