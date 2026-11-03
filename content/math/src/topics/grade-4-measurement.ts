@@ -1006,6 +1006,21 @@ const turnFractions: readonly [number, number][] = [
   [1, 360],
 ];
 
+/** turnFigure draws a circle cut into n equal parts by radii, shading the first k parts counterclockwise from the right and labeling each shaded part with its angle. */
+function turnFigure(n: number, k: number, alt: Text): Figure {
+  const on = (d: number, r = 3): Point => [r * Math.cos((d * Math.PI) / 180), r * Math.sin((d * Math.PI) / 180)];
+  const part = 360 / n;
+  const sector: Point[] = [[0, 0], ...Array.from({ length: k * 12 + 1 }, (_, i) => on((i * part) / 12))];
+  const marks: Mark[] = [
+    { kind: "shade", points: sector },
+    { kind: "polygon", points: Array.from({ length: 96 }, (_, i) => on(i * 3.75)) },
+    ...Array.from({ length: n }, (_, i): Mark => ({ kind: "segment", a: [0, 0], b: on(i * part) })),
+    ...Array.from({ length: k }, (_, i): Mark => ({ kind: "label", at: on((i + 0.5) * part, 1.8), text: `${part}°`, dir: "n" })),
+    { kind: "dot", at: [0, 0] },
+  ];
+  return { svg: sketch(marks), alt };
+}
+
 export const connectingAnglesAndCircles = topic(
   "connecting-angles-and-circles",
   t("Connecting Angles and Circles", "角与圆"),
@@ -1022,6 +1037,14 @@ export const connectingAnglesAndCircles = topic(
       explanation: t(
         "A full turn is $360^\\circ$. To find the degrees in a fraction of a turn, divide $360^\\circ$ by the denominator to get one part, then multiply by the numerator.\n\n$\\frac{1}{4}$ of a full turn is $360^\\circ \\div 4 = 90^\\circ$, and $\\frac{3}{4}$ of a turn is $3 \\times 90^\\circ = 270^\\circ$.",
         "一整圈是 $360^\\circ$。求几分之几圈是多少度，先用 $360^\\circ$ 除以分母得到一份，再乘分子。\n\n一整圈的 $\\frac{1}{4}$ 是 $360^\\circ \\div 4 = 90^\\circ$，$\\frac{3}{4}$ 圈是 $3 \\times 90^\\circ = 270^\\circ$。",
+      ),
+      figure: turnFigure(
+        4,
+        3,
+        t(
+          "A circle cut into 4 equal parts by radii from its center. Three of the parts are shaded, each a 90° angle at the center, so 3/4 of a turn is 270°.",
+          "一个圆被从圆心出发的半径分成 4 等份。其中 3 份涂上阴影，每份是圆心处的一个 90° 角，所以 3/4 圈是 270°。",
+        ),
       ),
       generate(rng) {
         const [a, b] = rng.pick(turnFractions);
@@ -1054,6 +1077,14 @@ export const connectingAnglesAndCircles = topic(
       explanation: t(
         "To find what fraction of a full turn an angle is, put its measure over $360$ and simplify.\n\n$120^\\circ$ is $\\frac{120}{360} = \\frac{1}{3}$ of a full turn, dividing both by $120$.",
         "求一个角是一整圈的几分之几，用它的度数作分子、$360$ 作分母，再约分。\n\n$120^\\circ$ 是一整圈的 $\\frac{120}{360} = \\frac{1}{3}$，分子分母同时除以 $120$。",
+      ),
+      figure: turnFigure(
+        3,
+        1,
+        t(
+          "A circle cut into 3 equal parts by radii from its center. One part is shaded; its angle at the center is 120°, so 120° is 1/3 of a turn.",
+          "一个圆被从圆心出发的半径分成 3 等份。其中 1 份涂上阴影，它在圆心处的角是 120°，所以 120° 是 1/3 圈。",
+        ),
       ),
       generate(rng) {
         const b = rng.pick([2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36]);
