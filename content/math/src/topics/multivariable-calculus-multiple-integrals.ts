@@ -315,8 +315,8 @@ export const lowerRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
   id: "lower-riemann-sums-over-general-rectangular-partitions",
   title: t("Lower Riemann Sums Over General Rectangular Partitions", "一般矩形分割上的下黎曼和"),
   summary: t(
-    "For non-uniform partitions with varying subrectangle widths, lower sums weigh each infimum by its individual area ΔA_{ij} = Δx_i Δy_j.",
-    "对于子矩形宽度不等的非均匀分割，下黎曼和将每个子矩形上的下确界乘以其各自面积 ΔA_{ij} = Δx_i Δy_j 后求和。",
+    "For partitions whose subrectangles have different widths, a lower sum weights each infimum by its own area $\\Delta A_{ij} = \\Delta x_i\\,\\Delta y_j$.",
+    "对于子矩形宽度不等的分割，下和把每个下确界乘以各自的面积 $\\Delta A_{ij} = \\Delta x_i\\,\\Delta y_j$ 再求和。",
   ),
   prerequisites: ["approximating-volumes-using-lower-riemann-sums"],
   encompasses: [{ topic: "approximating-volumes-using-lower-riemann-sums", weight: 0.3 }],
@@ -393,8 +393,8 @@ export const upperRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
   id: "upper-riemann-sums-over-general-rectangular-partitions",
   title: t("Upper Riemann Sums Over General Rectangular Partitions", "一般矩形分割上的上黎曼和"),
   summary: t(
-    "For general partitions, the upper sum accumulates the product of each subrectangle's supremum with its area ΔA_{ij}.",
-    "对于一般分割，上黎曼和累加每个子矩形上的上确界与其面积 ΔA_{ij} 的乘积。",
+    "For a general partition, the upper sum adds the products of each subrectangle's supremum with its area $\\Delta A_{ij}$.",
+    "对于一般分割，上和把每个子矩形上的上确界与其面积 $\\Delta A_{ij}$ 的乘积相加。",
   ),
   prerequisites: ["approximating-volumes-using-upper-riemann-sums"],
   encompasses: [{ topic: "approximating-volumes-using-upper-riemann-sums", weight: 0.3 }],
@@ -470,8 +470,8 @@ export const definingDoubleIntegralsUsingLowerAndUpperRiemannSums: TopicDef = {
   id: "defining-double-integrals-using-lower-and-upper-riemann-sums",
   title: t("Defining Double Integrals Using Lower and Upper Riemann Sums", "利用上下黎曼和定义二重积分"),
   summary: t(
-    "A bounded function f is Riemann integrable on R if sup L(f, P) = inf U(f, P); the common value is the double integral ∬_R f dA.",
-    "若有界函数 f 在 R 上的下黎曼和上确界与上黎曼和下确界相等，则称其黎曼可积，该公共值即为二重积分 ∬_R f dA。",
+    "A bounded function $f$ is integrable on $R$ if $\\sup_P L(f, P) = \\inf_P U(f, P)$; the common value is the double integral $\\iint_R f\\,dA$.",
+    "若有界函数 $f$ 满足 $\\sup_P L(f, P) = \\inf_P U(f, P)$，则 $f$ 在 $R$ 上可积，这个公共值就是二重积分 $\\iint_R f\\,dA$。",
   ),
   prerequisites: ["lower-riemann-sums-over-general-rectangular-partitions", "upper-riemann-sums-over-general-rectangular-partitions"],
   encompasses: [
@@ -1333,7 +1333,7 @@ export const tripleIntegralsOverTypeIiiRegions: TopicDef = {
 export const calculatingVolumesOfSolidsUsingTripleIntegrals: TopicDef = {
   id: "calculating-volumes-of-solids-using-triple-integrals",
   title: t("Calculating Volumes of Solids Using Triple Integrals", "利用三重积分计算立体的体积"),
-  summary: t("The volume of any 3D solid E equals the triple integral ∭_E 1 dV.", "任意三维立体 E 的体积等于其上的三重积分 ∭_E 1 dV。"),
+  summary: t("The volume of a solid $E$ is the triple integral $\\iiint_E 1\\,dV$.", "立体 $E$ 的体积等于三重积分 $\\iiint_E 1\\,dV$。"),
   prerequisites: ["triple-integrals-over-type-i-regions"],
   encompasses: [{ topic: "triple-integrals-over-type-i-regions", weight: 0.3 }],
   xp: 10,
@@ -1622,8 +1622,8 @@ export const computingAreasUsingAChangeOfVariables: TopicDef = {
   id: "computing-areas-using-a-change-of-variables",
   title: t("Computing Areas Using a Change of Variables", "利用变量代换计算平面图形面积"),
   summary: t(
-    "By the change of variables formula, Area(R) = ∬_S |J(u, v)| du dv, scaling the area of a simpler region S by the Jacobian determinant.",
-    "由变量代换公式，Area(R) = ∬_S |J(u, v)| du dv，将简单基准区域 S 的面积通过雅可比行列式缩放得到 R 的面积。",
+    "By the change of variables formula, $\\operatorname{Area}(R) = \\iint_S |J(u, v)|\\,du\\,dv$: the Jacobian scales area from a simpler region $S$.",
+    "由变量代换公式，$\\operatorname{Area}(R) = \\iint_S |J(u, v)|\\,du\\,dv$：雅可比行列式把较简单区域 $S$ 的面积缩放为 $R$ 的面积。",
   ),
   prerequisites: ["the-image-of-an-affine-transformation", "the-jacobian"],
   encompasses: [
@@ -1678,8 +1678,8 @@ export const computingDoubleIntegralsUsingAChangeOfVariables: TopicDef = {
   id: "computing-double-integrals-using-a-change-of-variables",
   title: t("Computing Double Integrals Using a Change of Variables", "应用变量代换计算二重积分"),
   summary: t(
-    "The change of variables formula ∬_R f(x, y) dA = ∬_G f(x(u, v), y(u, v)) |J(u, v)| du dv transforms complicated regions into simple rectangular domains.",
-    "变量代换公式 ∬_R f(x, y) dA = ∬_G f(x(u, v), y(u, v)) |J(u, v)| du dv 可将复杂区域化为简单的矩形域进行计算。",
+    "The change of variables formula $\\iint_R f(x, y)\\,dA = \\iint_G f(x(u, v), y(u, v))\\,|J(u, v)|\\,du\\,dv$ turns a complicated region into a simple one such as a rectangle.",
+    "变量代换公式 $\\iint_R f(x, y)\\,dA = \\iint_G f(x(u, v), y(u, v))\\,|J(u, v)|\\,du\\,dv$ 把复杂区域化为矩形等简单区域。",
   ),
   prerequisites: ["computing-areas-using-a-change-of-variables", "double-integrals-in-plane-polar-coordinates"],
   encompasses: [
@@ -2128,8 +2128,8 @@ export const computingTripleIntegralsUsingAChangeOfVariables: TopicDef = {
   id: "computing-triple-integrals-using-a-change-of-variables",
   title: t("Computing Triple Integrals Using a Change of Variables", "应用变量代换计算三重积分"),
   summary: t(
-    "The 3D change of variables formula transforms ellipsoids and general solids via ∭_E f dV = ∭_G f |J(u, v, w)| du dv dw.",
-    "三维变量代换公式 ∭_E f dV = ∭_G f |J(u, v, w)| du dv dw 可将椭球体及复杂立体变换为规则几何体进行积分。",
+    "In three dimensions, $\\iiint_E f\\,dV = \\iiint_G f\\,|J(u, v, w)|\\,du\\,dv\\,dw$ turns ellipsoids and other solids into simpler ones.",
+    "在三维中，$\\iiint_E f\\,dV = \\iiint_G f\\,|J(u, v, w)|\\,du\\,dv\\,dw$ 把椭球等立体化为较简单的立体。",
   ),
   prerequisites: ["triple-integrals-in-spherical-polar-coordinates", "computing-double-integrals-using-a-change-of-variables"],
   encompasses: [

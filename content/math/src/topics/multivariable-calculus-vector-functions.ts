@@ -775,8 +775,8 @@ export const findingCurvatureUsingTheCrossProduct: TopicDef = {
   id: "finding-curvature-using-the-cross-product",
   title: t("Finding Curvature Using the Cross Product", "利用叉积求曲率"),
   summary: t(
-    "The curvature of any three-dimensional space curve is given by κ(t) = ||r'(t) × r''(t)|| / ||r'(t)||^3.",
-    "任意三维空间曲线的曲率由公式 κ(t) = ||r'(t) × r''(t)|| / ||r'(t)||^3 给出。",
+    "The curvature of a space curve is $\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}$.",
+    "空间曲线的曲率为 $\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}$。",
   ),
   prerequisites: ["introduction-to-curvature", "the-cross-product-of-two-vectors"],
   encompasses: [{ topic: "introduction-to-curvature", weight: 0.3 }],
@@ -885,8 +885,8 @@ export const theCurvatureOfAPlaneCurve: TopicDef = {
   id: "the-curvature-of-a-plane-curve",
   title: t("The Curvature of a Plane Curve", "平面曲线的曲率"),
   summary: t(
-    "For a plane curve y = f(x), the curvature is κ(x) = |f''(x)| / (1 + (f'(x))^2)^(3/2).",
-    "对于平面曲线 y = f(x)，曲率为 κ(x) = |f''(x)| / (1 + (f'(x))^2)^(3/2)。",
+    "For a plane curve $y = f(x)$, the curvature is $\\kappa(x) = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}$.",
+    "对于平面曲线 $y = f(x)$，曲率为 $\\kappa(x) = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}$。",
   ),
   prerequisites: ["introduction-to-curvature", "second-and-higher-order-derivatives"],
   encompasses: [{ topic: "introduction-to-curvature", weight: 0.3 }],

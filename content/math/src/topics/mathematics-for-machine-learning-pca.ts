@@ -9,8 +9,8 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
     id: "introduction-to-principal-component-analysis",
     title: t("Introduction to Principal Component Analysis", "主成分分析引论"),
     summary: t(
-      "Principal Component Analysis (PCA) finds orthogonal directions of maximum variance in high-dimensional data. The total variance across all d features equals the trace of the covariance matrix Tr(S) = ∑_{i=1}^d λ_i.",
-      "主成分分析 (PCA) 在高维数据中寻找方差最大的正交投影方向。所有 d 个特征的总方差等于样本协方差矩阵的迹 Tr(S) = ∑_{i=1}^d λ_i。",
+      "Principal component analysis (PCA) finds orthogonal directions of maximum variance in high-dimensional data. The total variance of all $d$ features equals the trace of the covariance matrix: $\\operatorname{tr}(S) = \\sum_{i=1}^{d} \\lambda_i$.",
+      "主成分分析（PCA）在高维数据中寻找方差最大的正交方向。全部 $d$ 个特征的总方差等于协方差矩阵的迹：$\\operatorname{tr}(S) = \\sum_{i=1}^{d} \\lambda_i$。",
     ),
     prerequisites: ["multiple-linear-regression-with-matrices"],
     encompasses: [],
@@ -78,8 +78,8 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
     id: "computing-principal-components",
     title: t("Computing Principal Components", "计算主成分"),
     summary: t(
-      "The principal component directions are the unit eigenvectors of the sample covariance matrix S, ordered by descending eigenvalue λ_1 ≥ λ_2 ≥ ... ≥ λ_d.",
-      "主成分方向是样本协方差矩阵 S 的单位特征向量，按特征值降序排列：λ_1 ≥ λ_2 ≥ ... ≥ λ_d。",
+      "The principal directions are the unit eigenvectors of the sample covariance matrix $S$, ordered by decreasing eigenvalue $\\lambda_1 \\ge \\lambda_2 \\ge \\cdots \\ge \\lambda_d$.",
+      "主成分方向是样本协方差矩阵 $S$ 的单位特征向量，按特征值降序排列：$\\lambda_1 \\ge \\lambda_2 \\ge \\cdots \\ge \\lambda_d$。",
     ),
     prerequisites: ["introduction-to-principal-component-analysis"],
     encompasses: [],
@@ -139,8 +139,8 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
     id: "the-connection-between-pca-and-svd",
     title: t("The Connection Between PCA and SVD", "PCA 与 SVD 的联系"),
     summary: t(
-      "If X_c is an n × d centered data matrix with SVD X_c = U Σ V^T, the right singular vectors (columns of V) are the principal component directions, and the sample covariance eigenvalues satisfy λ_i = σ_i^2 / (n - 1).",
-      "若 X_c 为 n × d 的中心化数据矩阵且具有 SVD 分解 X_c = U Σ V^T，则右奇异向量（V 的列）为主成分方向，且样本协方差特征值满足 λ_i = σ_i^2 / (n - 1)。",
+      "If the centered $n \\times d$ data matrix has SVD $X_c = U\\Sigma V^T$, the right singular vectors (columns of $V$) are the principal directions, and the covariance eigenvalues are $\\lambda_i = \\frac{\\sigma_i^2}{n - 1}$.",
+      "若中心化的 $n \\times d$ 数据矩阵有奇异值分解 $X_c = U\\Sigma V^T$，则右奇异向量（$V$ 的列）就是主成分方向，协方差特征值为 $\\lambda_i = \\frac{\\sigma_i^2}{n - 1}$。",
     ),
     prerequisites: ["computing-principal-components"],
     encompasses: [],
@@ -181,8 +181,8 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
     id: "feature-extraction-using-pca",
     title: t("Feature Extraction Using PCA", "使用 PCA 进行特征提取"),
     summary: t(
-      "Projecting a centered data point x_c ∈ R^d onto the first principal direction v_1 yields the scalar principal component feature score z_1 = v_1^T x_c. For k components, z = V_k^T x_c reduces dimension from d to k.",
-      "将中心化数据点 x_c ∈ R^d 投影到第一主成分方向 v_1 上，得到标量主成分特征得分 z_1 = v_1^T x_c。对于 k 个主成分，z = V_k^T x_c 将维度从 d 降至 k。",
+      "Projecting a centered point $\\mathbf{x}_c \\in \\mathbb{R}^d$ onto the first principal direction $\\mathbf{v}_1$ gives the score $z_1 = \\mathbf{v}_1^T\\mathbf{x}_c$. With $k$ components, $\\mathbf{z} = V_k^T\\mathbf{x}_c$ reduces the dimension from $d$ to $k$.",
+      "把中心化数据点 $\\mathbf{x}_c \\in \\mathbb{R}^d$ 投影到第一主成分方向 $\\mathbf{v}_1$ 上，得到得分 $z_1 = \\mathbf{v}_1^T\\mathbf{x}_c$。取 $k$ 个主成分时，$\\mathbf{z} = V_k^T\\mathbf{x}_c$ 把维数从 $d$ 降到 $k$。",
     ),
     prerequisites: ["the-connection-between-pca-and-svd"],
     encompasses: [],

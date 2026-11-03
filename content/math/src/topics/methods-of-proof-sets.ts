@@ -383,8 +383,8 @@ export const indicatorFunctions: TopicDef = {
   id: "indicator-functions",
   title: t("Indicator Functions", "示性函数"),
   summary: t(
-    "The indicator function 1_A(x) is 1 when x ∈ A and 0 otherwise; set operations become arithmetic on indicators.",
-    "示性函数 1_A(x) 在 x ∈ A 时为 1，否则为 0；集合运算对应示性函数的算术运算。",
+    "The indicator function $\\mathbf{1}_A(x)$ is $1$ when $x \\in A$ and $0$ otherwise; set operations become arithmetic on indicators.",
+    "示性函数 $\\mathbf{1}_A(x)$ 在 $x \\in A$ 时为 $1$，否则为 $0$；集合运算对应示性函数的算术运算。",
   ),
   prerequisites: ["set-complements"],
   encompasses: [],

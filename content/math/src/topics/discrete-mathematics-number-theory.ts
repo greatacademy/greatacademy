@@ -617,8 +617,8 @@ export const fermatsLittleTheorem: TopicDef = {
   id: "fermats-little-theorem",
   title: t("Fermat's Little Theorem", "费马小定理"),
   summary: t(
-    "If p is prime and p ∤ a, then a^(p−1) ≡ 1 (mod p). So exponents can be reduced modulo p − 1, and a^(p−2) is the inverse of a modulo p.",
-    "若 p 是质数且 p ∤ a，则 a^(p−1) ≡ 1 (mod p)。因此指数可以对 p − 1 取模，而 a^(p−2) 就是 a 模 p 的逆元。",
+    "If $p$ is prime and $p \\nmid a$, then $a^{p-1} \\equiv 1 \\pmod{p}$. So exponents can be reduced modulo $p - 1$, and $a^{p-2}$ is the inverse of $a$ modulo $p$.",
+    "若 $p$ 是质数且 $p \\nmid a$，则 $a^{p-1} \\equiv 1 \\pmod{p}$。因此指数可以对 $p - 1$ 取模，而 $a^{p-2}$ 就是 $a$ 模 $p$ 的逆元。",
   ),
   prerequisites: ["multiplicative-inverses-modulo-n"],
   encompasses: [],
@@ -759,8 +759,8 @@ export const eulersTheorem: TopicDef = {
   id: "eulers-theorem",
   title: t("Euler's Theorem", "欧拉定理"),
   summary: t(
-    "If gcd(a, n) = 1, then a^φ(n) ≡ 1 (mod n); exponents can be reduced modulo φ(n). Fermat's little theorem is the case n = p.",
-    "若 gcd(a, n) = 1，则 a^φ(n) ≡ 1 (mod n)；指数可以对 φ(n) 取模。费马小定理是 n = p 的特例。",
+    "If $\\gcd(a, n) = 1$, then $a^{\\varphi(n)} \\equiv 1 \\pmod{n}$; exponents can be reduced modulo $\\varphi(n)$. Fermat's little theorem is the case $n = p$.",
+    "若 $\\gcd(a, n) = 1$，则 $a^{\\varphi(n)} \\equiv 1 \\pmod{n}$；指数可以对 $\\varphi(n)$ 取模。费马小定理是 $n = p$ 的特例。",
   ),
   prerequisites: ["fermats-little-theorem", "eulers-totient-function"],
   encompasses: [],

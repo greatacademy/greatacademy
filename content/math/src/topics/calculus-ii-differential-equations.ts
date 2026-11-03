@@ -873,8 +873,8 @@ export const exponentialGrowthAndDecayModelsWithFirstOrderOdes: TopicDef = {
   id: "exponential-growth-and-decay-models-with-first-order-odes",
   title: t("Exponential Growth and Decay Models With First-Order ODEs", "用一阶常微分方程建立指数增长与衰减模型"),
   summary: t(
-    "The solution of dy/dt = ky with y(0) = y₀ is y = y₀e^{kt}: growth when k > 0, decay when k < 0.",
-    "dy/dt = ky，y(0) = y₀ 的解为 y = y₀e^{kt}：k > 0 时增长，k < 0 时衰减。",
+    "The solution of $\\frac{dy}{dt} = ky$ with $y(0) = y_0$ is $y = y_0 e^{kt}$: growth when $k > 0$, decay when $k < 0$.",
+    "$\\frac{dy}{dt} = ky$，$y(0) = y_0$ 的解为 $y = y_0 e^{kt}$：$k > 0$ 时增长，$k < 0$ 时衰减。",
   ),
   prerequisites: ["solving-first-order-ivps-using-separation-of-variables", "modeling-with-first-order-odes"],
   encompasses: [{ topic: "solving-first-order-ivps-using-separation-of-variables", weight: 0.3 }],
@@ -948,8 +948,8 @@ export const exponentialGrowthAndDecayModelsWithFirstOrderOdesCalculatingUnknown
     "用一阶常微分方程建立指数增长与衰减模型：求未知时间与初始值",
   ),
   summary: t(
-    "Solve y₀ · m^{t/d} = y for t to find when a value is reached, or for y₀ to find the starting amount.",
-    "解 y₀ · m^{t/d} = y 中的 t 求出何时达到某值，或解 y₀ 求出初始量。",
+    "Solve $y_0 \\cdot m^{t/d} = y$ for $t$ to find when a value is reached, or for $y_0$ to find the starting amount.",
+    "解 $y_0 \\cdot m^{t/d} = y$ 中的 $t$ 求出何时达到某值，或解 $y_0$ 求出初始量。",
   ),
   prerequisites: ["exponential-growth-and-decay-models-with-first-order-odes"],
   encompasses: [{ topic: "exponential-growth-and-decay-models-with-first-order-odes", weight: 0.5 }],
@@ -1024,8 +1024,8 @@ export const exponentialGrowthAndDecayModelsWithFirstOrderOdesHalfLifeProblems: 
     "用一阶常微分方程建立指数增长与衰减模型：半衰期问题",
   ),
   summary: t(
-    "A substance with dA/dt = kA (k < 0) halves every h = ln 2/|k|, so A = A₀(1/2)^{t/h}.",
-    "满足 dA/dt = kA（k < 0）的物质每经过 h = ln 2/|k| 减半，所以 A = A₀(1/2)^{t/h}。",
+    "A substance with $\\frac{dA}{dt} = kA$ ($k < 0$) halves every $h = \\frac{\\ln 2}{|k|}$, so $A = A_0 \\left(\\frac{1}{2}\\right)^{t/h}$.",
+    "满足 $\\frac{dA}{dt} = kA$（$k < 0$）的物质每经过 $h = \\frac{\\ln 2}{|k|}$ 减半，所以 $A = A_0 \\left(\\frac{1}{2}\\right)^{t/h}$。",
   ),
   prerequisites: ["exponential-growth-and-decay-models-with-first-order-odes-calculating-unknown-times-and-initial-values"],
   encompasses: [
@@ -1251,8 +1251,8 @@ export const solvingTheLogisticGrowthEquation: TopicDef = {
   id: "solving-the-logistic-growth-equation",
   title: t("Solving the Logistic Growth Equation", "解逻辑斯谛增长方程"),
   summary: t(
-    "Separation and partial fractions give P(t) = K/(1 + Ae^{−kt}) with A = (K − P₀)/P₀.",
-    "分离变量并用部分分式得 P(t) = K/(1 + Ae^{−kt})，其中 A = (K − P₀)/P₀。",
+    "Separation and partial fractions give $P(t) = \\frac{K}{1 + Ae^{-kt}}$ with $A = \\frac{K - P_0}{P_0}$.",
+    "分离变量并用部分分式得 $P(t) = \\frac{K}{1 + Ae^{-kt}}$，其中 $A = \\frac{K - P_0}{P_0}$。",
   ),
   prerequisites: ["qualitative-analysis-of-the-logistic-growth-equation", "integrating-rational-functions-using-partial-fractions"],
   encompasses: [{ topic: "qualitative-analysis-of-the-logistic-growth-equation", weight: 0.3 }],

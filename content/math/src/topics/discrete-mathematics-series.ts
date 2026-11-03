@@ -641,8 +641,8 @@ export const approximatingValuesUsingTheGeneralizedBinomialTheorem: TopicDef = {
   id: "approximating-values-using-the-generalized-binomial-theorem",
   title: t("Approximating Values Using the Generalized Binomial Theorem", "用广义二项式定理求近似值"),
   summary: t(
-    "For small u, (1 + u)ʳ ≈ 1 + ru + C(r, 2)u²; numbers like √102 = 10(1 + 0.02)^(1/2) can be approximated this way.",
-    "当 u 很小时，(1 + u)ʳ ≈ 1 + ru + C(r, 2)u²；像 √102 = 10(1 + 0.02)^(1/2) 这样的数可以这样近似。",
+    "For small $u$, $(1 + u)^r \\approx 1 + ru + \\binom{r}{2}u^2$; numbers like $\\sqrt{102} = 10(1 + 0.02)^{1/2}$ can be approximated this way.",
+    "当 $u$ 很小时，$(1 + u)^r \\approx 1 + ru + \\binom{r}{2}u^2$；像 $\\sqrt{102} = 10(1 + 0.02)^{1/2}$ 这样的数可以这样近似。",
   ),
   prerequisites: ["working-with-the-generalized-binomial-theorem"],
   encompasses: [],
@@ -746,8 +746,8 @@ export const theMultinomialTheorem: TopicDef = {
   id: "the-multinomial-theorem",
   title: t("The Multinomial Theorem", "多项式定理"),
   summary: t(
-    "(x₁ + ⋯ + xₘ)ⁿ = Σ n!/(k₁! ⋯ kₘ!) x₁^k₁ ⋯ xₘ^kₘ over all k₁ + ⋯ + kₘ = n: the coefficient counts arrangements of the factors.",
-    "(x₁ + ⋯ + xₘ)ⁿ = Σ n!/(k₁! ⋯ kₘ!) x₁^k₁ ⋯ xₘ^kₘ，对所有 k₁ + ⋯ + kₘ = n 求和：系数计数各因子的排列方式。",
+    "$(x_1 + \\cdots + x_m)^n = \\sum \\frac{n!}{k_1! \\cdots k_m!} x_1^{k_1} \\cdots x_m^{k_m}$ over all $k_1 + \\cdots + k_m = n$: the coefficient counts arrangements of the factors.",
+    "$(x_1 + \\cdots + x_m)^n = \\sum \\frac{n!}{k_1! \\cdots k_m!} x_1^{k_1} \\cdots x_m^{k_m}$，对所有 $k_1 + \\cdots + k_m = n$ 求和：系数计数各因子的排列方式。",
   ),
   prerequisites: ["expanding-a-binomial-using-binomial-coefficients", "permutations-with-repetition"],
   encompasses: [],

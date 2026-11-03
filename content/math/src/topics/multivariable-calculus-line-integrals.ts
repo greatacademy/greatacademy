@@ -116,8 +116,8 @@ export const lineIntegralsOfScalarFunctions: TopicDef = {
   id: "line-integrals-of-scalar-functions",
   title: t("Line Integrals of Scalar Functions", "标量函数的第一类曲线积分"),
   summary: t(
-    "The scalar line integral ∫_C f ds integrates a function with respect to arc length ds = ||r'(t)|| dt along a curve.",
-    "标量函数的第一类曲线积分 ∫_C f ds 沿空间或平面曲线对弧长微元 ds = ||r'(t)|| dt 进行积分。",
+    "The scalar line integral $\\int_C f\\,ds$ integrates a function along a curve with respect to arc length $ds = \\|\\mathbf{r}'(t)\\|\\,dt$.",
+    "标量函数的曲线积分 $\\int_C f\\,ds$ 沿曲线对弧长微元 $ds = \\|\\mathbf{r}'(t)\\|\\,dt$ 积分。",
   ),
   prerequisites: ["simple-closed-and-oriented-curves"],
   encompasses: [{ topic: "simple-closed-and-oriented-curves", weight: 0.3 }],
@@ -176,8 +176,8 @@ export const propertiesOfLineIntegralsOfScalarFunctions: TopicDef = {
   id: "properties-of-line-integrals-of-scalar-functions",
   title: t("Properties of Line Integrals of Scalar Functions", "标量函数曲线积分的性质"),
   summary: t(
-    "Scalar line integrals are independent of curve orientation: ∫_{-C} f ds = ∫_C f ds, and linear with respect to the integrand.",
-    "第一类（标量）曲线积分与曲线定向无关：∫_{-C} f ds = ∫_C f ds，且对被积函数具有线性性质。",
+    "Scalar line integrals do not depend on the orientation of the curve, $\\int_{-C} f\\,ds = \\int_C f\\,ds$, and are linear in the integrand.",
+    "标量曲线积分与曲线方向无关：$\\int_{-C} f\\,ds = \\int_C f\\,ds$，且对被积函数是线性的。",
   ),
   prerequisites: ["line-integrals-of-scalar-functions"],
   encompasses: [{ topic: "line-integrals-of-scalar-functions", weight: 0.3 }],
@@ -510,8 +510,8 @@ export const furtherPropertiesOfLineIntegralsOfScalarFunctions: TopicDef = {
   id: "further-properties-of-line-integrals-of-scalar-functions",
   title: t("Further Properties of Line Integrals of Scalar Functions", "标量函数曲线积分的进一步性质"),
   summary: t(
-    "Line integrals over piecewise-smooth curves equal the sum of integrals over the individual smooth segments: ∫_{C1 + C2} f ds = ∫_{C1} f ds + ∫_{C2} f ds.",
-    "分段光滑曲线上的曲线积分等于各光滑子段上积分的和：∫_{C1 + C2} f ds = ∫_{C1} f ds + ∫_{C2} f ds。",
+    "A line integral over a piecewise-smooth curve is the sum of the integrals over its smooth pieces: $\\int_{C_1 + C_2} f\\,ds = \\int_{C_1} f\\,ds + \\int_{C_2} f\\,ds$.",
+    "分段光滑曲线上的曲线积分等于各光滑段上积分之和：$\\int_{C_1 + C_2} f\\,ds = \\int_{C_1} f\\,ds + \\int_{C_2} f\\,ds$。",
   ),
   prerequisites: ["line-integrals-of-scalar-functions-over-circles"],
   encompasses: [{ topic: "line-integrals-of-scalar-functions-over-circles", weight: 0.3 }],
@@ -619,8 +619,8 @@ export const lineIntegralsWithRespectToXAndY: TopicDef = {
   id: "line-integrals-with-respect-to-x-and-y",
   title: t("Line Integrals With Respect to X and Y", "对坐标 x 与 y 的第二类曲线积分"),
   summary: t(
-    "Line integrals with respect to coordinate variables, ∫_C P dx and ∫_C Q dy, evaluate differential displacements along oriented curves.",
-    "对坐标变量的第二类曲线积分 ∫_C P dx 与 ∫_C Q dy 沿有向曲线计算微分位移上的投影积分。",
+    "The line integrals $\\int_C P\\,dx$ and $\\int_C Q\\,dy$ integrate along an oriented curve with respect to the change in $x$ or in $y$.",
+    "对坐标的曲线积分 $\\int_C P\\,dx$ 与 $\\int_C Q\\,dy$ 沿有向曲线对 $x$ 或 $y$ 的变化量积分。",
   ),
   prerequisites: ["line-integrals-of-scalar-functions-over-line-segments"],
   encompasses: [
@@ -677,8 +677,8 @@ export const propertiesOfLineIntegralsWithRespectToXAndY: TopicDef = {
   id: "properties-of-line-integrals-with-respect-to-x-and-y",
   title: t("Properties of Line Integrals With Respect to X and Y", "对坐标的第二类曲线积分的性质"),
   summary: t(
-    "Unlike scalar line integrals, reversing orientation flips the sign of coordinate line integrals: ∫_{-C} P dx = -∫_C P dx.",
-    "与第一类标量曲线积分不同，反转遍历方向会使对坐标的第二类曲线积分反号：∫_{-C} P dx = -∫_C P dx。",
+    "Unlike scalar line integrals, reversing the orientation changes the sign of a line integral with respect to a coordinate: $\\int_{-C} P\\,dx = -\\int_C P\\,dx$.",
+    "与标量曲线积分不同，反转方向会使对坐标的曲线积分变号：$\\int_{-C} P\\,dx = -\\int_C P\\,dx$。",
   ),
   prerequisites: ["line-integrals-with-respect-to-x-and-y"],
   encompasses: [{ topic: "line-integrals-with-respect-to-x-and-y", weight: 0.3 }],
@@ -723,8 +723,8 @@ export const sumsOfLineIntegralsWithRespectToXAndYOverParametricCurves: TopicDef
   id: "sums-of-line-integrals-with-respect-to-x-and-y-over-parametric-curves",
   title: t("Sums of Line Integrals With Respect to X and Y Over Parametric Curves", "参数曲线上 P dx + Q dy 的曲线积分"),
   summary: t(
-    "The combined integral ∫_C (P dx + Q dy) evaluates ∫_a^b [P(x, y) x'(t) + Q(x, y) y'(t)] dt along parametric curves.",
-    "组合形式的第二类曲线积分 ∫_C (P dx + Q dy) 沿参数曲线转化为定积分 ∫_a^b [P(x, y) x'(t) + Q(x, y) y'(t)] dt。",
+    "Along a parametric curve, $\\int_C (P\\,dx + Q\\,dy) = \\int_a^b \\left[P(x, y)\\,x'(t) + Q(x, y)\\,y'(t)\\right] dt$.",
+    "沿参数曲线，$\\int_C (P\\,dx + Q\\,dy) = \\int_a^b \\left[P(x, y)\\,x'(t) + Q(x, y)\\,y'(t)\\right] dt$。",
   ),
   prerequisites: ["properties-of-line-integrals-with-respect-to-x-and-y"],
   encompasses: [
@@ -788,8 +788,8 @@ export const sumsOfLineIntegralsWithRespectToXAndY: TopicDef = {
   id: "sums-of-line-integrals-with-respect-to-x-and-y",
   title: t("Sums of Line Integrals With Respect to X and Y", "一般的 P dx + Q dy 曲线积分"),
   summary: t(
-    "Sums of coordinate line integrals ∫_C P dx + Q dy evaluate the circulation and tangential action of planar force fields.",
-    "第二类曲线积分 ∫_C P dx + Q dy 描述了平面力场沿曲线的环量与切向作用效果。",
+    "The sum $\\int_C P\\,dx + Q\\,dy$ measures the circulation, or tangential effect, of a plane force field along a curve.",
+    "曲线积分 $\\int_C P\\,dx + Q\\,dy$ 度量平面力场沿曲线的环量，即切向作用。",
   ),
   prerequisites: ["sums-of-line-integrals-with-respect-to-x-and-y-over-parametric-curves"],
   encompasses: [
@@ -853,8 +853,8 @@ export const lineIntegralsOfVectorValuedFunctionsOverParametricCurves: TopicDef 
   id: "line-integrals-of-vector-valued-functions-over-parametric-curves",
   title: t("Line Integrals of Vector-Valued Functions Over Parametric Curves", "参数曲线上的向量线积分"),
   summary: t(
-    "The line integral of a vector field F along a curve r(t) is evaluated by the dot product ∫_a^b F(r(t)) · r'(t) dt.",
-    "向量场 F 沿参数曲线 r(t) 的线积分通过点积定积分 ∫_a^b F(r(t)) · r'(t) dt 计算。",
+    "The line integral of a vector field $\\mathbf{F}$ along a curve $\\mathbf{r}(t)$ is $\\int_a^b \\mathbf{F}(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)\\,dt$.",
+    "向量场 $\\mathbf{F}$ 沿参数曲线 $\\mathbf{r}(t)$ 的线积分为 $\\int_a^b \\mathbf{F}(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)\\,dt$。",
   ),
   prerequisites: ["vector-fields", "sums-of-line-integrals-with-respect-to-x-and-y"],
   encompasses: [
@@ -976,8 +976,8 @@ export const interpretingLineIntegralsOfVectorValuedFunctions: TopicDef = {
   id: "interpreting-line-integrals-of-vector-valued-functions",
   title: t("Interpreting Line Integrals of Vector-Valued Functions", "向量线积分的几何与物理意义"),
   summary: t(
-    "The line integral ∫_C F · dr = ∫_C (F · T) ds measures the total tangential alignment (circulation or work) of F along C.",
-    "向量线积分 ∫_C F · dr = ∫_C (F · T) ds 度量了向量场沿曲线切向量的总累积效果（环量或功）。",
+    "The line integral $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_C (\\mathbf{F} \\cdot \\mathbf{T})\\,ds$ accumulates the tangential component of $\\mathbf{F}$ along $C$ (circulation or work).",
+    "线积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_C (\\mathbf{F} \\cdot \\mathbf{T})\\,ds$ 累积 $\\mathbf{F}$ 沿 $C$ 的切向分量（环量或功）。",
   ),
   prerequisites: ["line-integrals-of-vector-valued-functions-over-general-curves"],
   encompasses: [
@@ -1030,8 +1030,8 @@ export const propertiesOfLineIntegralsOfVectorValuedFunctions: TopicDef = {
   id: "properties-of-line-integrals-of-vector-valued-functions",
   title: t("Properties of Line Integrals of Vector-Valued Functions", "向量线积分的代数与几何性质"),
   summary: t(
-    "Vector line integrals satisfy ∫_{-C} F · dr = -∫_C F · dr, linearity in the field, and additivity along concatenated paths.",
-    "第二类向量线积分满足定向反转变号律 ∫_{-C} F · dr = -∫_C F · dr，对向量场的线性性以及沿连接路径的可加性。",
+    "Vector line integrals satisfy $\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = -\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$, are linear in the field, and add over joined paths.",
+    "向量线积分满足 $\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = -\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$，对向量场是线性的，并对相接的路径可加。",
   ),
   prerequisites: ["interpreting-line-integrals-of-vector-valued-functions"],
   encompasses: [
@@ -1083,8 +1083,8 @@ export const workDoneByAForceField: TopicDef = {
   id: "work-done-by-a-force-field",
   title: t("Work Done by a Force Field", "力场做功的计算"),
   summary: t(
-    "The work W done by a force field F moving a particle along curve C is given by the line integral W = ∫_C F · dr.",
-    "力场 F 推动质点沿曲线 C 运动所做的功 W 由向量线积分 W = ∫_C F · dr 给出。",
+    "The work done by a force field $\\mathbf{F}$ moving a particle along a curve $C$ is $W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r}$.",
+    "力场 $\\mathbf{F}$ 推动质点沿曲线 $C$ 运动所做的功为 $W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。",
   ),
   prerequisites: ["properties-of-line-integrals-of-vector-valued-functions"],
   encompasses: [
@@ -1150,8 +1150,8 @@ export const theFundamentalTheoremOfLineIntegrals: TopicDef = {
   id: "the-fundamental-theorem-of-line-integrals",
   title: t("The Fundamental Theorem of Line Integrals", "曲线积分基本定理"),
   summary: t(
-    "If F = ∇f is conservative, then ∫_C ∇f · dr = f(r(b)) - f(r(a)), depending only on the endpoints of C.",
-    "若 F = ∇f 为保守场，则曲线积分 ∫_C ∇f · dr = f(r(b)) - f(r(a))，仅取决于曲线 C 的起点与终点。",
+    "If $\\mathbf{F} = \\nabla f$ is conservative, then $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(\\mathbf{r}(b)) - f(\\mathbf{r}(a))$, which depends only on the endpoints of $C$.",
+    "若 $\\mathbf{F} = \\nabla f$ 为保守场，则 $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(\\mathbf{r}(b)) - f(\\mathbf{r}(a))$，只取决于 $C$ 的端点。",
   ),
   prerequisites: ["gradient-vector-fields", "line-integrals-of-vector-valued-functions-over-parametric-curves"],
   encompasses: [
@@ -1217,8 +1217,8 @@ export const pathIndependenceOfLineIntegrals: TopicDef = {
   id: "path-independence-of-line-integrals",
   title: t("Path Independence of Line Integrals", "曲线积分的路径无关性"),
   summary: t(
-    "A line integral ∫_C F · dr is independent of path in a connected domain D if and only if F = ∇f is a gradient field on D.",
-    "在连通区域 D 内，曲线积分 ∫_C F · dr 路径无关当且仅当 F = ∇f 是 D 上的保守梯度场。",
+    "On a connected domain $D$, the line integral $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ is independent of path if and only if $\\mathbf{F} = \\nabla f$ is a gradient field on $D$.",
+    "在连通区域 $D$ 上，线积分 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 与路径无关，当且仅当 $\\mathbf{F} = \\nabla f$ 是 $D$ 上的梯度场。",
   ),
   prerequisites: ["the-fundamental-theorem-of-line-integrals"],
   encompasses: [{ topic: "the-fundamental-theorem-of-line-integrals", weight: 0.3 }],
@@ -1276,8 +1276,8 @@ export const conservativeVectorFieldsAndClosedPaths: TopicDef = {
   id: "conservative-vector-fields-and-closed-paths",
   title: t("Conservative Vector Fields and Closed Paths", "保守向量场与闭路径环量"),
   summary: t(
-    "Around every closed curve C, the circulation of a conservative vector field is zero: ∮_C F · dr = 0.",
-    "沿任意闭合曲线 C，保守向量场的环量恒等于零：∮_C F · dr = 0。",
+    "The circulation of a conservative vector field around every closed curve $C$ is zero: $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = 0$.",
+    "保守向量场沿任意闭曲线 $C$ 的环量为零：$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = 0$。",
   ),
   prerequisites: ["path-independence-of-line-integrals"],
   encompasses: [{ topic: "path-independence-of-line-integrals", weight: 0.3 }],
@@ -1391,8 +1391,8 @@ export const lineIntegralsOfConservativeVectorFieldsInThreeDimensions: TopicDef 
   id: "line-integrals-of-conservative-vector-fields-in-three-dimensions",
   title: t("Line Integrals of Conservative Vector Fields in Three Dimensions", "三维保守向量场的曲线积分"),
   summary: t(
-    "In three dimensions, conservative line integrals ∫_C ∇f · dr = f(P2) - f(P1) depend strictly on the endpoints in R³.",
-    "在三维空间中，保守线积分 ∫_C ∇f · dr = f(P2) - f(P1) 严格仅取决于在 R³ 中的起点与终点。",
+    "In $\\mathbb{R}^3$, a conservative line integral $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(P_2) - f(P_1)$ depends only on the endpoints.",
+    "在 $\\mathbb{R}^3$ 中，保守场的线积分 $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(P_2) - f(P_1)$ 只取决于端点。",
   ),
   prerequisites: ["calculating-potential-functions-for-line-integrals"],
   encompasses: [
@@ -1517,8 +1517,8 @@ export const circulationAndFluxAcrossSimpleClosedPlaneCurves: TopicDef = {
   id: "circulation-and-flux-across-simple-closed-plane-curves",
   title: t("Circulation and Flux Across Simple Closed Plane Curves", "简单闭曲线上的环量与通量"),
   summary: t(
-    "Circulation evaluates ∮_C (P dx + Q dy) along the tangent T, while flux evaluates ∮_C (P dy - Q dx) across the outward normal n.",
-    "环量沿切向量 T 计算 ∮_C (P dx + Q dy)，而通量沿向外法向量 n 计算 ∮_C (P dy - Q dx)。",
+    "Circulation $\\oint_C (P\\,dx + Q\\,dy)$ accumulates the field along the tangent $\\mathbf{T}$, while flux $\\oint_C (P\\,dy - Q\\,dx)$ accumulates it across the outward normal $\\mathbf{n}$.",
+    "环量 $\\oint_C (P\\,dx + Q\\,dy)$ 沿切向量 $\\mathbf{T}$ 累积场，通量 $\\oint_C (P\\,dy - Q\\,dx)$ 沿向外法向量 $\\mathbf{n}$ 累积场。",
   ),
   prerequisites: ["line-integrals-of-vector-valued-functions-over-general-curves"],
   encompasses: [
@@ -1578,8 +1578,8 @@ export const greensTheoremInCirculationCurlForm: TopicDef = {
   id: "greens-theorem-in-circulation-curl-form",
   title: t("Green's Theorem in Circulation-Curl Form", "格林公式（环量-旋度形式）"),
   summary: t(
-    "Green's theorem equates counterclockwise circulation to the double integral of curl: ∮_C (P dx + Q dy) = ∬_D (Q_x - P_y) dA.",
-    "格林公式将沿逆时针边界的环量与区域上旋度的二重积分联系起来：∮_C (P dx + Q dy) = ∬_D (Q_x - P_y) dA。",
+    "Green's theorem equates the counterclockwise circulation to the double integral of the curl: $\\oint_C (P\\,dx + Q\\,dy) = \\iint_D (Q_x - P_y)\\,dA$.",
+    "格林公式把逆时针方向的环量与旋度的二重积分联系起来：$\\oint_C (P\\,dx + Q\\,dy) = \\iint_D (Q_x - P_y)\\,dA$。",
   ),
   prerequisites: ["circulation-and-flux-across-simple-closed-plane-curves", "double-integrals-over-rectangular-domains"],
   encompasses: [
@@ -1637,8 +1637,8 @@ export const calculatingAreasUsingGreensTheorem: TopicDef = {
   id: "calculating-areas-using-greens-theorem",
   title: t("Calculating Areas Using Green's Theorem", "应用格林公式计算平面区域面积"),
   summary: t(
-    "Green's theorem provides area formulas in terms of boundary line integrals: Area(D) = ∮_C x dy = -∮_C y dx = (1/2) ∮_C (x dy - y dx).",
-    "格林公式给出了通过边界曲线积分计算区域面积的公式：Area(D) = ∮_C x dy = -∮_C y dx = (1/2) ∮_C (x dy - y dx)。",
+    "Green's theorem gives area as a boundary integral: $\\operatorname{Area}(D) = \\oint_C x\\,dy = -\\oint_C y\\,dx = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx)$.",
+    "格林公式把面积写成边界上的曲线积分：$\\operatorname{Area}(D) = \\oint_C x\\,dy = -\\oint_C y\\,dx = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx)$。",
   ),
   prerequisites: ["greens-theorem-in-circulation-curl-form"],
   encompasses: [{ topic: "greens-theorem-in-circulation-curl-form", weight: 0.3 }],
@@ -1690,8 +1690,8 @@ export const greensTheoremInFluxDivergenceForm: TopicDef = {
   id: "greens-theorem-in-flux-divergence-form",
   title: t("Green's Theorem in Flux-Divergence Form", "格林公式（通量-散度形式）"),
   summary: t(
-    "The 2D divergence theorem equates total outward flux across C to the double integral of divergence: ∮_C (P dy - Q dx) = ∬_D (P_x + Q_y) dA.",
-    "二维散度定理将穿过闭曲线 C 的总向外通量等同于散度的二重积分：∮_C (P dy - Q dx) = ∬_D (P_x + Q_y) dA。",
+    "The flux form of Green's theorem equates the outward flux across $C$ to the double integral of the divergence: $\\oint_C (P\\,dy - Q\\,dx) = \\iint_D (P_x + Q_y)\\,dA$.",
+    "格林公式的通量形式把穿过 $C$ 的向外通量与散度的二重积分联系起来：$\\oint_C (P\\,dy - Q\\,dx) = \\iint_D (P_x + Q_y)\\,dA$。",
   ),
   prerequisites: ["greens-theorem-in-circulation-curl-form", "the-divergence-of-a-vector-field"],
   encompasses: [
@@ -1755,8 +1755,8 @@ export const greensTheoremOnRegionsWithHoles: TopicDef = {
   id: "greens-theorem-on-regions-with-holes",
   title: t("Green's Theorem on Regions With Holes", "复连通区域上的格林公式"),
   summary: t(
-    "For regions with holes, the boundary orientation traverses the outer boundary counterclockwise and inner boundaries clockwise: ∮_C1 - ∮_C2 = ∬_D curl F dA.",
-    "对于含空洞的复连通区域，正向遍历规定外边界取逆时针、内边界取顺时针：∮_C1 - ∮_C2 = ∬_D curl F dA。",
+    "For a region with a hole, the outer boundary $C_1$ is traversed counterclockwise and the inner boundary $C_2$ clockwise: $\\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D (Q_x - P_y)\\,dA$, with both $\\oint$ taken counterclockwise.",
+    "对于含孔的区域，外边界 $C_1$ 取逆时针、内边界 $C_2$ 取顺时针：$\\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D (Q_x - P_y)\\,dA$，其中两个 $\\oint$ 都按逆时针计算。",
   ),
   prerequisites: ["greens-theorem-in-circulation-curl-form"],
   encompasses: [{ topic: "greens-theorem-in-circulation-curl-form", weight: 0.3 }],

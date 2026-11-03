@@ -1224,8 +1224,8 @@ export const quotientRings: TopicDef = {
   id: "quotient-rings",
   title: t("Quotient Rings", "商环"),
   summary: t(
-    "If I is an ideal of R, the cosets r + I form a ring R/I with (a + I) + (b + I) = (a + b) + I and (a + I)(b + I) = ab + I; the absorption property makes multiplication well defined. ℤ/nℤ ≅ ℤₙ, ℤₙ/⟨d⟩ ≅ ℤ_d for d | n, and ℤ[i]/⟨a + bi⟩ has a² + b² elements.",
-    "若 I 是 R 的理想，则陪集 r + I 构成环 R/I，运算为 (a + I) + (b + I) = (a + b) + I，(a + I)(b + I) = ab + I；吸收性保证乘法良定义。ℤ/nℤ ≅ ℤₙ，对 d | n 有 ℤₙ/⟨d⟩ ≅ ℤ_d，且 ℤ[i]/⟨a + bi⟩ 有 a² + b² 个元素。",
+    "If $I$ is an ideal of $R$, the cosets $r + I$ form a ring $R/I$ with $(a + I) + (b + I) = (a + b) + I$ and $(a + I)(b + I) = ab + I$; the absorption property makes multiplication well defined. $\\mathbb{Z}/n\\mathbb{Z} \\cong \\mathbb{Z}_n$, $\\mathbb{Z}_n/\\langle d \\rangle \\cong \\mathbb{Z}_d$ for $d \\mid n$, and $\\mathbb{Z}[i]/\\langle a + bi \\rangle$ has $a^2 + b^2$ elements.",
+    "若 $I$ 是 $R$ 的理想，则陪集 $r + I$ 构成环 $R/I$，运算为 $(a + I) + (b + I) = (a + b) + I$，$(a + I)(b + I) = ab + I$；吸收性保证乘法良定义。$\\mathbb{Z}/n\\mathbb{Z} \\cong \\mathbb{Z}_n$，对 $d \\mid n$ 有 $\\mathbb{Z}_n/\\langle d \\rangle \\cong \\mathbb{Z}_d$，且 $\\mathbb{Z}[i]/\\langle a + bi \\rangle$ 有 $a^2 + b^2$ 个元素。",
   ),
   prerequisites: ["generating-elements-of-principal-ideal-rings", "quotient-groups"],
   encompasses: [],
@@ -1309,8 +1309,8 @@ export const polynomialQuotientRings: TopicDef = {
   id: "polynomial-quotient-rings",
   title: t("Polynomial Quotient Rings", "多项式商环"),
   summary: t(
-    "For a nonconstant f in F[x], every coset of ⟨f⟩ contains exactly one polynomial of degree less than deg f, its remainder on division by f. So F[x]/⟨f⟩ consists of these remainders, multiplied by reducing modulo f; ℤₚ[x]/⟨f⟩ has p^{deg f} elements, and ℝ[x]/⟨x² + 1⟩ ≅ ℂ.",
-    "对 F[x] 中的非常数多项式 f，⟨f⟩ 的每个陪集恰含一个次数小于 deg f 的多项式，即除以 f 的余式。所以 F[x]/⟨f⟩ 由这些余式组成，乘法为模 f 约化；ℤₚ[x]/⟨f⟩ 有 p^{deg f} 个元素，且 ℝ[x]/⟨x² + 1⟩ ≅ ℂ。",
+    "For a nonconstant $f$ in $F[x]$, every coset of $\\langle f \\rangle$ contains exactly one polynomial of degree less than $\\deg f$, its remainder on division by $f$. So $F[x]/\\langle f \\rangle$ consists of these remainders, multiplied by reducing modulo $f$; $\\mathbb{Z}_p[x]/\\langle f \\rangle$ has $p^{\\deg f}$ elements, and $\\mathbb{R}[x]/\\langle x^2 + 1 \\rangle \\cong \\mathbb{C}$.",
+    "对 $F[x]$ 中的非常数多项式 $f$，$\\langle f \\rangle$ 的每个陪集恰含一个次数小于 $\\deg f$ 的多项式，即除以 $f$ 的余式。所以 $F[x]/\\langle f \\rangle$ 由这些余式组成，乘法为模 $f$ 约化；$\\mathbb{Z}_p[x]/\\langle f \\rangle$ 有 $p^{\\deg f}$ 个元素，且 $\\mathbb{R}[x]/\\langle x^2 + 1 \\rangle \\cong \\mathbb{C}$。",
   ),
   prerequisites: ["quotient-rings", "dividing-polynomials-using-long-division"],
   encompasses: [],

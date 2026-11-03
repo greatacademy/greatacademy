@@ -9,8 +9,8 @@ export const mathematicsForMachineLearningContinuousConditioningTopics: TopicDef
     id: "conditional-expectation-for-continuous-random-variables",
     title: t("Conditional Expectation for Continuous Random Variables", "连续随机变量的条件期望"),
     summary: t(
-      "For continuous random variables (X, Y) with joint PDF f(x, y) and marginal PDF f_Y(y) > 0, the conditional expectation is E[X | Y = y] = ∫_{-∞}^∞ x f_{X|Y}(x | y) dx, where f_{X|Y}(x | y) = f(x, y) / f_Y(y).",
-      "对于具有联合概率密度函数 f(x, y) 且边际密度 f_Y(y) > 0 的连续随机变量 (X, Y)，条件期望为 E[X | Y = y] = ∫_{-∞}^∞ x f_{X|Y}(x | y) dx，其中条件密度为 f_{X|Y}(x | y) = f(x, y) / f_Y(y)。",
+      "For continuous random variables $(X, Y)$ with joint density $f(x, y)$ and $f_Y(y) > 0$, the conditional expectation is $E[X \\mid Y = y] = \\int_{-\\infty}^{\\infty} x\\,f_{X \\mid Y}(x \\mid y)\\,dx$, where $f_{X \\mid Y}(x \\mid y) = \\frac{f(x, y)}{f_Y(y)}$.",
+      "对于联合密度为 $f(x, y)$ 且 $f_Y(y) > 0$ 的连续随机变量 $(X, Y)$，条件期望为 $E[X \\mid Y = y] = \\int_{-\\infty}^{\\infty} x\\,f_{X \\mid Y}(x \\mid y)\\,dx$，其中 $f_{X \\mid Y}(x \\mid y) = \\frac{f(x, y)}{f_Y(y)}$。",
     ),
     prerequisites: ["conditional-expectation-for-discrete-random-variables", "joint-distributions-for-continuous-random-variables"],
     encompasses: [],
@@ -81,8 +81,8 @@ export const mathematicsForMachineLearningContinuousConditioningTopics: TopicDef
     id: "conditional-variance-for-continuous-random-variables",
     title: t("Conditional Variance for Continuous Random Variables", "连续随机变量的条件方差"),
     summary: t(
-      "The conditional variance of a continuous random variable X given Y = y is Var(X | Y = y) = E[X^2 | Y = y] - (E[X | Y = y])^2 = ∫_{-∞}^∞ (x - E[X | Y = y])^2 f_{X|Y}(x | y) dx.",
-      "连续随机变量 X 在给定 Y = y 下的条件方差为 Var(X | Y = y) = E[X^2 | Y = y] - (E[X | Y = y])^2 = ∫_{-∞}^∞ (x - E[X | Y = y])^2 f_{X|Y}(x | y) dx。",
+      "The conditional variance of $X$ given $Y = y$ is $\\operatorname{Var}(X \\mid Y = y) = E[X^2 \\mid Y = y] - (E[X \\mid Y = y])^2 = \\int_{-\\infty}^{\\infty} (x - E[X \\mid Y = y])^2 f_{X \\mid Y}(x \\mid y)\\,dx$.",
+      "$X$ 在 $Y = y$ 条件下的条件方差为 $\\operatorname{Var}(X \\mid Y = y) = E[X^2 \\mid Y = y] - (E[X \\mid Y = y])^2 = \\int_{-\\infty}^{\\infty} (x - E[X \\mid Y = y])^2 f_{X \\mid Y}(x \\mid y)\\,dx$。",
     ),
     prerequisites: ["conditional-expectation-for-continuous-random-variables"],
     encompasses: [],

@@ -86,8 +86,8 @@ export const generalSolutionsOfFirstOrderLinearOdes: TopicDef = {
   id: "general-solutions-of-first-order-linear-odes",
   title: t("General Solutions of First-Order Linear ODEs", "一阶线性微分方程的通解结构"),
   summary: t(
-    "The general solution of y' + a y = b is y(x) = b/a + C e^{-a x}, with steady-state limit b/a as x → ∞.",
-    "常系数方程 y' + a y = b 的通解为 y(x) = b/a + C e^{-a x}，当 x → ∞ 时的渐近稳态极限为 b/a。",
+    "The general solution of $y' + ay = b$ is $y = \\frac{b}{a} + Ce^{-ax}$, which tends to the steady state $\\frac{b}{a}$ as $x \\to \\infty$ when $a > 0$.",
+    "方程 $y' + ay = b$ 的通解为 $y = \\frac{b}{a} + Ce^{-ax}$；当 $a > 0$ 时，$x \\to \\infty$ 时趋于稳态 $\\frac{b}{a}$。",
   ),
   prerequisites: ["introduction-to-first-order-linear-odes"],
   encompasses: [{ topic: "introduction-to-first-order-linear-odes", weight: 0.3 }],
@@ -141,8 +141,8 @@ export const solvingFirstOrderLinearOdesWithExponentialForcing: TopicDef = {
   id: "solving-first-order-linear-odes-with-exponential-forcing",
   title: t("Solving First-Order Linear ODEs With Exponential Forcing", "指数非齐次项的一阶线性方程求解"),
   summary: t(
-    "For y' + a y = b e^{k x} with k ≠ -a, undetermined coefficients gives the particular solution y_p = A e^{k x} with A = b / (a + k).",
-    "对于含有指数非齐次项的方程 y' + a y = b e^{k x}（k ≠ -a），用待定系数法求得特解 y_p = A e^{k x}，其中 A = b / (a + k)。",
+    "For $y' + ay = be^{kx}$ with $k \\ne -a$, undetermined coefficients gives $y_p = Ae^{kx}$ with $A = \\frac{b}{a + k}$.",
+    "对 $y' + ay = be^{kx}$（$k \\ne -a$），待定系数法给出特解 $y_p = Ae^{kx}$，其中 $A = \\frac{b}{a + k}$。",
   ),
   prerequisites: ["general-solutions-of-first-order-linear-odes"],
   encompasses: [{ topic: "general-solutions-of-first-order-linear-odes", weight: 0.3 }],
@@ -195,8 +195,8 @@ export const solvingFirstOrderLinearOdesWithSinusoidalForcing: TopicDef = {
   id: "solving-first-order-linear-odes-with-sinusoidal-forcing",
   title: t("Solving First-Order Linear ODEs With Sinusoidal Forcing", "正弦非齐次项的一阶线性方程求解"),
   summary: t(
-    "For y' + a y = b cos(ω x), the steady-state sinusoidal response has amplitude R = b / √(a^2 + ω^2).",
-    "对于方程 y' + a y = b cos(ω x)，其稳态正弦响应振幅为 R = b / √(a^2 + ω^2)。",
+    "For $y' + ay = b\\cos \\omega x$, the steady-state response has amplitude $R = \\frac{b}{\\sqrt{a^2 + \\omega^2}}$.",
+    "对 $y' + ay = b\\cos \\omega x$，稳态响应的振幅为 $R = \\frac{b}{\\sqrt{a^2 + \\omega^2}}$。",
   ),
   prerequisites: ["general-solutions-of-first-order-linear-odes"],
   encompasses: [{ topic: "general-solutions-of-first-order-linear-odes", weight: 0.3 }],
@@ -360,8 +360,8 @@ export const furtherSolvingFirstOrderOdesBySubstitution: TopicDef = {
   id: "further-solving-first-order-odes-by-substitution",
   title: t("Further Solving First-Order ODEs by Substitution", "变量代换法的深入应用"),
   summary: t(
-    "Nonlinear substitutions such as u = ln y or u = y^2 convert complex differential relationships into standard separable or linear forms.",
-    "非线性变量代换（如 u = ln y 或 u = y^2）将复杂的非线性微分关系转化为标准的可分离或线性形式。",
+    "Nonlinear substitutions such as $u = \\ln y$ or $u = y^2$ turn harder equations into separable or linear ones.",
+    "非线性代换（如 $u = \\ln y$ 或 $u = y^2$）把较难的方程化为可分离或线性方程。",
   ),
   prerequisites: ["solving-first-order-odes-by-substitution"],
   encompasses: [{ topic: "solving-first-order-odes-by-substitution", weight: 0.3 }],
@@ -474,8 +474,8 @@ export const homogeneousFunctions: TopicDef = {
   id: "homogeneous-functions",
   title: t("Homogeneous Functions", "齐次函数"),
   summary: t(
-    "A multivariable function f(x, y) is homogeneous of degree n if f(t x, t y) = t^n f(x, y) for all t > 0.",
-    "若对任意 t > 0 均有 f(t x, t y) = t^n f(x, y)，则称多元函数 f(x, y) 为 n 次齐次函数。",
+    "A function $f(x, y)$ is homogeneous of degree $n$ if $f(tx, ty) = t^n f(x, y)$ for all $t > 0$.",
+    "若对任意 $t > 0$ 都有 $f(tx, ty) = t^n f(x, y)$，则称 $f(x, y)$ 为 $n$ 次齐次函数。",
   ),
   prerequisites: ["introduction-to-first-order-linear-odes"],
   encompasses: [{ topic: "introduction-to-first-order-linear-odes", weight: 0.3 }],
@@ -633,8 +633,8 @@ export const solvingExactOdesUsingIntegratingFactors: TopicDef = {
   id: "solving-exact-odes-using-integrating-factors",
   title: t("Solving Exact ODEs Using Integrating Factors", "积分因子法解非恰当方程"),
   summary: t(
-    "When (M_y - N_x)/N = f(x) depends solely on x, multiplying by μ(x) = exp(∫ f(x) dx) renders the equation exact.",
-    "当 (M_y - N_x)/N = f(x) 仅为 x 的函数时，乘以积分因子 μ(x) = exp(∫ f(x) dx) 可将方程转化为恰当微分方程。",
+    "When $\\frac{M_y - N_x}{N} = f(x)$ depends only on $x$, multiplying by $\\mu(x) = \\exp\\left(\\int f(x)\\,dx\\right)$ makes the equation exact.",
+    "当 $\\frac{M_y - N_x}{N} = f(x)$ 只与 $x$ 有关时，乘以积分因子 $\\mu(x) = \\exp\\left(\\int f(x)\\,dx\\right)$ 可使方程成为恰当方程。",
   ),
   prerequisites: ["exact-differential-equations"],
   encompasses: [{ topic: "exact-differential-equations", weight: 0.3 }],
@@ -684,8 +684,8 @@ export const bernoulliDifferentialEquations: TopicDef = {
   id: "bernoulli-differential-equations",
   title: t("Bernoulli Differential Equations", "伯努利微分方程"),
   summary: t(
-    "A Bernoulli equation y' + P(x)y = Q(x)y^n transforms into the linear equation v' + (1-n)P(x)v = (1-n)Q(x) via v = y^{1-n}.",
-    "伯努利方程 y' + P(x)y = Q(x)y^n 通过代换 v = y^{1-n} 转化为一阶线性常微分方程 v' + (1-n)P(x)v = (1-n)Q(x)。",
+    "The substitution $v = y^{1-n}$ turns a Bernoulli equation $y' + P(x)y = Q(x)y^n$ into the linear equation $v' + (1 - n)P(x)v = (1 - n)Q(x)$.",
+    "代换 $v = y^{1-n}$ 把伯努利方程 $y' + P(x)y = Q(x)y^n$ 化为线性方程 $v' + (1 - n)P(x)v = (1 - n)Q(x)$。",
   ),
   prerequisites: ["reducing-odes-to-first-order-linear-by-substitution"],
   encompasses: [
@@ -743,8 +743,8 @@ export const riccatiDifferentialEquations: TopicDef = {
   id: "riccati-differential-equations",
   title: t("Riccati Differential Equations", "黎卡提微分方程"),
   summary: t(
-    "Given a particular solution y_1 to Riccati's equation y' = q_0 + q_1 y + q_2 y^2, the substitution y = y_1 + 1/u reduces it to a first-order linear ODE.",
-    "已知黎卡提方程 y' = q_0 + q_1 y + q_2 y^2 的一个特解 y_1 时，通过代换 y = y_1 + 1/u 可将其化为一阶线性常微分方程。",
+    "Given a particular solution $y_1$ of a Riccati equation $y' = q_0 + q_1 y + q_2 y^2$, the substitution $y = y_1 + \\frac{1}{u}$ reduces it to a linear equation.",
+    "已知黎卡提方程 $y' = q_0 + q_1 y + q_2 y^2$ 的一个特解 $y_1$，代换 $y = y_1 + \\frac{1}{u}$ 可将其化为线性方程。",
   ),
   prerequisites: ["bernoulli-differential-equations"],
   encompasses: [{ topic: "bernoulli-differential-equations", weight: 0.3 }],
@@ -959,8 +959,8 @@ export const classifyingEquilibriumSolutionsOfFirstOrderOdes: TopicDef = {
   id: "classifying-equilibrium-solutions-of-first-order-odes",
   title: t("Classifying Equilibrium Solutions of First-Order ODEs", "一阶微分方程平衡解的稳定性分类"),
   summary: t(
-    "An equilibrium point y* of y' = f(y) is asymptotically stable (sink) if f'(y*) < 0, and unstable (source) if f'(y*) > 0.",
-    "对于自治方程 y' = f(y)，若 f'(y*) < 0 则平衡点 y* 是渐近稳定的（汇），若 f'(y*) > 0 则是不稳定的（源）。",
+    "An equilibrium $y^*$ of $y' = f(y)$ is asymptotically stable (a sink) if $f'(y^*) < 0$ and unstable (a source) if $f'(y^*) > 0$.",
+    "对 $y' = f(y)$，若 $f'(y^*) < 0$，平衡点 $y^*$ 渐近稳定（汇）；若 $f'(y^*) > 0$，则不稳定（源）。",
   ),
   prerequisites: ["phase-lines-of-first-order-odes"],
   encompasses: [{ topic: "phase-lines-of-first-order-odes", weight: 0.3 }],

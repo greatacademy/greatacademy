@@ -10,8 +10,8 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
     id: "spearmans-rank-correlation-coefficient",
     title: t("Spearman's Rank Correlation Coefficient", "斯皮尔曼等级相关系数"),
     summary: t(
-      "Spearman's rank correlation coefficient r_s measures monotonic association between two variables by evaluating Pearson's correlation on ranks: r_s = 1 - (6 ∑ d_i^2) / (n(n^2 - 1)), where d_i = rank(x_i) - rank(y_i).",
-      "斯皮尔曼等级相关系数 r_s 通过对秩计算皮尔逊相关系数来衡量两个变量之间的单调相关性：r_s = 1 - (6 ∑ d_i^2) / (n(n^2 - 1))，其中 d_i = rank(x_i) - rank(y_i)。",
+      "Spearman's rank correlation coefficient $r_s$ measures monotonic association by computing Pearson's correlation on ranks: $r_s = 1 - \\frac{6\\sum d_i^2}{n(n^2 - 1)}$, where $d_i = \\operatorname{rank}(x_i) - \\operatorname{rank}(y_i)$.",
+      "斯皮尔曼等级相关系数 $r_s$ 对秩计算皮尔逊相关系数，衡量两个变量的单调相关性：$r_s = 1 - \\frac{6\\sum d_i^2}{n(n^2 - 1)}$，其中 $d_i = \\operatorname{rank}(x_i) - \\operatorname{rank}(y_i)$。",
     ),
     prerequisites: ["the-linear-correlation-coefficient"],
     encompasses: [],
@@ -67,8 +67,8 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
     id: "confidence-intervals-for-linear-regression-slope-parameters",
     title: t("Confidence Intervals for Linear Regression Slope Parameters", "线性回归斜率参数的置信区间"),
     summary: t(
-      "A 100(1 - α)% confidence interval for the population regression slope β_1 is b_1 ± t_{α/2, n-2} s_{b_1}, where the standard error of the slope is s_{b_1} = s_e / √S_{xx}.",
-      "总体回归斜率 β_1 的 100(1 - α)% 置信区间为 b_1 ± t_{α/2, n-2} s_{b_1}，其中斜率的标准误差为 s_{b_1} = s_e / √S_{xx}。",
+      "A $100(1 - \\alpha)\\%$ confidence interval for the population slope $\\beta_1$ is $b_1 \\pm t_{\\alpha/2, n-2}\\, s_{b_1}$, where the standard error of the slope is $s_{b_1} = \\frac{s_e}{\\sqrt{S_{xx}}}$.",
+      "总体回归斜率 $\\beta_1$ 的 $100(1 - \\alpha)\\%$ 置信区间为 $b_1 \\pm t_{\\alpha/2, n-2}\\, s_{b_1}$，其中斜率的标准误为 $s_{b_1} = \\frac{s_e}{\\sqrt{S_{xx}}}$。",
     ),
     prerequisites: ["linear-regression", "confidence-intervals-for-one-mean-unknown-population-variance"],
     encompasses: [],
@@ -108,8 +108,8 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
     id: "confidence-intervals-for-linear-regression-intercept-parameters",
     title: t("Confidence Intervals for Linear Regression Intercept Parameters", "线性回归截距参数的置信区间"),
     summary: t(
-      "A 100(1 - α)% confidence interval for the regression intercept β_0 is b_0 ± t_{α/2, n-2} s_{b_0}, where the squared standard error of the intercept is s_{b_0}^2 = s_e^2 (1/n + x̄^2 / S_{xx}).",
-      "回归截距 β_0 的 100(1 - α)% 置信区间为 b_0 ± t_{α/2, n-2} s_{b_0}，其中截距的方差估计为 s_{b_0}^2 = s_e^2 (1/n + x̄^2 / S_{xx})。",
+      "A $100(1 - \\alpha)\\%$ confidence interval for the intercept $\\beta_0$ is $b_0 \\pm t_{\\alpha/2, n-2}\\, s_{b_0}$, where $s_{b_0}^2 = s_e^2\\left(\\frac{1}{n} + \\frac{\\bar{x}^2}{S_{xx}}\\right)$.",
+      "回归截距 $\\beta_0$ 的 $100(1 - \\alpha)\\%$ 置信区间为 $b_0 \\pm t_{\\alpha/2, n-2}\\, s_{b_0}$，其中 $s_{b_0}^2 = s_e^2\\left(\\frac{1}{n} + \\frac{\\bar{x}^2}{S_{xx}}\\right)$。",
     ),
     prerequisites: ["confidence-intervals-for-linear-regression-slope-parameters"],
     encompasses: [],

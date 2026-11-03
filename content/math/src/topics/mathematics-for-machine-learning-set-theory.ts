@@ -8,8 +8,8 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
     id: "indicator-functions-for-predicates",
     title: t("Indicator Functions for Predicates", "谓词的示性函数"),
     summary: t(
-      "The indicator function of a predicate P(x), denoted 1_{P}(x) or I(P(x)), equals 1 when the condition P(x) is true and 0 when P(x) is false.",
-      "谓词 P(x) 的示性函数（记作 1_{P}(x) 或 I(P(x))）在条件 P(x) 为真时取值为 1，为假时取值为 0。",
+      "The indicator function of a predicate $P(x)$, written $\\mathbf{1}_P(x)$ or $I(P(x))$, equals $1$ when $P(x)$ is true and $0$ when it is false.",
+      "谓词 $P(x)$ 的示性函数记作 $\\mathbf{1}_P(x)$ 或 $I(P(x))$，当 $P(x)$ 为真时取 $1$，为假时取 $0$。",
     ),
     prerequisites: ["indicator-functions"],
     encompasses: [],

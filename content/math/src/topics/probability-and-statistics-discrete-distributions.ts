@@ -10,8 +10,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
     id: "the-cdf-of-the-binomial-distribution",
     title: t("The CDF of the Binomial Distribution", "二项分布的累积分布函数"),
     summary: t(
-      "The cumulative distribution function (CDF) of X ~ Binomial(n, p) gives the probability of at most k successes: F(k) = P(X ≤ k) = ∑_{j=0}^k C(n, j) p^j (1-p)^{n-j}.",
-      "二项分布 X ~ Binomial(n, p) 的累积分布函数（CDF）表示至多获得 k 次成功的概率：F(k) = P(X ≤ k) = ∑_{j=0}^k C(n, j) p^j (1-p)^{n-j}。",
+      "The CDF of $X \\sim \\text{Binomial}(n, p)$ gives the probability of at most $k$ successes: $F(k) = P(X \\le k) = \\sum_{j=0}^{k} \\binom{n}{j} p^j (1 - p)^{n - j}$.",
+      "二项分布 $X \\sim \\text{Binomial}(n, p)$ 的累积分布函数表示至多 $k$ 次成功的概率：$F(k) = P(X \\le k) = \\sum_{j=0}^{k} \\binom{n}{j} p^j (1 - p)^{n - j}$。",
     ),
     prerequisites: ["the-binomial-distribution"],
     encompasses: [],
@@ -105,8 +105,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
     id: "the-cdf-of-the-poisson-distribution",
     title: t("The CDF of the Poisson Distribution", "泊松分布的累积分布函数"),
     summary: t(
-      "The CDF of a Poisson random variable X ~ Poisson(λ) gives the probability of observing at most k events: F(k) = P(X ≤ k) = e^{-λ} ∑_{j=0}^k λ^j / j!.",
-      "泊松分布 X ~ Poisson(λ) 的累积分布函数（CDF）表示至多观测到 k 次事件的概率：F(k) = P(X ≤ k) = e^{-λ} ∑_{j=0}^k λ^j / j!。",
+      "The CDF of $X \\sim \\text{Poisson}(\\lambda)$ gives the probability of at most $k$ events: $F(k) = P(X \\le k) = e^{-\\lambda} \\sum_{j=0}^{k} \\frac{\\lambda^j}{j!}$.",
+      "泊松分布 $X \\sim \\text{Poisson}(\\lambda)$ 的累积分布函数表示至多发生 $k$ 次事件的概率：$F(k) = P(X \\le k) = e^{-\\lambda} \\sum_{j=0}^{k} \\frac{\\lambda^j}{j!}$。",
     ),
     prerequisites: ["the-poisson-distribution"],
     encompasses: [],
@@ -179,8 +179,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
     id: "mean-and-variance-of-the-negative-binomial-distribution",
     title: t("Mean and Variance of the Negative Binomial Distribution", "负二项分布的均值与方差"),
     summary: t(
-      "For a negative binomial random variable X ~ NegativeBinomial(r, p) representing the number of trials to achieve r successes, the expected value is E[X] = r / p and the variance is Var(X) = r(1 - p) / p^2.",
-      "对于表示获得 r 次成功所需试验次数的负二项分布 X ~ NegativeBinomial(r, p)，其数学期望为 E[X] = r / p，方差为 Var(X) = r(1 - p) / p^2。",
+      "For a negative binomial random variable $X \\sim \\text{NB}(r, p)$, the number of trials needed for $r$ successes, $E[X] = \\frac{r}{p}$ and $\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2}$.",
+      "对于负二项随机变量 $X \\sim \\text{NB}(r, p)$（获得 $r$ 次成功所需的试验次数），$E[X] = \\frac{r}{p}$，$\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2}$。",
     ),
     prerequisites: ["the-negative-binomial-distribution"],
     encompasses: [],

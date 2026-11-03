@@ -792,8 +792,8 @@ export const cyclicSubgroupsInTheComplexPlane: TopicDef = {
   id: "cyclic-subgroups-in-the-complex-plane",
   title: t("Cyclic Subgroups in the Complex Plane", "复平面中的循环子群"),
   summary: t(
-    "In ℂ*, the cyclic subgroup ⟨z⟩ is finite exactly when z is a root of unity. The number e^{2πik/n} generates a subgroup of order n / gcd(k, n), whose elements are equally spaced on the unit circle. If |z| ≠ 1, the powers of z spiral in or out and ⟨z⟩ is infinite.",
-    "在 ℂ* 中，循环子群 ⟨z⟩ 有限当且仅当 z 是单位根。e^{2πik/n} 生成阶为 n / gcd(k, n) 的子群，其元素在单位圆上等距分布。若 |z| ≠ 1，z 的幂螺旋向内或向外，⟨z⟩ 为无限群。",
+    "In $\\mathbb{C}^*$, the cyclic subgroup $\\langle z \\rangle$ is finite exactly when $z$ is a root of unity. The number $e^{2\\pi ik/n}$ generates a subgroup of order $\\frac{n}{\\gcd(k, n)}$, whose elements are equally spaced on the unit circle. If $|z| \\ne 1$, the powers of $z$ spiral in or out and $\\langle z \\rangle$ is infinite.",
+    "在 $\\mathbb{C}^*$ 中，循环子群 $\\langle z \\rangle$ 有限当且仅当 $z$ 是单位根。$e^{2\\pi ik/n}$ 生成阶为 $\\frac{n}{\\gcd(k, n)}$ 的子群，其元素在单位圆上等距分布。若 $|z| \\ne 1$，$z$ 的幂螺旋向内或向外，$\\langle z \\rangle$ 为无限群。",
   ),
   prerequisites: ["cyclic-subgroups", "properties-of-roots-of-unity"],
   encompasses: [],

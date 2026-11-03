@@ -12,8 +12,8 @@ export const introductionToSystemsOfLinearOdes: TopicDef = {
   id: "introduction-to-systems-of-linear-odes",
   title: t("Introduction to Systems of Linear ODEs", "线性微分方程组简介"),
   summary: t(
-    "A first-order linear system x_1' = a x_1 + b x_2, x_2' = c x_1 + d x_2 is written in matrix form as x' = A x, characterized by trace and determinant.",
-    "一阶线性常微分方程组 x_1' = a x_1 + b x_2, x_2' = c x_1 + d x_2 表示为矩阵形式 x' = A x，由矩阵的迹与行列式所刻画。",
+    "A first-order linear system $x_1' = ax_1 + bx_2$, $x_2' = cx_1 + dx_2$ is written in matrix form as $\\mathbf{x}' = A\\mathbf{x}$ and characterized by the trace and determinant of $A$.",
+    "一阶线性方程组 $x_1' = ax_1 + bx_2$，$x_2' = cx_1 + dx_2$ 可写成矩阵形式 $\\mathbf{x}' = A\\mathbf{x}$，由 $A$ 的迹与行列式刻画。",
   ),
   prerequisites: ["general-solutions-of-linear-odes"],
   encompasses: [{ topic: "general-solutions-of-linear-odes", weight: 0.3 }],
@@ -66,8 +66,8 @@ export const expressingHomogeneousOdesAsFirstOrderSystems: TopicDef = {
   id: "expressing-homogeneous-odes-as-first-order-systems",
   title: t("Expressing Homogeneous ODEs as First-Order Systems", "将高阶齐次常微分方程转化为一阶微分方程组"),
   summary: t(
-    "By defining state variables x_1 = y, x_2 = y', the second-order ODE y'' + py' + qy = 0 transforms into the first-order system x' = A x with companion matrix.",
-    "通过定义状态变量 x_1 = y, x_2 = y'，二阶常微分方程 y'' + py' + qy = 0 可转化为具有友矩阵形式的一阶系统 x' = A x。",
+    "With the state variables $x_1 = y$, $x_2 = y'$, the second-order ODE $y'' + py' + qy = 0$ becomes the first-order system $\\mathbf{x}' = A\\mathbf{x}$ with a companion matrix.",
+    "取状态变量 $x_1 = y$，$x_2 = y'$，二阶方程 $y'' + py' + qy = 0$ 化为以友矩阵为系数的一阶系统 $\\mathbf{x}' = A\\mathbf{x}$。",
   ),
   prerequisites: ["introduction-to-systems-of-linear-odes"],
   encompasses: [{ topic: "introduction-to-systems-of-linear-odes", weight: 0.3 }],
@@ -120,8 +120,8 @@ export const expressingInhomogeneousOdesAsFirstOrderSystems: TopicDef = {
   id: "expressing-inhomogeneous-odes-as-first-order-systems",
   title: t("Expressing Inhomogeneous ODEs as First-Order Systems", "将高阶非齐次常微分方程转化为一阶微分方程组"),
   summary: t(
-    "An inhomogeneous ODE y'' + py' + qy = f(t) converts into x' = A x + g(t), where g(t) = (0, f(t))^T incorporates the external forcing.",
-    "非齐次微分方程 y'' + py' + qy = f(t) 转化为一阶系统 x' = A x + g(t)，其中外部激励项集中在向量 g(t) = (0, f(t))^T 的第二分量中。",
+    "An inhomogeneous ODE $y'' + py' + qy = f(t)$ becomes $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{g}(t)$, where $\\mathbf{g}(t) = (0, f(t))^T$ carries the forcing.",
+    "非齐次方程 $y'' + py' + qy = f(t)$ 化为 $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{g}(t)$，外力集中在 $\\mathbf{g}(t) = (0, f(t))^T$ 中。",
   ),
   prerequisites: ["expressing-homogeneous-odes-as-first-order-systems"],
   encompasses: [
@@ -176,8 +176,8 @@ export const linearIndependenceForHomogeneousSystemsOfOdes: TopicDef = {
   id: "linear-independence-for-homogeneous-systems-of-odes",
   title: t("Linear Independence for Homogeneous Systems of ODEs", "齐次线性微分方程组解向量的线性相关性与无关性"),
   summary: t(
-    "Vector solutions x_1(t), x_2(t) are linearly independent if and only if their matrix determinant W(t) = det(x_1(t), x_2(t)) is non-zero.",
-    "向量解 x_1(t), x_2(t) 线性无关当且仅当其构成的矩阵行列式（朗斯基行列式）W(t) = det(x_1(t), x_2(t)) 处处不为零。",
+    "Vector solutions $\\mathbf{x}_1(t), \\mathbf{x}_2(t)$ are linearly independent if and only if their Wronskian $W(t) = \\det\\begin{pmatrix} \\mathbf{x}_1(t) & \\mathbf{x}_2(t) \\end{pmatrix}$ is non-zero.",
+    "向量解 $\\mathbf{x}_1(t), \\mathbf{x}_2(t)$ 线性无关当且仅当其朗斯基行列式 $W(t) = \\det\\begin{pmatrix} \\mathbf{x}_1(t) & \\mathbf{x}_2(t) \\end{pmatrix}$ 不为零。",
   ),
   prerequisites: ["expressing-homogeneous-odes-as-first-order-systems"],
   encompasses: [
@@ -234,8 +234,8 @@ export const generalSolutionsOfFirstOrderLinearSystemsOfOdes: TopicDef = {
   id: "general-solutions-of-first-order-linear-systems-of-odes",
   title: t("General Solutions of First-Order Linear Systems of ODEs", "一阶线性微分方程组的通解结构"),
   summary: t(
-    "The general solution of a homogeneous system x' = A x is x(t) = c_1 x_1(t) + c_2 x_2(t), uniquely satisfying initial conditions x(0) = x_0.",
-    "齐次线性微分方程组 x' = A x 的通解为基本解组的线性组合 x(t) = c_1 x_1(t) + c_2 x_2(t)，由初值条件 x(0) = x_0 唯一确定常数系数。",
+    "The general solution of $\\mathbf{x}' = A\\mathbf{x}$ is $\\mathbf{x}(t) = c_1 \\mathbf{x}_1(t) + c_2 \\mathbf{x}_2(t)$, and an initial condition $\\mathbf{x}(0) = \\mathbf{x}_0$ fixes the constants.",
+    "$\\mathbf{x}' = A\\mathbf{x}$ 的通解为 $\\mathbf{x}(t) = c_1 \\mathbf{x}_1(t) + c_2 \\mathbf{x}_2(t)$，初值条件 $\\mathbf{x}(0) = \\mathbf{x}_0$ 唯一确定常数。",
   ),
   prerequisites: ["linear-independence-for-homogeneous-systems-of-odes"],
   encompasses: [
@@ -295,8 +295,8 @@ export const solvingDecoupledHomogeneousSystemsOfOdes: TopicDef = {
   id: "solving-decoupled-homogeneous-systems-of-odes",
   title: t("Solving Decoupled Homogeneous Systems of ODEs", "求解解耦的齐次线性微分方程组"),
   summary: t(
-    "A decoupled system x_1' = λ_1 x_1, x_2' = λ_2 x_2 consists of independent first-order equations with solutions x_1(t) = c_1 e^{λ_1 t}, x_2(t) = c_2 e^{λ_2 t}.",
-    "解耦微分方程组 x_1' = λ_1 x_1, x_2' = λ_2 x_2 由两个相互独立的单变量一阶常微分方程组成，通解为独立的单指数函数。",
+    "A decoupled system $x_1' = \\lambda_1 x_1$, $x_2' = \\lambda_2 x_2$ is two independent equations with solutions $x_1 = c_1 e^{\\lambda_1 t}$, $x_2 = c_2 e^{\\lambda_2 t}$.",
+    "解耦方程组 $x_1' = \\lambda_1 x_1$，$x_2' = \\lambda_2 x_2$ 是两个独立的方程，解为 $x_1 = c_1 e^{\\lambda_1 t}$，$x_2 = c_2 e^{\\lambda_2 t}$。",
   ),
   prerequisites: ["general-solutions-of-first-order-linear-systems-of-odes"],
   encompasses: [
@@ -350,8 +350,8 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvalues: TopicDef = 
   id: "solving-homogeneous-systems-of-odes-with-distinct-eigenvalues",
   title: t("Solving Homogeneous Systems of ODEs With Distinct Eigenvalues", "具有互异实特征值的齐次线性微分方程组求解"),
   summary: t(
-    "When A has real distinct eigenvalues λ_1 ≠ λ_2 with eigenvectors v_1, v_2, the general solution is x(t) = c_1 e^{λ_1 t} v_1 + c_2 e^{λ_2 t} v_2.",
-    "当系数矩阵 A 具有互异实特征值 λ_1 ≠ λ_2 及其特征向量 v_1, v_2 时，齐次微分方程组的通解为 x(t) = c_1 e^{λ_1 t} v_1 + c_2 e^{λ_2 t} v_2。",
+    "When $A$ has distinct real eigenvalues $\\lambda_1 \\ne \\lambda_2$ with eigenvectors $\\mathbf{v}_1, \\mathbf{v}_2$, the general solution is $\\mathbf{x}(t) = c_1 e^{\\lambda_1 t}\\mathbf{v}_1 + c_2 e^{\\lambda_2 t}\\mathbf{v}_2$.",
+    "当 $A$ 有互异实特征值 $\\lambda_1 \\ne \\lambda_2$ 及特征向量 $\\mathbf{v}_1, \\mathbf{v}_2$ 时，通解为 $\\mathbf{x}(t) = c_1 e^{\\lambda_1 t}\\mathbf{v}_1 + c_2 e^{\\lambda_2 t}\\mathbf{v}_2$。",
   ),
   prerequisites: ["solving-decoupled-homogeneous-systems-of-odes"],
   encompasses: [
@@ -409,8 +409,8 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvaluesAndInitialCon
   id: "solving-homogeneous-systems-of-odes-with-distinct-eigenvalues-and-initial-conditions",
   title: t("Solving Homogeneous Systems of ODEs With Distinct Eigenvalues and Initial Conditions", "带初值条件的互异特征值齐次系统求解"),
   summary: t(
-    "Solving an IVP x' = A x with x(0) = x_0 determines constants c_1, c_2 by solving the linear algebraic system c_1 v_1 + c_2 v_2 = x_0.",
-    "求解带初值条件 x(0) = x_0 的线性微分方程组通过解线性代数方程组 c_1 v_1 + c_2 v_2 = x_0 确定常数系数。",
+    "For $\\mathbf{x}' = A\\mathbf{x}$ with $\\mathbf{x}(0) = \\mathbf{x}_0$, find the constants by solving $c_1 \\mathbf{v}_1 + c_2 \\mathbf{v}_2 = \\mathbf{x}_0$.",
+    "对 $\\mathbf{x}' = A\\mathbf{x}$，$\\mathbf{x}(0) = \\mathbf{x}_0$，通过解 $c_1 \\mathbf{v}_1 + c_2 \\mathbf{v}_2 = \\mathbf{x}_0$ 确定常数。",
   ),
   prerequisites: ["solving-homogeneous-systems-of-odes-with-distinct-eigenvalues"],
   encompasses: [
@@ -466,8 +466,8 @@ export const solvingHomogeneousSystemsOfOdesWithRepeatedEigenvalues: TopicDef = 
   id: "solving-homogeneous-systems-of-odes-with-repeated-eigenvalues",
   title: t("Solving Homogeneous Systems of ODEs With Repeated Eigenvalues", "具有重特征值的齐次线性微分方程组求解"),
   summary: t(
-    "When A has a defective repeated eigenvalue λ with one eigenvector v, a generalized eigenvector w satisfying (A - λ I) w = v produces the solution x(t) = e^{λ t}(c_1 v + c_2 (t v + w)).",
-    "当矩阵 A 具有二重亏损特征值 λ 与单一特征向量 v 时，引入满足 (A - λ I) w = v 的广义特征向量 w，构成通解 x(t) = e^{λ t}(c_1 v + c_2 (t v + w))。",
+    "When $A$ has a repeated eigenvalue $\\lambda$ with only one eigenvector $\\mathbf{v}$, a generalized eigenvector $\\mathbf{w}$ with $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$ gives $\\mathbf{x}(t) = e^{\\lambda t}(c_1 \\mathbf{v} + c_2(t\\mathbf{v} + \\mathbf{w}))$.",
+    "当 $A$ 有二重特征值 $\\lambda$ 且只有一个特征向量 $\\mathbf{v}$ 时，取满足 $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$ 的广义特征向量 $\\mathbf{w}$，得 $\\mathbf{x}(t) = e^{\\lambda t}(c_1 \\mathbf{v} + c_2(t\\mathbf{v} + \\mathbf{w}))$。",
   ),
   prerequisites: ["solving-homogeneous-systems-of-odes-with-distinct-eigenvalues"],
   encompasses: [
@@ -522,8 +522,8 @@ export const solvingHomogeneousSystemsOfOdesWithComplexEigenvalues: TopicDef = {
   id: "solving-homogeneous-systems-of-odes-with-complex-eigenvalues",
   title: t("Solving Homogeneous Systems of ODEs With Complex Eigenvalues", "具有复特征值的齐次线性微分方程组求解"),
   summary: t(
-    "Complex conjugate eigenvalues α ± iβ produce oscillating spiral solutions with angular frequency β, wrapped in exponential envelope e^{α t}.",
-    "共轭复特征值 α ± iβ 产生角频率为 β 的旋转振荡轨迹，并带有指数包络 e^{α t}。",
+    "Complex eigenvalues $\\alpha \\pm i\\beta$ give spiraling solutions with angular frequency $\\beta$ inside the envelope $e^{\\alpha t}$.",
+    "共轭复特征值 $\\alpha \\pm i\\beta$ 给出角频率为 $\\beta$、包络为 $e^{\\alpha t}$ 的螺旋解。",
   ),
   prerequisites: ["solving-homogeneous-systems-of-odes-with-distinct-eigenvalues"],
   encompasses: [
@@ -579,8 +579,8 @@ export const solvingInhomogeneousSystemsOfOdes: TopicDef = {
   id: "solving-inhomogeneous-systems-of-odes",
   title: t("Solving Inhomogeneous Systems of ODEs", "非齐次线性微分方程组求解"),
   summary: t(
-    "For x' = A x + b with constant vector b and non-singular A, the constant particular solution is x_p = -A^{-1} b.",
-    "对于具有常向量激励 x' = A x + b 且系数矩阵 A 可逆的系统，常数特解向量由稳态代数方程给出：x_p = -A^{-1} b。",
+    "For $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{b}$ with a constant vector $\\mathbf{b}$ and invertible $A$, the constant particular solution is $\\mathbf{x}_p = -A^{-1}\\mathbf{b}$.",
+    "对常向量激励 $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{b}$ 且 $A$ 可逆，常数特解为 $\\mathbf{x}_p = -A^{-1}\\mathbf{b}$。",
   ),
   prerequisites: ["solving-homogeneous-systems-of-odes-with-distinct-eigenvalues"],
   encompasses: [
@@ -696,8 +696,8 @@ export const equilibriumPointsAndStabilityForSystemsOfOdes: TopicDef = {
   id: "equilibrium-points-and-stability-for-systems-of-odes",
   title: t("Equilibrium Points and Stability for Systems of ODEs", "微分方程组的平衡点与稳定性"),
   summary: t(
-    "Equilibrium points satisfy A x_0 = 0. When det(A) ≠ 0, the origin is the unique isolated equilibrium, classified by trace and determinant.",
-    "平衡点满足 A x_0 = 0。当 det(A) ≠ 0 时，原点是唯一的孤立平衡点，其稳定性由矩阵的迹与行列式完全确定。",
+    "Equilibrium points satisfy $A\\mathbf{x}_0 = \\mathbf{0}$. When $\\det A \\ne 0$, the origin is the only equilibrium, classified by the trace and determinant.",
+    "平衡点满足 $A\\mathbf{x}_0 = \\mathbf{0}$。当 $\\det A \\ne 0$ 时，原点是唯一的平衡点，其类型由迹与行列式确定。",
   ),
   prerequisites: ["phase-planes-and-phase-portraits"],
   encompasses: [{ topic: "phase-planes-and-phase-portraits", weight: 0.3 }],
@@ -751,8 +751,8 @@ export const phasePortraitsForDecoupledLinearSystems: TopicDef = {
   id: "phase-portraits-for-decoupled-linear-systems",
   title: t("Phase Portraits for Decoupled Linear Systems", "解耦线性系统的相图"),
   summary: t(
-    "For x' = λ_1 x and y' = λ_2 y, integrating dy/dx = (λ_2/λ_1)(y/x) yields trajectory curves y = C x^{λ_2/λ_1}.",
-    "对于解耦系统 x' = λ_1 x 与 y' = λ_2 y，积分分离变量方程 dy/dx = (λ_2/λ_1)(y/x) 得到相轨迹曲线族方程 y = C x^{λ_2/λ_1}。",
+    "For $x' = \\lambda_1 x$ and $y' = \\lambda_2 y$, integrating $\\frac{dy}{dx} = \\frac{\\lambda_2 y}{\\lambda_1 x}$ gives the trajectories $y = Cx^{\\lambda_2/\\lambda_1}$.",
+    "对 $x' = \\lambda_1 x$ 与 $y' = \\lambda_2 y$，积分 $\\frac{dy}{dx} = \\frac{\\lambda_2 y}{\\lambda_1 x}$ 得轨线 $y = Cx^{\\lambda_2/\\lambda_1}$。",
   ),
   prerequisites: ["phase-planes-and-phase-portraits"],
   encompasses: [{ topic: "phase-planes-and-phase-portraits", weight: 0.3 }],
@@ -804,8 +804,8 @@ export const phasePortraitsForLinearSystemsWithRealDistinctEigenvalues: TopicDef
   id: "phase-portraits-for-linear-systems-with-real-distinct-eigenvalues",
   title: t("Phase Portraits for Linear Systems With Real Distinct Eigenvalues", "具有互异实特征值的线性系统相图"),
   summary: t(
-    "When eigenvalues have opposite signs (λ_1 < 0 < λ_2), the origin is an unstable saddle point; when same signs, it is a stable or unstable node.",
-    "当特征值异号（λ_1 < 0 < λ_2）时原点为不稳定的鞍点；当特征值同号时原点为稳定或不稳定的结点。",
+    "When the eigenvalues have opposite signs ($\\lambda_1 < 0 < \\lambda_2$), the origin is an unstable saddle; when they have the same sign, it is a stable or unstable node.",
+    "当特征值异号（$\\lambda_1 < 0 < \\lambda_2$）时原点为不稳定的鞍点；同号时为稳定或不稳定的结点。",
   ),
   prerequisites: ["phase-portraits-for-decoupled-linear-systems"],
   encompasses: [
@@ -1025,8 +1025,8 @@ export const shiftedSystemsOfOdes: TopicDef = {
   id: "shifted-systems-of-odes",
   title: t("Shifted Systems of ODEs", "平移线性微分方程组"),
   summary: t(
-    "A shifted system x' = A(x - x_*) translates the phase portrait to an equilibrium point x_*, transforming back to standard origin form under u = x - x_*.",
-    "平移线性微分方程组 x' = A(x - x_*) 将相图几何结构整体平移至非零平衡点 x_*，通过坐标变换 u = x - x_* 可化回标准原点形式。",
+    "A shifted system $\\mathbf{x}' = A(\\mathbf{x} - \\mathbf{x}_*)$ moves the phase portrait to the equilibrium $\\mathbf{x}_*$; the substitution $\\mathbf{u} = \\mathbf{x} - \\mathbf{x}_*$ moves it back to the origin.",
+    "平移系统 $\\mathbf{x}' = A(\\mathbf{x} - \\mathbf{x}_*)$ 把相图平移到平衡点 $\\mathbf{x}_*$；代换 $\\mathbf{u} = \\mathbf{x} - \\mathbf{x}_*$ 可化回原点形式。",
   ),
   prerequisites: ["equilibrium-points-and-stability-for-systems-of-odes"],
   encompasses: [
@@ -1082,8 +1082,8 @@ export const linearApproximationsNearEquilibria: TopicDef = {
   id: "linear-approximations-near-equilibria",
   title: t("Linear Approximations Near Equilibria", "平衡点附近的线性化近似"),
   summary: t(
-    "Near an equilibrium point x_*, a nonlinear system x' = F(x) is approximated by the linear system u' = J(x_*) u, where J is the Jacobian matrix.",
-    "在平衡点 x_* 附近，非线性系统 x' = F(x) 可用一阶雅可比矩阵 J(x_*) 进行局部线性化近似：u' = J(x_*) u。",
+    "Near an equilibrium $\\mathbf{x}_*$, a nonlinear system $\\mathbf{x}' = F(\\mathbf{x})$ is approximated by $\\mathbf{u}' = J(\\mathbf{x}_*)\\mathbf{u}$, where $J$ is the Jacobian matrix.",
+    "在平衡点 $\\mathbf{x}_*$ 附近，非线性系统 $\\mathbf{x}' = F(\\mathbf{x})$ 可用 $\\mathbf{u}' = J(\\mathbf{x}_*)\\mathbf{u}$ 近似，其中 $J$ 为雅可比矩阵。",
   ),
   prerequisites: ["shifted-systems-of-odes"],
   encompasses: [{ topic: "shifted-systems-of-odes", weight: 0.3 }],
@@ -1135,8 +1135,8 @@ export const matrixExponentials: TopicDef = {
   id: "matrix-exponentials",
   title: t("Matrix Exponentials", "矩阵指数"),
   summary: t(
-    "The matrix exponential e^{At} = ∑ (At)^k / k! solves x' = A x, terminating into a finite sum I + At for nilpotent matrices with A^2 = 0.",
-    "矩阵指数 e^{At} = ∑ (At)^k / k! 用于表示系统 x' = A x 的解；对于幂零矩阵（A^2 = 0），泰勒级数截断为有限项 I + At。",
+    "The matrix exponential $e^{At} = \\sum_{k=0}^{\\infty} \\frac{(At)^k}{k!}$ solves $\\mathbf{x}' = A\\mathbf{x}$; when $A^2 = 0$ the series stops at $I + At$.",
+    "矩阵指数 $e^{At} = \\sum_{k=0}^{\\infty} \\frac{(At)^k}{k!}$ 给出 $\\mathbf{x}' = A\\mathbf{x}$ 的解；当 $A^2 = 0$ 时级数截断为 $I + At$。",
   ),
   prerequisites: ["solving-homogeneous-systems-of-odes-with-distinct-eigenvalues"],
   encompasses: [
@@ -1193,8 +1193,8 @@ export const fundamentalMatrices: TopicDef = {
   id: "fundamental-matrices",
   title: t("Fundamental Matrices", "基本解矩阵"),
   summary: t(
-    "A fundamental matrix Φ(t) has columns consisting of linearly independent vector solutions, satisfying Φ'(t) = A Φ(t) and normalized by e^{At} = Φ(t) Φ(0)^{-1}.",
-    "基本解矩阵 Φ(t) 的各列由线性无关的解向量组成，满足 Φ'(t) = A Φ(t)，且与矩阵指数的关系为 e^{At} = Φ(t) Φ(0)^{-1}。",
+    "A fundamental matrix $\\Phi(t)$ has linearly independent solutions as columns, satisfies $\\Phi' = A\\Phi$, and gives $e^{At} = \\Phi(t)\\Phi(0)^{-1}$.",
+    "基本解矩阵 $\\Phi(t)$ 的各列是线性无关的解，满足 $\\Phi' = A\\Phi$，且 $e^{At} = \\Phi(t)\\Phi(0)^{-1}$。",
   ),
   prerequisites: ["matrix-exponentials"],
   encompasses: [{ topic: "matrix-exponentials", weight: 0.3 }],
@@ -1243,8 +1243,8 @@ export const solvingHomogeneousSystemsOfOdesUsingMatrixMethods: TopicDef = {
   id: "solving-homogeneous-systems-of-odes-using-matrix-methods",
   title: t("Solving Homogeneous Systems of ODEs Using Matrix Methods", "应用矩阵方法求解齐次微分方程组"),
   summary: t(
-    "Using the matrix exponential, the unique solution to the IVP x' = A x, x(0) = x_0 is expressed compactly as x(t) = e^{At} x_0.",
-    "利用矩阵指数，初值问题 x' = A x, x(0) = x_0 的唯一解可紧凑表示为 x(t) = e^{At} x_0。",
+    "With the matrix exponential, the solution of $\\mathbf{x}' = A\\mathbf{x}$, $\\mathbf{x}(0) = \\mathbf{x}_0$ is $\\mathbf{x}(t) = e^{At}\\mathbf{x}_0$.",
+    "利用矩阵指数，初值问题 $\\mathbf{x}' = A\\mathbf{x}$，$\\mathbf{x}(0) = \\mathbf{x}_0$ 的解为 $\\mathbf{x}(t) = e^{At}\\mathbf{x}_0$。",
   ),
   prerequisites: ["fundamental-matrices"],
   encompasses: [{ topic: "fundamental-matrices", weight: 0.3 }],
@@ -1295,8 +1295,8 @@ export const solvingInhomogeneousSystemsOfOdesUsingMatrixMethods: TopicDef = {
   id: "solving-inhomogeneous-systems-of-odes-using-matrix-methods",
   title: t("Solving Inhomogeneous Systems of ODEs Using Matrix Methods", "应用矩阵方法求解非齐次微分方程组"),
   summary: t(
-    "The variation of parameters integral formula x(t) = e^{At} x_0 + ∫_0^t e^{A(t-s)} g(s) ds solves inhomogeneous linear systems.",
-    "常数变易积分公式 x(t) = e^{At} x_0 + ∫_0^t e^{A(t-s)} g(s) ds 给出非齐次线性常微分方程组的通解表达式。",
+    "The formula $\\mathbf{x}(t) = e^{At}\\mathbf{x}_0 + \\int_0^t e^{A(t - s)}\\mathbf{g}(s)\\,ds$ solves inhomogeneous linear systems.",
+    "公式 $\\mathbf{x}(t) = e^{At}\\mathbf{x}_0 + \\int_0^t e^{A(t - s)}\\mathbf{g}(s)\\,ds$ 给出非齐次线性方程组的解。",
   ),
   prerequisites: ["solving-homogeneous-systems-of-odes-using-matrix-methods"],
   encompasses: [
@@ -1353,8 +1353,8 @@ export const solvingSystemsOfOdesUsingVariationOfParameters: TopicDef = {
   id: "solving-systems-of-odes-using-variation-of-parameters",
   title: t("Solving Systems of ODEs Using Variation of Parameters", "利用常数变易法求解微分方程组"),
   summary: t(
-    "Setting x(t) = Φ(t) u(t) transforms the inhomogeneous system into Φ(t) u'(t) = g(t), solved algebraically for parameter derivatives u'(t) = Φ(t)^{-1} g(t).",
-    "设 x(t) = Φ(t) u(t) 将非齐次方程组转化为代数线性方程组 Φ(t) u'(t) = g(t)，从而解出变易参数导数 u'(t) = Φ(t)^{-1} g(t)。",
+    "Setting $\\mathbf{x} = \\Phi(t)\\mathbf{u}(t)$ turns the inhomogeneous system into $\\Phi\\mathbf{u}' = \\mathbf{g}$, so $\\mathbf{u}' = \\Phi^{-1}\\mathbf{g}$.",
+    "设 $\\mathbf{x} = \\Phi(t)\\mathbf{u}(t)$，非齐次方程组化为 $\\Phi\\mathbf{u}' = \\mathbf{g}$，从而 $\\mathbf{u}' = \\Phi^{-1}\\mathbf{g}$。",
   ),
   prerequisites: ["solving-inhomogeneous-systems-of-odes-using-matrix-methods"],
   encompasses: [
@@ -1415,8 +1415,8 @@ export const theLotkaVolterraPredatorPreyModel: TopicDef = {
   id: "the-lotka-volterra-predator-prey-model",
   title: t("The Lotka-Volterra Predator-Prey Model", "洛特卡-沃尔泰拉捕食者-猎物模型"),
   summary: t(
-    "The Lotka-Volterra model x' = α x - β x y, y' = -γ y + δ x y models interacting populations, having coexistence equilibrium (x_*, y_*) = (γ/δ, α/β).",
-    "洛特卡-沃尔泰拉模型 x' = α x - β x y, y' = -γ y + δ x y 描述物种竞争捕食关系，其共存平衡点为 (x_*, y_*) = (γ/δ, α/β)。",
+    "The Lotka-Volterra model $x' = \\alpha x - \\beta xy$, $y' = -\\gamma y + \\delta xy$ describes predator and prey populations, with coexistence equilibrium $(x_*, y_*) = \\left(\\frac{\\gamma}{\\delta}, \\frac{\\alpha}{\\beta}\\right)$.",
+    "洛特卡-沃尔泰拉模型 $x' = \\alpha x - \\beta xy$，$y' = -\\gamma y + \\delta xy$ 描述捕食者与猎物种群，其共存平衡点为 $(x_*, y_*) = \\left(\\frac{\\gamma}{\\delta}, \\frac{\\alpha}{\\beta}\\right)$。",
   ),
   prerequisites: ["linear-approximations-near-equilibria"],
   encompasses: [{ topic: "linear-approximations-near-equilibria", weight: 0.3 }],

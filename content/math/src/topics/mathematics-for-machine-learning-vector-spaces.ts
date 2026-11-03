@@ -8,8 +8,8 @@ export const mathematicsForMachineLearningVectorSpaceTopics: TopicDef[] = [
     id: "the-hadamard-product",
     title: t("The Hadamard Product", "阿达马积"),
     summary: t(
-      "The Hadamard product (entrywise product) A ⊙ B of two matrices or vectors of identical dimensions is formed by multiplying corresponding entries: (A ⊙ B)_{ij} = A_{ij} B_{ij}.",
-      "相同维度的两个矩阵或向量的阿达马积（逐元素乘积）A ⊙ B 由对应元素相乘得到：(A ⊙ B)_{ij} = A_{ij} B_{ij}。",
+      "The Hadamard (entrywise) product $A \\odot B$ of two matrices or vectors of the same size multiplies corresponding entries: $(A \\odot B)_{ij} = A_{ij}B_{ij}$.",
+      "两个同型矩阵或向量的阿达马积（逐元素乘积）$A \\odot B$ 由对应元素相乘得到：$(A \\odot B)_{ij} = A_{ij}B_{ij}$。",
     ),
     prerequisites: ["vectors-in-n-dimensional-euclidean-space"],
     encompasses: [],
@@ -92,8 +92,8 @@ export const mathematicsForMachineLearningVectorSpaceTopics: TopicDef[] = [
     id: "euclidean-manhattan-and-minkowski-distance",
     title: t("Euclidean, Manhattan, and Minkowski Distance", "欧几里得距离、曼哈顿距离与明可夫斯基距离"),
     summary: t(
-      "The Minkowski distance of order p >= 1 between vectors x and y in R^n is D_p(x, y) = (∑ |x_i - y_i|^p)^(1/p). Special cases include Manhattan distance (p = 1), Euclidean distance (p = 2), and Chebyshev distance (p -> ∞).",
-      "R^n 中向量 x 与 y 之间 p 阶 (p >= 1) 的明可夫斯基距离为 D_p(x, y) = (∑ |x_i - y_i|^p)^(1/p)。特例包括曼哈顿距离 (p = 1)、欧几里得距离 (p = 2) 与切比雪夫距离 (p -> ∞)。",
+      "The Minkowski distance of order $p \\ge 1$ between $\\mathbf{x}, \\mathbf{y} \\in \\mathbb{R}^n$ is $D_p(\\mathbf{x}, \\mathbf{y}) = \\left(\\sum |x_i - y_i|^p\\right)^{1/p}$. Special cases are the Manhattan distance ($p = 1$), the Euclidean distance ($p = 2$) and the Chebyshev distance ($p \\to \\infty$).",
+      "$\\mathbb{R}^n$ 中 $\\mathbf{x}$ 与 $\\mathbf{y}$ 之间 $p$ 阶（$p \\ge 1$）明可夫斯基距离为 $D_p(\\mathbf{x}, \\mathbf{y}) = \\left(\\sum |x_i - y_i|^p\\right)^{1/p}$。特例有曼哈顿距离（$p = 1$）、欧几里得距离（$p = 2$）和切比雪夫距离（$p \\to \\infty$）。",
     ),
     prerequisites: ["norm-of-a-vector-in-n-dimensional-euclidean-space"],
     encompasses: [],

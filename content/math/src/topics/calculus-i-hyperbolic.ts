@@ -251,8 +251,8 @@ export const solvingEquationsContainingHyperbolicFunctions: TopicDef = {
   id: "solving-equations-containing-hyperbolic-functions",
   title: t("Solving Equations Containing Hyperbolic Functions", "解含双曲函数的方程"),
   summary: t(
-    "Solve equations in sinh, cosh and tanh by rewriting them as quadratic equations in e^x.",
-    "把含 sinh、cosh、tanh 的方程改写成关于 e^x 的二次方程来求解。",
+    "Solve equations in $\\sinh$, $\\cosh$ and $\\tanh$ by rewriting them as quadratic equations in $e^x$.",
+    "把含 $\\sinh$、$\\cosh$、$\\tanh$ 的方程改写成关于 $e^x$ 的二次方程来求解。",
   ),
   prerequisites: ["the-hyperbolic-functions", "solving-equations-containing-the-exponential-function"],
   encompasses: [

@@ -1083,8 +1083,8 @@ export const limitsInvolvingTheExponentialFunction: TopicDef = {
   id: "limits-involving-the-exponential-function",
   title: t("Limits Involving the Exponential Function", "与指数函数有关的极限"),
   summary: t(
-    "Use lim (1 + 1/x)^x = e to find limits of the form (1 + a/x)^{bx} and (1 + ax)^{b/x}.",
-    "利用 lim (1 + 1/x)^x = e 求形如 (1 + a/x)^{bx} 与 (1 + ax)^{b/x} 的极限。",
+    "Use $\\lim_{x \\to \\infty} \\left(1 + \\frac{1}{x}\\right)^x = e$ to find limits of the form $\\left(1 + \\frac{a}{x}\\right)^{bx}$ and $(1 + ax)^{b/x}$.",
+    "利用 $\\lim_{x \\to \\infty} \\left(1 + \\frac{1}{x}\\right)^x = e$ 求形如 $\\left(1 + \\frac{a}{x}\\right)^{bx}$ 与 $(1 + ax)^{b/x}$ 的极限。",
   ),
   prerequisites: ["limits-of-exponential-functions", "continuously-compounded-interest"],
   encompasses: [
@@ -1153,8 +1153,8 @@ export const furtherLimitsInvolvingTheExponentialFunction: TopicDef = {
   id: "further-limits-involving-the-exponential-function",
   title: t("Further Limits Involving the Exponential Function", "与指数函数有关的进一步极限"),
   summary: t(
-    "Use lim (eˣ − 1)/x = 1 to find limits of quotients containing e^{ax} − 1.",
-    "利用 lim (eˣ − 1)/x = 1 求含 e^{ax} − 1 的商的极限。",
+    "Use $\\lim_{x \\to 0} \\frac{e^x - 1}{x} = 1$ to find limits of quotients containing $e^{ax} - 1$.",
+    "利用 $\\lim_{x \\to 0} \\frac{e^x - 1}{x} = 1$ 求含 $e^{ax} - 1$ 的商的极限。",
   ),
   prerequisites: ["limits-involving-the-exponential-function", "special-limits-involving-sine"],
   encompasses: [{ topic: "limits-involving-the-exponential-function", weight: 0.4 }],

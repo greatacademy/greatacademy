@@ -620,8 +620,8 @@ export const regularExpressions: TopicDef = {
   id: "regular-expressions",
   title: t("Regular Expressions", "正则表达式"),
   summary: t(
-    "Regular expressions build languages from single symbols using union (r ∣ s), concatenation (rs) and the Kleene star (r*, any number of copies, including none). They describe exactly the regular languages, the ones finite automata accept.",
-    "正则表达式由单个符号出发，用并（r ∣ s）、连接（rs）和 Kleene 星号（r*，任意多个副本，包括零个）构造语言。它们恰好描述正则语言，即有限自动机接受的语言。",
+    "Regular expressions build languages from single symbols using union ($r \\mid s$), concatenation ($rs$) and the Kleene star ($r^*$, any number of copies, including none). They describe exactly the regular languages, the ones finite automata accept.",
+    "正则表达式由单个符号出发，用并（$r \\mid s$）、连接（$rs$）和 Kleene 星号（$r^*$，任意多个副本，包括零个）构造语言。它们恰好描述正则语言，即有限自动机接受的语言。",
   ),
   prerequisites: ["the-language-of-automata"],
   encompasses: [],

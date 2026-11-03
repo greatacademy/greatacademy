@@ -10,8 +10,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
     id: "cumulative-distribution-functions-for-continuous-random-variables",
     title: t("Cumulative Distribution Functions for Continuous Random Variables", "连续型随机变量的累积分布函数"),
     summary: t(
-      "The cumulative distribution function (CDF) F(x) = P(X ≤ x) = ∫_{-∞}^x f(t) dt gives the probability that a continuous random variable takes a value at most x.",
-      "累积分布函数（CDF）F(x) = P(X ≤ x) = ∫_{-∞}^x f(t) dt 表示连续型随机变量取值不超过 x 的概率。",
+      "The cumulative distribution function $F(x) = P(X \\le x) = \\int_{-\\infty}^{x} f(t)\\,dt$ gives the probability that a continuous random variable takes a value at most $x$.",
+      "累积分布函数 $F(x) = P(X \\le x) = \\int_{-\\infty}^{x} f(t)\\,dt$ 表示连续型随机变量取值不超过 $x$ 的概率。",
     ),
     prerequisites: ["calculating-probabilities-with-continuous-random-variables"],
     encompasses: [],
@@ -78,8 +78,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
     id: "median-quartiles-and-percentiles-of-continuous-random-variables",
     title: t("Median, Quartiles and Percentiles of Continuous Random Variables", "连续型随机变量的中位数、四分位数与百分位数"),
     summary: t(
-      "The p-th quantile x_p satisfies F(x_p) = p. The median satisfies F(m) = 0.5, the first quartile satisfies F(Q_1) = 0.25, and the third quartile satisfies F(Q_3) = 0.75.",
-      "第 p 分位数 x_p 满足 F(x_p) = p。中位数满足 F(m) = 0.5，第一四分位数满足 F(Q_1) = 0.25，第三四分位数满足 F(Q_3) = 0.75。",
+      "The $p$-th quantile $x_p$ satisfies $F(x_p) = p$. The median satisfies $F(m) = 0.5$, the first quartile $F(Q_1) = 0.25$ and the third quartile $F(Q_3) = 0.75$.",
+      "$p$ 分位数 $x_p$ 满足 $F(x_p) = p$。中位数满足 $F(m) = 0.5$，第一四分位数满足 $F(Q_1) = 0.25$，第三四分位数满足 $F(Q_3) = 0.75$。",
     ),
     prerequisites: ["cumulative-distribution-functions-for-continuous-random-variables"],
     encompasses: [],
@@ -282,8 +282,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
     id: "simulating-random-observations",
     title: t("Simulating Random Observations", "模拟随机观测值"),
     summary: t(
-      "The inverse transform sampling method generates observations from a distribution with CDF F(x) by setting x = F^{-1}(u), where u is drawn from Uniform(0, 1).",
-      "逆变换抽样方法通过令 x = F^{-1}(u)（其中 u 取自 Uniform(0, 1) 的均匀随机数），生成服从累积分布函数 F(x) 的随机观测值。",
+      "Inverse transform sampling generates observations from a distribution with CDF $F(x)$ by setting $x = F^{-1}(u)$, where $u$ is drawn from $\\text{Uniform}(0, 1)$.",
+      "逆变换抽样令 $x = F^{-1}(u)$（$u$ 取自 $\\text{Uniform}(0, 1)$），生成服从累积分布函数 $F(x)$ 的随机观测值。",
     ),
     prerequisites: ["cumulative-distribution-functions-for-continuous-random-variables"],
     encompasses: [],
@@ -357,8 +357,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
     id: "the-distribution-function-method",
     title: t("The Distribution Function Method", "分布函数法"),
     summary: t(
-      "The distribution function method finds the density of Y = g(X) by first determining the CDF F_Y(y) = P(g(X) ≤ y) and then differentiating: f_Y(y) = F_Y'(y).",
-      "分布函数法通过先求变换后随机变量 Y = g(X) 的累积分布函数 F_Y(y) = P(g(X) ≤ y)，再对其求导得到概率密度函数：f_Y(y) = F_Y'(y)。",
+      "The distribution function method finds the density of $Y = g(X)$ by first finding the CDF $F_Y(y) = P(g(X) \\le y)$ and then differentiating: $f_Y(y) = F_Y'(y)$.",
+      "分布函数法先求 $Y = g(X)$ 的累积分布函数 $F_Y(y) = P(g(X) \\le y)$，再求导得到密度：$f_Y(y) = F_Y'(y)$。",
     ),
     prerequisites: [
       "one-to-one-transformations-of-discrete-random-variables",
@@ -428,8 +428,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
     id: "the-change-of-variables-method-for-continuous-random-variables",
     title: t("The Change-of-Variables Method for Continuous Random Variables", "连续型随机变量的变量代换法"),
     summary: t(
-      "For a strictly monotonic transformation Y = g(X), the probability density function of Y is given by f_Y(y) = f_X(g^{-1}(y)) |(d/dy) g^{-1}(y)|.",
-      "对于严格单调变换 Y = g(X)，Y 的概率密度函数由 f_Y(y) = f_X(g^{-1}(y)) |(d/dy) g^{-1}(y)| 给出。",
+      "For a strictly monotonic transformation $Y = g(X)$, the density of $Y$ is $f_Y(y) = f_X(g^{-1}(y)) \\left|\\frac{d}{dy} g^{-1}(y)\\right|$.",
+      "对于严格单调变换 $Y = g(X)$，$Y$ 的概率密度为 $f_Y(y) = f_X(g^{-1}(y)) \\left|\\frac{d}{dy} g^{-1}(y)\\right|$。",
     ),
     prerequisites: ["the-distribution-function-method"],
     encompasses: [],
@@ -505,8 +505,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
     id: "the-distribution-function-method-with-many-to-one-transformations",
     title: t("The Distribution Function Method With Many-to-One Transformations", "多对一变换的分布函数法"),
     summary: t(
-      "When g(X) is many-to-one, the preimage of {Y ≤ y} comprises multiple intervals: for Y = X^2 with symmetric support, P(Y ≤ y) = P(-√y ≤ X ≤ √y) = F_X(√y) - F_X(-√y).",
-      "当变换 g(X) 为多对一映射时，{Y ≤ y} 的原像包含多个区间：例如对具有对称支撑集的 Y = X^2，P(Y ≤ y) = P(-√y ≤ X ≤ √y) = F_X(√y) - F_X(-√y)。",
+      "When $g$ is many-to-one, the preimage of $\\{Y \\le y\\}$ consists of several pieces: for $Y = X^2$, $P(Y \\le y) = P(-\\sqrt{y} \\le X \\le \\sqrt{y}) = F_X(\\sqrt{y}) - F_X(-\\sqrt{y})$.",
+      "当 $g$ 为多对一映射时，$\\{Y \\le y\\}$ 的原像由多段组成：例如对 $Y = X^2$，$P(Y \\le y) = P(-\\sqrt{y} \\le X \\le \\sqrt{y}) = F_X(\\sqrt{y}) - F_X(-\\sqrt{y})$。",
     ),
     prerequisites: ["the-distribution-function-method", "many-to-one-transformations-of-discrete-random-variables"],
     encompasses: [],

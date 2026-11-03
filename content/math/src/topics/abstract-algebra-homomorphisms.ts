@@ -317,8 +317,8 @@ export const theFirstIsomorphismTheorem: TopicDef = {
   id: "the-first-isomorphism-theorem",
   title: t("The First Isomorphism Theorem", "第一同构定理"),
   summary: t(
-    "If φ: G → H is a homomorphism, then G/ker φ ≅ φ(G), by gker φ ↦ φ(g). To identify a quotient G/N, find a homomorphism from G that is onto a known group and has kernel N; for example, det: GL(2, ℝ) → ℝ* shows GL(2, ℝ)/SL(2, ℝ) ≅ ℝ*.",
-    "若 φ: G → H 是同态，则 G/ker φ ≅ φ(G)，对应为 gker φ ↦ φ(g)。要识别商群 G/N，可找一个从 G 到已知群的满同态，使其核为 N；例如 det: GL(2, ℝ) → ℝ* 说明 GL(2, ℝ)/SL(2, ℝ) ≅ ℝ*。",
+    "If $\\varphi: G \\to H$ is a homomorphism, then $G/\\ker\\varphi \\cong \\varphi(G)$, by $g\\ker\\varphi \\mapsto \\varphi(g)$. To identify a quotient $G/N$, find a homomorphism from $G$ onto a known group with kernel $N$; for example, $\\det: GL(2, \\mathbb{R}) \\to \\mathbb{R}^*$ shows $GL(2, \\mathbb{R})/SL(2, \\mathbb{R}) \\cong \\mathbb{R}^*$.",
+    "若 $\\varphi: G \\to H$ 是同态，则 $G/\\ker\\varphi \\cong \\varphi(G)$，对应为 $g\\ker\\varphi \\mapsto \\varphi(g)$。要识别商群 $G/N$，可找一个从 $G$ 到已知群、核为 $N$ 的满同态；例如 $\\det: GL(2, \\mathbb{R}) \\to \\mathbb{R}^*$ 说明 $GL(2, \\mathbb{R})/SL(2, \\mathbb{R}) \\cong \\mathbb{R}^*$。",
   ),
   prerequisites: ["the-kernel-of-a-group-homomorphism", "group-isomorphisms", "quotient-groups"],
   encompasses: [],

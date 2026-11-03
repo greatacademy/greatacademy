@@ -70,8 +70,8 @@ export const determiningPropertiesOfObjectsDescribedAsFunctionsOfDisplacement: T
   id: "determining-properties-of-objects-described-as-functions-of-displacement",
   title: t("Determining Properties of Objects Described as Functions of Displacement", "位移函数描述下物体的运动性质"),
   summary: t(
-    "Integrating the work-acceleration differential v dv = a(x) dx yields v(x)^2 - v_0^2 = 2 ∫ a(x) dx.",
-    "积分微分关系式 v dv = a(x) dx 可得速度平方差与位移积分的关系：v(x)^2 - v_0^2 = 2 ∫ a(x) dx。",
+    "Integrating the relation $v\\,dv = a(x)\\,dx$ gives $v(x)^2 - v_0^2 = 2\\int a(x)\\,dx$.",
+    "对关系式 $v\\,dv = a(x)\\,dx$ 积分得到 $v(x)^2 - v_0^2 = 2\\int a(x)\\,dx$。",
   ),
   prerequisites: ["velocity-and-acceleration-as-functions-of-displacement"],
   encompasses: [
@@ -129,8 +129,8 @@ export const theComponentsOfAcceleration: TopicDef = {
   id: "the-components-of-acceleration",
   title: t("The Components of Acceleration", "加速度的切向与法向分量"),
   summary: t(
-    "Acceleration decomposes into orthogonal tangential and normal components: a = a_T T + a_N N where a_T = v' and a_N = κ v^2.",
-    "加速度正交分解为切向分量与法向分量：a = a_T T + a_N N，其中 a_T = v'，a_N = κ v^2。",
+    "Acceleration splits into orthogonal tangential and normal components: $\\mathbf{a} = a_T\\mathbf{T} + a_N\\mathbf{N}$, where $a_T = v'$ and $a_N = \\kappa v^2$.",
+    "加速度可正交分解为切向分量与法向分量：$\\mathbf{a} = a_T\\mathbf{T} + a_N\\mathbf{N}$，其中 $a_T = v'$，$a_N = \\kappa v^2$。",
   ),
   prerequisites: ["principal-normal-vectors", "differentiation-rules-for-vector-valued-functions"],
   encompasses: [{ topic: "principal-normal-vectors", weight: 0.3 }],
@@ -183,8 +183,8 @@ export const theWorkEnergyPrinciple: TopicDef = {
   id: "the-work-energy-principle",
   title: t("The Work-Energy Principle", "动能定理与做功"),
   summary: t(
-    "The line integral of net force along a path equals the total work done and the change in kinetic energy: W = ∫_C F · dr = ΔK.",
-    "合外力沿路径的线积分等于所做的总功，亦等于质点动能的变化量：W = ∫_C F · dr = ΔK。",
+    "The line integral of the net force along a path equals the total work done and the change in kinetic energy: $W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\Delta K$.",
+    "合外力沿路径的线积分等于所做的总功，也等于动能的变化量：$W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\Delta K$。",
   ),
   prerequisites: ["interpreting-line-integrals-of-vector-valued-functions"],
   encompasses: [
@@ -243,8 +243,8 @@ export const circularMotionAboutTheOrigin: TopicDef = {
   id: "circular-motion-about-the-origin",
   title: t("Circular Motion About the Origin", "绕原点的圆周运动"),
   summary: t(
-    "In circular motion with radius R and constant angular speed ω, centripetal acceleration is directed inward with magnitude a_c = ω^2 R.",
-    "在半径为 R、角速度为 ω 的匀速圆周运动中，向心加速度指向圆心，其大小为 a_c = ω^2 R。",
+    "In circular motion with radius $R$ and constant angular speed $\\omega$, the centripetal acceleration points toward the center and has magnitude $a_c = \\omega^2 R$.",
+    "在半径为 $R$、角速度 $\\omega$ 恒定的圆周运动中，向心加速度指向圆心，大小为 $a_c = \\omega^2 R$。",
   ),
   prerequisites: ["the-components-of-acceleration"],
   encompasses: [{ topic: "the-components-of-acceleration", weight: 0.3 }],
@@ -299,8 +299,8 @@ export const theAverageValueOfAMultivariableFunction: TopicDef = {
   id: "the-average-value-of-a-multivariable-function",
   title: t("The Average Value of a Multivariable Function", "多元函数的平均值"),
   summary: t(
-    "The average value of a continuous function f(x, y) over a planar region D is f_avg = (1 / Area(D)) ∬_D f(x, y) dA.",
-    "连续多元函数 f(x, y) 在平面区域 D 上的平均值定义为 f_avg = (1 / Area(D)) ∬_D f(x, y) dA。",
+    "The average value of a continuous function $f(x, y)$ over a plane region $D$ is $f_{\\text{avg}} = \\frac{1}{\\operatorname{Area}(D)} \\iint_D f(x, y)\\,dA$.",
+    "连续函数 $f(x, y)$ 在平面区域 $D$ 上的平均值为 $f_{\\text{avg}} = \\frac{1}{\\operatorname{Area}(D)} \\iint_D f(x, y)\\,dA$。",
   ),
   prerequisites: ["double-integrals-over-rectangular-domains"],
   encompasses: [{ topic: "double-integrals-over-rectangular-domains", weight: 0.3 }],
@@ -356,8 +356,8 @@ export const densityMassAndChargeOfPlaneLaminas: TopicDef = {
   id: "density-mass-and-charge-of-plane-laminas",
   title: t("Density, Mass, and Charge of Plane Laminas", "平面薄片的密度、质量与电荷"),
   summary: t(
-    "Total mass or net electric charge of a planar lamina with area density ρ(x, y) is M = ∬_D ρ(x, y) dA.",
-    "面密度为 ρ(x, y) 的平面薄片的总质量或净电荷等于面密度的二重积分：M = ∬_D ρ(x, y) dA。",
+    "The total mass or net charge of a plane lamina with area density $\\rho(x, y)$ is $M = \\iint_D \\rho(x, y)\\,dA$.",
+    "面密度为 $\\rho(x, y)$ 的平面薄片的总质量或净电荷为 $M = \\iint_D \\rho(x, y)\\,dA$。",
   ),
   prerequisites: ["double-integrals-over-rectangular-domains"],
   encompasses: [{ topic: "double-integrals-over-rectangular-domains", weight: 0.3 }],
@@ -410,8 +410,8 @@ export const momentsAndCenterOfMass: TopicDef = {
   id: "moments-and-center-of-mass",
   title: t("Moments and Center of Mass", "质心与力矩的概念"),
   summary: t(
-    "First moments M_y = ∬ x ρ dA and M_x = ∬ y ρ dA locate the center of mass (x̄, ȳ) = (M_y / M, M_x / M).",
-    "一阶矩 M_y = ∬ x ρ dA 与 M_x = ∬ y ρ dA 确定质心坐标 (x̄, ȳ) = (M_y / M, M_x / M)。",
+    "The first moments $M_y = \\iint x\\rho\\,dA$ and $M_x = \\iint y\\rho\\,dA$ locate the center of mass $(\\bar{x}, \\bar{y}) = \\left(\\frac{M_y}{M}, \\frac{M_x}{M}\\right)$.",
+    "一阶矩 $M_y = \\iint x\\rho\\,dA$ 与 $M_x = \\iint y\\rho\\,dA$ 确定质心 $(\\bar{x}, \\bar{y}) = \\left(\\frac{M_y}{M}, \\frac{M_x}{M}\\right)$。",
   ),
   prerequisites: ["density-mass-and-charge-of-plane-laminas"],
   encompasses: [{ topic: "density-mass-and-charge-of-plane-laminas", weight: 0.3 }],
@@ -565,8 +565,8 @@ export const momentsOfInertiaOfLaminasAboutTheCoordinateAxes: TopicDef = {
   id: "moments-of-inertia-of-laminas-about-the-coordinate-axes",
   title: t("Moments of Inertia of Laminas About the Coordinate Axes", "薄片对坐标轴的转动惯量"),
   summary: t(
-    "The moments of inertia about the coordinate axes are I_x = ∬ y^2 ρ dA and I_y = ∬ x^2 ρ dA.",
-    "薄片对坐标轴的转动惯量定义为 I_x = ∬ y^2 ρ dA 与 I_y = ∬ x^2 ρ dA。",
+    "The moments of inertia about the coordinate axes are $I_x = \\iint y^2\\rho\\,dA$ and $I_y = \\iint x^2\\rho\\,dA$.",
+    "薄片对坐标轴的转动惯量为 $I_x = \\iint y^2\\rho\\,dA$ 与 $I_y = \\iint x^2\\rho\\,dA$。",
   ),
   prerequisites: ["moments-and-centers-of-mass-of-plane-laminas"],
   encompasses: [
@@ -624,8 +624,8 @@ export const momentsOfInertiaOfLaminasAboutOtherAxes: TopicDef = {
   id: "moments-of-inertia-of-laminas-about-other-axes",
   title: t("Moments of Inertia of Laminas About Other Axes", "薄片对任意轴的转动惯量"),
   summary: t(
-    "The moment of inertia of a body about any axis L is I_L = ∬ d(x, y)^2 ρ dA where d(x, y) is perpendicular distance to line L.",
-    "物体对任意轴 L 的转动惯量为 I_L = ∬ d(x, y)^2 ρ dA，其中 d(x, y) 为点 (x, y) 到直线 L 的垂直距离。",
+    "The moment of inertia about any axis $L$ is $I_L = \\iint d(x, y)^2\\rho\\,dA$, where $d(x, y)$ is the perpendicular distance from $(x, y)$ to $L$.",
+    "对任意轴 $L$ 的转动惯量为 $I_L = \\iint d(x, y)^2\\rho\\,dA$，其中 $d(x, y)$ 为点 $(x, y)$ 到 $L$ 的垂直距离。",
   ),
   prerequisites: ["moments-of-inertia-of-laminas-about-the-coordinate-axes"],
   encompasses: [
@@ -681,8 +681,8 @@ export const calculatingTheRadiusOfGyrationOfAPlaneLamina: TopicDef = {
   id: "calculating-the-radius-of-gyration-of-a-plane-lamina",
   title: t("Calculating the Radius of Gyration of a Plane Lamina", "计算平面薄片的回转半径"),
   summary: t(
-    "The radius of gyration k̄ represents the effective distance at which the entire mass could be concentrated: I = M k̄^2.",
-    "回转半径 k̄ 代表假设全部质量集中于单一点时保持相同转动惯量的有效距离：I = M k̄^2。",
+    "The radius of gyration $\\bar{k}$ is the distance at which the whole mass could be concentrated with the same moment of inertia: $I = M\\bar{k}^2$.",
+    "回转半径 $\\bar{k}$ 是把全部质量集中于一点而转动惯量不变时该点的距离：$I = M\\bar{k}^2$。",
   ),
   prerequisites: ["moments-of-inertia-of-laminas-about-the-coordinate-axes"],
   encompasses: [
@@ -738,8 +738,8 @@ export const theParallelAxisTheorem: TopicDef = {
   id: "the-parallel-axis-theorem",
   title: t("The Parallel Axis Theorem", "平行轴定理"),
   summary: t(
-    "The Parallel Axis Theorem states that the moment of inertia about any axis L is related to the centroidal moment of inertia by I = I_cm + M d^2.",
-    "平行轴定理指出：物体绕任意轴 L 的转动惯量与绕过质心的平行轴的转动惯量满足关系式 I = I_cm + M d^2。",
+    "The parallel axis theorem relates the moment of inertia about any axis to that about the parallel axis through the center of mass: $I = I_{\\text{cm}} + Md^2$.",
+    "平行轴定理指出，绕任意轴的转动惯量与绕过质心的平行轴的转动惯量满足 $I = I_{\\text{cm}} + Md^2$。",
   ),
   prerequisites: ["moments-of-inertia-of-laminas-about-other-axes"],
   encompasses: [
@@ -799,8 +799,8 @@ export const probabilityDensityFunctionsOfContinuousRandomVariables: TopicDef = 
   id: "probability-density-functions-of-continuous-random-variables",
   title: t("Probability Density Functions of Continuous Random Variables", "连续型随机变量的概率密度函数"),
   summary: t(
-    "A continuous joint probability density function f(x, y) satisfies f(x, y) ≥ 0 and ∬_R^2 f(x, y) dA = 1.",
-    "连续型联合概率密度函数 f(x, y) 满足非负性 f(x, y) ≥ 0 以及全平面归一化条件 ∬_R^2 f(x, y) dA = 1。",
+    "A joint probability density function $f(x, y)$ satisfies $f(x, y) \\ge 0$ and $\\iint_{\\mathbb{R}^2} f(x, y)\\,dA = 1$.",
+    "联合概率密度函数 $f(x, y)$ 满足 $f(x, y) \\ge 0$ 以及 $\\iint_{\\mathbb{R}^2} f(x, y)\\,dA = 1$。",
   ),
   prerequisites: ["double-integrals-over-rectangular-domains"],
   encompasses: [{ topic: "double-integrals-over-rectangular-domains", weight: 0.3 }],
@@ -850,8 +850,8 @@ export const calculatingProbabilitiesWithContinuousRandomVariables: TopicDef = {
   id: "calculating-probabilities-with-continuous-random-variables",
   title: t("Calculating Probabilities With Continuous Random Variables", "连续型随机变量区域概率的计算"),
   summary: t(
-    "The probability that (X, Y) falls in a subregion R is evaluated by the double integral P((X, Y) ∈ R) = ∬_R f(x, y) dA.",
-    "连续型随机变量落在区域 R 内的概率通过对联合概率密度做二重积分计算：P((X, Y) ∈ R) = ∬_R f(x, y) dA。",
+    "The probability that $(X, Y)$ falls in a region $R$ is the double integral $P((X, Y) \\in R) = \\iint_R f(x, y)\\,dA$.",
+    "$(X, Y)$ 落在区域 $R$ 内的概率由二重积分给出：$P((X, Y) \\in R) = \\iint_R f(x, y)\\,dA$。",
   ),
   prerequisites: ["probability-density-functions-of-continuous-random-variables"],
   encompasses: [
@@ -968,8 +968,8 @@ export const jointDistributionsForDiscreteRandomVariables: TopicDef = {
   id: "joint-distributions-for-discrete-random-variables",
   title: t("Joint Distributions for Discrete Random Variables", "离散型随机变量的联合分布"),
   summary: t(
-    "For discrete random variables, joint pmf p(x_i, y_j) sums to 1 and marginal distributions are given by row and column sums.",
-    "对于离散型随机变量，联合概率分布列 p(x_i, y_j) 总和为 1，边际分布通过行和与列和求得。",
+    "For discrete random variables, the joint PMF $p(x_i, y_j)$ sums to $1$, and the marginal distributions are the row and column sums.",
+    "对于离散型随机变量，联合分布律 $p(x_i, y_j)$ 之和为 $1$，边际分布由行和与列和给出。",
   ),
   prerequisites: ["double-summations"],
   encompasses: [{ topic: "double-summations", weight: 0.3 }],
@@ -1019,8 +1019,8 @@ export const jointDistributionsForContinuousRandomVariables: TopicDef = {
   id: "joint-distributions-for-continuous-random-variables",
   title: t("Joint Distributions for Continuous Random Variables", "连续型随机变量的边际密度与独立性"),
   summary: t(
-    "Marginal probability density functions are obtained by integrating out the unwanted variable: f_X(x) = ∫ f(x, y) dy.",
-    "通过对多余变量进行定积分求得边际概率密度函数：f_X(x) = ∫ f(x, y) dy。",
+    "Marginal density functions are obtained by integrating out the other variable: $f_X(x) = \\int f(x, y)\\,dy$.",
+    "对另一个变量积分即得边际密度函数：$f_X(x) = \\int f(x, y)\\,dy$。",
   ),
   prerequisites: ["calculating-probabilities-with-continuous-random-variables"],
   encompasses: [

@@ -27,7 +27,7 @@ function applyRules(terms: readonly (readonly [number, Rule])[]) {
 export const differentiatingExponentialFunctions: TopicDef = {
   id: "differentiating-exponential-functions",
   title: t("Differentiating Exponential Functions", "指数函数求导"),
-  summary: t("Differentiate e^x and exponential functions with other bases.", "对 e^x 以及其他底数的指数函数求导。"),
+  summary: t("Differentiate $e^x$ and exponential functions with other bases.", "对 $e^x$ 以及其他底数的指数函数求导。"),
   prerequisites: ["the-sum-and-constant-multiple-rules-for-differentiation", "limits-involving-the-exponential-function"],
   encompasses: [
     { topic: "the-sum-and-constant-multiple-rules-for-differentiation", weight: 0.4 },

@@ -591,8 +591,8 @@ export const improperIntegralsInvolvingExponentialFunctions: TopicDef = {
   id: "improper-integrals-involving-exponential-functions",
   title: t("Improper Integrals Involving Exponential Functions", "含指数函数的反常积分"),
   summary: t(
-    "Use e^(−ax) → 0 as x → ∞ to evaluate improper integrals of exponentials.",
-    "利用 x → ∞ 时 e^(−ax) → 0 计算指数函数的反常积分。",
+    "Use $e^{-ax} \\to 0$ as $x \\to \\infty$ (for $a > 0$) to evaluate improper integrals of exponentials.",
+    "利用 $x \\to \\infty$ 时 $e^{-ax} \\to 0$（$a > 0$）计算指数函数的反常积分。",
   ),
   prerequisites: [
     "improper-integrals",

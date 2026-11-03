@@ -178,8 +178,8 @@ export const theIntegralTest: TopicDef = {
   id: "the-integral-test",
   title: t("The Integral Test", "积分判别法"),
   summary: t(
-    "If f is positive, continuous and decreasing with aₙ = f(n), then Σaₙ and ∫₁^∞ f(x) dx both converge or both diverge.",
-    "若 f 为正、连续且递减，aₙ = f(n)，则 Σaₙ 与 ∫₁^∞ f(x) dx 同时收敛或同时发散。",
+    "If $f$ is positive, continuous and decreasing with $a_n = f(n)$, then $\\sum a_n$ and $\\int_1^{\\infty} f(x)\\,dx$ both converge or both diverge.",
+    "若 $f$ 为正、连续且递减，$a_n = f(n)$，则 $\\sum a_n$ 与 $\\int_1^{\\infty} f(x)\\,dx$ 同时收敛或同时发散。",
   ),
   prerequisites: ["the-nth-term-test-for-divergence", "improper-integrals"],
   encompasses: [{ topic: "improper-integrals", weight: 0.3 }],
@@ -249,8 +249,8 @@ export const theRemainderEstimateForTheIntegralTest: TopicDef = {
   id: "the-remainder-estimate-for-the-integral-test",
   title: t("The Remainder Estimate for the Integral Test", "积分判别法的余项估计"),
   summary: t(
-    "For positive decreasing f, the remainder after N terms satisfies R_N ≤ ∫_N^∞ f(x) dx.",
-    "对为正且递减的 f，前 N 项之后的余项满足 R_N ≤ ∫_N^∞ f(x) dx。",
+    "For positive decreasing $f$, the remainder after $N$ terms satisfies $R_N \\le \\int_N^{\\infty} f(x)\\,dx$.",
+    "对为正且递减的 $f$，前 $N$ 项之后的余项满足 $R_N \\le \\int_N^{\\infty} f(x)\\,dx$。",
   ),
   prerequisites: ["the-integral-test"],
   encompasses: [{ topic: "the-integral-test", weight: 0.4 }],
@@ -948,8 +948,8 @@ export const theAlternatingSeriesErrorBound: TopicDef = {
   id: "the-alternating-series-error-bound",
   title: t("The Alternating Series Error Bound", "交错级数的误差界"),
   summary: t(
-    "For a series that passes the alternating series test, |S − S_N| ≤ b_{N+1}, the first term left out.",
-    "对满足交错级数判别法条件的级数，|S − S_N| ≤ b_{N+1}，即第一个被省略的项。",
+    "For a series that passes the alternating series test, $|S - S_N| \\le b_{N+1}$, the first term left out.",
+    "对满足交错级数判别法条件的级数，$|S - S_N| \\le b_{N+1}$，即第一个被省略的项。",
   ),
   prerequisites: ["the-alternating-series-test"],
   encompasses: [{ topic: "the-alternating-series-test", weight: 0.4 }],

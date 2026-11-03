@@ -847,8 +847,8 @@ export const describingPlanarRegionsUsingSetBuilderNotation: TopicDef = {
   id: "describing-planar-regions-using-set-builder-notation",
   title: t("Describing Planar Regions Using Set-Builder Notation", "用集合符号描述平面区域"),
   summary: t(
-    "Describe half-planes, disks, and other 2D geometric regions using set-builder notation in R^2.",
-    "在 R^2 中用集合构建符表示半平面、圆盘等二维几何区域。",
+    "Describe half-planes, disks, and other regions of $\\mathbb{R}^2$ using set-builder notation.",
+    "用集合构建符表示 $\\mathbb{R}^2$ 中的半平面、圆盘等区域。",
   ),
   prerequisites: ["describing-sets-using-set-builder-notation"],
   encompasses: [],

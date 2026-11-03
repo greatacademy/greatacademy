@@ -1028,8 +1028,8 @@ export const thePoissonDistribution: TopicDef = {
   id: "the-poisson-distribution",
   title: t("The Poisson Distribution", "泊松分布"),
   summary: t(
-    "X ~ Po(λ) counts events occurring independently at a constant average rate λ per interval: P(X = k) = e^(−λ) λᵏ / k! for k = 0, 1, 2, ….",
-    "X ~ Po(λ) 统计以恒定平均速率 λ（每个区间）独立发生的事件数：P(X = k) = e^(−λ) λᵏ / k!，k = 0, 1, 2, …。",
+    "$X \\sim \\text{Po}(\\lambda)$ counts events that occur independently at a constant average rate $\\lambda$ per interval: $P(X = k) = \\frac{e^{-\\lambda}\\lambda^k}{k!}$ for $k = 0, 1, 2, \\dots$.",
+    "$X \\sim \\text{Po}(\\lambda)$ 统计以恒定平均速率 $\\lambda$（每个区间）独立发生的事件数：$P(X = k) = \\frac{e^{-\\lambda}\\lambda^k}{k!}$，$k = 0, 1, 2, \\dots$。",
   ),
   prerequisites: ["probability-mass-functions-of-discrete-random-variables", "exponential-functions", "factorials"],
   encompasses: [],

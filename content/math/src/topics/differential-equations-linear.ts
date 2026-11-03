@@ -12,8 +12,8 @@ export const differentialOperators: TopicDef = {
   id: "differential-operators",
   title: t("Differential Operators", "微分算子"),
   summary: t(
-    "Differential operators represent differentiation as an algebraic symbol D = d/dx, with polynomial operator P(D) satisfying P(D) e^{rx} = P(r) e^{rx}.",
-    "微分算子将求导运算记为代数符号 D = d/dx，多项式微分算子 P(D) 作用于指数函数满足 P(D) e^{rx} = P(r) e^{rx}。",
+    "A differential operator writes differentiation as an algebraic symbol $D = \\frac{d}{dx}$; a polynomial operator satisfies $P(D)e^{rx} = P(r)e^{rx}$.",
+    "微分算子把求导记为代数符号 $D = \\frac{d}{dx}$；多项式微分算子满足 $P(D)e^{rx} = P(r)e^{rx}$。",
   ),
   prerequisites: ["general-solutions-of-first-order-linear-odes"],
   encompasses: [{ topic: "general-solutions-of-first-order-linear-odes", weight: 0.3 }],
@@ -67,8 +67,8 @@ export const linearDifferentialOperators: TopicDef = {
   id: "linear-differential-operators",
   title: t("Linear Differential Operators", "线性微分算子"),
   summary: t(
-    "Linear differential operators commute when coefficients are constant, factoring as (D - r_1)(D - r_2) = D^2 - (r_1 + r_2)D + r_1 r_2.",
-    "常系数线性微分算子满足可交换律与可因式分解性：(D - r_1)(D - r_2) = D^2 - (r_1 + r_2)D + r_1 r_2。",
+    "Constant-coefficient linear operators commute and factor: $(D - r_1)(D - r_2) = D^2 - (r_1 + r_2)D + r_1 r_2$.",
+    "常系数线性微分算子可交换、可因式分解：$(D - r_1)(D - r_2) = D^2 - (r_1 + r_2)D + r_1 r_2$。",
   ),
   prerequisites: ["differential-operators"],
   encompasses: [{ topic: "differential-operators", weight: 0.3 }],
@@ -120,8 +120,8 @@ export const introductionToSecondOrderLinearOdes: TopicDef = {
   id: "introduction-to-second-order-linear-odes",
   title: t("Introduction to Second-Order Linear ODEs", "二阶线性微分方程简介"),
   summary: t(
-    "A second-order linear ODE y'' + P(x)y' + Q(x)y = g(x) uniquely determines the initial acceleration y''(x_0) from initial values y(x_0) and y'(x_0).",
-    "二阶线性常微分方程 y'' + P(x)y' + Q(x)y = g(x) 由初值 y(x_0) 和 y'(x_0) 唯一确定初始二阶导数加速度 y''(x_0)。",
+    "A second-order linear ODE $y'' + P(x)y' + Q(x)y = g(x)$ determines $y''(x_0)$ from the initial values $y(x_0)$ and $y'(x_0)$.",
+    "二阶线性常微分方程 $y'' + P(x)y' + Q(x)y = g(x)$ 由初值 $y(x_0)$ 和 $y'(x_0)$ 确定 $y''(x_0)$。",
   ),
   prerequisites: ["linear-differential-operators"],
   encompasses: [{ topic: "linear-differential-operators", weight: 0.3 }],
@@ -174,8 +174,8 @@ export const theSuperpositionPrinciple: TopicDef = {
   id: "the-superposition-principle",
   title: t("The Superposition Principle", "叠加原理"),
   summary: t(
-    "If y_1 and y_2 solve the homogeneous linear ODE L[y] = 0, then any linear combination c_1 y_1 + c_2 y_2 is also a solution.",
-    "若 y_1 与 y_2 是齐次线性微分方程 L[y] = 0 的解，则其任意线性组合 c_1 y_1 + c_2 y_2 仍是该方程的解。",
+    "If $y_1$ and $y_2$ solve the homogeneous linear ODE $L[y] = 0$, then every linear combination $c_1 y_1 + c_2 y_2$ is also a solution.",
+    "若 $y_1$ 与 $y_2$ 是齐次线性微分方程 $L[y] = 0$ 的解，则任意线性组合 $c_1 y_1 + c_2 y_2$ 仍是解。",
   ),
   prerequisites: ["introduction-to-second-order-linear-odes"],
   encompasses: [{ topic: "introduction-to-second-order-linear-odes", weight: 0.3 }],
@@ -226,8 +226,8 @@ export const reductionOfOrder: TopicDef = {
   id: "reduction-of-order",
   title: t("Reduction of Order", "降阶法"),
   summary: t(
-    "Given one solution y_1 to y'' + P(x)y' + Q(x)y = 0, setting y_2 = u(x) y_1 reduces the ODE to a first-order equation for v = u'.",
-    "已知齐次方程 y'' + P(x)y' + Q(x)y = 0 的一个非零特解 y_1 时，设 y_2 = u(x) y_1 可将方程降阶为关于 v = u' 的一阶微分方程。",
+    "Given one solution $y_1$ of $y'' + P(x)y' + Q(x)y = 0$, setting $y_2 = u(x)y_1$ reduces the ODE to a first-order equation for $v = u'$.",
+    "已知 $y'' + P(x)y' + Q(x)y = 0$ 的一个解 $y_1$，设 $y_2 = u(x)y_1$ 可将方程降为关于 $v = u'$ 的一阶方程。",
   ),
   prerequisites: ["the-superposition-principle"],
   encompasses: [{ topic: "the-superposition-principle", weight: 0.3 }],
@@ -279,8 +279,8 @@ export const linearIndependenceOfSolutionsToHomogeneousOdes: TopicDef = {
   id: "linear-independence-of-solutions-to-homogeneous-odes",
   title: t("Linear Independence of Solutions to Homogeneous ODEs", "齐次常微分方程解的线性相关性与无关性"),
   summary: t(
-    "Solutions y_1, y_2 are linearly independent on an interval if and only if their Wronskian W(y_1, y_2) = y_1 y_2' - y_1' y_2 is non-zero.",
-    "区间上的解 y_1, y_2 线性无关当且仅当朗斯基行列式 W(y_1, y_2) = y_1 y_2' - y_1' y_2 处处不为零。",
+    "Solutions $y_1, y_2$ are linearly independent on an interval if and only if their Wronskian $W(y_1, y_2) = y_1 y_2' - y_1' y_2$ is non-zero.",
+    "区间上的解 $y_1, y_2$ 线性无关当且仅当朗斯基行列式 $W(y_1, y_2) = y_1 y_2' - y_1' y_2$ 不为零。",
   ),
   prerequisites: ["the-superposition-principle"],
   encompasses: [{ topic: "the-superposition-principle", weight: 0.3 }],
@@ -332,8 +332,8 @@ export const generalSolutionsOfLinearOdes: TopicDef = {
   id: "general-solutions-of-linear-odes",
   title: t("General Solutions of Linear ODEs", "线性微分方程的通解结构"),
   summary: t(
-    "The general solution of an inhomogeneous linear ODE is y(x) = c_1 y_1(x) + c_2 y_2(x) + y_p(x), where y_h is the homogeneous general solution and y_p is any particular solution.",
-    "非齐次线性常微分方程的通解表示为齐次通解与一个非齐次特解之和：y(x) = c_1 y_1(x) + c_2 y_2(x) + y_p(x)。",
+    "The general solution of an inhomogeneous linear ODE is $y = c_1 y_1 + c_2 y_2 + y_p$: the homogeneous general solution plus any particular solution $y_p$.",
+    "非齐次线性常微分方程的通解为 $y = c_1 y_1 + c_2 y_2 + y_p$：齐次通解加上任一特解 $y_p$。",
   ),
   prerequisites: ["linear-independence-of-solutions-to-homogeneous-odes"],
   encompasses: [
@@ -393,8 +393,8 @@ export const abelsIdentity: TopicDef = {
   id: "abels-identity",
   title: t("Abel's Identity", "阿贝尔恒等式"),
   summary: t(
-    "Abel's identity states that the Wronskian of two solutions to y'' + P(x)y' + Q(x)y = 0 satisfies W(x) = W(x_0) exp(-∫_{x_0}^x P(t) dt).",
-    "阿贝尔恒等式指出齐次方程 y'' + P(x)y' + Q(x)y = 0 的解的朗斯基行列式满足 W(x) = W(x_0) exp(-∫_{x_0}^x P(t) dt)。",
+    "Abel's identity: the Wronskian of two solutions of $y'' + P(x)y' + Q(x)y = 0$ is $W(x) = W(x_0)\\exp\\left(-\\int_{x_0}^{x} P(t)\\,dt\\right)$.",
+    "阿贝尔恒等式：$y'' + P(x)y' + Q(x)y = 0$ 的两个解的朗斯基行列式为 $W(x) = W(x_0)\\exp\\left(-\\int_{x_0}^{x} P(t)\\,dt\\right)$。",
   ),
   prerequisites: ["linear-independence-of-solutions-to-homogeneous-odes"],
   encompasses: [
@@ -458,8 +458,8 @@ export const secondOrderHomogeneousOdesCharacteristicEquationsWithDistinctRealRo
     "二阶齐次常微分方程：具有不同实根的特征方程",
   ),
   summary: t(
-    "When the characteristic equation r^2 + br + c = 0 has distinct real roots r_1 ≠ r_2, the general solution is y = c_1 e^{r_1 x} + c_2 e^{r_2 x}.",
-    "当特征方程 r^2 + br + c = 0 具有两个不同实根 r_1 ≠ r_2 时，齐次通解为 y = c_1 e^{r_1 x} + c_2 e^{r_2 x}。",
+    "When the characteristic equation $r^2 + br + c = 0$ has distinct real roots $r_1 \\ne r_2$, the general solution is $y = c_1 e^{r_1 x} + c_2 e^{r_2 x}$.",
+    "当特征方程 $r^2 + br + c = 0$ 有两个不同实根 $r_1 \\ne r_2$ 时，通解为 $y = c_1 e^{r_1 x} + c_2 e^{r_2 x}$。",
   ),
   prerequisites: ["general-solutions-of-linear-odes"],
   encompasses: [{ topic: "general-solutions-of-linear-odes", weight: 0.3 }],
@@ -514,8 +514,8 @@ export const secondOrderHomogeneousOdesCharacteristicEquationsWithRepeatedRoots:
   id: "second-order-homogeneous-odes-characteristic-equations-with-repeated-roots",
   title: t("Second-Order Homogeneous ODEs: Characteristic Equations With Repeated Roots", "二阶齐次常微分方程：具有重根的特征方程"),
   summary: t(
-    "When the characteristic equation has a repeated root r, the general solution is y = (c_1 + c_2 x) e^{rx}.",
-    "当特征方程具有二重实根 r 时，齐次通解为 y = (c_1 + c_2 x) e^{rx}。",
+    "When the characteristic equation has a repeated root $r$, the general solution is $y = (c_1 + c_2 x)e^{rx}$.",
+    "当特征方程有二重实根 $r$ 时，通解为 $y = (c_1 + c_2 x)e^{rx}$。",
   ),
   prerequisites: ["second-order-homogeneous-odes-characteristic-equations-with-distinct-real-roots"],
   encompasses: [
@@ -568,8 +568,8 @@ export const secondOrderHomogeneousOdesCharacteristicEquationsWithComplexRoots: 
   id: "second-order-homogeneous-odes-characteristic-equations-with-complex-roots",
   title: t("Second-Order Homogeneous ODEs: Characteristic Equations With Complex Roots", "二阶齐次常微分方程：具有复数根的特征方程"),
   summary: t(
-    "When characteristic roots are complex conjugates α ± iβ, the general solution oscillates with exponential envelope: y = e^{αx}(c_1 cos(βx) + c_2 sin(βx)).",
-    "当特征方程具有共轭复根 α ± iβ 时，通解为带指数包络的振荡形式：y = e^{αx}(c_1 cos(βx) + c_2 sin(βx))。",
+    "When the characteristic roots are $\\alpha \\pm i\\beta$, the solutions oscillate inside an exponential envelope: $y = e^{\\alpha x}(c_1 \\cos \\beta x + c_2 \\sin \\beta x)$.",
+    "当特征根为共轭复根 $\\alpha \\pm i\\beta$ 时，通解是带指数包络的振荡：$y = e^{\\alpha x}(c_1 \\cos \\beta x + c_2 \\sin \\beta x)$。",
   ),
   prerequisites: ["second-order-homogeneous-odes-characteristic-equations-with-distinct-real-roots"],
   encompasses: [
@@ -629,8 +629,8 @@ export const secondOrderHomogeneousInitialValueProblems: TopicDef = {
   id: "second-order-homogeneous-initial-value-problems",
   title: t("Second-Order Homogeneous Initial Value Problems", "二阶齐次常微分方程的初值问题"),
   summary: t(
-    "Solving an IVP y'' + by' + cy = 0 with y(0) = y_0 and y'(0) = y_1 uniquely determines arbitrary constants c_1 and c_2.",
-    "求解初值条件为 y(0) = y_0 与 y'(0) = y_1 的二阶齐次初值问题可唯一确定通解中的待定任意常数 c_1 与 c_2。",
+    "The initial conditions $y(0) = y_0$ and $y'(0) = y_1$ determine the constants $c_1$ and $c_2$ in the solution of $y'' + by' + cy = 0$.",
+    "初值条件 $y(0) = y_0$ 与 $y'(0) = y_1$ 唯一确定 $y'' + by' + cy = 0$ 通解中的常数 $c_1$ 与 $c_2$。",
   ),
   prerequisites: ["second-order-homogeneous-odes-characteristic-equations-with-distinct-real-roots"],
   encompasses: [
@@ -690,8 +690,8 @@ export const secondOrderInhomogeneousOdesWithPolynomialForcing: TopicDef = {
   id: "second-order-inhomogeneous-odes-with-polynomial-forcing",
   title: t("Second-Order Inhomogeneous ODEs With Polynomial Forcing", "多项式激励下的二阶非齐次常微分方程"),
   summary: t(
-    "For y'' + by' + cy = P(x) with c ≠ 0, the method of undetermined coefficients seeks a particular solution of matching degree: y_p(x) = A_n x^n + ... + A_0.",
-    "当 c ≠ 0 时，对于多项式右端项 y'' + by' + cy = P(x)，待定系数法设同次多项式特解 y_p(x) = A_n x^n + ... + A_0 进行求解。",
+    "For $y'' + by' + cy = P(x)$ with $c \\ne 0$, undetermined coefficients seeks a particular solution of the same degree: $y_p = A_n x^n + \\cdots + A_0$.",
+    "当 $c \\ne 0$ 时，对 $y'' + by' + cy = P(x)$，待定系数法设同次多项式特解 $y_p = A_n x^n + \\cdots + A_0$。",
   ),
   prerequisites: ["second-order-homogeneous-initial-value-problems"],
   encompasses: [
@@ -749,8 +749,8 @@ export const secondOrderInhomogeneousOdesWithExponentialForcing: TopicDef = {
   id: "second-order-inhomogeneous-odes-with-exponential-forcing",
   title: t("Second-Order Inhomogeneous ODEs With Exponential Forcing", "指数激励下的二阶非齐次常微分方程"),
   summary: t(
-    "For y'' + by' + cy = K e^{mx} where m is not a characteristic root, the particular solution is y_p = A e^{mx} with A = K / P(m).",
-    "对于指数激励 y'' + by' + cy = K e^{mx}，当 m 不是特征根时，特解具有形式 y_p = A e^{mx}，其中 A = K / P(m)。",
+    "For $y'' + by' + cy = Ke^{mx}$ where $m$ is not a characteristic root, the particular solution is $y_p = Ae^{mx}$ with $A = \\frac{K}{P(m)}$.",
+    "对 $y'' + by' + cy = Ke^{mx}$，当 $m$ 不是特征根时，特解为 $y_p = Ae^{mx}$，其中 $A = \\frac{K}{P(m)}$。",
   ),
   prerequisites: ["second-order-inhomogeneous-odes-with-polynomial-forcing"],
   encompasses: [
@@ -812,8 +812,8 @@ export const secondOrderInhomogeneousOdesWithSinusoidalForcing: TopicDef = {
   id: "second-order-inhomogeneous-odes-with-sinusoidal-forcing",
   title: t("Second-Order Inhomogeneous ODEs With Sinusoidal Forcing", "正弦激励下的二阶非齐次常微分方程"),
   summary: t(
-    "For y'' + ω_0^2 y = F_0 cos(ω x) with ω ≠ ω_0, the particular solution is y_p(x) = [F_0 / (ω_0^2 - ω^2)] cos(ω x).",
-    "对于简谐受迫振动 y'' + ω_0^2 y = F_0 cos(ω x)（ω ≠ ω_0），特解为 y_p(x) = [F_0 / (ω_0^2 - ω^2)] cos(ω x)。",
+    "For $y'' + \\omega_0^2 y = F_0 \\cos \\omega x$ with $\\omega \\ne \\omega_0$, the particular solution is $y_p = \\frac{F_0}{\\omega_0^2 - \\omega^2} \\cos \\omega x$.",
+    "对 $y'' + \\omega_0^2 y = F_0 \\cos \\omega x$（$\\omega \\ne \\omega_0$），特解为 $y_p = \\frac{F_0}{\\omega_0^2 - \\omega^2} \\cos \\omega x$。",
   ),
   prerequisites: ["second-order-inhomogeneous-odes-with-exponential-forcing"],
   encompasses: [
@@ -878,8 +878,8 @@ export const cauchyEulerEquationsCharacteristicEquationsWithDistinctRealRoots: T
   id: "cauchy-euler-equations-characteristic-equations-with-distinct-real-roots",
   title: t("Cauchy-Euler Equations: Characteristic Equations With Distinct Real Roots", "柯西-欧拉方程：具有不同实根的特征方程"),
   summary: t(
-    "Substituting y = x^m into x^2 y'' + a x y' + b y = 0 yields m(m-1) + a m + b = 0, giving power solutions y = c_1 x^{m_1} + c_2 x^{m_2}.",
-    "将 y = x^m 代入柯西-欧拉方程 x^2 y'' + a x y' + b y = 0 得到特征方程 m(m-1) + a m + b = 0，从而得到幂函数通解 y = c_1 x^{m_1} + c_2 x^{m_2}。",
+    "Substituting $y = x^m$ into $x^2 y'' + axy' + by = 0$ gives $m(m - 1) + am + b = 0$ and power solutions $y = c_1 x^{m_1} + c_2 x^{m_2}$.",
+    "将 $y = x^m$ 代入 $x^2 y'' + axy' + by = 0$ 得 $m(m - 1) + am + b = 0$，从而得到幂函数通解 $y = c_1 x^{m_1} + c_2 x^{m_2}$。",
   ),
   prerequisites: ["second-order-homogeneous-odes-characteristic-equations-with-distinct-real-roots"],
   encompasses: [
@@ -946,8 +946,8 @@ export const cauchyEulerEquationsCharacteristicEquationsWithRepeatedRoots: Topic
   id: "cauchy-euler-equations-characteristic-equations-with-repeated-roots",
   title: t("Cauchy-Euler Equations: Characteristic Equations With Repeated Roots", "柯西-欧拉方程：具有重根的特征方程"),
   summary: t(
-    "When the indicial equation has a repeated root m, the general solution is y = (c_1 + c_2 ln x) x^m.",
-    "当指标特征方程具有二重实根 m 时，柯西-欧拉方程的通解为 y = (c_1 + c_2 ln x) x^m。",
+    "When the indicial equation has a repeated root $m$, the general solution is $y = (c_1 + c_2 \\ln x)x^m$.",
+    "当指标方程有二重根 $m$ 时，通解为 $y = (c_1 + c_2 \\ln x)x^m$。",
   ),
   prerequisites: ["cauchy-euler-equations-characteristic-equations-with-distinct-real-roots"],
   encompasses: [
@@ -1006,8 +1006,8 @@ export const cauchyEulerEquationsCharacteristicEquationsWithComplexRoots: TopicD
   id: "cauchy-euler-equations-characteristic-equations-with-complex-roots",
   title: t("Cauchy-Euler Equations: Characteristic Equations With Complex Roots", "柯西-欧拉方程：具有复数根的特征方程"),
   summary: t(
-    "When indicial roots are α ± iβ, the general solution is y = x^α [c_1 cos(β ln x) + c_2 sin(β ln x)].",
-    "当指标方程具有共轭复根 α ± iβ 时，柯西-欧拉方程的通解为 y = x^α [c_1 cos(β ln x) + c_2 sin(β ln x)]。",
+    "When the indicial roots are $\\alpha \\pm i\\beta$, the general solution is $y = x^{\\alpha}[c_1 \\cos(\\beta \\ln x) + c_2 \\sin(\\beta \\ln x)]$.",
+    "当指标方程的根为 $\\alpha \\pm i\\beta$ 时，通解为 $y = x^{\\alpha}[c_1 \\cos(\\beta \\ln x) + c_2 \\sin(\\beta \\ln x)]$。",
   ),
   prerequisites: ["cauchy-euler-equations-characteristic-equations-with-distinct-real-roots"],
   encompasses: [
@@ -1065,8 +1065,8 @@ export const cauchyEulerEquationsWithForcing: TopicDef = {
   id: "cauchy-euler-equations-with-forcing",
   title: t("Cauchy-Euler Equations With Forcing", "带外力激励的柯西-欧拉方程"),
   summary: t(
-    "The substitution x = e^t transforms Cauchy-Euler equations into constant-coefficient ODEs in t, solving inhomogeneous equations with forcing.",
-    "通过变量代换 x = e^t 可将非齐次柯西-欧拉方程转化为自变量为 t 的常系数非齐次线性常微分方程进行求解。",
+    "The substitution $x = e^t$ turns a Cauchy-Euler equation with forcing into a constant-coefficient equation in $t$.",
+    "代换 $x = e^t$ 把非齐次柯西-欧拉方程化为关于 $t$ 的常系数方程。",
   ),
   prerequisites: [
     "cauchy-euler-equations-characteristic-equations-with-distinct-real-roots",
@@ -1131,8 +1131,8 @@ export const variationOfParametersForFirstOrderLinearOdes: TopicDef = {
   id: "variation-of-parameters-for-first-order-linear-odes",
   title: t("Variation of Parameters for First-Order Linear ODEs", "一阶线性常微分方程的常数变易法"),
   summary: t(
-    "Setting y = u(x) y_h(x) in y' + P(x)y = f(x) yields u'(x) = f(x)/y_h(x), directly producing the particular solution.",
-    "设 y = u(x) y_h(x) 代入一阶线性方程 y' + P(x)y = f(x) 可解得 u'(x) = f(x)/y_h(x)，直接导出非齐次方程的特解。",
+    "Setting $y = u(x)y_h(x)$ in $y' + P(x)y = f(x)$ gives $u' = \\frac{f}{y_h}$, which produces the particular solution directly.",
+    "在 $y' + P(x)y = f(x)$ 中设 $y = u(x)y_h(x)$，得 $u' = \\frac{f}{y_h}$，由此直接得到特解。",
   ),
   prerequisites: ["general-solutions-of-first-order-linear-odes"],
   encompasses: [{ topic: "general-solutions-of-first-order-linear-odes", weight: 0.3 }],
@@ -1185,8 +1185,8 @@ export const variationOfParametersForSecondOrderOdes: TopicDef = {
   id: "variation-of-parameters-for-second-order-odes",
   title: t("Variation of Parameters for Second-Order ODEs", "二阶常微分方程的常数变易法原理"),
   summary: t(
-    "For y'' + P(x)y' + Q(x)y = g(x), setting y_p = u_1 y_1 + u_2 y_2 with auxiliary condition u_1' y_1 + u_2' y_2 = 0 yields u_1' = -y_2 g / W and u_2' = y_1 g / W.",
-    "对于二阶非齐次方程，设特解 y_p = u_1 y_1 + u_2 y_2 并附加辅助条件 u_1' y_1 + u_2' y_2 = 0，可解得 u_1' = -y_2 g / W 与 u_2' = y_1 g / W。",
+    "For $y'' + P(x)y' + Q(x)y = g(x)$, setting $y_p = u_1 y_1 + u_2 y_2$ with $u_1' y_1 + u_2' y_2 = 0$ gives $u_1' = -\\frac{y_2 g}{W}$ and $u_2' = \\frac{y_1 g}{W}$.",
+    "对 $y'' + P(x)y' + Q(x)y = g(x)$，设 $y_p = u_1 y_1 + u_2 y_2$ 并附加条件 $u_1' y_1 + u_2' y_2 = 0$，得 $u_1' = -\\frac{y_2 g}{W}$、$u_2' = \\frac{y_1 g}{W}$。",
   ),
   prerequisites: ["variation-of-parameters-for-first-order-linear-odes", "linear-independence-of-solutions-to-homogeneous-odes"],
   encompasses: [
@@ -1243,8 +1243,8 @@ export const solvingSecondOrderOdesUsingVariationOfParameters: TopicDef = {
   id: "solving-second-order-odes-using-variation-of-parameters",
   title: t("Solving Second-Order ODEs Using Variation of Parameters", "应用常数变易法求解二阶常微分方程"),
   summary: t(
-    "Variation of parameters solves y'' + y = tan x or sec x where undetermined coefficients fails, integrating u_1 = -∫ y_2 g / W dx and u_2 = ∫ y_1 g / W dx.",
-    "常数变易法能够求解待定系数法失效的方程（如 y'' + y = tan x 或 sec x），通过积分计算 u_1 = -∫ y_2 g / W dx 与 u_2 = ∫ y_1 g / W dx 获得通解。",
+    "Variation of parameters solves equations such as $y'' + y = \\tan x$, where undetermined coefficients fails, through $u_1 = -\\int \\frac{y_2 g}{W}\\,dx$ and $u_2 = \\int \\frac{y_1 g}{W}\\,dx$.",
+    "常数变易法可求解待定系数法失效的方程（如 $y'' + y = \\tan x$），通过 $u_1 = -\\int \\frac{y_2 g}{W}\\,dx$ 与 $u_2 = \\int \\frac{y_1 g}{W}\\,dx$ 得到解。",
   ),
   prerequisites: ["variation-of-parameters-for-second-order-odes"],
   encompasses: [{ topic: "variation-of-parameters-for-second-order-odes", weight: 0.3 }],
@@ -1294,8 +1294,8 @@ export const variationOfParametersWithHigherOrderOdes: TopicDef = {
   id: "variation-of-parameters-with-higher-order-odes",
   title: t("Variation of Parameters With Higher-Order ODEs", "高阶常微分方程的常数变易法"),
   summary: t(
-    "For an n-th order linear ODE, variation of parameters yields u_k'(x) = [W_k(x) / W(x)] g(x), where W_k is obtained by replacing column k with (0, ..., 1)^T.",
-    "对于 n 阶非齐次线性常微分方程，常数变易法通过克莱姆法则给出 u_k'(x) = [W_k(x) / W(x)] g(x)，其中 W_k 由朗斯基行列式第 k 列替换为 (0, ..., 1)^T 得到。",
+    "For an $n$th-order linear ODE, variation of parameters gives $u_k' = \\frac{W_k}{W} g$, where $W_k$ replaces column $k$ of the Wronskian with $(0, \\dots, 0, 1)^T$.",
+    "对 $n$ 阶线性方程，常数变易法给出 $u_k' = \\frac{W_k}{W} g$，其中 $W_k$ 是把朗斯基行列式第 $k$ 列换成 $(0, \\dots, 0, 1)^T$ 所得。",
   ),
   prerequisites: ["solving-second-order-odes-using-variation-of-parameters"],
   encompasses: [
@@ -1354,8 +1354,8 @@ export const simpleHarmonicOscillators: TopicDef = {
   id: "simple-harmonic-oscillators",
   title: t("Simple Harmonic Oscillators", "简谐振动模型"),
   summary: t(
-    "A mass-spring system without damping satisfies m y'' + k y = 0, oscillating with natural angular frequency ω_0 = √(k/m).",
-    "无阻尼弹簧振子系统满足 m y'' + k y = 0，以固有圆频率 ω_0 = √(k/m) 作简谐振动。",
+    "An undamped mass-spring system satisfies $my'' + ky = 0$ and oscillates with natural angular frequency $\\omega_0 = \\sqrt{k/m}$.",
+    "无阻尼弹簧振子满足 $my'' + ky = 0$，以固有角频率 $\\omega_0 = \\sqrt{k/m}$ 振动。",
   ),
   prerequisites: ["second-order-homogeneous-initial-value-problems"],
   encompasses: [
@@ -1412,8 +1412,8 @@ export const dampedOscillators: TopicDef = {
   id: "damped-oscillators",
   title: t("Damped Oscillators", "阻尼振动模型"),
   summary: t(
-    "In m y'' + c y' + k y = 0, the discriminant c^2 - 4mk classifies motion as overdamped (> 0), critically damped (= 0), or underdamped (< 0), with c_crit = 2 √(mk).",
-    "在阻尼振动方程 m y'' + c y' + k y = 0 中，判别式 c^2 - 4mk 将运动分为过阻尼、临界阻尼与欠阻尼，临界阻尼系数为 c_crit = 2 √(mk)。",
+    "In $my'' + cy' + ky = 0$, the sign of $c^2 - 4mk$ classifies the motion as overdamped ($> 0$), critically damped ($= 0$) or underdamped ($< 0$); critical damping is $c = 2\\sqrt{mk}$.",
+    "在 $my'' + cy' + ky = 0$ 中，$c^2 - 4mk$ 的符号把运动分为过阻尼（$> 0$）、临界阻尼（$= 0$）与欠阻尼（$< 0$）；临界阻尼系数为 $c = 2\\sqrt{mk}$。",
   ),
   prerequisites: ["simple-harmonic-oscillators"],
   encompasses: [{ topic: "simple-harmonic-oscillators", weight: 0.3 }],
@@ -1465,8 +1465,8 @@ export const forcedOscillators: TopicDef = {
   id: "forced-oscillators",
   title: t("Forced Oscillators", "受迫振动模型"),
   summary: t(
-    "In m y'' + c y' + k y = F_0 cos(ω t), damping dissipates the transient homogeneous response, leaving the steady-state periodic response.",
-    "在受迫振动方程 m y'' + c y' + k y = F_0 cos(ω t) 中，阻尼使得齐次瞬态解随时间衰减消失，最终仅保留周期稳态解。",
+    "In $my'' + cy' + ky = F_0 \\cos \\omega t$, damping makes the transient homogeneous response die out, leaving the periodic steady-state response.",
+    "在 $my'' + cy' + ky = F_0 \\cos \\omega t$ 中，阻尼使齐次瞬态解衰减，最终只留下周期稳态解。",
   ),
   prerequisites: ["damped-oscillators"],
   encompasses: [{ topic: "damped-oscillators", weight: 0.3 }],
@@ -1519,8 +1519,8 @@ export const resonanceInVibratingSystems: TopicDef = {
   id: "resonance-in-vibrating-systems",
   title: t("Resonance in Vibrating Systems", "振动系统中的共振现象"),
   summary: t(
-    "When an undamped system is driven at its natural frequency (ω = ω_0), pure resonance occurs with particular solution y_p(t) = [F_0 / (2 m ω_0)] t sin(ω_0 t), with linearly growing amplitude.",
-    "当无阻尼系统在外力频率等于固有频率（ω = ω_0）下激励时发生纯共振，特解振幅随时间线性无限发散：y_p(t) = [F_0 / (2 m ω_0)] t sin(ω_0 t)。",
+    "Driving an undamped system at its natural frequency ($\\omega = \\omega_0$) causes pure resonance: $y_p = \\frac{F_0}{2m\\omega_0} t \\sin \\omega_0 t$, whose amplitude grows linearly.",
+    "以固有频率（$\\omega = \\omega_0$）驱动无阻尼系统会发生纯共振：$y_p = \\frac{F_0}{2m\\omega_0} t \\sin \\omega_0 t$，振幅线性增长。",
   ),
   prerequisites: ["forced-oscillators"],
   encompasses: [{ topic: "forced-oscillators", weight: 0.3 }],
@@ -1574,8 +1574,8 @@ export const modelingCapacitorChargeInRclCircuitsWithSecondOrderOdes: TopicDef =
   id: "modeling-capacitor-charge-in-rcl-circuits-with-second-order-odes",
   title: t("Modeling Capacitor Charge in RCL Circuits With Second-Order ODEs", "二阶常微分方程建模 RCL 电路中的电容器电荷"),
   summary: t(
-    "Kirchhoff's law for a series RCL circuit governs capacitor charge: L q'' + R q' + (1/C) q = E(t), with resonant frequency ω_0 = 1/√(LC).",
-    "串联 RCL 回路的基尔霍夫电压定律给出电容器电荷方程：L q'' + R q' + (1/C) q = E(t)，其固有共振频率为 ω_0 = 1/√(LC)。",
+    "Kirchhoff's law for a series RCL circuit gives $Lq'' + Rq' + \\frac{1}{C}q = E(t)$ for the capacitor charge, with resonant frequency $\\omega_0 = \\frac{1}{\\sqrt{LC}}$.",
+    "串联 RCL 电路的基尔霍夫定律给出电容器电荷方程 $Lq'' + Rq' + \\frac{1}{C}q = E(t)$，共振频率为 $\\omega_0 = \\frac{1}{\\sqrt{LC}}$。",
   ),
   prerequisites: ["simple-harmonic-oscillators"],
   encompasses: [{ topic: "simple-harmonic-oscillators", weight: 0.3 }],

@@ -860,8 +860,8 @@ export const introductionToLinearTransformations: TopicDef = {
   id: "introduction-to-linear-transformations",
   title: t("Introduction to Linear Transformations", "线性变换的概念"),
   summary: t(
-    "Understand maps from R^2 to R^2 that satisfy additivity and scalar homogeneity.",
-    "理解平面到平面的映射，掌握线性变换的加法可加性与数乘齐次性。",
+    "Understand maps from $\\mathbb{R}^2$ to $\\mathbb{R}^2$ that are additive and homogeneous.",
+    "理解从 $\\mathbb{R}^2$ 到 $\\mathbb{R}^2$ 的映射，掌握线性变换的可加性与齐次性。",
   ),
   prerequisites: ["multiplying-a-matrix-by-a-column-vector"],
   encompasses: [],
@@ -1874,8 +1874,8 @@ export const rotationsAsLinearTransformations: TopicDef = {
   id: "rotations-as-linear-transformations",
   title: t("Rotations as Linear Transformations", "任意角度的平面旋转矩阵"),
   summary: t(
-    "Formulate the general rotation matrix R_theta and apply it to rotate points and vectors.",
-    "推导任意角度的平面旋转矩阵 R_theta，并将其应用于旋转点和向量。",
+    "Write the general rotation matrix $R_\\theta$ and use it to rotate points and vectors.",
+    "写出一般的旋转矩阵 $R_\\theta$，并用它旋转点和向量。",
   ),
   prerequisites: ["right-angle-rotations-as-linear-transformations"],
   encompasses: [],

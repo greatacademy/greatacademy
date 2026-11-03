@@ -72,8 +72,8 @@ export const modelingMixtureProblemsWithFirstOrderLinearOdes: TopicDef = {
   id: "modeling-mixture-problems-with-first-order-linear-odes",
   title: t("Modeling Mixture Problems With First-Order Linear ODEs", "一阶线性微分方程的混合问题建模"),
   summary: t(
-    "When incoming fluid contains concentration c_in of solute, the amount S(t) satisfies dS/dt + (r/V) S = r c_in, with steady-state capacity S_∞ = V c_in.",
-    "当流入液体含有浓度为 c_in 的溶质时，溶质质量 S(t) 满足一阶线性方程 dS/dt + (r/V) S = r c_in，其稳态极限为 S_∞ = V c_in。",
+    "When the incoming fluid has solute concentration $c_{\\text{in}}$, the amount $S(t)$ satisfies $\\frac{dS}{dt} + \\frac{r}{V}S = rc_{\\text{in}}$ and tends to $S_\\infty = Vc_{\\text{in}}$.",
+    "当流入液体的溶质浓度为 $c_{\\text{in}}$ 时，溶质量 $S(t)$ 满足 $\\frac{dS}{dt} + \\frac{r}{V}S = rc_{\\text{in}}$，并趋于 $S_\\infty = Vc_{\\text{in}}$。",
   ),
   prerequisites: ["modeling-mixture-problems-with-first-order-separable-odes", "general-solutions-of-first-order-linear-odes"],
   encompasses: [
@@ -247,8 +247,8 @@ export const inhibitedDecayModelsWithFirstOrderOdes: TopicDef = {
   id: "inhibited-decay-models-with-first-order-odes",
   title: t("Inhibited Decay Models With First-Order ODEs", "一阶微分方程的受阻衰减模型"),
   summary: t(
-    "Newton's law of cooling dT/dt = -k(T - T_m) models the temperature of an object approaching surrounding medium temperature T_m.",
-    "牛顿冷却定律 dT/dt = -k(T - T_m) 描述物体温度随时间衰减并趋于周围介质环境温度 T_m 的过程。",
+    "Newton's law of cooling, $\\frac{dT}{dt} = -k(T - T_m)$, models an object's temperature approaching the surrounding temperature $T_m$.",
+    "牛顿冷却定律 $\\frac{dT}{dt} = -k(T - T_m)$ 描述物体温度趋于环境温度 $T_m$ 的过程。",
   ),
   prerequisites: ["inhibited-growth-models-with-first-order-odes"],
   encompasses: [{ topic: "inhibited-growth-models-with-first-order-odes", weight: 0.3 }],
@@ -305,8 +305,8 @@ export const fallingBodyProblemsWithLinearDrag: TopicDef = {
   id: "falling-body-problems-with-linear-drag",
   title: t("Falling Body Problems With Linear Drag", "线性阻力下的落体问题"),
   summary: t(
-    "Under gravity and linear air resistance -bv, an object's downward velocity satisfies m dv/dt = mg - bv, yielding terminal velocity v_term = mg/b.",
-    "在重力和线性空气阻力 -bv 作用下，落体的向下速度满足 m dv/dt = mg - bv，其收尾终端速度为 v_term = mg/b。",
+    "Under gravity and linear air resistance $-bv$, the downward velocity satisfies $m\\frac{dv}{dt} = mg - bv$, with terminal velocity $v_{\\text{term}} = \\frac{mg}{b}$.",
+    "在重力与线性阻力 $-bv$ 作用下，向下速度满足 $m\\frac{dv}{dt} = mg - bv$，终端速度为 $v_{\\text{term}} = \\frac{mg}{b}$。",
   ),
   prerequisites: ["determining-properties-of-objects-described-as-functions-of-displacement"],
   encompasses: [
@@ -364,8 +364,8 @@ export const fallingBodyProblemsWithQuadraticDrag: TopicDef = {
   id: "falling-body-problems-with-quadratic-drag",
   title: t("Falling Body Problems With Quadratic Drag", "二次阻力下的落体问题"),
   summary: t(
-    "For high-speed falling objects, air resistance is proportional to v^2: m dv/dt = mg - c v^2, with terminal velocity v_term = √(mg/c).",
-    "高速运动落体的阻力与速度平方成正比：m dv/dt = mg - c v^2，其终端收尾速度为 v_term = √(mg/c)。",
+    "At high speed, air resistance is proportional to $v^2$: $m\\frac{dv}{dt} = mg - cv^2$, with terminal velocity $v_{\\text{term}} = \\sqrt{mg/c}$.",
+    "高速运动时阻力与 $v^2$ 成正比：$m\\frac{dv}{dt} = mg - cv^2$，终端速度为 $v_{\\text{term}} = \\sqrt{mg/c}$。",
   ),
   prerequisites: ["falling-body-problems-with-linear-drag"],
   encompasses: [{ topic: "falling-body-problems-with-linear-drag", weight: 0.3 }],
@@ -418,8 +418,8 @@ export const newtonsLawOfUniversalGravitation: TopicDef = {
   id: "newtons-law-of-universal-gravitation",
   title: t("Newton's Law of Universal Gravitation", "万有引力定律"),
   summary: t(
-    "Newton's law states gravitational force is inversely proportional to r^2: F = -GMm/r^2 = -mg_0 (R/r)^2, causing variable acceleration at planetary distances.",
-    "牛顿万有引力定律指出引力与距离平方成反比：F = -GMm/r^2 = -mg_0 (R/r)^2，在大尺度天体运动中加速度随距离衰减。",
+    "Gravitational force is inversely proportional to $r^2$: $F = -\\frac{GMm}{r^2} = -mg_0\\left(\\frac{R}{r}\\right)^2$, so acceleration changes with distance on a planetary scale.",
+    "引力与距离平方成反比：$F = -\\frac{GMm}{r^2} = -mg_0\\left(\\frac{R}{r}\\right)^2$，因此在天体尺度上加速度随距离变化。",
   ),
   prerequisites: ["falling-body-problems-with-linear-drag"],
   encompasses: [{ topic: "falling-body-problems-with-linear-drag", weight: 0.3 }],
@@ -471,8 +471,8 @@ export const modelingEscapeVelocityWithFirstOrderOdes: TopicDef = {
   id: "modeling-escape-velocity-with-first-order-odes",
   title: t("Modeling Escape Velocity With First-Order ODEs", "一阶微分方程建模逃逸速度"),
   summary: t(
-    "Using v dv/dr = -g_0 R^2/r^2, integrating from r = R to ∞ yields the escape velocity v_esc = √(2 g_0 R).",
-    "利用微分链式法则 v dv/dr = -g_0 R^2/r^2，从 r = R 积分至无穷大可推导得出逃逸速度公式 v_esc = √(2 g_0 R)。",
+    "Integrating $v\\frac{dv}{dr} = -\\frac{g_0 R^2}{r^2}$ from $r = R$ to $\\infty$ gives the escape velocity $v_{\\text{esc}} = \\sqrt{2g_0 R}$.",
+    "把 $v\\frac{dv}{dr} = -\\frac{g_0 R^2}{r^2}$ 从 $r = R$ 积分到 $\\infty$，得逃逸速度 $v_{\\text{esc}} = \\sqrt{2g_0 R}$。",
   ),
   prerequisites: ["newtons-law-of-universal-gravitation"],
   encompasses: [{ topic: "newtons-law-of-universal-gravitation", weight: 0.3 }],
@@ -524,8 +524,8 @@ export const modelingRlCircuitsWithFirstOrderOdes: TopicDef = {
   id: "modeling-rl-circuits-with-first-order-odes",
   title: t("Modeling RL Circuits With First-Order ODEs", "一阶微分方程建模 RL 电路"),
   summary: t(
-    "In a series RL circuit, current satisfies L di/dt + R i = V(t), with steady-state current i_∞ = V_0/R under constant voltage V_0.",
-    "在串联 RL 电路中，电流满足 L di/dt + R i = V(t)；在恒定电压 V_0 激励下，稳态电流为 i_∞ = V_0/R。",
+    "In a series RL circuit the current satisfies $L\\frac{di}{dt} + Ri = V(t)$; under a constant voltage $V_0$ it tends to $i_\\infty = \\frac{V_0}{R}$.",
+    "串联 RL 电路中电流满足 $L\\frac{di}{dt} + Ri = V(t)$；在恒定电压 $V_0$ 下趋于 $i_\\infty = \\frac{V_0}{R}$。",
   ),
   prerequisites: ["general-solutions-of-first-order-linear-odes"],
   encompasses: [{ topic: "general-solutions-of-first-order-linear-odes", weight: 0.3 }],
@@ -579,8 +579,8 @@ export const modelingRcCircuitsWithFirstOrderOdes: TopicDef = {
   id: "modeling-rc-circuits-with-first-order-odes",
   title: t("Modeling RC Circuits With First-Order ODEs", "一阶微分方程建模 RC 电路"),
   summary: t(
-    "In a series RC circuit, capacitor charge satisfies R dq/dt + (1/C) q = V(t), with maximum charge q_max = C V_0 under constant voltage V_0.",
-    "在串联 RC 电路中，电容器电荷量满足 R dq/dt + (1/C) q = V(t)；在恒压源 V_0 充电下，最大稳态电荷量为 q_max = C V_0。",
+    "In a series RC circuit the charge satisfies $R\\frac{dq}{dt} + \\frac{1}{C}q = V(t)$; under a constant voltage $V_0$ it tends to $q_{\\max} = CV_0$.",
+    "串联 RC 电路中电荷满足 $R\\frac{dq}{dt} + \\frac{1}{C}q = V(t)$；在恒定电压 $V_0$ 下趋于 $q_{\\max} = CV_0$。",
   ),
   prerequisites: ["general-solutions-of-first-order-linear-odes"],
   encompasses: [{ topic: "general-solutions-of-first-order-linear-odes", weight: 0.3 }],

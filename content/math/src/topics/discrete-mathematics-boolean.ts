@@ -283,8 +283,8 @@ export const booleanFunctions: TopicDef = {
   id: "boolean-functions",
   title: t("Boolean Functions", "布尔函数"),
   summary: t(
-    "A Boolean function of n variables maps each of the 2ⁿ inputs in {0, 1}ⁿ to 0 or 1; it is given by a truth table or a value vector, and there are 2^(2ⁿ) of them.",
-    "n 元布尔函数把 {0, 1}ⁿ 中的 2ⁿ 个输入各映射到 0 或 1；它可以用真值表或值向量给出，共有 2^(2ⁿ) 个。",
+    "A Boolean function of $n$ variables maps each of the $2^n$ inputs in $\\{0, 1\\}^n$ to $0$ or $1$; it is given by a truth table or a value vector, and there are $2^{2^n}$ of them.",
+    "$n$ 元布尔函数把 $\\{0, 1\\}^n$ 中的 $2^n$ 个输入各映射到 $0$ 或 $1$；它可以用真值表或值向量给出，共有 $2^{2^n}$ 个。",
   ),
   prerequisites: ["truth-tables"],
   encompasses: [],
@@ -1037,8 +1037,8 @@ export const selfDualBooleanFunctions: TopicDef = {
   id: "self-dual-boolean-functions",
   title: t("Self-Dual Boolean Functions", "自对偶布尔函数"),
   summary: t(
-    "The dual of f is f*(x₁, …, xₙ) = ¬f(¬x₁, …, ¬xₙ), obtained by swapping ∧ with ∨ and 0 with 1; f is self-dual when f* = f, that is, f takes opposite values at opposite inputs.",
-    "f 的对偶函数是 f*(x₁, …, xₙ) = ¬f(¬x₁, …, ¬xₙ)，可通过交换 ∧ 与 ∨、0 与 1 得到；若 f* = f，则 f 是自对偶的，即 f 在相反的输入处取相反的值。",
+    "The dual of $f$ is $f^*(x_1, \\dots, x_n) = \\neg f(\\neg x_1, \\dots, \\neg x_n)$, obtained by swapping $\\land$ with $\\lor$ and $0$ with $1$; $f$ is self-dual when $f^* = f$, that is, $f$ takes opposite values at opposite inputs.",
+    "$f$ 的对偶函数是 $f^*(x_1, \\dots, x_n) = \\neg f(\\neg x_1, \\dots, \\neg x_n)$，可通过交换 $\\land$ 与 $\\lor$、$0$ 与 $1$ 得到；若 $f^* = f$，则 $f$ 是自对偶的，即 $f$ 在相反的输入处取相反的值。",
   ),
   prerequisites: ["truth-preserving-boolean-functions"],
   encompasses: [],

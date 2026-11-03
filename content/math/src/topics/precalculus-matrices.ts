@@ -218,8 +218,8 @@ export const indexNotationForMatrices: TopicDef = {
   id: "index-notation-for-matrices",
   title: t("Index Notation for Matrices", "矩阵的下标表示法"),
   summary: t(
-    "Use double-subscript index notation a_ij to locate and evaluate entries in row i and column j of a matrix.",
-    "用双下标表示法 a_ij 定位并计算矩阵中位于第 i 行第 j 列的元素。",
+    "Use double-subscript notation $a_{ij}$ to locate and evaluate the entry in row $i$ and column $j$ of a matrix.",
+    "用双下标记号 $a_{ij}$ 定位并计算矩阵第 $i$ 行第 $j$ 列的元素。",
   ),
   prerequisites: ["introduction-to-matrices"],
   encompasses: [{ topic: "introduction-to-matrices", weight: 0.4 }],
@@ -850,8 +850,8 @@ export const theTransposeOfAMatrix: TopicDef = {
   id: "the-transpose-of-a-matrix",
   title: t("The Transpose of a Matrix", "矩阵的转置"),
   summary: t(
-    "Find the transpose A^T of an m x n matrix, observe dimension reversal to n x m, and identify symmetric matrices.",
-    "求 m x n 矩阵的转置矩阵 A^T，理解维度变为 n x m，并掌握对称矩阵的概念。",
+    "Find the transpose $A^T$ of an $m \\times n$ matrix, see that it is $n \\times m$, and identify symmetric matrices.",
+    "求 $m \\times n$ 矩阵的转置 $A^T$，理解它是 $n \\times m$ 矩阵，并掌握对称矩阵的概念。",
   ),
   prerequisites: ["index-notation-for-matrices"],
   encompasses: [{ topic: "index-notation-for-matrices", weight: 0.4 }],
@@ -1392,8 +1392,8 @@ export const powersOfMatrices: TopicDef = {
   id: "powers-of-matrices",
   title: t("Powers of Matrices", "方阵的幂"),
   summary: t(
-    "Compute positive integer powers A^2, A^3 of square matrices, including diagonal and shear matrices.",
-    "计算方阵的正整数次幂 A^2、A^3，包括对角矩阵和特殊剪切矩阵的幂。",
+    "Compute positive integer powers $A^2$, $A^3$ of square matrices, including diagonal and shear matrices.",
+    "计算方阵的正整数次幂 $A^2$、$A^3$，包括对角矩阵和剪切矩阵的幂。",
   ),
   prerequisites: ["multiplying-square-matrices"],
   encompasses: [{ topic: "multiplying-square-matrices", weight: 0.4 }],
@@ -2317,8 +2317,8 @@ export const theMinorsOfA3x3Matrix: TopicDef = {
   id: "the-minors-of-a-3x3-matrix",
   title: t("The Minors of a 3x3 Matrix", "三阶矩阵的余子式与代数余子式"),
   summary: t(
-    "Find minors M_ij by deleting row i and col j, and compute cofactors C_ij = (-1)^(i+j) M_ij with the checkerboard sign pattern.",
-    "通过划去第 i 行与第 j 列计算余子式 M_ij，并利用棋盘符号法则求代数余子式 C_ij = (-1)^(i+j) M_ij。",
+    "Find minors $M_{ij}$ by deleting row $i$ and column $j$, and compute cofactors $C_{ij} = (-1)^{i+j} M_{ij}$ with the checkerboard sign pattern.",
+    "划去第 $i$ 行与第 $j$ 列求余子式 $M_{ij}$，并按棋盘符号规律求代数余子式 $C_{ij} = (-1)^{i+j} M_{ij}$。",
   ),
   prerequisites: ["the-determinant-of-a-2x2-matrix"],
   encompasses: [{ topic: "the-determinant-of-a-2x2-matrix", weight: 0.4 }],

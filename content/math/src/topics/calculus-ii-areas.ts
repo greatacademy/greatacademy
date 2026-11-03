@@ -614,8 +614,8 @@ export const theArcLengthOfAPlanarCurve: TopicDef = {
   id: "the-arc-length-of-a-planar-curve",
   title: t("The Arc Length of a Planar Curve", "平面曲线的弧长"),
   summary: t(
-    "The length of y = f(x) from x = a to x = b is the integral of sqrt(1 + f′(x)²).",
-    "y = f(x) 从 x = a 到 x = b 的长度是 sqrt(1 + f′(x)²) 的积分。",
+    "The length of $y = f(x)$ from $x = a$ to $x = b$ is $\\int_a^b \\sqrt{1 + f'(x)^2}\\,dx$.",
+    "$y = f(x)$ 从 $x = a$ 到 $x = b$ 的弧长为 $\\int_a^b \\sqrt{1 + f'(x)^2}\\,dx$。",
   ),
   prerequisites: ["integration-using-substitution"],
   encompasses: [{ topic: "integration-using-substitution", weight: 0.3 }],

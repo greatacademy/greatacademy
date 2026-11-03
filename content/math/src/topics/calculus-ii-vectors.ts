@@ -612,7 +612,10 @@ function projectileVelocity(rng: Rng) {
 export const findingVelocityVectorsInTwoDimensionsUsingIntegration: TopicDef = {
   id: "finding-velocity-vectors-in-two-dimensions-using-integration",
   title: t("Finding Velocity Vectors in Two Dimensions Using Integration", "用积分求二维速度向量"),
-  summary: t("v(t₁) = v(0) + ∫₀^t₁ a(t) dt, component by component.", "v(t₁) = v(0) + ∫₀^t₁ a(t) dt，按分量计算。"),
+  summary: t(
+    "$\\mathbf{v}(t_1) = \\mathbf{v}(0) + \\int_0^{t_1} \\mathbf{a}(t)\\,dt$, computed component by component.",
+    "$\\mathbf{v}(t_1) = \\mathbf{v}(0) + \\int_0^{t_1} \\mathbf{a}(t)\\,dt$，按分量计算。",
+  ),
   prerequisites: [
     "integrating-vector-valued-functions",
     "calculating-acceleration-for-plane-motion-using-differentiation",
@@ -692,8 +695,8 @@ export const findingDisplacementVectorsInTwoDimensionsUsingIntegration: TopicDef
   id: "finding-displacement-vectors-in-two-dimensions-using-integration",
   title: t("Finding Displacement Vectors in Two Dimensions Using Integration", "用积分求二维位移向量"),
   summary: t(
-    "The displacement from t = a to t = b is ∫ₐᵇ v(t) dt, and r(t₁) = r(0) + ∫₀^t₁ v(t) dt.",
-    "从 t = a 到 t = b 的位移为 ∫ₐᵇ v(t) dt，且 r(t₁) = r(0) + ∫₀^t₁ v(t) dt。",
+    "The displacement from $t = a$ to $t = b$ is $\\int_a^b \\mathbf{v}(t)\\,dt$, and $\\mathbf{r}(t_1) = \\mathbf{r}(0) + \\int_0^{t_1} \\mathbf{v}(t)\\,dt$.",
+    "从 $t = a$ 到 $t = b$ 的位移为 $\\int_a^b \\mathbf{v}(t)\\,dt$，且 $\\mathbf{r}(t_1) = \\mathbf{r}(0) + \\int_0^{t_1} \\mathbf{v}(t)\\,dt$。",
   ),
   prerequisites: [
     "finding-velocity-vectors-in-two-dimensions-using-integration",

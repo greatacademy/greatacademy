@@ -2088,8 +2088,8 @@ export const rationalNumbersAsFiniteOrRepeatingDecimals = topic(
   "rational-numbers-as-finite-or-repeating-decimals",
   t("Rational Numbers as Finite or Repeating Decimals", "有理数是有限小数或无限循环小数"),
   t(
-    "Dividing the numerator by the denominator turns any fraction into a decimal that either ends or repeats. In lowest terms, a fraction terminates exactly when its denominator has no prime factors other than 2 and 5: −3/8 = −0.375, but 5/6 = 0.8333… = 0.8\\overline{3}.",
-    "用分子除以分母，任何分数都能化成有限小数或无限循环小数。化成最简分数后，分母只含质因数 2 和 5 时才是有限小数：−3/8 = −0.375，而 5/6 = 0.8333… = 0.8\\overline{3}。",
+    "Dividing the numerator by the denominator turns any fraction into a decimal that either ends or repeats. In lowest terms, a fraction terminates exactly when its denominator has no prime factors other than 2 and 5: $-\\frac{3}{8} = -0.375$, but $\\frac{5}{6} = 0.8333\\ldots = 0.8\\overline{3}$.",
+    "用分子除以分母，任何分数都能化成有限小数或无限循环小数。化成最简分数后，分母只含质因数 2 和 5 时才是有限小数：$-\\frac{3}{8} = -0.375$，而 $\\frac{5}{6} = 0.8333\\ldots = 0.8\\overline{3}$。",
   ),
   ["dividing-with-negative-numbers", "division-of-whole-numbers-with-decimal-quotients"],
   ["7.NS.A.2d"],

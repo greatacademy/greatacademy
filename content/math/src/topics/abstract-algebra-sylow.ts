@@ -205,8 +205,8 @@ export const theSecondSylowTheorem: TopicDef = {
   id: "the-second-sylow-theorem",
   title: t("The Second Sylow Theorem", "第二西罗定理"),
   summary: t(
-    "Any two Sylow p-subgroups of a finite group are conjugate, and every p-subgroup lies in some Sylow p-subgroup. So G acts transitively on its Sylow p-subgroups by conjugation, and their number is n_p = [G : N(P)]. In particular a Sylow p-subgroup is normal exactly when it is the only one.",
-    "有限群的任意两个西罗 p-子群共轭，且每个 p-子群都包含在某个西罗 p-子群中。所以 G 通过共轭传递地作用于它的西罗 p-子群，其个数为 n_p = [G : N(P)]。特别地，西罗 p-子群正规当且仅当它是唯一的。",
+    "Any two Sylow $p$-subgroups of a finite group are conjugate, and every $p$-subgroup lies in some Sylow $p$-subgroup. So $G$ acts transitively on its Sylow $p$-subgroups by conjugation, and their number is $n_p = [G : N(P)]$. In particular a Sylow $p$-subgroup is normal exactly when it is the only one.",
+    "有限群的任意两个西罗 $p$-子群共轭，且每个 $p$-子群都包含在某个西罗 $p$-子群中。所以 $G$ 通过共轭传递地作用于它的西罗 $p$-子群，其个数为 $n_p = [G : N(P)]$。特别地，西罗 $p$-子群正规当且仅当它是唯一的。",
   ),
   prerequisites: ["the-first-sylow-theorem", "conjugacy-of-group-subsets-and-subgroups"],
   encompasses: [],
@@ -292,8 +292,8 @@ export const theThirdSylowTheorem: TopicDef = {
   id: "the-third-sylow-theorem",
   title: t("The Third Sylow Theorem", "第三西罗定理"),
   summary: t(
-    "If |G| = pᵏm with p ∤ m, the number n_p of Sylow p-subgroups satisfies n_p ≡ 1 (mod p) and n_p | m. When these force n_p = 1, the Sylow p-subgroup is normal, so G is not simple; for example every group of order 15 has a normal subgroup of order 5 and of order 3, and is cyclic.",
-    "若 |G| = pᵏm 且 p ∤ m，则西罗 p-子群的个数 n_p 满足 n_p ≡ 1 (mod p) 且 n_p | m。当这些条件迫使 n_p = 1 时，西罗 p-子群正规，G 不是单群；例如每个 15 阶群都有 5 阶与 3 阶正规子群，并且是循环群。",
+    "If $|G| = p^k m$ with $p \\nmid m$, the number $n_p$ of Sylow $p$-subgroups satisfies $n_p \\equiv 1 \\pmod{p}$ and $n_p \\mid m$. When these force $n_p = 1$, the Sylow $p$-subgroup is normal, so $G$ is not simple; for example every group of order $15$ has normal subgroups of orders $5$ and $3$, and is cyclic.",
+    "若 $|G| = p^k m$ 且 $p \\nmid m$，则西罗 $p$-子群的个数 $n_p$ 满足 $n_p \\equiv 1 \\pmod{p}$ 且 $n_p \\mid m$。当这些条件迫使 $n_p = 1$ 时，西罗 $p$-子群正规，$G$ 不是单群；例如每个 $15$ 阶群都有 $5$ 阶与 $3$ 阶正规子群，并且是循环群。",
   ),
   prerequisites: ["the-second-sylow-theorem"],
   encompasses: [],

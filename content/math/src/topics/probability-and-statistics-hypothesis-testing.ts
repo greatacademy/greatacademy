@@ -10,8 +10,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "introduction-to-hypothesis-testing",
     title: t("Introduction to Hypothesis Testing", "假设检验导论"),
     summary: t(
-      "In hypothesis testing, the null hypothesis H_0 represents a default position of no effect or no difference, while the alternative hypothesis H_1 (or H_a) represents the claim to be tested.",
-      "在假设检验中，原假设 H_0 代表无效应或无差异的默认立场，而备择假设 H_1（或 H_a）代表待检验的断言。",
+      "In hypothesis testing, the null hypothesis $H_0$ is the default position of no effect or no difference, and the alternative hypothesis $H_1$ is the claim being tested.",
+      "在假设检验中，原假设 $H_0$ 代表无效应或无差异的默认立场，备择假设 $H_1$ 代表待检验的断言。",
     ),
     prerequisites: ["the-central-limit-theorem"],
     encompasses: [],
@@ -109,8 +109,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "hypothesis-tests-for-the-rate-of-a-poisson-distribution",
     title: t("Hypothesis Tests for the Rate of a Poisson Distribution", "泊松分布发生率的假设检验"),
     summary: t(
-      "For a sample of total events K ~ Poisson(nλ) over n intervals, testing H_0: λ = λ_0 with large nλ_0 uses the standardized test statistic Z = (K - nλ_0) / √(nλ_0).",
-      "若在 n 个区间内观测到的总事件数 K ~ Poisson(nλ)，在 nλ_0 较大时检验 H_0: λ = λ_0 使用标准化检验统计量 Z = (K - nλ_0) / √(nλ_0)。",
+      "For a total count $K \\sim \\text{Poisson}(n\\lambda)$ over $n$ intervals, test $H_0: \\lambda = \\lambda_0$ with large $n\\lambda_0$ using $Z = \\frac{K - n\\lambda_0}{\\sqrt{n\\lambda_0}}$.",
+      "若 $n$ 个区间内的总事件数 $K \\sim \\text{Poisson}(n\\lambda)$，在 $n\\lambda_0$ 较大时用 $Z = \\frac{K - n\\lambda_0}{\\sqrt{n\\lambda_0}}$ 检验 $H_0: \\lambda = \\lambda_0$。",
     ),
     prerequisites: ["introduction-to-hypothesis-testing", "the-poisson-distribution"],
     encompasses: [],
@@ -155,8 +155,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "critical-regions-for-left-tailed-hypothesis-tests",
     title: t("Critical Regions for Left-Tailed Hypothesis Tests", "左尾假设检验的临界区域"),
     summary: t(
-      "In a left-tailed test with significance level α, the critical region is Z ≤ -z_α. The null hypothesis H_0 is rejected if the calculated test statistic falls in this region.",
-      "在显著性水平为 α 的左尾检验中，临界区域为 Z ≤ -z_α。若计算得到的检验统计量落在此区域内，则拒绝原假设 H_0。",
+      "In a left-tailed test at significance level $\\alpha$, the critical region is $Z \\le -z_\\alpha$; $H_0$ is rejected if the test statistic falls in it.",
+      "在显著性水平为 $\\alpha$ 的左尾检验中，临界域为 $Z \\le -z_\\alpha$；检验统计量落入其中则拒绝 $H_0$。",
     ),
     prerequisites: ["introduction-to-hypothesis-testing", "percentage-points-of-the-standard-normal-distribution"],
     encompasses: [],
@@ -279,8 +279,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "two-tailed-hypothesis-tests",
     title: t("Two-Tailed Hypothesis Tests", "双尾假设检验"),
     summary: t(
-      "In a two-tailed test with significance level α, the significance level is split equally across both tails, giving critical region |Z| ≥ z_{α/2}.",
-      "在显著性水平为 α 的双尾检验中，显著性水平均分到两个尾部，临界区域为 |Z| ≥ z_{α/2}。",
+      "A two-tailed test splits the significance level $\\alpha$ equally between the tails, giving the critical region $|Z| \\ge z_{\\alpha/2}$.",
+      "双尾检验把显著性水平 $\\alpha$ 平分到两个尾部，临界域为 $|Z| \\ge z_{\\alpha/2}$。",
     ),
     prerequisites: ["critical-regions-for-right-tailed-hypothesis-tests"],
     encompasses: [],
@@ -357,8 +357,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "type-i-and-type-ii-errors",
     title: t("Type I and Type II Errors", "第一类与第二类错误"),
     summary: t(
-      "A Type I error is rejecting H_0 when H_0 is true (probability α). A Type II error is failing to reject H_0 when H_0 is false (probability β). The power of the test is 1 - β.",
-      "第一类错误是在 H_0 为真时拒绝 H_0（概率为 α）。第二类错误是在 H_0 为假时未能拒绝 H_0（概率为 β）。检验效能为 1 - β。",
+      "A Type I error rejects a true $H_0$ (probability $\\alpha$); a Type II error fails to reject a false $H_0$ (probability $\\beta$). The power of the test is $1 - \\beta$.",
+      "第一类错误是拒绝了为真的 $H_0$（概率 $\\alpha$）；第二类错误是未拒绝为假的 $H_0$（概率 $\\beta$）。检验功效为 $1 - \\beta$。",
     ),
     prerequisites: ["introduction-to-hypothesis-testing"],
     encompasses: [],
@@ -434,8 +434,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "hypothesis-tests-for-one-mean-known-population-variance",
     title: t("Hypothesis Tests for One Mean: Known Population Variance", "单总体均值的假设检验：已知总体方差"),
     summary: t(
-      "When the population variance σ^2 is known, the test statistic for testing H_0: μ = μ_0 is Z = (x̄ - μ_0) / (σ / √n), which follows N(0, 1) under H_0.",
-      "当总体方差 σ^2 已知时，检验 H_0: μ = μ_0 的检验统计量为 Z = (x̄ - μ_0) / (σ / √n)，在 H_0 下服从 N(0, 1)。",
+      "With known variance $\\sigma^2$, test $H_0: \\mu = \\mu_0$ using $Z = \\frac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}}$, which is $N(0, 1)$ under $H_0$.",
+      "总体方差 $\\sigma^2$ 已知时，用 $Z = \\frac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}}$ 检验 $H_0: \\mu = \\mu_0$，在 $H_0$ 下服从 $N(0, 1)$。",
     ),
     prerequisites: ["two-tailed-hypothesis-tests", "confidence-intervals-for-one-mean-known-population-variance"],
     encompasses: [],
@@ -479,8 +479,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "hypothesis-tests-for-one-mean-unknown-population-variance",
     title: t("Hypothesis Tests for One Mean: Unknown Population Variance", "单总体均值的假设检验：未知总体方差"),
     summary: t(
-      "When the population variance σ^2 is unknown and the sample comes from a normal population, the test statistic is T = (x̄ - μ_0) / (s / √n), which follows Student's t-distribution with ν = n - 1 degrees of freedom.",
-      "当总体方差 σ^2 未知且样本来自正态总体时，检验统计量为 T = (x̄ - μ_0) / (s / √n)，在 H_0 下服从自由度为 ν = n - 1 的学生 t 分布。",
+      "With unknown variance and a normal population, use $T = \\frac{\\bar{x} - \\mu_0}{s / \\sqrt{n}}$, which follows a $t$-distribution with $n - 1$ degrees of freedom under $H_0$.",
+      "总体方差未知且总体为正态时，用 $T = \\frac{\\bar{x} - \\mu_0}{s / \\sqrt{n}}$，在 $H_0$ 下服从自由度为 $n - 1$ 的 $t$ 分布。",
     ),
     prerequisites: [
       "hypothesis-tests-for-one-mean-known-population-variance",
@@ -527,8 +527,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "hypothesis-tests-for-one-variance",
     title: t("Hypothesis Tests for One Variance", "单总体方差的假设检验"),
     summary: t(
-      "To test hypotheses about a single population variance H_0: σ^2 = σ_0^2 from a normal population, the test statistic is χ^2 = (n - 1)s^2 / σ_0^2, which follows χ^2(n - 1) under H_0.",
-      "检验来自正态总体的单总体方差假设 H_0: σ^2 = σ_0^2 时，检验统计量为 χ^2 = (n - 1)s^2 / σ_0^2，在 H_0 下服从 χ^2(n - 1)。",
+      "To test $H_0: \\sigma^2 = \\sigma_0^2$ for a normal population, use $\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2}$, which follows $\\chi^2(n - 1)$ under $H_0$.",
+      "检验正态总体的 $H_0: \\sigma^2 = \\sigma_0^2$ 时，用 $\\chi^2 = \\frac{(n - 1)s^2}{\\sigma_0^2}$，在 $H_0$ 下服从 $\\chi^2(n - 1)$。",
     ),
     prerequisites: ["confidence-intervals-for-one-variance"],
     encompasses: [],
@@ -570,8 +570,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "hypothesis-tests-for-two-means-known-population-variances",
     title: t("Hypothesis Tests for Two Means: Known Population Variances", "双总体均值的假设检验：已知总体方差"),
     summary: t(
-      "When comparing two independent normal populations with known variances σ_1^2 and σ_2^2, the test statistic for H_0: μ_1 - μ_2 = Δ_0 is Z = ((x̄_1 - x̄_2) - Δ_0) / √(σ_1^2/n_1 + σ_2^2/n_2).",
-      "比较两个方差已知为 σ_1^2 与 σ_2^2 的独立正态总体均值时，检验 H_0: μ_1 - μ_2 = Δ_0 的统计量为 Z = ((x̄_1 - x̄_2) - Δ_0) / √(σ_1^2/n_1 + σ_2^2/n_2)。",
+      "For two independent normal populations with known variances, test $H_0: \\mu_1 - \\mu_2 = \\Delta_0$ using $Z = \\frac{(\\bar{x}_1 - \\bar{x}_2) - \\Delta_0}{\\sqrt{\\sigma_1^2/n_1 + \\sigma_2^2/n_2}}$.",
+      "对方差已知的两个独立正态总体，用 $Z = \\frac{(\\bar{x}_1 - \\bar{x}_2) - \\Delta_0}{\\sqrt{\\sigma_1^2/n_1 + \\sigma_2^2/n_2}}$ 检验 $H_0: \\mu_1 - \\mu_2 = \\Delta_0$。",
     ),
     prerequisites: [
       "hypothesis-tests-for-one-mean-known-population-variance",
@@ -628,8 +628,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "hypothesis-tests-for-two-means-equal-but-unknown-population-variances",
     title: t("Hypothesis Tests for Two Means: Equal But Unknown Population Variances", "双总体均值的假设检验：未知但相等总体方差"),
     summary: t(
-      "When comparing two means under the assumption σ_1^2 = σ_2^2 = σ^2, the pooled variance s_p^2 = ((n_1 - 1)s_1^2 + (n_2 - 1)s_2^2) / (n_1 + n_2 - 2) is used, giving a t-statistic with ν = n_1 + n_2 - 2 degrees of freedom.",
-      "在假设 σ_1^2 = σ_2^2 = σ^2 下比较两均值时，使用合并方差 s_p^2 = ((n_1 - 1)s_1^2 + (n_2 - 1)s_2^2) / (n_1 + n_2 - 2)，给出自由度为 ν = n_1 + n_2 - 2 的 t 统计量。",
+      "Assuming equal variances, use the pooled variance $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$ and a $t$-statistic with $n_1 + n_2 - 2$ degrees of freedom.",
+      "假设两方差相等时，使用合并方差 $s_p^2 = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}$ 和自由度为 $n_1 + n_2 - 2$ 的 $t$ 统计量。",
     ),
     prerequisites: [
       "hypothesis-tests-for-one-mean-unknown-population-variance",
@@ -676,8 +676,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "hypothesis-tests-for-two-means-unequal-and-unknown-population-variances",
     title: t("Hypothesis Tests for Two Means: Unequal and Unknown Population Variances", "双总体均值的假设检验：未知且不等总体方差"),
     summary: t(
-      "When variances σ_1^2 ≠ σ_2^2 are unknown, Welch's t-test uses the test statistic T = ((x̄_1 - x̄_2) - Δ_0) / √(s_1^2/n_1 + s_2^2/n_2).",
-      "当方差 σ_1^2 ≠ σ_2^2 未知时，韦尔奇 t 检验使用检验统计量 T = ((x̄_1 - x̄_2) - Δ_0) / √(s_1^2/n_1 + s_2^2/n_2)。",
+      "With unknown and unequal variances, Welch's test uses $T = \\frac{(\\bar{x}_1 - \\bar{x}_2) - \\Delta_0}{\\sqrt{s_1^2/n_1 + s_2^2/n_2}}$.",
+      "方差未知且不相等时，韦尔奇检验使用 $T = \\frac{(\\bar{x}_1 - \\bar{x}_2) - \\Delta_0}{\\sqrt{s_1^2/n_1 + s_2^2/n_2}}$。",
     ),
     prerequisites: ["confidence-intervals-for-differences-between-two-means-unknown-unequal-population-variances"],
     encompasses: [],
@@ -718,8 +718,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "hypothesis-tests-for-two-proportions",
     title: t("Hypothesis Tests for Two Proportions", "双总体比例的假设检验"),
     summary: t(
-      "To test H_0: p_1 = p_2, the pooled proportion p̂ = (x_1 + x_2) / (n_1 + n_2) is used to calculate standard error SE = √(p̂(1 - p̂)(1/n_1 + 1/n_2)) and test statistic Z = (p̂_1 - p̂_2) / SE.",
-      "检验 H_0: p_1 = p_2 时，使用合并样本比例 p̂ = (x_1 + x_2) / (n_1 + n_2) 计算标准误差 SE = √(p̂(1 - p̂)(1/n_1 + 1/n_2)) 及检验统计量 Z = (p̂_1 - p̂_2) / SE。",
+      "To test $H_0: p_1 = p_2$, pool the proportion $\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2}$, then use $\\text{SE} = \\sqrt{\\hat{p}(1 - \\hat{p})\\left(\\frac{1}{n_1} + \\frac{1}{n_2}\\right)}$ and $Z = \\frac{\\hat{p}_1 - \\hat{p}_2}{\\text{SE}}$.",
+      "检验 $H_0: p_1 = p_2$ 时，先求合并比例 $\\hat{p} = \\frac{x_1 + x_2}{n_1 + n_2}$，再用 $\\text{SE} = \\sqrt{\\hat{p}(1 - \\hat{p})\\left(\\frac{1}{n_1} + \\frac{1}{n_2}\\right)}$ 与 $Z = \\frac{\\hat{p}_1 - \\hat{p}_2}{\\text{SE}}$。",
     ),
     prerequisites: ["confidence-intervals-for-differences-between-two-proportions"],
     encompasses: [],
@@ -761,8 +761,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "hypothesis-tests-for-two-means-paired-sample-z-test",
     title: t("Hypothesis Tests for Two Means: Paired-Sample Z-Test", "双总体均值的假设检验：配对样本 Z 检验"),
     summary: t(
-      "When differences d_i = x_{1i} - x_{2i} have known variance σ_d^2, testing H_0: μ_d = Δ_0 uses the one-sample z-statistic Z = (d̄ - Δ_0) / (σ_d / √n).",
-      "当差值 d_i = x_{1i} - x_{2i} 具有已知方差 σ_d^2 时，检验 H_0: μ_d = Δ_0 使用单样本 z 统计量 Z = (d̄ - Δ_0) / (σ_d / √n)。",
+      "When the differences $d_i = x_{1i} - x_{2i}$ have known variance $\\sigma_d^2$, test $H_0: \\mu_d = \\Delta_0$ using $Z = \\frac{\\bar{d} - \\Delta_0}{\\sigma_d / \\sqrt{n}}$.",
+      "当差值 $d_i = x_{1i} - x_{2i}$ 的方差 $\\sigma_d^2$ 已知时，用 $Z = \\frac{\\bar{d} - \\Delta_0}{\\sigma_d / \\sqrt{n}}$ 检验 $H_0: \\mu_d = \\Delta_0$。",
     ),
     prerequisites: ["confidence-intervals-for-paired-samples-known-variances", "hypothesis-tests-for-one-mean-known-population-variance"],
     encompasses: [],
@@ -804,8 +804,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "hypothesis-tests-for-two-means-paired-sample-t-test",
     title: t("Hypothesis Tests for Two Means: Paired-Sample T-Test", "双总体均值的假设检验：配对样本 T 检验"),
     summary: t(
-      "When the population variance of differences is unknown, testing H_0: μ_d = Δ_0 uses the paired t-statistic T = (d̄ - Δ_0) / (s_d / √n) with ν = n - 1 degrees of freedom.",
-      "当差值总体方差未知时，检验 H_0: μ_d = Δ_0 使用配对 t 统计量 T = (d̄ - Δ_0) / (s_d / √n)，自由度为 ν = n - 1。",
+      "When the variance of the differences is unknown, test $H_0: \\mu_d = \\Delta_0$ using $T = \\frac{\\bar{d} - \\Delta_0}{s_d / \\sqrt{n}}$ with $n - 1$ degrees of freedom.",
+      "当差值的方差未知时，用 $T = \\frac{\\bar{d} - \\Delta_0}{s_d / \\sqrt{n}}$（自由度 $n - 1$）检验 $H_0: \\mu_d = \\Delta_0$。",
     ),
     prerequisites: ["hypothesis-tests-for-two-means-paired-sample-z-test", "hypothesis-tests-for-one-mean-unknown-population-variance"],
     encompasses: [],
@@ -847,8 +847,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "hypothesis-tests-for-two-variances",
     title: t("Hypothesis Tests for Two Variances", "双总体方差的假设检验"),
     summary: t(
-      "To test H_0: σ_1^2 = σ_2^2 for two independent normal populations, the test statistic is F = s_1^2 / s_2^2, which follows an F-distribution with ν_1 = n_1 - 1 and ν_2 = n_2 - 1 degrees of freedom.",
-      "检验两个独立正态总体的方差齐性 H_0: σ_1^2 = σ_2^2 时，检验统计量为 F = s_1^2 / s_2^2，在 H_0 下服从自由度为 ν_1 = n_1 - 1 与 ν_2 = n_2 - 1 的 F 分布。",
+      "To test $H_0: \\sigma_1^2 = \\sigma_2^2$ for two independent normal populations, use $F = \\frac{s_1^2}{s_2^2}$, which follows $F(n_1 - 1, n_2 - 1)$ under $H_0$.",
+      "检验两个独立正态总体的 $H_0: \\sigma_1^2 = \\sigma_2^2$ 时，用 $F = \\frac{s_1^2}{s_2^2}$，在 $H_0$ 下服从 $F(n_1 - 1, n_2 - 1)$。",
     ),
     prerequisites: ["the-f-distribution", "hypothesis-tests-for-one-variance"],
     encompasses: [],
@@ -956,8 +956,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "the-relationship-between-ssw-ssb-sst",
     title: t("The Relationship Between SSW, SSB, SST", "SSW、SSB 与 SST 之间的关系"),
     summary: t(
-      "The total sum of squares partitions as SST = SSB + SSW. The corresponding degrees of freedom partition as df_T = df_B + df_W, where df_B = k - 1, df_W = N - k, and df_T = N - 1.",
-      "总平方和分解为 SST = SSB + SSW。相应的自由度分解为 df_T = df_B + df_W，其中 df_B = k - 1，df_W = N - k，且 df_T = N - 1。",
+      "The total sum of squares splits as $\\text{SST} = \\text{SSB} + \\text{SSW}$, and the degrees of freedom split the same way: $N - 1 = (k - 1) + (N - k)$.",
+      "总平方和分解为 $\\text{SST} = \\text{SSB} + \\text{SSW}$，自由度也同样分解：$N - 1 = (k - 1) + (N - k)$。",
     ),
     prerequisites: ["one-factor-within-groups-and-between-groups-variation"],
     encompasses: [],
@@ -1014,8 +1014,8 @@ export const probabilityAndStatisticsHypothesisTestingTopics: TopicDef[] = [
     id: "one-factor-analysis-of-variance",
     title: t("One-Factor Analysis of Variance", "单因素方差分析"),
     summary: t(
-      "To test equality of k treatment means H_0: μ_1 = μ_2 = ... = μ_k, the ANOVA F-statistic is F = MSB / MSW = (SSB / (k - 1)) / (SSW / (N - k)), which follows F(k - 1, N - k) under H_0.",
-      "检验 k 个处理均值是否相等 H_0: μ_1 = μ_2 = ... = μ_k 时，方差分析 F 统计量为 F = MSB / MSW = (SSB / (k - 1)) / (SSW / (N - k))，在 H_0 下服从 F(k - 1, N - k)。",
+      "To test $H_0: \\mu_1 = \\mu_2 = \\cdots = \\mu_k$, the ANOVA statistic $F = \\frac{\\text{MSB}}{\\text{MSW}} = \\frac{\\text{SSB}/(k - 1)}{\\text{SSW}/(N - k)}$ follows $F(k - 1, N - k)$ under $H_0$.",
+      "检验 $H_0: \\mu_1 = \\mu_2 = \\cdots = \\mu_k$ 时，方差分析统计量 $F = \\frac{\\text{MSB}}{\\text{MSW}} = \\frac{\\text{SSB}/(k - 1)}{\\text{SSW}/(N - k)}$ 在 $H_0$ 下服从 $F(k - 1, N - k)$。",
     ),
     prerequisites: ["the-relationship-between-ssw-ssb-sst", "the-f-distribution"],
     encompasses: [],

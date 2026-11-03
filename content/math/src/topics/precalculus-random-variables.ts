@@ -529,8 +529,8 @@ const theBinomialDistribution: TopicDef = {
   id: "the-binomial-distribution",
   title: t("The Binomial Distribution", "二项分布"),
   summary: t(
-    "Compute probabilities for a binomial random variable X ~ B(n, p) with the formula C(n, k)p^k(1 − p)^(n − k), combine them for events such as X ≤ 1 or X ≥ 1, and find its mean np and variance np(1 − p).",
-    "用公式 C(n, k)p^k(1 − p)^(n − k) 计算二项随机变量 X ~ B(n, p) 的概率，把它们组合起来求 X ≤ 1、X ≥ 1 等事件的概率，并求其均值 np 与方差 np(1 − p)。",
+    "Compute probabilities for a binomial random variable $X \\sim B(n, p)$ with the formula $\\binom{n}{k}p^k(1 - p)^{n-k}$, combine them for events such as $X \\le 1$ or $X \\ge 1$, and find its mean $np$ and variance $np(1 - p)$.",
+    "用公式 $\\binom{n}{k}p^k(1 - p)^{n-k}$ 计算二项随机变量 $X \\sim B(n, p)$ 的概率，把它们组合起来求 $X \\le 1$、$X \\ge 1$ 等事件的概率，并求其均值 $np$ 与方差 $np(1 - p)$。",
   ),
   prerequisites: [
     "combinations",
@@ -928,8 +928,8 @@ const theGeometricDistribution: TopicDef = {
   id: "the-geometric-distribution",
   title: t("The Geometric Distribution", "几何分布"),
   summary: t(
-    "Compute probabilities for a geometric random variable X ~ Geo(p), the number of independent trials up to and including the first success, including tail probabilities P(X > k) = (1 − p)^k, and find its mean 1/p.",
-    "计算几何随机变量 X ~ Geo(p)（独立重复试验中直到第一次成功为止的试验次数）的概率，包括尾部概率 P(X > k) = (1 − p)^k，并求其均值 1/p。",
+    "Compute probabilities for a geometric random variable $X \\sim \\text{Geo}(p)$, the number of independent trials up to and including the first success, including tail probabilities $P(X > k) = (1 - p)^k$, and find its mean $\\frac{1}{p}$.",
+    "计算几何随机变量 $X \\sim \\text{Geo}(p)$（独立重复试验中直到第一次成功为止的试验次数）的概率，包括尾部概率 $P(X > k) = (1 - p)^k$，并求其均值 $\\frac{1}{p}$。",
   ),
   prerequisites: ["the-binomial-distribution", "the-sum-of-the-first-n-terms-of-a-geometric-series"],
   encompasses: [

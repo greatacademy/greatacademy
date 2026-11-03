@@ -1200,7 +1200,10 @@ export const findingTheSumOfAnInfiniteGeometricSeries: TopicDef = {
 export const writingAnInfiniteGeometricSeriesInSigmaNotation: TopicDef = {
   id: "writing-an-infinite-geometric-series-in-sigma-notation",
   title: t("Writing an Infinite Geometric Series in Sigma Notation", "用求和符号表示无穷等比级数"),
-  summary: t("a + ar + ar² + ⋯ = Σ_{n=1}^∞ a·rⁿ⁻¹ = Σ_{n=0}^∞ a·rⁿ.", "a + ar + ar² + ⋯ = Σ_{n=1}^∞ a·rⁿ⁻¹ = Σ_{n=0}^∞ a·rⁿ。"),
+  summary: t(
+    "$a + ar + ar^2 + \\cdots = \\sum_{n=1}^{\\infty} ar^{n-1} = \\sum_{n=0}^{\\infty} ar^n$.",
+    "$a + ar + ar^2 + \\cdots = \\sum_{n=1}^{\\infty} ar^{n-1} = \\sum_{n=0}^{\\infty} ar^n$。",
+  ),
   prerequisites: ["finding-the-sum-of-an-infinite-geometric-series", "writing-geometric-series-in-sigma-notation"],
   encompasses: [{ topic: "writing-geometric-series-in-sigma-notation", weight: 0.4 }],
   xp: 10,

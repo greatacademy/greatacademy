@@ -3060,8 +3060,8 @@ export const newtonsMethodForMultivariableFunctions: TopicDef = {
   id: "newtons-method-for-multivariable-functions",
   title: t("Newton's Method for Multivariable Functions", "多元牛顿迭代法"),
   summary: t(
-    "Newton's method solves nonlinear systems F(x) = 0 iteratively using x_{n+1} = x_n - J(x_n)⁻¹ F(x_n).",
-    "多元牛顿迭代法利用迭代公式 x_{n+1} = x_n - J(x_n)⁻¹ F(x_n) 求解非线性方程组 F(x) = 0。",
+    "Newton's method solves a nonlinear system $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$ by iterating $\\mathbf{x}_{n+1} = \\mathbf{x}_n - J(\\mathbf{x}_n)^{-1}\\mathbf{F}(\\mathbf{x}_n)$.",
+    "多元牛顿法通过迭代 $\\mathbf{x}_{n+1} = \\mathbf{x}_n - J(\\mathbf{x}_n)^{-1}\\mathbf{F}(\\mathbf{x}_n)$ 求解非线性方程组 $\\mathbf{F}(\\mathbf{x}) = \\mathbf{0}$。",
   ),
   prerequisites: ["the-derivative-of-a-multivariable-function"],
   encompasses: [{ topic: "the-derivative-of-a-multivariable-function", weight: 0.3 }],
@@ -3124,8 +3124,8 @@ export const newtonsMethodForOptimizingMultivariableFunctions: TopicDef = {
   id: "newtons-method-for-optimizing-multivariable-functions",
   title: t("Newton's Method for Optimizing Multivariable Functions", "多元优化的牛顿迭代法"),
   summary: t(
-    "Newton's optimization method finds stationary points using the iteration x_{n+1} = x_n - H(x_n)⁻¹ ∇f(x_n).",
-    "用于优化的牛顿法利用迭代公式 x_{n+1} = x_n - H(x_n)⁻¹ ∇f(x_n) 寻找驻点。",
+    "Newton's method for optimization finds stationary points by iterating $\\mathbf{x}_{n+1} = \\mathbf{x}_n - H(\\mathbf{x}_n)^{-1}\\nabla f(\\mathbf{x}_n)$.",
+    "用于优化的牛顿法通过迭代 $\\mathbf{x}_{n+1} = \\mathbf{x}_n - H(\\mathbf{x}_n)^{-1}\\nabla f(\\mathbf{x}_n)$ 寻找驻点。",
   ),
   prerequisites: ["newtons-method-for-multivariable-functions", "the-second-derivative-of-a-multivariable-function"],
   encompasses: [{ topic: "newtons-method-for-multivariable-functions", weight: 0.3 }],

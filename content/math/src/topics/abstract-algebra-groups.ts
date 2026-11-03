@@ -707,8 +707,8 @@ export const realRationalAndComplexGroups: TopicDef = {
   id: "real-rational-and-complex-groups",
   title: t("Real, Rational, and Complex Groups", "实数、有理数与复数群"),
   summary: t(
-    "ℤ, ℚ, ℝ and ℂ are groups under addition, and ℚ*, ℝ* and ℂ* (the nonzero numbers) are groups under multiplication. Many subsets are groups too, such as the positive reals, the complex numbers of modulus 1, and the nth roots of unity under multiplication.",
-    "ℤ、ℚ、ℝ 与 ℂ 对加法构成群，ℚ*、ℝ* 与 ℂ*（非零数）对乘法构成群。许多子集也构成群，例如正实数、模为 1 的复数以及 n 次单位根对乘法构成群。",
+    "$\\mathbb{Z}$, $\\mathbb{Q}$, $\\mathbb{R}$ and $\\mathbb{C}$ are groups under addition, and $\\mathbb{Q}^*$, $\\mathbb{R}^*$ and $\\mathbb{C}^*$ (the nonzero numbers) are groups under multiplication. Many subsets are groups too, such as the positive reals, the complex numbers of modulus $1$, and the $n$th roots of unity under multiplication.",
+    "$\\mathbb{Z}$、$\\mathbb{Q}$、$\\mathbb{R}$ 与 $\\mathbb{C}$ 对加法构成群，$\\mathbb{Q}^*$、$\\mathbb{R}^*$ 与 $\\mathbb{C}^*$（非零数）对乘法构成群。许多子集也构成群，例如正实数、模为 $1$ 的复数以及 $n$ 次单位根对乘法构成群。",
   ),
   prerequisites: ["introduction-to-groups", "dividing-complex-numbers"],
   encompasses: [],

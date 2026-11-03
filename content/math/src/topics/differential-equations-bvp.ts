@@ -176,8 +176,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
     id: "eigenvalues-and-eigenfunctions-of-homogeneous-bvps",
     title: t("Eigenvalues and Eigenfunctions of Homogeneous BVPs", "齐次常微分方程边值问题的特征值与特征函数"),
     summary: t(
-      "The Sturm-Liouville problem y'' + lambda y = 0 with Dirichlet conditions y(0) = 0, y(pi) = 0 admits nontrivial solutions only for discrete eigenvalues lambda_n = n^2.",
-      "施图姆-刘维尔问题 y'' + lambda y = 0 在狄利克雷边界条件 y(0) = 0, y(pi) = 0 下，仅对离散特征值 lambda_n = n^2 存在非平凡解。",
+      "The Sturm-Liouville problem $y'' + \\lambda y = 0$ with $y(0) = 0$, $y(\\pi) = 0$ has nontrivial solutions only for the eigenvalues $\\lambda_n = n^2$.",
+      "施图姆-刘维尔问题 $y'' + \\lambda y = 0$，$y(0) = 0$，$y(\\pi) = 0$ 只在特征值 $\\lambda_n = n^2$ 时有非平凡解。",
     ),
     prerequisites: ["second-order-inhomogeneous-boundary-value-problems"],
     encompasses: [],
@@ -332,8 +332,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
     id: "fourier-sine-series",
     title: t("Fourier Sine Series", "正弦傅里叶级数"),
     summary: t(
-      "Odd periodic extensions on [-pi, pi] have Fourier expansions containing exclusively sine terms, with coefficients bn = (2/pi) integral_0^pi f(x) sin(nx) dx.",
-      "奇周期延拓的傅里叶级数仅包含正弦项，其系数公式为 bn = (2/pi) integral_0^pi f(x) sin(nx) dx。",
+      "The odd extension to $[-\\pi, \\pi]$ has a Fourier series of sines only, with $b_n = \\frac{2}{\\pi}\\int_0^{\\pi} f(x)\\sin nx\\,dx$.",
+      "奇延拓到 $[-\\pi, \\pi]$ 的傅里叶级数只含正弦项，系数为 $b_n = \\frac{2}{\\pi}\\int_0^{\\pi} f(x)\\sin nx\\,dx$。",
     ),
     prerequisites: ["properties-of-fourier-series"],
     encompasses: [],
@@ -382,8 +382,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
     id: "fourier-cosine-series",
     title: t("Fourier Cosine Series", "余弦傅里叶级数"),
     summary: t(
-      "Even periodic extensions on [-pi, pi] have Fourier expansions containing exclusively cosine terms, with an = (2/pi) integral_0^pi f(x) cos(nx) dx.",
-      "偶周期延拓的傅里叶级数仅包含余弦项，其系数公式为 an = (2/pi) integral_0^pi f(x) cos(nx) dx。",
+      "The even extension to $[-\\pi, \\pi]$ has a Fourier series of cosines only, with $a_n = \\frac{2}{\\pi}\\int_0^{\\pi} f(x)\\cos nx\\,dx$.",
+      "偶延拓到 $[-\\pi, \\pi]$ 的傅里叶级数只含余弦项，系数为 $a_n = \\frac{2}{\\pi}\\int_0^{\\pi} f(x)\\cos nx\\,dx$。",
     ),
     prerequisites: ["fourier-sine-series"],
     encompasses: [],
@@ -585,8 +585,8 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
     id: "solving-odes-using-fourier-series",
     title: t("Solving ODEs Using Fourier Series", "用傅里叶级数求解常微分方程"),
     summary: t(
-      "Driven linear ODEs y'' + omega0^2 y = F_n sin(nx) decouple under Fourier series into independent harmonic response amplitudes Y_n = F_n / (omega0^2 - n^2).",
-      "在周期外力驱动下，线性微分方程 y'' + omega0^2 y = F_n sin(nx) 在傅里叶级数下解耦为各谐波分量的独立振幅方程 Y_n = F_n / (omega0^2 - n^2)。",
+      "Under a Fourier series, the driven equation $y'' + \\omega_0^2 y = \\sum F_n \\sin nx$ splits into harmonics with amplitudes $Y_n = \\frac{F_n}{\\omega_0^2 - n^2}$.",
+      "借助傅里叶级数，受迫方程 $y'' + \\omega_0^2 y = \\sum F_n \\sin nx$ 分解为各谐波，振幅为 $Y_n = \\frac{F_n}{\\omega_0^2 - n^2}$。",
     ),
     prerequisites: ["differentiating-and-integrating-fourier-series"],
     encompasses: [],

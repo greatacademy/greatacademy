@@ -601,8 +601,8 @@ export const eulersFormula: TopicDef = {
   id: "eulers-formula",
   title: t("Euler's Formula", "欧拉公式"),
   summary: t(
-    "Use Euler's formula e^{iθ} = cos θ + i sin θ to write complex numbers in exponential form re^{iθ}, convert between exponential and rectangular form, and multiply, divide and raise to powers using the laws of exponents.",
-    "利用欧拉公式 e^{iθ} = cos θ + i sin θ 把复数写成指数形式 re^{iθ}，在指数形式与代数形式之间转换，并用指数运算法则进行乘、除与乘方。",
+    "Use Euler's formula $e^{i\\theta} = \\cos\\theta + i\\sin\\theta$ to write complex numbers in exponential form $re^{i\\theta}$, convert between exponential and rectangular form, and multiply, divide and raise to powers using the laws of exponents.",
+    "利用欧拉公式 $e^{i\\theta} = \\cos\\theta + i\\sin\\theta$ 把复数写成指数形式 $re^{i\\theta}$，在指数形式与代数形式之间转换，并用指数运算法则进行乘、除与乘方。",
   ),
   prerequisites: ["de-moivres-theorem"],
   encompasses: [
@@ -759,8 +759,8 @@ export const theRootsOfUnity: TopicDef = {
   id: "the-roots-of-unity",
   title: t("The Roots of Unity", "单位根"),
   summary: t(
-    "Find the n solutions of zⁿ = 1, the nth roots of unity e^{2πik/n} for k = 0, 1, …, n − 1, which lie equally spaced on the unit circle, and write them in rectangular form.",
-    "求方程 zⁿ = 1 的 n 个解，即 n 次单位根 e^{2πik/n}（k = 0, 1, …, n − 1），它们等间隔地分布在单位圆上，并把它们写成代数形式。",
+    "Find the $n$ solutions of $z^n = 1$, the $n$th roots of unity $e^{2\\pi ik/n}$ for $k = 0, 1, \\dots, n - 1$, which lie equally spaced on the unit circle, and write them in rectangular form.",
+    "求方程 $z^n = 1$ 的 $n$ 个解，即 $n$ 次单位根 $e^{2\\pi ik/n}$（$k = 0, 1, \\dots, n - 1$），它们等间隔地分布在单位圆上，并把它们写成代数形式。",
   ),
   prerequisites: ["finding-powers-of-complex-numbers-using-de-moivres-theorem", "eulers-formula"],
   encompasses: [
@@ -867,8 +867,8 @@ export const propertiesOfRootsOfUnity: TopicDef = {
   id: "properties-of-roots-of-unity",
   title: t("Properties of Roots of Unity", "单位根的性质"),
   summary: t(
-    "Use the properties of the nth roots of unity: every root is a power of ω = e^{2πi/n}, powers repeat with period n, conjugates and reciprocals are ω^{n−k}, the roots sum to 0, and 1 + ω + ω² = 0 for a cube root of unity ω ≠ 1.",
-    "运用 n 次单位根的性质：每个根都是 ω = e^{2πi/n} 的幂，幂以 n 为周期重复，共轭与倒数为 ω^{n−k}，所有根之和为 0，且对三次单位根 ω ≠ 1 有 1 + ω + ω² = 0。",
+    "Use the properties of the $n$th roots of unity: every root is a power of $\\omega = e^{2\\pi i/n}$, powers repeat with period $n$, the conjugate and reciprocal of $\\omega^k$ are $\\omega^{n-k}$, the roots sum to $0$, and $1 + \\omega + \\omega^2 = 0$ for a cube root of unity $\\omega \\ne 1$.",
+    "运用 $n$ 次单位根的性质：每个根都是 $\\omega = e^{2\\pi i/n}$ 的幂，幂以 $n$ 为周期重复，$\\omega^k$ 的共轭与倒数为 $\\omega^{n-k}$，所有根之和为 $0$，且对三次单位根 $\\omega \\ne 1$ 有 $1 + \\omega + \\omega^2 = 0$。",
   ),
   prerequisites: ["the-roots-of-unity"],
   encompasses: [{ topic: "the-roots-of-unity", weight: 0.5 }],
