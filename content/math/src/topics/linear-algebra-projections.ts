@@ -1,6 +1,6 @@
-import type { Problem, Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { Q, sketch } from "@ga/subject-math";
 
 import { article, choiceProblem, expressionProblem, numberProblem, pointProblem } from "../problems.ts";
 
@@ -631,6 +631,28 @@ export const cauchySchwarzInequalityAndAngleBetweenTwoVectors: TopicDef = {
   ],
 };
 
+/** orthogonalSumFigure shows orthogonal u and v placed head to tail, with u + v the hypotenuse of a right triangle. */
+const orthogonalSumFigure: Figure = {
+  svg: sketch([
+    { kind: "segment", a: [0, 0], b: [4, 0] },
+    { kind: "segment", a: [4, 0], b: [4, 3] },
+    { kind: "segment", a: [0, 0], b: [4, 3] },
+    { kind: "segment", a: [2.85, 0.15], b: [3.15, 0] },
+    { kind: "segment", a: [2.85, -0.15], b: [3.15, 0] },
+    { kind: "segment", a: [3.85, 2.1], b: [4, 2.4] },
+    { kind: "segment", a: [4.15, 2.1], b: [4, 2.4] },
+    { kind: "segment", a: [3.63, 2.91], b: [4, 3] },
+    { kind: "segment", a: [3.81, 2.67], b: [4, 3] },
+    { kind: "right", vertex: [4, 0], from: [0, 0], to: [4, 3] },
+    { kind: "side", a: [0, 0], b: [4, 0], text: "u" },
+    { kind: "side", a: [4, 0], b: [4, 3], text: "v" },
+    { kind: "side", a: [4, 3], b: [0, 0], text: "u + v" },
+  ]),
+  alt: t(
+    "Orthogonal vectors u and v placed head to tail form a right triangle whose hypotenuse is u + v, so |u + v|² = |u|² + |v|².",
+    "正交向量 u 与 v 首尾相接，构成一个以 u + v 为斜边的直角三角形，所以 |u + v|² = |u|² + |v|²。",
+  ),
+};
 /** pythagoreanTheoremAndTriangleInequalityInInnerProductSpaces covers the generalized Pythagorean theorem and triangle inequality. */
 export const pythagoreanTheoremAndTriangleInequalityInInnerProductSpaces: TopicDef = {
   id: "pythagorean-theorem-and-triangle-inequality-in-inner-product-spaces",
@@ -650,6 +672,7 @@ export const pythagoreanTheoremAndTriangleInequalityInInnerProductSpaces: TopicD
         "In an inner product space, if vectors $u$ and $v$ are orthogonal ($\\langle u, v \\rangle = 0$), then $|u + v|^2 = |u|^2 + |v|^2$. More generally, for scalars $a, b$, $|a u + b v|^2 = a^2 |u|^2 + b^2 |v|^2$.",
         "在内积空间中，若两向量 $u$ 与 $v$ 正交（$\\langle u, v \\rangle = 0$），则 $|u + v|^2 = |u|^2 + |v|^2$。更一般地，对于标量 $a, b$，有 $|a u + b v|^2 = a^2 |u|^2 + b^2 |v|^2$。",
       ),
+      figure: orthogonalSumFigure,
       generate: (rng: Rng): Problem => {
         const nu = rng.pick([2, 3, 4, 5, 6]);
         const nv = rng.pick([2, 3, 4, 5, 6]);
