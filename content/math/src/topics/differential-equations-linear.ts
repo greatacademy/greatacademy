@@ -1,7 +1,13 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly } from "@ga/subject-math";
-import { numberProblem, steps } from "../problems.ts";
+import { poly, Q } from "@ga/subject-math";
+import { choiceProblem, lowestTerms, numberProblem, steps, yesNo } from "../problems.ts";
+
+/** par wraps a negative number in parentheses for use as a factor. */
+const par = (n: number): string => (n < 0 ? `(${n})` : String(n));
+
+/** signed writes a number as a following term: "+ 3" or "- 3". */
+const signed = (n: number): string => (n < 0 ? `- ${-n}` : `+ ${n}`);
 
 // ---------------------------------------------------------------------------
 // 3.8 Theory of Solutions to Linear ODEs
@@ -59,6 +65,33 @@ export const differentialOperators: TopicDef = {
         });
       },
     },
+    {
+      id: "applying-an-operator-to-a-power",
+      title: t("Applying an operator to a power", "把算子作用于幂函数"),
+      explanation: t(
+        "A polynomial operator $P(D) = D^2 + aD + b$ acts term by term: differentiate twice, differentiate once and multiply by $a$, multiply by $b$, then add. On a power,\n\n$$(D^2 + aD + b)\\,x^n = n(n - 1)x^{n - 2} + anx^{n - 1} + bx^n.$$\n\nUnlike $e^{rx}$, a power does not come back as a multiple of itself, so each term has a different power of $x$ until you substitute a value.",
+        "多项式算子 $P(D) = D^2 + aD + b$ 逐项作用：求两次导，求一次导再乘 $a$，乘 $b$，然后相加。作用在幂函数上，\n\n$$(D^2 + aD + b)\\,x^n = n(n - 1)x^{n - 2} + anx^{n - 1} + bx^n.$$\n\n与 $e^{rx}$ 不同，幂函数不会变回自身的倍数，所以在代入数值之前，各项含有不同次数的 $x$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-6, 6) || 2;
+        const b = rng.int(-9, 9) || -3;
+        const n = rng.int(2, 5);
+        const x0 = rng.pick([1, -1, 2]);
+        const ans = n * (n - 1) * x0 ** (n - 2) + a * n * x0 ** (n - 1) + b * x0 ** n;
+        return numberProblem({
+          prompt: t(
+            `Let $D = \\frac{d}{dx}$. Find the value of $(${poly([1, "D^2"], [a, "D"], [b, ""])})\\,x^{${n}}$ at $x = ${x0}$.`,
+            `设 $D = \\frac{d}{dx}$。求 $(${poly([1, "D^2"], [a, "D"], [b, ""])})\\,x^{${n}}$ 在 $x = ${x0}$ 处的值。`,
+          ),
+          answer: ans,
+          wrong: [(n * n + a * n + b) * x0 ** n, a * n * x0 ** (n - 1) + b * x0 ** n, n * (n - 1) + a * n + b + 1],
+          solution: t(
+            `$(${poly([1, "D^2"], [a, "D"], [b, ""])})\\,x^{${n}} = ${poly([n * (n - 1), n === 2 ? "" : n === 3 ? "x" : `x^{${n - 2}}`], [a * n, n === 2 ? "x" : `x^{${n - 1}}`], [b, `x^{${n}}`])}$. At $x = ${x0}$ this is $${ans}$.`,
+            `$(${poly([1, "D^2"], [a, "D"], [b, ""])})\\,x^{${n}} = ${poly([n * (n - 1), n === 2 ? "" : n === 3 ? "x" : `x^{${n - 2}}`], [a * n, n === 2 ? "x" : `x^{${n - 1}}`], [b, `x^{${n}}`])}$。在 $x = ${x0}$ 处值为 $${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -109,6 +142,43 @@ export const linearDifferentialOperators: TopicDef = {
           solution,
           answer: ans,
           wrong: [b, ans + r1, ans - r2],
+        });
+      },
+    },
+    {
+      id: "recognizing-a-linear-operator",
+      title: t("Recognizing a linear operator", "判断算子是否线性"),
+      explanation: t(
+        "An operator $L$ is linear when $L[c_1y_1 + c_2y_2] = c_1L[y_1] + c_2L[y_2]$ for all functions and constants. Coefficients may depend on $x$, as in $x^2y'' + e^xy$, but the unknown $y$ and its derivatives must appear only to the first power and never inside another function. A product such as $yy'$, a power such as $y^2$, a function such as $\\sin y$, or an added constant breaks linearity; an added constant fails because $L[0] \\ne 0$.",
+        "若对所有函数和常数都有 $L[c_1y_1 + c_2y_2] = c_1L[y_1] + c_2L[y_2]$，则算子 $L$ 是线性的。系数可以依赖于 $x$，例如 $x^2y'' + e^xy$，但未知函数 $y$ 及其导数只能以一次方出现，且不能出现在其他函数里面。乘积 $yy'$、幂 $y^2$、函数 $\\sin y$ 或附加常数都会破坏线性；附加常数之所以不行，是因为 $L[0] \\ne 0$。",
+      ),
+      generate(rng: Rng): Problem {
+        const c = rng.int(2, 9);
+        const forms: readonly [string, boolean][] = [
+          [`y'' + ${c}xy`, true],
+          [`x^2y'' + ${c}e^xy`, true],
+          [`y'' + ${c}\\sin(x)\\,y'`, true],
+          [`${c}y''' - x^${c}y`, true],
+          [`y'' + ${c}y^2`, false],
+          [`y'' + ${c}yy'`, false],
+          [`y'' + ${c}\\sin y`, false],
+          [`y' + ${c}`, false],
+          [`(y')^2 + ${c}y`, false],
+          [`y'' + ${c}\\ln(x)\\,y`, true],
+        ];
+        const [form, lin] = rng.pick(forms);
+        return choiceProblem({
+          prompt: t(`Is the operator $L[y] = ${form}$ linear?`, `算子 $L[y] = ${form}$ 是线性的吗？`),
+          options: yesNo,
+          correct: lin ? 0 : 1,
+          solution: t(
+            lin
+              ? `Yes: $y$ and its derivatives appear only to the first power, multiplied by functions of $x$.`
+              : `No: $L[y] = ${form}$ contains a term that is not of first degree in $y$ and its derivatives, so $L[2y] \\ne 2L[y]$ in general.`,
+            lin
+              ? `是：$y$ 及其导数只以一次方出现，并乘以 $x$ 的函数。`
+              : `否：$L[y] = ${form}$ 含有关于 $y$ 及其导数不是一次的项，所以一般 $L[2y] \\ne 2L[y]$。`,
+          ),
         });
       },
     },
@@ -166,6 +236,33 @@ export const introductionToSecondOrderLinearOdes: TopicDef = {
         });
       },
     },
+    {
+      id: "the-interval-of-guaranteed-existence",
+      title: t("The interval of guaranteed existence", "保证解存在的区间"),
+      explanation: t(
+        "Divide $a_2(x)y'' + a_1(x)y' + a_0(x)y = g(x)$ by $a_2(x)$ to reach the standard form $y'' + p(x)y' + q(x)y = f(x)$. If $p$, $q$ and $f$ are continuous on an open interval containing $x_0$, the initial value problem with $y(x_0)$ and $y'(x_0)$ has a unique solution on that whole interval. So the interval runs from $x_0$ out to the nearest zeros of $a_2$ on either side.",
+        "把 $a_2(x)y'' + a_1(x)y' + a_0(x)y = g(x)$ 除以 $a_2(x)$，化为标准形式 $y'' + p(x)y' + q(x)y = f(x)$。若 $p$、$q$、$f$ 在包含 $x_0$ 的开区间上连续，则给定 $y(x_0)$ 与 $y'(x_0)$ 的初值问题在整个区间上有唯一解。所以区间从 $x_0$ 向两侧延伸到 $a_2$ 最近的零点。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-8, 2);
+        const b = a + rng.int(2, 9);
+        const x0 = rng.int(a + 1, b - 1);
+        const pad = (r: number) => (r < 0 ? `x + ${-r}` : r === 0 ? "x" : `x - ${r}`);
+        const lead = a === 0 ? `x(${pad(b)})` : `(${pad(a)})(${pad(b)})`;
+        return numberProblem({
+          prompt: t(
+            `Find the length of the largest open interval on which $${lead}y'' + xy' + y = 0$ with $y(${x0}) = 1$, $y'(${x0}) = 0$ is guaranteed a unique solution.`,
+            `对 $${lead}y'' + xy' + y = 0$，$y(${x0}) = 1$，$y'(${x0}) = 0$，求保证唯一解存在的最大开区间的长度。`,
+          ),
+          answer: b - a,
+          wrong: [b, x0 - a, b - x0, a + b],
+          solution: t(
+            `The leading coefficient vanishes at $x = ${a}$ and $x = ${b}$, and $x_0 = ${x0}$ lies between them. The interval is $(${a}, ${b})$, of length $${b - a}$.`,
+            `首项系数在 $x = ${a}$ 和 $x = ${b}$ 处为零，而 $x_0 = ${x0}$ 位于二者之间。区间为 $(${a}, ${b})$，长度为 $${b - a}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -215,6 +312,36 @@ export const theSuperpositionPrinciple: TopicDef = {
           solution,
           answer: ans,
           wrong: [A * B, ans + 1, Math.abs(A - B)],
+        });
+      },
+    },
+    {
+      id: "superposing-responses-to-separate-forcings",
+      title: t("Superposing responses to separate forcings", "叠加对不同强迫项的响应"),
+      explanation: t(
+        "If $L$ is linear, $L[y_1] = g_1$ and $L[y_2] = g_2$, then\n\n$$L[\\alpha y_1 + \\beta y_2] = \\alpha g_1 + \\beta g_2.$$\n\nSo a forcing built from pieces is answered by the same combination of the responses to the pieces. The coefficients carry over exactly, including their signs, and every value of the combined solution is the same combination of the values of $y_1$ and $y_2$.",
+        "若 $L$ 线性，$L[y_1] = g_1$，$L[y_2] = g_2$，则\n\n$$L[\\alpha y_1 + \\beta y_2] = \\alpha g_1 + \\beta g_2.$$\n\n所以由若干部分组成的强迫项，其响应就是各部分响应的同样组合。系数连同符号原样保留，组合解的每个值都是 $y_1$ 与 $y_2$ 相应值的同样组合。",
+      ),
+      generate(rng: Rng): Problem {
+        const c = rng.int(2, 9);
+        const r = rng.int(1, 3);
+        const al = rng.int(-5, 5) || 2;
+        const be = rng.int(-5, 5) || -3;
+        const p = Q.of(1, r * r + c);
+        const q = Q.of(1, c);
+        const ans = Q.of(al).mul(p).add(Q.of(be).mul(q));
+        const er = r === 1 ? "e^{x}" : `e^{${r}x}`;
+        return numberProblem({
+          prompt: t(
+            `For $L[y] = y'' + ${c}y$: $L[${er}] = ${r * r + c}${er}$ and $L[1] = ${c}$. Find the constant-plus-exponential solution $y_p$ of $L[y] = ${poly([al, er], [be, ""])}$ and give $y_p(0)$.`,
+            `对 $L[y] = y'' + ${c}y$：$L[${er}] = ${r * r + c}${er}$，$L[1] = ${c}$。求 $L[y] = ${poly([al, er], [be, ""])}$ 的“常数加指数”形式的解 $y_p$，并给出 $y_p(0)$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(al + be), Q.of(al * (r * r + c) + be * c), Q.of(al).mul(p).sub(Q.of(be).mul(q))],
+          solution: t(
+            `$y_p = ${poly([Q.of(al, r * r + c), er], [Q.of(be, c), ""])}$ by superposition, so $y_p(0) = ${ans.toLatex()}$.`,
+            `由叠加原理 $y_p = ${poly([Q.of(al, r * r + c), er], [Q.of(be, c), ""])}$，所以 $y_p(0) = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -271,6 +398,31 @@ export const reductionOfOrder: TopicDef = {
         });
       },
     },
+    {
+      id: "reduction-of-order-for-a-cauchy-euler-equation",
+      title: t("Reduction of order for a Cauchy-Euler equation", "柯西-欧拉方程的降阶法"),
+      explanation: t(
+        "Given one solution $y_1$ of $y'' + p(x)y' + q(x)y = 0$, substitute $y = uy_1$. The terms without derivatives of $u$ cancel, leaving a first-order equation for $u'$ with solution\n\n$$u' = \\frac{C}{y_1^2}\\,e^{-\\int p\\,dx}.$$\n\nFor $x^2y'' - bxy' + by = 0$ with $y_1 = x$, the standard form has $p = -\\frac{b}{x}$, so $e^{-\\int p\\,dx} = x^b$ and $u' = Cx^{b - 2}$.",
+        "已知 $y'' + p(x)y' + q(x)y = 0$ 的一个解 $y_1$，代入 $y = uy_1$。不含 $u$ 的导数的项相互抵消，剩下关于 $u'$ 的一阶方程，其解为\n\n$$u' = \\frac{C}{y_1^2}\\,e^{-\\int p\\,dx}.$$\n\n对 $x^2y'' - bxy' + by = 0$ 与 $y_1 = x$，标准形式中 $p = -\\frac{b}{x}$，所以 $e^{-\\int p\\,dx} = x^b$，$u' = Cx^{b - 2}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const b = rng.pick([-4, -3, -2, -1, 2, 3, 4, 5, 6, 7, 8]);
+        const lead = rng.int(1, 3);
+        const ans = b - 2;
+        return numberProblem({
+          prompt: t(
+            `$y_1 = x$ solves $${poly([lead, "x^2y''"], [-b * lead, "xy'"], [b * lead, "y"])} = 0$ for $x > 0$. Substituting $y = ux$ gives $u' = Cx^k$. Find $k$.`,
+            `$y_1 = x$ 是 $${poly([lead, "x^2y''"], [-b * lead, "xy'"], [b * lead, "y"])} = 0$（$x > 0$）的解。代入 $y = ux$ 得 $u' = Cx^k$。求 $k$。`,
+          ),
+          answer: ans,
+          wrong: [b, b - 1, -b - 2, b + 2],
+          solution: t(
+            `In standard form $p = ${Q.of(-b).toLatex()}/x$, so $e^{-\\int p\\,dx} = x^{${b}}$ and $u' = \\frac{C x^{${b}}}{x^2} = Cx^{${ans}}$.`,
+            `标准形式中 $p = ${Q.of(-b).toLatex()}/x$，所以 $e^{-\\int p\\,dx} = x^{${b}}$，$u' = \\frac{C x^{${b}}}{x^2} = Cx^{${ans}}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -321,6 +473,32 @@ export const linearIndependenceOfSolutionsToHomogeneousOdes: TopicDef = {
           solution,
           answer: ans,
           wrong: [omega * omega, 1, 0],
+        });
+      },
+    },
+    {
+      id: "the-wronskian-of-two-powers",
+      title: t("The Wronskian of two powers", "两个幂函数的朗斯基行列式"),
+      explanation: t(
+        "The Wronskian of $y_1$ and $y_2$ is $W = y_1y_2' - y_1'y_2$; if it is nonzero at one point of an interval, the functions are linearly independent there. For powers,\n\n$$W(x^m, x^n) = x^m \\cdot nx^{n - 1} - mx^{m - 1} \\cdot x^n = (n - m)x^{m + n - 1}.$$\n\nIt vanishes identically only when $m = n$, so different powers are always independent for $x > 0$.",
+        "$y_1$ 与 $y_2$ 的朗斯基行列式为 $W = y_1y_2' - y_1'y_2$；若它在区间内某一点不为零，则这两个函数在该区间上线性无关。对幂函数，\n\n$$W(x^m, x^n) = x^m \\cdot nx^{n - 1} - mx^{m - 1} \\cdot x^n = (n - m)x^{m + n - 1}.$$\n\n只有 $m = n$ 时它才恒为零，所以不同的幂函数在 $x > 0$ 上总是线性无关的。",
+      ),
+      generate(rng: Rng): Problem {
+        const m = rng.int(-2, 4);
+        const n = rng.pick([-3, -1, 1, 2, 3, 5, 6].filter((k) => k !== m));
+        const ans = Q.of(n - m).mul(Q.of(2).pow(m + n - 1));
+        const pw = (k: number) => (k === 1 ? "x" : k === 0 ? "1" : `x^{${k}}`);
+        return numberProblem({
+          prompt: t(
+            `Evaluate the Wronskian $W(${pw(m)}, ${pw(n)})$ at $x = 2$.`,
+            `求朗斯基行列式 $W(${pw(m)}, ${pw(n)})$ 在 $x = 2$ 处的值。`,
+          ),
+          answer: ans,
+          wrong: [ans.neg(), Q.of(n - m), Q.of(m - n).mul(Q.of(2).pow(m + n)), Q.of(n * m).mul(Q.of(2).pow(m + n - 1))],
+          solution: t(
+            `$W = (${n} - ${par(m)})x^{${m + n - 1}}$, so at $x = 2$: $${n - m} \\cdot 2^{${m + n - 1}} = ${ans.toLatex()}$.`,
+            `$W = (${n} - ${par(m)})x^{${m + n - 1}}$，所以在 $x = 2$ 处为 $${n - m} \\cdot 2^{${m + n - 1}} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -385,6 +563,42 @@ export const generalSolutionsOfLinearOdes: TopicDef = {
         });
       },
     },
+    {
+      id: "fitting-a-general-solution-with-a-particular-part",
+      title: t("Fitting a general solution with a particular part", "确定含特解部分的通解"),
+      explanation: t(
+        "The general solution of a linear inhomogeneous equation is $y = c_1y_1 + c_2y_2 + y_p$. The initial conditions apply to the whole of it, particular part included:\n\n$$c_1y_1(0) + c_2y_2(0) + y_p(0) = y(0), \\qquad c_1y_1'(0) + c_2y_2'(0) + y_p'(0) = y'(0).$$\n\nMove the known values of $y_p$ to the right before solving for the constants.",
+        "线性非齐次方程的通解为 $y = c_1y_1 + c_2y_2 + y_p$。初始条件作用于整个通解，包括特解部分：\n\n$$c_1y_1(0) + c_2y_2(0) + y_p(0) = y(0), \\qquad c_1y_1'(0) + c_2y_2'(0) + y_p'(0) = y'(0).$$\n\n先把 $y_p$ 的已知值移到右边，再求常数。",
+      ),
+      generate(rng: Rng): Problem {
+        const r1 = rng.int(-4, 3);
+        const r2 = r1 + rng.int(1, 3);
+        const k = rng.int(-4, 4) || 2;
+        const c1 = rng.int(-5, 5);
+        const c2 = rng.int(-5, 5) || 1;
+        const p = c1 + c2;
+        const q = r1 * c1 + r2 * c2 + k;
+        const e = (r: number) => (r === 0 ? "" : r === 1 ? "e^{x}" : r === -1 ? "e^{-x}" : `e^{${r}x}`);
+        return numberProblem({
+          prompt: t(
+            `The general solution of an equation is $y = c_1${e(r1)} + c_2${e(r2)} ${k < 0 ? "-" : "+"} ${Math.abs(k) === 1 ? "" : Math.abs(k)}x$. Find $c_2$ when $y(0) = ${p}$ and $y'(0) = ${q}$.`,
+            `某方程的通解为 $y = c_1${e(r1)} + c_2${e(r2)} ${k < 0 ? "-" : "+"} ${Math.abs(k) === 1 ? "" : Math.abs(k)}x$。当 $y(0) = ${p}$，$y'(0) = ${q}$ 时求 $c_2$。`,
+          ),
+          answer: c2,
+          wrong: [Q.of(q - r1 * p, r2 - r1), c1, -c2],
+          solution: t(
+            steps(
+              `$y(0) = c_1 + c_2 = ${p}$ and $y'(0) = ${poly([r1, "c_1"], [r2, "c_2"], [k, ""])} = ${q}$.`,
+              `Subtract $${par(r1)}$ times the first equation: $${poly([r2 - r1, "c_2"])} = ${q - k - r1 * p}$, so $c_2 = ${c2}$.`,
+            ),
+            steps(
+              `$y(0) = c_1 + c_2 = ${p}$，$y'(0) = ${poly([r1, "c_1"], [r2, "c_2"], [k, ""])} = ${q}$。`,
+              `减去第一式的 $${par(r1)}$ 倍：$${poly([r2 - r1, "c_2"])} = ${q - k - r1 * p}$，所以 $c_2 = ${c2}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -440,6 +654,34 @@ export const abelsIdentity: TopicDef = {
           solution,
           answer: ans,
           wrong: [a, -12, 12],
+        });
+      },
+    },
+    {
+      id: "abels-identity-with-a-variable-coefficient",
+      title: t("Abel's identity with a variable coefficient", "变系数情形的阿贝尔恒等式"),
+      explanation: t(
+        "For $y'' + p(x)y' + q(x)y = 0$, Abel's identity gives the Wronskian of any two solutions without finding them:\n\n$$W(x) = W(x_0)\\exp\\left(-\\int_{x_0}^{x} p(s)\\,ds\\right).$$\n\nWith $p(x) = \\frac{k}{x}$ on $x > 0$ the integral is $k\\ln\\frac{x}{x_0}$, so $W(x) = W(x_0)\\left(\\frac{x_0}{x}\\right)^{k}$. Bring the equation to standard form first, since $p$ is the coefficient of $y'$ after dividing by the coefficient of $y''$.",
+        "对 $y'' + p(x)y' + q(x)y = 0$，阿贝尔恒等式不求解就给出任意两个解的朗斯基行列式：\n\n$$W(x) = W(x_0)\\exp\\left(-\\int_{x_0}^{x} p(s)\\,ds\\right).$$\n\n当 $x > 0$ 上 $p(x) = \\frac{k}{x}$ 时，积分为 $k\\ln\\frac{x}{x_0}$，所以 $W(x) = W(x_0)\\left(\\frac{x_0}{x}\\right)^{k}$。要先化为标准形式，因为 $p$ 是除以 $y''$ 的系数之后 $y'$ 的系数。",
+      ),
+      generate(rng: Rng): Problem {
+        const lead = rng.int(1, 3);
+        const k = rng.pick([-3, -2, -1, 1, 2, 3]);
+        const w1 = rng.int(1, 8) * rng.pick([-1, 1]);
+        const qq = rng.int(-5, 5) || 1;
+        const ans = Q.of(w1).mul(Q.of(2).pow(-k));
+        const lx = lead === 1 ? "x" : `${lead}x`;
+        return numberProblem({
+          prompt: t(
+            `Two solutions of $${lx}y'' ${k * lead < 0 ? "-" : "+"} ${Math.abs(k * lead) === 1 ? "" : Math.abs(k * lead)}y' ${qq < 0 ? "-" : "+"} ${Math.abs(qq) === 1 ? "" : Math.abs(qq)}xy = 0$ on $x > 0$ have Wronskian $W(1) = ${w1}$. Find $W(2)$.`,
+            `$${lx}y'' ${k * lead < 0 ? "-" : "+"} ${Math.abs(k * lead) === 1 ? "" : Math.abs(k * lead)}y' ${qq < 0 ? "-" : "+"} ${Math.abs(qq) === 1 ? "" : Math.abs(qq)}xy = 0$ 在 $x > 0$ 上的两个解满足 $W(1) = ${w1}$。求 $W(2)$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(w1).mul(Q.of(2).pow(k)), Q.of(w1).mul(Q.of(2).pow(-k * lead)), Q.of(w1)],
+          solution: t(
+            `In standard form $p(x) = ${Q.of(k).toLatex()}/x$, so $W(2) = ${w1} \\cdot \\left(\\frac{1}{2}\\right)^{${k}} = ${ans.toLatex()}$.`,
+            `标准形式中 $p(x) = ${Q.of(k).toLatex()}/x$，所以 $W(2) = ${w1} \\cdot \\left(\\frac{1}{2}\\right)^{${k}} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -506,6 +748,43 @@ export const secondOrderHomogeneousOdesCharacteristicEquationsWithDistinctRealRo
         });
       },
     },
+    {
+      id: "solving-an-ivp-with-distinct-real-roots",
+      title: t("Solving an initial value problem with distinct real roots", "求解特征根为互异实根的初值问题"),
+      explanation: t(
+        "When the characteristic equation $r^2 + br + c = 0$ has distinct real roots $r_1$, $r_2$, the general solution is $y = c_1e^{r_1x} + c_2e^{r_2x}$. The initial conditions give\n\n$$c_1 + c_2 = y(0), \\qquad r_1c_1 + r_2c_2 = y'(0),$$\n\na two-by-two linear system for the constants.",
+        "当特征方程 $r^2 + br + c = 0$ 有互异实根 $r_1$、$r_2$ 时，通解为 $y = c_1e^{r_1x} + c_2e^{r_2x}$。初始条件给出\n\n$$c_1 + c_2 = y(0), \\qquad r_1c_1 + r_2c_2 = y'(0),$$\n\n这是关于两个常数的二元线性方程组。",
+      ),
+      generate(rng: Rng): Problem {
+        const r1 = rng.int(-5, 4);
+        const r2 = r1 + rng.int(1, 4);
+        const c1 = rng.int(-5, 5) || 3;
+        const c2 = rng.int(-5, 5) || -2;
+        const p = c1 + c2;
+        const q = r1 * c1 + r2 * c2;
+        const which = rng.int(1, 2);
+        const ans = which === 1 ? c1 : c2;
+        const e = (r: number) => (r === 0 ? "1" : r === 1 ? "e^{x}" : r === -1 ? "e^{-x}" : `e^{${r}x}`);
+        return numberProblem({
+          prompt: t(
+            `Solve $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = 0$ with $y(0) = ${p}$, $y'(0) = ${q}$. Find the coefficient of $${e(which === 1 ? r1 : r2)}$.`,
+            `解 $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = 0$，$y(0) = ${p}$，$y'(0) = ${q}$。求 $${e(which === 1 ? r1 : r2)}$ 的系数。`,
+          ),
+          answer: ans,
+          wrong: [which === 1 ? c2 : c1, -ans, p],
+          solution: t(
+            steps(
+              `The characteristic roots are $${r1}$ and $${r2}$, so $y = c_1${e(r1)} + c_2${e(r2)}$.`,
+              `$c_1 + c_2 = ${p}$ and $${poly([r1, "c_1"], [r2, "c_2"])} = ${q}$ give $c_1 = ${c1}$, $c_2 = ${c2}$.`,
+            ),
+            steps(
+              `特征根为 $${r1}$ 与 $${r2}$，所以 $y = c_1${e(r1)} + c_2${e(r2)}$。`,
+              `由 $c_1 + c_2 = ${p}$ 与 $${poly([r1, "c_1"], [r2, "c_2"])} = ${q}$ 得 $c_1 = ${c1}$，$c_2 = ${c2}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -557,6 +836,33 @@ export const secondOrderHomogeneousOdesCharacteristicEquationsWithRepeatedRoots:
           solution,
           answer: ans,
           wrong: [b, c, -a],
+        });
+      },
+    },
+    {
+      id: "solving-an-ivp-with-a-repeated-root",
+      title: t("Solving an initial value problem with a repeated root", "求解特征根为重根的初值问题"),
+      explanation: t(
+        "A repeated root $r$ gives the general solution $y = (c_1 + c_2x)e^{rx}$. At $x = 0$, $y(0) = c_1$, and differentiating,\n\n$$y'(0) = rc_1 + c_2, \\qquad c_2 = y'(0) - r\\,y(0).$$\n\nThe coefficient of $xe^{rx}$ is not $y'(0)$ itself: the derivative of $c_1e^{rx}$ also contributes.",
+        "重根 $r$ 给出通解 $y = (c_1 + c_2x)e^{rx}$。在 $x = 0$ 时 $y(0) = c_1$，求导得\n\n$$y'(0) = rc_1 + c_2, \\qquad c_2 = y'(0) - r\\,y(0).$$\n\n$xe^{rx}$ 的系数并不就是 $y'(0)$：$c_1e^{rx}$ 的导数也有贡献。",
+      ),
+      generate(rng: Rng): Problem {
+        const r = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
+        const p = rng.int(-5, 5) || 2;
+        const q = rng.int(-8, 8);
+        const ans = q - r * p;
+        const er = r === 1 ? "e^{x}" : r === -1 ? "e^{-x}" : `e^{${r}x}`;
+        return numberProblem({
+          prompt: t(
+            `Solve $${poly([1, "y''"], [-2 * r, "y'"], [r * r, "y"])} = 0$ with $y(0) = ${p}$, $y'(0) = ${q}$. Find the coefficient of $x${er}$.`,
+            `解 $${poly([1, "y''"], [-2 * r, "y'"], [r * r, "y"])} = 0$，$y(0) = ${p}$，$y'(0) = ${q}$。求 $x${er}$ 的系数。`,
+          ),
+          answer: ans,
+          wrong: [q, q + r * p, p],
+          solution: t(
+            `The root $r = ${r}$ is repeated, so $y = (c_1 + c_2x)${er}$ with $c_1 = ${p}$ and $c_2 = ${q} - ${par(r)} \\cdot ${par(p)} = ${ans}$.`,
+            `$r = ${r}$ 是重根，所以 $y = (c_1 + c_2x)${er}$，其中 $c_1 = ${p}$，$c_2 = ${q} - ${par(r)} \\cdot ${par(p)} = ${ans}$。`,
+          ),
         });
       },
     },
@@ -621,6 +927,35 @@ export const secondOrderHomogeneousOdesCharacteristicEquationsWithComplexRoots: 
         });
       },
     },
+    {
+      id: "solving-an-ivp-with-complex-roots",
+      title: t("Solving an initial value problem with complex roots", "求解特征根为复根的初值问题"),
+      explanation: t(
+        "Complex roots $\\alpha \\pm \\beta i$ give $y = e^{\\alpha x}(A\\cos \\beta x + B\\sin \\beta x)$. At $x = 0$, $y(0) = A$, and the product rule gives\n\n$$y'(0) = \\alpha A + \\beta B, \\qquad B = \\frac{y'(0) - \\alpha\\,y(0)}{\\beta}.$$\n\nThe growth factor $e^{\\alpha x}$ contributes to the derivative, so $B$ is not simply $y'(0)/\\beta$ unless $\\alpha = 0$.",
+        "复根 $\\alpha \\pm \\beta i$ 给出 $y = e^{\\alpha x}(A\\cos \\beta x + B\\sin \\beta x)$。在 $x = 0$ 时 $y(0) = A$，由乘积法则得\n\n$$y'(0) = \\alpha A + \\beta B, \\qquad B = \\frac{y'(0) - \\alpha\\,y(0)}{\\beta}.$$\n\n增长因子 $e^{\\alpha x}$ 对导数也有贡献，所以除非 $\\alpha = 0$，$B$ 并不简单地等于 $y'(0)/\\beta$。",
+      ),
+      generate(rng: Rng): Problem {
+        const al = rng.pick([-3, -2, -1, 1, 2, 3]);
+        const be = rng.int(1, 5);
+        const p = rng.int(-5, 5) || 1;
+        const q = rng.int(-8, 8);
+        const ans = Q.of(q - al * p, be);
+        const ea = al === 1 ? "e^{x}" : al === -1 ? "e^{-x}" : `e^{${al}x}`;
+        const bx = be === 1 ? "x" : `${be}x`;
+        return numberProblem({
+          prompt: t(
+            `Solve $${poly([1, "y''"], [-2 * al, "y'"], [al * al + be * be, "y"])} = 0$ with $y(0) = ${p}$, $y'(0) = ${q}$, written as $y = ${ea}(A\\cos ${bx} + B\\sin ${bx})$. Find $B$.`,
+            `解 $${poly([1, "y''"], [-2 * al, "y'"], [al * al + be * be, "y"])} = 0$，$y(0) = ${p}$，$y'(0) = ${q}$，写成 $y = ${ea}(A\\cos ${bx} + B\\sin ${bx})$。求 $B$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(q, be), Q.of(q + al * p, be), Q.of(q - al * p)],
+          solution: t(
+            `The roots are $${al} \\pm ${be === 1 ? "" : be}i$. $A = ${p}$ and $${al} \\cdot ${par(p)} + ${be}B = ${q}$, so $B = ${ans.toLatex()}$.`,
+            `特征根为 $${al} \\pm ${be === 1 ? "" : be}i$。$A = ${p}$，且 $${al} \\cdot ${par(p)} + ${be}B = ${q}$，所以 $B = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -682,6 +1017,52 @@ export const secondOrderHomogeneousInitialValueProblems: TopicDef = {
         });
       },
     },
+    {
+      id: "evaluating-the-solution-of-a-second-order-ivp",
+      title: t("Evaluating the solution of a second-order initial value problem", "求二阶初值问题的解在某点的值"),
+      explanation: t(
+        "Solving an initial value problem ends with a function you can evaluate. Find the characteristic roots, fit the constants to $y(0)$ and $y'(0)$, and substitute. At $x = \\ln 2$ the exponentials turn into powers of two,\n\n$$e^{r\\ln 2} = 2^r,$$\n\nso $y(\\ln 2) = c_1 2^{r_1} + c_2 2^{r_2}$ is an exact rational number.",
+        "解初值问题的结果是一个可以求值的函数。先求特征根，再用 $y(0)$ 与 $y'(0)$ 确定常数，最后代入。在 $x = \\ln 2$ 处指数变成 $2$ 的幂，\n\n$$e^{r\\ln 2} = 2^r,$$\n\n所以 $y(\\ln 2) = c_1 2^{r_1} + c_2 2^{r_2}$ 是一个精确的有理数。",
+      ),
+      generate(rng: Rng): Problem {
+        const r1 = rng.int(-3, 1);
+        const r2 = r1 + rng.int(1, 3);
+        const c1 = rng.int(-4, 4) || 2;
+        const c2 = rng.int(-4, 4) || 1;
+        const p = c1 + c2;
+        const q = r1 * c1 + r2 * c2;
+        const two = Q.of(2);
+        const ans = Q.of(c1)
+          .mul(two.pow(r1))
+          .add(Q.of(c2).mul(two.pow(r2)));
+        return numberProblem({
+          prompt: t(
+            `Solve $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = 0$ with $y(0) = ${p}$, $y'(0) = ${q}$, and find $y(\\ln 2)$.`,
+            `解 $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = 0$，$y(0) = ${p}$，$y'(0) = ${q}$，并求 $y(\\ln 2)$。`,
+          ),
+          answer: ans,
+          wrong: [
+            Q.of(c2)
+              .mul(two.pow(r1))
+              .add(Q.of(c1).mul(two.pow(r2))),
+            Q.of(c1)
+              .mul(two.pow(-r1))
+              .add(Q.of(c2).mul(two.pow(-r2))),
+            Q.of(p),
+          ],
+          solution: t(
+            steps(
+              `The roots are $${r1}$ and $${r2}$; from $c_1 + c_2 = ${p}$ and $${poly([r1, "c_1"], [r2, "c_2"])} = ${q}$ we get $c_1 = ${c1}$, $c_2 = ${c2}$.`,
+              `$y(\\ln 2) = ${c1} \\cdot 2^{${r1}} + ${par(c2)} \\cdot 2^{${r2}} = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `特征根为 $${r1}$ 与 $${r2}$；由 $c_1 + c_2 = ${p}$ 与 $${poly([r1, "c_1"], [r2, "c_2"])} = ${q}$ 得 $c_1 = ${c1}$，$c_2 = ${c2}$。`,
+              `$y(\\ln 2) = ${c1} \\cdot 2^{${r1}} + ${par(c2)} \\cdot 2^{${r2}} = ${ans.toLatex()}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -738,6 +1119,44 @@ export const secondOrderInhomogeneousOdesWithPolynomialForcing: TopicDef = {
           solution,
           answer: ans,
           wrong: [K, c, ans + b],
+        });
+      },
+    },
+    {
+      id: "polynomial-forcing-without-a-y-term",
+      title: t("Polynomial forcing without a y term", "缺少 y 项时的多项式强迫"),
+      explanation: t(
+        "If the equation has no $y$ term, as in $y'' + by' = mx + n$, then constants solve the homogeneous equation and a trial $Ax + B$ cannot work. Multiply the trial by $x$: $y_p = Ax^2 + Bx$. Then $y_p'' + by_p' = 2bAx + (2A + bB)$, and matching coefficients gives\n\n$$A = \\frac{m}{2b}, \\qquad B = \\frac{n - 2A}{b}.$$",
+        "若方程不含 $y$ 项，例如 $y'' + by' = mx + n$，则常数是齐次方程的解，试探解 $Ax + B$ 行不通。把试探解乘以 $x$：$y_p = Ax^2 + Bx$。于是 $y_p'' + by_p' = 2bAx + (2A + bB)$，比较系数得\n\n$$A = \\frac{m}{2b}, \\qquad B = \\frac{n - 2A}{b}.$$",
+      ),
+      generate(rng: Rng): Problem {
+        const b = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
+        const m = rng.int(-8, 8) || 4;
+        const n = rng.int(-8, 8);
+        const A = Q.of(m, 2 * b);
+        const B = Q.of(n)
+          .sub(A.mul(Q.of(2)))
+          .div(Q.of(b));
+        const askA = rng.int(0, 1) === 0;
+        return numberProblem({
+          prompt: t(
+            `Find the particular solution $y_p = Ax^2 + Bx$ of $${poly([1, "y''"], [b, "y'"])} = ${poly([m, "x"], [n, ""])}$ and give $${askA ? "A" : "B"}$.`,
+            `求 $${poly([1, "y''"], [b, "y'"])} = ${poly([m, "x"], [n, ""])}$ 形如 $y_p = Ax^2 + Bx$ 的特解，并给出 $${askA ? "A" : "B"}$。`,
+          ),
+          answer: askA ? A : B,
+          wrong: askA
+            ? [Q.of(m, b), A.neg(), Q.of(m, 2)]
+            : [
+                Q.of(n, b),
+                Q.of(n)
+                  .add(A.mul(Q.of(2)))
+                  .div(Q.of(b)),
+                B.neg(),
+              ],
+          solution: t(
+            `Substituting gives $${poly([2 * b, "Ax"])} + (2A ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}B) = ${poly([m, "x"], [n, ""])}$, so $A = ${A.toLatex()}$ and $B = ${B.toLatex()}$.`,
+            `代入得 $${poly([2 * b, "Ax"])} + (2A ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}B) = ${poly([m, "x"], [n, ""])}$，所以 $A = ${A.toLatex()}$，$B = ${B.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -804,6 +1223,33 @@ export const secondOrderInhomogeneousOdesWithExponentialForcing: TopicDef = {
         });
       },
     },
+    {
+      id: "exponential-forcing-at-a-characteristic-root",
+      title: t("Exponential forcing at a characteristic root", "强迫项指数等于特征根"),
+      explanation: t(
+        "For $y'' + by' + cy = ke^{rx}$ the trial $Ae^{rx}$ gives $A\\,P(r) = k$ with $P(r) = r^2 + br + c$. When $r$ is a simple root of $P$ this fails, because $e^{rx}$ solves the homogeneous equation. Use $y_p = Axe^{rx}$ instead; substituting leaves\n\n$$A\\,P'(r) = k, \\qquad A = \\frac{k}{2r + b}.$$",
+        "对 $y'' + by' + cy = ke^{rx}$，试探解 $Ae^{rx}$ 给出 $A\\,P(r) = k$，其中 $P(r) = r^2 + br + c$。当 $r$ 是 $P$ 的单根时这行不通，因为 $e^{rx}$ 是齐次方程的解。改用 $y_p = Axe^{rx}$；代入后剩下\n\n$$A\\,P'(r) = k, \\qquad A = \\frac{k}{2r + b}.$$",
+      ),
+      generate(rng: Rng): Problem {
+        const r = rng.pick([-3, -2, -1, 1, 2, 3]);
+        const s = rng.pick([-4, -2, -1, 0, 1, 3, 4].filter((v) => v !== r));
+        const k = rng.int(-9, 9) || 6;
+        const ans = Q.of(k, r - s);
+        const er = r === 1 ? "e^{x}" : r === -1 ? "e^{-x}" : `e^{${r}x}`;
+        return numberProblem({
+          prompt: t(
+            `Find $A$ in the particular solution $y_p = Ax${er}$ of $${poly([1, "y''"], [-(r + s), "y'"], [r * s, "y"])} = ${poly([k, er])}$.`,
+            `求 $${poly([1, "y''"], [-(r + s), "y'"], [r * s, "y"])} = ${poly([k, er])}$ 的特解 $y_p = Ax${er}$ 中的 $A$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(k, r + s || 7), Q.of(k, 2 * r), ans.neg()],
+          solution: t(
+            `$P(r) = ${poly([1, "r^2"], [-(r + s), "r"], [r * s, ""])}$ has the root $${r}$, and $P'(${r}) = ${2 * r} ${signed(-(r + s))} = ${r - s}$. So $A = \\frac{${k}}{${r - s}}${lowestTerms(k, r - s)}$.`,
+            `$P(r) = ${poly([1, "r^2"], [-(r + s), "r"], [r * s, ""])}$ 以 $${r}$ 为根，且 $P'(${r}) = ${2 * r} ${signed(-(r + s))} = ${r - s}$。所以 $A = \\frac{${k}}{${r - s}}${lowestTerms(k, r - s)}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -863,6 +1309,38 @@ export const secondOrderInhomogeneousOdesWithSinusoidalForcing: TopicDef = {
           solution,
           answer: ans,
           wrong: [F0, denom, ans * 2],
+        });
+      },
+    },
+    {
+      id: "the-sine-coefficient-under-damped-forcing",
+      title: t("The sine coefficient under damped forcing", "有阻尼时强迫响应的正弦系数"),
+      explanation: t(
+        "With a $y'$ term, a cosine forcing produces both a cosine and a sine. For $y'' + by' + cy = k\\cos \\omega x$, try $y_p = A\\cos \\omega x + B\\sin \\omega x$ and match the cosine and sine terms:\n\n$$(c - \\omega^2)A + b\\omega B = k, \\qquad -b\\omega A + (c - \\omega^2)B = 0.$$\n\nSolving, $A = \\frac{k(c - \\omega^2)}{(c - \\omega^2)^2 + b^2\\omega^2}$ and $B = \\frac{kb\\omega}{(c - \\omega^2)^2 + b^2\\omega^2}$.",
+        "有 $y'$ 项时，余弦强迫会同时产生余弦和正弦。对 $y'' + by' + cy = k\\cos \\omega x$，设 $y_p = A\\cos \\omega x + B\\sin \\omega x$，比较余弦项与正弦项：\n\n$$(c - \\omega^2)A + b\\omega B = k, \\qquad -b\\omega A + (c - \\omega^2)B = 0.$$\n\n解得 $A = \\frac{k(c - \\omega^2)}{(c - \\omega^2)^2 + b^2\\omega^2}$，$B = \\frac{kb\\omega}{(c - \\omega^2)^2 + b^2\\omega^2}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const b = rng.int(1, 4);
+        const w = rng.int(1, 3);
+        const c = rng.int(1, 12);
+        const k = rng.int(1, 9) * 5;
+        const d = c - w * w;
+        const den = d * d + b * b * w * w;
+        const askB = rng.int(0, 1) === 0;
+        const A = Q.of(k * d, den);
+        const B = Q.of(k * b * w, den);
+        const wx = w === 1 ? "x" : `${w}x`;
+        return numberProblem({
+          prompt: t(
+            `Find $${askB ? "B" : "A"}$ in the particular solution $y_p = A\\cos ${wx} + B\\sin ${wx}$ of $${poly([1, "y''"], [b, "y'"], [c, "y"])} = ${k}\\cos ${wx}$.`,
+            `求 $${poly([1, "y''"], [b, "y'"], [c, "y"])} = ${k}\\cos ${wx}$ 的特解 $y_p = A\\cos ${wx} + B\\sin ${wx}$ 中的 $${askB ? "B" : "A"}$。`,
+          ),
+          answer: askB ? B : A,
+          wrong: askB ? [A, B.neg(), Q.of(k, b * w)] : [B, d === 0 ? Q.of(k) : Q.of(k, d), A.neg()],
+          solution: t(
+            `Here $c - \\omega^2 = ${d}$ and $b\\omega = ${b * w}$, so the denominator is $${par(d)}^2 + ${b * w}^2 = ${den}$. Then $A = ${A.toLatex()}$ and $B = ${B.toLatex()}$.`,
+            `这里 $c - \\omega^2 = ${d}$，$b\\omega = ${b * w}$，所以分母为 $${par(d)}^2 + ${b * w}^2 = ${den}$。于是 $A = ${A.toLatex()}$，$B = ${B.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -938,6 +1416,52 @@ export const cauchyEulerEquationsCharacteristicEquationsWithDistinctRealRoots: T
         });
       },
     },
+    {
+      id: "evaluating-a-cauchy-euler-initial-value-problem",
+      title: t("Evaluating a Cauchy-Euler initial value problem", "求柯西-欧拉初值问题的解在某点的值"),
+      explanation: t(
+        "For $x^2y'' + axy' + by = 0$ the trial $y = x^m$ gives the indicial equation $m(m - 1) + am + b = 0$. With distinct real roots, $y = c_1x^{m_1} + c_2x^{m_2}$. Initial conditions are usually given at $x = 1$, where every power equals $1$:\n\n$$c_1 + c_2 = y(1), \\qquad m_1c_1 + m_2c_2 = y'(1).$$",
+        "对 $x^2y'' + axy' + by = 0$，试探解 $y = x^m$ 给出指标方程 $m(m - 1) + am + b = 0$。当它有互异实根时，$y = c_1x^{m_1} + c_2x^{m_2}$。初始条件通常在 $x = 1$ 处给出，那里每个幂都等于 $1$：\n\n$$c_1 + c_2 = y(1), \\qquad m_1c_1 + m_2c_2 = y'(1).$$",
+      ),
+      generate(rng: Rng): Problem {
+        const m1 = rng.int(-3, 1);
+        const m2 = m1 + rng.int(1, 3);
+        const c1 = rng.int(-4, 4) || 3;
+        const c2 = rng.int(-4, 4) || -1;
+        const a = 1 - m1 - m2;
+        const b = m1 * m2;
+        const p = c1 + c2;
+        const q = m1 * c1 + m2 * c2;
+        const two = Q.of(2);
+        const ans = Q.of(c1)
+          .mul(two.pow(m1))
+          .add(Q.of(c2).mul(two.pow(m2)));
+        return numberProblem({
+          prompt: t(
+            `Solve $${poly([1, "x^2y''"], [a, "xy'"], [b, "y"])} = 0$ for $x > 0$ with $y(1) = ${p}$, $y'(1) = ${q}$, and find $y(2)$.`,
+            `在 $x > 0$ 上解 $${poly([1, "x^2y''"], [a, "xy'"], [b, "y"])} = 0$，$y(1) = ${p}$，$y'(1) = ${q}$，并求 $y(2)$。`,
+          ),
+          answer: ans,
+          wrong: [
+            Q.of(c2)
+              .mul(two.pow(m1))
+              .add(Q.of(c1).mul(two.pow(m2))),
+            Q.of(p),
+            Q.of(c1 * 2 * m1 + c2 * 2 * m2),
+          ],
+          solution: t(
+            steps(
+              `The indicial equation $${poly([1, "m^2"], [a - 1, "m"], [b, ""])} = 0$ has roots $${m1}$ and $${m2}$.`,
+              `$c_1 + c_2 = ${p}$ and $${poly([m1, "c_1"], [m2, "c_2"])} = ${q}$ give $c_1 = ${c1}$, $c_2 = ${c2}$, so $y(2) = ${c1} \\cdot 2^{${m1}} + ${par(c2)} \\cdot 2^{${m2}} = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `指标方程 $${poly([1, "m^2"], [a - 1, "m"], [b, ""])} = 0$ 的根为 $${m1}$ 与 $${m2}$。`,
+              `由 $c_1 + c_2 = ${p}$ 与 $${poly([m1, "c_1"], [m2, "c_2"])} = ${q}$ 得 $c_1 = ${c1}$，$c_2 = ${c2}$，所以 $y(2) = ${c1} \\cdot 2^{${m1}} + ${par(c2)} \\cdot 2^{${m2}} = ${ans.toLatex()}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -998,6 +1522,33 @@ export const cauchyEulerEquationsCharacteristicEquationsWithRepeatedRoots: Topic
         });
       },
     },
+    {
+      id: "solving-a-cauchy-euler-ivp-with-a-repeated-root",
+      title: t("Solving a Cauchy-Euler initial value problem with a repeated root", "求解指标方程有重根的柯西-欧拉初值问题"),
+      explanation: t(
+        "A repeated indicial root $m$ gives $y = x^m(c_1 + c_2\\ln x)$. At $x = 1$, $\\ln 1 = 0$, so $y(1) = c_1$. Differentiating,\n\n$$y' = mx^{m - 1}(c_1 + c_2\\ln x) + c_2x^{m - 1}, \\qquad y'(1) = mc_1 + c_2.$$\n\nSo the coefficient of $x^m\\ln x$ is $c_2 = y'(1) - m\\,y(1)$. The logarithm plays the part that the extra factor $x$ plays for a repeated root of a constant-coefficient equation, because the substitution $x = e^t$ turns $\\ln x$ into $t$.",
+        "指标方程的重根 $m$ 给出 $y = x^m(c_1 + c_2\\ln x)$。在 $x = 1$ 处 $\\ln 1 = 0$，所以 $y(1) = c_1$。求导得\n\n$$y' = mx^{m - 1}(c_1 + c_2\\ln x) + c_2x^{m - 1}, \\qquad y'(1) = mc_1 + c_2.$$\n\n所以 $x^m\\ln x$ 的系数为 $c_2 = y'(1) - m\\,y(1)$。对数所起的作用，相当于常系数方程重根时多出的因子 $x$，因为代换 $x = e^t$ 把 $\\ln x$ 变成 $t$。",
+      ),
+      generate(rng: Rng): Problem {
+        const m = rng.pick([-3, -2, -1, 1, 2, 3, 4]);
+        const p = rng.int(-5, 5) || 2;
+        const q = rng.int(-8, 8);
+        const ans = q - m * p;
+        const xm = m === 1 ? "x" : `x^{${m}}`;
+        return numberProblem({
+          prompt: t(
+            `Solve $${poly([1, "x^2y''"], [1 - 2 * m, "xy'"], [m * m, "y"])} = 0$ for $x > 0$ with $y(1) = ${p}$, $y'(1) = ${q}$. Find the coefficient of $${xm}\\ln x$.`,
+            `在 $x > 0$ 上解 $${poly([1, "x^2y''"], [1 - 2 * m, "xy'"], [m * m, "y"])} = 0$，$y(1) = ${p}$，$y'(1) = ${q}$。求 $${xm}\\ln x$ 的系数。`,
+          ),
+          answer: ans,
+          wrong: [q, q + m * p, p],
+          solution: t(
+            `The indicial equation is $(m ${signed(-m)})^2 = 0$, so $y = ${xm}(c_1 + c_2\\ln x)$ with $c_1 = ${p}$ and $c_2 = ${q} - ${par(m)} \\cdot ${par(p)} = ${ans}$.`,
+            `指标方程为 $(m ${signed(-m)})^2 = 0$，所以 $y = ${xm}(c_1 + c_2\\ln x)$，其中 $c_1 = ${p}$，$c_2 = ${q} - ${par(m)} \\cdot ${par(p)} = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1054,6 +1605,35 @@ export const cauchyEulerEquationsCharacteristicEquationsWithComplexRoots: TopicD
           solution,
           answer: ans,
           wrong: [betaSq, Math.round(betaSq / 2), ans + 1],
+        });
+      },
+    },
+    {
+      id: "solving-a-cauchy-euler-ivp-with-complex-roots",
+      title: t("Solving a Cauchy-Euler initial value problem with complex roots", "求解指标方程有复根的柯西-欧拉初值问题"),
+      explanation: t(
+        "Complex indicial roots $\\alpha \\pm \\beta i$ give $y = x^{\\alpha}\\big(A\\cos(\\beta\\ln x) + B\\sin(\\beta\\ln x)\\big)$. At $x = 1$ the logarithm is $0$, so $y(1) = A$, and the chain rule gives\n\n$$y'(1) = \\alpha A + \\beta B, \\qquad B = \\frac{y'(1) - \\alpha\\,y(1)}{\\beta}.$$\n\nThe power $x^{\\alpha}$ contributes to the derivative just as $e^{\\alpha x}$ does for constant coefficients, so subtract its share before dividing by $\\beta$.",
+        "指标方程的复根 $\\alpha \\pm \\beta i$ 给出 $y = x^{\\alpha}\\big(A\\cos(\\beta\\ln x) + B\\sin(\\beta\\ln x)\\big)$。在 $x = 1$ 处对数为 $0$，所以 $y(1) = A$，由链式法则得\n\n$$y'(1) = \\alpha A + \\beta B, \\qquad B = \\frac{y'(1) - \\alpha\\,y(1)}{\\beta}.$$\n\n幂 $x^{\\alpha}$ 对导数的贡献，与常系数情形中 $e^{\\alpha x}$ 的贡献一样，所以要先减去这一部分，再除以 $\\beta$。",
+      ),
+      generate(rng: Rng): Problem {
+        const al = rng.int(-2, 3);
+        const be = rng.int(1, 4);
+        const p = rng.int(-5, 5) || 3;
+        const q = rng.int(-8, 8);
+        const ans = Q.of(q - al * p, be);
+        const xa = al === 0 ? "" : al === 1 ? "x" : `x^{${al}}`;
+        const bl = be === 1 ? "\\ln x" : `${be}\\ln x`;
+        return numberProblem({
+          prompt: t(
+            `Solve $${poly([1, "x^2y''"], [1 - 2 * al, "xy'"], [al * al + be * be, "y"])} = 0$ for $x > 0$ with $y(1) = ${p}$, $y'(1) = ${q}$, written as $y = ${xa}\\big(A\\cos(${bl}) + B\\sin(${bl})\\big)$. Find $B$.`,
+            `在 $x > 0$ 上解 $${poly([1, "x^2y''"], [1 - 2 * al, "xy'"], [al * al + be * be, "y"])} = 0$，$y(1) = ${p}$，$y'(1) = ${q}$，写成 $y = ${xa}\\big(A\\cos(${bl}) + B\\sin(${bl})\\big)$。求 $B$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(q, be), Q.of(q + al * p, be), Q.of(q - al * p)],
+          solution: t(
+            `The indicial roots are $${al} \\pm ${be === 1 ? "" : be}i$. $A = ${p}$ and $${al} \\cdot ${par(p)} + ${be}B = ${q}$, so $B = ${ans.toLatex()}$.`,
+            `指标根为 $${al} \\pm ${be === 1 ? "" : be}i$。$A = ${p}$，且 $${al} \\cdot ${par(p)} + ${be}B = ${q}$，所以 $B = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1119,6 +1699,38 @@ export const cauchyEulerEquationsWithForcing: TopicDef = {
         });
       },
     },
+    {
+      id: "a-power-particular-solution-of-a-cauchy-euler-equation",
+      title: t("A power particular solution of a Cauchy-Euler equation", "柯西-欧拉方程的幂函数特解"),
+      explanation: t(
+        "A Cauchy-Euler operator maps a power to a multiple of the same power:\n\n$$x^2(x^r)'' + ax(x^r)' + bx^r = \\big(r(r - 1) + ar + b\\big)x^r.$$\n\nSo for the forcing $kx^r$, the trial $y_p = Ax^r$ works directly with $A = \\frac{k}{r(r - 1) + ar + b}$, provided $r$ is not a root of the indicial equation.",
+        "柯西-欧拉算子把幂函数映为同一幂的倍数：\n\n$$x^2(x^r)'' + ax(x^r)' + bx^r = \\big(r(r - 1) + ar + b\\big)x^r.$$\n\n所以对强迫项 $kx^r$，只要 $r$ 不是指标方程的根，试探解 $y_p = Ax^r$ 直接可用，$A = \\frac{k}{r(r - 1) + ar + b}$。",
+      ),
+      generate(rng: Rng): Problem {
+        let [a, b, r, den] = [0, 0, 0, 0];
+        do {
+          a = rng.int(-5, 5);
+          b = rng.int(-8, 8);
+          r = rng.pick([-2, -1, 2, 3, 4]);
+          den = r * (r - 1) + a * r + b;
+        } while (den === 0);
+        const k = rng.int(-9, 9) || 4;
+        const ans = Q.of(k, den);
+        const xr = `x^{${r}}`;
+        return numberProblem({
+          prompt: t(
+            `Find $A$ in the particular solution $y_p = A${xr}$ of $${poly([1, "x^2y''"], [a, "xy'"], [b, "y"])} = ${poly([k, xr])}$.`,
+            `求 $${poly([1, "x^2y''"], [a, "xy'"], [b, "y"])} = ${poly([k, xr])}$ 的特解 $y_p = A${xr}$ 中的 $A$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(k, r * r + a * r + b || 11), Q.of(k, r * (r - 1) + a + b || 13), ans.neg()],
+          solution: t(
+            `Substituting gives $(${r * (r - 1)} ${signed(a * r)} ${signed(b)})A = ${k}$, so $A = \\frac{${k}}{${den}}${lowestTerms(k, den)}$.`,
+            `代入得 $(${r * (r - 1)} ${signed(a * r)} ${signed(b)})A = ${k}$，所以 $A = \\frac{${k}}{${den}}${lowestTerms(k, den)}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1174,6 +1786,35 @@ export const variationOfParametersForFirstOrderLinearOdes: TopicDef = {
           solution,
           answer: ans,
           wrong: [a * K, ans + a, Math.round(K / a)],
+        });
+      },
+    },
+    {
+      id: "variation-of-parameters-with-a-power-times-exponential",
+      title: t("Variation of parameters with a power times an exponential", "强迫项为幂乘指数时的参数变易法"),
+      explanation: t(
+        "For $y' + ay = g(x)$ the homogeneous solution is $e^{-ax}$. Setting $y = u(x)e^{-ax}$ cancels the $a$ term and leaves $u' = e^{ax}g(x)$. When $g(x) = kx^ne^{-ax}$ the exponentials cancel:\n\n$$u' = kx^n, \\qquad u = \\frac{k}{n + 1}x^{n + 1} + C.$$\n\nThe initial value fixes $C = y(0)$, and $y = \\left(C + \\frac{k}{n + 1}x^{n + 1}\\right)e^{-ax}$.",
+        "对 $y' + ay = g(x)$，齐次解为 $e^{-ax}$。设 $y = u(x)e^{-ax}$，$a$ 项抵消，剩下 $u' = e^{ax}g(x)$。当 $g(x) = kx^ne^{-ax}$ 时指数相消：\n\n$$u' = kx^n, \\qquad u = \\frac{k}{n + 1}x^{n + 1} + C.$$\n\n初值确定 $C = y(0)$，于是 $y = \\left(C + \\frac{k}{n + 1}x^{n + 1}\\right)e^{-ax}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.pick([-3, -2, -1, 1, 2, 3, 4]);
+        const n = rng.int(1, 4);
+        const k = rng.int(-9, 9) || 6;
+        const y0 = rng.int(-5, 5);
+        const ans = Q.of(k, n + 1);
+        const ea = a === 1 ? "e^{-x}" : a === -1 ? "e^{x}" : `e^{${-a}x}`;
+        const xn = n === 1 ? "x" : `x^{${n}}`;
+        return numberProblem({
+          prompt: t(
+            `Solve $${poly([1, "y'"], [a, "y"])} = ${poly([k, `${xn}${ea}`])}$ with $y(0) = ${y0}$ by setting $y = u(x)${ea}$. Find the coefficient of $x^{${n + 1}}${ea}$ in $y$.`,
+            `设 $y = u(x)${ea}$，解 $${poly([1, "y'"], [a, "y"])} = ${poly([k, `${xn}${ea}`])}$，$y(0) = ${y0}$。求 $y$ 中 $x^{${n + 1}}${ea}$ 的系数。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(k), Q.of(k, n), Q.of(k * (n + 1)), Q.of(y0 + k, n + 1)],
+          solution: t(
+            `$u' = ${poly([k, xn])}$, so $u = ${poly([ans, `x^{${n + 1}}`], [y0, ""])}$ and the coefficient is $${ans.toLatex()}$.`,
+            `$u' = ${poly([k, xn])}$，所以 $u = ${poly([ans, `x^{${n + 1}}`], [y0, ""])}$，系数为 $${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1235,6 +1876,37 @@ export const variationOfParametersForSecondOrderOdes: TopicDef = {
         });
       },
     },
+    {
+      id: "the-parameter-derivatives-for-exponential-solutions",
+      title: t("The parameter derivatives for exponential solutions", "指数解情形的参数导数"),
+      explanation: t(
+        "For $y'' + py' + qy = g$ with homogeneous solutions $y_1$, $y_2$, variation of parameters sets $y_p = u_1y_1 + u_2y_2$ with\n\n$$u_1' = -\\frac{y_2\\,g}{W}, \\qquad u_2' = \\frac{y_1\\,g}{W}, \\qquad W = y_1y_2' - y_1'y_2.$$\n\nFor $y_1 = e^{r_1x}$ and $y_2 = e^{r_2x}$, $W = (r_2 - r_1)e^{(r_1 + r_2)x}$, so with $g = ke^{sx}$ the parameter derivatives are again exponentials.",
+        "对 $y'' + py' + qy = g$，设齐次解为 $y_1$、$y_2$，参数变易法取 $y_p = u_1y_1 + u_2y_2$，其中\n\n$$u_1' = -\\frac{y_2\\,g}{W}, \\qquad u_2' = \\frac{y_1\\,g}{W}, \\qquad W = y_1y_2' - y_1'y_2.$$\n\n对 $y_1 = e^{r_1x}$，$y_2 = e^{r_2x}$，$W = (r_2 - r_1)e^{(r_1 + r_2)x}$，所以当 $g = ke^{sx}$ 时，参数导数仍是指数函数。",
+      ),
+      generate(rng: Rng): Problem {
+        const r1 = rng.int(-3, 2);
+        const r2 = r1 + rng.int(1, 3);
+        const s = rng.int(-3, 4);
+        const k = rng.int(-9, 9) || 4;
+        const first = rng.int(0, 1) === 0;
+        const ans = first ? Q.of(-k, r2 - r1) : Q.of(k, r2 - r1);
+        const e = (r: number) => (r === 0 ? "1" : r === 1 ? "e^{x}" : r === -1 ? "e^{-x}" : `e^{${r}x}`);
+        const g = s === 0 ? String(k) : poly([k, e(s)]);
+        const out = first ? s - r1 : s - r2;
+        return numberProblem({
+          prompt: t(
+            `For $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = ${g}$ take $y_1 = ${e(r1)}$, $y_2 = ${e(r2)}$. Then $u_${first ? 1 : 2}' = C${out === 0 ? "" : e(out)}$. Find $C$.`,
+            `对 $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = ${g}$ 取 $y_1 = ${e(r1)}$，$y_2 = ${e(r2)}$。则 $u_${first ? 1 : 2}' = C${out === 0 ? "" : e(out)}$。求 $C$。`,
+          ),
+          answer: ans,
+          wrong: [ans.neg(), Q.of(k), Q.of(k, r1 - r2 - 1)],
+          solution: t(
+            `$W = ${r2 - r1}${e(r1 + r2) === "1" ? "" : e(r1 + r2)}$, so $u_${first ? 1 : 2}' = ${first ? "-" : ""}\\frac{${first ? "y_2" : "y_1"} \\cdot ${g}}{W}$ and $C = ${ans.toLatex()}$.`,
+            `$W = ${r2 - r1}${e(r1 + r2) === "1" ? "" : e(r1 + r2)}$，所以 $u_${first ? 1 : 2}' = ${first ? "-" : ""}\\frac{${first ? "y_2" : "y_1"} \\cdot ${g}}{W}$，$C = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1283,6 +1955,33 @@ export const solvingSecondOrderOdesUsingVariationOfParameters: TopicDef = {
           solution,
           answer: ans,
           wrong: [k * k, 1, 0],
+        });
+      },
+    },
+    {
+      id: "the-particular-solution-for-secant-forcing",
+      title: t("The particular solution for secant forcing", "正割强迫项的特解"),
+      explanation: t(
+        "Undetermined coefficients cannot handle $\\sec \\omega x$, but variation of parameters can. For $y'' + \\omega^2y = k\\sec \\omega x$ take $y_1 = \\cos \\omega x$, $y_2 = \\sin \\omega x$, $W = \\omega$:\n\n$$u_1' = -\\frac{k}{\\omega}\\tan \\omega x, \\qquad u_2' = \\frac{k}{\\omega}.$$\n\nIntegrating, $u_1 = \\frac{k}{\\omega^2}\\ln|\\cos \\omega x|$ and $u_2 = \\frac{k}{\\omega}x$, so\n\n$$y_p = \\frac{k}{\\omega^2}\\cos \\omega x\\,\\ln|\\cos \\omega x| + \\frac{k}{\\omega}x\\sin \\omega x.$$\n\nThe logarithm comes from integrating the tangent, and the factor $x$ from integrating a constant. Both coefficients scale with $k$, but they are divided by different powers of $\\omega$.",
+        "待定系数法处理不了 $\\sec \\omega x$，参数变易法却可以。对 $y'' + \\omega^2y = k\\sec \\omega x$，取 $y_1 = \\cos \\omega x$，$y_2 = \\sin \\omega x$，$W = \\omega$：\n\n$$u_1' = -\\frac{k}{\\omega}\\tan \\omega x, \\qquad u_2' = \\frac{k}{\\omega}.$$\n\n积分得 $u_1 = \\frac{k}{\\omega^2}\\ln|\\cos \\omega x|$，$u_2 = \\frac{k}{\\omega}x$，所以\n\n$$y_p = \\frac{k}{\\omega^2}\\cos \\omega x\\,\\ln|\\cos \\omega x| + \\frac{k}{\\omega}x\\sin \\omega x.$$\n\n对数来自对正切的积分，因子 $x$ 来自对常数的积分。两个系数都与 $k$ 成正比，但分别除以 $\\omega$ 的不同次幂。",
+      ),
+      generate(rng: Rng): Problem {
+        const w = rng.int(1, 4);
+        const k = rng.int(1, 12) * rng.pick([-1, 1]);
+        const log = rng.int(0, 1) === 0;
+        const ans = log ? Q.of(k, w * w) : Q.of(k, w);
+        const wx = w === 1 ? "x" : `${w}x`;
+        return numberProblem({
+          prompt: t(
+            `Variation of parameters gives a particular solution of $y'' + ${w * w === 1 ? "" : w * w}y = ${poly([k, `\\sec ${wx}`])}$ as a combination of $\\cos ${wx}\\,\\ln|\\cos ${wx}|$ and $x\\sin ${wx}$. Find the coefficient of $${log ? `\\cos ${wx}\\,\\ln|\\cos ${wx}|` : `x\\sin ${wx}`}$.`,
+            `参数变易法给出 $y'' + ${w * w === 1 ? "" : w * w}y = ${poly([k, `\\sec ${wx}`])}$ 的一个特解，它是 $\\cos ${wx}\\,\\ln|\\cos ${wx}|$ 与 $x\\sin ${wx}$ 的组合。求 $${log ? `\\cos ${wx}\\,\\ln|\\cos ${wx}|` : `x\\sin ${wx}`}$ 的系数。`,
+          ),
+          answer: ans,
+          wrong: log ? [Q.of(k, w), Q.of(-k, w * w), Q.of(k)] : [Q.of(k, w * w), Q.of(-k, w), Q.of(k * w)],
+          solution: t(
+            `$W = ${w}$, $u_1' = ${Q.of(-k, w).toLatex()}\\tan ${wx}$ and $u_2' = ${Q.of(k, w).toLatex()}$, so $u_1 = ${Q.of(k, w * w).toLatex()}\\ln|\\cos ${wx}|$ and $u_2 = ${Q.of(k, w).toLatex()}x$. The coefficient is $${ans.toLatex()}$.`,
+            `$W = ${w}$，$u_1' = ${Q.of(-k, w).toLatex()}\\tan ${wx}$，$u_2' = ${Q.of(k, w).toLatex()}$，所以 $u_1 = ${Q.of(k, w * w).toLatex()}\\ln|\\cos ${wx}|$，$u_2 = ${Q.of(k, w).toLatex()}x$。系数为 $${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -1339,6 +2038,33 @@ export const variationOfParametersWithHigherOrderOdes: TopicDef = {
           solution,
           answer: ans,
           wrong: [k, k * k, ans + 2],
+        });
+      },
+    },
+    {
+      id: "the-wronskian-of-three-exponentials",
+      title: t("The Wronskian of three exponentials", "三个指数函数的朗斯基行列式"),
+      explanation: t(
+        "Variation of parameters for a third-order equation divides by the Wronskian $W(y_1, y_2, y_3)$, the determinant of the functions and their first two derivatives. For $e^{ax}$, $e^{bx}$, $e^{cx}$ at $x = 0$ the rows are $(1, 1, 1)$, $(a, b, c)$ and $(a^2, b^2, c^2)$, a Vandermonde determinant:\n\n$$W(0) = (b - a)(c - a)(c - b).$$\n\nIt is nonzero exactly when the three rates are distinct.",
+        "三阶方程的参数变易法要除以朗斯基行列式 $W(y_1, y_2, y_3)$，即由函数及其一阶、二阶导数组成的行列式。对 $e^{ax}$、$e^{bx}$、$e^{cx}$，在 $x = 0$ 处各行为 $(1, 1, 1)$、$(a, b, c)$、$(a^2, b^2, c^2)$，这是范德蒙德行列式：\n\n$$W(0) = (b - a)(c - a)(c - b).$$\n\n它不为零当且仅当三个速率互不相同。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-3, 1);
+        const b = a + rng.int(1, 3);
+        const c = b + rng.int(1, 3);
+        const ans = (b - a) * (c - a) * (c - b);
+        const e = (r: number) => (r === 0 ? "1" : r === 1 ? "e^{x}" : r === -1 ? "e^{-x}" : `e^{${r}x}`);
+        return numberProblem({
+          prompt: t(
+            `Evaluate the Wronskian $W(${e(a)}, ${e(b)}, ${e(c)})$ at $x = 0$.`,
+            `求朗斯基行列式 $W(${e(a)}, ${e(b)}, ${e(c)})$ 在 $x = 0$ 处的值。`,
+          ),
+          answer: ans,
+          wrong: [-ans, (b - a) * (c - b), a * b * c, b - a + (c - a) + (c - b)],
+          solution: t(
+            `The rows at $0$ are $(1, 1, 1)$, $(${a}, ${b}, ${c})$, $(${a * a}, ${b * b}, ${c * c})$, so $W(0) = (${b} - ${par(a)})(${c} - ${par(a)})(${c} - ${par(b)}) = ${ans}$.`,
+            `在 $0$ 处各行为 $(1, 1, 1)$、$(${a}, ${b}, ${c})$、$(${a * a}, ${b * b}, ${c * c})$，所以 $W(0) = (${b} - ${par(a)})(${c} - ${par(a)})(${c} - ${par(b)}) = ${ans}$。`,
+          ),
         });
       },
     },
@@ -1404,6 +2130,40 @@ export const simpleHarmonicOscillators: TopicDef = {
         });
       },
     },
+    {
+      id: "the-amplitude-from-initial-conditions",
+      title: t("The amplitude from initial conditions", "由初始条件求振幅"),
+      explanation: t(
+        "The solution of $y'' + \\omega^2y = 0$ with $y(0) = y_0$ and $y'(0) = v_0$ is $y = y_0\\cos \\omega t + \\frac{v_0}{\\omega}\\sin \\omega t$. Written as one cosine $R\\cos(\\omega t - \\delta)$, its amplitude is\n\n$$R = \\sqrt{y_0^2 + \\left(\\frac{v_0}{\\omega}\\right)^2}.$$\n\nThe initial velocity is divided by $\\omega$ before it is combined with the initial displacement.",
+        "$y'' + \\omega^2y = 0$ 满足 $y(0) = y_0$，$y'(0) = v_0$ 的解为 $y = y_0\\cos \\omega t + \\frac{v_0}{\\omega}\\sin \\omega t$。写成单个余弦 $R\\cos(\\omega t - \\delta)$，振幅为\n\n$$R = \\sqrt{y_0^2 + \\left(\\frac{v_0}{\\omega}\\right)^2}.$$\n\n初速度要先除以 $\\omega$，再与初位移合成。",
+      ),
+      generate(rng: Rng): Problem {
+        const [u, v, R] = rng.pick([
+          [3, 4, 5],
+          [4, 3, 5],
+          [5, 12, 13],
+          [12, 5, 13],
+          [6, 8, 10],
+          [8, 6, 10],
+          [8, 15, 17],
+        ] as const);
+        const w = rng.int(1, 5);
+        const y0 = u * rng.pick([-1, 1]);
+        const v0 = v * w * rng.pick([-1, 1]);
+        return numberProblem({
+          prompt: t(
+            `A spring satisfies $y'' + ${w * w === 1 ? "" : w * w}y = 0$ with $y(0) = ${y0}$ and $y'(0) = ${v0}$. Find the amplitude of the motion.`,
+            `弹簧满足 $y'' + ${w * w === 1 ? "" : w * w}y = 0$，$y(0) = ${y0}$，$y'(0) = ${v0}$。求运动的振幅。`,
+          ),
+          answer: R,
+          wrong: [u + v, Math.abs(y0) + Math.abs(v0), ...(w === 1 ? [] : [Math.round(Math.sqrt(u * u + v0 * v0))])],
+          solution: t(
+            `$\\omega = ${w}$, so $R = \\sqrt{${par(y0)}^2 + \\left(\\frac{${v0}}{${w}}\\right)^2} = \\sqrt{${u * u} + ${v * v}} = ${R}$.`,
+            `$\\omega = ${w}$，所以 $R = \\sqrt{${par(y0)}^2 + \\left(\\frac{${v0}}{${w}}\\right)^2} = \\sqrt{${u * u} + ${v * v}} = ${R}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1454,6 +2214,40 @@ export const dampedOscillators: TopicDef = {
           solution,
           answer: ans,
           wrong: [p, 4 * p, springK],
+        });
+      },
+    },
+    {
+      id: "classifying-the-damping-of-an-oscillator",
+      title: t("Classifying the damping of an oscillator", "判别振子的阻尼类型"),
+      explanation: t(
+        "For $my'' + cy' + ky = 0$ the characteristic roots are $\\frac{-c \\pm \\sqrt{c^2 - 4mk}}{2m}$, so the discriminant $c^2 - 4mk$ decides the motion. If it is negative the system is underdamped and oscillates with decaying amplitude. If it is zero the system is critically damped, and if it is positive it is overdamped; in both of these cases it returns to rest without oscillating.",
+        "对 $my'' + cy' + ky = 0$，特征根为 $\\frac{-c \\pm \\sqrt{c^2 - 4mk}}{2m}$，所以判别式 $c^2 - 4mk$ 决定运动类型。若它为负，系统欠阻尼，振幅衰减地振荡。若它为零，系统临界阻尼；若为正，系统过阻尼；后两种情形下系统都不振荡地回到静止。",
+      ),
+      generate(rng: Rng): Problem {
+        const m = rng.int(1, 5);
+        const kind = rng.int(0, 2);
+        const r = rng.int(1, 6);
+        const k = kind === 1 ? m * r * r : rng.int(2, 40);
+        const c =
+          kind === 1
+            ? 2 * m * r
+            : kind === 0
+              ? rng.int(1, Math.max(1, Math.ceil(2 * Math.sqrt(m * k)) - 1))
+              : Math.floor(2 * Math.sqrt(m * k)) + rng.int(1, 6);
+        const disc = c * c - 4 * m * k;
+        const correct = disc < 0 ? 0 : disc === 0 ? 1 : 2;
+        return choiceProblem({
+          prompt: t(
+            `A mass of $${m}\\text{ kg}$ on a spring with $k = ${k}\\text{ N/m}$ has damping $c = ${c}\\text{ N}\\cdot\\text{s/m}$. Classify the damping.`,
+            `质量为 $${m}\\text{ kg}$ 的物体挂在 $k = ${k}\\text{ N/m}$ 的弹簧上，阻尼 $c = ${c}\\text{ N}\\cdot\\text{s/m}$。判断阻尼类型。`,
+          ),
+          options: [t("Underdamped", "欠阻尼"), t("Critically damped", "临界阻尼"), t("Overdamped", "过阻尼")],
+          correct,
+          solution: t(
+            `$c^2 - 4mk = ${c * c} - ${4 * m * k} = ${disc}$, which is ${disc < 0 ? "negative: underdamped" : disc === 0 ? "zero: critically damped" : "positive: overdamped"}.`,
+            `$c^2 - 4mk = ${c * c} - ${4 * m * k} = ${disc}$，${disc < 0 ? "为负：欠阻尼" : disc === 0 ? "为零：临界阻尼" : "为正：过阻尼"}。`,
+          ),
         });
       },
     },
@@ -1508,6 +2302,42 @@ export const forcedOscillators: TopicDef = {
           solution,
           answer: ans,
           wrong: [c, c * 2, 25],
+        });
+      },
+    },
+    {
+      id: "the-steady-state-amplitude-of-a-forced-oscillator",
+      title: t("The steady-state amplitude of a forced oscillator", "受迫振子的稳态振幅"),
+      explanation: t(
+        "For $y'' + cy' + ky = F\\cos \\omega t$ with $c > 0$ the transient dies out and the motion settles into the steady state $A\\cos \\omega t + B\\sin \\omega t$. Its amplitude is\n\n$$\\sqrt{A^2 + B^2} = \\frac{F}{\\sqrt{(k - \\omega^2)^2 + c^2\\omega^2}}.$$\n\nThe denominator combines the mismatch $k - \\omega^2$ between the natural and the driving frequency with the damping term $c\\omega$.",
+        "对 $y'' + cy' + ky = F\\cos \\omega t$（$c > 0$），暂态消失，运动趋于稳态 $A\\cos \\omega t + B\\sin \\omega t$。其振幅为\n\n$$\\sqrt{A^2 + B^2} = \\frac{F}{\\sqrt{(k - \\omega^2)^2 + c^2\\omega^2}}.$$\n\n分母把固有频率与驱动频率的失配 $k - \\omega^2$ 和阻尼项 $c\\omega$ 结合在一起。",
+      ),
+      generate(rng: Rng): Problem {
+        const w = rng.int(1, 4);
+        const u = rng.int(1, 2);
+        const [p0, q] = rng.pick([
+          [3, 4],
+          [4, 3],
+          [-3, 4],
+          [-4, 3],
+        ] as const);
+        const p = w * w + p0 * w * u > 0 ? p0 : -p0;
+        const c = q * u;
+        const k = w * w + p * w * u;
+        const F = rng.int(1, 12) * 5;
+        const ans = Q.of(F, 5 * w * u);
+        const wt = w === 1 ? "t" : `${w}t`;
+        return numberProblem({
+          prompt: t(
+            `Find the steady-state amplitude of $${poly([1, "y''"], [c, "y'"], [k, "y"])} = ${F}\\cos ${wt}$.`,
+            `求 $${poly([1, "y''"], [c, "y'"], [k, "y"])} = ${F}\\cos ${wt}$ 的稳态振幅。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(F, Math.abs(k - w * w) + c * w), Q.of(F, k), Q.of(F, 25 * w * w * u * u)],
+          solution: t(
+            `$k - \\omega^2 = ${k - w * w}$ and $c\\omega = ${c * w}$, so the amplitude is $\\frac{${F}}{\\sqrt{${(k - w * w) ** 2} + ${(c * w) ** 2}}} = \\frac{${F}}{${5 * w * u}}${lowestTerms(F, 5 * w * u)}$.`,
+            `$k - \\omega^2 = ${k - w * w}$，$c\\omega = ${c * w}$，所以振幅为 $\\frac{${F}}{\\sqrt{${(k - w * w) ** 2} + ${(c * w) ** 2}}} = \\frac{${F}}{${5 * w * u}}${lowestTerms(F, 5 * w * u)}$。`,
+          ),
         });
       },
     },
@@ -1566,6 +2396,33 @@ export const resonanceInVibratingSystems: TopicDef = {
         });
       },
     },
+    {
+      id: "the-practical-resonance-frequency",
+      title: t("The practical resonance frequency", "实际共振频率"),
+      explanation: t(
+        "With damping, the steady-state amplitude $\\frac{F}{\\sqrt{(k - \\omega^2)^2 + c^2\\omega^2}}$ of $y'' + cy' + ky = F\\cos \\omega t$ stays finite. It is largest where the expression under the root is smallest; differentiating in $\\omega^2$ gives\n\n$$\\omega_r^2 = k - \\frac{c^2}{2},$$\n\nwhen this is positive. The peak sits below the natural frequency $\\sqrt{k}$, and with heavy damping ($c^2 \\ge 2k$) there is no resonance peak at all.",
+        "有阻尼时，$y'' + cy' + ky = F\\cos \\omega t$ 的稳态振幅 $\\frac{F}{\\sqrt{(k - \\omega^2)^2 + c^2\\omega^2}}$ 保持有限。根号下的式子最小时振幅最大；对 $\\omega^2$ 求导得\n\n$$\\omega_r^2 = k - \\frac{c^2}{2},$$\n\n前提是它为正。峰值位于固有频率 $\\sqrt{k}$ 之下；阻尼很大（$c^2 \\ge 2k$）时根本没有共振峰。",
+      ),
+      generate(rng: Rng): Problem {
+        const wr = rng.int(1, 7);
+        const v = rng.int(1, 4);
+        const c = 2 * v;
+        const k = wr * wr + 2 * v * v;
+        const F = rng.int(2, 9);
+        return numberProblem({
+          prompt: t(
+            `For $${poly([1, "y''"], [c, "y'"], [k, "y"])} = ${F}\\cos \\omega t$, find the driving frequency $\\omega > 0$ that maximizes the steady-state amplitude.`,
+            `对 $${poly([1, "y''"], [c, "y'"], [k, "y"])} = ${F}\\cos \\omega t$，求使稳态振幅最大的驱动频率 $\\omega > 0$。`,
+          ),
+          answer: wr,
+          wrong: [wr * wr, ...(Number.isInteger(Math.sqrt(k)) ? [Math.sqrt(k)] : []), k - c],
+          solution: t(
+            `$\\omega_r^2 = ${k} - \\frac{${c}^2}{2} = ${k} - ${2 * v * v} = ${wr * wr}$, so $\\omega_r = ${wr}$.`,
+            `$\\omega_r^2 = ${k} - \\frac{${c}^2}{2} = ${k} - ${2 * v * v} = ${wr * wr}$，所以 $\\omega_r = ${wr}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -1615,6 +2472,34 @@ export const modelingCapacitorChargeInRclCircuitsWithSecondOrderOdes: TopicDef =
           solution,
           answer: ans,
           wrong: [omega0Sq, ans * 2, Math.round(omega0 / 2)],
+        });
+      },
+    },
+    {
+      id: "the-damped-frequency-of-capacitor-charge",
+      title: t("The damped frequency of capacitor charge", "电容电荷的阻尼振荡频率"),
+      explanation: t(
+        "The charge in a series RCL circuit satisfies $Lq'' + Rq' + \\frac{1}{C}q = E(t)$. Its characteristic roots are\n\n$$-\\frac{R}{2L} \\pm i\\sqrt{\\frac{1}{LC} - \\frac{R^2}{4L^2}}$$\n\nwhen $R^2 < \\frac{4L}{C}$. Then the charge oscillates with the damped angular frequency $\\omega_d = \\sqrt{\\frac{1}{LC} - \\frac{R^2}{4L^2}}$, which is lower than the undamped $\\frac{1}{\\sqrt{LC}}$.",
+        "串联 RCL 电路中的电荷满足 $Lq'' + Rq' + \\frac{1}{C}q = E(t)$。当 $R^2 < \\frac{4L}{C}$ 时，其特征根为\n\n$$-\\frac{R}{2L} \\pm i\\sqrt{\\frac{1}{LC} - \\frac{R^2}{4L^2}}.$$\n\n此时电荷以阻尼角频率 $\\omega_d = \\sqrt{\\frac{1}{LC} - \\frac{R^2}{4L^2}}$ 振荡，它低于无阻尼频率 $\\frac{1}{\\sqrt{LC}}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const L = rng.int(1, 4);
+        const al = rng.int(1, 5);
+        const be = rng.int(1, 8);
+        const R = 2 * L * al;
+        const n = L * (al * al + be * be);
+        const E = rng.int(1, 12) * 10;
+        return numberProblem({
+          prompt: t(
+            `A series circuit has $L = ${L}\\text{ H}$, $R = ${R}\\ \\Omega$, $C = \\frac{1}{${n}}\\text{ F}$ and $E = ${E}\\text{ V}$. Find the damped angular frequency $\\omega_d$ of the charge in $\\text{rad/s}$.`,
+            `串联电路中 $L = ${L}\\text{ H}$，$R = ${R}\\ \\Omega$，$C = \\frac{1}{${n}}\\text{ F}$，$E = ${E}\\text{ V}$。求电荷的阻尼角频率 $\\omega_d$（单位 $\\text{rad/s}$）。`,
+          ),
+          answer: be,
+          wrong: [be * be, al, al * al + be * be],
+          solution: t(
+            `$\\frac{1}{LC} = ${al * al + be * be}$ and $\\frac{R}{2L} = ${al}$, so $\\omega_d = \\sqrt{${al * al + be * be} - ${al * al}} = ${be}$.`,
+            `$\\frac{1}{LC} = ${al * al + be * be}$，$\\frac{R}{2L} = ${al}$，所以 $\\omega_d = \\sqrt{${al * al + be * be} - ${al * al}} = ${be}$。`,
+          ),
         });
       },
     },
@@ -1670,6 +2555,46 @@ export const modelingCurrentInRclCircuitsWithSecondOrderOdes: TopicDef = {
           solution,
           answer: ans,
           wrong: [E0, omega, ans * 2],
+        });
+      },
+    },
+    {
+      id: "the-steady-state-current-amplitude",
+      title: t("The steady-state current amplitude", "稳态电流振幅"),
+      explanation: t(
+        "Driven by $E(t) = E_0\\sin \\omega t$, a series RCL circuit settles into a sinusoidal current whose amplitude is the voltage amplitude divided by the impedance:\n\n$$I = \\frac{E_0}{Z}, \\qquad Z = \\sqrt{R^2 + X^2}, \\qquad X = \\omega L - \\frac{1}{\\omega C}.$$\n\nThe reactance $X$ can be negative when the capacitor dominates; only its square enters $Z$. When $X = 0$ the current amplitude is largest, $E_0/R$.",
+        "在 $E(t) = E_0\\sin \\omega t$ 驱动下，串联 RCL 电路趋于正弦电流，其振幅等于电压振幅除以阻抗：\n\n$$I = \\frac{E_0}{Z}, \\qquad Z = \\sqrt{R^2 + X^2}, \\qquad X = \\omega L - \\frac{1}{\\omega C}.$$\n\n电容占主导时电抗 $X$ 可以为负；进入 $Z$ 的只是它的平方。当 $X = 0$ 时电流振幅最大，为 $E_0/R$。",
+      ),
+      generate(rng: Rng): Problem {
+        const s = rng.int(1, 4);
+        const [rf, xf] = rng.pick([
+          [3, 4],
+          [4, 3],
+          [3, -4],
+          [4, -3],
+          [6, 8],
+          [8, -6],
+        ] as const);
+        const R = rf * s;
+        const X = xf * s;
+        const Z = Math.sqrt(R * R + X * X);
+        const w = rng.int(2, 10);
+        const lo = Math.max(1, Math.ceil((X + 1) / w));
+        const L = rng.int(lo, lo + 3);
+        const cap = w * L - X;
+        const E0 = rng.int(1, 12) * 10;
+        const ans = Q.of(E0, Z);
+        return numberProblem({
+          prompt: t(
+            `A series circuit with $R = ${R}\\ \\Omega$, $L = ${L}\\text{ H}$ and $C = \\frac{1}{${w * cap}}\\text{ F}$ is driven by $E(t) = ${E0}\\sin ${w}t\\text{ V}$. Find the steady-state current amplitude in amperes.`,
+            `串联电路中 $R = ${R}\\ \\Omega$，$L = ${L}\\text{ H}$，$C = \\frac{1}{${w * cap}}\\text{ F}$，由 $E(t) = ${E0}\\sin ${w}t\\text{ V}$ 驱动。求稳态电流振幅（单位安培）。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(E0, R), Q.of(E0, R + Math.abs(X)), Q.of(E0 * w, Z)],
+          solution: t(
+            `$\\omega L = ${w * L}$ and $\\frac{1}{\\omega C} = ${cap}$, so $X = ${X}$ and $Z = \\sqrt{${R * R} + ${X * X}} = ${Z}$. Then $I = \\frac{${E0}}{${Z}}${lowestTerms(E0, Z)}$.`,
+            `$\\omega L = ${w * L}$，$\\frac{1}{\\omega C} = ${cap}$，所以 $X = ${X}$，$Z = \\sqrt{${R * R} + ${X * X}} = ${Z}$。于是 $I = \\frac{${E0}}{${Z}}${lowestTerms(E0, Z)}$。`,
+          ),
         });
       },
     },
