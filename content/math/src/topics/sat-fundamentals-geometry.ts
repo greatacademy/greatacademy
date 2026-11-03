@@ -153,6 +153,35 @@ export const solvingGeometryProblemsByManipulatingRadicals = topic(
 // ---------------------------------------------------------------------------
 // Congruence
 
+/** congruentPairFigure draws △ABC ≅ △DEF, the second a mirror image, with matching sides marked by equal numbers of ticks. */
+const congruentPairFigure: Figure = (() => {
+  const [A, B, C, D, E, F]: Point[] = [
+    [0, 0],
+    [4, 0],
+    [1, 3],
+    [10, 0],
+    [6, 0],
+    [9, 3],
+  ];
+  const tri = (p: Point, q: Point, r: Point, names: string): Mark[] => [
+    { kind: "polygon", points: [p, q, r] },
+    { kind: "ticks", a: p, b: q, count: 1 },
+    { kind: "ticks", a: q, b: r, count: 2 },
+    { kind: "ticks", a: p, b: r, count: 3 },
+    { kind: "arc", vertex: p, from: q, to: r },
+    { kind: "label", at: p, text: names[0]!, dir: "s" },
+    { kind: "label", at: q, text: names[1]!, dir: "s" },
+    { kind: "label", at: r, text: names[2]!, dir: "n" },
+  ];
+  return {
+    svg: sketch([...tri(A!, B!, C!, "ABC"), ...tri(D!, E!, F!, "DEF")]),
+    alt: t(
+      "Triangles ABC and DEF, the second a mirror image of the first. AB and DE have one tick, BC and EF two, AC and DF three, and angles A and D are marked equal.",
+      "三角形 ABC 与 DEF，后者是前者的镜像。AB 与 DE 各有一道短线，BC 与 EF 各两道，AC 与 DF 各三道，角 A 与角 D 标为相等。",
+    ),
+  };
+})();
+
 /** solvingProblemsDescribingCongruentTriangles uses corresponding parts of congruent triangles given in words. */
 export const solvingProblemsDescribingCongruentTriangles = topic(
   "solving-problems-describing-congruent-triangles",
@@ -198,6 +227,7 @@ export const solvingProblemsDescribingCongruentTriangles = topic(
           ),
         });
       },
+      congruentPairFigure,
     ),
     kp(
       "corresponding-angles-of-congruent-triangles",
@@ -226,6 +256,7 @@ export const solvingProblemsDescribingCongruentTriangles = topic(
           ),
         });
       },
+      congruentPairFigure,
     ),
   ],
 );
