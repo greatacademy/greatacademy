@@ -1,7 +1,13 @@
-import type { Problem, Rng, TopicDef } from "@ga/content";
+import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
-import { numberProblem, steps } from "../problems.ts";
+import { choiceProblem, lowestTerms, numberProblem, steps, yesNo } from "../problems.ts";
+
+/** par writes a negative number in parentheses. */
+const par = (n: number): string => (n < 0 ? `(${n})` : String(n));
+
+/** signed writes a number as a signed term: "+ 3" or "- 3". */
+const signed = (n: number): string => (n < 0 ? `- ${-n}` : `+ ${n}`);
 
 /** Pythagorean triples for clean magnitudes. */
 const pythagoreanTriples = [
@@ -62,12 +68,12 @@ export const introductionToFirstOrderLinearOdes: TopicDef = {
           steps(
             `Divide the equation by the leading coefficient $(${poly([a, "x"])})$: $y' + \\frac{${b}}{${poly([a, "x"])}}y = \\frac{${c}}{${a}}x$.`,
             `Identify the coefficient function: $P(x) = \\frac{${b}}{${poly([a, "x"])}}$.`,
-            `Evaluate at $x = ${x0}$: $P(${x0}) = \\frac{${b}}{${a}(${x0})} = \\frac{${b}}{${a * x0}} = ${ans.toLatex()}$.`,
+            `Evaluate at $x = ${x0}$: $P(${x0}) = \\frac{${b}}{${a}(${x0})} = \\frac{${b}}{${a * x0}}${lowestTerms(b, a * x0)}$.`,
           ),
           steps(
             `方程两边同除以首项系数 $(${poly([a, "x"])})$：$y' + \\frac{${b}}{${poly([a, "x"])}}y = \\frac{${c}}{${a}}x$。`,
             `确定系数函数：$P(x) = \\frac{${b}}{${poly([a, "x"])}}$。`,
-            `代入 $x = ${x0}$ 求值：$P(${x0}) = \\frac{${b}}{${a}(${x0})} = \\frac{${b}}{${a * x0}} = ${ans.toLatex()}$。`,
+            `代入 $x = ${x0}$ 求值：$P(${x0}) = \\frac{${b}}{${a}(${x0})} = \\frac{${b}}{${a * x0}}${lowestTerms(b, a * x0)}$。`,
           ),
         );
         return numberProblem({
@@ -75,6 +81,44 @@ export const introductionToFirstOrderLinearOdes: TopicDef = {
           solution,
           answer: ans,
           wrong: [Q.of(a, b * x0), Q.of(b, x0), ans.mul(Q.of(2))],
+        });
+      },
+    },
+    {
+      id: "recognizing-linear-equations",
+      title: t("Recognizing linear equations", "识别线性方程"),
+      explanation: t(
+        "An equation is linear in $y$ when $y$ and $y'$ appear only to the first power, are never multiplied together, and never sit inside another function. The coefficients may be any functions of $x$.\n\nSo $x^{2}y' + (\\sin x)y = e^{x}$ is linear, but $y' + y^{2} = x$, $yy' = x$ and $y' = \\sin y$ are not.",
+        "当 $y$ 与 $y'$ 只以一次幂出现、彼此不相乘、也不出现在其他函数内部时，方程关于 $y$ 是线性的。系数可以是 $x$ 的任意函数。\n\n因此 $x^{2}y' + (\\sin x)y = e^{x}$ 是线性的，而 $y' + y^{2} = x$、$yy' = x$ 和 $y' = \\sin y$ 都不是。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(2, 9);
+        const b = rng.int(2, 5);
+        const linear = [
+          `x^{${b}}y' + ${a}y = \\sin x`,
+          `y' = ${a}xy + e^{x}`,
+          `(x^{2} + 1)y' - ${a}y = x^{${b}}`,
+          `y' + (\\cos x)y = ${a}x^{${b}}`,
+        ];
+        const nonlinear: [string, Text][] = [
+          [`y' + ${a}y^{2} = x`, t("$y$ is squared", "$y$ 被平方")],
+          [`yy' + ${a}x = 0`, t("$y$ multiplies $y'$", "$y$ 与 $y'$ 相乘")],
+          [`y' = \\sin(${a}y) + x`, t("$y$ sits inside the sine", "$y$ 出现在正弦函数内部")],
+          [`y' + ${a}e^{y} = x^{${b}}`, t("$y$ sits inside the exponential", "$y$ 出现在指数函数内部")],
+          [`(y')^{2} + ${a}y = x`, t("$y'$ is squared", "$y'$ 被平方")],
+        ];
+        const isLinear = rng.bool(0.5);
+        const [eq, why] = isLinear ? [rng.pick(linear), undefined] : rng.pick(nonlinear);
+        return choiceProblem({
+          prompt: t(`Is $${eq}$ linear in $y$?`, `$${eq}$ 关于 $y$ 是线性的吗？`),
+          options: yesNo,
+          correct: isLinear ? 0 : 1,
+          solution: why
+            ? t(`No: ${why.en}, so the equation is not linear.`, `不是：${why["zh-CN"]}，所以方程不是线性的。`)
+            : t(
+                "Yes: $y$ and $y'$ appear only to the first power, are not multiplied together, and their coefficients depend only on $x$.",
+                "是：$y$ 与 $y'$ 只以一次幂出现，彼此不相乘，且系数只依赖于 $x$。",
+              ),
         });
       },
     },
@@ -133,6 +177,39 @@ export const generalSolutionsOfFirstOrderLinearOdes: TopicDef = {
         });
       },
     },
+    {
+      id: "evaluating-the-solution-of-an-initial-value-problem",
+      title: t("Evaluating the solution of an initial value problem", "求初值问题的解在某点的值"),
+      explanation: t(
+        "The initial condition fixes the constant in $y = \\frac{b}{a} + Ce^{-ax}$: at $x = 0$, $C = y(0) - \\frac{b}{a}$. The transient part $Ce^{-ax}$ halves every $\\frac{\\ln 2}{a}$, so\n\n$$y\\left(\\frac{\\ln 2}{a}\\right) = \\frac{b}{a} + \\frac{1}{2}\\left(y(0) - \\frac{b}{a}\\right),$$\n\nthe value halfway between the start and the steady state.",
+        "初值条件确定 $y = \\frac{b}{a} + Ce^{-ax}$ 中的常数：令 $x = 0$，$C = y(0) - \\frac{b}{a}$。瞬态部分 $Ce^{-ax}$ 每经过 $\\frac{\\ln 2}{a}$ 减半，所以\n\n$$y\\left(\\frac{\\ln 2}{a}\\right) = \\frac{b}{a} + \\frac{1}{2}\\left(y(0) - \\frac{b}{a}\\right),$$\n\n即初值与稳态值的中点。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(2, 6);
+        const k = rng.int(1, 9);
+        let y0 = rng.int(-6, 15);
+        if (y0 === k) y0 = k + 4;
+        const ans = Q.of(k + y0, 2);
+        return numberProblem({
+          prompt: t(
+            `Solve $y' + ${a}y = ${a * k}$ with $y(0) = ${y0}$, and find $y\\left(\\frac{\\ln 2}{${a}}\\right)$.`,
+            `求解 $y' + ${a}y = ${a * k}$，$y(0) = ${y0}$，并求 $y\\left(\\frac{\\ln 2}{${a}}\\right)$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(k), Q.of(y0, 2), Q.of(2 * y0 - k)].filter((v) => !v.eq(ans)),
+          solution: t(
+            steps(
+              `The steady state is $\\frac{${a * k}}{${a}} = ${k}$, so $y = ${k} + Ce^{-${a}x}$ with $C = ${y0} - ${par(k)} = ${y0 - k}$.`,
+              `At $x = \\frac{\\ln 2}{${a}}$, $e^{-${a}x} = \\frac{1}{2}$, so $y = ${k} ${signed(y0 - k).replace(/\d+/, (n) => `\\frac{${n}}{2}`)} = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `稳态值为 $\\frac{${a * k}}{${a}} = ${k}$，所以 $y = ${k} + Ce^{-${a}x}$，$C = ${y0} - ${par(k)} = ${y0 - k}$。`,
+              `当 $x = \\frac{\\ln 2}{${a}}$ 时 $e^{-${a}x} = \\frac{1}{2}$，所以 $y = ${k} ${signed(y0 - k).replace(/\d+/, (n) => `\\frac{${n}}{2}`)} = ${ans.toLatex()}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -184,6 +261,38 @@ export const solvingFirstOrderLinearOdesWithExponentialForcing: TopicDef = {
           solution,
           answer: A,
           wrong: [b, a + k, A + 1],
+        });
+      },
+    },
+    {
+      id: "the-resonant-case-of-exponential-forcing",
+      title: t("The resonant case of exponential forcing", "指数激励的共振情形"),
+      explanation: t(
+        "When $k = -a$ the guess $Ae^{-ax}$ solves the homogeneous equation and cannot produce the forcing. Multiply the guess by $x$: substituting $y_p = Bxe^{-ax}$ into $y' + ay = be^{-ax}$ gives $B = b$. With $y(0) = y_0$ the solution is\n\n$$y = (bx + y_0)e^{-ax}.$$\n\nFor $b > ay_0 > 0$ it first rises and then decays; $y' = e^{-ax}\\left(b - a(bx + y_0)\\right)$ vanishes at $x = \\frac{1}{a} - \\frac{y_0}{b}$, where $y$ is largest.",
+        "当 $k = -a$ 时，猜测 $Ae^{-ax}$ 是齐次方程的解，无法产生激励项。把猜测乘以 $x$：将 $y_p = Bxe^{-ax}$ 代入 $y' + ay = be^{-ax}$ 得 $B = b$。若 $y(0) = y_0$，解为\n\n$$y = (bx + y_0)e^{-ax}.$$\n\n当 $b > ay_0 > 0$ 时，它先上升后衰减；$y' = e^{-ax}\\left(b - a(bx + y_0)\\right)$ 在 $x = \\frac{1}{a} - \\frac{y_0}{b}$ 处为零，此时 $y$ 最大。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 4);
+        const y0 = rng.int(1, 4);
+        const b = a * y0 + rng.int(1, 8);
+        const ans = Q.of(b - a * y0, a * b);
+        return numberProblem({
+          prompt: t(
+            `Solve $y' + ${a === 1 ? "" : a}y = ${b}e^{-${a === 1 ? "" : a}x}$ with $y(0) = ${y0}$, and find the value of $x$ at which $y$ is largest.`,
+            `求解 $y' + ${a === 1 ? "" : a}y = ${b}e^{-${a === 1 ? "" : a}x}$，$y(0) = ${y0}$，并求 $y$ 取最大值时 $x$ 的值。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(1, a), Q.of(y0, b), Q.of(b + a * y0, a * b)].filter((v) => !v.eq(ans)),
+          solution: t(
+            steps(
+              `The forcing $e^{-${a}x}$ solves the homogeneous equation, so try $y_p = Bxe^{-${a}x}$; substituting gives $B = ${b}$, and $y = (${b}x + ${y0})e^{-${a}x}$.`,
+              `$y' = e^{-${a}x}\\left(${b} - ${a}(${b}x + ${y0})\\right) = 0$ gives $x = \\frac{${b} - ${a * y0}}{${a * b}} = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `激励 $e^{-${a}x}$ 是齐次方程的解，所以设 $y_p = Bxe^{-${a}x}$；代入得 $B = ${b}$，$y = (${b}x + ${y0})e^{-${a}x}$。`,
+              `由 $y' = e^{-${a}x}\\left(${b} - ${a}(${b}x + ${y0})\\right) = 0$ 得 $x = \\frac{${b} - ${a * y0}}{${a * b}} = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -243,6 +352,42 @@ export const solvingFirstOrderLinearOdesWithSinusoidalForcing: TopicDef = {
         });
       },
     },
+    {
+      id: "the-coefficients-of-the-steady-state-response",
+      title: t("The coefficients of the steady-state response", "稳态响应的系数"),
+      explanation: t(
+        "Write the steady state as $y_p = A\\cos\\omega x + B\\sin\\omega x$ and substitute into $y' + ay = b\\cos\\omega x$. Matching the cosine and sine terms gives $aA + \\omega B = b$ and $aB - \\omega A = 0$, so\n\n$$A = \\frac{ab}{a^{2} + \\omega^{2}}, \\qquad B = \\frac{\\omega b}{a^{2} + \\omega^{2}}.$$\n\nThe sine part appears even though the forcing has none: the response lags behind the input.",
+        "把稳态写成 $y_p = A\\cos\\omega x + B\\sin\\omega x$，代入 $y' + ay = b\\cos\\omega x$。比较余弦项与正弦项得 $aA + \\omega B = b$ 与 $aB - \\omega A = 0$，所以\n\n$$A = \\frac{ab}{a^{2} + \\omega^{2}}, \\qquad B = \\frac{\\omega b}{a^{2} + \\omega^{2}}.$$\n\n尽管激励中没有正弦项，响应中仍出现正弦部分：响应滞后于输入。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 6);
+        const w = rng.int(1, 6);
+        const b = rng.int(2, 12);
+        const den = a * a + w * w;
+        const askA = rng.bool(0.5);
+        const ans = Q.of((askA ? a : w) * b, den);
+        const other = Q.of((askA ? w : a) * b, den);
+        const name = askA ? "A" : "B";
+        return numberProblem({
+          prompt: t(
+            `The steady-state solution of $y' + ${a === 1 ? "" : a}y = ${b}\\cos ${w === 1 ? "" : w}x$ is $y_p = A\\cos ${w === 1 ? "" : w}x + B\\sin ${w === 1 ? "" : w}x$. Find $${name}$.`,
+            `$y' + ${a === 1 ? "" : a}y = ${b}\\cos ${w === 1 ? "" : w}x$ 的稳态解为 $y_p = A\\cos ${w === 1 ? "" : w}x + B\\sin ${w === 1 ? "" : w}x$。求 $${name}$。`,
+          ),
+          answer: ans,
+          wrong: [other, Q.of(b, askA ? a : w), Q.of((askA ? a : w) * b, a + w)].filter((v) => !v.eq(ans)),
+          solution: t(
+            steps(
+              `Substituting and matching terms: $${a}A + ${w}B = ${b}$ and $${a}B - ${w}A = 0$.`,
+              `So $A = \\frac{${a} \\cdot ${b}}{${a}^{2} + ${w}^{2}} = ${Q.of(a * b, den).toLatex()}$ and $B = \\frac{${w} \\cdot ${b}}{${den}} = ${Q.of(w * b, den).toLatex()}$; hence $${name} = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `代入并比较系数：$${a}A + ${w}B = ${b}$，$${a}B - ${w}A = 0$。`,
+              `所以 $A = \\frac{${a} \\cdot ${b}}{${a}^{2} + ${w}^{2}} = ${Q.of(a * b, den).toLatex()}$，$B = \\frac{${w} \\cdot ${b}}{${den}} = ${Q.of(w * b, den).toLatex()}$；因此 $${name} = ${ans.toLatex()}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -292,6 +437,43 @@ export const solvingFirstOrderLinearOdesUsingIntegratingFactors: TopicDef = {
           solution,
           answer: k,
           wrong: [k + 1, k - 1, c],
+        });
+      },
+    },
+    {
+      id: "solving-with-a-power-integrating-factor",
+      title: t("Solving with a power integrating factor", "用幂函数积分因子求解"),
+      explanation: t(
+        "For $xy' + py = cx^{m+1}$ on $x > 0$, divide by $x$ to get $y' + \\frac{p}{x}y = cx^{m}$. The integrating factor is $e^{\\int p/x\\,dx} = x^{p}$, and\n\n$$(x^{p}y)' = cx^{m+p} \\implies x^{p}y = \\frac{c}{m + p + 1}x^{m+p+1} + C.$$\n\nDivide by $x^{p}$ and use the initial condition to find $C$.",
+        "对 $x > 0$ 上的 $xy' + py = cx^{m+1}$，除以 $x$ 得 $y' + \\frac{p}{x}y = cx^{m}$。积分因子为 $e^{\\int p/x\\,dx} = x^{p}$，且\n\n$$(x^{p}y)' = cx^{m+p} \\implies x^{p}y = \\frac{c}{m + p + 1}x^{m+p+1} + C.$$\n\n两边除以 $x^{p}$，再用初值条件求 $C$。",
+      ),
+      generate(rng: Rng): Problem {
+        const p = rng.int(1, 3);
+        const m = rng.int(0, 2);
+        const k = rng.int(1, 4);
+        let y0 = rng.int(-3, 9);
+        if (y0 === k) y0 = k + 2;
+        const c = k * (m + p + 1);
+        const big = Q.of(k * 2 ** (m + 1));
+        const ans = big.add(Q.of(y0 - k, 2 ** p));
+        const rhs = m === 0 ? "x" : `x^{${m + 1}}`;
+        return numberProblem({
+          prompt: t(
+            `Solve $xy' + ${p === 1 ? "" : p}y = ${c}${rhs}$ for $x > 0$ with $y(1) = ${y0}$, and find $y(2)$.`,
+            `在 $x > 0$ 上求解 $xy' + ${p === 1 ? "" : p}y = ${c}${rhs}$，$y(1) = ${y0}$，并求 $y(2)$。`,
+          ),
+          answer: ans,
+          wrong: [big, big.add(Q.of((y0 - k) * 2 ** p)), Q.of(y0 * 2 ** (m + 1))].filter((v) => !v.eq(ans)),
+          solution: t(
+            steps(
+              `The integrating factor is $x^{${p}}$: $(x^{${p}}y)' = ${c}x^{${m + p}}$, so $x^{${p}}y = ${k}x^{${m + p + 1}} + C$ and $y = ${k}x^{${m + 1}} + Cx^{-${p}}$.`,
+              `$y(1) = ${k} + C = ${y0}$ gives $C = ${y0 - k}$, so $y(2) = ${k} \\cdot 2^{${m + 1}} ${y0 < k ? "-" : "+"} ${Q.of(Math.abs(y0 - k), 2 ** p).toLatex()} = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `积分因子为 $x^{${p}}$：$(x^{${p}}y)' = ${c}x^{${m + p}}$，所以 $x^{${p}}y = ${k}x^{${m + p + 1}} + C$，$y = ${k}x^{${m + 1}} + Cx^{-${p}}$。`,
+              `由 $y(1) = ${k} + C = ${y0}$ 得 $C = ${y0 - k}$，所以 $y(2) = ${k} \\cdot 2^{${m + 1}} ${y0 < k ? "-" : "+"} ${Q.of(Math.abs(y0 - k), 2 ** p).toLatex()} = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -352,6 +534,47 @@ export const solvingFirstOrderOdesBySubstitution: TopicDef = {
         });
       },
     },
+    {
+      id: "solving-an-initial-value-problem-by-a-linear-substitution",
+      title: t("Solving an initial value problem by a linear substitution", "用线性代换求解初值问题"),
+      explanation: t(
+        "For $y' = (ax + y)^{2} - a$, let $v = ax + y$. Then $v' = a + y' = v^{2}$, which separates:\n\n$$-\\frac{1}{v} = x + C \\implies v = \\frac{v_0}{1 - v_0x}, \\qquad v_0 = v(0) = y(0).$$\n\nFinally undo the substitution, $y = v - ax$. Forgetting to subtract $ax$ at the end is the usual slip.",
+        "对 $y' = (ax + y)^{2} - a$，令 $v = ax + y$。则 $v' = a + y' = v^{2}$，可分离变量：\n\n$$-\\frac{1}{v} = x + C \\implies v = \\frac{v_0}{1 - v_0x}, \\qquad v_0 = v(0) = y(0).$$\n\n最后还原代换，$y = v - ax$。最后忘记减去 $ax$ 是常见错误。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 4);
+        const y0 = rng.pick([-3, -2, -1, 1, 2, 3]);
+        const m = rng.int(Math.abs(y0) + 1, Math.abs(y0) + 5);
+        const x1 = Q.of(1, m);
+        const v = Q.of(y0).div(Q.one.sub(Q.of(y0).mul(x1)));
+        const ans = v.sub(Q.of(a).mul(x1));
+        const ax = a === 1 ? "x" : `${a}x`;
+        return numberProblem({
+          prompt: t(
+            `Solve $y' = (${ax} + y)^{2} - ${a}$ with $y(0) = ${y0}$, and find $y\\left(\\frac{1}{${m}}\\right)$.`,
+            `求解 $y' = (${ax} + y)^{2} - ${a}$，$y(0) = ${y0}$，并求 $y\\left(\\frac{1}{${m}}\\right)$。`,
+          ),
+          answer: ans,
+          wrong: [
+            v,
+            Q.of(y0)
+              .div(Q.one.add(Q.of(y0).mul(x1)))
+              .sub(Q.of(a).mul(x1)),
+            Q.of(y0).sub(Q.of(a).mul(x1)),
+          ].filter((w) => !w.eq(ans)),
+          solution: t(
+            steps(
+              `With $v = ${ax} + y$, $v' = v^{2}$ and $v(0) = ${y0}$, so $v = \\frac{${y0}}{1 ${y0 > 0 ? "-" : "+"} ${Math.abs(y0) === 1 ? "" : Math.abs(y0)}x}$.`,
+              `At $x = \\frac{1}{${m}}$: $v = ${v.toLatex()}$, so $y = v - ${a} \\cdot \\frac{1}{${m}} = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `令 $v = ${ax} + y$，则 $v' = v^{2}$，$v(0) = ${y0}$，所以 $v = \\frac{${y0}}{1 ${y0 > 0 ? "-" : "+"} ${Math.abs(y0) === 1 ? "" : Math.abs(y0)}x}$。`,
+              `当 $x = \\frac{1}{${m}}$ 时 $v = ${v.toLatex()}$，所以 $y = v - ${a} \\cdot \\frac{1}{${m}} = ${ans.toLatex()}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -402,6 +625,39 @@ export const furtherSolvingFirstOrderOdesBySubstitution: TopicDef = {
           solution,
           answer: ans,
           wrong: [a + b * u0, ans + b, -ans],
+        });
+      },
+    },
+    {
+      id: "the-long-run-behavior-after-a-logarithmic-substitution",
+      title: t("The long-run behavior after a logarithmic substitution", "对数代换后的长期行为"),
+      explanation: t(
+        "For $y' = y(a - b\\ln y)$ with $y > 0$, the substitution $u = \\ln y$ gives $u' = \\frac{y'}{y} = a - bu$, a linear equation with solution $u = \\frac{a}{b} + Ce^{-bx}$.\n\nFor $b > 0$ the exponential dies out, so $\\ln y \\to \\frac{a}{b}$ and $y \\to e^{a/b}$ whatever the positive starting value. This is the Gompertz growth law.",
+        "对 $y > 0$ 的 $y' = y(a - b\\ln y)$，代换 $u = \\ln y$ 得 $u' = \\frac{y'}{y} = a - bu$，这是线性方程，解为 $u = \\frac{a}{b} + Ce^{-bx}$。\n\n当 $b > 0$ 时指数项消失，所以无论正初值是多少，都有 $\\ln y \\to \\frac{a}{b}$，$y \\to e^{a/b}$。这就是冈珀茨增长律。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-6, 12) || 5;
+        let b = rng.int(2, 8);
+        if (Math.abs(a) === b) b += 1;
+        const y0 = rng.int(1, 9);
+        const ans = Q.of(a, b);
+        return numberProblem({
+          prompt: t(
+            `$y > 0$ satisfies $y' = y(${a} - ${b}\\ln y)$ with $y(0) = ${y0}$. Find $\\lim_{x \\to \\infty} \\ln y(x)$.`,
+            `$y > 0$ 满足 $y' = y(${a} - ${b}\\ln y)$，$y(0) = ${y0}$。求 $\\lim_{x \\to \\infty} \\ln y(x)$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(a), Q.of(b, a), ans.neg()].filter((v) => !v.eq(ans)),
+          solution: t(
+            steps(
+              `With $u = \\ln y$, $u' = ${a} - ${b}u$, so $u = ${ans.toLatex()} + Ce^{-${b}x}$.`,
+              `Since $e^{-${b}x} \\to 0$, $\\ln y \\to ${ans.toLatex()}$, independent of $y(0) = ${y0}$.`,
+            ),
+            steps(
+              `令 $u = \\ln y$，则 $u' = ${a} - ${b}u$，所以 $u = ${ans.toLatex()} + Ce^{-${b}x}$。`,
+              `由于 $e^{-${b}x} \\to 0$，$\\ln y \\to ${ans.toLatex()}$，与 $y(0) = ${y0}$ 无关。`,
+            ),
+          ),
         });
       },
     },
@@ -462,6 +718,38 @@ export const reducingOdesToFirstOrderLinearBySubstitution: TopicDef = {
         });
       },
     },
+    {
+      id: "solving-with-the-substitution-v-equals-y-squared",
+      title: t("Solving with the substitution $v = y^{2}$", "用代换 $v = y^{2}$ 求解"),
+      explanation: t(
+        "Since $(y^{2})' = 2yy'$, the equation $2yy' + ay^{2} = b$ becomes $v' + av = b$ for $v = y^{2}$. Its solution is\n\n$$v = \\frac{b}{a} + \\left(y_0^{2} - \\frac{b}{a}\\right)e^{-ax},$$\n\nand $y = \\sqrt{v}$ for a positive solution. Remember that the initial value of $v$ is $y_0^{2}$, not $y_0$.",
+        "由于 $(y^{2})' = 2yy'$，令 $v = y^{2}$，方程 $2yy' + ay^{2} = b$ 化为 $v' + av = b$。其解为\n\n$$v = \\frac{b}{a} + \\left(y_0^{2} - \\frac{b}{a}\\right)e^{-ax},$$\n\n对正解有 $y = \\sqrt{v}$。注意 $v$ 的初值是 $y_0^{2}$，而不是 $y_0$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 5);
+        const k = rng.int(1, 12);
+        const y0 = rng.int(2, 6);
+        const ans = Q.of(k + y0 * y0, 2);
+        return numberProblem({
+          prompt: t(
+            `$y > 0$ satisfies $2yy' + ${a === 1 ? "" : a}y^{2} = ${a * k}$ with $y(0) = ${y0}$. Find $y\\left(\\frac{\\ln 2}{${a}}\\right)^{2}$.`,
+            `$y > 0$ 满足 $2yy' + ${a === 1 ? "" : a}y^{2} = ${a * k}$，$y(0) = ${y0}$。求 $y\\left(\\frac{\\ln 2}{${a}}\\right)^{2}$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(k + y0, 2), Q.of(k), Q.of(y0 * y0, 2)].filter((v) => !v.eq(ans)),
+          solution: t(
+            steps(
+              `With $v = y^{2}$: $v' + ${a}v = ${a * k}$, $v(0) = ${y0 * y0}$, so $v = ${k} + ${par(y0 * y0 - k)}e^{-${a}x}$.`,
+              `At $x = \\frac{\\ln 2}{${a}}$, $e^{-${a}x} = \\frac{1}{2}$, so $y^{2} = v = ${k} + \\frac{${y0 * y0 - k}}{2} = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `令 $v = y^{2}$：$v' + ${a}v = ${a * k}$，$v(0) = ${y0 * y0}$，所以 $v = ${k} + ${par(y0 * y0 - k)}e^{-${a}x}$。`,
+              `当 $x = \\frac{\\ln 2}{${a}}$ 时 $e^{-${a}x} = \\frac{1}{2}$，所以 $y^{2} = v = ${k} + \\frac{${y0 * y0 - k}}{2} = ${ans.toLatex()}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -519,6 +807,36 @@ export const homogeneousFunctions: TopicDef = {
         });
       },
     },
+    {
+      id: "scaling-a-homogeneous-function",
+      title: t("Scaling a homogeneous function", "齐次函数的缩放"),
+      explanation: t(
+        "If $f$ is homogeneous of degree $n$, one value fixes $f$ along the whole ray through that point: $f(tx, ty) = t^{n}f(x, y)$. For example, if $f$ has degree $3$ and $f(1, 2) = 5$, then $f(2, 4) = 2^{3} \\cdot 5 = 40$. The degree may be negative or zero; degree $0$ means $f$ is constant along rays, which is exactly the case $f(x, y) = F\\left(\\frac{y}{x}\\right)$.",
+        "若 $f$ 是 $n$ 次齐次函数，一个函数值就确定了 $f$ 在过该点的整条射线上的值：$f(tx, ty) = t^{n}f(x, y)$。例如，若 $f$ 为 $3$ 次且 $f(1, 2) = 5$，则 $f(2, 4) = 2^{3} \\cdot 5 = 40$。次数可以是负数或零；$0$ 次意味着 $f$ 沿射线为常数，这正是 $f(x, y) = F\\left(\\frac{y}{x}\\right)$ 的情形。",
+      ),
+      generate(rng: Rng): Problem {
+        const n = rng.int(-2, 4);
+        const tq = rng.pick([Q.of(2), Q.of(3), Q.of(1, 2), Q.of(-2)]);
+        const x0 = rng.int(1, 4);
+        const y0 = rng.int(-3, 5);
+        const c = rng.int(-6, 9) || 4;
+        const ans = tq.pow(n).mul(Q.of(c));
+        const sx = tq.mul(Q.of(x0));
+        const sy = tq.mul(Q.of(y0));
+        return numberProblem({
+          prompt: t(
+            `$f(x, y)$ is homogeneous of degree $${n}$ in the sense $f(tx, ty) = t^{${n}}f(x, y)$ for all $t \\ne 0$, and $f(${x0}, ${y0}) = ${c}$. Find $f(${sx.toLatex()}, ${sy.toLatex()})$.`,
+            `$f(x, y)$ 是 $${n}$ 次齐次函数，即对所有 $t \\ne 0$ 有 $f(tx, ty) = t^{${n}}f(x, y)$，且 $f(${x0}, ${y0}) = ${c}$。求 $f(${sx.toLatex()}, ${sy.toLatex()})$。`,
+          ),
+          answer: ans,
+          wrong: [tq.mul(Q.of(c)), tq.pow(n + 1).mul(Q.of(c)), Q.of(n).mul(tq).mul(Q.of(c))].filter((v) => !v.eq(ans)),
+          solution: t(
+            `$(${sx.toLatex()}, ${sy.toLatex()}) = t(${x0}, ${y0})$ with $t = ${tq.toLatex()}$, so $f = \\left(${tq.toLatex()}\\right)^{${n}} \\cdot ${par(c)} = ${ans.toLatex()}$.`,
+            `$(${sx.toLatex()}, ${sy.toLatex()}) = t(${x0}, ${y0})$，其中 $t = ${tq.toLatex()}$，所以 $f = \\left(${tq.toLatex()}\\right)^{${n}} \\cdot ${par(c)} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -569,6 +887,39 @@ export const homogeneousFirstOrderOdes: TopicDef = {
           solution,
           answer: ans,
           wrong: [k, c + 1, k * c],
+        });
+      },
+    },
+    {
+      id: "solving-a-homogeneous-initial-value-problem",
+      title: t("Solving a homogeneous initial value problem", "求解齐次初值问题"),
+      explanation: t(
+        "Every term on the right has degree two, so the equation depends only on the ratio $\\frac{y}{x}$ and the substitution $y = vx$ separates it. For $xyy' = ax^{2} + y^{2}$ on $x > 0$, put $y = vx$, so $y' = v + xv'$. Dividing by $x^{2}$ gives $v(v + xv') = a + v^{2}$, that is $vv' = \\frac{a}{x}$. Integrating,\n\n$$\\frac{v^{2}}{2} = a\\ln x + C \\implies \\left(\\frac{y}{x}\\right)^{2} = 2a\\ln x + v_0^{2},$$\n\nwhere $v_0 = y(1)$. At $x = e^{k}$ this is $2ak + v_0^{2}$.",
+        "右边每一项都是二次的，所以方程只依赖于比值 $\\frac{y}{x}$，代换 $y = vx$ 可使其分离变量。对 $x > 0$ 上的 $xyy' = ax^{2} + y^{2}$，令 $y = vx$，则 $y' = v + xv'$。两边除以 $x^{2}$ 得 $v(v + xv') = a + v^{2}$，即 $vv' = \\frac{a}{x}$。积分得\n\n$$\\frac{v^{2}}{2} = a\\ln x + C \\implies \\left(\\frac{y}{x}\\right)^{2} = 2a\\ln x + v_0^{2},$$\n\n其中 $v_0 = y(1)$。在 $x = e^{k}$ 处其值为 $2ak + v_0^{2}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 6);
+        const c = rng.int(1, 5);
+        const k = rng.int(1, 4);
+        const ans = 2 * a * k + c * c;
+        const ek = k === 1 ? "e" : `e^{${k}}`;
+        return numberProblem({
+          prompt: t(
+            `For $x > 0$, $y$ satisfies $xy\\,y' = ${a === 1 ? "" : a}x^{2} + y^{2}$ with $y(1) = ${c}$. Find $\\left(\\frac{y(${ek})}{${ek}}\\right)^{2}$.`,
+            `在 $x > 0$ 上，$y$ 满足 $xy\\,y' = ${a === 1 ? "" : a}x^{2} + y^{2}$，$y(1) = ${c}$。求 $\\left(\\frac{y(${ek})}{${ek}}\\right)^{2}$。`,
+          ),
+          answer: ans,
+          wrong: [a * k + c * c, 2 * a * k + c, 2 * a + c * c].filter((w) => w !== ans),
+          solution: t(
+            steps(
+              `With $y = vx$: $vv' = \\frac{${a}}{x}$, so $v^{2} = ${2 * a}\\ln x + C$; $v(1) = ${c}$ gives $C = ${c * c}$.`,
+              `At $x = ${ek}$: $v^{2} = ${2 * a} \\cdot ${k} + ${c * c} = ${ans}$.`,
+            ),
+            steps(
+              `令 $y = vx$：$vv' = \\frac{${a}}{x}$，所以 $v^{2} = ${2 * a}\\ln x + C$；由 $v(1) = ${c}$ 得 $C = ${c * c}$。`,
+              `在 $x = ${ek}$ 处：$v^{2} = ${2 * a} \\cdot ${k} + ${c * c} = ${ans}$。`,
+            ),
+          ),
         });
       },
     },
@@ -625,6 +976,41 @@ export const exactDifferentialEquations: TopicDef = {
         });
       },
     },
+    {
+      id: "finding-the-potential-function-of-an-exact-equation",
+      title: t("Finding the potential function of an exact equation", "求恰当方程的势函数"),
+      explanation: t(
+        "When $M\\,dx + N\\,dy = 0$ is exact, find $\\Psi$ with $\\Psi_x = M$ and $\\Psi_y = N$: integrate $M$ in $x$, then add only the terms of $\\int N\\,dy$ that are missing. Solutions are the level curves $\\Psi(x, y) = C$, and the curve through $(x_0, y_0)$ has $C = \\Psi(x_0, y_0)$.\n\nFor $(2xy + 3)\\,dx + (x^{2} + 4y)\\,dy = 0$: $\\Psi = x^{2}y + 3x + 2y^{2}$. Adding $\\int M\\,dx$ and $\\int N\\,dy$ outright would count $x^{2}y$ twice.",
+        "当 $M\\,dx + N\\,dy = 0$ 为恰当方程时，求满足 $\\Psi_x = M$、$\\Psi_y = N$ 的 $\\Psi$：先对 $x$ 积分 $M$，再只补上 $\\int N\\,dy$ 中缺少的项。解是等值线 $\\Psi(x, y) = C$，过 $(x_0, y_0)$ 的曲线有 $C = \\Psi(x_0, y_0)$。\n\n对 $(2xy + 3)\\,dx + (x^{2} + 4y)\\,dy = 0$：$\\Psi = x^{2}y + 3x + 2y^{2}$。直接把 $\\int M\\,dx$ 与 $\\int N\\,dy$ 相加会把 $x^{2}y$ 算两次。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 4);
+        const b = rng.int(-6, 6) || 3;
+        const c = rng.int(1, 3);
+        const x0 = rng.int(-3, 3) || 2;
+        const y0 = rng.int(-3, 3) || -1;
+        const ans = a * x0 * x0 * y0 + b * x0 + c * y0 * y0;
+        const ax2 = a === 1 ? "x^{2}" : `${a}x^{2}`;
+        return numberProblem({
+          prompt: t(
+            `The equation $(${2 * a}xy ${signed(b)})\\,dx + (${ax2} + ${2 * c}y)\\,dy = 0$ is exact. Its solution through $(${x0}, ${y0})$ is $\\Psi(x, y) = C$, where $\\Psi$ has no constant term. Find $C$.`,
+            `方程 $(${2 * a}xy ${signed(b)})\\,dx + (${ax2} + ${2 * c}y)\\,dy = 0$ 是恰当方程。它过 $(${x0}, ${y0})$ 的解为 $\\Psi(x, y) = C$，其中 $\\Psi$ 不含常数项。求 $C$。`,
+          ),
+          answer: ans,
+          wrong: [ans + a * x0 * x0 * y0, ans - b * x0, a * x0 * x0 * y0 + c * y0 * y0 + 2 * b * x0].filter((w) => w !== ans),
+          solution: t(
+            steps(
+              `$\\int M\\,dx = ${ax2}y ${signed(b)}x$; differentiating in $y$ gives $${ax2}$, so the missing part of $N$ is $${2 * c}y$, contributing $${c === 1 ? "" : c}y^{2}$.`,
+              `$\\Psi = ${ax2}y ${signed(b)}x + ${c === 1 ? "" : c}y^{2}$, and $C = \\Psi(${x0}, ${y0}) = ${a * x0 * x0 * y0} ${signed(b * x0)} + ${c * y0 * y0} = ${ans}$.`,
+            ),
+            steps(
+              `$\\int M\\,dx = ${ax2}y ${signed(b)}x$；对 $y$ 求导得 $${ax2}$，所以 $N$ 中缺少的部分是 $${2 * c}y$，贡献 $${c === 1 ? "" : c}y^{2}$。`,
+              `$\\Psi = ${ax2}y ${signed(b)}x + ${c === 1 ? "" : c}y^{2}$，$C = \\Psi(${x0}, ${y0}) = ${a * x0 * x0 * y0} ${signed(b * x0)} + ${c * y0 * y0} = ${ans}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -673,6 +1059,42 @@ export const solvingExactOdesUsingIntegratingFactors: TopicDef = {
           solution,
           answer: k,
           wrong: [k + 1, k - 1, 2 * k],
+        });
+      },
+    },
+    {
+      id: "solving-after-making-an-equation-exact",
+      title: t("Solving after making an equation exact", "化为恰当方程后求解"),
+      explanation: t(
+        "For $(py + qx^{j})\\,dx + x\\,dy = 0$, $\\frac{M_y - N_x}{N} = \\frac{p - 1}{x}$, so $\\mu = x^{p-1}$. Multiplying gives the exact equation $(px^{p-1}y + qx^{j+p-1})\\,dx + x^{p}\\,dy = 0$ with potential\n\n$$\\Psi = x^{p}y + \\frac{q}{j + p}x^{j+p}.$$\n\nThe solution through a point keeps $\\Psi$ at its value there; solve $\\Psi = C$ for $y$ at the new $x$.",
+        "对 $(py + qx^{j})\\,dx + x\\,dy = 0$，$\\frac{M_y - N_x}{N} = \\frac{p - 1}{x}$，所以 $\\mu = x^{p-1}$。相乘得恰当方程 $(px^{p-1}y + qx^{j+p-1})\\,dx + x^{p}\\,dy = 0$，势函数为\n\n$$\\Psi = x^{p}y + \\frac{q}{j + p}x^{j+p}.$$\n\n过某点的解使 $\\Psi$ 保持该点处的值；在新的 $x$ 处由 $\\Psi = C$ 解出 $y$。",
+      ),
+      generate(rng: Rng): Problem {
+        const p = rng.int(2, 3);
+        const j = rng.int(1, 2);
+        const s = rng.int(1, 3);
+        const q = s * (j + p);
+        const y0 = rng.int(-4, 6);
+        const C = y0 + s;
+        const ans = Q.of(C - s * 2 ** (j + p), 2 ** p);
+        const xj = j === 1 ? "x" : `x^{${j}}`;
+        return numberProblem({
+          prompt: t(
+            `Make $(${p}y + ${q}${xj})\\,dx + x\\,dy = 0$ exact with an integrating factor $\\mu(x)$, and find $y(2)$ for the solution with $y(1) = ${y0}$.`,
+            `用积分因子 $\\mu(x)$ 把 $(${p}y + ${q}${xj})\\,dx + x\\,dy = 0$ 化为恰当方程，并对满足 $y(1) = ${y0}$ 的解求 $y(2)$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(C - s * 2 ** (j + p), 2), Q.of(y0, 2 ** p), Q.of(C, 2 ** p)].filter((v) => !v.eq(ans)),
+          solution: t(
+            steps(
+              `$\\frac{M_y - N_x}{N} = \\frac{${p} - 1}{x}$, so $\\mu = x^{${p - 1}}$ and $\\Psi = x^{${p}}y + ${s === 1 ? "" : s}x^{${j + p}}$.`,
+              `$C = \\Psi(1, ${y0}) = ${C}$. At $x = 2$: $${2 ** p}y + ${s * 2 ** (j + p)} = ${C}$, so $y(2) = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `$\\frac{M_y - N_x}{N} = \\frac{${p} - 1}{x}$，所以 $\\mu = x^{${p - 1}}$，$\\Psi = x^{${p}}y + ${s === 1 ? "" : s}x^{${j + p}}$。`,
+              `$C = \\Psi(1, ${y0}) = ${C}$。在 $x = 2$ 处：$${2 ** p}y + ${s * 2 ** (j + p)} = ${C}$，所以 $y(2) = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -735,6 +1157,39 @@ export const bernoulliDifferentialEquations: TopicDef = {
         });
       },
     },
+    {
+      id: "solving-a-bernoulli-initial-value-problem",
+      title: t("Solving a Bernoulli initial value problem", "求解伯努利初值问题"),
+      explanation: t(
+        "For $y' + ay = by^{2}$ take $n = 2$, so $v = y^{-1}$ and $v' - av = -b$. Then\n\n$$v = \\frac{b}{a} + \\left(\\frac{1}{y_0} - \\frac{b}{a}\\right)e^{ax}, \\qquad y = \\frac{1}{v}.$$\n\nAt $x = \\frac{\\ln 2}{a}$ the exponential equals $2$, giving $v = \\frac{2}{y_0} - \\frac{b}{a}$. The last step, inverting $v$, is easy to forget.",
+        "对 $y' + ay = by^{2}$ 取 $n = 2$，所以 $v = y^{-1}$，$v' - av = -b$。于是\n\n$$v = \\frac{b}{a} + \\left(\\frac{1}{y_0} - \\frac{b}{a}\\right)e^{ax}, \\qquad y = \\frac{1}{v}.$$\n\n在 $x = \\frac{\\ln 2}{a}$ 处指数项等于 $2$，得 $v = \\frac{2}{y_0} - \\frac{b}{a}$。最后一步取 $v$ 的倒数容易被遗忘。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(2, 6);
+        const y0 = rng.int(1, 2);
+        const b = rng.int(1, Math.floor((2 * a - 1) / y0));
+        const ans = Q.of(a * y0, 2 * a - b * y0);
+        const v = Q.of(2 * a - b * y0, a * y0);
+        return numberProblem({
+          prompt: t(
+            `Solve $y' + ${a}y = ${b === 1 ? "" : b}y^{2}$ with $y(0) = ${y0}$, and find $y\\left(\\frac{\\ln 2}{${a}}\\right)$.`,
+            `求解 $y' + ${a}y = ${b === 1 ? "" : b}y^{2}$，$y(0) = ${y0}$，并求 $y\\left(\\frac{\\ln 2}{${a}}\\right)$。`,
+          ),
+          answer: ans,
+          wrong: [v, Q.of(y0, 2), Q.of(a * y0, 2 * a + b * y0)].filter((w) => !w.eq(ans)),
+          solution: t(
+            steps(
+              `With $v = \\frac{1}{y}$: $v' - ${a}v = -${b}$, $v(0) = \\frac{1}{${y0}}$, so $v = \\frac{${b}}{${a}} + \\left(\\frac{1}{${y0}} - \\frac{${b}}{${a}}\\right)e^{${a}x}$.`,
+              `At $x = \\frac{\\ln 2}{${a}}$: $v = \\frac{2}{${y0}} - \\frac{${b}}{${a}} = ${v.toLatex()}$, so $y = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `令 $v = \\frac{1}{y}$：$v' - ${a}v = -${b}$，$v(0) = \\frac{1}{${y0}}$，所以 $v = \\frac{${b}}{${a}} + \\left(\\frac{1}{${y0}} - \\frac{${b}}{${a}}\\right)e^{${a}x}$。`,
+              `当 $x = \\frac{\\ln 2}{${a}}$ 时 $v = \\frac{2}{${y0}} - \\frac{${b}}{${a}} = ${v.toLatex()}$，所以 $y = ${ans.toLatex()}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -786,6 +1241,37 @@ export const riccatiDifferentialEquations: TopicDef = {
           solution,
           answer: coeffU,
           wrong: [a, a * a, coeffU + 1],
+        });
+      },
+    },
+    {
+      id: "solving-a-riccati-initial-value-problem",
+      title: t("Solving a Riccati initial value problem", "求解里卡蒂初值问题"),
+      explanation: t(
+        "Knowing one solution turns the nonlinear Riccati equation into a linear one for a new unknown, which we then solve with an integrating factor. For $y' = y^{2} - k^{2}$ with known solution $y_1 = k$, set $y = k + \\frac{1}{u}$. Then $u' + 2ku = -1$, so $u = -\\frac{1}{2k} + Ce^{-2kx}$. With $y(0) = 0$, $u(0) = -\\frac{1}{k}$ and $C = -\\frac{1}{2k}$:\n\n$$u = -\\frac{1 + e^{-2kx}}{2k}, \\qquad y = k - \\frac{2k}{1 + e^{-2kx}}.$$\n\nAs $x \\to \\infty$, $y \\to -k$, the other equilibrium.",
+        "知道一个解，就能把非线性的里卡蒂方程化为关于新未知函数的线性方程，再用积分因子求解。对已知解 $y_1 = k$ 的 $y' = y^{2} - k^{2}$，令 $y = k + \\frac{1}{u}$。则 $u' + 2ku = -1$，所以 $u = -\\frac{1}{2k} + Ce^{-2kx}$。若 $y(0) = 0$，则 $u(0) = -\\frac{1}{k}$，$C = -\\frac{1}{2k}$：\n\n$$u = -\\frac{1 + e^{-2kx}}{2k}, \\qquad y = k - \\frac{2k}{1 + e^{-2kx}}.$$\n\n当 $x \\to \\infty$ 时 $y \\to -k$，即另一个平衡解。",
+      ),
+      generate(rng: Rng): Problem {
+        const k = rng.int(1, 6);
+        const m = rng.int(2, 6);
+        const ans = Q.of(k * (1 - m), m + 1);
+        return numberProblem({
+          prompt: t(
+            `$y_1 = ${k}$ solves $y' = y^{2} - ${k * k}$. Use it to solve the equation with $y(0) = 0$, and find $y\\left(\\frac{\\ln ${m}}{${2 * k}}\\right)$.`,
+            `$y_1 = ${k}$ 是 $y' = y^{2} - ${k * k}$ 的解。利用它求解满足 $y(0) = 0$ 的方程，并求 $y\\left(\\frac{\\ln ${m}}{${2 * k}}\\right)$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(-k), ans.neg(), Q.of(k * (1 - m), 2 * (m + 1))].filter((v) => !v.eq(ans)),
+          solution: t(
+            steps(
+              `With $y = ${k} + \\frac{1}{u}$: $u' + ${2 * k}u = -1$ and $u(0) = -\\frac{1}{${k}}$, so $u = -\\frac{1 + e^{-${2 * k}x}}{${2 * k}}$.`,
+              `At $x = \\frac{\\ln ${m}}{${2 * k}}$, $e^{-${2 * k}x} = \\frac{1}{${m}}$, so $u = -${Q.of(m + 1, 2 * k * m).toLatex()}$ and $y = ${k} - ${Q.of(2 * k * m, m + 1).toLatex()} = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `令 $y = ${k} + \\frac{1}{u}$：$u' + ${2 * k}u = -1$，$u(0) = -\\frac{1}{${k}}$，所以 $u = -\\frac{1 + e^{-${2 * k}x}}{${2 * k}}$。`,
+              `当 $x = \\frac{\\ln ${m}}{${2 * k}}$ 时 $e^{-${2 * k}x} = \\frac{1}{${m}}$，所以 $u = -${Q.of(m + 1, 2 * k * m).toLatex()}$，$y = ${k} - ${Q.of(2 * k * m, m + 1).toLatex()} = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -841,6 +1327,38 @@ export const clairautDifferentialEquations: TopicDef = {
         });
       },
     },
+    {
+      id: "the-singular-solution-of-clairauts-equation",
+      title: t("The singular solution of Clairaut's equation", "克莱罗方程的奇解"),
+      explanation: t(
+        "Differentiating $y = xp + f(p)$ gives $\\left(x + f'(p)\\right)p' = 0$. The factor $p' = 0$ gives the lines $y = Cx + f(C)$; the factor $x + f'(p) = 0$ gives the singular solution, the envelope of those lines.\n\nFor $f(p) = cp^{2}$: $x = -2cp$, so $p = -\\frac{x}{2c}$ and\n\n$$y = xp + cp^{2} = -\\frac{x^{2}}{4c}.$$",
+        "对 $y = xp + f(p)$ 求导得 $\\left(x + f'(p)\\right)p' = 0$。因子 $p' = 0$ 给出直线族 $y = Cx + f(C)$；因子 $x + f'(p) = 0$ 给出奇解，即这些直线的包络。\n\n对 $f(p) = cp^{2}$：$x = -2cp$，所以 $p = -\\frac{x}{2c}$，\n\n$$y = xp + cp^{2} = -\\frac{x^{2}}{4c}.$$",
+      ),
+      generate(rng: Rng): Problem {
+        const c = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
+        const x0 = rng.int(1, 9);
+        const ans = Q.of(-x0 * x0, 4 * c);
+        const cp = c === 1 ? "" : c === -1 ? "-" : `${c}`;
+        return numberProblem({
+          prompt: t(
+            `Find the value at $x = ${x0}$ of the singular solution of the Clairaut equation $y = xy' ${c < 0 ? "-" : "+"} ${Math.abs(c) === 1 ? "" : Math.abs(c)}(y')^{2}$.`,
+            `求克莱罗方程 $y = xy' ${c < 0 ? "-" : "+"} ${Math.abs(c) === 1 ? "" : Math.abs(c)}(y')^{2}$ 的奇解在 $x = ${x0}$ 处的值。`,
+          ),
+          answer: ans,
+          wrong: [ans.neg(), Q.of(-x0 * x0, 2 * c), Q.of(-c * x0 * x0)].filter((v) => !v.eq(ans)),
+          solution: t(
+            steps(
+              `Here $f(p) = ${cp}p^{2}$, and $x + f'(p) = 0$ gives $p = -\\frac{x}{${2 * c}}$.`,
+              `So $y = -\\frac{x^{2}}{${4 * c}}$, and at $x = ${x0}$, $y = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `这里 $f(p) = ${cp}p^{2}$，由 $x + f'(p) = 0$ 得 $p = -\\frac{x}{${2 * c}}$。`,
+              `所以 $y = -\\frac{x^{2}}{${4 * c}}$，在 $x = ${x0}$ 处 $y = ${ans.toLatex()}$。`,
+            ),
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -865,31 +1383,63 @@ export const dalembertDifferentialEquations: TopicDef = {
       ),
       generate(rng: Rng): Problem {
         const m = rng.int(2, 35);
-        const ans = m;
+        const ans = Q.of(m, m - 1);
 
         const prompt = t(
-          `Differentiating the d'Alembert equation $y = ${m}x y' + (y')^2$ with $p = y'$ produces a linear differential equation for $x$ as a function of $p$: $\\frac{dx}{dp} + \\frac{${m}}{(${m}-1)p}x = G(p)$. Find the coefficient of $p$ in the product $(${m}-1) \\times \\text{integrating factor power exponent}$.`,
-          `对达朗贝尔方程 $y = ${m}x y' + (y')^2$（记 $p = y'$）两端关于 $x$ 求导，得到关于 $x(p)$ 的一阶线性微分方程 $\\frac{dx}{dp} + \\frac{${m}}{(${m}-1)p}x = G(p)$。求该线性微分方程积分因子幂指数与 $(${m}-1)$ 的乘积。`,
+          `Differentiating the d'Alembert equation $y = ${m}x y' + (y')^2$ with $p = y'$ turns it into a linear equation $\\frac{dx}{dp} + P(p)x = G(p)$ for $x$ as a function of $p$. Its integrating factor is $p^{r}$. Find $r$.`,
+          `对达朗贝尔方程 $y = ${m}x y' + (y')^2$（记 $p = y'$）两端关于 $x$ 求导，它化为关于 $x(p)$ 的线性方程 $\\frac{dx}{dp} + P(p)x = G(p)$，其积分因子为 $p^{r}$。求 $r$。`,
         );
         const solution = t(
           steps(
             `Differentiate $y = ${m}x p + p^2$ with respect to $x$: $p = ${m}p + ${m}x \\frac{dp}{dx} + 2p \\frac{dp}{dx}$.`,
             `Rearrange: $(1 - ${m})p = (${m}x + 2p)\\frac{dp}{dx} \\implies \\frac{dx}{dp} + \\frac{${m}}{(${m}-1)p}x = -\\frac{2}{${m}-1}$.`,
             `The integrating factor for this linear equation is $I(p) = e^{\\int \\frac{${m}}{(${m}-1)p}dp} = p^{\\frac{${m}}{${m}-1}}$.`,
-            `Multiplying the exponent $\\frac{${m}}{${m}-1}$ by $(${m}-1)$ yields $${ans}$.`,
+            `So $r = \\frac{${m}}{${m - 1}}$${lowestTerms(m, m - 1)}.`,
           ),
           steps(
             `对 $y = ${m}x p + p^2$ 两边关于 $x$ 求导：$p = ${m}p + ${m}x \\frac{dp}{dx} + 2p \\frac{dp}{dx}$。`,
             `移项整理：$(1 - ${m})p = (${m}x + 2p)\\frac{dp}{dx} \\implies \\frac{dx}{dp} + \\frac{${m}}{(${m}-1)p}x = -\\frac{2}{${m}-1}$。`,
             `该方程的积分因子为 $I(p) = p^{\\frac{${m}}{${m}-1}}$。`,
-            `积分因子的幂指数乘以 $(${m}-1)$ 即得 $${ans}$。`,
+            `所以 $r = \\frac{${m}}{${m - 1}}$${lowestTerms(m, m - 1)}。`,
           ),
         );
         return numberProblem({
           prompt,
           solution,
           answer: ans,
-          wrong: [m - 1, m + 1, 2 * m],
+          wrong: [Q.of(m), Q.of(m - 1, m), ans.neg()],
+        });
+      },
+    },
+    {
+      id: "straight-line-solutions-of-dalembert-equations",
+      title: t("Straight-line solutions of d'Alembert equations", "达朗贝尔方程的直线解"),
+      explanation: t(
+        "Differentiating $y = xf(p) + g(p)$ gives $p - f(p) = \\left(xf'(p) + g'(p)\\right)p'$. If $p$ is a constant $p_0$, the left side must vanish: $p_0 = f(p_0)$. Each such fixed point gives a straight-line solution\n\n$$y = p_0x + g(p_0).$$\n\nFor $y = 2xp^{2} + 3p$: $p = 2p^{2}$ gives $p_0 = 0$ or $p_0 = \\frac{1}{2}$, so $y = 0$ and $y = \\frac{x}{2} + \\frac{3}{2}$ are solutions.",
+        "对 $y = xf(p) + g(p)$ 求导得 $p - f(p) = \\left(xf'(p) + g'(p)\\right)p'$。若 $p$ 是常数 $p_0$，左边必须为零：$p_0 = f(p_0)$。每个这样的不动点给出一条直线解\n\n$$y = p_0x + g(p_0).$$\n\n对 $y = 2xp^{2} + 3p$：由 $p = 2p^{2}$ 得 $p_0 = 0$ 或 $p_0 = \\frac{1}{2}$，所以 $y = 0$ 与 $y = \\frac{x}{2} + \\frac{3}{2}$ 都是解。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(2, 6);
+        const b = rng.int(-6, 8) || 5;
+        const x0 = rng.int(1, 9);
+        const ans = Q.of(x0 + b, a);
+        return numberProblem({
+          prompt: t(
+            `The d'Alembert equation $y = ${a}x(y')^{2} ${signed(b)}y'$ has a straight-line solution with nonzero slope. Find its value at $x = ${x0}$.`,
+            `达朗贝尔方程 $y = ${a}x(y')^{2} ${signed(b)}y'$有一条斜率不为零的直线解。求它在 $x = ${x0}$ 处的值。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(x0, a), Q.of(a * x0 + b), Q.of(x0 + b * a, a)].filter((v) => !v.eq(ans)),
+          solution: t(
+            steps(
+              `A constant slope $p_0$ must satisfy $p_0 = ${a}p_0^{2}$, so the nonzero slope is $p_0 = \\frac{1}{${a}}$.`,
+              `The line is $y = \\frac{x}{${a}} ${signed(b)} \\cdot \\frac{1}{${a}} = \\frac{x ${signed(b)}}{${a}}$; at $x = ${x0}$, $y = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `常数斜率 $p_0$ 必须满足 $p_0 = ${a}p_0^{2}$，所以非零斜率为 $p_0 = \\frac{1}{${a}}$。`,
+              `直线为 $y = \\frac{x}{${a}} ${signed(b)} \\cdot \\frac{1}{${a}} = \\frac{x ${signed(b)}}{${a}}$；在 $x = ${x0}$ 处 $y = ${ans.toLatex()}$。`,
+            ),
+          ),
         });
       },
     },
@@ -906,7 +1456,7 @@ export const phaseLinesOfFirstOrderOdes: TopicDef = {
   title: t("Phase Lines of First-Order ODEs", "一阶微分方程的相位线"),
   summary: t(
     "A phase line for an autonomous ODE y' = f(y) represents the real axis with arrows showing direction of flow and dots at equilibrium points.",
-    "一阶自自治方程 y' = f(y) 的相位线在实轴上标出平衡点并用箭头指示解曲线的演化流动方向。",
+    "一阶自治方程 y' = f(y) 的相位线在实轴上标出平衡点并用箭头指示解曲线的演化流动方向。",
   ),
   prerequisites: ["equilibrium-solutions-of-first-order-odes"],
   encompasses: [{ topic: "equilibrium-solutions-of-first-order-odes", weight: 0.3 }],
@@ -914,7 +1464,7 @@ export const phaseLinesOfFirstOrderOdes: TopicDef = {
   knowledgePoints: [
     {
       id: "constructing-and-interpreting-phase-lines",
-      title: t("Constructing and interpreting phase lines", "构造与分析自自治方程的相位线"),
+      title: t("Constructing and interpreting phase lines", "构造与分析自治方程的相位线"),
       explanation: t(
         "A phase line marks the equilibria and shows, between them, whether solutions increase or decrease according to the sign of the right side. For $y' = (y - a)(b - y)$ with $a < b$, $f(y) > 0$ when $a < y < b$ (solutions increase, arrow points right/up), while $f(y) < 0$ when $y > b$ or $y < a$ (solutions decrease).",
         "相线标出平衡点，并在平衡点之间根据右边的符号说明解是增加还是减少。对于 $y' = (y - a)(b - y)$（$a < b$），在区间 $a < y < b$ 上 $f(y) > 0$（解单调递增，箭头指向正方向）；在 $y > b$ 或 $y < a$ 时 $f(y) < 0$（解单调递减）。",
@@ -927,7 +1477,7 @@ export const phaseLinesOfFirstOrderOdes: TopicDef = {
 
         const prompt = t(
           `For the autonomous differential equation $y' = (y - ${a})(${b} - y)$, evaluate the slope $y'$ on the phase line at $y = ${yTest}$.`,
-          `对于自自治微分方程 $y' = (y - ${a})(${b} - y)$，求相位线上在 $y = ${yTest}$ 处的导数值 $y'$。`,
+          `对于自治微分方程 $y' = (y - ${a})(${b} - y)$，求相位线上在 $y = ${yTest}$ 处的导数值 $y'$。`,
         );
         const solution = t(
           steps(
@@ -937,7 +1487,7 @@ export const phaseLinesOfFirstOrderOdes: TopicDef = {
             `Since $y' > 0$, the flow arrow points toward higher $y$ values on $( ${a}, ${b} )$.`,
           ),
           steps(
-            `将 $y = ${yTest}$ 代入自自治函数 $f(y) = (y - ${a})(${b} - y)$。`,
+            `将 $y = ${yTest}$ 代入自治函数 $f(y) = (y - ${a})(${b} - y)$。`,
             `计算两因式：$(${yTest} - ${a}) = ${yTest - a}$，与 $(${b} - ${yTest}) = ${b - yTest}$。`,
             `相乘计算导数：$y' = (${yTest - a}) \\times (${b - yTest}) = ${ans}$。`,
             `由于导数大于零，在区间 $( ${a}, ${b} )$ 上解沿 $y$ 增加的方向流动。`,
@@ -948,6 +1498,34 @@ export const phaseLinesOfFirstOrderOdes: TopicDef = {
           solution,
           answer: ans,
           wrong: [-ans, ans + 1, ans - 1],
+        });
+      },
+    },
+    {
+      id: "long-run-behavior-from-a-phase-line",
+      title: t("Long-run behavior from a phase line", "由相线判断长期行为"),
+      explanation: t(
+        "On a phase line a solution moves in the direction of the arrows and can never cross an equilibrium, so it approaches the nearest equilibrium in its direction of motion.\n\nFor $y' = (1 - y)(y - 3)(y - 5)$: the sign is $+$ below $1$, $-$ on $(1, 3)$, $+$ on $(3, 5)$ and $-$ above $5$. A solution starting at $y(0) = 4$ rises to $5$; one starting at $y(0) = 2$ falls to $1$.",
+        "在相线上，解沿箭头方向移动，且不能越过平衡点，所以它趋向运动方向上最近的平衡点。\n\n对 $y' = (1 - y)(y - 3)(y - 5)$：符号在 $1$ 以下为 $+$，在 $(1, 3)$ 上为 $-$，在 $(3, 5)$ 上为 $+$，在 $5$ 以上为 $-$。从 $y(0) = 4$ 出发的解上升到 $5$；从 $y(0) = 2$ 出发的解下降到 $1$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 3);
+        const b = a + rng.int(1, 3);
+        const c = b + rng.int(1, 3);
+        let y0 = rng.int(Math.max(0, a - 3), c + 3);
+        if (y0 === b) y0 = c + 1;
+        const ans = y0 < b ? a : c;
+        return numberProblem({
+          prompt: t(
+            `For $y' = (${a} - y)(y - ${b})(y - ${c})$ with $y(0) = ${y0}$, find $\\lim_{t \\to \\infty} y(t)$.`,
+            `对 $y' = (${a} - y)(y - ${b})(y - ${c})$，$y(0) = ${y0}$，求 $\\lim_{t \\to \\infty} y(t)$。`,
+          ),
+          answer: ans,
+          wrong: [b, ans === a ? c : a, y0].filter((w) => w !== ans),
+          solution: t(
+            `The equilibria are $${a}$, $${b}$, $${c}$; $y'$ is $+$ below $${a}$, $-$ on $(${a}, ${b})$, $+$ on $(${b}, ${c})$ and $-$ above $${c}$. So $${a}$ and $${c}$ attract and $${b}$ repels, and from $y(0) = ${y0}$ the solution tends to $${ans}$.`,
+            `平衡点为 $${a}$、$${b}$、$${c}$；$y'$ 在 $${a}$ 以下为 $+$，在 $(${a}, ${b})$ 上为 $-$，在 $(${b}, ${c})$ 上为 $+$，在 $${c}$ 以上为 $-$。所以 $${a}$ 与 $${c}$ 吸引，$${b}$ 排斥，从 $y(0) = ${y0}$ 出发的解趋于 $${ans}$。`,
+          ),
         });
       },
     },
@@ -1002,6 +1580,44 @@ export const classifyingEquilibriumSolutionsOfFirstOrderOdes: TopicDef = {
           solution,
           answer: fPrimeA,
           wrong: [-fPrimeA, fPrimeA - 1, fPrimeA + 2],
+        });
+      },
+    },
+    {
+      id: "classifying-equilibria-when-the-derivative-test-fails",
+      title: t("Classifying equilibria when the derivative test fails", "导数判别法失效时的平衡点分类"),
+      explanation: t(
+        "When $f'(y^{*}) = 0$ the derivative test says nothing; look at the sign of $f$ on each side instead. At a double root such as $y^{*} = a$ in $f(y) = (y - a)^{2}(y - b)$, the factor $(y - a)^{2}$ never changes sign, so $f$ has the same sign on both sides: solutions approach from one side and leave on the other. Such an equilibrium is semi-stable (a node).\n\nAt the simple root $y = b$, $f'(b) = (b - a)^{2} > 0$, so it is a source; a minus sign in front of $f$ reverses this to a sink.",
+        "当 $f'(y^{*}) = 0$ 时导数判别法失效；应改看 $f$ 在两侧的符号。在二重根处，例如 $f(y) = (y - a)^{2}(y - b)$ 中的 $y^{*} = a$，因子 $(y - a)^{2}$ 从不变号，所以 $f$ 在两侧同号：解从一侧趋近，从另一侧离开。这样的平衡点是半稳定的（结点）。\n\n在单根 $y = b$ 处，$f'(b) = (b - a)^{2} > 0$，所以它是源；在 $f$ 前加负号会使它变成汇。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(-4, 6);
+        let b = rng.int(-4, 6);
+        if (b === a) b = a + 3;
+        const s = rng.bool(0.5) ? 1 : -1;
+        const askDouble = rng.bool(0.4);
+        const yStar = askDouble ? a : b;
+        const correct = askDouble ? 2 : s > 0 ? 1 : 0;
+        const lin = (r: number): string => (r === 0 ? "y" : `y ${signed(-r)}`);
+        const sq = a === 0 ? "y^{2}" : `(${lin(a)})^{2}`;
+        const f = `${s < 0 ? "-" : ""}${sq}${b === 0 ? "y" : `(${lin(b)})`}`;
+        return choiceProblem({
+          prompt: t(`Classify the equilibrium $y = ${yStar}$ of $y' = ${f}$.`, `判断 $y' = ${f}$ 的平衡点 $y = ${yStar}$ 的类型。`),
+          options: [
+            t("Stable (a sink)", "稳定（汇）"),
+            t("Unstable (a source)", "不稳定（源）"),
+            t("Semi-stable (a node)", "半稳定（结点）"),
+          ],
+          correct,
+          solution: askDouble
+            ? t(
+                `$y = ${a}$ is a double root, so $f'(${a}) = 0$ and the derivative test fails. The factor $${sq}$ keeps its sign, so $f$ has the same sign on both sides of $${a}$: the equilibrium is semi-stable.`,
+                `$y = ${a}$ 是二重根，所以 $f'(${a}) = 0$，导数判别法失效。因子 $${sq}$ 不变号，所以 $f$ 在 $${a}$ 两侧同号：该平衡点是半稳定的。`,
+              )
+            : t(
+                `$f'(${b}) = ${s < 0 ? "-" : ""}(${b} ${signed(-a)})^{2} = ${s * (b - a) ** 2}$, which is ${s > 0 ? "positive" : "negative"}, so $y = ${b}$ is a ${s > 0 ? "source" : "sink"}.`,
+                `$f'(${b}) = ${s < 0 ? "-" : ""}(${b} ${signed(-a)})^{2} = ${s * (b - a) ** 2}$，${s > 0 ? "为正" : "为负"}，所以 $y = ${b}$ 是${s > 0 ? "源" : "汇"}。`,
+              ),
         });
       },
     },
