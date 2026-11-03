@@ -296,6 +296,40 @@ export const scaleDrawingsAndScaleFactor: TopicDef = {
         });
       },
     },
+    {
+      id: "scale-factor-drawing-length",
+      title: t("Finding Drawing Lengths from Actual Dimensions", "根据实际尺寸求图上长度"),
+      explanation: t(
+        "Going the other way, from a real object to the drawing, divide by the scale instead of multiplying. Each drawing unit stands for a fixed actual length, so count how many of those lengths fit into the actual measurement.\n\nWith the scale $1\\text{ cm} = 5\\text{ m}$, a wall that is $35\\text{ m}$ long is drawn as $35 \\div 5 = 7\\text{ cm}$. Check: $7\\text{ cm}$ on the drawing stands for $7 \\times 5 = 35\\text{ m}$.",
+        "反过来，由实物求图上长度时，要除以比例尺而不是乘。图上每个单位代表固定的实际长度，所以看实际长度里含有多少个这样的长度。\n\n比例尺为 $1\\text{ cm} = 5\\text{ m}$ 时，一面 $35\\text{ m}$ 长的墙在图上画成 $35 \\div 5 = 7\\text{ cm}$。检验：图上 $7\\text{ cm}$ 代表 $7 \\times 5 = 35\\text{ m}$。",
+      ),
+      generate(rng) {
+        const scale = rng.int(2, 25);
+        const drawing = rng.int(3, 18);
+        const actual = drawing * scale;
+        const [thing, thingZh] = rng.pick([
+          ["a soccer field", "一个足球场"],
+          ["a parking lot", "一个停车场"],
+          ["a garden", "一个花园"],
+          ["a swimming pool", "一个游泳池"],
+          ["a warehouse", "一个仓库"],
+        ] as const);
+        return numberProblem({
+          prompt: t(
+            `A map uses the scale $1\\text{ cm} = ${scale}\\text{ m}$. ${thing[0]!.toUpperCase()}${thing.slice(1)} is $${actual}\\text{ m}$ long. How long is it on the map, in centimeters?`,
+            `一张地图的比例尺为 $1\\text{ cm} = ${scale}\\text{ m}$。${thingZh}长 $${actual}\\text{ m}$。它在地图上长多少厘米？`,
+          ),
+          answer: drawing,
+          form: "integer",
+          unit: "cm",
+          wrong: [actual * scale, actual - scale, drawing + 1],
+          solution: t(
+            `Each centimeter stands for $${scale}\\text{ m}$, so divide: $${actual} \\div ${scale} = ${drawing}\\text{ cm}$.`,
+            `每厘米代表 $${scale}\\text{ m}$，所以相除：$${actual} \\div ${scale} = ${drawing}\\text{ cm}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -348,6 +382,45 @@ export const classifyingRationalAndIrrationalNumbers: TopicDef = {
         });
       },
     },
+    {
+      id: "rational-numbers-in-disguise",
+      title: t("Recognizing Rational Numbers That Look Irrational", "识别看似无理的有理数"),
+      explanation: t(
+        "Some numbers look irrational but are not, so simplify before deciding. A root of a perfect power is an integer: $\\sqrt{49} = 7$ and $\\sqrt[3]{27} = 3$. A repeating decimal such as $0.\\overline{3} = \\frac{1}{3}$ is rational, because its digits repeat in a fixed block.\n\nOn the other hand, $\\pi$, the square root of a non-square such as $\\sqrt{8}$, and the cube root of a non-cube such as $\\sqrt[3]{10}$ stay irrational, as does a nonzero rational multiple of one of them, like $3\\sqrt{2}$.",
+        "有些数看起来是无理数，其实不是，所以要先化简再判断。完全幂的方根是整数：$\\sqrt{49} = 7$，$\\sqrt[3]{27} = 3$。像 $0.\\overline{3} = \\frac{1}{3}$ 这样的循环小数是有理数，因为它的数字按固定的段重复。\n\n另一方面，$\\pi$、非完全平方数的平方根（如 $\\sqrt{8}$）以及非完全立方数的立方根（如 $\\sqrt[3]{10}$）仍是无理数，它们的非零有理倍数（如 $3\\sqrt{2}$）也是无理数。",
+      ),
+      generate(rng) {
+        const kind = rng.int(0, 2);
+        const square = rng.int(4, 15);
+        const cube = rng.int(2, 6);
+        const digit = rng.int(1, 8);
+        const rational = [`\\sqrt{${square * square}}`, `\\sqrt[3]{${cube ** 3}}`, `0.\\overline{${digit}}`][kind]!;
+        const why = [
+          t(`$\\sqrt{${square * square}} = ${square}$`, `$\\sqrt{${square * square}} = ${square}$`),
+          t(`$\\sqrt[3]{${cube ** 3}} = ${cube}$`, `$\\sqrt[3]{${cube ** 3}} = ${cube}$`),
+          t(`$0.\\overline{${digit}} = \\frac{${digit}}{9}$`, `$0.\\overline{${digit}} = \\frac{${digit}}{9}$`),
+        ][kind]!;
+        const nonSquare = rng.pick([2, 3, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20]);
+        const nonCube = rng.pick([2, 3, 4, 5, 6, 7, 9, 10, 12, 15, 20, 25]);
+        const multiple = rng.int(2, 9);
+        const otherNonSquare = rng.pick([2, 3, 5, 7].filter((n) => n !== nonSquare));
+        const irrationals = rng.sample(
+          [`\\sqrt{${nonSquare}}`, `\\sqrt[3]{${nonCube}}`, `\\pi`, `${multiple}\\sqrt{${otherNonSquare}}`],
+          3,
+        );
+        const numbers = rng.shuffle([rational, ...irrationals]);
+        const listed = numbers.map((x) => `$${x}$`);
+        return choiceProblem({
+          prompt: t(`Which of these numbers is rational: ${listed.join(", ")}?`, `下列哪个数是有理数：${listed.join("、")}？`),
+          options: numbers.map((x) => t(`$${x}$`, `$${x}$`)),
+          correct: numbers.indexOf(rational),
+          solution: t(
+            `${why.en}, which is a ratio of integers, so it is rational. The others cannot be simplified to a ratio of integers: they involve $\\pi$ or a root of a number that is not a perfect power.`,
+            `${why["zh-CN"]}，是整数之比，所以是有理数。其他各数都不能化成整数之比：它们含有 $\\pi$ 或非完全幂的方根。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -392,8 +465,45 @@ export const approximatingSquareRoots: TopicDef = {
         });
       },
     },
+    {
+      id: "nearest-integer-to-a-square-root",
+      title: t("The Nearest Integer to a Square Root", "最接近平方根的整数"),
+      explanation: t(
+        "Knowing that $\\sqrt{N}$ lies between $k$ and $k + 1$ does not say which one it is closer to. The halfway point is $k + \\frac{1}{2}$, and $(k + \\frac{1}{2})^2 = k^2 + k + \\frac{1}{4}$. So $\\sqrt{N}$ is closer to $k$ when $N \\le k^2 + k$ and closer to $k + 1$ when $N \\ge k^2 + k + 1$.\n\nFor $\\sqrt{54}$: $k = 7$ and $7^2 + 7 = 56$. Since $54 \\le 56$, $\\sqrt{54}$ is closer to $7$ (indeed $\\sqrt{54} \\approx 7.35$). Comparing distances to the perfect squares, $54 - 49 = 5$ against $64 - 54 = 10$, gives the same answer here, but the halfway square is the reliable test.",
+        "知道 $\\sqrt{N}$ 在 $k$ 与 $k + 1$ 之间，并不能说明它更接近哪一个。两者的中点是 $k + \\frac{1}{2}$，而 $(k + \\frac{1}{2})^2 = k^2 + k + \\frac{1}{4}$。因此当 $N \\le k^2 + k$ 时 $\\sqrt{N}$ 更接近 $k$，当 $N \\ge k^2 + k + 1$ 时更接近 $k + 1$。\n\n对于 $\\sqrt{54}$：$k = 7$，$7^2 + 7 = 56$。因为 $54 \\le 56$，所以 $\\sqrt{54}$ 更接近 $7$（实际上 $\\sqrt{54} \\approx 7.35$）。比较到两个完全平方数的距离 $54 - 49 = 5$ 与 $64 - 54 = 10$，这里也得到同样的结论，但用中点的平方判断才可靠。",
+      ),
+      generate(rng) {
+        const k = rng.int(3, 14);
+        const n = rng.int(k * k + 1, (k + 1) * (k + 1) - 1);
+        const mid = k * k + k;
+        const nearest = n <= mid ? k : k + 1;
+        const other = nearest === k ? k + 1 : k;
+        return numberProblem({
+          prompt: t(`Which whole number is closest to $\\sqrt{${n}}$?`, `哪个整数最接近 $\\sqrt{${n}}$？`),
+          answer: nearest,
+          form: "integer",
+          wrong: [other, nearest + (nearest === k ? -1 : 1)],
+          solution: t(
+            `$${k * k} < ${n} < ${(k + 1) * (k + 1)}$, so $${k} < \\sqrt{${n}} < ${k + 1}$. The halfway point $${k}.5$ has square $${mid}.25$, and $${n}$ is ${n <= mid ? "below" : "above"} it, so $\\sqrt{${n}}$ is closest to $${nearest}$.`,
+            `$${k * k} < ${n} < ${(k + 1) * (k + 1)}$，所以 $${k} < \\sqrt{${n}} < ${k + 1}$。中点 $${k}.5$ 的平方是 $${mid}.25$，$${n}$ ${n <= mid ? "小于" : "大于"}它，所以 $\\sqrt{${n}}$ 最接近 $${nearest}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
+
+/** twoWayLatex writes a two-way table with row and column totals; a null cell is shown as a blank to fill. */
+function twoWayLatex(
+  rows: readonly [string, string],
+  cols: readonly [string, string],
+  cells: readonly (readonly (number | null)[])[],
+  total: string,
+): string {
+  const cell = (v: number | null | undefined) => (v === null || v === undefined ? "?" : `${v}`);
+  const line = (label: string, r: readonly (number | null)[]) => `\\text{${label}} & ${r.map(cell).join(" & ")}`;
+  return `\\begin{array}{|l|c|c|c|}\\hline & \\text{${cols[0]}} & \\text{${cols[1]}} & \\text{${total}} \\\\ \\hline ${line(rows[0], cells[0]!)} \\\\ \\hline ${line(rows[1], cells[1]!)} \\\\ \\hline ${line(total, cells[2]!)} \\\\ \\hline\\end{array}`;
+}
 
 /** twoWayFrequencyTables reads and interprets bivariate categorical data tables. */
 export const twoWayFrequencyTables: TopicDef = {
@@ -444,6 +554,63 @@ export const twoWayFrequencyTables: TopicDef = {
         });
       },
     },
+    {
+      id: "a-cell-from-the-totals",
+      title: t("Finding a Cell from Row and Column Totals", "由行列合计求单元格"),
+      explanation: t(
+        'In a two-way table every row adds up to its row total and every column adds up to its column total. A blank cell can therefore be found from any line through it whose other entries are known, and sometimes a second blank must be filled first.\n\nIf the "yes" column total is $40$ and the first row has $15$ in that column, the second row\'s "yes" cell is $40 - 15 = 25$; with a row total of $60$, the cell next to it is $60 - 25 = 35$.',
+        "在双向表中，每行之和等于行合计，每列之和等于列合计。因此只要经过空格的某一行或某一列的其余数都已知，就能求出这个空格；有时要先填出另一个空格。\n\n若“是”这一列的合计为 $40$，第一行在这一列是 $15$，则第二行“是”的格子为 $40 - 15 = 25$；若第二行合计为 $60$，它旁边的格子为 $60 - 25 = 35$。",
+      ),
+      generate(rng) {
+        const a1 = rng.int(8, 40);
+        const a2 = rng.int(8, 40);
+        const b1 = rng.int(8, 40);
+        const b2 = rng.int(8, 40);
+        const [rowsEn, rowsZh, colsEn, colsZh] = rng.pick([
+          [
+            ["Grade 7", "Grade 8"],
+            ["七年级", "八年级"],
+            ["Bus", "Walk"],
+            ["坐车", "步行"],
+          ],
+          [
+            ["Adults", "Children"],
+            ["成人", "儿童"],
+            ["Tea", "Juice"],
+            ["茶", "果汁"],
+          ],
+          [
+            ["Morning", "Evening"],
+            ["上午", "晚上"],
+            ["Online", "In store"],
+            ["网购", "店内"],
+          ],
+        ] as const);
+        const r1 = a1 + a2;
+        const r2 = b1 + b2;
+        const c1 = a1 + b1;
+        const c2 = a2 + b2;
+        const all = r1 + r2;
+        const cells = [
+          [a1, null, r1],
+          [null, null, r2],
+          [c1, c2, all],
+        ] as const;
+        return numberProblem({
+          prompt: t(
+            `Find the value in the "${rowsEn[1]}" row and the "${colsEn[1]}" column. $$${twoWayLatex(rowsEn, colsEn, cells, "Total")}$$`,
+            `求“${rowsZh[1]}”一行中“${colsZh[1]}”一列的数。$$${twoWayLatex(rowsZh, colsZh, cells, "合计")}$$`,
+          ),
+          answer: b2,
+          form: "integer",
+          wrong: [b1, a2, c2 - a1, r2 - a1].filter((w) => w !== b2 && w > 0),
+          solution: t(
+            `First the "${colsEn[1]}" cell of the first row: $${r1} - ${a1} = ${a2}$. Then the "${colsEn[1]}" column gives $${c2} - ${a2} = ${b2}$.`,
+            `先求第一行“${colsZh[1]}”的格子：$${r1} - ${a1} = ${a2}$。再由“${colsZh[1]}”一列得 $${c2} - ${a2} = ${b2}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -489,6 +656,53 @@ export const relativeFrequencyTables: TopicDef = {
           unit: "%",
           wrong: [percent + 5, percent - 5, 100 - percent],
           solution,
+        });
+      },
+    },
+    {
+      id: "joint-and-marginal-relative-frequency",
+      title: t("Joint and Marginal Relative Frequencies", "联合相对频数与边缘相对频数"),
+      explanation: t(
+        'Relative frequencies of the whole table divide by the grand total, not by a row or column total. A **joint relative frequency** divides one cell by the grand total; a **marginal relative frequency** divides a row or column total by the grand total.\n\nIn a survey of $200$ people where $50$ are adults who prefer tea and $80$ in all prefer tea, the joint relative frequency of "adult and tea" is $\\frac{50}{200} = 25\\%$ and the marginal relative frequency of tea is $\\frac{80}{200} = 40\\%$.',
+        "整张表的相对频数要除以总计，而不是除以某行或某列的合计。**联合相对频数**用某一格除以总计；**边缘相对频数**用某行或某列的合计除以总计。\n\n在一次对 $200$ 人的调查中，若喜欢茶的成人有 $50$ 人，喜欢茶的共 $80$ 人，则“成人且喜欢茶”的联合相对频数为 $\\frac{50}{200} = 25\\%$，喜欢茶的边缘相对频数为 $\\frac{80}{200} = 40\\%$。",
+      ),
+      generate(rng) {
+        const all = rng.pick([20, 40, 60, 80, 100, 200]);
+        const step = all / 20;
+        const cuts = rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 3).sort((x, y) => x - y);
+        const parts = [cuts[0]!, cuts[1]! - cuts[0]!, cuts[2]! - cuts[1]!, 20 - cuts[2]!];
+        const [a1, a2, b1, b2] = parts.map((k) => k * step) as [number, number, number, number];
+        const cells = [
+          [a1, a2, a1 + a2],
+          [b1, b2, b1 + b2],
+          [a1 + b1, a2 + b2, all],
+        ] as const;
+        const rows = ["Adults", "Students"] as const;
+        const rowsZh = ["成人", "学生"] as const;
+        const cols = ["Tea", "Coffee"] as const;
+        const colsZh = ["茶", "咖啡"] as const;
+        const joint = rng.bool();
+        const count = joint ? a1 : a1 + b1;
+        const answer = (count * 100) / all;
+        const ask = joint ? t(`are adults who prefer tea`, `喜欢茶的成人`) : t(`prefer tea`, `喜欢茶的人`);
+        return numberProblem({
+          prompt: t(
+            `The table shows the drink preferences of $${all}$ people. What percent of all the people surveyed ${ask.en}? $$${twoWayLatex(rows, cols, cells, "Total")}$$`,
+            `下表是 $${all}$ 人的饮品偏好。${ask["zh-CN"]}占全部受访者的百分之几？$$${twoWayLatex(rowsZh, colsZh, cells, "合计")}$$`,
+          ),
+          answer,
+          form: "integer",
+          unit: "%",
+          wrong: [
+            Math.round((a1 * 100) / (a1 + a2)),
+            Math.round((a1 * 100) / (a1 + b1)),
+            joint ? ((a1 + b1) * 100) / all : (a1 * 100) / all,
+            count,
+          ].filter((w) => w !== answer),
+          solution: t(
+            `Divide by the grand total: $\\frac{${count}}{${all}} \\times 100\\% = ${answer}\\%$.`,
+            `除以总计：$\\frac{${count}}{${all}} \\times 100\\% = ${answer}\\%$。`,
+          ),
         });
       },
     },
@@ -669,6 +883,46 @@ export const linearVsNonlinearFunctions: TopicDef = {
           options,
           correct: equations.indexOf(linearEq),
           solution,
+        });
+      },
+    },
+    {
+      id: "linear-from-a-table",
+      title: t("Recognizing a Linear Function from a Table", "由表格识别一次函数"),
+      explanation: t(
+        "A table shows a linear function exactly when equal steps in $x$ always give equal steps in $y$. With $x$ going up by $1$, find the difference between each $y$ and the next: a linear function has the same difference every time, and that difference is the slope.\n\nFor the points $(0, 2), (1, 5), (2, 8), (3, 11)$ the differences are $3, 3, 3$, so the function is linear. For $(0, 1), (1, 2), (2, 4), (3, 8)$ they are $1, 2, 4$: the values double instead, so the function is nonlinear.",
+        "当 $x$ 每次增加相同的量，$y$ 也总是增加相同的量时，表格表示的才是一次函数。$x$ 每次增加 $1$ 时，求相邻两个 $y$ 值的差：一次函数每次的差都相同，这个差就是斜率。\n\n对于点 $(0, 2), (1, 5), (2, 8), (3, 11)$，差依次为 $3, 3, 3$，所以是一次函数。对于 $(0, 1), (1, 2), (2, 4), (3, 8)$，差依次为 $1, 2, 4$：函数值是在翻倍，所以不是一次函数。",
+      ),
+      generate(rng) {
+        const m = rng.int(2, 6);
+        const b = rng.int(-5, 9);
+        const x0 = rng.int(-4, 8);
+        const step = rng.int(1, 3);
+        const xs = [0, 1, 2, 3].map((i) => x0 + i * step);
+        const linear = xs.map((x) => m * x + b);
+        const square = xs.map((x) => x * x + b);
+        const exponential = xs.map((_, i) => 2 ** i * m + b);
+        const bump = rng.int(1, 2);
+        const almost = linear.map((y, i) => (i === 2 ? y + bump : y));
+        const show = (ys: readonly number[]) => ys.join(",\\ ");
+        const diffs = (ys: readonly number[]) =>
+          ys
+            .slice(1)
+            .map((y, i) => y - ys[i]!)
+            .join(", ");
+        const tables = rng.shuffle([linear, square, exponential, almost]);
+        const xList = xs.join(", ");
+        return choiceProblem({
+          prompt: t(
+            `Each list gives the $y$-values of a function at $x = ${xList}$, in that order. Which list comes from a linear function?`,
+            `每组依次列出一个函数在 $x = ${xList}$ 处的 $y$ 值。哪一组来自一次函数？`,
+          ),
+          options: tables.map((ys) => t(`$${show(ys)}$`, `$${show(ys)}$`)),
+          correct: tables.indexOf(linear),
+          solution: t(
+            `The $x$-values go up by $${step}$ each time. The $y$-differences of $${show(linear)}$ are $${diffs(linear)}$, all equal, so its rate of change is the constant $${m * step} \\div ${step} = ${m}$. The other lists have differences $${diffs(square)}$, $${diffs(exponential)}$ and $${diffs(almost)}$, which are not constant.`,
+            `$x$ 值每次增加 $${step}$。$${show(linear)}$ 的 $y$ 值之差为 $${diffs(linear)}$，全都相等，所以变化率是常数 $${m * step} \\div ${step} = ${m}$。其他各组的差为 $${diffs(square)}$、$${diffs(exponential)}$ 和 $${diffs(almost)}$，都不是常数。`,
+          ),
         });
       },
     },
