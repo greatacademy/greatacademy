@@ -1,6 +1,6 @@
-import type { KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { linear, Q, radical } from "@ga/subject-math";
+import { linear, type Mark, type Point, Q, radical, sketch } from "@ga/subject-math";
 
 import { expressionProblem, numberProblem, radicalProblem, steps } from "../problems.ts";
 import { pickChoice } from "./grade-4-fractions.ts";
@@ -30,8 +30,8 @@ function topic(
 }
 
 /** kp builds a KnowledgePointDef. */
-function kp(id: string, title: Text, explanation: Text, generate: (rng: Rng) => Problem): KnowledgePointDef {
-  return { id, title, explanation, generate };
+function kp(id: string, title: Text, explanation: Text, generate: (rng: Rng) => Problem, figure?: Figure): KnowledgePointDef {
+  return figure ? { id, title, explanation, figure, generate } : { id, title, explanation, generate };
 }
 
 /** triples are Pythagorean triples with the hypotenuse last. */
@@ -886,6 +886,81 @@ export const constructingFunctionsRepresentingPropertiesOf2dShapes = topic(
 // ---------------------------------------------------------------------------
 // Inscribed shapes
 
+/** on is the point at distance r from the origin in direction d degrees. */
+const on = (d: number, r: number): Point => [r * Math.cos((d * Math.PI) / 180), r * Math.sin((d * Math.PI) / 180)];
+
+/** circleAt draws a circle of radius r about the origin. */
+const circleAt = (r: number): Mark => ({ kind: "polygon", points: Array.from({ length: 96 }, (_, i) => on(i * 3.75, r)) });
+
+/** equilateralInCircleFigure shows an equilateral triangle inscribed in a circle, with the radius to the top vertex and the height through the center. */
+const equilateralInCircleFigure: Figure = (() => {
+  const [a, b, c] = [on(90, 3), on(210, 3), on(330, 3)];
+  const m: Point = [0, -1.5];
+  return {
+    svg: sketch([
+      circleAt(3),
+      { kind: "polygon", points: [a, b, c] },
+      { kind: "segment", a: [0, 0], b: m, dashed: true },
+      { kind: "segment", a: [0, 0], b: a, accent: true },
+      { kind: "right", vertex: m, from: c, to: a },
+      { kind: "dot", at: [0, 0] },
+      { kind: "label", at: [0, 0], text: "O", dir: "e" },
+      { kind: "label", at: [0, 1.5], text: "r", dir: "w", italic: true },
+      { kind: "label", at: [0, -0.75], text: "r/2", dir: "w" },
+      { kind: "side", a: c, b: a, text: "s" },
+    ]),
+    alt: t(
+      "An equilateral triangle with side s inscribed in a circle with center O. The radius r runs from O to the top vertex, and the height from that vertex continues through O for another r/2 to the midpoint of the bottom side, so the height is 3r/2.",
+      "一个边长为 s 的正三角形内接于圆心为 O 的圆。半径 r 从 O 连到顶端的顶点；从该顶点出发的高经过 O，再延伸 r/2 到底边中点，所以高为 3r/2。",
+    ),
+  };
+})();
+
+/** circleInEquilateralFigure shows the circle inscribed in an equilateral triangle, with its radius to the midpoint of the bottom side. */
+const circleInEquilateralFigure: Figure = (() => {
+  const [a, b, c] = [on(90, 3), on(210, 3), on(330, 3)];
+  const m: Point = [0, -1.5];
+  return {
+    svg: sketch([
+      { kind: "polygon", points: [a, b, c] },
+      circleAt(1.5),
+      { kind: "segment", a: [0, 0], b: m, accent: true },
+      { kind: "segment", a: a, b: [0, 0], dashed: true },
+      { kind: "right", vertex: m, from: c, to: a },
+      { kind: "dot", at: [0, 0] },
+      { kind: "label", at: [0, 0], text: "O", dir: "e" },
+      { kind: "label", at: [0, -0.75], text: "r", dir: "w", italic: true },
+      { kind: "side", a: b, b: c, text: "s" },
+    ]),
+    alt: t(
+      "A circle inscribed in an equilateral triangle with side s, centered at O. The radius r runs from O straight down to the midpoint of the bottom side, meeting it at a right angle; the dashed rest of the height, from O up to the top vertex, is twice as long.",
+      "一个圆内切于边长为 s 的正三角形，圆心为 O。半径 r 从 O 竖直向下连到底边中点，与底边垂直；高的其余部分（从 O 到顶端顶点，虚线）是它的两倍长。",
+    ),
+  };
+})();
+
+/** triangleOnDiameterFigure shows a triangle inscribed in a circle with side AB a diameter and the right angle at C. */
+const triangleOnDiameterFigure: Figure = (() => {
+  const [a, b, c] = [on(180, 3), on(0, 3), on(65, 3)];
+  return {
+    svg: sketch([
+      circleAt(3),
+      { kind: "polygon", points: [a, b, c] },
+      { kind: "right", vertex: c, from: a, to: b },
+      { kind: "segment", a: c, b: [c[0], 0], dashed: true },
+      { kind: "dot", at: [0, 0] },
+      { kind: "label", at: a, text: "A", dir: "w" },
+      { kind: "label", at: b, text: "B", dir: "e" },
+      { kind: "label", at: c, text: "C", dir: "n" },
+      { kind: "label", at: [c[0], c[1] / 2], text: "h", dir: "e", italic: true },
+    ]),
+    alt: t(
+      "Triangle ABC inscribed in a circle with AB a diameter through the center. The angle at C is a right angle, and a dashed height h drops from C to AB.",
+      "△ABC 内接于圆，AB 是过圆心的直径。C 处的角是直角，从 C 到 AB 的虚线是高 h。",
+    ),
+  };
+})();
+
 /** equilateralTrianglesInscribedInCircles relates the side and area of an inscribed equilateral triangle to the radius. */
 export const equilateralTrianglesInscribedInCircles = topic(
   "equilateral-triangles-inscribed-in-circles",
@@ -933,6 +1008,7 @@ export const equilateralTrianglesInscribedInCircles = topic(
               ),
             });
       },
+      equilateralInCircleFigure,
     ),
     kp(
       "area-from-the-radius",
@@ -995,6 +1071,7 @@ export const circlesInscribedInEquilateralTriangles = topic(
           ),
         });
       },
+      circleInEquilateralFigure,
     ),
     kp(
       "area-of-the-inscribed-circle",
@@ -1060,6 +1137,7 @@ export const areasOfInscribedTriangles = topic(
           ),
         });
       },
+      triangleOnDiameterFigure,
     ),
     kp(
       "greatest-inscribed-triangle-on-a-diameter",
