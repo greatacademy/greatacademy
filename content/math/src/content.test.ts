@@ -30,6 +30,7 @@ const explainedCourses = [
   "mathematical-methods-for-the-physical-sciences-ii",
   "mathematics-for-machine-learning",
   "probability-and-statistics",
+  "discrete-mathematics",
   "integrated-math-i",
   "integrated-math-ii",
   "integrated-math-iii",

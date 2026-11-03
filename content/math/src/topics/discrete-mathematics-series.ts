@@ -76,8 +76,8 @@ export const finiteLinearSeries: TopicDef = {
       id: "sums-of-linear-expressions",
       title: t("Sums of linear expressions", "线性式的和"),
       explanation: t(
-        "$\\sum_{k=1}^{20} (3k - 2) = 3\\sum_{k=1}^{20} k - 2 \\cdot 20 = 3 \\cdot \\frac{20 \\cdot 21}{2} - 40 = 590$. The constant is added $n$ times, not once.",
-        "$\\sum_{k=1}^{20} (3k - 2) = 3\\sum_{k=1}^{20} k - 2 \\cdot 20 = 3 \\cdot \\frac{20 \\cdot 21}{2} - 40 = 590$。常数要加 $n$ 次，而不是一次。",
+        "Split the sum into a multiple of the sum of the first integers and a constant added once for every term. $\\sum_{k=1}^{20} (3k - 2) = 3\\sum_{k=1}^{20} k - 2 \\cdot 20 = 3 \\cdot \\frac{20 \\cdot 21}{2} - 40 = 590$. The constant is added $n$ times, not once.",
+        "把和拆成前若干个整数之和的倍数，加上每一项都加一次的常数。$\\sum_{k=1}^{20} (3k - 2) = 3\\sum_{k=1}^{20} k - 2 \\cdot 20 = 3 \\cdot \\frac{20 \\cdot 21}{2} - 40 = 590$。常数要加 $n$ 次，而不是一次。",
       ),
       generate(rng) {
         const a = rng.nonZero(-6, 9);
@@ -103,8 +103,8 @@ export const finiteLinearSeries: TopicDef = {
       id: "linear-sums-with-a-shifted-start",
       title: t("Sums not starting at 1", "不从 1 开始的和"),
       explanation: t(
-        "$\\sum_{k=11}^{30} k = \\sum_{k=1}^{30} k - \\sum_{k=1}^{10} k = 465 - 55 = 410$. Subtract up to $m - 1$, not up to $m$.",
-        "$\\sum_{k=11}^{30} k = \\sum_{k=1}^{30} k - \\sum_{k=1}^{10} k = 465 - 55 = 410$。减去到 $m - 1$ 的和，而不是到 $m$ 的和。",
+        "A sum that starts later is the full sum up to the end minus the full sum up to just before the start. $\\sum_{k=11}^{30} k = \\sum_{k=1}^{30} k - \\sum_{k=1}^{10} k = 465 - 55 = 410$. Subtract up to $m - 1$, not up to $m$.",
+        "从较后位置开始的和，等于到末项的完整和减去到起点前一项的完整和。$\\sum_{k=11}^{30} k = \\sum_{k=1}^{30} k - \\sum_{k=1}^{10} k = 465 - 55 = 410$。减去到 $m - 1$ 的和，而不是到 $m$ 的和。",
       ),
       generate(rng) {
         const m = rng.int(5, 30);
@@ -151,8 +151,8 @@ export const finiteQuadraticSeries: TopicDef = {
       id: "sums-of-quadratic-expressions",
       title: t("Sums of quadratic expressions", "二次式的和"),
       explanation: t(
-        "$\\sum_{k=1}^{10} (k^2 + 2k) = \\frac{10 \\cdot 11 \\cdot 21}{6} + 2 \\cdot \\frac{10 \\cdot 11}{2} = 385 + 110 = 495$.",
-        "$\\sum_{k=1}^{10} (k^2 + 2k) = \\frac{10 \\cdot 11 \\cdot 21}{6} + 2 \\cdot \\frac{10 \\cdot 11}{2} = 385 + 110 = 495$。",
+        "Split the expression into its square, linear and constant parts, and use the known formula for each kind of sum. $\\sum_{k=1}^{10} (k^2 + 2k) = \\frac{10 \\cdot 11 \\cdot 21}{6} + 2 \\cdot \\frac{10 \\cdot 11}{2} = 385 + 110 = 495$.",
+        "把表达式拆成平方项、一次项和常数项，对每一类和使用已知公式。$\\sum_{k=1}^{10} (k^2 + 2k) = \\frac{10 \\cdot 11 \\cdot 21}{6} + 2 \\cdot \\frac{10 \\cdot 11}{2} = 385 + 110 = 495$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-3, 4);
@@ -185,8 +185,8 @@ export const finiteQuadraticSeries: TopicDef = {
       id: "sums-of-squares-in-a-range",
       title: t("Sums of squares in a range", "某范围内的平方和"),
       explanation: t(
-        "$11^2 + 12^2 + \\cdots + 20^2 = \\sum_{k=1}^{20} k^2 - \\sum_{k=1}^{10} k^2 = 2870 - 385 = 2485$.",
-        "$11^2 + 12^2 + \\cdots + 20^2 = \\sum_{k=1}^{20} k^2 - \\sum_{k=1}^{10} k^2 = 2870 - 385 = 2485$。",
+        "Subtract the sum of squares up to just before the start from the sum of squares up to the end. $11^2 + 12^2 + \\cdots + 20^2 = \\sum_{k=1}^{20} k^2 - \\sum_{k=1}^{10} k^2 = 2870 - 385 = 2485$.",
+        "用到末项的平方和减去到起点前一项的平方和。$11^2 + 12^2 + \\cdots + 20^2 = \\sum_{k=1}^{20} k^2 - \\sum_{k=1}^{10} k^2 = 2870 - 385 = 2485$。",
       ),
       generate(rng) {
         const m = rng.int(3, 20);
@@ -237,8 +237,8 @@ export const finiteCubicSeries: TopicDef = {
       id: "sums-of-cubes",
       title: t("Sums of cubes", "立方和"),
       explanation: t(
-        "$\\sum_{k=1}^{10} k^3 = \\left(\\frac{10 \\cdot 11}{2}\\right)^2 = 55^2 = 3025$, and $\\sum_{k=6}^{10} k^3 = 3025 - 15^2 = 2800$.",
-        "$\\sum_{k=1}^{10} k^3 = \\left(\\frac{10 \\cdot 11}{2}\\right)^2 = 55^2 = 3025$，$\\sum_{k=6}^{10} k^3 = 3025 - 15^2 = 2800$。",
+        "The sum of the first cubes is the square of the sum of the first integers, a surprising and useful identity. $\\sum_{k=1}^{10} k^3 = \\left(\\frac{10 \\cdot 11}{2}\\right)^2 = 55^2 = 3025$, and $\\sum_{k=6}^{10} k^3 = 3025 - 15^2 = 2800$.",
+        "前若干个立方数之和等于前若干个整数之和的平方，这是一个令人惊讶又很有用的恒等式。$\\sum_{k=1}^{10} k^3 = \\left(\\frac{10 \\cdot 11}{2}\\right)^2 = 55^2 = 3025$，$\\sum_{k=6}^{10} k^3 = 3025 - 15^2 = 2800$。",
       ),
       generate(rng) {
         const m = rng.bool() ? 1 : rng.int(3, 12);
@@ -265,8 +265,8 @@ export const finiteCubicSeries: TopicDef = {
       id: "sums-of-cubic-expressions",
       title: t("Sums of cubic expressions", "三次式的和"),
       explanation: t(
-        "Expand first: $\\sum_{k=1}^{n} k(k + 1)^2 = \\sum (k^3 + 2k^2 + k)$. For $n = 5$: $225 + 2 \\cdot 55 + 15 = 350$.",
-        "先展开：$\\sum_{k=1}^{n} k(k + 1)^2 = \\sum (k^3 + 2k^2 + k)$。$n = 5$ 时：$225 + 2 \\cdot 55 + 15 = 350$。",
+        "Expand the expression into powers of the index first, then apply the formulas for sums of cubes, squares and integers. Expand first: $\\sum_{k=1}^{n} k(k + 1)^2 = \\sum (k^3 + 2k^2 + k)$. For $n = 5$: $225 + 2 \\cdot 55 + 15 = 350$.",
+        "先把表达式展开成下标的各次幂，再分别用立方和、平方和与整数和的公式。先展开：$\\sum_{k=1}^{n} k(k + 1)^2 = \\sum (k^3 + 2k^2 + k)$。$n = 5$ 时：$225 + 2 \\cdot 55 + 15 = 350$。",
       ),
       generate(rng) {
         const n = rng.int(5, 20);
@@ -356,8 +356,8 @@ export const theGeneralizedBinomialTheorem: TopicDef = {
       id: "generalized-binomial-coefficients",
       title: t("Generalized binomial coefficients", "广义二项式系数"),
       explanation: t(
-        "$\\binom{-1/2}{3} = \\frac{(-\\frac{1}{2})(-\\frac{3}{2})(-\\frac{5}{2})}{3!} = \\frac{-15/8}{6} = -\\frac{5}{16}$: multiply $k$ factors, each one less than the last, and divide by $k!$.",
-        "$\\binom{-1/2}{3} = \\frac{(-\\frac{1}{2})(-\\frac{3}{2})(-\\frac{5}{2})}{3!} = \\frac{-15/8}{6} = -\\frac{5}{16}$：把 $k$ 个依次减一的因子相乘，再除以 $k!$。",
+        "The definition by a falling product makes sense for any exponent, including negative numbers and fractions, not just whole numbers. $\\binom{-1/2}{3} = \\frac{(-\\frac{1}{2})(-\\frac{3}{2})(-\\frac{5}{2})}{3!} = \\frac{-15/8}{6} = -\\frac{5}{16}$: multiply $k$ factors, each one less than the last, and divide by $k!$.",
+        "用下降乘积给出的定义对任何指数都有意义，包括负数和分数，而不只是整数。$\\binom{-1/2}{3} = \\frac{(-\\frac{1}{2})(-\\frac{3}{2})(-\\frac{5}{2})}{3!} = \\frac{-15/8}{6} = -\\frac{5}{16}$：把 $k$ 个依次减一的因子相乘，再除以 $k!$。",
       ),
       generate(rng) {
         const r = rng.pick(EXPONENTS);
@@ -388,8 +388,8 @@ export const theGeneralizedBinomialTheorem: TopicDef = {
       id: "coefficients-in-generalized-expansions",
       title: t("Coefficients of (1 + cx)ʳ", "(1 + cx)ʳ 的系数"),
       explanation: t(
-        "In $(1 - 2x)^{-3}$, the $x^2$ term is $\\binom{-3}{2}(-2x)^2 = 6 \\cdot 4x^2 = 24x^2$. Raise $c$, sign included, to the power $k$.",
-        "在 $(1 - 2x)^{-3}$ 中，$x^2$ 项为 $\\binom{-3}{2}(-2x)^2 = 6 \\cdot 4x^2 = 24x^2$。要把 $c$ 连同符号一起取 $k$ 次方。",
+        "Each term of the expansion is a generalized binomial coefficient times a power of the whole term inside, including its coefficient and sign. In $(1 - 2x)^{-3}$, the $x^2$ term is $\\binom{-3}{2}(-2x)^2 = 6 \\cdot 4x^2 = 24x^2$. Raise $c$, sign included, to the power $k$.",
+        "展开式的每一项都是广义二项式系数乘以括号内整个项的幂，包括它的系数和符号。在 $(1 - 2x)^{-3}$ 中，$x^2$ 项为 $\\binom{-3}{2}(-2x)^2 = 6 \\cdot 4x^2 = 24x^2$。要把 $c$ 连同符号一起取 $k$ 次方。",
       ),
       generate(rng) {
         const r = rng.pick(EXPONENTS);
@@ -466,8 +466,8 @@ export const workingWithTheGeneralizedBinomialTheorem: TopicDef = {
       id: "expanding-a-plus-bx-to-a-power",
       title: t("Expanding (a + bx)ʳ", "展开 (a + bx)ʳ"),
       explanation: t(
-        "$\\sqrt{4 + x} = 2\\left(1 + \\frac{x}{4}\\right)^{1/2} = 2\\left(1 + \\frac{x}{8} - \\frac{x^2}{128} + \\cdots\\right)$, so the $x^2$ coefficient is $-\\frac{1}{64}$. Forgetting the factor $a^r$ is the usual slip.",
-        "$\\sqrt{4 + x} = 2\\left(1 + \\frac{x}{4}\\right)^{1/2} = 2\\left(1 + \\frac{x}{8} - \\frac{x^2}{128} + \\cdots\\right)$，所以 $x^2$ 的系数为 $-\\frac{1}{64}$。常见错误是漏掉因子 $a^r$。",
+        "Factor out the constant term so the bracket starts with one, then expand and multiply back by the power of the constant. $\\sqrt{4 + x} = 2\\left(1 + \\frac{x}{4}\\right)^{1/2} = 2\\left(1 + \\frac{x}{8} - \\frac{x^2}{128} + \\cdots\\right)$, so the $x^2$ coefficient is $-\\frac{1}{64}$. Forgetting the factor $a^r$ is the usual slip.",
+        "先提出常数项使括号以 1 开头，再展开，最后乘回常数的幂。$\\sqrt{4 + x} = 2\\left(1 + \\frac{x}{4}\\right)^{1/2} = 2\\left(1 + \\frac{x}{8} - \\frac{x^2}{128} + \\cdots\\right)$，所以 $x^2$ 的系数为 $-\\frac{1}{64}$。常见错误是漏掉因子 $a^r$。",
       ),
       generate(rng) {
         const { a, r, ar } = randomBase(rng);
@@ -499,8 +499,8 @@ export const workingWithTheGeneralizedBinomialTheorem: TopicDef = {
       id: "products-with-generalized-expansions",
       title: t("Products with expansions", "与展开式相乘"),
       explanation: t(
-        "In $(2 + x)(1 - x)^{-1} = (2 + x)(1 + x + x^2 + \\cdots)$, the $x^2$ coefficient is $2 \\cdot 1 + 1 \\cdot 1 = 3$: pair $2$ with the $x^2$ term and $x$ with the $x$ term.",
-        "在 $(2 + x)(1 - x)^{-1} = (2 + x)(1 + x + x^2 + \\cdots)$ 中，$x^2$ 的系数为 $2 \\cdot 1 + 1 \\cdot 1 = 3$：$2$ 配 $x^2$ 项，$x$ 配 $x$ 项。",
+        "To find a coefficient in a product, pair each term of one factor with the term of the other that brings the power up to the one you want. In $(2 + x)(1 - x)^{-1} = (2 + x)(1 + x + x^2 + \\cdots)$, the $x^2$ coefficient is $2 \\cdot 1 + 1 \\cdot 1 = 3$: pair $2$ with the $x^2$ term and $x$ with the $x$ term.",
+        "要求乘积中的某个系数，把一个因子的每一项与另一个因子中能把次数补到所需次数的项配对。在 $(2 + x)(1 - x)^{-1} = (2 + x)(1 + x + x^2 + \\cdots)$ 中，$x^2$ 的系数为 $2 \\cdot 1 + 1 \\cdot 1 = 3$：$2$ 配 $x^2$ 项，$x$ 配 $x$ 项。",
       ),
       generate(rng) {
         const r = rng.pick(EXPONENTS);
@@ -558,8 +558,8 @@ export const determiningRangesOfValidityForGeneralizedBinomialExpansions: TopicD
       id: "range-of-validity-of-one-expansion",
       title: t("One expansion", "单个展开式"),
       explanation: t(
-        "$(9 - 2x)^{1/2} = 3\\left(1 - \\frac{2x}{9}\\right)^{1/2}$ is valid for $\\left|\\frac{2x}{9}\\right| < 1$, that is, $|x| < \\frac{9}{2}$.",
-        "$(9 - 2x)^{1/2} = 3\\left(1 - \\frac{2x}{9}\\right)^{1/2}$ 在 $\\left|\\frac{2x}{9}\\right| < 1$，即 $|x| < \\frac{9}{2}$ 时有效。",
+        "The expansion of one plus a small quantity to a non-integer power converges only when that quantity has absolute value less than one. $(9 - 2x)^{1/2} = 3\\left(1 - \\frac{2x}{9}\\right)^{1/2}$ is valid for $\\left|\\frac{2x}{9}\\right| < 1$, that is, $|x| < \\frac{9}{2}$.",
+        "一加一个小量的非整数次幂的展开式，只有在这个小量的绝对值小于 1 时才收敛。$(9 - 2x)^{1/2} = 3\\left(1 - \\frac{2x}{9}\\right)^{1/2}$ 在 $\\left|\\frac{2x}{9}\\right| < 1$，即 $|x| < \\frac{9}{2}$ 时有效。",
       ),
       generate(rng) {
         const a = rng.int(1, 12);
@@ -604,8 +604,8 @@ export const determiningRangesOfValidityForGeneralizedBinomialExpansions: TopicD
       id: "range-of-validity-of-a-product",
       title: t("Products of expansions", "展开式之积"),
       explanation: t(
-        "$(1 + 2x)^{-1}$ needs $|x| < \\frac{1}{2}$ and $(3 - x)^{1/2}$ needs $|x| < 3$. Their product's expansion needs both: $|x| < \\frac{1}{2}$.",
-        "$(1 + 2x)^{-1}$ 需要 $|x| < \\frac{1}{2}$，$(3 - x)^{1/2}$ 需要 $|x| < 3$。乘积的展开需要两者同时成立：$|x| < \\frac{1}{2}$。",
+        "A product of expansions is valid only where every factor's expansion is valid, so take the narrowest of their ranges. $(1 + 2x)^{-1}$ needs $|x| < \\frac{1}{2}$ and $(3 - x)^{1/2}$ needs $|x| < 3$. Their product's expansion needs both: $|x| < \\frac{1}{2}$.",
+        "展开式的乘积只在每个因子的展开式都成立的地方成立，所以取它们范围中最窄的一个。$(1 + 2x)^{-1}$ 需要 $|x| < \\frac{1}{2}$，$(3 - x)^{1/2}$ 需要 $|x| < 3$。乘积的展开需要两者同时成立：$|x| < \\frac{1}{2}$。",
       ),
       generate(rng) {
         const [a1, a2] = [rng.int(1, 9), rng.int(1, 9)];
@@ -653,8 +653,8 @@ export const approximatingValuesUsingTheGeneralizedBinomialTheorem: TopicDef = {
       id: "approximating-powers-near-one",
       title: t("Powers near 1", "接近 1 的数的乘方"),
       explanation: t(
-        "$\\sqrt{1.04} = (1 + 0.04)^{1/2} \\approx 1 + \\frac{1}{2}(0.04) - \\frac{1}{8}(0.04)^2 = 1.0198$; the true value is $1.01980\\ldots$",
-        "$\\sqrt{1.04} = (1 + 0.04)^{1/2} \\approx 1 + \\frac{1}{2}(0.04) - \\frac{1}{8}(0.04)^2 = 1.0198$；真实值为 $1.01980\\ldots$",
+        "When the quantity added to one is small, its higher powers are tiny, so the first few terms of the expansion give an accurate value. $\\sqrt{1.04} = (1 + 0.04)^{1/2} \\approx 1 + \\frac{1}{2}(0.04) - \\frac{1}{8}(0.04)^2 = 1.0198$; the true value is $1.01980\\ldots$",
+        "当加到 1 上的量很小时，它的高次幂非常小，所以展开式的前几项就能给出准确的值。$\\sqrt{1.04} = (1 + 0.04)^{1/2} \\approx 1 + \\frac{1}{2}(0.04) - \\frac{1}{8}(0.04)^2 = 1.0198$；真实值为 $1.01980\\ldots$",
       ),
       generate(rng) {
         const r = rng.pick(APPROX);
@@ -690,8 +690,8 @@ export const approximatingValuesUsingTheGeneralizedBinomialTheorem: TopicDef = {
       id: "approximating-roots-by-factoring",
       title: t("Approximating roots", "近似计算方根"),
       explanation: t(
-        "$\\sqrt{102} = 10\\left(1 + 0.02\\right)^{1/2} \\approx 10\\left(1 + 0.01 - 0.00005\\right) = 10.0995$. Factor out the nearest perfect square so that $u$ is small.",
-        "$\\sqrt{102} = 10\\left(1 + 0.02\\right)^{1/2} \\approx 10\\left(1 + 0.01 - 0.00005\\right) = 10.0995$。提出最接近的完全平方数，使 $u$ 很小。",
+        "Factoring out the nearest perfect power leaves a bracket close to one, so the expansion converges fast and a few terms suffice. $\\sqrt{102} = 10\\left(1 + 0.02\\right)^{1/2} \\approx 10\\left(1 + 0.01 - 0.00005\\right) = 10.0995$. Factor out the nearest perfect square so that $u$ is small.",
+        "提出最接近的完全幂之后，括号里剩下的数接近 1，所以展开式收敛很快，几项就够了。$\\sqrt{102} = 10\\left(1 + 0.02\\right)^{1/2} \\approx 10\\left(1 + 0.01 - 0.00005\\right) = 10.0995$。提出最接近的完全平方数，使 $u$ 很小。",
       ),
       generate(rng) {
         const s = rng.pick([5, 10, 20, 30]);
@@ -788,8 +788,8 @@ export const theMultinomialTheorem: TopicDef = {
       id: "multinomial-coefficients-with-constants",
       title: t("Terms with coefficients", "带系数的项"),
       explanation: t(
-        "In $(2x - y + z)^4$, the $x^2yz$ term is $\\frac{4!}{2! \\, 1! \\, 1!}(2x)^2(-y)(z) = 12 \\cdot 4 \\cdot (-1)x^2yz = -48x^2yz$.",
-        "在 $(2x - y + z)^4$ 中，$x^2yz$ 项为 $\\frac{4!}{2! \\, 1! \\, 1!}(2x)^2(-y)(z) = 12 \\cdot 4 \\cdot (-1)x^2yz = -48x^2yz$。",
+        "The multinomial coefficient counts the arrangements, and each term inside, with its coefficient and sign, is raised to its own power. In $(2x - y + z)^4$, the $x^2yz$ term is $\\frac{4!}{2! \\, 1! \\, 1!}(2x)^2(-y)(z) = 12 \\cdot 4 \\cdot (-1)x^2yz = -48x^2yz$.",
+        "多项式系数计算排列的方法数，括号内的每一项连同其系数和符号都升到各自的幂。在 $(2x - y + z)^4$ 中，$x^2yz$ 项为 $\\frac{4!}{2! \\, 1! \\, 1!}(2x)^2(-y)(z) = 12 \\cdot 4 \\cdot (-1)x^2yz = -48x^2yz$。",
       ),
       generate(rng) {
         const n = rng.int(3, 7);
@@ -834,8 +834,8 @@ export const countingTermsInMultinomialExpansions: TopicDef = {
       id: "number-of-terms-in-an-expansion",
       title: t("The number of terms", "项数"),
       explanation: t(
-        "The terms of $(x + y + z)^4$ are $x^ay^bz^c$ with $a + b + c = 4$: $\\binom{4 + 2}{2} = 15$ terms.",
-        "$(x + y + z)^4$ 的项是满足 $a + b + c = 4$ 的 $x^ay^bz^c$：共 $\\binom{4 + 2}{2} = 15$ 项。",
+        "Each term corresponds to a way of splitting the exponent among the variables, which is counted by stars and bars. The terms of $(x + y + z)^4$ are $x^ay^bz^c$ with $a + b + c = 4$: $\\binom{4 + 2}{2} = 15$ terms.",
+        "每一项对应把指数分配给各个变量的一种方式，可以用隔板法计数。$(x + y + z)^4$ 的项是满足 $a + b + c = 4$ 的 $x^ay^bz^c$：共 $\\binom{4 + 2}{2} = 15$ 项。",
       ),
       generate(rng) {
         const m = rng.int(3, 6);
@@ -865,8 +865,8 @@ export const countingTermsInMultinomialExpansions: TopicDef = {
       id: "terms-containing-a-given-variable",
       title: t("Terms containing a variable", "含某变量的项"),
       explanation: t(
-        "Of the $15$ terms of $(x + y + z)^4$, those without $x$ are the $5$ terms of $(y + z)^4$, so $10$ terms contain $x$.",
-        "在 $(x + y + z)^4$ 的 $15$ 项中，不含 $x$ 的是 $(y + z)^4$ 的 $5$ 项，所以含 $x$ 的有 $10$ 项。",
+        "Count the terms that leave the variable out, which form a smaller expansion, and subtract them from the total number of terms. Of the $15$ terms of $(x + y + z)^4$, those without $x$ are the $5$ terms of $(y + z)^4$, so $10$ terms contain $x$.",
+        "数出不含这个变量的项，它们构成一个较小的展开式，再从总项数中减去。在 $(x + y + z)^4$ 的 $15$ 项中，不含 $x$ 的是 $(y + z)^4$ 的 $5$ 项，所以含 $x$ 的有 $10$ 项。",
       ),
       generate(rng) {
         const m = rng.int(3, 4);

@@ -585,8 +585,8 @@ export const disjunctiveNormalForms: TopicDef = {
       id: "recognizing-disjunctive-normal-forms",
       title: t("Recognizing DNF", "识别析取范式"),
       explanation: t(
-        "$(x \\wedge \\neg y) \\vee z \\vee (\\neg x \\wedge y \\wedge z)$ is in DNF. $(x \\vee y) \\wedge z$ is not ($\\wedge$ over $\\vee$), and neither is $\\neg (x \\wedge y) \\vee z$ ($\\neg$ over a conjunction).",
-        "$(x \\wedge \\neg y) \\vee z \\vee (\\neg x \\wedge y \\wedge z)$ 是析取范式。$(x \\vee y) \\wedge z$ 不是（$\\wedge$ 作用在 $\\vee$ 上），$\\neg (x \\wedge y) \\vee z$ 也不是（$\\neg$ 作用在合取式上）。",
+        "A formula is in disjunctive normal form when it is an OR of terms, each term an AND of variables or their negations, with negation only on single variables. $(x \\wedge \\neg y) \\vee z \\vee (\\neg x \\wedge y \\wedge z)$ is in DNF. $(x \\vee y) \\wedge z$ is not ($\\wedge$ over $\\vee$), and neither is $\\neg (x \\wedge y) \\vee z$ ($\\neg$ over a conjunction).",
+        "如果一个公式是若干项的“或”，每一项都是变量或其否定的“与”，且否定只作用在单个变量上，它就是析取范式。$(x \\wedge \\neg y) \\vee z \\vee (\\neg x \\wedge y \\wedge z)$ 是析取范式。$(x \\vee y) \\wedge z$ 不是（$\\wedge$ 作用在 $\\vee$ 上），$\\neg (x \\wedge y) \\vee z$ 也不是（$\\neg$ 作用在合取式上）。",
       ),
       generate: (rng) => normalFormChoice(rng, "or"),
     },
@@ -594,8 +594,8 @@ export const disjunctiveNormalForms: TopicDef = {
       id: "converting-to-disjunctive-normal-form",
       title: t("Converting to DNF", "化为析取范式"),
       explanation: t(
-        "$(x \\vee y) \\wedge (z \\vee \\neg w) = (x \\wedge z) \\vee (x \\wedge \\neg w) \\vee (y \\wedge z) \\vee (y \\wedge \\neg w)$, distributing like $(a + b)(c + d) = ac + ad + bc + bd$. Push negations inward first with De Morgan's laws.",
-        "$(x \\vee y) \\wedge (z \\vee \\neg w) = (x \\wedge z) \\vee (x \\wedge \\neg w) \\vee (y \\wedge z) \\vee (y \\wedge \\neg w)$，就像 $(a + b)(c + d) = ac + ad + bc + bd$ 那样展开。先用德摩根律把否定移到变量上。",
+        "To reach disjunctive normal form, push negations inward with De Morgan's laws and then distribute AND over OR, just as multiplication distributes over addition. $(x \\vee y) \\wedge (z \\vee \\neg w) = (x \\wedge z) \\vee (x \\wedge \\neg w) \\vee (y \\wedge z) \\vee (y \\wedge \\neg w)$, distributing like $(a + b)(c + d) = ac + ad + bc + bd$. Push negations inward first with De Morgan's laws.",
+        "要化成析取范式，先用德摩根律把否定推到里面，再把“与”对“或”分配，就像乘法对加法分配一样。$(x \\vee y) \\wedge (z \\vee \\neg w) = (x \\wedge z) \\vee (x \\wedge \\neg w) \\vee (y \\wedge z) \\vee (y \\wedge \\neg w)$，就像 $(a + b)(c + d) = ac + ad + bc + bd$ 那样展开。先用德摩根律把否定移到变量上。",
       ),
       generate: (rng) => distributeChoice(rng, "or"),
     },
@@ -712,8 +712,8 @@ export const conjunctiveNormalForms: TopicDef = {
       id: "recognizing-conjunctive-normal-forms",
       title: t("Recognizing CNF", "识别合取范式"),
       explanation: t(
-        "$(x \\vee \\neg y) \\wedge z \\wedge (\\neg x \\vee y \\vee z)$ is in CNF. $(x \\wedge y) \\vee z$ is not, and neither is $\\neg (x \\vee y) \\wedge z$.",
-        "$(x \\vee \\neg y) \\wedge z \\wedge (\\neg x \\vee y \\vee z)$ 是合取范式。$(x \\wedge y) \\vee z$ 不是，$\\neg (x \\vee y) \\wedge z$ 也不是。",
+        "A formula is in conjunctive normal form when it is an AND of clauses, each clause an OR of variables or their negations. $(x \\vee \\neg y) \\wedge z \\wedge (\\neg x \\vee y \\vee z)$ is in CNF. $(x \\wedge y) \\vee z$ is not, and neither is $\\neg (x \\vee y) \\wedge z$.",
+        "如果一个公式是若干子句的“与”，每个子句都是变量或其否定的“或”，它就是合取范式。$(x \\vee \\neg y) \\wedge z \\wedge (\\neg x \\vee y \\vee z)$ 是合取范式。$(x \\wedge y) \\vee z$ 不是，$\\neg (x \\vee y) \\wedge z$ 也不是。",
       ),
       generate: (rng) => normalFormChoice(rng, "and"),
     },
@@ -721,8 +721,8 @@ export const conjunctiveNormalForms: TopicDef = {
       id: "converting-to-conjunctive-normal-form",
       title: t("Converting to CNF", "化为合取范式"),
       explanation: t(
-        "$(x \\wedge y) \\vee (z \\wedge w) = (x \\vee z) \\wedge (x \\vee w) \\wedge (y \\vee z) \\wedge (y \\vee w)$: distribute $\\vee$ over $\\wedge$, the dual of the DNF expansion.",
-        "$(x \\wedge y) \\vee (z \\wedge w) = (x \\vee z) \\wedge (x \\vee w) \\wedge (y \\vee z) \\wedge (y \\vee w)$：把 $\\vee$ 对 $\\wedge$ 展开，与析取范式的展开对偶。",
+        "Conjunctive normal form is the dual of disjunctive normal form, so after pushing negations inward you distribute OR over AND instead. $(x \\wedge y) \\vee (z \\wedge w) = (x \\vee z) \\wedge (x \\vee w) \\wedge (y \\vee z) \\wedge (y \\vee w)$: distribute $\\vee$ over $\\wedge$, the dual of the DNF expansion.",
+        "合取范式是析取范式的对偶，所以把否定推到里面之后，改为把“或”对“与”分配。$(x \\wedge y) \\vee (z \\wedge w) = (x \\vee z) \\wedge (x \\vee w) \\wedge (y \\vee z) \\wedge (y \\vee w)$：把 $\\vee$ 对 $\\wedge$ 展开，与析取范式的展开对偶。",
       ),
       generate: (rng) => distributeChoice(rng, "and"),
     },
@@ -780,8 +780,8 @@ export const booleanPolynomials: TopicDef = {
       id: "finding-a-boolean-polynomial",
       title: t("Finding the polynomial", "求布尔多项式"),
       explanation: t(
-        "Rewrite with $\\neg a = a \\oplus 1$ and $a \\vee b = a \\oplus b \\oplus ab$, expand, and cancel pairs since $a \\oplus a = 0$. For example $x \\vee \\neg y = x \\oplus (y \\oplus 1) \\oplus x(y \\oplus 1) = 1 \\oplus y \\oplus xy$.",
-        "用 $\\neg a = a \\oplus 1$ 与 $a \\vee b = a \\oplus b \\oplus ab$ 改写，展开后两两抵消（$a \\oplus a = 0$）。例如 $x \\vee \\neg y = x \\oplus (y \\oplus 1) \\oplus x(y \\oplus 1) = 1 \\oplus y \\oplus xy$。",
+        "Every Boolean function can be written as a polynomial using exclusive or and AND, and this form is unique once repeated terms cancel in pairs. Rewrite with $\\neg a = a \\oplus 1$ and $a \\vee b = a \\oplus b \\oplus ab$, expand, and cancel pairs since $a \\oplus a = 0$. For example $x \\vee \\neg y = x \\oplus (y \\oplus 1) \\oplus x(y \\oplus 1) = 1 \\oplus y \\oplus xy$.",
+        "每个布尔函数都可以写成用异或和“与”构成的多项式，重复的项成对抵消之后，这种形式是唯一的。用 $\\neg a = a \\oplus 1$ 与 $a \\vee b = a \\oplus b \\oplus ab$ 改写，展开后两两抵消（$a \\oplus a = 0$）。例如 $x \\vee \\neg y = x \\oplus (y \\oplus 1) \\oplus x(y \\oplus 1) = 1 \\oplus y \\oplus xy$。",
       ),
       generate(rng) {
         const n = rng.int(2, 3);
@@ -900,8 +900,8 @@ export const simplifyingLogicalExpressionsUsingKarnaughMaps: TopicDef = {
       id: "finding-a-minimal-dnf",
       title: t("Finding a minimal DNF", "求最简析取范式"),
       explanation: t(
-        "For $f(x, y, z) = \\sum m(0, 2, 4, 5)$: cells $0, 2$ ($x = 0$, $z = 0$) form the block $\\neg x \\wedge \\neg z$, and cells $4, 5$ form $x \\wedge \\neg y$. So $f = (\\neg x \\wedge \\neg z) \\vee (x \\wedge \\neg y)$.",
-        "对 $f(x, y, z) = \\sum m(0, 2, 4, 5)$：格子 $0, 2$（$x = 0$，$z = 0$）构成块 $\\neg x \\wedge \\neg z$，格子 $4, 5$ 构成 $x \\wedge \\neg y$。所以 $f = (\\neg x \\wedge \\neg z) \\vee (x \\wedge \\neg y)$。",
+        "On a Karnaugh map, adjacent cells differ in one variable, so grouping the ones into the largest possible blocks removes variables and gives the shortest formula. For $f(x, y, z) = \\sum m(0, 2, 4, 5)$: cells $0, 2$ ($x = 0$, $z = 0$) form the block $\\neg x \\wedge \\neg z$, and cells $4, 5$ form $x \\wedge \\neg y$. So $f = (\\neg x \\wedge \\neg z) \\vee (x \\wedge \\neg y)$.",
+        "在卡诺图上，相邻格子只有一个变量不同，所以把 1 分组成尽可能大的块就能消去变量，得到最短的公式。对 $f(x, y, z) = \\sum m(0, 2, 4, 5)$：格子 $0, 2$（$x = 0$，$z = 0$）构成块 $\\neg x \\wedge \\neg z$，格子 $4, 5$ 构成 $x \\wedge \\neg y$。所以 $f = (\\neg x \\wedge \\neg z) \\vee (x \\wedge \\neg y)$。",
       ),
       generate(rng) {
         let n: number;
@@ -945,8 +945,8 @@ export const truthPreservingBooleanFunctions: TopicDef = {
       id: "classifying-truth-preservation",
       title: t("Classifying functions", "函数分类"),
       explanation: t(
-        "$x \\wedge y$ preserves both $0$ and $1$. $x \\Rightarrow y$ preserves $1$ only, since $0 \\Rightarrow 0 = 1$. $x \\oplus y$ preserves $0$ only. $x \\uparrow y$ preserves neither.",
-        "$x \\wedge y$ 既保 $0$ 又保 $1$。$x \\Rightarrow y$ 只保 $1$，因为 $0 \\Rightarrow 0 = 1$。$x \\oplus y$ 只保 $0$。$x \\uparrow y$ 两者都不保。",
+        "A function preserves zero when all inputs zero give output zero, and preserves one when all inputs one give output one; check these two rows of the table. $x \\wedge y$ preserves both $0$ and $1$. $x \\Rightarrow y$ preserves $1$ only, since $0 \\Rightarrow 0 = 1$. $x \\oplus y$ preserves $0$ only. $x \\uparrow y$ preserves neither.",
+        "如果所有输入为 0 时输出为 0，函数就保持 0；如果所有输入为 1 时输出为 1，就保持 1；只需检查真值表的这两行。$x \\wedge y$ 既保 $0$ 又保 $1$。$x \\Rightarrow y$ 只保 $1$，因为 $0 \\Rightarrow 0 = 1$。$x \\oplus y$ 只保 $0$。$x \\uparrow y$ 两者都不保。",
       ),
       generate(rng) {
         const kind = rng.int(0, 3);
@@ -1230,8 +1230,8 @@ export const affineBooleanFunctions: TopicDef = {
       id: "recognizing-affine-functions",
       title: t("Recognizing affine functions", "识别仿射函数"),
       explanation: t(
-        "$x \\Leftrightarrow y = 1 \\oplus x \\oplus y$ is affine. $x \\vee y = x \\oplus y \\oplus xy$ is not: its polynomial contains $xy$.",
-        "$x \\Leftrightarrow y = 1 \\oplus x \\oplus y$ 是仿射的。$x \\vee y = x \\oplus y \\oplus xy$ 不是：它的多项式含有 $xy$。",
+        "A function is affine when its Boolean polynomial has no products of variables, only single variables combined by exclusive or and possibly a constant. $x \\Leftrightarrow y = 1 \\oplus x \\oplus y$ is affine. $x \\vee y = x \\oplus y \\oplus xy$ is not: its polynomial contains $xy$.",
+        "如果一个函数的布尔多项式中没有变量的乘积，只有用异或连接的单个变量和可能的常数，它就是仿射函数。$x \\Leftrightarrow y = 1 \\oplus x \\oplus y$ 是仿射的。$x \\vee y = x \\oplus y \\oplus xy$ 不是：它的多项式含有 $xy$。",
       ),
       generate(rng) {
         const value = rng.bool();
@@ -1438,8 +1438,8 @@ export const functionallyCompleteSets: TopicDef = {
       id: "writing-functions-with-nand-or-nor",
       title: t("Using only ↑ or only ↓", "只用 ↑ 或只用 ↓"),
       explanation: t(
-        "$x \\uparrow x = \\neg x$, $(x \\uparrow y) \\uparrow (x \\uparrow y) = x \\wedge y$ and $(x \\uparrow x) \\uparrow (y \\uparrow y) = x \\vee y$. Dually, $(x \\downarrow y) \\downarrow (x \\downarrow y) = x \\vee y$ and $(x \\downarrow x) \\downarrow (y \\downarrow y) = x \\wedge y$.",
-        "$x \\uparrow x = \\neg x$，$(x \\uparrow y) \\uparrow (x \\uparrow y) = x \\wedge y$，$(x \\uparrow x) \\uparrow (y \\uparrow y) = x \\vee y$。对偶地，$(x \\downarrow y) \\downarrow (x \\downarrow y) = x \\vee y$，$(x \\downarrow x) \\downarrow (y \\downarrow y) = x \\wedge y$。",
+        "NAND alone is enough to build every Boolean function, because it can make NOT, AND and OR, and the same is true of NOR. $x \\uparrow x = \\neg x$, $(x \\uparrow y) \\uparrow (x \\uparrow y) = x \\wedge y$ and $(x \\uparrow x) \\uparrow (y \\uparrow y) = x \\vee y$. Dually, $(x \\downarrow y) \\downarrow (x \\downarrow y) = x \\vee y$ and $(x \\downarrow x) \\downarrow (y \\downarrow y) = x \\wedge y$.",
+        "仅用与非就能构造每个布尔函数，因为它可以构造出非、与和或，或非也是如此。$x \\uparrow x = \\neg x$，$(x \\uparrow y) \\uparrow (x \\uparrow y) = x \\wedge y$，$(x \\uparrow x) \\uparrow (y \\uparrow y) = x \\vee y$。对偶地，$(x \\downarrow y) \\downarrow (x \\downarrow y) = x \\vee y$，$(x \\downarrow x) \\downarrow (y \\downarrow y) = x \\wedge y$。",
       ),
       generate(rng) {
         const op = rng.pick(["nand", "nor"] as const);
@@ -1622,8 +1622,8 @@ export const introductionToLogicCircuits: TopicDef = {
       id: "tracing-a-circuit",
       title: t("Tracing a circuit", "追踪电路"),
       explanation: t(
-        "With $g_1 = \\mathrm{AND}(x, y)$, $g_2 = \\mathrm{NOT}(z)$, $g_3 = \\mathrm{OR}(g_1, g_2)$ and inputs $x = 1, y = 0, z = 0$: $g_1 = 0$, $g_2 = 1$, so the output is $g_3 = 1$.",
-        "设 $g_1 = \\mathrm{AND}(x, y)$，$g_2 = \\mathrm{NOT}(z)$，$g_3 = \\mathrm{OR}(g_1, g_2)$，输入 $x = 1, y = 0, z = 0$：$g_1 = 0$，$g_2 = 1$，所以输出 $g_3 = 1$。",
+        "Evaluate the gates in order from the inputs, since each gate needs the values of the gates feeding it before it can be computed. With $g_1 = \\mathrm{AND}(x, y)$, $g_2 = \\mathrm{NOT}(z)$, $g_3 = \\mathrm{OR}(g_1, g_2)$ and inputs $x = 1, y = 0, z = 0$: $g_1 = 0$, $g_2 = 1$, so the output is $g_3 = 1$.",
+        "从输入开始按顺序计算各个门，因为每个门都需要先知道输入它的那些门的值才能计算。设 $g_1 = \\mathrm{AND}(x, y)$，$g_2 = \\mathrm{NOT}(z)$，$g_3 = \\mathrm{OR}(g_1, g_2)$，输入 $x = 1, y = 0, z = 0$：$g_1 = 0$，$g_2 = 1$，所以输出 $g_3 = 1$。",
       ),
       generate(rng) {
         const e = formula3(rng, ["and", "or"], 3);
@@ -1648,8 +1648,8 @@ export const introductionToLogicCircuits: TopicDef = {
       id: "the-expression-of-a-circuit",
       title: t("The expression of a circuit", "电路的表达式"),
       explanation: t(
-        "Replace each gate by its operation, working forward: $g_1 = \\mathrm{OR}(x, y)$, $g_2 = \\mathrm{NOT}(g_1)$, $g_3 = \\mathrm{AND}(g_2, z)$ computes $\\neg (x \\vee y) \\wedge z$.",
-        "从前往后把每个门换成对应的运算：$g_1 = \\mathrm{OR}(x, y)$，$g_2 = \\mathrm{NOT}(g_1)$，$g_3 = \\mathrm{AND}(g_2, z)$ 计算的是 $\\neg (x \\vee y) \\wedge z$。",
+        "Writing each gate as an operation on the expressions of its inputs builds up a formula for the output, one gate at a time. Replace each gate by its operation, working forward: $g_1 = \\mathrm{OR}(x, y)$, $g_2 = \\mathrm{NOT}(g_1)$, $g_3 = \\mathrm{AND}(g_2, z)$ computes $\\neg (x \\vee y) \\wedge z$.",
+        "把每个门写成对其输入表达式的运算，就能一个门接一个门地构造出输出的公式。从前往后把每个门换成对应的运算：$g_1 = \\mathrm{OR}(x, y)$，$g_2 = \\mathrm{NOT}(g_1)$，$g_3 = \\mathrm{AND}(g_2, z)$ 计算的是 $\\neg (x \\vee y) \\wedge z$。",
       ),
       generate(rng) {
         const e = formula3(rng, ["and", "or"], 3);
@@ -1689,8 +1689,8 @@ export const logicGatesAndCombinationalCircuits: TopicDef = {
       id: "tracing-circuits-with-xor-nand-and-nor",
       title: t("Circuits with XOR, NAND and NOR", "含异或门、与非门、或非门的电路"),
       explanation: t(
-        "With $g_1 = \\mathrm{NAND}(x, y)$, $g_2 = \\mathrm{XOR}(g_1, z)$ and $x = y = z = 1$: $g_1 = 0$, so the output is $g_2 = 0 \\oplus 1 = 1$.",
-        "设 $g_1 = \\mathrm{NAND}(x, y)$，$g_2 = \\mathrm{XOR}(g_1, z)$，$x = y = z = 1$：$g_1 = 0$，所以输出 $g_2 = 0 \\oplus 1 = 1$。",
+        "These gates are traced exactly like the basic ones, using their truth tables: exclusive or is one when the inputs differ, and NAND and NOR negate AND and OR. With $g_1 = \\mathrm{NAND}(x, y)$, $g_2 = \\mathrm{XOR}(g_1, z)$ and $x = y = z = 1$: $g_1 = 0$, so the output is $g_2 = 0 \\oplus 1 = 1$.",
+        "这些门的追踪方法与基本门完全相同，只需用它们的真值表：异或在输入不同时为 1，与非和或非是与和或的否定。设 $g_1 = \\mathrm{NAND}(x, y)$，$g_2 = \\mathrm{XOR}(g_1, z)$，$x = y = z = 1$：$g_1 = 0$，所以输出 $g_2 = 0 \\oplus 1 = 1$。",
       ),
       generate(rng) {
         let e: BExpr;
@@ -1821,8 +1821,8 @@ export const simplifyingLogicCircuits: TopicDef = {
       id: "simplifying-a-circuit",
       title: t("Simplifying a circuit", "化简电路"),
       explanation: t(
-        "The circuit for $(x \\wedge y) \\vee (x \\wedge \\neg y \\wedge z) \\vee (\\neg x \\wedge y \\wedge z)$ has value vector $0001\\,0111$, whose Karnaugh map groups into $(x \\wedge y) \\vee (x \\wedge z) \\vee (y \\wedge z)$: fewer, smaller gates.",
-        "$(x \\wedge y) \\vee (x \\wedge \\neg y \\wedge z) \\vee (\\neg x \\wedge y \\wedge z)$ 对应电路的值向量是 $0001\\,0111$，其卡诺图合并为 $(x \\wedge y) \\vee (x \\wedge z) \\vee (y \\wedge z)$：门更少、更小。",
+        "Find the value vector of the circuit, simplify the function with a Karnaugh map, and build a smaller circuit that computes the same function. The circuit for $(x \\wedge y) \\vee (x \\wedge \\neg y \\wedge z) \\vee (\\neg x \\wedge y \\wedge z)$ has value vector $0001\\,0111$, whose Karnaugh map groups into $(x \\wedge y) \\vee (x \\wedge z) \\vee (y \\wedge z)$: fewer, smaller gates.",
+        "求出电路的值向量，用卡诺图化简这个函数，再搭建一个计算同一函数的更小电路。$(x \\wedge y) \\vee (x \\wedge \\neg y \\wedge z) \\vee (\\neg x \\wedge y \\wedge z)$ 对应电路的值向量是 $0001\\,0111$，其卡诺图合并为 $(x \\wedge y) \\vee (x \\wedge z) \\vee (y \\wedge z)$：门更少、更小。",
       ),
       generate(rng) {
         let e: BExpr;

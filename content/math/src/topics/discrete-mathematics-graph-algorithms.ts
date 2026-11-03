@@ -536,8 +536,8 @@ export const topologicalOrdering: TopicDef = {
       id: "checking-a-topological-ordering",
       title: t("Checking an ordering", "检验排序"),
       explanation: t(
-        "With arcs $(A, C), (B, C), (C, D)$, the order $B, A, C, D$ is topological, but $A, C, B, D$ is not, because the arc $(B, C)$ points backward.",
-        "若弧为 $(A, C), (B, C), (C, D)$，则 $B, A, C, D$ 是拓扑排序，而 $A, C, B, D$ 不是，因为弧 $(B, C)$ 指向前面。",
+        "An ordering is topological when every arc goes from an earlier vertex to a later one, so check that no arc points backward. With arcs $(A, C), (B, C), (C, D)$, the order $B, A, C, D$ is topological, but $A, C, B, D$ is not, because the arc $(B, C)$ points backward.",
+        "如果每条弧都从排在前面的顶点指向排在后面的顶点，这个顺序就是拓扑序，所以要检查没有弧指向后方。若弧为 $(A, C), (B, C), (C, D)$，则 $B, A, C, D$ 是拓扑排序，而 $A, C, B, D$ 不是，因为弧 $(B, C)$ 指向前面。",
       ),
       generate(rng) {
         const n = rng.int(5, 6);
@@ -1128,8 +1128,8 @@ export const dijkstrasAlgorithm: TopicDef = {
       id: "shortest-weighted-distances",
       title: t("Shortest distances", "最短距离"),
       explanation: t(
-        "With $AB\\colon 4$, $AC\\colon 1$, $CB\\colon 2$: start $d(A) = 0$; finalize $A$, so $d(B) = 4$, $d(C) = 1$; finalize $C$, and $d(B) = \\min(4, 1 + 2) = 3$. The direct edge is not always shortest.",
-        "若 $AB\\colon 4$、$AC\\colon 1$、$CB\\colon 2$：开始 $d(A) = 0$；确定 $A$，得 $d(B) = 4$，$d(C) = 1$；确定 $C$，$d(B) = \\min(4, 1 + 2) = 3$。直接的边不一定最短。",
+        "Dijkstra's algorithm repeatedly finalizes the closest unfinished vertex and updates its neighbors, which works because weights are never negative. With $AB\\colon 4$, $AC\\colon 1$, $CB\\colon 2$: start $d(A) = 0$; finalize $A$, so $d(B) = 4$, $d(C) = 1$; finalize $C$, and $d(B) = \\min(4, 1 + 2) = 3$. The direct edge is not always shortest.",
+        "迪杰斯特拉算法反复确定距离最近的未完成顶点并更新它的邻居，这之所以可行，是因为权重从不为负。若 $AB\\colon 4$、$AC\\colon 1$、$CB\\colon 2$：开始 $d(A) = 0$；确定 $A$，得 $d(B) = 4$，$d(C) = 1$；确定 $C$，$d(B) = \\min(4, 1 + 2) = 3$。直接的边不一定最短。",
       ),
       generate(rng) {
         const n = rng.int(5, 7);

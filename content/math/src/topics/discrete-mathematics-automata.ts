@@ -341,8 +341,8 @@ export const processingStringsUsingDeterministicFiniteAutomata: TopicDef = {
       id: "remainder-automata",
       title: t("Tracking remainders", "追踪余数"),
       explanation: t(
-        "In the DFA with $\\delta(q_r, b) = q_{(2r + b) \\bmod 3}$, reading $1101$ goes $q_0 \\to q_1 \\to q_0 \\to q_0 \\to q_1$. Indeed $1101_2 = 13$ and $13 \\bmod 3 = 1$.",
-        "在 $\\delta(q_r, b) = q_{(2r + b) \\bmod 3}$ 的 DFA 中，读入 $1101$ 依次经过 $q_0 \\to q_1 \\to q_0 \\to q_0 \\to q_1$。确实 $1101_2 = 13$，$13 \\bmod 3 = 1$。",
+        "Reading a binary digit doubles the number so far and adds the digit, so an automaton can track just the remainder after each digit. In the DFA with $\\delta(q_r, b) = q_{(2r + b) \\bmod 3}$, reading $1101$ goes $q_0 \\to q_1 \\to q_0 \\to q_0 \\to q_1$. Indeed $1101_2 = 13$ and $13 \\bmod 3 = 1$.",
+        "读入一个二进制位相当于把已读的数加倍再加上这一位，所以自动机只需记录每读一位后的余数。在 $\\delta(q_r, b) = q_{(2r + b) \\bmod 3}$ 的 DFA 中，读入 $1101$ 依次经过 $q_0 \\to q_1 \\to q_0 \\to q_0 \\to q_1$。确实 $1101_2 = 13$，$13 \\bmod 3 = 1$。",
       ),
       generate(rng) {
         const mod = rng.int(3, 7);
@@ -1128,8 +1128,8 @@ export const bigOmegaNotation: TopicDef = {
       id: "polynomial-lower-bounds",
       title: t("Polynomial lower bounds", "多项式下界"),
       explanation: t(
-        "$\\frac{n^3}{\\log_2 n}$ is $\\Omega(n^2)$, since $\\log_2 n \\le n$, but not $\\Omega(n^3)$. So the largest integer $k$ with $\\frac{n^3}{\\log_2 n} = \\Omega(n^k)$ is $2$.",
-        "$\\frac{n^3}{\\log_2 n}$ 是 $\\Omega(n^2)$，因为 $\\log_2 n \\le n$；但不是 $\\Omega(n^3)$。所以使 $\\frac{n^3}{\\log_2 n} = \\Omega(n^k)$ 的最大整数 $k$ 为 $2$。",
+        "A lower bound means the function eventually grows at least as fast as a constant multiple of the bound, ignoring small values. $\\frac{n^3}{\\log_2 n}$ is $\\Omega(n^2)$, since $\\log_2 n \\le n$, but not $\\Omega(n^3)$. So the largest integer $k$ with $\\frac{n^3}{\\log_2 n} = \\Omega(n^k)$ is $2$.",
+        "下界的意思是，不计较小的值，函数最终至少与界的某个常数倍增长得一样快。$\\frac{n^3}{\\log_2 n}$ 是 $\\Omega(n^2)$，因为 $\\log_2 n \\le n$；但不是 $\\Omega(n^3)$。所以使 $\\frac{n^3}{\\log_2 n} = \\Omega(n^k)$ 的最大整数 $k$ 为 $2$。",
       ),
       generate(rng) {
         const g = randomGrowth(rng);
@@ -1243,8 +1243,8 @@ export const bigThetaNotation: TopicDef = {
       id: "exact-polynomial-growth",
       title: t("Exact growth rates", "确切增长率"),
       explanation: t(
-        "$(n^2 + 3)(2n - 1)$ has leading term $2n^3$, so it is $\\Theta(n^3)$. For a quotient, subtract the degrees: $\\frac{n^5 + n}{n^2 + 1} = \\Theta(n^3)$.",
-        "$(n^2 + 3)(2n - 1)$ 的首项为 $2n^3$，所以它是 $\\Theta(n^3)$。对于商，用次数相减：$\\frac{n^5 + n}{n^2 + 1} = \\Theta(n^3)$。",
+        "For products and quotients of polynomials, only the leading terms matter, so the exponent of the growth rate comes from adding or subtracting degrees. $(n^2 + 3)(2n - 1)$ has leading term $2n^3$, so it is $\\Theta(n^3)$. For a quotient, subtract the degrees: $\\frac{n^5 + n}{n^2 + 1} = \\Theta(n^3)$.",
+        "对于多项式的乘积和商，只有首项起作用，所以增长率的指数由次数相加或相减得到。$(n^2 + 3)(2n - 1)$ 的首项为 $2n^3$，所以它是 $\\Theta(n^3)$。对于商，用次数相减：$\\frac{n^5 + n}{n^2 + 1} = \\Theta(n^3)$。",
       ),
       generate(rng) {
         const a = rng.int(1, 5);

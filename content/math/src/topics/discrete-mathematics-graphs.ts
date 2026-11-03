@@ -252,8 +252,8 @@ export const walksPathsAndDistancesInDirectedGraphs: TopicDef = {
       id: "directed-distances",
       title: t("Directed distances", "有向距离"),
       explanation: t(
-        "With arcs $(A, B), (B, C), (C, A)$: $d(A, C) = 2$ via $A \\to B \\to C$, but $d(C, A) = 1$. Distances in directed graphs need not be symmetric.",
-        "若弧为 $(A, B), (B, C), (C, A)$：$d(A, C) = 2$（经 $A \\to B \\to C$），但 $d(C, A) = 1$。有向图中的距离不一定对称。",
+        "In a directed graph you may only travel along arcs in their direction, so the distance from one vertex to another can differ from the reverse distance. With arcs $(A, B), (B, C), (C, A)$: $d(A, C) = 2$ via $A \\to B \\to C$, but $d(C, A) = 1$. Distances in directed graphs need not be symmetric.",
+        "在有向图中只能沿弧的方向行进，所以从一个顶点到另一个顶点的距离可能与反方向的距离不同。若弧为 $(A, B), (B, C), (C, A)$：$d(A, C) = 2$（经 $A \\to B \\to C$），但 $d(C, A) = 1$。有向图中的距离不一定对称。",
       ),
       generate(rng) {
         const n = rng.int(5, 6);
@@ -348,8 +348,8 @@ export const theDegreeOfAVertex: TopicDef = {
       id: "degrees-in-simple-graphs",
       title: t("Degrees in simple graphs", "简单图中的度"),
       explanation: t(
-        "If $E = \\{AB, AC, BC, CD\\}$, then $C$ lies on $AC$, $BC$ and $CD$, so $\\deg(C) = 3$.",
-        "若 $E = \\{AB, AC, BC, CD\\}$，则 $C$ 在 $AC$、$BC$、$CD$ 上，所以 $\\deg(C) = 3$。",
+        "The degree of a vertex is the number of edges that meet it, which in a simple graph equals the number of its neighbors. If $E = \\{AB, AC, BC, CD\\}$, then $C$ lies on $AC$, $BC$ and $CD$, so $\\deg(C) = 3$.",
+        "顶点的度是与它相连的边数，在简单图中它等于该顶点的邻居个数。若 $E = \\{AB, AC, BC, CD\\}$，则 $C$ 在 $AC$、$BC$、$CD$ 上，所以 $\\deg(C) = 3$。",
       ),
       generate(rng) {
         const n = rng.int(5, 8);
@@ -441,8 +441,8 @@ export const theHandshakingLemma: TopicDef = {
       id: "edges-from-a-degree-sequence",
       title: t("Edges from degrees", "由度数求边数"),
       explanation: t(
-        "A graph with degrees $3, 3, 2, 2, 2$ has $\\frac{3 + 3 + 2 + 2 + 2}{2} = 6$ edges.",
-        "度数为 $3, 3, 2, 2, 2$ 的图有 $\\frac{3 + 3 + 2 + 2 + 2}{2} = 6$ 条边。",
+        "Every edge has two ends and adds one to the degree of each, so the degrees sum to twice the number of edges. A graph with degrees $3, 3, 2, 2, 2$ has $\\frac{3 + 3 + 2 + 2 + 2}{2} = 6$ edges.",
+        "每条边有两个端点，使每个端点的度各加 1，所以度数之和等于边数的两倍。度数为 $3, 3, 2, 2, 2$ 的图有 $\\frac{3 + 3 + 2 + 2 + 2}{2} = 6$ 条边。",
       ),
       generate(rng) {
         const n = rng.int(5, 9);
@@ -627,8 +627,8 @@ export const completeAndBipartiteGraphs: TopicDef = {
       id: "edges-of-complete-and-complete-bipartite-graphs",
       title: t("Counting edges", "数边"),
       explanation: t(
-        "$K_7$ has $\\binom{7}{2} = 21$ edges and $K_{3,5}$ has $3 \\cdot 5 = 15$ edges.",
-        "$K_7$ 有 $\\binom{7}{2} = 21$ 条边，$K_{3,5}$ 有 $3 \\cdot 5 = 15$ 条边。",
+        "A complete graph joins every pair of vertices, while a complete bipartite graph joins every vertex on one side to every vertex on the other. $K_7$ has $\\binom{7}{2} = 21$ edges and $K_{3,5}$ has $3 \\cdot 5 = 15$ edges.",
+        "完全图连接每一对顶点，而完全二部图把一侧的每个顶点连接到另一侧的每个顶点。$K_7$ 有 $\\binom{7}{2} = 21$ 条边，$K_{3,5}$ 有 $3 \\cdot 5 = 15$ 条边。",
       ),
       generate(rng) {
         if (rng.bool()) {

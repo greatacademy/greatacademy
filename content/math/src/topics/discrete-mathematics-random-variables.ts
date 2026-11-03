@@ -1745,8 +1745,8 @@ export const theHypergeometricDistribution: TopicDef = {
       id: "hypergeometric-point-probabilities",
       title: t("Point probabilities", "单点概率"),
       explanation: t(
-        "From $10$ bulbs with $3$ faulty, choose $4$. Exactly $1$ faulty: $\\frac{\\binom{3}{1}\\binom{7}{3}}{\\binom{10}{4}} = \\frac{3 \\cdot 35}{210} = \\frac{1}{2}$.",
-        "从 $10$ 个灯泡（$3$ 个坏的）中取 $4$ 个。恰有 $1$ 个坏的：$\\frac{\\binom{3}{1}\\binom{7}{3}}{\\binom{10}{4}} = \\frac{3 \\cdot 35}{210} = \\frac{1}{2}$。",
+        "When sampling without replacement, count the ways to choose the right number from each group and divide by all the ways to choose the sample. From $10$ bulbs with $3$ faulty, choose $4$. Exactly $1$ faulty: $\\frac{\\binom{3}{1}\\binom{7}{3}}{\\binom{10}{4}} = \\frac{3 \\cdot 35}{210} = \\frac{1}{2}$.",
+        "不放回抽样时，数出从每组中选出所需个数的方法数，再除以选出整个样本的所有方法数。从 $10$ 个灯泡（$3$ 个坏的）中取 $4$ 个。恰有 $1$ 个坏的：$\\frac{\\binom{3}{1}\\binom{7}{3}}{\\binom{10}{4}} = \\frac{3 \\cdot 35}{210} = \\frac{1}{2}$。",
       ),
       generate(rng) {
         const s = hyperStory(rng);
@@ -1818,8 +1818,8 @@ export const thePmfOfTheHypergeometricDistribution: TopicDef = {
       id: "hypergeometric-cumulative-probabilities",
       title: t("Cumulative probabilities", "累积概率"),
       explanation: t(
-        "From $10$ bulbs with $3$ faulty, choose $4$. At least one faulty: $1 - P(X = 0) = 1 - \\frac{\\binom{7}{4}}{\\binom{10}{4}} = 1 - \\frac{35}{210} = \\frac{5}{6}$.",
-        "从 $10$ 个灯泡（$3$ 个坏的）中取 $4$ 个。至少一个坏的：$1 - P(X = 0) = 1 - \\frac{\\binom{7}{4}}{\\binom{10}{4}} = 1 - \\frac{35}{210} = \\frac{5}{6}$。",
+        "A cumulative probability adds point probabilities, and for at least one it is quicker to subtract the probability of none from one. From $10$ bulbs with $3$ faulty, choose $4$. At least one faulty: $1 - P(X = 0) = 1 - \\frac{\\binom{7}{4}}{\\binom{10}{4}} = 1 - \\frac{35}{210} = \\frac{5}{6}$.",
+        "累积概率是若干点概率之和，对于至少一个的情形，用 1 减去一个都没有的概率更快。从 $10$ 个灯泡（$3$ 个坏的）中取 $4$ 个。至少一个坏的：$1 - P(X = 0) = 1 - \\frac{\\binom{7}{4}}{\\binom{10}{4}} = 1 - \\frac{35}{210} = \\frac{5}{6}$。",
       ),
       generate(rng) {
         const s = hyperStory(rng);
@@ -1849,8 +1849,8 @@ export const thePmfOfTheHypergeometricDistribution: TopicDef = {
       id: "variance-of-a-hypergeometric-variable",
       title: t("The variance", "方差"),
       explanation: t(
-        "With $N = 10$, $K = 3$, $n = 4$: $\\operatorname{Var}(X) = 4 \\cdot \\frac{3}{10} \\cdot \\frac{7}{10} \\cdot \\frac{6}{9} = 0.56$, smaller than the binomial $0.84$ because sampling without replacement reduces spread.",
-        "$N = 10$，$K = 3$，$n = 4$ 时：$\\operatorname{Var}(X) = 4 \\cdot \\frac{3}{10} \\cdot \\frac{7}{10} \\cdot \\frac{6}{9} = 0.56$，比二项分布的 $0.84$ 小，因为不放回抽样减小了离散程度。",
+        "The variance matches the binomial one times a correction factor, which is smaller than one because drawing without replacement reduces the spread. With $N = 10$, $K = 3$, $n = 4$: $\\operatorname{Var}(X) = 4 \\cdot \\frac{3}{10} \\cdot \\frac{7}{10} \\cdot \\frac{6}{9} = 0.56$, smaller than the binomial $0.84$ because sampling without replacement reduces spread.",
+        "方差等于二项分布的方差乘以一个修正因子，这个因子小于 1，因为不放回抽取会减小波动。$N = 10$，$K = 3$，$n = 4$ 时：$\\operatorname{Var}(X) = 4 \\cdot \\frac{3}{10} \\cdot \\frac{7}{10} \\cdot \\frac{6}{9} = 0.56$，比二项分布的 $0.84$ 小，因为不放回抽样减小了离散程度。",
       ),
       generate(rng) {
         const s = hyperStory(rng);

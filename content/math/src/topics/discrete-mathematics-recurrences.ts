@@ -158,8 +158,8 @@ export const firstOrderRecurrenceRelations: TopicDef = {
       id: "solving-homogeneous-first-order-recurrences",
       title: t("aₙ = r aₙ₋₁", "aₙ = r aₙ₋₁"),
       explanation: t(
-        "$a_n = 3a_{n-1}$ with $a_0 = 2$ multiplies by $3$ each step: $a_n = 2 \\cdot 3^n$, so $a_6 = 1458$.",
-        "$a_n = 3a_{n-1}$，$a_0 = 2$，每一步乘以 $3$：$a_n = 2 \\cdot 3^n$，所以 $a_6 = 1458$。",
+        "Multiplying by the same ratio at each step makes the sequence geometric, so the term is the initial value times a power of the ratio. $a_n = 3a_{n-1}$ with $a_0 = 2$ multiplies by $3$ each step: $a_n = 2 \\cdot 3^n$, so $a_6 = 1458$.",
+        "每一步都乘以相同的比，序列就是等比数列，所以通项是初值乘以比的幂。$a_n = 3a_{n-1}$，$a_0 = 2$，每一步乘以 $3$：$a_n = 2 \\cdot 3^n$，所以 $a_6 = 1458$。",
       ),
       generate(rng) {
         const r = rng.pick(RATIOS);
@@ -190,8 +190,8 @@ export const firstOrderRecurrenceRelations: TopicDef = {
       id: "solving-first-order-recurrences-with-a-constant",
       title: t("aₙ = r aₙ₋₁ + d", "aₙ = r aₙ₋₁ + d"),
       explanation: t(
-        "For $a_n = 3a_{n-1} - 4$, $a_0 = 5$: the fixed point solves $p = 3p - 4$, so $p = 2$. Then $a_n - 2 = 3(a_{n-1} - 2)$, giving $a_n = 3 \\cdot 3^n + 2$.",
-        "对 $a_n = 3a_{n-1} - 4$，$a_0 = 5$：不动点满足 $p = 3p - 4$，所以 $p = 2$。于是 $a_n - 2 = 3(a_{n-1} - 2)$，得 $a_n = 3 \\cdot 3^n + 2$。",
+        "Shifting the sequence by its fixed point removes the constant, so the shifted sequence is geometric and easy to solve. For $a_n = 3a_{n-1} - 4$, $a_0 = 5$: the fixed point solves $p = 3p - 4$, so $p = 2$. Then $a_n - 2 = 3(a_{n-1} - 2)$, giving $a_n = 3 \\cdot 3^n + 2$.",
+        "把序列减去它的不动点就去掉了常数项，于是平移后的序列是等比的，容易求解。对 $a_n = 3a_{n-1} - 4$，$a_0 = 5$：不动点满足 $p = 3p - 4$，所以 $p = 2$。于是 $a_n - 2 = 3(a_{n-1} - 2)$，得 $a_n = 3 \\cdot 3^n + 2$。",
       ),
       generate(rng) {
         const r = rng.pick(RATIOS.filter((x) => x !== -1));
@@ -238,8 +238,8 @@ export const firstOrderRecurrenceRelationsWithPolynomialForcing: TopicDef = {
       id: "polynomial-particular-solutions",
       title: t("Polynomial particular solutions", "多项式特解"),
       explanation: t(
-        "For $a_n = 3a_{n-1} + 4n$, try $cn + e$: $cn + e = 3c(n - 1) + 3e + 4n$. Matching $n$: $c = 3c + 4$, so $c = -2$; matching constants: $e = -3c + 3e$, so $e = -3$.",
-        "对 $a_n = 3a_{n-1} + 4n$，设 $cn + e$：$cn + e = 3c(n - 1) + 3e + 4n$。比较 $n$ 的系数：$c = 3c + 4$，所以 $c = -2$；比较常数项：$e = -3c + 3e$，所以 $e = -3$。",
+        "When the forcing term is a polynomial, try a polynomial of the same degree and match the coefficients of each power of the index. For $a_n = 3a_{n-1} + 4n$, try $cn + e$: $cn + e = 3c(n - 1) + 3e + 4n$. Matching $n$: $c = 3c + 4$, so $c = -2$; matching constants: $e = -3c + 3e$, so $e = -3$.",
+        "当强迫项是多项式时，尝试同次数的多项式，再比较下标各次幂的系数。对 $a_n = 3a_{n-1} + 4n$，设 $cn + e$：$cn + e = 3c(n - 1) + 3e + 4n$。比较 $n$ 的系数：$c = 3c + 4$，所以 $c = -2$；比较常数项：$e = -3c + 3e$，所以 $e = -3$。",
       ),
       generate(rng) {
         const r = rng.pick([-3, -2, -1, 2, 3, 4]);
@@ -281,8 +281,8 @@ export const firstOrderRecurrenceRelationsWithPolynomialForcing: TopicDef = {
       id: "summing-a-polynomial-forcing-term",
       title: t("The case r = 1", "r = 1 的情形"),
       explanation: t(
-        "$a_n = a_{n-1} + 2n + 1$ with $a_0 = 3$ adds $2k + 1$ at step $k$: $a_n = 3 + \\sum_{k=1}^{n}(2k + 1) = 3 + n(n + 1) + n$, so $a_{10} = 123$.",
-        "$a_n = a_{n-1} + 2n + 1$，$a_0 = 3$，第 $k$ 步加 $2k + 1$：$a_n = 3 + \\sum_{k=1}^{n}(2k + 1) = 3 + n(n + 1) + n$，所以 $a_{10} = 123$。",
+        "When the ratio is one, each step just adds the forcing term, so the solution is the initial value plus the sum of those terms. $a_n = a_{n-1} + 2n + 1$ with $a_0 = 3$ adds $2k + 1$ at step $k$: $a_n = 3 + \\sum_{k=1}^{n}(2k + 1) = 3 + n(n + 1) + n$, so $a_{10} = 123$.",
+        "当比为 1 时，每一步只是加上强迫项，所以解就是初值加上这些项之和。$a_n = a_{n-1} + 2n + 1$，$a_0 = 3$，第 $k$ 步加 $2k + 1$：$a_n = 3 + \\sum_{k=1}^{n}(2k + 1) = 3 + n(n + 1) + n$，所以 $a_{10} = 123$。",
       ),
       generate(rng) {
         const alpha = rng.nonZero(-4, 5);
@@ -335,8 +335,8 @@ export const firstOrderRecurrenceRelationsWithExponentialForcing: TopicDef = {
       id: "exponential-particular-solutions",
       title: t("Exponential particular solutions", "指数特解"),
       explanation: t(
-        "For $a_n = 2a_{n-1} + 3 \\cdot 5^n$, try $K \\cdot 5^n$: $K \\cdot 5^n = 2K \\cdot 5^{n-1} + 3 \\cdot 5^n$. Dividing by $5^{n-1}$: $5K = 2K + 15$, so $K = 5$.",
-        "对 $a_n = 2a_{n-1} + 3 \\cdot 5^n$，设 $K \\cdot 5^n$：$K \\cdot 5^n = 2K \\cdot 5^{n-1} + 3 \\cdot 5^n$。两边除以 $5^{n-1}$：$5K = 2K + 15$，所以 $K = 5$。",
+        "When the forcing term is an exponential, try a constant times the same exponential and solve for the constant. For $a_n = 2a_{n-1} + 3 \\cdot 5^n$, try $K \\cdot 5^n$: $K \\cdot 5^n = 2K \\cdot 5^{n-1} + 3 \\cdot 5^n$. Dividing by $5^{n-1}$: $5K = 2K + 15$, so $K = 5$.",
+        "当强迫项是指数函数时，尝试同一指数函数的常数倍，再解出这个常数。对 $a_n = 2a_{n-1} + 3 \\cdot 5^n$，设 $K \\cdot 5^n$：$K \\cdot 5^n = 2K \\cdot 5^{n-1} + 3 \\cdot 5^n$。两边除以 $5^{n-1}$：$5K = 2K + 15$，所以 $K = 5$。",
       ),
       generate(rng) {
         const r = rng.pick([-3, -2, 2, 3, 4]);
@@ -364,8 +364,8 @@ export const firstOrderRecurrenceRelationsWithExponentialForcing: TopicDef = {
       id: "resonant-exponential-forcing",
       title: t("Forcing at the same base", "底数相同的强迫项"),
       explanation: t(
-        "For $a_n = 2a_{n-1} + 3 \\cdot 2^n$, $K \\cdot 2^n$ fails because it solves the homogeneous part. Try $Kn2^n$: $Kn = K(n - 1) + 3$, so $K = 3$ and $a_n = (a_0 + 3n)2^n$.",
-        "对 $a_n = 2a_{n-1} + 3 \\cdot 2^n$，$K \\cdot 2^n$ 不行，因为它满足齐次部分。设 $Kn2^n$：$Kn = K(n - 1) + 3$，所以 $K = 3$，$a_n = (a_0 + 3n)2^n$。",
+        "If the exponential already solves the homogeneous part, multiply the guess by the index to get a form that can match the forcing. For $a_n = 2a_{n-1} + 3 \\cdot 2^n$, $K \\cdot 2^n$ fails because it solves the homogeneous part. Try $Kn2^n$: $Kn = K(n - 1) + 3$, so $K = 3$ and $a_n = (a_0 + 3n)2^n$.",
+        "如果这个指数函数已经是齐次部分的解，就把猜测乘以下标，得到能与强迫项匹配的形式。对 $a_n = 2a_{n-1} + 3 \\cdot 2^n$，$K \\cdot 2^n$ 不行，因为它满足齐次部分。设 $Kn2^n$：$Kn = K(n - 1) + 3$，所以 $K = 3$，$a_n = (a_0 + 3n)2^n$。",
       ),
       generate(rng) {
         const r = rng.pick([-3, -2, 2, 3]);
@@ -447,8 +447,8 @@ export const secondOrderHomogeneousRecurrenceRelationsWithDistinctRealRoots: Top
       id: "characteristic-roots-of-a-recurrence",
       title: t("The characteristic roots", "特征根"),
       explanation: t(
-        "For $a_n = a_{n-1} + 6a_{n-2}$, the characteristic equation is $x^2 - x - 6 = 0$, that is, $(x - 3)(x + 2) = 0$: roots $3$ and $-2$. So $a_n = A \\cdot 3^n + B(-2)^n$.",
-        "对 $a_n = a_{n-1} + 6a_{n-2}$，特征方程为 $x^2 - x - 6 = 0$，即 $(x - 3)(x + 2) = 0$：根为 $3$ 和 $-2$。所以 $a_n = A \\cdot 3^n + B(-2)^n$。",
+        "Trying a power of an unknown number turns the recurrence into a polynomial equation whose roots give the basic solutions. For $a_n = a_{n-1} + 6a_{n-2}$, the characteristic equation is $x^2 - x - 6 = 0$, that is, $(x - 3)(x + 2) = 0$: roots $3$ and $-2$. So $a_n = A \\cdot 3^n + B(-2)^n$.",
+        "尝试一个未知数的幂，就把递推关系变成一个多项式方程，它的根给出基本解。对 $a_n = a_{n-1} + 6a_{n-2}$，特征方程为 $x^2 - x - 6 = 0$，即 $(x - 3)(x + 2) = 0$：根为 $3$ 和 $-2$。所以 $a_n = A \\cdot 3^n + B(-2)^n$。",
       ),
       generate(rng) {
         const { r1, r2, p, q } = randomRoots(rng);
@@ -472,8 +472,8 @@ export const secondOrderHomogeneousRecurrenceRelationsWithDistinctRealRoots: Top
       id: "solving-with-initial-conditions",
       title: t("Using the initial conditions", "利用初始条件"),
       explanation: t(
-        "For $a_n = a_{n-1} + 6a_{n-2}$ with $a_0 = 3$, $a_1 = 4$: $A + B = 3$ and $3A - 2B = 4$, so $A = 2$, $B = 1$, and $a_n = 2 \\cdot 3^n + (-2)^n$.",
-        "对 $a_n = a_{n-1} + 6a_{n-2}$，$a_0 = 3$，$a_1 = 4$：$A + B = 3$，$3A - 2B = 4$，所以 $A = 2$，$B = 1$，$a_n = 2 \\cdot 3^n + (-2)^n$。",
+        "The general solution has one constant for each root, and the initial terms give a system of equations that fixes them. For $a_n = a_{n-1} + 6a_{n-2}$ with $a_0 = 3$, $a_1 = 4$: $A + B = 3$ and $3A - 2B = 4$, so $A = 2$, $B = 1$, and $a_n = 2 \\cdot 3^n + (-2)^n$.",
+        "通解中每个根对应一个常数，初始项给出一个方程组来确定这些常数。对 $a_n = a_{n-1} + 6a_{n-2}$，$a_0 = 3$，$a_1 = 4$：$A + B = 3$，$3A - 2B = 4$，所以 $A = 2$，$B = 1$，$a_n = 2 \\cdot 3^n + (-2)^n$。",
       ),
       generate(rng) {
         const { r1, r2, p, q } = randomRoots(rng);
@@ -530,8 +530,8 @@ export const secondOrderHomogeneousRecurrenceRelationsWithRepeatedRoots: TopicDe
       id: "constants-for-a-repeated-root",
       title: t("Finding the constants", "求常数"),
       explanation: t(
-        "$a_n = 4a_{n-1} - 4a_{n-2}$ has characteristic equation $(x - 2)^2 = 0$. With $a_0 = 1$, $a_1 = 6$: $A = 1$ and $(A + B) \\cdot 2 = 6$, so $B = 2$ and $a_n = (1 + 2n)2^n$.",
-        "$a_n = 4a_{n-1} - 4a_{n-2}$ 的特征方程为 $(x - 2)^2 = 0$。由 $a_0 = 1$，$a_1 = 6$：$A = 1$，$(A + B) \\cdot 2 = 6$，所以 $B = 2$，$a_n = (1 + 2n)2^n$。",
+        "A repeated root gives the solutions the power and the index times the power, and the initial terms determine the two constants. $a_n = 4a_{n-1} - 4a_{n-2}$ has characteristic equation $(x - 2)^2 = 0$. With $a_0 = 1$, $a_1 = 6$: $A = 1$ and $(A + B) \\cdot 2 = 6$, so $B = 2$ and $a_n = (1 + 2n)2^n$.",
+        "重根给出该幂以及下标乘以该幂两个解，初始项确定这两个常数。$a_n = 4a_{n-1} - 4a_{n-2}$ 的特征方程为 $(x - 2)^2 = 0$。由 $a_0 = 1$，$a_1 = 6$：$A = 1$，$(A + B) \\cdot 2 = 6$，所以 $B = 2$，$a_n = (1 + 2n)2^n$。",
       ),
       generate(rng) {
         const r = rng.pick([-3, -2, -1, 1, 2, 3, 4]);
@@ -557,8 +557,8 @@ export const secondOrderHomogeneousRecurrenceRelationsWithRepeatedRoots: TopicDe
       id: "terms-from-a-repeated-root-solution",
       title: t("Finding a term", "求某一项"),
       explanation: t(
-        "With $a_n = (1 + 2n)2^n$: $a_8 = 17 \\cdot 256 = 4352$. The factor $n$ makes the terms grow faster than $2^n$.",
-        "由 $a_n = (1 + 2n)2^n$：$a_8 = 17 \\cdot 256 = 4352$。因子 $n$ 使各项比 $2^n$ 增长得更快。",
+        "Substitute the index into the closed form; the extra factor of the index makes the terms grow a little faster than the power alone. With $a_n = (1 + 2n)2^n$: $a_8 = 17 \\cdot 256 = 4352$. The factor $n$ makes the terms grow faster than $2^n$.",
+        "把下标代入封闭形式；额外的下标因子使各项比单纯的幂增长得稍快。由 $a_n = (1 + 2n)2^n$：$a_8 = 17 \\cdot 256 = 4352$。因子 $n$ 使各项比 $2^n$ 增长得更快。",
       ),
       generate(rng) {
         const r = rng.pick([-3, -2, 2, 3]);
@@ -636,8 +636,8 @@ export const secondOrderHomogeneousRecurrenceRelationsWithComplexRoots: TopicDef
       id: "modulus-and-argument-of-characteristic-roots",
       title: t("Modulus and argument", "模与辐角"),
       explanation: t(
-        "$a_n = 2a_{n-1} - 2a_{n-2}$ has characteristic equation $x^2 - 2x + 2 = 0$, with roots $1 \\pm i = \\sqrt{2}(\\cos 45^\\circ \\pm i \\sin 45^\\circ)$. So $\\rho = \\sqrt{2}$, $\\theta = 45^\\circ$, and $a_n = (\\sqrt{2})^n(A \\cos 45n^\\circ + B \\sin 45n^\\circ)$.",
-        "$a_n = 2a_{n-1} - 2a_{n-2}$ 的特征方程为 $x^2 - 2x + 2 = 0$，根为 $1 \\pm i = \\sqrt{2}(\\cos 45^\\circ \\pm i \\sin 45^\\circ)$。所以 $\\rho = \\sqrt{2}$，$\\theta = 45^\\circ$，$a_n = (\\sqrt{2})^n(A \\cos 45n^\\circ + B \\sin 45n^\\circ)$。",
+        "Complex characteristic roots come in conjugate pairs, and writing them in polar form shows how fast the terms grow and how they oscillate. $a_n = 2a_{n-1} - 2a_{n-2}$ has characteristic equation $x^2 - 2x + 2 = 0$, with roots $1 \\pm i = \\sqrt{2}(\\cos 45^\\circ \\pm i \\sin 45^\\circ)$. So $\\rho = \\sqrt{2}$, $\\theta = 45^\\circ$, and $a_n = (\\sqrt{2})^n(A \\cos 45n^\\circ + B \\sin 45n^\\circ)$.",
+        "复特征根成共轭对出现，把它们写成极坐标形式，就能看出各项增长多快以及如何振荡。$a_n = 2a_{n-1} - 2a_{n-2}$ 的特征方程为 $x^2 - 2x + 2 = 0$，根为 $1 \\pm i = \\sqrt{2}(\\cos 45^\\circ \\pm i \\sin 45^\\circ)$。所以 $\\rho = \\sqrt{2}$，$\\theta = 45^\\circ$，$a_n = (\\sqrt{2})^n(A \\cos 45n^\\circ + B \\sin 45n^\\circ)$。",
       ),
       generate(rng) {
         const c = randomComplexRoots(rng);
@@ -665,8 +665,8 @@ export const secondOrderHomogeneousRecurrenceRelationsWithComplexRoots: TopicDef
       id: "terms-from-a-complex-root-solution",
       title: t("Finding a term", "求某一项"),
       explanation: t(
-        "For $a_n = 2a_{n-1} - 2a_{n-2}$ with $a_0 = 1$, $a_1 = 1$: $A = 1$ and $\\sqrt{2}(\\cos 45^\\circ + B \\sin 45^\\circ) = 1$ gives $B = 0$. So $a_n = (\\sqrt{2})^n \\cos 45n^\\circ$ and $a_{8} = 16 \\cos 360^\\circ = 16$.",
-        "对 $a_n = 2a_{n-1} - 2a_{n-2}$，$a_0 = 1$，$a_1 = 1$：$A = 1$，由 $\\sqrt{2}(\\cos 45^\\circ + B \\sin 45^\\circ) = 1$ 得 $B = 0$。所以 $a_n = (\\sqrt{2})^n \\cos 45n^\\circ$，$a_{8} = 16 \\cos 360^\\circ = 16$。",
+        "With complex roots the real solution is a power of the modulus times a combination of cosines and sines of multiples of the argument. For $a_n = 2a_{n-1} - 2a_{n-2}$ with $a_0 = 1$, $a_1 = 1$: $A = 1$ and $\\sqrt{2}(\\cos 45^\\circ + B \\sin 45^\\circ) = 1$ gives $B = 0$. So $a_n = (\\sqrt{2})^n \\cos 45n^\\circ$ and $a_{8} = 16 \\cos 360^\\circ = 16$.",
+        "对于复根，实数解是模的幂乘以辐角倍数的余弦和正弦的组合。对 $a_n = 2a_{n-1} - 2a_{n-2}$，$a_0 = 1$，$a_1 = 1$：$A = 1$，由 $\\sqrt{2}(\\cos 45^\\circ + B \\sin 45^\\circ) = 1$ 得 $B = 0$。所以 $a_n = (\\sqrt{2})^n \\cos 45n^\\circ$，$a_{8} = 16 \\cos 360^\\circ = 16$。",
       ),
       generate(rng) {
         const c = randomComplexRoots(rng);
@@ -711,8 +711,8 @@ export const secondOrderRecurrenceRelationsWithPolynomialForcing: TopicDef = {
       id: "linear-particular-solutions-of-second-order-recurrences",
       title: t("Linear particular solutions", "一次特解"),
       explanation: t(
-        "For $a_n = a_{n-1} + 2a_{n-2} + 4n$, try $cn + e$. The $n$ terms: $c = c + 2c + 4$, so $c = -2$. The constants: $e = (e - c) + 2(e - 2c)$, so $e = 5$.",
-        "对 $a_n = a_{n-1} + 2a_{n-2} + 4n$，设 $cn + e$。比较 $n$ 的系数：$c = c + 2c + 4$，所以 $c = -2$。比较常数项：$e = (e - c) + 2(e - 2c)$，所以 $e = 5$。",
+        "Try a linear expression in the index and match the coefficient of the index and the constant on both sides. For $a_n = a_{n-1} + 2a_{n-2} + 4n$, try $cn + e$. The $n$ terms: $c = c + 2c + 4$, so $c = -2$. The constants: $e = (e - c) + 2(e - 2c)$, so $e = 5$.",
+        "尝试关于下标的一次式，再比较两边下标的系数和常数项。对 $a_n = a_{n-1} + 2a_{n-2} + 4n$，设 $cn + e$。比较 $n$ 的系数：$c = c + 2c + 4$，所以 $c = -2$。比较常数项：$e = (e - c) + 2(e - 2c)$，所以 $e = 5$。",
       ),
       generate(rng) {
         let p: number;
@@ -758,8 +758,8 @@ export const secondOrderRecurrenceRelationsWithPolynomialForcing: TopicDef = {
       id: "constant-forcing-when-one-is-a-root",
       title: t("When 1 is a characteristic root", "当 1 是特征根时"),
       explanation: t(
-        "$a_n = 3a_{n-1} - 2a_{n-2} + 5$ has characteristic roots $1$ and $2$, so a constant particular solution fails. Try $cn$: $cn = 3c(n - 1) - 2c(n - 2) + 5$, so $0 = c + 5$ and $c = -5$.",
-        "$a_n = 3a_{n-1} - 2a_{n-2} + 5$ 的特征根为 $1$ 和 $2$，所以常数特解不行。设 $cn$：$cn = 3c(n - 1) - 2c(n - 2) + 5$，所以 $0 = c + 5$，$c = -5$。",
+        "When one is a characteristic root, constants solve the homogeneous part, so multiply the guess by the index. $a_n = 3a_{n-1} - 2a_{n-2} + 5$ has characteristic roots $1$ and $2$, so a constant particular solution fails. Try $cn$: $cn = 3c(n - 1) - 2c(n - 2) + 5$, so $0 = c + 5$ and $c = -5$.",
+        "当 1 是特征根时，常数是齐次部分的解，所以要把猜测乘以下标。$a_n = 3a_{n-1} - 2a_{n-2} + 5$ 的特征根为 $1$ 和 $2$，所以常数特解不行。设 $cn$：$cn = 3c(n - 1) - 2c(n - 2) + 5$，所以 $0 = c + 5$，$c = -5$。",
       ),
       generate(rng) {
         const s = rng.pick([-3, -2, -1, 2, 3, 4]);
@@ -804,8 +804,8 @@ export const secondOrderRecurrenceRelationsWithExponentialForcing: TopicDef = {
       id: "exponential-particular-solutions-of-second-order-recurrences",
       title: t("Exponential particular solutions", "指数特解"),
       explanation: t(
-        "For $a_n = a_{n-1} + 6a_{n-2} + 4^n$, try $K \\cdot 4^n$ and divide by $4^{n-2}$: $16K = 4K + 6K + 16$, so $K = \\frac{8}{3}$.",
-        "对 $a_n = a_{n-1} + 6a_{n-2} + 4^n$，设 $K \\cdot 4^n$，两边除以 $4^{n-2}$：$16K = 4K + 6K + 16$，所以 $K = \\frac{8}{3}$。",
+        "Try a constant times the forcing exponential and divide through by its lowest power to get a simple equation for the constant. For $a_n = a_{n-1} + 6a_{n-2} + 4^n$, try $K \\cdot 4^n$ and divide by $4^{n-2}$: $16K = 4K + 6K + 16$, so $K = \\frac{8}{3}$.",
+        "尝试强迫指数函数的常数倍，再除以它的最低次幂，得到关于常数的简单方程。对 $a_n = a_{n-1} + 6a_{n-2} + 4^n$，设 $K \\cdot 4^n$，两边除以 $4^{n-2}$：$16K = 4K + 6K + 16$，所以 $K = \\frac{8}{3}$。",
       ),
       generate(rng) {
         const { p, q, r1, r2 } = randomRoots(rng);
@@ -832,8 +832,8 @@ export const secondOrderRecurrenceRelationsWithExponentialForcing: TopicDef = {
       id: "exponential-forcing-at-a-characteristic-root",
       title: t("Forcing at a characteristic root", "强迫项的底数是特征根"),
       explanation: t(
-        "$a_n = a_{n-1} + 6a_{n-2} + 3^n$ has root $3$, so try $Kn3^n$. Dividing by $3^{n-2}$: $9Kn = 3K(n - 1) + 6K(n - 2) + 9$; the $n$ terms cancel and $15K = 9$, so $K = \\frac{3}{5}$.",
-        "$a_n = a_{n-1} + 6a_{n-2} + 3^n$ 有特征根 $3$，所以设 $Kn3^n$。两边除以 $3^{n-2}$：$9Kn = 3K(n - 1) + 6K(n - 2) + 9$；$n$ 的项抵消，$15K = 9$，所以 $K = \\frac{3}{5}$。",
+        "When the forcing base is a characteristic root, multiply the guess by the index, and the terms containing the index cancel out. $a_n = a_{n-1} + 6a_{n-2} + 3^n$ has root $3$, so try $Kn3^n$. Dividing by $3^{n-2}$: $9Kn = 3K(n - 1) + 6K(n - 2) + 9$; the $n$ terms cancel and $15K = 9$, so $K = \\frac{3}{5}$.",
+        "当强迫项的底数是特征根时，把猜测乘以下标，含下标的项会相互抵消。$a_n = a_{n-1} + 6a_{n-2} + 3^n$ 有特征根 $3$，所以设 $Kn3^n$。两边除以 $3^{n-2}$：$9Kn = 3K(n - 1) + 6K(n - 2) + 9$；$n$ 的项抵消，$15K = 9$，所以 $K = \\frac{3}{5}$。",
       ),
       generate(rng) {
         let roots: Roots;
@@ -881,8 +881,8 @@ export const generatingFunctions: TopicDef = {
       id: "coefficients-of-geometric-generating-functions",
       title: t("Coefficients of c/(1 − rx)", "c/(1 − rx) 的系数"),
       explanation: t(
-        "$\\frac{5}{1 + 2x} = 5\\sum (-2)^n x^n$, so the coefficient of $x^4$ is $5 \\cdot 16 = 80$.",
-        "$\\frac{5}{1 + 2x} = 5\\sum (-2)^n x^n$，所以 $x^4$ 的系数为 $5 \\cdot 16 = 80$。",
+        "A constant over one minus a multiple of the variable is a geometric series, so its coefficients are that constant times powers of the multiple. $\\frac{5}{1 + 2x} = 5\\sum (-2)^n x^n$, so the coefficient of $x^4$ is $5 \\cdot 16 = 80$.",
+        "常数除以一减去变量的倍数是一个几何级数，所以它的系数是该常数乘以那个倍数的幂。$\\frac{5}{1 + 2x} = 5\\sum (-2)^n x^n$，所以 $x^4$ 的系数为 $5 \\cdot 16 = 80$。",
       ),
       generate(rng) {
         const r = rng.pick(RATIOS);
@@ -907,8 +907,8 @@ export const generatingFunctions: TopicDef = {
       id: "coefficients-of-squared-geometric-generating-functions",
       title: t("Coefficients of 1/(1 − rx)²", "1/(1 − rx)² 的系数"),
       explanation: t(
-        "Differentiating $\\frac{1}{1 - x} = \\sum x^n$ gives $\\frac{1}{(1 - x)^2} = \\sum (n + 1)x^n$; replacing $x$ by $rx$, $\\frac{1}{(1 - 3x)^2}$ has $x^4$ coefficient $5 \\cdot 3^4 = 405$.",
-        "对 $\\frac{1}{1 - x} = \\sum x^n$ 求导得 $\\frac{1}{(1 - x)^2} = \\sum (n + 1)x^n$；把 $x$ 换成 $rx$，$\\frac{1}{(1 - 3x)^2}$ 中 $x^4$ 的系数为 $5 \\cdot 3^4 = 405$。",
+        "Differentiating the geometric series gives the coefficients of its square, which grow linearly in the index times the powers. Differentiating $\\frac{1}{1 - x} = \\sum x^n$ gives $\\frac{1}{(1 - x)^2} = \\sum (n + 1)x^n$; replacing $x$ by $rx$, $\\frac{1}{(1 - 3x)^2}$ has $x^4$ coefficient $5 \\cdot 3^4 = 405$.",
+        "对几何级数求导就得到它的平方的系数，这些系数是下标的一次式乘以相应的幂。对 $\\frac{1}{1 - x} = \\sum x^n$ 求导得 $\\frac{1}{(1 - x)^2} = \\sum (n + 1)x^n$；把 $x$ 换成 $rx$，$\\frac{1}{(1 - 3x)^2}$ 中 $x^4$ 的系数为 $5 \\cdot 3^4 = 405$。",
       ),
       generate(rng) {
         const r = rng.pick(RATIOS);
@@ -956,8 +956,8 @@ export const generatingFunctionsOfHomogeneousRecurrenceRelations: TopicDef = {
       id: "generating-functions-of-first-order-recurrences",
       title: t("First-order recurrences", "一阶递推关系"),
       explanation: t(
-        "If $a_n = 3a_{n-1}$ and $a_0 = 2$, then $G(x) - 3xG(x) = 2$, so $G(x) = \\frac{2}{1 - 3x}$ and $G\\left(\\frac{1}{5}\\right) = \\frac{2}{2/5} = 5$.",
-        "若 $a_n = 3a_{n-1}$，$a_0 = 2$，则 $G(x) - 3xG(x) = 2$，所以 $G(x) = \\frac{2}{1 - 3x}$，$G\\left(\\frac{1}{5}\\right) = \\frac{2}{2/5} = 5$。",
+        "Multiplying the recurrence by powers of the variable and summing turns it into an equation for the generating function. If $a_n = 3a_{n-1}$ and $a_0 = 2$, then $G(x) - 3xG(x) = 2$, so $G(x) = \\frac{2}{1 - 3x}$ and $G\\left(\\frac{1}{5}\\right) = \\frac{2}{2/5} = 5$.",
+        "把递推式乘以变量的幂再求和，就把它变成关于生成函数的方程。若 $a_n = 3a_{n-1}$，$a_0 = 2$，则 $G(x) - 3xG(x) = 2$，所以 $G(x) = \\frac{2}{1 - 3x}$，$G\\left(\\frac{1}{5}\\right) = \\frac{2}{2/5} = 5$。",
       ),
       generate(rng) {
         const r = rng.pick(RATIOS);
@@ -1058,8 +1058,8 @@ export const determiningTheGeneralTermOfASequenceFromItsGeneratingFunction: Topi
       id: "partial-fractions-of-generating-functions",
       title: t("Partial fractions", "部分分式"),
       explanation: t(
-        "$\\frac{3 - 5x}{(1 - 2x)(1 - x)} = \\frac{A}{1 - 2x} + \\frac{B}{1 - x}$ means $3 - 5x = A(1 - x) + B(1 - 2x)$. Putting $x = 1$: $-2 = -B$, so $B = 2$; putting $x = \\frac{1}{2}$: $\\frac{1}{2} = \\frac{A}{2}$, so $A = 1$. Then $a_n = 2^n + 2$.",
-        "$\\frac{3 - 5x}{(1 - 2x)(1 - x)} = \\frac{A}{1 - 2x} + \\frac{B}{1 - x}$ 意味着 $3 - 5x = A(1 - x) + B(1 - 2x)$。令 $x = 1$：$-2 = -B$，所以 $B = 2$；令 $x = \\frac{1}{2}$：$\\frac{1}{2} = \\frac{A}{2}$，所以 $A = 1$。于是 $a_n = 2^n + 2$。",
+        "Partial fractions split a rational generating function into geometric pieces, each of which has easy coefficients. $\\frac{3 - 5x}{(1 - 2x)(1 - x)} = \\frac{A}{1 - 2x} + \\frac{B}{1 - x}$ means $3 - 5x = A(1 - x) + B(1 - 2x)$. Putting $x = 1$: $-2 = -B$, so $B = 2$; putting $x = \\frac{1}{2}$: $\\frac{1}{2} = \\frac{A}{2}$, so $A = 1$. Then $a_n = 2^n + 2$.",
+        "部分分式把有理生成函数拆成若干几何部分，每一部分的系数都很容易求。$\\frac{3 - 5x}{(1 - 2x)(1 - x)} = \\frac{A}{1 - 2x} + \\frac{B}{1 - x}$ 意味着 $3 - 5x = A(1 - x) + B(1 - 2x)$。令 $x = 1$：$-2 = -B$，所以 $B = 2$；令 $x = \\frac{1}{2}$：$\\frac{1}{2} = \\frac{A}{2}$，所以 $A = 1$。于是 $a_n = 2^n + 2$。",
       ),
       generate(rng) {
         const f = randomPartialFractions(rng);
@@ -1082,8 +1082,8 @@ export const determiningTheGeneralTermOfASequenceFromItsGeneratingFunction: Topi
       id: "terms-from-a-rational-generating-function",
       title: t("Finding a term", "求某一项"),
       explanation: t(
-        "If $G(x) = \\frac{1}{1 - 2x} + \\frac{2}{1 - x}$, then $a_n = 2^n + 2$ and $a_{10} = 1026$, without expanding the power series term by term.",
-        "若 $G(x) = \\frac{1}{1 - 2x} + \\frac{2}{1 - x}$，则 $a_n = 2^n + 2$，$a_{10} = 1026$，无需逐项展开幂级数。",
+        "Once the generating function is a sum of geometric pieces, each term is the sum of the matching coefficients, with no long expansion needed. If $G(x) = \\frac{1}{1 - 2x} + \\frac{2}{1 - x}$, then $a_n = 2^n + 2$ and $a_{10} = 1026$, without expanding the power series term by term.",
+        "一旦生成函数写成几何部分之和，每一项就是相应系数之和，不需要冗长的展开。若 $G(x) = \\frac{1}{1 - 2x} + \\frac{2}{1 - x}$，则 $a_n = 2^n + 2$，$a_{10} = 1026$，无需逐项展开幂级数。",
       ),
       generate(rng) {
         const f = randomPartialFractions(rng);
@@ -1155,8 +1155,8 @@ export const solvingHomogeneousRecurrenceRelationsUsingGeneratingFunctions: Topi
       id: "solving-a-recurrence-with-generating-functions",
       title: t("Solving a recurrence", "解递推关系"),
       explanation: t(
-        "For $a_n = a_{n-1} + 6a_{n-2}$, $a_0 = 3$, $a_1 = 4$: $G(x) = \\frac{3 + x}{(1 - 3x)(1 + 2x)} = \\frac{2}{1 - 3x} + \\frac{1}{1 + 2x}$, so $a_n = 2 \\cdot 3^n + (-2)^n$.",
-        "对 $a_n = a_{n-1} + 6a_{n-2}$，$a_0 = 3$，$a_1 = 4$：$G(x) = \\frac{3 + x}{(1 - 3x)(1 + 2x)} = \\frac{2}{1 - 3x} + \\frac{1}{1 + 2x}$，所以 $a_n = 2 \\cdot 3^n + (-2)^n$。",
+        "Find the generating function from the recurrence, split it by partial fractions, and read off a closed form for the terms. For $a_n = a_{n-1} + 6a_{n-2}$, $a_0 = 3$, $a_1 = 4$: $G(x) = \\frac{3 + x}{(1 - 3x)(1 + 2x)} = \\frac{2}{1 - 3x} + \\frac{1}{1 + 2x}$, so $a_n = 2 \\cdot 3^n + (-2)^n$.",
+        "由递推式求出生成函数，用部分分式拆开，再读出通项的封闭形式。对 $a_n = a_{n-1} + 6a_{n-2}$，$a_0 = 3$，$a_1 = 4$：$G(x) = \\frac{3 + x}{(1 - 3x)(1 + 2x)} = \\frac{2}{1 - 3x} + \\frac{1}{1 + 2x}$，所以 $a_n = 2 \\cdot 3^n + (-2)^n$。",
       ),
       generate(rng) {
         const { r1, r2, p, q } = randomRoots(rng);
@@ -1207,8 +1207,8 @@ export const generatingFunctionsForInhomogeneousRecurrenceRelations: TopicDef = 
       id: "generating-functions-with-a-constant-forcing-term",
       title: t("A constant forcing term", "常数强迫项"),
       explanation: t(
-        "For $a_n = 2a_{n-1} + 3$, $a_0 = 1$: $(1 - 2x)G(x) = 1 + \\frac{3x}{1 - x}$, so $G(x) = \\frac{1 + 2x}{(1 - x)(1 - 2x)}$.",
-        "对 $a_n = 2a_{n-1} + 3$，$a_0 = 1$：$(1 - 2x)G(x) = 1 + \\frac{3x}{1 - x}$，所以 $G(x) = \\frac{1 + 2x}{(1 - x)(1 - 2x)}$。",
+        "A constant forcing term contributes a geometric series to the equation, which adds a factor to the denominator of the generating function. For $a_n = 2a_{n-1} + 3$, $a_0 = 1$: $(1 - 2x)G(x) = 1 + \\frac{3x}{1 - x}$, so $G(x) = \\frac{1 + 2x}{(1 - x)(1 - 2x)}$.",
+        "常数强迫项在方程中贡献一个几何级数，这会给生成函数的分母增加一个因子。对 $a_n = 2a_{n-1} + 3$，$a_0 = 1$：$(1 - 2x)G(x) = 1 + \\frac{3x}{1 - x}$，所以 $G(x) = \\frac{1 + 2x}{(1 - x)(1 - 2x)}$。",
       ),
       generate(rng) {
         const r = rng.pick(RATIOS);
@@ -1233,8 +1233,8 @@ export const generatingFunctionsForInhomogeneousRecurrenceRelations: TopicDef = 
       id: "solving-exponentially-forced-recurrences-with-generating-functions",
       title: t("An exponential forcing term", "指数强迫项"),
       explanation: t(
-        "For $a_n = 2a_{n-1} + 3^n$, $a_0 = 1$: $G(x) = \\frac{1}{(1 - 2x)(1 - 3x)} = \\frac{-2}{1 - 2x} + \\frac{3}{1 - 3x}$, so $a_n = 3^{n+1} - 2^{n+1}$.",
-        "对 $a_n = 2a_{n-1} + 3^n$，$a_0 = 1$：$G(x) = \\frac{1}{(1 - 2x)(1 - 3x)} = \\frac{-2}{1 - 2x} + \\frac{3}{1 - 3x}$，所以 $a_n = 3^{n+1} - 2^{n+1}$。",
+        "An exponential forcing term adds its own geometric factor, so partial fractions produce a term with that base in the solution. For $a_n = 2a_{n-1} + 3^n$, $a_0 = 1$: $G(x) = \\frac{1}{(1 - 2x)(1 - 3x)} = \\frac{-2}{1 - 2x} + \\frac{3}{1 - 3x}$, so $a_n = 3^{n+1} - 2^{n+1}$.",
+        "指数强迫项会增加它自己的几何因子，所以部分分式会在解中产生以该底数为底的项。对 $a_n = 2a_{n-1} + 3^n$，$a_0 = 1$：$G(x) = \\frac{1}{(1 - 2x)(1 - 3x)} = \\frac{-2}{1 - 2x} + \\frac{3}{1 - 3x}$，所以 $a_n = 3^{n+1} - 2^{n+1}$。",
       ),
       generate(rng) {
         const r = rng.pick([-2, 2, 3]);

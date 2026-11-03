@@ -70,8 +70,8 @@ export const binaryIntegers: TopicDef = {
       id: "binary-to-decimal",
       title: t("Binary to decimal", "二进制化为十进制"),
       explanation: t(
-        "Add the place values of the $1$ bits: $\\mathrm{101101}_{2} = 32 + 8 + 4 + 1 = 45$.",
-        "把为 $1$ 的位的位值相加：$\\mathrm{101101}_{2} = 32 + 8 + 4 + 1 = 45$。",
+        "Each binary digit is worth a power of two, doubling from right to left, so the value is the sum of the powers where the digit is one. Add the place values of the $1$ bits: $\\mathrm{101101}_{2} = 32 + 8 + 4 + 1 = 45$.",
+        "每个二进制位代表一个 2 的幂，从右向左依次加倍，所以数值是所有为 1 的位对应的幂之和。把为 $1$ 的位的位值相加：$\\mathrm{101101}_{2} = 32 + 8 + 4 + 1 = 45$。",
       ),
       generate(rng) {
         const n = rng.int(9, 255);
@@ -88,8 +88,8 @@ export const binaryIntegers: TopicDef = {
       id: "decimal-to-binary",
       title: t("Decimal to binary", "十进制化为二进制"),
       explanation: t(
-        "Divide by $2$ repeatedly and read the remainders from last to first: $13 = 2 \\cdot 6 + 1$, $6 = 2 \\cdot 3 + 0$, $3 = 2 \\cdot 1 + 1$, $1 = 2 \\cdot 0 + 1$, so $13 = \\mathrm{1101}_{2}$.",
-        "不断除以 $2$，再把余数从后往前读：$13 = 2 \\cdot 6 + 1$，$6 = 2 \\cdot 3 + 0$，$3 = 2 \\cdot 1 + 1$，$1 = 2 \\cdot 0 + 1$，所以 $13 = \\mathrm{1101}_{2}$。",
+        "Repeated division by two peels off the binary digits from the right, so the remainders read from last to first give the number. Divide by $2$ repeatedly and read the remainders from last to first: $13 = 2 \\cdot 6 + 1$, $6 = 2 \\cdot 3 + 0$, $3 = 2 \\cdot 1 + 1$, $1 = 2 \\cdot 0 + 1$, so $13 = \\mathrm{1101}_{2}$.",
+        "反复除以 2 会从右边依次剥出二进制位，所以把余数从最后一个读到第一个就得到这个数。不断除以 $2$，再把余数从后往前读：$13 = 2 \\cdot 6 + 1$，$6 = 2 \\cdot 3 + 0$，$3 = 2 \\cdot 1 + 1$，$1 = 2 \\cdot 0 + 1$，所以 $13 = \\mathrm{1101}_{2}$。",
       ),
       generate(rng) {
         const n = rng.int(9, 200);
@@ -125,8 +125,8 @@ export const addingAndSubtractingBinaryIntegers: TopicDef = {
       id: "adding-binary-integers",
       title: t("Adding binary integers", "二进制整数加法"),
       explanation: t(
-        "$\\mathrm{1011}_{2} + \\mathrm{0110}_{2}$: from the right, $1 + 0 = 1$; $1 + 1 = 10$, write $0$ carry $1$; $0 + 1 + 1 = 10$, write $0$ carry $1$; $1 + 0 + 1 = 10$. The sum is $\\mathrm{10001}_{2}$, that is, $11 + 6 = 17$.",
-        "$\\mathrm{1011}_{2} + \\mathrm{0110}_{2}$：从右往左，$1 + 0 = 1$；$1 + 1 = 10$，写 $0$ 进 $1$；$0 + 1 + 1 = 10$，写 $0$ 进 $1$；$1 + 0 + 1 = 10$。和为 $\\mathrm{10001}_{2}$，即 $11 + 6 = 17$。",
+        "Binary addition works column by column like decimal addition, except that two ones make ten, so you write zero and carry one. $\\mathrm{1011}_{2} + \\mathrm{0110}_{2}$: from the right, $1 + 0 = 1$; $1 + 1 = 10$, write $0$ carry $1$; $0 + 1 + 1 = 10$, write $0$ carry $1$; $1 + 0 + 1 = 10$. The sum is $\\mathrm{10001}_{2}$, that is, $11 + 6 = 17$.",
+        "二进制加法像十进制加法一样逐列进行，只是两个 1 相加得到 10，所以写 0 并进 1。$\\mathrm{1011}_{2} + \\mathrm{0110}_{2}$：从右往左，$1 + 0 = 1$；$1 + 1 = 10$，写 $0$ 进 $1$；$0 + 1 + 1 = 10$，写 $0$ 进 $1$；$1 + 0 + 1 = 10$。和为 $\\mathrm{10001}_{2}$，即 $11 + 6 = 17$。",
       ),
       generate(rng) {
         const a = rng.int(5, 127);
@@ -193,8 +193,8 @@ export const multiplyingAndDividingBinaryIntegers: TopicDef = {
       id: "multiplying-binary-integers",
       title: t("Multiplying binary integers", "二进制整数乘法"),
       explanation: t(
-        "$\\mathrm{1011}_{2} \\times \\mathrm{101}_{2}$: the multiplier has $1$ bits worth $4$ and $1$, so add $\\mathrm{101100}_{2}$ (shifted two places) and $\\mathrm{1011}_{2}$: $\\mathrm{110111}_{2} = 55 = 11 \\times 5$.",
-        "$\\mathrm{1011}_{2} \\times \\mathrm{101}_{2}$：乘数的 $1$ 位的位值是 $4$ 和 $1$，所以把 $\\mathrm{101100}_{2}$（左移两位）与 $\\mathrm{1011}_{2}$ 相加：$\\mathrm{110111}_{2} = 55 = 11 \\times 5$。",
+        "Multiplying by a binary number means adding shifted copies of the other number, one copy for each digit that is one. $\\mathrm{1011}_{2} \\times \\mathrm{101}_{2}$: the multiplier has $1$ bits worth $4$ and $1$, so add $\\mathrm{101100}_{2}$ (shifted two places) and $\\mathrm{1011}_{2}$: $\\mathrm{110111}_{2} = 55 = 11 \\times 5$.",
+        "乘以一个二进制数，就是把另一个数的移位副本相加，每个为 1 的位对应一个副本。$\\mathrm{1011}_{2} \\times \\mathrm{101}_{2}$：乘数的 $1$ 位的位值是 $4$ 和 $1$，所以把 $\\mathrm{101100}_{2}$（左移两位）与 $\\mathrm{1011}_{2}$ 相加：$\\mathrm{110111}_{2} = 55 = 11 \\times 5$。",
       ),
       generate(rng) {
         const a = rng.int(5, 31);
@@ -261,8 +261,8 @@ export const binaryFractions: TopicDef = {
       id: "binary-fractions-to-decimal",
       title: t("Binary fractions to decimal", "二进制小数化为十进制"),
       explanation: t(
-        "$\\mathrm{10.101}_{2} = 2 + \\frac{1}{2} + \\frac{1}{8} = 2.625$.",
-        "$\\mathrm{10.101}_{2} = 2 + \\frac{1}{2} + \\frac{1}{8} = 2.625$。",
+        "Digits after the binary point are worth halves, quarters, eighths and so on, so add those fractions for the digits that are one. $\\mathrm{10.101}_{2} = 2 + \\frac{1}{2} + \\frac{1}{8} = 2.625$.",
+        "二进制小数点后的各位分别代表二分之一、四分之一、八分之一等，所以把为 1 的位对应的分数相加。$\\mathrm{10.101}_{2} = 2 + \\frac{1}{2} + \\frac{1}{8} = 2.625$。",
       ),
       generate(rng) {
         const k = rng.int(2, 4);
@@ -287,8 +287,8 @@ export const binaryFractions: TopicDef = {
       id: "decimal-fractions-to-binary",
       title: t("Decimal fractions to binary", "十进制小数化为二进制"),
       explanation: t(
-        "For $0.375$: $0.375 \\times 2 = 0.75$ (bit $0$), $0.75 \\times 2 = 1.5$ (bit $1$), $0.5 \\times 2 = 1$ (bit $1$). So $0.375 = \\mathrm{0.011}_{2}$.",
-        "对 $0.375$：$0.375 \\times 2 = 0.75$（位 $0$），$0.75 \\times 2 = 1.5$（位 $1$），$0.5 \\times 2 = 1$（位 $1$）。所以 $0.375 = \\mathrm{0.011}_{2}$。",
+        "Doubling a fraction moves the binary point one place, so the whole number part after each doubling is the next binary digit. For $0.375$: $0.375 \\times 2 = 0.75$ (bit $0$), $0.75 \\times 2 = 1.5$ (bit $1$), $0.5 \\times 2 = 1$ (bit $1$). So $0.375 = \\mathrm{0.011}_{2}$.",
+        "把小数加倍相当于把二进制小数点移动一位，所以每次加倍后的整数部分就是下一位二进制数字。对 $0.375$：$0.375 \\times 2 = 0.75$（位 $0$），$0.75 \\times 2 = 1.5$（位 $1$），$0.5 \\times 2 = 1$（位 $1$）。所以 $0.375 = \\mathrm{0.011}_{2}$。",
       ),
       generate(rng) {
         const k = rng.int(2, 3);
@@ -340,8 +340,8 @@ export const hexadecimalIntegers: TopicDef = {
       id: "hexadecimal-to-decimal",
       title: t("Hexadecimal to decimal", "十六进制化为十进制"),
       explanation: t(
-        "$\\mathrm{2F}_{16} = 2 \\cdot 16 + 15 = 47$ and $\\mathrm{1A0}_{16} = 1 \\cdot 256 + 10 \\cdot 16 + 0 = 416$.",
-        "$\\mathrm{2F}_{16} = 2 \\cdot 16 + 15 = 47$，$\\mathrm{1A0}_{16} = 1 \\cdot 256 + 10 \\cdot 16 + 0 = 416$。",
+        "Hexadecimal digits are worth powers of sixteen, and the letters from A to F stand for the values ten to fifteen. $\\mathrm{2F}_{16} = 2 \\cdot 16 + 15 = 47$ and $\\mathrm{1A0}_{16} = 1 \\cdot 256 + 10 \\cdot 16 + 0 = 416$.",
+        "十六进制的各位代表 16 的幂，字母 A 到 F 表示数值 10 到 15。$\\mathrm{2F}_{16} = 2 \\cdot 16 + 15 = 47$，$\\mathrm{1A0}_{16} = 1 \\cdot 256 + 10 \\cdot 16 + 0 = 416$。",
       ),
       generate(rng) {
         let n: number;
@@ -360,8 +360,8 @@ export const hexadecimalIntegers: TopicDef = {
       id: "decimal-to-hexadecimal",
       title: t("Decimal to hexadecimal", "十进制化为十六进制"),
       explanation: t(
-        "Divide by $16$ repeatedly: $700 = 16 \\cdot 43 + 12$, $43 = 16 \\cdot 2 + 11$, $2 = 16 \\cdot 0 + 2$. The remainders $2, 11, 12$ read upward give $700 = \\mathrm{2BC}_{16}$.",
-        "不断除以 $16$：$700 = 16 \\cdot 43 + 12$，$43 = 16 \\cdot 2 + 11$，$2 = 16 \\cdot 0 + 2$。余数 $2, 11, 12$ 从下往上读得 $700 = \\mathrm{2BC}_{16}$。",
+        "The same repeated division works with sixteen in place of two, writing remainders from ten to fifteen as letters. Divide by $16$ repeatedly: $700 = 16 \\cdot 43 + 12$, $43 = 16 \\cdot 2 + 11$, $2 = 16 \\cdot 0 + 2$. The remainders $2, 11, 12$ read upward give $700 = \\mathrm{2BC}_{16}$.",
+        "同样的反复除法也适用，只需把 2 换成 16，并把 10 到 15 的余数写成字母。不断除以 $16$：$700 = 16 \\cdot 43 + 12$，$43 = 16 \\cdot 2 + 11$，$2 = 16 \\cdot 0 + 2$。余数 $2, 11, 12$ 从下往上读得 $700 = \\mathrm{2BC}_{16}$。",
       ),
       generate(rng) {
         let n: number;
@@ -406,8 +406,8 @@ export const convertingBetweenBinaryAndHexadecimalIntegers: TopicDef = {
       id: "binary-to-hexadecimal",
       title: t("Binary to hexadecimal", "二进制化为十六进制"),
       explanation: t(
-        "Group from the right: $\\mathrm{1011101}_{2} = \\mathrm{0101\\,1101}_{2}$, and $\\mathrm{0101}_{2} = 5$, $\\mathrm{1101}_{2} = \\mathrm{D}$, so it is $\\mathrm{5D}_{16}$.",
-        "从右往左分组：$\\mathrm{1011101}_{2} = \\mathrm{0101\\,1101}_{2}$，$\\mathrm{0101}_{2} = 5$，$\\mathrm{1101}_{2} = \\mathrm{D}$，所以是 $\\mathrm{5D}_{16}$。",
+        "Sixteen is two to the fourth power, so each group of four binary digits, counted from the right, becomes one hexadecimal digit. Group from the right: $\\mathrm{1011101}_{2} = \\mathrm{0101\\,1101}_{2}$, and $\\mathrm{0101}_{2} = 5$, $\\mathrm{1101}_{2} = \\mathrm{D}$, so it is $\\mathrm{5D}_{16}$.",
+        "16 是 2 的四次方，所以从右边数起，每四个二进制位一组，就变成一个十六进制数字。从右往左分组：$\\mathrm{1011101}_{2} = \\mathrm{0101\\,1101}_{2}$，$\\mathrm{0101}_{2} = 5$，$\\mathrm{1101}_{2} = \\mathrm{D}$，所以是 $\\mathrm{5D}_{16}$。",
       ),
       generate(rng) {
         let n: number;
@@ -431,8 +431,8 @@ export const convertingBetweenBinaryAndHexadecimalIntegers: TopicDef = {
       id: "hexadecimal-to-binary",
       title: t("Hexadecimal to binary", "十六进制化为二进制"),
       explanation: t(
-        "Replace each digit by four bits: $\\mathrm{A3}_{16}$ is $\\mathrm{1010}$ then $\\mathrm{0011}$, so $\\mathrm{10100011}_{2}$.",
-        "把每个数字换成四个比特：$\\mathrm{A3}_{16}$ 是 $\\mathrm{1010}$ 接 $\\mathrm{0011}$，所以是 $\\mathrm{10100011}_{2}$。",
+        "Going the other way, replace each hexadecimal digit by its four binary digits, keeping leading zeros inside the number. Replace each digit by four bits: $\\mathrm{A3}_{16}$ is $\\mathrm{1010}$ then $\\mathrm{0011}$, so $\\mathrm{10100011}_{2}$.",
+        "反过来，把每个十六进制数字换成它的四个二进制位，数中间的前导零要保留。把每个数字换成四个比特：$\\mathrm{A3}_{16}$ 是 $\\mathrm{1010}$ 接 $\\mathrm{0011}$，所以是 $\\mathrm{10100011}_{2}$。",
       ),
       generate(rng) {
         let n: number;
@@ -488,8 +488,8 @@ export const integersInArbitraryBases: TopicDef = {
       id: "base-b-to-decimal",
       title: t("Base b to decimal", "b 进制化为十进制"),
       explanation: t(
-        "$\\mathrm{2012}_{3} = 2 \\cdot 27 + 0 \\cdot 9 + 1 \\cdot 3 + 2 = 59$.",
-        "$\\mathrm{2012}_{3} = 2 \\cdot 27 + 0 \\cdot 9 + 1 \\cdot 3 + 2 = 59$。",
+        "In any base, each digit is multiplied by a power of the base, starting from the zeroth power on the right. $\\mathrm{2012}_{3} = 2 \\cdot 27 + 0 \\cdot 9 + 1 \\cdot 3 + 2 = 59$.",
+        "在任何进制中，每一位都乘以基数的一个幂，从右边的零次幂开始。$\\mathrm{2012}_{3} = 2 \\cdot 27 + 0 \\cdot 9 + 1 \\cdot 3 + 2 = 59$。",
       ),
       generate(rng) {
         const b = rng.pick(BASES);
@@ -507,8 +507,8 @@ export const integersInArbitraryBases: TopicDef = {
       id: "decimal-to-base-b",
       title: t("Decimal to base b", "十进制化为 b 进制"),
       explanation: t(
-        "To write $59$ in base $3$: $59 = 3 \\cdot 19 + 2$, $19 = 3 \\cdot 6 + 1$, $6 = 3 \\cdot 2 + 0$, $2 = 3 \\cdot 0 + 2$. Reading upward, $59 = \\mathrm{2012}_{3}$.",
-        "把 $59$ 写成三进制：$59 = 3 \\cdot 19 + 2$，$19 = 3 \\cdot 6 + 1$，$6 = 3 \\cdot 2 + 0$，$2 = 3 \\cdot 0 + 2$。从下往上读，$59 = \\mathrm{2012}_{3}$。",
+        "Divide by the base repeatedly and read the remainders from last to first, exactly as for binary. To write $59$ in base $3$: $59 = 3 \\cdot 19 + 2$, $19 = 3 \\cdot 6 + 1$, $6 = 3 \\cdot 2 + 0$, $2 = 3 \\cdot 0 + 2$. Reading upward, $59 = \\mathrm{2012}_{3}$.",
+        "反复除以基数，再把余数从最后一个读到第一个，与二进制的做法完全一样。把 $59$ 写成三进制：$59 = 3 \\cdot 19 + 2$，$19 = 3 \\cdot 6 + 1$，$6 = 3 \\cdot 2 + 0$，$2 = 3 \\cdot 0 + 2$。从下往上读，$59 = \\mathrm{2012}_{3}$。",
       ),
       generate(rng) {
         const b = rng.pick(BASES);
@@ -546,8 +546,8 @@ export const fractionsInArbitraryBases: TopicDef = {
       id: "base-b-fractions-to-fractions",
       title: t("Reading base-b fractions", "读 b 进制小数"),
       explanation: t(
-        "$\\mathrm{1.21}_{3} = 1 + \\frac{2}{3} + \\frac{1}{9} = \\frac{16}{9}$.",
-        "$\\mathrm{1.21}_{3} = 1 + \\frac{2}{3} + \\frac{1}{9} = \\frac{16}{9}$。",
+        "Digits after the point are worth negative powers of the base, so add each digit divided by the matching power. $\\mathrm{1.21}_{3} = 1 + \\frac{2}{3} + \\frac{1}{9} = \\frac{16}{9}$.",
+        "小数点后的各位代表基数的负幂，所以把每一位除以相应的幂再相加。$\\mathrm{1.21}_{3} = 1 + \\frac{2}{3} + \\frac{1}{9} = \\frac{16}{9}$。",
       ),
       generate(rng) {
         const b = rng.pick(BASES);
@@ -629,8 +629,8 @@ export const fermatsLittleTheorem: TopicDef = {
       id: "reducing-powers-with-fermat",
       title: t("Reducing large powers", "化简大次幂"),
       explanation: t(
-        "To find $3^{100} \\bmod 7$: $3^6 \\equiv 1$, and $100 = 6 \\cdot 16 + 4$, so $3^{100} = (3^6)^{16} \\cdot 3^4 \\equiv 3^4 = 81 \\equiv 4 \\pmod 7$.",
-        "求 $3^{100} \\bmod 7$：$3^6 \\equiv 1$，且 $100 = 6 \\cdot 16 + 4$，所以 $3^{100} = (3^6)^{16} \\cdot 3^4 \\equiv 3^4 = 81 \\equiv 4 \\pmod 7$。",
+        "Fermat's little theorem says the power one less than a prime is one modulo that prime, so exponents can be reduced by multiples of it. To find $3^{100} \\bmod 7$: $3^6 \\equiv 1$, and $100 = 6 \\cdot 16 + 4$, so $3^{100} = (3^6)^{16} \\cdot 3^4 \\equiv 3^4 = 81 \\equiv 4 \\pmod 7$.",
+        "费马小定理说，素数减 1 次幂模这个素数等于 1，所以指数可以减去它的倍数。求 $3^{100} \\bmod 7$：$3^6 \\equiv 1$，且 $100 = 6 \\cdot 16 + 4$，所以 $3^{100} = (3^6)^{16} \\cdot 3^4 \\equiv 3^4 = 81 \\equiv 4 \\pmod 7$。",
       ),
       generate(rng) {
         const p = rng.pick(PRIMES.slice(0, 7));
@@ -653,8 +653,8 @@ export const fermatsLittleTheorem: TopicDef = {
       id: "inverses-with-fermat",
       title: t("Inverses from Fermat", "用费马小定理求逆元"),
       explanation: t(
-        "Since $a \\cdot a^{p-2} = a^{p-1} \\equiv 1$, the inverse of $a$ modulo $p$ is $a^{p-2} \\bmod p$. Modulo $7$: $3^{-1} \\equiv 3^5 = 243 \\equiv 5$, and indeed $3 \\cdot 5 = 15 \\equiv 1$.",
-        "因为 $a \\cdot a^{p-2} = a^{p-1} \\equiv 1$，所以 $a$ 模 $p$ 的逆元是 $a^{p-2} \\bmod p$。模 $7$：$3^{-1} \\equiv 3^5 = 243 \\equiv 5$，确实 $3 \\cdot 5 = 15 \\equiv 1$。",
+        "Since the power one less than the prime is one, the power two less than the prime is an inverse, which can be found by repeated squaring. Since $a \\cdot a^{p-2} = a^{p-1} \\equiv 1$, the inverse of $a$ modulo $p$ is $a^{p-2} \\bmod p$. Modulo $7$: $3^{-1} \\equiv 3^5 = 243 \\equiv 5$, and indeed $3 \\cdot 5 = 15 \\equiv 1$.",
+        "由于素数减 1 次幂等于 1，素数减 2 次幂就是逆元，可以用反复平方求出。因为 $a \\cdot a^{p-2} = a^{p-1} \\equiv 1$，所以 $a$ 模 $p$ 的逆元是 $a^{p-2} \\bmod p$。模 $7$：$3^{-1} \\equiv 3^5 = 243 \\equiv 5$，确实 $3 \\cdot 5 = 15 \\equiv 1$。",
       ),
       generate(rng) {
         const p = rng.pick(PRIMES);
@@ -731,8 +731,8 @@ export const eulersTotientFunction: TopicDef = {
       id: "totients-of-composite-numbers",
       title: t("Totients of composite numbers", "合数的欧拉函数"),
       explanation: t(
-        "Factor and multiply: $\\varphi(360) = \\varphi(2^3)\\varphi(3^2)\\varphi(5) = 4 \\cdot 6 \\cdot 4 = 96$. Equivalently $\\varphi(n) = n \\prod_{p \\mid n} \\left(1 - \\frac{1}{p}\\right)$.",
-        "先分解再相乘：$\\varphi(360) = \\varphi(2^3)\\varphi(3^2)\\varphi(5) = 4 \\cdot 6 \\cdot 4 = 96$。等价地，$\\varphi(n) = n \\prod_{p \\mid n} \\left(1 - \\frac{1}{p}\\right)$。",
+        "Euler's totient is multiplicative over coprime factors, and for a prime power it removes the multiples of the prime. Factor and multiply: $\\varphi(360) = \\varphi(2^3)\\varphi(3^2)\\varphi(5) = 4 \\cdot 6 \\cdot 4 = 96$. Equivalently $\\varphi(n) = n \\prod_{p \\mid n} \\left(1 - \\frac{1}{p}\\right)$.",
+        "欧拉函数对互素的因数是积性的，对素数的幂，它去掉了该素数的倍数。先分解再相乘：$\\varphi(360) = \\varphi(2^3)\\varphi(3^2)\\varphi(5) = 4 \\cdot 6 \\cdot 4 = 96$。等价地，$\\varphi(n) = n \\prod_{p \\mid n} \\left(1 - \\frac{1}{p}\\right)$。",
       ),
       generate(rng) {
         let n: number;
@@ -771,8 +771,8 @@ export const eulersTheorem: TopicDef = {
       id: "reducing-powers-with-euler",
       title: t("Reducing powers modulo n", "模 n 化简幂"),
       explanation: t(
-        "To find $7^{50} \\bmod 15$: $\\varphi(15) = 8$, $\\gcd(7, 15) = 1$ and $50 = 8 \\cdot 6 + 2$, so $7^{50} \\equiv 7^2 = 49 \\equiv 4 \\pmod{15}$.",
-        "求 $7^{50} \\bmod 15$：$\\varphi(15) = 8$，$\\gcd(7, 15) = 1$，且 $50 = 8 \\cdot 6 + 2$，所以 $7^{50} \\equiv 7^2 = 49 \\equiv 4 \\pmod{15}$。",
+        "Euler's theorem generalizes Fermat's: when the base is coprime to the modulus, the totient power is one, so exponents reduce modulo the totient. To find $7^{50} \\bmod 15$: $\\varphi(15) = 8$, $\\gcd(7, 15) = 1$ and $50 = 8 \\cdot 6 + 2$, so $7^{50} \\equiv 7^2 = 49 \\equiv 4 \\pmod{15}$.",
+        "欧拉定理推广了费马定理：当底数与模互素时，欧拉函数值次幂等于 1，所以指数可以模欧拉函数值约化。求 $7^{50} \\bmod 15$：$\\varphi(15) = 8$，$\\gcd(7, 15) = 1$，且 $50 = 8 \\cdot 6 + 2$，所以 $7^{50} \\equiv 7^2 = 49 \\equiv 4 \\pmod{15}$。",
       ),
       generate(rng) {
         let n: number;
@@ -800,8 +800,8 @@ export const eulersTheorem: TopicDef = {
       id: "last-digits-of-powers",
       title: t("Last digits of powers", "幂的末位数字"),
       explanation: t(
-        "The last two digits of $3^{2023}$ are $3^{2023} \\bmod 100$. As $\\varphi(100) = 40$ and $2023 = 40 \\cdot 50 + 23$, $3^{2023} \\equiv 3^{23} \\equiv 27 \\pmod{100}$.",
-        "$3^{2023}$ 的末两位就是 $3^{2023} \\bmod 100$。因为 $\\varphi(100) = 40$，且 $2023 = 40 \\cdot 50 + 23$，所以 $3^{2023} \\equiv 3^{23} \\equiv 27 \\pmod{100}$。",
+        "The last two digits of a number are its remainder modulo one hundred, so Euler's theorem with that modulus finds them. The last two digits of $3^{2023}$ are $3^{2023} \\bmod 100$. As $\\varphi(100) = 40$ and $2023 = 40 \\cdot 50 + 23$, $3^{2023} \\equiv 3^{23} \\equiv 27 \\pmod{100}$.",
+        "一个数的最后两位就是它模 100 的余数，所以用以 100 为模的欧拉定理就能求出它们。$3^{2023}$ 的末两位就是 $3^{2023} \\bmod 100$。因为 $\\varphi(100) = 40$，且 $2023 = 40 \\cdot 50 + 23$，所以 $3^{2023} \\equiv 3^{23} \\equiv 27 \\pmod{100}$。",
       ),
       generate(rng) {
         const two = rng.bool();
@@ -883,8 +883,8 @@ export const introductionToCryptography: TopicDef = {
       id: "encrypting-with-a-shift-cipher",
       title: t("Encrypting with a shift cipher", "用移位密码加密"),
       explanation: t(
-        "With key $k = 3$: $\\mathrm{X} = 23 \\mapsto 26 \\equiv 0 = \\mathrm{A}$, wrapping around the alphabet. So $\\mathrm{XYZ}$ becomes $\\mathrm{ABC}$.",
-        "密钥 $k = 3$ 时：$\\mathrm{X} = 23 \\mapsto 26 \\equiv 0 = \\mathrm{A}$，在字母表末尾绕回开头。所以 $\\mathrm{XYZ}$ 变成 $\\mathrm{ABC}$。",
+        "A shift cipher replaces each letter by the one a fixed number of places later, wrapping from the end of the alphabet back to the start. With key $k = 3$: $\\mathrm{X} = 23 \\mapsto 26 \\equiv 0 = \\mathrm{A}$, wrapping around the alphabet. So $\\mathrm{XYZ}$ becomes $\\mathrm{ABC}$.",
+        "移位密码把每个字母换成其后固定位数的字母，到字母表末尾时再回到开头。密钥 $k = 3$ 时：$\\mathrm{X} = 23 \\mapsto 26 \\equiv 0 = \\mathrm{A}$，在字母表末尾绕回开头。所以 $\\mathrm{XYZ}$ 变成 $\\mathrm{ABC}$。",
       ),
       generate(rng) {
         const w = rng.pick(WORDS);
@@ -909,8 +909,8 @@ export const introductionToCryptography: TopicDef = {
       id: "decrypting-a-shift-cipher",
       title: t("Decrypting a shift cipher", "解密移位密码"),
       explanation: t(
-        "Decryption subtracts the key: with $k = 5$, $\\mathrm{F} = 5 \\mapsto 0 = \\mathrm{A}$ and $\\mathrm{C} = 2 \\mapsto -3 \\equiv 23 = \\mathrm{X}$.",
-        "解密时减去密钥：$k = 5$ 时，$\\mathrm{F} = 5 \\mapsto 0 = \\mathrm{A}$，$\\mathrm{C} = 2 \\mapsto -3 \\equiv 23 = \\mathrm{X}$。",
+        "Decryption undoes the shift by moving back the same number of places, again wrapping around the alphabet. Decryption subtracts the key: with $k = 5$, $\\mathrm{F} = 5 \\mapsto 0 = \\mathrm{A}$ and $\\mathrm{C} = 2 \\mapsto -3 \\equiv 23 = \\mathrm{X}$.",
+        "解密时向回移动同样的位数来撤销移位，同样要在字母表上绕回。解密时减去密钥：$k = 5$ 时，$\\mathrm{F} = 5 \\mapsto 0 = \\mathrm{A}$，$\\mathrm{C} = 2 \\mapsto -3 \\equiv 23 = \\mathrm{X}$。",
       ),
       generate(rng) {
         const w = rng.pick(WORDS);
@@ -957,8 +957,8 @@ export const theLinearCipher: TopicDef = {
       id: "encrypting-with-a-linear-cipher",
       title: t("Encrypting", "加密"),
       explanation: t(
-        "With $y = 5x + 8 \\bmod 26$, the letter $\\mathrm{K} = 10$ becomes $58 \\equiv 6 = \\mathrm{G}$.",
-        "用 $y = 5x + 8 \\bmod 26$，字母 $\\mathrm{K} = 10$ 变成 $58 \\equiv 6 = \\mathrm{G}$。",
+        "A linear cipher multiplies the letter's number by a key and adds another, then reduces modulo twenty six. With $y = 5x + 8 \\bmod 26$, the letter $\\mathrm{K} = 10$ becomes $58 \\equiv 6 = \\mathrm{G}$.",
+        "线性密码把字母对应的数乘以一个密钥再加上另一个密钥，然后模 26 约化。用 $y = 5x + 8 \\bmod 26$，字母 $\\mathrm{K} = 10$ 变成 $58 \\equiv 6 = \\mathrm{G}$。",
       ),
       generate(rng) {
         const a = rng.pick(UNITS26);
@@ -983,8 +983,8 @@ export const theLinearCipher: TopicDef = {
       id: "decrypting-a-linear-cipher",
       title: t("Decrypting", "解密"),
       explanation: t(
-        "For $y = 5x + 8$: $5^{-1} \\equiv 21 \\pmod{26}$ since $5 \\cdot 21 = 105 = 4 \\cdot 26 + 1$. So $x = 21(y - 8) \\bmod 26$, and $\\mathrm{G} = 6$ decrypts to $21 \\cdot (-2) = -42 \\equiv 10 = \\mathrm{K}$.",
-        "对 $y = 5x + 8$：因为 $5 \\cdot 21 = 105 = 4 \\cdot 26 + 1$，所以 $5^{-1} \\equiv 21 \\pmod{26}$。于是 $x = 21(y - 8) \\bmod 26$，$\\mathrm{G} = 6$ 解密为 $21 \\cdot (-2) = -42 \\equiv 10 = \\mathrm{K}$。",
+        "To decrypt, subtract the added key and multiply by the inverse of the multiplier, which exists only if it is coprime to twenty six. For $y = 5x + 8$: $5^{-1} \\equiv 21 \\pmod{26}$ since $5 \\cdot 21 = 105 = 4 \\cdot 26 + 1$. So $x = 21(y - 8) \\bmod 26$, and $\\mathrm{G} = 6$ decrypts to $21 \\cdot (-2) = -42 \\equiv 10 = \\mathrm{K}$.",
+        "解密时先减去加上的密钥，再乘以乘数的逆元，只有乘数与 26 互素时逆元才存在。对 $y = 5x + 8$：因为 $5 \\cdot 21 = 105 = 4 \\cdot 26 + 1$，所以 $5^{-1} \\equiv 21 \\pmod{26}$。于是 $x = 21(y - 8) \\bmod 26$，$\\mathrm{G} = 6$ 解密为 $21 \\cdot (-2) = -42 \\equiv 10 = \\mathrm{K}$。",
       ),
       generate(rng) {
         const a = rng.pick(UNITS26);
@@ -1032,8 +1032,8 @@ export const theDiffieHellmanProtocol: TopicDef = {
       id: "computing-a-public-value",
       title: t("Public values", "公开值"),
       explanation: t(
-        "With $p = 23$, $g = 5$ and Alice's secret $a = 6$: $A = 5^6 \\bmod 23$. Square repeatedly: $5^2 = 25 \\equiv 2$, $5^4 \\equiv 4$, so $5^6 \\equiv 4 \\cdot 2 = 8$. Alice sends $A = 8$.",
-        "取 $p = 23$，$g = 5$，爱丽丝的秘密数 $a = 6$：$A = 5^6 \\bmod 23$。反复平方：$5^2 = 25 \\equiv 2$，$5^4 \\equiv 4$，所以 $5^6 \\equiv 4 \\cdot 2 = 8$。爱丽丝发送 $A = 8$。",
+        "Each party raises the shared base to a secret power modulo the prime, and repeated squaring keeps the numbers small. With $p = 23$, $g = 5$ and Alice's secret $a = 6$: $A = 5^6 \\bmod 23$. Square repeatedly: $5^2 = 25 \\equiv 2$, $5^4 \\equiv 4$, so $5^6 \\equiv 4 \\cdot 2 = 8$. Alice sends $A = 8$.",
+        "每一方都把公共底数模素数地升到一个秘密的幂，反复平方能让数字保持很小。取 $p = 23$，$g = 5$，爱丽丝的秘密数 $a = 6$：$A = 5^6 \\bmod 23$。反复平方：$5^2 = 25 \\equiv 2$，$5^4 \\equiv 4$，所以 $5^6 \\equiv 4 \\cdot 2 = 8$。爱丽丝发送 $A = 8$。",
       ),
       generate(rng) {
         const p = rng.pick(DH_PRIMES);
@@ -1055,8 +1055,8 @@ export const theDiffieHellmanProtocol: TopicDef = {
       id: "computing-the-shared-key",
       title: t("The shared key", "共享密钥"),
       explanation: t(
-        "Continuing with $p = 23$, $g = 5$, $a = 6$: if Bob sends $B = 19$, Alice computes $19^6 \\bmod 23 = 2$. Bob, from his secret $b$, gets the same $A^b \\equiv g^{ab} \\equiv 2$.",
-        "继续取 $p = 23$，$g = 5$，$a = 6$：若鲍勃发送 $B = 19$，爱丽丝计算 $19^6 \\bmod 23 = 2$。鲍勃用他的秘密数 $b$ 也得到同样的 $A^b \\equiv g^{ab} \\equiv 2$。",
+        "Raising the other party's public value to your own secret power gives the same result for both sides, because exponents multiply. Continuing with $p = 23$, $g = 5$, $a = 6$: if Bob sends $B = 19$, Alice computes $19^6 \\bmod 23 = 2$. Bob, from his secret $b$, gets the same $A^b \\equiv g^{ab} \\equiv 2$.",
+        "把对方的公开值升到自己的秘密幂，双方得到相同的结果，因为指数相乘。继续取 $p = 23$，$g = 5$，$a = 6$：若鲍勃发送 $B = 19$，爱丽丝计算 $19^6 \\bmod 23 = 2$。鲍勃用他的秘密数 $b$ 也得到同样的 $A^b \\equiv g^{ab} \\equiv 2$。",
       ),
       generate(rng) {
         const p = rng.pick(DH_PRIMES);
@@ -1117,8 +1117,8 @@ export const theRsaCryptosystem: TopicDef = {
       id: "finding-the-private-exponent",
       title: t("The private exponent", "私钥指数"),
       explanation: t(
-        "With $p = 5$, $q = 11$: $n = 55$ and $\\varphi = 4 \\cdot 10 = 40$. For $e = 3$, $d \\equiv 3^{-1} \\pmod{40}$; $3 \\cdot 27 = 81 = 2 \\cdot 40 + 1$, so $d = 27$.",
-        "取 $p = 5$，$q = 11$：$n = 55$，$\\varphi = 4 \\cdot 10 = 40$。对 $e = 3$，$d \\equiv 3^{-1} \\pmod{40}$；$3 \\cdot 27 = 81 = 2 \\cdot 40 + 1$，所以 $d = 27$。",
+        "The private exponent is the inverse of the public exponent modulo the totient, found with the extended Euclidean algorithm. With $p = 5$, $q = 11$: $n = 55$ and $\\varphi = 4 \\cdot 10 = 40$. For $e = 3$, $d \\equiv 3^{-1} \\pmod{40}$; $3 \\cdot 27 = 81 = 2 \\cdot 40 + 1$, so $d = 27$.",
+        "私钥指数是公钥指数模欧拉函数值的逆元，可以用扩展欧几里得算法求出。取 $p = 5$，$q = 11$：$n = 55$，$\\varphi = 4 \\cdot 10 = 40$。对 $e = 3$，$d \\equiv 3^{-1} \\pmod{40}$；$3 \\cdot 27 = 81 = 2 \\cdot 40 + 1$，所以 $d = 27$。",
       ),
       generate(rng) {
         const { p, q, n, f, e, d } = rsaKeys(rng);
@@ -1140,8 +1140,8 @@ export const theRsaCryptosystem: TopicDef = {
       id: "encrypting-and-decrypting-with-rsa",
       title: t("Encrypting and decrypting", "加密与解密"),
       explanation: t(
-        "With $n = 55$, $e = 3$, $d = 27$: the message $m = 7$ encrypts to $c = 7^3 = 343 \\equiv 13 \\pmod{55}$, and $13^{27} \\equiv 7 \\pmod{55}$ recovers it.",
-        "取 $n = 55$，$e = 3$，$d = 27$：消息 $m = 7$ 加密为 $c = 7^3 = 343 \\equiv 13 \\pmod{55}$，而 $13^{27} \\equiv 7 \\pmod{55}$ 恢复出原消息。",
+        "Encryption raises the message to the public exponent, and decryption raises the result to the private exponent, which returns the original message. With $n = 55$, $e = 3$, $d = 27$: the message $m = 7$ encrypts to $c = 7^3 = 343 \\equiv 13 \\pmod{55}$, and $13^{27} \\equiv 7 \\pmod{55}$ recovers it.",
+        "加密把消息升到公钥指数次幂，解密把结果升到私钥指数次幂，从而还原出原来的消息。取 $n = 55$，$e = 3$，$d = 27$：消息 $m = 7$ 加密为 $c = 7^3 = 343 \\equiv 13 \\pmod{55}$，而 $13^{27} \\equiv 7 \\pmod{55}$ 恢复出原消息。",
       ),
       generate(rng) {
         const { n, e, d } = rsaKeys(rng);
