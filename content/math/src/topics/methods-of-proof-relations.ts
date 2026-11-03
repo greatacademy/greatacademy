@@ -298,7 +298,7 @@ export const theDomainAndRangeOfARelation: TopicDef = {
     },
     {
       id: "domain-and-range-of-a-relation-on-the-reals",
-      title: t("Relations on ℝ", "ℝ 上的关系"),
+      title: t("Relations on $\\mathbb{R}$", "$\\mathbb{R}$ 上的关系"),
       explanation: t(
         "An input is in the domain when some output satisfies the equation with it, so solve for the outputs and see when they exist. For $R = \\{(x, y) \\in \\mathbb{R}^2 : y^2 = x - 3\\}$: a real $y$ exists exactly when $x \\ge 3$, so $\\operatorname{dom} R = [3, \\infty)$, and every real $y$ occurs, so $\\operatorname{ran} R = \\mathbb{R}$.",
         "如果存在某个输出与一个输入满足方程，这个输入就在定义域中，所以要解出输出，看它何时存在。对 $R = \\{(x, y) \\in \\mathbb{R}^2 : y^2 = x - 3\\}$：当且仅当 $x \\ge 3$ 时存在实数 $y$，所以 $\\operatorname{dom} R = [3, \\infty)$；每个实数 $y$ 都出现，所以 $\\operatorname{ran} R = \\mathbb{R}$。",
@@ -649,7 +649,7 @@ export const functionalRelations: TopicDef = {
     },
     {
       id: "functional-relations-on-the-reals",
-      title: t("Relations on ℝ", "ℝ 上的关系"),
+      title: t("Relations on $\\mathbb{R}$", "$\\mathbb{R}$ 上的关系"),
       explanation: t(
         "A relation on the reals is a function when each input has exactly one output, which fails if an input has two or none. $\\{(x, y) : y = x^2\\}$ is a function $\\mathbb{R} \\to \\mathbb{R}$. $\\{(x, y) : x = y^2\\}$ is not: $x = 4$ is related to both $2$ and $-2$, and $x = -1$ to nothing.",
         "实数上的关系是函数，当且仅当每个输入恰好有一个输出；如果某个输入有两个或没有输出，就不是函数。$\\{(x, y) : y = x^2\\}$ 是函数 $\\mathbb{R} \\to \\mathbb{R}$。$\\{(x, y) : x = y^2\\}$ 不是：$x = 4$ 同时与 $2$ 和 $-2$ 相关，而 $x = -1$ 不与任何数相关。",
@@ -1449,7 +1449,7 @@ export const theIntegersModuloN: TopicDef = {
   knowledgePoints: [
     {
       id: "arithmetic-in-the-integers-modulo-n",
-      title: t("Arithmetic in ℤₙ", "ℤₙ 中的运算"),
+      title: t("Arithmetic in $\\mathbb{Z}_n$", "$\\mathbb{Z}_n$ 中的运算"),
       explanation: t(
         "Arithmetic on residue classes works with any representatives, so compute with ordinary integers and reduce at the end. In $\\mathbb{Z}_7$: $[5] + [4] \\cdot [6] = [5] + [24] = [5] + [3] = [8] = [1]$.",
         "剩余类上的运算可以用任意代表元进行，所以先用普通整数计算，最后再约化。在 $\\mathbb{Z}_7$ 中：$[5] + [4] \\cdot [6] = [5] + [24] = [5] + [3] = [8] = [1]$。",

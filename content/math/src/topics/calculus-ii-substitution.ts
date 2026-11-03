@@ -1343,7 +1343,7 @@ export const integrationBySubstitutionWithInverseReciprocalHyperbolicFunctions: 
     },
     {
       id: "substituting-x-squared-for-arsech-and-arcsch",
-      title: t("Substituting x² for arsech and arcsch", "用 x² 代换得 arsech 与 arcsch"),
+      title: t("Substituting $x^2$ for arsech and arcsch", "用 $x^2$ 代换得 arsech 与 arcsch"),
       explanation: t(
         "Multiplying the top and bottom by the variable creates the derivative of its square, so substituting the square turns the integrand into a standard form. Multiply the top and bottom by $x$ and let $u = x^{2}$, so $\\frac{dx}{x} = \\frac{x \\, dx}{x^{2}} = \\frac{du}{2u}$:\n\n$$\\int \\frac{dx}{x\\sqrt{a^{2} - x^{4}}} = \\frac{1}{2}\\int \\frac{du}{u\\sqrt{a^{2} - u^{2}}} = -\\frac{1}{2a}\\operatorname{arsech}\\frac{x^{2}}{a} + C,$$\n\nand likewise $\\int \\frac{dx}{x\\sqrt{a^{2} + x^{4}}} = -\\frac{1}{2a}\\operatorname{arcsch}\\frac{x^{2}}{a} + C$.",
         "分子分母同乘以变量就产生了它平方的导数，所以把平方换元后，被积函数就成了标准形式。分子分母同乘 $x$，令 $u = x^{2}$，则 $\\frac{dx}{x} = \\frac{x \\, dx}{x^{2}} = \\frac{du}{2u}$：\n\n$$\\int \\frac{dx}{x\\sqrt{a^{2} - x^{4}}} = \\frac{1}{2}\\int \\frac{du}{u\\sqrt{a^{2} - u^{2}}} = -\\frac{1}{2a}\\operatorname{arsech}\\frac{x^{2}}{a} + C，$$\n\n同理 $\\int \\frac{dx}{x\\sqrt{a^{2} + x^{4}}} = -\\frac{1}{2a}\\operatorname{arcsch}\\frac{x^{2}}{a} + C$。",
@@ -1424,7 +1424,7 @@ export const integratingFunctionsUsingPolynomialDivision: TopicDef = {
     },
     {
       id: "dividing-by-x-squared-plus-one",
-      title: t("Dividing by x² + 1", "除以 x² + 1"),
+      title: t("Dividing by $x^2 + 1$", "除以 $x^2 + 1$"),
       explanation: t(
         "After dividing by $x^{2} + 1$, a remainder $bx + c$ splits into a logarithm and an arctangent:\n\n$$\\int \\frac{bx + c}{x^{2} + 1} \\, dx = \\frac{b}{2}\\ln(x^{2} + 1) + c\\arctan x + C,$$\n\nusing $u = x^{2} + 1$ for the first part. For example, $\\frac{x^{3} + 2x + 3}{x^{2} + 1} = x + \\frac{x + 3}{x^{2} + 1}$.",
         "除以 $x^{2} + 1$ 后，余项 $bx + c$ 拆成对数与反正切：\n\n$$\\int \\frac{bx + c}{x^{2} + 1} \\, dx = \\frac{b}{2}\\ln(x^{2} + 1) + c\\arctan x + C，$$\n\n第一部分用 $u = x^{2} + 1$。例如 $\\frac{x^{3} + 2x + 3}{x^{2} + 1} = x + \\frac{x + 3}{x^{2} + 1}$。",

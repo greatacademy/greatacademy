@@ -1610,7 +1610,7 @@ export const solvingCubicEquationsWithComplexRoots: TopicDef = {
   knowledgePoints: [
     {
       id: "cubes-equal-to-a-constant",
-      title: t("Solve x³ = ±k³", "解 x³ = ±k³"),
+      title: t("Solve $x^3 = \\pm k^3$", "解 $x^3 = \\pm k^3$"),
       explanation: t(
         "Factor a difference or sum of cubes and solve the quadratic factor:\n\n$$x^{3} - 8 = (x - 2)(x^{2} + 2x + 4) = 0$$\n\nThe linear factor gives $x = 2$; the quadratic gives\n\n$$x = \\frac{-2 \\pm \\sqrt{4 - 16}}{2} = \\frac{-2 \\pm 2i\\sqrt{3}}{2} = -1 \\pm i\\sqrt{3}$$\n\nSo $x^{3} = 8$ has three solutions, as the fundamental theorem of algebra requires: the three cube roots of $8$.",
         "分解立方差或立方和，再解其中的二次因式：\n\n$$x^{3} - 8 = (x - 2)(x^{2} + 2x + 4) = 0$$\n\n一次因式给出 $x = 2$；二次因式给出\n\n$$x = \\frac{-2 \\pm \\sqrt{4 - 16}}{2} = \\frac{-2 \\pm 2i\\sqrt{3}}{2} = -1 \\pm i\\sqrt{3}$$\n\n所以正如代数基本定理所要求的，$x^{3} = 8$ 有三个解，即 $8$ 的三个立方根。",

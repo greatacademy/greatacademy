@@ -1256,7 +1256,7 @@ export const extendingTheTrigonometricRatiosToNegativeAngles: TopicDef = {
     },
     {
       id: "ratios-of-opposite-angles",
-      title: t("Ratios of θ and −θ", "θ 与 −θ 的三角比"),
+      title: t("Ratios of $\\theta$ and $-\\theta$", "$\\theta$ 与 $-\\theta$ 的三角比"),
       explanation: t(
         "The angles $\\theta$ and $-\\theta$ turn by the same amount in opposite directions, so their terminal sides are mirror images across the $x$-axis: if one meets the unit circle at $(x, y)$, the other meets it at $(x, -y)$. Hence\n\n$$\\sin(-\\theta) = -\\sin \\theta, \\qquad \\cos(-\\theta) = \\cos \\theta, \\qquad \\tan(-\\theta) = \\frac{-y}{x} = -\\tan \\theta.$$\n\nFor example, if $\\sin \\theta = \\frac{2}{7}$, then $\\sin(-\\theta) = -\\frac{2}{7}$; if $\\cos \\theta = -\\frac{3}{4}$, then $\\cos(-\\theta) = -\\frac{3}{4}$ as well.",
         "角 $\\theta$ 与 $-\\theta$ 朝相反方向转过相同的角度，所以它们的终边关于 $x$ 轴对称：若一个与单位圆交于 $(x, y)$，另一个就交于 $(x, -y)$。因此\n\n$$\\sin(-\\theta) = -\\sin \\theta, \\qquad \\cos(-\\theta) = \\cos \\theta, \\qquad \\tan(-\\theta) = \\frac{-y}{x} = -\\tan \\theta.$$\n\n例如，若 $\\sin \\theta = \\frac{2}{7}$，则 $\\sin(-\\theta) = -\\frac{2}{7}$；若 $\\cos \\theta = -\\frac{3}{4}$，则 $\\cos(-\\theta)$ 也等于 $-\\frac{3}{4}$。",

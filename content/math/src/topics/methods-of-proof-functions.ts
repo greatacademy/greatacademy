@@ -55,7 +55,7 @@ export const theLimitOfANullSequence: TopicDef = {
   knowledgePoints: [
     {
       id: "finding-n-for-a-given-epsilon",
-      title: t("Finding N for a given ε", "对给定的 ε 求 N"),
+      title: t("Finding $N$ for a given $\\varepsilon$", "对给定的 $\\varepsilon$ 求 $N$"),
       explanation: t(
         "For a particular tolerance, solve the inequality for the index to find how far along the sequence you must go. For $a_n = \\dfrac{3}{n}$ and $\\varepsilon = \\dfrac{1}{10}$: $\\dfrac{3}{n} < \\dfrac{1}{10}$ exactly when $n > 30$, so the smallest $N$ that works is $31$.",
         "对于一个具体的容差，解关于下标的不等式，就知道需要沿着序列走多远。对 $a_n = \\dfrac{3}{n}$ 与 $\\varepsilon = \\dfrac{1}{10}$：$\\dfrac{3}{n} < \\dfrac{1}{10}$ 当且仅当 $n > 30$，所以可行的最小 $N$ 是 $31$。",
@@ -127,7 +127,7 @@ export const provingTheLimitOfANullSequence: TopicDef = {
   knowledgePoints: [
     {
       id: "choosing-n-in-terms-of-epsilon",
-      title: t("Choosing N in terms of ε", "用 ε 表示 N"),
+      title: t("Choosing $N$ in terms of $\\varepsilon$", "用 $\\varepsilon$ 表示 $N$"),
       explanation: t(
         "A convergence proof must work for every tolerance, so solve the inequality symbolically and choose the index as a formula in the tolerance. To prove $\\dfrac{5}{n + 2} \\to 0$: given $\\varepsilon > 0$, $\\dfrac{5}{n + 2} < \\varepsilon \\iff n > \\dfrac{5}{\\varepsilon} - 2$. So choose any integer $N > \\dfrac{5}{\\varepsilon} - 2$.",
         "收敛性证明必须对每个容差都成立，所以要符号化地解不等式，把下标选成关于容差的公式。证明 $\\dfrac{5}{n + 2} \\to 0$：给定 $\\varepsilon > 0$，$\\dfrac{5}{n + 2} < \\varepsilon \\iff n > \\dfrac{5}{\\varepsilon} - 2$。所以取任意整数 $N > \\dfrac{5}{\\varepsilon} - 2$。",
@@ -207,7 +207,7 @@ export const provingTheFiniteLimitOfASequence: TopicDef = {
   knowledgePoints: [
     {
       id: "simplifying-the-distance-to-the-limit",
-      title: t("Simplifying |aₙ − L|", "化简 |aₙ − L|"),
+      title: t("Simplifying $|a_n - L|$", "化简 $|a_n - L|$"),
       explanation: t(
         "Combining the term and the limit over a common denominator gives a simple expression for the distance, which is easier to bound. For $a_n = \\dfrac{2n + 1}{n + 3}$ and $L = 2$: $a_n - 2 = \\dfrac{2n + 1 - 2(n + 3)}{n + 3} = \\dfrac{-5}{n + 3}$, so $|a_n - 2| = \\dfrac{5}{n + 3}$.",
         "把项和极限通分合并，就得到距离的简单表达式，它更容易估计上界。对 $a_n = \\dfrac{2n + 1}{n + 3}$ 与 $L = 2$：$a_n - 2 = \\dfrac{2n + 1 - 2(n + 3)}{n + 3} = \\dfrac{-5}{n + 3}$，所以 $|a_n - 2| = \\dfrac{5}{n + 3}$。",

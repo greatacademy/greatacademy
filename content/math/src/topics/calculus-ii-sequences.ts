@@ -139,7 +139,7 @@ export const convergenceOfGeometricSequences: TopicDef = {
   knowledgePoints: [
     {
       id: "limits-of-geometric-sequences",
-      title: t("The limit of c·rⁿ", "c·rⁿ 的极限"),
+      title: t("The limit of $c \\cdot r^n$", "$c \\cdot r^n$ 的极限"),
       explanation: t(
         "For $c \\neq 0$, the sequence $c \\cdot r^{n}$:\n\n- tends to $0$ when $-1 < r < 1$, since the powers shrink;\n- is constant, equal to $c$, when $r = 1$;\n- tends to $\\infty$ or $-\\infty$ (by the sign of $c$) when $r > 1$;\n- has no limit when $r \\le -1$, since its terms alternate in sign without settling.\n\nFor example, $5\\left(-\\frac{2}{3}\\right)^{n} \\to 0$, while $-2 \\cdot 3^{n} \\to -\\infty$.",
         "对 $c \\neq 0$，数列 $c \\cdot r^{n}$：\n\n- $-1 < r < 1$ 时趋于 $0$，因为幂越来越小；\n- $r = 1$ 时恒等于 $c$；\n- $r > 1$ 时按 $c$ 的符号趋于 $\\infty$ 或 $-\\infty$；\n- $r \\le -1$ 时没有极限，因为各项正负交替而不趋于定值。\n\n例如 $5\\left(-\\frac{2}{3}\\right)^{n} \\to 0$，而 $-2 \\cdot 3^{n} \\to -\\infty$。",

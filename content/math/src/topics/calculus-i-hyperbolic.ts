@@ -146,7 +146,7 @@ export const theHyperbolicFunctions: TopicDef = {
     },
     {
       id: "the-hyperbolic-identity",
-      title: t("The identity cosh²x − sinh²x = 1", "恒等式 cosh²x − sinh²x = 1"),
+      title: t("The identity $\\cosh^2 x - \\sinh^2 x = 1$", "恒等式 $\\cosh^2 x - \\sinh^2 x = 1$"),
       explanation: t(
         "This identity plays the same role for hyperbolic functions that the Pythagorean identity plays for sine and cosine, but with a minus sign instead of a plus. Squaring the definitions and subtracting gives\n\n$$\\cosh^{2} x - \\sinh^{2} x = 1.$$\n\nSince $\\cosh x > 0$ always, $\\cosh x = \\sqrt{1 + \\sinh^{2} x}$. If $\\sinh x = \\frac{3}{4}$, then $\\cosh x = \\sqrt{1 + \\frac{9}{16}} = \\frac{5}{4}$ and $\\tanh x = \\frac{3/4}{5/4} = \\frac{3}{5}$.",
         "这个恒等式对双曲函数的作用，就像勾股恒等式对正弦和余弦的作用一样，只是把加号换成了减号。把定义平方后相减得\n\n$$\\cosh^{2} x - \\sinh^{2} x = 1.$$\n\n因为 $\\cosh x$ 恒为正，$\\cosh x = \\sqrt{1 + \\sinh^{2} x}$。若 $\\sinh x = \\frac{3}{4}$，则 $\\cosh x = \\sqrt{1 + \\frac{9}{16}} = \\frac{5}{4}$，$\\tanh x = \\frac{3/4}{5/4} = \\frac{3}{5}$。",

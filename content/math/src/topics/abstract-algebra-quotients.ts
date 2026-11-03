@@ -922,7 +922,7 @@ export const leftAndRightCosetsInMatrixGroups: TopicDef = {
   knowledgePoints: [
     {
       id: "same-coset-of-sl2",
-      title: t("Cosets of SL(2, ℝ)", "SL(2, ℝ) 的陪集"),
+      title: t("Cosets of $SL(2, \\mathbb{R})$", "$SL(2, \\mathbb{R})$ 的陪集"),
       explanation: t(
         "Two matrices share a coset of the matrices with determinant one exactly when their determinants are equal, because the determinant is multiplicative. $A$ and $B$ lie in the same left coset of $SL(2, \\mathbb{R})$ exactly when $A^{-1}B \\in SL(2, \\mathbb{R})$, that is, $\\det B = \\det A$.",
         "两个矩阵属于行列式为 1 的矩阵所成子群的同一个陪集，当且仅当它们的行列式相等，因为行列式是积性的。$A$ 与 $B$ 在 $SL(2, \\mathbb{R})$ 的同一左陪集中当且仅当 $A^{-1}B \\in SL(2, \\mathbb{R})$，即 $\\det B = \\det A$。",
@@ -1311,7 +1311,7 @@ export const theNormalizerOfASubgroup: TopicDef = {
   knowledgePoints: [
     {
       id: "normalizers-in-dihedral-groups",
-      title: t("Normalizers in Dₙ", "Dₙ 中的正规化子"),
+      title: t("Normalizers in $D_n$", "$D_n$ 中的正规化子"),
       explanation: t(
         "In $D_n$, $\\langle r^k s \\rangle = \\{e, r^ks\\}$. Conjugating by $r$ gives $r^{k+2}s$, so only rotations $r^j$ with $2j \\equiv 0$ normalize it. For $n$ odd, $N(\\langle r^ks \\rangle) = \\{e, r^ks\\}$; for $n$ even it also contains $r^{n/2}$ and $r^{k + n/2}s$, giving $4$ elements. Rotation subgroups are normal, with normalizer all of $D_n$.",
         "在 $D_n$ 中，$\\langle r^k s \\rangle = \\{e, r^ks\\}$。用 $r$ 共轭得 $r^{k+2}s$，所以只有满足 $2j \\equiv 0$ 的旋转 $r^j$ 正规化它。$n$ 为奇数时，$N(\\langle r^ks \\rangle) = \\{e, r^ks\\}$；$n$ 为偶数时还含 $r^{n/2}$ 与 $r^{k + n/2}s$，共 $4$ 个元素。旋转子群是正规的，正规化子为整个 $D_n$。",
@@ -1345,7 +1345,7 @@ export const theNormalizerOfASubgroup: TopicDef = {
     },
     {
       id: "normalizers-in-symmetric-groups",
-      title: t("Normalizers in Sₙ", "Sₙ 中的正规化子"),
+      title: t("Normalizers in $S_n$", "$S_n$ 中的正规化子"),
       explanation: t(
         "$\\sigma$ normalizes $\\langle (a\\;b) \\rangle$ exactly when $\\sigma$ maps $\\{a, b\\}$ to itself: $2 \\cdot (n - 2)!$ permutations. It normalizes $\\langle (a\\;b\\;c) \\rangle$ exactly when it maps $\\{a, b, c\\}$ to itself, since both $(a\\;b\\;c)$ and its inverse lie in the subgroup: $6 \\cdot (n - 3)!$ permutations.",
         "$\\sigma$ 正规化 $\\langle (a\\;b) \\rangle$ 当且仅当 $\\sigma$ 把 $\\{a, b\\}$ 映到自身：共 $2 \\cdot (n - 2)!$ 个置换。它正规化 $\\langle (a\\;b\\;c) \\rangle$ 当且仅当它把 $\\{a, b, c\\}$ 映到自身，因为 $(a\\;b\\;c)$ 及其逆都在该子群中：共 $6 \\cdot (n - 3)!$ 个置换。",
@@ -1439,7 +1439,7 @@ export const theCenterOfAGroup: TopicDef = {
     },
     {
       id: "central-elements-of-dihedral-groups",
-      title: t("Central elements of Dₙ", "Dₙ 的中心元素"),
+      title: t("Central elements of $D_n$", "$D_n$ 的中心元素"),
       explanation: t(
         "A rotation is central only when it equals its own inverse, which happens for the identity and for the half turn when there is one. Since $sr^k = r^{-k}s$, the rotation $r^k$ commutes with $s$ only when $r^k = r^{-k}$, that is, $2k \\equiv 0 \\pmod n$. A reflection $r^ks$ never commutes with $r$ when $n \\ge 3$.",
         "一个旋转只有在等于自己的逆时才属于中心，这对恒等元成立，对存在的半周旋转也成立。由于 $sr^k = r^{-k}s$，旋转 $r^k$ 仅当 $r^k = r^{-k}$，即 $2k \\equiv 0 \\pmod n$ 时与 $s$ 可交换。$n \\ge 3$ 时反射 $r^ks$ 从不与 $r$ 可交换。",
@@ -1491,7 +1491,7 @@ export const theCentralizerOfASubgroup: TopicDef = {
   knowledgePoints: [
     {
       id: "centralizers-in-dihedral-groups",
-      title: t("Centralizers in Dₙ", "Dₙ 中的中心化子"),
+      title: t("Centralizers in $D_n$", "$D_n$ 中的中心化子"),
       explanation: t(
         "In $D_n$, a rotation $r^k$ commutes with all rotations, and with the reflections only if $2k \\equiv 0 \\pmod n$; so $|C(r^k)|$ is $2n$ or $n$. A reflection $r^ks$ commutes with $e$, itself, and when $n$ is even with $r^{n/2}$ and $r^{k+n/2}s$.",
         "在 $D_n$ 中，旋转 $r^k$ 与所有旋转可交换，仅当 $2k \\equiv 0 \\pmod n$ 时才与反射可交换；所以 $|C(r^k)|$ 为 $2n$ 或 $n$。反射 $r^ks$ 与 $e$、自身可交换，$n$ 为偶数时还与 $r^{n/2}$ 及 $r^{k+n/2}s$ 可交换。",
@@ -1528,7 +1528,7 @@ export const theCentralizerOfASubgroup: TopicDef = {
     },
     {
       id: "centralizers-in-symmetric-groups",
-      title: t("Centralizers in Sₙ", "Sₙ 中的中心化子"),
+      title: t("Centralizers in $S_n$", "$S_n$ 中的中心化子"),
       explanation: t(
         "$\\sigma$ commutes with $(a\\;b)$ exactly when it maps $\\{a, b\\}$ to itself: $2 \\cdot (n - 2)!$ permutations. $\\sigma$ commutes with the $3$-cycle $(a\\;b\\;c)$ exactly when it acts on $\\{a, b, c\\}$ as a power of the cycle: $3 \\cdot (n - 3)!$ permutations. An $n$-cycle commutes only with its own $n$ powers.",
         "$\\sigma$ 与 $(a\\;b)$ 可交换当且仅当它把 $\\{a, b\\}$ 映到自身：共 $2 \\cdot (n - 2)!$ 个置换。$\\sigma$ 与 $3$-轮换 $(a\\;b\\;c)$ 可交换当且仅当它在 $\\{a, b, c\\}$ 上的作用是该轮换的幂：共 $3 \\cdot (n - 3)!$ 个置换。$n$-轮换只与它自己的 $n$ 个幂可交换。",

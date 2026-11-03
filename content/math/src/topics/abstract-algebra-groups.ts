@@ -1307,7 +1307,7 @@ export const ordersOfGroupElements: TopicDef = {
   knowledgePoints: [
     {
       id: "orders-in-additive-groups",
-      title: t("Orders in ℤₙ", "ℤₙ 中的阶"),
+      title: t("Orders in $\\mathbb{Z}_n$", "$\\mathbb{Z}_n$ 中的阶"),
       explanation: t(
         "In $\\mathbb{Z}_{12}$, the multiples of $8$ are $8, 4, 0$, so $8$ has order $3$. In general the order of $a$ in $\\mathbb{Z}_n$ is $\\frac{n}{\\gcd(a, n)}$, here $\\frac{12}{4} = 3$.",
         "在 $\\mathbb{Z}_{12}$ 中，$8$ 的倍数依次为 $8, 4, 0$，所以 $8$ 的阶为 $3$。一般地，$a$ 在 $\\mathbb{Z}_n$ 中的阶为 $\\frac{n}{\\gcd(a, n)}$，这里为 $\\frac{12}{4} = 3$。",

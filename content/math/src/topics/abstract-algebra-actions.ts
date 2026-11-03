@@ -383,7 +383,7 @@ export const stabilizers: TopicDef = {
     },
     {
       id: "stabilizers-in-symmetric-groups",
-      title: t("Stabilizers in Sₙ", "Sₙ 中的稳定子"),
+      title: t("Stabilizers in $S_n$", "$S_n$ 中的稳定子"),
       explanation: t(
         "In $S_6$ acting on subsets of $\\{1, \\dots, 6\\}$, the stabilizer of $\\{1, 2\\}$ permutes $\\{1, 2\\}$ and $\\{3, 4, 5, 6\\}$ separately: $2! \\cdot 4! = 48$ elements. The permutations fixing both $1$ and $2$ number $4! = 24$.",
         "在 $S_6$ 作用于 $\\{1, \\dots, 6\\}$ 的子集时，$\\{1, 2\\}$ 的稳定子分别置换 $\\{1, 2\\}$ 与 $\\{3, 4, 5, 6\\}$：共 $2! \\cdot 4! = 48$ 个元素。同时固定 $1$ 和 $2$ 的置换有 $4! = 24$ 个。",
@@ -740,7 +740,7 @@ export const conjugationAndConjugacyClasses: TopicDef = {
   knowledgePoints: [
     {
       id: "sizes-of-conjugacy-classes-in-dihedral-groups",
-      title: t("Class sizes in Dₙ", "Dₙ 中共轭类的大小"),
+      title: t("Class sizes in $D_n$", "$D_n$ 中共轭类的大小"),
       explanation: t(
         "The size of a conjugacy class is the group order divided by the order of the centralizer of any element in it. In $D_6$ of order $12$, $C(rs)$ has $4$ elements, so the class of $rs$ has $\\frac{12}{4} = 3$: $\\{rs, r^3s, r^5s\\}$. The class of $r^2$ is $\\{r^2, r^4\\}$.",
         "共轭类的大小等于群的阶除以类中任一元素的中心化子的阶。在 $12$ 阶的 $D_6$ 中，$C(rs)$ 有 $4$ 个元素，所以 $rs$ 的共轭类有 $\\frac{12}{4} = 3$ 个元素：$\\{rs, r^3s, r^5s\\}$。$r^2$ 的共轭类为 $\\{r^2, r^4\\}$。",
@@ -776,7 +776,7 @@ export const conjugationAndConjugacyClasses: TopicDef = {
     },
     {
       id: "counting-conjugacy-classes-of-dihedral-groups",
-      title: t("Number of classes of Dₙ", "Dₙ 的共轭类个数"),
+      title: t("Number of classes of $D_n$", "$D_n$ 的共轭类个数"),
       explanation: t(
         "Rotations pair up with their inverses, and the reflections form one class or two depending on whether the number of sides is odd or even. $D_5$: $\\{e\\}$, $\\{r, r^4\\}$, $\\{r^2, r^3\\}$ and the $5$ reflections: $4$ classes. $D_6$: $\\{e\\}$, $\\{r^3\\}$, $\\{r, r^5\\}$, $\\{r^2, r^4\\}$ and two classes of reflections: $6$ classes.",
         "旋转与它们的逆配成一对，而反射组成一类还是两类，取决于边数是奇数还是偶数。$D_5$：$\\{e\\}$、$\\{r, r^4\\}$、$\\{r^2, r^3\\}$ 以及 $5$ 个反射：共 $4$ 个类。$D_6$：$\\{e\\}$、$\\{r^3\\}$、$\\{r, r^5\\}$、$\\{r^2, r^4\\}$ 以及两类反射：共 $6$ 个类。",

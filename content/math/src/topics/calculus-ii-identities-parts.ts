@@ -996,7 +996,7 @@ export const applyingTheIntegrationByPartsTwice: TopicDef = {
   knowledgePoints: [
     {
       id: "x-squared-times-an-exponential",
-      title: t("x² times an exponential", "x² 乘指数函数"),
+      title: t("$x^2$ times an exponential", "$x^2$ 乘指数函数"),
       explanation: t(
         "Each integration by parts lowers the power of $x$ by one. For $\\int x^{2}e^{x} \\, dx$, take $u = x^{2}$: $\\int x^{2}e^{x} \\, dx = x^{2}e^{x} - 2\\int xe^{x} \\, dx$. Integrating by parts again,\n\n$$\\int x^{2}e^{x} \\, dx = x^{2}e^{x} - 2xe^{x} + 2e^{x} + C = (x^{2} - 2x + 2)e^{x} + C.$$",
         "每做一次分部积分，$x$ 的次数降低一。对 $\\int x^{2}e^{x} \\, dx$，取 $u = x^{2}$：$\\int x^{2}e^{x} \\, dx = x^{2}e^{x} - 2\\int xe^{x} \\, dx$。再分部积分一次，\n\n$$\\int x^{2}e^{x} \\, dx = x^{2}e^{x} - 2xe^{x} + 2e^{x} + C = (x^{2} - 2x + 2)e^{x} + C。$$",
@@ -1023,7 +1023,7 @@ export const applyingTheIntegrationByPartsTwice: TopicDef = {
     },
     {
       id: "x-squared-times-sine-or-cosine",
-      title: t("x² times sine or cosine", "x² 乘正弦或余弦"),
+      title: t("$x^2$ times sine or cosine", "$x^2$ 乘正弦或余弦"),
       explanation: t(
         "Each round of integration by parts lowers the power of the variable by one, so a square needs two rounds before only a trigonometric integral remains. Take $u = x^{2}$ twice. For example,\n\n$$\\int x^{2}\\cos x \\, dx = x^{2}\\sin x - 2\\int x\\sin x \\, dx = x^{2}\\sin x + 2x\\cos x - 2\\sin x + C.$$\n\nWatch the signs: $\\int \\sin x \\, dx = -\\cos x$ introduces a minus each time a sine is integrated.",
         "每做一次分部积分，变量的幂就降低一次，所以平方需要做两次，最后只剩一个三角函数的积分。两次都取 $u = x^{2}$（第二次为 $x$）。例如\n\n$$\\int x^{2}\\cos x \\, dx = x^{2}\\sin x - 2\\int x\\sin x \\, dx = x^{2}\\sin x + 2x\\cos x - 2\\sin x + C。$$\n\n注意符号：每次对正弦积分，$\\int \\sin x \\, dx = -\\cos x$ 都会带来一个负号。",

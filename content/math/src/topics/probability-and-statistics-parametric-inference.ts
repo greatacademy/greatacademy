@@ -240,7 +240,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
     knowledgePoints: [
       {
         id: "exact-normality-of-sample-mean",
-        title: t("Exact normality of X̄ from normal populations", "正态总体下样本均值的严格正态性"),
+        title: t("Exact normality of $\\bar{X}$ from normal populations", "正态总体下样本均值的严格正态性"),
         explanation: t(
           "When the population itself is normal, the sample mean is exactly normal for every sample size, not only approximately for large samples. For a normal population and any $n \\ge 1$, $\\bar{X} \\sim N\\left(\\mu, \\frac{\\sigma^2}{n}\\right)$ holds exactly, without requiring a large $n$.",
           "当总体本身是正态分布时，样本均值对任何样本量都恰好服从正态分布，而不仅仅在大样本时近似成立。对正态总体与任意样本容量 $n \\ge 1$，$\\bar{X} \\sim N\\left(\\mu, \\frac{\\sigma^2}{n}\\right)$ 均精确成立，无需大样本条件。",
@@ -373,7 +373,7 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
     knowledgePoints: [
       {
         id: "method-of-moments-uniform-zero-theta",
-        title: t("Method of moments for continuous uniform U(0, θ)", "连续均匀分布 U(0, θ) 的矩估计"),
+        title: t("Method of moments for the continuous uniform $U(0, \\theta)$", "连续均匀分布 $U(0, \\theta)$ 的矩估计"),
         explanation: t(
           "The mean of a uniform distribution starting at zero is half its upper endpoint, so doubling the sample mean estimates that endpoint. For X ~ U(0, θ), E[X] = θ / 2, so θ̂ = 2 x̄.",
           "从零开始的均匀分布的均值是上端点的一半，所以把样本均值加倍就能估计这个端点。对于 X ~ U(0, θ)，理论均值为 E[X] = θ / 2，因此矩估计量为 θ̂ = 2 x̄。",

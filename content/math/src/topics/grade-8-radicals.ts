@@ -634,7 +634,7 @@ export const solvingEquationsUsingCubeRoots = topic(
   [
     {
       id: "x-cubed-equals-a-number",
-      title: t("x³ equals a number", "x³ 等于一个数"),
+      title: t("$x^3$ equals a number", "$x^3$ 等于一个数"),
       explanation: t(
         "$x^{3} = -64$: the only real number whose cube is $-64$ is $-4$, so $x = \\sqrt[3]{-64} = -4$. Dividing by $3$ instead gives $-\\frac{64}{3}$, which is wrong.",
         "$x^{3} = -64$：立方等于 $-64$ 的实数只有 $-4$，所以 $x = \\sqrt[3]{-64} = -4$。除以 $3$ 得到 $-\\frac{64}{3}$，是错误的。",

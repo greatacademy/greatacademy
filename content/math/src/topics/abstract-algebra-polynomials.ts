@@ -118,7 +118,7 @@ export const ringsOfPolynomials: TopicDef = {
   knowledgePoints: [
     {
       id: "multiplying-polynomials-over-zn",
-      title: t("Multiplying over ℤₙ", "在 ℤₙ 上相乘"),
+      title: t("Multiplying over $\\mathbb{Z}_n$", "在 $\\mathbb{Z}_n$ 上相乘"),
       explanation: t(
         "Multiply the polynomials as usual and reduce every coefficient modulo the number at the end. In $\\mathbb{Z}_5[x]$, $(3x + 4)(2x^2 + x + 3) = 6x^3 + 11x^2 + 13x + 12 = x^3 + x^2 + 3x + 2$.",
         "照常把多项式相乘，最后把每个系数模这个数约化。在 $\\mathbb{Z}_5[x]$ 中，$(3x + 4)(2x^2 + x + 3) = 6x^3 + 11x^2 + 13x + 12 = x^3 + x^2 + 3x + 2$。",
@@ -506,7 +506,7 @@ export const theExtendedEuclidianAlgorithmInRingsOfPolynomials: TopicDef = {
     },
     {
       id: "inverses-modulo-quadratics",
-      title: t("Inverses modulo x² − c", "模 x² − c 的逆"),
+      title: t("Inverses modulo $x^2 - c$", "模 $x^2 - c$ 的逆"),
       explanation: t(
         "Multiplying by the conjugate turns the product into a constant, which is then inverted in the coefficient field. In $\\mathbb{Z}_7[x]/\\langle x^2 - 3 \\rangle$, $(2 + x)(2 - x) = 4 - 3 = 1$, so $(2 + x)^{-1} = 2 - x = 2 + 6x$.",
         "乘以共轭把乘积变成一个常数，再在系数域中对它求逆。在 $\\mathbb{Z}_7[x]/\\langle x^2 - 3 \\rangle$ 中，$(2 + x)(2 - x) = 4 - 3 = 1$，所以 $(2 + x)^{-1} = 2 - x = 2 + 6x$。",
@@ -570,7 +570,7 @@ export const irreduciblePolynomialsOverTheRealAndComplexNumbers: TopicDef = {
   knowledgePoints: [
     {
       id: "irreducibility-over-r-and-c",
-      title: t("Irreducible over ℝ or ℂ?", "在 ℝ 或 ℂ 上不可约吗？"),
+      title: t("Irreducible over $\\mathbb{R}$ or $\\mathbb{C}$?", "在 $\\mathbb{R}$ 或 $\\mathbb{C}$ 上不可约吗？"),
       explanation: t(
         "$x^2 + 2x + 5$ has discriminant $-16 < 0$, so it is irreducible over $\\mathbb{R}$; over $\\mathbb{C}$ it factors as $(x + 1 - 2i)(x + 1 + 2i)$. Every real polynomial of odd degree at least $3$ is reducible over $\\mathbb{R}$, since it has a real root.",
         "$x^2 + 2x + 5$ 的判别式为 $-16 < 0$，所以它在 $\\mathbb{R}$ 上不可约；在 $\\mathbb{C}$ 上分解为 $(x + 1 - 2i)(x + 1 + 2i)$。次数至少为 $3$ 的奇次实系数多项式在 $\\mathbb{R}$ 上都可约，因为它有实根。",
@@ -639,7 +639,7 @@ export const irreduciblePolynomialsOverTheRealAndComplexNumbers: TopicDef = {
     },
     {
       id: "counting-irreducible-factors-over-r",
-      title: t("Irreducible factors over ℝ", "ℝ 上的不可约因式"),
+      title: t("Irreducible factors over $\\mathbb{R}$", "$\\mathbb{R}$ 上的不可约因式"),
       explanation: t(
         "Over the reals every polynomial factors into linear factors and quadratics without real roots, so count those pieces. $x^4 - 1 = (x - 1)(x + 1)(x^2 + 1)$ has $3$ irreducible factors over $\\mathbb{R}$ and $4$ over $\\mathbb{C}$.",
         "在实数上，每个多项式都能分解成一次因式和没有实根的二次因式，所以数出这些因式。$x^4 - 1 = (x - 1)(x + 1)(x^2 + 1)$ 在 $\\mathbb{R}$ 上有 $3$ 个不可约因式，在 $\\mathbb{C}$ 上有 $4$ 个。",

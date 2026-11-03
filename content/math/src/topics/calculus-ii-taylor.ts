@@ -148,7 +148,7 @@ export const secondDegreeTaylorPolynomials: TopicDef = {
   knowledgePoints: [
     {
       id: "second-degree-taylor-polynomials-from-derivative-values",
-      title: t("Building P₂ from derivative values", "由导数值构造 P₂"),
+      title: t("Building $P_2$ from derivative values", "由导数值构造 $P_2$"),
       explanation: t(
         "The linearization matches $f$ and $f'$ at $a$. Adding a quadratic term also matches $f''$:\n\n$$P_2(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2}(x - a)^{2}.$$\n\nThe $\\frac{1}{2}$ is needed because the second derivative of $(x - a)^{2}$ is $2$. If $f(1) = 3$, $f'(1) = -2$ and $f''(1) = 4$, then $P_2(x) = 3 - 2(x - 1) + 2(x - 1)^{2}$.",
         "线性化在 $a$ 处与 $f$、$f'$ 相等。再加一个二次项，就能让 $f''$ 也相等：\n\n$$P_2(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2}(x - a)^{2}。$$\n\n之所以要乘 $\\frac{1}{2}$，是因为 $(x - a)^{2}$ 的二阶导数是 $2$。若 $f(1) = 3$，$f'(1) = -2$，$f''(1) = 4$，则 $P_2(x) = 3 - 2(x - 1) + 2(x - 1)^{2}$。",
@@ -157,7 +157,7 @@ export const secondDegreeTaylorPolynomials: TopicDef = {
     },
     {
       id: "second-degree-taylor-polynomials-of-functions",
-      title: t("P₂ for a given function", "给定函数的 P₂"),
+      title: t("$P_2$ for a given function", "给定函数的 $P_2$"),
       explanation: t(
         "The second degree Taylor polynomial matches the value, slope and curvature of the function at the center, so it follows the curve better than the tangent line. Compute $f(a)$, $f'(a)$ and $f''(a)$, then substitute. For $f(x) = e^{3x}$ at $a = 0$: $f(0) = 1$, $f'(0) = 3$, $f''(0) = 9$, so $P_2(x) = 1 + 3x + \\frac{9}{2}x^{2}$.",
         "二次泰勒多项式在中心处与函数的值、斜率和弯曲程度都一致，所以比切线更贴近曲线。先求 $f(a)$、$f'(a)$、$f''(a)$，再代入公式。对 $f(x) = e^{3x}$，$a = 0$：$f(0) = 1$，$f'(0) = 3$，$f''(0) = 9$，所以 $P_2(x) = 1 + 3x + \\frac{9}{2}x^{2}$。",
@@ -189,7 +189,7 @@ export const analyzingSecondDegreeTaylorPolynomials: TopicDef = {
   knowledgePoints: [
     {
       id: "reading-derivatives-from-p2",
-      title: t("Reading derivatives from P₂", "从 P₂ 读出导数"),
+      title: t("Reading derivatives from $P_2$", "从 $P_2$ 读出导数"),
       explanation: t(
         "Each coefficient of a Taylor polynomial is a derivative at the center divided by a factorial, so multiplying by the factorial recovers the derivative. In $P_2(x) = c_0 + c_1(x - a) + c_2(x - a)^{2}$, $c_0 = f(a)$, $c_1 = f'(a)$ and $c_2 = \\frac{f''(a)}{2}$, so $f''(a) = 2c_2$. For $P_2(x) = 5 - (x - 2) + 3(x - 2)^{2}$: $f'(2) = -1$ and $f''(2) = 6$.",
         "泰勒多项式的每个系数都是中心处的导数除以阶乘，所以乘以阶乘就能还原出导数。在 $P_2(x) = c_0 + c_1(x - a) + c_2(x - a)^{2}$ 中，$c_0 = f(a)$，$c_1 = f'(a)$，$c_2 = \\frac{f''(a)}{2}$，所以 $f''(a) = 2c_2$。对 $P_2(x) = 5 - (x - 2) + 3(x - 2)^{2}$：$f'(2) = -1$，$f''(2) = 6$。",
@@ -224,7 +224,7 @@ export const analyzingSecondDegreeTaylorPolynomials: TopicDef = {
     },
     {
       id: "local-behavior-from-p2",
-      title: t("Local behavior from P₂", "由 P₂ 判断局部性态"),
+      title: t("Local behavior from $P_2$", "由 $P_2$ 判断局部性态"),
       explanation: t(
         "If $P_2(x) = c_0 + c_2(x - a)^{2}$ has no linear term, then $f'(a) = 0$ and the sign of $f''(a) = 2c_2$ decides by the second derivative test: a **local minimum** when $c_2 > 0$ and a **local maximum** when $c_2 < 0$. If the linear coefficient is not $0$, then $f'(a) \\neq 0$ and $a$ is not a local extremum.",
         "若 $P_2(x) = c_0 + c_2(x - a)^{2}$ 没有一次项，则 $f'(a) = 0$，再由 $f''(a) = 2c_2$ 的符号按二阶导数判别法判断：$c_2 > 0$ 时为**局部极小值**，$c_2 < 0$ 时为**局部极大值**。若一次项系数不为 $0$，则 $f'(a) \\neq 0$，$a$ 不是局部极值点。",
@@ -258,7 +258,7 @@ export const analyzingSecondDegreeTaylorPolynomials: TopicDef = {
     },
     {
       id: "approximating-with-p2",
-      title: t("Approximating values with P₂", "用 P₂ 近似函数值"),
+      title: t("Approximating values with $P_2$", "用 $P_2$ 近似函数值"),
       explanation: t(
         "Substitute the nearby value into the polynomial instead of the function, which gives an estimate that is accurate when the value is close to the center. Near $a$, $f(x) \\approx P_2(x)$, usually much better than the linearization. With $P_2(x) = 4 + 2(x - 1) - 3(x - 1)^{2}$: $f(1.1) \\approx 4 + 2(0.1) - 3(0.1)^{2} = 4.17$.",
         "把附近的值代入多项式而不是原函数，当这个值离中心很近时，得到的估计值很准确。在 $a$ 附近 $f(x) \\approx P_2(x)$，通常比线性化精确得多。对 $P_2(x) = 4 + 2(x - 1) - 3(x - 1)^{2}$：$f(1.1) \\approx 4 + 2(0.1) - 3(0.1)^{2} = 4.17$。",
@@ -314,7 +314,7 @@ export const thirdDegreeTaylorPolynomials: TopicDef = {
   knowledgePoints: [
     {
       id: "third-degree-taylor-polynomials-from-derivative-values",
-      title: t("Building P₃ from derivative values", "由导数值构造 P₃"),
+      title: t("Building $P_3$ from derivative values", "由导数值构造 $P_3$"),
       explanation: t(
         "Each new term uses the next derivative at the center, divided by the factorial of its order, multiplied by the matching power of the distance from the center. The third derivative of $(x - a)^{3}$ is $3! = 6$, so the cubic coefficient is $\\frac{f'''(a)}{3!}$:\n\n$$P_3(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2!}(x - a)^{2} + \\frac{f'''(a)}{3!}(x - a)^{3}.$$\n\nIf $f(0) = 2$, $f'(0) = 1$, $f''(0) = -4$ and $f'''(0) = 12$, then $P_3(x) = 2 + x - 2x^{2} + 2x^{3}$.",
         "每增加一项就用中心处的下一阶导数，除以其阶数的阶乘，再乘以到中心距离的相应次幂。$(x - a)^{3}$ 的三阶导数是 $3! = 6$，所以三次项系数为 $\\frac{f'''(a)}{3!}$：\n\n$$P_3(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2!}(x - a)^{2} + \\frac{f'''(a)}{3!}(x - a)^{3}。$$\n\n若 $f(0) = 2$，$f'(0) = 1$，$f''(0) = -4$，$f'''(0) = 12$，则 $P_3(x) = 2 + x - 2x^{2} + 2x^{3}$。",
@@ -323,7 +323,7 @@ export const thirdDegreeTaylorPolynomials: TopicDef = {
     },
     {
       id: "third-degree-taylor-polynomials-of-functions",
-      title: t("P₃ for a given function", "给定函数的 P₃"),
+      title: t("$P_3$ for a given function", "给定函数的 $P_3$"),
       explanation: t(
         "Find the first three derivatives, evaluate them and the function at the center, and divide each by the right factorial to get the coefficients. Differentiate three times and evaluate at the center. For $f(x) = \\sin(2x)$ at $0$: $f(0) = 0$, $f'(0) = 2$, $f''(0) = 0$, $f'''(0) = -8$, so $P_3(x) = 2x - \\frac{8}{6}x^{3} = 2x - \\frac{4}{3}x^{3}$.",
         "求出前三阶导数，把它们和函数在中心处的值算出来，再分别除以相应的阶乘得到系数。求三阶导数并在中心处取值。对 $f(x) = \\sin(2x)$，中心 $0$：$f(0) = 0$，$f'(0) = 2$，$f''(0) = 0$，$f'''(0) = -8$，所以 $P_3(x) = 2x - \\frac{8}{6}x^{3} = 2x - \\frac{4}{3}x^{3}$。",

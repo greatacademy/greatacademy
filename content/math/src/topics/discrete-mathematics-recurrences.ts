@@ -156,7 +156,7 @@ export const firstOrderRecurrenceRelations: TopicDef = {
   knowledgePoints: [
     {
       id: "solving-homogeneous-first-order-recurrences",
-      title: t("aₙ = r aₙ₋₁", "aₙ = r aₙ₋₁"),
+      title: t("$a_n = r a_{n-1}$", "$a_n = r a_{n-1}$"),
       explanation: t(
         "Multiplying by the same ratio at each step makes the sequence geometric, so the term is the initial value times a power of the ratio. $a_n = 3a_{n-1}$ with $a_0 = 2$ multiplies by $3$ each step: $a_n = 2 \\cdot 3^n$, so $a_6 = 1458$.",
         "每一步都乘以相同的比，序列就是等比数列，所以通项是初值乘以比的幂。$a_n = 3a_{n-1}$，$a_0 = 2$，每一步乘以 $3$：$a_n = 2 \\cdot 3^n$，所以 $a_6 = 1458$。",
@@ -188,7 +188,7 @@ export const firstOrderRecurrenceRelations: TopicDef = {
     },
     {
       id: "solving-first-order-recurrences-with-a-constant",
-      title: t("aₙ = r aₙ₋₁ + d", "aₙ = r aₙ₋₁ + d"),
+      title: t("$a_n = r a_{n-1} + d$", "$a_n = r a_{n-1} + d$"),
       explanation: t(
         "Shifting the sequence by its fixed point removes the constant, so the shifted sequence is geometric and easy to solve. For $a_n = 3a_{n-1} - 4$, $a_0 = 5$: the fixed point solves $p = 3p - 4$, so $p = 2$. Then $a_n - 2 = 3(a_{n-1} - 2)$, giving $a_n = 3 \\cdot 3^n + 2$.",
         "把序列减去它的不动点就去掉了常数项，于是平移后的序列是等比的，容易求解。对 $a_n = 3a_{n-1} - 4$，$a_0 = 5$：不动点满足 $p = 3p - 4$，所以 $p = 2$。于是 $a_n - 2 = 3(a_{n-1} - 2)$，得 $a_n = 3 \\cdot 3^n + 2$。",
@@ -905,7 +905,7 @@ export const generatingFunctions: TopicDef = {
     },
     {
       id: "coefficients-of-squared-geometric-generating-functions",
-      title: t("Coefficients of 1/(1 − rx)²", "1/(1 − rx)² 的系数"),
+      title: t("Coefficients of $1/(1 - rx)^2$", "$1/(1 - rx)^2$ 的系数"),
       explanation: t(
         "Differentiating the geometric series gives the coefficients of its square, which grow linearly in the index times the powers. Differentiating $\\frac{1}{1 - x} = \\sum x^n$ gives $\\frac{1}{(1 - x)^2} = \\sum (n + 1)x^n$; replacing $x$ by $rx$, $\\frac{1}{(1 - 3x)^2}$ has $x^4$ coefficient $5 \\cdot 3^4 = 405$.",
         "对几何级数求导就得到它的平方的系数，这些系数是下标的一次式乘以相应的幂。对 $\\frac{1}{1 - x} = \\sum x^n$ 求导得 $\\frac{1}{(1 - x)^2} = \\sum (n + 1)x^n$；把 $x$ 换成 $rx$，$\\frac{1}{(1 - 3x)^2}$ 中 $x^4$ 的系数为 $5 \\cdot 3^4 = 405$。",

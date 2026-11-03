@@ -142,7 +142,7 @@ export const introductionToRings: TopicDef = {
     },
     {
       id: "multiplying-in-quadratic-integer-rings",
-      title: t("Multiplying in ℤ[√k]", "在 ℤ[√k] 中做乘法"),
+      title: t("Multiplying in $\\mathbb{Z}[\\sqrt{k}]$", "在 $\\mathbb{Z}[\\sqrt{k}]$ 中做乘法"),
       explanation: t(
         "Multiply as with binomials, then replace the square of the root by the integer it stands for. $(2 + 3\\sqrt{5})(1 - \\sqrt{5}) = 2 - 2\\sqrt{5} + 3\\sqrt{5} - 15 = -13 + \\sqrt{5}$.",
         "像二项式那样相乘，再把根号的平方换成它所代表的整数。$(2 + 3\\sqrt{5})(1 - \\sqrt{5}) = 2 - 2\\sqrt{5} + 3\\sqrt{5} - 15 = -13 + \\sqrt{5}$。",
@@ -377,7 +377,7 @@ export const ringsWithUnity: TopicDef = {
     },
     {
       id: "unities-of-subrings-of-zn",
-      title: t("Unities of subrings of ℤₙ", "ℤₙ 子环的幺元"),
+      title: t("Unities of subrings of $\\mathbb{Z}_n$", "$\\mathbb{Z}_n$ 子环的幺元"),
       explanation: t(
         "A subring may have a unity different from one, namely an element of the subring that multiplies every element of it to itself. In $\\mathbb{Z}_{10}$, the subring $\\langle 2 \\rangle = \\{0, 2, 4, 6, 8\\}$ has unity $6$: $6 \\equiv 0 \\pmod 2$ and $6 \\equiv 1 \\pmod 5$, so $6x = x$ for every even $x$.",
         "子环可能有不同于 1 的单位元，也就是子环中一个与其每个元素相乘都得到该元素本身的元素。在 $\\mathbb{Z}_{10}$ 中，子环 $\\langle 2 \\rangle = \\{0, 2, 4, 6, 8\\}$ 的幺元为 $6$：$6 \\equiv 0 \\pmod 2$ 且 $6 \\equiv 1 \\pmod 5$，所以对每个偶数 $x$ 有 $6x = x$。",
@@ -424,7 +424,7 @@ export const integralDomains: TopicDef = {
   knowledgePoints: [
     {
       id: "counting-zero-divisors-in-zn",
-      title: t("Zero divisors in ℤₙ", "ℤₙ 中的零因子"),
+      title: t("Zero divisors in $\\mathbb{Z}_n$", "$\\mathbb{Z}_n$ 中的零因子"),
       explanation: t(
         "In this ring every nonzero element is either a unit or a zero divisor, so subtract the units and zero from the total. In $\\mathbb{Z}_{12}$, the units are $1, 5, 7, 11$, so the zero divisors are the other $12 - 4 - 1 = 7$ nonzero elements: $2, 3, 4, 6, 8, 9, 10$.",
         "在这个环中，每个非零元素要么是单位，要么是零因子，所以从总数中减去单位和零。在 $\\mathbb{Z}_{12}$ 中，单位为 $1, 5, 7, 11$，所以零因子是其余 $12 - 4 - 1 = 7$ 个非零元素：$2, 3, 4, 6, 8, 9, 10$。",
@@ -707,7 +707,7 @@ export const theUnitsOfARing: TopicDef = {
     },
     {
       id: "units-of-quadratic-integer-rings",
-      title: t("Units of ℤ[√k]", "ℤ[√k] 的单位"),
+      title: t("Units of $\\mathbb{Z}[\\sqrt{k}]$", "$\\mathbb{Z}[\\sqrt{k}]$ 的单位"),
       explanation: t(
         "The norm is multiplicative, so an element can be a unit only when its norm is a unit of the integers, plus or minus one. $3 + 2\\sqrt 2$ is a unit of $\\mathbb{Z}[\\sqrt 2]$: its norm is $9 - 8 = 1$, and $(3 + 2\\sqrt 2)(3 - 2\\sqrt 2) = 1$. $1 + \\sqrt 3$ is not a unit of $\\mathbb{Z}[\\sqrt 3]$: its norm is $-2$.",
         "范数是积性的，所以一个元素只有在它的范数是整数的单位，即正负 1 时，才可能是单位。$3 + 2\\sqrt 2$ 是 $\\mathbb{Z}[\\sqrt 2]$ 的单位：范数为 $9 - 8 = 1$，且 $(3 + 2\\sqrt 2)(3 - 2\\sqrt 2) = 1$。$1 + \\sqrt 3$ 不是 $\\mathbb{Z}[\\sqrt 3]$ 的单位：范数为 $-2$。",
@@ -798,7 +798,7 @@ export const findingTheInverseOfAMatrixOverARing: TopicDef = {
     },
     {
       id: "inverting-matrices-over-zn",
-      title: t("Inverting over ℤₙ", "在 ℤₙ 上求逆"),
+      title: t("Inverting over $\\mathbb{Z}_n$", "在 $\\mathbb{Z}_n$ 上求逆"),
       explanation: t(
         "The usual formula for an inverse works over residues, with division by the determinant replaced by multiplication by its inverse. Over $\\mathbb{Z}_7$, $A = \\begin{pmatrix} 2 & 1 \\\\ 3 & 4 \\end{pmatrix}$ has $\\det A = 5$ and $5^{-1} = 3$, so $A^{-1} = 3\\begin{pmatrix} 4 & -1 \\\\ -3 & 2 \\end{pmatrix} = \\begin{pmatrix} 5 & 4 \\\\ 5 & 6 \\end{pmatrix}$.",
         "求逆的常用公式在剩余类上同样适用，只是除以行列式要换成乘以它的逆元。在 $\\mathbb{Z}_7$ 上，$A = \\begin{pmatrix} 2 & 1 \\\\ 3 & 4 \\end{pmatrix}$ 的 $\\det A = 5$，$5^{-1} = 3$，所以 $A^{-1} = 3\\begin{pmatrix} 4 & -1 \\\\ -3 & 2 \\end{pmatrix} = \\begin{pmatrix} 5 & 4 \\\\ 5 & 6 \\end{pmatrix}$。",
@@ -993,7 +993,7 @@ export const subrings: TopicDef = {
     },
     {
       id: "counting-subrings-of-zn",
-      title: t("Subrings of ℤₙ", "ℤₙ 的子环"),
+      title: t("Subrings of $\\mathbb{Z}_n$", "$\\mathbb{Z}_n$ 的子环"),
       explanation: t(
         "Every additive subgroup $\\langle d \\rangle$ of $\\mathbb{Z}_n$ is closed under multiplication, so the subrings of $\\mathbb{Z}_{12}$ are the $6$ subgroups $\\langle 1 \\rangle, \\langle 2 \\rangle, \\langle 3 \\rangle, \\langle 4 \\rangle, \\langle 6 \\rangle, \\langle 0 \\rangle$.",
         "$\\mathbb{Z}_n$ 的每个加法子群 $\\langle d \\rangle$ 都对乘法封闭，所以 $\\mathbb{Z}_{12}$ 的子环就是 $6$ 个子群 $\\langle 1 \\rangle, \\langle 2 \\rangle, \\langle 3 \\rangle, \\langle 4 \\rangle, \\langle 6 \\rangle, \\langle 0 \\rangle$。",
@@ -1345,7 +1345,7 @@ export const polynomialQuotientRings: TopicDef = {
     },
     {
       id: "multiplying-in-polynomial-quotient-rings",
-      title: t("Multiplying in F[x]/⟨x² − c⟩", "在 F[x]/⟨x² − c⟩ 中相乘"),
+      title: t("Multiplying in $F[x]/\\langle x^2 - c \\rangle$", "在 $F[x]/\\langle x^2 - c \\rangle$ 中相乘"),
       explanation: t(
         "Multiply the polynomials as usual, then use the relation given by the modulus to replace the square of the variable by a constant. In $\\mathbb{Z}_7[x]/\\langle x^2 - 3 \\rangle$, $x^2 = 3$, so $(2 + x)(4 + 5x) = 8 + 14x + 5x^2 = 8 + 14x + 15 = 23 + 14x = 2 + 0x$.",
         "照常把多项式相乘，再用模所给出的关系把变量的平方换成常数。在 $\\mathbb{Z}_7[x]/\\langle x^2 - 3 \\rangle$ 中，$x^2 = 3$，所以 $(2 + x)(4 + 5x) = 8 + 14x + 5x^2 = 8 + 14x + 15 = 23 + 14x = 2 + 0x$。",

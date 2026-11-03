@@ -2209,7 +2209,7 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
     },
     {
       id: "evaluating-sin-double-angle",
-      title: t("Evaluating sin(2θ) from given values", "由已知值求 sin(2θ)"),
+      title: t("Evaluating $\\sin 2\\theta$ from given values", "由已知值求 $\\sin 2\\theta$"),
       explanation: t(
         "To use $\\sin(2\\theta) = 2\\sin\\theta\\cos\\theta$ you need both the sine and the cosine of $\\theta$. Find the missing one from the Pythagorean identity and the quadrant.\n\nIf $\\sin\\theta = \\frac{3}{5}$ and $\\theta$ is in the first quadrant, then $\\cos\\theta = \\frac{4}{5}$ (from the Pythagorean identity) and:\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\frac{4}{5} = \\frac{24}{25}$$",
         "要用 $\\sin(2\\theta) = 2\\sin\\theta\\cos\\theta$，需要同时知道 $\\theta$ 的正弦和余弦。由勾股恒等式和所在象限求出缺少的那个。\n\n若 $\\sin\\theta = \\frac{3}{5}$ 且 $\\theta$ 在第一象限，则由勾股恒等式得 $\\cos\\theta = \\frac{4}{5}$，从而：\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\frac{4}{5} = \\frac{24}{25}$$",
@@ -2315,7 +2315,7 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
   knowledgePoints: [
     {
       id: "verifying-double-angle-sine-identities",
-      title: t("Verifying identities with sin(2θ)", "利用 sin(2θ) 验证恒等式"),
+      title: t("Verifying identities with $\\sin 2\\theta$", "利用 $\\sin 2\\theta$ 验证恒等式"),
       explanation: t(
         "To verify an identity, transform one side step by step until it matches the other side, here by replacing the sine of a double angle with its formula. To verify $\\frac{\\sin(2\\theta)}{\\sin\\theta} = 2\\cos\\theta$, substitute and simplify the left side:\n\n$$\\frac{\\sin(2\\theta)}{\\sin\\theta} = \\frac{2\\sin\\theta\\cos\\theta}{\\sin\\theta} = 2\\cos\\theta \\checkmark$$",
         "验证恒等式时，把一边逐步变形，直到与另一边相同；这里是把二倍角的正弦换成它的公式。为验证 $\\frac{\\sin(2\\theta)}{\\sin\\theta} = 2\\cos\\theta$，代入并化简左边：\n\n$$\\frac{\\sin(2\\theta)}{\\sin\\theta} = \\frac{2\\sin\\theta\\cos\\theta}{\\sin\\theta} = 2\\cos\\theta \\checkmark$$",
@@ -2412,7 +2412,7 @@ export const usingTheDoubleAngleFormulaForSineWithThePythagoreanTheorem: TopicDe
   knowledgePoints: [
     {
       id: "sin-double-angle-from-cos-only",
-      title: t("Finding sin(2θ) from cos(θ) in a given quadrant", "由 cos(θ) 在给定象限求 sin(2θ)"),
+      title: t("Finding $\\sin 2\\theta$ from $\\cos\\theta$ in a given quadrant", "由 $\\cos\\theta$ 在给定象限求 $\\sin 2\\theta$"),
       explanation: t(
         "When only the cosine is given, find the sine from the Pythagorean identity, choosing its sign from the quadrant, before using the double-angle formula. If $\\cos\\theta = -\\frac{4}{5}$ and $\\theta$ is in quadrant II, then $\\sin\\theta = \\frac{3}{5}$ (positive in QII) and:\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$",
         "只给出余弦时，先用勾股恒等式求正弦，并根据所在象限确定符号，再用二倍角公式。若 $\\cos\\theta = -\\frac{4}{5}$ 且 $\\theta$ 在第二象限，则 $\\sin\\theta = \\frac{3}{5}$（第二象限正弦为正），从而：\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$",
@@ -2544,7 +2544,7 @@ export const theDoubleAngleFormulaForCosine: TopicDef = {
     },
     {
       id: "evaluating-cos-double-angle",
-      title: t("Evaluating cos(2θ) from a given value", "由已知值求 cos(2θ)"),
+      title: t("Evaluating $\\cos 2\\theta$ from a given value", "由已知值求 $\\cos 2\\theta$"),
       explanation: t(
         "Picking the form that matches the given ratio saves a step and avoids worrying about the sign of the other ratio.\n\nIf $\\sin\\theta = \\frac{5}{13}$, use the form $1 - 2\\sin^2\\theta$ (only sine needed):\n\n$$\\cos(2\\theta) = 1 - 2\\left(\\frac{5}{13}\\right)^2 = 1 - \\frac{50}{169} = \\frac{119}{169}$$",
         "选用与已知三角比相对应的形式，可以省去一步，也不用考虑另一个三角比的符号。\n\n若 $\\sin\\theta = \\frac{5}{13}$，使用只含正弦的形式 $1 - 2\\sin^2\\theta$：\n\n$$\\cos(2\\theta) = 1 - 2\\left(\\frac{5}{13}\\right)^2 = 1 - \\frac{50}{169} = \\frac{119}{169}$$",
@@ -2622,7 +2622,7 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulasForCosin
   knowledgePoints: [
     {
       id: "choosing-form-for-cos-identity",
-      title: t("Choosing the right form of cos(2θ) for verification", "选择合适的 cos(2θ) 形式来验证恒等式"),
+      title: t("Choosing the right form of $\\cos 2\\theta$ for verification", "选择合适的 $\\cos 2\\theta$ 形式来验证恒等式"),
       explanation: t(
         "The cosine of a double angle has three forms, so choose the one that makes the expression match the other side of the identity most directly. To show $1 + \\cos(2\\theta) = 2\\cos^2\\theta$, substitute $\\cos(2\\theta) = 2\\cos^2\\theta - 1$:\n\n$$1 + (2\\cos^2\\theta - 1) = 2\\cos^2\\theta \\checkmark$$",
         "二倍角的余弦有三种形式，要选择能使式子最直接地与恒等式另一边相同的那一种。为证明 $1 + \\cos(2\\theta) = 2\\cos^2\\theta$，代入 $\\cos(2\\theta) = 2\\cos^2\\theta - 1$：\n\n$$1 + (2\\cos^2\\theta - 1) = 2\\cos^2\\theta \\checkmark$$",
@@ -2716,7 +2716,7 @@ export const findingExactValuesOfTrigonometricExpressionsUsingTheDoubleAngleForm
   knowledgePoints: [
     {
       id: "evaluating-cos-2theta-at-special-angles",
-      title: t("Evaluating cos(2θ) at special angles", "在特殊角处求 cos(2θ)"),
+      title: t("Evaluating $\\cos 2\\theta$ at special angles", "在特殊角处求 $\\cos 2\\theta$"),
       explanation: t(
         "When an angle is twice a special angle, the double angle formula expresses its cosine through the known values of the smaller angle. Use a known double angle:\n\n$$\\cos\\left(\\frac{\\pi}{3}\\right) = \\cos\\left(2\\cdot\\frac{\\pi}{6}\\right) = 2\\cos^2\\frac{\\pi}{6} - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2} \\checkmark$$",
         "当一个角是某个特殊角的两倍时，二倍角公式可以用小角的已知值表示它的余弦。利用已知的二倍角：\n\n$$\\cos\\left(\\frac{\\pi}{3}\\right) = \\cos\\left(2\\cdot\\frac{\\pi}{6}\\right) = 2\\cos^2\\frac{\\pi}{6} - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2} \\checkmark$$",
@@ -2962,7 +2962,7 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForTangen
   knowledgePoints: [
     {
       id: "verifying-tan-double-angle-identities",
-      title: t("Verifying identities involving tan(2θ)", "验证含 tan(2θ) 的恒等式"),
+      title: t("Verifying identities involving $\\tan 2\\theta$", "验证含 $\\tan 2\\theta$ 的恒等式"),
       explanation: t(
         "To verify such an identity, rewrite every function in terms of sine and cosine or in terms of tangent, then simplify one side until it matches the other. Verify $\\tan(2\\theta) = \\dfrac{2}{\\cot\\theta - \\tan\\theta}$:\n\n$$\\frac{2}{\\cot\\theta - \\tan\\theta} = \\frac{2}{\\frac{\\cos\\theta}{\\sin\\theta} - \\frac{\\sin\\theta}{\\cos\\theta}} = \\frac{2}{\\frac{\\cos^2\\theta - \\sin^2\\theta}{\\sin\\theta\\cos\\theta}} = \\frac{2\\sin\\theta\\cos\\theta}{\\cos^2\\theta - \\sin^2\\theta} = \\frac{\\sin(2\\theta)}{\\cos(2\\theta)} = \\tan(2\\theta) \\checkmark$$",
         "验证这样的恒等式时，把所有函数都用正弦和余弦或都用正切表示，再化简一边直到与另一边相同。验证 $\\tan(2\\theta) = \\dfrac{2}{\\cot\\theta - \\tan\\theta}$：\n\n$$\\frac{2}{\\cot\\theta - \\tan\\theta} = \\frac{2}{\\frac{\\cos\\theta}{\\sin\\theta} - \\frac{\\sin\\theta}{\\cos\\theta}} = \\frac{2}{\\frac{\\cos^2\\theta - \\sin^2\\theta}{\\sin\\theta\\cos\\theta}} = \\frac{2\\sin\\theta\\cos\\theta}{\\cos^2\\theta - \\sin^2\\theta} = \\frac{\\sin(2\\theta)}{\\cos(2\\theta)} = \\tan(2\\theta) \\checkmark$$",

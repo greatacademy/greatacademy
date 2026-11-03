@@ -658,7 +658,7 @@ export const theSymmetricGroupOnNSymbols: TopicDef = {
     },
     {
       id: "products-in-symmetric-groups",
-      title: t("Multiplying in Sₙ", "Sₙ 中的乘法"),
+      title: t("Multiplying in $S_n$", "$S_n$ 中的乘法"),
       explanation: t(
         "Follow each point through the right factor and then the left factor, recording the cycles as they close. To write $\\sigma\\tau$ in disjoint cycles, follow each point through $\\tau$ then $\\sigma$. With $\\sigma = (1\\;2\\;3)$ and $\\tau = (2\\;4)$: $1 \\mapsto 1 \\mapsto 2$, $2 \\mapsto 4 \\mapsto 4$, $4 \\mapsto 2 \\mapsto 3$, $3 \\mapsto 3 \\mapsto 1$, so $\\sigma\\tau = (1\\;2\\;4\\;3)$.",
         "让每个点先经过右边的因子再经过左边的因子，在轮换闭合时把它们记录下来。要把 $\\sigma\\tau$ 写成不相交轮换，就让每个点依次经过 $\\tau$ 和 $\\sigma$。设 $\\sigma = (1\\;2\\;3)$、$\\tau = (2\\;4)$：$1 \\mapsto 1 \\mapsto 2$，$2 \\mapsto 4 \\mapsto 4$，$4 \\mapsto 2 \\mapsto 3$，$3 \\mapsto 3 \\mapsto 1$，所以 $\\sigma\\tau = (1\\;2\\;4\\;3)$。",
@@ -707,7 +707,7 @@ export const theAlternatingGroupOnNSymbols: TopicDef = {
   knowledgePoints: [
     {
       id: "counting-elements-of-alternating-groups",
-      title: t("Counting in Aₙ", "Aₙ 中的计数"),
+      title: t("Counting in $A_n$", "$A_n$ 中的计数"),
       explanation: t(
         "$|A_5| = \\frac{5!}{2} = 60$. Every $3$-cycle is even, so all $\\frac{5 \\cdot 4 \\cdot 3}{3} = 20$ three-cycles of $S_5$ lie in $A_5$, while no $4$-cycle does.",
         "$|A_5| = \\frac{5!}{2} = 60$。每个 $3$-轮换都是偶置换，所以 $S_5$ 的全部 $\\frac{5 \\cdot 4 \\cdot 3}{3} = 20$ 个 $3$-轮换都在 $A_5$ 中，而 $4$-轮换都不在。",
@@ -748,7 +748,7 @@ export const theAlternatingGroupOnNSymbols: TopicDef = {
     },
     {
       id: "membership-in-alternating-groups",
-      title: t("Membership in Aₙ", "是否属于 Aₙ"),
+      title: t("Membership in $A_n$", "是否属于 $A_n$"),
       explanation: t(
         "A permutation is even when it is a product of an even number of transpositions, and the alternating group consists of the even permutations. Count transpositions: a $k$-cycle contributes $k - 1$. $(1\\;3)(2\\;4\\;5\\;6)$ contributes $1 + 3 = 4$, so it is even and lies in $A_6$.",
         "当一个置换是偶数个对换的乘积时，它是偶置换，交错群由所有偶置换组成。数对换：$k$-轮换贡献 $k - 1$ 个。$(1\\;3)(2\\;4\\;5\\;6)$ 贡献 $1 + 3 = 4$ 个，所以是偶置换，属于 $A_6$。",
@@ -907,7 +907,7 @@ export const dihedralGroup: TopicDef = {
   knowledgePoints: [
     {
       id: "orders-of-elements-of-dihedral-groups",
-      title: t("Orders in Dₙ", "Dₙ 中元素的阶"),
+      title: t("Orders in $D_n$", "$D_n$ 中元素的阶"),
       explanation: t(
         "In $D_n$ the rotation $r^k$ has order $\\frac{n}{\\gcd(k, n)}$, and every reflection $r^ks$ has order $2$. In $D_{12}$, $r^8$ has order $\\frac{12}{4} = 3$ and $r^5s$ has order $2$.",
         "在 $D_n$ 中，旋转 $r^k$ 的阶为 $\\frac{n}{\\gcd(k, n)}$，每个反射 $r^ks$ 的阶为 $2$。在 $D_{12}$ 中，$r^8$ 的阶为 $\\frac{12}{4} = 3$，$r^5s$ 的阶为 $2$。",
@@ -935,7 +935,7 @@ export const dihedralGroup: TopicDef = {
     },
     {
       id: "counting-elements-of-dihedral-groups",
-      title: t("Counting elements of Dₙ", "Dₙ 中的计数"),
+      title: t("Counting elements of $D_n$", "$D_n$ 中的计数"),
       explanation: t(
         "$D_n$ has $n$ reflections, each of order $2$. When $n$ is even, the half turn $r^{n/2}$ also has order $2$, so $D_n$ has $n + 1$ elements of order $2$; when $n$ is odd it has $n$.",
         "$D_n$ 有 $n$ 个反射，每个的阶都是 $2$。$n$ 为偶数时，半周旋转 $r^{n/2}$ 的阶也是 $2$，所以 $D_n$ 有 $n + 1$ 个 $2$ 阶元素；$n$ 为奇数时有 $n$ 个。",

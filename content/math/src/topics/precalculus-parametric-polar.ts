@@ -774,7 +774,7 @@ export const parametricEquationsOfParabolas: TopicDef = {
   knowledgePoints: [
     {
       id: "standard-horizontal-parabola-parametric",
-      title: t("Parametric equations of horizontal parabolas y² = 4px", "水平抛物线 y² = 4px 的参数方程"),
+      title: t("Parametric equations of horizontal parabolas $y^2 = 4px$", "水平抛物线 $y^2 = 4px$ 的参数方程"),
       explanation: t(
         "A standard horizontal parabola with vertex at $(0, 0)$ has Cartesian equation $y^2 = 4px$ with focus $(p, 0)$.\nSetting $y = 2pt$ into the equation:\n$$(2pt)^2 = 4px \\implies 4p^2 t^2 = 4px \\implies x = pt^2$$\nThus, the standard parametric equations are:\n$$x = pt^2, \\quad y = 2pt \\quad (t \\in \\mathbb{R})$$\nEliminating $t = \\frac{y}{2p}$ yields $x = p\\left(\\frac{y}{2p}\\right)^2 = \\frac{y^2}{4p} \\implies y^2 = 4px$.",
         "顶点在原点 $(0, 0)$、焦点在 $(p, 0)$ 的标准水平抛物线方程为 $y^2 = 4px$。\n令 $y = 2pt$，代入方程得：\n$$(2pt)^2 = 4px \\implies 4p^2 t^2 = 4px \\implies x = pt^2$$\n因此标准参数方程为：\n$$x = pt^2, \\quad y = 2pt \\quad (t \\in \\mathbb{R})$$\n反向消去参数 $t = \\frac{y}{2p}$ 即可恢复直角坐标方程 $y^2 = 4px$。",
@@ -844,7 +844,7 @@ export const parametricEquationsOfParabolas: TopicDef = {
     },
     {
       id: "standard-vertical-parabola-parametric",
-      title: t("Parametric equations of vertical parabolas x² = 4py", "铅直抛物线 x² = 4py 的参数方程"),
+      title: t("Parametric equations of vertical parabolas $x^2 = 4py$", "铅直抛物线 $x^2 = 4py$ 的参数方程"),
       explanation: t(
         "A standard vertical parabola with vertex at $(0, 0)$ has Cartesian equation $x^2 = 4py$ with focus at $(0, p)$.\nSetting $x = 2pt$ into the equation gives:\n$$(2pt)^2 = 4py \\implies 4p^2 t^2 = 4py \\implies y = pt^2$$\nThus, its parametric equations are:\n$$x = 2pt, \\quad y = pt^2 \\quad (t \\in \\mathbb{R})$$",
         "顶点在原点 $(0, 0)$、焦点在 $(0, p)$ 的标准铅直抛物线方程为 $x^2 = 4py$。\n令 $x = 2pt$ 代入方程可得：\n$$(2pt)^2 = 4py \\implies 4p^2 t^2 = 4py \\implies y = pt^2$$\n因此其参数方程为：\n$$x = 2pt, \\quad y = pt^2 \\quad (t \\in \\mathbb{R})$$",
@@ -1497,7 +1497,7 @@ export const polarEquationsOfRadialLines: TopicDef = {
   knowledgePoints: [
     {
       id: "radial-line-polar-equation",
-      title: t("The polar equation θ = α", "极坐标方程 θ = α"),
+      title: t("The polar equation $\\theta = \\alpha$", "极坐标方程 $\\theta = \\alpha$"),
       explanation: t(
         "The polar equation $\\theta = \\alpha$ places no restriction on $r$, allowing $r$ to be any real number:\n- For $r \\ge 0$, the points trace the ray making angle $\\alpha$ with the polar axis.\n- For $r < 0$, the points trace the opposite ray in direction $\\alpha + \\pi$.\nTogether, all values of $r \\in \\mathbb{R}$ form the complete straight line passing through the pole with slope:\n$$m = \\tan\\alpha$$",
         "极坐标方程 $\\theta = \\alpha$ 对极径 $r$ 没有任何限制，$r$ 可取任意实数：\n- 当 $r \\ge 0$ 时，点构成与极轴夹角为 $\\alpha$ 的射线。\n- 当 $r < 0$ 时，点构成反方向角为 $\\alpha + \\pi$ 的反向射线。\n两部分结合，全体 $r \\in \\mathbb{R}$ 构成了整条穿过极点且斜率为：\n$$m = \\tan\\alpha$$\n的直线。",
@@ -1624,7 +1624,7 @@ export const polarEquationsOfRadialLines: TopicDef = {
     },
     {
       id: "radial-line-to-cartesian",
-      title: t("Convert θ = α to Cartesian equation", "将 θ = α 转化为直角坐标方程"),
+      title: t("Convert $\\theta = \\alpha$ to a Cartesian equation", "将 $\\theta = \\alpha$ 转化为直角坐标方程"),
       explanation: t(
         "A fixed angle with any distance describes a whole line through the origin, because negative distances reach the points on the opposite side. To convert $\\theta = \\alpha$ into Cartesian coordinates, take the tangent of both sides:\n$$\\tan\\theta = \\tan\\alpha \\implies \\frac{y}{x} = \\tan\\alpha \\implies y = (\\tan\\alpha)x$$\nFor example, $\\theta = \\frac{\\pi}{3}$ gives $y = \\left(\\tan\\frac{\\pi}{3}\\right)x = \\sqrt{3}x$.",
         "固定角度而距离任意时，描述的是一条经过原点的直线，因为负的距离会到达另一侧的点。将 $\\theta = \\alpha$ 转化为直角坐标方程时，两边取正切：\n$$\\tan\\theta = \\tan\\alpha \\implies \\frac{y}{x} = \\tan\\alpha \\implies y = (\\tan\\alpha)x$$\n例如，$\\theta = \\frac{\\pi}{3}$ 对应直线 $y = \\left(\\tan\\frac{\\pi}{3}\\right)x = \\sqrt{3}x$。",
@@ -1833,7 +1833,7 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
   knowledgePoints: [
     {
       id: "circle-on-x-axis-polar",
-      title: t("Circles of the form r = 2a cos θ", "形如 r = 2a cos θ 的圆"),
+      title: t("Circles of the form $r = 2a\\cos\\theta$", "形如 $r = 2a\\cos\\theta$ 的圆"),
       explanation: t(
         "Multiplying $r = 2a\\cos\\theta$ by $r$ gives:\n$$r^2 = 2a(r\\cos\\theta) \\implies x^2 + y^2 = 2ax \\implies (x - a)^2 + y^2 = a^2$$\nThis is a circle with:\n- Center at $(a, 0)$ on the $x$-axis\n- Radius $R = |a|$\n- Passing through the pole $(0, 0)$ and tangent to the $y$-axis.",
         "将方程 $r = 2a\\cos\\theta$ 两端同乘 $r$ 可得：\n$$r^2 = 2a(r\\cos\\theta) \\implies x^2 + y^2 = 2ax \\implies (x - a)^2 + y^2 = a^2$$\n这表示一个圆，其特征为：\n- 圆心在 $x$ 轴上的 $(a, 0)$\n- 半径为 $R = |a|$\n- 经过极点 $(0, 0)$ 且与 $y$ 轴相切于极点。",
@@ -1882,7 +1882,7 @@ export const polarEquationsOfCirclesCenteredOnTheCoordinateAxes: TopicDef = {
     },
     {
       id: "circle-on-y-axis-polar",
-      title: t("Circles of the form r = 2b sin θ", "形如 r = 2b sin θ 的圆"),
+      title: t("Circles of the form $r = 2b\\sin\\theta$", "形如 $r = 2b\\sin\\theta$ 的圆"),
       explanation: t(
         "Multiplying $r = 2b\\sin\\theta$ by $r$ gives:\n$$r^2 = 2b(r\\sin\\theta) \\implies x^2 + y^2 = 2by \\implies x^2 + (y - b)^2 = b^2$$\nThis is a circle with:\n- Center at $(0, b)$ on the $y$-axis\n- Radius $R = |b|$\n- Passing through the pole $(0, 0)$ and tangent to the $x$-axis.",
         "将方程 $r = 2b\\sin\\theta$ 两端同乘 $r$ 可得：\n$$r^2 = 2b(r\\sin\\theta) \\implies x^2 + y^2 = 2by \\implies x^2 + (y - b)^2 = b^2$$\n这表示一个圆，其特征为：\n- 圆心在 $y$ 轴上的 $(0, b)$\n- 半径为 $R = |b|$\n- 经过极点 $(0, 0)$ 且与 $x$ 轴相切于极点。",

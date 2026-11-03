@@ -716,7 +716,7 @@ export const cyclicSubgroups: TopicDef = {
   knowledgePoints: [
     {
       id: "cyclic-subgroups-of-zn",
-      title: t("Cyclic subgroups of ℤₙ", "ℤₙ 的循环子群"),
+      title: t("Cyclic subgroups of $\\mathbb{Z}_n$", "$\\mathbb{Z}_n$ 的循环子群"),
       explanation: t(
         "The multiples of an element modulo the order are exactly the multiples of their gcd, so that gcd generates the same subgroup. In $\\mathbb{Z}_{18}$, $\\langle 12 \\rangle = \\{0, 12, 6\\}$, the multiples of $\\gcd(12, 18) = 6$. An element belongs to $\\langle a \\rangle$ exactly when it is a multiple of $\\gcd(a, n)$.",
         "一个元素模群阶的倍数恰好是它们最大公因数的倍数，所以这个最大公因数生成同一个子群。在 $\\mathbb{Z}_{18}$ 中，$\\langle 12 \\rangle = \\{0, 12, 6\\}$，即 $\\gcd(12, 18) = 6$ 的倍数。一个元素属于 $\\langle a \\rangle$ 当且仅当它是 $\\gcd(a, n)$ 的倍数。",
@@ -1057,7 +1057,7 @@ export const generatingSets: TopicDef = {
   knowledgePoints: [
     {
       id: "generating-sets-of-zn",
-      title: t("Generating sets of ℤₙ", "ℤₙ 的生成集"),
+      title: t("Generating sets of $\\mathbb{Z}_n$", "$\\mathbb{Z}_n$ 的生成集"),
       explanation: t(
         "$\\{a, b\\}$ generates $\\mathbb{Z}_n$ exactly when $\\gcd(a, b, n) = 1$, even if neither element generates alone. In $\\mathbb{Z}_{30}$, $\\{6, 10\\}$ generates the subgroup $\\langle 2 \\rangle$ of order $15$, and $\\{6, 10, 15\\}$ generates all of $\\mathbb{Z}_{30}$.",
         "$\\{a, b\\}$ 生成 $\\mathbb{Z}_n$ 当且仅当 $\\gcd(a, b, n) = 1$，即使两者单独都不是生成元。在 $\\mathbb{Z}_{30}$ 中，$\\{6, 10\\}$ 生成 $15$ 阶子群 $\\langle 2 \\rangle$，$\\{6, 10, 15\\}$ 生成整个 $\\mathbb{Z}_{30}$。",
@@ -1088,7 +1088,7 @@ export const generatingSets: TopicDef = {
     },
     {
       id: "subgroups-of-s3-generated-by-two-elements",
-      title: t("Generated subgroups of S₃", "S₃ 中生成的子群"),
+      title: t("Generated subgroups of $S_3$", "$S_3$ 中生成的子群"),
       explanation: t(
         "In $S_3 = \\{e, r, r^2, s, rs, r^2s\\}$, where $r^3 = s^2 = e$ and $sr = r^2s$: $r$ generates $\\{e, r, r^2\\}$, $s$ generates $\\{e, s\\}$, and any rotation together with any reflection generates all of $S_3$.",
         "在 $S_3 = \\{e, r, r^2, s, rs, r^2s\\}$ 中（$r^3 = s^2 = e$，$sr = r^2s$）：$r$ 生成 $\\{e, r, r^2\\}$，$s$ 生成 $\\{e, s\\}$，任一旋转与任一反射一起生成整个 $S_3$。",
@@ -1235,7 +1235,7 @@ export const universalPropertyOfFreeGroups: TopicDef = {
   knowledgePoints: [
     {
       id: "homomorphisms-from-free-groups-to-zn",
-      title: t("Maps to ℤₙ", "到 ℤₙ 的映射"),
+      title: t("Maps to $\\mathbb{Z}_n$", "到 $\\mathbb{Z}_n$ 的映射"),
       explanation: t(
         "If $\\varphi(a) = 2$ and $\\varphi(b) = 5$ in $\\mathbb{Z}_7$, then $\\varphi(a^3b^{-1}a^{-1}) = 3 \\cdot 2 - 5 - 2 = -1 \\equiv 6$. Since $\\mathbb{Z}_n$ is abelian, only the total exponent of each letter matters.",
         "若在 $\\mathbb{Z}_7$ 中 $\\varphi(a) = 2$、$\\varphi(b) = 5$，则 $\\varphi(a^3b^{-1}a^{-1}) = 3 \\cdot 2 - 5 - 2 = -1 \\equiv 6$。由于 $\\mathbb{Z}_n$ 是阿贝尔群，只有每个字母的指数和起作用。",
@@ -1269,7 +1269,7 @@ export const universalPropertyOfFreeGroups: TopicDef = {
     },
     {
       id: "homomorphisms-from-free-groups-to-s3",
-      title: t("Maps to S₃", "到 S₃ 的映射"),
+      title: t("Maps to $S_3$", "到 $S_3$ 的映射"),
       explanation: t(
         "A homomorphism from a free group is fixed by where the generators go, and the image of a word is the product of their images in the same order. In a non-abelian group the order of the letters matters. With $\\varphi(a) = r$ and $\\varphi(b) = s$ in $S_3$, $\\varphi(ab) = rs$ but $\\varphi(ba) = sr = r^2s$.",
         "从自由群出发的同态由生成元的去向决定，一个词的像就是生成元的像按相同顺序的乘积。在非阿贝尔群中字母的顺序很重要。若在 $S_3$ 中 $\\varphi(a) = r$、$\\varphi(b) = s$，则 $\\varphi(ab) = rs$，而 $\\varphi(ba) = sr = r^2s$。",

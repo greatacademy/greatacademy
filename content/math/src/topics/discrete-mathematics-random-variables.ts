@@ -162,7 +162,7 @@ export const manyToOneTransformationsOfDiscreteRandomVariables: TopicDef = {
   knowledgePoints: [
     {
       id: "probabilities-of-squares-and-absolute-values",
-      title: t("Probabilities of X² and |X|", "X² 与 |X| 的概率"),
+      title: t("Probabilities of $X^2$ and $|X|$", "$X^2$ 与 $|X|$ 的概率"),
       explanation: t(
         "Squaring or taking absolute values sends two opposite values to the same result, so add the probabilities of both values that produce it. If $Y = X^2$, then $Y = 4$ when $X = 2$ or $X = -2$: $P(Y = 4) = P(X = -2) + P(X = 2)$.",
         "平方或取绝对值会把两个相反的值映射到同一个结果，所以要把产生它的两个值的概率加起来。若 $Y = X^2$，则 $X = 2$ 或 $X = -2$ 时 $Y = 4$：$P(Y = 4) = P(X = -2) + P(X = 2)$。",
@@ -342,7 +342,7 @@ export const varianceOfDiscreteRandomVariables: TopicDef = {
     },
     {
       id: "second-moment-from-mean-and-variance",
-      title: t("E(X²) from the mean and variance", "由均值与方差求 E(X²)"),
+      title: t("$E(X^2)$ from the mean and variance", "由均值与方差求 $E(X^2)$"),
       explanation: t(
         "The mean of the square is always at least the square of the mean, and the variance is exactly the difference between them. Rearranging $\\operatorname{Var}(X) = E(X^2) - E(X)^2$ gives $E(X^2) = \\operatorname{Var}(X) + E(X)^2$. If $E(X) = 3$ and $\\operatorname{Var}(X) = 2$, then $E(X^2) = 11$.",
         "平方的均值总是不小于均值的平方，方差正好是两者之差。把 $\\operatorname{Var}(X) = E(X^2) - E(X)^2$ 变形得 $E(X^2) = \\operatorname{Var}(X) + E(X)^2$。若 $E(X) = 3$，$\\operatorname{Var}(X) = 2$，则 $E(X^2) = 11$。",
@@ -977,7 +977,7 @@ export const meanAndVarianceOfTheBinomialDistribution: TopicDef = {
     },
     {
       id: "second-moment-of-a-binomial-variable",
-      title: t("E(X²) of a binomial variable", "二项变量的 E(X²)"),
+      title: t("$E(X^2)$ of a binomial variable", "二项变量的 $E(X^2)$"),
       explanation: t(
         "The second moment is the variance plus the square of the mean, and both are known for a binomial variable. For $X \\sim B(10, 0.4)$: $E(X) = 4$ and $\\operatorname{Var}(X) = 2.4$, so $E(X^2) = 2.4 + 4^2 = 18.4$.",
         "二阶矩等于方差加上均值的平方，而二项变量的这两个量都是已知的。对 $X \\sim B(10, 0.4)$：$E(X) = 4$，$\\operatorname{Var}(X) = 2.4$，所以 $E(X^2) = 2.4 + 4^2 = 18.4$。",

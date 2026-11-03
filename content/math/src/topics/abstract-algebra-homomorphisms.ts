@@ -563,7 +563,7 @@ export const theThirdIsomorphismTheorem: TopicDef = {
     },
     {
       id: "the-third-isomorphism-theorem-in-zn",
-      title: t("In ℤₙ", "在 ℤₙ 中"),
+      title: t("In $\\mathbb{Z}_n$", "在 $\\mathbb{Z}_n$ 中"),
       explanation: t(
         "Find each subgroup's generator by the gcd with the modulus, then the quotient of quotients is isomorphic to the group modulo the larger subgroup. In $\\mathbb{Z}_{24}$, $N = \\langle 16 \\rangle = \\langle 8 \\rangle$ lies in $K = \\langle 10 \\rangle = \\langle 2 \\rangle$, so $(\\mathbb{Z}_{24}/N)/(K/N) \\cong \\mathbb{Z}_{24}/\\langle 2 \\rangle \\cong \\mathbb{Z}_2$.",
         "用与模的最大公因数求出每个子群的生成元，于是商的商同构于群模较大的那个子群。在 $\\mathbb{Z}_{24}$ 中，$N = \\langle 16 \\rangle = \\langle 8 \\rangle$ 包含于 $K = \\langle 10 \\rangle = \\langle 2 \\rangle$，所以 $(\\mathbb{Z}_{24}/N)/(K/N) \\cong \\mathbb{Z}_{24}/\\langle 2 \\rangle \\cong \\mathbb{Z}_2$。",
