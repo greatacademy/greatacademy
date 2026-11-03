@@ -1,7 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
+import { choiceProblem, lowestTerms, numberProblem, steps } from "../problems.ts";
 
 /** Topics for Unit 3: Discrete Probability Distributions (new topics). */
 export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
@@ -233,6 +233,39 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
               askVar
                 ? `$\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^2} = \\frac{${r} \\left(1 - ${p.toLatex()}\\right)}{\\left(${p.toLatex()}\\right)^2} = ${ans.toLatex()}$。`
                 : `$E[X] = \\frac{r}{p} = \\frac{${r}}{${p.toLatex()}} = ${ans.toLatex()}$。`,
+            ),
+          });
+        },
+      },
+      {
+        id: "recovering-the-parameters-from-the-mean-and-variance",
+        title: t("Recovering the parameters from the mean and variance", "由均值与方差反求参数"),
+        explanation: t(
+          "The mean and the variance together determine a negative binomial distribution. Dividing them cancels $r$:\n\n$$\\frac{\\operatorname{Var}(X)}{E[X]} = \\frac{r(1 - p)/p^{2}}{r/p} = \\frac{1 - p}{p},$$\n\nso $\\frac{1}{p} = 1 + \\frac{\\operatorname{Var}(X)}{E[X]}$. Once $p$ is known, $r = p \\cdot E[X]$. For $E[X] = 8$ and $\\operatorname{Var}(X) = 8$: $\\frac{1}{p} = 2$, so $p = \\frac{1}{2}$ and $r = 4$.",
+          "均值和方差一起确定一个负二项分布。两者相除可以消去 $r$：\n\n$$\\frac{\\operatorname{Var}(X)}{E[X]} = \\frac{r(1 - p)/p^{2}}{r/p} = \\frac{1 - p}{p},$$\n\n所以 $\\frac{1}{p} = 1 + \\frac{\\operatorname{Var}(X)}{E[X]}$。求出 $p$ 后，$r = p \\cdot E[X]$。例如 $E[X] = 8$，$\\operatorname{Var}(X) = 8$：$\\frac{1}{p} = 2$，所以 $p = \\frac{1}{2}$，$r = 4$。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const r = rng.int(2, 10);
+          const pDenom = rng.pick([2, 3, 4, 5, 6, 10]);
+          const pNum = rng.int(1, pDenom - 1);
+          const p = Q.of(pNum, pDenom);
+          const mean = Q.of(r).div(p);
+          const variance = Q.of(r).mul(Q.one.sub(p)).div(p.mul(p));
+          const ratio = variance.div(mean);
+          const askR = rng.bool();
+          const lines = `\\frac{1}{p} = 1 + \\frac{\\operatorname{Var}(X)}{E[X]} = 1 + \\frac{${variance.toLatex()}}{${mean.toLatex()}} = 1 + ${ratio.toLatex()} = ${Q.one.div(p).toLatex()}, \\quad p = ${p.toLatex()}`;
+          return numberProblem({
+            prompt: t(
+              `$X \\sim \\text{NegativeBinomial}(r, p)$ counts the trials needed for $r$ successes, with $E[X] = ${mean.toLatex()}$ and $\\operatorname{Var}(X) = ${variance.toLatex()}$. Find $${askR ? "r" : "p"}$.`,
+              `$X \\sim \\text{NegativeBinomial}(r, p)$ 表示获得 $r$ 次成功所需的试验次数，$E[X] = ${mean.toLatex()}$，$\\operatorname{Var}(X) = ${variance.toLatex()}$。求 $${askR ? "r" : "p"}$。`,
+            ),
+            answer: askR ? r : p,
+            wrong: askR
+              ? [mean.mul(Q.one.sub(p)), mean, mean.mul(p).mul(p), Q.one.div(p)]
+              : [Q.one.div(Q.one.add(mean.div(variance))), ratio, Q.one.sub(p)],
+            solution: t(
+              `Divide the variance by the mean to cancel $r$:${steps(lines)}${askR ? `Then $r = p \\cdot E[X] = ${p.toLatex()} \\cdot ${mean.toLatex()} = ${r}$.` : ""}`,
+              `用方差除以均值消去 $r$：${steps(lines)}${askR ? `于是 $r = p \\cdot E[X] = ${p.toLatex()} \\cdot ${mean.toLatex()} = ${r}$。` : ""}`,
             ),
           });
         },
