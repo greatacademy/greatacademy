@@ -1,6 +1,6 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { type Coefficient, type Compass, linear, type Mark, type Point, type Q, q, sketch } from "@ga/subject-math";
+import { type Coefficient, type Compass, linear, type Mark, type Point, plane, type Q, q, sketch } from "@ga/subject-math";
 
 import { choiceProblem, numberProblem, pointProblem, steps, yesNo } from "../problems.ts";
 
@@ -2527,6 +2527,21 @@ function twoCircles(rng: Rng): [CircleData, CircleData] {
 const circleTex = (name: string, c: CircleData) => `circle $${name}$ with center $(${c.h}, ${c.k})$ and radius $${c.r}$`;
 const circleTexZh = (name: string, c: CircleData) => `圆 $${name}$（圆心 $(${c.h}, ${c.k})$，半径 $${c.r}$）`;
 
+/** circleMappingFigure maps the circle with center (1, 2) and radius 3 onto the circle with center (4, −1) and radius 6: translated (dashed), then dilated. */
+const circleMappingFigure: Figure = {
+  svg: plane({ xMin: -3, xMax: 11, yMin: -8, yMax: 6, labelEvery: 2 }, [
+    { kind: "circle", center: [1, 2], r: 3 },
+    { kind: "circle", center: [4, -1], r: 3, dashed: true },
+    { kind: "circle", center: [4, -1], r: 6, accent: true },
+    { kind: "segment", a: [1, 2], b: [4, -1], dashed: true },
+    { kind: "point", at: [1, 2], label: "A", dir: "nw" },
+    { kind: "point", at: [4, -1], label: "B", dir: "se" },
+  ]),
+  alt: t(
+    "Circle A with center (1, 2) and radius 3 is translated so its center lands on (4, −1), the dashed circle, and then dilated about (4, −1) by 2 onto circle B with radius 6.",
+    "圆心 (1, 2)、半径 3 的圆 A 先平移，使圆心落在 (4, −1)（虚线圆），再以 (4, −1) 为中心按比例 2 位似，得到半径 6 的圆 B。",
+  ),
+};
 /** ProofStep is a statement of the circle similarity proof with its reason. */
 interface ProofStep {
   readonly s: Text;
@@ -2569,6 +2584,7 @@ export const provingCircleSimilarity: TopicDef = {
         "To map circle $A$ (center $(h_1, k_1)$, radius $r_1$) onto circle $B$ (center $(h_2, k_2)$, radius $r_2$):\n\n1. **Translate** by $(x, y) \\to (x + h_2 - h_1, y + k_2 - k_1)$. The center moves onto $(h_2, k_2)$ and the radius stays $r_1$.\n2. **Dilate** about $(h_2, k_2)$ with scale factor $\\frac{r_2}{r_1}$. The center stays put and the radius becomes $r_2$.\n\nFor circle $A$ with center $(1, 2)$ and radius $3$, and circle $B$ with center $(4, -1)$ and radius $6$: translate by $(x, y) \\to (x + 3, y - 3)$, then dilate about $(4, -1)$ with scale factor $2$.",
         "要把圆 $A$（圆心 $(h_1, k_1)$，半径 $r_1$）变为圆 $B$（圆心 $(h_2, k_2)$，半径 $r_2$）：\n\n1. **平移** $(x, y) \\to (x + h_2 - h_1, y + k_2 - k_1)$。圆心移到 $(h_2, k_2)$，半径仍为 $r_1$。\n2. 以 $(h_2, k_2)$ 为中心、比例因子为 $\\frac{r_2}{r_1}$ 作**位似**。圆心不动，半径变为 $r_2$。\n\n圆 $A$ 圆心 $(1, 2)$、半径 $3$，圆 $B$ 圆心 $(4, -1)$、半径 $6$：先平移 $(x, y) \\to (x + 3, y - 3)$，再以 $(4, -1)$ 为中心、比例因子 $2$ 作位似。",
       ),
+      figure: circleMappingFigure,
       keyPrerequisites: ["translations-of-geometric-figures"],
       generate(rng) {
         const [A, B] = twoCircles(rng);
