@@ -303,10 +303,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
     ],
   },
 
-  // 7.26.1 Confidence Intervals for Differences Between Two Means: Known Population Variances
+  // 7.26.1 Confidence Intervals for Two Means: Known and Unequal Population Variances
   {
     id: "confidence-intervals-for-differences-between-two-means-known-population-variances",
-    title: t("Confidence Intervals for Differences Between Two Means: Known Population Variances", "两个均值之差的置信区间：已知总体方差"),
+    title: t("Confidence Intervals for Two Means: Known and Unequal Population Variances", "两个均值之差的置信区间：已知且不等的总体方差"),
     summary: t(
       "When independent samples are drawn from populations with known variances $\\sigma_1^2$ and $\\sigma_2^2$, the confidence interval for $\\mu_1 - \\mu_2$ is $(\\bar{x}_1 - \\bar{x}_2) \\pm z_{\\alpha/2} \\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}$.",
       "当从已知方差分别为 $\\sigma_1^2$ 与 $\\sigma_2^2$ 的两个总体中抽取独立样本时，$\\mu_1 - \\mu_2$ 的置信区间为 $(\\bar{x}_1 - \\bar{x}_2) \\pm z_{\\alpha/2} \\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}$。",
@@ -348,13 +348,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
     ],
   },
 
-  // 7.26.2 Confidence Intervals for Differences Between Two Means: Unknown Equal Population Variances
+  // 7.26.2 Confidence Intervals for Two Means: Equal and Unknown Population Variance
   {
     id: "confidence-intervals-for-differences-between-two-means-unknown-equal-population-variances",
-    title: t(
-      "Confidence Intervals for Differences Between Two Means: Unknown Equal Population Variances",
-      "两个均值之差的置信区间：未知且相等总体方差",
-    ),
+    title: t("Confidence Intervals for Two Means: Equal and Unknown Population Variance", "两个均值之差的置信区间：未知但相等的总体方差"),
     summary: t(
       "Assuming equal unknown variances $\\sigma_1^2 = \\sigma_2^2$, the confidence interval is $(\\bar{x}_1 - \\bar{x}_2) \\pm t_{\\alpha/2, n_1+n_2-2}\\, s_p \\sqrt{\\frac{1}{n_1} + \\frac{1}{n_2}}$.",
       "在假定总体方差未知但相等（$\\sigma_1^2 = \\sigma_2^2$）的条件下，置信区间为 $(\\bar{x}_1 - \\bar{x}_2) \\pm t_{\\alpha/2, n_1+n_2-2}\\, s_p \\sqrt{\\frac{1}{n_1} + \\frac{1}{n_2}}$。",
@@ -391,13 +388,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
     ],
   },
 
-  // 7.26.3 Confidence Intervals for Differences Between Two Means: Unknown Unequal Population Variances
+  // 7.26.3 Confidence Intervals for Two Means: Unequal and Unknown Population Variance
   {
     id: "confidence-intervals-for-differences-between-two-means-unknown-unequal-population-variances",
-    title: t(
-      "Confidence Intervals for Differences Between Two Means: Unknown Unequal Population Variances",
-      "两个均值之差的置信区间：未知且不等总体方差",
-    ),
+    title: t("Confidence Intervals for Two Means: Unequal and Unknown Population Variance", "两个均值之差的置信区间：未知且不等的总体方差"),
     summary: t(
       "When population variances are unequal and unknown, Welch's $t$-interval uses $\\text{SE} = \\sqrt{\\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}}$ with degrees of freedom computed via the Welch–Satterthwaite approximation.",
       "当总体方差未知且不相等时，韦尔奇（Welch）$t$ 区间采用标准误差 $\\text{SE} = \\sqrt{\\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}}$，并通过韦尔奇–萨特思韦特公式计算自由度。",
@@ -534,10 +528,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
     ],
   },
 
-  // 7.26.5 Confidence Intervals for Differences Between Two Proportions
+  // 7.26.4 Confidence Intervals for Two Proportions
   {
     id: "confidence-intervals-for-differences-between-two-proportions",
-    title: t("Confidence Intervals for Differences Between Two Proportions", "两个比例之差的置信区间"),
+    title: t("Confidence Intervals for Two Proportions", "两个比例之差的置信区间"),
     summary: t(
       "A large-sample confidence interval for $p_1 - p_2$ is $(\\hat{p}_1 - \\hat{p}_2) \\pm z_{\\alpha/2} \\sqrt{\\frac{\\hat{p}_1(1 - \\hat{p}_1)}{n_1} + \\frac{\\hat{p}_2(1 - \\hat{p}_2)}{n_2}}$.",
       "两个总体比例之差 $p_1 - p_2$ 的大样本置信区间为 $(\\hat{p}_1 - \\hat{p}_2) \\pm z_{\\alpha/2} \\sqrt{\\frac{\\hat{p}_1(1 - \\hat{p}_1)}{n_1} + \\frac{\\hat{p}_2(1 - \\hat{p}_2)}{n_2}}$。",
@@ -578,10 +572,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
     ],
   },
 
-  // 7.27.1 Sample Size Determination for Estimating Means
+  // 7.27.1 Estimating Sample Sizes for Means
   {
     id: "sample-size-determination-for-estimating-means",
-    title: t("Sample Size Determination for Estimating Means", "估计均值的样本容量确定"),
+    title: t("Estimating Sample Sizes for Means", "估计均值所需的样本容量"),
     summary: t(
       "To estimate a population mean $\\mu$ within a margin of error $E$ at $100(1 - \\alpha)\\%$ confidence, the minimum sample size is $n = \\left\\lceil \\left(\\frac{z_{\\alpha/2}\\sigma}{E}\\right)^2 \\right\\rceil$.",
       "为了在 $100(1 - \\alpha)\\%$ 置信水平下将总体均值 $\\mu$ 的估计误差控制在 $E$ 之内，所需的最小样本容量为 $n = \\left\\lceil \\left(\\frac{z_{\\alpha/2}\\sigma}{E}\\right)^2 \\right\\rceil$。",
@@ -622,10 +616,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
     ],
   },
 
-  // 7.27.2 Sample Size Determination for Estimating Means: Finite Populations
+  // Estimating Sample Sizes for Means: Finite Population Correction
   {
     id: "sample-size-determination-for-estimating-means-finite-populations",
-    title: t("Sample Size Determination for Estimating Means: Finite Populations", "估计均值的样本容量确定：有限总体"),
+    title: t("Estimating Sample Sizes for Means: Finite Population Correction", "估计均值所需的样本容量：有限总体校正"),
     summary: t(
       "For a finite population of size $N$, the required sample size adjusted for FPC is $n = \\frac{N n_0}{n_0 + N - 1}$, where $n_0 = \\left(\\frac{z_{\\alpha/2}\\sigma}{E}\\right)^2$.",
       "对于容量为 $N$ 的有限总体，经 FPC 校正后的必要样本容量为 $n = \\frac{N n_0}{n_0 + N - 1}$，其中 $n_0 = \\left(\\frac{z_{\\alpha/2}\\sigma}{E}\\right)^2$。",
@@ -664,10 +658,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
     ],
   },
 
-  // 7.27.3 Sample Size Determination for Estimating Proportions
+  // 7.27.2 Estimating Sample Sizes for Proportions
   {
     id: "sample-size-determination-for-estimating-proportions",
-    title: t("Sample Size Determination for Estimating Proportions", "估计比例的样本容量确定"),
+    title: t("Estimating Sample Sizes for Proportions", "估计比例所需的样本容量"),
     summary: t(
       "The sample size required to estimate a population proportion $p$ within margin $E$ is $n = \\frac{z_{\\alpha/2}^2\\, p(1 - p)}{E^2}$. Using $p = 0.5$ gives the most conservative (largest) sample size.",
       "为了在允许误差 $E$ 内估计总体比例 $p$，所需样本容量为 $n = \\frac{z_{\\alpha/2}^2\\, p(1 - p)}{E^2}$。取 $p = 0.5$ 可获得最保守（最大）的样本容量。",
@@ -707,10 +701,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
     ],
   },
 
-  // 7.27.4 Sample Size Determination for Estimating Proportions: Finite Populations
+  // 7.27.3 Estimating Sample Sizes for Proportions: Finite Population Correction
   {
     id: "sample-size-determination-for-estimating-proportions-finite-populations",
-    title: t("Sample Size Determination for Estimating Proportions: Finite Populations", "估计比例的样本容量确定：有限总体"),
+    title: t("Estimating Sample Sizes for Proportions: Finite Population Correction", "估计比例所需的样本容量：有限总体校正"),
     summary: t(
       "For a finite population of size $N$, the FPC-adjusted sample size for estimating proportions is $n = \\frac{N n_0}{n_0 + N - 1}$, where $n_0$ is the uncorrected sample size.",
       "对于容量为 $N$ 的有限总体，估计比例时经 FPC 校正的必要样本容量为 $n = \\frac{N n_0}{n_0 + N - 1}$，其中 $n_0$ 为未校正的样本容量。",

@@ -1148,7 +1148,7 @@ export const workDoneByAForceField: TopicDef = {
 /** theFundamentalTheoremOfLineIntegrals evaluates line integrals of gradient fields. */
 export const theFundamentalTheoremOfLineIntegrals: TopicDef = {
   id: "the-fundamental-theorem-of-line-integrals",
-  title: t("The Fundamental Theorem of Line Integrals", "曲线积分基本定理"),
+  title: t("The Fundamental Theorem for Line Integrals", "曲线积分基本定理"),
   summary: t(
     "If $\\mathbf{F} = \\nabla f$ is conservative, then $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(\\mathbf{r}(b)) - f(\\mathbf{r}(a))$, which depends only on the endpoints of $C$.",
     "若 $\\mathbf{F} = \\nabla f$ 为保守场，则 $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(\\mathbf{r}(b)) - f(\\mathbf{r}(a))$，只取决于 $C$ 的端点。",
@@ -2068,7 +2068,7 @@ export const circulationAndFluxAcrossSimpleClosedPlaneCurves: TopicDef = {
 /** greensTheoremInCirculationCurlForm connects circulation to the curl double integral. */
 export const greensTheoremInCirculationCurlForm: TopicDef = {
   id: "greens-theorem-in-circulation-curl-form",
-  title: t("Green's Theorem in Circulation-Curl Form", "格林公式（环量-旋度形式）"),
+  title: t("Introduction to Green's Theorem", "格林公式简介"),
   summary: t(
     "Green's theorem equates the counterclockwise circulation to the double integral of the curl: $\\oint_C (P\\,dx + Q\\,dy) = \\iint_D (Q_x - P_y)\\,dA$.",
     "格林公式把逆时针方向的环量与旋度的二重积分联系起来：$\\oint_C (P\\,dx + Q\\,dy) = \\iint_D (Q_x - P_y)\\,dA$。",
@@ -2218,7 +2218,7 @@ export const greensTheoremInPolarCoordinates: TopicDef = {
 /** calculatingAreasUsingGreensTheorem evaluates areas via boundary line integrals. */
 export const calculatingAreasUsingGreensTheorem: TopicDef = {
   id: "calculating-areas-using-greens-theorem",
-  title: t("Calculating Areas Using Green's Theorem", "应用格林公式计算平面区域面积"),
+  title: t("Using Green's Theorem to Calculate Area", "应用格林公式计算平面区域面积"),
   summary: t(
     "Green's theorem gives area as a boundary integral: $\\operatorname{Area}(D) = \\oint_C x\\,dy = -\\oint_C y\\,dx = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx)$.",
     "格林公式把面积写成边界上的曲线积分：$\\operatorname{Area}(D) = \\oint_C x\\,dy = -\\oint_C y\\,dx = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx)$。",
@@ -2271,7 +2271,7 @@ export const calculatingAreasUsingGreensTheorem: TopicDef = {
 /** greensTheoremInFluxDivergenceForm connects outward flux to the divergence double integral. */
 export const greensTheoremInFluxDivergenceForm: TopicDef = {
   id: "greens-theorem-in-flux-divergence-form",
-  title: t("Green's Theorem in Flux-Divergence Form", "格林公式（通量-散度形式）"),
+  title: t("Green's Theorem in Flux Form", "格林公式的通量形式"),
   summary: t(
     "The flux form of Green's theorem equates the outward flux across $C$ to the double integral of the divergence: $\\oint_C (P\\,dy - Q\\,dx) = \\iint_D (P_x + Q_y)\\,dA$.",
     "格林公式的通量形式把穿过 $C$ 的向外通量与散度的二重积分联系起来：$\\oint_C (P\\,dy - Q\\,dx) = \\iint_D (P_x + Q_y)\\,dA$。",
@@ -2336,7 +2336,7 @@ export const greensTheoremInFluxDivergenceForm: TopicDef = {
 /** greensTheoremOnRegionsWithHoles extends Green's theorem to multiply-connected domains. */
 export const greensTheoremOnRegionsWithHoles: TopicDef = {
   id: "greens-theorem-on-regions-with-holes",
-  title: t("Green's Theorem on Regions With Holes", "复连通区域上的格林公式"),
+  title: t("Extending Green's Theorem", "格林公式的推广：复连通区域"),
   summary: t(
     "For a region with a hole, the outer boundary $C_1$ is traversed counterclockwise and the inner boundary $C_2$ clockwise: $\\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D (Q_x - P_y)\\,dA$, with both $\\oint$ taken counterclockwise.",
     "对于含孔的区域，外边界 $C_1$ 取逆时针、内边界 $C_2$ 取顺时针：$\\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D (Q_x - P_y)\\,dA$，其中两个 $\\oint$ 都按逆时针计算。",
