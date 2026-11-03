@@ -15253,6 +15253,7 @@ export const actMathFundamentals: CourseDef = {
             "introduction-to-matrices",
             "adding-and-subtracting-matrices",
             "scalar-multiplication-of-matrices",
+            "matrix-equations",
             "multiplying-a-matrix-by-a-column-vector",
             "multiplying-square-matrices",
             "conformability-for-matrix-multiplication",
@@ -15469,6 +15470,7 @@ export const actMathFundamentals: CourseDef = {
             "compound-inequalities",
             "verifying-solutions-of-linear-inequalities",
             "solving-one-step-inequalities",
+            "real-number-restrictions",
             "representing-solutions-to-inequalities-on-number-lines",
             "further-solving-linear-inequalities",
             "interval-notation",
@@ -15618,6 +15620,7 @@ export const actMathFundamentals: CourseDef = {
           title: t("Rational Expressions", "有理式"),
           topics: [
             "simplifying-rational-expressions-by-factoring",
+            "simplifying-rational-expressions-with-sums-and-differences-of-cubes",
             "simplifying-rational-expressions-using-polynomial-factorization",
             "adding-and-subtracting-rational-expressions",
             "adding-rational-expressions-with-unlike-denominators",
@@ -15998,6 +16001,7 @@ export const actMathFundamentals: CourseDef = {
           topics: [
             "midpoints-in-the-coordinate-plane",
             "equations-of-circles",
+            "solving-systems-of-nonlinear-equations-using-graphs",
             "graphing-curves-defined-parametrically",
             "cartesian-equations-of-parametric-curves",
             "introduction-to-polar-coordinates",
@@ -16267,6 +16271,8 @@ export const actMathFundamentals: CourseDef = {
             "equations-of-hyperbolas-centered-at-a-general-point",
             "asymptotes-of-hyperbolas-centered-at-the-origin",
             "finding-intercepts-and-intersections-of-hyperbolas",
+            "foci-of-hyperbolas",
+            "focal-distance-properties-of-ellipses-and-hyperbolas",
           ],
         },
       ],
@@ -16433,6 +16439,7 @@ export const actMathFundamentals: CourseDef = {
             "writing-ratios-using-fractions",
             "reasoning-with-equivalent-ratios",
             "further-reasoning-with-equivalent-ratios",
+            "fractions-of-fractions",
             "ratio-tables",
             "graphing-ratios",
           ],
@@ -16615,6 +16622,7 @@ export const actMathPrep: CourseDef = {
             "scalar-multiplication-of-matrices",
             "multiplying-matrices",
             "the-determinant-of-a-2x2-matrix",
+            "modeling-with-matrix-products",
           ],
         },
         {
@@ -16639,6 +16647,7 @@ export const actMathPrep: CourseDef = {
             "evaluating-algebraic-expressions",
             "two-step-equations",
             "applying-defined-operations",
+            "evaluating-expressions-using-given-relations",
           ],
         },
         {
@@ -16661,6 +16670,8 @@ export const actMathPrep: CourseDef = {
             "modeling-real-world-problems-using-inequalities",
             "modeling-with-two-step-inequalities",
             "representing-solutions-to-inequalities-on-number-lines",
+            "the-coordinate-plane",
+            "translations-of-geometric-figures",
           ],
         },
         {
@@ -16686,6 +16697,7 @@ export const actMathPrep: CourseDef = {
             "the-discriminant-of-a-quadratic-equation",
             "vietas-formulas",
             "modeling-with-quadratic-equations",
+            "solving-quadratic-equations-with-leading-coefficients-by-factoring",
           ],
         },
         {
@@ -16733,6 +16745,7 @@ export const actMathPrep: CourseDef = {
           title: t("Function Notation and Composition", "函数记号与复合"),
           topics: [
             "introduction-to-functions",
+            "interpreting-rate-of-change-and-initial-value-in-context",
             "interpreting-descriptions-of-physical-phenomena",
             "area-of-rectangles-and-squares",
             "units-in-formulas",
@@ -16766,6 +16779,7 @@ export const actMathPrep: CourseDef = {
             "combining-laws-of-logarithms",
             "solving-logarithmic-equations",
             "graphing-logarithmic-functions",
+            "solving-exponential-equations-using-logarithms",
           ],
         },
         {
@@ -16839,6 +16853,7 @@ export const actMathPrep: CourseDef = {
             "properties-of-parallelograms",
             "properties-of-trapezoids",
             "regular-polygons",
+            "side-angle-relationships-in-triangles",
           ],
         },
         {
@@ -16876,6 +16891,7 @@ export const actMathPrep: CourseDef = {
             "modeling-with-rectangles",
             "area-of-trapezoids",
             "areas-of-triangles",
+            "finding-altitudes-using-the-pythagorean-theorem",
             "perimeters-of-shapes",
             "calculating-perimeters-and-areas-of-scaled-shapes",
             "finding-areas-between-shapes",
@@ -16912,6 +16928,7 @@ export const actMathPrep: CourseDef = {
             "equations-of-circles",
             "finding-areas-and-perimeters-in-the-coordinate-plane",
             "calculating-areas-of-rectangles-in-the-plane",
+            "circles-in-the-coordinate-plane",
           ],
         },
         {
@@ -16923,6 +16940,7 @@ export const actMathPrep: CourseDef = {
             "converting-units-of-volume-to-smaller-units",
             "understanding-volume-using-unit-cubes",
             "composite-solids",
+            "surface-areas-and-volumes-of-similar-solids",
           ],
         },
         {
@@ -16949,11 +16967,19 @@ export const actMathPrep: CourseDef = {
             "effects-of-data-change-on-the-mean",
             "mean-of-a-data-set",
             "comparing-measures-of-spread",
+            "comparing-effects-of-data-change-on-measures-of-centrality",
           ],
         },
         {
           title: t("Data Displays", "数据的呈现"),
-          topics: ["two-way-frequency-tables", "finding-a-percentage-given-two-numbers", "bar-graphs", "circle-graphs", "histograms"],
+          topics: [
+            "two-way-frequency-tables",
+            "finding-a-percentage-given-two-numbers",
+            "bar-graphs",
+            "circle-graphs",
+            "histograms",
+            "joint-frequency-tables",
+          ],
         },
         {
           title: t("Probability", "概率"),
@@ -16984,6 +17010,7 @@ export const actMathPrep: CourseDef = {
             "combinations",
             "computing-probabilities-using-combinatorics",
             "venn-diagrams-in-probability",
+            "the-union-of-sets",
           ],
         },
         {
@@ -17016,6 +17043,7 @@ export const actMathPrep: CourseDef = {
             "comparing-rational-numbers",
             "ordering-rational-numbers",
             "approximating-square-roots",
+            "absolute-value",
           ],
         },
         {
@@ -17077,7 +17105,7 @@ export const actMathPrep: CourseDef = {
         },
         {
           title: t("Basic Measurement Geometry", "基础度量几何"),
-          topics: ["volumes-of-right-rectangular-prisms", "volumes-of-right-rectangular-prisms-word-problems"],
+          topics: ["volumes-of-right-rectangular-prisms", "packing-rectangular-boxes", "volumes-of-right-rectangular-prisms-word-problems"],
         },
       ],
     },

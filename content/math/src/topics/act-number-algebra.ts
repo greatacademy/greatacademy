@@ -2,12 +2,13 @@ import type { KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/conten
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
-import { numberProblem, steps } from "../problems.ts";
+import { expressionProblem, numberProblem, steps } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
 
 // ACT Math, number and algebra: ones digits of powers, digits of expansions in powers of a base, counting integers
 // between bounds, defined operations, properties of operations, comparing quantities under constraints, slant
-// asymptotes and joint variation.
+// asymptotes, joint variation, real-number restrictions, expressions evaluated from given relations, matrix equations
+// and models, sums and differences of cubes in rational expressions, and systems solved from graphs.
 
 /** topic builds a TopicDef with the common fields filled in. */
 function topic(
@@ -874,6 +875,627 @@ export const jointVariation = topic(
   ],
 );
 
+// ---------------------------------------------------------------------------
+// Real-number restrictions, given relations, matrix equations and models, cubes in rational expressions, and systems
+// read from graphs
+
+/** lin writes a·v + c in LaTeX: "3x - 6", "-x + 2", "x". */
+function lin(a: number, c: number, v = "x"): string {
+  const head = a === 1 ? v : a === -1 ? `-${v}` : `${a}${v}`;
+  return c === 0 ? head : `${head} ${c < 0 ? "-" : "+"} ${Math.abs(c)}`;
+}
+
+/** mat writes a matrix of numbers or LaTeX entries in LaTeX. */
+const mat = (m: readonly (readonly (number | string)[])[]): string =>
+  `\\begin{bmatrix} ${m.map((row) => row.join(" & ")).join(" \\\\ ")} \\end{bmatrix}`;
+
+/** realNumberRestrictions finds the values for which a quotient or an even root is not a real number. */
+export const realNumberRestrictions = topic(
+  "real-number-restrictions",
+  t("Real-Number Restrictions", "实数范围内的限制"),
+  t(
+    "Find the values of a variable for which an expression is not a real number: those that make a denominator zero, and those that put a negative number under a square root.",
+    "求使一个式子不是实数的变量取值：使分母为零的值，以及使平方根下出现负数的值。",
+  ),
+  ["evaluating-algebraic-expressions", "solving-one-step-inequalities", "the-square-root-of-a-perfect-square"],
+  ["6.EE.A.2", "A-REI.B.3"],
+  [
+    kp(
+      "values-where-a-quotient-is-not-defined",
+      t("Values where a quotient is not defined", "使商无意义的值"),
+      t(
+        "Division by zero is not defined, so a fraction has no value when its denominator equals zero, whatever its numerator is. To find the value that is not allowed, set the denominator equal to $0$ and solve. For $\\frac{x + 4}{3x - 12}$, $3x - 12 = 0$ gives $x = 4$, so the expression is not defined at $x = 4$ and defined for every other real number. A zero numerator causes no trouble: it only makes the value $0$.",
+        "除以零没有意义，所以无论分子是什么，分母等于零时分数都没有值。要找出不允许的值，令分母等于 $0$ 并求解。对于 $\\frac{x + 4}{3x - 12}$，由 $3x - 12 = 0$ 得 $x = 4$，所以该式在 $x = 4$ 处无意义，对其他每个实数都有意义。分子为零并不会出问题，只是使值为 $0$。",
+      ),
+      (rng) => {
+        const r = rng.nonZero(-9, 9);
+        const a = rng.int(2, 5);
+        let q = rng.nonZero(-9, 9);
+        while (q === -r) q = rng.nonZero(-9, 9);
+        const den = lin(a, -a * r);
+        const num = lin(1, q);
+        return numberProblem({
+          prompt: t(
+            `For what value of $x$ is the expression $\\dfrac{${num}}{${den}}$ not defined?`,
+            `当 $x$ 取何值时，式子 $\\dfrac{${num}}{${den}}$ 无意义？`,
+          ),
+          answer: r,
+          solveFor: "x",
+          form: "integer",
+          wrong: [-r, a * r, -q, Q.of(r, a)],
+          solution: t(
+            `The expression is not defined where the denominator is zero: $${den} = 0$ gives $${a}x = ${a * r}$, so $x = ${r}$. The numerator $${num}$ does not matter.`,
+            `分母为零时式子无意义：由 $${den} = 0$ 得 $${a}x = ${a * r}$，所以 $x = ${r}$。分子 $${num}$ 不影响结果。`,
+          ),
+        });
+      },
+    ),
+    kp(
+      "square-roots-of-negative-numbers",
+      t("Square roots of negative numbers", "负数的平方根"),
+      t(
+        "No real number squares to a negative number, so $\\sqrt{u}$ is a real number only when $u \\ge 0$. To find where $\\sqrt{2x - 7}$ is real, solve $2x - 7 \\ge 0$ to get $x \\ge 3.5$; the least integer allowed is $4$. When the variable has a negative coefficient, as in $\\sqrt{10 - 3x}$, solving $10 - 3x \\ge 0$ gives $x \\le \\frac{10}{3}$, an upper bound, so the greatest integer allowed is $3$.",
+        "没有哪个实数的平方是负数，所以只有当 $u \\ge 0$ 时 $\\sqrt{u}$ 才是实数。要找出 $\\sqrt{2x - 7}$ 为实数的范围，解 $2x - 7 \\ge 0$ 得 $x \\ge 3.5$，允许的最小整数是 $4$。当变量的系数为负时，比如 $\\sqrt{10 - 3x}$，解 $10 - 3x \\ge 0$ 得 $x \\le \\frac{10}{3}$，这是一个上界，所以允许的最大整数是 $3$。",
+      ),
+      (rng) => {
+        const a = rng.int(2, 6);
+        const b = rng.int(1, 40);
+        const up = rng.bool();
+        const bound = Q.of(b, a);
+        const answer = up ? Math.floor(b / a) : Math.ceil(b / a);
+        const expr = up ? `${b} - ${a}x` : `${a}x - ${b}`;
+        return numberProblem({
+          prompt: t(
+            `What is the ${up ? "greatest" : "least"} integer $x$ for which $\\sqrt{${expr}}$ is a real number?`,
+            `使 $\\sqrt{${expr}}$ 为实数的${up ? "最大" : "最小"}整数 $x$ 是多少？`,
+          ),
+          answer,
+          form: "integer",
+          wrong: [
+            up ? answer + 1 : answer - 1,
+            -answer,
+            b,
+            up ? Math.ceil(b / a) + (b % a === 0 ? 1 : 0) : Math.floor(b / a) - (b % a === 0 ? 1 : 0),
+          ],
+          solution: t(
+            `The square root is real only when $${expr} \\ge 0$, that is, $x ${up ? "\\le" : "\\ge"} ${bound.toLatex()}$. The ${up ? "greatest" : "least"} integer with this property is $${answer}$.`,
+            `只有当 $${expr} \\ge 0$，即 $x ${up ? "\\le" : "\\ge"} ${bound.toLatex()}$ 时，平方根才是实数。满足条件的${up ? "最大" : "最小"}整数是 $${answer}$。`,
+          ),
+        });
+      },
+    ),
+  ],
+);
+
+/** evaluatingExpressionsUsingGivenRelations finds the value of an expression from a relation without solving for each variable. */
+export const evaluatingExpressionsUsingGivenRelations = topic(
+  "evaluating-expressions-using-given-relations",
+  t("Evaluating Expressions Using Given Relations", "利用已知关系求式子的值"),
+  t(
+    "Find the value of an expression from a given relation between its variables, by rewriting the expression in terms of the part whose value is known.",
+    "根据变量之间的已知关系，把式子改写成用已知部分表示的形式，从而求出式子的值。",
+  ),
+  ["evaluating-algebraic-expressions", "distributive-property"],
+  ["A-SSE.A.2"],
+  [
+    kp(
+      "multiples-of-a-known-expression",
+      t("Multiples of a known expression", "已知式子的倍数"),
+      t(
+        "When an equation gives the value of an expression such as $2x + 3y$, look for that expression inside the one you must evaluate instead of trying to find $x$ and $y$, which one equation cannot determine. If $2x + 3y = 7$, then $6x + 9y - 4 = 3(2x + 3y) - 4 = 3 \\cdot 7 - 4 = 17$. Factor out the multiple first, then substitute the known value.",
+        "当方程给出了像 $2x + 3y$ 这样的式子的值时，应在要求值的式子中寻找这个式子，而不是去求 $x$ 和 $y$，因为一个方程无法确定它们。若 $2x + 3y = 7$，则 $6x + 9y - 4 = 3(2x + 3y) - 4 = 3 \\cdot 7 - 4 = 17$。先提出倍数，再代入已知的值。",
+      ),
+      (rng) => {
+        const a = rng.int(1, 5);
+        let b = rng.int(1, 5);
+        while (b === a) b = rng.int(1, 5);
+        const k = rng.int(2, 5);
+        const s = rng.nonZero(-9, 12);
+        const c = rng.nonZero(-10, 10);
+        const [u, v] = rng.pick([
+          ["x", "y"],
+          ["a", "b"],
+          ["m", "n"],
+          ["p", "q"],
+        ] as const);
+        const known = `${a === 1 ? "" : a}${u} + ${b === 1 ? "" : b}${v}`;
+        const target = `${k * a}${u} + ${k * b}${v} ${c < 0 ? "-" : "+"} ${Math.abs(c)}`;
+        const answer = k * s + c;
+        return numberProblem({
+          prompt: t(`If $${known} = ${s}$, what is the value of $${target}$?`, `若 $${known} = ${s}$，则 $${target}$ 的值是多少？`),
+          answer,
+          form: "integer",
+          wrong: [s + c, k * s, k * s - c, k * (s + c)],
+          solution: t(
+            steps(
+              `Factor $${k}$ out of the variable terms: $${target} = ${k}(${known}) ${c < 0 ? "-" : "+"} ${Math.abs(c)}$.`,
+              `Substitute $${known} = ${s}$: $${k} \\cdot ${paren(s)} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${answer}$.`,
+            ),
+            steps(
+              `从含变量的项中提出 $${k}$：$${target} = ${k}(${known}) ${c < 0 ? "-" : "+"} ${Math.abs(c)}$。`,
+              `代入 $${known} = ${s}$：$${k} \\cdot ${paren(s)} ${c < 0 ? "-" : "+"} ${Math.abs(c)} = ${answer}$。`,
+            ),
+          ),
+        });
+      },
+    ),
+    kp(
+      "substituting-a-proportional-relation",
+      t("Substituting a proportional relation", "代入比例关系"),
+      t(
+        "When one variable is a multiple of another, as in $a = 4b$, substitute to write the whole expression in terms of one variable; in a quotient that variable then cancels. With $a = 4b$ and $b \\ne 0$, $\\frac{a + b}{a - b} = \\frac{4b + b}{4b - b} = \\frac{5b}{3b} = \\frac{5}{3}$. The value is the same for every allowed $b$, which is why the question can ask for a single number.",
+        "当一个变量是另一个变量的倍数时，比如 $a = 4b$，代入后就能把整个式子用一个变量表示；在商中这个变量随后会约去。由 $a = 4b$ 且 $b \\ne 0$，$\\frac{a + b}{a - b} = \\frac{4b + b}{4b - b} = \\frac{5b}{3b} = \\frac{5}{3}$。对每个允许的 $b$，值都相同，所以题目可以要求一个确定的数。",
+      ),
+      (rng) => {
+        const m = rng.pick([2, 3, 4, 5, 6, -2, -3, -4]);
+        const p = rng.int(1, 3);
+        const forms = [
+          { latex: "\\dfrac{a + b}{a - b}", num: m + 1, den: m - 1 },
+          { latex: `\\dfrac{a + ${p}b}{b}`, num: m + p, den: 1 },
+          { latex: "\\dfrac{a^{2} + b^{2}}{ab}", num: m * m + 1, den: m },
+        ];
+        const f = rng.pick(forms);
+        const answer = Q.of(f.num, f.den);
+        return numberProblem({
+          prompt: t(
+            `If $a = ${m}b$ and $b \\ne 0$, what is the value of $${f.latex}$?`,
+            `若 $a = ${m}b$ 且 $b \\ne 0$，则 $${f.latex}$ 的值是多少？`,
+          ),
+          answer,
+          form: "fraction",
+          wrong: [Q.of(f.den, f.num === 0 ? 1 : f.num), Q.of(m), Q.of(f.num), Q.of(m + 1, m)],
+          solution: t(
+            `Substitute $a = ${m}b$ and cancel $b$: the expression equals $${answer.toLatex()}$ for every $b \\ne 0$.`,
+            `代入 $a = ${m}b$ 并约去 $b$：对每个 $b \\ne 0$，式子都等于 $${answer.toLatex()}$。`,
+          ),
+        });
+      },
+    ),
+    kp(
+      "products-from-a-sum-and-a-difference",
+      t("Products from a sum and a difference", "由和与差求积"),
+      t(
+        "Some expressions factor into pieces whose values are given. Because $x^{2} - y^{2} = (x + y)(x - y)$, knowing $x + y$ and $x - y$ is enough to find $x^{2} - y^{2}$ without finding $x$ or $y$: if $x + y = 9$ and $x - y = 4$, then $x^{2} - y^{2} = 9 \\cdot 4 = 36$. Recognizing the factored form saves solving a system.",
+        "有些式子可以分解成值已知的几部分。因为 $x^{2} - y^{2} = (x + y)(x - y)$，只要知道 $x + y$ 和 $x - y$，不必求出 $x$ 或 $y$ 就能得到 $x^{2} - y^{2}$：若 $x + y = 9$，$x - y = 4$，则 $x^{2} - y^{2} = 9 \\cdot 4 = 36$。认出分解后的形式就省去了解方程组。",
+      ),
+      (rng) => {
+        const s = rng.nonZero(-12, 15);
+        const d = rng.nonZero(-9, 9);
+        const answer = s * d;
+        return numberProblem({
+          prompt: t(
+            `If $x + y = ${s}$ and $x - y = ${d}$, what is the value of $x^{2} - y^{2}$?`,
+            `若 $x + y = ${s}$，$x - y = ${d}$，则 $x^{2} - y^{2}$ 的值是多少？`,
+          ),
+          answer,
+          form: "integer",
+          wrong: [s * s - d * d, s + d, s * s + d * d, -answer],
+          solution: t(
+            `Factor: $x^{2} - y^{2} = (x + y)(x - y) = ${paren(s)} \\cdot ${paren(d)} = ${answer}$.`,
+            `分解因式：$x^{2} - y^{2} = (x + y)(x - y) = ${paren(s)} \\cdot ${paren(d)} = ${answer}$。`,
+          ),
+        });
+      },
+    ),
+  ],
+);
+
+/** matrixEquations finds unknown entries from equal matrices and from scalar matrix equations. */
+export const matrixEquations = topic(
+  "matrix-equations",
+  t("Matrix Equations", "矩阵方程"),
+  t(
+    "Use the fact that equal matrices have equal entries to find unknowns, and solve equations such as $kX + B = C$ for an unknown matrix one entry at a time.",
+    "利用相等矩阵的对应元素相等求未知数，并逐个元素地求解像 $kX + B = C$ 这样的未知矩阵方程。",
+  ),
+  ["scalar-multiplication-of-matrices", "two-step-equations"],
+  ["N-VM.C.8"],
+  [
+    kp(
+      "equal-matrices",
+      t("Equal matrices", "相等的矩阵"),
+      t(
+        "Two matrices are equal exactly when they have the same dimensions and every entry of one equals the entry in the same position of the other. An equation between two $2 \\times 2$ matrices is therefore four ordinary equations, one for each position. Set the entries containing unknowns equal to the matching entries and solve each equation separately.",
+        "两个矩阵相等，当且仅当它们的阶数相同，并且一个矩阵的每个元素都等于另一个矩阵相同位置上的元素。因此两个 $2 \\times 2$ 矩阵之间的等式就是四个普通方程，每个位置一个。把含未知数的元素与对应位置的元素相等，再分别解每个方程。",
+      ),
+      (rng) => {
+        const x = rng.int(-6, 9);
+        const y = rng.nonZero(-5, 6);
+        const k = rng.int(2, 4);
+        const p = rng.nonZero(-5, 5);
+        const q = rng.int(-9, 9);
+        const r = rng.int(-9, 9);
+        const left = mat([
+          [lin(1, p), q],
+          [r, `${k}y`],
+        ]);
+        const right = mat([
+          [x + p, q],
+          [r, k * y],
+        ]);
+        return numberProblem({
+          prompt: t(`If $${left} = ${right}$, what is $x + y$?`, `若 $${left} = ${right}$，则 $x + y$ 是多少？`),
+          answer: x + y,
+          form: "integer",
+          wrong: [x + p + k * y, x + k * y, x - y, x + p + y],
+          solution: t(
+            steps(
+              `Matching the top-left entries, $${lin(1, p)} = ${x + p}$, so $x = ${x}$.`,
+              `Matching the bottom-right entries, $${k}y = ${k * y}$, so $y = ${y}$.`,
+              `So $x + y = ${x + y}$.`,
+            ),
+            steps(
+              `比较左上角的元素，$${lin(1, p)} = ${x + p}$，所以 $x = ${x}$。`,
+              `比较右下角的元素，$${k}y = ${k * y}$，所以 $y = ${y}$。`,
+              `所以 $x + y = ${x + y}$。`,
+            ),
+          ),
+        });
+      },
+    ),
+    kp(
+      "solving-a-scalar-matrix-equation",
+      t("Solving a scalar matrix equation", "解含数乘的矩阵方程"),
+      t(
+        "Solve $kX + B = C$ for the matrix $X$ just as you would solve $kx + b = c$ for a number: subtract $B$ from both sides, then divide every entry by $k$, so $X = \\frac{1}{k}(C - B)$. Matrix subtraction and scalar multiplication both work entry by entry, so any single entry of $X$ comes from the matching entries of $B$ and $C$ alone.",
+        "求解矩阵 $X$ 满足的 $kX + B = C$，与求解数的方程 $kx + b = c$ 一样：两边同时减去 $B$，再把每个元素除以 $k$，所以 $X = \\frac{1}{k}(C - B)$。矩阵减法和数乘都是逐个元素进行的，所以 $X$ 的任一元素只由 $B$ 和 $C$ 中对应位置的元素决定。",
+      ),
+      (rng) => {
+        const k = rng.int(2, 4);
+        const X = [0, 1].map(() => [0, 1].map(() => rng.int(-6, 6)));
+        const B = [0, 1].map(() => [0, 1].map(() => rng.int(-9, 9)));
+        const C = X.map((row, i) => row.map((v, j) => k * v + B[i]![j]!));
+        const i = rng.int(0, 1);
+        const j = rng.int(0, 1);
+        const x = X[i]![j]!;
+        const b = B[i]![j]!;
+        const c = C[i]![j]!;
+        const rowName = i === 0 ? t("first", "第一") : t("second", "第二");
+        const colName = j === 0 ? t("first", "第一") : t("second", "第二");
+        return numberProblem({
+          prompt: t(
+            `The matrix $X$ satisfies $${k}X + ${mat(B)} = ${mat(C)}$. What is the entry of $X$ in the ${rowName.en} row and ${colName.en} column?`,
+            `矩阵 $X$ 满足 $${k}X + ${mat(B)} = ${mat(C)}$。$X$ 中位于${rowName["zh-CN"]}行${colName["zh-CN"]}列的元素是多少？`,
+          ),
+          answer: x,
+          form: "fraction",
+          wrong: [c - b, Q.of(c + b, k), Q.of(c, k).sub(Q.of(b)), k * c - b],
+          solution: t(
+            `Subtract and divide entry by entry: $X = \\frac{1}{${k}}\\left(${mat(C)} - ${mat(B)}\\right)$, so the entry is $\\frac{${c} - ${paren(b)}}{${k}} = \\frac{${c - b}}{${k}} = ${x}$.`,
+            `逐个元素相减再相除：$X = \\frac{1}{${k}}\\left(${mat(C)} - ${mat(B)}\\right)$，所以该元素为 $\\frac{${c} - ${paren(b)}}{${k}} = \\frac{${c - b}}{${k}} = ${x}$。`,
+          ),
+        });
+      },
+    ),
+  ],
+);
+
+/** modelingWithMatrixProducts uses products of quantity and price matrices to find totals. */
+export const modelingWithMatrixProducts = topic(
+  "modeling-with-matrix-products",
+  t("Modeling With Matrix Products", "用矩阵乘积建模"),
+  t(
+    "Organize quantities and unit values in matrices and multiply them so that each entry of the product is a total, choosing the order of the factors that makes the dimensions match.",
+    "把数量和单价排成矩阵并相乘，使乘积的每个元素都是一个总量，并选择使阶数相容的因子顺序。",
+  ),
+  ["multiplying-matrices"],
+  ["N-VM.C.6", "N-VM.C.8"],
+  [
+    kp(
+      "totals-from-a-matrix-product",
+      t("Totals from a matrix product", "由矩阵乘积求总量"),
+      t(
+        "If each row of a matrix $N$ lists how many of each item one store sold, and a column matrix $P$ lists the price of each item in the same order, then each entry of $NP$ is a row of $N$ times the column $P$: the number of each item times its price, added up. So the entry in row $i$ of $NP$ is the total revenue of store $i$.",
+        "若矩阵 $N$ 的每一行列出某家商店各种商品的销量，列矩阵 $P$ 按同样的顺序列出各商品的单价，那么 $NP$ 的每个元素都是 $N$ 的一行乘以列 $P$：各商品的数量乘以单价再相加。所以 $NP$ 第 $i$ 行的元素就是第 $i$ 家商店的总收入。",
+      ),
+      (rng) => {
+        const N = [0, 1].map(() => [0, 1, 2].map(() => rng.int(1, 12)));
+        const P = [0, 1, 2].map(() => rng.int(2, 9));
+        const i = rng.int(0, 1);
+        const row = N[i]!;
+        const total = row.reduce((s, v, j) => s + v * P[j]!, 0);
+        const other = N[1 - i]!.reduce((s, v, j) => s + v * P[j]!, 0);
+        const sumN = row.reduce((s, v) => s + v, 0);
+        const sumP = P.reduce((s, v) => s + v, 0);
+        const store = i === 0 ? t("A", "A") : t("B", "B");
+        return numberProblem({
+          prompt: t(
+            `The rows of $N = ${mat(N)}$ give the numbers of pens, notebooks and folders sold by stores A and B, and $P = ${mat(P.map((v) => [v]))}$ gives the prices, in dollars, of a pen, a notebook and a folder. What is the entry of $NP$ that gives store ${store.en}'s total revenue, in dollars?`,
+            `矩阵 $N = ${mat(N)}$ 的两行分别是商店 A 和 B 卖出的钢笔、笔记本和文件夹的数量，$P = ${mat(P.map((v) => [v]))}$ 给出钢笔、笔记本和文件夹的单价（美元）。$NP$ 中表示商店 ${store["zh-CN"]} 总收入（美元）的元素是多少？`,
+          ),
+          answer: total,
+          form: "integer",
+          wrong: [other, sumN * sumP, sumN + sumP, row[0]! * P[0]!],
+          solution: t(
+            `Row ${i + 1} of $N$ times $P$: $${row.map((v, j) => `${v} \\cdot ${P[j]}`).join(" + ")} = ${total}$.`,
+            `$N$ 的第 ${i + 1} 行乘以 $P$：$${row.map((v, j) => `${v} \\cdot ${P[j]}`).join(" + ")} = ${total}$。`,
+          ),
+        });
+      },
+    ),
+    kp(
+      "choosing-the-order-of-the-factors",
+      t("Choosing the order of the factors", "选择因子的顺序"),
+      t(
+        "A product $AB$ is defined only when the number of columns of $A$ equals the number of rows of $B$, and in a model the matching dimension must be the one that lists the items. If quantities of $3$ items fill the columns of a $2 \\times 3$ matrix $N$, prices must form a $3 \\times 1$ column $P$ and the totals are $NP$. If instead the items fill the rows of $N$, prices form a $1 \\times 3$ row and the totals are $PN$.",
+        "乘积 $AB$ 只有在 $A$ 的列数等于 $B$ 的行数时才有定义，而在模型中，相匹配的那一维必须是列出各商品的那一维。若 $3$ 种商品的数量排在 $2 \\times 3$ 矩阵 $N$ 的各列，价格就要排成 $3 \\times 1$ 的列 $P$，总量为 $NP$。若商品排在 $N$ 的各行，价格就排成 $1 \\times 3$ 的行，总量为 $PN$。",
+      ),
+      (rng) => {
+        const items = rng.int(2, 4);
+        const groups = rng.pick([2, 3, 4].filter((g) => g !== items));
+        const byColumns = rng.bool();
+        const who = rng.pick([
+          { en: "customers bought", zh: "位顾客购买", each: "customer", eachZh: "每位顾客", total: "total cost", totalZh: "总花费" },
+          { en: "stores sold", zh: "家商店卖出", each: "store", eachZh: "每家商店", total: "total revenue", totalZh: "总收入" },
+          { en: "families ordered", zh: "个家庭订购", each: "family", eachZh: "每个家庭", total: "total cost", totalZh: "总花费" },
+        ]);
+        const nDims = byColumns ? `${groups} \\times ${items}` : `${items} \\times ${groups}`;
+        const pDims = byColumns ? `${items} \\times 1` : `1 \\times ${items}`;
+        const correct = byColumns ? "NP" : "PN";
+        return pickChoice(
+          rng,
+          t(
+            `A $${nDims}$ matrix $N$ lists how many of each of $${items}$ items $${groups}$ ${who.en}, with one ${byColumns ? "column" : "row"} for each item. A $${pDims}$ matrix $P$ lists the price of each item. Which product gives each ${who.each}'s ${who.total}?`,
+            `一个 $${nDims}$ 矩阵 $N$ 列出了 $${groups}$ ${who.zh} $${items}$ 种商品各自的数量，每种商品占一${byColumns ? "列" : "行"}。一个 $${pDims}$ 矩阵 $P$ 列出了每种商品的单价。哪个乘积给出${who.eachZh}的${who.totalZh}？`,
+          ),
+          mathText(correct),
+          [mathText(byColumns ? "PN" : "NP"), mathText("N + P"), mathText(byColumns ? "P^{T}N" : "NP^{T}")],
+          t(
+            `The items must be the matching dimension. ${byColumns ? `$N$ is $${nDims}$ and $P$ is $${pDims}$, so $NP$ is defined and is $${groups} \\times 1$` : `$P$ is $${pDims}$ and $N$ is $${nDims}$, so $PN$ is defined and is $1 \\times ${groups}$`}: one total for each ${who.each}.`,
+            `商品必须是相匹配的那一维。${byColumns ? `$N$ 是 $${nDims}$，$P$ 是 $${pDims}$，所以 $NP$ 有定义，是 $${groups} \\times 1$ 矩阵` : `$P$ 是 $${pDims}$，$N$ 是 $${nDims}$，所以 $PN$ 有定义，是 $1 \\times ${groups}$ 矩阵`}：${who.eachZh}一个总量。`,
+          ),
+        );
+      },
+    ),
+  ],
+);
+
+/** cubeParts writes (p·x)³ ± q³ pieces for the sum- and difference-of-cubes topic. */
+function cubeParts(p: number, q: number, plus: boolean) {
+  const s = plus ? "+" : "-";
+  const o = plus ? "-" : "+";
+  const px = p === 1 ? "x" : `${p}x`;
+  const pp = p * p === 1 ? "" : String(p * p);
+  return {
+    cubic: `${p ** 3 === 1 ? "" : p ** 3}x^{3} ${s} ${q ** 3}`,
+    linear: `${px} ${s} ${q}`,
+    quadratic: `${pp}x^{2} ${o} ${p * q === 1 ? "" : p * q}x + ${q * q}`,
+    wrongQuadratic: `${pp}x^{2} ${s} ${p * q === 1 ? "" : p * q}x + ${q * q}`,
+  };
+}
+
+/** simplifyingRationalExpressionsWithSumsAndDifferencesOfCubes cancels factors of sums and differences of cubes. */
+export const simplifyingRationalExpressionsWithSumsAndDifferencesOfCubes = topic(
+  "simplifying-rational-expressions-with-sums-and-differences-of-cubes",
+  t("Simplifying Rational Expressions With Sums and Differences of Cubes", "化简含立方和与立方差的有理式"),
+  t(
+    "Factor $a^{3} - b^{3} = (a - b)(a^{2} + ab + b^{2})$ and $a^{3} + b^{3} = (a + b)(a^{2} - ab + b^{2})$ in a rational expression, then cancel the common factors.",
+    "在有理式中用 $a^{3} - b^{3} = (a - b)(a^{2} + ab + b^{2})$ 和 $a^{3} + b^{3} = (a + b)(a^{2} - ab + b^{2})$ 分解因式，再约去公因式。",
+  ),
+  ["factoring-sums-and-differences-of-cubes", "simplifying-rational-expressions-by-factoring"],
+  ["A-SSE.A.2", "A-APR.D.6"],
+  [
+    kp(
+      "cubes-over-a-linear-factor",
+      t("A sum or difference of cubes over a linear factor", "立方和或立方差除以一次因式"),
+      t(
+        "A difference of cubes always contains the factor $a - b$, and a sum of cubes always contains $a + b$, so a quotient such as $\\frac{x^{3} - 8}{x - 2}$ simplifies by factoring the numerator: $\\frac{(x - 2)(x^{2} + 2x + 4)}{x - 2} = x^{2} + 2x + 4$ for $x \\ne 2$. Remember the signs: the middle term of the quadratic factor has the opposite sign to the one between the cubes, and the last term is always positive.",
+        "立方差总含有因式 $a - b$，立方和总含有因式 $a + b$，所以像 $\\frac{x^{3} - 8}{x - 2}$ 这样的商可以通过分解分子来化简：当 $x \\ne 2$ 时，$\\frac{(x - 2)(x^{2} + 2x + 4)}{x - 2} = x^{2} + 2x + 4$。注意符号：二次因式的中间项与两个立方之间的符号相反，最后一项总是正的。",
+      ),
+      (rng) => {
+        const p = rng.pick([1, 1, 2, 3]);
+        const q = rng.int(1, 5);
+        const plus = rng.bool();
+        const c = cubeParts(p, q, plus);
+        return expressionProblem({
+          prompt: t(
+            `Simplify $\\dfrac{${c.cubic}}{${c.linear}}$ for $x \\ne ${Q.of(plus ? -q : q, p).toLatex()}$.`,
+            `当 $x \\ne ${Q.of(plus ? -q : q, p).toLatex()}$ 时，化简 $\\dfrac{${c.cubic}}{${c.linear}}$。`,
+          ),
+          answer: c.quadratic,
+          simplified: true,
+          wrong: [c.wrongQuadratic, `${p * p === 1 ? "" : p * p}x^{2} + ${q * q}`, `(${c.linear})^{2}`],
+          solution: t(
+            `Factor the ${plus ? "sum" : "difference"} of cubes: $${c.cubic} = (${c.linear})(${c.quadratic})$. Cancelling $${c.linear}$ leaves $${c.quadratic}$.`,
+            `把立方${plus ? "和" : "差"}分解因式：$${c.cubic} = (${c.linear})(${c.quadratic})$。约去 $${c.linear}$ 后剩下 $${c.quadratic}$。`,
+          ),
+        });
+      },
+    ),
+    kp(
+      "cubes-over-a-difference-of-squares",
+      t("A difference of cubes over a difference of squares", "立方差除以平方差"),
+      t(
+        "When both the numerator and the denominator factor, factor both completely before cancelling. In $\\frac{x^{3} - 27}{x^{2} - 9}$, the numerator is $(x - 3)(x^{2} + 3x + 9)$ and the denominator is $(x - 3)(x + 3)$. Only the common factor $x - 3$ cancels, leaving $\\frac{x^{2} + 3x + 9}{x + 3}$; the quadratic $x^{2} + 3x + 9$ has no real roots, so nothing else cancels.",
+        "当分子和分母都能分解时，先把它们完全分解再约分。在 $\\frac{x^{3} - 27}{x^{2} - 9}$ 中，分子是 $(x - 3)(x^{2} + 3x + 9)$，分母是 $(x - 3)(x + 3)$。只有公因式 $x - 3$ 能约去，剩下 $\\frac{x^{2} + 3x + 9}{x + 3}$；二次式 $x^{2} + 3x + 9$ 没有实根，所以不能再约分。",
+      ),
+      (rng) => {
+        const [p, q] = rng.pick([
+          [1, 1],
+          [1, 2],
+          [1, 3],
+          [1, 4],
+          [1, 5],
+          [1, 6],
+          [2, 1],
+          [2, 3],
+          [2, 5],
+          [3, 1],
+          [3, 2],
+          [3, 4],
+          [3, 5],
+          [4, 1],
+          [4, 3],
+          [4, 5],
+        ] as const);
+        const plus = rng.bool();
+        const c = cubeParts(p, q, plus);
+        const px = p === 1 ? "x" : `${p}x`;
+        const other = `${px} ${plus ? "-" : "+"} ${q}`;
+        const square = `${p === 1 ? "" : p * p}x^{2} - ${q * q}`;
+        const excluded = Q.of(q, p).toLatex();
+        const answer = `\\frac{${c.quadratic}}{${other}}`;
+        return expressionProblem({
+          prompt: t(
+            `Simplify $\\dfrac{${c.cubic}}{${square}}$ for $x \\ne \\pm ${excluded}$.`,
+            `当 $x \\ne \\pm ${excluded}$ 时，化简 $\\dfrac{${c.cubic}}{${square}}$。`,
+          ),
+          answer,
+          lowest: true,
+          wrong: [`\\frac{${c.wrongQuadratic}}{${other}}`, `\\frac{${c.quadratic}}{${c.linear}}`, c.linear],
+          solution: t(
+            steps(
+              `Factor both parts: $\\dfrac{(${c.linear})(${c.quadratic})}{(${c.linear})(${other})}$.`,
+              `Cancel $${c.linear}$: the result is $${answer}$.`,
+            ),
+            steps(
+              `把分子分母都分解：$\\dfrac{(${c.linear})(${c.quadratic})}{(${c.linear})(${other})}$。`,
+              `约去 $${c.linear}$，结果为 $${answer}$。`,
+            ),
+          ),
+        });
+      },
+    ),
+  ],
+);
+
+/** solvingSystemsOfNonlinearEquationsUsingGraphs counts and identifies the solutions of a system as the points where its graphs meet. */
+export const solvingSystemsOfNonlinearEquationsUsingGraphs = topic(
+  "solving-systems-of-nonlinear-equations-using-graphs",
+  t("Solving Systems of Nonlinear Equations Using Graphs", "用图象解非线性方程组"),
+  t(
+    "Treat the solutions of a system as the points where the graphs of its equations meet, count them by picturing a circle or a parabola together with a line, and check a point by testing it in both equations.",
+    "把方程组的解看作各方程图象的交点：通过想象圆或抛物线与一条直线的位置来数出解的个数，并把一个点代入两个方程来检验它是否为解。",
+  ),
+  ["solving-systems-of-nonlinear-equations", "equations-of-circles"],
+  ["A-REI.C.7", "A-REI.D.11"],
+  [
+    kp(
+      "a-circle-and-a-line",
+      t("A circle and a horizontal or vertical line", "圆与水平线或竖直线"),
+      t(
+        "Each solution of a system is a point on both graphs, so the number of solutions is the number of points where the graphs cross or touch. The circle $x^{2} + y^{2} = r^{2}$ reaches from $-r$ to $r$ in each direction. A horizontal line $y = k$ cuts it twice when $|k| < r$, touches it once when $|k| = r$, and misses it when $|k| > r$; a vertical line $x = k$ behaves the same way.",
+        "方程组的每个解都是两个图象上共同的点，所以解的个数就是图象相交或相切的点的个数。圆 $x^{2} + y^{2} = r^{2}$ 在每个方向上都从 $-r$ 延伸到 $r$。水平线 $y = k$ 在 $|k| < r$ 时与它交于两点，$|k| = r$ 时与它切于一点，$|k| > r$ 时与它不相交；竖直线 $x = k$ 的情况相同。",
+      ),
+      (rng) => {
+        const r = rng.int(2, 9);
+        const kind = rng.int(0, 2);
+        const k = rng.sign() * (kind === 0 ? rng.int(0, r - 1) : kind === 1 ? r : rng.int(r + 1, r + 6));
+        const answer = kind === 0 ? 2 : kind === 1 ? 1 : 0;
+        const v = rng.pick(["x", "y"]);
+        return numberProblem({
+          prompt: t(
+            `How many real solutions does the system $x^{2} + y^{2} = ${r * r}$, $${v} = ${k}$ have?`,
+            `方程组 $x^{2} + y^{2} = ${r * r}$，$${v} = ${k}$ 有多少个实数解？`,
+          ),
+          answer,
+          form: "integer",
+          wrong: [0, 1, 2, 4],
+          solution: t(
+            `The circle has radius $${r}$. Since $|${k}| ${kind === 0 ? "<" : kind === 1 ? "=" : ">"} ${r}$, the line ${kind === 0 ? "crosses the circle twice" : kind === 1 ? "touches the circle once" : "misses the circle"}, so there ${answer === 1 ? "is $1$ solution" : `are $${answer}$ solutions`}.`,
+            `圆的半径为 $${r}$。因为 $|${k}| ${kind === 0 ? "<" : kind === 1 ? "=" : ">"} ${r}$，这条直线${kind === 0 ? "与圆交于两点" : kind === 1 ? "与圆切于一点" : "与圆不相交"}，所以有 $${answer}$ 个解。`,
+          ),
+        });
+      },
+    ),
+    kp(
+      "a-parabola-and-a-horizontal-line",
+      t("A parabola and a horizontal line", "抛物线与水平线"),
+      t(
+        "The graph of $y = a(x - h)^{2} + v$ is a parabola with vertex $(h, v)$; it opens upward when $a > 0$, so $v$ is its lowest $y$-value, and downward when $a < 0$, so $v$ is its highest. A horizontal line $y = k$ on the open side of the vertex crosses the parabola twice, the line $y = v$ touches it once at the vertex, and a line beyond the vertex misses it.",
+        "$y = a(x - h)^{2} + v$ 的图象是顶点为 $(h, v)$ 的抛物线；$a > 0$ 时开口向上，$v$ 是最小的 $y$ 值；$a < 0$ 时开口向下，$v$ 是最大的 $y$ 值。位于抛物线开口一侧的水平线 $y = k$ 与它交于两点，直线 $y = v$ 在顶点处与它切于一点，越过顶点另一侧的直线与它不相交。",
+      ),
+      (rng) => {
+        const a = rng.pick([1, 2, 3, -1, -2, -3]);
+        const h = rng.int(-5, 5);
+        const v = rng.int(-6, 6);
+        const kind = rng.int(0, 2);
+        const up = a > 0;
+        const k = kind === 1 ? v : (kind === 0) === up ? v + rng.int(1, 6) : v - rng.int(1, 6);
+        const answer = kind === 0 ? 2 : kind === 1 ? 1 : 0;
+        const sq = h === 0 ? "x^{2}" : `(x ${h < 0 ? "+" : "-"} ${Math.abs(h)})^{2}`;
+        const coef = a === 1 ? "" : a === -1 ? "-" : String(a);
+        const rhs = `${coef}${sq}${v === 0 ? "" : ` ${v < 0 ? "-" : "+"} ${Math.abs(v)}`}`;
+        return numberProblem({
+          prompt: t(
+            `How many real solutions does the system $y = ${rhs}$, $y = ${k}$ have?`,
+            `方程组 $y = ${rhs}$，$y = ${k}$ 有多少个实数解？`,
+          ),
+          answer,
+          form: "integer",
+          wrong: [0, 1, 2, 3],
+          solution: t(
+            `The parabola opens ${up ? "upward" : "downward"} from its vertex $(${h}, ${v})$, so its ${up ? "least" : "greatest"} $y$-value is $${v}$. The line $y = ${k}$ ${kind === 0 ? "lies on the open side and crosses it twice" : kind === 1 ? "passes through the vertex and touches it once" : `lies ${up ? "below" : "above"} the vertex and misses it`}: ${answer === 1 ? "$1$ solution" : `$${answer}$ solutions`}.`,
+            `抛物线从顶点 $(${h}, ${v})$ 开口向${up ? "上" : "下"}，所以它的最${up ? "小" : "大"} $y$ 值为 $${v}$。直线 $y = ${k}$ ${kind === 0 ? "位于开口一侧，与抛物线交于两点" : kind === 1 ? "经过顶点，与抛物线切于一点" : `位于顶点${up ? "下方" : "上方"}，与抛物线不相交`}：共 $${answer}$ 个解。`,
+          ),
+        });
+      },
+    ),
+    kp(
+      "checking-an-intersection-point",
+      t("Checking an intersection point", "检验交点"),
+      t(
+        "A point that looks like an intersection on a graph is a solution only if its coordinates satisfy both equations exactly. To decide which listed point solves the system $x^{2} + y^{2} = 25$, $y = x + 1$, substitute each into both: $(3, 4)$ gives $9 + 16 = 25$ and $4 = 3 + 1$, so it is a solution, while $(4, 3)$ lies on the circle but not on the line.",
+        "图象上看起来像交点的点，只有当它的坐标恰好满足两个方程时才是解。要判断所列哪个点是方程组 $x^{2} + y^{2} = 25$，$y = x + 1$ 的解，把每个点代入两个方程：$(3, 4)$ 给出 $9 + 16 = 25$ 和 $4 = 3 + 1$，所以它是解；而 $(4, 3)$ 在圆上却不在直线上。",
+      ),
+      (rng) => {
+        const [p, q, c] = rng.pick([
+          [3, 4, 5],
+          [5, 12, 13],
+          [6, 8, 10],
+        ] as const);
+        const pts: [number, number][] = [];
+        for (const [x, y] of [
+          [p, q],
+          [q, p],
+        ] as const)
+          for (const sx of [1, -1]) for (const sy of [1, -1]) pts.push([sx * x, sy * y]);
+        // Pairs of lattice points joined by a line with an integer slope and intercept, not through the center.
+        const pairs = pts.flatMap((A) =>
+          pts
+            .filter(([x, y]) => x !== A[0] && !(x === -A[0] && y === -A[1]))
+            .filter(([x, y]) => (y - A[1]) % (x - A[0]) === 0 && (A[1] * x - y * A[0]) % (x - A[0]) === 0)
+            .map((B) => [A, B] as const),
+        );
+        const [P1, P2] = rng.pick(pairs);
+        const m = Q.of(P2[1] - P1[1], P2[0] - P1[0]);
+        const b = Q.of(P1[1]).sub(m.mul(Q.of(P1[0])));
+        const onLine = ([x, y]: [number, number]) => Q.of(y).eq(m.mul(Q.of(x)).add(b));
+        const mx = m.eq(Q.of(1)) ? "x" : m.eq(Q.of(-1)) ? "-x" : `${m.toLatex()}x`;
+        const line =
+          m.sign() === 0
+            ? `y = ${b.toLatex()}`
+            : b.sign() === 0
+              ? `y = ${mx}`
+              : `y = ${mx} ${b.sign() < 0 ? "-" : "+"} ${b.abs().toLatex()}`;
+        const [x0, y0] = rng.bool() ? P1 : P2;
+        const offCircle: [number, number] = [2 * P2[0] - P1[0], 2 * P2[1] - P1[1]];
+        const wrongPts = [
+          ...rng.sample(
+            pts.filter((pt) => !onLine(pt)),
+            2,
+          ),
+          offCircle,
+        ];
+        const pt = ([x, y]: readonly [number, number]) => mathText(`(${x}, ${y})`);
+        return pickChoice(
+          rng,
+          t(
+            `Which point is a solution of the system $x^{2} + y^{2} = ${c * c}$, $${line}$?`,
+            `哪个点是方程组 $x^{2} + y^{2} = ${c * c}$，$${line}$ 的解？`,
+          ),
+          pt([x0, y0]),
+          wrongPts.map(pt),
+          t(
+            `Substitute $(${x0}, ${y0})$: $${paren(x0)}^{2} + ${paren(y0)}^{2} = ${c * c}$, and it satisfies $${line}$, so it lies on both graphs. Each other point fails at least one of the equations.`,
+            `代入 $(${x0}, ${y0})$：$${paren(x0)}^{2} + ${paren(y0)}^{2} = ${c * c}$，并且它满足 $${line}$，所以它在两个图象上。其他每个点都至少不满足其中一个方程。`,
+          ),
+        );
+      },
+    ),
+  ],
+);
+
 /** actNumberAlgebraTopics lists the ACT Math number and algebra topics in prerequisite order. */
 export const actNumberAlgebraTopics: readonly TopicDef[] = [
   findingOnesDigitsOfPowers,
@@ -884,4 +1506,10 @@ export const actNumberAlgebraTopics: readonly TopicDef[] = [
   comparingQuantitiesUnderConstraints,
   slantAsymptotesOfRationalFunctions,
   jointVariation,
+  realNumberRestrictions,
+  evaluatingExpressionsUsingGivenRelations,
+  matrixEquations,
+  modelingWithMatrixProducts,
+  simplifyingRationalExpressionsWithSumsAndDifferencesOfCubes,
+  solvingSystemsOfNonlinearEquationsUsingGraphs,
 ];

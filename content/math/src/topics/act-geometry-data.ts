@@ -2,13 +2,14 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@g
 import { t } from "@ga/content";
 import { Q, svgDocument } from "@ga/subject-math";
 
-import { numberProblem, steps } from "../problems.ts";
-import { pickChoice } from "./grade-4-fractions.ts";
+import { numberProblem, radicalProblem, steps } from "../problems.ts";
+import { mathText, pickChoice } from "./grade-4-fractions.ts";
 
 // ACT Math, geometry, statistics and probability: conic sections as slices of a cone, areas of regular polygons,
 // rhombuses and kites, volumes of cube stacks from their views, spheres and cubes inscribed in each other, systems of a
-// linear and a circular inequality, kinds of statistical studies, counts that give a target probability, and circle
-// graphs.
+// linear and a circular inequality, kinds of statistical studies, counts that give a target probability, circle graphs,
+// focal distances of conics, sides and opposite angles of triangles, altitudes from the Pythagorean theorem, and packing
+// boxes.
 
 /** topic builds a TopicDef with the common fields filled in. */
 function topic(
@@ -1124,6 +1125,390 @@ export const circleGraphs = topic(
   ],
 );
 
+// ---------------------------------------------------------------------------
+// Focal distances of conics, sides and opposite angles, altitudes from the Pythagorean theorem, and packing boxes
+
+/** triples are Pythagorean triples [p, q, r] with p² + q² = r². */
+const triples = [
+  [3, 4, 5],
+  [6, 8, 10],
+  [5, 12, 13],
+  [9, 12, 15],
+  [8, 15, 17],
+  [12, 16, 20],
+  [7, 24, 25],
+  [20, 21, 29],
+] as const;
+
+/** focalDistancePropertiesOfEllipsesAndHyperbolas uses the constant sum and difference of the distances to the foci. */
+export const focalDistancePropertiesOfEllipsesAndHyperbolas = topic(
+  "focal-distance-properties-of-ellipses-and-hyperbolas",
+  t("Focal Distance Properties of Ellipses and Hyperbolas", "椭圆与双曲线的焦半径性质"),
+  t(
+    "Use the fact that the distances from a point of an ellipse to its foci add to $2a$, and that the distances from a point of a hyperbola to its foci differ by $2a$.",
+    "利用椭圆上一点到两焦点的距离之和为 $2a$、双曲线上一点到两焦点的距离之差为 $2a$ 的性质。",
+  ),
+  ["foci-of-ellipses", "foci-of-hyperbolas"],
+  ["G-GPE.A.3"],
+  [
+    kp(
+      "the-focal-sum-of-an-ellipse",
+      t("The focal sum of an ellipse", "椭圆的焦半径之和"),
+      t(
+        "An ellipse is the set of points whose distances to the two foci add to the same number, and that number is the length of the major axis, $2a$. Checking at an end of the major axis shows why: from $(a, 0)$ the foci $(\\pm c, 0)$ are $a - c$ and $a + c$ away, which add to $2a$. So if a point of the ellipse is $d$ from one focus, it is $2a - d$ from the other.",
+        "椭圆是到两个焦点的距离之和为同一个数的点的集合，这个数就是长轴的长 $2a$。在长轴的端点处检验就能看出原因：从 $(a, 0)$ 到焦点 $(\\pm c, 0)$ 的距离分别是 $a - c$ 和 $a + c$，和为 $2a$。所以若椭圆上一点到一个焦点的距离为 $d$，则它到另一个焦点的距离为 $2a - d$。",
+      ),
+      (rng) => {
+        const [p, q, a] = rng.pick(triples);
+        const [b, c] = rng.bool() ? [p, q] : [q, p];
+        const vertical = rng.bool();
+        const d = rng.int(a - c + 1, a + c - 1);
+        const answer = 2 * a - d;
+        const eq = vertical
+          ? `\\frac{x^{2}}{${b * b}} + \\frac{y^{2}}{${a * a}} = 1`
+          : `\\frac{x^{2}}{${a * a}} + \\frac{y^{2}}{${b * b}} = 1`;
+        return numberProblem({
+          prompt: t(
+            `A point $P$ on the ellipse $${eq}$ is $${d}$ units from one focus. How far is $P$ from the other focus?`,
+            `椭圆 $${eq}$ 上一点 $P$ 到一个焦点的距离为 $${d}$。$P$ 到另一个焦点的距离是多少？`,
+          ),
+          answer,
+          form: "integer",
+          wrong: distinct(Q.of(answer), [Q.of(d), Q.of(Math.abs(2 * c - d)), Q.of(Math.abs(2 * b - d)), Q.of(a + c - d)]),
+          solution: t(
+            `Here $a^{2} = ${a * a}$, so $a = ${a}$ and the distances to the foci add to $2a = ${2 * a}$. The other distance is $${2 * a} - ${d} = ${answer}$.`,
+            `这里 $a^{2} = ${a * a}$，所以 $a = ${a}$，到两焦点的距离之和为 $2a = ${2 * a}$。另一个距离为 $${2 * a} - ${d} = ${answer}$。`,
+          ),
+        });
+      },
+    ),
+    kp(
+      "the-focal-difference-of-a-hyperbola",
+      t("The focal difference of a hyperbola", "双曲线的焦半径之差"),
+      t(
+        "A hyperbola is the set of points whose distances to the two foci differ by the same number, the distance $2a$ between its vertices. From the vertex $(a, 0)$ the foci $(\\pm c, 0)$ are $c - a$ and $c + a$ away, a difference of $2a$. So a point of the hyperbola that is $d$ from the nearer focus is $d + 2a$ from the farther one, and a point $D$ from the farther focus is $D - 2a$ from the nearer one.",
+        "双曲线是到两个焦点的距离之差为同一个数的点的集合，这个数就是两顶点之间的距离 $2a$。从顶点 $(a, 0)$ 到焦点 $(\\pm c, 0)$ 的距离分别是 $c - a$ 和 $c + a$，差为 $2a$。所以双曲线上一点若到较近焦点的距离为 $d$，则到较远焦点的距离为 $d + 2a$；若到较远焦点的距离为 $D$，则到较近焦点的距离为 $D - 2a$。",
+      ),
+      (rng) => {
+        const [p, q, c] = rng.pick(triples);
+        const [a, b] = rng.bool() ? [p, q] : [q, p];
+        const near = rng.int(c - a, c - a + 12);
+        const far = near + 2 * a;
+        const askFar = rng.bool();
+        const answer = askFar ? far : near;
+        const eq = `\\frac{x^{2}}{${a * a}} - \\frac{y^{2}}{${b * b}} = 1`;
+        const which = askFar ? t("nearer", "较近") : t("farther", "较远");
+        const other = askFar ? t("farther", "较远") : t("nearer", "较近");
+        const shown = askFar ? near : far;
+        return numberProblem({
+          prompt: t(
+            `A point $P$ on the hyperbola $${eq}$ is $${shown}$ units from the ${which.en} focus. How far is $P$ from the ${other.en} focus?`,
+            `双曲线 $${eq}$ 上一点 $P$ 到${which["zh-CN"]}焦点的距离为 $${shown}$。$P$ 到${other["zh-CN"]}焦点的距离是多少？`,
+          ),
+          answer,
+          form: "integer",
+          wrong: distinct(Q.of(answer), [
+            Q.of(askFar ? shown + a : shown - a),
+            Q.of(askFar ? shown + 2 * c : Math.abs(shown - 2 * c)),
+            Q.of(Math.abs(2 * a - shown)),
+            Q.of(askFar ? shown + 2 * b : Math.abs(shown - 2 * b)),
+          ]),
+          solution: t(
+            `Here $a^{2} = ${a * a}$, so $a = ${a}$ and the distances to the foci differ by $2a = ${2 * a}$. The ${other.en} focus is ${askFar ? `$${shown} + ${2 * a} = ${answer}$` : `$${shown} - ${2 * a} = ${answer}$`} away.`,
+            `这里 $a^{2} = ${a * a}$，所以 $a = ${a}$，到两焦点的距离之差为 $2a = ${2 * a}$。到${other["zh-CN"]}焦点的距离为 ${askFar ? `$${shown} + ${2 * a} = ${answer}$` : `$${shown} - ${2 * a} = ${answer}$`}。`,
+          ),
+        });
+      },
+    ),
+    kp(
+      "the-perimeter-of-a-focal-triangle",
+      t("The perimeter of a focal triangle", "焦点三角形的周长"),
+      t(
+        "For a point $P$ of an ellipse with foci $F_{1}$ and $F_{2}$, the triangle $PF_{1}F_{2}$ has two sides whose sum is always $PF_{1} + PF_{2} = 2a$, and a third side $F_{1}F_{2} = 2c$, the distance between the foci. So its perimeter is $2a + 2c$ wherever $P$ is on the ellipse, even though the triangle itself changes shape as $P$ moves.",
+        "对于以 $F_{1}$、$F_{2}$ 为焦点的椭圆上的一点 $P$，三角形 $PF_{1}F_{2}$ 有两条边之和恒为 $PF_{1} + PF_{2} = 2a$，第三条边 $F_{1}F_{2} = 2c$ 是两焦点间的距离。所以无论 $P$ 在椭圆上何处，周长都是 $2a + 2c$，尽管三角形本身的形状随 $P$ 的移动而改变。",
+      ),
+      (rng) => {
+        const [p, q, a] = rng.pick(triples);
+        const [b, c] = rng.bool() ? [p, q] : [q, p];
+        const answer = 2 * a + 2 * c;
+        const vertical = rng.bool();
+        const eq = vertical
+          ? `\\frac{x^{2}}{${b * b}} + \\frac{y^{2}}{${a * a}} = 1`
+          : `\\frac{x^{2}}{${a * a}} + \\frac{y^{2}}{${b * b}} = 1`;
+        const axis = vertical ? "y" : "x";
+        return numberProblem({
+          prompt: t(
+            `$F_{1}$ and $F_{2}$ are the foci of the ellipse $${eq}$, and $P$ is a point on the ellipse that is not on the $${axis}$-axis. What is the perimeter of triangle $PF_{1}F_{2}$?`,
+            `$F_{1}$、$F_{2}$ 是椭圆 $${eq}$ 的焦点，$P$ 是椭圆上不在 $${axis}$ 轴上的一点。三角形 $PF_{1}F_{2}$ 的周长是多少？`,
+          ),
+          answer,
+          form: "integer",
+          wrong: distinct(Q.of(answer), [Q.of(2 * a), Q.of(2 * a + c), Q.of(4 * a), Q.of(2 * a + 2 * b)]),
+          solution: t(
+            steps(
+              `Here $a = ${a}$ and $b = ${b}$, with the major axis along the $${axis}$-axis, so $c = \\sqrt{${a * a} - ${b * b}} = ${c}$.`,
+              `$PF_{1} + PF_{2} = 2a = ${2 * a}$ and $F_{1}F_{2} = 2c = ${2 * c}$, so the perimeter is $${2 * a} + ${2 * c} = ${answer}$.`,
+            ),
+            steps(
+              `这里 $a = ${a}$，$b = ${b}$，长轴在 $${axis}$ 轴上，所以 $c = \\sqrt{${a * a} - ${b * b}} = ${c}$。`,
+              `$PF_{1} + PF_{2} = 2a = ${2 * a}$，$F_{1}F_{2} = 2c = ${2 * c}$，所以周长为 $${2 * a} + ${2 * c} = ${answer}$。`,
+            ),
+          ),
+        });
+      },
+    ),
+  ],
+);
+
+/** opposite names the side of triangle ABC opposite each vertex. */
+const opposite = { A: "BC", B: "AC", C: "AB" } as const;
+
+/** sideAngleRelationshipsInTriangles orders the sides of a triangle by the angles opposite them, and the reverse. */
+export const sideAngleRelationshipsInTriangles = topic(
+  "side-angle-relationships-in-triangles",
+  t("Side-Angle Relationships in Triangles", "三角形的边角关系"),
+  t(
+    "In a triangle the longest side is opposite the largest angle and the shortest side is opposite the smallest angle; use this to order sides from angles and angles from sides.",
+    "在三角形中，最长边所对的角最大，最短边所对的角最小；利用这一点由角的大小比较边，由边的大小比较角。",
+  ),
+  ["angles-of-a-triangle", "the-triangle-inequality"],
+  ["G-CO.C.10"],
+  [
+    kp(
+      "ordering-sides-from-angles",
+      t("Ordering sides from angles", "由角比较边"),
+      t(
+        "In any triangle, a larger angle lies opposite a longer side, so the sides are in the same order as the angles opposite them. Each side is named by the two vertices it joins and lies opposite the third: side $BC$ is opposite $\\angle A$. If two angles are given, find the third from the angle sum of $180^\\circ$ first, then pick the side across from the largest or the smallest angle.",
+        "在任何三角形中，较大的角所对的边较长，所以各边的大小顺序与它们所对的角的大小顺序相同。每条边用它连接的两个顶点命名，并且与第三个顶点相对：边 $BC$ 与 $\\angle A$ 相对。若已知两个角，先用内角和 $180^\\circ$ 求出第三个角，再找出最大角或最小角对面的边。",
+      ),
+      (rng) => {
+        let A = 0;
+        let B = 0;
+        let C = 0;
+        do {
+          A = rng.int(4, 20) * 5;
+          B = rng.int(4, 20) * 5;
+          C = 180 - A - B;
+        } while (C < 15 || A === B || B === C || A === C);
+        const angles = { A, B, C };
+        const longest = rng.bool();
+        const pick = (Object.keys(angles) as ("A" | "B" | "C")[]).reduce((m, k) =>
+          (longest ? angles[k] > angles[m] : angles[k] < angles[m]) ? k : m,
+        );
+        const side = (k: "A" | "B" | "C") => mathText(`\\overline{${opposite[k]}}`);
+        return pickChoice(
+          rng,
+          t(
+            `In triangle $ABC$, $m\\angle A = ${A}^\\circ$ and $m\\angle B = ${B}^\\circ$. Which side of the triangle is the ${longest ? "longest" : "shortest"}?`,
+            `在三角形 $ABC$ 中，$m\\angle A = ${A}^\\circ$，$m\\angle B = ${B}^\\circ$。三角形的哪条边最${longest ? "长" : "短"}？`,
+          ),
+          side(pick),
+          (["A", "B", "C"] as const).filter((k) => k !== pick).map(side),
+          t(
+            `The third angle is $m\\angle C = 180^\\circ - ${A}^\\circ - ${B}^\\circ = ${C}^\\circ$. The ${longest ? "largest" : "smallest"} angle is $\\angle ${pick}$, so the ${longest ? "longest" : "shortest"} side is the one opposite it, $\\overline{${opposite[pick]}}$.`,
+            `第三个角为 $m\\angle C = 180^\\circ - ${A}^\\circ - ${B}^\\circ = ${C}^\\circ$。最${longest ? "大" : "小"}的角是 $\\angle ${pick}$，所以最${longest ? "长" : "短"}的边是它对面的边 $\\overline{${opposite[pick]}}$。`,
+          ),
+        );
+      },
+    ),
+    kp(
+      "ordering-angles-from-sides",
+      t("Ordering angles from sides", "由边比较角"),
+      t(
+        "The relationship also works in reverse: the longest side of a triangle lies opposite its largest angle, and the shortest side opposite its smallest angle. So to find the largest angle when the three side lengths are known, locate the longest side and take the angle at the vertex that side does not touch. For sides $AB = 7$, $BC = 9$ and $AC = 5$, the longest side $BC$ is opposite $\\angle A$.",
+        "这一关系反过来也成立：三角形的最长边所对的角最大，最短边所对的角最小。所以已知三边长度时，要找最大的角，就找出最长边，取它不经过的那个顶点处的角。若 $AB = 7$，$BC = 9$，$AC = 5$，最长边 $BC$ 所对的是 $\\angle A$。",
+      ),
+      (rng) => {
+        let a = 0;
+        let b = 0;
+        let c = 0;
+        do {
+          a = rng.int(3, 15);
+          b = rng.int(3, 15);
+          c = rng.int(3, 15);
+        } while (a === b || b === c || a === c || a + b <= c || b + c <= a || a + c <= b);
+        const sides = { A: a, B: b, C: c };
+        const largest = rng.bool();
+        const pick = (Object.keys(sides) as ("A" | "B" | "C")[]).reduce((m, k) =>
+          (largest ? sides[k] > sides[m] : sides[k] < sides[m]) ? k : m,
+        );
+        const angle = (k: "A" | "B" | "C") => mathText(`\\angle ${k}`);
+        return pickChoice(
+          rng,
+          t(
+            `In triangle $ABC$, $AB = ${c}$, $BC = ${a}$ and $AC = ${b}$. Which angle of the triangle is the ${largest ? "largest" : "smallest"}?`,
+            `在三角形 $ABC$ 中，$AB = ${c}$，$BC = ${a}$，$AC = ${b}$。三角形的哪个角最${largest ? "大" : "小"}？`,
+          ),
+          angle(pick),
+          (["A", "B", "C"] as const).filter((k) => k !== pick).map(angle),
+          t(
+            `The ${largest ? "longest" : "shortest"} side is $${opposite[pick]} = ${sides[pick]}$, which is opposite $\\angle ${pick}$, so $\\angle ${pick}$ is the ${largest ? "largest" : "smallest"} angle.`,
+            `最${largest ? "长" : "短"}的边是 $${opposite[pick]} = ${sides[pick]}$，它所对的是 $\\angle ${pick}$，所以 $\\angle ${pick}$ 最${largest ? "大" : "小"}。`,
+          ),
+        );
+      },
+    ),
+  ],
+);
+
+/** findingAltitudesUsingThePythagoreanTheorem finds altitudes and areas of isosceles and equilateral triangles from their sides. */
+export const findingAltitudesUsingThePythagoreanTheorem = topic(
+  "finding-altitudes-using-the-pythagorean-theorem",
+  t("Finding Altitudes Using the Pythagorean Theorem", "用勾股定理求高"),
+  t(
+    "Split an isosceles or equilateral triangle along the altitude to its base into two congruent right triangles, and find the altitude and the area with the Pythagorean theorem.",
+    "沿底边上的高把等腰三角形或等边三角形分成两个全等的直角三角形，再用勾股定理求高和面积。",
+  ),
+  ["the-pythagorean-theorem", "isosceles-triangles", "areas-of-triangles"],
+  ["8.G.B.7", "G-SRT.C.8"],
+  [
+    kp(
+      "the-altitude-of-an-isosceles-triangle",
+      t("The altitude of an isosceles triangle", "等腰三角形的高"),
+      t(
+        "The altitude from the vertex angle of an isosceles triangle meets the base at its midpoint, cutting the triangle into two congruent right triangles. In each, a leg of the isosceles triangle is the hypotenuse, half the base is one leg, and the altitude is the other leg. So with legs $s$ and base $b$, the altitude is $h = \\sqrt{s^{2} - \\left(\\frac{b}{2}\\right)^{2}}$; with $s = 13$ and $b = 10$, $h = \\sqrt{169 - 25} = 12$.",
+        "等腰三角形从顶角出发的高与底边交于底边的中点，把三角形分成两个全等的直角三角形。在每个直角三角形中，等腰三角形的腰是斜边，底边的一半是一条直角边，高是另一条直角边。所以腰长为 $s$、底边为 $b$ 时，高为 $h = \\sqrt{s^{2} - \\left(\\frac{b}{2}\\right)^{2}}$；当 $s = 13$，$b = 10$ 时，$h = \\sqrt{169 - 25} = 12$。",
+      ),
+      (rng) => {
+        const [p0, q0, r0] = rng.pick(triples);
+        const k = r0 > 15 ? 1 : rng.int(1, 3);
+        const [p, q] = (rng.bool() ? [p0, q0] : [q0, p0]).map((v) => v * k) as [number, number];
+        const r = r0 * k;
+        const area = rng.bool();
+        const answer = area ? p * q : q;
+        return numberProblem({
+          prompt: t(
+            `An isosceles triangle has two sides of length $${r}$ and a base of length $${2 * p}$. What is ${area ? "the area of the triangle" : "the length of the altitude to the base"}?`,
+            `一个等腰三角形的两腰长为 $${r}$，底边长为 $${2 * p}$。${area ? "这个三角形的面积" : "底边上的高"}是多少？`,
+          ),
+          answer,
+          form: "integer",
+          wrong: area ? [2 * p * q, p * r, Q.of(p * q, 2), r * r] : [r - p, Math.round(Math.sqrt(r * r + p * p)), 2 * q, r],
+          solution: t(
+            steps(
+              `The altitude bisects the base, so each half is $${p}$ and $h = \\sqrt{${r}^{2} - ${p}^{2}} = \\sqrt{${r * r - p * p}} = ${q}$.`,
+              ...(area ? [`The area is $\\frac{1}{2} \\cdot ${2 * p} \\cdot ${q} = ${p * q}$.`] : []),
+            ),
+            steps(
+              `高平分底边，所以每一半长 $${p}$，$h = \\sqrt{${r}^{2} - ${p}^{2}} = \\sqrt{${r * r - p * p}} = ${q}$。`,
+              ...(area ? [`面积为 $\\frac{1}{2} \\cdot ${2 * p} \\cdot ${q} = ${p * q}$。`] : []),
+            ),
+          ),
+        });
+      },
+    ),
+    kp(
+      "the-altitude-of-an-equilateral-triangle",
+      t("The altitude of an equilateral triangle", "等边三角形的高"),
+      t(
+        "An equilateral triangle with side $s$ is isosceles from every vertex, so an altitude splits it into two right triangles with hypotenuse $s$ and one leg $\\frac{s}{2}$. The altitude is $h = \\sqrt{s^{2} - \\frac{s^{2}}{4}} = \\sqrt{\\frac{3s^{2}}{4}} = \\frac{s\\sqrt{3}}{2}$, and the area is $\\frac{1}{2} \\cdot s \\cdot \\frac{s\\sqrt{3}}{2} = \\frac{s^{2}\\sqrt{3}}{4}$. These are the side ratios of a $30$-$60$-$90$ triangle.",
+        "边长为 $s$ 的等边三角形从每个顶点看都是等腰三角形，所以一条高把它分成两个直角三角形，斜边为 $s$，一条直角边为 $\\frac{s}{2}$。高为 $h = \\sqrt{s^{2} - \\frac{s^{2}}{4}} = \\sqrt{\\frac{3s^{2}}{4}} = \\frac{s\\sqrt{3}}{2}$，面积为 $\\frac{1}{2} \\cdot s \\cdot \\frac{s\\sqrt{3}}{2} = \\frac{s^{2}\\sqrt{3}}{4}$。这正是 $30$-$60$-$90$ 三角形的边长比。",
+      ),
+      (rng) => {
+        const s = rng.int(2, 14);
+        const area = rng.bool();
+        const coef = area ? Q.of(s * s, 4) : Q.of(s, 2);
+        const shown = (c: Q) => (c.isInteger() ? `${c.toLatex()}\\sqrt{3}` : `\\frac{${c.n}\\sqrt{3}}{${c.d}}`);
+        return radicalProblem({
+          prompt: t(
+            `What is the ${area ? "area" : "length of an altitude"} of an equilateral triangle with side length $${s}$? Give the exact value.`,
+            `边长为 $${s}$ 的等边三角形的${area ? "面积" : "高"}是多少？请给出精确值。`,
+          ),
+          answer: [coef, 3],
+          wrong: area
+            ? [shown(Q.of(s * s, 2)), `${(s * s) / 2}`, shown(Q.of(s, 2))]
+            : [`${s}\\sqrt{3}`, `${s / 2}`, `\\frac{${s}\\sqrt{2}}{2}`],
+          solution: t(
+            area
+              ? `The altitude is $\\frac{${s}\\sqrt{3}}{2}$, so the area is $\\frac{1}{2} \\cdot ${s} \\cdot \\frac{${s}\\sqrt{3}}{2} = ${shown(coef)}$.`
+              : `Half the base is $\\frac{${s}}{2}$, so $h = \\sqrt{${s}^{2} - \\left(\\frac{${s}}{2}\\right)^{2}} = \\sqrt{\\frac{${3 * s * s}}{4}} = ${shown(coef)}$.`,
+            area
+              ? `高为 $\\frac{${s}\\sqrt{3}}{2}$，所以面积为 $\\frac{1}{2} \\cdot ${s} \\cdot \\frac{${s}\\sqrt{3}}{2} = ${shown(coef)}$。`
+              : `底边的一半为 $\\frac{${s}}{2}$，所以 $h = \\sqrt{${s}^{2} - \\left(\\frac{${s}}{2}\\right)^{2}} = \\sqrt{\\frac{${3 * s * s}}{4}} = ${shown(coef)}$。`,
+          ),
+        });
+      },
+    ),
+  ],
+);
+
+/** packingRectangularBoxes counts how many congruent boxes fit in a larger box. */
+export const packingRectangularBoxes = topic(
+  "packing-rectangular-boxes",
+  t("Packing Rectangular Boxes", "装箱问题"),
+  t(
+    "Count how many congruent boxes or cubes fit in a larger box by fitting whole numbers of them along each edge and multiplying, rather than dividing the volumes.",
+    "计算一个大箱子中能装下多少个全等的小箱子或小正方体：沿每条棱放下整数个，再把三个数相乘，而不是用体积相除。",
+  ),
+  ["volumes-of-right-rectangular-prisms"],
+  ["5.MD.C.5", "6.G.A.2"],
+  [
+    kp(
+      "boxes-that-fill-the-space",
+      t("Boxes that fill the space exactly", "恰好装满的箱子"),
+      t(
+        "When each edge of the small box divides the matching edge of the large one, the small boxes stack into layers with no gaps. Along each edge, the number of boxes is the large length divided by the small length, and the total is the product of the three counts. A $12 \\times 10 \\times 6$ box holds $\\frac{12}{4} \\cdot \\frac{10}{5} \\cdot \\frac{6}{3} = 3 \\cdot 2 \\cdot 2 = 12$ boxes measuring $4 \\times 5 \\times 3$.",
+        "当小箱子的每条棱都能整除大箱子对应的棱时，小箱子可以一层层地无缝堆放。沿每条棱放下的箱子数是大箱子的长度除以小箱子的长度，总数就是三个数的乘积。一个 $12 \\times 10 \\times 6$ 的箱子能装下 $\\frac{12}{4} \\cdot \\frac{10}{5} \\cdot \\frac{6}{3} = 3 \\cdot 2 \\cdot 2 = 12$ 个 $4 \\times 5 \\times 3$ 的箱子。",
+      ),
+      (rng) => {
+        const small = [rng.int(2, 6), rng.int(2, 6), rng.int(1, 4)];
+        const counts = [rng.int(2, 5), rng.int(2, 5), rng.int(1, 4)];
+        const big = small.map((v, i) => v * counts[i]!);
+        const answer = counts[0]! * counts[1]! * counts[2]!;
+        const dims = (d: number[]) => d.join(" \\times ");
+        return numberProblem({
+          prompt: t(
+            `How many boxes measuring $${dims(small)}$ inches fit inside a crate measuring $${dims(big)}$ inches, if every box is placed with its edges parallel to the matching edges of the crate?`,
+            `若每个箱子的棱都与货箱对应的棱平行放置，一个 $${dims(big)}$ 英寸的货箱中能装下多少个 $${dims(small)}$ 英寸的箱子？`,
+          ),
+          answer,
+          form: "integer",
+          wrong: [counts[0]! + counts[1]! + counts[2]!, counts[0]! * counts[1]!, answer * 2],
+          solution: t(
+            `Along the edges the crate holds $${big.map((v, i) => `\\frac{${v}}{${small[i]}}`).join(", ")}$, that is, $${counts.join(", ")}$ boxes. In all, $${counts.join(" \\cdot ")} = ${answer}$ boxes.`,
+            `沿三条棱分别能放 $${big.map((v, i) => `\\frac{${v}}{${small[i]}}`).join("，")}$，即 $${counts.join("，")}$ 个箱子。共 $${counts.join(" \\cdot ")} = ${answer}$ 个。`,
+          ),
+        });
+      },
+    ),
+    kp(
+      "cubes-that-leave-gaps",
+      t("Cubes that leave gaps", "留有空隙的正方体"),
+      t(
+        "When an edge of the large box is not a multiple of the cube's edge, only whole cubes fit along it and the leftover space is wasted, so take the whole-number part of each quotient. Cubes with $3$-inch edges in a $10 \\times 8 \\times 7$ box fit $3$, $2$ and $2$ along the edges, $12$ in all. Dividing the volumes, $\\frac{560}{27} \\approx 20$, overcounts, because the gaps cannot be filled with whole cubes.",
+        "当大箱子的某条棱不是正方体棱长的倍数时，沿这条棱只能放下整数个正方体，剩余的空间被浪费，所以每个商只取整数部分。棱长 $3$ 英寸的正方体放进 $10 \\times 8 \\times 7$ 的箱子，沿三条棱分别能放 $3$、$2$、$2$ 个，共 $12$ 个。用体积相除得 $\\frac{560}{27} \\approx 20$，算多了，因为空隙无法用完整的正方体填满。",
+      ),
+      (rng) => {
+        let e = 0;
+        let big: number[] = [];
+        let counts: number[] = [];
+        let answer = 0;
+        let byVolume = 0;
+        do {
+          e = rng.int(2, 5);
+          big = [rng.int(e + 1, 6 * e), rng.int(e + 1, 6 * e), rng.int(e, 4 * e)];
+          counts = big.map((v) => Math.floor(v / e));
+          answer = counts[0]! * counts[1]! * counts[2]!;
+          byVolume = Math.floor((big[0]! * big[1]! * big[2]!) / e ** 3);
+        } while (byVolume === answer);
+        return numberProblem({
+          prompt: t(
+            `What is the greatest number of cubes with $${e}$-inch edges that fit inside a box measuring $${big.join(" \\times ")}$ inches?`,
+            `一个 $${big.join(" \\times ")}$ 英寸的箱子中最多能装下多少个棱长 $${e}$ 英寸的正方体？`,
+          ),
+          answer,
+          form: "integer",
+          wrong: [byVolume, big.map((v) => Math.ceil(v / e)).reduce((x, y) => x * y, 1), counts[0]! * counts[1]!],
+          solution: t(
+            `Only whole cubes fit along each edge: $${big.map((v) => `\\left\\lfloor \\frac{${v}}{${e}} \\right\\rfloor`).join(", ")}$ give $${counts.join(", ")}$. So at most $${counts.join(" \\cdot ")} = ${answer}$ cubes fit.`,
+            `沿每条棱只能放整数个正方体：$${big.map((v) => `\\left\\lfloor \\frac{${v}}{${e}} \\right\\rfloor`).join("，")}$ 分别为 $${counts.join("，")}$。所以最多能装 $${counts.join(" \\cdot ")} = ${answer}$ 个。`,
+          ),
+        });
+      },
+    ),
+  ],
+);
+
 /** actGeometryDataTopics lists the ACT Math geometry, statistics and probability topics in prerequisite order. */
 export const actGeometryDataTopics: readonly TopicDef[] = [
   conicSectionsAsSlicesOfACone,
@@ -1135,4 +1520,8 @@ export const actGeometryDataTopics: readonly TopicDef[] = [
   classifyingStatisticalStudies,
   adjustingOutcomesToATargetProbability,
   circleGraphs,
+  focalDistancePropertiesOfEllipsesAndHyperbolas,
+  sideAngleRelationshipsInTriangles,
+  findingAltitudesUsingThePythagoreanTheorem,
+  packingRectangularBoxes,
 ];

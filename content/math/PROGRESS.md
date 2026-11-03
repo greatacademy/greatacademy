@@ -70,7 +70,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Mathematical Methods for the Physical Sciences I, II | Calculus II | done | | 13 units (294 topics) and 12 units (238 topics) |
 | Abstract Algebra | Methods of Proof, Linear Algebra | done | | 9 units, 129 topics |
 | SAT Math Fundamentals, SAT Math Prep | Algebra II | done | | Assigned slot **F**. 2 courses: SAT Math Fundamentals (rebuilt to the full outline: 17 units, 655 topics, `sat-fundamentals-*.ts` for the 76 new ones) and SAT Math Prep (rebuilt to the full outline: 4 units, 292 topics, `sat-prep-*.ts` for the 32 new ones) |
-| ACT Math Fundamentals, ACT Math Prep | Precalculus | done | | Assigned slot **G**. 2 courses: ACT Math Fundamentals (rebuilt to the full outline: 7 units, 851 topics) and ACT Math Prep (rebuilt to the full outline: 6 units, 305 topics); `act-*.ts` hold the 17 new topics |
+| ACT Math Fundamentals, ACT Math Prep | Precalculus | done | | Assigned slot **G**. 2 courses: ACT Math Fundamentals (rebuilt to the full outline: 7 units, 858 topics) and ACT Math Prep (rebuilt to the full outline: 6 units, 321 topics); `act-*.ts` hold the 27 new topics; outline titles still sharing a topic teach the same skill as another title |
 
 ## Requests
 
