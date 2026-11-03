@@ -93,6 +93,56 @@ export const theNthTermTestForDivergence: TopicDef = {
         return nthTermProblem(rng, a, limit, diverges);
       },
     },
+    {
+      id: "terms-that-need-a-standard-limit",
+      title: t("Terms whose limit needs a standard limit", "需要用到常见极限的项"),
+      explanation: t(
+        "The $n$th term test needs only the limit of the terms, and finding it may take a standard limit. $n \\sin\\left(\\frac{3}{n}\\right) \\to 3$ because $\\frac{\\sin x}{x} \\to 1$; $\\left(1 + \\frac{2}{n}\\right)^{n} \\to e^{2}$; and $(-1)^{n} \\frac{n}{n + 1}$ swings between values near $-1$ and $1$, so it has no limit. Each of these series diverges. But $\\sqrt{n^{2} + 5} - n = \\frac{5}{\\sqrt{n^{2} + 5} + n} \\to 0$, so for that series the test says nothing.",
+        "第 $n$ 项判别法只需要各项的极限，而求这个极限可能要用到常见极限。$n \\sin\\left(\\frac{3}{n}\\right) \\to 3$，因为 $\\frac{\\sin x}{x} \\to 1$；$\\left(1 + \\frac{2}{n}\\right)^{n} \\to e^{2}$；$(-1)^{n} \\frac{n}{n + 1}$ 在接近 $-1$ 和 $1$ 的值之间摆动，没有极限。这些级数都发散。但 $\\sqrt{n^{2} + 5} - n = \\frac{5}{\\sqrt{n^{2} + 5} + n} \\to 0$，所以对这个级数此判别法无法得出结论。",
+      ),
+      generate(rng) {
+        const c = rng.int(2, 9);
+        const s = rng.int(1, 9);
+        const cases = [
+          {
+            a: `n \\sin\\left(\\frac{${c}}{n}\\right)`,
+            limit: t(`$\\to ${c}$, since $\\frac{\\sin x}{x} \\to 1$`, `$\\to ${c}$，因为 $\\frac{\\sin x}{x} \\to 1$`),
+            diverges: true,
+          },
+          { a: `\\left(1 + \\frac{${c}}{n}\\right)^{n}`, limit: t(`$\\to e^{${c}}$`, `$\\to e^{${c}}$`), diverges: true },
+          { a: `\\cos\\left(\\frac{${c}}{n}\\right)`, limit: t("$\\to \\cos 0 = 1$", "$\\to \\cos 0 = 1$"), diverges: true },
+          {
+            a: `(-1)^{n} \\frac{${term(c, "n")}}{${shift(s)}}`,
+            limit: t(
+              `swings between values near $-${c}$ and $${c}$, so it has no limit`,
+              `在接近 $-${c}$ 和 $${c}$ 的值之间摆动，没有极限`,
+            ),
+            diverges: true,
+          },
+          {
+            a: `\\left(\\sqrt{n^{2} + ${s}} - n\\right)`,
+            limit: t(`$= \\frac{${s}}{\\sqrt{n^{2} + ${s}} + n} \\to 0$`, `$= \\frac{${s}}{\\sqrt{n^{2} + ${s}} + n} \\to 0$`),
+            diverges: false,
+          },
+          {
+            a: `\\frac{\\ln n}{${term(c, "n")}}`,
+            limit: t("$\\to 0$, since $\\ln n$ grows more slowly than $n$", "$\\to 0$，因为 $\\ln n$ 比 $n$ 增长得慢"),
+            diverges: false,
+          },
+        ];
+        const k = rng.pick(cases);
+        return oneOf(
+          rng,
+          t(`What does the $n$th term test say about $${sigma(k.a)}$?`, `第 $n$ 项判别法对 $${sigma(k.a)}$ 能得出什么结论？`),
+          nthTermOutcomes[k.diverges ? 0 : 1],
+          nthTermOutcomes.filter((_, i) => i !== (k.diverges ? 0 : 1)),
+          t(
+            `The terms $a_n = ${k.a}$ ${k.limit.en}. ${k.diverges ? "They do not tend to $0$, so the series diverges." : "They tend to $0$, so the test is inconclusive and another test is needed."}`,
+            `各项 $a_n = ${k.a}$ ${k.limit["zh-CN"]}。${k.diverges ? "它们不趋于 $0$，所以级数发散。" : "它们趋于 $0$，所以此判别法无法得出结论，需要用别的判别法。"}`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -493,6 +543,58 @@ export const theComparisonTest: TopicDef = {
         );
       },
     },
+    {
+      id: "an-inequality-that-settles-it",
+      title: t("An inequality that settles the question", "能下结论的不等式"),
+      explanation: t(
+        "A comparison only settles the question when it points the useful way: below a convergent series, or above a divergent one. $\\frac{1}{n^{2} + 4} < \\frac{1}{n^{2}}$ proves convergence, but $\\frac{1}{n^{2} + 4} < \\frac{1}{n}$ proves nothing, since being smaller than a divergent series allows either outcome. Likewise $\\frac{n + 3}{n^{2}} > \\frac{1}{n}$ proves divergence, while $\\frac{n + 3}{n^{2}} \\le \\frac{4}{n}$ proves nothing.",
+        "只有方向有用的比较才能下结论：小于一个收敛级数，或大于一个发散级数。$\\frac{1}{n^{2} + 4} < \\frac{1}{n^{2}}$ 能证明收敛，但 $\\frac{1}{n^{2} + 4} < \\frac{1}{n}$ 什么也证明不了，因为比发散级数小，两种结果都有可能。同样，$\\frac{n + 3}{n^{2}} > \\frac{1}{n}$ 能证明发散，而 $\\frac{n + 3}{n^{2}} \\le \\frac{4}{n}$ 什么也证明不了。",
+      ),
+      generate(rng) {
+        const s = rng.int(1, 9);
+        const kind = rng.int(0, 3);
+        const say = (ineq: string, b: string, conv: boolean, verdictConv: boolean) =>
+          t(
+            `$a_n ${ineq} ${b}$ and $\\sum ${b}$ ${conv ? "converges" : "diverges"}, so the series ${verdictConv ? "converges" : "diverges"}.`,
+            `$a_n ${ineq} ${b}$，且 $\\sum ${b}$ ${conv ? "收敛" : "发散"}，所以级数${verdictConv ? "收敛" : "发散"}。`,
+          );
+        let a: string;
+        let right: Text;
+        let wrong: Text[];
+        if (kind < 2) {
+          const p = kind === 0 ? rng.int(2, 4) : 0;
+          const k = rng.int(2, 6);
+          a = kind === 0 ? `\\frac{1}{n^{${p}} + ${s}}` : `\\frac{1}{${k}^{n} + ${s}}`;
+          const b = kind === 0 ? `\\frac{1}{n^{${p}}}` : `\\left(\\frac{1}{${k}}\\right)^{n}`;
+          right = say("<", b, true, true);
+          wrong = [
+            say("<", "\\frac{1}{n}", false, false),
+            say("<", "\\frac{1}{n}", false, true),
+            t("$a_n \\to 0$, so the series converges.", "$a_n \\to 0$，所以级数收敛。"),
+          ];
+        } else {
+          a = kind === 2 ? `\\frac{n + ${s}}{n^{2}}` : `\\frac{\\sqrt{n} + ${s}}{n}`;
+          const b = kind === 2 ? "\\frac{1}{n}" : "\\frac{1}{\\sqrt{n}}";
+          const upper = kind === 2 ? `\\frac{${s + 1}}{n}` : `\\frac{${s + 1}}{\\sqrt{n}}`;
+          right = say(">", b, false, false);
+          wrong = [
+            say("\\le", upper, false, false),
+            t("$a_n \\to 0$, so the series converges.", "$a_n \\to 0$，所以级数收敛。"),
+            t("The terms decrease, so the series converges.", "各项递减，所以级数收敛。"),
+          ];
+        }
+        return oneOf(
+          rng,
+          t(`Which reasoning correctly decides whether $${sigma(a)}$ converges?`, `哪种推理能正确判断 $${sigma(a)}$ 是否收敛？`),
+          right,
+          wrong,
+          t(
+            `${right.en} The comparison is useful because it puts the terms ${kind < 2 ? "below a convergent series" : "above a divergent series"}; a bound in the other direction would prove nothing.`,
+            `${right["zh-CN"]}这个比较有用，因为它把各项放在${kind < 2 ? "一个收敛级数之下" : "一个发散级数之上"}；反方向的界什么也证明不了。`,
+          ),
+        );
+      },
+    },
   ],
 };
 
@@ -631,6 +733,51 @@ export const theAlternatingSeriesTest: TopicDef = {
       generate(rng) {
         const k = alternatingCase(rng);
         return verdict(rng, sigma(`(-1)^{n} ${k.b}`), k.converges, k.work);
+      },
+    },
+    {
+      id: "the-alternating-series-error-bound",
+      title: t("The alternating series error bound", "交错级数的误差估计"),
+      explanation: t(
+        "When the alternating series test applies, the sum lies between any two consecutive partial sums, so stopping after $N$ terms leaves an error of at most the first term left out: $|S - S_N| \\le b_{N+1}$. For $\\sum \\frac{(-1)^{n+1}}{n^{2}}$, the error of $S_{9}$ is at most $b_{10} = \\frac{1}{100}$. To make the error less than $\\frac{1}{400}$, take $N$ with $(N + 1)^{2} > 400$, so $N = 20$.",
+        "交错级数判别法适用时，级数的和总在相邻两个部分和之间，所以只取前 $N$ 项时，误差不超过第一个被略去的项：$|S - S_N| \\le b_{N+1}$。对 $\\sum \\frac{(-1)^{n+1}}{n^{2}}$，$S_{9}$ 的误差至多为 $b_{10} = \\frac{1}{100}$。要使误差小于 $\\frac{1}{400}$，取满足 $(N + 1)^{2} > 400$ 的 $N$，即 $N = 20$。",
+      ),
+      generate(rng) {
+        if (rng.bool()) {
+          const c = rng.int(1, 5);
+          const p = rng.int(1, 3);
+          const N = rng.int(3, 12);
+          const pw = (v: string) => (p === 1 ? v : `${v}^{${p}}`);
+          const answer = Q.of(c, (N + 1) ** p);
+          return numberProblem({
+            prompt: t(
+              `The sum $S$ of $${sigma(`\\frac{(-1)^{n+1} \\cdot ${c}}{${pw("n")}}`)}$ is approximated by the partial sum $S_{${N}}$. What upper bound does the alternating series error bound give for $|S - S_{${N}}|$?`,
+              `用部分和 $S_{${N}}$ 近似 $${sigma(`\\frac{(-1)^{n+1} \\cdot ${c}}{${pw("n")}}`)}$ 的和 $S$。由交错级数的误差估计，$|S - S_{${N}}|$ 的上界是多少？`,
+            ),
+            answer,
+            form: "fraction",
+            wrong: [Q.of(c, N ** p), Q.of(c, (N + 2) ** p), Q.of(1, (N + 1) ** p)].filter((w) => !w.eq(answer)),
+            solution: t(
+              `The terms $b_n = \\frac{${c}}{${pw("n")}}$ decrease to $0$, so the error is at most the first term left out: $b_{${N + 1}} = \\frac{${c}}{${pw(`${N + 1}`)}} = ${answer.toLatex()}$.`,
+              `$b_n = \\frac{${c}}{${pw("n")}}$ 递减趋于 $0$，所以误差不超过第一个被略去的项：$b_{${N + 1}} = \\frac{${c}}{${pw(`${N + 1}`)}} = ${answer.toLatex()}$。`,
+            ),
+          });
+        }
+        const m = rng.int(5, 40);
+        const M = m * m;
+        return numberProblem({
+          prompt: t(
+            `Using the alternating series error bound, what is the smallest $N$ for which $S_N$ is guaranteed to approximate the sum of $${sigma("\\frac{(-1)^{n+1}}{n^{2}}")}$ with error less than $\\frac{1}{${M}}$?`,
+            `利用交错级数的误差估计，保证 $S_N$ 近似 $${sigma("\\frac{(-1)^{n+1}}{n^{2}}")}$ 的和时误差小于 $\\frac{1}{${M}}$ 的最小 $N$ 是多少？`,
+          ),
+          answer: m,
+          solveFor: "N",
+          wrong: [m - 1, m + 1, M, M - 1],
+          solution: t(
+            `The error is at most $b_{N+1} = \\frac{1}{(N + 1)^{2}}$, which is less than $\\frac{1}{${M}}$ when $(N + 1)^{2} > ${M}$, that is $N + 1 > ${m}$. So $N = ${m}$.`,
+            `误差不超过 $b_{N+1} = \\frac{1}{(N + 1)^{2}}$，当 $(N + 1)^{2} > ${M}$，即 $N + 1 > ${m}$ 时它小于 $\\frac{1}{${M}}$。所以 $N = ${m}$。`,
+          ),
+        });
       },
     },
   ],
@@ -916,6 +1063,62 @@ export const absoluteAndConditionalConvergence: TopicDef = {
           t(
             `$|a_n| = ${b} \\to ${c} \\neq 0$, so the terms do not tend to $0$ and the series diverges by the $n$th term test.`,
             `$|a_n| = ${b} \\to ${c} \\neq 0$，各项不趋于 $0$，由第 $n$ 项判别法级数发散。`,
+          ),
+        );
+      },
+    },
+    {
+      id: "signs-that-are-not-strictly-alternating",
+      title: t("Signs given by trigonometric or negative bases", "由三角函数或负底数给出的符号"),
+      explanation: t(
+        "Absolute convergence settles series whose signs do not simply alternate. Since $|\\sin(3n)| \\le 1$, $\\left|\\frac{\\sin(3n)}{n^{2}}\\right| \\le \\frac{1}{n^{2}}$, so $\\sum \\frac{\\sin(3n)}{n^{2}}$ converges absolutely. A factor $\\cos(n\\pi)$ is just $(-1)^{n}$, so $\\sum \\frac{\\cos(n\\pi)}{\\sqrt{n}}$ converges conditionally. And $\\sum \\frac{(-2)^{n}}{5^{n}}$ is geometric with $|r| = \\frac{2}{5} < 1$, so it converges absolutely.",
+        "绝对收敛可以处理符号并非简单交错的级数。由于 $|\\sin(3n)| \\le 1$，$\\left|\\frac{\\sin(3n)}{n^{2}}\\right| \\le \\frac{1}{n^{2}}$，所以 $\\sum \\frac{\\sin(3n)}{n^{2}}$ 绝对收敛。因子 $\\cos(n\\pi)$ 就是 $(-1)^{n}$，所以 $\\sum \\frac{\\cos(n\\pi)}{\\sqrt{n}}$ 条件收敛。而 $\\sum \\frac{(-2)^{n}}{5^{n}}$ 是 $|r| = \\frac{2}{5} < 1$ 的等比级数，所以绝对收敛。",
+      ),
+      generate(rng) {
+        const kind = rng.int(0, 2);
+        const c = rng.int(2, 9);
+        if (kind === 0) {
+          const p = rng.int(2, 4);
+          const trig = rng.pick(["\\sin", "\\cos"]);
+          const a = `\\frac{${trig}(${c}n)}{n^{${p}}}`;
+          return oneOf(
+            rng,
+            t(`How does $${sigma(a)}$ behave?`, `$${sigma(a)}$ 的敛散性如何？`),
+            modes[0],
+            [modes[1], modes[2]],
+            t(
+              `$|${trig}(${c}n)| \\le 1$, so $|a_n| \\le \\frac{1}{n^{${p}}}$, and $\\sum \\frac{1}{n^{${p}}}$ converges since $${p} > 1$. By comparison $\\sum |a_n|$ converges: the series converges absolutely.`,
+              `$|${trig}(${c}n)| \\le 1$，所以 $|a_n| \\le \\frac{1}{n^{${p}}}$，而 $${p} > 1$，$\\sum \\frac{1}{n^{${p}}}$ 收敛。由比较判别法 $\\sum |a_n|$ 收敛：级数绝对收敛。`,
+            ),
+          );
+        }
+        if (kind === 1) {
+          const f = powerForm(rng);
+          const abs = f.p.toNumber() > 1;
+          const a = `\\cos(n\\pi) \\cdot ${f.tex}`;
+          return oneOf(
+            rng,
+            t(`How does $${sigma(a)}$ behave?`, `$${sigma(a)}$ 的敛散性如何？`),
+            modes[abs ? 0 : 1],
+            [modes[abs ? 1 : 0], modes[2]],
+            t(
+              `$\\cos(n\\pi) = (-1)^{n}$, so the series is alternating with $|a_n| = ${f.tex} = \\frac{1}{n^{${f.p.toLatex()}}}$. ${abs ? "Since $p > 1$, $\\sum |a_n|$ converges: the series converges absolutely." : "Since $p \\le 1$, $\\sum |a_n|$ diverges, but $|a_n|$ decreases to $0$, so the series converges conditionally."}`,
+              `$\\cos(n\\pi) = (-1)^{n}$，所以这是交错级数，$|a_n| = ${f.tex} = \\frac{1}{n^{${f.p.toLatex()}}}$。${abs ? "由于 $p > 1$，$\\sum |a_n|$ 收敛：级数绝对收敛。" : "由于 $p \\le 1$，$\\sum |a_n|$ 发散，但 $|a_n|$ 递减趋于 $0$，所以级数条件收敛。"}`,
+            ),
+          );
+        }
+        const k = rng.int(2, 9);
+        const m = rng.int(2, 9);
+        const a = `\\frac{(-${k})^{n}}{${m}^{n}}`;
+        const conv = k < m;
+        return oneOf(
+          rng,
+          t(`How does $${sigma(a)}$ behave?`, `$${sigma(a)}$ 的敛散性如何？`),
+          modes[conv ? 0 : 2],
+          [modes[1], modes[conv ? 2 : 0]],
+          t(
+            `This is a geometric series with $r = -\\frac{${k}}{${m}}$. ${conv ? `Since $|r| < 1$, $\\sum |a_n|$ is geometric with ratio $\\frac{${k}}{${m}} < 1$ and converges: the series converges absolutely.` : "Since $|r| \\ge 1$, the terms do not tend to $0$ and the series diverges."}`,
+            `这是 $r = -\\frac{${k}}{${m}}$ 的等比级数。${conv ? `由于 $|r| < 1$，$\\sum |a_n|$ 是公比 $\\frac{${k}}{${m}} < 1$ 的等比级数，收敛：级数绝对收敛。` : "由于 $|r| \\ge 1$，各项不趋于 $0$，级数发散。"}`,
           ),
         );
       },
