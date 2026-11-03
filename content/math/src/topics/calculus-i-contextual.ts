@@ -653,6 +653,34 @@ function overPi(c: Q): string {
   return `${c.sign() < 0 ? "-" : ""}\\frac{${n}}{${c.d === 1n ? "" : c.d}\\pi}`;
 }
 
+const ring = (r: number, squash = 1, n = 96): Point[] =>
+  Array.from({ length: n }, (_, i) => [r * Math.cos((2 * Math.PI * i) / n), squash * r * Math.sin((2 * Math.PI * i) / n)]);
+
+/** growthFigure shows a circle (or a sphere, with its equator) of radius r gaining a thin shaded band of width dr. */
+function growthFigure(sphere: boolean): Figure {
+  const marks: Mark[] = [
+    { kind: "shade", points: [...ring(3.5), ...ring(3).reverse()] },
+    { kind: "polygon", points: ring(3) },
+    { kind: "polygon", points: ring(3.5) },
+    { kind: "segment", a: [0, 0], b: [3, 0] },
+    { kind: "dot", at: [0, 0] },
+    { kind: "side", a: [3, 0], b: [0, 0], text: "r" },
+    { kind: "label", at: [3.5, 0], text: "dr", dir: "e" },
+  ];
+  if (sphere) marks.splice(3, 0, { kind: "polygon", points: ring(3, 0.3) });
+  return {
+    svg: sketch(marks),
+    alt: sphere
+      ? t(
+          "A sphere of radius r with a thin shaded shell of thickness dr over its surface; the new volume is about the surface area 4πr² times dr.",
+          "半径为 r 的球，表面覆盖一层厚度为 dr 的阴影薄壳；新增体积约为表面积 4πr² 乘以 dr。",
+        )
+      : t(
+          "A circle of radius r with a thin shaded ring of width dr around it; the new area is about the circumference 2πr times dr.",
+          "半径为 r 的圆，外面围着一圈宽为 dr 的阴影细环；新增面积约为周长 2πr 乘以 dr。",
+        ),
+  };
+}
 /** calculatingRelatedRatesWithCirclesAndSpheres relates rates of radius, area and volume. */
 export const calculatingRelatedRatesWithCirclesAndSpheres: TopicDef = {
   id: "calculating-related-rates-with-circles-and-spheres",
@@ -673,6 +701,7 @@ export const calculatingRelatedRatesWithCirclesAndSpheres: TopicDef = {
         "Differentiate the area or circumference formula with respect to time, so that the rate of the radius appears as a factor by the chain rule. Differentiate $A = \\pi r^{2}$ with respect to $t$: $\\frac{dA}{dt} = 2\\pi r\\frac{dr}{dt}$. For the circumference $C = 2\\pi r$: $\\frac{dC}{dt} = 2\\pi\\frac{dr}{dt}$. Leave answers in terms of $\\pi$.",
         "把面积或周长公式对时间求导，根据链式法则，半径的变化率会作为一个因子出现。把 $A = \\pi r^{2}$ 对 $t$ 求导：$\\frac{dA}{dt} = 2\\pi r\\frac{dr}{dt}$。对周长 $C = 2\\pi r$：$\\frac{dC}{dt} = 2\\pi\\frac{dr}{dt}$。答案用 $\\pi$ 表示。",
       ),
+      figure: growthFigure(false),
       generate(rng) {
         const r0 = rng.int(2, 30);
         const v = rng.int(1, 9);
@@ -706,6 +735,7 @@ export const calculatingRelatedRatesWithCirclesAndSpheres: TopicDef = {
         "The rate at which the volume grows is the surface area times the rate of the radius, because new volume is added as a thin shell over the surface. For a sphere, $V = \\frac{4}{3}\\pi r^{3}$ and $S = 4\\pi r^{2}$, so\n\n$$\\frac{dV}{dt} = 4\\pi r^{2}\\frac{dr}{dt}, \\qquad \\frac{dS}{dt} = 8\\pi r\\frac{dr}{dt}.$$",
         "体积增长的速率等于表面积乘以半径的变化率，因为新增的体积是覆盖在表面上的一层薄壳。对球，$V = \\frac{4}{3}\\pi r^{3}$，$S = 4\\pi r^{2}$，所以\n\n$$\\frac{dV}{dt} = 4\\pi r^{2}\\frac{dr}{dt}, \\qquad \\frac{dS}{dt} = 8\\pi r\\frac{dr}{dt}.$$",
       ),
+      figure: growthFigure(true),
       generate(rng) {
         const r0 = rng.int(2, 15);
         const v = Q.of(rng.int(1, 5), rng.pick([1, 1, 2, 4]));
