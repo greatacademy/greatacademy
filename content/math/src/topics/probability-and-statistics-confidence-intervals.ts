@@ -1,7 +1,35 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { dec, Q } from "@ga/subject-math";
 import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
+
+/** pickLevel picks a common confidence level and its two-sided $z$ critical value. */
+const pickLevel = (rng: Rng): [number, Q] =>
+  rng.pick([
+    [90, Q.parse("1.645")],
+    [95, Q.parse("1.96")],
+    [99, Q.parse("2.576")],
+  ] as [number, Q][]);
+
+/** pickFpc picks a population size, a sample size and the exact finite population correction, the square root of (N - n) / (N - 1). */
+const pickFpc = (rng: Rng): [number, number, Q] =>
+  rng.pick([
+    [101, 37, Q.of(4, 5)],
+    [101, 20, Q.of(9, 10)],
+    [101, 65, Q.of(3, 5)],
+    [101, 52, Q.of(7, 10)],
+    [401, 77, Q.of(9, 10)],
+    [401, 257, Q.of(3, 5)],
+    [401, 176, Q.of(3, 4)],
+    [626, 226, Q.of(4, 5)],
+    [626, 401, Q.of(3, 5)],
+  ] as [number, number, Q][]);
+
+/** round2 rounds a measured value to two decimal places. */
+const round2 = (x: number): Q => Q.of(Math.round(x * 100), 100);
+
+/** par writes a value in parentheses when it is negative. */
+const par = (v: Q): string => (v.sign() < 0 ? `(${dec(v)})` : dec(v));
 
 /** Topics for Unit 7: Confidence Intervals (new topics). */
 export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
@@ -46,6 +74,41 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "endpoints-of-a-z-interval",
+        title: t("Endpoints of a $z$-interval", "$z$ 区间的端点"),
+        explanation: t(
+          "The interval is centered at the sample mean and reaches one margin of error to each side:\n\n$$\\bar{x} - z_{\\alpha/2}\\frac{\\sigma}{\\sqrt{n}} \\quad\\text{to}\\quad \\bar{x} + z_{\\alpha/2}\\frac{\\sigma}{\\sqrt{n}}.$$\n\nThe usual critical values are $z_{0.05} = 1.645$ for $90\\%$, $z_{0.025} = 1.96$ for $95\\%$ and $z_{0.005} = 2.576$ for $99\\%$. With $\\bar{x} = 50$, $\\sigma = 8$, $n = 16$ at $95\\%$: the standard error is $2$, the margin is $3.92$, and the interval is $(46.08, 53.92)$.",
+          "置信区间以样本均值为中心，向两侧各延伸一个误差界：\n\n$$\\bar{x} - z_{\\alpha/2}\\frac{\\sigma}{\\sqrt{n}} \\quad\\text{到}\\quad \\bar{x} + z_{\\alpha/2}\\frac{\\sigma}{\\sqrt{n}}.$$\n\n常用临界值：$90\\%$ 为 $z_{0.05} = 1.645$，$95\\%$ 为 $z_{0.025} = 1.96$，$99\\%$ 为 $z_{0.005} = 2.576$。若 $\\bar{x} = 50$，$\\sigma = 8$，$n = 16$，置信水平 $95\\%$：标准误为 $2$，误差界为 $3.92$，区间为 $(46.08, 53.92)$。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const [pct, z] = pickLevel(rng);
+          const k = rng.int(3, 12);
+          const se = Q.of(rng.int(1, 6));
+          const sigma = se.mul(Q.of(k));
+          const xbar = Q.of(rng.int(200, 1200), 10);
+          const margin = z.mul(se);
+          const upper = rng.bool();
+          const ans = upper ? xbar.add(margin) : xbar.sub(margin);
+          return numberProblem({
+            prompt: t(
+              `A sample of $n = ${k * k}$ from a normal population with $\\sigma = ${dec(sigma)}$ has mean $\\bar{x} = ${dec(xbar)}$. Find the ${upper ? "upper" : "lower"} endpoint of the $${pct}\\%$ confidence interval for $\\mu$ (use $z = ${dec(z)}$).`,
+              `从 $\\sigma = ${dec(sigma)}$ 的正态总体中抽取容量 $n = ${k * k}$ 的样本，均值 $\\bar{x} = ${dec(xbar)}$。求 $\\mu$ 的 $${pct}\\%$ 置信区间的${upper ? "上" : "下"}端点（取 $z = ${dec(z)}$）。`,
+            ),
+            answer: ans,
+            form: "decimal",
+            wrong: [
+              upper ? xbar.sub(margin) : xbar.add(margin),
+              upper ? xbar.add(z.mul(sigma)) : xbar.sub(z.mul(sigma)),
+              upper ? xbar.add(z.mul(sigma).div(Q.of(k * k))) : xbar.sub(z.mul(sigma).div(Q.of(k * k))),
+            ],
+            solution: t(
+              `The standard error is $\\frac{${dec(sigma)}}{\\sqrt{${k * k}}} = ${dec(se)}$ and the margin is $${dec(z)} \\cdot ${dec(se)} = ${dec(margin)}$, so the ${upper ? "upper" : "lower"} endpoint is $${dec(xbar)} ${upper ? "+" : "-"} ${dec(margin)} = ${dec(ans)}$.`,
+              `标准误为 $\\frac{${dec(sigma)}}{\\sqrt{${k * k}}} = ${dec(se)}$，误差界为 $${dec(z)} \\cdot ${dec(se)} = ${dec(margin)}$，所以${upper ? "上" : "下"}端点为 $${dec(xbar)} ${upper ? "+" : "-"} ${dec(margin)} = ${dec(ans)}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -81,6 +144,49 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             solution: t(
               `The degrees of freedom for a one-sample $t$-interval is $\\nu = n - 1 = ${n} - 1 = ${n - 1}$.`,
               `单样本 $t$ 置信区间的自由度为 $\\nu = n - 1 = ${n} - 1 = ${n - 1}$。`,
+            ),
+          });
+        },
+      },
+      {
+        id: "endpoints-of-a-t-interval",
+        title: t("Endpoints of a $t$-interval", "$t$ 区间的端点"),
+        explanation: t(
+          "With $\\sigma$ unknown, the sample standard deviation $s$ takes its place and the critical value comes from the $t$-distribution with $n - 1$ degrees of freedom:\n\n$$\\bar{x} \\pm t_{\\alpha/2, n-1}\\frac{s}{\\sqrt{n}}.$$\n\nThe $t$ critical value is larger than the matching $z$ value, which widens the interval to allow for the extra uncertainty in $s$; the difference fades as $n$ grows. For $n = 16$, $s = 8$, $\\bar{x} = 30$ and $t_{0.025, 15} = 2.131$: the margin is $2.131 \\cdot 2 = 4.262$.",
+          "当 $\\sigma$ 未知时，用样本标准差 $s$ 代替，临界值取自自由度为 $n - 1$ 的 $t$ 分布：\n\n$$\\bar{x} \\pm t_{\\alpha/2, n-1}\\frac{s}{\\sqrt{n}}.$$\n\n$t$ 临界值比相应的 $z$ 值大，使区间变宽，以反映 $s$ 带来的额外不确定性；$n$ 增大时差别逐渐消失。若 $n = 16$，$s = 8$，$\\bar{x} = 30$，$t_{0.025, 15} = 2.131$：误差界为 $2.131 \\cdot 2 = 4.262$。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const [k, t025, t05] = rng.pick([
+            [3, "2.306", "1.860"],
+            [4, "2.131", "1.753"],
+            [5, "2.064", "1.711"],
+            [6, "2.030", "1.690"],
+          ] as const);
+          const ninety = rng.bool(0.4);
+          const tc = Q.parse(ninety ? t05 : t025);
+          const n = k * k;
+          const se = Q.of(rng.int(1, 5));
+          const s = se.mul(Q.of(k));
+          const xbar = Q.of(rng.int(100, 900), 10);
+          const margin = tc.mul(se);
+          const upper = rng.bool();
+          const ans = upper ? xbar.add(margin) : xbar.sub(margin);
+          const tName = `t_{${ninety ? "0.05" : "0.025"}, ${n - 1}}`;
+          return numberProblem({
+            prompt: t(
+              `A sample of $n = ${n}$ from a normal population has $\\bar{x} = ${dec(xbar)}$ and $s = ${dec(s)}$. Using $${tName} = ${dec(tc)}$, find the ${upper ? "upper" : "lower"} endpoint of the $${ninety ? 90 : 95}\\%$ confidence interval for $\\mu$.`,
+              `从正态总体中抽取容量 $n = ${n}$ 的样本，$\\bar{x} = ${dec(xbar)}$，$s = ${dec(s)}$。取 $${tName} = ${dec(tc)}$，求 $\\mu$ 的 $${ninety ? 90 : 95}\\%$ 置信区间的${upper ? "上" : "下"}端点。`,
+            ),
+            answer: ans,
+            form: "decimal",
+            wrong: [
+              upper ? xbar.sub(margin) : xbar.add(margin),
+              upper ? xbar.add(tc.mul(s)) : xbar.sub(tc.mul(s)),
+              upper ? xbar.add(Q.parse("1.96").mul(se)) : xbar.sub(Q.parse("1.96").mul(se)),
+            ],
+            solution: t(
+              `The standard error is $\\frac{s}{\\sqrt{n}} = \\frac{${dec(s)}}{${k}} = ${dec(se)}$, and the margin is $${dec(tc)} \\cdot ${dec(se)} = ${dec(margin)}$. The ${upper ? "upper" : "lower"} endpoint is $${dec(xbar)} ${upper ? "+" : "-"} ${dec(margin)} = ${dec(ans)}$.`,
+              `标准误为 $\\frac{s}{\\sqrt{n}} = \\frac{${dec(s)}}{${k}} = ${dec(se)}$，误差界为 $${dec(tc)} \\cdot ${dec(se)} = ${dec(margin)}$。${upper ? "上" : "下"}端点为 $${dec(xbar)} ${upper ? "+" : "-"} ${dec(margin)} = ${dec(ans)}$。`,
             ),
           });
         },
@@ -141,6 +247,33 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "the-corrected-margin-of-error",
+        title: t("The corrected margin of error", "修正后的误差界"),
+        explanation: t(
+          "Sampling a large share of a finite population leaves less uncertainty, and the margin of error is multiplied by the **finite population correction**:\n\n$$E = z_{\\alpha/2}\\frac{\\sigma}{\\sqrt{n}}\\sqrt{\\frac{N - n}{N - 1}}.$$\n\nThe factor is below $1$ and matters once $n$ is more than about $5\\%$ of $N$. For $N = 101$ and $n = 37$, $\\sqrt{\\frac{64}{100}} = 0.8$, so the margin shrinks by a fifth.",
+          "从有限总体中抽取较大比例的样本时，不确定性减小，误差界要乘以**有限总体校正因子**：\n\n$$E = z_{\\alpha/2}\\frac{\\sigma}{\\sqrt{n}}\\sqrt{\\frac{N - n}{N - 1}}.$$\n\n该因子小于 $1$，当 $n$ 超过 $N$ 的约 $5\\%$ 时就不可忽略。例如 $N = 101$，$n = 37$，$\\sqrt{\\frac{64}{100}} = 0.8$，误差界缩小五分之一。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const [pct, z] = pickLevel(rng);
+          const [N, n, r] = pickFpc(rng);
+          const se = Q.of(rng.int(2, 40), 10);
+          const ans = z.mul(se).mul(r);
+          return numberProblem({
+            prompt: t(
+              `A sample of $n = ${n}$ is drawn without replacement from a population of $N = ${N}$, and $\\frac{\\sigma}{\\sqrt{n}} = ${dec(se)}$. Find the margin of error of the $${pct}\\%$ confidence interval for $\\mu$ with the finite population correction (use $z = ${dec(z)}$).`,
+              `从容量 $N = ${N}$ 的总体中不放回地抽取 $n = ${n}$ 个个体，$\\frac{\\sigma}{\\sqrt{n}} = ${dec(se)}$。求带有限总体校正的 $\\mu$ 的 $${pct}\\%$ 置信区间的误差界（取 $z = ${dec(z)}$）。`,
+            ),
+            answer: ans,
+            form: "decimal",
+            wrong: [z.mul(se), z.mul(se).mul(r).mul(r), se.mul(r), z.mul(se).mul(Q.one.sub(r))],
+            solution: t(
+              `The correction is $\\sqrt{\\frac{${N} - ${n}}{${N} - 1}} = \\sqrt{\\frac{${N - n}}{${N - 1}}} = ${dec(r)}$, so $E = ${dec(z)} \\cdot ${dec(se)} \\cdot ${dec(r)} = ${dec(ans)}$.`,
+              `校正因子为 $\\sqrt{\\frac{${N} - ${n}}{${N} - 1}} = \\sqrt{\\frac{${N - n}}{${N - 1}}} = ${dec(r)}$，所以 $E = ${dec(z)} \\cdot ${dec(se)} \\cdot ${dec(r)} = ${dec(ans)}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -181,6 +314,48 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             solution: t(
               `$\\widehat{\\text{Var}}(\\hat{p}) = \\frac{\\frac{${numP}}{${denP}} \\left(1 - \\frac{${numP}}{${denP}}\\right)}{${n}} = \\frac{${numP} \\times ${denP - numP}}{100 \\times ${n}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `$\\widehat{\\text{Var}}(\\hat{p}) = \\frac{\\frac{${numP}}{${denP}} \\left(1 - \\frac{${numP}}{${denP}}\\right)}{${n}} = \\frac{${numP} \\times ${denP - numP}}{100 \\times ${n}} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
+            ),
+          });
+        },
+      },
+      {
+        id: "endpoints-of-a-proportion-interval",
+        title: t("Endpoints of a proportion interval", "比例区间的端点"),
+        explanation: t(
+          "The Wald interval puts the sample proportion in the middle and estimates the standard error from it:\n\n$$\\hat{p} \\pm z_{\\alpha/2}\\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{n}}.$$\n\nIf $80$ of $400$ voters support a measure, $\\hat{p} = 0.2$, the standard error is $\\sqrt{\\frac{0.16}{400}} = 0.02$, and the $95\\%$ interval is $0.2 \\pm 0.0392$, from $0.1608$ to $0.2392$. Check first that there are at least $10$ successes and $10$ failures.",
+          "沃尔德区间以样本比例为中心，并由它估计标准误：\n\n$$\\hat{p} \\pm z_{\\alpha/2}\\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{n}}.$$\n\n若 $400$ 名选民中有 $80$ 人支持某项提案，$\\hat{p} = 0.2$，标准误为 $\\sqrt{\\frac{0.16}{400}} = 0.02$，$95\\%$ 区间为 $0.2 \\pm 0.0392$，即从 $0.1608$ 到 $0.2392$。先检查成功和失败次数都至少为 $10$。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const [pct, z] = pickLevel(rng);
+          const [p, sd] = rng.pick([
+            [Q.of(1, 2), Q.of(1, 2)],
+            [Q.of(1, 5), Q.of(2, 5)],
+            [Q.of(4, 5), Q.of(2, 5)],
+            [Q.of(1, 10), Q.of(3, 10)],
+            [Q.of(9, 10), Q.of(3, 10)],
+          ] as const);
+          const root = rng.pick([10, 20, 25, 40, 50]);
+          const n = root * root;
+          const x = p.mul(Q.of(n));
+          const se = sd.div(Q.of(root));
+          const margin = z.mul(se);
+          const upper = rng.bool();
+          const ans = upper ? p.add(margin) : p.sub(margin);
+          return numberProblem({
+            prompt: t(
+              `In a random sample of $${n}$ people, $${x.toString()}$ answer yes. Find the ${upper ? "upper" : "lower"} endpoint of the $${pct}\\%$ Wald confidence interval for the population proportion (use $z = ${dec(z)}$).`,
+              `在 $${n}$ 人的随机样本中，有 $${x.toString()}$ 人回答“是”。求总体比例的 $${pct}\\%$ 沃尔德置信区间的${upper ? "上" : "下"}端点（取 $z = ${dec(z)}$）。`,
+            ),
+            answer: ans,
+            form: "decimal",
+            wrong: [
+              upper ? p.sub(margin) : p.add(margin),
+              upper ? p.add(z.mul(sd.pow(2)).div(Q.of(n))) : p.sub(z.mul(sd.pow(2)).div(Q.of(n))),
+              upper ? p.add(se) : p.sub(se),
+            ],
+            solution: t(
+              `$\\hat{p} = \\frac{${x.toString()}}{${n}} = ${dec(p)}$ and $\\sqrt{\\frac{${dec(p)} \\cdot ${dec(Q.one.sub(p))}}{${n}}} = \\frac{${dec(sd)}}{${root}} = ${dec(se)}$. The margin is $${dec(z)} \\cdot ${dec(se)} = ${dec(margin)}$, so the endpoint is $${dec(p)} ${upper ? "+" : "-"} ${dec(margin)} = ${dec(ans)}$.`,
+              `$\\hat{p} = \\frac{${x.toString()}}{${n}} = ${dec(p)}$，$\\sqrt{\\frac{${dec(p)} \\cdot ${dec(Q.one.sub(p))}}{${n}}} = \\frac{${dec(sd)}}{${root}} = ${dec(se)}$。误差界为 $${dec(z)} \\cdot ${dec(se)} = ${dec(margin)}$，所以端点为 $${dec(p)} ${upper ? "+" : "-"} ${dec(margin)} = ${dec(ans)}$。`,
             ),
           });
         },
@@ -236,6 +411,39 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             solution: t(
               `The finite-population-corrected standard error multiplies the uncorrected standard error by the FPC factor $\\sqrt{\\frac{N - n}{N - 1}}$, giving $\\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{${n}} \\left(\\frac{${N} - ${n}}{${N} - 1}\\right)}$.`,
               `经有限总体校正的标准误差将未校正的标准误差乘以 FPC 因子 $\\sqrt{\\frac{N - n}{N - 1}}$，得到 $\\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{${n}} \\left(\\frac{${N} - ${n}}{${N} - 1}\\right)}$。`,
+            ),
+          });
+        },
+      },
+      {
+        id: "the-corrected-margin-for-a-proportion",
+        title: t("The corrected margin for a proportion", "比例的修正误差界"),
+        explanation: t(
+          "For a proportion estimated from a sample drawn without replacement, the standard error is multiplied by the same correction as for a mean:\n\n$$E = z_{\\alpha/2}\\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{n}}\\sqrt{\\frac{N - n}{N - 1}}.$$\n\nCompute the uncorrected standard error, the correction factor and the critical value separately, then multiply. Surveying $100$ of the $226$ members of a club, the factor is $\\sqrt{\\frac{126}{225}} \\approx 0.75$, so the margin is about a quarter smaller than the textbook formula gives.",
+          "对于不放回抽样估计的比例，标准误要乘以与均值相同的校正因子：\n\n$$E = z_{\\alpha/2}\\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{n}}\\sqrt{\\frac{N - n}{N - 1}}.$$\n\n分别算出未校正的标准误、校正因子和临界值，再相乘。例如调查某俱乐部 $226$ 名成员中的 $100$ 人，校正因子为 $\\sqrt{\\frac{126}{225}} \\approx 0.75$，误差界比教科书公式给出的约小四分之一。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const [pct, z] = pickLevel(rng);
+          const [N, n, r] = pickFpc(rng);
+          const x = rng.int(Math.ceil(n * 0.2), Math.floor(n * 0.8));
+          const p = x / n;
+          const se = Math.sqrt((p * (1 - p)) / n);
+          const zn = z.toNumber();
+          const rn = r.toNumber();
+          const r4 = (v: number): Q => Q.of(Math.round(v * 10000), 10000);
+          const ans = r4(zn * se * rn);
+          const wrong = [r4(zn * se), r4(zn * se * rn * rn), r4(zn * ((p * (1 - p)) / n) * rn)].filter((w) => !w.eq(ans));
+          return numberProblem({
+            prompt: t(
+              `A club has $N = ${N}$ members. A sample of $n = ${n}$ members is chosen without replacement, and $${x}$ of them favor a proposal. Find the finite-population-corrected margin of error for the proportion at $${pct}\\%$ confidence (use $z = ${dec(z)}$). Round to four decimal places.`,
+              `某俱乐部有 $N = ${N}$ 名成员。不放回地抽取 $n = ${n}$ 名成员，其中 $${x}$ 人赞成一项提案。求置信水平 $${pct}\\%$ 下比例的经有限总体校正的误差界（取 $z = ${dec(z)}$），精确到四位小数。`,
+            ),
+            answer: ans,
+            form: "decimal",
+            wrong,
+            solution: t(
+              `$\\hat{p} = \\frac{${x}}{${n}} \\approx ${p.toFixed(4)}$, so $\\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{n}} \\approx ${se.toFixed(5)}$. The correction is $\\sqrt{\\frac{${N - n}}{${N - 1}}} = ${dec(r)}$, so $E \\approx ${dec(z)} \\cdot ${se.toFixed(5)} \\cdot ${dec(r)} \\approx ${dec(ans)}$.`,
+              `$\\hat{p} = \\frac{${x}}{${n}} \\approx ${p.toFixed(4)}$，所以 $\\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{n}} \\approx ${se.toFixed(5)}$。校正因子为 $\\sqrt{\\frac{${N - n}}{${N - 1}}} = ${dec(r)}$，所以 $E \\approx ${dec(z)} \\cdot ${se.toFixed(5)} \\cdot ${dec(r)} \\approx ${dec(ans)}$。`,
             ),
           });
         },
@@ -300,6 +508,38 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "endpoints-of-a-variance-interval",
+        title: t("Endpoints of a variance interval", "方差区间的端点"),
+        explanation: t(
+          "Since $\\frac{(n - 1)s^{2}}{\\sigma^{2}}$ has a $\\chi^{2}_{n-1}$ distribution, the interval for $\\sigma^{2}$ divides $(n - 1)s^{2}$ by the two chi-square critical values. The **larger** critical value gives the **lower** endpoint:\n\n$$\\frac{(n - 1)s^{2}}{\\chi^{2}_{\\alpha/2}} \\le \\sigma^{2} \\le \\frac{(n - 1)s^{2}}{\\chi^{2}_{1 - \\alpha/2}},$$\n\nwhere $\\chi^{2}_{\\alpha/2}$ cuts off the upper tail. The interval is not symmetric about $s^{2}$, because the chi-square distribution is skewed.",
+          "因为 $\\frac{(n - 1)s^{2}}{\\sigma^{2}}$ 服从 $\\chi^{2}_{n-1}$ 分布，$\\sigma^{2}$ 的区间是用两个卡方临界值去除 $(n - 1)s^{2}$。**较大**的临界值给出**下**端点：\n\n$$\\frac{(n - 1)s^{2}}{\\chi^{2}_{\\alpha/2}} \\le \\sigma^{2} \\le \\frac{(n - 1)s^{2}}{\\chi^{2}_{1 - \\alpha/2}},$$\n\n其中 $\\chi^{2}_{\\alpha/2}$ 截去上尾。由于卡方分布是偏斜的，区间不以 $s^{2}$ 为中心对称。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const [n, hi, lo] = rng.pick([
+            [10, 19.023, 2.7],
+            [15, 26.119, 5.629],
+            [20, 32.852, 8.907],
+            [25, 39.364, 12.401],
+          ] as const);
+          const s2 = rng.int(4, 120);
+          const upper = rng.bool();
+          const ans = round2(((n - 1) * s2) / (upper ? lo : hi));
+          return numberProblem({
+            prompt: t(
+              `A sample of $n = ${n}$ from a normal population has variance $s^{2} = ${s2}$. With $\\chi^{2}_{0.025, ${n - 1}} = ${hi}$ and $\\chi^{2}_{0.975, ${n - 1}} = ${lo}$, find the ${upper ? "upper" : "lower"} endpoint of the $95\\%$ confidence interval for $\\sigma^{2}$. Round to two decimal places.`,
+              `从正态总体中抽取容量 $n = ${n}$ 的样本，方差 $s^{2} = ${s2}$。已知 $\\chi^{2}_{0.025, ${n - 1}} = ${hi}$，$\\chi^{2}_{0.975, ${n - 1}} = ${lo}$，求 $\\sigma^{2}$ 的 $95\\%$ 置信区间的${upper ? "上" : "下"}端点，精确到两位小数。`,
+            ),
+            answer: ans,
+            form: "decimal",
+            wrong: [round2(((n - 1) * s2) / (upper ? hi : lo)), round2((n * s2) / (upper ? lo : hi)), round2(s2 / (upper ? lo : hi))],
+            solution: t(
+              `$(n - 1)s^{2} = ${n - 1} \\cdot ${s2} = ${(n - 1) * s2}$. The ${upper ? "upper endpoint uses the smaller" : "lower endpoint uses the larger"} critical value: $\\frac{${(n - 1) * s2}}{${upper ? lo : hi}} \\approx ${dec(ans)}$.`,
+              `$(n - 1)s^{2} = ${n - 1} \\cdot ${s2} = ${(n - 1) * s2}$。${upper ? "上端点用较小的" : "下端点用较大的"}临界值：$\\frac{${(n - 1) * s2}}{${upper ? lo : hi}} \\approx ${dec(ans)}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -345,6 +585,56 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "endpoints-of-an-interval-for-a-difference-of-means",
+        title: t("Endpoints of an interval for $\\mu_1 - \\mu_2$", "$\\mu_1 - \\mu_2$ 区间的端点"),
+        explanation: t(
+          "The interval for $\\mu_1 - \\mu_2$ is centered at the observed difference $\\bar{x}_1 - \\bar{x}_2$ and reaches $z_{\\alpha/2}$ standard errors to each side. If the interval contains $0$, the data are consistent with equal means; if both endpoints have the same sign, they point to a real difference in that direction.\n\nWith $\\bar{x}_1 = 72$, $\\bar{x}_2 = 68$, $\\frac{\\sigma_1^{2}}{n_1} = 1.44$ and $\\frac{\\sigma_2^{2}}{n_2} = 1.06$, the standard error is $\\sqrt{2.5} \\approx 1.58$; using a squared standard error that is a perfect square keeps the arithmetic exact.",
+          "$\\mu_1 - \\mu_2$ 的区间以观测差 $\\bar{x}_1 - \\bar{x}_2$ 为中心，向两侧各延伸 $z_{\\alpha/2}$ 个标准误。若区间包含 $0$，数据与均值相等相容；若两端点同号，则表明在该方向上存在真实差异。\n\n例如 $\\bar{x}_1 = 72$，$\\bar{x}_2 = 68$，$\\frac{\\sigma_1^{2}}{n_1} = 1.44$，$\\frac{\\sigma_2^{2}}{n_2} = 1.06$，标准误为 $\\sqrt{2.5} \\approx 1.58$；若方差和恰为完全平方数，计算就是精确的。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const [pct, z] = pickLevel(rng);
+          const [a, b, c] = rng.pick([
+            [3, 4, 5],
+            [6, 8, 10],
+            [5, 12, 13],
+            [8, 6, 10],
+            [12, 5, 13],
+          ] as const);
+          const scale = rng.pick([1, 2]);
+          const sd1 = a * scale;
+          const sd2 = b * scale;
+          const n = rng.pick([4, 9, 16, 25]);
+          const root = Math.sqrt(n);
+          const s1 = sd1 * root;
+          const s2 = sd2 * root;
+          const se = Q.of(c * scale);
+          const x1 = rng.int(40, 90);
+          const x2 = rng.int(40, 90);
+          const diff = Q.of(x1 - x2);
+          const margin = z.mul(se);
+          const upper = rng.bool();
+          const ans = upper ? diff.add(margin) : diff.sub(margin);
+          const wrongSe = Q.of(sd1 + sd2);
+          return numberProblem({
+            prompt: t(
+              `Independent samples of size $n_1 = n_2 = ${n}$ come from normal populations with $\\sigma_1 = ${s1}$ and $\\sigma_2 = ${s2}$. The sample means are $\\bar{x}_1 = ${x1}$ and $\\bar{x}_2 = ${x2}$. Find the ${upper ? "upper" : "lower"} endpoint of the $${pct}\\%$ confidence interval for $\\mu_1 - \\mu_2$ (use $z = ${dec(z)}$).`,
+              `从 $\\sigma_1 = ${s1}$ 和 $\\sigma_2 = ${s2}$ 的两个正态总体中各抽取容量 $n_1 = n_2 = ${n}$ 的独立样本，样本均值为 $\\bar{x}_1 = ${x1}$，$\\bar{x}_2 = ${x2}$。求 $\\mu_1 - \\mu_2$ 的 $${pct}\\%$ 置信区间的${upper ? "上" : "下"}端点（取 $z = ${dec(z)}$）。`,
+            ),
+            answer: ans,
+            form: "decimal",
+            wrong: [
+              upper ? diff.sub(margin) : diff.add(margin),
+              upper ? diff.add(z.mul(wrongSe)) : diff.sub(z.mul(wrongSe)),
+              upper ? diff.add(se) : diff.sub(se),
+            ],
+            solution: t(
+              `$\\frac{\\sigma_1^{2}}{n_1} + \\frac{\\sigma_2^{2}}{n_2} = \\frac{${s1 * s1}}{${n}} + \\frac{${s2 * s2}}{${n}} = ${sd1 * sd1} + ${sd2 * sd2} = ${(c * scale) ** 2}$, so the standard error is $${c * scale}$ and the margin is $${dec(z)} \\cdot ${c * scale} = ${dec(margin)}$. The endpoint is $${par(diff)} ${upper ? "+" : "-"} ${dec(margin)} = ${dec(ans)}$.`,
+              `$\\frac{\\sigma_1^{2}}{n_1} + \\frac{\\sigma_2^{2}}{n_2} = \\frac{${s1 * s1}}{${n}} + \\frac{${s2 * s2}}{${n}} = ${sd1 * sd1} + ${sd2 * sd2} = ${(c * scale) ** 2}$，所以标准误为 $${c * scale}$，误差界为 $${dec(z)} \\cdot ${c * scale} = ${dec(margin)}$。端点为 $${par(diff)} ${upper ? "+" : "-"} ${dec(margin)} = ${dec(ans)}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -381,6 +671,37 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             solution: t(
               `$\\nu = n_1 + n_2 - 2 = ${n1} + ${n2} - 2 = ${n1 + n2 - 2}$.`,
               `$\\nu = n_1 + n_2 - 2 = ${n1} + ${n2} - 2 = ${n1 + n2 - 2}$。`,
+            ),
+          });
+        },
+      },
+      {
+        id: "the-pooled-variance",
+        title: t("The pooled variance", "合并方差"),
+        explanation: t(
+          "When the two populations share a variance, both samples estimate it, and the **pooled variance** combines them, weighting each sample variance by its degrees of freedom:\n\n$$s_p^{2} = \\frac{(n_1 - 1)s_1^{2} + (n_2 - 1)s_2^{2}}{n_1 + n_2 - 2}.$$\n\nIt always lies between $s_1^{2}$ and $s_2^{2}$, closer to the one from the larger sample. The interval then uses $s_p\\sqrt{\\frac{1}{n_1} + \\frac{1}{n_2}}$ as its standard error.",
+          "当两个总体方差相同时，两个样本都在估计它，**合并方差**把两者结合起来，以自由度为权重：\n\n$$s_p^{2} = \\frac{(n_1 - 1)s_1^{2} + (n_2 - 1)s_2^{2}}{n_1 + n_2 - 2}.$$\n\n它总在 $s_1^{2}$ 与 $s_2^{2}$ 之间，并更靠近样本较大的那一个。区间的标准误为 $s_p\\sqrt{\\frac{1}{n_1} + \\frac{1}{n_2}}$。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const n1 = rng.int(5, 20);
+          let n2 = rng.int(5, 20);
+          if (n2 === n1) n2 += 3;
+          const v1 = rng.int(4, 60);
+          let v2 = rng.int(4, 60);
+          if (v2 === v1) v2 += 7;
+          const num = (n1 - 1) * v1 + (n2 - 1) * v2;
+          const df = n1 + n2 - 2;
+          const ans = Q.of(num, df);
+          return numberProblem({
+            prompt: t(
+              `Two independent samples from populations with a common variance have $n_1 = ${n1}$, $s_1^{2} = ${v1}$ and $n_2 = ${n2}$, $s_2^{2} = ${v2}$. Find the pooled variance $s_p^{2}$.`,
+              `来自方差相同的两个总体的独立样本满足 $n_1 = ${n1}$，$s_1^{2} = ${v1}$；$n_2 = ${n2}$，$s_2^{2} = ${v2}$。求合并方差 $s_p^{2}$。`,
+            ),
+            answer: ans,
+            wrong: [Q.of(v1 + v2, 2), Q.of(n1 * v1 + n2 * v2, n1 + n2), Q.of(num, n1 + n2), Q.of(v1, n1).add(Q.of(v2, n2))],
+            solution: t(
+              `$s_p^{2} = \\frac{${n1 - 1} \\cdot ${v1} + ${n2 - 1} \\cdot ${v2}}{${n1} + ${n2} - 2} = \\frac{${num}}{${df}}${lowestTerms(num, df)}$.`,
+              `$s_p^{2} = \\frac{${n1 - 1} \\cdot ${v1} + ${n2 - 1} \\cdot ${v2}}{${n1} + ${n2} - 2} = \\frac{${num}}{${df}}${lowestTerms(num, df)}$。`,
             ),
           });
         },
@@ -432,6 +753,45 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "the-welch-degrees-of-freedom",
+        title: t("The Welch degrees of freedom", "韦尔奇自由度"),
+        explanation: t(
+          "Without equal variances the statistic is only approximately $t$-distributed, with the **Welch–Satterthwaite** degrees of freedom. Writing $a = \\frac{s_1^{2}}{n_1}$ and $b = \\frac{s_2^{2}}{n_2}$,\n\n$$\\nu = \\frac{(a + b)^{2}}{\\frac{a^{2}}{n_1 - 1} + \\frac{b^{2}}{n_2 - 1}}.$$\n\nThe result is usually not a whole number; tables are entered with $\\nu$ rounded **down**, which errs on the side of a wider interval. It always lies between $\\min(n_1, n_2) - 1$ and $n_1 + n_2 - 2$.",
+          "方差不相等时，统计量只近似服从 $t$ 分布，自由度由 **韦尔奇–萨特思韦特** 公式给出。记 $a = \\frac{s_1^{2}}{n_1}$，$b = \\frac{s_2^{2}}{n_2}$，\n\n$$\\nu = \\frac{(a + b)^{2}}{\\frac{a^{2}}{n_1 - 1} + \\frac{b^{2}}{n_2 - 1}}.$$\n\n结果通常不是整数；查表时把 $\\nu$ **向下**取整，使区间偏宽、更稳妥。它总介于 $\\min(n_1, n_2) - 1$ 与 $n_1 + n_2 - 2$ 之间。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const n1 = rng.int(6, 16);
+          let n2 = rng.int(6, 16);
+          if (n2 === n1) n2 += 4;
+          const a = Q.of(rng.int(1, 9));
+          let b = Q.of(rng.int(1, 9));
+          if (b.eq(a)) b = b.add(Q.of(3));
+          const nu = a
+            .add(b)
+            .pow(2)
+            .div(
+              a
+                .pow(2)
+                .div(Q.of(n1 - 1))
+                .add(b.pow(2).div(Q.of(n2 - 1))),
+            );
+          const fl = Math.floor(nu.toNumber());
+          const wrong = [n1 + n2 - 2, Math.min(n1, n2) - 1, fl + 1].filter((w) => w !== fl);
+          return numberProblem({
+            prompt: t(
+              `For two independent samples, $n_1 = ${n1}$ with $\\frac{s_1^{2}}{n_1} = ${a.toString()}$, and $n_2 = ${n2}$ with $\\frac{s_2^{2}}{n_2} = ${b.toString()}$. Compute the Welch–Satterthwaite degrees of freedom and round down to a whole number.`,
+              `两个独立样本满足 $n_1 = ${n1}$，$\\frac{s_1^{2}}{n_1} = ${a.toString()}$；$n_2 = ${n2}$，$\\frac{s_2^{2}}{n_2} = ${b.toString()}$。计算韦尔奇–萨特思韦特自由度，并向下取整。`,
+            ),
+            answer: fl,
+            wrong,
+            solution: t(
+              `$\\nu = \\frac{(${a.toString()} + ${b.toString()})^{2}}{\\frac{${a.toString()}^{2}}{${n1 - 1}} + \\frac{${b.toString()}^{2}}{${n2 - 1}}} = ${nu.toLatex()} \\approx ${nu.toNumber().toFixed(2)}$, which rounds down to $${fl}$.`,
+              `$\\nu = \\frac{(${a.toString()} + ${b.toString()})^{2}}{\\frac{${a.toString()}^{2}}{${n1 - 1}} + \\frac{${b.toString()}^{2}}{${n2 - 1}}} = ${nu.toLatex()} \\approx ${nu.toNumber().toFixed(2)}$，向下取整得 $${fl}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -471,6 +831,41 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             solution: t(
               `$E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}} = ${z} \\times \\frac{${sigmaD}}{\\sqrt{${n}}} = ${z} \\times \\frac{${sigmaD}}{${k}} = ${margin}$.`,
               `$E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}} = ${z} \\times \\frac{${sigmaD}}{\\sqrt{${n}}} = ${z} \\times \\frac{${sigmaD}}{${k}} = ${margin}$。`,
+            ),
+          });
+        },
+      },
+      {
+        id: "endpoints-of-a-paired-interval",
+        title: t("Endpoints of a paired interval", "配对区间的端点"),
+        explanation: t(
+          "Pairing turns two samples into one sample of differences $d_i = x_i - y_i$. With the standard deviation $\\sigma_d$ of the differences known, the interval for the mean difference is\n\n$$\\bar{d} \\pm z_{\\alpha/2}\\frac{\\sigma_d}{\\sqrt{n}},$$\n\nwhere $n$ is the number of **pairs**. Pairing helps because $\\sigma_d$ removes the variation between subjects and is often far smaller than either population's standard deviation.",
+          "配对把两个样本变成一个差值样本 $d_i = x_i - y_i$。若差值的标准差 $\\sigma_d$ 已知，均值差的区间为\n\n$$\\bar{d} \\pm z_{\\alpha/2}\\frac{\\sigma_d}{\\sqrt{n}},$$\n\n其中 $n$ 是**配对数**。配对之所以有效，是因为 $\\sigma_d$ 去掉了个体之间的差异，往往远小于任一总体的标准差。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const [pct, z] = pickLevel(rng);
+          const k = rng.int(3, 9);
+          const se = Q.of(rng.int(1, 8), 2);
+          const sd = se.mul(Q.of(k));
+          const dbar = Q.of(rng.int(-30, 90), 10);
+          const margin = z.mul(se);
+          const upper = rng.bool();
+          const ans = upper ? dbar.add(margin) : dbar.sub(margin);
+          return numberProblem({
+            prompt: t(
+              `For $${k * k}$ subjects measured before and after a treatment, the mean of the differences (before minus after) is $\\bar{d} = ${dec(dbar)}$, and the differences have known standard deviation $\\sigma_d = ${dec(sd)}$. Find the ${upper ? "upper" : "lower"} endpoint of the $${pct}\\%$ confidence interval for the mean difference (use $z = ${dec(z)}$).`,
+              `对 $${k * k}$ 名受试者在处理前后各测一次，差值（处理前减处理后）的均值为 $\\bar{d} = ${dec(dbar)}$，差值的标准差已知为 $\\sigma_d = ${dec(sd)}$。求均值差的 $${pct}\\%$ 置信区间的${upper ? "上" : "下"}端点（取 $z = ${dec(z)}$）。`,
+            ),
+            answer: ans,
+            form: "decimal",
+            wrong: [
+              upper ? dbar.sub(margin) : dbar.add(margin),
+              upper ? dbar.add(z.mul(sd)) : dbar.sub(z.mul(sd)),
+              upper ? dbar.add(z.mul(sd).div(Q.of(k * k))) : dbar.sub(z.mul(sd).div(Q.of(k * k))),
+            ],
+            solution: t(
+              `The standard error is $\\frac{${dec(sd)}}{\\sqrt{${k * k}}} = ${dec(se)}$ and the margin is $${dec(z)} \\cdot ${dec(se)} = ${dec(margin)}$, so the endpoint is $${par(dbar)} ${upper ? "+" : "-"} ${dec(margin)} = ${dec(ans)}$.`,
+              `标准误为 $\\frac{${dec(sd)}}{\\sqrt{${k * k}}} = ${dec(se)}$，误差界为 $${dec(z)} \\cdot ${dec(se)} = ${dec(margin)}$，所以端点为 $${par(dbar)} ${upper ? "+" : "-"} ${dec(margin)} = ${dec(ans)}$。`,
             ),
           });
         },
@@ -525,6 +920,51 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "the-variance-of-the-differences",
+        title: t("The variance of the differences", "差值的方差"),
+        explanation: t(
+          "With $\\sigma_d$ unknown, estimate it from the differences themselves. Subtract within each pair, find the mean $\\bar{d}$, then\n\n$$s_d^{2} = \\frac{\\sum (d_i - \\bar{d})^{2}}{n - 1}.$$\n\nWork with the differences, not with the two columns separately: $s_d^{2}$ is not $s_x^{2} + s_y^{2}$, because the paired values are correlated. The interval is then $\\bar{d} \\pm t_{\\alpha/2, n-1}\\frac{s_d}{\\sqrt{n}}$.",
+          "当 $\\sigma_d$ 未知时，用差值本身来估计。先在每对内相减，求出均值 $\\bar{d}$，再算\n\n$$s_d^{2} = \\frac{\\sum (d_i - \\bar{d})^{2}}{n - 1}.$$\n\n要用差值计算，而不是分别处理两列：由于配对数据相关，$s_d^{2}$ 并不等于 $s_x^{2} + s_y^{2}$。区间为 $\\bar{d} \\pm t_{\\alpha/2, n-1}\\frac{s_d}{\\sqrt{n}}$。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const n = rng.pick([4, 5]);
+          const dbar = rng.int(-3, 6);
+          const devs = rng.pick(
+            n === 4
+              ? [
+                  [-2, -1, 1, 2],
+                  [-3, 0, 1, 2],
+                  [-4, 1, 1, 2],
+                  [-3, -1, 1, 3],
+                ]
+              : [
+                  [-2, -1, 0, 1, 2],
+                  [-3, -1, 0, 2, 2],
+                  [-4, 0, 1, 1, 2],
+                  [-2, -2, 0, 1, 3],
+                ],
+          );
+          const order = rng.shuffle([...devs]);
+          const ds = order.map((e) => dbar + e);
+          const after = ds.map(() => rng.int(20, 60));
+          const before = after.map((y, i) => y + (ds[i] ?? 0));
+          const ss = devs.reduce((s, e) => s + e * e, 0);
+          const ans = Q.of(ss, n - 1);
+          return numberProblem({
+            prompt: t(
+              `Paired measurements (before, after) are ${before.map((x, i) => `$(${x}, ${after[i]})$`).join(", ")}. Using the differences before minus after, find the sample variance $s_d^{2}$ of the differences.`,
+              `配对测量值（处理前，处理后）为 ${before.map((x, i) => `$(${x}, ${after[i]})$`).join("，")}。用差值“处理前减处理后”，求差值的样本方差 $s_d^{2}$。`,
+            ),
+            answer: ans,
+            wrong: [Q.of(ss, n), Q.of(ss), Q.of(ss, n - 1).add(Q.of(dbar * dbar))],
+            solution: t(
+              `The differences are $${ds.join(", ")}$ with mean $\\bar{d} = ${dbar}$. Their deviations $${order.join(", ")}$ have squares summing to $${ss}$, so $s_d^{2} = \\frac{${ss}}{${n - 1}}${lowestTerms(ss, n - 1)}$.`,
+              `差值为 $${ds.join(", ")}$，均值 $\\bar{d} = ${dbar}$。离差 $${order.join(", ")}$ 的平方和为 $${ss}$，所以 $s_d^{2} = \\frac{${ss}}{${n - 1}}${lowestTerms(ss, n - 1)}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -565,6 +1005,47 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             solution: t(
               `Since $\\hat{p}_1(1 - \\hat{p}_1) = \\frac{1}{4}$ and $\\hat{p}_2(1 - \\hat{p}_2) = \\frac{1}{4}$, $\\widehat{\\text{Var}}(\\hat{p}_1 - \\hat{p}_2) = \\frac{1}{4(${n1})} + \\frac{1}{4(${n2})} = \\frac{${n1} + ${n2}}{4(${n1})(${n2})} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `由于 $\\hat{p}_1(1 - \\hat{p}_1) = \\frac{1}{4}$ 且 $\\hat{p}_2(1 - \\hat{p}_2) = \\frac{1}{4}$，故 $\\widehat{\\text{Var}}(\\hat{p}_1 - \\hat{p}_2) = \\frac{1}{4(${n1})} + \\frac{1}{4(${n2})} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
+            ),
+          });
+        },
+      },
+      {
+        id: "endpoints-of-an-interval-for-a-difference-of-proportions",
+        title: t("Endpoints of an interval for $p_1 - p_2$", "$p_1 - p_2$ 区间的端点"),
+        explanation: t(
+          "Each sample proportion estimates its own variance, and the variances add:\n\n$$(\\hat{p}_1 - \\hat{p}_2) \\pm z_{\\alpha/2}\\sqrt{\\frac{\\hat{p}_1(1 - \\hat{p}_1)}{n_1} + \\frac{\\hat{p}_2(1 - \\hat{p}_2)}{n_2}}.$$\n\nCompute the two proportions, the two variance terms, the standard error, and then the margin; keep several decimal places until the final step. An interval that excludes $0$ suggests the two proportions differ.",
+          "每个样本比例各自估计自己的方差，方差相加：\n\n$$(\\hat{p}_1 - \\hat{p}_2) \\pm z_{\\alpha/2}\\sqrt{\\frac{\\hat{p}_1(1 - \\hat{p}_1)}{n_1} + \\frac{\\hat{p}_2(1 - \\hat{p}_2)}{n_2}}.$$\n\n依次算出两个比例、两项方差、标准误和误差界；最后一步之前保留足够的小数位。若区间不含 $0$，说明两个比例可能不同。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const [pct, z] = pickLevel(rng);
+          const n1 = rng.pick([100, 200, 250, 400, 500]);
+          const n2 = rng.pick([100, 200, 250, 400, 500]);
+          const x1 = rng.int(Math.floor(n1 * 0.2), Math.floor(n1 * 0.8));
+          const x2 = rng.int(Math.floor(n2 * 0.2), Math.floor(n2 * 0.8));
+          const p1 = x1 / n1;
+          const p2 = x2 / n2;
+          const v = (p1 * (1 - p1)) / n1 + (p2 * (1 - p2)) / n2;
+          const se = Math.sqrt(v);
+          const zn = z.toNumber();
+          const upper = rng.bool();
+          const r3 = (x: number): Q => Q.of(Math.round(x * 1000), 1000);
+          const ans = r3(p1 - p2 + (upper ? 1 : -1) * zn * se);
+          const wrong = [
+            r3(p1 - p2 + (upper ? -1 : 1) * zn * se),
+            r3(p1 - p2 + (upper ? 1 : -1) * zn * v),
+            r3(p1 - p2 + (upper ? 1 : -1) * zn * (Math.sqrt((p1 * (1 - p1)) / n1) + Math.sqrt((p2 * (1 - p2)) / n2))),
+          ].filter((w) => !w.eq(ans));
+          return numberProblem({
+            prompt: t(
+              `In one group, $${x1}$ of $${n1}$ people respond; in an independent group, $${x2}$ of $${n2}$ respond. Find the ${upper ? "upper" : "lower"} endpoint of the $${pct}\\%$ confidence interval for $p_1 - p_2$ (use $z = ${dec(z)}$). Round to three decimal places.`,
+              `第一组 $${n1}$ 人中有 $${x1}$ 人响应；另一独立组 $${n2}$ 人中有 $${x2}$ 人响应。求 $p_1 - p_2$ 的 $${pct}\\%$ 置信区间的${upper ? "上" : "下"}端点（取 $z = ${dec(z)}$），精确到三位小数。`,
+            ),
+            answer: ans,
+            form: "decimal",
+            wrong,
+            solution: t(
+              `$\\hat{p}_1 = ${dec(Q.of(x1, n1))}$ and $\\hat{p}_2 = ${dec(Q.of(x2, n2))}$. The variance terms sum to $${v.toFixed(6)}$, so the standard error is $${se.toFixed(4)}$ and the margin is $${dec(z)} \\cdot ${se.toFixed(4)} \\approx ${(zn * se).toFixed(4)}$. The endpoint is $${(p1 - p2).toFixed(3)} ${upper ? "+" : "-"} ${(zn * se).toFixed(4)} \\approx ${dec(ans)}$.`,
+              `$\\hat{p}_1 = ${dec(Q.of(x1, n1))}$，$\\hat{p}_2 = ${dec(Q.of(x2, n2))}$。两项方差之和为 $${v.toFixed(6)}$，标准误为 $${se.toFixed(4)}$，误差界为 $${dec(z)} \\cdot ${se.toFixed(4)} \\approx ${(zn * se).toFixed(4)}$。端点为 $${(p1 - p2).toFixed(3)} ${upper ? "+" : "-"} ${(zn * se).toFixed(4)} \\approx ${dec(ans)}$。`,
             ),
           });
         },
@@ -613,6 +1094,44 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "rounding-a-sample-size-up",
+        title: t("Rounding a sample size up", "样本容量向上取整"),
+        explanation: t(
+          "With real critical values the formula $n = \\left(\\frac{z_{\\alpha/2}\\sigma}{E}\\right)^{2}$ rarely gives a whole number. Always round **up**, even when the decimal part is tiny: rounding down would give a margin slightly larger than $E$.\n\nFor $95\\%$ confidence, $\\sigma = 12$ and $E = 2$: $\\left(\\frac{1.96 \\cdot 12}{2}\\right)^{2} = 11.76^{2} = 138.2976$, so $n = 139$.",
+          "使用真实临界值时，公式 $n = \\left(\\frac{z_{\\alpha/2}\\sigma}{E}\\right)^{2}$ 很少得到整数。总是**向上**取整，即使小数部分很小：向下取整会使误差界略大于 $E$。\n\n例如 $95\\%$ 置信，$\\sigma = 12$，$E = 2$：$\\left(\\frac{1.96 \\cdot 12}{2}\\right)^{2} = 11.76^{2} = 138.2976$，所以 $n = 139$。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const [pct, z] = pickLevel(rng);
+          const sigma = rng.int(3, 30);
+          const E = Q.of(rng.pick([5, 10, 15, 20, 25, 30, 40, 50]), 10);
+          const base = z.mul(Q.of(sigma)).div(E);
+          const n0 = base.pow(2);
+          const ceil = Math.ceil(n0.toNumber());
+          const fl = Math.floor(n0.toNumber());
+          return numberProblem({
+            prompt: t(
+              `How large a sample is needed to estimate a mean to within $E = ${dec(E)}$ with $${pct}\\%$ confidence, if $\\sigma = ${sigma}$? Use $z = ${dec(z)}$.`,
+              `已知 $\\sigma = ${sigma}$，要在 $${pct}\\%$ 置信水平下把均值的估计误差控制在 $E = ${dec(E)}$ 以内，需要多大的样本？取 $z = ${dec(z)}$。`,
+            ),
+            answer: ceil,
+            wrong: [
+              fl,
+              Math.ceil(base.toNumber()),
+              Math.ceil(
+                z
+                  .mul(Q.of(sigma * sigma))
+                  .div(E)
+                  .toNumber(),
+              ),
+            ].filter((w) => w !== ceil),
+            solution: t(
+              `$\\left(\\frac{${dec(z)} \\cdot ${sigma}}{${dec(E)}}\\right)^{2} \\approx ${n0.toNumber().toFixed(4)}$. Rounding up gives $n = ${ceil}$.`,
+              `$\\left(\\frac{${dec(z)} \\cdot ${sigma}}{${dec(E)}}\\right)^{2} \\approx ${n0.toNumber().toFixed(4)}$。向上取整得 $n = ${ceil}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -651,6 +1170,35 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             solution: t(
               `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
+            ),
+          });
+        },
+      },
+      {
+        id: "a-finite-population-sample-size-from-the-start",
+        title: t("A finite-population sample size from the start", "从头计算有限总体的样本容量"),
+        explanation: t(
+          "The full calculation has two stages. First find the infinite-population size $n_0 = \\left(\\frac{z_{\\alpha/2}\\sigma}{E}\\right)^{2}$, without rounding. Then correct it and round up:\n\n$$n = \\left\\lceil \\frac{N n_0}{n_0 + N - 1} \\right\\rceil.$$\n\nThe correction matters most when $n_0$ is a sizable fraction of $N$; when $N$ is huge it changes almost nothing.",
+          "完整计算分两步。先求无限总体下的样本量 $n_0 = \\left(\\frac{z_{\\alpha/2}\\sigma}{E}\\right)^{2}$，不取整。再作校正并向上取整：\n\n$$n = \\left\\lceil \\frac{N n_0}{n_0 + N - 1} \\right\\rceil.$$\n\n当 $n_0$ 占 $N$ 的比例较大时，校正最为重要；$N$ 很大时它几乎不改变结果。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const E = rng.int(1, 4);
+          const sigma = E * rng.int(4, 12);
+          const base = (2 * sigma) / E;
+          const n0 = base * base;
+          const N = rng.int(Math.max(150, n0), 3000);
+          const exact = Q.of(N * n0, n0 + N - 1);
+          const ans = Math.ceil(exact.toNumber());
+          return numberProblem({
+            prompt: t(
+              `A population has $N = ${N}$ members and standard deviation $\\sigma = ${sigma}$. Using $z = 2$, find the smallest sample, drawn without replacement, that estimates the mean to within $E = ${E}$.`,
+              `某总体有 $N = ${N}$ 个成员，标准差 $\\sigma = ${sigma}$。取 $z = 2$，求不放回抽样时，使均值估计误差不超过 $E = ${E}$ 的最小样本容量。`,
+            ),
+            answer: ans,
+            wrong: [n0, Math.floor(exact.toNumber()), Math.ceil((N * n0) / (n0 + N))].filter((w) => w !== ans),
+            solution: t(
+              `$n_0 = \\left(\\frac{2 \\cdot ${sigma}}{${E}}\\right)^{2} = ${n0}$, and $\\frac{${N} \\cdot ${n0}}{${n0} + ${N} - 1} = \\frac{${N * n0}}{${n0 + N - 1}} \\approx ${exact.toNumber().toFixed(3)}$, which rounds up to $${ans}$.`,
+              `$n_0 = \\left(\\frac{2 \\cdot ${sigma}}{${E}}\\right)^{2} = ${n0}$，$\\frac{${N} \\cdot ${n0}}{${n0} + ${N} - 1} = \\frac{${N * n0}}{${n0 + N - 1}} \\approx ${exact.toNumber().toFixed(3)}$，向上取整得 $${ans}$。`,
             ),
           });
         },
@@ -698,6 +1246,36 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "sample-size-with-a-planning-value",
+        title: t("Sample size with a planning value", "使用规划值的样本容量"),
+        explanation: t(
+          "When a pilot study or earlier survey gives a planning value $\\tilde{p}$, use it instead of $0.5$:\n\n$$n = \\left\\lceil \\frac{z_{\\alpha/2}^{2}\\,\\tilde{p}(1 - \\tilde{p})}{E^{2}} \\right\\rceil.$$\n\nThe further $\\tilde{p}$ is from $0.5$, the smaller $\\tilde{p}(1 - \\tilde{p})$ and the smaller the sample. For $\\tilde{p} = 0.2$, $E = 0.04$ and $z = 1.96$: $\\frac{3.8416 \\cdot 0.16}{0.0016} = 384.16$, so $n = 385$, against $601$ with $0.5$.",
+          "当预调查或以往调查给出规划值 $\\tilde{p}$ 时，用它代替 $0.5$：\n\n$$n = \\left\\lceil \\frac{z_{\\alpha/2}^{2}\\,\\tilde{p}(1 - \\tilde{p})}{E^{2}} \\right\\rceil.$$\n\n$\\tilde{p}$ 离 $0.5$ 越远，$\\tilde{p}(1 - \\tilde{p})$ 越小，所需样本也越小。例如 $\\tilde{p} = 0.2$，$E = 0.04$，$z = 1.96$：$\\frac{3.8416 \\cdot 0.16}{0.0016} = 384.16$，所以 $n = 385$，而用 $0.5$ 则需 $601$。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const [pct, z] = pickLevel(rng);
+          const p = Q.of(rng.pick([1, 2, 3, 4, 6, 7, 8, 9]), 10);
+          const E = Q.of(rng.pick([2, 3, 4, 5, 6]), 100);
+          const n0 = z.pow(2).mul(p).mul(Q.one.sub(p)).div(E.pow(2));
+          const ans = Math.ceil(n0.toNumber());
+          const half = Math.ceil(z.pow(2).div(Q.of(4)).div(E.pow(2)).toNumber());
+          return numberProblem({
+            prompt: t(
+              `A pilot survey suggests a proportion near $${dec(p)}$. How large a sample is needed to estimate the proportion to within $E = ${dec(E)}$ with $${pct}\\%$ confidence? Use $z = ${dec(z)}$.`,
+              `预调查显示比例约为 $${dec(p)}$。要在 $${pct}\\%$ 置信水平下把比例的估计误差控制在 $E = ${dec(E)}$ 以内，需要多大的样本？取 $z = ${dec(z)}$。`,
+            ),
+            answer: ans,
+            wrong: [half, Math.floor(n0.toNumber()), Math.ceil(z.mul(p).mul(Q.one.sub(p)).div(E.pow(2)).toNumber())].filter(
+              (w) => w !== ans,
+            ),
+            solution: t(
+              `$n = \\frac{${dec(z)}^{2} \\cdot ${dec(p)} \\cdot ${dec(Q.one.sub(p))}}{${dec(E)}^{2}} \\approx ${n0.toNumber().toFixed(3)}$, which rounds up to $${ans}$.`,
+              `$n = \\frac{${dec(z)}^{2} \\cdot ${dec(p)} \\cdot ${dec(Q.one.sub(p))}}{${dec(E)}^{2}} \\approx ${n0.toNumber().toFixed(3)}$，向上取整得 $${ans}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -739,6 +1317,43 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             solution: t(
               `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
               `$n = \\frac{N n_0}{n_0 + N - 1} = \\frac{(${N})(${n0})}{${n0} + ${N} - 1} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
+            ),
+          });
+        },
+      },
+      {
+        id: "a-finite-population-sample-size-for-a-proportion",
+        title: t("A finite-population sample size for a proportion", "有限总体下比例的样本容量"),
+        explanation: t(
+          "Combine the two steps: compute $n_0 = \\frac{z_{\\alpha/2}^{2}\\,p(1 - p)}{E^{2}}$ with $p = 0.5$ unless a planning value is available, then apply the correction and round up:\n\n$$n = \\left\\lceil \\frac{N n_0}{n_0 + N - 1} \\right\\rceil.$$\n\nFor a school of $N = 800$ students, $z = 2$ and $E = 0.05$: $n_0 = 400$ and $n = \\left\\lceil \\frac{320000}{1199} \\right\\rceil = 267$, a third fewer than without the correction.",
+          "把两步合起来：除非有规划值，否则取 $p = 0.5$ 计算 $n_0 = \\frac{z_{\\alpha/2}^{2}\\,p(1 - p)}{E^{2}}$，再作校正并向上取整：\n\n$$n = \\left\\lceil \\frac{N n_0}{n_0 + N - 1} \\right\\rceil.$$\n\n例如一所有 $N = 800$ 名学生的学校，$z = 2$，$E = 0.05$：$n_0 = 400$，$n = \\left\\lceil \\frac{320000}{1199} \\right\\rceil = 267$，比不校正少三分之一。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const E = Q.of(rng.pick([2, 3, 4, 5, 6, 8, 10]), 100);
+          const n0q = Q.of(4).mul(Q.of(1, 4)).div(E.pow(2));
+          const n0 = Math.ceil(n0q.toNumber());
+          const N = rng.int(200, 5000);
+          const exact = n0q.mul(Q.of(N)).div(n0q.add(Q.of(N - 1)));
+          const ans = Math.ceil(exact.toNumber());
+          return numberProblem({
+            prompt: t(
+              `An organization has $N = ${N}$ members. With no prior estimate of the proportion and $z = 2$, how many members must be surveyed, without replacement, to estimate a proportion to within $E = ${dec(E)}$?`,
+              `某组织有 $N = ${N}$ 名成员。没有比例的先验估计，取 $z = 2$，不放回地调查多少名成员才能把比例的估计误差控制在 $E = ${dec(E)}$ 以内？`,
+            ),
+            answer: ans,
+            wrong: [
+              n0,
+              Math.floor(exact.toNumber()),
+              Math.ceil(
+                n0q
+                  .mul(Q.of(N))
+                  .div(n0q.add(Q.of(N)))
+                  .toNumber(),
+              ),
+            ].filter((w) => w !== ans && w !== 0),
+            solution: t(
+              `With $p = 0.5$, $n_0 = \\frac{2^{2} \\cdot 0.25}{${dec(E)}^{2}} = ${n0q.toLatex()}$. Then $\\frac{${N} \\cdot ${n0q.toLatex()}}{${n0q.toLatex()} + ${N - 1}} \\approx ${exact.toNumber().toFixed(3)}$, which rounds up to $${ans}$.`,
+              `取 $p = 0.5$，$n_0 = \\frac{2^{2} \\cdot 0.25}{${dec(E)}^{2}} = ${n0q.toLatex()}$。于是 $\\frac{${N} \\cdot ${n0q.toLatex()}}{${n0q.toLatex()} + ${N - 1}} \\approx ${exact.toNumber().toFixed(3)}$，向上取整得 $${ans}$。`,
             ),
           });
         },
