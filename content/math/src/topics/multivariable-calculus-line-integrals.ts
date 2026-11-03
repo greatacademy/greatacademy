@@ -1,6 +1,6 @@
-import type { Problem, Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { paren, poly, Q } from "@ga/subject-math";
+import { type PlaneMark, paren, plane, poly, Q } from "@ga/subject-math";
 import { choiceProblem, numberProblem, pointProblem, steps, yesNo } from "../problems.ts";
 
 /** Pythagorean triples for clean coordinates. */
@@ -397,6 +397,26 @@ export const lineIntegralsOfScalarFunctionsOverLineSegments: TopicDef = {
   ],
 };
 
+const wireView = { xMin: -5, xMax: 5, yMin: -5, yMax: 5, labelEvery: 1 } as const;
+const onWire = (d: number, r = 3): readonly [number, number] => [r * Math.cos((d * Math.PI) / 180), r * Math.sin((d * Math.PI) / 180)];
+
+/** circularWireFigure shows a wire along the circle of radius R and one short piece of it, of length ds. */
+const circularWireFigure: Figure = {
+  svg: plane(wireView, [
+    { kind: "circle", center: [0, 0], r: 3 },
+    { kind: "segment", a: [0, 0], b: onWire(40) },
+    { kind: "segment", a: [0, 0], b: onWire(60), dashed: true },
+    { kind: "curve", f: (x) => Math.sqrt(9 - x * x), from: onWire(60)[0], to: onWire(40)[0], accent: true },
+    { kind: "point", at: onWire(40) },
+    { kind: "point", at: onWire(60) },
+    { kind: "label", at: [1.15, 0.95], text: "R", dir: "se" },
+    { kind: "label", at: onWire(50, 3.1), text: "ds", dir: "ne" },
+  ] satisfies PlaneMark[]),
+  alt: t(
+    "A circular wire of radius R centered at the origin, with one short piece of arc of length ds marked between two radii; adding ρ₀ ds around the circle gives ρ₀ times the circumference 2πR.",
+    "以原点为圆心、半径为 R 的圆形细丝，两条半径之间标出一小段长为 ds 的弧；沿圆周累加 ρ₀ ds，得到 ρ₀ 乘以周长 2πR。",
+  ),
+};
 /** lineIntegralsOfScalarFunctionsOverCircles integrates scalar functions over circular paths. */
 export const lineIntegralsOfScalarFunctionsOverCircles: TopicDef = {
   id: "line-integrals-of-scalar-functions-over-circles",
@@ -421,6 +441,7 @@ export const lineIntegralsOfScalarFunctionsOverCircles: TopicDef = {
         "For a full circle $C$ of radius $R$ centered at the origin, the line integral of a constant density $\\rho_0$ divided by $\\pi$ is:\n\n$$\\frac{1}{\\pi}\\int_C \\rho_0\\,ds = \\frac{\\rho_0}{\\pi}(2\\pi R) = 2\\rho_0 R.$$",
         "对于以原点为中心、半径为 $R$ 的完整圆周 $C$，恒定密度 $\\rho_0$ 的曲线积分除以 $\\pi$ 为：\n\n$$\\frac{1}{\\pi}\\int_C \\rho_0\\,ds = \\frac{\\rho_0}{\\pi}(2\\pi R) = 2\\rho_0 R。$$",
       ),
+      figure: circularWireFigure,
       generate(rng: Rng): Problem {
         const R = rng.int(2, 12);
         const rho = rng.int(1, 8);
@@ -453,6 +474,23 @@ export const lineIntegralsOfScalarFunctionsOverCircles: TopicDef = {
   ],
 };
 
+/** ellipseSymmetryFigure pairs points (x, y) and (−x, y) of an ellipse, where cx takes opposite values. */
+const ellipseSymmetryFigure: Figure = {
+  svg: plane(wireView, [
+    { kind: "curve", f: (x) => 2.5 * Math.sqrt(Math.max(0, 1 - (x * x) / 16)), from: -4, to: 4 },
+    { kind: "curve", f: (x) => -2.5 * Math.sqrt(Math.max(0, 1 - (x * x) / 16)), from: -4, to: 4 },
+    { kind: "segment", a: [-2.4, 2], b: [2.4, 2], dashed: true },
+    { kind: "segment", a: [-3.2, -1.5], b: [3.2, -1.5], dashed: true },
+    { kind: "point", at: [2.4, 2], label: "cx", dir: "ne" },
+    { kind: "point", at: [-2.4, 2], label: "−cx", dir: "nw" },
+    { kind: "point", at: [3.2, -1.5], label: "cx", dir: "se" },
+    { kind: "point", at: [-3.2, -1.5], label: "−cx", dir: "sw" },
+  ]),
+  alt: t(
+    "An ellipse symmetric about the y-axis, with points paired across it; at each pair cx takes opposite values, so the cx parts of the integral cancel.",
+    "关于 y 轴对称的椭圆，其上的点关于 y 轴两两配对；每一对点处 cx 的值互为相反数，所以积分中 cx 的部分相互抵消。",
+  ),
+};
 /** lineIntegralsOfScalarFunctionsOverEllipses uses symmetry over elliptical paths. */
 export const lineIntegralsOfScalarFunctionsOverEllipses: TopicDef = {
   id: "line-integrals-of-scalar-functions-over-ellipses",
@@ -472,6 +510,7 @@ export const lineIntegralsOfScalarFunctionsOverEllipses: TopicDef = {
         "When both the curve and the function are symmetric, the integral over the whole curve is a multiple of the integral over one quarter. By symmetry across the coordinate axes, for the ellipse $C: \\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$:\n\n$$\\oint_C (cx + k)\\,ds = \\oint_C cx\\,ds + k\\oint_C 1\\,ds = 0 + k\\,\\text{Length}(C).$$",
         "当曲线和函数都对称时，整条曲线上的积分是四分之一曲线上积分的倍数。由关于坐标轴的对称性，对于椭圆 $C: \\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$：\n\n$$\\oint_C (cx + k)\\,ds = \\oint_C cx\\,ds + k\\oint_C 1\\,ds = 0 + k\\,\\text{Length}(C)。$$",
       ),
+      figure: ellipseSymmetryFigure,
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
         const b = rng.int(2, 8);
