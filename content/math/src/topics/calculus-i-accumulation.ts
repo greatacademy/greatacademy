@@ -2,8 +2,8 @@ import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
 
-import { functionProblem, numberProblem, solutionsProblem } from "../problems.ts";
-import { fac, type Poly, par, pLatex, table } from "./calculus-common.ts";
+import { functionProblem, numberProblem, solutionsProblem, steps } from "../problems.ts";
+import { fac, type Poly, par, piLatex, pLatex, table } from "./calculus-common.ts";
 import { zigzag, zigzagFigure, zigzagXs } from "./calculus-i-extrema.ts";
 import { antiderivativeAt, antiderivativeLatex, qAt } from "./calculus-i-riemann.ts";
 
@@ -231,7 +231,7 @@ export const findingTheAreaBetweenACurveAndTheXAxisWhenTheyIntersect: TopicDef =
   id: "finding-the-area-between-a-curve-and-the-x-axis-when-they-intersect",
   title: t("Finding the Area Between a Curve and the X-Axis When They Intersect", "曲线与 x 轴相交时求两者之间的面积"),
   summary: t("Split the interval at the x-intercepts and add the areas of the pieces.", "在 x 截距处拆分区间，再把各部分的面积相加。"),
-  prerequisites: ["the-area-bounded-by-a-curve-and-the-x-axis"],
+  prerequisites: ["the-area-bounded-by-a-curve-and-the-x-axis", "integrating-trigonometric-functions"],
   encompasses: [{ topic: "the-area-bounded-by-a-curve-and-the-x-axis", weight: 0.5 }],
   xp: 10,
   standards: [],
@@ -273,6 +273,46 @@ export const findingTheAreaBetweenACurveAndTheXAxisWhenTheyIntersect: TopicDef =
             ),
           });
         }
+      },
+    },
+    {
+      id: "total-area-under-sine-and-cosine-curves",
+      title: t("Total area under sine and cosine curves", "正弦、余弦曲线与 x 轴之间的总面积"),
+      explanation: t(
+        "Sine and cosine cross the axis again and again, so over a long interval their integral cancels: $\\int_{0}^{2\\pi} \\sin x \\, dx = 0$, although the curve encloses area. Split at the zeros, which are the multiples of $\\pi$ for $\\sin x$ and the odd multiples of $\\frac{\\pi}{2}$ for $\\cos x$, and add the absolute values of the pieces.\n\nEach arch of $\\sin x$ between consecutive zeros has area $\\int_{0}^{\\pi} \\sin x \\, dx = 2$, and each half-arch from a zero to a peak has area $1$. So $y = \\sin x$ from $0$ to $2\\pi$ encloses a total area of $2 + 2 = 4$.",
+        "正弦和余弦反复穿过 $x$ 轴，所以在较长的区间上积分会相互抵消：$\\int_{0}^{2\\pi} \\sin x \\, dx = 0$，但曲线确实围成了面积。在零点处拆分区间——$\\sin x$ 的零点是 $\\pi$ 的整数倍，$\\cos x$ 的零点是 $\\frac{\\pi}{2}$ 的奇数倍——再把各段积分的绝对值相加。\n\n$\\sin x$ 在相邻两个零点之间的每一拱的面积为 $\\int_{0}^{\\pi} \\sin x \\, dx = 2$，从零点到峰值的半拱面积为 $1$。所以 $y = \\sin x$ 从 $0$ 到 $2\\pi$ 围成的总面积为 $2 + 2 = 4$。",
+      ),
+      keyPrerequisites: ["integrating-trigonometric-functions"],
+      generate(rng) {
+        const sine = rng.bool();
+        const m = rng.int(sine ? 3 : 2, 6);
+        const a = rng.int(1, 6);
+        const cosAt = (j: number) => [1, 0, -1, 0][j % 4] ?? 0;
+        const sinAt = (j: number) => [0, 1, 0, -1][j % 4] ?? 0;
+        const anti = (j: number) => (sine ? -a * cosAt(j) : a * sinAt(j));
+        const cuts = [0];
+        for (let j = 1; j < m; j++) if (sine ? j % 2 === 0 : j % 2 === 1) cuts.push(j);
+        cuts.push(m);
+        const pieces = cuts.slice(1).map((x, i) => anti(x) - anti(cuts[i] ?? 0));
+        const total = pieces.reduce((s, v) => s + Math.abs(v), 0);
+        const net = anti(m) - anti(0);
+        const f = `${a === 1 ? "" : a}\\${sine ? "sin" : "cos"} x`;
+        const at = (j: number) => piLatex(j, 2);
+        const zeros = cuts.slice(1, -1).map(at).join(", ");
+        const integrals = pieces.map((v, i) => `\\int_{${at(cuts[i] ?? 0)}}^{${at(cuts[i + 1] ?? 0)}} ${f} \\, dx = ${v}`);
+        return numberProblem({
+          prompt: t(
+            `Find the total area between $y = ${f}$ and the $x$-axis from $x = 0$ to $x = ${at(m)}$.`,
+            `求 $y = ${f}$ 与 $x$ 轴之间从 $x = 0$ 到 $x = ${at(m)}$ 的总面积。`,
+          ),
+          answer: total,
+          form: "integer",
+          wrong: [net, Math.abs(net), 2 * total, total / 2, a * m * 2].filter((w) => Number.isInteger(w)),
+          solution: t(
+            `The curve crosses the axis at $x = ${zeros}$. Integrate on each piece:${steps(...integrals)}The total area is $${pieces.map((v) => Math.abs(v)).join(" + ")} = ${total}$, while the integral over the whole interval is only $${net}$.`,
+            `曲线在 $x = ${zeros}$ 处穿过 $x$ 轴。在每一段上分别积分：${steps(...integrals)}总面积为 $${pieces.map((v) => Math.abs(v)).join(" + ")} = ${total}$，而整个区间上的积分只有 $${net}$。`,
+          ),
+        });
       },
     },
   ],

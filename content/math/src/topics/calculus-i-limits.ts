@@ -499,6 +499,64 @@ export const infiniteLimitsFromGraphs: TopicDef = {
         );
       },
     },
+    {
+      id: "graphs-with-two-vertical-asymptotes",
+      title: t("Graphs with two vertical asymptotes", "有两条竖直渐近线的图像"),
+      explanation: t(
+        "A graph can have several vertical asymptotes, and the behavior near each one is read separately. First find the dashed line at the point the limit approaches; then look only at the part of the graph next to it on the side the limit names:\n\n- the graph shooting up gives $\\infty$, shooting down gives $-\\infty$;\n- for a two-sided limit, both sides must go the same way, otherwise the limit does not exist.\n\nWhat the graph does near the other asymptote, or far away, has no bearing on the limit.",
+        "一个图像可以有几条竖直渐近线，每条渐近线附近的行为要分别读出。先找出极限所趋向的那个点处的虚线，再只看虚线旁、极限所指那一侧的图像：\n\n- 图像向上无限延伸为 $\\infty$，向下无限延伸为 $-\\infty$；\n- 对于双侧极限，两侧必须同向，否则极限不存在。\n\n图像在另一条渐近线附近或远处的表现，与这个极限无关。",
+      ),
+      generate(rng) {
+        const h1 = rng.int(-4, -1);
+        const h2 = h1 + rng.int(3, 5);
+        const c = rng.int(-2, 2);
+        const k1 = rng.pick([-1, 1]);
+        const k2 = rng.pick([-1, 1]);
+        const e1 = rng.pick([1, 2]);
+        const e2 = rng.pick([1, 2]);
+        const f = (x: number) => c + k1 / (x - h1) ** e1 + k2 / (x - h2) ** e2;
+        const first = rng.bool();
+        const [h, k, e] = first ? [h1, k1, e1] : [h2, k2, e2];
+        const leftSign = e === 2 ? k : -k;
+        const rightSign = k;
+        const side = rng.pick([-1, 1, 0] as const);
+        const toInf = (s: number): LimitValue => (s > 0 ? "inf" : "-inf");
+        const answer: LimitValue =
+          side < 0 ? toInf(leftSign) : side > 0 ? toInf(rightSign) : leftSign === rightSign ? toInf(leftSign) : "dne";
+        const operator = side === 0 ? lim(h) : lim(h, side);
+        const verdict =
+          side === 0
+            ? answer === "dne"
+              ? t(" The sides disagree, so the two-sided limit does not exist.", "两侧不一致，所以双侧极限不存在。")
+              : t(` Both sides agree, so the limit is $${infL(leftSign)}$.`, `两侧一致，所以极限为 $${infL(leftSign)}$。`)
+            : t("", "");
+        return limitChoice(
+          rng,
+          t(
+            `The graph of $y = f(x)$ has vertical asymptotes at $x = ${h1}$ and $x = ${h2}$. Find $${operator} f(x)$.`,
+            `$y = f(x)$ 的图像在 $x = ${h1}$ 和 $x = ${h2}$ 处有竖直渐近线。求 $${operator} f(x)$。`,
+          ),
+          answer,
+          [Q.of(c), Q.of(h)],
+          t(
+            `Look only at the asymptote $x = ${h}$. Just left of it the graph ${leftSign > 0 ? "rises" : "falls"} without bound, and just right of it the graph ${rightSign > 0 ? "rises" : "falls"} without bound: $${lim(h, -1)} f(x) = ${infL(leftSign)}$ and $${lim(h, 1)} f(x) = ${infL(rightSign)}$.${verdict.en}`,
+            `只看渐近线 $x = ${h}$。紧靠它的左侧，图像无界${leftSign > 0 ? "上升" : "下降"}；紧靠它的右侧，图像无界${rightSign > 0 ? "上升" : "下降"}：$${lim(h, -1)} f(x) = ${infL(leftSign)}$，$${lim(h, 1)} f(x) = ${infL(rightSign)}$。${verdict["zh-CN"]}`,
+          ),
+          {
+            svg: plane(view, [
+              { kind: "line", a: [h1, 0], b: [h1, 1], dashed: true },
+              { kind: "line", a: [h2, 0], b: [h2, 1], dashed: true },
+              { kind: "curve", f, accent: true },
+            ]),
+            alt: t(
+              `The graph of y = f(x) with vertical asymptotes at x = ${h1} and x = ${h2}.`,
+              `在 x = ${h1} 和 x = ${h2} 处有竖直渐近线的 y = f(x) 的图像。`,
+            ),
+          },
+          true,
+        );
+      },
+    },
   ],
 };
 
