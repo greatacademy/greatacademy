@@ -1,7 +1,9 @@
 import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
+import { gcd } from "@ga/subject-math";
 
 import { choiceProblem, numberProblem } from "../problems.ts";
+import { tableLatex, tapeFigure } from "./grade-6-ratios.ts";
 import { histogramSvg } from "./grade-7-statistics.ts";
 
 /** ratioTablesAndTapeDiagrams uses tables and tape diagrams to solve equivalent ratio problems. */
@@ -21,13 +23,13 @@ export const ratioTablesAndTapeDiagrams: TopicDef = {
       id: "ratio-tables",
       title: t("Completing Ratio Tables", "填补比例表"),
       explanation: t(
-        "A **ratio table** displays pairs of numbers in equivalent ratios. Multiplying or dividing both quantities by the same non-zero number produces an equivalent ratio.\n\nFor example, if the ratio of flour to sugar is $3 : 2$, then multiplying both terms by $4$ gives $12 : 8$.",
-        "**比例表**显示具有等比关系的一对对数值。给两项同时乘或除以相同的非零数，即可得到等比。\n\n例如，如果面粉与糖的比为 $3 : 2$，两项同乘 $4$ 得到 $12 : 8$。",
+        "A **ratio table** displays pairs of numbers in equivalent ratios, one pair in each column. Multiplying or dividing both quantities by the same non-zero number produces an equivalent ratio, so to fill a missing entry, find the number that scales the known entry in its row and scale the other entry by the same number.\n\nFor example, if the ratio of flour to sugar is $3 : 2$, then $12$ cups of flour is $3 \\times 4$, so the sugar is $2 \\times 4 = 8$ cups: $$\\begin{array}{|l|c|c|}\\hline \\text{Flour} & 3 & 12 \\\\ \\hline \\text{Sugar} & 2 & 8 \\\\ \\hline\\end{array}$$",
+        "**比例表**按列列出具有等比关系的一对对数值。给两项同时乘或除以相同的非零数，即可得到等比；所以要填出空缺的数，先求出同一行中已知数放大的倍数，再把另一项放大同样的倍数。\n\n例如，如果面粉与糖的比为 $3 : 2$，$12$ 杯面粉是 $3 \\times 4$，所以糖是 $2 \\times 4 = 8$ 杯：$$\\begin{array}{|l|c|c|}\\hline \\text{面粉} & 3 & 12 \\\\ \\hline \\text{糖} & 2 & 8 \\\\ \\hline\\end{array}$$",
       ),
       generate(rng) {
         const a = rng.int(2, 7);
         let b = rng.int(2, 9);
-        while (b === a) b = rng.int(2, 9);
+        while (gcd(a, b) !== 1) b = rng.int(2, 9);
         const m = rng.int(3, 12);
         const targetA = a * m;
         const answer = b * m;
@@ -35,9 +37,10 @@ export const ratioTablesAndTapeDiagrams: TopicDef = {
         const wrong2 = answer - b;
         const wrong3 = a * (m + 1);
 
+        const table = tableLatex(["A", "B"], [String(a), String(targetA)], [String(b), "\\square"]);
         const prompt = t(
-          `In a recipe, the ratio of cups of ingredient $A$ to cups of ingredient $B$ is $${a} : ${b}$. If a baker uses $${targetA}$ cups of ingredient $A$, how many cups of ingredient $B$ are needed?`,
-          `在一个配方中，原料 $A$ 与原料 $B$ 的杯数比为 $${a} : ${b}$。如果面包师使用了 $${targetA}$ 杯原料 $A$，需要多少杯原料 $B$？`,
+          `In a recipe, the ratio of cups of ingredient $A$ to cups of ingredient $B$ is $${a} : ${b}$. A baker uses $${targetA}$ cups of ingredient $A$. Complete the ratio table: how many cups of ingredient $B$ are needed? $$${table}$$`,
+          `在一个配方中，原料 $A$ 与原料 $B$ 的杯数比为 $${a} : ${b}$。面包师使用了 $${targetA}$ 杯原料 $A$。补全比例表：需要多少杯原料 $B$？$$${table}$$`,
         );
         const solution = t(
           `The ratio of ingredient $A$ to ingredient $B$ is $\\frac{${a}}{${b}}$. Since ingredient $A$ is scaled by $\\frac{${targetA}}{${a}} = ${m}$, multiply ingredient $B$ by $${m}$ as well: $${b} \\times ${m} = ${answer}$.`,
@@ -57,34 +60,38 @@ export const ratioTablesAndTapeDiagrams: TopicDef = {
       id: "tape-diagrams",
       title: t("Solving Ratio Problems with Tape Diagrams", "使用条形图求解比例问题"),
       explanation: t(
-        "A **tape diagram** (or strip diagram) represents parts of a ratio as equal rectangular units. The total number of units equals the sum of the ratio parts.\n\nIf blue and red paint are mixed in the ratio $3 : 5$ and the total volume is $40\\text{ mL}$, each unit is $40 \\div (3 + 5) = 5\\text{ mL}$, so the blue paint is $3 \\times 5 = 15\\text{ mL}$.",
-        "**条形图**将比例中的各个部分表示为相同大小的矩形单元。总单元数等于比例各部分之和。\n\n如果蓝漆与红漆按 $3 : 5$ 混合，总体积为 $40\\text{ mL}$，则每个单元代表 $40 \\div (3 + 5) = 5\\text{ mL}$，因此蓝漆为 $3 \\times 5 = 15\\text{ mL}$。",
+        "A **tape diagram** (or strip diagram) represents parts of a ratio as equal rectangular units. The total number of units equals the sum of the ratio parts.\n\nIf paint A and paint B are mixed in the ratio $3 : 5$, as in the diagram, and the total volume is $40\\text{ mL}$, each unit is $40 \\div (3 + 5) = 5\\text{ mL}$, so paint A is $3 \\times 5 = 15\\text{ mL}$.",
+        "**条形图**将比例中的各个部分表示为相同大小的矩形单元。总单元数等于比例各部分之和。\n\n如果像图中那样把颜料 A 与颜料 B 按 $3 : 5$ 混合，总体积为 $40\\text{ mL}$，则每个单元代表 $40 \\div (3 + 5) = 5\\text{ mL}$，因此颜料 A 为 $3 \\times 5 = 15\\text{ mL}$。",
       ),
+      figure: tapeFigure(3, 5, ["A", "B"]),
       generate(rng) {
         const p1 = rng.int(2, 6);
         let p2 = rng.int(2, 7);
-        while (p2 === p1) p2 = rng.int(2, 7);
+        while (gcd(p1, p2) !== 1) p2 = rng.int(2, 7);
         const unitVal = rng.int(3, 15);
         const total = (p1 + p2) * unitVal;
         const answer = p1 * unitVal;
         const other = p2 * unitVal;
 
         const prompt = t(
-          `In a school club, the ratio of boys to girls is $${p1} : ${p2}$. If there are $${total}$ students in total, how many boys are in the club?`,
-          `某学校社团中，男生与女生的比例是 $${p1} : ${p2}$。如果学生总共有 $${total}$ 人，社团中有多少名男生？`,
+          `In a school club, the ratio of boys to girls is $${p1} : ${p2}$, shown in the tape diagram with A for boys and B for girls. If there are $${total}$ students in total, how many boys are in the club?`,
+          `某学校社团中，男生与女生的比例是 $${p1} : ${p2}$，如线段图所示，A 表示男生，B 表示女生。如果学生总共有 $${total}$ 人，社团中有多少名男生？`,
         );
         const solution = t(
           `The total number of equal units in the tape diagram is $${p1} + ${p2} = ${p1 + p2}$. Each unit represents $${total} \\div ${p1 + p2} = ${unitVal}$ students. Therefore, the number of boys is $${p1} \\times ${unitVal} = ${answer}$.`,
           `条形图中代表总数的等分单元数为 $${p1} + ${p2} = ${p1 + p2}$。每个单元代表 $${total} \\div ${p1 + p2} = ${unitVal}$ 名学生。因此男生人数为 $${p1} \\times ${unitVal} = ${answer}$。`,
         );
 
-        return numberProblem({
-          prompt,
-          answer,
-          form: "integer",
-          wrong: [other, answer + unitVal, answer - unitVal],
-          solution,
-        });
+        return {
+          ...numberProblem({
+            prompt,
+            answer,
+            form: "integer",
+            wrong: [other, answer + unitVal, answer - unitVal],
+            solution,
+          }),
+          figure: tapeFigure(p1, p2, ["A", "B"]),
+        };
       },
     },
   ],

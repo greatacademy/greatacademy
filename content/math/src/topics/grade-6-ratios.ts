@@ -67,7 +67,7 @@ const mixes: readonly Mix[] = [
 ];
 
 /** tableLatex writes a two-row table with a label in front of each row. */
-function tableLatex(labels: readonly [string, string], top: readonly string[], bottom: readonly string[]): string {
+export function tableLatex(labels: readonly [string, string], top: readonly string[], bottom: readonly string[]): string {
   const cols = "c".repeat(top.length);
   return `\\begin{array}{|l|${cols.split("").join("|")}|}\\hline \\text{${labels[0]}} & ${top.join(" & ")} \\\\ \\hline \\text{${labels[1]}} & ${bottom.join(" & ")} \\\\ \\hline\\end{array}`;
 }
@@ -667,7 +667,7 @@ export const graphingRatios = topic(
 );
 
 /** tapeFigure draws two tapes of a and b equal boxes, one above the other. */
-function tapeFigure(a: number, b: number, labels: readonly [string, string]): Figure {
+export function tapeFigure(a: number, b: number, labels: readonly [string, string]): Figure {
   const box = 24;
   let body = "";
   [a, b].forEach((n, row) => {
