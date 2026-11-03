@@ -293,8 +293,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "inverse-transform-sampling-method",
         title: t("Deriving the inverse CDF transformation", "推导逆累积分布函数变换"),
         explanation: t(
-          "If $U \\sim \\text{Uniform}(0, 1)$, then $X = F^{-1}(U)$ has cumulative distribution function $F(x)$. Solving $u = F(x)$ for $x$ yields the simulation formula.",
-          "若 $U \\sim \\text{Uniform}(0, 1)$，则 $X = F^{-1}(U)$ 的累积分布函数为 $F(x)$。由 $u = F(x)$ 解出 $x$ 即得模拟公式。",
+          "Feeding uniform random numbers through the inverse of a cumulative distribution function produces samples that follow that distribution. If $U \\sim \\text{Uniform}(0, 1)$, then $X = F^{-1}(U)$ has cumulative distribution function $F(x)$. Solving $u = F(x)$ for $x$ yields the simulation formula.",
+          "把均匀随机数代入累积分布函数的反函数，就能得到服从该分布的样本。若 $U \\sim \\text{Uniform}(0, 1)$，则 $X = F^{-1}(U)$ 的累积分布函数为 $F(x)$。由 $u = F(x)$ 解出 $x$ 即得模拟公式。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 50);
@@ -326,8 +326,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "simulating-observations-from-uniform-draws",
         title: t("Computing a simulated value from a uniform draw", "由均匀分布抽样计算模拟值"),
         explanation: t(
-          "Given the CDF $F(x) = \\frac{x^2}{b^2}$ and a uniform draw $u$, the simulated observation is $x = b\\sqrt{u}$.",
-          "给定累积分布函数 $F(x) = \\frac{x^2}{b^2}$ 及均匀抽样值 $u$，模拟观测值为 $x = b\\sqrt{u}$。",
+          "Set the cumulative distribution function equal to the uniform draw and solve for the value, which is the simulated observation. Given the CDF $F(x) = \\frac{x^2}{b^2}$ and a uniform draw $u$, the simulated observation is $x = b\\sqrt{u}$.",
+          "令累积分布函数等于这个均匀抽样值，再解出相应的值，它就是模拟的观测值。给定累积分布函数 $F(x) = \\frac{x^2}{b^2}$ 及均匀抽样值 $u$，模拟观测值为 $x = b\\sqrt{u}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.pick([2, 3, 4, 5, 6, 7, 8, 9]);
@@ -371,8 +371,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "evaluating-cdf-of-transformed-variable",
         title: t("Evaluating the CDF of a linear transformation", "计算线性变换后随机变量的累积分布函数"),
         explanation: t(
-          "For $X \\sim \\text{Uniform}(0, b)$ and $Y = aX + c$ with $a > 0$, $F_Y(y) = P(aX + c \\le y) = P\\left(X \\le \\frac{y - c}{a}\\right) = \\frac{y - c}{ab}$.",
-          "若 $X \\sim \\text{Uniform}(0, b)$ 且 $Y = aX + c$（$a > 0$），则 $F_Y(y) = P(aX + c \\le y) = P\\left(X \\le \\frac{y - c}{a}\\right) = \\frac{y - c}{ab}$。",
+          "Rewrite the event about the new variable as an event about the old one, then use the known distribution of the old variable. For $X \\sim \\text{Uniform}(0, b)$ and $Y = aX + c$ with $a > 0$, $F_Y(y) = P(aX + c \\le y) = P\\left(X \\le \\frac{y - c}{a}\\right) = \\frac{y - c}{ab}$.",
+          "把关于新变量的事件改写成关于旧变量的事件，再利用旧变量的已知分布。若 $X \\sim \\text{Uniform}(0, b)$ 且 $Y = aX + c$（$a > 0$），则 $F_Y(y) = P(aX + c \\le y) = P\\left(X \\le \\frac{y - c}{a}\\right) = \\frac{y - c}{ab}$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(4, 25);
@@ -398,8 +398,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "pdf-via-distribution-function-method",
         title: t("Deriving the PDF by differentiating the CDF", "通过对 CDF 求导推导概率密度函数"),
         explanation: t(
-          "For $Y = X^2$ with $X \\sim \\text{Uniform}(0, b)$, $F_Y(y) = P(X \\le \\sqrt{y}) = \\frac{\\sqrt{y}}{b}$, so differentiating gives $f_Y(y) = \\frac{1}{2b\\sqrt{y}}$ for $0 < y < b^2$.",
-          "对于 $X \\sim \\text{Uniform}(0, b)$ 且 $Y = X^2$，$F_Y(y) = P(X \\le \\sqrt{y}) = \\frac{\\sqrt{y}}{b}$，求导得 $f_Y(y) = \\frac{1}{2b\\sqrt{y}}$（$0 < y < b^2$）。",
+          "Find the cumulative distribution function of the new variable first, then differentiate it to get the density. For $Y = X^2$ with $X \\sim \\text{Uniform}(0, b)$, $F_Y(y) = P(X \\le \\sqrt{y}) = \\frac{\\sqrt{y}}{b}$, so differentiating gives $f_Y(y) = \\frac{1}{2b\\sqrt{y}}$ for $0 < y < b^2$.",
+          "先求出新变量的累积分布函数，再对它求导得到密度。对于 $X \\sim \\text{Uniform}(0, b)$ 且 $Y = X^2$，$F_Y(y) = P(X \\le \\sqrt{y}) = \\frac{\\sqrt{y}}{b}$，求导得 $f_Y(y) = \\frac{1}{2b\\sqrt{y}}$（$0 < y < b^2$）。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(3, 20);
@@ -439,8 +439,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "change-of-variables-scale-transformation",
         title: t("Applying the change-of-variables formula for scaling", "应用变量代换公式求解尺度变换"),
         explanation: t(
-          "If $Y = cX$ with $c > 0$, then $x = \\frac{y}{c}$ and $\\left|\\frac{dx}{dy}\\right| = \\frac{1}{c}$. Hence $f_Y(y) = \\frac{1}{c} f_X\\left(\\frac{y}{c}\\right)$.",
-          "若 $Y = cX$（$c > 0$），则 $x = \\frac{y}{c}$ 且 $\\left|\\frac{dx}{dy}\\right| = \\frac{1}{c}$。因此 $f_Y(y) = \\frac{1}{c} f_X\\left(\\frac{y}{c}\\right)$。",
+          "Scaling a variable stretches its density horizontally, so the density must be divided by the scale factor to keep the total probability one. If $Y = cX$ with $c > 0$, then $x = \\frac{y}{c}$ and $\\left|\\frac{dx}{dy}\\right| = \\frac{1}{c}$. Hence $f_Y(y) = \\frac{1}{c} f_X\\left(\\frac{y}{c}\\right)$.",
+          "对变量缩放会在水平方向拉伸它的密度，所以密度要除以缩放因子，使总概率保持为 1。若 $Y = cX$（$c > 0$），则 $x = \\frac{y}{c}$ 且 $\\left|\\frac{dx}{dy}\\right| = \\frac{1}{c}$。因此 $f_Y(y) = \\frac{1}{c} f_X\\left(\\frac{y}{c}\\right)$。",
         ),
         generate: (rng: Rng): Problem => {
           const c = rng.int(2, 10);
@@ -474,8 +474,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "evaluating-transformed-density-at-a-point",
         title: t("Evaluating the transformed density at a point", "计算变换后密度函数在特定点的值"),
         explanation: t(
-          "For $Y = \\frac{c}{X}$ with $X \\sim \\text{Uniform}(0, b)$, $x = \\frac{c}{y}$ and $\\left|\\frac{dx}{dy}\\right| = \\frac{c}{y^2}$. The density is $f_Y(y) = \\frac{c}{by^2}$ for $y > \\frac{c}{b}$.",
-          "对于 $X \\sim \\text{Uniform}(0, b)$ 且 $Y = \\frac{c}{X}$，$x = \\frac{c}{y}$ 且 $\\left|\\frac{dx}{dy}\\right| = \\frac{c}{y^2}$。密度函数为 $f_Y(y) = \\frac{c}{by^2}$（$y > \\frac{c}{b}$）。",
+          "For a one to one transformation, the new density is the old density at the matching point times the absolute value of the derivative of the inverse. For $Y = \\frac{c}{X}$ with $X \\sim \\text{Uniform}(0, b)$, $x = \\frac{c}{y}$ and $\\left|\\frac{dx}{dy}\\right| = \\frac{c}{y^2}$. The density is $f_Y(y) = \\frac{c}{by^2}$ for $y > \\frac{c}{b}$.",
+          "对于一一对应的变换，新密度等于旧密度在对应点处的值乘以反函数导数的绝对值。对于 $X \\sim \\text{Uniform}(0, b)$ 且 $Y = \\frac{c}{X}$，$x = \\frac{c}{y}$ 且 $\\left|\\frac{dx}{dy}\\right| = \\frac{c}{y^2}$。密度函数为 $f_Y(y) = \\frac{c}{by^2}$（$y > \\frac{c}{b}$）。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(2, 10);
@@ -516,8 +516,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "many-to-one-cdf-formulation",
         title: t("Formulating the CDF for symmetric quadratic transformations", "求解对称二次变换的累积分布函数"),
         explanation: t(
-          "For $X \\sim \\text{Uniform}(-a, a)$ and $Y = X^2$, the event $\\{Y \\le y\\}$ is $\\{-\\sqrt{y} \\le X \\le \\sqrt{y}\\}$. Thus $F_Y(y) = \\frac{\\sqrt{y} - (-\\sqrt{y})}{2a} = \\frac{\\sqrt{y}}{a}$ for $0 < y < a^2$.",
-          "若 $X \\sim \\text{Uniform}(-a, a)$ 且 $Y = X^2$，则事件 $\\{Y \\le y\\}$ 即 $\\{-\\sqrt{y} \\le X \\le \\sqrt{y}\\}$。因此在 $0 < y < a^2$ 上，$F_Y(y) = \\frac{\\sqrt{y} - (-\\sqrt{y})}{2a} = \\frac{\\sqrt{y}}{a}$。",
+          "When two original values map to each new value, the event about the new variable becomes an interval of original values on both sides of zero. For $X \\sim \\text{Uniform}(-a, a)$ and $Y = X^2$, the event $\\{Y \\le y\\}$ is $\\{-\\sqrt{y} \\le X \\le \\sqrt{y}\\}$. Thus $F_Y(y) = \\frac{\\sqrt{y} - (-\\sqrt{y})}{2a} = \\frac{\\sqrt{y}}{a}$ for $0 < y < a^2$.",
+          "当两个原始值映射到同一个新值时，关于新变量的事件就变成零两侧的一个原始取值区间。若 $X \\sim \\text{Uniform}(-a, a)$ 且 $Y = X^2$，则事件 $\\{Y \\le y\\}$ 即 $\\{-\\sqrt{y} \\le X \\le \\sqrt{y}\\}$。因此在 $0 < y < a^2$ 上，$F_Y(y) = \\frac{\\sqrt{y} - (-\\sqrt{y})}{2a} = \\frac{\\sqrt{y}}{a}$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(3, 25);
@@ -541,8 +541,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "many-to-one-pdf-derivation",
         title: t("Differentiating the CDF for a many-to-one transformation", "对多对一变换的 CDF 求导得到概率密度"),
         explanation: t(
-          "Differentiating $F_Y(y) = \\frac{\\sqrt{y}}{a}$ gives $f_Y(y) = \\frac{1}{2a\\sqrt{y}}$ for $0 < y < a^2$.",
-          "对 $F_Y(y) = \\frac{\\sqrt{y}}{a}$ 求导得 $f_Y(y) = \\frac{1}{2a\\sqrt{y}}$（$0 < y < a^2$）。",
+          "Differentiating the cumulative distribution function handles both branches at once, giving the density of the new variable. Differentiating $F_Y(y) = \\frac{\\sqrt{y}}{a}$ gives $f_Y(y) = \\frac{1}{2a\\sqrt{y}}$ for $0 < y < a^2$.",
+          "对累积分布函数求导可以同时处理两个分支，从而得到新变量的密度。对 $F_Y(y) = \\frac{\\sqrt{y}}{a}$ 求导得 $f_Y(y) = \\frac{1}{2a\\sqrt{y}}$（$0 < y < a^2$）。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(3, 20);

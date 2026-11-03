@@ -444,8 +444,8 @@ export const booleanFunctionsAndLogicalOperations: TopicDef = {
       id: "evaluating-xor-nand-and-nor",
       title: t("Evaluating ⊕, ↑ and ↓", "计算 ⊕、↑ 与 ↓"),
       explanation: t(
-        "$1 \\oplus 1 = 0$, $1 \\uparrow 1 = 0$ and $0 \\downarrow 0 = 1$; otherwise $\\oplus$ gives $1$ exactly when the inputs differ, $\\uparrow$ gives $1$, and $\\downarrow$ gives $0$. With $x = 1, y = 0, z = 1$: $(x \\uparrow y) \\oplus z = 1 \\oplus 1 = 0$.",
-        "$1 \\oplus 1 = 0$，$1 \\uparrow 1 = 0$，$0 \\downarrow 0 = 1$；其余情况下，$\\oplus$ 在输入不同时取 $1$，$\\uparrow$ 取 $1$，$\\downarrow$ 取 $0$。取 $x = 1, y = 0, z = 1$：$(x \\uparrow y) \\oplus z = 1 \\oplus 1 = 0$。",
+        "Exclusive or detects a difference between the inputs, while nand and nor are the negations of and and or, and each can be read from a short truth table. $1 \\oplus 1 = 0$, $1 \\uparrow 1 = 0$ and $0 \\downarrow 0 = 1$; otherwise $\\oplus$ gives $1$ exactly when the inputs differ, $\\uparrow$ gives $1$, and $\\downarrow$ gives $0$. With $x = 1, y = 0, z = 1$: $(x \\uparrow y) \\oplus z = 1 \\oplus 1 = 0$.",
+        "异或用来检测两个输入是否不同，而与非和或非是“与”和“或”的否定，每一个都可以从简短的真值表中读出。$1 \\oplus 1 = 0$，$1 \\uparrow 1 = 0$，$0 \\downarrow 0 = 1$；其余情况下，$\\oplus$ 在输入不同时取 $1$，$\\uparrow$ 取 $1$，$\\downarrow$ 取 $0$。取 $x = 1, y = 0, z = 1$：$(x \\uparrow y) \\oplus z = 1 \\oplus 1 = 0$。",
       ),
       generate(rng) {
         let e: BExpr;
@@ -468,8 +468,8 @@ export const booleanFunctionsAndLogicalOperations: TopicDef = {
       id: "rewriting-xor-nand-and-nor",
       title: t("Rewriting with ∧, ∨ and ¬", "用 ∧、∨、¬ 改写"),
       explanation: t(
-        "$x \\uparrow y = \\neg (x \\wedge y) = \\neg x \\vee \\neg y$, $x \\downarrow y = \\neg x \\wedge \\neg y$, $x \\oplus y = (x \\wedge \\neg y) \\vee (\\neg x \\wedge y)$, and $x \\uparrow x = \\neg x$. Compare truth tables to check any rewriting.",
-        "$x \\uparrow y = \\neg (x \\wedge y) = \\neg x \\vee \\neg y$，$x \\downarrow y = \\neg x \\wedge \\neg y$，$x \\oplus y = (x \\wedge \\neg y) \\vee (\\neg x \\wedge y)$，$x \\uparrow x = \\neg x$。比较真值表即可检验任何改写。",
+        "De Morgan's laws turn a negated and into an or of negations and a negated or into an and of negations, which rewrites these gates with the basic connectives. $x \\uparrow y = \\neg (x \\wedge y) = \\neg x \\vee \\neg y$, $x \\downarrow y = \\neg x \\wedge \\neg y$, $x \\oplus y = (x \\wedge \\neg y) \\vee (\\neg x \\wedge y)$, and $x \\uparrow x = \\neg x$. Compare truth tables to check any rewriting.",
+        "德摩根律把否定的“与”变成否定的“或”，把否定的“或”变成否定的“与”，从而用基本联结词改写这些门。$x \\uparrow y = \\neg (x \\wedge y) = \\neg x \\vee \\neg y$，$x \\downarrow y = \\neg x \\wedge \\neg y$，$x \\oplus y = (x \\wedge \\neg y) \\vee (\\neg x \\wedge y)$，$x \\uparrow x = \\neg x$。比较真值表即可检验任何改写。",
       ),
       generate(rng) {
         const pair = rng.pick(PAIRS);

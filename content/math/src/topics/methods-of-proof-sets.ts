@@ -430,8 +430,8 @@ export const indicatorFunctions: TopicDef = {
       id: "indicators-of-set-operations",
       title: t("Indicators of set operations", "集合运算的示性函数"),
       explanation: t(
-        "$\\mathbf{1}_{A \\cap B} = \\mathbf{1}_A \\mathbf{1}_B$, $\\mathbf{1}_{A^{c}} = 1 - \\mathbf{1}_A$, $\\mathbf{1}_{A \\cup B} = \\mathbf{1}_A + \\mathbf{1}_B - \\mathbf{1}_A \\mathbf{1}_B$ and $\\mathbf{1}_{A \\setminus B} = \\mathbf{1}_A (1 - \\mathbf{1}_B)$. Check each by trying the four cases $x \\in A$ or not, $x \\in B$ or not.",
-        "$\\mathbf{1}_{A \\cap B} = \\mathbf{1}_A \\mathbf{1}_B$，$\\mathbf{1}_{A^{c}} = 1 - \\mathbf{1}_A$，$\\mathbf{1}_{A \\cup B} = \\mathbf{1}_A + \\mathbf{1}_B - \\mathbf{1}_A \\mathbf{1}_B$，$\\mathbf{1}_{A \\setminus B} = \\mathbf{1}_A (1 - \\mathbf{1}_B)$。可以逐一检验 $x$ 是否属于 $A$、是否属于 $B$ 这四种情形。",
+        "An indicator is one on a set and zero off it, so intersections become products, complements become one minus, and unions need inclusion and exclusion. $\\mathbf{1}_{A \\cap B} = \\mathbf{1}_A \\mathbf{1}_B$, $\\mathbf{1}_{A^{c}} = 1 - \\mathbf{1}_A$, $\\mathbf{1}_{A \\cup B} = \\mathbf{1}_A + \\mathbf{1}_B - \\mathbf{1}_A \\mathbf{1}_B$ and $\\mathbf{1}_{A \\setminus B} = \\mathbf{1}_A (1 - \\mathbf{1}_B)$. Check each by trying the four cases $x \\in A$ or not, $x \\in B$ or not.",
+        "示性函数在集合上取 1、在集合外取 0，所以交集变成乘积，补集变成 1 减去它，并集则需要用容斥原理。$\\mathbf{1}_{A \\cap B} = \\mathbf{1}_A \\mathbf{1}_B$，$\\mathbf{1}_{A^{c}} = 1 - \\mathbf{1}_A$，$\\mathbf{1}_{A \\cup B} = \\mathbf{1}_A + \\mathbf{1}_B - \\mathbf{1}_A \\mathbf{1}_B$，$\\mathbf{1}_{A \\setminus B} = \\mathbf{1}_A (1 - \\mathbf{1}_B)$。可以逐一检验 $x$ 是否属于 $A$、是否属于 $B$ 这四种情形。",
       ),
       generate(rng) {
         const [X, Y] = rng.shuffle(["A", "B", "C", "D"]);

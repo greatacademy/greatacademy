@@ -80,8 +80,8 @@ export const truthSetsOfPredicates: TopicDef = {
       id: "finding-truth-sets-over-the-integers",
       title: t("Truth sets over the integers", "整数上的真值集"),
       explanation: t(
-        "Over $\\mathbb{Z}$ a truth set can still be finite. $\\{x \\in \\mathbb{Z} : x^2 < 10\\} = \\{-3, -2, -1, 0, 1, 2, 3\\}$: remember the negative integers.",
-        "在 $\\mathbb{Z}$ 上真值集也可能是有限的。$\\{x \\in \\mathbb{Z} : x^2 < 10\\} = \\{-3, -2, -1, 0, 1, 2, 3\\}$：别忘了负整数。",
+        "The truth set of a predicate is the set of elements of the universe that make it true, so list exactly those integers, including the negative ones. Over $\\mathbb{Z}$ a truth set can still be finite. $\\{x \\in \\mathbb{Z} : x^2 < 10\\} = \\{-3, -2, -1, 0, 1, 2, 3\\}$: remember the negative integers.",
+        "谓词的真值集是论域中使它为真的元素的集合，所以要准确列出这些整数，包括负整数。在 $\\mathbb{Z}$ 上真值集也可能是有限的。$\\{x \\in \\mathbb{Z} : x^2 < 10\\} = \\{-3, -2, -1, 0, 1, 2, 3\\}$：别忘了负整数。",
       ),
       generate(rng) {
         if (rng.bool()) {
@@ -180,8 +180,8 @@ export const theAndAndOrConnectivesWithPredicates: TopicDef = {
       id: "truth-sets-of-disjunctions",
       title: t("Truth sets of disjunctions", "析取的真值集"),
       explanation: t(
-        "$P(x) \\vee Q(x)$ is true when at least one of the predicates is: its truth set is $A \\cup B$.",
-        "$P(x) \\vee Q(x)$ 只要其中一个谓词为真就为真：其真值集为 $A \\cup B$。",
+        "An element satisfies an or statement when it satisfies either part, so the truth set collects the elements of both truth sets. $P(x) \\vee Q(x)$ is true when at least one of the predicates is: its truth set is $A \\cup B$.",
+        "一个元素满足“或”命题，只要它满足其中一部分，所以真值集汇集了两个真值集中的元素。$P(x) \\vee Q(x)$ 只要其中一个谓词为真就为真：其真值集为 $A \\cup B$。",
       ),
       generate: (rng) =>
         combinedSetProblem(
@@ -212,8 +212,8 @@ export const theNotConnectiveWithPredicates: TopicDef = {
       id: "truth-sets-of-negations",
       title: t("Truth sets of negations", "否定的真值集"),
       explanation: t(
-        "$\\neg P(x)$ is true exactly where $P(x)$ is false, so its truth set is $A^{c} = U \\setminus A$.",
-        "$\\neg P(x)$ 恰在 $P(x)$ 为假处为真，所以其真值集为 $A^{c} = U \\setminus A$。",
+        "Negating a predicate swaps true and false for every element, so its truth set is everything in the universe outside the original truth set. $\\neg P(x)$ is true exactly where $P(x)$ is false, so its truth set is $A^{c} = U \\setminus A$.",
+        "否定一个谓词会使每个元素的真假互换，所以它的真值集是论域中原真值集以外的所有元素。$\\neg P(x)$ 恰在 $P(x)$ 为假处为真，所以其真值集为 $A^{c} = U \\setminus A$。",
       ),
       generate(rng) {
         const u = universe(rng);
@@ -238,8 +238,8 @@ export const theNotConnectiveWithPredicates: TopicDef = {
       id: "truth-sets-with-a-negated-predicate",
       title: t("Combining with a negated predicate", "与否定谓词组合"),
       explanation: t(
-        "Combine the rules: the truth set of $P(x) \\wedge \\neg Q(x)$ is $A \\cap B^{c} = A \\setminus B$, and that of $P(x) \\vee \\neg Q(x)$ is $A \\cup B^{c}$.",
-        "组合这些规则：$P(x) \\wedge \\neg Q(x)$ 的真值集为 $A \\cap B^{c} = A \\setminus B$，$P(x) \\vee \\neg Q(x)$ 的真值集为 $A \\cup B^{c}$。",
+        "Combine the rules for and, or and not step by step, turning each logical operation into the matching set operation. Combine the rules: the truth set of $P(x) \\wedge \\neg Q(x)$ is $A \\cap B^{c} = A \\setminus B$, and that of $P(x) \\vee \\neg Q(x)$ is $A \\cup B^{c}$.",
+        "把“与”“或”“非”的规则一步一步结合起来，把每个逻辑运算转化为相应的集合运算。组合这些规则：$P(x) \\wedge \\neg Q(x)$ 的真值集为 $A \\cap B^{c} = A \\setminus B$，$P(x) \\vee \\neg Q(x)$ 的真值集为 $A \\cup B^{c}$。",
       ),
       generate(rng) {
         const isAnd = rng.bool();
@@ -337,8 +337,8 @@ export const conditionalStatementsWithPredicates: TopicDef = {
       id: "truth-sets-of-conditional-predicates",
       title: t("Truth sets of conditionals", "条件命题的真值集"),
       explanation: t(
-        "Since $P(x) \\Rightarrow Q(x) \\equiv \\neg P(x) \\vee Q(x)$, its truth set is $A^{c} \\cup B$: every $x$ outside $A$, plus every $x$ in $B$.",
-        "由于 $P(x) \\Rightarrow Q(x) \\equiv \\neg P(x) \\vee Q(x)$，其真值集为 $A^{c} \\cup B$：不在 $A$ 中的所有 $x$，加上 $B$ 中的所有 $x$。",
+        "A conditional is false only when the hypothesis holds and the conclusion fails, so it is true everywhere except the part of the first set outside the second. Since $P(x) \\Rightarrow Q(x) \\equiv \\neg P(x) \\vee Q(x)$, its truth set is $A^{c} \\cup B$: every $x$ outside $A$, plus every $x$ in $B$.",
+        "条件句只有在前提成立而结论不成立时才为假，所以除了第一个集合中不属于第二个集合的部分，它处处为真。由于 $P(x) \\Rightarrow Q(x) \\equiv \\neg P(x) \\vee Q(x)$，其真值集为 $A^{c} \\cup B$：不在 $A$ 中的所有 $x$，加上 $B$ 中的所有 $x$。",
       ),
       generate: (rng) =>
         combinedSetProblem(

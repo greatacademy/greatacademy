@@ -21,8 +21,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
         id: "evaluating-binomial-cdf-small-n",
         title: t("Evaluating the CDF for a symmetric Binomial variable", "计算对称二项分布的累积分布函数值"),
         explanation: t(
-          "For $X \\sim \\text{Binomial}(n, \\frac{1}{2})$, each outcome has probability $\\left(\\frac{1}{2}\\right)^n$, so $F(k) = \\frac{1}{2^n} \\sum_{j=0}^k \\binom{n}{j}$.",
-          "对于 $X \\sim \\text{Binomial}(n, \\frac{1}{2})$，每个结果的概率为 $\\left(\\frac{1}{2}\\right)^n$，故 $F(k) = \\frac{1}{2^n} \\sum_{j=0}^k \\binom{n}{j}$。",
+          "With a success probability of one half every sequence is equally likely, so cumulative probabilities are sums of binomial coefficients divided by a power of two. For $X \\sim \\text{Binomial}(n, \\frac{1}{2})$, each outcome has probability $\\left(\\frac{1}{2}\\right)^n$, so $F(k) = \\frac{1}{2^n} \\sum_{j=0}^k \\binom{n}{j}$.",
+          "当成功概率为二分之一时，每个序列的可能性都相同，所以累积概率等于组合数之和除以 2 的幂。对于 $X \\sim \\text{Binomial}(n, \\frac{1}{2})$，每个结果的概率为 $\\left(\\frac{1}{2}\\right)^n$，故 $F(k) = \\frac{1}{2^n} \\sum_{j=0}^k \\binom{n}{j}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(3, 12);
@@ -61,8 +61,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
         id: "binomial-tail-probability-via-cdf",
         title: t("Computing tail probabilities using the CDF complement", "利用累积分布函数余概率计算右尾概率"),
         explanation: t(
-          "For any integer random variable X, the probability of exceeding k is P(X > k) = 1 - P(X ≤ k) = 1 - F(k).",
-          "对任意整值随机变量 X，严格大于 k 的概率由余事件给出：P(X > k) = 1 - P(X ≤ k) = 1 - F(k)。",
+          "The probability of exceeding a value is the complement of being at most that value, which is often easier to compute. For any integer random variable X, the probability of exceeding k is P(X > k) = 1 - P(X ≤ k) = 1 - F(k).",
+          "超过某个值的概率是不超过该值的概率的补，后者往往更容易计算。对任意整值随机变量 X，严格大于 k 的概率由余事件给出：P(X > k) = 1 - P(X ≤ k) = 1 - F(k)。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(4, 12);
@@ -116,8 +116,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
         id: "evaluating-poisson-cdf-sum",
         title: t("Evaluating the polynomial factor of a Poisson CDF", "计算泊松累积分布函数的多项式因子"),
         explanation: t(
-          "For $X \\sim \\text{Poisson}(\\lambda)$, $P(X \\le 2) = e^{-\\lambda}\\left(1 + \\lambda + \\frac{\\lambda^2}{2}\\right)$.",
-          "对于 $X \\sim \\text{Poisson}(\\lambda)$，$P(X \\le 2) = e^{-\\lambda}\\left(1 + \\lambda + \\frac{\\lambda^2}{2}\\right)$。",
+          "Each Poisson probability shares the same exponential factor, so a cumulative probability is that factor times a short sum of powers over factorials. For $X \\sim \\text{Poisson}(\\lambda)$, $P(X \\le 2) = e^{-\\lambda}\\left(1 + \\lambda + \\frac{\\lambda^2}{2}\\right)$.",
+          "每个泊松概率都有相同的指数因子，所以累积概率是这个因子乘以几项幂除以阶乘的和。对于 $X \\sim \\text{Poisson}(\\lambda)$，$P(X \\le 2) = e^{-\\lambda}\\left(1 + \\lambda + \\frac{\\lambda^2}{2}\\right)$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(1, 30);
@@ -142,8 +142,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
         id: "poisson-at-least-one-event",
         title: t("Calculating the probability of at least one event", "计算至少发生一次事件的概率表达式"),
         explanation: t(
-          "For $X \\sim \\text{Poisson}(\\lambda)$, the probability of at least one occurrence is $P(X \\ge 1) = 1 - P(X = 0) = 1 - e^{-\\lambda}$.",
-          "对于 $X \\sim \\text{Poisson}(\\lambda)$，至少发生一次的概率为 $P(X \\ge 1) = 1 - P(X = 0) = 1 - e^{-\\lambda}$。",
+          "Rather than add up every positive count, subtract the probability of zero events from one. For $X \\sim \\text{Poisson}(\\lambda)$, the probability of at least one occurrence is $P(X \\ge 1) = 1 - P(X = 0) = 1 - e^{-\\lambda}$.",
+          "不必把所有正次数的概率加起来，只需用 1 减去零次事件的概率。对于 $X \\sim \\text{Poisson}(\\lambda)$，至少发生一次的概率为 $P(X \\ge 1) = 1 - P(X = 0) = 1 - e^{-\\lambda}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 40);

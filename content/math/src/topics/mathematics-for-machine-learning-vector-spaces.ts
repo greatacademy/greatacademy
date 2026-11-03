@@ -19,8 +19,8 @@ export const mathematicsForMachineLearningVectorSpaceTopics: TopicDef[] = [
         id: "evaluating-hadamard-products",
         title: t("Computing Hadamard products and their components", "计算阿达马积及其元素"),
         explanation: t(
-          "For $\\mathbf{u}, \\mathbf{v} \\in \\mathbb{R}^n$, $(\\mathbf{u} \\odot \\mathbf{v})_i = u_i v_i$. The sum of the entries of $\\mathbf{u} \\odot \\mathbf{v}$ equals the standard inner product $\\mathbf{u}^T \\mathbf{v}$.",
-          "对于 $\\mathbf{u}, \\mathbf{v} \\in \\mathbb{R}^n$，$(\\mathbf{u} \\odot \\mathbf{v})_i = u_i v_i$。$\\mathbf{u} \\odot \\mathbf{v}$ 各分量之和等于标准内积 $\\mathbf{u}^T \\mathbf{v}$。",
+          "The Hadamard product multiplies vectors entry by entry rather than taking a dot product, so its result is a vector of the same length. For $\\mathbf{u}, \\mathbf{v} \\in \\mathbb{R}^n$, $(\\mathbf{u} \\odot \\mathbf{v})_i = u_i v_i$. The sum of the entries of $\\mathbf{u} \\odot \\mathbf{v}$ equals the standard inner product $\\mathbf{u}^T \\mathbf{v}$.",
+          "哈达玛积是逐个分量相乘，而不是求点积，所以结果是一个长度相同的向量。对于 $\\mathbf{u}, \\mathbf{v} \\in \\mathbb{R}^n$，$(\\mathbf{u} \\odot \\mathbf{v})_i = u_i v_i$。$\\mathbf{u} \\odot \\mathbf{v}$ 各分量之和等于标准内积 $\\mathbf{u}^T \\mathbf{v}$。",
         ),
         generate: (rng: Rng): Problem => {
           const kind = rng.int(0, 1);
@@ -103,8 +103,8 @@ export const mathematicsForMachineLearningVectorSpaceTopics: TopicDef[] = [
         id: "calculating-minkowski-distances",
         title: t("Calculating Manhattan and Euclidean distances", "计算曼哈顿距离与欧几里得距离"),
         explanation: t(
-          "$D_1(\\mathbf{x}, \\mathbf{y}) = \\sum_i |x_i - y_i|$ (Manhattan, $L_1$), and $D_2(\\mathbf{x}, \\mathbf{y}) = \\sqrt{\\sum_i (x_i - y_i)^2}$ (Euclidean, $L_2$).",
-          "$D_1(\\mathbf{x}, \\mathbf{y}) = \\sum_i |x_i - y_i|$（曼哈顿距离，$L_1$），$D_2(\\mathbf{x}, \\mathbf{y}) = \\sqrt{\\sum_i (x_i - y_i)^2}$（欧几里得距离，$L_2$）。",
+          "Manhattan distance adds the absolute differences along each axis like walking on a grid, while Euclidean distance takes the straight line length. $D_1(\\mathbf{x}, \\mathbf{y}) = \\sum_i |x_i - y_i|$ (Manhattan, $L_1$), and $D_2(\\mathbf{x}, \\mathbf{y}) = \\sqrt{\\sum_i (x_i - y_i)^2}$ (Euclidean, $L_2$).",
+          "曼哈顿距离像在网格上行走一样把各轴上的绝对差加起来，而欧氏距离取的是直线长度。$D_1(\\mathbf{x}, \\mathbf{y}) = \\sum_i |x_i - y_i|$（曼哈顿距离，$L_1$），$D_2(\\mathbf{x}, \\mathbf{y}) = \\sqrt{\\sum_i (x_i - y_i)^2}$（欧几里得距离，$L_2$）。",
         ),
         generate: (rng: Rng): Problem => {
           const metricType = rng.pick(["manhattan", "euclidean", "chebyshev"] as const);

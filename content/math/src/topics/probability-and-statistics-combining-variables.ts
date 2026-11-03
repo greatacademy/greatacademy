@@ -1096,8 +1096,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "evaluating-law-of-total-expectation",
         title: t("Computing overall mean via conditional expectations", "通过条件期望加权计算总体均值"),
         explanation: t(
-          "By the law of total expectation, $E[Y] = \\sum_x E[Y \\mid X = x] \\, P(X = x)$.",
-          "由全期望公式，$E[Y] = \\sum_x E[Y \\mid X = x] \\, P(X = x)$。",
+          "The overall mean is a weighted average of the conditional means, with each weight being the probability of its condition. By the law of total expectation, $E[Y] = \\sum_x E[Y \\mid X = x] \\, P(X = x)$.",
+          "总均值是各条件均值的加权平均，每个权重是相应条件发生的概率。由全期望公式，$E[Y] = \\sum_x E[Y \\mid X = x] \\, P(X = x)$。",
         ),
         generate: (rng: Rng): Problem => {
           const e1 = rng.int(10, 40);
@@ -1308,8 +1308,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "sample-covariance-divisor",
         title: t("Understanding the Bessel correction divisor n - 1 for sample covariance", "理解样本协方差的贝塞尔校正除数 n - 1"),
         explanation: t(
-          "Unbiased sample covariance divides by degrees of freedom n - 1, not n.",
-          "为保证无偏性，样本协方差除以自由度 n - 1，而非样本容量 n。",
+          "As with the sample variance, using the sample means uses up one degree of freedom, so dividing by one less than the sample size removes the bias. Unbiased sample covariance divides by degrees of freedom n - 1, not n.",
+          "与样本方差一样，使用样本均值会用掉一个自由度，所以除以样本量减 1 可以消除偏差。为保证无偏性，样本协方差除以自由度 n - 1，而非样本容量 n。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(5, 50);

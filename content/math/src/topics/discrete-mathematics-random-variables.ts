@@ -528,8 +528,8 @@ export const theDiscreteUniformDistribution: TopicDef = {
       id: "uniform-probabilities-of-intervals",
       title: t("Probabilities of intervals", "区间的概率"),
       explanation: t(
-        "If $X$ is uniform on $\\{1, \\dots, 20\\}$, then $P(5 \\le X < 9) = \\frac{4}{20} = \\frac{1}{5}$: the values $5, 6, 7, 8$. Count carefully at the endpoints.",
-        "若 $X$ 在 $\\{1, \\dots, 20\\}$ 上服从均匀分布，则 $P(5 \\le X < 9) = \\frac{4}{20} = \\frac{1}{5}$：取值 $5, 6, 7, 8$。注意端点的计数。",
+        "Every value of a discrete uniform variable is equally likely, so a probability is the number of favorable values divided by the total number of values. If $X$ is uniform on $\\{1, \\dots, 20\\}$, then $P(5 \\le X < 9) = \\frac{4}{20} = \\frac{1}{5}$: the values $5, 6, 7, 8$. Count carefully at the endpoints.",
+        "离散均匀变量的每个值都同样可能，所以概率等于有利取值的个数除以取值的总数。若 $X$ 在 $\\{1, \\dots, 20\\}$ 上服从均匀分布，则 $P(5 \\le X < 9) = \\frac{4}{20} = \\frac{1}{5}$：取值 $5, 6, 7, 8$。注意端点的计数。",
       ),
       generate(rng) {
         const a = rng.int(0, 5);
@@ -558,8 +558,8 @@ export const theDiscreteUniformDistribution: TopicDef = {
       id: "uniform-probabilities-of-divisibility",
       title: t("Probabilities of divisibility", "整除的概率"),
       explanation: t(
-        "If $X$ is uniform on $\\{1, \\dots, 50\\}$, the multiples of $3$ are $3, 6, \\dots, 48$, that is, $\\lfloor 50/3 \\rfloor = 16$ values: $P(3 \\mid X) = \\frac{16}{50} = \\frac{8}{25}$.",
-        "若 $X$ 在 $\\{1, \\dots, 50\\}$ 上服从均匀分布，$3$ 的倍数是 $3, 6, \\dots, 48$，即 $\\lfloor 50/3 \\rfloor = 16$ 个值：$P(3 \\mid X) = \\frac{16}{50} = \\frac{8}{25}$。",
+        "Count the multiples in the range by dividing its end by the divisor and rounding down, then divide by the number of values. If $X$ is uniform on $\\{1, \\dots, 50\\}$, the multiples of $3$ are $3, 6, \\dots, 48$, that is, $\\lfloor 50/3 \\rfloor = 16$ values: $P(3 \\mid X) = \\frac{16}{50} = \\frac{8}{25}$.",
+        "用区间的终点除以除数并向下取整来数出范围内的倍数，再除以取值的总数。若 $X$ 在 $\\{1, \\dots, 50\\}$ 上服从均匀分布，$3$ 的倍数是 $3, 6, \\dots, 48$，即 $\\lfloor 50/3 \\rfloor = 16$ 个值：$P(3 \\mid X) = \\frac{16}{50} = \\frac{8}{25}$。",
       ),
       generate(rng) {
         const b = rng.int(20, 100);
@@ -603,8 +603,8 @@ export const meanAndVarianceOfTheDiscreteUniformDistribution: TopicDef = {
       id: "mean-of-a-discrete-uniform-distribution",
       title: t("The mean", "均值"),
       explanation: t(
-        "By symmetry the mean is the midpoint: uniform on $\\{4, \\dots, 17\\}$ has $E(X) = \\frac{4 + 17}{2} = 10.5$.",
-        "由对称性，均值就是中点：在 $\\{4, \\dots, 17\\}$ 上均匀分布时 $E(X) = \\frac{4 + 17}{2} = 10.5$。",
+        "The values are evenly spaced and equally likely, so they balance at the midpoint between the smallest and the largest. By symmetry the mean is the midpoint: uniform on $\\{4, \\dots, 17\\}$ has $E(X) = \\frac{4 + 17}{2} = 10.5$.",
+        "这些取值等间隔且同样可能，所以它们在最小值和最大值的中点处平衡。由对称性，均值就是中点：在 $\\{4, \\dots, 17\\}$ 上均匀分布时 $E(X) = \\frac{4 + 17}{2} = 10.5$。",
       ),
       generate(rng) {
         const a = rng.int(-10, 20);
@@ -684,8 +684,8 @@ export const modelingWithDiscreteUniformDistributions: TopicDef = {
       id: "expected-payout-of-a-uniform-game",
       title: t("Expected payouts", "期望收益"),
       explanation: t(
-        "A die numbered $1$ to $6$ pays $3X - 5$ dollars. $E(X) = 3.5$, so the expected payout is $3 \\cdot 3.5 - 5 = 5.5$ dollars.",
-        "掷一枚 $1$ 到 $6$ 的骰子，收益为 $3X - 5$ 元。$E(X) = 3.5$，所以期望收益为 $3 \\cdot 3.5 - 5 = 5.5$ 元。",
+        "The payout is a linear function of the outcome, so its mean is the same linear function applied to the mean outcome. A die numbered $1$ to $6$ pays $3X - 5$ dollars. $E(X) = 3.5$, so the expected payout is $3 \\cdot 3.5 - 5 = 5.5$ dollars.",
+        "收益是结果的一次函数，所以它的均值就是把同样的一次函数作用于结果的均值。掷一枚 $1$ 到 $6$ 的骰子，收益为 $3X - 5$ 元。$E(X) = 3.5$，所以期望收益为 $3 \\cdot 3.5 - 5 = 5.5$ 元。",
       ),
       generate(rng) {
         const s = uniformStory(rng);
@@ -710,8 +710,8 @@ export const modelingWithDiscreteUniformDistributions: TopicDef = {
       id: "variance-of-a-uniform-payout",
       title: t("Variance of payouts", "收益的方差"),
       explanation: t(
-        "A die numbered $1$ to $6$ pays $2X + 1$: $\\operatorname{Var}(2X + 1) = 4 \\cdot \\frac{35}{12} = \\frac{35}{3}$.",
-        "掷一枚 $1$ 到 $6$ 的骰子，收益为 $2X + 1$：$\\operatorname{Var}(2X + 1) = 4 \\cdot \\frac{35}{12} = \\frac{35}{3}$。",
+        "Adding a constant does not change the spread of the payout, while the multiplier scales the variance by its square. A die numbered $1$ to $6$ pays $2X + 1$: $\\operatorname{Var}(2X + 1) = 4 \\cdot \\frac{35}{12} = \\frac{35}{3}$.",
+        "加上一个常数不会改变收益的分散程度，而乘数会使方差乘以它的平方。掷一枚 $1$ 到 $6$ 的骰子，收益为 $2X + 1$：$\\operatorname{Var}(2X + 1) = 4 \\cdot \\frac{35}{12} = \\frac{35}{3}$。",
       ),
       generate(rng) {
         const s = uniformStory(rng);
@@ -813,8 +813,8 @@ export const theBernoulliDistribution: TopicDef = {
       id: "bernoulli-indicators-of-events",
       title: t("Indicators of events", "事件的示性变量"),
       explanation: t(
-        "Let $X = 1$ if a fair die shows at most $2$ and $X = 0$ otherwise. Then $X \\sim \\operatorname{Bernoulli}(\\frac{1}{3})$ and $P(X = 0) = \\frac{2}{3}$.",
-        "若均匀骰子点数不超过 $2$ 则令 $X = 1$，否则 $X = 0$。于是 $X \\sim \\operatorname{Bernoulli}(\\frac{1}{3})$，$P(X = 0) = \\frac{2}{3}$。",
+        "Any event gives a Bernoulli variable that equals one when the event happens, and its parameter is the probability of the event. Let $X = 1$ if a fair die shows at most $2$ and $X = 0$ otherwise. Then $X \\sim \\operatorname{Bernoulli}(\\frac{1}{3})$ and $P(X = 0) = \\frac{2}{3}$.",
+        "任何事件都给出一个伯努利变量，事件发生时取 1，它的参数就是事件发生的概率。若均匀骰子点数不超过 $2$ 则令 $X = 1$，否则 $X = 0$。于是 $X \\sim \\operatorname{Bernoulli}(\\frac{1}{3})$，$P(X = 0) = \\frac{2}{3}$。",
       ),
       generate(rng) {
         const s = bernoulliStory(rng);
@@ -838,8 +838,8 @@ export const theBernoulliDistribution: TopicDef = {
       id: "bernoulli-parameter-from-odds",
       title: t("Finding the parameter", "求参数"),
       explanation: t(
-        "If success is $3$ times as likely as failure, then $p = 3(1 - p)$, so $p = \\frac{3}{4}$.",
-        "若成功的可能性是失败的 $3$ 倍，则 $p = 3(1 - p)$，所以 $p = \\frac{3}{4}$。",
+        "The probabilities of success and failure must add to one, so a stated ratio between them gives a single equation for the parameter. If success is $3$ times as likely as failure, then $p = 3(1 - p)$, so $p = \\frac{3}{4}$.",
+        "成功和失败的概率之和必须为 1，所以给定它们之间的比就得到关于参数的一个方程。若成功的可能性是失败的 $3$ 倍，则 $p = 3(1 - p)$，所以 $p = \\frac{3}{4}$。",
       ),
       generate(rng) {
         const k = Q.of(rng.int(1, 9), rng.int(1, 5));
@@ -946,8 +946,8 @@ export const meanAndVarianceOfTheBinomialDistribution: TopicDef = {
       id: "binomial-parameters-from-mean-and-variance",
       title: t("Parameters from mean and variance", "由均值与方差求参数"),
       explanation: t(
-        "If $E(X) = 12$ and $\\operatorname{Var}(X) = 8.4$, then $1 - p = \\frac{8.4}{12} = 0.7$, so $p = 0.3$ and $n = \\frac{12}{0.3} = 40$.",
-        "若 $E(X) = 12$，$\\operatorname{Var}(X) = 8.4$，则 $1 - p = \\frac{8.4}{12} = 0.7$，所以 $p = 0.3$，$n = \\frac{12}{0.3} = 40$。",
+        "The variance divided by the mean gives the failure probability, and then the mean divided by the success probability gives the number of trials. If $E(X) = 12$ and $\\operatorname{Var}(X) = 8.4$, then $1 - p = \\frac{8.4}{12} = 0.7$, so $p = 0.3$ and $n = \\frac{12}{0.3} = 40$.",
+        "方差除以均值得到失败的概率，再用均值除以成功概率得到试验次数。若 $E(X) = 12$，$\\operatorname{Var}(X) = 8.4$，则 $1 - p = \\frac{8.4}{12} = 0.7$，所以 $p = 0.3$，$n = \\frac{12}{0.3} = 40$。",
       ),
       generate(rng) {
         let p: Q;
@@ -979,8 +979,8 @@ export const meanAndVarianceOfTheBinomialDistribution: TopicDef = {
       id: "second-moment-of-a-binomial-variable",
       title: t("E(X²) of a binomial variable", "二项变量的 E(X²)"),
       explanation: t(
-        "For $X \\sim B(10, 0.4)$: $E(X) = 4$ and $\\operatorname{Var}(X) = 2.4$, so $E(X^2) = 2.4 + 4^2 = 18.4$.",
-        "对 $X \\sim B(10, 0.4)$：$E(X) = 4$，$\\operatorname{Var}(X) = 2.4$，所以 $E(X^2) = 2.4 + 4^2 = 18.4$。",
+        "The second moment is the variance plus the square of the mean, and both are known for a binomial variable. For $X \\sim B(10, 0.4)$: $E(X) = 4$ and $\\operatorname{Var}(X) = 2.4$, so $E(X^2) = 2.4 + 4^2 = 18.4$.",
+        "二阶矩等于方差加上均值的平方，而二项变量的这两个量都是已知的。对 $X \\sim B(10, 0.4)$：$E(X) = 4$，$\\operatorname{Var}(X) = 2.4$，所以 $E(X^2) = 2.4 + 4^2 = 18.4$。",
       ),
       generate(rng) {
         const p = rng.pick(PS);
@@ -1040,8 +1040,8 @@ export const thePoissonDistribution: TopicDef = {
       id: "poisson-point-probabilities",
       title: t("Point probabilities", "单点概率"),
       explanation: t(
-        "For $X \\sim \\operatorname{Po}(2)$: $P(X = 3) = e^{-2} \\frac{2^3}{3!} = \\frac{8}{6} e^{-2} \\approx 0.1804$.",
-        "对 $X \\sim \\operatorname{Po}(2)$：$P(X = 3) = e^{-2} \\frac{2^3}{3!} = \\frac{8}{6} e^{-2} \\approx 0.1804$。",
+        "The Poisson distribution counts events that occur independently at a constant average rate, and each probability uses that rate in the formula. For $X \\sim \\operatorname{Po}(2)$: $P(X = 3) = e^{-2} \\frac{2^3}{3!} = \\frac{8}{6} e^{-2} \\approx 0.1804$.",
+        "泊松分布计算以固定平均速率独立发生的事件个数，每个概率都在公式中用到这个速率。对 $X \\sim \\operatorname{Po}(2)$：$P(X = 3) = e^{-2} \\frac{2^3}{3!} = \\frac{8}{6} e^{-2} \\approx 0.1804$。",
       ),
       generate(rng) {
         let lambda: number;
@@ -1071,8 +1071,8 @@ export const thePoissonDistribution: TopicDef = {
       id: "poisson-cumulative-probabilities",
       title: t("Cumulative probabilities", "累积概率"),
       explanation: t(
-        "For $X \\sim \\operatorname{Po}(1.5)$: $P(X \\ge 2) = 1 - P(X = 0) - P(X = 1) = 1 - e^{-1.5}(1 + 1.5) \\approx 0.4422$.",
-        "对 $X \\sim \\operatorname{Po}(1.5)$：$P(X \\ge 2) = 1 - P(X = 0) - P(X = 1) = 1 - e^{-1.5}(1 + 1.5) \\approx 0.4422$。",
+        "For at least some number of events, subtract the probabilities of the few smaller counts from one, rather than summing an infinite tail. For $X \\sim \\operatorname{Po}(1.5)$: $P(X \\ge 2) = 1 - P(X = 0) - P(X = 1) = 1 - e^{-1.5}(1 + 1.5) \\approx 0.4422$.",
+        "求至少发生若干次的概率时，用 1 减去较小几个次数的概率，而不是去求无穷多项的和。对 $X \\sim \\operatorname{Po}(1.5)$：$P(X \\ge 2) = 1 - P(X = 0) - P(X = 1) = 1 - e^{-1.5}(1 + 1.5) \\approx 0.4422$。",
       ),
       generate(rng) {
         let lambda: number;
@@ -1186,8 +1186,8 @@ export const modelingWithThePoissonDistribution: TopicDef = {
       id: "poisson-probabilities-in-context",
       title: t("Probabilities in context", "情境中的概率"),
       explanation: t(
-        "Calls arrive at $4$ per hour. In $30$ minutes the count is $\\operatorname{Po}(2)$, so $P(\\text{exactly } 1) = 2e^{-2} \\approx 0.2707$.",
-        "电话以每小时 $4$ 个的速率到来。$30$ 分钟内的来电数服从 $\\operatorname{Po}(2)$，所以恰有 $1$ 个的概率为 $2e^{-2} \\approx 0.2707$。",
+        "Scale the rate to the length of the interval in question first, because the Poisson parameter is the expected count over that interval. Calls arrive at $4$ per hour. In $30$ minutes the count is $\\operatorname{Po}(2)$, so $P(\\text{exactly } 1) = 2e^{-2} \\approx 0.2707$.",
+        "先把速率按所问区间的长度进行换算，因为泊松参数是该区间内的期望次数。电话以每小时 $4$ 个的速率到来。$30$ 分钟内的来电数服从 $\\operatorname{Po}(2)$，所以恰有 $1$ 个的概率为 $2e^{-2} \\approx 0.2707$。",
       ),
       generate(rng) {
         let s: PoissonStory;
@@ -1219,8 +1219,8 @@ export const modelingWithThePoissonDistribution: TopicDef = {
       id: "at-least-one-event",
       title: t("At least one event", "至少发生一次"),
       explanation: t(
-        "If flaws appear at $0.4$ per metre, a $5$-metre length has $\\lambda = 2$ and $P(X \\ge 1) = 1 - e^{-2} \\approx 0.8647$.",
-        "若瑕疵以每米 $0.4$ 个出现，$5$ 米长的一段 $\\lambda = 2$，$P(X \\ge 1) = 1 - e^{-2} \\approx 0.8647$。",
+        "The complement of at least one event is no events at all, whose Poisson probability is simply the exponential of minus the rate. If flaws appear at $0.4$ per metre, a $5$-metre length has $\\lambda = 2$ and $P(X \\ge 1) = 1 - e^{-2} \\approx 0.8647$.",
+        "“至少一次”的补是“一次也没有”，它的泊松概率就是 e 的负速率次幂。若瑕疵以每米 $0.4$ 个出现，$5$ 米长的一段 $\\lambda = 2$，$P(X \\ge 1) = 1 - e^{-2} \\approx 0.8647$。",
       ),
       generate(rng) {
         let s: PoissonStory;

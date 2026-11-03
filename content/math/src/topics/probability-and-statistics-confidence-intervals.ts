@@ -21,8 +21,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "margin-of-error-known-variance",
         title: t("Calculating the margin of error with known variance", "计算已知总体方差下的误差范围"),
         explanation: t(
-          "The margin of error is $E = z_{\\alpha/2} \\frac{\\sigma}{\\sqrt{n}}$.",
-          "误差范围为 $E = z_{\\alpha/2} \\frac{\\sigma}{\\sqrt{n}}$。",
+          "The margin of error is a critical value times the standard error, so it shrinks with larger samples and grows with higher confidence. The margin of error is $E = z_{\\alpha/2} \\frac{\\sigma}{\\sqrt{n}}$.",
+          "误差范围等于临界值乘以标准误，所以样本越大它越小，置信水平越高它越大。误差范围为 $E = z_{\\alpha/2} \\frac{\\sigma}{\\sqrt{n}}$。",
         ),
         generate: (rng: Rng): Problem => {
           // Choose clean values: n = k^2, z = 2 (approx 95%) or z = 3 (approx 99.7%)
@@ -157,7 +157,10 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
       {
         id: "wald-proportion-variance-evaluation",
         title: t("Evaluating the estimated variance of the sample proportion", "计算样本比例的估计方差"),
-        explanation: t("The estimated variance of p̂ is p̂(1 - p̂) / n.", "样本比例 p̂ 的估计方差为 p̂(1 - p̂) / n。"),
+        explanation: t(
+          "The true variance of a sample proportion depends on the unknown proportion, so the estimate substitutes the sample proportion for it. The estimated variance of p̂ is p̂(1 - p̂) / n.",
+          "样本比例的真实方差依赖于未知的比例，所以估计时用样本比例代替它。样本比例 p̂ 的估计方差为 p̂(1 - p̂) / n。",
+        ),
         generate: (rng: Rng): Problem => {
           const numP = rng.int(1, 9);
           const denP = 10;
@@ -313,8 +316,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
         id: "two-mean-known-variance-se",
         title: t("Evaluating the standard error of difference between two independent means", "计算两个独立均值之差的标准误差"),
         explanation: t(
-          "The standard error is $SE = \\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}$.",
-          "标准误差为 $SE = \\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}$。",
+          "The variances of independent sample means add, even for a difference, so the standard error is the square root of their sum. The standard error is $SE = \\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}$.",
+          "独立样本均值的方差即使相减也要相加，所以标准误是它们之和的平方根。标准误差为 $SE = \\sqrt{\\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}}$。",
         ),
         generate: (rng: Rng): Problem => {
           const v1 = rng.int(10, 80);

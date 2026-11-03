@@ -20,8 +20,8 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
         id: "evaluating-pca-total-variance",
         title: t("Computing total variance and proportion of variance explained", "计算总方差与方差解释比例"),
         explanation: t(
-          "The total variance is $\\operatorname{Tr}(S) = \\sum_i \\lambda_i$. The proportion of variance explained by the first $k$ components is $\\frac{\\sum_{i=1}^k \\lambda_i}{\\sum_{i=1}^d \\lambda_i}$.",
-          "总方差为 $\\operatorname{Tr}(S) = \\sum_i \\lambda_i$。前 $k$ 个主成分所解释的方差比例为 $\\frac{\\sum_{i=1}^k \\lambda_i}{\\sum_{i=1}^d \\lambda_i}$。",
+          "Each principal component carries a share of the total variance equal to its eigenvalue, so the share explained is that eigenvalue divided by the sum of all of them. The total variance is $\\operatorname{Tr}(S) = \\sum_i \\lambda_i$. The proportion of variance explained by the first $k$ components is $\\frac{\\sum_{i=1}^k \\lambda_i}{\\sum_{i=1}^d \\lambda_i}$.",
+          "每个主成分所承载的方差份额等于它的特征值，所以解释的比例就是该特征值除以所有特征值之和。总方差为 $\\operatorname{Tr}(S) = \\sum_i \\lambda_i$。前 $k$ 个主成分所解释的方差比例为 $\\frac{\\sum_{i=1}^k \\lambda_i}{\\sum_{i=1}^d \\lambda_i}$。",
         ),
         generate: (rng: Rng): Problem => {
           const kind = rng.int(0, 1);
@@ -192,8 +192,8 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
         id: "computing-principal-component-scores",
         title: t("Computing principal component projection scores", "计算主成分投影得分"),
         explanation: t(
-          "$z_1 = \\mathbf{v}_1^T \\mathbf{x}_c = \\sum_{i=1}^d v_{1i} x_{ci}$. The projected score $z_1$ is the coordinate along the first principal axis.",
-          "$z_1 = \\mathbf{v}_1^T \\mathbf{x}_c = \\sum_{i=1}^d v_{1i} x_{ci}$。投影得分 $z_1$ 表示沿第一主成分轴的坐标。",
+          "A principal component score is the coordinate of a centered data point along the component direction, found by a dot product with the unit eigenvector. $z_1 = \\mathbf{v}_1^T \\mathbf{x}_c = \\sum_{i=1}^d v_{1i} x_{ci}$. The projected score $z_1$ is the coordinate along the first principal axis.",
+          "主成分得分是中心化后的数据点沿主成分方向的坐标，通过与单位特征向量做点积得到。$z_1 = \\mathbf{v}_1^T \\mathbf{x}_c = \\sum_{i=1}^d v_{1i} x_{ci}$。投影得分 $z_1$ 表示沿第一主成分轴的坐标。",
         ),
         generate: (rng: Rng): Problem => {
           // Unit vector with integer / simple rational components

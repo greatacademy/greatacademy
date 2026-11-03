@@ -106,8 +106,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "sample-variance-calculation-small-n",
         title: t("Calculating sample variance with n - 1 divisor", "用除数 n - 1 计算样本方差"),
         explanation: t(
-          "$S^2 = \\frac{1}{n - 1} \\left[\\sum_i x_i^2 - n\\bar{x}^2\\right]$.",
-          "$S^2 = \\frac{1}{n - 1} \\left[\\sum_i x_i^2 - n\\bar{x}^2\\right]$。",
+          "Dividing by one less than the sample size corrects for measuring spread around the sample mean instead of the unknown true mean. $S^2 = \\frac{1}{n - 1} \\left[\\sum_i x_i^2 - n\\bar{x}^2\\right]$.",
+          "除以样本量减 1，是为了修正用样本均值而不是未知真实均值来衡量分散程度所带来的偏差。$S^2 = \\frac{1}{n - 1} \\left[\\sum_i x_i^2 - n\\bar{x}^2\\right]$。",
         ),
         generate: (rng: Rng): Problem => {
           // Choose a mean and deviations so calculations are clean
@@ -287,7 +287,10 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
       {
         id: "sample-proportion-unbiasedness",
         title: t("Expectation of sample proportion estimator", "样本比例估计量的数学期望"),
-        explanation: t("E[p̂] = p is unbiased regardless of population size N.", "无论总体容量 N 为何值，样本比例均满足无偏性 E[p̂] = p。"),
+        explanation: t(
+          "Each sampled item is equally likely to be any member of the population, so on average the sample proportion equals the population proportion. E[p̂] = p is unbiased regardless of population size N.",
+          "每个抽到的个体都同样可能是总体中的任何成员，所以平均来说样本比例等于总体比例。无论总体容量 N 为何值，样本比例均满足无偏性 E[p̂] = p。",
+        ),
         generate: (rng: Rng): Problem => {
           const num = rng.int(1, 9);
           const den = 10;
@@ -528,7 +531,10 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
       {
         id: "evaluating-sample-proportion-point-estimate",
         title: t("Calculating the point estimate of a proportion", "计算总体比例的点估计值"),
-        explanation: t("p̂ = x / n.", "p̂ = x / n。"),
+        explanation: t(
+          "The natural estimate of a population proportion is the fraction of the sample that has the property. p̂ = x / n.",
+          "总体比例的自然估计是样本中具有该性质的个体所占的比例。p̂ = x / n。",
+        ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(50, 400);
           const x = rng.int(10, n - 10);
@@ -633,8 +639,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "evaluating-product-constant-powers",
         title: t("Evaluating products of powers and constants", "计算常数与幂次的连乘式"),
         explanation: t(
-          "A constant factor comes out of a product as a power: $\\prod_{i=1}^n (c x_i) = c^n \\prod_{i=1}^n x_i$.",
-          "常数因子以幂的形式提出连乘：$\\prod_{i=1}^n (c x_i) = c^n \\prod_{i=1}^n x_i$。",
+          "In a product over many terms, a constant factor appears once in each term, so it comes out raised to the number of terms. A constant factor comes out of a product as a power: $\\prod_{i=1}^n (c x_i) = c^n \\prod_{i=1}^n x_i$.",
+          "在多项的乘积中，常数因子在每一项中都出现一次，所以提出来时要取项数次幂。常数因子以幂的形式提出连乘：$\\prod_{i=1}^n (c x_i) = c^n \\prod_{i=1}^n x_i$。",
         ),
         generate: (rng: Rng): Problem => {
           const c = rng.int(2, 15);
@@ -671,8 +677,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "bernoulli-likelihood-formulation",
         title: t("Formulating the Bernoulli likelihood function", "构建伯努利似然函数"),
         explanation: t(
-          "For $n$ independent Bernoulli trials with $k$ successes, $L(p) = p^k (1 - p)^{n - k}$.",
-          "对含有 $k$ 次成功的 $n$ 次独立伯努利试验，似然函数为 $L(p) = p^k (1 - p)^{n - k}$。",
+          "The likelihood is the probability of the observed data viewed as a function of the parameter, and independent trials multiply. For $n$ independent Bernoulli trials with $k$ successes, $L(p) = p^k (1 - p)^{n - k}$.",
+          "似然函数是把观测数据的概率看作参数的函数，独立试验的概率要相乘。对含有 $k$ 次成功的 $n$ 次独立伯努利试验，似然函数为 $L(p) = p^k (1 - p)^{n - k}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = 2 * rng.int(3, 15) + 1; // odd n guarantees k !== n - k
@@ -721,7 +727,10 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
       {
         id: "bernoulli-log-likelihood-expression",
         title: t("Expressing the log-likelihood of a Bernoulli sample", "表示伯努利样本的对数似然函数"),
-        explanation: t("ln L(p) = k ln(p) + (n - k) ln(1 - p).", "ln L(p) = k ln(p) + (n - k) ln(1 - p)。"),
+        explanation: t(
+          "Taking logarithms turns the product into a sum, which is easier to differentiate and has its maximum at the same parameter value. ln L(p) = k ln(p) + (n - k) ln(1 - p).",
+          "取对数把乘积变成和，更容易求导，而且最大值出现在相同的参数值处。ln L(p) = k ln(p) + (n - k) ln(1 - p)。",
+        ),
         generate: (rng: Rng): Problem => {
           const n = 2 * rng.int(3, 20) + 1; // odd n guarantees k !== n - k
           const k = rng.int(2, n - 2);
@@ -770,8 +779,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "exponential-likelihood-formulation",
         title: t("Formulating the likelihood function for an exponential sample", "构建指数分布样本的似然函数"),
         explanation: t(
-          "For $X_i \\sim \\text{Exp}(\\lambda)$, $L(\\lambda) = \\prod_i \\lambda e^{-\\lambda x_i} = \\lambda^n e^{-\\lambda \\sum_i x_i}$.",
-          "对于 $X_i \\sim \\text{Exp}(\\lambda)$，似然函数为 $L(\\lambda) = \\prod_i \\lambda e^{-\\lambda x_i} = \\lambda^n e^{-\\lambda \\sum_i x_i}$。",
+          "Multiplying the densities of independent observations collects the rate into a power and the exponents into a single sum. For $X_i \\sim \\text{Exp}(\\lambda)$, $L(\\lambda) = \\prod_i \\lambda e^{-\\lambda x_i} = \\lambda^n e^{-\\lambda \\sum_i x_i}$.",
+          "把独立观测的密度相乘，速率汇集成一个幂，指数汇集成一个和。对于 $X_i \\sim \\text{Exp}(\\lambda)$，似然函数为 $L(\\lambda) = \\prod_i \\lambda e^{-\\lambda x_i} = \\lambda^n e^{-\\lambda \\sum_i x_i}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(3, 50);
@@ -819,8 +828,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "exponential-log-likelihood-expression",
         title: t("Deriving the log-likelihood function of an exponential sample", "推导指数分布样本的对数似然函数"),
         explanation: t(
-          "Taking logarithms, $\\ln L(\\lambda) = n \\ln \\lambda - \\lambda \\sum_i x_i$.",
-          "取对数得 $\\ln L(\\lambda) = n \\ln \\lambda - \\lambda \\sum_i x_i$。",
+          "The logarithm of the likelihood separates into a term from the powers of the rate and a term from the exponent. Taking logarithms, $\\ln L(\\lambda) = n \\ln \\lambda - \\lambda \\sum_i x_i$.",
+          "似然函数的对数分成两部分：一部分来自速率的幂，另一部分来自指数。取对数得 $\\ln L(\\lambda) = n \\ln \\lambda - \\lambda \\sum_i x_i$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(4, 50);
@@ -871,8 +880,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "mle-of-exponential-distribution",
         title: t("Evaluating the MLE of the rate parameter for exponential data", "计算指数分布比率参数的极大似然估计"),
         explanation: t(
-          "Setting $\\frac{d}{d\\lambda}\\left[n \\ln \\lambda - \\lambda \\sum_i x_i\\right] = \\frac{n}{\\lambda} - \\sum_i x_i = 0$ yields $\\hat{\\lambda} = \\frac{n}{\\sum_i x_i} = \\frac{1}{\\bar{x}}$.",
-          "令 $\\frac{d}{d\\lambda}\\left[n \\ln \\lambda - \\lambda \\sum_i x_i\\right] = \\frac{n}{\\lambda} - \\sum_i x_i = 0$，解得 $\\hat{\\lambda} = \\frac{n}{\\sum_i x_i} = \\frac{1}{\\bar{x}}$。",
+          "Setting the derivative of the log likelihood to zero shows that the best estimate of the rate is the reciprocal of the sample mean. Setting $\\frac{d}{d\\lambda}\\left[n \\ln \\lambda - \\lambda \\sum_i x_i\\right] = \\frac{n}{\\lambda} - \\sum_i x_i = 0$ yields $\\hat{\\lambda} = \\frac{n}{\\sum_i x_i} = \\frac{1}{\\bar{x}}$.",
+          "令对数似然的导数为零，可以看出速率的最佳估计是样本均值的倒数。令 $\\frac{d}{d\\lambda}\\left[n \\ln \\lambda - \\lambda \\sum_i x_i\\right] = \\frac{n}{\\lambda} - \\sum_i x_i = 0$，解得 $\\hat{\\lambda} = \\frac{n}{\\sum_i x_i} = \\frac{1}{\\bar{x}}$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(5, 50);

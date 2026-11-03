@@ -19,8 +19,8 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
         id: "evaluating-indicator-functions-for-predicates",
         title: t("Evaluating indicator functions of predicates", "计算谓词的示性函数"),
         explanation: t(
-          "$\\mathbb{I}[P(x)] = 1$ if $P(x)$ holds, and $0$ otherwise. Summing indicators counts how many elements satisfy the predicate: $\\sum_{i=1}^n \\mathbb{I}[P(x_i)]$.",
-          "若 $P(x)$ 成立则 $\\mathbb{I}[P(x)] = 1$，否则为 $0$。对示性函数求和等于满足谓词条件的元素总数：$\\sum_{i=1}^n \\mathbb{I}[P(x_i)]$。",
+          "Turning a true or false statement into one or zero lets you count with ordinary arithmetic, which is how many loss functions and accuracies are written. $\\mathbb{I}[P(x)] = 1$ if $P(x)$ holds, and $0$ otherwise. Summing indicators counts how many elements satisfy the predicate: $\\sum_{i=1}^n \\mathbb{I}[P(x_i)]$.",
+          "把真或假的陈述变成 1 或 0，就可以用普通的算术来计数，许多损失函数和准确率都是这样写出来的。若 $P(x)$ 成立则 $\\mathbb{I}[P(x)] = 1$，否则为 $0$。对示性函数求和等于满足谓词条件的元素总数：$\\sum_{i=1}^n \\mathbb{I}[P(x_i)]$。",
         ),
         generate: (rng: Rng): Problem => {
           const kind = rng.int(0, 1);
@@ -150,8 +150,8 @@ export const mathematicsForMachineLearningSetTheoryTopics: TopicDef[] = [
         id: "evaluating-argmax-and-argmin-functions",
         title: t("Evaluating argmax and argmin of parameterized functions", "计算参数化函数的 argmax 与 argmin"),
         explanation: t(
-          "For $f(x) = -a(x - h)^2 + k$ with $a > 0$, $\\max f(x) = k$ and $\\operatorname{argmax}_x f(x) = h$. For $g(x) = a(x - h)^2 + k$, $\\min g(x) = k$ and $\\operatorname{argmin}_x g(x) = h$.",
-          "对于 $f(x) = -a(x - h)^2 + k$（$a > 0$），$\\max f(x) = k$ 且 $\\operatorname{argmax}_x f(x) = h$。对于 $g(x) = a(x - h)^2 + k$，$\\min g(x) = k$ 且 $\\operatorname{argmin}_x g(x) = h$。",
+          "The maximum is the largest value a function reaches, while the argmax is the input where it is reached, so the two answer different questions. For $f(x) = -a(x - h)^2 + k$ with $a > 0$, $\\max f(x) = k$ and $\\operatorname{argmax}_x f(x) = h$. For $g(x) = a(x - h)^2 + k$, $\\min g(x) = k$ and $\\operatorname{argmin}_x g(x) = h$.",
+          "最大值是函数能达到的最大函数值，而 argmax 是达到它的那个输入，所以两者回答的是不同的问题。对于 $f(x) = -a(x - h)^2 + k$（$a > 0$），$\\max f(x) = k$ 且 $\\operatorname{argmax}_x f(x) = h$。对于 $g(x) = a(x - h)^2 + k$，$\\min g(x) = k$ 且 $\\operatorname{argmin}_x g(x) = h$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(1, 5);

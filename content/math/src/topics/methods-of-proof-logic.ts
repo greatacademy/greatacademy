@@ -669,8 +669,8 @@ export const theDistributiveLaws: TopicDef = {
       id: "distributing-a-connective",
       title: t("Distributing", "展开"),
       explanation: t(
-        "Unlike arithmetic, both connectives distribute over each other: $p \\wedge (q \\vee r) \\equiv (p \\wedge q) \\vee (p \\wedge r)$ and $p \\vee (q \\wedge r) \\equiv (p \\vee q) \\wedge (p \\vee r)$.",
-        "与算术不同，两种联结词可以互相分配：$p \\wedge (q \\vee r) \\equiv (p \\wedge q) \\vee (p \\wedge r)$，$p \\vee (q \\wedge r) \\equiv (p \\vee q) \\wedge (p \\vee r)$。",
+        "In logic, and distributes over or just as multiplication distributes over addition, and or also distributes over and, which has no arithmetic counterpart. Unlike arithmetic, both connectives distribute over each other: $p \\wedge (q \\vee r) \\equiv (p \\wedge q) \\vee (p \\wedge r)$ and $p \\vee (q \\wedge r) \\equiv (p \\vee q) \\wedge (p \\vee r)$.",
+        "在逻辑中，“与”对“或”满足分配律，就像乘法对加法一样；而“或”对“与”也满足分配律，这在算术中没有对应。与算术不同，两种联结词可以互相分配：$p \\wedge (q \\vee r) \\equiv (p \\wedge q) \\vee (p \\wedge r)$，$p \\vee (q \\wedge r) \\equiv (p \\vee q) \\wedge (p \\vee r)$。",
       ),
       generate: (rng) => applyTheLaw(rng, [4, 5]),
     },
@@ -678,8 +678,8 @@ export const theDistributiveLaws: TopicDef = {
       id: "factoring-with-the-distributive-laws",
       title: t("Factoring", "提取公因式"),
       explanation: t(
-        "Read right to left, the laws factor out a common part: $(p \\vee q) \\wedge (p \\vee \\neg r) \\equiv p \\vee (q \\wedge \\neg r)$.",
-        "从右往左读，分配律可以提取公共部分：$(p \\vee q) \\wedge (p \\vee \\neg r) \\equiv p \\vee (q \\wedge \\neg r)$。",
+        "Reading a distributive law from right to left pulls out a shared part of two clauses, which often shortens an expression. Read right to left, the laws factor out a common part: $(p \\vee q) \\wedge (p \\vee \\neg r) \\equiv p \\vee (q \\wedge \\neg r)$.",
+        "从右往左读分配律，可以提出两个子句的公共部分，这常常能使表达式变短。从右往左读，分配律可以提取公共部分：$(p \\vee q) \\wedge (p \\vee \\neg r) \\equiv p \\vee (q \\wedge \\neg r)$。",
       ),
       generate(rng) {
         const law = laws[rng.pick([4, 5])]!;
@@ -962,8 +962,8 @@ export const biconditionalStatements: TopicDef = {
       id: "rewriting-biconditionals",
       title: t("Rewriting biconditionals", "改写双条件命题"),
       explanation: t(
-        "$p \\Leftrightarrow q \\equiv (p \\Rightarrow q) \\wedge (q \\Rightarrow p)$: a biconditional asserts an implication in both directions. Also $p \\Leftrightarrow q \\equiv (p \\wedge q) \\vee (\\neg p \\wedge \\neg q)$ and $\\neg(p \\Leftrightarrow q) \\equiv p \\Leftrightarrow \\neg q$.",
-        "$p \\Leftrightarrow q \\equiv (p \\Rightarrow q) \\wedge (q \\Rightarrow p)$：双条件命题断言两个方向的蕴涵。另外 $p \\Leftrightarrow q \\equiv (p \\wedge q) \\vee (\\neg p \\wedge \\neg q)$，$\\neg(p \\Leftrightarrow q) \\equiv p \\Leftrightarrow \\neg q$。",
+        "A biconditional says that two statements are always true together or false together, which is the same as each implying the other. $p \\Leftrightarrow q \\equiv (p \\Rightarrow q) \\wedge (q \\Rightarrow p)$: a biconditional asserts an implication in both directions. Also $p \\Leftrightarrow q \\equiv (p \\wedge q) \\vee (\\neg p \\wedge \\neg q)$ and $\\neg(p \\Leftrightarrow q) \\equiv p \\Leftrightarrow \\neg q$.",
+        "双条件句是说两个命题总是同真或同假，这等价于它们互相蕴含。$p \\Leftrightarrow q \\equiv (p \\Rightarrow q) \\wedge (q \\Rightarrow p)$：双条件命题断言两个方向的蕴涵。另外 $p \\Leftrightarrow q \\equiv (p \\wedge q) \\vee (\\neg p \\wedge \\neg q)$，$\\neg(p \\Leftrightarrow q) \\equiv p \\Leftrightarrow \\neg q$。",
       ),
       generate(rng) {
         const [a, b] = threeLiterals(rng);

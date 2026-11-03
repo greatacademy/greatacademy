@@ -28,6 +28,7 @@ const explainedCourses = [
   "differential-equations",
   "mathematical-methods-for-the-physical-sciences-i",
   "mathematical-methods-for-the-physical-sciences-ii",
+  "mathematics-for-machine-learning",
   "integrated-math-i",
   "integrated-math-ii",
   "integrated-math-iii",

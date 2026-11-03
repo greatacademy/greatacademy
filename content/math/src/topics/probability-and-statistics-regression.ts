@@ -78,8 +78,8 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
         id: "evaluating-regression-slope-standard-error",
         title: t("Computing standard error of the regression slope", "计算回归斜率的标准误差"),
         explanation: t(
-          "The standard error of the slope is $s_{b_1} = \\frac{s_e}{\\sqrt{S_{xx}}}$.",
-          "斜率的标准误差为 $s_{b_1} = \\frac{s_e}{\\sqrt{S_{xx}}}$。",
+          "The slope is estimated more precisely when the residuals are small and when the inputs are spread out widely. The standard error of the slope is $s_{b_1} = \\frac{s_e}{\\sqrt{S_{xx}}}$.",
+          "当残差较小且自变量分布得很开时，斜率的估计更精确。斜率的标准误差为 $s_{b_1} = \\frac{s_e}{\\sqrt{S_{xx}}}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 10);
@@ -119,8 +119,8 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
         id: "evaluating-regression-intercept-variance",
         title: t("Computing squared standard error of the regression intercept", "计算回归截距的标准误差平方"),
         explanation: t(
-          "The estimated variance of the intercept is $s_{b_0}^2 = s_e^2 \\left(\\frac{1}{n} + \\frac{\\bar{x}^2}{S_{xx}}\\right)$.",
-          "截距的方差估计为 $s_{b_0}^2 = s_e^2 \\left(\\frac{1}{n} + \\frac{\\bar{x}^2}{S_{xx}}\\right)$。",
+          "The intercept is uncertain both because of the average level and because of the slope, so its variance grows when the mean input is far from zero. The estimated variance of the intercept is $s_{b_0}^2 = s_e^2 \\left(\\frac{1}{n} + \\frac{\\bar{x}^2}{S_{xx}}\\right)$.",
+          "截距的不确定性既来自平均水平，也来自斜率，所以当自变量的均值离零很远时，它的方差会增大。截距的方差估计为 $s_{b_0}^2 = s_e^2 \\left(\\frac{1}{n} + \\frac{\\bar{x}^2}{S_{xx}}\\right)$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(6, 30);

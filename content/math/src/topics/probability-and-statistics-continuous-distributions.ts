@@ -21,8 +21,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "continuity-correction-intervals",
         title: t("Applying continuity correction to discrete events", "对离散事件应用连续性校正"),
         explanation: t(
-          "For discrete X, P(X ≤ k) is approximated by P(Y ≤ k + 0.5) and P(X ≥ k) by P(Y ≥ k - 0.5) for continuous normal Y.",
-          "对于离散随机变量 X，P(X ≤ k) 用连续正态变量 Y 的 P(Y ≤ k + 0.5) 近似，P(X ≥ k) 用 P(Y ≥ k - 0.5) 近似。",
+          "When a continuous distribution approximates whole number counts, extend each boundary by one half so that every included count keeps its full interval. For discrete X, P(X ≤ k) is approximated by P(Y ≤ k + 0.5) and P(X ≥ k) by P(Y ≥ k - 0.5) for continuous normal Y.",
+          "当用连续分布近似整数计数时，把每个边界延伸二分之一，使每个被包含的计数保有完整的区间。对于离散随机变量 X，P(X ≤ k) 用连续正态变量 Y 的 P(Y ≤ k + 0.5) 近似，P(X ≥ k) 用 P(Y ≥ k - 0.5) 近似。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(10, 80);
@@ -68,8 +68,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "normal-approximation-parameters",
         title: t("Computing mean and variance for normal approximation of binomial", "计算二项分布正态近似的均值与方差"),
         explanation: t(
-          "For $X \\sim \\text{Binomial}(n, p)$, the approximating normal distribution has mean $\\mu = np$ and variance $\\sigma^2 = np(1 - p)$.",
-          "对于 $X \\sim \\text{Binomial}(n, p)$，近似正态分布的均值为 $\\mu = np$，方差为 $\\sigma^2 = np(1 - p)$。",
+          "The approximating normal distribution is chosen to have the same mean and variance as the binomial it replaces. For $X \\sim \\text{Binomial}(n, p)$, the approximating normal distribution has mean $\\mu = np$ and variance $\\sigma^2 = np(1 - p)$.",
+          "近似的正态分布要选择与被替代的二项分布具有相同的均值和方差。对于 $X \\sim \\text{Binomial}(n, p)$，近似正态分布的均值为 $\\mu = np$，方差为 $\\sigma^2 = np(1 - p)$。",
         ),
         generate: (rng: Rng): Problem => {
           // Choose n and p such that np and np(1-p) are clean
@@ -198,8 +198,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "continuous-uniform-pdf-value",
         title: t("Evaluating the density of a continuous uniform distribution", "计算连续均匀分布的概率密度值"),
         explanation: t(
-          "For X ~ U(a, b), the probability density function is f(x) = 1 / (b - a) for a ≤ x ≤ b and 0 elsewhere.",
-          "对于 X ~ U(a, b)，在 a ≤ x ≤ b 时概率密度函数为 f(x) = 1 / (b - a)，在其他区间为 0。",
+          "A uniform density is constant over its interval, and its height is set so that the rectangle under it has area one. For X ~ U(a, b), the probability density function is f(x) = 1 / (b - a) for a ≤ x ≤ b and 0 elsewhere.",
+          "均匀密度在其区间上是常数，它的高度使下方矩形的面积为 1。对于 X ~ U(a, b)，在 a ≤ x ≤ b 时概率密度函数为 f(x) = 1 / (b - a)，在其他区间为 0。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(0, 15);
@@ -223,8 +223,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "continuous-uniform-interval-probability",
         title: t("Computing subinterval probabilities for uniform distributions", "计算均匀分布子区间上的概率"),
         explanation: t(
-          "For X ~ U(a, b) and a ≤ c < d ≤ b, P(c ≤ X ≤ d) = (d - c) / (b - a).",
-          "对于 X ~ U(a, b) 且 a ≤ c < d ≤ b，概率为 P(c ≤ X ≤ d) = (d - c) / (b - a)。",
+          "For a uniform variable, probability is proportional to length, so the chance of a subinterval is its length divided by the whole length. For X ~ U(a, b) and a ≤ c < d ≤ b, P(c ≤ X ≤ d) = (d - c) / (b - a).",
+          "对于均匀变量，概率与长度成正比，所以子区间的概率等于它的长度除以整个区间的长度。对于 X ~ U(a, b) 且 a ≤ c < d ≤ b，概率为 P(c ≤ X ≤ d) = (d - c) / (b - a)。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(1, 10);
@@ -266,8 +266,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "continuous-uniform-expectation",
         title: t("Expected value of a continuous uniform distribution", "连续均匀分布的期望值"),
         explanation: t(
-          "For X ~ U(a, b), the expected value is the midpoint E[X] = (a + b) / 2.",
-          "对于 X ~ U(a, b)，期望值为区间中点 E[X] = (a + b) / 2。",
+          "A uniform density is symmetric about the center of its interval, so the mean is the midpoint of the two endpoints. For X ~ U(a, b), the expected value is the midpoint E[X] = (a + b) / 2.",
+          "均匀密度关于区间中点对称，所以均值是两个端点的中点。对于 X ~ U(a, b)，期望值为区间中点 E[X] = (a + b) / 2。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(-20, 20);
@@ -291,8 +291,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "continuous-uniform-variance",
         title: t("Variance of a continuous uniform distribution", "连续均匀分布的方差"),
         explanation: t(
-          "For $X \\sim U(a, b)$, the variance is $\\operatorname{Var}(X) = \\frac{(b - a)^2}{12}$.",
-          "对于 $X \\sim U(a, b)$，方差为 $\\operatorname{Var}(X) = \\frac{(b - a)^2}{12}$。",
+          "The variance depends only on the length of the interval, growing with the square of that length, and not on where the interval sits. For $X \\sim U(a, b)$, the variance is $\\operatorname{Var}(X) = \\frac{(b - a)^2}{12}$.",
+          "方差只取决于区间的长度，随长度的平方增大，而与区间的位置无关。对于 $X \\sim U(a, b)$，方差为 $\\operatorname{Var}(X) = \\frac{(b - a)^2}{12}$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(0, 15);
@@ -332,8 +332,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "uniform-conditional-probability",
         title: t("Conditional probability in a uniform model", "均匀分布模型中的条件概率"),
         explanation: t(
-          "For X ~ U(a, b) and a ≤ c < d ≤ b, P(X > d | X > c) = (b - d) / (b - c).",
-          "对于 X ~ U(a, b) 且 a ≤ c < d ≤ b，条件概率为 P(X > d | X > c) = (b - d) / (b - c)。",
+          "Given that the value exceeds a point, it is uniform on the remaining part of the interval, so the conditional probability is again a ratio of lengths. For X ~ U(a, b) and a ≤ c < d ≤ b, P(X > d | X > c) = (b - d) / (b - c).",
+          "在已知取值超过某点的条件下，它在区间剩下的部分上仍是均匀的，所以条件概率仍是长度之比。对于 X ~ U(a, b) 且 a ≤ c < d ≤ b，条件概率为 P(X > d | X > c) = (b - d) / (b - c)。",
         ),
         generate: (rng: Rng): Problem => {
           const maxWait = rng.int(15, 60); // [0, maxWait]
@@ -359,8 +359,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "uniform-quantile-cutoff",
         title: t("Finding quantiles for continuous uniform distributions", "求解连续均匀分布的分位数阈值"),
         explanation: t(
-          "For $X \\sim U(a, b)$, the value $x_p$ satisfying $P(X \\le x_p) = p$ is $x_p = a + p(b - a)$.",
-          "对于 $X \\sim U(a, b)$，满足 $P(X \\le x_p) = p$ 的值为 $x_p = a + p(b - a)$。",
+          "A quantile of a uniform distribution lies the given fraction of the way from the left endpoint to the right endpoint. For $X \\sim U(a, b)$, the value $x_p$ satisfying $P(X \\le x_p) = p$ is $x_p = a + p(b - a)$.",
+          "均匀分布的分位数位于从左端点到右端点的给定比例处。对于 $X \\sim U(a, b)$，满足 $P(X \\le x_p) = p$ 的值为 $x_p = a + p(b - a)$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(5, 30);
@@ -624,8 +624,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "gamma-function-integer-values",
         title: t("Evaluating Gamma function ratios for positive integers", "计算正整数伽马函数的比值"),
         explanation: t(
-          "For positive integers, Γ(n) = (n - 1)!, so Γ(n) / Γ(m) = (n - 1)! / (m - 1)!.",
-          "对正整数，Γ(n) = (n - 1)!，因此 Γ(n) / Γ(m) = (n - 1)! / (m - 1)!。",
+          "The gamma function extends the factorial, shifted by one, so ratios of its values at integers become ratios of factorials that mostly cancel. For positive integers, Γ(n) = (n - 1)!, so Γ(n) / Γ(m) = (n - 1)! / (m - 1)!.",
+          "伽马函数推广了阶乘（相差一位），所以它在整数处的值之比就是阶乘之比，大部分可以约去。对正整数，Γ(n) = (n - 1)!，因此 Γ(n) / Γ(m) = (n - 1)! / (m - 1)!。",
         ),
         generate: (rng: Rng): Problem => {
           const m = rng.int(2, 25);
@@ -650,8 +650,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "gamma-function-half-integer",
         title: t("Applying recurrence for half-integer Gamma values", "应用递推公式计算半整数伽马函数比值"),
         explanation: t(
-          "Using $\\Gamma(\\alpha + 1) = \\alpha \\Gamma(\\alpha)$, $\\frac{\\Gamma(a + \\frac{1}{2})}{\\Gamma(b + \\frac{1}{2})} = \\prod_{k=b}^{a-1} \\left(k + \\frac{1}{2}\\right)$.",
-          "利用 $\\Gamma(\\alpha + 1) = \\alpha \\Gamma(\\alpha)$，可得 $\\frac{\\Gamma(a + \\frac{1}{2})}{\\Gamma(b + \\frac{1}{2})} = \\prod_{k=b}^{a-1} \\left(k + \\frac{1}{2}\\right)$。",
+          "The recurrence lowers the argument one step at a time, so a ratio of values at half integers becomes a product of a few half integer factors. Using $\\Gamma(\\alpha + 1) = \\alpha \\Gamma(\\alpha)$, $\\frac{\\Gamma(a + \\frac{1}{2})}{\\Gamma(b + \\frac{1}{2})} = \\prod_{k=b}^{a-1} \\left(k + \\frac{1}{2}\\right)$.",
+          "递推关系一次把自变量降低 1，所以在半整数处的值之比就变成几个半整数因子的乘积。利用 $\\Gamma(\\alpha + 1) = \\alpha \\Gamma(\\alpha)$，可得 $\\frac{\\Gamma(a + \\frac{1}{2})}{\\Gamma(b + \\frac{1}{2})} = \\prod_{k=b}^{a-1} \\left(k + \\frac{1}{2}\\right)$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(1, 20);
@@ -774,8 +774,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "chi-square-sum-of-normals",
         title: t("Definition of Chi-square as sum of squared standard normals", "卡方分布作为标准正态变量平方和的定义"),
         explanation: t(
-          "If $Z_1, \\dots, Z_k$ are independent $N(0, 1)$ variables, then $\\sum_{i=1}^k Z_i^2 \\sim \\chi^2(k)$.",
-          "若 $Z_1, \\dots, Z_k$ 相互独立且服从 $N(0, 1)$，则 $\\sum_{i=1}^k Z_i^2 \\sim \\chi^2(k)$。",
+          "Adding the squares of independent standard normal variables gives a chi square variable, whose degrees of freedom count the squares added. If $Z_1, \\dots, Z_k$ are independent $N(0, 1)$ variables, then $\\sum_{i=1}^k Z_i^2 \\sim \\chi^2(k)$.",
+          "把独立标准正态变量的平方相加，得到卡方变量，它的自由度就是相加的平方的个数。若 $Z_1, \\dots, Z_k$ 相互独立且服从 $N(0, 1)$，则 $\\sum_{i=1}^k Z_i^2 \\sim \\chi^2(k)$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 30);
@@ -808,8 +808,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "chi-square-mean-and-variance",
         title: t("Moments of a Chi-square distribution", "卡方分布的数字特征"),
         explanation: t(
-          "For $X \\sim \\chi^2(k)$, $E[X] = k$ and $\\operatorname{Var}(X) = 2k$.",
-          "对于 $X \\sim \\chi^2(k)$，期望为 $E[X] = k$，方差为 $\\operatorname{Var}(X) = 2k$。",
+          "Each squared standard normal has mean one and variance two, so a sum of them has mean and variance proportional to the degrees of freedom. For $X \\sim \\chi^2(k)$, $E[X] = k$ and $\\operatorname{Var}(X) = 2k$.",
+          "每个标准正态变量的平方均值为 1、方差为 2，所以它们的和的均值和方差都与自由度成正比。对于 $X \\sim \\chi^2(k)$，期望为 $E[X] = k$，方差为 $\\operatorname{Var}(X) = 2k$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(3, 50);
@@ -846,8 +846,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "t-distribution-ratio-definition",
         title: t("Formulation of the Student's t ratio", "学生 t 分布的比值构造形式"),
         explanation: t(
-          "$T = \\frac{Z}{\\sqrt{V / \\nu}}$, where $Z \\sim N(0, 1)$ and $V \\sim \\chi^2(\\nu)$ are independent.",
-          "$T = \\frac{Z}{\\sqrt{V / \\nu}}$，其中 $Z \\sim N(0, 1)$ 与 $V \\sim \\chi^2(\\nu)$ 相互独立。",
+          "The t distribution arises when a standard normal is divided by an estimate of its scale built from an independent chi square variable. $T = \\frac{Z}{\\sqrt{V / \\nu}}$, where $Z \\sim N(0, 1)$ and $V \\sim \\chi^2(\\nu)$ are independent.",
+          "当一个标准正态变量除以由独立的卡方变量构造的尺度估计时，就得到 t 分布。$T = \\frac{Z}{\\sqrt{V / \\nu}}$，其中 $Z \\sim N(0, 1)$ 与 $V \\sim \\chi^2(\\nu)$ 相互独立。",
         ),
         generate: (rng: Rng): Problem => {
           const nu = rng.int(2, 35);
@@ -880,8 +880,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "t-distribution-variance",
         title: t("Variance of the Student's t-distribution", "学生 t 分布的方差"),
         explanation: t(
-          "For $T \\sim t(\\nu)$ with $\\nu > 2$, $\\operatorname{Var}(T) = \\frac{\\nu}{\\nu - 2}$.",
-          "对于自由度 $\\nu > 2$ 的 $T \\sim t(\\nu)$，方差为 $\\operatorname{Var}(T) = \\frac{\\nu}{\\nu - 2}$。",
+          "The t distribution has heavier tails than the normal, so its variance is greater than one, approaching one as the degrees of freedom grow. For $T \\sim t(\\nu)$ with $\\nu > 2$, $\\operatorname{Var}(T) = \\frac{\\nu}{\\nu - 2}$.",
+          "t 分布的尾部比正态分布更厚，所以它的方差大于 1，并随着自由度增大而趋于 1。对于自由度 $\\nu > 2$ 的 $T \\sim t(\\nu)$，方差为 $\\operatorname{Var}(T) = \\frac{\\nu}{\\nu - 2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const nu = rng.int(3, 40);

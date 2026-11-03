@@ -20,8 +20,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
         id: "evaluating-subset-gradients",
         title: t("Evaluating gradients with respect to parameter subsets", "求关于参数子集的梯度"),
         explanation: t(
-          "For $f(\\mathbf{w}, b) = \\|\\mathbf{y} - (X\\mathbf{w} + b\\mathbf{1})\\|^2$, holding the bias $b$ constant gives $\\nabla_{\\mathbf{w}} f = -2X^T(\\mathbf{y} - (X\\mathbf{w} + b\\mathbf{1}))$.",
-          "对于 $f(\\mathbf{w}, b) = \\|\\mathbf{y} - (X\\mathbf{w} + b\\mathbf{1})\\|^2$，固定偏置 $b$ 时有 $\\nabla_{\\mathbf{w}} f = -2X^T(\\mathbf{y} - (X\\mathbf{w} + b\\mathbf{1}))$。",
+          "A gradient with respect to some of the parameters treats all the others as constants, just as a partial derivative does for one variable. For $f(\\mathbf{w}, b) = \\|\\mathbf{y} - (X\\mathbf{w} + b\\mathbf{1})\\|^2$, holding the bias $b$ constant gives $\\nabla_{\\mathbf{w}} f = -2X^T(\\mathbf{y} - (X\\mathbf{w} + b\\mathbf{1}))$.",
+          "对部分参数求梯度时，把其他所有参数都当作常数，就像对一个变量求偏导数一样。对于 $f(\\mathbf{w}, b) = \\|\\mathbf{y} - (X\\mathbf{w} + b\\mathbf{1})\\|^2$，固定偏置 $b$ 时有 $\\nabla_{\\mathbf{w}} f = -2X^T(\\mathbf{y} - (X\\mathbf{w} + b\\mathbf{1}))$。",
         ),
         generate: (rng: Rng): Problem => {
           // f(x1, x2, y1, y2) = a*x1*y1 + b*x2*y2 + c*x1^2 + d*x2^2 + e*y1^2
@@ -72,8 +72,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
         id: "evaluating-total-derivatives-on-vectors",
         title: t("Applying total derivatives to direction vectors", "将全导数作用于方向向量"),
         explanation: t(
-          "$D\\mathbf{f}(\\mathbf{x})(\\mathbf{v}) = J_{\\mathbf{f}}(\\mathbf{x}) \\mathbf{v}$ is the directional differential, which linearly approximates $\\mathbf{f}(\\mathbf{x} + \\mathbf{v}) - \\mathbf{f}(\\mathbf{x})$.",
-          "$D\\mathbf{f}(\\mathbf{x})(\\mathbf{v}) = J_{\\mathbf{f}}(\\mathbf{x}) \\mathbf{v}$ 为方向微分，它线性逼近 $\\mathbf{f}(\\mathbf{x} + \\mathbf{v}) - \\mathbf{f}(\\mathbf{x})$。",
+          "The total derivative is a linear map, so applying it to a direction means multiplying the Jacobian matrix by that direction vector. $D\\mathbf{f}(\\mathbf{x})(\\mathbf{v}) = J_{\\mathbf{f}}(\\mathbf{x}) \\mathbf{v}$ is the directional differential, which linearly approximates $\\mathbf{f}(\\mathbf{x} + \\mathbf{v}) - \\mathbf{f}(\\mathbf{x})$.",
+          "全导数是一个线性映射，所以把它作用于一个方向，就是用雅可比矩阵乘以这个方向向量。$D\\mathbf{f}(\\mathbf{x})(\\mathbf{v}) = J_{\\mathbf{f}}(\\mathbf{x}) \\mathbf{v}$ 为方向微分，它线性逼近 $\\mathbf{f}(\\mathbf{x} + \\mathbf{v}) - \\mathbf{f}(\\mathbf{x})$。",
         ),
         generate: (rng: Rng): Problem => {
           // f: R^2 -> R^2: f1(x, y) = a*x^2 + b*y, f2(x, y) = c*x*y + d
@@ -133,8 +133,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
         id: "multiplying-jacobians-chain-rule",
         title: t("Computing Jacobian of composite functions via matrix multiplication", "通过矩阵乘法计算复合映射的雅可比矩阵"),
         explanation: t(
-          "$J_{g \\circ f}(\\mathbf{x}) = J_g(\\mathbf{y}) \\, J_f(\\mathbf{x})$, where $\\mathbf{y} = f(\\mathbf{x})$. Entry $(i, j)$ is $\\sum_k (J_g)_{ik} (J_f)_{kj}$.",
-          "$J_{g \\circ f}(\\mathbf{x}) = J_g(\\mathbf{y}) \\, J_f(\\mathbf{x})$，其中 $\\mathbf{y} = f(\\mathbf{x})$。第 $(i, j)$ 个元素为 $\\sum_k (J_g)_{ik} (J_f)_{kj}$。",
+          "The chain rule for functions of several variables multiplies Jacobian matrices, with the outer function's Jacobian evaluated at the inner function's output. $J_{g \\circ f}(\\mathbf{x}) = J_g(\\mathbf{y}) \\, J_f(\\mathbf{x})$, where $\\mathbf{y} = f(\\mathbf{x})$. Entry $(i, j)$ is $\\sum_k (J_g)_{ik} (J_f)_{kj}$.",
+          "多元函数的链式法则是雅可比矩阵相乘，外层函数的雅可比矩阵要在内层函数的输出处求值。$J_{g \\circ f}(\\mathbf{x}) = J_g(\\mathbf{y}) \\, J_f(\\mathbf{x})$，其中 $\\mathbf{y} = f(\\mathbf{x})$。第 $(i, j)$ 个元素为 $\\sum_k (J_g)_{ik} (J_f)_{kj}$。",
         ),
         generate: (rng: Rng): Problem => {
           // 2x2 Jacobians
@@ -190,8 +190,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
         id: "evaluating-quadratic-form-vector-gradients",
         title: t("Evaluating gradients of quadratic forms and linear terms", "求二次型与线性项关于向量的梯度"),
         explanation: t(
-          "For $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x} + \\mathbf{b}^T \\mathbf{x}$, $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = (A + A^T)\\mathbf{x} + \\mathbf{b}$.",
-          "对于 $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x} + \\mathbf{b}^T \\mathbf{x}$，$\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = (A + A^T)\\mathbf{x} + \\mathbf{b}$。",
+          "The gradient of a quadratic form involves the matrix plus its transpose, which simplifies to twice the matrix when the matrix is symmetric. For $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x} + \\mathbf{b}^T \\mathbf{x}$, $\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = (A + A^T)\\mathbf{x} + \\mathbf{b}$.",
+          "二次型的梯度含有矩阵加上它的转置，当矩阵对称时化简为矩阵的两倍。对于 $f(\\mathbf{x}) = \\mathbf{x}^T A \\mathbf{x} + \\mathbf{b}^T \\mathbf{x}$，$\\nabla_{\\mathbf{x}} f(\\mathbf{x}) = (A + A^T)\\mathbf{x} + \\mathbf{b}$。",
         ),
         generate: (rng: Rng): Problem => {
           // Symmetric 2x2 matrix A = [[a, b], [b, c]]
@@ -249,8 +249,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
         id: "evaluating-least-squares-gradients",
         title: t("Evaluating gradients of least-squares objective functions", "计算最小二乘目标函数的梯度"),
         explanation: t(
-          "For $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2 = (A\\mathbf{x} - \\mathbf{b})^T (A\\mathbf{x} - \\mathbf{b})$, $\\nabla_{\\mathbf{x}} f = 2A^T(A\\mathbf{x} - \\mathbf{b})$.",
-          "对于 $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2 = (A\\mathbf{x} - \\mathbf{b})^T (A\\mathbf{x} - \\mathbf{b})$，$\\nabla_{\\mathbf{x}} f = 2A^T(A\\mathbf{x} - \\mathbf{b})$。",
+          "Expanding the squared error gives a quadratic form plus a linear term, and its gradient is twice the transpose times the residual. For $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2 = (A\\mathbf{x} - \\mathbf{b})^T (A\\mathbf{x} - \\mathbf{b})$, $\\nabla_{\\mathbf{x}} f = 2A^T(A\\mathbf{x} - \\mathbf{b})$.",
+          "把平方误差展开得到一个二次型加一个一次项，它的梯度是转置乘以残差的两倍。对于 $f(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2 = (A\\mathbf{x} - \\mathbf{b})^T (A\\mathbf{x} - \\mathbf{b})$，$\\nabla_{\\mathbf{x}} f = 2A^T(A\\mathbf{x} - \\mathbf{b})$。",
         ),
         generate: (rng: Rng): Problem => {
           // A is 2x2, b is 2x1, x is 2x1
@@ -313,8 +313,8 @@ export const mathematicsForMachineLearningMatrixCalculusTopics: TopicDef[] = [
         id: "evaluating-matrix-derivative-identities",
         title: t("Evaluating matrix gradients of bilinear forms and traces", "计算双线性形式与迹的矩阵梯度"),
         explanation: t(
-          "$\\nabla_X (\\mathbf{a}^T X \\mathbf{b}) = \\mathbf{a} \\mathbf{b}^T$, so entry $(i, j)$ of $\\nabla_X (\\mathbf{a}^T X \\mathbf{b})$ is $a_i b_j$.",
-          "$\\nabla_X (\\mathbf{a}^T X \\mathbf{b}) = \\mathbf{a} \\mathbf{b}^T$，因此 $\\nabla_X (\\mathbf{a}^T X \\mathbf{b})$ 的第 $(i, j)$ 个元素为 $a_i b_j$。",
+          "Each entry of a matrix gradient is the partial derivative with respect to one entry of the matrix, so the identities can be checked one entry at a time. $\\nabla_X (\\mathbf{a}^T X \\mathbf{b}) = \\mathbf{a} \\mathbf{b}^T$, so entry $(i, j)$ of $\\nabla_X (\\mathbf{a}^T X \\mathbf{b})$ is $a_i b_j$.",
+          "矩阵梯度的每个元素都是对矩阵某个元素的偏导数，所以这些恒等式可以逐个元素地检验。$\\nabla_X (\\mathbf{a}^T X \\mathbf{b}) = \\mathbf{a} \\mathbf{b}^T$，因此 $\\nabla_X (\\mathbf{a}^T X \\mathbf{b})$ 的第 $(i, j)$ 个元素为 $a_i b_j$。",
         ),
         generate: (rng: Rng): Problem => {
           const m = rng.int(2, 3);
