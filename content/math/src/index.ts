@@ -202,6 +202,9 @@ import { satFundamentalsAlgebraTopics } from "./topics/sat-fundamentals-algebra.
 import { satFundamentalsDataTopics } from "./topics/sat-fundamentals-data.ts";
 import { satFundamentalsGeometryTopics } from "./topics/sat-fundamentals-geometry.ts";
 import { satMathStrategyTopics } from "./topics/sat-math-strategies.ts";
+import { satPrepAdvancedTopics } from "./topics/sat-prep-advanced.ts";
+import { satPrepAlgebraTopics } from "./topics/sat-prep-algebra.ts";
+import { satPrepDataTopics } from "./topics/sat-prep-data.ts";
 import { sequenceTopics } from "./topics/sequences.ts";
 import { statisticsTopics } from "./topics/statistics.ts";
 import { twoVariableTopics } from "./topics/two-variable-models.ts";
@@ -414,6 +417,9 @@ export const math: SubjectDef = {
     ...satFundamentalsGeometryTopics,
     ...satFundamentalsAdvancedTopics,
     ...satFundamentalsDataTopics,
+    ...satPrepAlgebraTopics,
+    ...satPrepAdvancedTopics,
+    ...satPrepDataTopics,
     ...satMathStrategyTopics,
   ],
   courses: mathCourses,
