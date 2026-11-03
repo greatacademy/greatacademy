@@ -718,6 +718,33 @@ export const areasOfSimilarPolygons: TopicDef = {
 
 // ─── 1.4.4 Working with areas of similar polygons ───────────────────────────
 
+/** similarSquaresFigure shows squares of sides 3 and 5 ruled into unit squares: the sides grow by 5/3 and the areas, 9 and 25, by 25/9. */
+const similarSquaresFigure: Figure = (() => {
+  const grid = (x0: number, n: number): Mark[] => [
+    {
+      kind: "polygon",
+      points: [
+        [x0, 0],
+        [x0 + n, 0],
+        [x0 + n, n],
+        [x0, n],
+      ],
+    },
+    ...Array.from({ length: n - 1 }, (_, i): Mark[] => [
+      { kind: "segment", a: [x0 + i + 1, 0], b: [x0 + i + 1, n], dashed: true },
+      { kind: "segment", a: [x0, i + 1], b: [x0 + n, i + 1], dashed: true },
+    ]).flat(),
+    { kind: "side", a: [x0, 0], b: [x0 + n, 0], text: String(n) },
+  ];
+  return {
+    svg: sketch([...grid(0, 3), ...grid(4.5, 5)]),
+    alt: t(
+      "A square of side 3 ruled into 9 unit squares beside a square of side 5 ruled into 25 unit squares. The sides grow by the scale factor 5/3, and the areas by 25/9, its square.",
+      "边长为 3 的正方形被分成 9 个单位正方形，旁边边长为 5 的正方形被分成 25 个单位正方形。边长按相似比 5/3 增大，面积按它的平方 25/9 增大。",
+    ),
+  };
+})();
+
 /** areaPair picks coprime a ≠ b and a multiplier, for areas a²·c and b²·c. */
 function areaPair(rng: Rng): { a: number; b: number; c: number } {
   for (;;) {
@@ -753,6 +780,7 @@ export const workingWithAreasOfSimilarPolygons: TopicDef = {
         "相似多边形的面积比是 $k^{2}$，所以相似比是它的平方根：\n\n$$k = \\sqrt{\\frac{\\text{第二个的面积}}{\\text{第一个的面积}}}。$$\n\n若面积为 $18$ 和 $50$，则 $\\frac{50}{18} = \\frac{25}{9}$，$k = \\sqrt{\\frac{25}{9}} = \\frac{5}{3}$。先约分，再开平方。",
       ),
       keyPrerequisites: ["square-roots-and-cube-roots"],
+      figure: similarSquaresFigure,
       generate(rng) {
         const { a, b, c } = areaPair(rng);
         const kind = rng.pick(polygonKinds);
