@@ -618,8 +618,8 @@ export const scalarMultiplicationOfMatrices: TopicDef = {
       id: "computing-scalar-multiplication",
       title: t("Computing scalar multiples of matrices", "计算矩阵的数乘"),
       explanation: t(
-        "To multiply a matrix $A$ by a scalar $k$, multiply every entry in $A$ by $k$: $(k A)_{ij} = k \\cdot a_{ij}$.",
-        "用标量（实数）$k$ 乘以矩阵 $A$ 时，需要将矩阵 $A$ 中的每一个元素都乘以 $k$：$(k A)_{ij} = k \\cdot a_{ij}$。",
+        "Multiplying a matrix by a number changes every entry in the same way, so the result has the same size as the original matrix. To multiply a matrix $A$ by a scalar $k$, multiply every entry in $A$ by $k$: $(k A)_{ij} = k \\cdot a_{ij}$.",
+        "用一个数乘矩阵时，每个元素都按同样的方式改变，所以结果与原矩阵的大小相同。用标量（实数）$k$ 乘以矩阵 $A$ 时，需要将矩阵 $A$ 中的每一个元素都乘以 $k$：$(k A)_{ij} = k \\cdot a_{ij}$。",
       ),
       generate(rng) {
         const k = rng.pick([-4, -3, -2, 2, 3, 4, 5]);
@@ -1445,8 +1445,8 @@ export const powersOfMatrices: TopicDef = {
       id: "powers-of-diagonal-and-pattern-matrices",
       title: t("Powers of diagonal and pattern matrices", "对角矩阵与特殊矩阵的幂"),
       explanation: t(
-        "For a diagonal matrix $D = \\begin{pmatrix} d_1 & 0 \\\\ 0 & d_2 \\end{pmatrix}$, powers are given by $D^k = \\begin{pmatrix} d_1^k & 0 \\\\ 0 & d_2^k \\end{pmatrix}$. For a shear matrix $S = \\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix}$, $S^k = \\begin{pmatrix} 1 & k a \\\\ 0 & 1 \\end{pmatrix}$.",
-        "对于对角矩阵 $D = \\begin{pmatrix} d_1 & 0 \\\\ 0 & d_2 \\end{pmatrix}$，其 $k$ 次幂为 $D^k = \\begin{pmatrix} d_1^k & 0 \\\\ 0 & d_2^k \\end{pmatrix}$。对于剪切矩阵 $S = \\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix}$，有 $S^k = \\begin{pmatrix} 1 & k a \\\\ 0 & 1 \\end{pmatrix}$。",
+        "Most powers of matrices take repeated multiplication, but some special matrices follow a pattern that you can spot after computing the first few powers. For a diagonal matrix $D = \\begin{pmatrix} d_1 & 0 \\\\ 0 & d_2 \\end{pmatrix}$, powers are given by $D^k = \\begin{pmatrix} d_1^k & 0 \\\\ 0 & d_2^k \\end{pmatrix}$. For a shear matrix $S = \\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix}$, $S^k = \\begin{pmatrix} 1 & k a \\\\ 0 & 1 \\end{pmatrix}$.",
+        "大多数矩阵的幂需要反复相乘，但一些特殊矩阵有规律可循，算出前几个幂后就能看出规律。对于对角矩阵 $D = \\begin{pmatrix} d_1 & 0 \\\\ 0 & d_2 \\end{pmatrix}$，其 $k$ 次幂为 $D^k = \\begin{pmatrix} d_1^k & 0 \\\\ 0 & d_2^k \\end{pmatrix}$。对于剪切矩阵 $S = \\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix}$，有 $S^k = \\begin{pmatrix} 1 & k a \\\\ 0 & 1 \\end{pmatrix}$。",
       ),
       generate(rng) {
         const isDiag = rng.bool();
@@ -1588,8 +1588,8 @@ export const multiplyingAMatrixByTheIdentityMatrix: TopicDef = {
       id: "identity-matrix-multiplication-property",
       title: t("Multiplication by the identity matrix", "与单位矩阵相乘的性质"),
       explanation: t(
-        "The identity matrix $I$ acts like the number 1 in matrix algebra: for any $m \\times n$ matrix $A$, $I_m A = A$ and $A I_n = A$.",
-        "单位矩阵 $I$ 在矩阵代数中的作用相当于数字 1：对于任意 $m \\times n$ 矩阵 $A$，均有 $I_m A = A$ 以及 $A I_n = A$。",
+        "The identity matrix has ones on its main diagonal and zeros elsewhere, and multiplying by it on either side leaves a matrix unchanged. The identity matrix $I$ acts like the number 1 in matrix algebra: for any $m \\times n$ matrix $A$, $I_m A = A$ and $A I_n = A$.",
+        "单位矩阵的主对角线上都是 1，其余都是 0，无论从哪一边乘它，矩阵都不变。单位矩阵 $I$ 在矩阵代数中的作用相当于数字 1：对于任意 $m \\times n$ 矩阵 $A$，均有 $I_m A = A$ 以及 $A I_n = A$。",
       ),
       generate(rng) {
         const m = rng.pick([2, 3]);

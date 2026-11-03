@@ -1436,8 +1436,8 @@ const symmetryOfTheStandardNormal: TopicDef = {
       id: "symmetric-intervals",
       title: t("Symmetric intervals", "对称区间"),
       explanation: t(
-        "The interval from $-a$ to $a$ leaves two equal tails, each $1 - \\Phi(a)$:\n\n$$P(-a < Z < a) = 1 - 2(1 - \\Phi(a)) = 2\\Phi(a) - 1, \\qquad P(|Z| > a) = 2(1 - \\Phi(a)).$$\n\nWith $\\Phi(2) = 0.9772$: $P(-2 < Z < 2) = 0.9544$ and $P(|Z| > 2) = 0.0456$.",
-        "从 $-a$ 到 $a$ 的区间两侧留下两个相等的尾部，各为 $1 - \\Phi(a)$：\n\n$$P(-a < Z < a) = 1 - 2(1 - \\Phi(a)) = 2\\Phi(a) - 1, \\qquad P(|Z| > a) = 2(1 - \\Phi(a)).$$\n\n由 $\\Phi(2) = 0.9772$ 得：$P(-2 < Z < 2) = 0.9544$，$P(|Z| > 2) = 0.0456$。",
+        "The standard normal curve is symmetric about zero, so an interval centered at zero leaves the same area in the left tail as in the right tail. The interval from $-a$ to $a$ leaves two equal tails, each $1 - \\Phi(a)$:\n\n$$P(-a < Z < a) = 1 - 2(1 - \\Phi(a)) = 2\\Phi(a) - 1, \\qquad P(|Z| > a) = 2(1 - \\Phi(a)).$$\n\nWith $\\Phi(2) = 0.9772$: $P(-2 < Z < 2) = 0.9544$ and $P(|Z| > 2) = 0.0456$.",
+        "标准正态曲线关于零对称，所以以零为中心的区间在左尾和右尾留下的面积相同。从 $-a$ 到 $a$ 的区间两侧留下两个相等的尾部，各为 $1 - \\Phi(a)$：\n\n$$P(-a < Z < a) = 1 - 2(1 - \\Phi(a)) = 2\\Phi(a) - 1, \\qquad P(|Z| > a) = 2(1 - \\Phi(a)).$$\n\n由 $\\Phi(2) = 0.9772$ 得：$P(-2 < Z < 2) = 0.9544$，$P(|Z| > 2) = 0.0456$。",
       ),
       generate(rng) {
         const a = rng.pick(ZS);
@@ -1465,8 +1465,8 @@ const symmetryOfTheStandardNormal: TopicDef = {
       id: "intervals-with-negative-endpoints",
       title: t("Intervals with negative endpoints", "端点为负的区间"),
       explanation: t(
-        "Write every probability as a difference of values of $\\Phi$ and replace $\\Phi(-a)$ by $1 - \\Phi(a)$:\n\n$$P(-a < Z < b) = \\Phi(b) - (1 - \\Phi(a)) = \\Phi(a) + \\Phi(b) - 1,$$\n\n$$P(-b < Z < -a) = P(a < Z < b) = \\Phi(b) - \\Phi(a).$$\n\nWith $\\Phi(1) = 0.8413$ and $\\Phi(2) = 0.9772$: $P(-1 < Z < 2) = 0.8185$ and $P(-2 < Z < -1) = 0.1359$.",
-        "把每个概率写成 $\\Phi$ 的值之差，并把 $\\Phi(-a)$ 换成 $1 - \\Phi(a)$：\n\n$$P(-a < Z < b) = \\Phi(b) - (1 - \\Phi(a)) = \\Phi(a) + \\Phi(b) - 1,$$\n\n$$P(-b < Z < -a) = P(a < Z < b) = \\Phi(b) - \\Phi(a).$$\n\n由 $\\Phi(1) = 0.8413$，$\\Phi(2) = 0.9772$ 得：$P(-1 < Z < 2) = 0.8185$，$P(-2 < Z < -1) = 0.1359$。",
+        "Tables and calculators often give the area to the left of positive values only, so use symmetry to turn each negative endpoint into a positive one. Write every probability as a difference of values of $\\Phi$ and replace $\\Phi(-a)$ by $1 - \\Phi(a)$:\n\n$$P(-a < Z < b) = \\Phi(b) - (1 - \\Phi(a)) = \\Phi(a) + \\Phi(b) - 1,$$\n\n$$P(-b < Z < -a) = P(a < Z < b) = \\Phi(b) - \\Phi(a).$$\n\nWith $\\Phi(1) = 0.8413$ and $\\Phi(2) = 0.9772$: $P(-1 < Z < 2) = 0.8185$ and $P(-2 < Z < -1) = 0.1359$.",
+        "表格和计算器常常只给出正值左侧的面积，所以要利用对称性把每个负的端点化为正的端点。把每个概率写成 $\\Phi$ 的值之差，并把 $\\Phi(-a)$ 换成 $1 - \\Phi(a)$：\n\n$$P(-a < Z < b) = \\Phi(b) - (1 - \\Phi(a)) = \\Phi(a) + \\Phi(b) - 1,$$\n\n$$P(-b < Z < -a) = P(a < Z < b) = \\Phi(b) - \\Phi(a).$$\n\n由 $\\Phi(1) = 0.8413$，$\\Phi(2) = 0.9772$ 得：$P(-1 < Z < 2) = 0.8185$，$P(-2 < Z < -1) = 0.1359$。",
       ),
       generate(rng) {
         const across = rng.bool();
@@ -1542,8 +1542,8 @@ const theNormalDistribution: TopicDef = {
       id: "probabilities-for-a-normal-variable",
       title: t("Probabilities below or above a value", "某值以下或以上的概率"),
       explanation: t(
-        "To find a probability for $X \\sim N(\\mu, \\sigma^2)$, standardize and use $\\Phi$:\n\n$$P(X < x) = \\Phi\\left(\\frac{x - \\mu}{\\sigma}\\right), \\qquad P(X > x) = 1 - \\Phi\\left(\\frac{x - \\mu}{\\sigma}\\right).$$\n\nFor $X \\sim N(50, 16)$: $P(X < 44) = \\Phi(-1.5) = 1 - \\Phi(1.5) = 1 - 0.9332 = 0.0668$.",
-        "求 $X \\sim N(\\mu, \\sigma^2)$ 的概率时，先标准化再用 $\\Phi$：\n\n$$P(X < x) = \\Phi\\left(\\frac{x - \\mu}{\\sigma}\\right), \\qquad P(X > x) = 1 - \\Phi\\left(\\frac{x - \\mu}{\\sigma}\\right).$$\n\n对 $X \\sim N(50, 16)$：$P(X < 44) = \\Phi(-1.5) = 1 - \\Phi(1.5) = 1 - 0.9332 = 0.0668$。",
+        "Every normal distribution becomes the standard normal distribution after subtracting the mean and dividing by the standard deviation, so one table serves them all. To find a probability for $X \\sim N(\\mu, \\sigma^2)$, standardize and use $\\Phi$:\n\n$$P(X < x) = \\Phi\\left(\\frac{x - \\mu}{\\sigma}\\right), \\qquad P(X > x) = 1 - \\Phi\\left(\\frac{x - \\mu}{\\sigma}\\right).$$\n\nFor $X \\sim N(50, 16)$: $P(X < 44) = \\Phi(-1.5) = 1 - \\Phi(1.5) = 1 - 0.9332 = 0.0668$.",
+        "任何正态分布在减去平均数并除以标准差后都变为标准正态分布，所以一张表就能用于所有正态分布。求 $X \\sim N(\\mu, \\sigma^2)$ 的概率时，先标准化再用 $\\Phi$：\n\n$$P(X < x) = \\Phi\\left(\\frac{x - \\mu}{\\sigma}\\right), \\qquad P(X > x) = 1 - \\Phi\\left(\\frac{x - \\mu}{\\sigma}\\right).$$\n\n对 $X \\sim N(50, 16)$：$P(X < 44) = \\Phi(-1.5) = 1 - \\Phi(1.5) = 1 - 0.9332 = 0.0668$。",
       ),
       generate(rng) {
         const mu = rng.int(10, 100);
@@ -1576,8 +1576,8 @@ const theNormalDistribution: TopicDef = {
       id: "probabilities-between-two-values-of-a-normal-variable",
       title: t("Probabilities between two values", "两值之间的概率"),
       explanation: t(
-        "Standardize both endpoints and subtract:\n\n$$P(x_1 < X < x_2) = \\Phi(z_2) - \\Phi(z_1), \\qquad z_i = \\frac{x_i - \\mu}{\\sigma}.$$\n\nFor $X \\sim N(50, 16)$: $P(46 < X < 58) = \\Phi(2) - \\Phi(-1) = 0.9772 - (1 - 0.8413) = 0.8185$.",
-        "把两个端点都标准化后相减：\n\n$$P(x_1 < X < x_2) = \\Phi(z_2) - \\Phi(z_1), \\qquad z_i = \\frac{x_i - \\mu}{\\sigma}.$$\n\n对 $X \\sim N(50, 16)$：$P(46 < X < 58) = \\Phi(2) - \\Phi(-1) = 0.9772 - (1 - 0.8413) = 0.8185$。",
+        "The probability of landing between two values is the area to the left of the larger one minus the area to the left of the smaller one. Standardize both endpoints and subtract:\n\n$$P(x_1 < X < x_2) = \\Phi(z_2) - \\Phi(z_1), \\qquad z_i = \\frac{x_i - \\mu}{\\sigma}.$$\n\nFor $X \\sim N(50, 16)$: $P(46 < X < 58) = \\Phi(2) - \\Phi(-1) = 0.9772 - (1 - 0.8413) = 0.8185$.",
+        "落在两个值之间的概率，等于较大值左侧的面积减去较小值左侧的面积。把两个端点都标准化后相减：\n\n$$P(x_1 < X < x_2) = \\Phi(z_2) - \\Phi(z_1), \\qquad z_i = \\frac{x_i - \\mu}{\\sigma}.$$\n\n对 $X \\sim N(50, 16)$：$P(46 < X < 58) = \\Phi(2) - \\Phi(-1) = 0.9772 - (1 - 0.8413) = 0.8185$。",
       ),
       generate(rng) {
         const mu = rng.int(10, 100);

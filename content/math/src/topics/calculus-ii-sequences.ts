@@ -1176,8 +1176,8 @@ export const findingTheSumOfAnInfiniteGeometricSeries: TopicDef = {
       id: "sums-of-written-out-geometric-series",
       title: t("Sums of written-out geometric series", "写出各项的等比级数之和"),
       explanation: t(
-        `The partial sums of $a + ar + ar^{2} + \\cdots$ are $S_n = \\frac{a(1 - r^{n})}{1 - r}$. When $|r| < 1$, $r^{n} \\to 0$, so the series converges to\n\n$$${geometricSum}.$$\n\nFor $12 - 6 + 3 - \\frac{3}{2} + \\cdots$: $a = 12$, $r = -\\frac{1}{2}$, and $S = \\frac{12}{3/2} = 8$.`,
-        `$a + ar + ar^{2} + \\cdots$ 的部分和为 $S_n = \\frac{a(1 - r^{n})}{1 - r}$。当 $|r| < 1$ 时 $r^{n} \\to 0$，所以级数收敛于\n\n$$${geometricSum}。$$\n\n对 $12 - 6 + 3 - \\frac{3}{2} + \\cdots$：$a = 12$，$r = -\\frac{1}{2}$，$S = \\frac{12}{3/2} = 8$。`,
+        `To sum a written-out geometric series, find its first term and the common ratio by dividing a term by the one before it, and check that the ratio is small enough. The partial sums of $a + ar + ar^{2} + \\cdots$ are $S_n = \\frac{a(1 - r^{n})}{1 - r}$. When $|r| < 1$, $r^{n} \\to 0$, so the series converges to\n\n$$${geometricSum}.$$\n\nFor $12 - 6 + 3 - \\frac{3}{2} + \\cdots$: $a = 12$, $r = -\\frac{1}{2}$, and $S = \\frac{12}{3/2} = 8$.`,
+        `求写出各项的等比级数之和时，先找出首项，并用某一项除以前一项求出公比，再检查公比的绝对值是否小于 1。$a + ar + ar^{2} + \\cdots$ 的部分和为 $S_n = \\frac{a(1 - r^{n})}{1 - r}$。当 $|r| < 1$ 时 $r^{n} \\to 0$，所以级数收敛于\n\n$$${geometricSum}。$$\n\n对 $12 - 6 + 3 - \\frac{3}{2} + \\cdots$：$a = 12$，$r = -\\frac{1}{2}$，$S = \\frac{12}{3/2} = 8$。`,
       ),
       generate(rng) {
         const g = geometricSeries(rng);

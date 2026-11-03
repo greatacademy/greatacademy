@@ -186,8 +186,8 @@ export const graphingTheInverseCosineFunction: TopicDef = {
       id: "domain-and-range-of-arccos",
       title: t("Domain and range of arccos", "反余弦函数的定义域与值域"),
       explanation: t(
-        "To invert $\\cos x$, its domain is restricted to $[0, \\pi]$. Therefore, $y = \\arccos x$ has:\n\n- **Domain**: $[-1, 1]$\n- **Range**: $[0, \\pi]$",
-        "为了使 $\\cos x$ 具有反函数，将其定义域限制在 $[0, \\pi]$。因此 $y = \\arccos x$ 的：\n\n- **定义域**：$[-1, 1]$\n- **值域**：$[0, \\pi]$",
+        "Cosine takes every value many times, so to have an inverse it is restricted to an interval where it takes each value exactly once. To invert $\\cos x$, its domain is restricted to $[0, \\pi]$. Therefore, $y = \\arccos x$ has:\n\n- **Domain**: $[-1, 1]$\n- **Range**: $[0, \\pi]$",
+        "余弦函数的每个值都会取到很多次，所以要有反函数，就把它限制在每个值恰好取到一次的区间上。为了使 $\\cos x$ 具有反函数，将其定义域限制在 $[0, \\pi]$。因此 $y = \\arccos x$ 的：\n\n- **定义域**：$[-1, 1]$\n- **值域**：$[0, \\pi]$",
       ),
       generate(rng) {
         const type = rng.pick(["scaled", "shifted", "linear", "range"] as const);
@@ -257,8 +257,8 @@ export const graphingTheInverseCosineFunction: TopicDef = {
       id: "key-points-and-symmetry-of-arccos",
       title: t("Key points and evaluation of arccos", "反余弦的关键点与求值"),
       explanation: t(
-        "Key points on $y = \\arccos x$ include $(-1, \\pi)$, $(0, \\pi/2)$, and $(1, 0)$. Furthermore, $\\arccos(-x) = \\pi - \\arccos x$.",
-        "$y = \\arccos x$ 上的关键点包括 $(-1, \\pi)$、$(0, \\pi/2)$ 与 $(1, 0)$。此外，$\\arccos(-x) = \\pi - \\arccos x$。",
+        "The graph of inverse cosine is the reflection of the restricted cosine graph in the line through the origin at forty-five degrees, so its key points swap coordinates. Key points on $y = \\arccos x$ include $(-1, \\pi)$, $(0, \\pi/2)$, and $(1, 0)$. Furthermore, $\\arccos(-x) = \\pi - \\arccos x$.",
+        "反余弦的图象是限制后的余弦图象关于直线 $y = x$ 的对称图形，所以关键点的横纵坐标互换。$y = \\arccos x$ 上的关键点包括 $(-1, \\pi)$、$(0, \\pi/2)$ 与 $(1, 0)$。此外，$\\arccos(-x) = \\pi - \\arccos x$。",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -310,8 +310,8 @@ export const graphingTheInverseTangentFunction: TopicDef = {
       id: "domain-and-range-of-arctan",
       title: t("Domain and range of arctan", "反正切函数的定义域与值域"),
       explanation: t(
-        "By restricting $\\tan x$ to $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$, the inverse tangent function $y = \\arctan x$ has:\n\n- **Domain**: $(-\\infty, \\infty)$\n- **Range**: $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$",
-        "通过将 $\\tan x$ 的定义域限制在 $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$ 上，反正切函数 $y = \\arctan x$ 的：\n\n- **定义域**：$(-\\infty, \\infty)$\n- **值域**：$\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$",
+        "Tangent repeats its values, so it is restricted to one branch between two asymptotes, and its inverse takes any real input to an angle in that branch. By restricting $\\tan x$ to $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$, the inverse tangent function $y = \\arctan x$ has:\n\n- **Domain**: $(-\\infty, \\infty)$\n- **Range**: $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$",
+        "正切函数的值会重复，所以把它限制在两条渐近线之间的一支上，它的反函数把任意实数对应到这一支中的一个角。通过将 $\\tan x$ 的定义域限制在 $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$ 上，反正切函数 $y = \\arctan x$ 的：\n\n- **定义域**：$(-\\infty, \\infty)$\n- **值域**：$\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$",
       ),
       generate(rng) {
         const type = rng.pick(["domain", "range-scaled", "range-shifted"] as const);
@@ -377,8 +377,8 @@ export const graphingTheInverseTangentFunction: TopicDef = {
       id: "asymptotes-and-symmetry-of-arctan",
       title: t("Horizontal asymptotes and symmetry of arctan", "反正切函数的渐近线与对称性"),
       explanation: t(
-        "As $x \\to \\infty$, $\\arctan x \\to \\frac{\\pi}{2}$. As $x \\to -\\infty$, $\\arctan x \\to -\\frac{\\pi}{2}$. Its horizontal asymptotes are $y = \\pm \\frac{\\pi}{2}$, and $\\arctan(-x) = -\\arctan x$ (odd symmetry).",
-        "当 $x \\to \\infty$ 时，$\\arctan x \\to \\frac{\\pi}{2}$；当 $x \\to -\\infty$ 时，$\\arctan x \\to -\\frac{\\pi}{2}$。其水平渐近线为 $y = \\pm \\frac{\\pi}{2}$，且 $\\arctan(-x) = -\\arctan x$（奇函数对称性）。",
+        "The vertical asymptotes of the restricted tangent become horizontal asymptotes of the inverse tangent, because the graph is reflected across the diagonal line. As $x \\to \\infty$, $\\arctan x \\to \\frac{\\pi}{2}$. As $x \\to -\\infty$, $\\arctan x \\to -\\frac{\\pi}{2}$. Its horizontal asymptotes are $y = \\pm \\frac{\\pi}{2}$, and $\\arctan(-x) = -\\arctan x$ (odd symmetry).",
+        "限制后的正切的竖直渐近线变为反正切的水平渐近线，因为图象是关于对角线翻折得到的。当 $x \\to \\infty$ 时，$\\arctan x \\to \\frac{\\pi}{2}$；当 $x \\to -\\infty$ 时，$\\arctan x \\to -\\frac{\\pi}{2}$。其水平渐近线为 $y = \\pm \\frac{\\pi}{2}$，且 $\\arctan(-x) = -\\arctan x$（奇函数对称性）。",
       ),
       generate(rng) {
         const k = rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15]);
@@ -706,8 +706,8 @@ export const simplifyingExpressionsUsingBasicTrigonometricIdentities: TopicDef =
       id: "reciprocal-and-quotient-products",
       title: t("Products of reciprocal and quotient expressions", "倒数与商关系的乘积"),
       explanation: t(
-        "Express everything in terms of sine and cosine to simplify products:\n\n$$\\tan \\theta \\cos \\theta = \\left(\\frac{\\sin \\theta}{\\cos \\theta}\\right) \\cos \\theta = \\sin \\theta, \\quad \\sin \\theta \\csc \\theta = \\sin \\theta \\left(\\frac{1}{\\sin \\theta}\\right) = 1$$",
-        "将式子全部化为正弦与余弦进行化简：\n\n$$\\tan \\theta \\cos \\theta = \\left(\\frac{\\sin \\theta}{\\cos \\theta}\\right) \\cos \\theta = \\sin \\theta, \\quad \\sin \\theta \\csc \\theta = \\sin \\theta \\left(\\frac{1}{\\sin \\theta}\\right) = 1$$",
+        "Rewriting tangent, cotangent, secant and cosecant in terms of sine and cosine often lets factors cancel, leaving a much simpler expression. Express everything in terms of sine and cosine to simplify products:\n\n$$\\tan \\theta \\cos \\theta = \\left(\\frac{\\sin \\theta}{\\cos \\theta}\\right) \\cos \\theta = \\sin \\theta, \\quad \\sin \\theta \\csc \\theta = \\sin \\theta \\left(\\frac{1}{\\sin \\theta}\\right) = 1$$",
+        "把正切、余切、正割和余割用正弦和余弦表示，常常能约去因式，得到简单得多的式子。将式子全部化为正弦与余弦进行化简：\n\n$$\\tan \\theta \\cos \\theta = \\left(\\frac{\\sin \\theta}{\\cos \\theta}\\right) \\cos \\theta = \\sin \\theta, \\quad \\sin \\theta \\csc \\theta = \\sin \\theta \\left(\\frac{1}{\\sin \\theta}\\right) = 1$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "\\beta", "u"]);
@@ -800,8 +800,8 @@ export const simplifyingExpressionsUsingThePythagoreanIdentity: TopicDef = {
       id: "direct-pythagorean-simplification",
       title: t("Direct Pythagorean substitution", "直接利用平方关系代换"),
       explanation: t(
-        "From $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$, we have:\n\n$$1 - \\sin^{2}\\theta = \\cos^{2}\\theta, \\quad 1 - \\cos^{2}\\theta = \\sin^{2}\\theta$$",
-        "由 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ 可得：\n\n$$1 - \\sin^{2}\\theta = \\cos^{2}\\theta, \\quad 1 - \\cos^{2}\\theta = \\sin^{2}\\theta$$",
+        "The Pythagorean identity can be rearranged so that one minus the square of sine or cosine becomes the square of the other function. From $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$, we have:\n\n$$1 - \\sin^{2}\\theta = \\cos^{2}\\theta, \\quad 1 - \\cos^{2}\\theta = \\sin^{2}\\theta$$",
+        "勾股恒等式可以变形，使 1 减去正弦或余弦的平方变为另一个函数的平方。由 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ 可得：\n\n$$1 - \\sin^{2}\\theta = \\cos^{2}\\theta, \\quad 1 - \\cos^{2}\\theta = \\sin^{2}\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -828,8 +828,8 @@ export const simplifyingExpressionsUsingThePythagoreanIdentity: TopicDef = {
       id: "products-yielding-the-pythagorean-identity",
       title: t("Conjugate products yielding Pythagorean identity", "共轭乘积化简"),
       explanation: t(
-        "Multiplying conjugates gives a difference of squares:\n\n$$(1 - \\cos\\theta)(1 + \\cos\\theta) = 1 - \\cos^{2}\\theta = \\sin^{2}\\theta, \\quad (1 - \\sin\\theta)(1 + \\sin\\theta) = 1 - \\sin^{2}\\theta = \\cos^{2}\\theta$$",
-        "共轭因式相乘形成平方差：\n\n$$(1 - \\cos\\theta)(1 + \\cos\\theta) = 1 - \\cos^{2}\\theta = \\sin^{2}\\theta, \\quad (1 - \\sin\\theta)(1 + \\sin\\theta) = 1 - \\sin^{2}\\theta = \\cos^{2}\\theta$$",
+        "When two factors differ only in the sign between their terms, their product is a difference of squares that the Pythagorean identity can simplify. Multiplying conjugates gives a difference of squares:\n\n$$(1 - \\cos\\theta)(1 + \\cos\\theta) = 1 - \\cos^{2}\\theta = \\sin^{2}\\theta, \\quad (1 - \\sin\\theta)(1 + \\sin\\theta) = 1 - \\sin^{2}\\theta = \\cos^{2}\\theta$$",
+        "当两个因式只在中间的符号上不同时，它们的积是平方差，可以再用勾股恒等式化简。共轭因式相乘形成平方差：\n\n$$(1 - \\cos\\theta)(1 + \\cos\\theta) = 1 - \\cos^{2}\\theta = \\sin^{2}\\theta, \\quad (1 - \\sin\\theta)(1 + \\sin\\theta) = 1 - \\sin^{2}\\theta = \\cos^{2}\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -875,8 +875,8 @@ export const alternateFormsOfThePythagoreanIdentity: TopicDef = {
       id: "difference-of-squares-higher-powers",
       title: t("Factoring higher powers of sine and cosine", "正弦与余弦高次幂的因式分解"),
       explanation: t(
-        "Recognize differences of squares in higher powers:\n\n$$\\sin^{4}\\theta - \\cos^{4}\\theta = (\\sin^{2}\\theta - \\cos^{2}\\theta)(\\sin^{2}\\theta + \\cos^{2}\\theta) = \\sin^{2}\\theta - \\cos^{2}\\theta$$",
-        "识别高次幂中的平方差公式：\n\n$$\\sin^{4}\\theta - \\cos^{4}\\theta = (\\sin^{2}\\theta - \\cos^{2}\\theta)(\\sin^{2}\\theta + \\cos^{2}\\theta) = \\sin^{2}\\theta - \\cos^{2}\\theta$$",
+        "Fourth powers of sine and cosine can be treated as squares of squares, so factor them as a difference of squares and then use the identity. Recognize differences of squares in higher powers:\n\n$$\\sin^{4}\\theta - \\cos^{4}\\theta = (\\sin^{2}\\theta - \\cos^{2}\\theta)(\\sin^{2}\\theta + \\cos^{2}\\theta) = \\sin^{2}\\theta - \\cos^{2}\\theta$$",
+        "正弦和余弦的四次方可以看作平方的平方，所以先按平方差分解，再用恒等式化简。识别高次幂中的平方差公式：\n\n$$\\sin^{4}\\theta - \\cos^{4}\\theta = (\\sin^{2}\\theta - \\cos^{2}\\theta)(\\sin^{2}\\theta + \\cos^{2}\\theta) = \\sin^{2}\\theta - \\cos^{2}\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -920,8 +920,8 @@ export const alternateFormsOfThePythagoreanIdentity: TopicDef = {
       id: "fractions-with-pythagorean-substitutions",
       title: t("Pythagorean substitutions in fractions", "分式中的勾股恒等式代换"),
       explanation: t(
-        "Substitute $1 - \\cos^{2}\\theta = \\sin^{2}\\theta$ to cancel common factors in fractions:\n\n$$\\frac{1 - \\cos^{2}\\theta}{\\sin \\theta} = \\frac{\\sin^{2}\\theta}{\\sin \\theta} = \\sin \\theta$$",
-        "代换 $1 - \\cos^{2}\\theta = \\sin^{2}\\theta$ 以约去分式中的公因式：\n\n$$\\frac{1 - \\cos^{2}\\theta}{\\sin \\theta} = \\frac{\\sin^{2}\\theta}{\\sin \\theta} = \\sin \\theta$$",
+        "In a fraction, replace an expression from the Pythagorean identity by the single term it equals, then factor and cancel what the numerator and denominator share. Substitute $1 - \\cos^{2}\\theta = \\sin^{2}\\theta$ to cancel common factors in fractions:\n\n$$\\frac{1 - \\cos^{2}\\theta}{\\sin \\theta} = \\frac{\\sin^{2}\\theta}{\\sin \\theta} = \\sin \\theta$$",
+        "在分式中，把勾股恒等式中的式子换成与它相等的单项，再因式分解，约去分子和分母的公因式。代换 $1 - \\cos^{2}\\theta = \\sin^{2}\\theta$ 以约去分式中的公因式：\n\n$$\\frac{1 - \\cos^{2}\\theta}{\\sin \\theta} = \\frac{\\sin^{2}\\theta}{\\sin \\theta} = \\sin \\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -972,8 +972,8 @@ export const simplifyingExpressionsUsingTheSecantTangentIdentity: TopicDef = {
       id: "direct-secant-tangent-substitutions",
       title: t("Direct secant-tangent substitution", "直接利用正割-正切关系代换"),
       explanation: t(
-        "Dividing $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ by $\\cos^{2}\\theta$ yields $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$. Therefore:\n\n$$\\sec^{2}\\theta - \\tan^{2}\\theta = 1, \\quad \\sec^{2}\\theta - 1 = \\tan^{2}\\theta$$",
-        "将 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ 两边同除以 $\\cos^{2}\\theta$ 得 $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$。因此：\n\n$$\\sec^{2}\\theta - \\tan^{2}\\theta = 1, \\quad \\sec^{2}\\theta - 1 = \\tan^{2}\\theta$$",
+        "Dividing the Pythagorean identity by the square of cosine gives an identity relating secant and tangent, which replaces one squared function by the other. Dividing $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ by $\\cos^{2}\\theta$ yields $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$. Therefore:\n\n$$\\sec^{2}\\theta - \\tan^{2}\\theta = 1, \\quad \\sec^{2}\\theta - 1 = \\tan^{2}\\theta$$",
+        "把勾股恒等式两边同除以余弦的平方，得到联系正割和正切的恒等式，可以把一个函数的平方换成另一个。将 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ 两边同除以 $\\cos^{2}\\theta$ 得 $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$。因此：\n\n$$\\sec^{2}\\theta - \\tan^{2}\\theta = 1, \\quad \\sec^{2}\\theta - 1 = \\tan^{2}\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -1001,8 +1001,8 @@ export const simplifyingExpressionsUsingTheSecantTangentIdentity: TopicDef = {
       id: "secant-tangent-fractions",
       title: t("Fractions involving secant and tangent", "含正割与正切的分式"),
       explanation: t(
-        "Fractions containing $\\sec^{2}\\theta - 1$ or $\\sec^{2}\\theta - \\tan^{2}\\theta$ can be simplified directly:\n\n$$\\frac{\\sec^{2}\\theta - 1}{\\tan \\theta} = \\frac{\\tan^{2}\\theta}{\\tan \\theta} = \\tan \\theta$$",
-        "含 $\\sec^{2}\\theta - 1$ 或 $\\sec^{2}\\theta - \\tan^{2}\\theta$ 的分式可直接化简：\n\n$$\\frac{\\sec^{2}\\theta - 1}{\\tan \\theta} = \\frac{\\tan^{2}\\theta}{\\tan \\theta} = \\tan \\theta$$",
+        "Look for the difference of the squares of secant and tangent, or secant squared minus one, and replace it by its simpler equal before cancelling. Fractions containing $\\sec^{2}\\theta - 1$ or $\\sec^{2}\\theta - \\tan^{2}\\theta$ can be simplified directly:\n\n$$\\frac{\\sec^{2}\\theta - 1}{\\tan \\theta} = \\frac{\\tan^{2}\\theta}{\\tan \\theta} = \\tan \\theta$$",
+        "找出正割平方与正切平方之差，或正割平方减 1，先把它换成更简单的等值式，再约分。含 $\\sec^{2}\\theta - 1$ 或 $\\sec^{2}\\theta - \\tan^{2}\\theta$ 的分式可直接化简：\n\n$$\\frac{\\sec^{2}\\theta - 1}{\\tan \\theta} = \\frac{\\tan^{2}\\theta}{\\tan \\theta} = \\tan \\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -1053,8 +1053,8 @@ export const alternateFormsOfTheSecantTangentIdentity: TopicDef = {
       id: "factoring-secant-tangent-powers",
       title: t("Factoring higher powers of secant and tangent", "正割与正切高次幂的因式分解"),
       explanation: t(
-        "Using difference of squares:\n\n$$\\sec^{4}\\theta - \\tan^{4}\\theta = (\\sec^{2}\\theta - \\tan^{2}\\theta)(\\sec^{2}\\theta + \\tan^{2}\\theta) = \\sec^{2}\\theta + \\tan^{2}\\theta$$",
-        "应用平方差公式：\n\n$$\\sec^{4}\\theta - \\tan^{4}\\theta = (\\sec^{2}\\theta - \\tan^{2}\\theta)(\\sec^{2}\\theta + \\tan^{2}\\theta) = \\sec^{2}\\theta + \\tan^{2}\\theta$$",
+        "High powers of secant and tangent can often be factored as a difference of squares, after which one factor simplifies to a single number or term. Using difference of squares:\n\n$$\\sec^{4}\\theta - \\tan^{4}\\theta = (\\sec^{2}\\theta - \\tan^{2}\\theta)(\\sec^{2}\\theta + \\tan^{2}\\theta) = \\sec^{2}\\theta + \\tan^{2}\\theta$$",
+        "正割和正切的高次幂常常可以按平方差分解，分解后其中一个因式化简为一个数或一项。应用平方差公式：\n\n$$\\sec^{4}\\theta - \\tan^{4}\\theta = (\\sec^{2}\\theta - \\tan^{2}\\theta)(\\sec^{2}\\theta + \\tan^{2}\\theta) = \\sec^{2}\\theta + \\tan^{2}\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "alpha", "u"]);
@@ -1093,8 +1093,8 @@ export const alternateFormsOfTheSecantTangentIdentity: TopicDef = {
       id: "secant-tangent-reciprocal-relationships",
       title: t("Conjugate reciprocal relationship", "共轭因式的倒数关系"),
       explanation: t(
-        "Since $(\\sec\\theta - \\tan\\theta)(\\sec\\theta + \\tan\\theta) = 1$, the factors are reciprocals of each other:\n\n$$\\frac{1}{\\sec\\theta + \\tan\\theta} = \\sec\\theta - \\tan\\theta$$",
-        "因为 $(\\sec\\theta - \\tan\\theta)(\\sec\\theta + \\tan\\theta) = 1$，所以它们互为倒数：\n\n$$\\frac{1}{\\sec\\theta + \\tan\\theta} = \\sec\\theta - \\tan\\theta$$",
+        "Because the product of the sum and the difference of secant and tangent is one, either factor can be replaced by the reciprocal of the other. Since $(\\sec\\theta - \\tan\\theta)(\\sec\\theta + \\tan\\theta) = 1$, the factors are reciprocals of each other:\n\n$$\\frac{1}{\\sec\\theta + \\tan\\theta} = \\sec\\theta - \\tan\\theta$$",
+        "因为正割与正切之和与之差的积为 1，所以任一个因式都可以换成另一个的倒数。因为 $(\\sec\\theta - \\tan\\theta)(\\sec\\theta + \\tan\\theta) = 1$，所以它们互为倒数：\n\n$$\\frac{1}{\\sec\\theta + \\tan\\theta} = \\sec\\theta - \\tan\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "\\beta", "u"]);
@@ -1147,8 +1147,8 @@ export const simplifyingTrigonometricExpressionsUsingTheCotangentCosecantIdentit
       id: "cotangent-cosecant-basic",
       title: t("Basic cotangent-cosecant substitutions", "余切-余割基本代换"),
       explanation: t(
-        "Dividing $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ by $\\sin^{2}\\theta$ gives $1 + \\cot^{2}\\theta = \\csc^{2}\\theta$. Thus:\n\n$$\\csc^{2}\\theta - \\cot^{2}\\theta = 1, \\quad \\csc^{2}\\theta - 1 = \\cot^{2}\\theta$$",
-        "将 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ 两边除以 $\\sin^{2}\\theta$ 得到 $1 + \\cot^{2}\\theta = \\csc^{2}\\theta$。因此：\n\n$$\\csc^{2}\\theta - \\cot^{2}\\theta = 1, \\quad \\csc^{2}\\theta - 1 = \\cot^{2}\\theta$$",
+        "Dividing the Pythagorean identity by the square of sine gives an identity relating cotangent and cosecant, used in the same way as the secant and tangent identity. Dividing $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ by $\\sin^{2}\\theta$ gives $1 + \\cot^{2}\\theta = \\csc^{2}\\theta$. Thus:\n\n$$\\csc^{2}\\theta - \\cot^{2}\\theta = 1, \\quad \\csc^{2}\\theta - 1 = \\cot^{2}\\theta$$",
+        "把勾股恒等式两边同除以正弦的平方，得到联系余切和余割的恒等式，用法与正割、正切的恒等式相同。将 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$ 两边除以 $\\sin^{2}\\theta$ 得到 $1 + \\cot^{2}\\theta = \\csc^{2}\\theta$。因此：\n\n$$\\csc^{2}\\theta - \\cot^{2}\\theta = 1, \\quad \\csc^{2}\\theta - 1 = \\cot^{2}\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "\\beta"]);
@@ -1177,8 +1177,8 @@ export const simplifyingTrigonometricExpressionsUsingTheCotangentCosecantIdentit
       id: "cotangent-cosecant-fractions",
       title: t("Cotangent-cosecant fractions and reciprocals", "余切-余割分式与倒数关系"),
       explanation: t(
-        "In fractions, $\\frac{\\csc^{2}\\theta - 1}{\\cot \\theta} = \\frac{\\cot^{2}\\theta}{\\cot \\theta} = \\cot \\theta$, and $\\frac{1}{\\csc\\theta + \\cot\\theta} = \\csc\\theta - \\cot\\theta$.",
-        "在分式中，$\\frac{\\csc^{2}\\theta - 1}{\\cot \\theta} = \\frac{\\cot^{2}\\theta}{\\cot \\theta} = \\cot \\theta$，且 $\\frac{1}{\\csc\\theta + \\cot\\theta} = \\csc\\theta - \\cot\\theta$。",
+        "In fractions, first replace any expression from the cotangent and cosecant identity by its single equal term, and then cancel common factors. In fractions, $\\frac{\\csc^{2}\\theta - 1}{\\cot \\theta} = \\frac{\\cot^{2}\\theta}{\\cot \\theta} = \\cot \\theta$, and $\\frac{1}{\\csc\\theta + \\cot\\theta} = \\csc\\theta - \\cot\\theta$.",
+        "在分式中，先把余切与余割恒等式中的式子换成与它相等的单项，再约去公因式。在分式中，$\\frac{\\csc^{2}\\theta - 1}{\\cot \\theta} = \\frac{\\cot^{2}\\theta}{\\cot \\theta} = \\cot \\theta$，且 $\\frac{1}{\\csc\\theta + \\cot\\theta} = \\csc\\theta - \\cot\\theta$。",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "\\beta", "u"]);
@@ -1224,8 +1224,8 @@ export const simplifyingTrigonometricExpressionsUsingCofunctionIdentities: Topic
       id: "cofunction-identities-basic",
       title: t("Cofunction identities in radians", "弧度制下的余角恒等式"),
       explanation: t(
-        "Complementary angles satisfy:\n\n$$\\sin\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cos\\theta, \\quad \\cos\\left(\\frac{\\pi}{2} - \\theta\\right) = \\sin\\theta, \\quad \\tan\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cot\\theta$$",
-        "互余的两个角满足：\n\n$$\\sin\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cos\\theta, \\quad \\cos\\left(\\frac{\\pi}{2} - \\theta\\right) = \\sin\\theta, \\quad \\tan\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cot\\theta$$",
+        "Two angles that add up to a right angle are complementary, and each trigonometric function of one equals the cofunction of the other. Complementary angles satisfy:\n\n$$\\sin\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cos\\theta, \\quad \\cos\\left(\\frac{\\pi}{2} - \\theta\\right) = \\sin\\theta, \\quad \\tan\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cot\\theta$$",
+        "和为直角的两个角互余，其中一个角的三角函数等于另一个角的余函数。互余的两个角满足：\n\n$$\\sin\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cos\\theta, \\quad \\cos\\left(\\frac{\\pi}{2} - \\theta\\right) = \\sin\\theta, \\quad \\tan\\left(\\frac{\\pi}{2} - \\theta\\right) = \\cot\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "\\beta", "u"]);
@@ -1252,8 +1252,8 @@ export const simplifyingTrigonometricExpressionsUsingCofunctionIdentities: Topic
       id: "cofunction-identities-in-degree-expressions",
       title: t("Cofunction identities with numerical angles", "数字角度中的余角恒等式"),
       explanation: t(
-        "Since $\\sin(90^{\\circ} - x) = \\cos x$, ratios of complementary angles are equal: $\\sin(70^{\\circ}) = \\cos(20^{\\circ})$, so $\\frac{\\sin(70^{\\circ})}{\\cos(20^{\\circ})} = 1$.",
-        "因为 $\\sin(90^{\\circ} - x) = \\cos x$，互余角的对应三角比相等：$\\sin(70^{\\circ}) = \\cos(20^{\\circ})$，因此 $\\frac{\\sin(70^{\\circ})}{\\cos(20^{\\circ})} = 1$。",
+        "Look for pairs of angles that add up to ninety degrees, and rewrite one of them with its cofunction so the two terms can be combined. Since $\\sin(90^{\\circ} - x) = \\cos x$, ratios of complementary angles are equal: $\\sin(70^{\\circ}) = \\cos(20^{\\circ})$, so $\\frac{\\sin(70^{\\circ})}{\\cos(20^{\\circ})} = 1$.",
+        "找出和为九十度的一对角，把其中一个用余函数改写，使两项可以合并。因为 $\\sin(90^{\\circ} - x) = \\cos x$，互余角的对应三角比相等：$\\sin(70^{\\circ}) = \\cos(20^{\\circ})$，因此 $\\frac{\\sin(70^{\\circ})}{\\cos(20^{\\circ})} = 1$。",
       ),
       generate(rng) {
         const deg = rng.int(10, 80);
@@ -2269,8 +2269,8 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForSine: 
       id: "verifying-double-angle-sine-identities",
       title: t("Verifying identities with sin(2θ)", "利用 sin(2θ) 验证恒等式"),
       explanation: t(
-        "To verify $\\frac{\\sin(2\\theta)}{\\sin\\theta} = 2\\cos\\theta$, substitute and simplify the left side:\n\n$$\\frac{\\sin(2\\theta)}{\\sin\\theta} = \\frac{2\\sin\\theta\\cos\\theta}{\\sin\\theta} = 2\\cos\\theta \\checkmark$$",
-        "为验证 $\\frac{\\sin(2\\theta)}{\\sin\\theta} = 2\\cos\\theta$，代入并化简左边：\n\n$$\\frac{\\sin(2\\theta)}{\\sin\\theta} = \\frac{2\\sin\\theta\\cos\\theta}{\\sin\\theta} = 2\\cos\\theta \\checkmark$$",
+        "To verify an identity, transform one side step by step until it matches the other side, here by replacing the sine of a double angle with its formula. To verify $\\frac{\\sin(2\\theta)}{\\sin\\theta} = 2\\cos\\theta$, substitute and simplify the left side:\n\n$$\\frac{\\sin(2\\theta)}{\\sin\\theta} = \\frac{2\\sin\\theta\\cos\\theta}{\\sin\\theta} = 2\\cos\\theta \\checkmark$$",
+        "验证恒等式时，把一边逐步变形，直到与另一边相同；这里是把二倍角的正弦换成它的公式。为验证 $\\frac{\\sin(2\\theta)}{\\sin\\theta} = 2\\cos\\theta$，代入并化简左边：\n\n$$\\frac{\\sin(2\\theta)}{\\sin\\theta} = \\frac{2\\sin\\theta\\cos\\theta}{\\sin\\theta} = 2\\cos\\theta \\checkmark$$",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -2366,8 +2366,8 @@ export const usingTheDoubleAngleFormulaForSineWithThePythagoreanTheorem: TopicDe
       id: "sin-double-angle-from-cos-only",
       title: t("Finding sin(2θ) from cos(θ) in a given quadrant", "由 cos(θ) 在给定象限求 sin(2θ)"),
       explanation: t(
-        "If $\\cos\\theta = -\\frac{4}{5}$ and $\\theta$ is in quadrant II, then $\\sin\\theta = \\frac{3}{5}$ (positive in QII) and:\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$",
-        "若 $\\cos\\theta = -\\frac{4}{5}$ 且 $\\theta$ 在第二象限，则 $\\sin\\theta = \\frac{3}{5}$（第二象限正弦为正），从而：\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$",
+        "When only the cosine is given, find the sine from the Pythagorean identity, choosing its sign from the quadrant, before using the double-angle formula. If $\\cos\\theta = -\\frac{4}{5}$ and $\\theta$ is in quadrant II, then $\\sin\\theta = \\frac{3}{5}$ (positive in QII) and:\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$",
+        "只给出余弦时，先用勾股恒等式求正弦，并根据所在象限确定符号，再用二倍角公式。若 $\\cos\\theta = -\\frac{4}{5}$ 且 $\\theta$ 在第二象限，则 $\\sin\\theta = \\frac{3}{5}$（第二象限正弦为正），从而：\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\left(-\\frac{4}{5}\\right) = -\\frac{24}{25}$$",
       ),
       generate(rng) {
         const [a, b, c] = rng.pick([
@@ -2576,8 +2576,8 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulasForCosin
       id: "choosing-form-for-cos-identity",
       title: t("Choosing the right form of cos(2θ) for verification", "选择合适的 cos(2θ) 形式来验证恒等式"),
       explanation: t(
-        "To show $1 + \\cos(2\\theta) = 2\\cos^2\\theta$, substitute $\\cos(2\\theta) = 2\\cos^2\\theta - 1$:\n\n$$1 + (2\\cos^2\\theta - 1) = 2\\cos^2\\theta \\checkmark$$",
-        "为证明 $1 + \\cos(2\\theta) = 2\\cos^2\\theta$，代入 $\\cos(2\\theta) = 2\\cos^2\\theta - 1$：\n\n$$1 + (2\\cos^2\\theta - 1) = 2\\cos^2\\theta \\checkmark$$",
+        "The cosine of a double angle has three forms, so choose the one that makes the expression match the other side of the identity most directly. To show $1 + \\cos(2\\theta) = 2\\cos^2\\theta$, substitute $\\cos(2\\theta) = 2\\cos^2\\theta - 1$:\n\n$$1 + (2\\cos^2\\theta - 1) = 2\\cos^2\\theta \\checkmark$$",
+        "二倍角的余弦有三种形式，要选择能使式子最直接地与恒等式另一边相同的那一种。为证明 $1 + \\cos(2\\theta) = 2\\cos^2\\theta$，代入 $\\cos(2\\theta) = 2\\cos^2\\theta - 1$：\n\n$$1 + (2\\cos^2\\theta - 1) = 2\\cos^2\\theta \\checkmark$$",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);

@@ -127,8 +127,8 @@ export const elementaryTrigonometricEquationsContainingSine: TopicDef = {
       id: "solve-elementary-sine-equations-radians",
       title: t("Solve sin(x) = c in radians on [0, 2π)", "在 [0, 2π) 内求解正弦方程（弧度制）"),
       explanation: t(
-        "For $\\sin x = c$ on $[0, 2\\pi)$:\n\n$$\\sin x = \\frac{\\sqrt{3}}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{2\\pi}{3}$$\n\n$$\\sin x = -\\frac{1}{2} \\implies x = \\frac{7\\pi}{6}, \\; \\frac{11\\pi}{6}$$",
-        "在 $[0, 2\\pi)$ 上求解 $\\sin x = c$：\n\n$$\\sin x = \\frac{\\sqrt{3}}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{2\\pi}{3}$$\n\n$$\\sin x = -\\frac{1}{2} \\implies x = \\frac{7\\pi}{6}, \\; \\frac{11\\pi}{6}$$",
+        "Sine is positive in the first two quadrants and negative in the last two, so most equations of this kind have two solutions in one full turn. For $\\sin x = c$ on $[0, 2\\pi)$:\n\n$$\\sin x = \\frac{\\sqrt{3}}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{2\\pi}{3}$$\n\n$$\\sin x = -\\frac{1}{2} \\implies x = \\frac{7\\pi}{6}, \\; \\frac{11\\pi}{6}$$",
+        "正弦在第一、二象限为正，在第三、四象限为负，所以这类方程在一整圈内通常有两个解。在 $[0, 2\\pi)$ 上求解 $\\sin x = c$：\n\n$$\\sin x = \\frac{\\sqrt{3}}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{2\\pi}{3}$$\n\n$$\\sin x = -\\frac{1}{2} \\implies x = \\frac{7\\pi}{6}, \\; \\frac{11\\pi}{6}$$",
       ),
       generate(rng) {
         const item = rng.pick([

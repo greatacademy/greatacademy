@@ -695,8 +695,8 @@ export const theInclusionExclusionPrinciple: TopicDef = {
       id: "counting-multiples-by-inclusion-exclusion",
       title: t("Counting multiples", "计数倍数"),
       explanation: t(
-        "Of $1, \\dots, 100$, the multiples of $2$ or $3$ number $50 + 33 - 16 = 67$: the multiples of $6$ were counted twice.",
-        "在 $1, \\dots, 100$ 中，$2$ 或 $3$ 的倍数有 $50 + 33 - 16 = 67$ 个：$6$ 的倍数被数了两次。",
+        "To count the numbers divisible by at least one of several divisors, add the counts for each divisor and subtract the overlaps that were counted twice. Of $1, \\dots, 100$, the multiples of $2$ or $3$ number $50 + 33 - 16 = 67$: the multiples of $6$ were counted twice.",
+        "要数出至少能被几个除数中的一个整除的数，先把各除数的个数相加，再减去被数了两次的重叠部分。在 $1, \\dots, 100$ 中，$2$ 或 $3$ 的倍数有 $50 + 33 - 16 = 67$ 个：$6$ 的倍数被数了两次。",
       ),
       generate(rng) {
         const ds = rng.sample([2, 3, 5, 7], rng.int(2, 3)).sort((a, b) => a - b);
@@ -753,8 +753,8 @@ export const countingIntegerSolutionsOfAConstrainedEquation: TopicDef = {
       id: "solutions-with-lower-bounds",
       title: t("Lower bounds", "下界"),
       explanation: t(
-        "For $x + y + z = 10$ with $x \\ge 2$, $y \\ge 1$, $z \\ge 0$, put $x' = x - 2$, $y' = y - 1$: then $x' + y' + z = 7$ with all variables $\\ge 0$, which has $\\binom{9}{2} = 36$ solutions.",
-        "对 $x + y + z = 10$，$x \\ge 2$，$y \\ge 1$，$z \\ge 0$，令 $x' = x - 2$，$y' = y - 1$：则 $x' + y' + z = 7$，各变量 $\\ge 0$，共有 $\\binom{9}{2} = 36$ 组解。",
+        "When some variables must be at least a given number, subtract that number from them first, which turns the problem into one where every variable is simply nonnegative. For $x + y + z = 10$ with $x \\ge 2$, $y \\ge 1$, $z \\ge 0$, put $x' = x - 2$, $y' = y - 1$: then $x' + y' + z = 7$ with all variables $\\ge 0$, which has $\\binom{9}{2} = 36$ solutions.",
+        "当某些变量至少为某个数时，先从这些变量中减去这个数，问题就变成每个变量只需非负的情形。对 $x + y + z = 10$，$x \\ge 2$，$y \\ge 1$，$z \\ge 0$，令 $x' = x - 2$，$y' = y - 1$：则 $x' + y' + z = 7$，各变量 $\\ge 0$，共有 $\\binom{9}{2} = 36$ 组解。",
       ),
       generate(rng) {
         const k = rng.int(3, 5);
@@ -782,8 +782,8 @@ export const countingIntegerSolutionsOfAConstrainedEquation: TopicDef = {
       id: "solutions-with-an-upper-bound",
       title: t("An upper bound", "上界"),
       explanation: t(
-        "For $x + y + z = 10$ in nonnegative integers with $x \\le 3$: all solutions number $\\binom{12}{2} = 66$; those with $x \\ge 4$ number $\\binom{8}{2} = 28$. So $66 - 28 = 38$.",
-        "对非负整数 $x + y + z = 10$ 且 $x \\le 3$：全部解有 $\\binom{12}{2} = 66$ 组；$x \\ge 4$ 的有 $\\binom{8}{2} = 28$ 组。所以 $66 - 28 = 38$。",
+        "An upper bound is handled by counting all solutions and then subtracting the solutions that break the bound, which have a lower bound instead. For $x + y + z = 10$ in nonnegative integers with $x \\le 3$: all solutions number $\\binom{12}{2} = 66$; those with $x \\ge 4$ number $\\binom{8}{2} = 28$. So $66 - 28 = 38$.",
+        "处理上界时，先数出所有解，再减去超出上界的解，而这些解满足的是一个下界条件。对非负整数 $x + y + z = 10$ 且 $x \\le 3$：全部解有 $\\binom{12}{2} = 66$ 组；$x \\ge 4$ 的有 $\\binom{8}{2} = 28$ 组。所以 $66 - 28 = 38$。",
       ),
       generate(rng) {
         const k = rng.int(3, 4);

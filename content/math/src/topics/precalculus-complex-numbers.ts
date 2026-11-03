@@ -818,8 +818,8 @@ export const specialPropertiesOfTheComplexConjugate: TopicDef = {
       id: "conjugate-of-arithmetic-operations",
       title: t("Conjugate of sum and product", "复数和与积的共轭性质"),
       explanation: t(
-        "The complex conjugate distributes across addition, subtraction, multiplication, and division:\n\n1. $\\overline{z_1 + z_2} = \\bar{z}_1 + \\bar{z}_2$\n2. $\\overline{z_1 - z_2} = \\bar{z}_1 - \\bar{z}_2$\n3. $\\overline{z_1 z_2} = \\bar{z}_1 \\bar{z}_2$\n4. $\\overline{\\left(\\frac{z_1}{z_2}\\right)} = \\frac{\\bar{z}_1}{\\bar{z}_2}$\n5. $\\overline{z^n} = (\\bar{z})^n$",
-        "共轭运算对加法、减法、乘法和除法均满足分配律：\n\n1. $\\overline{z_1 + z_2} = \\bar{z}_1 + \\bar{z}_2$\n2. $\\overline{z_1 - z_2} = \\bar{z}_1 - \\bar{z}_2$\n3. $\\overline{z_1 z_2} = \\bar{z}_1 \\bar{z}_2$\n4. $\\overline{\\left(\\frac{z_1}{z_2}\\right)} = \\frac{\\bar{z}_1}{\\bar{z}_2}$\n5. $\\overline{z^n} = (\\bar{z})^n$",
+        "Taking the conjugate changes the sign of the imaginary part, and you can take it before or after doing arithmetic and get the same result. The complex conjugate distributes across addition, subtraction, multiplication, and division:\n\n1. $\\overline{z_1 + z_2} = \\bar{z}_1 + \\bar{z}_2$\n2. $\\overline{z_1 - z_2} = \\bar{z}_1 - \\bar{z}_2$\n3. $\\overline{z_1 z_2} = \\bar{z}_1 \\bar{z}_2$\n4. $\\overline{\\left(\\frac{z_1}{z_2}\\right)} = \\frac{\\bar{z}_1}{\\bar{z}_2}$\n5. $\\overline{z^n} = (\\bar{z})^n$",
+        "取共轭就是改变虚部的符号，先取共轭再运算与先运算再取共轭的结果相同。共轭运算对加法、减法、乘法和除法均满足分配律：\n\n1. $\\overline{z_1 + z_2} = \\bar{z}_1 + \\bar{z}_2$\n2. $\\overline{z_1 - z_2} = \\bar{z}_1 - \\bar{z}_2$\n3. $\\overline{z_1 z_2} = \\bar{z}_1 \\bar{z}_2$\n4. $\\overline{\\left(\\frac{z_1}{z_2}\\right)} = \\frac{\\bar{z}_1}{\\bar{z}_2}$\n5. $\\overline{z^n} = (\\bar{z})^n$",
       ),
       generate(rng) {
         const a1 = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
@@ -870,8 +870,8 @@ export const specialPropertiesOfTheComplexConjugate: TopicDef = {
       id: "real-and-purely-imaginary-conjugate-criteria",
       title: t("Conjugate criteria for real and purely imaginary numbers", "实数与纯虚数的共轭判定准则"),
       explanation: t(
-        "For any complex number $z = a + bi$:\n\n- $\\operatorname{Re}(z) = \\frac{z + \\bar{z}}{2} = a$\n- $\\operatorname{Im}(z) = \\frac{z - \\bar{z}}{2i} = b$\n\nImportant criteria:\n- $z$ is purely real $\\iff z = \\bar{z}$\n- $z$ is purely imaginary $\\iff z = -\\bar{z}$ (with $z \\neq 0$)",
-        "对任意复数 $z = a + bi$：\n\n- $\\operatorname{Re}(z) = \\frac{z + \\bar{z}}{2} = a$\n- $\\operatorname{Im}(z) = \\frac{z - \\bar{z}}{2i} = b$\n\n重要判定法则：\n- $z$ 为实数 $\\iff z = \\bar{z}$\n- $z$ 为纯虚数 $\\iff z = -\\bar{z}$（且 $z \\neq 0$）",
+        "Comparing a complex number with its conjugate shows which parts it has: a number equal to its conjugate has no imaginary part. For any complex number $z = a + bi$:\n\n- $\\operatorname{Re}(z) = \\frac{z + \\bar{z}}{2} = a$\n- $\\operatorname{Im}(z) = \\frac{z - \\bar{z}}{2i} = b$\n\nImportant criteria:\n- $z$ is purely real $\\iff z = \\bar{z}$\n- $z$ is purely imaginary $\\iff z = -\\bar{z}$ (with $z \\neq 0$)",
+        "把一个复数与它的共轭比较，就能看出它有哪些部分：与共轭相等的数没有虚部。对任意复数 $z = a + bi$：\n\n- $\\operatorname{Re}(z) = \\frac{z + \\bar{z}}{2} = a$\n- $\\operatorname{Im}(z) = \\frac{z - \\bar{z}}{2i} = b$\n\n重要判定法则：\n- $z$ 为实数 $\\iff z = \\bar{z}$\n- $z$ 为纯虚数 $\\iff z = -\\bar{z}$（且 $z \\neq 0$）",
       ),
       generate(rng) {
         const a = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -952,8 +952,8 @@ export const theComplexConjugateAndTheRootsOfAQuadraticEquation: TopicDef = {
       id: "reconstruct-quadratic-from-conjugate-roots",
       title: t("Reconstruct quadratic equations from complex conjugate roots", "由共轭复数根还原一元二次方程"),
       explanation: t(
-        "A monic quadratic equation with roots $x = p \\pm qi$ can be reconstructed using Vieta's formulas:\n\n- $\\text{Sum of roots} = (p + qi) + (p - qi) = 2p$\n- $\\text{Product of roots} = (p + qi)(p - qi) = p^2 + q^2$\n\nThe equation is:\n$$x^2 - (2p)x + (p^2 + q^2) = 0$$",
-        "以 $x = p \\pm qi$ 为根的一元二次方程可通过韦达定理写出：\n\n- 两根之和 $= (p + qi) + (p - qi) = 2p$\n- 两根之积 $= (p + qi)(p - qi) = p^2 + q^2$\n\n对应的首一二次方程为：\n$$x^2 - (2p)x + (p^2 + q^2) = 0$$",
+        "Nonreal roots of a quadratic with real coefficients come in conjugate pairs, and the sum and product of the pair give the coefficients of the equation. A monic quadratic equation with roots $x = p \\pm qi$ can be reconstructed using Vieta's formulas:\n\n- $\\text{Sum of roots} = (p + qi) + (p - qi) = 2p$\n- $\\text{Product of roots} = (p + qi)(p - qi) = p^2 + q^2$\n\nThe equation is:\n$$x^2 - (2p)x + (p^2 + q^2) = 0$$",
+        "实系数二次方程的虚根成共轭对出现，这一对根的和与积给出方程的系数。以 $x = p \\pm qi$ 为根的一元二次方程可通过韦达定理写出：\n\n- 两根之和 $= (p + qi) + (p - qi) = 2p$\n- 两根之积 $= (p + qi)(p - qi) = p^2 + q^2$\n\n对应的首一二次方程为：\n$$x^2 - (2p)x + (p^2 + q^2) = 0$$",
       ),
       generate(rng) {
         const p = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);

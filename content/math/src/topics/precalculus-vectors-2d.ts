@@ -972,8 +972,8 @@ export const linearCombinationsOfVectorsAndTheirProperties: TopicDef = {
       id: "simplify-linear-combinations",
       title: t("Simplify linear combinations of vectors", "化简向量的线性组合"),
       explanation: t(
-        "Vector addition and scalar multiplication satisfy distributive properties:\n\n$$c_1(a_1\\mathbf{u} + b_1\\mathbf{v}) + c_2(a_2\\mathbf{u} + b_2\\mathbf{v}) = (c_1 a_1 + c_2 a_2)\\mathbf{u} + (c_1 b_1 + c_2 b_2)\\mathbf{v}$$",
-        "向量加法与数乘满足乘法对加法的分配律：\n\n$$c_1(a_1\\mathbf{u} + b_1\\mathbf{v}) + c_2(a_2\\mathbf{u} + b_2\\mathbf{v}) = (c_1 a_1 + c_2 a_2)\\mathbf{u} + (c_1 b_1 + c_2 b_2)\\mathbf{v}$$",
+        "To simplify a combination of vectors, distribute each scalar over its parentheses and then collect the multiples of each vector, just as you collect like terms in algebra. Vector addition and scalar multiplication satisfy distributive properties:\n\n$$c_1(a_1\\mathbf{u} + b_1\\mathbf{v}) + c_2(a_2\\mathbf{u} + b_2\\mathbf{v}) = (c_1 a_1 + c_2 a_2)\\mathbf{u} + (c_1 b_1 + c_2 b_2)\\mathbf{v}$$",
+        "化简向量的组合时，先把每个数乘分配到括号里，再合并同一向量的倍数，就像代数中合并同类项一样。向量加法与数乘满足乘法对加法的分配律：\n\n$$c_1(a_1\\mathbf{u} + b_1\\mathbf{v}) + c_2(a_2\\mathbf{u} + b_2\\mathbf{v}) = (c_1 a_1 + c_2 a_2)\\mathbf{u} + (c_1 b_1 + c_2 b_2)\\mathbf{v}$$",
       ),
       generate(rng) {
         const c1 = rng.pick([2, 3, 4, 5]);
@@ -1012,8 +1012,8 @@ export const linearCombinationsOfVectorsAndTheirProperties: TopicDef = {
       id: "solve-for-scalar-coefficients",
       title: t("Solve for unknown scalar coefficients in linear combinations", "求解向量线性组合中的未知标量系数"),
       explanation: t(
-        "If vectors $\\mathbf{u}$ and $\\mathbf{v}$ are non-collinear (linearly independent), then:\n\n$$x\\mathbf{u} + y\\mathbf{v} = a\\mathbf{u} + b\\mathbf{v} \\iff x = a \\text{ and } y = b$$",
-        "若向量 $\\mathbf{u}$ 和 $\\mathbf{v}$ 不共线（线性无关），则：\n\n$$x\\mathbf{u} + y\\mathbf{v} = a\\mathbf{u} + b\\mathbf{v} \\iff x = a \\text{ 且 } y = b$$",
+        "When two vectors do not point along the same line, each vector in their plane has only one way to be written as a combination of them, so the coefficients can be matched. If vectors $\\mathbf{u}$ and $\\mathbf{v}$ are non-collinear (linearly independent), then:\n\n$$x\\mathbf{u} + y\\mathbf{v} = a\\mathbf{u} + b\\mathbf{v} \\iff x = a \\text{ and } y = b$$",
+        "当两个向量不在同一直线上时，它们所在平面中的每个向量只有一种方式写成它们的组合，所以可以对应比较系数。若向量 $\\mathbf{u}$ 和 $\\mathbf{v}$ 不共线（线性无关），则：\n\n$$x\\mathbf{u} + y\\mathbf{v} = a\\mathbf{u} + b\\mathbf{v} \\iff x = a \\text{ 且 } y = b$$",
       ),
       generate(rng) {
         const x = rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8]);

@@ -897,8 +897,8 @@ const theZScore: TopicDef = {
       id: "a-value-from-its-z-score",
       title: t("A value from its z-score", "由 z 分数求数值"),
       explanation: t(
-        "Solving $z = \\frac{x - \\mu}{\\sigma}$ for $x$ gives\n\n$$x = \\mu + z\\sigma.$$\n\nWith mean $50$ and standard deviation $6$, the value with $z = -1.5$ is $50 + (-1.5)(6) = 41$.",
-        "由 $z = \\frac{x - \\mu}{\\sigma}$ 解出 $x$，得\n\n$$x = \\mu + z\\sigma.$$\n\n均值为 $50$、标准差为 $6$ 时，$z = -1.5$ 对应的数值是 $50 + (-1.5)(6) = 41$。",
+        "A z-score tells how many standard deviations a value lies above or below the mean, so the value is the mean plus that many standard deviations. Solving $z = \\frac{x - \\mu}{\\sigma}$ for $x$ gives\n\n$$x = \\mu + z\\sigma.$$\n\nWith mean $50$ and standard deviation $6$, the value with $z = -1.5$ is $50 + (-1.5)(6) = 41$.",
+        "z 分数表示一个值比平均数高或低多少个标准差，所以这个值等于平均数加上这么多个标准差。由 $z = \\frac{x - \\mu}{\\sigma}$ 解出 $x$，得\n\n$$x = \\mu + z\\sigma.$$\n\n均值为 $50$、标准差为 $6$ 时，$z = -1.5$ 对应的数值是 $50 + (-1.5)(6) = 41$。",
       ),
       generate(rng) {
         const { sc, mu, sd } = zSetting(rng);

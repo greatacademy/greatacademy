@@ -1296,8 +1296,8 @@ export const asymptotesOfHyperbolasCenteredAtTheOrigin: TopicDef = {
       id: "asymptotes-of-horizontal-hyperbolas",
       title: t("Asymptotes of horizontal hyperbolas", "水平双曲线的渐近线方程"),
       explanation: t(
-        "For the horizontal hyperbola $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$, setting the right side to $0$ gives:\n\n$$\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{b}{a}x$$",
-        "对于水平双曲线 $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$，将等式右边置为 $0$：\n\n$$\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{b}{a}x$$",
+        "Far from the center, a hyperbola gets closer and closer to two lines through its center, and these asymptotes come from replacing the constant one by zero. For the horizontal hyperbola $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$, setting the right side to $0$ gives:\n\n$$\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{b}{a}x$$",
+        "离中心越远，双曲线越接近两条过中心的直线；把方程中的常数 1 换成 0 就得到这两条渐近线。对于水平双曲线 $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$，将等式右边置为 $0$：\n\n$$\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{b}{a}x$$",
       ),
       generate(rng) {
         const a = rng.int(2, 12);
@@ -1332,8 +1332,8 @@ export const asymptotesOfHyperbolasCenteredAtTheOrigin: TopicDef = {
       id: "asymptotes-of-vertical-hyperbolas",
       title: t("Asymptotes of vertical hyperbolas", "竖直双曲线的渐近线方程"),
       explanation: t(
-        "For the vertical hyperbola $\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$, setting the right side to $0$ gives:\n\n$$\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{a}{b}x$$",
-        "对于竖直双曲线 $\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$，将等式右边置为 $0$：\n\n$$\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{a}{b}x$$",
+        "When the term with the vertical variable is positive, the hyperbola opens up and down, and its asymptotes still come from replacing the constant one by zero. For the vertical hyperbola $\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$, setting the right side to $0$ gives:\n\n$$\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{a}{b}x$$",
+        "当含纵坐标变量的项为正时，双曲线向上下开口，它的渐近线仍由把常数 1 换成 0 得到。对于竖直双曲线 $\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$，将等式右边置为 $0$：\n\n$$\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{a}{b}x$$",
       ),
       generate(rng) {
         const a = rng.int(2, 12);

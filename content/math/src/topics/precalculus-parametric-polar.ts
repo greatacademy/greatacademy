@@ -1200,8 +1200,8 @@ export const convertingFromPolarCoordinatesToCartesianCoordinates: TopicDef = {
       id: "polar-to-cartesian",
       title: t("Convert polar coordinates to Cartesian coordinates", "将极坐标转换为直角坐标"),
       explanation: t(
-        "To convert polar coordinates $(r, \\theta)$ to Cartesian coordinates $(x, y)$:\n$$x = r\\cos\\theta, \\quad y = r\\sin\\theta$$\nFor example, for $(r, \\theta) = (6, \\frac{2\\pi}{3})$:\n$$x = 6\\cos\\frac{2\\pi}{3} = 6\\left(-\\frac{1}{2}\\right) = -3, \\quad y = 6\\sin\\frac{2\\pi}{3} = 6\\left(\\frac{\\sqrt{3}}{2}\\right) = 3\\sqrt{3}$$\nThus $(x, y) = (-3, 3\\sqrt{3})$.",
-        "将极坐标 $(r, \\theta)$ 转换为直角坐标 $(x, y)$ 的公式为：\n$$x = r\\cos\\theta, \\quad y = r\\sin\\theta$$\n例如，对于 $(r, \\theta) = (6, \\frac{2\\pi}{3})$：\n$$x = 6\\cos\\frac{2\\pi}{3} = 6\\left(-\\frac{1}{2}\\right) = -3, \\quad y = 6\\sin\\frac{2\\pi}{3} = 6\\left(\\frac{\\sqrt{3}}{2}\\right) = 3\\sqrt{3}$$\n直角坐标为 $(-3, 3\\sqrt{3})$。",
+        "A point in polar coordinates is given by its distance from the origin and its angle, and right-triangle trigonometry gives its horizontal and vertical coordinates. To convert polar coordinates $(r, \\theta)$ to Cartesian coordinates $(x, y)$:\n$$x = r\\cos\\theta, \\quad y = r\\sin\\theta$$\nFor example, for $(r, \\theta) = (6, \\frac{2\\pi}{3})$:\n$$x = 6\\cos\\frac{2\\pi}{3} = 6\\left(-\\frac{1}{2}\\right) = -3, \\quad y = 6\\sin\\frac{2\\pi}{3} = 6\\left(\\frac{\\sqrt{3}}{2}\\right) = 3\\sqrt{3}$$\nThus $(x, y) = (-3, 3\\sqrt{3})$.",
+        "极坐标中的点由它到原点的距离和角度给出，用直角三角形中的三角比就能求出它的横坐标和纵坐标。将极坐标 $(r, \\theta)$ 转换为直角坐标 $(x, y)$ 的公式为：\n$$x = r\\cos\\theta, \\quad y = r\\sin\\theta$$\n例如，对于 $(r, \\theta) = (6, \\frac{2\\pi}{3})$：\n$$x = 6\\cos\\frac{2\\pi}{3} = 6\\left(-\\frac{1}{2}\\right) = -3, \\quad y = 6\\sin\\frac{2\\pi}{3} = 6\\left(\\frac{\\sqrt{3}}{2}\\right) = 3\\sqrt{3}$$\n直角坐标为 $(-3, 3\\sqrt{3})$。",
       ),
       generate(rng) {
         const k = rng.int(1, 6);

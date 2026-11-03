@@ -416,8 +416,8 @@ export const additionAndScalarMultiplicationOfCartesianVectorsIn3D: TopicDef = {
       id: "addition-and-subtraction-of-3d-vectors",
       title: t("Addition and subtraction of 3D vectors", "三维空间向量的加法与减法"),
       explanation: t(
-        "Vector addition and subtraction are performed component-wise in three dimensions:\n\n$$\\langle u_1, u_2, u_3 \\rangle \\pm \\langle v_1, v_2, v_3 \\rangle = \\langle u_1 \\pm v_1, \\; u_2 \\pm v_2, \\; u_3 \\pm v_3 \\rangle$$",
-        "在三维空间中，向量的加法与减法按对应坐标分量分别进行：\n\n$$\\langle u_1, u_2, u_3 \\rangle \\pm \\langle v_1, v_2, v_3 \\rangle = \\langle u_1 \\pm v_1, \\; u_2 \\pm v_2, \\; u_3 \\pm v_3 \\rangle$$",
+        "Three-dimensional vectors are added and subtracted exactly as in the plane, one component at a time, with a third component for the new direction. Vector addition and subtraction are performed component-wise in three dimensions:\n\n$$\\langle u_1, u_2, u_3 \\rangle \\pm \\langle v_1, v_2, v_3 \\rangle = \\langle u_1 \\pm v_1, \\; u_2 \\pm v_2, \\; u_3 \\pm v_3 \\rangle$$",
+        "三维向量的加减法与平面中完全一样，逐个分量进行，只是多了一个表示新方向的第三个分量。在三维空间中，向量的加法与减法按对应坐标分量分别进行：\n\n$$\\langle u_1, u_2, u_3 \\rangle \\pm \\langle v_1, v_2, v_3 \\rangle = \\langle u_1 \\pm v_1, \\; u_2 \\pm v_2, \\; u_3 \\pm v_3 \\rangle$$",
       ),
       generate(rng) {
         const u: Vec3 = [
@@ -458,8 +458,8 @@ export const additionAndScalarMultiplicationOfCartesianVectorsIn3D: TopicDef = {
       id: "scalar-multiplication-and-linear-combinations-in-3d",
       title: t("Scalar multiplication and linear combinations in 3D", "三维空间向量的数乘与线性组合"),
       explanation: t(
-        "Multiplying a 3D vector by a scalar $c$ scales each component:\n\n$$c\\langle x, y, z \\rangle = \\langle cx, cy, cz \\rangle$$\n\nA linear combination $a\\mathbf{u} + b\\mathbf{v}$ combines scalar multiplication and addition.",
-        "用标量 $c$ 乘以三维向量会将每个坐标分量均乘以 $c$：\n\n$$c\\langle x, y, z \\rangle = \\langle cx, cy, cz \\rangle$$\n\n线性组合 $a\\mathbf{u} + b\\mathbf{v}$ 是数乘与加法的综合运算。",
+        "A scalar stretches or shrinks a vector and reverses it when negative, and each of the three components is multiplied by the same number. Multiplying a 3D vector by a scalar $c$ scales each component:\n\n$$c\\langle x, y, z \\rangle = \\langle cx, cy, cz \\rangle$$\n\nA linear combination $a\\mathbf{u} + b\\mathbf{v}$ combines scalar multiplication and addition.",
+        "数乘会把向量拉长或缩短，乘以负数时还会反向，三个分量都乘以同一个数。用标量 $c$ 乘以三维向量会将每个坐标分量均乘以 $c$：\n\n$$c\\langle x, y, z \\rangle = \\langle cx, cy, cz \\rangle$$\n\n线性组合 $a\\mathbf{u} + b\\mathbf{v}$ 是数乘与加法的综合运算。",
       ),
       generate(rng) {
         const u: Vec3 = [
@@ -658,8 +658,8 @@ export const calculatingTheDotProductUsingAngleAndMagnitude: TopicDef = {
       id: "sign-of-the-dot-product-and-orthogonality",
       title: t("Sign of the dot product and orthogonality", "数量积的正负与垂直关系"),
       explanation: t(
-        "Because $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$ and magnitudes are positive:\n\n- $\\mathbf{u} \\cdot \\mathbf{v} > 0 \\iff 0^\\circ \\le \\theta < 90^\\circ$ (acute angle)\n- $\\mathbf{u} \\cdot \\mathbf{v} = 0 \\iff \\theta = 90^\\circ$ (orthogonal / perpendicular)\n- $\\mathbf{u} \\cdot \\mathbf{v} < 0 \\iff 90^\\circ < \\theta \\le 180^\\circ$ (obtuse angle)",
-        "因为 $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$ 且向量模长为正：\n\n- $\\mathbf{u} \\cdot \\mathbf{v} > 0 \\iff 0^\\circ \\le \\theta < 90^\\circ$（锐角）\n- $\\mathbf{u} \\cdot \\mathbf{v} = 0 \\iff \\theta = 90^\\circ$（正交 / 垂直）\n- $\\mathbf{u} \\cdot \\mathbf{v} < 0 \\iff 90^\\circ < \\theta \\le 180^\\circ$（钝角）",
+        "The sign of the dot product tells whether the angle between two vectors is acute, right or obtuse, without computing the angle itself. Because $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$ and magnitudes are positive:\n\n- $\\mathbf{u} \\cdot \\mathbf{v} > 0 \\iff 0^\\circ \\le \\theta < 90^\\circ$ (acute angle)\n- $\\mathbf{u} \\cdot \\mathbf{v} = 0 \\iff \\theta = 90^\\circ$ (orthogonal / perpendicular)\n- $\\mathbf{u} \\cdot \\mathbf{v} < 0 \\iff 90^\\circ < \\theta \\le 180^\\circ$ (obtuse angle)",
+        "点积的符号可以告诉我们两个向量的夹角是锐角、直角还是钝角，而不必求出角本身。因为 $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$ 且向量模长为正：\n\n- $\\mathbf{u} \\cdot \\mathbf{v} > 0 \\iff 0^\\circ \\le \\theta < 90^\\circ$（锐角）\n- $\\mathbf{u} \\cdot \\mathbf{v} = 0 \\iff \\theta = 90^\\circ$（正交 / 垂直）\n- $\\mathbf{u} \\cdot \\mathbf{v} < 0 \\iff 90^\\circ < \\theta \\le 180^\\circ$（钝角）",
       ),
       generate(rng) {
         const uMag = rng.pick([3, 4, 5, 7, 9]);
@@ -741,8 +741,8 @@ export const calculatingTheDotProductUsingComponents: TopicDef = {
       id: "algebraic-dot-product-in-2d-and-3d",
       title: t("Algebraic dot product in 2D and 3D", "二维与三维向量的坐标数量积"),
       explanation: t(
-        "Using component form:\n\n- In 2D: $\\langle u_1, u_2 \\rangle \\cdot \\langle v_1, v_2 \\rangle = u_1 v_1 + u_2 v_2$\n- In 3D: $\\langle u_1, u_2, u_3 \\rangle \\cdot \\langle v_1, v_2, v_3 \\rangle = u_1 v_1 + u_2 v_2 + u_3 v_3$",
-        "利用坐标分量表示：\n\n- 二维：$\\langle u_1, u_2 \\rangle \\cdot \\langle v_1, v_2 \\rangle = u_1 v_1 + u_2 v_2$\n- 三维：$\\langle u_1, u_2, u_3 \\rangle \\cdot \\langle v_1, v_2, v_3 \\rangle = u_1 v_1 + u_2 v_2 + u_3 v_3$",
+        "To find a dot product from components, multiply the matching components of the two vectors and add the products; the result is a number, not a vector. Using component form:\n\n- In 2D: $\\langle u_1, u_2 \\rangle \\cdot \\langle v_1, v_2 \\rangle = u_1 v_1 + u_2 v_2$\n- In 3D: $\\langle u_1, u_2, u_3 \\rangle \\cdot \\langle v_1, v_2, v_3 \\rangle = u_1 v_1 + u_2 v_2 + u_3 v_3$",
+        "由分量求点积时，把两个向量对应的分量相乘再把积相加；结果是一个数，而不是向量。利用坐标分量表示：\n\n- 二维：$\\langle u_1, u_2 \\rangle \\cdot \\langle v_1, v_2 \\rangle = u_1 v_1 + u_2 v_2$\n- 三维：$\\langle u_1, u_2, u_3 \\rangle \\cdot \\langle v_1, v_2, v_3 \\rangle = u_1 v_1 + u_2 v_2 + u_3 v_3$",
       ),
       generate(rng) {
         if (rng.bool()) {
