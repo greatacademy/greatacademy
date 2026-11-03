@@ -403,8 +403,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "exponential-cdf-evaluation",
         title: t("Evaluating survival and cumulative probabilities of exponential distribution", "计算指数分布的生存概率与累积概率"),
         explanation: t(
-          "For $X \\sim \\text{Exp}(\\lambda)$, the survival probability is $P(X > x) = e^{-\\lambda x}$ and the CDF is $P(X \\le x) = 1 - e^{-\\lambda x}$.",
-          "对于 $X \\sim \\text{Exp}(\\lambda)$，其生存概率为 $P(X > x) = e^{-\\lambda x}$，累积分布函数为 $P(X \\le x) = 1 - e^{-\\lambda x}$。",
+          "The chance of waiting longer than a given time decays exponentially, and the cumulative probability is one minus that survival probability. For $X \\sim \\text{Exp}(\\lambda)$, the survival probability is $P(X > x) = e^{-\\lambda x}$ and the CDF is $P(X \\le x) = 1 - e^{-\\lambda x}$.",
+          "等待时间超过给定值的概率按指数衰减，累积概率等于 1 减去这个生存概率。对于 $X \\sim \\text{Exp}(\\lambda)$，其生存概率为 $P(X > x) = e^{-\\lambda x}$，累积分布函数为 $P(X \\le x) = 1 - e^{-\\lambda x}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 10);
@@ -439,8 +439,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "exponential-memoryless-property",
         title: t("Understanding the memoryless property of exponential variables", "理解指数变量的无记忆性"),
         explanation: t(
-          "The exponential distribution satisfies the memoryless property: P(X > s + t | X > s) = P(X > t).",
-          "指数分布满足无记忆性：P(X > s + t | X > s) = P(X > t)。",
+          "Having already waited some time does not change the distribution of the remaining wait, which makes the exponential the model for events that do not wear out. The exponential distribution satisfies the memoryless property: P(X > s + t | X > s) = P(X > t).",
+          "已经等待了一段时间并不改变剩余等待时间的分布，这使指数分布成为不会老化的事件的模型。指数分布满足无记忆性：P(X > s + t | X > s) = P(X > t)。",
         ),
         generate: (rng: Rng): Problem => {
           const s = rng.int(5, 40);
@@ -490,8 +490,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "exponential-rate-from-mean",
         title: t("Determining the rate parameter from expected duration", "根据平均持续时间确定比率参数"),
         explanation: t(
-          "If the average time between events is μ, the rate parameter is λ = 1 / μ.",
-          "若事件发生的平均间隔时间为 μ，则比率参数为 λ = 1 / μ。",
+          "The rate counts how many events happen per unit of time on average, so it is the reciprocal of the average time between events. If the average time between events is μ, the rate parameter is λ = 1 / μ.",
+          "速率表示单位时间内平均发生多少次事件，所以它是两次事件之间平均时间的倒数。若事件发生的平均间隔时间为 μ，则比率参数为 λ = 1 / μ。",
         ),
         generate: (rng: Rng): Problem => {
           const mean = rng.int(2, 50);
@@ -513,8 +513,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "exponential-median-formula",
         title: t("Identifying the median of an exponential distribution", "确定指数分布的中位数表达式"),
         explanation: t(
-          "For $X \\sim \\text{Exp}(\\lambda)$, the median $m$ satisfies $1 - e^{-\\lambda m} = 0.5$, so $m = \\frac{\\ln 2}{\\lambda}$.",
-          "对于 $X \\sim \\text{Exp}(\\lambda)$，中位数 $m$ 满足 $1 - e^{-\\lambda m} = 0.5$，因此 $m = \\frac{\\ln 2}{\\lambda}$。",
+          "Setting the cumulative probability equal to one half and taking logarithms shows that the median is shorter than the mean. For $X \\sim \\text{Exp}(\\lambda)$, the median $m$ satisfies $1 - e^{-\\lambda m} = 0.5$, so $m = \\frac{\\ln 2}{\\lambda}$.",
+          "令累积概率等于二分之一并取对数，可以看出中位数比均值短。对于 $X \\sim \\text{Exp}(\\lambda)$，中位数 $m$ 满足 $1 - e^{-\\lambda m} = 0.5$，因此 $m = \\frac{\\ln 2}{\\lambda}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(3, 30);
@@ -562,8 +562,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "exponential-mean-and-sd-equality",
         title: t("Standard deviation of an exponential random variable", "指数随机变量的标准差"),
         explanation: t(
-          "For $X \\sim \\text{Exp}(\\lambda)$, $\\operatorname{Var}(X) = \\frac{1}{\\lambda^2}$, so the standard deviation is $\\operatorname{SD}(X) = \\frac{1}{\\lambda}$, equal to the mean.",
-          "对于 $X \\sim \\text{Exp}(\\lambda)$，方差为 $\\operatorname{Var}(X) = \\frac{1}{\\lambda^2}$，因此标准差为 $\\operatorname{SD}(X) = \\frac{1}{\\lambda}$，恰好等于其期望值。",
+          "For an exponential distribution the spread is as large as the mean itself, so the standard deviation equals the mean. For $X \\sim \\text{Exp}(\\lambda)$, $\\operatorname{Var}(X) = \\frac{1}{\\lambda^2}$, so the standard deviation is $\\operatorname{SD}(X) = \\frac{1}{\\lambda}$, equal to the mean.",
+          "对于指数分布，分散程度与均值本身一样大，所以标准差等于均值。对于 $X \\sim \\text{Exp}(\\lambda)$，方差为 $\\operatorname{Var}(X) = \\frac{1}{\\lambda^2}$，因此标准差为 $\\operatorname{SD}(X) = \\frac{1}{\\lambda}$，恰好等于其期望值。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 40);
@@ -585,8 +585,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
         id: "exponential-second-moment",
         title: t("Calculating the second raw moment of an exponential distribution", "计算指数分布的二阶原点矩"),
         explanation: t(
-          "For $X \\sim \\text{Exp}(\\lambda)$, $E[X^2] = \\operatorname{Var}(X) + (E[X])^2 = \\frac{1}{\\lambda^2} + \\frac{1}{\\lambda^2} = \\frac{2}{\\lambda^2}$.",
-          "对于 $X \\sim \\text{Exp}(\\lambda)$，$E[X^2] = \\operatorname{Var}(X) + (E[X])^2 = \\frac{1}{\\lambda^2} + \\frac{1}{\\lambda^2} = \\frac{2}{\\lambda^2}$。",
+          "Adding the square of the mean to the variance gives the second moment, which for an exponential is twice the square of the mean. For $X \\sim \\text{Exp}(\\lambda)$, $E[X^2] = \\operatorname{Var}(X) + (E[X])^2 = \\frac{1}{\\lambda^2} + \\frac{1}{\\lambda^2} = \\frac{2}{\\lambda^2}$.",
+          "把均值的平方加到方差上得到二阶矩，对指数分布来说它是均值平方的两倍。对于 $X \\sim \\text{Exp}(\\lambda)$，$E[X^2] = \\operatorname{Var}(X) + (E[X])^2 = \\frac{1}{\\lambda^2} + \\frac{1}{\\lambda^2} = \\frac{2}{\\lambda^2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(1, 50);

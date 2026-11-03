@@ -21,8 +21,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "sample-mean-calculation",
         title: t("Calculating the sample mean from raw data", "根据原始数据计算样本均值"),
         explanation: t(
-          "Sum all observations and divide by the sample size $n$: $\\bar{x} = \\frac{1}{n} \\sum_i x_i$.",
-          "将所有观测值相加并除以样本容量 $n$：$\\bar{x} = \\frac{1}{n} \\sum_i x_i$。",
+          "The sample mean is the balance point of the data, the single value that the observations are spread around. Sum all observations and divide by the sample size $n$: $\\bar{x} = \\frac{1}{n} \\sum_i x_i$.",
+          "样本均值是数据的平衡点，是观测值围绕分布的那个单一数值。将所有观测值相加并除以样本容量 $n$：$\\bar{x} = \\frac{1}{n} \\sum_i x_i$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(4, 7);
@@ -67,8 +67,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "sampling-distribution-unbiased-expectation",
         title: t("Expected value of the sample mean statistic", "样本均值统计量的数学期望"),
         explanation: t(
-          "For any population with mean μ, the expected value of the sample mean is E[X̄] = μ (unbiasedness).",
-          "对任意均值为 μ 的总体，样本均值的期望值满足 E[X̄] = μ（无偏性）。",
+          "The sample mean varies from sample to sample, but on average it hits the population mean exactly, which is what unbiased means. For any population with mean μ, the expected value of the sample mean is E[X̄] = μ (unbiasedness).",
+          "样本均值随样本不同而变化，但平均来说它恰好等于总体均值，这就是无偏的含义。对任意均值为 μ 的总体，样本均值的期望值满足 E[X̄] = μ（无偏性）。",
         ),
         generate: (rng: Rng): Problem => {
           const mu = rng.int(10, 90);
@@ -197,8 +197,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "standard-error-of-the-mean",
         title: t("Evaluating the standard error of the sample mean", "计算样本均值的标准误差"),
         explanation: t(
-          "$SE(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}}$ decreases in inverse proportion to the square root of the sample size.",
-          "$SE(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}}$ 与样本容量的平方根成反比。",
+          "The standard error measures how much the sample mean typically varies, and quadrupling the sample size only halves it. $SE(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}}$ decreases in inverse proportion to the square root of the sample size.",
+          "标准误衡量样本均值通常的波动程度，把样本量增加到四倍只能使它减半。$SE(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}}$ 与样本容量的平方根成反比。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 12);
@@ -237,8 +237,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "exact-normality-of-sample-mean",
         title: t("Exact normality of X̄ from normal populations", "正态总体下样本均值的严格正态性"),
         explanation: t(
-          "For a normal population and any $n \\ge 1$, $\\bar{X} \\sim N\\left(\\mu, \\frac{\\sigma^2}{n}\\right)$ holds exactly, without requiring a large $n$.",
-          "对正态总体与任意样本容量 $n \\ge 1$，$\\bar{X} \\sim N\\left(\\mu, \\frac{\\sigma^2}{n}\\right)$ 均精确成立，无需大样本条件。",
+          "When the population itself is normal, the sample mean is exactly normal for every sample size, not only approximately for large samples. For a normal population and any $n \\ge 1$, $\\bar{X} \\sim N\\left(\\mu, \\frac{\\sigma^2}{n}\\right)$ holds exactly, without requiring a large $n$.",
+          "当总体本身是正态分布时，样本均值对任何样本量都恰好服从正态分布，而不仅仅在大样本时近似成立。对正态总体与任意样本容量 $n \\ge 1$，$\\bar{X} \\sim N\\left(\\mu, \\frac{\\sigma^2}{n}\\right)$ 均精确成立，无需大样本条件。",
         ),
         generate: (rng: Rng): Problem => {
           const mu = rng.int(50, 150);
@@ -400,8 +400,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
         id: "clt-convergence-distribution",
         title: t("Asymptotic distribution of the standardized mean under CLT", "中心极限定理下标准化均值的渐近分布"),
         explanation: t(
-          "As $n \\to \\infty$, $\\frac{\\bar{X} - \\mu}{\\sigma / \\sqrt{n}}$ converges in distribution to $N(0, 1)$ for any population with finite variance $\\sigma^2$.",
-          "当 $n \\to \\infty$ 时，对任意方差 $\\sigma^2$ 有限的总体，$\\frac{\\bar{X} - \\mu}{\\sigma / \\sqrt{n}}$ 依分布收敛至 $N(0, 1)$。",
+          "The central limit theorem says that for large samples the standardized mean is approximately standard normal, whatever the shape of the population. As $n \\to \\infty$, $\\frac{\\bar{X} - \\mu}{\\sigma / \\sqrt{n}}$ converges in distribution to $N(0, 1)$ for any population with finite variance $\\sigma^2$.",
+          "中心极限定理说明，无论总体的形状如何，大样本时标准化的均值近似服从标准正态分布。当 $n \\to \\infty$ 时，对任意方差 $\\sigma^2$ 有限的总体，$\\frac{\\bar{X} - \\mu}{\\sigma / \\sqrt{n}}$ 依分布收敛至 $N(0, 1)$。",
         ),
         generate: (rng: Rng): Problem => {
           const n = rng.int(30, 200);

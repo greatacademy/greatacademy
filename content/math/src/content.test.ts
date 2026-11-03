@@ -26,6 +26,8 @@ const explainedCourses = [
   "linear-algebra",
   "multivariable-calculus",
   "differential-equations",
+  "mathematical-methods-for-the-physical-sciences-i",
+  "mathematical-methods-for-the-physical-sciences-ii",
   "integrated-math-i",
   "integrated-math-ii",
   "integrated-math-iii",

@@ -70,8 +70,8 @@ export const bayesTheorem: TopicDef = {
       id: "bayes-theorem-from-probabilities",
       title: t("Applying the formula", "运用公式"),
       explanation: t(
-        "If $P(A) = 0.4$, $P(B \\mid A) = 0.5$ and $P(B) = 0.25$, then $P(A \\mid B) = \\frac{0.5 \\cdot 0.4}{0.25} = 0.8$.",
-        "若 $P(A) = 0.4$，$P(B \\mid A) = 0.5$，$P(B) = 0.25$，则 $P(A \\mid B) = \\frac{0.5 \\cdot 0.4}{0.25} = 0.8$。",
+        "Bayes' theorem reverses a conditional probability: it finds the chance of the cause given the evidence from the chance of the evidence given the cause. If $P(A) = 0.4$, $P(B \\mid A) = 0.5$ and $P(B) = 0.25$, then $P(A \\mid B) = \\frac{0.5 \\cdot 0.4}{0.25} = 0.8$.",
+        "贝叶斯定理把条件概率倒过来：由“原因下出现证据的概率”求出“有证据时原因成立的概率”。若 $P(A) = 0.4$，$P(B \\mid A) = 0.5$，$P(B) = 0.25$，则 $P(A \\mid B) = \\frac{0.5 \\cdot 0.4}{0.25} = 0.8$。",
       ),
       generate(rng) {
         const a = Q.of(rng.int(1, 9), 10);
@@ -181,8 +181,8 @@ export const extendingTheLawOfTotalProbability: TopicDef = {
       id: "total-probability-over-a-partition",
       title: t("Total probability over a partition", "对划分求全概率"),
       explanation: t(
-        "Machines A, B, C make $50\\%$, $30\\%$, $20\\%$ of the parts, with $2\\%$, $3\\%$, $5\\%$ defective: $P(D) = 0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 + 0.2 \\cdot 0.05 = 0.029$.",
-        "机器 A、B、C 分别生产 $50\\%$、$30\\%$、$20\\%$ 的零件，次品率为 $2\\%$、$3\\%$、$5\\%$：$P(D) = 0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 + 0.2 \\cdot 0.05 = 0.029$。",
+        "When the outcomes split into separate cases that cover everything, the probability of an event is the sum over the cases of the case probability times the chance of the event in that case. Machines A, B, C make $50\\%$, $30\\%$, $20\\%$ of the parts, with $2\\%$, $3\\%$, $5\\%$ defective: $P(D) = 0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 + 0.2 \\cdot 0.05 = 0.029$.",
+        "当结果被分成互不重叠且覆盖全部的情形时，事件的概率等于各情形的概率乘以该情形下事件发生的概率，再全部相加。机器 A、B、C 分别生产 $50\\%$、$30\\%$、$20\\%$ 的零件，次品率为 $2\\%$、$3\\%$、$5\\%$：$P(D) = 0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 + 0.2 \\cdot 0.05 = 0.029$。",
       ),
       generate(rng) {
         const m = randomMachines(rng);
@@ -212,8 +212,8 @@ export const extendingTheLawOfTotalProbability: TopicDef = {
       id: "a-missing-conditional-probability",
       title: t("A missing conditional probability", "求缺失的条件概率"),
       explanation: t(
-        "If $P(D) = 0.029$ and machines A and B contribute $0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 = 0.019$, then C contributes $0.01 = 0.2 \\cdot P(D \\mid C)$, so $P(D \\mid C) = 0.05$.",
-        "若 $P(D) = 0.029$，机器 A、B 贡献 $0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 = 0.019$，则 C 贡献 $0.01 = 0.2 \\cdot P(D \\mid C)$，所以 $P(D \\mid C) = 0.05$。",
+        "If the total probability is known, subtract the contributions of the known cases to find the contribution of the missing one, then divide by its case probability. If $P(D) = 0.029$ and machines A and B contribute $0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 = 0.019$, then C contributes $0.01 = 0.2 \\cdot P(D \\mid C)$, so $P(D \\mid C) = 0.05$.",
+        "如果已知总概率，就减去已知情形的贡献，得到缺少的那个情形的贡献，再除以该情形的概率。若 $P(D) = 0.029$，机器 A、B 贡献 $0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 = 0.019$，则 C 贡献 $0.01 = 0.2 \\cdot P(D \\mid C)$，所以 $P(D \\mid C) = 0.05$。",
       ),
       generate(rng) {
         const m = randomMachines(rng);
@@ -258,8 +258,8 @@ export const extendingBayesTheorem: TopicDef = {
       id: "bayes-theorem-over-a-partition",
       title: t("Bayes' theorem over a partition", "对划分使用贝叶斯定理"),
       explanation: t(
-        "With shares $50\\%$, $30\\%$, $20\\%$ and defect rates $2\\%$, $3\\%$, $5\\%$: $P(D) = 0.029$, so $P(C \\mid D) = \\frac{0.2 \\cdot 0.05}{0.029} = \\frac{10}{29}$.",
-        "份额为 $50\\%$、$30\\%$、$20\\%$，次品率为 $2\\%$、$3\\%$、$5\\%$：$P(D) = 0.029$，所以 $P(C \\mid D) = \\frac{0.2 \\cdot 0.05}{0.029} = \\frac{10}{29}$。",
+        "The denominator is the total probability of the evidence over all cases, and the numerator is the one path through the case you are asking about. With shares $50\\%$, $30\\%$, $20\\%$ and defect rates $2\\%$, $3\\%$, $5\\%$: $P(D) = 0.029$, so $P(C \\mid D) = \\frac{0.2 \\cdot 0.05}{0.029} = \\frac{10}{29}$.",
+        "分母是证据在所有情形下的总概率，分子是经过所问情形的那一条路径的概率。份额为 $50\\%$、$30\\%$、$20\\%$，次品率为 $2\\%$、$3\\%$、$5\\%$：$P(D) = 0.029$，所以 $P(C \\mid D) = \\frac{0.2 \\cdot 0.05}{0.029} = \\frac{10}{29}$。",
       ),
       generate(rng) {
         const m = randomMachines(rng);

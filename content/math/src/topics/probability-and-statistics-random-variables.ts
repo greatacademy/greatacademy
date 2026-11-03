@@ -21,8 +21,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "evaluating-cdf-from-pdf",
         title: t("Evaluating the CDF of a continuous random variable", "由概率密度函数计算累积分布函数值"),
         explanation: t(
-          "For a continuous random variable $X$ with PDF $f(x)$ on $[0, b]$, the CDF is $F(x) = \\int_0^x f(t) \\, dt$. At any point $x_0$, $F(x_0)$ is $P(X \\le x_0)$.",
-          "对于在区间 $[0, b]$ 上具有概率密度函数 $f(x)$ 的连续型随机变量 $X$，其累积分布函数为 $F(x) = \\int_0^x f(t) \\, dt$。在任意点 $x_0$ 处，$F(x_0)$ 表示 $P(X \\le x_0)$。",
+          "The cumulative distribution function gives the probability of a value at most the given one, which is the area under the density up to that point. For a continuous random variable $X$ with PDF $f(x)$ on $[0, b]$, the CDF is $F(x) = \\int_0^x f(t) \\, dt$. At any point $x_0$, $F(x_0)$ is $P(X \\le x_0)$.",
+          "累积分布函数给出取值不超过给定值的概率，也就是密度曲线下到该点为止的面积。对于在区间 $[0, b]$ 上具有概率密度函数 $f(x)$ 的连续型随机变量 $X$，其累积分布函数为 $F(x) = \\int_0^x f(t) \\, dt$。在任意点 $x_0$ 处，$F(x_0)$ 表示 $P(X \\le x_0)$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(4, 30);
@@ -89,8 +89,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "median-of-continuous-random-variable",
         title: t("Finding the median of a continuous distribution", "求解连续型分布的中位数"),
         explanation: t(
-          "The median $m$ of a continuous random variable $X$ satisfies $F(m) = \\frac{1}{2}$, or equivalently $\\int_{-\\infty}^m f(t) \\, dt = \\frac{1}{2}$.",
-          "连续型随机变量 $X$ 的中位数 $m$ 满足 $F(m) = \\frac{1}{2}$，或等价地 $\\int_{-\\infty}^m f(t) \\, dt = \\frac{1}{2}$。",
+          "The median splits the probability in half, so it is the point where the area under the density on each side equals one half. The median $m$ of a continuous random variable $X$ satisfies $F(m) = \\frac{1}{2}$, or equivalently $\\int_{-\\infty}^m f(t) \\, dt = \\frac{1}{2}$.",
+          "中位数把概率平分为两半，所以它是密度曲线下两侧面积都等于二分之一的点。连续型随机变量 $X$ 的中位数 $m$ 满足 $F(m) = \\frac{1}{2}$，或等价地 $\\int_{-\\infty}^m f(t) \\, dt = \\frac{1}{2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const x0 = rng.int(2, 35);
@@ -113,8 +113,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "quartiles-and-percentiles-of-continuous-random-variable",
         title: t("Computing percentiles and quartiles", "计算百分位数与四分位数"),
         explanation: t(
-          "The $p$-th quantile $x_p$ satisfies $F(x_p) = p$. For $F(x) = \\frac{x^2}{b^2}$ on $[0, b]$, setting $\\frac{x_p^2}{b^2} = p$ yields $x_p = b\\sqrt{p}$.",
-          "$p$ 分位数 $x_p$ 满足 $F(x_p) = p$。对于区间 $[0, b]$ 上的 $F(x) = \\frac{x^2}{b^2}$，令 $\\frac{x_p^2}{b^2} = p$ 可得 $x_p = b\\sqrt{p}$。",
+          "A percentile is the value below which a given fraction of the probability lies, so set the cumulative distribution function equal to that fraction and solve. The $p$-th quantile $x_p$ satisfies $F(x_p) = p$. For $F(x) = \\frac{x^2}{b^2}$ on $[0, b]$, setting $\\frac{x_p^2}{b^2} = p$ yields $x_p = b\\sqrt{p}$.",
+          "百分位数是其下方概率占给定比例的值，所以令累积分布函数等于这个比例，再求解。$p$ 分位数 $x_p$ 满足 $F(x_p) = p$。对于区间 $[0, b]$ 上的 $F(x) = \\frac{x^2}{b^2}$，令 $\\frac{x_p^2}{b^2} = p$ 可得 $x_p = b\\sqrt{p}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.pick([3, 4, 5, 6, 7, 8, 9]);
@@ -180,8 +180,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "mode-of-exponential-weighted-pdf",
         title: t("Mode of a gamma-type or exponentially damped PDF", "伽马型或指数衰减型密度的众数"),
         explanation: t(
-          "For $f(x) = Cxe^{-kx}$ ($x \\ge 0$), differentiation gives $f'(x) = Ce^{-kx}(1 - kx)$. The unique maximum occurs at $x = \\frac{1}{k}$.",
-          "对于 $f(x) = Cxe^{-kx}$（$x \\ge 0$），求导得 $f'(x) = Ce^{-kx}(1 - kx)$。唯一最大值点为 $x = \\frac{1}{k}$。",
+          "The mode is where the density is highest, so set its derivative equal to zero and check that the critical point is a maximum. For $f(x) = Cxe^{-kx}$ ($x \\ge 0$), differentiation gives $f'(x) = Ce^{-kx}(1 - kx)$. The unique maximum occurs at $x = \\frac{1}{k}$.",
+          "众数是密度最大的位置，所以令密度的导数等于零，并检验这个临界点是最大值点。对于 $f(x) = Cxe^{-kx}$（$x \\ge 0$），求导得 $f'(x) = Ce^{-kx}(1 - kx)$。唯一最大值点为 $x = \\frac{1}{k}$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 30);
@@ -218,8 +218,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "continuity-correction-interval",
         title: t("Identifying continuity-corrected intervals", "确定连续性校正后的区间"),
         explanation: t(
-          "Each discrete integer k occupies the continuous interval [k - 0.5, k + 0.5]. Thus P(a ≤ X ≤ b) maps to [a - 0.5, b + 0.5], while P(X ≥ a) maps to [a - 0.5, ∞).",
-          "每个离散整数 k 对应连续区间 [k - 0.5, k + 0.5]。因此 P(a ≤ X ≤ b) 对应连续区间 [a - 0.5, b + 0.5]，而 P(X ≥ a) 对应 [a - 0.5, ∞)。",
+          "When a continuous distribution approximates a discrete one, each whole number is spread over the interval of width one centered on it. Each discrete integer k occupies the continuous interval [k - 0.5, k + 0.5]. Thus P(a ≤ X ≤ b) maps to [a - 0.5, b + 0.5], while P(X ≥ a) maps to [a - 0.5, ∞).",
+          "当用连续分布近似离散分布时，每个整数都被摊开到以它为中心、宽度为 1 的区间上。每个离散整数 k 对应连续区间 [k - 0.5, k + 0.5]。因此 P(a ≤ X ≤ b) 对应连续区间 [a - 0.5, b + 0.5]，而 P(X ≥ a) 对应 [a - 0.5, ∞)。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(10, 50);
@@ -252,8 +252,8 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
         id: "calculating-probability-with-continuity-correction",
         title: t("Evaluating probability with continuity correction", "利用连续性校正计算近似概率"),
         explanation: t(
-          "For an approximating continuous variable $Y$ with constant density $\\frac{1}{L}$, $P(a \\le X \\le b) \\approx \\int_{a - 0.5}^{b + 0.5} \\frac{1}{L} \\, dy = \\frac{b - a + 1}{L}$.",
-          "若近似连续型随机变量 $Y$ 具有恒定密度 $\\frac{1}{L}$，则 $P(a \\le X \\le b) \\approx \\int_{a - 0.5}^{b + 0.5} \\frac{1}{L} \\, dy = \\frac{b - a + 1}{L}$。",
+          "After widening the interval by one half at each end, compute the probability of the continuous variable over the widened interval. For an approximating continuous variable $Y$ with constant density $\\frac{1}{L}$, $P(a \\le X \\le b) \\approx \\int_{a - 0.5}^{b + 0.5} \\frac{1}{L} \\, dy = \\frac{b - a + 1}{L}$.",
+          "把区间两端各扩大二分之一后，计算连续变量在扩大后区间上的概率。若近似连续型随机变量 $Y$ 具有恒定密度 $\\frac{1}{L}$，则 $P(a \\le X \\le b) \\approx \\int_{a - 0.5}^{b + 0.5} \\frac{1}{L} \\, dy = \\frac{b - a + 1}{L}$。",
         ),
         generate: (rng: Rng): Problem => {
           const L = rng.int(40, 150);

@@ -89,8 +89,8 @@ export const oneToOneTransformationsOfDiscreteRandomVariables: TopicDef = {
       id: "probabilities-of-a-linear-transformation",
       title: t("Probabilities of Y = aX + b", "Y = aX + b 的概率"),
       explanation: t(
-        "If $Y = 2X + 1$, then $Y = 7$ exactly when $X = 3$, so $P(Y = 7) = P(X = 3)$. Solve $y = g(x)$ for $x$ and read the table.",
-        "若 $Y = 2X + 1$，则 $Y = 7$ 当且仅当 $X = 3$，所以 $P(Y = 7) = P(X = 3)$。由 $y = g(x)$ 解出 $x$ 再查表。",
+        "A linear transformation matches each value of the new variable with exactly one value of the old one, so their probabilities are equal. If $Y = 2X + 1$, then $Y = 7$ exactly when $X = 3$, so $P(Y = 7) = P(X = 3)$. Solve $y = g(x)$ for $x$ and read the table.",
+        "线性变换使新变量的每个值恰好对应旧变量的一个值，所以它们的概率相等。若 $Y = 2X + 1$，则 $Y = 7$ 当且仅当 $X = 3$，所以 $P(Y = 7) = P(X = 3)$。由 $y = g(x)$ 解出 $x$ 再查表。",
       ),
       generate(rng) {
         const d = randomDist(rng);
@@ -117,8 +117,8 @@ export const oneToOneTransformationsOfDiscreteRandomVariables: TopicDef = {
       id: "events-of-a-linear-transformation",
       title: t("Events for Y = aX + b", "Y = aX + b 的事件"),
       explanation: t(
-        "With $Y = -2X + 3$: $Y > 0$ means $-2X + 3 > 0$, that is, $X < 1.5$. Dividing by a negative number reverses the inequality.",
-        "取 $Y = -2X + 3$：$Y > 0$ 即 $-2X + 3 > 0$，也就是 $X < 1.5$。除以负数时不等号要反向。",
+        "Rewrite the event about the new variable as an inequality about the old one, remembering to reverse the inequality when dividing by a negative number. With $Y = -2X + 3$: $Y > 0$ means $-2X + 3 > 0$, that is, $X < 1.5$. Dividing by a negative number reverses the inequality.",
+        "把关于新变量的事件改写成关于旧变量的不等式，除以负数时记得改变不等号的方向。取 $Y = -2X + 3$：$Y > 0$ 即 $-2X + 3 > 0$，也就是 $X < 1.5$。除以负数时不等号要反向。",
       ),
       generate(rng) {
         const d = randomDist(rng);
@@ -164,8 +164,8 @@ export const manyToOneTransformationsOfDiscreteRandomVariables: TopicDef = {
       id: "probabilities-of-squares-and-absolute-values",
       title: t("Probabilities of X² and |X|", "X² 与 |X| 的概率"),
       explanation: t(
-        "If $Y = X^2$, then $Y = 4$ when $X = 2$ or $X = -2$: $P(Y = 4) = P(X = -2) + P(X = 2)$.",
-        "若 $Y = X^2$，则 $X = 2$ 或 $X = -2$ 时 $Y = 4$：$P(Y = 4) = P(X = -2) + P(X = 2)$。",
+        "Squaring or taking absolute values sends two opposite values to the same result, so add the probabilities of both values that produce it. If $Y = X^2$, then $Y = 4$ when $X = 2$ or $X = -2$: $P(Y = 4) = P(X = -2) + P(X = 2)$.",
+        "平方或取绝对值会把两个相反的值映射到同一个结果，所以要把产生它的两个值的概率加起来。若 $Y = X^2$，则 $X = 2$ 或 $X = -2$ 时 $Y = 4$：$P(Y = 4) = P(X = -2) + P(X = 2)$。",
       ),
       generate(rng) {
         let d: Dist;
@@ -200,8 +200,8 @@ export const manyToOneTransformationsOfDiscreteRandomVariables: TopicDef = {
       id: "cumulative-probabilities-of-many-to-one-transformations",
       title: t("Events for many-to-one transformations", "多对一变换的事件"),
       explanation: t(
-        "With $Y = X^2$: $Y \\le 4$ means $-2 \\le X \\le 2$, so add the probabilities of all $x$ in that range.",
-        "取 $Y = X^2$：$Y \\le 4$ 即 $-2 \\le X \\le 2$，所以把该范围内所有 $x$ 的概率相加。",
+        "Translate the event into the set of original values that satisfy it, which for a square is an interval centered at zero, and add their probabilities. With $Y = X^2$: $Y \\le 4$ means $-2 \\le X \\le 2$, so add the probabilities of all $x$ in that range.",
+        "把事件转化为满足它的原始取值的集合，对平方来说这是一个以零为中心的区间，再把这些值的概率加起来。取 $Y = X^2$：$Y \\le 4$ 即 $-2 \\le X \\le 2$，所以把该范围内所有 $x$ 的概率相加。",
       ),
       generate(rng) {
         const d = randomDist(rng, -3, 4, rng.int(4, 6));
@@ -244,8 +244,8 @@ export const propertiesOfExpectationForDiscreteRandomVariables: TopicDef = {
       id: "linearity-of-expectation",
       title: t("Linearity of expectation", "期望的线性性"),
       explanation: t(
-        "If $E(X) = 4$ and $E(Y) = -1$, then $E(3X - 2Y + 5) = 3 \\cdot 4 - 2 \\cdot (-1) + 5 = 19$. No independence is needed.",
-        "若 $E(X) = 4$，$E(Y) = -1$，则 $E(3X - 2Y + 5) = 3 \\cdot 4 - 2 \\cdot (-1) + 5 = 19$。这不需要独立性。",
+        "Expectation passes through sums and constant multiples, so the mean of a combination is the same combination of the means. If $E(X) = 4$ and $E(Y) = -1$, then $E(3X - 2Y + 5) = 3 \\cdot 4 - 2 \\cdot (-1) + 5 = 19$. No independence is needed.",
+        "期望可以穿过和与常数倍，所以组合的均值等于各均值的同样组合。若 $E(X) = 4$，$E(Y) = -1$，则 $E(3X - 2Y + 5) = 3 \\cdot 4 - 2 \\cdot (-1) + 5 = 19$。这不需要独立性。",
       ),
       generate(rng) {
         const ex = rng.int(-6, 9);
@@ -270,8 +270,8 @@ export const propertiesOfExpectationForDiscreteRandomVariables: TopicDef = {
       id: "expected-value-of-a-function",
       title: t("Expected value of g(X)", "g(X) 的期望"),
       explanation: t(
-        "Weight each value of $g(x)$ by $P(X = x)$: if $X$ is $-1, 0, 2$ with probabilities $0.2, 0.5, 0.3$, then $E(X^2) = 1 \\cdot 0.2 + 0 \\cdot 0.5 + 4 \\cdot 0.3 = 1.4$. In general $E(X^2) \\ne E(X)^2$.",
-        "用 $P(X = x)$ 对每个 $g(x)$ 加权：若 $X$ 取 $-1, 0, 2$ 的概率为 $0.2, 0.5, 0.3$，则 $E(X^2) = 1 \\cdot 0.2 + 0 \\cdot 0.5 + 4 \\cdot 0.3 = 1.4$。一般 $E(X^2) \\ne E(X)^2$。",
+        "To find the mean of a function of a variable, apply the function to each value and weight the results by the original probabilities. Weight each value of $g(x)$ by $P(X = x)$: if $X$ is $-1, 0, 2$ with probabilities $0.2, 0.5, 0.3$, then $E(X^2) = 1 \\cdot 0.2 + 0 \\cdot 0.5 + 4 \\cdot 0.3 = 1.4$. In general $E(X^2) \\ne E(X)^2$.",
+        "要求变量的函数的均值，就把函数作用在每个取值上，再用原来的概率对结果加权。用 $P(X = x)$ 对每个 $g(x)$ 加权：若 $X$ 取 $-1, 0, 2$ 的概率为 $0.2, 0.5, 0.3$，则 $E(X^2) = 1 \\cdot 0.2 + 0 \\cdot 0.5 + 4 \\cdot 0.3 = 1.4$。一般 $E(X^2) \\ne E(X)^2$。",
       ),
       generate(rng) {
         const kind = rng.int(0, 2);
@@ -320,8 +320,8 @@ export const varianceOfDiscreteRandomVariables: TopicDef = {
       id: "variance-from-a-distribution",
       title: t("Variance from a table", "由分布表求方差"),
       explanation: t(
-        "For $X = 0, 1, 2$ with probabilities $0.3, 0.4, 0.3$: $E(X) = 1$ and $E(X^2) = 0.4 + 1.2 = 1.6$, so $\\operatorname{Var}(X) = 1.6 - 1^2 = 0.6$.",
-        "对取 $0, 1, 2$、概率为 $0.3, 0.4, 0.3$ 的 $X$：$E(X) = 1$，$E(X^2) = 0.4 + 1.2 = 1.6$，所以 $\\operatorname{Var}(X) = 1.6 - 1^2 = 0.6$。",
+        "The variance measures spread around the mean, and the shortcut computes it as the mean of the squares minus the square of the mean. For $X = 0, 1, 2$ with probabilities $0.3, 0.4, 0.3$: $E(X) = 1$ and $E(X^2) = 0.4 + 1.2 = 1.6$, so $\\operatorname{Var}(X) = 1.6 - 1^2 = 0.6$.",
+        "方差衡量围绕均值的分散程度，简便方法是用平方的均值减去均值的平方。对取 $0, 1, 2$、概率为 $0.3, 0.4, 0.3$ 的 $X$：$E(X) = 1$，$E(X^2) = 0.4 + 1.2 = 1.6$，所以 $\\operatorname{Var}(X) = 1.6 - 1^2 = 0.6$。",
       ),
       generate(rng) {
         const d = randomDist(rng, -2, 5, rng.int(3, 4));
@@ -344,8 +344,8 @@ export const varianceOfDiscreteRandomVariables: TopicDef = {
       id: "second-moment-from-mean-and-variance",
       title: t("E(X²) from the mean and variance", "由均值与方差求 E(X²)"),
       explanation: t(
-        "Rearranging $\\operatorname{Var}(X) = E(X^2) - E(X)^2$ gives $E(X^2) = \\operatorname{Var}(X) + E(X)^2$. If $E(X) = 3$ and $\\operatorname{Var}(X) = 2$, then $E(X^2) = 11$.",
-        "把 $\\operatorname{Var}(X) = E(X^2) - E(X)^2$ 变形得 $E(X^2) = \\operatorname{Var}(X) + E(X)^2$。若 $E(X) = 3$，$\\operatorname{Var}(X) = 2$，则 $E(X^2) = 11$。",
+        "The mean of the square is always at least the square of the mean, and the variance is exactly the difference between them. Rearranging $\\operatorname{Var}(X) = E(X^2) - E(X)^2$ gives $E(X^2) = \\operatorname{Var}(X) + E(X)^2$. If $E(X) = 3$ and $\\operatorname{Var}(X) = 2$, then $E(X^2) = 11$.",
+        "平方的均值总是不小于均值的平方，方差正好是两者之差。把 $\\operatorname{Var}(X) = E(X^2) - E(X)^2$ 变形得 $E(X^2) = \\operatorname{Var}(X) + E(X)^2$。若 $E(X) = 3$，$\\operatorname{Var}(X) = 2$，则 $E(X^2) = 11$。",
       ),
       generate(rng) {
         const m = rng.nonZero(-8, 12);
@@ -391,8 +391,8 @@ export const momentsOfDiscreteRandomVariables: TopicDef = {
       id: "higher-moments-from-a-distribution",
       title: t("Higher moments", "高阶矩"),
       explanation: t(
-        "For $X = -1, 1, 2$ with probabilities $0.5, 0.3, 0.2$: $E(X^3) = -1 \\cdot 0.5 + 1 \\cdot 0.3 + 8 \\cdot 0.2 = 1.4$.",
-        "对取 $-1, 1, 2$、概率为 $0.5, 0.3, 0.2$ 的 $X$：$E(X^3) = -1 \\cdot 0.5 + 1 \\cdot 0.3 + 8 \\cdot 0.2 = 1.4$。",
+        "Higher moments weight each value raised to a power by its probability, and they describe features of the shape such as skewness. For $X = -1, 1, 2$ with probabilities $0.5, 0.3, 0.2$: $E(X^3) = -1 \\cdot 0.5 + 1 \\cdot 0.3 + 8 \\cdot 0.2 = 1.4$.",
+        "高阶矩用概率对每个取值的幂加权，它们描述分布形状的特征，例如偏度。对取 $-1, 1, 2$、概率为 $0.5, 0.3, 0.2$ 的 $X$：$E(X^3) = -1 \\cdot 0.5 + 1 \\cdot 0.3 + 8 \\cdot 0.2 = 1.4$。",
       ),
       generate(rng) {
         const d = randomDist(rng, -2, 3, 3);
@@ -414,8 +414,8 @@ export const momentsOfDiscreteRandomVariables: TopicDef = {
       id: "second-moments-about-a-point",
       title: t("Second moments about a point", "关于某点的二阶矩"),
       explanation: t(
-        "Expanding, $E((X - c)^2) = \\operatorname{Var}(X) + (\\mu - c)^2$: the second moment about $c$ is smallest when $c = \\mu$. If $\\mu = 5$, $\\operatorname{Var}(X) = 3$, then $E((X - 2)^2) = 3 + 9 = 12$.",
-        "展开得 $E((X - c)^2) = \\operatorname{Var}(X) + (\\mu - c)^2$：关于 $c$ 的二阶矩在 $c = \\mu$ 时最小。若 $\\mu = 5$，$\\operatorname{Var}(X) = 3$，则 $E((X - 2)^2) = 3 + 9 = 12$。",
+        "The average squared distance from a point is the variance plus the squared distance from the point to the mean, so it is smallest at the mean. Expanding, $E((X - c)^2) = \\operatorname{Var}(X) + (\\mu - c)^2$: the second moment about $c$ is smallest when $c = \\mu$. If $\\mu = 5$, $\\operatorname{Var}(X) = 3$, then $E((X - 2)^2) = 3 + 9 = 12$.",
+        "到一点的平均平方距离等于方差加上该点到均值距离的平方，所以在均值处最小。展开得 $E((X - c)^2) = \\operatorname{Var}(X) + (\\mu - c)^2$：关于 $c$ 的二阶矩在 $c = \\mu$ 时最小。若 $\\mu = 5$，$\\operatorname{Var}(X) = 3$，则 $E((X - 2)^2) = 3 + 9 = 12$。",
       ),
       generate(rng) {
         const m = rng.int(-5, 9);
@@ -458,8 +458,8 @@ export const propertiesOfVarianceForDiscreteRandomVariables: TopicDef = {
       id: "variance-of-a-linear-transformation",
       title: t("Variance of aX + b", "aX + b 的方差"),
       explanation: t(
-        "If $\\operatorname{Var}(X) = 4$, then $\\operatorname{Var}(-3X + 7) = (-3)^2 \\cdot 4 = 36$, and the standard deviation of $-3X + 7$ is $|-3| \\cdot 2 = 6$.",
-        "若 $\\operatorname{Var}(X) = 4$，则 $\\operatorname{Var}(-3X + 7) = (-3)^2 \\cdot 4 = 36$，$-3X + 7$ 的标准差为 $|-3| \\cdot 2 = 6$。",
+        "Adding a constant shifts every value equally and does not change the spread, while multiplying by a constant scales the variance by its square. If $\\operatorname{Var}(X) = 4$, then $\\operatorname{Var}(-3X + 7) = (-3)^2 \\cdot 4 = 36$, and the standard deviation of $-3X + 7$ is $|-3| \\cdot 2 = 6$.",
+        "加上一个常数使每个值平移相同的量，不改变分散程度；而乘以常数会使方差乘以该常数的平方。若 $\\operatorname{Var}(X) = 4$，则 $\\operatorname{Var}(-3X + 7) = (-3)^2 \\cdot 4 = 36$，$-3X + 7$ 的标准差为 $|-3| \\cdot 2 = 6$。",
       ),
       generate(rng) {
         const v = rng.int(1, 12);
@@ -484,8 +484,8 @@ export const propertiesOfVarianceForDiscreteRandomVariables: TopicDef = {
       id: "variance-of-sums-of-independent-variables",
       title: t("Variance of sums", "和的方差"),
       explanation: t(
-        "For independent $X, Y$ with variances $2$ and $5$: $\\operatorname{Var}(3X - Y) = 9 \\cdot 2 + 1 \\cdot 5 = 23$. Variances add even when the variables are subtracted.",
-        "对相互独立、方差分别为 $2$ 和 $5$ 的 $X, Y$：$\\operatorname{Var}(3X - Y) = 9 \\cdot 2 + 1 \\cdot 5 = 23$。即使变量相减，方差也相加。",
+        "For independent variables, variances add even when the variables are subtracted, because the coefficients are squared and squares are never negative. For independent $X, Y$ with variances $2$ and $5$: $\\operatorname{Var}(3X - Y) = 9 \\cdot 2 + 1 \\cdot 5 = 23$. Variances add even when the variables are subtracted.",
+        "对于独立变量，即使变量相减，方差也相加，因为系数要平方，而平方永远不会是负的。对相互独立、方差分别为 $2$ 和 $5$ 的 $X, Y$：$\\operatorname{Var}(3X - Y) = 9 \\cdot 2 + 1 \\cdot 5 = 23$。即使变量相减，方差也相加。",
       ),
       generate(rng) {
         const vx = rng.int(1, 10);

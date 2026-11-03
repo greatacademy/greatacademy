@@ -21,8 +21,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "evaluating-joint-discrete-cdf",
         title: t("Evaluating the joint CDF from a probability mass table", "根据概率质量表计算联合累积分布函数值"),
         explanation: t(
-          "Sum p(u, v) for all pairs (u, v) with u ≤ x and v ≤ y.",
-          "将所有满足 u ≤ x 且 v ≤ y 的点 (u, v) 处的联合概率 p(u, v) 求和。",
+          "The joint cumulative distribution function at a point is the total probability of the lower left corner of the table, where both variables are at most the given values. Sum p(u, v) for all pairs (u, v) with u ≤ x and v ≤ y.",
+          "联合累积分布函数在一点的值是表格左下角部分的总概率，即两个变量都不超过给定值的部分。将所有满足 u ≤ x 且 v ≤ y 的点 (u, v) 处的联合概率 p(u, v) 求和。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(1, 4);
@@ -67,8 +67,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "calculating-discrete-marginal-pmf",
         title: t("Summing rows to compute marginal probabilities", "通过行或列求和计算边际概率"),
         explanation: t(
-          "The marginal pmf $p_X(x) = \\sum_y p(x, y)$ sums the joint probabilities over all $y$.",
-          "边际分布律 $p_X(x) = \\sum_y p(x, y)$ 是对所有 $y$ 的联合概率求和。",
+          "To get the distribution of one variable alone, add across the table over all values of the other variable. The marginal pmf $p_X(x) = \\sum_y p(x, y)$ sums the joint probabilities over all $y$.",
+          "要得到单个变量的分布，就在表格中把另一个变量所有取值对应的概率加起来。边际分布律 $p_X(x) = \\sum_y p(x, y)$ 是对所有 $y$ 的联合概率求和。",
         ),
         generate: (rng: Rng): Problem => {
           const p1 = rng.int(1, 5);
@@ -110,7 +110,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "discrete-independence-product-rule",
         title: t("Checking independence via joint and marginal products", "通过联合与边际概率乘积验证独立性"),
-        explanation: t("Under independence, P(X = x, Y = y) = P(X = x) P(Y = y).", "在独立性下，P(X = x, Y = y) = P(X = x) P(Y = y)。"),
+        explanation: t(
+          "Two variables are independent only if every entry of the joint table equals the product of its row total and column total; one failure is enough to show dependence. Under independence, P(X = x, Y = y) = P(X = x) P(Y = y).",
+          "只有当联合表中每个元素都等于其行和与列和的乘积时，两个变量才相互独立；只要有一处不符，就说明它们不独立。在独立性下，P(X = x, Y = y) = P(X = x) P(Y = y)。",
+        ),
         generate: (rng: Rng): Problem => {
           const numA = rng.int(1, 4);
           const denA = rng.int(5, 8);
@@ -150,7 +153,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "evaluating-discrete-conditional-pmf",
         title: t("Computing conditional PMF values", "计算条件概率分布律取值"),
-        explanation: t("P(Y = y | X = x) = P(X = x, Y = y) / P(X = x).", "P(Y = y | X = x) = P(X = x, Y = y) / P(X = x)。"),
+        explanation: t(
+          "A conditional probability restricts attention to one row or column of the table and rescales it by dividing by that row or column total. P(Y = y | X = x) = P(X = x, Y = y) / P(X = x).",
+          "条件概率只关注表格中的一行或一列，并除以这一行或这一列的总和来重新缩放。P(Y = y | X = x) = P(X = x, Y = y) / P(X = x)。",
+        ),
         generate: (rng: Rng): Problem => {
           const jointVal = rng.int(1, 6);
           const otherVal = rng.int(1, 6);
@@ -298,8 +304,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "integrating-marginal-density-constant",
         title: t("Evaluating marginal density coefficients", "计算边际密度函数的系数"),
         explanation: t(
-          "For $f(x, y) = c(x + y)$ on $[0, 1] \\times [0, 1]$, $f_X(x) = c\\left(x + \\frac{1}{2}\\right)$.",
-          "对于 $[0, 1] \\times [0, 1]$ 上的 $f(x, y) = c(x + y)$，边际密度为 $f_X(x) = c\\left(x + \\frac{1}{2}\\right)$。",
+          "Integrating the joint density over the other variable leaves a function of one variable, which is the marginal density. For $f(x, y) = c(x + y)$ on $[0, 1] \\times [0, 1]$, $f_X(x) = c\\left(x + \\frac{1}{2}\\right)$.",
+          "把联合密度对另一个变量积分，剩下一个单变量函数，这就是边缘密度。对于 $[0, 1] \\times [0, 1]$ 上的 $f(x, y) = c(x + y)$，边际密度为 $f_X(x) = c\\left(x + \\frac{1}{2}\\right)$。",
         ),
         generate: (rng: Rng): Problem => {
           // f(x, y) = c * x * y on [0, a] x [0, b]
@@ -343,8 +349,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "continuous-independence-factorization",
         title: t("Testing independence by factorability of joint PDF", "根据联合密度的可乘积分解检验独立性"),
         explanation: t(
-          "If f(x, y) = g(x) h(y) on a product domain [a, b] x [c, d], then X and Y are independent.",
-          "若在笛卡尔积区间 [a, b] x [c, d] 上 f(x, y) = g(x) h(y)，则 X 与 Y 相互独立。",
+          "If the joint density splits into a function of one variable times a function of the other on a rectangle, the variables carry no information about each other. If f(x, y) = g(x) h(y) on a product domain [a, b] x [c, d], then X and Y are independent.",
+          "如果在矩形区域上联合密度可以分解为一个变量的函数乘以另一个变量的函数，那么两个变量彼此不提供任何信息。若在笛卡尔积区间 [a, b] x [c, d] 上 f(x, y) = g(x) h(y)，则 X 与 Y 相互独立。",
         ),
         generate: (rng: Rng): Problem => {
           const m = rng.int(2, 8);
@@ -399,8 +405,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "evaluating-conditional-density",
         title: t("Evaluating the conditional density at a given value", "计算给定条件下的条件概率密度值"),
         explanation: t(
-          "The conditional density is $f_{Y \\mid X}(y \\mid x) = \\frac{f(x, y)}{f_X(x)}$.",
-          "条件密度为 $f_{Y \\mid X}(y \\mid x) = \\frac{f(x, y)}{f_X(x)}$。",
+          "A conditional density is a slice of the joint density at a fixed value of one variable, rescaled by the marginal so that it integrates to one. The conditional density is $f_{Y \\mid X}(y \\mid x) = \\frac{f(x, y)}{f_X(x)}$.",
+          "条件密度是在一个变量取固定值时联合密度的一个切片，再用边缘密度重新缩放，使它的积分为 1。条件密度为 $f_{Y \\mid X}(y \\mid x) = \\frac{f(x, y)}{f_X(x)}$。",
         ),
         generate: (rng: Rng): Problem => {
           // f(x, y) = 2 for 0 <= y <= x <= 1
@@ -443,8 +449,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "evaluating-joint-continuous-cdf",
         title: t("Evaluating double integral of joint density for CDF", "通过联合密度的二重积分计算累积分布函数值"),
         explanation: t(
-          "The joint CDF is $F(x, y) = P(X \\le x, Y \\le y) = \\int_{-\\infty}^x \\int_{-\\infty}^y f(u, v) \\, dv \\, du$.",
-          "联合分布函数为 $F(x, y) = P(X \\le x, Y \\le y) = \\int_{-\\infty}^x \\int_{-\\infty}^y f(u, v) \\, dv \\, du$。",
+          "The joint cumulative distribution function adds up the density over the region to the lower left of the point, so it is a double integral. The joint CDF is $F(x, y) = P(X \\le x, Y \\le y) = \\int_{-\\infty}^x \\int_{-\\infty}^y f(u, v) \\, dv \\, du$.",
+          "联合累积分布函数把该点左下方区域上的密度加起来，所以它是一个二重积分。联合分布函数为 $F(x, y) = P(X \\le x, Y \\le y) = \\int_{-\\infty}^x \\int_{-\\infty}^y f(u, v) \\, dv \\, du$。",
         ),
         generate: (rng: Rng): Problem => {
           // f(x, y) = 1 on [0, 1] x [0, 1]
@@ -488,8 +494,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "joint-cdf-rectangular-probability",
         title: t("Expressing rectangular probability in terms of the joint CDF", "用联合累积分布函数表示矩形区域上的概率"),
         explanation: t(
-          "P(a < X ≤ b, c < Y ≤ d) = F(b, d) - F(a, d) - F(b, c) + F(a, c).",
-          "P(a < X ≤ b, c < Y ≤ d) = F(b, d) - F(a, d) - F(b, c) + F(a, c)。",
+          "Subtracting the two strips removes their overlap twice, so the corner region must be added back once, as in inclusion and exclusion. P(a < X ≤ b, c < Y ≤ d) = F(b, d) - F(a, d) - F(b, c) + F(a, c).",
+          "减去两个条带时它们的重叠部分被减了两次，所以要把角上的区域加回一次，这与容斥原理一样。P(a < X ≤ b, c < Y ≤ d) = F(b, d) - F(a, d) - F(b, c) + F(a, c)。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(1, 3);
@@ -545,8 +551,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "bivariate-normal-zero-correlation-independence",
         title: t("Zero correlation implies independence for bivariate normal variables", "二元正态变量零相关即独立"),
         explanation: t(
-          "For jointly normal random variables, $\\operatorname{Cov}(X, Y) = 0$ (or $\\rho = 0$) is necessary and sufficient for independence.",
-          "对于联合正态随机变量，$\\operatorname{Cov}(X, Y) = 0$（或 $\\rho = 0$）是两者相互独立的充要条件。",
+          "For most pairs of variables zero correlation does not imply independence, but for jointly normal variables it does, because the density then factors. For jointly normal random variables, $\\operatorname{Cov}(X, Y) = 0$ (or $\\rho = 0$) is necessary and sufficient for independence.",
+          "对大多数变量对来说，相关系数为零并不意味着独立，但对联合正态变量却成立，因为此时密度可以分解。对于联合正态随机变量，$\\operatorname{Cov}(X, Y) = 0$（或 $\\rho = 0$）是两者相互独立的充要条件。",
         ),
         generate: (rng: Rng): Problem => {
           const muX = rng.int(1, 25);
@@ -697,8 +703,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "variance-of-two-normal-linear-combination",
         title: t("Variance of linear combination of two independent normals", "两个独立正态变量线性组合的方差"),
         explanation: t(
-          "$\\operatorname{Var}(aX + bY) = a^2 \\operatorname{Var}(X) + b^2 \\operatorname{Var}(Y)$ when $X$ and $Y$ are independent.",
-          "当 $X$ 与 $Y$ 独立时，$\\operatorname{Var}(aX + bY) = a^2 \\operatorname{Var}(X) + b^2 \\operatorname{Var}(Y)$。",
+          "A combination of independent normal variables is normal again, and its variance uses the squares of the coefficients. $\\operatorname{Var}(aX + bY) = a^2 \\operatorname{Var}(X) + b^2 \\operatorname{Var}(Y)$ when $X$ and $Y$ are independent.",
+          "独立正态变量的组合仍然是正态的，它的方差要用系数的平方。当 $X$ 与 $Y$ 独立时，$\\operatorname{Var}(aX + bY) = a^2 \\operatorname{Var}(X) + b^2 \\operatorname{Var}(Y)$。",
         ),
         generate: (rng: Rng): Problem => {
           const a = rng.int(1, 8);
@@ -739,8 +745,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "mean-of-multiple-normal-combination",
         title: t("Mean of a general linear combination of normal variables", "多个正态变量一般线性组合的均值"),
         explanation: t(
-          "Expectation is linear: $E\\left[\\sum_i c_i X_i\\right] = \\sum_i c_i E[X_i]$.",
-          "期望是线性的：$E\\left[\\sum_i c_i X_i\\right] = \\sum_i c_i E[X_i]$。",
+          "The mean of any linear combination is the same combination of the means, whether or not the variables are independent. Expectation is linear: $E\\left[\\sum_i c_i X_i\\right] = \\sum_i c_i E[X_i]$.",
+          "无论变量是否独立，任意线性组合的均值都是各均值的同样组合。期望是线性的：$E\\left[\\sum_i c_i X_i\\right] = \\sum_i c_i E[X_i]$。",
         ),
         generate: (rng: Rng): Problem => {
           const c1 = rng.int(1, 4);
@@ -783,8 +789,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "sample-mean-variance-iid-normal",
         title: t("Variance of the sample mean for i.i.d. normal variables", "独立同分布正态样本均值的方差"),
         explanation: t(
-          "For $X_1, \\dots, X_n$ i.i.d. $N(\\mu, \\sigma^2)$, $\\operatorname{Var}(\\bar{X}) = \\frac{\\sigma^2}{n}$.",
-          "对于独立同分布的 $X_1, \\dots, X_n \\sim N(\\mu, \\sigma^2)$，样本均值的方差为 $\\operatorname{Var}(\\bar{X}) = \\frac{\\sigma^2}{n}$。",
+          "Averaging independent observations cancels part of their random variation, so the variance of the mean shrinks in proportion to the sample size. For $X_1, \\dots, X_n$ i.i.d. $N(\\mu, \\sigma^2)$, $\\operatorname{Var}(\\bar{X}) = \\frac{\\sigma^2}{n}$.",
+          "对独立观测取平均会抵消一部分随机波动，所以均值的方差与样本量成反比地缩小。对于独立同分布的 $X_1, \\dots, X_n \\sim N(\\mu, \\sigma^2)$，样本均值的方差为 $\\operatorname{Var}(\\bar{X}) = \\frac{\\sigma^2}{n}$。",
         ),
         generate: (rng: Rng): Problem => {
           const sigmaSq = rng.int(10, 100);
@@ -821,7 +827,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "multiplicative-expectation-independent",
         title: t("Evaluating the expectation of a product of independent variables", "计算相互独立变量积的数学期望"),
-        explanation: t("If X and Y are independent, E[XY] = E[X] E[Y].", "若 X 与 Y 相互独立，则 E[XY] = E[X] E[Y]。"),
+        explanation: t(
+          "For independent variables the mean of a product splits into the product of the means, which fails in general when they are dependent. If X and Y are independent, E[XY] = E[X] E[Y].",
+          "对于独立变量，乘积的均值可以拆成均值的乘积，而在变量相关时一般不成立。若 X 与 Y 相互独立，则 E[XY] = E[X] E[Y]。",
+        ),
         generate: (rng: Rng): Problem => {
           const eX = rng.int(-10, 20);
           const eY = rng.int(2, 20);
@@ -859,8 +868,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "sum-of-variances-independent",
         title: t("Computing variance of sum of independent variables", "计算独立随机变量和的方差"),
         explanation: t(
-          "For independent variables, $\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y)$.",
-          "对于相互独立的变量，$\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y)$。",
+          "Independence makes the covariance term vanish, so the variance of a sum is just the sum of the variances. For independent variables, $\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y)$.",
+          "独立性使协方差项为零，所以和的方差就是方差之和。对于相互独立的变量，$\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y)$。",
         ),
         generate: (rng: Rng): Problem => {
           const v1 = rng.int(5, 50);
@@ -898,7 +907,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "evaluating-discrete-joint-expectation",
         title: t("Evaluating E[XY] from a discrete probability table", "根据离散概率表计算 E[XY]"),
-        explanation: t("$E[XY] = \\sum_x \\sum_y xy \\, p(x, y)$.", "$E[XY] = \\sum_x \\sum_y xy \\, p(x, y)$。"),
+        explanation: t(
+          "Multiply the two values in each cell of the table by the probability in that cell, and add the results over the whole table. $E[XY] = \\sum_x \\sum_y xy \\, p(x, y)$.",
+          "把表格中每个格子对应的两个取值相乘，再乘以该格子的概率，然后对整个表格求和。$E[XY] = \\sum_x \\sum_y xy \\, p(x, y)$。",
+        ),
         generate: (rng: Rng): Problem => {
           const p11 = rng.int(1, 5);
           const p12 = rng.int(1, 5);
@@ -941,8 +953,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "evaluating-discrete-conditional-expectation",
         title: t("Calculating conditional expectation from conditional PMF", "根据条件概率质量函数计算条件期望"),
         explanation: t(
-          "$E[Y \\mid X = x] = \\sum_y y \\, P(Y = y \\mid X = x)$.",
-          "$E[Y \\mid X = x] = \\sum_y y \\, P(Y = y \\mid X = x)$。",
+          "A conditional expectation is an ordinary mean computed with the conditional probabilities for the given value of the other variable. $E[Y \\mid X = x] = \\sum_y y \\, P(Y = y \\mid X = x)$.",
+          "条件期望就是用另一个变量取给定值时的条件概率计算的普通均值。$E[Y \\mid X = x] = \\sum_y y \\, P(Y = y \\mid X = x)$。",
         ),
         generate: (rng: Rng): Problem => {
           const w1 = rng.int(1, 5);
@@ -984,8 +996,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "evaluating-conditional-variance-discrete",
         title: t("Computing conditional variance using moments", "利用条件矩计算条件方差"),
         explanation: t(
-          "$\\operatorname{Var}(Y \\mid X = x) = E[Y^2 \\mid X = x] - (E[Y \\mid X = x])^2$.",
-          "$\\operatorname{Var}(Y \\mid X = x) = E[Y^2 \\mid X = x] - (E[Y \\mid X = x])^2$。",
+          "The conditional variance uses the same shortcut as ordinary variance, with every expectation replaced by its conditional version. $\\operatorname{Var}(Y \\mid X = x) = E[Y^2 \\mid X = x] - (E[Y \\mid X = x])^2$.",
+          "条件方差使用与普通方差相同的简便公式，只是把每个期望都换成条件期望。$\\operatorname{Var}(Y \\mid X = x) = E[Y^2 \\mid X = x] - (E[Y \\mid X = x])^2$。",
         ),
         generate: (rng: Rng): Problem => {
           // Let Y | X = x take values 0 with prob 1/2 and 2*k with prob 1/2
@@ -1026,8 +1038,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "lotus-for-two-variables-concept",
         title: t("Understanding the direct expectation integral/sum under LOTUS", "理解 LOTUS 下直接期望积分与求和的概念"),
         explanation: t(
-          "E[g(X, Y)] = ∬ g(x, y) f(x, y) dy dx eliminates the need to determine the density of g(X, Y).",
-          "E[g(X, Y)] = ∬ g(x, y) f(x, y) dy dx 免除了求解 g(X, Y) 本身概率密度的繁琐步骤。",
+          "You can average a function of two variables directly against their joint density, without first working out the distribution of the function itself. E[g(X, Y)] = ∬ g(x, y) f(x, y) dy dx eliminates the need to determine the density of g(X, Y).",
+          "可以直接用联合密度对两个变量的函数求平均，而不必先求出这个函数本身的分布。E[g(X, Y)] = ∬ g(x, y) f(x, y) dy dx 免除了求解 g(X, Y) 本身概率密度的繁琐步骤。",
         ),
         generate: (rng: Rng): Problem => {
           const c = rng.int(2, 50);
@@ -1131,7 +1143,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
       {
         id: "evaluating-covariance-formula",
         title: t("Computing covariance from expectations", "根据期望值计算协方差"),
-        explanation: t("$\\operatorname{Cov}(X, Y) = E[XY] - E[X] \\, E[Y]$.", "$\\operatorname{Cov}(X, Y) = E[XY] - E[X] \\, E[Y]$。"),
+        explanation: t(
+          "Covariance measures whether two variables tend to be above their means together, and the shortcut is the mean of the product minus the product of the means. $\\operatorname{Cov}(X, Y) = E[XY] - E[X] \\, E[Y]$.",
+          "协方差衡量两个变量是否倾向于同时高于各自的均值，简便公式是乘积的均值减去均值的乘积。$\\operatorname{Cov}(X, Y) = E[XY] - E[X] \\, E[Y]$。",
+        ),
         generate: (rng: Rng): Problem => {
           const eX = rng.int(2, 10);
           const eY = rng.int(2, 10);
@@ -1170,8 +1185,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "evaluating-variance-with-covariance",
         title: t("Computing variance of a sum using the covariance term", "利用协方差项计算随机变量和的方差"),
         explanation: t(
-          "$\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y) + 2\\operatorname{Cov}(X, Y)$.",
-          "$\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y) + 2\\operatorname{Cov}(X, Y)$。",
+          "When variables are dependent, the variance of a sum includes twice their covariance, which adds spread when they move together. $\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y) + 2\\operatorname{Cov}(X, Y)$.",
+          "当变量相关时，和的方差包含两倍的协方差，它们同向变动时会增大分散程度。$\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y) + 2\\operatorname{Cov}(X, Y)$。",
         ),
         generate: (rng: Rng): Problem => {
           const vx = rng.int(5, 30);
@@ -1211,8 +1226,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "covariance-matrix-symmetry-and-entries",
         title: t("Identifying diagonal and off-diagonal entries of covariance matrix", "识别协方差矩阵的对角与非对角元素"),
         explanation: t(
-          "The diagonal holds the variances $\\operatorname{Var}(X_i)$, and the off-diagonal entries are $\\operatorname{Cov}(X_i, X_j) = \\operatorname{Cov}(X_j, X_i)$.",
-          "对角元为方差 $\\operatorname{Var}(X_i)$，非对角元为协方差 $\\operatorname{Cov}(X_i, X_j) = \\operatorname{Cov}(X_j, X_i)$。",
+          "The covariance of a variable with itself is its variance, and covariance does not depend on order, so the matrix is symmetric. The diagonal holds the variances $\\operatorname{Var}(X_i)$, and the off-diagonal entries are $\\operatorname{Cov}(X_i, X_j) = \\operatorname{Cov}(X_j, X_i)$.",
+          "变量与自身的协方差就是它的方差，而协方差与顺序无关，所以这个矩阵是对称的。对角元为方差 $\\operatorname{Var}(X_i)$，非对角元为协方差 $\\operatorname{Cov}(X_i, X_j) = \\operatorname{Cov}(X_j, X_i)$。",
         ),
         generate: (rng: Rng): Problem => {
           const v1 = rng.int(4, 25);
@@ -1251,8 +1266,8 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
         id: "computing-correlation-coefficient",
         title: t("Evaluating the correlation coefficient from covariance and standard deviations", "根据协方差与标准差计算相关系数"),
         explanation: t(
-          "$\\rho(X, Y) = \\frac{\\operatorname{Cov}(X, Y)}{\\sigma_X \\sigma_Y}$.",
-          "$\\rho(X, Y) = \\frac{\\operatorname{Cov}(X, Y)}{\\sigma_X \\sigma_Y}$。",
+          "Dividing the covariance by both standard deviations removes the units, giving a number between minus one and one that measures linear association. $\\rho(X, Y) = \\frac{\\operatorname{Cov}(X, Y)}{\\sigma_X \\sigma_Y}$.",
+          "把协方差除以两个标准差就去掉了单位，得到一个介于 −1 和 1 之间、衡量线性关联程度的数。$\\rho(X, Y) = \\frac{\\operatorname{Cov}(X, Y)}{\\sigma_X \\sigma_Y}$。",
         ),
         generate: (rng: Rng): Problem => {
           // Choose clean values: sx, sy, cov

@@ -21,8 +21,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "raw-moments-of-continuous-random-variables",
         title: t("Calculating the n-th raw moment", "计算连续型随机变量的 n 阶原点矩"),
         explanation: t(
-          "For $f(x) = \\frac{(k+1)x^k}{b^{k+1}}$ on $[0, b]$, the $n$-th moment is $E[X^n] = \\int_0^b x^n \\frac{(k+1)x^k}{b^{k+1}} \\, dx = \\frac{(k+1)b^n}{k+n+1}$.",
-          "对于在 $[0, b]$ 上密度为 $f(x) = \\frac{(k+1)x^k}{b^{k+1}}$ 的分布，其 $n$ 阶原点矩为 $E[X^n] = \\int_0^b x^n \\frac{(k+1)x^k}{b^{k+1}} \\, dx = \\frac{(k+1)b^n}{k+n+1}$。",
+          "For a continuous variable, a moment is the integral of the power of the variable times the density over the support. For $f(x) = \\frac{(k+1)x^k}{b^{k+1}}$ on $[0, b]$, the $n$-th moment is $E[X^n] = \\int_0^b x^n \\frac{(k+1)x^k}{b^{k+1}} \\, dx = \\frac{(k+1)b^n}{k+n+1}$.",
+          "对于连续变量，矩是变量的幂乘以密度在支撑集上的积分。对于在 $[0, b]$ 上密度为 $f(x) = \\frac{(k+1)x^k}{b^{k+1}}$ 的分布，其 $n$ 阶原点矩为 $E[X^n] = \\int_0^b x^n \\frac{(k+1)x^k}{b^{k+1}} \\, dx = \\frac{(k+1)b^n}{k+n+1}$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(2, 35);
@@ -105,8 +105,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "expected-value-of-polynomial-pdf",
         title: t("Evaluating the expectation of a polynomial density", "求解多项式型密度的期望值"),
         explanation: t(
-          "For $f(x) = \\frac{(k+1)x^k}{b^{k+1}}$ on $[0, b]$, $E[X] = \\frac{(k+1)b}{k+2}$. For $f(x) = \\frac{2x}{b^2}$, $E[X] = \\frac{2b}{3}$.",
-          "对于在 $[0, b]$ 上密度为 $f(x) = \\frac{(k+1)x^k}{b^{k+1}}$ 的随机变量，$E[X] = \\frac{(k+1)b}{k+2}$。对 $f(x) = \\frac{2x}{b^2}$，$E[X] = \\frac{2b}{3}$。",
+          "The mean is the balance point of the density, found by integrating the variable times the density over the interval. For $f(x) = \\frac{(k+1)x^k}{b^{k+1}}$ on $[0, b]$, $E[X] = \\frac{(k+1)b}{k+2}$. For $f(x) = \\frac{2x}{b^2}$, $E[X] = \\frac{2b}{3}$.",
+          "均值是密度的平衡点，通过把变量乘以密度在区间上积分得到。对于在 $[0, b]$ 上密度为 $f(x) = \\frac{(k+1)x^k}{b^{k+1}}$ 的随机变量，$E[X] = \\frac{(k+1)b}{k+2}$。对 $f(x) = \\frac{2x}{b^2}$，$E[X] = \\frac{2b}{3}$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(3, 45);
@@ -128,8 +128,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "expected-value-of-exponential-pdf",
         title: t("Expected value of an exponential distribution", "指数分布的期望值"),
         explanation: t(
-          "For an exponential distribution with rate $\\lambda$ (density $f(x) = \\lambda e^{-\\lambda x}$ for $x \\ge 0$), the expected value is $E[X] = \\frac{1}{\\lambda}$.",
-          "对于速率参数为 $\\lambda$ 的指数分布（在 $x \\ge 0$ 上密度为 $f(x) = \\lambda e^{-\\lambda x}$），期望值为 $E[X] = \\frac{1}{\\lambda}$。",
+          "For an exponential distribution, integration by parts shows that the mean waiting time is the reciprocal of the rate. For an exponential distribution with rate $\\lambda$ (density $f(x) = \\lambda e^{-\\lambda x}$ for $x \\ge 0$), the expected value is $E[X] = \\frac{1}{\\lambda}$.",
+          "对于指数分布，用分部积分可以证明平均等待时间是速率的倒数。对于速率参数为 $\\lambda$ 的指数分布（在 $x \\ge 0$ 上密度为 $f(x) = \\lambda e^{-\\lambda x}$），期望值为 $E[X] = \\frac{1}{\\lambda}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 40);
@@ -166,8 +166,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "variance-calculation-via-moments",
         title: t("Computing variance using the shortcut formula", "利用矩的简化公式计算方差"),
         explanation: t(
-          "$\\operatorname{Var}(X) = E[X^2] - (E[X])^2$. For $f(x) = \\frac{2x}{b^2}$ on $[0, b]$, $E[X] = \\frac{2b}{3}$ and $E[X^2] = \\frac{b^2}{2}$, so $\\operatorname{Var}(X) = \\frac{b^2}{2} - \\frac{4b^2}{9} = \\frac{b^2}{18}$.",
-          "$\\operatorname{Var}(X) = E[X^2] - (E[X])^2$。对 $[0, b]$ 上的 $f(x) = \\frac{2x}{b^2}$，$E[X] = \\frac{2b}{3}$，$E[X^2] = \\frac{b^2}{2}$，故 $\\operatorname{Var}(X) = \\frac{b^2}{2} - \\frac{4b^2}{9} = \\frac{b^2}{18}$。",
+          "Compute the first and second moments by integration, then subtract the square of the first from the second to get the variance. $\\operatorname{Var}(X) = E[X^2] - (E[X])^2$. For $f(x) = \\frac{2x}{b^2}$ on $[0, b]$, $E[X] = \\frac{2b}{3}$ and $E[X^2] = \\frac{b^2}{2}$, so $\\operatorname{Var}(X) = \\frac{b^2}{2} - \\frac{4b^2}{9} = \\frac{b^2}{18}$.",
+          "先用积分求出一阶矩和二阶矩，再用二阶矩减去一阶矩的平方得到方差。$\\operatorname{Var}(X) = E[X^2] - (E[X])^2$。对 $[0, b]$ 上的 $f(x) = \\frac{2x}{b^2}$，$E[X] = \\frac{2b}{3}$，$E[X^2] = \\frac{b^2}{2}$，故 $\\operatorname{Var}(X) = \\frac{b^2}{2} - \\frac{4b^2}{9} = \\frac{b^2}{18}$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(3, 35);
@@ -190,8 +190,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "variance-of-exponential-random-variables",
         title: t("Variance of an exponential distribution", "指数分布的方差"),
         explanation: t(
-          "For an exponential distribution with rate $\\lambda$, $E[X] = \\frac{1}{\\lambda}$ and $E[X^2] = \\frac{2}{\\lambda^2}$. Hence $\\operatorname{Var}(X) = \\frac{2}{\\lambda^2} - \\left(\\frac{1}{\\lambda}\\right)^2 = \\frac{1}{\\lambda^2}$.",
-          "对于速率参数为 $\\lambda$ 的指数分布，$E[X] = \\frac{1}{\\lambda}$ 且 $E[X^2] = \\frac{2}{\\lambda^2}$。因此 $\\operatorname{Var}(X) = \\frac{2}{\\lambda^2} - \\left(\\frac{1}{\\lambda}\\right)^2 = \\frac{1}{\\lambda^2}$。",
+          "Subtracting the square of the mean from the second moment shows that the variance of an exponential is the square of its mean. For an exponential distribution with rate $\\lambda$, $E[X] = \\frac{1}{\\lambda}$ and $E[X^2] = \\frac{2}{\\lambda^2}$. Hence $\\operatorname{Var}(X) = \\frac{2}{\\lambda^2} - \\left(\\frac{1}{\\lambda}\\right)^2 = \\frac{1}{\\lambda^2}$.",
+          "用二阶矩减去均值的平方，可以看出指数分布的方差等于其均值的平方。对于速率参数为 $\\lambda$ 的指数分布，$E[X] = \\frac{1}{\\lambda}$ 且 $E[X^2] = \\frac{2}{\\lambda^2}$。因此 $\\operatorname{Var}(X) = \\frac{2}{\\lambda^2} - \\left(\\frac{1}{\\lambda}\\right)^2 = \\frac{1}{\\lambda^2}$。",
         ),
         generate: (rng: Rng): Problem => {
           const lambda = rng.int(2, 30);
@@ -228,8 +228,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "lotus-for-polynomial-functions",
         title: t("Applying LOTUS to powers of uniform variables", "对均匀分布的幂函数应用 LOTUS 法则"),
         explanation: t(
-          "For $X \\sim \\text{Uniform}(0, b)$ with density $\\frac{1}{b}$, LOTUS gives $E[cX^2] = \\int_0^b c x^2 \\cdot \\frac{1}{b} \\, dx = \\frac{cb^2}{3}$.",
-          "对于在 $[0, b]$ 上密度为 $\\frac{1}{b}$ 的均匀分布 $X$，由 LOTUS 法则可得 $E[cX^2] = \\int_0^b c x^2 \\cdot \\frac{1}{b} \\, dx = \\frac{cb^2}{3}$。",
+          "The law of the unconscious statistician lets you find the mean of a function by integrating the function against the original density, without finding a new distribution. For $X \\sim \\text{Uniform}(0, b)$ with density $\\frac{1}{b}$, LOTUS gives $E[cX^2] = \\int_0^b c x^2 \\cdot \\frac{1}{b} \\, dx = \\frac{cb^2}{3}$.",
+          "无意识统计学家定律让你把函数与原来的密度一起积分来求函数的均值，而不必求出新的分布。对于在 $[0, b]$ 上密度为 $\\frac{1}{b}$ 的均匀分布 $X$，由 LOTUS 法则可得 $E[cX^2] = \\int_0^b c x^2 \\cdot \\frac{1}{b} \\, dx = \\frac{cb^2}{3}$。",
         ),
         generate: (rng: Rng): Problem => {
           const b = rng.int(2, 25);
@@ -253,8 +253,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         id: "lotus-for-inverse-powers",
         title: t("Applying LOTUS on unbounded supports", "在无界支撑集上应用 LOTUS 法则"),
         explanation: t(
-          "For $f(x) = \\frac{2}{x^3}$ ($x \\ge 1$), $E[kX] = \\int_1^\\infty kx \\cdot \\frac{2}{x^3} \\, dx = \\int_1^\\infty \\frac{2k}{x^2} \\, dx = 2k$.",
-          "对于 $f(x) = \\frac{2}{x^3}$（$x \\ge 1$），$E[kX] = \\int_1^\\infty kx \\cdot \\frac{2}{x^3} \\, dx = \\int_1^\\infty \\frac{2k}{x^2} \\, dx = 2k$。",
+          "On an unbounded support the expectation is an improper integral, which exists only when the density decays fast enough to make it converge. For $f(x) = \\frac{2}{x^3}$ ($x \\ge 1$), $E[kX] = \\int_1^\\infty kx \\cdot \\frac{2}{x^3} \\, dx = \\int_1^\\infty \\frac{2k}{x^2} \\, dx = 2k$.",
+          "在无界支撑集上，期望是一个反常积分，只有当密度衰减得足够快使它收敛时，期望才存在。对于 $f(x) = \\frac{2}{x^3}$（$x \\ge 1$），$E[kX] = \\int_1^\\infty kx \\cdot \\frac{2}{x^3} \\, dx = \\int_1^\\infty \\frac{2k}{x^2} \\, dx = 2k$。",
         ),
         generate: (rng: Rng): Problem => {
           const k = rng.int(2, 35);
