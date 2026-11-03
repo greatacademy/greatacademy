@@ -995,6 +995,20 @@ function pickCombinedPoint(rng: Rng, a: Q, b: Q): XY {
   }
 }
 
+/** bothStretchesFigure stretches P(2, −6) horizontally by 3 and then vertically by 1/2, through (6, −6) to P'(6, −3). */
+const bothStretchesFigure = graph(
+  [
+    { kind: "segment", a: [2, -6], b: [6, -6], dashed: true },
+    { kind: "segment", a: [6, -6], b: [6, -3], dashed: true },
+    { kind: "point", at: [2, -6], label: "P(2, −6)", dir: "s" },
+    { kind: "point", at: [6, -6], label: "(6, −6)", dir: "s" },
+    { kind: "point", at: [6, -3], label: "P'(6, −3)", dir: "ne", accent: true },
+    { kind: "label", at: [4, -6], text: "× 3", dir: "n" },
+    { kind: "label", at: [6, -4.5], text: "× ½", dir: "e" },
+  ],
+  "P(2, −6) moves horizontally to (6, −6), its x-coordinate tripled, then vertically to P'(6, −3), its y-coordinate halved.",
+  "P(2, −6) 先水平移到 (6, −6)，横坐标乘 3；再竖直移到 P'(6, −3)，纵坐标减半。",
+);
 /** combiningStretchesOfGeometricFigures combines horizontal and vertical stretches into one rule. */
 export const combiningStretchesOfGeometricFigures: TopicDef = {
   id: "combining-stretches-of-geometric-figures",
@@ -1015,6 +1029,7 @@ export const combiningStretchesOfGeometricFigures: TopicDef = {
         "A horizontal stretch by $a$ followed by a vertical stretch by $b$ multiplies $x$ by $a$ and $y$ by $b$:\n\n$$(x, y) \\to (ax, by).$$\n\nThe order does not matter, since each stretch changes only its own coordinate. When $a = b$, the result is a dilation about the origin.\n\nStretching $P(2, -6)$ horizontally by $3$ and vertically by $\\frac{1}{2}$ gives $P'(6, -3)$.",
         "以因子 $a$ 水平伸缩、再以因子 $b$ 竖直伸缩，把 $x$ 乘以 $a$，$y$ 乘以 $b$：\n\n$$(x, y) \\to (ax, by)。$$\n\n顺序无关紧要，因为每次伸缩只改变自己的那个坐标。当 $a = b$ 时，结果就是以原点为中心的位似。\n\n把 $P(2, -6)$ 以因子 $3$ 水平伸缩、以因子 $\\frac{1}{2}$ 竖直伸缩，得到 $P'(6, -3)$。",
       ),
+      figure: bothStretchesFigure,
       generate(rng) {
         const [a, b] = rng.sample(niceScales, 2) as [Q, Q];
         const p = pickCombinedPoint(rng, a, b);
