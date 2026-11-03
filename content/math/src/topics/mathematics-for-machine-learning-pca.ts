@@ -72,6 +72,42 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "choosing-how-many-components-to-keep",
+        title: t("Choosing how many components to keep", "确定保留的主成分个数"),
+        explanation: t(
+          "A common rule keeps the fewest leading components whose combined share of the variance reaches a target such as $90\\%$. Sort the eigenvalues from largest to smallest, add them up one at a time, and stop as soon as the running total divided by the total variance reaches the target.\n\nFor eigenvalues $50, 30, 12, 5, 3$ (total $100$), the running shares are $50\\%, 80\\%, 92\\%, \\dots$, so $3$ components are needed for $90\\%$ but only $2$ for $80\\%$.",
+          "常用的规则是：保留最少的前几个主成分，使它们合计的方差占比达到目标，例如 $90\\%$。把特征值从大到小排列，逐个累加，一旦累计和除以总方差达到目标就停止。\n\n对于特征值 $50, 30, 12, 5, 3$（总和 $100$），累计占比为 $50\\%, 80\\%, 92\\%, \\dots$，所以要达到 $90\\%$ 需要 $3$ 个主成分，而 $80\\%$ 只需要 $2$ 个。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const d = rng.int(4, 6);
+          const lambdas = rng.sample([1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 60], d).sort((a, b) => b - a);
+          const total = lambdas.reduce((s, v) => s + v, 0);
+          const target = rng.pick([70, 80, 90, 95]);
+          const running: number[] = [];
+          lambdas.forEach((v, i) => {
+            running.push((running[i - 1] ?? 0) + v);
+          });
+          const k = running.findIndex((r) => r * 100 >= target * total) + 1;
+          const shares = running
+            .slice(0, k)
+            .map((r) => `\\frac{${r}}{${total}}`)
+            .join(",\\ ");
+          return numberProblem({
+            prompt: t(
+              `The covariance matrix of a dataset with $${d}$ features has eigenvalues $${lambdas.join(", ")}$. What is the smallest number of principal components that together explain at least $${target}\\%$ of the total variance?`,
+              `某数据集有 $${d}$ 个特征，其协方差矩阵的特征值为 $${lambdas.join(", ")}$。至少需要几个主成分，才能合计解释不少于 $${target}\\%$ 的总方差？`,
+            ),
+            answer: k,
+            form: "integer",
+            wrong: [k - 1, k + 1, Math.ceil((d * target) / 100)].filter((w) => w >= 1 && w <= d),
+            solution: t(
+              `The total variance is $${total}$. The running shares are $${shares}$, and the first to reach $${target}\\%$ is the share of the first $${k}$ components, so $${k}$ components are needed.`,
+              `总方差为 $${total}$。累计占比依次为 $${shares}$，第一个达到 $${target}\\%$ 的是前 $${k}$ 个主成分的占比，所以需要 $${k}$ 个主成分。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -134,6 +170,48 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
           });
         },
       },
+      {
+        id: "the-direction-of-the-first-component",
+        title: t("Finding the direction of the first principal component", "求第一主成分的方向"),
+        explanation: t(
+          "Once the largest eigenvalue $\\lambda_1$ is known, its eigenvector gives the direction of the first principal axis. The first row of $(S - \\lambda_1 I)\\mathbf{v} = \\mathbf{0}$ reads $(s_{11} - \\lambda_1)v_1 + s_{12}v_2 = 0$, so the axis has slope\n$$\\frac{v_2}{v_1} = \\frac{\\lambda_1 - s_{11}}{s_{12}}.$$\nFor $S = \\begin{pmatrix} 13 & 4 \\\\ 4 & 7 \\end{pmatrix}$ with $\\lambda_1 = 15$, the slope is $\\frac{15 - 13}{4} = \\frac{1}{2}$: the data spread most along the direction $(2, 1)$.",
+          "求出最大特征值 $\\lambda_1$ 后，它的特征向量给出第一主轴的方向。方程 $(S - \\lambda_1 I)\\mathbf{v} = \\mathbf{0}$ 的第一行为 $(s_{11} - \\lambda_1)v_1 + s_{12}v_2 = 0$，所以主轴的斜率为\n$$\\frac{v_2}{v_1} = \\frac{\\lambda_1 - s_{11}}{s_{12}}.$$\n对 $S = \\begin{pmatrix} 13 & 4 \\\\ 4 & 7 \\end{pmatrix}$，$\\lambda_1 = 15$，斜率为 $\\frac{15 - 13}{4} = \\frac{1}{2}$：数据沿方向 $(2, 1)$ 分散得最开。",
+        ),
+        generate: (rng: Rng): Problem => {
+          // s11 - s22 = k and the eigenvalue gap is delta, with s12^2 = (delta^2 - k^2) / 4.
+          const tr = rng.pick([
+            { s12: 3, k: 8, delta: 10 },
+            { s12: 4, k: 6, delta: 10 },
+            { s12: 6, k: 5, delta: 13 },
+            { s12: 6, k: 16, delta: 20 },
+            { s12: 8, k: 12, delta: 20 },
+            { s12: 4, k: 15, delta: 17 },
+            { s12: 12, k: 10, delta: 26 },
+          ]);
+          const l2 = rng.int(2, 15);
+          const l1 = l2 + tr.delta;
+          const swap = rng.bool();
+          const big = l2 + (tr.delta + tr.k) / 2;
+          const small = l2 + (tr.delta - tr.k) / 2;
+          const s11 = swap ? small : big;
+          const s22 = swap ? big : small;
+          const s12 = rng.pick([1, -1]) * tr.s12;
+          const slope = Q.of(l1 - s11, s12);
+          return numberProblem({
+            prompt: t(
+              `The covariance matrix $S = \\begin{pmatrix} ${s11} & ${s12} \\\\ ${s12} & ${s22} \\end{pmatrix}$ has largest eigenvalue $\\lambda_1 = ${l1}$. Find the slope $\\frac{v_2}{v_1}$ of the first principal direction $\\mathbf{v} = (v_1, v_2)$.`,
+              `协方差矩阵 $S = \\begin{pmatrix} ${s11} & ${s12} \\\\ ${s12} & ${s22} \\end{pmatrix}$ 的最大特征值为 $\\lambda_1 = ${l1}$。求第一主方向 $\\mathbf{v} = (v_1, v_2)$ 的斜率 $\\frac{v_2}{v_1}$。`,
+            ),
+            answer: slope,
+            form: "fraction",
+            wrong: [Q.of(l2 - s11, s12), Q.of(s12, l1 - s11), slope.neg()],
+            solution: t(
+              `The first row of $(S - ${l1}I)\\mathbf{v} = \\mathbf{0}$ is $(${s11} - ${l1})v_1 + (${s12})v_2 = 0$, so $\\frac{v_2}{v_1} = \\frac{${l1} - ${s11}}{${s12}} = ${slope.toLatex()}$.`,
+              `$(S - ${l1}I)\\mathbf{v} = \\mathbf{0}$ 的第一行为 $(${s11} - ${l1})v_1 + (${s12})v_2 = 0$，所以 $\\frac{v_2}{v_1} = \\frac{${l1} - ${s11}}{${s12}} = ${slope.toLatex()}$。`,
+            ),
+          });
+        },
+      },
     ],
   },
 
@@ -173,6 +251,44 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
             solution: t(
               `Using the connection $\\lambda_1 = \\frac{\\sigma_1^2}{n - 1} = \\frac{${sigma}^2}{${sampleN} - 1} = \\frac{${sigmaSquared}}{${nMinus1}} = ${variance.toLatex()}$.`,
               `由公式 $\\lambda_1 = \\frac{\\sigma_1^2}{n - 1} = \\frac{${sigma}^2}{${sampleN} - 1} = \\frac{${sigmaSquared}}{${nMinus1}} = ${variance.toLatex()}$。`,
+            ),
+          });
+        },
+      },
+      {
+        id: "variance-shares-from-singular-values",
+        title: t("Variance shares from singular values", "由奇异值求方差占比"),
+        explanation: t(
+          "Each covariance eigenvalue is $\\frac{\\sigma_i^2}{n - 1}$, and the common factor $\\frac{1}{n - 1}$ cancels in a ratio. So the share of variance explained by the first $k$ components can be read straight from the singular values:\n$$\\frac{\\sigma_1^2 + \\cdots + \\sigma_k^2}{\\sigma_1^2 + \\cdots + \\sigma_d^2}.$$\nThe singular values must be squared first: with $\\sigma = (4, 2, 1)$, the first component explains $\\frac{16}{21}$ of the variance, not $\\frac{4}{7}$.",
+          "每个协方差特征值都是 $\\frac{\\sigma_i^2}{n - 1}$，而公因子 $\\frac{1}{n - 1}$ 在比值中约去。所以前 $k$ 个主成分解释的方差占比可以直接由奇异值得到：\n$$\\frac{\\sigma_1^2 + \\cdots + \\sigma_k^2}{\\sigma_1^2 + \\cdots + \\sigma_d^2}.$$\n奇异值必须先平方：若 $\\sigma = (4, 2, 1)$，第一主成分解释的方差占比为 $\\frac{16}{21}$，而不是 $\\frac{4}{7}$。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const sigmas = rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15], 3).sort((a, b) => b - a);
+          const k = rng.int(1, 2);
+          const sq = sigmas.map((s) => s * s);
+          const total = sq.reduce((s, v) => s + v, 0);
+          const top = sq.slice(0, k).reduce((s, v) => s + v, 0);
+          const answer = Q.of(top, total);
+          const n = rng.int(20, 120);
+          const plain = sigmas.slice(0, k).reduce((s, v) => s + v, 0);
+          return numberProblem({
+            prompt: t(
+              `A centered data matrix with $n = ${n}$ rows has singular values $\\sigma_1 = ${sigmas[0]}$, $\\sigma_2 = ${sigmas[1]}$, $\\sigma_3 = ${sigmas[2]}$. What fraction of the total variance ${k === 1 ? "does the first principal component" : "do the first two principal components"} explain?`,
+              `一个有 $n = ${n}$ 行的中心化数据矩阵，奇异值为 $\\sigma_1 = ${sigmas[0]}$，$\\sigma_2 = ${sigmas[1]}$，$\\sigma_3 = ${sigmas[2]}$。${k === 1 ? "第一主成分" : "前两个主成分"}解释了总方差的几分之几？`,
+            ),
+            answer,
+            form: "fraction",
+            wrong: [
+              Q.of(
+                plain,
+                sigmas.reduce((s, v) => s + v, 0),
+              ),
+              Q.of(top, n - 1),
+              Q.of(total - top, total),
+            ],
+            solution: t(
+              `The eigenvalues are $\\frac{\\sigma_i^2}{${n - 1}}$, and the factor cancels, so the share is $\\frac{${sq.slice(0, k).join(" + ")}}{${sq.join(" + ")}} = ${answer.toLatex()}$.`,
+              `特征值为 $\\frac{\\sigma_i^2}{${n - 1}}$，因子约去，所以占比为 $\\frac{${sq.slice(0, k).join(" + ")}}{${sq.join(" + ")}} = ${answer.toLatex()}$。`,
             ),
           });
         },
@@ -232,6 +348,43 @@ export const mathematicsForMachineLearningPcaTopics: TopicDef[] = [
             solution: t(
               `$z_1 = \\mathbf{v}_1^T \\mathbf{x}_c = \\left(\\frac{${a}}{${c}}\\right)(${xVal1}) + \\left(\\frac{${b}}{${c}}\\right)(${xVal2}) = \\frac{${a * xVal1} + (${b * xVal2})}{${c}} = \\frac{${dotVal}}{${c}} = ${exactScore.toLatex()}$.`,
               `$z_1 = \\mathbf{v}_1^T \\mathbf{x}_c = \\left(\\frac{${a}}{${c}}\\right)(${xVal1}) + \\left(\\frac{${b}}{${c}}\\right)(${xVal2}) = \\frac{${a * xVal1} + (${b * xVal2})}{${c}} = \\frac{${dotVal}}{${c}} = ${exactScore.toLatex()}$。`,
+            ),
+          });
+        },
+      },
+      {
+        id: "reconstruction-error-of-a-projection",
+        title: t("The reconstruction error of keeping one component", "只保留一个主成分时的重构误差"),
+        explanation: t(
+          "Keeping only the first component replaces $\\mathbf{x}_c$ by its reconstruction $\\hat{\\mathbf{x}} = z_1 \\mathbf{v}_1$. Because the principal directions are orthonormal, $\\mathbf{x}_c = z_1\\mathbf{v}_1 + z_2\\mathbf{v}_2$, and the squared error is the part that was dropped:\n$$\\|\\mathbf{x}_c - \\hat{\\mathbf{x}}\\|^2 = z_2^2 = \\|\\mathbf{x}_c\\|^2 - z_1^2.$$\nWith $\\mathbf{v}_1 = (\\frac{3}{5}, \\frac{4}{5})$ and $\\mathbf{x}_c = (5, 0)$: $z_1 = 3$, so the error is $25 - 9 = 16$.",
+          "只保留第一主成分时，用重构 $\\hat{\\mathbf{x}} = z_1 \\mathbf{v}_1$ 代替 $\\mathbf{x}_c$。由于主方向是标准正交的，$\\mathbf{x}_c = z_1\\mathbf{v}_1 + z_2\\mathbf{v}_2$，平方误差就是被舍弃的部分：\n$$\\|\\mathbf{x}_c - \\hat{\\mathbf{x}}\\|^2 = z_2^2 = \\|\\mathbf{x}_c\\|^2 - z_1^2.$$\n若 $\\mathbf{v}_1 = (\\frac{3}{5}, \\frac{4}{5})$，$\\mathbf{x}_c = (5, 0)$：$z_1 = 3$，所以误差为 $25 - 9 = 16$。",
+        ),
+        generate: (rng: Rng): Problem => {
+          const [a, b0, c] = rng.pick([
+            [3, 4, 5],
+            [4, 3, 5],
+            [5, 12, 13],
+            [12, 5, 13],
+            [8, 15, 17],
+            [15, 8, 17],
+          ] as const);
+          const b = rng.pick([1, -1]) * b0;
+          const x1 = rng.int(-8, 10);
+          const x2 = rng.pick([-7, -5, -3, -2, -1, 1, 2, 3, 5, 7]);
+          const z1 = Q.of(a * x1 + b * x2, c);
+          const norm = x1 * x1 + x2 * x2;
+          const err = Q.of(norm).sub(z1.mul(z1));
+          return numberProblem({
+            prompt: t(
+              `The first principal direction is $\\mathbf{v}_1 = \\left(\\frac{${a}}{${c}}, ${b < 0 ? "-" : ""}\\frac{${Math.abs(b)}}{${c}}\\right)$. A centered point $\\mathbf{x}_c = (${x1}, ${x2})$ is reconstructed from its first score alone as $\\hat{\\mathbf{x}} = z_1 \\mathbf{v}_1$. Find the squared reconstruction error $\\|\\mathbf{x}_c - \\hat{\\mathbf{x}}\\|^2$.`,
+              `第一主方向为 $\\mathbf{v}_1 = \\left(\\frac{${a}}{${c}}, ${b < 0 ? "-" : ""}\\frac{${Math.abs(b)}}{${c}}\\right)$。中心化的点 $\\mathbf{x}_c = (${x1}, ${x2})$ 只用第一得分重构为 $\\hat{\\mathbf{x}} = z_1 \\mathbf{v}_1$。求平方重构误差 $\\|\\mathbf{x}_c - \\hat{\\mathbf{x}}\\|^2$。`,
+            ),
+            answer: err,
+            form: "fraction",
+            wrong: [z1.mul(z1), Q.of(norm), Q.of(norm).sub(z1)],
+            solution: t(
+              `$z_1 = \\frac{${a}(${x1}) + (${b})(${x2})}{${c}} = ${z1.toLatex()}$ and $\\|\\mathbf{x}_c\\|^2 = ${norm}$, so the error is $${norm} - \\left(${z1.toLatex()}\\right)^2 = ${err.toLatex()}$.`,
+              `$z_1 = \\frac{${a}(${x1}) + (${b})(${x2})}{${c}} = ${z1.toLatex()}$，$\\|\\mathbf{x}_c\\|^2 = ${norm}$，所以误差为 $${norm} - \\left(${z1.toLatex()}\\right)^2 = ${err.toLatex()}$。`,
             ),
           });
         },
