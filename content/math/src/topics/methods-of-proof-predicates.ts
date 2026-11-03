@@ -673,7 +673,7 @@ export const translatingBetweenLogicalAndSetOperations: TopicDef = {
       id: "quantified-statements-as-set-relations",
       title: t("Quantified statements as set relations", "量化命题与集合关系"),
       explanation: t(
-        '"$P(x) \\Rightarrow Q(x)$ for every $x \\in U$" says every element of $A$ lies in $B$: $A \\subseteq B$. "$P(x) \\Leftrightarrow Q(x)$ for every $x$" says $A = B$. "No $x$ satisfies $P(x) \\wedge Q(x)$" says $A \\cap B = \\varnothing$.',
+        '"A predicate picks out the set of elements where it is true, so statements about all elements become statements about how those sets relate. $P(x) \\Rightarrow Q(x)$ for every $x \\in U$" says every element of $A$ lies in $B$: $A \\subseteq B$. "一个谓词选出使它为真的元素组成的集合，所以关于所有元素的命题就变成了关于这些集合之间关系的命题。$P(x) \\Leftrightarrow Q(x)$ for every $x$" says $A = B$. "No $x$ satisfies $P(x) \\wedge Q(x)$" says $A \\cap B = \\varnothing$.',
         "“对每个 $x \\in U$，$P(x) \\Rightarrow Q(x)$”表示 $A$ 的每个元素都在 $B$ 中：$A \\subseteq B$。“对每个 $x$，$P(x) \\Leftrightarrow Q(x)$”表示 $A = B$。“没有 $x$ 满足 $P(x) \\wedge Q(x)$”表示 $A \\cap B = \\varnothing$。",
       ),
       generate(rng) {
@@ -1246,8 +1246,8 @@ export const negatingStatementsWithNestedQuantifiers: TopicDef = {
       id: "negating-two-quantifiers",
       title: t("Negating two quantifiers", "否定两个量词"),
       explanation: t(
-        "Push the negation through one quantifier at a time: $\\neg \\forall x\\ \\exists y\\ P \\equiv \\exists x\\ \\neg \\exists y\\ P \\equiv \\exists x\\ \\forall y\\ \\neg P$. The negation of $\\forall x\\ \\exists y,\\ y > x$ is $\\exists x\\ \\forall y,\\ y \\le x$.",
-        "让否定逐个穿过量词：$\\neg \\forall x\\ \\exists y\\ P \\equiv \\exists x\\ \\neg \\exists y\\ P \\equiv \\exists x\\ \\forall y\\ \\neg P$。$\\forall x\\ \\exists y,\\ y > x$ 的否定是 $\\exists x\\ \\forall y,\\ y \\le x$。",
+        "Negation passes through quantifiers one at a time, turning every for all into there exists and every there exists into for all. Push the negation through one quantifier at a time: $\\neg \\forall x\\ \\exists y\\ P \\equiv \\exists x\\ \\neg \\exists y\\ P \\equiv \\exists x\\ \\forall y\\ \\neg P$. The negation of $\\forall x\\ \\exists y,\\ y > x$ is $\\exists x\\ \\forall y,\\ y \\le x$.",
+        "否定逐个穿过量词，把每个“对所有”变成“存在”，把每个“存在”变成“对所有”。让否定逐个穿过量词：$\\neg \\forall x\\ \\exists y\\ P \\equiv \\exists x\\ \\neg \\exists y\\ P \\equiv \\exists x\\ \\forall y\\ \\neg P$。$\\forall x\\ \\exists y,\\ y > x$ 的否定是 $\\exists x\\ \\forall y,\\ y \\le x$。",
       ),
       generate(rng) {
         const D = dom(rng.bool() ? "Z" : "R");

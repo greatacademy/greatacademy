@@ -745,8 +745,8 @@ export const elementaryPropertiesOfSetOperations: TopicDef = {
       id: "simplifying-with-set-properties",
       title: t("Simplifying set expressions", "化简集合表达式"),
       explanation: t(
-        "For sets $A$, $B$ in a universe $U$: $A \\cup \\varnothing = A$, $A \\cap U = A$, $A \\cup U = U$, $A \\cap \\varnothing = \\varnothing$, $A \\cup A = A$, $A \\cup A^{c} = U$, $A \\cap A^{c} = \\varnothing$, $(A^{c})^{c} = A$ and $A \\cup (A \\cap B) = A$.",
-        "对全集 $U$ 中的集合 $A$、$B$：$A \\cup \\varnothing = A$，$A \\cap U = A$，$A \\cup U = U$，$A \\cap \\varnothing = \\varnothing$，$A \\cup A = A$，$A \\cup A^{c} = U$，$A \\cap A^{c} = \\varnothing$，$(A^{c})^{c} = A$，$A \\cup (A \\cap B) = A$。",
+        "The laws of sets mirror the laws of logic, so the empty set and the universe behave like false and true in simplifications. For sets $A$, $B$ in a universe $U$: $A \\cup \\varnothing = A$, $A \\cap U = A$, $A \\cup U = U$, $A \\cap \\varnothing = \\varnothing$, $A \\cup A = A$, $A \\cup A^{c} = U$, $A \\cap A^{c} = \\varnothing$, $(A^{c})^{c} = A$ and $A \\cup (A \\cap B) = A$.",
+        "集合的运算律与逻辑的运算律一一对应，所以在化简中空集和全集分别像假和真一样起作用。对全集 $U$ 中的集合 $A$、$B$：$A \\cup \\varnothing = A$，$A \\cap U = A$，$A \\cup U = U$，$A \\cap \\varnothing = \\varnothing$，$A \\cup A = A$，$A \\cup A^{c} = U$，$A \\cap A^{c} = \\varnothing$，$(A^{c})^{c} = A$，$A \\cup (A \\cap B) = A$。",
       ),
       generate(rng) {
         const id = rng.pick(identities);
@@ -770,8 +770,8 @@ export const elementaryPropertiesOfSetOperations: TopicDef = {
       id: "naming-set-properties",
       title: t("Naming the property", "说出性质"),
       explanation: t(
-        "Each property has a name: identity ($A \\cup \\varnothing = A$), domination ($A \\cup U = U$), idempotence ($A \\cup A = A$), complement ($A \\cup A^{c} = U$), double complement ($(A^{c})^{c} = A$) and absorption ($A \\cup (A \\cap B) = A$).",
-        "每条性质都有名称：同一律（$A \\cup \\varnothing = A$）、零律（$A \\cup U = U$）、幂等律（$A \\cup A = A$）、互补律（$A \\cup A^{c} = U$）、双重补律（$(A^{c})^{c} = A$）、吸收律（$A \\cup (A \\cap B) = A$）。",
+        "Knowing the names of the standard set laws lets you justify each step of a simplification, just as in algebra. Each property has a name: identity ($A \\cup \\varnothing = A$), domination ($A \\cup U = U$), idempotence ($A \\cup A = A$), complement ($A \\cup A^{c} = U$), double complement ($(A^{c})^{c} = A$) and absorption ($A \\cup (A \\cap B) = A$).",
+        "知道标准集合运算律的名称，就能像在代数中一样为化简的每一步说明理由。每条性质都有名称：同一律（$A \\cup \\varnothing = A$）、零律（$A \\cup U = U$）、幂等律（$A \\cup A = A$）、互补律（$A \\cup A^{c} = U$）、双重补律（$(A^{c})^{c} = A$）、吸收律（$A \\cup (A \\cap B) = A$）。",
       ),
       generate(rng) {
         const id = rng.pick(identities.filter((i) => i.name.en !== "Difference"));
@@ -919,8 +919,8 @@ export const deMorgansLawsForSets: TopicDef = {
       id: "rewriting-complements-of-set-expressions",
       title: t("Rewriting complements", "改写补集"),
       explanation: t(
-        "Apply De Morgan's laws repeatedly to push a complement inward, and cancel double complements: $(A \\cap (B \\cup C^{c}))^{c} = A^{c} \\cup (B^{c} \\cap C)$.",
-        "反复应用德摩根律把补集移入，并消去双重补：$(A \\cap (B \\cup C^{c}))^{c} = A^{c} \\cup (B^{c} \\cap C)$。",
+        "De Morgan's laws turn the complement of a union into an intersection of complements and vice versa, so a complement can be pushed onto single sets. Apply De Morgan's laws repeatedly to push a complement inward, and cancel double complements: $(A \\cap (B \\cup C^{c}))^{c} = A^{c} \\cup (B^{c} \\cap C)$.",
+        "德摩根律把并集的补变成补集的交，反之亦然，所以可以把补运算推到单个集合上。反复应用德摩根律把补集移入，并消去双重补：$(A \\cap (B \\cup C^{c}))^{c} = A^{c} \\cup (B^{c} \\cap C)$。",
       ),
       generate(rng) {
         for (;;) {
@@ -986,8 +986,8 @@ export const provingDeMorgansLawsForSets: TopicDef = {
       id: "the-reverse-inclusion",
       title: t("The reverse inclusion", "反方向的包含"),
       explanation: t(
-        "For $A^{c} \\cap B^{c} \\subseteq (A \\cup B)^{c}$: let $x \\in A^{c} \\cap B^{c}$. Then $x \\notin A$ and $x \\notin B$, so $x$ is in neither, that is $x \\notin A \\cup B$. Hence $x \\in (A \\cup B)^{c}$.",
-        "证明 $A^{c} \\cap B^{c} \\subseteq (A \\cup B)^{c}$：设 $x \\in A^{c} \\cap B^{c}$，则 $x \\notin A$ 且 $x \\notin B$，即 $x$ 两个都不在，也就是 $x \\notin A \\cup B$。因此 $x \\in (A \\cup B)^{c}$。",
+        "To prove two sets equal, prove each is a subset of the other, taking an arbitrary element of one and showing it lies in the other. For $A^{c} \\cap B^{c} \\subseteq (A \\cup B)^{c}$: let $x \\in A^{c} \\cap B^{c}$. Then $x \\notin A$ and $x \\notin B$, so $x$ is in neither, that is $x \\notin A \\cup B$. Hence $x \\in (A \\cup B)^{c}$.",
+        "要证明两个集合相等，就证明它们互为子集：任取一个集合中的元素，证明它属于另一个集合。证明 $A^{c} \\cap B^{c} \\subseteq (A \\cup B)^{c}$：设 $x \\in A^{c} \\cap B^{c}$，则 $x \\notin A$ 且 $x \\notin B$，即 $x$ 两个都不在，也就是 $x \\notin A \\cup B$。因此 $x \\in (A \\cup B)^{c}$。",
       ),
       generate(rng) {
         const [x, y, z] = letters(rng);
@@ -1126,8 +1126,8 @@ export const provingDistributivePropertiesOfUnionAndIntersection: TopicDef = {
       id: "distributing-membership-statements",
       title: t("Distributing membership statements", "分配隶属关系命题"),
       explanation: t(
-        "Let $x \\in A \\cap (B \\cup C)$. Then $x \\in A$ and ($x \\in B$ or $x \\in C$). By the distributive law for logic, ($x \\in A$ and $x \\in B$) or ($x \\in A$ and $x \\in C$), so $x \\in (A \\cap B) \\cup (A \\cap C)$.",
-        "设 $x \\in A \\cap (B \\cup C)$，则 $x \\in A$ 且（$x \\in B$ 或 $x \\in C$）。由逻辑的分配律，（$x \\in A$ 且 $x \\in B$）或（$x \\in A$ 且 $x \\in C$），所以 $x \\in (A \\cap B) \\cup (A \\cap C)$。",
+        "Membership in a combination of sets is a logical statement, so the distributive law of logic proves the matching law for sets. Let $x \\in A \\cap (B \\cup C)$. Then $x \\in A$ and ($x \\in B$ or $x \\in C$). By the distributive law for logic, ($x \\in A$ and $x \\in B$) or ($x \\in A$ and $x \\in C$), so $x \\in (A \\cap B) \\cup (A \\cap C)$.",
+        "属于若干集合的组合是一个逻辑命题，所以逻辑的分配律可以证明集合相应的分配律。设 $x \\in A \\cap (B \\cup C)$，则 $x \\in A$ 且（$x \\in B$ 或 $x \\in C$）。由逻辑的分配律，（$x \\in A$ 且 $x \\in B$）或（$x \\in A$ 且 $x \\in C$），所以 $x \\in (A \\cap B) \\cup (A \\cap C)$。",
       ),
       generate(rng) {
         const f = distributiveForm(rng);
@@ -1211,8 +1211,8 @@ export const provingDistributivePropertiesOfTheCartesianProduct: TopicDef = {
       id: "sizes-of-products-of-set-operations",
       title: t("Sizes of products", "积集的元素个数"),
       explanation: t(
-        "$|A \\times B| = |A| \\cdot |B|$, so $|A \\times (B \\cup C)| = |A| \\cdot |B \\cup C|$. By the distributive property this is also $|(A \\times B) \\cup (A \\times C)|$.",
-        "$|A \\times B| = |A| \\cdot |B|$，所以 $|A \\times (B \\cup C)| = |A| \\cdot |B \\cup C|$。由分配律，它也等于 $|(A \\times B) \\cup (A \\times C)|$。",
+        "The size of a Cartesian product is the product of the sizes, so set identities for products become identities of numbers. $|A \\times B| = |A| \\cdot |B|$, so $|A \\times (B \\cup C)| = |A| \\cdot |B \\cup C|$. By the distributive property this is also $|(A \\times B) \\cup (A \\times C)|$.",
+        "笛卡儿积的元素个数等于各集合个数的乘积，所以关于乘积的集合恒等式就变成了数的恒等式。$|A \\times B| = |A| \\cdot |B|$，所以 $|A \\times (B \\cup C)| = |A| \\cdot |B \\cup C|$。由分配律，它也等于 $|(A \\times B) \\cup (A \\times C)|$。",
       ),
       generate(rng) {
         const { A, B, C } = twoSets(rng);
@@ -1240,8 +1240,8 @@ export const provingDistributivePropertiesOfTheCartesianProduct: TopicDef = {
       id: "chasing-ordered-pairs",
       title: t("Chasing ordered pairs", "追踪有序对"),
       explanation: t(
-        "Let $(x, y) \\in A \\times (B \\cup C)$. Then $x \\in A$ and ($y \\in B$ or $y \\in C$). So ($x \\in A$ and $y \\in B$) or ($x \\in A$ and $y \\in C$), that is, $(x, y) \\in A \\times B$ or $(x, y) \\in A \\times C$. Hence $(x, y) \\in (A \\times B) \\cup (A \\times C)$.",
-        "设 $(x, y) \\in A \\times (B \\cup C)$，则 $x \\in A$ 且（$y \\in B$ 或 $y \\in C$）。于是（$x \\in A$ 且 $y \\in B$）或（$x \\in A$ 且 $y \\in C$），即 $(x, y) \\in A \\times B$ 或 $(x, y) \\in A \\times C$。因此 $(x, y) \\in (A \\times B) \\cup (A \\times C)$。",
+        "To prove an identity about products of sets, take an arbitrary ordered pair and follow what its membership says about each coordinate. Let $(x, y) \\in A \\times (B \\cup C)$. Then $x \\in A$ and ($y \\in B$ or $y \\in C$). So ($x \\in A$ and $y \\in B$) or ($x \\in A$ and $y \\in C$), that is, $(x, y) \\in A \\times B$ or $(x, y) \\in A \\times C$. Hence $(x, y) \\in (A \\times B) \\cup (A \\times C)$.",
+        "要证明关于集合乘积的恒等式，任取一个有序对，追踪它的隶属关系对每个坐标意味着什么。设 $(x, y) \\in A \\times (B \\cup C)$，则 $x \\in A$ 且（$y \\in B$ 或 $y \\in C$）。于是（$x \\in A$ 且 $y \\in B$）或（$x \\in A$ 且 $y \\in C$），即 $(x, y) \\in A \\times B$ 或 $(x, y) \\in A \\times C$。因此 $(x, y) \\in (A \\times B) \\cup (A \\times C)$。",
       ),
       generate(rng) {
         const [x, y, z] = rng.shuffle(["p", "q", "r", "s"] as const) as [Var, Var, Var];

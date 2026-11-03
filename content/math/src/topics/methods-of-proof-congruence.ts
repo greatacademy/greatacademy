@@ -60,8 +60,8 @@ export const modularCongruence: TopicDef = {
       id: "checking-a-congruence",
       title: t("Checking a congruence", "检验同余式"),
       explanation: t(
-        "$38 \\equiv 10 \\pmod{7}$ because $38 - 10 = 28 = 7 \\cdot 4$. But $38 \\not\\equiv 11 \\pmod{7}$, since $38 - 11 = 27$ is not a multiple of $7$.",
-        "$38 \\equiv 10 \\pmod{7}$，因为 $38 - 10 = 28 = 7 \\cdot 4$。但 $38 \\not\\equiv 11 \\pmod{7}$，因为 $38 - 11 = 27$ 不是 $7$ 的倍数。",
+        "Two integers are congruent modulo a number exactly when their difference is a whole multiple of that number. $38 \\equiv 10 \\pmod{7}$ because $38 - 10 = 28 = 7 \\cdot 4$. But $38 \\not\\equiv 11 \\pmod{7}$, since $38 - 11 = 27$ is not a multiple of $7$.",
+        "两个整数模某个数同余，当且仅当它们的差是这个数的倍数。$38 \\equiv 10 \\pmod{7}$，因为 $38 - 10 = 28 = 7 \\cdot 4$。但 $38 \\not\\equiv 11 \\pmod{7}$，因为 $38 - 11 = 27$ 不是 $7$ 的倍数。",
       ),
       generate(rng) {
         const n = rng.int(3, 15);
@@ -84,8 +84,8 @@ export const modularCongruence: TopicDef = {
       id: "finding-congruent-integers",
       title: t("Finding congruent integers", "找出同余的整数"),
       explanation: t(
-        "The integers congruent to $5$ modulo $8$ are $\\dots, -11, -3, 5, 13, 21, \\dots$: add or subtract multiples of $8$.",
-        "模 $8$ 与 $5$ 同余的整数是 $\\dots, -11, -3, 5, 13, 21, \\dots$：加上或减去 $8$ 的倍数即可。",
+        "Adding or subtracting the modulus does not change the remainder, so the congruent integers are spaced evenly by the modulus. The integers congruent to $5$ modulo $8$ are $\\dots, -11, -3, 5, 13, 21, \\dots$: add or subtract multiples of $8$.",
+        "加上或减去模不会改变余数，所以同余的整数以模为间隔均匀分布。模 $8$ 与 $5$ 同余的整数是 $\\dots, -11, -3, 5, 13, 21, \\dots$：加上或减去 $8$ 的倍数即可。",
       ),
       generate(rng) {
         const n = rng.int(3, 13);
@@ -124,8 +124,8 @@ export const theAdditionPropertyOfModularArithmetic: TopicDef = {
       id: "adding-congruences",
       title: t("Adding congruences", "同余式相加"),
       explanation: t(
-        "If $a \\equiv 4 \\pmod{9}$ and $b \\equiv 7 \\pmod{9}$, then $a + b \\equiv 11 \\equiv 2 \\pmod{9}$ and $a - b \\equiv -3 \\equiv 6 \\pmod{9}$.",
-        "若 $a \\equiv 4 \\pmod{9}$ 且 $b \\equiv 7 \\pmod{9}$，则 $a + b \\equiv 11 \\equiv 2 \\pmod{9}$，$a - b \\equiv -3 \\equiv 6 \\pmod{9}$。",
+        "Congruences can be added and subtracted like equations, and the result can then be reduced to a remainder in the usual range. If $a \\equiv 4 \\pmod{9}$ and $b \\equiv 7 \\pmod{9}$, then $a + b \\equiv 11 \\equiv 2 \\pmod{9}$ and $a - b \\equiv -3 \\equiv 6 \\pmod{9}$.",
+        "同余式可以像等式一样相加和相减，然后再把结果约化到通常范围内的余数。若 $a \\equiv 4 \\pmod{9}$ 且 $b \\equiv 7 \\pmod{9}$，则 $a + b \\equiv 11 \\equiv 2 \\pmod{9}$，$a - b \\equiv -3 \\equiv 6 \\pmod{9}$。",
       ),
       generate(rng) {
         const n = rng.int(4, 13);
@@ -217,8 +217,8 @@ export const modularResidues: TopicDef = {
       id: "counting-integers-in-a-residue-class",
       title: t("Counting integers in a residue class", "统计剩余类中的整数"),
       explanation: t(
-        "How many integers from $1$ to $50$ are $\\equiv 3 \\pmod{7}$? They are $3, 10, \\dots, 45$, that is $3 + 7k$ for $k = 0, \\dots, 6$: seven of them.",
-        "从 $1$ 到 $50$ 中有多少个整数 $\\equiv 3 \\pmod{7}$？它们是 $3, 10, \\dots, 45$，即 $3 + 7k$，$k = 0, \\dots, 6$：共七个。",
+        "The members of a residue class form an arithmetic progression, so count them by finding the first and last terms in the range. How many integers from $1$ to $50$ are $\\equiv 3 \\pmod{7}$? They are $3, 10, \\dots, 45$, that is $3 + 7k$ for $k = 0, \\dots, 6$: seven of them.",
+        "一个剩余类中的元素构成等差数列，所以通过找出范围内的首项和末项来计数。从 $1$ 到 $50$ 中有多少个整数 $\\equiv 3 \\pmod{7}$？它们是 $3, 10, \\dots, 45$，即 $3 + 7k$，$k = 0, \\dots, 6$：共七个。",
       ),
       generate(rng) {
         const n = rng.int(3, 12);
@@ -260,8 +260,8 @@ export const theMultiplicationPropertiesOfModularArithmetic: TopicDef = {
       id: "reducing-products",
       title: t("Reducing products", "约化乘积"),
       explanation: t(
-        "$123 \\cdot 456 \\pmod{10}$: $123 \\equiv 3$ and $456 \\equiv 6$, so the product is $\\equiv 18 \\equiv 8 \\pmod{10}$.",
-        "$123 \\cdot 456 \\pmod{10}$：$123 \\equiv 3$，$456 \\equiv 6$，所以乘积 $\\equiv 18 \\equiv 8 \\pmod{10}$。",
+        "Congruences can be multiplied, so reduce each factor first and multiply the small remainders instead of the large numbers. $123 \\cdot 456 \\pmod{10}$: $123 \\equiv 3$ and $456 \\equiv 6$, so the product is $\\equiv 18 \\equiv 8 \\pmod{10}$.",
+        "同余式可以相乘，所以先约化每个因数，再把小的余数相乘，而不是乘大数。$123 \\cdot 456 \\pmod{10}$：$123 \\equiv 3$，$456 \\equiv 6$，所以乘积 $\\equiv 18 \\equiv 8 \\pmod{10}$。",
       ),
       generate(rng) {
         const n = rng.int(3, 13);
@@ -285,8 +285,8 @@ export const theMultiplicationPropertiesOfModularArithmetic: TopicDef = {
       id: "reducing-powers",
       title: t("Reducing powers", "约化幂"),
       explanation: t(
-        "To find $2^{100} \\bmod 7$: $2^3 = 8 \\equiv 1 \\pmod{7}$, so $2^{100} = (2^3)^{33} \\cdot 2 \\equiv 1^{33} \\cdot 2 = 2 \\pmod{7}$. Look for a power that is $\\equiv 1$ (or $\\equiv -1$).",
-        "求 $2^{100} \\bmod 7$：$2^3 = 8 \\equiv 1 \\pmod{7}$，所以 $2^{100} = (2^3)^{33} \\cdot 2 \\equiv 1^{33} \\cdot 2 = 2 \\pmod{7}$。寻找 $\\equiv 1$（或 $\\equiv -1$）的幂。",
+        "Look for a small power that is congruent to one, then split the exponent into multiples of it plus a remainder. To find $2^{100} \\bmod 7$: $2^3 = 8 \\equiv 1 \\pmod{7}$, so $2^{100} = (2^3)^{33} \\cdot 2 \\equiv 1^{33} \\cdot 2 = 2 \\pmod{7}$. Look for a power that is $\\equiv 1$ (or $\\equiv -1$).",
+        "寻找一个同余于 1 的小幂，再把指数分成它的倍数加上余数。求 $2^{100} \\bmod 7$：$2^3 = 8 \\equiv 1 \\pmod{7}$，所以 $2^{100} = (2^3)^{33} \\cdot 2 \\equiv 1^{33} \\cdot 2 = 2 \\pmod{7}$。寻找 $\\equiv 1$（或 $\\equiv -1$）的幂。",
       ),
       generate(rng) {
         let n: number;
@@ -330,8 +330,8 @@ export const theDivisionPropertiesOfModularArithmetic: TopicDef = {
       id: "the-modulus-after-cancelling",
       title: t("The modulus after cancelling", "约去后的模"),
       explanation: t(
-        "From $6a \\equiv 6b \\pmod{15}$: $\\gcd(6, 15) = 3$, so $a \\equiv b \\pmod{5}$. Dividing by $6$ also divides the modulus by the common factor $3$.",
-        "由 $6a \\equiv 6b \\pmod{15}$：$\\gcd(6, 15) = 3$，所以 $a \\equiv b \\pmod{5}$。两边除以 $6$ 时，模也要除以公因数 $3$。",
+        "Dividing a congruence by a common factor is allowed only if the modulus is divided by its gcd with that factor. From $6a \\equiv 6b \\pmod{15}$: $\\gcd(6, 15) = 3$, so $a \\equiv b \\pmod{5}$. Dividing by $6$ also divides the modulus by the common factor $3$.",
+        "只有把模也除以它与该因数的最大公因数，才可以把同余式除以这个公因数。由 $6a \\equiv 6b \\pmod{15}$：$\\gcd(6, 15) = 3$，所以 $a \\equiv b \\pmod{5}$。两边除以 $6$ 时，模也要除以公因数 $3$。",
       ),
       generate(rng) {
         const c = rng.int(2, 15);
@@ -362,8 +362,8 @@ export const theDivisionPropertiesOfModularArithmetic: TopicDef = {
       id: "when-cancellation-is-valid",
       title: t("When cancellation is valid", "何时可以约去"),
       explanation: t(
-        "$4 \\cdot 2 \\equiv 4 \\cdot 5 \\pmod{12}$, but $2 \\not\\equiv 5 \\pmod{12}$: cancelling $4$ fails because $\\gcd(4, 12) \\ne 1$. Cancelling $c$ is valid exactly when $\\gcd(c, n) = 1$.",
-        "$4 \\cdot 2 \\equiv 4 \\cdot 5 \\pmod{12}$，但 $2 \\not\\equiv 5 \\pmod{12}$：约去 $4$ 失败，因为 $\\gcd(4, 12) \\ne 1$。当且仅当 $\\gcd(c, n) = 1$ 时可以约去 $c$。",
+        "A factor can be cancelled from both sides without changing the modulus only when it shares no common factor with the modulus. $4 \\cdot 2 \\equiv 4 \\cdot 5 \\pmod{12}$, but $2 \\not\\equiv 5 \\pmod{12}$: cancelling $4$ fails because $\\gcd(4, 12) \\ne 1$. Cancelling $c$ is valid exactly when $\\gcd(c, n) = 1$.",
+        "只有当一个因数与模没有公因数时，才能在不改变模的情况下从两边约去它。$4 \\cdot 2 \\equiv 4 \\cdot 5 \\pmod{12}$，但 $2 \\not\\equiv 5 \\pmod{12}$：约去 $4$ 失败，因为 $\\gcd(4, 12) \\ne 1$。当且仅当 $\\gcd(c, n) = 1$ 时可以约去 $c$。",
       ),
       generate(rng) {
         const c = rng.int(2, 12);
@@ -410,8 +410,8 @@ export const provingPropertiesOfModularCongruence: TopicDef = {
       id: "combining-the-defining-equations",
       title: t("Combining the defining equations", "组合定义等式"),
       explanation: t(
-        "To prove that $a \\equiv b$ and $c \\equiv d \\pmod{6}$ imply $a + c \\equiv b + d \\pmod{6}$: write $a - b = 6k$ and $c - d = 6l$. Then $(a + c) - (b + d) = 6k + 6l = 6(k + l)$.",
-        "证明 $a \\equiv b$ 且 $c \\equiv d \\pmod{6}$ 推出 $a + c \\equiv b + d \\pmod{6}$：写 $a - b = 6k$，$c - d = 6l$。则 $(a + c) - (b + d) = 6k + 6l = 6(k + l)$。",
+        "Each congruence means a difference is a multiple of the modulus, so combine those equations to show the new difference is a multiple too. To prove that $a \\equiv b$ and $c \\equiv d \\pmod{6}$ imply $a + c \\equiv b + d \\pmod{6}$: write $a - b = 6k$ and $c - d = 6l$. Then $(a + c) - (b + d) = 6k + 6l = 6(k + l)$.",
+        "每个同余式都意味着某个差是模的倍数，所以把这些等式组合起来，证明新的差也是模的倍数。证明 $a \\equiv b$ 且 $c \\equiv d \\pmod{6}$ 推出 $a + c \\equiv b + d \\pmod{6}$：写 $a - b = 6k$，$c - d = 6l$。则 $(a + c) - (b + d) = 6k + 6l = 6(k + l)$。",
       ),
       generate(rng) {
         const n = rng.int(2, 12);
@@ -580,8 +580,8 @@ export const provingDivisibilityUsingCongruence: TopicDef = {
       id: "checking-residue-classes",
       title: t("Checking residue classes", "逐一检验剩余类"),
       explanation: t(
-        "To prove $3 \\mid n^3 - n$, check $n \\equiv 0, 1, 2 \\pmod{3}$: $0 - 0 = 0$, $1 - 1 = 0$, $8 - 2 = 6 \\equiv 0$. Every case gives $0$, so $3$ always divides $n^3 - n$.",
-        "证明 $3 \\mid n^3 - n$：检验 $n \\equiv 0, 1, 2 \\pmod{3}$：$0 - 0 = 0$，$1 - 1 = 0$，$8 - 2 = 6 \\equiv 0$。每种情况都得 $0$，所以 $3$ 总整除 $n^3 - n$。",
+        "Every integer falls into one of finitely many residue classes, so checking one representative from each class covers all integers. To prove $3 \\mid n^3 - n$, check $n \\equiv 0, 1, 2 \\pmod{3}$: $0 - 0 = 0$, $1 - 1 = 0$, $8 - 2 = 6 \\equiv 0$. Every case gives $0$, so $3$ always divides $n^3 - n$.",
+        "每个整数都属于有限个剩余类之一，所以从每类中检查一个代表就覆盖了所有整数。证明 $3 \\mid n^3 - n$：检验 $n \\equiv 0, 1, 2 \\pmod{3}$：$0 - 0 = 0$，$1 - 1 = 0$，$8 - 2 = 6 \\equiv 0$。每种情况都得 $0$，所以 $3$ 总整除 $n^3 - n$。",
       ),
       generate(rng) {
         const m = rng.int(3, 9);
@@ -609,8 +609,8 @@ export const provingDivisibilityUsingCongruence: TopicDef = {
       id: "digit-tests-for-divisibility",
       title: t("Digit tests", "数字判别法"),
       explanation: t(
-        "Since $10 \\equiv 1 \\pmod{9}$, a number is congruent to its digit sum modulo $9$. Since $10 \\equiv -1 \\pmod{11}$, $d_k \\cdots d_1 d_0 \\equiv d_0 - d_1 + d_2 - \\cdots \\pmod{11}$. For $8371$: $1 - 7 + 3 - 8 = -11 \\equiv 0$, so $11 \\mid 8371$.",
-        "因为 $10 \\equiv 1 \\pmod{9}$，一个数模 $9$ 与其各位数字之和同余。因为 $10 \\equiv -1 \\pmod{11}$，$d_k \\cdots d_1 d_0 \\equiv d_0 - d_1 + d_2 - \\cdots \\pmod{11}$。对 $8371$：$1 - 7 + 3 - 8 = -11 \\equiv 0$，所以 $11 \\mid 8371$。",
+        "Ten has a simple remainder modulo nine and eleven, so a number reduces to a simple combination of its digits. Since $10 \\equiv 1 \\pmod{9}$, a number is congruent to its digit sum modulo $9$. Since $10 \\equiv -1 \\pmod{11}$, $d_k \\cdots d_1 d_0 \\equiv d_0 - d_1 + d_2 - \\cdots \\pmod{11}$. For $8371$: $1 - 7 + 3 - 8 = -11 \\equiv 0$, so $11 \\mid 8371$.",
+        "10 模 9 和模 11 的余数都很简单，所以一个数可以约化为其各位数字的简单组合。因为 $10 \\equiv 1 \\pmod{9}$，一个数模 $9$ 与其各位数字之和同余。因为 $10 \\equiv -1 \\pmod{11}$，$d_k \\cdots d_1 d_0 \\equiv d_0 - d_1 + d_2 - \\cdots \\pmod{11}$。对 $8371$：$1 - 7 + 3 - 8 = -11 \\equiv 0$，所以 $11 \\mid 8371$。",
       ),
       generate(rng) {
         const m = rng.pick([3, 9, 11]);
@@ -681,8 +681,8 @@ export const provingCongruenceByContrapositive: TopicDef = {
       id: "finding-the-residues-that-satisfy-a-congruence",
       title: t("Residues satisfying a congruence", "满足同余式的剩余"),
       explanation: t(
-        "To prove “if $n^2 \\not\\equiv 4 \\pmod{5}$, then $n \\not\\equiv 2$ and $n \\not\\equiv 3 \\pmod{5}$”, first find which residues satisfy $n^2 \\equiv 4 \\pmod{5}$: squaring $0, 1, 2, 3, 4$ gives $0, 1, 4, 4, 1$, so exactly $n \\equiv 2, 3$.",
-        "要证明“若 $n^2 \\not\\equiv 4 \\pmod{5}$，则 $n \\not\\equiv 2$ 且 $n \\not\\equiv 3 \\pmod{5}$”，先找出满足 $n^2 \\equiv 4 \\pmod{5}$ 的剩余：$0, 1, 2, 3, 4$ 的平方为 $0, 1, 4, 4, 1$，所以恰好是 $n \\equiv 2, 3$。",
+        "To see which residues satisfy a congruence, test each residue class in turn, since there are only finitely many. To prove “if $n^2 \\not\\equiv 4 \\pmod{5}$, then $n \\not\\equiv 2$ and $n \\not\\equiv 3 \\pmod{5}$”, first find which residues satisfy $n^2 \\equiv 4 \\pmod{5}$: squaring $0, 1, 2, 3, 4$ gives $0, 1, 4, 4, 1$, so exactly $n \\equiv 2, 3$.",
+        "要知道哪些余数满足一个同余式，逐个检验每个剩余类，因为只有有限个。要证明“若 $n^2 \\not\\equiv 4 \\pmod{5}$，则 $n \\not\\equiv 2$ 且 $n \\not\\equiv 3 \\pmod{5}$”，先找出满足 $n^2 \\equiv 4 \\pmod{5}$ 的剩余：$0, 1, 2, 3, 4$ 的平方为 $0, 1, 4, 4, 1$，所以恰好是 $n \\equiv 2, 3$。",
       ),
       generate(rng) {
         const m = rng.int(5, 16);
@@ -724,8 +724,8 @@ export const additiveInversesModuloN: TopicDef = {
       id: "finding-additive-inverses",
       title: t("Finding additive inverses", "求加法逆元"),
       explanation: t(
-        "The additive inverse of $23$ modulo $9$: $23 \\equiv 5$, and $5 + 4 = 9 \\equiv 0$, so it is $4$.",
-        "$23$ 模 $9$ 的加法逆元：$23 \\equiv 5$，而 $5 + 4 = 9 \\equiv 0$，所以是 $4$。",
+        "The additive inverse is what you add to get a multiple of the modulus, which is the modulus minus the reduced number. The additive inverse of $23$ modulo $9$: $23 \\equiv 5$, and $5 + 4 = 9 \\equiv 0$, so it is $4$.",
+        "加法逆元是加上之后得到模的倍数的那个数，即模减去约化后的数。$23$ 模 $9$ 的加法逆元：$23 \\equiv 5$，而 $5 + 4 = 9 \\equiv 0$，所以是 $4$。",
       ),
       generate(rng) {
         const n = rng.int(4, 30);
@@ -749,8 +749,8 @@ export const additiveInversesModuloN: TopicDef = {
       id: "solving-additive-congruences",
       title: t("Solving x + a ≡ b", "解 x + a ≡ b"),
       explanation: t(
-        "Add the additive inverse of $a$ to both sides: $x + 8 \\equiv 3 \\pmod{11}$ gives $x \\equiv 3 - 8 = -5 \\equiv 6 \\pmod{11}$.",
-        "两边加上 $a$ 的加法逆元：$x + 8 \\equiv 3 \\pmod{11}$ 得 $x \\equiv 3 - 8 = -5 \\equiv 6 \\pmod{11}$。",
+        "Adding the same number to both sides keeps a congruence true, so subtracting the constant isolates the unknown. Add the additive inverse of $a$ to both sides: $x + 8 \\equiv 3 \\pmod{11}$ gives $x \\equiv 3 - 8 = -5 \\equiv 6 \\pmod{11}$.",
+        "两边加上同一个数，同余式仍然成立，所以减去常数就能把未知数单独分离出来。两边加上 $a$ 的加法逆元：$x + 8 \\equiv 3 \\pmod{11}$ 得 $x \\equiv 3 - 8 = -5 \\equiv 6 \\pmod{11}$。",
       ),
       generate(rng) {
         const n = rng.int(4, 25);
@@ -791,8 +791,8 @@ export const multiplicativeInversesModuloN: TopicDef = {
       id: "finding-multiplicative-inverses",
       title: t("Finding multiplicative inverses", "求乘法逆元"),
       explanation: t(
-        "The inverse of $7$ modulo $26$: the extended Euclidean algorithm gives $7 \\cdot (-11) + 26 \\cdot 3 = 1$, so $7^{-1} \\equiv -11 \\equiv 15 \\pmod{26}$. Check: $7 \\cdot 15 = 105 = 4 \\cdot 26 + 1$.",
-        "$7$ 模 $26$ 的逆元：扩展欧几里得算法给出 $7 \\cdot (-11) + 26 \\cdot 3 = 1$，所以 $7^{-1} \\equiv -11 \\equiv 15 \\pmod{26}$。验证：$7 \\cdot 15 = 105 = 4 \\cdot 26 + 1$。",
+        "An inverse exists when the number and the modulus are coprime, and the extended Euclidean algorithm finds it from a Bézout identity. The inverse of $7$ modulo $26$: the extended Euclidean algorithm gives $7 \\cdot (-11) + 26 \\cdot 3 = 1$, so $7^{-1} \\equiv -11 \\equiv 15 \\pmod{26}$. Check: $7 \\cdot 15 = 105 = 4 \\cdot 26 + 1$.",
+        "当这个数与模互素时逆元存在，扩展欧几里得算法可以由贝祖等式求出它。$7$ 模 $26$ 的逆元：扩展欧几里得算法给出 $7 \\cdot (-11) + 26 \\cdot 3 = 1$，所以 $7^{-1} \\equiv -11 \\equiv 15 \\pmod{26}$。验证：$7 \\cdot 15 = 105 = 4 \\cdot 26 + 1$。",
       ),
       generate(rng) {
         let n: number;
@@ -862,8 +862,8 @@ export const solvingLinearCongruences: TopicDef = {
       id: "solving-with-an-inverse",
       title: t("Solving with an inverse", "利用逆元求解"),
       explanation: t(
-        "$5x \\equiv 3 \\pmod{12}$: $5^{-1} \\equiv 5$ (since $25 \\equiv 1$), so $x \\equiv 5 \\cdot 3 = 15 \\equiv 3 \\pmod{12}$. Check: $5 \\cdot 3 = 15 \\equiv 3$.",
-        "$5x \\equiv 3 \\pmod{12}$：$5^{-1} \\equiv 5$（因为 $25 \\equiv 1$），所以 $x \\equiv 5 \\cdot 3 = 15 \\equiv 3 \\pmod{12}$。验证：$5 \\cdot 3 = 15 \\equiv 3$。",
+        "Multiplying both sides by the inverse of the coefficient undoes the multiplication, just as dividing does for ordinary equations. $5x \\equiv 3 \\pmod{12}$: $5^{-1} \\equiv 5$ (since $25 \\equiv 1$), so $x \\equiv 5 \\cdot 3 = 15 \\equiv 3 \\pmod{12}$. Check: $5 \\cdot 3 = 15 \\equiv 3$.",
+        "把两边乘以系数的逆元就撤销了乘法，就像普通方程中的除法一样。$5x \\equiv 3 \\pmod{12}$：$5^{-1} \\equiv 5$（因为 $25 \\equiv 1$），所以 $x \\equiv 5 \\cdot 3 = 15 \\equiv 3 \\pmod{12}$。验证：$5 \\cdot 3 = 15 \\equiv 3$。",
       ),
       generate(rng) {
         let n: number;
@@ -893,8 +893,8 @@ export const solvingLinearCongruences: TopicDef = {
       id: "counting-solutions-of-a-linear-congruence",
       title: t("Counting solutions", "统计解的个数"),
       explanation: t(
-        "$6x \\equiv 9 \\pmod{15}$: $\\gcd(6, 15) = 3$ divides $9$, so there are $3$ solutions modulo $15$. $6x \\equiv 4 \\pmod{15}$ has none, since $3 \\nmid 4$.",
-        "$6x \\equiv 9 \\pmod{15}$：$\\gcd(6, 15) = 3$ 整除 $9$，所以模 $15$ 有 $3$ 个解。$6x \\equiv 4 \\pmod{15}$ 无解，因为 $3 \\nmid 4$。",
+        "A linear congruence has solutions only when the gcd of the coefficient and the modulus divides the constant, and then it has exactly that many. $6x \\equiv 9 \\pmod{15}$: $\\gcd(6, 15) = 3$ divides $9$, so there are $3$ solutions modulo $15$. $6x \\equiv 4 \\pmod{15}$ has none, since $3 \\nmid 4$.",
+        "线性同余式只有在系数与模的最大公因数整除常数时才有解，而且这时恰好有那么多个解。$6x \\equiv 9 \\pmod{15}$：$\\gcd(6, 15) = 3$ 整除 $9$，所以模 $15$ 有 $3$ 个解。$6x \\equiv 4 \\pmod{15}$ 无解，因为 $3 \\nmid 4$。",
       ),
       generate(rng) {
         const n = rng.int(6, 36);
@@ -948,8 +948,8 @@ export const solvingAdvancedLinearCongruences: TopicDef = {
       id: "listing-all-solutions",
       title: t("Listing all solutions", "列出全部解"),
       explanation: t(
-        "$6x \\equiv 9 \\pmod{15}$: divide by $3$ to get $2x \\equiv 3 \\pmod{5}$, so $x \\equiv 4 \\pmod{5}$. Modulo $15$ the solutions are $4, 9, 14$.",
-        "$6x \\equiv 9 \\pmod{15}$：两边除以 $3$ 得 $2x \\equiv 3 \\pmod{5}$，所以 $x \\equiv 4 \\pmod{5}$。模 $15$ 的解是 $4, 9, 14$。",
+        "Divide everything by the gcd, solve the smaller congruence, and then list its solutions within the original modulus. $6x \\equiv 9 \\pmod{15}$: divide by $3$ to get $2x \\equiv 3 \\pmod{5}$, so $x \\equiv 4 \\pmod{5}$. Modulo $15$ the solutions are $4, 9, 14$.",
+        "把各项都除以最大公因数，解较小的同余式，再在原来的模内列出它的所有解。$6x \\equiv 9 \\pmod{15}$：两边除以 $3$ 得 $2x \\equiv 3 \\pmod{5}$，所以 $x \\equiv 4 \\pmod{5}$。模 $15$ 的解是 $4, 9, 14$。",
       ),
       generate(rng) {
         const d = rng.int(2, 4);
@@ -983,8 +983,8 @@ export const solvingAdvancedLinearCongruences: TopicDef = {
       id: "reducing-the-coefficients-first",
       title: t("Reducing the coefficients first", "先约化系数"),
       explanation: t(
-        "$47x \\equiv -13 \\pmod{9}$: reduce first, $47 \\equiv 2$ and $-13 \\equiv 5$, giving $2x \\equiv 5 \\pmod{9}$. Then $2^{-1} \\equiv 5$, so $x \\equiv 25 \\equiv 7 \\pmod{9}$.",
-        "$47x \\equiv -13 \\pmod{9}$：先约化，$47 \\equiv 2$，$-13 \\equiv 5$，得 $2x \\equiv 5 \\pmod{9}$。而 $2^{-1} \\equiv 5$，所以 $x \\equiv 25 \\equiv 7 \\pmod{9}$。",
+        "Replacing every number by its remainder first keeps the arithmetic small and does not change the solutions. $47x \\equiv -13 \\pmod{9}$: reduce first, $47 \\equiv 2$ and $-13 \\equiv 5$, giving $2x \\equiv 5 \\pmod{9}$. Then $2^{-1} \\equiv 5$, so $x \\equiv 25 \\equiv 7 \\pmod{9}$.",
+        "先把每个数换成它的余数，可以让计算保持简单，而且不改变解。$47x \\equiv -13 \\pmod{9}$：先约化，$47 \\equiv 2$，$-13 \\equiv 5$，得 $2x \\equiv 5 \\pmod{9}$。而 $2^{-1} \\equiv 5$，所以 $x \\equiv 25 \\equiv 7 \\pmod{9}$。",
       ),
       generate(rng) {
         let n: number;
@@ -1031,8 +1031,8 @@ export const theChineseRemainderTheorem: TopicDef = {
       id: "solving-two-congruences",
       title: t("Two congruences", "两个同余式"),
       explanation: t(
-        "$x \\equiv 2 \\pmod{5}$, $x \\equiv 3 \\pmod{7}$: write $x = 2 + 5k$. Then $2 + 5k \\equiv 3 \\pmod{7}$, so $5k \\equiv 1$ and $k \\equiv 3 \\pmod{7}$. So $x = 17$, and all solutions are $x \\equiv 17 \\pmod{35}$.",
-        "$x \\equiv 2 \\pmod{5}$，$x \\equiv 3 \\pmod{7}$：写 $x = 2 + 5k$。则 $2 + 5k \\equiv 3 \\pmod{7}$，所以 $5k \\equiv 1$，$k \\equiv 3 \\pmod{7}$。于是 $x = 17$，全部解为 $x \\equiv 17 \\pmod{35}$。",
+        "Write the general solution of the first congruence with a parameter and substitute it into the second to find the parameter. $x \\equiv 2 \\pmod{5}$, $x \\equiv 3 \\pmod{7}$: write $x = 2 + 5k$. Then $2 + 5k \\equiv 3 \\pmod{7}$, so $5k \\equiv 1$ and $k \\equiv 3 \\pmod{7}$. So $x = 17$, and all solutions are $x \\equiv 17 \\pmod{35}$.",
+        "用一个参数写出第一个同余式的通解，再代入第二个同余式求出这个参数。$x \\equiv 2 \\pmod{5}$，$x \\equiv 3 \\pmod{7}$：写 $x = 2 + 5k$。则 $2 + 5k \\equiv 3 \\pmod{7}$，所以 $5k \\equiv 1$，$k \\equiv 3 \\pmod{7}$。于是 $x = 17$，全部解为 $x \\equiv 17 \\pmod{35}$。",
       ),
       generate(rng) {
         let m: number;
@@ -1063,8 +1063,8 @@ export const theChineseRemainderTheorem: TopicDef = {
       id: "solving-three-congruences",
       title: t("Three congruences", "三个同余式"),
       explanation: t(
-        "$x \\equiv 1 \\pmod{3}$, $x \\equiv 2 \\pmod{4}$, $x \\equiv 3 \\pmod{5}$: the first two give $x \\equiv 10 \\pmod{12}$; then $10 + 12k \\equiv 3 \\pmod{5}$ gives $k \\equiv 4$, so $x = 58$ modulo $60$.",
-        "$x \\equiv 1 \\pmod{3}$，$x \\equiv 2 \\pmod{4}$，$x \\equiv 3 \\pmod{5}$：前两个给出 $x \\equiv 10 \\pmod{12}$；再由 $10 + 12k \\equiv 3 \\pmod{5}$ 得 $k \\equiv 4$，所以模 $60$ 有 $x = 58$。",
+        "Combine the congruences two at a time: solving the first pair gives one congruence, which is then combined with the third. $x \\equiv 1 \\pmod{3}$, $x \\equiv 2 \\pmod{4}$, $x \\equiv 3 \\pmod{5}$: the first two give $x \\equiv 10 \\pmod{12}$; then $10 + 12k \\equiv 3 \\pmod{5}$ gives $k \\equiv 4$, so $x = 58$ modulo $60$.",
+        "把同余式两两合并：解出前两个得到一个同余式，再把它与第三个合并。$x \\equiv 1 \\pmod{3}$，$x \\equiv 2 \\pmod{4}$，$x \\equiv 3 \\pmod{5}$：前两个给出 $x \\equiv 10 \\pmod{12}$；再由 $10 + 12k \\equiv 3 \\pmod{5}$ 得 $k \\equiv 4$，所以模 $60$ 有 $x = 58$。",
       ),
       generate(rng) {
         const [p, q, r] = rng.pick([
@@ -1114,8 +1114,8 @@ export const provingPropertiesOfLinearCongruences: TopicDef = {
       id: "constructing-a-solution-from-bezout",
       title: t("Constructing a solution", "构造解"),
       explanation: t(
-        "Given $7 \\cdot (-2) + 15 \\cdot 1 = 1$, multiply by $4$: $7 \\cdot (-8) + 15 \\cdot 4 = 4$, so $7 \\cdot (-8) \\equiv 4 \\pmod{15}$ and $x = -8 \\equiv 7$ solves $7x \\equiv 4 \\pmod{15}$.",
-        "已知 $7 \\cdot (-2) + 15 \\cdot 1 = 1$，两边乘以 $4$：$7 \\cdot (-8) + 15 \\cdot 4 = 4$，所以 $7 \\cdot (-8) \\equiv 4 \\pmod{15}$，$x = -8 \\equiv 7$ 是 $7x \\equiv 4 \\pmod{15}$ 的解。",
+        "A Bézout identity shows a multiple of the coefficient congruent to one, so scaling it gives a solution of the congruence. Given $7 \\cdot (-2) + 15 \\cdot 1 = 1$, multiply by $4$: $7 \\cdot (-8) + 15 \\cdot 4 = 4$, so $7 \\cdot (-8) \\equiv 4 \\pmod{15}$ and $x = -8 \\equiv 7$ solves $7x \\equiv 4 \\pmod{15}$.",
+        "贝祖等式给出系数的一个同余于 1 的倍数，把它按比例放大就得到同余式的解。已知 $7 \\cdot (-2) + 15 \\cdot 1 = 1$，两边乘以 $4$：$7 \\cdot (-8) + 15 \\cdot 4 = 4$，所以 $7 \\cdot (-8) \\equiv 4 \\pmod{15}$，$x = -8 \\equiv 7$ 是 $7x \\equiv 4 \\pmod{15}$ 的解。",
       ),
       generate(rng) {
         let n: number;
@@ -1146,8 +1146,8 @@ export const provingPropertiesOfLinearCongruences: TopicDef = {
       id: "proving-uniqueness-of-solutions",
       title: t("Proving uniqueness", "证明唯一性"),
       explanation: t(
-        "Suppose $ax \\equiv b$ and $ay \\equiv b \\pmod{n}$ with $\\gcd(a, n) = 1$. Subtracting, $n \\mid a(x - y)$; since $n$ shares no factor with $a$, $n \\mid x - y$, so $x \\equiv y \\pmod{n}$.",
-        "设 $ax \\equiv b$ 且 $ay \\equiv b \\pmod{n}$，$\\gcd(a, n) = 1$。相减得 $n \\mid a(x - y)$；由于 $n$ 与 $a$ 没有公因数，$n \\mid x - y$，所以 $x \\equiv y \\pmod{n}$。",
+        "If two solutions existed, the modulus would divide the coefficient times their difference, and coprimality forces it to divide the difference itself. Suppose $ax \\equiv b$ and $ay \\equiv b \\pmod{n}$ with $\\gcd(a, n) = 1$. Subtracting, $n \\mid a(x - y)$; since $n$ shares no factor with $a$, $n \\mid x - y$, so $x \\equiv y \\pmod{n}$.",
+        "如果存在两个解，模就整除系数乘以它们的差，而互素性迫使模整除这个差本身。设 $ax \\equiv b$ 且 $ay \\equiv b \\pmod{n}$，$\\gcd(a, n) = 1$。相减得 $n \\mid a(x - y)$；由于 $n$ 与 $a$ 没有公因数，$n \\mid x - y$，所以 $x \\equiv y \\pmod{n}$。",
       ),
       generate(rng) {
         const n = rng.int(4, 30);

@@ -106,8 +106,8 @@ export const relationsOnFiniteSets: TopicDef = {
       id: "counting-pairs-in-a-relation",
       title: t("Counting pairs in a relation", "统计关系中的序对"),
       explanation: t(
-        "Let $A = \\{1, 2, 3, 4\\}$ and $R = \\{(a, b) \\in A \\times A : a < b\\}$. Then $R = \\{(1, 2), (1, 3), (1, 4), (2, 3), (2, 4), (3, 4)\\}$ has $6$ pairs.",
-        "设 $A = \\{1, 2, 3, 4\\}$，$R = \\{(a, b) \\in A \\times A : a < b\\}$。则 $R = \\{(1, 2), (1, 3), (1, 4), (2, 3), (2, 4), (3, 4)\\}$，共 $6$ 个序对。",
+        "A relation on a finite set is a set of ordered pairs, so list the pairs that satisfy the condition and count them. Let $A = \\{1, 2, 3, 4\\}$ and $R = \\{(a, b) \\in A \\times A : a < b\\}$. Then $R = \\{(1, 2), (1, 3), (1, 4), (2, 3), (2, 4), (3, 4)\\}$ has $6$ pairs.",
+        "有限集上的关系是有序对的集合，所以列出满足条件的有序对并计数。设 $A = \\{1, 2, 3, 4\\}$，$R = \\{(a, b) \\in A \\times A : a < b\\}$。则 $R = \\{(1, 2), (1, 3), (1, 4), (2, 3), (2, 4), (3, 4)\\}$，共 $6$ 个序对。",
       ),
       generate(rng) {
         const n = rng.int(4, 7);
@@ -135,8 +135,8 @@ export const relationsOnFiniteSets: TopicDef = {
       id: "pairs-in-a-relation",
       title: t("Pairs in a relation", "关系中的序对"),
       explanation: t(
-        "With $A = \\{1, \\dots, 6\\}$ and $a \\mathrel{R} b \\iff a \\mid b$: $(2, 6) \\in R$ because $2 \\mid 6$, but $(6, 2) \\notin R$. The order of a pair matters.",
-        "取 $A = \\{1, \\dots, 6\\}$，$a \\mathrel{R} b \\iff a \\mid b$：$(2, 6) \\in R$，因为 $2 \\mid 6$；但 $(6, 2) \\notin R$。序对的顺序很重要。",
+        "A relation can hold for a pair in one order but not the other, because the first and second positions play different roles. With $A = \\{1, \\dots, 6\\}$ and $a \\mathrel{R} b \\iff a \\mid b$: $(2, 6) \\in R$ because $2 \\mid 6$, but $(6, 2) \\notin R$. The order of a pair matters.",
+        "一个关系可能对某个有序对成立而对反序不成立，因为第一和第二位置的作用不同。取 $A = \\{1, \\dots, 6\\}$，$a \\mathrel{R} b \\iff a \\mid b$：$(2, 6) \\in R$，因为 $2 \\mid 6$；但 $(6, 2) \\notin R$。序对的顺序很重要。",
       ),
       generate(rng) {
         const n = rng.int(5, 8);
@@ -185,8 +185,8 @@ export const relationsOnInfiniteSets: TopicDef = {
       id: "membership-in-relations-on-the-integers",
       title: t("Membership", "属于关系"),
       explanation: t(
-        "On $\\mathbb{Z}$, let $a \\mathrel{R} b \\iff 3 \\mid a - b$. Then $(7, -2) \\in R$ since $7 - (-2) = 9$, but $(7, 2) \\notin R$ since $5$ is not a multiple of $3$.",
-        "在 $\\mathbb{Z}$ 上，令 $a \\mathrel{R} b \\iff 3 \\mid a - b$。则 $(7, -2) \\in R$，因为 $7 - (-2) = 9$；但 $(7, 2) \\notin R$，因为 $5$ 不是 $3$ 的倍数。",
+        "To decide whether a pair belongs to the relation, substitute the two numbers into its defining condition and check it. On $\\mathbb{Z}$, let $a \\mathrel{R} b \\iff 3 \\mid a - b$. Then $(7, -2) \\in R$ since $7 - (-2) = 9$, but $(7, 2) \\notin R$ since $5$ is not a multiple of $3$.",
+        "要判断一个有序对是否属于这个关系，把两个数代入它的定义条件进行检验。在 $\\mathbb{Z}$ 上，令 $a \\mathrel{R} b \\iff 3 \\mid a - b$。则 $(7, -2) \\in R$，因为 $7 - (-2) = 9$；但 $(7, 2) \\notin R$，因为 $5$ 不是 $3$ 的倍数。",
       ),
       generate(rng) {
         const k = rng.int(2, 7);
@@ -223,8 +223,8 @@ export const relationsOnInfiniteSets: TopicDef = {
       id: "counting-related-elements",
       title: t("Counting related elements", "统计相关元素"),
       explanation: t(
-        "On $\\mathbb{Z}$, let $a \\mathrel{R} b \\iff |a - b| \\le 2$. The integers $b$ with $5 \\mathrel{R} b$ are $3, 4, 5, 6, 7$: five of them.",
-        "在 $\\mathbb{Z}$ 上，令 $a \\mathrel{R} b \\iff |a - b| \\le 2$。满足 $5 \\mathrel{R} b$ 的整数 $b$ 是 $3, 4, 5, 6, 7$：共五个。",
+        "Fix the first element and find every second element that satisfies the condition with it. On $\\mathbb{Z}$, let $a \\mathrel{R} b \\iff |a - b| \\le 2$. The integers $b$ with $5 \\mathrel{R} b$ are $3, 4, 5, 6, 7$: five of them.",
+        "固定第一个元素，找出与它满足条件的所有第二个元素。在 $\\mathbb{Z}$ 上，令 $a \\mathrel{R} b \\iff |a - b| \\le 2$。满足 $5 \\mathrel{R} b$ 的整数 $b$ 是 $3, 4, 5, 6, 7$：共五个。",
       ),
       generate(rng) {
         const a = rng.int(-9, 12);
@@ -273,8 +273,8 @@ export const theDomainAndRangeOfARelation: TopicDef = {
       id: "domain-and-range-of-a-finite-relation",
       title: t("Finite relations", "有限关系"),
       explanation: t(
-        "For $R = \\{(1, 4), (2, 4), (2, 5), (6, 1)\\}$: $\\operatorname{dom} R = \\{1, 2, 6\\}$ and $\\operatorname{ran} R = \\{1, 4, 5\\}$.",
-        "对 $R = \\{(1, 4), (2, 4), (2, 5), (6, 1)\\}$：$\\operatorname{dom} R = \\{1, 2, 6\\}$，$\\operatorname{ran} R = \\{1, 4, 5\\}$。",
+        "The domain collects the first entries of the pairs and the range collects the second entries, each listed once. For $R = \\{(1, 4), (2, 4), (2, 5), (6, 1)\\}$: $\\operatorname{dom} R = \\{1, 2, 6\\}$ and $\\operatorname{ran} R = \\{1, 4, 5\\}$.",
+        "定义域收集各有序对的第一个元素，值域收集第二个元素，每个只列一次。对 $R = \\{(1, 4), (2, 4), (2, 5), (6, 1)\\}$：$\\operatorname{dom} R = \\{1, 2, 6\\}$，$\\operatorname{ran} R = \\{1, 4, 5\\}$。",
       ),
       generate(rng) {
         const size = rng.int(3, 6);
@@ -300,8 +300,8 @@ export const theDomainAndRangeOfARelation: TopicDef = {
       id: "domain-and-range-of-a-relation-on-the-reals",
       title: t("Relations on ℝ", "ℝ 上的关系"),
       explanation: t(
-        "For $R = \\{(x, y) \\in \\mathbb{R}^2 : y^2 = x - 3\\}$: a real $y$ exists exactly when $x \\ge 3$, so $\\operatorname{dom} R = [3, \\infty)$, and every real $y$ occurs, so $\\operatorname{ran} R = \\mathbb{R}$.",
-        "对 $R = \\{(x, y) \\in \\mathbb{R}^2 : y^2 = x - 3\\}$：当且仅当 $x \\ge 3$ 时存在实数 $y$，所以 $\\operatorname{dom} R = [3, \\infty)$；每个实数 $y$ 都出现，所以 $\\operatorname{ran} R = \\mathbb{R}$。",
+        "An input is in the domain when some output satisfies the equation with it, so solve for the outputs and see when they exist. For $R = \\{(x, y) \\in \\mathbb{R}^2 : y^2 = x - 3\\}$: a real $y$ exists exactly when $x \\ge 3$, so $\\operatorname{dom} R = [3, \\infty)$, and every real $y$ occurs, so $\\operatorname{ran} R = \\mathbb{R}$.",
+        "如果存在某个输出与一个输入满足方程，这个输入就在定义域中，所以要解出输出，看它何时存在。对 $R = \\{(x, y) \\in \\mathbb{R}^2 : y^2 = x - 3\\}$：当且仅当 $x \\ge 3$ 时存在实数 $y$，所以 $\\operatorname{dom} R = [3, \\infty)$；每个实数 $y$ 都出现，所以 $\\operatorname{ran} R = \\mathbb{R}$。",
       ),
       generate(rng) {
         const c = rng.int(1, 9);
@@ -455,8 +455,8 @@ export const operationsOnRelations: TopicDef = {
       id: "the-inverse-relation",
       title: t("The inverse relation", "逆关系"),
       explanation: t(
-        "Reverse every pair: if $R = \\{(1, 3), (2, 3), (4, 1)\\}$, then $R^{-1} = \\{(3, 1), (3, 2), (1, 4)\\}$. The domain of $R^{-1}$ is the range of $R$.",
-        "把每个序对反过来：若 $R = \\{(1, 3), (2, 3), (4, 1)\\}$，则 $R^{-1} = \\{(3, 1), (3, 2), (1, 4)\\}$。$R^{-1}$ 的定义域就是 $R$ 的值域。",
+        "The inverse relation reverses the direction of every pair, so its domain and range are the range and domain of the original. Reverse every pair: if $R = \\{(1, 3), (2, 3), (4, 1)\\}$, then $R^{-1} = \\{(3, 1), (3, 2), (1, 4)\\}$. The domain of $R^{-1}$ is the range of $R$.",
+        "逆关系把每个有序对的方向反过来，所以它的定义域和值域分别是原关系的值域和定义域。把每个序对反过来：若 $R = \\{(1, 3), (2, 3), (4, 1)\\}$，则 $R^{-1} = \\{(3, 1), (3, 2), (1, 4)\\}$。$R^{-1}$ 的定义域就是 $R$ 的值域。",
       ),
       generate(rng) {
         let r: Pair[];
@@ -479,8 +479,8 @@ export const operationsOnRelations: TopicDef = {
       id: "composing-relations",
       title: t("Composing relations", "关系的复合"),
       explanation: t(
-        "With $R = \\{(1, 2), (1, 3), (2, 2)\\}$ and $S = \\{(2, 5), (3, 6)\\}$: $1 \\to 2 \\to 5$, $1 \\to 3 \\to 6$ and $2 \\to 2 \\to 5$, so $S \\circ R = \\{(1, 5), (1, 6), (2, 5)\\}$.",
-        "取 $R = \\{(1, 2), (1, 3), (2, 2)\\}$，$S = \\{(2, 5), (3, 6)\\}$：$1 \\to 2 \\to 5$，$1 \\to 3 \\to 6$，$2 \\to 2 \\to 5$，所以 $S \\circ R = \\{(1, 5), (1, 6), (2, 5)\\}$。",
+        "The composition links pairs end to end, relating a first element to a final element whenever some middle element connects them. With $R = \\{(1, 2), (1, 3), (2, 2)\\}$ and $S = \\{(2, 5), (3, 6)\\}$: $1 \\to 2 \\to 5$, $1 \\to 3 \\to 6$ and $2 \\to 2 \\to 5$, so $S \\circ R = \\{(1, 5), (1, 6), (2, 5)\\}$.",
+        "复合把有序对首尾相接，只要有某个中间元素把它们连起来，就把第一个元素与最终元素关联起来。取 $R = \\{(1, 2), (1, 3), (2, 2)\\}$，$S = \\{(2, 5), (3, 6)\\}$：$1 \\to 2 \\to 5$，$1 \\to 3 \\to 6$，$2 \\to 2 \\to 5$，所以 $S \\circ R = \\{(1, 5), (1, 6), (2, 5)\\}$。",
       ),
       generate(rng) {
         let r: Pair[];
@@ -526,8 +526,8 @@ export const nAryRelations: TopicDef = {
       id: "counting-tuples",
       title: t("Counting tuples", "统计元组"),
       explanation: t(
-        "On $A = \\{1, 2, 3, 4\\}$, the ternary relation $\\{(a, b, c) \\in A^3 : a + b = c\\}$ contains $(1, 1, 2), (1, 2, 3), (2, 1, 3), (1, 3, 4), (2, 2, 4), (3, 1, 4)$: six triples.",
-        "在 $A = \\{1, 2, 3, 4\\}$ 上，三元关系 $\\{(a, b, c) \\in A^3 : a + b = c\\}$ 包含 $(1, 1, 2), (1, 2, 3), (2, 1, 3), (1, 3, 4), (2, 2, 4), (3, 1, 4)$：共六个三元组。",
+        "A relation of three places is a set of triples, so list all the triples from the set that satisfy the condition. On $A = \\{1, 2, 3, 4\\}$, the ternary relation $\\{(a, b, c) \\in A^3 : a + b = c\\}$ contains $(1, 1, 2), (1, 2, 3), (2, 1, 3), (1, 3, 4), (2, 2, 4), (3, 1, 4)$: six triples.",
+        "三元关系是三元组的集合，所以列出集合中满足条件的所有三元组。在 $A = \\{1, 2, 3, 4\\}$ 上，三元关系 $\\{(a, b, c) \\in A^3 : a + b = c\\}$ 包含 $(1, 1, 2), (1, 2, 3), (2, 1, 3), (1, 3, 4), (2, 2, 4), (3, 1, 4)$：共六个三元组。",
       ),
       generate(rng) {
         const n = rng.int(3, 7);
@@ -563,8 +563,8 @@ export const nAryRelations: TopicDef = {
       id: "tuples-in-a-relation",
       title: t("Tuples in a relation", "关系中的元组"),
       explanation: t(
-        "Let $R = \\{(x, y, z) \\in \\mathbb{Z}^3 : x + 2y = z\\}$. Then $(3, 1, 5) \\in R$, but $(1, 3, 5) \\notin R$, since $1 + 6 = 7$. Positions matter.",
-        "设 $R = \\{(x, y, z) \\in \\mathbb{Z}^3 : x + 2y = z\\}$。则 $(3, 1, 5) \\in R$，但 $(1, 3, 5) \\notin R$，因为 $1 + 6 = 7$。分量的位置很重要。",
+        "Each position in a tuple has its own role in the condition, so changing the order of the entries can change membership. Let $R = \\{(x, y, z) \\in \\mathbb{Z}^3 : x + 2y = z\\}$. Then $(3, 1, 5) \\in R$, but $(1, 3, 5) \\notin R$, since $1 + 6 = 7$. Positions matter.",
+        "元组中的每个位置在条件中都有自己的作用，所以改变各项的顺序可能会改变隶属关系。设 $R = \\{(x, y, z) \\in \\mathbb{Z}^3 : x + 2y = z\\}$。则 $(3, 1, 5) \\in R$，但 $(1, 3, 5) \\notin R$，因为 $1 + 6 = 7$。分量的位置很重要。",
       ),
       generate(rng) {
         const o = rng.int(1, 3);
@@ -615,8 +615,8 @@ export const functionalRelations: TopicDef = {
       id: "finite-functional-relations",
       title: t("Finite relations", "有限关系"),
       explanation: t(
-        "From $A = \\{1, 2, 3\\}$ to $B = \\{4, 5\\}$: $\\{(1, 4), (2, 4), (3, 5)\\}$ is a function. $\\{(1, 4), (1, 5), (3, 5)\\}$ is not: $1$ has two partners and $2$ has none.",
-        "从 $A = \\{1, 2, 3\\}$ 到 $B = \\{4, 5\\}$：$\\{(1, 4), (2, 4), (3, 5)\\}$ 是函数。$\\{(1, 4), (1, 5), (3, 5)\\}$ 不是：$1$ 有两个对应元素，$2$ 没有。",
+        "A relation is a function when every element of the domain set is related to exactly one element, never none and never two. From $A = \\{1, 2, 3\\}$ to $B = \\{4, 5\\}$: $\\{(1, 4), (2, 4), (3, 5)\\}$ is a function. $\\{(1, 4), (1, 5), (3, 5)\\}$ is not: $1$ has two partners and $2$ has none.",
+        "当定义域集合中的每个元素都恰好与一个元素相关，既不是零个也不是两个时，这个关系就是函数。从 $A = \\{1, 2, 3\\}$ 到 $B = \\{4, 5\\}$：$\\{(1, 4), (2, 4), (3, 5)\\}$ 是函数。$\\{(1, 4), (1, 5), (3, 5)\\}$ 不是：$1$ 有两个对应元素，$2$ 没有。",
       ),
       generate(rng) {
         const m = rng.int(3, 4);
@@ -651,8 +651,8 @@ export const functionalRelations: TopicDef = {
       id: "functional-relations-on-the-reals",
       title: t("Relations on ℝ", "ℝ 上的关系"),
       explanation: t(
-        "$\\{(x, y) : y = x^2\\}$ is a function $\\mathbb{R} \\to \\mathbb{R}$. $\\{(x, y) : x = y^2\\}$ is not: $x = 4$ is related to both $2$ and $-2$, and $x = -1$ to nothing.",
-        "$\\{(x, y) : y = x^2\\}$ 是函数 $\\mathbb{R} \\to \\mathbb{R}$。$\\{(x, y) : x = y^2\\}$ 不是：$x = 4$ 同时与 $2$ 和 $-2$ 相关，而 $x = -1$ 不与任何数相关。",
+        "A relation on the reals is a function when each input has exactly one output, which fails if an input has two or none. $\\{(x, y) : y = x^2\\}$ is a function $\\mathbb{R} \\to \\mathbb{R}$. $\\{(x, y) : x = y^2\\}$ is not: $x = 4$ is related to both $2$ and $-2$, and $x = -1$ to nothing.",
+        "实数上的关系是函数，当且仅当每个输入恰好有一个输出；如果某个输入有两个或没有输出，就不是函数。$\\{(x, y) : y = x^2\\}$ 是函数 $\\mathbb{R} \\to \\mathbb{R}$。$\\{(x, y) : x = y^2\\}$ 不是：$x = 4$ 同时与 $2$ 和 $-2$ 相关，而 $x = -1$ 不与任何数相关。",
       ),
       generate(rng) {
         const c = rng.int(1, 9);
@@ -723,8 +723,8 @@ export const reflexiveAndIrreflexiveRelations: TopicDef = {
       id: "reflexivity-of-finite-relations",
       title: t("Finite relations", "有限关系"),
       explanation: t(
-        "On $\\{1, 2, 3\\}$: $\\{(1, 1), (2, 2), (3, 3), (1, 2)\\}$ is reflexive; $\\{(1, 2), (2, 1)\\}$ is irreflexive; $\\{(1, 1), (1, 2)\\}$ is neither, since it contains $(1, 1)$ but not $(2, 2)$.",
-        "在 $\\{1, 2, 3\\}$ 上：$\\{(1, 1), (2, 2), (3, 3), (1, 2)\\}$ 是自反的；$\\{(1, 2), (2, 1)\\}$ 是反自反的；$\\{(1, 1), (1, 2)\\}$ 两者都不是，因为它含 $(1, 1)$ 却不含 $(2, 2)$。",
+        "A relation is reflexive when every element is related to itself, irreflexive when none is, and neither when only some are. On $\\{1, 2, 3\\}$: $\\{(1, 1), (2, 2), (3, 3), (1, 2)\\}$ is reflexive; $\\{(1, 2), (2, 1)\\}$ is irreflexive; $\\{(1, 1), (1, 2)\\}$ is neither, since it contains $(1, 1)$ but not $(2, 2)$.",
+        "当每个元素都与自身相关时，关系是自反的；没有一个与自身相关时是反自反的；只有部分相关时两者都不是。在 $\\{1, 2, 3\\}$ 上：$\\{(1, 1), (2, 2), (3, 3), (1, 2)\\}$ 是自反的；$\\{(1, 2), (2, 1)\\}$ 是反自反的；$\\{(1, 1), (1, 2)\\}$ 两者都不是，因为它含 $(1, 1)$ 却不含 $(2, 2)$。",
       ),
       generate(rng) {
         const n = rng.int(3, 4);
@@ -753,8 +753,8 @@ export const reflexiveAndIrreflexiveRelations: TopicDef = {
       id: "reflexivity-of-relations-on-the-integers",
       title: t("Relations on the integers", "整数上的关系"),
       explanation: t(
-        "On $\\mathbb{Z}$: $a \\le b$ is reflexive; $a < b$ is irreflexive; $ab > 0$ is neither, since $1 \\cdot 1 > 0$ but $0 \\cdot 0 = 0$.",
-        "在 $\\mathbb{Z}$ 上：$a \\le b$ 是自反的；$a < b$ 是反自反的；$ab > 0$ 两者都不是，因为 $1 \\cdot 1 > 0$ 而 $0 \\cdot 0 = 0$。",
+        "Check whether each integer satisfies the condition with itself; one integer that fails rules out reflexivity, and one that succeeds rules out irreflexivity. On $\\mathbb{Z}$: $a \\le b$ is reflexive; $a < b$ is irreflexive; $ab > 0$ is neither, since $1 \\cdot 1 > 0$ but $0 \\cdot 0 = 0$.",
+        "检查每个整数与自身是否满足条件；有一个不满足就排除了自反性，有一个满足就排除了反自反性。在 $\\mathbb{Z}$ 上：$a \\le b$ 是自反的；$a < b$ 是反自反的；$ab > 0$ 两者都不是，因为 $1 \\cdot 1 > 0$ 而 $0 \\cdot 0 = 0$。",
       ),
       generate(rng) {
         const k = rng.int(2, 9);
@@ -964,8 +964,8 @@ export const transitiveRelations: TopicDef = {
       id: "checking-transitivity",
       title: t("Checking transitivity", "检验传递性"),
       explanation: t(
-        "$\\{(1, 2), (2, 3), (1, 3)\\}$ is transitive. $\\{(1, 2), (2, 1)\\}$ is not: $(1, 2)$ and $(2, 1)$ require $(1, 1)$.",
-        "$\\{(1, 2), (2, 3), (1, 3)\\}$ 是传递的。$\\{(1, 2), (2, 1)\\}$ 不是：$(1, 2)$ 与 $(2, 1)$ 要求 $(1, 1)$。",
+        "Transitivity requires that whenever two pairs link end to end, the pair joining the outer elements is also present. $\\{(1, 2), (2, 3), (1, 3)\\}$ is transitive. $\\{(1, 2), (2, 1)\\}$ is not: $(1, 2)$ and $(2, 1)$ require $(1, 1)$.",
+        "传递性要求只要两个有序对首尾相接，连接两端元素的有序对也必须存在。$\\{(1, 2), (2, 3), (1, 3)\\}$ 是传递的。$\\{(1, 2), (2, 1)\\}$ 不是：$(1, 2)$ 与 $(2, 1)$ 要求 $(1, 1)$。",
       ),
       generate(rng) {
         const n = rng.int(3, 4);
@@ -996,8 +996,8 @@ export const transitiveRelations: TopicDef = {
       id: "the-transitive-closure",
       title: t("The transitive closure", "传递闭包"),
       explanation: t(
-        "For $R = \\{(1, 2), (2, 3), (3, 4)\\}$, add $(1, 3)$ and $(2, 4)$, then $(1, 4)$: the transitive closure has $6$ pairs, $3$ more than $R$.",
-        "对 $R = \\{(1, 2), (2, 3), (3, 4)\\}$，补上 $(1, 3)$ 与 $(2, 4)$，再补上 $(1, 4)$：传递闭包有 $6$ 个序对，比 $R$ 多 $3$ 个。",
+        "The transitive closure adds the pairs needed for transitivity, repeating until no chain of pairs is missing its shortcut. For $R = \\{(1, 2), (2, 3), (3, 4)\\}$, add $(1, 3)$ and $(2, 4)$, then $(1, 4)$: the transitive closure has $6$ pairs, $3$ more than $R$.",
+        "传递闭包添加传递性所需的有序对，反复进行，直到每条有序对的链都有对应的捷径。对 $R = \\{(1, 2), (2, 3), (3, 4)\\}$，补上 $(1, 3)$ 与 $(2, 4)$，再补上 $(1, 4)$：传递闭包有 $6$ 个序对，比 $R$ 多 $3$ 个。",
       ),
       generate(rng) {
         const n = rng.int(3, 5);
@@ -1175,8 +1175,8 @@ export const provingARelationIsAnEquivalenceRelation: TopicDef = {
       id: "identities-in-equivalence-proofs",
       title: t("The key identities", "关键恒等式"),
       explanation: t(
-        "Let $a \\sim b \\iff 8 \\mid 3a + 5b$. Reflexive: $3a + 5a = 8a$. Symmetric: $3b + 5a = 8(a + b) - (3a + 5b)$. Transitive: $3a + 5c = (3a + 5b) + (3b + 5c) - 8b$.",
-        "令 $a \\sim b \\iff 8 \\mid 3a + 5b$。自反：$3a + 5a = 8a$。对称：$3b + 5a = 8(a + b) - (3a + 5b)$。传递：$3a + 5c = (3a + 5b) + (3b + 5c) - 8b$。",
+        "Each property of an equivalence relation comes down to an identity showing that a new expression is a multiple of the modulus. Let $a \\sim b \\iff 8 \\mid 3a + 5b$. Reflexive: $3a + 5a = 8a$. Symmetric: $3b + 5a = 8(a + b) - (3a + 5b)$. Transitive: $3a + 5c = (3a + 5b) + (3b + 5c) - 8b$.",
+        "等价关系的每个性质都归结为一个恒等式，说明某个新表达式是模的倍数。令 $a \\sim b \\iff 8 \\mid 3a + 5b$。自反：$3a + 5a = 8a$。对称：$3b + 5a = 8(a + b) - (3a + 5b)$。传递：$3a + 5c = (3a + 5b) + (3b + 5c) - 8b$。",
       ),
       generate(rng) {
         let p: number;
@@ -1226,8 +1226,8 @@ export const provingARelationIsAnEquivalenceRelation: TopicDef = {
       id: "equivalent-pairs",
       title: t("Equivalent pairs", "等价的数对"),
       explanation: t(
-        "On $\\mathbb{N} \\times \\mathbb{N}$, $(a, b) \\sim (c, d) \\iff a + d = b + c$ is an equivalence relation (it says $a - b = c - d$). So $(5, 2) \\sim (7, 4)$. On $\\mathbb{Z} \\times (\\mathbb{Z} \\setminus \\{0\\})$, $(a, b) \\sim (c, d) \\iff ad = bc$ says $\\tfrac{a}{b} = \\tfrac{c}{d}$, so $(2, 3) \\sim (4, 6)$.",
-        "在 $\\mathbb{N} \\times \\mathbb{N}$ 上，$(a, b) \\sim (c, d) \\iff a + d = b + c$ 是等价关系（它表示 $a - b = c - d$）。所以 $(5, 2) \\sim (7, 4)$。在 $\\mathbb{Z} \\times (\\mathbb{Z} \\setminus \\{0\\})$ 上，$(a, b) \\sim (c, d) \\iff ad = bc$ 表示 $\\tfrac{a}{b} = \\tfrac{c}{d}$，所以 $(2, 3) \\sim (4, 6)$。",
+        "Rearranging the condition shows it compares differences, so two pairs are equivalent when they have the same difference. On $\\mathbb{N} \\times \\mathbb{N}$, $(a, b) \\sim (c, d) \\iff a + d = b + c$ is an equivalence relation (it says $a - b = c - d$). So $(5, 2) \\sim (7, 4)$. On $\\mathbb{Z} \\times (\\mathbb{Z} \\setminus \\{0\\})$, $(a, b) \\sim (c, d) \\iff ad = bc$ says $\\tfrac{a}{b} = \\tfrac{c}{d}$, so $(2, 3) \\sim (4, 6)$.",
+        "把条件变形就能看出它在比较差，所以两个有序对差相同时就等价。在 $\\mathbb{N} \\times \\mathbb{N}$ 上，$(a, b) \\sim (c, d) \\iff a + d = b + c$ 是等价关系（它表示 $a - b = c - d$）。所以 $(5, 2) \\sim (7, 4)$。在 $\\mathbb{Z} \\times (\\mathbb{Z} \\setminus \\{0\\})$ 上，$(a, b) \\sim (c, d) \\iff ad = bc$ 表示 $\\tfrac{a}{b} = \\tfrac{c}{d}$，所以 $(2, 3) \\sim (4, 6)$。",
       ),
       generate(rng) {
         const additive = rng.bool();
@@ -1286,8 +1286,8 @@ export const residueClasses: TopicDef = {
       id: "elements-of-a-residue-class",
       title: t("Elements of a residue class", "剩余类中的元素"),
       explanation: t(
-        "$[2]_5 = \\{\\dots, -8, -3, 2, 7, 12, \\dots\\}$. Its elements between $-10$ and $10$ are $-8, -3, 2, 7$.",
-        "$[2]_5 = \\{\\dots, -8, -3, 2, 7, 12, \\dots\\}$。它在 $-10$ 与 $10$ 之间的元素是 $-8, -3, 2, 7$。",
+        "A residue class contains every integer with the same remainder, obtained by adding or subtracting multiples of the modulus. $[2]_5 = \\{\\dots, -8, -3, 2, 7, 12, \\dots\\}$. Its elements between $-10$ and $10$ are $-8, -3, 2, 7$.",
+        "一个剩余类包含所有余数相同的整数，可以通过加上或减去模的倍数得到。$[2]_5 = \\{\\dots, -8, -3, 2, 7, 12, \\dots\\}$。它在 $-10$ 与 $10$ 之间的元素是 $-8, -3, 2, 7$。",
       ),
       generate(rng) {
         const n = rng.int(3, 9);
@@ -1313,8 +1313,8 @@ export const residueClasses: TopicDef = {
       id: "equal-residue-classes",
       title: t("Equal residue classes", "相等的剩余类"),
       explanation: t(
-        "$[17]_6 = [-1]_6$ because $17 - (-1) = 18$ is a multiple of $6$. Two residue classes are either equal or disjoint.",
-        "$[17]_6 = [-1]_6$，因为 $17 - (-1) = 18$ 是 $6$ 的倍数。两个剩余类要么相等，要么不相交。",
+        "Two residue classes are the same exactly when their representatives are congruent, and otherwise they share no elements. $[17]_6 = [-1]_6$ because $17 - (-1) = 18$ is a multiple of $6$. Two residue classes are either equal or disjoint.",
+        "两个剩余类相同，当且仅当它们的代表元同余，否则它们没有公共元素。$[17]_6 = [-1]_6$，因为 $17 - (-1) = 18$ 是 $6$ 的倍数。两个剩余类要么相等，要么不相交。",
       ),
       generate(rng) {
         const n = rng.int(3, 12);
@@ -1410,8 +1410,8 @@ export const equivalenceClasses: TopicDef = {
       id: "counting-equivalence-classes",
       title: t("Counting equivalence classes", "统计等价类个数"),
       explanation: t(
-        "On $\\{1, \\dots, 10\\}$ with $x \\sim y \\iff \\lfloor x/3 \\rfloor = \\lfloor y/3 \\rfloor$, the classes are $\\{1, 2\\}, \\{3, 4, 5\\}, \\{6, 7, 8\\}, \\{9, 10\\}$: four classes, one for each value of $\\lfloor x/3 \\rfloor$.",
-        "在 $\\{1, \\dots, 10\\}$ 上，$x \\sim y \\iff \\lfloor x/3 \\rfloor = \\lfloor y/3 \\rfloor$，等价类为 $\\{1, 2\\}, \\{3, 4, 5\\}, \\{6, 7, 8\\}, \\{9, 10\\}$：共四个，每个 $\\lfloor x/3 \\rfloor$ 的取值对应一个。",
+        "The equivalence classes partition the set, so group the elements by the value that the relation compares and count the groups. On $\\{1, \\dots, 10\\}$ with $x \\sim y \\iff \\lfloor x/3 \\rfloor = \\lfloor y/3 \\rfloor$, the classes are $\\{1, 2\\}, \\{3, 4, 5\\}, \\{6, 7, 8\\}, \\{9, 10\\}$: four classes, one for each value of $\\lfloor x/3 \\rfloor$.",
+        "等价类划分了整个集合，所以按照关系所比较的值把元素分组，再数出组数。在 $\\{1, \\dots, 10\\}$ 上，$x \\sim y \\iff \\lfloor x/3 \\rfloor = \\lfloor y/3 \\rfloor$，等价类为 $\\{1, 2\\}, \\{3, 4, 5\\}, \\{6, 7, 8\\}, \\{9, 10\\}$：共四个，每个 $\\lfloor x/3 \\rfloor$ 的取值对应一个。",
       ),
       generate(rng) {
         const N = rng.int(10, 30);
@@ -1451,8 +1451,8 @@ export const theIntegersModuloN: TopicDef = {
       id: "arithmetic-in-the-integers-modulo-n",
       title: t("Arithmetic in ℤₙ", "ℤₙ 中的运算"),
       explanation: t(
-        "In $\\mathbb{Z}_7$: $[5] + [4] \\cdot [6] = [5] + [24] = [5] + [3] = [8] = [1]$.",
-        "在 $\\mathbb{Z}_7$ 中：$[5] + [4] \\cdot [6] = [5] + [24] = [5] + [3] = [8] = [1]$。",
+        "Arithmetic on residue classes works with any representatives, so compute with ordinary integers and reduce at the end. In $\\mathbb{Z}_7$: $[5] + [4] \\cdot [6] = [5] + [24] = [5] + [3] = [8] = [1]$.",
+        "剩余类上的运算可以用任意代表元进行，所以先用普通整数计算，最后再约化。在 $\\mathbb{Z}_7$ 中：$[5] + [4] \\cdot [6] = [5] + [24] = [5] + [3] = [8] = [1]$。",
       ),
       generate(rng) {
         const n = rng.int(4, 13);
@@ -1480,8 +1480,8 @@ export const theIntegersModuloN: TopicDef = {
       id: "units-and-zero-divisors",
       title: t("Units and zero divisors", "单位与零因子"),
       explanation: t(
-        "In $\\mathbb{Z}_{12}$, the invertible classes are $[1], [5], [7], [11]$, those with $\\gcd(a, 12) = 1$. Every other nonzero class is a zero divisor: $[4] \\cdot [3] = [0]$.",
-        "在 $\\mathbb{Z}_{12}$ 中，可逆类是 $[1], [5], [7], [11]$，即满足 $\\gcd(a, 12) = 1$ 的类。其余非零类都是零因子：$[4] \\cdot [3] = [0]$。",
+        "A class has an inverse exactly when its representative is coprime to the modulus, and every other nonzero class multiplies some nonzero class to zero. In $\\mathbb{Z}_{12}$, the invertible classes are $[1], [5], [7], [11]$, those with $\\gcd(a, 12) = 1$. Every other nonzero class is a zero divisor: $[4] \\cdot [3] = [0]$.",
+        "一个类有逆元，当且仅当它的代表元与模互素；其他每个非零类都能与某个非零类相乘得到零。在 $\\mathbb{Z}_{12}$ 中，可逆类是 $[1], [5], [7], [11]$，即满足 $\\gcd(a, 12) = 1$ 的类。其余非零类都是零因子：$[4] \\cdot [3] = [0]$。",
       ),
       generate(rng) {
         const n = rng.int(6, 40);

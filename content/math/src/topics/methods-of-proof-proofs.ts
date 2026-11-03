@@ -234,8 +234,8 @@ export const provingDivisibility: TopicDef = {
       id: "divisibility-of-linear-combinations",
       title: t("Divisibility of combinations", "线性组合的整除性"),
       explanation: t(
-        "If $a \\mid m$ and $a \\mid n$, write $m = aj$ and $n = ak$. Then $3m - 2n = 3aj - 2ak = a(3j - 2k)$, and $3j - 2k$ is an integer, so $a \\mid 3m - 2n$.",
-        "若 $a \\mid m$ 且 $a \\mid n$，写 $m = aj$，$n = ak$。则 $3m - 2n = 3aj - 2ak = a(3j - 2k)$，而 $3j - 2k$ 是整数，所以 $a \\mid 3m - 2n$。",
+        "If a number divides two integers, writing each as a multiple of it shows that it also divides any combination of them with integer coefficients. If $a \\mid m$ and $a \\mid n$, write $m = aj$ and $n = ak$. Then $3m - 2n = 3aj - 2ak = a(3j - 2k)$, and $3j - 2k$ is an integer, so $a \\mid 3m - 2n$.",
+        "如果一个数整除两个整数，把它们都写成这个数的倍数，就能看出它也整除它们的任何整系数组合。若 $a \\mid m$ 且 $a \\mid n$，写 $m = aj$，$n = ak$。则 $3m - 2n = 3aj - 2ak = a(3j - 2k)$，而 $3j - 2k$ 是整数，所以 $a \\mid 3m - 2n$。",
       ),
       generate(rng) {
         const d = rng.int(2, 9);
@@ -267,8 +267,8 @@ export const provingDivisibility: TopicDef = {
       id: "guaranteed-divisors",
       title: t("Guaranteed divisors", "必然的因数"),
       explanation: t(
-        "If $4 \\mid m$ and $6 \\mid n$, then $m = 4j$ and $n = 6k$, so $mn = 24jk$: $24 \\mid mn$. But $m + n = 4j + 6k = 2(2j + 3k)$ is only guaranteed to be divisible by $2$ (try $m = 4$, $n = 6$).",
-        "若 $4 \\mid m$ 且 $6 \\mid n$，则 $m = 4j$，$n = 6k$，所以 $mn = 24jk$：$24 \\mid mn$。但 $m + n = 4j + 6k = 2(2j + 3k)$ 只能保证被 $2$ 整除（试 $m = 4$，$n = 6$）。",
+        "Writing each number as a multiple of its known divisor shows exactly which factors are forced in a product or a sum. If $4 \\mid m$ and $6 \\mid n$, then $m = 4j$ and $n = 6k$, so $mn = 24jk$: $24 \\mid mn$. But $m + n = 4j + 6k = 2(2j + 3k)$ is only guaranteed to be divisible by $2$ (try $m = 4$, $n = 6$).",
+        "把每个数写成它已知因数的倍数，就能准确看出乘积或和中必然含有哪些因数。若 $4 \\mid m$ 且 $6 \\mid n$，则 $m = 4j$，$n = 6k$，所以 $mn = 24jk$：$24 \\mid mn$。但 $m + n = 4j + 6k = 2(2j + 3k)$ 只能保证被 $2$ 整除（试 $m = 4$，$n = 6$）。",
       ),
       generate(rng) {
         const a = rng.int(2, 12);
@@ -439,8 +439,8 @@ export const disprovingUniversalStatements: TopicDef = {
       id: "what-a-disproof-shows",
       title: t("What a disproof shows", "否定需要证明什么"),
       explanation: t(
-        '$\\neg \\forall x\\, P(x) \\equiv \\exists x\\, \\neg P(x)$. To disprove "for every real $x$, $x^2 \\ge x$", show there is a real $x$ with $x^2 < x$, such as $x = \\tfrac{1}{2}$.',
-        "$\\neg \\forall x\\, P(x) \\equiv \\exists x\\, \\neg P(x)$。要否定“对每个实数 $x$，$x^2 \\ge x$”，只需说明存在实数 $x$ 使 $x^2 < x$，例如 $x = \\tfrac{1}{2}$。",
+        '$\\neg \\forall x\\, P(x) \\equiv \\exists x\\, \\neg P(x)$. To disprove "A statement about every element is false exactly when some element fails it, so a single counterexample is a complete disproof. for every real $x$, $x^2 \\ge x$", show there is a real $x$ with $x^2 < x$, such as $x = \\tfrac{1}{2}$.',
+        "关于每个元素的命题为假，当且仅当有某个元素不满足它，所以一个反例就是完整的反驳。$\\neg \\forall x\\, P(x) \\equiv \\exists x\\, \\neg P(x)$。要否定“对每个实数 $x$，$x^2 \\ge x$”，只需说明存在实数 $x$ 使 $x^2 < x$，例如 $x = \\tfrac{1}{2}$。",
       ),
       generate(rng) {
         const k = rng.int(1, 9);
@@ -960,7 +960,7 @@ export const provingDivisibilityByContrapositive: TopicDef = {
       id: "the-contrapositive-of-a-divisibility-claim",
       title: t("The contrapositive of a divisibility claim", "整除命题的逆否"),
       explanation: t(
-        '"If $5 \\nmid n^2 + 10n$ then $5 \\nmid n$" has contrapositive "if $5 \\mid n$ then $5 \\mid n^2 + 10n$". Negating $\\nmid$ gives $\\mid$.',
+        '"The contrapositive swaps the hypothesis and conclusion and negates both, and it is often easier because the new hypothesis gives an equation to work with. If $5 \\nmid n^2 + 10n$ then $5 \\nmid n$" has contrapositive "逆否命题交换假设和结论并把两者都否定，它常常更容易证明，因为新的假设提供了一个可以使用的等式。if $5 \\mid n$ then $5 \\mid n^2 + 10n$". Negating $\\nmid$ gives $\\mid$.',
         "“若 $5 \\nmid n^2 + 10n$，则 $5 \\nmid n$”的逆否命题是“若 $5 \\mid n$，则 $5 \\mid n^2 + 10n$”。$\\nmid$ 的否定是 $\\mid$。",
       ),
       generate(rng) {
@@ -989,8 +989,8 @@ export const provingDivisibilityByContrapositive: TopicDef = {
       id: "completing-a-divisibility-contrapositive",
       title: t("Completing the proof", "完成证明"),
       explanation: t(
-        "Assume $d \\mid n$ and write $n = dj$. Then substitute: for $n^2 + 3n$ with $d = 4$, $16j^2 + 12j = 4(4j^2 + 3j)$, so $4 \\mid n^2 + 3n$.",
-        "假设 $d \\mid n$，写 $n = dj$，然后代入：对 $n^2 + 3n$ 和 $d = 4$，$16j^2 + 12j = 4(4j^2 + 3j)$，所以 $4 \\mid n^2 + 3n$。",
+        "Once the divisibility is assumed, write the number as a multiple, substitute it into the expression, and factor out the divisor. Assume $d \\mid n$ and write $n = dj$. Then substitute: for $n^2 + 3n$ with $d = 4$, $16j^2 + 12j = 4(4j^2 + 3j)$, so $4 \\mid n^2 + 3n$.",
+        "一旦假设了整除关系，就把这个数写成倍数，代入表达式，再提出这个因数。假设 $d \\mid n$，写 $n = dj$，然后代入：对 $n^2 + 3n$ 和 $d = 4$，$16j^2 + 12j = 4(4j^2 + 3j)$，所以 $4 \\mid n^2 + 3n$。",
       ),
       generate(rng) {
         const d = rng.int(2, 9);
@@ -1363,8 +1363,8 @@ export const provingDivisibilityByContradiction: TopicDef = {
       id: "never-divisible-expressions",
       title: t("Never divisible", "永远不能整除"),
       explanation: t(
-        "If $d \\mid m$, then $d \\mid am + c$ exactly when $d \\mid c$. So when $7 \\mid m$, $3m + 14$ is always divisible by $7$, while $3m + 10$ never is.",
-        "若 $d \\mid m$，则 $d \\mid am + c$ 当且仅当 $d \\mid c$。所以当 $7 \\mid m$ 时，$3m + 14$ 总能被 $7$ 整除，而 $3m + 10$ 永远不能。",
+        "If a divisor already divides one part of a sum, it divides the whole sum exactly when it divides the remaining part. If $d \\mid m$, then $d \\mid am + c$ exactly when $d \\mid c$. So when $7 \\mid m$, $3m + 14$ is always divisible by $7$, while $3m + 10$ never is.",
+        "如果一个因数已经整除和的一部分，那么它整除整个和，当且仅当它整除剩下的部分。若 $d \\mid m$，则 $d \\mid am + c$ 当且仅当 $d \\mid c$。所以当 $7 \\mid m$ 时，$3m + 14$ 总能被 $7$ 整除，而 $3m + 10$ 永远不能。",
       ),
       generate(rng) {
         const d = rng.int(3, 11);

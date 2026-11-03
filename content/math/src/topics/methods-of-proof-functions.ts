@@ -57,8 +57,8 @@ export const theLimitOfANullSequence: TopicDef = {
       id: "finding-n-for-a-given-epsilon",
       title: t("Finding N for a given ε", "对给定的 ε 求 N"),
       explanation: t(
-        "For $a_n = \\dfrac{3}{n}$ and $\\varepsilon = \\dfrac{1}{10}$: $\\dfrac{3}{n} < \\dfrac{1}{10}$ exactly when $n > 30$, so the smallest $N$ that works is $31$.",
-        "对 $a_n = \\dfrac{3}{n}$ 与 $\\varepsilon = \\dfrac{1}{10}$：$\\dfrac{3}{n} < \\dfrac{1}{10}$ 当且仅当 $n > 30$，所以可行的最小 $N$ 是 $31$。",
+        "For a particular tolerance, solve the inequality for the index to find how far along the sequence you must go. For $a_n = \\dfrac{3}{n}$ and $\\varepsilon = \\dfrac{1}{10}$: $\\dfrac{3}{n} < \\dfrac{1}{10}$ exactly when $n > 30$, so the smallest $N$ that works is $31$.",
+        "对于一个具体的容差，解关于下标的不等式，就知道需要沿着序列走多远。对 $a_n = \\dfrac{3}{n}$ 与 $\\varepsilon = \\dfrac{1}{10}$：$\\dfrac{3}{n} < \\dfrac{1}{10}$ 当且仅当 $n > 30$，所以可行的最小 $N$ 是 $31$。",
       ),
       generate(rng) {
         const s = nullSeq(rng);
@@ -129,8 +129,8 @@ export const provingTheLimitOfANullSequence: TopicDef = {
       id: "choosing-n-in-terms-of-epsilon",
       title: t("Choosing N in terms of ε", "用 ε 表示 N"),
       explanation: t(
-        "To prove $\\dfrac{5}{n + 2} \\to 0$: given $\\varepsilon > 0$, $\\dfrac{5}{n + 2} < \\varepsilon \\iff n > \\dfrac{5}{\\varepsilon} - 2$. So choose any integer $N > \\dfrac{5}{\\varepsilon} - 2$.",
-        "证明 $\\dfrac{5}{n + 2} \\to 0$：给定 $\\varepsilon > 0$，$\\dfrac{5}{n + 2} < \\varepsilon \\iff n > \\dfrac{5}{\\varepsilon} - 2$。所以取任意整数 $N > \\dfrac{5}{\\varepsilon} - 2$。",
+        "A convergence proof must work for every tolerance, so solve the inequality symbolically and choose the index as a formula in the tolerance. To prove $\\dfrac{5}{n + 2} \\to 0$: given $\\varepsilon > 0$, $\\dfrac{5}{n + 2} < \\varepsilon \\iff n > \\dfrac{5}{\\varepsilon} - 2$. So choose any integer $N > \\dfrac{5}{\\varepsilon} - 2$.",
+        "收敛性证明必须对每个容差都成立，所以要符号化地解不等式，把下标选成关于容差的公式。证明 $\\dfrac{5}{n + 2} \\to 0$：给定 $\\varepsilon > 0$，$\\dfrac{5}{n + 2} < \\varepsilon \\iff n > \\dfrac{5}{\\varepsilon} - 2$。所以取任意整数 $N > \\dfrac{5}{\\varepsilon} - 2$。",
       ),
       generate(rng) {
         const c = rng.int(2, 9);
@@ -209,8 +209,8 @@ export const provingTheFiniteLimitOfASequence: TopicDef = {
       id: "simplifying-the-distance-to-the-limit",
       title: t("Simplifying |aₙ − L|", "化简 |aₙ − L|"),
       explanation: t(
-        "For $a_n = \\dfrac{2n + 1}{n + 3}$ and $L = 2$: $a_n - 2 = \\dfrac{2n + 1 - 2(n + 3)}{n + 3} = \\dfrac{-5}{n + 3}$, so $|a_n - 2| = \\dfrac{5}{n + 3}$.",
-        "对 $a_n = \\dfrac{2n + 1}{n + 3}$ 与 $L = 2$：$a_n - 2 = \\dfrac{2n + 1 - 2(n + 3)}{n + 3} = \\dfrac{-5}{n + 3}$，所以 $|a_n - 2| = \\dfrac{5}{n + 3}$。",
+        "Combining the term and the limit over a common denominator gives a simple expression for the distance, which is easier to bound. For $a_n = \\dfrac{2n + 1}{n + 3}$ and $L = 2$: $a_n - 2 = \\dfrac{2n + 1 - 2(n + 3)}{n + 3} = \\dfrac{-5}{n + 3}$, so $|a_n - 2| = \\dfrac{5}{n + 3}$.",
+        "把项和极限通分合并，就得到距离的简单表达式，它更容易估计上界。对 $a_n = \\dfrac{2n + 1}{n + 3}$ 与 $L = 2$：$a_n - 2 = \\dfrac{2n + 1 - 2(n + 3)}{n + 3} = \\dfrac{-5}{n + 3}$，所以 $|a_n - 2| = \\dfrac{5}{n + 3}$。",
       ),
       generate(rng) {
         let p: number;
@@ -247,8 +247,8 @@ export const provingTheFiniteLimitOfASequence: TopicDef = {
       id: "finding-n-for-a-finite-limit",
       title: t("Finding N", "求 N"),
       explanation: t(
-        "With $|a_n - 2| = \\dfrac{5}{n + 3}$ and $\\varepsilon = \\dfrac{1}{20}$: $\\dfrac{5}{n + 3} < \\dfrac{1}{20} \\iff n + 3 > 100 \\iff n > 97$, so the smallest $N$ is $98$.",
-        "由 $|a_n - 2| = \\dfrac{5}{n + 3}$ 与 $\\varepsilon = \\dfrac{1}{20}$：$\\dfrac{5}{n + 3} < \\dfrac{1}{20} \\iff n + 3 > 100 \\iff n > 97$，所以最小的 $N$ 是 $98$。",
+        "Once the distance to the limit is a simple expression, solving the inequality for the index gives the required starting point. With $|a_n - 2| = \\dfrac{5}{n + 3}$ and $\\varepsilon = \\dfrac{1}{20}$: $\\dfrac{5}{n + 3} < \\dfrac{1}{20} \\iff n + 3 > 100 \\iff n > 97$, so the smallest $N$ is $98$.",
+        "一旦到极限的距离是一个简单表达式，解关于下标的不等式就得到所需的起点。由 $|a_n - 2| = \\dfrac{5}{n + 3}$ 与 $\\varepsilon = \\dfrac{1}{20}$：$\\dfrac{5}{n + 3} < \\dfrac{1}{20} \\iff n + 3 > 100 \\iff n > 97$，所以最小的 $N$ 是 $98$。",
       ),
       generate(rng) {
         let p: number;
@@ -296,8 +296,8 @@ export const infiniteLimitsOfSequences: TopicDef = {
       id: "finding-n-for-a-given-m",
       title: t("Finding N for a given M", "对给定的 M 求 N"),
       explanation: t(
-        "For $a_n = 3n - 7$ and $M = 50$: $3n - 7 > 50 \\iff n > 19$, so the smallest $N$ with $a_n > 50$ for all $n \\ge N$ is $20$.",
-        "对 $a_n = 3n - 7$ 与 $M = 50$：$3n - 7 > 50 \\iff n > 19$，所以使所有 $n \\ge N$ 都满足 $a_n > 50$ 的最小 $N$ 是 $20$。",
+        "For a sequence tending to infinity, each bound must eventually be exceeded, so solve for the index past which the terms stay above it. For $a_n = 3n - 7$ and $M = 50$: $3n - 7 > 50 \\iff n > 19$, so the smallest $N$ with $a_n > 50$ for all $n \\ge N$ is $20$.",
+        "对于趋于无穷的序列，每个界最终都会被超过，所以要解出一个下标，使得此后各项都保持在界之上。对 $a_n = 3n - 7$ 与 $M = 50$：$3n - 7 > 50 \\iff n > 19$，所以使所有 $n \\ge N$ 都满足 $a_n > 50$ 的最小 $N$ 是 $20$。",
       ),
       generate(rng) {
         const kind = rng.int(0, 2);
@@ -381,8 +381,8 @@ export const provingASequenceHasAnInfiniteLimit: TopicDef = {
       id: "choosing-n-in-terms-of-m",
       title: t("Choosing N in terms of M", "用 M 表示 N"),
       explanation: t(
-        "To prove $4\\sqrt{n} - 3 \\to \\infty$: given $M$, $4\\sqrt{n} - 3 > M \\iff n > \\left(\\dfrac{M + 3}{4}\\right)^2$ (for $M > -3$). Choose any integer $N$ larger than this.",
-        "证明 $4\\sqrt{n} - 3 \\to \\infty$：给定 $M$，$4\\sqrt{n} - 3 > M \\iff n > \\left(\\dfrac{M + 3}{4}\\right)^2$（当 $M > -3$ 时）。取任意大于它的整数 $N$。",
+        "To prove divergence to infinity, solve the inequality for a general bound and choose the index as a formula in that bound. To prove $4\\sqrt{n} - 3 \\to \\infty$: given $M$, $4\\sqrt{n} - 3 > M \\iff n > \\left(\\dfrac{M + 3}{4}\\right)^2$ (for $M > -3$). Choose any integer $N$ larger than this.",
+        "要证明发散到无穷，就对一般的界解不等式，把下标选成关于这个界的公式。证明 $4\\sqrt{n} - 3 \\to \\infty$：给定 $M$，$4\\sqrt{n} - 3 > M \\iff n > \\left(\\dfrac{M + 3}{4}\\right)^2$（当 $M > -3$ 时）。取任意大于它的整数 $N$。",
       ),
       generate(rng) {
         const p = rng.int(2, 9);
@@ -415,8 +415,8 @@ export const provingASequenceHasAnInfiniteLimit: TopicDef = {
       id: "lower-bounds-for-divergent-sequences",
       title: t("Lower bounds", "下界"),
       explanation: t(
-        "To show $\\dfrac{n^2 + 5}{n + 1} \\to \\infty$, find a simpler lower bound: for $n \\ge 1$, $\\dfrac{n^2 + 5}{n + 1} > \\dfrac{n^2}{n + n} = \\dfrac{n}{2}$, and $\\dfrac{n}{2} > M$ once $n > 2M$.",
-        "要证明 $\\dfrac{n^2 + 5}{n + 1} \\to \\infty$，先找一个更简单的下界：当 $n \\ge 1$ 时，$\\dfrac{n^2 + 5}{n + 1} > \\dfrac{n^2}{n + n} = \\dfrac{n}{2}$，而当 $n > 2M$ 时 $\\dfrac{n}{2} > M$。",
+        "When the inequality is hard to solve exactly, replace the term by a simpler expression below it that still grows without bound. To show $\\dfrac{n^2 + 5}{n + 1} \\to \\infty$, find a simpler lower bound: for $n \\ge 1$, $\\dfrac{n^2 + 5}{n + 1} > \\dfrac{n^2}{n + n} = \\dfrac{n}{2}$, and $\\dfrac{n}{2} > M$ once $n > 2M$.",
+        "当不等式难以精确求解时，用一个比该项小、但仍然无界增长的简单表达式代替它。要证明 $\\dfrac{n^2 + 5}{n + 1} \\to \\infty$，先找一个更简单的下界：当 $n \\ge 1$ 时，$\\dfrac{n^2 + 5}{n + 1} > \\dfrac{n^2}{n + n} = \\dfrac{n}{2}$，而当 $n > 2M$ 时 $\\dfrac{n}{2} > M$。",
       ),
       generate(rng) {
         const a = rng.int(1, 9);
@@ -570,8 +570,8 @@ export const provingInjectivity: TopicDef = {
       id: "the-key-step-of-an-injectivity-proof",
       title: t("The key step", "关键一步"),
       explanation: t(
-        "For $f(x) = \\dfrac{2x + 1}{x - 3}$ on $x \\ne 3$: if $f(a) = f(b)$, cross-multiplying gives $(2a + 1)(b - 3) = (2b + 1)(a - 3)$, which simplifies to $-7a = -7b$, so $a = b$.",
-        "对 $x \\ne 3$ 上的 $f(x) = \\dfrac{2x + 1}{x - 3}$：若 $f(a) = f(b)$，交叉相乘得 $(2a + 1)(b - 3) = (2b + 1)(a - 3)$，化简得 $-7a = -7b$，所以 $a = b$。",
+        "To prove injectivity, assume two inputs give the same output and use algebra to show the inputs must be equal. For $f(x) = \\dfrac{2x + 1}{x - 3}$ on $x \\ne 3$: if $f(a) = f(b)$, cross-multiplying gives $(2a + 1)(b - 3) = (2b + 1)(a - 3)$, which simplifies to $-7a = -7b$, so $a = b$.",
+        "要证明单射，就假设两个输入给出相同的输出，再用代数证明这两个输入必然相等。对 $x \\ne 3$ 上的 $f(x) = \\dfrac{2x + 1}{x - 3}$：若 $f(a) = f(b)$，交叉相乘得 $(2a + 1)(b - 3) = (2b + 1)(a - 3)$，化简得 $-7a = -7b$，所以 $a = b$。",
       ),
       generate(rng) {
         const p = rng.int(2, 9);
@@ -762,8 +762,8 @@ export const intoFunctions: TopicDef = {
       id: "values-outside-the-range",
       title: t("Values outside the range", "值域之外的值"),
       explanation: t(
-        "$f: \\mathbb{Z} \\to \\mathbb{Z}$, $f(n) = 3n + 1$ has range $\\{\\dots, -2, 1, 4, 7, \\dots\\}$, so $f$ is into: $5$ is not an output, since $3n + 1 = 5$ has no integer solution.",
-        "$f: \\mathbb{Z} \\to \\mathbb{Z}$，$f(n) = 3n + 1$ 的值域是 $\\{\\dots, -2, 1, 4, 7, \\dots\\}$，所以 $f$ 不是满射：$5$ 不是输出，因为 $3n + 1 = 5$ 没有整数解。",
+        "A function fails to be onto when some value of the codomain is never an output, so one such value is enough to show it. $f: \\mathbb{Z} \\to \\mathbb{Z}$, $f(n) = 3n + 1$ has range $\\{\\dots, -2, 1, 4, 7, \\dots\\}$, so $f$ is into: $5$ is not an output, since $3n + 1 = 5$ has no integer solution.",
+        "如果陪域中有某个值从来不是输出，函数就不是满射，所以找到一个这样的值就足以说明。$f: \\mathbb{Z} \\to \\mathbb{Z}$，$f(n) = 3n + 1$ 的值域是 $\\{\\dots, -2, 1, 4, 7, \\dots\\}$，所以 $f$ 不是满射：$5$ 不是输出，因为 $3n + 1 = 5$ 没有整数解。",
       ),
       generate(rng) {
         const k = rng.int(2, 7);
@@ -1153,8 +1153,8 @@ export const discreteInfiniteSetsWithEqualCardinality: TopicDef = {
       id: "bijections-onto-arithmetic-progressions",
       title: t("Bijections onto progressions", "到等差数列的双射"),
       explanation: t(
-        "$f(n) = 3n + 2$ is a bijection from $\\mathbb{N} = \\{0, 1, 2, \\dots\\}$ onto $\\{2, 5, 8, \\dots\\}$, so this proper subset of $\\mathbb{N}$ has the same cardinality as $\\mathbb{N}$.",
-        "$f(n) = 3n + 2$ 是从 $\\mathbb{N} = \\{0, 1, 2, \\dots\\}$ 到 $\\{2, 5, 8, \\dots\\}$ 的双射，所以 $\\mathbb{N}$ 的这个真子集与 $\\mathbb{N}$ 等势。",
+        "A linear function matches the natural numbers one to one with an arithmetic progression, showing an infinite set can match a proper subset. $f(n) = 3n + 2$ is a bijection from $\\mathbb{N} = \\{0, 1, 2, \\dots\\}$ onto $\\{2, 5, 8, \\dots\\}$, so this proper subset of $\\mathbb{N}$ has the same cardinality as $\\mathbb{N}$.",
+        "一个线性函数把自然数与一个等差数列一一对应起来，这表明无限集可以与它的真子集一一对应。$f(n) = 3n + 2$ 是从 $\\mathbb{N} = \\{0, 1, 2, \\dots\\}$ 到 $\\{2, 5, 8, \\dots\\}$ 的双射，所以 $\\mathbb{N}$ 的这个真子集与 $\\mathbb{N}$ 等势。",
       ),
       generate(rng) {
         const k = rng.int(2, 9);
@@ -1179,8 +1179,8 @@ export const discreteInfiniteSetsWithEqualCardinality: TopicDef = {
       id: "a-bijection-from-naturals-to-integers",
       title: t("ℕ and ℤ", "ℕ 与 ℤ"),
       explanation: t(
-        "List $\\mathbb{Z}$ as $0, -1, 1, -2, 2, \\dots$: $f(n) = \\dfrac{n}{2}$ for even $n$ and $f(n) = -\\dfrac{n + 1}{2}$ for odd $n$ is a bijection $\\mathbb{N} \\to \\mathbb{Z}$. For example $f(7) = -4$ and $f(8) = 4$.",
-        "把 $\\mathbb{Z}$ 排成 $0, -1, 1, -2, 2, \\dots$：$n$ 为偶数时 $f(n) = \\dfrac{n}{2}$，$n$ 为奇数时 $f(n) = -\\dfrac{n + 1}{2}$，这是 $\\mathbb{N} \\to \\mathbb{Z}$ 的双射。例如 $f(7) = -4$，$f(8) = 4$。",
+        "Listing the integers alternately on each side of zero pairs every natural number with exactly one integer, so both sets have the same size. List $\\mathbb{Z}$ as $0, -1, 1, -2, 2, \\dots$: $f(n) = \\dfrac{n}{2}$ for even $n$ and $f(n) = -\\dfrac{n + 1}{2}$ for odd $n$ is a bijection $\\mathbb{N} \\to \\mathbb{Z}$. For example $f(7) = -4$ and $f(8) = 4$.",
+        "把整数在零的两侧交替列出，就把每个自然数与恰好一个整数配对，所以这两个集合大小相同。把 $\\mathbb{Z}$ 排成 $0, -1, 1, -2, 2, \\dots$：$n$ 为偶数时 $f(n) = \\dfrac{n}{2}$，$n$ 为奇数时 $f(n) = -\\dfrac{n + 1}{2}$，这是 $\\mathbb{N} \\to \\mathbb{Z}$ 的双射。例如 $f(7) = -4$，$f(8) = 4$。",
       ),
       generate(rng) {
         const inverse = rng.bool();
@@ -1245,8 +1245,8 @@ export const continuousInfiniteSetsWithEqualCardinality: TopicDef = {
       id: "linear-bijections-between-intervals",
       title: t("Linear bijections between intervals", "区间之间的线性双射"),
       explanation: t(
-        "$f(x) = c + \\dfrac{d - c}{b - a}(x - a)$ maps $(a, b)$ bijectively onto $(c, d)$: it is linear, sends $a \\mapsto c$ and $b \\mapsto d$. From $(0, 2)$ onto $(3, 9)$: $f(x) = 3 + 3x$.",
-        "$f(x) = c + \\dfrac{d - c}{b - a}(x - a)$ 把 $(a, b)$ 双射到 $(c, d)$ 上：它是线性的，且 $a \\mapsto c$，$b \\mapsto d$。从 $(0, 2)$ 到 $(3, 9)$：$f(x) = 3 + 3x$。",
+        "A straight line through the matching endpoints stretches and shifts one interval onto another, so any two open intervals have the same size. $f(x) = c + \\dfrac{d - c}{b - a}(x - a)$ maps $(a, b)$ bijectively onto $(c, d)$: it is linear, sends $a \\mapsto c$ and $b \\mapsto d$. From $(0, 2)$ onto $(3, 9)$: $f(x) = 3 + 3x$.",
+        "经过对应端点的直线把一个区间伸缩、平移到另一个区间上，所以任意两个开区间大小相同。$f(x) = c + \\dfrac{d - c}{b - a}(x - a)$ 把 $(a, b)$ 双射到 $(c, d)$ 上：它是线性的，且 $a \\mapsto c$，$b \\mapsto d$。从 $(0, 2)$ 到 $(3, 9)$：$f(x) = 3 + 3x$。",
       ),
       generate(rng) {
         const a = rng.int(-5, 5);
@@ -1506,8 +1506,8 @@ export const theCantorBernsteinSchroderTheorem: TopicDef = {
       id: "injections-into-open-intervals",
       title: t("Injections into open intervals", "到开区间的单射"),
       explanation: t(
-        "To show $|[0, 1]| = |(0, 1)|$, use two injections: the inclusion $(0, 1) \\to [0, 1]$, and $x \\mapsto \\dfrac{x + 1}{3}$, which maps $[0, 1]$ into $[\\tfrac{1}{3}, \\tfrac{2}{3}] \\subset (0, 1)$.",
-        "要证明 $|[0, 1]| = |(0, 1)|$，用两个单射：包含映射 $(0, 1) \\to [0, 1]$，以及 $x \\mapsto \\dfrac{x + 1}{3}$，它把 $[0, 1]$ 映入 $[\\tfrac{1}{3}, \\tfrac{2}{3}] \\subset (0, 1)$。",
+        "The Schröder–Bernstein theorem says injections in both directions guarantee a bijection, which avoids building one directly. To show $|[0, 1]| = |(0, 1)|$, use two injections: the inclusion $(0, 1) \\to [0, 1]$, and $x \\mapsto \\dfrac{x + 1}{3}$, which maps $[0, 1]$ into $[\\tfrac{1}{3}, \\tfrac{2}{3}] \\subset (0, 1)$.",
+        "施罗德–伯恩斯坦定理说，两个方向的单射保证存在双射，这样就不必直接构造双射。要证明 $|[0, 1]| = |(0, 1)|$，用两个单射：包含映射 $(0, 1) \\to [0, 1]$，以及 $x \\mapsto \\dfrac{x + 1}{3}$，它把 $[0, 1]$ 映入 $[\\tfrac{1}{3}, \\tfrac{2}{3}] \\subset (0, 1)$。",
       ),
       generate(rng) {
         const a = rng.int(1, 9);
@@ -1702,8 +1702,8 @@ export const cantorsTheorem: TopicDef = {
       id: "the-diagonal-set",
       title: t("The diagonal set", "对角集"),
       explanation: t(
-        "For $f: A \\to \\mathcal{P}(A)$, let $D = \\{a \\in A : a \\notin f(a)\\}$. If $D = f(d)$, then $d \\in D \\iff d \\notin f(d) = D$, a contradiction. With $f(1) = \\{1, 2\\}$, $f(2) = \\{3\\}$, $f(3) = \\varnothing$: $D = \\{2, 3\\}$, which is not $f(1)$, $f(2)$ or $f(3)$.",
-        "对 $f: A \\to \\mathcal{P}(A)$，令 $D = \\{a \\in A : a \\notin f(a)\\}$。若 $D = f(d)$，则 $d \\in D \\iff d \\notin f(d) = D$，矛盾。若 $f(1) = \\{1, 2\\}$，$f(2) = \\{3\\}$，$f(3) = \\varnothing$，则 $D = \\{2, 3\\}$，它不等于 $f(1)$、$f(2)$、$f(3)$ 中的任何一个。",
+        "The diagonal set differs from every image set at one element, so no function from a set onto its power set can exist. For $f: A \\to \\mathcal{P}(A)$, let $D = \\{a \\in A : a \\notin f(a)\\}$. If $D = f(d)$, then $d \\in D \\iff d \\notin f(d) = D$, a contradiction. With $f(1) = \\{1, 2\\}$, $f(2) = \\{3\\}$, $f(3) = \\varnothing$: $D = \\{2, 3\\}$, which is not $f(1)$, $f(2)$ or $f(3)$.",
+        "对角集合与每个像集合都在某个元素上不同，所以不存在从一个集合到它的幂集的满射。对 $f: A \\to \\mathcal{P}(A)$，令 $D = \\{a \\in A : a \\notin f(a)\\}$。若 $D = f(d)$，则 $d \\in D \\iff d \\notin f(d) = D$，矛盾。若 $f(1) = \\{1, 2\\}$，$f(2) = \\{3\\}$，$f(3) = \\varnothing$，则 $D = \\{2, 3\\}$，它不等于 $f(1)$、$f(2)$、$f(3)$ 中的任何一个。",
       ),
       generate(rng) {
         const n = rng.int(3, 5);

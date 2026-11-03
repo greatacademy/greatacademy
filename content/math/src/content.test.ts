@@ -31,6 +31,8 @@ const explainedCourses = [
   "mathematics-for-machine-learning",
   "probability-and-statistics",
   "discrete-mathematics",
+  "methods-of-proof",
+  "methods-of-proof",
   "integrated-math-i",
   "integrated-math-ii",
   "integrated-math-iii",

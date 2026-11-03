@@ -144,8 +144,8 @@ export const integerDivisibility: TopicDef = {
       id: "deciding-divisibility",
       title: t("Deciding divisibility", "判断整除"),
       explanation: t(
-        "$-6 \\mid 42$ since $42 = (-6)(-7)$; $7 \\mid 0$ since $0 = 7 \\cdot 0$; but $0 \\nmid 5$, because $0 \\cdot k = 0$ for every $k$. Signs do not affect divisibility.",
-        "$-6 \\mid 42$，因为 $42 = (-6)(-7)$；$7 \\mid 0$，因为 $0 = 7 \\cdot 0$；但 $0 \\nmid 5$，因为对每个 $k$，$0 \\cdot k = 0$。符号不影响整除性。",
+        "One integer divides another when the second is an integer multiple of the first, which allows negative numbers and zero. $-6 \\mid 42$ since $42 = (-6)(-7)$; $7 \\mid 0$ since $0 = 7 \\cdot 0$; but $0 \\nmid 5$, because $0 \\cdot k = 0$ for every $k$. Signs do not affect divisibility.",
+        "一个整数整除另一个整数，是指后者是前者的整数倍，这里允许负数和零。$-6 \\mid 42$，因为 $42 = (-6)(-7)$；$7 \\mid 0$，因为 $0 = 7 \\cdot 0$；但 $0 \\nmid 5$，因为对每个 $k$，$0 \\cdot k = 0$。符号不影响整除性。",
       ),
       generate(rng) {
         const kind = rng.int(0, 5);
@@ -235,8 +235,8 @@ export const theDivisionAlgorithm: TopicDef = {
       id: "remainders-of-negative-integers",
       title: t("Remainders", "余数"),
       explanation: t(
-        "The remainder is never negative. $-23 = 5 \\cdot (-5) + 2$, so dividing $-23$ by $5$ gives $q = -5$ and $r = 2$, not $q = -4$, $r = -3$.",
-        "余数永远不为负。$-23 = 5 \\cdot (-5) + 2$，所以 $-23$ 除以 $5$ 得 $q = -5$，$r = 2$，而不是 $q = -4$，$r = -3$。",
+        "The division algorithm requires a remainder between zero and the divisor, so for negative numbers the quotient must be rounded down. The remainder is never negative. $-23 = 5 \\cdot (-5) + 2$, so dividing $-23$ by $5$ gives $q = -5$ and $r = 2$, not $q = -4$, $r = -3$.",
+        "带余除法要求余数介于零和除数之间，所以对于负数，商必须向下取整。余数永远不为负。$-23 = 5 \\cdot (-5) + 2$，所以 $-23$ 除以 $5$ 得 $q = -5$，$r = 2$，而不是 $q = -4$，$r = -3$。",
       ),
       generate(rng) {
         const b = rng.int(3, 15);
@@ -257,8 +257,8 @@ export const theDivisionAlgorithm: TopicDef = {
       id: "quotients-of-the-division-algorithm",
       title: t("Quotients", "商"),
       explanation: t(
-        "The quotient is $q = \\lfloor a/b \\rfloor$, rounding down even for negative $a$: dividing $-23$ by $5$ gives $q = \\lfloor -4.6 \\rfloor = -5$.",
-        "商是 $q = \\lfloor a/b \\rfloor$，即使 $a$ 为负也向下取整：$-23$ 除以 $5$ 得 $q = \\lfloor -4.6 \\rfloor = -5$。",
+        "The quotient is the floor of the exact ratio, which is what keeps the remainder from becoming negative. The quotient is $q = \\lfloor a/b \\rfloor$, rounding down even for negative $a$: dividing $-23$ by $5$ gives $q = \\lfloor -4.6 \\rfloor = -5$.",
+        "商是精确比值的向下取整，正是这一点保证余数不会变成负数。商是 $q = \\lfloor a/b \\rfloor$，即使 $a$ 为负也向下取整：$-23$ 除以 $5$ 得 $q = \\lfloor -4.6 \\rfloor = -5$。",
       ),
       generate(rng) {
         const b = rng.int(3, 15);
@@ -343,8 +343,8 @@ export const theEuclideanAlgorithm: TopicDef = {
       id: "computing-gcds-with-the-euclidean-algorithm",
       title: t("Computing the gcd", "计算最大公因数"),
       explanation: t(
-        "Repeat until the remainder is $0$; the last nonzero remainder is the gcd. $252 = 105 \\cdot 2 + 42$, $105 = 42 \\cdot 2 + 21$, $42 = 21 \\cdot 2 + 0$, so $\\gcd(252, 105) = 21$.",
-        "重复直到余数为 $0$；最后一个非零余数就是最大公因数。$252 = 105 \\cdot 2 + 42$，$105 = 42 \\cdot 2 + 21$，$42 = 21 \\cdot 2 + 0$，所以 $\\gcd(252, 105) = 21$。",
+        "A common divisor of two numbers also divides their remainder, so replacing the pair by the smaller number and the remainder keeps the gcd the same. Repeat until the remainder is $0$; the last nonzero remainder is the gcd. $252 = 105 \\cdot 2 + 42$, $105 = 42 \\cdot 2 + 21$, $42 = 21 \\cdot 2 + 0$, so $\\gcd(252, 105) = 21$.",
+        "两个数的公因数也整除它们的余数，所以把这一对数换成较小的数和余数，最大公因数不变。重复直到余数为 $0$；最后一个非零余数就是最大公因数。$252 = 105 \\cdot 2 + 42$，$105 = 42 \\cdot 2 + 21$，$42 = 21 \\cdot 2 + 0$，所以 $\\gcd(252, 105) = 21$。",
       ),
       generate(rng) {
         const [a, b] = euclidPair(rng);
@@ -381,8 +381,8 @@ export const theExtendedEuclideanAlgorithm: TopicDef = {
       id: "bezout-coefficients",
       title: t("Bézout coefficients", "裴蜀系数"),
       explanation: t(
-        "From $35 = 12 \\cdot 2 + 11$ and $12 = 11 \\cdot 1 + 1$: $1 = 12 - 11 = 12 - (35 - 2 \\cdot 12) = 3 \\cdot 12 - 35$. So $35x + 12y = 1$ with $x = -1$, $y = 3$. Adding $12$ to $x$ and subtracting $35$ from $y$ gives another solution, such as $x = 11$, $y = -32$.",
-        "由 $35 = 12 \\cdot 2 + 11$ 与 $12 = 11 \\cdot 1 + 1$：$1 = 12 - 11 = 12 - (35 - 2 \\cdot 12) = 3 \\cdot 12 - 35$。所以 $35x + 12y = 1$ 有解 $x = -1$，$y = 3$。把 $x$ 加 $12$、$y$ 减 $35$ 得到另一组解，例如 $x = 11$，$y = -32$。",
+        "Working back through the Euclidean algorithm writes the gcd as an integer combination of the two original numbers. From $35 = 12 \\cdot 2 + 11$ and $12 = 11 \\cdot 1 + 1$: $1 = 12 - 11 = 12 - (35 - 2 \\cdot 12) = 3 \\cdot 12 - 35$. So $35x + 12y = 1$ with $x = -1$, $y = 3$. Adding $12$ to $x$ and subtracting $35$ from $y$ gives another solution, such as $x = 11$, $y = -32$.",
+        "沿着欧几里得算法倒推，就能把最大公因数写成两个原数的整数组合。由 $35 = 12 \\cdot 2 + 11$ 与 $12 = 11 \\cdot 1 + 1$：$1 = 12 - 11 = 12 - (35 - 2 \\cdot 12) = 3 \\cdot 12 - 35$。所以 $35x + 12y = 1$ 有解 $x = -1$，$y = 3$。把 $x$ 加 $12$、$y$ 减 $35$ 得到另一组解，例如 $x = 11$，$y = -32$。",
       ),
       generate(rng) {
         const [a, b] = euclidPair(rng);
@@ -409,8 +409,8 @@ export const theExtendedEuclideanAlgorithm: TopicDef = {
       id: "scaling-bezout-identities",
       title: t("Scaling a Bézout identity", "放大裴蜀等式"),
       explanation: t(
-        "If $ax_0 + by_0 = g$, then multiplying by $k$ solves $ax + by = kg$: $x = kx_0$, $y = ky_0$. From $35(-1) + 12(3) = 1$ we get $35(-5) + 12(15) = 5$.",
-        "若 $ax_0 + by_0 = g$，两边乘 $k$ 就得到 $ax + by = kg$ 的解：$x = kx_0$，$y = ky_0$。由 $35(-1) + 12(3) = 1$ 得 $35(-5) + 12(15) = 5$。",
+        "Multiplying both sides of the identity by the same integer turns a solution for the gcd into a solution for any multiple of it. If $ax_0 + by_0 = g$, then multiplying by $k$ solves $ax + by = kg$: $x = kx_0$, $y = ky_0$. From $35(-1) + 12(3) = 1$ we get $35(-5) + 12(15) = 5$.",
+        "把恒等式两边乘以同一个整数，就把关于最大公因数的解变成关于它任意倍数的解。若 $ax_0 + by_0 = g$，两边乘 $k$ 就得到 $ax + by = kg$ 的解：$x = kx_0$，$y = ky_0$。由 $35(-1) + 12(3) = 1$ 得 $35(-5) + 12(15) = 5$。",
       ),
       generate(rng) {
         const [a, b] = euclidPair(rng);
@@ -482,8 +482,8 @@ export const linearDiophantineEquations: TopicDef = {
       id: "counting-positive-solutions",
       title: t("Counting positive solutions", "统计正整数解"),
       explanation: t(
-        "The solutions of $3x + 5y = 52$ are $x = 4 + 5t$, $y = 8 - 3t$. Both are positive for $t = 0, 1, 2$, so there are three positive solutions: $(4, 8)$, $(9, 5)$, $(14, 2)$.",
-        "$3x + 5y = 52$ 的解为 $x = 4 + 5t$，$y = 8 - 3t$。当 $t = 0, 1, 2$ 时两者都为正，所以有三组正整数解：$(4, 8)$、$(9, 5)$、$(14, 2)$。",
+        "All solutions of a linear Diophantine equation come from one by adding steps along a parameter, so find the parameter values that keep both positive. The solutions of $3x + 5y = 52$ are $x = 4 + 5t$, $y = 8 - 3t$. Both are positive for $t = 0, 1, 2$, so there are three positive solutions: $(4, 8)$, $(9, 5)$, $(14, 2)$.",
+        "线性丢番图方程的所有解都可以由一个解沿参数逐步得到，所以找出使两者都为正的参数值。$3x + 5y = 52$ 的解为 $x = 4 + 5t$，$y = 8 - 3t$。当 $t = 0, 1, 2$ 时两者都为正，所以有三组正整数解：$(4, 8)$、$(9, 5)$、$(14, 2)$。",
       ),
       generate(rng) {
         for (;;) {
@@ -603,8 +603,8 @@ export const propertiesOfIntegerDivisibility: TopicDef = {
       id: "which-divisibility-claims-hold",
       title: t("Which claims hold", "哪些命题成立"),
       explanation: t(
-        "True: if $a \\mid b$ and $b \\mid c$ then $a \\mid c$; if $a \\mid b$ and $a \\mid c$ then $a \\mid bx + cy$. False in general: $a \\mid b + c \\Rightarrow a \\mid b$, and $a \\mid m, b \\mid m \\Rightarrow ab \\mid m$ (try $4 \\mid 12$, $6 \\mid 12$, $24 \\nmid 12$).",
-        "成立：若 $a \\mid b$ 且 $b \\mid c$，则 $a \\mid c$；若 $a \\mid b$ 且 $a \\mid c$，则 $a \\mid bx + cy$。一般不成立：$a \\mid b + c \\Rightarrow a \\mid b$，以及 $a \\mid m, b \\mid m \\Rightarrow ab \\mid m$（试 $4 \\mid 12$，$6 \\mid 12$，$24 \\nmid 12$）。",
+        "Each true divisibility claim follows from writing numbers as multiples, and each false one is shown by a small counterexample. True: if $a \\mid b$ and $b \\mid c$ then $a \\mid c$; if $a \\mid b$ and $a \\mid c$ then $a \\mid bx + cy$. False in general: $a \\mid b + c \\Rightarrow a \\mid b$, and $a \\mid m, b \\mid m \\Rightarrow ab \\mid m$ (try $4 \\mid 12$, $6 \\mid 12$, $24 \\nmid 12$).",
+        "每个成立的整除命题都可以通过把数写成倍数来证明，每个不成立的命题都可以用一个小的反例说明。成立：若 $a \\mid b$ 且 $b \\mid c$，则 $a \\mid c$；若 $a \\mid b$ 且 $a \\mid c$，则 $a \\mid bx + cy$。一般不成立：$a \\mid b + c \\Rightarrow a \\mid b$，以及 $a \\mid m, b \\mid m \\Rightarrow ab \\mid m$（试 $4 \\mid 12$，$6 \\mid 12$，$24 \\nmid 12$）。",
       ),
       generate(rng) {
         const p = divisibilityProperty(rng);
@@ -615,8 +615,8 @@ export const propertiesOfIntegerDivisibility: TopicDef = {
       id: "smallest-common-multiples",
       title: t("Smallest common multiples", "最小公倍数"),
       explanation: t(
-        "If $a \\mid m$ and $b \\mid m$ for a positive integer $m$, then $\\operatorname{lcm}(a, b) \\mid m$, so the smallest such $m$ is $\\operatorname{lcm}(a, b) = ab/\\gcd(a, b)$.",
-        "若正整数 $m$ 满足 $a \\mid m$ 且 $b \\mid m$，则 $\\operatorname{lcm}(a, b) \\mid m$，所以这样的最小 $m$ 是 $\\operatorname{lcm}(a, b) = ab/\\gcd(a, b)$。",
+        "Every common multiple of two numbers is a multiple of their least common multiple, so the least common multiple is the smallest positive one. If $a \\mid m$ and $b \\mid m$ for a positive integer $m$, then $\\operatorname{lcm}(a, b) \\mid m$, so the smallest such $m$ is $\\operatorname{lcm}(a, b) = ab/\\gcd(a, b)$.",
+        "两个数的每个公倍数都是它们最小公倍数的倍数，所以最小公倍数是最小的正公倍数。若正整数 $m$ 满足 $a \\mid m$ 且 $b \\mid m$，则 $\\operatorname{lcm}(a, b) \\mid m$，所以这样的最小 $m$ 是 $\\operatorname{lcm}(a, b) = ab/\\gcd(a, b)$。",
       ),
       generate(rng) {
         const a = rng.int(4, 30);
@@ -706,8 +706,8 @@ export const propertiesOfPrimeDivisibility: TopicDef = {
       id: "smallest-m-with-d-dividing-a-power",
       title: t("Divisors of powers", "幂的因数"),
       explanation: t(
-        "$d \\mid m^k$ exactly when each prime $p^e$ in $d$ has $p^{\\lceil e/k \\rceil} \\mid m$. The smallest positive $m$ with $72 = 2^3 \\cdot 3^2 \\mid m^2$ is $2^2 \\cdot 3 = 12$.",
-        "$d \\mid m^k$ 当且仅当 $d$ 中每个素数幂 $p^e$ 都满足 $p^{\\lceil e/k \\rceil} \\mid m$。满足 $72 = 2^3 \\cdot 3^2 \\mid m^2$ 的最小正整数 $m$ 是 $2^2 \\cdot 3 = 12$。",
+        "Raising a number to a power multiplies the exponent of every prime in it, so each prime must appear often enough to reach the divisor's exponent. $d \\mid m^k$ exactly when each prime $p^e$ in $d$ has $p^{\\lceil e/k \\rceil} \\mid m$. The smallest positive $m$ with $72 = 2^3 \\cdot 3^2 \\mid m^2$ is $2^2 \\cdot 3 = 12$.",
+        "把一个数升幂会使其中每个素数的指数相乘，所以每个素数必须出现足够多次，才能达到因数中的指数。$d \\mid m^k$ 当且仅当 $d$ 中每个素数幂 $p^e$ 都满足 $p^{\\lceil e/k \\rceil} \\mid m$。满足 $72 = 2^3 \\cdot 3^2 \\mid m^2$ 的最小正整数 $m$ 是 $2^2 \\cdot 3 = 12$。",
       ),
       generate(rng) {
         let d: number;
@@ -794,8 +794,8 @@ export const mathematicalInduction: TopicDef = {
       id: "the-inductive-step-for-sums",
       title: t("The inductive step for sums", "求和公式的归纳步骤"),
       explanation: t(
-        "For $\\sum_{i=1}^{n} (2i - 1) = n^2$: assume $\\sum_{i=1}^{k} (2i - 1) = k^2$. Then $\\sum_{i=1}^{k+1} (2i - 1) = k^2 + (2(k + 1) - 1) = k^2 + 2k + 1 = (k + 1)^2$. The new term is the summand at $i = k + 1$.",
-        "对 $\\sum_{i=1}^{n} (2i - 1) = n^2$：假设 $\\sum_{i=1}^{k} (2i - 1) = k^2$。则 $\\sum_{i=1}^{k+1} (2i - 1) = k^2 + (2(k + 1) - 1) = k^2 + 2k + 1 = (k + 1)^2$。新增的项是 $i = k + 1$ 时的求和项。",
+        "The sum up to the next term is the sum up to the current term plus one more term, so the hypothesis replaces the first part. For $\\sum_{i=1}^{n} (2i - 1) = n^2$: assume $\\sum_{i=1}^{k} (2i - 1) = k^2$. Then $\\sum_{i=1}^{k+1} (2i - 1) = k^2 + (2(k + 1) - 1) = k^2 + 2k + 1 = (k + 1)^2$. The new term is the summand at $i = k + 1$.",
+        "到下一项的和等于到当前项的和再加一项，所以归纳假设可以替换前一部分。对 $\\sum_{i=1}^{n} (2i - 1) = n^2$：假设 $\\sum_{i=1}^{k} (2i - 1) = k^2$。则 $\\sum_{i=1}^{k+1} (2i - 1) = k^2 + (2(k + 1) - 1) = k^2 + 2k + 1 = (k + 1)^2$。新增的项是 $i = k + 1$ 时的求和项。",
       ),
       generate(rng) {
         const a = rng.int(1, 9);
@@ -847,8 +847,8 @@ export const provingInequalitiesUsingInduction: TopicDef = {
       id: "finding-the-base-case",
       title: t("Finding the base case", "确定起点"),
       explanation: t(
-        "$2^n > n^2$ fails for $n = 2, 3, 4$ but holds for $n = 5$ ($32 > 25$) and every larger $n$, so an induction proof starts at $n_0 = 5$.",
-        "$2^n > n^2$ 在 $n = 2, 3, 4$ 时不成立，但在 $n = 5$ 时成立（$32 > 25$），且对更大的 $n$ 都成立，所以归纳证明从 $n_0 = 5$ 开始。",
+        "Induction needs a starting value where the statement holds and from which every step works, so check small values to find where it begins. $2^n > n^2$ fails for $n = 2, 3, 4$ but holds for $n = 5$ ($32 > 25$) and every larger $n$, so an induction proof starts at $n_0 = 5$.",
+        "归纳法需要一个使命题成立、并且由此每一步都成立的起点，所以要检查较小的值，找出从哪里开始。$2^n > n^2$ 在 $n = 2, 3, 4$ 时不成立，但在 $n = 5$ 时成立（$32 > 25$），且对更大的 $n$ 都成立，所以归纳证明从 $n_0 = 5$ 开始。",
       ),
       generate(rng) {
         const kind = rng.int(0, 2);
@@ -888,8 +888,8 @@ export const provingInequalitiesUsingInduction: TopicDef = {
       id: "chaining-the-inductive-hypothesis",
       title: t("Chaining the hypothesis", "串联归纳假设"),
       explanation: t(
-        "To prove $3^n > 5n$ for $n \\ge 3$: assume $3^k > 5k$. Then $3^{k+1} = 3 \\cdot 3^k > 15k = 5k + 10k \\ge 5k + 5 = 5(k + 1)$, using $10k \\ge 5$.",
-        "证明 $n \\ge 3$ 时 $3^n > 5n$：假设 $3^k > 5k$。则 $3^{k+1} = 3 \\cdot 3^k > 15k = 5k + 10k \\ge 5k + 5 = 5(k + 1)$，其中用到 $10k \\ge 5$。",
+        "For an inequality, apply the hypothesis to part of the next expression and then show that the extra amount is at least what is needed. To prove $3^n > 5n$ for $n \\ge 3$: assume $3^k > 5k$. Then $3^{k+1} = 3 \\cdot 3^k > 15k = 5k + 10k \\ge 5k + 5 = 5(k + 1)$, using $10k \\ge 5$.",
+        "对于不等式，把归纳假设用在下一个表达式的一部分上，再证明多出的量至少达到所需的量。证明 $n \\ge 3$ 时 $3^n > 5n$：假设 $3^k > 5k$。则 $3^{k+1} = 3 \\cdot 3^k > 15k = 5k + 10k \\ge 5k + 5 = 5(k + 1)$，其中用到 $10k \\ge 5$。",
       ),
       generate(rng) {
         const a = rng.int(2, 7);
@@ -934,8 +934,8 @@ export const provingDivisibilityUsingInduction: TopicDef = {
       id: "rewriting-the-next-term",
       title: t("Rewriting the next term", "改写下一项"),
       explanation: t(
-        "To prove $7 \\mid 8^n - 1$: $8^{k+1} - 1 = 8 \\cdot 8^k - 8 + 7 = 8(8^k - 1) + 7$. The inductive hypothesis says $7 \\mid 8^k - 1$, and $7 \\mid 7$, so $7 \\mid 8^{k+1} - 1$.",
-        "证明 $7 \\mid 8^n - 1$：$8^{k+1} - 1 = 8 \\cdot 8^k - 8 + 7 = 8(8^k - 1) + 7$。归纳假设给出 $7 \\mid 8^k - 1$，又 $7 \\mid 7$，所以 $7 \\mid 8^{k+1} - 1$。",
+        "Rewrite the next expression so that the expression from the hypothesis appears inside it, and the rest is visibly divisible. To prove $7 \\mid 8^n - 1$: $8^{k+1} - 1 = 8 \\cdot 8^k - 8 + 7 = 8(8^k - 1) + 7$. The inductive hypothesis says $7 \\mid 8^k - 1$, and $7 \\mid 7$, so $7 \\mid 8^{k+1} - 1$.",
+        "改写下一个表达式，使归纳假设中的表达式出现在其中，而剩下的部分明显可以被整除。证明 $7 \\mid 8^n - 1$：$8^{k+1} - 1 = 8 \\cdot 8^k - 8 + 7 = 8(8^k - 1) + 7$。归纳假设给出 $7 \\mid 8^k - 1$，又 $7 \\mid 7$，所以 $7 \\mid 8^{k+1} - 1$。",
       ),
       generate(rng) {
         const a = rng.int(3, 20);
@@ -1017,8 +1017,8 @@ export const provingMatrixIdentitiesUsingInduction: TopicDef = {
       id: "entries-of-matrix-powers",
       title: t("Entries of matrix powers", "矩阵幂的元素"),
       explanation: t(
-        "By induction, $\\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix}^n = \\begin{pmatrix} 1 & na \\\\ 0 & 1 \\end{pmatrix}$ and $\\begin{pmatrix} b & 1 \\\\ 0 & b \\end{pmatrix}^n = \\begin{pmatrix} b^n & nb^{n-1} \\\\ 0 & b^n \\end{pmatrix}$.",
-        "由归纳法，$\\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix}^n = \\begin{pmatrix} 1 & na \\\\ 0 & 1 \\end{pmatrix}$，$\\begin{pmatrix} b & 1 \\\\ 0 & b \\end{pmatrix}^n = \\begin{pmatrix} b^n & nb^{n-1} \\\\ 0 & b^n \\end{pmatrix}$。",
+        "Compute the first few powers to guess a pattern for the entries, then prove the pattern by induction. By induction, $\\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix}^n = \\begin{pmatrix} 1 & na \\\\ 0 & 1 \\end{pmatrix}$ and $\\begin{pmatrix} b & 1 \\\\ 0 & b \\end{pmatrix}^n = \\begin{pmatrix} b^n & nb^{n-1} \\\\ 0 & b^n \\end{pmatrix}$.",
+        "先计算前几次幂，猜出元素的规律，再用归纳法证明这个规律。由归纳法，$\\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix}^n = \\begin{pmatrix} 1 & na \\\\ 0 & 1 \\end{pmatrix}$，$\\begin{pmatrix} b & 1 \\\\ 0 & b \\end{pmatrix}^n = \\begin{pmatrix} b^n & nb^{n-1} \\\\ 0 & b^n \\end{pmatrix}$。",
       ),
       generate(rng) {
         const n = rng.int(4, 20);
@@ -1057,8 +1057,8 @@ export const provingMatrixIdentitiesUsingInduction: TopicDef = {
       id: "the-inductive-step-for-matrix-powers",
       title: t("The inductive step", "归纳步骤"),
       explanation: t(
-        "Assume $A^k = \\begin{pmatrix} 1 & ka \\\\ 0 & 1 \\end{pmatrix}$. Then $A^{k+1} = A^k A = \\begin{pmatrix} 1 & ka \\\\ 0 & 1 \\end{pmatrix}\\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix} = \\begin{pmatrix} 1 & (k + 1)a \\\\ 0 & 1 \\end{pmatrix}$.",
-        "假设 $A^k = \\begin{pmatrix} 1 & ka \\\\ 0 & 1 \\end{pmatrix}$。则 $A^{k+1} = A^k A = \\begin{pmatrix} 1 & ka \\\\ 0 & 1 \\end{pmatrix}\\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix} = \\begin{pmatrix} 1 & (k + 1)a \\\\ 0 & 1 \\end{pmatrix}$。",
+        "Multiply the assumed formula for one power by the matrix once more and check that the entries match the formula for the next power. Assume $A^k = \\begin{pmatrix} 1 & ka \\\\ 0 & 1 \\end{pmatrix}$. Then $A^{k+1} = A^k A = \\begin{pmatrix} 1 & ka \\\\ 0 & 1 \\end{pmatrix}\\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix} = \\begin{pmatrix} 1 & (k + 1)a \\\\ 0 & 1 \\end{pmatrix}$.",
+        "把假设的某次幂公式再乘一次矩阵，检查各元素是否与下一次幂的公式一致。假设 $A^k = \\begin{pmatrix} 1 & ka \\\\ 0 & 1 \\end{pmatrix}$。则 $A^{k+1} = A^k A = \\begin{pmatrix} 1 & ka \\\\ 0 & 1 \\end{pmatrix}\\begin{pmatrix} 1 & a \\\\ 0 & 1 \\end{pmatrix} = \\begin{pmatrix} 1 & (k + 1)a \\\\ 0 & 1 \\end{pmatrix}$。",
       ),
       generate(rng) {
         const a = rng.int(2, 9);
@@ -1108,8 +1108,8 @@ export const strongInductionAndRecurrenceRelations: TopicDef = {
       id: "computing-terms-of-a-recurrence",
       title: t("Computing terms", "计算项"),
       explanation: t(
-        "A recurrence such as $a_n = a_{n-1} + 2a_{n-2}$ with $a_0 = 0$, $a_1 = 1$ determines every term: $a_2 = 1$, $a_3 = 3$, $a_4 = 5$, $a_5 = 11$.",
-        "像 $a_n = a_{n-1} + 2a_{n-2}$、$a_0 = 0$、$a_1 = 1$ 这样的递推关系确定了每一项：$a_2 = 1$，$a_3 = 3$，$a_4 = 5$，$a_5 = 11$。",
+        "A recurrence gives each term from earlier ones, so starting from the initial values you can compute the terms one after another. A recurrence such as $a_n = a_{n-1} + 2a_{n-2}$ with $a_0 = 0$, $a_1 = 1$ determines every term: $a_2 = 1$, $a_3 = 3$, $a_4 = 5$, $a_5 = 11$.",
+        "递推关系由前面的项给出每一项，所以从初值出发可以逐项计算。像 $a_n = a_{n-1} + 2a_{n-2}$、$a_0 = 0$、$a_1 = 1$ 这样的递推关系确定了每一项：$a_2 = 1$，$a_3 = 3$，$a_4 = 5$，$a_5 = 11$。",
       ),
       generate(rng) {
         const p = rng.int(-3, 4) || 1;
