@@ -1,6 +1,6 @@
-import type { Problem, Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { paren, poly, Q } from "@ga/subject-math";
+import { type Mark, type Point, paren, poly, Q, sketch } from "@ga/subject-math";
 
 import { choiceProblem, numberProblem, pointProblem } from "../problems.ts";
 
@@ -226,6 +226,72 @@ export const introductionToVectors: TopicDef = {
 
 // ─── 5.16.2 The Triangle Law for the Addition of Two Vectors ────────────────
 
+/** vectorArrow draws the vector from a to b as a segment with an arrowhead at b. */
+function vectorArrow(a: Point, b: Point, style: { accent?: boolean; dashed?: boolean } = {}): Mark[] {
+  const n = Math.hypot(b[0] - a[0], b[1] - a[1]);
+  const [ux, uy] = [(b[0] - a[0]) / n, (b[1] - a[1]) / n];
+  const head = [0.45, -0.45].map((ang): Mark => {
+    const [c, s] = [Math.cos(ang), Math.sin(ang)];
+    return { kind: "segment", a: b, b: [b[0] - 0.4 * (ux * c - uy * s), b[1] - 0.4 * (ux * s + uy * c)], accent: style.accent };
+  });
+  return [{ kind: "segment", a, b, ...style }, ...head];
+}
+
+/** triangleLawFigure shows AB and BC placed head to tail, with their sum AC closing the triangle. */
+const triangleLawFigure: Figure = (() => {
+  const [a, b, c]: Point[] = [
+    [0, 0],
+    [4, 0.5],
+    [5.5, 3.5],
+  ];
+  return {
+    svg: sketch([
+      ...vectorArrow(a!, b!),
+      ...vectorArrow(b!, c!),
+      ...vectorArrow(a!, c!, { accent: true }),
+      { kind: "label", at: a!, text: "A", dir: "w" },
+      { kind: "label", at: b!, text: "B", dir: "se" },
+      { kind: "label", at: c!, text: "C", dir: "n" },
+    ]),
+    alt: t(
+      "Triangle ABC with arrows from A to B and from B to C, the second starting where the first ends, and a highlighted arrow from A to C showing their sum.",
+      "三角形 ABC：从 A 指向 B 的箭头，以及从它的终点 B 出发指向 C 的箭头；高亮的从 A 指向 C 的箭头表示两者之和。",
+    ),
+  };
+})();
+
+/** parallelogramLawFigure shows parallelogram ABCD with u = AB and v = AD, the diagonal AC = u + v and the diagonal BD = v − u. */
+const parallelogramLawFigure: Figure = (() => {
+  const [a, b, c, d]: Point[] = [
+    [0, 0],
+    [5, 0],
+    [7, 3],
+    [2, 3],
+  ];
+  return {
+    svg: sketch([
+      { kind: "segment", a: b!, b: c! },
+      { kind: "segment", a: d!, b: c! },
+      ...vectorArrow(a!, b!),
+      ...vectorArrow(a!, d!),
+      ...vectorArrow(a!, c!, { accent: true }),
+      ...vectorArrow(b!, d!, { dashed: true }),
+      { kind: "side", a: a!, b: b!, text: "u" },
+      { kind: "side", a: d!, b: a!, text: "v" },
+      { kind: "label", at: [2.8, 1.2], text: "u + v", dir: "nw" },
+      { kind: "label", at: [4.1, 0.9], text: "v − u", dir: "ne" },
+      { kind: "label", at: a!, text: "A", dir: "sw" },
+      { kind: "label", at: b!, text: "B", dir: "se" },
+      { kind: "label", at: c!, text: "C", dir: "ne" },
+      { kind: "label", at: d!, text: "D", dir: "nw" },
+    ]),
+    alt: t(
+      "Parallelogram ABCD with u the arrow from A to B and v the arrow from A to D. The highlighted diagonal from A to C is u + v, and the dashed diagonal from B to D is v − u.",
+      "平行四边形 ABCD：u 是从 A 指向 B 的箭头，v 是从 A 指向 D 的箭头。高亮的对角线从 A 指向 C，表示 u + v；虚线对角线从 B 指向 D，表示 v − u。",
+    ),
+  };
+})();
+
 /** theTriangleLawForTheAdditionOfTwoVectors covers head-to-tail addition and parallelogram law. */
 export const theTriangleLawForTheAdditionOfTwoVectors: TopicDef = {
   id: "the-triangle-law-for-the-addition-of-two-vectors",
@@ -246,6 +312,7 @@ export const theTriangleLawForTheAdditionOfTwoVectors: TopicDef = {
         "By the **triangle law** of vector addition, placing the tail of vector $\\vec{BC}$ at the head of vector $\\vec{AB}$ results in the sum:\n\n$$\\vec{AB} + \\vec{BC} = \\vec{AC}$$\n\nFor vector subtraction: $\\vec{AB} - \\vec{AC} = \\vec{AB} + \\vec{CA} = \\vec{CB}$.",
         "根据向量加法的**三角形法则**，将向量 $\\vec{BC}$ 的起点接在向量 $\\vec{AB}$ 的终点上，其和向量为：\n\n$$\\vec{AB} + \\vec{BC} = \\vec{AC}$$\n\n对于向量减法：$$\\vec{AB} - \\vec{AC} = \\vec{AB} + \\vec{CA} = \\vec{CB}$$。",
       ),
+      figure: triangleLawFigure,
       generate(rng) {
         const letters = ["A", "B", "C", "D", "E", "P", "Q", "R", "S"];
         const p1 = rng.pick(letters);
@@ -323,6 +390,7 @@ export const theTriangleLawForTheAdditionOfTwoVectors: TopicDef = {
         "In a parallelogram $ABCD$ with adjacent edges representing vectors $\\mathbf{u} = \\vec{AB}$ and $\\mathbf{v} = \\vec{AD}$:\n\n- The main diagonal starting from $A$ represents the sum: $\\vec{AC} = \\mathbf{u} + \\mathbf{v}$\n- The diagonal $\\vec{BD}$ represents the difference: $\\vec{BD} = \\vec{AD} - \\vec{AB} = \\mathbf{v} - \\mathbf{u}$",
         "在以相邻边表示向量 $\\mathbf{u} = \\vec{AB}$ 和 $\\mathbf{v} = \\vec{AD}$ 的平行四边形 $ABCD$ 中：\n\n- 从 $A$ 出发的主对角线表示和向量：$$\\vec{AC} = \\mathbf{u} + \\mathbf{v}$$\n- 对角线 $\\vec{BD}$ 表示差向量：$$\\vec{BD} = \\vec{AD} - \\vec{AB} = \\mathbf{v} - \\mathbf{u}$$",
       ),
+      figure: parallelogramLawFigure,
       generate(rng) {
         const names = [
           ["A", "B", "C", "D"],
