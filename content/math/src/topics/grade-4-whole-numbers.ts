@@ -200,8 +200,8 @@ export const evaluatingExpressionsInvolvingAdditionAndMultiplication: TopicDef =
       id: "multiplying-before-adding",
       title: t("Multiply before adding", "先乘后加"),
       explanation: t(
-        "$6 + 4 \\times 3$: multiply first, $4 \\times 3 = 12$, then add: $6 + 12 = 18$. Adding first would give the wrong answer $30$.",
-        "$6 + 4 \\times 3$：先乘，$4 \\times 3 = 12$，再加：$6 + 12 = 18$。先加会得到错误答案 $30$。",
+        "When an expression has both multiplication and addition, multiply first, then add, even if the addition is written first.\n\n$6 + 4 \\times 3$: multiply first, $4 \\times 3 = 12$, then add: $6 + 12 = 18$. Adding first would give the wrong answer $30$.",
+        "式子里既有乘法又有加法时，先算乘法，再算加法，即使加法写在前面也一样。\n\n$6 + 4 \\times 3$：先乘，$4 \\times 3 = 12$，再加：$6 + 12 = 18$。先加会得到错误答案 $30$。",
       ),
       generate(rng) {
         const [a, b, c] = [rng.int(2, 30), rng.int(2, 9), rng.int(2, 9)];
@@ -224,8 +224,8 @@ export const evaluatingExpressionsInvolvingAdditionAndMultiplication: TopicDef =
       id: "parentheses-with-addition-and-multiplication",
       title: t("Parentheses first", "先算括号"),
       explanation: t(
-        "$(6 + 4) \\times 3$: work out the parentheses first, $6 + 4 = 10$, then multiply: $10 \\times 3 = 30$.",
-        "$(6 + 4) \\times 3$：先算括号，$6 + 4 = 10$，再乘：$10 \\times 3 = 30$。",
+        "Parentheses change the order: work out what is inside them first, then do the rest.\n\n$(6 + 4) \\times 3$: work out the parentheses first, $6 + 4 = 10$, then multiply: $10 \\times 3 = 30$.",
+        "括号会改变运算顺序：先算括号里面的，再算其余部分。\n\n$(6 + 4) \\times 3$：先算括号，$6 + 4 = 10$，再乘：$10 \\times 3 = 30$。",
       ),
       generate(rng) {
         const [a, b, c] = [rng.int(2, 20), rng.int(2, 20), rng.int(2, 9)];
@@ -264,8 +264,8 @@ export const evaluatingExpressionsContainingMultiplicationAndDivision: TopicDef 
       id: "multiplying-and-dividing-left-to-right",
       title: t("Left to right", "从左往右"),
       explanation: t(
-        "$36 \\div 6 \\times 3 = 6 \\times 3 = 18$, not $36 \\div 18 = 2$.",
-        "$36 \\div 6 \\times 3 = 6 \\times 3 = 18$，而不是 $36 \\div 18 = 2$。",
+        "Multiplication and division have the same rank, so do them in order from left to right. Do not multiply first just because it is multiplication.\n\n$36 \\div 6 \\times 3 = 6 \\times 3 = 18$, not $36 \\div 18 = 2$.",
+        "乘法和除法是同级运算，要从左往右依次计算。不能因为是乘法就先算。\n\n$36 \\div 6 \\times 3 = 6 \\times 3 = 18$，而不是 $36 \\div 18 = 2$。",
       ),
       generate(rng) {
         const b = rng.int(2, 6);
@@ -288,7 +288,10 @@ export const evaluatingExpressionsContainingMultiplicationAndDivision: TopicDef 
     {
       id: "mixing-the-four-operations",
       title: t("All four operations", "四则混合运算"),
-      explanation: t("$30 - 18 \\div 3 = 30 - 6 = 24$: divide before subtracting.", "$30 - 18 \\div 3 = 30 - 6 = 24$：先除后减。"),
+      explanation: t(
+        "With all four operations, do multiplication and division first, from left to right, then addition and subtraction, from left to right.\n\n$30 - 18 \\div 3 = 30 - 6 = 24$: divide before subtracting. Subtracting first gives $12 \\div 3 = 4$, which is wrong.",
+        "四则混合运算中，先从左往右算乘除，再从左往右算加减。\n\n$30 - 18 \\div 3 = 30 - 6 = 24$：先除后减。如果先减，得 $12 \\div 3 = 4$，是错误的。",
+      ),
       generate(rng) {
         const c = rng.int(2, 9);
         const b = c * rng.int(2, 9);
@@ -328,8 +331,8 @@ export const solvingMultistepWordProblemsUsingNumberOperations: TopicDef = {
       id: "groups-then-subtract",
       title: t("Multiply, then subtract", "先乘再减"),
       explanation: t(
-        "A shop has $6$ boxes of $24$ pencils and sells $50$ pencils. It had $6 \\times 24 = 144$ pencils, so $144 - 50 = 94$ are left.",
-        "商店有 $6$ 盒铅笔，每盒 $24$ 支，卖出 $50$ 支。原有 $6 \\times 24 = 144$ 支，所以还剩 $144 - 50 = 94$ 支。",
+        "Break a multistep problem into steps. First find the total from equal groups by multiplying, then subtract what was taken away.\n\nA shop has $6$ boxes of $24$ pencils and sells $50$ pencils. It had $6 \\times 24 = 144$ pencils, so $144 - 50 = 94$ are left.",
+        "把多步应用题分成几步来解。先用乘法求出几组相同的数的总数，再减去拿走的部分。\n\n商店有 $6$ 盒铅笔，每盒 $24$ 支，卖出 $50$ 支。原有 $6 \\times 24 = 144$ 支，所以还剩 $144 - 50 = 94$ 支。",
       ),
       generate(rng) {
         const th = rng.pick(things);
@@ -357,8 +360,8 @@ export const solvingMultistepWordProblemsUsingNumberOperations: TopicDef = {
       id: "add-then-multiply",
       title: t("Add, then multiply", "先加再乘"),
       explanation: t(
-        "A ticket costs $\\$8$ for a child and $\\$12$ for an adult. For $5$ pairs of a child and an adult: $(8 + 12) \\times 5 = \\$100$.",
-        "儿童票 $8$ 元，成人票 $12$ 元。$5$ 对儿童和成人共需 $(8 + 12) \\times 5 = 100$ 元。",
+        "When each group contains two kinds of things, you can find the cost of one group first by adding, then multiply by the number of groups. Use parentheses to show the addition is done first.\n\nA ticket costs $\\$8$ for a child and $\\$12$ for an adult. For $5$ pairs of a child and an adult: $(8 + 12) \\times 5 = \\$100$.",
+        "每组里有两种东西时，可以先用加法求出一组的价钱，再乘组数。用括号表示先算加法。\n\n儿童票 $8$ 元，成人票 $12$ 元。$5$ 对儿童和成人共需 $(8 + 12) \\times 5 = 100$ 元。",
       ),
       generate(rng) {
         const a = rng.int(3, 15);
@@ -479,7 +482,10 @@ export const interpretingMultiplicationEquationsAsAComparison: TopicDef = {
     {
       id: "reading-multiplicative-comparisons",
       title: t("How many times as many?", "是几倍"),
-      explanation: t("$42 = 6 \\times 7$ means $42$ is $6$ times as many as $7$.", "$42 = 6 \\times 7$ 表示 $42$ 是 $7$ 的 $6$ 倍。"),
+      explanation: t(
+        "A multiplication equation can compare two amounts. In $a = b \\times c$, $a$ is $b$ times as many as $c$: the product is the larger amount, one factor is the smaller amount, and the other factor says how many times.\n\n$42 = 6 \\times 7$ means $42$ is $6$ times as many as $7$ (and also $7$ times as many as $6$).",
+        "乘法算式可以表示两个量的倍数关系。在 $a = b \\times c$ 中，$a$ 是 $c$ 的 $b$ 倍：积是较大的量，一个因数是较小的量，另一个因数表示倍数。\n\n$42 = 6 \\times 7$ 表示 $42$ 是 $7$ 的 $6$ 倍（也是 $6$ 的 $7$ 倍）。",
+      ),
       generate(rng) {
         const a = rng.int(2, 12);
         let b: number;
@@ -505,8 +511,8 @@ export const interpretingMultiplicationEquationsAsAComparison: TopicDef = {
       id: "choosing-the-equation-for-a-comparison",
       title: t("Choosing the equation", "选出算式"),
       explanation: t(
-        '"$48$ is $6$ times as many as $8$" is the equation $48 = 6 \\times 8$.',
-        '"$48$ 是 $8$ 的 $6$ 倍"就是算式 $48 = 6 \\times 8$。',
+        'To write "$a$ is $n$ times as many as $b$" as an equation, put the larger amount alone on one side and multiply the other two: $a = n \\times b$.\n\n"$48$ is $6$ times as many as $8$" is the equation $48 = 6 \\times 8$.',
+        '把"$a$ 是 $b$ 的 $n$ 倍"写成算式，就让较大的量单独在一边，另一边是另外两个数相乘：$a = n \\times b$。\n\n"$48$ 是 $8$ 的 $6$ 倍"就是算式 $48 = 6 \\times 8$。',
       ),
       generate(rng) {
         const a = rng.int(2, 9);
@@ -548,8 +554,8 @@ export const representingComparisonStatementsAsEquations: TopicDef = {
       id: "writing-comparison-equations",
       title: t("Writing the equation", "写出算式"),
       explanation: t(
-        "Mia has $3$ times as many shells as Leo, who has $9$. With $m$ for Mia's shells: $m = 3 \\times 9$.",
-        "米娅的贝壳数是利奥的 $3$ 倍，利奥有 $9$ 个。用 $m$ 表示米娅的贝壳数：$m = 3 \\times 9$。",
+        '"Times as many" means multiply. Use a letter for the unknown amount and set it equal to the number of times multiplied by the amount it is compared with.\n\nMia has $3$ times as many shells as Leo, who has $9$. With $m$ for Mia\'s shells: $m = 3 \\times 9$. Writing $m = 3 + 9$ is a common mistake.',
+        '"是……的几倍"用乘法。用字母表示未知的量，让它等于倍数乘被比较的量。\n\n米娅的贝壳数是利奥的 $3$ 倍，利奥有 $9$ 个。用 $m$ 表示米娅的贝壳数：$m = 3 \\times 9$。写成 $m = 3 + 9$ 是常见的错误。',
       ),
       generate(rng) {
         const [p, q] = rng.sample(names, 2);
@@ -589,8 +595,8 @@ export const representingComparisonStatementsAsEquations: TopicDef = {
       id: "solving-for-an-unknown-factor",
       title: t("Unknown factors", "求未知因数"),
       explanation: t(
-        '"$56$ is $7$ times as many as $n$": $56 = 7 \\times n$, so $n = 56 \\div 7 = 8$.',
-        '"$56$ 是 $n$ 的 $7$ 倍"：$56 = 7 \\times n$，所以 $n = 56 \\div 7 = 8$。',
+        'When the larger amount and the number of times are known, the smaller amount is an unknown factor. Find it by dividing the product by the known factor.\n\n"$56$ is $7$ times as many as $n$": $56 = 7 \\times n$, so $n = 56 \\div 7 = 8$.',
+        '已知较大的量和倍数时，较小的量是一个未知的因数。用积除以已知的因数求出它。\n\n"$56$ 是 $n$ 的 $7$ 倍"：$56 = 7 \\times n$，所以 $n = 56 \\div 7 = 8$。',
       ),
       generate(rng) {
         const k = rng.int(2, 12);
@@ -660,8 +666,8 @@ export const wordProblemsInvolvingAdditiveAndMultiplicativeComparison: TopicDef 
       id: "more-than-versus-times-as-many",
       title: t("How many more or how many times?", "多多少还是几倍"),
       explanation: t(
-        "$35$ and $7$: $35$ is $35 - 7 = 28$ more than $7$, and $35 \\div 7 = 5$ times as many.",
-        "$35$ 与 $7$：$35$ 比 $7$ 多 $35 - 7 = 28$，是 $7$ 的 $35 \\div 7 = 5$ 倍。",
+        '"How many more" compares by subtracting; "how many times as many" compares by dividing. Read the question carefully to choose.\n\n$35$ and $7$: $35$ is $35 - 7 = 28$ more than $7$, and $35 \\div 7 = 5$ times as many.',
+        '"多多少"用减法比较，"是几倍"用除法比较。仔细读题再选择。\n\n$35$ 与 $7$：$35$ 比 $7$ 多 $35 - 7 = 28$，是 $7$ 的 $35 \\div 7 = 5$ 倍。',
       ),
       generate(rng) {
         const [p, q] = rng.sample(names, 2);
@@ -708,8 +714,8 @@ export const generatingPatterns: TopicDef = {
       id: "terms-of-a-pattern-from-a-rule",
       title: t("Following a one-step rule", "按一步规则"),
       explanation: t(
-        "Start at $7$ and add $5$: $7, 12, 17, 22, 27$. The $5$th number is $27 = 7 + 4 \\times 5$.",
-        "从 $7$ 开始，每次加 $5$：$7, 12, 17, 22, 27$。第 $5$ 个数是 $27 = 7 + 4 \\times 5$。",
+        "A pattern rule tells how to get each number from the one before. Start with the first number and apply the rule again and again. To reach the $n$th number you apply the rule $n - 1$ times.\n\nStart at $7$ and add $5$: $7, 12, 17, 22, 27$. The $5$th number is $27 = 7 + 4 \\times 5$.",
+        "数列的规则说明怎样由前一个数得到后一个数。从第一个数开始，一次次地使用规则。求第 $n$ 个数，要使用规则 $n - 1$ 次。\n\n从 $7$ 开始，每次加 $5$：$7, 12, 17, 22, 27$。第 $5$ 个数是 $27 = 7 + 4 \\times 5$。",
       ),
       generate(rng) {
         const mult = rng.bool(0.3);
@@ -754,8 +760,8 @@ export const generatingPatterns: TopicDef = {
       id: "patterns-from-two-step-rules",
       title: t("Following a two-step rule", "按两步规则"),
       explanation: t(
-        'Start at $1$ with the rule "multiply by $2$, then add $1$": $1, 3, 7, 15$.',
-        '从 $1$ 开始，规则为"乘 $2$，再加 $1$"：$1, 3, 7, 15$。',
+        'With a two-step rule, do both steps in order to get each new number, then start again from that number.\n\nStart at $1$ with the rule "multiply by $2$, then add $1$": $1 \\times 2 + 1 = 3$, $3 \\times 2 + 1 = 7$, $7 \\times 2 + 1 = 15$. So the pattern is $1, 3, 7, 15$.',
+        '规则有两步时，按顺序做完两步得到下一个数，再从这个数开始继续。\n\n从 $1$ 开始，规则为"乘 $2$，再加 $1$"：$1 \\times 2 + 1 = 3$，$3 \\times 2 + 1 = 7$，$7 \\times 2 + 1 = 15$。所以数列是 $1, 3, 7, 15$。',
       ),
       generate(rng) {
         const a = rng.int(1, 6);
@@ -799,8 +805,8 @@ export const identifyingPatterns: TopicDef = {
       id: "continuing-a-pattern",
       title: t("The next number", "下一个数"),
       explanation: t(
-        "In $4, 11, 18, 25$ each number is $7$ more than the one before, so the next number is $32$.",
-        "在 $4, 11, 18, 25$ 中，每个数都比前一个多 $7$，所以下一个数是 $32$。",
+        "To continue a pattern, find the rule by comparing each number with the one before it. Check that the rule works for every step, then apply it once more.\n\nIn $4, 11, 18, 25$ each number is $7$ more than the one before, so the next number is $25 + 7 = 32$.",
+        "要接着写数列，先比较每个数和它前一个数，找出规则。检查规则对每一步都成立，再用一次规则。\n\n在 $4, 11, 18, 25$ 中，每个数都比前一个多 $7$，所以下一个数是 $25 + 7 = 32$。",
       ),
       generate(rng) {
         const mult = rng.bool(0.3);
@@ -832,8 +838,8 @@ export const identifyingPatterns: TopicDef = {
       id: "finding-a-missing-number-in-a-pattern",
       title: t("A missing number", "缺少的数"),
       explanation: t(
-        "In $9, 15, \\square, 27, 33$ the step is $6$, so the missing number is $21$.",
-        "在 $9, 15, \\square, 27, 33$ 中，每次加 $6$，所以缺少的数是 $21$。",
+        "Find the step from two neighbors that are both known, then use it to fill the gap. Check that the step also leads from the missing number to the next one.\n\nIn $9, 15, \\square, 27, 33$ the step is $6$, so the missing number is $15 + 6 = 21$, and $21 + 6 = 27$ checks.",
+        "用两个相邻的已知数求出每次增加多少，再用它填出空缺的数。检查从空缺的数到下一个数也符合这个规则。\n\n在 $9, 15, \\square, 27, 33$ 中，每次加 $6$，所以缺少的数是 $15 + 6 = 21$，而 $21 + 6 = 27$，正好符合。",
       ),
       generate(rng) {
         const a = rng.int(1, 50);
@@ -898,11 +904,11 @@ function placeValueKPs(lo: number, hi: number): KnowledgePointDef[] {
       title: t("The value of a digit", "数字表示的值"),
       explanation: t(
         hi <= 4
-          ? "A digit's value is the digit times its place: in $5{,}382$ the $3$ is worth $300$."
-          : "A digit's value is the digit times its place: in $4{,}706{,}215$ the $7$ is worth $700{,}000$.",
+          ? "Each place is worth ten times the place to its right: ones, tens, hundreds, thousands. A digit's value is the digit times its place, so the same digit is worth more the farther left it is.\n\nIn $5{,}382$ the $3$ is in the hundreds place, so it is worth $3 \\times 100 = 300$, not $3$."
+          : "Large numbers use the same pattern: after thousands come ten thousands, hundred thousands and millions. Count the places from the right to find where a digit is, then multiply the digit by that place.\n\nIn $4{,}706{,}215$ the $7$ is in the hundred thousands place, so it is worth $700{,}000$.",
         hi <= 4
-          ? "数字表示的值等于数字乘它所在数位的单位：$5{,}382$ 中的 $3$ 表示 $300$。"
-          : "数字表示的值等于数字乘它所在数位的单位：$4{,}706{,}215$ 中的 $7$ 表示 $700{,}000$。",
+          ? "每一位的计数单位都是它右边一位的十倍：个、十、百、千。一个数字表示的值等于这个数字乘它所在数位的计数单位，所以同一个数字越靠左，表示的值越大。\n\n$5{,}382$ 中的 $3$ 在百位上，表示 $3 \\times 100 = 300$，而不是 $3$。"
+          : "大数也遵循同样的规律：千位之后是万位、十万位、百万位。从右往左数出数字所在的数位，再用数字乘这一位的计数单位。\n\n$4{,}706{,}215$ 中的 $7$ 在十万位上，表示 $700{,}000$。",
       ),
       generate(rng) {
         let n: number;
@@ -1068,8 +1074,8 @@ export const convertingFromStandardFormToExpandedForm: TopicDef = {
       id: "choosing-the-expanded-form",
       title: t("Choosing the expanded form", "选出展开形式"),
       explanation: t(
-        "$7{,}308 = 7{,}000 + 300 + 8$, not $7{,}000 + 300 + 80$.",
-        "$7{,}308 = 7{,}000 + 300 + 8$，而不是 $7{,}000 + 300 + 80$。",
+        "Expanded form writes a number as the sum of the values of its digits. Write each nonzero digit with its place value and skip the zeros, but keep every digit in its own place.\n\n$7{,}308 = 7{,}000 + 300 + 8$, not $7{,}000 + 300 + 80$: the $8$ is in the ones place, because the $0$ holds the tens place.",
+        "展开式是把一个数写成各个数字所表示的值的和。按每个非零数字所在的数位写出它的值，$0$ 不用写，但每个数字都要留在自己的数位上。\n\n$7{,}308 = 7{,}000 + 300 + 8$，而不是 $7{,}000 + 300 + 80$：$0$ 占着十位，所以 $8$ 在个位上。",
       ),
       generate(rng) {
         const n = numberWithZeros(rng, rng.int(4, 6));
@@ -1100,8 +1106,8 @@ export const convertingFromStandardFormToExpandedForm: TopicDef = {
       id: "missing-terms-of-expanded-forms",
       title: t("A missing term", "缺少的加数"),
       explanation: t(
-        "$52{,}074 = 50{,}000 + 2{,}000 + \\square + 4$: the missing term is the value of the $7$, which is $70$.",
-        "$52{,}074 = 50{,}000 + 2{,}000 + \\square + 4$：缺少的是 $7$ 表示的值 $70$。",
+        "To find a missing term, compare the expanded form with the number place by place and see which digit has not been written yet. The missing term is that digit's value.\n\n$52{,}074 = 50{,}000 + 2{,}000 + \\square + 4$: the missing term is the value of the $7$, which is in the tens place, so it is $70$.",
+        "求展开式中缺少的项，就把展开式和原数逐位对照，看哪个数字还没写出来。缺少的项就是这个数字表示的值。\n\n$52{,}074 = 50{,}000 + 2{,}000 + \\square + 4$：缺少的是十位上 $7$ 表示的值，即 $70$。",
       ),
       generate(rng) {
         const n = numberWithZeros(rng, rng.int(4, 7));
@@ -1142,8 +1148,8 @@ export const convertingFromExpandedFormToStandardForm: TopicDef = {
       id: "writing-expanded-forms-as-numbers",
       title: t("Terms in order", "按顺序的展开形式"),
       explanation: t(
-        "$30{,}000 + 400 + 7 = 30{,}407$: there are no thousands and no tens, so those places get zeros.",
-        "$30{,}000 + 400 + 7 = 30{,}407$：没有千和十，所以这两位写 $0$。",
+        "To write expanded form as a number, put each term's digit in its place. Any place with no term gets a $0$, so the other digits stay in the right places.\n\n$30{,}000 + 400 + 7 = 30{,}407$: there are no thousands and no tens, so those places get zeros. Leaving them out would give $347$.",
+        "把展开式写成数时，把每一项的数字放到相应的数位上。没有的数位写 $0$ 占位，其他数字才能在正确的位置。\n\n$30{,}000 + 400 + 7 = 30{,}407$：没有千和十，所以这两位写 $0$。漏掉它们就成了 $347$。",
       ),
       generate(rng) {
         const n = numberWithZeros(rng, rng.int(4, 7));
@@ -1169,8 +1175,8 @@ export const convertingFromExpandedFormToStandardForm: TopicDef = {
       id: "writing-scrambled-expanded-forms-as-numbers",
       title: t("Terms in any order", "打乱顺序的展开形式"),
       explanation: t(
-        "$8 + 500 + 20{,}000 = 20{,}508$: sort the terms by place first.",
-        "$8 + 500 + 20{,}000 = 20{,}508$：先按数位整理各项。",
+        "The terms may be in any order. Sort them by place, from the largest down, then write each digit in its place and fill the empty places with zeros.\n\n$8 + 500 + 20{,}000 = 20{,}508$: there are $2$ ten thousands, no thousands, $5$ hundreds, no tens and $8$ ones.",
+        "展开式中各项的顺序可能是乱的。先按数位从大到小排好，再把每个数字写在相应的数位上，空着的数位写 $0$。\n\n$8 + 500 + 20{,}000 = 20{,}508$：有 $2$ 个万、$0$ 个千、$5$ 个百、$0$ 个十和 $8$ 个一。",
       ),
       generate(rng) {
         let n: number;
@@ -1210,8 +1216,8 @@ export const equivalentPlaceValueRepresentations: TopicDef = {
       id: "counting-units-in-round-numbers",
       title: t("How many hundreds?", "有多少个百"),
       explanation: t(
-        "$5{,}600 = 56$ hundreds, since $56 \\times 100 = 5{,}600$.",
-        "$5{,}600 = 56$ 个百，因为 $56 \\times 100 = 5{,}600$。",
+        "A number can be counted in any unit. To find how many hundreds a number ending in $00$ is, divide it by $100$, which removes two zeros. Count all the hundreds, including those inside the thousands.\n\n$5{,}600 = 56$ hundreds, since $56 \\times 100 = 5{,}600$. It is not $6$ hundreds: the $5$ thousands are $50$ more hundreds.",
+        "一个数可以用不同的计数单位来数。求一个末尾是 $00$ 的数里有多少个百，就除以 $100$，去掉两个 $0$。千里面的百也要算进去。\n\n$5{,}600 = 56$ 个百，因为 $56 \\times 100 = 5{,}600$。不是 $6$ 个百：$5$ 个千里还有 $50$ 个百。",
       ),
       generate(rng) {
         const k = rng.int(1, 3);
@@ -1233,8 +1239,8 @@ export const equivalentPlaceValueRepresentations: TopicDef = {
       id: "counting-whole-units-in-a-number",
       title: t("Whole tens in a number", "一个数中有多少个整十"),
       explanation: t(
-        "$4{,}237$ contains $423$ whole tens ($4{,}230$) and $7$ ones; the tens digit alone is only $3$.",
-        "$4{,}237$ 中有 $423$ 个十（即 $4{,}230$）和 $7$ 个一；十位上的数字只是 $3$。",
+        "The number of whole tens in a number is everything to the left of the ones digit, read as one number. The ones are left over. This is different from the tens digit, which counts only the tens not already in a hundred.\n\n$4{,}237$ contains $423$ whole tens ($4{,}230$) and $7$ ones; the tens digit alone is only $3$.",
+        "一个数里有多少个整十，就把个位左边的所有数字看作一个数来读，剩下的是个位上的一。这和十位上的数字不同，十位数字只数没有满一百的十。\n\n$4{,}237$ 中有 $423$ 个十（即 $4{,}230$）和 $7$ 个一；十位上的数字只是 $3$。",
       ),
       generate(rng) {
         const n = randomWithDigits(rng, rng.int(4, 5));
@@ -1272,8 +1278,8 @@ export const moreOnEquivalentPlaceValueRepresentations: TopicDef = {
       id: "combining-units-with-regrouping",
       title: t("Combining units", "合并计数单位"),
       explanation: t(
-        "$3$ thousands $+ 14$ hundreds $= 3{,}000 + 1{,}400 = 4{,}400$.",
-        "$3$ 个千 $+ 14$ 个百 $= 3{,}000 + 1{,}400 = 4{,}400$。",
+        "When a place has $10$ or more units, it is not a single digit any more. Write each part as a number and add; ten of one unit make one of the next larger unit.\n\n$3$ thousands $+ 14$ hundreds $= 3{,}000 + 1{,}400 = 4{,}400$, because $14$ hundreds is $1$ thousand and $4$ hundreds.",
+        "某一位上的单位满 $10$ 个或更多时，就不再是一个数字。把每一部分写成数再相加；满十个就向前一位进一。\n\n$3$ 个千 $+ 14$ 个百 $= 3{,}000 + 1{,}400 = 4{,}400$，因为 $14$ 个百是 $1$ 个千和 $4$ 个百。",
       ),
       generate(rng) {
         const hiK = rng.int(2, 3);
@@ -1300,8 +1306,8 @@ export const moreOnEquivalentPlaceValueRepresentations: TopicDef = {
       id: "combining-three-kinds-of-units",
       title: t("Three kinds of units", "三种计数单位"),
       explanation: t(
-        "$2$ hundreds $+ 15$ tens $+ 12$ ones $= 200 + 150 + 12 = 362$.",
-        "$2$ 个百 $+ 15$ 个十 $+ 12$ 个一 $= 200 + 150 + 12 = 362$。",
+        "Turn each part into a number by multiplying by its unit, then add them. Do not just write the counts side by side.\n\n$2$ hundreds $+ 15$ tens $+ 12$ ones $= 200 + 150 + 12 = 362$. Writing $21512$ would be a mistake.",
+        "把每一部分乘它的计数单位变成数，再相加。不能把个数直接并排写在一起。\n\n$2$ 个百 $+ 15$ 个十 $+ 12$ 个一 $= 200 + 150 + 12 = 362$。写成 $21512$ 是错误的。",
       ),
       generate(rng) {
         const a = rng.int(1, 9);
@@ -1340,8 +1346,8 @@ export const equivalentPlaceValueRepresentationsAndBorrowing: TopicDef = {
       id: "breaking-a-hundred-into-tens",
       title: t("Trading one for ten", "一换十"),
       explanation: t(
-        "$652 = 6$ hundreds $+ 4$ tens $+ \\square$ ones: one ten was traded for ten ones, so $\\square = 12$.",
-        "$652 = 6$ 个百 $+ 4$ 个十 $+ \\square$ 个一：拿一个十换成十个一，所以 $\\square = 12$。",
+        "A number can be rewritten by trading one unit for ten of the next smaller unit, as in subtraction with regrouping. The total stays the same: one place goes down by $1$ and the next goes up by $10$.\n\n$652 = 6$ hundreds $+ 4$ tens $+ \\square$ ones: one ten was traded for ten ones, so $\\square = 2 + 10 = 12$.",
+        "一个数可以拿一个计数单位换成十个较小的单位来改写，就像退位减法那样。总数不变：一位减少 $1$，下一位增加 $10$。\n\n$652 = 6$ 个百 $+ 4$ 个十 $+ \\square$ 个一：拿一个十换成十个一，所以 $\\square = 2 + 10 = 12$。",
       ),
       generate(rng) {
         let n: number;
@@ -1425,8 +1431,8 @@ export const comparingPlaceValues: TopicDef = {
       id: "comparing-a-digit-in-two-numbers",
       title: t("The same digit in two numbers", "两个数中的同一个数字"),
       explanation: t(
-        "The $6$ in $46{,}213$ is worth $6{,}000$; the $6$ in $3{,}562$ is worth $60$. $6{,}000$ is $100$ times $60$.",
-        "$46{,}213$ 中的 $6$ 表示 $6{,}000$；$3{,}562$ 中的 $6$ 表示 $60$。$6{,}000$ 是 $60$ 的 $100$ 倍。",
+        "Each place to the left is worth $10$ times as much. So the same digit two places farther left is worth $10 \\times 10 = 100$ times as much. Find each digit's value, then divide.\n\nThe $6$ in $46{,}213$ is worth $6{,}000$; the $6$ in $3{,}562$ is worth $60$. $6{,}000$ is $100$ times $60$.",
+        "每向左一位，计数单位扩大到原来的 $10$ 倍。所以同一个数字向左移两位，表示的值是原来的 $10 \\times 10 = 100$ 倍。先求出每个数字表示的值，再相除。\n\n$46{,}213$ 中的 $6$ 表示 $6{,}000$；$3{,}562$ 中的 $6$ 表示 $60$。$6{,}000$ 是 $60$ 的 $100$ 倍。",
       ),
       generate(rng) {
         const d = rng.int(1, 9);
@@ -1463,8 +1469,8 @@ export const comparingPlaceValues: TopicDef = {
       id: "comparing-a-repeated-digit",
       title: t("A repeated digit", "重复出现的数字"),
       explanation: t(
-        "In $5{,}352$ the first $5$ is worth $5{,}000$ and the second $50$; the first is $100$ times the second.",
-        "在 $5{,}352$ 中，第一个 $5$ 表示 $5{,}000$，第二个表示 $50$；前者是后者的 $100$ 倍。",
+        "When a digit appears twice in one number, count how many places apart the two are. Each place apart multiplies the value by $10$.\n\nIn $5{,}352$ the first $5$ is worth $5{,}000$ and the second $50$. They are two places apart, so the first is $100$ times the second.",
+        "同一个数字在一个数中出现两次时，数一数它们相隔几位。每隔一位，值就扩大 $10$ 倍。\n\n在 $5{,}352$ 中，第一个 $5$ 表示 $5{,}000$，第二个表示 $50$。它们相隔两位，所以前者是后者的 $100$ 倍。",
       ),
       generate(rng) {
         const d = rng.int(1, 9);
@@ -1514,8 +1520,8 @@ export const comparingWholeNumbers: TopicDef = {
       id: "comparing-numbers-with-different-numbers-of-digits",
       title: t("Different numbers of digits", "位数不同"),
       explanation: t(
-        "$9{,}876 < 10{,}002$: a five-digit number is greater than any four-digit number.",
-        "$9{,}876 < 10{,}002$：五位数比任何四位数都大。",
+        "When two whole numbers have different numbers of digits, the one with more digits is greater, whatever the digits are. Count the digits first.\n\n$9{,}876 < 10{,}002$: a five-digit number is greater than any four-digit number.",
+        "两个整数的位数不同时，位数多的数大，不论各位上是什么数字。先数位数。\n\n$9{,}876 < 10{,}002$：五位数比任何四位数都大。",
       ),
       generate(rng) {
         const da = rng.int(3, 6);
@@ -1540,8 +1546,8 @@ export const comparingWholeNumbers: TopicDef = {
       id: "comparing-numbers-with-the-same-number-of-digits",
       title: t("The same number of digits", "位数相同"),
       explanation: t(
-        "$47{,}312$ and $47{,}298$ first differ in the hundreds place: $3 > 2$, so $47{,}312 > 47{,}298$.",
-        "$47{,}312$ 与 $47{,}298$ 第一个不同的数位是百位：$3 > 2$，所以 $47{,}312 > 47{,}298$。",
+        "When the numbers have the same number of digits, compare them place by place from the left. The first place where the digits differ decides which number is greater.\n\n$47{,}312$ and $47{,}298$ first differ in the hundreds place: $3 > 2$, so $47{,}312 > 47{,}298$, even though $98$ is more than $12$.",
+        "位数相同时，从最高位开始逐位比较。第一个数字不同的数位决定哪个数大。\n\n$47{,}312$ 与 $47{,}298$ 第一个不同的数位是百位：$3 > 2$，所以 $47{,}312 > 47{,}298$，尽管 $98$ 比 $12$ 大。",
       ),
       generate(rng) {
         const len = rng.int(4, 7);
@@ -1597,8 +1603,8 @@ export const comparingWholeNumbersUsingPlaceValue: TopicDef = {
       id: "finding-the-greatest-number",
       title: t("The greatest number", "最大的数"),
       explanation: t(
-        "Of $52{,}318$, $52{,}381$, $52{,}183$ and $51{,}832$, the greatest is $52{,}381$: compare the thousands, then the hundreds, then the tens.",
-        "$52{,}318$、$52{,}381$、$52{,}183$ 和 $51{,}832$ 中最大的是 $52{,}381$：依次比较千位、百位、十位。",
+        "To find the greatest of several numbers, compare them all place by place from the left. At each place keep only the numbers with the largest digit, and move on until one is left.\n\nOf $52{,}318$, $52{,}381$, $52{,}183$ and $51{,}832$, the greatest is $52{,}381$: compare the thousands, then the hundreds, then the tens.",
+        "在几个数中找最大的，从最高位开始逐位比较。每一位只留下数字最大的那些数，继续比下一位，直到只剩一个。\n\n$52{,}318$、$52{,}381$、$52{,}183$ 和 $51{,}832$ 中最大的是 $52{,}381$：依次比较千位、百位、十位。",
       ),
       generate(rng) {
         const len = rng.int(4, 6);
@@ -1758,8 +1764,8 @@ export const roundingDownWholeNumbers: TopicDef = {
       "down",
       [1, 2],
       t(
-        "$632$ to the nearest ten: the ones digit $2$ is less than $5$, so $630$.",
-        "$632$ 四舍五入到十位：个位是 $2$，小于 $5$，所以是 $630$。",
+        "To round, look at the digit just to the right of the place you round to. If it is less than $5$, keep the rounding digit and change every digit after it to $0$.\n\n$632$ to the nearest ten: the ones digit $2$ is less than $5$, so $630$.",
+        "四舍五入时，看要保留的数位右边一位上的数字。如果小于 $5$，保留的数位不变，后面的各位都改写成 $0$。\n\n$632$ 四舍五入到十位：个位是 $2$，小于 $5$，所以是 $630$。",
       ),
     ),
     roundingKP(
@@ -1768,8 +1774,8 @@ export const roundingDownWholeNumbers: TopicDef = {
       "down",
       [3, 4, 5],
       t(
-        "$58{,}412$ to the nearest thousand: the hundreds digit $4$ is less than $5$, so $58{,}000$.",
-        "$58{,}412$ 四舍五入到千位：百位是 $4$，小于 $5$，所以是 $58{,}000$。",
+        "Rounding to larger places works the same way: look only at the next digit to the right. If it is less than $5$, the rounding digit stays and all the digits after it become zeros.\n\n$58{,}412$ to the nearest thousand: the hundreds digit $4$ is less than $5$, so $58{,}000$.",
+        "保留到更高的数位也是同样的方法：只看右边紧挨着的一位。如果小于 $5$，保留的数位不变，后面的各位都改写成 $0$。\n\n$58{,}412$ 四舍五入到千位：百位是 $4$，小于 $5$，所以是 $58{,}000$。",
       ),
     ),
   ],
@@ -1794,8 +1800,8 @@ export const roundingUpWholeNumbers: TopicDef = {
       "up",
       [1, 2],
       t(
-        "$647$ to the nearest ten: the ones digit $7$ is $5$ or more, so $650$.",
-        "$647$ 四舍五入到十位：个位是 $7$，大于或等于 $5$，所以是 $650$。",
+        "If the digit to the right of the rounding place is $5$ or more, add $1$ to the rounding digit and change every digit after it to $0$.\n\n$647$ to the nearest ten: the ones digit $7$ is $5$ or more, so $650$.",
+        "如果要保留的数位右边一位上的数字是 $5$ 或更大，就在保留的数位上加 $1$，后面的各位都改写成 $0$。\n\n$647$ 四舍五入到十位：个位是 $7$，大于或等于 $5$，所以是 $650$。",
       ),
     ),
     roundingKP(
@@ -1804,8 +1810,8 @@ export const roundingUpWholeNumbers: TopicDef = {
       "mixed",
       [3, 4, 5],
       t(
-        "$58{,}612$ to the nearest thousand: the hundreds digit is $6$, so $59{,}000$; $58{,}412$ would give $58{,}000$.",
-        "$58{,}612$ 四舍五入到千位：百位是 $6$，所以是 $59{,}000$；$58{,}412$ 则是 $58{,}000$。",
+        "Look only at the digit just right of the rounding place: $5$ or more rounds up, less than $5$ rounds down. The digits farther right do not matter.\n\n$58{,}612$ to the nearest thousand: the hundreds digit is $6$, so $59{,}000$; $58{,}412$ would give $58{,}000$.",
+        "只看要保留的数位右边一位：$5$ 或更大就进一，小于 $5$ 就舍去。更右边的数字不用管。\n\n$58{,}612$ 四舍五入到千位：百位是 $6$，所以是 $59{,}000$；$58{,}412$ 则是 $58{,}000$。",
       ),
     ),
   ],
@@ -1830,8 +1836,8 @@ export const roundingUpTheDigit9: TopicDef = {
       "nine",
       [1, 2],
       t(
-        "$596$ to the nearest ten: $9$ tens plus one more ten is $10$ tens, so $600$.",
-        "$596$ 四舍五入到十位：$9$ 个十再加一个十是 $10$ 个十，所以是 $600$。",
+        "When the rounding digit is $9$ and you round up, it becomes $10$: write $0$ there and carry $1$ to the place on its left.\n\n$596$ to the nearest ten: $9$ tens plus one more ten is $10$ tens, which is $1$ hundred, so $600$. Writing $5{,}100$ or $5100$ would be a mistake.",
+        "如果要保留的数位上是 $9$，又需要进一，它就变成 $10$：这一位写 $0$，向左边一位进 $1$。\n\n$596$ 四舍五入到十位：$9$ 个十再加一个十是 $10$ 个十，即 $1$ 个百，所以是 $600$。写成 $5100$ 是错误的。",
       ),
     ),
     roundingKP(
@@ -1840,8 +1846,8 @@ export const roundingUpTheDigit9: TopicDef = {
       "nine",
       [3, 4],
       t(
-        "$49{,}712$ to the nearest thousand: $9$ thousands round up to $10$ thousands, so $50{,}000$.",
-        "$49{,}712$ 四舍五入到千位：$9$ 个千进一成 $10$ 个千，所以是 $50{,}000$。",
+        "For larger places, a $9$ that rounds up also becomes $0$ and carries $1$ to the left.\n\n$49{,}712$ to the nearest thousand: the hundreds digit $7$ means round up, and $9$ thousands round up to $10$ thousands, so $50{,}000$.",
+        "保留到更高的数位时，需要进一的 $9$ 同样变成 $0$，并向左边一位进 $1$。\n\n$49{,}712$ 四舍五入到千位：百位是 $7$，要进一，$9$ 个千进一成 $10$ 个千，所以是 $50{,}000$。",
       ),
     ),
   ],
@@ -1887,7 +1893,10 @@ function additionTopic(id: string, title: Text, summary: Text, prerequisites: st
       {
         id: `${id}-word-problems`,
         title: t("Word problems", "应用题"),
-        explanation: t('"How many in all" and "how many altogether" ask for a sum.', '"一共有多少"求的是和。'),
+        explanation: t(
+          'Read the question to decide which operation it asks for. Words like "how many in all" and "how many altogether" put amounts together, so they ask for a sum: add all the amounts given, lining up the digits by place value.\n\nA zoo has $46$ visitors on Monday and $38$ on Tuesday. In all there were $46 + 38 = 84$ visitors.',
+          '先读懂问题，判断要用哪种运算。"一共有多少""总共有多少"是把几个量合起来，求的是和：把题中给出的数都加起来，相同数位要对齐。\n\n动物园星期一有 $46$ 人，星期二有 $38$ 人。一共有 $46 + 38 = 84$ 人。',
+        ),
         generate(rng) {
           const ns = sizes(rng);
           const s = ns.reduce((a, b) => a + b, 0);
@@ -2012,12 +2021,20 @@ function estimatingKP(id: string, k: number, subtract: boolean): KnowledgePointD
     title: t(`Rounding to the nearest ${roundNames[k]!.en}`, `四舍五入到${placeNames[k]!["zh-CN"]}`),
     explanation: subtract
       ? t(
-          k === 2 ? "$823 - 368 \\approx 800 - 400 = 400$." : "$7{,}812 - 2{,}456 \\approx 8{,}000 - 2{,}000 = 6{,}000$.",
-          k === 2 ? "$823 - 368 \\approx 800 - 400 = 400$。" : "$7{,}812 - 2{,}456 \\approx 8{,}000 - 2{,}000 = 6{,}000$。",
+          k === 2
+            ? "To estimate a difference, round each number to the nearest hundred on its own, then subtract the rounded numbers. Round both numbers before subtracting, not the exact answer afterwards.\n\n$823 - 368 \\approx 800 - 400 = 400$."
+            : "Round each number to the nearest thousand, then subtract.\n\n$7{,}812 - 2{,}456 \\approx 8{,}000 - 2{,}000 = 6{,}000$. The exact difference, $5{,}356$, is near this estimate.",
+          k === 2
+            ? "估算差时，把每个数分别四舍五入到整百数，再把近似数相减。要先把两个数都取近似值再相减，而不是算出准确的差再取近似值。\n\n$823 - 368 \\approx 800 - 400 = 400$。"
+            : "把每个数四舍五入到千位，再相减。\n\n$7{,}812 - 2{,}456 \\approx 8{,}000 - 2{,}000 = 6{,}000$。准确的差是 $5{,}356$，和估算结果接近。",
         )
       : t(
-          k === 2 ? "$468 + 237 \\approx 500 + 200 = 700$." : "$4{,}612 + 2{,}391 \\approx 5{,}000 + 2{,}000 = 7{,}000$.",
-          k === 2 ? "$468 + 237 \\approx 500 + 200 = 700$。" : "$4{,}612 + 2{,}391 \\approx 5{,}000 + 2{,}000 = 7{,}000$。",
+          k === 2
+            ? "To estimate a sum, round each number first, then add the rounded numbers. An estimate shows about how big the answer is and helps you check an exact sum.\n\n$468 + 237 \\approx 500 + 200 = 700$."
+            : "Round each number to the nearest thousand by looking at its hundreds digit, then add.\n\n$4{,}612 + 2{,}391 \\approx 5{,}000 + 2{,}000 = 7{,}000$.",
+          k === 2
+            ? "估算和时，先把每个数取近似值，再把近似数相加。估算可以看出答案大约是多少，也可以用来检查准确的结果。\n\n$468 + 237 \\approx 500 + 200 = 700$。"
+            : "根据百位上的数字，把每个数四舍五入到千位，再相加。\n\n$4{,}612 + 2{,}391 \\approx 5{,}000 + 2{,}000 = 7{,}000$。",
         ),
     generate(rng) {
       let a: number;
@@ -2119,8 +2136,8 @@ function subtractionTopic(
         id: `${id}-word-problems`,
         title: t("Word problems", "应用题"),
         explanation: t(
-          '"How many are left", "how many more" and "how much farther" ask for a difference.',
-          '"还剩多少""多多少""还要走多远"求的都是差。',
+          'Questions like "how many are left", "how many more" and "how much farther" ask for a difference: subtract the smaller amount from the larger one. Check by adding the answer to the smaller amount.\n\nA library has $85$ books and lends out $27$. There are $85 - 27 = 58$ books left, and $58 + 27 = 85$ checks.',
+          '"还剩多少""多多少""还要走多远"这样的问题求的都是差：用较大的量减去较小的量。用得数加较小的量来验算。\n\n图书馆有 $85$ 本书，借出了 $27$ 本。还剩 $85 - 27 = 58$ 本，而 $58 + 27 = 85$，验算正确。',
         ),
         generate(rng) {
           const [a, b] = pair(rng);

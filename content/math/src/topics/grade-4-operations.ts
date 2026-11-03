@@ -909,8 +909,8 @@ export const multiplyingNumbersEndingInZeros: TopicDef = {
       id: "one-factor-ending-in-zeros",
       title: t("One factor ending in zeros", "一个因数末尾有 0"),
       explanation: t(
-        "$6 \\times 400$ is $6$ times $4$ hundreds, which is $24$ hundreds:\n\n$$6 \\times 400 = 6 \\times 4 \\times 100 = 24 \\times 100 = 2{,}400$$\n\nMultiply the basic fact, then write the zeros.",
-        "$6 \\times 400$ 是 $6$ 乘 $4$ 个百，等于 $24$ 个百：\n\n$$6 \\times 400 = 6 \\times 4 \\times 100 = 24 \\times 100 = 2{,}400$$\n\n先用口诀算出乘积，再添上末尾的 $0$。",
+        "$6 \\times 400$ is $6$ times $4$ hundreds, which is $24$ hundreds:\n\n$$6 \\times 400 = 6 \\times 4 \\times 100 = 24 \\times 100 = 2{,}400$$\n\nMultiply the basic fact, then write the zeros from the factor. If the basic fact already ends in $0$, keep that zero too: $5 \\times 600 = 3{,}000$, since $5 \\times 6 = 30$.",
+        "$6 \\times 400$ 是 $6$ 乘 $4$ 个百，等于 $24$ 个百：\n\n$$6 \\times 400 = 6 \\times 4 \\times 100 = 24 \\times 100 = 2{,}400$$\n\n先用口诀算出乘积，再添上因数末尾的 $0$。如果口诀的积本身末尾有 $0$，这个 $0$ 也要保留：$5 \\times 600 = 3{,}000$，因为 $5 \\times 6 = 30$。",
       ),
       generate(rng) {
         const a = rng.int(2, 9);
@@ -999,8 +999,8 @@ export const multiplyingUsingRepeatedAddition: TopicDef = {
       id: "equal-groups",
       title: t("Multiplication as equal groups", "乘法就是几个相同的数相加"),
       explanation: t(
-        "$4 \\times 23$ means $4$ groups of $23$. So it is the same as adding $23$ four times:\n\n$$4 \\times 23 = 23 + 23 + 23 + 23$$",
-        "$4 \\times 23$ 表示 $4$ 个 $23$，所以它等于把 $23$ 加四次：\n\n$$4 \\times 23 = 23 + 23 + 23 + 23$$",
+        "Multiplication counts equal groups: the first factor tells how many groups, and the second tells how many are in each group. So the product is the same as adding the group size that many times.\n\n$4 \\times 23$ means $4$ groups of $23$:\n\n$$4 \\times 23 = 23 + 23 + 23 + 23$$\n\nIt is not $4 + 23$.",
+        "乘法是求几个相同加数的和：一个因数表示有几组，另一个因数表示每组有多少。所以乘积等于把每组的数加那么多次。\n\n$4 \\times 23$ 表示 $4$ 个 $23$：\n\n$$4 \\times 23 = 23 + 23 + 23 + 23$$\n\n而不是 $4 + 23$。",
       ),
       generate(rng) {
         const a = rng.int(3, 5);
@@ -1022,8 +1022,8 @@ export const multiplyingUsingRepeatedAddition: TopicDef = {
       id: "adding-the-groups",
       title: t("Adding the groups", "把各组加起来"),
       explanation: t(
-        "To find $3 \\times 27$, add three $27$s, one at a time:\n\n$$27 + 27 = 54, \\quad 54 + 27 = 81$$\n\nSo $3 \\times 27 = 81$.",
-        "求 $3 \\times 27$，就把三个 $27$ 一个一个加起来：\n\n$$27 + 27 = 54, \\quad 54 + 27 = 81$$\n\n所以 $3 \\times 27 = 81$。",
+        "To find a product by repeated addition, add the group size once for each group, keeping a running total. Count the groups so you add exactly the right number.\n\nTo find $3 \\times 27$, add three $27$s, one at a time:\n\n$$27 + 27 = 54, \\quad 54 + 27 = 81$$\n\nSo $3 \\times 27 = 81$.",
+        "用连加求乘积，有几组就把每组的数加几次，边加边记下累计的和。数清组数，不多加也不少加。\n\n求 $3 \\times 27$，就把三个 $27$ 一个一个加起来：\n\n$$27 + 27 = 54, \\quad 54 + 27 = 81$$\n\n所以 $3 \\times 27 = 81$。",
       ),
       generate(rng) {
         const a = rng.int(2, 4);
@@ -1046,8 +1046,8 @@ export const multiplyingUsingRepeatedAddition: TopicDef = {
       id: "one-more-group",
       title: t("One more group", "再加一组"),
       explanation: t(
-        "If you know $5 \\times 18 = 90$, then $6 \\times 18$ is one more group of $18$:\n\n$$6 \\times 18 = 5 \\times 18 + 18 = 90 + 18 = 108$$\n\nAdd the group, $18$, not the $6$.",
-        "如果知道 $5 \\times 18 = 90$，那么 $6 \\times 18$ 就是再多一组 $18$：\n\n$$6 \\times 18 = 5 \\times 18 + 18 = 90 + 18 = 108$$\n\n要加的是一组 $18$，而不是 $6$。",
+        "A product you already know helps with the next one: one more group means adding one more copy of the group size.\n\nIf you know $5 \\times 18 = 90$, then $6 \\times 18$ is one more group of $18$:\n\n$$6 \\times 18 = 5 \\times 18 + 18 = 90 + 18 = 108$$\n\nAdd the group, $18$, not the $6$.",
+        "已知的乘积可以帮助计算下一个：多一组，就再加上一组的数。\n\n如果知道 $5 \\times 18 = 90$，那么 $6 \\times 18$ 就是再多一组 $18$：\n\n$$6 \\times 18 = 5 \\times 18 + 18 = 90 + 18 = 108$$\n\n要加的是一组 $18$，而不是 $6$。",
       ),
       generate(rng) {
         const a = rng.pick([2, 5, 10, 10, 20]);
@@ -1091,8 +1091,8 @@ export const multiplyingUsingRepeatedSubtraction: TopicDef = {
       id: "one-group-fewer",
       title: t("One group fewer", "少一组"),
       explanation: t(
-        "$9 \\times 24$ is one group of $24$ fewer than $10 \\times 24$:\n\n$$9 \\times 24 = 10 \\times 24 - 24 = 240 - 24 = 216$$\n\nSubtract the group, $24$, not the $9$ or the $10$.",
-        "$9 \\times 24$ 比 $10 \\times 24$ 少一组 $24$：\n\n$$9 \\times 24 = 10 \\times 24 - 24 = 240 - 24 = 216$$\n\n要减去的是一组 $24$，而不是 $9$ 或 $10$。",
+        "Multiplying by $10$ is easy, so a product with $9$ groups can start from $10$ groups and take one group away.\n\n$9 \\times 24$ is one group of $24$ fewer than $10 \\times 24$:\n\n$$9 \\times 24 = 10 \\times 24 - 24 = 240 - 24 = 216$$\n\nSubtract the group, $24$, not the $9$ or the $10$.",
+        "乘 $10$ 很容易，所以求 $9$ 组的积，可以先算 $10$ 组，再去掉一组。\n\n$9 \\times 24$ 比 $10 \\times 24$ 少一组 $24$：\n\n$$9 \\times 24 = 10 \\times 24 - 24 = 240 - 24 = 216$$\n\n要减去的是一组 $24$，而不是 $9$ 或 $10$。",
       ),
       generate(rng) {
         const a = rng.pick([10, 10, 5, 20]);
@@ -1183,8 +1183,8 @@ export const estimatingMultiDigitMultiplication: TopicDef = {
       id: "rounding-both-factors",
       title: t("Rounding both factors", "把两个因数都取近似数"),
       explanation: t(
-        "When both factors have two digits, round each to the nearest ten:\n\n$$38 \\times 52 \\approx 40 \\times 50 = 2{,}000$$",
-        "两个因数都是两位数时，把它们都四舍五入到整十数：\n\n$$38 \\times 52 \\approx 40 \\times 50 = 2{,}000$$",
+        "To estimate a product, round the factors to numbers that are easy to multiply, then multiply the rounded numbers. When both factors have two digits, round each to the nearest ten:\n\n$$38 \\times 52 \\approx 40 \\times 50 = 2{,}000$$\n\nThe estimate tells you the exact product, $1{,}976$, should be near $2{,}000$.",
+        "估算乘积，先把因数取成容易相乘的近似数，再把近似数相乘。两个因数都是两位数时，把它们都四舍五入到整十数：\n\n$$38 \\times 52 \\approx 40 \\times 50 = 2{,}000$$\n\n估算说明准确的积 $1{,}976$ 应该接近 $2{,}000$。",
       ),
       generate(rng) {
         const pick = () => {
@@ -1213,8 +1213,8 @@ export const estimatingMultiDigitMultiplication: TopicDef = {
       id: "rounding-to-hundreds",
       title: t("Rounding to the nearest hundred", "取整百数"),
       explanation: t(
-        "For a three-digit factor, round to the nearest hundred:\n\n$$412 \\times 7 \\approx 400 \\times 7 = 2{,}800$$",
-        "三位数的因数可以四舍五入到整百数：\n\n$$412 \\times 7 \\approx 400 \\times 7 = 2{,}800$$",
+        "For a three-digit factor, round to the nearest hundred, keep the one-digit factor as it is, and multiply using a basic fact and the zeros:\n\n$$412 \\times 7 \\approx 400 \\times 7 = 2{,}800$$",
+        "三位数的因数可以四舍五入到整百数，一位数的因数不变，再用口诀乘，最后添上 $0$：\n\n$$412 \\times 7 \\approx 400 \\times 7 = 2{,}800$$",
       ),
       generate(rng) {
         let n = rng.int(110, 949);
@@ -1307,8 +1307,8 @@ export const twoDigitByOneDigitMultiplicationUsingAreaModels: TopicDef = {
       id: "adding-the-parts",
       title: t("Adding the parts", "把各部分相加"),
       explanation: t(
-        "The whole area is the sum of the parts:\n\n$$6 \\times 47 = 6 \\times 40 + 6 \\times 7 = 240 + 42 = 282$$",
-        "整个长方形的面积等于各部分面积之和：\n\n$$6 \\times 47 = 6 \\times 40 + 6 \\times 7 = 240 + 42 = 282$$",
+        "An area model splits the two-digit factor into tens and ones. Each part is a smaller product that is easy to find, and the whole area is the sum of the parts:\n\n$$6 \\times 47 = 6 \\times 40 + 6 \\times 7 = 240 + 42 = 282$$\n\nBoth parts must be multiplied by $6$; $6 \\times 40 + 7$ forgets the ones.",
+        "面积模型把两位数的因数分成几个十和几个一。每一部分都是容易计算的小乘积，整个长方形的面积等于各部分面积之和：\n\n$$6 \\times 47 = 6 \\times 40 + 6 \\times 7 = 240 + 42 = 282$$\n\n两部分都要乘 $6$；算成 $6 \\times 40 + 7$ 就漏乘了个位。",
       ),
       generate(rng) {
         const a = rng.int(3, 9);
@@ -1387,8 +1387,8 @@ export const multiDigitByOneDigitMultiplicationUsingAreaModels: TopicDef = {
       id: "multi-digit-products",
       title: t("Finding the whole product", "求出整个乘积"),
       explanation: t(
-        "Add the areas of all the parts. For $4 \\times 2{,}315$, split $2{,}315 = 2{,}000 + 300 + 10 + 5$:\n\n$$8{,}000 + 1{,}200 + 40 + 20 = 9{,}260$$",
-        "把所有部分的面积相加。计算 $4 \\times 2{,}315$ 时，把它分成 $2{,}315 = 2{,}000 + 300 + 10 + 5$：\n\n$$8{,}000 + 1{,}200 + 40 + 20 = 9{,}260$$",
+        "Split the large factor by place value, multiply each part by the one-digit factor, and add the areas of all the parts. For $4 \\times 2{,}315$, split $2{,}315 = 2{,}000 + 300 + 10 + 5$ and multiply each part by $4$:\n\n$$8{,}000 + 1{,}200 + 40 + 20 = 9{,}260$$",
+        "把大的因数按数位拆开，每一部分分别乘一位数，再把所有部分的面积相加。计算 $4 \\times 2{,}315$ 时，把它分成 $2{,}315 = 2{,}000 + 300 + 10 + 5$，每部分乘 $4$：\n\n$$8{,}000 + 1{,}200 + 40 + 20 = 9{,}260$$",
       ),
       generate(rng) {
         const a = rng.int(3, 9);
@@ -1656,8 +1656,8 @@ export const twoDigitByTwoDigitMultiplicationUsingAreaModels: TopicDef = {
       id: "adding-four-parts",
       title: t("Adding the four parts", "四部分相加"),
       explanation: t(
-        "The product is the sum of the four parts:\n\n$$23 \\times 45 = 800 + 100 + 120 + 15 = 1{,}035$$",
-        "乘积等于四部分面积之和：\n\n$$23 \\times 45 = 800 + 100 + 120 + 15 = 1{,}035$$",
+        "When both factors are split into tens and ones, the model has four parts: tens times tens, tens times ones, ones times tens and ones times ones. The product is the sum of the four parts. For $23 \\times 45$ these are $20 \\times 40$, $20 \\times 5$, $3 \\times 40$ and $3 \\times 5$:\n\n$$23 \\times 45 = 800 + 100 + 120 + 15 = 1{,}035$$",
+        "两个因数都分成几个十和几个一时，模型有四部分：十乘十、十乘一、一乘十、一乘一。乘积等于四部分之和。计算 $23 \\times 45$ 时，这四部分是 $20 \\times 40$、$20 \\times 5$、$3 \\times 40$ 和 $3 \\times 5$：\n\n$$23 \\times 45 = 800 + 100 + 120 + 15 = 1{,}035$$",
       ),
       generate(rng) {
         const x = twoDigit(rng);
@@ -1805,8 +1805,8 @@ export const relationshipBetweenMultiplicationAndDivision: TopicDef = {
       id: "dividing-with-multiplication-facts",
       title: t("Dividing with multiplication facts", "用乘法口诀做除法"),
       explanation: t(
-        "To find $56 \\div 7$, think of multiplication: $7 \\times \\square = 56$. Since $7 \\times 8 = 56$, $56 \\div 7 = 8$.",
-        "求 $56 \\div 7$ 时，想乘法：$7 \\times \\square = 56$。因为 $7 \\times 8 = 56$，所以 $56 \\div 7 = 8$。",
+        "Division undoes multiplication: a division asks for the missing factor in a multiplication. Turn the division into a multiplication with a box and use the facts you know.\n\nTo find $56 \\div 7$, think of multiplication: $7 \\times \\square = 56$. Since $7 \\times 8 = 56$, $56 \\div 7 = 8$.",
+        "除法是乘法的逆运算：除法就是求乘法中缺少的因数。把除法改写成带方框的乘法，再用学过的乘法口诀。\n\n求 $56 \\div 7$ 时，想乘法：$7 \\times \\square = 56$。因为 $7 \\times 8 = 56$，所以 $56 \\div 7 = 8$。",
       ),
       generate(rng) {
         const d = rng.int(2, 12);
@@ -2043,8 +2043,8 @@ export const dividendsDivisorsQuotientsAndRemainders: TopicDef = {
       id: "finding-the-dividend",
       title: t("Finding the dividend", "求被除数"),
       explanation: t(
-        "The parts of a division fit together like this:\n\n$$\\text{dividend} = \\text{divisor} \\times \\text{quotient} + \\text{remainder}$$\n\nFor $47 \\div 6 = 7 \\text{ R } 5$: $6 \\times 7 + 5 = 47$.",
-        "除法的各部分之间有这样的关系：\n\n$$\\text{被除数} = \\text{除数} \\times \\text{商} + \\text{余数}$$\n\n例如 $47 \\div 6 = 7 \\cdots\\cdots 5$：$6 \\times 7 + 5 = 47$。",
+        "The dividend is made of the divisor's equal groups, the quotient tells how many groups there are, and the remainder is what is left over. So the parts of a division fit together like this:\n\n$$\\text{dividend} = \\text{divisor} \\times \\text{quotient} + \\text{remainder}$$\n\nFor $47 \\div 6 = 7 \\text{ R } 5$: $6 \\times 7 + 5 = 47$. Do not forget to add the remainder.",
+        '被除数由若干个"除数"组成，商表示有几组，余数是剩下的部分。所以除法的各部分之间有这样的关系：\n\n$$\\text{被除数} = \\text{除数} \\times \\text{商} + \\text{余数}$$\n\n例如 $47 \\div 6 = 7 \\cdots\\cdots 5$：$6 \\times 7 + 5 = 47$。不要忘记加上余数。',
       ),
       generate(rng) {
         const d = rng.int(3, 9);
@@ -2399,8 +2399,8 @@ export const dividingByOneDigitNumbersUsingMultiplication: TopicDef = {
       id: "missing-factors-beyond-the-facts",
       title: t("Missing factors beyond the facts", "超出口诀的未知因数"),
       explanation: t(
-        "To solve $7 \\times \\square = 84$, start with ten groups: $7 \\times 10 = 70$. That leaves $84 - 70 = 14$, and $7 \\times 2 = 14$. So $\\square = 10 + 2 = 12$.",
-        "求 $7 \\times \\square = 84$ 时，先想十组：$7 \\times 10 = 70$，还剩 $84 - 70 = 14$，而 $7 \\times 2 = 14$。所以 $\\square = 10 + 2 = 12$。",
+        "When the product is beyond the multiplication facts, find the missing factor in pieces. Start with ten groups, see what is left, and find how many more groups make the rest.\n\nTo solve $7 \\times \\square = 84$, start with ten groups: $7 \\times 10 = 70$. That leaves $84 - 70 = 14$, and $7 \\times 2 = 14$. So $\\square = 10 + 2 = 12$.",
+        "积超出乘法口诀的范围时，可以分几步求缺少的因数。先想十组，看还剩多少，再想剩下的是几组。\n\n求 $7 \\times \\square = 84$ 时，先想十组：$7 \\times 10 = 70$，还剩 $84 - 70 = 14$，而 $7 \\times 2 = 14$。所以 $\\square = 10 + 2 = 12$。",
       ),
       generate(rng) {
         const d = rng.int(3, 9);
@@ -2422,8 +2422,8 @@ export const dividingByOneDigitNumbersUsingMultiplication: TopicDef = {
       id: "dividing-two-digit-numbers",
       title: t("Dividing two-digit numbers", "两位数除以一位数"),
       explanation: t(
-        "To find $96 \\div 4$, think $4 \\times \\square = 96$. Try tens first: $4 \\times 20 = 80$, leaving $16 = 4 \\times 4$. So $96 \\div 4 = 24$.\n\nCheck by multiplying: $4 \\times 24 = 96$.",
-        "求 $96 \\div 4$ 时，想 $4 \\times \\square = 96$。先试整十：$4 \\times 20 = 80$，还剩 $16 = 4 \\times 4$。所以 $96 \\div 4 = 24$。\n\n用乘法检验：$4 \\times 24 = 96$。",
+        "To divide, think of the missing factor. Try a number of tens first, then find how many more groups fit in what is left, and add the two parts of the quotient.\n\nTo find $96 \\div 4$, think $4 \\times \\square = 96$. Try tens first: $4 \\times 20 = 80$, leaving $16 = 4 \\times 4$. So $96 \\div 4 = 24$.\n\nCheck by multiplying: $4 \\times 24 = 96$.",
+        "做除法时，想缺少的因数。先试几个十，再看剩下的部分还能分几组，把商的两部分加起来。\n\n求 $96 \\div 4$ 时，想 $4 \\times \\square = 96$。先试整十：$4 \\times 20 = 80$，还剩 $16 = 4 \\times 4$。所以 $96 \\div 4 = 24$。\n\n用乘法检验：$4 \\times 24 = 96$。",
       ),
       generate(rng) {
         const d = rng.int(2, 8);
@@ -2464,8 +2464,8 @@ export const dividingUsingPlaceValueStrategies: TopicDef = {
       id: "dividing-each-place",
       title: t("Dividing each place", "每一位分别除"),
       explanation: t(
-        "When every digit of the dividend divides evenly, divide each place on its own:\n\n$$639 \\div 3 = 600 \\div 3 + 30 \\div 3 + 9 \\div 3 = 200 + 10 + 3 = 213$$",
-        "当被除数的每一位都能被整除时，可以每一位分别除：\n\n$$639 \\div 3 = 600 \\div 3 + 30 \\div 3 + 9 \\div 3 = 200 + 10 + 3 = 213$$",
+        "Split the dividend into its hundreds, tens and ones. When every part divides evenly, divide each place on its own and add the quotients:\n\n$$639 \\div 3 = 600 \\div 3 + 30 \\div 3 + 9 \\div 3 = 200 + 10 + 3 = 213$$",
+        "把被除数拆成几个百、几个十和几个一。当每一部分都能被整除时，可以每一位分别除，再把商相加：\n\n$$639 \\div 3 = 600 \\div 3 + 30 \\div 3 + 9 \\div 3 = 200 + 10 + 3 = 213$$",
       ),
       generate(rng) {
         const d = rng.int(2, 4);
@@ -2799,8 +2799,8 @@ export const multiDigitByOneDigitDivisionUsingAreaModels: TopicDef = {
       id: "three-part-models",
       title: t("Models with three parts", "三部分的模型"),
       explanation: t(
-        "For $963 \\div 3$, split $963 = 900 + 60 + 3$. Each part divides by $3$:\n\n$$900 \\div 3 = 300, \\quad 60 \\div 3 = 20, \\quad 3 \\div 3 = 1$$\n\nThese are the lengths of the three parts.",
-        "计算 $963 \\div 3$ 时，把它拆成 $963 = 900 + 60 + 3$，每一部分都能被 $3$ 整除：\n\n$$900 \\div 3 = 300, \\quad 60 \\div 3 = 20, \\quad 3 \\div 3 = 1$$\n\n这就是三部分各自的长。",
+        "In a division area model the area is the dividend and one side is the divisor; the unknown side is the quotient. Split the area into parts that each divide easily, and divide each part to find its length. For $963 \\div 3$, split $963 = 900 + 60 + 3$:\n\n$$900 \\div 3 = 300, \\quad 60 \\div 3 = 20, \\quad 3 \\div 3 = 1$$\n\nThese are the lengths of the three parts.",
+        "在除法的面积模型中，面积是被除数，一条边是除数，另一条未知的边就是商。把面积拆成容易除的几部分，每部分分别除，得到各自的长。计算 $963 \\div 3$ 时，把它拆成 $963 = 900 + 60 + 3$：\n\n$$900 \\div 3 = 300, \\quad 60 \\div 3 = 20, \\quad 3 \\div 3 = 1$$\n\n这就是三部分各自的长。",
       ),
       generate: alignedModels.side,
     },
@@ -2808,8 +2808,8 @@ export const multiDigitByOneDigitDivisionUsingAreaModels: TopicDef = {
       id: "three-part-quotients",
       title: t("Finding the quotient", "求出商"),
       explanation: t(
-        "Add the lengths of the parts: $963 \\div 3 = 300 + 20 + 1 = 321$.",
-        "把各部分的长相加：$963 \\div 3 = 300 + 20 + 1 = 321$。",
+        "The quotient is the whole length of the model, so add the lengths of all the parts. Check by multiplying the quotient by the divisor.\n\n$963 \\div 3 = 300 + 20 + 1 = 321$, and $3 \\times 321 = 963$.",
+        "商就是整个模型的长，所以把各部分的长加起来。用商乘除数来检验。\n\n$963 \\div 3 = 300 + 20 + 1 = 321$，而 $3 \\times 321 = 963$。",
       ),
       generate: alignedModels.whole,
     },
@@ -2841,8 +2841,8 @@ export const moreMultiDigitByOneDigitDivisionUsingAreaModels: TopicDef = {
       id: "quotients-from-friendly-parts",
       title: t("Finding the quotient", "求出商"),
       explanation: t(
-        "Add the lengths: $744 \\div 6 = 100 + 20 + 4 = 124$. Check: $6 \\times 124 = 744$.",
-        "把各部分的长相加：$744 \\div 6 = 100 + 20 + 4 = 124$。检验：$6 \\times 124 = 744$。",
+        "When the digits do not divide evenly one place at a time, split the dividend into friendly parts that the divisor goes into, such as $600 + 120 + 24$. Divide each part, then add the lengths.\n\n$744 \\div 6 = 100 + 20 + 4 = 124$. Check: $6 \\times 124 = 744$.",
+        "如果不能逐位整除，就把被除数拆成能被除数整除的几部分，例如 $600 + 120 + 24$。每部分分别除，再把长相加。\n\n$744 \\div 6 = 100 + 20 + 4 = 124$。检验：$6 \\times 124 = 744$。",
       ),
       generate: unalignedModels.whole,
     },
@@ -2998,8 +2998,8 @@ export const multiDigitByOneDigitDivisionUsingPartialQuotients: TopicDef = {
       id: "three-digit-dividends",
       title: t("Three-digit dividends", "三位数被除数"),
       explanation: t(
-        "With larger numbers, take away $100$ groups at a time first, then $10$ groups, then single groups:\n\n$$742 - 700 = 42 \\quad (7 \\times 100), \\qquad 42 - 42 = 0 \\quad (7 \\times 6)$$\n\n$742 \\div 7 = 100 + 6 = 106$.",
-        "数比较大时，先一次去掉 $100$ 组，再去掉 $10$ 组，最后一组一组地去掉：\n\n$$742 - 700 = 42 \\quad (7 \\times 100), \\qquad 42 - 42 = 0 \\quad (7 \\times 6)$$\n\n$742 \\div 7 = 100 + 6 = 106$。",
+        "Partial quotients divide by taking away groups of the divisor until nothing, or less than one group, is left. With larger numbers, take away $100$ groups at a time first, then $10$ groups, then single groups, and add up all the groups you took:\n\n$$742 - 700 = 42 \\quad (7 \\times 100), \\qquad 42 - 42 = 0 \\quad (7 \\times 6)$$\n\n$742 \\div 7 = 100 + 6 = 106$.",
+        "用部分商做除法，就是一次次地去掉若干组除数，直到剩下的不够一组。数比较大时，先一次去掉 $100$ 组，再去掉 $10$ 组，最后一组一组地去掉，再把去掉的组数加起来：\n\n$$742 - 700 = 42 \\quad (7 \\times 100), \\qquad 42 - 42 = 0 \\quad (7 \\times 6)$$\n\n$742 \\div 7 = 100 + 6 = 106$。",
       ),
       generate(rng) {
         const d = rng.int(3, 9);

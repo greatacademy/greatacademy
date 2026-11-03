@@ -383,8 +383,8 @@ export const modelingFractionsUsingNumberLines = topic(
       id: "choosing-the-point-for-a-fraction",
       title: t("Finding the point", "找出表示分数的点"),
       explanation: t(
-        "To find $\\frac{3}{5}$, cut $0$ to $1$ into $5$ steps and go $3$ steps from $0$.",
-        "要找 $\\frac{3}{5}$，把 $0$ 到 $1$ 分成 $5$ 格，从 $0$ 起走 $3$ 格。",
+        "On a number line, the denominator tells how many equal steps the space from $0$ to $1$ is cut into, and the numerator tells how many steps to count from $0$.\n\nTo find $\\frac{3}{5}$, cut $0$ to $1$ into $5$ equal steps and go $3$ steps from $0$. Count the spaces, not the tick marks.",
+        "在数轴上，分母表示把 $0$ 到 $1$ 平均分成几格，分子表示从 $0$ 起数几格。\n\n要找 $\\frac{3}{5}$，把 $0$ 到 $1$ 平均分成 $5$ 格，从 $0$ 起走 $3$ 格。要数格子，而不是数刻度线。",
       ),
       generate(rng) {
         const d = rng.int(4, 12);
@@ -431,8 +431,8 @@ export const writingUnitFractionsInWords = topic(
       id: "reading-and-writing-unit-fractions",
       title: t("Unit fractions and their names", "单位分数的读法"),
       explanation: t(
-        '$\\frac{1}{6}$ is "one sixth", and "one ninth" is $\\frac{1}{9}$.',
-        '$\\frac{1}{6}$ 读作"六分之一"，"九分之一"写作 $\\frac{1}{9}$。',
+        'A unit fraction has numerator $1$. In words it is "one" followed by the name of the parts, which comes from the denominator: halves, thirds, fourths, fifths, sixths and so on.\n\n$\\frac{1}{6}$ is "one sixth", and "one ninth" is $\\frac{1}{9}$.',
+        '分子是 $1$ 的分数叫分数单位。读的时候先读分母，再读"分之一"：几分之一的"几"就是分母。\n\n$\\frac{1}{6}$ 读作"六分之一"，"九分之一"写作 $\\frac{1}{9}$。',
       ),
       generate(rng) {
         const d = rng.pick(unitDenominators);
@@ -462,8 +462,8 @@ export const writingUnitFractionsInWords = topic(
       id: "unit-fractions-in-context",
       title: t("One equal part", "其中一份"),
       explanation: t(
-        "If a pizza is cut into $8$ equal slices, one slice is $\\frac{1}{8}$ of the pizza.",
-        "把一个比萨平均切成 $8$ 块，一块就是这个比萨的 $\\frac{1}{8}$。",
+        "When a whole is cut into equal parts, one part is a unit fraction: $1$ over the number of parts. The parts must be equal.\n\nIf a pizza is cut into $8$ equal slices, one slice is $\\frac{1}{8}$ of the pizza.",
+        "把一个整体平均分成几份，其中一份就是一个分数单位：分母是份数，分子是 $1$。必须是平均分。\n\n把一个比萨平均切成 $8$ 块，一块就是这个比萨的 $\\frac{1}{8}$。",
       ),
       generate(rng) {
         const w = rng.pick(wholes);
@@ -497,8 +497,8 @@ export const writingFractionsInWords = topic(
       id: "writing-fractions-as-words",
       title: t("From fraction to words", "从分数到文字"),
       explanation: t(
-        '$\\frac{4}{9}$ is "four ninths": the numerator first, then the plural name of the parts.',
-        '$\\frac{4}{9}$ 读作"九分之四"：先读分母，再读分子。',
+        'To write a fraction in words, say the numerator as a number, then the name of the parts from the denominator, made plural when the numerator is more than $1$.\n\n$\\frac{4}{9}$ is "four ninths": the numerator first, then the plural name of the parts.',
+        '分数的读法是先读分母，再读"分之"，最后读分子。分母表示平均分成几份，分子表示取了几份。\n\n$\\frac{4}{9}$ 读作"九分之四"：先读分母 $9$，再读分子 $4$。',
       ),
       generate(rng) {
         const [n, d] = properFraction(rng, 12, 3);
@@ -523,7 +523,10 @@ export const writingFractionsInWords = topic(
     {
       id: "writing-words-as-fractions",
       title: t("From words to fraction", "从文字到分数"),
-      explanation: t('"Five eighths" is $\\frac{5}{8}$.', '"八分之五"写作 $\\frac{5}{8}$。'),
+      explanation: t(
+        'To write a fraction from words, the first number word is the numerator and the name of the parts gives the denominator: thirds are $3$, eighths are $8$, tenths are $10$.\n\n"Five eighths" is $\\frac{5}{8}$, not $\\frac{8}{5}$.',
+        '根据读法写分数时，"分之"前面的数是分母，后面的数是分子。\n\n"八分之五"写作 $\\frac{5}{8}$，而不是 $\\frac{8}{5}$。',
+      ),
       generate(rng) {
         const [n, d] = properFraction(rng, 20, 3);
         return numberProblem({
@@ -555,8 +558,8 @@ export const interpretingFractionsAsDivision = topic(
       id: "writing-quotients-as-fractions",
       title: t("Division as a fraction", "把除法写成分数"),
       explanation: t(
-        "$5 \\div 7 = \\frac{5}{7}$: the dividend is the numerator and the divisor is the denominator.",
-        "$5 \\div 7 = \\frac{5}{7}$：被除数作分子，除数作分母。",
+        "A fraction is a division: $\\frac{a}{b}$ means $a \\div b$. So any division can be written as a fraction, with the number being divided on top.\n\n$5 \\div 7 = \\frac{5}{7}$: the dividend is the numerator and the divisor is the denominator.",
+        "分数也表示除法：$\\frac{a}{b}$ 就是 $a \\div b$。所以任何除法都可以写成分数，被除数作分子。\n\n$5 \\div 7 = \\frac{5}{7}$：被除数作分子，除数作分母。",
       ),
       generate(rng) {
         const [a, b] = properFraction(rng, 15);
@@ -573,8 +576,8 @@ export const interpretingFractionsAsDivision = topic(
       id: "fair-shares-as-fractions",
       title: t("Fair shares", "平均分"),
       explanation: t(
-        "$2$ cakes shared equally among $5$ friends: each friend gets $2 \\div 5 = \\frac{2}{5}$ of a cake.",
-        "$2$ 个蛋糕平均分给 $5$ 个朋友：每人得到 $2 \\div 5 = \\frac{2}{5}$ 个蛋糕。",
+        "When some wholes are shared equally, each share is the number of wholes divided by the number of people, which is the fraction wholes over people.\n\n$2$ cakes shared equally among $5$ friends: each friend gets $2 \\div 5 = \\frac{2}{5}$ of a cake. Writing $\\frac{5}{2}$ would give each friend more than two cakes.",
+        "把几个整体平均分给几个人，每人分到的是整体数除以人数，也就是以整体数为分子、人数为分母的分数。\n\n$2$ 个蛋糕平均分给 $5$ 个朋友：每人得到 $2 \\div 5 = \\frac{2}{5}$ 个蛋糕。如果写成 $\\frac{5}{2}$，每人就分到两个多蛋糕，这显然不对。",
       ),
       generate(rng) {
         const w = rng.pick(wholes.filter((x) => x.en !== "garden"));
@@ -648,8 +651,8 @@ export const improperFractions = topic(
       id: "comparing-fractions-with-one-whole",
       title: t("Less than, equal to or more than 1", "小于、等于还是大于 1"),
       explanation: t(
-        "$\\frac{5}{5} = 1$, $\\frac{4}{5} < 1$ and $\\frac{6}{5} > 1$: compare the numerator with the denominator.",
-        "$\\frac{5}{5} = 1$，$\\frac{4}{5} < 1$，$\\frac{6}{5} > 1$：比较分子和分母。",
+        "Compare the numerator with the denominator. If they are equal, the fraction is one whole; if the numerator is smaller, it is less than $1$; if the numerator is larger, it is more than $1$ and is called an improper fraction.\n\n$\\frac{5}{5} = 1$, $\\frac{4}{5} < 1$ and $\\frac{6}{5} > 1$.",
+        "比较分子和分母：相等时分数等于 $1$；分子小于分母时，分数小于 $1$；分子大于分母时，分数大于 $1$，叫作假分数。\n\n$\\frac{5}{5} = 1$，$\\frac{4}{5} < 1$，$\\frac{6}{5} > 1$。",
       ),
       generate(rng) {
         const d = rng.int(2, 15);
@@ -689,8 +692,8 @@ export const modelsForMixedNumbers = topic(
       id: "mixed-numbers-from-models",
       title: t("Reading a model", "看模型写带分数"),
       explanation: t(
-        "$2$ full bars and $3$ of $5$ parts of the next bar show $2\\frac{3}{5}$.",
-        "$2$ 个涂满的长条，加上下一个长条 $5$ 份中的 $3$ 份，表示 $2\\frac{3}{5}$。",
+        "A mixed number is a whole number and a fraction together. Count the full wholes in the model for the whole-number part, then write the partly shaded whole as a fraction.\n\n$2$ full bars and $3$ of $5$ parts of the next bar show $2\\frac{3}{5}$.",
+        "带分数由一个整数和一个分数组成。数出模型中涂满的整体个数作为整数部分，再把没涂满的那个整体写成分数。\n\n$2$ 个涂满的长条，加上下一个长条 $5$ 份中的 $3$ 份，表示 $2\\frac{3}{5}$。",
       ),
       generate(rng) {
         const d = rng.int(2, 8);
@@ -715,8 +718,8 @@ export const modelsForMixedNumbers = topic(
       id: "mixed-numbers-from-wholes-and-parts",
       title: t("Wholes and parts", "整体和部分"),
       explanation: t(
-        "$3$ whole pies and $\\frac{1}{4}$ of a pie make $3\\frac{1}{4}$ pies.",
-        "$3$ 个完整的馅饼和 $\\frac{1}{4}$ 个馅饼合起来是 $3\\frac{1}{4}$ 个馅饼。",
+        "To write wholes and a part as a mixed number, write the number of wholes, then the fraction right after it. A mixed number means the whole number plus the fraction.\n\n$3$ whole pies and $\\frac{1}{4}$ of a pie make $3\\frac{1}{4}$ pies.",
+        "把几个整体和一部分写成带分数，先写整体的个数，紧接着写分数。带分数表示整数加上分数。\n\n$3$ 个完整的馅饼和 $\\frac{1}{4}$ 个馅饼合起来是 $3\\frac{1}{4}$ 个馅饼。",
       ),
       generate(rng) {
         const wh = rng.pick(wholes.filter((x) => x.en !== "garden"));
@@ -779,8 +782,8 @@ export const modelingMixedNumbersUsingNumberLines = topic(
       id: "finding-mixed-numbers-on-number-lines",
       title: t("Finding the point", "找出表示带分数的点"),
       explanation: t(
-        "To find $1\\frac{2}{3}$, go to $1$ and then $2$ steps of $\\frac{1}{3}$ further.",
-        "要找 $1\\frac{2}{3}$，先找到 $1$，再往右走 $2$ 个 $\\frac{1}{3}$。",
+        "To place a mixed number on a number line, first go to its whole-number part, then count steps of the unit fraction from there.\n\nTo find $1\\frac{2}{3}$, go to $1$ and then $2$ steps of $\\frac{1}{3}$ further. The point lies between $1$ and $2$.",
+        "在数轴上找带分数，先找到它的整数部分，再从那里按分数单位往右数。\n\n要找 $1\\frac{2}{3}$，先找到 $1$，再往右走 $2$ 个 $\\frac{1}{3}$。这个点在 $1$ 和 $2$ 之间。",
       ),
       generate(rng) {
         const d = rng.int(3, 6);
@@ -831,8 +834,8 @@ export const interpretingDivisionProblemsAsMixedNumbers = topic(
       id: "quotients-as-mixed-numbers",
       title: t("Quotients as mixed numbers", "商写成带分数"),
       explanation: t(
-        "$23 \\div 4 = 5 \\text{ R } 3$, so $23 \\div 4 = 5\\frac{3}{4}$: the remainder over the divisor.",
-        "$23 \\div 4 = 5 \\cdots\\cdots 3$，所以 $23 \\div 4 = 5\\frac{3}{4}$：余数作分子，除数作分母。",
+        "A division with a remainder can be written as a mixed number. The quotient is the whole-number part, and the remainder over the divisor is the fraction, since the remainder is still to be divided.\n\n$23 \\div 4 = 5 \\text{ R } 3$, so $23 \\div 4 = 5\\frac{3}{4}$.",
+        "有余数的除法可以写成带分数。商是整数部分，余数还要继续平均分，所以余数作分子、除数作分母，就是分数部分。\n\n$23 \\div 4 = 5 \\cdots\\cdots 3$，所以 $23 \\div 4 = 5\\frac{3}{4}$。",
       ),
       generate(rng) {
         const b = rng.int(2, 9);
@@ -855,8 +858,8 @@ export const interpretingDivisionProblemsAsMixedNumbers = topic(
       id: "sharing-with-mixed-number-answers",
       title: t("Sharing with a remainder", "有余数的平均分"),
       explanation: t(
-        "$14$ feet of rope cut into $4$ equal pieces: each is $14 \\div 4 = 3\\frac{2}{4} = 3\\frac{1}{2}$ feet long.",
-        "$14$ 英尺长的绳子平均剪成 $4$ 段：每段长 $14 \\div 4 = 3\\frac{1}{2}$ 英尺。",
+        "When an amount like rope or rice is shared equally, the remainder can be split too, so the answer is a mixed number: quotient and remainder over divisor, simplified.\n\n$14$ feet of rope cut into $4$ equal pieces: $14 \\div 4 = 3 \\text{ R } 2$, so each piece is $3\\frac{2}{4} = 3\\frac{1}{2}$ feet long.",
+        "把绳子、大米这样可以再分的量平均分时，余数也可以继续分，所以结果是带分数：商作整数部分，余数比除数作分数部分，再约分。\n\n$14$ 英尺长的绳子平均剪成 $4$ 段：$14 \\div 4 = 3 \\cdots\\cdots 2$，所以每段长 $3\\frac{2}{4} = 3\\frac{1}{2}$ 英尺。",
       ),
       generate(rng) {
         const b = rng.int(2, 8);
@@ -902,8 +905,8 @@ export const convertingImproperFractionsToMixedNumbers = topic(
       id: "writing-improper-fractions-as-mixed-numbers",
       title: t("Improper to mixed", "假分数化带分数"),
       explanation: t(
-        "$\\frac{29}{6}$: $29 \\div 6 = 4 \\text{ R } 5$, so $\\frac{29}{6} = 4\\frac{5}{6}$.",
-        "$\\frac{29}{6}$：$29 \\div 6 = 4 \\cdots\\cdots 5$，所以 $\\frac{29}{6} = 4\\frac{5}{6}$。",
+        "To change an improper fraction to a mixed number, divide the numerator by the denominator. The quotient is the whole number, and the remainder over the same denominator is the fraction.\n\n$\\frac{29}{6}$: $29 \\div 6 = 4 \\text{ R } 5$, so $\\frac{29}{6} = 4\\frac{5}{6}$.",
+        "把假分数化成带分数，用分子除以分母。商是整数部分，余数作分子、分母不变，就是分数部分。\n\n$\\frac{29}{6}$：$29 \\div 6 = 4 \\cdots\\cdots 5$，所以 $\\frac{29}{6} = 4\\frac{5}{6}$。",
       ),
       generate(rng) {
         const [n, d] = improperFraction(rng, 12, 9);
@@ -925,8 +928,8 @@ export const convertingImproperFractionsToMixedNumbers = topic(
       id: "improper-fractions-equal-to-whole-numbers",
       title: t("Whole numbers and missing parts", "整数与缺少的部分"),
       explanation: t(
-        "$\\frac{24}{6} = 4$, since $24 \\div 6 = 4$ with no remainder. And $\\frac{26}{6} = 4\\frac{2}{6}$, so the missing numerator in $4\\frac{\\square}{6}$ is $2$.",
-        "$\\frac{24}{6} = 4$，因为 $24 \\div 6 = 4$ 没有余数。$\\frac{26}{6} = 4\\frac{2}{6}$，所以 $4\\frac{\\square}{6}$ 中缺少的分子是 $2$。",
+        "If the numerator divides evenly by the denominator, the improper fraction is a whole number. Otherwise, the remainder is the numerator of the fraction part.\n\n$\\frac{24}{6} = 4$, since $24 \\div 6 = 4$ with no remainder. And $\\frac{26}{6} = 4\\frac{2}{6}$, so the missing numerator in $4\\frac{\\square}{6}$ is $2$.",
+        "如果分子能被分母整除，假分数就等于整数；否则余数就是分数部分的分子。\n\n$\\frac{24}{6} = 4$，因为 $24 \\div 6 = 4$ 没有余数。$\\frac{26}{6} = 4\\frac{2}{6}$，所以 $4\\frac{\\square}{6}$ 中缺少的分子是 $2$。",
       ),
       generate(rng) {
         const d = rng.int(2, 12);
@@ -973,8 +976,8 @@ export const convertingMixedNumbersToImproperFractions = topic(
       id: "writing-mixed-numbers-as-improper-fractions",
       title: t("Mixed to improper", "带分数化假分数"),
       explanation: t(
-        "$4\\frac{3}{7} = \\frac{4 \\times 7 + 3}{7} = \\frac{31}{7}$.",
-        "$4\\frac{3}{7} = \\frac{4 \\times 7 + 3}{7} = \\frac{31}{7}$。",
+        "To change a mixed number to an improper fraction, find how many parts the wholes make by multiplying the whole number by the denominator, then add the numerator. The denominator stays the same.\n\n$4\\frac{3}{7} = \\frac{4 \\times 7 + 3}{7} = \\frac{31}{7}$.",
+        "把带分数化成假分数，先用整数乘分母，求出整数部分有多少份，再加上分子。分母不变。\n\n$4\\frac{3}{7} = \\frac{4 \\times 7 + 3}{7} = \\frac{31}{7}$。",
       ),
       generate(rng) {
         const d = rng.int(2, 12);
@@ -996,8 +999,8 @@ export const convertingMixedNumbersToImproperFractions = topic(
       id: "missing-numerators-of-improper-fractions",
       title: t("A missing numerator", "缺少的分子"),
       explanation: t(
-        "$2\\frac{5}{8} = \\frac{\\square}{8}$: $2$ wholes are $16$ eighths, and $16 + 5 = 21$.",
-        "$2\\frac{5}{8} = \\frac{\\square}{8}$：$2$ 个整体是 $16$ 个八分之一，$16 + 5 = 21$。",
+        "Each whole holds as many parts as the denominator. Multiply to count the parts in the wholes, then add the parts in the fraction.\n\n$2\\frac{5}{8} = \\frac{\\square}{8}$: $2$ wholes are $16$ eighths, and $16 + 5 = 21$. Adding $2 + 5$ forgets that each whole is $8$ eighths.",
+        "每个整体里的份数等于分母。先用乘法求出整数部分有几份，再加上分数部分的份数。\n\n$2\\frac{5}{8} = \\frac{\\square}{8}$：$2$ 个整体是 $16$ 个八分之一，$16 + 5 = 21$。如果算成 $2 + 5$，就忘了每个整体是 $8$ 个八分之一。",
       ),
       generate(rng) {
         const d = rng.int(2, 12);
@@ -1110,8 +1113,8 @@ export const equivalentFractionsByMultiplyingAndDividing = topic(
       id: "scaling-up-numerator-and-denominator",
       title: t("Multiplying both parts", "分子分母同乘一个数"),
       explanation: t(
-        "$\\frac{2}{7} = \\frac{\\square}{35}$: $35 = 7 \\times 5$, so multiply the numerator by $5$ too: $\\frac{10}{35}$.",
-        "$\\frac{2}{7} = \\frac{\\square}{35}$：$35 = 7 \\times 5$，所以分子也乘 $5$：$\\frac{10}{35}$。",
+        "Multiplying the numerator and the denominator by the same number gives an equal fraction: each part is cut into that many smaller parts. First find what the old denominator was multiplied by, then multiply the numerator by the same number.\n\n$\\frac{2}{7} = \\frac{\\square}{35}$: $35 = 7 \\times 5$, so multiply the numerator by $5$ too: $\\frac{10}{35}$.",
+        "分子和分母同时乘同一个数，分数的大小不变：相当于把每一份再平均分成几份。先看分母乘了几，再把分子也乘同一个数。\n\n$\\frac{2}{7} = \\frac{\\square}{35}$：$35 = 7 \\times 5$，所以分子也乘 $5$：$\\frac{10}{35}$。",
       ),
       generate(rng) {
         const [n, d] = properFraction(rng, 12);
@@ -1135,8 +1138,8 @@ export const equivalentFractionsByMultiplyingAndDividing = topic(
       id: "scaling-down-numerator-and-denominator",
       title: t("Dividing both parts", "分子分母同除以一个数"),
       explanation: t(
-        "$\\frac{24}{30} = \\frac{\\square}{5}$: $30 \\div 6 = 5$, so divide the numerator by $6$ too: $\\frac{4}{5}$.",
-        "$\\frac{24}{30} = \\frac{\\square}{5}$：$30 \\div 6 = 5$，所以分子也除以 $6$：$\\frac{4}{5}$。",
+        "Dividing the numerator and the denominator by the same number also gives an equal fraction. Find what the denominator was divided by, then divide the numerator by the same number, not subtract.\n\n$\\frac{24}{30} = \\frac{\\square}{5}$: $30 \\div 6 = 5$, so divide the numerator by $6$ too: $\\frac{4}{5}$.",
+        "分子和分母同时除以同一个数，分数的大小也不变。先看分母除以了几，再把分子也除以同一个数，不能用减法。\n\n$\\frac{24}{30} = \\frac{\\square}{5}$：$30 \\div 6 = 5$，所以分子也除以 $6$：$\\frac{4}{5}$。",
       ),
       generate(rng) {
         const [n, d] = properFraction(rng, 12);
@@ -1201,8 +1204,8 @@ export const leastCommonDenominators = topic(
       id: "rewriting-with-the-least-common-denominator",
       title: t("Rewriting with the LCD", "化成以最小公分母为分母的分数"),
       explanation: t(
-        "With the LCD $24$: $\\frac{3}{8} = \\frac{3 \\times 3}{8 \\times 3} = \\frac{9}{24}$.",
-        "以最小公分母 $24$ 为分母：$\\frac{3}{8} = \\frac{3 \\times 3}{8 \\times 3} = \\frac{9}{24}$。",
+        "To rewrite a fraction with the least common denominator, find what its denominator must be multiplied by to reach the LCD, and multiply the numerator by the same number.\n\nWith the LCD $24$: $8 \\times 3 = 24$, so $\\frac{3}{8} = \\frac{3 \\times 3}{8 \\times 3} = \\frac{9}{24}$.",
+        "把一个分数改写成以最小公分母为分母的分数，先看它的分母乘几得到最小公分母，再把分子乘同一个数。\n\n以最小公分母 $24$ 为分母：$8 \\times 3 = 24$，所以 $\\frac{3}{8} = \\frac{3 \\times 3}{8 \\times 3} = \\frac{9}{24}$。",
       ),
       generate(rng) {
         let b: number;
@@ -1245,8 +1248,8 @@ export const writingFractionsInLowestTerms = topic(
       id: "simplifying-by-the-greatest-common-factor",
       title: t("Dividing by the greatest common factor", "除以最大公因数"),
       explanation: t(
-        "$\\frac{20}{30}$: the GCF of $20$ and $30$ is $10$, so $\\frac{20}{30} = \\frac{2}{3}$.",
-        "$\\frac{20}{30}$：$20$ 和 $30$ 的最大公因数是 $10$，所以 $\\frac{20}{30} = \\frac{2}{3}$。",
+        "A fraction is in lowest terms when the numerator and the denominator have no common factor other than $1$. Divide both by their greatest common factor to get there in one step.\n\n$\\frac{20}{30}$: the GCF of $20$ and $30$ is $10$, so $\\frac{20}{30} = \\frac{20 \\div 10}{30 \\div 10} = \\frac{2}{3}$. Dividing by a smaller common factor, such as $2$, leaves a fraction that can still be simplified.",
+        "分子和分母除了 $1$ 以外没有公因数时，分数就是最简分数。用它们的最大公因数同时去除，一步就能化成最简分数。\n\n$\\frac{20}{30}$：$20$ 和 $30$ 的最大公因数是 $10$，所以 $\\frac{20}{30} = \\frac{20 \\div 10}{30 \\div 10} = \\frac{2}{3}$。如果只除以较小的公因数，比如 $2$，得到的分数还能继续约分。",
       ),
       generate(rng) {
         const [n, d] = properFraction(rng, 12);
@@ -1268,8 +1271,8 @@ export const writingFractionsInLowestTerms = topic(
       id: "recognizing-lowest-terms",
       title: t("Which fraction is in lowest terms?", "哪个是最简分数"),
       explanation: t(
-        "$\\frac{9}{14}$ is in lowest terms: $9 = 3 \\times 3$ and $14 = 2 \\times 7$ share no factor. $\\frac{9}{15}$ is not: both are multiples of $3$.",
-        "$\\frac{9}{14}$ 是最简分数：$9 = 3 \\times 3$，$14 = 2 \\times 7$，没有公因数。$\\frac{9}{15}$ 不是：两个数都是 $3$ 的倍数。",
+        "To check whether a fraction is in lowest terms, look for a number other than $1$ that divides both the numerator and the denominator. If there is none, the fraction is in lowest terms.\n\n$\\frac{9}{14}$ is in lowest terms: $9 = 3 \\times 3$ and $14 = 2 \\times 7$ share no factor. $\\frac{9}{15}$ is not: both are multiples of $3$.",
+        "判断一个分数是不是最简分数，就看有没有除 $1$ 以外的数能同时整除分子和分母。如果没有，就是最简分数。\n\n$\\frac{9}{14}$ 是最简分数：$9 = 3 \\times 3$，$14 = 2 \\times 7$，没有公因数。$\\frac{9}{15}$ 不是：两个数都是 $3$ 的倍数。",
       ),
       generate(rng) {
         const [n, d] = properFraction(rng, 20, 5);
@@ -1316,8 +1319,8 @@ export const comparingFractions = topic(
       id: "comparing-fractions-with-like-denominators",
       title: t("The same denominator", "分母相同"),
       explanation: t(
-        "$\\frac{4}{9} < \\frac{7}{9}$: ninths of the same size, and $4 < 7$.",
-        "$\\frac{4}{9} < \\frac{7}{9}$：每份都是九分之一，而 $4 < 7$。",
+        "When two fractions have the same denominator, their parts are the same size, so the fraction with more parts, the larger numerator, is greater.\n\n$\\frac{4}{9} < \\frac{7}{9}$: ninths of the same size, and $4 < 7$.",
+        "两个分数的分母相同时，每一份一样大，所以份数多的，也就是分子大的分数大。\n\n$\\frac{4}{9} < \\frac{7}{9}$：每份都是九分之一，而 $4 < 7$。",
       ),
       generate(rng) {
         const d = rng.int(3, 15);
@@ -1340,8 +1343,8 @@ export const comparingFractions = topic(
       id: "comparing-fractions-with-like-numerators",
       title: t("The same numerator", "分子相同"),
       explanation: t(
-        "$\\frac{2}{3} > \\frac{2}{7}$: both have $2$ parts, but a third is larger than a seventh.",
-        "$\\frac{2}{3} > \\frac{2}{7}$：都是 $2$ 份，但三分之一比七分之一大。",
+        "When two fractions have the same numerator, they have the same number of parts. Cutting a whole into more parts makes each part smaller, so the fraction with the smaller denominator is greater.\n\n$\\frac{2}{3} > \\frac{2}{7}$: both have $2$ parts, but a third is larger than a seventh. Do not choose the larger denominator.",
+        "两个分数的分子相同时，份数一样多。一个整体分的份数越多，每一份就越小，所以分母小的分数反而大。\n\n$\\frac{2}{3} > \\frac{2}{7}$：都是 $2$ 份，但三分之一比七分之一大。不要以为分母大的分数就大。",
       ),
       generate(rng) {
         const n = rng.int(1, 7);
@@ -1379,8 +1382,8 @@ export const comparingFractionsUsingUnitBenchmarks = topic(
       id: "comparing-across-one",
       title: t("One on each side of 1", "分别在 1 的两侧"),
       explanation: t(
-        "$\\frac{11}{12} < 1$ and $\\frac{5}{4} > 1$, so $\\frac{11}{12} < \\frac{5}{4}$.",
-        "$\\frac{11}{12} < 1$，$\\frac{5}{4} > 1$，所以 $\\frac{11}{12} < \\frac{5}{4}$。",
+        "A fraction is less than $1$ when its numerator is less than its denominator, and greater than $1$ when its numerator is greater. If one fraction is below $1$ and the other above, the comparison is done without any more work.\n\n$\\frac{11}{12} < 1$ and $\\frac{5}{4} > 1$, so $\\frac{11}{12} < \\frac{5}{4}$.",
+        "分子小于分母的分数小于 $1$，分子大于分母的分数大于 $1$。如果一个分数小于 $1$，另一个大于 $1$，不用再算就能比出大小。\n\n$\\frac{11}{12} < 1$，$\\frac{5}{4} > 1$，所以 $\\frac{11}{12} < \\frac{5}{4}$。",
       ),
       generate(rng) {
         const [a, b] = properFraction(rng, 15, 3);
@@ -1402,8 +1405,8 @@ export const comparingFractionsUsingUnitBenchmarks = topic(
       id: "distance-from-one",
       title: t("Just below 1", "略小于 1"),
       explanation: t(
-        "$\\frac{7}{8}$ is $\\frac{1}{8}$ below $1$ and $\\frac{5}{6}$ is $\\frac{1}{6}$ below $1$. Since $\\frac{1}{8} < \\frac{1}{6}$, $\\frac{7}{8}$ is closer to $1$: $\\frac{7}{8} > \\frac{5}{6}$.",
-        "$\\frac{7}{8}$ 比 $1$ 少 $\\frac{1}{8}$，$\\frac{5}{6}$ 比 $1$ 少 $\\frac{1}{6}$。因为 $\\frac{1}{8} < \\frac{1}{6}$，$\\frac{7}{8}$ 更接近 $1$：$\\frac{7}{8} > \\frac{5}{6}$。",
+        "When both fractions are just below $1$, compare how much each is missing from $1$. The fraction that is missing less is closer to $1$, so it is greater.\n\n$\\frac{7}{8}$ is $\\frac{1}{8}$ below $1$ and $\\frac{5}{6}$ is $\\frac{1}{6}$ below $1$. Since $\\frac{1}{8} < \\frac{1}{6}$, $\\frac{7}{8}$ is closer to $1$: $\\frac{7}{8} > \\frac{5}{6}$.",
+        "两个分数都略小于 $1$ 时，比较它们各自比 $1$ 少多少。少得越少，就越接近 $1$，这个分数就越大。\n\n$\\frac{7}{8}$ 比 $1$ 少 $\\frac{1}{8}$，$\\frac{5}{6}$ 比 $1$ 少 $\\frac{1}{6}$。因为 $\\frac{1}{8} < \\frac{1}{6}$，$\\frac{7}{8}$ 更接近 $1$：$\\frac{7}{8} > \\frac{5}{6}$。",
       ),
       generate(rng) {
         let b: number;
@@ -1440,8 +1443,8 @@ export const comparingFractionsUsingOneHalfBenchmarks = topic(
       id: "comparing-with-one-half",
       title: t("Compared with one half", "与二分之一比较"),
       explanation: t(
-        "$\\frac{4}{9}$: half of $9$ is $4\\frac{1}{2}$, and $4$ is less, so $\\frac{4}{9} < \\frac{1}{2}$.",
-        "$\\frac{4}{9}$：$9$ 的一半是 $4\\frac{1}{2}$，$4$ 比它小，所以 $\\frac{4}{9} < \\frac{1}{2}$。",
+        "To compare a fraction with $\\frac{1}{2}$, find half of the denominator. If the numerator is less than that, the fraction is less than one half; if it is more, the fraction is greater.\n\n$\\frac{4}{9}$: half of $9$ is $4\\frac{1}{2}$, and $4$ is less, so $\\frac{4}{9} < \\frac{1}{2}$.",
+        "把一个分数和 $\\frac{1}{2}$ 比较，先求出分母的一半。分子比它小，分数就小于二分之一；分子比它大，分数就大于二分之一。\n\n$\\frac{4}{9}$：$9$ 的一半是 $4\\frac{1}{2}$，$4$ 比它小，所以 $\\frac{4}{9} < \\frac{1}{2}$。",
       ),
       generate(rng) {
         const d = rng.int(3, 20);
@@ -1462,8 +1465,8 @@ export const comparingFractionsUsingOneHalfBenchmarks = topic(
       id: "comparing-two-fractions-across-one-half",
       title: t("One on each side of one half", "分别在 1/2 的两侧"),
       explanation: t(
-        "$\\frac{3}{8} < \\frac{1}{2}$ and $\\frac{4}{7} > \\frac{1}{2}$, so $\\frac{3}{8} < \\frac{4}{7}$.",
-        "$\\frac{3}{8} < \\frac{1}{2}$，$\\frac{4}{7} > \\frac{1}{2}$，所以 $\\frac{3}{8} < \\frac{4}{7}$。",
+        "Compare each fraction with $\\frac{1}{2}$ by checking whether its numerator is less or more than half its denominator. If one fraction is below one half and the other above, the one above is greater.\n\n$\\frac{3}{8} < \\frac{1}{2}$ and $\\frac{4}{7} > \\frac{1}{2}$, so $\\frac{3}{8} < \\frac{4}{7}$.",
+        "看每个分数的分子比分母的一半小还是大，把它和 $\\frac{1}{2}$ 比较。如果一个小于二分之一，另一个大于二分之一，大于二分之一的那个就大。\n\n$\\frac{3}{8} < \\frac{1}{2}$，$\\frac{4}{7} > \\frac{1}{2}$，所以 $\\frac{3}{8} < \\frac{4}{7}$。",
       ),
       generate(rng) {
         let b: number;
@@ -1516,8 +1519,8 @@ export const comparingFractionModelsUsingCommonDenominators = topic(
       id: "comparing-two-bar-models",
       title: t("Comparing two bars", "比较两个长条"),
       explanation: t(
-        "The bars show $\\frac{3}{4}$ and $\\frac{5}{8}$. Cutting each fourth in two gives $\\frac{6}{8}$, so $\\frac{3}{4} > \\frac{5}{8}$.",
-        "两个长条分别表示 $\\frac{3}{4}$ 和 $\\frac{5}{8}$。把每个四分之一再分成两份得到 $\\frac{6}{8}$，所以 $\\frac{3}{4} > \\frac{5}{8}$。",
+        "Two bar models are easy to compare once their parts are the same size. Cut the larger parts of one bar into smaller pieces until they match the other bar, then compare the numbers of shaded parts.\n\nThe bars show $\\frac{3}{4}$ and $\\frac{5}{8}$. Cutting each fourth in two gives $\\frac{6}{8}$, so $\\frac{3}{4} > \\frac{5}{8}$.",
+        "两个长条模型的每份大小相同时，比较起来就很容易。把一个长条中较大的份再分成小份，使它与另一个长条的份一样大，再比较涂色的份数。\n\n两个长条分别表示 $\\frac{3}{4}$ 和 $\\frac{5}{8}$。把每个四分之一再分成两份得到 $\\frac{6}{8}$，所以 $\\frac{3}{4} > \\frac{5}{8}$。",
       ),
       generate(rng) {
         const { a, b, c, d, k } = multiplePair(rng);
@@ -1538,8 +1541,8 @@ export const comparingFractionModelsUsingCommonDenominators = topic(
       id: "rewriting-a-model-with-smaller-parts",
       title: t("Making the parts the same size", "使每份一样大"),
       explanation: t(
-        "To compare $\\frac{2}{5}$ with tenths, write $\\frac{2}{5} = \\frac{4}{10}$.",
-        "要把 $\\frac{2}{5}$ 与十分之几比较，先写成 $\\frac{2}{5} = \\frac{4}{10}$。",
+        "To rewrite a model with smaller parts, find how many small parts fit in one large part. Multiply both the numerator and the denominator by that number.\n\nTo compare $\\frac{2}{5}$ with tenths: each fifth is $2$ tenths, so $\\frac{2}{5} = \\frac{4}{10}$.",
+        "要把模型改成更小的份，先看一个大份里有几个小份，再把分子和分母都乘这个数。\n\n要把 $\\frac{2}{5}$ 与十分之几比较：每个五分之一是 $2$ 个十分之一，所以 $\\frac{2}{5} = \\frac{4}{10}$。",
       ),
       generate(rng) {
         const { a, b, c, d, k } = multiplePair(rng);
@@ -1578,8 +1581,8 @@ export const comparingFractionsUsingCommonDenominators = topic(
       id: "comparing-two-fractions-with-unlike-denominators",
       title: t("Two fractions", "比较两个分数"),
       explanation: t(
-        "$\\frac{5}{6}$ and $\\frac{7}{9}$: with denominator $18$ they are $\\frac{15}{18}$ and $\\frac{14}{18}$, so $\\frac{5}{6} > \\frac{7}{9}$.",
-        "$\\frac{5}{6}$ 和 $\\frac{7}{9}$：通分为 $\\frac{15}{18}$ 和 $\\frac{14}{18}$，所以 $\\frac{5}{6} > \\frac{7}{9}$。",
+        "To compare fractions with different denominators, rewrite them with a common denominator, a common multiple of both. Then the parts are the same size and you compare the numerators.\n\n$\\frac{5}{6}$ and $\\frac{7}{9}$: with denominator $18$ they are $\\frac{15}{18}$ and $\\frac{14}{18}$, so $\\frac{5}{6} > \\frac{7}{9}$.",
+        "比较分母不同的分数，先通分，把它们化成分母相同的分数，公分母是两个分母的公倍数。这样每份一样大，再比较分子。\n\n$\\frac{5}{6}$ 和 $\\frac{7}{9}$：通分为 $\\frac{15}{18}$ 和 $\\frac{14}{18}$，所以 $\\frac{5}{6} > \\frac{7}{9}$。",
       ),
       generate(rng) {
         let a: number;
@@ -1607,8 +1610,8 @@ export const comparingFractionsUsingCommonDenominators = topic(
       id: "ordering-three-fractions",
       title: t("The greatest of three fractions", "三个分数中最大的"),
       explanation: t(
-        "$\\frac{1}{2}, \\frac{2}{3}, \\frac{3}{4}$ with denominator $12$ are $\\frac{6}{12}, \\frac{8}{12}, \\frac{9}{12}$; the greatest is $\\frac{3}{4}$.",
-        "$\\frac{1}{2}, \\frac{2}{3}, \\frac{3}{4}$ 通分为 $\\frac{6}{12}, \\frac{8}{12}, \\frac{9}{12}$；最大的是 $\\frac{3}{4}$。",
+        "With three fractions, choose a denominator that all three denominators divide into, rewrite every fraction with it, and compare the numerators.\n\n$\\frac{1}{2}, \\frac{2}{3}, \\frac{3}{4}$ with denominator $12$ are $\\frac{6}{12}, \\frac{8}{12}, \\frac{9}{12}$; the greatest is $\\frac{3}{4}$.",
+        "比较三个分数，选一个三个分母都能整除的数作公分母，把每个分数都化成这个分母，再比较分子。\n\n$\\frac{1}{2}, \\frac{2}{3}, \\frac{3}{4}$ 通分为 $\\frac{6}{12}, \\frac{8}{12}, \\frac{9}{12}$；最大的是 $\\frac{3}{4}$。",
       ),
       generate(rng) {
         for (;;) {
@@ -1677,8 +1680,8 @@ export const addingFractionsWithLikeDenominatorsUsingModels = topic(
       id: "adding-with-bar-models",
       title: t("Joining shaded parts", "合并涂色部分"),
       explanation: t(
-        "The bar shows $\\frac{2}{7}$ and then $\\frac{3}{7}$ more: $5$ parts of $7$ are shaded, so $\\frac{2}{7} + \\frac{3}{7} = \\frac{5}{7}$.",
-        "长条先涂 $\\frac{2}{7}$，再涂 $\\frac{3}{7}$：$7$ 份中共涂了 $5$ 份，所以 $\\frac{2}{7} + \\frac{3}{7} = \\frac{5}{7}$。",
+        "Adding fractions with the same denominator joins parts of the same size. Count all the shaded parts; the size of each part, the denominator, does not change.\n\nThe bar shows $\\frac{2}{7}$ and then $\\frac{3}{7}$ more: $5$ parts of $7$ are shaded, so $\\frac{2}{7} + \\frac{3}{7} = \\frac{5}{7}$, not $\\frac{5}{14}$.",
+        "同分母分数相加，是把同样大小的份合在一起。数出所有涂色的份数；每份的大小，也就是分母，不变。\n\n长条先涂 $\\frac{2}{7}$，再涂 $\\frac{3}{7}$：$7$ 份中共涂了 $5$ 份，所以 $\\frac{2}{7} + \\frac{3}{7} = \\frac{5}{7}$，而不是 $\\frac{5}{14}$。",
       ),
       generate(rng) {
         const [a, b, d] = likeSum(rng, 1);
@@ -1701,8 +1704,8 @@ export const addingFractionsWithLikeDenominatorsUsingModels = topic(
       id: "counting-unit-fractions-in-a-sum",
       title: t("Counting unit fractions", "数单位分数"),
       explanation: t(
-        "$\\frac{3}{8} + \\frac{4}{8}$ is $3$ eighths and $4$ eighths: $7$ eighths.",
-        "$\\frac{3}{8} + \\frac{4}{8}$ 是 $3$ 个八分之一加 $4$ 个八分之一：$7$ 个八分之一。",
+        "Think of each fraction as a count of unit fractions. Adding fractions with the same denominator adds the counts, and the unit stays the same.\n\n$\\frac{3}{8} + \\frac{4}{8}$ is $3$ eighths and $4$ eighths: $7$ eighths, or $\\frac{7}{8}$.",
+        "把每个分数看作几个分数单位。同分母分数相加，就是把分数单位的个数相加，分数单位不变。\n\n$\\frac{3}{8} + \\frac{4}{8}$ 是 $3$ 个八分之一加 $4$ 个八分之一：$7$ 个八分之一，即 $\\frac{7}{8}$。",
       ),
       generate(rng) {
         const d = rng.int(3, 15);
@@ -1761,8 +1764,8 @@ export const addingFractionsWithLikeDenominators = topic(
       id: "adding-three-fractions-with-like-denominators",
       title: t("Three fractions", "三个分数相加"),
       explanation: t(
-        "$\\frac{1}{8} + \\frac{2}{8} + \\frac{4}{8} = \\frac{7}{8}$.",
-        "$\\frac{1}{8} + \\frac{2}{8} + \\frac{4}{8} = \\frac{7}{8}$。",
+        "To add fractions with the same denominator, add the numerators and keep the denominator. This works for any number of fractions. Simplify or write a mixed number if the answer allows it.\n\n$\\frac{1}{8} + \\frac{2}{8} + \\frac{4}{8} = \\frac{1 + 2 + 4}{8} = \\frac{7}{8}$.",
+        "同分母分数相加，分母不变，分子相加。几个分数相加也是这样。如果结果能约分或化成带分数，就继续化简。\n\n$\\frac{1}{8} + \\frac{2}{8} + \\frac{4}{8} = \\frac{1 + 2 + 4}{8} = \\frac{7}{8}$。",
       ),
       generate(rng) {
         for (;;) {
@@ -1799,7 +1802,10 @@ export const subtractingFractionsWithLikeDenominators = topic(
     {
       id: "subtracting-two-fractions-with-like-denominators",
       title: t("Two fractions", "两个分数相减"),
-      explanation: t("$\\frac{11}{12} - \\frac{4}{12} = \\frac{7}{12}$.", "$\\frac{11}{12} - \\frac{4}{12} = \\frac{7}{12}$。"),
+      explanation: t(
+        "To subtract fractions with the same denominator, subtract the numerators and keep the denominator: you are taking away parts of the same size.\n\n$\\frac{11}{12} - \\frac{4}{12} = \\frac{11 - 4}{12} = \\frac{7}{12}$. Subtracting the denominators too would give $\\frac{7}{0}$, which makes no sense.",
+        "同分母分数相减，分母不变，分子相减：拿走的是同样大小的份。\n\n$\\frac{11}{12} - \\frac{4}{12} = \\frac{11 - 4}{12} = \\frac{7}{12}$。如果分母也相减，会得到 $\\frac{7}{0}$，这是没有意义的。",
+      ),
       generate(rng) {
         const [a, b, d] = likeDifference(rng, 15);
         return numberProblem({
@@ -1818,8 +1824,8 @@ export const subtractingFractionsWithLikeDenominators = topic(
       id: "subtracting-fractions-from-wholes",
       title: t("Subtracting from a whole number", "从整数中减去分数"),
       explanation: t(
-        "$2 - \\frac{3}{5} = \\frac{10}{5} - \\frac{3}{5} = \\frac{7}{5}$.",
-        "$2 - \\frac{3}{5} = \\frac{10}{5} - \\frac{3}{5} = \\frac{7}{5}$。",
+        "To subtract a fraction from a whole number, first write the whole number as a fraction with the same denominator: each whole is that many parts. Then subtract the numerators.\n\n$2 - \\frac{3}{5} = \\frac{10}{5} - \\frac{3}{5} = \\frac{7}{5}$, since $2$ wholes are $10$ fifths.",
+        "用整数减分数，先把整数写成分母相同的分数：每个整体就是那么多份。再把分子相减。\n\n$2 - \\frac{3}{5} = \\frac{10}{5} - \\frac{3}{5} = \\frac{7}{5}$，因为 $2$ 个整体是 $10$ 个五分之一。",
       ),
       generate(rng) {
         const d = rng.int(2, 12);
@@ -1847,12 +1853,12 @@ function fractionWordKP(id: string, subtract: boolean, k: number): KnowledgePoin
     title: k === 0 ? t("Measured amounts", "度量的数量") : t("Parts of a whole", "整体的一部分"),
     explanation: subtract
       ? t(
-          '"How much more" asks for a difference: $\\frac{7}{8} - \\frac{3}{8} = \\frac{4}{8} = \\frac{1}{2}$.',
-          '"多多少"求的是差：$\\frac{7}{8} - \\frac{3}{8} = \\frac{4}{8} = \\frac{1}{2}$。',
+          'Questions like "how much more" or "how much is left" ask for a difference. Subtract the smaller amount from the larger, keep the denominator, and simplify the answer.\n\n"How much more" asks for a difference: $\\frac{7}{8} - \\frac{3}{8} = \\frac{4}{8} = \\frac{1}{2}$.',
+          '"多多少""还剩多少"这样的问题求的是差。用较大的量减去较小的量，分母不变，再把结果化简。\n\n"多多少"求的是差：$\\frac{7}{8} - \\frac{3}{8} = \\frac{4}{8} = \\frac{1}{2}$。',
         )
       : t(
-          '"In all" asks for a sum: $\\frac{3}{10} + \\frac{4}{10} = \\frac{7}{10}$.',
-          '"一共"求的是和：$\\frac{3}{10} + \\frac{4}{10} = \\frac{7}{10}$。',
+          'In a word problem, decide first which operation the question asks for. Words like "in all" or "altogether" ask for a sum, so add the fractions: add the numerators and keep the denominator.\n\n"In all" asks for a sum: $\\frac{3}{10} + \\frac{4}{10} = \\frac{7}{10}$.',
+          '解应用题，先判断问题要求用哪种运算。"一共""总共"求的是和，所以把分数相加：分母不变，分子相加。\n\n"一共"求的是和：$\\frac{3}{10} + \\frac{4}{10} = \\frac{7}{10}$。',
         ),
     generate(rng) {
       const name = rng.pick(names);
@@ -1934,8 +1940,8 @@ export const decomposingFractionsIntoSumsUsingModels = topic(
       id: "fractions-as-sums-of-unit-fractions",
       title: t("Sums of unit fractions", "单位分数的和"),
       explanation: t(
-        "$\\frac{4}{7}$ is $4$ parts of size $\\frac{1}{7}$: $\\frac{4}{7} = \\frac{1}{7} + \\frac{1}{7} + \\frac{1}{7} + \\frac{1}{7}$.",
-        "$\\frac{4}{7}$ 是 $4$ 个 $\\frac{1}{7}$：$\\frac{4}{7} = \\frac{1}{7} + \\frac{1}{7} + \\frac{1}{7} + \\frac{1}{7}$。",
+        "Any fraction is a sum of unit fractions: the numerator says how many copies of $1$ over the denominator to add.\n\n$\\frac{4}{7}$ is $4$ parts of size $\\frac{1}{7}$: $\\frac{4}{7} = \\frac{1}{7} + \\frac{1}{7} + \\frac{1}{7} + \\frac{1}{7}$.",
+        "任何分数都可以写成几个分数单位的和：分子表示有几个分数单位相加。\n\n$\\frac{4}{7}$ 是 $4$ 个 $\\frac{1}{7}$：$\\frac{4}{7} = \\frac{1}{7} + \\frac{1}{7} + \\frac{1}{7} + \\frac{1}{7}$。",
       ),
       generate(rng) {
         const d = rng.int(3, 12);
@@ -1962,8 +1968,8 @@ export const decomposingFractionsIntoSumsUsingModels = topic(
       id: "splitting-a-model-into-two-parts",
       title: t("Two groups of parts", "分成两组"),
       explanation: t(
-        "$\\frac{5}{8}$ split into $2$ parts and the rest: $\\frac{5}{8} = \\frac{2}{8} + \\frac{3}{8}$.",
-        "把 $\\frac{5}{8}$ 分成 $2$ 份和剩下的部分：$\\frac{5}{8} = \\frac{2}{8} + \\frac{3}{8}$。",
+        "The shaded parts of a model can be split into two groups. Both groups keep the same denominator, and their numerators add up to the original numerator.\n\n$\\frac{5}{8}$ split into $2$ parts and the rest: $5 - 2 = 3$, so $\\frac{5}{8} = \\frac{2}{8} + \\frac{3}{8}$.",
+        "模型中涂色的份可以分成两组。两组的分母都不变，分子加起来等于原来的分子。\n\n把 $\\frac{5}{8}$ 分成 $2$ 份和剩下的部分：$5 - 2 = 3$，所以 $\\frac{5}{8} = \\frac{2}{8} + \\frac{3}{8}$。",
       ),
       generate(rng) {
         const d = rng.int(3, 12);
@@ -2004,8 +2010,8 @@ export const decomposingFractionsIntoSums = topic(
       id: "choosing-a-correct-decomposition",
       title: t("Which sum is equal?", "哪个和相等"),
       explanation: t(
-        "$\\frac{7}{10} = \\frac{3}{10} + \\frac{4}{10}$ because $3 + 4 = 7$, while $\\frac{3}{5} + \\frac{4}{5} = \\frac{7}{5}$ is not equal to it.",
-        "$\\frac{7}{10} = \\frac{3}{10} + \\frac{4}{10}$，因为 $3 + 4 = 7$；而 $\\frac{3}{5} + \\frac{4}{5} = \\frac{7}{5}$ 不等于它。",
+        "A sum equals the fraction only if every part has the same denominator as the fraction and the numerators add up to its numerator. Check both conditions.\n\n$\\frac{7}{10} = \\frac{3}{10} + \\frac{4}{10}$ because $3 + 4 = 7$, while $\\frac{3}{5} + \\frac{4}{5} = \\frac{7}{5}$ is not equal to it.",
+        "只有每一部分的分母都和原分数相同，而且分子加起来等于原分数的分子，这个和才等于原分数。两个条件都要检查。\n\n$\\frac{7}{10} = \\frac{3}{10} + \\frac{4}{10}$，因为 $3 + 4 = 7$；而 $\\frac{3}{5} + \\frac{4}{5} = \\frac{7}{5}$ 不等于它。",
       ),
       generate(rng) {
         const d = rng.int(5, 15);
@@ -2033,8 +2039,8 @@ export const decomposingFractionsIntoSums = topic(
       id: "completing-a-decomposition-into-three-fractions",
       title: t("Three parts", "拆成三个分数"),
       explanation: t(
-        "$\\frac{9}{11} = \\frac{2}{11} + \\frac{3}{11} + \\frac{\\square}{11}$: $9 - 2 - 3 = 4$.",
-        "$\\frac{9}{11} = \\frac{2}{11} + \\frac{3}{11} + \\frac{\\square}{11}$：$9 - 2 - 3 = 4$。",
+        "To find the missing part, subtract the known numerators from the whole numerator. The denominator stays the same.\n\n$\\frac{9}{11} = \\frac{2}{11} + \\frac{3}{11} + \\frac{\\square}{11}$: $9 - 2 - 3 = 4$, so the missing part is $\\frac{4}{11}$.",
+        "求缺少的部分，用原分数的分子减去已知的各个分子。分母不变。\n\n$\\frac{9}{11} = \\frac{2}{11} + \\frac{3}{11} + \\frac{\\square}{11}$：$9 - 2 - 3 = 4$，所以缺少的部分是 $\\frac{4}{11}$。",
       ),
       generate(rng) {
         const d = rng.int(5, 15);
@@ -2103,7 +2109,10 @@ export const addingMixedNumbersWithLikeDenominators = topic(
     {
       id: "adding-mixed-numbers-without-regrouping",
       title: t("Without regrouping", "不进位"),
-      explanation: t("$3\\frac{1}{6} + 2\\frac{4}{6} = 5\\frac{5}{6}$.", "$3\\frac{1}{6} + 2\\frac{4}{6} = 5\\frac{5}{6}$。"),
+      explanation: t(
+        "To add mixed numbers with the same denominator, add the whole numbers and add the fractions separately, then put them together.\n\n$3\\frac{1}{6} + 2\\frac{4}{6}$: $3 + 2 = 5$ and $\\frac{1}{6} + \\frac{4}{6} = \\frac{5}{6}$, so the sum is $5\\frac{5}{6}$.",
+        "同分母带分数相加，整数部分和分数部分分别相加，再合起来。\n\n$3\\frac{1}{6} + 2\\frac{4}{6}$：$3 + 2 = 5$，$\\frac{1}{6} + \\frac{4}{6} = \\frac{5}{6}$，所以和是 $5\\frac{5}{6}$。",
+      ),
       generate(rng) {
         const { w1, r1, w2, r2, d } = mixedPair(rng, "add");
         return numberProblem({
@@ -2125,8 +2134,8 @@ export const addingMixedNumbersWithLikeDenominators = topic(
       id: "adding-mixed-numbers-with-regrouping",
       title: t("With regrouping", "要进位"),
       explanation: t(
-        "$2\\frac{3}{5} + 1\\frac{4}{5} = 3\\frac{7}{5}$, and $\\frac{7}{5} = 1\\frac{2}{5}$, so the sum is $4\\frac{2}{5}$.",
-        "$2\\frac{3}{5} + 1\\frac{4}{5} = 3\\frac{7}{5}$，而 $\\frac{7}{5} = 1\\frac{2}{5}$，所以和是 $4\\frac{2}{5}$。",
+        "If the fractions add to $1$ or more, the fraction part is improper. Change it to a mixed number and add its whole to the whole-number part.\n\n$2\\frac{3}{5} + 1\\frac{4}{5} = 3\\frac{7}{5}$, and $\\frac{7}{5} = 1\\frac{2}{5}$, so the sum is $4\\frac{2}{5}$. Leaving the answer as $3\\frac{7}{5}$ is not finished.",
+        "如果分数部分相加满 $1$ 或超过 $1$，分数部分就是假分数。把它化成带分数，再把整数部分加到原来的整数上。\n\n$2\\frac{3}{5} + 1\\frac{4}{5} = 3\\frac{7}{5}$，而 $\\frac{7}{5} = 1\\frac{2}{5}$，所以和是 $4\\frac{2}{5}$。结果写成 $3\\frac{7}{5}$ 还没有化简完。",
       ),
       generate(rng) {
         const { w1, r1, w2, r2, d } = mixedPair(rng, "addRegroup");
@@ -2162,7 +2171,10 @@ export const subtractingMixedNumbersWithLikeDenominators = topic(
     {
       id: "subtracting-mixed-numbers-without-borrowing",
       title: t("Two mixed numbers", "两个带分数相减"),
-      explanation: t("$6\\frac{5}{7} - 2\\frac{1}{7} = 4\\frac{4}{7}$.", "$6\\frac{5}{7} - 2\\frac{1}{7} = 4\\frac{4}{7}$。"),
+      explanation: t(
+        "When the first fraction is at least as large as the second, subtract the whole numbers and subtract the fractions separately.\n\n$6\\frac{5}{7} - 2\\frac{1}{7}$: $6 - 2 = 4$ and $\\frac{5}{7} - \\frac{1}{7} = \\frac{4}{7}$, so the difference is $4\\frac{4}{7}$.",
+        "第一个分数部分不小于第二个时，整数部分和分数部分分别相减。\n\n$6\\frac{5}{7} - 2\\frac{1}{7}$：$6 - 2 = 4$，$\\frac{5}{7} - \\frac{1}{7} = \\frac{4}{7}$，所以差是 $4\\frac{4}{7}$。",
+      ),
       generate(rng) {
         const { w1, r1, w2, r2, d } = mixedPair(rng, "sub");
         return numberProblem({
@@ -2184,8 +2196,8 @@ export const subtractingMixedNumbersWithLikeDenominators = topic(
       id: "subtracting-fractions-from-mixed-numbers",
       title: t("A fraction or a whole number from a mixed number", "带分数减分数或整数"),
       explanation: t(
-        "$4\\frac{5}{9} - \\frac{2}{9} = 4\\frac{3}{9} = 4\\frac{1}{3}$, and $4\\frac{5}{9} - 3 = 1\\frac{5}{9}$.",
-        "$4\\frac{5}{9} - \\frac{2}{9} = 4\\frac{3}{9} = 4\\frac{1}{3}$，$4\\frac{5}{9} - 3 = 1\\frac{5}{9}$。",
+        "Subtracting a fraction changes only the fraction part, and subtracting a whole number changes only the whole-number part. Simplify the result if you can.\n\n$4\\frac{5}{9} - \\frac{2}{9} = 4\\frac{3}{9} = 4\\frac{1}{3}$, and $4\\frac{5}{9} - 3 = 1\\frac{5}{9}$.",
+        "减去一个分数，只有分数部分变化；减去一个整数，只有整数部分变化。结果能约分的要约分。\n\n$4\\frac{5}{9} - \\frac{2}{9} = 4\\frac{3}{9} = 4\\frac{1}{3}$，$4\\frac{5}{9} - 3 = 1\\frac{5}{9}$。",
       ),
       generate(rng) {
         const { w1, r1, r2, d } = mixedPair(rng, "sub");
@@ -2235,8 +2247,8 @@ export const subtractingMixedNumbersWithLikeDenominatorsUsingImproperFractions =
       id: "subtracting-mixed-numbers-with-borrowing",
       title: t("A smaller first fraction", "被减数的分数部分较小"),
       explanation: t(
-        "$5\\frac{2}{7} - 2\\frac{5}{7} = \\frac{37}{7} - \\frac{19}{7} = \\frac{18}{7} = 2\\frac{4}{7}$.",
-        "$5\\frac{2}{7} - 2\\frac{5}{7} = \\frac{37}{7} - \\frac{19}{7} = \\frac{18}{7} = 2\\frac{4}{7}$。",
+        "When the first fraction is smaller than the second, the fractions cannot be subtracted directly. Change both mixed numbers to improper fractions, subtract the numerators, and change the answer back to a mixed number.\n\n$5\\frac{2}{7} - 2\\frac{5}{7} = \\frac{37}{7} - \\frac{19}{7} = \\frac{18}{7} = 2\\frac{4}{7}$. Subtracting $\\frac{2}{7}$ from $\\frac{5}{7}$ instead is a common mistake.",
+        "第一个分数部分比第二个小时，分数部分不够减。把两个带分数都化成假分数，分子相减，再把结果化成带分数。\n\n$5\\frac{2}{7} - 2\\frac{5}{7} = \\frac{37}{7} - \\frac{19}{7} = \\frac{18}{7} = 2\\frac{4}{7}$。反过来用 $\\frac{5}{7}$ 减 $\\frac{2}{7}$ 是常见的错误。",
       ),
       generate(rng) {
         const { w1, r1, w2, r2, d } = mixedPair(rng, "subBorrow");
@@ -2261,8 +2273,8 @@ export const subtractingMixedNumbersWithLikeDenominatorsUsingImproperFractions =
       id: "subtracting-mixed-numbers-from-whole-numbers",
       title: t("From a whole number", "从整数中减去带分数"),
       explanation: t(
-        "$6 - 2\\frac{3}{8} = \\frac{48}{8} - \\frac{19}{8} = \\frac{29}{8} = 3\\frac{5}{8}$.",
-        "$6 - 2\\frac{3}{8} = \\frac{48}{8} - \\frac{19}{8} = \\frac{29}{8} = 3\\frac{5}{8}$。",
+        "To subtract a mixed number from a whole number, write both as improper fractions with the same denominator, subtract, and change back.\n\n$6 - 2\\frac{3}{8} = \\frac{48}{8} - \\frac{19}{8} = \\frac{29}{8} = 3\\frac{5}{8}$. The answer is not $4\\frac{3}{8}$: the $\\frac{3}{8}$ is taken away, not kept.",
+        "用整数减带分数，把两个数都化成分母相同的假分数，相减后再化回带分数。\n\n$6 - 2\\frac{3}{8} = \\frac{48}{8} - \\frac{19}{8} = \\frac{29}{8} = 3\\frac{5}{8}$。答案不是 $4\\frac{3}{8}$：$\\frac{3}{8}$ 是要减去的，不是留下的。",
       ),
       generate(rng) {
         const d = rng.int(2, 12);
@@ -2297,12 +2309,12 @@ function mixedWordKP(id: string, subtract: boolean, regroup: boolean): Knowledge
       : t("Without regrouping", "不需要进位或借位"),
     explanation: subtract
       ? t(
-          "A board $5\\frac{1}{4}$ feet long has $1\\frac{3}{4}$ feet cut off: $5\\frac{1}{4} - 1\\frac{3}{4} = 3\\frac{2}{4} = 3\\frac{1}{2}$ feet are left.",
-          "一块 $5\\frac{1}{4}$ 英尺长的木板锯掉 $1\\frac{3}{4}$ 英尺：还剩 $5\\frac{1}{4} - 1\\frac{3}{4} = 3\\frac{1}{2}$ 英尺。",
+          "When an amount is taken away or two amounts are compared, subtract the mixed numbers. If the first fraction is too small, borrow one whole or use improper fractions.\n\nA board $5\\frac{1}{4}$ feet long has $1\\frac{3}{4}$ feet cut off: $5\\frac{1}{4} - 1\\frac{3}{4} = 3\\frac{2}{4} = 3\\frac{1}{2}$ feet are left.",
+          "拿走一部分或比较两个量时，把带分数相减。如果第一个分数部分不够减，就借一个整体，或者化成假分数再算。\n\n一块 $5\\frac{1}{4}$ 英尺长的木板锯掉 $1\\frac{3}{4}$ 英尺：还剩 $5\\frac{1}{4} - 1\\frac{3}{4} = 3\\frac{1}{2}$ 英尺。",
         )
       : t(
-          "$2\\frac{3}{8}$ miles and then $1\\frac{7}{8}$ miles: $3\\frac{10}{8} = 4\\frac{2}{8} = 4\\frac{1}{4}$ miles in all.",
-          "先走 $2\\frac{3}{8}$ 英里，再走 $1\\frac{7}{8}$ 英里：一共 $3\\frac{10}{8} = 4\\frac{1}{4}$ 英里。",
+          "When two amounts are put together, add the mixed numbers: add the whole numbers and the fractions. If the fractions make $1$ or more, carry the whole into the whole-number part.\n\n$2\\frac{3}{8}$ miles and then $1\\frac{7}{8}$ miles: $3\\frac{10}{8} = 4\\frac{2}{8} = 4\\frac{1}{4}$ miles in all.",
+          "两个量合在一起，就把带分数相加：整数部分相加，分数部分相加。分数部分满 $1$ 时，向整数部分进一。\n\n先走 $2\\frac{3}{8}$ 英里，再走 $1\\frac{7}{8}$ 英里：一共 $3\\frac{10}{8} = 4\\frac{1}{4}$ 英里。",
         ),
     generate(rng) {
       const name = rng.pick(names);
@@ -2374,8 +2386,8 @@ export const multiplyingUnitFractionsByWholeNumbersUsingModels = topic(
       id: "copies-of-a-unit-fraction",
       title: t("Copies of a unit fraction", "几个单位分数"),
       explanation: t(
-        "The model shows $4$ parts of size $\\frac{1}{6}$ shaded: $4 \\times \\frac{1}{6} = \\frac{4}{6}$.",
-        "模型中涂色了 $4$ 个 $\\frac{1}{6}$：$4 \\times \\frac{1}{6} = \\frac{4}{6}$。",
+        "A whole number times a unit fraction counts copies of that unit fraction. The whole number becomes the numerator, and the denominator stays the same.\n\nThe model shows $4$ parts of size $\\frac{1}{6}$ shaded: $4 \\times \\frac{1}{6} = \\frac{4}{6}$, not $\\frac{4}{24}$.",
+        "整数乘分数单位，就是求几个这样的分数单位。整数变成分子，分母不变。\n\n模型中涂色了 $4$ 个 $\\frac{1}{6}$：$4 \\times \\frac{1}{6} = \\frac{4}{6}$，而不是 $\\frac{4}{24}$。",
       ),
       generate(rng) {
         const d = rng.int(3, 12);
@@ -2399,7 +2411,10 @@ export const multiplyingUnitFractionsByWholeNumbersUsingModels = topic(
     {
       id: "products-of-whole-numbers-and-unit-fractions",
       title: t("The product as a fraction", "积写成分数"),
-      explanation: t("$7 \\times \\frac{1}{10} = \\frac{7}{10}$.", "$7 \\times \\frac{1}{10} = \\frac{7}{10}$。"),
+      explanation: t(
+        "Multiplying a unit fraction by a whole number gives that many copies of it, so the product has the whole number as numerator and the same denominator. Multiply only the numerator.\n\n$7 \\times \\frac{1}{10} = \\frac{7 \\times 1}{10} = \\frac{7}{10}$.",
+        "分数单位乘整数，得到的是几个这样的分数单位，所以积的分子是这个整数，分母不变。只乘分子。\n\n$7 \\times \\frac{1}{10} = \\frac{7 \\times 1}{10} = \\frac{7}{10}$。",
+      ),
       generate(rng) {
         const d = rng.int(2, 15);
         const n = coprimeTo(rng, d, 2, 2 * d);
@@ -2429,8 +2444,8 @@ export const multiplyingFractionsByWholeNumbersUsingModels = topic(
       id: "groups-of-a-fraction-in-a-model",
       title: t("Groups of a fraction", "几组分数"),
       explanation: t(
-        "$3$ groups of $\\frac{2}{5}$ shade $6$ fifths: $3 \\times \\frac{2}{5} = \\frac{6}{5}$.",
-        "$3$ 组 $\\frac{2}{5}$ 共涂色 $6$ 个五分之一：$3 \\times \\frac{2}{5} = \\frac{6}{5}$。",
+        "Equal groups of a fraction can be counted part by part. Each group has as many parts as the numerator, so multiply the number of groups by the numerator; the size of the parts does not change.\n\n$3$ groups of $\\frac{2}{5}$ shade $3 \\times 2 = 6$ fifths: $3 \\times \\frac{2}{5} = \\frac{6}{5}$.",
+        "几组同样的分数可以一份一份地数。每组的份数等于分子，所以用组数乘分子；每份的大小不变。\n\n$3$ 组 $\\frac{2}{5}$ 共涂色 $3 \\times 2 = 6$ 个五分之一：$3 \\times \\frac{2}{5} = \\frac{6}{5}$。",
       ),
       generate(rng) {
         const d = rng.int(3, 8);
@@ -2459,8 +2474,8 @@ export const multiplyingFractionsByWholeNumbersUsingModels = topic(
       id: "writing-products-as-sums",
       title: t("Products as repeated addition", "乘法与连加"),
       explanation: t(
-        "$4 \\times \\frac{3}{7} = \\frac{3}{7} + \\frac{3}{7} + \\frac{3}{7} + \\frac{3}{7} = \\frac{12}{7}$.",
-        "$4 \\times \\frac{3}{7} = \\frac{3}{7} + \\frac{3}{7} + \\frac{3}{7} + \\frac{3}{7} = \\frac{12}{7}$。",
+        "Multiplying by a whole number is repeated addition, just as with whole numbers: $n \\times \\frac{a}{b}$ is $\\frac{a}{b}$ added $n$ times.\n\n$4 \\times \\frac{3}{7} = \\frac{3}{7} + \\frac{3}{7} + \\frac{3}{7} + \\frac{3}{7} = \\frac{12}{7}$.",
+        "和整数一样，乘整数就是求几个相同加数的和：$n \\times \\frac{a}{b}$ 就是 $n$ 个 $\\frac{a}{b}$ 相加。\n\n$4 \\times \\frac{3}{7} = \\frac{3}{7} + \\frac{3}{7} + \\frac{3}{7} + \\frac{3}{7} = \\frac{12}{7}$。",
       ),
       generate(rng) {
         const n = rng.int(2, 5);
@@ -2502,7 +2517,10 @@ export const multiplyingFractionsByWholeNumbers = topic(
     {
       id: "products-as-improper-fractions",
       title: t("The product as a fraction", "积写成分数"),
-      explanation: t("$5 \\times \\frac{3}{4} = \\frac{15}{4}$.", "$5 \\times \\frac{3}{4} = \\frac{15}{4}$。"),
+      explanation: t(
+        "To multiply a fraction by a whole number, multiply the numerator by the whole number and keep the denominator. Do not multiply the denominator as well.\n\n$5 \\times \\frac{3}{4} = \\frac{5 \\times 3}{4} = \\frac{15}{4}$.",
+        "分数乘整数，用分子乘整数，分母不变。分母不能也乘这个整数。\n\n$5 \\times \\frac{3}{4} = \\frac{5 \\times 3}{4} = \\frac{15}{4}$。",
+      ),
       generate(rng) {
         for (;;) {
           const d = rng.int(2, 12);
@@ -2526,8 +2544,8 @@ export const multiplyingFractionsByWholeNumbers = topic(
       id: "products-as-mixed-numbers",
       title: t("The product as a mixed number", "积写成带分数"),
       explanation: t(
-        "$4 \\times \\frac{2}{3} = \\frac{8}{3} = 2\\frac{2}{3}$.",
-        "$4 \\times \\frac{2}{3} = \\frac{8}{3} = 2\\frac{2}{3}$。",
+        "Multiply the numerator by the whole number to get an improper fraction, then divide the numerator by the denominator to write it as a mixed number.\n\n$4 \\times \\frac{2}{3} = \\frac{8}{3}$, and $8 \\div 3 = 2 \\text{ R } 2$, so the product is $2\\frac{2}{3}$.",
+        "先用分子乘整数，得到假分数，再用分子除以分母，把它写成带分数。\n\n$4 \\times \\frac{2}{3} = \\frac{8}{3}$，$8 \\div 3 = 2 \\cdots\\cdots 2$，所以积是 $2\\frac{2}{3}$。",
       ),
       generate(rng) {
         for (;;) {
@@ -2565,8 +2583,8 @@ export const multiplyingFractionsByWholeNumbersWordProblems = topic(
       id: "repeated-fractional-amounts",
       title: t("Equal amounts", "相同的数量"),
       explanation: t(
-        "$5$ people each eat $\\frac{3}{8}$ of a pizza: $5 \\times \\frac{3}{8} = \\frac{15}{8} = 1\\frac{7}{8}$ pizzas.",
-        "$5$ 个人每人吃 $\\frac{3}{8}$ 个比萨：一共 $5 \\times \\frac{3}{8} = \\frac{15}{8} = 1\\frac{7}{8}$ 个比萨。",
+        "When the same fractional amount is repeated several times, the total is the number of times multiplied by the fraction. Write an improper result as a mixed number.\n\n$5$ people each eat $\\frac{3}{8}$ of a pizza: $5 \\times \\frac{3}{8} = \\frac{15}{8} = 1\\frac{7}{8}$ pizzas.",
+        "同一个分数量重复几次，总数就是次数乘这个分数。结果是假分数时化成带分数。\n\n$5$ 个人每人吃 $\\frac{3}{8}$ 个比萨：一共 $5 \\times \\frac{3}{8} = \\frac{15}{8} = 1\\frac{7}{8}$ 个比萨。",
       ),
       generate(rng) {
         for (;;) {
@@ -2606,8 +2624,8 @@ export const multiplyingFractionsByWholeNumbersWordProblems = topic(
       id: "comparing-with-a-fractional-multiple",
       title: t("Times as much", "几倍"),
       explanation: t(
-        "A puppy eats $\\frac{2}{3}$ cup of food and a big dog eats $4$ times as much: $4 \\times \\frac{2}{3} = 2\\frac{2}{3}$ cups.",
-        "小狗吃 $\\frac{2}{3}$ 杯狗粮，大狗吃的是它的 $4$ 倍：$4 \\times \\frac{2}{3} = 2\\frac{2}{3}$ 杯。",
+        '"Times as much" means multiply: the larger amount is the number of times multiplied by the smaller amount, even when that amount is a fraction.\n\nA puppy eats $\\frac{2}{3}$ cup of food and a big dog eats $4$ times as much: $4 \\times \\frac{2}{3} = \\frac{8}{3} = 2\\frac{2}{3}$ cups. Adding $4 + \\frac{2}{3}$ would be a mistake.',
+        '"是……的几倍"用乘法：较大的量等于倍数乘较小的量，即使较小的量是分数也一样。\n\n小狗吃 $\\frac{2}{3}$ 杯狗粮，大狗吃的是它的 $4$ 倍：$4 \\times \\frac{2}{3} = \\frac{8}{3} = 2\\frac{2}{3}$ 杯。算成 $4 + \\frac{2}{3}$ 是错误的。',
       ),
       generate(rng) {
         for (;;) {
@@ -2649,8 +2667,8 @@ export const strategiesToSimplifyWholeNumberAndFractionMultiplication = topic(
       id: "cancelling-before-multiplying",
       title: t("Cancelling a common factor", "先约分"),
       explanation: t(
-        "$10 \\times \\frac{3}{4}$: $10$ and $4$ share the factor $2$, so $10 \\times \\frac{3}{4} = 5 \\times \\frac{3}{2} = \\frac{15}{2}$.",
-        "$10 \\times \\frac{3}{4}$：$10$ 和 $4$ 有公因数 $2$，所以 $10 \\times \\frac{3}{4} = 5 \\times \\frac{3}{2} = \\frac{15}{2}$。",
+        "Before multiplying, look for a common factor of the whole number and the denominator. Dividing both by it first keeps the numbers small and gives an answer already in lowest terms.\n\n$10 \\times \\frac{3}{4}$: $10$ and $4$ share the factor $2$, so $10 \\times \\frac{3}{4} = 5 \\times \\frac{3}{2} = \\frac{15}{2}$.",
+        "相乘之前，先看整数和分母有没有公因数。先把两者同时除以公因数，数就变小了，结果也直接是最简分数。\n\n$10 \\times \\frac{3}{4}$：$10$ 和 $4$ 有公因数 $2$，所以 $10 \\times \\frac{3}{4} = 5 \\times \\frac{3}{2} = \\frac{15}{2}$。",
       ),
       generate(rng) {
         for (;;) {
@@ -2677,8 +2695,8 @@ export const strategiesToSimplifyWholeNumberAndFractionMultiplication = topic(
       id: "products-that-are-whole-numbers",
       title: t("Whole-number products", "积是整数"),
       explanation: t(
-        "$12 \\times \\frac{3}{4}$: $12 \\div 4 = 3$, so the product is $3 \\times 3 = 9$.",
-        "$12 \\times \\frac{3}{4}$：$12 \\div 4 = 3$，所以积是 $3 \\times 3 = 9$。",
+        "If the denominator divides the whole number exactly, divide first: the denominator cancels completely and the product is a whole number.\n\n$12 \\times \\frac{3}{4}$: $12 \\div 4 = 3$, so the product is $3 \\times 3 = 9$.",
+        "如果整数能被分母整除，就先除：分母完全约掉，积是整数。\n\n$12 \\times \\frac{3}{4}$：$12 \\div 4 = 3$，所以积是 $3 \\times 3 = 9$。",
       ),
       generate(rng) {
         const d = rng.int(2, 12);
@@ -2717,8 +2735,8 @@ export const decimalFractions = topic(
       id: "tenths-as-hundredths",
       title: t("Tenths as hundredths", "十分之几化成百分之几"),
       explanation: t(
-        "$\\frac{3}{10} = \\frac{30}{100}$: each tenth is ten hundredths.",
-        "$\\frac{3}{10} = \\frac{30}{100}$：一个十分之一是十个百分之一。",
+        "One tenth is ten hundredths, so a number of tenths becomes hundredths by multiplying the numerator and the denominator by $10$. This lets you add tenths and hundredths.\n\n$\\frac{3}{10} = \\frac{30}{100}$: each tenth is ten hundredths.",
+        "一个十分之一是十个百分之一，所以把分子和分母同时乘 $10$，十分之几就化成百分之几。这样十分之几和百分之几就能相加。\n\n$\\frac{3}{10} = \\frac{30}{100}$：一个十分之一是十个百分之一。",
       ),
       generate(rng) {
         const a = rng.int(1, 9);
@@ -2788,8 +2806,8 @@ export const plottingDecimalsOnNumberLines = topic(
       id: "reading-tenths-on-number-lines",
       title: t("Tenths", "十分位"),
       explanation: t(
-        "On a line from $2$ to $3$ cut into $10$ steps, a point $4$ steps past $2$ is at $2.4$.",
-        "在从 $2$ 到 $3$ 平均分成 $10$ 格的数轴上，$2$ 右边第 $4$ 格的点表示 $2.4$。",
+        "When the space between two whole numbers is cut into $10$ equal steps, each step is one tenth. Start at the whole number on the left and count steps of $0.1$.\n\nOn a line from $2$ to $3$ cut into $10$ steps, a point $4$ steps past $2$ is at $2.4$.",
+        "两个相邻整数之间平均分成 $10$ 格时，每格是十分之一。从左边的整数开始，按 $0.1$ 一格往右数。\n\n在从 $2$ 到 $3$ 平均分成 $10$ 格的数轴上，$2$ 右边第 $4$ 格的点表示 $2.4$。",
       ),
       generate(rng) {
         const w = rng.int(0, 5);
@@ -2817,8 +2835,8 @@ export const plottingDecimalsOnNumberLines = topic(
       id: "reading-hundredths-on-number-lines",
       title: t("Hundredths", "百分位"),
       explanation: t(
-        "On a line from $0.6$ to $0.7$ cut into $10$ steps, each step is $0.01$; $3$ steps past $0.6$ is $0.63$.",
-        "在从 $0.6$ 到 $0.7$ 平均分成 $10$ 格的数轴上，每格是 $0.01$；$0.6$ 右边第 $3$ 格是 $0.63$。",
+        "When the space between two tenths is cut into $10$ equal steps, each step is one hundredth. Start at the tenth on the left and count steps of $0.01$.\n\nOn a line from $0.6$ to $0.7$ cut into $10$ steps, each step is $0.01$; $3$ steps past $0.6$ is $0.63$.",
+        "两个相邻的十分之几之间平均分成 $10$ 格时，每格是百分之一。从左边的数开始，按 $0.01$ 一格往右数。\n\n在从 $0.6$ 到 $0.7$ 平均分成 $10$ 格的数轴上，每格是 $0.01$；$0.6$ 右边第 $3$ 格是 $0.63$。",
       ),
       generate(rng) {
         const start = rng.int(0, 29);
@@ -2859,8 +2877,8 @@ export const comparingDecimalsUpToHundredths = topic(
       id: "comparing-two-decimals",
       title: t("Two decimals", "比较两个小数"),
       explanation: t(
-        "$0.6$ and $0.58$: as hundredths they are $0.60$ and $0.58$, so $0.6 > 0.58$. More digits do not make a decimal greater.",
-        "$0.6$ 与 $0.58$：写成两位小数是 $0.60$ 与 $0.58$，所以 $0.6 > 0.58$。小数位数多并不代表小数大。",
+        "Compare decimals place by place from the left, as with whole numbers. If they have different numbers of decimal places, write zeros at the end so they line up; this does not change their values.\n\n$0.6$ and $0.58$: as hundredths they are $0.60$ and $0.58$, so $0.6 > 0.58$. More digits do not make a decimal greater.",
+        "和整数一样，小数也从左往右逐位比较。如果小数位数不同，在末尾添 $0$ 使它们对齐；这不改变小数的大小。\n\n$0.6$ 与 $0.58$：写成两位小数是 $0.60$ 与 $0.58$，所以 $0.6 > 0.58$。小数位数多并不代表小数大。",
       ),
       generate(rng) {
         const w = rng.int(0, 9);
@@ -2887,7 +2905,10 @@ export const comparingDecimalsUpToHundredths = topic(
     {
       id: "finding-the-greatest-decimal",
       title: t("The greatest decimal", "最大的小数"),
-      explanation: t("Of $0.4$, $0.38$, $0.42$ and $0.09$, the greatest is $0.42$.", "$0.4$、$0.38$、$0.42$、$0.09$ 中最大的是 $0.42$。"),
+      explanation: t(
+        "To find the greatest decimal, give them all the same number of decimal places, then compare the tenths first and the hundredths only if the tenths are equal.\n\nOf $0.4$, $0.38$, $0.42$ and $0.09$, written $0.40$, $0.38$, $0.42$ and $0.09$, the greatest is $0.42$.",
+        "在几个小数中找最大的，先把它们都写成相同的小数位数，再先比十分位，十分位相同时才比百分位。\n\n$0.4$、$0.38$、$0.42$、$0.09$ 写成 $0.40$、$0.38$、$0.42$、$0.09$，最大的是 $0.42$。",
+      ),
       generate(rng) {
         const w = rng.int(0, 5);
         const vals = new Set<number>();
@@ -2936,8 +2957,8 @@ export const convertingFractionsToDecimals = topic(
       id: "fractions-with-denominators-ten-and-hundred",
       title: t("Tenths and hundredths", "十分之几和百分之几"),
       explanation: t(
-        "$\\frac{9}{100} = 0.09$, not $0.9$: nine hundredths has a $0$ in the tenths place.",
-        "$\\frac{9}{100} = 0.09$，而不是 $0.9$：百分之九的十分位上是 $0$。",
+        "A fraction with denominator $10$ has one decimal place, and one with denominator $100$ has two. Write the numerator so that its last digit lands in the tenths or hundredths place, adding zeros if needed.\n\n$\\frac{9}{100} = 0.09$, not $0.9$: nine hundredths has a $0$ in the tenths place.",
+        "分母是 $10$ 的分数写成一位小数，分母是 $100$ 的写成两位小数。写分子时，让它的最后一位落在十分位或百分位上，位数不够就补 $0$。\n\n$\\frac{9}{100} = 0.09$，而不是 $0.9$：百分之九的十分位上是 $0$。",
       ),
       generate(rng) {
         const den = rng.pick([10, 100]);
@@ -2957,8 +2978,8 @@ export const convertingFractionsToDecimals = topic(
       id: "fractions-with-denominators-dividing-a-hundred",
       title: t("Other denominators", "其他分母"),
       explanation: t(
-        "$\\frac{7}{20} = \\frac{7 \\times 5}{20 \\times 5} = \\frac{35}{100} = 0.35$.",
-        "$\\frac{7}{20} = \\frac{7 \\times 5}{20 \\times 5} = \\frac{35}{100} = 0.35$。",
+        "If the denominator divides $10$ or $100$, first write an equal fraction with denominator $10$ or $100$ by multiplying the numerator and the denominator by the same number. Then write it as a decimal.\n\n$\\frac{7}{20} = \\frac{7 \\times 5}{20 \\times 5} = \\frac{35}{100} = 0.35$.",
+        "如果分母能整除 $10$ 或 $100$，先把分子分母同时乘同一个数，化成分母是 $10$ 或 $100$ 的分数，再写成小数。\n\n$\\frac{7}{20} = \\frac{7 \\times 5}{20 \\times 5} = \\frac{35}{100} = 0.35$。",
       ),
       generate(rng) {
         const d = rng.pick(decimalDenominators);
@@ -2992,7 +3013,10 @@ export const convertingMixedNumbersToDecimals = topic(
     {
       id: "mixed-numbers-with-tenths-and-hundredths",
       title: t("Tenths and hundredths", "十分之几和百分之几"),
-      explanation: t("$5\\frac{3}{100} = 5.03$.", "$5\\frac{3}{100} = 5.03$。"),
+      explanation: t(
+        "The whole-number part of a mixed number goes to the left of the decimal point, and the fraction part becomes the digits to the right. Hundredths need two places, so a fraction under ten hundredths needs a $0$ in the tenths place.\n\n$5\\frac{3}{100} = 5.03$, not $5.3$.",
+        "带分数的整数部分写在小数点左边，分数部分写成小数点右边的数字。百分之几要占两位，所以不足十个百分之一时，十分位上要写 $0$。\n\n$5\\frac{3}{100} = 5.03$，而不是 $5.3$。",
+      ),
       generate(rng) {
         const w = rng.int(1, 20);
         const den = rng.pick([10, 100]);
@@ -3018,7 +3042,10 @@ export const convertingMixedNumbersToDecimals = topic(
     {
       id: "mixed-numbers-with-other-denominators",
       title: t("Other denominators", "其他分母"),
-      explanation: t("$4\\frac{3}{5} = 4\\frac{6}{10} = 4.6$.", "$4\\frac{3}{5} = 4\\frac{6}{10} = 4.6$。"),
+      explanation: t(
+        "Keep the whole number, and rewrite the fraction part with denominator $10$ or $100$ first. Then write the decimal.\n\n$4\\frac{3}{5} = 4\\frac{6}{10} = 4.6$, since $\\frac{3}{5} = \\frac{6}{10}$.",
+        "整数部分不变，先把分数部分化成分母是 $10$ 或 $100$ 的分数，再写成小数。\n\n$4\\frac{3}{5} = 4\\frac{6}{10} = 4.6$，因为 $\\frac{3}{5} = \\frac{6}{10}$。",
+      ),
       generate(rng) {
         const w = rng.int(1, 20);
         const d = rng.pick(decimalDenominators);
@@ -3053,7 +3080,10 @@ export const convertingDecimalsToFractions = topic(
     {
       id: "decimals-as-tenths-and-hundredths",
       title: t("Tenths and hundredths", "十分之几和百分之几"),
-      explanation: t("$0.07 = \\frac{7}{100}$ and $0.3 = \\frac{3}{10}$.", "$0.07 = \\frac{7}{100}$，$0.3 = \\frac{3}{10}$。"),
+      explanation: t(
+        "The number of decimal places tells the denominator: one place means tenths, two places mean hundredths. The digits after the point, read as a whole number, give the numerator.\n\n$0.07 = \\frac{7}{100}$ and $0.3 = \\frac{3}{10}$.",
+        "小数的位数决定分母：一位小数是十分之几，两位小数是百分之几。小数点后面的数字作为一个整数读，就是分子。\n\n$0.07 = \\frac{7}{100}$，$0.3 = \\frac{3}{10}$。",
+      ),
       generate(rng) {
         const tenths = rng.bool(0.3);
         const den = tenths ? 10 : 100;
@@ -3074,8 +3104,8 @@ export const convertingDecimalsToFractions = topic(
       id: "decimals-as-fractions-in-lowest-terms",
       title: t("In lowest terms", "化成最简分数"),
       explanation: t(
-        "$0.75 = \\frac{75}{100} = \\frac{3}{4}$, dividing by $25$.",
-        "$0.75 = \\frac{75}{100} = \\frac{3}{4}$，分子分母同时除以 $25$。",
+        "Write the decimal as tenths or hundredths, then divide the numerator and the denominator by their greatest common factor.\n\n$0.75 = \\frac{75}{100} = \\frac{3}{4}$, dividing both by $25$.",
+        "先把小数写成十分之几或百分之几，再用分子和分母的最大公因数同时去除。\n\n$0.75 = \\frac{75}{100} = \\frac{3}{4}$，分子分母同时除以 $25$。",
       ),
       generate(rng) {
         let n: number;
@@ -3114,7 +3144,10 @@ export const convertingDecimalsToMixedNumbers = topic(
     {
       id: "decimals-as-mixed-numbers-with-tenths-and-hundredths",
       title: t("Tenths and hundredths", "十分之几和百分之几"),
-      explanation: t("$6.07 = 6\\frac{7}{100}$ and $2.9 = 2\\frac{9}{10}$.", "$6.07 = 6\\frac{7}{100}$，$2.9 = 2\\frac{9}{10}$。"),
+      explanation: t(
+        "The digits before the decimal point are the whole-number part. The digits after it become a fraction over $10$ or $100$, depending on how many decimal places there are.\n\n$6.07 = 6\\frac{7}{100}$ and $2.9 = 2\\frac{9}{10}$.",
+        "小数点前面的数是整数部分。小数点后面的数字写成分母是 $10$ 或 $100$ 的分数，看有几位小数而定。\n\n$6.07 = 6\\frac{7}{100}$，$2.9 = 2\\frac{9}{10}$。",
+      ),
       generate(rng) {
         const w = rng.int(1, 20);
         const tenths = rng.bool(0.3);
@@ -3133,7 +3166,10 @@ export const convertingDecimalsToMixedNumbers = topic(
     {
       id: "decimals-as-mixed-numbers-in-lowest-terms",
       title: t("In lowest terms", "化成最简形式"),
-      explanation: t("$4.6 = 4\\frac{6}{10} = 4\\frac{3}{5}$.", "$4.6 = 4\\frac{6}{10} = 4\\frac{3}{5}$。"),
+      explanation: t(
+        "Write the whole-number part, turn the decimal part into tenths or hundredths, and then simplify the fraction part. The whole number does not change.\n\n$4.6 = 4\\frac{6}{10} = 4\\frac{3}{5}$.",
+        "先写出整数部分，把小数部分化成十分之几或百分之几，再把分数部分约分。整数部分不变。\n\n$4.6 = 4\\frac{6}{10} = 4\\frac{3}{5}$。",
+      ),
       generate(rng) {
         const w = rng.int(1, 20);
         let n: number;
@@ -3170,8 +3206,8 @@ export const addingDecimalFractions = topic(
       id: "adding-tenths-and-hundredths-as-fractions",
       title: t("As a fraction", "写成分数"),
       explanation: t(
-        "$\\frac{6}{10} + \\frac{23}{100} = \\frac{60}{100} + \\frac{23}{100} = \\frac{83}{100}$.",
-        "$\\frac{6}{10} + \\frac{23}{100} = \\frac{60}{100} + \\frac{23}{100} = \\frac{83}{100}$。",
+        "Tenths and hundredths are different sizes, so they cannot be added directly. Rewrite the tenths as hundredths, then add the numerators.\n\n$\\frac{6}{10} + \\frac{23}{100} = \\frac{60}{100} + \\frac{23}{100} = \\frac{83}{100}$, not $\\frac{29}{110}$.",
+        "十分之几和百分之几每份的大小不同，不能直接相加。先把十分之几化成百分之几，再把分子相加。\n\n$\\frac{6}{10} + \\frac{23}{100} = \\frac{60}{100} + \\frac{23}{100} = \\frac{83}{100}$，而不是 $\\frac{29}{110}$。",
       ),
       generate(rng) {
         const a = rng.int(1, 9);
@@ -3195,8 +3231,8 @@ export const addingDecimalFractions = topic(
       id: "adding-tenths-and-hundredths-as-decimals",
       title: t("As a decimal", "写成小数"),
       explanation: t(
-        "$\\frac{4}{10} + \\frac{38}{100} = \\frac{78}{100} = 0.78$.",
-        "$\\frac{4}{10} + \\frac{38}{100} = \\frac{78}{100} = 0.78$。",
+        "Rewrite the tenths as hundredths, add the numerators, and then write the hundredths as a decimal with two decimal places.\n\n$\\frac{4}{10} + \\frac{38}{100} = \\frac{40}{100} + \\frac{38}{100} = \\frac{78}{100} = 0.78$.",
+        "先把十分之几化成百分之几，分子相加，再把百分之几写成两位小数。\n\n$\\frac{4}{10} + \\frac{38}{100} = \\frac{40}{100} + \\frac{38}{100} = \\frac{78}{100} = 0.78$。",
       ),
       generate(rng) {
         const a = rng.int(1, 9);

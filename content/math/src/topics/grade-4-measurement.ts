@@ -302,8 +302,8 @@ export const unitsOfMass = topic(
       "choosing-units-of-mass",
       t("Choosing a unit", "选择合适的单位"),
       t(
-        "A paper clip has a mass of about $1$ gram and a bicycle about $12$ kilograms.",
-        "一枚回形针的质量大约是 $1$ 克，一辆自行车大约是 $12$ 千克。",
+        "Grams measure light things and kilograms measure heavy things; one kilogram is $1{,}000$ grams. Picture the object and choose the unit that gives a sensible number.\n\nA paper clip has a mass of about $1$ gram and a bicycle about $12$ kilograms.",
+        "克用来称轻的物体，千克用来称重的物体；$1$ 千克等于 $1{,}000$ 克。想一想物体的样子，选一个使数值合理的单位。\n\n一枚回形针的质量大约是 $1$ 克，一辆自行车大约是 $12$ 千克。",
       ),
       massEstimates,
       (a) => t(`weighs about ${a}`, `的质量大约是 ${a}`),
@@ -326,8 +326,8 @@ export const unitsOfTimeAndElapsedTime = topic(
       "choosing-units-of-time",
       t("Choosing a unit", "选择合适的单位"),
       t(
-        "A sneeze lasts about $1$ second, brushing your teeth about $2$ minutes and a movie about $2$ hours.",
-        "打一个喷嚏大约 $1$ 秒，刷牙大约 $2$ 分钟，看一部电影大约 $2$ 小时。",
+        "Seconds measure very short events, minutes measure everyday tasks, and hours measure longer activities. Choose the unit that makes the number sensible.\n\nA sneeze lasts about $1$ second, brushing your teeth about $2$ minutes and a movie about $2$ hours.",
+        "秒用来计量很短的事情，分钟用来计量日常的小事，小时用来计量较长的活动。选一个使数值合理的单位。\n\n打一个喷嚏大约 $1$ 秒，刷牙大约 $2$ 分钟，看一部电影大约 $2$ 小时。",
       ),
       timeEstimates,
       (a) => t(`takes about ${a}`, `大约用时 ${a}`),
@@ -336,8 +336,8 @@ export const unitsOfTimeAndElapsedTime = topic(
       id: "finding-elapsed-time",
       title: t("Elapsed time", "经过时间"),
       explanation: t(
-        "From $2{:}45$ to $4{:}10$: $15$ minutes to $3{:}00$, $1$ hour to $4{:}00$, and $10$ more minutes. That is $15 + 60 + 10 = 85$ minutes.",
-        "从 $2{:}45$ 到 $4{:}10$：到 $3{:}00$ 是 $15$ 分钟，再到 $4{:}00$ 是 $1$ 小时，再过 $10$ 分钟。一共 $15 + 60 + 10 = 85$ 分钟。",
+        "To find elapsed time, count forward from the start time in easy jumps: first to the next whole hour, then whole hours, then the minutes left. Add the jumps. An hour is $60$ minutes, not $100$, so do not just subtract the times as numbers.\n\nFrom $2{:}45$ to $4{:}10$: $15$ minutes to $3{:}00$, $1$ hour to $4{:}00$, and $10$ more minutes. That is $15 + 60 + 10 = 85$ minutes.",
+        "求经过的时间，从开始时刻往后分段数：先数到下一个整点，再数整小时，最后数剩下的分钟，把各段加起来。$1$ 小时是 $60$ 分钟，不是 $100$ 分钟，所以不能把两个时刻直接当作数相减。\n\n从 $2{:}45$ 到 $4{:}10$：到 $3{:}00$ 是 $15$ 分钟，再到 $4{:}00$ 是 $1$ 小时，再过 $10$ 分钟。一共 $15 + 60 + 10 = 85$ 分钟。",
       ),
       generate(rng) {
         const start = rng.int(7, 10) * 60 + rng.int(0, 11) * 5;
@@ -380,7 +380,10 @@ export const unitsOfVolume = topic(
     estimateKP(
       "choosing-units-of-volume",
       t("Choosing a unit", "选择合适的单位"),
-      t("A spoonful holds about $5$ milliliters and a bucket about $10$ liters.", "一勺大约能装 $5$ 毫升，一只水桶大约能装 $10$ 升。"),
+      t(
+        "Milliliters measure small amounts of liquid and liters measure large amounts; one liter is $1{,}000$ milliliters. Choose the unit that makes the number sensible.\n\nA spoonful holds about $5$ milliliters and a bucket about $10$ liters.",
+        "毫升用来计量少量的液体，升用来计量大量的液体；$1$ 升等于 $1{,}000$ 毫升。选一个使数值合理的单位。\n\n一勺大约能装 $5$ 毫升，一只水桶大约能装 $10$ 升。",
+      ),
       volumeEstimates,
       (a) => t(`holds about ${a}`, `大约能装 ${a}`),
     ),
@@ -454,8 +457,14 @@ export const convertingMetricUnitsOfLengthToSmallerUnits = topic(
       { big: cm, small: mm, factor: 10 },
       { big: m, small: mm, factor: 1000 },
     ],
-    t("$7$ cm $= 7 \\times 10 = 70$ mm.", "$7$ 厘米 $= 7 \\times 10 = 70$ 毫米。"),
-    t("$5$ m $36$ cm $= 500 + 36 = 536$ cm.", "$5$ 米 $36$ 厘米 $= 500 + 36 = 536$ 厘米。"),
+    t(
+      "A smaller unit fits into a larger one many times, so changing to a smaller unit gives a larger number: multiply by how many small units make one large unit. One centimeter is $10$ millimeters, one meter is $100$ centimeters, and one kilometer is $1{,}000$ meters.\n\n$7$ cm $= 7 \\times 10 = 70$ mm.",
+      "一个大单位里有好几个小单位，所以换成小单位后数值变大：乘一个大单位里小单位的个数。$1$ 厘米 $= 10$ 毫米，$1$ 米 $= 100$ 厘米，$1$ 千米 $= 1{,}000$ 米。\n\n$7$ 厘米 $= 7 \\times 10 = 70$ 毫米。",
+    ),
+    t(
+      "For an amount in two units, convert the larger unit to the smaller one, then add the part already in the smaller unit.\n\n$5$ m $36$ cm: $5$ m $= 500$ cm, so $5$ m $36$ cm $= 500 + 36 = 536$ cm. Joining the digits does not always work: $5$ m $6$ cm is $506$ cm, not $56$ cm.",
+      "有两个单位的量，先把大单位换成小单位，再加上原来就是小单位的部分。\n\n$5$ 米 $36$ 厘米：$5$ 米 $= 500$ 厘米，所以 $5$ 米 $36$ 厘米 $= 500 + 36 = 536$ 厘米。不能把数字直接拼在一起：$5$ 米 $6$ 厘米是 $506$ 厘米，而不是 $56$ 厘米。",
+    ),
   ),
 );
 
@@ -476,8 +485,14 @@ export const convertingCustomaryUnitsOfLengthToSmallerUnits = topic(
       { big: yd, small: inch, factor: 36 },
       { big: mi, small: yd, factor: 1760 },
     ],
-    t("$4$ yd $= 4 \\times 3 = 12$ ft.", "$4$ 码 $= 4 \\times 3 = 12$ 英尺。"),
-    t("$3$ ft $7$ in $= 36 + 7 = 43$ in.", "$3$ 英尺 $7$ 英寸 $= 36 + 7 = 43$ 英寸。"),
+    t(
+      "To change to a smaller unit, multiply by how many small units make one large unit: one foot is $12$ inches, one yard is $3$ feet, and one mile is $5{,}280$ feet.\n\n$4$ yd $= 4 \\times 3 = 12$ ft.",
+      "换成较小的单位，就乘一个大单位里小单位的个数：$1$ 英尺 $= 12$ 英寸，$1$ 码 $= 3$ 英尺，$1$ 英里 $= 5{,}280$ 英尺。\n\n$4$ 码 $= 4 \\times 3 = 12$ 英尺。",
+    ),
+    t(
+      "Convert the larger unit to the smaller one by multiplying, then add the part already in the smaller unit.\n\n$3$ ft $7$ in: $3$ ft $= 3 \\times 12 = 36$ in, so $3$ ft $7$ in $= 36 + 7 = 43$ in.",
+      "先用乘法把大单位换成小单位，再加上原来就是小单位的部分。\n\n$3$ 英尺 $7$ 英寸：$3$ 英尺 $= 3 \\times 12 = 36$ 英寸，所以 $3$ 英尺 $7$ 英寸 $= 36 + 7 = 43$ 英寸。",
+    ),
   ),
 );
 
@@ -493,8 +508,14 @@ export const convertingUnitsOfVolumeToSmallerUnits = topic(
   conversionKPs(
     "volumes",
     [...volumeConversions, { big: gal, small: pt, factor: 8 }],
-    t("$6$ gal $= 6 \\times 4 = 24$ qt.", "$6$ 加仑 $= 6 \\times 4 = 24$ 夸脱。"),
-    t("$2$ L $350$ mL $= 2{,}000 + 350 = 2{,}350$ mL.", "$2$ 升 $350$ 毫升 $= 2000 + 350 = 2350$ 毫升。"),
+    t(
+      "To change to a smaller unit of volume, multiply by how many small units make one large unit: one gallon is $4$ quarts, one quart is $2$ pints, one pint is $2$ cups, and one liter is $1{,}000$ milliliters.\n\n$6$ gal $= 6 \\times 4 = 24$ qt.",
+      "换成较小的容积单位，就乘一个大单位里小单位的个数：$1$ 加仑 $= 4$ 夸脱，$1$ 夸脱 $= 2$ 品脱，$1$ 品脱 $= 2$ 杯，$1$ 升 $= 1{,}000$ 毫升。\n\n$6$ 加仑 $= 6 \\times 4 = 24$ 夸脱。",
+    ),
+    t(
+      "Convert the larger unit to the smaller one by multiplying, then add the part already in the smaller unit.\n\n$2$ L $350$ mL: $2$ L $= 2{,}000$ mL, so $2$ L $350$ mL $= 2{,}000 + 350 = 2{,}350$ mL.",
+      "先用乘法把大单位换成小单位，再加上原来就是小单位的部分。\n\n$2$ 升 $350$ 毫升：$2$ 升 $= 2000$ 毫升，所以 $2$ 升 $350$ 毫升 $= 2000 + 350 = 2350$ 毫升。",
+    ),
   ),
 );
 
@@ -510,8 +531,14 @@ export const convertingUnitsOfMassToSmallerUnits = topic(
   conversionKPs(
     "masses",
     massConversions,
-    t("$5$ lb $= 5 \\times 16 = 80$ oz.", "$5$ 磅 $= 5 \\times 16 = 80$ 盎司。"),
-    t("$2$ kg $75$ g $= 2{,}000 + 75 = 2{,}075$ g.", "$2$ 千克 $75$ 克 $= 2000 + 75 = 2075$ 克。"),
+    t(
+      "To change to a smaller unit of mass, multiply by how many small units make one large unit: one pound is $16$ ounces and one kilogram is $1{,}000$ grams.\n\n$5$ lb $= 5 \\times 16 = 80$ oz.",
+      "换成较小的质量单位，就乘一个大单位里小单位的个数：$1$ 磅 $= 16$ 盎司，$1$ 千克 $= 1{,}000$ 克。\n\n$5$ 磅 $= 5 \\times 16 = 80$ 盎司。",
+    ),
+    t(
+      "Convert the larger unit to the smaller one by multiplying, then add the part already in the smaller unit. Keep every place: $75$ g is not $750$ g.\n\n$2$ kg $75$ g: $2$ kg $= 2{,}000$ g, so $2$ kg $75$ g $= 2{,}000 + 75 = 2{,}075$ g.",
+      "先用乘法把大单位换成小单位，再加上原来就是小单位的部分。数位要对齐：$75$ 克不是 $750$ 克。\n\n$2$ 千克 $75$ 克：$2$ 千克 $= 2000$ 克，所以 $2$ 千克 $75$ 克 $= 2000 + 75 = 2075$ 克。",
+    ),
   ),
 );
 
@@ -527,8 +554,14 @@ export const convertingUnitsOfTimeToSmallerUnits = topic(
   conversionKPs(
     "times",
     timeConversions,
-    t("$4$ min $= 4 \\times 60 = 240$ s.", "$4$ 分钟 $= 4 \\times 60 = 240$ 秒。"),
-    t("$1$ h $25$ min $= 60 + 25 = 85$ min.", "$1$ 小时 $25$ 分钟 $= 60 + 25 = 85$ 分钟。"),
+    t(
+      "To change to a smaller unit of time, multiply by how many small units make one large unit: one minute is $60$ seconds, one hour is $60$ minutes, and one day is $24$ hours.\n\n$4$ min $= 4 \\times 60 = 240$ s.",
+      "换成较小的时间单位，就乘一个大单位里小单位的个数：$1$ 分 $= 60$ 秒，$1$ 小时 $= 60$ 分，$1$ 天 $= 24$ 小时。\n\n$4$ 分钟 $= 4 \\times 60 = 240$ 秒。",
+    ),
+    t(
+      "Convert the larger unit to the smaller one, then add the part already in the smaller unit. Remember that an hour is $60$ minutes, not $100$.\n\n$1$ h $25$ min $= 60 + 25 = 85$ min, not $125$ min.",
+      "先把大单位换成小单位，再加上原来就是小单位的部分。记住 $1$ 小时是 $60$ 分钟，不是 $100$ 分钟。\n\n$1$ 小时 $25$ 分钟 $= 60 + 25 = 85$ 分钟，而不是 $125$ 分钟。",
+    ),
   ),
 );
 
@@ -572,8 +605,8 @@ export const creatingAndInterpretingLinePlots = topic(
       id: "reading-counts-from-line-plots",
       title: t("How many dots", "数点"),
       explanation: t(
-        "If there are $3$ dots above $4$, then $3$ students gave the answer $4$.",
-        "如果 $4$ 的上方有 $3$ 个点，就说明有 $3$ 名学生的答案是 $4$。",
+        "In a line plot each dot stands for one item, placed above its value. The number of dots above a value tells how many items have that value, and counting all the dots gives the total number of items.\n\nIf there are $3$ dots above $4$, then $3$ students gave the answer $4$.",
+        "在线图中，每个点代表一个数据，画在它的数值上方。某个数值上方有几个点，就有几个数据是这个值；数出所有的点，就得到数据的总个数。\n\n如果 $4$ 的上方有 $3$ 个点，就说明有 $3$ 名学生的答案是 $4$。",
       ),
       generate(rng) {
         const s = rng.pick(surveys);
@@ -743,8 +776,8 @@ export const creatingAndInterpretingLinePlotsWithFractions = topic(
       id: "differences-in-fraction-line-plots",
       title: t("Longest minus shortest", "最长减最短"),
       explanation: t(
-        "If the longest pencil is $5\\frac{3}{4}$ inches and the shortest $4\\frac{1}{4}$ inches, the difference is $1\\frac{2}{4} = 1\\frac{1}{2}$ inches.",
-        "如果最长的铅笔长 $5\\frac{3}{4}$ 英寸，最短的长 $4\\frac{1}{4}$ 英寸，二者相差 $1\\frac{2}{4} = 1\\frac{1}{2}$ 英寸。",
+        "To find how much longer the longest item is than the shortest, find the rightmost and leftmost values that have dots, then subtract. Ignore how many dots each has.\n\nIf the longest pencil is $5\\frac{3}{4}$ inches and the shortest $4\\frac{1}{4}$ inches, the difference is $5\\frac{3}{4} - 4\\frac{1}{4} = 1\\frac{2}{4} = 1\\frac{1}{2}$ inches.",
+        "求最长的比最短的长多少，先找出有点的最右边和最左边的数值，再相减。不用管每个数值上有几个点。\n\n如果最长的铅笔长 $5\\frac{3}{4}$ 英寸，最短的长 $4\\frac{1}{4}$ 英寸，二者相差 $5\\frac{3}{4} - 4\\frac{1}{4} = 1\\frac{2}{4} = 1\\frac{1}{2}$ 英寸。",
       ),
       generate(rng) {
         const d = rng.pick([4, 8]);
@@ -780,8 +813,8 @@ export const creatingAndInterpretingLinePlotsWithFractions = topic(
       id: "totals-in-fraction-line-plots",
       title: t("Totals of fractional values", "分数数据的总和"),
       explanation: t(
-        "If $3$ glasses each hold $\\frac{1}{4}$ liter, together they hold $\\frac{3}{4}$ liter.",
-        "如果 $3$ 个杯子各装 $\\frac{1}{4}$ 升，合起来一共 $\\frac{3}{4}$ 升。",
+        "To find the total of the items at one value, count the dots above it and multiply the count by the value, or add the value once for each dot.\n\nIf $3$ glasses each hold $\\frac{1}{4}$ liter, together they hold $3 \\times \\frac{1}{4} = \\frac{3}{4}$ liter.",
+        "求某个数值上所有数据的总量，数出它上方有几个点，用点数乘这个数值，或者每个点加一次这个数值。\n\n如果 $3$ 个杯子各装 $\\frac{1}{4}$ 升，合起来一共 $3 \\times \\frac{1}{4} = \\frac{3}{4}$ 升。",
       ),
       generate(rng) {
         const d = rng.pick([4, 8]);
@@ -906,8 +939,8 @@ export const pointsLinesRaysAndSegments = topic(
       id: "counting-segments-and-rays",
       title: t("Counting segments", "数线段"),
       explanation: t(
-        "Points $A, B, C$ on a line give $3$ segments: $AB$, $BC$ and $AC$. With $4$ points there are $3 + 2 + 1 = 6$.",
-        "直线上的点 $A, B, C$ 构成 $3$ 条线段：$AB$、$BC$、$AC$。$4$ 个点则有 $3 + 2 + 1 = 6$ 条。",
+        "A segment needs two endpoints, so count the pairs of points. Starting from the first point, it pairs with every point after it; the next point pairs with the ones after it, and so on. Add these counts.\n\nPoints $A, B, C$ on a line give $3$ segments: $AB$, $BC$ and $AC$. With $4$ points there are $3 + 2 + 1 = 6$. Counting only the short segments between neighbors misses the longer ones.",
+        "一条线段有两个端点，所以要数点的配对。第一个点和后面每个点各组成一条，第二个点和它后面的点各组成一条，依此类推，把这些数加起来。\n\n直线上的点 $A, B, C$ 构成 $3$ 条线段：$AB$、$BC$、$AC$。$4$ 个点则有 $3 + 2 + 1 = 6$ 条。只数相邻两点之间的短线段，会漏掉较长的线段。",
       ),
       generate(rng) {
         const n = rng.int(2, 8);
@@ -987,8 +1020,8 @@ export const connectingAnglesAndCircles = topic(
       id: "degrees-from-fractions-of-a-turn",
       title: t("From a fraction of a turn to degrees", "由几分之几圈求度数"),
       explanation: t(
-        "$\\frac{1}{4}$ of a full turn is $360^\\circ \\div 4 = 90^\\circ$, and $\\frac{3}{4}$ of a turn is $3 \\times 90^\\circ = 270^\\circ$.",
-        "一整圈的 $\\frac{1}{4}$ 是 $360^\\circ \\div 4 = 90^\\circ$，$\\frac{3}{4}$ 圈是 $3 \\times 90^\\circ = 270^\\circ$。",
+        "A full turn is $360^\\circ$. To find the degrees in a fraction of a turn, divide $360^\\circ$ by the denominator to get one part, then multiply by the numerator.\n\n$\\frac{1}{4}$ of a full turn is $360^\\circ \\div 4 = 90^\\circ$, and $\\frac{3}{4}$ of a turn is $3 \\times 90^\\circ = 270^\\circ$.",
+        "一整圈是 $360^\\circ$。求几分之几圈是多少度，先用 $360^\\circ$ 除以分母得到一份，再乘分子。\n\n一整圈的 $\\frac{1}{4}$ 是 $360^\\circ \\div 4 = 90^\\circ$，$\\frac{3}{4}$ 圈是 $3 \\times 90^\\circ = 270^\\circ$。",
       ),
       generate(rng) {
         const [a, b] = rng.pick(turnFractions);
@@ -1019,8 +1052,8 @@ export const connectingAnglesAndCircles = topic(
       id: "fractions-of-a-turn-from-degrees",
       title: t("From degrees to a fraction of a turn", "由度数求几分之几圈"),
       explanation: t(
-        "$120^\\circ$ is $\\frac{120}{360} = \\frac{1}{3}$ of a full turn.",
-        "$120^\\circ$ 是一整圈的 $\\frac{120}{360} = \\frac{1}{3}$。",
+        "To find what fraction of a full turn an angle is, put its measure over $360$ and simplify.\n\n$120^\\circ$ is $\\frac{120}{360} = \\frac{1}{3}$ of a full turn, dividing both by $120$.",
+        "求一个角是一整圈的几分之几，用它的度数作分子、$360$ 作分母，再约分。\n\n$120^\\circ$ 是一整圈的 $\\frac{120}{360} = \\frac{1}{3}$，分子分母同时除以 $120$。",
       ),
       generate(rng) {
         const b = rng.pick([2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36]);
@@ -1107,8 +1140,8 @@ export const measuringAnglesUsingAProtractor = topic(
       id: "reading-a-protractor-between-two-marks",
       title: t("Neither ray at zero", "两条边都不在 0°"),
       explanation: t(
-        "The rays are at $40^\\circ$ and $115^\\circ$, so the angle measures $115^\\circ - 40^\\circ = 75^\\circ$.",
-        "两条边分别在 $40^\\circ$ 和 $115^\\circ$，所以这个角是 $115^\\circ - 40^\\circ = 75^\\circ$。",
+        "When neither ray is on $0^\\circ$, read the marks where both rays cross the protractor on the same scale, then subtract the smaller reading from the larger.\n\nThe rays are at $40^\\circ$ and $115^\\circ$, so the angle measures $115^\\circ - 40^\\circ = 75^\\circ$. Reading only one ray would give $115^\\circ$, which is wrong.",
+        "两条边都不在 $0^\\circ$ 刻度上时，在同一圈刻度上读出两条边对着的度数，再用大数减小数。\n\n两条边分别在 $40^\\circ$ 和 $115^\\circ$，所以这个角是 $115^\\circ - 40^\\circ = 75^\\circ$。只读一条边会得到 $115^\\circ$，这是错误的。",
       ),
       generate(rng) {
         const a = rng.int(2, 20) * 5;
@@ -1156,8 +1189,8 @@ export const rightStraightFullAndNullAngles = topic(
       id: "measures-of-special-angles",
       title: t("Measures of the special angles", "特殊角的度数"),
       explanation: t(
-        "A right angle is $90^\\circ$, a straight angle $180^\\circ$, a full angle $360^\\circ$ and a null angle $0^\\circ$.",
-        "直角是 $90^\\circ$，平角是 $180^\\circ$，周角是 $360^\\circ$，零角是 $0^\\circ$。",
+        "Four angles have special names. A right angle is a quarter turn, a straight angle is a half turn and looks like a straight line, a full angle is a whole turn, and a null angle is no turn at all.\n\nA right angle is $90^\\circ$, a straight angle $180^\\circ$, a full angle $360^\\circ$ and a null angle $0^\\circ$. So $2$ right angles make a straight angle and $4$ make a full angle.",
+        "有四种角有特别的名称。直角是四分之一圈，平角是半圈，看起来像一条直线，周角是一整圈，零角是一点也没有转。\n\n直角是 $90^\\circ$，平角是 $180^\\circ$，周角是 $360^\\circ$，零角是 $0^\\circ$。所以 $2$ 个直角组成一个平角，$4$ 个直角组成一个周角。",
       ),
       generate(rng) {
         const a = rng.pick(specialAngles);
@@ -1250,8 +1283,8 @@ export const acuteObtuseAndReflexAngles = topic(
       id: "classifying-angles-by-measure",
       title: t("Classifying by measure", "按度数分类"),
       explanation: t(
-        "$35^\\circ$ is acute, $90^\\circ$ right, $125^\\circ$ obtuse, $180^\\circ$ straight and $250^\\circ$ reflex.",
-        "$35^\\circ$ 是锐角，$90^\\circ$ 是直角，$125^\\circ$ 是钝角，$180^\\circ$ 是平角，$250^\\circ$ 是优角。",
+        "Classify an angle by comparing its measure with $90^\\circ$, $180^\\circ$ and $360^\\circ$. An acute angle is less than $90^\\circ$, an obtuse angle is between $90^\\circ$ and $180^\\circ$, and a reflex angle is between $180^\\circ$ and $360^\\circ$.\n\n$35^\\circ$ is acute, $90^\\circ$ right, $125^\\circ$ obtuse, $180^\\circ$ straight and $250^\\circ$ reflex.",
+        "把角的度数和 $90^\\circ$、$180^\\circ$、$360^\\circ$ 比较来分类。锐角小于 $90^\\circ$，钝角在 $90^\\circ$ 和 $180^\\circ$ 之间，优角在 $180^\\circ$ 和 $360^\\circ$ 之间。\n\n$35^\\circ$ 是锐角，$90^\\circ$ 是直角，$125^\\circ$ 是钝角，$180^\\circ$ 是平角，$250^\\circ$ 是优角。",
       ),
       generate(rng) {
         const k = rng.pick([0, 0, 2, 2, 4, 4, 1, 3]);
@@ -1274,8 +1307,8 @@ export const acuteObtuseAndReflexAngles = topic(
       id: "finding-reflex-angles",
       title: t("The reflex angle", "求优角"),
       explanation: t(
-        "If the smaller angle between two rays is $70^\\circ$, the reflex angle between them is $360^\\circ - 70^\\circ = 290^\\circ$.",
-        "如果两条射线所夹的较小角是 $70^\\circ$，那么它们所成的优角是 $360^\\circ - 70^\\circ = 290^\\circ$。",
+        "Two rays from a point make two angles that together fill a full turn. So the reflex angle is $360^\\circ$ minus the smaller angle.\n\nIf the smaller angle between two rays is $70^\\circ$, the reflex angle between them is $360^\\circ - 70^\\circ = 290^\\circ$. Subtracting from $180^\\circ$ gives the wrong angle.",
+        "从一点出发的两条射线组成两个角，合起来正好是一整圈。所以优角等于 $360^\\circ$ 减去较小的角。\n\n如果两条射线所夹的较小角是 $70^\\circ$，那么它们所成的优角是 $360^\\circ - 70^\\circ = 290^\\circ$。用 $180^\\circ$ 去减是错误的。",
       ),
       generate(rng) {
         const v = rng.int(10, 170);
@@ -1432,8 +1465,8 @@ export const sumsOfAngles = topic(
       id: "adding-several-adjacent-angles",
       title: t("Adding adjacent angles", "相邻角相加"),
       explanation: t(
-        "An angle split into $25^\\circ$, $40^\\circ$ and $30^\\circ$ measures $25^\\circ + 40^\\circ + 30^\\circ = 95^\\circ$.",
-        "分成 $25^\\circ$、$40^\\circ$、$30^\\circ$ 三部分的角是 $25^\\circ + 40^\\circ + 30^\\circ = 95^\\circ$。",
+        "When an angle is split into parts that do not overlap, its measure is the sum of the parts. Add all the parts, however many there are.\n\nAn angle split into $25^\\circ$, $40^\\circ$ and $30^\\circ$ measures $25^\\circ + 40^\\circ + 30^\\circ = 95^\\circ$.",
+        "一个角被分成互不重叠的几部分时，它的度数等于各部分的和。不管有几部分，都要全部加起来。\n\n分成 $25^\\circ$、$40^\\circ$、$30^\\circ$ 三部分的角是 $25^\\circ + 40^\\circ + 30^\\circ = 95^\\circ$。",
       ),
       generate(rng) {
         let parts: number[];
@@ -1469,8 +1502,8 @@ export const sumsOfAngles = topic(
       id: "angles-around-a-point",
       title: t("Angles around a point", "围绕一点的角"),
       explanation: t(
-        "Three angles around a point measure $100^\\circ$, $130^\\circ$ and $130^\\circ$: together $360^\\circ$, a full turn.",
-        "围绕一点的三个角分别是 $100^\\circ$、$130^\\circ$、$130^\\circ$：合起来是 $360^\\circ$，一整圈。",
+        "Angles that fill the space around a point make a full turn, so they add up to $360^\\circ$. To find an unknown one, subtract the known angles from $360^\\circ$.\n\nThree angles around a point measure $100^\\circ$, $130^\\circ$ and $130^\\circ$: together $360^\\circ$, a full turn. If the last were unknown, it would be $360^\\circ - 100^\\circ - 130^\\circ = 130^\\circ$.",
+        "围绕一点的几个角正好组成一整圈，所以它们的和是 $360^\\circ$。求未知的角，就用 $360^\\circ$ 减去已知的角。\n\n围绕一点的三个角分别是 $100^\\circ$、$130^\\circ$、$130^\\circ$：合起来是 $360^\\circ$，一整圈。如果最后一个未知，它就是 $360^\\circ - 100^\\circ - 130^\\circ = 130^\\circ$。",
       ),
       generate(rng) {
         let a: number;
@@ -1521,8 +1554,8 @@ export const solvingAngleProblems = topic(
       id: "unknown-parts-of-right-and-straight-angles",
       title: t("Part of a right or straight angle", "直角或平角的一部分"),
       explanation: t(
-        "A straight angle split into $65^\\circ$ and $x$: $x = 180^\\circ - 65^\\circ = 115^\\circ$.",
-        "平角被分成 $65^\\circ$ 和 $x$：$x = 180^\\circ - 65^\\circ = 115^\\circ$。",
+        "The parts of a right angle add up to $90^\\circ$, and the parts of a straight angle add up to $180^\\circ$. Subtract the known part from the whole to find the unknown part. Check first which kind of angle it is.\n\nA straight angle split into $65^\\circ$ and $x$: $x = 180^\\circ - 65^\\circ = 115^\\circ$.",
+        "直角的各部分加起来是 $90^\\circ$，平角的各部分加起来是 $180^\\circ$。用整个角减去已知的部分，就得到未知的部分。先看清是哪一种角。\n\n平角被分成 $65^\\circ$ 和 $x$：$x = 180^\\circ - 65^\\circ = 115^\\circ$。",
       ),
       generate(rng) {
         const total = rng.pick([90, 180] as const);
@@ -1566,8 +1599,8 @@ export const solvingAngleProblems = topic(
       id: "angle-word-problems",
       title: t("Word problems", "应用题"),
       explanation: t(
-        "A sprinkler turns $45^\\circ$ at a time. To turn $180^\\circ$ it needs $180 \\div 45 = 4$ turns.",
-        "一个喷头每次转 $45^\\circ$。要转 $180^\\circ$ 需要 $180 \\div 45 = 4$ 次。",
+        "In an angle word problem, decide what the angles do. If parts make up a whole angle, add or subtract; if the same turn is repeated, multiply or divide.\n\nA sprinkler turns $45^\\circ$ at a time. To turn $180^\\circ$ it needs $180 \\div 45 = 4$ turns.",
+        "解角的应用题，先想清楚角之间的关系。几部分组成一个角，就用加法或减法；同样的转动重复几次，就用乘法或除法。\n\n一个喷头每次转 $45^\\circ$。要转 $180^\\circ$ 需要 $180 \\div 45 = 4$ 次。",
       ),
       generate(rng) {
         const name = rng.pick(names);
@@ -1668,8 +1701,8 @@ export const parallelAndPerpendicularLines = topic(
       id: "parallel-sides-of-shapes",
       title: t("Parallel sides of shapes", "图形中的平行边"),
       explanation: t(
-        "A rectangle has $2$ pairs of parallel sides; a regular hexagon has $3$.",
-        "长方形有 $2$ 组平行边；正六边形有 $3$ 组。",
+        "Two sides are parallel if they would never meet, however far they were extended. Count each pair of parallel sides once; a shape may have none, one or several pairs.\n\nA rectangle has $2$ pairs of parallel sides; a regular hexagon has $3$. A triangle has none.",
+        "两条边无论怎样延长都不相交，就互相平行。每组平行边只数一次；一个图形可能没有、有一组或有好几组平行边。\n\n长方形有 $2$ 组平行边；正六边形有 $3$ 组。三角形没有平行边。",
       ),
       generate(rng) {
         const s = rng.pick(shapes);
