@@ -1,6 +1,6 @@
-import type { Problem, Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
-import { gcd, num, poly } from "@ga/subject-math";
+import { gcd, num, poly, svgDocument } from "@ga/subject-math";
 
 import { choiceProblem, type ExpressionProblem, expressionProblem, numberProblem, steps, yesNo } from "../problems.ts";
 
@@ -1317,6 +1317,29 @@ export const squaringBinomials: TopicDef = {
   ],
 };
 
+/** pascalSumFigure draws rows 0 to 5 of Pascal's triangle, with lines from 4 and 6 in row 4 down to their sum 10 in row 5. */
+const pascalSumFigure: Figure = (() => {
+  const [cx, dx, dy, top] = [160, 34, 30, 20];
+  const at = (n: number, k: number) => [cx + (k - n / 2) * dx, top + n * dy] as const;
+  const [a, b, c] = [at(4, 1), at(4, 2), at(5, 2)];
+  let body = `<line class="accent" x1="${a[0]}" y1="${a[1] + 7}" x2="${c[0]}" y2="${c[1] - 11}" stroke-width="1.5"/>`;
+  body += `<line class="accent" x1="${b[0]}" y1="${b[1] + 7}" x2="${c[0]}" y2="${c[1] - 11}" stroke-width="1.5"/>`;
+  let row = [1];
+  for (let n = 0; n <= 5; n++) {
+    row.forEach((v, k) => {
+      const [x, y] = at(n, k);
+      body += `<text x="${x}" y="${y + 4}" stroke="none" fill="currentColor">${v}</text>`;
+    });
+    row = [1, ...row.slice(1).map((v, k) => v + row[k]!), 1];
+  }
+  return {
+    svg: svgDocument(top + 5 * dy + 16, body),
+    alt: t(
+      "Rows 0 to 5 of Pascal's triangle: 1; 1 1; 1 2 1; 1 3 3 1; 1 4 6 4 1; 1 5 10 10 5 1. Lines join 4 and 6 in row 4 to the 10 below them, their sum.",
+      "杨辉三角的第 0 到第 5 行：1；1 1；1 2 1；1 3 3 1；1 4 6 4 1；1 5 10 10 5 1。连线把第 4 行的 4 和 6 连到它们下方的和 10。",
+    ),
+  };
+})();
 /** pascalRow writes row n of Pascal's triangle: "1, 4, 6, 4, 1". */
 const pascalRow = (n: number) => Array.from({ length: n + 1 }, (_, i) => choose(n, i)).join(", ");
 
@@ -1343,6 +1366,7 @@ export const expandingBinomialsUsingPascalsTriangle: TopicDef = {
         "Expanding powers of $a + b$ gives\n\n$$(a + b)^{2} = a^{2} + 2ab + b^{2} \\qquad (a + b)^{3} = a^{3} + 3a^{2}b + 3ab^{2} + b^{3}$$\n\nThe coefficients are the rows of **Pascal's triangle**. Each row starts and ends with $1$, and every other number is the sum of the two numbers above it:\n\n$$\\begin{array}{c} 1 \\\\ 1 \\quad 1 \\\\ 1 \\quad 2 \\quad 1 \\\\ 1 \\quad 3 \\quad 3 \\quad 1 \\\\ 1 \\quad 4 \\quad 6 \\quad 4 \\quad 1 \\\\ 1 \\quad 5 \\quad 10 \\quad 10 \\quad 5 \\quad 1 \\end{array}$$\n\nIn $(a + b)^{n}$, the powers of $a$ go down from $n$ to $0$ while the powers of $b$ go up from $0$ to $n$, and the coefficients are the row that starts $1, n$:\n\n$$(a + b)^{4} = a^{4} + 4a^{3}b + 6a^{2}b^{2} + 4ab^{3} + b^{4}$$",
         "展开 $a + b$ 的乘方：\n\n$$(a + b)^{2} = a^{2} + 2ab + b^{2} \\qquad (a + b)^{3} = a^{3} + 3a^{2}b + 3ab^{2} + b^{3}$$\n\n各项系数正是**杨辉三角**（帕斯卡三角形）的各行。每行首尾都是 $1$，其余每个数都等于它上方两个数之和：\n\n$$\\begin{array}{c} 1 \\\\ 1 \\quad 1 \\\\ 1 \\quad 2 \\quad 1 \\\\ 1 \\quad 3 \\quad 3 \\quad 1 \\\\ 1 \\quad 4 \\quad 6 \\quad 4 \\quad 1 \\\\ 1 \\quad 5 \\quad 10 \\quad 10 \\quad 5 \\quad 1 \\end{array}$$\n\n在 $(a + b)^{n}$ 中，$a$ 的指数从 $n$ 递减到 $0$，$b$ 的指数从 $0$ 递增到 $n$，系数就是以 $1, n$ 开头的那一行：\n\n$$(a + b)^{4} = a^{4} + 4a^{3}b + 6a^{2}b^{2} + 4ab^{3} + b^{4}$$",
       ),
+      figure: pascalSumFigure,
       generate(rng) {
         const n = rng.int(4, 9);
         const k = rng.int(1, n - 1);
