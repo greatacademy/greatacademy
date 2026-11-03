@@ -16105,6 +16105,7 @@ export const actMathFundamentals: CourseDef = {
             "properties-of-parallelograms",
             "properties-of-rectangles-and-squares",
             "properties-of-trapezoids",
+            "finding-the-length-of-a-trapezoid-midsegment",
           ],
         },
         {
@@ -16158,6 +16159,7 @@ export const actMathFundamentals: CourseDef = {
           topics: [
             "perimeter",
             "area-of-rectangles-and-squares",
+            "finding-the-area-covered-by-crossing-rectangular-strips",
             "diagonals-of-squares",
             "modeling-with-rectangles",
             "area-of-parallelograms",
@@ -16197,6 +16199,7 @@ export const actMathFundamentals: CourseDef = {
             "surface-areas-and-volumes-of-similar-solids",
             "working-with-descriptions-of-similar-solids",
             "volumes-of-right-rectangular-prisms",
+            "reasoning-from-a-rectangular-prism",
             "areas-of-circles",
             "volumes-of-cylinders",
             "surface-areas-of-cylinders",
