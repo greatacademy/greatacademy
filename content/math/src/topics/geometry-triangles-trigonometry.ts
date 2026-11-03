@@ -1004,8 +1004,8 @@ export const areaOfIsoscelesRightTriangles: TopicDef = {
       id: "area-from-the-hypotenuse",
       title: t("From the hypotenuse", "由斜边求面积"),
       explanation: t(
-        "From the hypotenuse $c$, the legs are $\\frac{c}{\\sqrt{2}}$, so $s^2 = \\frac{c^2}{2}$ and\n\n$$A = \\frac{s^2}{2} = \\frac{c^2}{4}.$$\n\nWith hypotenuse $10$: the legs are $5\\sqrt{2}$, and $A = \\frac{100}{4} = 25$.",
-        "已知斜边 $c$ 时，直角边是 $\\frac{c}{\\sqrt{2}}$，所以 $s^2 = \\frac{c^2}{2}$，\n\n$$A = \\frac{s^2}{2} = \\frac{c^2}{4}.$$\n\n斜边为 $10$ 时：直角边是 $5\\sqrt{2}$，$A = \\frac{100}{4} = 25$。",
+        "In an isosceles right triangle the two legs are equal and serve as base and height. Find a leg from the hypotenuse first, then take half the product of the legs.\n\nFrom the hypotenuse $c$, the legs are $\\frac{c}{\\sqrt{2}}$, so $s^2 = \\frac{c^2}{2}$ and\n\n$$A = \\frac{s^2}{2} = \\frac{c^2}{4}.$$\n\nWith hypotenuse $10$: the legs are $5\\sqrt{2}$, and $A = \\frac{100}{4} = 25$.",
+        "在等腰直角三角形中，两条直角边相等，可以作为底和高。先由斜边求出直角边，再取两条直角边乘积的一半。\n\n已知斜边 $c$ 时，直角边是 $\\frac{c}{\\sqrt{2}}$，所以 $s^2 = \\frac{c^2}{2}$，\n\n$$A = \\frac{s^2}{2} = \\frac{c^2}{4}.$$\n\n斜边为 $10$ 时：直角边是 $5\\sqrt{2}$，$A = \\frac{100}{4} = 25$。",
       ),
       generate(rng) {
         const k = rng.int(2, 20);
@@ -1137,8 +1137,8 @@ export const areaOfThirtySixtyNinetyTriangles: TopicDef = {
       id: "area-from-the-longer-leg",
       title: t("From the longer leg", "由较长的直角边求面积"),
       explanation: t(
-        "With longer leg $L$, the shorter leg is $\\frac{L}{\\sqrt{3}} = \\frac{L\\sqrt{3}}{3}$. With $L = 6$: the shorter leg is $2\\sqrt{3}$ and\n\n$$A = \\frac{1}{2} \\cdot 2\\sqrt{3} \\cdot 6 = 6\\sqrt{3}.$$",
-        "较长的直角边为 $L$ 时，较短的直角边是 $\\frac{L}{\\sqrt{3}} = \\frac{L\\sqrt{3}}{3}$。$L = 6$ 时：较短的直角边是 $2\\sqrt{3}$，\n\n$$A = \\frac{1}{2} \\cdot 2\\sqrt{3} \\cdot 6 = 6\\sqrt{3}.$$",
+        "In a $30^\\circ$-$60^\\circ$-$90^\\circ$ triangle the longer leg is $\\sqrt{3}$ times the shorter leg. Find the shorter leg, then the area is half the product of the two legs.\n\nWith longer leg $L$, the shorter leg is $\\frac{L}{\\sqrt{3}} = \\frac{L\\sqrt{3}}{3}$. With $L = 6$: the shorter leg is $2\\sqrt{3}$ and\n\n$$A = \\frac{1}{2} \\cdot 2\\sqrt{3} \\cdot 6 = 6\\sqrt{3}.$$",
+        "在 $30^\\circ$-$60^\\circ$-$90^\\circ$ 三角形中，较长的直角边是较短直角边的 $\\sqrt{3}$ 倍。先求出较短的直角边，面积就是两条直角边乘积的一半。\n\n较长的直角边为 $L$ 时，较短的直角边是 $\\frac{L}{\\sqrt{3}} = \\frac{L\\sqrt{3}}{3}$。$L = 6$ 时：较短的直角边是 $2\\sqrt{3}$，\n\n$$A = \\frac{1}{2} \\cdot 2\\sqrt{3} \\cdot 6 = 6\\sqrt{3}.$$",
       ),
       generate(rng) {
         const k = rng.int(2, 15);
@@ -1240,8 +1240,8 @@ export const areaOfEquilateralTriangles: TopicDef = {
       id: "area-from-the-side",
       title: t("The area from the side", "由边长求面积"),
       explanation: t(
-        "Multiply half the base by the height:\n\n$$A = \\frac{1}{2} \\cdot s \\cdot \\frac{s\\sqrt{3}}{2} = \\frac{s^2\\sqrt{3}}{4}.$$\n\nWith side $6$: $A = \\frac{36\\sqrt{3}}{4} = 9\\sqrt{3}$.",
-        "底的一半乘以高：\n\n$$A = \\frac{1}{2} \\cdot s \\cdot \\frac{s\\sqrt{3}}{2} = \\frac{s^2\\sqrt{3}}{4}.$$\n\n边长为 $6$ 时：$A = \\frac{36\\sqrt{3}}{4} = 9\\sqrt{3}$。",
+        "The height of an equilateral triangle splits it into two $30^\\circ$-$60^\\circ$-$90^\\circ$ triangles, so the height is $\\frac{\\sqrt{3}}{2}$ times the side.\n\nMultiply half the base by the height:\n\n$$A = \\frac{1}{2} \\cdot s \\cdot \\frac{s\\sqrt{3}}{2} = \\frac{s^2\\sqrt{3}}{4}.$$\n\nWith side $6$: $A = \\frac{36\\sqrt{3}}{4} = 9\\sqrt{3}$.",
+        "等边三角形的高把它分成两个 $30^\\circ$-$60^\\circ$-$90^\\circ$ 三角形，所以高是边长的 $\\frac{\\sqrt{3}}{2}$ 倍。\n\n底的一半乘以高：\n\n$$A = \\frac{1}{2} \\cdot s \\cdot \\frac{s\\sqrt{3}}{2} = \\frac{s^2\\sqrt{3}}{4}.$$\n\n边长为 $6$ 时：$A = \\frac{36\\sqrt{3}}{4} = 9\\sqrt{3}$。",
       ),
       generate(rng) {
         const s = rng.int(2, 20);
@@ -2059,8 +2059,8 @@ export const mediansAndCentroids: TopicDef = {
       id: "coordinates-of-the-centroid",
       title: t("Coordinates of the centroid", "重心的坐标"),
       explanation: t(
-        "The centroid of the triangle with vertices $(x_1, y_1)$, $(x_2, y_2)$, $(x_3, y_3)$ is the average of the vertices:\n\n$$G = \\left(\\frac{x_1 + x_2 + x_3}{3}, \\frac{y_1 + y_2 + y_3}{3}\\right).$$\n\nFor $A(1, 2)$, $B(7, -1)$, $C(4, 5)$: $G = \\left(\\frac{12}{3}, \\frac{6}{3}\\right) = (4, 2)$.",
-        "顶点为 $(x_1, y_1)$、$(x_2, y_2)$、$(x_3, y_3)$ 的三角形的重心是三个顶点的平均：\n\n$$G = \\left(\\frac{x_1 + x_2 + x_3}{3}, \\frac{y_1 + y_2 + y_3}{3}\\right).$$\n\n对于 $A(1, 2)$、$B(7, -1)$、$C(4, 5)$：$G = \\left(\\frac{12}{3}, \\frac{6}{3}\\right) = (4, 2)$。",
+        "The three medians of a triangle meet at the centroid, the balance point of the triangle. Its coordinates are found by averaging the coordinates of the three vertices.\n\nThe centroid of the triangle with vertices $(x_1, y_1)$, $(x_2, y_2)$, $(x_3, y_3)$ is the average of the vertices:\n\n$$G = \\left(\\frac{x_1 + x_2 + x_3}{3}, \\frac{y_1 + y_2 + y_3}{3}\\right).$$\n\nFor $A(1, 2)$, $B(7, -1)$, $C(4, 5)$: $G = \\left(\\frac{12}{3}, \\frac{6}{3}\\right) = (4, 2)$.",
+        "三角形的三条中线交于重心，也就是三角形的平衡点。它的坐标等于三个顶点坐标的平均数。\n\n顶点为 $(x_1, y_1)$、$(x_2, y_2)$、$(x_3, y_3)$ 的三角形的重心是三个顶点的平均：\n\n$$G = \\left(\\frac{x_1 + x_2 + x_3}{3}, \\frac{y_1 + y_2 + y_3}{3}\\right).$$\n\n对于 $A(1, 2)$、$B(7, -1)$、$C(4, 5)$：$G = \\left(\\frac{12}{3}, \\frac{6}{3}\\right) = (4, 2)$。",
       ),
       generate(rng) {
         for (;;) {

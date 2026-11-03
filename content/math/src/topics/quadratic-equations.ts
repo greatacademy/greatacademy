@@ -1094,8 +1094,8 @@ export const completingTheSquare: TopicDef = {
       id: "odd-linear-term",
       title: t("Odd linear terms", "一次项系数为奇数"),
       explanation: t(
-        "When $b$ is odd, $p = \\frac{b}{2}$ is a fraction, and so is $p^{2}$:\n\n$$x^{2} + 5x + 1 = \\left(x^{2} + 5x + \\frac{25}{4}\\right) - \\frac{25}{4} + 1 = \\left(x + \\frac{5}{2}\\right)^{2} - \\frac{21}{4}$$\n\nWrite $1 = \\frac{4}{4}$ to combine the constants.",
-        "当 $b$ 是奇数时，$p = \\frac{b}{2}$ 是分数，$p^{2}$ 也是分数：\n\n$$x^{2} + 5x + 1 = \\left(x^{2} + 5x + \\frac{25}{4}\\right) - \\frac{25}{4} + 1 = \\left(x + \\frac{5}{2}\\right)^{2} - \\frac{21}{4}$$\n\n把 $1$ 写成 $\\frac{4}{4}$ 来合并常数。",
+        "Completing the square always adds the square of half the coefficient of $x$ and subtracts it again, so the value of the expression does not change.\n\nWhen $b$ is odd, $p = \\frac{b}{2}$ is a fraction, and so is $p^{2}$:\n\n$$x^{2} + 5x + 1 = \\left(x^{2} + 5x + \\frac{25}{4}\\right) - \\frac{25}{4} + 1 = \\left(x + \\frac{5}{2}\\right)^{2} - \\frac{21}{4}$$\n\nWrite $1 = \\frac{4}{4}$ to combine the constants.",
+        "配方时，总是加上 $x$ 的系数一半的平方，再把它减去，所以式子的值不变。\n\n当 $b$ 是奇数时，$p = \\frac{b}{2}$ 是分数，$p^{2}$ 也是分数：\n\n$$x^{2} + 5x + 1 = \\left(x^{2} + 5x + \\frac{25}{4}\\right) - \\frac{25}{4} + 1 = \\left(x + \\frac{5}{2}\\right)^{2} - \\frac{21}{4}$$\n\n把 $1$ 写成 $\\frac{4}{4}$ 来合并常数。",
       ),
       keyPrerequisites: ["factoring-perfect-square-trinomials"],
       generate(rng) {
@@ -1186,8 +1186,8 @@ export const completingTheSquareWithLeadingCoefficients: TopicDef = {
       id: "fractions",
       title: t("Fractions inside the square", "平方内出现分数"),
       explanation: t(
-        "When the leading coefficient does not divide the coefficient of $x$, $p = \\frac{b}{2a}$ is a fraction:\n\n$$2x^{2} + 6x + 1 = 2(x^{2} + 3x) + 1 = 2\\left(x + \\frac{3}{2}\\right)^{2} - 2 \\cdot \\frac{9}{4} + 1 = 2\\left(x + \\frac{3}{2}\\right)^{2} - \\frac{7}{2}$$",
-        "当首项系数不能整除 $x$ 的系数时，$p = \\frac{b}{2a}$ 是分数：\n\n$$2x^{2} + 6x + 1 = 2(x^{2} + 3x) + 1 = 2\\left(x + \\frac{3}{2}\\right)^{2} - 2 \\cdot \\frac{9}{4} + 1 = 2\\left(x + \\frac{3}{2}\\right)^{2} - \\frac{7}{2}$$",
+        "With a leading coefficient, factor it out of the $x^{2}$ and $x$ terms first, complete the square inside the parentheses, and remember that the subtracted square is multiplied by that coefficient.\n\nWhen the leading coefficient does not divide the coefficient of $x$, $p = \\frac{b}{2a}$ is a fraction:\n\n$$2x^{2} + 6x + 1 = 2(x^{2} + 3x) + 1 = 2\\left(x + \\frac{3}{2}\\right)^{2} - 2 \\cdot \\frac{9}{4} + 1 = 2\\left(x + \\frac{3}{2}\\right)^{2} - \\frac{7}{2}$$",
+        "首项系数不是 $1$ 时，先从 $x^{2}$ 项和 $x$ 项中提出首项系数，在括号内配方，并记住减去的平方要乘这个系数。\n\n当首项系数不能整除 $x$ 的系数时，$p = \\frac{b}{2a}$ 是分数：\n\n$$2x^{2} + 6x + 1 = 2(x^{2} + 3x) + 1 = 2\\left(x + \\frac{3}{2}\\right)^{2} - 2 \\cdot \\frac{9}{4} + 1 = 2\\left(x + \\frac{3}{2}\\right)^{2} - \\frac{7}{2}$$",
       ),
       generate(rng) {
         let a: number;
@@ -1394,8 +1394,8 @@ export const solvingQuadraticEquationsWithLeadingCoefficientsByCompletingTheSqua
       id: "a-divides-every-coefficient",
       title: t("Dividing by the leading coefficient", "两边除以首项系数"),
       explanation: t(
-        "Completing the square needs $x^{2}$ with coefficient $1$. Divide both sides by the leading coefficient first:\n\n$$3x^{2} - 12x + 6 = 0 \\Rightarrow x^{2} - 4x + 2 = 0 \\Rightarrow (x - 2)^{2} = 2 \\Rightarrow x = 2 \\pm \\sqrt{2}$$",
-        "配方需要 $x^{2}$ 的系数为 $1$。先两边同时除以首项系数：\n\n$$3x^{2} - 12x + 6 = 0 \\Rightarrow x^{2} - 4x + 2 = 0 \\Rightarrow (x - 2)^{2} = 2 \\Rightarrow x = 2 \\pm \\sqrt{2}$$",
+        "Dividing both sides of an equation by the same nonzero number does not change its solutions, so the equation can be made monic before completing the square.\n\nCompleting the square needs $x^{2}$ with coefficient $1$. Divide both sides by the leading coefficient first:\n\n$$3x^{2} - 12x + 6 = 0 \\Rightarrow x^{2} - 4x + 2 = 0 \\Rightarrow (x - 2)^{2} = 2 \\Rightarrow x = 2 \\pm \\sqrt{2}$$",
+        "方程两边同时除以同一个非零数，解不变，所以可以先把首项系数化为 $1$，再配方。\n\n配方需要 $x^{2}$ 的系数为 $1$。先两边同时除以首项系数：\n\n$$3x^{2} - 12x + 6 = 0 \\Rightarrow x^{2} - 4x + 2 = 0 \\Rightarrow (x - 2)^{2} = 2 \\Rightarrow x = 2 \\pm \\sqrt{2}$$",
       ),
       generate(rng) {
         const a = rng.pick([2, 3, 4, 5, -2, -3]);
@@ -1441,8 +1441,8 @@ export const solvingQuadraticEquationsWithLeadingCoefficientsByCompletingTheSqua
       id: "negative-leading-coefficient",
       title: t("A negative leading coefficient", "首项系数为负"),
       explanation: t(
-        "Dividing by a negative leading coefficient changes the sign of every term:\n\n$$-x^{2} + 4x + 1 = 0 \\Rightarrow x^{2} - 4x - 1 = 0 \\Rightarrow (x - 2)^{2} = 5 \\Rightarrow x = 2 \\pm \\sqrt{5}$$",
-        "除以负的首项系数时，每一项都要变号：\n\n$$-x^{2} + 4x + 1 = 0 \\Rightarrow x^{2} - 4x - 1 = 0 \\Rightarrow (x - 2)^{2} = 5 \\Rightarrow x = 2 \\pm \\sqrt{5}$$",
+        "A negative leading coefficient is handled the same way: divide every term by it, which flips all the signs, and then complete the square as usual.\n\nDividing by a negative leading coefficient changes the sign of every term:\n\n$$-x^{2} + 4x + 1 = 0 \\Rightarrow x^{2} - 4x - 1 = 0 \\Rightarrow (x - 2)^{2} = 5 \\Rightarrow x = 2 \\pm \\sqrt{5}$$",
+        "首项系数为负数时方法相同：每一项都除以它，所有符号都会改变，然后照常配方。\n\n除以负的首项系数时，每一项都要变号：\n\n$$-x^{2} + 4x + 1 = 0 \\Rightarrow x^{2} - 4x - 1 = 0 \\Rightarrow (x - 2)^{2} = 5 \\Rightarrow x = 2 \\pm \\sqrt{5}$$",
       ),
       generate(rng) {
         const [a, b, c] = drawPositiveDiscriminant(rng, [-1, -1, -2, -3]);
@@ -1786,8 +1786,8 @@ export const quadraticEquationsWithOneRealSolution: TopicDef = {
       id: "unknown-linear-coefficient",
       title: t("An unknown coefficient of $x$", "未知的一次项系数"),
       explanation: t(
-        "When the coefficient of $x$ is unknown, the condition $k^{2} = 4ac$ has two solutions, $k = \\pm 2\\sqrt{ac}$:\n\n$$x^{2} + kx + 9 = 0: \\quad k^{2} - 36 = 0 \\Rightarrow k = 6 \\text{ or } k = -6$$\n\nGive both: $x^{2} + 6x + 9 = (x + 3)^{2}$ and $x^{2} - 6x + 9 = (x - 3)^{2}$.",
-        "当 $x$ 的系数未知时，条件 $k^{2} = 4ac$ 有两个解 $k = \\pm 2\\sqrt{ac}$：\n\n$$x^{2} + kx + 9 = 0: \\quad k^{2} - 36 = 0 \\Rightarrow k = 6 \\text{ 或 } k = -6$$\n\n两个都要写：$x^{2} + 6x + 9 = (x + 3)^{2}$，$x^{2} - 6x + 9 = (x - 3)^{2}$。",
+        "A quadratic equation has exactly one real solution when its discriminant $b^{2} - 4ac$ is zero. Set the discriminant equal to zero and solve for the unknown coefficient.\n\nWhen the coefficient of $x$ is unknown, the condition $k^{2} = 4ac$ has two solutions, $k = \\pm 2\\sqrt{ac}$:\n\n$$x^{2} + kx + 9 = 0: \\quad k^{2} - 36 = 0 \\Rightarrow k = 6 \\text{ or } k = -6$$\n\nGive both: $x^{2} + 6x + 9 = (x + 3)^{2}$ and $x^{2} - 6x + 9 = (x - 3)^{2}$.",
+        "当判别式 $b^{2} - 4ac$ 等于零时，二次方程恰好有一个实数解。令判别式等于零，解出未知的系数。\n\n当 $x$ 的系数未知时，条件 $k^{2} = 4ac$ 有两个解 $k = \\pm 2\\sqrt{ac}$：\n\n$$x^{2} + kx + 9 = 0: \\quad k^{2} - 36 = 0 \\Rightarrow k = 6 \\text{ 或 } k = -6$$\n\n两个都要写：$x^{2} + 6x + 9 = (x + 3)^{2}$，$x^{2} - 6x + 9 = (x - 3)^{2}$。",
       ),
       generate(rng) {
         const w = rng.pick([1, 1, 2, 3]) * rng.sign();

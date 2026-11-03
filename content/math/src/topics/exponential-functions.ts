@@ -1093,8 +1093,8 @@ export const combiningRulesOfExponentsWithAlgebraicExpressions: TopicDef = {
       id: "negative-powers-in-combinations",
       title: t("Negative powers in combinations", "综合运算中的负指数幂"),
       explanation: t(
-        "Treat a negative power of a fraction first, by flipping the fraction. Then multiply:\n\n$$\\left(\\frac{2x}{y^{2}}\\right)^{-3} \\cdot 4x^{5}y = \\frac{y^{6}}{8x^{3}} \\cdot 4x^{5}y = \\frac{4x^{5}y^{7}}{8x^{3}} = \\frac{x^{2}y^{7}}{2}$$",
-        "先处理分数的负指数幂：把分数颠倒。然后再相乘：\n\n$$\\left(\\frac{2x}{y^{2}}\\right)^{-3} \\cdot 4x^{5}y = \\frac{y^{6}}{8x^{3}} \\cdot 4x^{5}y = \\frac{4x^{5}y^{7}}{8x^{3}} = \\frac{x^{2}y^{7}}{2}$$",
+        "When several exponent rules are needed, work one step at a time and write each intermediate result. Keep coefficients and each variable separate as you combine.\n\nTreat a negative power of a fraction first, by flipping the fraction. Then multiply:\n\n$$\\left(\\frac{2x}{y^{2}}\\right)^{-3} \\cdot 4x^{5}y = \\frac{y^{6}}{8x^{3}} \\cdot 4x^{5}y = \\frac{4x^{5}y^{7}}{8x^{3}} = \\frac{x^{2}y^{7}}{2}$$",
+        "需要用到几条指数法则时，一步一步地算，并写出每个中间结果。合并时把系数和每个字母分开处理。\n\n先处理分数的负指数幂：把分数颠倒。然后再相乘：\n\n$$\\left(\\frac{2x}{y^{2}}\\right)^{-3} \\cdot 4x^{5}y = \\frac{y^{6}}{8x^{3}} \\cdot 4x^{5}y = \\frac{4x^{5}y^{7}}{8x^{3}} = \\frac{x^{2}y^{7}}{2}$$",
       ),
       generate(rng) {
         const a = rng.int(1, 3);
@@ -1415,8 +1415,8 @@ export const solvingExponentialEquationsWithFractionalSolutions: TopicDef = {
       id: "fractional-solutions-with-linear-exponents",
       title: t("Linear exponents", "一次式指数"),
       explanation: t(
-        "With expressions in the exponents, rewrite the bases, multiply out the exponents, and solve:\n\n$$9^{x + 1} = 27^{x} \\implies 3^{2x + 2} = 3^{3x} \\implies 2x + 2 = 3x \\implies x = 2$$\n\n$$8^{2x} = 4^{x + 1} \\implies 2^{6x} = 2^{2x + 2} \\implies 4x = 2 \\implies x = \\frac{1}{2}$$",
-        "指数中含代数式时，改写底数、展开指数，再求解：\n\n$$9^{x + 1} = 27^{x} \\implies 3^{2x + 2} = 3^{3x} \\implies 2x + 2 = 3x \\implies x = 2$$\n\n$$8^{2x} = 4^{x + 1} \\implies 2^{6x} = 2^{2x + 2} \\implies 4x = 2 \\implies x = \\frac{1}{2}$$",
+        "When both sides can be written as powers of the same base, the exponents must be equal. Rewrite each base as a power of a common base, then set the exponents equal.\n\nWith expressions in the exponents, rewrite the bases, multiply out the exponents, and solve:\n\n$$9^{x + 1} = 27^{x} \\implies 3^{2x + 2} = 3^{3x} \\implies 2x + 2 = 3x \\implies x = 2$$\n\n$$8^{2x} = 4^{x + 1} \\implies 2^{6x} = 2^{2x + 2} \\implies 4x = 2 \\implies x = \\frac{1}{2}$$",
+        "如果两边都能写成同一底数的幂，那么指数必须相等。把每个底数改写成公共底数的幂，再令指数相等。\n\n指数中含代数式时，改写底数、展开指数，再求解：\n\n$$9^{x + 1} = 27^{x} \\implies 3^{2x + 2} = 3^{3x} \\implies 2x + 2 = 3x \\implies x = 2$$\n\n$$8^{2x} = 4^{x + 1} \\implies 2^{6x} = 2^{2x + 2} \\implies 4x = 2 \\implies x = \\frac{1}{2}$$",
       ),
       generate(rng) {
         const { b, p, q, a1, a2, c1, c2, x } = rewriteEquation(rng, false);

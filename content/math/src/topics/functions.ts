@@ -1429,8 +1429,8 @@ export const rootsOfAFunction: TopicDef = {
       id: "roots-of-linear-functions",
       title: t("Roots of linear functions", "一次函数的零点"),
       explanation: t(
-        "To find a root from a formula, set the function equal to $0$ and solve. For $f(x) = 4x + 6$:\n\n$$4x + 6 = 0 \\;\\Rightarrow\\; 4x = -6 \\;\\Rightarrow\\; x = -\\frac{3}{2}.$$",
-        "由公式求零点，就是令函数等于 $0$ 并解方程。对于 $f(x) = 4x + 6$：\n\n$$4x + 6 = 0 \\;\\Rightarrow\\; 4x = -6 \\;\\Rightarrow\\; x = -\\frac{3}{2}.$$",
+        "A root of a function is an input where the output is zero; on the graph it is where the line crosses the $x$-axis.\n\nTo find a root from a formula, set the function equal to $0$ and solve. For $f(x) = 4x + 6$:\n\n$$4x + 6 = 0 \\;\\Rightarrow\\; 4x = -6 \\;\\Rightarrow\\; x = -\\frac{3}{2}.$$",
+        "函数的零点是使输出为零的输入值，在图像上就是直线与 $x$ 轴的交点。\n\n由公式求零点，就是令函数等于 $0$ 并解方程。对于 $f(x) = 4x + 6$：\n\n$$4x + 6 = 0 \\;\\Rightarrow\\; 4x = -6 \\;\\Rightarrow\\; x = -\\frac{3}{2}.$$",
       ),
       keyPrerequisites: ["two-step-equations"],
       generate(rng) {

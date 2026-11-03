@@ -2266,8 +2266,8 @@ export const constructingRevenueCostAndProfitFunctions: TopicDef = {
       id: "revenue-with-price-changes",
       title: t("Revenue when the price changes", "价格变化时的收入"),
       explanation: t(
-        "A theater sells $300$ tickets at $\\$12$. For each $\\$1$ increase in price it sells $15$ fewer tickets. After $n$ increases of $\\$1$ the price is $12 + n$ and the number sold is $300 - 15n$, so\n\n$$R(n) = (12 + n)(300 - 15n) = -15n^{2} + 120n + 3600$$\n\nRevenue is price times number sold, so it is a quadratic function of $n$.",
-        "一家剧院以 $12$ 元的票价能卖出 $300$ 张票。票价每提高 $1$ 元，就少卖 $15$ 张。提价 $n$ 次（每次 $1$ 元）后，票价是 $12 + n$，售出 $300 - 15n$ 张，所以\n\n$$R(n) = (12 + n)(300 - 15n) = -15n^{2} + 120n + 3600$$\n\n收入等于价格乘以销量，所以它是 $n$ 的二次函数。",
+        "When raising the price lowers the number sold, both the price and the quantity depend on the number of changes. Write each one as an expression first, then multiply them.\n\nA theater sells $300$ tickets at $\\$12$. For each $\\$1$ increase in price it sells $15$ fewer tickets. After $n$ increases of $\\$1$ the price is $12 + n$ and the number sold is $300 - 15n$, so\n\n$$R(n) = (12 + n)(300 - 15n) = -15n^{2} + 120n + 3600$$\n\nRevenue is price times number sold, so it is a quadratic function of $n$.",
+        "当提价使销量减少时，价格和销量都取决于提价的次数。先把它们各自写成式子，再相乘。\n\n一家剧院以 $12$ 元的票价能卖出 $300$ 张票。票价每提高 $1$ 元，就少卖 $15$ 张。提价 $n$ 次（每次 $1$ 元）后，票价是 $12 + n$，售出 $300 - 15n$ 张，所以\n\n$$R(n) = (12 + n)(300 - 15n) = -15n^{2} + 120n + 3600$$\n\n收入等于价格乘以销量，所以它是 $n$ 的二次函数。",
       ),
       generate(rng) {
         const item = rng.pick(goods);

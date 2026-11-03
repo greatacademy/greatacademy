@@ -640,8 +640,8 @@ export const absoluteValueEquations: TopicDef = {
       id: "solving-simple-absolute-value-equations",
       title: t("Equations like |x + b| = c", "形如 |x + b| = c 的方程"),
       explanation: t(
-        "$|u| = c$ with $c > 0$ means $u$ is $c$ units from $0$, so $u = c$ or $u = -c$. Solve both equations:\n\n$$|x + 2| = 5 \\;\\Rightarrow\\; x + 2 = 5 \\text{ or } x + 2 = -5 \\;\\Rightarrow\\; x = 3 \\text{ or } x = -7$$\n\nCheck: $|3 + 2| = 5$ and $|-7 + 2| = 5$.",
-        "当 $c > 0$ 时，$|u| = c$ 表示 $u$ 到 $0$ 的距离是 $c$，所以 $u = c$ 或 $u = -c$。两个方程都要解：\n\n$$|x + 2| = 5 \\;\\Rightarrow\\; x + 2 = 5 \\text{ 或 } x + 2 = -5 \\;\\Rightarrow\\; x = 3 \\text{ 或 } x = -7$$\n\n检验：$|3 + 2| = 5$，$|-7 + 2| = 5$。",
+        "An absolute value measures distance from zero, and two numbers have any given positive distance from zero. So an absolute value equation splits into two equations.\n\n$|u| = c$ with $c > 0$ means $u$ is $c$ units from $0$, so $u = c$ or $u = -c$. Solve both equations:\n\n$$|x + 2| = 5 \\;\\Rightarrow\\; x + 2 = 5 \\text{ or } x + 2 = -5 \\;\\Rightarrow\\; x = 3 \\text{ or } x = -7$$\n\nCheck: $|3 + 2| = 5$ and $|-7 + 2| = 5$.",
+        "绝对值表示到零的距离，而到零的距离等于某个正数的数有两个。所以绝对值方程要拆成两个方程。\n\n当 $c > 0$ 时，$|u| = c$ 表示 $u$ 到 $0$ 的距离是 $c$，所以 $u = c$ 或 $u = -c$。两个方程都要解：\n\n$$|x + 2| = 5 \\;\\Rightarrow\\; x + 2 = 5 \\text{ 或 } x + 2 = -5 \\;\\Rightarrow\\; x = 3 \\text{ 或 } x = -7$$\n\n检验：$|3 + 2| = 5$，$|-7 + 2| = 5$。",
       ),
       generate(rng) {
         const b = rng.int(-9, 9);

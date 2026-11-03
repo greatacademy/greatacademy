@@ -1540,8 +1540,8 @@ export const tangentTangentLinesToCircles: TopicDef = {
       id: "the-line-to-the-center",
       title: t("The line to the center", "连接圆心的线段"),
       explanation: t(
-        "The congruent right triangles $OAP$ and $OBP$ show that $OP$ **bisects** both $\\angle APB$ and $\\angle AOB$:\n\n$$\\angle APO = \\angle BPO = \\tfrac{1}{2}\\angle APB, \\qquad \\angle AOP = 90^\\circ - \\angle APO.$$\n\nIf $\\angle APB = 64^\\circ$, then $\\angle APO = 32^\\circ$ and $\\angle AOP = 58^\\circ$.",
-        "全等的直角三角形 $OAP$ 与 $OBP$ 说明 $OP$ 同时**平分** $\\angle APB$ 和 $\\angle AOB$：\n\n$$\\angle APO = \\angle BPO = \\tfrac{1}{2}\\angle APB, \\qquad \\angle AOP = 90^\\circ - \\angle APO.$$\n\n若 $\\angle APB = 64^\\circ$，则 $\\angle APO = 32^\\circ$，$\\angle AOP = 58^\\circ$。",
+        "Two tangents drawn from the same outside point are equal in length, and the segment from that point to the center splits the figure into two congruent right triangles.\n\nThe congruent right triangles $OAP$ and $OBP$ show that $OP$ **bisects** both $\\angle APB$ and $\\angle AOB$:\n\n$$\\angle APO = \\angle BPO = \\tfrac{1}{2}\\angle APB, \\qquad \\angle AOP = 90^\\circ - \\angle APO.$$\n\nIf $\\angle APB = 64^\\circ$, then $\\angle APO = 32^\\circ$ and $\\angle AOP = 58^\\circ$.",
+        "从圆外同一点引出的两条切线长度相等，这一点到圆心的线段把图形分成两个全等的直角三角形。\n\n全等的直角三角形 $OAP$ 与 $OBP$ 说明 $OP$ 同时**平分** $\\angle APB$ 和 $\\angle AOB$：\n\n$$\\angle APO = \\angle BPO = \\tfrac{1}{2}\\angle APB, \\qquad \\angle AOP = 90^\\circ - \\angle APO.$$\n\n若 $\\angle APB = 64^\\circ$，则 $\\angle APO = 32^\\circ$，$\\angle AOP = 58^\\circ$。",
       ),
       generate(rng) {
         const phi = rng.int(25, 70);

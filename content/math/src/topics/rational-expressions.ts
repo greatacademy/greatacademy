@@ -906,8 +906,8 @@ export const rationalEquationsUsingCrossMultiplication: TopicDef = {
       id: "a-number-on-one-side",
       title: t("A number fraction on one side", "一边是数的分数"),
       explanation: t(
-        "As with proportions, $\\frac{a}{b} = \\frac{c}{d}$ means $ad = bc$ (for nonzero $b$ and $d$). Cross-multiply, keeping each binomial in parentheses:\n\n$$\\frac{5}{x + 2} = \\frac{3}{4} \\;\\Rightarrow\\; 3(x + 2) = 5 \\cdot 4 \\;\\Rightarrow\\; 3x + 6 = 20 \\;\\Rightarrow\\; x = \\frac{14}{3}$$",
-        "与比例一样，$\\frac{a}{b} = \\frac{c}{d}$ 意味着 $ad = bc$（$b$、$d$ 不为零）。交叉相乘，二项式要放在括号里：\n\n$$\\frac{5}{x + 2} = \\frac{3}{4} \\;\\Rightarrow\\; 3(x + 2) = 5 \\cdot 4 \\;\\Rightarrow\\; 3x + 6 = 20 \\;\\Rightarrow\\; x = \\frac{14}{3}$$",
+        "When an equation is a single fraction equal to another single fraction, cross-multiplying clears both denominators at once. Check that the solution does not make a denominator zero.\n\nAs with proportions, $\\frac{a}{b} = \\frac{c}{d}$ means $ad = bc$ (for nonzero $b$ and $d$). Cross-multiply, keeping each binomial in parentheses:\n\n$$\\frac{5}{x + 2} = \\frac{3}{4} \\;\\Rightarrow\\; 3(x + 2) = 5 \\cdot 4 \\;\\Rightarrow\\; 3x + 6 = 20 \\;\\Rightarrow\\; x = \\frac{14}{3}$$",
+        "当方程是一个分式等于另一个分式时，交叉相乘可以一次去掉两个分母。还要检验解不会使分母为零。\n\n与比例一样，$\\frac{a}{b} = \\frac{c}{d}$ 意味着 $ad = bc$（$b$、$d$ 不为零）。交叉相乘，二项式要放在括号里：\n\n$$\\frac{5}{x + 2} = \\frac{3}{4} \\;\\Rightarrow\\; 3(x + 2) = 5 \\cdot 4 \\;\\Rightarrow\\; 3x + 6 = 20 \\;\\Rightarrow\\; x = \\frac{14}{3}$$",
       ),
       keyPrerequisites: ["proportions"],
       generate(rng) {

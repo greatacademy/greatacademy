@@ -185,8 +185,8 @@ export const distributiveProperty: TopicDef = {
       id: "positive-factor",
       title: t("Distributing a positive number", "分配一个正数"),
       explanation: t(
-        "The **distributive property** says $a(b + c) = ab + ac$: the factor outside multiplies **every** term inside. For example,\n\n$$4(2x - 5) = 4 \\cdot 2x + 4 \\cdot (-5) = 8x - 20.$$",
-        "**乘法分配律**：$a(b + c) = ab + ac$，括号外的因数要乘以括号内的**每一项**。例如\n\n$$4(2x - 5) = 4 \\cdot 2x + 4 \\cdot (-5) = 8x - 20.$$",
+        "Multiply the outside factor by each term in turn, keeping the sign of each term. Forgetting to multiply the second term is the most common mistake.\n\nThe **distributive property** says $a(b + c) = ab + ac$: the factor outside multiplies **every** term inside. For example,\n\n$$4(2x - 5) = 4 \\cdot 2x + 4 \\cdot (-5) = 8x - 20.$$",
+        "用括号外的因数依次乘括号里的每一项，并保留每一项的符号。最常见的错误是忘记乘第二项。\n\n**乘法分配律**：$a(b + c) = ab + ac$，括号外的因数要乘以括号内的**每一项**。例如\n\n$$4(2x - 5) = 4 \\cdot 2x + 4 \\cdot (-5) = 8x - 20.$$",
       ),
       keyPrerequisites: ["multiplying-integers"],
       generate(rng) {

@@ -369,8 +369,8 @@ export const unknownCoefficientsByFactoring: TopicDef = {
       id: "expanding-then-factoring",
       title: t("Expanding, then factoring", "先展开，再提公因式"),
       explanation: t(
-        "If $x$ is inside parentheses, expand first; only then can the terms with $x$ be collected:\n\n$$a(x + 2) = 5x + b \\;\\Rightarrow\\; ax + 2a = 5x + b \\;\\Rightarrow\\; x(a - 5) = b - 2a \\;\\Rightarrow\\; x = \\frac{b - 2a}{a - 5}.$$",
-        "如果 $x$ 在括号里，要先展开，然后才能把含 $x$ 的项移到一起：\n\n$$a(x + 2) = 5x + b \\;\\Rightarrow\\; ax + 2a = 5x + b \\;\\Rightarrow\\; x(a - 5) = b - 2a \\;\\Rightarrow\\; x = \\frac{b - 2a}{a - 5}.$$",
+        "To solve for $x$ when the other letters are unknown constants, gather every term containing $x$ on one side, factor out $x$, and divide by the factor that is left.\n\nIf $x$ is inside parentheses, expand first; only then can the terms with $x$ be collected:\n\n$$a(x + 2) = 5x + b \\;\\Rightarrow\\; ax + 2a = 5x + b \\;\\Rightarrow\\; x(a - 5) = b - 2a \\;\\Rightarrow\\; x = \\frac{b - 2a}{a - 5}.$$",
+        "当其他字母是未知常数时，要解出 $x$，就把所有含 $x$ 的项移到一边，提出公因式 $x$，再除以剩下的因式。\n\n如果 $x$ 在括号里，要先展开，然后才能把含 $x$ 的项移到一起：\n\n$$a(x + 2) = 5x + b \\;\\Rightarrow\\; ax + 2a = 5x + b \\;\\Rightarrow\\; x(a - 5) = b - 2a \\;\\Rightarrow\\; x = \\frac{b - 2a}{a - 5}.$$",
       ),
       generate(rng) {
         if (rng.bool()) {

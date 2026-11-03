@@ -103,8 +103,8 @@ export const unitPricesAndSpeed: TopicDef = {
       id: "unit-price-calculation",
       title: t("Calculating Unit Price", "计算单价"),
       explanation: t(
-        "A **unit price** is the cost per single unit of an item: $\\text{Unit Price} = \\frac{\\text{Total Cost}}{\\text{Quantity}}$.",
-        "**单价**指物品每单件的价格：$\\text{单价} = \\frac{\\text{总价}}{\\text{数量}}$。",
+        "Dividing the total cost by the number of units gives the price of one unit, which makes packages of different sizes easy to compare. The lower unit price is the better buy.\n\nA **unit price** is the cost per single unit of an item: $\\text{Unit Price} = \\frac{\\text{Total Cost}}{\\text{Quantity}}$.",
+        "用总价除以数量得到一个单位的价钱，这样不同大小的包装就容易比较了。单价越低越划算。\n\n**单价**指物品每单件的价格：$\\text{单价} = \\frac{\\text{总价}}{\\text{数量}}$。",
       ),
       generate(rng) {
         const qty = rng.pick([3, 4, 5, 6, 8, 10]);
@@ -134,8 +134,8 @@ export const unitPricesAndSpeed: TopicDef = {
       id: "constant-speed-calculation",
       title: t("Calculating Speed as a Unit Rate", "计算恒定速度"),
       explanation: t(
-        "Speed is a unit rate representing distance traveled per unit of time: $\\text{Speed} = \\frac{\\text{Distance}}{\\text{Time}}$.",
-        "速度是表示单位时间内行进距离的单位率：$\\text{速度} = \\frac{\\text{距离}}{\\text{时间}}$。",
+        "Divide the distance by the time it took to get the distance covered in one unit of time. The units of speed combine both, such as miles per hour.\n\nSpeed is a unit rate representing distance traveled per unit of time: $\\text{Speed} = \\frac{\\text{Distance}}{\\text{Time}}$.",
+        "用路程除以所用的时间，得到单位时间内走过的路程。速度的单位由两者组成，比如英里每小时。\n\n速度是表示单位时间内行进距离的单位率：$\\text{速度} = \\frac{\\text{距离}}{\\text{时间}}$。",
       ),
       generate(rng) {
         const speed = rng.int(35, 75);
@@ -456,8 +456,8 @@ export const relativeFrequencyTables: TopicDef = {
       id: "conditional-relative-frequency",
       title: t("Calculating Conditional Relative Frequency", "计算条件相对频数"),
       explanation: t(
-        "A **conditional relative frequency** compares a frequency count to a specific row total or column total: $\\text{Conditional Relative Frequency} = \\frac{\\text{Cell Count}}{\\text{Subgroup Total}} \\times 100\\%$.",
-        "**条件相对频数**将某单元格频数与特定行合计或列合计进行比较：$\\text{条件相对频数} = \\frac{\\text{单元格频数}}{\\text{子群合计}} \\times 100\\%$。",
+        "A conditional relative frequency looks only at one group, such as one row of a two-way table, and asks what fraction of that group falls in a given category.\n\nA **conditional relative frequency** compares a frequency count to a specific row total or column total: $\\text{Conditional Relative Frequency} = \\frac{\\text{Cell Count}}{\\text{Subgroup Total}} \\times 100\\%$.",
+        "条件相对频数只看一个组，比如双向表中的一行，问这个组中有多大比例属于某个类别。\n\n**条件相对频数**将某单元格频数与特定行合计或列合计进行比较：$\\text{条件相对频数} = \\frac{\\text{单元格频数}}{\\text{子群合计}} \\times 100\\%$。",
       ),
       generate(rng) {
         const mult = rng.pick([2, 4, 5, 10]);

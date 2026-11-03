@@ -1002,8 +1002,8 @@ export const dividingComplexNumbers: TopicDef = {
       id: "reciprocal-of-a-complex-number",
       title: t("Reciprocal of a complex number", "复数的倒数运算"),
       explanation: t(
-        "To find the reciprocal $\\frac{1}{z} = \\frac{1}{a + bi}$, multiply the numerator and denominator by the conjugate $\\bar{z} = a - bi$:\n\n$$\\frac{1}{a + bi} = \\frac{a - bi}{(a + bi)(a - bi)} = \\frac{a - bi}{a^2 + b^2} = \\frac{a}{a^2 + b^2} - \\frac{b}{a^2 + b^2}i$$",
-        "求复数的倒数 $\\frac{1}{z} = \\frac{1}{a + bi}$ 时，将分子分母同乘共轭复数 $\\bar{z} = a - bi$：\n\n$$\\frac{1}{a + bi} = \\frac{a - bi}{(a + bi)(a - bi)} = \\frac{a - bi}{a^2 + b^2} = \\frac{a}{a^2 + b^2} - \\frac{b}{a^2 + b^2}i$$",
+        "A complex number times its conjugate is the real number $a^2 + b^2$. That is what removes $i$ from the denominator.\n\nTo find the reciprocal $\\frac{1}{z} = \\frac{1}{a + bi}$, multiply the numerator and denominator by the conjugate $\\bar{z} = a - bi$:\n\n$$\\frac{1}{a + bi} = \\frac{a - bi}{(a + bi)(a - bi)} = \\frac{a - bi}{a^2 + b^2} = \\frac{a}{a^2 + b^2} - \\frac{b}{a^2 + b^2}i$$",
+        "一个复数乘它的共轭复数，得到实数 $a^2 + b^2$。正是这一点使分母中不再含有 $i$。\n\n求复数的倒数 $\\frac{1}{z} = \\frac{1}{a + bi}$ 时，将分子分母同乘共轭复数 $\\bar{z} = a - bi$：\n\n$$\\frac{1}{a + bi} = \\frac{a - bi}{(a + bi)(a - bi)} = \\frac{a - bi}{a^2 + b^2} = \\frac{a}{a^2 + b^2} - \\frac{b}{a^2 + b^2}i$$",
       ),
       generate(rng) {
         const a = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
@@ -1029,8 +1029,8 @@ export const dividingComplexNumbers: TopicDef = {
       id: "quotient-of-two-complex-numbers",
       title: t("Quotient of two complex numbers", "两复数相除"),
       explanation: t(
-        "To divide two complex numbers $\\frac{z_1}{z_2} = \\frac{a + bi}{c + di}$, multiply the numerator and denominator by $\\bar{z}_2 = c - di$:\n\n$$\\frac{a + bi}{c + di} = \\frac{(a + bi)(c - di)}{c^2 + d^2} = \\frac{(ac + bd) + (bc - ad)i}{c^2 + d^2}$$",
-        "计算两个复数的商 $\\frac{z_1}{z_2} = \\frac{a + bi}{c + di}$ 时，分子分母同乘分母的共轭复数 $\\bar{z}_2 = c - di$：\n\n$$\\frac{a + bi}{c + di} = \\frac{(a + bi)(c - di)}{c^2 + d^2} = \\frac{(ac + bd) + (bc - ad)i}{c^2 + d^2}$$",
+        "Dividing by a complex number works like rationalizing a denominator: the conjugate turns the denominator into a real number, and then the result can be split into real and imaginary parts.\n\nTo divide two complex numbers $\\frac{z_1}{z_2} = \\frac{a + bi}{c + di}$, multiply the numerator and denominator by $\\bar{z}_2 = c - di$:\n\n$$\\frac{a + bi}{c + di} = \\frac{(a + bi)(c - di)}{c^2 + d^2} = \\frac{(ac + bd) + (bc - ad)i}{c^2 + d^2}$$",
+        "除以一个复数与分母有理化类似：乘共轭复数后分母变成实数，然后把结果分成实部和虚部。\n\n计算两个复数的商 $\\frac{z_1}{z_2} = \\frac{a + bi}{c + di}$ 时，分子分母同乘分母的共轭复数 $\\bar{z}_2 = c - di$：\n\n$$\\frac{a + bi}{c + di} = \\frac{(a + bi)(c - di)}{c^2 + d^2} = \\frac{(ac + bd) + (bc - ad)i}{c^2 + d^2}$$",
       ),
       generate(rng) {
         const z2 = rng.pick([

@@ -918,8 +918,8 @@ export const quadraticEquationsWithPurelyImaginarySolutions: TopicDef = {
       id: "with-a-leading-coefficient",
       title: t("Equations of the form $ax^{2} + c = 0$", "形如 $ax^{2} + c = 0$ 的方程"),
       explanation: t(
-        "Isolate $x^{2}$ first: subtract the constant, then divide by the coefficient of $x^{2}$.\n\n$$3x^{2} + 54 = 0 \\quad\\Rightarrow\\quad 3x^{2} = -54 \\quad\\Rightarrow\\quad x^{2} = -18$$\n\nso $x = \\pm\\sqrt{-18} = \\pm 3i\\sqrt{2}$.",
-        "先分离出 $x^{2}$：减去常数，再除以 $x^{2}$ 的系数。\n\n$$3x^{2} + 54 = 0 \\quad\\Rightarrow\\quad 3x^{2} = -54 \\quad\\Rightarrow\\quad x^{2} = -18$$\n\n所以 $x = \\pm\\sqrt{-18} = \\pm 3i\\sqrt{2}$。",
+        "When $x^{2}$ equals a negative number, there is no real solution, but there are two imaginary ones, since $\\sqrt{-k} = i\\sqrt{k}$ for $k > 0$.\n\nIsolate $x^{2}$ first: subtract the constant, then divide by the coefficient of $x^{2}$.\n\n$$3x^{2} + 54 = 0 \\quad\\Rightarrow\\quad 3x^{2} = -54 \\quad\\Rightarrow\\quad x^{2} = -18$$\n\nso $x = \\pm\\sqrt{-18} = \\pm 3i\\sqrt{2}$.",
+        "当 $x^{2}$ 等于一个负数时，方程没有实数解，但有两个虚数解，因为当 $k > 0$ 时 $\\sqrt{-k} = i\\sqrt{k}$。\n\n先分离出 $x^{2}$：减去常数，再除以 $x^{2}$ 的系数。\n\n$$3x^{2} + 54 = 0 \\quad\\Rightarrow\\quad 3x^{2} = -54 \\quad\\Rightarrow\\quad x^{2} = -18$$\n\n所以 $x = \\pm\\sqrt{-18} = \\pm 3i\\sqrt{2}$。",
       ),
       generate(rng) {
         const { n, c, m } = negRoot(rng);
@@ -1220,8 +1220,8 @@ export const multiplyingComplexNumbers: TopicDef = {
       id: "by-an-imaginary-number",
       title: t("Multiplying by an imaginary number", "乘以一个虚数"),
       explanation: t(
-        "Distribute, then replace $i^{2}$ by $-1$ and write the result in the form $a + bi$:\n\n$$3i(4 - 2i) = 12i - 6i^{2} = 12i + 6 = 6 + 12i$$",
-        "用分配律展开，把 $i^{2}$ 换成 $-1$，再把结果写成 $a + bi$ 的形式：\n\n$$3i(4 - 2i) = 12i - 6i^{2} = 12i + 6 = 6 + 12i$$",
+        "Complex numbers multiply like binomials, with one extra rule: $i^{2} = -1$. That rule turns the $i^{2}$ term into a real number.\n\nDistribute, then replace $i^{2}$ by $-1$ and write the result in the form $a + bi$:\n\n$$3i(4 - 2i) = 12i - 6i^{2} = 12i + 6 = 6 + 12i$$",
+        "复数相乘与二项式相乘一样，只多一条规则：$i^{2} = -1$。这条规则把 $i^{2}$ 项变成实数。\n\n用分配律展开，把 $i^{2}$ 换成 $-1$，再把结果写成 $a + bi$ 的形式：\n\n$$3i(4 - 2i) = 12i - 6i^{2} = 12i + 6 = 6 + 12i$$",
       ),
       generate(rng) {
         const k = rng.nonZero(-6, 6);

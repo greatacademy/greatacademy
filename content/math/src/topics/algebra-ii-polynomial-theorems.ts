@@ -774,8 +774,8 @@ export const determiningTheRootsOfPolynomials: TopicDef = {
       id: "factors-with-coefficients",
       title: t("Factors with leading coefficients", "带首项系数的因式"),
       explanation: t(
-        "A factor $ax - b$ gives the root $x = \\frac{b}{a}$: solve $ax - b = 0$ rather than reading the number off the factor.\n\n$$p(x) = (2x - 3)(3x + 1)(x - 4)$$\n\n$$2x - 3 = 0 \\implies x = \\frac{3}{2}, \\quad 3x + 1 = 0 \\implies x = -\\frac{1}{3}, \\quad x - 4 = 0 \\implies x = 4$$",
-        "因式 $ax - b$ 给出的根是 $x = \\frac{b}{a}$：要解方程 $ax - b = 0$，而不是直接读出因式中的数。\n\n$$p(x) = (2x - 3)(3x + 1)(x - 4)$$\n\n$$2x - 3 = 0 \\implies x = \\frac{3}{2}, \\quad 3x + 1 = 0 \\implies x = -\\frac{1}{3}, \\quad x - 4 = 0 \\implies x = 4$$",
+        "A product is zero exactly when one of its factors is zero, so each factor gives one root.\n\nA factor $ax - b$ gives the root $x = \\frac{b}{a}$: solve $ax - b = 0$ rather than reading the number off the factor.\n\n$$p(x) = (2x - 3)(3x + 1)(x - 4)$$\n\n$$2x - 3 = 0 \\implies x = \\frac{3}{2}, \\quad 3x + 1 = 0 \\implies x = -\\frac{1}{3}, \\quad x - 4 = 0 \\implies x = 4$$",
+        "一个乘积等于零，当且仅当其中某个因式等于零，所以每个因式给出一个根。\n\n因式 $ax - b$ 给出的根是 $x = \\frac{b}{a}$：要解方程 $ax - b = 0$，而不是直接读出因式中的数。\n\n$$p(x) = (2x - 3)(3x + 1)(x - 4)$$\n\n$$2x - 3 = 0 \\implies x = \\frac{3}{2}, \\quad 3x + 1 = 0 \\implies x = -\\frac{1}{3}, \\quad x - 4 = 0 \\implies x = 4$$",
       ),
       generate(rng) {
         for (;;) {
@@ -1189,8 +1189,8 @@ export const solvingBiquadraticEquations: TopicDef = {
       id: "fewer-real-solutions",
       title: t("Fewer real solutions", "实数解较少的情形"),
       explanation: t(
-        "A factor $x^{2} + k$ with $k > 0$ gives no real solution, and $x^{2} = k$ for a $k$ that is not a perfect square gives $x = \\pm\\sqrt{k}$:\n\n$$x^{4} + 5x^{2} - 36 = (x^{2} - 4)(x^{2} + 9) = 0 \\implies x = \\pm 2$$\n\n$$x^{4} - 7x^{2} + 12 = (x^{2} - 3)(x^{2} - 4) = 0 \\implies x = \\pm\\sqrt{3}, \\; x = \\pm 2$$",
-        "因式 $x^{2} + k$（$k > 0$）没有实数解；当 $k$ 不是完全平方数时，$x^{2} = k$ 得 $x = \\pm\\sqrt{k}$：\n\n$$x^{4} + 5x^{2} - 36 = (x^{2} - 4)(x^{2} + 9) = 0 \\implies x = \\pm 2$$\n\n$$x^{4} - 7x^{2} + 12 = (x^{2} - 3)(x^{2} - 4) = 0 \\implies x = \\pm\\sqrt{3}, \\; x = \\pm 2$$",
+        "A biquadratic equation can have up to four real solutions, but each factor must be checked. A factor that is a sum of a square and a positive number never equals zero.\n\nA factor $x^{2} + k$ with $k > 0$ gives no real solution, and $x^{2} = k$ for a $k$ that is not a perfect square gives $x = \\pm\\sqrt{k}$:\n\n$$x^{4} + 5x^{2} - 36 = (x^{2} - 4)(x^{2} + 9) = 0 \\implies x = \\pm 2$$\n\n$$x^{4} - 7x^{2} + 12 = (x^{2} - 3)(x^{2} - 4) = 0 \\implies x = \\pm\\sqrt{3}, \\; x = \\pm 2$$",
+        "双二次方程最多有四个实数解，但每个因式都要检查。平方式加上一个正数的因式永远不会等于零。\n\n因式 $x^{2} + k$（$k > 0$）没有实数解；当 $k$ 不是完全平方数时，$x^{2} = k$ 得 $x = \\pm\\sqrt{k}$：\n\n$$x^{4} + 5x^{2} - 36 = (x^{2} - 4)(x^{2} + 9) = 0 \\implies x = \\pm 2$$\n\n$$x^{4} - 7x^{2} + 12 = (x^{2} - 3)(x^{2} - 4) = 0 \\implies x = \\pm\\sqrt{3}, \\; x = \\pm 2$$",
       ),
       generate(rng) {
         const m = rng.int(1, 6);
@@ -1465,8 +1465,8 @@ export const determiningPolynomialCoefficientsUsingTheFactorTheorem: TopicDef = 
       id: "a-factor-with-a-leading-coefficient",
       title: t("A factor with a leading coefficient", "首项系数不为 1 的因式"),
       explanation: t(
-        "If $ax - b$ is a factor, the root is $x = \\frac{b}{a}$, so $p\\left(\\frac{b}{a}\\right) = 0$.\n\n$2x - 1$ is a factor of $p(x) = 2x^{3} + x^{2} + kx + 1$:\n\n$$p\\left(\\frac{1}{2}\\right) = \\frac{1}{4} + \\frac{1}{4} + \\frac{1}{2}k + 1 = \\frac{1}{2}k + \\frac{3}{2} = 0 \\implies k = -3$$",
-        "若 $ax - b$ 是因式，则根为 $x = \\frac{b}{a}$，所以 $p\\left(\\frac{b}{a}\\right) = 0$。\n\n$2x - 1$ 是 $p(x) = 2x^{3} + x^{2} + kx + 1$ 的因式：\n\n$$p\\left(\\frac{1}{2}\\right) = \\frac{1}{4} + \\frac{1}{4} + \\frac{1}{2}k + 1 = \\frac{1}{2}k + \\frac{3}{2} = 0 \\implies k = -3$$",
+        "By the factor theorem, a linear expression is a factor of a polynomial exactly when its root makes the polynomial zero. Substitute the root and solve for the unknown coefficient.\n\nIf $ax - b$ is a factor, the root is $x = \\frac{b}{a}$, so $p\\left(\\frac{b}{a}\\right) = 0$.\n\n$2x - 1$ is a factor of $p(x) = 2x^{3} + x^{2} + kx + 1$:\n\n$$p\\left(\\frac{1}{2}\\right) = \\frac{1}{4} + \\frac{1}{4} + \\frac{1}{2}k + 1 = \\frac{1}{2}k + \\frac{3}{2} = 0 \\implies k = -3$$",
+        "由因式定理，一个一次式是多项式的因式，当且仅当它的根使多项式等于零。代入这个根，解出未知的系数。\n\n若 $ax - b$ 是因式，则根为 $x = \\frac{b}{a}$，所以 $p\\left(\\frac{b}{a}\\right) = 0$。\n\n$2x - 1$ 是 $p(x) = 2x^{3} + x^{2} + kx + 1$ 的因式：\n\n$$p\\left(\\frac{1}{2}\\right) = \\frac{1}{4} + \\frac{1}{4} + \\frac{1}{2}k + 1 = \\frac{1}{2}k + \\frac{3}{2} = 0 \\implies k = -3$$",
       ),
       generate(rng) {
         let a: number;

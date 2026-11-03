@@ -475,8 +475,8 @@ export const commonLogarithm: TopicDef = {
       id: "solving-common-logarithm-equations",
       title: t("Solving $\\log x = c$", "解 $\\log x = c$"),
       explanation: t(
-        "Since $\\log x = c$ means $10^{c} = x$, an equation in a common logarithm is solved by raising $10$ to the value:\n\n$$3\\log x - 2 = 7 \\implies \\log x = 3 \\implies x = 10^{3} = 1000$$",
-        "因为 $\\log x = c$ 表示 $10^{c} = x$，解常用对数方程就是求 $10$ 的这个次幂：\n\n$$3\\log x - 2 = 7 \\implies \\log x = 3 \\implies x = 10^{3} = 1000$$",
+        "The common logarithm has base $10$. Isolate the logarithm first, then rewrite the equation in exponential form to find $x$.\n\nSince $\\log x = c$ means $10^{c} = x$, an equation in a common logarithm is solved by raising $10$ to the value:\n\n$$3\\log x - 2 = 7 \\implies \\log x = 3 \\implies x = 10^{3} = 1000$$",
+        "常用对数以 $10$ 为底。先把对数单独留在一边，再把方程改写成指数形式求出 $x$。\n\n因为 $\\log x = c$ 表示 $10^{c} = x$，解常用对数方程就是求 $10$ 的这个次幂：\n\n$$3\\log x - 2 = 7 \\implies \\log x = 3 \\implies x = 10^{3} = 1000$$",
       ),
       generate(rng) {
         const c = rng.int(-3, 5);
@@ -614,8 +614,8 @@ export const naturalLogarithm: TopicDef = {
       id: "inverse-properties-of-the-natural-logarithm",
       title: t("$e$ and $\\ln$ undo each other", "$e$ 与 $\\ln$ 互相抵消"),
       explanation: t(
-        "Raising $e$ to a power and taking $\\ln$ undo each other:\n\n$$\\ln e^{u} = u \\quad \\text{for every } u, \\qquad e^{\\ln x} = x \\quad \\text{for } x > 0.$$\n\nSo $e^{\\ln 7} = 7$ and $\\ln e^{2x - 5} = 2x - 5$.",
-        "求 $e$ 的幂与取 $\\ln$ 互相抵消：\n\n$$\\ln e^{u} = u \\quad \\text{（对任意 } u\\text{）}, \\qquad e^{\\ln x} = x \\quad \\text{（} x > 0\\text{）}。$$\n\n所以 $e^{\\ln 7} = 7$，$\\ln e^{2x - 5} = 2x - 5$。",
+        "The natural logarithm is the logarithm with base $e$, so it is the inverse of the function $e^{x}$, and applying one after the other returns the original input.\n\nRaising $e$ to a power and taking $\\ln$ undo each other:\n\n$$\\ln e^{u} = u \\quad \\text{for every } u, \\qquad e^{\\ln x} = x \\quad \\text{for } x > 0.$$\n\nSo $e^{\\ln 7} = 7$ and $\\ln e^{2x - 5} = 2x - 5$.",
+        "自然对数是以 $e$ 为底的对数，所以它是函数 $e^{x}$ 的反函数，先后作用这两个函数就回到原来的输入。\n\n求 $e$ 的幂与取 $\\ln$ 互相抵消：\n\n$$\\ln e^{u} = u \\quad \\text{（对任意 } u\\text{）}, \\qquad e^{\\ln x} = x \\quad \\text{（} x > 0\\text{）}。$$\n\n所以 $e^{\\ln 7} = 7$，$\\ln e^{2x - 5} = 2x - 5$。",
       ),
       generate(rng) {
         if (rng.bool()) {
@@ -751,8 +751,8 @@ export const simplifyingLogarithmicExpressions: TopicDef = {
       id: "arithmetic-with-logarithms",
       title: t("Arithmetic with logarithms", "对数的运算"),
       explanation: t(
-        "To evaluate an expression with several logarithms, evaluate each one, then do the arithmetic:\n\n$$2\\log_{3} 9 - \\log_{2} 8 + \\ln e^{4} = 2 \\cdot 2 - 3 + 4 = 5$$",
-        "计算含有几个对数的式子时，先分别求出每个对数，再做运算：\n\n$$2\\log_{3} 9 - \\log_{2} 8 + \\ln e^{4} = 2 \\cdot 2 - 3 + 4 = 5$$",
+        "Each logarithm asks which power of its base gives the argument. Answer that question for each one separately; the base can differ from term to term.\n\nTo evaluate an expression with several logarithms, evaluate each one, then do the arithmetic:\n\n$$2\\log_{3} 9 - \\log_{2} 8 + \\ln e^{4} = 2 \\cdot 2 - 3 + 4 = 5$$",
+        "每个对数问的都是底数的几次幂等于真数。对每个对数分别回答这个问题，各项的底数可以不同。\n\n计算含有几个对数的式子时，先分别求出每个对数，再做运算：\n\n$$2\\log_{3} 9 - \\log_{2} 8 + \\ln e^{4} = 2 \\cdot 2 - 3 + 4 = 5$$",
       ),
       generate(rng) {
         const term = (): { latex: string; value: Q } => {
@@ -878,8 +878,8 @@ export const productRuleForLogarithms: TopicDef = {
       id: "evaluating-with-the-product-rule",
       title: t("Evaluating with the product rule", "用积的法则求值"),
       explanation: t(
-        "Neither $\\log_{6} 4$ nor $\\log_{6} 9$ is a nice number, but their sum is:\n\n$$\\log_{6} 4 + \\log_{6} 9 = \\log_{6} 36 = 2$$\n\nCombine first, then evaluate.",
-        "$\\log_{6} 4$ 和 $\\log_{6} 9$ 都不是简单的数，但它们的和是：\n\n$$\\log_{6} 4 + \\log_{6} 9 = \\log_{6} 36 = 2$$\n\n先合并，再求值。",
+        "The product rule, $\\log_{b} M + \\log_{b} N = \\log_{b} MN$, lets you merge two logarithms with the same base into one, which is often easier to evaluate.\n\nNeither $\\log_{6} 4$ nor $\\log_{6} 9$ is a nice number, but their sum is:\n\n$$\\log_{6} 4 + \\log_{6} 9 = \\log_{6} 36 = 2$$\n\nCombine first, then evaluate.",
+        "积的法则 $\\log_{b} M + \\log_{b} N = \\log_{b} MN$ 可以把同底的两个对数合并成一个，往往更容易求值。\n\n$\\log_{6} 4$ 和 $\\log_{6} 9$ 都不是简单的数，但它们的和是：\n\n$$\\log_{6} 4 + \\log_{6} 9 = \\log_{6} 36 = 2$$\n\n先合并，再求值。",
       ),
       generate(rng) {
         const { b, c, M, N } = rng.pick(exactProducts);
@@ -981,8 +981,8 @@ export const quotientRuleForLogarithms: TopicDef = {
       id: "evaluating-with-the-quotient-rule",
       title: t("Evaluating with the quotient rule", "用商的法则求值"),
       explanation: t(
-        "As with sums, combine first, then evaluate:\n\n$$\\log_{2} 40 - \\log_{2} 5 = \\log_{2} 8 = 3, \\qquad \\log_{3} 2 - \\log_{3} 18 = \\log_{3} \\frac{1}{9} = -2$$",
-        "和求和一样，先合并，再求值：\n\n$$\\log_{2} 40 - \\log_{2} 5 = \\log_{2} 8 = 3, \\qquad \\log_{3} 2 - \\log_{3} 18 = \\log_{3} \\frac{1}{9} = -2$$",
+        "The quotient rule, $\\log_{b} M - \\log_{b} N = \\log_{b} \\frac{M}{N}$, merges a difference of logarithms with the same base into the logarithm of a quotient.\n\nAs with sums, combine first, then evaluate:\n\n$$\\log_{2} 40 - \\log_{2} 5 = \\log_{2} 8 = 3, \\qquad \\log_{3} 2 - \\log_{3} 18 = \\log_{3} \\frac{1}{9} = -2$$",
+        "商的法则 $\\log_{b} M - \\log_{b} N = \\log_{b} \\frac{M}{N}$ 把同底对数之差合并成一个商的对数。\n\n和求和一样，先合并，再求值：\n\n$$\\log_{2} 40 - \\log_{2} 5 = \\log_{2} 8 = 3, \\qquad \\log_{3} 2 - \\log_{3} 18 = \\log_{3} \\frac{1}{9} = -2$$",
       ),
       generate(rng) {
         for (;;) {
@@ -1142,8 +1142,8 @@ export const powerRuleForLogarithms: TopicDef = {
       id: "power-rule-with-unknown-arguments",
       title: t("Logarithms of powers of an unknown", "未知数的幂的对数"),
       explanation: t(
-        "If you know $\\log_{b} x$, the power rule gives the logarithm of every power of $x$. With $\\log_{b} x = 4$:\n\n$$\\log_{b} x^{3} = 3 \\cdot 4 = 12, \\qquad \\log_{b} \\sqrt{x} = \\frac{1}{2} \\cdot 4 = 2, \\qquad \\log_{b} \\frac{1}{x^{2}} = -2 \\cdot 4 = -8$$",
-        "已知 $\\log_{b} x$ 时，幂的法则给出 $x$ 的任何次幂的对数。若 $\\log_{b} x = 4$：\n\n$$\\log_{b} x^{3} = 3 \\cdot 4 = 12, \\qquad \\log_{b} \\sqrt{x} = \\frac{1}{2} \\cdot 4 = 2, \\qquad \\log_{b} \\frac{1}{x^{2}} = -2 \\cdot 4 = -8$$",
+        "The power rule, $\\log_{b} M^{k} = k\\log_{b} M$, moves an exponent in front of the logarithm. Roots and reciprocals are powers too, with fractional and negative exponents.\n\nIf you know $\\log_{b} x$, the power rule gives the logarithm of every power of $x$. With $\\log_{b} x = 4$:\n\n$$\\log_{b} x^{3} = 3 \\cdot 4 = 12, \\qquad \\log_{b} \\sqrt{x} = \\frac{1}{2} \\cdot 4 = 2, \\qquad \\log_{b} \\frac{1}{x^{2}} = -2 \\cdot 4 = -8$$",
+        "幂的法则 $\\log_{b} M^{k} = k\\log_{b} M$ 把指数移到对数前面。根式和倒数也是幂，指数分别是分数和负数。\n\n已知 $\\log_{b} x$ 时，幂的法则给出 $x$ 的任何次幂的对数。若 $\\log_{b} x = 4$：\n\n$$\\log_{b} x^{3} = 3 \\cdot 4 = 12, \\qquad \\log_{b} \\sqrt{x} = \\frac{1}{2} \\cdot 4 = 2, \\qquad \\log_{b} \\frac{1}{x^{2}} = -2 \\cdot 4 = -8$$",
       ),
       generate(rng) {
         const L = Q.of(rng.nonZero(-6, 9));

@@ -1270,8 +1270,8 @@ export const additionAndScalarMultiplicationOfCartesianVectorsIn2d: TopicDef = {
       id: "add-and-subtract-cartesian-vectors",
       title: t("Add and subtract 2D Cartesian vectors", "二维直角坐标向量的加减运算"),
       explanation: t(
-        "For vectors $\\mathbf{u} = \\langle u_1, u_2 \\rangle$ and $\\mathbf{v} = \\langle v_1, v_2 \\rangle$:\n\n$$\\mathbf{u} + \\mathbf{v} = \\langle u_1 + v_1,\\, u_2 + v_2 \\rangle$$\n\n$$\\mathbf{u} - \\mathbf{v} = \\langle u_1 - v_1,\\, u_2 - v_2 \\rangle$$",
-        "对于向量 $\\mathbf{u} = \\langle u_1, u_2 \\rangle$ 和 $\\mathbf{v} = \\langle v_1, v_2 \\rangle$：\n\n$$\\mathbf{u} + \\mathbf{v} = \\langle u_1 + v_1,\\, u_2 + v_2 \\rangle$$\n\n$$\\mathbf{u} - \\mathbf{v} = \\langle u_1 - v_1,\\, u_2 - v_2 \\rangle$$",
+        "Vectors in component form are added and subtracted one component at a time: the $x$-components together and the $y$-components together.\n\nFor vectors $\\mathbf{u} = \\langle u_1, u_2 \\rangle$ and $\\mathbf{v} = \\langle v_1, v_2 \\rangle$:\n\n$$\\mathbf{u} + \\mathbf{v} = \\langle u_1 + v_1,\\, u_2 + v_2 \\rangle$$\n\n$$\\mathbf{u} - \\mathbf{v} = \\langle u_1 - v_1,\\, u_2 - v_2 \\rangle$$",
+        "用分量表示的向量相加减时，逐个分量进行：$x$ 分量与 $x$ 分量运算，$y$ 分量与 $y$ 分量运算。\n\n对于向量 $\\mathbf{u} = \\langle u_1, u_2 \\rangle$ 和 $\\mathbf{v} = \\langle v_1, v_2 \\rangle$：\n\n$$\\mathbf{u} + \\mathbf{v} = \\langle u_1 + v_1,\\, u_2 + v_2 \\rangle$$\n\n$$\\mathbf{u} - \\mathbf{v} = \\langle u_1 - v_1,\\, u_2 - v_2 \\rangle$$",
       ),
       generate(rng) {
         const u1 = rng.pick([-7, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 7]);
@@ -1308,8 +1308,8 @@ export const additionAndScalarMultiplicationOfCartesianVectorsIn2d: TopicDef = {
       id: "scalar-multiplication-and-linear-combination-2d",
       title: t("Scalar multiplication and linear combinations in 2D", "二维向量的数乘与线性组合"),
       explanation: t(
-        "Multiplying vector $\\mathbf{v} = \\langle x, y \\rangle$ by scalar $k$ yields $k\\mathbf{v} = \\langle kx, ky \\rangle$.\n\nA linear combination is computed component-wise:\n\n$$a\\mathbf{u} + b\\mathbf{v} = \\langle a u_1 + b v_1,\\, a u_2 + b v_2 \\rangle$$",
-        "标量 $k$ 乘以向量 $\\mathbf{v} = \\langle x, y \\rangle$ 得 $k\\mathbf{v} = \\langle kx, ky \\rangle$。\n\n线性组合按分量分别计算：\n\n$$a\\mathbf{u} + b\\mathbf{v} = \\langle a u_1 + b v_1,\\, a u_2 + b v_2 \\rangle$$",
+        "A scalar stretches or shrinks a vector, and a negative scalar also reverses it. Each component is multiplied by the scalar.\n\nMultiplying vector $\\mathbf{v} = \\langle x, y \\rangle$ by scalar $k$ yields $k\\mathbf{v} = \\langle kx, ky \\rangle$.\n\nA linear combination is computed component-wise:\n\n$$a\\mathbf{u} + b\\mathbf{v} = \\langle a u_1 + b v_1,\\, a u_2 + b v_2 \\rangle$$",
+        "标量会把向量拉长或缩短，负的标量还会把它反向。每个分量都乘这个标量。\n\n标量 $k$ 乘以向量 $\\mathbf{v} = \\langle x, y \\rangle$ 得 $k\\mathbf{v} = \\langle kx, ky \\rangle$。\n\n线性组合按分量分别计算：\n\n$$a\\mathbf{u} + b\\mathbf{v} = \\langle a u_1 + b v_1,\\, a u_2 + b v_2 \\rangle$$",
       ),
       generate(rng) {
         const a = rng.pick([2, 3, 4, -2, -3]);

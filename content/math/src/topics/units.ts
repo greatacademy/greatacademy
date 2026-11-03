@@ -274,8 +274,8 @@ export const twoStepUnitConversions: TopicDef = {
       id: "two-steps-to-a-larger-unit",
       title: t("Two steps to a larger unit", "两步换算成较大的单位"),
       explanation: t(
-        "Going to a larger unit, both steps divide. To convert $45000$ mg to kilograms:\n\n$$45000\\text{ mg} = (45000 \\div 1000)\\text{ g} = 45\\text{ g}$$\n\n$$45\\text{ g} = (45 \\div 1000)\\text{ kg} = 0.045\\text{ kg}$$",
-        "换算成较大的单位时，两步都用除法。把 $45000$ mg 换算成千克：\n\n$$45000\\text{ mg} = (45000 \\div 1000)\\text{ g} = 45\\text{ g}$$\n\n$$45\\text{ g} = (45 \\div 1000)\\text{ kg} = 0.045\\text{ kg}$$",
+        "When there is no single conversion factor, go through an intermediate unit. A larger unit needs fewer of it, so each step divides by the conversion factor.\n\nGoing to a larger unit, both steps divide. To convert $45000$ mg to kilograms:\n\n$$45000\\text{ mg} = (45000 \\div 1000)\\text{ g} = 45\\text{ g}$$\n\n$$45\\text{ g} = (45 \\div 1000)\\text{ kg} = 0.045\\text{ kg}$$",
+        "没有直接的换算关系时，就借助一个中间单位。较大的单位所需的个数更少，所以每一步都除以换算率。\n\n换算成较大的单位时，两步都用除法。把 $45000$ mg 换算成千克：\n\n$$45000\\text{ mg} = (45000 \\div 1000)\\text{ g} = 45\\text{ g}$$\n\n$$45\\text{ g} = (45 \\div 1000)\\text{ kg} = 0.045\\text{ kg}$$",
       ),
       generate(rng) {
         const [from, base, to] = twoStepPair(rng, false);
@@ -1735,8 +1735,8 @@ export const inverseVariation: TopicDef = {
       id: "writing-inverse-variation-equations",
       title: t("Writing the equation", "写出方程"),
       explanation: t(
-        "Find $k = xy$ from a known pair and substitute it into $y = \\frac{k}{x}$. If $y = 6$ when $x = 4$, then $k = 24$ and\n\n$$y = \\frac{24}{x}$$",
-        "由一组已知的值求出 $k = xy$，代入 $y = \\frac{k}{x}$。若 $x = 4$ 时 $y = 6$，则 $k = 24$，\n\n$$y = \\frac{24}{x}$$",
+        "In an inverse variation the product of the two quantities stays constant: when one doubles, the other halves. That constant product is $k$.\n\nFind $k = xy$ from a known pair and substitute it into $y = \\frac{k}{x}$. If $y = 6$ when $x = 4$, then $k = 24$ and\n\n$$y = \\frac{24}{x}$$",
+        "在反比例关系中，两个量的乘积保持不变：一个量变为原来的两倍时，另一个量变为一半。这个不变的乘积就是 $k$。\n\n由一组已知的值求出 $k = xy$，代入 $y = \\frac{k}{x}$。若 $x = 4$ 时 $y = 6$，则 $k = 24$，\n\n$$y = \\frac{24}{x}$$",
       ),
       generate(rng) {
         const { x, y, k } = inverseData(rng);

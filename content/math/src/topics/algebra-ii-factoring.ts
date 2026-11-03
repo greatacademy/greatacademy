@@ -1184,8 +1184,8 @@ export const factoringBiquadraticExpressions: TopicDef = {
       id: "factoring-further",
       title: t("Factoring the factors further", "继续分解因式"),
       explanation: t(
-        "A factor $x^{2} - a^{2}$ with a square $a^{2}$ is a difference of squares; factor it to finish:\n\n$$x^{4} - 13x^{2} + 36 = (x^{2} - 4)(x^{2} - 9) = (x + 2)(x - 2)(x + 3)(x - 3)$$\n\n$$x^{4} + 3x^{2} - 4 = (x^{2} + 4)(x^{2} - 1) = (x^{2} + 4)(x + 1)(x - 1)$$",
-        "因式 $x^{2} - a^{2}$（$a^{2}$ 是平方数）是平方差，要继续分解：\n\n$$x^{4} - 13x^{2} + 36 = (x^{2} - 4)(x^{2} - 9) = (x + 2)(x - 2)(x + 3)(x - 3)$$\n\n$$x^{4} + 3x^{2} - 4 = (x^{2} + 4)(x^{2} - 1) = (x^{2} + 4)(x + 1)(x - 1)$$",
+        "A factorization is complete only when no factor can be factored again. After the first step, check each quadratic factor for a difference of squares.\n\nA factor $x^{2} - a^{2}$ with a square $a^{2}$ is a difference of squares; factor it to finish:\n\n$$x^{4} - 13x^{2} + 36 = (x^{2} - 4)(x^{2} - 9) = (x + 2)(x - 2)(x + 3)(x - 3)$$\n\n$$x^{4} + 3x^{2} - 4 = (x^{2} + 4)(x^{2} - 1) = (x^{2} + 4)(x + 1)(x - 1)$$",
+        "只有当每个因式都不能再分解时，因式分解才算完成。第一步之后，检查每个二次因式是不是平方差。\n\n因式 $x^{2} - a^{2}$（$a^{2}$ 是平方数）是平方差，要继续分解：\n\n$$x^{4} - 13x^{2} + 36 = (x^{2} - 4)(x^{2} - 9) = (x + 2)(x - 2)(x + 3)(x - 3)$$\n\n$$x^{4} + 3x^{2} - 4 = (x^{2} + 4)(x^{2} - 1) = (x^{2} + 4)(x + 1)(x - 1)$$",
       ),
       keyPrerequisites: ["factoring-higher-order-polynomials-as-a-difference-of-squares"],
       generate(rng) {

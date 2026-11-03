@@ -1070,8 +1070,8 @@ export const propertiesOfLinesInStandardForm: TopicDef = {
       id: "slope-from-standard-form",
       title: t("The slope", "斜率"),
       explanation: t(
-        "Solving $Ax + By = C$ for $y$ (with $B \\ne 0$) gives $y = -\\frac{A}{B}x + \\frac{C}{B}$, so the slope is\n\n$$m = -\\frac{A}{B}.$$\n\nFor $3x - 4y = 12$, $m = -\\frac{3}{-4} = \\frac{3}{4}$. Mind both signs.",
-        "把 $Ax + By = C$（$B \\ne 0$）对 $y$ 求解，得 $y = -\\frac{A}{B}x + \\frac{C}{B}$，所以斜率为\n\n$$m = -\\frac{A}{B}.$$\n\n对于 $3x - 4y = 12$，$m = -\\frac{3}{-4} = \\frac{3}{4}$。注意两个符号。",
+        "The slope of a line in standard form can be read from its coefficients without rewriting the whole equation.\n\nSolving $Ax + By = C$ for $y$ (with $B \\ne 0$) gives $y = -\\frac{A}{B}x + \\frac{C}{B}$, so the slope is\n\n$$m = -\\frac{A}{B}.$$\n\nFor $3x - 4y = 12$, $m = -\\frac{3}{-4} = \\frac{3}{4}$. Mind both signs.",
+        "标准形式的直线方程不必整个改写，也能由系数直接读出斜率。\n\n把 $Ax + By = C$（$B \\ne 0$）对 $y$ 求解，得 $y = -\\frac{A}{B}x + \\frac{C}{B}$，所以斜率为\n\n$$m = -\\frac{A}{B}.$$\n\n对于 $3x - 4y = 12$，$m = -\\frac{3}{-4} = \\frac{3}{4}$。注意两个符号。",
       ),
       generate(rng) {
         const [a, b] = [rng.nonZero(-7, 7), rng.nonZero(-7, 7)];

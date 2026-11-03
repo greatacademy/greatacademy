@@ -365,8 +365,8 @@ export const intervalNotation: TopicDef = {
       id: "interval-notation-to-inequality",
       title: t("From intervals to inequalities", "从区间到不等式"),
       explanation: t(
-        "To read an interval, put $x$ between its endpoints. A square bracket becomes $\\le$ and a parenthesis becomes $<$:\n\n$$[-4, 1) \\quad\\text{means}\\quad -4 \\le x < 1$$",
-        "读区间时，把 $x$ 放在两个端点之间。方括号变成 $\\le$，圆括号变成 $<$：\n\n$$[-4, 1) \\quad\\text{表示}\\quad -4 \\le x < 1$$",
+        "Interval notation lists the smallest and largest values of a set. A bracket means the endpoint is included, and a parenthesis means it is left out.\n\nTo read an interval, put $x$ between its endpoints. A square bracket becomes $\\le$ and a parenthesis becomes $<$:\n\n$$[-4, 1) \\quad\\text{means}\\quad -4 \\le x < 1$$",
+        "区间记号写出一个集合的最小值和最大值。方括号表示包含端点，圆括号表示不包含端点。\n\n读区间时，把 $x$ 放在两个端点之间。方括号变成 $\\le$，圆括号变成 $<$：\n\n$$[-4, 1) \\quad\\text{表示}\\quad -4 \\le x < 1$$",
       ),
       generate(rng) {
         const [lo, hi] = boundedEnds(rng);
@@ -418,8 +418,8 @@ export const intervalNotation: TopicDef = {
       id: "solving-in-interval-notation",
       title: t("Answers in interval notation", "用区间记号写解集"),
       explanation: t(
-        "Solve the double inequality as before, then write the solution set as an interval:\n\n$$-1 \\le 3x + 5 < 11 \\;\\Rightarrow\\; -2 \\le x < 2 \\;\\Rightarrow\\; [-2, 2)$$",
-        "像之前一样解连不等式，再把解集写成区间：\n\n$$-1 \\le 3x + 5 < 11 \\;\\Rightarrow\\; -2 \\le x < 2 \\;\\Rightarrow\\; [-2, 2)$$",
+        "The solution of a double inequality is a set of numbers between two endpoints, and interval notation describes it compactly. Each endpoint keeps the type of inequality it came with.\n\nSolve the double inequality as before, then write the solution set as an interval:\n\n$$-1 \\le 3x + 5 < 11 \\;\\Rightarrow\\; -2 \\le x < 2 \\;\\Rightarrow\\; [-2, 2)$$",
+        "连不等式的解是两个端点之间的一组数，用区间记号可以简洁地表示。每个端点保持原来不等号的类型。\n\n像之前一样解连不等式，再把解集写成区间：\n\n$$-1 \\le 3x + 5 < 11 \\;\\Rightarrow\\; -2 \\le x < 2 \\;\\Rightarrow\\; [-2, 2)$$",
       ),
       generate(rng) {
         const p = compound(rng, rng.bool(0.4));
@@ -486,8 +486,8 @@ export const unboundedIntervals: TopicDef = {
       id: "unbounded-intervals-to-inequalities",
       title: t("From unbounded intervals to inequalities", "从无界区间到不等式"),
       explanation: t(
-        "An interval that ends at $\\infty$ is a set $x > a$ or $x \\ge a$; one that starts at $-\\infty$ is $x < b$ or $x \\le b$:\n\n$$(-\\infty, 7] \\quad\\text{means}\\quad x \\le 7$$",
-        "以 $\\infty$ 结尾的区间是 $x > a$ 或 $x \\ge a$；以 $-\\infty$ 开头的区间是 $x < b$ 或 $x \\le b$：\n\n$$(-\\infty, 7] \\quad\\text{表示}\\quad x \\le 7$$",
+        "An interval with no end on one side uses the symbol $\\infty$ or $-\\infty$, which always takes a parenthesis because infinity is not a number that can be included.\n\nAn interval that ends at $\\infty$ is a set $x > a$ or $x \\ge a$; one that starts at $-\\infty$ is $x < b$ or $x \\le b$:\n\n$$(-\\infty, 7] \\quad\\text{means}\\quad x \\le 7$$",
+        "一侧没有端点的区间用 $\\infty$ 或 $-\\infty$ 表示。无穷大不是一个可以包含的数，所以总是用圆括号。\n\n以 $\\infty$ 结尾的区间是 $x > a$ 或 $x \\ge a$；以 $-\\infty$ 开头的区间是 $x < b$ 或 $x \\le b$：\n\n$$(-\\infty, 7] \\quad\\text{表示}\\quad x \\le 7$$",
       ),
       generate(rng) {
         const v = rayEnd(rng);
@@ -2353,8 +2353,8 @@ export const solvingEvenPowerEquations: TopicDef = {
       id: "even-powers-of-binomials",
       title: t("Even powers of an expression", "式子的偶次幂"),
       explanation: t(
-        "Take the even root of the whole expression with $\\pm$ and solve both linear equations:\n\n$$(x + 2)^{4} = 16 \\;\\Rightarrow\\; x + 2 = \\pm 2 \\;\\Rightarrow\\; x = 0 \\text{ or } x = -4$$",
-        "对整个式子开偶次方并加上 $\\pm$，再解两个一次方程：\n\n$$(x + 2)^{4} = 16 \\;\\Rightarrow\\; x + 2 = \\pm 2 \\;\\Rightarrow\\; x = 0 \\text{ 或 } x = -4$$",
+        "An even power hides the sign of what is inside, so a positive result comes from two values, one positive and one negative. Both lead to a solution.\n\nTake the even root of the whole expression with $\\pm$ and solve both linear equations:\n\n$$(x + 2)^{4} = 16 \\;\\Rightarrow\\; x + 2 = \\pm 2 \\;\\Rightarrow\\; x = 0 \\text{ or } x = -4$$",
+        "偶次幂会掩盖底数的符号，所以一个正的结果来自两个值，一正一负，两个都对应方程的解。\n\n对整个式子开偶次方并加上 $\\pm$，再解两个一次方程：\n\n$$(x + 2)^{4} = 16 \\;\\Rightarrow\\; x + 2 = \\pm 2 \\;\\Rightarrow\\; x = 0 \\text{ 或 } x = -4$$",
       ),
       generate(rng) {
         const n = rng.pick([4, 4, 6]);

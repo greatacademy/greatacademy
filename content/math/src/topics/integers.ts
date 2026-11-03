@@ -228,8 +228,8 @@ export const subtractingIntegers: TopicDef = {
       id: "subtracting-a-positive",
       title: t("Subtracting a positive integer", "减去正整数"),
       explanation: t(
-        "Subtracting a number is the same as adding its opposite: $a - b = a + (-b)$. For example, $3 - 8 = 3 + (-8) = -5$, and $-4 - 6 = -4 + (-6) = -10$.",
-        "减去一个数，等于加上这个数的相反数：$a - b = a + (-b)$。例如 $3 - 8 = 3 + (-8) = -5$，$-4 - 6 = -4 + (-6) = -10$。",
+        "On the number line, subtracting a positive number moves left. Rewriting the subtraction as adding the opposite lets you use the rules for adding integers.\n\nSubtracting a number is the same as adding its opposite: $a - b = a + (-b)$. For example, $3 - 8 = 3 + (-8) = -5$, and $-4 - 6 = -4 + (-6) = -10$.",
+        "在数轴上，减去一个正数就是向左移动。把减法改写成加上相反数，就可以用整数加法的法则来计算。\n\n减去一个数，等于加上这个数的相反数：$a - b = a + (-b)$。例如 $3 - 8 = 3 + (-8) = -5$，$-4 - 6 = -4 + (-6) = -10$。",
       ),
       keyPrerequisites: ["adding-integers"],
       generate(rng) {
@@ -251,8 +251,8 @@ export const subtractingIntegers: TopicDef = {
       id: "subtracting-a-negative",
       title: t("Subtracting a negative integer", "减去负整数"),
       explanation: t(
-        "To subtract a negative number, add its opposite, which is positive: $a - (-b) = a + b$. For example, $-9 - (-4) = -9 + 4 = -5$.",
-        "减去一个负数，等于加上它的相反数（一个正数）：$a - (-b) = a + b$。例如 $-9 - (-4) = -9 + 4 = -5$。",
+        "Taking away a negative amount, such as removing a debt, makes the total larger. That is why subtracting a negative number moves right on the number line.\n\nTo subtract a negative number, add its opposite, which is positive: $a - (-b) = a + b$. For example, $-9 - (-4) = -9 + 4 = -5$.",
+        "拿走一个负的量，比如免除一笔欠款，会使总量变大。所以减去一个负数在数轴上是向右移动。\n\n减去一个负数，等于加上它的相反数（一个正数）：$a - (-b) = a + b$。例如 $-9 - (-4) = -9 + 4 = -5$。",
       ),
       keyPrerequisites: ["adding-integers"],
       generate(rng) {
@@ -542,8 +542,8 @@ export const orderOfOperationsWithIntegers: TopicDef = {
       id: "with-exponents-and-division",
       title: t("Exponents and division", "含乘方与除法的运算"),
       explanation: t(
-        "Exponents come before multiplication and division, which come before addition and subtraction. For example, $-7 + (-2)^3 \\div 4 = -7 + (-8) \\div 4 = -7 + (-2) = -9$.",
-        "乘方先于乘除，乘除先于加减。例如 $-7 + (-2)^3 \\div 4 = -7 + (-8) \\div 4 = -7 + (-2) = -9$。",
+        "With negative numbers the order of operations does not change. Evaluate powers carefully: a negative base in parentheses raised to an odd power stays negative.\n\nExponents come before multiplication and division, which come before addition and subtraction. For example, $-7 + (-2)^3 \\div 4 = -7 + (-8) \\div 4 = -7 + (-2) = -9$.",
+        "有负数时运算顺序不变。计算乘方时要细心：括号里的负数作底数，奇次幂仍是负数。\n\n乘方先于乘除，乘除先于加减。例如 $-7 + (-2)^3 \\div 4 = -7 + (-8) \\div 4 = -7 + (-2) = -9$。",
       ),
       keyPrerequisites: ["powers-of-integers", "dividing-integers"],
       generate(rng) {

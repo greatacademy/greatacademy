@@ -348,8 +348,8 @@ export const factoringPerfectSquareTrinomials: TopicDef = {
       id: "two-variables",
       title: t("Perfect squares in two variables", "含两个变量的完全平方"),
       explanation: t(
-        "The same pattern works when the last term is a square of a variable term:\n\n$$a^{2} + 6ab + 9b^{2} = a^{2} + 2(a)(3b) + (3b)^{2} = (a + 3b)^{2}$$",
-        "当最后一项是含变量的项的平方时，同样适用：\n\n$$a^{2} + 6ab + 9b^{2} = a^{2} + 2(a)(3b) + (3b)^{2} = (a + 3b)^{2}$$",
+        "A trinomial is a perfect square when its first and last terms are squares and its middle term is twice the product of their roots.\n\nThe same pattern works when the last term is a square of a variable term:\n\n$$a^{2} + 6ab + 9b^{2} = a^{2} + 2(a)(3b) + (3b)^{2} = (a + 3b)^{2}$$",
+        "如果一个三项式的首末两项都是平方式，并且中间项等于它们的平方根之积的两倍，它就是完全平方式。\n\n当最后一项是含变量的项的平方时，同样适用：\n\n$$a^{2} + 6ab + 9b^{2} = a^{2} + 2(a)(3b) + (3b)^{2} = (a + 3b)^{2}$$",
       ),
       generate(rng) {
         const k = rng.int(1, 9);
@@ -534,8 +534,8 @@ export const factoringDifferencesOfSquares: TopicDef = {
       id: "squares-of-terms",
       title: t("Squares of terms with coefficients", "带系数的项的平方"),
       explanation: t(
-        "Each square may be a whole term, coefficient included: $9x^{2} = (3x)^{2}$ and $25y^{2} = (5y)^{2}$.\n\n$$9x^{2} - 25y^{2} = (3x)^{2} - (5y)^{2} = (3x + 5y)(3x - 5y)$$",
-        "平方可以是一个完整的项（包括系数）：$9x^{2} = (3x)^{2}$，$25y^{2} = (5y)^{2}$。\n\n$$9x^{2} - 25y^{2} = (3x)^{2} - (5y)^{2} = (3x + 5y)(3x - 5y)$$",
+        "A difference of two squares always factors as the sum times the difference of the square roots. First write each term as the square of something.\n\nEach square may be a whole term, coefficient included: $9x^{2} = (3x)^{2}$ and $25y^{2} = (5y)^{2}$.\n\n$$9x^{2} - 25y^{2} = (3x)^{2} - (5y)^{2} = (3x + 5y)(3x - 5y)$$",
+        "两个平方式之差总能分解成两个平方根之和乘它们之差。先把每一项写成某个式子的平方。\n\n平方可以是一个完整的项（包括系数）：$9x^{2} = (3x)^{2}$，$25y^{2} = (5y)^{2}$。\n\n$$9x^{2} - 25y^{2} = (3x)^{2} - (5y)^{2} = (3x + 5y)(3x - 5y)$$",
       ),
       generate(rng) {
         let p: number;
@@ -713,8 +713,8 @@ export const factoringTrinomials: TopicDef = {
       id: "two-variables",
       title: t("Trinomials in two variables", "含两个变量的三项式"),
       explanation: t(
-        "In $x^{2} + bxy + cy^{2}$ the same two numbers appear as coefficients of $y$:\n\n$$(x + my)(x + ny) = x^{2} + (m + n)xy + mny^{2}$$\n\nSo $x^{2} - xy - 12y^{2} = (x + 3y)(x - 4y)$, since $3 \\cdot (-4) = -12$ and $3 + (-4) = -1$.",
-        "在 $x^{2} + bxy + cy^{2}$ 中，同样的两个数作为 $y$ 的系数出现：\n\n$$(x + my)(x + ny) = x^{2} + (m + n)xy + mny^{2}$$\n\n所以 $x^{2} - xy - 12y^{2} = (x + 3y)(x - 4y)$，因为 $3 \\cdot (-4) = -12$，$3 + (-4) = -1$。",
+        "Factoring a trinomial in two variables works like factoring one in a single variable: look for two numbers whose product is the last coefficient and whose sum is the middle one.\n\nIn $x^{2} + bxy + cy^{2}$ the same two numbers appear as coefficients of $y$:\n\n$$(x + my)(x + ny) = x^{2} + (m + n)xy + mny^{2}$$\n\nSo $x^{2} - xy - 12y^{2} = (x + 3y)(x - 4y)$, since $3 \\cdot (-4) = -12$ and $3 + (-4) = -1$.",
+        "二元三项式的因式分解与一元的相同：找两个数，它们的积等于末项系数，和等于中间项系数。\n\n在 $x^{2} + bxy + cy^{2}$ 中，同样的两个数作为 $y$ 的系数出现：\n\n$$(x + my)(x + ny) = x^{2} + (m + n)xy + mny^{2}$$\n\n所以 $x^{2} - xy - 12y^{2} = (x + 3y)(x - 4y)$，因为 $3 \\cdot (-4) = -12$，$3 + (-4) = -1$。",
       ),
       generate(rng) {
         const [m, n] = drawMonic(rng, rng.bool());

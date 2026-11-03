@@ -1289,8 +1289,8 @@ export const squaringBinomials: TopicDef = {
       id: "two-variables",
       title: t("Squaring a binomial in two variables", "含两个变量的二项式平方"),
       explanation: t(
-        "The formulas hold for any two terms. With $a = 2x$ and $b = 5y$:\n\n$$(2x - 5y)^{2} = (2x)^{2} - 2(2x)(5y) + (5y)^{2} = 4x^{2} - 20xy + 25y^{2}$$",
-        "公式对任意两项都成立。取 $a = 2x$，$b = 5y$：\n\n$$(2x - 5y)^{2} = (2x)^{2} - 2(2x)(5y) + (5y)^{2} = 4x^{2} - 20xy + 25y^{2}$$",
+        "The square of a binomial is the square of the first term, plus or minus twice the product of the terms, plus the square of the last term. Square every coefficient too.\n\nThe formulas hold for any two terms. With $a = 2x$ and $b = 5y$:\n\n$$(2x - 5y)^{2} = (2x)^{2} - 2(2x)(5y) + (5y)^{2} = 4x^{2} - 20xy + 25y^{2}$$",
+        "二项式的平方等于首项的平方，加上或减去两项乘积的两倍，再加上末项的平方。系数也要平方。\n\n公式对任意两项都成立。取 $a = 2x$，$b = 5y$：\n\n$$(2x - 5y)^{2} = (2x)^{2} - 2(2x)(5y) + (5y)^{2} = 4x^{2} - 20xy + 25y^{2}$$",
       ),
       generate(rng) {
         const a = rng.pick([1, 1, 2, 3, 4, 5]);

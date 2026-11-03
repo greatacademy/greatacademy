@@ -510,8 +510,8 @@ export const evaluatingExpressionsContainingInverseTrigonometricFunctions: Topic
       id: "evaluating-arctan-special",
       title: t("Exact values of arctan", "反正切的精确值"),
       explanation: t(
-        "For $y = \\arctan x$, the angle must lie in $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$:\n\n$$\\arctan(1) = \\frac{\\pi}{4}, \\quad \\arctan(-\\sqrt{3}) = -\\frac{\\pi}{3}$$",
-        "对 $y = \\arctan x$，结果角必须位于 $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$：\n\n$$\\arctan(1) = \\frac{\\pi}{4}, \\quad \\arctan(-\\sqrt{3}) = -\\frac{\\pi}{3}$$",
+        "The inverse tangent gives the angle whose tangent is $x$. Many angles share a tangent, so the answer is the one between $-\\frac{\\pi}{2}$ and $\\frac{\\pi}{2}$.\n\nFor $y = \\arctan x$, the angle must lie in $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$:\n\n$$\\arctan(1) = \\frac{\\pi}{4}, \\quad \\arctan(-\\sqrt{3}) = -\\frac{\\pi}{3}$$",
+        "反正切给出正切等于 $x$ 的角。有许多角的正切相同，所以答案取 $-\\frac{\\pi}{2}$ 与 $\\frac{\\pi}{2}$ 之间的那个。\n\n对 $y = \\arctan x$，结果角必须位于 $\\left(-\\frac{\\pi}{2}, \\frac{\\pi}{2}\\right)$：\n\n$$\\arctan(1) = \\frac{\\pi}{4}, \\quad \\arctan(-\\sqrt{3}) = -\\frac{\\pi}{3}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1320,8 +1320,8 @@ export const theSumAndDifferenceFormulasForSine: TopicDef = {
       id: "sine-sum-difference-formulas",
       title: t("Sine sum and difference identities", "正弦和差公式形式"),
       explanation: t(
-        "The angle addition and subtraction formulas for sine are:\n\n$$\\sin(\\alpha + \\beta) = \\sin \\alpha \\cos \\beta + \\cos \\alpha \\sin \\beta, \\quad \\sin(\\alpha - \\beta) = \\sin \\alpha \\cos \\beta - \\cos \\alpha \\sin \\beta$$",
-        "正弦的和差角公式为：\n\n$$\\sin(\\alpha + \\beta) = \\sin \\alpha \\cos \\beta + \\cos \\alpha \\sin \\beta, \\quad \\sin(\\alpha - \\beta) = \\sin \\alpha \\cos \\beta - \\cos \\alpha \\sin \\beta$$",
+        "The sine of a sum is not the sum of the sines. These formulas express it with the sines and cosines of the two angles, and the sign in the middle matches the sign between the angles.\n\nThe angle addition and subtraction formulas for sine are:\n\n$$\\sin(\\alpha + \\beta) = \\sin \\alpha \\cos \\beta + \\cos \\alpha \\sin \\beta, \\quad \\sin(\\alpha - \\beta) = \\sin \\alpha \\cos \\beta - \\cos \\alpha \\sin \\beta$$",
+        "和的正弦不等于正弦之和。这些公式用两个角的正弦和余弦来表示它，中间的符号与两角之间的符号相同。\n\n正弦的和差角公式为：\n\n$$\\sin(\\alpha + \\beta) = \\sin \\alpha \\cos \\beta + \\cos \\alpha \\sin \\beta, \\quad \\sin(\\alpha - \\beta) = \\sin \\alpha \\cos \\beta - \\cos \\alpha \\sin \\beta$$",
       ),
       generate(rng) {
         const isSum = rng.bool();
@@ -1352,8 +1352,8 @@ export const theSumAndDifferenceFormulasForSine: TopicDef = {
       id: "collapsing-sine-to-special-values",
       title: t("Evaluating collapsed sine formulas", "正弦和差公式计算特殊角"),
       explanation: t(
-        "Collapsing expressions can yield special angles:\n\n$$\\sin(40^{\\circ})\\cos(20^{\\circ}) + \\cos(40^{\\circ})\\sin(20^{\\circ}) = \\sin(60^{\\circ}) = \\frac{\\sqrt{3}}{2}$$",
-        "将式子合并为单个正弦后可直接求出特殊角的值：\n\n$$\\sin(40^{\\circ})\\cos(20^{\\circ}) + \\cos(40^{\\circ})\\sin(20^{\\circ}) = \\sin(60^{\\circ}) = \\frac{\\sqrt{3}}{2}$$",
+        "An expression of the form $\\sin\\alpha\\cos\\beta \\pm \\cos\\alpha\\sin\\beta$ can be read backwards as the sine of a single angle, which is often a special angle.\n\nCollapsing expressions can yield special angles:\n\n$$\\sin(40^{\\circ})\\cos(20^{\\circ}) + \\cos(40^{\\circ})\\sin(20^{\\circ}) = \\sin(60^{\\circ}) = \\frac{\\sqrt{3}}{2}$$",
+        "形如 $\\sin\\alpha\\cos\\beta \\pm \\cos\\alpha\\sin\\beta$ 的式子可以反过来看成一个角的正弦，这个角往往是特殊角。\n\n将式子合并为单个正弦后可直接求出特殊角的值：\n\n$$\\sin(40^{\\circ})\\cos(20^{\\circ}) + \\cos(40^{\\circ})\\sin(20^{\\circ}) = \\sin(60^{\\circ}) = \\frac{\\sqrt{3}}{2}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1427,8 +1427,8 @@ export const theSumAndDifferenceFormulasForCosine: TopicDef = {
       id: "cosine-sum-difference-formulas",
       title: t("Cosine sum and difference identities", "余弦和差公式形式"),
       explanation: t(
-        "Note the sign flip in cosine formulas:\n\n$$\\cos(\\alpha + \\beta) = \\cos \\alpha \\cos \\beta - \\sin \\alpha \\sin \\beta, \\quad \\cos(\\alpha - \\beta) = \\cos \\alpha \\cos \\beta + \\sin \\alpha \\sin \\beta$$",
-        "注意余弦和差公式中的正负号反转：\n\n$$\\cos(\\alpha + \\beta) = \\cos \\alpha \\cos \\beta - \\sin \\alpha \\sin \\beta, \\quad \\cos(\\alpha - \\beta) = \\cos \\alpha \\cos \\beta + \\sin \\alpha \\sin \\beta$$",
+        "The cosine formulas multiply cosine with cosine and sine with sine. The sign in the middle is the opposite of the sign between the angles.\n\nNote the sign flip in cosine formulas:\n\n$$\\cos(\\alpha + \\beta) = \\cos \\alpha \\cos \\beta - \\sin \\alpha \\sin \\beta, \\quad \\cos(\\alpha - \\beta) = \\cos \\alpha \\cos \\beta + \\sin \\alpha \\sin \\beta$$",
+        "余弦公式是余弦乘余弦、正弦乘正弦。中间的符号与两角之间的符号相反。\n\n注意余弦和差公式中的正负号反转：\n\n$$\\cos(\\alpha + \\beta) = \\cos \\alpha \\cos \\beta - \\sin \\alpha \\sin \\beta, \\quad \\cos(\\alpha - \\beta) = \\cos \\alpha \\cos \\beta + \\sin \\alpha \\sin \\beta$$",
       ),
       generate(rng) {
         const isSum = rng.bool();
@@ -1459,8 +1459,8 @@ export const theSumAndDifferenceFormulasForCosine: TopicDef = {
       id: "collapsing-cosine-to-special-values",
       title: t("Evaluating collapsed cosine formulas", "余弦和差公式计算特殊角"),
       explanation: t(
-        "Collapsing terms with the cosine formula:\n\n$$\\cos(70^{\\circ})\\cos(10^{\\circ}) + \\sin(70^{\\circ})\\sin(10^{\\circ}) = \\cos(60^{\\circ}) = \\frac{1}{2}$$",
-        "利用余弦和差公式合并求特殊角：\n\n$$\\cos(70^{\\circ})\\cos(10^{\\circ}) + \\sin(70^{\\circ})\\sin(10^{\\circ}) = \\cos(60^{\\circ}) = \\frac{1}{2}$$",
+        "An expression of the form $\\cos\\alpha\\cos\\beta \\mp \\sin\\alpha\\sin\\beta$ can be read backwards as the cosine of a sum or difference, which is often a special angle.\n\nCollapsing terms with the cosine formula:\n\n$$\\cos(70^{\\circ})\\cos(10^{\\circ}) + \\sin(70^{\\circ})\\sin(10^{\\circ}) = \\cos(60^{\\circ}) = \\frac{1}{2}$$",
+        "形如 $\\cos\\alpha\\cos\\beta \\mp \\sin\\alpha\\sin\\beta$ 的式子可以反过来看成两角和或差的余弦，这个角往往是特殊角。\n\n利用余弦和差公式合并求特殊角：\n\n$$\\cos(70^{\\circ})\\cos(10^{\\circ}) + \\sin(70^{\\circ})\\sin(10^{\\circ}) = \\cos(60^{\\circ}) = \\frac{1}{2}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -2102,8 +2102,8 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
       id: "double-angle-formula-for-sine-statement",
       title: t("The double-angle formula for sine", "正弦二倍角公式的陈述"),
       explanation: t(
-        "Applying the addition formula with both angles equal gives:\n\n$$\\sin(2\\theta) = \\sin(\\theta + \\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$",
-        "将和角公式中两个角取相同值，即得：\n\n$$\\sin(2\\theta) = \\sin(\\theta + \\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$",
+        "The double-angle formula is a special case of the sum formula, so it does not need to be memorized separately. Note that $\\sin(2\\theta)$ is not $2\\sin\\theta$.\n\nApplying the addition formula with both angles equal gives:\n\n$$\\sin(2\\theta) = \\sin(\\theta + \\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$",
+        "二倍角公式是和角公式的特例，所以不必另外记忆。注意 $\\sin(2\\theta)$ 不等于 $2\\sin\\theta$。\n\n将和角公式中两个角取相同值，即得：\n\n$$\\sin(2\\theta) = \\sin(\\theta + \\theta) = \\sin\\theta\\cos\\theta + \\cos\\theta\\sin\\theta = 2\\sin\\theta\\cos\\theta$$",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u", "A"]);
@@ -2163,8 +2163,8 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
       id: "evaluating-sin-double-angle",
       title: t("Evaluating sin(2θ) from given values", "由已知值求 sin(2θ)"),
       explanation: t(
-        "If $\\sin\\theta = \\frac{3}{5}$ and $\\theta$ is in the first quadrant, then $\\cos\\theta = \\frac{4}{5}$ (from the Pythagorean identity) and:\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\frac{4}{5} = \\frac{24}{25}$$",
-        "若 $\\sin\\theta = \\frac{3}{5}$ 且 $\\theta$ 在第一象限，则由勾股恒等式得 $\\cos\\theta = \\frac{4}{5}$，从而：\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\frac{4}{5} = \\frac{24}{25}$$",
+        "To use $\\sin(2\\theta) = 2\\sin\\theta\\cos\\theta$ you need both the sine and the cosine of $\\theta$. Find the missing one from the Pythagorean identity and the quadrant.\n\nIf $\\sin\\theta = \\frac{3}{5}$ and $\\theta$ is in the first quadrant, then $\\cos\\theta = \\frac{4}{5}$ (from the Pythagorean identity) and:\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\frac{4}{5} = \\frac{24}{25}$$",
+        "要用 $\\sin(2\\theta) = 2\\sin\\theta\\cos\\theta$，需要同时知道 $\\theta$ 的正弦和余弦。由勾股恒等式和所在象限求出缺少的那个。\n\n若 $\\sin\\theta = \\frac{3}{5}$ 且 $\\theta$ 在第一象限，则由勾股恒等式得 $\\cos\\theta = \\frac{4}{5}$，从而：\n\n$$\\sin(2\\theta) = 2\\cdot\\frac{3}{5}\\cdot\\frac{4}{5} = \\frac{24}{25}$$",
       ),
       generate(rng) {
         const [a, b, c] = rng.pick([
@@ -2209,8 +2209,8 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
       id: "rewriting-products-as-sin-double-angle",
       title: t("Rewriting products using the double-angle formula", "用二倍角公式改写乘积"),
       explanation: t(
-        "The product $6\\sin x\\cos x$ can be rewritten as $3\\cdot(2\\sin x\\cos x) = 3\\sin(2x)$.",
-        "乘积 $6\\sin x\\cos x$ 可改写为 $3\\cdot(2\\sin x\\cos x) = 3\\sin(2x)$。",
+        "A product of sine and cosine of the same angle can be written as a single sine of the double angle. Pull out a factor of $2$ first.\n\nThe product $6\\sin x\\cos x$ can be rewritten as $3\\cdot(2\\sin x\\cos x) = 3\\sin(2x)$.",
+        "同一个角的正弦与余弦之积可以写成二倍角的正弦。先凑出因数 $2$。\n\n乘积 $6\\sin x\\cos x$ 可改写为 $3\\cdot(2\\sin x\\cos x) = 3\\sin(2x)$。",
       ),
       generate(rng) {
         const k = rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -2435,8 +2435,8 @@ export const theDoubleAngleFormulaForCosine: TopicDef = {
       id: "three-forms-of-cos-double-angle",
       title: t("The three forms of the cosine double-angle formula", "余弦二倍角公式的三种形式"),
       explanation: t(
-        "From $\\cos(\\alpha+\\beta) = \\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta$ with $\\alpha=\\beta=\\theta$:\n\n$$\\cos(2\\theta) = \\cos^2\\theta - \\sin^2\\theta = 2\\cos^2\\theta - 1 = 1 - 2\\sin^2\\theta$$\n\nThe last two forms use $\\sin^2\\theta + \\cos^2\\theta = 1$.",
-        "由余弦和角公式令 $\\alpha=\\beta=\\theta$，得：\n\n$$\\cos(2\\theta) = \\cos^2\\theta - \\sin^2\\theta = 2\\cos^2\\theta - 1 = 1 - 2\\sin^2\\theta$$\n\n后两种形式利用了 $\\sin^2\\theta + \\cos^2\\theta = 1$。",
+        "The cosine double-angle formula has three equivalent forms. Choose the one that uses the information you have, sine only, cosine only, or both.\n\nFrom $\\cos(\\alpha+\\beta) = \\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta$ with $\\alpha=\\beta=\\theta$:\n\n$$\\cos(2\\theta) = \\cos^2\\theta - \\sin^2\\theta = 2\\cos^2\\theta - 1 = 1 - 2\\sin^2\\theta$$\n\nThe last two forms use $\\sin^2\\theta + \\cos^2\\theta = 1$.",
+        "余弦的二倍角公式有三种等价形式。根据已知条件选择：只有正弦、只有余弦，或者两者都有。\n\n由余弦和角公式令 $\\alpha=\\beta=\\theta$，得：\n\n$$\\cos(2\\theta) = \\cos^2\\theta - \\sin^2\\theta = 2\\cos^2\\theta - 1 = 1 - 2\\sin^2\\theta$$\n\n后两种形式利用了 $\\sin^2\\theta + \\cos^2\\theta = 1$。",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -2498,8 +2498,8 @@ export const theDoubleAngleFormulaForCosine: TopicDef = {
       id: "evaluating-cos-double-angle",
       title: t("Evaluating cos(2θ) from a given value", "由已知值求 cos(2θ)"),
       explanation: t(
-        "If $\\sin\\theta = \\frac{5}{13}$, use the form $1 - 2\\sin^2\\theta$ (only sine needed):\n\n$$\\cos(2\\theta) = 1 - 2\\left(\\frac{5}{13}\\right)^2 = 1 - \\frac{50}{169} = \\frac{119}{169}$$",
-        "若 $\\sin\\theta = \\frac{5}{13}$，使用只含正弦的形式 $1 - 2\\sin^2\\theta$：\n\n$$\\cos(2\\theta) = 1 - 2\\left(\\frac{5}{13}\\right)^2 = 1 - \\frac{50}{169} = \\frac{119}{169}$$",
+        "Picking the form that matches the given ratio saves a step and avoids worrying about the sign of the other ratio.\n\nIf $\\sin\\theta = \\frac{5}{13}$, use the form $1 - 2\\sin^2\\theta$ (only sine needed):\n\n$$\\cos(2\\theta) = 1 - 2\\left(\\frac{5}{13}\\right)^2 = 1 - \\frac{50}{169} = \\frac{119}{169}$$",
+        "选用与已知三角比相对应的形式，可以省去一步，也不用考虑另一个三角比的符号。\n\n若 $\\sin\\theta = \\frac{5}{13}$，使用只含正弦的形式 $1 - 2\\sin^2\\theta$：\n\n$$\\cos(2\\theta) = 1 - 2\\left(\\frac{5}{13}\\right)^2 = 1 - \\frac{50}{169} = \\frac{119}{169}$$",
       ),
       generate(rng) {
         const [a, b, c] = rng.pick([

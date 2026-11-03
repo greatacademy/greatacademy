@@ -992,8 +992,8 @@ export const combiningGraphTransformationsThreeOrMoreOperations: TopicDef = {
       id: "points-under-several-transformations",
       title: t("Following a point", "追踪一个点"),
       explanation: t(
-        "For $y = a f(b(x - h)) + k$, the point $(x, y)$ of $f$ moves to\n\n$$\\left(\\frac{x}{b} + h,\\ ay + k\\right).$$\n\nFor $y = 3f(2(x + 1)) - 4$, the point $(6, 2)$ moves to $\\left(\\frac{6}{2} - 1,\\ 3 \\cdot 2 - 4\\right) = (2, 2)$.",
-        "对于 $y = a f(b(x - h)) + k$，$f$ 上的点 $(x, y)$ 移到\n\n$$\\left(\\frac{x}{b} + h,\\ ay + k\\right)。$$\n\n对于 $y = 3f(2(x + 1)) - 4$，点 $(6, 2)$ 移到 $\\left(\\frac{6}{2} - 1,\\ 3 \\cdot 2 - 4\\right) = (2, 2)$。",
+        "Changes inside the function act on $x$ and are undone in reverse, while changes outside act on $y$ directly. Track a single point through each transformation.\n\nFor $y = a f(b(x - h)) + k$, the point $(x, y)$ of $f$ moves to\n\n$$\\left(\\frac{x}{b} + h,\\ ay + k\\right).$$\n\nFor $y = 3f(2(x + 1)) - 4$, the point $(6, 2)$ moves to $\\left(\\frac{6}{2} - 1,\\ 3 \\cdot 2 - 4\\right) = (2, 2)$.",
+        "函数内部的变化作用于 $x$，要反过来理解；函数外部的变化直接作用于 $y$。跟踪一个点经过每一次变换的位置。\n\n对于 $y = a f(b(x - h)) + k$，$f$ 上的点 $(x, y)$ 移到\n\n$$\\left(\\frac{x}{b} + h,\\ ay + k\\right)。$$\n\n对于 $y = 3f(2(x + 1)) - 4$，点 $(6, 2)$ 移到 $\\left(\\frac{6}{2} - 1,\\ 3 \\cdot 2 - 4\\right) = (2, 2)$。",
       ),
       generate(rng) {
         const g = threeTf(rng);

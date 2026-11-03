@@ -2072,8 +2072,8 @@ export const theDeterminantOfA2x2Matrix: TopicDef = {
       id: "evaluating-2x2-determinants",
       title: t("Evaluating determinants of 2x2 matrices", "计算二阶矩阵的行列式"),
       explanation: t(
-        "The determinant of a $2 \\times 2$ matrix $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ is denoted $\\det(A)$ or $\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix}$ and is defined as:\n\n$$\\det(A) = ad - bc$$",
-        "$2 \\times 2$ 矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 的行列式记作 $\\det(A)$ 或 $\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix}$，其计算公式为：\n\n$$\\det(A) = ad - bc$$",
+        "The determinant of a $2 \\times 2$ matrix is the product of the main diagonal minus the product of the other diagonal. Watch the signs of negative entries.\n\nThe determinant of a $2 \\times 2$ matrix $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ is denoted $\\det(A)$ or $\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix}$ and is defined as:\n\n$$\\det(A) = ad - bc$$",
+        "$2 \\times 2$ 矩阵的行列式等于主对角线上两数之积减去另一条对角线上两数之积。注意负数元素的符号。\n\n$2 \\times 2$ 矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 的行列式记作 $\\det(A)$ 或 $\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix}$，其计算公式为：\n\n$$\\det(A) = ad - bc$$",
       ),
       generate(rng) {
         const pool = [-9, -8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9];

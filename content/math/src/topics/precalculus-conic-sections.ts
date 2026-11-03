@@ -1208,8 +1208,8 @@ export const equationsOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
       id: "standard-form-with-center-h-k-hyperbola",
       title: t("Standard form of a translated hyperbola", "平移双曲线的标准方程"),
       explanation: t(
-        "For a hyperbola centered at $(h, k)$:\n\n- Horizontal transverse axis:\n$$\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$$\n\n- Vertical transverse axis:\n$$\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$$",
-        "中心在 $(h, k)$ 的双曲线标准方程：\n\n- 实轴水平：\n$$\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$$\n\n- 实轴竖直：\n$$\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$$",
+        "Moving the center from the origin to $(h, k)$ replaces $x$ by $x - h$ and $y$ by $y - k$. The positive term tells which way the hyperbola opens, and $a$ always goes with it.\n\nFor a hyperbola centered at $(h, k)$:\n\n- Horizontal transverse axis:\n$$\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$$\n\n- Vertical transverse axis:\n$$\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$$",
+        "把中心从原点移到 $(h, k)$，就是把 $x$ 换成 $x - h$，把 $y$ 换成 $y - k$。正的那一项决定双曲线的开口方向，$a$ 总是与它对应。\n\n中心在 $(h, k)$ 的双曲线标准方程：\n\n- 实轴水平：\n$$\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$$\n\n- 实轴竖直：\n$$\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$$",
       ),
       generate(rng) {
         const h = rng.nonZero(-6, 6);

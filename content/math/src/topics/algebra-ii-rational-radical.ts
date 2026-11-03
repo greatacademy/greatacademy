@@ -899,8 +899,8 @@ export const dividingRationalExpressions: TopicDef = {
       id: "dividing-monomial-fractions",
       title: t("Monomial fractions", "单项式分式"),
       explanation: t(
-        "To divide by a fraction, multiply by its reciprocal: flip the **second** fraction only.\n\n$$\\frac{4x^{3}}{5y} \\div \\frac{2x}{15y^{2}} = \\frac{4x^{3}}{5y} \\cdot \\frac{15y^{2}}{2x} = 6x^{2}y$$",
-        "除以一个分式等于乘以它的倒数：只把**第二个**分式颠倒过来。\n\n$$\\frac{4x^{3}}{5y} \\div \\frac{2x}{15y^{2}} = \\frac{4x^{3}}{5y} \\cdot \\frac{15y^{2}}{2x} = 6x^{2}y$$",
+        "Rational expressions divide just like numerical fractions. After flipping the divisor, multiply and cancel common factors of the coefficients and of each variable.\n\nTo divide by a fraction, multiply by its reciprocal: flip the **second** fraction only.\n\n$$\\frac{4x^{3}}{5y} \\div \\frac{2x}{15y^{2}} = \\frac{4x^{3}}{5y} \\cdot \\frac{15y^{2}}{2x} = 6x^{2}y$$",
+        "分式的除法与数的分数相同。把除式颠倒后相乘，再约去系数和每个字母的公因式。\n\n除以一个分式等于乘以它的倒数：只把**第二个**分式颠倒过来。\n\n$$\\frac{4x^{3}}{5y} \\div \\frac{2x}{15y^{2}} = \\frac{4x^{3}}{5y} \\cdot \\frac{15y^{2}}{2x} = 6x^{2}y$$",
       ),
       keyPrerequisites: ["dividing-fractions"],
       generate(rng) {
@@ -1047,8 +1047,8 @@ export const simplifyingComplexFractions: TopicDef = {
       id: "a-fraction-over-a-fraction",
       title: t("A fraction over a fraction", "分式除以分式"),
       explanation: t(
-        "A **complex fraction** has fractions in its numerator or denominator. A fraction over a fraction is a division: $\\dfrac{\\;\\frac{a}{b}\\;}{\\frac{c}{d}} = \\frac{a}{b} \\div \\frac{c}{d} = \\frac{a}{b} \\cdot \\frac{d}{c}$.\n\n$$\\frac{\\;\\frac{6}{x + 2}\\;}{\\frac{4}{(x + 2)(x - 1)}} = \\frac{6}{x + 2} \\cdot \\frac{(x + 2)(x - 1)}{4} = \\frac{3(x - 1)}{2}$$",
-        "分子或分母中含有分式的分式叫**繁分式**。分式除以分式就是除法：$\\dfrac{\\;\\frac{a}{b}\\;}{\\frac{c}{d}} = \\frac{a}{b} \\div \\frac{c}{d} = \\frac{a}{b} \\cdot \\frac{d}{c}$。\n\n$$\\frac{\\;\\frac{6}{x + 2}\\;}{\\frac{4}{(x + 2)(x - 1)}} = \\frac{6}{x + 2} \\cdot \\frac{(x + 2)(x - 1)}{4} = \\frac{3(x - 1)}{2}$$",
+        "Treat the main fraction bar as a division sign.\n\nA **complex fraction** has fractions in its numerator or denominator. A fraction over a fraction is a division: $\\dfrac{\\;\\frac{a}{b}\\;}{\\frac{c}{d}} = \\frac{a}{b} \\div \\frac{c}{d} = \\frac{a}{b} \\cdot \\frac{d}{c}$.\n\n$$\\frac{\\;\\frac{6}{x + 2}\\;}{\\frac{4}{(x + 2)(x - 1)}} = \\frac{6}{x + 2} \\cdot \\frac{(x + 2)(x - 1)}{4} = \\frac{3(x - 1)}{2}$$",
+        "把主分数线看作除号。\n\n分子或分母中含有分式的分式叫**繁分式**。分式除以分式就是除法：$\\dfrac{\\;\\frac{a}{b}\\;}{\\frac{c}{d}} = \\frac{a}{b} \\div \\frac{c}{d} = \\frac{a}{b} \\cdot \\frac{d}{c}$。\n\n$$\\frac{\\;\\frac{6}{x + 2}\\;}{\\frac{4}{(x + 2)(x - 1)}} = \\frac{6}{x + 2} \\cdot \\frac{(x + 2)(x - 1)}{4} = \\frac{3(x - 1)}{2}$$",
       ),
       generate(rng) {
         for (;;) {
@@ -1126,8 +1126,8 @@ export const simplifyingComplexFractions: TopicDef = {
       id: "complex-fractions-that-factor",
       title: t("Complex fractions that factor", "可以分解的繁分式"),
       explanation: t(
-        "After clearing the small fractions, factor and cancel:\n\n$$\\frac{1 - \\frac{9}{x^{2}}}{1 + \\frac{3}{x}} = \\frac{x^{2} - 9}{x^{2} + 3x} = \\frac{(x + 3)(x - 3)}{x(x + 3)} = \\frac{x - 3}{x}$$\n\nHere the LCD of $\\frac{9}{x^{2}}$ and $\\frac{3}{x}$ is $x^{2}$.",
-        "消去小分式之后，再分解因式并约分：\n\n$$\\frac{1 - \\frac{9}{x^{2}}}{1 + \\frac{3}{x}} = \\frac{x^{2} - 9}{x^{2} + 3x} = \\frac{(x + 3)(x - 3)}{x(x + 3)} = \\frac{x - 3}{x}$$\n\n这里 $\\frac{9}{x^{2}}$ 与 $\\frac{3}{x}$ 的最简公分母是 $x^{2}$。",
+        "When the numerator or denominator is a sum with fractions, multiply both by the least common denominator of all the small fractions. That clears them in one step.\n\nAfter clearing the small fractions, factor and cancel:\n\n$$\\frac{1 - \\frac{9}{x^{2}}}{1 + \\frac{3}{x}} = \\frac{x^{2} - 9}{x^{2} + 3x} = \\frac{(x + 3)(x - 3)}{x(x + 3)} = \\frac{x - 3}{x}$$\n\nHere the LCD of $\\frac{9}{x^{2}}$ and $\\frac{3}{x}$ is $x^{2}$.",
+        "当分子或分母是含分式的和时，把它们同时乘所有小分式的最简公分母，一步就能去掉这些分式。\n\n消去小分式之后，再分解因式并约分：\n\n$$\\frac{1 - \\frac{9}{x^{2}}}{1 + \\frac{3}{x}} = \\frac{x^{2} - 9}{x^{2} + 3x} = \\frac{(x + 3)(x - 3)}{x(x + 3)} = \\frac{x - 3}{x}$$\n\n这里 $\\frac{9}{x^{2}}$ 与 $\\frac{3}{x}$ 的最简公分母是 $x^{2}$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-9, 9);

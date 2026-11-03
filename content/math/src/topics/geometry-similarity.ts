@@ -2966,8 +2966,8 @@ export const theTriangleProportionalityTheorem: TopicDef = {
       id: "proportionality-with-algebra",
       title: t("Proportionality with algebra", "含未知数的比例"),
       explanation: t(
-        `When a segment is an expression, write the proportion, cross-multiply and solve.\n\nWith $AD = 4$, $DB = 6$, $AE = x + 2$ and $EC = 9$:${steps("\\frac{4}{6} = \\frac{x + 2}{9} \\quad\\Rightarrow\\quad 6(x + 2) = 36 \\quad\\Rightarrow\\quad x = 4")}`,
-        `当一条线段是式子时，写出比例式，交叉相乘再求解。\n\n若 $AD = 4$，$DB = 6$，$AE = x + 2$，$EC = 9$：${steps("\\frac{4}{6} = \\frac{x + 2}{9} \\quad\\Rightarrow\\quad 6(x + 2) = 36 \\quad\\Rightarrow\\quad x = 4")}`,
+        `A line parallel to one side of a triangle cuts the other two sides in the same ratio, so $\\frac{AD}{DB} = \\frac{AE}{EC}$ holds even when some of the lengths are unknown.\n\nWhen a segment is an expression, write the proportion, cross-multiply and solve.\n\nWith $AD = 4$, $DB = 6$, $AE = x + 2$ and $EC = 9$:${steps("\\frac{4}{6} = \\frac{x + 2}{9} \\quad\\Rightarrow\\quad 6(x + 2) = 36 \\quad\\Rightarrow\\quad x = 4")}`,
+        `平行于三角形一边的直线截另外两边所得的线段成比例，所以即使有些长度未知，$\\frac{AD}{DB} = \\frac{AE}{EC}$ 仍然成立。\n\n当一条线段是式子时，写出比例式，交叉相乘再求解。\n\n若 $AD = 4$，$DB = 6$，$AE = x + 2$，$EC = 9$：${steps("\\frac{4}{6} = \\frac{x + 2}{9} \\quad\\Rightarrow\\quad 6(x + 2) = 36 \\quad\\Rightarrow\\quad x = 4")}`,
       ),
       keyPrerequisites: ["proportions"],
       generate(rng) {

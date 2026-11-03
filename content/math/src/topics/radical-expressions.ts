@@ -1044,8 +1044,8 @@ export const addingAndSubtractingRadicalExpressions: TopicDef = {
       id: "simplifying-before-combining-with-variables",
       title: t("Simplifying before combining", "先化简再合并"),
       explanation: t(
-        "Terms that look different may be alike once each root is simplified:\n\n$$\\sqrt{12x^{3}} + x\\sqrt{27x} = 2x\\sqrt{3x} + 3x\\sqrt{3x} = 5x\\sqrt{3x}$$",
-        "看起来不同的项，化简每个根式后可能是同类项：\n\n$$\\sqrt{12x^{3}} + x\\sqrt{27x} = 2x\\sqrt{3x} + 3x\\sqrt{3x} = 5x\\sqrt{3x}$$",
+        "Only like radicals, with the same index and the same radicand, can be added. Simplify each radical first, because that often reveals terms that can be combined.\n\nTerms that look different may be alike once each root is simplified:\n\n$$\\sqrt{12x^{3}} + x\\sqrt{27x} = 2x\\sqrt{3x} + 3x\\sqrt{3x} = 5x\\sqrt{3x}$$",
+        "只有根指数相同、被开方式也相同的同类根式才能相加。先把每个根式化简，常常就能看出可以合并的项。\n\n看起来不同的项，化简每个根式后可能是同类项：\n\n$$\\sqrt{12x^{3}} + x\\sqrt{27x} = 2x\\sqrt{3x} + 3x\\sqrt{3x} = 5x\\sqrt{3x}$$",
       ),
       generate(rng) {
         const p = rng.pick([2, 3, 5, 6, 7]);
@@ -1084,8 +1084,8 @@ export const addingAndSubtractingRadicalExpressions: TopicDef = {
       id: "unlike-radicals-remain",
       title: t("Unlike radicals remain", "不同类的根式保留"),
       explanation: t(
-        "After simplifying, combine only the like terms; terms with different radicands stay separate:\n\n$$\\sqrt{8x} + \\sqrt{27x} + 3\\sqrt{2x} = 2\\sqrt{2x} + 3\\sqrt{3x} + 3\\sqrt{2x} = 5\\sqrt{2x} + 3\\sqrt{3x}$$",
-        "化简后只合并同类项；被开方式不同的项保持分开：\n\n$$\\sqrt{8x} + \\sqrt{27x} + 3\\sqrt{2x} = 2\\sqrt{2x} + 3\\sqrt{3x} + 3\\sqrt{2x} = 5\\sqrt{2x} + 3\\sqrt{3x}$$",
+        "Radicals with different radicands are like different variables: they cannot be merged into one term, even after simplifying.\n\nAfter simplifying, combine only the like terms; terms with different radicands stay separate:\n\n$$\\sqrt{8x} + \\sqrt{27x} + 3\\sqrt{2x} = 2\\sqrt{2x} + 3\\sqrt{3x} + 3\\sqrt{2x} = 5\\sqrt{2x} + 3\\sqrt{3x}$$",
+        "被开方式不同的根式就像不同的字母，即使化简之后也不能合并成一项。\n\n化简后只合并同类项；被开方式不同的项保持分开：\n\n$$\\sqrt{8x} + \\sqrt{27x} + 3\\sqrt{2x} = 2\\sqrt{2x} + 3\\sqrt{3x} + 3\\sqrt{2x} = 5\\sqrt{2x} + 3\\sqrt{3x}$$",
       ),
       generate(rng) {
         const [p, q] = rng.sample([2, 3, 5, 6, 7], 2) as [number, number];
@@ -1337,8 +1337,8 @@ export const rationalizingTwoTermDenominators: TopicDef = {
       id: "two-root-denominators",
       title: t("Denominators such as $\\sqrt{a} + \\sqrt{b}$", "形如 $\\sqrt{a} + \\sqrt{b}$ 的分母"),
       explanation: t(
-        "The conjugate of $\\sqrt{a} + \\sqrt{b}$ is $\\sqrt{a} - \\sqrt{b}$, and their product is $a - b$:\n\n$$\\frac{6}{\\sqrt{5} + \\sqrt{2}} = \\frac{6(\\sqrt{5} - \\sqrt{2})}{5 - 2} = 2\\sqrt{5} - 2\\sqrt{2}$$",
-        "$\\sqrt{a} + \\sqrt{b}$ 的共轭式是 $\\sqrt{a} - \\sqrt{b}$，它们的乘积是 $a - b$：\n\n$$\\frac{6}{\\sqrt{5} + \\sqrt{2}} = \\frac{6(\\sqrt{5} - \\sqrt{2})}{5 - 2} = 2\\sqrt{5} - 2\\sqrt{2}$$",
+        "To rationalize a denominator with two terms, multiply the top and bottom by its conjugate. The product of conjugates is a difference of squares, so the roots disappear.\n\nThe conjugate of $\\sqrt{a} + \\sqrt{b}$ is $\\sqrt{a} - \\sqrt{b}$, and their product is $a - b$:\n\n$$\\frac{6}{\\sqrt{5} + \\sqrt{2}} = \\frac{6(\\sqrt{5} - \\sqrt{2})}{5 - 2} = 2\\sqrt{5} - 2\\sqrt{2}$$",
+        "分母是两项时，把分子分母同时乘分母的共轭式。共轭式之积是平方差，根号就消失了。\n\n$\\sqrt{a} + \\sqrt{b}$ 的共轭式是 $\\sqrt{a} - \\sqrt{b}$，它们的乘积是 $a - b$：\n\n$$\\frac{6}{\\sqrt{5} + \\sqrt{2}} = \\frac{6(\\sqrt{5} - \\sqrt{2})}{5 - 2} = 2\\sqrt{5} - 2\\sqrt{2}$$",
       ),
       generate(rng) {
         let p: number;
@@ -1426,8 +1426,8 @@ export const furtherRationalizingDenominators: TopicDef = {
       id: "differences-of-roots-with-variables",
       title: t("Two roots with variables", "两个含变量的根式"),
       explanation: t(
-        "The conjugate of $\\sqrt{x + 3} - \\sqrt{x}$ is $\\sqrt{x + 3} + \\sqrt{x}$, and their product is $(x + 3) - x = 3$:\n\n$$\\frac{6}{\\sqrt{x + 3} - \\sqrt{x}} = \\frac{6(\\sqrt{x + 3} + \\sqrt{x})}{3} = 2\\sqrt{x + 3} + 2\\sqrt{x}$$",
-        "$\\sqrt{x + 3} - \\sqrt{x}$ 的共轭式是 $\\sqrt{x + 3} + \\sqrt{x}$，它们的乘积是 $(x + 3) - x = 3$：\n\n$$\\frac{6}{\\sqrt{x + 3} - \\sqrt{x}} = \\frac{6(\\sqrt{x + 3} + \\sqrt{x})}{3} = 2\\sqrt{x + 3} + 2\\sqrt{x}$$",
+        "The conjugate method works with variables too. Multiplying by the conjugate turns the denominator into a difference of the radicands, which has no roots.\n\nThe conjugate of $\\sqrt{x + 3} - \\sqrt{x}$ is $\\sqrt{x + 3} + \\sqrt{x}$, and their product is $(x + 3) - x = 3$:\n\n$$\\frac{6}{\\sqrt{x + 3} - \\sqrt{x}} = \\frac{6(\\sqrt{x + 3} + \\sqrt{x})}{3} = 2\\sqrt{x + 3} + 2\\sqrt{x}$$",
+        "共轭式的方法对含字母的式子同样适用。乘共轭式后，分母变成两个被开方式之差，不再含根号。\n\n$\\sqrt{x + 3} - \\sqrt{x}$ 的共轭式是 $\\sqrt{x + 3} + \\sqrt{x}$，它们的乘积是 $(x + 3) - x = 3$：\n\n$$\\frac{6}{\\sqrt{x + 3} - \\sqrt{x}} = \\frac{6(\\sqrt{x + 3} + \\sqrt{x})}{3} = 2\\sqrt{x + 3} + 2\\sqrt{x}$$",
       ),
       generate(rng) {
         const b = rng.pick([0, 0, 1, 2, 3]);

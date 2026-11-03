@@ -2970,8 +2970,8 @@ export const specialTrigonometricRatios: TopicDef = {
       id: "expressions-with-special-ratios",
       title: t("Expressions with special ratios", "含特殊角三角比的式子"),
       explanation: t(
-        "Replace each ratio by its exact value, then simplify:\n\n$$4\\sin 60^\\circ \\cos 30^\\circ = 4 \\cdot \\frac{\\sqrt{3}}{2} \\cdot \\frac{\\sqrt{3}}{2} = 4 \\cdot \\frac{3}{4} = 3,$$\n\n$$\\frac{\\tan 60^\\circ}{\\sin 45^\\circ} = \\sqrt{3} \\div \\frac{\\sqrt{2}}{2} = \\frac{2\\sqrt{3}}{\\sqrt{2}} = \\sqrt{6}.$$",
-        "把每个三角比换成精确值，再化简：\n\n$$4\\sin 60^\\circ \\cos 30^\\circ = 4 \\cdot \\frac{\\sqrt{3}}{2} \\cdot \\frac{\\sqrt{3}}{2} = 4 \\cdot \\frac{3}{4} = 3,$$\n\n$$\\frac{\\tan 60^\\circ}{\\sin 45^\\circ} = \\sqrt{3} \\div \\frac{\\sqrt{2}}{2} = \\frac{2\\sqrt{3}}{\\sqrt{2}} = \\sqrt{6}.$$",
+        "The sine, cosine and tangent of $30^\\circ$, $45^\\circ$ and $60^\\circ$ have exact values with square roots. Using them keeps the answer exact instead of a rounded decimal.\n\nReplace each ratio by its exact value, then simplify:\n\n$$4\\sin 60^\\circ \\cos 30^\\circ = 4 \\cdot \\frac{\\sqrt{3}}{2} \\cdot \\frac{\\sqrt{3}}{2} = 4 \\cdot \\frac{3}{4} = 3,$$\n\n$$\\frac{\\tan 60^\\circ}{\\sin 45^\\circ} = \\sqrt{3} \\div \\frac{\\sqrt{2}}{2} = \\frac{2\\sqrt{3}}{\\sqrt{2}} = \\sqrt{6}.$$",
+        "$30^\\circ$、$45^\\circ$ 和 $60^\\circ$ 的正弦、余弦和正切都有含根号的精确值。用它们计算，答案就是精确值而不是近似的小数。\n\n把每个三角比换成精确值，再化简：\n\n$$4\\sin 60^\\circ \\cos 30^\\circ = 4 \\cdot \\frac{\\sqrt{3}}{2} \\cdot \\frac{\\sqrt{3}}{2} = 4 \\cdot \\frac{3}{4} = 3,$$\n\n$$\\frac{\\tan 60^\\circ}{\\sin 45^\\circ} = \\sqrt{3} \\div \\frac{\\sqrt{2}}{2} = \\frac{2\\sqrt{3}}{\\sqrt{2}} = \\sqrt{6}.$$",
       ),
       generate(rng) {
         const f = rng.pick(["sin", "cos", "tan"] as const);

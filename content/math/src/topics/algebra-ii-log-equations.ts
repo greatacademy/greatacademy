@@ -323,8 +323,8 @@ export const solvingLogarithmicEquationsContainingTheNaturalLogarithm: TopicDef 
       id: "isolating-the-natural-logarithm",
       title: t("Isolating the natural logarithm", "把自然对数单独留在一边"),
       explanation: t(
-        "Isolate $\\ln$ before converting:\n\n$$3\\ln(x + 2) - 4 = 2 \\implies 3\\ln(x + 2) = 6 \\implies \\ln(x + 2) = 2 \\implies x + 2 = e^{2}$$\n\nSo $x = e^{2} - 2$.",
-        "先把 $\\ln$ 单独留在一边，再化为指数式：\n\n$$3\\ln(x + 2) - 4 = 2 \\implies 3\\ln(x + 2) = 6 \\implies \\ln(x + 2) = 2 \\implies x + 2 = e^{2}$$\n\n所以 $x = e^{2} - 2$。",
+        "An equation $\\ln u = c$ means $u = e^{c}$. Undo the outer operations first so the logarithm stands alone, then convert to exponential form.\n\nIsolate $\\ln$ before converting:\n\n$$3\\ln(x + 2) - 4 = 2 \\implies 3\\ln(x + 2) = 6 \\implies \\ln(x + 2) = 2 \\implies x + 2 = e^{2}$$\n\nSo $x = e^{2} - 2$.",
+        "方程 $\\ln u = c$ 表示 $u = e^{c}$。先撤销外层的运算，让对数单独留在一边，再化成指数形式。\n\n先把 $\\ln$ 单独留在一边，再化为指数式：\n\n$$3\\ln(x + 2) - 4 = 2 \\implies 3\\ln(x + 2) = 6 \\implies \\ln(x + 2) = 2 \\implies x + 2 = e^{2}$$\n\n所以 $x = e^{2} - 2$。",
       ),
       generate(rng) {
         for (;;) {
@@ -1496,8 +1496,8 @@ export const verticalReflectionsOfExponentialFunctions: TopicDef = {
       id: "intercepts-of-reflected-graphs",
       title: t("Intercepts", "截距"),
       explanation: t(
-        "For $g(x) = -a \\cdot b^{x} + k$ with $a > 0$ and $k > 0$, the $y$-intercept is $g(0) = k - a$, and the graph crosses the $x$-axis where $a \\cdot b^{x} = k$:\n\n$$-2(3)^{x} + 18 = 0 \\implies 2(3)^{x} = 18 \\implies 3^{x} = 9 \\implies x = 2$$",
-        "对 $g(x) = -a \\cdot b^{x} + k$（$a > 0$，$k > 0$），$y$ 轴截距是 $g(0) = k - a$，图象在 $a \\cdot b^{x} = k$ 处与 $x$ 轴相交：\n\n$$-2(3)^{x} + 18 = 0 \\implies 2(3)^{x} = 18 \\implies 3^{x} = 9 \\implies x = 2$$",
+        "A negative coefficient reflects the exponential graph across its horizontal asymptote. The intercepts are still found the usual way: set $x = 0$ for one and $g(x) = 0$ for the other.\n\nFor $g(x) = -a \\cdot b^{x} + k$ with $a > 0$ and $k > 0$, the $y$-intercept is $g(0) = k - a$, and the graph crosses the $x$-axis where $a \\cdot b^{x} = k$:\n\n$$-2(3)^{x} + 18 = 0 \\implies 2(3)^{x} = 18 \\implies 3^{x} = 9 \\implies x = 2$$",
+        "负的系数把指数函数的图像关于水平渐近线翻折。截距仍按通常的方法求：一个令 $x = 0$，另一个令 $g(x) = 0$。\n\n对 $g(x) = -a \\cdot b^{x} + k$（$a > 0$，$k > 0$），$y$ 轴截距是 $g(0) = k - a$，图象在 $a \\cdot b^{x} = k$ 处与 $x$ 轴相交：\n\n$$-2(3)^{x} + 18 = 0 \\implies 2(3)^{x} = 18 \\implies 3^{x} = 9 \\implies x = 2$$",
       ),
       generate(rng) {
         const a = rng.pick([1, 2, 3, 4]);
@@ -1729,8 +1729,8 @@ export const propertiesOfTransformedExponentialFunctions: TopicDef = {
       id: "intercepts-of-transformed-exponentials",
       title: t("Intercepts", "截距"),
       explanation: t(
-        "The $y$-intercept is $f(0)$. The $x$-intercept, if there is one, solves $f(x) = 0$. For $f(x) = 2(3)^{x - 1} - 18$:\n\n$$f(0) = 2 \\cdot 3^{-1} - 18 = \\frac{2}{3} - 18 = -\\frac{52}{3}$$\n\n$$2(3)^{x - 1} = 18 \\implies 3^{x - 1} = 9 = 3^{2} \\implies x = 3$$",
-        "$y$ 轴截距是 $f(0)$。若与 $x$ 轴有交点，它满足 $f(x) = 0$。对 $f(x) = 2(3)^{x - 1} - 18$：\n\n$$f(0) = 2 \\cdot 3^{-1} - 18 = \\frac{2}{3} - 18 = -\\frac{52}{3}$$\n\n$$2(3)^{x - 1} = 18 \\implies 3^{x - 1} = 9 = 3^{2} \\implies x = 3$$",
+        "A transformed exponential function crosses the $y$-axis exactly once, but it crosses the $x$-axis only if the asymptote and the graph lie on opposite sides of it.\n\nThe $y$-intercept is $f(0)$. The $x$-intercept, if there is one, solves $f(x) = 0$. For $f(x) = 2(3)^{x - 1} - 18$:\n\n$$f(0) = 2 \\cdot 3^{-1} - 18 = \\frac{2}{3} - 18 = -\\frac{52}{3}$$\n\n$$2(3)^{x - 1} = 18 \\implies 3^{x - 1} = 9 = 3^{2} \\implies x = 3$$",
+        "变换后的指数函数图像与 $y$ 轴恰好相交一次，但只有当渐近线与图像位于 $x$ 轴两侧时，才与 $x$ 轴相交。\n\n$y$ 轴截距是 $f(0)$。若与 $x$ 轴有交点，它满足 $f(x) = 0$。对 $f(x) = 2(3)^{x - 1} - 18$：\n\n$$f(0) = 2 \\cdot 3^{-1} - 18 = \\frac{2}{3} - 18 = -\\frac{52}{3}$$\n\n$$2(3)^{x - 1} = 18 \\implies 3^{x - 1} = 9 = 3^{2} \\implies x = 3$$",
       ),
       generate(rng) {
         const a = rng.pick([1, 2, 3, -1, -2]);
@@ -2563,8 +2563,8 @@ export const continuouslyCompoundedInterest: TopicDef = {
       id: "rate-for-continuous-growth",
       title: t("The interest rate", "利率"),
       explanation: t(
-        "To find the rate, solve $Pe^{rt} = A$ for $r$:\n\n$$1000e^{10r} = 1500 \\implies 10r = \\ln 1.5 \\implies r = \\frac{\\ln 1.5}{10} \\approx 0.04055$$\n\nAs a percent, $r \\approx 4.05\\%$.",
-        "求利率时，从 $Pe^{rt} = A$ 中解出 $r$：\n\n$$1000e^{10r} = 1500 \\implies 10r = \\ln 1.5 \\implies r = \\frac{\\ln 1.5}{10} \\approx 0.04055$$\n\n写成百分数，$r \\approx 4.05\\%$。",
+        "With continuous compounding the balance is $A = Pe^{rt}$. When the rate is the unknown, divide by $P$ and take the natural logarithm to bring the exponent down.\n\nTo find the rate, solve $Pe^{rt} = A$ for $r$:\n\n$$1000e^{10r} = 1500 \\implies 10r = \\ln 1.5 \\implies r = \\frac{\\ln 1.5}{10} \\approx 0.04055$$\n\nAs a percent, $r \\approx 4.05\\%$.",
+        "连续复利的余额是 $A = Pe^{rt}$。利率未知时，先除以 $P$，再取自然对数，把指数移下来。\n\n求利率时，从 $Pe^{rt} = A$ 中解出 $r$：\n\n$$1000e^{10r} = 1500 \\implies 10r = \\ln 1.5 \\implies r = \\frac{\\ln 1.5}{10} \\approx 0.04055$$\n\n写成百分数，$r \\approx 4.05\\%$。",
       ),
       generate(rng) {
         for (;;) {

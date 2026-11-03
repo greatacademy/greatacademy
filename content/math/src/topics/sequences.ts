@@ -849,8 +849,8 @@ export const explicitAndRecursiveArithmeticFormulas: TopicDef = {
       id: "recursive-to-explicit",
       title: t("From recursive to explicit", "由递推公式到通项公式"),
       explanation: t(
-        "A recursive formula $a_1 = a$, $a_n = a_{n-1} + d$ gives the first term and the common difference directly. Substitute them into $a_n = a_1 + (n - 1)d$:\n\n$$a_1 = -2, \\; a_n = a_{n-1} + 5 \\quad\\Longrightarrow\\quad a_n = -2 + (n - 1) \\cdot 5 = 5n - 7.$$",
-        "递推公式 $a_1 = a$，$a_n = a_{n-1} + d$ 直接给出了首项和公差。把它们代入 $a_n = a_1 + (n - 1)d$：\n\n$$a_1 = -2, \\; a_n = a_{n-1} + 5 \\quad\\Longrightarrow\\quad a_n = -2 + (n - 1) \\cdot 5 = 5n - 7.$$",
+        "A recursive formula gives each term from the one before, while an explicit formula gives any term directly from its position.\n\nA recursive formula $a_1 = a$, $a_n = a_{n-1} + d$ gives the first term and the common difference directly. Substitute them into $a_n = a_1 + (n - 1)d$:\n\n$$a_1 = -2, \\; a_n = a_{n-1} + 5 \\quad\\Longrightarrow\\quad a_n = -2 + (n - 1) \\cdot 5 = 5n - 7.$$",
+        "递推公式由前一项得到每一项，而通项公式可以由项的位置直接求出任何一项。\n\n递推公式 $a_1 = a$，$a_n = a_{n-1} + d$ 直接给出了首项和公差。把它们代入 $a_n = a_1 + (n - 1)d$：\n\n$$a_1 = -2, \\; a_n = a_{n-1} + 5 \\quad\\Longrightarrow\\quad a_n = -2 + (n - 1) \\cdot 5 = 5n - 7.$$",
       ),
       generate(rng) {
         const a1 = rng.int(-20, 25);
@@ -956,8 +956,8 @@ export const arithmeticSequencesFromTwoTerms: TopicDef = {
       id: "first-term-from-two-terms",
       title: t("The first term from two terms", "由两项求首项"),
       explanation: t(
-        "Once $d$ is known, step back from $a_p$ to $a_1$: that is $p - 1$ steps, so\n\n$$a_1 = a_p - (p - 1)d.$$\n\nWith $a_3 = 11$ and $d = 4$: $a_1 = 11 - 2 \\cdot 4 = 3$.",
-        "求出 $d$ 后，从 $a_p$ 倒推到 $a_1$：共 $p - 1$ 步，所以\n\n$$a_1 = a_p - (p - 1)d.$$\n\n当 $a_3 = 11$，$d = 4$ 时：$a_1 = 11 - 2 \\cdot 4 = 3$。",
+        "In an arithmetic sequence each step adds the common difference, so walking back from a known term means subtracting it once for every step.\n\nOnce $d$ is known, step back from $a_p$ to $a_1$: that is $p - 1$ steps, so\n\n$$a_1 = a_p - (p - 1)d.$$\n\nWith $a_3 = 11$ and $d = 4$: $a_1 = 11 - 2 \\cdot 4 = 3$.",
+        "在等差数列中，每一步都加上公差，所以从已知的项往回推，每退一步就减去一次公差。\n\n求出 $d$ 后，从 $a_p$ 倒推到 $a_1$：共 $p - 1$ 步，所以\n\n$$a_1 = a_p - (p - 1)d.$$\n\n当 $a_3 = 11$，$d = 4$ 时：$a_1 = 11 - 2 \\cdot 4 = 3$。",
       ),
       generate(rng) {
         const { a1, d, p, q, x, y } = twoTerms(rng);
@@ -976,8 +976,8 @@ export const arithmeticSequencesFromTwoTerms: TopicDef = {
       id: "explicit-formula-from-two-terms",
       title: t("The explicit formula from two terms", "由两项求通项公式"),
       explanation: t(
-        "Find $d$, then $a_1$, then substitute into $a_n = a_1 + (n - 1)d$. With $a_3 = 11$ and $a_8 = 31$: $d = 4$, $a_1 = 3$, and\n\n$$a_n = 3 + (n - 1) \\cdot 4 = 4n - 1.$$\n\nCheck: $4 \\cdot 8 - 1 = 31$. ✓",
-        "先求 $d$，再求 $a_1$，然后代入 $a_n = a_1 + (n - 1)d$。当 $a_3 = 11$，$a_8 = 31$ 时：$d = 4$，$a_1 = 3$，\n\n$$a_n = 3 + (n - 1) \\cdot 4 = 4n - 1.$$\n\n检验：$4 \\cdot 8 - 1 = 31$。✓",
+        "Two terms are enough to determine an arithmetic sequence. Divide their difference by the number of steps between them to get $d$, then work back to the first term.\n\nFind $d$, then $a_1$, then substitute into $a_n = a_1 + (n - 1)d$. With $a_3 = 11$ and $a_8 = 31$: $d = 4$, $a_1 = 3$, and\n\n$$a_n = 3 + (n - 1) \\cdot 4 = 4n - 1.$$\n\nCheck: $4 \\cdot 8 - 1 = 31$. ✓",
+        "两项就能确定一个等差数列。用两项之差除以它们之间的步数得到 $d$，再往回推出首项。\n\n先求 $d$，再求 $a_1$，然后代入 $a_n = a_1 + (n - 1)d$。当 $a_3 = 11$，$a_8 = 31$ 时：$d = 4$，$a_1 = 3$，\n\n$$a_n = 3 + (n - 1) \\cdot 4 = 4n - 1.$$\n\n检验：$4 \\cdot 8 - 1 = 31$。✓",
       ),
       generate(rng) {
         const { a1, d, p, q, x, y } = twoTerms(rng);
@@ -1712,8 +1712,8 @@ export const recursiveFormulasForGeometricSequences: TopicDef = {
       id: "recursive-to-explicit",
       title: t("From recursive to explicit", "由递推公式到通项公式"),
       explanation: t(
-        "A recursive formula $a_1 = a$, $a_n = r a_{n-1}$ gives the first term and the ratio directly; substitute them into $a_n = a_1 r^{n-1}$:\n\n$$a_1 = 7, \\; a_n = -2a_{n-1} \\quad\\Longrightarrow\\quad a_n = 7 \\cdot (-2)^{n-1}.$$",
-        "递推公式 $a_1 = a$，$a_n = r a_{n-1}$ 直接给出首项和公比，把它们代入 $a_n = a_1 r^{n-1}$：\n\n$$a_1 = 7, \\; a_n = -2a_{n-1} \\quad\\Longrightarrow\\quad a_n = 7 \\cdot (-2)^{n-1}.$$",
+        "In a geometric sequence each term is the one before multiplied by the common ratio, so the term in position $n$ has been multiplied by the ratio $n - 1$ times.\n\nA recursive formula $a_1 = a$, $a_n = r a_{n-1}$ gives the first term and the ratio directly; substitute them into $a_n = a_1 r^{n-1}$:\n\n$$a_1 = 7, \\; a_n = -2a_{n-1} \\quad\\Longrightarrow\\quad a_n = 7 \\cdot (-2)^{n-1}.$$",
+        "在等比数列中，每一项等于前一项乘公比，所以第 $n$ 项是首项乘了 $n - 1$ 次公比。\n\n递推公式 $a_1 = a$，$a_n = r a_{n-1}$ 直接给出首项和公比，把它们代入 $a_n = a_1 r^{n-1}$：\n\n$$a_1 = 7, \\; a_n = -2a_{n-1} \\quad\\Longrightarrow\\quad a_n = 7 \\cdot (-2)^{n-1}.$$",
       ),
       generate(rng) {
         const r = rng.pick(ratios.filter((x) => !x.eq(Q.one.neg())));
@@ -1834,8 +1834,8 @@ export const geometricSequencesFromTwoTerms: TopicDef = {
       id: "first-term-from-two-terms",
       title: t("The first term from two terms", "由两项求首项"),
       explanation: t(
-        "Once $r$ is known, divide $a_p$ by $r$ a total of $p - 1$ times:\n\n$$a_1 = \\frac{a_p}{r^{p-1}}.$$\n\nWith $a_2 = 6$ and $r = 3$: $a_1 = \\frac{6}{3} = 2$.",
-        "求出 $r$ 后，用 $a_p$ 除以 $r$ 共 $p - 1$ 次：\n\n$$a_1 = \\frac{a_p}{r^{p-1}}.$$\n\n当 $a_2 = 6$，$r = 3$ 时：$a_1 = \\frac{6}{3} = 2$。",
+        "Walking back in a geometric sequence undoes the multiplications, so each step back divides by the common ratio.\n\nOnce $r$ is known, divide $a_p$ by $r$ a total of $p - 1$ times:\n\n$$a_1 = \\frac{a_p}{r^{p-1}}.$$\n\nWith $a_2 = 6$ and $r = 3$: $a_1 = \\frac{6}{3} = 2$.",
+        "在等比数列中往回推就是撤销乘法，所以每退一步都要除以公比。\n\n求出 $r$ 后，用 $a_p$ 除以 $r$ 共 $p - 1$ 次：\n\n$$a_1 = \\frac{a_p}{r^{p-1}}.$$\n\n当 $a_2 = 6$，$r = 3$ 时：$a_1 = \\frac{6}{3} = 2$。",
       ),
       generate(rng) {
         const s = twoGeometricTerms(rng, 2);
@@ -1925,8 +1925,8 @@ export const indexOfATermInAGeometricSequence: TopicDef = {
       id: "index-with-fractional-ratios",
       title: t("Fractional ratios", "分数公比"),
       explanation: t(
-        "The same method works when the terms shrink. In $640, 320, 160, \\ldots$, the value $5$:\n\n$$640 \\cdot \\left(\\frac{1}{2}\\right)^{n-1} = 5 \\;\\Rightarrow\\; \\left(\\frac{1}{2}\\right)^{n-1} = \\frac{1}{128} = \\left(\\frac{1}{2}\\right)^{7} \\;\\Rightarrow\\; n = 8.$$",
-        "当各项逐渐变小时，方法相同。在 $640, 320, 160, \\ldots$ 中，值 $5$：\n\n$$640 \\cdot \\left(\\frac{1}{2}\\right)^{n-1} = 5 \\;\\Rightarrow\\; \\left(\\frac{1}{2}\\right)^{n-1} = \\frac{1}{128} = \\left(\\frac{1}{2}\\right)^{7} \\;\\Rightarrow\\; n = 8.$$",
+        "To find which term has a given value, set the explicit formula equal to that value and solve for $n$ by writing both sides as powers of the ratio.\n\nThe same method works when the terms shrink. In $640, 320, 160, \\ldots$, the value $5$:\n\n$$640 \\cdot \\left(\\frac{1}{2}\\right)^{n-1} = 5 \\;\\Rightarrow\\; \\left(\\frac{1}{2}\\right)^{n-1} = \\frac{1}{128} = \\left(\\frac{1}{2}\\right)^{7} \\;\\Rightarrow\\; n = 8.$$",
+        "要找出某个值是第几项，就令通项公式等于这个值，把两边写成公比的幂，再解出 $n$。\n\n当各项逐渐变小时，方法相同。在 $640, 320, 160, \\ldots$ 中，值 $5$：\n\n$$640 \\cdot \\left(\\frac{1}{2}\\right)^{n-1} = 5 \\;\\Rightarrow\\; \\left(\\frac{1}{2}\\right)^{n-1} = \\frac{1}{128} = \\left(\\frac{1}{2}\\right)^{7} \\;\\Rightarrow\\; n = 8.$$",
       ),
       generate(rng) {
         const r = rng.pick([Q.of(1, 2), Q.of(-1, 2), Q.of(1, 3), Q.of(1, 4), Q.of(2, 3)]);
