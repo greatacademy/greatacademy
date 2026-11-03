@@ -77,8 +77,8 @@ export const introductionToBinaryOperations: TopicDef = {
       id: "evaluating-binary-operations",
       title: t("Evaluating an operation", "计算运算结果"),
       explanation: t(
-        "Substitute the first element for $a$ and the second for $b$. With $a \\ast b = 2a - b + ab$, $3 \\ast (-1) = 6 + 1 - 3 = 4$, while $(-1) \\ast 3 = -2 - 3 - 3 = -8$: the order matters.",
-        "把第一个元素代入 $a$，第二个代入 $b$。若 $a \\ast b = 2a - b + ab$，则 $3 \\ast (-1) = 6 + 1 - 3 = 4$，而 $(-1) \\ast 3 = -2 - 3 - 3 = -8$：顺序很重要。",
+        "A binary operation is a rule that combines two elements into one, so evaluate it by substituting the two elements into its formula in order. Substitute the first element for $a$ and the second for $b$. With $a \\ast b = 2a - b + ab$, $3 \\ast (-1) = 6 + 1 - 3 = 4$, while $(-1) \\ast 3 = -2 - 3 - 3 = -8$: the order matters.",
+        "二元运算是把两个元素合成一个元素的规则，所以按顺序把两个元素代入它的公式来求值。把第一个元素代入 $a$，第二个代入 $b$。若 $a \\ast b = 2a - b + ab$，则 $3 \\ast (-1) = 6 + 1 - 3 = 4$，而 $(-1) \\ast 3 = -2 - 3 - 3 = -8$：顺序很重要。",
       ),
       generate(rng) {
         const o: Linear = { p: rng.nonZero(-4, 4), q: rng.nonZero(-4, 4), r: rng.int(-2, 2), k: rng.int(-6, 6) };
@@ -225,8 +225,8 @@ export const associativeBinaryOperations: TopicDef = {
       id: "evaluating-iterated-operations",
       title: t("Bracketed products", "带括号的运算"),
       explanation: t(
-        "Work from the innermost brackets. With $a \\ast b = a + 2b$, $(1 \\ast 2) \\ast 3 = 5 \\ast 3 = 11$ but $1 \\ast (2 \\ast 3) = 1 \\ast 8 = 17$, so this operation is not associative.",
-        "从最内层括号算起。若 $a \\ast b = a + 2b$，则 $(1 \\ast 2) \\ast 3 = 5 \\ast 3 = 11$，而 $1 \\ast (2 \\ast 3) = 1 \\ast 8 = 17$，所以这个运算不可结合。",
+        "An operation combines only two elements at a time, so a bracketed expression is evaluated from the inside out, and different bracketings may disagree. Work from the innermost brackets. With $a \\ast b = a + 2b$, $(1 \\ast 2) \\ast 3 = 5 \\ast 3 = 11$ but $1 \\ast (2 \\ast 3) = 1 \\ast 8 = 17$, so this operation is not associative.",
+        "运算一次只合并两个元素，所以带括号的表达式要从里向外计算，不同的加括号方式可能给出不同结果。从最内层括号算起。若 $a \\ast b = a + 2b$，则 $(1 \\ast 2) \\ast 3 = 5 \\ast 3 = 11$，而 $1 \\ast (2 \\ast 3) = 1 \\ast 8 = 17$，所以这个运算不可结合。",
       ),
       generate(rng) {
         const o: Linear = { p: rng.nonZero(-3, 3), q: rng.nonZero(-3, 3), r: 0, k: rng.int(-5, 5) };
@@ -326,8 +326,8 @@ export const commutativeBinaryOperations: TopicDef = {
       id: "commutativity-of-formulas",
       title: t("Operations given by formulas", "由公式给出的运算"),
       explanation: t(
-        "Swap $a$ and $b$ and compare. $a \\ast b = 3a + 3b - ab$ is commutative, since swapping gives $3b + 3a - ba$, the same. $a \\ast b = 2a + b$ is not: $1 \\ast 0 = 2$ but $0 \\ast 1 = 1$.",
-        "交换 $a$ 与 $b$ 后比较。$a \\ast b = 3a + 3b - ab$ 可交换，因为交换后得 $3b + 3a - ba$，与原式相同。$a \\ast b = 2a + b$ 不可交换：$1 \\ast 0 = 2$，而 $0 \\ast 1 = 1$。",
+        "An operation is commutative when the order of the two elements never matters, which you check by swapping them in the formula. Swap $a$ and $b$ and compare. $a \\ast b = 3a + 3b - ab$ is commutative, since swapping gives $3b + 3a - ba$, the same. $a \\ast b = 2a + b$ is not: $1 \\ast 0 = 2$ but $0 \\ast 1 = 1$.",
+        "如果两个元素的顺序从不影响结果，运算就是可交换的，检验方法是在公式中交换它们。交换 $a$ 与 $b$ 后比较。$a \\ast b = 3a + 3b - ab$ 可交换，因为交换后得 $3b + 3a - ba$，与原式相同。$a \\ast b = 2a + b$ 不可交换：$1 \\ast 0 = 2$，而 $0 \\ast 1 = 1$。",
       ),
       generate(rng) {
         const p = rng.nonZero(-4, 4);
@@ -427,8 +427,8 @@ export const identitiesOfBinaryOperations: TopicDef = {
       id: "identities-from-formulas",
       title: t("Identities from formulas", "由公式求单位元"),
       explanation: t(
-        "Solve $a \\ast e = a$ for $e$ and check that $e \\ast a = a$ too. For $a \\ast b = a + b - 4$ on $\\mathbb{Z}$, $a + e - 4 = a$ gives $e = 4$. For $a \\ast b = \\frac{ab}{3}$ on $\\mathbb{Q} \\setminus \\{0\\}$, $\\frac{ae}{3} = a$ gives $e = 3$.",
-        "解 $a \\ast e = a$ 求 $e$，并检验 $e \\ast a = a$ 也成立。对 $\\mathbb{Z}$ 上的 $a \\ast b = a + b - 4$，由 $a + e - 4 = a$ 得 $e = 4$。对 $\\mathbb{Q} \\setminus \\{0\\}$ 上的 $a \\ast b = \\frac{ab}{3}$，由 $\\frac{ae}{3} = a$ 得 $e = 3$。",
+        "An identity element leaves every element unchanged on both sides, so solve for it from one side and confirm it works on the other. Solve $a \\ast e = a$ for $e$ and check that $e \\ast a = a$ too. For $a \\ast b = a + b - 4$ on $\\mathbb{Z}$, $a + e - 4 = a$ gives $e = 4$. For $a \\ast b = \\frac{ab}{3}$ on $\\mathbb{Q} \\setminus \\{0\\}$, $\\frac{ae}{3} = a$ gives $e = 3$.",
+        "单位元从两边作用都不改变任何元素，所以从一边解出它，再确认它在另一边也成立。解 $a \\ast e = a$ 求 $e$，并检验 $e \\ast a = a$ 也成立。对 $\\mathbb{Z}$ 上的 $a \\ast b = a + b - 4$，由 $a + e - 4 = a$ 得 $e = 4$。对 $\\mathbb{Q} \\setminus \\{0\\}$ 上的 $a \\ast b = \\frac{ab}{3}$，由 $\\frac{ae}{3} = a$ 得 $e = 3$。",
       ),
       generate(rng) {
         const s = randomShifted(rng);
@@ -826,8 +826,8 @@ export const realRationalAndComplexGroups: TopicDef = {
       id: "inverses-in-the-complex-group",
       title: t("Inverses of complex numbers", "复数的逆元"),
       explanation: t(
-        "In $(\\mathbb{C}^*, \\cdot)$ the inverse of $z = a + bi$ is $z^{-1} = \\frac{\\bar z}{|z|^2} = \\frac{a - bi}{a^2 + b^2}$. For $z = 3 + 4i$, $z^{-1} = \\frac{3}{25} - \\frac{4}{25}i$.",
-        "在 $(\\mathbb{C}^*, \\cdot)$ 中，$z = a + bi$ 的逆元为 $z^{-1} = \\frac{\\bar z}{|z|^2} = \\frac{a - bi}{a^2 + b^2}$。对 $z = 3 + 4i$，$z^{-1} = \\frac{3}{25} - \\frac{4}{25}i$。",
+        "Multiplying a complex number by its conjugate gives a positive real number, so dividing the conjugate by that number gives the inverse. In $(\\mathbb{C}^*, \\cdot)$ the inverse of $z = a + bi$ is $z^{-1} = \\frac{\\bar z}{|z|^2} = \\frac{a - bi}{a^2 + b^2}$. For $z = 3 + 4i$, $z^{-1} = \\frac{3}{25} - \\frac{4}{25}i$.",
+        "复数乘以它的共轭得到一个正实数，所以把共轭除以这个数就得到逆元。在 $(\\mathbb{C}^*, \\cdot)$ 中，$z = a + bi$ 的逆元为 $z^{-1} = \\frac{\\bar z}{|z|^2} = \\frac{a - bi}{a^2 + b^2}$。对 $z = 3 + 4i$，$z^{-1} = \\frac{3}{25} - \\frac{4}{25}i$。",
       ),
       generate(rng) {
         const a = rng.nonZero(-6, 6);
@@ -1075,8 +1075,8 @@ export const functionGroups: TopicDef = {
       id: "composing-in-a-group-of-functions",
       title: t("Composing functions", "复合函数"),
       explanation: t(
-        "Substitute the inner function into the outer one and simplify. If $f(x) = \\frac{1}{x}$ and $g(x) = 1 - x$, then $(f \\circ g)(x) = \\frac{1}{1 - x}$ and $(g \\circ f)(x) = 1 - \\frac{1}{x} = \\frac{x - 1}{x}$.",
-        "把内层函数代入外层函数并化简。若 $f(x) = \\frac{1}{x}$、$g(x) = 1 - x$，则 $(f \\circ g)(x) = \\frac{1}{1 - x}$，$(g \\circ f)(x) = 1 - \\frac{1}{x} = \\frac{x - 1}{x}$。",
+        "In a group of functions the operation is composition, so the product of two elements is one function applied to the output of the other. Substitute the inner function into the outer one and simplify. If $f(x) = \\frac{1}{x}$ and $g(x) = 1 - x$, then $(f \\circ g)(x) = \\frac{1}{1 - x}$ and $(g \\circ f)(x) = 1 - \\frac{1}{x} = \\frac{x - 1}{x}$.",
+        "在函数群中运算是复合，所以两个元素的乘积就是把一个函数作用在另一个函数的输出上。把内层函数代入外层函数并化简。若 $f(x) = \\frac{1}{x}$、$g(x) = 1 - x$，则 $(f \\circ g)(x) = \\frac{1}{1 - x}$，$(g \\circ f)(x) = 1 - \\frac{1}{x} = \\frac{x - 1}{x}$。",
       ),
       generate(rng) {
         const f = rng.pick(ANHARMONIC);
@@ -1103,8 +1103,8 @@ export const functionGroups: TopicDef = {
       id: "inverses-in-the-affine-group",
       title: t("Inverses of affine maps", "仿射映射的逆"),
       explanation: t(
-        "In the group of maps $x \\mapsto ax + b$, the inverse of $f(x) = ax + b$ is $f^{-1}(x) = \\frac{x - b}{a}$, and $(f \\circ g)^{-1} = g^{-1} \\circ f^{-1}$. For $f(x) = 2x + 1$ and $g(x) = x - 3$, $(f \\circ g)^{-1}(5) = g^{-1}(f^{-1}(5)) = g^{-1}(2) = 5$.",
-        "在映射 $x \\mapsto ax + b$ 构成的群中，$f(x) = ax + b$ 的逆为 $f^{-1}(x) = \\frac{x - b}{a}$，且 $(f \\circ g)^{-1} = g^{-1} \\circ f^{-1}$。若 $f(x) = 2x + 1$、$g(x) = x - 3$，则 $(f \\circ g)^{-1}(5) = g^{-1}(f^{-1}(5)) = g^{-1}(2) = 5$。",
+        "The inverse of an affine map undoes it by first removing the shift and then dividing by the scale, and it is again an affine map. In the group of maps $x \\mapsto ax + b$, the inverse of $f(x) = ax + b$ is $f^{-1}(x) = \\frac{x - b}{a}$, and $(f \\circ g)^{-1} = g^{-1} \\circ f^{-1}$. For $f(x) = 2x + 1$ and $g(x) = x - 3$, $(f \\circ g)^{-1}(5) = g^{-1}(f^{-1}(5)) = g^{-1}(2) = 5$.",
+        "仿射映射的逆先去掉平移再除以缩放比，从而撤销原映射，它仍然是一个仿射映射。在映射 $x \\mapsto ax + b$ 构成的群中，$f(x) = ax + b$ 的逆为 $f^{-1}(x) = \\frac{x - b}{a}$，且 $(f \\circ g)^{-1} = g^{-1} \\circ f^{-1}$。若 $f(x) = 2x + 1$、$g(x) = x - 3$，则 $(f \\circ g)^{-1}(5) = g^{-1}(f^{-1}(5)) = g^{-1}(2) = 5$。",
       ),
       generate(rng) {
         const [a, b, c, d] = [rng.nonZero(-4, 4), rng.int(-6, 6), rng.nonZero(-4, 4), rng.int(-6, 6)];
@@ -1148,8 +1148,8 @@ export const generalGroups: TopicDef = {
       id: "powers-in-general-groups",
       title: t("Powers of elements", "元素的幂"),
       explanation: t(
-        "In $(\\mathbb{Z}, \\ast)$ with $a \\ast b = a + b + 2$, $x^2 = 2x + 2$, $x^3 = x^2 \\ast x = 3x + 4$ and in general $x^n = nx + 2(n - 1)$. So $5^4 = 20 + 6 = 26$.",
-        "在 $a \\ast b = a + b + 2$ 的 $(\\mathbb{Z}, \\ast)$ 中，$x^2 = 2x + 2$，$x^3 = x^2 \\ast x = 3x + 4$，一般地 $x^n = nx + 2(n - 1)$。所以 $5^4 = 20 + 6 = 26$。",
+        "A power means combining an element with itself repeatedly using the group's own operation, which may not be ordinary multiplication. In $(\\mathbb{Z}, \\ast)$ with $a \\ast b = a + b + 2$, $x^2 = 2x + 2$, $x^3 = x^2 \\ast x = 3x + 4$ and in general $x^n = nx + 2(n - 1)$. So $5^4 = 20 + 6 = 26$.",
+        "幂的意思是用群自身的运算把一个元素反复与自己结合，这个运算不一定是普通乘法。在 $a \\ast b = a + b + 2$ 的 $(\\mathbb{Z}, \\ast)$ 中，$x^2 = 2x + 2$，$x^3 = x^2 \\ast x = 3x + 4$，一般地 $x^n = nx + 2(n - 1)$。所以 $5^4 = 20 + 6 = 26$。",
       ),
       generate(rng) {
         const c = rng.nonZero(-5, 5);
@@ -1174,8 +1174,8 @@ export const generalGroups: TopicDef = {
       id: "inverses-in-general-groups",
       title: t("Inverses", "逆元"),
       explanation: t(
-        "$\\mathbb{R} \\setminus \\{-1\\}$ is a group under $a \\ast b = a + b + ab$ with identity $0$. The inverse of $a$ solves $a + x + ax = 0$, so $x = -\\frac{a}{1 + a}$; for $a = 3$ it is $-\\frac{3}{4}$.",
-        "$\\mathbb{R} \\setminus \\{-1\\}$ 在 $a \\ast b = a + b + ab$ 下构成群，单位元为 $0$。$a$ 的逆元满足 $a + x + ax = 0$，所以 $x = -\\frac{a}{1 + a}$；$a = 3$ 时为 $-\\frac{3}{4}$。",
+        "The inverse of an element is what combines with it to give the identity, so set up that equation using the operation and solve it. $\\mathbb{R} \\setminus \\{-1\\}$ is a group under $a \\ast b = a + b + ab$ with identity $0$. The inverse of $a$ solves $a + x + ax = 0$, so $x = -\\frac{a}{1 + a}$; for $a = 3$ it is $-\\frac{3}{4}$.",
+        "一个元素的逆元是与它结合得到单位元的那个元素，所以用这个运算列出方程并求解。$\\mathbb{R} \\setminus \\{-1\\}$ 在 $a \\ast b = a + b + ab$ 下构成群，单位元为 $0$。$a$ 的逆元满足 $a + x + ax = 0$，所以 $x = -\\frac{a}{1 + a}$；$a = 3$ 时为 $-\\frac{3}{4}$。",
       ),
       generate(rng) {
         const k = rng.int(1, 4);
@@ -1252,8 +1252,8 @@ export const theOrderOfAGroup: TopicDef = {
       id: "the-order-of-the-group-of-units",
       title: t("The group of units", "单位群"),
       explanation: t(
-        "$U(n) = \\{a \\in \\mathbb{Z}_n : \\gcd(a, n) = 1\\}$ is a group under multiplication modulo $n$, of order $\\varphi(n)$. For $n = 12$, $U(12) = \\{1, 5, 7, 11\\}$ has order $\\varphi(12) = 4$.",
-        "$U(n) = \\{a \\in \\mathbb{Z}_n : \\gcd(a, n) = 1\\}$ 在模 $n$ 乘法下构成群，阶为 $\\varphi(n)$。$n = 12$ 时，$U(12) = \\{1, 5, 7, 11\\}$ 的阶为 $\\varphi(12) = 4$。",
+        "The elements with multiplicative inverses modulo a number are exactly those coprime to it, so there are as many as Euler's totient counts. $U(n) = \\{a \\in \\mathbb{Z}_n : \\gcd(a, n) = 1\\}$ is a group under multiplication modulo $n$, of order $\\varphi(n)$. For $n = 12$, $U(12) = \\{1, 5, 7, 11\\}$ has order $\\varphi(12) = 4$.",
+        "模某个数有乘法逆元的元素恰好是与它互素的数，所以个数等于欧拉函数的值。$U(n) = \\{a \\in \\mathbb{Z}_n : \\gcd(a, n) = 1\\}$ 在模 $n$ 乘法下构成群，阶为 $\\varphi(n)$。$n = 12$ 时，$U(12) = \\{1, 5, 7, 11\\}$ 的阶为 $\\varphi(12) = 4$。",
       ),
       generate(rng) {
         const n = rng.int(6, 60);
@@ -1334,8 +1334,8 @@ export const ordersOfGroupElements: TopicDef = {
       id: "orders-in-groups-of-units",
       title: t("Orders in U(n)", "U(n) 中的阶"),
       explanation: t(
-        "Compute successive powers until you reach $1$. In $U(10)$, $3^1 = 3$, $3^2 = 9$, $3^3 = 27 \\equiv 7$, $3^4 \\equiv 21 \\equiv 1$, so $3$ has order $4$.",
-        "依次计算幂直到得到 $1$。在 $U(10)$ 中，$3^1 = 3$，$3^2 = 9$，$3^3 = 27 \\equiv 7$，$3^4 \\equiv 21 \\equiv 1$，所以 $3$ 的阶为 $4$。",
+        "The order of an element is the smallest positive power that gives the identity, so compute powers until you reach one. Compute successive powers until you reach $1$. In $U(10)$, $3^1 = 3$, $3^2 = 9$, $3^3 = 27 \\equiv 7$, $3^4 \\equiv 21 \\equiv 1$, so $3$ has order $4$.",
+        "元素的阶是使它等于单位元的最小正幂，所以逐个计算幂，直到得到 1。依次计算幂直到得到 $1$。在 $U(10)$ 中，$3^1 = 3$，$3^2 = 9$，$3^3 = 27 \\equiv 7$，$3^4 \\equiv 21 \\equiv 1$，所以 $3$ 的阶为 $4$。",
       ),
       generate(rng) {
         let n: number;
@@ -1384,8 +1384,8 @@ export const computingInversesOfElementsInZn: TopicDef = {
       id: "inverses-in-groups-of-units",
       title: t("Inverses in U(n)", "U(n) 中的逆元"),
       explanation: t(
-        "In $U(26)$, the extended Euclidean algorithm gives $26 = 3 \\cdot 7 + 5$, $7 = 5 + 2$, $5 = 2 \\cdot 2 + 1$, and back-substituting $1 = 3 \\cdot 26 - 11 \\cdot 7$. So $7^{-1} = -11 = 15$.",
-        "在 $U(26)$ 中，扩展欧几里得算法给出 $26 = 3 \\cdot 7 + 5$，$7 = 5 + 2$，$5 = 2 \\cdot 2 + 1$，回代得 $1 = 3 \\cdot 26 - 11 \\cdot 7$。所以 $7^{-1} = -11 = 15$。",
+        "The extended Euclidean algorithm writes one as a combination of the element and the modulus, and the coefficient of the element is its inverse. In $U(26)$, the extended Euclidean algorithm gives $26 = 3 \\cdot 7 + 5$, $7 = 5 + 2$, $5 = 2 \\cdot 2 + 1$, and back-substituting $1 = 3 \\cdot 26 - 11 \\cdot 7$. So $7^{-1} = -11 = 15$.",
+        "扩展欧几里得算法把 1 写成该元素与模的组合，其中该元素的系数就是它的逆元。在 $U(26)$ 中，扩展欧几里得算法给出 $26 = 3 \\cdot 7 + 5$，$7 = 5 + 2$，$5 = 2 \\cdot 2 + 1$，回代得 $1 = 3 \\cdot 26 - 11 \\cdot 7$。所以 $7^{-1} = -11 = 15$。",
       ),
       generate(rng) {
         let n: number;
@@ -1413,8 +1413,8 @@ export const computingInversesOfElementsInZn: TopicDef = {
       id: "solving-equations-in-groups-of-units",
       title: t("Solving ax = b", "解 ax = b"),
       explanation: t(
-        "Multiply both sides by $a^{-1}$. In $U(11)$, $3x = 7$: $3^{-1} = 4$, so $x = 4 \\cdot 7 = 28 \\equiv 6$. Check: $3 \\cdot 6 = 18 \\equiv 7$.",
-        "两边同乘 $a^{-1}$。在 $U(11)$ 中解 $3x = 7$：$3^{-1} = 4$，所以 $x = 4 \\cdot 7 = 28 \\equiv 6$。验算：$3 \\cdot 6 = 18 \\equiv 7$。",
+        "In any group an equation of this form has exactly one solution, found by multiplying both sides by the inverse of the coefficient. Multiply both sides by $a^{-1}$. In $U(11)$, $3x = 7$: $3^{-1} = 4$, so $x = 4 \\cdot 7 = 28 \\equiv 6$. Check: $3 \\cdot 6 = 18 \\equiv 7$.",
+        "在任何群中，这种形式的方程恰好有一个解，把两边乘以系数的逆元就能求出。两边同乘 $a^{-1}$。在 $U(11)$ 中解 $3x = 7$：$3^{-1} = 4$，所以 $x = 4 \\cdot 7 = 28 \\equiv 6$。验算：$3 \\cdot 6 = 18 \\equiv 7$。",
       ),
       generate(rng) {
         let n: number;
@@ -1493,8 +1493,8 @@ export const cayleyTables: TopicDef = {
       id: "computing-with-cayley-tables",
       title: t("Computing products", "计算乘积"),
       explanation: t(
-        "To find $(x \\ast y) \\ast z$, read $x \\ast y$ from row $x$, column $y$, then look up that element's row and column $z$.",
-        "要求 $(x \\ast y) \\ast z$，先在第 $x$ 行第 $y$ 列读出 $x \\ast y$，再查该元素所在行与第 $z$ 列的交叉处。",
+        "A Cayley table lists every product, with the row giving the first element and the column giving the second, so products are looked up step by step. To find $(x \\ast y) \\ast z$, read $x \\ast y$ from row $x$, column $y$, then look up that element's row and column $z$.",
+        "凯莱表列出所有乘积，行给出第一个元素，列给出第二个元素，所以乘积可以逐步查出。要求 $(x \\ast y) \\ast z$，先在第 $x$ 行第 $y$ 列读出 $x \\ast y$，再查该元素所在行与第 $z$ 列的交叉处。",
       ),
       generate(rng) {
         const g = randomSmallGroup(rng);

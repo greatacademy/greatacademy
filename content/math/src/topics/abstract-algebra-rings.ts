@@ -144,8 +144,8 @@ export const introductionToRings: TopicDef = {
       id: "multiplying-in-quadratic-integer-rings",
       title: t("Multiplying in ℤ[√k]", "在 ℤ[√k] 中做乘法"),
       explanation: t(
-        "$(2 + 3\\sqrt{5})(1 - \\sqrt{5}) = 2 - 2\\sqrt{5} + 3\\sqrt{5} - 15 = -13 + \\sqrt{5}$.",
-        "$(2 + 3\\sqrt{5})(1 - \\sqrt{5}) = 2 - 2\\sqrt{5} + 3\\sqrt{5} - 15 = -13 + \\sqrt{5}$。",
+        "Multiply as with binomials, then replace the square of the root by the integer it stands for. $(2 + 3\\sqrt{5})(1 - \\sqrt{5}) = 2 - 2\\sqrt{5} + 3\\sqrt{5} - 15 = -13 + \\sqrt{5}$.",
+        "像二项式那样相乘，再把根号的平方换成它所代表的整数。$(2 + 3\\sqrt{5})(1 - \\sqrt{5}) = 2 - 2\\sqrt{5} + 3\\sqrt{5} - 15 = -13 + \\sqrt{5}$。",
       ),
       generate(rng) {
         const k = nonSquare(rng);
@@ -265,8 +265,8 @@ export const commutativeRings: TopicDef = {
       id: "commutators-of-matrices",
       title: t("Commutators of matrices", "矩阵的交换子"),
       explanation: t(
-        "With $A = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$ and $B = \\begin{pmatrix} 1 & 0 \\\\ 1 & 1 \\end{pmatrix}$: $AB = \\begin{pmatrix} 2 & 1 \\\\ 1 & 1 \\end{pmatrix}$ and $BA = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$, so $AB - BA = \\begin{pmatrix} 1 & 0 \\\\ 0 & -1 \\end{pmatrix}$.",
-        "设 $A = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$，$B = \\begin{pmatrix} 1 & 0 \\\\ 1 & 1 \\end{pmatrix}$：$AB = \\begin{pmatrix} 2 & 1 \\\\ 1 & 1 \\end{pmatrix}$，$BA = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$，所以 $AB - BA = \\begin{pmatrix} 1 & 0 \\\\ 0 & -1 \\end{pmatrix}$。",
+        "A commutator measures how far two elements are from commuting, and it equals the identity exactly when they commute. With $A = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$ and $B = \\begin{pmatrix} 1 & 0 \\\\ 1 & 1 \\end{pmatrix}$: $AB = \\begin{pmatrix} 2 & 1 \\\\ 1 & 1 \\end{pmatrix}$ and $BA = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$, so $AB - BA = \\begin{pmatrix} 1 & 0 \\\\ 0 & -1 \\end{pmatrix}$.",
+        "交换子衡量两个元素离可交换有多远，当且仅当它们可交换时，交换子等于单位元。设 $A = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$，$B = \\begin{pmatrix} 1 & 0 \\\\ 1 & 1 \\end{pmatrix}$：$AB = \\begin{pmatrix} 2 & 1 \\\\ 1 & 1 \\end{pmatrix}$，$BA = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\end{pmatrix}$，所以 $AB - BA = \\begin{pmatrix} 1 & 0 \\\\ 0 & -1 \\end{pmatrix}$。",
       ),
       generate(rng) {
         let a: Mat2;
@@ -379,8 +379,8 @@ export const ringsWithUnity: TopicDef = {
       id: "unities-of-subrings-of-zn",
       title: t("Unities of subrings of ℤₙ", "ℤₙ 子环的幺元"),
       explanation: t(
-        "In $\\mathbb{Z}_{10}$, the subring $\\langle 2 \\rangle = \\{0, 2, 4, 6, 8\\}$ has unity $6$: $6 \\equiv 0 \\pmod 2$ and $6 \\equiv 1 \\pmod 5$, so $6x = x$ for every even $x$.",
-        "在 $\\mathbb{Z}_{10}$ 中，子环 $\\langle 2 \\rangle = \\{0, 2, 4, 6, 8\\}$ 的幺元为 $6$：$6 \\equiv 0 \\pmod 2$ 且 $6 \\equiv 1 \\pmod 5$，所以对每个偶数 $x$ 有 $6x = x$。",
+        "A subring may have a unity different from one, namely an element of the subring that multiplies every element of it to itself. In $\\mathbb{Z}_{10}$, the subring $\\langle 2 \\rangle = \\{0, 2, 4, 6, 8\\}$ has unity $6$: $6 \\equiv 0 \\pmod 2$ and $6 \\equiv 1 \\pmod 5$, so $6x = x$ for every even $x$.",
+        "子环可能有不同于 1 的单位元，也就是子环中一个与其每个元素相乘都得到该元素本身的元素。在 $\\mathbb{Z}_{10}$ 中，子环 $\\langle 2 \\rangle = \\{0, 2, 4, 6, 8\\}$ 的幺元为 $6$：$6 \\equiv 0 \\pmod 2$ 且 $6 \\equiv 1 \\pmod 5$，所以对每个偶数 $x$ 有 $6x = x$。",
       ),
       generate(rng) {
         let n: number;
@@ -426,8 +426,8 @@ export const integralDomains: TopicDef = {
       id: "counting-zero-divisors-in-zn",
       title: t("Zero divisors in ℤₙ", "ℤₙ 中的零因子"),
       explanation: t(
-        "In $\\mathbb{Z}_{12}$, the units are $1, 5, 7, 11$, so the zero divisors are the other $12 - 4 - 1 = 7$ nonzero elements: $2, 3, 4, 6, 8, 9, 10$.",
-        "在 $\\mathbb{Z}_{12}$ 中，单位为 $1, 5, 7, 11$，所以零因子是其余 $12 - 4 - 1 = 7$ 个非零元素：$2, 3, 4, 6, 8, 9, 10$。",
+        "In this ring every nonzero element is either a unit or a zero divisor, so subtract the units and zero from the total. In $\\mathbb{Z}_{12}$, the units are $1, 5, 7, 11$, so the zero divisors are the other $12 - 4 - 1 = 7$ nonzero elements: $2, 3, 4, 6, 8, 9, 10$.",
+        "在这个环中，每个非零元素要么是单位，要么是零因子，所以从总数中减去单位和零。在 $\\mathbb{Z}_{12}$ 中，单位为 $1, 5, 7, 11$，所以零因子是其余 $12 - 4 - 1 = 7$ 个非零元素：$2, 3, 4, 6, 8, 9, 10$。",
       ),
       generate(rng) {
         let n: number;
@@ -449,8 +449,8 @@ export const integralDomains: TopicDef = {
       id: "recognizing-integral-domains",
       title: t("Recognizing integral domains", "识别整环"),
       explanation: t(
-        "$\\mathbb{Z}_{13}$ is an integral domain, but $\\mathbb{Z}_{15}$ is not: $3 \\cdot 5 = 0$. $\\mathbb{Z} \\times \\mathbb{Z}$ is not either: $(1, 0)(0, 1) = (0, 0)$.",
-        "$\\mathbb{Z}_{13}$ 是整环，而 $\\mathbb{Z}_{15}$ 不是：$3 \\cdot 5 = 0$。$\\mathbb{Z} \\times \\mathbb{Z}$ 也不是：$(1, 0)(0, 1) = (0, 0)$。",
+        "An integral domain is a commutative ring with unity in which a product is zero only when one of the factors is zero. $\\mathbb{Z}_{13}$ is an integral domain, but $\\mathbb{Z}_{15}$ is not: $3 \\cdot 5 = 0$. $\\mathbb{Z} \\times \\mathbb{Z}$ is not either: $(1, 0)(0, 1) = (0, 0)$.",
+        "整环是有单位元的交换环，其中乘积为零只有在某个因子为零时才会发生。$\\mathbb{Z}_{13}$ 是整环，而 $\\mathbb{Z}_{15}$ 不是：$3 \\cdot 5 = 0$。$\\mathbb{Z} \\times \\mathbb{Z}$ 也不是：$(1, 0)(0, 1) = (0, 0)$。",
       ),
       generate(rng) {
         const n = rng.int(4, 40);
@@ -517,8 +517,8 @@ export const introductionToFields: TopicDef = {
       id: "recognizing-fields",
       title: t("Recognizing fields", "识别域"),
       explanation: t(
-        "$\\mathbb{Q}(\\sqrt{2})$ is a field: $\\frac{1}{a + b\\sqrt 2} = \\frac{a - b\\sqrt 2}{a^2 - 2b^2}$. $\\mathbb{Z}[\\sqrt 2]$ is not: $2$ has no inverse in it.",
-        "$\\mathbb{Q}(\\sqrt{2})$ 是域：$\\frac{1}{a + b\\sqrt 2} = \\frac{a - b\\sqrt 2}{a^2 - 2b^2}$。$\\mathbb{Z}[\\sqrt 2]$ 不是：$2$ 在其中没有逆元。",
+        "A field is a commutative ring in which every nonzero element has a multiplicative inverse, so check whether the inverses stay in the set. $\\mathbb{Q}(\\sqrt{2})$ is a field: $\\frac{1}{a + b\\sqrt 2} = \\frac{a - b\\sqrt 2}{a^2 - 2b^2}$. $\\mathbb{Z}[\\sqrt 2]$ is not: $2$ has no inverse in it.",
+        "域是每个非零元素都有乘法逆元的交换环，所以要检查这些逆元是否仍在集合中。$\\mathbb{Q}(\\sqrt{2})$ 是域：$\\frac{1}{a + b\\sqrt 2} = \\frac{a - b\\sqrt 2}{a^2 - 2b^2}$。$\\mathbb{Z}[\\sqrt 2]$ 不是：$2$ 在其中没有逆元。",
       ),
       generate(rng) {
         const n = rng.int(4, 40);
@@ -572,8 +572,8 @@ export const introductionToFields: TopicDef = {
       id: "solving-linear-equations-in-zp",
       title: t("Solving ax = b in ℤₚ", "在 ℤₚ 中解 ax = b"),
       explanation: t(
-        "In $\\mathbb{Z}_{11}$, $3x = 7$ gives $x = 7 \\cdot 3^{-1} = 7 \\cdot 4 = 28 \\equiv 6$. Check: $3 \\cdot 6 = 18 \\equiv 7$.",
-        "在 $\\mathbb{Z}_{11}$ 中，$3x = 7$ 得 $x = 7 \\cdot 3^{-1} = 7 \\cdot 4 = 28 \\equiv 6$。验证：$3 \\cdot 6 = 18 \\equiv 7$。",
+        "Modulo a prime every nonzero element has an inverse, so a linear equation is solved by multiplying by the inverse of the coefficient. In $\\mathbb{Z}_{11}$, $3x = 7$ gives $x = 7 \\cdot 3^{-1} = 7 \\cdot 4 = 28 \\equiv 6$. Check: $3 \\cdot 6 = 18 \\equiv 7$.",
+        "模素数时每个非零元素都有逆元，所以线性方程可以通过乘以系数的逆元来求解。在 $\\mathbb{Z}_{11}$ 中，$3x = 7$ 得 $x = 7 \\cdot 3^{-1} = 7 \\cdot 4 = 28 \\equiv 6$。验证：$3 \\cdot 6 = 18 \\equiv 7$。",
       ),
       generate(rng) {
         const p = rng.pick([5, 7, 11, 13, 17, 19, 23, 29, 31]);
@@ -612,8 +612,8 @@ export const theCharacteristicOfARing: TopicDef = {
       id: "characteristics-of-product-rings",
       title: t("Characteristics of products", "直积的特征"),
       explanation: t(
-        "$\\mathbb{Z}_4 \\times \\mathbb{Z}_6$ has characteristic $\\operatorname{lcm}(4, 6) = 12$: $12(a, b) = (0, 0)$ always, and $(1, 1)$ needs all $12$. $\\mathbb{Z} \\times \\mathbb{Z}_6$ has characteristic $0$.",
-        "$\\mathbb{Z}_4 \\times \\mathbb{Z}_6$ 的特征为 $\\operatorname{lcm}(4, 6) = 12$：总有 $12(a, b) = (0, 0)$，而 $(1, 1)$ 恰需 $12$。$\\mathbb{Z} \\times \\mathbb{Z}_6$ 的特征为 $0$。",
+        "The characteristic is the least number of copies of the unity that sum to zero, which in a product must work in every coordinate. $\\mathbb{Z}_4 \\times \\mathbb{Z}_6$ has characteristic $\\operatorname{lcm}(4, 6) = 12$: $12(a, b) = (0, 0)$ always, and $(1, 1)$ needs all $12$. $\\mathbb{Z} \\times \\mathbb{Z}_6$ has characteristic $0$.",
+        "特征是使单位元的若干份相加等于零的最小份数，在直积中这必须对每个坐标都成立。$\\mathbb{Z}_4 \\times \\mathbb{Z}_6$ 的特征为 $\\operatorname{lcm}(4, 6) = 12$：总有 $12(a, b) = (0, 0)$，而 $(1, 1)$ 恰需 $12$。$\\mathbb{Z} \\times \\mathbb{Z}_6$ 的特征为 $0$。",
       ),
       generate(rng) {
         const ns = range(1, rng.int(2, 3)).map(() => rng.int(2, 20));
@@ -687,8 +687,8 @@ export const theUnitsOfARing: TopicDef = {
       id: "counting-units-of-product-rings",
       title: t("Units of products", "直积的单位"),
       explanation: t(
-        "$U(\\mathbb{Z}_8 \\times \\mathbb{Z}_9) = U(8) \\times U(9)$ has $4 \\cdot 6 = 24$ elements.",
-        "$U(\\mathbb{Z}_8 \\times \\mathbb{Z}_9) = U(8) \\times U(9)$ 有 $4 \\cdot 6 = 24$ 个元素。",
+        "An element of a product ring is a unit exactly when every coordinate is a unit, so multiply the numbers of units. $U(\\mathbb{Z}_8 \\times \\mathbb{Z}_9) = U(8) \\times U(9)$ has $4 \\cdot 6 = 24$ elements.",
+        "直积环中的元素是单位，当且仅当每个坐标都是单位，所以把各自的单位个数相乘。$U(\\mathbb{Z}_8 \\times \\mathbb{Z}_9) = U(8) \\times U(9)$ 有 $4 \\cdot 6 = 24$ 个元素。",
       ),
       generate(rng) {
         const m = rng.int(3, 30);
@@ -709,8 +709,8 @@ export const theUnitsOfARing: TopicDef = {
       id: "units-of-quadratic-integer-rings",
       title: t("Units of ℤ[√k]", "ℤ[√k] 的单位"),
       explanation: t(
-        "$3 + 2\\sqrt 2$ is a unit of $\\mathbb{Z}[\\sqrt 2]$: its norm is $9 - 8 = 1$, and $(3 + 2\\sqrt 2)(3 - 2\\sqrt 2) = 1$. $1 + \\sqrt 3$ is not a unit of $\\mathbb{Z}[\\sqrt 3]$: its norm is $-2$.",
-        "$3 + 2\\sqrt 2$ 是 $\\mathbb{Z}[\\sqrt 2]$ 的单位：范数为 $9 - 8 = 1$，且 $(3 + 2\\sqrt 2)(3 - 2\\sqrt 2) = 1$。$1 + \\sqrt 3$ 不是 $\\mathbb{Z}[\\sqrt 3]$ 的单位：范数为 $-2$。",
+        "The norm is multiplicative, so an element can be a unit only when its norm is a unit of the integers, plus or minus one. $3 + 2\\sqrt 2$ is a unit of $\\mathbb{Z}[\\sqrt 2]$: its norm is $9 - 8 = 1$, and $(3 + 2\\sqrt 2)(3 - 2\\sqrt 2) = 1$. $1 + \\sqrt 3$ is not a unit of $\\mathbb{Z}[\\sqrt 3]$: its norm is $-2$.",
+        "范数是积性的，所以一个元素只有在它的范数是整数的单位，即正负 1 时，才可能是单位。$3 + 2\\sqrt 2$ 是 $\\mathbb{Z}[\\sqrt 2]$ 的单位：范数为 $9 - 8 = 1$，且 $(3 + 2\\sqrt 2)(3 - 2\\sqrt 2) = 1$。$1 + \\sqrt 3$ 不是 $\\mathbb{Z}[\\sqrt 3]$ 的单位：范数为 $-2$。",
       ),
       generate(rng) {
         const k = rng.pick([2, 3, 5, 6, 7, 8, 10, 11, 12, 13]);
@@ -800,8 +800,8 @@ export const findingTheInverseOfAMatrixOverARing: TopicDef = {
       id: "inverting-matrices-over-zn",
       title: t("Inverting over ℤₙ", "在 ℤₙ 上求逆"),
       explanation: t(
-        "Over $\\mathbb{Z}_7$, $A = \\begin{pmatrix} 2 & 1 \\\\ 3 & 4 \\end{pmatrix}$ has $\\det A = 5$ and $5^{-1} = 3$, so $A^{-1} = 3\\begin{pmatrix} 4 & -1 \\\\ -3 & 2 \\end{pmatrix} = \\begin{pmatrix} 5 & 4 \\\\ 5 & 6 \\end{pmatrix}$.",
-        "在 $\\mathbb{Z}_7$ 上，$A = \\begin{pmatrix} 2 & 1 \\\\ 3 & 4 \\end{pmatrix}$ 的 $\\det A = 5$，$5^{-1} = 3$，所以 $A^{-1} = 3\\begin{pmatrix} 4 & -1 \\\\ -3 & 2 \\end{pmatrix} = \\begin{pmatrix} 5 & 4 \\\\ 5 & 6 \\end{pmatrix}$。",
+        "The usual formula for an inverse works over residues, with division by the determinant replaced by multiplication by its inverse. Over $\\mathbb{Z}_7$, $A = \\begin{pmatrix} 2 & 1 \\\\ 3 & 4 \\end{pmatrix}$ has $\\det A = 5$ and $5^{-1} = 3$, so $A^{-1} = 3\\begin{pmatrix} 4 & -1 \\\\ -3 & 2 \\end{pmatrix} = \\begin{pmatrix} 5 & 4 \\\\ 5 & 6 \\end{pmatrix}$.",
+        "求逆的常用公式在剩余类上同样适用，只是除以行列式要换成乘以它的逆元。在 $\\mathbb{Z}_7$ 上，$A = \\begin{pmatrix} 2 & 1 \\\\ 3 & 4 \\end{pmatrix}$ 的 $\\det A = 5$，$5^{-1} = 3$，所以 $A^{-1} = 3\\begin{pmatrix} 4 & -1 \\\\ -3 & 2 \\end{pmatrix} = \\begin{pmatrix} 5 & 4 \\\\ 5 & 6 \\end{pmatrix}$。",
       ),
       generate(rng) {
         const n = rng.pick([5, 7, 9, 10, 11, 12, 13, 15]);
@@ -845,8 +845,8 @@ export const theFieldOfQuotientsOfAnIntegralDomain: TopicDef = {
       id: "equal-fractions-in-a-field-of-quotients",
       title: t("Equal fractions", "相等的分式"),
       explanation: t(
-        "In the field of quotients of $\\mathbb{Z}[\\sqrt 2]$, $\\frac{\\sqrt 2}{2} = \\frac{1}{\\sqrt 2}$, since $\\sqrt 2 \\cdot \\sqrt 2 = 2 \\cdot 1$.",
-        "在 $\\mathbb{Z}[\\sqrt 2]$ 的分式域中，$\\frac{\\sqrt 2}{2} = \\frac{1}{\\sqrt 2}$，因为 $\\sqrt 2 \\cdot \\sqrt 2 = 2 \\cdot 1$。",
+        "Two fractions are equal when cross multiplication gives the same product, exactly as for ordinary fractions of integers. In the field of quotients of $\\mathbb{Z}[\\sqrt 2]$, $\\frac{\\sqrt 2}{2} = \\frac{1}{\\sqrt 2}$, since $\\sqrt 2 \\cdot \\sqrt 2 = 2 \\cdot 1$.",
+        "两个分式相等，当且仅当交叉相乘得到相同的乘积，这与普通整数分数完全一样。在 $\\mathbb{Z}[\\sqrt 2]$ 的分式域中，$\\frac{\\sqrt 2}{2} = \\frac{1}{\\sqrt 2}$，因为 $\\sqrt 2 \\cdot \\sqrt 2 = 2 \\cdot 1$。",
       ),
       generate(rng) {
         const k = nonSquare(rng);
@@ -877,8 +877,8 @@ export const theFieldOfQuotientsOfAnIntegralDomain: TopicDef = {
       id: "identifying-fields-of-quotients",
       title: t("Identifying fields of quotients", "识别分式域"),
       explanation: t(
-        "The field of quotients of $\\mathbb{Z}[i]$ is $\\mathbb{Q}(i) = \\{a + bi : a, b \\in \\mathbb{Q}\\}$: every $\\frac{a + bi}{c + di}$ simplifies to this form by multiplying by $\\frac{c - di}{c - di}$.",
-        "$\\mathbb{Z}[i]$ 的分式域为 $\\mathbb{Q}(i) = \\{a + bi : a, b \\in \\mathbb{Q}\\}$：每个 $\\frac{a + bi}{c + di}$ 乘以 $\\frac{c - di}{c - di}$ 后都化为这种形式。",
+        "The field of quotients is the smallest field containing the ring, obtained by allowing division by every nonzero element. The field of quotients of $\\mathbb{Z}[i]$ is $\\mathbb{Q}(i) = \\{a + bi : a, b \\in \\mathbb{Q}\\}$: every $\\frac{a + bi}{c + di}$ simplifies to this form by multiplying by $\\frac{c - di}{c - di}$.",
+        "分式域是包含这个环的最小的域，通过允许除以每个非零元素而得到。$\\mathbb{Z}[i]$ 的分式域为 $\\mathbb{Q}(i) = \\{a + bi : a, b \\in \\mathbb{Q}\\}$：每个 $\\frac{a + bi}{c + di}$ 乘以 $\\frac{c - di}{c - di}$ 后都化为这种形式。",
       ),
       generate(rng) {
         const k = nonSquare(rng);
@@ -1035,8 +1035,8 @@ export const ideals: TopicDef = {
       id: "recognizing-ideals",
       title: t("Recognizing ideals", "识别理想"),
       explanation: t(
-        "$\\mathbb{Z}$ is a subring of $\\mathbb{Q}$ but not an ideal: $\\frac{1}{2} \\cdot 1 \\notin \\mathbb{Z}$. $\\{(a, 0) : a \\in \\mathbb{Z}\\}$ is an ideal of $\\mathbb{Z} \\times \\mathbb{Z}$: $(r, s)(a, 0) = (ra, 0)$.",
-        "$\\mathbb{Z}$ 是 $\\mathbb{Q}$ 的子环但不是理想：$\\frac{1}{2} \\cdot 1 \\notin \\mathbb{Z}$。$\\{(a, 0) : a \\in \\mathbb{Z}\\}$ 是 $\\mathbb{Z} \\times \\mathbb{Z}$ 的理想：$(r, s)(a, 0) = (ra, 0)$。",
+        "An ideal is a subring that absorbs multiplication, so multiplying any of its elements by any ring element stays inside it. $\\mathbb{Z}$ is a subring of $\\mathbb{Q}$ but not an ideal: $\\frac{1}{2} \\cdot 1 \\notin \\mathbb{Z}$. $\\{(a, 0) : a \\in \\mathbb{Z}\\}$ is an ideal of $\\mathbb{Z} \\times \\mathbb{Z}$: $(r, s)(a, 0) = (ra, 0)$.",
+        "理想是吸收乘法的子环，所以把它的任一元素乘以环中任一元素，结果仍在其中。$\\mathbb{Z}$ 是 $\\mathbb{Q}$ 的子环但不是理想：$\\frac{1}{2} \\cdot 1 \\notin \\mathbb{Z}$。$\\{(a, 0) : a \\in \\mathbb{Z}\\}$ 是 $\\mathbb{Z} \\times \\mathbb{Z}$ 的理想：$(r, s)(a, 0) = (ra, 0)$。",
       ),
       generate(rng) {
         const n = rng.int(2, 15);
@@ -1101,8 +1101,8 @@ export const ideals: TopicDef = {
       id: "sums-intersections-and-products-of-ideals-of-z",
       title: t("Combining ideals of ℤ", "组合 ℤ 的理想"),
       explanation: t(
-        "$12\\mathbb{Z} + 18\\mathbb{Z} = 6\\mathbb{Z}$, $12\\mathbb{Z} \\cap 18\\mathbb{Z} = 36\\mathbb{Z}$, and $(12\\mathbb{Z})(18\\mathbb{Z}) = 216\\mathbb{Z}$.",
-        "$12\\mathbb{Z} + 18\\mathbb{Z} = 6\\mathbb{Z}$，$12\\mathbb{Z} \\cap 18\\mathbb{Z} = 36\\mathbb{Z}$，$(12\\mathbb{Z})(18\\mathbb{Z}) = 216\\mathbb{Z}$。",
+        "Every ideal of the integers is the multiples of one number, and sums, intersections and products correspond to the gcd, the lcm and the product. $12\\mathbb{Z} + 18\\mathbb{Z} = 6\\mathbb{Z}$, $12\\mathbb{Z} \\cap 18\\mathbb{Z} = 36\\mathbb{Z}$, and $(12\\mathbb{Z})(18\\mathbb{Z}) = 216\\mathbb{Z}$.",
+        "整数环的每个理想都是某个数的倍数，理想的和、交、积分别对应最大公因数、最小公倍数和乘积。$12\\mathbb{Z} + 18\\mathbb{Z} = 6\\mathbb{Z}$，$12\\mathbb{Z} \\cap 18\\mathbb{Z} = 36\\mathbb{Z}$，$(12\\mathbb{Z})(18\\mathbb{Z}) = 216\\mathbb{Z}$。",
       ),
       generate(rng) {
         let a: number;
@@ -1149,8 +1149,8 @@ export const generatingElementsOfPrincipalIdealRings: TopicDef = {
       id: "equal-principal-ideals-of-zn",
       title: t("Equal principal ideals", "相等的主理想"),
       explanation: t(
-        "In $\\mathbb{Z}_{20}$, $\\langle 6 \\rangle = \\langle 2 \\rangle = \\langle 14 \\rangle$ since $\\gcd(6, 20) = \\gcd(14, 20) = 2$, but $\\langle 4 \\rangle \\ne \\langle 6 \\rangle$.",
-        "在 $\\mathbb{Z}_{20}$ 中，$\\langle 6 \\rangle = \\langle 2 \\rangle = \\langle 14 \\rangle$，因为 $\\gcd(6, 20) = \\gcd(14, 20) = 2$；但 $\\langle 4 \\rangle \\ne \\langle 6 \\rangle$。",
+        "Two elements generate the same ideal exactly when they have the same gcd with the modulus. In $\\mathbb{Z}_{20}$, $\\langle 6 \\rangle = \\langle 2 \\rangle = \\langle 14 \\rangle$ since $\\gcd(6, 20) = \\gcd(14, 20) = 2$, but $\\langle 4 \\rangle \\ne \\langle 6 \\rangle$.",
+        "两个元素生成同一个理想，当且仅当它们与模的最大公因数相同。在 $\\mathbb{Z}_{20}$ 中，$\\langle 6 \\rangle = \\langle 2 \\rangle = \\langle 14 \\rangle$，因为 $\\gcd(6, 20) = \\gcd(14, 20) = 2$；但 $\\langle 4 \\rangle \\ne \\langle 6 \\rangle$。",
       ),
       generate(rng) {
         const n = rng.pick([12, 18, 20, 24, 30, 36, 40, 42, 45, 48, 60]);
@@ -1182,8 +1182,8 @@ export const generatingElementsOfPrincipalIdealRings: TopicDef = {
       id: "generators-of-ideals-of-zn",
       title: t("Generators of ⟨a, b⟩", "⟨a, b⟩ 的生成元"),
       explanation: t(
-        "In $\\mathbb{Z}_{36}$, $\\langle 8, 30 \\rangle = \\langle \\gcd(8, 30, 36) \\rangle = \\langle 2 \\rangle$.",
-        "在 $\\mathbb{Z}_{36}$ 中，$\\langle 8, 30 \\rangle = \\langle \\gcd(8, 30, 36) \\rangle = \\langle 2 \\rangle$。",
+        "An ideal generated by several elements of this ring is principal, generated by the gcd of those elements and the modulus. In $\\mathbb{Z}_{36}$, $\\langle 8, 30 \\rangle = \\langle \\gcd(8, 30, 36) \\rangle = \\langle 2 \\rangle$.",
+        "这个环中由若干元素生成的理想是主理想，由这些元素与模的最大公因数生成。在 $\\mathbb{Z}_{36}$ 中，$\\langle 8, 30 \\rangle = \\langle \\gcd(8, 30, 36) \\rangle = \\langle 2 \\rangle$。",
       ),
       generate(rng) {
         const n = rng.pick([24, 30, 36, 40, 48, 60, 72, 84, 90, 96, 120]);
@@ -1236,8 +1236,8 @@ export const quotientRings: TopicDef = {
       id: "sizes-of-quotients-of-gaussian-integers",
       title: t("Quotients of ℤ[i]", "ℤ[i] 的商环"),
       explanation: t(
-        "$\\mathbb{Z}[i]/\\langle 2 + i \\rangle$ has $2^2 + 1^2 = 5$ elements; in fact it is isomorphic to $\\mathbb{Z}_5$, since $i \\equiv -2$.",
-        "$\\mathbb{Z}[i]/\\langle 2 + i \\rangle$ 有 $2^2 + 1^2 = 5$ 个元素；事实上它同构于 $\\mathbb{Z}_5$，因为 $i \\equiv -2$。",
+        "The quotient of the Gaussian integers by a principal ideal has as many elements as the norm of its generator. $\\mathbb{Z}[i]/\\langle 2 + i \\rangle$ has $2^2 + 1^2 = 5$ elements; in fact it is isomorphic to $\\mathbb{Z}_5$, since $i \\equiv -2$.",
+        "高斯整数环模一个主理想所得商环的元素个数，等于生成元的范数。$\\mathbb{Z}[i]/\\langle 2 + i \\rangle$ 有 $2^2 + 1^2 = 5$ 个元素；事实上它同构于 $\\mathbb{Z}_5$，因为 $i \\equiv -2$。",
       ),
       generate(rng) {
         const a = rng.int(1, 9);
@@ -1261,8 +1261,8 @@ export const quotientRings: TopicDef = {
       id: "multiplying-in-quotients-of-zn",
       title: t("Multiplying cosets", "陪集相乘"),
       explanation: t(
-        "In $\\mathbb{Z}_{24}/\\langle 6 \\rangle$, $(5 + \\langle 6 \\rangle)(4 + \\langle 6 \\rangle) = 20 + \\langle 6 \\rangle = 2 + \\langle 6 \\rangle$.",
-        "在 $\\mathbb{Z}_{24}/\\langle 6 \\rangle$ 中，$(5 + \\langle 6 \\rangle)(4 + \\langle 6 \\rangle) = 20 + \\langle 6 \\rangle = 2 + \\langle 6 \\rangle$。",
+        "Multiply the representatives of the cosets and then reduce the result to the coset it belongs to. In $\\mathbb{Z}_{24}/\\langle 6 \\rangle$, $(5 + \\langle 6 \\rangle)(4 + \\langle 6 \\rangle) = 20 + \\langle 6 \\rangle = 2 + \\langle 6 \\rangle$.",
+        "把陪集的代表元相乘，再把结果约化到它所属的陪集。在 $\\mathbb{Z}_{24}/\\langle 6 \\rangle$ 中，$(5 + \\langle 6 \\rangle)(4 + \\langle 6 \\rangle) = 20 + \\langle 6 \\rangle = 2 + \\langle 6 \\rangle$。",
       ),
       generate(rng) {
         const n = rng.pick([24, 30, 36, 40, 48, 60, 72]);
@@ -1321,8 +1321,8 @@ export const polynomialQuotientRings: TopicDef = {
       id: "sizes-of-polynomial-quotient-rings",
       title: t("Sizes of ℤₚ[x]/⟨f⟩", "ℤₚ[x]/⟨f⟩ 的大小"),
       explanation: t(
-        "$\\mathbb{Z}_3[x]/\\langle x^2 + 1 \\rangle$ consists of the $a + bx$ with $a, b \\in \\mathbb{Z}_3$: $3^2 = 9$ elements.",
-        "$\\mathbb{Z}_3[x]/\\langle x^2 + 1 \\rangle$ 由 $a + bx$（$a, b \\in \\mathbb{Z}_3$）组成：共 $3^2 = 9$ 个元素。",
+        "Every class has a unique remainder of degree less than the modulus polynomial, so count those remainders by their coefficients. $\\mathbb{Z}_3[x]/\\langle x^2 + 1 \\rangle$ consists of the $a + bx$ with $a, b \\in \\mathbb{Z}_3$: $3^2 = 9$ elements.",
+        "每个类都有唯一一个次数小于模多项式的余式，所以按系数来数这些余式。$\\mathbb{Z}_3[x]/\\langle x^2 + 1 \\rangle$ 由 $a + bx$（$a, b \\in \\mathbb{Z}_3$）组成：共 $3^2 = 9$ 个元素。",
       ),
       generate(rng) {
         const p = rng.pick([2, 3, 5, 7]);
@@ -1347,8 +1347,8 @@ export const polynomialQuotientRings: TopicDef = {
       id: "multiplying-in-polynomial-quotient-rings",
       title: t("Multiplying in F[x]/⟨x² − c⟩", "在 F[x]/⟨x² − c⟩ 中相乘"),
       explanation: t(
-        "In $\\mathbb{Z}_7[x]/\\langle x^2 - 3 \\rangle$, $x^2 = 3$, so $(2 + x)(4 + 5x) = 8 + 14x + 5x^2 = 8 + 14x + 15 = 23 + 14x = 2 + 0x$.",
-        "在 $\\mathbb{Z}_7[x]/\\langle x^2 - 3 \\rangle$ 中，$x^2 = 3$，所以 $(2 + x)(4 + 5x) = 8 + 14x + 5x^2 = 8 + 14x + 15 = 23 + 14x = 2 + 0x$。",
+        "Multiply the polynomials as usual, then use the relation given by the modulus to replace the square of the variable by a constant. In $\\mathbb{Z}_7[x]/\\langle x^2 - 3 \\rangle$, $x^2 = 3$, so $(2 + x)(4 + 5x) = 8 + 14x + 5x^2 = 8 + 14x + 15 = 23 + 14x = 2 + 0x$.",
+        "照常把多项式相乘，再用模所给出的关系把变量的平方换成常数。在 $\\mathbb{Z}_7[x]/\\langle x^2 - 3 \\rangle$ 中，$x^2 = 3$，所以 $(2 + x)(4 + 5x) = 8 + 14x + 5x^2 = 8 + 14x + 15 = 23 + 14x = 2 + 0x$。",
       ),
       generate(rng) {
         const p = rng.pick([5, 7, 11, 13]);
@@ -1391,8 +1391,8 @@ export const ringHomomorphisms: TopicDef = {
       id: "recognizing-ring-homomorphisms",
       title: t("Recognizing ring homomorphisms", "识别环同态"),
       explanation: t(
-        "$\\varphi(a + b\\sqrt 3) = a - b\\sqrt 3$ is a ring homomorphism of $\\mathbb{Z}[\\sqrt 3]$. $\\varphi(x) = 3x$ on $\\mathbb{Z}$ is not: $\\varphi(1 \\cdot 1) = 3$ but $\\varphi(1)\\varphi(1) = 9$.",
-        "$\\varphi(a + b\\sqrt 3) = a - b\\sqrt 3$ 是 $\\mathbb{Z}[\\sqrt 3]$ 的环同态。$\\mathbb{Z}$ 上的 $\\varphi(x) = 3x$ 不是：$\\varphi(1 \\cdot 1) = 3$，而 $\\varphi(1)\\varphi(1) = 9$。",
+        "A ring homomorphism must respect both addition and multiplication, so check the product of two elements as well as the sum. $\\varphi(a + b\\sqrt 3) = a - b\\sqrt 3$ is a ring homomorphism of $\\mathbb{Z}[\\sqrt 3]$. $\\varphi(x) = 3x$ on $\\mathbb{Z}$ is not: $\\varphi(1 \\cdot 1) = 3$ but $\\varphi(1)\\varphi(1) = 9$.",
+        "环同态必须同时保持加法和乘法，所以除了检查和，还要检查两个元素的乘积。$\\varphi(a + b\\sqrt 3) = a - b\\sqrt 3$ 是 $\\mathbb{Z}[\\sqrt 3]$ 的环同态。$\\mathbb{Z}$ 上的 $\\varphi(x) = 3x$ 不是：$\\varphi(1 \\cdot 1) = 3$，而 $\\varphi(1)\\varphi(1) = 9$。",
       ),
       generate(rng) {
         const n = rng.int(2, 12);
@@ -1469,8 +1469,8 @@ export const ringHomomorphisms: TopicDef = {
       id: "evaluation-homomorphisms-into-zn",
       title: t("Evaluation homomorphisms", "求值同态"),
       explanation: t(
-        "$\\varphi: \\mathbb{Z}[x] \\to \\mathbb{Z}_7$, $\\varphi(f) = f(3) \\bmod 7$, is a ring homomorphism. For $f = x^3 + 2x + 5$, $\\varphi(f) = 27 + 6 + 5 = 38 \\equiv 3$.",
-        "$\\varphi: \\mathbb{Z}[x] \\to \\mathbb{Z}_7$，$\\varphi(f) = f(3) \\bmod 7$ 是环同态。对 $f = x^3 + 2x + 5$，$\\varphi(f) = 27 + 6 + 5 = 38 \\equiv 3$。",
+        "Substituting a value for the variable and reducing respects both operations, so it is a ring homomorphism, computed by evaluating the polynomial. $\\varphi: \\mathbb{Z}[x] \\to \\mathbb{Z}_7$, $\\varphi(f) = f(3) \\bmod 7$, is a ring homomorphism. For $f = x^3 + 2x + 5$, $\\varphi(f) = 27 + 6 + 5 = 38 \\equiv 3$.",
+        "把变量换成一个值再约化，同时保持两种运算，所以它是环同态，计算方法就是求多项式的值。$\\varphi: \\mathbb{Z}[x] \\to \\mathbb{Z}_7$，$\\varphi(f) = f(3) \\bmod 7$ 是环同态。对 $f = x^3 + 2x + 5$，$\\varphi(f) = 27 + 6 + 5 = 38 \\equiv 3$。",
       ),
       generate(rng) {
         const n = rng.pick([5, 6, 7, 8, 9, 10, 11, 12, 13]);
@@ -1521,8 +1521,8 @@ export const ringHomomorphismsBetweenResidueRings: TopicDef = {
       id: "recognizing-homomorphisms-between-residue-rings",
       title: t("Is x ↦ kx a ring homomorphism?", "x ↦ kx 是环同态吗？"),
       explanation: t(
-        "$x \\mapsto 4x$ from $\\mathbb{Z}_6$ to $\\mathbb{Z}_{12}$ is a ring homomorphism: $6 \\cdot 4 = 24 \\equiv 0$ and $4^2 = 16 \\equiv 4 \\pmod{12}$. $x \\mapsto 3x$ is not: $9 \\not\\equiv 3$.",
-        "从 $\\mathbb{Z}_6$ 到 $\\mathbb{Z}_{12}$ 的 $x \\mapsto 4x$ 是环同态：$6 \\cdot 4 = 24 \\equiv 0$，$4^2 = 16 \\equiv 4 \\pmod{12}$。$x \\mapsto 3x$ 不是：$9 \\not\\equiv 3$。",
+        "Such a map is a well defined ring homomorphism when it respects the modulus and the multiplier is idempotent in the target ring. $x \\mapsto 4x$ from $\\mathbb{Z}_6$ to $\\mathbb{Z}_{12}$ is a ring homomorphism: $6 \\cdot 4 = 24 \\equiv 0$ and $4^2 = 16 \\equiv 4 \\pmod{12}$. $x \\mapsto 3x$ is not: $9 \\not\\equiv 3$.",
+        "当这样的映射与模相容，并且乘数在目标环中是幂等元时，它就是良定义的环同态。从 $\\mathbb{Z}_6$ 到 $\\mathbb{Z}_{12}$ 的 $x \\mapsto 4x$ 是环同态：$6 \\cdot 4 = 24 \\equiv 0$，$4^2 = 16 \\equiv 4 \\pmod{12}$。$x \\mapsto 3x$ 不是：$9 \\not\\equiv 3$。",
       ),
       generate(rng) {
         const want = rng.bool();
@@ -1634,8 +1634,8 @@ export const theImageAndKernelOfARingHomomorphism: TopicDef = {
       id: "images-of-homomorphisms-between-residue-rings",
       title: t("Images of residue ring homomorphisms", "剩余类环同态的像"),
       explanation: t(
-        "$x \\mapsto 4x$ is a ring homomorphism $\\mathbb{Z}_6 \\to \\mathbb{Z}_{12}$ with image $\\{0, 4, 8\\}$, so its kernel has $\\frac{6}{3} = 2$ elements: $\\{0, 3\\}$.",
-        "$x \\mapsto 4x$ 是环同态 $\\mathbb{Z}_6 \\to \\mathbb{Z}_{12}$，像为 $\\{0, 4, 8\\}$，所以核有 $\\frac{6}{3} = 2$ 个元素：$\\{0, 3\\}$。",
+        "The image consists of the multiples of the multiplier in the target, so list those multiples. $x \\mapsto 4x$ is a ring homomorphism $\\mathbb{Z}_6 \\to \\mathbb{Z}_{12}$ with image $\\{0, 4, 8\\}$, so its kernel has $\\frac{6}{3} = 2$ elements: $\\{0, 3\\}$.",
+        "像由目标环中乘数的倍数组成，所以把这些倍数列出来。$x \\mapsto 4x$ 是环同态 $\\mathbb{Z}_6 \\to \\mathbb{Z}_{12}$，像为 $\\{0, 4, 8\\}$，所以核有 $\\frac{6}{3} = 2$ 个元素：$\\{0, 3\\}$。",
       ),
       generate(rng) {
         let m: number;
@@ -1688,8 +1688,8 @@ export const primeIdealsAndMaximalIdeals: TopicDef = {
       id: "recognizing-prime-and-maximal-ideals",
       title: t("Prime or maximal?", "素理想还是极大理想？"),
       explanation: t(
-        "$\\langle 5 \\rangle$ is maximal in $\\mathbb{Z}_{30}$, since $\\mathbb{Z}_{30}/\\langle 5 \\rangle \\cong \\mathbb{Z}_5$ is a field. $\\langle 6 \\rangle$ is not even prime: $2 \\cdot 3 \\in \\langle 6 \\rangle$ but $2, 3 \\notin \\langle 6 \\rangle$.",
-        "$\\langle 5 \\rangle$ 是 $\\mathbb{Z}_{30}$ 的极大理想，因为 $\\mathbb{Z}_{30}/\\langle 5 \\rangle \\cong \\mathbb{Z}_5$ 是域。$\\langle 6 \\rangle$ 甚至不是素理想：$2 \\cdot 3 \\in \\langle 6 \\rangle$，但 $2, 3 \\notin \\langle 6 \\rangle$。",
+        "An ideal is maximal when the quotient is a field and prime when the quotient is an integral domain, so identify the quotient ring. $\\langle 5 \\rangle$ is maximal in $\\mathbb{Z}_{30}$, since $\\mathbb{Z}_{30}/\\langle 5 \\rangle \\cong \\mathbb{Z}_5$ is a field. $\\langle 6 \\rangle$ is not even prime: $2 \\cdot 3 \\in \\langle 6 \\rangle$ but $2, 3 \\notin \\langle 6 \\rangle$.",
+        "当商环是域时理想是极大的，当商环是整环时理想是素的，所以要确定商环。$\\langle 5 \\rangle$ 是 $\\mathbb{Z}_{30}$ 的极大理想，因为 $\\mathbb{Z}_{30}/\\langle 5 \\rangle \\cong \\mathbb{Z}_5$ 是域。$\\langle 6 \\rangle$ 甚至不是素理想：$2 \\cdot 3 \\in \\langle 6 \\rangle$，但 $2, 3 \\notin \\langle 6 \\rangle$。",
       ),
       generate(rng) {
         const n = rng.pick([12, 18, 20, 24, 30, 36, 40, 42, 60, 70, 84, 90, 105]);
@@ -1719,8 +1719,8 @@ export const primeIdealsAndMaximalIdeals: TopicDef = {
       id: "counting-maximal-ideals",
       title: t("Counting maximal ideals", "数极大理想"),
       explanation: t(
-        "The maximal ideals of $\\mathbb{Z}_{12} \\times \\mathbb{Z}_{15}$ are $M \\times \\mathbb{Z}_{15}$ and $\\mathbb{Z}_{12} \\times M$ for maximal $M$: $\\langle 2 \\rangle, \\langle 3 \\rangle$ in $\\mathbb{Z}_{12}$ and $\\langle 3 \\rangle, \\langle 5 \\rangle$ in $\\mathbb{Z}_{15}$, so $4$ in all.",
-        "$\\mathbb{Z}_{12} \\times \\mathbb{Z}_{15}$ 的极大理想为 $M \\times \\mathbb{Z}_{15}$ 与 $\\mathbb{Z}_{12} \\times M$，$M$ 取极大理想：$\\mathbb{Z}_{12}$ 中的 $\\langle 2 \\rangle, \\langle 3 \\rangle$ 与 $\\mathbb{Z}_{15}$ 中的 $\\langle 3 \\rangle, \\langle 5 \\rangle$，共 $4$ 个。",
+        "The maximal ideals of a product replace one factor by one of its maximal ideals and keep the other factor whole. The maximal ideals of $\\mathbb{Z}_{12} \\times \\mathbb{Z}_{15}$ are $M \\times \\mathbb{Z}_{15}$ and $\\mathbb{Z}_{12} \\times M$ for maximal $M$: $\\langle 2 \\rangle, \\langle 3 \\rangle$ in $\\mathbb{Z}_{12}$ and $\\langle 3 \\rangle, \\langle 5 \\rangle$ in $\\mathbb{Z}_{15}$, so $4$ in all.",
+        "直积的极大理想是把一个因子换成它的某个极大理想，而保持另一个因子不变。$\\mathbb{Z}_{12} \\times \\mathbb{Z}_{15}$ 的极大理想为 $M \\times \\mathbb{Z}_{15}$ 与 $\\mathbb{Z}_{12} \\times M$，$M$ 取极大理想：$\\mathbb{Z}_{12}$ 中的 $\\langle 2 \\rangle, \\langle 3 \\rangle$ 与 $\\mathbb{Z}_{15}$ 中的 $\\langle 3 \\rangle, \\langle 5 \\rangle$，共 $4$ 个。",
       ),
       generate(rng) {
         const m = rng.int(4, 60);

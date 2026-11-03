@@ -120,8 +120,8 @@ export const ringsOfPolynomials: TopicDef = {
       id: "multiplying-polynomials-over-zn",
       title: t("Multiplying over ℤₙ", "在 ℤₙ 上相乘"),
       explanation: t(
-        "In $\\mathbb{Z}_5[x]$, $(3x + 4)(2x^2 + x + 3) = 6x^3 + 11x^2 + 13x + 12 = x^3 + x^2 + 3x + 2$.",
-        "在 $\\mathbb{Z}_5[x]$ 中，$(3x + 4)(2x^2 + x + 3) = 6x^3 + 11x^2 + 13x + 12 = x^3 + x^2 + 3x + 2$。",
+        "Multiply the polynomials as usual and reduce every coefficient modulo the number at the end. In $\\mathbb{Z}_5[x]$, $(3x + 4)(2x^2 + x + 3) = 6x^3 + 11x^2 + 13x + 12 = x^3 + x^2 + 3x + 2$.",
+        "照常把多项式相乘，最后把每个系数模这个数约化。在 $\\mathbb{Z}_5[x]$ 中，$(3x + 4)(2x^2 + x + 3) = 6x^3 + 11x^2 + 13x + 12 = x^3 + x^2 + 3x + 2$。",
       ),
       generate(rng) {
         const n = rng.int(4, 12);
@@ -149,8 +149,8 @@ export const ringsOfPolynomials: TopicDef = {
       id: "degrees-of-products-over-zn",
       title: t("Degrees of products", "乘积的次数"),
       explanation: t(
-        "In $\\mathbb{Z}_6[x]$, $(2x^2 + 1)(3x + 1) = 6x^3 + 2x^2 + 3x + 1 = 2x^2 + 3x + 1$, which has degree $2$, not $3$: the leading coefficients $2$ and $3$ are zero divisors.",
-        "在 $\\mathbb{Z}_6[x]$ 中，$(2x^2 + 1)(3x + 1) = 6x^3 + 2x^2 + 3x + 1 = 2x^2 + 3x + 1$，次数为 $2$ 而非 $3$：首项系数 $2$ 与 $3$ 是零因子。",
+        "When the modulus is not prime, the leading coefficients can multiply to zero, so the degree of a product may drop. In $\\mathbb{Z}_6[x]$, $(2x^2 + 1)(3x + 1) = 6x^3 + 2x^2 + 3x + 1 = 2x^2 + 3x + 1$, which has degree $2$, not $3$: the leading coefficients $2$ and $3$ are zero divisors.",
+        "当模不是素数时，首项系数相乘可能为零，所以乘积的次数可能会降低。在 $\\mathbb{Z}_6[x]$ 中，$(2x^2 + 1)(3x + 1) = 6x^3 + 2x^2 + 3x + 1 = 2x^2 + 3x + 1$，次数为 $2$ 而非 $3$：首项系数 $2$ 与 $3$ 是零因子。",
       ),
       generate(rng) {
         const n = rng.pick([4, 6, 8, 9, 10, 12, 15, 18]);
@@ -255,8 +255,8 @@ export const unitsInPolynomialRings: TopicDef = {
       id: "inverting-unit-polynomials",
       title: t("Inverting unit polynomials", "求单位多项式的逆"),
       explanation: t(
-        "In $\\mathbb{Z}_{25}[x]$, $f = 2 + 5x$ has $5^2 = 0$, so try $f^{-1} = 2^{-1} - 2^{-2} \\cdot 5x = 13 - 169 \\cdot 5x = 13 - 20x = 13 + 5x$. Check: $(2 + 5x)(13 + 5x) = 26 + 75x + 25x^2 = 1$.",
-        "在 $\\mathbb{Z}_{25}[x]$ 中，$f = 2 + 5x$ 满足 $5^2 = 0$，试 $f^{-1} = 2^{-1} - 2^{-2} \\cdot 5x = 13 - 169 \\cdot 5x = 13 - 20x = 13 + 5x$。验证：$(2 + 5x)(13 + 5x) = 26 + 75x + 25x^2 = 1$。",
+        "A polynomial whose constant term is a unit and whose other coefficients are nilpotent is invertible, using a finite geometric series. In $\\mathbb{Z}_{25}[x]$, $f = 2 + 5x$ has $5^2 = 0$, so try $f^{-1} = 2^{-1} - 2^{-2} \\cdot 5x = 13 - 169 \\cdot 5x = 13 - 20x = 13 + 5x$. Check: $(2 + 5x)(13 + 5x) = 26 + 75x + 25x^2 = 1$.",
+        "常数项是单位、其他系数都是幂零元的多项式是可逆的，可以用有限项的几何级数求出逆。在 $\\mathbb{Z}_{25}[x]$ 中，$f = 2 + 5x$ 满足 $5^2 = 0$，试 $f^{-1} = 2^{-1} - 2^{-2} \\cdot 5x = 13 - 169 \\cdot 5x = 13 - 20x = 13 + 5x$。验证：$(2 + 5x)(13 + 5x) = 26 + 75x + 25x^2 = 1$。",
       ),
       generate(rng) {
         const p = rng.pick([2, 3, 5, 7]);
@@ -301,8 +301,8 @@ export const theDivisionAlgorithmInRingsOfPolynomialsOverFiniteFields: TopicDef 
       id: "remainders-on-division-by-linear-polynomials",
       title: t("Dividing by x − c", "除以 x − c"),
       explanation: t(
-        "Over $\\mathbb{Z}_7$, dividing $x^4 + 3x + 2$ by $x - 2$ leaves $2^4 + 3 \\cdot 2 + 2 = 24 \\equiv 3$.",
-        "在 $\\mathbb{Z}_7$ 上，$x^4 + 3x + 2$ 除以 $x - 2$ 的余数为 $2^4 + 3 \\cdot 2 + 2 = 24 \\equiv 3$。",
+        "The remainder theorem says that dividing by the variable minus a constant leaves the value of the polynomial at that constant. Over $\\mathbb{Z}_7$, dividing $x^4 + 3x + 2$ by $x - 2$ leaves $2^4 + 3 \\cdot 2 + 2 = 24 \\equiv 3$.",
+        "余式定理说，除以变量减去一个常数，余式就是多项式在这个常数处的值。在 $\\mathbb{Z}_7$ 上，$x^4 + 3x + 2$ 除以 $x - 2$ 的余数为 $2^4 + 3 \\cdot 2 + 2 = 24 \\equiv 3$。",
       ),
       generate(rng) {
         const p = rng.pick([5, 7, 11, 13]);
@@ -328,8 +328,8 @@ export const theDivisionAlgorithmInRingsOfPolynomialsOverFiniteFields: TopicDef 
       id: "dividing-polynomials-over-zp",
       title: t("Long division over ℤₚ", "在 ℤₚ 上做长除法"),
       explanation: t(
-        "Over $\\mathbb{Z}_5$, divide $x^3 + 2x + 1$ by $2x^2 + 1$: $2^{-1} = 3$, so the first term of the quotient is $3x$; $x^3 + 2x + 1 - 3x(2x^2 + 1) = -x + 1 = 4x + 1$. So $q = 3x$ and $r = 4x + 1$.",
-        "在 $\\mathbb{Z}_5$ 上，用 $2x^2 + 1$ 除 $x^3 + 2x + 1$：$2^{-1} = 3$，所以商的首项为 $3x$；$x^3 + 2x + 1 - 3x(2x^2 + 1) = -x + 1 = 4x + 1$。所以 $q = 3x$，$r = 4x + 1$。",
+        "Long division works over a prime modulus because the leading coefficient of the divisor has an inverse there. Over $\\mathbb{Z}_5$, divide $x^3 + 2x + 1$ by $2x^2 + 1$: $2^{-1} = 3$, so the first term of the quotient is $3x$; $x^3 + 2x + 1 - 3x(2x^2 + 1) = -x + 1 = 4x + 1$. So $q = 3x$ and $r = 4x + 1$.",
+        "在素数模下长除法可行，因为除式的首项系数在那里有逆元。在 $\\mathbb{Z}_5$ 上，用 $2x^2 + 1$ 除 $x^3 + 2x + 1$：$2^{-1} = 3$，所以商的首项为 $3x$；$x^3 + 2x + 1 - 3x(2x^2 + 1) = -x + 1 = 4x + 1$。所以 $q = 3x$，$r = 4x + 1$。",
       ),
       generate(rng) {
         const p = rng.pick([3, 5, 7]);
@@ -396,8 +396,8 @@ export const theEuclidianAlgorithmInRingsOfPolynomials: TopicDef = {
       id: "gcds-of-polynomials-over-zp",
       title: t("Finding the gcd", "求最大公因式"),
       explanation: t(
-        "Over $\\mathbb{Z}_3$: $x^3 + x + 2 = x(x^2 + 2) + (2x + 2)$ and $x^2 + 2 = (2x + 2)(2x + 1) + 0$. The last nonzero remainder $2x + 2$, made monic, gives $\\gcd = x + 1$.",
-        "在 $\\mathbb{Z}_3$ 上：$x^3 + x + 2 = x(x^2 + 2) + (2x + 2)$，$x^2 + 2 = (2x + 2)(2x + 1) + 0$。最后一个非零余式 $2x + 2$ 化为首一，得 $\\gcd = x + 1$。",
+        "The Euclidean algorithm works for polynomials over a field, dividing repeatedly until the remainder is zero. Over $\\mathbb{Z}_3$: $x^3 + x + 2 = x(x^2 + 2) + (2x + 2)$ and $x^2 + 2 = (2x + 2)(2x + 1) + 0$. The last nonzero remainder $2x + 2$, made monic, gives $\\gcd = x + 1$.",
+        "欧几里得算法对域上的多项式同样适用，反复相除直到余式为零。在 $\\mathbb{Z}_3$ 上：$x^3 + x + 2 = x(x^2 + 2) + (2x + 2)$，$x^2 + 2 = (2x + 2)(2x + 1) + 0$。最后一个非零余式 $2x + 2$ 化为首一，得 $\\gcd = x + 1$。",
       ),
       generate(rng) {
         const p = rng.pick([2, 3, 5, 7]);
@@ -423,8 +423,8 @@ export const theEuclidianAlgorithmInRingsOfPolynomials: TopicDef = {
       id: "degrees-of-gcds-over-zp",
       title: t("Degree of the gcd", "最大公因式的次数"),
       explanation: t(
-        "Over $\\mathbb{Z}_2$, $x^3 + 1 = (x + 1)(x^2 + x + 1)$ and $x^2 + 1 = (x + 1)^2$, so $\\gcd(x^3 + 1, x^2 + 1) = x + 1$, of degree $1$.",
-        "在 $\\mathbb{Z}_2$ 上，$x^3 + 1 = (x + 1)(x^2 + x + 1)$，$x^2 + 1 = (x + 1)^2$，所以 $\\gcd(x^3 + 1, x^2 + 1) = x + 1$，次数为 $1$。",
+        "Factoring both polynomials shows their common factors, whose product is the gcd, and its degree follows. Over $\\mathbb{Z}_2$, $x^3 + 1 = (x + 1)(x^2 + x + 1)$ and $x^2 + 1 = (x + 1)^2$, so $\\gcd(x^3 + 1, x^2 + 1) = x + 1$, of degree $1$.",
+        "把两个多项式都因式分解，就能看出它们的公因式，公因式的乘积就是最大公因式，次数随之可知。在 $\\mathbb{Z}_2$ 上，$x^3 + 1 = (x + 1)(x^2 + x + 1)$，$x^2 + 1 = (x + 1)^2$，所以 $\\gcd(x^3 + 1, x^2 + 1) = x + 1$，次数为 $1$。",
       ),
       generate(rng) {
         const p = rng.pick([2, 3, 5, 7]);
@@ -475,8 +475,8 @@ export const theExtendedEuclidianAlgorithmInRingsOfPolynomials: TopicDef = {
       id: "inverses-in-polynomial-quotient-rings",
       title: t("Inverses modulo f", "模 f 的逆"),
       explanation: t(
-        "In $\\mathbb{Z}_3[x]/\\langle x^2 + 1 \\rangle$: $x^2 + 1 = (x + 1)(x + 2) + 2$, so $1 = 2(x^2 + 1) - 2(x + 1)(x + 2)$, giving $(x + 1)^{-1} = -2(x + 2) = x + 2$. Check: $(x + 1)(x + 2) = x^2 + 2 = 1$.",
-        "在 $\\mathbb{Z}_3[x]/\\langle x^2 + 1 \\rangle$ 中：$x^2 + 1 = (x + 1)(x + 2) + 2$，所以 $1 = 2(x^2 + 1) - 2(x + 1)(x + 2)$，得 $(x + 1)^{-1} = -2(x + 2) = x + 2$。验证：$(x + 1)(x + 2) = x^2 + 2 = 1$。",
+        "Run the Euclidean algorithm on the polynomial and the modulus, then work backward to write one as a combination of them. In $\\mathbb{Z}_3[x]/\\langle x^2 + 1 \\rangle$: $x^2 + 1 = (x + 1)(x + 2) + 2$, so $1 = 2(x^2 + 1) - 2(x + 1)(x + 2)$, giving $(x + 1)^{-1} = -2(x + 2) = x + 2$. Check: $(x + 1)(x + 2) = x^2 + 2 = 1$.",
+        "对这个多项式和模运行欧几里得算法，再倒推，把 1 写成它们的组合。在 $\\mathbb{Z}_3[x]/\\langle x^2 + 1 \\rangle$ 中：$x^2 + 1 = (x + 1)(x + 2) + 2$，所以 $1 = 2(x^2 + 1) - 2(x + 1)(x + 2)$，得 $(x + 1)^{-1} = -2(x + 2) = x + 2$。验证：$(x + 1)(x + 2) = x^2 + 2 = 1$。",
       ),
       generate(rng) {
         const p = rng.pick([2, 3, 5]);
@@ -508,8 +508,8 @@ export const theExtendedEuclidianAlgorithmInRingsOfPolynomials: TopicDef = {
       id: "inverses-modulo-quadratics",
       title: t("Inverses modulo x² − c", "模 x² − c 的逆"),
       explanation: t(
-        "In $\\mathbb{Z}_7[x]/\\langle x^2 - 3 \\rangle$, $(2 + x)(2 - x) = 4 - 3 = 1$, so $(2 + x)^{-1} = 2 - x = 2 + 6x$.",
-        "在 $\\mathbb{Z}_7[x]/\\langle x^2 - 3 \\rangle$ 中，$(2 + x)(2 - x) = 4 - 3 = 1$，所以 $(2 + x)^{-1} = 2 - x = 2 + 6x$。",
+        "Multiplying by the conjugate turns the product into a constant, which is then inverted in the coefficient field. In $\\mathbb{Z}_7[x]/\\langle x^2 - 3 \\rangle$, $(2 + x)(2 - x) = 4 - 3 = 1$, so $(2 + x)^{-1} = 2 - x = 2 + 6x$.",
+        "乘以共轭把乘积变成一个常数，再在系数域中对它求逆。在 $\\mathbb{Z}_7[x]/\\langle x^2 - 3 \\rangle$ 中，$(2 + x)(2 - x) = 4 - 3 = 1$，所以 $(2 + x)^{-1} = 2 - x = 2 + 6x$。",
       ),
       generate(rng) {
         const p = rng.pick([7, 11, 13, 17, 19]);
@@ -641,8 +641,8 @@ export const irreduciblePolynomialsOverTheRealAndComplexNumbers: TopicDef = {
       id: "counting-irreducible-factors-over-r",
       title: t("Irreducible factors over ℝ", "ℝ 上的不可约因式"),
       explanation: t(
-        "$x^4 - 1 = (x - 1)(x + 1)(x^2 + 1)$ has $3$ irreducible factors over $\\mathbb{R}$ and $4$ over $\\mathbb{C}$.",
-        "$x^4 - 1 = (x - 1)(x + 1)(x^2 + 1)$ 在 $\\mathbb{R}$ 上有 $3$ 个不可约因式，在 $\\mathbb{C}$ 上有 $4$ 个。",
+        "Over the reals every polynomial factors into linear factors and quadratics without real roots, so count those pieces. $x^4 - 1 = (x - 1)(x + 1)(x^2 + 1)$ has $3$ irreducible factors over $\\mathbb{R}$ and $4$ over $\\mathbb{C}$.",
+        "在实数上，每个多项式都能分解成一次因式和没有实根的二次因式，所以数出这些因式。$x^4 - 1 = (x - 1)(x + 1)(x^2 + 1)$ 在 $\\mathbb{R}$ 上有 $3$ 个不可约因式，在 $\\mathbb{C}$ 上有 $4$ 个。",
       ),
       generate(rng) {
         const nQuad = rng.int(1, 2);
@@ -735,8 +735,8 @@ export const irreduciblePolynomialsOverTheIntegersAndRationalNumbers: TopicDef =
       id: "irreducibility-over-z-versus-q",
       title: t("Over ℤ versus over ℚ", "ℤ 上与 ℚ 上"),
       explanation: t(
-        "$6x + 9 = 3(2x + 3)$ is reducible over $\\mathbb{Z}$, since $3$ is not a unit of $\\mathbb{Z}$, but irreducible over $\\mathbb{Q}$, where $3$ is a unit.",
-        "$6x + 9 = 3(2x + 3)$ 在 $\\mathbb{Z}$ 上可约，因为 $3$ 不是 $\\mathbb{Z}$ 的单位；但在 $\\mathbb{Q}$ 上不可约，因为 $3$ 在那里是单位。",
+        "Over the integers a nonunit constant factor makes a polynomial reducible, while over the rationals constants are units and do not count. $6x + 9 = 3(2x + 3)$ is reducible over $\\mathbb{Z}$, since $3$ is not a unit of $\\mathbb{Z}$, but irreducible over $\\mathbb{Q}$, where $3$ is a unit.",
+        "在整数上，非单位的常数因子会使多项式可约，而在有理数上常数都是单位，不算作因子。$6x + 9 = 3(2x + 3)$ 在 $\\mathbb{Z}$ 上可约，因为 $3$ 不是 $\\mathbb{Z}$ 的单位；但在 $\\mathbb{Q}$ 上不可约，因为 $3$ 在那里是单位。",
       ),
       generate(rng) {
         const c = rng.int(2, 6);
@@ -844,8 +844,8 @@ export const irreduciblePolynomialsOverAFiniteField: TopicDef = {
       id: "counting-irreducible-polynomials-over-zp",
       title: t("Counting irreducibles", "数不可约多项式"),
       explanation: t(
-        "Over $\\mathbb{Z}_5$ there are $25$ monic quadratics; $5$ are squares $(x - a)^2$ and $\\binom{5}{2} = 10$ are $(x - a)(x - b)$ with $a \\ne b$, leaving $25 - 15 = 10 = \\frac{5^2 - 5}{2}$ irreducible ones.",
-        "在 $\\mathbb{Z}_5$ 上有 $25$ 个首一二次多项式；其中 $5$ 个是 $(x - a)^2$，$\\binom{5}{2} = 10$ 个是 $(x - a)(x - b)$（$a \\ne b$），余下 $25 - 15 = 10 = \\frac{5^2 - 5}{2}$ 个不可约。",
+        "Count all monic polynomials of the degree and subtract those that split into factors of lower degree. Over $\\mathbb{Z}_5$ there are $25$ monic quadratics; $5$ are squares $(x - a)^2$ and $\\binom{5}{2} = 10$ are $(x - a)(x - b)$ with $a \\ne b$, leaving $25 - 15 = 10 = \\frac{5^2 - 5}{2}$ irreducible ones.",
+        "数出该次数的所有首一多项式，再减去那些能分解成更低次因式的多项式。在 $\\mathbb{Z}_5$ 上有 $25$ 个首一二次多项式；其中 $5$ 个是 $(x - a)^2$，$\\binom{5}{2} = 10$ 个是 $(x - a)(x - b)$（$a \\ne b$），余下 $25 - 15 = 10 = \\frac{5^2 - 5}{2}$ 个不可约。",
       ),
       generate(rng) {
         const p = rng.pick([2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41]);
@@ -1043,8 +1043,8 @@ export const theDivisionRingOfQuaternions: TopicDef = {
       id: "multiplying-quaternion-units",
       title: t("Products of i, j, k", "i、j、k 的乘积"),
       explanation: t(
-        "$jik = (ji)k = -k \\cdot k = -k^2 = 1$, and $i^3 j = (i^2)(ij) = -k$.",
-        "$jik = (ji)k = -k \\cdot k = -k^2 = 1$，$i^3 j = (i^2)(ij) = -k$。",
+        "The quaternion units square to minus one and multiply cyclically, with the order reversed giving a minus sign. $jik = (ji)k = -k \\cdot k = -k^2 = 1$, and $i^3 j = (i^2)(ij) = -k$.",
+        "四元数单位的平方都等于负 1，它们按循环顺序相乘，顺序反过来时会多出一个负号。$jik = (ji)k = -k \\cdot k = -k^2 = 1$，$i^3 j = (i^2)(ij) = -k$。",
       ),
       generate(rng) {
         const unitQ: Record<string, Quat> = { i: [0, 1, 0, 0], j: [0, 0, 1, 0], k: [0, 0, 0, 1] };
@@ -1076,8 +1076,8 @@ export const theDivisionRingOfQuaternions: TopicDef = {
       id: "multiplying-quaternions",
       title: t("Multiplying quaternions", "四元数相乘"),
       explanation: t(
-        "$(1 + 2i)(3j - k) = 3j - k + 6ij - 2ik = 3j - k + 6k + 2j = 5j + 5k$.",
-        "$(1 + 2i)(3j - k) = 3j - k + 6ij - 2ik = 3j - k + 6k + 2j = 5j + 5k$。",
+        "Expand the product term by term, keeping the order of the units because quaternion multiplication does not commute. $(1 + 2i)(3j - k) = 3j - k + 6ij - 2ik = 3j - k + 6k + 2j = 5j + 5k$.",
+        "把乘积逐项展开，要保持各单位的顺序，因为四元数乘法不可交换。$(1 + 2i)(3j - k) = 3j - k + 6ij - 2ik = 3j - k + 6k + 2j = 5j + 5k$。",
       ),
       generate(rng) {
         const x = randomQuat(rng, 2);
@@ -1116,8 +1116,8 @@ export const invertingQuaternions: TopicDef = {
       id: "norms-of-quaternions",
       title: t("Norms", "范数"),
       explanation: t(
-        "$N(2 - i + 3k) = 4 + 1 + 9 = 14$, and $N((1 + i)(2 - i + 3k)) = N(1 + i) \\cdot 14 = 28$.",
-        "$N(2 - i + 3k) = 4 + 1 + 9 = 14$，$N((1 + i)(2 - i + 3k)) = N(1 + i) \\cdot 14 = 28$。",
+        "The norm is the sum of the squares of the four components, and the norm of a product is the product of the norms. $N(2 - i + 3k) = 4 + 1 + 9 = 14$, and $N((1 + i)(2 - i + 3k)) = N(1 + i) \\cdot 14 = 28$.",
+        "范数是四个分量的平方和，乘积的范数等于范数的乘积。$N(2 - i + 3k) = 4 + 1 + 9 = 14$，$N((1 + i)(2 - i + 3k)) = N(1 + i) \\cdot 14 = 28$。",
       ),
       generate(rng) {
         const x = randomQuat(rng);
@@ -1148,8 +1148,8 @@ export const invertingQuaternions: TopicDef = {
       id: "inverses-of-quaternions",
       title: t("Inverses", "逆"),
       explanation: t(
-        "$(1 + 2j - k)^{-1} = \\frac{1 - 2j + k}{1 + 4 + 1} = \\frac{1}{6} - \\frac{1}{3}j + \\frac{1}{6}k$.",
-        "$(1 + 2j - k)^{-1} = \\frac{1 - 2j + k}{1 + 4 + 1} = \\frac{1}{6} - \\frac{1}{3}j + \\frac{1}{6}k$。",
+        "A quaternion times its conjugate equals its norm, so the inverse is the conjugate divided by the norm. $(1 + 2j - k)^{-1} = \\frac{1 - 2j + k}{1 + 4 + 1} = \\frac{1}{6} - \\frac{1}{3}j + \\frac{1}{6}k$.",
+        "四元数乘以它的共轭等于它的范数，所以逆元就是共轭除以范数。$(1 + 2j - k)^{-1} = \\frac{1 - 2j + k}{1 + 4 + 1} = \\frac{1}{6} - \\frac{1}{3}j + \\frac{1}{6}k$。",
       ),
       generate(rng) {
         const x = randomQuat(rng);
@@ -1187,8 +1187,8 @@ export const linearEquationsOverQuaternions: TopicDef = {
       id: "solving-left-linear-equations-over-quaternions",
       title: t("Solving qx = r", "解 qx = r"),
       explanation: t(
-        "To solve $(1 + i)x = 2j$: $x = \\frac{(1 - i) \\cdot 2j}{2} = (1 - i)j = j - k$.",
-        "解 $(1 + i)x = 2j$：$x = \\frac{(1 - i) \\cdot 2j}{2} = (1 - i)j = j - k$。",
+        "When the unknown is on the right of the coefficient, multiply by the inverse of the coefficient on the left side. To solve $(1 + i)x = 2j$: $x = \\frac{(1 - i) \\cdot 2j}{2} = (1 - i)j = j - k$.",
+        "当未知数在系数的右边时，在左边乘以系数的逆元。解 $(1 + i)x = 2j$：$x = \\frac{(1 - i) \\cdot 2j}{2} = (1 - i)j = j - k$。",
       ),
       generate(rng) {
         const q = randomQuat(rng, 2);
@@ -1214,8 +1214,8 @@ export const linearEquationsOverQuaternions: TopicDef = {
       id: "solving-right-linear-equations-over-quaternions",
       title: t("Solving xq = r", "解 xq = r"),
       explanation: t(
-        "To solve $x(1 + i) = 2j$: $x = \\frac{2j(1 - i)}{2} = j(1 - i) = j + k$, not $j - k$ as for $(1 + i)x = 2j$.",
-        "解 $x(1 + i) = 2j$：$x = \\frac{2j(1 - i)}{2} = j(1 - i) = j + k$，而不是 $(1 + i)x = 2j$ 的解 $j - k$。",
+        "When the unknown is on the left of the coefficient, multiply by the inverse on the right, which can give a different answer. To solve $x(1 + i) = 2j$: $x = \\frac{2j(1 - i)}{2} = j(1 - i) = j + k$, not $j - k$ as for $(1 + i)x = 2j$.",
+        "当未知数在系数的左边时，在右边乘以逆元，这可能给出不同的答案。解 $x(1 + i) = 2j$：$x = \\frac{2j(1 - i)}{2} = j(1 - i) = j + k$，而不是 $(1 + i)x = 2j$ 的解 $j - k$。",
       ),
       generate(rng) {
         const q = randomQuat(rng, 2);
@@ -1257,8 +1257,8 @@ export const vectorSpacesOverFiniteFields: TopicDef = {
       id: "counting-vectors-in-spans-over-zp",
       title: t("Sizes of spans", "张成空间的大小"),
       explanation: t(
-        "In $\\mathbb{Z}_3^4$, the span of two linearly independent vectors is a $2$-dimensional subspace with $3^2 = 9$ vectors.",
-        "在 $\\mathbb{Z}_3^4$ 中，两个线性无关向量的张成空间是 $2$ 维子空间，有 $3^2 = 9$ 个向量。",
+        "Each vector in the span is fixed by one choice of coefficient for each basis vector, so a space of a given dimension has that power of the field size. In $\\mathbb{Z}_3^4$, the span of two linearly independent vectors is a $2$-dimensional subspace with $3^2 = 9$ vectors.",
+        "张成空间中的每个向量由每个基向量的一个系数选择确定，所以一定维数的空间所含向量数是域大小的相应次幂。在 $\\mathbb{Z}_3^4$ 中，两个线性无关向量的张成空间是 $2$ 维子空间，有 $3^2 = 9$ 个向量。",
       ),
       generate(rng) {
         const p = rng.pick([2, 3, 5, 7]);

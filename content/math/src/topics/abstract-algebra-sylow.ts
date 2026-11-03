@@ -72,8 +72,8 @@ export const pGroups: TopicDef = {
       id: "centers-from-class-equations-of-p-groups",
       title: t("Centers of p-groups", "p-群的中心"),
       explanation: t(
-        "If a group of order $27$ has $8$ conjugacy classes of size $3$ besides the central elements, then $|Z(G)| = 27 - 8 \\cdot 3 = 3$.",
-        "若 $27$ 阶群除中心元素外有 $8$ 个大小为 $3$ 的共轭类，则 $|Z(G)| = 27 - 8 \\cdot 3 = 3$。",
+        "The class equation says the group order is the size of the center plus the sizes of the other classes, so subtract those to find the center. If a group of order $27$ has $8$ conjugacy classes of size $3$ besides the central elements, then $|Z(G)| = 27 - 8 \\cdot 3 = 3$.",
+        "类方程说群的阶等于中心的大小加上其他类的大小，所以减去后者就得到中心的大小。若 $27$ 阶群除中心元素外有 $8$ 个大小为 $3$ 的共轭类，则 $|Z(G)| = 27 - 8 \\cdot 3 = 3$。",
       ),
       generate(rng) {
         const p = rng.pick([2, 2, 3, 3, 5]);
@@ -120,8 +120,8 @@ export const theFirstSylowTheorem: TopicDef = {
       id: "orders-of-sylow-subgroups",
       title: t("Orders of Sylow subgroups", "西罗子群的阶"),
       explanation: t(
-        "$|G| = 360 = 2^3 \\cdot 3^2 \\cdot 5$, so the Sylow $3$-subgroups of $G$ have order $9$.",
-        "$|G| = 360 = 2^3 \\cdot 3^2 \\cdot 5$，所以 $G$ 的西罗 $3$-子群的阶为 $9$。",
+        "A Sylow subgroup has the largest power of the prime that divides the group order, so read it off the prime factorization. $|G| = 360 = 2^3 \\cdot 3^2 \\cdot 5$, so the Sylow $3$-subgroups of $G$ have order $9$.",
+        "西罗子群的阶是整除群阶的该素数的最高次幂，所以从素因数分解中直接读出。$|G| = 360 = 2^3 \\cdot 3^2 \\cdot 5$，所以 $G$ 的西罗 $3$-子群的阶为 $9$。",
       ),
       generate(rng) {
         let n: number;
@@ -256,8 +256,8 @@ export const theSecondSylowTheorem: TopicDef = {
       id: "normalizers-of-sylow-subgroups",
       title: t("Normalizers of Sylow subgroups", "西罗子群的正规化子"),
       explanation: t(
-        "$A_5$ has order $60$ and $6$ Sylow $5$-subgroups. They are all conjugate, so $6 = [A_5 : N(P)]$ and $|N(P)| = 10$.",
-        "$A_5$ 的阶为 $60$，有 $6$ 个西罗 $5$-子群。它们彼此共轭，所以 $6 = [A_5 : N(P)]$，$|N(P)| = 10$。",
+        "All Sylow subgroups for one prime are conjugate, so their number equals the index of the normalizer of any one of them. $A_5$ has order $60$ and $6$ Sylow $5$-subgroups. They are all conjugate, so $6 = [A_5 : N(P)]$ and $|N(P)| = 10$.",
+        "同一个素数的所有西罗子群都共轭，所以它们的个数等于其中任一个的正规化子的指数。$A_5$ 的阶为 $60$，有 $6$ 个西罗 $5$-子群。它们彼此共轭，所以 $6 = [A_5 : N(P)]$，$|N(P)| = 10$。",
       ),
       generate(rng) {
         let n: number;
@@ -304,8 +304,8 @@ export const theThirdSylowTheorem: TopicDef = {
       id: "possible-numbers-of-sylow-subgroups",
       title: t("Possible values of n_p", "n_p 的可能取值"),
       explanation: t(
-        "For $|G| = 60 = 2^2 \\cdot 15$, $n_2$ divides $15$ and is odd: $1, 3, 5, 15$. For $p = 5$, $n_5$ divides $12$ and is $\\equiv 1 \\pmod 5$: $1$ or $6$.",
-        "对 $|G| = 60 = 2^2 \\cdot 15$，$n_2$ 整除 $15$ 且为奇数：$1, 3, 5, 15$。对 $p = 5$，$n_5$ 整除 $12$ 且 $\\equiv 1 \\pmod 5$：$1$ 或 $6$。",
+        "The number of Sylow subgroups divides the part of the order coprime to the prime and leaves remainder one when divided by the prime. For $|G| = 60 = 2^2 \\cdot 15$, $n_2$ divides $15$ and is odd: $1, 3, 5, 15$. For $p = 5$, $n_5$ divides $12$ and is $\\equiv 1 \\pmod 5$: $1$ or $6$.",
+        "西罗子群的个数整除群阶中与该素数互素的部分，而且除以该素数余 1。对 $|G| = 60 = 2^2 \\cdot 15$，$n_2$ 整除 $15$ 且为奇数：$1, 3, 5, 15$。对 $p = 5$，$n_5$ 整除 $12$ 且 $\\equiv 1 \\pmod 5$：$1$ 或 $6$。",
       ),
       generate(rng) {
         let n: number;

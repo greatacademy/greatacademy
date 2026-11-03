@@ -70,8 +70,8 @@ export const externalDirectProducts: TopicDef = {
       id: "orders-of-elements-of-direct-products",
       title: t("Orders of elements", "元素的阶"),
       explanation: t(
-        "In $\\mathbb{Z}_{12} \\times \\mathbb{Z}_{18}$, $8$ has order $3$ in $\\mathbb{Z}_{12}$ and $4$ has order $9$ in $\\mathbb{Z}_{18}$, so $(8, 4)$ has order $\\operatorname{lcm}(3, 9) = 9$.",
-        "在 $\\mathbb{Z}_{12} \\times \\mathbb{Z}_{18}$ 中，$8$ 在 $\\mathbb{Z}_{12}$ 中的阶为 $3$，$4$ 在 $\\mathbb{Z}_{18}$ 中的阶为 $9$，所以 $(8, 4)$ 的阶为 $\\operatorname{lcm}(3, 9) = 9$。",
+        "An element of a direct product returns to the identity only when every coordinate does, so its order is the least common multiple of their orders. In $\\mathbb{Z}_{12} \\times \\mathbb{Z}_{18}$, $8$ has order $3$ in $\\mathbb{Z}_{12}$ and $4$ has order $9$ in $\\mathbb{Z}_{18}$, so $(8, 4)$ has order $\\operatorname{lcm}(3, 9) = 9$.",
+        "直积中的元素只有在每个坐标都回到单位元时才回到单位元，所以它的阶是各坐标阶的最小公倍数。在 $\\mathbb{Z}_{12} \\times \\mathbb{Z}_{18}$ 中，$8$ 在 $\\mathbb{Z}_{12}$ 中的阶为 $3$，$4$ 在 $\\mathbb{Z}_{18}$ 中的阶为 $9$，所以 $(8, 4)$ 的阶为 $\\operatorname{lcm}(3, 9) = 9$。",
       ),
       generate(rng) {
         const m = rng.int(4, 24);
@@ -98,8 +98,8 @@ export const externalDirectProducts: TopicDef = {
       id: "inverses-in-direct-products",
       title: t("Inverses in direct products", "直积中的逆"),
       explanation: t(
-        "Invert in each coordinate with that coordinate's operation. In $U(10) \\times \\mathbb{Z}_8$, the inverse of $(3, 5)$ is $(7, 3)$: $3 \\cdot 7 \\equiv 1 \\pmod{10}$ and $5 + 3 \\equiv 0 \\pmod 8$.",
-        "在每个坐标上用该坐标的运算求逆。在 $U(10) \\times \\mathbb{Z}_8$ 中，$(3, 5)$ 的逆为 $(7, 3)$：$3 \\cdot 7 \\equiv 1 \\pmod{10}$，$5 + 3 \\equiv 0 \\pmod 8$。",
+        "The operation in a direct product acts coordinate by coordinate, so the inverse takes the inverse in each coordinate's own group. Invert in each coordinate with that coordinate's operation. In $U(10) \\times \\mathbb{Z}_8$, the inverse of $(3, 5)$ is $(7, 3)$: $3 \\cdot 7 \\equiv 1 \\pmod{10}$ and $5 + 3 \\equiv 0 \\pmod 8$.",
+        "直积中的运算逐个坐标进行，所以逆元在每个坐标所属的群中分别取逆。在每个坐标上用该坐标的运算求逆。在 $U(10) \\times \\mathbb{Z}_8$ 中，$(3, 5)$ 的逆为 $(7, 3)$：$3 \\cdot 7 \\equiv 1 \\pmod{10}$，$5 + 3 \\equiv 0 \\pmod 8$。",
       ),
       generate(rng) {
         let m: number;
@@ -148,8 +148,8 @@ export const cyclicDirectProductGroups: TopicDef = {
       id: "recognizing-cyclic-direct-products",
       title: t("Is the product cyclic?", "直积是循环群吗？"),
       explanation: t(
-        "$\\mathbb{Z}_4 \\times \\mathbb{Z}_9$ is cyclic since $\\gcd(4, 9) = 1$: $(1, 1)$ has order $36$. $\\mathbb{Z}_6 \\times \\mathbb{Z}_4$ is not: every element has order dividing $\\operatorname{lcm}(6, 4) = 12 < 24$.",
-        "$\\mathbb{Z}_4 \\times \\mathbb{Z}_9$ 是循环群，因为 $\\gcd(4, 9) = 1$：$(1, 1)$ 的阶为 $36$。$\\mathbb{Z}_6 \\times \\mathbb{Z}_4$ 不是：每个元素的阶都整除 $\\operatorname{lcm}(6, 4) = 12 < 24$。",
+        "A product of two cyclic groups is cyclic exactly when their orders are coprime, because only then does some element reach the full order. $\\mathbb{Z}_4 \\times \\mathbb{Z}_9$ is cyclic since $\\gcd(4, 9) = 1$: $(1, 1)$ has order $36$. $\\mathbb{Z}_6 \\times \\mathbb{Z}_4$ is not: every element has order dividing $\\operatorname{lcm}(6, 4) = 12 < 24$.",
+        "两个循环群的直积是循环群，当且仅当它们的阶互素，因为只有这时才有元素达到全部的阶。$\\mathbb{Z}_4 \\times \\mathbb{Z}_9$ 是循环群，因为 $\\gcd(4, 9) = 1$：$(1, 1)$ 的阶为 $36$。$\\mathbb{Z}_6 \\times \\mathbb{Z}_4$ 不是：每个元素的阶都整除 $\\operatorname{lcm}(6, 4) = 12 < 24$。",
       ),
       generate(rng) {
         const ns = range(1, rng.bool(0.7) ? 2 : 3).map(() => rng.int(2, 25));
@@ -176,8 +176,8 @@ export const cyclicDirectProductGroups: TopicDef = {
       id: "counting-elements-of-a-given-order-in-direct-products",
       title: t("Counting elements of a given order", "数给定阶的元素"),
       explanation: t(
-        "In $\\mathbb{Z}_2 \\times \\mathbb{Z}_4$, the elements of order $2$ are those $(a, b) \\ne (0, 0)$ with $2a = 0$ and $2b = 0$: $(1, 0), (0, 2), (1, 2)$. So there are $3$.",
-        "在 $\\mathbb{Z}_2 \\times \\mathbb{Z}_4$ 中，$2$ 阶元素是满足 $2a = 0$、$2b = 0$ 且 $(a, b) \\ne (0, 0)$ 的元素：$(1, 0), (0, 2), (1, 2)$。所以共 $3$ 个。",
+        "Since the order is a least common multiple, count the pairs of coordinate orders whose least common multiple is the target. In $\\mathbb{Z}_2 \\times \\mathbb{Z}_4$, the elements of order $2$ are those $(a, b) \\ne (0, 0)$ with $2a = 0$ and $2b = 0$: $(1, 0), (0, 2), (1, 2)$. So there are $3$.",
+        "由于阶是最小公倍数，所以要数出那些坐标阶的组合，使它们的最小公倍数等于目标值。在 $\\mathbb{Z}_2 \\times \\mathbb{Z}_4$ 中，$2$ 阶元素是满足 $2a = 0$、$2b = 0$ 且 $(a, b) \\ne (0, 0)$ 的元素：$(1, 0), (0, 2), (1, 2)$。所以共 $3$ 个。",
       ),
       generate(rng) {
         let m: number;
@@ -304,8 +304,8 @@ export const torsionGroups: TopicDef = {
       id: "sizes-of-torsion-subgroups",
       title: t("Torsion subgroups", "挠子群"),
       explanation: t(
-        "The torsion subgroup of $\\mathbb{Z}^2 \\times \\mathbb{Z}_4 \\times \\mathbb{Z}_6$ is $\\{0\\} \\times \\{0\\} \\times \\mathbb{Z}_4 \\times \\mathbb{Z}_6$, with $24$ elements. In $\\mathbb{R}^*$ the torsion subgroup is $\\{\\pm 1\\}$.",
-        "$\\mathbb{Z}^2 \\times \\mathbb{Z}_4 \\times \\mathbb{Z}_6$ 的挠子群为 $\\{0\\} \\times \\{0\\} \\times \\mathbb{Z}_4 \\times \\mathbb{Z}_6$，有 $24$ 个元素。$\\mathbb{R}^*$ 的挠子群为 $\\{\\pm 1\\}$。",
+        "The torsion subgroup collects the elements of finite order, and in a product with free parts only the finite factors contribute. The torsion subgroup of $\\mathbb{Z}^2 \\times \\mathbb{Z}_4 \\times \\mathbb{Z}_6$ is $\\{0\\} \\times \\{0\\} \\times \\mathbb{Z}_4 \\times \\mathbb{Z}_6$, with $24$ elements. In $\\mathbb{R}^*$ the torsion subgroup is $\\{\\pm 1\\}$.",
+        "挠子群由有限阶元素组成，在含有自由部分的直积中，只有有限因子作出贡献。$\\mathbb{Z}^2 \\times \\mathbb{Z}_4 \\times \\mathbb{Z}_6$ 的挠子群为 $\\{0\\} \\times \\{0\\} \\times \\mathbb{Z}_4 \\times \\mathbb{Z}_6$，有 $24$ 个元素。$\\mathbb{R}^*$ 的挠子群为 $\\{\\pm 1\\}$。",
       ),
       generate(rng) {
         const m = rng.int(2, 15);
@@ -463,8 +463,8 @@ export const freeAbelianGroups: TopicDef = {
       id: "indices-of-subgroups-of-z2",
       title: t("Indices in ℤ²", "ℤ² 中的指数"),
       explanation: t(
-        "$(2, 1)$ and $(1, 3)$ generate a subgroup of $\\mathbb{Z}^2$ of index $|2 \\cdot 3 - 1 \\cdot 1| = 5$: the quotient has $5$ elements.",
-        "$(2, 1)$ 与 $(1, 3)$ 生成 $\\mathbb{Z}^2$ 中指数为 $|2 \\cdot 3 - 1 \\cdot 1| = 5$ 的子群：商群有 $5$ 个元素。",
+        "The index of the subgroup generated by two vectors in the integer plane is the absolute value of their determinant, the area of their parallelogram. $(2, 1)$ and $(1, 3)$ generate a subgroup of $\\mathbb{Z}^2$ of index $|2 \\cdot 3 - 1 \\cdot 1| = 5$: the quotient has $5$ elements.",
+        "整数平面中由两个向量生成的子群的指数等于它们行列式的绝对值，也就是它们所成平行四边形的面积。$(2, 1)$ 与 $(1, 3)$ 生成 $\\mathbb{Z}^2$ 中指数为 $|2 \\cdot 3 - 1 \\cdot 1| = 5$ 的子群：商群有 $5$ 个元素。",
       ),
       generate(rng) {
         let a: number;
@@ -631,8 +631,8 @@ export const cosetsOfTheAdditiveGroupsOfIntegersModuloN: TopicDef = {
       id: "counting-cosets-in-zn",
       title: t("Counting cosets", "数陪集"),
       explanation: t(
-        "In $\\mathbb{Z}_{20}$, $\\langle 8 \\rangle = \\langle 4 \\rangle$ has $5$ elements, so there are $\\frac{20}{5} = 4$ cosets: $0 + H, 1 + H, 2 + H, 3 + H$.",
-        "在 $\\mathbb{Z}_{20}$ 中，$\\langle 8 \\rangle = \\langle 4 \\rangle$ 有 $5$ 个元素，所以共有 $\\frac{20}{5} = 4$ 个陪集：$0 + H, 1 + H, 2 + H, 3 + H$。",
+        "The cosets of a subgroup all have the same size, so their number is the order of the group divided by the order of the subgroup. In $\\mathbb{Z}_{20}$, $\\langle 8 \\rangle = \\langle 4 \\rangle$ has $5$ elements, so there are $\\frac{20}{5} = 4$ cosets: $0 + H, 1 + H, 2 + H, 3 + H$.",
+        "一个子群的所有陪集大小都相同，所以陪集的个数等于群的阶除以子群的阶。在 $\\mathbb{Z}_{20}$ 中，$\\langle 8 \\rangle = \\langle 4 \\rangle$ 有 $5$ 个元素，所以共有 $\\frac{20}{5} = 4$ 个陪集：$0 + H, 1 + H, 2 + H, 3 + H$。",
       ),
       generate(rng) {
         let n: number;
@@ -660,8 +660,8 @@ export const cosetsOfTheAdditiveGroupsOfIntegersModuloN: TopicDef = {
       id: "elements-of-cosets-in-zn",
       title: t("Elements of a coset", "陪集的元素"),
       explanation: t(
-        "In $\\mathbb{Z}_{18}$ with $H = \\langle 12 \\rangle = \\{0, 6, 12\\}$, the coset $5 + H = \\{5, 11, 17\\}$. An element $x$ lies in $b + H$ exactly when $x - b \\in H$.",
-        "在 $\\mathbb{Z}_{18}$ 中，$H = \\langle 12 \\rangle = \\{0, 6, 12\\}$，陪集 $5 + H = \\{5, 11, 17\\}$。元素 $x$ 属于 $b + H$ 当且仅当 $x - b \\in H$。",
+        "A coset is the subgroup shifted by one element, so add that element to every member of the subgroup. In $\\mathbb{Z}_{18}$ with $H = \\langle 12 \\rangle = \\{0, 6, 12\\}$, the coset $5 + H = \\{5, 11, 17\\}$. An element $x$ lies in $b + H$ exactly when $x - b \\in H$.",
+        "陪集是把子群平移一个元素，所以把这个元素加到子群的每个成员上。在 $\\mathbb{Z}_{18}$ 中，$H = \\langle 12 \\rangle = \\{0, 6, 12\\}$，陪集 $5 + H = \\{5, 11, 17\\}$。元素 $x$ 属于 $b + H$ 当且仅当 $x - b \\in H$。",
       ),
       generate(rng) {
         let n: number;
@@ -718,8 +718,8 @@ export const cosetsOfTheMultiplicativeGroupsOfIntegersModuloN: TopicDef = {
       id: "counting-cosets-in-groups-of-units",
       title: t("Counting cosets", "数陪集"),
       explanation: t(
-        "In $U(13)$, $\\langle 3 \\rangle = \\{1, 3, 9\\}$ has $3$ elements, so there are $\\frac{12}{3} = 4$ cosets.",
-        "在 $U(13)$ 中，$\\langle 3 \\rangle = \\{1, 3, 9\\}$ 有 $3$ 个元素，所以共有 $\\frac{12}{3} = 4$ 个陪集。",
+        "Lagrange's theorem applies to every finite group, so the number of cosets is again the group order divided by the subgroup order. In $U(13)$, $\\langle 3 \\rangle = \\{1, 3, 9\\}$ has $3$ elements, so there are $\\frac{12}{3} = 4$ cosets.",
+        "拉格朗日定理适用于每个有限群，所以陪集的个数仍是群的阶除以子群的阶。在 $U(13)$ 中，$\\langle 3 \\rangle = \\{1, 3, 9\\}$ 有 $3$ 个元素，所以共有 $\\frac{12}{3} = 4$ 个陪集。",
       ),
       generate(rng) {
         let n: number;
@@ -748,8 +748,8 @@ export const cosetsOfTheMultiplicativeGroupsOfIntegersModuloN: TopicDef = {
       id: "elements-of-cosets-in-groups-of-units",
       title: t("Elements of a coset", "陪集的元素"),
       explanation: t(
-        "In $U(13)$ with $H = \\langle 3 \\rangle = \\{1, 3, 9\\}$, the coset $2H = \\{2, 6, 18 \\bmod 13\\} = \\{2, 6, 5\\}$.",
-        "在 $U(13)$ 中，$H = \\langle 3 \\rangle = \\{1, 3, 9\\}$，陪集 $2H = \\{2, 6, 18 \\bmod 13\\} = \\{2, 6, 5\\}$。",
+        "In a multiplicative group a coset is the subgroup multiplied by one element, with every product reduced modulo the number. In $U(13)$ with $H = \\langle 3 \\rangle = \\{1, 3, 9\\}$, the coset $2H = \\{2, 6, 18 \\bmod 13\\} = \\{2, 6, 5\\}$.",
+        "在乘法群中，陪集是子群乘以一个元素，每个乘积都要模这个数约化。在 $U(13)$ 中，$H = \\langle 3 \\rangle = \\{1, 3, 9\\}$，陪集 $2H = \\{2, 6, 18 \\bmod 13\\} = \\{2, 6, 5\\}$。",
       ),
       generate(rng) {
         let n: number;
@@ -863,8 +863,8 @@ export const cosetsOfInfiniteScalarGroups: TopicDef = {
       id: "representatives-of-cosets-of-z-in-q",
       title: t("Coset representatives", "陪集代表元"),
       explanation: t(
-        "Every coset $x + \\mathbb{Z}$ in $\\mathbb{Q}$ contains exactly one number in $[0, 1)$. For $x = -\\frac{17}{5} = -4 + \\frac{3}{5}$, it is $\\frac{3}{5}$.",
-        "$\\mathbb{Q}$ 中每个陪集 $x + \\mathbb{Z}$ 恰含一个 $[0, 1)$ 中的数。对 $x = -\\frac{17}{5} = -4 + \\frac{3}{5}$，这个数是 $\\frac{3}{5}$。",
+        "Two rationals lie in the same coset when they differ by an integer, so each coset is named by the fractional part of any member. Every coset $x + \\mathbb{Z}$ in $\\mathbb{Q}$ contains exactly one number in $[0, 1)$. For $x = -\\frac{17}{5} = -4 + \\frac{3}{5}$, it is $\\frac{3}{5}$.",
+        "两个有理数相差一个整数时属于同一个陪集，所以每个陪集可以用其中任一成员的小数部分来表示。$\\mathbb{Q}$ 中每个陪集 $x + \\mathbb{Z}$ 恰含一个 $[0, 1)$ 中的数。对 $x = -\\frac{17}{5} = -4 + \\frac{3}{5}$，这个数是 $\\frac{3}{5}$。",
       ),
       generate(rng) {
         const q = rng.int(2, 12);
@@ -924,8 +924,8 @@ export const leftAndRightCosetsInMatrixGroups: TopicDef = {
       id: "same-coset-of-sl2",
       title: t("Cosets of SL(2, ℝ)", "SL(2, ℝ) 的陪集"),
       explanation: t(
-        "$A$ and $B$ lie in the same left coset of $SL(2, \\mathbb{R})$ exactly when $A^{-1}B \\in SL(2, \\mathbb{R})$, that is, $\\det B = \\det A$.",
-        "$A$ 与 $B$ 在 $SL(2, \\mathbb{R})$ 的同一左陪集中当且仅当 $A^{-1}B \\in SL(2, \\mathbb{R})$，即 $\\det B = \\det A$。",
+        "Two matrices share a coset of the matrices with determinant one exactly when their determinants are equal, because the determinant is multiplicative. $A$ and $B$ lie in the same left coset of $SL(2, \\mathbb{R})$ exactly when $A^{-1}B \\in SL(2, \\mathbb{R})$, that is, $\\det B = \\det A$.",
+        "两个矩阵属于行列式为 1 的矩阵所成子群的同一个陪集，当且仅当它们的行列式相等，因为行列式是积性的。$A$ 与 $B$ 在 $SL(2, \\mathbb{R})$ 的同一左陪集中当且仅当 $A^{-1}B \\in SL(2, \\mathbb{R})$，即 $\\det B = \\det A$。",
       ),
       generate(rng) {
         const a = randomIntMatrix(rng);
@@ -1016,8 +1016,8 @@ export const leftAndRightCosetsInPermutationGroups: TopicDef = {
       id: "left-cosets-in-symmetric-groups",
       title: t("Finding a left coset", "求左陪集"),
       explanation: t(
-        "Multiply $\\sigma$ by each element of $H$ on the right. With $H = \\{e, (1\\;2)\\}$ and $\\sigma = (1\\;3)$: $\\sigma e = (1\\;3)$ and $\\sigma(1\\;2) = (1\\;2\\;3)$, so $\\sigma H = \\{(1\\;3), (1\\;2\\;3)\\}$.",
-        "用 $\\sigma$ 右乘 $H$ 的每个元素。设 $H = \\{e, (1\\;2)\\}$，$\\sigma = (1\\;3)$：$\\sigma e = (1\\;3)$，$\\sigma(1\\;2) = (1\\;2\\;3)$，所以 $\\sigma H = \\{(1\\;3), (1\\;2\\;3)\\}$。",
+        "A left coset multiplies the fixed element on the left of every subgroup element, so compute each of those products. Multiply $\\sigma$ by each element of $H$ on the right. With $H = \\{e, (1\\;2)\\}$ and $\\sigma = (1\\;3)$: $\\sigma e = (1\\;3)$ and $\\sigma(1\\;2) = (1\\;2\\;3)$, so $\\sigma H = \\{(1\\;3), (1\\;2\\;3)\\}$.",
+        "左陪集是把固定元素乘在每个子群元素的左边，所以要计算每个这样的乘积。用 $\\sigma$ 右乘 $H$ 的每个元素。设 $H = \\{e, (1\\;2)\\}$，$\\sigma = (1\\;3)$：$\\sigma e = (1\\;3)$，$\\sigma(1\\;2) = (1\\;2\\;3)$，所以 $\\sigma H = \\{(1\\;3), (1\\;2\\;3)\\}$。",
       ),
       generate(rng) {
         const n = rng.int(3, 5);
@@ -1051,8 +1051,8 @@ export const leftAndRightCosetsInPermutationGroups: TopicDef = {
       id: "comparing-left-and-right-cosets",
       title: t("Left versus right cosets", "左陪集与右陪集"),
       explanation: t(
-        "$\\sigma H = H\\sigma$ exactly when $\\sigma H \\sigma^{-1} = H$. With $H = \\langle (1\\;2\\;3) \\rangle$ in $S_3$, every $\\sigma$ satisfies this; with $H = \\langle (1\\;2) \\rangle$, $\\sigma = (1\\;3)$ does not.",
-        "$\\sigma H = H\\sigma$ 当且仅当 $\\sigma H \\sigma^{-1} = H$。在 $S_3$ 中取 $H = \\langle (1\\;2\\;3) \\rangle$，每个 $\\sigma$ 都满足；取 $H = \\langle (1\\;2) \\rangle$，$\\sigma = (1\\;3)$ 不满足。",
+        "Left and right cosets of an element agree exactly when conjugating by that element leaves the subgroup unchanged. $\\sigma H = H\\sigma$ exactly when $\\sigma H \\sigma^{-1} = H$. With $H = \\langle (1\\;2\\;3) \\rangle$ in $S_3$, every $\\sigma$ satisfies this; with $H = \\langle (1\\;2) \\rangle$, $\\sigma = (1\\;3)$ does not.",
+        "一个元素的左陪集和右陪集相同，当且仅当用这个元素共轭后子群保持不变。$\\sigma H = H\\sigma$ 当且仅当 $\\sigma H \\sigma^{-1} = H$。在 $S_3$ 中取 $H = \\langle (1\\;2\\;3) \\rangle$，每个 $\\sigma$ 都满足；取 $H = \\langle (1\\;2) \\rangle$，$\\sigma = (1\\;3)$ 不满足。",
       ),
       generate(rng) {
         const n = rng.int(3, 5);
@@ -1097,8 +1097,8 @@ export const normalSubgroups: TopicDef = {
       id: "recognizing-normal-subgroups",
       title: t("Recognizing normal subgroups", "识别正规子群"),
       explanation: t(
-        "$A_n \\trianglelefteq S_n$ since it has index $2$, and $SL(2, \\mathbb{R}) \\trianglelefteq GL(2, \\mathbb{R})$ since $\\det(ASA^{-1}) = \\det S$. But $\\langle (1\\;2) \\rangle$ is not normal in $S_3$: $(1\\;3)(1\\;2)(1\\;3)^{-1} = (2\\;3)$.",
-        "$A_n \\trianglelefteq S_n$，因为它的指数为 $2$；$SL(2, \\mathbb{R}) \\trianglelefteq GL(2, \\mathbb{R})$，因为 $\\det(ASA^{-1}) = \\det S$。但 $\\langle (1\\;2) \\rangle$ 在 $S_3$ 中不正规：$(1\\;3)(1\\;2)(1\\;3)^{-1} = (2\\;3)$。",
+        "A subgroup is normal when every conjugate of it is itself; subgroups of index two and kernels of homomorphisms are always normal. $A_n \\trianglelefteq S_n$ since it has index $2$, and $SL(2, \\mathbb{R}) \\trianglelefteq GL(2, \\mathbb{R})$ since $\\det(ASA^{-1}) = \\det S$. But $\\langle (1\\;2) \\rangle$ is not normal in $S_3$: $(1\\;3)(1\\;2)(1\\;3)^{-1} = (2\\;3)$.",
+        "如果一个子群的每个共轭都等于它自己，它就是正规子群；指数为 2 的子群和同态的核总是正规的。$A_n \\trianglelefteq S_n$，因为它的指数为 $2$；$SL(2, \\mathbb{R}) \\trianglelefteq GL(2, \\mathbb{R})$，因为 $\\det(ASA^{-1}) = \\det S$。但 $\\langle (1\\;2) \\rangle$ 在 $S_3$ 中不正规：$(1\\;3)(1\\;2)(1\\;3)^{-1} = (2\\;3)$。",
       ),
       generate(rng) {
         const n = rng.int(3, 12);
@@ -1176,8 +1176,8 @@ export const normalSubgroups: TopicDef = {
       id: "conjugating-permutations",
       title: t("Conjugating permutations", "共轭置换"),
       explanation: t(
-        "To find $\\sigma\\tau\\sigma^{-1}$, apply $\\sigma$ to each point in the cycles of $\\tau$. With $\\sigma = (1\\;2\\;4)$ and $\\tau = (1\\;3)(2\\;5)$: $\\sigma\\tau\\sigma^{-1} = (\\sigma(1)\\;\\sigma(3))(\\sigma(2)\\;\\sigma(5)) = (2\\;3)(4\\;5)$.",
-        "求 $\\sigma\\tau\\sigma^{-1}$ 时，对 $\\tau$ 的轮换中每个点作用 $\\sigma$。设 $\\sigma = (1\\;2\\;4)$，$\\tau = (1\\;3)(2\\;5)$：$\\sigma\\tau\\sigma^{-1} = (\\sigma(1)\\;\\sigma(3))(\\sigma(2)\\;\\sigma(5)) = (2\\;3)(4\\;5)$。",
+        "Conjugating a permutation relabels its points, so apply the conjugating permutation to every entry in the cycles. To find $\\sigma\\tau\\sigma^{-1}$, apply $\\sigma$ to each point in the cycles of $\\tau$. With $\\sigma = (1\\;2\\;4)$ and $\\tau = (1\\;3)(2\\;5)$: $\\sigma\\tau\\sigma^{-1} = (\\sigma(1)\\;\\sigma(3))(\\sigma(2)\\;\\sigma(5)) = (2\\;3)(4\\;5)$.",
+        "共轭一个置换相当于给它的点重新命名，所以把共轭用的置换作用到轮换中的每一项上。求 $\\sigma\\tau\\sigma^{-1}$ 时，对 $\\tau$ 的轮换中每个点作用 $\\sigma$。设 $\\sigma = (1\\;2\\;4)$，$\\tau = (1\\;3)(2\\;5)$：$\\sigma\\tau\\sigma^{-1} = (\\sigma(1)\\;\\sigma(3))(\\sigma(2)\\;\\sigma(5)) = (2\\;3)(4\\;5)$。",
       ),
       generate(rng) {
         const n = rng.int(5, 7);
@@ -1225,8 +1225,8 @@ export const maximalNormalSubgroups: TopicDef = {
       id: "counting-maximal-subgroups-of-zn",
       title: t("Counting maximal subgroups", "数极大子群"),
       explanation: t(
-        "$\\mathbb{Z}_{60}$ has one maximal subgroup for each prime factor of $60 = 2^2 \\cdot 3 \\cdot 5$: $\\langle 2 \\rangle$, $\\langle 3 \\rangle$ and $\\langle 5 \\rangle$.",
-        "$\\mathbb{Z}_{60}$ 对 $60 = 2^2 \\cdot 3 \\cdot 5$ 的每个素因子各有一个极大子群：$\\langle 2 \\rangle$、$\\langle 3 \\rangle$ 与 $\\langle 5 \\rangle$。",
+        "Subgroups of a cyclic group match the divisors of its order, and the maximal ones come from dividing by a single prime. $\\mathbb{Z}_{60}$ has one maximal subgroup for each prime factor of $60 = 2^2 \\cdot 3 \\cdot 5$: $\\langle 2 \\rangle$, $\\langle 3 \\rangle$ and $\\langle 5 \\rangle$.",
+        "循环群的子群与它的阶的因数一一对应，极大子群来自于除以单个素数。$\\mathbb{Z}_{60}$ 对 $60 = 2^2 \\cdot 3 \\cdot 5$ 的每个素因子各有一个极大子群：$\\langle 2 \\rangle$、$\\langle 3 \\rangle$ 与 $\\langle 5 \\rangle$。",
       ),
       generate(rng) {
         let n: number;
@@ -1389,8 +1389,8 @@ export const theCenterOfAGroup: TopicDef = {
       id: "sizes-of-centers",
       title: t("Sizes of centers", "中心的大小"),
       explanation: t(
-        "$Z(D_6 \\times \\mathbb{Z}_5) = Z(D_6) \\times \\mathbb{Z}_5 = \\{e, r^3\\} \\times \\mathbb{Z}_5$, with $10$ elements. $Z(GL(2, \\mathbb{Z}_7))$ is the $6$ nonzero scalar matrices.",
-        "$Z(D_6 \\times \\mathbb{Z}_5) = Z(D_6) \\times \\mathbb{Z}_5 = \\{e, r^3\\} \\times \\mathbb{Z}_5$，有 $10$ 个元素。$Z(GL(2, \\mathbb{Z}_7))$ 是 $6$ 个非零数量矩阵。",
+        "The center of a direct product is the product of the centers, so find the center of each factor and multiply their sizes. $Z(D_6 \\times \\mathbb{Z}_5) = Z(D_6) \\times \\mathbb{Z}_5 = \\{e, r^3\\} \\times \\mathbb{Z}_5$, with $10$ elements. $Z(GL(2, \\mathbb{Z}_7))$ is the $6$ nonzero scalar matrices.",
+        "直积的中心等于各因子中心的直积，所以求出每个因子的中心，再把它们的大小相乘。$Z(D_6 \\times \\mathbb{Z}_5) = Z(D_6) \\times \\mathbb{Z}_5 = \\{e, r^3\\} \\times \\mathbb{Z}_5$，有 $10$ 个元素。$Z(GL(2, \\mathbb{Z}_7))$ 是 $6$ 个非零数量矩阵。",
       ),
       generate(rng) {
         const n = rng.int(3, 20);
@@ -1441,8 +1441,8 @@ export const theCenterOfAGroup: TopicDef = {
       id: "central-elements-of-dihedral-groups",
       title: t("Central elements of Dₙ", "Dₙ 的中心元素"),
       explanation: t(
-        "Since $sr^k = r^{-k}s$, the rotation $r^k$ commutes with $s$ only when $r^k = r^{-k}$, that is, $2k \\equiv 0 \\pmod n$. A reflection $r^ks$ never commutes with $r$ when $n \\ge 3$.",
-        "由于 $sr^k = r^{-k}s$，旋转 $r^k$ 仅当 $r^k = r^{-k}$，即 $2k \\equiv 0 \\pmod n$ 时与 $s$ 可交换。$n \\ge 3$ 时反射 $r^ks$ 从不与 $r$ 可交换。",
+        "A rotation is central only when it equals its own inverse, which happens for the identity and for the half turn when there is one. Since $sr^k = r^{-k}s$, the rotation $r^k$ commutes with $s$ only when $r^k = r^{-k}$, that is, $2k \\equiv 0 \\pmod n$. A reflection $r^ks$ never commutes with $r$ when $n \\ge 3$.",
+        "一个旋转只有在等于自己的逆时才属于中心，这对恒等元成立，对存在的半周旋转也成立。由于 $sr^k = r^{-k}s$，旋转 $r^k$ 仅当 $r^k = r^{-k}$，即 $2k \\equiv 0 \\pmod n$ 时与 $s$ 可交换。$n \\ge 3$ 时反射 $r^ks$ 从不与 $r$ 可交换。",
       ),
       generate(rng) {
         const holds = rng.bool();
@@ -1578,8 +1578,8 @@ export const quotientGroups: TopicDef = {
       id: "orders-of-quotients-of-direct-products",
       title: t("Orders of quotient groups", "商群的阶"),
       explanation: t(
-        "$(\\mathbb{Z}_4 \\times \\mathbb{Z}_6)/\\langle (2, 3) \\rangle$: $(2, 3)$ has order $\\operatorname{lcm}(2, 2) = 2$, so the quotient has $\\frac{24}{2} = 12$ elements.",
-        "$(\\mathbb{Z}_4 \\times \\mathbb{Z}_6)/\\langle (2, 3) \\rangle$：$(2, 3)$ 的阶为 $\\operatorname{lcm}(2, 2) = 2$，所以商群有 $\\frac{24}{2} = 12$ 个元素。",
+        "The order of a quotient is the order of the group divided by the order of the subgroup, and the order of a cyclic subgroup is its generator's order. $(\\mathbb{Z}_4 \\times \\mathbb{Z}_6)/\\langle (2, 3) \\rangle$: $(2, 3)$ has order $\\operatorname{lcm}(2, 2) = 2$, so the quotient has $\\frac{24}{2} = 12$ elements.",
+        "商群的阶等于群的阶除以子群的阶，而循环子群的阶就是它的生成元的阶。$(\\mathbb{Z}_4 \\times \\mathbb{Z}_6)/\\langle (2, 3) \\rangle$：$(2, 3)$ 的阶为 $\\operatorname{lcm}(2, 2) = 2$，所以商群有 $\\frac{24}{2} = 12$ 个元素。",
       ),
       generate(rng) {
         let m: number;
@@ -1613,8 +1613,8 @@ export const quotientGroups: TopicDef = {
       id: "orders-of-elements-of-quotient-groups",
       title: t("Orders of cosets", "陪集的阶"),
       explanation: t(
-        "In $\\mathbb{Z}_{24}/\\langle 8 \\rangle$, the coset $6 + \\langle 8 \\rangle$ has order the least $k$ with $6k \\in \\langle 8 \\rangle$, that is, $8 \\mid 6k$ modulo $24$: $k = 4$.",
-        "在 $\\mathbb{Z}_{24}/\\langle 8 \\rangle$ 中，陪集 $6 + \\langle 8 \\rangle$ 的阶是使 $6k \\in \\langle 8 \\rangle$ 的最小 $k$，即模 $24$ 下 $8 \\mid 6k$：$k = 4$。",
+        "A coset has order equal to the smallest multiple of its representative that falls into the subgroup. In $\\mathbb{Z}_{24}/\\langle 8 \\rangle$, the coset $6 + \\langle 8 \\rangle$ has order the least $k$ with $6k \\in \\langle 8 \\rangle$, that is, $8 \\mid 6k$ modulo $24$: $k = 4$.",
+        "一个陪集的阶等于使它的代表元落入子群的最小倍数。在 $\\mathbb{Z}_{24}/\\langle 8 \\rangle$ 中，陪集 $6 + \\langle 8 \\rangle$ 的阶是使 $6k \\in \\langle 8 \\rangle$ 的最小 $k$，即模 $24$ 下 $8 \\mid 6k$：$k = 4$。",
       ),
       generate(rng) {
         let n: number;
@@ -1698,8 +1698,8 @@ export const lagrangesTheorem: TopicDef = {
       id: "indices-in-towers-of-subgroups",
       title: t("Indices in towers", "子群链中的指数"),
       explanation: t(
-        "If $|G| = 120$, $H \\le K \\le G$, $[G : K] = 5$ and $|H| = 4$, then $|K| = 24$ and $[K : H] = 6$; also $[G : H] = 30 = 5 \\cdot 6$.",
-        "若 $|G| = 120$，$H \\le K \\le G$，$[G : K] = 5$，$|H| = 4$，则 $|K| = 24$，$[K : H] = 6$；且 $[G : H] = 30 = 5 \\cdot 6$。",
+        "Indices multiply along a tower of subgroups, which follows from Lagrange's theorem applied at each level. If $|G| = 120$, $H \\le K \\le G$, $[G : K] = 5$ and $|H| = 4$, then $|K| = 24$ and $[K : H] = 6$; also $[G : H] = 30 = 5 \\cdot 6$.",
+        "沿着子群链，指数相乘，这可以由在每一层应用拉格朗日定理得到。若 $|G| = 120$，$H \\le K \\le G$，$[G : K] = 5$，$|H| = 4$，则 $|K| = 24$，$[K : H] = 6$；且 $[G : H] = 30 = 5 \\cdot 6$。",
       ),
       generate(rng) {
         const h = rng.int(2, 8);

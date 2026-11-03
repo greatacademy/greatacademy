@@ -141,8 +141,8 @@ export const cycles: TopicDef = {
       id: "images-under-cycles",
       title: t("Applying a cycle", "作用一个轮换"),
       explanation: t(
-        "In $S_6$, $\\sigma = (2\\;5\\;3\\;6)$ sends $2 \\mapsto 5$, $5 \\mapsto 3$, $3 \\mapsto 6$ and wraps around: $6 \\mapsto 2$. Points not in the cycle are fixed, so $\\sigma(1) = 1$.",
-        "在 $S_6$ 中，$\\sigma = (2\\;5\\;3\\;6)$ 把 $2 \\mapsto 5$、$5 \\mapsto 3$、$3 \\mapsto 6$，并绕回 $6 \\mapsto 2$。不在轮换中的点保持不动，所以 $\\sigma(1) = 1$。",
+        "A cycle sends each listed point to the next one, the last point back to the first, and leaves every other point fixed. In $S_6$, $\\sigma = (2\\;5\\;3\\;6)$ sends $2 \\mapsto 5$, $5 \\mapsto 3$, $3 \\mapsto 6$ and wraps around: $6 \\mapsto 2$. Points not in the cycle are fixed, so $\\sigma(1) = 1$.",
+        "一个轮换把每个列出的点送到下一个点，把最后一个点送回第一个点，其余的点保持不动。在 $S_6$ 中，$\\sigma = (2\\;5\\;3\\;6)$ 把 $2 \\mapsto 5$、$5 \\mapsto 3$、$3 \\mapsto 6$，并绕回 $6 \\mapsto 2$。不在轮换中的点保持不动，所以 $\\sigma(1) = 1$。",
       ),
       generate(rng) {
         const n = rng.int(5, 9);
@@ -170,8 +170,8 @@ export const cycles: TopicDef = {
       id: "products-of-cycles",
       title: t("Products of cycles", "轮换的乘积"),
       explanation: t(
-        "To evaluate $\\sigma\\tau$ at a point, apply $\\tau$ first and then $\\sigma$. With $\\sigma = (1\\;3\\;4)$ and $\\tau = (1\\;2)$: $\\tau(1) = 2$ and $\\sigma(2) = 2$, so $\\sigma\\tau(1) = 2$.",
-        "求 $\\sigma\\tau$ 在某点的值时，先作用 $\\tau$，再作用 $\\sigma$。设 $\\sigma = (1\\;3\\;4)$、$\\tau = (1\\;2)$：$\\tau(1) = 2$，$\\sigma(2) = 2$，所以 $\\sigma\\tau(1) = 2$。",
+        "A product of permutations is a composition of functions, so the factor on the right acts first, just as with ordinary functions. To evaluate $\\sigma\\tau$ at a point, apply $\\tau$ first and then $\\sigma$. With $\\sigma = (1\\;3\\;4)$ and $\\tau = (1\\;2)$: $\\tau(1) = 2$ and $\\sigma(2) = 2$, so $\\sigma\\tau(1) = 2$.",
+        "置换的乘积是函数的复合，所以右边的因子先作用，与普通函数一样。求 $\\sigma\\tau$ 在某点的值时，先作用 $\\tau$，再作用 $\\sigma$。设 $\\sigma = (1\\;3\\;4)$、$\\tau = (1\\;2)$：$\\tau(1) = 2$，$\\sigma(2) = 2$，所以 $\\sigma\\tau(1) = 2$。",
       ),
       generate(rng) {
         const n = rng.int(5, 8);
@@ -215,8 +215,8 @@ export const convertingBetweenPermutationsAndCycles: TopicDef = {
       id: "writing-permutations-as-cycles",
       title: t("Two-line notation to cycles", "两行记法化为轮换"),
       explanation: t(
-        "For $\\begin{pmatrix} 1 & 2 & 3 & 4 & 5 \\\\ 3 & 5 & 4 & 1 & 2 \\end{pmatrix}$: $1 \\mapsto 3 \\mapsto 4 \\mapsto 1$ gives $(1\\;3\\;4)$, and $2 \\mapsto 5 \\mapsto 2$ gives $(2\\;5)$. So the permutation is $(1\\;3\\;4)(2\\;5)$.",
-        "对 $\\begin{pmatrix} 1 & 2 & 3 & 4 & 5 \\\\ 3 & 5 & 4 & 1 & 2 \\end{pmatrix}$：$1 \\mapsto 3 \\mapsto 4 \\mapsto 1$ 得 $(1\\;3\\;4)$，$2 \\mapsto 5 \\mapsto 2$ 得 $(2\\;5)$。所以该置换为 $(1\\;3\\;4)(2\\;5)$。",
+        "Follow a point to its image, then to the image of that, until you return; this closes one cycle, and then start again with an unused point. For $\\begin{pmatrix} 1 & 2 & 3 & 4 & 5 \\\\ 3 & 5 & 4 & 1 & 2 \\end{pmatrix}$: $1 \\mapsto 3 \\mapsto 4 \\mapsto 1$ gives $(1\\;3\\;4)$, and $2 \\mapsto 5 \\mapsto 2$ gives $(2\\;5)$. So the permutation is $(1\\;3\\;4)(2\\;5)$.",
+        "从一个点追踪到它的像，再追踪到像的像，直到回到起点；这样就完成一个轮换，然后从一个未用过的点重新开始。对 $\\begin{pmatrix} 1 & 2 & 3 & 4 & 5 \\\\ 3 & 5 & 4 & 1 & 2 \\end{pmatrix}$：$1 \\mapsto 3 \\mapsto 4 \\mapsto 1$ 得 $(1\\;3\\;4)$，$2 \\mapsto 5 \\mapsto 2$ 得 $(2\\;5)$。所以该置换为 $(1\\;3\\;4)(2\\;5)$。",
       ),
       generate(rng) {
         const p = randomPerm(rng, rng.int(5, 8));
@@ -233,8 +233,8 @@ export const convertingBetweenPermutationsAndCycles: TopicDef = {
       id: "writing-cycles-as-permutations",
       title: t("Cycles to two-line notation", "轮换化为两行记法"),
       explanation: t(
-        "To write $(1\\;4)(2\\;3\\;5)$ in two-line notation, record the image of each point: $1 \\mapsto 4$, $2 \\mapsto 3$, $3 \\mapsto 5$, $4 \\mapsto 1$, $5 \\mapsto 2$, giving $\\begin{pmatrix} 1 & 2 & 3 & 4 & 5 \\\\ 4 & 3 & 5 & 1 & 2 \\end{pmatrix}$.",
-        "要把 $(1\\;4)(2\\;3\\;5)$ 写成两行记法，就记下每个点的像：$1 \\mapsto 4$、$2 \\mapsto 3$、$3 \\mapsto 5$、$4 \\mapsto 1$、$5 \\mapsto 2$，得 $\\begin{pmatrix} 1 & 2 & 3 & 4 & 5 \\\\ 4 & 3 & 5 & 1 & 2 \\end{pmatrix}$。",
+        "Two line notation lists the image of every point, so find where each point goes under the product of cycles. To write $(1\\;4)(2\\;3\\;5)$ in two-line notation, record the image of each point: $1 \\mapsto 4$, $2 \\mapsto 3$, $3 \\mapsto 5$, $4 \\mapsto 1$, $5 \\mapsto 2$, giving $\\begin{pmatrix} 1 & 2 & 3 & 4 & 5 \\\\ 4 & 3 & 5 & 1 & 2 \\end{pmatrix}$.",
+        "两行记法列出每个点的像，所以要求出每个点在这些轮换的乘积下去哪里。要把 $(1\\;4)(2\\;3\\;5)$ 写成两行记法，就记下每个点的像：$1 \\mapsto 4$、$2 \\mapsto 3$、$3 \\mapsto 5$、$4 \\mapsto 1$、$5 \\mapsto 2$，得 $\\begin{pmatrix} 1 & 2 & 3 & 4 & 5 \\\\ 4 & 3 & 5 & 1 & 2 \\end{pmatrix}$。",
       ),
       generate(rng) {
         const p = randomPerm(rng, rng.int(5, 7));
@@ -276,8 +276,8 @@ export const theInverseOfACycle: TopicDef = {
       id: "inverting-cycles",
       title: t("Inverting a cycle", "求轮换的逆"),
       explanation: t(
-        "$(1\\;4\\;2\\;6)^{-1} = (6\\;2\\;4\\;1)$, which starting from the smallest point is $(1\\;6\\;2\\;4)$.",
-        "$(1\\;4\\;2\\;6)^{-1} = (6\\;2\\;4\\;1)$，从最小点开始写为 $(1\\;6\\;2\\;4)$。",
+        "Undoing a cycle means sending each point back to the one before it, which is the same cycle listed in reverse order. $(1\\;4\\;2\\;6)^{-1} = (6\\;2\\;4\\;1)$, which starting from the smallest point is $(1\\;6\\;2\\;4)$.",
+        "撤销一个轮换就是把每个点送回它前面的点，这就是把同一个轮换倒序列出。$(1\\;4\\;2\\;6)^{-1} = (6\\;2\\;4\\;1)$，从最小点开始写为 $(1\\;6\\;2\\;4)$。",
       ),
       generate(rng) {
         const n = rng.int(6, 9);
@@ -370,8 +370,8 @@ export const theInverseOfAPermutation: TopicDef = {
       id: "inverses-of-products-of-cycles",
       title: t("Inverses of products", "乘积的逆"),
       explanation: t(
-        "$(\\sigma\\tau)^{-1} = \\tau^{-1}\\sigma^{-1}$: to evaluate it at $x$, apply $\\sigma^{-1}$ first, then $\\tau^{-1}$. With $\\sigma = (1\\;2\\;3)$ and $\\tau = (1\\;4)$: $\\sigma^{-1}(1) = 3$ and $\\tau^{-1}(3) = 3$, so $(\\sigma\\tau)^{-1}(1) = 3$.",
-        "$(\\sigma\\tau)^{-1} = \\tau^{-1}\\sigma^{-1}$：求它在 $x$ 处的值时，先作用 $\\sigma^{-1}$，再作用 $\\tau^{-1}$。设 $\\sigma = (1\\;2\\;3)$、$\\tau = (1\\;4)$：$\\sigma^{-1}(1) = 3$，$\\tau^{-1}(3) = 3$，所以 $(\\sigma\\tau)^{-1}(1) = 3$。",
+        "The inverse of a product reverses the order of the factors and inverts each, so the last factor applied is undone first. $(\\sigma\\tau)^{-1} = \\tau^{-1}\\sigma^{-1}$: to evaluate it at $x$, apply $\\sigma^{-1}$ first, then $\\tau^{-1}$. With $\\sigma = (1\\;2\\;3)$ and $\\tau = (1\\;4)$: $\\sigma^{-1}(1) = 3$ and $\\tau^{-1}(3) = 3$, so $(\\sigma\\tau)^{-1}(1) = 3$.",
+        "乘积的逆把因子的顺序反过来并把每个因子取逆，所以最后作用的因子最先被撤销。$(\\sigma\\tau)^{-1} = \\tau^{-1}\\sigma^{-1}$：求它在 $x$ 处的值时，先作用 $\\sigma^{-1}$，再作用 $\\tau^{-1}$。设 $\\sigma = (1\\;2\\;3)$、$\\tau = (1\\;4)$：$\\sigma^{-1}(1) = 3$，$\\tau^{-1}(3) = 3$，所以 $(\\sigma\\tau)^{-1}(1) = 3$。",
       ),
       generate(rng) {
         const n = rng.int(5, 8);
@@ -414,8 +414,8 @@ export const theOrderOfACycle: TopicDef = {
       id: "powers-of-cycles",
       title: t("Powers of a cycle", "轮换的幂"),
       explanation: t(
-        "$\\sigma^m$ moves each point of the cycle $m$ places forward, wrapping around. For $\\sigma = (1\\;5\\;2\\;7\\;4)$, $\\sigma^3(5) = 4$ since $5 \\to 2 \\to 7 \\to 4$.",
-        "$\\sigma^m$ 把轮换中的每个点向前移动 $m$ 位，到末尾绕回。对 $\\sigma = (1\\;5\\;2\\;7\\;4)$，$\\sigma^3(5) = 4$，因为 $5 \\to 2 \\to 7 \\to 4$。",
+        "Each application of a cycle moves a point one place along it, so a power moves it that many places, wrapping around the cycle. $\\sigma^m$ moves each point of the cycle $m$ places forward, wrapping around. For $\\sigma = (1\\;5\\;2\\;7\\;4)$, $\\sigma^3(5) = 4$ since $5 \\to 2 \\to 7 \\to 4$.",
+        "每作用一次轮换，点就沿着它移动一个位置，所以幂会使点移动那么多个位置，并在轮换上绕回。$\\sigma^m$ 把轮换中的每个点向前移动 $m$ 位，到末尾绕回。对 $\\sigma = (1\\;5\\;2\\;7\\;4)$，$\\sigma^3(5) = 4$，因为 $5 \\to 2 \\to 7 \\to 4$。",
       ),
       generate(rng) {
         const n = rng.int(6, 9);
@@ -528,8 +528,8 @@ export const theOrderOfAPermutation: TopicDef = {
       id: "orders-of-permutations-in-two-line-notation",
       title: t("Permutations in two-line notation", "两行记法下的置换"),
       explanation: t(
-        "$\\begin{pmatrix} 1 & 2 & 3 & 4 & 5 & 6 \\\\ 2 & 3 & 1 & 5 & 4 & 6 \\end{pmatrix} = (1\\;2\\;3)(4\\;5)$, so its order is $\\operatorname{lcm}(3, 2) = 6$.",
-        "$\\begin{pmatrix} 1 & 2 & 3 & 4 & 5 & 6 \\\\ 2 & 3 & 1 & 5 & 4 & 6 \\end{pmatrix} = (1\\;2\\;3)(4\\;5)$，所以它的阶为 $\\operatorname{lcm}(3, 2) = 6$。",
+        "Write the permutation as disjoint cycles first; its order is the least common multiple of the cycle lengths. $\\begin{pmatrix} 1 & 2 & 3 & 4 & 5 & 6 \\\\ 2 & 3 & 1 & 5 & 4 & 6 \\end{pmatrix} = (1\\;2\\;3)(4\\;5)$, so its order is $\\operatorname{lcm}(3, 2) = 6$.",
+        "先把置换写成不相交轮换的乘积；它的阶是各轮换长度的最小公倍数。$\\begin{pmatrix} 1 & 2 & 3 & 4 & 5 & 6 \\\\ 2 & 3 & 1 & 5 & 4 & 6 \\end{pmatrix} = (1\\;2\\;3)(4\\;5)$，所以它的阶为 $\\operatorname{lcm}(3, 2) = 6$。",
       ),
       generate(rng) {
         const p = randomPerm(rng, rng.int(6, 9));
@@ -569,8 +569,8 @@ export const transpositions: TopicDef = {
       id: "counting-transpositions",
       title: t("Fewest transpositions", "最少对换个数"),
       explanation: t(
-        "A $k$-cycle is a product of $k - 1$ transpositions, and no fewer. So $(1\\;2\\;3\\;4)(5\\;6\\;7)$ needs $3 + 2 = 5$ transpositions.",
-        "$k$-轮换是 $k - 1$ 个对换之积，且不能更少。所以 $(1\\;2\\;3\\;4)(5\\;6\\;7)$ 需要 $3 + 2 = 5$ 个对换。",
+        "Each transposition can merge or split cycles by only one, so the fewest needed is the number of points minus the number of cycles. A $k$-cycle is a product of $k - 1$ transpositions, and no fewer. So $(1\\;2\\;3\\;4)(5\\;6\\;7)$ needs $3 + 2 = 5$ transpositions.",
+        "每个对换只能使轮换数增加或减少一个，所以所需的最少对换数等于点数减去轮换数。$k$-轮换是 $k - 1$ 个对换之积，且不能更少。所以 $(1\\;2\\;3\\;4)(5\\;6\\;7)$ 需要 $3 + 2 = 5$ 个对换。",
       ),
       generate(rng) {
         const p = randomPerm(rng, rng.int(6, 10));
@@ -660,8 +660,8 @@ export const theSymmetricGroupOnNSymbols: TopicDef = {
       id: "products-in-symmetric-groups",
       title: t("Multiplying in Sₙ", "Sₙ 中的乘法"),
       explanation: t(
-        "To write $\\sigma\\tau$ in disjoint cycles, follow each point through $\\tau$ then $\\sigma$. With $\\sigma = (1\\;2\\;3)$ and $\\tau = (2\\;4)$: $1 \\mapsto 1 \\mapsto 2$, $2 \\mapsto 4 \\mapsto 4$, $4 \\mapsto 2 \\mapsto 3$, $3 \\mapsto 3 \\mapsto 1$, so $\\sigma\\tau = (1\\;2\\;4\\;3)$.",
-        "要把 $\\sigma\\tau$ 写成不相交轮换，就让每个点依次经过 $\\tau$ 和 $\\sigma$。设 $\\sigma = (1\\;2\\;3)$、$\\tau = (2\\;4)$：$1 \\mapsto 1 \\mapsto 2$，$2 \\mapsto 4 \\mapsto 4$，$4 \\mapsto 2 \\mapsto 3$，$3 \\mapsto 3 \\mapsto 1$，所以 $\\sigma\\tau = (1\\;2\\;4\\;3)$。",
+        "Follow each point through the right factor and then the left factor, recording the cycles as they close. To write $\\sigma\\tau$ in disjoint cycles, follow each point through $\\tau$ then $\\sigma$. With $\\sigma = (1\\;2\\;3)$ and $\\tau = (2\\;4)$: $1 \\mapsto 1 \\mapsto 2$, $2 \\mapsto 4 \\mapsto 4$, $4 \\mapsto 2 \\mapsto 3$, $3 \\mapsto 3 \\mapsto 1$, so $\\sigma\\tau = (1\\;2\\;4\\;3)$.",
+        "让每个点先经过右边的因子再经过左边的因子，在轮换闭合时把它们记录下来。要把 $\\sigma\\tau$ 写成不相交轮换，就让每个点依次经过 $\\tau$ 和 $\\sigma$。设 $\\sigma = (1\\;2\\;3)$、$\\tau = (2\\;4)$：$1 \\mapsto 1 \\mapsto 2$，$2 \\mapsto 4 \\mapsto 4$，$4 \\mapsto 2 \\mapsto 3$，$3 \\mapsto 3 \\mapsto 1$，所以 $\\sigma\\tau = (1\\;2\\;4\\;3)$。",
       ),
       generate(rng) {
         const n = rng.int(4, 6);
@@ -750,8 +750,8 @@ export const theAlternatingGroupOnNSymbols: TopicDef = {
       id: "membership-in-alternating-groups",
       title: t("Membership in Aₙ", "是否属于 Aₙ"),
       explanation: t(
-        "Count transpositions: a $k$-cycle contributes $k - 1$. $(1\\;3)(2\\;4\\;5\\;6)$ contributes $1 + 3 = 4$, so it is even and lies in $A_6$.",
-        "数对换：$k$-轮换贡献 $k - 1$ 个。$(1\\;3)(2\\;4\\;5\\;6)$ 贡献 $1 + 3 = 4$ 个，所以是偶置换，属于 $A_6$。",
+        "A permutation is even when it is a product of an even number of transpositions, and the alternating group consists of the even permutations. Count transpositions: a $k$-cycle contributes $k - 1$. $(1\\;3)(2\\;4\\;5\\;6)$ contributes $1 + 3 = 4$, so it is even and lies in $A_6$.",
+        "当一个置换是偶数个对换的乘积时，它是偶置换，交错群由所有偶置换组成。数对换：$k$-轮换贡献 $k - 1$ 个。$(1\\;3)(2\\;4\\;5\\;6)$ 贡献 $1 + 3 = 4$ 个，所以是偶置换，属于 $A_6$。",
       ),
       generate(rng) {
         const n = rng.int(5, 8);
@@ -1198,8 +1198,8 @@ export const theSymmetryGroupOfACubeCombiningRotationsAndReflections: TopicDef =
       id: "images-under-composite-symmetries",
       title: t("Composing symmetries", "复合对称"),
       explanation: t(
-        "$\\rho \\circ \\mu$ applies $\\mu$ first. With $\\mu: (x, y, z) \\mapsto (x, y, -z)$ and $\\rho: (x, y, z) \\mapsto (-y, x, z)$: $\\mu(1, 2, 3) = (1, 2, -3)$ and $\\rho(1, 2, -3) = (-2, 1, -3)$.",
-        "$\\rho \\circ \\mu$ 先作用 $\\mu$。设 $\\mu: (x, y, z) \\mapsto (x, y, -z)$，$\\rho: (x, y, z) \\mapsto (-y, x, z)$：$\\mu(1, 2, 3) = (1, 2, -3)$，$\\rho(1, 2, -3) = (-2, 1, -3)$。",
+        "A composite symmetry applies the right map first and then the left map, so substitute the result of one into the formula of the other. $\\rho \\circ \\mu$ applies $\\mu$ first. With $\\mu: (x, y, z) \\mapsto (x, y, -z)$ and $\\rho: (x, y, z) \\mapsto (-y, x, z)$: $\\mu(1, 2, 3) = (1, 2, -3)$ and $\\rho(1, 2, -3) = (-2, 1, -3)$.",
+        "复合对称先作用右边的映射，再作用左边的映射，所以把一个映射的结果代入另一个映射的公式。$\\rho \\circ \\mu$ 先作用 $\\mu$。设 $\\mu: (x, y, z) \\mapsto (x, y, -z)$，$\\rho: (x, y, z) \\mapsto (-y, x, z)$：$\\mu(1, 2, 3) = (1, 2, -3)$，$\\rho(1, 2, -3) = (-2, 1, -3)$。",
       ),
       generate(rng) {
         let rho: Mat3;
