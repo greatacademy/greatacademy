@@ -487,6 +487,41 @@ export const calculatingPerimetersAndAreasOfScaledShapes = topic(
 // ---------------------------------------------------------------------------
 // Circles
 
+/** sectorsFigure shows a circle cut into 12 equal sectors, the upper half shaded, and the same sectors laid side by side, pointing up and down in turn, as a near-parallelogram with base πr and height r. */
+const sectorsFigure: Figure = (() => {
+  const r = 2;
+  const n = 12;
+  const half = 180 / n;
+  const at = (c: Point, d: number): Point => [c[0] + r * Math.cos((d * Math.PI) / 180), c[1] + r * Math.sin((d * Math.PI) / 180)];
+  // sector is the wedge with apex c, opening around direction d degrees.
+  const sector = (c: Point, d: number): Point[] => [c, ...Array.from({ length: 7 }, (_, i) => at(c, d - half + (i * 2 * half) / 6))];
+  const marks: Mark[] = [];
+  for (let k = 0; k < n; k++) {
+    const pts = sector([0, 0], (k + 0.5) * 2 * half);
+    if (k < n / 2) marks.push({ kind: "shade", points: pts });
+    marks.push({ kind: "polygon", points: pts });
+  }
+  const w = (Math.PI * r) / (n / 2);
+  const x0 = 3.2;
+  for (let j = 0; j < n / 2; j++) {
+    const up = sector([x0 + w / 2 + j * w, 0], 90);
+    const down = sector([x0 + w + j * w, r], 270);
+    marks.push({ kind: "shade", points: up }, { kind: "polygon", points: up }, { kind: "polygon", points: down });
+  }
+  marks.push(
+    { kind: "segment", a: [x0 + w / 2, 0], b: [x0 + w / 2, r], dashed: true },
+    { kind: "label", at: [x0 + w / 2, r / 2], text: "r", dir: "w", italic: true },
+    { kind: "label", at: [x0 + w / 2 + 3 * w, -0.1], text: "½C = πr", dir: "s" },
+  );
+  return {
+    svg: sketch(marks),
+    alt: t(
+      "A circle cut into 12 equal sectors, the upper 6 shaded. Beside it the same sectors are laid in a row, the shaded ones pointing up and the others pointing down between them, forming a shape close to a parallelogram whose base is half the circumference, πr, and whose height is the radius r.",
+      "一个圆被分成 12 个相等的扇形，上面 6 个涂上阴影。旁边把这些扇形排成一行，涂阴影的朝上，其余的朝下插在它们之间，拼成接近平行四边形的图形：底是周长的一半 πr，高是半径 r。",
+    ),
+  };
+})();
+
 /** relatingTheCircumferenceAndAreaOfACircle goes between the circumference and the area through the radius. */
 export const relatingTheCircumferenceAndAreaOfACircle = topic(
   "relating-the-circumference-and-area-of-a-circle",
@@ -561,6 +596,7 @@ export const relatingTheCircumferenceAndAreaOfACircle = topic(
         "Cut a circle into many thin, equal sectors and lay them side by side, pointing up and down in turn. The result is close to a parallelogram: its base is half the circumference, $\\pi r$, and its height is the radius $r$. So\n\n$$A = \\tfrac{1}{2} \\cdot C \\cdot r = \\pi r \\cdot r = \\pi r^2.$$\n\nThis also works with measured values: a round tabletop with circumference $220$ cm and radius $35$ cm has area about $\\frac{1}{2} \\cdot 220 \\cdot 35 = 3850\\text{ cm}^2$.",
         "把圆剪成许多相等的细小扇形，一个朝上、一个朝下地并排拼起来，得到的图形接近平行四边形：底是周长的一半 $\\pi r$，高是半径 $r$。所以\n\n$$A = \\tfrac{1}{2} \\cdot C \\cdot r = \\pi r \\cdot r = \\pi r^2.$$\n\n对测量值同样适用：周长 $220$ cm、半径 $35$ cm 的圆桌面，面积约为 $\\frac{1}{2} \\cdot 220 \\cdot 35 = 3850\\text{ cm}^2$。",
       ),
+      figure: sectorsFigure,
       generate(rng) {
         if (rng.bool()) {
           // Measured circles: the radius to the nearest tenth and the circumference to the nearest whole unit.
