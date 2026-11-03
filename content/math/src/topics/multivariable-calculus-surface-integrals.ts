@@ -1,6 +1,6 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { poly } from "@ga/subject-math";
+import { poly, Q } from "@ga/subject-math";
 import { numberProblem, steps } from "../problems.ts";
 
 // ---------------------------------------------------------------------------
@@ -57,6 +57,35 @@ export const parametricSurfaces: TopicDef = {
         });
       },
     },
+    {
+      id: "locating-a-point-by-inverting-the-parametrization",
+      title: t("Locating a point by inverting the parametrization", "反解参数确定点的位置"),
+      explanation: t(
+        "To find the point of a parametric surface above a given $(x, y)$, solve the first two coordinate equations for the parameters and substitute them into the third. For $\\mathbf{r}(u, v) = \\langle au, bv, u^2 + v^2 \\rangle$, the point above $(X, Y)$ has $u = \\frac{X}{a}$ and $v = \\frac{Y}{b}$, so its height is $z = \\left(\\frac{X}{a}\\right)^2 + \\left(\\frac{Y}{b}\\right)^2$. This is also how a parametrization is turned into a Cartesian equation.",
+        "要求参数曲面在给定 $(x, y)$ 上方的点，先由前两个坐标方程解出参数，再代入第三个。对 $\\mathbf{r}(u, v) = \\langle au, bv, u^2 + v^2 \\rangle$，$(X, Y)$ 上方的点有 $u = \\frac{X}{a}$，$v = \\frac{Y}{b}$，所以高度为 $z = \\left(\\frac{X}{a}\\right)^2 + \\left(\\frac{Y}{b}\\right)^2$。这也是把参数化转化为直角坐标方程的方法。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(2, 5);
+        const b = rng.int(2, 5);
+        const u0 = rng.nonZero(-3, 3);
+        const v0 = rng.int(-3, 3);
+        const X = a * u0;
+        const Y = b * v0;
+        const ans = u0 * u0 + v0 * v0;
+        return numberProblem({
+          prompt: t(
+            `The surface $\\mathbf{r}(u, v) = \\langle ${a}u, ${b}v, u^2 + v^2 \\rangle$ passes over the point $(${X}, ${Y})$ of the $xy$-plane. Find the height $z$ of the surface there.`,
+            `曲面 $\\mathbf{r}(u, v) = \\langle ${a}u, ${b}v, u^2 + v^2 \\rangle$ 经过 $xy$ 平面上点 $(${X}, ${Y})$ 的上方。求曲面在那里的高度 $z$。`,
+          ),
+          answer: ans,
+          wrong: [X * X + Y * Y, a * u0 * u0 + b * v0 * v0, Math.abs(u0) + Math.abs(v0)],
+          solution: t(
+            `$${a}u = ${X}$ and $${b}v = ${Y}$ give $u = ${u0}$ and $v = ${v0}$, so $z = (${u0})^2 + (${v0})^2 = ${ans}$.`,
+            `由 $${a}u = ${X}$ 与 $${b}v = ${Y}$ 得 $u = ${u0}$，$v = ${v0}$，所以 $z = (${u0})^2 + (${v0})^2 = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -110,6 +139,33 @@ export const tangentPlanesToParametricSurfaces: TopicDef = {
         });
       },
     },
+    {
+      id: "where-a-tangent-plane-meets-the-z-axis",
+      title: t("Where a tangent plane meets the $z$-axis", "切平面与 $z$ 轴的交点"),
+      explanation: t(
+        "The tangent plane at $\\mathbf{r}(u_0, v_0)$ has normal $\\mathbf{n} = \\mathbf{r}_u \\times \\mathbf{r}_v$ and equation $\\mathbf{n} \\cdot (\\langle x, y, z \\rangle - \\mathbf{r}(u_0, v_0)) = 0$. For $\\mathbf{r}(u, v) = \\langle u + v, u - v, uv \\rangle$, $\\mathbf{r}_u = \\langle 1, 1, v \\rangle$ and $\\mathbf{r}_v = \\langle 1, -1, u \\rangle$, so\n\n$$\\mathbf{n} = \\langle u + v,\\ v - u,\\ -2 \\rangle.$$\n\nSetting $x = y = 0$ in the plane's equation gives the height at which it crosses the $z$-axis.",
+        "在 $\\mathbf{r}(u_0, v_0)$ 处的切平面法向量为 $\\mathbf{n} = \\mathbf{r}_u \\times \\mathbf{r}_v$，方程为 $\\mathbf{n} \\cdot (\\langle x, y, z \\rangle - \\mathbf{r}(u_0, v_0)) = 0$。对 $\\mathbf{r}(u, v) = \\langle u + v, u - v, uv \\rangle$，$\\mathbf{r}_u = \\langle 1, 1, v \\rangle$，$\\mathbf{r}_v = \\langle 1, -1, u \\rangle$，所以\n\n$$\\mathbf{n} = \\langle u + v,\\ v - u,\\ -2 \\rangle。$$\n\n在平面方程中令 $x = y = 0$，就得到它与 $z$ 轴相交的高度。",
+      ),
+      generate(rng: Rng): Problem {
+        const u0 = rng.nonZero(-4, 4);
+        const v0 = rng.nonZero(-4, 4);
+        const P = [u0 + v0, u0 - v0, u0 * v0];
+        const n = [u0 + v0, v0 - u0, -2];
+        const ans = -u0 * v0;
+        return numberProblem({
+          prompt: t(
+            `Find the $z$-coordinate where the tangent plane to $\\mathbf{r}(u, v) = \\langle u + v, u - v, uv \\rangle$ at $(u, v) = (${u0}, ${v0})$ crosses the $z$-axis.`,
+            `求 $\\mathbf{r}(u, v) = \\langle u + v, u - v, uv \\rangle$ 在 $(u, v) = (${u0}, ${v0})$ 处的切平面与 $z$ 轴交点的 $z$ 坐标。`,
+          ),
+          answer: ans,
+          wrong: [u0 * v0, 2 * u0 * v0, -2 * u0 * v0],
+          solution: t(
+            `The point is $(${P.join(", ")})$ and $\\mathbf{n} = \\langle ${n.join(", ")} \\rangle$. With $x = y = 0$: $${n[0]}(0 - ${P[0]! < 0 ? `(${P[0]})` : P[0]}) + ${n[1]! < 0 ? `(${n[1]})` : n[1]}(0 - ${P[1]! < 0 ? `(${P[1]})` : P[1]}) - 2(z - ${P[2]! < 0 ? `(${P[2]})` : P[2]}) = 0$, so $z = ${ans}$.`,
+            `该点为 $(${P.join(", ")})$，$\\mathbf{n} = \\langle ${n.join(", ")} \\rangle$。令 $x = y = 0$：$${n[0]}(0 - ${P[0]! < 0 ? `(${P[0]})` : P[0]}) + ${n[1]! < 0 ? `(${n[1]})` : n[1]}(0 - ${P[1]! < 0 ? `(${P[1]})` : P[1]}) - 2(z - ${P[2]! < 0 ? `(${P[2]})` : P[2]}) = 0$，所以 $z = ${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -150,6 +206,48 @@ export const parametrizationsOfEllipsoidsAndCones: TopicDef = {
           solution,
           answer: z,
           wrong: [z + k, z - k, k * k * u],
+        });
+      },
+    },
+    {
+      id: "a-point-on-a-parametrized-ellipsoid",
+      title: t("A point on a parametrized ellipsoid", "参数化椭球面上的点"),
+      explanation: t(
+        "The ellipsoid $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$ is parametrized by stretching spherical coordinates:\n\n$$\\mathbf{r}(\\phi, \\theta) = \\langle a\\sin\\phi\\cos\\theta,\\ b\\sin\\phi\\sin\\theta,\\ c\\cos\\phi \\rangle, \\quad 0 \\le \\phi \\le \\pi,\\ 0 \\le \\theta \\le 2\\pi.$$\n\nHere $\\phi$ is measured down from the positive $z$-axis, so $\\phi = 0$ is the top, $\\phi = \\frac{\\pi}{2}$ the equator and $\\phi = \\pi$ the bottom.",
+        "椭球面 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$ 由拉伸球坐标来参数化：\n\n$$\\mathbf{r}(\\phi, \\theta) = \\langle a\\sin\\phi\\cos\\theta,\\ b\\sin\\phi\\sin\\theta,\\ c\\cos\\phi \\rangle, \\quad 0 \\le \\phi \\le \\pi,\\ 0 \\le \\theta \\le 2\\pi。$$\n\n这里 $\\phi$ 从正 $z$ 轴向下量起，所以 $\\phi = 0$ 是顶点，$\\phi = \\frac{\\pi}{2}$ 是赤道，$\\phi = \\pi$ 是底点。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(2, 6);
+        const b = rng.int(2, 6);
+        const c = rng.int(2, 6);
+        const askZ = rng.int(0, 1) === 0;
+        // Angles whose sine or cosine is rational: [label, value numerator, value denominator].
+        const phis: [string, number, number][] = askZ
+          ? [
+              ["\\frac{\\pi}{3}", 1, 2],
+              ["\\frac{2\\pi}{3}", -1, 2],
+              ["\\frac{\\pi}{2}", 0, 1],
+              ["\\pi", -1, 1],
+            ]
+          : [
+              ["\\frac{\\pi}{6}", 1, 2],
+              ["\\frac{5\\pi}{6}", 1, 2],
+              ["\\frac{\\pi}{2}", 1, 1],
+            ];
+        const [lab, num, den] = rng.pick(phis);
+        const back = !askZ && rng.int(0, 1) === 1;
+        const th = back ? "\\pi" : "0";
+        const ans = askZ ? Q.of(c * num, den) : Q.of((back ? -a : a) * num, den);
+        const line = askZ ? `z = ${c}\\cos ${lab} = ${ans.toLatex()}` : `x = ${a}\\sin ${lab}\\cos ${th} = ${ans.toLatex()}`;
+        const sym = askZ ? "z" : "x";
+        return numberProblem({
+          prompt: t(
+            `The ellipsoid $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1$ is parametrized by $\\langle ${a}\\sin\\phi\\cos\\theta, ${b}\\sin\\phi\\sin\\theta, ${c}\\cos\\phi \\rangle$. Find the $${sym}$-coordinate of the point with $\\phi = ${lab}$, $\\theta = ${th}$.`,
+            `椭球面 $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1$ 的参数化为 $\\langle ${a}\\sin\\phi\\cos\\theta, ${b}\\sin\\phi\\sin\\theta, ${c}\\cos\\phi \\rangle$。求 $\\phi = ${lab}$、$\\theta = ${th}$ 对应点的 $${sym}$ 坐标。`,
+          ),
+          answer: ans,
+          wrong: [ans.neg(), Q.of(askZ ? c : a), Q.of(b * num, den), Q.of(askZ ? a * num : c * num, den)],
+          solution: t(`$${line}$.`, `$${line}$。`),
         });
       },
     },
@@ -196,6 +294,33 @@ export const parametrizationsOfParaboloidsAndHyperboloids: TopicDef = {
           solution,
           answer: z,
           wrong: [a * u, z + a, 2 * a * u * u],
+        });
+      },
+    },
+    {
+      id: "cross-sections-of-a-hyperboloid-of-one-sheet",
+      title: t("Cross-sections of a hyperboloid of one sheet", "单叶双曲面的截面"),
+      explanation: t(
+        "The hyperboloid of one sheet $\\frac{x^2 + y^2}{a^2} - \\frac{z^2}{c^2} = 1$ is parametrized by\n\n$$\\mathbf{r}(u, v) = \\left\\langle a\\sqrt{1 + u^2}\\cos v,\\ a\\sqrt{1 + u^2}\\sin v,\\ cu \\right\\rangle.$$\n\nFixing $u$ fixes the height $z = cu$, and the cross-section there is a circle of radius $a\\sqrt{1 + u^2}$. The narrowest circle, of radius $a$, is the waist at $z = 0$, and the circles widen in both directions.",
+        "单叶双曲面 $\\frac{x^2 + y^2}{a^2} - \\frac{z^2}{c^2} = 1$ 的参数化为\n\n$$\\mathbf{r}(u, v) = \\left\\langle a\\sqrt{1 + u^2}\\cos v,\\ a\\sqrt{1 + u^2}\\sin v,\\ cu \\right\\rangle。$$\n\n固定 $u$ 就固定了高度 $z = cu$，那里的截面是半径为 $a\\sqrt{1 + u^2}$ 的圆。最窄的圆半径为 $a$，是 $z = 0$ 处的腰部，圆向上下两个方向逐渐变宽。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 5);
+        const c = rng.int(1, 4);
+        const m = rng.nonZero(-3, 3);
+        const h = m * c;
+        const ans = a * a * (1 + m * m);
+        return numberProblem({
+          prompt: t(
+            `The hyperboloid $\\frac{x^2 + y^2}{${a * a}} - \\frac{z^2}{${c * c}} = 1$ meets the plane $z = ${h}$ in a circle. Find the square of its radius.`,
+            `双曲面 $\\frac{x^2 + y^2}{${a * a}} - \\frac{z^2}{${c * c}} = 1$ 与平面 $z = ${h}$ 相交于一个圆。求其半径的平方。`,
+          ),
+          answer: ans,
+          wrong: [a * a * (m * m - 1) || a * a + 1, a * a + h * h, a * a],
+          solution: t(
+            `At $z = ${h}$, $u = \\frac{${h}}{${c}} = ${m}$, so the radius squared is $${a * a}(1 + ${m * m}) = ${ans}$.`,
+            `在 $z = ${h}$ 处 $u = \\frac{${h}}{${c}} = ${m}$，所以半径的平方为 $${a * a}(1 + ${m * m}) = ${ans}$。`,
+          ),
         });
       },
     },
@@ -247,6 +372,39 @@ export const parametrizationsOfCylinders: TopicDef = {
           solution,
           answer: ans,
           wrong: [ans * ans, 2 * ans, ans + H],
+        });
+      },
+    },
+    {
+      id: "the-area-element-of-an-elliptic-cylinder",
+      title: t("The area element of an elliptic cylinder", "椭圆柱面的面积元"),
+      explanation: t(
+        "The elliptic cylinder $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$ is parametrized by $\\mathbf{r}(u, v) = \\langle a\\cos u, b\\sin u, v \\rangle$. Then $\\mathbf{r}_u = \\langle -a\\sin u, b\\cos u, 0 \\rangle$ and $\\mathbf{r}_v = \\langle 0, 0, 1 \\rangle$, so\n\n$$\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = \\sqrt{a^2\\sin^2 u + b^2\\cos^2 u}.$$\n\nUnlike a circular cylinder, the area element changes around the cylinder: it equals $b$ where $u = 0$ and $a$ where $u = \\frac{\\pi}{2}$.",
+        "椭圆柱面 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$ 的参数化为 $\\mathbf{r}(u, v) = \\langle a\\cos u, b\\sin u, v \\rangle$。于是 $\\mathbf{r}_u = \\langle -a\\sin u, b\\cos u, 0 \\rangle$，$\\mathbf{r}_v = \\langle 0, 0, 1 \\rangle$，所以\n\n$$\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = \\sqrt{a^2\\sin^2 u + b^2\\cos^2 u}。$$\n\n与圆柱面不同，面积元沿柱面变化：在 $u = 0$ 处等于 $b$，在 $u = \\frac{\\pi}{2}$ 处等于 $a$。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.int(1, 7);
+        let b = rng.int(1, 7);
+        if (b === a) b += 1;
+        const at = rng.pick([
+          ["0", 0, 1],
+          ["\\frac{\\pi}{2}", 1, 0],
+          ["\\pi", 0, -1],
+          ["\\frac{3\\pi}{2}", -1, 0],
+        ] as const);
+        const [lab, s, c] = at;
+        const ans = Math.abs(s) === 1 ? a : b;
+        return numberProblem({
+          prompt: t(
+            `For $\\mathbf{r}(u, v) = \\langle ${a}\\cos u, ${b}\\sin u, v \\rangle$, find $\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\|$ at $u = ${lab}$.`,
+            `对 $\\mathbf{r}(u, v) = \\langle ${a}\\cos u, ${b}\\sin u, v \\rangle$，求 $u = ${lab}$ 处的 $\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\|$。`,
+          ),
+          answer: ans,
+          wrong: [ans === a ? b : a, a * b, a + b],
+          solution: t(
+            `$\\mathbf{r}_u = \\langle ${-a * s}, ${b * c}, 0 \\rangle$ and $\\mathbf{r}_v = \\langle 0, 0, 1 \\rangle$ at $u = ${lab}$, so the length of their cross product is $${ans}$.`,
+            `在 $u = ${lab}$ 处 $\\mathbf{r}_u = \\langle ${-a * s}, ${b * c}, 0 \\rangle$，$\\mathbf{r}_v = \\langle 0, 0, 1 \\rangle$，所以叉积的长度为 $${ans}$。`,
+          ),
         });
       },
     },
@@ -308,6 +466,37 @@ export const areasOfParametricSurfaces: TopicDef = {
         });
       },
     },
+    {
+      id: "the-lateral-area-of-a-cone",
+      title: t("The lateral area of a cone", "圆锥的侧面积"),
+      explanation: t(
+        "The cone $z = k\\sqrt{x^2 + y^2}$ is parametrized by $\\mathbf{r}(u, v) = \\langle u\\cos v, u\\sin v, ku \\rangle$. Then $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle -ku\\cos v, -ku\\sin v, u \\rangle$, whose length is $u\\sqrt{1 + k^2}$. Over $0 \\le u \\le R$, $0 \\le v \\le 2\\pi$,\n\n$$A = \\int_0^{2\\pi}\\int_0^R u\\sqrt{1 + k^2}\\,du\\,dv = \\pi R^2\\sqrt{1 + k^2},$$\n\nwhich matches the familiar formula $\\pi R \\ell$ with slant height $\\ell = R\\sqrt{1 + k^2}$.",
+        "圆锥面 $z = k\\sqrt{x^2 + y^2}$ 的参数化为 $\\mathbf{r}(u, v) = \\langle u\\cos v, u\\sin v, ku \\rangle$。于是 $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle -ku\\cos v, -ku\\sin v, u \\rangle$，其长度为 $u\\sqrt{1 + k^2}$。在 $0 \\le u \\le R$，$0 \\le v \\le 2\\pi$ 上，\n\n$$A = \\int_0^{2\\pi}\\int_0^R u\\sqrt{1 + k^2}\\,du\\,dv = \\pi R^2\\sqrt{1 + k^2},$$\n\n与熟悉的公式 $\\pi R \\ell$（母线长 $\\ell = R\\sqrt{1 + k^2}$）一致。",
+      ),
+      generate(rng: Rng): Problem {
+        const [p, q, h] = rng.pick([
+          [3, 4, 5],
+          [4, 3, 5],
+          [5, 12, 13],
+          [12, 5, 13],
+          [8, 15, 17],
+        ] as const);
+        const R = rng.int(1, 6);
+        const ans = Q.of(R * R * h, q);
+        return numberProblem({
+          prompt: t(
+            `Find the area of the cone $z = \\frac{${p}}{${q}}\\sqrt{x^2 + y^2}$ for $x^2 + y^2 \\le ${R * R}$, divided by $\\pi$.`,
+            `求圆锥面 $z = \\frac{${p}}{${q}}\\sqrt{x^2 + y^2}$（$x^2 + y^2 \\le ${R * R}$）的面积除以 $\\pi$。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(R * R), Q.of(2 * R * R * h, q), Q.of(R * R * p, q)],
+          solution: t(
+            `$\\sqrt{1 + k^2} = \\sqrt{1 + \\frac{${p * p}}{${q * q}}} = \\frac{${h}}{${q}}$, so $A = \\pi \\cdot ${R * R} \\cdot \\frac{${h}}{${q}}$ and $\\frac{A}{\\pi} = ${ans.toLatex()}$.`,
+            `$\\sqrt{1 + k^2} = \\sqrt{1 + \\frac{${p * p}}{${q * q}}} = \\frac{${h}}{${q}}$，所以 $A = \\pi \\cdot ${R * R} \\cdot \\frac{${h}}{${q}}$，$\\frac{A}{\\pi} = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -358,6 +547,32 @@ export const surfacesOfRevolution: TopicDef = {
           solution,
           answer: ans,
           wrong: [R * H, ans + 2 * R, 4 * R * H],
+        });
+      },
+    },
+    {
+      id: "the-area-of-a-spherical-zone",
+      title: t("The area of a spherical zone", "球带的面积"),
+      explanation: t(
+        "Revolving $y = \\sqrt{R^2 - x^2}$ for $a \\le x \\le b$ about the $x$-axis gives a zone of a sphere. Here $y\\sqrt{1 + y'^2} = \\sqrt{R^2 - x^2} \\cdot \\frac{R}{\\sqrt{R^2 - x^2}} = R$, so\n\n$$S = 2\\pi\\int_a^b R\\,dx = 2\\pi R(b - a).$$\n\nRemarkably, the area depends only on the width $b - a$ of the slab, not on where the slab sits along the sphere.",
+        "把 $y = \\sqrt{R^2 - x^2}$（$a \\le x \\le b$）绕 $x$ 轴旋转得到一个球带。这里 $y\\sqrt{1 + y'^2} = \\sqrt{R^2 - x^2} \\cdot \\frac{R}{\\sqrt{R^2 - x^2}} = R$，所以\n\n$$S = 2\\pi\\int_a^b R\\,dx = 2\\pi R(b - a)。$$\n\n值得注意的是，面积只取决于夹层的宽度 $b - a$，与夹层在球上的位置无关。",
+      ),
+      generate(rng: Rng): Problem {
+        const R = rng.int(2, 9);
+        const a = rng.int(-R, R - 1);
+        const b = rng.int(a + 1, R);
+        const ans = 2 * R * (b - a);
+        return numberProblem({
+          prompt: t(
+            `The arc $y = \\sqrt{${R * R} - x^2}$, $${a} \\le x \\le ${b}$, is revolved about the $x$-axis. Find the area of the resulting surface divided by $\\pi$.`,
+            `把弧 $y = \\sqrt{${R * R} - x^2}$（$${a} \\le x \\le ${b}$）绕 $x$ 轴旋转。求所得曲面的面积除以 $\\pi$。`,
+          ),
+          answer: ans,
+          wrong: [R * (b - a), 2 * R * R * (b - a), 4 * R * R],
+          solution: t(
+            `$y\\sqrt{1 + y'^2} = ${R}$, so $S = 2\\pi \\cdot ${R}(${b} - ${a < 0 ? `(${a})` : a}) = ${ans}\\pi$.`,
+            `$y\\sqrt{1 + y'^2} = ${R}$，所以 $S = 2\\pi \\cdot ${R}(${b} - ${a < 0 ? `(${a})` : a}) = ${ans}\\pi$。`,
+          ),
         });
       },
     },
@@ -423,6 +638,32 @@ export const areasOfSurfaces: TopicDef = {
         });
       },
     },
+    {
+      id: "area-of-a-curved-graph-over-a-rectangle",
+      title: t("The area of a curved graph over a rectangle", "矩形上方曲面图形的面积"),
+      explanation: t(
+        "The area of the graph $z = f(x, y)$ over $D$ is $\\iint_D \\sqrt{1 + f_x^2 + f_y^2}\\,dA$. For $f = \\frac{2}{3}x^{3/2}$, $f_x = x^{1/2}$ and $f_y = 0$, so the integrand is $\\sqrt{1 + x}$ and over $[0, a] \\times [0, b]$\n\n$$A = b\\int_0^a \\sqrt{1 + x}\\,dx = \\frac{2b}{3}\\left[(1 + a)^{3/2} - 1\\right].$$",
+        "图形 $z = f(x, y)$ 在 $D$ 上方的面积为 $\\iint_D \\sqrt{1 + f_x^2 + f_y^2}\\,dA$。对 $f = \\frac{2}{3}x^{3/2}$，$f_x = x^{1/2}$，$f_y = 0$，所以被积函数为 $\\sqrt{1 + x}$，在 $[0, a] \\times [0, b]$ 上\n\n$$A = b\\int_0^a \\sqrt{1 + x}\\,dx = \\frac{2b}{3}\\left[(1 + a)^{3/2} - 1\\right]。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const n = rng.int(2, 5);
+        const a = n * n - 1;
+        const b = rng.int(1, 8);
+        const ans = Q.of(2 * b * (n ** 3 - 1), 3);
+        return numberProblem({
+          prompt: t(
+            `Find the area of the surface $z = \\frac{2}{3}x^{3/2}$ above the rectangle $[0, ${a}] \\times [0, ${b}]$.`,
+            `求曲面 $z = \\frac{2}{3}x^{3/2}$ 在矩形 $[0, ${a}] \\times [0, ${b}]$ 上方的面积。`,
+          ),
+          answer: ans,
+          wrong: [Q.of(a * b), Q.of(2 * b * n ** 3, 3), Q.of(2 * (n ** 3 - 1), 3)],
+          solution: t(
+            `$\\sqrt{1 + f_x^2} = \\sqrt{1 + x}$, so $A = ${b} \\cdot \\frac{2}{3}\\left[${n * n}^{3/2} - 1\\right] = ${b} \\cdot \\frac{2}{3}(${n ** 3} - 1) = ${ans.toLatex()}$.`,
+            `$\\sqrt{1 + f_x^2} = \\sqrt{1 + x}$，所以 $A = ${b} \\cdot \\frac{2}{3}\\left[${n * n}^{3/2} - 1\\right] = ${b} \\cdot \\frac{2}{3}(${n ** 3} - 1) = ${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -481,6 +722,38 @@ export const surfaceIntegralsOverParametricSurfaces: TopicDef = {
         });
       },
     },
+    {
+      id: "a-surface-integral-over-a-cylinder",
+      title: t("A surface integral over a cylinder", "圆柱面上的曲面积分"),
+      explanation: t(
+        "On the cylinder $\\mathbf{r}(u, v) = \\langle R\\cos u, R\\sin u, v \\rangle$, $0 \\le u \\le 2\\pi$, $0 \\le v \\le H$, the area element is $dS = R\\,du\\,dv$. Write the integrand in terms of $u$ and $v$ and integrate over the parameter rectangle:\n\n$$\\iint_S (x^2 + y^2)\\,dS = \\int_0^H\\int_0^{2\\pi} R^2 \\cdot R\\,du\\,dv = 2\\pi R^3H, \\qquad \\iint_S z\\,dS = \\int_0^H\\int_0^{2\\pi} vR\\,du\\,dv = \\pi RH^2.$$",
+        "在圆柱面 $\\mathbf{r}(u, v) = \\langle R\\cos u, R\\sin u, v \\rangle$（$0 \\le u \\le 2\\pi$，$0 \\le v \\le H$）上，面积元为 $dS = R\\,du\\,dv$。把被积函数用 $u$、$v$ 表示，再在参数矩形上积分：\n\n$$\\iint_S (x^2 + y^2)\\,dS = \\int_0^H\\int_0^{2\\pi} R^2 \\cdot R\\,du\\,dv = 2\\pi R^3H, \\qquad \\iint_S z\\,dS = \\int_0^H\\int_0^{2\\pi} vR\\,du\\,dv = \\pi RH^2。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const R = rng.int(1, 5);
+        const H = rng.int(1, 6);
+        const radial = rng.int(0, 1) === 0;
+        const ans = radial ? 2 * R ** 3 * H : R * H * H;
+        const f = radial ? "(x^2 + y^2)" : "z";
+        return numberProblem({
+          prompt: t(
+            `$S$ is the cylinder $x^2 + y^2 = ${R * R}$, $0 \\le z \\le ${H}$. Find $\\frac{1}{\\pi}\\iint_S ${f}\\,dS$.`,
+            `$S$ 是圆柱面 $x^2 + y^2 = ${R * R}$，$0 \\le z \\le ${H}$。求 $\\frac{1}{\\pi}\\iint_S ${f}\\,dS$。`,
+          ),
+          answer: ans,
+          wrong: radial ? [2 * R * R * H, R ** 3 * H, 2 * R ** 4 * H] : [2 * R * H * H, R * H, H * H],
+          solution: radial
+            ? t(
+                `$x^2 + y^2 = ${R * R}$ on $S$ and $dS = ${R}\\,du\\,dv$, so the integral is $${R * R} \\cdot ${R} \\cdot 2\\pi \\cdot ${H} = ${ans}\\pi$.`,
+                `在 $S$ 上 $x^2 + y^2 = ${R * R}$，$dS = ${R}\\,du\\,dv$，所以积分为 $${R * R} \\cdot ${R} \\cdot 2\\pi \\cdot ${H} = ${ans}\\pi$。`,
+              )
+            : t(
+                `$\\int_0^{${H}}\\int_0^{2\\pi} v \\cdot ${R}\\,du\\,dv = 2\\pi \\cdot ${R} \\cdot \\frac{${H * H}}{2} = ${ans}\\pi$.`,
+                `$\\int_0^{${H}}\\int_0^{2\\pi} v \\cdot ${R}\\,du\\,dv = 2\\pi \\cdot ${R} \\cdot \\frac{${H * H}}{2} = ${ans}\\pi$。`,
+              ),
+        });
+      },
+    },
   ],
 };
 
@@ -533,6 +806,41 @@ export const surfaceIntegralsOverCartesianSurfaces: TopicDef = {
           solution,
           answer: ans,
           wrong: [c * W * H, ans + 3 * c, 2 * ans],
+        });
+      },
+    },
+    {
+      id: "integrating-a-nonconstant-function-over-a-plane",
+      title: t("Integrating a nonconstant function over a tilted plane", "在倾斜平面上积分非常数函数"),
+      explanation: t(
+        "For $S$ the graph of $z = px + qy$ over $D$, $dS = \\sqrt{1 + p^2 + q^2}\\,dA$ is a constant multiple of $dA$. So\n\n$$\\iint_S f\\,dS = \\sqrt{1 + p^2 + q^2}\\iint_D f(x, y, px + qy)\\,dA.$$\n\nFor $f = x$ over $[0, W] \\times [0, H]$ the remaining double integral is $\\frac{W^2H}{2}$.",
+        "若 $S$ 是 $z = px + qy$ 在 $D$ 上方的图形，则 $dS = \\sqrt{1 + p^2 + q^2}\\,dA$ 是 $dA$ 的常数倍。所以\n\n$$\\iint_S f\\,dS = \\sqrt{1 + p^2 + q^2}\\iint_D f(x, y, px + qy)\\,dA。$$\n\n对 $[0, W] \\times [0, H]$ 上的 $f = x$，剩下的二重积分为 $\\frac{W^2H}{2}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const [p, q, k] = rng.pick([
+          [2, 2, 3],
+          [2, -2, 3],
+          [-2, 2, 3],
+          [4, 8, 9],
+          [8, 4, 9],
+          [-4, 8, 9],
+        ] as const);
+        const W = rng.int(1, 5);
+        const H = rng.int(1, 5);
+        const useY = rng.int(0, 1) === 1;
+        const ans = useY ? Q.of(k * W * H * H, 2) : Q.of(k * W * W * H, 2);
+        const v = useY ? "y" : "x";
+        return numberProblem({
+          prompt: t(
+            `Evaluate $\\iint_S ${v}\\,dS$, where $S$ is the part of the plane $z = ${poly([p, "x"], [q, "y"])}$ above $[0, ${W}] \\times [0, ${H}]$.`,
+            `计算 $\\iint_S ${v}\\,dS$，其中 $S$ 是平面 $z = ${poly([p, "x"], [q, "y"])}$ 在 $[0, ${W}] \\times [0, ${H}]$ 上方的部分。`,
+          ),
+          answer: ans,
+          wrong: [ans.div(Q.of(k)), useY ? Q.of(k * W * W * H, 2) : Q.of(k * W * H * H, 2), Q.of(k * W * H)],
+          solution: t(
+            `$\\sqrt{1 + ${p * p} + ${q * q}} = ${k}$ and $\\iint_D ${v}\\,dA = ${(useY ? Q.of(W * H * H, 2) : Q.of(W * W * H, 2)).toLatex()}$, so the integral is $${ans.toLatex()}$.`,
+            `$\\sqrt{1 + ${p * p} + ${q * q}} = ${k}$，$\\iint_D ${v}\\,dA = ${(useY ? Q.of(W * H * H, 2) : Q.of(W * W * H, 2)).toLatex()}$，所以积分为 $${ans.toLatex()}$。`,
+          ),
         });
       },
     },
@@ -593,6 +901,34 @@ export const fluxInThreeDimensionalVectorFields: TopicDef = {
         });
       },
     },
+    {
+      id: "flux-of-a-position-field-through-a-horizontal-square",
+      title: t("Flux of a nonuniform field through a horizontal square", "非均匀场穿过水平正方形的通量"),
+      explanation: t(
+        "Flux adds up the normal component of the field over the surface: $\\iint_S \\mathbf{F} \\cdot \\mathbf{n}\\,dS$. On the horizontal rectangle at height $z = h$ with upward normal $\\mathbf{n} = \\mathbf{k}$, only the $z$-component counts. For $\\mathbf{F} = \\langle x, y, z \\rangle$ that component is the constant $h$, so the flux is $h$ times the area, even though the field itself varies across the rectangle.",
+        "通量把场的法向分量在曲面上累加：$\\iint_S \\mathbf{F} \\cdot \\mathbf{n}\\,dS$。在高度 $z = h$、法向向上 $\\mathbf{n} = \\mathbf{k}$ 的水平矩形上，只有 $z$ 分量起作用。对 $\\mathbf{F} = \\langle x, y, z \\rangle$，该分量是常数 $h$，所以通量是 $h$ 乘以面积，尽管场本身在矩形上是变化的。",
+      ),
+      generate(rng: Rng): Problem {
+        const W = rng.int(1, 5);
+        const H = rng.int(1, 5);
+        const h = rng.nonZero(-4, 5);
+        const k = rng.int(1, 3);
+        const ans = k * h * W * H;
+        const F = k === 1 ? "\\langle x, y, z \\rangle" : `${k}\\langle x, y, z \\rangle`;
+        return numberProblem({
+          prompt: t(
+            `Find the upward flux of $\\mathbf{F} = ${F}$ through the rectangle $[0, ${W}] \\times [0, ${H}]$ in the plane $z = ${h}$.`,
+            `求 $\\mathbf{F} = ${F}$ 穿过平面 $z = ${h}$ 内矩形 $[0, ${W}] \\times [0, ${H}]$ 的向上通量。`,
+          ),
+          answer: ans,
+          wrong: [k * W * H, k * h * (W + H), Q.of(k * W * W * H * H, 4)],
+          solution: t(
+            `$\\mathbf{F} \\cdot \\mathbf{k} = ${k * h}$ on the rectangle, whose area is $${W * H}$, so the flux is $${ans}$.`,
+            `在矩形上 $\\mathbf{F} \\cdot \\mathbf{k} = ${k * h}$，矩形面积为 $${W * H}$，所以通量为 $${ans}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -643,6 +979,32 @@ export const fluxThroughClosedSurfaces: TopicDef = {
           solution,
           answer: 0,
           wrong: [vol, cx * W * H, cy * L * H],
+        });
+      },
+    },
+    {
+      id: "outward-flux-of-a-radial-field-through-a-sphere",
+      title: t("Outward flux of a radial field through a sphere", "径向场穿过球面的向外通量"),
+      explanation: t(
+        "On the sphere $x^2 + y^2 + z^2 = R^2$ the outward unit normal is $\\mathbf{n} = \\frac{\\langle x, y, z \\rangle}{R}$. For the radial field $\\mathbf{F} = k\\langle x, y, z \\rangle$, $\\mathbf{F} \\cdot \\mathbf{n} = \\frac{k(x^2 + y^2 + z^2)}{R} = kR$ is constant on the sphere. So the net outward flux is $kR$ times the area $4\\pi R^2$, that is $4\\pi kR^3$.",
+        "在球面 $x^2 + y^2 + z^2 = R^2$ 上，向外单位法向量为 $\\mathbf{n} = \\frac{\\langle x, y, z \\rangle}{R}$。对径向场 $\\mathbf{F} = k\\langle x, y, z \\rangle$，$\\mathbf{F} \\cdot \\mathbf{n} = \\frac{k(x^2 + y^2 + z^2)}{R} = kR$ 在球面上为常数。所以净向外通量是 $kR$ 乘以面积 $4\\pi R^2$，即 $4\\pi kR^3$。",
+      ),
+      generate(rng: Rng): Problem {
+        const k = rng.nonZero(-4, 6);
+        const R = rng.int(1, 5);
+        const ans = 4 * k * R ** 3;
+        const F = k === 1 ? "\\langle x, y, z \\rangle" : k === -1 ? "-\\langle x, y, z \\rangle" : `${k}\\langle x, y, z \\rangle`;
+        return numberProblem({
+          prompt: t(
+            `Find the net outward flux of $\\mathbf{F} = ${F}$ through the sphere $x^2 + y^2 + z^2 = ${R * R}$, divided by $\\pi$.`,
+            `求 $\\mathbf{F} = ${F}$ 穿过球面 $x^2 + y^2 + z^2 = ${R * R}$ 的净向外通量除以 $\\pi$。`,
+          ),
+          answer: ans,
+          wrong: [4 * k * R * R, Q.of(4 * k * R ** 3, 3), 0],
+          solution: t(
+            `$\\mathbf{F} \\cdot \\mathbf{n} = ${k}(${R}) = ${k * R}$ everywhere on the sphere, and the area is $${4 * R * R}\\pi$, so the flux is $${ans}\\pi$.`,
+            `在球面上处处 $\\mathbf{F} \\cdot \\mathbf{n} = ${k}(${R}) = ${k * R}$，面积为 $${4 * R * R}\\pi$，所以通量为 $${ans}\\pi$。`,
+          ),
         });
       },
     },
@@ -705,6 +1067,34 @@ export const calculatingFluxThroughParametricSurfaces: TopicDef = {
         });
       },
     },
+    {
+      id: "outward-flux-through-a-cylinder",
+      title: t("Outward flux through the side of a cylinder", "穿过圆柱侧面的向外通量"),
+      explanation: t(
+        "For the cylinder $\\mathbf{r}(u, v) = \\langle R\\cos u, R\\sin u, v \\rangle$, the cross product $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle R\\cos u, R\\sin u, 0 \\rangle$ points outward. The flux is $\\iint_D \\mathbf{F}(\\mathbf{r}(u, v)) \\cdot (\\mathbf{r}_u \\times \\mathbf{r}_v)\\,du\\,dv$. For $\\mathbf{F} = \\langle kx, ky, g(z) \\rangle$ the dot product is $kR^2$, and the $z$-component never contributes because the side's normal is horizontal.",
+        "对圆柱面 $\\mathbf{r}(u, v) = \\langle R\\cos u, R\\sin u, v \\rangle$，叉积 $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle R\\cos u, R\\sin u, 0 \\rangle$ 指向外侧。通量为 $\\iint_D \\mathbf{F}(\\mathbf{r}(u, v)) \\cdot (\\mathbf{r}_u \\times \\mathbf{r}_v)\\,du\\,dv$。对 $\\mathbf{F} = \\langle kx, ky, g(z) \\rangle$，点积为 $kR^2$，而 $z$ 分量从不起作用，因为侧面的法向量是水平的。",
+      ),
+      generate(rng: Rng): Problem {
+        const k = rng.nonZero(-3, 4);
+        const R = rng.int(1, 5);
+        const H = rng.int(1, 6);
+        const c = rng.int(1, 5);
+        const ans = 2 * k * R * R * H;
+        const third = rng.pick([`${c}z`, `z^2`, `${c}`]);
+        return numberProblem({
+          prompt: t(
+            `Find the outward flux of $\\mathbf{F} = \\langle ${poly([k, "x"])}, ${poly([k, "y"])}, ${third} \\rangle$ through the side $x^2 + y^2 = ${R * R}$, $0 \\le z \\le ${H}$, of a cylinder, divided by $\\pi$.`,
+            `求 $\\mathbf{F} = \\langle ${poly([k, "x"])}, ${poly([k, "y"])}, ${third} \\rangle$ 穿过圆柱侧面 $x^2 + y^2 = ${R * R}$（$0 \\le z \\le ${H}$）的向外通量除以 $\\pi$。`,
+          ),
+          answer: ans,
+          wrong: [k * R * R * H, 2 * k * R * H, 2 * k * R ** 3 * H],
+          solution: t(
+            `$\\mathbf{F} \\cdot (\\mathbf{r}_u \\times \\mathbf{r}_v) = ${k}(${R * R}\\cos^2 u + ${R * R}\\sin^2 u) = ${k * R * R}$, so the flux is $${k * R * R} \\cdot 2\\pi \\cdot ${H} = ${ans}\\pi$.`,
+            `$\\mathbf{F} \\cdot (\\mathbf{r}_u \\times \\mathbf{r}_v) = ${k}(${R * R}\\cos^2 u + ${R * R}\\sin^2 u) = ${k * R * R}$，所以通量为 $${k * R * R} \\cdot 2\\pi \\cdot ${H} = ${ans}\\pi$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -764,6 +1154,35 @@ export const calculatingFluxThroughCartesianSurfaces: TopicDef = {
         });
       },
     },
+    {
+      id: "upward-flux-through-a-paraboloid-over-a-rectangle",
+      title: t("Upward flux through a curved graph", "穿过曲面图形的向上通量"),
+      explanation: t(
+        "For the graph $z = g(x, y)$ with upward orientation, $d\\mathbf{S} = \\langle -g_x, -g_y, 1 \\rangle\\,dA$, so\n\n$$\\iint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iint_D \\left(-Pg_x - Qg_y + R\\right)dA,$$\n\nwith $P$, $Q$, $R$ evaluated at $z = g(x, y)$. For $\\mathbf{F} = \\langle x, y, z \\rangle$ and $g = x^2 + y^2$ the integrand is $-2x^2 - 2y^2 + (x^2 + y^2) = -(x^2 + y^2)$: the field points outward, mostly against the upward normal.",
+        "对向上定向的图形 $z = g(x, y)$，$d\\mathbf{S} = \\langle -g_x, -g_y, 1 \\rangle\\,dA$，所以\n\n$$\\iint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iint_D \\left(-Pg_x - Qg_y + R\\right)dA,$$\n\n其中 $P$、$Q$、$R$ 在 $z = g(x, y)$ 处取值。对 $\\mathbf{F} = \\langle x, y, z \\rangle$ 与 $g = x^2 + y^2$，被积函数为 $-2x^2 - 2y^2 + (x^2 + y^2) = -(x^2 + y^2)$：场向外指，大体与向上的法向量相反。",
+      ),
+      generate(rng: Rng): Problem {
+        const W = rng.int(1, 4);
+        const H = rng.int(1, 4);
+        const k = rng.int(1, 3);
+        // F = <x, y, k z>: integrand -2x^2 - 2y^2 + k(x^2 + y^2) = (k - 2)(x^2 + y^2).
+        const base = Q.of(W ** 3 * H + W * H ** 3, 3);
+        const ans = base.mul(Q.of(k - 2));
+        const R = k === 1 ? "z" : `${k}z`;
+        return numberProblem({
+          prompt: t(
+            `Find the upward flux of $\\mathbf{F} = \\langle x, y, ${R} \\rangle$ through the surface $z = x^2 + y^2$ above $[0, ${W}] \\times [0, ${H}]$.`,
+            `求 $\\mathbf{F} = \\langle x, y, ${R} \\rangle$ 穿过曲面 $z = x^2 + y^2$ 在 $[0, ${W}] \\times [0, ${H}]$ 上方部分的向上通量。`,
+          ),
+          answer: ans,
+          wrong: [base.mul(Q.of(k + 2)), base.mul(Q.of(k)), ans.neg()],
+          solution: t(
+            `The integrand is $-2x^2 - 2y^2 + ${k === 1 ? "" : k}(x^2 + y^2) = ${poly([k - 2, "(x^2 + y^2)"]) || "0"}$, and $\\iint_D (x^2 + y^2)\\,dA = ${base.toLatex()}$, so the flux is $${ans.toLatex()}$.`,
+            `被积函数为 $-2x^2 - 2y^2 + ${k === 1 ? "" : k}(x^2 + y^2) = ${poly([k - 2, "(x^2 + y^2)"]) || "0"}$，$\\iint_D (x^2 + y^2)\\,dA = ${base.toLatex()}$，所以通量为 $${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -819,6 +1238,36 @@ export const calculatingFluxThroughClosedSurfaces: TopicDef = {
           solution,
           answer: flux,
           wrong: [vol, (a + b) * vol, flux + vol],
+        });
+      },
+    },
+    {
+      id: "face-by-face-flux-of-a-quadratic-field",
+      title: t("Face-by-face flux of a quadratic field", "逐面计算二次场的通量"),
+      explanation: t(
+        "To find the flux out of a box face by face, note that on each face only one component of $\\mathbf{F}$ is normal. For $\\mathbf{F} = \\langle px^2, qy^2, rz^2 \\rangle$ on $[0, A] \\times [0, B] \\times [0, C]$, the faces through the origin contribute nothing, because there the normal component is $0$. On the face $x = A$ the normal component is $pA^2$ over area $BC$, and similarly for the other two, so the total is\n\n$$pA^2BC + qB^2AC + rC^2AB.$$",
+        "逐面计算长方体的通量时，注意每个面上只有 $\\mathbf{F}$ 的一个分量是法向的。对 $[0, A] \\times [0, B] \\times [0, C]$ 上的 $\\mathbf{F} = \\langle px^2, qy^2, rz^2 \\rangle$，过原点的三个面没有贡献，因为那里法向分量为 $0$。在面 $x = A$ 上法向分量为 $pA^2$，面积为 $BC$，另两个面同理，所以总量为\n\n$$pA^2BC + qB^2AC + rC^2AB。$$",
+      ),
+      generate(rng: Rng): Problem {
+        const p = rng.nonZero(-3, 3);
+        const q = rng.nonZero(-3, 3);
+        const r = rng.nonZero(-3, 3);
+        const A = rng.int(1, 3);
+        const B = rng.int(1, 3);
+        const C = rng.int(1, 3);
+        const parts = [p * A * A * B * C, q * B * B * A * C, r * C * C * A * B];
+        const ans = parts[0]! + parts[1]! + parts[2]!;
+        return numberProblem({
+          prompt: t(
+            `Find the net outward flux of $\\mathbf{F} = \\langle ${poly([p, "x^2"])}, ${poly([q, "y^2"])}, ${poly([r, "z^2"])} \\rangle$ out of the box $[0, ${A}] \\times [0, ${B}] \\times [0, ${C}]$.`,
+            `求 $\\mathbf{F} = \\langle ${poly([p, "x^2"])}, ${poly([q, "y^2"])}, ${poly([r, "z^2"])} \\rangle$ 从长方体 $[0, ${A}] \\times [0, ${B}] \\times [0, ${C}]$ 流出的净通量。`,
+          ),
+          answer: ans,
+          wrong: [2 * ans, (p + q + r) * A * B * C, parts[0]! - parts[1]! + parts[2]!],
+          solution: t(
+            `Only the faces $x = ${A}$, $y = ${B}$, $z = ${C}$ contribute: $${parts.map((x) => (x < 0 ? `(${x})` : `${x}`)).join(" + ")} = ${ans}$.`,
+            `只有面 $x = ${A}$、$y = ${B}$、$z = ${C}$ 有贡献：$${parts.map((x) => (x < 0 ? `(${x})` : `${x}`)).join(" + ")} = ${ans}$。`,
+          ),
         });
       },
     },
@@ -885,6 +1334,46 @@ export const theDivergenceTheorem: TopicDef = {
         });
       },
     },
+    {
+      id: "divergence-theorem-on-a-sphere-or-cylinder",
+      title: t("The divergence theorem on a sphere or a cylinder", "球体或圆柱体上的散度定理"),
+      explanation: t(
+        "When the divergence is constant, the divergence theorem reduces the flux to divergence times volume: $\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = (\\nabla \\cdot \\mathbf{F})\\,V$. For $\\mathbf{F} = \\langle ax, by, cz \\rangle$, $\\nabla \\cdot \\mathbf{F} = a + b + c$. A ball of radius $R$ has volume $\\frac{4}{3}\\pi R^3$, and a solid cylinder of radius $R$ and height $H$ has volume $\\pi R^2H$, so no surface parametrization is needed at all.",
+        "当散度为常数时，散度定理把通量化为散度乘以体积：$\\oiint_S \\mathbf{F} \\cdot d\\mathbf{S} = (\\nabla \\cdot \\mathbf{F})\\,V$。对 $\\mathbf{F} = \\langle ax, by, cz \\rangle$，$\\nabla \\cdot \\mathbf{F} = a + b + c$。半径为 $R$ 的球体体积为 $\\frac{4}{3}\\pi R^3$，半径 $R$、高 $H$ 的实心圆柱体积为 $\\pi R^2H$，所以根本不需要参数化曲面。",
+      ),
+      generate(rng: Rng): Problem {
+        const a = rng.nonZero(-3, 4);
+        const b = rng.nonZero(-3, 4);
+        let c = rng.nonZero(-3, 4);
+        if (a + b + c === 0) c += 1;
+        if (c === 0) c = 2;
+        const d = a + b + c;
+        const R = rng.int(1, 4);
+        const ball = rng.int(0, 1) === 0;
+        const H = rng.int(1, 5);
+        const ans = ball ? Q.of(4 * d * R ** 3, 3) : Q.of(d * R * R * H);
+        const region = ball
+          ? t(`the sphere $x^2 + y^2 + z^2 = ${R * R}$`, `球面 $x^2 + y^2 + z^2 = ${R * R}$`)
+          : t(
+              `the closed cylinder $x^2 + y^2 \\le ${R * R}$, $0 \\le z \\le ${H}$ (side, top and bottom)`,
+              `封闭圆柱面 $x^2 + y^2 \\le ${R * R}$，$0 \\le z \\le ${H}$（侧面、顶面与底面）`,
+            );
+        return numberProblem({
+          prompt: t(
+            `Find the outward flux of $\\mathbf{F} = \\langle ${poly([a, "x"])}, ${poly([b, "y"])}, ${poly([c, "z"])} \\rangle$ through ${region.en}, divided by $\\pi$.`,
+            `求 $\\mathbf{F} = \\langle ${poly([a, "x"])}, ${poly([b, "y"])}, ${poly([c, "z"])} \\rangle$ 穿过${region["zh-CN"]}的向外通量除以 $\\pi$。`,
+          ),
+          answer: ans,
+          wrong: ball
+            ? [Q.of(d * R ** 3), Q.of(4 * d * R * R), Q.of(4 * a * b * c * R ** 3, 3)]
+            : [Q.of(d * R * H), Q.of(2 * d * R * R * H), Q.of(a * b * c * R * R * H)],
+          solution: t(
+            `$\\nabla \\cdot \\mathbf{F} = ${d}$ and the volume is $${ball ? `\\frac{4}{3}\\pi \\cdot ${R ** 3}` : `\\pi \\cdot ${R * R} \\cdot ${H}`}$, so the flux divided by $\\pi$ is $${ans.toLatex()}$.`,
+            `$\\nabla \\cdot \\mathbf{F} = ${d}$，体积为 $${ball ? `\\frac{4}{3}\\pi \\cdot ${R ** 3}` : `\\pi \\cdot ${R * R} \\cdot ${H}`}$，所以通量除以 $\\pi$ 为 $${ans.toLatex()}$。`,
+          ),
+        });
+      },
+    },
   ],
 };
 
@@ -938,6 +1427,33 @@ export const stokesTheorem: TopicDef = {
           solution,
           answer: ans,
           wrong: [a * area, ans + area, curlZ * (W + H)],
+        });
+      },
+    },
+    {
+      id: "stokes-theorem-on-a-tilted-triangle",
+      title: t("Stokes' theorem on a tilted triangle", "倾斜三角形上的斯托克斯定理"),
+      explanation: t(
+        "Stokes' theorem replaces the circulation around $C$ by the flux of $\\nabla \\times \\mathbf{F}$ through any surface bounded by $C$. For $\\mathbf{F} = \\langle pz, qx, ry \\rangle$ the curl is the constant $\\langle r, p, q \\rangle$. Take the triangle with vertices $(a, 0, 0)$, $(0, a, 0)$, $(0, 0, a)$, oriented with normal pointing away from the origin. Its projections onto the three coordinate planes each have area $\\frac{a^2}{2}$, so the flux of a constant vector $\\langle A, B, C \\rangle$ through it is $(A + B + C)\\frac{a^2}{2}$.",
+        "斯托克斯定理把沿 $C$ 的环量换成 $\\nabla \\times \\mathbf{F}$ 穿过任一以 $C$ 为边界的曲面的通量。对 $\\mathbf{F} = \\langle pz, qx, ry \\rangle$，旋度是常向量 $\\langle r, p, q \\rangle$。取顶点为 $(a, 0, 0)$、$(0, a, 0)$、$(0, 0, a)$ 的三角形，法向量背离原点。它在三个坐标平面上的投影面积都是 $\\frac{a^2}{2}$，所以常向量 $\\langle A, B, C \\rangle$ 穿过它的通量为 $(A + B + C)\\frac{a^2}{2}$。",
+      ),
+      generate(rng: Rng): Problem {
+        const p = rng.nonZero(-3, 4);
+        const q = rng.nonZero(-3, 4);
+        const r = rng.nonZero(-3, 4);
+        const a = rng.int(1, 5);
+        const ans = Q.of((p + q + r) * a * a, 2);
+        return numberProblem({
+          prompt: t(
+            `$C$ is the boundary of the triangle with vertices $(${a}, 0, 0)$, $(0, ${a}, 0)$, $(0, 0, ${a})$, traversed in that order. Use Stokes' theorem to find $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle ${poly([p, "z"])}, ${poly([q, "x"])}, ${poly([r, "y"])} \\rangle$.`,
+            `$C$ 是顶点为 $(${a}, 0, 0)$、$(0, ${a}, 0)$、$(0, 0, ${a})$ 的三角形边界，按此顺序绕行。用斯托克斯定理求 $\\mathbf{F} = \\langle ${poly([p, "z"])}, ${poly([q, "x"])}, ${poly([r, "y"])} \\rangle$ 的 $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r}$。`,
+          ),
+          answer: ans,
+          wrong: [ans.neg(), Q.of((p + q + r) * a * a), Q.of((p + q + r) * a * a, 6)],
+          solution: t(
+            `$\\nabla \\times \\mathbf{F} = \\langle ${r}, ${p}, ${q} \\rangle$. The triangle's normal $\\langle 1, 1, 1 \\rangle$ matches the orientation, and each projection has area $${Q.of(a * a, 2).toLatex()}$, so the circulation is $(${[r, p, q].map((x) => (x < 0 ? `(${x})` : `${x}`)).join(" + ")}) \\cdot ${Q.of(a * a, 2).toLatex()} = ${ans.toLatex()}$.`,
+            `$\\nabla \\times \\mathbf{F} = \\langle ${r}, ${p}, ${q} \\rangle$。三角形的法向量 $\\langle 1, 1, 1 \\rangle$ 与定向一致，每个投影面积为 $${Q.of(a * a, 2).toLatex()}$，所以环量为 $(${[r, p, q].map((x) => (x < 0 ? `(${x})` : `${x}`)).join(" + ")}) \\cdot ${Q.of(a * a, 2).toLatex()} = ${ans.toLatex()}$。`,
+          ),
         });
       },
     },
