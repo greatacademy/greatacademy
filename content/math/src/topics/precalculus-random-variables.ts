@@ -1779,8 +1779,8 @@ const percentagePoints: TopicDef = {
       id: "symmetric-interval-with-a-given-probability",
       title: t("A symmetric interval with a given probability", "概率已知的对称区间"),
       explanation: t(
-        "If $P(-a < Z < a) = p$ with $a > 0$, then $2\\Phi(a) - 1 = p$, so\n\n$$\\Phi(a) = \\frac{1 + p}{2}.$$\n\nFor $P(-a < Z < a) = 0.7698$: $\\Phi(a) = \\frac{1.7698}{2} = 0.8849$, so $a = 1.2$.",
-        "若 $P(-a < Z < a) = p$，$a > 0$，则 $2\\Phi(a) - 1 = p$，所以\n\n$$\\Phi(a) = \\frac{1 + p}{2}.$$\n\n对 $P(-a < Z < a) = 0.7698$：$\\Phi(a) = \\frac{1.7698}{2} = 0.8849$，所以 $a = 1.2$。",
+        "Because the standard normal curve is symmetric, the probability outside the interval splits equally into two tails, which tells you the cumulative probability at the endpoint. If $P(-a < Z < a) = p$ with $a > 0$, then $2\\Phi(a) - 1 = p$, so\n\n$$\\Phi(a) = \\frac{1 + p}{2}.$$\n\nFor $P(-a < Z < a) = 0.7698$: $\\Phi(a) = \\frac{1.7698}{2} = 0.8849$, so $a = 1.2$.",
+        "由于标准正态曲线是对称的，区间外的概率平均分成两个尾部，由此可以知道端点处的累积概率。若 $P(-a < Z < a) = p$，$a > 0$，则 $2\\Phi(a) - 1 = p$，所以\n\n$$\\Phi(a) = \\frac{1 + p}{2}.$$\n\n对 $P(-a < Z < a) = 0.7698$：$\\Phi(a) = \\frac{1.7698}{2} = 0.8849$，所以 $a = 1.2$。",
       ),
       generate(rng) {
         return pointProblem(rng, "symmetric");

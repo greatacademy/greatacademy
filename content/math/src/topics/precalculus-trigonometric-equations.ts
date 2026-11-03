@@ -299,8 +299,8 @@ export const elementaryTrigonometricEquationsContainingCosine: TopicDef = {
       id: "solve-elementary-cosine-equations-radians",
       title: t("Solve cos(x) = c in radians on [0, 2π)", "在 [0, 2π) 内求解余弦方程（弧度制）"),
       explanation: t(
-        "For $\\cos x = c$ on $[0, 2\\pi)$:\n\n$$\\cos x = \\frac{1}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\n$$\\cos x = -\\frac{\\sqrt{3}}{2} \\implies x = \\frac{5\\pi}{6}, \\; \\frac{7\\pi}{6}$$",
-        "在 $[0, 2\\pi)$ 上求解 $\\cos x = c$：\n\n$$\\cos x = \\frac{1}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\n$$\\cos x = -\\frac{\\sqrt{3}}{2} \\implies x = \\frac{5\\pi}{6}, \\; \\frac{7\\pi}{6}$$",
+        "Cosine is positive in the first and fourth quadrants and negative in the second and third, so each value strictly between minus one and one gives two solutions in one turn. For $\\cos x = c$ on $[0, 2\\pi)$:\n\n$$\\cos x = \\frac{1}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\n$$\\cos x = -\\frac{\\sqrt{3}}{2} \\implies x = \\frac{5\\pi}{6}, \\; \\frac{7\\pi}{6}$$",
+        "余弦在第一、四象限为正，在第二、三象限为负，所以介于 −1 和 1 之间的每个值在一周内都有两个解。在 $[0, 2\\pi)$ 上求解 $\\cos x = c$：\n\n$$\\cos x = \\frac{1}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\n$$\\cos x = -\\frac{\\sqrt{3}}{2} \\implies x = \\frac{5\\pi}{6}, \\; \\frac{7\\pi}{6}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -536,8 +536,8 @@ export const elementaryTrigonometricEquationsContainingSecant: TopicDef = {
       id: "solve-elementary-secant-equations",
       title: t("Solve sec(x) = c on [0, 2π)", "在 [0, 2π) 上求解正割方程"),
       explanation: t(
-        "Convert using $\\cos x = \\frac{1}{\\sec x}$:\n\n$$\\sec x = 2 \\iff \\cos x = \\frac{1}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\nIf $|c| < 1$, $\\sec x = c$ has no real solution because $|\\sec x| \\ge 1$.",
-        "利用 $\\cos x = \\frac{1}{\\sec x}$ 进行转化：\n\n$$\\sec x = 2 \\iff \\cos x = \\frac{1}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\n若 $|c| < 1$，由于 $|\\sec x| \\ge 1$，方程 $\\sec x = c$ 无实数解。",
+        "Secant is the reciprocal of cosine, so rewrite the equation as a cosine equation, which has no solution when the reciprocal lies outside the range of cosine. Convert using $\\cos x = \\frac{1}{\\sec x}$:\n\n$$\\sec x = 2 \\iff \\cos x = \\frac{1}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\nIf $|c| < 1$, $\\sec x = c$ has no real solution because $|\\sec x| \\ge 1$.",
+        "正割是余弦的倒数，所以把方程改写成余弦方程；如果倒数超出余弦的值域，方程就没有解。利用 $\\cos x = \\frac{1}{\\sec x}$ 进行转化：\n\n$$\\sec x = 2 \\iff \\cos x = \\frac{1}{2} \\implies x = \\frac{\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\n若 $|c| < 1$，由于 $|\\sec x| \\ge 1$，方程 $\\sec x = c$ 无实数解。",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -604,8 +604,8 @@ export const elementaryTrigonometricEquationsContainingSecant: TopicDef = {
       id: "solve-elementary-secant-equations-degrees",
       title: t("Solve sec(x) = c in degrees on [0°, 360°)", "在 [0°, 360°) 上求解正割方程（角度制）"),
       explanation: t(
-        "Use $\\cos(x^{\\circ}) = \\frac{1}{\\sec(x^{\\circ})}$:\n\n$$\\sec(x^{\\circ}) = 2 \\iff \\cos(x^{\\circ}) = \\frac{1}{2} \\implies x = 60, 300$$",
-        "利用 $\\cos(x^{\\circ}) = \\frac{1}{\\sec(x^{\\circ})}$：\n\n$$\\sec(x^{\\circ}) = 2 \\iff \\cos(x^{\\circ}) = \\frac{1}{2} \\implies x = 60, 300$$",
+        "Take the reciprocal to get an equation in cosine, then use the reference angle and the signs of cosine in each quadrant to list the degree solutions. Use $\\cos(x^{\\circ}) = \\frac{1}{\\sec(x^{\\circ})}$:\n\n$$\\sec(x^{\\circ}) = 2 \\iff \\cos(x^{\\circ}) = \\frac{1}{2} \\implies x = 60, 300$$",
+        "取倒数得到余弦方程，再用参考角和余弦在各象限的符号写出所有度数解。利用 $\\cos(x^{\\circ}) = \\frac{1}{\\sec(x^{\\circ})}$：\n\n$$\\sec(x^{\\circ}) = 2 \\iff \\cos(x^{\\circ}) = \\frac{1}{2} \\implies x = 60, 300$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -711,8 +711,8 @@ export const elementaryTrigonometricEquationsContainingCosecant: TopicDef = {
       id: "solve-elementary-cosecant-equations",
       title: t("Solve csc(x) = c on [0, 2π)", "在 [0, 2π) 上求解余割方程"),
       explanation: t(
-        "Convert using $\\sin x = \\frac{1}{\\csc x}$:\n\n$$\\csc x = 2 \\iff \\sin x = \\frac{1}{2} \\implies x = \\frac{\\pi}{6}, \\; \\frac{5\\pi}{6}$$",
-        "利用 $\\sin x = \\frac{1}{\\csc x}$ 进行转化：\n\n$$\\csc x = 2 \\iff \\sin x = \\frac{1}{2} \\implies x = \\frac{\\pi}{6}, \\; \\frac{5\\pi}{6}$$",
+        "Cosecant is the reciprocal of sine, so rewrite the equation as a sine equation, which has no solution when the reciprocal lies outside the range of sine. Convert using $\\sin x = \\frac{1}{\\csc x}$:\n\n$$\\csc x = 2 \\iff \\sin x = \\frac{1}{2} \\implies x = \\frac{\\pi}{6}, \\; \\frac{5\\pi}{6}$$",
+        "余割是正弦的倒数，所以把方程改写成正弦方程；如果倒数超出正弦的值域，方程就没有解。利用 $\\sin x = \\frac{1}{\\csc x}$ 进行转化：\n\n$$\\csc x = 2 \\iff \\sin x = \\frac{1}{2} \\implies x = \\frac{\\pi}{6}, \\; \\frac{5\\pi}{6}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -779,8 +779,8 @@ export const elementaryTrigonometricEquationsContainingCosecant: TopicDef = {
       id: "solve-elementary-cosecant-equations-degrees",
       title: t("Solve csc(x) = c in degrees on [0°, 360°)", "在 [0°, 360°) 上求解余割方程（角度制）"),
       explanation: t(
-        "Use $\\sin(x^{\\circ}) = \\frac{1}{\\csc(x^{\\circ})}$:\n\n$$\\csc(x^{\\circ}) = 2 \\iff \\sin(x^{\\circ}) = \\frac{1}{2} \\implies x = 30, 150$$",
-        "利用 $\\sin(x^{\\circ}) = \\frac{1}{\\csc(x^{\\circ})}$：\n\n$$\\csc(x^{\\circ}) = 2 \\iff \\sin(x^{\\circ}) = \\frac{1}{2} \\implies x = 30, 150$$",
+        "Take the reciprocal to get an equation in sine, then use the reference angle and the signs of sine in each quadrant to list the degree solutions. Use $\\sin(x^{\\circ}) = \\frac{1}{\\csc(x^{\\circ})}$:\n\n$$\\csc(x^{\\circ}) = 2 \\iff \\sin(x^{\\circ}) = \\frac{1}{2} \\implies x = 30, 150$$",
+        "取倒数得到正弦方程，再用参考角和正弦在各象限的符号写出所有度数解。利用 $\\sin(x^{\\circ}) = \\frac{1}{\\csc(x^{\\circ})}$：\n\n$$\\csc(x^{\\circ}) = 2 \\iff \\sin(x^{\\circ}) = \\frac{1}{2} \\implies x = 30, 150$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -889,8 +889,8 @@ export const elementaryTrigonometricEquationsContainingCotangent: TopicDef = {
       id: "solve-elementary-cotangent-equations",
       title: t("Solve cot(x) = c on [0, 2π)", "在 [0, 2π) 上求解余切方程"),
       explanation: t(
-        "Using $\\tan x = \\frac{1}{\\cot x}$:\n\n$$\\cot x = \\sqrt{3} \\iff \\tan x = \\frac{1}{\\sqrt{3}} \\implies x = \\frac{\\pi}{6}, \\; \\frac{7\\pi}{6}$$\n\nIf $\\cot x = 0$, $\\cos x = 0 \\implies x = \\frac{\\pi}{2}, \\; \\frac{3\\pi}{2}$.",
-        "利用 $\\tan x = \\frac{1}{\\cot x}$：\n\n$$\\cot x = \\sqrt{3} \\iff \\tan x = \\frac{1}{\\sqrt{3}} \\implies x = \\frac{\\pi}{6}, \\; \\frac{7\\pi}{6}$$\n\n若 $\\cot x = 0$，则 $\\cos x = 0 \\implies x = \\frac{\\pi}{2}, \\; \\frac{3\\pi}{2}$。",
+        "Cotangent is the reciprocal of tangent, so rewrite the equation in tangent; a cotangent of zero instead means that cosine is zero. Using $\\tan x = \\frac{1}{\\cot x}$:\n\n$$\\cot x = \\sqrt{3} \\iff \\tan x = \\frac{1}{\\sqrt{3}} \\implies x = \\frac{\\pi}{6}, \\; \\frac{7\\pi}{6}$$\n\nIf $\\cot x = 0$, $\\cos x = 0 \\implies x = \\frac{\\pi}{2}, \\; \\frac{3\\pi}{2}$.",
+        "余切是正切的倒数，所以把方程改写成正切方程；余切为零则意味着余弦为零。利用 $\\tan x = \\frac{1}{\\cot x}$：\n\n$$\\cot x = \\sqrt{3} \\iff \\tan x = \\frac{1}{\\sqrt{3}} \\implies x = \\frac{\\pi}{6}, \\; \\frac{7\\pi}{6}$$\n\n若 $\\cot x = 0$，则 $\\cos x = 0 \\implies x = \\frac{\\pi}{2}, \\; \\frac{3\\pi}{2}$。",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -946,8 +946,8 @@ export const elementaryTrigonometricEquationsContainingCotangent: TopicDef = {
       id: "solve-elementary-cotangent-equations-degrees",
       title: t("Solve cot(x) = c in degrees on [0°, 360°)", "在 [0°, 360°) 上求解余切方程（角度制）"),
       explanation: t(
-        "Use $\\tan(x^{\\circ}) = \\frac{1}{\\cot(x^{\\circ})}$:\n\n$$\\cot(x^{\\circ}) = \\sqrt{3} \\iff \\tan(x^{\\circ}) = \\frac{\\sqrt{3}}{3} \\implies x = 30, 210$$",
-        "利用 $\\tan(x^{\\circ}) = \\frac{1}{\\cot(x^{\\circ})}$：\n\n$$\\cot(x^{\\circ}) = \\sqrt{3} \\iff \\tan(x^{\\circ}) = \\frac{\\sqrt{3}}{3} \\implies x = 30, 210$$",
+        "Rewrite the equation as a tangent equation and remember that tangent repeats every one hundred eighty degrees, giving two solutions in a full turn. Use $\\tan(x^{\\circ}) = \\frac{1}{\\cot(x^{\\circ})}$:\n\n$$\\cot(x^{\\circ}) = \\sqrt{3} \\iff \\tan(x^{\\circ}) = \\frac{\\sqrt{3}}{3} \\implies x = 30, 210$$",
+        "把方程改写成正切方程，并记住正切每 180° 重复一次，所以一整周内有两个解。利用 $\\tan(x^{\\circ}) = \\frac{1}{\\cot(x^{\\circ})}$：\n\n$$\\cot(x^{\\circ}) = \\sqrt{3} \\iff \\tan(x^{\\circ}) = \\frac{\\sqrt{3}}{3} \\implies x = 30, 210$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1060,8 +1060,8 @@ export const generalSolutionsOfElementaryTrigonometricEquations: TopicDef = {
       id: "general-solutions-sin-cos-tan",
       title: t("General solution formulas for trigonometric equations", "三角方程通解公式形式"),
       explanation: t(
-        "For $k \\in \\mathbb{Z}$:\n\n- $\\sin x = c$: $x = \\alpha + 2k\\pi$ or $x = (\\pi - \\alpha) + 2k\\pi$\n- $\\cos x = c$: $x = \\pm \\alpha + 2k\\pi$\n- $\\tan x = c$: $x = \\alpha + k\\pi$",
-        "对于 $k \\in \\mathbb{Z}$：\n\n- $\\sin x = c$：$x = \\alpha + 2k\\pi$ 或 $x = (\\pi - \\alpha) + 2k\\pi$\n- $\\cos x = c$：$x = \\pm \\alpha + 2k\\pi$\n- $\\tan x = c$：$x = \\alpha + k\\pi$",
+        "Because trigonometric functions repeat, an equation has infinitely many solutions, which we describe by adding whole multiples of the period to the solutions in one cycle. For $k \\in \\mathbb{Z}$:\n\n- $\\sin x = c$: $x = \\alpha + 2k\\pi$ or $x = (\\pi - \\alpha) + 2k\\pi$\n- $\\cos x = c$: $x = \\pm \\alpha + 2k\\pi$\n- $\\tan x = c$: $x = \\alpha + k\\pi$",
+        "由于三角函数是周期函数，方程有无穷多个解，我们在一个周期内的解上加上周期的整数倍来描述它们。对于 $k \\in \\mathbb{Z}$：\n\n- $\\sin x = c$：$x = \\alpha + 2k\\pi$ 或 $x = (\\pi - \\alpha) + 2k\\pi$\n- $\\cos x = c$：$x = \\pm \\alpha + 2k\\pi$\n- $\\tan x = c$：$x = \\alpha + k\\pi$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1140,8 +1140,8 @@ export const generalSolutionsOfElementaryTrigonometricEquations: TopicDef = {
       id: "particular-solutions-from-general-trig",
       title: t("Evaluate particular degree solutions from general formulas", "由通解公式求特定角度解"),
       explanation: t(
-        "Given a general solution $x = \\alpha + 360k$ or $x = \\alpha + 180k$ in degrees, substitute the specified integer $k$ to find a particular solution.",
-        "给定角度制下的通解 $x = \\alpha + 360k$ 或 $x = \\alpha + 180k$，代入指定的整数 $k$ 即可求得对应的特解。",
+        "A general solution is a family of angles indexed by an integer, and choosing a specific integer picks out one member of the family. Given a general solution $x = \\alpha + 360k$ or $x = \\alpha + 180k$ in degrees, substitute the specified integer $k$ to find a particular solution.",
+        "通解是一族以整数为下标的角，选定一个具体的整数就得到这族角中的一个。给定角度制下的通解 $x = \\alpha + 360k$ 或 $x = \\alpha + 180k$，代入指定的整数 $k$ 即可求得对应的特解。",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1192,8 +1192,8 @@ export const generalSolutionsOfTrigonometricEquationsWithTransformedFunctions: T
       id: "general-solution-multi-angle",
       title: t("General solution of sin(Bx) = c and cos(Bx) = c", "sin(Bx) = c 与 cos(Bx) = c 的通解"),
       explanation: t(
-        "For $\\sin(2x) = \\frac{1}{2}$:\n\n$$2x = \\frac{\\pi}{6} + 2k\\pi \\implies x = \\frac{\\pi}{12} + k\\pi$$\n\n$$2x = \\frac{5\\pi}{6} + 2k\\pi \\implies x = \\frac{5\\pi}{12} + k\\pi$$",
-        "对于 $\\sin(2x) = \\frac{1}{2}$：\n\n$$2x = \\frac{\\pi}{6} + 2k\\pi \\implies x = \\frac{\\pi}{12} + k\\pi$$\n\n$$2x = \\frac{5\\pi}{6} + 2k\\pi \\implies x = \\frac{5\\pi}{12} + k\\pi$$",
+        "Solve for the whole inner angle first, adding multiples of the period, and only then divide by the coefficient, which also divides the period. For $\\sin(2x) = \\frac{1}{2}$:\n\n$$2x = \\frac{\\pi}{6} + 2k\\pi \\implies x = \\frac{\\pi}{12} + k\\pi$$\n\n$$2x = \\frac{5\\pi}{6} + 2k\\pi \\implies x = \\frac{5\\pi}{12} + k\\pi$$",
+        "先对整个内层角求解并加上周期的整数倍，然后再除以系数，周期也随之被除。对于 $\\sin(2x) = \\frac{1}{2}$：\n\n$$2x = \\frac{\\pi}{6} + 2k\\pi \\implies x = \\frac{\\pi}{12} + k\\pi$$\n\n$$2x = \\frac{5\\pi}{6} + 2k\\pi \\implies x = \\frac{5\\pi}{12} + k\\pi$$",
       ),
       generate(rng) {
         const B = rng.pick([2, 3, 4]);
@@ -1251,8 +1251,8 @@ export const generalSolutionsOfTrigonometricEquationsWithTransformedFunctions: T
       id: "period-and-spacing-of-transformed-trig-solutions",
       title: t("Particular degree solutions of transformed equations", "变换三角方程的特解计算"),
       explanation: t(
-        "For $\\sin(Bx^{\\circ}) = c$, dividing the general solution $Bx = \\alpha + 360k$ by $B$ gives $x = \\frac{\\alpha}{B} + \\frac{360}{B}k$.",
-        "对于 $\\sin(Bx^{\\circ}) = c$，将 $Bx = \\alpha + 360k$ 两边除以 $B$ 可得 $x = \\frac{\\alpha}{B} + \\frac{360}{B}k$。",
+        "Multiplying the input by a constant squeezes the graph horizontally, so the solutions are spaced more closely, by the period divided by that constant. For $\\sin(Bx^{\\circ}) = c$, dividing the general solution $Bx = \\alpha + 360k$ by $B$ gives $x = \\frac{\\alpha}{B} + \\frac{360}{B}k$.",
+        "把自变量乘以一个常数会在水平方向压缩图像，所以解之间的间隔变小，等于周期除以这个常数。对于 $\\sin(Bx^{\\circ}) = c$，将 $Bx = \\alpha + 360k$ 两边除以 $B$ 可得 $x = \\frac{\\alpha}{B} + \\frac{360}{B}k$。",
       ),
       generate(rng) {
         const B = rng.pick([2, 3, 5, 6]);
@@ -1303,8 +1303,8 @@ export const trigonometricEquationsContainingTransformedSineFunctions: TopicDef 
       id: "solve-transformed-sine-frequency-and-phase",
       title: t("Solve transformed sine equations on [0, 2π)", "在 [0, 2π) 上求解变换正弦方程"),
       explanation: t(
-        "For $\\sin(2x) = 1$ on $[0, 2\\pi)$:\n\n$$2x \\in [0, 4\\pi) \\implies 2x = \\frac{\\pi}{2}, \\; \\frac{5\\pi}{2} \\implies x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4}$$",
-        "在 $[0, 2\\pi)$ 上求解 $\\sin(2x) = 1$：\n\n$$2x \\in [0, 4\\pi) \\implies 2x = \\frac{\\pi}{2}, \\; \\frac{5\\pi}{2} \\implies x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4}$$",
+        "Find the interval that the inner expression covers as the variable runs over the given interval, list every solution for the inner expression there, and then solve for the variable. For $\\sin(2x) = 1$ on $[0, 2\\pi)$:\n\n$$2x \\in [0, 4\\pi) \\implies 2x = \\frac{\\pi}{2}, \\; \\frac{5\\pi}{2} \\implies x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4}$$",
+        "先求出变量取遍给定区间时内层式子所覆盖的区间，在其中写出内层式子的所有解，再解出变量。在 $[0, 2\\pi)$ 上求解 $\\sin(2x) = 1$：\n\n$$2x \\in [0, 4\\pi) \\implies 2x = \\frac{\\pi}{2}, \\; \\frac{5\\pi}{2} \\implies x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1367,8 +1367,8 @@ export const trigonometricEquationsContainingTransformedSineFunctions: TopicDef 
       id: "solve-transformed-sine-degrees",
       title: t("Solve transformed sine equations in degrees", "在角度制下求解变换正弦方程"),
       explanation: t(
-        "To solve $\\sin(x^{\\circ} - \\varphi^{\\circ}) = c$ on $[0, 360)$, find the reference angles for $x - \\varphi$ and add $\\varphi$.",
-        "在 $[0, 360)$ 上求解 $\\sin(x^{\\circ} - \\varphi^{\\circ}) = c$ 时，先求出 $x - \\varphi$ 的解，再加上 $\\varphi$。",
+        "Treat the shifted angle as a single unknown, find all its values with the given sine, and then add the shift back to each one. To solve $\\sin(x^{\\circ} - \\varphi^{\\circ}) = c$ on $[0, 360)$, find the reference angles for $x - \\varphi$ and add $\\varphi$.",
+        "把平移后的角看作一个未知数，求出正弦为给定值的所有角，再给每个角加回平移量。在 $[0, 360)$ 上求解 $\\sin(x^{\\circ} - \\varphi^{\\circ}) = c$ 时，先求出 $x - \\varphi$ 的解，再加上 $\\varphi$。",
       ),
       generate(rng) {
         const shift = rng.pick([10, 15, 20, 25, 30, 40]);
@@ -1425,8 +1425,8 @@ export const trigonometricEquationsContainingTransformedCosineFunctions: TopicDe
       id: "solve-transformed-cosine-frequency-and-phase",
       title: t("Solve transformed cosine equations on [0, 2π)", "在 [0, 2π) 上求解变换余弦方程"),
       explanation: t(
-        "For $\\cos(2x) = 1$ on $[0, 2\\pi)$:\n\n$$2x = 0, \\; 2\\pi \\implies x = 0, \\; \\pi$$\n\nFor $\\cos(2x) = 0$:\n\n$$2x = \\frac{\\pi}{2}, \\; \\frac{3\\pi}{2}, \\; \\frac{5\\pi}{2}, \\; \\frac{7\\pi}{2} \\implies x = \\frac{\\pi}{4}, \\; \\frac{3\\pi}{4}, \\; \\frac{5\\pi}{4}, \\; \\frac{7\\pi}{4}$$",
-        "在 $[0, 2\\pi)$ 上求解 $\\cos(2x) = 1$：\n\n$$2x = 0, \\; 2\\pi \\implies x = 0, \\; \\pi$$\n\n求解 $\\cos(2x) = 0$：\n\n$$2x = \\frac{\\pi}{2}, \\; \\frac{3\\pi}{2}, \\; \\frac{5\\pi}{2}, \\; \\frac{7\\pi}{2} \\implies x = \\frac{\\pi}{4}, \\; \\frac{3\\pi}{4}, \\; \\frac{5\\pi}{4}, \\; \\frac{7\\pi}{4}$$",
+        "Work with the inner expression as one angle, list its solutions across the stretched interval, and then divide or shift to recover the original variable. For $\\cos(2x) = 1$ on $[0, 2\\pi)$:\n\n$$2x = 0, \\; 2\\pi \\implies x = 0, \\; \\pi$$\n\nFor $\\cos(2x) = 0$:\n\n$$2x = \\frac{\\pi}{2}, \\; \\frac{3\\pi}{2}, \\; \\frac{5\\pi}{2}, \\; \\frac{7\\pi}{2} \\implies x = \\frac{\\pi}{4}, \\; \\frac{3\\pi}{4}, \\; \\frac{5\\pi}{4}, \\; \\frac{7\\pi}{4}$$",
+        "把内层式子当作一个角，在伸缩后的区间内写出它的所有解，再通过除法或平移求回原变量。在 $[0, 2\\pi)$ 上求解 $\\cos(2x) = 1$：\n\n$$2x = 0, \\; 2\\pi \\implies x = 0, \\; \\pi$$\n\n求解 $\\cos(2x) = 0$：\n\n$$2x = \\frac{\\pi}{2}, \\; \\frac{3\\pi}{2}, \\; \\frac{5\\pi}{2}, \\; \\frac{7\\pi}{2} \\implies x = \\frac{\\pi}{4}, \\; \\frac{3\\pi}{4}, \\; \\frac{5\\pi}{4}, \\; \\frac{7\\pi}{4}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1486,8 +1486,8 @@ export const trigonometricEquationsContainingTransformedCosineFunctions: TopicDe
       id: "solve-transformed-cosine-degrees",
       title: t("Solve transformed cosine equations in degrees", "在角度制下求解变换余弦方程"),
       explanation: t(
-        "To solve $\\cos(x^{\\circ} - \\varphi^{\\circ}) = c$ on $[0, 360)$, find the reference angles for $x - \\varphi$ and add $\\varphi$.",
-        "在 $[0, 360)$ 上求解 $\\cos(x^{\\circ} - \\varphi^{\\circ}) = c$ 时，先求内层角的值，再解出 $x$。",
+        "Treat the shifted angle as a single unknown, find all its values with the given cosine, and then add the shift back to each one. To solve $\\cos(x^{\\circ} - \\varphi^{\\circ}) = c$ on $[0, 360)$, find the reference angles for $x - \\varphi$ and add $\\varphi$.",
+        "把平移后的角看作一个未知数，求出余弦为给定值的所有角，再给每个角加回平移量。在 $[0, 360)$ 上求解 $\\cos(x^{\\circ} - \\varphi^{\\circ}) = c$ 时，先求内层角的值，再解出 $x$。",
       ),
       generate(rng) {
         const shift = rng.pick([10, 15, 20, 25]);
@@ -1544,8 +1544,8 @@ export const trigonometricEquationsContainingTransformedTangentFunctions: TopicD
       id: "solve-transformed-tangent-equations",
       title: t("Solve transformed tangent equations on [0, π)", "在 [0, π) 上求解变换正切方程"),
       explanation: t(
-        "For $\\tan(2x) = 1$ on $[0, \\pi)$:\n\n$$2x \\in [0, 2\\pi) \\implies 2x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4} \\implies x = \\frac{\\pi}{8}, \\; \\frac{5\\pi}{8}$$",
-        "在 $[0, \\pi)$ 上求解 $\\tan(2x) = 1$：\n\n$$2x \\in [0, 2\\pi) \\implies 2x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4} \\implies x = \\frac{\\pi}{8}, \\; \\frac{5\\pi}{8}$$",
+        "Tangent repeats every half turn, so after finding one solution for the inner angle, add multiples of pi to cover the whole stretched interval before solving for the variable. For $\\tan(2x) = 1$ on $[0, \\pi)$:\n\n$$2x \\in [0, 2\\pi) \\implies 2x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4} \\implies x = \\frac{\\pi}{8}, \\; \\frac{5\\pi}{8}$$",
+        "正切每半周重复一次，所以求出内层角的一个解后，加上 π 的倍数覆盖整个伸缩后的区间，再解出变量。在 $[0, \\pi)$ 上求解 $\\tan(2x) = 1$：\n\n$$2x \\in [0, 2\\pi) \\implies 2x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4} \\implies x = \\frac{\\pi}{8}, \\; \\frac{5\\pi}{8}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1604,8 +1604,8 @@ export const trigonometricEquationsContainingTransformedTangentFunctions: TopicD
       id: "solve-transformed-tangent-degrees",
       title: t("Solve transformed tangent equations in degrees", "在角度制下求解变换正切方程"),
       explanation: t(
-        "To solve $\\tan(x^{\\circ} - \\varphi^{\\circ}) = c$ on $[0, 180)$, find the principal angle in $[0, 180)$ and shift by $\\varphi$.",
-        "在 $[0, 180)$ 上求解 $\\tan(x^{\\circ} - \\varphi^{\\circ}) = c$ 时，先求出主值角并加上偏移量 $\\varphi$。",
+        "Treat the shifted angle as a single unknown, find its value with the given tangent, and then add the shift back, keeping the answers inside the interval. To solve $\\tan(x^{\\circ} - \\varphi^{\\circ}) = c$ on $[0, 180)$, find the principal angle in $[0, 180)$ and shift by $\\varphi$.",
+        "把平移后的角看作一个未知数，求出正切为给定值的角，再加回平移量，并使答案保持在区间内。在 $[0, 180)$ 上求解 $\\tan(x^{\\circ} - \\varphi^{\\circ}) = c$ 时，先求出主值角并加上偏移量 $\\varphi$。",
       ),
       generate(rng) {
         const shift = rng.pick([5, 10, 15, 20, 25]);
@@ -1661,8 +1661,8 @@ export const solvingTrigonometricEquationsUsingTheSinCosTanIdentity: TopicDef = 
       id: "divide-by-cosine-to-tangent",
       title: t("Convert A sin(x) = B cos(x) into tan(x) = B/A", "将 A sin(x) = B cos(x) 化为 tan(x) = B/A"),
       explanation: t(
-        "Divide both sides by $\\cos x$ (noting $\\cos x \\ne 0$):\n\n$$\\sin x = \\cos x \\implies \\frac{\\sin x}{\\cos x} = 1 \\implies \\tan x = 1 \\implies x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4}$$\n\n$$\\sin x + \\sqrt{3}\\cos x = 0 \\implies \\tan x = -\\sqrt{3} \\implies x = \\frac{2\\pi}{3}, \\; \\frac{5\\pi}{3}$$",
-        "两边同除以 $\\cos x$（注意 $\\cos x \\ne 0$）：\n\n$$\\sin x = \\cos x \\implies \\frac{\\sin x}{\\cos x} = 1 \\implies \\tan x = 1 \\implies x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4}$$\n\n$$\\sin x + \\sqrt{3}\\cos x = 0 \\implies \\tan x = -\\sqrt{3} \\implies x = \\frac{2\\pi}{3}, \\; \\frac{5\\pi}{3}$$",
+        "When an equation compares a multiple of sine with a multiple of cosine, dividing by cosine leaves a single tangent equation, which is easier to solve. Divide both sides by $\\cos x$ (noting $\\cos x \\ne 0$):\n\n$$\\sin x = \\cos x \\implies \\frac{\\sin x}{\\cos x} = 1 \\implies \\tan x = 1 \\implies x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4}$$\n\n$$\\sin x + \\sqrt{3}\\cos x = 0 \\implies \\tan x = -\\sqrt{3} \\implies x = \\frac{2\\pi}{3}, \\; \\frac{5\\pi}{3}$$",
+        "当方程比较正弦的倍数与余弦的倍数时，两边除以余弦就只剩一个正切方程，更容易求解。两边同除以 $\\cos x$（注意 $\\cos x \\ne 0$）：\n\n$$\\sin x = \\cos x \\implies \\frac{\\sin x}{\\cos x} = 1 \\implies \\tan x = 1 \\implies x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4}$$\n\n$$\\sin x + \\sqrt{3}\\cos x = 0 \\implies \\tan x = -\\sqrt{3} \\implies x = \\frac{2\\pi}{3}, \\; \\frac{5\\pi}{3}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1725,8 +1725,8 @@ export const solvingTrigonometricEquationsUsingTheSinCosTanIdentity: TopicDef = 
       id: "solve-sin-cos-tan-identity-degrees",
       title: t("Solve A sin(x) = B cos(x) in degrees on [0°, 360°)", "在 [0°, 360°) 上利用商数关系求解（角度制）"),
       explanation: t(
-        "Divide both sides by $\\cos(x^{\\circ})$ to obtain $\\tan(x^{\\circ}) = \\frac{B}{A}$, then find all solutions in $[0, 360)$.",
-        "两边同除以 $\\cos(x^{\\circ})$ 得到 $\\tan(x^{\\circ}) = \\frac{B}{A}$，再求出 $[0, 360)$ 内的所有解。",
+        "Before dividing, check that the values where cosine is zero are not solutions, since dividing by cosine would lose them. Divide both sides by $\\cos(x^{\\circ})$ to obtain $\\tan(x^{\\circ}) = \\frac{B}{A}$, then find all solutions in $[0, 360)$.",
+        "在相除之前，先检查使余弦为零的值是不是解，因为除以余弦会丢掉这些值。两边同除以 $\\cos(x^{\\circ})$ 得到 $\\tan(x^{\\circ}) = \\frac{B}{A}$，再求出 $[0, 360)$ 内的所有解。",
       ),
       generate(rng) {
         const coeff = rng.pick([1, 2, 3, 5]);
@@ -1833,8 +1833,8 @@ export const solvingTrigonometricEquationsUsingTheZeroProductProperty: TopicDef 
       id: "factor-and-zero-product-trig",
       title: t("Factoring trigonometric equations", "分解因式求解三角方程"),
       explanation: t(
-        "Factor out common factors:\n\n$$2\\sin x\\cos x - \\cos x = 0 \\implies \\cos x(2\\sin x - 1) = 0$$\n\n$$\\cos x = 0 \\implies x = \\frac{\\pi}{2}, \\; \\frac{3\\pi}{2}, \\qquad \\sin x = \\frac{1}{2} \\implies x = \\frac{\\pi}{6}, \\; \\frac{5\\pi}{6}$$",
-        "提出公因式：\n\n$$2\\sin x\\cos x - \\cos x = 0 \\implies \\cos x(2\\sin x - 1) = 0$$\n\n$$\\cos x = 0 \\implies x = \\frac{\\pi}{2}, \\; \\frac{3\\pi}{2}, \\qquad \\sin x = \\frac{1}{2} \\implies x = \\frac{\\pi}{6}, \\; \\frac{5\\pi}{6}$$",
+        "Never divide both sides by a trigonometric factor, because that loses solutions; instead factor it out and set each factor equal to zero. Factor out common factors:\n\n$$2\\sin x\\cos x - \\cos x = 0 \\implies \\cos x(2\\sin x - 1) = 0$$\n\n$$\\cos x = 0 \\implies x = \\frac{\\pi}{2}, \\; \\frac{3\\pi}{2}, \\qquad \\sin x = \\frac{1}{2} \\implies x = \\frac{\\pi}{6}, \\; \\frac{5\\pi}{6}$$",
+        "不要把两边同除以一个三角因式，因为那样会丢掉解；应把它提出来，令每个因式等于零。提出公因式：\n\n$$2\\sin x\\cos x - \\cos x = 0 \\implies \\cos x(2\\sin x - 1) = 0$$\n\n$$\\cos x = 0 \\implies x = \\frac{\\pi}{2}, \\; \\frac{3\\pi}{2}, \\qquad \\sin x = \\frac{1}{2} \\implies x = \\frac{\\pi}{6}, \\; \\frac{5\\pi}{6}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1901,8 +1901,8 @@ export const solvingTrigonometricEquationsUsingTheZeroProductProperty: TopicDef 
       id: "solve-zero-product-trig-degrees",
       title: t("Solve factored trigonometric equations in degrees", "在角度制下分解因式求解三角方程"),
       explanation: t(
-        "Factor the equation into a product equal to zero and collect all degree solutions on $[0, 360)$.",
-        "将方程分解因式后令各因式等于零，合并 $[0, 360)$ 上的全部角度解。",
+        "Each factor gives its own elementary equation, and the solutions of the original equation are all the solutions of these equations taken together. Factor the equation into a product equal to zero and collect all degree solutions on $[0, 360)$.",
+        "每个因式都给出一个基本方程，原方程的解就是这些方程的所有解合在一起。将方程分解因式后令各因式等于零，合并 $[0, 360)$ 上的全部角度解。",
       ),
       generate(rng) {
         const k = rng.pick([1, 2, 3]);
@@ -2025,8 +2025,8 @@ export const quadraticTrigonometricEquationsContainingSineOrCosine: TopicDef = {
       id: "solve-quadratic-sin-cos-equations",
       title: t("Solve quadratic equations in sin or cos on [0, 2π)", "在 [0, 2π) 上求解正弦或余弦二次方程"),
       explanation: t(
-        "For $2\\sin^{2} x - \\sin x - 1 = 0$:\n\n$$(2\\sin x + 1)(\\sin x - 1) = 0 \\implies \\sin x = -\\frac{1}{2} \\text{ or } \\sin x = 1$$\n\n$$x = \\frac{7\\pi}{6}, \\; \\frac{11\\pi}{6}, \\; \\frac{\\pi}{2}$$",
-        "对于 $2\\sin^{2} x - \\sin x - 1 = 0$：\n\n$$(2\\sin x + 1)(\\sin x - 1) = 0 \\implies \\sin x = -\\frac{1}{2} \\text{ 或 } \\sin x = 1$$\n\n$$x = \\frac{7\\pi}{6}, \\; \\frac{11\\pi}{6}, \\; \\frac{\\pi}{2}$$",
+        "Treat the trigonometric function as the unknown of a quadratic, factor or use the formula, and discard any value outside the range from minus one to one. For $2\\sin^{2} x - \\sin x - 1 = 0$:\n\n$$(2\\sin x + 1)(\\sin x - 1) = 0 \\implies \\sin x = -\\frac{1}{2} \\text{ or } \\sin x = 1$$\n\n$$x = \\frac{7\\pi}{6}, \\; \\frac{11\\pi}{6}, \\; \\frac{\\pi}{2}$$",
+        "把三角函数当作二次方程的未知数，因式分解或用求根公式求解，并舍去不在 −1 到 1 之间的值。对于 $2\\sin^{2} x - \\sin x - 1 = 0$：\n\n$$(2\\sin x + 1)(\\sin x - 1) = 0 \\implies \\sin x = -\\frac{1}{2} \\text{ 或 } \\sin x = 1$$\n\n$$x = \\frac{7\\pi}{6}, \\; \\frac{11\\pi}{6}, \\; \\frac{\\pi}{2}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -2105,8 +2105,8 @@ export const quadraticTrigonometricEquationsContainingSineOrCosine: TopicDef = {
       id: "solve-quadratic-sin-cos-degrees",
       title: t("Solve quadratic equations in sin or cos in degrees", "在角度制下求解正弦或余弦二次方程"),
       explanation: t(
-        "Factor the quadratic in $\\sin(x^{\\circ})$ or $\\cos(x^{\\circ})$ and find all degree solutions in $[0, 360)$.",
-        "对关于 $\\sin(x^{\\circ})$ 或 $\\cos(x^{\\circ})$ 的二次方程分解因式，求出 $[0, 360)$ 内的全部角度解。",
+        "Solve the quadratic for the function value first, then turn each valid value into angles using reference angles and the signs in each quadrant. Factor the quadratic in $\\sin(x^{\\circ})$ or $\\cos(x^{\\circ})$ and find all degree solutions in $[0, 360)$.",
+        "先解二次方程求出函数值，再用参考角和各象限的符号把每个有效值化为角度。对关于 $\\sin(x^{\\circ})$ 或 $\\cos(x^{\\circ})$ 的二次方程分解因式，求出 $[0, 360)$ 内的全部角度解。",
       ),
       generate(rng) {
         const k = rng.pick([1, 2, 3]);
@@ -2225,8 +2225,8 @@ export const quadraticTrigonometricEquationsContainingTangentOrCotangent: TopicD
       id: "solve-quadratic-tangent-cotangent-equations",
       title: t("Solve quadratic equations in tangent on [0, 2π)", "在 [0, 2π) 上求解正切二次方程"),
       explanation: t(
-        "For $\\tan^{2} x - 3 = 0$:\n\n$$\\tan x = \\pm \\sqrt{3} \\implies x = \\frac{\\pi}{3}, \\; \\frac{2\\pi}{3}, \\; \\frac{4\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\nIf mixed with $\\sec^{2} x$, substitute $\\sec^{2} x = 1 + \\tan^{2} x$.",
-        "对于 $\\tan^{2} x - 3 = 0$：\n\n$$\\tan x = \\pm \\sqrt{3} \\implies x = \\frac{\\pi}{3}, \\; \\frac{2\\pi}{3}, \\; \\frac{4\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\n若含有 $\\sec^{2} x$，代入 $\\sec^{2} x = 1 + \\tan^{2} x$ 化为二次方程。",
+        "Tangent can take any real value, so every real root of the quadratic gives solutions, two in each full turn. For $\\tan^{2} x - 3 = 0$:\n\n$$\\tan x = \\pm \\sqrt{3} \\implies x = \\frac{\\pi}{3}, \\; \\frac{2\\pi}{3}, \\; \\frac{4\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\nIf mixed with $\\sec^{2} x$, substitute $\\sec^{2} x = 1 + \\tan^{2} x$.",
+        "正切可以取任意实数值，所以二次方程的每个实根都给出解，每一整周内有两个。对于 $\\tan^{2} x - 3 = 0$：\n\n$$\\tan x = \\pm \\sqrt{3} \\implies x = \\frac{\\pi}{3}, \\; \\frac{2\\pi}{3}, \\; \\frac{4\\pi}{3}, \\; \\frac{5\\pi}{3}$$\n\n若含有 $\\sec^{2} x$，代入 $\\sec^{2} x = 1 + \\tan^{2} x$ 化为二次方程。",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -2311,8 +2311,8 @@ export const quadraticTrigonometricEquationsContainingTangentOrCotangent: TopicD
       id: "solve-quadratic-tangent-cotangent-degrees",
       title: t("Solve quadratic equations in tangent or cotangent in degrees", "在角度制下求解正切或余切二次方程"),
       explanation: t(
-        "Solve the quadratic equation for $\\tan(x^{\\circ})$ or $\\cot(x^{\\circ})$ and list all degree solutions in $[0, 360)$.",
-        "求出 $\\tan(x^{\\circ})$ 或 $\\cot(x^{\\circ})$ 的二次方程解，并列出 $[0, 360)$ 内的所有角度解。",
+        "Solve the quadratic for the value of the function, then use the period of one hundred eighty degrees to list every angle in a full turn. Solve the quadratic equation for $\\tan(x^{\\circ})$ or $\\cot(x^{\\circ})$ and list all degree solutions in $[0, 360)$.",
+        "先解二次方程求出函数值，再利用 180° 的周期写出一整周内的所有角。求出 $\\tan(x^{\\circ})$ 或 $\\cot(x^{\\circ})$ 的二次方程解，并列出 $[0, 360)$ 内的所有角度解。",
       ),
       generate(rng) {
         const k = rng.pick([1, 2, 3]);

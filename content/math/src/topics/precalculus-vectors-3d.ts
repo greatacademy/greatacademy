@@ -572,8 +572,8 @@ export const calculatingTheMagnitudeOfCartesianVectorsIn3D: TopicDef = {
       id: "normalization-and-3d-unit-vectors",
       title: t("Normalization and 3D unit vectors", "单位向量化与三维单位向量"),
       explanation: t(
-        "A unit vector has magnitude $1$. To normalize a nonzero vector $\\mathbf{v}$, divide it by its magnitude:\n\n$$\\mathbf{u} = \\frac{\\mathbf{v}}{\\|\\mathbf{v}\\|} = \\left\\langle \\frac{x}{\\|\\mathbf{v}\\|}, \\; \\frac{y}{\\|\\mathbf{v}\\|}, \\; \\frac{z}{\\|\\mathbf{v}\\|} \\right\\rangle$$",
-        "单位向量的模长为 $1$。将非零向量 $\\mathbf{v}$ 单位化，只需将其除以其自身的模长：\n\n$$\\mathbf{u} = \\frac{\\mathbf{v}}{\\|\\mathbf{v}\\|} = \\left\\langle \\frac{x}{\\|\\mathbf{v}\\|}, \\; \\frac{y}{\\|\\mathbf{v}\\|}, \\; \\frac{z}{\\|\\mathbf{v}\\|} \\right\\rangle$$",
+        "Dividing a vector by its length keeps its direction but makes its length one, which is useful whenever only the direction matters. A unit vector has magnitude $1$. To normalize a nonzero vector $\\mathbf{v}$, divide it by its magnitude:\n\n$$\\mathbf{u} = \\frac{\\mathbf{v}}{\\|\\mathbf{v}\\|} = \\left\\langle \\frac{x}{\\|\\mathbf{v}\\|}, \\; \\frac{y}{\\|\\mathbf{v}\\|}, \\; \\frac{z}{\\|\\mathbf{v}\\|} \\right\\rangle$$",
+        "把向量除以它的长度会保持方向不变，而长度变为 1，在只关心方向时很有用。单位向量的模长为 $1$。将非零向量 $\\mathbf{v}$ 单位化，只需将其除以其自身的模长：\n\n$$\\mathbf{u} = \\frac{\\mathbf{v}}{\\|\\mathbf{v}\\|} = \\left\\langle \\frac{x}{\\|\\mathbf{v}\\|}, \\; \\frac{y}{\\|\\mathbf{v}\\|}, \\; \\frac{z}{\\|\\mathbf{v}\\|} \\right\\rangle$$",
       ),
       generate(rng) {
         const [v, L] = pickQuadruple(rng);
@@ -854,8 +854,8 @@ export const theAngleBetweenTwoVectors: TopicDef = {
       id: "cosine-formula-for-angle-between-vectors",
       title: t("Cosine formula for angle between vectors", "两向量夹角的余弦公式"),
       explanation: t(
-        "The cosine of the angle $\\theta$ between two nonzero vectors $\\mathbf{u}$ and $\\mathbf{v}$ is given by:\n\n$$\\cos\\theta = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{u}\\| \\|\\mathbf{v}\\|}$$",
-        "两非零向量 $\\mathbf{u}$ 与 $\\mathbf{v}$ 夹角 $\\theta$ 的余弦值为：\n\n$$\\cos\\theta = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{u}\\| \\|\\mathbf{v}\\|}$$",
+        "The dot product equals the product of the lengths times the cosine of the angle, so dividing by the lengths isolates the cosine. The cosine of the angle $\\theta$ between two nonzero vectors $\\mathbf{u}$ and $\\mathbf{v}$ is given by:\n\n$$\\cos\\theta = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{u}\\| \\|\\mathbf{v}\\|}$$",
+        "点积等于两个长度的积乘以夹角的余弦，所以除以两个长度就能单独得到余弦。两非零向量 $\\mathbf{u}$ 与 $\\mathbf{v}$ 夹角 $\\theta$ 的余弦值为：\n\n$$\\cos\\theta = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{u}\\| \\|\\mathbf{v}\\|}$$",
       ),
       generate(rng) {
         const [u, Lu] = pickQuadruple(rng);
@@ -882,8 +882,8 @@ export const theAngleBetweenTwoVectors: TopicDef = {
       id: "determining-the-exact-angle-between-vectors",
       title: t("Determining the exact angle between vectors", "求两向量夹角的精确值"),
       explanation: t(
-        "Once $\\cos\\theta$ is determined, the angle $\\theta \\in [0^\\circ, 180^\\circ]$ is found by evaluating $\\arccos(\\cos\\theta)$. Familiar special angles include:\n\n- $\\cos\\theta = 1 \\implies 0^\\circ$\n- $\\cos\\theta = \\frac{\\sqrt{2}}{2} \\implies 45^\\circ, \\quad -\\frac{\\sqrt{2}}{2} \\implies 135^\\circ$\n- $\\cos\\theta = \\frac{1}{2} \\implies 60^\\circ, \\quad -\\frac{1}{2} \\implies 120^\\circ$\n- $\\cos\\theta = 0 \\implies 90^\\circ$\n- $\\cos\\theta = -1 \\implies 180^\\circ$",
-        "求出 $\\cos\\theta$ 后，通过 $\\arccos(\\cos\\theta)$ 确定夹角 $\\theta \\in [0^\\circ, 180^\\circ]$。常见特殊角包括：\n\n- $\\cos\\theta = 1 \\implies 0^\\circ$\n- $\\cos\\theta = \\frac{\\sqrt{2}}{2} \\implies 45^\\circ, \\quad -\\frac{\\sqrt{2}}{2} \\implies 135^\\circ$\n- $\\cos\\theta = \\frac{1}{2} \\implies 60^\\circ, \\quad -\\frac{1}{2} \\implies 120^\\circ$\n- $\\cos\\theta = 0 \\implies 90^\\circ$\n- $\\cos\\theta = -1 \\implies 180^\\circ$",
+        "The angle between two vectors always lies between zero and one hundred eighty degrees, so a single arccosine gives it without any ambiguity. Once $\\cos\\theta$ is determined, the angle $\\theta \\in [0^\\circ, 180^\\circ]$ is found by evaluating $\\arccos(\\cos\\theta)$. Familiar special angles include:\n\n- $\\cos\\theta = 1 \\implies 0^\\circ$\n- $\\cos\\theta = \\frac{\\sqrt{2}}{2} \\implies 45^\\circ, \\quad -\\frac{\\sqrt{2}}{2} \\implies 135^\\circ$\n- $\\cos\\theta = \\frac{1}{2} \\implies 60^\\circ, \\quad -\\frac{1}{2} \\implies 120^\\circ$\n- $\\cos\\theta = 0 \\implies 90^\\circ$\n- $\\cos\\theta = -1 \\implies 180^\\circ$",
+        "两个向量的夹角总在 0° 到 180° 之间，所以用一次反余弦就能毫无歧义地得到它。求出 $\\cos\\theta$ 后，通过 $\\arccos(\\cos\\theta)$ 确定夹角 $\\theta \\in [0^\\circ, 180^\\circ]$。常见特殊角包括：\n\n- $\\cos\\theta = 1 \\implies 0^\\circ$\n- $\\cos\\theta = \\frac{\\sqrt{2}}{2} \\implies 45^\\circ, \\quad -\\frac{\\sqrt{2}}{2} \\implies 135^\\circ$\n- $\\cos\\theta = \\frac{1}{2} \\implies 60^\\circ, \\quad -\\frac{1}{2} \\implies 120^\\circ$\n- $\\cos\\theta = 0 \\implies 90^\\circ$\n- $\\cos\\theta = -1 \\implies 180^\\circ$",
       ),
       generate(rng) {
         const item = rng.pick(specialAnglePairs);
@@ -1285,8 +1285,8 @@ export const propertiesOfTheCrossProduct: TopicDef = {
       id: "distributivity-and-scalar-associativity-of-cross-product",
       title: t("Distributivity and scalar associativity of cross product", "叉积的分配律与数乘结合律"),
       explanation: t(
-        "The cross product distributes over addition:\n\n$$\\mathbf{u} \\times (\\mathbf{v} + \\mathbf{w}) = \\mathbf{u} \\times \\mathbf{v} + \\mathbf{u} \\times \\mathbf{w}$$\n\n$$(\\mathbf{u} + \\mathbf{v}) \\times \\mathbf{w} = \\mathbf{u} \\times \\mathbf{w} + \\mathbf{v} \\times \\mathbf{w}$$\n\nNotice that $(\\mathbf{u} + a\\mathbf{v}) \\times (\\mathbf{u} + b\\mathbf{v}) = (b - a)(\\mathbf{u} \\times \\mathbf{v})$.",
-        "向量叉积对加法满足分配律：\n\n$$\\mathbf{u} \\times (\\mathbf{v} + \\mathbf{w}) = \\mathbf{u} \\times \\mathbf{v} + \\mathbf{u} \\times \\mathbf{w}$$\n\n$$(\\mathbf{u} + \\mathbf{v}) \\times \\mathbf{w} = \\mathbf{u} \\times \\mathbf{w} + \\mathbf{v} \\times \\mathbf{w}$$\n\n注意 $(\\mathbf{u} + a\\mathbf{v}) \\times (\\mathbf{u} + b\\mathbf{v}) = (b - a)(\\mathbf{u} \\times \\mathbf{v})$。",
+        "The cross product behaves like ordinary multiplication in many ways, but the order of the factors matters, because swapping them reverses the sign. The cross product distributes over addition:\n\n$$\\mathbf{u} \\times (\\mathbf{v} + \\mathbf{w}) = \\mathbf{u} \\times \\mathbf{v} + \\mathbf{u} \\times \\mathbf{w}$$\n\n$$(\\mathbf{u} + \\mathbf{v}) \\times \\mathbf{w} = \\mathbf{u} \\times \\mathbf{w} + \\mathbf{v} \\times \\mathbf{w}$$\n\nNotice that $(\\mathbf{u} + a\\mathbf{v}) \\times (\\mathbf{u} + b\\mathbf{v}) = (b - a)(\\mathbf{u} \\times \\mathbf{v})$.",
+        "叉积在许多方面像普通乘法一样，但因子的顺序很重要，交换它们会改变符号。向量叉积对加法满足分配律：\n\n$$\\mathbf{u} \\times (\\mathbf{v} + \\mathbf{w}) = \\mathbf{u} \\times \\mathbf{v} + \\mathbf{u} \\times \\mathbf{w}$$\n\n$$(\\mathbf{u} + \\mathbf{v}) \\times \\mathbf{w} = \\mathbf{u} \\times \\mathbf{w} + \\mathbf{v} \\times \\mathbf{w}$$\n\n注意 $(\\mathbf{u} + a\\mathbf{v}) \\times (\\mathbf{u} + b\\mathbf{v}) = (b - a)(\\mathbf{u} \\times \\mathbf{v})$。",
       ),
       generate(rng) {
         const a = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
@@ -1343,8 +1343,8 @@ export const calculatingTheCrossProductUsingDeterminants: TopicDef = {
       id: "determinant-formula-for-cross-product",
       title: t("Determinant formula for cross product", "利用三阶行列式展开计算叉积"),
       explanation: t(
-        "The cross product of $\\mathbf{u} = \\langle u_1, u_2, u_3 \\rangle$ and $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$ is calculated using the formal determinant:\n\n$$\\mathbf{u} \\times \\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\end{vmatrix} = \\langle u_2 v_3 - u_3 v_2, \\; -(u_1 v_3 - u_3 v_1), \\; u_1 v_2 - u_2 v_1 \\rangle$$",
-        "向量 $\\mathbf{u} = \\langle u_1, u_2, u_3 \\rangle$ 与 $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$ 的叉积可用形式三阶行列式计算：\n\n$$\\mathbf{u} \\times \\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\end{vmatrix} = \\langle u_2 v_3 - u_3 v_2, \\; -(u_1 v_3 - u_3 v_1), \\; u_1 v_2 - u_2 v_1 \\rangle$$",
+        "Writing the unit vectors in the first row of a determinant is a memory aid: expanding along that row produces each component of the cross product. The cross product of $\\mathbf{u} = \\langle u_1, u_2, u_3 \\rangle$ and $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$ is calculated using the formal determinant:\n\n$$\\mathbf{u} \\times \\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\end{vmatrix} = \\langle u_2 v_3 - u_3 v_2, \\; -(u_1 v_3 - u_3 v_1), \\; u_1 v_2 - u_2 v_1 \\rangle$$",
+        "把单位向量写在行列式的第一行是一种记忆方法：沿这一行展开就得到叉积的各个分量。向量 $\\mathbf{u} = \\langle u_1, u_2, u_3 \\rangle$ 与 $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$ 的叉积可用形式三阶行列式计算：\n\n$$\\mathbf{u} \\times \\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\end{vmatrix} = \\langle u_2 v_3 - u_3 v_2, \\; -(u_1 v_3 - u_3 v_1), \\; u_1 v_2 - u_2 v_1 \\rangle$$",
       ),
       generate(rng) {
         const u: Vec3 = [
@@ -1514,8 +1514,8 @@ export const theScalarTripleProduct: TopicDef = {
       id: "evaluating-the-scalar-triple-product",
       title: t("Evaluating the scalar triple product", "计算标量三重积"),
       explanation: t(
-        "The scalar triple product of three vectors $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ is defined as $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})$ and equals the $3\\times 3$ determinant:\n\n$$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = \\begin{vmatrix} u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\\\ w_1 & w_2 & w_3 \\end{vmatrix}$$",
-        "三向量 $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ 的标量三重积（混合积）定义为 $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})$，其值等于相应的三阶行列式：\n\n$$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = \\begin{vmatrix} u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\\\ w_1 & w_2 & w_3 \\end{vmatrix}$$",
+        "The scalar triple product is a single number, and it equals the determinant of the matrix whose rows are the three vectors. The scalar triple product of three vectors $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ is defined as $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})$ and equals the $3\\times 3$ determinant:\n\n$$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = \\begin{vmatrix} u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\\\ w_1 & w_2 & w_3 \\end{vmatrix}$$",
+        "标量三重积是一个数，它等于以三个向量为行的矩阵的行列式。三向量 $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ 的标量三重积（混合积）定义为 $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})$，其值等于相应的三阶行列式：\n\n$$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = \\begin{vmatrix} u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\\\ w_1 & w_2 & w_3 \\end{vmatrix}$$",
       ),
       generate(rng) {
         const u: Vec3 = [rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3])];
@@ -1650,8 +1650,8 @@ export const volumesOfParallelepipeds: TopicDef = {
       id: "volume-of-a-parallelepiped-from-vertices",
       title: t("Volume of a parallelepiped from vertices", "由顶点坐标计算平行六面体体积"),
       explanation: t(
-        "If a parallelepiped has a vertex $A$ with three adjacent vertices $B, C, D$, its volume is:\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})|$$",
-        "若平行六面体的一个顶点为 $A$，且与之相邻的三个顶点为 $B, C, D$，则其体积为：\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})|$$",
+        "Subtract the coordinates of the shared vertex from the other three to get the edge vectors, then take the absolute value of their triple product. If a parallelepiped has a vertex $A$ with three adjacent vertices $B, C, D$, its volume is:\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})|$$",
+        "用另外三个顶点的坐标减去公共顶点的坐标得到棱向量，再取它们三重积的绝对值。若平行六面体的一个顶点为 $A$，且与之相邻的三个顶点为 $B, C, D$，则其体积为：\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})|$$",
       ),
       generate(rng) {
         const A: Vec3 = [rng.pick([-2, -1, 0, 1, 2]), rng.pick([-2, -1, 0, 1, 2]), rng.pick([-2, -1, 0, 1, 2])];

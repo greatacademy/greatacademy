@@ -637,8 +637,8 @@ export const furtherEvaluatingExpressionsContainingInverseTrigonometricFunctions
       id: "evaluating-inverse-trig-outside-principal-range",
       title: t("Inverse trig of trig outside principal range", "主值区间外的反三角复合值"),
       explanation: t(
-        "While $\\sin(\\arcsin x) = x$ always holds for $x \\in [-1, 1]$, $\\arcsin(\\sin \\theta) = \\theta$ holds **only** when $\\theta \\in [-\\pi/2, \\pi/2]$. For $\\theta = 5\\pi/6$:\n\n$$\\arcsin\\left(\\sin\\left(\\frac{5\\pi}{6}\\right)\\right) = \\arcsin\\left(\\frac{1}{2}\\right) = \\frac{\\pi}{6}$$",
-        "虽然当 $x \\in [-1, 1]$ 时恒有 $\\sin(\\arcsin x) = x$，但 $\\arcsin(\\sin \\theta) = \\theta$ **仅**在 $\\theta \\in [-\\pi/2, \\pi/2]$ 时成立。以 $\\theta = 5\\pi/6$ 为例：\n\n$$\\arcsin\\left(\\sin\\left(\\frac{5\\pi}{6}\\right)\\right) = \\arcsin\\left(\\frac{1}{2}\\right) = \\frac{\\pi}{6}$$",
+        "An inverse trigonometric function always returns an angle in its principal range, so when the inner angle lies outside that range, find the angle in the range with the same value. While $\\sin(\\arcsin x) = x$ always holds for $x \\in [-1, 1]$, $\\arcsin(\\sin \\theta) = \\theta$ holds **only** when $\\theta \\in [-\\pi/2, \\pi/2]$. For $\\theta = 5\\pi/6$:\n\n$$\\arcsin\\left(\\sin\\left(\\frac{5\\pi}{6}\\right)\\right) = \\arcsin\\left(\\frac{1}{2}\\right) = \\frac{\\pi}{6}$$",
+        "反三角函数总是返回主值区间内的角，所以当里面的角不在这个区间时，要找区间内函数值相同的那个角。虽然当 $x \\in [-1, 1]$ 时恒有 $\\sin(\\arcsin x) = x$，但 $\\arcsin(\\sin \\theta) = \\theta$ **仅**在 $\\theta \\in [-\\pi/2, \\pi/2]$ 时成立。以 $\\theta = 5\\pi/6$ 为例：\n\n$$\\arcsin\\left(\\sin\\left(\\frac{5\\pi}{6}\\right)\\right) = \\arcsin\\left(\\frac{1}{2}\\right) = \\frac{\\pi}{6}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1534,8 +1534,8 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
       id: "tangent-sum-difference-formulas",
       title: t("Tangent sum and difference identities", "正切和差公式形式"),
       explanation: t(
-        "The angle addition and subtraction formulas for tangent are:\n\n$$\\tan(\\alpha + \\beta) = \\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}, \\quad \\tan(\\alpha - \\beta) = \\frac{\\tan\\alpha - \\tan\\beta}{1 + \\tan\\alpha\\tan\\beta}$$",
-        "正切的和差角公式为：\n\n$$\\tan(\\alpha + \\beta) = \\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}, \\quad \\tan(\\alpha - \\beta) = \\frac{\\tan\\alpha - \\tan\\beta}{1 + \\tan\\alpha\\tan\\beta}$$",
+        "Dividing the sine formula by the cosine formula and then dividing every term by the product of the cosines gives formulas that use tangents alone. The angle addition and subtraction formulas for tangent are:\n\n$$\\tan(\\alpha + \\beta) = \\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}, \\quad \\tan(\\alpha - \\beta) = \\frac{\\tan\\alpha - \\tan\\beta}{1 + \\tan\\alpha\\tan\\beta}$$",
+        "把正弦公式除以余弦公式，再把每一项都除以两个余弦的积，就得到只含正切的公式。正切的和差角公式为：\n\n$$\\tan(\\alpha + \\beta) = \\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha\\tan\\beta}, \\quad \\tan(\\alpha - \\beta) = \\frac{\\tan\\alpha - \\tan\\beta}{1 + \\tan\\alpha\\tan\\beta}$$",
       ),
       generate(rng) {
         const isSum = rng.bool();
@@ -1567,8 +1567,8 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
       id: "collapsing-tangent-to-special-values",
       title: t("Evaluating collapsed tangent formulas", "正切和差公式计算特殊角"),
       explanation: t(
-        "Collapsing tangent expressions to special angles:\n\n$$\\frac{\\tan(50^{\\circ}) - \\tan(20^{\\circ})}{1 + \\tan(50^{\\circ})\\tan(20^{\\circ})} = \\tan(30^{\\circ}) = \\frac{\\sqrt{3}}{3}$$",
-        "利用正切公式合并求特殊角：\n\n$$\\frac{\\tan(50^{\\circ}) - \\tan(20^{\\circ})}{1 + \\tan(50^{\\circ})\\tan(20^{\\circ})} = \\tan(30^{\\circ}) = \\frac{\\sqrt{3}}{3}$$",
+        "When an expression has exactly the shape of the tangent sum or difference formula, read off the two angles and replace the whole fraction by the tangent of their sum or difference. Collapsing tangent expressions to special angles:\n\n$$\\frac{\\tan(50^{\\circ}) - \\tan(20^{\\circ})}{1 + \\tan(50^{\\circ})\\tan(20^{\\circ})} = \\tan(30^{\\circ}) = \\frac{\\sqrt{3}}{3}$$",
+        "当一个式子恰好具有正切和角或差角公式的形式时，读出两个角，把整个分式换成它们的和或差的正切。利用正切公式合并求特殊角：\n\n$$\\frac{\\tan(50^{\\circ}) - \\tan(20^{\\circ})}{1 + \\tan(50^{\\circ})\\tan(20^{\\circ})} = \\tan(30^{\\circ}) = \\frac{\\sqrt{3}}{3}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1640,8 +1640,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
       id: "exact-sine-of-fifteen-and-seventy-five",
       title: t("Exact sine of 15° and 75°", "15° 与 75° 的正弦精确值"),
       explanation: t(
-        "Using $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ and $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$:\n\n$$\\sin(75^{\\circ}) = \\sin(45^{\\circ})\\cos(30^{\\circ}) + \\cos(45^{\\circ})\\sin(30^{\\circ}) = \\frac{\\sqrt{2}}{2}\\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{2}}{2}\\frac{1}{2} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$\n\n$$\\sin(15^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
-        "由 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ 以及 $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$：\n\n$$\\sin(75^{\\circ}) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin(15^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
+        "Angles such as fifteen and seventy-five degrees are sums or differences of familiar special angles, so the sum and difference formulas give their exact values. Using $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ and $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$:\n\n$$\\sin(75^{\\circ}) = \\sin(45^{\\circ})\\cos(30^{\\circ}) + \\cos(45^{\\circ})\\sin(30^{\\circ}) = \\frac{\\sqrt{2}}{2}\\frac{\\sqrt{3}}{2} + \\frac{\\sqrt{2}}{2}\\frac{1}{2} = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$\n\n$$\\sin(15^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
+        "像 15° 和 75° 这样的角是熟悉的特殊角的和或差，所以用和角与差角公式可以求出它们的精确值。由 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ 以及 $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$：\n\n$$\\sin(75^{\\circ}) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin(15^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1688,8 +1688,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForSine: TopicDef =
       id: "exact-sine-in-radians-twelfths",
       title: t("Exact sine for radian multiples of π/12", "π/12 弧度倍角处的正弦精确值"),
       explanation: t(
-        "In radians, $\\frac{5\\pi}{12} = 75^{\\circ}$ and $\\frac{\\pi}{12} = 15^{\\circ}$:\n\n$$\\sin\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
-        "在弧度制下，$\\frac{5\\pi}{12} = 75^{\\circ}$，$\\frac{\\pi}{12} = 15^{\\circ}$：\n\n$$\\sin\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
+        "Radian multiples of a twelfth of pi are sums or differences of the special angles with denominators three, four and six, so write the angle that way first. In radians, $\\frac{5\\pi}{12} = 75^{\\circ}$ and $\\frac{\\pi}{12} = 15^{\\circ}$:\n\n$$\\sin\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
+        "π/12 的倍数可以写成分母为 3、4、6 的特殊角的和或差，所以先把角写成这样的形式。在弧度制下，$\\frac{5\\pi}{12} = 75^{\\circ}$，$\\frac{\\pi}{12} = 15^{\\circ}$：\n\n$$\\sin\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}, \\quad \\sin\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1750,8 +1750,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
       id: "exact-cosine-of-fifteen-and-seventy-five",
       title: t("Exact cosine of 15° and 75°", "15° 与 75° 的余弦精确值"),
       explanation: t(
-        "Using $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ and $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$:\n\n$$\\cos(75^{\\circ}) = \\cos(45^{\\circ})\\cos(30^{\\circ}) - \\sin(45^{\\circ})\\sin(30^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$\n\n$$\\cos(15^{\\circ}) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
-        "由 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ 与 $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$：\n\n$$\\cos(75^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\cos(15^{\\circ}) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
+        "The cosine formulas keep the products of matching functions together and flip the sign in the middle, so take care with the sign before simplifying. Using $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ and $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$:\n\n$$\\cos(75^{\\circ}) = \\cos(45^{\\circ})\\cos(30^{\\circ}) - \\sin(45^{\\circ})\\sin(30^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}$$\n\n$$\\cos(15^{\\circ}) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
+        "余弦公式把同名函数的积放在一起，并且中间的符号与角之间的符号相反，所以化简前要注意符号。由 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$ 与 $15^{\\circ} = 45^{\\circ} - 30^{\\circ}$：\n\n$$\\cos(75^{\\circ}) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\cos(15^{\\circ}) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1800,8 +1800,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForCosine: TopicDef
       id: "exact-cosine-in-radians-twelfths",
       title: t("Exact cosine for radian multiples of π/12", "π/12 弧度倍角处的余弦精确值"),
       explanation: t(
-        "For angles in radians:\n\n$$\\cos\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\cos\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
-        "对于弧度制下的角：\n\n$$\\cos\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\cos\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
+        "To find these values, split the radian angle into two special angles, apply the cosine sum or difference formula, and simplify the products of the radicals. For angles in radians:\n\n$$\\cos\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\cos\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
+        "求这些值时，把弧度角拆成两个特殊角，用余弦的和角或差角公式，再化简根式的乘积。对于弧度制下的角：\n\n$$\\cos\\left(\\frac{5\\pi}{12}\\right) = \\frac{\\sqrt{6} - \\sqrt{2}}{4}, \\quad \\cos\\left(\\frac{\\pi}{12}\\right) = \\frac{\\sqrt{6} + \\sqrt{2}}{4}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1862,8 +1862,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForTangent: TopicDe
       id: "exact-tangent-fifteen-seventy-five",
       title: t("Exact tangent of 15° and 75°", "15° 与 75° 的正切精确值"),
       explanation: t(
-        "Using $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$:\n\n$$\\tan(75^{\\circ}) = \\frac{\\tan 45^{\\circ} + \\tan 30^{\\circ}}{1 - \\tan 45^{\\circ}\\tan 30^{\\circ}} = \\frac{1 + 1/\\sqrt{3}}{1 - 1/\\sqrt{3}} = \\frac{\\sqrt{3} + 1}{\\sqrt{3} - 1} = 2 + \\sqrt{3}$$\n\nSimilarly, $\\tan(15^{\\circ}) = 2 - \\sqrt{3}$.",
-        "由 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$：\n\n$$\\tan(75^{\\circ}) = 2 + \\sqrt{3}, \\quad \\tan(15^{\\circ}) = 2 - \\sqrt{3}$$",
+        "After substituting the known tangents, the result is a fraction with radicals in the denominator, which you rationalize by multiplying by the conjugate. Using $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$:\n\n$$\\tan(75^{\\circ}) = \\frac{\\tan 45^{\\circ} + \\tan 30^{\\circ}}{1 - \\tan 45^{\\circ}\\tan 30^{\\circ}} = \\frac{1 + 1/\\sqrt{3}}{1 - 1/\\sqrt{3}} = \\frac{\\sqrt{3} + 1}{\\sqrt{3} - 1} = 2 + \\sqrt{3}$$\n\nSimilarly, $\\tan(15^{\\circ}) = 2 - \\sqrt{3}$.",
+        "代入已知的正切值后，得到分母含根式的分式，要乘以共轭式把分母有理化。由 $75^{\\circ} = 45^{\\circ} + 30^{\\circ}$：\n\n$$\\tan(75^{\\circ}) = 2 + \\sqrt{3}, \\quad \\tan(15^{\\circ}) = 2 - \\sqrt{3}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1903,8 +1903,8 @@ export const calculatingTrigonometricRatiosUsingTheSumFormulaForTangent: TopicDe
       id: "exact-tangent-in-radians",
       title: t("Exact tangent in radians", "弧度制下的正切精确值"),
       explanation: t(
-        "In radians:\n\n$$\\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}, \\quad \\tan\\left(\\frac{\\pi}{12}\\right) = 2 - \\sqrt{3}$$",
-        "在弧度制下：\n\n$$\\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}, \\quad \\tan\\left(\\frac{\\pi}{12}\\right) = 2 - \\sqrt{3}$$",
+        "These values come from the same sum and difference formulas, with the radian angles written as sums or differences of a quarter of pi and a sixth of pi. In radians:\n\n$$\\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}, \\quad \\tan\\left(\\frac{\\pi}{12}\\right) = 2 - \\sqrt{3}$$",
+        "这些值来自同样的和角与差角公式，把弧度角写成 π/4 与 π/6 的和或差即可。在弧度制下：\n\n$$\\tan\\left(\\frac{5\\pi}{12}\\right) = 2 + \\sqrt{3}, \\quad \\tan\\left(\\frac{\\pi}{12}\\right) = 2 - \\sqrt{3}$$",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1960,8 +1960,8 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
       id: "amplitude-of-linear-combination",
       title: t("Amplitude of a sum of sine and cosine", "正弦与余弦线性组合的振幅"),
       explanation: t(
-        "For $f(x) = A \\sin x + B \\cos x$, the maximum value (amplitude) is $R = \\sqrt{A^{2} + B^{2}}$. For $3\\sin x + 4\\cos x$:\n\n$$R = \\sqrt{3^{2} + 4^{2}} = 5$$",
-        "对于 $f(x) = A \\sin x + B \\cos x$，其最大值（振幅）为 $R = \\sqrt{A^{2} + B^{2}}$。以 $3\\sin x + 4\\cos x$ 为例：\n\n$$R = \\sqrt{3^{2} + 4^{2}} = 5$$",
+        "A sum of a sine and a cosine with the same input is a single shifted sine wave, and its amplitude is the length of the vector made from the two coefficients. For $f(x) = A \\sin x + B \\cos x$, the maximum value (amplitude) is $R = \\sqrt{A^{2} + B^{2}}$. For $3\\sin x + 4\\cos x$:\n\n$$R = \\sqrt{3^{2} + 4^{2}} = 5$$",
+        "同一自变量的正弦与余弦之和是一条平移后的正弦曲线，它的振幅等于由两个系数构成的向量的长度。对于 $f(x) = A \\sin x + B \\cos x$，其最大值（振幅）为 $R = \\sqrt{A^{2} + B^{2}}$。以 $3\\sin x + 4\\cos x$ 为例：\n\n$$R = \\sqrt{3^{2} + 4^{2}} = 5$$",
       ),
       generate(rng) {
         const allTriples = [
@@ -2005,8 +2005,8 @@ export const writingSumsOfTrigonometricFunctionsInAmplitudePhaseForm: TopicDef =
       id: "amplitude-phase-form-exact",
       title: t("Complete amplitude-phase form", "完整的振幅-初相表达式"),
       explanation: t(
-        "Rewrite using the auxiliary angle:\n\n$$\\sqrt{3}\\sin x + \\cos x = 2\\left(\\frac{\\sqrt{3}}{2}\\sin x + \\frac{1}{2}\\cos x\\right) = 2\\sin\\left(x + \\frac{\\pi}{6}\\right)$$",
-        "利用辅助角改写：\n\n$$\\sqrt{3}\\sin x + \\cos x = 2\\left(\\frac{\\sqrt{3}}{2}\\sin x + \\frac{1}{2}\\cos x\\right) = 2\\sin\\left(x + \\frac{\\pi}{6}\\right)$$",
+        "Factor out the amplitude so that the remaining coefficients are the cosine and sine of one angle, then recognize the sum formula for sine. Rewrite using the auxiliary angle:\n\n$$\\sqrt{3}\\sin x + \\cos x = 2\\left(\\frac{\\sqrt{3}}{2}\\sin x + \\frac{1}{2}\\cos x\\right) = 2\\sin\\left(x + \\frac{\\pi}{6}\\right)$$",
+        "先提出振幅，使剩下的系数分别是同一个角的余弦和正弦，再认出这是正弦的和角公式。利用辅助角改写：\n\n$$\\sqrt{3}\\sin x + \\cos x = 2\\left(\\frac{\\sqrt{3}}{2}\\sin x + \\frac{1}{2}\\cos x\\right) = 2\\sin\\left(x + \\frac{\\pi}{6}\\right)$$",
       ),
       generate(rng) {
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
@@ -2670,8 +2670,8 @@ export const findingExactValuesOfTrigonometricExpressionsUsingTheDoubleAngleForm
       id: "evaluating-cos-2theta-at-special-angles",
       title: t("Evaluating cos(2θ) at special angles", "在特殊角处求 cos(2θ)"),
       explanation: t(
-        "Use a known double angle:\n\n$$\\cos\\left(\\frac{\\pi}{3}\\right) = \\cos\\left(2\\cdot\\frac{\\pi}{6}\\right) = 2\\cos^2\\frac{\\pi}{6} - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2} \\checkmark$$",
-        "利用已知的二倍角：\n\n$$\\cos\\left(\\frac{\\pi}{3}\\right) = \\cos\\left(2\\cdot\\frac{\\pi}{6}\\right) = 2\\cos^2\\frac{\\pi}{6} - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2} \\checkmark$$",
+        "When an angle is twice a special angle, the double angle formula expresses its cosine through the known values of the smaller angle. Use a known double angle:\n\n$$\\cos\\left(\\frac{\\pi}{3}\\right) = \\cos\\left(2\\cdot\\frac{\\pi}{6}\\right) = 2\\cos^2\\frac{\\pi}{6} - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2} \\checkmark$$",
+        "当一个角是某个特殊角的两倍时，二倍角公式可以用小角的已知值表示它的余弦。利用已知的二倍角：\n\n$$\\cos\\left(\\frac{\\pi}{3}\\right) = \\cos\\left(2\\cdot\\frac{\\pi}{6}\\right) = 2\\cos^2\\frac{\\pi}{6} - 1 = 2\\cdot\\frac{3}{4} - 1 = \\frac{1}{2} \\checkmark$$",
       ),
       generate(rng) {
         const items = [
@@ -2821,8 +2821,8 @@ export const simplifyingExpressionsUsingTheDoubleAngleFormulaForTangent: TopicDe
       id: "tan-double-angle-formula",
       title: t("The double-angle formula for tangent", "正切的二倍角公式"),
       explanation: t(
-        "From the addition formula with $A=B=\\theta$:\n\n$$\\tan(2\\theta) = \\frac{2\\tan\\theta}{1 - \\tan^2\\theta}$$\n\nExample: if $\\tan\\theta = \\frac{1}{2}$, then $\\tan(2\\theta) = \\frac{2\\cdot\\frac{1}{2}}{1 - \\frac{1}{4}} = \\frac{1}{\\frac{3}{4}} = \\frac{4}{3}$.",
-        "由和角公式令 $A=B=\\theta$，得：\n\n$$\\tan(2\\theta) = \\frac{2\\tan\\theta}{1 - \\tan^2\\theta}$$\n\n例如，若 $\\tan\\theta = \\frac{1}{2}$，则 $\\tan(2\\theta) = \\frac{2\\cdot\\frac{1}{2}}{1 - \\frac{1}{4}} = \\frac{1}{\\frac{3}{4}} = \\frac{4}{3}$。",
+        "Setting both angles equal in the tangent sum formula gives the double angle formula, which finds the tangent of twice an angle from the tangent of the angle. From the addition formula with $A=B=\\theta$:\n\n$$\\tan(2\\theta) = \\frac{2\\tan\\theta}{1 - \\tan^2\\theta}$$\n\nExample: if $\\tan\\theta = \\frac{1}{2}$, then $\\tan(2\\theta) = \\frac{2\\cdot\\frac{1}{2}}{1 - \\frac{1}{4}} = \\frac{1}{\\frac{3}{4}} = \\frac{4}{3}$.",
+        "在正切和角公式中令两个角相等，就得到二倍角公式，它由一个角的正切求出两倍角的正切。由和角公式令 $A=B=\\theta$，得：\n\n$$\\tan(2\\theta) = \\frac{2\\tan\\theta}{1 - \\tan^2\\theta}$$\n\n例如，若 $\\tan\\theta = \\frac{1}{2}$，则 $\\tan(2\\theta) = \\frac{2\\cdot\\frac{1}{2}}{1 - \\frac{1}{4}} = \\frac{1}{\\frac{3}{4}} = \\frac{4}{3}$。",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);
@@ -2865,8 +2865,8 @@ export const simplifyingExpressionsUsingTheDoubleAngleFormulaForTangent: TopicDe
       id: "tan-double-angle-rewriting",
       title: t("Rewriting products as tan double-angle", "将乘积改写为正切二倍角"),
       explanation: t(
-        "To simplify $\\dfrac{2\\tan x}{1 - \\tan^2 x}$, recognize the double-angle pattern:\n\n$$\\frac{2\\tan x}{1 - \\tan^2 x} = \\tan(2x)$$",
-        "化简 $\\dfrac{2\\tan x}{1 - \\tan^2 x}$ 时，识别二倍角模式：\n\n$$\\frac{2\\tan x}{1 - \\tan^2 x} = \\tan(2x)$$",
+        "When a fraction has twice a tangent on top and one minus its square below, it collapses to the tangent of the doubled angle. To simplify $\\dfrac{2\\tan x}{1 - \\tan^2 x}$, recognize the double-angle pattern:\n\n$$\\frac{2\\tan x}{1 - \\tan^2 x} = \\tan(2x)$$",
+        "当一个分式的分子是正切的两倍、分母是 1 减去它的平方时，它可以合并为两倍角的正切。化简 $\\dfrac{2\\tan x}{1 - \\tan^2 x}$ 时，识别二倍角模式：\n\n$$\\frac{2\\tan x}{1 - \\tan^2 x} = \\tan(2x)$$",
       ),
       generate(rng) {
         const v = rng.pick(["x", "\\theta", "t", "\\alpha", "u"]);
@@ -2916,8 +2916,8 @@ export const verifyingTrigonometricIdentitiesUsingTheDoubleAngleFormulaForTangen
       id: "verifying-tan-double-angle-identities",
       title: t("Verifying identities involving tan(2θ)", "验证含 tan(2θ) 的恒等式"),
       explanation: t(
-        "Verify $\\tan(2\\theta) = \\dfrac{2}{\\cot\\theta - \\tan\\theta}$:\n\n$$\\frac{2}{\\cot\\theta - \\tan\\theta} = \\frac{2}{\\frac{\\cos\\theta}{\\sin\\theta} - \\frac{\\sin\\theta}{\\cos\\theta}} = \\frac{2}{\\frac{\\cos^2\\theta - \\sin^2\\theta}{\\sin\\theta\\cos\\theta}} = \\frac{2\\sin\\theta\\cos\\theta}{\\cos^2\\theta - \\sin^2\\theta} = \\frac{\\sin(2\\theta)}{\\cos(2\\theta)} = \\tan(2\\theta) \\checkmark$$",
-        "验证 $\\tan(2\\theta) = \\dfrac{2}{\\cot\\theta - \\tan\\theta}$：\n\n$$\\frac{2}{\\cot\\theta - \\tan\\theta} = \\frac{2}{\\frac{\\cos\\theta}{\\sin\\theta} - \\frac{\\sin\\theta}{\\cos\\theta}} = \\frac{2}{\\frac{\\cos^2\\theta - \\sin^2\\theta}{\\sin\\theta\\cos\\theta}} = \\frac{2\\sin\\theta\\cos\\theta}{\\cos^2\\theta - \\sin^2\\theta} = \\frac{\\sin(2\\theta)}{\\cos(2\\theta)} = \\tan(2\\theta) \\checkmark$$",
+        "To verify such an identity, rewrite every function in terms of sine and cosine or in terms of tangent, then simplify one side until it matches the other. Verify $\\tan(2\\theta) = \\dfrac{2}{\\cot\\theta - \\tan\\theta}$:\n\n$$\\frac{2}{\\cot\\theta - \\tan\\theta} = \\frac{2}{\\frac{\\cos\\theta}{\\sin\\theta} - \\frac{\\sin\\theta}{\\cos\\theta}} = \\frac{2}{\\frac{\\cos^2\\theta - \\sin^2\\theta}{\\sin\\theta\\cos\\theta}} = \\frac{2\\sin\\theta\\cos\\theta}{\\cos^2\\theta - \\sin^2\\theta} = \\frac{\\sin(2\\theta)}{\\cos(2\\theta)} = \\tan(2\\theta) \\checkmark$$",
+        "验证这样的恒等式时，把所有函数都用正弦和余弦或都用正切表示，再化简一边直到与另一边相同。验证 $\\tan(2\\theta) = \\dfrac{2}{\\cot\\theta - \\tan\\theta}$：\n\n$$\\frac{2}{\\cot\\theta - \\tan\\theta} = \\frac{2}{\\frac{\\cos\\theta}{\\sin\\theta} - \\frac{\\sin\\theta}{\\cos\\theta}} = \\frac{2}{\\frac{\\cos^2\\theta - \\sin^2\\theta}{\\sin\\theta\\cos\\theta}} = \\frac{2\\sin\\theta\\cos\\theta}{\\cos^2\\theta - \\sin^2\\theta} = \\frac{\\sin(2\\theta)}{\\cos(2\\theta)} = \\tan(2\\theta) \\checkmark$$",
       ),
       generate(rng) {
         const v = rng.pick(["\\theta", "x", "\\alpha", "t", "u"]);

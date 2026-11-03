@@ -1723,8 +1723,8 @@ export const solvingInequalitiesInvolvingExponentialFunctions: TopicDef = {
       id: "exponential-inequalities-quadratic-in-form",
       title: t("Inequalities quadratic in an exponential", "二次型指数不等式"),
       explanation: t(
-        "Substitute $u = 2^{x}$ in $4^{x} - 6 \\cdot 2^{x} + 8 < 0$:\n\n$$u^{2} - 6u + 8 < 0 \\implies (u - 2)(u - 4) < 0 \\implies 2 < u < 4$$\n\nSubstituting back $u = 2^{x}$ gives $2 < 2^{x} < 4 \\implies 1 < x < 2$, so the solution is $(1, 2)$.",
-        "在 $4^{x} - 6 \\cdot 2^{x} + 8 < 0$ 中令 $u = 2^{x}$：\n\n$$u^{2} - 6u + 8 < 0 \\implies (u - 2)(u - 4) < 0 \\implies 2 < u < 4$$\n\n代回 $u = 2^{x}$ 得 $2 < 2^{x} < 4 \\implies 1 < x < 2$，所以解集是 $(1, 2)$。",
+        "When one power is the square of another, a substitution turns the inequality into a quadratic one; solve that, then undo the substitution, remembering that an exponential is always positive. Substitute $u = 2^{x}$ in $4^{x} - 6 \\cdot 2^{x} + 8 < 0$:\n\n$$u^{2} - 6u + 8 < 0 \\implies (u - 2)(u - 4) < 0 \\implies 2 < u < 4$$\n\nSubstituting back $u = 2^{x}$ gives $2 < 2^{x} < 4 \\implies 1 < x < 2$, so the solution is $(1, 2)$.",
+        "当一个幂是另一个幂的平方时，换元可以把不等式化为二次不等式；先解它，再代回原变量，并记住指数式总是正的。在 $4^{x} - 6 \\cdot 2^{x} + 8 < 0$ 中令 $u = 2^{x}$：\n\n$$u^{2} - 6u + 8 < 0 \\implies (u - 2)(u - 4) < 0 \\implies 2 < u < 4$$\n\n代回 $u = 2^{x}$ 得 $2 < 2^{x} < 4 \\implies 1 < x < 2$，所以解集是 $(1, 2)$。",
       ),
       generate(rng) {
         const [e1, e2] = distinctPair(rng, 0, 4).sort((p, q) => p - q);

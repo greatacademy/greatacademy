@@ -218,8 +218,8 @@ export const inversesOf2x2Matrices: TopicDef = {
       id: "formula-for-inverse-of-2x2-matrix",
       title: t("Formula for the inverse of a 2x2 matrix", "二阶逆矩阵的计算公式"),
       explanation: t(
-        "For $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, the adjugate is $\\text{adj}(A) = \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$, and the inverse is $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A) = \\frac{1}{ad-bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$.",
-        "对于二阶矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，其伴随矩阵为 $\\text{adj}(A) = \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$，逆矩阵为 $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A) = \\frac{1}{ad-bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$。",
+        "Swap the diagonal entries, change the signs of the other two, and divide by the determinant; if the determinant is zero, there is no inverse. For $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, the adjugate is $\\text{adj}(A) = \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$, and the inverse is $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A) = \\frac{1}{ad-bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$.",
+        "交换主对角线上的元素，改变另外两个元素的符号，再除以行列式；如果行列式为零，就没有逆矩阵。对于二阶矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，其伴随矩阵为 $\\text{adj}(A) = \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$，逆矩阵为 $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A) = \\frac{1}{ad-bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$。",
       ),
       generate(rng) {
         const a = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
@@ -282,8 +282,8 @@ export const inversesOf2x2Matrices: TopicDef = {
       id: "calculating-inverse-of-2x2-matrix",
       title: t("Calculating the inverse of a 2x2 matrix", "计算二阶矩阵的逆矩阵"),
       explanation: t(
-        "To find the inverse of $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, calculate $\\det(A) = ad - bc$, verify $\\det(A) \\ne 0$, and scale the adjugate matrix by $\\frac{1}{\\det(A)}$.",
-        "求二阶矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 的逆矩阵，先计算 $\\det(A) = ad - bc$，确认 $\\det(A) \\ne 0$，再将伴随矩阵乘以 $\\frac{1}{\\det(A)}$。",
+        "You can check the answer by multiplying the matrix by its inverse, which should give the identity matrix. To find the inverse of $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, calculate $\\det(A) = ad - bc$, verify $\\det(A) \\ne 0$, and scale the adjugate matrix by $\\frac{1}{\\det(A)}$.",
+        "可以把矩阵与求出的逆矩阵相乘来检验答案，结果应该是单位矩阵。求二阶矩阵 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 的逆矩阵，先计算 $\\det(A) = ad - bc$，确认 $\\det(A) \\ne 0$，再将伴随矩阵乘以 $\\frac{1}{\\det(A)}$。",
       ),
       generate(rng) {
         const a = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
@@ -554,8 +554,8 @@ export const solving2x2SystemsOfEquationsUsingInverseMatrices: TopicDef = {
       id: "matrix-inversion-form-for-2x2-system",
       title: t("Matrix equation form and inverse solution expression", "矩阵方程形式与逆矩阵表达式"),
       explanation: t(
-        "A system $\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$ is represented as $A\\mathbf{x} = \\mathbf{b}$, where $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, $\\mathbf{x} = \\begin{pmatrix} x \\\\ y \\end{pmatrix}$, and $\\mathbf{b} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$. Left-multiplying by $A^{-1}$ yields $\\mathbf{x} = A^{-1}\\mathbf{b}$.",
-        "线性方程组 $\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$ 可以写成矩阵方程 $A\\mathbf{x} = \\mathbf{b}$。两边左乘逆矩阵 $A^{-1}$，可得解向量 $\\mathbf{x} = A^{-1}\\mathbf{b}$。",
+        "Just as dividing both sides solves a number equation, multiplying both sides on the left by the inverse solves a matrix equation. A system $\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$ is represented as $A\\mathbf{x} = \\mathbf{b}$, where $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, $\\mathbf{x} = \\begin{pmatrix} x \\\\ y \\end{pmatrix}$, and $\\mathbf{b} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$. Left-multiplying by $A^{-1}$ yields $\\mathbf{x} = A^{-1}\\mathbf{b}$.",
+        "就像两边同除可以解数的方程一样，两边同时左乘逆矩阵可以解矩阵方程。线性方程组 $\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$ 可以写成矩阵方程 $A\\mathbf{x} = \\mathbf{b}$。两边左乘逆矩阵 $A^{-1}$，可得解向量 $\\mathbf{x} = A^{-1}\\mathbf{b}$。",
       ),
       generate(rng) {
         const a = rng.pick([2, 3, 4, 5]);
@@ -598,8 +598,8 @@ export const solving2x2SystemsOfEquationsUsingInverseMatrices: TopicDef = {
       id: "solving-2x2-system-via-inverse-matrix",
       title: t("Solving a 2x2 linear system using the inverse matrix", "利用逆矩阵求解二元线性方程组"),
       explanation: t(
-        "To solve $A\\mathbf{x} = \\mathbf{b}$, calculate $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A)$ and multiply by $\\mathbf{b}$ to obtain $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$.",
-        "求解 $A\\mathbf{x} = \\mathbf{b}$ 时，先求出逆矩阵 $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A)$，再计算矩阵乘积 $A^{-1}\\mathbf{b}$ 即可得到 $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$。",
+        "Once the inverse is known, the solution is a single matrix times vector product, and the entries of the result are the values of the variables. To solve $A\\mathbf{x} = \\mathbf{b}$, calculate $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A)$ and multiply by $\\mathbf{b}$ to obtain $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$.",
+        "求出逆矩阵后，解就是一次矩阵与向量的乘积，结果的各个元素就是变量的值。求解 $A\\mathbf{x} = \\mathbf{b}$ 时，先求出逆矩阵 $A^{-1} = \\frac{1}{\\det(A)}\\text{adj}(A)$，再计算矩阵乘积 $A^{-1}\\mathbf{b}$ 即可得到 $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$。",
       ),
       generate(rng) {
         const x0 = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
@@ -942,8 +942,8 @@ export const introductionToLinearTransformations: TopicDef = {
       id: "evaluating-linear-transformations-on-vectors",
       title: t("Evaluating linear transformations on linear combinations", "在线性组合上计算线性变换"),
       explanation: t(
-        "By linearity, for any vectors $\\mathbf{u}, \\mathbf{v}$ and constants $c_1, c_2$, we have $T(c_1\\mathbf{u} + c_2\\mathbf{v}) = c_1 T(\\mathbf{u}) + c_2 T(\\mathbf{v})$.",
-        "根据线性性质，对任意向量 $\\mathbf{u}, \\mathbf{v}$ 和常数 $c_1, c_2$，均有 $T(c_1\\mathbf{u} + c_2\\mathbf{v}) = c_1 T(\\mathbf{u}) + c_2 T(\\mathbf{v})$。",
+        "A linear transformation respects addition and scaling, so knowing its values on a few vectors determines its value on any combination of them. By linearity, for any vectors $\\mathbf{u}, \\mathbf{v}$ and constants $c_1, c_2$, we have $T(c_1\\mathbf{u} + c_2\\mathbf{v}) = c_1 T(\\mathbf{u}) + c_2 T(\\mathbf{v})$.",
+        "线性变换保持加法和数乘，所以知道它在几个向量上的值，就能求出它在这些向量任意组合上的值。根据线性性质，对任意向量 $\\mathbf{u}, \\mathbf{v}$ 和常数 $c_1, c_2$，均有 $T(c_1\\mathbf{u} + c_2\\mathbf{v}) = c_1 T(\\mathbf{u}) + c_2 T(\\mathbf{v})$。",
       ),
       generate(rng) {
         const uImg: Vec2 = [rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]), rng.pick([-4, -3, -2, -1, 1, 2, 3, 4])];
@@ -1060,8 +1060,8 @@ export const theStandardMatrixOfALinearTransformation: TopicDef = {
       id: "finding-standard-matrix-from-formula",
       title: t("Finding standard matrix from algebraic formulas", "由代数表达式求标准矩阵"),
       explanation: t(
-        "If a linear transformation is given by $T\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ax + by \\\\ cx + dy \\end{pmatrix}$, its standard matrix is $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$.",
-        "若线性变换的坐标公式为 $T\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ax + by \\\\ cx + dy \\end{pmatrix}$，则其标准矩阵为 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$。",
+        "The coefficients of each output formula fill one row of the matrix, so read them off in order of the variables. If a linear transformation is given by $T\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ax + by \\\\ cx + dy \\end{pmatrix}$, its standard matrix is $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$.",
+        "每个输出公式的系数填成矩阵的一行，所以按变量的顺序把它们读出来。若线性变换的坐标公式为 $T\\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ax + by \\\\ cx + dy \\end{pmatrix}$，则其标准矩阵为 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$。",
       ),
       generate(rng) {
         const a = rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6]);
@@ -1132,8 +1132,8 @@ export const linearTransformationsOfPointsAndLinesInThePlane: TopicDef = {
       id: "transforming-points-in-the-plane",
       title: t("Transforming points under a linear transformation", "线性变换作用下的点变换"),
       explanation: t(
-        "A point $P(x, y)$ represented by column vector $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$ transforms to $P'(x', y') = A \\begin{pmatrix} x \\\\ y \\end{pmatrix}$.",
-        "平面上的点 $P(x, y)$ 对应列向量 $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$，在线性变换 $A$ 作用下的像为 $P'(x', y') = A \\begin{pmatrix} x \\\\ y \\end{pmatrix}$。",
+        "To find where a point goes, write it as a column vector and multiply it by the matrix; the product gives the coordinates of the image. A point $P(x, y)$ represented by column vector $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$ transforms to $P'(x', y') = A \\begin{pmatrix} x \\\\ y \\end{pmatrix}$.",
+        "要找一个点被变换到哪里，把它写成列向量再用矩阵去乘；乘积给出像点的坐标。平面上的点 $P(x, y)$ 对应列向量 $\\begin{pmatrix} x \\\\ y \\end{pmatrix}$，在线性变换 $A$ 作用下的像为 $P'(x', y') = A \\begin{pmatrix} x \\\\ y \\end{pmatrix}$。",
       ),
       generate(rng) {
         const a = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
@@ -1352,8 +1352,8 @@ export const dilationsAndReflectionsAsLinearTransformations: TopicDef = {
       id: "dilation-matrices-in-the-plane",
       title: t("Dilation matrices in the plane", "平面中的位似伸缩矩阵"),
       explanation: t(
-        "A uniform dilation with scale factor $k$ centered at the origin maps $(x, y) \\mapsto (kx, ky)$. Its standard matrix is $D_k = \\begin{pmatrix} k & 0 \\\\ 0 & k \\end{pmatrix} = k I$.",
-        "以原点为中心的缩放比例为 $k$ 的均匀位似伸缩变换将 $(x, y) \\mapsto (kx, ky)$。其标准矩阵为 $D_k = \\begin{pmatrix} k & 0 \\\\ 0 & k \\end{pmatrix} = k I$。",
+        "A dilation multiplies every distance from the origin by the same factor, so its matrix is that factor times the identity matrix. A uniform dilation with scale factor $k$ centered at the origin maps $(x, y) \\mapsto (kx, ky)$. Its standard matrix is $D_k = \\begin{pmatrix} k & 0 \\\\ 0 & k \\end{pmatrix} = k I$.",
+        "位似变换把到原点的每个距离都乘以同一个因子，所以它的矩阵是这个因子乘以单位矩阵。以原点为中心的缩放比例为 $k$ 的均匀位似伸缩变换将 $(x, y) \\mapsto (kx, ky)$。其标准矩阵为 $D_k = \\begin{pmatrix} k & 0 \\\\ 0 & k \\end{pmatrix} = k I$。",
       ),
       generate(rng) {
         const askPoint = rng.pick([true, false]);
@@ -1634,8 +1634,8 @@ export const rightAngleRotationsAsLinearTransformations: TopicDef = {
       id: "matrices-for-right-angle-rotations",
       title: t("Matrices for right-angle rotations", "直角旋转的标准矩阵"),
       explanation: t(
-        "Standard counterclockwise rotation matrices about the origin:\n- By $90^\\circ$: $R_{90^\\circ} = \\begin{pmatrix} 0 & -1 \\\\ 1 & 0 \\end{pmatrix}$\n- By $180^\\circ$: $R_{180^\\circ} = \\begin{pmatrix} -1 & 0 \\\\ 0 & -1 \\end{pmatrix} = -I$\n- By $270^\\circ$: $R_{270^\\circ} = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix}$",
-        "绕原点逆时针直角旋转的标准矩阵：\n- 逆时针旋转 $90^\\circ$：$R_{90^\\circ} = \\begin{pmatrix} 0 & -1 \\\\ 1 & 0 \\end{pmatrix}$\n- 逆时针旋转 $180^\\circ$：$R_{180^\\circ} = \\begin{pmatrix} -1 & 0 \\\\ 0 & -1 \\end{pmatrix} = -I$\n- 逆时针旋转 $270^\\circ$：$R_{270^\\circ} = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix}$",
+        "The columns of a rotation matrix are the images of the two unit vectors, which are easy to find for right angles. Standard counterclockwise rotation matrices about the origin:\n- By $90^\\circ$: $R_{90^\\circ} = \\begin{pmatrix} 0 & -1 \\\\ 1 & 0 \\end{pmatrix}$\n- By $180^\\circ$: $R_{180^\\circ} = \\begin{pmatrix} -1 & 0 \\\\ 0 & -1 \\end{pmatrix} = -I$\n- By $270^\\circ$: $R_{270^\\circ} = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix}$",
+        "旋转矩阵的列是两个单位向量的像，对于直角旋转，这些像很容易求出。绕原点逆时针直角旋转的标准矩阵：\n- 逆时针旋转 $90^\\circ$：$R_{90^\\circ} = \\begin{pmatrix} 0 & -1 \\\\ 1 & 0 \\end{pmatrix}$\n- 逆时针旋转 $180^\\circ$：$R_{180^\\circ} = \\begin{pmatrix} -1 & 0 \\\\ 0 & -1 \\end{pmatrix} = -I$\n- 逆时针旋转 $270^\\circ$：$R_{270^\\circ} = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix}$",
       ),
       generate(rng) {
         const pool: { angle: number; rad: string; mat: Mat2 }[] = [
@@ -1807,8 +1807,8 @@ export const rightAngleRotationsAsLinearTransformations: TopicDef = {
       id: "applying-right-angle-rotations-to-vectors",
       title: t("Rotating points and vectors by right angles", "直角旋转作用于向量与点"),
       explanation: t(
-        "Applying right-angle counterclockwise rotations to point $(x, y)$:\n- $90^\\circ$: $(x, y) \\mapsto (-y, x)$\n- $180^\\circ$: $(x, y) \\mapsto (-x, -y)$\n- $270^\\circ$: $(x, y) \\mapsto (y, -x)$",
-        "对点 $(x, y)$ 进行绕原点的逆时针直角旋转：\n- 旋转 $90^\\circ$：$(x, y) \\mapsto (-y, x)$\n- 旋转 $180^\\circ$：$(x, y) \\mapsto (-x, -y)$\n- 旋转 $270^\\circ$：$(x, y) \\mapsto (y, -x)$",
+        "For right angle rotations, the coordinates simply swap places and change signs, so you can rotate a point without writing out the matrix product. Applying right-angle counterclockwise rotations to point $(x, y)$:\n- $90^\\circ$: $(x, y) \\mapsto (-y, x)$\n- $180^\\circ$: $(x, y) \\mapsto (-x, -y)$\n- $270^\\circ$: $(x, y) \\mapsto (y, -x)$",
+        "对于直角旋转，坐标只是交换位置并改变符号，所以不必写出矩阵乘积就能旋转一个点。对点 $(x, y)$ 进行绕原点的逆时针直角旋转：\n- 旋转 $90^\\circ$：$(x, y) \\mapsto (-y, x)$\n- 旋转 $180^\\circ$：$(x, y) \\mapsto (-x, -y)$\n- 旋转 $270^\\circ$：$(x, y) \\mapsto (y, -x)$",
       ),
       generate(rng) {
         const x = rng.pick([-8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8]);
@@ -1886,8 +1886,8 @@ export const rotationsAsLinearTransformations: TopicDef = {
       id: "general-rotation-matrix-formula",
       title: t("General rotation matrix formula", "平面旋转矩阵的一般公式"),
       explanation: t(
-        "A counterclockwise rotation by angle $\\theta$ about the origin is represented by the matrix $R_\\theta = \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$.",
-        "绕原点逆时针旋转角度 $\\theta$ 的平面旋转矩阵为 $R_\\theta = \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$。",
+        "The first column is where the horizontal unit vector lands after rotating, and the second column is where the vertical unit vector lands. A counterclockwise rotation by angle $\\theta$ about the origin is represented by the matrix $R_\\theta = \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$.",
+        "第一列是水平单位向量旋转后的位置，第二列是竖直单位向量旋转后的位置。绕原点逆时针旋转角度 $\\theta$ 的平面旋转矩阵为 $R_\\theta = \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$。",
       ),
       generate(rng) {
         const pool: { deg: number; rad: string; cosStr: string; sinStr: string }[] = [
@@ -1945,8 +1945,8 @@ export const rotationsAsLinearTransformations: TopicDef = {
       id: "rotating-points-and-vectors-by-arbitrary-angles",
       title: t("Rotating points and vectors by special angles", "特殊角度下的点与向量旋转"),
       explanation: t(
-        "To rotate a point $P(x, y)$ by $\\theta$, compute $R_\\theta \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} x\\cos\\theta - y\\sin\\theta \\\\ x\\sin\\theta + y\\cos\\theta \\end{pmatrix}$.",
-        "旋转点 $P(x, y)$ 角度 $\\theta$ 时，计算矩阵乘法 $R_\\theta \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} x\\cos\\theta - y\\sin\\theta \\\\ x\\sin\\theta + y\\cos\\theta \\end{pmatrix}$。",
+        "Substitute the exact cosine and sine of the angle into the rotation matrix, then multiply it by the column vector of the point. To rotate a point $P(x, y)$ by $\\theta$, compute $R_\\theta \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} x\\cos\\theta - y\\sin\\theta \\\\ x\\sin\\theta + y\\cos\\theta \\end{pmatrix}$.",
+        "把角的余弦和正弦的精确值代入旋转矩阵，再乘以该点的列向量。旋转点 $P(x, y)$ 角度 $\\theta$ 时，计算矩阵乘法 $R_\\theta \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} x\\cos\\theta - y\\sin\\theta \\\\ x\\sin\\theta + y\\cos\\theta \\end{pmatrix}$。",
       ),
       generate(rng) {
         const pool: { deg: number; pt: [number, number]; imgLatex: string; w1: string; w2: string; w3: string; w4: string }[] = [

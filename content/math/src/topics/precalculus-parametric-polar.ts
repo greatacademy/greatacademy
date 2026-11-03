@@ -1499,8 +1499,8 @@ export const polarEquationsOfRadialLines: TopicDef = {
       id: "radial-line-to-cartesian",
       title: t("Convert θ = α to Cartesian equation", "将 θ = α 转化为直角坐标方程"),
       explanation: t(
-        "To convert $\\theta = \\alpha$ into Cartesian coordinates, take the tangent of both sides:\n$$\\tan\\theta = \\tan\\alpha \\implies \\frac{y}{x} = \\tan\\alpha \\implies y = (\\tan\\alpha)x$$\nFor example, $\\theta = \\frac{\\pi}{3}$ gives $y = \\left(\\tan\\frac{\\pi}{3}\\right)x = \\sqrt{3}x$.",
-        "将 $\\theta = \\alpha$ 转化为直角坐标方程时，两边取正切：\n$$\\tan\\theta = \\tan\\alpha \\implies \\frac{y}{x} = \\tan\\alpha \\implies y = (\\tan\\alpha)x$$\n例如，$\\theta = \\frac{\\pi}{3}$ 对应直线 $y = \\left(\\tan\\frac{\\pi}{3}\\right)x = \\sqrt{3}x$。",
+        "A fixed angle with any distance describes a whole line through the origin, because negative distances reach the points on the opposite side. To convert $\\theta = \\alpha$ into Cartesian coordinates, take the tangent of both sides:\n$$\\tan\\theta = \\tan\\alpha \\implies \\frac{y}{x} = \\tan\\alpha \\implies y = (\\tan\\alpha)x$$\nFor example, $\\theta = \\frac{\\pi}{3}$ gives $y = \\left(\\tan\\frac{\\pi}{3}\\right)x = \\sqrt{3}x$.",
+        "固定角度而距离任意时，描述的是一条经过原点的直线，因为负的距离会到达另一侧的点。将 $\\theta = \\alpha$ 转化为直角坐标方程时，两边取正切：\n$$\\tan\\theta = \\tan\\alpha \\implies \\frac{y}{x} = \\tan\\alpha \\implies y = (\\tan\\alpha)x$$\n例如，$\\theta = \\frac{\\pi}{3}$ 对应直线 $y = \\left(\\tan\\frac{\\pi}{3}\\right)x = \\sqrt{3}x$。",
       ),
       generate(rng) {
         const lineData = [

@@ -1618,8 +1618,8 @@ export const calculatingTheComponentsOfCartesianVectorsIn2d: TopicDef = {
       id: "components-from-magnitude-and-angle-special",
       title: t("Compute components for special angles", "特殊方向角的向量坐标分量计算"),
       explanation: t(
-        "Given magnitude $\\|\\mathbf{v}\\| = r$ and direction angle $\\theta$, the components are given by:\n\n$$x = r\\cos\\theta,\\quad y = r\\sin\\theta$$\n\nso $\\mathbf{v} = \\langle r\\cos\\theta,\\, r\\sin\\theta \\rangle$.",
-        "已知模长 $\\|\\mathbf{v}\\| = r$ 与方向角 $\\theta$，坐标分量由下列公式给出：\n\n$$x = r\\cos\\theta,\\quad y = r\\sin\\theta$$\n\n即 $\\mathbf{v} = \\langle r\\cos\\theta,\\, r\\sin\\theta \\rangle$。",
+        "A vector's components are the legs of a right triangle whose hypotenuse is the magnitude, so cosine gives the horizontal part and sine the vertical part. Given magnitude $\\|\\mathbf{v}\\| = r$ and direction angle $\\theta$, the components are given by:\n\n$$x = r\\cos\\theta,\\quad y = r\\sin\\theta$$\n\nso $\\mathbf{v} = \\langle r\\cos\\theta,\\, r\\sin\\theta \\rangle$.",
+        "向量的分量是以模为斜边的直角三角形的两条直角边，所以余弦给出水平分量，正弦给出竖直分量。已知模长 $\\|\\mathbf{v}\\| = r$ 与方向角 $\\theta$，坐标分量由下列公式给出：\n\n$$x = r\\cos\\theta,\\quad y = r\\sin\\theta$$\n\n即 $\\mathbf{v} = \\langle r\\cos\\theta,\\, r\\sin\\theta \\rangle$。",
       ),
       generate(rng) {
         const r = rng.pick([2, 4, 6, 8, 10, 12]);

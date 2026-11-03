@@ -18,6 +18,7 @@ const explainedCourses = [
   "algebra-i",
   "geometry",
   "algebra-ii",
+  "precalculus",
   "integrated-math-i",
   "integrated-math-ii",
   "integrated-math-iii",

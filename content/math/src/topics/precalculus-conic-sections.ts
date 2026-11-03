@@ -1383,8 +1383,8 @@ export const asymptotesOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
       id: "asymptotes-of-translated-horizontal-hyperbolas",
       title: t("Asymptotes of translated horizontal hyperbolas", "平移水平双曲线的渐近线"),
       explanation: t(
-        "For $\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$, the asymptotes pass through the center $(h, k)$ with slopes $\\pm \\frac{b}{a}$:\n\n$$y - k = \\pm \\frac{b}{a}(x - h)$$",
-        "对于 $\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$，渐近线穿过中心 $(h, k)$，斜率为 $\\pm \\frac{b}{a}$：\n\n$$y - k = \\pm \\frac{b}{a}(x - h)$$",
+        "Translating a hyperbola moves its asymptotes with it, so they become lines through the new center with the same slopes as before. For $\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$, the asymptotes pass through the center $(h, k)$ with slopes $\\pm \\frac{b}{a}$:\n\n$$y - k = \\pm \\frac{b}{a}(x - h)$$",
+        "平移双曲线时，它的渐近线也随之移动，变成经过新中心、斜率不变的直线。对于 $\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$，渐近线穿过中心 $(h, k)$，斜率为 $\\pm \\frac{b}{a}$：\n\n$$y - k = \\pm \\frac{b}{a}(x - h)$$",
       ),
       generate(rng) {
         const h = rng.nonZero(-6, 6);
@@ -1419,8 +1419,8 @@ export const asymptotesOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
       id: "asymptotes-of-translated-vertical-hyperbolas",
       title: t("Asymptotes of translated vertical hyperbolas", "平移竖直双曲线的渐近线"),
       explanation: t(
-        "For $\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$, the asymptotes pass through the center $(h, k)$ with slopes $\\pm \\frac{a}{b}$:\n\n$$y - k = \\pm \\frac{a}{b}(x - h)$$",
-        "对于 $\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$，渐近线穿过中心 $(h, k)$，斜率为 $\\pm \\frac{a}{b}$：\n\n$$y - k = \\pm \\frac{a}{b}(x - h)$$",
+        "For a hyperbola that opens up and down, the slopes of the asymptotes are the square root under the positive term divided by the other one. For $\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$, the asymptotes pass through the center $(h, k)$ with slopes $\\pm \\frac{a}{b}$:\n\n$$y - k = \\pm \\frac{a}{b}(x - h)$$",
+        "对于开口向上下的双曲线，渐近线的斜率等于正项下的平方根除以另一项下的平方根。对于 $\\frac{(y-k)^{2}}{a^{2}} - \\frac{(x-h)^{2}}{b^{2}} = 1$，渐近线穿过中心 $(h, k)$，斜率为 $\\pm \\frac{a}{b}$：\n\n$$y - k = \\pm \\frac{a}{b}(x - h)$$",
       ),
       generate(rng) {
         const h = rng.nonZero(-6, 6);

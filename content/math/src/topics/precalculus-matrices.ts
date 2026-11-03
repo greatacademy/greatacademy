@@ -906,8 +906,8 @@ export const theTransposeOfAMatrix: TopicDef = {
       id: "symmetric-and-skew-symmetric-matrices",
       title: t("Symmetric matrices and transpose properties", "对称矩阵与转置的性质"),
       explanation: t(
-        "A square matrix $A$ is symmetric if $A^T = A$, meaning $a_{ij} = a_{ji}$ for all $i$ and $j$. For all compatible matrices, $(A^T)^T = A$ and $(A + B)^T = A^T + B^T$.",
-        "若方阵 $A$ 满足 $A^T = A$，则称 $A$ 为对称矩阵，这意味着对所有的 $i$ 和 $j$ 均有 $a_{ij} = a_{ji}$。对于任何相容矩阵，恒有 $(A^T)^T = A$ 以及 $(A + B)^T = A^T + B^T$。",
+        "The transpose flips a matrix across its main diagonal, so a symmetric matrix is one that looks the same after this reflection. A square matrix $A$ is symmetric if $A^T = A$, meaning $a_{ij} = a_{ji}$ for all $i$ and $j$. For all compatible matrices, $(A^T)^T = A$ and $(A + B)^T = A^T + B^T$.",
+        "转置把矩阵沿主对角线翻转，所以对称矩阵就是翻转后保持不变的矩阵。若方阵 $A$ 满足 $A^T = A$，则称 $A$ 为对称矩阵，这意味着对所有的 $i$ 和 $j$ 均有 $a_{ij} = a_{ji}$。对于任何相容矩阵，恒有 $(A^T)^T = A$ 以及 $(A + B)^T = A^T + B^T$。",
       ),
       generate(rng) {
         const x = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
@@ -1840,8 +1840,8 @@ export const representing2x2SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
       id: "system-to-matrix-equation-2x2",
       title: t("Converting a 2x2 system to matrix form", "将二元一次方程组转化为矩阵方程"),
       explanation: t(
-        "A system of linear equations $\\begin{cases} a x + b y = e \\\\ c x + d y = f \\end{cases}$ can be written in matrix form as $A \\mathbf{x} = \\mathbf{b}$:\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$$",
-        "线性方程组 $\\begin{cases} a x + b y = e \\\\ c x + d y = f \\end{cases}$ 可以写成矩阵方程 $A \\mathbf{x} = \\mathbf{b}$ 的形式：\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$$",
+        "The coefficients of the variables form the matrix, the variables form a column vector, and the constants on the right form another column vector. A system of linear equations $\\begin{cases} a x + b y = e \\\\ c x + d y = f \\end{cases}$ can be written in matrix form as $A \\mathbf{x} = \\mathbf{b}$:\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$$",
+        "变量的系数组成矩阵，变量组成一个列向量，右边的常数组成另一个列向量。线性方程组 $\\begin{cases} a x + b y = e \\\\ c x + d y = f \\end{cases}$ 可以写成矩阵方程 $A \\mathbf{x} = \\mathbf{b}$ 的形式：\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$$",
       ),
       generate(rng) {
         const pool = [-7, -5, -4, -3, -2, 2, 3, 4, 5, 7];
@@ -1885,8 +1885,8 @@ export const representing2x2SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
       id: "matrix-equation-to-system-2x2",
       title: t("Expanding a 2x2 matrix equation into a system", "将二元矩阵方程还原为线性方程组"),
       explanation: t(
-        "Multiplying out the matrix equation $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$ restores the original system: $\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$.",
-        "展开矩阵方程 $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$ 即可还原原本的方程组：$\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$。",
+        "Each row of the matrix times the column of variables gives the left side of one equation, so multiplying out recovers the whole system. Multiplying out the matrix equation $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$ restores the original system: $\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$.",
+        "矩阵的每一行乘以变量列向量得到一个方程的左边，所以把乘积展开就还原出整个方程组。展开矩阵方程 $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} e \\\\ f \\end{pmatrix}$ 即可还原原本的方程组：$\\begin{cases} ax + by = e \\\\ cx + dy = f \\end{cases}$。",
       ),
       generate(rng) {
         const pool = [-6, -5, -4, -3, -2, 2, 3, 4, 5, 6];
@@ -2370,8 +2370,8 @@ export const theMinorsOfA3x3Matrix: TopicDef = {
       id: "calculating-cofactors-of-a-3x3-matrix",
       title: t("Calculating cofactors of a 3x3 matrix", "计算三阶矩阵的代数余子式"),
       explanation: t(
-        "The cofactor $C_{ij}$ is the signed minor: $C_{ij} = (-1)^{i+j} M_{ij}$. The signs follow a checkerboard pattern:\n\n$$\\begin{pmatrix} + & - & + \\\\ - & + & - \\\\ + & - & + \\end{pmatrix}$$",
-        "代数余子式 $C_{ij}$ 是带有符号的余子式：$C_{ij} = (-1)^{i+j} M_{ij}$。符号遵循棋盘状正负交错规律：\n\n$$\\begin{pmatrix} + & - & + \\\\ - & + & - \\\\ + & - & + \\end{pmatrix}$$",
+        "A cofactor is a minor with a sign attached, and the sign depends only on the position of the entry, alternating like the squares of a chessboard. The cofactor $C_{ij}$ is the signed minor: $C_{ij} = (-1)^{i+j} M_{ij}$. The signs follow a checkerboard pattern:\n\n$$\\begin{pmatrix} + & - & + \\\\ - & + & - \\\\ + & - & + \\end{pmatrix}$$",
+        "余子式加上符号就是代数余子式，符号只取决于元素的位置，像棋盘的格子一样交替变化。代数余子式 $C_{ij}$ 是带有符号的余子式：$C_{ij} = (-1)^{i+j} M_{ij}$。符号遵循棋盘状正负交错规律：\n\n$$\\begin{pmatrix} + & - & + \\\\ - & + & - \\\\ + & - & + \\end{pmatrix}$$",
       ),
       generate(rng) {
         const pool = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5];

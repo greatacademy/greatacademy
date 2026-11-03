@@ -1232,8 +1232,8 @@ export const extendingPolynomialIdentitiesToTheComplexNumbers: TopicDef = {
       id: "factoring-quadratics-over-complex-numbers",
       title: t("Factoring general quadratics over the complex numbers", "在复数范围内分解二次多项式"),
       explanation: t(
-        "Every quadratic $x^2 - 2px + (p^2 + q^2)$ with complex roots $p \\pm qi$ factors completely over $\\mathbb{C}$ as:\n\n$$[x - (p + qi)][x - (p - qi)]$$\n\nFor instance, $x^2 - 6x + 13 = (x - 3)^2 + 4 = [x - (3 + 2i)][x - (3 - 2i)]$.",
-        "每一个具有共轭虚根 $p \\pm qi$ 的二次多项式 $x^2 - 2px + (p^2 + q^2)$ 在复数域 $\\mathbb{C}$ 上都可分解为：\n\n$$[x - (p + qi)][x - (p - qi)]$$\n\n例如，$x^2 - 6x + 13 = (x - 3)^2 + 4 = [x - (3 + 2i)][x - (3 - 2i)]$。",
+        "Every quadratic factors into linear factors once complex numbers are allowed, one factor for each root found with the quadratic formula. Every quadratic $x^2 - 2px + (p^2 + q^2)$ with complex roots $p \\pm qi$ factors completely over $\\mathbb{C}$ as:\n\n$$[x - (p + qi)][x - (p - qi)]$$\n\nFor instance, $x^2 - 6x + 13 = (x - 3)^2 + 4 = [x - (3 + 2i)][x - (3 - 2i)]$.",
+        "只要允许使用复数，每个二次式都能分解为一次因式，用求根公式求出的每个根对应一个因式。每一个具有共轭虚根 $p \\pm qi$ 的二次多项式 $x^2 - 2px + (p^2 + q^2)$ 在复数域 $\\mathbb{C}$ 上都可分解为：\n\n$$[x - (p + qi)][x - (p - qi)]$$\n\n例如，$x^2 - 6x + 13 = (x - 3)^2 + 4 = [x - (3 + 2i)][x - (3 - 2i)]$。",
       ),
       generate(rng) {
         const p = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
@@ -1322,8 +1322,8 @@ export const thePolarFormOfAComplexNumber: TopicDef = {
       id: "convert-polar-to-rectangular-form",
       title: t("Convert polar form to rectangular form", "将三角形式转换为代数形式"),
       explanation: t(
-        "To convert $z = r(\\cos\\theta + i\\sin\\theta)$ to rectangular form $a + bi$, evaluate $\\cos\\theta$ and $\\sin\\theta$, then distribute $r$:\n\n$$a = r\\cos\\theta, \\quad b = r\\sin\\theta$$\n\n$$z = (r\\cos\\theta) + (r\\sin\\theta)i$$",
-        "将三角形式 $z = r(\\cos\\theta + i\\sin\\theta)$ 转换为代数形式 $a + bi$ 时，先求出 $\\cos\\theta$ 与 $\\sin\\theta$ 的精确值，再乘以模长 $r$：\n\n$$a = r\\cos\\theta, \\quad b = r\\sin\\theta$$\n\n$$z = (r\\cos\\theta) + (r\\sin\\theta)i$$",
+        "The real part is the horizontal coordinate and the imaginary part is the vertical one, just as with converting polar coordinates of a point. To convert $z = r(\\cos\\theta + i\\sin\\theta)$ to rectangular form $a + bi$, evaluate $\\cos\\theta$ and $\\sin\\theta$, then distribute $r$:\n\n$$a = r\\cos\\theta, \\quad b = r\\sin\\theta$$\n\n$$z = (r\\cos\\theta) + (r\\sin\\theta)i$$",
+        "实部是水平坐标，虚部是竖直坐标，与把点的极坐标化为直角坐标完全一样。将三角形式 $z = r(\\cos\\theta + i\\sin\\theta)$ 转换为代数形式 $a + bi$ 时，先求出 $\\cos\\theta$ 与 $\\sin\\theta$ 的精确值，再乘以模长 $r$：\n\n$$a = r\\cos\\theta, \\quad b = r\\sin\\theta$$\n\n$$z = (r\\cos\\theta) + (r\\sin\\theta)i$$",
       ),
       generate(rng) {
         const items = getSpecialPolarItems();
@@ -1497,8 +1497,8 @@ export const quotientsOfComplexNumbersExpressedInPolarForm: TopicDef = {
       id: "polar-quotients-converted-to-rectangular",
       title: t("Evaluate polar quotients in rectangular form", "将极坐标商转换为代数形式"),
       explanation: t(
-        "After calculating $\\frac{z_1}{z_2} = \\frac{r_1}{r_2}[\\cos(\\theta_1 - \\theta_2) + i\\sin(\\theta_1 - \\theta_2)]$, evaluate the cosine and sine values to obtain the standard rectangular form $a + bi$.",
-        "计算完三角形式的商 $\\frac{z_1}{z_2} = \\frac{r_1}{r_2}[\\cos(\\theta_1 - \\theta_2) + i\\sin(\\theta_1 - \\theta_2)]$ 后，求出正弦和余弦的精确值，即可化为标准代数形式 $a + bi$。",
+        "Dividing in polar form is quick, and evaluating the cosine and sine of the resulting angle turns the answer back into rectangular form. After calculating $\\frac{z_1}{z_2} = \\frac{r_1}{r_2}[\\cos(\\theta_1 - \\theta_2) + i\\sin(\\theta_1 - \\theta_2)]$, evaluate the cosine and sine values to obtain the standard rectangular form $a + bi$.",
+        "用极坐标形式做除法很快，再求出所得角的余弦和正弦，就能把结果化回直角坐标形式。计算完三角形式的商 $\\frac{z_1}{z_2} = \\frac{r_1}{r_2}[\\cos(\\theta_1 - \\theta_2) + i\\sin(\\theta_1 - \\theta_2)]$ 后，求出正弦和余弦的精确值，即可化为标准代数形式 $a + bi$。",
       ),
       generate(rng) {
         const item = rng.pick([
@@ -1549,8 +1549,8 @@ export const theCisNotation: TopicDef = {
       id: "cis-definition-and-evaluation",
       title: t("Definition and evaluation of cis notation", "cis 记号的定义与求值"),
       explanation: t(
-        "The notation **$\\text{cis}(\\theta)$** is an abbreviation for:\n\n$$\\text{cis}(\\theta) = \\cos\\theta + i\\sin\\theta$$\n\nThus, $r\\,\\text{cis}(\\theta) = r(\\cos\\theta + i\\sin\\theta)$.\n\nFor example:\n- $\\text{cis}(0) = 1$\n- $\\text{cis}\\left(\\frac{\\pi}{2}\\right) = i$\n- $\\text{cis}(\\pi) = -1$\n- $\\text{cis}\\left(\\frac{3\\pi}{2}\\right) = -i$",
-        "简记符号 **$\\text{cis}(\\theta)$** 代表：\n\n$$\\text{cis}(\\theta) = \\cos\\theta + i\\sin\\theta$$\n\n因此，$r\\,\\text{cis}(\\theta) = r(\\cos\\theta + i\\sin\\theta)$。\n\n常见特殊值：\n- $\\text{cis}(0) = 1$\n- $\\text{cis}\\left(\\frac{\\pi}{2}\\right) = i$\n- $\\text{cis}(\\pi) = -1$\n- $\\text{cis}\\left(\\frac{3\\pi}{2}\\right) = -i$",
+        "The cis notation is only a shorthand that saves writing, and evaluating it means finding the cosine and sine of the angle. The notation **$\\text{cis}(\\theta)$** is an abbreviation for:\n\n$$\\text{cis}(\\theta) = \\cos\\theta + i\\sin\\theta$$\n\nThus, $r\\,\\text{cis}(\\theta) = r(\\cos\\theta + i\\sin\\theta)$.\n\nFor example:\n- $\\text{cis}(0) = 1$\n- $\\text{cis}\\left(\\frac{\\pi}{2}\\right) = i$\n- $\\text{cis}(\\pi) = -1$\n- $\\text{cis}\\left(\\frac{3\\pi}{2}\\right) = -i$",
+        "cis 记号只是一种节省书写的简写，求它的值就是求出角的余弦和正弦。简记符号 **$\\text{cis}(\\theta)$** 代表：\n\n$$\\text{cis}(\\theta) = \\cos\\theta + i\\sin\\theta$$\n\n因此，$r\\,\\text{cis}(\\theta) = r(\\cos\\theta + i\\sin\\theta)$。\n\n常见特殊值：\n- $\\text{cis}(0) = 1$\n- $\\text{cis}\\left(\\frac{\\pi}{2}\\right) = i$\n- $\\text{cis}(\\pi) = -1$\n- $\\text{cis}\\left(\\frac{3\\pi}{2}\\right) = -i$",
       ),
       generate(rng) {
         const items = getSpecialPolarItems();
@@ -1572,8 +1572,8 @@ export const theCisNotation: TopicDef = {
       id: "products-and-quotients-in-cis-notation",
       title: t("Multiplication and division in cis notation", "cis 记号下的乘法与除法运算"),
       explanation: t(
-        "Using $\\text{cis}$ notation, the product and quotient rules are written compactly:\n\n- **Product**: $r_1\\,\\text{cis}(\\alpha) \\cdot r_2\\,\\text{cis}(\\beta) = (r_1 r_2)\\,\\text{cis}(\\alpha + \\beta)$\n- **Quotient**: $\\frac{r_1\\,\\text{cis}(\\alpha)}{r_2\\,\\text{cis}(\\beta)} = \\left(\\frac{r_1}{r_2}\\right)\\,\\text{cis}(\\alpha - \\beta)$",
-        "使用 $\\text{cis}$ 记号，复数的乘法和除法法则表示更为简洁：\n\n- **乘积**：$r_1\\,\\text{cis}(\\alpha) \\cdot r_2\\,\\text{cis}(\\beta) = (r_1 r_2)\\,\\text{cis}(\\alpha + \\beta)$\n- **商**：$\\frac{r_1\\,\\text{cis}(\\alpha)}{r_2\\,\\text{cis}(\\beta)} = \\left(\\frac{r_1}{r_2}\\right)\\,\\text{cis}(\\alpha - \\beta)$",
+        "When multiplying, the moduli multiply and the angles add; when dividing, the moduli divide and the angles subtract. Using $\\text{cis}$ notation, the product and quotient rules are written compactly:\n\n- **Product**: $r_1\\,\\text{cis}(\\alpha) \\cdot r_2\\,\\text{cis}(\\beta) = (r_1 r_2)\\,\\text{cis}(\\alpha + \\beta)$\n- **Quotient**: $\\frac{r_1\\,\\text{cis}(\\alpha)}{r_2\\,\\text{cis}(\\beta)} = \\left(\\frac{r_1}{r_2}\\right)\\,\\text{cis}(\\alpha - \\beta)$",
+        "相乘时模相乘、角相加；相除时模相除、角相减。使用 $\\text{cis}$ 记号，复数的乘法和除法法则表示更为简洁：\n\n- **乘积**：$r_1\\,\\text{cis}(\\alpha) \\cdot r_2\\,\\text{cis}(\\beta) = (r_1 r_2)\\,\\text{cis}(\\alpha + \\beta)$\n- **商**：$\\frac{r_1\\,\\text{cis}(\\alpha)}{r_2\\,\\text{cis}(\\beta)} = \\left(\\frac{r_1}{r_2}\\right)\\,\\text{cis}(\\alpha - \\beta)$",
       ),
       generate(rng) {
         const isProduct = rng.bool();

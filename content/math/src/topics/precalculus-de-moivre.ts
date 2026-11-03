@@ -1681,8 +1681,8 @@ export const solvingCubicEquationsWithComplexRoots: TopicDef = {
       id: "solving-cubics-by-grouping",
       title: t("Solve cubics by grouping", "用分组分解法解三次方程"),
       explanation: t(
-        "When the coefficients come in proportional pairs, group them:\n\n$$x^{3} - 3x^{2} + 4x - 12 = x^{2}(x - 3) + 4(x - 3) = (x - 3)(x^{2} + 4)$$\n\nThen $x = 3$ or $x^{2} = -4$, that is $x = \\pm 2i$.",
-        "当系数成比例地两两成组时，分组分解：\n\n$$x^{3} - 3x^{2} + 4x - 12 = x^{2}(x - 3) + 4(x - 3) = (x - 3)(x^{2} + 4)$$\n\n于是 $x = 3$，或 $x^{2} = -4$，即 $x = \\pm 2i$。",
+        "Grouping works when the first two terms and the last two terms share the same binomial factor after taking out their common factors. When the coefficients come in proportional pairs, group them:\n\n$$x^{3} - 3x^{2} + 4x - 12 = x^{2}(x - 3) + 4(x - 3) = (x - 3)(x^{2} + 4)$$\n\nThen $x = 3$ or $x^{2} = -4$, that is $x = \\pm 2i$.",
+        "当前两项和后两项各自提出公因式后剩下相同的二项式时，就可以用分组分解法。当系数成比例地两两成组时，分组分解：\n\n$$x^{3} - 3x^{2} + 4x - 12 = x^{2}(x - 3) + 4(x - 3) = (x - 3)(x^{2} + 4)$$\n\n于是 $x = 3$，或 $x^{2} = -4$，即 $x = \\pm 2i$。",
       ),
       generate(rng) {
         const r = rng.nonZero(-9, 9);
