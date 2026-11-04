@@ -215,3 +215,23 @@ export function dotsFigure(
     alt,
   );
 }
+
+/** Sketch lists what sketchFigure draws on its 320 by 240 canvas: segments, circles and text labels. */
+export interface Sketch {
+  readonly segs?: readonly (readonly [number, number, number, number])[];
+  readonly circles?: readonly (readonly [number, number, number])[];
+  readonly labels?: readonly (readonly [number, number, string])[];
+}
+
+/** sketchFigure draws a geometric figure from segments, circles and labels. */
+export function sketchFigure(s: Sketch, alt: Text): Figure {
+  const segs = (s.segs ?? []).map(([a, b, c, d]) => `<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke-width="1.6"/>`);
+  const circles = (s.circles ?? []).map(([a, b, r]) => `<circle cx="${a}" cy="${b}" r="${r}" stroke-width="1.6"/>`);
+  const labels = (s.labels ?? []).map(
+    ([x, y, l]) => `<text x="${x}" y="${y}" font-size="14" text-anchor="middle" fill="currentColor" stroke="none">${l}</text>`,
+  );
+  return {
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" fill="none" stroke="currentColor">${[...segs, ...circles, ...labels].join("")}</svg>`,
+    alt,
+  };
+}
