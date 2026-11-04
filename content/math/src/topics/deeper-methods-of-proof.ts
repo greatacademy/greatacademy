@@ -2195,6 +2195,692 @@ const relationsByClassCount: KnowledgePointDef = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// Third pass
+// ---------------------------------------------------------------------------
+
+/** oneTo lists the integers from 1 to n. */
+const oneTo = (n: number) => [...Array(n).keys()].map((i) => i + 1);
+
+/** powerLatex writes a prime power, leaving out an exponent of 1. */
+const powerLatex = (base: number, exponent: number) => (exponent === 1 ? `${base}` : `${base}^{${exponent}}`);
+
+const setOfSquares: KnowledgePointDef = {
+  id: "the-size-of-a-set-of-squares",
+  title: t("The size of a set of squares", "平方数集合的大小"),
+  explanation: t(
+    "A set lists each element once, however many times the condition produces it. In the set of $x^2$ with $x$ running from $-a$ to $b$, the values $x$ and $-x$ give the same square, so counting the values of $x$ overcounts. Only the sizes $0, 1, 2, \\dots$ matter, and these reach up to the larger of $a$ and $b$. So the size of the set is one more than that larger number.",
+    "集合中每个元素只列一次，不管条件产生它多少次。在 $x$ 从 $-a$ 取到 $b$ 的 $x^2$ 的集合中，$x$ 和 $-x$ 给出相同的平方，所以数 $x$ 的个数会数多。只有绝对值 $0, 1, 2, \\dots$ 起作用，它们最大取到 $a$ 和 $b$ 中较大的数。所以集合的大小是这个较大的数加一。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 12);
+    const b = rng.pick(oneTo(12).filter((v) => v !== a));
+    const top = Math.max(a, b);
+    const answer = top + 1;
+    return numberProblem({
+      prompt: t(
+        `How many elements does the set $\\{x^2 : x \\in \\mathbb{Z},\\ -${a} \\le x \\le ${b}\\}$ have?`,
+        `集合 $\\{x^2 : x \\in \\mathbb{Z},\\ -${a} \\le x \\le ${b}\\}$ 有多少个元素？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a + b + 1, Math.min(a, b) + 1, a + b, top],
+      solution: t(
+        `The squares are those of $0, 1, \\dots, ${top}$, since a negative value repeats the square of its opposite. That gives $${answer}$ elements.`,
+        `这些平方是 $0, 1, \\dots, ${top}$ 的平方，因为负值只是重复其相反数的平方。所以有 $${answer}$ 个元素。`,
+      ),
+    });
+  },
+};
+
+const quadraticTruthSet: KnowledgePointDef = {
+  id: "counting-the-truth-set-of-a-quadratic-inequality",
+  title: t("Counting the truth set of a quadratic inequality", "计算二次不等式真值集的大小"),
+  explanation: t(
+    "The truth set of a predicate over the integers is often a run of consecutive integers. When a quadratic with positive leading coefficient factors as $(x - r)(x - s)$, it is negative exactly between its roots. The inequality $\\le 0$ includes both roots, and the strict inequality $< 0$ leaves them out. So the two versions differ by exactly two elements, which is why one must read the sign carefully before counting.",
+    "整数上谓词的真值集常常是一段连续的整数。当首项系数为正的二次式分解为 $(x - r)(x - s)$ 时，它恰好在两根之间为负。不等式 $\\le 0$ 包含两个根，严格不等式 $< 0$ 不包含。所以两种情况恰好差两个元素，这就是为什么计数前要仔细看符号。",
+  ),
+  generate(rng) {
+    const r = rng.int(-9, 6);
+    const s = r + rng.int(2, 9);
+    const strict = rng.pick([true, false]);
+    const answer = strict ? s - r - 1 : s - r + 1;
+    const form = poly([1, "x^2"], [-(r + s), "x"], [r * s, ""]);
+    const sign = strict ? "<" : "\\le";
+    return numberProblem({
+      prompt: t(`How many integers $x$ make the predicate $${form} ${sign} 0$ true?`, `有多少个整数 $x$ 使谓词 $${form} ${sign} 0$ 为真？`),
+      answer,
+      form: "integer",
+      wrong: [s - r, strict ? s - r + 1 : s - r - 1, s - r + 2, Math.abs(s) + 1],
+      solution: t(
+        `The quadratic has roots $${r}$ and $${s}$, and it is negative between them. ${strict ? "The roots themselves are excluded" : "The roots themselves are included"}, which leaves $${answer}$ integers.`,
+        `二次式的根是 $${r}$ 和 $${s}$，在它们之间为负。${strict ? "根本身不包含在内" : "根本身包含在内"}，所以有 $${answer}$ 个整数。`,
+      ),
+    });
+  },
+};
+
+const notBetweenCount: KnowledgePointDef = {
+  id: "counting-the-values-outside-a-negated-conjunction",
+  title: t("Counting the values outside a negated conjunction", "计算否定合取之外的值"),
+  explanation: t(
+    "By De Morgan's law, the negation of $x > a \\land x < b$ is $x \\le a \\lor x \\ge b$. Notice that the strict inequalities become non-strict, so that $a$ and $b$ themselves satisfy the negation. On a finite domain, the truth set of a negation is the complement of the original truth set. So it is usually quickest to count the values that satisfy the conjunction, and then to subtract this from the size of the domain.",
+    "由德摩根律，$x > a \\land x < b$ 的否定是 $x \\le a \\lor x \\ge b$。注意严格不等式变成了非严格的，所以 $a$ 和 $b$ 本身满足否定。在有限论域上，否定的真值集是原真值集的补集。所以通常最快的方法是数满足合取的值，再从论域的大小中减去。",
+  ),
+  generate(rng) {
+    const n = rng.int(12, 60);
+    const a = rng.int(1, n - 4);
+    const b = a + rng.int(3, Math.min(10, n - a));
+    const inside = b - a - 1;
+    const answer = n - inside;
+    return numberProblem({
+      prompt: t(
+        `On the domain $\\{1, 2, \\dots, ${n}\\}$, how many values of $x$ make $\\neg(x > ${a} \\land x < ${b})$ true?`,
+        `在论域 $\\{1, 2, \\dots, ${n}\\}$ 上，有多少个 $x$ 使 $\\neg(x > ${a} \\land x < ${b})$ 为真？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [inside, answer - 1, answer - 2, n],
+      solution: t(
+        `The conjunction holds for the $${inside}$ integers strictly between ${a} and ${b}. The negation holds for the other $${n} - ${inside} = ${answer}$ values.`,
+        `合取对严格介于 ${a} 和 ${b} 之间的 $${inside}$ 个整数成立。否定对其余 $${n} - ${inside} = ${answer}$ 个值成立。`,
+      ),
+    });
+  },
+};
+
+const conditionalFromSizes: KnowledgePointDef = {
+  id: "the-size-of-the-truth-set-of-a-conditional",
+  title: t("The size of the truth set of a conditional", "条件句真值集的大小"),
+  explanation: t(
+    "The conditional $P(x) \\Rightarrow Q(x)$ fails only where $P$ holds and $Q$ does not. In terms of sets, its truth set is the complement of $P \\setminus Q$. The number of elements in $P \\setminus Q$ is $|P| - |P \\cap Q|$, so the conditional holds for all the remaining elements of the domain. Elements outside $P$ all count as true, whether or not they lie in $Q$, and that is the easy part to overlook.",
+    "条件句 $P(x) \\Rightarrow Q(x)$ 只在 $P$ 成立而 $Q$ 不成立时为假。用集合的语言，它的真值集是 $P \\setminus Q$ 的补集。$P \\setminus Q$ 的元素个数是 $|P| - |P \\cap Q|$，所以条件句对论域中所有其余元素成立。$P$ 之外的元素都算真，不管它们是否在 $Q$ 中，这是容易忽略的部分。",
+  ),
+  generate(rng) {
+    const both = rng.int(1, 12);
+    const onlyP = rng.int(1, 15);
+    const onlyQ = rng.int(1, 15);
+    const neither = rng.int(1, 20);
+    const size = both + onlyP + onlyQ + neither;
+    const p = both + onlyP;
+    const q = both + onlyQ;
+    const answer = size - onlyP;
+    return numberProblem({
+      prompt: t(
+        `In a domain of ${size} elements, $P(x)$ holds for ${p}, $Q(x)$ holds for ${q}, and both hold for ${both}. For how many elements is $P(x) \\Rightarrow Q(x)$ true?`,
+        `在 ${size} 个元素的论域中，$P(x)$ 对 ${p} 个成立，$Q(x)$ 对 ${q} 个成立，两者都对 ${both} 个成立。$P(x) \\Rightarrow Q(x)$ 对多少个元素为真？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [both, size - p, size - both, size - q + both, onlyP],
+      solution: t(
+        `It fails where $P$ holds without $Q$, which is $${p} - ${both} = ${onlyP}$ elements. So it is true for $${size} - ${onlyP} = ${answer}$.`,
+        `它在 $P$ 成立而 $Q$ 不成立时为假，这样的元素有 $${p} - ${both} = ${onlyP}$ 个。所以它对 $${size} - ${onlyP} = ${answer}$ 个元素为真。`,
+      ),
+    });
+  },
+};
+
+const whereExistsFails: KnowledgePointDef = {
+  id: "counting-the-values-where-an-inner-exists-fails",
+  title: t("Counting the values where an inner exists fails", "计算内层存在量词不成立的值"),
+  explanation: t(
+    "To disprove $\\forall x\\,\\exists y\\,P(x, y)$, one needs an $x$ for which $\\forall y\\,\\neg P(x, y)$ holds, meaning that no $y$ works. So each value of $x$ is tested on its own. When $P$ says that $x + y = k$, the only possible partner is $y = k - x$, and the question is whether this number lies in the domain of $y$. Each $x$ whose partner lies outside is a counterexample to the statement.",
+    "要否定 $\\forall x\\,\\exists y\\,P(x, y)$，需要一个 $x$ 使 $\\forall y\\,\\neg P(x, y)$ 成立，也就是没有 $y$ 可行。所以要逐个检验 $x$ 的每个值。当 $P$ 表示 $x + y = k$ 时，唯一可能的搭档是 $y = k - x$，问题是这个数是否在 $y$ 的论域中。搭档落在论域之外的每个 $x$ 都是这个命题的反例。",
+  ),
+  generate(rng) {
+    const n = rng.int(4, 20);
+    const m = rng.int(4, 20);
+    const k = rng.int(3, n + m);
+    const good = oneTo(n).filter((x) => k - x >= 1 && k - x <= m).length;
+    const answer = n - good;
+    return numberProblem({
+      prompt: t(
+        `Let $x$ range over $\\{1, \\dots, ${n}\\}$ and $y$ over $\\{1, \\dots, ${m}\\}$. For how many values of $x$ is $\\neg\\exists y\\,(x + y = ${k})$ true?`,
+        `设 $x$ 取遍 $\\{1, \\dots, ${n}\\}$，$y$ 取遍 $\\{1, \\dots, ${m}\\}$。有多少个 $x$ 使 $\\neg\\exists y\\,(x + y = ${k})$ 为真？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [good, Math.abs(n - m), n, answer + 1],
+      solution: t(
+        `A partner $y = ${k} - x$ exists for $${good}$ of the values of $x$, since it must lie between 1 and ${m}. This leaves $${n} - ${good} = ${answer}$ values without one.`,
+        `$y = ${k} - x$ 必须在 1 和 ${m} 之间，这对 $${good}$ 个 $x$ 成立。所以没有搭档的值有 $${n} - ${good} = ${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const oddExpressionPairs: KnowledgePointDef = {
+  id: "counting-the-pairs-that-make-an-expression-odd",
+  title: t("Counting the pairs that make an expression odd", "计算使表达式为奇数的数对"),
+  explanation: t(
+    "A proof about parity often starts by factoring. Since $mn + m = m(n + 1)$, the expression is a product, and a product is odd exactly when every factor is odd. So $m$ must be odd and $n + 1$ must be odd, which means that $n$ is even. These two conditions are independent of each other, so the number of pairs is a simple product of the number of odd $m$ and the number of even $n$.",
+    "关于奇偶性的证明常常从因式分解开始。由于 $mn + m = m(n + 1)$，表达式是乘积，而乘积为奇数当且仅当每个因子都是奇数。所以 $m$ 必须是奇数，$n + 1$ 必须是奇数，也就是 $n$ 是偶数。这两个条件相互独立，所以数对的个数就是奇数 $m$ 的个数与偶数 $n$ 的个数之积。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 30);
+    const b = rng.int(2, 30);
+    const oddA = Math.ceil(a / 2);
+    const evenA = Math.floor(a / 2);
+    const evenB = Math.floor(b / 2);
+    const oddB = Math.ceil(b / 2);
+    const answer = oddA * evenB;
+    return numberProblem({
+      prompt: t(
+        `How many pairs $(m, n)$ with $1 \\le m \\le ${a}$ and $1 \\le n \\le ${b}$ make $mn + m$ odd?`,
+        `有多少个数对 $(m, n)$，$1 \\le m \\le ${a}$，$1 \\le n \\le ${b}$，使 $mn + m$ 为奇数？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a * b - answer, oddA * oddB, evenA * evenB, answer + 1],
+      solution: t(
+        `Since $mn + m = m(n + 1)$, we need $m$ odd and $n$ even. There are $${oddA}$ odd values of $m$ and $${evenB}$ even values of $n$, so the count is $${answer}$.`,
+        `由于 $mn + m = m(n + 1)$，需要 $m$ 为奇数且 $n$ 为偶数。奇数 $m$ 有 $${oddA}$ 个，偶数 $n$ 有 $${evenB}$ 个，所以个数是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const vacuousCases: KnowledgePointDef = {
+  id: "counting-the-vacuous-cases-of-a-conditional",
+  title: t("Counting the vacuous cases of a conditional", "计算条件句的空真情形"),
+  explanation: t(
+    "A conditional is vacuously true at a value where its hypothesis is false, and in that case its conclusion is never examined. This is why a universal claim only needs checking where the hypothesis holds. So the vacuous cases can be counted from the hypothesis alone, even if the conclusion looks relevant. In a domain of numbers, a hypothesis about divisibility is false for all the numbers that are not multiples of the divisor.",
+    "在假设为假的值上，条件句是空真的，这时根本不用检查结论。这就是为什么全称命题只需要在假设成立的地方检查。所以只凭假设就能数出空真情形，即使结论看上去相关。在数的论域中，关于整除的假设对所有不是除数倍数的数都为假。",
+  ),
+  generate(rng) {
+    const n = rng.int(12, 80);
+    const d = rng.int(2, 9);
+    const k = rng.int(2, n - 1);
+    const multiples = Math.floor(n / d);
+    const answer = n - multiples;
+    return numberProblem({
+      prompt: t(
+        `On the domain $\\{1, 2, \\dots, ${n}\\}$, consider "if $${d} \\mid x$, then $x > ${k}$". For how many values of $x$ is this true vacuously?`,
+        `在论域 $\\{1, 2, \\dots, ${n}\\}$ 上，考虑“如果 $${d} \\mid x$，那么 $x > ${k}$”。有多少个 $x$ 使它空真？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [multiples, n, n - k, answer + 1],
+      solution: t(
+        `It is vacuous when the hypothesis fails. There are $${multiples}$ multiples of ${d} in the domain, which leaves $${n} - ${multiples} = ${answer}$ values.`,
+        `假设不成立时它是空真的。论域中有 $${multiples}$ 个 ${d} 的倍数，剩下 $${n} - ${multiples} = ${answer}$ 个值。`,
+      ),
+    });
+  },
+};
+
+const sumOfDivisors: KnowledgePointDef = {
+  id: "the-sum-of-the-divisors-of-a-number",
+  title: t("The sum of the divisors of a number", "一个数的因数之和"),
+  explanation: t(
+    "Every divisor of $p^a q^b$ has the form $p^i q^j$, with $0 \\le i \\le a$ and $0 \\le j \\le b$. Adding all of them gives a product of two sums, $(1 + p + \\dots + p^a)(1 + q + \\dots + q^b)$, as expanding the product shows. So no list of divisors is needed, and the idea works just as well for more primes. A number's divisors always include 1 and the number itself.",
+    "$p^a q^b$ 的每个因数都形如 $p^i q^j$，其中 $0 \\le i \\le a$，$0 \\le j \\le b$。把它们全部相加，得到两个和的乘积 $(1 + p + \\dots + p^a)(1 + q + \\dots + q^b)$，展开乘积就可以看出。所以不需要列出因数，这个想法对更多素数同样有效。一个数的因数总包含 1 和它本身。",
+  ),
+  generate(rng) {
+    const [p, q] = rng.pick([
+      [2, 3],
+      [2, 5],
+      [2, 7],
+      [3, 5],
+      [3, 7],
+      [5, 7],
+    ] as const);
+    const a = rng.int(1, 3);
+    const b = rng.int(1, 2);
+    const n = p ** a * q ** b;
+    const first = (p ** (a + 1) - 1) / (p - 1);
+    const second = (q ** (b + 1) - 1) / (q - 1);
+    const answer = first * second;
+    return numberProblem({
+      prompt: t(`Find the sum of all positive divisors of ${n}.`, `求 ${n} 的所有正因数之和。`),
+      answer,
+      form: "integer",
+      wrong: [n + 1, (a + 1) * (b + 1), answer - n, answer + 1],
+      solution: t(
+        `Since $${n} = ${powerLatex(p, a)} \\cdot ${powerLatex(q, b)}$, the sum is $(${oneTo(a + 1)
+          .map((i) => p ** (i - 1))
+          .join(" + ")})(${oneTo(b + 1)
+          .map((i) => q ** (i - 1))
+          .join(" + ")}) = ${first} \\cdot ${second} = ${answer}$.`,
+        `由于 $${n} = ${powerLatex(p, a)} \\cdot ${powerLatex(q, b)}$，和是 $(${oneTo(a + 1)
+          .map((i) => p ** (i - 1))
+          .join(" + ")})(${oneTo(b + 1)
+          .map((i) => q ** (i - 1))
+          .join(" + ")}) = ${first} \\cdot ${second} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const triangularMatrixCorner: KnowledgePointDef = {
+  id: "the-corner-of-a-power-of-a-triangular-matrix",
+  title: t("The corner of a power of a triangular matrix", "三角矩阵的幂的右上角"),
+  explanation: t(
+    "To guess a formula for the powers of $\\begin{pmatrix} r & a \\\\ 0 & r \\end{pmatrix}$, compute a few by hand. The corner entries come out as $a$, $2ra$, $3r^2a$, and so on, which suggests $nr^{n - 1}a$. Induction then proves it: multiplying by the matrix once more gives $r \\cdot nr^{n - 1}a + a \\cdot r^n = (n + 1)r^n a$. This has the same shape as the derivative of $r^n$, and that is no accident.",
+    "要猜测 $\\begin{pmatrix} r & a \\\\ 0 & r \\end{pmatrix}$ 的幂的公式，先手算几个。右上角元素依次是 $a$、$2ra$、$3r^2a$ 等，这提示公式是 $nr^{n - 1}a$。然后用归纳法证明：再乘一次矩阵，得 $r \\cdot nr^{n - 1}a + a \\cdot r^n = (n + 1)r^n a$。它的形状与 $r^n$ 的导数相同，这并非巧合。",
+  ),
+  generate(rng) {
+    const r = rng.int(2, 3);
+    const a = rng.int(1, 9);
+    const n = rng.int(3, 6);
+    const answer = n * r ** (n - 1) * a;
+    return numberProblem({
+      prompt: t(
+        `Find the top right entry of $\\begin{pmatrix} ${r} & ${a} \\\\ 0 & ${r} \\end{pmatrix}^{${n}}$.`,
+        `求 $\\begin{pmatrix} ${r} & ${a} \\\\ 0 & ${r} \\end{pmatrix}^{${n}}$ 右上角的元素。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a * r ** (n - 1), n * r ** n * a, r ** n, n * a],
+      solution: t(
+        `The formula $nr^{n - 1}a$, which induction proves, gives $${n} \\cdot ${r}^{${n - 1}} \\cdot ${a} = ${answer}$.`,
+        `归纳法证明的公式 $nr^{n - 1}a$ 给出 $${n} \\cdot ${r}^{${n - 1}} \\cdot ${a} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const floorPreimage: KnowledgePointDef = {
+  id: "the-size-of-a-preimage-under-a-floor-function",
+  title: t("The size of a preimage under a floor function", "取整函数下原像的大小"),
+  explanation: t(
+    "Proving surjectivity means finding a preimage for each value, and it can be useful to find all of them. The numbers with $\\lfloor \\frac{n}{k} \\rfloor = v$ are exactly the block $kv \\le n < k(v + 1)$, which has $k$ integers. On a finite domain, though, the first and last blocks can be cut short. If the domain starts at 1, the block for 0 loses the number 0, and the last block stops at the end of the domain.",
+    "证明满射就是为每个值找一个原像，有时找出全部原像很有用。满足 $\\lfloor \\frac{n}{k} \\rfloor = v$ 的数恰好是一段 $kv \\le n < k(v + 1)$，有 $k$ 个整数。不过在有限论域上，第一段和最后一段可能被截短。如果论域从 1 开始，0 对应的一段就少了数 0，最后一段则停在论域的末尾。",
+  ),
+  generate(rng) {
+    const k = rng.int(2, 9);
+    const m = rng.int(2, 12);
+    const r = rng.int(0, k - 1);
+    const n = k * m + r;
+    const v = rng.int(0, m);
+    const preimage = oneTo(n).filter((x) => Math.floor(x / k) === v);
+    const answer = preimage.length;
+    return numberProblem({
+      prompt: t(
+        `Let $f : \\{1, 2, \\dots, ${n}\\} \\to \\mathbb{Z}$ with $f(x) = \\lfloor \\frac{x}{${k}} \\rfloor$. How many elements does the preimage $f^{-1}(\\{${v}\\})$ have?`,
+        `设 $f : \\{1, 2, \\dots, ${n}\\} \\to \\mathbb{Z}$，$f(x) = \\lfloor \\frac{x}{${k}} \\rfloor$。原像 $f^{-1}(\\{${v}\\})$ 有多少个元素？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [k, k - 1, r + 1, k + 1, answer + 1, answer + 2],
+      solution: t(
+        `In the domain, the numbers with quotient ${v} on division by ${k} are $${preimage.join(", ")}$. So the size of the preimage is $${answer}$.`,
+        `论域中除以 ${k} 的商为 ${v} 的数是 $${preimage.join(", ")}$。所以原像的大小是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const residueOfLongSum: KnowledgePointDef = {
+  id: "the-residue-of-a-long-sum",
+  title: t("The residue of a long sum", "长求和的剩余"),
+  explanation: t(
+    "The least nonnegative residue of a sum like $1 + 2 + \\dots + n$ can be found without adding the terms one by one. The closed form $\\frac{n(n + 1)}{2}$ gives the whole sum at once, and dividing that by the modulus gives the residue. Take care not to reduce $n$ first and then apply the formula, because the division by 2 does not always behave well with congruences. Reducing after computing the exact integer is always safe.",
+    "像 $1 + 2 + \\dots + n$ 这样的和，其最小非负剩余不必逐项相加。封闭式 $\\frac{n(n + 1)}{2}$ 一下子给出整个和，再除以模就得到剩余。注意不要先化简 $n$ 再套公式，因为除以 2 与同余的配合并不总是可靠。算出精确的整数后再化简总是安全的。",
+  ),
+  generate(rng) {
+    const n = rng.int(10, 200);
+    const m = rng.int(3, 13);
+    const sum = (n * (n + 1)) / 2;
+    const answer = sum % m;
+    const reduced = n % m;
+    return numberProblem({
+      prompt: t(
+        `Find the least nonnegative residue of $1 + 2 + \\dots + ${n}$ modulo ${m}.`,
+        `求 $1 + 2 + \\dots + ${n}$ 模 ${m} 的最小非负剩余。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [reduced, (n * (n + 1)) % m, ((reduced * (reduced + 1)) >> 1) % m, (answer + 1) % m],
+      solution: t(
+        `The sum is $\\frac{${n} \\cdot ${n + 1}}{2} = ${sum}$, and dividing by ${m} leaves the remainder $${answer}$.`,
+        `和是 $\\frac{${n} \\cdot ${n + 1}}{2} = ${sum}$，除以 ${m} 余 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const missingDigit: KnowledgePointDef = {
+  id: "the-missing-digit-for-divisibility-by-nine",
+  title: t("The missing digit for divisibility by nine", "被九整除所缺的数字"),
+  explanation: t(
+    "Since $10 \\equiv 1 \\pmod 9$, every power of 10 is also congruent to 1, and so a number is congruent to the sum of its digits modulo 9. This proves the digit test for divisibility by 9, and it turns a question about a long number into a question about a small sum. A missing digit must bring the digit sum to a multiple of 9, and among the digits only 0 and 9 have the same effect.",
+    "由于 $10 \\equiv 1 \\pmod 9$，10 的每个幂也同余于 1，所以一个数模 9 同余于它的各位数字之和。这证明了被 9 整除的数字判别法，也把关于长数字的问题变成了关于小和数的问题。所缺的数字必须使数字和成为 9 的倍数，而在所有数字中只有 0 和 9 的效果相同。",
+  ),
+  generate(rng) {
+    const first = rng.int(1, 9);
+    const second = rng.int(0, 9);
+    const third = rng.int(0, 9);
+    const fourth = rng.int(0, 9);
+    const base = first + second + third + fourth;
+    const adjusted = (9 - (base % 9)) % 9 === 0 ? (fourth === 9 ? 8 : fourth + 1) : fourth;
+    const known = first + second + third + adjusted;
+    const answer = (9 - (known % 9)) % 9;
+    const shown = `${first}${second}\\square${third}${adjusted}`;
+    return numberProblem({
+      prompt: t(
+        `The digit $\\square$ makes the number $${shown}$ divisible by 9. Find the digit.`,
+        `数字 $\\square$ 使 $${shown}$ 能被 9 整除。求这个数字。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [9 - answer, (answer + 3) % 10, answer + 1, answer === 1 ? 2 : answer - 1],
+      solution: t(
+        `The known digits add to $${known}$, and the next multiple of 9 is $${known + answer}$. So the missing digit is $${answer}$.`,
+        `已知数字之和是 $${known}$，下一个 9 的倍数是 $${known + answer}$。所以所缺的数字是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const selfAdditiveInverses: KnowledgePointDef = {
+  id: "the-residues-equal-to-their-own-additive-inverse",
+  title: t("The residues equal to their own additive inverse", "等于自身加法逆元的剩余"),
+  explanation: t(
+    "Most residues pair up with a different additive inverse, since $x$ and $n - x$ are usually different. A residue equal to its own inverse must satisfy $2x \\equiv 0 \\pmod n$. The residue 0 always qualifies. When $n$ is even, the residue $\\frac{n}{2}$ also qualifies, and there are no others. So the count depends only on the parity of $n$, which also tells us about the pairing of the other residues.",
+    "大多数剩余与一个不同的加法逆元配对，因为 $x$ 和 $n - x$ 通常不同。等于自身逆元的剩余必须满足 $2x \\equiv 0 \\pmod n$。剩余 0 总是满足。当 $n$ 是偶数时，剩余 $\\frac{n}{2}$ 也满足，没有其他的了。所以个数只取决于 $n$ 的奇偶性，这也说明了其余剩余的配对情况。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 60);
+    const even = n % 2 === 0;
+    const answer = even ? 2 : 1;
+    return numberProblem({
+      prompt: t(
+        `How many residues $x$ in $\\{0, 1, \\dots, ${n - 1}\\}$ satisfy $x \\equiv -x \\pmod{${n}}$?`,
+        `$\\{0, 1, \\dots, ${n - 1}\\}$ 中有多少个剩余 $x$ 满足 $x \\equiv -x \\pmod{${n}}$？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [even ? 1 : 2, 0, Math.floor(n / 2), n],
+      solution: t(
+        `The condition is $2x \\equiv 0 \\pmod{${n}}$. ${even ? `Its solutions are $0$ and $${n / 2}$` : "Since the modulus is odd, its only solution is $0$"}, so the count is $${answer}$.`,
+        `条件是 $2x \\equiv 0 \\pmod{${n}}$。${even ? `它的解是 $0$ 和 $${n / 2}$` : "由于模是奇数，它唯一的解是 $0$"}，所以个数是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const selfMultiplicativeInverses: KnowledgePointDef = {
+  id: "counting-the-residues-that-are-their-own-inverse",
+  title: t("Counting the residues that are their own inverse", "计算自身就是逆元的剩余"),
+  explanation: t(
+    "A residue is its own multiplicative inverse when $x^2 \\equiv 1 \\pmod n$. The residues 1 and $n - 1$ always work. For a prime modulus there are no others, because $n$ dividing $(x - 1)(x + 1)$ forces it to divide one of the factors. For a composite modulus, the factors can share out the prime powers of $n$, and so there may be more solutions, for example 3 and 5 modulo 8.",
+    "当 $x^2 \\equiv 1 \\pmod n$ 时，剩余是它自身的乘法逆元。剩余 1 和 $n - 1$ 总是可行。对素数模没有其他解，因为 $n$ 整除 $(x - 1)(x + 1)$ 就必须整除其中一个因子。对合数模，两个因子可以分担 $n$ 的素数幂，所以可能有更多的解，例如模 8 时的 3 和 5。",
+  ),
+  generate(rng) {
+    const n = rng.int(5, 60);
+    const solutions = [...Array(n).keys()].filter((x) => (x * x) % n === 1);
+    const answer = solutions.length;
+    return numberProblem({
+      prompt: t(
+        `How many residues $x$ in $\\{0, 1, \\dots, ${n - 1}\\}$ are their own multiplicative inverse modulo ${n}?`,
+        `$\\{0, 1, \\dots, ${n - 1}\\}$ 中有多少个剩余 $x$ 在模 ${n} 下是自身的乘法逆元？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [2, totient(n), 1, answer + 2],
+      solution: t(
+        `The solutions of $x^2 \\equiv 1 \\pmod{${n}}$ are $${solutions.join(", ")}$, which makes $${answer}$.`,
+        `$x^2 \\equiv 1 \\pmod{${n}}$ 的解是 $${solutions.join(", ")}$，共 $${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const domainOfSumRelation: KnowledgePointDef = {
+  id: "the-domain-of-a-sum-relation",
+  title: t("The domain of a sum relation", "和关系的定义域"),
+  explanation: t(
+    "The domain of a relation is the set of first coordinates that actually occur. For the relation $x + y = k$ on $\\{1, \\dots, n\\}$, a value of $x$ occurs when its partner $k - x$ is also between 1 and $n$. When $k$ is small, the partner fails to be positive for large $x$. When $k$ is large, the partner is too big for small $x$. So the domain is a run of consecutive integers, and both ends must be checked.",
+    "关系的定义域是实际出现的第一坐标的集合。对 $\\{1, \\dots, n\\}$ 上的关系 $x + y = k$，当搭档 $k - x$ 也在 1 和 $n$ 之间时，$x$ 的值才出现。$k$ 较小时，对大的 $x$，搭档不是正数。$k$ 较大时，对小的 $x$，搭档太大。所以定义域是一段连续的整数，两端都要检查。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 20);
+    const k = rng.int(3, 2 * n - 1);
+    const domain = oneTo(n).filter((x) => k - x >= 1 && k - x <= n);
+    const answer = domain.length;
+    return numberProblem({
+      prompt: t(
+        `The relation $R$ on $\\{1, 2, \\dots, ${n}\\}$ has $(x, y) \\in R$ when $x + y = ${k}$. How many elements does the domain of $R$ have?`,
+        `$\\{1, 2, \\dots, ${n}\\}$ 上的关系 $R$ 定义为：当 $x + y = ${k}$ 时 $(x, y) \\in R$。$R$ 的定义域有多少个元素？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n, k, k - 1, Math.abs(2 * n - k), answer + 1, answer - 1],
+      solution: t(
+        `The value $${k} - x$ must also lie between 1 and ${n}, so $x$ runs from $${domain[0] ?? 0}$ to $${domain[domain.length - 1] ?? 0}$. That is $${answer}$ values.`,
+        `$${k} - x$ 也必须在 1 和 ${n} 之间，所以 $x$ 从 $${domain[0] ?? 0}$ 取到 $${domain[domain.length - 1] ?? 0}$。共 $${answer}$ 个值。`,
+      ),
+    });
+  },
+};
+
+const onesInDivisibilityMatrix: KnowledgePointDef = {
+  id: "counting-the-ones-in-a-divisibility-matrix",
+  title: t("Counting the ones in a divisibility matrix", "计算整除矩阵中 1 的个数"),
+  explanation: t(
+    "The matrix of a relation on $\\{1, \\dots, n\\}$ has a 1 in row $i$ and column $j$ when $i$ is related to $j$. So the number of ones is the number of pairs in the relation. For divisibility, row $d$ has a 1 at each multiple of $d$, which gives $\\lfloor \\frac{n}{d} \\rfloor$ ones. Adding along the rows avoids testing every entry, and it also equals the total number of divisors of the numbers up to $n$.",
+    "$\\{1, \\dots, n\\}$ 上关系的矩阵，当 $i$ 与 $j$ 有关系时，第 $i$ 行第 $j$ 列为 1。所以 1 的个数就是关系中数对的个数。对整除关系，第 $d$ 行在 $d$ 的每个倍数处为 1，共 $\\lfloor \\frac{n}{d} \\rfloor$ 个。按行相加就不必检查每个元素，它也等于不超过 $n$ 的各数的因数个数之和。",
+  ),
+  generate(rng) {
+    const n = rng.int(4, 40);
+    const answer = oneTo(n).reduce((sum, d) => sum + Math.floor(n / d), 0);
+    return numberProblem({
+      prompt: t(
+        `The relation "$i$ divides $j$" on $\\{1, 2, \\dots, ${n}\\}$ is written as a matrix of zeros and ones. How many ones does the matrix have?`,
+        `$\\{1, 2, \\dots, ${n}\\}$ 上的关系“$i$ 整除 $j$”写成 0 和 1 的矩阵。矩阵中有多少个 1？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n, n * n, (n * (n + 1)) / 2, answer + 1],
+      solution: t(
+        `Row $d$ has $\\lfloor \\frac{${n}}{d} \\rfloor$ ones, one for each multiple of $d$. Adding over all the rows gives $${answer}$.`,
+        `第 $d$ 行有 $\\lfloor \\frac{${n}}{d} \\rfloor$ 个 1，每个 $d$ 的倍数一个。对所有行求和，得 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const closureOfCycleOrChain: KnowledgePointDef = {
+  id: "the-size-of-the-transitive-closure-of-a-cycle-or-chain",
+  title: t("The size of the transitive closure of a cycle or chain", "环或链的传递闭包的大小"),
+  explanation: t(
+    "The transitive closure adds a pair $(a, b)$ whenever there is a path of arrows from $a$ to $b$. On a chain $a_1 \\to a_2 \\to \\dots \\to a_n$, an element reaches only those later in the chain, which gives one pair for each choice of two positions. On a cycle, every element reaches every element, including itself, by going all the way around. So joining up the two ends of a chain enlarges the closure considerably.",
+    "传递闭包在从 $a$ 到 $b$ 有箭头路径时加入数对 $(a, b)$。在链 $a_1 \\to a_2 \\to \\dots \\to a_n$ 上，一个元素只能到达链中在它之后的元素，所以每选两个位置就有一对。在环上，每个元素都能到达每个元素，包括绕一圈回到自身。所以把链的两端连起来会使闭包大大增加。",
+  ),
+  generate(rng) {
+    const n = rng.int(5, 20);
+    const cycle = rng.pick([true, false]);
+    const answer = cycle ? n * n : (n * (n - 1)) / 2;
+    return numberProblem({
+      prompt: t(
+        `A relation consists of the pairs $(a_1, a_2), (a_2, a_3), \\dots, (a_{${n - 1}}, a_{${n}})$${cycle ? `, together with $(a_{${n}}, a_1)$` : ""}, on ${n} different elements. How many pairs does its transitive closure have?`,
+        `${n} 个不同元素上的一个关系由数对 $(a_1, a_2), (a_2, a_3), \\dots, (a_{${n - 1}}, a_{${n}})$${cycle ? `以及 $(a_{${n}}, a_1)$` : ""}组成。它的传递闭包有多少个数对？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [cycle ? n : n - 1, n * (n - 1), (n * (n + 1)) / 2, cycle ? (n * (n - 1)) / 2 : n * n],
+      solution: t(
+        cycle
+          ? `The arrows form a cycle, so every element reaches all ${n} elements, itself included. This gives $${n}^2 = ${answer}$ pairs.`
+          : `Each element reaches exactly those later in the chain, so each pair of positions gives one pair. This makes $\\binom{${n}}{2} = ${answer}$.`,
+        cycle
+          ? `箭头构成一个环，所以每个元素都能到达全部 ${n} 个元素，包括它自身。这样得 $${n}^2 = ${answer}$ 个数对。`
+          : `每个元素恰好到达链中在它之后的元素，所以每两个位置给出一个数对。共 $\\binom{${n}}{2} = ${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const classesOfEqualSquares: KnowledgePointDef = {
+  id: "counting-the-classes-of-equal-squares",
+  title: t("Counting the classes of equal squares", "计算平方相等的等价类"),
+  explanation: t(
+    "Any function defines an equivalence relation, by calling two elements related when they have the same image. The classes then correspond one-to-one with the different values that the function takes. So counting classes of $x \\sim y$ when $x^2 \\equiv y^2 \\pmod n$ is the same as counting the different squares modulo $n$. For an odd prime $p$, the residues $x$ and $-x$ pair up, apart from 0, so there are $\\frac{p + 1}{2}$ classes.",
+    "任何函数都定义一个等价关系：两个元素的像相同时称它们相关。于是等价类与函数取到的不同值一一对应。所以当 $x^2 \\equiv y^2 \\pmod n$ 时 $x \\sim y$ 的类的个数，就是模 $n$ 的不同平方数的个数。对奇素数 $p$，除 0 以外，$x$ 和 $-x$ 配对，所以有 $\\frac{p + 1}{2}$ 个类。",
+  ),
+  generate(rng) {
+    const n = rng.int(5, 60);
+    const squares = new Set([...Array(n).keys()].map((x) => (x * x) % n));
+    const answer = squares.size;
+    return numberProblem({
+      prompt: t(
+        `On $\\{0, 1, \\dots, ${n - 1}\\}$, let $x \\sim y$ when $x^2 \\equiv y^2 \\pmod{${n}}$. How many equivalence classes are there?`,
+        `在 $\\{0, 1, \\dots, ${n - 1}\\}$ 上，当 $x^2 \\equiv y^2 \\pmod{${n}}$ 时令 $x \\sim y$。共有多少个等价类？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [Math.floor((n + 1) / 2), n, totient(n), answer + 1],
+      solution: t(
+        `The classes match the different values of $x^2$ modulo ${n}, which are $${[...squares].sort((a, b) => a - b).join(", ")}$. That is $${answer}$ classes.`,
+        `类与 $x^2$ 模 ${n} 的不同值对应，这些值是 $${[...squares].sort((a, b) => a - b).join(", ")}$。共 $${answer}$ 个类。`,
+      ),
+    });
+  },
+};
+
+const modulusOfCongruence: KnowledgePointDef = {
+  id: "counting-the-moduli-for-which-two-numbers-are-congruent",
+  title: t("Counting the moduli for which two numbers are congruent", "计算使两数同余的模"),
+  explanation: t(
+    "By definition, $a \\equiv b \\pmod m$ means that $m$ divides $a - b$. So the moduli that make two given numbers congruent are exactly the divisors of their difference. Moduli are usually taken to be greater than 1, which removes one divisor from the count. The size of the numbers does not matter, only their difference, so that a question about large numbers can come down to factoring a small one.",
+    "按定义，$a \\equiv b \\pmod m$ 意味着 $m$ 整除 $a - b$。所以使两个给定的数同余的模，恰好是它们之差的因数。模通常取大于 1 的数，这样要从个数中去掉一个因数。这两个数本身的大小不重要，只有差才重要，所以关于大数的问题可以归结为分解一个小数。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 200);
+    const difference = rng.int(4, 120);
+    const b = a + difference;
+    const divisors = divisorsOf(difference);
+    const answer = divisors.length - 1;
+    return numberProblem({
+      prompt: t(
+        `For how many integers $m > 1$ is $${b} \\equiv ${a} \\pmod m$ true?`,
+        `有多少个整数 $m > 1$ 使 $${b} \\equiv ${a} \\pmod m$ 成立？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [divisors.length, difference, difference - 1, answer + 2],
+      solution: t(
+        `The modulus $m$ must divide $${b} - ${a} = ${difference}$, which has $${divisors.length}$ positive divisors. Leaving out 1 gives $${answer}$.`,
+        `模 $m$ 必须整除 $${b} - ${a} = ${difference}$，它有 $${divisors.length}$ 个正因数。去掉 1，得 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const injectiveMultiplications: KnowledgePointDef = {
+  id: "counting-the-injective-multiplications-modulo-n",
+  title: t("Counting the injective multiplications modulo n", "计算模 n 的单射乘法"),
+  explanation: t(
+    "The function $f(x) = ax$ on the residues modulo $n$ is injective exactly when $\\gcd(a, n) = 1$. If $ax \\equiv ay$, then $n$ divides $a(x - y)$, and when $a$ and $n$ share no factor, $n$ must divide $x - y$. If they do share a factor $d > 1$, then $f(\\frac{n}{d}) = f(0)$ gives two inputs with the same image. A function from a finite set to itself that is injective is also surjective.",
+    "模 $n$ 剩余上的函数 $f(x) = ax$ 是单射，当且仅当 $\\gcd(a, n) = 1$。如果 $ax \\equiv ay$，那么 $n$ 整除 $a(x - y)$，当 $a$ 与 $n$ 没有公因数时，$n$ 必须整除 $x - y$。如果它们有公因数 $d > 1$，那么 $f(\\frac{n}{d}) = f(0)$，两个输入有相同的像。有限集到自身的单射也是满射。",
+  ),
+  generate(rng) {
+    const n = rng.int(4, 60);
+    const answer = totient(n);
+    return numberProblem({
+      prompt: t(
+        `For how many values of $a$ in $\\{1, 2, \\dots, ${n}\\}$ is the function $f(x) = ax$ on the residues modulo ${n} injective?`,
+        `$\\{1, 2, \\dots, ${n}\\}$ 中有多少个 $a$，使模 ${n} 剩余上的函数 $f(x) = ax$ 是单射？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n - 1, n, Math.floor(n / 2), answer + 1],
+      solution: t(
+        `The function is injective exactly when $\\gcd(a, ${n}) = 1$. There are $${answer}$ such values of $a$ up to ${n}.`,
+        `函数是单射当且仅当 $\\gcd(a, ${n}) = 1$。不超过 ${n} 的这样的 $a$ 有 $${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const oddTriangularNumbers: KnowledgePointDef = {
+  id: "counting-the-odd-triangular-numbers",
+  title: t("Counting the odd triangular numbers", "计算奇三角形数的个数"),
+  explanation: t(
+    "The parity of the triangular number $T_k = \\frac{k(k + 1)}{2}$ follows a pattern of period four: odd, odd, even, even. It is not enough to look at $k$ and $k + 1$ alone, because one of them is always even and the factor 2 cancels part of it. Only when the even one is a multiple of 4 is $T_k$ even. So $T_k$ is odd when $k$ leaves a remainder of 1 or 2 on division by 4.",
+    "三角形数 $T_k = \\frac{k(k + 1)}{2}$ 的奇偶性呈周期为四的规律：奇、奇、偶、偶。只看 $k$ 和 $k + 1$ 不够，因为其中总有一个是偶数，而因子 2 会消去它的一部分。只有当那个偶数是 4 的倍数时，$T_k$ 才是偶数。所以当 $k$ 除以 4 余 1 或 2 时，$T_k$ 是奇数。",
+  ),
+  generate(rng) {
+    const n = rng.int(5, 60);
+    const answer = oneTo(n).filter((k) => k % 4 === 1 || k % 4 === 2).length;
+    return numberProblem({
+      prompt: t(
+        `How many of the numbers $\\frac{k(k + 1)}{2}$, for $k = 1, 2, \\dots, ${n}$, are odd?`,
+        `当 $k = 1, 2, \\dots, ${n}$ 时，数 $\\frac{k(k + 1)}{2}$ 中有多少个是奇数？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n - answer, Math.floor(n / 4), n, answer + 1, answer - 1],
+      solution: t(
+        `The number is odd exactly when $k$ leaves remainder 1 or 2 on division by 4. Up to ${n}, there are $${answer}$ such values of $k$.`,
+        `当且仅当 $k$ 除以 4 余 1 或 2 时，这个数是奇数。不超过 ${n} 的这样的 $k$ 有 $${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const factorialBeatsPower: KnowledgePointDef = {
+  id: "the-smallest-n-where-a-factorial-beats-a-power",
+  title: t("The smallest n where a factorial beats a power", "阶乘超过幂的最小 n"),
+  explanation: t(
+    "Before an inductive proof of an inequality such as $n! > ca^n$ can start, the right base case must be found, by testing small values. The inductive step then goes through as soon as $n + 1 \\ge a$, because the left side is multiplied by $n + 1$ and the right side only by $a$. So the factorial must win eventually, whatever the values of $a$ and $c$, even though it starts off behind the power.",
+    "在用归纳法证明像 $n! > ca^n$ 这样的不等式之前，必须通过试小值找到正确的基础情形。只要 $n + 1 \\ge a$，归纳步骤就能完成，因为左边乘以 $n + 1$，而右边只乘以 $a$。所以无论 $a$ 和 $c$ 取什么值，阶乘最终一定会胜出，尽管开始时它落后于幂。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 6);
+    const c = rng.int(1, 9);
+    let n = 1;
+    let left = 1;
+    let right = c * a;
+    while (left <= right) {
+      n += 1;
+      left *= n;
+      right *= a;
+    }
+    const previousLeft = left / n;
+    const previousRight = right / a;
+    const scale = c === 1 ? "" : `${c} \\cdot `;
+    return numberProblem({
+      prompt: t(`Find the smallest positive integer $n$ with $n! > ${scale}${a}^n$.`, `求满足 $n! > ${scale}${a}^n$ 的最小正整数 $n$。`),
+      answer: n,
+      form: "integer",
+      wrong: [n - 1, n + 1, a, a + 1],
+      solution: t(
+        `At $n = ${n - 1}$, the two sides are $${previousLeft}$ and $${previousRight}$. At $n = ${n}$, they are $${left}$ and $${right}$, so $n = ${n}$ is the first to work.`,
+        `在 $n = ${n - 1}$ 时，两边分别是 $${previousLeft}$ 和 $${previousRight}$。在 $n = ${n}$ 时，它们是 $${left}$ 和 $${right}$，所以 $n = ${n}$ 是第一个满足的。`,
+      ),
+    });
+  },
+};
+
+const triplesWithSum: KnowledgePointDef = {
+  id: "counting-the-triples-of-a-sum-relation",
+  title: t("Counting the triples of a sum relation", "计算和关系中的三元组"),
+  explanation: t(
+    "A ternary relation is a set of triples, and its size can sometimes be found by a clever encoding. A triple of positive integers adding to $k$ corresponds to a choice of two cut points among the $k - 1$ gaps between $k$ objects in a row. Each choice gives three nonempty blocks, whose sizes form the triple. So the count is $\\binom{k - 1}{2}$, and the order within the triple is taken into account automatically.",
+    "三元关系是三元组的集合，它的大小有时可以通过巧妙的编码求得。和为 $k$ 的正整数三元组，对应于在一行 $k$ 个对象之间的 $k - 1$ 个空隙中选两个切点。每种选法给出三个非空段，它们的大小构成三元组。所以个数是 $\\binom{k - 1}{2}$，三元组内的顺序也自动考虑在内。",
+  ),
+  generate(rng) {
+    const k = rng.int(4, 40);
+    const answer = binom(k - 1, 2);
+    return numberProblem({
+      prompt: t(
+        `The relation $R$ on the positive integers holds for $(x, y, z)$ when $x + y + z = ${k}$. How many triples does $R$ contain?`,
+        `正整数上的关系 $R$ 在 $x + y + z = ${k}$ 时对 $(x, y, z)$ 成立。$R$ 包含多少个三元组？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [binom(k, 2), binom(k + 2, 2), k * k, answer + 1],
+      solution: t(
+        `Choosing two of the ${k - 1} gaps between ${k} objects gives the triple. So the count is $\\binom{${k - 1}}{2} = ${answer}$.`,
+        `在 ${k} 个对象之间的 ${k - 1} 个空隙中选两个，就给出三元组。所以个数是 $\\binom{${k - 1}}{2} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
 /** deeperMethodsOfProofPoints gives, by topic id, the knowledge points added after a Methods of Proof topic's own. */
 export const deeperMethodsOfProofPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "cardinality-of-finite-sets": [threeSets],
@@ -2258,4 +2944,27 @@ export const deeperMethodsOfProofPoints: Readonly<Record<string, readonly Knowle
   "the-multiplication-properties-of-modular-arithmetic": [cycleLengthOfPowers],
   "functional-relations": [atMostOnePartner],
   "equivalence-relations": [relationsByClassCount],
+  "the-conditional-definition-of-a-set": [setOfSquares],
+  "truth-sets-of-predicates": [quadraticTruthSet],
+  "simplifying-predicate-expressions-using-de-morgans-laws": [notBetweenCount],
+  "translating-between-logical-and-set-operations": [conditionalFromSizes],
+  "negating-statements-with-nested-quantifiers": [whereExistsFails],
+  "proving-parity": [oddExpressionPairs],
+  "trivial-and-vacuous-proofs": [vacuousCases],
+  "integer-divisibility": [sumOfDivisors],
+  "proving-matrix-identities-using-induction": [triangularMatrixCorner],
+  "proving-surjectivity": [floorPreimage],
+  "modular-residues": [residueOfLongSum],
+  "proving-divisibility-using-congruence": [missingDigit],
+  "additive-inverses-modulo-n": [selfAdditiveInverses],
+  "multiplicative-inverses-modulo-n": [selfMultiplicativeInverses],
+  "the-domain-and-range-of-a-relation": [domainOfSumRelation],
+  "graphical-representations-of-relations": [onesInDivisibilityMatrix],
+  "transitive-relations": [closureOfCycleOrChain],
+  "equivalence-classes": [classesOfEqualSquares],
+  "modular-congruence": [modulusOfCongruence],
+  "proving-injectivity": [injectiveMultiplications],
+  parity: [oddTriangularNumbers],
+  "proving-inequalities-using-induction": [factorialBeatsPower],
+  "n-ary-relations": [triplesWithSum],
 };
