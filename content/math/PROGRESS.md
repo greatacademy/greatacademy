@@ -56,7 +56,6 @@ The report lists outline topics missing from each course and the findings of heu
 The board tracks whether a course exists, not whether it is finished. Measured on 2026-11-03:
 
 - **SAT and ACT Math Prep are exam-style in their questions, not yet in everything.** 252 of the 284 SAT Prep topics and 345 of the 347 ACT Prep topics are exam topics (`exam.ts`), and what is left is:
-  - About 124 ACT exam topics reuse the SAT generators through `multipleChoice`, so a learner taking both courses sees similar questions.
   - The ACT outline lists "Solving Exponential Equations" twice, and the course has it once, so the course has 347 topics against 348 outline entries.
 - **University courses have almost no figures.** About 1% of the topics of Linear Algebra, Multivariable Calculus and Probability & Statistics have one, and none in the Multivariable Calculus topics on vector fields, level curves and surfaces.
 - **University topics are shallow.** They average about 2.0 knowledge points, against the 3 to 4 of the design.

@@ -311,15 +311,3 @@ export function ask(
 ): Problem {
   return mc(rng, t(en, zh), correct, wrong, t(solEn, solZh), figure);
 }
-
-/** asChoice gives a typed-answer problem four options, using its listed mistakes as distractors; every question on the ACT is multiple choice. */
-export function asChoice(rng: Rng, p: Problem): Problem {
-  if (p.answer.checker !== "number") return p;
-  const value = Q.parse((p.answer.expected as { value: string }).value);
-  return mc(rng, p.prompt, value, p.wrong ?? [], p.solution, p.figure);
-}
-
-/** multipleChoice retitles a spec for another exam outline and makes every one of its questions multiple choice. */
-export function multipleChoice(spec: ExamSpec, en: string, zh: string): ExamSpec {
-  return { ...spec, title: t(en, zh), make: (rng, hard) => asChoice(rng, spec.make(rng, hard)) };
-}

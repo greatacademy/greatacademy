@@ -1,5 +1,10 @@
+import { t } from "@ga/content";
+
 import type { ExamSpec } from "../exam.ts";
-import { multipleChoice } from "../exam.ts";
+import { actOwnAlgebra1 } from "./act-exam-own-1.ts";
+import { actOwnAlgebra2 } from "./act-exam-own-2.ts";
+import { actOwnGeometry } from "./act-exam-own-3.ts";
+import { actOwnData } from "./act-exam-own-4.ts";
 import { satExamAdvanced1 } from "./sat-exam-advanced-1.ts";
 import { satExamAdvanced2 } from "./sat-exam-advanced-2.ts";
 import { satExamAdvanced3 } from "./sat-exam-advanced-3.ts";
@@ -12,7 +17,7 @@ import { satExamData2 } from "./sat-exam-data-2.ts";
 import { satExamGeometry1 } from "./sat-exam-geometry-1.ts";
 import { satExamGeometry2 } from "./sat-exam-geometry-2.ts";
 
-// ACT Math Prep topics that ask the same kind of question as an SAT Math Prep topic, as multiple choice throughout.
+// ACT Math Prep topics on the same mathematics as an SAT Math Prep topic.
 
 const sat = new Map(
   [
@@ -159,9 +164,13 @@ const shared: readonly (readonly [string, string, string])[] = [
   ["Finding the Volume of a Rectangular Prism", "求长方体的体积", "Volumes of Right Rectangular Prisms"],
 ];
 
-/** actExamShared are the ACT Math Prep topics that reuse the question generators of an SAT Math Prep topic as multiple choice. */
+const own: Record<string, ExamSpec["make"]> = { ...actOwnAlgebra1, ...actOwnAlgebra2, ...actOwnGeometry, ...actOwnData };
+
+/** actExamShared are the ACT Math Prep topics on the same mathematics as an SAT Math Prep topic: they share its prerequisites and tips and ask questions of their own. */
 export const actExamShared: ExamSpec[] = shared.map(([en, zh, from]) => {
   const spec = sat.get(from);
   if (!spec) throw new Error(`no SAT spec titled ${from}`);
-  return multipleChoice(spec, en, zh);
+  const make = own[en];
+  if (!make) throw new Error(`no ACT question generator titled ${en}`);
+  return { ...spec, title: t(en, zh), make };
 });

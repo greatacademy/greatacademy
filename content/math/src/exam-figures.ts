@@ -290,6 +290,62 @@ export function cevianFigure(a: number, b: number, dac?: number): Figure {
   });
 }
 
+/** crossFigure draws two crossing lines with labels in two of the angles they form; vertical puts the second label opposite the first and otherwise beside it. */
+export function crossFigure(angle: number, first: string, second: string, vertical: boolean): Figure {
+  const slant = Math.max(30, Math.min(150, angle));
+  return sceneFigure({
+    shapes: [
+      {
+        pts: [
+          [-1, 0],
+          [1, 0],
+        ],
+      },
+      { pts: [polar(0.9, slant + 180), polar(0.9, slant)] },
+    ],
+    labels: [
+      { at: polar(0.28, slant / 2), text: first },
+      { at: polar(0.28, vertical ? slant / 2 + 180 : (slant + 180) / 2), text: second },
+    ],
+  });
+}
+
+/** transversalFigure draws two parallel lines crossed by a third, with an angle labeled at the upper crossing and another at the lower one; corresponding puts the second in the same position, and otherwise it is on the same side between the lines. */
+export function transversalFigure(angle: number, first: string, second: string, corresponding: boolean): Figure {
+  const slant = Math.max(35, Math.min(145, corresponding ? angle : 180 - angle));
+  const run = 1 / Math.tan(rad(slant));
+  const top: Pt = [run / 2, 0.5];
+  const low: Pt = [-run / 2, -0.5];
+  const up = (at: Pt): Pt => polar(0.26, slant / 2, at);
+  const under = (at: Pt): Pt => polar(0.26, -(180 - slant) / 2, at);
+  return sceneFigure({
+    shapes: [
+      {
+        pts: [
+          [-1.5, 0.5],
+          [1.5, 0.5],
+        ],
+      },
+      {
+        pts: [
+          [-1.5, -0.5],
+          [1.5, -0.5],
+        ],
+      },
+      {
+        pts: [
+          [low[0] - run * 0.45, -0.95],
+          [top[0] + run * 0.45, 0.95],
+        ],
+      },
+    ],
+    labels: [
+      { at: corresponding ? up(top) : under(top), text: first },
+      { at: up(low), text: second },
+    ],
+  });
+}
+
 /** radiusFigure draws a circle with a labeled radius. */
 export function radiusFigure(label: string): Figure {
   return sceneFigure({
@@ -783,6 +839,33 @@ export function pointsFigure(
     ),
     givenGraph,
     segment,
+  );
+}
+
+/** regionFigure graphs the solutions of y > mx + b or y < mx + b: a dashed boundary line with the solutions shaded. */
+export function regionFigure(m: number, b: number, above: boolean): Figure {
+  const view: PlotView = { x: [-10, 10], y: [-12, 12], dx: 2, dy: 2 };
+  return plotFrame(
+    view,
+    (px, py) => {
+      const clip = (x: number): number => Math.max(-10, Math.min(10, x));
+      const [xa, xc] = [clip((-12 - b) / m), clip((12 - b) / m)].sort((p, q) => p - q) as [number, number];
+      const [ya, yc] = [m * xa + b, m * xc + b];
+      const edge = above ? 12 : -12;
+      const corners: Pt[] = [
+        [xa, ya],
+        [xc, yc],
+      ];
+      if (xc < 10 && yc !== edge) corners.push([10, yc], [10, edge]);
+      else if (xc === 10) corners.push([10, edge]);
+      else corners.push([10, edge]);
+      corners.push([-10, edge]);
+      if (xa > -10 && ya !== edge) corners.push([-10, ya]);
+      else if (xa === -10) corners.push([-10, ya]);
+      const pts = corners.map((p) => `${r1(px(p[0]))},${r1(py(p[1]))}`).join(" ");
+      return `<polygon points="${pts}" fill="currentColor" fill-opacity="0.15" stroke="none"/><line class="accent" x1="${r1(px(xa))}" y1="${r1(py(ya))}" x2="${r1(px(xc))}" y2="${r1(py(yc))}" stroke-width="2" stroke-dasharray="6 4"/>`;
+    },
+    givenGraph,
   );
 }
 
