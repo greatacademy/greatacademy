@@ -771,7 +771,7 @@ export const netsOfPolyhedrons: TopicDef = {
               `The net is folded into a cube. Which face is opposite face ${label}?`,
               `把这个展开图折成正方体。哪个面与面 ${label} 相对？`,
             ),
-            options: options.map((o) => t(o, o)),
+            options: options.map((o) => t(`Face ${o}`, `面 ${o}`)),
             correct: options.indexOf(answer),
             solution: rowCase
               ? t(

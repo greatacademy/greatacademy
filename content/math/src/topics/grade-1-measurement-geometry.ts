@@ -45,6 +45,12 @@ function whole(
 /** letter names a choice that reads the same in both languages. */
 const letter = (label: string): Text => t(label, label);
 
+/** barName names a lettered bar as an option, since a bare letter would clash with the A, B, C keys of the player. */
+const barName = (label: string): Text => t(`Bar ${label}`, `长条 ${label}`);
+
+/** groupName names a lettered row or bar of a graph as an option, for the same reason. */
+const groupName = (label: string): Text => t(`Group ${label}`, `${label} 组`);
+
 /** clockHour wraps a number onto the hours of a clock face, from 1 to 12. */
 const clockHour = (hour: number): number => ((hour - 1 + 12) % 12) + 1;
 
@@ -81,8 +87,8 @@ const comparingLengths = earlyTopic(
         return pickChoice(
           rng,
           t(`Which bar is the ${asksLongest ? "longest" : "shortest"}?`, `哪个长条${asksLongest ? "最长" : "最短"}？`),
-          letter(correct),
-          labels.filter((label) => label !== correct).map(letter),
+          barName(correct),
+          labels.filter((label) => label !== correct).map(barName),
           t(
             `All the bars start at the same line, and bar ${correct} ${asksLongest ? "reaches the farthest" : "stops the soonest"}.`,
             `所有长条都从同一条线开始，长条 ${correct} ${asksLongest ? "伸得最远" : "最先停下"}。`,
@@ -448,8 +454,8 @@ function readingFromGraph(rng: Rng, mark: GraphMark, values: readonly number[], 
       `${lead[0]} Which has the ${asksMost ? "most" : "fewest"} ${story.many}?`,
       `${lead[1]}哪一组的${story.zhMark}${asksMost ? "最多" : "最少"}？`,
     ),
-    letter(correct),
-    graphLabels.filter((label) => label !== correct).map(letter),
+    groupName(correct),
+    graphLabels.filter((label) => label !== correct).map(groupName),
     t(
       `${correct} has ${plural(target, story.one)}, and that is ${asksMost ? "more" : "fewer"} than each of the others.`,
       `${correct} 有 ${target} ${story.zhOne}，${asksMost ? "比其他的都多" : "比其他的都少"}。`,
