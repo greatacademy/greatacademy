@@ -44,12 +44,23 @@ The report lists outline topics missing from each course and the findings of heu
 - Claim improvement work by course and check in *Notes* (for example "explanations"), and follow the rules above for files and commits.
 - Every knowledge point explains its idea in at least 15 words of prose, and `content/math/src/content.test.ts` enforces this for every course; new knowledge points must meet it too.
 - Every topic written by hand has at least two knowledge points; topics built by factories (`proofKp`, `placeValueKPs` and the like) get theirs from the factory. Solutions say why each step is taken, not only the result.
+- *Two-option choice* is a real weakness where it dominates: Yes/No questions make up 24% of the knowledge points of Abstract Algebra and 17% of Methods of Proof, and a learner can guess half of them. Replace them there first.
 - These findings are known false positives; review them only after a content change:
-  - *two-option choice*: Yes/No questions.
   - *visual topic without a figure*: titles that say "graphing calculator" or "significant figures", where the problems use tables or no picture.
   - *canonical answer appears in the prompt*: questions where the answer is an equal quantity named in the prompt, such as $\sin T = \cos S$ or $\varnothing$ in the input instructions.
   - *topic in no course*: older topics whose ids must stay. Most are computed foundations, because course topics list them as prerequisites.
   - *duplicate topic titles*: `units-of-time` and `units-of-time-and-elapsed-time`, and `mean-of-a-data-set` and `the-mean-of-a-data-set`, are different topics with one outline title, and no course contains both.
+
+## Open Gaps
+
+The board tracks whether a course exists, not whether it is finished. Measured on 2026-11-03:
+
+- **SAT and ACT Math Prep are not exam-style.** 233 of the 292 SAT Prep topics and 237 of the 321 ACT Prep topics are shared with Fundamentals, and they are ordinary lessons. The SAT outline asks for practice only, with problems that mirror the exam.
+- **University courses have almost no figures.** About 1% of the topics of Linear Algebra, Multivariable Calculus and Probability & Statistics have one, and none in the Multivariable Calculus topics on vector fields, level curves and surfaces.
+- **University topics are shallow.** They average about 2.0 knowledge points, against the 3 to 4 of the design.
+- **Some questions test little.** A few reduce a skill to reading a number off the prompt, such as a cone's parametrization where the learner only computes $8u$.
+- **`encompassings.ts` holds inferred weights** for topics with no encompassings of their own. Writing reviewed encompassings on a topic and deleting its entry improves on them.
+- **Outside the reference catalog:** grades 1 to 3, real and complex analysis, partial differential equations, linear programming and a number theory course.
 
 ## Board
 
@@ -76,8 +87,8 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Mathematics for Machine Learning | Calculus II, Linear Algebra | done | | 12 units, 301 topics (283 reused, 18 new) |
 | Mathematical Methods for the Physical Sciences I, II | Calculus II | done | | 13 units (294 topics) and 12 units (238 topics) |
 | Abstract Algebra | Methods of Proof, Linear Algebra | done | | 9 units, 129 topics |
-| SAT Math Fundamentals, SAT Math Prep | Algebra II | done | | Assigned slot **F**. 2 courses: SAT Math Fundamentals (rebuilt to the full outline: 17 units, 655 topics, `sat-fundamentals-*.ts` for the 76 new ones) and SAT Math Prep (rebuilt to the full outline: 4 units, 292 topics, `sat-prep-*.ts` for the 32 new ones) |
-| ACT Math Fundamentals, ACT Math Prep | Precalculus | done | | Assigned slot **G**. 2 courses: ACT Math Fundamentals (rebuilt to the full outline: 7 units, 858 topics) and ACT Math Prep (rebuilt to the full outline: 6 units, 321 topics); `act-*.ts` hold the 27 new topics and `act-fundamentals-*.ts` 29 more for outline titles that had no topic of their own; the outline titles the audit still lists are taught by an existing topic under another name |
+| SAT Math Fundamentals, SAT Math Prep | Algebra II | done | | Assigned slot **F**. 2 courses: SAT Math Fundamentals (rebuilt to the full outline: 17 units, 658 topics, `sat-fundamentals-*.ts` for the 76 new ones) and SAT Math Prep (rebuilt to the full outline: 4 units, 292 topics, `sat-prep-*.ts` for the 32 new ones) |
+| ACT Math Fundamentals, ACT Math Prep | Precalculus | done | | Assigned slot **G**. 2 courses: ACT Math Fundamentals (rebuilt to the full outline: 7 units, 888 topics) and ACT Math Prep (rebuilt to the full outline: 6 units, 321 topics); `act-*.ts` hold the 27 new topics and `act-fundamentals-*.ts` 29 more for outline titles that had no topic of their own; most outline titles the audit lists have an existing topic with the same mathematics, but not the exam-style practice the Prep outlines ask for (see *Open Gaps*) |
 
 ## Requests
 
