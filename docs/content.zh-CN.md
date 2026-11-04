@@ -204,7 +204,7 @@ const prealgebra: CourseDef = {
 
 **读图题。** `content/math/src/topics/figure-reading.ts` 中的 `figureReadingPoints` 按主题 id 为大学课程的主题追加知识点，排在主题自身的知识点之后：把向量场、等值线、二次曲面或极坐标曲线与公式对应，以及从图上读出积分限、矩阵、投影或概率。`content/math/src/index.ts` 中处理每个主题的步骤负责追加。`libs/subject-math` 中的 `plane` 负责画箭头、等值线、折线和阴影多边形。
 
-**主题跳过的技能。** `content/math/src/topics/deeper-*.ts` 中的 `deeperLinearAlgebraPoints`、`deeperMultivariableCalculusPoints` 和 `deeperProbabilityStatisticsPoints` 按主题 id 为这些课程的主题追加知识点，排在主题自身的知识点之后、读图题之前。每个知识点都是主题自身没有涉及的技能，例如由逆矩阵解方程组、拉格朗日乘数或全方差公式，而不是已有技能的另一种版本。主题已有的 id 不变，所以学习者状态仍然有效。
+**主题跳过的技能。** `content/math/src/topics/deeper-*.ts` 中的 `deeper…Points` 映射分别对应微积分 I、微积分 II、线性代数、多元微积分和概率统计，按主题 id 为这些课程的主题追加知识点，排在主题自身的知识点之后、读图题之前。每个知识点都是主题自身没有涉及的技能，例如由逆矩阵解方程组、拉格朗日乘数或全方差公式，而不是已有技能的另一种版本。主题已有的 id 不变，所以学习者状态仍然有效。
 
 **文本规整。** 生成器按一般情况编写，随机值取 1 时会得到"$1x$"或"$1$ hours"。`polishTopic` 包装学科的每个生成器：在学习者读到的内容中（不含答案）去掉系数 1 和等式链中重复的值；在英文中让名词与数量 1 保持一致，并在 8、11 这类数字前写"an"。模板按一般情况编写，这些交给它处理；其他书写规则由 `mathTextIssue` 通过抽样检查（§8）。
 
