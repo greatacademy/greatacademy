@@ -46,7 +46,7 @@ The report lists outline topics missing from each course and the findings of heu
 - Every topic written by hand has at least two knowledge points; topics built by factories (`proofKp`, `placeValueKPs` and the like) get theirs from the factory. Solutions say why each step is taken, not only the result.
 - *Two-option choice* is a real weakness where it dominates: Yes/No questions make up 24% of the knowledge points of Abstract Algebra and 17% of Methods of Proof, and a learner can guess half of them. Replace them there first.
 - These findings are known false positives; review them only after a content change:
-  - *visual topic without a figure*: titles that say "graphing calculator" or "significant figures", where the problems use tables or no picture.
+  - *visual topic without a figure*: titles that say "graphing calculator" or "significant figures", where the problems use tables or no picture. Also exam topics where a figure adds nothing or gives the answer away: the equations of circles, Classifying Triangles, Describing Behavior of a Function Graph, and Finding a Net Cost or Profit, whose title only contains "net".
   - *canonical answer appears in the prompt*: questions where the answer is an equal quantity named in the prompt, such as $\sin T = \cos S$ or $\varnothing$ in the input instructions.
   - *topic in no course*: older topics whose ids must stay. Most are computed foundations, because course topics list them as prerequisites.
   - *duplicate topic titles*: an exam topic shares its outline title with the Fundamentals topic it builds on (about 60 findings). Also `units-of-time` and `units-of-time-and-elapsed-time`, and `mean-of-a-data-set` and `the-mean-of-a-data-set`, are different topics with one outline title, and no course contains both.
@@ -56,7 +56,6 @@ The report lists outline topics missing from each course and the findings of heu
 The board tracks whether a course exists, not whether it is finished. Measured on 2026-11-03:
 
 - **SAT and ACT Math Prep are exam-style in their questions, not yet in everything.** 252 of the 284 SAT Prep topics and 345 of the 347 ACT Prep topics are exam topics (`exam.ts`), and what is left is:
-  - 61 exam topics, most of them in geometry, ask about a figure in words and draw none, unlike the real test.
   - About 124 ACT exam topics reuse the SAT generators through `multipleChoice`, so a learner taking both courses sees similar questions.
   - Options are shuffled, while the real tests list numeric options in order.
   - The ACT outline lists "Solving Exponential Equations" twice, and the course has it once, so the course has 347 topics against 348 outline entries.

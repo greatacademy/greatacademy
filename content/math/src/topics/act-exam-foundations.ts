@@ -1,8 +1,8 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
 import type { ExamSpec } from "../exam.ts";
 import { ask, mod, words } from "../exam.ts";
+import { heightFigure, nestedSquaresFigure, numberLineFigure, polyFigure, rightPts, stripFigure } from "../exam-figures.ts";
 
 // ACT Math Prep, Foundations: arithmetic, fractions, ratios and rates, word problems, and basic data and geometry.
 
@@ -414,6 +414,7 @@ export const actExamFoundations: ExamSpec[] = [
       [a + m, a + k * n, k * m, a + k * m + 1],
       `Each part has length $${k}$.`,
       `每份长 $${k}$。`,
+      numberLineFigure(a, a + k * n, n, m),
     );
   }),
   orderTips("Ordering Rational Numbers", "给有理数排序", ["comparing-rational-numbers"], (rng, hard) => {
@@ -1200,6 +1201,7 @@ export const actExamFoundations: ExamSpec[] = [
         [b * h, b + h, 2 * (b + h), (b * h) / 2 + 2],
         `$\\frac{1}{2}(${b})(${h})$.`,
         `$\\frac{1}{2}(${b})(${h})$。`,
+        heightFigure(`${b}`, `${h}`),
       );
     return ask(
       rng,
@@ -1209,6 +1211,7 @@ export const actExamFoundations: ExamSpec[] = [
       [b * k * h, b + k * h, (b * h) / 2, (b * k * h) / 2 + k],
       `The legs serve as base and height.`,
       `两条直角边就是底和高。`,
+      polyFigure(rightPts(b, k * h), { s: [`${k * h}`, `${b}`, null], right: 1 }),
     );
   }),
   shapeTips(
@@ -1277,6 +1280,7 @@ export const actExamFoundations: ExamSpec[] = [
         ],
         `$${n - cells}$ of the $${n}$ parts are not shaded.`,
         `$${n}$ 份中有 $${n - cells}$ 份没有涂色。`,
+        stripFigure(n, cells),
       );
     return ask(
       rng,
@@ -1286,6 +1290,7 @@ export const actExamFoundations: ExamSpec[] = [
       [Q.of(1, k), Q.of(k * k - 1, k * k), Q.of(1, 2 * k), Q.of(2, k * k + 1)],
       `The side ratio is $\\frac{1}{${k}}$, so the area ratio is its square.`,
       `边长比是 $\\frac{1}{${k}}$，所以面积比是它的平方。`,
+      nestedSquaresFigure(`${m * k}`, `${m}`, k),
     );
   }),
   shapeTips("Finding the Perimeter of a Rectangle", "求长方形的周长", ["perimeter"], (rng, hard) => {

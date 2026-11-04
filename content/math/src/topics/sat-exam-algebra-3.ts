@@ -1,9 +1,9 @@
 import type { Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
 import type { ExamSpec } from "../exam.ts";
 import { cx, mc, mod, sg, spr, tx, words } from "../exam.ts";
+import { lineFigure, pointsFigure } from "../exam-figures.ts";
 
 // SAT Math Prep, Algebra: graphs of lines, parallel and perpendicular lines, and modeling with linear functions.
 
@@ -199,6 +199,7 @@ export const satExamAlgebra3: ExamSpec[] = [
           `A shift up adds to the output: the new line is $y = ${cx(m)} ${sg(b + Math.abs(b) + 1)}$. At $x = ${a}$, $k = ${m * a + b + Math.abs(b) + 1}$.`,
           `向上平移是给输出增加：新直线为 $y = ${cx(m)} ${sg(b + Math.abs(b) + 1)}$。当 $x = ${a}$ 时，$k = ${m * a + b + Math.abs(b) + 1}$。`,
         ),
+        lineFigure(m, b),
       );
     },
   ),
@@ -632,6 +633,16 @@ export const satExamAlgebra3: ExamSpec[] = [
           t(`The value after one ${c.tu.en}`, `一${c.tu["zh-CN"]}后的值`),
         ],
         t(`The vertical axis is where $x = 0$, the moment of the start.`, `纵轴上 $x = 0$，即开始的时刻。`),
+        pointsFigure(
+          [
+            [0, s],
+            [b, s + m * b],
+          ],
+          [
+            [0, s],
+            [b, s + m * b],
+          ],
+        ),
       );
     return spr(
       t(
@@ -643,6 +654,16 @@ export const satExamAlgebra3: ExamSpec[] = [
       t(
         `The slope is $\\frac{${m * (b - a)}}{${b - a}} = ${m}$. Then $${s + m * a} - ${a}(${m}) = ${s}$.`,
         `斜率为 $\\frac{${m * (b - a)}}{${b - a}} = ${m}$。于是 $${s + m * a} - ${a}(${m}) = ${s}$。`,
+      ),
+      pointsFigure(
+        [
+          [a, s + m * a],
+          [b, s + m * b],
+        ],
+        [
+          [a, s + m * a],
+          [b, s + m * b],
+        ],
       ),
     );
   }),

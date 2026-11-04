@@ -1,8 +1,8 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
 import type { ExamSpec } from "../exam.ts";
 import { cx, mc, mod, sg, spr, words } from "../exam.ts";
+import { linesFigure } from "../exam-figures.ts";
 
 // SAT Math Prep, Algebra: systems of linear equations, special solution counts, and linear inequalities.
 
@@ -366,17 +366,19 @@ export const satExamAlgebra4: ExamSpec[] = [
         );
       }
       const y1 = rng.int(2, 9);
+      const x0 = rng.int(1, 5);
       return spr(
         t(
-          `A system of two linear equations is graphed. One line is $y = ${y1}$ and the other is $y = ${cx(m)} ${sg(y1 - m * 2)}$. What is the $x$-coordinate of the solution of the system?`,
-          `两个一次方程组成的方程组的图象中，一条直线是 $y = ${y1}$，另一条是 $y = ${cx(m)} ${sg(y1 - m * 2)}$。方程组解的横坐标是多少？`,
+          `A system of two linear equations is graphed. One line is $y = ${y1}$ and the other is $y = ${cx(m)} ${sg(y1 - m * x0)}$. What is the $x$-coordinate of the solution of the system?`,
+          `两个一次方程组成的方程组的图象中，一条直线是 $y = ${y1}$，另一条是 $y = ${cx(m)} ${sg(y1 - m * x0)}$。方程组解的横坐标是多少？`,
         ),
-        2,
-        [y1, m, y1 - m * 2],
+        x0,
+        [y1, m, y1 - m * x0].filter((v) => v !== x0),
         t(
-          `The solution is the crossing point: $${cx(m)} ${sg(y1 - m * 2)} = ${y1}$ gives $x = 2$.`,
-          `解就是交点：$${cx(m)} ${sg(y1 - m * 2)} = ${y1}$ 得 $x = 2$。`,
+          `The solution is the crossing point: $${cx(m)} ${sg(y1 - m * x0)} = ${y1}$ gives $x = ${x0}$.`,
+          `解就是交点：$${cx(m)} ${sg(y1 - m * x0)} = ${y1}$ 得 $x = ${x0}$。`,
         ),
+        linesFigure([0, y1], [m, y1 - m * x0]),
       );
     },
   ),

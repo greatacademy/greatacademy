@@ -1,8 +1,8 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
 import type { ExamSpec } from "../exam.ts";
 import { ask, mod, sketchFigure } from "../exam.ts";
+import { pieFigure } from "../exam-figures.ts";
 
 // ACT Math Prep, Statistics and Probability: means, tables and graphs, probability, expected value, counting and estimation.
 
@@ -205,6 +205,7 @@ export const actExamStatistics: ExamSpec[] = [
         [p, n - (n * p) / 100, (n * p) / 10, (n * p) / 100 + p],
         `$${p}\\%$ of $${n}$.`,
         `$${n}$ 的 $${p}\\%$。`,
+        pieFigure(p),
       );
     return ask(
       rng,
@@ -214,6 +215,7 @@ export const actExamStatistics: ExamSpec[] = [
       [p + q, 180 - p - q, (9 * (p + q)) / 5, (18 * (p + q)) / 5 + 10],
       `$${p + q}\\%$ of $360^\\circ$.`,
       `$360^\\circ$ 的 $${p + q}\\%$。`,
+      pieFigure(p + q),
     );
   }),
   probTips("Solving for a Count Given a Probability", "由概率求数量", ["adjusting-outcomes-to-a-target-probability"], (rng, hard) => {

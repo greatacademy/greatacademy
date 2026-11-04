@@ -163,7 +163,8 @@ export interface PlotView {
 
 const round1 = (n: number): string => String(Math.round(n * 10) / 10);
 
-const plotFrame = (v: PlotView, body: (px: (x: number) => number, py: (y: number) => number) => string, alt: Text): Figure => {
+/** plotFrame draws the grid and axes of a coordinate figure and what body adds in its coordinates. */
+export const plotFrame = (v: PlotView, body: (px: (x: number) => number, py: (y: number) => number) => string, alt: Text): Figure => {
   const [W, H, M] = [320, 240, 26];
   const px = (x: number) => M + ((x - v.x[0]) / (v.x[1] - v.x[0])) * (W - 2 * M);
   const py = (y: number) => H - M - ((y - v.y[0]) / (v.y[1] - v.y[0])) * (H - 2 * M);

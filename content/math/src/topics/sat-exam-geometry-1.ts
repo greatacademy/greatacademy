@@ -1,7 +1,22 @@
 import { t } from "@ga/content";
-
 import type { ExamSpec } from "../exam.ts";
 import { mc, mod, sg, sketchFigure, spr } from "../exam.ts";
+import {
+  bowtieFigure,
+  cevianFigure,
+  chordFigure,
+  circumcircleFigure,
+  equilateralFigure,
+  exteriorFigure,
+  incircleFigure,
+  isoPts,
+  kiteFigure,
+  polyFigure,
+  radiusFigure,
+  rectFigure,
+  rightPts,
+  squareCircleFigure,
+} from "../exam-figures.ts";
 
 // SAT Math Prep, Geometry and Trigonometry: lines and angles, area and perimeter, right triangles, circles and inscribed shapes.
 
@@ -306,6 +321,7 @@ export const satExamGeometry1: ExamSpec[] = [
           `The base angles are equal and add to $180 - ${apex}$, so each is $${(180 - apex) / 2}$.`,
           `两个底角相等，和为 $180 - ${apex}$，所以每个为 $${(180 - apex) / 2}$。`,
         ),
+        polyFigure(isoPts(apex), { a: [null, null, `${apex}°`] }),
       );
     const base = rng.int(20, 80);
     return spr(
@@ -319,6 +335,7 @@ export const satExamGeometry1: ExamSpec[] = [
         `Both base angles are $${base}^\\circ$, so the vertex angle is $180 - 2(${base}) = ${180 - 2 * base}$.`,
         `两个底角都是 $${base}^\\circ$，所以顶角是 $180 - 2(${base}) = ${180 - 2 * base}$。`,
       ),
+      polyFigure(isoPts(180 - 2 * base), { a: [`${base}°`, null, "?"] }),
     );
   }),
   angleTips("Exterior Angles of Triangles", "三角形的外角", ["exterior-angles-of-triangles"], (rng, hard) => {
@@ -336,8 +353,9 @@ export const satExamGeometry1: ExamSpec[] = [
           `An exterior angle equals the sum of the two remote interior angles: $${a} + ${b} = ${a + b}$.`,
           `外角等于两个不相邻内角之和：$${a} + ${b} = ${a + b}$。`,
         ),
+        exteriorFigure(a, b, `${a}°`, `${b}°`, "?"),
       );
-    const x = rng.int(10, 25);
+    const x = rng.int(10, 20);
     const k = rng.int(2, 4);
     return spr(
       t(
@@ -350,6 +368,7 @@ export const satExamGeometry1: ExamSpec[] = [
         `The remote angles add to the exterior angle: $${k + 1}x + ${a} = ${(k + 1) * x + a}$, so $x = ${x}$.`,
         `不相邻内角之和等于外角：$${k + 1}x + ${a} = ${(k + 1) * x + a}$，所以 $x = ${x}$。`,
       ),
+      exteriorFigure(42, 62, "x°", `(${k}x + ${a})°`, `${(k + 1) * x + a}°`),
     );
   }),
   angleTips("Solving Problems With Multiple Triangles", "解多个三角形的问题", ["problem-solving-with-angles-of-triangles"], (rng, hard) => {
@@ -368,6 +387,7 @@ export const satExamGeometry1: ExamSpec[] = [
           `Angle $ACB$ is $${shared}^\\circ$, and its vertical angle $DCE$ is the same. So angle $E$ is $180 - ${shared} - ${c} = ${180 - shared - c}$.`,
           `$\\angle ACB = ${shared}^\\circ$，它的对顶角 $\\angle DCE$ 相同。所以 $\\angle E = 180 - ${shared} - ${c} = ${180 - shared - c}$。`,
         ),
+        bowtieFigure(a, b, c),
       );
     return spr(
       t(
@@ -380,6 +400,7 @@ export const satExamGeometry1: ExamSpec[] = [
         `The two triangles have $360^\\circ$ in total, so the sum is $360 - ${a} - ${b} - ${c} - ${a - 5} = ${360 - a - b - c - a + 5}$.`,
         `两个三角形内角总和为 $360^\\circ$，所以和为 $360 - ${a} - ${b} - ${c} - ${a - 5} = ${360 - a - b - c - a + 5}$。`,
       ),
+      kiteFigure(a, b, a - 5, c),
     );
   }),
   angleTips(
@@ -401,6 +422,7 @@ export const satExamGeometry1: ExamSpec[] = [
             `Angle $ADC$ is an exterior angle of triangle $ABD$, so it equals $${a} + ${b} = ${a + b}$.`,
             `$\\angle ADC$ 是三角形 $ABD$ 的外角，所以等于 $${a} + ${b} = ${a + b}$。`,
           ),
+          cevianFigure(a, b),
         );
       const c = rng.int(20, 40);
       return spr(
@@ -414,6 +436,7 @@ export const satExamGeometry1: ExamSpec[] = [
           `In the large triangle, the angles at $A$, $B$ and $C$ add to $180$: $(${a} + ${c}) + ${b} + \\angle ACD = 180$. So the angle is $${180 - a - b - c}$.`,
           `在大三角形中，$A$、$B$、$C$ 处的角和为 $180$：$(${a} + ${c}) + ${b} + \\angle ACD = 180$。所以该角为 $${180 - a - b - c}$。`,
         ),
+        cevianFigure(a, b, c),
       );
     },
   ),
@@ -449,6 +472,7 @@ export const satExamGeometry1: ExamSpec[] = [
         2 * (l + w),
         [l + w, l * w, 2 * l + w],
         t(`Add all four sides: $2(${l} + ${w}) = ${2 * (l + w)}$.`, `四条边相加：$2(${l} + ${w}) = ${2 * (l + w)}$。`),
+        rectFigure(l, w, `${l}`, `${w}`),
       );
     return spr(
       t(
@@ -461,6 +485,7 @@ export const satExamGeometry1: ExamSpec[] = [
         `With width $x$, the perimeter is $${2 * (k + 1)}x$, so $x = ${w}$ and the length is $${k * w}$.`,
         `设宽为 $x$，周长为 $${2 * (k + 1)}x$，所以 $x = ${w}$，长为 $${k * w}$。`,
       ),
+      rectFigure(k, 1, `${k}x`, "x"),
     );
   }),
   areaTips(
@@ -651,6 +676,7 @@ export const satExamGeometry1: ExamSpec[] = [
         `${a}\\sqrt{2}`,
         [`${2 * a}`, `${a}\\sqrt{3}`, `\\frac{${a}\\sqrt{2}}{2}`, `${2 * a}\\sqrt{2}`],
         t(`The hypotenuse is a leg times $\\sqrt{2}$.`, `斜边等于直角边乘 $\\sqrt{2}$。`),
+        polyFigure(rightPts(1, 1), { s: [`${a}`, `${a}`, "?"], right: 1 }),
       );
     return spr(
       t(
@@ -663,6 +689,7 @@ export const satExamGeometry1: ExamSpec[] = [
         `The area is half the product of the legs: $\\frac{1}{2}(${a}\\sqrt{2})^2 = ${a * a}$.`,
         `面积是两直角边之积的一半：$\\frac{1}{2}(${a}\\sqrt{2})^2 = ${a * a}$。`,
       ),
+      polyFigure(rightPts(1, 1), { s: [`${a}√2`, `${a}√2`, `${2 * a}`], right: 1 }),
     );
   }),
   rightTips("Problem-Solving With Special Triangles", "用特殊三角形解题", ["thirty-sixty-ninety-triangles"], (rng, hard) => {
@@ -677,6 +704,7 @@ export const satExamGeometry1: ExamSpec[] = [
         2 * a,
         [`${a}\\sqrt{3}`, `${a}\\sqrt{2}`, 3 * a],
         t(`The hypotenuse is twice the shortest side, opposite $30^\\circ$.`, `斜边是 $30^\\circ$ 所对最短边的两倍。`),
+        polyFigure(rightPts(Math.sqrt(3), 1), { a: ["60°", null, "30°"], s: [`${a}`, null, "?"], right: 1 }),
       );
     return mc(
       rng,
@@ -690,6 +718,7 @@ export const satExamGeometry1: ExamSpec[] = [
         `The shortest side is $${a}$, and the side opposite $60^\\circ$ is $${a}\\sqrt{3}$.`,
         `最短边是 $${a}$，$60^\\circ$ 所对的边是 $${a}\\sqrt{3}$。`,
       ),
+      polyFigure(rightPts(Math.sqrt(3), 1), { a: ["60°", null, "30°"], s: [null, "?", `${2 * a}`], right: 1 }),
     );
   }),
   rightTips(
@@ -708,6 +737,7 @@ export const satExamGeometry1: ExamSpec[] = [
             `The height splits it into two $30$-$60$-$90$ triangles with short side $${a / 2}$, so the height is $${a / 2}\\sqrt{3}$.`,
             `高把它分成两个短边为 $${a / 2}$ 的 $30$-$60$-$90$ 三角形，所以高是 $${a / 2}\\sqrt{3}$。`,
           ),
+          equilateralFigure(`${a}`, "?"),
         );
       return spr(
         t(
@@ -720,6 +750,7 @@ export const satExamGeometry1: ExamSpec[] = [
           `The height is $${a / 2}\\sqrt{3}$, so the area is $\\frac{1}{2}(${a})(${a / 2}\\sqrt{3}) = ${(a * a) / 4}\\sqrt{3}$.`,
           `高是 $${a / 2}\\sqrt{3}$，所以面积为 $\\frac{1}{2}(${a})(${a / 2}\\sqrt{3}) = ${(a * a) / 4}\\sqrt{3}$。`,
         ),
+        equilateralFigure(`${a}`, null),
       );
     },
   ),
@@ -741,6 +772,7 @@ export const satExamGeometry1: ExamSpec[] = [
             `$(${a}\\sqrt{${n}})^2 + (${b}\\sqrt{${n}})^2 = ${a * a * n} + ${b * b * n} = ${(a * a + b * b) * n}$.`,
             `$(${a}\\sqrt{${n}})^2 + (${b}\\sqrt{${n}})^2 = ${a * a * n} + ${b * b * n} = ${(a * a + b * b) * n}$。`,
           ),
+          polyFigure(rightPts(b, a), { s: [`${a}√${n}`, `${b}√${n}`, null], right: 1 }),
         );
       const [p, q, c] = rng.pick([
         [3, 4, 5],
@@ -759,6 +791,7 @@ export const satExamGeometry1: ExamSpec[] = [
           `Both legs share $${a}\\sqrt{${n}}$, so the triangle is a scaled $${p}$-$${q}$-$${c}$ triangle.`,
           `两条直角边都含 $${a}\\sqrt{${n}}$，所以它是放大的 $${p}$-$${q}$-$${c}$ 三角形。`,
         ),
+        polyFigure(rightPts(q, p), { s: [`${p * a}√${n}`, `${q * a}√${n}`, "?"], right: 1 }),
       );
     },
   ),
@@ -821,6 +854,7 @@ export const satExamGeometry1: ExamSpec[] = [
         `${r * r}\\pi`,
         [`${2 * r}\\pi`, `${r * r * 2}\\pi`, `${r}\\pi`, `${r * r + 1}\\pi`],
         t(`Area is $\\pi r^2 = ${r * r}\\pi$.`, `面积是 $\\pi r^2 = ${r * r}\\pi$。`),
+        radiusFigure(`${r}`),
       );
     return spr(
       t(
@@ -847,6 +881,7 @@ export const satExamGeometry1: ExamSpec[] = [
           `$OA$ and $OB$ are radii, so the base angles are equal: $\\frac{180 - ${a}}{2} = ${(180 - a) / 2}$.`,
           `$OA$、$OB$ 是半径，所以底角相等：$\\frac{180 - ${a}}{2} = ${(180 - a) / 2}$。`,
         ),
+        chordFigure(a, `${a}°`, "?"),
       );
     const b = rng.int(15, 75);
     return spr(
@@ -860,6 +895,7 @@ export const satExamGeometry1: ExamSpec[] = [
         `Both base angles are $${b}^\\circ$, so the angle at $O$ is $180 - 2(${b}) = ${180 - 2 * b}$.`,
         `两个底角都是 $${b}^\\circ$，所以 $O$ 处的角是 $180 - 2(${b}) = ${180 - 2 * b}$。`,
       ),
+      chordFigure(180 - 2 * b, "?", `${b}°`),
     );
   }),
   circleTips("Tangent Lines to Circles", "圆的切线", ["tangent-lines-to-circles"], (rng, hard) => {
@@ -1126,6 +1162,7 @@ export const satExamGeometry1: ExamSpec[] = [
           `The side equals the diameter, $${2 * r}$, so the area is $${4 * r * r}$.`,
           `边长等于直径 $${2 * r}$，所以面积为 $${4 * r * r}$。`,
         ),
+        squareCircleFigure({ radius: `${r}` }),
       );
     return mc(
       rng,
@@ -1139,6 +1176,7 @@ export const satExamGeometry1: ExamSpec[] = [
         `Subtract the circle's area $${r * r}\\pi$ from the square's area $${4 * r * r}$.`,
         `从正方形面积 $${4 * r * r}$ 中减去圆的面积 $${r * r}\\pi$。`,
       ),
+      squareCircleFigure({ side: `${2 * r}`, shade: true }),
     );
   }),
   inscribedTips(
@@ -1160,6 +1198,7 @@ export const satExamGeometry1: ExamSpec[] = [
             `The inscribed radius is one third of the height, so the height is $${3 * r}$.`,
             `内切圆半径是高的三分之一，所以高为 $${3 * r}$。`,
           ),
+          incircleFigure(`${r}`),
         );
       return mc(
         rng,
@@ -1173,6 +1212,7 @@ export const satExamGeometry1: ExamSpec[] = [
           `The height is $${3 * r}$, and $\\frac{s\\sqrt{3}}{2} = ${3 * r}$ gives $s = ${2 * r}\\sqrt{3}$.`,
           `高为 $${3 * r}$，由 $\\frac{s\\sqrt{3}}{2} = ${3 * r}$ 得 $s = ${2 * r}\\sqrt{3}$。`,
         ),
+        incircleFigure(`${r}`),
       );
     },
   ),
@@ -1195,6 +1235,7 @@ export const satExamGeometry1: ExamSpec[] = [
             `The circumscribed radius is two thirds of the height, so the height is $\\frac{3}{2}(${r}) = ${(3 * r) / 2}$.`,
             `外接圆半径是高的三分之二，所以高为 $\\frac{3}{2}(${r}) = ${(3 * r) / 2}$。`,
           ),
+          circumcircleFigure(`${r}`),
         );
       return mc(
         rng,
@@ -1208,6 +1249,7 @@ export const satExamGeometry1: ExamSpec[] = [
           `The height is $${(3 * r) / 2}$, and $\\frac{s\\sqrt{3}}{2} = ${(3 * r) / 2}$ gives $s = ${r}\\sqrt{3}$.`,
           `高为 $${(3 * r) / 2}$，由 $\\frac{s\\sqrt{3}}{2} = ${(3 * r) / 2}$ 得 $s = ${r}\\sqrt{3}$。`,
         ),
+        circumcircleFigure(`${r}`),
       );
     },
   ),

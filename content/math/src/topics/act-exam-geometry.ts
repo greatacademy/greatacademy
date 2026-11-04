@@ -1,8 +1,27 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
 import type { ExamSpec } from "../exam.ts";
 import { ask, mod, sg, sketchFigure, words } from "../exam.ts";
+import {
+  diameterFigure,
+  diameterTriangleFigure,
+  heightFigure,
+  hexagonSpokesFigure,
+  inscribedAngleFigure,
+  pointsFigure,
+  polyFigure,
+  rectFigure,
+  rectPlot,
+  regularPts,
+  rightPts,
+  ringFigure,
+  sectorFigure,
+  squareCircleFigure,
+  squareInCircleFigure,
+  triangleInRectFigure,
+  twoCirclesFigure,
+  twoSquaresFigure,
+} from "../exam-figures.ts";
 
 // ACT Math Prep, Geometry: lines and angles, polygons, transformations, right triangles, area, circles, the coordinate plane, solids and conics.
 
@@ -326,6 +345,14 @@ export const actExamGeometry: ExamSpec[] = [
         [b - a, a + b, a + b + 1, b - a - 1 === 0 ? a + b + 2 : b - a - 1],
         `The third side must lie strictly between $${b - a}$ and $${a + b}$.`,
         `第三边必须严格介于 $${b - a}$ 和 $${a + b}$ 之间。`,
+        polyFigure(
+          [
+            [0, 0],
+            [2, 0],
+            [0.5, 1],
+          ],
+          { s: [`${b}`, "?", `${a}`] },
+        ),
       );
     return ask(
       rng,
@@ -335,6 +362,14 @@ export const actExamGeometry: ExamSpec[] = [
       [2 * a, 2 * a + 1, a + b, b - a],
       `The whole numbers from $${b - a + 1}$ to $${a + b - 1}$ work.`,
       `从 $${b - a + 1}$ 到 $${a + b - 1}$ 的整数都可以。`,
+      polyFigure(
+        [
+          [0, 0],
+          [2, 0],
+          [0.5, 1],
+        ],
+        { s: [`${b}`, "?", `${a}`] },
+      ),
     );
   }),
   triangleTips(
@@ -437,6 +472,7 @@ export const actExamGeometry: ExamSpec[] = [
       [720 - a - b - 190 - 2 * known, 360 - a - b - 90 - 2 * known, 540 - a - b - 190 - 2 * known + 10, 540 - a - b - 190 - 2 * known - 10],
       `The angles of a pentagon add to $540^\\circ$.`,
       `五边形内角和为 $540^\\circ$。`,
+      polyFigure(regularPts(5), { a: [`${a}°`, `${b}°`, `${90 + known}°`, `${100 + known}°`, "?"] }),
     );
   }),
   polygonTips("Finding Angles in Parallelograms", "求平行四边形的角", ["properties-of-parallelograms"], (rng, hard) => {
@@ -501,6 +537,7 @@ export const actExamGeometry: ExamSpec[] = [
         [n * s - n, s + n, s + 1, n],
         `Divide the perimeter by the number of sides.`,
         `周长除以边数。`,
+        polyFigure(regularPts(n), { s: ["?"] }),
       );
     return ask(
       rng,
@@ -510,6 +547,7 @@ export const actExamGeometry: ExamSpec[] = [
       [18 * s * k, 3 * s * k, 12 * s * k, 6 * s * k + 6],
       `Each triangle has side $${s * k}$, and the hexagon has $6$ such sides.`,
       `每个三角形边长 $${s * k}$，六边形有 $6$ 条这样的边。`,
+      hexagonSpokesFigure(),
     );
   }),
   moveTips("Translating and Reflecting a Point", "平移和翻折点", ["reflections-of-points-in-the-coordinate-plane"], (rng, hard) => {
@@ -574,6 +612,7 @@ export const actExamGeometry: ExamSpec[] = [
         [`(${x + k}, ${y + k})`, `(${k * x}, ${y})`, `(${x}, ${k * y})`, `(${k * k * x}, ${k * k * y})`],
         `Multiply each coordinate by $${k}$.`,
         `每个坐标乘 $${k}$。`,
+        pointsFigure([[x, y]]),
       );
     return ask(
       rng,
@@ -583,6 +622,7 @@ export const actExamGeometry: ExamSpec[] = [
       [k * l * w, 2 * k * (l + w), k * k * (l + w), k * k * l * w + k],
       `Area scales by $${k}^2$.`,
       `面积乘 $${k}^2$。`,
+      rectFigure(l, w, `${l}`, `${w}`),
     );
   }),
   moveTips("Finding Lengths Using Parallel Lines", "利用平行线求长度", ["the-triangle-proportionality-theorem"], (rng, hard) => {
@@ -674,6 +714,7 @@ export const actExamGeometry: ExamSpec[] = [
           [(c - p) * k, (c + p) * k, c * k, q * k + 1],
           `$\\sqrt{${c * k}^2 - ${p * k}^2}$.`,
           `$\\sqrt{${c * k}^2 - ${p * k}^2}$。`,
+          polyFigure(rightPts(p, q), { s: ["?", `${p * k}`, `${c * k}`], right: 1 }),
         );
       return ask(
         rng,
@@ -683,6 +724,7 @@ export const actExamGeometry: ExamSpec[] = [
         [(p + q) * k, (q - p) * k > 0 ? (q - p) * k : (p - q) * k, c * k + 2, c * k - 1],
         `North and east are perpendicular, so the distance is the hypotenuse.`,
         `向北和向东互相垂直，距离就是斜边。`,
+        polyFigure(rightPts(q, p), { s: [`${p * k}`, `${q * k}`, "?"], right: 1 }),
       );
     },
   ),
@@ -924,6 +966,7 @@ export const actExamGeometry: ExamSpec[] = [
         [b * h, b + h, 2 * b * h, (b * h) / 2 + 1],
         `$\\frac{1}{2}(${b})(${h})$.`,
         `$\\frac{1}{2}(${b})(${h})$。`,
+        heightFigure(`${b}`, `${h}`),
       );
     return ask(
       rng,
@@ -946,6 +989,7 @@ export const actExamGeometry: ExamSpec[] = [
         [`${r * r} - ${r * r}\\pi`, `${2 * r * r} - ${r * r}\\pi`, `${4 * r * r} - ${2 * r}\\pi`, `${4 * r * r}\\pi - ${r * r}`],
         `The square has side $${2 * r}$.`,
         `正方形边长是 $${2 * r}$。`,
+        squareCircleFigure({ radius: `${r}`, shade: true }),
       );
     return ask(
       rng,
@@ -955,6 +999,7 @@ export const actExamGeometry: ExamSpec[] = [
       [`${(k + d) ** 2}\\pi`, `${2 * (k + d)}\\pi`, `${(r + k + d) ** 2 + r * r}\\pi`, `${(r + k + d) ** 2}\\pi`],
       `$\\pi(${r + k + d})^2 - \\pi(${r})^2$.`,
       `$\\pi(${r + k + d})^2 - \\pi(${r})^2$。`,
+      ringFigure(r, r + k + d),
     );
   }),
   areaTips("Comparing Areas of Figures", "比较图形的面积", ["calculating-perimeters-and-areas-of-scaled-shapes"], (rng, hard) => {
@@ -968,6 +1013,7 @@ export const actExamGeometry: ExamSpec[] = [
         [k, 2 * k, 4 * k, k * k * a],
         `Scaling lengths by $${k}$ scales area by $${k * k}$.`,
         `长度乘 $${k}$，面积乘 $${k * k}$。`,
+        twoSquaresFigure(`${a}`, `${k * a}`, k),
       );
     return ask(
       rng,
@@ -977,6 +1023,7 @@ export const actExamGeometry: ExamSpec[] = [
       [b * h, 2 * b * h, b + h, (b * h) / 2 + b],
       `The triangle has half the rectangle's area.`,
       `三角形面积是长方形的一半。`,
+      triangleInRectFigure(`${b}`, `${h}`),
     );
   }),
   areaTips("Finding Areas of Nested Regions", "求嵌套区域的面积", ["finding-areas-between-shapes"], (rng, hard) => {
@@ -1034,6 +1081,7 @@ export const actExamGeometry: ExamSpec[] = [
         [`${r}\\pi`, `${4 * r}\\pi`, `${r * r}\\pi`, `${4 * r * r}\\pi`],
         `Circumference is $\\pi d$.`,
         `周长是 $\\pi d$。`,
+        diameterFigure(`${2 * r}`),
       );
     return ask(
       rng,
@@ -1066,6 +1114,7 @@ export const actExamGeometry: ExamSpec[] = [
       [`${(a * r) / 90}\\pi`, `${(a * r) / 60}\\pi`, `${(a * r) / 180 + 1}\\pi`, `${(a * r) / 180 + 2}\\pi`, `${(a * r) / 180 + 3}\\pi`],
       `The arc is $\\frac{${a}}{360}$ of the circumference $${2 * r}\\pi$.`,
       `弧占周长 $${2 * r}\\pi$ 的 $\\frac{${a}}{360}$。`,
+      sectorFigure(a, `${a}°`, `${r}`),
     );
   }),
   circleTips("Comparing Areas of Circles", "比较圆的面积", ["relating-the-circumference-and-area-of-a-circle"], (rng, hard) => {
@@ -1079,6 +1128,7 @@ export const actExamGeometry: ExamSpec[] = [
         [k, 2 * k, k * k * r, k + r],
         `Area depends on the square of the radius.`,
         `面积取决于半径的平方。`,
+        twoCirclesFigure(`${r}`, `${k * r}`, k),
       );
     return ask(
       rng,
@@ -1133,6 +1183,7 @@ export const actExamGeometry: ExamSpec[] = [
         [2 * a, 4 * a, 180 - 2 * a === a ? a + 1 : 180 - 2 * a, 360 - 2 * a],
         `An inscribed angle is half the central angle.`,
         `圆周角是圆心角的一半。`,
+        inscribedAngleFigure(2 * a),
       );
     return ask(
       rng,
@@ -1142,6 +1193,7 @@ export const actExamGeometry: ExamSpec[] = [
       [b === 45 ? 46 : b, 180 - b, 2 * b, 90 + b],
       `Since $AB$ is a diameter, $\\angle C = 90^\\circ$.`,
       `因为 $AB$ 是直径，$\\angle C = 90^\\circ$。`,
+      diameterTriangleFigure(b),
     );
   }),
   circleTips(
@@ -1168,6 +1220,7 @@ export const actExamGeometry: ExamSpec[] = [
         [p, 4 * p, p * k, 2 * p * k],
         `$d = 2(${p * k}) = ${2 * p * k}$.`,
         `$d = 2(${p * k}) = ${2 * p * k}$。`,
+        squareInCircleFigure(`${p * k}`),
       );
     },
   ),
@@ -1361,6 +1414,7 @@ export const actExamGeometry: ExamSpec[] = [
           [`(${x + w}, ${y + 2 * h})`, `(${x + w + w}, ${y + h})`, `(${y + h}, ${x})`, `(${x - w}, ${y + h})`],
           `The missing vertex shares $x$ with the first and $y$ with the third.`,
           `缺少的顶点与第一个点 $x$ 相同，与第三个点 $y$ 相同。`,
+          rectPlot(x, y, w, h, true),
         );
       return ask(
         rng,
@@ -1370,6 +1424,7 @@ export const actExamGeometry: ExamSpec[] = [
         [2 * (w + h), w + h, w * h + w, (x + w) * (y + h) === w * h ? w * h + 1 : (x + w) * (y + h)],
         `The width is $${w}$ and the height is $${h}$.`,
         `宽是 $${w}$，高是 $${h}$。`,
+        rectPlot(x, y, w, h, false),
       );
     },
   ),

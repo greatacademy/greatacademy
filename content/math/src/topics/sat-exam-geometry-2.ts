@@ -1,8 +1,8 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
 import type { ExamSpec } from "../exam.ts";
 import { mc, mod, sketchFigure, spr, words } from "../exam.ts";
+import { altitudeFigure, anglePts, polyFigure, rightPts, twoTrianglesFigure } from "../exam-figures.ts";
 
 // SAT Math Prep, Geometry and Trigonometry: surface area and volume, congruence and similarity, and trigonometry.
 
@@ -361,6 +361,11 @@ export const satExamGeometry2: ExamSpec[] = [
           `Angle $D$ matches $A$, so it is $${a}^\\circ$. Then $F = 180 - ${a} - ${b} = ${180 - a - b}$.`,
           `$\\angle D$ 对应 $\\angle A$，为 $${a}^\\circ$。于是 $\\angle F = 180 - ${a} - ${b} = ${180 - a - b}$。`,
         ),
+        twoTrianglesFigure(
+          anglePts(a, b),
+          { v: ["A", "B", "C"], a: [`${a}°`, null, null] },
+          { v: ["D", "E", "F"], a: [null, `${b}°`, "?"] },
+        ),
       );
     return spr(
       t(
@@ -372,6 +377,11 @@ export const satExamGeometry2: ExamSpec[] = [
       t(
         `Corresponding sides are equal: $2x + ${c} = ${2 * x + c}$, so $x = ${x}$.`,
         `对应边相等：$2x + ${c} = ${2 * x + c}$，所以 $x = ${x}$。`,
+      ),
+      twoTrianglesFigure(
+        anglePts(55, 65),
+        { v: ["A", "B", "C"], s: [`2x + ${c}`, null, null] },
+        { v: ["D", "E", "F"], s: [`${2 * x + c}`, null, null] },
       ),
     );
   }),
@@ -424,6 +434,17 @@ export const satExamGeometry2: ExamSpec[] = [
           t(
             `The scale factor is $${k}$, so the other side is $${k}(${b}) = ${k * b}$.`,
             `比例因子是 $${k}$，所以另一条边为 $${k}(${b}) = ${k * b}$。`,
+          ),
+          twoTrianglesFigure(
+            [
+              [0, 0],
+              [a / b, 0],
+              [a / b, 1],
+              [0, 1],
+            ],
+            { s: [`${a}`, `${b}`, null, null] },
+            { s: [`${k * a}`, "?", null, null] },
+            1.5,
           ),
         );
       return spr(
@@ -531,6 +552,7 @@ export const satExamGeometry2: ExamSpec[] = [
             `The altitude forms similar triangles, so $\\frac{${p}}{CD} = \\frac{CD}{${q}}$ and $CD = \\sqrt{${p * q}} = ${alt}$.`,
             `高构成相似三角形，所以 $\\frac{${p}}{CD} = \\frac{CD}{${q}}$，$CD = \\sqrt{${p * q}} = ${alt}$。`,
           ),
+          altitudeFigure(p, q, "?"),
         );
       return spr(
         t(
@@ -543,6 +565,7 @@ export const satExamGeometry2: ExamSpec[] = [
           `The altitude is $\\sqrt{${p * q}} = ${alt}$ and the hypotenuse is $${p + q}$, so the area is half their product.`,
           `高是 $\\sqrt{${p * q}} = ${alt}$，斜边是 $${p + q}$，所以面积是两者之积的一半。`,
         ),
+        altitudeFigure(p, q, null),
       );
     },
   ),
@@ -616,6 +639,7 @@ export const satExamGeometry2: ExamSpec[] = [
         `The area ratio is $${k * k}$, so the length factor is $${k}$ and the side is $${k * (a + 1)}$.`,
         `面积比是 $${k * k}$，所以长度比例是 $${k}$，边长为 $${k * (a + 1)}$。`,
       ),
+      twoTrianglesFigure(anglePts(50, 70), { s: [null, `${a + 1}`, null] }, { s: [null, "?", null] }, 1.6),
     );
   }),
   simTips(
@@ -802,6 +826,12 @@ export const satExamGeometry2: ExamSpec[] = [
           `$\\tan D = \\frac{EF}{DF} = \\frac{${p}}{${q}}$, so $DF = ${k * q}$.`,
           `$\\tan D = \\frac{EF}{DF} = \\frac{${p}}{${q}}$，所以 $DF = ${k * q}$。`,
         ),
+        twoTrianglesFigure(
+          rightPts(q, p),
+          { v: ["B", "C", "A"], right: 1 },
+          { v: ["E", "F", "D"], s: [`${k * p}`, "?", null], right: 1 },
+          1.4,
+        ),
       );
     },
   ),
@@ -824,6 +854,7 @@ export const satExamGeometry2: ExamSpec[] = [
             `Height over shadow equals the tangent: $${q * k} \\cdot \\frac{${p}}{${q}} = ${p * k}$.`,
             `高与影长之比等于正切：$${q * k} \\cdot \\frac{${p}}{${q}} = ${p * k}$。`,
           ),
+          polyFigure(rightPts(q, p), { a: [null, null, "A"], s: ["?", `${q * k}`, null], right: 1 }),
         );
       return spr(
         t(
@@ -836,6 +867,7 @@ export const satExamGeometry2: ExamSpec[] = [
           `$DF = ${k * q}$ from the cosine, and the Pythagorean theorem gives $EF = ${k * p}$.`,
           `由余弦得 $DF = ${k * q}$，再由勾股定理得 $EF = ${k * p}$。`,
         ),
+        polyFigure(rightPts(q, p), { v: ["E", "F", "D"], s: ["?", null, `${k * c}`], right: 1 }),
       );
     },
   ),

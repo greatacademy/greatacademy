@@ -1,8 +1,8 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
 import type { ExamSpec } from "../exam.ts";
 import { ask, curveFigure, mod, sg, words } from "../exam.ts";
+import { curvePlot, polyFigure, sasPts } from "../exam-figures.ts";
 
 // ACT Math Prep, Functions: notation, logarithms, graphs and their features, sequences and trigonometric functions.
 
@@ -560,6 +560,7 @@ export const actExamFunctions: ExamSpec[] = [
         ],
         `Add $${kk}$ to the output.`,
         `输出加 $${kk}$。`,
+        curvePlot((x) => a * x + b, [-10, 10], [-20, 20]),
       );
     return ask(
       rng,
@@ -574,6 +575,7 @@ export const actExamFunctions: ExamSpec[] = [
       ],
       `Solve $(x - ${k})^2 = ${a * a}$, so $x - ${k} = \\pm ${a}$.`,
       `解 $(x - ${k})^2 = ${a * a}$，得 $x - ${k} = \\pm ${a}$。`,
+      curvePlot((x) => (x - k) ** 2, [k - 6, k + 6], [-4, 36]),
     );
   }),
   graphTips(
@@ -591,6 +593,7 @@ export const actExamFunctions: ExamSpec[] = [
           [`y = ${a}(x + ${h})^2`, `y = ${a}x^2 + ${h}`, `y = ${a}x^2 - ${h}`, `y = ${a}(x - ${h + 1})^2`],
           `Moving right by $${h}$ replaces $x$ with $x - ${h}$.`,
           `向右移 $${h}$ 就是把 $x$ 换成 $x - ${h}$。`,
+          curvePlot((x) => a * x * x, [-5, 5], [-5, 50]),
         );
       return ask(
         rng,
@@ -600,6 +603,7 @@ export const actExamFunctions: ExamSpec[] = [
         [`(${h}, ${k})`, `(${-h}, ${k})`, `(${-h}, ${-k})`, `(${k}, ${h})`],
         `Reflecting across the $x$-axis negates the $y$-coordinate only.`,
         `关于 $x$ 轴翻折只改变 $y$ 坐标的符号。`,
+        curvePlot((x) => (x - h) ** 2 + k, [h - 5, h + 5], [k - 5, k + 25]),
       );
     },
   ),
@@ -1064,6 +1068,7 @@ export const actExamFunctions: ExamSpec[] = [
         [(a * b) / 2, a * b, a + b, (a * b) / 4 + 1],
         `$\\frac{1}{2}(${a})(${b})\\sin 30^\\circ = \\frac{1}{2}(${a})(${b})\\left(\\frac{1}{2}\\right)$.`,
         `$\\frac{1}{2}(${a})(${b})\\sin 30^\\circ = \\frac{1}{2}(${a})(${b})\\left(\\frac{1}{2}\\right)$。`,
+        polyFigure(sasPts(a, b, 30), { a: ["30°", null, null], s: [`${a}`, null, `${b}`] }),
       );
     return ask(
       rng,
@@ -1073,6 +1078,7 @@ export const actExamFunctions: ExamSpec[] = [
       [Q.of(a * b * n, 10), Q.of(a * b, 2), Q.of((a + b) * n, 20), Q.of(a * b * n, 40)],
       `$\\frac{1}{2}(${a})(${b})\\left(\\frac{${n}}{10}\\right)$.`,
       `$\\frac{1}{2}(${a})(${b})\\left(\\frac{${n}}{10}\\right)$。`,
+      polyFigure(sasPts(a, b, 55), { a: ["θ", null, null], s: [`${a}`, null, `${b}`] }),
     );
   }),
   lawTips("Using the Law of Sines", "运用正弦定理", ["the-law-of-sines"], (rng, hard) => {
