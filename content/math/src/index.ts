@@ -79,6 +79,7 @@ import { calculusIISubstitutionTopics } from "./topics/calculus-ii-substitution.
 import { calculusIITaylorTopics } from "./topics/calculus-ii-taylor.ts";
 import { calculusIIVectorTopics } from "./topics/calculus-ii-vectors.ts";
 import { combinatoricsTopics } from "./topics/combinatorics.ts";
+import { complexAnalysisTopics } from "./topics/complex-analysis.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
 import { deeperAbstractAlgebraPoints } from "./topics/deeper-abstract-algebra.ts";
@@ -439,6 +440,7 @@ export const math: SubjectDef = {
     ...methodsOfProofProofTopics,
     ...methodsOfProofNumberTheoryTopics,
     ...numberTheoryCourseTopics,
+    ...complexAnalysisTopics,
     ...realAnalysisTopics,
     ...methodsOfProofFunctionTopics,
     ...methodsOfProofCongruenceTopics,

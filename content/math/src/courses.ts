@@ -18307,6 +18307,72 @@ export const realAnalysis: CourseDef = {
   ],
 };
 
+/** complexAnalysis is the course on analytic functions, contour integrals, series, residues and conformal maps. */
+export const complexAnalysis: CourseDef = {
+  id: "complex-analysis",
+  title: t("Complex Analysis", "复分析"),
+  description: t(
+    "Calculus for functions of a complex variable: analytic functions and the Cauchy–Riemann equations, contour integrals and Cauchy's theorems, Taylor and Laurent series, residues, and conformal maps.",
+    "复变函数的微积分：解析函数和柯西–黎曼方程，围道积分和柯西定理，泰勒级数和洛朗级数，留数，以及共形映射。",
+  ),
+  units: [
+    {
+      title: t("Analytic Functions", "解析函数"),
+      modules: [
+        {
+          title: t("Complex Numbers Revisited", "复数回顾"),
+          topics: ["the-complex-plane", "the-polar-form-of-a-complex-number", "eulers-formula", "higher-roots-of-complex-numbers"],
+        },
+        {
+          title: t("Differentiation", "微分"),
+          topics: [
+            "functions-of-a-complex-variable",
+            "limits-of-complex-functions",
+            "the-complex-derivative",
+            "the-cauchy-riemann-equations",
+            "harmonic-functions-and-conjugates",
+          ],
+        },
+        {
+          title: t("Elementary Functions", "初等函数"),
+          topics: ["the-complex-exponential-function", "the-complex-logarithm"],
+        },
+      ],
+    },
+    {
+      title: t("Integration", "积分"),
+      modules: [
+        {
+          title: t("Cauchy's Theorems", "柯西定理"),
+          topics: ["contour-integrals", "cauchys-integral-theorem", "cauchys-integral-formula", "cauchys-estimates-and-liouvilles-theorem"],
+        },
+      ],
+    },
+    {
+      title: t("Series and Residues", "级数和留数"),
+      modules: [
+        {
+          title: t("Series", "级数"),
+          topics: ["taylor-series-of-analytic-functions", "laurent-series", "classifying-isolated-singularities"],
+        },
+        {
+          title: t("Residues", "留数"),
+          topics: ["computing-residues", "the-residue-theorem"],
+        },
+      ],
+    },
+    {
+      title: t("Geometry of Analytic Maps", "解析映射的几何"),
+      modules: [
+        {
+          title: t("Conformal Maps", "共形映射"),
+          topics: ["mobius-transformations", "conformal-maps"],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -18327,6 +18393,7 @@ export const mathCourses: readonly CourseDef[] = [
   abstractAlgebra,
   numberTheory,
   realAnalysis,
+  complexAnalysis,
   integratedMathI,
   integratedMathII,
   integratedMathIII,
