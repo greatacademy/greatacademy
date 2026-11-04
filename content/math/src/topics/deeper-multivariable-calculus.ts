@@ -1609,6 +1609,804 @@ const fluxThroughTiltedTriangle: KnowledgePointDef = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// Third pass
+// ---------------------------------------------------------------------------
+
+/** thirdPassChoose counts the ways to choose k things from n. */
+const thirdPassChoose = (n: number, k: number) => {
+  let c = 1;
+  for (let i = 1; i <= k; i++) c = (c * (n - k + i)) / i;
+  return c;
+};
+/** pythagoreanSlopes lists rise, run and hypotenuse of right triangles with whole sides. */
+const pythagoreanSlopes = [
+  [3, 4, 5],
+  [4, 3, 5],
+  [5, 12, 13],
+  [12, 5, 13],
+  [8, 15, 17],
+  [15, 8, 17],
+] as const;
+
+const curvatureWithSlope: KnowledgePointDef = {
+  id: "the-curvature-where-the-slope-is-not-zero",
+  title: t("The curvature where the slope is not zero", "斜率不为零处的曲率"),
+  explanation: t(
+    "The curvature of $y = f(x)$ is $\\kappa = \\frac{|f''|}{(1 + (f')^2)^{3/2}}$. At a point where the slope is zero the denominator is 1, so curvature equals $|f''|$. A nonzero slope makes the denominator larger, because the same bending is spread over a longer arc. So the steeper the curve is at a point, the smaller the curvature for the same second derivative.",
+    "$y = f(x)$ 的曲率是 $\\kappa = \\frac{|f''|}{(1 + (f')^2)^{3/2}}$。在斜率为零的点，分母是 1，所以曲率等于 $|f''|$。斜率不为零时分母变大，因为同样的弯曲分布在更长的弧上。所以对相同的二阶导数，曲线在一点越陡，曲率就越小。",
+  ),
+  generate(rng) {
+    const [p, q, h] = rng.pick(pythagoreanSlopes);
+    const sign = rng.pick([1, -1]);
+    const s = nonzero(rng, 9);
+    const size = Math.abs(s);
+    const a = rng.int(-5, 5);
+    const answer = Q.of(size * q ** 3, h ** 3);
+    const slope = Q.of(sign * p, q);
+    return numberProblem({
+      prompt: t(
+        `At $x = ${a}$, a function has $f'(${a}) = ${slope.toLatex()}$ and $f''(${a}) = ${s}$. Find the curvature of $y = f(x)$ there.`,
+        `在 $x = ${a}$ 处，函数满足 $f'(${a}) = ${slope.toLatex()}$，$f''(${a}) = ${s}$。求 $y = f(x)$ 在该处的曲率。`,
+      ),
+      answer,
+      wrong: [Q.of(size), Q.of(size * q * q, h * h), Q.of(size * q, h), answer.add(Q.of(1))],
+      solution: t(
+        `Here $1 + (f')^2 = ${Q.of(h * h, q * q).toLatex()}$, and raising this to the power $\\frac{3}{2}$ gives $${Q.of(h ** 3, q ** 3).toLatex()}$. Dividing $${size}$ by it gives $${answer.toLatex()}$.`,
+        `这里 $1 + (f')^2 = ${Q.of(h * h, q * q).toLatex()}$，它的 $\\frac{3}{2}$ 次幂是 $${Q.of(h ** 3, q ** 3).toLatex()}$。用它除 $${size}$，得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const squaredLengthRate: KnowledgePointDef = {
+  id: "the-rate-of-change-of-a-squared-length",
+  title: t("The rate of change of a squared length", "长度平方的变化率"),
+  explanation: t(
+    "The squared length of a moving vector is $\\|\\mathbf{r}\\|^2 = \\mathbf{r} \\cdot \\mathbf{r}$, so the product rule for dot products gives $\\frac{d}{dt}\\|\\mathbf{r}\\|^2 = 2\\mathbf{r} \\cdot \\mathbf{r}'$. Only the current position and velocity are needed, and not the formula for the curve. If the result is zero, the vector is momentarily neither lengthening nor shortening, because its velocity is perpendicular to it.",
+    "运动向量的长度平方是 $\\|\\mathbf{r}\\|^2 = \\mathbf{r} \\cdot \\mathbf{r}$，所以点积的乘积法则给出 $\\frac{d}{dt}\\|\\mathbf{r}\\|^2 = 2\\mathbf{r} \\cdot \\mathbf{r}'$。只需要当前的位置和速度，不需要曲线的公式。如果结果为零，向量此刻既不变长也不变短，因为它的速度与它垂直。",
+  ),
+  generate(rng) {
+    const r = [rng.int(-6, 6), rng.int(-6, 6), nonzero(rng, 6)];
+    const v = [rng.int(-6, 6), rng.int(-6, 6), nonzero(rng, 6)];
+    const product = (r[0] ?? 0) * (v[0] ?? 0) + (r[1] ?? 0) * (v[1] ?? 0) + (r[2] ?? 0) * (v[2] ?? 0);
+    const t0 = rng.int(1, 5);
+    const answer = 2 * product;
+    const vectorSum = (r[0] ?? 0) + (r[1] ?? 0) + (r[2] ?? 0) + (v[0] ?? 0) + (v[1] ?? 0) + (v[2] ?? 0);
+    return numberProblem({
+      prompt: t(
+        `A curve has $\\mathbf{r}(${t0}) = \\langle ${r.join(", ")} \\rangle$ and $\\mathbf{r}'(${t0}) = \\langle ${v.join(", ")} \\rangle$. Find $\\frac{d}{dt}\\|\\mathbf{r}(t)\\|^2$ at $t = ${t0}$.`,
+        `一条曲线满足 $\\mathbf{r}(${t0}) = \\langle ${r.join(", ")} \\rangle$，$\\mathbf{r}'(${t0}) = \\langle ${v.join(", ")} \\rangle$。求 $t = ${t0}$ 时的 $\\frac{d}{dt}\\|\\mathbf{r}(t)\\|^2$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [product, -answer, vectorSum, answer + 1],
+      solution: t(
+        `The derivative is $2\\mathbf{r} \\cdot \\mathbf{r}'$. The dot product is $${product}$, so the value is $${answer}$.`,
+        `导数是 $2\\mathbf{r} \\cdot \\mathbf{r}'$。点积是 $${product}$，所以值是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const gapBetweenSheets: KnowledgePointDef = {
+  id: "the-gap-between-the-sheets-of-a-hyperboloid",
+  title: t("The gap between the sheets of a hyperboloid", "双叶双曲面两叶之间的距离"),
+  explanation: t(
+    "Rearranging $\\frac{z^2}{c^2} - \\frac{x^2}{a^2} - \\frac{y^2}{b^2} = 1$ gives $\\frac{z^2}{c^2} = 1 + \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$, and the right side is at least 1. So $|z| \\ge c$ on the whole surface, and no point lies between the planes $z = -c$ and $z = c$. The two sheets come closest at their vertices on the $z$-axis, where the values of $a$ and $b$ play no part.",
+    "把 $\\frac{z^2}{c^2} - \\frac{x^2}{a^2} - \\frac{y^2}{b^2} = 1$ 整理成 $\\frac{z^2}{c^2} = 1 + \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$，右边至少是 1。所以整个曲面上 $|z| \\ge c$，平面 $z = -c$ 和 $z = c$ 之间没有点。两叶在 $z$ 轴上的顶点处最接近，这时 $a$、$b$ 的值不起作用。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 9);
+    const b = rng.int(2, 9);
+    const c = rng.int(2, 9);
+    const answer = 2 * c;
+    return numberProblem({
+      prompt: t(
+        `Find the shortest distance between the two sheets of $\\frac{z^2}{${c * c}} - \\frac{x^2}{${a * a}} - \\frac{y^2}{${b * b}} = 1$.`,
+        `求 $\\frac{z^2}{${c * c}} - \\frac{x^2}{${a * a}} - \\frac{y^2}{${b * b}} = 1$ 两叶之间的最短距离。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [c, c * c, 2 * c * c, 2 * a, 2 * b, 2 * c + 1],
+      solution: t(
+        `The vertices are at $z = \\pm ${c}$, and every other point has larger $|z|$. Their distance is $${answer}$.`,
+        `顶点在 $z = \\pm ${c}$，其他点的 $|z|$ 都更大。它们的距离是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const ellipsoidSliceArea: KnowledgePointDef = {
+  id: "the-area-of-a-slice-of-an-ellipsoid",
+  title: t("The area of a slice of an ellipsoid", "椭球截面的面积"),
+  explanation: t(
+    "The plane $z = k$ cuts an ellipsoid in an ellipse. Moving $\\frac{k^2}{c^2}$ to the right side leaves $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1 - \\frac{k^2}{c^2}$, and both semi-axes shrink by the same factor $\\sqrt{1 - \\frac{k^2}{c^2}}$. An ellipse with semi-axes $A$ and $B$ has area $\\pi AB$, so the two square roots multiply away and the area of the slice is rational in $k$.",
+    "平面 $z = k$ 把椭球截成一个椭圆。把 $\\frac{k^2}{c^2}$ 移到右边，得 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1 - \\frac{k^2}{c^2}$，两个半轴都缩小相同的因子 $\\sqrt{1 - \\frac{k^2}{c^2}}$。半轴为 $A$、$B$ 的椭圆面积是 $\\pi AB$，所以两个平方根相乘后消失，截面面积是 $k$ 的有理式。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 8);
+    const b = rng.int(2, 8);
+    const c = rng.int(3, 9);
+    const k = rng.int(1, c - 1);
+    const answer = Q.of(a * b * (c * c - k * k), c * c);
+    return numberProblem({
+      prompt: t(
+        `The plane $z = ${k}$ cuts $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1$ in an ellipse of area $A\\pi$. Find $A$.`,
+        `平面 $z = ${k}$ 把 $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} + \\frac{z^2}{${c * c}} = 1$ 截成面积为 $A\\pi$ 的椭圆。求 $A$。`,
+      ),
+      answer,
+      wrong: [Q.of(a * b), Q.of(a * b * (c - k), c), Q.of(a * b * k * k, c * c), Q.of(a * b * (c * c - k * k))],
+      solution: t(
+        `Each squared semi-axis is multiplied by $1 - \\frac{${k * k}}{${c * c}}$, so the product of the semi-axes is $${a} \\cdot ${b}$ times that factor. This gives $A = ${answer.toLatex()}$.`,
+        `每个半轴的平方都乘以 $1 - \\frac{${k * k}}{${c * c}}$，所以两个半轴之积是 $${a} \\cdot ${b}$ 乘以这个因子。于是 $A = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const linearizationError: KnowledgePointDef = {
+  id: "the-exact-error-of-a-linearization-of-a-product",
+  title: t("The exact error of a linearization of a product", "乘积线性化的精确误差"),
+  explanation: t(
+    "For $f(x, y) = cxy$ at $(a, b)$, the linearization is $L = cab + cb(x - a) + ca(y - b)$. Writing $x = a + h$ and $y = b + k$ and expanding $f$ exactly gives the same three terms plus one more, $chk$. So the error is exactly this product. It is small compared with the steps themselves, which is what it means for $f$ to be differentiable at the point.",
+    "对 $f(x, y) = cxy$ 在 $(a, b)$ 处，线性化是 $L = cab + cb(x - a) + ca(y - b)$。令 $x = a + h$，$y = b + k$，精确展开 $f$，得到同样的三项，再加一项 $chk$。所以误差恰好就是这个乘积。它相对于步长本身很小，这正是 $f$ 在该点可微的含义。",
+  ),
+  generate(rng) {
+    const c = rng.int(2, 6);
+    const a = rng.int(1, 6);
+    const b = rng.int(1, 6);
+    const h = nonzero(rng, 3);
+    const k = nonzero(rng, 3);
+    const answer = c * h * k;
+    return numberProblem({
+      prompt: t(
+        `Let $L$ be the linearization of $f(x, y) = ${c}xy$ at $(${a}, ${b})$. Find $f(${a + h}, ${b + k}) - L(${a + h}, ${b + k})$.`,
+        `设 $L$ 是 $f(x, y) = ${c}xy$ 在 $(${a}, ${b})$ 处的线性化。求 $f(${a + h}, ${b + k}) - L(${a + h}, ${b + k})$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [0, c * (a * k + b * h), h * k, -answer],
+      solution: t(
+        `Here $h = ${h}$ and $k = ${k}$, and expanding $f(a + h, b + k)$ leaves the extra term $${c}hk = ${answer}$.`,
+        `这里 $h = ${h}$，$k = ${k}$，展开 $f(a + h, b + k)$ 后多出一项 $${c}hk = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const horizontalTangent: KnowledgePointDef = {
+  id: "where-a-level-curve-has-a-horizontal-tangent",
+  title: t("Where a level curve has a horizontal tangent", "等值线切线水平的位置"),
+  explanation: t(
+    "The tangent to a level curve $F(x, y) = k$ is perpendicular to $\\nabla F$. A horizontal tangent therefore means that the gradient points straight up or down, so $F_x = 0$ while $F_y \\ne 0$. The condition $F_x = 0$ gives a line through the origin here, and it must still be combined with the equation of the curve to find the actual points of tangency.",
+    "等值线 $F(x, y) = k$ 的切线垂直于 $\\nabla F$。所以切线水平意味着梯度竖直朝上或朝下，即 $F_x = 0$ 而 $F_y \\ne 0$。条件 $F_x = 0$ 在这里给出一条过原点的直线，还必须与曲线方程联立，才能求出实际的切点。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 3);
+    const c = rng.int(2, 4);
+    const m = rng.int(1, 4);
+    const level = a * (c * a - 1) * m * m;
+    const answer = -a * m;
+    const form = poly([a, "x^2"], [2, "xy"], [c, "y^2"]);
+    return numberProblem({
+      prompt: t(
+        `The level curve $${form} = ${level}$ has a horizontal tangent at two points. Find the $y$-coordinate of the one with $x > 0$.`,
+        `等值线 $${form} = ${level}$ 在两点处有水平切线。求其中 $x > 0$ 的点的 $y$ 坐标。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-answer, m, -m - 1, -c * m],
+      solution: t(
+        `Setting $F_x = ${poly([2 * a, "x"], [2, "y"])} = 0$ gives $y = ${a === 1 ? "-x" : `-${a}x`}$. Substituting in the curve gives $x = ${m}$, so $y = ${answer}$.`,
+        `令 $F_x = ${poly([2 * a, "x"], [2, "y"])} = 0$，得 $y = ${a === 1 ? "-x" : `-${a}x`}$。代入曲线，得 $x = ${m}$，所以 $y = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const distinctPartials: KnowledgePointDef = {
+  id: "counting-the-different-partial-derivatives-of-a-given-order",
+  title: t("Counting the different partial derivatives of a given order", "计算给定阶的不同偏导数个数"),
+  explanation: t(
+    "When mixed partial derivatives are continuous, the order of differentiation does not matter. A partial derivative of order $k$ is therefore decided by how many times each variable is used, and these counts are whole numbers adding to $k$. Stars and bars counts them as $\\binom{n + k - 1}{k}$. Without the equality of mixed partials, there would be $n^k$ different derivatives to find.",
+    "当混合偏导数连续时，求导的顺序无关紧要。因此 $k$ 阶偏导数由每个变量被使用的次数决定，这些次数是和为 $k$ 的整数。隔板法给出个数 $\\binom{n + k - 1}{k}$。如果混合偏导数不相等，就要求 $n^k$ 个不同的导数。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 7);
+    const k = rng.int(2, 6);
+    const answer = thirdPassChoose(n + k - 1, k);
+    return numberProblem({
+      prompt: t(
+        `A function of ${n} variables has continuous partial derivatives of all orders. How many different partial derivatives of order ${k} can it have?`,
+        `一个 ${n} 元函数具有各阶连续偏导数。它最多有多少个不同的 ${k} 阶偏导数？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n ** k, n * k, k + 1, answer + 1],
+      solution: t(
+        `A derivative is decided by how many times each variable is used. So the count is $\\binom{${n + k - 1}}{${k}} = ${answer}$.`,
+        `一个导数由每个变量被使用的次数决定。所以个数是 $\\binom{${n + k - 1}}{${k}} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const preimageArea: KnowledgePointDef = {
+  id: "the-area-of-a-region-from-the-area-of-its-image",
+  title: t("The area of a region from the area of its image", "由像的面积求原区域的面积"),
+  explanation: t(
+    "An affine transformation multiplies every area by $|\\det A|$, where $A$ is its matrix, and the translation has no effect on area. Its inverse is also affine, with matrix $A^{-1}$, whose determinant is $\\frac{1}{\\det A}$. So to go back from an image to the original region, divide by $|\\det A|$. There is no need to find the inverse map or to know the shape of the region.",
+    "仿射变换把每个面积乘以 $|\\det A|$，其中 $A$ 是它的矩阵，平移对面积没有影响。它的逆也是仿射的，矩阵是 $A^{-1}$，行列式是 $\\frac{1}{\\det A}$。所以从像回到原区域，就除以 $|\\det A|$。不需要求出逆映射，也不需要知道区域的形状。",
+  ),
+  generate(rng) {
+    let a = nonzero(rng, 4);
+    const b = nonzero(rng, 4);
+    const c = nonzero(rng, 4);
+    const d = nonzero(rng, 4);
+    if (a * d === b * c) a += a > 0 ? 1 : -1;
+    const det = a * d - b * c;
+    const size = Math.abs(det);
+    const area = rng.int(2, 40);
+    const e = rng.int(-5, 5);
+    const g = rng.int(-5, 5);
+    const answer = Q.of(area, size);
+    return numberProblem({
+      prompt: t(
+        `The transformation $T(x, y) = (${poly([a, "x"], [b, "y"], [e, ""])}, ${poly([c, "x"], [d, "y"], [g, ""])})$ maps a region $S$ onto a region of area $${area}$. Find the area of $S$.`,
+        `变换 $T(x, y) = (${poly([a, "x"], [b, "y"], [e, ""])}, ${poly([c, "x"], [d, "y"], [g, ""])})$ 把区域 $S$ 映到面积为 $${area}$ 的区域。求 $S$ 的面积。`,
+      ),
+      answer,
+      wrong: [Q.of(area * size), Q.of(area), Q.of(area, Math.abs(a * d + b * c) || 1), answer.add(Q.of(1))],
+      solution: t(
+        `The determinant of the linear part is $${det}$, so areas are multiplied by $${size}$. Dividing $${area}$ by this gives $${answer.toLatex()}$.`,
+        `线性部分的行列式是 $${det}$，所以面积乘以 $${size}$。用它除 $${area}$，得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const largestSecondDirectional: KnowledgePointDef = {
+  id: "the-largest-second-directional-derivative",
+  title: t("The largest second directional derivative", "最大的二阶方向导数"),
+  explanation: t(
+    "The second directional derivative in the direction of a unit vector $\\mathbf{u}$ is $\\mathbf{u}^T H \\mathbf{u}$, where $H$ is the Hessian. For a symmetric matrix, this quantity is largest when $\\mathbf{u}$ is an eigenvector for the largest eigenvalue, and that eigenvalue is the largest value. A Hessian of the form $\\begin{pmatrix} p & q \\\\ q & p \\end{pmatrix}$ has eigenvalues $p + q$ and $p - q$, along the diagonal directions.",
+    "沿单位向量 $\\mathbf{u}$ 的二阶方向导数是 $\\mathbf{u}^T H \\mathbf{u}$，其中 $H$ 是黑塞矩阵。对对称矩阵，当 $\\mathbf{u}$ 是最大特征值的特征向量时，这个量最大，最大值就是这个特征值。形如 $\\begin{pmatrix} p & q \\\\ q & p \\end{pmatrix}$ 的黑塞矩阵有特征值 $p + q$ 和 $p - q$，对应对角方向。",
+  ),
+  generate(rng) {
+    const s = nonzero(rng, 6);
+    const q = nonzero(rng, 9);
+    const answer = 2 * s + Math.abs(q);
+    return numberProblem({
+      prompt: t(
+        `Let $f(x, y) = ${poly([s, "x^2"], [q, "xy"], [s, "y^2"])}$. Find the largest value of the second directional derivative of $f$ over all unit vectors.`,
+        `设 $f(x, y) = ${poly([s, "x^2"], [q, "xy"], [s, "y^2"])}$。求 $f$ 的二阶方向导数在所有单位向量上的最大值。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [2 * s, 2 * s - Math.abs(q), Math.abs(q), 2 * s * Math.abs(q)],
+      solution: t(
+        `The Hessian has diagonal entries $${2 * s}$ and off-diagonal entries $${q}$, so its eigenvalues are $${2 * s} \\pm ${Math.abs(q)}$. The larger is $${answer}$.`,
+        `黑塞矩阵的对角元是 $${2 * s}$，非对角元是 $${q}$，所以特征值是 $${2 * s} \\pm ${Math.abs(q)}$。较大的是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const logarithmCrossTerm: KnowledgePointDef = {
+  id: "the-cross-term-of-a-taylor-polynomial-of-a-logarithm",
+  title: t("The cross term of a Taylor polynomial of a logarithm", "对数的泰勒多项式的交叉项"),
+  explanation: t(
+    "A Taylor polynomial of a composite function can be found without any partial derivatives. Put $w = ax + by$ into the one-variable series $\\ln(1 + w) = w - \\frac{w^2}{2} + \\dots$, and collect terms up to degree two. Only $-\\frac{w^2}{2}$ can produce a term in $xy$, and squaring $w$ gives $2ab\\,xy$ there. The higher terms of the series have degree at least three.",
+    "复合函数的泰勒多项式不必求偏导数就能得到。把 $w = ax + by$ 代入一元级数 $\\ln(1 + w) = w - \\frac{w^2}{2} + \\dots$，并收集到二次为止的项。只有 $-\\frac{w^2}{2}$ 能产生 $xy$ 项，而 $w$ 的平方在那里给出 $2ab\\,xy$。级数的更高项次数至少是三。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 5);
+    const b = nonzero(rng, 5);
+    const answer = -a * b;
+    return numberProblem({
+      prompt: t(
+        `Find the coefficient of $xy$ in the second-degree Taylor polynomial of $f(x, y) = \\ln(${poly([1, ""], [a, "x"], [b, "y"])})$ at $(0, 0)$.`,
+        `求 $f(x, y) = \\ln(${poly([1, ""], [a, "x"], [b, "y"])})$ 在 $(0, 0)$ 处的二次泰勒多项式中 $xy$ 的系数。`,
+      ),
+      answer,
+      wrong: [Q.of(a * b), Q.of(-a * b, 2), Q.of(-2 * a * b), Q.of(a + b)],
+      solution: t(
+        `The term $-\\frac{w^2}{2}$ with $w = ${poly([a, "x"], [b, "y"])}$ contains $-\\frac{1}{2} \\cdot 2 \\cdot ${inParens(a)} \\cdot ${inParens(b)}\\,xy$, so the coefficient is $${answer}$.`,
+        `当 $w = ${poly([a, "x"], [b, "y"])}$ 时，$-\\frac{w^2}{2}$ 含有 $-\\frac{1}{2} \\cdot 2 \\cdot ${inParens(a)} \\cdot ${inParens(b)}\\,xy$，所以系数是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const lineAndParabolaMoment: KnowledgePointDef = {
+  id: "integrating-x-between-a-line-and-a-parabola",
+  title: t("Integrating x between a line and a parabola", "在直线和抛物线之间对 x 积分"),
+  explanation: t(
+    "A Type I region is described by first fixing $x$, then letting $y$ run from the lower curve to the upper curve. Here, the curves $y = x^2$ and $y = kx$ cross at $x = 0$ and $x = k$, and the line is on top between them. The inner integral then contributes the height of the region at $x$, multiplied by the integrand, leaving a single integral in $x$.",
+    "I 型区域的描述方法是先固定 $x$，再让 $y$ 从下方曲线取到上方曲线。这里曲线 $y = x^2$ 和 $y = kx$ 相交于 $x = 0$ 和 $x = k$，其间直线在上方。于是内层积分给出区域在 $x$ 处的高度乘以被积函数，只剩下一个关于 $x$ 的积分。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 6);
+    const c = rng.int(1, 12);
+    const answer = Q.of(c * k ** 4, 12);
+    const line = k === 1 ? "x" : `${k}x`;
+    const integrand = c === 1 ? "x" : `${c}x`;
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\iint_D ${integrand}\\,dA$, where $D$ is the region between $y = x^2$ and $y = ${line}$.`,
+        `计算 $\\iint_D ${integrand}\\,dA$，其中 $D$ 是 $y = x^2$ 和 $y = ${line}$ 之间的区域。`,
+      ),
+      answer,
+      wrong: [Q.of(c * k ** 3, 6), Q.of(c * k ** 4, 6), Q.of(c * k ** 4, 4), Q.of(c * k ** 4, 3)],
+      solution: t(
+        `The integral is $\\int_0^{${k}} ${integrand}\\left(${line} - x^2\\right) dx$, and integrating gives $${answer.toLatex()}$.`,
+        `积分是 $\\int_0^{${k}} ${integrand}\\left(${line} - x^2\\right) dx$，积分后得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const reversingToIntegrate: KnowledgePointDef = {
+  id: "reversing-the-order-when-an-inner-integral-is-impossible",
+  title: t("Reversing the order when an inner integral is impossible", "内层积分无法计算时交换次序"),
+  explanation: t(
+    "Functions such as $\\sin(x^2)$ have no elementary antiderivative, so an iterated integral that integrates one with respect to $x$ first cannot be done as written. Sketching the region and describing it in the other order puts $y$ on the inside instead. The inner integral then produces a factor of $x$, and that factor is exactly what makes the substitution $u = x^2$ work on the outside.",
+    "像 $\\sin(x^2)$ 这样的函数没有初等原函数，所以先对 $x$ 积分它的累次积分，按原样无法计算。画出区域，换一种次序描述，让 $y$ 在内层。于是内层积分产生一个因子 $x$，这个因子正好使外层的代换 $u = x^2$ 可行。",
+  ),
+  generate(rng) {
+    const c = rng.int(1, 12);
+    const [name, limit, value] = rng.pick([
+      ["\\sin", "\\sqrt{\\pi}", Q.of(c)],
+      ["\\sin", "\\sqrt{\\frac{\\pi}{2}}", Q.of(c, 2)],
+      ["\\cos", "\\sqrt{\\frac{\\pi}{2}}", Q.of(c, 2)],
+      ["\\cos", "\\sqrt{\\frac{\\pi}{6}}", Q.of(c, 4)],
+    ] as const);
+    const factor = c === 1 ? "" : `${c}`;
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\int_0^{${limit}} \\int_y^{${limit}} ${factor}${name}(x^2)\\,dx\\,dy$.`,
+        `计算 $\\int_0^{${limit}} \\int_y^{${limit}} ${factor}${name}(x^2)\\,dx\\,dy$。`,
+      ),
+      answer: value,
+      wrong: [value.mul(Q.of(2)), value.div(Q.of(2)), Q.of(0), value.neg()],
+      solution: t(
+        `Reversing the order gives $\\int_0^{${limit}} \\int_0^{x} ${factor}${name}(x^2)\\,dy\\,dx = \\int_0^{${limit}} ${factor}x${name}(x^2)\\,dx$. With $u = x^2$, this equals $${value.toLatex()}$.`,
+        `交换次序得 $\\int_0^{${limit}} \\int_0^{x} ${factor}${name}(x^2)\\,dy\\,dx = \\int_0^{${limit}} ${factor}x${name}(x^2)\\,dx$。令 $u = x^2$，它等于 $${value.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const averageOverBox: KnowledgePointDef = {
+  id: "the-average-of-a-product-over-a-box",
+  title: t("The average of a product over a box", "乘积在长方体上的平均值"),
+  explanation: t(
+    "The average of a function over a solid is its triple integral divided by the volume. When the integrand is a product of functions of separate variables on a box, the triple integral splits into three single integrals. Each factor of $\\int_0^a x\\,dx = \\frac{a^2}{2}$ then divides by the matching side $a$, leaving $\\frac{a}{2}$. So the average is the product of the averages of the three coordinates.",
+    "函数在立体上的平均值是三重积分除以体积。当被积函数在长方体上是各变量函数的乘积时，三重积分可分成三个单积分。每个因子 $\\int_0^a x\\,dx = \\frac{a^2}{2}$ 除以相应的边 $a$，剩下 $\\frac{a}{2}$。所以平均值是三个坐标平均值的乘积。",
+  ),
+  generate(rng) {
+    const c = rng.int(1, 9);
+    const a = rng.int(1, 6);
+    const b = rng.int(1, 6);
+    const d = rng.int(1, 6);
+    const answer = Q.of(c * a * b * d, 8);
+    const integrand = c === 1 ? "xyz" : `${c}xyz`;
+    return numberProblem({
+      prompt: t(
+        `Find the average value of $f(x, y, z) = ${integrand}$ over the box $[0, ${a}] \\times [0, ${b}] \\times [0, ${d}]$.`,
+        `求 $f(x, y, z) = ${integrand}$ 在长方体 $[0, ${a}] \\times [0, ${b}] \\times [0, ${d}]$ 上的平均值。`,
+      ),
+      answer,
+      wrong: [Q.of(c * (a * b * d) ** 2, 8), Q.of(c * a * b * d, 2), Q.of(c * a * b * d, 4), Q.of(a * b * d, 8)],
+      solution: t(
+        `The coordinates have averages $${Q.of(a, 2).toLatex()}$, $${Q.of(b, 2).toLatex()}$ and $${Q.of(d, 2).toLatex()}$. Multiplying them by $${c}$ gives $${answer.toLatex()}$.`,
+        `各坐标的平均值是 $${Q.of(a, 2).toLatex()}$、$${Q.of(b, 2).toLatex()}$、$${Q.of(d, 2).toLatex()}$。它们与 $${c}$ 相乘，得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const twoCylinders: KnowledgePointDef = {
+  id: "the-volume-common-to-two-cylinders",
+  title: t("The volume common to two cylinders", "两个圆柱的公共体积"),
+  explanation: t(
+    "The solid inside both $x^2 + y^2 = r^2$ and $x^2 + z^2 = r^2$ is easiest to slice at fixed $x$. At that value, $y$ and $z$ each run independently between $\\pm\\sqrt{r^2 - x^2}$, so the cross section is a square rather than a circle. Its area is a simple polynomial in $x$, and no circular functions appear, even though the solid is bounded entirely by curved cylinders.",
+    "同时在 $x^2 + y^2 = r^2$ 和 $x^2 + z^2 = r^2$ 内部的立体，最容易在固定的 $x$ 处切片。这时 $y$ 和 $z$ 各自独立地在 $\\pm\\sqrt{r^2 - x^2}$ 之间变化，所以截面是正方形而不是圆。它的面积是 $x$ 的简单多项式，虽然立体完全由弯曲的圆柱面围成，却不出现三角函数。",
+  ),
+  generate(rng) {
+    const r = rng.int(1, 15);
+    const octant = rng.pick([true, false]);
+    const whole = Q.of(16 * r ** 3, 3);
+    const part = Q.of(2 * r ** 3, 3);
+    const answer = octant ? part : whole;
+    return numberProblem({
+      prompt: t(
+        `Find the volume of the ${octant ? "first-octant part of the " : ""}solid inside both $x^2 + y^2 = ${r * r}$ and $x^2 + z^2 = ${r * r}$.`,
+        `求同时在 $x^2 + y^2 = ${r * r}$ 和 $x^2 + z^2 = ${r * r}$ 内部${octant ? "且位于第一卦限" : ""}的立体体积。`,
+      ),
+      answer,
+      wrong: [octant ? whole : part, Q.of(8 * r ** 3, 3), Q.of(4 * r ** 3, 3), Q.of(r ** 3, 3), Q.of(16 * r ** 2, 3)],
+      solution: t(
+        `At fixed $x$ the cross section ${octant ? `is a square of side $\\sqrt{${r * r} - x^2}$, and integrating its area from $0$ to $${r}$` : `is a square of side $2\\sqrt{${r * r} - x^2}$, and integrating its area from $-${r}$ to $${r}$`} gives $${answer.toLatex()}$.`,
+        `在固定的 $x$ 处，截面${octant ? `是边长为 $\\sqrt{${r * r} - x^2}$ 的正方形，它的面积从 $0$ 到 $${r}$ 积分` : `是边长为 $2\\sqrt{${r * r} - x^2}$ 的正方形，它的面积从 $-${r}$ 到 $${r}$ 积分`}得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const distanceOverAnnulus: KnowledgePointDef = {
+  id: "integrating-the-distance-from-the-origin-over-an-annulus",
+  title: t("Integrating the distance from the origin over an annulus", "在圆环上对到原点的距离积分"),
+  explanation: t(
+    "In polar coordinates, $\\sqrt{x^2 + y^2}$ becomes $r$, and the area element is $r\\,dr\\,d\\theta$. The two factors of $r$ multiply, so the radial integral is of $r^2$ and not of $r$. An easy mistake is to forget the extra factor from the area element. The integrand does not depend on $\\theta$, so going all the way around the annulus just multiplies the result by $2\\pi$.",
+    "在极坐标中，$\\sqrt{x^2 + y^2}$ 变成 $r$，面积元是 $r\\,dr\\,d\\theta$。两个因子 $r$ 相乘，所以径向积分的被积函数是 $r^2$ 而不是 $r$。一个常见的错误是忘记面积元的额外因子。被积函数与 $\\theta$ 无关，所以绕圆环一周只是把结果乘以 $2\\pi$。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 6);
+    const b = rng.int(a + 1, 9);
+    const answer = Q.of(2 * (b ** 3 - a ** 3), 3);
+    return numberProblem({
+      prompt: t(
+        `The integral of $\\sqrt{x^2 + y^2}$ over the annulus $${a * a} \\le x^2 + y^2 \\le ${b * b}$ equals $c\\pi$. Find $c$.`,
+        `$\\sqrt{x^2 + y^2}$ 在圆环 $${a * a} \\le x^2 + y^2 \\le ${b * b}$ 上的积分等于 $c\\pi$。求 $c$。`,
+      ),
+      answer,
+      wrong: [Q.of(b ** 3 - a ** 3, 3), Q.of(b * b - a * a), Q.of(2 * (b - a) ** 3, 3), answer.add(Q.of(1))],
+      solution: t(
+        `The integral is $\\int_0^{2\\pi} \\int_{${a}}^{${b}} r^2\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${b ** 3} - ${a ** 3}}{3}$, so $c = ${answer.toLatex()}$.`,
+        `积分是 $\\int_0^{2\\pi} \\int_{${a}}^{${b}} r^2\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{${b ** 3} - ${a ** 3}}{3}$，所以 $c = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const sphericalToCartesian: KnowledgePointDef = {
+  id: "a-cartesian-coordinate-from-spherical-coordinates",
+  title: t("A Cartesian coordinate from spherical coordinates", "由球坐标求直角坐标"),
+  explanation: t(
+    "With $\\varphi$ measured down from the positive $z$-axis, the distance of a point from the $z$-axis is $\\rho\\sin\\varphi$. This distance acts as the polar radius in the $xy$-plane, so $x = \\rho\\sin\\varphi\\cos\\theta$ and $y = \\rho\\sin\\varphi\\sin\\theta$. The height is $z = \\rho\\cos\\varphi$. Mixing up the two angles is the usual mistake, and the role of $\\sin\\varphi$ is the thing to remember.",
+    "当 $\\varphi$ 从 $z$ 轴正向向下量时，点到 $z$ 轴的距离是 $\\rho\\sin\\varphi$。这个距离就是 $xy$ 平面上的极径，所以 $x = \\rho\\sin\\varphi\\cos\\theta$，$y = \\rho\\sin\\varphi\\sin\\theta$。高度是 $z = \\rho\\cos\\varphi$。常见的错误是把两个角弄混，要记住的是 $\\sin\\varphi$ 的作用。",
+  ),
+  generate(rng) {
+    const rho = rng.int(2, 20);
+    const [phi, sinPhi] = rng.pick([
+      ["\\frac{\\pi}{6}", Q.of(1, 2)],
+      ["\\frac{\\pi}{2}", Q.of(1)],
+      ["\\frac{5\\pi}{6}", Q.of(1, 2)],
+    ] as const);
+    const [theta, cosTheta] = rng.pick([
+      ["\\frac{\\pi}{3}", Q.of(1, 2)],
+      ["\\frac{2\\pi}{3}", Q.of(-1, 2)],
+      ["\\pi", Q.of(-1)],
+      ["0", Q.of(1)],
+    ] as const);
+    const r = Q.of(rho);
+    const answer = r.mul(sinPhi).mul(cosTheta);
+    return numberProblem({
+      prompt: t(
+        `A point has spherical coordinates $\\rho = ${rho}$, $\\theta = ${theta}$ and $\\varphi = ${phi}$, with $\\varphi$ measured from the positive $z$-axis. Find its $x$-coordinate.`,
+        `一个点的球坐标是 $\\rho = ${rho}$，$\\theta = ${theta}$，$\\varphi = ${phi}$，其中 $\\varphi$ 从 $z$ 轴正向量起。求它的 $x$ 坐标。`,
+      ),
+      answer,
+      wrong: [r.mul(cosTheta), r.mul(sinPhi), answer.neg(), answer.mul(Q.of(2)), answer.add(Q.of(1))],
+      solution: t(
+        `Here $\\sin\\varphi = ${sinPhi.toLatex()}$ and $\\cos\\theta = ${cosTheta.toLatex()}$. So $x = \\rho\\sin\\varphi\\cos\\theta = ${answer.toLatex()}$.`,
+        `这里 $\\sin\\varphi = ${sinPhi.toLatex()}$，$\\cos\\theta = ${cosTheta.toLatex()}$。所以 $x = \\rho\\sin\\varphi\\cos\\theta = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const averageAlongSegment: KnowledgePointDef = {
+  id: "the-average-of-a-linear-function-along-a-segment",
+  title: t("The average of a linear function along a segment", "线性函数沿线段的平均值"),
+  explanation: t(
+    "The average value of $f$ along a curve $C$ is $\\frac{1}{L}\\int_C f\\,ds$, where $L$ is the length. On a straight segment, a linear function changes at a steady rate with arc length, so its average is the value at the midpoint, and equals the average of the values at the two ends. So the length of the segment, which may be an awkward number, never needs to be computed.",
+    "$f$ 沿曲线 $C$ 的平均值是 $\\frac{1}{L}\\int_C f\\,ds$，其中 $L$ 是长度。在直线段上，线性函数随弧长匀速变化，所以平均值就是中点处的值，也等于两端值的平均。所以线段的长度即使是不太好算的数，也根本不需要计算。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 6);
+    const b = nonzero(rng, 6);
+    const c = rng.int(-9, 9);
+    const px = rng.int(-6, 6);
+    const py = rng.int(-6, 6);
+    const qx = px + nonzero(rng, 6);
+    const qy = py + nonzero(rng, 6);
+    const start = a * px + b * py + c;
+    const end = a * qx + b * qy + c;
+    const answer = Q.of(start + end, 2);
+    return numberProblem({
+      prompt: t(
+        `Find the average value of $f(x, y) = ${poly([a, "x"], [b, "y"], [c, ""])}$ along the segment from $(${px}, ${py})$ to $(${qx}, ${qy})$.`,
+        `求 $f(x, y) = ${poly([a, "x"], [b, "y"], [c, ""])}$ 沿从 $(${px}, ${py})$ 到 $(${qx}, ${qy})$ 的线段的平均值。`,
+      ),
+      answer,
+      wrong: [Q.of(start), Q.of(end), Q.of(start + end), answer.add(Q.of(1))],
+      solution: t(
+        `The values at the ends are $${start}$ and $${end}$. Because $f$ changes steadily along the segment, the average is halfway between them, which is $${answer.toLatex()}$.`,
+        `两端的值是 $${start}$ 和 $${end}$。由于 $f$ 沿线段匀速变化，平均值在它们的正中间，也就是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const workByRadialField: KnowledgePointDef = {
+  id: "the-work-done-by-a-field-proportional-to-position",
+  title: t("The work done by a field proportional to position", "与位置成正比的力场做的功"),
+  explanation: t(
+    "A force that points along the position vector, $\\mathbf{F} = k\\langle x, y \\rangle$, varies from point to point, so work is not a dot product with the displacement. But it is the gradient of $\\frac{k}{2}(x^2 + y^2)$. The fundamental theorem of line integrals then gives the work as the change in this potential, and the path taken between the two points makes no difference.",
+    "沿位置向量方向的力 $\\mathbf{F} = k\\langle x, y \\rangle$ 随点而变，所以功不是它与位移的点积。但它是 $\\frac{k}{2}(x^2 + y^2)$ 的梯度。于是线积分基本定理给出功等于这个势的改变量，两点之间走哪条路径都没有区别。",
+  ),
+  generate(rng) {
+    const k = nonzero(rng, 6);
+    const px = rng.int(-6, 6);
+    const py = nonzero(rng, 6);
+    const qx = nonzero(rng, 6);
+    const qy = rng.pick([...Array(13).keys()].map((i) => i - 6).filter((v) => qx * qx + v * v !== px * px + py * py));
+    const start = px * px + py * py;
+    const end = qx * qx + qy * qy;
+    const answer = Q.of(k * (end - start), 2);
+    const atStart = k * (px * (qx - px) + py * (qy - py));
+    const atEnd = k * (qx * (qx - px) + qy * (qy - py));
+    const field = k === 1 ? "" : k === -1 ? "-" : `${k}`;
+    return numberProblem({
+      prompt: t(
+        `Find the work done by $\\mathbf{F}(x, y) = ${field}\\langle x, y \\rangle$ on a particle moving along a smooth path from $(${px}, ${py})$ to $(${qx}, ${qy})$.`,
+        `求 $\\mathbf{F}(x, y) = ${field}\\langle x, y \\rangle$ 对沿光滑路径从 $(${px}, ${py})$ 运动到 $(${qx}, ${qy})$ 的质点做的功。`,
+      ),
+      answer,
+      wrong: [Q.of(k * (end - start)), answer.neg(), Q.of(atStart), Q.of(atEnd)],
+      solution: t(
+        `A potential is $\\frac{k}{2}(x^2 + y^2)$ with $k = ${k}$, and $x^2 + y^2$ changes from $${start}$ to $${end}$. So the work is $${answer.toLatex()}$.`,
+        `势函数是 $\\frac{k}{2}(x^2 + y^2)$，其中 $k = ${k}$，$x^2 + y^2$ 从 $${start}$ 变到 $${end}$。所以功是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const astroidArea: KnowledgePointDef = {
+  id: "the-area-inside-an-astroid-from-greens-theorem",
+  title: t("The area inside an astroid from Green's theorem", "用格林定理求星形线内的面积"),
+  explanation: t(
+    "Green's theorem turns the area of a region into $\\frac{1}{2}\\oint_C x\\,dy - y\\,dx$ around its boundary. This is especially useful for a curve given in parametric form, such as the astroid $x = a\\cos^3 t$, $y = a\\sin^3 t$, which would be awkward to describe as a function. Here, the integrand simplifies to $3a^2\\sin^2 t\\cos^2 t$, and only a single integral in $t$ remains.",
+    "格林定理把区域的面积化成沿边界的 $\\frac{1}{2}\\oint_C x\\,dy - y\\,dx$。这对参数形式给出的曲线特别有用，例如星形线 $x = a\\cos^3 t$，$y = a\\sin^3 t$，它写成函数形式很不方便。这里被积函数化简为 $3a^2\\sin^2 t\\cos^2 t$，只剩下一个关于 $t$ 的积分。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 30);
+    const answer = Q.of(3 * a * a, 8);
+    return numberProblem({
+      prompt: t(
+        `The area enclosed by the astroid $x = ${a}\\cos^3 t$, $y = ${a}\\sin^3 t$, $0 \\le t \\le 2\\pi$, equals $c\\pi$. Find $c$.`,
+        `星形线 $x = ${a}\\cos^3 t$，$y = ${a}\\sin^3 t$，$0 \\le t \\le 2\\pi$ 围成的面积等于 $c\\pi$。求 $c$。`,
+      ),
+      answer,
+      wrong: [Q.of(a * a), Q.of(3 * a * a, 4), Q.of(3 * a * a, 16), Q.of(3 * a, 8)],
+      solution: t(
+        `The integrand is $${3 * a * a}\\sin^2 t\\cos^2 t$, and $\\int_0^{2\\pi} \\sin^2 t\\cos^2 t\\,dt = \\frac{\\pi}{4}$. Half of the product is $${answer.toLatex()}\\pi$.`,
+        `被积函数是 $${3 * a * a}\\sin^2 t\\cos^2 t$，且 $\\int_0^{2\\pi} \\sin^2 t\\cos^2 t\\,dt = \\frac{\\pi}{4}$。乘积的一半是 $${answer.toLatex()}\\pi$。`,
+      ),
+    });
+  },
+};
+
+const coneSurfaceArea: KnowledgePointDef = {
+  id: "the-area-of-a-cone-above-a-disk",
+  title: t("The area of a cone above a disk", "圆盘上方的圆锥面积"),
+  explanation: t(
+    "The surface area above a region is $\\iint_D \\sqrt{1 + z_x^2 + z_y^2}\\,dA$. On the cone $z = k\\sqrt{x^2 + y^2}$, the two partial derivatives change from point to point, but $z_x^2 + z_y^2 = k^2$ everywhere. So the square root is a constant, and the surface area is that constant times the area of the region below. The tilt of the cone is the same at all its points.",
+    "区域上方的曲面面积是 $\\iint_D \\sqrt{1 + z_x^2 + z_y^2}\\,dA$。在圆锥面 $z = k\\sqrt{x^2 + y^2}$ 上，两个偏导数随点而变，但处处有 $z_x^2 + z_y^2 = k^2$。所以平方根是常数，曲面面积就是这个常数乘以下方区域的面积。圆锥在所有点的倾斜程度都相同。",
+  ),
+  generate(rng) {
+    const [p, q, h] = rng.pick(pythagoreanSlopes);
+    const r = rng.int(2, 9);
+    const answer = Q.of(h * r * r, q);
+    const slope = Q.of(p, q);
+    return numberProblem({
+      prompt: t(
+        `The part of the cone $z = ${slope.toLatex()}\\sqrt{x^2 + y^2}$ above the disk $x^2 + y^2 \\le ${r * r}$ has area $c\\pi$. Find $c$.`,
+        `圆锥面 $z = ${slope.toLatex()}\\sqrt{x^2 + y^2}$ 在圆盘 $x^2 + y^2 \\le ${r * r}$ 上方部分的面积是 $c\\pi$。求 $c$。`,
+      ),
+      answer,
+      wrong: [Q.of(r * r), Q.of(p * r * r, q), Q.of(h * h * r * r, q * q), Q.of(h * r, q)],
+      solution: t(
+        `Here $\\sqrt{1 + z_x^2 + z_y^2} = \\sqrt{1 + \\left(${slope.toLatex()}\\right)^2} = ${Q.of(h, q).toLatex()}$, and the disk has area $${r * r}\\pi$. So $c = ${answer.toLatex()}$.`,
+        `这里 $\\sqrt{1 + z_x^2 + z_y^2} = \\sqrt{1 + \\left(${slope.toLatex()}\\right)^2} = ${Q.of(h, q).toLatex()}$，圆盘的面积是 $${r * r}\\pi$。所以 $c = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const integralOverCylinder: KnowledgePointDef = {
+  id: "integrating-the-height-over-a-cylinder",
+  title: t("Integrating the height over a cylinder", "在圆柱面上对高度积分"),
+  explanation: t(
+    "A surface integral over a parametrized surface is $\\iint f\\,\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\|\\,du\\,dv$. On the cylinder $\\langle R\\cos u, R\\sin u, v \\rangle$, the length of the cross product is just $R$, so the area element is $R\\,du\\,dv$. Then a function of the height alone integrates to the factor $2\\pi$ around the cylinder times a single integral along its height.",
+    "参数曲面上的曲面积分是 $\\iint f\\,\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\|\\,du\\,dv$。在圆柱面 $\\langle R\\cos u, R\\sin u, v \\rangle$ 上，叉积的长度就是 $R$，所以面积元是 $R\\,du\\,dv$。于是只与高度有关的函数，积分结果是绕圆柱一周的因子 $2\\pi$ 乘以沿高度的单积分。",
+  ),
+  generate(rng) {
+    const c = rng.int(1, 6);
+    const r = rng.int(2, 9);
+    const h = rng.int(1, 9);
+    const answer = c * r * h * h;
+    const integrand = c === 1 ? "z" : `${c}z`;
+    return numberProblem({
+      prompt: t(
+        `The surface $S$ is the side of the cylinder $x^2 + y^2 = ${r * r}$, $0 \\le z \\le ${h}$. The integral $\\iint_S ${integrand}\\,dS$ equals $c\\pi$. Find $c$.`,
+        `曲面 $S$ 是圆柱 $x^2 + y^2 = ${r * r}$，$0 \\le z \\le ${h}$ 的侧面。积分 $\\iint_S ${integrand}\\,dS$ 等于 $c\\pi$。求 $c$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [c * r * h, c * r * r * h, 2 * answer, c * h * h, answer + 1],
+      solution: t(
+        `The area element is $${r}\\,du\\,dv$, so the integral is $${r} \\cdot 2\\pi \\cdot \\int_0^{${h}} ${integrand}\\,dz = ${answer}\\pi$.`,
+        `面积元是 $${r}\\,du\\,dv$，所以积分是 $${r} \\cdot 2\\pi \\cdot \\int_0^{${h}} ${integrand}\\,dz = ${answer}\\pi$。`,
+      ),
+    });
+  },
+};
+
+const inverseSquareFlux: KnowledgePointDef = {
+  id: "the-flux-of-an-inverse-square-field-through-a-sphere",
+  title: t("The flux of an inverse square field through a sphere", "平方反比场穿过球面的通量"),
+  explanation: t(
+    "On a sphere of radius $R$ centered at the origin, the field $\\mathbf{F} = k\\frac{\\mathbf{r}}{\\|\\mathbf{r}\\|^3}$ points along the outward normal, with constant size $\\frac{|k|}{R^2}$. Multiplying by the area $4\\pi R^2$ cancels the radius, so every such sphere gets the same flux. The divergence theorem cannot be used directly on the ball here, because the field is not defined at the center.",
+    "在以原点为心、半径为 $R$ 的球面上，场 $\\mathbf{F} = k\\frac{\\mathbf{r}}{\\|\\mathbf{r}\\|^3}$ 沿外法线方向，大小恒为 $\\frac{|k|}{R^2}$。乘以面积 $4\\pi R^2$，半径就消去了，所以所有这样的球面通量都相同。这里不能直接对球体用散度定理，因为场在球心没有定义。",
+  ),
+  generate(rng) {
+    const k = nonzero(rng, 9);
+    const r = rng.int(2, 9);
+    const answer = 4 * k;
+    const field = k === 1 ? "" : k === -1 ? "-" : `${k}`;
+    return numberProblem({
+      prompt: t(
+        `The outward flux of $\\mathbf{F} = ${field}\\frac{\\langle x, y, z \\rangle}{(x^2 + y^2 + z^2)^{3/2}}$ through the sphere $x^2 + y^2 + z^2 = ${r * r}$ equals $c\\pi$. Find $c$.`,
+        `$\\mathbf{F} = ${field}\\frac{\\langle x, y, z \\rangle}{(x^2 + y^2 + z^2)^{3/2}}$ 穿过球面 $x^2 + y^2 + z^2 = ${r * r}$ 的外向通量等于 $c\\pi$。求 $c$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [0, 4 * k * r * r, 4 * k * r, k, -answer],
+      solution: t(
+        `On the sphere, $\\mathbf{F} \\cdot \\mathbf{n} = ${Q.of(k, r * r).toLatex()}$, and the area is $${4 * r * r}\\pi$. The product is $${answer}\\pi$.`,
+        `在球面上，$\\mathbf{F} \\cdot \\mathbf{n} = ${Q.of(k, r * r).toLatex()}$，面积是 $${4 * r * r}\\pi$。乘积是 $${answer}\\pi$。`,
+      ),
+    });
+  },
+};
+
+const diskMoment: KnowledgePointDef = {
+  id: "the-moment-of-inertia-of-a-disk-about-a-diameter",
+  title: t("The moment of inertia of a disk about a diameter", "圆盘对直径的转动惯量"),
+  explanation: t(
+    "The moment $I_x = \\iint \\rho y^2\\,dA$ of a disk is easy in polar coordinates, but symmetry makes it easier still. A disk centered at the origin has $I_x = I_y$, and these add to the polar moment $I_0 = \\iint \\rho r^2\\,dA = \\frac{\\pi\\rho R^4}{2}$, because $x^2 + y^2 = r^2$. So the moment about a diameter is exactly half of the moment about the center.",
+    "圆盘的转动惯量 $I_x = \\iint \\rho y^2\\,dA$ 用极坐标很容易求，但利用对称性更容易。以原点为心的圆盘有 $I_x = I_y$，它们之和是极惯性矩 $I_0 = \\iint \\rho r^2\\,dA = \\frac{\\pi\\rho R^4}{2}$，因为 $x^2 + y^2 = r^2$。所以对直径的转动惯量恰好是对圆心的转动惯量的一半。",
+  ),
+  generate(rng) {
+    const density = rng.int(1, 9);
+    const r = rng.int(1, 6);
+    const answer = Q.of(density * r ** 4, 4);
+    return numberProblem({
+      prompt: t(
+        `A disk $x^2 + y^2 \\le ${r * r}$ has constant density $${density}$. Its moment of inertia about the $x$-axis equals $c\\pi$. Find $c$.`,
+        `圆盘 $x^2 + y^2 \\le ${r * r}$ 的密度恒为 $${density}$。它对 $x$ 轴的转动惯量等于 $c\\pi$。求 $c$。`,
+      ),
+      answer,
+      wrong: [Q.of(density * r ** 4, 2), Q.of(density * r ** 4, 8), Q.of(density * r ** 3, 3), Q.of(density * r * r, 2)],
+      solution: t(
+        `The polar moment is $\\frac{${density} \\cdot ${r ** 4}}{2}\\pi$, and $I_x$ is half of it by symmetry. So $c = ${answer.toLatex()}$.`,
+        `极惯性矩是 $\\frac{${density} \\cdot ${r ** 4}}{2}\\pi$，由对称性，$I_x$ 是它的一半。所以 $c = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const rectangleCentralMoment: KnowledgePointDef = {
+  id: "the-moment-of-inertia-of-a-rectangle-about-a-central-axis",
+  title: t("The moment of inertia of a rectangle about a central axis", "矩形对中心轴的转动惯量"),
+  explanation: t(
+    "For an axis through the center of a uniform rectangle, parallel to a side, the distance to the axis runs from $-\\frac{h}{2}$ to $\\frac{h}{2}$. Integrating the squared distance over the rectangle gives $\\frac{\\rho wh^3}{12}$, which is a quarter of the moment about the edge. Only the height across the axis is cubed. This is why a beam is stiffer when set on its narrow side.",
+    "对过均匀矩形中心、平行于一边的轴，到轴的距离从 $-\\frac{h}{2}$ 变到 $\\frac{h}{2}$。距离平方在矩形上积分，得 $\\frac{\\rho wh^3}{12}$，是对边的转动惯量的四分之一。只有垂直于轴的高度取三次方。这就是梁竖放时更坚固的原因。",
+  ),
+  generate(rng) {
+    const density = rng.int(1, 6);
+    const w = rng.int(1, 9);
+    const h = rng.pick([...Array(9).keys()].map((i) => i + 1).filter((v) => v !== w));
+    const answer = Q.of(density * w * h ** 3, 12);
+    return numberProblem({
+      prompt: t(
+        `A rectangle of width ${w} along the $x$-axis and height ${h} along the $y$-axis has constant density $${density}$. Find its moment of inertia about the horizontal line through its center.`,
+        `一个矩形沿 $x$ 轴宽 ${w}、沿 $y$ 轴高 ${h}，密度恒为 $${density}$。求它对过其中心的水平线的转动惯量。`,
+      ),
+      answer,
+      wrong: [Q.of(density * w * h ** 3, 3), Q.of(density * h * w ** 3, 12), Q.of(density * w * h * h, 12), answer.add(Q.of(1))],
+      solution: t(
+        `The integral is $${density} \\cdot ${w} \\cdot \\int_{-h/2}^{h/2} y^2\\,dy$ with $h = ${h}$, and it equals $${answer.toLatex()}$.`,
+        `当 $h = ${h}$ 时，积分是 $${density} \\cdot ${w} \\cdot \\int_{-h/2}^{h/2} y^2\\,dy$，它等于 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const annulusGyration: KnowledgePointDef = {
+  id: "the-radius-of-gyration-of-an-annulus",
+  title: t("The radius of gyration of an annulus", "圆环的回转半径"),
+  explanation: t(
+    "The squared radius of gyration is the moment of inertia divided by the mass, so the density cancels. For an annulus about its center, these are integrals in polar coordinates, of $r^3$ and of $r$ respectively. Factoring a difference of squares simplifies the ratio to $\\frac{a^2 + b^2}{2}$. A thin ring has all its mass near one radius, so this agrees with the limit $R^2$.",
+    "回转半径的平方是转动惯量除以质量，所以密度消去了。对圆环关于圆心，这两者是极坐标下分别对 $r^3$ 和 $r$ 的积分。分解平方差后，比值化简为 $\\frac{a^2 + b^2}{2}$。细圆环的质量都集中在一个半径附近，这与极限 $R^2$ 相符。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 9);
+    const b = rng.int(a + 1, 12);
+    const answer = Q.of(a * a + b * b, 2);
+    return numberProblem({
+      prompt: t(
+        `A uniform annulus has inner radius ${a} and outer radius ${b}. Find the square of its radius of gyration about the center.`,
+        `一个均匀圆环的内半径是 ${a}，外半径是 ${b}。求它关于圆心的回转半径的平方。`,
+      ),
+      answer,
+      wrong: [Q.of(b * b - a * a, 2), Q.of((a + b) ** 2, 4), Q.of(a * a + b * b), Q.of(b * b, 2)],
+      solution: t(
+        `The ratio of the integrals is $\\frac{(${b}^4 - ${a}^4)/4}{(${b}^2 - ${a}^2)/2} = \\frac{${a}^2 + ${b}^2}{2} = ${answer.toLatex()}$.`,
+        `两个积分之比是 $\\frac{(${b}^4 - ${a}^4)/4}{(${b}^2 - ${a}^2)/2} = \\frac{${a}^2 + ${b}^2}{2} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const expectedCoordinate: KnowledgePointDef = {
+  id: "an-expected-coordinate-from-a-joint-density",
+  title: t("An expected coordinate from a joint density", "由联合密度求坐标的期望"),
+  explanation: t(
+    "When a joint density on a rectangle is a product of a function of $x$ and a function of $y$, the two variables are independent. The density of $X$ alone then follows from its own factor, normalized over its own interval, and $y$ plays no further part. For a density proportional to $xy$, this gives $X$ a density proportional to $x$, whose mean is two thirds of the way along.",
+    "当矩形上的联合密度是 $x$ 的函数与 $y$ 的函数之积时，两个变量相互独立。于是 $X$ 的密度由它自己的因子在自己的区间上归一化得到，$y$ 不再起作用。对与 $xy$ 成正比的密度，$X$ 的密度与 $x$ 成正比，它的均值在区间的三分之二处。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 12);
+    const b = rng.pick([...Array(12).keys()].map((i) => i + 1).filter((v) => v !== a));
+    const answer = Q.of(2 * a, 3);
+    return numberProblem({
+      prompt: t(
+        `$f(x, y) = Cxy$ is a joint density on $[0, ${a}] \\times [0, ${b}]$. Find $E(X)$.`,
+        `$f(x, y) = Cxy$ 是 $[0, ${a}] \\times [0, ${b}]$ 上的联合密度。求 $E(X)$。`,
+      ),
+      answer,
+      wrong: [Q.of(a, 2), Q.of(2 * b, 3), Q.of(a, 3), Q.of(3 * a, 4)],
+      solution: t(
+        `The variable $X$ has density proportional to $x$ on $[0, ${a}]$. So $E(X) = \\frac{\\int_0^{${a}} x^2\\,dx}{\\int_0^{${a}} x\\,dx} = ${answer.toLatex()}$.`,
+        `变量 $X$ 在 $[0, ${a}]$ 上的密度与 $x$ 成正比。所以 $E(X) = \\frac{\\int_0^{${a}} x^2\\,dx}{\\int_0^{${a}} x\\,dx} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const streamCondition: KnowledgePointDef = {
+  id: "the-coefficient-that-allows-a-stream-function",
+  title: t("The coefficient that allows a stream function", "使流函数存在的系数"),
+  explanation: t(
+    "A stream function satisfies $P = \\psi_y$ and $Q = -\\psi_x$. Since the mixed partial derivatives of $\\psi$ agree, this forces $P_x = \\psi_{yx} = \\psi_{xy} = -Q_y$, which is to say that the divergence $P_x + Q_y$ is zero. So a flow in the whole plane has a stream function exactly when it is incompressible. This test can be applied before trying to find $\\psi$ itself.",
+    "流函数满足 $P = \\psi_y$ 和 $Q = -\\psi_x$。由于 $\\psi$ 的混合偏导数相等，这就要求 $P_x = \\psi_{yx} = \\psi_{xy} = -Q_y$，也就是说散度 $P_x + Q_y$ 为零。所以全平面上的流存在流函数，当且仅当它不可压缩。在尝试求 $\\psi$ 本身之前，可以先做这个检验。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 9);
+    const b = nonzero(rng, 9);
+    const c = nonzero(rng, 9);
+    const answer = -a;
+    return numberProblem({
+      prompt: t(
+        `Find $k$ so that the flow $\\mathbf{F}(x, y) = \\langle ${poly([a, "x"], [b, "y"])}, ${poly([c, "x"])} + ky \\rangle$ has a stream function.`,
+        `求 $k$，使流 $\\mathbf{F}(x, y) = \\langle ${poly([a, "x"], [b, "y"])}, ${poly([c, "x"])} + ky \\rangle$ 存在流函数。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a, b, c, -b, -c],
+      solution: t(
+        `The divergence is $${a} + k$, and it must be zero. So $k = ${answer}$.`,
+        `散度是 $${a} + k$，它必须为零。所以 $k = ${answer}$。`,
+      ),
+    });
+  },
+};
+
 /** deeperMultivariableCalculusPoints gives, by topic id, the knowledge points added after a Multivariable Calculus topic's own. */
 export const deeperMultivariableCalculusPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "tangent-vectors-and-tangent-lines-to-curves": [tangentParallelToPlane],
@@ -1662,4 +2460,31 @@ export const deeperMultivariableCalculusPoints: Readonly<Record<string, readonly
   "surface-integrals-over-parametric-surfaces": [sphereSecondMoment],
   "differentiating-under-the-integral-sign": [integralWithLog],
   "flux-in-three-dimensional-vector-fields": [fluxThroughTiltedTriangle],
+  "the-curvature-of-a-plane-curve": [curvatureWithSlope],
+  "differentiation-rules-for-vector-valued-functions": [squaredLengthRate],
+  hyperboloids: [gapBetweenSheets],
+  ellipsoids: [ellipsoidSliceArea],
+  "linearization-of-multivariable-functions": [linearizationError],
+  "tangent-lines-to-level-curves": [horizontalTangent],
+  "equality-of-mixed-partial-derivatives": [distinctPartials],
+  "the-inverse-of-an-affine-transformation": [preimageArea],
+  "the-second-derivative-of-a-multivariable-function": [largestSecondDirectional],
+  "second-degree-taylor-polynomials-of-multivariable-functions": [logarithmCrossTerm],
+  "double-integrals-over-type-i-regions": [lineAndParabolaMoment],
+  "changing-the-order-of-integration-in-double-integrals": [reversingToIntegrate],
+  "triple-integrals-over-rectangular-domains": [averageOverBox],
+  "calculating-volumes-of-solids-using-triple-integrals": [twoCylinders],
+  "double-integrals-between-polar-curves": [distanceOverAnnulus],
+  "spherical-polar-coordinates": [sphericalToCartesian],
+  "line-integrals-of-scalar-functions-over-line-segments": [averageAlongSegment],
+  "work-done-by-a-force-field": [workByRadialField],
+  "calculating-areas-using-greens-theorem": [astroidArea],
+  "areas-of-surfaces": [coneSurfaceArea],
+  "parametrizations-of-cylinders": [integralOverCylinder],
+  "flux-through-closed-surfaces": [inverseSquareFlux],
+  "moments-of-inertia-of-laminas-about-the-coordinate-axes": [diskMoment],
+  "moments-of-inertia-of-laminas-about-other-axes": [rectangleCentralMoment],
+  "calculating-the-radius-of-gyration-of-a-plane-lamina": [annulusGyration],
+  "probability-density-functions-of-continuous-random-variables": [expectedCoordinate],
+  "stream-functions": [streamCondition],
 };
