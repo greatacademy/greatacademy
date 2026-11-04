@@ -180,14 +180,14 @@ export function spr(prompt: Text, answer: Coefficient, wrong: readonly Coefficie
   };
 }
 
-/** sg writes a signed term after an expression: sg(3) is "+ 3" and sg(-3) is "- 3". */
-export const sg = (n: number, suffix = ""): string => `${n < 0 ? "-" : "+"} ${Math.abs(n)}${suffix}`;
+/** sg writes a signed term after an expression: sg(3) is "+ 3", sg(-3) is "- 3" and sg(0) is empty. */
+export const sg = (n: number, suffix = ""): string => (n === 0 ? "" : `${n < 0 ? "-" : "+"} ${Math.abs(n)}${suffix}`);
 
 /** cx writes a leading coefficient with a variable: cx(1, "x") is "x", cx(-1, "x") is "-x" and cx(3, "x") is "3x". */
 export const cx = (c: number, v = "x"): string => (c === 1 ? v : c === -1 ? `-${v}` : `${c}${v}`);
 
-/** tx writes a later term with its sign: tx(-1, "y") is "- y" and tx(3, "y") is "+ 3y". */
-export const tx = (c: number, v = "x"): string => `${c < 0 ? "-" : "+"} ${Math.abs(c) === 1 ? v : `${Math.abs(c)}${v}`}`;
+/** tx writes a later term with its sign: tx(-1, "y") is "- y", tx(3, "y") is "+ 3y" and tx(0, "y") is empty. */
+export const tx = (c: number, v = "x"): string => (c === 0 ? "" : `${c < 0 ? "-" : "+"} ${Math.abs(c) === 1 ? v : `${Math.abs(c)}${v}`}`);
 
 /** table writes a two-row table of values as display math. */
 export function table(x1: string, y1: string, xs: readonly (number | string)[], ys: readonly (number | string)[]): string {

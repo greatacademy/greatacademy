@@ -676,7 +676,7 @@ export const actExamNumbers: ExamSpec[] = [
         `What is $(${a} + ${b}i) + (${c} - ${d}i)$?`,
         `$(${a} + ${b}i) + (${c} - ${d}i)$ 等于什么？`,
         cplx(a + c, b - d),
-        [cplx(a + c, b + d), cplx(a - c, b - d), `${a + c + b - d}i`, cplx(a + c + 1, b - d)],
+        [cplx(a + c, b + d), cplx(a - c, b - d), `${a + c + b - d || a + c + b + d}i`, cplx(a + c + 1, b - d)],
         `Add the real parts and the imaginary parts separately.`,
         `实部、虚部分别相加。`,
       );
