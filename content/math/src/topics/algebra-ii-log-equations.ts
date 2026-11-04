@@ -2692,7 +2692,6 @@ export const convertingBetweenExponents: TopicDef = {
   ),
   prerequisites: ["continuously-compounded-interest"],
   encompasses: [
-    { topic: "continuously-compounded-interest", weight: 0.4 },
     { topic: "writing-radicals-using-fractional-exponents", weight: 0.2 },
     { topic: "modeling-with-compound-interest", weight: 0.2 },
   ],

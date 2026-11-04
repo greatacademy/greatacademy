@@ -1080,10 +1080,7 @@ export const multiplyingUsingRepeatedSubtraction: TopicDef = {
     "乘一个接近整十或整百的数时，先多乘再减去一组：9 × 24 = 10 × 24 − 24。",
   ),
   prerequisites: ["multiplying-using-repeated-addition", "multiplying-numbers-ending-in-zeros"],
-  encompasses: [
-    { topic: "multiplying-using-repeated-addition", weight: 0.4 },
-    { topic: "multiplying-numbers-ending-in-zeros", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "multiplying-using-repeated-addition", weight: 0.4 }],
   xp: 10,
   standards: ["CCSS.4.NBT.B.5"],
   knowledgePoints: [

@@ -16,10 +16,7 @@ export const evaluatingExpressionsUsingAGraphingCalculator: TopicDef = {
     "用括号对分子、分母与复合指数分组，保持弧度模式，并以完整精度存储中间计算值。",
   ),
   prerequisites: ["extending-the-trigonometric-ratios-using-angles-in-radians"],
-  encompasses: [
-    { topic: "evaluating-expressions", weight: 0.3 },
-    { topic: "extending-the-trigonometric-ratios-using-angles-in-radians", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "evaluating-expressions", weight: 0.3 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

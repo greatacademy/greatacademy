@@ -709,7 +709,7 @@ export const newtonsLawOfUniversalGravitation: TopicDef = {
     "引力与距离平方成反比：$F = -\\frac{GMm}{r^2} = -mg_0\\left(\\frac{R}{r}\\right)^2$，因此在天体尺度上加速度随距离变化。",
   ),
   prerequisites: ["falling-body-problems-with-linear-drag"],
-  encompasses: [{ topic: "falling-body-problems-with-linear-drag", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
