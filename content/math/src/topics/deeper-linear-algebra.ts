@@ -1100,10 +1100,10 @@ const inverseOfIPlusNilpotent: KnowledgePointDef = {
 
 const blocksFromNullities: KnowledgePointDef = {
   id: "counting-jordan-blocks-from-nullities",
-  title: t("Counting Jordan blocks from nullities", "由零度数约当块"),
+  title: t("Counting Jordan blocks from nullities", "由零度数若尔当块"),
   explanation: t(
     "Let $N = A - \\lambda I$. The nullity of $N$ counts the Jordan blocks for $\\lambda$, because each block has one eigenvector. Each further power gains one dimension for every block that is long enough, so the nullity of $N^2$ minus the nullity of $N$ counts the blocks of size at least two.",
-    "设 $N = A - \\lambda I$。$N$ 的零度等于 $\\lambda$ 的约当块个数，因为每块有一个特征向量。再乘一次，每个足够长的块都多一维，所以 $N^2$ 的零度减 $N$ 的零度，就是大小至少为二的块数。",
+    "设 $N = A - \\lambda I$。$N$ 的零度等于 $\\lambda$ 的若尔当块个数，因为每块有一个特征向量。再乘一次，每个足够长的块都多一维，所以 $N^2$ 的零度减 $N$ 的零度，就是大小至少为二的块数。",
   ),
   generate(rng) {
     const sizes = rng.pick([
@@ -1129,8 +1129,8 @@ const blocksFromNullities: KnowledgePointDef = {
     const givenZh = `$A$ 是 ${total} 阶矩阵，唯一的特征值是 $${l}$。设 $N = A - (${l})I$，$N$ 的零度是 $${n1}$，$N^2$ 的零度是 $${n2}$。`;
     return numberProblem({
       prompt: askSingles
-        ? t(`${given} How many Jordan blocks have size exactly 1?`, `${givenZh}大小恰为 1 的约当块有多少个？`)
-        : t(`${given} How many Jordan blocks have size at least 2?`, `${givenZh}大小至少为 2 的约当块有多少个？`),
+        ? t(`${given} How many Jordan blocks have size exactly 1?`, `${givenZh}大小恰为 1 的若尔当块有多少个？`)
+        : t(`${given} How many Jordan blocks have size at least 2?`, `${givenZh}大小至少为 2 的若尔当块有多少个？`),
       answer,
       form: "integer",
       wrong: [n1, n2, askSingles ? n2 - n1 : singles, answer + 1].filter((x) => x !== answer),
@@ -1144,7 +1144,7 @@ const blocksFromNullities: KnowledgePointDef = {
 
 const exponentialOfJordanBlock: KnowledgePointDef = {
   id: "the-exponential-of-a-2x2-jordan-block",
-  title: t("The exponential of a 2×2 Jordan block", "二阶约当块的指数"),
+  title: t("The exponential of a 2×2 Jordan block", "二阶若尔当块的指数"),
   explanation: t(
     "Write $A = \\lambda I + N$ with $N^2 = 0$. Since $\\lambda I$ and $N$ commute, $e^{At} = e^{\\lambda t}e^{Nt} = e^{\\lambda t}(I + tN)$. The exponential series for $N$ stops after two terms, and so a factor of $t$ appears beside the exponential.",
     "把 $A$ 写成 $\\lambda I + N$，其中 $N^2 = 0$。因为 $\\lambda I$ 与 $N$ 可交换，$e^{At} = e^{\\lambda t}e^{Nt} = e^{\\lambda t}(I + tN)$。$N$ 的指数级数两项后就停止，所以指数旁边出现因子 $t$。",
@@ -1559,6 +1559,898 @@ const slopeFromNormalEquations: KnowledgePointDef = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// Second pass
+// ---------------------------------------------------------------------------
+
+/** signedTerm writes an integer as a term to be added, with its sign and a space. */
+const signedTerm = (n: number) => (n < 0 ? `- ${-n}` : `+ ${n}`);
+/** det3 expands the determinant of a 3 by 3 matrix along its first row. */
+const det3 = ([[a, b, c], [d, e, f], [g, h, i]]: [[number, number, number], [number, number, number], [number, number, number]]) =>
+  a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
+/** withCoefficient writes a positive coefficient before a symbol, leaving out 1. */
+const withCoefficient = (n: number, symbol: string) => `${n === 1 ? "" : n}${symbol}`;
+/** shiftTerm writes a multiple of the identity as a term to be added, leaving out a coefficient of 1. */
+const shiftTerm = (n: number) => `${n < 0 ? "-" : "+"} ${withCoefficient(Math.abs(n), "I")}`;
+/** binomial2 counts the ways to choose two things from n. */
+const binomial2 = (n: number) => (n * (n - 1)) / 2;
+
+const lineMeetsHorizontalPlane: KnowledgePointDef = {
+  id: "where-a-line-meets-a-plane-of-constant-height",
+  title: t("Where a line meets a plane of constant height", "直线与等高平面的交点"),
+  explanation: t(
+    "A point lies on a parametric line for exactly one value of the parameter, so a condition on one coordinate decides the whole point. To find where a line meets the plane $z = k$, solve the $z$ equation for $t$, then put that value of $t$ into the other coordinates. All three coordinates must use the same value of the parameter.",
+    "参数直线上的一个点恰好对应一个参数值，所以对一个坐标的条件就决定了整个点。要求直线与平面 $z = k$ 的交点，先从 $z$ 的方程解出 $t$，再把这个 $t$ 代入其他坐标。三个坐标必须使用同一个参数值。",
+  ),
+  generate(rng) {
+    const a = rng.int(-5, 5);
+    const b = rng.int(-5, 5);
+    const c = rng.int(-5, 5);
+    const p = nonzero(rng, 4);
+    const q = nonzero(rng, 4);
+    const r = nonzero(rng, 4);
+    const k = rng.pick([...Array(21).keys()].map((i) => i - 10).filter((v) => v !== c));
+    const time = Q.of(k - c, r);
+    const answer = Q.of(a).add(time.mul(Q.of(p)));
+    return numberProblem({
+      prompt: t(
+        `The line $x = ${poly([a, ""], [p, "t"])}$, $y = ${poly([b, ""], [q, "t"])}$, $z = ${poly([c, ""], [r, "t"])}$ meets the plane $z = ${k}$. Find the $x$-coordinate of that point.`,
+        `直线 $x = ${poly([a, ""], [p, "t"])}$，$y = ${poly([b, ""], [q, "t"])}$，$z = ${poly([c, ""], [r, "t"])}$ 与平面 $z = ${k}$ 相交。求交点的 $x$ 坐标。`,
+      ),
+      answer,
+      wrong: [time, Q.of(a + p * (k - c)), Q.of(a).add(Q.of(k, r).mul(Q.of(p))), Q.of(a).sub(time.mul(Q.of(p))), answer.add(Q.of(1))],
+      solution: t(
+        `Setting $z = ${k}$ gives $t = ${time.toLatex()}$. Then $x = ${poly([a, ""], [p, "t"])} = ${answer.toLatex()}$.`,
+        `令 $z = ${k}$，得 $t = ${time.toLatex()}$。于是 $x = ${poly([a, ""], [p, "t"])} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const pointOnSymmetricLine: KnowledgePointDef = {
+  id: "a-point-on-a-line-in-symmetric-form",
+  title: t("A point on a line in symmetric form", "对称式直线上的点"),
+  explanation: t(
+    "In the symmetric form of a line, the three fractions share one value, and that shared value is the parameter $t$. So once one coordinate is known, its fraction gives $t$, and every other coordinate follows by solving its own fraction. There is no need to convert to parametric equations first, although the working is exactly the same.",
+    "在直线的对称式中，三个分式取同一个值，这个共同的值就是参数 $t$。所以一旦知道一个坐标，它的分式就给出 $t$，其他坐标都可以由各自的分式解出。不需要先化成参数方程，尽管计算实质上是一样的。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 6);
+    const b = nonzero(rng, 6);
+    const c = nonzero(rng, 6);
+    const p = rng.int(2, 6);
+    const q = rng.int(2, 6);
+    const r = rng.int(2, 6);
+    const x = rng.pick([...Array(21).keys()].map((i) => i - 10).filter((v) => v !== a));
+    const shift = Q.of(q * (x - a), p);
+    const answer = Q.of(b).add(shift);
+    const line = `\\frac{x ${signedTerm(-a)}}{${p}} = \\frac{y ${signedTerm(-b)}}{${q}} = \\frac{z ${signedTerm(-c)}}{${r}}`;
+    const value = Q.of(x - a, p);
+    return numberProblem({
+      prompt: t(
+        `A point on the line $${line}$ has $x = ${x}$. Find its $y$-coordinate.`,
+        `直线 $${line}$ 上的一点满足 $x = ${x}$。求它的 $y$ 坐标。`,
+      ),
+      answer,
+      wrong: [shift, Q.of(b).sub(shift), Q.of(b).add(Q.of(p * (x - a), q)), value],
+      solution: t(
+        `The common value of the fractions is $${value.toLatex()}$. So $y = ${b} + ${q} \\cdot \\left(${value.toLatex()}\\right) = ${answer.toLatex()}$.`,
+        `这些分式的共同值是 $${value.toLatex()}$。所以 $y = ${b} + ${q} \\cdot \\left(${value.toLatex()}\\right) = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const planeIntercept: KnowledgePointDef = {
+  id: "the-intercept-of-a-plane-on-an-axis",
+  title: t("The intercept of a plane on an axis", "平面在坐标轴上的截距"),
+  explanation: t(
+    "Every point on the $x$-axis has the form $(x, 0, 0)$. Putting this into the equation $\\mathbf{n} \\cdot \\mathbf{r} = d$ leaves only the term with the first component of the normal, so $n_1 x = d$. The intercept therefore divides $d$ by that one component. The other two components of the normal affect the other two intercepts instead.",
+    "$x$ 轴上的每个点都形如 $(x, 0, 0)$。把它代入方程 $\\mathbf{n} \\cdot \\mathbf{r} = d$，只留下含法向量第一个分量的项，所以 $n_1 x = d$。因此截距就是 $d$ 除以这一个分量。法向量的另外两个分量影响的是另外两个截距。",
+  ),
+  generate(rng) {
+    const n1 = nonzero(rng, 9);
+    const n2 = nonzero(rng, 9);
+    const n3 = nonzero(rng, 9);
+    const d = nonzero(rng, 20);
+    const answer = Q.of(d, n1);
+    return numberProblem({
+      prompt: t(
+        `A plane has equation $\\langle ${n1}, ${n2}, ${n3} \\rangle \\cdot \\mathbf{r} = ${d}$. Find the $x$-coordinate of the point where it meets the $x$-axis.`,
+        `一个平面的方程是 $\\langle ${n1}, ${n2}, ${n3} \\rangle \\cdot \\mathbf{r} = ${d}$。求它与 $x$ 轴交点的 $x$ 坐标。`,
+      ),
+      answer,
+      wrong: [Q.of(n1, d), Q.of(d, n2), answer.neg(), Q.of(d), answer.add(Q.of(1))],
+      solution: t(
+        `At $(x, 0, 0)$, the equation becomes $${poly([n1, "x"])} = ${d}$, so $x = ${answer.toLatex()}$.`,
+        `在 $(x, 0, 0)$ 处，方程变成 $${poly([n1, "x"])} = ${d}$，所以 $x = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const planeConstantFromSpan: KnowledgePointDef = {
+  id: "the-scalar-equation-from-a-parametric-plane",
+  title: t("The scalar equation from a parametric plane", "由参数平面求标量方程"),
+  explanation: t(
+    "Both spanning vectors of a plane are perpendicular to its normal, so their cross product $\\mathbf{n} = \\mathbf{u} \\times \\mathbf{v}$ is a normal. The value $\\mathbf{n} \\cdot \\mathbf{r}$ is the same at every point of the plane, because moving along $\\mathbf{u}$ or $\\mathbf{v}$ does not change it. So the base point supplies the constant $d = \\mathbf{n} \\cdot \\mathbf{p}$.",
+    "平面的两个张成向量都垂直于法向量，所以它们的叉积 $\\mathbf{n} = \\mathbf{u} \\times \\mathbf{v}$ 就是法向量。$\\mathbf{n} \\cdot \\mathbf{r}$ 的值在平面上每一点都相同，因为沿 $\\mathbf{u}$ 或 $\\mathbf{v}$ 移动都不改变它。所以基点给出常数 $d = \\mathbf{n} \\cdot \\mathbf{p}$。",
+  ),
+  generate(rng) {
+    const point = [nonzero(rng, 5), nonzero(rng, 5), nonzero(rng, 5)];
+    const u = [1, nonzero(rng, 3), nonzero(rng, 3)] as const;
+    const v = [0, 1, nonzero(rng, 3)] as const;
+    const normal = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+    const answer = dot(normal, point);
+    return numberProblem({
+      prompt: t(
+        `A plane has equation $\\mathbf{r}(s, t) = \\langle ${point.join(", ")} \\rangle + s\\langle ${u.join(", ")} \\rangle + t\\langle ${v.join(", ")} \\rangle$. With $\\mathbf{n}$ the cross product of the first spanning vector with the second, write the plane as $\\mathbf{n} \\cdot \\mathbf{r} = d$. Find $d$.`,
+        `一个平面的方程是 $\\mathbf{r}(s, t) = \\langle ${point.join(", ")} \\rangle + s\\langle ${u.join(", ")} \\rangle + t\\langle ${v.join(", ")} \\rangle$。设 $\\mathbf{n}$ 是第一个张成向量与第二个张成向量的叉积，把平面写成 $\\mathbf{n} \\cdot \\mathbf{r} = d$。求 $d$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-answer, dot(u, point), dot(v, point), answer + 1],
+      solution: t(
+        `The cross product is $\\mathbf{n} = \\langle ${normal.join(", ")} \\rangle$. Its dot product with the base point is $${answer}$.`,
+        `叉积是 $\\mathbf{n} = \\langle ${normal.join(", ")} \\rangle$。它与基点的点积是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const vandermonde: KnowledgePointDef = {
+  id: "the-determinant-of-a-vandermonde-matrix",
+  title: t("The determinant of a Vandermonde matrix", "范德蒙德矩阵的行列式"),
+  explanation: t(
+    "A matrix with rows $(1, a, a^2)$, $(1, b, b^2)$ and $(1, c, c^2)$ has a determinant that factors completely. Subtracting the first row from the others clears the first column, and each new row then has a common factor, such as $b - a$. What remains gives $(b - a)(c - a)(c - b)$. It vanishes exactly when two of the numbers coincide.",
+    "行为 $(1, a, a^2)$、$(1, b, b^2)$、$(1, c, c^2)$ 的矩阵，行列式可以完全分解。从其他行减去第一行，就清除了第一列，每个新行都有公因子，例如 $b - a$。剩下的部分给出 $(b - a)(c - a)(c - b)$。它为零，当且仅当有两个数相等。",
+  ),
+  generate(rng) {
+    const pool = [...Array(12).keys()].map((i) => i - 5);
+    const a = rng.pick(pool);
+    const b = rng.pick(pool.filter((v) => v !== a));
+    const c = rng.pick(pool.filter((v) => v !== a && v !== b));
+    const answer = (b - a) * (c - a) * (c - b);
+    return numberProblem({
+      prompt: t(
+        `Find the determinant of $${mat([
+          [1, a, a * a],
+          [1, b, b * b],
+          [1, c, c * c],
+        ])}$.`,
+        `求 $${mat([
+          [1, a, a * a],
+          [1, b, b * b],
+          [1, c, c * c],
+        ])}$ 的行列式。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-answer, a * b * c, b - a + (c - a) + (c - b)],
+      solution: t(
+        `This is a Vandermonde matrix with $a = ${a}$, $b = ${b}$, $c = ${c}$, so its determinant is $(b - a)(c - a)(c - b) = ${inParens(b - a)} \\cdot ${inParens(c - a)} \\cdot ${inParens(c - b)} = ${answer}$.`,
+        `这是 $a = ${a}$，$b = ${b}$，$c = ${c}$ 的范德蒙德矩阵，所以行列式是 $(b - a)(c - a)(c - b) = ${inParens(b - a)} \\cdot ${inParens(c - a)} \\cdot ${inParens(c - b)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const powerOfElementary: KnowledgePointDef = {
+  id: "a-power-of-an-elementary-matrix",
+  title: t("A power of an elementary matrix", "初等矩阵的幂"),
+  explanation: t(
+    "Multiplying by the elementary matrix for $R_3 + kR_1 \\to R_3$ performs that row operation. Doing it $n$ times adds $k$ times the first row to the third row $n$ times, and the first row never changes. So the total effect is $R_3 + nkR_1 \\to R_3$. The entry grows by adding, not by multiplying, even though the matrix is being raised to a power.",
+    "乘以 $R_3 + kR_1 \\to R_3$ 的初等矩阵，就是执行这个行运算。做 $n$ 次，就是把第一行的 $k$ 倍加到第三行 $n$ 次，而第一行始终不变。所以总效果是 $R_3 + nkR_1 \\to R_3$。尽管矩阵在求幂，这个元素却是按加法增长，而不是按乘法。",
+  ),
+  generate(rng) {
+    const k = nonzero(rng, 9);
+    const n = rng.int(2, 9);
+    const answer = n * k;
+    return numberProblem({
+      prompt: t(
+        `Let $E = ${mat([
+          [1, 0, 0],
+          [0, 1, 0],
+          [k, 0, 1],
+        ])}$. Find the $(3, 1)$ entry of $E^{${n}}$.`,
+        `设 $E = ${mat([
+          [1, 0, 0],
+          [0, 1, 0],
+          [k, 0, 1],
+        ])}$。求 $E^{${n}}$ 的 $(3, 1)$ 元素。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [k ** n, k + n, k, (n + 1) * k],
+      solution: t(
+        `Each factor adds $${k}$ times row 1 to row 3, and row 1 stays fixed. After ${n} factors, the entry is $${n} \\cdot ${inParens(k)} = ${answer}$.`,
+        `每个因子把第 1 行的 $${k}$ 倍加到第 3 行，第 1 行保持不变。${n} 个因子之后，这个元素是 $${n} \\cdot ${inParens(k)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const scalarForEntry: KnowledgePointDef = {
+  id: "the-scalar-that-gives-a-combination-a-chosen-entry",
+  title: t("The scalar that gives a combination a chosen entry", "使组合取得指定分量的标量"),
+  explanation: t(
+    "Vector operations in $\\mathbb{R}^n$ act on each entry separately, so a single entry of $\\mathbf{u} + c\\mathbf{v}$ depends on $c$ through one ordinary linear equation. Solving it fixes $c$, and that decides all the other entries too. Entries of $\\mathbf{v}$ that are zero would make the corresponding entry independent of $c$, which is why a nonzero entry must be used.",
+    "$\\mathbb{R}^n$ 中的向量运算分别作用于每个分量，所以 $\\mathbf{u} + c\\mathbf{v}$ 的一个分量通过一个普通的线性方程依赖于 $c$。解这个方程就确定了 $c$，也决定了其他所有分量。如果 $\\mathbf{v}$ 的某个分量为零，相应分量就与 $c$ 无关，所以必须用非零分量。",
+  ),
+  generate(rng) {
+    const u = [rng.int(-9, 9), rng.int(-9, 9), rng.int(-9, 9), rng.int(-9, 9)];
+    const v = [nonzero(rng, 6), nonzero(rng, 6), nonzero(rng, 6), nonzero(rng, 6)];
+    const c = nonzero(rng, 6);
+    const position = rng.int(1, 4);
+    const uEntry = u[position - 1] ?? 0;
+    const vEntry = v[position - 1] ?? 1;
+    const target = uEntry + c * vEntry;
+    return numberProblem({
+      prompt: t(
+        `Let $\\mathbf{u} = ${col(...u)}$ and $\\mathbf{v} = ${col(...v)}$ in $\\mathbb{R}^4$. Find $c$ so that entry ${position} of $\\mathbf{u} + c\\mathbf{v}$ equals $${target}$.`,
+        `设 $\\mathbb{R}^4$ 中的 $\\mathbf{u} = ${col(...u)}$，$\\mathbf{v} = ${col(...v)}$。求 $c$，使 $\\mathbf{u} + c\\mathbf{v}$ 的第 ${position} 个分量等于 $${target}$。`,
+      ),
+      answer: c,
+      wrong: [-c, Q.of(target, vEntry), Q.of(target + uEntry, vEntry), c + 1],
+      solution: t(
+        `Entry ${position} gives $${poly([uEntry, ""], [vEntry, "c"])} = ${target}$, so $c = ${c}$.`,
+        `第 ${position} 个分量给出 $${poly([uEntry, ""], [vEntry, "c"])} = ${target}$，所以 $c = ${c}$。`,
+      ),
+    });
+  },
+};
+
+const entryInNullSpace: KnowledgePointDef = {
+  id: "the-entry-that-puts-a-vector-in-a-null-space",
+  title: t("The entry that puts a vector in a null space", "使向量属于零空间的分量"),
+  explanation: t(
+    "A vector lies in the null space of a matrix exactly when its dot product with every row is zero. So membership gives one equation for each row. If one entry of the vector is unknown, an equation containing it can be solved for that entry. The other rows must then also hold, and the choice of the vector here makes them hold.",
+    "向量属于矩阵的零空间，当且仅当它与每一行的点积都为零。所以属于关系为每一行给出一个方程。如果向量有一个未知分量，就可以从含它的方程中解出这个分量。其他行也必须成立，这里向量的选取保证了这一点。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 4);
+    const b = nonzero(rng, 4);
+    const c = nonzero(rng, 4);
+    const z = nonzero(rng, 4);
+    const y = -c * z;
+    const answer = -(a * y + b * z);
+    return numberProblem({
+      prompt: t(
+        `Let $A = ${mat([
+          [1, a, b],
+          [0, 1, c],
+        ])}$. Find $k$ so that $${col("k", y, z)}$ lies in the null space of $A$.`,
+        `设 $A = ${mat([
+          [1, a, b],
+          [0, 1, c],
+        ])}$。求 $k$，使 $${col("k", y, z)}$ 属于 $A$ 的零空间。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-answer, a * y + 2 * b * z, a * y, b * z],
+      solution: t(
+        `Row 1 requires $k + ${inParens(a)} \\cdot ${inParens(y)} + ${inParens(b)} \\cdot ${inParens(z)} = 0$, so $k = ${answer}$. Row 2 also holds, since $${inParens(y)} + ${inParens(c)} \\cdot ${inParens(z)} = 0$.`,
+        `第 1 行要求 $k + ${inParens(a)} \\cdot ${inParens(y)} + ${inParens(b)} \\cdot ${inParens(z)} = 0$，所以 $k = ${answer}$。第 2 行也成立，因为 $${inParens(y)} + ${inParens(c)} \\cdot ${inParens(z)} = 0$。`,
+      ),
+    });
+  },
+};
+
+const nullityOfTranspose: KnowledgePointDef = {
+  id: "the-nullity-of-a-transpose",
+  title: t("The nullity of a transpose", "转置矩阵的零化度"),
+  explanation: t(
+    "A matrix and its transpose have the same rank, because row rank equals column rank. Their nullities generally differ, since the transpose has as many columns as the original has rows. Rank-nullity applied to the transpose of an $m \\times n$ matrix of rank $r$ gives $m - r$, while the matrix itself has nullity $n - r$. The two agree only for square matrices.",
+    "矩阵和它的转置有相同的秩，因为行秩等于列秩。它们的零化度一般不同，因为转置的列数等于原矩阵的行数。对秩为 $r$ 的 $m \\times n$ 矩阵的转置用秩-零化度定理，得 $m - r$，而矩阵本身的零化度是 $n - r$。只有方阵的两者才相等。",
+  ),
+  generate(rng) {
+    const m = rng.int(3, 12);
+    const n = rng.int(3, 12);
+    const r = rng.int(1, Math.min(m, n));
+    const answer = m - r;
+    return numberProblem({
+      prompt: t(
+        `A matrix $A$ has ${m} rows, ${n} columns and rank ${r}. Find the nullity of $A^T$.`,
+        `矩阵 $A$ 有 ${m} 行、${n} 列，秩是 ${r}。求 $A^T$ 的零化度。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n - r, r, m + n - r, n],
+      solution: t(
+        `The transpose has ${m} columns and rank ${r}, so its nullity is $${m} - ${r} = ${answer}$.`,
+        `转置有 ${m} 列，秩是 ${r}，所以零化度是 $${m} - ${r} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const smallestNullity: KnowledgePointDef = {
+  id: "the-smallest-possible-nullity-of-a-matrix",
+  title: t("The smallest possible nullity of a matrix", "矩阵零化度的最小可能值"),
+  explanation: t(
+    "The rank of a matrix cannot exceed its number of rows or its number of columns. Rank-nullity then bounds the nullity from below: it is at least the number of columns minus the largest possible rank. So a matrix with more columns than rows always has a nontrivial null space, while with at least as many rows as columns the nullity can be zero.",
+    "矩阵的秩不能超过行数，也不能超过列数。于是秩-零化度定理给出零化度的下界：它至少是列数减去最大可能的秩。所以列数多于行数的矩阵总有非平凡的零空间，而行数不少于列数时，零化度可以为零。",
+  ),
+  generate(rng) {
+    const m = rng.int(2, 20);
+    const n = rng.pick([...Array(19).keys()].map((i) => i + 2).filter((v) => v !== m));
+    const answer = Math.max(n - m, 0);
+    return numberProblem({
+      prompt: t(
+        `What is the smallest possible nullity of a matrix with ${m} rows and ${n} columns?`,
+        `一个 ${m} 行 ${n} 列的矩阵，零化度最小可能是多少？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [m, n, Math.abs(n - m) + 1, Math.min(m, n), Math.max(m, n) - 1],
+      solution: t(
+        `The rank is at most $${Math.min(m, n)}$, so the nullity is at least $${n} - ${Math.min(m, n)} = ${answer}$, and a matrix of largest rank reaches it.`,
+        `秩最多是 $${Math.min(m, n)}$，所以零化度至少是 $${n} - ${Math.min(m, n)} = ${answer}$，秩最大的矩阵达到这个值。`,
+      ),
+    });
+  },
+};
+
+const symmetrizationRank: KnowledgePointDef = {
+  id: "the-rank-of-the-symmetrizing-map",
+  title: t("The rank of the symmetrizing map", "对称化映射的秩"),
+  explanation: t(
+    "The map $T(A) = A + A^T$ on $n \\times n$ matrices sends everything to symmetric matrices, and its kernel is the set of matrices with $A^T = -A$, the skew-symmetric ones. Those have dimension $\\frac{n(n - 1)}{2}$. Rank-nullity then gives the rank as $n^2$ minus this number, which matches the dimension of the symmetric matrices, so the map is onto them.",
+    "$n \\times n$ 矩阵上的映射 $T(A) = A + A^T$ 把一切都映到对称矩阵，它的核是满足 $A^T = -A$ 的矩阵，即反对称矩阵。它们的维数是 $\\frac{n(n - 1)}{2}$。于是秩-零化度定理给出秩等于 $n^2$ 减去这个数，这正是对称矩阵的维数，所以映射是到对称矩阵上的满射。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 30);
+    const kernel = binomial2(n);
+    const answer = n * n - kernel;
+    return numberProblem({
+      prompt: t(
+        `Let $T: M_{${n} \\times ${n}} \\to M_{${n} \\times ${n}}$ be $T(A) = A + A^T$. Find the rank of $T$.`,
+        `设 $T: M_{${n} \\times ${n}} \\to M_{${n} \\times ${n}}$ 为 $T(A) = A + A^T$。求 $T$ 的秩。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [kernel, n * n, n],
+      solution: t(
+        `The kernel is the skew-symmetric matrices, of dimension $${kernel}$. So the rank is $${n * n} - ${kernel} = ${answer}$.`,
+        `核是反对称矩阵，维数是 $${kernel}$。所以秩是 $${n * n} - ${kernel} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const inverseMapValue: KnowledgePointDef = {
+  id: "a-value-of-the-inverse-of-a-linear-map",
+  title: t("A value of the inverse of a linear map", "线性映射逆映射的值"),
+  explanation: t(
+    "An invertible linear map has an inverse that is itself linear, and its standard matrix is the inverse of the original matrix. So $T^{-1}(\\mathbf{b})$ is the unique solution of $A\\mathbf{x} = \\mathbf{b}$. When the determinant is 1, the two by two inverse swaps the diagonal and negates the other entries, and the arithmetic stays in whole numbers.",
+    "可逆线性映射的逆本身也是线性的，它的标准矩阵就是原矩阵的逆。所以 $T^{-1}(\\mathbf{b})$ 是 $A\\mathbf{x} = \\mathbf{b}$ 的唯一解。当行列式为 1 时，二阶逆矩阵就是交换对角元、把其他元素取负，计算一直停留在整数范围内。",
+  ),
+  generate(rng) {
+    const p = nonzero(rng, 4);
+    const q = nonzero(rng, 4);
+    const x = nonzero(rng, 6);
+    const y = nonzero(rng, 6);
+    const d = 1 + p * q;
+    const answer = d * x - p * y;
+    const inverse = mat([
+      [d, -p],
+      [-q, 1],
+    ]);
+    return numberProblem({
+      prompt: t(
+        `Let $T(\\mathbf{x}) = A\\mathbf{x}$ with $A = ${mat([
+          [1, p],
+          [q, d],
+        ])}$. Find the first entry of $T^{-1}\\left(${col(x, y)}\\right)$.`,
+        `设 $T(\\mathbf{x}) = A\\mathbf{x}$，$A = ${mat([
+          [1, p],
+          [q, d],
+        ])}$。求 $T^{-1}\\left(${col(x, y)}\\right)$ 的第一个分量。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [x + p * y, y - q * x, -answer, d * x + p * y],
+      solution: t(
+        `Since $\\det A = 1$, the inverse matrix is $${inverse}$. The first entry of the image is $${inParens(d)} \\cdot ${inParens(x)} + ${inParens(-p)} \\cdot ${inParens(y)} = ${answer}$.`,
+        `由于 $\\det A = 1$，逆矩阵是 $${inverse}$。像的第一个分量是 $${inParens(d)} \\cdot ${inParens(x)} + ${inParens(-p)} \\cdot ${inParens(y)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const determinantInNewBasis: KnowledgePointDef = {
+  id: "the-determinant-does-not-depend-on-the-basis",
+  title: t("The determinant does not depend on the basis", "行列式不依赖于基"),
+  explanation: t(
+    "Matrices of one operator relative to different bases are similar: $[T]_C = P^{-1}[T]_BP$. Taking determinants, the factors $\\det P^{-1}$ and $\\det P$ cancel, because the determinant of a product is the product of the determinants. So the determinant belongs to the operator and not to the basis, and the change of basis matrix need not be used at all.",
+    "同一算子在不同基下的矩阵是相似的：$[T]_C = P^{-1}[T]_BP$。取行列式后，因子 $\\det P^{-1}$ 和 $\\det P$ 相消，因为乘积的行列式等于行列式的乘积。所以行列式属于算子，而不属于基，根本用不着基变换矩阵。",
+  ),
+  generate(rng) {
+    const a = rng.int(-6, 6);
+    const b = rng.int(-6, 6);
+    const c = rng.int(-6, 6);
+    const d = rng.int(-6, 6);
+    const p = nonzero(rng, 4);
+    const q = nonzero(rng, 4);
+    const answer = a * d - b * c;
+    return numberProblem({
+      prompt: t(
+        `An operator has $[T]_B = ${mat([
+          [a, b],
+          [c, d],
+        ])}$, and $[T]_C = P^{-1}[T]_BP$ with $P = ${mat([
+          [1, p],
+          [q, 1 + p * q],
+        ])}$. Find $\\det [T]_C$.`,
+        `一个算子的 $[T]_B = ${mat([
+          [a, b],
+          [c, d],
+        ])}$，且 $[T]_C = P^{-1}[T]_BP$，其中 $P = ${mat([
+          [1, p],
+          [q, 1 + p * q],
+        ])}$。求 $\\det [T]_C$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a + d, -answer, answer + 1, answer - 1, a * d + b * c],
+      solution: t(
+        `Similar matrices have equal determinants, so the value is $\\det [T]_B = ${inParens(a)} \\cdot ${inParens(d)} - ${inParens(b)} \\cdot ${inParens(c)} = ${answer}$.`,
+        `相似矩阵的行列式相等，所以值是 $\\det [T]_B = ${inParens(a)} \\cdot ${inParens(d)} - ${inParens(b)} \\cdot ${inParens(c)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const evaluationKernel: KnowledgePointDef = {
+  id: "the-kernel-of-evaluation-at-two-points",
+  title: t("The kernel of evaluation at two points", "两点求值映射的核"),
+  explanation: t(
+    "The map $p \\mapsto (p(a), p(b))$, with $a \\ne b$, goes from $P_n$ to $\\mathbb{R}^2$. It is onto when $n \\ge 1$, because a line can be drawn with any values at two different points. So its rank is 2, and rank-nullity gives a kernel of dimension $n + 1 - 2$. The kernel is the set of multiples of $(x - a)(x - b)$.",
+    "映射 $p \\mapsto (p(a), p(b))$（$a \\ne b$）从 $P_n$ 到 $\\mathbb{R}^2$。当 $n \\ge 1$ 时它是满射，因为可以画一条直线在两个不同的点上取任意值。所以它的秩是 2，秩-零化度定理给出核的维数 $n + 1 - 2$。核就是 $(x - a)(x - b)$ 的倍式的集合。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 30);
+    const a = rng.int(-5, 5);
+    const b = rng.pick([...Array(11).keys()].map((i) => i - 5).filter((v) => v !== a));
+    const answer = n - 1;
+    return numberProblem({
+      prompt: t(
+        `Let $T: P_{${n}} \\to \\mathbb{R}^2$ be $T(p) = (p(${a}), p(${b}))$. Find the dimension of the kernel of $T$.`,
+        `设 $T: P_{${n}} \\to \\mathbb{R}^2$ 为 $T(p) = (p(${a}), p(${b}))$。求 $T$ 的核的维数。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n, n + 1, n - 2, 2],
+      solution: t(
+        `The space $P_{${n}}$ has dimension ${n + 1}, and the map is onto $\\mathbb{R}^2$. So the kernel has dimension $${n + 1} - 2 = ${answer}$.`,
+        `空间 $P_{${n}}$ 的维数是 ${n + 1}，映射是到 $\\mathbb{R}^2$ 上的满射。所以核的维数是 $${n + 1} - 2 = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const characteristicConstant: KnowledgePointDef = {
+  id: "the-constant-term-of-a-characteristic-polynomial",
+  title: t("The constant term of a characteristic polynomial", "特征多项式的常数项"),
+  explanation: t(
+    "Setting $\\lambda = 0$ in $\\det(\\lambda I - A)$ leaves $\\det(-A)$, and this is the constant term of the characteristic polynomial. Pulling the sign out of each of the $n$ rows gives $(-1)^n\\det A$. So for a $3 \\times 3$ matrix, the constant term is $-\\det A$. There is no need to expand the whole polynomial to find it.",
+    "在 $\\det(\\lambda I - A)$ 中令 $\\lambda = 0$，得到 $\\det(-A)$，这就是特征多项式的常数项。从 $n$ 行中各提出一个负号，得 $(-1)^n\\det A$。所以对 $3 \\times 3$ 矩阵，常数项是 $-\\det A$。不需要展开整个多项式就能求出它。",
+  ),
+  generate(rng) {
+    const grid: [[number, number, number], [number, number, number], [number, number, number]] = [
+      [rng.int(-4, 4), rng.int(-4, 4), rng.int(-4, 4)],
+      [rng.int(-4, 4), rng.int(-4, 4), rng.int(-4, 4)],
+      [rng.int(-4, 4), rng.int(-4, 4), rng.int(-4, 4)],
+    ];
+    const det = det3(grid);
+    const trace = grid[0][0] + grid[1][1] + grid[2][2];
+    return numberProblem({
+      prompt: t(
+        `Find the constant term of $\\det(\\lambda I - A)$ for $A = ${mat(grid)}$.`,
+        `对 $A = ${mat(grid)}$，求 $\\det(\\lambda I - A)$ 的常数项。`,
+      ),
+      answer: -det,
+      form: "integer",
+      wrong: [det, trace, -trace, det + 1],
+      solution: t(
+        `The constant term is $\\det(-A) = -\\det A$. Here $\\det A = ${det}$, so the term is $${-det}$.`,
+        `常数项是 $\\det(-A) = -\\det A$。这里 $\\det A = ${det}$，所以常数项是 $${-det}$。`,
+      ),
+    });
+  },
+};
+
+const inverseShiftEigenvalue: KnowledgePointDef = {
+  id: "an-eigenvalue-of-a-shifted-inverse",
+  title: t("An eigenvalue of a shifted inverse", "平移逆矩阵的特征值"),
+  explanation: t(
+    "If $A\\mathbf{v} = \\lambda\\mathbf{v}$ with $A$ invertible, then $A^{-1}\\mathbf{v} = \\frac{1}{\\lambda}\\mathbf{v}$, so the same eigenvector works for the inverse. Adding $cI$ just adds $c\\mathbf{v}$. So $A^{-1} + cI$ has eigenvalue $\\frac{1}{\\lambda} + c$. Order matters: inverting after the shift would give a different number, $\\frac{1}{\\lambda + c}$.",
+    "如果 $A\\mathbf{v} = \\lambda\\mathbf{v}$ 且 $A$ 可逆，那么 $A^{-1}\\mathbf{v} = \\frac{1}{\\lambda}\\mathbf{v}$，所以同一个特征向量对逆矩阵也适用。加上 $cI$ 只是加上 $c\\mathbf{v}$。所以 $A^{-1} + cI$ 有特征值 $\\frac{1}{\\lambda} + c$。顺序很重要：平移后再求逆，会得到另一个数 $\\frac{1}{\\lambda + c}$。",
+  ),
+  generate(rng) {
+    const lambda = nonzero(rng, 9);
+    const c = nonzero(rng, 5);
+    const answer = Q.of(1, lambda).add(Q.of(c));
+    return numberProblem({
+      prompt: t(
+        `An invertible matrix $A$ has eigenvalue $${lambda}$. Find the corresponding eigenvalue of $A^{-1} ${shiftTerm(c)}$.`,
+        `可逆矩阵 $A$ 有特征值 $${lambda}$。求 $A^{-1} ${shiftTerm(c)}$ 相应的特征值。`,
+      ),
+      answer,
+      wrong: [Q.of(lambda + c), Q.of(1, lambda).sub(Q.of(c)), lambda + c === 0 ? Q.of(c, lambda) : Q.of(1, lambda + c), Q.of(c, lambda)],
+      solution: t(
+        `The inverse has eigenvalue $${frac(1, lambda)}$ on the same eigenvector, and the shift adds $${c}$. The sum is $${answer.toLatex()}$.`,
+        `逆矩阵在同一个特征向量上的特征值是 $${frac(1, lambda)}$，平移再加上 $${c}$。和是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const powerOfDiagonalized: KnowledgePointDef = {
+  id: "an-entry-of-a-power-from-a-diagonalization",
+  title: t("An entry of a power from a diagonalization", "由对角化求幂的元素"),
+  explanation: t(
+    "Writing $A = PDP^{-1}$ makes powers simple, because the inner factors cancel: $A^k = PD^kP^{-1}$. Only the diagonal entries of $D$ need raising to the power. The work that remains is two matrix products, and the $P$ here has a simple inverse. Multiplying $A$ by itself repeatedly would be far slower when $k$ is large.",
+    "写成 $A = PDP^{-1}$ 后，求幂就很简单，因为中间的因子相消：$A^k = PD^kP^{-1}$。只需要对 $D$ 的对角元求幂。剩下的工作是两次矩阵乘法，而这里的 $P$ 的逆很简单。当 $k$ 很大时，反复用 $A$ 自乘要慢得多。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 5);
+    const pool = [-3, -2, -1, 1, 2, 3];
+    const p = rng.pick(pool);
+    const q = rng.pick(pool.filter((v) => v !== p));
+    const k = rng.int(3, 5);
+    const pk = p ** k;
+    const qk = q ** k;
+    const answer = a * (qk - pk);
+    const factor = a === 1 ? "" : a === -1 ? "-" : `${a}`;
+    return numberProblem({
+      prompt: t(
+        `Let $A = PDP^{-1}$ with $P = ${mat([
+          [1, a],
+          [0, 1],
+        ])}$ and $D = ${mat([
+          [p, 0],
+          [0, q],
+        ])}$. Find the $(1, 2)$ entry of $A^{${k}}$.`,
+        `设 $A = PDP^{-1}$，其中 $P = ${mat([
+          [1, a],
+          [0, 1],
+        ])}$，$D = ${mat([
+          [p, 0],
+          [0, q],
+        ])}$。求 $A^{${k}}$ 的 $(1, 2)$ 元素。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-answer, a * (q - p), qk - pk, a * (qk + pk), answer + a],
+      solution: t(
+        `Here $D^{${k}}$ has diagonal $${pk}$, $${qk}$, and $P^{-1} = ${mat([
+          [1, -a],
+          [0, 1],
+        ])}$. Multiplying out, the entry is $${factor}\\left(${qk} - ${inParens(pk)}\\right) = ${answer}$.`,
+        `这里 $D^{${k}}$ 的对角元是 $${pk}$、$${qk}$，$P^{-1} = ${mat([
+          [1, -a],
+          [0, 1],
+        ])}$。乘开后，这个元素是 $${factor}\\left(${qk} - ${inParens(pk)}\\right) = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const hermitianDeterminant: KnowledgePointDef = {
+  id: "the-determinant-of-a-hermitian-matrix",
+  title: t("The determinant of a Hermitian matrix", "埃尔米特矩阵的行列式"),
+  explanation: t(
+    "A Hermitian matrix equals its own conjugate transpose, so its diagonal is real and the entries across the diagonal are conjugates. The two by two determinant then subtracts a complex number times its conjugate, which is the real number $|z|^2$. So the determinant comes out real, in agreement with the fact that a Hermitian matrix has real eigenvalues.",
+    "埃尔米特矩阵等于自身的共轭转置，所以对角元是实数，关于对角线对称的元素互为共轭。于是二阶行列式减去的是一个复数乘以它的共轭，也就是实数 $|z|^2$。所以行列式是实数，这与埃尔米特矩阵的特征值都是实数这一事实相符。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 9);
+    const d = nonzero(rng, 9);
+    const re = rng.int(1, 6);
+    const im = rng.int(1, 6);
+    const tail = withCoefficient(im, "i");
+    const answer = a * d - re * re - im * im;
+    return numberProblem({
+      prompt: t(
+        `Find the determinant of the Hermitian matrix $${mat([
+          [a, `${re} + ${tail}`],
+          [`${re} - ${tail}`, d],
+        ])}$.`,
+        `求埃尔米特矩阵 $${mat([
+          [a, `${re} + ${tail}`],
+          [`${re} - ${tail}`, d],
+        ])}$ 的行列式。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a * d + re * re + im * im, a * d - re * re + im * im, a * d - (re + im) ** 2],
+      solution: t(
+        `The product of the off-diagonal entries is $${re}^2 + ${im}^2 = ${re * re + im * im}$. So the determinant is $${a * d} - ${re * re + im * im} = ${answer}$.`,
+        `非对角元之积是 $${re}^2 + ${im}^2 = ${re * re + im * im}$。所以行列式是 $${a * d} - ${re * re + im * im} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const blockDeterminant: KnowledgePointDef = {
+  id: "the-determinant-from-a-real-and-a-complex-pair-of-eigenvalues",
+  title: t("The determinant from a real eigenvalue and a complex pair", "由实特征值与共轭复特征值求行列式"),
+  explanation: t(
+    "A real $3 \\times 3$ matrix with a real eigenvalue and a complex pair is similar to a block diagonal matrix, with a $1 \\times 1$ block and a rotation-scaling block. The determinant of a block diagonal matrix is the product of the block determinants, and the rotation-scaling block has determinant $a^2 + b^2$. This is the same as multiplying all three eigenvalues.",
+    "具有一个实特征值和一对复特征值的实 $3 \\times 3$ 矩阵，相似于一个分块对角矩阵，含一个 $1 \\times 1$ 块和一个旋转缩放块。分块对角矩阵的行列式是各块行列式之积，旋转缩放块的行列式是 $a^2 + b^2$。这与三个特征值相乘是一样的。",
+  ),
+  generate(rng) {
+    const r = nonzero(rng, 6);
+    const a = nonzero(rng, 6);
+    const b = rng.int(1, 6);
+    const answer = r * (a * a + b * b);
+    return numberProblem({
+      prompt: t(
+        `A real $3 \\times 3$ matrix has eigenvalues $${r}$ and $${a} \\pm ${withCoefficient(b, "i")}$. Find its determinant.`,
+        `一个实 $3 \\times 3$ 矩阵的特征值是 $${r}$ 和 $${a} \\pm ${withCoefficient(b, "i")}$。求它的行列式。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [r * (a * a - b * b), r + 2 * a, r * a * b, -answer],
+      solution: t(
+        `The complex pair multiplies to $${inParens(a)}^2 + ${b}^2 = ${a * a + b * b}$. Multiplying by $${r}$ gives $${answer}$.`,
+        `这对复特征值之积是 $${inParens(a)}^2 + ${b}^2 = ${a * a + b * b}$。乘以 $${r}$，得 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const rankOfNilpotentPower: KnowledgePointDef = {
+  id: "the-rank-of-a-power-of-a-jordan-block-minus-its-eigenvalue",
+  title: t("The rank of a power of a shifted Jordan block", "平移若尔当块的幂的秩"),
+  explanation: t(
+    "For a single Jordan block, $N = J - \\lambda I$ has ones just above the diagonal and shifts the basis vectors down a chain. Each power pushes the line of ones one place further from the diagonal and removes one of them. So the rank of $N^k$ is $n - k$ until it reaches zero, and this is what the ranks of generalized eigenvectors measure.",
+    "对单个若尔当块，$N = J - \\lambda I$ 在对角线正上方有一串 1，并把基向量沿一条链移动。每求一次幂，这串 1 就离对角线更远一格，并少掉一个。所以 $N^k$ 的秩是 $n - k$，直到变成零，这正是广义特征向量的秩所度量的。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 12);
+    const k = rng.int(2, n - 1);
+    const lambda = nonzero(rng, 6);
+    const answer = n - k;
+    return numberProblem({
+      prompt: t(
+        `Let $J$ be a single Jordan block of size ${n} with eigenvalue $${lambda}$. Find the rank of $(J ${shiftTerm(-lambda)})^{${k}}$.`,
+        `设 $J$ 是大小为 ${n}、特征值为 $${lambda}$ 的单个若尔当块。求 $(J ${shiftTerm(-lambda)})^{${k}}$ 的秩。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [k, n - k + 1, n, n - k - 1],
+      solution: t(
+        `The power moves the line of ones ${k} places from the main diagonal, which leaves $${n} - ${k} = ${answer}$ ones in independent rows.`,
+        `这个幂把那串 1 从主对角线移开 ${k} 格，留下 $${n} - ${k} = ${answer}$ 个位于独立行中的 1。`,
+      ),
+    });
+  },
+};
+
+const powerOfTwoBlock: KnowledgePointDef = {
+  id: "an-entry-of-a-power-of-a-2x2-jordan-block",
+  title: t("An entry of a power of a 2×2 Jordan block", "二阶若尔当块的幂的元素"),
+  explanation: t(
+    "Write the block as $J = \\lambda I + N$, where $N$ has a single 1 above the diagonal and $N^2 = 0$. Since $\\lambda I$ commutes with $N$, the binomial theorem applies and stops after two terms: $J^k = \\lambda^kI + k\\lambda^{k - 1}N$. So the top right entry grows like $k\\lambda^{k - 1}$, which is the derivative of $\\lambda^k$.",
+    "把块写成 $J = \\lambda I + N$，其中 $N$ 在对角线上方有一个 1，且 $N^2 = 0$。由于 $\\lambda I$ 与 $N$ 可交换，二项式定理适用，并且两项后就停止：$J^k = \\lambda^kI + k\\lambda^{k - 1}N$。所以右上角元素按 $k\\lambda^{k - 1}$ 增长，这正是 $\\lambda^k$ 的导数。",
+  ),
+  generate(rng) {
+    const lambda = nonzero(rng, 5);
+    const k = rng.int(3, 7);
+    const answer = k * lambda ** (k - 1);
+    return numberProblem({
+      prompt: t(
+        `Let $J = ${mat([
+          [lambda, 1],
+          [0, lambda],
+        ])}$. Find the top right entry of $J^{${k}}$.`,
+        `设 $J = ${mat([
+          [lambda, 1],
+          [0, lambda],
+        ])}$。求 $J^{${k}}$ 右上角的元素。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [lambda ** k, k * lambda ** k, lambda ** (k - 1), k, answer + lambda, answer - 1],
+      solution: t(
+        `The entry is $k\\lambda^{k - 1} = ${k} \\cdot ${inParens(lambda)}^{${k - 1}} = ${answer}$.`,
+        `这个元素是 $k\\lambda^{k - 1} = ${k} \\cdot ${inParens(lambda)}^{${k - 1}} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const powerOfThreeBlock: KnowledgePointDef = {
+  id: "the-corner-entry-of-a-power-of-a-3x3-jordan-block",
+  title: t("The corner entry of a power of a 3×3 Jordan block", "三阶若尔当块的幂的角元素"),
+  explanation: t(
+    "For a block of size three, $J = \\lambda I + N$ with $N^3 = 0$, so the binomial theorem gives three terms: $J^k = \\lambda^kI + k\\lambda^{k - 1}N + \\binom{k}{2}\\lambda^{k - 2}N^2$. Only $N^2$ reaches the top right corner. That corner entry is therefore $\\binom{k}{2}\\lambda^{k - 2}$, and it is half of the second derivative of $\\lambda^k$.",
+    "对大小为三的块，$J = \\lambda I + N$，$N^3 = 0$，所以二项式定理给出三项：$J^k = \\lambda^kI + k\\lambda^{k - 1}N + \\binom{k}{2}\\lambda^{k - 2}N^2$。只有 $N^2$ 能到达右上角。所以这个角元素是 $\\binom{k}{2}\\lambda^{k - 2}$，它是 $\\lambda^k$ 二阶导数的一半。",
+  ),
+  generate(rng) {
+    const lambda = nonzero(rng, 4);
+    const k = rng.int(4, 8);
+    const choose = binomial2(k);
+    const answer = choose * lambda ** (k - 2);
+    return numberProblem({
+      prompt: t(
+        `Let $J = ${mat([
+          [lambda, 1, 0],
+          [0, lambda, 1],
+          [0, 0, lambda],
+        ])}$. Find the top right entry of $J^{${k}}$.`,
+        `设 $J = ${mat([
+          [lambda, 1, 0],
+          [0, lambda, 1],
+          [0, 0, lambda],
+        ])}$。求 $J^{${k}}$ 右上角的元素。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [k * lambda ** (k - 1), k * (k - 1) * lambda ** (k - 2), lambda ** (k - 2), choose],
+      solution: t(
+        `The entry is $\\binom{${k}}{2}\\lambda^{${k - 2}} = ${choose} \\cdot ${inParens(lambda)}^{${k - 2}} = ${answer}$.`,
+        `这个元素是 $\\binom{${k}}{2}\\lambda^{${k - 2}} = ${choose} \\cdot ${inParens(lambda)}^{${k - 2}} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const cosineFromDot: KnowledgePointDef = {
+  id: "the-cosine-of-an-angle-from-norms-and-a-dot-product",
+  title: t("The cosine of an angle from norms and a dot product", "由范数和点积求夹角余弦"),
+  explanation: t(
+    "In $\\mathbb{R}^n$, the angle between two nonzero vectors is defined through the formula $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$. The Cauchy-Schwarz inequality guarantees that the resulting cosine lies between $-1$ and $1$. So a dot product divided by the two norms gives the cosine, even in dimensions where no picture of the angle can be drawn.",
+    "在 $\\mathbb{R}^n$ 中，两个非零向量的夹角由公式 $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$ 定义。柯西-施瓦茨不等式保证得到的余弦在 $-1$ 和 $1$ 之间。所以点积除以两个范数就得到余弦，即使在无法画出夹角的高维空间也是如此。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 9);
+    const b = rng.int(2, 9);
+    const size = rng.int(1, a * b - 1);
+    const c = rng.pick([size, -size]);
+    const answer = Q.of(c, a * b);
+    return numberProblem({
+      prompt: t(
+        `In $\\mathbb{R}^n$, $\\|\\mathbf{u}\\| = ${a}$, $\\|\\mathbf{v}\\| = ${b}$ and $\\mathbf{u} \\cdot \\mathbf{v} = ${c}$. Find the cosine of the angle between them.`,
+        `在 $\\mathbb{R}^n$ 中，$\\|\\mathbf{u}\\| = ${a}$，$\\|\\mathbf{v}\\| = ${b}$，$\\mathbf{u} \\cdot \\mathbf{v} = ${c}$。求它们夹角的余弦。`,
+      ),
+      answer,
+      wrong: [answer.neg(), Q.of(c, a + b), Q.of(c, a * a * b * b), Q.of(a * b, c)],
+      solution: t(
+        `The cosine is $\\frac{${c}}{${a} \\cdot ${b}} = ${answer.toLatex()}$.`,
+        `余弦是 $\\frac{${c}}{${a} \\cdot ${b}} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const unitVectorEntry: KnowledgePointDef = {
+  id: "an-entry-of-a-unit-vector",
+  title: t("An entry of a unit vector", "单位向量的分量"),
+  explanation: t(
+    "Dividing a nonzero vector by its norm gives a vector of length one in the same direction. Each entry is divided by the same number, so the ratios between entries do not change. These entries are the direction cosines of the vector, the cosines of its angles with the coordinate axes, and their squares always add to one.",
+    "把非零向量除以它的范数，就得到同方向的单位长度向量。每个分量都除以同一个数，所以分量之间的比不变。这些分量是向量的方向余弦，即它与各坐标轴夹角的余弦，它们的平方和总是 1。",
+  ),
+  generate(rng) {
+    const [x, y, z, norm] = rng.pick([
+      [1, 2, 2, 3],
+      [2, 3, 6, 7],
+      [1, 4, 8, 9],
+      [4, 4, 7, 9],
+      [2, 6, 9, 11],
+      [6, 6, 7, 11],
+      [3, 4, 12, 13],
+      [2, 5, 14, 15],
+    ]) as [number, number, number, number];
+    const scale = rng.int(1, 4);
+    const sign = rng.pick([1, -1]);
+    const position = rng.int(1, 3);
+    const entries = [sign * x * scale, y * scale, z * scale];
+    const entry = entries[position - 1] ?? 1;
+    const answer = Q.of(entry, norm * scale);
+    return numberProblem({
+      prompt: t(
+        `Let $\\mathbf{v} = ${col(...entries)}$. Find entry ${position} of the unit vector in the direction of $\\mathbf{v}$.`,
+        `设 $\\mathbf{v} = ${col(...entries)}$。求 $\\mathbf{v}$ 方向的单位向量的第 ${position} 个分量。`,
+      ),
+      answer,
+      wrong: [Q.of(entry), Q.of(entry, norm * norm * scale * scale), answer.neg(), Q.of(norm * scale, entry)],
+      solution: t(
+        `The norm is $${norm * scale}$, and dividing $${entry}$ by it gives $${answer.toLatex()}$.`,
+        `范数是 $${norm * scale}$，用它除 $${entry}$，得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const monomialNorm: KnowledgePointDef = {
+  id: "the-norm-of-a-power-function",
+  title: t("The norm of a power function", "幂函数的范数"),
+  explanation: t(
+    "With the inner product $\\langle f, g \\rangle = \\int_0^1 f(t)g(t)\\,dt$, the squared norm of $f$ is the integral of $f^2$. For $f(t) = ct^n$ this squares both factors, giving $c^2t^{2n}$, which integrates to $\\frac{c^2}{2n + 1}$. Note that the exponent doubles before integrating, which is why the denominator is $2n + 1$ and not $n + 1$.",
+    "用内积 $\\langle f, g \\rangle = \\int_0^1 f(t)g(t)\\,dt$，$f$ 的范数平方是 $f^2$ 的积分。对 $f(t) = ct^n$，两个因子都要平方，得 $c^2t^{2n}$，积分后是 $\\frac{c^2}{2n + 1}$。注意指数在积分前先翻倍，所以分母是 $2n + 1$，而不是 $n + 1$。",
+  ),
+  generate(rng) {
+    const c = rng.int(2, 12);
+    const n = rng.int(2, 12);
+    const answer = Q.of(c * c, 2 * n + 1);
+    return numberProblem({
+      prompt: t(
+        `With $\\langle f, g \\rangle = \\int_0^1 f(t)g(t)\\,dt$, find $\\|f\\|^2$ for $f(t) = ${c}t^{${n}}$.`,
+        `用 $\\langle f, g \\rangle = \\int_0^1 f(t)g(t)\\,dt$，对 $f(t) = ${c}t^{${n}}$ 求 $\\|f\\|^2$。`,
+      ),
+      answer,
+      wrong: [Q.of(c * c, n + 1), Q.of(c, 2 * n + 1), Q.of(c * c, 2 * n), Q.of(c, n + 1)],
+      solution: t(
+        `The square of $f$ is $${c * c}t^{${2 * n}}$, and its integral over $[0, 1]$ is $${answer.toLatex()}$.`,
+        `$f$ 的平方是 $${c * c}t^{${2 * n}}$，它在 $[0, 1]$ 上的积分是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const triangleBounds: KnowledgePointDef = {
+  id: "the-range-of-a-norm-from-the-triangle-inequality",
+  title: t("The range of a norm from the triangle inequality", "由三角不等式求范数的范围"),
+  explanation: t(
+    "The triangle inequality gives an upper bound, $\\|\\mathbf{u} + \\mathbf{v}\\| \\le \\|\\mathbf{u}\\| + \\|\\mathbf{v}\\|$, reached when the vectors point the same way. Applying it again to $\\mathbf{u} = (\\mathbf{u} + \\mathbf{v}) - \\mathbf{v}$ gives the lower bound $\\big|\\|\\mathbf{u}\\| - \\|\\mathbf{v}\\|\\big|$, reached when they point opposite ways. Orthogonal vectors give a value strictly in between.",
+    "三角不等式给出上界 $\\|\\mathbf{u} + \\mathbf{v}\\| \\le \\|\\mathbf{u}\\| + \\|\\mathbf{v}\\|$，当两个向量同向时达到。对 $\\mathbf{u} = (\\mathbf{u} + \\mathbf{v}) - \\mathbf{v}$ 再用一次，得到下界 $\\big|\\|\\mathbf{u}\\| - \\|\\mathbf{v}\\|\\big|$，当它们反向时达到。正交向量给出的值严格介于两者之间。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 30);
+    const b = rng.pick([...Array(30).keys()].map((i) => i + 1).filter((v) => v !== a));
+    const largest = rng.pick([true, false]);
+    const answer = largest ? a + b : Math.abs(a - b);
+    const other = largest ? Math.abs(a - b) : a + b;
+    return numberProblem({
+      prompt: t(
+        `In an inner product space, $\\|\\mathbf{u}\\| = ${a}$ and $\\|\\mathbf{v}\\| = ${b}$. What is the ${largest ? "largest" : "smallest"} possible value of $\\|\\mathbf{u} + \\mathbf{v}\\|$?`,
+        `在内积空间中，$\\|\\mathbf{u}\\| = ${a}$，$\\|\\mathbf{v}\\| = ${b}$。$\\|\\mathbf{u} + \\mathbf{v}\\|$ ${largest ? "最大" : "最小"}可能是多少？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [other, a * b, a * a + b * b, Math.max(a, b)],
+      solution: t(
+        `The norm lies between $|${a} - ${b}| = ${Math.abs(a - b)}$ and $${a} + ${b} = ${a + b}$. The value $${answer}$ is reached when the vectors point ${largest ? "the same way" : "opposite ways"}.`,
+        `范数介于 $|${a} - ${b}| = ${Math.abs(a - b)}$ 和 $${a} + ${b} = ${a + b}$ 之间。值 $${answer}$ 在两个向量${largest ? "同向" : "反向"}时达到。`,
+      ),
+    });
+  },
+};
+
+const trigonometricNorm: KnowledgePointDef = {
+  id: "the-norm-of-a-sum-of-orthogonal-trigonometric-functions",
+  title: t("The norm of a sum of orthogonal trigonometric functions", "正交三角函数之和的范数"),
+  explanation: t(
+    "On $[-\\pi, \\pi]$ with the integral inner product, $\\sin mt$ and $\\cos nt$ are orthogonal for all positive whole $m$ and $n$, since their product is an odd function. Each has squared norm $\\pi$. The Pythagorean theorem then applies to any combination of them, so the squared norm is found without squaring and integrating the whole expression.",
+    "在 $[-\\pi, \\pi]$ 上用积分内积，对所有正整数 $m$、$n$，$\\sin mt$ 和 $\\cos nt$ 都正交，因为它们的积是奇函数。它们的范数平方都是 $\\pi$。于是勾股定理适用于它们的任何组合，所以不必把整个式子平方再积分，就能求出范数平方。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 9);
+    const b = rng.int(1, 9);
+    const m = rng.int(1, 9);
+    const n = rng.int(1, 9);
+    const answer = a * a + b * b;
+    const first = withCoefficient(a, `\\sin ${withCoefficient(m, "t")}`);
+    const second = withCoefficient(b, `\\cos ${withCoefficient(n, "t")}`);
+    return numberProblem({
+      prompt: t(
+        `With $\\langle f, g \\rangle = \\int_{-\\pi}^{\\pi} f(t)g(t)\\,dt$, the function $f(t) = ${first} + ${second}$ has $\\|f\\|^2 = c\\pi$. Find $c$.`,
+        `用 $\\langle f, g \\rangle = \\int_{-\\pi}^{\\pi} f(t)g(t)\\,dt$，函数 $f(t) = ${first} + ${second}$ 满足 $\\|f\\|^2 = c\\pi$。求 $c$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [(a + b) ** 2, 2 * answer, a + b, Math.abs(a * a - b * b) + 1],
+      solution: t(
+        `The two terms are orthogonal, and each basic function has squared norm $\\pi$. So $c = ${a}^2 + ${b}^2 = ${answer}$.`,
+        `两项正交，每个基本函数的范数平方都是 $\\pi$。所以 $c = ${a}^2 + ${b}^2 = ${answer}$。`,
+      ),
+    });
+  },
+};
+
 /** deeperLinearAlgebraPoints gives, by topic id, the knowledge points added after a Linear Algebra topic's own. */
 export const deeperLinearAlgebraPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "the-intersection-of-two-planes": [perpendicularPlanes],
@@ -1601,4 +2493,31 @@ export const deeperLinearAlgebraPoints: Readonly<Record<string, readonly Knowled
   "singular-value-decomposition-and-the-pseudoinverse-matrix": [pseudoinverseOfADiagonal],
   "steady-state-vectors": [rateOfConvergence],
   "linear-regression-with-matrices": [slopeFromNormalEquations],
+  "the-parametric-equations-of-a-line": [lineMeetsHorizontalPlane],
+  "the-cartesian-equation-of-a-line": [pointOnSymmetricLine],
+  "the-vector-equation-of-a-plane": [planeIntercept],
+  "the-parametric-equations-of-a-plane": [planeConstantFromSpan],
+  "finding-determinants-using-row-and-column-operations": [vandermonde],
+  "elementary-3x3-matrices": [powerOfElementary],
+  "vectors-in-n-dimensional-euclidean-space": [scalarForEntry],
+  "the-null-space-of-a-matrix": [entryInNullSpace],
+  "the-dimension-of-the-null-space-of-a-matrix": [nullityOfTranspose],
+  "the-rank-nullity-theorem": [smallestNullity],
+  "rank-nullity-theorem-in-terms-of-linear-transformations": [symmetrizationRank],
+  "invertible-matrix-theorem-in-terms-of-linear-transformations": [inverseMapValue],
+  "connections-between-matrix-representations-of-a-linear-transformation": [determinantInNewBasis],
+  "linear-maps-between-two-different-vector-spaces": [evaluationKernel],
+  "characteristic-equation-of-a-matrix": [characteristicConstant],
+  "invertible-matrix-theorem-in-terms-of-eigenvalues": [inverseShiftEigenvalue],
+  "diagonalizing-a-2x2-matrix": [powerOfDiagonalized],
+  "matrices-over-the-complex-numbers": [hermitianDeterminant],
+  "block-diagonalization-of-nxn-matrices": [blockDeterminant],
+  "ranks-of-generalized-eigenvectors": [rankOfNilpotentPower],
+  "jordan-canonical-form-of-a-2x2-matrix": [powerOfTwoBlock],
+  "jordan-canonical-decomposition-of-a-3x3-matrix": [powerOfThreeBlock],
+  "dot-product-in-n-dimensional-euclidean-space": [cosineFromDot],
+  "norm-of-a-vector-in-n-dimensional-euclidean-space": [unitVectorEntry],
+  "norm-of-a-vector-in-inner-product-spaces": [monomialNorm],
+  "pythagorean-theorem-and-triangle-inequality-in-inner-product-spaces": [triangleBounds],
+  "orthogonal-vectors-in-inner-product-spaces": [trigonometricNorm],
 };
