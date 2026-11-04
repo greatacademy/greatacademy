@@ -3,6 +3,7 @@ import { compileSubject, t } from "@ga/content";
 import { mathCheckers } from "@ga/subject-math";
 
 import { mathCourses } from "./courses.ts";
+import { inferredEncompassings } from "./encompassings.ts";
 import { polishTopic } from "./polish.ts";
 import { absoluteValueTopics } from "./topics/absolute-value.ts";
 import { abstractAlgebraActionTopics } from "./topics/abstract-algebra-actions.ts";
@@ -442,7 +443,7 @@ export const math: SubjectDef = {
     ...actFundamentalsFigureUnitTopics,
     ...actGeometryDataTopics,
     ...satMathStrategyTopics,
-  ].map(polishTopic),
+  ].map((topic) => polishTopic(topic.encompasses.length ? topic : { ...topic, encompasses: inferredEncompassings[topic.id] ?? [] })),
   courses: mathCourses,
   checkers: mathCheckers,
 };

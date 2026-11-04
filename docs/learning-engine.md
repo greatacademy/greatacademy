@@ -140,16 +140,16 @@ These values come from the book's description and our judgment, not from data. R
 
 | Student | Ability, XP/day | Days | Explicit reviews per topic | Failed lessons |
 | :--- | :--- | ---: | ---: | ---: |
-| Strong | 0.95, 40 | 5.7 | 0.24 | 0 |
-| Typical | 0.85, 30 | 7.8 | 0.55 | 1.3 |
-| Struggling | 0.70, 20 | 11.4 | 1.40 | 5.8 |
+| Strong | 0.95, 40 | 5.7 | 0.26 | 0 |
+| Typical | 0.85, 30 | 7.7 | 0.57 | 1.2 |
+| Struggling | 0.70, 20 | 11.5 | 1.44 | 6.3 |
 | Typical, knows integers | 0.85, 30 | 5.9 | 0.58 | 0.7 |
 
 Typical learners need fewer than one explicit review per topic, because lessons on later topics review earlier ones implicitly. Struggling learners get more explicit practice: their low speeds withhold implicit credit. The simulator's tests keep these properties from regressing.
 
-On Prealgebra (215 topics, plus the arithmetic topics they build on) the same students need more explicit reviews: typical 224.9 days and 4.18 reviews per topic, strong 3.82, struggling 5.48 over 325 days, and one struggling run in 20 does not finish within the simulated year. The course is broad rather than deep: many of its units (ratios and percentages, scientific notation, radicals, statistics, geometry) are practiced by few later topics in the course, so less of their review comes implicitly. Their encompassing topics come with Algebra I and Geometry. The weights record what each topic actually practices and are not raised to improve these numbers.
+On Prealgebra (217 topics, plus the arithmetic topics they build on) the same students need more explicit reviews: typical 225.1 days and 4.01 reviews per topic, strong 3.30, struggling 5.43 over 319 days. The course is broad rather than deep: many of its units (ratios and percentages, scientific notation, radicals, statistics, geometry) are practiced by few later topics in the course, so less of their review comes implicitly. Their encompassing topics come with Algebra I and Geometry. The weights record what each topic actually practices and are not raised to improve these numbers. Topics without authored encompassings use the inferred ones described in [content.md](content.md), which help strong students most: on 4th Grade Math reviews per topic fell from 3.14 to 2.30 for strong, 3.84 to 3.38 for typical and 5.13 to 5.11 for struggling students; on Linear Algebra from 3.41 to 3.27 for strong students, with typical and struggling students about unchanged.
 
-On Algebra I (224 topics, plus the Prealgebra topics they build on, since the simulated students start from nothing) a typical student needs 187.3 days and 3.68 reviews per topic, a strong one 2.57, and a struggling one 5.92 over 288 days. A review of the encompassings, recording every prerequisite that a topic's problems genuinely practice, lowered the typical count by about 3%. Most remaining reviews fall on topics that no later topic practices yet, such as work and mixture problems, coin problems, perpendicular lines, Vieta's formulas, radical equations and the profit models; they are reviewed explicitly until later units build on them.
+On Algebra I (233 topics, plus the Prealgebra topics they build on, since the simulated students start from nothing) a typical student needs 217.0 days and 3.94 reviews per topic, a strong one 2.78, and a struggling one 5.88 over 323 days. A review of the encompassings, recording every prerequisite that a topic's problems genuinely practice, lowered the typical count by about 3%. Most remaining reviews fall on topics that no later topic practices yet, such as work and mixture problems, coin problems, perpendicular lines, Vieta's formulas, radical equations and the profit models; they are reviewed explicitly until later units build on them.
 
 ```bash
 pnpm nx run simulate:simulate                  # Foundations of Algebra

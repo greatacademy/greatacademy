@@ -1,7 +1,8 @@
 import { CompileError, formatIssue } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
-import { compileMath } from "./index.ts";
+import { inferredEncompassings } from "./encompassings.ts";
+import { compileMath, math } from "./index.ts";
 import { mathTextIssue } from "./sampling.ts";
 
 const rawMath = /\^|_[A-Za-z0-9{]|sqrt\(/;
@@ -20,6 +21,14 @@ describe("math content", () => {
       if (e instanceof CompileError) throw new Error(e.issues.map(formatIssue).join("\n"));
       throw e;
     }
+  });
+
+  it("infers encompassings only for topics that have none of their own", () => {
+    const authored = new Map(math.topics.map((topic) => [topic.id, topic]));
+    const stale = Object.entries(inferredEncompassings)
+      .filter(([id, edges]) => authored.get(id)?.encompasses !== edges)
+      .map(([id]) => id);
+    expect(stale).toEqual([]);
   });
 
   it("writes the math of topic summaries and explanations in $…$", () => {
