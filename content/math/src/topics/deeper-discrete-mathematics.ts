@@ -939,6 +939,1062 @@ const fixedPoints: KnowledgePointDef = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// Second pass
+// ---------------------------------------------------------------------------
+
+/** matrix writes a grid of numbers as a LaTeX matrix. */
+const matrix = (rows: number[][]) => `\\begin{pmatrix} ${rows.map((row) => row.join(" & ")).join(" \\\\ ")} \\end{pmatrix}`;
+/** binary writes a positive integer as a base 2 numeral. */
+const binary = (n: number) => `\\mathrm{${n.toString(2)}}_{2}`;
+/** productOf multiplies a list of numbers. */
+const productOf = (values: number[]) => values.reduce((a, b) => a * b, 1);
+
+const functionsWithFixedValues: KnowledgePointDef = {
+  id: "boolean-functions-with-values-fixed-on-some-inputs",
+  title: t("Boolean functions with values fixed on some inputs", "在部分输入上取值固定的布尔函数"),
+  explanation: t(
+    "A Boolean function of $n$ variables is nothing more than a choice of 0 or 1 for each of its $2^n$ input rows, and these choices are independent. Fixing the value on some rows removes those choices and leaves the rest free. So each remaining row doubles the count, and the answer is a power of 2 with the number of free rows as exponent.",
+    "$n$ 个变量的布尔函数，不过是为 $2^n$ 个输入行各选 0 或 1，这些选择相互独立。在某些行上固定取值，就去掉了这些选择，其余的行仍然自由。所以每个剩下的行都使个数翻倍，答案是 2 的幂，指数是自由行的个数。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 4);
+    const rows = 2 ** n;
+    const fixed = rng.int(1, rows - 1);
+    const value = rng.int(0, 1);
+    const free = rows - fixed;
+    const answer = 2 ** free;
+    return numberProblem({
+      prompt: t(
+        `How many Boolean functions of ${n} variables take the value ${value} on each of ${fixed} chosen input ${fixed === 1 ? "row" : "rows"}?`,
+        `有多少个 ${n} 元布尔函数，在选定的 ${fixed} 个输入行上都取值 ${value}？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [2 ** rows, 2 ** fixed, free, 2 * free, answer + 1],
+      solution: t(
+        `There are ${rows} rows, and ${free} of them remain free. Each free row has 2 possible values, so the count is $${pow(2, free)}${free === 1 ? "" : ` = ${answer}`}$.`,
+        `一共有 ${rows} 行，其中 ${free} 行仍然自由。每个自由行有 2 种取值，所以个数是 $${pow(2, free)}${free === 1 ? "" : ` = ${answer}`}$。`,
+      ),
+    });
+  },
+};
+
+const distributingClauses: KnowledgePointDef = {
+  id: "the-number-of-terms-after-distributing-clauses",
+  title: t("The number of terms after distributing clauses", "分配子句后的项数"),
+  explanation: t(
+    "Distributing $\\wedge$ over $\\vee$ turns a conjunction of clauses into a disjunctive normal form. Each resulting term is made by picking one literal from every clause, just as each term of a product of sums picks one summand from every bracket. So the number of terms is the product of the clause sizes, which is why converting between normal forms can make a formula grow quickly.",
+    "把 $\\wedge$ 对 $\\vee$ 分配，就把子句的合取变成析取范式。得到的每一项都是从每个子句中各选一个文字构成的，正如和的乘积展开时，每一项从每个括号中各选一项。所以项数是各子句大小的乘积，这也是范式转换会使公式迅速变大的原因。",
+  ),
+  generate(rng) {
+    const sizes = range(1, rng.int(2, 4)).map(() => rng.int(2, 6));
+    const answer = productOf(sizes);
+    const sum = sizes.reduce((a, b) => a + b, 0);
+    const list = `${sizes.slice(0, -1).join(", ")} and ${sizes[sizes.length - 1]}`;
+    return numberProblem({
+      prompt: t(
+        `A conjunction has ${sizes.length} clauses, with ${list} literals, and no variable occurs twice. Distributing $\\wedge$ over $\\vee$ gives a disjunctive normal form. How many terms does it have before any simplification?`,
+        `一个合取式有 ${sizes.length} 个子句，文字个数分别是 ${sizes.join("、")}，没有变量出现两次。把 $\\wedge$ 对 $\\vee$ 分配，得到一个析取范式。化简之前它有多少项？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [sum, sizes.length, answer + 1, 2 ** sum],
+      solution: t(
+        `Each term picks one literal from every clause, so there are $${sizes.join(" \\cdot ")} = ${answer}$ terms.`,
+        `每一项从每个子句中各选一个文字，所以有 $${sizes.join(" \\cdot ")} = ${answer}$ 项。`,
+      ),
+    });
+  },
+};
+
+const clausesOfWidth: KnowledgePointDef = {
+  id: "counting-the-clauses-of-a-given-width",
+  title: t("Counting the clauses of a given width", "计算给定宽度的子句数"),
+  explanation: t(
+    "A clause with exactly $k$ literals on $k$ different variables is built in two independent steps. First choose which $k$ of the $n$ variables appear, which can be done in $\\binom{n}{k}$ ways. Then decide for each chosen variable whether it appears plain or negated, which gives $2^k$ ways. A variable cannot appear in both forms, because such a clause would always be true.",
+    "恰有 $k$ 个文字、涉及 $k$ 个不同变量的子句，分两个独立的步骤构造。先选出 $n$ 个变量中出现的 $k$ 个，有 $\\binom{n}{k}$ 种选法。再决定每个选中的变量是原样出现还是取反出现，有 $2^k$ 种方式。一个变量不能以两种形式同时出现，因为这样的子句永远为真。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 12);
+    const k = rng.int(2, Math.min(n, 5));
+    const choose = binom(n, k);
+    const answer = choose * 2 ** k;
+    return numberProblem({
+      prompt: t(
+        `Over ${n} variables, how many clauses have exactly ${k} literals on ${k} different variables?`,
+        `在 ${n} 个变量上，有多少个子句恰有 ${k} 个文字，且涉及 ${k} 个不同的变量？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [choose, 2 ** k, binom(2 * n, k), n ** k],
+      solution: t(
+        `Choose the variables in $\\binom{${n}}{${k}} = ${choose}$ ways and their signs in $2^{${k}} = ${2 ** k}$ ways. The product is $${answer}$.`,
+        `选择变量有 $\\binom{${n}}{${k}} = ${choose}$ 种方法，选择符号有 $2^{${k}} = ${2 ** k}$ 种方法。乘积是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const mintermsOfConjunction: KnowledgePointDef = {
+  id: "the-minterms-of-a-single-conjunction",
+  title: t("The minterms of a single conjunction", "单个合取式的极小项"),
+  explanation: t(
+    "A minterm mentions every variable, so a shorter conjunction stands for several minterms at once. The literals that are present fix the values of their variables, and each variable that is missing can take either value. So a conjunction of $k$ literals over $n$ variables is true on $2^{n - k}$ rows, and its principal disjunctive normal form has that many minterms.",
+    "极小项涉及每个变量，所以较短的合取式同时代表多个极小项。出现的文字固定了相应变量的取值，每个没有出现的变量都可以取任一值。所以 $n$ 个变量上 $k$ 个文字的合取式在 $2^{n - k}$ 行上为真，它的主析取范式就有这么多个极小项。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 8);
+    const k = rng.int(1, n - 1);
+    const literals = range(1, k).map((i) => `${rng.int(0, 1) === 0 ? "\\neg " : ""}x_{${i}}`);
+    const answer = 2 ** (n - k);
+    return numberProblem({
+      prompt: t(
+        `A function of the ${n} variables $x_{1}, \\dots, x_{${n}}$ is $f = ${literals.join(" \\wedge ")}$. How many minterms does its principal disjunctive normal form have?`,
+        `$x_{1}, \\dots, x_{${n}}$ 这 ${n} 个变量的函数是 $f = ${literals.join(" \\wedge ")}$。它的主析取范式有多少个极小项？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [1, n - k, 2 ** k, 2 ** n - answer, k],
+      solution: t(
+        `The formula fixes ${k} of the variables and leaves ${n - k} free, which gives $${pow(2, n - k)}${n - k === 1 ? "" : ` = ${answer}`}$ true rows.`,
+        `这个公式固定了 ${k} 个变量，留下 ${n - k} 个自由变量，于是有 $${pow(2, n - k)}${n - k === 1 ? "" : ` = ${answer}`}$ 个为真的行。`,
+      ),
+    });
+  },
+};
+
+const maxtermsFromMinterms: KnowledgePointDef = {
+  id: "the-maxterms-from-the-number-of-minterms",
+  title: t("The maxterms from the number of minterms", "由极小项个数求极大项个数"),
+  explanation: t(
+    "Every input row of a function falls into exactly one of two groups. A row where the function is true gives a minterm of the principal disjunctive normal form, and a row where it is false gives a maxterm of the principal conjunctive normal form. So the numbers of minterms and maxterms always add to $2^n$, and knowing one tells you the other.",
+    "函数的每个输入行恰好属于两类之一。函数为真的行给出主析取范式的一个极小项，函数为假的行给出主合取范式的一个极大项。所以极小项和极大项的个数之和总是 $2^n$，知道其中一个就知道另一个。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 8);
+    const rows = 2 ** n;
+    const m = rng.int(1, rows - 1);
+    const answer = rows - m;
+    return numberProblem({
+      prompt: t(
+        `The principal disjunctive normal form of a function of ${n} variables has ${m} ${m === 1 ? "minterm" : "minterms"}. How many maxterms does its principal conjunctive normal form have?`,
+        `一个 ${n} 元函数的主析取范式有 ${m} 个极小项。它的主合取范式有多少个极大项？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [m, rows, answer + 1, Math.max(answer - 1, 0)],
+      solution: t(
+        `There are $2^{${n}} = ${rows}$ rows, and ${m} of them are true. The other $${answer}$ give the maxterms.`,
+        `一共有 $2^{${n}} = ${rows}$ 行，其中 ${m} 行为真。其余 $${answer}$ 行给出极大项。`,
+      ),
+    });
+  },
+};
+
+const monomialsOfDegree: KnowledgePointDef = {
+  id: "counting-the-monomials-of-a-given-degree",
+  title: t("Counting the monomials of a given degree", "计算给定次数的单项式数"),
+  explanation: t(
+    "In a Boolean polynomial, $x \\wedge x = x$, so no variable ever needs an exponent above 1. A monomial is therefore determined by the set of variables it contains, and its degree is the size of that set. Counting monomials of degree $d$ in $n$ variables is the same as counting subsets of size $d$, which is why the answer is a binomial coefficient and not a power.",
+    "在布尔多项式中，$x \\wedge x = x$，所以任何变量的指数都不需要超过 1。因此单项式由它所含变量的集合决定，次数就是这个集合的大小。计算 $n$ 个变量上 $d$ 次单项式的个数，就是计算大小为 $d$ 的子集个数，所以答案是二项式系数，而不是幂。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 12);
+    const d = rng.int(2, n - 1);
+    const answer = binom(n, d);
+    return numberProblem({
+      prompt: t(
+        `How many different monomials of degree ${d} can a Boolean polynomial in ${n} variables contain?`,
+        `${n} 个变量的布尔多项式可以含有多少个不同的 ${d} 次单项式？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n ** d, 2 ** n, 2 ** d, n * d],
+      solution: t(
+        `A monomial of degree ${d} is a set of ${d} variables, so there are $\\binom{${n}}{${d}} = ${answer}$ of them.`,
+        `${d} 次单项式就是 ${d} 个变量的集合，所以有 $\\binom{${n}}{${d}} = ${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const karnaughGroups: KnowledgePointDef = {
+  id: "counting-the-groups-of-a-karnaugh-map",
+  title: t("Counting the groups of a Karnaugh map", "计算卡诺图中的分组数"),
+  explanation: t(
+    "A valid group of $2^j$ cells in a Karnaugh map lets exactly $j$ variables vary while the others stay fixed. To describe such a group, choose which $j$ variables are free, then choose a value for each of the remaining $n - j$ variables. Multiplying the two counts gives every group. It also shows that wrapping around the edges of the map is part of the count.",
+    "卡诺图中 $2^j$ 个格子的有效分组，恰好让 $j$ 个变量变化，其他变量保持固定。要描述这样的分组，先选出哪 $j$ 个变量自由，再为其余 $n - j$ 个变量各选一个值。两个计数相乘，就得到所有分组。这也说明，绕过图边缘的分组也包括在内。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 8);
+    const j = rng.int(1, n - 1);
+    const choose = binom(n, j);
+    const values = 2 ** (n - j);
+    const answer = choose * values;
+    return numberProblem({
+      prompt: t(
+        `A valid group of $${2 ** j}$ cells in a Karnaugh map of ${n} variables lets ${j} ${j === 1 ? "variable" : "variables"} vary and fixes the others. How many different groups of this size are there?`,
+        `${n} 个变量的卡诺图中，$${2 ** j}$ 个格子的有效分组让 ${j} 个变量变化，并固定其他变量。这样大小的不同分组有多少个？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [choose, values, choose * 2 ** j, 2 ** n],
+      solution: t(
+        `Choose the free variables in $\\binom{${n}}{${j}} = ${choose}$ ways and the values of the others in $${values}$ ways. The product is $${answer}$.`,
+        `选择自由变量有 $\\binom{${n}}{${j}} = ${choose}$ 种方法，选择其他变量的值有 $${values}$ 种方法。乘积是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const affineDependingOn: KnowledgePointDef = {
+  id: "affine-functions-that-depend-on-a-given-number-of-variables",
+  title: t("Affine functions that depend on a given number of variables", "依赖给定个数变量的仿射函数"),
+  explanation: t(
+    "An affine Boolean function has the form $c \\oplus x_{i_1} \\oplus \\dots \\oplus x_{i_k}$, and the variables in the sum are exactly the ones it depends on, since changing any of them flips the output. So to count them, choose the $k$ variables, then choose the constant $c$. The constant has two values, and it does not change which variables matter.",
+    "仿射布尔函数的形式是 $c \\oplus x_{i_1} \\oplus \\dots \\oplus x_{i_k}$，和中的变量恰好就是它依赖的变量，因为改变其中任何一个都会翻转输出。所以要计数，先选这 $k$ 个变量，再选常数 $c$。常数有两个值，它不改变函数依赖哪些变量。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 14);
+    const k = rng.int(1, n);
+    const choose = binom(n, k);
+    const answer = 2 * choose;
+    return numberProblem({
+      prompt: t(
+        `How many affine Boolean functions of ${n} variables depend on exactly ${k} of them?`,
+        `有多少个 ${n} 元仿射布尔函数恰好依赖其中 ${k} 个变量？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [choose, 2 ** (n + 1), 2 ** k, n, choose + 1],
+      solution: t(
+        `Choose the variables in $\\binom{${n}}{${k}} = ${choose}$ ways, and the constant in 2 ways. That gives $${answer}$.`,
+        `选择变量有 $\\binom{${n}}{${k}} = ${choose}$ 种方法，选择常数有 2 种方法。一共是 $${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const integersWithBits: KnowledgePointDef = {
+  id: "integers-with-a-given-number-of-binary-digits-and-ones",
+  title: t("Integers with a given number of binary digits and ones", "给定二进制位数和 1 的个数的整数"),
+  explanation: t(
+    "The leading digit of a positive binary integer is always 1, because a leading 0 would simply not be written. So in an integer with $n$ digits and $k$ ones, one of the ones is already placed. The remaining $k - 1$ ones can occupy any of the other $n - 1$ positions, which gives a binomial coefficient with both numbers reduced by one.",
+    "正二进制整数的最高位总是 1，因为最高位的 0 根本不会写出来。所以在 $n$ 位、含 $k$ 个 1 的整数中，已经有一个 1 的位置确定了。其余 $k - 1$ 个 1 可以占据另外 $n - 1$ 个位置中的任意位置，于是得到两个数都减一的二项式系数。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 16);
+    const k = rng.int(1, n);
+    const answer = binom(n - 1, k - 1);
+    return numberProblem({
+      prompt: t(
+        `How many positive integers have exactly ${n} binary digits, with no leading zeros, of which exactly ${k} ${k === 1 ? "is" : "are"} 1?`,
+        `有多少个正整数恰有 ${n} 位二进制数字（最高位不为零），其中恰有 ${k} 个 1？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [binom(n, k), 2 ** (n - 1), n - 1, answer + 1],
+      solution: t(
+        `The first digit is 1, and the other ones go among the remaining ${n - 1} digits. Their places can be chosen in $\\binom{${n - 1}}{${k - 1}} = ${answer}$ ways.`,
+        `最高位是 1，其余的 1 放在另外 ${n - 1} 位中。选择它们的位置有 $\\binom{${n - 1}}{${k - 1}} = ${answer}$ 种方法。`,
+      ),
+    });
+  },
+};
+
+const dividingByPowerOfTwo: KnowledgePointDef = {
+  id: "dividing-by-a-power-of-two-in-binary",
+  title: t("Dividing by a power of two in binary", "二进制中除以 2 的幂"),
+  explanation: t(
+    "Dividing by 2 in binary moves every digit one place to the right, just as dividing by 10 does in decimal. So dividing by $2^k$, which is written as a 1 followed by $k$ zeros, removes the last $k$ digits of the number. Those digits form the remainder, and the digits left over form the quotient. No long division is needed at all.",
+    "在二进制中除以 2，就是把每一位右移一位，正如十进制中除以 10。所以除以 $2^k$（写作 1 后跟 $k$ 个零），就是去掉数的最后 $k$ 位。这些位构成余数，留下的位构成商。根本不需要长除法。",
+  ),
+  generate(rng) {
+    const k = rng.int(2, 6);
+    const x = rng.int(100, 4000);
+    const divisor = 2 ** k;
+    const answer = Math.floor(x / divisor);
+    return numberProblem({
+      prompt: t(
+        `Find the quotient, ignoring the remainder, when $${binary(x)}$ is divided by $${binary(divisor)}$. Write it in decimal.`,
+        `求 $${binary(x)}$ 除以 $${binary(divisor)}$ 的商（不计余数）。用十进制表示。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [Math.floor(x / 2 ** (k - 1)), Math.floor(x / 2 ** (k + 1)), x % divisor, x * divisor],
+      solution: t(
+        `The divisor is $2^{${k}}$, so remove the last ${k} digits. This leaves $${binary(answer)} = ${answer}$.`,
+        `除数是 $2^{${k}}$，所以去掉最后 ${k} 位。留下 $${binary(answer)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const hexOnes: KnowledgePointDef = {
+  id: "counting-the-ones-of-a-hexadecimal-number",
+  title: t("Counting the ones of a hexadecimal number", "计算十六进制数中 1 的个数"),
+  explanation: t(
+    "Each hexadecimal digit corresponds to exactly four binary digits, because $16 = 2^4$. So a hexadecimal numeral converts to binary one digit at a time, with no carrying and no arithmetic on the whole number. This makes questions about individual bits easy to answer. In particular, the number of ones in the whole number is the sum of the counts for each digit.",
+    "每个十六进制数字恰好对应四个二进制数字，因为 $16 = 2^4$。所以十六进制数可以逐位转换成二进制，不需要进位，也不需要对整个数做运算。这使得关于单个位的问题很容易回答。特别地，整个数中 1 的个数，就是每个数字对应个数的和。",
+  ),
+  generate(rng) {
+    const length = rng.int(3, 5);
+    const digits = range(1, length).map((i) => (i === 1 ? rng.int(1, 15) : rng.int(0, 15)));
+    const numeral = digits.map((d) => d.toString(16).toUpperCase()).join("");
+    const counts = digits.map((d) => d.toString(2).split("0").join("").length);
+    const answer = counts.reduce((a, b) => a + b, 0);
+    const parts = digits.map((d) => d.toString(2).padStart(4, "0")).join("\\ ");
+    return numberProblem({
+      prompt: t(
+        `How many of the binary digits of $\\mathrm{${numeral}}_{16}$ are 1?`,
+        `$\\mathrm{${numeral}}_{16}$ 的二进制数字中有多少个 1？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [4 * length, 4 * length - answer, length, answer + 1],
+      solution: t(
+        `Digit by digit, the number is $\\mathrm{${parts}}_{2}$, which has ${answer} ${answer === 1 ? "one" : "ones"}.`,
+        `逐位写出，这个数是 $\\mathrm{${parts}}_{2}$，其中有 ${answer} 个 1。`,
+      ),
+    });
+  },
+};
+
+const placesInPowerBase: KnowledgePointDef = {
+  id: "the-number-of-places-of-a-fraction-in-a-power-of-two-base",
+  title: t("The number of places of a fraction in a power of two base", "分数在 2 的幂进制下的位数"),
+  explanation: t(
+    "A fraction with odd numerator and denominator $2^k$ terminates after exactly $k$ places in base 2. In base 4 or base 8, each digit stands for a block of two or three binary digits. So the binary places are grouped into blocks from the point, and a block that is only partly filled still needs a digit. That is why the count rounds up.",
+    "分子为奇数、分母为 $2^k$ 的分数，在二进制下恰好在 $k$ 位后终止。在四进制或八进制下，每个数字代表两个或三个二进制数字组成的一组。所以从小数点起把二进制位分组，只填了一部分的组仍然需要一个数字。这就是计数要向上取整的原因。",
+  ),
+  generate(rng) {
+    const k = rng.int(2, 12);
+    const denominator = 2 ** k;
+    const m = 2 * rng.int(0, denominator / 2 - 1) + 1;
+    const block = rng.int(2, 3);
+    const base = 2 ** block;
+    const answer = Math.ceil(k / block);
+    return numberProblem({
+      prompt: t(
+        `How many digits does $\\frac{${m}}{${denominator}}$ have after the point when written in base ${base}?`,
+        `$\\frac{${m}}{${denominator}}$ 用 ${base} 进制写出时，小数点后有多少位？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [k, Math.floor(k / block) === answer ? answer + 1 : Math.floor(k / block), k * block, denominator],
+      solution: t(
+        `In base 2 there are ${k} places, because $${denominator} = 2^{${k}}$. Grouping them in blocks of ${block} takes ${answer} ${answer === 1 ? "block" : "blocks"}.`,
+        `在二进制下有 ${k} 位，因为 $${denominator} = 2^{${k}}$。把它们按 ${block} 位一组分组，需要 ${answer} 组。`,
+      ),
+    });
+  },
+};
+
+const affineDecrypt: KnowledgePointDef = {
+  id: "decrypting-a-letter-of-an-affine-cipher",
+  title: t("Decrypting a letter of an affine cipher", "解密仿射密码的字母"),
+  explanation: t(
+    "An affine cipher encrypts a letter number $x$ as $y = ax + b$ modulo 26. To undo it, undo the steps in reverse order: subtract $b$, then multiply by the inverse of $a$ modulo 26. The inverse exists exactly when $a$ is coprime to 26, which is why only those values make usable keys. Dividing by $a$ as an ordinary fraction does not work.",
+    "仿射密码把字母编号 $x$ 加密成模 26 的 $y = ax + b$。要还原，就按相反的顺序撤销各步：先减去 $b$，再乘以 $a$ 模 26 的逆。逆存在当且仅当 $a$ 与 26 互素，所以只有这些值才能作为可用的密钥。像普通分数那样除以 $a$ 是行不通的。",
+  ),
+  generate(rng) {
+    const a = rng.pick([3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25]);
+    const b = rng.int(1, 25);
+    const x = rng.int(0, 25);
+    const y = (a * x + b) % 26;
+    const inverse = range(1, 25).find((v) => (a * v) % 26 === 1) ?? 1;
+    const difference = (((y - b) % 26) + 26) % 26;
+    return numberProblem({
+      prompt: t(
+        `Letters are numbered $\\mathrm{A} = 0, \\dots, \\mathrm{Z} = 25$. A letter was encrypted as $x \\mapsto ${a}x + ${b} \\pmod{26}$, and the result is $${y}$. Find the original letter's number $x$.`,
+        `字母编号为 $\\mathrm{A} = 0, \\dots, \\mathrm{Z} = 25$。一个字母按 $x \\mapsto ${a}x + ${b} \\pmod{26}$ 加密，结果是 $${y}$。求原字母的编号 $x$。`,
+      ),
+      answer: x,
+      form: "integer",
+      wrong: [difference, (a * y + b) % 26, (inverse * y) % 26, (inverse * (y + b)) % 26, (x + 1) % 26],
+      solution: t(
+        `Modulo 26, the inverse of ${a} is ${inverse}, and $${y} - ${b} \\equiv ${difference}$. So $x \\equiv ${inverse} \\cdot ${difference} \\equiv ${x}$.`,
+        `模 26 时，${a} 的逆是 ${inverse}，且 $${y} - ${b} \\equiv ${difference}$。所以 $x \\equiv ${inverse} \\cdot ${difference} \\equiv ${x}$。`,
+      ),
+    });
+  },
+};
+
+const partitionsIntoThree: KnowledgePointDef = {
+  id: "partitions-into-exactly-three-parts",
+  title: t("Partitions into exactly three parts", "恰好分成三部分的分拆"),
+  explanation: t(
+    "To count partitions of $n$ into exactly three parts, list them with $a \\ge b \\ge c \\ge 1$, so that each partition appears once. A useful shortcut is that the count equals $\\frac{n^2}{12}$ rounded to the nearest whole number. Compositions are a different thing: there, order matters and the count is $\\binom{n - 1}{2}$. Each partition corresponds to as many as six compositions.",
+    "要计算 $n$ 恰好分成三部分的分拆数，就按 $a \\ge b \\ge c \\ge 1$ 列出，使每个分拆只出现一次。一个有用的捷径是，这个个数等于 $\\frac{n^2}{12}$ 四舍五入到最接近的整数。有序分解是另一回事：那里顺序有关，个数是 $\\binom{n - 1}{2}$。每个分拆最多对应六个有序分解。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 40);
+    const answer = Math.round((n * n) / 12);
+    return numberProblem({
+      prompt: t(
+        `In how many ways can ${n} be written as a sum of exactly 3 positive integers, if order does not matter?`,
+        `不计顺序，${n} 有多少种方法写成恰好 3 个正整数之和？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [binom(n - 1, 2), Math.floor(n / 2), n, answer + 1],
+      solution: t(
+        `The count is $\\frac{${n * n}}{12}$ rounded to the nearest whole number, which is ${answer}.`,
+        `这个个数是 $\\frac{${n * n}}{12}$ 四舍五入到最接近的整数，也就是 ${answer}。`,
+      ),
+    });
+  },
+};
+
+const twoUpperBounds: KnowledgePointDef = {
+  id: "integer-solutions-with-two-upper-bounds",
+  title: t("Integer solutions with two upper bounds", "带两个上界的整数解"),
+  explanation: t(
+    "Upper bounds are handled by inclusion and exclusion. Start from all nonnegative solutions, then subtract those that break the first bound and those that break the second. Breaking $x_1 \\le a$ means $x_1 \\ge a + 1$, and subtracting $a + 1$ from $x_1$ turns this into an ordinary count with a smaller total. Solutions that break both were subtracted twice, so add them back.",
+    "上界用容斥原理处理。先取所有非负解，再减去违反第一个上界的解和违反第二个上界的解。违反 $x_1 \\le a$ 就是 $x_1 \\ge a + 1$，从 $x_1$ 中减去 $a + 1$，就化成总和更小的普通计数。同时违反两者的解被减了两次，所以要加回来。",
+  ),
+  generate(rng) {
+    const n = rng.int(8, 20);
+    const a = rng.int(2, n - 1);
+    const b = rng.int(2, n - 1);
+    const count = (total: number) => (total < 0 ? 0 : binom(total + 2, 2));
+    const all = count(n);
+    const overA = count(n - a - 1);
+    const overB = count(n - b - 1);
+    const overBoth = count(n - a - b - 2);
+    const answer = all - overA - overB + overBoth;
+    return numberProblem({
+      prompt: t(
+        `How many solutions in nonnegative integers does $x_{1} + x_{2} + x_{3} = ${n}$ have with $x_{1} \\le ${a}$ and $x_{2} \\le ${b}$?`,
+        `$x_{1} + x_{2} + x_{3} = ${n}$ 有多少组非负整数解满足 $x_{1} \\le ${a}$ 且 $x_{2} \\le ${b}$？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [all, all - overA, all - overB, all - overA - overB, (a + 1) * (b + 1)],
+      solution: t(
+        `There are ${all} solutions in all, ${overA} break the first bound, ${overB} break the second, and ${overBoth} break both. So the count is $${all} - ${overA} - ${overB} + ${overBoth} = ${answer}$.`,
+        `一共有 ${all} 组解，${overA} 组违反第一个上界，${overB} 组违反第二个上界，${overBoth} 组同时违反两者。所以个数是 $${all} - ${overA} - ${overB} + ${overBoth} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const coefficientSum: KnowledgePointDef = {
+  id: "the-sum-of-the-coefficients-of-a-multinomial-expansion",
+  title: t("The sum of the coefficients of a multinomial expansion", "多项式展开的系数和"),
+  explanation: t(
+    "Setting every variable equal to 1 turns each term of an expansion into its coefficient alone, so the expression's value at that point is the sum of all the coefficients. There is no need to find any single term. This works for negative coefficients as well, where signs inside the bracket simply combine first, and the power is taken afterwards.",
+    "令每个变量都等于 1，展开式的每一项就只剩下它的系数，所以这一点上的表达式的值就是所有系数之和。根本不需要求出任何单独的项。对负系数也同样成立，括号内的符号先合并，然后再求幂。",
+  ),
+  generate(rng) {
+    const a = rng.pick([-3, -2, -1, 1, 2, 3, 4, 5]);
+    const b = rng.pick([-3, -2, -1, 1, 2, 3, 4, 5]);
+    const c = rng.pick([-3, -2, -1, 1, 2, 3, 4, 5]);
+    const n = rng.int(2, 6);
+    const sum = a + b + c;
+    const answer = sum ** n;
+    const size = Math.abs(a) + Math.abs(b) + Math.abs(c);
+    return numberProblem({
+      prompt: t(
+        `Find the sum of all the coefficients in the expansion of $(${poly([a, "x"], [b, "y"], [c, "z"])})^{${n}}$.`,
+        `求 $(${poly([a, "x"], [b, "y"], [c, "z"])})^{${n}}$ 展开式中所有系数之和。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [size ** n, sum * n, a ** n + b ** n + c ** n, 3 ** n, answer + 1],
+      solution: t(
+        `Put $x = y = z = 1$. The bracket equals $${sum}$, so the sum is $${inParens(sum)}^{${n}} = ${answer}$.`,
+        `令 $x = y = z = 1$。括号的值是 $${sum}$，所以和是 $${inParens(sum)}^{${n}} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const termsWithAllVariables: KnowledgePointDef = {
+  id: "the-terms-of-a-multinomial-expansion-that-contain-every-variable",
+  title: t("The terms of a multinomial expansion that contain every variable", "多项式展开中含所有变量的项"),
+  explanation: t(
+    "A term of $(x_1 + \\dots + x_k)^n$ is decided by its exponents, which are whole numbers adding to $n$. A term that contains every variable has all its exponents at least 1. Giving each variable one copy first leaves $n - k$ to share out freely among $k$ variables, and stars and bars then gives $\\binom{n - 1}{k - 1}$ such terms, fewer than the full count.",
+    "$(x_1 + \\dots + x_k)^n$ 的一项由它的指数决定，这些指数是和为 $n$ 的整数。含所有变量的项，所有指数都至少是 1。先给每个变量一份，剩下 $n - k$ 份在 $k$ 个变量中自由分配，于是隔板法给出 $\\binom{n - 1}{k - 1}$ 个这样的项，比全部项数少。",
+  ),
+  generate(rng) {
+    const k = rng.int(3, 6);
+    const n = rng.int(k, 20);
+    const answer = binom(n - 1, k - 1);
+    const bracket = range(1, k)
+      .map((i) => `x_{${i}}`)
+      .join(" + ");
+    return numberProblem({
+      prompt: t(
+        `After like terms are collected, how many terms of the expansion of $(${bracket})^{${n}}$ contain all ${k} variables?`,
+        `合并同类项后，$(${bracket})^{${n}}$ 的展开式中有多少项含全部 ${k} 个变量？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [binom(n + k - 1, k - 1), binom(n, k - 1), answer + 1, n],
+      solution: t(
+        `The exponents are all at least 1 and add to ${n}, so there are $\\binom{${n - 1}}{${k - 1}} = ${answer}$ such terms.`,
+        `指数都至少是 1，且和为 ${n}，所以有 $\\binom{${n - 1}}{${k - 1}} = ${answer}$ 个这样的项。`,
+      ),
+    });
+  },
+};
+
+const graphsWithEdges: KnowledgePointDef = {
+  id: "labeled-graphs-with-a-given-number-of-edges",
+  title: t("Labeled graphs with a given number of edges", "给定边数的标号图"),
+  explanation: t(
+    "A simple graph on labeled vertices is decided by which pairs of vertices are joined. There are $\\binom{n}{2}$ pairs available, and a graph with exactly $m$ edges chooses $m$ of them. So the count is a binomial coefficient applied twice. Labeled means that two graphs with the same shape but different vertex names count as different, unlike counting graphs up to isomorphism.",
+    "标号顶点上的简单图，由哪些顶点对相连决定。可用的顶点对有 $\\binom{n}{2}$ 个，恰有 $m$ 条边的图从中选出 $m$ 个。所以计数用了两次二项式系数。标号意味着形状相同但顶点名称不同的两个图算作不同的图，这与同构意义下的计数不同。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 8);
+    const pairs = binom(n, 2);
+    const m = rng.int(1, pairs - 1);
+    const answer = binom(pairs, m);
+    return numberProblem({
+      prompt: t(
+        `How many simple graphs on ${n} labeled vertices have exactly ${m} ${m === 1 ? "edge" : "edges"}?`,
+        `${n} 个标号顶点上，有多少个简单图恰有 ${m} 条边？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [2 ** pairs, binom(n, Math.min(m, n)), pairs, pairs * m],
+      solution: t(
+        `There are $\\binom{${n}}{2} = ${pairs}$ pairs of vertices, and the graph chooses ${m} of them, in $\\binom{${pairs}}{${m}} = ${answer}$ ways.`,
+        `一共有 $\\binom{${n}}{2} = ${pairs}$ 个顶点对，图从中选出 ${m} 个，有 $\\binom{${pairs}}{${m}} = ${answer}$ 种方法。`,
+      ),
+    });
+  },
+};
+
+const fewestVertices: KnowledgePointDef = {
+  id: "the-fewest-vertices-for-a-given-maximum-degree",
+  title: t("The fewest vertices for a given maximum degree", "给定最大度时的最少顶点数"),
+  explanation: t(
+    "The handshaking lemma gives a lower bound on the number of vertices. If no degree exceeds $d$, the sum of the degrees is at most $dn$, and it must equal $2m$. So $n \\ge \\frac{2m}{d}$, and since $n$ is a whole number, this rounds up. When $d$ is smaller than $n$, a graph with degrees as equal as possible reaches this bound.",
+    "握手引理给出顶点数的下界。如果没有度超过 $d$，度数之和最多是 $dn$，而它必须等于 $2m$。所以 $n \\ge \\frac{2m}{d}$，由于 $n$ 是整数，要向上取整。当 $d$ 小于 $n$ 时，度数尽量相等的图可以达到这个下界。",
+  ),
+  generate(rng) {
+    const n = rng.int(4, 20);
+    const d = rng.int(2, n - 1);
+    const m = rng.int(Math.floor(((n - 1) * d) / 2) + 1, Math.floor((n * d) / 2));
+    const bound = Q.of(2 * m, d);
+    return numberProblem({
+      prompt: t(
+        `A simple graph has ${m} edges, and no vertex has degree above ${d}. What is the fewest vertices it can have?`,
+        `一个简单图有 ${m} 条边，没有顶点的度超过 ${d}。它最少有多少个顶点？`,
+      ),
+      answer: n,
+      form: "integer",
+      wrong: [m, d + 1, Math.floor(m / d), n + 1, n - 1],
+      solution: t(
+        `The degrees add to ${2 * m} and each is at most ${d}, so the number of vertices is at least $${bound.toLatex()}$. The smallest whole number allowed is ${n}.`,
+        `度数之和是 ${2 * m}，每个度最多是 ${d}，所以顶点数至少是 $${bound.toLatex()}$。允许的最小整数是 ${n}。`,
+      ),
+    });
+  },
+};
+
+const complementOfRegular: KnowledgePointDef = {
+  id: "the-edges-of-the-complement-of-a-regular-graph",
+  title: t("The edges of the complement of a regular graph", "正则图补图的边数"),
+  explanation: t(
+    "In the complement of a simple graph, a vertex is joined to exactly the vertices it was not joined to, leaving out itself. So a vertex of degree $r$ on $n$ vertices has degree $n - 1 - r$ in the complement. The complement of a regular graph is therefore regular too, and the handshaking lemma gives its edges. The total with the original is always $\\binom{n}{2}$.",
+    "在简单图的补图中，一个顶点恰好与原来不相邻的顶点相连，不包括自身。所以 $n$ 个顶点的图中度为 $r$ 的顶点，在补图中的度是 $n - 1 - r$。因此正则图的补图也是正则的，握手引理给出它的边数。它与原图的边数之和总是 $\\binom{n}{2}$。",
+  ),
+  generate(rng) {
+    const n = rng.int(5, 30);
+    const options = range(1, n - 2).filter((r) => (n * r) % 2 === 0);
+    const r = rng.pick(options);
+    const degree = n - 1 - r;
+    const answer = (n * degree) / 2;
+    return numberProblem({
+      prompt: t(
+        `A simple ${r}-regular graph has ${n} vertices. How many edges does its complement have?`,
+        `一个 ${r}-正则简单图有 ${n} 个顶点。它的补图有多少条边？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [(n * r) / 2, binom(n, 2), n * degree, degree],
+      solution: t(
+        `Each vertex has degree $${n} - 1 - ${r} = ${degree}$ in the complement, so it has $\\frac{${n} \\cdot ${degree}}{2} = ${answer}$ edges.`,
+        `每个顶点在补图中的度是 $${n} - 1 - ${r} = ${degree}$，所以补图有 $\\frac{${n} \\cdot ${degree}}{2} = ${answer}$ 条边。`,
+      ),
+    });
+  },
+};
+
+const mostComponents: KnowledgePointDef = {
+  id: "the-most-components-for-a-given-number-of-edges",
+  title: t("The most components for a given number of edges", "给定边数时的最多连通分支数"),
+  explanation: t(
+    "To get as many connected components as possible, keep the edges from joining new vertices. That means packing all $m$ edges into the smallest possible group of $k$ vertices, the smallest $k$ with $\\binom{k}{2} \\ge m$, and leaving all the other vertices isolated. The group counts as one component, and each isolated vertex counts as another. Spreading the edges out would only lower the count.",
+    "要得到尽可能多的连通分支，就不要让边连接新的顶点。也就是把所有 $m$ 条边放进尽可能少的 $k$ 个顶点中（满足 $\\binom{k}{2} \\ge m$ 的最小 $k$），其余顶点都孤立。这一组算一个分支，每个孤立顶点各算一个。把边分散开只会使个数减少。",
+  ),
+  generate(rng) {
+    const n = rng.int(6, 30);
+    const m = rng.int(1, Math.min(binom(n - 1, 2), 60));
+    const k = range(2, n).find((v) => binom(v, 2) >= m) ?? n;
+    const answer = n - k + 1;
+    return numberProblem({
+      prompt: t(
+        `A simple graph has ${n} vertices and ${m} ${m === 1 ? "edge" : "edges"}. What is the largest number of connected components it can have?`,
+        `一个简单图有 ${n} 个顶点、${m} 条边。它最多有多少个连通分支？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [Math.max(n - m, 1), n, answer + 1, n - k],
+      solution: t(
+        `The smallest group of vertices that holds ${m} ${m === 1 ? "edge" : "edges"} has ${k} vertices, since $\\binom{${k}}{2} = ${binom(k, 2)}$. The other ${n - k} ${n - k === 1 ? "vertex stays" : "vertices stay"} isolated, which gives $${n - k} + 1 = ${answer}$ components.`,
+        `能容纳 ${m} 条边的最小顶点组有 ${k} 个顶点，因为 $\\binom{${k}}{2} = ${binom(k, 2)}$。其余 ${n - k} 个顶点保持孤立，于是有 $${n - k} + 1 = ${answer}$ 个分支。`,
+      ),
+    });
+  },
+};
+
+const treeCutVertices: KnowledgePointDef = {
+  id: "the-cut-vertices-of-a-tree",
+  title: t("The cut vertices of a tree", "树的割点"),
+  explanation: t(
+    "In a tree, each pair of vertices is joined by exactly one path. Removing a vertex of degree at least 2 cuts the path between two of its neighbors, so every such vertex is a cut vertex. Removing a leaf cannot disconnect anything, since no path passes through a leaf. So on three or more vertices, the cut vertices are exactly the vertices that are not leaves.",
+    "在树中，每对顶点恰好由一条路径相连。去掉度至少为 2 的顶点，会切断它的两个邻点之间的路径，所以每个这样的顶点都是割点。去掉叶子不会使任何东西断开，因为没有路径经过叶子。所以在三个或更多顶点上，割点恰好就是不是叶子的顶点。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 40);
+    const leaves = rng.int(2, n - 1);
+    const answer = n - leaves;
+    return numberProblem({
+      prompt: t(
+        `A tree has ${n} vertices, and ${leaves} of them are leaves. How many cut vertices does it have?`,
+        `一棵树有 ${n} 个顶点，其中 ${leaves} 个是叶子。它有多少个割点？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [leaves, n - 1, answer + 1, n],
+      solution: t(
+        `The cut vertices are the non-leaves, so there are $${n} - ${leaves} = ${answer}$.`,
+        `割点就是非叶子顶点，所以有 $${n} - ${leaves} = ${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const fullTreeLeaves: KnowledgePointDef = {
+  id: "the-leaves-of-a-full-tree",
+  title: t("The leaves of a full tree", "满树的叶子"),
+  explanation: t(
+    "In a full $m$-ary tree, each internal vertex has exactly $m$ children. Every vertex except the root is a child of exactly one internal vertex, so with $i$ internal vertices the tree has $mi + 1$ vertices. Subtracting the internal ones leaves $(m - 1)i + 1$ leaves. The depth and shape of the tree play no part, so very different trees give the same count.",
+    "在满 $m$ 叉树中，每个内部顶点恰有 $m$ 个孩子。除根以外的每个顶点都恰好是一个内部顶点的孩子，所以有 $i$ 个内部顶点的树共有 $mi + 1$ 个顶点。减去内部顶点，剩下 $(m - 1)i + 1$ 片叶子。树的深度和形状都不起作用，所以差别很大的树也给出相同的个数。",
+  ),
+  generate(rng) {
+    const m = rng.int(2, 9);
+    const i = rng.int(1, 40);
+    const answer = (m - 1) * i + 1;
+    return numberProblem({
+      prompt: t(
+        `In a rooted tree, every internal vertex has exactly ${m} children, and there are ${i} internal ${i === 1 ? "vertex" : "vertices"}. How many leaves does it have?`,
+        `在一棵有根树中，每个内部顶点恰有 ${m} 个孩子，共有 ${i} 个内部顶点。它有多少片叶子？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [m * i + 1, m * i, (m - 1) * i, i + 1],
+      solution: t(
+        `The tree has $${m} \\cdot ${i} + 1 = ${m * i + 1}$ vertices, and removing the ${i} internal ones leaves ${answer}.`,
+        `这棵树有 $${m} \\cdot ${i} + 1 = ${m * i + 1}$ 个顶点，去掉 ${i} 个内部顶点，剩下 ${answer} 个。`,
+      ),
+    });
+  },
+};
+
+const traceOfCube: KnowledgePointDef = {
+  id: "the-trace-of-the-cube-of-an-adjacency-matrix",
+  title: t("The trace of the cube of an adjacency matrix", "邻接矩阵立方的迹"),
+  explanation: t(
+    "The diagonal entry $(A^3)_{ii}$ counts the walks of length 3 that start and end at vertex $i$. In a simple graph, such a walk must go around a triangle. Each triangle gives six of these walks across the whole diagonal, since it can start at any of three corners and go in either of two directions. So the trace is six times the number of triangles.",
+    "对角元 $(A^3)_{ii}$ 计算从顶点 $i$ 出发并回到 $i$、长度为 3 的路线。在简单图中，这样的路线必须绕一个三角形。每个三角形在整条对角线上给出六条这样的路线，因为可以从三个角中任一个出发，并沿两个方向之一行走。所以迹是三角形个数的六倍。",
+  ),
+  generate(rng) {
+    const size = 5;
+    const grid = range(1, size).map(() => range(1, size).map(() => 0));
+    const link = (i: number, j: number, on: number) => {
+      const row = grid[i];
+      const other = grid[j];
+      if (row && other) {
+        row[j] = on;
+        other[i] = on;
+      }
+    };
+    for (const i of range(0, size - 1)) {
+      for (const j of range(i + 1, size - 1)) link(i, j, rng.int(0, 1));
+    }
+    link(0, 1, 1);
+    link(1, 2, 1);
+    link(0, 2, 1);
+    const at = (i: number, j: number) => grid[i]?.[j] ?? 0;
+    let triangles = 0;
+    for (const i of range(0, size - 1)) {
+      for (const j of range(i + 1, size - 1)) {
+        for (const k of range(j + 1, size - 1)) triangles += at(i, j) * at(j, k) * at(i, k);
+      }
+    }
+    const edges = grid.flat().reduce((a, b) => a + b, 0) / 2;
+    const answer = 6 * triangles;
+    return numberProblem({
+      prompt: t(
+        `A simple graph has adjacency matrix $A = ${matrix(grid)}$. Find $\\operatorname{tr}(A^3)$.`,
+        `一个简单图的邻接矩阵是 $A = ${matrix(grid)}$。求 $\\operatorname{tr}(A^3)$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [triangles, 3 * triangles, 2 * edges, answer + 1],
+      solution: t(
+        `The graph has ${triangles} ${triangles === 1 ? "triangle" : "triangles"}, and each gives 6 closed walks of length 3. So the trace is $${answer}$.`,
+        `这个图有 ${triangles} 个三角形，每个给出 6 条长度为 3 的闭路线。所以迹是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const pathDistanceSum: KnowledgePointDef = {
+  id: "the-sum-of-the-distance-matrix-of-a-path",
+  title: t("The sum of the distance matrix of a path", "路径图距离矩阵的元素和"),
+  explanation: t(
+    "On a path with $n$ vertices, there are $n - d$ pairs of vertices at distance $d$. So the distances between unordered pairs add to $\\sum_{d = 1}^{n - 1} d(n - d) = \\binom{n + 1}{3}$. A distance matrix records each pair twice, once above the diagonal and once below it, while the diagonal itself is all zeros. The sum of all its entries is therefore double this total.",
+    "在 $n$ 个顶点的路径上，距离为 $d$ 的顶点对有 $n - d$ 个。所以无序顶点对的距离之和是 $\\sum_{d = 1}^{n - 1} d(n - d) = \\binom{n + 1}{3}$。距离矩阵把每对记录两次，对角线上方一次，下方一次，而对角线全是零。因此它所有元素之和是这个总数的两倍。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 30);
+    const half = binom(n + 1, 3);
+    const answer = 2 * half;
+    return numberProblem({
+      prompt: t(
+        `A path graph has ${n} vertices. Find the sum of all the entries of its distance matrix.`,
+        `一个路径图有 ${n} 个顶点。求它的距离矩阵所有元素之和。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [half, n * (n - 1), 2 * (n - 1), n * n],
+      solution: t(
+        `The unordered pairs contribute $\\binom{${n + 1}}{3} = ${half}$, and the matrix counts each pair twice, which gives $${answer}$.`,
+        `无序顶点对贡献 $\\binom{${n + 1}}{3} = ${half}$，矩阵把每对计算两次，于是得 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const dagMostEdges: KnowledgePointDef = {
+  id: "the-most-edges-of-a-directed-acyclic-graph",
+  title: t("The most edges of a directed acyclic graph", "有向无环图的最多边数"),
+  explanation: t(
+    "A directed acyclic graph can be placed in a topological order, with every edge pointing forward. So for each pair of vertices, only the forward edge is possible, and this gives at most one edge per pair. Adding every forward edge reaches that limit without creating a cycle. An edge in both directions between a pair of vertices would already be a cycle of length two.",
+    "有向无环图可以排成拓扑序，每条边都指向前方。所以对每对顶点，只可能有向前的那条边，这样每对最多一条边。加上所有向前的边，就达到这个上限，而不产生圈。一对顶点之间两个方向都有边，本身就已经是长度为二的圈。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 40);
+    const answer = binom(n, 2);
+    return numberProblem({
+      prompt: t(
+        `What is the largest number of edges a directed acyclic graph on ${n} vertices can have?`,
+        `${n} 个顶点的有向无环图最多有多少条边？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n * (n - 1), n - 1, answer - 1, n * n],
+      solution: t(
+        `A topological order allows one forward edge for each pair of vertices, so the largest number is $\\binom{${n}}{2} = ${answer}$.`,
+        `拓扑序允许每对顶点有一条向前的边，所以最大值是 $\\binom{${n}}{2} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const twoChains: KnowledgePointDef = {
+  id: "the-topological-orderings-of-two-separate-paths",
+  title: t("The topological orderings of two separate paths", "两条独立路径的拓扑排序"),
+  explanation: t(
+    "A directed path allows only one order of its own vertices. If a graph consists of two separate paths, a topological ordering is any way of shuffling them together that keeps each path in order. Such a shuffle is decided by which positions go to the first path, and the vertices then fill those positions in their only possible order. So the count is one binomial coefficient.",
+    "有向路径只允许它自身顶点的一种顺序。如果一个图由两条独立的路径组成，拓扑排序就是把它们混合在一起、同时保持每条路径内部顺序的任何方式。这样的混合由哪些位置分给第一条路径决定，然后顶点按唯一可能的顺序填入这些位置。所以计数就是一个二项式系数。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 10);
+    const b = rng.int(2, 10);
+    const answer = binom(a + b, a);
+    return numberProblem({
+      prompt: t(
+        `A directed graph consists of two separate directed paths, one with ${a} vertices and one with ${b}, and no other edges. How many topological orderings does it have?`,
+        `一个有向图由两条独立的有向路径组成，一条有 ${a} 个顶点，另一条有 ${b} 个，没有其他边。它有多少种拓扑排序？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a + b, a * b, 2 ** (a + b), 2],
+      solution: t(
+        `Choose which ${a} of the ${a + b} positions go to the first path, in $\\binom{${a + b}}{${a}} = ${answer}$ ways.`,
+        `选择 ${a + b} 个位置中哪 ${a} 个分给第一条路径，有 $\\binom{${a + b}}{${a}} = ${answer}$ 种方法。`,
+      ),
+    });
+  },
+};
+
+const bfsDiscovered: KnowledgePointDef = {
+  id: "the-vertices-a-breadth-first-search-finds-by-a-given-level",
+  title: t("The vertices a breadth-first search finds by a given level", "广度优先搜索到某层时找到的顶点"),
+  explanation: t(
+    "A breadth-first search finds vertices in order of their distance from the start, finishing each level before moving to the next. In a complete $m$-ary tree started at the root, level $j$ has $m^j$ vertices, because each vertex on one level has $m$ children on the next. The number found once level $d$ is finished is the geometric sum of all the levels up to $d$.",
+    "广度优先搜索按到起点的距离顺序找到顶点，完成一层后才进入下一层。在从根出发的完全 $m$ 叉树中，第 $j$ 层有 $m^j$ 个顶点，因为一层的每个顶点在下一层有 $m$ 个孩子。第 $d$ 层完成时找到的顶点数，就是到第 $d$ 层为止所有层的几何级数和。",
+  ),
+  generate(rng) {
+    const m = rng.int(2, 6);
+    const d = rng.int(1, 7);
+    const answer = (m ** (d + 1) - 1) / (m - 1);
+    return numberProblem({
+      prompt: t(
+        `A breadth-first search starts at the root of a complete ${m}-ary tree of height ${d + 2}, with the root on level 0. How many vertices have been discovered once level ${d} is finished?`,
+        `广度优先搜索从高度为 ${d + 2} 的完全 ${m} 叉树的根出发，根在第 0 层。第 ${d} 层完成时，已经发现了多少个顶点？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [m ** d, m ** (d + 1), m * d + 1, answer - 1],
+      solution: t(
+        `The levels contain powers of ${m}, so the total is $\\frac{${m}^{${d + 1}} - 1}{${m} - 1} = ${answer}$.`,
+        `各层的顶点数是 ${m} 的幂，所以总数是 $\\frac{${m}^{${d + 1}} - 1}{${m} - 1} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const primStar: KnowledgePointDef = {
+  id: "the-spanning-tree-of-a-graph-with-sum-weights",
+  title: t("The spanning tree of a graph with sum weights", "和权图的生成树"),
+  explanation: t(
+    "Prim's algorithm grows a tree by always adding the cheapest edge that leaves it. When vertices are numbered and an edge between $i$ and $j$ weighs $i + j$, the cheapest edge reaching any new vertex $j$ comes from the smallest vertex already in the tree. If the tree contains vertex 1, every new vertex is attached directly to vertex 1, so the tree is a star.",
+    "普里姆算法总是加入离开当前树的最便宜的边，使树增长。当顶点编号，且 $i$、$j$ 之间的边权为 $i + j$ 时，到达任何新顶点 $j$ 的最便宜的边，来自树中最小的顶点。如果树含顶点 1，每个新顶点都直接连到顶点 1，所以这棵树是星形。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 40);
+    const answer = n - 1 + (n * (n + 1)) / 2 - 1;
+    return numberProblem({
+      prompt: t(
+        `A complete graph has vertices $1, 2, \\dots, ${n}$, and the edge between $i$ and $j$ has weight $i + j$. Find the total weight of a minimum spanning tree.`,
+        `一个完全图的顶点是 $1, 2, \\dots, ${n}$，$i$ 与 $j$ 之间的边权为 $i + j$。求最小生成树的总权重。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n * n - 1, (n * (n + 1)) / 2 - 1, ((n - 1) * (n * (n + 1))) / 2, answer + 1],
+      solution: t(
+        `Every vertex $j \\ge 2$ joins vertex 1 with an edge of weight $1 + j$. These weights add to $${n - 1} + ${(n * (n + 1)) / 2 - 1} = ${answer}$.`,
+        `每个顶点 $j \\ge 2$ 通过权为 $1 + j$ 的边连到顶点 1。这些权重之和是 $${n - 1} + ${(n * (n + 1)) / 2 - 1} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const gridPaths: KnowledgePointDef = {
+  id: "the-shortest-paths-across-a-grid-graph",
+  title: t("The shortest paths across a grid graph", "网格图中的最短路径"),
+  explanation: t(
+    "In a grid graph, moving from one corner to the opposite corner needs a fixed number of steps in each direction, and any shortest path uses no others. A shortest path is therefore a sequence of steps, in which we only choose the order of the two kinds. Choosing the positions of one kind decides the whole sequence, which gives a binomial coefficient instead of a search.",
+    "在网格图中，从一个角走到对角，每个方向需要固定的步数，任何最短路径都不会多走。因此最短路径就是一列步子，我们只选择两种步子的顺序。选定其中一种步子的位置，就决定了整个序列，于是得到一个二项式系数，而不必搜索。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 10);
+    const b = rng.int(2, 10);
+    const answer = binom(a + b, a);
+    return numberProblem({
+      prompt: t(
+        `A grid graph has vertices $(i, j)$ with $0 \\le i \\le ${a}$ and $0 \\le j \\le ${b}$, and two vertices are joined when they differ by 1 in one coordinate. How many shortest paths go from $(0, 0)$ to $(${a}, ${b})$?`,
+        `网格图的顶点是 $(i, j)$，$0 \\le i \\le ${a}$，$0 \\le j \\le ${b}$，两个顶点在一个坐标上相差 1 时相连。从 $(0, 0)$ 到 $(${a}, ${b})$ 有多少条最短路径？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a + b, (a + 1) * (b + 1), 2 ** (a + b), a * b],
+      solution: t(
+        `A shortest path has $${a} + ${b} = ${a + b}$ steps, and ${a} of them increase $i$. So there are $\\binom{${a + b}}{${a}} = ${answer}$ paths.`,
+        `最短路径有 $${a} + ${b} = ${a + b}$ 步，其中 ${a} 步增加 $i$。所以有 $\\binom{${a + b}}{${a}} = ${answer}$ 条路径。`,
+      ),
+    });
+  },
+};
+
+const mooreCount: KnowledgePointDef = {
+  id: "counting-the-tables-of-a-moore-machine",
+  title: t("Counting the tables of a Moore machine", "计算摩尔机的表"),
+  explanation: t(
+    "A Moore machine's table has two independent parts. Each pair of a state and an input symbol needs a next state, which makes $as$ entries with $s$ choices each. Each state also needs one output, which makes $s$ entries with $b$ choices each. The output belongs to the state and not to the transition, and this is what makes the count smaller than for a Mealy machine.",
+    "摩尔机的表有两个独立的部分。每一对状态和输入符号需要一个下一状态，共 $as$ 项，每项有 $s$ 种选择。每个状态还需要一个输出，共 $s$ 项，每项有 $b$ 种选择。输出属于状态而不属于转移，这使得计数比米利机要小。",
+  ),
+  generate(rng) {
+    const s = rng.int(2, 5);
+    const a = s === 5 ? 2 : rng.int(2, 3);
+    const b = rng.int(2, 5);
+    const entries = a * s;
+    const answer = s ** entries * b ** s;
+    return numberProblem({
+      prompt: t(
+        `A Moore machine has ${s} states with a fixed start state, ${a} input symbols and ${b} output symbols. How many different tables of next states and outputs are there?`,
+        `一个摩尔机有 ${s} 个状态（起始状态固定）、${a} 个输入符号和 ${b} 个输出符号。下一状态和输出构成的表有多少种？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [s ** entries, (s * b) ** entries, s ** a * b, s ** entries + b ** s],
+      solution: t(
+        `There are ${entries} next states with ${s} choices each, and ${s} outputs with ${b} choices each. So the count is $${s}^{${entries}} \\cdot ${b}^{${s}} = ${answer}$.`,
+        `有 ${entries} 个下一状态，每个 ${s} 种选择；有 ${s} 个输出，每个 ${b} 种选择。所以个数是 $${s}^{${entries}} \\cdot ${b}^{${s}} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const noTwoOnes: KnowledgePointDef = {
+  id: "the-accepted-strings-of-a-given-length-with-no-two-ones-together",
+  title: t("Accepted strings of a given length with no two ones together", "没有相邻 1 的给定长度串"),
+  explanation: t(
+    "The states of a DFA can be used to count its accepted strings. For strings with no two consecutive ones, the DFA remembers whether the last symbol was a 1. A valid string of length $n$ either ends in 0, after any valid string of length $n - 1$, or ends in 01, after any valid string of length $n - 2$. So the counts follow the Fibonacci recurrence.",
+    "DFA 的状态可以用来计算它接受的串的个数。对没有两个连续 1 的串，DFA 记住最后一个符号是否为 1。长度为 $n$ 的有效串，要么以 0 结尾（前面是任意长度为 $n - 1$ 的有效串），要么以 01 结尾（前面是任意长度为 $n - 2$ 的有效串）。所以这些个数满足斐波那契递推。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 30);
+    const counts = [1, 2];
+    for (const i of range(2, n)) counts[i] = (counts[i - 1] ?? 0) + (counts[i - 2] ?? 0);
+    const answer = counts[n] ?? 0;
+    const shorter = counts[n - 1] ?? 0;
+    const shortest = counts[n - 2] ?? 0;
+    return numberProblem({
+      prompt: t(
+        `A DFA over $\\{0, 1\\}$ accepts exactly the strings with no two consecutive 1s. How many strings of length ${n} does it accept?`,
+        `$\\{0, 1\\}$ 上的一个 DFA 恰好接受没有两个连续 1 的串。它接受多少个长度为 ${n} 的串？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [2 ** n, shorter, n + 1, answer + 1],
+      solution: t(
+        `The counts start at 1 for the empty string and 2 for length 1, and each is the sum of the previous two. For length ${n}, this gives $${shorter} + ${shortest} = ${answer}$.`,
+        `个数从空串的 1 和长度 1 的 2 开始，每个都是前两个之和。长度为 ${n} 时，得 $${shorter} + ${shortest} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const regexBlock: KnowledgePointDef = {
+  id: "the-strings-of-a-given-length-with-a-single-block-of-ones",
+  title: t("The strings of a given length with a single block of ones", "只有一段 1 的给定长度串"),
+  explanation: t(
+    "A string matching $0^*1^*0^*$ is either all zeros or has one unbroken block of ones. A block is decided by where it starts and where it ends, which amounts to choosing two of the $n + 1$ gaps between and around the symbols. Adding the all-zero string gives the total. Different splits can produce the same all-zero string, so it must be counted only once.",
+    "匹配 $0^*1^*0^*$ 的串，要么全是零，要么有一段连续的 1。这一段由它的起点和终点决定，相当于从符号之间及两端的 $n + 1$ 个间隙中选两个。再加上全零串，就得到总数。不同的拆分可以产生同一个全零串，所以它只能算一次。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 35);
+    const blocks = binom(n + 1, 2);
+    const answer = blocks + 1;
+    return numberProblem({
+      prompt: t(
+        `How many binary strings of length ${n} match the regular expression $0^*1^*0^*$?`,
+        `长度为 ${n} 的二进制串中，有多少个匹配正则表达式 $0^*1^*0^*$？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [blocks, 2 ** n, n + 1, binom(n + 2, 2)],
+      solution: t(
+        `A block of ones can be chosen in $\\binom{${n + 1}}{2} = ${blocks}$ ways, and the all-zero string adds one more, which gives $${answer}$.`,
+        `一段 1 有 $\\binom{${n + 1}}{2} = ${blocks}$ 种选法，全零串再加一个，于是得 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const tmConfigurations: KnowledgePointDef = {
+  id: "counting-the-configurations-of-a-turing-machine",
+  title: t("Counting the configurations of a Turing machine", "计算图灵机的格局数"),
+  explanation: t(
+    "A configuration records everything needed to continue a computation: the current state, the position of the head, and the contents of the tape. On a tape limited to $c$ cells, these parts are independent, so the count is the product of the number of states, the $c$ head positions, and the number of tape contents. This count is what bounds how long a machine can run without repeating.",
+    "格局记录了继续计算所需的一切：当前状态、读写头的位置和纸带的内容。在限于 $c$ 个单元的纸带上，这些部分相互独立，所以个数是状态数、$c$ 个读写头位置和纸带内容数的乘积。这个计数决定了机器在不重复的情况下最多能运行多久。",
+  ),
+  generate(rng) {
+    const q = rng.int(2, 9);
+    const c = rng.int(2, 8);
+    const g = rng.int(2, 4);
+    const tapes = g ** c;
+    const answer = q * c * tapes;
+    return numberProblem({
+      prompt: t(
+        `A Turing machine has ${q} states and ${g} tape symbols, and it uses only ${c} cells of its tape. How many configurations are possible?`,
+        `一台图灵机有 ${q} 个状态和 ${g} 个纸带符号，只使用纸带上的 ${c} 个单元。可能的格局有多少个？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [q * tapes, tapes, q * c * g, (q + c) * tapes],
+      solution: t(
+        `There are ${q} states, ${c} head positions and $${g}^{${c}} = ${tapes}$ tape contents, so the product is $${answer}$.`,
+        `有 ${q} 个状态、${c} 个读写头位置和 $${g}^{${c}} = ${tapes}$ 种纸带内容，所以乘积是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const sumOfPowersOrder: KnowledgePointDef = {
+  id: "the-order-of-a-sum-of-powers",
+  title: t("The order of a sum of powers", "幂和的阶"),
+  explanation: t(
+    "A loop that does $i^p$ work on its $i$th pass has total cost $\\sum_{i = 1}^n i^p$. Each of the $n$ terms is at most $n^p$, so the sum is $O(n^{p + 1})$. This exponent cannot be lowered, since the larger half of the terms are each at least $\\left(\\frac{n}{2}\\right)^p$. So summing raises the exponent by exactly one, whatever the constant in front.",
+    "第 $i$ 次循环做 $i^p$ 的工作，总代价是 $\\sum_{i = 1}^n i^p$。$n$ 个项中每一项最多是 $n^p$，所以和是 $O(n^{p + 1})$。这个指数不能再降低，因为较大的一半项每项至少是 $\\left(\\frac{n}{2}\\right)^p$。所以求和恰好使指数增加一，与前面的常数无关。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 9);
+    const p = rng.int(1, 9);
+    const answer = p + 1;
+    const term = p === 1 ? "i" : `i^{${p}}`;
+    const top = p === 1 ? "n" : `n^{${p}}`;
+    return numberProblem({
+      prompt: t(
+        `Find the smallest integer $k$ such that $\\sum_{i=1}^{n} ${a}${term} = O(n^k)$.`,
+        `求最小的整数 $k$，使 $\\sum_{i=1}^{n} ${a}${term} = O(n^k)$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [p, p + 2, a + p, a * p],
+      solution: t(
+        `Each of the $n$ terms is at most $${a}${top}$, and the larger half are all a constant times that size. So the exponent is $${p} + 1 = ${answer}$.`,
+        `$n$ 项中每项最多是 $${a}${top}$，较大的一半项都是这个大小的常数倍。所以指数是 $${p} + 1 = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const omegaThreshold: KnowledgePointDef = {
+  id: "the-threshold-where-an-exponential-overtakes-a-power",
+  title: t("The threshold where an exponential overtakes a power", "指数函数超过幂函数的临界点"),
+  explanation: t(
+    "The statement $2^n = \\Omega(n^p)$ only needs its inequality to hold from some point on. Small values of $n$ can behave differently, and an inequality may hold at first, fail for a while, and then hold for good. So the threshold $n_0$ is one more than the last value where the inequality fails, and it is not the first value where it happens to hold.",
+    "$2^n = \\Omega(n^p)$ 只要求不等式从某一点起成立。较小的 $n$ 可以表现不同，不等式可能开始成立，失败一段时间，然后一直成立。所以临界值 $n_0$ 比不等式失败的最后一个值大一，而不是它碰巧成立的第一个值。",
+  ),
+  generate(rng) {
+    const c = rng.int(1, 60);
+    const p = rng.int(2, 3);
+    const holds = (n: number) => 2 ** n >= c * n ** p;
+    const last =
+      range(1, 64)
+        .filter((n) => !holds(n))
+        .pop() ?? 0;
+    const answer = last + 1;
+    const first = range(1, 64).find(holds) ?? answer;
+    const scaled = c === 1 ? `n^{${p}}` : `${c}n^{${p}}`;
+    return numberProblem({
+      prompt: t(
+        `Find the smallest positive integer $n_0$ such that $2^n \\ge ${scaled}$ for all integers $n \\ge n_0$.`,
+        `求最小的正整数 $n_0$，使 $2^n \\ge ${scaled}$ 对所有整数 $n \\ge n_0$ 成立。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [first, last, answer + 1, answer + 2, c],
+      solution: t(
+        `At $n = ${last}$, the left side is $${2 ** last}$ and the right side is $${c * last ** p}$, so the inequality fails. At $n = ${answer}$, it is $${2 ** answer} \\ge ${c * answer ** p}$, and it holds from then on.`,
+        `当 $n = ${last}$ 时，左边是 $${2 ** last}$，右边是 $${c * last ** p}$，所以不等式不成立。当 $n = ${answer}$ 时，$${2 ** answer} \\ge ${c * answer ** p}$，此后一直成立。`,
+      ),
+    });
+  },
+};
+
 /** deeperDiscreteMathematicsPoints gives, by topic id, the knowledge points added after a Discrete Mathematics topic's own. */
 export const deeperDiscreteMathematicsPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "boolean-functions": [functionsOfAGivenWeight],
@@ -970,4 +2026,40 @@ export const deeperDiscreteMathematicsPoints: Readonly<Record<string, readonly K
   "kruskals-algorithm": [treeAfterANewEdge],
   "deterministic-finite-automata": [productAutomaton],
   "big-theta-notation": [divideAndConquerExponent],
+  "boolean-functions-and-logical-operations": [functionsWithFixedValues],
+  "disjunctive-normal-forms": [distributingClauses],
+  "conjunctive-normal-forms": [clausesOfWidth],
+  "principal-disjunctive-normal-forms": [mintermsOfConjunction],
+  "principal-conjunctive-normal-forms": [maxtermsFromMinterms],
+  "boolean-polynomials": [monomialsOfDegree],
+  "simplifying-logical-expressions-using-karnaugh-maps": [karnaughGroups],
+  "affine-boolean-functions": [affineDependingOn],
+  "binary-integers": [integersWithBits],
+  "multiplying-and-dividing-binary-integers": [dividingByPowerOfTwo],
+  "hexadecimal-integers": [hexOnes],
+  "fractions-in-arbitrary-bases": [placesInPowerBase],
+  "introduction-to-cryptography": [affineDecrypt],
+  "partitions-of-natural-numbers": [partitionsIntoThree],
+  "counting-integer-solutions-of-a-constrained-equation": [twoUpperBounds],
+  "the-multinomial-theorem": [coefficientSum],
+  "counting-terms-in-multinomial-expansions": [termsWithAllVariables],
+  "introduction-to-graphs": [graphsWithEdges],
+  "the-handshaking-lemma": [fewestVertices],
+  "subgraphs-and-graph-complements": [complementOfRegular],
+  "connected-graphs": [mostComponents],
+  "cut-vertices-and-cut-edges": [treeCutVertices],
+  "trees-and-forests": [fullTreeLeaves],
+  "adjacency-matrices": [traceOfCube],
+  "distance-matrices": [pathDistanceSum],
+  "directed-acyclic-graphs": [dagMostEdges],
+  "topological-ordering": [twoChains],
+  "breadth-first-search": [bfsDiscovered],
+  "prims-algorithm": [primStar],
+  "shortest-paths-in-unweighted-graphs": [gridPaths],
+  "moore-machines": [mooreCount],
+  "the-language-of-automata": [noTwoOnes],
+  "regular-expressions": [regexBlock],
+  "introduction-to-turing-machines": [tmConfigurations],
+  "big-o-notation": [sumOfPowersOrder],
+  "big-omega-notation": [omegaThreshold],
 };
