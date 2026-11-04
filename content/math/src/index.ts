@@ -3,6 +3,7 @@ import { compileSubject, t } from "@ga/content";
 import { mathCheckers } from "@ga/subject-math";
 
 import { mathCourses } from "./courses.ts";
+import { polishTopic } from "./polish.ts";
 import { absoluteValueTopics } from "./topics/absolute-value.ts";
 import { abstractAlgebraActionTopics } from "./topics/abstract-algebra-actions.ts";
 import { abstractAlgebraGroupTopics } from "./topics/abstract-algebra-groups.ts";
@@ -441,7 +442,7 @@ export const math: SubjectDef = {
     ...actFundamentalsFigureUnitTopics,
     ...actGeometryDataTopics,
     ...satMathStrategyTopics,
-  ],
+  ].map(polishTopic),
   courses: mathCourses,
   checkers: mathCheckers,
 };
