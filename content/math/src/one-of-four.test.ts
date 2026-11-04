@@ -2,7 +2,7 @@ import type { Generator } from "@ga/content";
 import { createRng, t } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
-import { oneOfFour, oneOfFourVerdicts } from "./one-of-four.ts";
+import { oneOfFour, oneOfFourTopic } from "./one-of-four.ts";
 import { choiceProblem, yesNo } from "./problems.ts";
 
 /** isEven asks whether a number is even: a two-option question. */
@@ -49,15 +49,17 @@ describe("oneOfFour", () => {
   });
 });
 
-describe("oneOfFourVerdicts", () => {
-  /** whichStore asks a two-option question whose options name its own things. */
-  const whichStore: Generator = (rng) =>
-    choiceProblem({
-      prompt: t(`Which store sells ${rng.int(1, 50)} pens for less?`, `哪家商店卖 ${rng.int(1, 50)} 支笔更便宜？`),
-      options: [t("Store A", "商店 A"), t("Store B", "商店 B")],
+describe("oneOfFourTopic", () => {
+  /** whichStore asks a two-option question whose options name its own things, so they differ from question to question. */
+  const whichStore: Generator = (rng) => {
+    const [first, second] = [rng.int(1, 40), rng.int(41, 80)];
+    return choiceProblem({
+      prompt: t(`Which is the better buy, store ${first} or store ${second}?`, `商店 ${first} 和商店 ${second} 哪家更划算？`),
+      options: [t(`Store ${first}`, `商店 ${first}`), t(`Store ${second}`, `商店 ${second}`)],
       correct: rng.int(0, 1),
       solution: t("Comparing the two prices settles it.", "比较两个价格即可判断。"),
     });
+  };
   const kp = (id: string, generate: Generator) => ({ id, title: t(id, id), explanation: t(id, id), generate });
   const topic = {
     id: "demo",
@@ -67,7 +69,7 @@ describe("oneOfFourVerdicts", () => {
     knowledgePoints: [kp("verdict", isEven), kp("named", whichStore)],
   };
 
-  const turned = oneOfFourVerdicts(topic as never).knowledgePoints;
+  const turned = oneOfFourTopic(topic as never).knowledgePoints;
   /** optionCount generates a problem from a turned knowledge point and counts its options. */
   const optionCount = (index: number, seed: number) => {
     const problem = (turned[index] as (typeof turned)[number]).generate(createRng(seed));
@@ -94,7 +96,7 @@ describe("oneOfFourVerdicts", () => {
         return this.helper(rng);
       },
     };
-    const [only] = oneOfFourVerdicts({ ...topic, knowledgePoints: [withThis] } as never).knowledgePoints;
+    const [only] = oneOfFourTopic({ ...topic, knowledgePoints: [withThis] } as never).knowledgePoints;
     expect(() => only?.generate(createRng(1))).not.toThrow();
   });
 });

@@ -4,7 +4,7 @@ import { mathCheckers } from "@ga/subject-math";
 
 import { mathCourses } from "./courses.ts";
 import { inferredEncompassings } from "./encompassings.ts";
-import { oneOfFourTopic, oneOfFourVerdicts } from "./one-of-four.ts";
+import { oneOfFourTopic } from "./one-of-four.ts";
 import { polishTopic } from "./polish.ts";
 import { absoluteValueTopics } from "./topics/absolute-value.ts";
 import { abstractAlgebraActionTopics } from "./topics/abstract-algebra-actions.ts";
@@ -248,13 +248,6 @@ import { statisticsTopics } from "./topics/statistics.ts";
 import { twoVariableTopics } from "./topics/two-variable-models.ts";
 import { unitTopics } from "./topics/units.ts";
 
-/** judgedOverFourCases holds the topics of the proof courses, where yes-or-no questions become questions over four cases. */
-const judgedOverFourCases = new Set(
-  mathCourses
-    .filter((course) => course.id === "abstract-algebra" || course.id === "methods-of-proof")
-    .flatMap((course) => course.units.flatMap((unit) => unit.modules.flatMap((module) => module.topics))),
-);
-
 /** finished applies the passes every topic goes through: inferred encompassings, added knowledge points, questions over four cases and polish. */
 function finished(topic: TopicDef): TopicDef {
   const weighted = {
@@ -282,7 +275,7 @@ function finished(topic: TopicDef): TopicDef {
       ...(moreFigureReadingPoints[topic.id] ?? []),
     ],
   };
-  return polishTopic(judgedOverFourCases.has(topic.id) ? oneOfFourTopic(weighted) : oneOfFourVerdicts(weighted));
+  return polishTopic(oneOfFourTopic(weighted));
 }
 
 /** math is the definition of the mathematics subject. */

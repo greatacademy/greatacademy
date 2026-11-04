@@ -19,29 +19,35 @@ function twoOptions(problem: Problem): { readonly options: readonly Text[]; read
   return { options: input.options, correct: answer.expected as number };
 }
 
+/** sameWords tells whether two questions offer the same two options, in any order. */
+const sameWords = (a: readonly Text[], b: readonly Text[]) => a.every((x) => b.some((y) => y.en === x.en));
+
+/** bare drops the stop at the end of an answer, so that it can be quoted or followed by another stop. */
+const bare = (text: string) => text.replace(/[.。]$/, "");
+
 /** settled writes a question with its answer and solution, leaving out a solution's own repeat of the answer. */
 function settled(problem: Problem, answer: Text): Text {
   const rest = (locale: Locale, stops: readonly string[]) => {
     const solution = problem.solution[locale];
-    const lead = stops.map((stop) => `${answer[locale]}${stop}`).find((l) => solution.startsWith(l));
+    const lead = stops.map((stop) => `${bare(answer[locale])}${stop}`).find((l) => solution.startsWith(l));
     return lead ? solution.slice(lead.length).trimStart() : solution;
   };
   return t(
-    `${problem.prompt.en} **${answer.en}.** ${rest("en", [".", ":"])}`,
-    `${problem.prompt["zh-CN"]} **${answer["zh-CN"]}。** ${rest("zh-CN", ["。", "："])}`,
+    `${problem.prompt.en} **${bare(answer.en)}.** ${rest("en", [".", ":"])}`,
+    `${problem.prompt["zh-CN"]} **${bare(answer["zh-CN"])}。** ${rest("zh-CN", ["。", "："])}`,
   );
 }
 
 /**
  * oneOfFour turns a generator of two-option questions into one that asks which of four such questions has a given
  * answer, so that a learner has to judge four cases and cannot guess half of them. A problem it cannot turn, such as one
- * with a figure, or one whose options `accepts` turns down, is returned as it is.
+ * with a figure, or one whose options name its own things and so differ from question to question, is returned as it is.
  */
-export function oneOfFour(generate: Generator, accepts: (options: readonly Text[]) => boolean = () => true): Generator {
+export function oneOfFour(generate: Generator): Generator {
   return (rng) => {
     const first = generate(rng);
     const shape = twoOptions(first);
-    if (!shape || !accepts(shape.options)) return first;
+    if (!shape) return first;
     const label = shape.options[shape.correct] as Text;
     const others: Problem[] = [];
     const seen = new Set([first.prompt.en]);
@@ -49,7 +55,7 @@ export function oneOfFour(generate: Generator, accepts: (options: readonly Text[
       const next = generate(rng);
       const nextShape = twoOptions(next);
       if (!nextShape || seen.has(next.prompt.en)) continue;
-      if (nextShape.options[nextShape.correct]?.en === label.en) continue;
+      if (!sameWords(nextShape.options, shape.options) || nextShape.options[nextShape.correct]?.en === label.en) continue;
       seen.add(next.prompt.en);
       others.push(next);
     }
@@ -62,8 +68,8 @@ export function oneOfFour(generate: Generator, accepts: (options: readonly Text[
     });
     return choiceProblem({
       prompt: t(
-        `Exactly one of these questions has the answer "${label.en}". Which one?`,
-        `下列问题中恰有一个的答案是“${label["zh-CN"]}”。是哪一个？`,
+        `Exactly one of these questions has the answer "${bare(label.en)}". Which one?`,
+        `下列问题中恰有一个的答案是“${bare(label["zh-CN"])}”。是哪一个？`,
       ),
       options,
       correct: options.indexOf(first.prompt),
@@ -75,25 +81,4 @@ export function oneOfFour(generate: Generator, accepts: (options: readonly Text[
 /** oneOfFourTopic applies oneOfFour to every knowledge point of a topic. */
 export function oneOfFourTopic(topic: TopicDef): TopicDef {
   return { ...topic, knowledgePoints: topic.knowledgePoints.map((kp) => ({ ...kp, generate: oneOfFour((rng) => kp.generate(rng)) })) };
-}
-
-/** isVerdict tells whether two options are words that mean the same in any question, such as yes and no. */
-const isVerdict = (options: readonly Text[]) => {
-  const words = options
-    .map((o) => o.en)
-    .sort()
-    .join("/");
-  return words === "No/Yes" || words === "False/True";
-};
-
-/**
- * oneOfFourVerdicts applies oneOfFour to the questions of a topic that ask for a verdict, such as yes or no. A question
- * whose two options name its own things, such as two stores, is left as it is, because those words mean nothing in
- * another question.
- */
-export function oneOfFourVerdicts(topic: TopicDef): TopicDef {
-  return {
-    ...topic,
-    knowledgePoints: topic.knowledgePoints.map((kp) => ({ ...kp, generate: oneOfFour((rng) => kp.generate(rng), isVerdict) })),
-  };
 }
