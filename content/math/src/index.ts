@@ -86,6 +86,7 @@ import { deeperCalculusIPoints } from "./topics/deeper-calculus-i.ts";
 import { deeperCalculusIIPoints } from "./topics/deeper-calculus-ii.ts";
 import { deeperDifferentialEquationsPoints } from "./topics/deeper-differential-equations.ts";
 import { deeperDiscreteMathematicsPoints } from "./topics/deeper-discrete-mathematics.ts";
+import { deeperGrade4Points } from "./topics/deeper-grade-4.ts";
 import { deeperLinearAlgebraPoints } from "./topics/deeper-linear-algebra.ts";
 import { deeperMethodsOfProofPoints } from "./topics/deeper-methods-of-proof.ts";
 import { deeperMultivariableCalculusPoints } from "./topics/deeper-multivariable-calculus.ts";
@@ -252,6 +253,7 @@ function finished(topic: TopicDef): TopicDef {
     encompasses: topic.encompasses.length ? topic.encompasses : (inferredEncompassings[topic.id] ?? []),
     knowledgePoints: [
       ...topic.knowledgePoints,
+      ...(deeperGrade4Points[topic.id] ?? []),
       ...(deeperAbstractAlgebraPoints[topic.id] ?? []),
       ...(deeperCalculusIPoints[topic.id] ?? []),
       ...(deeperCalculusIIPoints[topic.id] ?? []),
