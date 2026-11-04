@@ -821,6 +821,1038 @@ const rightMinusLeft: KnowledgePointDef = {
   },
 };
 
+/** timesX writes a multiple of x, without a coefficient of one. */
+const timesX = (a: number) => (a === 1 ? "x" : a === -1 ? "-x" : `${a}x`);
+
+const sinhAndCoshTogether: KnowledgePointDef = {
+  id: "an-equation-with-both-sinh-and-cosh",
+  title: t("An equation with both sinh and cosh", "同时含 sinh 和 cosh 的方程"),
+  explanation: t(
+    "When sinh and cosh appear together, no single inverse function undoes them. Writing both in terms of the exponential turns the equation into one in $u = e^{x}$. Multiplying by $u$ gives a quadratic, and since an exponential is always positive, only a positive root of that quadratic can correspond to a real $x$.",
+    "当 sinh 和 cosh 同时出现时，没有一个反函数能直接消去它们。把两者都写成指数形式，方程就变成关于 $u = e^{x}$ 的方程。两边乘以 $u$ 得到二次方程；由于指数函数恒为正，只有正根才对应实数 $x$。",
+  ),
+  generate(rng) {
+    const k = rng.int(2, 6);
+    const j = rng.int(1, 4);
+    const n = k * j;
+    const m = different(rng, 1, 7, n);
+    const c = m * k - j;
+    const equation = `${poly([m + n, "\\sinh x"], [m - n, "\\cosh x"])} = ${c}`;
+    const inU = `${poly([m, "u"])} - \\frac{${n}}{u} = ${c}`;
+    const quadratic = poly([m, "u^2"], [-c, "u"], [-n, ""]);
+    const other = Q.of(-j, m).toLatex();
+    return numberProblem({
+      prompt: t(
+        `The equation $${equation}$ has exactly one real solution $x$. Find $e^{x}$.`,
+        `方程 $${equation}$ 恰有一个实数解 $x$。求 $e^{x}$。`,
+      ),
+      answer: k,
+      form: "integer",
+      wrong: [m, j, k + 1, 2 * k, k + 2, 3 * k],
+      solution: t(
+        `With $u = e^{x}$, the definitions turn the equation into $${inU}$, that is $${quadratic} = 0$. Its roots are $${k}$ and $${other}$, and $e^{x}$ must be positive, so $e^{x} = ${k}$.`,
+        `令 $u = e^{x}$，由定义得方程 $${inU}$，即 $${quadratic} = 0$。它的根是 $${k}$ 和 $${other}$，而 $e^{x}$ 必须为正，所以 $e^{x} = ${k}$。`,
+      ),
+    });
+  },
+};
+
+const hyperbolicOfInverse: KnowledgePointDef = {
+  id: "a-hyperbolic-function-of-an-inverse-hyperbolic-value",
+  title: t("A hyperbolic function of an inverse hyperbolic value", "反双曲函数值的双曲函数"),
+  explanation: t(
+    "To evaluate a hyperbolic function of an inverse hyperbolic value, name the inner value $y$, so one of $\\sinh y$ and $\\cosh y$ is known at once. The identity $\\cosh^{2} y - \\sinh^{2} y = 1$ gives the other, and the sign follows from the facts that cosh is positive and the principal value of arcosh is not negative.",
+    "要计算反双曲函数值的双曲函数，把里面的值记作 $y$，这样 $\\sinh y$ 和 $\\cosh y$ 中就有一个立刻已知。恒等式 $\\cosh^{2} y - \\sinh^{2} y = 1$ 给出另一个，而符号由两个事实确定：cosh 恒为正，arcosh 的主值不为负。",
+  ),
+  generate(rng) {
+    const [a, b, c] = rng.pick([
+      [3, 4, 5],
+      [4, 3, 5],
+      [5, 12, 13],
+      [12, 5, 13],
+      [8, 15, 17],
+      [15, 8, 17],
+      [7, 24, 25],
+      [24, 7, 25],
+    ] as const);
+    const fromSinh = rng.pick([true, false]);
+    const s = fromSinh ? rng.pick([1, -1]) : 1;
+    const outerIsTanh = rng.pick([true, false]);
+    const sinhY = Q.of(s * b, a);
+    const coshY = Q.of(c, a);
+    const tanhY = Q.of(s * b, c);
+    const inner = fromSinh
+      ? `\\operatorname{arsinh}\\left(${sinhY.toLatex()}\\right)`
+      : `\\operatorname{arcosh}\\left(${coshY.toLatex()}\\right)`;
+    const outer = outerIsTanh ? "\\tanh" : fromSinh ? "\\cosh" : "\\sinh";
+    const answer = outerIsTanh ? tanhY : fromSinh ? coshY : sinhY;
+    const known = fromSinh ? `\\sinh y = ${sinhY.toLatex()}` : `\\cosh y = ${coshY.toLatex()}`;
+    const found = fromSinh ? `\\cosh y = ${coshY.toLatex()}` : `\\sinh y = ${sinhY.toLatex()}`;
+    const last = outerIsTanh ? `$\\tanh y = \\frac{\\sinh y}{\\cosh y} = ${answer.toLatex()}$` : `this is the value asked for`;
+    const lastZh = outerIsTanh ? `$\\tanh y = \\frac{\\sinh y}{\\cosh y} = ${answer.toLatex()}$` : `这就是所求的值`;
+    return numberProblem({
+      prompt: t(`Find $${outer}\\left(${inner}\\right)$.`, `求 $${outer}\\left(${inner}\\right)$。`),
+      answer,
+      wrong: [Q.of(c, s * a), Q.of(s * b, a), Q.of(s * b, c), Q.of(s * a, c), Q.of(s * a, b)],
+      solution: t(
+        `Let $y = ${inner}$, so $${known}$. The identity $\\cosh^{2} y - \\sinh^{2} y = 1$ then gives $${found}$, taking the sign that applies, and ${last}.`,
+        `令 $y = ${inner}$，则 $${known}$。由恒等式 $\\cosh^{2} y - \\sinh^{2} y = 1$，并取相应的符号，得 $${found}$，而 ${lastZh}。`,
+      ),
+    });
+  },
+};
+
+const quotientLimitNewDenominator: KnowledgePointDef = {
+  id: "a-known-quotient-limit-over-a-new-denominator",
+  title: t("A known quotient limit over a new denominator", "已知商的极限，换一个分母"),
+  explanation: t(
+    "The formula for $f$ is not needed when the limit of a related quotient is known. Factor the new denominator so that the known denominator appears, then write the new quotient as a product of the known quotient and a remaining fraction. The product rule for limits combines the two, because each factor has a limit.",
+    "已知相关商的极限时，不需要 $f$ 的表达式。把新分母因式分解，让已知的分母出现，再把新商写成已知商与剩余分式的乘积。由于每个因子都有极限，极限的乘积法则就能把两者合起来。",
+  ),
+  generate(rng) {
+    const c = nonzero(rng, 6);
+    const l = nonzero(rng, 9);
+    const isDifference = rng.pick([true, false]);
+    const factor = isDifference ? poly([1, "x"], [c, ""]) : "x";
+    const denominator = isDifference ? poly([1, "x^2"], [-c * c, ""]) : poly([1, "x^2"], [-c, "x"]);
+    const at = isDifference ? 2 * c : c;
+    const known = poly([1, "x"], [-c, ""]);
+    const answer = Q.of(l, at);
+    return numberProblem({
+      prompt: t(
+        `A function $f$ satisfies $\\lim_{x \\to ${c}} \\frac{f(x)}{${known}} = ${l}$. Find $\\lim_{x \\to ${c}} \\frac{f(x)}{${denominator}}$.`,
+        `函数 $f$ 满足 $\\lim_{x \\to ${c}} \\frac{f(x)}{${known}} = ${l}$。求 $\\lim_{x \\to ${c}} \\frac{f(x)}{${denominator}}$。`,
+      ),
+      answer,
+      wrong: [Q.of(l), Q.of(l * at), Q.of(-l, at), Q.of(l + at), Q.of(2 * l), Q.of(3 * l)],
+      solution: t(
+        `The new quotient is $\\frac{f(x)}{${known}} \\cdot \\frac{1}{${factor}}$. The first factor tends to $${l}$ and the second to $${Q.of(1, at).toLatex()}$, so the limit is $${answer.toLatex()}$.`,
+        `新的商是 $\\frac{f(x)}{${known}} \\cdot \\frac{1}{${factor}}$。第一个因子趋于 $${l}$，第二个趋于 $${Q.of(1, at).toLatex()}$，所以极限是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const ratioOfExponentials: KnowledgePointDef = {
+  id: "a-ratio-of-exponentials-at-either-infinity",
+  title: t("A ratio of exponentials at either infinity", "指数函数之比在两个方向的极限"),
+  explanation: t(
+    "An exponential with base above one behaves very differently in the two directions. As $x \\to \\infty$ it dominates the constants, so dividing above and below by it leaves its coefficients. As $x \\to -\\infty$ it vanishes, so only the constants remain. The same quotient therefore usually has two different limits at the two ends.",
+    "底数大于一的指数函数在两个方向上表现截然不同。当 $x \\to \\infty$ 时它压倒常数，所以分子分母同除以它，就只剩它的系数。当 $x \\to -\\infty$ 时它趋于零，只剩常数。因此同一个商在两端通常有两个不同的极限。",
+  ),
+  generate(rng) {
+    const base = rng.pick(["2^{x}", "3^{x}", "4^{x}", "5^{x}", "e^{x}"]);
+    const a = nonzero(rng, 9);
+    const c = rng.int(1, 6);
+    const q = rng.int(1, 9);
+    const p = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9].filter((x) => x * c !== a * q));
+    const atPositive = rng.pick([true, false]);
+    const answer = atPositive ? Q.of(a, c) : Q.of(p, q);
+    const other = atPositive ? Q.of(p, q) : Q.of(a, c);
+    const target = atPositive ? "\\infty" : "-\\infty";
+    const term = (n: number) => (Math.abs(n) === 1 || base === "e^{x}" ? base : `\\cdot ${base}`);
+    const f = `\\frac{${poly([a, term(a)], [p, ""])}}{${poly([c, term(c)], [q, ""])}}`;
+    return numberProblem({
+      prompt: t(`Find $\\lim_{x \\to ${target}} ${f}$.`, `求 $\\lim_{x \\to ${target}} ${f}$。`),
+      answer,
+      wrong: [other, Q.of(a, q), Q.of(p, c), Q.of(a + p, c + q), answer.neg(), Q.of(a + p), answer.mul(Q.of(2))],
+      solution: t(
+        atPositive
+          ? `As $x \\to \\infty$, $${base}$ grows without bound, so dividing the top and the bottom by it leaves the ratio of its coefficients, $${answer.toLatex()}$.`
+          : `As $x \\to -\\infty$, $${base} \\to 0$, so only the constant terms remain and the limit is $${answer.toLatex()}$.`,
+        atPositive
+          ? `当 $x \\to \\infty$ 时，$${base}$ 无限增大，所以分子分母同除以它，只剩系数之比 $${answer.toLatex()}$。`
+          : `当 $x \\to -\\infty$ 时，$${base} \\to 0$，所以只剩常数项，极限是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const differenceOfLogarithms: KnowledgePointDef = {
+  id: "a-difference-of-logarithms-at-infinity",
+  title: t("A difference of logarithms at infinity", "对数之差在无穷远处的极限"),
+  explanation: t(
+    "Each logarithm alone grows without bound, so the difference looks like infinity minus infinity, which says nothing yet. Combining them into the logarithm of a quotient resolves it: the quotient has a finite limit, found from its leading coefficients, and the logarithm is continuous there, so the limit can be moved inside.",
+    "每个对数单独都无限增大，所以差看起来是无穷减无穷，这还说明不了什么。把它们合并成商的对数就能解决：这个商有有限的极限，由最高次项系数求出，而对数函数在那里连续，所以极限可以移到对数里面。",
+  ),
+  generate(rng) {
+    const b = rng.pick([2, 3, 5, 10]);
+    const k = rng.int(1, b === 2 ? 4 : b === 3 ? 3 : 2);
+    const c = rng.int(1, 5);
+    const p = rng.int(1, 9);
+    const q = rng.int(1, 9);
+    const s = rng.pick([1, -1]);
+    const large = c * b ** k;
+    const log = b === 10 ? "\\log" : `\\log_{${b}}`;
+    const big = `${log}\\left(${poly([large, "x"], [p, ""])}\\right)`;
+    const small = `${log}\\left(${poly([c, "x"], [q, ""])}\\right)`;
+    const f = s > 0 ? `${big} - ${small}` : `${small} - ${big}`;
+    const answer = s * k;
+    return numberProblem({
+      prompt: t(`Find $\\lim_{x \\to \\infty} \\left(${f}\\right)$.`, `求 $\\lim_{x \\to \\infty} \\left(${f}\\right)$。`),
+      answer,
+      form: "integer",
+      wrong: [s * b ** k, s * (k + 1), -s * k, 0],
+      solution: t(
+        `The difference of logarithms is the logarithm of a quotient whose limit is $${s > 0 ? b ** k : Q.of(1, b ** k).toLatex()}$, by its leading coefficients. So the limit is $${log} ${s > 0 ? b ** k : Q.of(1, b ** k).toLatex()} = ${answer}$.`,
+        `对数之差是一个商的对数，由最高次项系数知这个商的极限是 $${s > 0 ? b ** k : Q.of(1, b ** k).toLatex()}$。所以极限是 $${log} ${s > 0 ? b ** k : Q.of(1, b ** k).toLatex()} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const tangentMinusSine: KnowledgePointDef = {
+  id: "tangent-minus-sine-over-a-cube",
+  title: t("Tangent minus sine over a cube", "正切减正弦除以立方"),
+  explanation: t(
+    "Tangent and sine agree to first order near zero, so their difference shrinks faster than the angle, and splitting the quotient into two limits at once would fail. Factor the sine out of the numerator using $\\tan u = \\frac{\\sin u}{\\cos u}$. This exposes one minus cosine, which supplies two powers of the angle, while the sine supplies the third.",
+    "正切和正弦在零附近的一阶行为相同，所以它们的差比角本身更快地趋于零，直接把商拆成两个极限是行不通的。利用 $\\tan u = \\frac{\\sin u}{\\cos u}$ 把分子里的正弦提出来。这样就出现一减余弦，它提供角的两次方，而正弦提供第三次方。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 6);
+    const c = rng.int(1, 6);
+    const answer = Q.of(a ** 3, 2 * c);
+    const u = timesX(a);
+    const product = Q.of(a ** 3, 2).toLatex();
+    const scale = c === 1 ? "" : `, and dividing by $${c}$ gives $${answer.toLatex()}$`;
+    const scaleZh = c === 1 ? "" : `，再除以 $${c}$ 得 $${answer.toLatex()}$`;
+    return numberProblem({
+      prompt: t(
+        `Find $\\lim_{x \\to 0} \\frac{\\tan ${u} - \\sin ${u}}{${poly([c, "x^3"])}}$.`,
+        `求 $\\lim_{x \\to 0} \\frac{\\tan ${u} - \\sin ${u}}{${poly([c, "x^3"])}}$。`,
+      ),
+      answer,
+      wrong: [Q.of(a * a, 2 * c), Q.of(a ** 3, c), Q.of(a, 2 * c), Q.of(0), Q.of(a ** 3, 3 * c)],
+      solution: t(
+        `The numerator is $\\frac{\\sin ${u}}{\\cos ${u}}(1 - \\cos ${u})$. As $x \\to 0$, $\\frac{\\sin ${u}}{x} \\to ${a}$, $\\cos ${u} \\to 1$ and $\\frac{1 - \\cos ${u}}{x^2} \\to ${Q.of(a * a, 2).toLatex()}$. Multiplying these gives $${product}$${scale}.`,
+        `分子等于 $\\frac{\\sin ${u}}{\\cos ${u}}(1 - \\cos ${u})$。当 $x \\to 0$ 时，$\\frac{\\sin ${u}}{x} \\to ${a}$，$\\cos ${u} \\to 1$，$\\frac{1 - \\cos ${u}}{x^2} \\to ${Q.of(a * a, 2).toLatex()}$。三者相乘得 $${product}$${scaleZh}。`,
+      ),
+    });
+  },
+};
+
+const differenceOfTwoRoots: KnowledgePointDef = {
+  id: "a-difference-of-two-roots-at-infinity",
+  title: t("A difference of two roots at infinity", "两个根式之差在无穷远处的极限"),
+  explanation: t(
+    "Two square roots with the same leading term both grow without bound, yet their difference can settle at a finite value. Multiplying by the conjugate cancels the squared terms and leaves a linear numerator over a sum of roots. Each root behaves like $k|x|$, and when $x$ is negative that absolute value contributes a change of sign.",
+    "两个最高次项相同的平方根都无限增大，但它们的差可以趋于有限值。乘以共轭式消去平方项，剩下一次式的分子和根式之和的分母。每个根式的行为都像 $k|x|$，当 $x$ 为负时，这个绝对值会带来一次变号。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 3);
+    const a = nonzero(rng, 8);
+    const c = different(rng, -8, 8, a);
+    const b = rng.int(1, 9);
+    const d = rng.int(1, 9);
+    const positive = rng.pick([true, false]);
+    const s = positive ? 1 : -1;
+    const answer = Q.of(s * (a - c), 2 * k);
+    const first = `\\sqrt{${poly([k * k, "x^2"], [a, "x"], [b, ""])}}`;
+    const second = `\\sqrt{${poly([k * k, "x^2"], [c, "x"], [d, ""])}}`;
+    const target = positive ? "\\infty" : "-\\infty";
+    const top = poly([a - c, "x"], [b - d, ""]);
+    return numberProblem({
+      prompt: t(
+        `Find $\\lim_{x \\to ${target}} \\left(${first} - ${second}\\right)$.`,
+        `求 $\\lim_{x \\to ${target}} \\left(${first} - ${second}\\right)$。`,
+      ),
+      answer,
+      wrong: [Q.of(-s * (a - c), 2 * k), Q.of(s * (a - c), k), Q.of(s * (a - c)), Q.of(a + c, 2 * k), Q.of(s * (a - c), 4 * k)],
+      solution: t(
+        `Multiplying by the conjugate makes the numerator $${top}$, over the sum of the roots, which behaves like $${2 * k}|x|$. ${positive ? "Here $|x| = x$" : "Here $|x| = -x$"}, so the limit is $${answer.toLatex()}$.`,
+        `乘以共轭式后，分子是 $${top}$，分母是两个根式之和，其行为像 $${2 * k}|x|$。${positive ? "这里 $|x| = x$" : "这里 $|x| = -x$"}，所以极限是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const boundedTermInRatio: KnowledgePointDef = {
+  id: "a-bounded-term-inside-a-ratio-at-infinity",
+  title: t("A bounded term inside a ratio at infinity", "无穷远处比值中的有界项"),
+  explanation: t(
+    "Sine and cosine never settle down as $x$ grows, so this limit cannot be found by substituting or by splitting into separate limits of the oscillating part. Dividing above and below by $x$ fixes it: the oscillating term becomes a bounded quantity over $x$, and the squeeze theorem sends that term to zero whatever its oscillation does.",
+    "当 $x$ 增大时，正弦和余弦不会稳定下来，所以不能靠代入或单独求振荡部分的极限来解决。分子分母同除以 $x$ 就行了：振荡项变成有界量除以 $x$，无论它怎样振荡，夹逼定理都使这一项趋于零。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 6);
+    const b = nonzero(rng, 9);
+    const c = rng.int(1, 6);
+    const d = nonzero(rng, 9);
+    const wave = rng.pick(["\\sin x", "\\cos x"]);
+    const answer = Q.of(a, c);
+    const f = `\\frac{${poly([a, "x"], [b, wave])}}{${poly([c, "x"], [d, ""])}}`;
+    const reduced = `\\frac{${poly([b, wave])}}{x}`;
+    return numberProblem({
+      prompt: t(`Find $\\lim_{x \\to \\infty} ${f}$.`, `求 $\\lim_{x \\to \\infty} ${f}$。`),
+      answer,
+      wrong: [Q.of(b, d), Q.of(a + b, c), Q.of(0), Q.of(a, d), answer.neg(), Q.of(b, c), answer.mul(Q.of(2))],
+      solution: t(
+        `Divide the top and the bottom by $x$. Since $\\left|${reduced}\\right| \\le \\frac{${Math.abs(b)}}{x}$, the squeeze theorem sends this term to $0$, and $\\frac{${d}}{x} \\to 0$ as well. What remains is $${answer.toLatex()}$.`,
+        `分子分母同除以 $x$。因为 $\\left|${reduced}\\right| \\le \\frac{${Math.abs(b)}}{x}$，由夹逼定理这一项趋于 $0$，$\\frac{${d}}{x}$ 也趋于 $0$。剩下的就是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const differenceOfCosines: KnowledgePointDef = {
+  id: "a-difference-of-cosines-over-x-squared",
+  title: t("A difference of cosines over x squared", "余弦之差除以 x 的平方"),
+  explanation: t(
+    "The standard limit involves one minus a cosine, and a difference of two cosines has none in sight. Adding and subtracting one rewrites the numerator as a difference of two such expressions. Each then has its own limit over $x^{2}$, half the square of its coefficient, so the two can be taken separately and subtracted.",
+    "标准极限涉及一减余弦，而两个余弦之差里看不出这种形式。加一再减一，就把分子改写成两个这样的式子之差。每个式子除以 $x^{2}$ 都有自己的极限，即系数平方的一半，所以可以分别求出再相减。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 7);
+    const b = different(rng, 1, 7, a);
+    const c = rng.int(1, 4);
+    const answer = Q.of(b * b - a * a, 2 * c);
+    const ua = timesX(a);
+    const ub = timesX(b);
+    const difference = Q.of(b * b - a * a, 2).toLatex();
+    const scale = c === 1 ? "" : `, and dividing by $${c}$ gives $${answer.toLatex()}$`;
+    const scaleZh = c === 1 ? "" : `，再除以 $${c}$ 得 $${answer.toLatex()}$`;
+    return numberProblem({
+      prompt: t(
+        `Find $\\lim_{x \\to 0} \\frac{\\cos ${ua} - \\cos ${ub}}{${poly([c, "x^2"])}}$.`,
+        `求 $\\lim_{x \\to 0} \\frac{\\cos ${ua} - \\cos ${ub}}{${poly([c, "x^2"])}}$。`,
+      ),
+      answer,
+      wrong: [Q.of(a * a - b * b, 2 * c), Q.of(b * b - a * a, c), Q.of(b - a, 2 * c), Q.of((b - a) ** 2, 2 * c)],
+      solution: t(
+        `The numerator equals $(1 - \\cos ${ub}) - (1 - \\cos ${ua})$. Over $x^2$ these tend to $${Q.of(b * b, 2).toLatex()}$ and $${Q.of(a * a, 2).toLatex()}$, whose difference is $${difference}$${scale}.`,
+        `分子等于 $(1 - \\cos ${ub}) - (1 - \\cos ${ua})$。除以 $x^2$ 后，它们分别趋于 $${Q.of(b * b, 2).toLatex()}$ 和 $${Q.of(a * a, 2).toLatex()}$，二者之差是 $${difference}$${scaleZh}。`,
+      ),
+    });
+  },
+};
+
+const ratioOfExponentialDifferences: KnowledgePointDef = {
+  id: "a-ratio-of-two-exponential-differences",
+  title: t("A ratio of two exponential differences", "两个指数差之比"),
+  explanation: t(
+    "Both the numerator and the denominator tend to zero, and neither has the form $e^{u} - 1$ on its own. Subtracting and adding one splits each into two familiar pieces. Dividing above and below by $x$ then turns each piece into a standard limit equal to its exponent's coefficient, so only those coefficients decide the value.",
+    "分子和分母都趋于零，而且都不是 $e^{u} - 1$ 的形式。减一再加一，把每一个拆成两个熟悉的部分。分子分母同除以 $x$ 后，每一部分都变成标准极限，其值等于指数的系数，所以结果只取决于这些系数。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 5);
+    const b = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5].filter((x) => x !== a));
+    const c = nonzero(rng, 5);
+    const d = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5].filter((x) => x !== c && !(c === a && x === b)));
+    const answer = Q.of(a - b, c - d);
+    const e = (m: number) => `e^{${timesX(m)}}`;
+    const f = `\\frac{${e(a)} - ${e(b)}}{${e(c)} - ${e(d)}}`;
+    return numberProblem({
+      prompt: t(`Find $\\lim_{x \\to 0} ${f}$.`, `求 $\\lim_{x \\to 0} ${f}$。`),
+      answer,
+      wrong: [
+        Q.of(c - d, a - b),
+        Q.of(a, c),
+        Q.of(b - a, c - d),
+        Q.of(a - b),
+        Q.of(b, d),
+        Q.of(2 * (a - b), c - d),
+        Q.of(a * d, b * c),
+        Q.of(3 * (a - b), c - d),
+      ],
+      solution: t(
+        `Since $\\frac{e^{mx} - 1}{x} \\to m$, the top over $x$ tends to $${poly([a, ""], [-b, ""])} = ${a - b}$ and the bottom over $x$ to $${poly([c, ""], [-d, ""])} = ${c - d}$. The limit is their ratio, $${answer.toLatex()}$.`,
+        `由于 $\\frac{e^{mx} - 1}{x} \\to m$，分子除以 $x$ 趋于 $${poly([a, ""], [-b, ""])} = ${a - b}$，分母除以 $x$ 趋于 $${poly([c, ""], [-d, ""])} = ${c - d}$。极限是二者之比 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const differentiableJoin: KnowledgePointDef = {
+  id: "constants-that-make-a-join-differentiable",
+  title: t("Constants that make a join differentiable", "使连接处可导的常数"),
+  explanation: t(
+    "Two pieces join smoothly only if two things hold at the break point. The values must agree, because a differentiable function is continuous, and the one-sided slopes must agree, so that there is no corner. With a line as one piece, the slope condition fixes its slope, and the value condition then fixes its intercept.",
+    "两段要光滑连接，分段点处必须同时满足两件事。函数值必须相等，因为可导函数一定连续；单侧斜率也必须相等，这样才没有尖角。当其中一段是直线时，斜率条件确定它的斜率，然后函数值条件确定它的截距。",
+  ),
+  generate(rng) {
+    const c = nonzero(rng, 4);
+    const a = nonzero(rng, 3);
+    const p = nonzero(rng, 9);
+    const q = nonzero(rng, 9);
+    const m = 2 * a * c + p;
+    const value = a * c * c + p * c + q;
+    const answer = value - m * c;
+    const f = `\\begin{cases} ${poly([a, "x^2"], [p, "x"], [q, ""])} & x \\le ${c} \\\\ mx + n & x > ${c} \\end{cases}`;
+    return numberProblem({
+      prompt: t(
+        `Let $f(x) = ${f}$. The constants $m$ and $n$ are chosen so that $f$ is differentiable at $x = ${c}$. Find $n$.`,
+        `设 $f(x) = ${f}$。选取常数 $m$ 和 $n$，使 $f$ 在 $x = ${c}$ 处可导。求 $n$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [value, m, value + m * c, q, answer + c, answer + 2 * c, answer - 2 * c],
+      solution: t(
+        `The slopes must agree, so $m$ equals the derivative of the first piece at $x = ${c}$, which is $${m}$. The values must agree, so $${m} \\cdot ${inParens(c)} + n = ${value}$, which gives $n = ${answer}$.`,
+        `斜率必须相等，所以 $m$ 等于第一段在 $x = ${c}$ 处的导数，即 $${m}$。函数值必须相等，所以 $${m} \\cdot ${inParens(c)} + n = ${value}$，得 $n = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const leastSlopeOnCubic: KnowledgePointDef = {
+  id: "the-extreme-slope-on-a-cubic",
+  title: t("The extreme slope on a cubic", "三次曲线上斜率的最值"),
+  explanation: t(
+    "The slope of a cubic at each point is given by its derivative, which is a quadratic in $x$. So the slope itself has an extreme value, at the vertex of that parabola: a least slope when the cubic's leading coefficient is positive and a greatest slope when it is negative. No tangent line on the curve can go beyond it.",
+    "三次曲线在每一点的斜率由它的导数给出，而导数是 $x$ 的二次式。所以斜率本身有最值，出现在这条抛物线的顶点处：三次项系数为正时是最小斜率，为负时是最大斜率。曲线上任何切线的斜率都不会超过这个界限。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 3);
+    const k = nonzero(rng, 4);
+    const c = nonzero(rng, 9);
+    const d = nonzero(rng, 9);
+    const answer = c - 3 * a * k * k;
+    const y = poly([a, "x^3"], [3 * a * k, "x^2"], [c, "x"], [d, ""]);
+    const slope = poly([3 * a, "x^2"], [6 * a * k, "x"], [c, ""]);
+    const least = a > 0;
+    return numberProblem({
+      prompt: t(
+        `Find the ${least ? "least" : "greatest"} possible slope of a tangent line to $y = ${y}$.`,
+        `求 $y = ${y}$ 的切线斜率的${least ? "最小" : "最大"}值。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-k, c, c + 3 * a * k * k, c - 6 * a * k * k],
+      solution: t(
+        `The slope is $y' = ${slope}$, a parabola with its vertex at $x = ${-k}$. There the slope is $${answer}$.`,
+        `斜率是 $y' = ${slope}$，这条抛物线的顶点在 $x = ${-k}$。此处的斜率是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const arctanOfPowerAtPoint: KnowledgePointDef = {
+  id: "an-arctangent-of-a-power-at-a-point",
+  title: t("An arctangent of a power at a point", "幂函数的反正切在一点的导数"),
+  explanation: t(
+    "The derivative of arctangent is one over one plus the square of its argument, and the chain rule multiplies that by the derivative of the argument. When the argument is a power of $x$, the two factors pull in different directions, since the numerator grows like one power and the denominator like a much higher one, so both must be computed at the point.",
+    "反正切的导数是一除以一加自变量的平方，链式法则再乘以内层函数的导数。当内层是 $x$ 的幂时，两个因子的作用方向不同，分子按较低的幂增长，分母按高得多的幂增长，所以两者都要在该点算出来。",
+  ),
+  generate(rng) {
+    const big = rng.int(1, 6);
+    const b = rng.int(1, 3);
+    const n = rng.pick([2, 3]);
+    const c = rng.pick([-2, -1, 1, 2]);
+    const inner = b * c ** n;
+    const slope = b * n * c ** (n - 1);
+    const top = big * slope;
+    const bottom = 1 + inner * inner;
+    const answer = Q.of(top, bottom);
+    const f = poly([big, `\\arctan\\left(${poly([b, `x^{${n}}`])}\\right)`]);
+    return numberProblem({
+      prompt: t(`Let $f(x) = ${f}$. Find $f'(${c})$.`, `设 $f(x) = ${f}$。求 $f'(${c})$。`),
+      answer,
+      wrong: [Q.of(big, bottom), Q.of(top), Q.of(top, 1 + Math.abs(inner)), Q.of(-top, bottom)],
+      solution: t(
+        `By the chain rule, $f'(x)$ is $${big}$ times the derivative of the inside, over $1$ plus the inside squared. At $x = ${c}$ the inside is $${inner}$ and its derivative is $${slope}$, so $f'(${c}) = \\frac{${big} \\cdot ${inParens(slope)}}{1 + ${inner * inner}} = ${answer.toLatex()}$.`,
+        `由链式法则，$f'(x)$ 等于 $${big}$ 乘以内层的导数，再除以 $1$ 加内层的平方。在 $x = ${c}$ 处，内层是 $${inner}$，它的导数是 $${slope}$，所以 $f'(${c}) = \\frac{${big} \\cdot ${inParens(slope)}}{1 + ${inner * inner}} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const logOfTrig: KnowledgePointDef = {
+  id: "a-logarithm-of-a-trigonometric-function-at-a-point",
+  title: t("A logarithm of a trigonometric function at a point", "三角函数的对数在一点的导数"),
+  explanation: t(
+    "The rule for a logarithm divides the derivative of the inside by the inside, and a trigonometric inside then simplifies. The derivative of $\\ln(\\sin u)$ with respect to $u$ becomes a cotangent, and that of $\\ln(\\cos u)$ becomes a negative tangent. The chain rule still multiplies by the derivative of the angle, a step that is easy to forget.",
+    "对数的求导法则是内层的导数除以内层，而内层是三角函数时还能进一步化简。$\\ln(\\sin u)$ 对 $u$ 的导数化为余切，$\\ln(\\cos u)$ 对 $u$ 的导数化为负的正切。链式法则还要再乘以角的导数，这一步很容易漏掉。",
+  ),
+  generate(rng) {
+    const big = nonzero(rng, 6);
+    const b = rng.int(1, 6);
+    const [name, factor] = rng.pick([
+      ["\\sin", 1],
+      ["\\cos", -1],
+      ["\\tan", 2],
+    ] as const);
+    const answer = big * b * factor;
+    const u = timesX(b);
+    const f = poly([big, `\\ln\\left(${name} ${u}\\right)`]);
+    const at = `\\frac{\\pi}{${4 * b}}`;
+    const rate = factor === 1 ? `\\cot ${u}` : factor === -1 ? `\\left(-\\tan ${u}\\right)` : `\\frac{\\sec^{2} ${u}}{\\tan ${u}}`;
+    return numberProblem({
+      prompt: t(`Let $f(x) = ${f}$. Find $f'\\left(${at}\\right)$.`, `设 $f(x) = ${f}$。求 $f'\\left(${at}\\right)$。`),
+      answer,
+      form: "integer",
+      wrong: [-answer, 2 * answer, big * factor, 3 * answer],
+      solution: t(
+        `$f'(x) = ${big * b} \\cdot ${rate}$. At $x = ${at}$ the angle $${u}$ is $\\frac{\\pi}{4}$, where this last factor equals $${factor}$, so the derivative is $${answer}$.`,
+        `$f'(x) = ${big * b} \\cdot ${rate}$。在 $x = ${at}$ 处，角 $${u}$ 等于 $\\frac{\\pi}{4}$，此时最后这个因子等于 $${factor}$，所以导数是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const powerOfTrigOfMultiple: KnowledgePointDef = {
+  id: "a-power-of-a-trigonometric-function-of-a-multiple",
+  title: t("A power of a trigonometric function of a multiple", "倍角三角函数的幂"),
+  explanation: t(
+    "A function such as $\\tan^{2}(bx)$ has three layers: the square, the tangent and the multiple of $x$. The chain rule produces one factor for each layer, working from the outside in. Evaluating at a point where the angle is $\\frac{\\pi}{4}$ keeps the values simple and shows clearly whether a factor from any layer was dropped.",
+    "$\\tan^{2}(bx)$ 这样的函数有三层：平方、正切和 $x$ 的倍数。链式法则由外向内为每一层产生一个因子。在角等于 $\\frac{\\pi}{4}$ 的点求值，数值简单，也能清楚地看出是否漏掉了某一层的因子。",
+  ),
+  generate(rng) {
+    const big = nonzero(rng, 6);
+    const b = rng.int(1, 6);
+    const [outer, factor, steps] = rng.pick([
+      ["\\tan^{2}", 4, "2\\tan u \\sec^{2} u = 2 \\cdot 1 \\cdot 2"],
+      ["\\sec^{2}", 4, "2\\sec^{2} u \\tan u = 2 \\cdot 2 \\cdot 1"],
+      ["\\sin^{2}", 1, "2\\sin u \\cos u = \\sin 2u = 1"],
+      ["\\cos^{2}", -1, "-2\\cos u \\sin u = -\\sin 2u = -1"],
+      ["\\tan^{3}", 6, "3\\tan^{2} u \\sec^{2} u = 3 \\cdot 1 \\cdot 2"],
+    ] as const);
+    const answer = big * b * factor;
+    const u = timesX(b);
+    const f = poly([big, `${outer}(${u})`]);
+    const at = `\\frac{\\pi}{${4 * b}}`;
+    return numberProblem({
+      prompt: t(`Let $f(x) = ${f}$. Find $f'\\left(${at}\\right)$.`, `设 $f(x) = ${f}$。求 $f'\\left(${at}\\right)$。`),
+      answer,
+      form: "integer",
+      wrong: [big * factor, 2 * answer, -answer, big * b, 3 * answer],
+      solution: t(
+        `Let $u = ${u}$, so $u = \\frac{\\pi}{4}$ at this point. The derivative of the function of $u$ is $${steps}$ there, without the constant. Multiplying by $${big}$ and by $\\frac{du}{dx} = ${b}$ gives $${answer}$.`,
+        `令 $u = ${u}$，此时 $u = \\frac{\\pi}{4}$。不计常数时，关于 $u$ 的导数在此处是 $${steps}$。再乘以 $${big}$ 和 $\\frac{du}{dx} = ${b}$，得 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const secondDerivativeFromDxDy: KnowledgePointDef = {
+  id: "the-second-derivative-when-x-is-a-function-of-y",
+  title: t("The second derivative when x is a function of y", "x 是 y 的函数时的二阶导数"),
+  explanation: t(
+    "When $x$ is given in terms of $y$, the first derivative is the reciprocal $\\frac{dy}{dx} = \\frac{1}{x'(y)}$. Differentiating again with respect to $x$ needs care, because this expression is a function of $y$: the chain rule contributes one more factor of $\\frac{dy}{dx}$. It is not the reciprocal of the second derivative of $x$.",
+    "当 $x$ 用 $y$ 表示时，一阶导数是倒数 $\\frac{dy}{dx} = \\frac{1}{x'(y)}$。再对 $x$ 求导时要小心，因为这个式子是 $y$ 的函数：链式法则还要多乘一个因子 $\\frac{dy}{dx}$。它并不是 $x$ 的二阶导数的倒数。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 2);
+    const p = rng.int(1, 5);
+    const c = rng.pick([-2, -1, 1, 2]);
+    const q = nonzero(rng, 5);
+    const first = 3 * a * c * c + p;
+    const second = 6 * a * c;
+    const x0 = a * c ** 3 + p * c + q;
+    const answer = Q.of(-second, first ** 3);
+    const curve = poly([a, "y^3"], [p, "y"], [q, ""]);
+    return numberProblem({
+      prompt: t(
+        `The point $(${x0}, ${c})$ lies on the curve $x = ${curve}$. Find $\\frac{d^{2}y}{dx^{2}}$ at this point.`,
+        `点 $(${x0}, ${c})$ 在曲线 $x = ${curve}$ 上。求此点处的 $\\frac{d^{2}y}{dx^{2}}$。`,
+      ),
+      answer,
+      wrong: [Q.of(second, first ** 3), Q.of(-second, first * first), Q.of(1, second), Q.of(1, first)],
+      solution: t(
+        `$\\frac{dy}{dx} = \\frac{1}{x'(y)}$. Differentiating with respect to $x$ gives $\\frac{d^{2}y}{dx^{2}} = -\\frac{x''(y)}{x'(y)^{2}} \\cdot \\frac{dy}{dx} = -\\frac{x''(y)}{x'(y)^{3}}$. At $y = ${c}$, $x' = ${first}$ and $x'' = ${second}$, so the value is $${answer.toLatex()}$.`,
+        `$\\frac{dy}{dx} = \\frac{1}{x'(y)}$。对 $x$ 求导得 $\\frac{d^{2}y}{dx^{2}} = -\\frac{x''(y)}{x'(y)^{2}} \\cdot \\frac{dy}{dx} = -\\frac{x''(y)}{x'(y)^{3}}$。在 $y = ${c}$ 处，$x' = ${first}$，$x'' = ${second}$，所以值是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const squareFromDiagonal: KnowledgePointDef = {
+  id: "the-area-of-a-square-from-its-diagonal",
+  title: t("The area of a square from its diagonal", "由对角线求正方形的面积"),
+  explanation: t(
+    "A related-rates problem is easiest when the quantities are linked directly. The side of a square is the diagonal divided by the square root of two, and squaring removes that root, so the area is half the square of the diagonal. Differentiating this relation with respect to time links the two rates without ever computing the side.",
+    "相关变化率问题中，把两个量直接联系起来最省事。正方形的边长等于对角线除以根号二，平方后根号消失，所以面积等于对角线平方的一半。对这个关系关于时间求导，就把两个变化率联系起来，完全不必算出边长。",
+  ),
+  generate(rng) {
+    const d = rng.int(2, 20);
+    const rate = rng.int(1, 9);
+    const findArea = rng.pick([true, false]);
+    if (findArea) {
+      const answer = d * rate;
+      return numberProblem({
+        prompt: t(
+          `The diagonal of a square grows at $${rate}$ cm/s. Find the rate of change of its area, in cm²/s, when the diagonal is $${d}$ cm.`,
+          `正方形的对角线以 $${rate}$ cm/s 的速度增长。求对角线为 $${d}$ cm 时其面积的变化率，单位为 cm²/s。`,
+        ),
+        answer,
+        wrong: [2 * answer, Q.of(answer, 2), 4 * answer],
+        solution: t(
+          `The area is $A = \\frac{1}{2}D^{2}$, so $\\frac{dA}{dt} = D\\frac{dD}{dt} = ${d} \\cdot ${rate} = ${answer}$.`,
+          `面积是 $A = \\frac{1}{2}D^{2}$，所以 $\\frac{dA}{dt} = D\\frac{dD}{dt} = ${d} \\cdot ${rate} = ${answer}$。`,
+        ),
+      });
+    }
+    const answer = Q.of(rate, d);
+    return numberProblem({
+      prompt: t(
+        `The area of a square grows at $${rate}$ cm²/s. How fast is its diagonal growing, in cm/s, when the diagonal is $${d}$ cm?`,
+        `正方形的面积以 $${rate}$ cm²/s 的速度增长。对角线为 $${d}$ cm 时，它增长的速度是多少 cm/s？`,
+      ),
+      answer,
+      wrong: [Q.of(2 * rate, d), Q.of(rate, 2 * d), Q.of(rate * d), Q.of(rate, d * d)],
+      solution: t(
+        `The area is $A = \\frac{1}{2}D^{2}$, so $\\frac{dA}{dt} = D\\frac{dD}{dt}$, that is $${rate} = ${d}\\frac{dD}{dt}$, and $\\frac{dD}{dt} = ${answer.toLatex()}$.`,
+        `面积是 $A = \\frac{1}{2}D^{2}$，所以 $\\frac{dA}{dt} = D\\frac{dD}{dt}$，即 $${rate} = ${d}\\frac{dD}{dt}$，得 $\\frac{dD}{dt} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const triangleWithGrowingAngle: KnowledgePointDef = {
+  id: "the-area-of-a-triangle-with-a-growing-angle",
+  title: t("The area of a triangle with a growing angle", "夹角增大时三角形的面积"),
+  explanation: t(
+    "With two sides fixed, the area of a triangle depends only on the angle between them, through one half the product of the sides times the sine of the angle. Differentiating brings in the cosine and the angle's rate. Past a right angle the cosine is negative, so the area shrinks even though the angle keeps growing.",
+    "两边固定时，三角形的面积只取决于它们的夹角：面积等于两边之积的一半乘以夹角的正弦。求导时出现余弦和夹角的变化率。夹角超过直角后余弦为负，所以尽管夹角继续增大，面积却在减小。",
+  ),
+  generate(rng) {
+    const p = rng.int(2, 12);
+    const q = rng.int(2, 12);
+    const n = rng.int(2, 10);
+    const acute = rng.pick([true, false]);
+    const s = acute ? 1 : -1;
+    const angle = acute ? "\\frac{\\pi}{3}" : "\\frac{2\\pi}{3}";
+    const cosine = acute ? "\\frac{1}{2}" : "-\\frac{1}{2}";
+    const omega = Q.of(1, n);
+    const answer = Q.of(s * p * q, 4 * n);
+    return numberProblem({
+      prompt: t(
+        `Two sides of a triangle stay fixed at $${p}$ cm and $${q}$ cm, while the angle between them grows at $${omega.toLatex()}$ radians per second. Find the rate of change of the area, in cm²/s, when the angle is $${angle}$. Give a negative value if the area is shrinking.`,
+        `三角形的两边固定为 $${p}$ cm 和 $${q}$ cm，它们的夹角以每秒 $${omega.toLatex()}$ 弧度的速度增大。求夹角为 $${angle}$ 时面积的变化率，单位为 cm²/s。若面积在减小，请给出负值。`,
+      ),
+      answer,
+      wrong: [Q.of(-s * p * q, 4 * n), Q.of(s * p * q, 2 * n), Q.of(s * p * q, n), Q.of(p * q, 4)],
+      solution: t(
+        `The area is $A = \\frac{1}{2}(${p})(${q})\\sin\\theta$, so $\\frac{dA}{dt} = \\frac{1}{2}(${p})(${q})\\cos\\theta\\,\\frac{d\\theta}{dt}$. With $\\cos\\theta = ${cosine}$ this is $${answer.toLatex()}$.`,
+        `面积是 $A = \\frac{1}{2}(${p})(${q})\\sin\\theta$，所以 $\\frac{dA}{dt} = \\frac{1}{2}(${p})(${q})\\cos\\theta\\,\\frac{d\\theta}{dt}$。由 $\\cos\\theta = ${cosine}$，结果是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const cornerAsCandidate: KnowledgePointDef = {
+  id: "a-corner-as-a-candidate-for-the-minimum",
+  title: t("A corner as a candidate for the minimum", "尖角点作为最小值的候选点"),
+  explanation: t(
+    "The candidates for a global extreme are not only the points where the derivative is zero and the endpoints: a point where the derivative fails to exist counts too. An absolute value creates such a corner. Treat each side of the corner as its own function, keep only stationary points that lie on their own side, and compare.",
+    "全局最值的候选点不只是导数为零的点和端点：导数不存在的点同样算数。绝对值会造成这样的尖角。把尖角两侧分别看作各自的函数，只保留落在自己一侧的驻点，然后比较。",
+  ),
+  generate(rng) {
+    const m = rng.int(2, 6);
+    const c = rng.pick([-8, -7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8]);
+    const l = Math.min(c, -m) - rng.int(1, 3);
+    const r = Math.max(c, m) + rng.int(1, 3);
+    const f = (x: number) => x * x + 2 * m * Math.abs(x - c);
+    const name = `x^2 + ${2 * m}|${poly([1, "x"], [-c, ""])}|`;
+    const cornerWins = Math.abs(c) <= m;
+    const at = cornerWins ? c : c > 0 ? m : -m;
+    const answer = f(at);
+    const en = cornerWins
+      ? `To the left of $x = ${c}$, $f'(x) = 2x - ${2 * m}$, which is negative because $x < ${m}$. To the right, $f'(x) = 2x + ${2 * m}$, which is positive because $x > ${-m}$. So $f$ falls until the corner and then rises, and the minimum is at the corner, $f(${c}) = ${answer}$.`
+      : c > 0
+        ? `To the left of $x = ${c}$, $f'(x) = 2x - ${2 * m}$, which is zero at $x = ${m}$. To the right, $f'(x) = 2x + ${2 * m}$ is positive. So the minimum is at $x = ${m}$, before the corner, and $f(${m}) = ${answer}$.`
+        : `To the right of $x = ${c}$, $f'(x) = 2x + ${2 * m}$, which is zero at $x = ${-m}$. To the left, $f'(x) = 2x - ${2 * m}$ is negative. So the minimum is at $x = ${-m}$, after the corner, and $f(${-m}) = ${answer}$.`;
+    const zh = cornerWins
+      ? `在 $x = ${c}$ 左侧，$f'(x) = 2x - ${2 * m}$，因为 $x < ${m}$，所以为负。在右侧，$f'(x) = 2x + ${2 * m}$，因为 $x > ${-m}$，所以为正。于是 $f$ 先降到尖角再上升，最小值在尖角处，$f(${c}) = ${answer}$。`
+      : c > 0
+        ? `在 $x = ${c}$ 左侧，$f'(x) = 2x - ${2 * m}$，它在 $x = ${m}$ 处为零。在右侧，$f'(x) = 2x + ${2 * m}$ 为正。所以最小值在尖角之前的 $x = ${m}$ 处，$f(${m}) = ${answer}$。`
+        : `在 $x = ${c}$ 右侧，$f'(x) = 2x + ${2 * m}$，它在 $x = ${-m}$ 处为零。在左侧，$f'(x) = 2x - ${2 * m}$ 为负。所以最小值在尖角之后的 $x = ${-m}$ 处，$f(${-m}) = ${answer}$。`;
+    return numberProblem({
+      prompt: t(
+        `Find the global minimum value of $f(x) = ${name}$ on $[${l}, ${r}]$.`,
+        `求 $f(x) = ${name}$ 在 $[${l}, ${r}]$ 上的全局最小值。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [c * c, f(m), f(-m), f(l), f(r)],
+      solution: t(en, zh),
+    });
+  },
+};
+
+const criticalPointWhereDerivativeFails: KnowledgePointDef = {
+  id: "a-critical-point-where-the-derivative-does-not-exist",
+  title: t("A critical point where the derivative does not exist", "导数不存在的临界点"),
+  explanation: t(
+    "A critical point is a point of the domain where the derivative is zero or does not exist, and the second kind is easily missed. For a fractional power, put the derivative over a common denominator. Its numerator gives the zeros, while its denominator vanishes at the origin, where the function is defined but the derivative is not.",
+    "临界点是定义域内导数为零或导数不存在的点，第二类很容易被漏掉。对分数次幂，把导数通分。分子给出导数的零点，而分母在原点处为零，那里函数有定义，导数却不存在。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 12);
+    const p = rng.pick([1, 2]);
+    const answer = Q.of(p * a, p + 3);
+    const power = `x^{\\frac{${p}}{3}}`;
+    const factor = poly([1, "x"], [-a, ""]);
+    const top = poly([p + 3, "x"], [-p * a, ""]);
+    const below = p === 1 ? "3x^{\\frac{2}{3}}" : "3x^{\\frac{1}{3}}";
+    return numberProblem({
+      prompt: t(
+        `The function $f(x) = ${power}(${factor})$ has two critical points. Find the nonzero one.`,
+        `函数 $f(x) = ${power}(${factor})$ 有两个临界点。求不为零的那一个。`,
+      ),
+      answer,
+      wrong: [Q.of(a), Q.of(p * a, 3), Q.of(a, p + 3), Q.of(-p * a, p + 3)],
+      solution: t(
+        `Over a common denominator, $f'(x) = \\frac{${top}}{${below}}$. The numerator is zero at $x = ${answer.toLatex()}$, and the derivative does not exist at $x = 0$, which is the other critical point.`,
+        `通分后 $f'(x) = \\frac{${top}}{${below}}$。分子在 $x = ${answer.toLatex()}$ 处为零，而导数在 $x = 0$ 处不存在，那就是另一个临界点。`,
+      ),
+    });
+  },
+};
+
+const increasingEverywhere: KnowledgePointDef = {
+  id: "the-least-coefficient-that-makes-a-cubic-increasing",
+  title: t("The least coefficient that makes a cubic increasing", "使三次函数递增的最小系数"),
+  explanation: t(
+    "A cubic with positive leading coefficient rises on the whole real line exactly when its derivative is never negative. That derivative is an upward parabola, so the condition is that its discriminant is not positive. A single point where the derivative touches zero is allowed, because the function still increases through it, so the boundary value counts.",
+    "首项系数为正的三次函数在整个实数轴上递增，当且仅当它的导数从不为负。这个导数是开口向上的抛物线，所以条件是判别式不为正。导数在单独一点碰到零是允许的，因为函数经过那里时仍然递增，所以边界值也算。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 4);
+    const b = nonzero(rng, 9);
+    const d = nonzero(rng, 9);
+    const answer = Q.of(b * b, 3 * a);
+    const f = poly([a, "x^3"], [b, "x^2"], [1, "kx"], [d, ""]);
+    const derivative = poly([3 * a, "x^2"], [2 * b, "x"], [1, "k"]);
+    return numberProblem({
+      prompt: t(
+        `Find the least value of $k$ for which $f(x) = ${f}$ is increasing on the whole real line.`,
+        `求使 $f(x) = ${f}$ 在整个实数轴上递增的 $k$ 的最小值。`,
+      ),
+      answer,
+      wrong: [Q.of(b * b, a), Q.of(b * b, 6 * a), Q.of(-b * b, 3 * a), Q.of(Math.abs(b), 3 * a)],
+      solution: t(
+        `$f'(x) = ${derivative}$ must never be negative, so its discriminant $${4 * b * b} - ${12 * a}k$ must not be positive. This gives $k \\ge ${answer.toLatex()}$.`,
+        `$f'(x) = ${derivative}$ 必须从不为负，所以它的判别式 $${4 * b * b} - ${12 * a}k$ 不能为正。由此得 $k \\ge ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const cylinderInCone: KnowledgePointDef = {
+  id: "the-largest-cylinder-in-a-cone",
+  title: t("The largest cylinder in a cone", "圆锥内最大的圆柱"),
+  explanation: t(
+    "An inscribed cylinder has a radius and a height, but they are not independent: similar triangles in a vertical slice of the cone tie them together along a straight line. Writing the height in terms of the radius leaves a cubic volume function of one variable, and setting its derivative to zero locates the best radius.",
+    "内接圆柱有半径和高，但二者并不独立：圆锥竖直截面中的相似三角形把它们联系在一条直线上。把高用半径表示后，体积就成为一个单变量的三次函数，令其导数为零即可确定最佳半径。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 5);
+    const j = rng.int(1, 8);
+    const R = 3 * k;
+    const H = 3 * j;
+    const answer = 4 * k * k * j;
+    return numberProblem({
+      prompt: t(
+        `A cylinder stands inside a cone of base radius $${R}$ and height $${H}$, with its base on the base of the cone. Its largest possible volume is $V\\pi$. Find $V$.`,
+        `一个圆柱立在底面半径为 $${R}$、高为 $${H}$ 的圆锥内，底面落在圆锥的底面上。它的最大体积是 $V\\pi$。求 $V$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [9 * k * k * j, 12 * k * k * j, 2 * k * k * j, 3 * k * k * j],
+      solution: t(
+        `Similar triangles give $h = ${H}\\left(1 - \\frac{r}{${R}}\\right)$, so $V(r) = \\pi r^{2} h$. Setting $V'(r) = 0$ gives $r = ${2 * k}$, two thirds of the cone's radius, and then $h = ${j}$. The volume is $\\pi (${2 * k})^{2}(${j}) = ${answer}\\pi$.`,
+        `由相似三角形得 $h = ${H}\\left(1 - \\frac{r}{${R}}\\right)$，所以 $V(r) = \\pi r^{2} h$。令 $V'(r) = 0$ 得 $r = ${2 * k}$，即圆锥半径的三分之二，此时 $h = ${j}$。体积是 $\\pi (${2 * k})^{2}(${j}) = ${answer}\\pi$。`,
+      ),
+    });
+  },
+};
+
+const canWithCostlyEnds: KnowledgePointDef = {
+  id: "a-can-whose-ends-cost-more-than-its-side",
+  title: t("A can whose ends cost more than its side", "两端比侧面更贵的罐子"),
+  explanation: t(
+    "When the materials differ in price, the quantity to minimize is the cost and not the surface area. Each area is weighted by its price before differentiating. The fixed volume still removes the height, leaving a function of the radius alone. Dearer ends push the best can to be taller and narrower than the can of least material.",
+    "材料价格不同时，要最小化的是成本而不是表面积。求导之前，每部分面积都要乘以各自的单价。固定的体积仍然可以消去高，只留下半径的函数。两端越贵，最佳的罐子就比用料最少的罐子越高越细。",
+  ),
+  generate(rng) {
+    const r = rng.int(1, 6);
+    const [ends, side] = rng.pick([
+      [2, 1],
+      [3, 1],
+      [3, 2],
+      [4, 1],
+      [5, 2],
+      [5, 4],
+      [4, 3],
+    ] as const);
+    const volume = Q.of(2 * ends * r ** 3, side);
+    const answer = Q.of(2 * ends * r, side);
+    const held = `${volume.toLatex()}\\pi`;
+    const cost = `${2 * ends}\\pi r^{2} + \\frac{${volume.mul(Q.of(2 * side)).toLatex()}\\pi}{r}`;
+    return numberProblem({
+      prompt: t(
+        `A closed cylindrical can must hold $${held}$ cm³. Its top and bottom cost $${ends}$ cents per cm², and its side costs $${side}$ ${side === 1 ? "cent" : "cents"} per cm². Find the height, in cm, of the cheapest can.`,
+        `一个有盖的圆柱形罐子必须容纳 $${held}$ cm³。顶和底的成本是每 cm² $${ends}$ 分，侧面的成本是每 cm² $${side}$ 分。求最便宜的罐子的高，单位为 cm。`,
+      ),
+      answer,
+      wrong: [Q.of(2 * r), Q.of(r), Q.of(2 * side * r, ends), Q.of(ends * r, side), Q.of(4 * ends * r, side)],
+      solution: t(
+        `Removing the height with the volume, the cost is $C(r) = ${cost}$ in cents. Setting $C'(r) = 0$ gives $r = ${r}$, and the volume then gives $h = ${answer.toLatex()}$.`,
+        `用体积消去高，成本（单位：分）是 $C(r) = ${cost}$。令 $C'(r) = 0$ 得 $r = ${r}$，再由体积得 $h = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const cableAcrossRiver: KnowledgePointDef = {
+  id: "the-cheapest-cable-across-a-river",
+  title: t("The cheapest cable across a river", "过河电缆的最低成本路线"),
+  explanation: t(
+    "A cable that crosses water at a high price and then runs along the bank at a low price should not take the shortest path, nor should it cross straight over. Its cost is a root plus a linear term in the landing point. At the best landing point the two rates balance, and that point does not depend on how far the destination is.",
+    "电缆在水下成本高、沿岸成本低时，既不该走最短路线，也不该笔直过河。总成本是着陆点的一个根式加一个一次项。在最佳着陆点，两种变化率相互平衡，而这个点与目的地有多远无关。",
+  ),
+  generate(rng) {
+    const [water, land, across, along] = rng.pick([
+      [5, 3, 4, 3],
+      [5, 4, 3, 4],
+      [13, 5, 12, 5],
+      [13, 12, 5, 12],
+      [17, 8, 15, 8],
+      [17, 15, 8, 15],
+    ] as const);
+    const k = rng.int(1, 5);
+    const width = across * k;
+    const answer = along * k;
+    const total = answer + rng.int(1, 20);
+    return numberProblem({
+      prompt: t(
+        `A cable must run from a point on one bank of a straight river $${width}$ m wide to a point on the other bank, $${total}$ m downstream of the point directly opposite. Cable costs $${water}$ dollars per metre under water and $${land}$ dollars per metre along the far bank. How far downstream of the point directly opposite, in metres, should the cable land to cost the least?`,
+        `一条电缆要从笔直河流一岸的某点铺到对岸一点，河宽 $${width}$ m，终点在正对岸点的下游 $${total}$ m 处。电缆水下每米 $${water}$ 美元，沿对岸每米 $${land}$ 美元。为使成本最低，电缆应在正对岸点下游多少米处上岸？`,
+      ),
+      answer,
+      wrong: [Q.of(width), Q.of(total), Q.of(width * across, along), Q.of(width * land, water)],
+      solution: t(
+        `Landing $x$ m downstream costs $C(x) = ${water}\\sqrt{${width * width} + x^{2}} + ${land}(${total} - x)$. Setting $C'(x) = 0$ gives $${water}x = ${land}\\sqrt{${width * width} + x^{2}}$. Squaring and solving for positive $x$ gives $x = ${answer}$, which is within the $${total}$ m available.`,
+        `在下游 $x$ m 处上岸的成本是 $C(x) = ${water}\\sqrt{${width * width} + x^{2}} + ${land}(${total} - x)$。令 $C'(x) = 0$ 得 $${water}x = ${land}\\sqrt{${width * width} + x^{2}}$。两边平方并取正解，得 $x = ${answer}$，它在 $${total}$ m 的范围之内。`,
+      ),
+    });
+  },
+};
+
+const greatestSpeed: KnowledgePointDef = {
+  id: "the-greatest-speed-over-a-time-interval",
+  title: t("The greatest speed over a time interval", "一段时间内的最大速率"),
+  explanation: t(
+    "Speed is the absolute value of velocity, so its greatest value need not be where velocity is greatest. The candidates are the endpoints and the moment when acceleration is zero, where velocity reaches an extreme. A velocity that dips far below zero can produce the highest speed of all, so compare absolute values and not signed ones.",
+    "速率是速度的绝对值，所以它的最大值不一定出现在速度最大的时刻。候选点是两个端点，以及加速度为零的时刻，那时速度达到极值。速度如果向下深入零以下，可能产生全程最高的速率，所以要比较绝对值，而不是带符号的值。",
+  ),
+  generate(rng) {
+    const t0 = rng.int(1, 4);
+    const end = t0 + rng.int(1, 4);
+    const q = rng.int(1, 20);
+    const r = rng.int(1, 9);
+    const v = (x: number) => 3 * x * x - 6 * t0 * x + q;
+    const answer = Math.max(Math.abs(v(0)), Math.abs(v(t0)), Math.abs(v(end)));
+    const s = poly([1, "t^3"], [-3 * t0, "t^2"], [q, "t"], [r, ""]);
+    return numberProblem({
+      prompt: t(
+        `A particle moves along a line with position $s(t) = ${s}$ metres after $t$ seconds. Find its greatest speed, in m/s, for $0 \\le t \\le ${end}$.`,
+        `一个质点沿直线运动，$t$ 秒后的位置是 $s(t) = ${s}$ 米。求 $0 \\le t \\le ${end}$ 时它的最大速率，单位为 m/s。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [v(0), v(t0), v(end), q + 3 * t0 * t0, 6 * (end - t0), answer + 6 * t0, 2 * answer, 3 * answer],
+      solution: t(
+        `$v(t) = ${poly([3, "t^2"], [-6 * t0, "t"], [q, ""])}$, and $v'(t) = 0$ at $t = ${t0}$. Then $v(0) = ${v(0)}$, $v(${t0}) = ${v(t0)}$ and $v(${end}) = ${v(end)}$. The greatest absolute value is $${answer}$.`,
+        `$v(t) = ${poly([3, "t^2"], [-6 * t0, "t"], [q, ""])}$，且 $v'(t) = 0$ 在 $t = ${t0}$ 处。于是 $v(0) = ${v(0)}$，$v(${t0}) = ${v(t0)}$，$v(${end}) = ${v(end)}$。绝对值最大的是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const overlappingIntervals: KnowledgePointDef = {
+  id: "integrals-on-overlapping-intervals",
+  title: t("Integrals on overlapping intervals", "重叠区间上的积分"),
+  explanation: t(
+    "Additivity lets integrals on adjacent intervals be added. When two given intervals overlap, adding them counts the shared part twice. So the integral over the whole span is the sum of the two integrals minus the integral over the overlap. A number line sketch with the four endpoints in order makes the bookkeeping clear.",
+    "积分的可加性允许把相邻区间上的积分相加。当两个已知区间有重叠时，直接相加会把公共部分算两次。所以整个范围上的积分等于两个积分之和减去重叠部分上的积分。在数轴上按顺序标出四个端点，就能把这笔账算清楚。",
+  ),
+  generate(rng) {
+    const a = rng.int(-6, 0);
+    const b = a + rng.int(1, 3);
+    const c = b + rng.int(1, 3);
+    const d = c + rng.int(1, 3);
+    const p = nonzero(rng, 12);
+    const q = nonzero(rng, 12);
+    const r = nonzero(rng, 12);
+    const answer = p + q - r;
+    const int = (lo: number, hi: number) => `\\int_{${lo}}^{${hi}} f(x) \\, dx`;
+    const given = `${int(a, c)} = ${p}$, $${int(b, d)} = ${q}$ and $${int(b, c)} = ${r}`;
+    const givenZh = `${int(a, c)} = ${p}$，$${int(b, d)} = ${q}$，$${int(b, c)} = ${r}`;
+    return numberProblem({
+      prompt: t(`Given $${given}$, find $${int(a, d)}$.`, `已知 $${givenZh}$，求 $${int(a, d)}$。`),
+      answer,
+      form: "integer",
+      wrong: [p + q, p + q + r, p - r, q - r, p + q - 2 * r],
+      solution: t(
+        `The intervals $[${a}, ${c}]$ and $[${b}, ${d}]$ together cover $[${a}, ${d}]$, and both contain $[${b}, ${c}]$. So the value is $${poly([p, ""], [q, ""], [-r, ""])} = ${answer}$.`,
+        `区间 $[${a}, ${c}]$ 和 $[${b}, ${d}]$ 合起来覆盖 $[${a}, ${d}]$，而且都包含 $[${b}, ${c}]$。所以值是 $${poly([p, ""], [q, ""], [-r, ""])} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const absoluteValueOfQuadratic: KnowledgePointDef = {
+  id: "the-integral-of-the-absolute-value-of-a-quadratic",
+  title: t("The integral of the absolute value of a quadratic", "二次函数绝对值的积分"),
+  explanation: t(
+    "An absolute value is a piecewise function in disguise, with its breaks where the inside changes sign. For a quadratic those are its roots. Split the interval at any root inside it, flip the sign on the part where the quadratic is negative, and integrate each piece separately. Integrating without splitting would let the negative part cancel some of the area.",
+    "绝对值其实是分段函数，分段点就在内部变号的地方。对二次函数来说，这些点就是它的根。在区间内的根处把区间分开，在二次函数为负的部分改变符号，再分别积分。不分段直接积分，负的部分就会抵消一部分面积。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 6);
+    const b = a + rng.int(1, 5);
+    const c = rng.int(1, 3);
+    const first = Q.of(2 * a ** 3, 3);
+    const second = Q.of(b ** 3 - a ** 3, 3).sub(Q.of(a * a * (b - a)));
+    const answer = first.add(second).mul(Q.of(c));
+    const f = poly([c, `\\left|${poly([1, "x^2"], [-a * a, ""])}\\right|`]);
+    const scale = c === 1 ? "" : ` Multiplying by $${c}$ gives $${answer.toLatex()}$.`;
+    const scaleZh = c === 1 ? "" : `乘以 $${c}$ 得 $${answer.toLatex()}$。`;
+    const sum = first.add(second).toLatex();
+    return numberProblem({
+      prompt: t(`Evaluate $\\int_{0}^{${b}} ${f} \\, dx$.`, `计算 $\\int_{0}^{${b}} ${f} \\, dx$。`),
+      answer,
+      wrong: [
+        Q.of(b ** 3, 3)
+          .sub(Q.of(a * a * b))
+          .mul(Q.of(c)),
+        second.mul(Q.of(c)),
+        first.mul(Q.of(c)),
+        first.sub(second).mul(Q.of(c)),
+      ],
+      solution: t(
+        `$x^2 - ${a * a}$ is negative on $[0, ${a}]$ and positive on $[${a}, ${b}]$. So $\\int_{0}^{${b}} |x^2 - ${a * a}| \\, dx = \\int_{0}^{${a}} (${a * a} - x^2) \\, dx + \\int_{${a}}^{${b}} (x^2 - ${a * a}) \\, dx = ${first.toLatex()} + ${second.toLatex()} = ${sum}$.${scale}`,
+        `$x^2 - ${a * a}$ 在 $[0, ${a}]$ 上为负，在 $[${a}, ${b}]$ 上为正。所以 $\\int_{0}^{${b}} |x^2 - ${a * a}| \\, dx = \\int_{0}^{${a}} (${a * a} - x^2) \\, dx + \\int_{${a}}^{${b}} (x^2 - ${a * a}) \\, dx = ${first.toLatex()} + ${second.toLatex()} = ${sum}$。${scaleZh}`,
+      ),
+    });
+  },
+};
+
+const dropBetweenExtremes: KnowledgePointDef = {
+  id: "the-drop-between-extremes-of-an-accumulation-function",
+  title: t("The drop between extremes of an accumulation function", "累积函数两个极值之间的落差"),
+  explanation: t(
+    "An accumulation function has its integrand as its derivative, so its local extrema lie at the integrand's sign changes. The change between two such points is simply the integral of the integrand between them. The lower limit of the accumulation function shifts every value by the same amount and therefore plays no part in that difference.",
+    "累积函数的导数就是被积函数，所以它的局部极值出现在被积函数变号的地方。这两点之间的变化量，就是被积函数在两点之间的积分。累积函数的积分下限使所有函数值平移相同的量，因此对这个差没有影响。",
+  ),
+  generate(rng) {
+    const p = rng.int(-6, 5);
+    const q = p + rng.int(1, 6);
+    const c = rng.int(1, 3);
+    const k = rng.int(-3, 3);
+    const gap = q - p;
+    const answer = Q.of(c * gap ** 3, 6);
+    const integrand = poly([c, "t^2"], [-c * (p + q), "t"], [c * p * q, ""]);
+    return numberProblem({
+      prompt: t(
+        `Let $g(x) = \\int_{${k}}^{x} (${integrand}) \\, dt$. Find the local maximum value of $g$ minus its local minimum value.`,
+        `设 $g(x) = \\int_{${k}}^{x} (${integrand}) \\, dt$。求 $g$ 的极大值减去极小值的差。`,
+      ),
+      answer,
+      wrong: [answer.neg(), Q.of(c * gap ** 3, 3), Q.of(c * gap * gap, 2), Q.of(gap ** 3, 6), Q.of(c * gap ** 3)],
+      solution: t(
+        `$g'(x)$ is the integrand, which is positive, then negative, then positive, with zeros at $x = ${p}$ and $x = ${q}$. So $g(${p})$ is the local maximum and $g(${q})$ the local minimum. Their difference is minus the integral of the integrand from $${p}$ to $${q}$, which is $${answer.toLatex()}$.`,
+        `$g'(x)$ 就是被积函数，它先正、后负、再正，零点是 $x = ${p}$ 和 $x = ${q}$。所以 $g(${p})$ 是极大值，$g(${q})$ 是极小值。二者之差等于被积函数从 $${p}$ 到 $${q}$ 的积分的相反数，即 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const limitOfSumValue: KnowledgePointDef = {
+  id: "the-value-of-a-limit-of-a-sum",
+  title: t("The value of a limit of a sum", "和式极限的值"),
+  explanation: t(
+    "A limit of right Riemann sums can be computed without any summation formula, by recognizing the integral it defines. The factor multiplying the bracket is the width of a subinterval, whose numerator gives the length of the interval. The constant in the bracket is its left endpoint, and the bracket itself is the variable of integration.",
+    "右黎曼和的极限不用求和公式也能算出，只要认出它定义的积分。括号外的因子是子区间的宽度，其分子给出区间的长度。括号里的常数是区间的左端点，整个括号就是积分变量。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 5);
+    const b = rng.int(1, 6);
+    const k = rng.pick([2, 3]);
+    const top = a + b;
+    const value = Q.of(top ** (k + 1) - a ** (k + 1), k + 1);
+    const step = b === 1 ? "\\frac{i}{n}" : `\\frac{${b}i}{n}`;
+    const sum = `\\lim_{n \\to \\infty} \\sum_{i = 1}^{n} \\left(${a} + ${step}\\right)^{${k}} \\cdot \\frac{${b}}{n}`;
+    const integral = `\\int_{${a}}^{${top}} x^{${k}} \\, dx`;
+    return numberProblem({
+      prompt: t(`Find $${sum}$.`, `求 $${sum}$。`),
+      answer: value,
+      wrong: [Q.of(b ** (k + 1), k + 1), value.div(Q.of(b)), Q.of(top ** (k + 1) - a ** (k + 1)), Q.of(top ** k - a ** k, k)],
+      solution: t(
+        `The sum is a right Riemann sum for $x^{${k}}$ on an interval of length $${b}$ starting at $${a}$, so the limit is $${integral} = ${value.toLatex()}$.`,
+        `这个和是 $x^{${k}}$ 在从 $${a}$ 开始、长度为 $${b}$ 的区间上的右黎曼和，所以极限是 $${integral} = ${value.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const enclosedByYAxis: KnowledgePointDef = {
+  id: "a-region-enclosed-by-a-curve-and-the-y-axis",
+  title: t("A region enclosed by a curve and the y-axis", "曲线与 y 轴围成的区域"),
+  explanation: t(
+    "When no bounding lines are given, the limits of integration must come from the curve itself: they are the values of $y$ where the curve meets the $y$-axis, the roots of $x(y) = 0$. Between those roots the curve stays on one side of the axis, so the area is the integral of the absolute value of $x$ with respect to $y$.",
+    "没有给出边界直线时，积分限必须来自曲线本身：它们是曲线与 $y$ 轴相交处的 $y$ 值，即 $x(y) = 0$ 的根。在这两个根之间，曲线保持在 $y$ 轴的一侧，所以面积就是 $x$ 的绝对值对 $y$ 的积分。",
+  ),
+  generate(rng) {
+    const p = rng.int(-5, 4);
+    const gap = rng.int(1, 6);
+    const q = p + gap;
+    const c = rng.int(1, 3);
+    const opensLeft = rng.pick([true, false]);
+    const s = opensLeft ? -1 : 1;
+    const answer = Q.of(c * gap ** 3, 6);
+    const curve = poly([s * c, "y^2"], [-s * c * (p + q), "y"], [s * c * p * q, ""]);
+    const side = opensLeft ? "right" : "left";
+    const sideZh = opensLeft ? "右" : "左";
+    return numberProblem({
+      prompt: t(
+        `Find the area of the region enclosed by the curve $x = ${curve}$ and the $y$-axis.`,
+        `求曲线 $x = ${curve}$ 与 $y$ 轴围成的区域的面积。`,
+      ),
+      answer,
+      wrong: [answer.neg(), Q.of(c * gap ** 3, 3), Q.of(c * gap * gap, 2), Q.of(gap ** 3, 6), Q.of(c * gap ** 3)],
+      solution: t(
+        `The curve meets the $y$-axis at $y = ${p}$ and $y = ${q}$, and between them it lies to the ${side} of the axis. Integrating $|x|$ from $${p}$ to $${q}$ gives $${answer.toLatex()}$.`,
+        `曲线与 $y$ 轴相交于 $y = ${p}$ 和 $y = ${q}$，在这两点之间它位于 $y$ 轴${sideZh}侧。对 $|x|$ 从 $${p}$ 到 $${q}$ 积分，得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const centralDifferenceError: KnowledgePointDef = {
+  id: "the-error-of-a-central-difference-on-a-cubic",
+  title: t("The error of a central difference on a cubic", "三次函数的中心差商误差"),
+  explanation: t(
+    "A central difference balances the two sides of a point, so its even-powered terms in the step cancel. For a cubic the error is therefore exactly its leading coefficient times the square of the step, and it does not depend on the point at all. Halving the step divides the error by four, which is why central differences are preferred.",
+    "中心差商平衡了一点的两侧，所以步长的偶次项相互抵消。因此对三次函数，误差恰好等于最高次项系数乘以步长的平方，完全与所取的点无关。步长减半，误差就变为四分之一，这正是人们偏爱中心差商的原因。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 5);
+    const b = nonzero(rng, 9);
+    const e = nonzero(rng, 9);
+    const c = nonzero(rng, 4);
+    const h = rng.pick([Q.of(1, 2), Q.one, Q.of(2), Q.of(1, 4)]);
+    const answer = h.mul(h).mul(Q.of(a));
+    const f = poly([a, "x^3"], [b, "x"], [e, ""]);
+    const forward = Q.of(3 * a * c)
+      .mul(h)
+      .add(answer);
+    return numberProblem({
+      prompt: t(
+        `Let $f(x) = ${f}$. Estimate $f'(${c})$ with a central difference quotient $\\frac{f(a + h) - f(a - h)}{2h}$, using $h = ${h.toLatex()}$. Find the estimate minus the true value of $f'(${c})$.`,
+        `设 $f(x) = ${f}$。用中心差商 $\\frac{f(a + h) - f(a - h)}{2h}$ 估计 $f'(${c})$，取 $h = ${h.toLatex()}$。求估计值减去 $f'(${c})$ 的真实值。`,
+      ),
+      answer,
+      wrong: [forward, h.mul(Q.of(a)), answer.mul(Q.of(2)), Q.of(0), answer.neg()],
+      solution: t(
+        `Expanding, $\\frac{(a + h)^{3} - (a - h)^{3}}{2h} = 3a^{2} + h^{2}$, while the linear and constant terms are estimated exactly. So the error is $${inParens(a)} \\cdot \\left(${h.toLatex()}\\right)^{2} = ${answer.toLatex()}$.`,
+        `展开得 $\\frac{(a + h)^{3} - (a - h)^{3}}{2h} = 3a^{2} + h^{2}$，而一次项和常数项的估计完全准确。所以误差是 $${inParens(a)} \\cdot \\left(${h.toLatex()}\\right)^{2} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
 /** deeperCalculusIPoints gives, by topic id, the knowledge points added after a Calculus I topic's own. */
 export const deeperCalculusIPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "limits-of-piecewise-functions": [coefficientForPiecewiseLimit],
@@ -851,4 +1883,35 @@ export const deeperCalculusIPoints: Readonly<Record<string, readonly KnowledgePo
   "evaluating-definite-integrals-using-symmetry": [symmetryAboutAnotherCenter],
   "the-second-fundamental-theorem-of-calculus": [constantInAnAccumulation],
   "approximating-areas-with-the-right-riemann-sum": [rightMinusLeft],
+  "solving-equations-containing-hyperbolic-functions": [sinhAndCoshTogether],
+  "the-inverse-hyperbolic-functions": [hyperbolicOfInverse],
+  "the-product-and-quotient-rules-for-limits": [quotientLimitNewDenominator],
+  "limits-of-exponential-functions": [ratioOfExponentials],
+  "limits-of-logarithmic-functions": [differenceOfLogarithms],
+  "calculating-limits-using-trigonometric-identities": [tangentMinusSine],
+  "evaluating-limits-at-infinity-of-radical-functions": [differenceOfTwoRoots],
+  "the-squeeze-theorem": [boundedTermInRatio],
+  "special-limits-involving-cosine": [differenceOfCosines],
+  "further-limits-involving-the-exponential-function": [ratioOfExponentialDifferences],
+  "continuity-and-differentiability-of-functions": [differentiableJoin],
+  "calculating-the-slope-of-a-tangent-line-using-differentiation": [leastSlopeOnCubic],
+  "differentiating-inverse-trigonometric-functions": [arctanOfPowerAtPoint],
+  "the-chain-rule-with-logarithmic-functions": [logOfTrig],
+  "the-chain-rule-with-trigonometric-functions": [powerOfTrigOfMultiple],
+  "calculating-dy-dx-using-dx-dy": [secondDerivativeFromDxDy],
+  "calculating-related-rates-with-squares": [squareFromDiagonal],
+  "calculating-related-rates-using-trigonometry": [triangleWithGrowingAngle],
+  "the-candidates-test": [cornerAsCandidate],
+  "using-differentiation-to-calculate-critical-points": [criticalPointWhereDerivativeFails],
+  "determining-intervals-on-which-a-function-is-increasing-or-decreasing": [increasingEverywhere],
+  "optimization-problems-with-inscribed-shapes": [cylinderInCone],
+  "optimization-problems-involving-cylinders": [canWithCostlyEnds],
+  "optimizing-distances": [cableAcrossRiver],
+  "determining-characteristics-of-moving-objects-using-differentiation": [greatestSpeed],
+  "properties-of-definite-integrals-involving-the-limits-of-integration": [overlappingIntervals],
+  "definite-integrals-of-piecewise-functions": [absoluteValueOfQuadratic],
+  "the-integral-as-an-accumulation-function": [dropBetweenExtremes],
+  "defining-definite-integrals-using-left-and-right-riemann-sums": [limitOfSumValue],
+  "the-area-bounded-by-a-curve-and-the-y-axis": [enclosedByYAxis],
+  "estimating-derivatives-using-a-central-difference-quotient": [centralDifferenceError],
 };
