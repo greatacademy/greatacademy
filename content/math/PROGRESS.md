@@ -45,6 +45,7 @@ The report lists outline topics missing from each course and the findings of heu
 - Every knowledge point explains its idea in at least 15 words of prose, and `content/math/src/content.test.ts` enforces this for every course; new knowledge points must meet it too.
 - Every topic written by hand has at least two knowledge points; topics built by factories (`proofKp`, `placeValueKPs` and the like) get theirs from the factory. Solutions say why each step is taken, not only the result.
 - *Two-option choice* is a real weakness where it dominates: Yes/No questions make up 24% of the knowledge points of Abstract Algebra and 17% of Methods of Proof, and a learner can guess half of them. Replace them there first.
+- `tools/audit/src/aliases.ts` lists outline titles that a topic covers under another title. A course with one of those topics covers the entry, so the report lists only real gaps; add an entry only after reading the topic.
 - These findings are known false positives; review them only after a content change:
   - *visual topic without a figure*: titles that say "graphing calculator" or "significant figures", where the problems use tables or no picture. Also exam topics where a figure adds nothing or gives the answer away: the equations of circles, Classifying Triangles, Describing Behavior of a Function Graph, and Finding a Net Cost or Profit, whose title only contains "net".
   - *canonical answer appears in the prompt*: questions where the answer is an equal quantity named in the prompt, such as $\sin T = \cos S$ or $\varnothing$ in the input instructions.
@@ -72,7 +73,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Calculus I | Precalculus | done | | |
 | Calculus II | Calculus I | done | | 5 units, 160 topics |
 | Linear Algebra | Calculus I | done | | Assigned slot **A**. Complete 8 units, 181 topics (revision complete: free-response checkers, signs and LaTeX polished) |
-| Methods of Proof | Calculus I | done | | Assigned slot **B**. 7 units, 135 topics; Set Theory precedes Logic so the predicate topics can use sets |
+| Methods of Proof | Calculus I | done | | Assigned slot **B**. 7 units, 931 topics; Set Theory precedes Logic so the predicate topics can use sets |
 | Discrete Mathematics | Methods of Proof | done | | Slot **B** after Methods of Proof. 8 units, 143 topics |
 | 4th Grade Math, 5th Grade Math | — | done | — | 4th: 7 units, 140 topics; 5th: 8 units, 134 topics (`grade-4-*.ts`, `grade-5-*.ts`) |
 | 6th, 7th and 8th Grade Math | 5th Grade Math (outline) | done | | Rebuilt to the full outlines. 6th: 8 units, 157 topics (`grade-6-*.ts`). 7th: 5 units, 27 modules, 170 topics (`grade-7-*.ts`). 8th: 9 units, 27 modules, 134 topics (`grade-8-*.ts`) |

@@ -1,5 +1,7 @@
 import { type CompiledSubject, generateProblem } from "@ga/content";
 
+import { outlineAliases } from "./aliases.ts";
+
 /** Outline is a reference course outline: its stated size and its topic titles in order. */
 export interface Outline {
   readonly size: string;
@@ -73,7 +75,9 @@ export function audit(subject: CompiledSubject, outlines: ReadonlyMap<string, Ou
     gaps.push({
       course: course.def.id,
       missing: outline.titles
-        .filter((title) => !covered.has(normalizeTitle(title)))
+        .filter(
+          (title) => !covered.has(normalizeTitle(title)) && !(outlineAliases.get(title) ?? []).some((id) => course.topics.includes(id)),
+        )
         .map((title) => ({ title, existsAs: byTitle.get(normalizeTitle(title)) ?? [] })),
     });
   }

@@ -169,7 +169,7 @@ function piecesAlt(pieces: readonly Piece[], name: string): Text {
 }
 
 /** graphFigure draws a graph made of pieces. */
-function graphFigure(pieces: readonly Piece[], name = "f"): Figure {
+export function graphFigure(pieces: readonly Piece[], name = "f"): Figure {
   return { svg: plane(view, pieceMarks(pieces)), alt: piecesAlt(pieces, name) };
 }
 
@@ -1498,7 +1498,7 @@ export const rootsOfAFunction: TopicDef = {
 // Topic: increasing and decreasing functions.
 
 /** monotoneWalk draws a piece over -5..5 that both rises and falls, with integer vertices in [-5, 5]. */
-function monotoneWalk(rng: Rng, flat: boolean): Point[] {
+export function monotoneWalk(rng: Rng, flat: boolean): Point[] {
   const xs = walkXs(rng, -5, 5, 4);
   const n = xs.length - 1;
   const dirs: number[] = [];

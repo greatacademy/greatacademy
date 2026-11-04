@@ -180,6 +180,7 @@ import { multivariableCalculusMultivariableFunctionTopics } from "./topics/multi
 import { multivariableCalculusSurfaceIntegralTopics } from "./topics/multivariable-calculus-surface-integrals.ts";
 import { multivariableCalculusVectorFunctionTopics } from "./topics/multivariable-calculus-vector-functions.ts";
 import { numberTheoryTopics } from "./topics/number-theory.ts";
+import { outlineGapTopics } from "./topics/outline-gaps.ts";
 import { polynomialTopics } from "./topics/polynomials.ts";
 import { precalculusComplexNumberTopics } from "./topics/precalculus-complex-numbers.ts";
 import { precalculusConicSectionTopics } from "./topics/precalculus-conic-sections.ts";
@@ -448,6 +449,7 @@ export const math: SubjectDef = {
     ...actFundamentalsReasoningAlgebraTopics,
     ...actFundamentalsReasoningGeometryTopics,
     ...actFundamentalsReasoningDataTopics,
+    ...outlineGapTopics,
     ...actGeometryDataTopics,
     ...satMathStrategyTopics,
     ...examTopics,
