@@ -81,6 +81,7 @@ import { calculusIIVectorTopics } from "./topics/calculus-ii-vectors.ts";
 import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
+import { deeperCalculusIPoints } from "./topics/deeper-calculus-i.ts";
 import { deeperLinearAlgebraPoints } from "./topics/deeper-linear-algebra.ts";
 import { deeperMultivariableCalculusPoints } from "./topics/deeper-multivariable-calculus.ts";
 import { deeperProbabilityStatisticsPoints } from "./topics/deeper-probability-statistics.ts";
@@ -246,6 +247,7 @@ function finished(topic: TopicDef): TopicDef {
     encompasses: topic.encompasses.length ? topic.encompasses : (inferredEncompassings[topic.id] ?? []),
     knowledgePoints: [
       ...topic.knowledgePoints,
+      ...(deeperCalculusIPoints[topic.id] ?? []),
       ...(deeperLinearAlgebraPoints[topic.id] ?? []),
       ...(deeperMultivariableCalculusPoints[topic.id] ?? []),
       ...(deeperProbabilityStatisticsPoints[topic.id] ?? []),
