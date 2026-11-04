@@ -89,6 +89,24 @@ describe("figures", () => {
 });
 
 describe("plane", () => {
+  it("draws an arrow with a head and leaves out an arrow outside the view", () => {
+    const window = { xMin: -3, xMax: 3, yMin: -3, yMax: 3 };
+    expect(plane(window, [{ kind: "arrow", from: [0, 0], to: [1, 2] }])).toContain("<polyline");
+    expect(plane(window, [{ kind: "arrow", from: [0, 0], to: [9, 2] }])).not.toContain("<polyline");
+  });
+
+  it("draws a level curve near where the function has that value", () => {
+    const window = { xMin: -3, xMax: 3, yMin: -3, yMax: 3 };
+    const svg = plane(window, [{ kind: "contour", f: (x, y) => x * x + y * y, level: 4 }]);
+    const path = svg.match(/<path d="([^"]+)"/)?.[1] ?? "";
+    expect(path.length).toBeGreaterThan(0);
+    const scale = 260 / 6;
+    for (const [, x, y] of path.matchAll(/[ML]([\d.]+) ([\d.]+)/g)) {
+      const radius = Math.hypot((Number(x) - 22) / scale - 3, 3 - (Number(y) - 22) / scale);
+      expect(Math.abs(radius - 2)).toBeLessThan(0.02);
+    }
+  });
+
   const view = { xMin: -5, xMax: 5, yMin: -5, yMax: 5 };
 
   it("clip lines and curves to the view", () => {

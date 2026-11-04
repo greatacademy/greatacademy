@@ -51,7 +51,21 @@ export type PlaneMark =
   | { readonly kind: "circle"; readonly center: Point; readonly r: number; readonly accent?: boolean; readonly dashed?: boolean }
   /** region shades the part of the view where every half-plane holds, and inside or outside the disk if one is given. */
   | { readonly kind: "region"; readonly halfPlanes: readonly HalfPlane[]; readonly disk?: Disk }
-  | { readonly kind: "label"; readonly at: Point; readonly text: string; readonly dir: Compass };
+  | { readonly kind: "label"; readonly at: Point; readonly text: string; readonly dir: Compass }
+  /** arrow draws a straight arrow from from to to, left out when either end is outside the view. */
+  | { readonly kind: "arrow"; readonly from: Point; readonly to: Point; readonly accent?: boolean; readonly thin?: boolean }
+  /** contour draws the level curve f(x, y) = level over the view. */
+  | {
+      readonly kind: "contour";
+      readonly f: (x: number, y: number) => number;
+      readonly level: number;
+      readonly accent?: boolean;
+      readonly dashed?: boolean;
+    }
+  /** path draws a closed or open chain of points, broken where it leaves the view. */
+  | { readonly kind: "path"; readonly points: readonly Point[]; readonly accent?: boolean; readonly dashed?: boolean }
+  /** polygon shades a polygon, which need not be convex and has to lie inside the view. */
+  | { readonly kind: "polygon"; readonly points: readonly Point[] };
 
 const size = 260;
 const pad = 22;
@@ -115,6 +129,45 @@ function clipSegment(p: Point, q: Point, v: PlaneView): [Point, Point] | undefin
     [p[0] + t0 * dx, p[1] + t0 * dy],
     [p[0] + t1 * dx, p[1] + t1 * dy],
   ];
+}
+
+/**
+ * contourSegments finds the level curve f = level over the view by marching squares, as short segments. A cell with
+ * the value on each side of one diagonal holds two segments, joined so as to keep the cell's center with its own side.
+ */
+function contourSegments(f: (x: number, y: number) => number, level: number, v: PlaneView, n = 90): [Point, Point][] {
+  const out: [Point, Point][] = [];
+  const [dx, dy] = [(v.xMax - v.xMin) / n, (v.yMax - v.yMin) / n];
+  const value = (x: number, y: number) => f(x, y) - level;
+  const cross = (p: Point, fp: number, q: Point, fq: number): Point => {
+    const t = fp / (fp - fq);
+    return [p[0] + t * (q[0] - p[0]), p[1] + t * (q[1] - p[1])];
+  };
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      const corners: Point[] = [
+        [v.xMin + i * dx, v.yMin + j * dy],
+        [v.xMin + (i + 1) * dx, v.yMin + j * dy],
+        [v.xMin + (i + 1) * dx, v.yMin + (j + 1) * dy],
+        [v.xMin + i * dx, v.yMin + (j + 1) * dy],
+      ];
+      // A tiny shift keeps a level that falls exactly on a grid point from counting as a crossing of two edges at once.
+      const values = corners.map((c) => value(c[0], c[1]) || 1e-12);
+      const hits: Point[] = [];
+      for (let k = 0; k < 4; k++) {
+        const [fp, fq] = [values[k]!, values[(k + 1) % 4]!];
+        if (fp > 0 !== fq > 0) hits.push(cross(corners[k]!, fp, corners[(k + 1) % 4]!, fq));
+      }
+      if (hits.length === 2) out.push([hits[0]!, hits[1]!]);
+      else if (hits.length === 4) {
+        const centerAbove = value(v.xMin + (i + 0.5) * dx, v.yMin + (j + 0.5) * dy) > 0;
+        const firstAbove = values[1]! > 0;
+        if (centerAbove === firstAbove) out.push([hits[0]!, hits[3]!], [hits[1]!, hits[2]!]);
+        else out.push([hits[0]!, hits[1]!], [hits[2]!, hits[3]!]);
+      }
+    }
+  }
+  return out;
 }
 
 /**
@@ -212,6 +265,51 @@ export function plane(view: PlaneView, marks: readonly PlaneMark[]): string {
         flush();
         break;
       }
+      case "arrow": {
+        const inView = (p: Point) => p[0] >= xMin && p[0] <= xMax && p[1] >= yMin && p[1] <= yMax;
+        if (!inView(m.from) || !inView(m.to)) break;
+        const [x1, y1, x2, y2] = [sx(m.from[0]), sy(m.from[1]), sx(m.to[0]), sy(m.to[1])];
+        const length = Math.hypot(x2 - x1, y2 - y1);
+        if (length < 1e-6) break;
+        const width = m.thin ? 1.2 : 2;
+        const head = Math.min(m.thin ? 5 : 8, length * 0.6);
+        const [ux, uy] = [(x2 - x1) / length, (y2 - y1) / length];
+        const barb = (side: number) =>
+          `${round(x2 - head * ux + side * head * 0.5 * uy)},${round(y2 - head * uy - side * head * 0.5 * ux)}`;
+        const cls = m.accent ? ' class="accent"' : "";
+        body += `<g${cls} stroke-width="${width}"><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/><polyline points="${barb(1)} ${x2},${y2} ${barb(-1)}"/></g>`;
+        break;
+      }
+      case "contour": {
+        const d = contourSegments(m.f, m.level, view)
+          .map(([p, q]) => `M${sx(p[0])} ${sy(p[1])}L${sx(q[0])} ${sy(q[1])}`)
+          .join("");
+        if (d) body += `<path d="${d}"${attrs(m)} stroke-width="1.6"/>`;
+        break;
+      }
+      case "path": {
+        let run: Point[] = [];
+        const flush = () => {
+          if (run.length >= 2) body += polyline(run, m);
+          run = [];
+        };
+        for (let i = 0; i + 1 < m.points.length; i++) {
+          const q = m.points[i + 1]!;
+          const seg = clipSegment(m.points[i]!, q, view);
+          if (!seg) {
+            flush();
+            continue;
+          }
+          if (run.length === 0) run.push(seg[0]);
+          run.push(seg[1]);
+          if (Math.hypot(seg[1][0] - q[0], seg[1][1] - q[1]) > 1e-9) flush();
+        }
+        flush();
+        break;
+      }
+      case "polygon":
+        regions += `<polygon class="accent" points="${m.points.map((p) => `${sx(p[0])},${sy(p[1])}`).join(" ")}" fill="currentColor" fill-opacity="0.15" stroke="none"/>`;
+        break;
       case "curve": {
         const lo = Math.max(m.from ?? xMin, xMin);
         const hi = Math.min(m.to ?? xMax, xMax);
