@@ -175,7 +175,7 @@ const prealgebra: CourseDef = {
 - 给出选项 `textIssue(text, locale)` 时：题面、解答或选项被该函数报告有问题，学科可借此执行自己的书写规则；
 - 给出选项 `maxPositionShare` 时：选择题的正确选项落在同一位置的样本超过该比例。
 
-不同题面少于 `minDistinct` 个时发出警告；图形不同的题面算作不同。每个内容包都在测试中运行 `compileSubject` 和 `sampleGenerators`，因此运行时会拒绝的内容无法合入。选项 `shard: { index, count }` 只抽样从第 `index` 个起每隔 `count` 个的主题，内容包可以借此把抽样分到 Vitest 并行运行的多个测试文件中；`content/math` 分成四份，并传入自己的 `textIssue`（`$` 成对、数学模式外无 LaTeX、无连写正负号、中文中无成串英文）和 0.8 的 `maxPositionShare`。
+不同题面少于 `minDistinct` 个时发出警告；图形或选项集合不同的题面算作不同。每个内容包都在测试中运行 `compileSubject` 和 `sampleGenerators`，因此运行时会拒绝的内容无法合入。选项 `shard: { index, count }` 只抽样从第 `index` 个起每隔 `count` 个的主题，内容包可以借此把抽样分到 Vitest 并行运行的多个测试文件中；`content/math` 分成四份，并传入自己的 `textIssue`（`$` 成对、数学模式外无 LaTeX、无连写正负号、中文中无成串英文）和 0.8 的 `maxPositionShare`。
 
 ## 9. 提供题目
 
@@ -199,6 +199,8 @@ const prealgebra: CourseDef = {
 | `point` | `{ values, vars? }`：有理数 | 与 `values` 相等的有序数对或数组：`(3, -2)`；给出 `vars` 时也可以写成 `x = 3, y = -2`，顺序不限；每个数的写法与 `number` 相同 |
 | `equation` | `{ eq, form?, vars? }`：用 LaTeX 写出的多项式方程；`form` 为 `"slope-intercept"`、`"standard"` 或 `"point-slope"` | 两边之差是 `eq` 两边之差的非零倍数的方程：对 `y = 2x + 3`，`4x - 2y + 6 = 0` 也正确。`form` 要求关于 `vars`（默认 `x` 和 `y`）的直线方程形式：右边已化简的 `y = mx + b`；`A`、`B`、`C` 为没有公因数的整数且 `A > 0` 的 `Ax + By = C`；或 `y - k = m(x - h)`。等价但形式不对的方程会被拒绝并给出反馈 |
 | `factored` | `{ expr }`：用 LaTeX 写出、已在整数范围内彻底分解的多项式 | `expr` 的彻底分解：与之等价，非常数因式的个数（重复的按重数计）与 `expr` 相同，每个因式的系数都是没有公因数的整数，前面可以乘一个整数，因式顺序不限：`2(x + 1)(x - 3)` 或 `-2(3 - x)(x + 1)`。`(2x + 2)(x - 3)` 和 `2(x^2 - 2x - 3)` 会被拒绝并给出反馈 |
+
+**四选一的判断题。** 是非题让学习者有一半机会猜对。在抽象代数和证明方法两门课中，`oneOfFourTopic` 从生成器取四道这样的题，其中一道是给定答案，另外三道是相反答案，并问哪一道是给定答案。解答逐一说明这四道题。带图形的题目或太长不便作选项的题目保持原样。
 
 **文本规整。** 生成器按一般情况编写，随机值取 1 时会得到"$1x$"或"$1$ hours"。`polishTopic` 包装学科的每个生成器：在学习者读到的内容中（不含答案）去掉系数 1 和等式链中重复的值；在英文中让名词与数量 1 保持一致，并在 8、11 这类数字前写"an"。模板按一般情况编写，这些交给它处理；其他书写规则由 `mathTextIssue` 通过抽样检查（§8）。
 
