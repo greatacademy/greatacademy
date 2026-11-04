@@ -2,7 +2,7 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
 import type { ExamSpec } from "../exam.ts";
-import { mc, mod, spr, words } from "../exam.ts";
+import { mc, mod, spr } from "../exam.ts";
 
 // SAT Math Prep, Problem-Solving and Data Analysis: percentages, percentage change, unit conversions, ratios and rates.
 
@@ -711,14 +711,14 @@ export const satExamData2: ExamSpec[] = [
   propTips("Descriptions of Physical Phenomena", "描述物理现象", ["interpreting-descriptions-of-physical-phenomena"], (rng, hard) => {
     const [g, k, f] = [rng.int(2, 9), rng.int(2, 12), rng.int(2, 6)];
     if (!hard)
-      return words(
+      return mc(
         rng,
         t(
           `The energy of a moving object is given by $E = ${k}v^2$, where $v$ is its speed. If the speed is multiplied by $${f}$, by what factor is the energy multiplied?`,
           `运动物体的能量为 $E = ${k}v^2$，其中 $v$ 是速度。若速度乘以 $${f}$，能量乘以多少？`,
         ),
-        t(`$${f * f}$`, `$${f * f}$`),
-        [t(`$${f}$`, `$${f}$`), t(`$${2 * f + 1}$`, `$${2 * f + 1}$`), t(`$${f * f + f}$`, `$${f * f + f}$`)],
+        f * f,
+        [f, 2 * f + 1, f * f + f],
         t(`The speed is squared, so the factor is $${f}^2 = ${f * f}$.`, `速度被平方，所以倍数是 $${f}^2 = ${f * f}$。`),
       );
     return spr(

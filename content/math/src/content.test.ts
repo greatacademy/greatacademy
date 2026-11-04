@@ -1,4 +1,4 @@
-import { CompileError, formatIssue } from "@ga/content";
+import { CompileError, createRng, figureIssue, formatIssue } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
 import { inferredEncompassings } from "./encompassings.ts";
@@ -14,6 +14,23 @@ const minProseWords = 15;
 const proseWords = (text: string) => text.replace(/\$\$[\s\S]*?\$\$|\$[^$]*\$/g, " ").match(/[A-Za-z]{2,}/g)?.length ?? 0;
 
 describe("math content", () => {
+  it("lists the numeric options of exam questions from least to greatest and draws valid figures", () => {
+    const number = /^\$(-?\d+(?:\.\d+)?)\$$/;
+    for (const topic of math.topics.filter((tp) => /^(sat|act)-exam-/.test(tp.id))) {
+      for (const kp of topic.knowledgePoints) {
+        for (let seed = 1; seed <= 5; seed++) {
+          const problem = kp.generate(createRng(seed));
+          if (problem.figure) expect(figureIssue(problem.figure), topic.id).toBeUndefined();
+          const input = problem.answer.input as { readonly options?: readonly { readonly en: string }[] } | undefined;
+          const values = (input?.options ?? []).map((o) => number.exec(o.en)?.[1]);
+          if (values.length === 0 || values.includes(undefined)) continue;
+          const shown = values.map(Number);
+          expect(shown, topic.id).toEqual([...shown].sort((a, b) => a - b));
+        }
+      }
+    }
+  });
+
   it("compiles without warnings", () => {
     try {
       expect(compileMath().warnings.map(formatIssue)).toEqual([]);

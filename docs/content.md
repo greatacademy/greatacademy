@@ -271,3 +271,5 @@ The first course, **Foundations of Algebra** (`algebra-foundations`), has 20 top
 
 An exam topic is built by `content/math/src/exam.ts` from one specification per outline title. Its id is `<exam>-exam-<title>`, and it has two knowledge points, `exam-question` and `harder-exam-question`, whose questions are written in the style of the test. It is practice-only, because the mathematics is taught by the Fundamentals topics, which it lists as prerequisites and encompasses; its explanation is a short tip for a learner who failed the lesson.
 
+A question about a figure draws it (`content/math/src/exam-figures.ts`), labeled with the given measures and with "?" at what it asks, unless a drawing would show the answer. Numeric options are listed from least to greatest, as on the real tests. So that "pick the smallest" tells nothing, the position of the answer is drawn at random, and distractors on the side with too many are mirrored across the answer or replaced by a near value; the first distractors a generator lists stay. Other options are shuffled.
+

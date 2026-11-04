@@ -78,6 +78,42 @@ export type Option = Coefficient | string;
 
 const latexOf = (o: Option): string => (typeof o === "string" ? o : (o instanceof Q ? o : Q.of(o)).toLatex());
 
+/** optionValue is the number an option shows, or undefined if it is not a plain number or fraction. */
+function optionValue(o: Option): Q | undefined {
+  if (typeof o !== "string") return o instanceof Q ? o : Q.of(o);
+  if (/^-?\d+(\.\d+)?$/.test(o)) return Q.parse(o);
+  const frac = /^(-?)\\frac\{(\d+)\}\{([1-9]\d*)\}$/.exec(o);
+  return frac ? Q.of(BigInt(`${frac[1]}${frac[2]}`), BigInt(frac[3] as string)) : undefined;
+}
+
+/**
+ * orderedOptions lists numeric options from least to greatest, as the real tests do, with the answer at a position drawn at random so that
+ * "pick the smallest" tells nothing. Distractors on the side that has too many are mirrored across the answer, or replaced by a near value if
+ * the mirror image would be out of place, such as a negative among positive quantities; the first distractors listed, the most plausible, stay.
+ */
+function orderedOptions(rng: Rng, correct: Q, wrong: readonly Q[]): Q[] {
+  const all = [correct, ...wrong];
+  const positive = correct.sign() > 0 && all.every((v) => v.sign() >= 0);
+  const fraction = all.every((v) => v.sign() >= 0 && v.cmp(Q.one) <= 0);
+  const fits = (v: Q): boolean => !v.eq(correct) && !(positive && v.sign() <= 0) && !(fraction && v.cmp(Q.one) >= 0);
+  const step = correct.isInteger() ? Q.one : Q.of(1n, 2n * correct.d);
+  const nearBy = (side: number): Q[] => [1, 2, 3, 4, 5, 6].map((d) => correct.add(step.mul(Q.of(side * d)))).filter(fits);
+  const least = Math.max(0, 3 - nearBy(1).length);
+  const target = rng.int(Math.min(least, 3), Math.max(least, Math.min(3, nearBy(-1).length)));
+  const options = [...wrong];
+  const below = (): number => options.filter((o) => o.cmp(correct) < 0).length;
+  for (let i = options.length - 1; i >= 0 && below() !== target; i--) {
+    const w = options[i] as Q;
+    const isBelow = w.cmp(correct) < 0;
+    if (isBelow !== below() > target) continue;
+    const free = (v: Q): boolean => fits(v) && !options.some((o) => o.eq(v));
+    const mirror = correct.add(correct.sub(w));
+    const next = free(mirror) ? mirror : nearBy(isBelow ? 1 : -1).find(free);
+    if (next) options[i] = next;
+  }
+  return [correct, ...options].sort((a, b) => a.cmp(b));
+}
+
 /** concluded ends a solution by stating the answer, unless it already explains itself and names it. */
 function concluded(solution: Text, answer: Text): Text {
   if (solution.en.length >= 25 && solution.en.includes(answer.en.replace(/\.$/, ""))) return solution;
@@ -87,31 +123,36 @@ function concluded(solution: Text, answer: Text): Text {
   );
 }
 
-/** mc builds a four-option question from a correct option and its distractors, in shuffled order so that the position of the answer tells nothing; missing distractors are filled with nearby values. */
+/** mc builds a four-option question from a correct option and its distractors. Numeric options are listed from least to greatest, as on the real tests (see orderedOptions), and other options are shuffled, so that the position of the answer tells nothing; missing distractors are filled with nearby values. */
 export function mc(rng: Rng, prompt: Text, correct: Option, wrong: readonly Option[], solution: Text, figure?: Figure): Problem {
   const key = latexOf(correct);
   const seen = new Set([key]);
-  const rest: string[] = [];
+  const rest: Option[] = [];
   for (const w of wrong) {
     const l = latexOf(w);
     if (!seen.has(l) && rest.length < 3) {
       seen.add(l);
-      rest.push(l);
+      rest.push(w);
     }
   }
   for (let d = 1; rest.length < 3 && typeof correct !== "string"; d++) {
     for (const c of [
-      correct instanceof Q ? correct.add(Q.of(d)) : Q.of(correct).add(Q.of(d)),
-      correct instanceof Q ? correct.sub(Q.of(d)) : Q.of(correct).sub(Q.of(d)),
+      (correct instanceof Q ? correct : Q.of(correct)).add(Q.of(d)),
+      (correct instanceof Q ? correct : Q.of(correct)).sub(Q.of(d)),
     ]) {
       const l = c.toLatex();
       if (!seen.has(l) && rest.length < 3) {
         seen.add(l);
-        rest.push(l);
+        rest.push(c);
       }
     }
   }
-  const ordered = rng.shuffle([key, ...rest]);
+  const value = optionValue(correct);
+  const values = rest.map(optionValue);
+  const ordered =
+    value && values.every((v) => v !== undefined)
+      ? orderedOptions(rng, value, values as Q[]).map((v) => v.toLatex())
+      : rng.shuffle([key, ...rest.map(latexOf)]);
   const options = ordered.map((l) => t(`$${l}$`, `$${l}$`));
   return {
     ...choiceProblem({ prompt, options, correct: ordered.indexOf(key), solution: concluded(solution, t(`$${key}$`, `$${key}$`)) }),
