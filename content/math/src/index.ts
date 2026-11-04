@@ -81,6 +81,7 @@ import { calculusIIVectorTopics } from "./topics/calculus-ii-vectors.ts";
 import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
+import { deeperLinearAlgebraPoints } from "./topics/deeper-linear-algebra.ts";
 import { differentialEquationsBvpTopics } from "./topics/differential-equations-bvp.ts";
 import { differentialEquationsFirstOrderTopics } from "./topics/differential-equations-first-order.ts";
 import { differentialEquationsLaplaceTopics } from "./topics/differential-equations-laplace.ts";
@@ -236,12 +237,12 @@ const judgedOverFourCases = new Set(
     .flatMap((course) => course.units.flatMap((unit) => unit.modules.flatMap((module) => module.topics))),
 );
 
-/** finished applies the passes every topic goes through: inferred encompassings, knowledge points that read a drawing, questions over four cases and polish. */
+/** finished applies the passes every topic goes through: inferred encompassings, added knowledge points, questions over four cases and polish. */
 function finished(topic: TopicDef): TopicDef {
   const weighted = {
     ...topic,
     encompasses: topic.encompasses.length ? topic.encompasses : (inferredEncompassings[topic.id] ?? []),
-    knowledgePoints: [...topic.knowledgePoints, ...(figureReadingPoints[topic.id] ?? [])],
+    knowledgePoints: [...topic.knowledgePoints, ...(deeperLinearAlgebraPoints[topic.id] ?? []), ...(figureReadingPoints[topic.id] ?? [])],
   };
   return polishTopic(judgedOverFourCases.has(topic.id) ? oneOfFourTopic(weighted) : weighted);
 }
