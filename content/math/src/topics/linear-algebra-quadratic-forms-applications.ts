@@ -1968,11 +1968,11 @@ export const computingTheSingularValuesOfAMatrix: TopicDef = {
           `Compute $A^T A = ${mat2Latex([
             [a11 * a11, 0],
             [0, a22 * a22],
-          ])}$. The eigenvalues of $A^T A$ are ${c * c}$ and ${d * d}$. Taking the positive square roots gives the singular values $\\sigma_1 = \\sqrt{${c * c}} = ${c}$ and $\\sigma_2 = \\sqrt{${d * d}} = ${d}$.`,
+          ])}$. The eigenvalues of $A^T A$ are $${c * c}$ and $${d * d}$. Taking the positive square roots gives the singular values $\\sigma_1 = \\sqrt{${c * c}} = ${c}$ and $\\sigma_2 = \\sqrt{${d * d}} = ${d}$.`,
           `计算 $A^T A = ${mat2Latex([
             [a11 * a11, 0],
             [0, a22 * a22],
-          ])}$。$A^T A$ 的特征值为 ${c * c}$ 和 ${d * d}$。取算术平方根得到奇异值为 $\\sigma_1 = \\sqrt{${c * c}} = ${c}$ 与 $\\sigma_2 = \\sqrt{${d * d}} = ${d}$。`,
+          ])}$。$A^T A$ 的特征值为 $${c * c}$ 和 $${d * d}$。取算术平方根得到奇异值为 $\\sigma_1 = \\sqrt{${c * c}} = ${c}$ 与 $\\sigma_2 = \\sqrt{${d * d}} = ${d}$。`,
         );
 
         return solutionsProblem({

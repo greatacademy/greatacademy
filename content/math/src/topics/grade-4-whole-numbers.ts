@@ -370,7 +370,7 @@ export const solvingMultistepWordProblemsUsingNumberOperations: TopicDef = {
         const value = (a + b) * n;
         return numberProblem({
           prompt: t(
-            `A notebook costs $${a} and a pen costs $${b}. How many dollars do ${n} notebooks and ${n} pens cost in total?`,
+            `A notebook costs \\$${a} and a pen costs \\$${b}. How many dollars do ${n} notebooks and ${n} pens cost in total?`,
             `一本笔记本 ${a} 元，一支钢笔 ${b} 元。${n} 本笔记本和 ${n} 支钢笔一共多少元？`,
           ),
           answer: value,
@@ -1409,11 +1409,11 @@ export const equivalentPlaceValueRepresentationsAndBorrowing: TopicDef = {
         return numberProblem({
           prompt: askTens
             ? t(
-                `$${fmt(n)} = ${a}$ thousands $+ ${b - 1}$ hundreds $+ \\square$ tens $+ ${c + 10}$ ones. Find the number in the box.`,
+                `$${fmt(n)} = ${a}$ ${a === 1 ? "thousand" : "thousands"} $+ ${b - 1}$ ${b === 2 ? "hundred" : "hundreds"} $+ \\square$ tens $+ ${c + 10}$ ones. Find the number in the box.`,
                 `$${fmt(n)} = ${a}$ 个千 $+ ${b - 1}$ 个百 $+ \\square$ 个十 $+ ${c + 10}$ 个一。求方框中的数。`,
               )
             : t(
-                `$${fmt(n)} = ${a}$ thousands $+ ${b - 1}$ hundreds $+ 9$ tens $+ \\square$ ones. Find the number in the box.`,
+                `$${fmt(n)} = ${a}$ ${a === 1 ? "thousand" : "thousands"} $+ ${b - 1}$ ${b === 2 ? "hundred" : "hundreds"} $+ 9$ tens $+ \\square$ ones. Find the number in the box.`,
                 `$${fmt(n)} = ${a}$ 个千 $+ ${b - 1}$ 个百 $+ 9$ 个十 $+ \\square$ 个一。求方框中的数。`,
               ),
           answer: askTens ? 9 : c + 10,

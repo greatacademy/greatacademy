@@ -1532,8 +1532,8 @@ export const solvingRadicalEquations: TopicDef = {
       id: "squaring-both-sides",
       title: t("Squaring both sides", "两边平方"),
       explanation: t(
-        "To undo a square root, square both sides, then solve:\n\n$$\\sqrt{2x + 3} = 5 ;\\Rightarrow; 2x + 3 = 25 ;\\Rightarrow; x = 11$$\n\nA square root is never negative, so an equation such as $\\sqrt{2x + 3} = -5$ has **no solution**. Squaring would give $x = 11$ anyway, but $\\sqrt{25} = 5 \\ne -5$: squaring can create **extraneous** solutions, so always check the answer in the original equation.",
-        "要消去平方根，就把两边平方，再求解：\n\n$$\\sqrt{2x + 3} = 5 ;\\Rightarrow; 2x + 3 = 25 ;\\Rightarrow; x = 11$$\n\n平方根永远不是负数，所以 $\\sqrt{2x + 3} = -5$ 这样的方程**无解**。平方后仍会得到 $x = 11$，但 $\\sqrt{25} = 5 \\ne -5$：平方可能产生**增根**，所以一定要把答案代回原方程检验。",
+        "To undo a square root, square both sides, then solve:\n\n$$\\sqrt{2x + 3} = 5 \\;\\Rightarrow\\; 2x + 3 = 25 \\;\\Rightarrow\\; x = 11$$\n\nA square root is never negative, so an equation such as $\\sqrt{2x + 3} = -5$ has **no solution**. Squaring would give $x = 11$ anyway, but $\\sqrt{25} = 5 \\ne -5$: squaring can create **extraneous** solutions, so always check the answer in the original equation.",
+        "要消去平方根，就把两边平方，再求解：\n\n$$\\sqrt{2x + 3} = 5 \\;\\Rightarrow\\; 2x + 3 = 25 \\;\\Rightarrow\\; x = 11$$\n\n平方根永远不是负数，所以 $\\sqrt{2x + 3} = -5$ 这样的方程**无解**。平方后仍会得到 $x = 11$，但 $\\sqrt{25} = 5 \\ne -5$：平方可能产生**增根**，所以一定要把答案代回原方程检验。",
       ),
       generate(rng) {
         const x0 = rng.nonZero(-12, 12);
@@ -1559,8 +1559,8 @@ export const solvingRadicalEquations: TopicDef = {
       id: "isolating-the-root",
       title: t("Isolating the root first", "先分离根式"),
       explanation: t(
-        "Isolate the square root before squaring; squaring $3\\sqrt{x} + 1$ as it stands would not remove the root.\n\n$$3\\sqrt{x - 2} + 1 = 13 ;\\Rightarrow; \\sqrt{x - 2} = 4 ;\\Rightarrow; x - 2 = 16 ;\\Rightarrow; x = 18$$\n\nIf the isolated root equals a negative number, there is no solution.",
-        "先分离出平方根再平方；直接平方 $3\\sqrt{x} + 1$ 并不能消去根号。\n\n$$3\\sqrt{x - 2} + 1 = 13 ;\\Rightarrow; \\sqrt{x - 2} = 4 ;\\Rightarrow; x - 2 = 16 ;\\Rightarrow; x = 18$$\n\n如果分离出的根式等于负数，方程无解。",
+        "Isolate the square root before squaring; squaring $3\\sqrt{x} + 1$ as it stands would not remove the root.\n\n$$3\\sqrt{x - 2} + 1 = 13 \\;\\Rightarrow\\; \\sqrt{x - 2} = 4 \\;\\Rightarrow\\; x - 2 = 16 \\;\\Rightarrow\\; x = 18$$\n\nIf the isolated root equals a negative number, there is no solution.",
+        "先分离出平方根再平方；直接平方 $3\\sqrt{x} + 1$ 并不能消去根号。\n\n$$3\\sqrt{x - 2} + 1 = 13 \\;\\Rightarrow\\; \\sqrt{x - 2} = 4 \\;\\Rightarrow\\; x - 2 = 16 \\;\\Rightarrow\\; x = 18$$\n\n如果分离出的根式等于负数，方程无解。",
       ),
       keyPrerequisites: ["two-step-equations"],
       generate(rng) {
@@ -1596,8 +1596,8 @@ export const solvingRadicalEquations: TopicDef = {
       id: "roots-on-both-sides",
       title: t("Roots on both sides", "两边都有根式"),
       explanation: t(
-        "When each side is a square root, squaring removes both:\n\n$$\\sqrt{3x - 1} = \\sqrt{x + 7} ;\\Rightarrow; 3x - 1 = x + 7 ;\\Rightarrow; x = 4$$\n\nCheck that the radicands are not negative at the solution: if they are, the roots are undefined there and the solution is extraneous.",
-        "当两边都是平方根时，平方后两个根号都消去：\n\n$$\\sqrt{3x - 1} = \\sqrt{x + 7} ;\\Rightarrow; 3x - 1 = x + 7 ;\\Rightarrow; x = 4$$\n\n检验解处的被开方式不是负数：如果是负数，根式在那里没有意义，这个解就是增根。",
+        "When each side is a square root, squaring removes both:\n\n$$\\sqrt{3x - 1} = \\sqrt{x + 7} \\;\\Rightarrow\\; 3x - 1 = x + 7 \\;\\Rightarrow\\; x = 4$$\n\nCheck that the radicands are not negative at the solution: if they are, the roots are undefined there and the solution is extraneous.",
+        "当两边都是平方根时，平方后两个根号都消去：\n\n$$\\sqrt{3x - 1} = \\sqrt{x + 7} \\;\\Rightarrow\\; 3x - 1 = x + 7 \\;\\Rightarrow\\; x = 4$$\n\n检验解处的被开方式不是负数：如果是负数，根式在那里没有意义，这个解就是增根。",
       ),
       keyPrerequisites: ["equations-with-variables-on-both-sides"],
       generate(rng) {
@@ -1626,8 +1626,8 @@ export const solvingRadicalEquations: TopicDef = {
       id: "extraneous-solutions",
       title: t("Extraneous solutions", "增根"),
       explanation: t(
-        "When the other side contains $x$, squaring can produce a solution that makes it negative. Such a solution is extraneous:\n\n$$\\sqrt{x^{2} + 7} = x + 1 ;\\Rightarrow; x^{2} + 7 = x^{2} + 2x + 1 ;\\Rightarrow; x = 3$$\n\nCheck: $\\sqrt{16} = 4 = 3 + 1$, so $x = 3$ is a solution. For $x = \\sqrt{2x^{2} - 9}$, squaring gives $x^{2} = 9$, but $x = -3$ makes the left side negative while the root is positive, so only $x = 3$ is a solution.",
-        "当另一边含有 $x$ 时，平方可能得到使这一边为负的解，这样的解就是增根：\n\n$$\\sqrt{x^{2} + 7} = x + 1 ;\\Rightarrow; x^{2} + 7 = x^{2} + 2x + 1 ;\\Rightarrow; x = 3$$\n\n检验：$\\sqrt{16} = 4 = 3 + 1$，所以 $x = 3$ 是解。对于 $x = \\sqrt{2x^{2} - 9}$，平方得到 $x^{2} = 9$，但 $x = -3$ 使左边为负而根式为正，所以只有 $x = 3$ 是解。",
+        "When the other side contains $x$, squaring can produce a solution that makes it negative. Such a solution is extraneous:\n\n$$\\sqrt{x^{2} + 7} = x + 1 \\;\\Rightarrow\\; x^{2} + 7 = x^{2} + 2x + 1 \\;\\Rightarrow\\; x = 3$$\n\nCheck: $\\sqrt{16} = 4 = 3 + 1$, so $x = 3$ is a solution. For $x = \\sqrt{2x^{2} - 9}$, squaring gives $x^{2} = 9$, but $x = -3$ makes the left side negative while the root is positive, so only $x = 3$ is a solution.",
+        "当另一边含有 $x$ 时，平方可能得到使这一边为负的解，这样的解就是增根：\n\n$$\\sqrt{x^{2} + 7} = x + 1 \\;\\Rightarrow\\; x^{2} + 7 = x^{2} + 2x + 1 \\;\\Rightarrow\\; x = 3$$\n\n检验：$\\sqrt{16} = 4 = 3 + 1$，所以 $x = 3$ 是解。对于 $x = \\sqrt{2x^{2} - 9}$，平方得到 $x^{2} = 9$，但 $x = -3$ 使左边为负而根式为正，所以只有 $x = 3$ 是解。",
       ),
       keyPrerequisites: ["squaring-binomials"],
       generate(rng) {

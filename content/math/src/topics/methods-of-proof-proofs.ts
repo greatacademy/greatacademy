@@ -1210,7 +1210,7 @@ export const provingPropertiesOfIrrationalsByContradiction: TopicDef = {
       generate(rng) {
         const p = rng.pick([2, 3, 5, 6, 7, 10, 11, 13]);
         const a = rng.int(-9, 9);
-        const b = rng.int(1, 7);
+        const b = rng.int(a === 0 ? 2 : 1, 7);
         const lhs = `${a === 0 ? "" : `${a} + `}${b === 1 ? "" : b}\\sqrt{${p}}`;
         const num = a === 0 ? "m" : `m ${a > 0 ? "-" : "+"} ${term(Math.abs(a), "n")}`;
         const den = b === 1 ? "n" : `${b}n`;

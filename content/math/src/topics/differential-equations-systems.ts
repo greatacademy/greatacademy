@@ -1487,22 +1487,22 @@ export const phasePortraitsForLinearSystemsWithZeroEigenvalues: TopicDef = {
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 35);
-        const ans = a;
+        const ans = -a;
 
         const prompt = t(
-          `For the linear system $\\mathbf{x}' = \\begin{pmatrix} ${a} & 1 \\\\ ${2 * a} & 2 \\end{pmatrix} \\mathbf{x}$, the equilibrium points form a line $${a}x + y = 0$. Find the coefficient of $x$ in this line equation.`,
-          `对于线性系统 $\\mathbf{x}' = \\begin{pmatrix} ${a} & 1 \\\\ ${2 * a} & 2 \\end{pmatrix} \\mathbf{x}$，其平衡点构成直线 $${a}x + y = 0$。求该平衡线方程中 $x$ 的系数。`,
+          `For the linear system $\\mathbf{x}' = \\begin{pmatrix} ${a} & 1 \\\\ ${2 * a} & 2 \\end{pmatrix} \\mathbf{x}$, the equilibrium points form a line $y = mx$. Find $m$.`,
+          `对于线性系统 $\\mathbf{x}' = \\begin{pmatrix} ${a} & 1 \\\\ ${2 * a} & 2 \\end{pmatrix} \\mathbf{x}$，其平衡点构成直线 $y = mx$。求 $m$。`,
         );
         const solution = t(
           steps(
-            `Equilibrium points satisfy $A \\mathbf{x} = \\mathbf{0}$, which gives ${a}x + y = 0$ and ${2 * a}x + 2y = 0$.`,
-            `Both equations are identical to $${a}x + y = 0$.`,
-            `The coefficient of $x$ is $a = ${ans}$.`,
+            `Equilibrium points satisfy $A \\mathbf{x} = \\mathbf{0}$, which gives $${a}x + y = 0$ and $${2 * a}x + 2y = 0$.`,
+            `The second equation is twice the first, so both say $${a}x + y = 0$.`,
+            `Solving for $y$ gives $y = ${ans}x$, so $m = ${ans}$.`,
           ),
           steps(
-            `平衡点满足 $A \\mathbf{x} = \\mathbf{0}$，展开得 ${a}x + y = 0$ 与 ${2 * a}x + 2y = 0$。`,
-            `两方程线性相关，化简均为 $${a}x + y = 0$。`,
-            `因此 $x$ 的系数为 $a = ${ans}$。`,
+            `平衡点满足 $A \\mathbf{x} = \\mathbf{0}$，展开得 $${a}x + y = 0$ 与 $${2 * a}x + 2y = 0$。`,
+            `第二个方程是第一个的两倍，所以两者都表示 $${a}x + y = 0$。`,
+            `解出 $y$ 得 $y = ${ans}x$，所以 $m = ${ans}$。`,
           ),
         );
 
@@ -1510,7 +1510,7 @@ export const phasePortraitsForLinearSystemsWithZeroEigenvalues: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [2 * a, a + 1, 1],
+          wrong: [a, -2 * a, 1],
         });
       },
     },

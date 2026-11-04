@@ -1209,13 +1209,13 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
               `Transforming the ODE: $(s^2 + ${omegaSq}) Y(s) = \\frac{${K} e^{-${c}s}}{s}$.`,
               `Thus $Y(s) = \\frac{${K}}{\\omega^2} e^{-${c}s} \\left[ \\frac{1}{s} - \\frac{s}{s^2 + ${omegaSq}} \\right] = ${ans} e^{-${c}s} \\left[ \\frac{1}{s} - \\frac{s}{s^2 + ${omegaSq}} \\right]$.`,
               `Inverting with the second shifting theorem gives $y(t) = ${ans}[1 - \\cos(${omega}(t - ${c}))] u(t - ${c})$.`,
-              `The cosine term oscillates between $-1$ and $+1$, so $y(t)$ oscillates between $0$ and ${2 * ans}$ around the center level ${ans}$.`,
+              `The cosine term oscillates between $-1$ and $+1$, so $y(t)$ oscillates between $0$ and $${2 * ans}$ around the center level $${ans}$.`,
             ),
             steps(
               `对微分方程取变换：$(s^2 + ${omegaSq}) Y(s) = \\frac{${K} e^{-${c}s}}{s}$。`,
               `分解分式：$Y(s) = ${ans} e^{-${c}s} \\left[ \\frac{1}{s} - \\frac{s}{s^2 + ${omegaSq}} \\right]$。`,
               `利用第二位移定理求逆变换得 $y(t) = ${ans}[1 - \\cos(${omega}(t - ${c}))] u(t - ${c})$。`,
-              `余弦项在 $-1$ 到 $+1$ 之间振动，因此 $y(t)$ 在 $0$ 到 ${2 * ans}$ 之间波动，中心平衡位置为 ${ans}$。`,
+              `余弦项在 $-1$ 到 $+1$ 之间振动，因此 $y(t)$ 在 $0$ 到 $${2 * ans}$ 之间波动，中心平衡位置为 $${ans}$。`,
             ),
           );
 
