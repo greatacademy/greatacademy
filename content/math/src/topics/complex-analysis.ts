@@ -364,8 +364,8 @@ const harmonic = topic(
           answer,
           [a * x0 + b * y0, b * x0 - a * y0, a * y0 + b * x0, answer + 1],
           [
-            `$v_y = u_x = ${a}$ and $v_x = -u_y = -${b}$, so $v = ${a}y - ${b}x$, which gives ${answer} at this point.`,
-            `$v_y = u_x = ${a}$，$v_x = -u_y = -${b}$，所以 $v = ${a}y - ${b}x$，在这一点的值是 ${answer}。`,
+            `$v_y = u_x = ${a}$ and $v_x = -u_y = -${b}$, so $v = ${a}y - ${b}x$, which gives $${answer}$ at this point.`,
+            `$v_y = u_x = ${a}$，$v_x = -u_y = -${b}$，所以 $v = ${a}y - ${b}x$，在这一点的值是 $${answer}$。`,
           ],
         );
       },
@@ -399,8 +399,8 @@ const complexExponential = topic(
           answer,
           [-answer, 1, r + 1, half ? r - 1 : -r - 1],
           [
-            `The modulus is $e^{\\ln ${r}} = ${r}$, and the angle is an ${half ? "odd" : "even"} multiple of $\\pi$, so the value is ${answer}.`,
-            `模是 $e^{\\ln ${r}} = ${r}$，角是 $\\pi$ 的${half ? "奇数" : "偶数"}倍，所以值是 ${answer}。`,
+            `The modulus is $e^{\\ln ${r}} = ${r}$, and the angle is an ${half ? "odd" : "even"} multiple of $\\pi$, so the value is $${answer}$.`,
+            `模是 $e^{\\ln ${r}} = ${r}$，角是 $\\pi$ 的${half ? "奇数" : "偶数"}倍，所以值是 $${answer}$。`,
           ],
         );
       },
@@ -594,11 +594,11 @@ const cauchyTheorem = topic(
           [inside ? 0 : 2 * c, c === 0 ? 1 : c, 2 * r, 2 * c + 2],
           [
             inside
-              ? `${a} is inside the circle, so the pole is enclosed and the integral is $2\\pi i \\times ${c}$.`
-              : `${a} is outside the circle, so the function is analytic on and inside the path, and the integral is 0.`,
+              ? `$${a}$ is inside the circle, so the pole is enclosed and the integral is $2\\pi i \\times ${c}$.`
+              : `$${a}$ is outside the circle, so the function is analytic on and inside the path, and the integral is 0.`,
             inside
-              ? `${a} 在圆内，极点被包围，所以积分是 $2\\pi i \\times ${c}$。`
-              : `${a} 在圆外，函数在路径上及其内部解析，所以积分是 0。`,
+              ? `$${a}$ 在圆内，极点被包围，所以积分是 $2\\pi i \\times ${c}$。`
+              : `$${a}$ 在圆外，函数在路径上及其内部解析，所以积分是 0。`,
           ],
         );
       },
@@ -619,8 +619,8 @@ const cauchyTheorem = topic(
         const f = `${2 * p === 1 ? "" : 2 * p}z + ${c}`;
         return ask(
           [
-            `The integral of $${f}$ along any path from ${a} to ${b} has what value?`,
-            `$${f}$ 沿从 ${a} 到 ${b} 的任何路径积分，结果是多少？`,
+            `The integral of $${f}$ along any path from $${a}$ to $${b}$ has what value?`,
+            `$${f}$ 沿从 $${a}$ 到 $${b}$ 的任何路径积分，结果是多少？`,
           ],
           answer,
           [2 * p * (b - a) + c, answer + c, p * (b * b + a * a) + c * (b - a), 0],
@@ -915,8 +915,8 @@ const singularities = topic(
           answer,
           [n, m === answer ? answer + 1 : m, n + m, n + k],
           [
-            `The factor has power ${n} below and power ${k} above, which leaves order ${answer}. The other factor is not zero at ${a}.`,
-            `这个因子在分母中为零 ${n} 次，在分子中为零 ${k} 次，剩下的阶是 ${answer}。另一个因子在 ${a} 处不为零。`,
+            `The factor has power ${n} below and power ${k} above, which leaves order ${answer}. The other factor is not zero at $${a}$.`,
+            `这个因子在分母中为零 ${n} 次，在分子中为零 ${k} 次，剩下的阶是 ${answer}。另一个因子在 $${a}$ 处不为零。`,
           ],
         );
       },
@@ -1032,8 +1032,8 @@ const residues = topic(
           answer,
           [p * a * a + q * a, 2 * p, answer + q, q],
           [
-            `The residue is the derivative of the numerator at ${a}: $${2 * p}(${a}) + ${q} = ${answer}$.`,
-            `留数是分子在 ${a} 处的导数：$${2 * p}(${a}) + ${q} = ${answer}$。`,
+            `The residue is the derivative of the numerator at $${a}$: $${2 * p}(${a}) + ${q} = ${answer}$.`,
+            `留数是分子在 $${a}$ 处的导数：$${2 * p}(${a}) + ${q} = ${answer}$。`,
           ],
         );
       },
@@ -1070,8 +1070,8 @@ const residueTheorem = topic(
           answer,
           [value, 0, -answer, answer + 2],
           [
-            `Only the pole at ${a} is inside, since ${b} is outside. Its residue is $\\frac{${c}}{${bracket(a)} - ${bracket(b)}} = ${value}$, so $k = ${answer}$.`,
-            `只有 ${a} 处的极点在圆内，${b} 在圆外。它的留数是 $\\frac{${c}}{${bracket(a)} - ${bracket(b)}} = ${value}$，所以 $k = ${answer}$。`,
+            `Only the pole at $${a}$ is inside, since $${b}$ is outside. Its residue is $\\frac{${c}}{${bracket(a)} - ${bracket(b)}} = ${value}$, so $k = ${answer}$.`,
+            `只有 $${a}$ 处的极点在圆内，$${b}$ 在圆外。它的留数是 $\\frac{${c}}{${bracket(a)} - ${bracket(b)}} = ${value}$，所以 $k = ${answer}$。`,
           ],
         );
       },
@@ -1170,8 +1170,8 @@ const mobiusMaps = topic(
           q,
           [p, p + q, a, q + 1],
           [
-            `Setting $z(z + ${d}) = ${top}$ gives $${factor(p)}${factor(q)} = 0$, so the fixed points are ${p} and ${q}.`,
-            `令 $z(z + ${d}) = ${top}$，得 $${factor(p)}${factor(q)} = 0$，所以不动点是 ${p} 和 ${q}。`,
+            `Setting $z(z + ${d}) = ${top}$ gives $${factor(p)}${factor(q)} = 0$, so the fixed points are $${p}$ and $${q}$.`,
+            `令 $z(z + ${d}) = ${top}$，得 $${factor(p)}${factor(q)} = 0$，所以不动点是 $${p}$ 和 $${q}$。`,
           ],
         );
       },
