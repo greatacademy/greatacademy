@@ -295,7 +295,7 @@ export const unitsOfMass = topic(
     "Mass measures how heavy something is. Metric units are the gram and the kilogram: 1 kg = 1,000 g. Customary units of weight are the ounce and the pound: 1 lb = 16 oz.",
     "质量表示物体有多重。公制单位有克和千克：1 千克 = 1000 克。英制重量单位有盎司和磅：1 磅 = 16 盎司。",
   ),
-  [],
+  ["grams-kilograms-and-liters"],
   ["4.MD.A.1"],
   [
     estimateKP(
@@ -319,7 +319,7 @@ export const unitsOfTimeAndElapsedTime = topic(
     "Units of time are the second, minute, hour, day and week: 1 min = 60 s, 1 h = 60 min, 1 day = 24 h and 1 week = 7 days. The time between a start and an end is the elapsed time.",
     "时间单位有秒、分钟、小时、天和周：1 分钟 = 60 秒，1 小时 = 60 分钟，1 天 = 24 小时，1 周 = 7 天。从开始到结束经过的时间叫经过时间。",
   ),
-  [],
+  ["elapsed-time-in-minutes"],
   ["4.MD.A.1", "4.MD.A.2"],
   [
     estimateKP(
@@ -374,7 +374,7 @@ export const unitsOfVolume = topic(
     "Liquid volume measures how much a container holds. Metric units are the milliliter and the liter: 1 L = 1,000 mL. Customary units are the cup, pint, quart and gallon: 1 pt = 2 c, 1 qt = 2 pt and 1 gal = 4 qt.",
     "容积表示容器能装多少液体。公制单位有毫升和升：1 升 = 1000 毫升。英制单位有杯、品脱、夸脱和加仑：1 品脱 = 2 杯，1 夸脱 = 2 品脱，1 加仑 = 4 夸脱。",
   ),
-  [],
+  ["grams-kilograms-and-liters"],
   ["4.MD.A.1"],
   [
     estimateKP(
@@ -598,7 +598,7 @@ export const creatingAndInterpretingLinePlots = topic(
     "A line plot shows data on a number line, with one dot (or X) above a value for each time it appears. Counting the dots above a value tells how often it occurs; counting all the dots tells how many data values there are.",
     "线图（点图）把数据画在数轴上：数据中每出现一次某个值，就在这个值的上方画一个点（或 X）。数某个值上方的点，就知道它出现了几次；数所有的点，就知道一共有多少个数据。",
   ),
-  [],
+  ["line-plots-of-measurements"],
   ["4.MD.B.4"],
   [
     {

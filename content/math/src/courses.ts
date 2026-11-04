@@ -17260,6 +17260,121 @@ export const actMathPrep: CourseDef = {
   ],
 };
 
+/** thirdGradeMath is the Common Core-aligned 3rd Grade Math course. */
+export const thirdGradeMath: CourseDef = {
+  id: "3rd-grade-math",
+  title: t("3rd Grade Math", "三年级数学"),
+  description: t(
+    "The meaning of multiplication and division, the facts up to 10 times 10, and the properties that make them easier; two-step word problems and number patterns; rounding and three-digit addition and subtraction; fractions as numbers on a number line; time to the minute, mass and liquid volume; scaled graphs and line plots; area, perimeter and the sorting of quadrilaterals.",
+    "乘法和除法的意义，10 乘 10 以内的算式，以及使计算更容易的运算律；两步应用题和数的规律；取近似和三位数加减法；数轴上的分数；钟表读到分钟，质量和容积；带比例的统计图和线图；面积、周长和四边形的分类。",
+  ),
+  units: [
+    {
+      title: t("Multiplication", "乘法"),
+      modules: [
+        {
+          title: t("The Meaning of Multiplication", "乘法的意义"),
+          topics: ["multiplication-as-equal-groups", "multiplication-with-arrays"],
+        },
+        {
+          title: t("Multiplication Facts", "乘法算式"),
+          topics: ["multiplying-by-2-5-and-10", "multiplying-by-3-and-4", "multiplying-by-6-7-8-and-9", "multiplying-by-0-and-1"],
+        },
+        {
+          title: t("Making Multiplication Easier", "让乘法更容易"),
+          topics: ["properties-of-multiplication", "splitting-a-factor-to-multiply", "multiplying-by-multiples-of-10"],
+        },
+      ],
+    },
+    {
+      title: t("Division", "除法"),
+      modules: [
+        {
+          title: t("The Meaning of Division", "除法的意义"),
+          topics: ["division-as-sharing", "division-as-making-groups", "relating-multiplication-and-division"],
+        },
+        {
+          title: t("Division Facts", "除法算式"),
+          topics: ["division-facts-to-100"],
+        },
+      ],
+    },
+    {
+      title: t("Problem Solving and Patterns", "解决问题和规律"),
+      modules: [
+        {
+          title: t("Word Problems", "应用题"),
+          topics: [
+            "multiplication-and-division-word-problems",
+            "two-step-word-problems-with-all-operations",
+            "expressions-with-two-operations",
+          ],
+        },
+        {
+          title: t("Patterns", "规律"),
+          topics: ["arithmetic-patterns"],
+        },
+      ],
+    },
+    {
+      title: t("Place Value", "数位"),
+      modules: [
+        {
+          title: t("Three-Digit Numbers and Rounding", "三位数和取近似"),
+          topics: ["understanding-three-digit-numbers", "rounding-to-the-nearest-ten", "rounding-to-the-nearest-hundred"],
+        },
+        {
+          title: t("Adding and Subtracting", "加法和减法"),
+          topics: ["adding-within-1000", "subtracting-within-1000"],
+        },
+      ],
+    },
+    {
+      title: t("Fractions", "分数"),
+      modules: [
+        {
+          title: t("Fractions as Numbers", "分数是数"),
+          topics: ["unit-fractions", "fractions-as-parts-of-a-whole", "fractions-on-the-number-line"],
+        },
+        {
+          title: t("Equal and Unequal Fractions", "相等和不等的分数"),
+          topics: ["equal-fractions-with-pictures", "comparing-fractions-with-a-common-part"],
+        },
+      ],
+    },
+    {
+      title: t("Measurement and Data", "测量和数据"),
+      modules: [
+        {
+          title: t("Time, Mass and Volume", "时间、质量和容积"),
+          topics: ["telling-time-to-the-minute", "elapsed-time-in-minutes", "grams-kilograms-and-liters"],
+        },
+        {
+          title: t("Graphs and Line Plots", "统计图和线图"),
+          topics: ["scaled-picture-graphs", "scaled-bar-graphs", "line-plots-of-measurements"],
+        },
+      ],
+    },
+    {
+      title: t("Geometry", "几何"),
+      modules: [
+        {
+          title: t("Area", "面积"),
+          topics: ["area-with-unit-squares", "area-of-a-rectangle-by-multiplying", "area-of-combined-rectangles"],
+        },
+        {
+          title: t("Perimeter", "周长"),
+          topics: ["perimeter-of-polygons", "same-perimeter-or-same-area"],
+        },
+        {
+          title: t("Shapes", "图形"),
+          topics: ["sorting-quadrilaterals", "equal-parts-of-shapes"],
+        },
+      ],
+    },
+  ],
+};
+
 /** fourthGradeMath is the Common Core-aligned 4th Grade Math course. */
 export const fourthGradeMath: CourseDef = {
   id: "4th-grade-math",
@@ -17853,6 +17968,7 @@ export const mathCourses: readonly CourseDef[] = [
   mathematicsForMachineLearning,
   mathematicalMethodsForThePhysicalSciencesI,
   mathematicalMethodsForThePhysicalSciencesII,
+  thirdGradeMath,
   fourthGradeMath,
   fifthGradeMath,
   sixthGradeMath,

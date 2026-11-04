@@ -954,7 +954,7 @@ export const placeValueWithNumbersUpToFourDigits: TopicDef = {
     "The places of a four-digit number are, from the right, the ones, tens, hundreds and thousands. Each place is worth ten times the place to its right, so the value of a digit is the digit times 1, 10, 100 or 1,000.",
     "四位数的数位从右往左依次是个位、十位、百位和千位。每一位的单位是它右边一位的十倍，所以一个数字表示的值等于这个数字乘 1、10、100 或 1,000。",
   ),
-  prerequisites: [],
+  prerequisites: ["understanding-three-digit-numbers"],
   encompasses: [],
   xp: 10,
   standards: ccss("4.NBT.A.1", "4.NBT.A.2"),

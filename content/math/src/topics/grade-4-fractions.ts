@@ -291,7 +291,7 @@ export const fractionModels = topic(
     "A fraction names equal parts of a whole. If a bar is cut into 5 equal parts and 3 are shaded, then 3/5 of the bar is shaded: the denominator 5 counts the parts in the whole, and the numerator 3 counts the shaded parts.",
     "分数表示把一个整体平均分成若干份中的几份。把一个长条平均分成 5 份，涂色 3 份，涂色部分就是这个长条的 3/5：分母 5 表示整体被分成的份数，分子 3 表示涂色的份数。",
   ),
-  [],
+  ["comparing-fractions-with-a-common-part"],
   ["3.NF.A.1"],
   [
     {
