@@ -4,7 +4,7 @@ import { mathCheckers } from "@ga/subject-math";
 
 import { mathCourses } from "./courses.ts";
 import { inferredEncompassings } from "./encompassings.ts";
-import { oneOfFourTopic } from "./one-of-four.ts";
+import { oneOfFourTopic, oneOfFourVerdicts } from "./one-of-four.ts";
 import { polishTopic } from "./polish.ts";
 import { absoluteValueTopics } from "./topics/absolute-value.ts";
 import { abstractAlgebraActionTopics } from "./topics/abstract-algebra-actions.ts";
@@ -282,7 +282,7 @@ function finished(topic: TopicDef): TopicDef {
       ...(moreFigureReadingPoints[topic.id] ?? []),
     ],
   };
-  return polishTopic(judgedOverFourCases.has(topic.id) ? oneOfFourTopic(weighted) : weighted);
+  return polishTopic(judgedOverFourCases.has(topic.id) ? oneOfFourTopic(weighted) : oneOfFourVerdicts(weighted));
 }
 
 /** math is the definition of the mathematics subject. */

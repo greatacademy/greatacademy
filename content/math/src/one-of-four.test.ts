@@ -2,7 +2,7 @@ import type { Generator } from "@ga/content";
 import { createRng, t } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
-import { oneOfFour } from "./one-of-four.ts";
+import { oneOfFour, oneOfFourVerdicts } from "./one-of-four.ts";
 import { choiceProblem, yesNo } from "./problems.ts";
 
 /** isEven asks whether a number is even: a two-option question. */
@@ -46,5 +46,55 @@ describe("oneOfFour", () => {
     const alwaysYes: Generator = () =>
       choiceProblem({ prompt: t("Is $2$ even?", "$2$ 是偶数吗？"), options: yesNo, correct: 0, solution: t("It is.", "是的。") });
     expect(oneOfFour(alwaysYes)(createRng(1))).toEqual(alwaysYes(createRng(1)));
+  });
+});
+
+describe("oneOfFourVerdicts", () => {
+  /** whichStore asks a two-option question whose options name its own things. */
+  const whichStore: Generator = (rng) =>
+    choiceProblem({
+      prompt: t(`Which store sells ${rng.int(1, 50)} pens for less?`, `哪家商店卖 ${rng.int(1, 50)} 支笔更便宜？`),
+      options: [t("Store A", "商店 A"), t("Store B", "商店 B")],
+      correct: rng.int(0, 1),
+      solution: t("Comparing the two prices settles it.", "比较两个价格即可判断。"),
+    });
+  const kp = (id: string, generate: Generator) => ({ id, title: t(id, id), explanation: t(id, id), generate });
+  const topic = {
+    id: "demo",
+    title: t("Demo", "示例"),
+    description: t("Demo", "示例"),
+    prerequisites: [],
+    knowledgePoints: [kp("verdict", isEven), kp("named", whichStore)],
+  };
+
+  const turned = oneOfFourVerdicts(topic as never).knowledgePoints;
+  /** optionCount generates a problem from a turned knowledge point and counts its options. */
+  const optionCount = (index: number, seed: number) => {
+    const problem = (turned[index] as (typeof turned)[number]).generate(createRng(seed));
+    return (problem.answer.input as { options: readonly unknown[] }).options.length;
+  };
+
+  it("turns a yes-or-no question into four cases, and leaves named options alone", () => {
+    for (let seed = 1; seed <= 50; seed++) {
+      expect(optionCount(0, seed)).toBe(4);
+      expect(optionCount(1, seed)).toBe(2);
+    }
+  });
+
+  it("is deterministic", () => {
+    const verdict = turned[0] as (typeof turned)[number];
+    expect(verdict.generate(createRng(7))).toEqual(verdict.generate(createRng(7)));
+  });
+
+  it("keeps the generator's own receiver", () => {
+    const self = { ...kp("self", isEven), helper: isEven, generate: undefined as never };
+    const withThis = {
+      ...self,
+      generate(this: { helper: Generator }, rng: Parameters<Generator>[0]) {
+        return this.helper(rng);
+      },
+    };
+    const [only] = oneOfFourVerdicts({ ...topic, knowledgePoints: [withThis] } as never).knowledgePoints;
+    expect(() => only?.generate(createRng(1))).not.toThrow();
   });
 });

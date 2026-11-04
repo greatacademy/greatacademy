@@ -783,7 +783,7 @@ const linePlotsEarly = earlyTopic(
             ],
             answer,
             [v, values.length, values.length - answer],
-            [`There ${answer === 1 ? "is 1 mark" : `are ${answer} marks`} above ${v}.`, `${v} 的上方有 ${answer} 个点。`],
+            [`Counting the marks above ${v} on the plot gives ${answer}.`, `数图上 ${v} 上方的点，一共有 ${answer} 个。`],
           ),
           figure: {
             svg: dotPlot(values, { min: 3, max: 8, step: 1 }),
