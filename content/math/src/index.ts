@@ -90,6 +90,7 @@ import { deeperGrade4Points } from "./topics/deeper-grade-4.ts";
 import { deeperGrade5Points } from "./topics/deeper-grade-5.ts";
 import { deeperGrade6Points } from "./topics/deeper-grade-6.ts";
 import { deeperGrade7Points } from "./topics/deeper-grade-7.ts";
+import { deeperGrade8Points } from "./topics/deeper-grade-8.ts";
 import { deeperLinearAlgebraPoints } from "./topics/deeper-linear-algebra.ts";
 import { deeperMethodsOfProofPoints } from "./topics/deeper-methods-of-proof.ts";
 import { deeperMultivariableCalculusPoints } from "./topics/deeper-multivariable-calculus.ts";
@@ -257,6 +258,7 @@ function finished(topic: TopicDef): TopicDef {
     encompasses: topic.encompasses.length ? topic.encompasses : (inferredEncompassings[topic.id] ?? []),
     knowledgePoints: [
       ...topic.knowledgePoints,
+      ...(deeperGrade8Points[topic.id] ?? []),
       ...(deeperGrade7Points[topic.id] ?? []),
       ...(deeperGrade6Points[topic.id] ?? []),
       ...(deeperGrade5Points[topic.id] ?? []),
