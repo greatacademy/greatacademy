@@ -135,6 +135,10 @@ import { solidGeometryTopics } from "./topics/geometry-solids.ts";
 import { transformationTopics } from "./topics/geometry-transformations.ts";
 import { triangleTrigonometryTopics } from "./topics/geometry-triangles-trigonometry.ts";
 import { trigonometryTopics } from "./topics/geometry-trigonometry.ts";
+import { gradeOneMeasureTopics } from "./topics/grade-1-measurement-geometry.ts";
+import { gradeOneNumberTopics } from "./topics/grade-1-numbers-operations.ts";
+import { gradeTwoMeasureTopics } from "./topics/grade-2-measurement-geometry.ts";
+import { gradeTwoNumberTopics } from "./topics/grade-2-numbers-operations.ts";
 import { gradeThreeMeasureTopics } from "./topics/grade-3-fractions-measurement.ts";
 import { gradeThreeOperationTopics } from "./topics/grade-3-operations.ts";
 import { grade4FractionTopics } from "./topics/grade-4-fractions.ts";
@@ -506,6 +510,10 @@ export const math: SubjectDef = {
     ...actGeometryDataTopics,
     ...satMathStrategyTopics,
     ...examTopics,
+    ...gradeOneNumberTopics,
+    ...gradeOneMeasureTopics,
+    ...gradeTwoNumberTopics,
+    ...gradeTwoMeasureTopics,
     ...gradeThreeOperationTopics,
     ...gradeThreeMeasureTopics,
   ].map(finished),

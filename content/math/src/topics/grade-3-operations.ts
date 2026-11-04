@@ -93,7 +93,7 @@ const multiplicationAsEqualGroups = earlyTopic(
     "Read a multiplication as a number of equal groups, and connect it with repeated addition.",
     "把乘法理解成若干相同的组，并与重复相加联系起来。",
   ],
-  [],
+  ["arrays-and-repeated-addition"],
   ["3.OA.A.1"],
   [
     earlyPoint(
@@ -1050,7 +1050,7 @@ const placeValueThreeDigits = earlyTopic(
     "See a three-digit number as hundreds, tens and ones, and regroup between the places.",
     "把三位数看成几百、几十和几，并在数位之间转换。",
   ],
-  [],
+  ["place-value-up-to-1000"],
   ["3.NBT.A.1"],
   [
     earlyPoint(

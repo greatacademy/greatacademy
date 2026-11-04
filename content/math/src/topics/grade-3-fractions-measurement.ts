@@ -41,7 +41,7 @@ const unitFractions = earlyTopic(
   "unit-fractions",
   ["Unit Fractions", "单位分数"],
   ["See one of several equal parts of a whole as a fraction with a top number of 1.", "把整体平均分后的一份看成分子为 1 的分数。"],
-  [],
+  ["halves-thirds-and-fourths-of-shapes"],
   ["3.NF.A.1"],
   [
     earlyPoint(
@@ -389,7 +389,7 @@ const tellingTimeToTheMinute = earlyTopic(
   "telling-time-to-the-minute",
   ["Telling Time to the Minute", "看钟表到分钟"],
   ["Read an analog clock to the nearest minute.", "读指针式钟表，读到分钟。"],
-  [],
+  ["telling-time-to-five-minutes"],
   ["3.MD.A.1"],
   [
     earlyPoint(
@@ -623,7 +623,7 @@ const scaledPictureGraphs = earlyTopic(
   "scaled-picture-graphs",
   ["Scaled Picture Graphs", "带比例的象形统计图"],
   ["Read a picture graph in which each picture stands for several items.", "读每个图案代表多个物品的象形统计图。"],
-  [],
+  ["picture-graphs-of-single-units"],
   ["3.MD.B.3"],
   [
     earlyPoint(
@@ -841,7 +841,7 @@ const areaWithUnitSquares = earlyTopic(
     "Measure area by counting unit squares that cover a shape without gaps or overlaps.",
     "用单位正方形不留空隙、不重叠地铺满图形，数出面积。",
   ],
-  [],
+  ["rows-and-columns-of-squares"],
   ["3.MD.C.5", "3.MD.C.6"],
   [
     earlyPoint(
@@ -1191,7 +1191,7 @@ const sortingQuadrilaterals = earlyTopic(
     "Sort four-sided shapes by their sides and angles, seeing that a shape can belong to several groups.",
     "按边和角给四边形分类，明白一个图形可以属于几类。",
   ],
-  [],
+  ["naming-polygons-by-their-sides"],
   ["3.G.A.1"],
   [
     earlyPoint(

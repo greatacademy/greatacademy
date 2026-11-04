@@ -17260,6 +17260,204 @@ export const actMathPrep: CourseDef = {
   ],
 };
 
+/** firstGradeMath is the Common Core-aligned 1st Grade Math course. */
+export const firstGradeMath: CourseDef = {
+  id: "1st-grade-math",
+  title: t("1st Grade Math", "一年级数学"),
+  description: t(
+    "Counting to 120, tens and ones, adding and subtracting within 20, word problems, adding tens, length, time, first graphs and shapes.",
+    "数到 120、十和一、20 以内的加减法、应用题、整十数加减、长度、时间、初步的统计图和图形。",
+  ),
+  units: [
+    {
+      title: t("Numbers to 120", "120 以内的数"),
+      modules: [
+        { title: t("Counting and Writing Numbers", "数数和写数"), topics: ["counting-to-120", "reading-and-writing-numbers-to-120"] },
+        {
+          title: t("Tens and Ones", "十和一"),
+          topics: ["ten-and-some-ones", "tens-and-ones", "counting-groups-of-ten", "comparing-two-digit-numbers"],
+        },
+      ],
+    },
+    {
+      title: t("Adding and Subtracting Within 20", "20 以内的加减法"),
+      modules: [
+        {
+          title: t("Strategies for Adding", "加法的策略"),
+          topics: [
+            "counting-on-to-add",
+            "counting-back-to-subtract",
+            "making-ten-to-add",
+            "doubles-and-near-doubles",
+            "adding-in-any-order",
+            "adding-three-numbers-within-20",
+          ],
+        },
+        {
+          title: t("Connecting Addition and Subtraction", "联系加法和减法"),
+          topics: ["subtracting-through-ten", "related-addition-and-subtraction-facts", "missing-addends-within-20", "the-equal-sign"],
+        },
+      ],
+    },
+    {
+      title: t("Word Problems", "应用题"),
+      modules: [
+        {
+          title: t("Stories Within 20", "20 以内的故事"),
+          topics: [
+            "adding-to-word-problems",
+            "taking-away-word-problems",
+            "comparing-word-problems-within-20",
+            "word-problems-with-a-missing-part",
+            "three-addend-word-problems",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Adding and Subtracting Tens", "整十数的加减"),
+      modules: [
+        {
+          title: t("Working With Tens", "用十来计算"),
+          topics: ["adding-multiples-of-ten", "adding-tens-to-two-digit-numbers", "ten-more-and-ten-less", "subtracting-multiples-of-ten"],
+        },
+      ],
+    },
+    {
+      title: t("Length and Time", "长度和时间"),
+      modules: [
+        { title: t("Length", "长度"), topics: ["comparing-lengths-directly", "measuring-with-non-standard-units"] },
+        { title: t("Time", "时间"), topics: ["telling-time-to-the-hour", "telling-time-to-the-half-hour"] },
+      ],
+    },
+    {
+      title: t("Data", "统计"),
+      modules: [{ title: t("Tallies and Graphs", "计数表和统计图"), topics: ["tally-charts", "first-picture-graphs", "first-bar-graphs"] }],
+    },
+    {
+      title: t("Shapes", "图形"),
+      modules: [
+        {
+          title: t("Attributes and Equal Shares", "特征和等分"),
+          topics: ["defining-attributes-of-shapes", "composing-shapes", "halves-and-fourths-of-shapes"],
+        },
+      ],
+    },
+  ],
+};
+
+/** secondGradeMath is the Common Core-aligned 2nd Grade Math course. */
+export const secondGradeMath: CourseDef = {
+  id: "2nd-grade-math",
+  title: t("2nd Grade Math", "二年级数学"),
+  description: t(
+    "Place value to 1000, adding and subtracting within 100 and 1000, word problems, measuring length, time, money, graphs and shapes.",
+    "1000 以内的位值、100 和 1000 以内的加减法、应用题、测量长度、时间、钱币、统计图和图形。",
+  ),
+  units: [
+    {
+      title: t("Number Patterns", "数的规律"),
+      modules: [
+        {
+          title: t("Skip Counting and Arrays", "跳着数和点阵"),
+          topics: ["skip-counting-by-2s-5s-and-10s", "even-and-odd-numbers", "arrays-and-repeated-addition"],
+        },
+      ],
+    },
+    {
+      title: t("Place Value to 1000", "1000 以内的位值"),
+      modules: [
+        {
+          title: t("Hundreds, Tens and Ones", "百、十和一"),
+          topics: [
+            "hundreds-as-bundles-of-tens",
+            "skip-counting-by-100s",
+            "place-value-up-to-1000",
+            "expanded-form-up-to-1000",
+            "number-names-up-to-1000",
+          ],
+        },
+        {
+          title: t("Comparing and Changing Numbers", "比较和改变数"),
+          topics: ["comparing-numbers-up-to-1000", "adding-and-subtracting-10-or-100"],
+        },
+      ],
+    },
+    {
+      title: t("Adding and Subtracting", "加法和减法"),
+      modules: [
+        {
+          title: t("Within 100", "100 以内"),
+          topics: [
+            "adding-and-subtracting-within-20-quickly",
+            "adding-within-100",
+            "subtracting-within-100",
+            "adding-several-two-digit-numbers",
+            "missing-numbers-within-100",
+          ],
+        },
+        { title: t("Within 1000", "1000 以内"), topics: ["adding-within-1000-with-models", "subtracting-within-1000-with-models"] },
+      ],
+    },
+    {
+      title: t("Word Problems", "应用题"),
+      modules: [
+        {
+          title: t("Stories Within 100", "100 以内的故事"),
+          topics: ["word-problems-within-100", "comparing-word-problems-within-100", "two-step-word-problems-within-100"],
+        },
+      ],
+    },
+    {
+      title: t("Length", "长度"),
+      modules: [
+        {
+          title: t("Measuring", "测量"),
+          topics: [
+            "measuring-length-in-inches-and-centimeters",
+            "feet-and-meters",
+            "same-length-in-different-units",
+            "estimating-lengths",
+            "comparing-lengths-by-measuring",
+          ],
+        },
+        { title: t("Using Lengths", "运用长度"), topics: ["length-word-problems", "sums-and-differences-on-a-number-line"] },
+      ],
+    },
+    {
+      title: t("Time and Money", "时间和钱币"),
+      modules: [
+        { title: t("Time", "时间"), topics: ["telling-time-to-five-minutes", "a-m-and-p-m"] },
+        { title: t("Money", "钱币"), topics: ["counting-coins", "dollars-and-cents"] },
+      ],
+    },
+    {
+      title: t("Data", "统计"),
+      modules: [
+        {
+          title: t("Plots and Graphs", "线图和统计图"),
+          topics: ["line-plots-of-lengths", "picture-graphs-of-single-units", "reading-bar-graphs"],
+        },
+      ],
+    },
+    {
+      title: t("Geometry", "几何"),
+      modules: [
+        {
+          title: t("Shapes and Shares", "图形和等分"),
+          topics: [
+            "naming-polygons-by-their-sides",
+            "counting-sides-and-angles",
+            "faces-of-a-cube",
+            "rows-and-columns-of-squares",
+            "halves-thirds-and-fourths-of-shapes",
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 /** thirdGradeMath is the Common Core-aligned 3rd Grade Math course. */
 export const thirdGradeMath: CourseDef = {
   id: "3rd-grade-math",
@@ -18056,6 +18254,8 @@ export const mathCourses: readonly CourseDef[] = [
   mathematicsForMachineLearning,
   mathematicalMethodsForThePhysicalSciencesI,
   mathematicalMethodsForThePhysicalSciencesII,
+  firstGradeMath,
+  secondGradeMath,
   thirdGradeMath,
   fourthGradeMath,
   fifthGradeMath,
