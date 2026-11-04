@@ -1673,6 +1673,699 @@ const matrixSubspaceDimension: KnowledgePointDef = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// Third pass
+// ---------------------------------------------------------------------------
+
+/** factorial computes n! for a small n. */
+const factorial = (n: number): number => (n <= 1 ? 1 : n * factorial(n - 1));
+/** choose computes the binomial coefficient of n and k. */
+const choose = (n: number, k: number) => factorial(n) / (factorial(k) * factorial(n - k));
+
+const powerUnderShiftedSum: KnowledgePointDef = {
+  id: "a-power-under-a-shifted-sum",
+  title: t("A power under a shifted sum", "平移加法下的幂"),
+  explanation: t(
+    "The integers form a group under the operation $x \\ast y = x + y + k$, with identity $-k$. In a group, the $n$th power of an element means the element combined with itself $n$ times, whatever the operation is called. Here it is not a product in the usual sense. Each extra copy of $a$ adds both $a$ and $k$, so that the operation produces a simple linear pattern in $n$, and not a true power.",
+    "整数在运算 $x \\ast y = x + y + k$ 下构成群，单位元是 $-k$。在群中，元素的 $n$ 次幂指这个元素与自身运算 $n$ 次，不管运算叫什么。这里它不是通常意义的乘积。每多一个 $a$，就多加 $a$ 和 $k$，所以运算给出关于 $n$ 的简单线性规律，而不是真正的乘方。",
+  ),
+  generate(rng) {
+    const a = pickNonzero(rng, 9);
+    const k = pickNonzero(rng, 9);
+    const n = rng.int(3, 9);
+    const answer = n * a + (n - 1) * k;
+    return numberProblem({
+      prompt: t(
+        `The integers form a group under $x \\ast y = ${poly([1, "x"], [1, "y"], [k, ""])}$. Find $${a} \\ast ${a} \\ast \\cdots \\ast ${a}$, with ${n} copies of $${a}$.`,
+        `整数在运算 $x \\ast y = ${poly([1, "x"], [1, "y"], [k, ""])}$ 下构成群。求 $${a} \\ast ${a} \\ast \\cdots \\ast ${a}$，其中有 ${n} 个 $${a}$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n * a, n * a + n * k, n * a + k, a + (n - 1) * k],
+      solution: t(
+        `Each further copy adds $${a} ${signed(k)} = ${a + k}$. With ${n - 1} further copies, the result is $${a} + ${n - 1} \\cdot ${a + k < 0 ? `(${a + k})` : a + k} = ${answer}$.`,
+        `每多一个，就加上 $${a} ${signed(k)} = ${a + k}$。多了 ${n - 1} 个，结果是 $${a} + ${n - 1} \\cdot ${a + k < 0 ? `(${a + k})` : a + k} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const powerOfOnePlusI: KnowledgePointDef = {
+  id: "a-power-of-one-plus-or-minus-i",
+  title: t("A power of one plus or minus i", "1 加减 i 的幂"),
+  explanation: t(
+    "In the group of nonzero complex numbers under multiplication, powers of an element can often be found through a convenient small power. Here $(1 + i)^2 = 2i$ and $(1 - i)^2 = -2i$, which are much easier to raise to a power, since powers of $i$ run through a cycle of four. So write the exponent as a multiple of 2, plus a possible remainder of 1, rather than multiplying out each factor.",
+    "在非零复数的乘法群中，元素的幂常常可以借助一个方便的小次幂求出。这里 $(1 + i)^2 = 2i$，$(1 - i)^2 = -2i$，它们的幂要容易得多，因为 $i$ 的幂以四为周期循环。所以把指数写成 2 的倍数，可能再加余数 1，而不是逐个因子相乘。",
+  ),
+  generate(rng) {
+    const s = rng.pick([1, -1]);
+    const n = rng.int(4, 24);
+    let re = 1;
+    let im = 0;
+    for (let i = 0; i < n; i += 1) {
+      [re, im] = [re - s * im, im + s * re];
+    }
+    const half = Math.floor(n / 2);
+    const asksReal = n % 2 === 1 ? rng.pick([true, false]) : im === 0;
+    const answer = asksReal ? re : im;
+    const base = s === 1 ? "1 + i" : "1 - i";
+    const square = s === 1 ? "2i" : "-2i";
+    const form = n % 2 === 1 ? `(${square})^{${half}}(${base})` : `(${square})^{${half}}`;
+    return numberProblem({
+      prompt: t(
+        `In the group of nonzero complex numbers, $(${base})^{${n}} = x + yi$. Find ${asksReal ? "$x$" : "$y$"}.`,
+        `在非零复数群中，$(${base})^{${n}} = x + yi$。求 ${asksReal ? "$x$" : "$y$"}。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-answer, 2 * answer, 2 ** n, n],
+      solution: t(
+        `Since $(${base})^2 = ${square}$, the power is $${form} = ${poly([re, ""], [im, "i"])}$. So ${asksReal ? "$x$" : "$y$"} is $${answer}$.`,
+        `由于 $(${base})^2 = ${square}$，这个幂等于 $${form} = ${poly([re, ""], [im, "i"])}$。所以 ${asksReal ? "$x$" : "$y$"} 是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const triangularGroupSize: KnowledgePointDef = {
+  id: "the-size-of-a-triangular-matrix-group-over-zp",
+  title: t("The size of a triangular matrix group over Zp", "Zp 上三角矩阵群的大小"),
+  explanation: t(
+    "The upper triangular matrices with nonzero diagonal entries form a subgroup of the invertible matrices, because their determinant is the product of the diagonal. To count them over a finite field, choose each entry independently: a diagonal entry has $p - 1$ choices, and an entry above the diagonal has $p$. An $n \\times n$ matrix has $\\frac{n(n - 1)}{2}$ entries above the diagonal. If all the diagonal entries must equal 1, only those entries remain free.",
+    "对角元非零的上三角矩阵构成可逆矩阵的子群，因为它们的行列式是对角元之积。在有限域上计数时，每个元素独立选择：对角元有 $p - 1$ 种选择，对角线上方的元素有 $p$ 种。$n \\times n$ 矩阵在对角线上方有 $\\frac{n(n - 1)}{2}$ 个元素。如果所有对角元都必须是 1，就只有这些元素是自由的。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 4);
+    const p = rng.pick([2, 3, 5, 7, 11]);
+    const unit = rng.pick([true, false]);
+    const above = (n * (n - 1)) / 2;
+    const free = p ** above;
+    const answer = unit ? free : (p - 1) ** n * free;
+    const kind = unit ? ["with every diagonal entry equal to 1", "对角元全为 1 的"] : ["that are invertible", "可逆的"];
+    return numberProblem({
+      prompt: t(
+        `How many upper triangular $${n} \\times ${n}$ matrices over $${Zn(p)}$ are there ${kind[0]}?`,
+        `$${Zn(p)}$ 上有多少个${kind[1]}上三角 $${n} \\times ${n}$ 矩阵？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [p ** (n * n), unit ? (p - 1) ** n * free : free, p ** n, (p - 1) ** n, answer + 1],
+      solution: t(
+        `There ${above === 1 ? "is 1 entry" : `are ${above} entries`} above the diagonal, giving $${free}$ choices. ${unit ? "The diagonal is fixed, so the count is that number" : `Each of the ${n} diagonal entries has ${p - 1} nonzero choices, which gives $${answer}$ in all`}.`,
+        `对角线上方有 ${above} 个元素，给出 $${free}$ 种选择。${unit ? "对角线已固定，所以个数就是这个数" : `${n} 个对角元各有 ${p - 1} 种非零选择，总共 $${answer}$ 个`}。`,
+      ),
+    });
+  },
+};
+
+const affineGroupSize: KnowledgePointDef = {
+  id: "the-size-of-the-affine-group-modulo-n",
+  title: t("The size of the affine group modulo n", "模 n 仿射群的大小"),
+  explanation: t(
+    "A map $x \\mapsto ax + b$ on the residues modulo $n$ is a bijection exactly when $a$ is a unit, since $b$ only shifts the values. The invertible maps of this form are closed under composition and form a group. Its size comes from two independent choices: $a$ must be one of the $\\varphi(n)$ units, and $b$ can be any of the $n$ residues. The composition of two such maps is again one of them.",
+    "模 $n$ 剩余上的映射 $x \\mapsto ax + b$ 是双射，当且仅当 $a$ 是单位，因为 $b$ 只是平移取值。这种形式的可逆映射对复合封闭，构成一个群。它的大小来自两个独立的选择：$a$ 必须是 $\\varphi(n)$ 个单位之一，$b$ 可以是 $n$ 个剩余中的任何一个。两个这样的映射的复合仍是这样的映射。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 60);
+    const units = totient(n);
+    const answer = n * units;
+    return numberProblem({
+      prompt: t(
+        `How many maps $x \\mapsto ax + b$ on $${Zn(n)}$ are bijections?`,
+        `$${Zn(n)}$ 上有多少个映射 $x \\mapsto ax + b$ 是双射？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n * n, n * (n - 1), units, n + units],
+      solution: t(
+        `The map is a bijection exactly when $a$ is a unit, which gives $\\varphi(${n}) = ${units}$ choices, and $b$ is free, with ${n} choices. The total is $${answer}$.`,
+        `映射是双射当且仅当 $a$ 是单位，这给出 $\\varphi(${n}) = ${units}$ 种选择，$b$ 是自由的，有 ${n} 种选择。总数是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const smallestPrimitiveRoot: KnowledgePointDef = {
+  id: "the-smallest-generator-of-the-units-modulo-a-prime",
+  title: t("The smallest generator of the units modulo a prime", "模素数单位群的最小生成元"),
+  explanation: t(
+    "The group of units modulo a prime $p$ is cyclic of order $p - 1$, but no simple formula gives a generator. An element generates the group exactly when its order is $p - 1$, and the order must divide $p - 1$. So to test a candidate, it is enough to compute its powers until they reach 1. Trying $2, 3, 4, \\dots$ in turn finds the smallest generator, usually after only a few tries.",
+    "模素数 $p$ 的单位群是 $p - 1$ 阶循环群，但没有简单公式给出生成元。一个元素生成这个群，当且仅当它的阶是 $p - 1$，而阶必须整除 $p - 1$。所以要检验一个候选，只需计算它的幂直到得到 1。依次试 $2, 3, 4, \\dots$ 就能找到最小的生成元，通常只需试几次。",
+  ),
+  generate(rng) {
+    const p = rng.pick(primeList(199).filter((q) => q > 2));
+    const orderOf = (g: number) => {
+      let value = g % p;
+      let order = 1;
+      while (value !== 1) {
+        value = (value * g) % p;
+        order += 1;
+      }
+      return order;
+    };
+    const answer = range(2, p - 1).find((g) => orderOf(g) === p - 1) ?? 2;
+    const smaller = range(2, answer - 1).map((g) => [g, orderOf(g)]);
+    return numberProblem({
+      prompt: t(`Find the smallest positive integer that generates the group of units modulo ${p}.`, `求生成模 ${p} 单位群的最小正整数。`),
+      answer,
+      form: "integer",
+      wrong: [answer + 1, p - 1, totient(p - 1), answer + 2, answer + 3],
+      solution: t(
+        `A generator must have order $${p - 1}$. ${smaller.length > 0 ? `The smaller candidates fall short, with orders ${smaller.map(([g, order]) => `$${order}$ for $${g}$`).join(", ")}. ` : ""}The powers of $${answer}$ first reach 1 at exponent $${p - 1}$, so it is the smallest.`,
+        `生成元的阶必须是 $${p - 1}$。${smaller.length > 0 ? `较小的候选都不满足，它们的阶是：${smaller.map(([g, order]) => `$${g}$ 的阶为 $${order}$`).join("，")}。` : ""}$${answer}$ 的幂第一次等于 1 是在指数 $${p - 1}$ 处，所以它最小。`,
+      ),
+    });
+  },
+};
+
+const sumOfOrders: KnowledgePointDef = {
+  id: "the-sum-of-the-orders-of-the-elements-of-zn",
+  title: t("The sum of the orders of the elements of Zn", "Zn 中元素的阶之和"),
+  explanation: t(
+    "In a cyclic group of order $n$, the order of every element divides $n$, and for each divisor $d$ there are exactly $\\varphi(d)$ elements of order $d$. So instead of finding the order of each element in turn, group the elements by their order. Each divisor $d$ contributes $d\\varphi(d)$ to the sum. This counting by classes is a common way of adding up something over all the elements of a group.",
+    "在 $n$ 阶循环群中，每个元素的阶都整除 $n$，对每个因数 $d$，恰好有 $\\varphi(d)$ 个 $d$ 阶元素。所以不必逐个求元素的阶，而是按阶把元素分组。每个因数 $d$ 对总和贡献 $d\\varphi(d)$。这种分类计数是对群的所有元素求和的常用方法。",
+  ),
+  generate(rng) {
+    const n = rng.int(4, 60);
+    const parts = divisors(n);
+    const answer = sum(parts.map((d) => d * totient(d)));
+    return numberProblem({
+      prompt: t(`Add up the orders of all the elements of $${Zn(n)}$.`, `把 $${Zn(n)}$ 中所有元素的阶相加。`),
+      answer,
+      form: "integer",
+      wrong: [(n * (n + 1)) / 2, sum(parts), n * n, answer + 1],
+      solution: t(
+        `Each divisor $d$ of ${n} gives $\\varphi(d)$ elements of order $d$. So the sum is $${parts.map((d) => `${d} \\cdot ${totient(d)}`).join(" + ")} = ${answer}$.`,
+        `${n} 的每个因数 $d$ 给出 $\\varphi(d)$ 个 $d$ 阶元素。所以和是 $${parts.map((d) => `${d} \\cdot ${totient(d)}`).join(" + ")} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const cyclesInPower: KnowledgePointDef = {
+  id: "the-number-of-cycles-in-a-power-of-a-cycle",
+  title: t("The number of cycles in a power of a cycle", "循环的幂中循环的个数"),
+  explanation: t(
+    "A power of a cycle need not be a cycle. Moving $k$ steps at a time around a loop of $\\ell$ symbols returns to the start after $\\frac{\\ell}{\\gcd(\\ell, k)}$ moves, so that this is the length of each piece. All the pieces have equal length, and together they use all $\\ell$ symbols, which means that there are $\\gcd(\\ell, k)$ of them. In particular, the power is a single cycle exactly when $\\ell$ and $k$ are coprime.",
+    "循环的幂不一定是循环。沿着 $\\ell$ 个符号的环每次走 $k$ 步，走 $\\frac{\\ell}{\\gcd(\\ell, k)}$ 次回到起点，这就是每一段的长度。所有段长度相等，合起来用完全部 $\\ell$ 个符号，所以共有 $\\gcd(\\ell, k)$ 段。特别地，当且仅当 $\\ell$ 与 $k$ 互素时，这个幂是一个循环。",
+  ),
+  generate(rng) {
+    const length = rng.int(6, 40);
+    const k = rng.int(2, length - 1);
+    const answer = gcd(length, k);
+    return numberProblem({
+      prompt: t(
+        `Let $c$ be a cycle of length ${length}. Into how many disjoint cycles does $c^{${k}}$ split?`,
+        `设 $c$ 是长度为 ${length} 的循环。$c^{${k}}$ 分解成多少个不相交的循环？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [k, length / answer, answer + 1, length - k, answer + 2],
+      solution: t(
+        `Moving ${k} steps at a time, each cycle closes after $\\frac{${length}}{\\gcd(${length}, ${k})} = ${length / answer}$ moves. Since the cycles use all ${length} symbols, the number of them is $${answer}$.`,
+        `每次走 ${k} 步，每个循环走 $\\frac{${length}}{\\gcd(${length}, ${k})} = ${length / answer}$ 次后闭合。由于这些循环用完全部 ${length} 个符号，它们的个数是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const inversionsCount: KnowledgePointDef = {
+  id: "counting-inversions-as-adjacent-transpositions",
+  title: t("Counting inversions as adjacent transpositions", "用逆序数计算相邻对换"),
+  explanation: t(
+    "An adjacent transposition swaps two neighbouring entries in a row, and it changes the relative order of exactly one pair. So it changes the number of inversions, the pairs of entries that are out of order, by exactly 1. Sorting needs the inversions to reach zero, and each swap of a neighbouring out-of-order pair removes one. So the fewest swaps equals the number of inversions, and this is more than an arbitrary factorization into transpositions may need.",
+    "相邻对换交换一行中相邻的两个元素，它恰好改变一对元素的相对顺序。所以它使逆序数（顺序颠倒的元素对的个数）恰好改变 1。排序需要逆序数变为零，而每次交换一对顺序颠倒的相邻元素就减少一个。所以最少交换次数等于逆序数，这比任意分解为对换可能需要的次数要多。",
+  ),
+  generate(rng) {
+    const n = rng.int(5, 8);
+    const row = range(1, n);
+    for (let i = n - 1; i > 0; i -= 1) {
+      const j = rng.int(0, i);
+      const held = row[i] ?? 0;
+      row[i] = row[j] ?? 0;
+      row[j] = held;
+    }
+    if (row.every((v, i) => v === i + 1)) {
+      row.reverse();
+    }
+    const answer = sum(row.map((v, i) => row.slice(i + 1).filter((w) => w < v).length));
+    const seen = new Set<number>();
+    let cycles = 0;
+    for (const start of row) {
+      if (!seen.has(start)) {
+        cycles += 1;
+        let at = start;
+        while (!seen.has(at)) {
+          seen.add(at);
+          at = row[at - 1] ?? at;
+        }
+      }
+    }
+    return numberProblem({
+      prompt: t(
+        `A permutation of $\\{1, \\dots, ${n}\\}$ is written in a row as ${row.join(", ")}. What is the fewest swaps of neighbouring entries that will sort the row into increasing order?`,
+        `$\\{1, \\dots, ${n}\\}$ 的一个排列写成一行：${row.join("，")}。把这一行排成递增顺序，最少要交换多少次相邻元素？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n - cycles, (n * (n - 1)) / 2, answer + 1, answer - 1],
+      solution: t(
+        `Each swap of neighbours changes the number of inversions by exactly 1, so the fewest swaps is the number of inversions. Counting the pairs that are out of order in the row gives $${answer}$.`,
+        `每次相邻交换使逆序数恰好改变 1，所以最少交换次数就是逆序数。数出这一行中顺序颠倒的元素对，得 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const involutionsWithSwaps: KnowledgePointDef = {
+  id: "counting-permutations-equal-to-their-inverse",
+  title: t("Counting permutations equal to their inverse", "计算等于自身逆的排列"),
+  explanation: t(
+    "A permutation equals its own inverse exactly when applying it twice gives the identity, which means that all its cycles have length 1 or 2. So such a permutation is a set of disjoint transpositions. To count those with $k$ transpositions, line up the symbols and pair the first $2k$. Since this overcounts, divide by $2^k$ for the order within each pair and by $k!$ for the order of the pairs, and by $(n - 2k)!$ for the remaining symbols.",
+    "一个排列等于自身的逆，当且仅当应用两次得到恒等排列，也就是它的所有循环长度都是 1 或 2。所以这样的排列是一组不相交的对换。要数含 $k$ 个对换的排列，把符号排成一行，把前 $2k$ 个配对。由于这样数多了，要除以 $2^k$（每对内的顺序）、$k!$（各对的顺序）和 $(n - 2k)!$（其余的符号）。",
+  ),
+  generate(rng) {
+    const n = rng.int(4, 14);
+    const k = rng.int(2, Math.floor(n / 2));
+    const answer = factorial(n) / (2 ** k * factorial(k) * factorial(n - 2 * k));
+    return numberProblem({
+      prompt: t(
+        `How many permutations in $S_{${n}}$ are products of exactly ${k} disjoint transpositions, and so equal their own inverse?`,
+        `$S_{${n}}$ 中有多少个排列恰好是 ${k} 个不相交对换的积，因而等于自身的逆？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [choose(n, 2 * k), answer * factorial(k), answer * 2 ** k, choose(n, 2) ** k, answer + 1],
+      solution: t(
+        `The count is $\\frac{${n}!}{${2 ** k} \\cdot ${k}! \\cdot ${n - 2 * k}!} = ${answer}$, dividing out the order within each pair, the order of the pairs, and the order of the remaining symbols.`,
+        `个数是 $\\frac{${n}!}{${2 ** k} \\cdot ${k}! \\cdot ${n - 2 * k}!} = ${answer}$，这里除掉了每对内的顺序、各对的顺序和其余符号的顺序。`,
+      ),
+    });
+  },
+};
+
+const permutationsOfCycleType: KnowledgePointDef = {
+  id: "counting-permutations-of-a-given-cycle-type",
+  title: t("Counting permutations of a given cycle type", "计算给定循环类型的排列"),
+  explanation: t(
+    "To count the permutations with a given cycle type, first choose which symbols go into each cycle, and then arrange them. A cycle on $\\ell$ chosen symbols can be written in $(\\ell - 1)!$ different ways, because rotating a cycle does not change it. Two cycles of equal length are unordered, so choosing them in turn counts each permutation twice, and this must be divided out. Symbols not used are fixed, and contribute a single way.",
+    "要数给定循环类型的排列，先选出每个循环包含哪些符号，再排列它们。选定的 $\\ell$ 个符号组成的循环有 $(\\ell - 1)!$ 种不同的写法，因为旋转循环不会改变它。两个长度相同的循环没有顺序，所以依次选择会把每个排列数两次，必须除掉。没有用到的符号是不动点，只有一种情形。",
+  ),
+  generate(rng) {
+    const n = rng.int(5, 10);
+    const a = rng.int(2, n - 2);
+    const b = rng.int(2, Math.min(a, n - a));
+    const same = a === b;
+    const first = choose(n, a) * factorial(a - 1);
+    const second = choose(n - a, b) * factorial(b - 1);
+    const answer = (first * second) / (same ? 2 : 1);
+    const type = same ? `two disjoint ${a}-cycles` : `one ${a}-cycle and one disjoint ${b}-cycle`;
+    const typeZh = same ? `两个不相交的 ${a}-循环` : `一个 ${a}-循环和一个与之不相交的 ${b}-循环`;
+    return numberProblem({
+      prompt: t(
+        `How many permutations in $S_{${n}}$ consist of ${type}, with all other symbols fixed?`,
+        `$S_{${n}}$ 中有多少个排列由${typeZh}组成，其余符号都不动？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [same ? 2 * answer : answer * a, choose(n, a) * choose(n - a, b), answer * b, answer + 1, answer + 2],
+      solution: t(
+        `Choosing and arranging gives $\\binom{${n}}{${a}} \\cdot ${factorial(a - 1)}$ ways for the first cycle and $\\binom{${n - a}}{${b}} \\cdot ${factorial(b - 1)}$ for the second${same ? ", and the two cycles have equal length, so divide by 2" : ""}. The result is $${answer}$.`,
+        `选择并排列，第一个循环有 $\\binom{${n}}{${a}} \\cdot ${factorial(a - 1)}$ 种方法，第二个有 $\\binom{${n - a}}{${b}} \\cdot ${factorial(b - 1)}$ 种${same ? "，两个循环长度相同，所以要除以 2" : ""}。结果是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const prismSymmetries: KnowledgePointDef = {
+  id: "the-symmetries-of-a-regular-prism",
+  title: t("The symmetries of a regular prism", "正棱柱的对称"),
+  explanation: t(
+    "A right prism on a regular $n$-gon keeps the two bases apart from the side faces, unless it happens to be a cube, so every symmetry must send the bases to the bases. The $n$ rotations about the central axis keep each base in place, and $n$ half-turns about axes through the middle of the prism swap the bases. These are the $2n$ rotations. Adding reflection through the middle plane doubles the count, giving $4n$ symmetries in all.",
+    "正 $n$ 边形上的直棱柱，除非恰好是立方体，底面和侧面是区分开的，所以每个对称都把底面变到底面。绕中心轴的 $n$ 个旋转保持每个底面不动，绕过棱柱中部的轴的 $n$ 个半周旋转交换两个底面。这就是 $2n$ 个旋转。加上关于中间平面的反射，个数加倍，总共有 $4n$ 个对称。",
+  ),
+  generate(rng) {
+    const n = rng.pick(range(3, 40).filter((v) => v !== 4));
+    const all = rng.pick([true, false]);
+    const answer = all ? 4 * n : 2 * n;
+    return numberProblem({
+      prompt: t(
+        `A right prism has regular ${n}-gons as its bases. How many ${all ? "symmetries, counting rotations and reflections," : "rotational symmetries, counting the identity,"} does it have?`,
+        `一个直棱柱的底面是正 ${n} 边形。它有多少个${all ? "对称（包括旋转和反射）" : "旋转对称（包括恒等变换）"}？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n, all ? 2 * n : 4 * n, 6 * n, n + 2],
+      solution: t(
+        `There are ${n} rotations about the central axis and ${n} half-turns that swap the bases, which makes $${2 * n}$ rotations. ${all ? `Each can also be followed by the reflection in the middle plane, which gives $${answer}$.` : "So the answer is that number."}`,
+        `绕中心轴有 ${n} 个旋转，交换两个底面的半周旋转有 ${n} 个，共 $${2 * n}$ 个旋转。${all ? `每个旋转还可以再接一次关于中间平面的反射，得 $${answer}$。` : "所以答案就是这个数。"}`,
+      ),
+    });
+  },
+};
+
+const elementsOfOrderInProduct: KnowledgePointDef = {
+  id: "counting-elements-of-a-given-order-in-a-product",
+  title: t("Counting elements of a given order in a product", "计算积群中给定阶的元素"),
+  explanation: t(
+    "The order of an element $(x, y)$ of a direct product is the least common multiple of the orders of $x$ and $y$. So to count the elements of order $d$, list the pairs of orders $(d_1, d_2)$ with $\\operatorname{lcm}(d_1, d_2) = d$, using divisors of the two group orders. In a cyclic factor, there are $\\varphi(d_1)$ elements of order $d_1$, so each pair of orders contributes the product of two totients.",
+    "直积中元素 $(x, y)$ 的阶是 $x$ 和 $y$ 的阶的最小公倍数。所以要数 $d$ 阶元素，就用两个群的阶的因数，列出满足 $\\operatorname{lcm}(d_1, d_2) = d$ 的阶对 $(d_1, d_2)$。在循环因子中，有 $\\varphi(d_1)$ 个 $d_1$ 阶元素，所以每个阶对贡献两个欧拉函数值之积。",
+  ),
+  generate(rng) {
+    const m = rng.int(2, 12);
+    const n = rng.int(2, 12);
+    const d = rng.pick(divisors(lcm(m, n)).filter((v) => v > 1));
+    const pairs = divisors(m).flatMap((d1) =>
+      divisors(n)
+        .filter((d2) => lcm(d1, d2) === d)
+        .map((d2) => [d1, d2] as const),
+    );
+    const answer = sum(pairs.map(([d1, d2]) => totient(d1) * totient(d2)));
+    const shown = pairs.map(([d1, d2]) => `${totient(d1)} \\cdot ${totient(d2)}`).join(" + ");
+    return numberProblem({
+      prompt: t(
+        `How many elements of order ${d} does $${Zn(m)} \\times ${Zn(n)}$ have?`,
+        `$${Zn(m)} \\times ${Zn(n)}$ 中有多少个 ${d} 阶元素？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [totient(d), 2 * totient(d), m * n, answer + 1, answer + 2],
+      solution: t(
+        `The orders must have least common multiple ${d}, and the possible pairs of orders are ${pairs.map(([d1, d2]) => `$(${d1}, ${d2})$`).join(", ")}. Counting elements of these orders gives $${shown} = ${answer}$.`,
+        `两个阶的最小公倍数必须是 ${d}，可能的阶对是 ${pairs.map(([d1, d2]) => `$(${d1}, ${d2})$`).join("、")}。数出这些阶的元素，得 $${shown} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const smallestInCoset: KnowledgePointDef = {
+  id: "the-smallest-element-of-a-coset-of-a-subgroup-of-units",
+  title: t("The smallest element of a coset of a subgroup of units", "单位子群陪集中的最小元素"),
+  explanation: t(
+    "A coset $aH$ of a subgroup $H$ of the units modulo $p$ is found by multiplying each element of $H$ by $a$ and reducing. The result has the same number of elements as $H$, and it is disjoint from $H$ when $a$ lies outside $H$. A coset has no natural first element, because any of its elements can serve as the representative $a$. So choosing the smallest is a way of naming the coset uniquely.",
+    "模 $p$ 单位群的子群 $H$ 的陪集 $aH$，是把 $H$ 的每个元素乘以 $a$ 再化简得到的。结果与 $H$ 的元素个数相同，当 $a$ 在 $H$ 之外时与 $H$ 不相交。陪集没有天然的第一个元素，因为它的任何元素都可以作代表元 $a$。所以选最小的元素是给陪集唯一命名的一种方法。",
+  ),
+  generate(rng) {
+    const p = rng.pick(primeList(97).filter((q) => q > 10));
+    const subgroupOf = (g: number) => {
+      const members = [1];
+      let value = g % p;
+      while (value !== 1) {
+        members.push(value);
+        value = (value * g) % p;
+      }
+      return members;
+    };
+    const g = rng.pick(
+      range(2, p - 1).filter((v) => {
+        const size = subgroupOf(v).length;
+        return size <= 12 && size < p - 1;
+      }),
+    );
+    const subgroup = subgroupOf(g);
+    const a = rng.pick(range(2, p - 1).filter((v) => !subgroup.includes(v)));
+    const coset = subgroup.map((h) => (a * h) % p).sort((x, y) => x - y);
+    const answer = coset[0] ?? a;
+    const listed = [...subgroup].sort((x, y) => x - y).join(", ");
+    return numberProblem({
+      prompt: t(
+        `In the group of units modulo ${p}, let $H$ be the subgroup generated by ${g}. Find the smallest element of the coset $${a}H$, taken as an integer from 1 to ${p - 1}.`,
+        `在模 ${p} 的单位群中，设 $H$ 是由 ${g} 生成的子群。求陪集 $${a}H$ 的最小元素，取 1 到 ${p - 1} 之间的整数。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a, g, (a * g) % p, answer + 1, answer + 2, p - answer],
+      solution: t(
+        `Here $H = \\{${listed}\\}$. Multiplying by ${a} and reducing gives $\\{${coset.join(", ")}\\}$, whose smallest element is $${answer}$.`,
+        `这里 $H = \\{${listed}\\}$。乘以 ${a} 并化简，得 $\\{${coset.join(", ")}\\}$，最小元素是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const subgroupsOfQuotient: KnowledgePointDef = {
+  id: "counting-the-subgroups-of-a-quotient-of-zn",
+  title: t("Counting the subgroups of a quotient of Zn", "计算 Zn 的商群的子群个数"),
+  explanation: t(
+    "The element $k$ of $\\mathbb{Z}_n$ generates the same subgroup as $\\gcd(n, k)$, and this has $\\frac{n}{\\gcd(n, k)}$ elements. So the quotient by it has order $\\gcd(n, k)$. A quotient of a cyclic group is cyclic, and a cyclic group has exactly one subgroup for each divisor of its order. So the number of subgroups of the quotient is the number of divisors of $\\gcd(n, k)$, and it has nothing further to do with $n$.",
+    "$\\mathbb{Z}_n$ 中的元素 $k$ 与 $\\gcd(n, k)$ 生成相同的子群，它有 $\\frac{n}{\\gcd(n, k)}$ 个元素。所以对它的商群的阶是 $\\gcd(n, k)$。循环群的商群是循环群，循环群对其阶的每个因数恰有一个子群。所以商群的子群个数是 $\\gcd(n, k)$ 的因数个数，与 $n$ 再无其他关系。",
+  ),
+  generate(rng) {
+    const n = rng.pick(compositeList(12, 120));
+    const k = rng.pick(range(2, n - 1).filter((v) => gcd(n, v) > 1));
+    const order = gcd(n, k);
+    const answer = divisors(order).length;
+    return numberProblem({
+      prompt: t(
+        `How many subgroups does the quotient group $${Zn(n)} / \\langle ${k} \\rangle$ have?`,
+        `商群 $${Zn(n)} / \\langle ${k} \\rangle$ 有多少个子群？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [order, divisors(n).length, divisors(n / order).length, answer + 1, answer + 2, n / order, answer + 3],
+      solution: t(
+        `The subgroup $\\langle ${k} \\rangle$ has $\\frac{${n}}{\\gcd(${n}, ${k})} = ${n / order}$ elements, so the quotient is cyclic of order $${order}$. It has one subgroup for each of the $${answer}$ divisors of ${order}.`,
+        `子群 $\\langle ${k} \\rangle$ 有 $\\frac{${n}}{\\gcd(${n}, ${k})} = ${n / order}$ 个元素，所以商群是 $${order}$ 阶循环群。${order} 的每个因数对应一个子群，共 $${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const orbitsOfNegation: KnowledgePointDef = {
+  id: "counting-the-orbits-of-negation-on-zn",
+  title: t("Counting the orbits of negation on Zn", "计算 Zn 上取负作用的轨道数"),
+  explanation: t(
+    "The two-element group $\\{1, -1\\}$ acts on the residues modulo $n$ by multiplication. Each orbit is the pair $\\{x, -x\\}$, and this pair has only one element when $x \\equiv -x$. Those fixed residues are 0 and, for even $n$, also $\\frac{n}{2}$. All other residues pair up, so the number of orbits is the number of fixed residues plus half of the rest. Burnside's lemma gives the same count, as the average number of points fixed.",
+    "二元群 $\\{1, -1\\}$ 通过乘法作用在模 $n$ 的剩余上。每个轨道是一对 $\\{x, -x\\}$，当 $x \\equiv -x$ 时这一对只有一个元素。这些不动的剩余是 0，当 $n$ 为偶数时还有 $\\frac{n}{2}$。其余剩余两两配对，所以轨道数是不动剩余的个数加上其余个数的一半。伯恩赛德引理作为不动点个数的平均值，给出同样的结果。",
+  ),
+  generate(rng) {
+    const n = rng.int(5, 100);
+    const fixed = n % 2 === 0 ? 2 : 1;
+    const answer = fixed + (n - fixed) / 2;
+    return numberProblem({
+      prompt: t(
+        `The group $\\{1, -1\\}$ acts on $${Zn(n)}$ by multiplication. How many orbits are there?`,
+        `群 $\\{1, -1\\}$ 通过乘法作用在 $${Zn(n)}$ 上。共有多少个轨道？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [Math.floor(n / 2), answer + 1, n, 2],
+      solution: t(
+        `Each orbit is $\\{x, -x\\}$. There ${fixed === 1 ? "is $1$ fixed residue, namely 0" : `are $2$ fixed residues, namely 0 and ${n / 2}`}, and the other $${n - fixed}$ residues form $${(n - fixed) / 2}$ pairs. So there are $${answer}$ orbits.`,
+        `每个轨道是 $\\{x, -x\\}$。不动的剩余有 ${fixed === 1 ? "$1$ 个，即 0" : `$2$ 个，即 0 和 ${n / 2}`}，其余 $${n - fixed}$ 个剩余组成 $${(n - fixed) / 2}$ 对。所以共有 $${answer}$ 个轨道。`,
+      ),
+    });
+  },
+};
+
+const gridColorings: KnowledgePointDef = {
+  id: "colorings-of-a-square-grid-up-to-rotation",
+  title: t("Colorings of a square grid up to rotation", "旋转意义下方格的染色"),
+  explanation: t(
+    "Burnside's lemma counts colorings up to rotation by averaging the numbers of colorings fixed by each of the four rotations. A coloring is fixed by a rotation exactly when it is constant on each cycle of cells, so a rotation with $m$ cycles fixes $c^m$ colorings. The identity has one cycle per cell. The quarter turns have the fewest cycles, since most cells move through a four-cell loop. A central cell, if there is one, always forms a cycle by itself.",
+    "伯恩赛德引理把四个旋转各自固定的染色数取平均，来计算旋转意义下的染色数。一个染色被旋转固定，当且仅当它在方格的每个循环上取常数，所以有 $m$ 个循环的旋转固定 $c^m$ 种染色。恒等变换每格一个循环。四分之一转的循环最少，因为大多数方格在四格环中移动。如果有中心格，它总是单独成一个循环。",
+  ),
+  generate(rng) {
+    const size = rng.pick([2, 3, 3, 4, 4]);
+    const c = rng.pick(range(2, size === 2 ? 20 : size === 3 ? 10 : 6));
+    const [identity, half, quarter] = size === 2 ? [4, 2, 1] : size === 3 ? [9, 5, 3] : [16, 8, 4];
+    const answer = (c ** identity + c ** half + 2 * c ** quarter) / 4;
+    const power = (e: number) => (e === 1 ? `${c}` : `${c}^{${e}}`);
+    return numberProblem({
+      prompt: t(
+        `The cells of a ${size}×${size} grid are colored using ${c} colors. How many colorings are there, counting two as the same if a rotation of the grid turns one into the other?`,
+        `用 ${c} 种颜色给 ${size}×${size} 方格的格子染色。如果旋转方格能把一种染色变成另一种，就算作相同。共有多少种染色？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [c ** identity, Math.floor(c ** identity / 4), (c ** identity + c ** half) / 2, answer + 1],
+      solution: t(
+        `The identity has ${identity} cycles of cells, the half turn has ${half}, and each of the two quarter turns has ${quarter}. So Burnside's lemma gives $\\frac{${power(identity)} + ${power(half)} + 2 \\cdot ${power(quarter)}}{4} = ${answer}$.`,
+        `恒等变换有 ${identity} 个方格循环，半周旋转有 ${half} 个，两个四分之一转各有 ${quarter} 个。所以伯恩赛德引理给出 $\\frac{${power(identity)} + ${power(half)} + 2 \\cdot ${power(quarter)}}{4} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const sylowOfSymmetric: KnowledgePointDef = {
+  id: "the-order-of-a-sylow-subgroup-of-a-symmetric-group",
+  title: t("The order of a Sylow subgroup of a symmetric group", "对称群的西罗子群的阶"),
+  explanation: t(
+    "A Sylow $p$-subgroup has as its order the highest power of $p$ that divides the order of the group. For $S_n$, the order is $n!$, and the exponent of $p$ in it is $\\lfloor \\frac{n}{p} \\rfloor + \\lfloor \\frac{n}{p^2} \\rfloor + \\dots$, because the multiples of $p$ each contribute a factor, the multiples of $p^2$ contribute another, and so on. Note that the answer is the power itself, not its exponent.",
+    "西罗 $p$-子群的阶是整除群的阶的 $p$ 的最高次幂。对 $S_n$，阶是 $n!$，其中 $p$ 的指数是 $\\lfloor \\frac{n}{p} \\rfloor + \\lfloor \\frac{n}{p^2} \\rfloor + \\dots$，因为 $p$ 的每个倍数贡献一个因子，$p^2$ 的倍数再贡献一个，依此类推。注意答案是这个幂本身，不是它的指数。",
+  ),
+  generate(rng) {
+    const n = rng.int(4, 12);
+    const p = rng.pick(primeList(n));
+    const parts = [p, p * p, p * p * p].filter((q) => q <= n).map((q) => Math.floor(n / q));
+    const exponent = sum(parts);
+    const answer = p ** exponent;
+    return numberProblem({
+      prompt: t(`Find the order of a Sylow ${p}-subgroup of $S_{${n}}$.`, `求 $S_{${n}}$ 的西罗 ${p}-子群的阶。`),
+      answer,
+      form: "integer",
+      wrong: [exponent, p * answer, p * exponent, answer + p, n],
+      solution: t(
+        `The exponent of ${p} in ${n}! is $${parts.length > 1 ? `${parts.join(" + ")} = ` : ""}${exponent}$, so the order is $${exponent === 1 ? `${p}` : `${p}^{${exponent}} = ${answer}`}$.`,
+        `${n}! 中 ${p} 的指数是 $${parts.length > 1 ? `${parts.join(" + ")} = ` : ""}${exponent}$，所以阶是 $${exponent === 1 ? `${p}` : `${p}^{${exponent}} = ${answer}`}$。`,
+      ),
+    });
+  },
+};
+
+const triangularUnits: KnowledgePointDef = {
+  id: "counting-units-of-triangular-matrices-over-zn",
+  title: t("Counting units of triangular matrices over Zn", "计算 Zn 上三角矩阵环的单位"),
+  explanation: t(
+    "The upper triangular $2 \\times 2$ matrices over $\\mathbb{Z}_n$ form a ring. A matrix in this ring is a unit exactly when its inverse is also upper triangular, and this happens when both diagonal entries are units of $\\mathbb{Z}_n$. The entry above the diagonal can be anything, since it does not affect the determinant. So the count is a product of three independent choices, and the ring is not commutative even though $\\mathbb{Z}_n$ is.",
+    "$\\mathbb{Z}_n$ 上的 $2 \\times 2$ 上三角矩阵构成环。这个环中的矩阵是单位，当且仅当它的逆也是上三角矩阵，这发生在两个对角元都是 $\\mathbb{Z}_n$ 的单位时。对角线上方的元素可以任取，因为它不影响行列式。所以个数是三个独立选择之积，尽管 $\\mathbb{Z}_n$ 可交换，这个环却不可交换。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 40);
+    const units = totient(n);
+    const answer = units * units * n;
+    return numberProblem({
+      prompt: t(
+        `How many units does the ring of upper triangular $2 \\times 2$ matrices over $${Zn(n)}$ have?`,
+        `$${Zn(n)}$ 上的 $2 \\times 2$ 上三角矩阵环有多少个单位？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [units * n, units * units, n ** 3, (n - 1) ** 2 * n],
+      solution: t(
+        `Both diagonal entries must be units, with $\\varphi(${n}) = ${units}$ choices each, and the third entry is free, with ${n} choices. This gives $${units}^2 \\cdot ${n} = ${answer}$.`,
+        `两个对角元都必须是单位，各有 $\\varphi(${n}) = ${units}$ 种选择，第三个元素是自由的，有 ${n} 种选择。所以是 $${units}^2 \\cdot ${n} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const gaussianFraction: KnowledgePointDef = {
+  id: "a-fraction-of-gaussian-integers-in-standard-form",
+  title: t("A fraction of Gaussian integers in standard form", "把高斯整数之比写成标准形式"),
+  explanation: t(
+    "The Gaussian integers $\\mathbb{Z}[i]$ form an integral domain, and their field of quotients is the set of $x + yi$ with $x$ and $y$ rational. A fraction is put in this form by multiplying the top and bottom by the conjugate of the denominator. The new denominator is the integer $c^2 + d^2$, which is why every fraction has rational coordinates. So every quotient of Gaussian integers has one standard form, although many fractions represent it.",
+    "高斯整数 $\\mathbb{Z}[i]$ 构成整环，它的分式域是 $x$、$y$ 为有理数的 $x + yi$ 的集合。把分子分母同乘以分母的共轭，就把分式写成这种形式。新的分母是整数 $c^2 + d^2$，这就是每个分式都有有理坐标的原因。所以高斯整数的每个商都有唯一的标准形式，尽管有许多分式表示它。",
+  ),
+  generate(rng) {
+    const a = pickNonzero(rng, 9);
+    const b = pickNonzero(rng, 9);
+    const c = pickNonzero(rng, 9);
+    const d = pickNonzero(rng, 9);
+    const norm = c * c + d * d;
+    const re = a * c + b * d;
+    const im = b * c - a * d;
+    const asksReal = rng.pick([true, false]);
+    const answer = Q.of(asksReal ? re : im, norm);
+    return numberProblem({
+      prompt: t(
+        `In the field of quotients of $\\mathbb{Z}[i]$, write $\\frac{${poly([a, ""], [b, "i"])}}{${poly([c, ""], [d, "i"])}} = x + yi$ with $x$ and $y$ rational. Find ${asksReal ? "$x$" : "$y$"}.`,
+        `在 $\\mathbb{Z}[i]$ 的分式域中，写成 $\\frac{${poly([a, ""], [b, "i"])}}{${poly([c, ""], [d, "i"])}} = x + yi$，其中 $x$、$y$ 是有理数。求 ${asksReal ? "$x$" : "$y$"}。`,
+      ),
+      answer,
+      wrong: [
+        Q.of(asksReal ? a : b, c),
+        Q.of(asksReal ? a * c - b * d : b * c + a * d, norm),
+        answer.neg(),
+        Q.of(asksReal ? re : im, 2 * norm),
+        answer.add(Q.of(1)),
+        answer.sub(Q.of(1)),
+      ],
+      solution: t(
+        `Multiplying the top and bottom by $${poly([c, ""], [-d, "i"])}$ gives the denominator $${norm}$ and the numerator $${poly([re, ""], [im, "i"])}$. So ${asksReal ? "$x$" : "$y$"} is $${answer.toLatex()}$.`,
+        `分子分母同乘以 $${poly([c, ""], [-d, "i"])}$，分母是 $${norm}$，分子是 $${poly([re, ""], [im, "i"])}$。所以 ${asksReal ? "$x$" : "$y$"} 是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const idealGenerator: KnowledgePointDef = {
+  id: "the-generator-of-a-sum-or-intersection-of-ideals",
+  title: t("The generator of a sum or intersection of ideals", "理想的和或交的生成元"),
+  explanation: t(
+    "Every ideal of the integers is principal, so the sum and the intersection of two ideals have single generators. The sum $(a) + (b)$ contains all $ax + by$, which by Bezout's identity are exactly the multiples of $\\gcd(a, b)$. The intersection $(a) \\cap (b)$ contains the common multiples, which are the multiples of $\\operatorname{lcm}(a, b)$. It is easy to swap these: a larger ideal has a smaller generator, so the sum belongs with the gcd.",
+    "整数的每个理想都是主理想，所以两个理想的和与交都有单个生成元。和 $(a) + (b)$ 包含所有 $ax + by$，由贝祖等式，它们恰好是 $\\gcd(a, b)$ 的倍数。交 $(a) \\cap (b)$ 包含公倍数，也就是 $\\operatorname{lcm}(a, b)$ 的倍数。这两者容易弄混：较大的理想有较小的生成元，所以和对应最大公因数。",
+  ),
+  generate(rng) {
+    const a = rng.int(4, 60);
+    const b = rng.pick(range(4, 60).filter((v) => v !== a));
+    const asksSum = rng.pick([true, false]);
+    const answer = asksSum ? gcd(a, b) : lcm(a, b);
+    const symbol = asksSum ? "+" : "\\cap";
+    return numberProblem({
+      prompt: t(
+        `In the ring of integers, find the positive generator of the ideal $(${a}) ${symbol} (${b})$.`,
+        `在整数环中，求理想 $(${a}) ${symbol} (${b})$ 的正生成元。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [asksSum ? lcm(a, b) : gcd(a, b), a * b, a + b, Math.abs(a - b) + 1],
+      solution: t(
+        asksSum
+          ? `The ideal holds all combinations $${a}x + ${b}y$, which are the multiples of $\\gcd(${a}, ${b}) = ${answer}$.`
+          : `The ideal holds the common multiples of ${a} and ${b}, which are the multiples of $\\operatorname{lcm}(${a}, ${b}) = ${answer}$.`,
+        asksSum
+          ? `这个理想包含所有组合 $${a}x + ${b}y$，它们是 $\\gcd(${a}, ${b}) = ${answer}$ 的倍数。`
+          : `这个理想包含 ${a} 和 ${b} 的公倍数，它们是 $\\operatorname{lcm}(${a}, ${b}) = ${answer}$ 的倍数。`,
+      ),
+    });
+  },
+};
+
+const kernelIntoProduct: KnowledgePointDef = {
+  id: "the-kernel-of-a-map-into-a-product-of-residue-rings",
+  title: t("The kernel of a map into a product of residue rings", "到剩余环之积的映射的核"),
+  explanation: t(
+    "The ring homomorphism from the integers to a product of residue rings sends an integer to its remainders. An integer lies in the kernel when every remainder is zero, so that it is divisible by every modulus. So the kernel is the ideal generated by the least common multiple of the moduli. By the first isomorphism theorem, the image is a copy of the residue ring modulo this number, which need not be the whole product.",
+    "从整数到剩余环之积的环同态把一个整数映到它的余数。整数在核中，当且仅当每个余数都是零，也就是它能被每个模整除。所以核是由各模的最小公倍数生成的理想。由第一同构定理，像同构于模这个数的剩余环，它不一定是整个积。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 15);
+    const b = rng.pick(range(2, 15).filter((v) => v !== a));
+    const c = rng.pick(range(2, 15).filter((v) => v !== a && v !== b));
+    const answer = lcm(lcm(a, b), c);
+    return numberProblem({
+      prompt: t(
+        `The homomorphism $\\mathbb{Z} \\to ${Zn(a)} \\times ${Zn(b)} \\times ${Zn(c)}$ sends $x$ to its three remainders. Find the positive generator of its kernel.`,
+        `同态 $\\mathbb{Z} \\to ${Zn(a)} \\times ${Zn(b)} \\times ${Zn(c)}$ 把 $x$ 映到它的三个余数。求它的核的正生成元。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a * b * c, gcd(gcd(a, b), c), a + b + c, lcm(a, b), 2 * answer],
+      solution: t(
+        `An integer lies in the kernel when ${a}, ${b} and ${c} all divide it. So the generator is their least common multiple, $${answer}$.`,
+        `整数在核中，当且仅当 ${a}、${b}、${c} 都整除它。所以生成元是它们的最小公倍数 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const primeIdealsOfProduct: KnowledgePointDef = {
+  id: "counting-prime-ideals-of-a-product-of-residue-rings",
+  title: t("Counting prime ideals of a product of residue rings", "计算剩余环之积的素理想"),
+  explanation: t(
+    "Every ideal of a product of two rings $R \\times S$ has the form $I \\times J$, and it is prime exactly when one factor is the whole ring and the other is prime. So the prime ideals of $R \\times S$ come from those of $R$ and those of $S$ separately, and the counts add. For $\\mathbb{Z}_n$, the prime ideals correspond to the prime divisors of $n$. A prime dividing both moduli counts once for each factor.",
+    "两个环之积 $R \\times S$ 的每个理想都形如 $I \\times J$，它是素理想当且仅当一个因子是整个环，另一个是素理想。所以 $R \\times S$ 的素理想分别来自 $R$ 和 $S$ 的素理想，个数相加。对 $\\mathbb{Z}_n$，素理想对应 $n$ 的素因数。同时整除两个模的素数在每个因子中各算一次。",
+  ),
+  generate(rng) {
+    const m = rng.int(6, 120);
+    const n = rng.int(6, 120);
+    const left = primes(m);
+    const right = primes(n);
+    const answer = left.length + right.length;
+    return numberProblem({
+      prompt: t(`How many prime ideals does the ring $${Zn(m)} \\times ${Zn(n)}$ have?`, `环 $${Zn(m)} \\times ${Zn(n)}$ 有多少个素理想？`),
+      answer,
+      form: "integer",
+      wrong: [primes(lcm(m, n)).length, left.length * right.length, divisors(m).length + divisors(n).length, answer + 1, answer + 2],
+      solution: t(
+        `A prime ideal comes from one factor, with the other factor whole. The prime divisors are ${left.join(", ")} for ${m} and ${right.join(", ")} for ${n}, which gives $${left.length} + ${right.length} = ${answer}$.`,
+        `素理想来自一个因子，另一个因子取整个环。${m} 的素因数是 ${left.join("、")}，${n} 的素因数是 ${right.join("、")}，所以是 $${left.length} + ${right.length} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
 /** deeperAbstractAlgebraPoints gives, by topic id, the knowledge points added after an Abstract Algebra topic's own. */
 export const deeperAbstractAlgebraPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "associative-binary-operations": [associativityParameter],
@@ -1731,4 +2424,26 @@ export const deeperAbstractAlgebraPoints: Readonly<Record<string, readonly Knowl
   "introduction-to-abstract-vector-spaces": [productDimension],
   "bases-in-abstract-vector-spaces": [shiftedBasisCoordinate],
   "subspaces-of-abstract-vector-spaces": [matrixSubspaceDimension],
+  "introduction-to-groups": [powerUnderShiftedSum],
+  "real-rational-and-complex-groups": [powerOfOnePlusI],
+  "subgroups-of-matrix-groups": [triangularGroupSize],
+  "subgroups-of-function-groups": [affineGroupSize],
+  "cyclic-groups": [smallestPrimitiveRoot],
+  "properties-of-cyclic-groups": [sumOfOrders],
+  "the-order-of-a-cycle": [cyclesInPower],
+  transpositions: [inversionsCount],
+  "the-inverse-of-a-permutation": [involutionsWithSwaps],
+  "the-symmetric-group-on-n-symbols": [permutationsOfCycleType],
+  "the-symmetry-group-of-a-figure": [prismSymmetries],
+  "external-direct-products": [elementsOfOrderInProduct],
+  "cosets-of-the-multiplicative-groups-of-integers-modulo-n": [smallestInCoset],
+  "quotient-groups": [subgroupsOfQuotient],
+  "group-actions": [orbitsOfNegation],
+  "burnsides-lemma": [gridColorings],
+  "the-first-sylow-theorem": [sylowOfSymmetric],
+  "the-units-of-a-ring": [triangularUnits],
+  "the-field-of-quotients-of-an-integral-domain": [gaussianFraction],
+  "generating-elements-of-principal-ideal-rings": [idealGenerator],
+  "the-image-and-kernel-of-a-ring-homomorphism": [kernelIntoProduct],
+  "prime-ideals-and-maximal-ideals": [primeIdealsOfProduct],
 };
