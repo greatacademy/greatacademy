@@ -18222,6 +18222,91 @@ export const numberTheory: CourseDef = {
   ],
 };
 
+/** realAnalysis is the course on the rigorous foundations of calculus: sequences, series, continuity, differentiation, integration and sequences of functions. */
+export const realAnalysis: CourseDef = {
+  id: "real-analysis",
+  title: t("Real Analysis", "实分析"),
+  description: t(
+    "The rigorous foundations of calculus: completeness, sequences and series, limits and continuity through epsilons and deltas, compactness, the Riemann integral, and uniform convergence.",
+    "微积分的严格基础：完备性，数列和级数，用 ε 和 δ 研究极限和连续，紧性，黎曼积分，以及一致收敛。",
+  ),
+  units: [
+    {
+      title: t("Sequences", "数列"),
+      modules: [
+        {
+          title: t("Bounds and Limits", "界和极限"),
+          topics: [
+            "supremum-and-infimum",
+            "suprema-of-sets-of-reals",
+            "limits-of-sequences",
+            "proving-the-finite-limit-of-a-sequence",
+            "the-epsilon-definition-for-sequences",
+          ],
+        },
+        {
+          title: t("Convergence Without the Limit", "不用极限判断收敛"),
+          topics: [
+            "monotonic-sequences",
+            "the-monotone-convergence-theorem",
+            "subsequences-and-the-bolzano-weierstrass-theorem",
+            "cauchy-sequences",
+            "limit-superior-and-limit-inferior",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Series", "级数"),
+      modules: [
+        {
+          title: t("Convergence of Series", "级数的收敛"),
+          topics: ["harmonic-series-and-p-series", "absolute-and-conditional-convergence-of-series"],
+        },
+      ],
+    },
+    {
+      title: t("Limits and Continuity", "极限和连续"),
+      modules: [
+        {
+          title: t("Rigorous Limits", "严格的极限"),
+          topics: ["defining-continuity-at-a-point", "epsilon-delta-proofs-of-limits", "the-sequential-criterion-for-continuity"],
+        },
+        {
+          title: t("Topology of the Line", "直线的拓扑"),
+          topics: ["distances-in-metric-spaces", "open-and-closed-sets-of-reals", "compactness-on-the-real-line", "uniform-continuity"],
+        },
+      ],
+    },
+    {
+      title: t("Differentiation and Integration", "微分和积分"),
+      modules: [
+        {
+          title: t("The Derivative", "导数"),
+          topics: ["differentiability-in-analysis", "the-mean-value-theorem", "bounds-from-the-mean-value-theorem"],
+        },
+        {
+          title: t("The Riemann Integral", "黎曼积分"),
+          topics: [
+            "defining-definite-integrals-using-left-and-right-riemann-sums",
+            "upper-and-lower-darboux-sums",
+            "riemann-integrability",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("Sequences of Functions", "函数列"),
+      modules: [
+        {
+          title: t("Uniform Convergence", "一致收敛"),
+          topics: ["pointwise-and-uniform-convergence", "the-weierstrass-m-test", "the-contraction-mapping-principle"],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -18241,6 +18326,7 @@ export const mathCourses: readonly CourseDef[] = [
   discreteMathematics,
   abstractAlgebra,
   numberTheory,
+  realAnalysis,
   integratedMathI,
   integratedMathII,
   integratedMathIII,

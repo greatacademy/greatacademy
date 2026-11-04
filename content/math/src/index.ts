@@ -240,6 +240,7 @@ import { radicalExpressionTopics } from "./topics/radical-expressions.ts";
 import { radicalTopics } from "./topics/radicals.ts";
 import { rationalExpressionTopics } from "./topics/rational-expressions.ts";
 import { ratioTopics } from "./topics/ratios.ts";
+import { realAnalysisTopics } from "./topics/real-analysis.ts";
 import { satFundamentalsAdvancedTopics } from "./topics/sat-fundamentals-advanced.ts";
 import { satFundamentalsAlgebraTopics } from "./topics/sat-fundamentals-algebra.ts";
 import { satFundamentalsDataTopics } from "./topics/sat-fundamentals-data.ts";
@@ -438,6 +439,7 @@ export const math: SubjectDef = {
     ...methodsOfProofProofTopics,
     ...methodsOfProofNumberTheoryTopics,
     ...numberTheoryCourseTopics,
+    ...realAnalysisTopics,
     ...methodsOfProofFunctionTopics,
     ...methodsOfProofCongruenceTopics,
     ...methodsOfProofRelationTopics,
