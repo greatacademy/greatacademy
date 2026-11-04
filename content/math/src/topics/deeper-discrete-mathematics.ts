@@ -1819,10 +1819,10 @@ const gridPaths: KnowledgePointDef = {
 
 const mooreCount: KnowledgePointDef = {
   id: "counting-the-tables-of-a-moore-machine",
-  title: t("Counting the tables of a Moore machine", "计算摩尔机的表"),
+  title: t("Counting the tables of a Moore machine", "计算Moore 机的表"),
   explanation: t(
     "A Moore machine's table has two independent parts. Each pair of a state and an input symbol needs a next state, which makes $as$ entries with $s$ choices each. Each state also needs one output, which makes $s$ entries with $b$ choices each. The output belongs to the state and not to the transition, and this is what makes the count smaller than for a Mealy machine.",
-    "摩尔机的表有两个独立的部分。每一对状态和输入符号需要一个下一状态，共 $as$ 项，每项有 $s$ 种选择。每个状态还需要一个输出，共 $s$ 项，每项有 $b$ 种选择。输出属于状态而不属于转移，这使得计数比米利机要小。",
+    "Moore 机的表有两个独立的部分。每一对状态和输入符号需要一个下一状态，共 $as$ 项，每项有 $s$ 种选择。每个状态还需要一个输出，共 $s$ 项，每项有 $b$ 种选择。输出属于状态而不属于转移，这使得计数比Mealy 机要小。",
   ),
   generate(rng) {
     const s = rng.int(2, 5);
@@ -1833,7 +1833,7 @@ const mooreCount: KnowledgePointDef = {
     return numberProblem({
       prompt: t(
         `A Moore machine has ${s} states with a fixed start state, ${a} input symbols and ${b} output symbols. How many different tables of next states and outputs are there?`,
-        `一个摩尔机有 ${s} 个状态（起始状态固定）、${a} 个输入符号和 ${b} 个输出符号。下一状态和输出构成的表有多少种？`,
+        `一个Moore 机有 ${s} 个状态（起始状态固定）、${a} 个输入符号和 ${b} 个输出符号。下一状态和输出构成的表有多少种？`,
       ),
       answer,
       form: "integer",
@@ -1995,6 +1995,1359 @@ const omegaThreshold: KnowledgePointDef = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// Third pass
+// ---------------------------------------------------------------------------
+
+/** sumOfTerms writes integer coefficients and monomials as a sum, leaving out zero terms and unit coefficients. */
+const sumOfTerms = (terms: readonly (readonly [number, string])[]) =>
+  terms
+    .filter(([c]) => c !== 0)
+    .map(([c, m], i) => {
+      const size = Math.abs(c);
+      const body = m === "" ? `${size}` : size === 1 ? m : `${size}${m}`;
+      return `${i === 0 ? (c < 0 ? "-" : "") : c < 0 ? " - " : " + "}${body}`;
+    })
+    .join("");
+/** ratioTerm writes a signed term with a rational coefficient, leaving out a unit coefficient. */
+const ratioTerm = (q: Q, m: string, first: boolean) => {
+  const size = q.abs();
+  const body = size.eq(Q.of(1)) ? m : `${size.toLatex()}${m}`;
+  return `${first ? (q.sign() < 0 ? "-" : "") : q.sign() < 0 ? " - " : " + "}${body}`;
+};
+/** bracketPow writes a rational base to an exponent, in brackets, leaving out an exponent of one. */
+const bracketPow = (base: Q, e: number) => {
+  const inner = `\\left(${base.toLatex()}\\right)`;
+  return e === 1 ? inner : `${inner}^{${e}}`;
+};
+/** sampleFrom draws k different items of a list, in the order drawn. */
+const sampleFrom = <T>(rng: Parameters<KnowledgePointDef["generate"]>[0], items: readonly T[], k: number): T[] => {
+  const rest = [...items];
+  const out: T[] = [];
+  for (let i = 0; i < k; i++) out.push(rest.splice(rng.int(0, rest.length - 1), 1)[0] as T);
+  return out;
+};
+/** arcSet writes the arcs of a directed graph on lettered vertices, in alphabetical order. */
+const arcSet = (edges: readonly (readonly [number, number])[]) =>
+  [...edges]
+    .sort((a, b) => a[0] - b[0] || a[1] - b[1])
+    .map(([u, v]) => `(${"ABCDEFGH"[u]}, ${"ABCDEFGH"[v]})`)
+    .join(", ");
+/** letterList writes the vertices with the given numbers as the letters A, B, …. */
+const letterList = (ids: readonly number[]) => ids.map((i) => "ABCDEFGH"[i]).join(", ");
+/** automatonTable writes a transition table on the states q_0, … with cells given as LaTeX, the start state arrowed and accepting states starred. */
+const automatonTable = (cells: readonly (readonly [string, string])[], accepting: readonly number[] = []) =>
+  `\\begin{array}{c|cc} & 0 & 1 \\\\ \\hline ${cells
+    .map(([zero, one], q) => `${q === 0 ? "\\to " : ""}${accepting.includes(q) ? "{*}" : ""}q_{${q}} & ${zero} & ${one}`)
+    .join(" \\\\ ")} \\end{array}`;
+
+const rearrangingForAugmentedMatrix: KnowledgePointDef = {
+  id: "equations-out-of-standard-form-in-an-augmented-matrix",
+  title: t("Equations out of standard form in an augmented matrix", "增广矩阵中不是标准形式的方程"),
+  explanation: t(
+    "An augmented matrix can only be read off once every equation has its unknowns on the left, in the agreed order, and its constant on the right. An equation that arrives in another shape must be rearranged first. Moving a term across the equals sign changes its sign, and that sign is what the matrix records.",
+    "只有当每个方程的未知数都按约定顺序放在左边、常数放在右边时，才能直接写出增广矩阵。形式不同的方程要先整理。把一项移到等号另一边时符号会改变，矩阵记录的正是改变后的符号。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 6);
+    const b = rng.int(2, 7);
+    const d = rng.int(2, 7);
+    const c = rng.int(1, 12);
+    const e = rng.pick(range(1, 12).filter((v) => v !== c));
+    const kind = rng.pick(["y", "z", "rhs"] as const);
+    const answer = kind === "y" ? -b : kind === "z" ? d : e - c;
+    const wrong =
+      kind === "y"
+        ? [b, d, -d, a, -a, -c, -b - 1, 1 - b]
+        : kind === "z"
+          ? [-d, b, -b, a, -a, e, c, d + 1, d + 2]
+          : [e + c, c - e, e, c, a, e - c + 1];
+    const where = {
+      y: t("the column of $y$", "$y$ 这一列"),
+      z: t("the column of $z$", "$z$ 这一列"),
+      rhs: t("the column of constants", "常数列"),
+    }[kind];
+    return numberProblem({
+      prompt: t(
+        `The equation $${a}x + ${c} = ${b}y - ${d}z + ${e}$ is one row of a system in the unknowns $x, y, z$. In the augmented matrix $[A \\mid \\mathbf{b}]$, with columns in that order, what is the entry of this row in ${where.en}?`,
+        `方程 $${a}x + ${c} = ${b}y - ${d}z + ${e}$ 是关于未知数 $x, y, z$ 的方程组中的一行。在按此顺序排列的增广矩阵 $[A \\mid \\mathbf{b}]$ 中，这一行在${where["zh-CN"]}的元素是多少？`,
+      ),
+      answer,
+      form: "integer",
+      wrong,
+      solution: t(
+        `Move the unknowns to the left and the constants to the right. The term in $y$ changes sign and so does the term in $z$, which gives $${sumOfTerms(
+          [
+            [a, "x"],
+            [-b, "y"],
+            [d, "z"],
+          ],
+        )} = ${e - c}$. The entry in ${where.en} is $${answer}$.`,
+        `把未知数移到左边，常数移到右边。含 $y$ 的项和含 $z$ 的项都要变号，得到 $${sumOfTerms([
+          [a, "x"],
+          [-b, "y"],
+          [d, "z"],
+        ])} = ${e - c}$。${where["zh-CN"]}的元素是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const zerosOfRowEchelonForm: KnowledgePointDef = {
+  id: "zero-entries-forced-by-row-echelon-form",
+  title: t("Zero entries forced by row echelon form", "行阶梯形强制出现的零元素"),
+  explanation: t(
+    "Row echelon form forces some entries to be zero and leaves the others free. Each pivot lies strictly to the right of the pivot above it, so the rows need longer and longer runs of leading zeros, and any row with no pivot is zero throughout. Entries above a pivot or to its right may be anything.",
+    "行阶梯形要求一部分元素为零，其余元素不受限制。每个主元都严格位于上一行主元的右边，所以各行开头的零越来越多，而没有主元的行全部为零。主元上方和右边的元素可以取任意值。",
+  ),
+  generate(rng) {
+    const [m, n, r] = rng.pick(
+      range(2, 6).flatMap((m) => range(2, 7).flatMap((n) => range(2, Math.min(m, n)).map((r) => [m, n, r] as const))),
+    );
+    const stairs = (r * (r - 1)) / 2;
+    const blank = (m - r) * n;
+    const answer = stairs + blank;
+    const rest = m - r;
+    const restEn =
+      rest === 0
+        ? "Every row has a pivot, so there are no zero rows."
+        : `The ${rest === 1 ? "row" : `${rest} rows`} without a pivot ${rest === 1 ? "is" : "are"} all zero, which adds $${rest} \\cdot ${n} = ${blank}$.`;
+    const restZh =
+      rest === 0 ? "每一行都有主元，所以没有零行。" : `没有主元的 ${rest} 行全为零，增加 $${rest} \\cdot ${n} = ${blank}$ 个。`;
+    return numberProblem({
+      prompt: t(
+        `A $${m} \\times ${n}$ matrix is in row echelon form and has exactly ${r} pivots. What is the smallest possible number of entries equal to $0$?`,
+        `一个 $${m} \\times ${n}$ 矩阵是行阶梯形，恰好有 ${r} 个主元。其中等于 $0$ 的元素最少有多少个？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [stairs + rest, (r * (r + 1)) / 2 + blank, blank + r, stairs + (m - r) * (n - r), answer + 1, answer + 2, m * n],
+      solution: t(
+        `Each pivot sits strictly to the right of the one above it, so the $i$th pivot row has at least $i - 1$ leading zeros. That forces $\\frac{${r} \\cdot ${r - 1}}{2} = ${stairs}$ ${stairs === 1 ? "zero" : "zeros"}, and pivots in the first ${r} columns with every other entry nonzero use no more. ${restEn} The minimum is $${answer}$.`,
+        `每个主元都严格在上一行主元的右边，所以第 $i$ 个主元行开头至少有 $i - 1$ 个零。这要求 $\\frac{${r} \\cdot ${r - 1}}{2} = ${stairs}$ 个零；主元放在前 ${r} 列、其余元素都不为零时不会多用。${restZh}最少是 $${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const backSubstitutionCost: KnowledgePointDef = {
+  id: "counting-the-operations-of-back-substitution",
+  title: t("Counting the operations of back substitution", "计算回代的运算次数"),
+  explanation: t(
+    "The cost of back substitution comes from how much of each row is already known. The last unknown needs one division and nothing else. Every row above it has one more known unknown to multiply and subtract, so the work grows row by row, and adding it up gives a triangular number, far below the cost of elimination.",
+    "回代的运算量取决于每一行已知的未知数有多少。最后一个未知数只需要一次除法。往上每一行都多一个已知未知数要相乘再相减，所以工作量逐行增加，加起来是一个三角形数，远小于消元的运算量。",
+  ),
+  generate(rng) {
+    const n = rng.int(4, 30);
+    const kind = rng.pick(["mul", "all"] as const);
+    const products = (n * (n - 1)) / 2;
+    const answer = kind === "mul" ? products : n * n;
+    return numberProblem({
+      prompt:
+        kind === "mul"
+          ? t(
+              `Back substitution solves an upper triangular system of ${n} equations in ${n} unknowns, with no zero entries on or above the diagonal. How many multiplications does it use, not counting divisions?`,
+              `用回代法解一个含 ${n} 个方程、${n} 个未知数的上三角方程组，对角线及其上方没有零元素。不计除法，一共要做多少次乘法？`,
+            )
+          : t(
+              `Back substitution solves an upper triangular system of ${n} equations in ${n} unknowns, with no zero entries on or above the diagonal. How many multiplications, subtractions and divisions does it use in total?`,
+              `用回代法解一个含 ${n} 个方程、${n} 个未知数的上三角方程组，对角线及其上方没有零元素。乘法、减法和除法一共要做多少次？`,
+            ),
+      answer,
+      form: "integer",
+      wrong: [n * n, (n * (n + 1)) / 2, n * (n - 1), n * (n + 1), products, 2 * n - 1],
+      solution:
+        kind === "mul"
+          ? t(
+              `The row solved $j$th from the bottom contains $j - 1$ unknowns already found, and each one is multiplied by its coefficient once. So the count is $0 + 1 + \\cdots + ${n - 1} = \\frac{${n} \\cdot ${n - 1}}{2} = ${answer}$.`,
+              `从下往上第 $j$ 个求解的行含 $j - 1$ 个已求出的未知数，每个都要与系数相乘一次。所以次数是 $0 + 1 + \\cdots + ${n - 1} = \\frac{${n} \\cdot ${n - 1}}{2} = ${answer}$。`,
+            )
+          : t(
+              `A row with $j - 1$ known unknowns uses $j - 1$ multiplications, $j - 1$ subtractions and one division. There are $\\frac{${n} \\cdot ${n - 1}}{2} = ${products}$ multiplications, as many subtractions and ${n} divisions, so the total is $2 \\cdot ${products} + ${n} = ${answer}$.`,
+              `含 $j - 1$ 个已知未知数的行要做 $j - 1$ 次乘法、$j - 1$ 次减法和一次除法。乘法有 $\\frac{${n} \\cdot ${n - 1}}{2} = ${products}$ 次，减法同样多，除法 ${n} 次，总数是 $2 \\cdot ${products} + ${n} = ${answer}$。`,
+            ),
+    });
+  },
+};
+
+const preserversOfAGivenWeight: KnowledgePointDef = {
+  id: "truth-preserving-functions-of-a-given-weight",
+  title: t("Truth-preserving functions of a given weight", "给定权重的保值函数"),
+  explanation: t(
+    "Preserving or failing to preserve a constant fixes the value of a function on one particular input: all zeros for the constant zero, all ones for the constant one. These two rows of the table are then settled, and the remaining rows are still free. A condition on the number of ones must be split between the fixed rows and the free ones.",
+    "是否保某个常数，决定了函数在一个特定输入上的值：保 0 看全零输入，保 1 看全一输入。这样真值表的两行就确定了，其余各行仍然自由。对取一个数的要求，要分别算在已确定的行和自由的行上。",
+  ),
+  generate(rng) {
+    const [n, k, kind] = rng.pick(
+      [3, 4].flatMap((n) =>
+        range(2, 6).flatMap((k) =>
+          (["both", "neither", "zero", "one"] as const).filter((kind) => kind !== "one" || k >= 3).map((kind) => [n, k, kind] as const),
+        ),
+      ),
+    );
+    const free = 2 ** n - 2;
+    const fixedOnes = ({ both: 1, neither: 1, zero: 0, one: 2 } as const)[kind];
+    const pickOnes = k - fixedOnes;
+    const answer = binom(free, pickOnes);
+    const condition = {
+      both: t("preserve both $0$ and $1$", "既保 $0$ 又保 $1$"),
+      neither: t("preserve neither $0$ nor $1$", "既不保 $0$ 也不保 $1$"),
+      zero: t("preserve $0$ but not $1$", "保 $0$ 但不保 $1$"),
+      one: t("preserve $1$ but not $0$", "保 $1$ 但不保 $0$"),
+    }[kind];
+    const values = {
+      both: "f(0, \\dots, 0) = 0, f(1, \\dots, 1) = 1",
+      neither: "f(0, \\dots, 0) = 1, f(1, \\dots, 1) = 0",
+      zero: "f(0, \\dots, 0) = 0, f(1, \\dots, 1) = 0",
+      one: "f(0, \\dots, 0) = 1, f(1, \\dots, 1) = 1",
+    }[kind];
+    const ones = {
+      0: t("neither equals $1$", "两个都不是 $1$"),
+      1: t("exactly one equals $1$", "恰有一个是 $1$"),
+      2: t("both equal $1$", "两个都是 $1$"),
+    }[fixedOnes];
+    return numberProblem({
+      prompt: t(
+        `How many Boolean functions of ${n} variables ${condition.en} and equal $1$ on exactly ${k} of their inputs?`,
+        `有多少个 ${n} 元布尔函数${condition["zh-CN"]}，并且恰好在 ${k} 个输入上取值为 $1$？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [binom(2 ** n, k), binom(2 ** n - 1, k), binom(free, k), binom(free, k - 1), binom(free, Math.max(k - 2, 0))],
+      solution: t(
+        `The condition means $${values}$, so two values are settled, and ${ones.en}. ${pickOnes === 1 ? "The one remaining $1$ goes" : `The remaining ${pickOnes} ones go`} among the other $2^{${n}} - 2 = ${free}$ inputs, in $\\binom{${free}}{${pickOnes}} = ${answer}$ ways.`,
+        `这个条件就是 $${values}$，所以两个值已确定，${ones["zh-CN"]}。还要在其余 $2^{${n}} - 2 = ${free}$ 个输入中放 ${pickOnes} 个一，有 $\\binom{${free}}{${pickOnes}} = ${answer}$ 种方法。`,
+      ),
+    });
+  },
+};
+
+/** postPool lists functions of x, y, z for testing completeness, with their LaTeX. */
+const postPool: readonly (readonly [string, (x: number, y: number, z: number) => number])[] = [
+  ["x \\wedge y", (x, y) => x & y],
+  ["x \\vee y", (x, y) => x | y],
+  ["\\neg x", (x) => 1 - x],
+  ["x \\oplus y", (x, y) => x ^ y],
+  ["x \\Leftrightarrow y", (x, y) => 1 - (x ^ y)],
+  ["x \\Rightarrow y", (x, y) => (1 - x) | y],
+  ["x \\oplus y \\oplus z", (x, y, z) => x ^ y ^ z],
+  ["x \\wedge \\neg y", (x, y) => x & (1 - y)],
+  ["(x \\wedge y) \\vee (y \\wedge z) \\vee (x \\wedge z)", (x, y, z) => (x & y) | (y & z) | (x & z)],
+  ["0", () => 0],
+  ["1", () => 1],
+];
+/** postEscapes lists the Post classes T0, T1, S, M, L that a function of three variables lies outside. */
+const postEscapes = (f: (x: number, y: number, z: number) => number) => {
+  const at = (v: number) => f((v >> 2) & 1, (v >> 1) & 1, v & 1);
+  const inputs = range(0, 7);
+  const out: string[] = [];
+  if (at(0) !== 0) out.push("T_0");
+  if (at(7) !== 1) out.push("T_1");
+  if (inputs.some((v) => at(v) === at(7 - v))) out.push("S");
+  if (inputs.some((v) => inputs.some((w) => (v & w) === v && at(v) > at(w)))) out.push("M");
+  if (inputs.some((v) => inputs.some((w) => (at(v ^ w) ^ at(v) ^ at(w) ^ at(0)) !== 0))) out.push("L");
+  return out;
+};
+const CLASSES = ["T_0", "T_1", "S", "M", "L"];
+/** smallestCompletePart gives the indices of a smallest functionally complete part of a list of escape lists, or undefined when the whole list is not complete. */
+const smallestCompletePart = (escapes: readonly (readonly string[])[]) => {
+  const masks = range(1, 2 ** escapes.length - 1).sort(
+    (a, b) => a.toString(2).replaceAll("0", "").length - b.toString(2).replaceAll("0", "").length || a - b,
+  );
+  for (const mask of masks) {
+    const part = range(0, escapes.length - 1).filter((i) => (mask >> i) & 1);
+    if (CLASSES.every((c) => part.some((i) => (escapes[i] as readonly string[]).includes(c)))) return part;
+  }
+  return undefined;
+};
+
+const smallestCompleteSubset: KnowledgePointDef = {
+  id: "the-smallest-complete-subset-of-a-set-of-functions",
+  title: t("The smallest complete subset of a set of functions", "函数集的最小完备子集"),
+  explanation: t(
+    "Post's theorem turns completeness into a covering question. Record, for each function, which of the five classes it lies outside. A subset is complete exactly when every class is left by at least one chosen function, so finding the smallest complete subset means covering all five classes with as few functions as possible.",
+    "波斯特定理把完备性变成了一个覆盖问题。对每个函数，记下它不属于五个类中的哪些。一个子集完备，当且仅当每个类都至少有一个选中的函数不属于它，所以求最小完备子集，就是用尽量少的函数覆盖全部五个类。",
+  ),
+  generate(rng) {
+    let chosen = [0, 2, 9, 3];
+    let part = [0, 1];
+    for (let attempt = 0; attempt < 200; attempt++) {
+      const trial = sampleFrom(rng, range(0, postPool.length - 1), rng.int(3, 5));
+      const found = smallestCompletePart(trial.map((i) => postEscapes((postPool[i] as (typeof postPool)[number])[1])));
+      if (found && found.length >= 2) {
+        chosen = trial;
+        part = found;
+        break;
+      }
+    }
+    const functions = chosen.map((i) => postPool[i] as (typeof postPool)[number]);
+    const answer = part.length;
+    const listing = functions.map(([latex]) => latex).join(", \\quad ");
+    const lines = functions.map(([latex, f]) => [latex, postEscapes(f).join(", ")] as const);
+    const best = part.map((i) => (functions[i] as (typeof postPool)[number])[0]).join(", \\ ");
+    return numberProblem({
+      prompt: t(
+        `Consider the functions $${listing}$ of the variables $x, y, z$. These functions together are functionally complete. What is the smallest number of them that still form a functionally complete set?`,
+        `考虑变量 $x, y, z$ 的函数 $${listing}$。这些函数合在一起是函数完备的。最少选其中几个，仍能构成函数完备集？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [answer + 1, answer - 1, functions.length, 5, answer + 2],
+      solution: t(
+        `The classes each function lies outside are: ${lines.map(([f, out]) => `$${f}$: $${out}$`).join("; ")}. A complete subset must leave each of $T_0, T_1, S, M, L$, and no ${answer - 1 === 1 ? "single function does" : `${answer - 1} functions do`}. The functions $${best}$ do, so the smallest number is $${answer}$.`,
+        `每个函数不属于的类是：${lines.map(([f, out]) => `$${f}$：$${out}$`).join("；")}。完备子集必须对 $T_0, T_1, S, M, L$ 每一类都有函数不属于它，而任何 ${answer - 1} 个函数都做不到。函数 $${best}$ 可以做到，所以最少是 $${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const GATE_OPERATIONS: Readonly<Record<string, (a: number, b: number) => number>> = {
+  AND: (a, b) => a & b,
+  OR: (a, b) => a | b,
+  XOR: (a, b) => a ^ b,
+  NAND: (a, b) => 1 - (a & b),
+  NOR: (a, b) => 1 - (a | b),
+};
+
+const inputsThatLightACircuit: KnowledgePointDef = {
+  id: "counting-the-inputs-that-make-a-circuit-output-one",
+  title: t("Counting the inputs that make a circuit output one", "计算使电路输出一的输入个数"),
+  explanation: t(
+    "Tracing a circuit on one input tells you a single row of its truth table. To describe the whole circuit, repeat the trace for every combination of inputs, working through the gates in order so that each gate's inputs are known before it is evaluated. With three inputs there are eight rows to fill in.",
+    "在一个输入上追踪电路，只得到真值表的一行。要了解整个电路，就对每种输入组合都追踪一次，并按顺序计算各门，使每个门的输入在计算它之前已经确定。三个输入共有八行要填。",
+  ),
+  generate(rng) {
+    const names = Object.keys(GATE_OPERATIONS);
+    const rows = range(0, 7).map((v) => [(v >> 2) & 1, (v >> 1) & 1, v & 1] as const);
+    for (;;) {
+      const [op1, op2, op3] = [rng.pick(names), rng.pick(names), rng.pick(names)];
+      const second = rng.pick(["x", "y"]);
+      const f1 = GATE_OPERATIONS[op1] as (a: number, b: number) => number;
+      const f2 = GATE_OPERATIONS[op2] as (a: number, b: number) => number;
+      const f3 = GATE_OPERATIONS[op3] as (a: number, b: number) => number;
+      const lit = rows.filter(([x, y, z]) => f3(f1(x, y), f2(second === "x" ? x : y, z)) === 1);
+      const answer = lit.length;
+      if (answer < 2 || answer > 6) continue;
+      const gates = `g_{1} = \\mathrm{${op1}}(x, y)$, $g_{2} = \\mathrm{${op2}}(${second}, z)$, $g_{3} = \\mathrm{${op3}}(g_{1}, g_{2})`;
+      const list = lit.map(([x, y, z]) => `(${x}, ${y}, ${z})`).join(", ");
+      return numberProblem({
+        prompt: t(
+          `A circuit has inputs $x, y, z$ and gates $${gates}$, with output $g_{3}$. For how many of the $8$ input combinations is the output $1$?`,
+          `一个电路的输入是 $x, y, z$，门为 $${gates.replaceAll("$, $", "$、$")}$，输出是 $g_{3}$。在 $8$ 种输入组合中，有多少种使输出为 $1$？`,
+        ),
+        answer,
+        form: "integer",
+        wrong: [8 - answer, answer + 1, answer - 1, answer + 2, 4],
+        solution: t(
+          `Evaluate $g_{1}$, then $g_{2}$, then $g_{3}$ on each of the eight rows. The output is $1$ exactly on $(x, y, z) = ${list}$, so the count is $${answer}$.`,
+          `在八行中的每一行依次计算 $g_{1}$、$g_{2}$、$g_{3}$。输出为 $1$ 的恰好是 $(x, y, z) = ${list}$，所以有 $${answer}$ 种。`,
+        ),
+      });
+    }
+  },
+};
+
+const gatesSavedByFactoring: KnowledgePointDef = {
+  id: "gates-saved-by-factoring-a-circuit",
+  title: t("Gates saved by factoring a circuit", "因式分解节省的门数"),
+  explanation: t(
+    "The distributive law often makes a circuit much smaller. A product of two sums multiplied out has one AND for every pair of terms, and these must then be joined by ORs, so the expanded form grows with the product of the two sizes. The factored form grows only with their sum, since each input is used once.",
+    "分配律常常能让电路小很多。两个和式的积展开后，每一对项都要一个与门，再用或门连接起来，所以展开式的规模随两个大小的乘积增长。分解后的形式只随它们的和增长，因为每个输入只用一次。",
+  ),
+  generate(rng) {
+    const p = rng.int(2, 7);
+    const q = rng.int(2, 7);
+    const pairs = p * q;
+    const expanded = 2 * pairs - 1;
+    const factored = p + q - 1;
+    const answer = expanded - factored;
+    return numberProblem({
+      prompt: t(
+        `A circuit of two-input AND and OR gates computes an OR of ${pairs} products, each pairing one of ${p} different variables with one of ${q} other different variables. How many gates are saved by replacing it with the circuit for the factored form, an AND of an OR of the ${p} variables and an OR of the ${q} variables?`,
+        `一个由二输入与门和或门组成的电路计算 ${pairs} 个积的或，每个积由 ${p} 个不同变量之一和另外 ${q} 个不同变量之一配成。把它换成分解形式的电路，即 ${p} 个变量的或与 ${q} 个变量的或再取与，能节省多少个门？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [expanded, factored, pairs, pairs - factored, answer - 1, answer + 1],
+      solution: t(
+        `The expanded circuit uses ${pairs} ANDs and ${pairs - 1} ORs to join them, so ${expanded} gates. The factored one uses $${p - 1} + ${q - 1}$ ORs and one AND, so ${factored} gates. The saving is $${expanded} - ${factored} = ${answer}$.`,
+        `展开的电路用 ${pairs} 个与门和 ${pairs - 1} 个或门连接，共 ${expanded} 个门。分解的电路用 $${p - 1} + ${q - 1}$ 个或门，再加一个与门，共 ${factored} 个门。节省 $${expanded} - ${factored} = ${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const remainderOfARandomVariable: KnowledgePointDef = {
+  id: "probabilities-of-a-remainder",
+  title: t("Probabilities of a remainder", "余数的概率"),
+  explanation: t(
+    "Taking a remainder is a many-to-one transformation with a pattern: all values of the variable in the same residue class map to the same result. To find the probability of a given remainder, identify every listed value in that class and add their probabilities. Values that are far apart can still land on the same result.",
+    "取余数是一种有规律的多对一变换：属于同一剩余类的变量值都映到同一个结果。要求某个余数的概率，就找出表中属于这一类的所有值，把它们的概率相加。相距很远的值也可能得到同一个结果。",
+  ),
+  generate(rng) {
+    for (;;) {
+      const m = rng.pick([3, 4, 5]);
+      const xs = sampleFrom(rng, range(1, 12), 5).sort((a, b) => a - b);
+      const cuts = sampleFrom(rng, range(1, 9), 4).sort((a, b) => a - b);
+      const marks = [0, ...cuts, 10];
+      const tenths = marks.slice(1).map((c, i) => c - (marks[i] as number));
+      const classes = range(0, m - 1).filter((r) => xs.filter((x) => x % m === r).length >= 2);
+      if (classes.length === 0) continue;
+      const r = rng.pick(classes);
+      const members = xs.flatMap((x, i) => (x % m === r ? [[x, tenths[i] as number] as const] : []));
+      const total = members.reduce((s, [, p]) => s + p, 0);
+      if (total === 10) continue;
+      const answer = Q.of(total, 10);
+      const dec1 = (tenth: number) => (tenth === 10 ? "1" : `0.${tenth}`);
+      const head = xs.map((x) => `$${x}$`).join(" | ");
+      const body = tenths.map((p) => `$${dec1(p)}$`).join(" | ");
+      const table = `| $x$ | ${head} |\n| :---: | ${xs.map(() => ":---:").join(" | ")} |\n| $P(X = x)$ | ${body} |`;
+      const values = members.map(([x]) => x).join(", ");
+      const adds = members.map(([, p]) => dec1(p)).join(" + ");
+      return numberProblem({
+        prompt: t(
+          `The random variable $X$ has the distribution below.\n\n${table}\n\nLet $Y$ be the remainder when $X$ is divided by $${m}$. Find $P(Y = ${r})$.`,
+          `随机变量 $X$ 的分布如下。\n\n${table}\n\n设 $Y$ 是 $X$ 除以 $${m}$ 的余数。求 $P(Y = ${r})$。`,
+        ),
+        answer,
+        form: "decimal",
+        wrong: [
+          Q.of((members[0] as readonly [number, number])[1], 10),
+          Q.of(10 - total, 10),
+          Q.of(1, m),
+          Q.of(total + 1, 10),
+          Q.of(total - 1, 10),
+        ],
+        solution: t(
+          `The listed values that leave remainder $${r}$ on division by $${m}$ are $${values}$. Their probabilities add up: $${adds} = ${dec1(total)}$.`,
+          `表中除以 $${m}$ 余 $${r}$ 的值是 $${values}$。把它们的概率相加：$${adds} = ${dec1(total)}$。`,
+        ),
+      });
+    }
+  },
+};
+
+const matchingNeighbours: KnowledgePointDef = {
+  id: "the-expected-number-of-matching-neighbours",
+  title: t("The expected number of matching neighbours", "相邻相同的期望对数"),
+  explanation: t(
+    "Linearity of expectation handles counts that have no convenient distribution. Write the count as a sum of indicators, one for each place where the event could occur, and add their expected values. Each indicator's expectation is simply the probability of its event, and the addition is valid whether or not the indicators are independent.",
+    "期望的线性性可以处理那些没有方便分布的计数。把计数写成示性变量的和，事件可能发生的每个位置对应一个，再把它们的期望相加。每个示性变量的期望就是对应事件的概率，无论这些变量是否独立，相加都成立。",
+  ),
+  generate(rng) {
+    const s = rng.pick([4, 6, 8, 10, 12]);
+    const n = rng.int(5, 25);
+    const answer = Q.of(n - 1, s);
+    return numberProblem({
+      prompt: t(
+        `A row of ${n} fair dice, each with ${s} faces, is rolled. A pair of neighbouring dice matches when they show the same number. Find the expected number of matching neighbouring pairs.`,
+        `掷一排 ${n} 枚公平的骰子，每枚有 ${s} 个面。相邻两枚骰子点数相同时，称这一对匹配。求匹配的相邻对数的期望。`,
+      ),
+      answer,
+      wrong: [Q.of(n, s), Q.of(n - 1, s * s), Q.of(n - 2, s), Q.of(1, s), Q.of(n - 1, s - 1)],
+      solution: t(
+        `There are ${n - 1} neighbouring pairs, and whatever the first die of a pair shows, the second matches it with probability $\\frac{1}{${s}}$. Adding one indicator for each pair gives $\\frac{${n - 1}}{${s}}${gcd(n - 1, s) === 1 ? "" : ` = ${answer.toLatex()}`}$.`,
+        `相邻的对共有 ${n - 1} 个，无论一对中第一枚显示什么，第二枚与它相同的概率都是 $\\frac{1}{${s}}$。对每一对加一个示性变量，得到 $\\frac{${n - 1}}{${s}}${gcd(n - 1, s) === 1 ? "" : ` = ${answer.toLatex()}`}$。`,
+      ),
+    });
+  },
+};
+
+const thirdCentralMoment: KnowledgePointDef = {
+  id: "the-third-central-moment-from-raw-moments",
+  title: t("The third central moment from raw moments", "由原点矩求三阶中心矩"),
+  explanation: t(
+    "The central moments measure spread and asymmetry around the mean, and they can be recovered from the raw moments without knowing the distribution. Expand the power of the difference with the binomial theorem and take expectations term by term, treating the mean as a constant. The sign of the third central moment then shows the skew.",
+    "中心矩度量围绕均值的离散和不对称程度，不必知道分布，也能由原点矩求出。用二项式定理展开差的幂，再逐项取期望，把均值当作常数。三阶中心矩的符号就显示了偏斜的方向。",
+  ),
+  generate(rng) {
+    const m = rng.pick([-3, -2, -1, 1, 2, 3, 4, 5]);
+    const s = m * m + rng.int(1, 12);
+    const third = rng.int(1, 60);
+    const answer = third - 3 * m * s + 2 * m ** 3;
+    return numberProblem({
+      prompt: t(
+        `$E(X) = ${m}$, $E(X^2) = ${s}$ and $E(X^3) = ${third}$. Find $E\\big((X - E(X))^3\\big)$.`,
+        `$E(X) = ${m}$，$E(X^2) = ${s}$，$E(X^3) = ${third}$。求 $E\\big((X - E(X))^3\\big)$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [
+        third - m ** 3,
+        third - 3 * m * s,
+        third - 3 * m * s - 2 * m ** 3,
+        third - 3 * m * s + m ** 3,
+        third + 3 * m * s + 2 * m ** 3,
+      ],
+      solution: t(
+        `Write $\\mu$ for the mean and expand: $E\\big((X - \\mu)^3\\big) = E(X^3) - 3\\mu E(X^2) + 3\\mu^2 E(X) - \\mu^3 = E(X^3) - 3\\mu E(X^2) + 2\\mu^3$. This is $${third} - 3 \\cdot ${inParens(m)} \\cdot ${s} + 2 \\cdot ${inParens(m ** 3)} = ${answer}$.`,
+        `记均值为 $\\mu$ 并展开：$E\\big((X - \\mu)^3\\big) = E(X^3) - 3\\mu E(X^2) + 3\\mu^2 E(X) - \\mu^3 = E(X^3) - 3\\mu E(X^2) + 2\\mu^3$。代入得 $${third} - 3 \\cdot ${inParens(m)} \\cdot ${s} + 2 \\cdot ${inParens(m ** 3)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const largestOfTwoDraws: KnowledgePointDef = {
+  id: "the-distribution-of-the-larger-of-two-draws",
+  title: t("The distribution of the larger of two draws", "两次抽取中较大值的分布"),
+  explanation: t(
+    "The larger of two uniform draws is not uniform, because large values have more ways to be the maximum. The easy route is through the cumulative probability: the larger value is at most some number exactly when both draws are. Subtracting consecutive cumulative probabilities then gives the probability of each individual value.",
+    "两次均匀抽取中的较大值不再服从均匀分布，因为较大的值有更多方式成为最大值。简便的做法是通过累积概率：较大值不超过某个数，当且仅当两次抽取都不超过它。把相邻的累积概率相减，就得到每个值的概率。",
+  ),
+  generate(rng) {
+    const n = rng.int(6, 20);
+    const k = rng.int(2, n);
+    const answer = Q.of(2 * k - 1, n * n);
+    return numberProblem({
+      prompt: t(
+        `A ticket is drawn at random from tickets numbered $1$ to $${n}$, returned, and a second ticket is drawn. $L$ is the larger of the two numbers (or their common value if they are equal). Find $P(L = ${k})$.`,
+        `从编号 $1$ 到 $${n}$ 的奖券中随机抽一张，放回后再抽一张。$L$ 是两个号码中较大的一个（相等时取这个相同的值）。求 $P(L = ${k})$。`,
+      ),
+      answer,
+      form: "fraction",
+      wrong: [Q.of(k * k, n * n), Q.of(2 * k, n * n), Q.of(2 * k - 2, n * n), Q.of(1, n), Q.of(k, n)],
+      solution: t(
+        `$L \\le ${k}$ requires both draws to be at most $${k}$, which is ${k * k} of the ${n * n} equally likely outcomes, and $L \\le ${k - 1}$ is ${(k - 1) ** 2} of them. So $L = ${k}$ on $${k * k} - ${(k - 1) ** 2} = ${2 * k - 1}$ outcomes, and the probability is $${answer.toLatex()}$.`,
+        `$L \\le ${k}$ 要求两次都不超过 $${k}$，这是 ${n * n} 种等可能结果中的 ${k * k} 种；$L \\le ${k - 1}$ 是其中的 ${(k - 1) ** 2} 种。所以 $L = ${k}$ 有 $${k * k} - ${(k - 1) ** 2} = ${2 * k - 1}$ 种结果，概率是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const negativeBinomialThroughBinomial: KnowledgePointDef = {
+  id: "negative-binomial-tail-through-the-binomial",
+  title: t("A negative binomial tail through the binomial", "用二项分布求负二项分布的累积概率"),
+  explanation: t(
+    "A question about waiting for successes can be turned into a question about counting them. Needing no more than a given number of trials to reach a target number of successes means exactly that those trials contain at least the target. So a cumulative negative binomial probability equals a binomial tail, which often has fewer terms to add.",
+    "关于等待成功的问题可以转化成关于计数成功的问题。达到目标成功次数所需的试验不超过某个数，恰好意味着这些试验中至少有目标次数的成功。所以负二项分布的累积概率等于二项分布的尾概率，要加的项往往更少。",
+  ),
+  generate(rng) {
+    const [pn, pd] = rng.pick([
+      [1, 2],
+      [1, 3],
+      [2, 3],
+      [1, 4],
+      [3, 4],
+    ] as const);
+    const r = rng.int(2, 4);
+    const k = r + rng.int(1, 3);
+    const p = Q.of(pn, pd);
+    const q = Q.of(1).sub(p);
+    const binomialTerm = (j: number) =>
+      Q.of(binom(k, j))
+        .mul(p.pow(j))
+        .mul(q.pow(k - j));
+    const answer = range(r, k).reduce((s, j) => s.add(binomialTerm(j)), Q.of(0));
+    const exactly = Q.of(binom(k - 1, r - 1))
+      .mul(p.pow(r))
+      .mul(q.pow(k - r));
+    return numberProblem({
+      prompt: t(
+        `Independent trials each succeed with probability $${p.toLatex()}$. $X$ is the number of trials needed for $${r}$ successes. Find $P(X \\le ${k})$.`,
+        `独立试验每次成功的概率为 $${p.toLatex()}$。$X$ 是取得 $${r}$ 次成功所需的试验次数。求 $P(X \\le ${k})$。`,
+      ),
+      answer,
+      form: "fraction",
+      wrong: [exactly, binomialTerm(r), Q.of(1).sub(answer), answer.sub(exactly), binomialTerm(k)],
+      solution: t(
+        `$X \\le ${k}$ means that the first ${k} trials contain at least ${r} successes. So $P(X \\le ${k}) = \\sum_{j=${r}}^{${k}} \\binom{${k}}{j} \\left(${p.toLatex()}\\right)^{j} \\left(${q.toLatex()}\\right)^{${k} - j} = ${answer.toLatex()}$.`,
+        `$X \\le ${k}$ 表示前 ${k} 次试验中至少有 ${r} 次成功。所以 $P(X \\le ${k}) = \\sum_{j=${r}}^{${k}} \\binom{${k}}{j} \\left(${p.toLatex()}\\right)^{j} \\left(${q.toLatex()}\\right)^{${k} - j} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const lengthOfASeries: KnowledgePointDef = {
+  id: "the-length-of-a-first-to-win-series",
+  title: t("The length of a first-to-win series", "先胜赛制的比赛场数"),
+  explanation: t(
+    "A contest played until one side reaches a set number of wins can end with either side winning, so its length combines two negative binomial probabilities. For one side to win in a particular game, it must win that game and exactly one fewer than the target among the games before it. Add the cases for the two sides.",
+    "一直比到一方达到规定胜场数的比赛，可能由任一方结束，所以场数的概率由两个负二项概率组成。一方要在某一场取胜结束，必须赢下这一场，并在之前的比赛中恰好赢目标数减一场。再把双方的情形相加。",
+  ),
+  generate(rng) {
+    const p = rng.pick([Q.of(1, 2), Q.of(1, 3), Q.of(2, 3), Q.of(1, 4), Q.of(3, 4), Q.of(2, 5), Q.of(3, 5)]);
+    const q = Q.of(1).sub(p);
+    const w = rng.int(3, 5);
+    const g = w + rng.int(1, w - 1);
+    const ways = binom(g - 1, w - 1);
+    const a = Q.of(ways)
+      .mul(p.pow(w))
+      .mul(q.pow(g - w));
+    const b = Q.of(ways)
+      .mul(q.pow(w))
+      .mul(p.pow(g - w));
+    const answer = a.add(b);
+    return numberProblem({
+      prompt: t(
+        `Two teams play until one of them has won ${w} games. Team A wins each game with probability $${p.toLatex()}$, independently. Find the probability that exactly ${g} games are played.`,
+        `两队比赛，直到其中一队赢满 ${w} 场为止。A 队每场获胜的概率为 $${p.toLatex()}$，各场相互独立。求恰好比赛 ${g} 场的概率。`,
+      ),
+      answer,
+      form: "fraction",
+      wrong: [
+        a,
+        b,
+        Q.of(binom(g, w))
+          .mul(p.pow(w))
+          .mul(q.pow(g - w))
+          .add(
+            Q.of(binom(g, w))
+              .mul(q.pow(w))
+              .mul(p.pow(g - w)),
+          ),
+        p
+          .pow(w)
+          .mul(q.pow(g - w))
+          .add(q.pow(w).mul(p.pow(g - w))),
+      ],
+      solution: t(
+        `For a team to finish in game ${g}, it wins that game and ${w - 1} of the ${g - 1} before it, in $\\binom{${g - 1}}{${w - 1}} = ${ways}$ ways. Either team can do this, so the probability is $${ways}\\left[${bracketPow(p, w)}${bracketPow(q, g - w)} + ${bracketPow(q, w)}${bracketPow(p, g - w)}\\right] = ${answer.toLatex()}$.`,
+        `一队要在第 ${g} 场结束比赛，就要赢下这一场和之前 ${g - 1} 场中的 ${w - 1} 场，有 $\\binom{${g - 1}}{${w - 1}} = ${ways}$ 种方式。两队都可能如此，所以概率是 $${ways}\\left[${bracketPow(p, w)}${bracketPow(q, g - w)} + ${bracketPow(q, w)}${bracketPow(p, g - w)}\\right] = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const hypergeometricSupport: KnowledgePointDef = {
+  id: "the-possible-values-of-a-hypergeometric-variable",
+  title: t("The possible values of a hypergeometric variable", "超几何变量的可能取值"),
+  explanation: t(
+    "A hypergeometric count cannot take every value from zero up to the sample size. The sample cannot contain more special items than exist, and when the sample is large, it runs out of ordinary items and must include some special ones. These two limits together decide exactly which values have nonzero probability.",
+    "超几何计数并不能取从零到样本量的所有值。样本中的特殊物品不可能比总数还多；而样本较大时，普通物品不够用，必然包含一些特殊物品。这两个限制共同决定了哪些值的概率不为零。",
+  ),
+  generate(rng) {
+    const R = rng.int(3, 12);
+    const W = rng.int(3, 12);
+    const n = rng.int(W + 1, R + W - 1);
+    const lo = n - W;
+    const hi = Math.min(n, R);
+    const kind = rng.pick(["smallest", "count"] as const);
+    const count = hi - lo + 1;
+    const answer = kind === "smallest" ? lo : count;
+    return numberProblem({
+      prompt:
+        kind === "smallest"
+          ? t(
+              `A bag holds ${R} red and ${W} white marbles. ${n} marbles are drawn at random without replacement. $X$ is the number of red marbles. What is the smallest value $X$ can take?`,
+              `袋中有 ${R} 个红球和 ${W} 个白球。不放回地随机取出 ${n} 个球，$X$ 是其中红球的个数。$X$ 最小可能取多少？`,
+            )
+          : t(
+              `A bag holds ${R} red and ${W} white marbles. ${n} marbles are drawn at random without replacement. $X$ is the number of red marbles. How many different values can $X$ take?`,
+              `袋中有 ${R} 个红球和 ${W} 个白球。不放回地随机取出 ${n} 个球，$X$ 是其中红球的个数。$X$ 一共可能取多少个不同的值？`,
+            ),
+      answer,
+      form: "integer",
+      wrong: kind === "smallest" ? [0, lo + 1, lo + 2, n, R, W] : [n + 1, hi + 1, count - 1, count + 1, count + 2, R + 1],
+      solution: t(
+        `At most ${W} of the ${n} marbles can be white, so at least $${n} - ${W} = ${lo}$ are red. At most $\\min(${n}, ${R}) = ${hi}$ are red. So $X$ takes the values from $${lo}$ to $${hi}$${kind === "smallest" ? `, and the smallest is $${lo}$` : `, which is $${hi} - ${lo} + 1 = ${count}$ values`}.`,
+        `取出的 ${n} 个球中白球至多 ${W} 个，所以红球至少 $${n} - ${W} = ${lo}$ 个。红球至多 $\\min(${n}, ${R}) = ${hi}$ 个。所以 $X$ 取值从 $${lo}$ 到 $${hi}$${kind === "smallest" ? `，最小是 $${lo}$` : `，共 $${hi} - ${lo} + 1 = ${count}$ 个值`}。`,
+      ),
+    });
+  },
+};
+
+const hypergeometricMode: KnowledgePointDef = {
+  id: "the-most-likely-value-of-a-hypergeometric-variable",
+  title: t("The most likely value of a hypergeometric variable", "超几何变量最可能的取值"),
+  explanation: t(
+    "To find where a probability mass function peaks, compare each probability with the next by taking their ratio. In a hypergeometric distribution the binomial coefficients in that ratio cancel to a short fraction. While the ratio exceeds one the probabilities are rising, and once it falls below one they are falling, so the peak is at the changeover.",
+    "要找概率质量函数的峰值，就用比值比较相邻的两个概率。在超几何分布中，这个比值里的二项式系数约分后是一个简短的分数。比值大于一时概率在上升，小于一时概率在下降，所以峰值就在转折的地方。",
+  ),
+  generate(rng) {
+    for (;;) {
+      const R = rng.int(5, 15);
+      const W = rng.int(5, 15);
+      const n = rng.int(4, 12);
+      if (n >= R + W) continue;
+      const ratio = (x: number) => Q.of((R - x) * (n - x), (x + 1) * (W - n + x + 1));
+      const lo = Math.max(0, n - W);
+      const hi = Math.min(n, R);
+      const mode = range(lo, hi).find((x) => x === hi || ratio(x).cmp(Q.of(1)) < 0) as number;
+      if (mode === lo || mode === hi || ratio(mode - 1).eq(Q.of(1))) continue;
+      const mean = (n * R) / (R + W);
+      const shifted = sumOfTerms([
+        [1, "x"],
+        [W - n + 1, ""],
+      ]);
+      return numberProblem({
+        prompt: t(
+          `A bag holds ${R} red and ${W} white marbles. ${n} marbles are drawn at random without replacement. $X$ is the number of red marbles. Which value of $X$ is the most likely?`,
+          `袋中有 ${R} 个红球和 ${W} 个白球。不放回地随机取出 ${n} 个球，$X$ 是其中红球的个数。$X$ 取哪个值的可能性最大？`,
+        ),
+        answer: mode,
+        form: "integer",
+        wrong: [mode + 1, mode - 1, Math.floor(mean), Math.ceil(mean), mode + 2],
+        solution: t(
+          `The ratio of consecutive probabilities is $\\frac{P(X = x + 1)}{P(X = x)} = \\frac{(${R} - x)(${n} - x)}{(x + 1)(${shifted})}$. At $x = ${mode - 1}$ it is $${ratio(mode - 1).toLatex()} > 1$, and at $x = ${mode}$ it is $${ratio(mode).toLatex()} < 1$. So the probabilities rise up to $x = ${mode}$ and fall after it.`,
+          `相邻概率之比为 $\\frac{P(X = x + 1)}{P(X = x)} = \\frac{(${R} - x)(${n} - x)}{(x + 1)(${shifted})}$。当 $x = ${mode - 1}$ 时比值为 $${ratio(mode - 1).toLatex()} > 1$，当 $x = ${mode}$ 时比值为 $${ratio(mode).toLatex()} < 1$。所以概率一直上升到 $x = ${mode}$，之后下降。`,
+        ),
+      });
+    }
+  },
+};
+
+const totalProbabilityTwoDraws: KnowledgePointDef = {
+  id: "total-probability-with-a-calculation-in-each-case",
+  title: t("Total probability with a calculation in each case", "每种情形都要计算的全概率"),
+  explanation: t(
+    "In the law of total probability the conditional probabilities are not always handed to you. Often each case is a small problem of its own, and the partition only tells you which problem you are in. Solve each case separately under its condition, and only then weight the answers by the probabilities of the cases.",
+    "在全概率公式中，条件概率不一定是直接给出的。每种情形常常本身就是一个小问题，划分只告诉你身处哪个问题。先在各自的条件下分别求解，然后才用各情形的概率加权。",
+  ),
+  generate(rng) {
+    const weights = rng.pick([
+      [Q.of(1, 2), Q.of(1, 3), Q.of(1, 6)],
+      [Q.of(1, 4), Q.of(1, 4), Q.of(1, 2)],
+      [Q.of(1, 5), Q.of(2, 5), Q.of(2, 5)],
+      [Q.of(1, 6), Q.of(1, 6), Q.of(2, 3)],
+    ]);
+    const boxes = sampleFrom(rng, range(2, 6), 3).map((r) => [r, rng.int(2, 6)] as const);
+    const both = boxes.map(([r, w]) => Q.of(r * (r - 1), (r + w) * (r + w - 1)));
+    const single = boxes.map(([r, w]) => Q.of(r, r + w));
+    const total = (values: readonly Q[]) => values.reduce((s, v, i) => s.add(v.mul(weights[i] as Q)), Q.of(0));
+    const answer = total(both);
+    const names = ["A", "B", "C"];
+    const contentsEn = boxes.map(([r, w], i) => `Box ${names[i]} holds ${r} red and ${w} white balls`).join(", ");
+    const contentsZh = boxes.map(([r, w], i) => `${names[i]} 箱有 ${r} 个红球和 ${w} 个白球`).join("，");
+    const chance = weights.map((v) => v.toLatex());
+    const sum = both.map((v, i) => `${(weights[i] as Q).toLatex()} \\cdot ${v.toLatex()}`).join(" + ");
+    return numberProblem({
+      prompt: t(
+        `Box A, B or C is chosen with probabilities $${chance[0]}$, $${chance[1]}$, $${chance[2]}$. ${contentsEn}. Two balls are drawn from the chosen box without replacement. Find the probability that both are red.`,
+        `以概率 $${chance[0]}$、$${chance[1]}$、$${chance[2]}$ 选中 A、B、C 箱。${contentsZh}。从选中的箱子中不放回地取两个球。求两个都是红球的概率。`,
+      ),
+      answer,
+      form: "fraction",
+      wrong: [
+        total(single),
+        total(single.map((v) => v.mul(v))),
+        both.reduce((s, v) => s.add(v), Q.of(0)).div(Q.of(3)),
+        total(single).mul(total(single)),
+        both[0] as Q,
+        both[2] as Q,
+        total(single).mul(Q.of(1, 2)),
+      ],
+      solution: t(
+        `Within a box with $r$ red among $n$ balls, both are red with probability $\\frac{r(r - 1)}{n(n - 1)}$, since the second draw has one red ball fewer and one ball fewer overall. Weighting the three boxes gives $${sum} = ${answer.toLatex()}$.`,
+        `在 $n$ 个球中有 $r$ 个红球的箱子里，两个都是红球的概率是 $\\frac{r(r - 1)}{n(n - 1)}$，因为第二次取时红球和总球数都少了一个。对三个箱子加权得 $${sum} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const timeForAtLeastOne: KnowledgePointDef = {
+  id: "the-length-needed-for-at-least-one-event",
+  title: t("The length needed for at least one event", "至少发生一次所需的长度"),
+  explanation: t(
+    "Questions about planning ask for the interval rather than the probability. In a Poisson model the count over a longer interval has a proportionally larger mean, and the probability of no events falls exponentially with length. So set the probability of no events to the allowed level, solve using a logarithm, and round up to reach the requirement.",
+    "规划类的问题求的是区间长度而不是概率。在泊松模型中，区间越长，计数的均值按比例增大，没有事件发生的概率随长度指数下降。所以令没有事件发生的概率等于允许的水平，用对数解出长度，再向上取整以满足要求。",
+  ),
+  generate(rng) {
+    const hundredths = rng.pick([5, 10, 15, 20, 25, 40, 50]);
+    const percent = rng.pick([50, 75, 90, 95, 99]);
+    const rate = hundredths / 100;
+    const rest = (100 - percent) / 100;
+    const exact = -Math.log(rest) / rate;
+    const answer = Math.ceil(exact);
+    const [en, zh, enUnits, zhUnits] = rng.pick([
+      ["Calls reach a help desk", "咨询电话相互独立地打到服务台", "minute", "分钟"],
+      ["Flaws appear in a cable", "电缆上的瑕疵相互独立地出现", "metre", "米"],
+      ["Customers arrive at a kiosk", "顾客相互独立地来到售货亭", "minute", "分钟"],
+      ["Typing errors occur in a manuscript", "手稿中的打字错误相互独立地出现", "page", "页"],
+    ] as const);
+    return numberProblem({
+      prompt: t(
+        `${en} independently at a constant average rate of $${rate}$ per ${enUnits}. What is the smallest whole number of ${enUnits}s for which the probability of at least one is at least $${percent}\\%$?`,
+        `${zh}，平均每${zhUnits} $${rate}$ 次。至少要多少${zhUnits}（取整数），才能使至少发生一次的概率不低于 $${percent}\\%$？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [Math.floor(exact), answer + 1, Math.ceil(percent / 100 / rate), Math.ceil(1 / rate), answer + 2],
+      solution: t(
+        `Over $t$ ${enUnits}s the count is Poisson with mean $${rate}t$, so at least one has probability $1 - e^{-${rate}t}$. This needs $e^{-${rate}t} \\le ${rest}$, or $t \\ge \\frac{-\\ln ${rest}}{${rate}} \\approx ${exact.toFixed(2)}$. The next whole number is $${answer}$.`,
+        `在 $t$ ${zhUnits}内，计数服从均值为 $${rate}t$ 的泊松分布，所以至少发生一次的概率是 $1 - e^{-${rate}t}$。需要 $e^{-${rate}t} \\le ${rest}$，即 $t \\ge \\frac{-\\ln ${rest}}{${rate}} \\approx ${exact.toFixed(2)}$。向上取整得 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const termsFromALinearSum: KnowledgePointDef = {
+  id: "the-number-of-terms-from-a-linear-sum",
+  title: t("The number of terms from a linear sum", "由线性和式求项数"),
+  explanation: t(
+    "A sum of a linear expression is itself a quadratic function of its upper limit, so a sum with an unknown number of terms can be solved. Apply the formula for the sum of the first integers, clear the fraction, and solve the quadratic equation. Only a positive integer root makes sense as a number of terms.",
+    "线性表达式的和本身是上限的二次函数，所以项数未知的和式可以求解。用前若干个整数之和的公式，去掉分母，解这个二次方程。作为项数，只有正整数根才有意义。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 6);
+    const b = rng.pick(range(-3, 9).filter((v) => v !== 0));
+    const N = rng.int(5, 40);
+    const S = (a * N * (N + 1)) / 2 + b * N;
+    const quadratic = sumOfTerms([
+      [a, "N^2"],
+      [a + 2 * b, "N"],
+      [-2 * S, ""],
+    ]);
+    return numberProblem({
+      prompt: t(
+        `Find the positive integer $N$ such that $\\sum_{k=1}^{N} (${sumOfTerms([
+          [a, "k"],
+          [b, ""],
+        ])}) = ${S}$.`,
+        `求正整数 $N$，使 $\\sum_{k=1}^{N} (${sumOfTerms([
+          [a, "k"],
+          [b, ""],
+        ])}) = ${S}$。`,
+      ),
+      answer: N,
+      form: "integer",
+      wrong: [N + 1, N - 1, N + 2, Math.round(S / a), Math.round(S / (a + Math.abs(b)))],
+      solution: t(
+        `The sum equals $${a} \\cdot \\frac{N(N + 1)}{2} ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}N$. Setting it equal to $${S}$ and multiplying by two gives $${quadratic} = 0$. Its positive root is $N = ${N}$, and the other root is negative, so it cannot count terms.`,
+        `这个和等于 $${a} \\cdot \\frac{N(N + 1)}{2} ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}N$。令它等于 $${S}$ 并乘以二，得 $${quadratic} = 0$。正根是 $N = ${N}$，另一个根是负数，不能作为项数。`,
+      ),
+    });
+  },
+};
+
+const alternatingSquares: KnowledgePointDef = {
+  id: "alternating-sums-of-squares",
+  title: t("Alternating sums of squares", "平方的交错和"),
+  explanation: t(
+    "When the signs of a sum of squares alternate, the formula for the sum of squares is the wrong tool, because the terms nearly cancel. Pair each square with the next, starting from the largest. A difference of consecutive squares equals the sum of the two numbers, so the alternating sum collapses to a sum of integers.",
+    "平方和的符号交替时，平方和公式不是合适的工具，因为各项几乎相互抵消。从最大的一项开始，把每个平方与下一个配对。相邻两个平方之差等于这两个数之和，所以交错和就化成了整数的和。",
+  ),
+  generate(rng) {
+    const n = rng.int(5, 60);
+    const plusFirst = rng.pick([true, false]);
+    const size = (n * (n + 1)) / 2;
+    const largestPositive = plusFirst ? n % 2 === 1 : n % 2 === 0;
+    const answer = largestPositive ? size : -size;
+    const sign = plusFirst ? "(-1)^{k+1}" : "(-1)^{k}";
+    const allSquares = (n * (n + 1) * (2 * n + 1)) / 6;
+    return numberProblem({
+      prompt: t(`Evaluate $\\sum_{k=1}^{${n}} ${sign} k^2$.`, `计算 $\\sum_{k=1}^{${n}} ${sign} k^2$。`),
+      answer,
+      form: "integer",
+      wrong: [-answer, allSquares, -allSquares, answer > 0 ? n * n : -n * n, answer > 0 ? size - n : n - size],
+      solution: t(
+        `Pair from the top: $${n}^2 - ${n - 1}^2 = ${n} + ${n - 1}$, and in the same way for each lower pair, since $a^2 - (a - 1)^2 = a + (a - 1)$. So the size of the sum is $${n} + ${n - 1} + \\cdots + 1 = \\frac{${n} \\cdot ${n + 1}}{2} = ${size}$. The term $k = ${n}$ has a ${largestPositive ? "plus" : "minus"} sign, so the sum is $${answer}$.`,
+        `从最大的项开始配对：$${n}^2 - ${n - 1}^2 = ${n} + ${n - 1}$，较小的各对也一样，因为 $a^2 - (a - 1)^2 = a + (a - 1)$。所以和的绝对值是 $${n} + ${n - 1} + \\cdots + 1 = \\frac{${n} \\cdot ${n + 1}}{2} = ${size}$。$k = ${n}$ 这一项的符号是${largestPositive ? "正" : "负"}，所以和是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const firstPartialSumPastATarget: KnowledgePointDef = {
+  id: "the-first-partial-sum-past-a-target",
+  title: t("The first partial sum past a target", "首次超过目标的部分和"),
+  explanation: t(
+    "For a series of positive terms the partial sums keep growing, so there is a first index at which they pass any given target. A closed form for the partial sum gives a good first estimate of that index, but the answer must then be confirmed by comparing the partial sums on either side, since rounding alone can miss by one.",
+    "对正项级数，部分和不断增大，所以对任何目标，都有首个超过它的下标。部分和的封闭形式能给出这个下标的良好估计，但还要比较两侧的部分和来确认，因为只靠四舍五入可能差一。",
+  ),
+  generate(rng) {
+    const geometric = rng.pick([true, false]);
+    const a = rng.int(2, 7);
+    const b = geometric ? rng.pick([2, 3]) : rng.int(1, 9);
+    const term = (n: number) => (geometric ? a * b ** n : a * n + b);
+    const target = rng.int(10, 40) * 25;
+    let n = 1;
+    let previous = 0;
+    let sum = term(1);
+    while (sum <= target) {
+      n += 1;
+      previous = sum;
+      sum += term(n);
+    }
+    const series = geometric ? `${a} \\cdot ${b}^{n}` : `(${a}n + ${b})`;
+    const closed = geometric
+      ? b === 2
+        ? `S_n = ${a}(2^{n + 1} - 2)`
+        : `S_n = ${a} \\cdot \\frac{${b}^{n + 1} - ${b}}{${b - 1}}`
+      : `S_n = ${a} \\cdot \\frac{n(n + 1)}{2} + ${b === 1 ? "" : b}n`;
+    return numberProblem({
+      prompt: t(
+        `$S_n$ is the $n$th partial sum of the series $\\sum_{n=1}^{\\infty} ${series}$. Find the smallest $n$ with $S_n > ${target}$.`,
+        `$S_n$ 是级数 $\\sum_{n=1}^{\\infty} ${series}$ 的第 $n$ 个部分和。求使 $S_n > ${target}$ 的最小的 $n$。`,
+      ),
+      answer: n,
+      form: "integer",
+      wrong: [n + 1, n - 1, n + 2, n - 2, n + 3],
+      solution: t(
+        `Here $${closed}$. It gives $S_{${n - 1}} = ${previous}$, which does not exceed $${target}$, and $S_{${n}} = ${sum}$, which does. The partial sums only grow, so the smallest index is $${n}$.`,
+        `这里 $${closed}$。由此 $S_{${n - 1}} = ${previous}$，没有超过 $${target}$，而 $S_{${n}} = ${sum}$ 超过了。部分和只增不减，所以最小的下标是 $${n}$。`,
+      ),
+    });
+  },
+};
+
+const seriesWithDoubledIndex: KnowledgePointDef = {
+  id: "geometric-series-with-a-multiple-of-the-index-in-the-exponent",
+  title: t("Geometric series with a multiple of the index in the exponent", "指数含下标倍数的几何级数"),
+  explanation: t(
+    "A series in sigma notation need not show its common ratio directly. When the exponent grows by two with each step of the index, the ratio between consecutive terms is the square of the base, not the base. Write out the first term from the starting index, compare it with the second, and only then apply the sum formula.",
+    "用求和符号写的级数不一定直接显示公比。当下标每增加一，指数增加二时，相邻两项之比是底数的平方，而不是底数。先写出起始下标对应的首项，与第二项比较，然后才使用求和公式。",
+  ),
+  generate(rng) {
+    const r = rng.pick([Q.of(1, 2), Q.of(1, 3), Q.of(2, 3), Q.of(1, 4), Q.of(3, 4), Q.of(2, 5), Q.of(3, 5)]);
+    const a = rng.int(2, 9);
+    const shift = rng.pick([0, 1]);
+    const exponent = shift === 0 ? "2n" : "2n + 1";
+    const first = Q.of(a).mul(r.pow(shift));
+    const ratio = r.mul(r);
+    const answer = first.div(Q.of(1).sub(ratio));
+    return numberProblem({
+      prompt: t(
+        `Find $\\sum_{n=0}^{\\infty} ${a}\\left(${r.toLatex()}\\right)^{${exponent}}$.`,
+        `求 $\\sum_{n=0}^{\\infty} ${a}\\left(${r.toLatex()}\\right)^{${exponent}}$。`,
+      ),
+      answer,
+      form: "fraction",
+      wrong: [
+        first.div(Q.of(1).sub(r)),
+        Q.of(a).div(Q.of(1).sub(ratio)),
+        Q.of(a).div(Q.of(1).sub(r)),
+        first.div(Q.of(1).add(ratio)),
+        first.mul(ratio).div(Q.of(1).sub(ratio)),
+      ],
+      solution: t(
+        `The term at $n = 0$ is $${first.toLatex()}$. Raising $n$ by one adds two to the exponent, so the common ratio is $\\left(${r.toLatex()}\\right)^{2} = ${ratio.toLatex()}$, not $${r.toLatex()}$. The sum is $\\frac{${first.toLatex()}}{1 - ${ratio.toLatex()}} = ${answer.toLatex()}$.`,
+        `$n = 0$ 对应的项是 $${first.toLatex()}$。$n$ 每增加一，指数增加二，所以公比是 $\\left(${r.toLatex()}\\right)^{2} = ${ratio.toLatex()}$，而不是 $${r.toLatex()}$。和为 $\\frac{${first.toLatex()}}{1 - ${ratio.toLatex()}} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const exponentFromCoefficients: KnowledgePointDef = {
+  id: "the-exponent-from-two-coefficients-of-a-binomial-expansion",
+  title: t("The exponent from two coefficients of a binomial expansion", "由二项展开式的两个系数求指数"),
+  explanation: t(
+    "The first coefficients of a generalized binomial expansion can be read backward. They give two equations in the exponent and the scale of the variable, and the scale appears to the first power in one equation and squared in the other. Squaring the first coefficient and dividing by the second therefore removes the scale and leaves an equation in the exponent.",
+    "广义二项展开式的前几个系数可以反过来用。它们给出关于指数和变量比例的两个方程，比例在一个方程中是一次，在另一个中是平方。所以把第一个系数平方再除以第二个，就消去了比例，留下关于指数的方程。",
+  ),
+  generate(rng) {
+    const scales: readonly (readonly [Q, readonly number[]])[] = [
+      [Q.of(-1), [2, 3, 4, 5]],
+      [Q.of(-2), [2, 3, 4]],
+      [Q.of(-3), [2, 3]],
+      [Q.of(3), [2, 3]],
+      [Q.of(4), [2, 3]],
+      [Q.of(1, 2), [2, 4, 6]],
+      [Q.of(-1, 2), [2, 4, 6]],
+      [Q.of(3, 2), [2, 4]],
+      [Q.of(-3, 2), [2, 4]],
+      [Q.of(1, 3), [3, 6]],
+      [Q.of(-1, 3), [3, 6]],
+      [Q.of(2, 3), [3, 6]],
+    ];
+    const [alpha, k] = rng.pick(scales.flatMap(([alpha, ks]) => ks.flatMap((k) => [[alpha, k] as const, [alpha, -k] as const])));
+    const A = alpha.mul(Q.of(k));
+    const B = alpha
+      .mul(alpha.sub(Q.of(1)))
+      .mul(Q.of(k * k))
+      .div(Q.of(2));
+    const expansion = `1${ratioTerm(A, "x", false)}${ratioTerm(B, "x^2", false)} + \\cdots`;
+    const square = A.mul(A);
+    const denominator = square.sub(B).sub(B);
+    return numberProblem({
+      prompt: t(
+        `For a nonzero constant $k$ and an exponent $\\alpha$, the expansion of $(1 + kx)^{\\alpha}$ begins $${expansion}$. Find $\\alpha$.`,
+        `对非零常数 $k$ 和指数 $\\alpha$，$(1 + kx)^{\\alpha}$ 的展开式开头是 $${expansion}$。求 $\\alpha$。`,
+      ),
+      answer: alpha,
+      wrong: [alpha.neg(), alpha.add(Q.of(1)), alpha.sub(Q.of(1)), Q.of(1).div(alpha), A],
+      solution: t(
+        `Matching coefficients gives $\\alpha k = ${A.toLatex()}$ and $\\frac{\\alpha(\\alpha - 1)}{2} k^2 = ${B.toLatex()}$. Hence $(\\alpha k)^2 - 2 \\cdot \\frac{\\alpha(\\alpha - 1)}{2} k^2 = \\alpha k^2$, which is $${denominator.toLatex()}$. Dividing $(\\alpha k)^2 = ${square.toLatex()}$ by $\\alpha k^2$ leaves $\\alpha = ${alpha.toLatex()}$.`,
+        `比较系数得 $\\alpha k = ${A.toLatex()}$，$\\frac{\\alpha(\\alpha - 1)}{2} k^2 = ${B.toLatex()}$。于是 $(\\alpha k)^2 - 2 \\cdot \\frac{\\alpha(\\alpha - 1)}{2} k^2 = \\alpha k^2$，其值为 $${denominator.toLatex()}$。用 $(\\alpha k)^2 = ${square.toLatex()}$ 除以 $\\alpha k^2$，得 $\\alpha = ${alpha.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const firstOmittedTerm: KnowledgePointDef = {
+  id: "the-first-term-left-out-of-a-binomial-approximation",
+  title: t("The first term left out of a binomial approximation", "二项近似中第一个被舍去的项"),
+  explanation: t(
+    "A truncated binomial expansion is only useful if we know roughly how far off it is. When the small quantity is well below one, each term is much smaller than the one before, so the error is close to the first term left out. Its sign also shows whether the approximation is too large or too small.",
+    "截断的二项展开式只有在知道大致误差时才有用。当小量远小于一时，每一项都比前一项小得多，所以误差接近第一个被舍去的项。它的符号还说明近似值偏大还是偏小。",
+  ),
+  generate(rng) {
+    const alpha = rng.pick([Q.of(1, 2), Q.of(-1, 2), Q.of(1, 3), Q.of(-1), Q.of(-2), Q.of(3, 2), Q.of(-3, 2)]);
+    const [x, base] = rng.pick([
+      [Q.of(1, 10), "1.1"],
+      [Q.of(-1, 10), "0.9"],
+      [Q.of(1, 5), "1.2"],
+      [Q.of(-1, 5), "0.8"],
+      [Q.of(1, 20), "1.05"],
+      [Q.of(-1, 20), "0.95"],
+      [Q.of(1, 4), "1.25"],
+      [Q.of(-1, 4), "0.75"],
+    ] as const);
+    const c3 = alpha
+      .mul(alpha.sub(Q.of(1)))
+      .mul(alpha.sub(Q.of(2)))
+      .div(Q.of(6));
+    const answer = c3.mul(x.pow(3));
+    const second = alpha
+      .mul(alpha.sub(Q.of(1)))
+      .div(Q.of(2))
+      .mul(x.pow(2));
+    return numberProblem({
+      prompt: t(
+        `The first three terms of the expansion of $(1 + x)^{${alpha.toLatex()}}$ are used to approximate $${base}^{${alpha.toLatex()}}$. Find the value of the first term left out, as an exact fraction.`,
+        `用 $(1 + x)^{${alpha.toLatex()}}$ 展开式的前三项近似 $${base}^{${alpha.toLatex()}}$。求第一个被舍去的项的值，写成准确的分数。`,
+      ),
+      answer,
+      form: "fraction",
+      wrong: [answer.neg(), second, answer.mul(Q.of(6)), x.pow(3), c3],
+      solution: t(
+        `Here $x = ${x.toLatex()}$, and the first three terms stop at $x^2$. The next is $\\frac{\\alpha(\\alpha - 1)(\\alpha - 2)}{6} x^3$ with $\\alpha = ${alpha.toLatex()}$, whose coefficient is $${c3.toLatex()}$. Multiplying by $x^3 = ${x.pow(3).toLatex()}$ gives $${answer.toLatex()}$, which is roughly the error of the approximation.`,
+        `这里 $x = ${x.toLatex()}$，前三项到 $x^2$ 为止。下一项是 $\\frac{\\alpha(\\alpha - 1)(\\alpha - 2)}{6} x^3$，其中 $\\alpha = ${alpha.toLatex()}$，系数为 $${c3.toLatex()}$。乘以 $x^3 = ${x.pow(3).toLatex()}$ 得 $${answer.toLatex()}$，它大致就是近似的误差。`,
+      ),
+    });
+  },
+};
+
+const walksInACompleteGraph: KnowledgePointDef = {
+  id: "walks-between-two-vertices-of-a-complete-graph",
+  title: t("Walks between two vertices of a complete graph", "完全图中两顶点之间的途径"),
+  explanation: t(
+    "The symmetry of a complete graph means only one thing matters about a walk's current position: whether it stands at the target vertex or somewhere else. So keep two counts, one for walks ending at the target and one for walks ending at any particular other vertex, and update both as the walk grows. This avoids any matrix power.",
+    "完全图的对称性意味着，途径当前的位置只有一点重要：它是否在目标顶点上。所以维护两个计数，一个是结束于目标顶点的途径数，另一个是结束于某个特定其他顶点的途径数，随途径变长同时更新。这样就不需要计算矩阵的幂。",
+  ),
+  generate(rng) {
+    const n = rng.int(4, 12);
+    const k = rng.int(2, 6);
+    const same = [0];
+    const other = [1];
+    for (let i = 1; i < k; i++) {
+      same.push((n - 1) * (other[i - 1] as number));
+      other.push((same[i - 1] as number) + (n - 2) * (other[i - 1] as number));
+    }
+    const answer = other[k - 1] as number;
+    const lastSame = same[k - 2] as number;
+    const lastOther = other[k - 2] as number;
+    return numberProblem({
+      prompt: t(
+        `In the complete graph $K_{${n}}$, $u$ and $v$ are two different vertices. How many walks of length ${k} go from $u$ to $v$?`,
+        `在完全图 $K_{${n}}$ 中，$u$ 和 $v$ 是两个不同的顶点。从 $u$ 到 $v$ 长度为 ${k} 的途径有多少条？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [(n - 1) ** k, (n - 1) ** (k - 1), same[k - 1] as number, (n - 2) ** (k - 1), n ** (k - 1), answer + 1, answer - 1],
+      solution: t(
+        `Let $a_j$ count walks of length $j$ from $u$ back to $u$, and $b_j$ those from $u$ to one other vertex, with $a_1 = 0$ and $b_1 = 1$. The last step into $v$ comes from $u$ or from one of the other $${n - 2}$ vertices, so $b_{j+1} = a_j + ${n - 2}b_j$, and $a_{j+1} = ${n - 1}b_j$. Working up to $j = ${k - 1}$ gives $a_{${k - 1}} = ${lastSame}$ and $b_{${k - 1}} = ${lastOther}$, so $b_{${k}} = ${lastSame} + ${n - 2} \\cdot ${lastOther} = ${answer}$.`,
+        `设 $a_j$ 是从 $u$ 回到 $u$ 的长度为 $j$ 的途径数，$b_j$ 是从 $u$ 到某个其他顶点的途径数，$a_1 = 0$，$b_1 = 1$。进入 $v$ 的最后一步来自 $u$ 或其他 $${n - 2}$ 个顶点之一，所以 $b_{j+1} = a_j + ${n - 2}b_j$，$a_{j+1} = ${n - 1}b_j$。递推到 $j = ${k - 1}$ 得 $a_{${k - 1}} = ${lastSame}$，$b_{${k - 1}} = ${lastOther}$，所以 $b_{${k}} = ${lastSame} + ${n - 2} \\cdot ${lastOther} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const traceOfDirectedSquare: KnowledgePointDef = {
+  id: "the-trace-of-the-square-of-a-directed-adjacency-matrix",
+  title: t("The trace of the square of a directed adjacency matrix", "有向图邻接矩阵平方的迹"),
+  explanation: t(
+    "The diagonal of the square of an adjacency matrix counts closed walks of length two. In a directed graph without loops, such a walk leaves a vertex and returns at once, so it needs arcs in both directions between two vertices. This means the trace can be read from the matrix by looking for symmetric pairs of ones, without squaring.",
+    "邻接矩阵平方的对角线计算长度为二的闭途径。在没有环的有向图中，这样的途径离开一个顶点又立刻返回，所以两个顶点之间必须有两个方向的弧。因此不必做平方，只要在矩阵中寻找对称的一对一，就能读出迹。",
+  ),
+  generate(rng) {
+    const n = rng.pick([4, 5]);
+    const rows: number[][] = range(0, n - 1).map((i) => range(0, n - 1).map((j) => (i !== j && rng.int(0, 1) === 1 ? 1 : 0)));
+    const entry = (i: number, j: number) => (rows[i] as number[])[j] as number;
+    const bothWays = () =>
+      range(0, n - 1).flatMap((i) =>
+        range(i + 1, n - 1)
+          .filter((j) => entry(i, j) === 1 && entry(j, i) === 1)
+          .map((j) => [i, j] as const),
+      );
+    if (bothWays().length === 0) {
+      (rows[0] as number[])[1] = 1;
+      (rows[1] as number[])[0] = 1;
+    }
+    const pairs = bothWays();
+    const arcs = rows.flat().reduce((s, v) => s + v, 0);
+    const answer = 2 * pairs.length;
+    const names = pairs.map(([i, j]) => `\\{${"ABCDE"[i]}, ${"ABCDE"[j]}\\}`).join(", ");
+    return numberProblem({
+      prompt: t(
+        `A directed graph on vertices $${letterList(range(0, n - 1))}$ has adjacency matrix $M = ${matrix(rows)}$. Find the trace of $M^2$.`,
+        `顶点为 $${letterList(range(0, n - 1))}$ 的有向图的邻接矩阵是 $M = ${matrix(rows)}$。求 $M^2$ 的迹。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [pairs.length, arcs, 2 * arcs, answer + 2, answer + 4, n],
+      solution: t(
+        `The trace of $M^2$ counts closed walks of length two, and each pair of vertices joined in both directions gives exactly two of them, one starting at each end. The pairs with symmetric ones in $M$ are $${names}$, so the trace is $2 \\cdot ${pairs.length} = ${answer}$.`,
+        `$M^2$ 的迹计算长度为二的闭途径，每对双向相连的顶点恰好给出两条，分别从两端出发。$M$ 中有对称的一的顶点对是 $${names}$，所以迹是 $2 \\cdot ${pairs.length} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const whereKahnStops: KnowledgePointDef = {
+  id: "where-kahns-algorithm-stops-on-a-graph-with-a-cycle",
+  title: t("Where Kahn's algorithm stops on a graph with a cycle", "Kahn 算法在含环图上的停止位置"),
+  explanation: t(
+    "On a graph with a directed cycle, Kahn's algorithm cannot finish. Vertices on the cycle never reach in-degree zero, since each waits for the one before it, and anything that can be reached from the cycle waits too. The algorithm outputs everything else and then stops with vertices left over, and this is how it detects a cycle.",
+    "在含有向环的图上，Kahn 算法无法完成。环上的顶点入度永远到不了零，因为每个都在等它前面的顶点；从环出发能到达的顶点也都要等。算法输出其余所有顶点，然后在还有顶点剩余时停止，它正是这样检测到环的。",
+  ),
+  generate(rng) {
+    const n = rng.pick([6, 7]);
+    const ids = sampleFrom(rng, range(0, n - 1), n);
+    const front = rng.int(1, 3);
+    const cycle = rng.int(2, 3);
+    const frontIds = ids.slice(0, front);
+    const onCycle = ids.slice(front, front + cycle);
+    const back = ids.slice(front + cycle);
+    const edges: [number, number][] = [];
+    const add = (u: number, v: number) => {
+      if (!edges.some(([a, b]) => a === u && b === v)) edges.push([u, v]);
+    };
+    onCycle.forEach((u, i) => {
+      add(u, onCycle[(i + 1) % onCycle.length] as number);
+    });
+    for (let i = 0; i < front; i++) {
+      for (let j = i + 1; j < n; j++) {
+        if (rng.int(0, 2) === 0) add(ids[i] as number, ids[j] as number);
+      }
+    }
+    add(rng.pick(frontIds), rng.pick(onCycle));
+    back.forEach((v, i) => {
+      if (rng.int(0, 1) === 0) add(rng.pick(onCycle), v);
+      else add(rng.pick(frontIds), v);
+      if (i > 0 && rng.int(0, 1) === 0) add(back[i - 1] as number, v);
+    });
+    const remaining = new Set(ids);
+    const output: number[] = [];
+    for (;;) {
+      const ready = [...remaining].sort((a, b) => a - b).find((v) => !edges.some(([u, w]) => w === v && remaining.has(u)));
+      if (ready === undefined) break;
+      remaining.delete(ready);
+      output.push(ready);
+    }
+    const answer = output.length;
+    const initial = ids.filter((v) => !edges.some(([, w]) => w === v)).length;
+    const left = letterList([...remaining].sort((a, b) => a - b));
+    return numberProblem({
+      prompt: t(
+        `Let $G$ be the directed graph with $V = \\{${letterList(range(0, n - 1))}\\}$ and $E = \\{${arcSet(edges)}\\}$. Kahn's algorithm is run on $G$. How many vertices does it output before it stops?`,
+        `设 $G$ 是有向图，$V = \\{${letterList(range(0, n - 1))}\\}$，$E = \\{${arcSet(edges)}\\}$。在 $G$ 上运行 Kahn 算法。它停止之前输出多少个顶点？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n, n - answer, initial, answer + 1, answer - 1],
+      solution: t(
+        `Remove vertices of in-degree zero one at a time. The algorithm can output $${letterList(output)}$, after which each of $${left}$ still has an incoming arc from another remaining vertex, because of a directed cycle among them. So it stops after $${answer}$ ${answer === 1 ? "vertex" : "vertices"}.`,
+        `依次删去入度为零的顶点。算法可以输出 $${letterList(output)}$，之后 $${left}$ 中每个顶点仍有来自其他剩余顶点的入弧，因为它们之中有有向环。所以它输出 $${answer}$ 个顶点后停止。`,
+      ),
+    });
+  },
+};
+
+const tentativeLabel: KnowledgePointDef = {
+  id: "a-tentative-distance-during-dijkstras-algorithm",
+  title: t("A tentative distance during Dijkstra's algorithm", "Dijkstra 算法过程中的暂定距离"),
+  explanation: t(
+    "Dijkstra's algorithm keeps a tentative distance for every vertex and improves it as vertices are finalized. A tentative distance is the best route found so far that passes only through finalized vertices, so it may be larger than the true distance. Each time a vertex is finalized, compare the route through it with the current label and keep the smaller.",
+    "Dijkstra 算法为每个顶点保存一个暂定距离，并在顶点确定时改进它。暂定距离是目前找到的、只经过已确定顶点的最佳路线，所以可能大于真实距离。每确定一个顶点，就把经过它的路线与当前标记比较，保留较小的。",
+  ),
+  generate(rng) {
+    const pairs = range(0, 4).flatMap((i) => range(i + 1, 4).map((j) => [i, j] as const));
+    for (;;) {
+      const weights = new Map<string, number>();
+      for (const [i, j] of pairs) {
+        if (rng.int(0, 3) !== 0) weights.set(`${i}${j}`, rng.int(1, 20));
+      }
+      const w = (a: number, b: number) => weights.get(a < b ? `${a}${b}` : `${b}${a}`);
+      const direct = range(1, 4).filter((v) => w(0, v) !== undefined);
+      if (direct.length < 2) continue;
+      const nearestDistance = Math.min(...direct.map((v) => w(0, v) as number));
+      const closest = direct.filter((v) => w(0, v) === nearestDistance);
+      if (closest.length !== 1) continue;
+      const nearest = closest[0] as number;
+      const improved = range(1, 4).filter((v) => {
+        const through = w(nearest, v);
+        if (v === nearest || through === undefined) return false;
+        const old = w(0, v);
+        return old === undefined || nearestDistance + through < old;
+      });
+      if (improved.length === 0) continue;
+      const target = rng.pick(improved);
+      const through = w(nearest, target) as number;
+      const answer = nearestDistance + through;
+      const old = w(0, target);
+      const graph = pairs
+        .filter(([i, j]) => weights.has(`${i}${j}`))
+        .map(([i, j]) => `${"ABCDE"[i]}${"ABCDE"[j]}\\colon ${weights.get(`${i}${j}`)}`)
+        .join(",\\ ");
+      const name = "ABCDE"[target];
+      const close = "ABCDE"[nearest];
+      const oldEn = old === undefined ? "had no label yet" : `had label $${old}$ from the edge from $A$`;
+      const oldZh = old === undefined ? "还没有标记" : `的标记是来自 $A$ 的边给出的 $${old}$`;
+      return numberProblem({
+        prompt: t(
+          `A weighted graph on vertices $A$, $B$, $C$, $D$, $E$ has edges with weights $${graph}$. Dijkstra's algorithm starts from $A$. After $A$ and one more vertex have been finalized, what is the tentative distance of $${name}$?`,
+          `一个带权图的顶点为 $A$、$B$、$C$、$D$、$E$，边的权为 $${graph}$。Dijkstra 算法从 $A$ 开始。在 $A$ 和另一个顶点确定之后，$${name}$ 的暂定距离是多少？`,
+        ),
+        answer,
+        form: "integer",
+        wrong: [through, old ?? through + 1, answer + 1, nearestDistance, answer - 1, answer + 2],
+        solution: t(
+          `From $A$, the smallest edge leads to $${close}$ with weight $${nearestDistance}$, so $${close}$ is finalized next. Before that, $${name}$ ${oldEn}. The route through $${close}$ costs $${nearestDistance} + ${through} = ${answer}$, which is smaller, so the label becomes $${answer}$.`,
+          `从 $A$ 出发，最小的边通向 $${close}$，权为 $${nearestDistance}$，所以接下来确定 $${close}$。在此之前，$${name}$ ${oldZh}。经过 $${close}$ 的路线长度是 $${nearestDistance} + ${through} = ${answer}$，更小，所以标记变为 $${answer}$。`,
+        ),
+      });
+    }
+  },
+};
+
+const mealyToMooreStates: KnowledgePointDef = {
+  id: "the-states-of-a-moore-machine-from-a-mealy-machine",
+  title: t("The states of a Moore machine from a Mealy machine", "由 Mealy 机得到的 Moore 机的状态数"),
+  explanation: t(
+    "A Mealy machine attaches outputs to transitions, whereas a Moore machine attaches them to states. To convert, a state entered with two different outputs must be split, since one Moore state can show only one output. So each new state is a pair of an old state and an output with which it is entered.",
+    "Mealy 机把输出放在转移上，而 Moore 机把输出放在状态上。转换时，以两种不同输出进入的状态必须拆分，因为一个 Moore 状态只能显示一种输出。所以每个新状态都是一个旧状态和进入它时的一个输出组成的对。",
+  ),
+  generate(rng) {
+    for (;;) {
+      const k = rng.pick([3, 4]);
+      const table = range(0, k - 1).map(
+        () =>
+          [
+            [rng.int(0, k - 1), rng.int(0, 1)],
+            [rng.int(0, k - 1), rng.int(0, 1)],
+          ] as const,
+      );
+      const reached = new Set([0]);
+      for (let round = 0; round < k; round++) {
+        for (const q of [...reached]) {
+          for (const [to] of table[q] as (typeof table)[number]) reached.add(to);
+        }
+      }
+      if (reached.size !== k) continue;
+      const pairs = new Set(table.flatMap((row) => row.map(([to, out]) => `${to},${out}`)));
+      const startEntered = table.some((row) => row.some(([to]) => to === 0));
+      const answer = pairs.size + (startEntered ? 0 : 1);
+      if (answer === k) continue;
+      const cell = ([to, out]: readonly [number, number]) => `q_{${to}}/${out}`;
+      const shown = automatonTable(table.map((row) => [cell(row[0]), cell(row[1])]));
+      const list = [...pairs]
+        .sort()
+        .map((p) => `(q_{${p.split(",")[0]}}, ${p.split(",")[1]})`)
+        .join(", ");
+      return numberProblem({
+        prompt: t(
+          `A Mealy machine with start state $q_0$ has transition table $${shown}$, where each entry shows the next state and the output. It is converted to a Moore machine by making one state for each pair of a state and an output with which that state is entered, with one extra state for $q_0$ if it is never entered. How many states does the Moore machine have?`,
+          `一个 Mealy 机的起始状态是 $q_0$，转移表为 $${shown}$，每格表示下一状态和输出。把它转换成 Moore 机：对每个状态和进入该状态时的一个输出组成的对，建立一个状态；如果 $q_0$ 从未被进入，再为它加一个状态。这个 Moore 机有多少个状态？`,
+        ),
+        answer,
+        form: "integer",
+        wrong: [k, 2 * k, pairs.size + 1, answer + 1, answer - 1],
+        solution: t(
+          `The pairs that occur in the table are $${list}$, which is ${pairs.size} pairs. ${startEntered ? "The state $q_0$ is entered by some transition, so no extra state is needed" : "The state $q_0$ is never entered, so it needs one extra state"}. That gives $${answer}$ states.`,
+          `表中出现的对是 $${list}$，共 ${pairs.size} 个。${startEntered ? "状态 $q_0$ 有转移进入，所以不需要额外的状态" : "状态 $q_0$ 从未被进入，所以需要一个额外的状态"}。这样共有 $${answer}$ 个状态。`,
+        ),
+      });
+    }
+  },
+};
+
+const acceptedStringsByLength: KnowledgePointDef = {
+  id: "counting-the-accepted-strings-of-a-given-length",
+  title: t("Counting the accepted strings of a given length", "计算给定长度的被接受字符串"),
+  explanation: t(
+    "Listing every string of a given length is slow, since the number doubles with each symbol. A deterministic automaton gives a better way, because each string follows exactly one path. Keep a count of the strings of the current length that end in each state, and let each count flow along the two outgoing transitions to produce the next length.",
+    "列出给定长度的所有字符串很慢，因为每多一个符号，数量就翻倍。确定性自动机提供了更好的办法，因为每个字符串恰好走一条路径。记录当前长度的字符串结束于每个状态的个数，让每个计数沿两条出边转移，就得到下一长度的计数。",
+  ),
+  generate(rng) {
+    for (;;) {
+      const k = rng.pick([3, 4]);
+      const table = range(0, k - 1).map(() => [rng.int(0, k - 1), rng.int(0, k - 1)] as const);
+      const accepting = sampleFrom(rng, range(0, k - 1), rng.int(1, 2)).sort((a, b) => a - b);
+      const length = rng.int(4, 7);
+      const steps: number[][] = [range(0, k - 1).map((q) => (q === 0 ? 1 : 0))];
+      for (let i = 0; i < length; i++) {
+        const next = range(0, k - 1).map(() => 0);
+        (steps[i] as number[]).forEach((count, q) => {
+          for (const to of table[q] as readonly [number, number]) next[to] = (next[to] as number) + count;
+        });
+        steps.push(next);
+      }
+      const accepted = (v: readonly number[]) => accepting.reduce((s, q) => s + (v[q] as number), 0);
+      const last = steps[length] as number[];
+      const answer = accepted(last);
+      if (answer === 0 || answer === 2 ** length) continue;
+      const shown = automatonTable(
+        table.map(([a, b]) => [`q_{${a}}`, `q_{${b}}`]),
+        accepting,
+      );
+      const lastThree = steps.slice(length - 2).map((v, i) => [length - 2 + i, v.join(", ")] as const);
+      const trail = lastThree.map(([n, v]) => `length $${n}$: $(${v})$`).join(", ");
+      const trailZh = lastThree.map(([n, v]) => `长度 $${n}$：$(${v})$`).join("，");
+      return numberProblem({
+        prompt: t(
+          `A DFA over the alphabet $\\{0, 1\\}$ has transition table $${shown}$. How many strings of length ${length} does it accept?`,
+          `字母表 $\\{0, 1\\}$ 上的一个 DFA 的转移表为 $${shown}$。它接受多少个长度为 ${length} 的字符串？`,
+        ),
+        answer,
+        form: "integer",
+        wrong: [2 ** length - answer, accepted(steps[length - 1] as number[]), 2 ** (length - 1), answer + 1, answer - 1, answer + 2],
+        solution: t(
+          `Keep a vector of how many strings of each length end in $q_0, q_1, \\dots$, starting from one string at $q_0$, and send each count along both transitions. The last vectors are ${trail}. Adding the entries for accepting states gives $${answer}$.`,
+          `用一个向量记录每种长度的字符串结束于 $q_0, q_1, \\dots$ 的个数，从 $q_0$ 上的一个字符串开始，把每个计数沿两条转移送出。最后几个向量是 ${trailZh}。把接受状态对应的元素相加得 $${answer}$。`,
+        ),
+      });
+    }
+  },
+};
+
+const subsetConstructionStates: KnowledgePointDef = {
+  id: "the-states-of-the-subset-construction",
+  title: t("The states of the subset construction", "子集构造的状态数"),
+  explanation: t(
+    "The subset construction turns a nondeterministic automaton into a deterministic one whose states are sets of the original states. There may be many subsets in principle, but only those actually reached from the start matter. So build them as you go: follow both symbols from each new set, and stop when no new set appears. The empty set counts if reached.",
+    "子集构造把非确定性自动机变成确定性自动机，新状态是原状态的集合。理论上子集可能很多，但只有从起始状态实际到达的才重要。所以边走边构造：从每个新集合沿两个符号出发，直到没有新集合出现。到达的空集也要计入。",
+  ),
+  generate(rng) {
+    for (;;) {
+      const k = rng.pick([3, 4]);
+      const masks = range(0, k - 1).map(() => [rng.int(0, 2 ** k - 1), rng.int(0, 2 ** k - 1)] as const);
+      const step = (set: number, symbol: 0 | 1) =>
+        range(0, k - 1).reduce((s, q) => ((set >> q) & 1 ? s | ((masks[q] as readonly [number, number])[symbol] as number) : s), 0);
+      const found = [1];
+      for (let i = 0; i < found.length; i++) {
+        for (const symbol of [0, 1] as const) {
+          const next = step(found[i] as number, symbol);
+          if (!found.includes(next)) found.push(next);
+        }
+      }
+      const answer = found.length;
+      if (answer < 4 || answer === 2 ** k) continue;
+      const setLatex = (mask: number) =>
+        mask === 0
+          ? "\\varnothing"
+          : `\\{${range(0, k - 1)
+              .filter((q) => (mask >> q) & 1)
+              .map((q) => `q_{${q}}`)
+              .join(", ")}\\}`;
+      const shown = automatonTable(masks.map(([a, b]) => [setLatex(a), setLatex(b)]));
+      const list = found.map(setLatex).join(", ");
+      return numberProblem({
+        prompt: t(
+          `An NFA with start state $q_0$ has transition table $${shown}$. The subset construction builds a DFA from it, keeping only the subsets reached from $\\{q_0\\}$ and counting $\\varnothing$ if it is reached. How many states does the DFA have?`,
+          `一个 NFA 的起始状态是 $q_0$，转移表为 $${shown}$。用子集构造由它得到一个 DFA，只保留从 $\\{q_0\\}$ 能到达的子集，到达 $\\varnothing$ 时也计入。这个 DFA 有多少个状态？`,
+        ),
+        answer,
+        form: "integer",
+        wrong: [2 ** k, k, answer + 1, answer - 1, 2 ** k - 1],
+        solution: t(
+          `Start from $\\{q_0\\}$ and, for each new set, take the union of the transitions of its members on each symbol. The sets that appear are $${list}$, and these lead to no others, so the DFA has $${answer}$ states.`,
+          `从 $\\{q_0\\}$ 开始，对每个新集合，在每个符号上取其成员转移的并集。出现的集合是 $${list}$，它们不再产生新的集合，所以 DFA 有 $${answer}$ 个状态。`,
+        ),
+      });
+    }
+  },
+};
+
 /** deeperDiscreteMathematicsPoints gives, by topic id, the knowledge points added after a Discrete Mathematics topic's own. */
 export const deeperDiscreteMathematicsPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "boolean-functions": [functionsOfAGivenWeight],
@@ -2062,4 +3415,34 @@ export const deeperDiscreteMathematicsPoints: Readonly<Record<string, readonly K
   "introduction-to-turing-machines": [tmConfigurations],
   "big-o-notation": [sumOfPowersOrder],
   "big-omega-notation": [omegaThreshold],
+  "systems-of-equations-as-augmented-matrices": [rearrangingForAugmentedMatrix],
+  "row-echelon-form": [zerosOfRowEchelonForm],
+  "solving-systems-of-equations-using-back-substitution": [backSubstitutionCost],
+  "truth-preserving-boolean-functions": [preserversOfAGivenWeight],
+  "posts-functional-completeness-theorem": [smallestCompleteSubset],
+  "introduction-to-logic-circuits": [inputsThatLightACircuit],
+  "simplifying-logic-circuits": [gatesSavedByFactoring],
+  "many-to-one-transformations-of-discrete-random-variables": [remainderOfARandomVariable],
+  "properties-of-expectation-for-discrete-random-variables": [matchingNeighbours],
+  "moments-of-discrete-random-variables": [thirdCentralMoment],
+  "modeling-with-discrete-uniform-distributions": [largestOfTwoDraws],
+  "the-negative-binomial-distribution": [negativeBinomialThroughBinomial],
+  "modeling-with-the-negative-binomial-distribution": [lengthOfASeries],
+  "the-hypergeometric-distribution": [hypergeometricSupport],
+  "the-pmf-of-the-hypergeometric-distribution": [hypergeometricMode],
+  "extending-the-law-of-total-probability": [totalProbabilityTwoDraws],
+  "modeling-with-the-poisson-distribution": [timeForAtLeastOne],
+  "finite-linear-series": [termsFromALinearSum],
+  "finite-quadratic-series": [alternatingSquares],
+  "infinite-series-and-partial-sums": [firstPartialSumPastATarget],
+  "sums-of-infinite-geometric-series-given-in-sigma-notation": [seriesWithDoubledIndex],
+  "the-generalized-binomial-theorem": [exponentFromCoefficients],
+  "approximating-values-using-the-generalized-binomial-theorem": [firstOmittedTerm],
+  "walks-trails-paths-and-distances": [walksInACompleteGraph],
+  "adjacency-matrices-of-directed-graphs": [traceOfDirectedSquare],
+  "kahns-algorithm": [whereKahnStops],
+  "dijkstras-algorithm": [tentativeLabel],
+  "mealy-machines": [mealyToMooreStates],
+  "processing-strings-using-deterministic-finite-automata": [acceptedStringsByLength],
+  "nondeterministic-finite-automata": [subsetConstructionStates],
 };
