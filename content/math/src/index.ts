@@ -82,6 +82,7 @@ import { combinatoricsTopics } from "./topics/combinatorics.ts";
 import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
 import { deeperLinearAlgebraPoints } from "./topics/deeper-linear-algebra.ts";
+import { deeperMultivariableCalculusPoints } from "./topics/deeper-multivariable-calculus.ts";
 import { differentialEquationsBvpTopics } from "./topics/differential-equations-bvp.ts";
 import { differentialEquationsFirstOrderTopics } from "./topics/differential-equations-first-order.ts";
 import { differentialEquationsLaplaceTopics } from "./topics/differential-equations-laplace.ts";
@@ -242,7 +243,12 @@ function finished(topic: TopicDef): TopicDef {
   const weighted = {
     ...topic,
     encompasses: topic.encompasses.length ? topic.encompasses : (inferredEncompassings[topic.id] ?? []),
-    knowledgePoints: [...topic.knowledgePoints, ...(deeperLinearAlgebraPoints[topic.id] ?? []), ...(figureReadingPoints[topic.id] ?? [])],
+    knowledgePoints: [
+      ...topic.knowledgePoints,
+      ...(deeperLinearAlgebraPoints[topic.id] ?? []),
+      ...(deeperMultivariableCalculusPoints[topic.id] ?? []),
+      ...(figureReadingPoints[topic.id] ?? []),
+    ],
   };
   return polishTopic(judgedOverFourCases.has(topic.id) ? oneOfFourTopic(weighted) : weighted);
 }
