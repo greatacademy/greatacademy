@@ -1572,6 +1572,975 @@ const projectileSpeed: KnowledgePointDef = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// Third pass
+// ---------------------------------------------------------------------------
+
+/** signedCoefficient writes a nonzero number before a symbol, leaving out 1 and keeping the sign of -1. */
+const signedCoefficient = (n: number) => (n === 1 ? "" : n === -1 ? "-" : `${n}`);
+
+const upperLimitFromLogarithm: KnowledgePointDef = {
+  id: "the-upper-limit-from-a-logarithmic-value",
+  title: t("The upper limit from a logarithmic value", "由对数值求积分上限"),
+  explanation: t(
+    "The integral of a linear function's derivative over that function is a difference of logarithms, which is the logarithm of a ratio. So when the value is $\\ln m$, the linear function must grow by the factor $m$ between the two limits. That turns the question about an integral into a linear equation for the unknown limit.",
+    "线性函数的导数除以该函数，积分是对数之差，也就是比值的对数。所以积分值为 $\\ln m$ 时，线性函数从下限到上限必须增大到 $m$ 倍。这样，积分问题就变成了关于未知积分限的一次方程。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 6);
+    const c = rng.int(2, 9);
+    const m = rng.int(2, 6);
+    const answer = Q.of(c * (m - 1), a);
+    const denominator = poly([a, "x"], [c, ""]);
+    return numberProblem({
+      prompt: t(
+        `For which $b > 0$ is $\\int_0^b \\frac{${a}}{${denominator}}\\,dx = \\ln ${m}$?`,
+        `$b > 0$ 取何值时 $\\int_0^b \\frac{${a}}{${denominator}}\\,dx = \\ln ${m}$？`,
+      ),
+      answer,
+      solveFor: "b",
+      wrong: [Q.of(c * (m - 1)), Q.of(c * m, a), Q.of(m - 1, a), Q.of(c * (m + 1), a)],
+      solution: t(
+        `With $u = ${denominator}$ and $du = ${a}\\,dx$, the integral is $\\ln\\frac{${a}b + ${c}}{${c}}$. This equals $\\ln ${m}$ exactly when $${a}b + ${c} = ${c * m}$, so $b = ${answer.toLatex()}$.`,
+        `令 $u = ${denominator}$，$du = ${a}\\,dx$，积分等于 $\\ln\\frac{${a}b + ${c}}{${c}}$。它等于 $\\ln ${m}$ 当且仅当 $${a}b + ${c} = ${c * m}$，所以 $b = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const xTimesFOfXSquared: KnowledgePointDef = {
+  id: "an-integral-of-x-times-f-of-x-squared",
+  title: t("An integral of x times f of x squared", "x 乘以 x 平方的函数的积分"),
+  explanation: t(
+    "Substitution needs no formula for the outer function, only that the derivative of the inner one is present. In $\\int xf(x^2)\\,dx$, the choice $u = x^2$ gives $du = 2x\\,dx$, so the factor $x\\,dx$ becomes $\\frac{du}{2}$. The limits are squared as well, and a known integral of $f$ then finishes the work, even though $f$ itself stays unknown.",
+    "换元不需要外层函数的公式，只要内层函数的导数出现在被积式中。在 $\\int xf(x^2)\\,dx$ 中，取 $u = x^2$，则 $du = 2x\\,dx$，所以 $x\\,dx$ 变成 $\\frac{du}{2}$。积分限也要平方，再用已知的 $f$ 的积分就能得到结果，即使 $f$ 本身仍然未知。",
+  ),
+  generate(rng) {
+    const b = rng.int(2, 7);
+    const k = rng.int(1, 6);
+    const v = nonzero(rng, 12);
+    const answer = Q.of(k * v, 2);
+    const half = k === 2 ? "" : `${Q.of(k, 2).toLatex()} \\cdot `;
+    return numberProblem({
+      prompt: t(
+        `$\\int_0^{${b * b}} f(u)\\,du = ${v}$. Find $\\int_0^{${b}} ${coefficientOf(k)}xf(x^2)\\,dx$.`,
+        `$\\int_0^{${b * b}} f(u)\\,du = ${v}$。求 $\\int_0^{${b}} ${coefficientOf(k)}xf(x^2)\\,dx$。`,
+      ),
+      answer,
+      wrong: [Q.of(k * v), Q.of(2 * k * v), Q.of(k * v, b), Q.of(k * v, b * b)],
+      solution: t(
+        `Let $u = x^2$, so $x\\,dx = \\frac{du}{2}$, and the limits become $0$ and $${b * b}$. The integral is $${half}${inParens(v)} = ${answer.toLatex()}$.`,
+        `令 $u = x^2$，则 $x\\,dx = \\frac{du}{2}$，积分限变成 $0$ 和 $${b * b}$。积分等于 $${half}${inParens(v)} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const xSquaredInTermsOfU: KnowledgePointDef = {
+  id: "rewriting-x-squared-in-terms-of-u",
+  title: t("Rewriting x squared in terms of u", "把 x 的平方写成 u 的式子"),
+  explanation: t(
+    "When $u = x - a$, a factor of $x^2$ outside the power must also be converted. Since $x = u + a$, the square expands into three terms, each a power of $u$ with its own coefficient. Multiplying them by the power of $u$ leaves a polynomial that can be integrated term by term, with the limits changed to values of $u$.",
+    "令 $u = x - a$ 时，幂外面的因子 $x^2$ 也必须转换。因为 $x = u + a$，平方展开成三项，每项都是 $u$ 的幂，各有系数。再乘以 $u$ 的幂，就得到可以逐项积分的多项式，积分限也要换成 $u$ 的值。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 5);
+    const n = rng.int(2, 5);
+    const inner = poly([1, "x"], [-a, ""]);
+    const one = Q.of(1, n + 3);
+    const two = Q.of(2 * a, n + 2);
+    const three = Q.of(a * a, n + 1);
+    const answer = one.add(two).add(three);
+    const expanded = poly([1, `u^${n + 2}`], [2 * a, `u^${n + 1}`], [a * a, `u^${n}`]);
+    const square = poly([1, "u^2"], [2 * a, "u"], [a * a, ""]);
+    const sum = poly([one, ""], [two, ""], [three, ""]);
+    return numberProblem({
+      prompt: t(`Evaluate $\\int_{${a}}^{${a + 1}} x^2(${inner})^${n}\\,dx$.`, `计算 $\\int_{${a}}^{${a + 1}} x^2(${inner})^${n}\\,dx$。`),
+      answer,
+      wrong: [one.add(three), one.add(Q.of(a, n + 2)).add(three), Q.of((a + 1) * (a + 1), n + 1), one],
+      solution: t(
+        `Let $u = ${inner}$, so $x = ${poly([1, "u"], [a, ""])}$ and the limits become $0$ and $1$. Then $x^2 = ${square}$, so the integrand is $${expanded}$. Integrating term by term and setting $u = 1$ gives $${sum} = ${answer.toLatex()}$.`,
+        `令 $u = ${inner}$，则 $x = ${poly([1, "u"], [a, ""])}$，积分限变成 $0$ 和 $1$。于是 $x^2 = ${square}$，被积函数是 $${expanded}$。逐项积分并令 $u = 1$，得 $${sum} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const arsinhAsLogarithm: KnowledgePointDef = {
+  id: "an-inverse-hyperbolic-integral-as-a-logarithm",
+  title: t("An inverse hyperbolic integral as a logarithm", "把反双曲积分写成对数"),
+  explanation: t(
+    "An inverse hyperbolic function is a logarithm in disguise, which is how a definite integral producing one gets a closed value. From $\\operatorname{arsinh} z = \\ln\\left(z + \\sqrt{z^2 + 1}\\right)$, the value of the antiderivative at a limit becomes a single logarithm. It is cleanest when the root is rational, as it is for the sides of a right triangle with whole sides.",
+    "反双曲函数其实就是对数，所以结果含反双曲函数的定积分可以化成确定的值。由 $\\operatorname{arsinh} z = \\ln\\left(z + \\sqrt{z^2 + 1}\\right)$，原函数在积分限处的值就是一个对数。当根式是有理数时最简洁，比如边长都是整数的直角三角形的情形。",
+  ),
+  generate(rng) {
+    const { a, b, h } = pythagorean(rng);
+    const s = rng.int(1, 3);
+    const A = s * a;
+    const B = s * b;
+    const H = s * h;
+    const answer = Q.of(B + H, A);
+    const z = Q.of(B, A).toLatex();
+    const root = Q.of(H, A).toLatex();
+    return numberProblem({
+      prompt: t(
+        `$\\int_0^{${B}} \\frac{dx}{\\sqrt{x^2 + ${A * A}}} = \\ln c$. Find $c$.`,
+        `$\\int_0^{${B}} \\frac{dx}{\\sqrt{x^2 + ${A * A}}} = \\ln c$。求 $c$。`,
+      ),
+      answer,
+      wrong: [Q.of(B + H), Q.of(H, A), Q.of(B, A), Q.of(A + H, B)],
+      solution: t(
+        `An antiderivative is $\\operatorname{arsinh}\\frac{x}{${A}}$, which is $0$ at $x = 0$. At the upper limit $z = ${z}$ and $\\sqrt{z^2 + 1} = ${root}$, so the value is $\\ln\\left(${z} + ${root}\\right)$ and $c = ${answer.toLatex()}$.`,
+        `一个原函数是 $\\operatorname{arsinh}\\frac{x}{${A}}$，它在 $x = 0$ 处为 $0$。在上限处 $z = ${z}$，$\\sqrt{z^2 + 1} = ${root}$，所以积分值是 $\\ln\\left(${z} + ${root}\\right)$，$c = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const constantRemovingLogarithm: KnowledgePointDef = {
+  id: "the-constant-that-removes-the-logarithm",
+  title: t("The constant that removes the logarithm", "消去对数项的常数"),
+  explanation: t(
+    "Dividing a quadratic by $x - a$ leaves a polynomial quotient and a constant remainder $R$. The quotient integrates to a polynomial, and only the fraction $\\frac{R}{x - a}$ produces a logarithm. So an antiderivative free of logarithms means the remainder is zero, and the remainder theorem gives it as the value of the numerator at $x = a$.",
+    "二次式除以 $x - a$，得到多项式商和常数余数 $R$。商积分后仍是多项式，只有分式 $\\frac{R}{x - a}$ 才产生对数。所以原函数不含对数就意味着余数为零，而由余数定理，余数就是分子在 $x = a$ 处的值。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 6);
+    const b = rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6].filter((v) => v !== -a));
+    const answer = -a * (a + b);
+    const denominator = poly([1, "x"], [-a, ""]);
+    const numerator = poly([1, "x^2"], [b, "x"]);
+    return numberProblem({
+      prompt: t(
+        `The antiderivative of $\\frac{${numerator} + k}{${denominator}}$ contains no logarithm. Find $k$.`,
+        `$\\frac{${numerator} + k}{${denominator}}$ 的原函数不含对数。求 $k$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a * (a + b), a * a - a * b, a * b, -(a * a) - b],
+      solution: t(
+        `Dividing by $${denominator}$ gives the quotient $${poly([1, "x"], [a + b, ""])}$ and the remainder $${a * a} + ${inParens(a * b)} + k$. The logarithm comes only from the remainder, so it must vanish, which gives $k = ${answer}$.`,
+        `除以 $${denominator}$，商是 $${poly([1, "x"], [a + b, ""])}$，余数是 $${a * a} + ${inParens(a * b)} + k$。对数只来自余数，所以余数必须为零，得 $k = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const linearOverCompletedSquare: KnowledgePointDef = {
+  id: "a-linear-numerator-over-a-completed-square",
+  title: t("A linear numerator over a completed square", "配方后分子为一次式的积分"),
+  explanation: t(
+    "When the numerator contains $x$, split it before completing the square. One part is a multiple of the derivative of the denominator, and it integrates to a logarithm. What remains is a constant over the completed square, and it integrates to an arctangent. The coefficient of the arctangent depends on the constant left over after the split, not on the original constant.",
+    "分子含 $x$ 时，先把它拆开，再配方。一部分是分母导数的倍数，积分得到对数。剩下的是常数除以配方后的式子，积分得到反正切。反正切的系数取决于拆分后剩下的常数，而不是原来的常数项。",
+  ),
+  generate(rng) {
+    const m = rng.int(1, 4);
+    const p = nonzero(rng, 4);
+    const a = rng.int(1, 4);
+    const n = rng.pick([-7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7].filter((v) => v + m * p !== 0));
+    const rest = n + m * p;
+    const answer = Q.of(rest, a);
+    const numerator = poly([m, "x"], [n, ""]);
+    const denominator = poly([1, "x^2"], [-2 * p, "x"], [p * p + a * a, ""]);
+    const inner = poly([1, "x"], [-p, ""]);
+    const arc = a === 1 ? `\\arctan(${inner})` : `\\arctan\\frac{${inner}}{${a}}`;
+    const half = fractionBefore(m, 2);
+    const form = `${half}\\ln(${denominator}) + K${arc} + C`;
+    const split = `${half}(${poly([2, "x"], [-2 * p, ""])}) ${rest < 0 ? "-" : "+"} ${Math.abs(rest)}`;
+    return numberProblem({
+      prompt: t(
+        `An antiderivative of $\\frac{${numerator}}{${denominator}}$ has the form $${form}$. Find $K$.`,
+        `$\\frac{${numerator}}{${denominator}}$ 的原函数形如 $${form}$。求 $K$。`,
+      ),
+      answer,
+      wrong: [Q.of(n, a), Q.of(n - m * p, a), Q.of(rest), Q.of(rest, 2 * a), answer.neg()],
+      solution: t(
+        `The numerator is $${split}$, where the bracket is the derivative of the denominator and gives the logarithm. The denominator is $(${inner})^2 + ${a * a}$, so the constant $${rest}$ gives an arctangent with coefficient $K = ${answer.toLatex()}$.`,
+        `分子等于 $${split}$，括号是分母的导数，积分得到对数。分母等于 $(${inner})^2 + ${a * a}$，所以常数 $${rest}$ 积分后得到反正切，系数 $K = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const powerOfCoshAndSinh: KnowledgePointDef = {
+  id: "powers-of-cosh-plus-or-minus-sinh",
+  title: t("Powers of cosh plus or minus sinh", "cosh 加减 sinh 的幂"),
+  explanation: t(
+    "Adding and subtracting the definitions of the hyperbolic functions gives two short identities: $\\cosh x + \\sinh x = e^x$ and $\\cosh x - \\sinh x = e^{-x}$. A power of either is therefore a single exponential, with no need to expand the bracket. A logarithm in the limit then cancels the exponential when the result is evaluated.",
+    "把双曲函数的定义相加、相减，得到两个简单的恒等式：$\\cosh x + \\sinh x = e^x$，$\\cosh x - \\sinh x = e^{-x}$。所以它们的幂都只是一个指数函数，不必展开括号。求值时，积分限中的对数会与指数相互抵消。",
+  ),
+  generate(rng) {
+    const plus = rng.pick([true, false]);
+    const n = rng.int(1, 3);
+    const a = rng.int(2, 5);
+    const k = rng.int(1, 6);
+    const power = a ** n;
+    const bracket = `(\\cosh x ${plus ? "+" : "-"} \\sinh x)${n === 1 ? "" : `^${n}`}`;
+    const up = Q.of(k * (power - 1), n);
+    const down = Q.of(k * (power - 1), n * power);
+    const answer = plus ? up : down;
+    const exponent = `${plus ? "" : "-"}${coefficientOf(n)}x`;
+    const work = plus ? `${fractionBefore(k, n)}(${power} - 1)` : `${fractionBefore(k, n)}\\left(1 - ${Q.of(1, power).toLatex()}\\right)`;
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\int_0^{\\ln ${a}} ${coefficientOf(k)}${bracket}\\,dx$.`,
+        `计算 $\\int_0^{\\ln ${a}} ${coefficientOf(k)}${bracket}\\,dx$。`,
+      ),
+      answer,
+      wrong: plus
+        ? [Q.of(k * (power - 1)), Q.of(k * power, n), down, Q.of(k * (power + 1), n)]
+        : [Q.of(k * (power - 1), power), Q.of(k, n * power), up, Q.of(k * (power + 1), n * power), down.neg()],
+      solution: t(
+        `The bracket equals $e^{${plus ? "" : "-"}x}$, so the integrand is $${coefficientOf(k)}e^{${exponent}}$. Evaluating its antiderivative at $x = \\ln ${a}$ and $x = 0$ gives $${work} = ${answer.toLatex()}$.`,
+        `括号内等于 $e^{${plus ? "" : "-"}x}$，所以被积函数是 $${coefficientOf(k)}e^{${exponent}}$。原函数在 $x = \\ln ${a}$ 与 $x = 0$ 处求值，得 $${work} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const evenPowerOfSech: KnowledgePointDef = {
+  id: "an-even-power-of-sech",
+  title: t("An even power of sech", "sech 的偶次幂"),
+  explanation: t(
+    "The derivative of $\\tanh x$ is $\\operatorname{sech}^2 x$, so one factor of $\\operatorname{sech}^2 x$ can be saved for the differential. The rest is converted by the identity $\\operatorname{sech}^2 x = 1 - \\tanh^2 x$. Note the minus sign, which differs from the identity for ordinary secant. With $u = \\tanh x$, the integrand is then a polynomial in $u$.",
+    "$\\tanh x$ 的导数是 $\\operatorname{sech}^2 x$，所以可以留出一个 $\\operatorname{sech}^2 x$ 作微分。其余部分用恒等式 $\\operatorname{sech}^2 x = 1 - \\tanh^2 x$ 转换。注意这里是减号，与普通正割的恒等式不同。令 $u = \\tanh x$，被积函数就成为 $u$ 的多项式。",
+  ),
+  generate(rng) {
+    const [p, q] = rng.pick([
+      [1, 2],
+      [1, 3],
+      [2, 3],
+      [1, 4],
+      [3, 4],
+      [1, 5],
+      [3, 5],
+      [4, 5],
+    ]) as [number, number];
+    const k = rng.int(1, 6);
+    const T = Q.of(p, q);
+    const times = Q.of(k);
+    const cubeThird = T.pow(3).div(Q.of(3));
+    const answer = T.sub(cubeThird).mul(times);
+    return numberProblem({
+      prompt: t(
+        `$\\tanh b = ${T.toLatex()}$ with $b > 0$. Evaluate $\\int_0^b ${coefficientOf(k)}\\operatorname{sech}^4 x\\,dx$.`,
+        `$\\tanh b = ${T.toLatex()}$，$b > 0$。计算 $\\int_0^b ${coefficientOf(k)}\\operatorname{sech}^4 x\\,dx$。`,
+      ),
+      answer,
+      wrong: [T.mul(times), T.add(cubeThird).mul(times), cubeThird.mul(times), T.sub(T.pow(3)).mul(times)],
+      solution: t(
+        `Write $\\operatorname{sech}^4 x = (1 - \\tanh^2 x)\\operatorname{sech}^2 x$ and let $u = \\tanh x$, so $u$ runs from $0$ to $${T.toLatex()}$. The integral is $${coefficientOf(k)}\\left[u - \\frac{u^3}{3}\\right]_0^{${T.toLatex()}} = ${answer.toLatex()}$.`,
+        `写成 $\\operatorname{sech}^4 x = (1 - \\tanh^2 x)\\operatorname{sech}^2 x$，令 $u = \\tanh x$，则 $u$ 从 $0$ 变到 $${T.toLatex()}$。积分等于 $${coefficientOf(k)}\\left[u - \\frac{u^3}{3}\\right]_0^{${T.toLatex()}} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const fourthPowerOfHyperbolic: KnowledgePointDef = {
+  id: "a-fourth-power-of-sinh-or-cosh",
+  title: t("A fourth power of sinh or cosh", "sinh 或 cosh 的四次幂"),
+  explanation: t(
+    "One double angle formula turns a fourth power into the square of a sum, and that square contains $\\cosh^2 2x$, which needs the formula a second time. Only then is every term a constant or a single hyperbolic cosine, ready to integrate. The sign of the middle term depends on whether the starting function was $\\sinh$ or $\\cosh$.",
+    "用一次二倍角公式，四次幂变成一个和的平方，而这个平方中含有 $\\cosh^2 2x$，需要再用一次公式。这样每一项才都是常数或单个双曲余弦，可以积分。中间一项的符号取决于开始时是 $\\sinh$ 还是 $\\cosh$。",
+  ),
+  generate(rng) {
+    const cosh = rng.pick([true, false]);
+    const k = nonzero(rng, 8);
+    const letter = rng.pick(["A", "B", "D"]);
+    const sign = cosh ? 1 : -1;
+    const fn = cosh ? "\\cosh" : "\\sinh";
+    const answer = letter === "A" ? Q.of(3 * k, 8) : letter === "B" ? Q.of(sign * k, 4) : Q.of(k, 32);
+    const wrong =
+      letter === "A"
+        ? [Q.of(k, 4), Q.of(3 * k, 4), Q.of(k, 8), Q.of(k, 2)]
+        : letter === "B"
+          ? [Q.of(-sign * k, 4), Q.of(sign * k, 2), Q.of(sign * k, 8), Q.of(k, 32)]
+          : [Q.of(k, 8), Q.of(k, 16), Q.of(k, 4), Q.of(3 * k, 8)];
+    const lowered = poly([Q.of(3, 8), ""], [Q.of(sign, 2), "\\cosh 2x"], [Q.of(1, 8), "\\cosh 4x"]);
+    const integrated = poly([Q.of(3, 8), "x"], [Q.of(sign, 4), "\\sinh 2x"], [Q.of(1, 32), "\\sinh 4x"]);
+    const scaled = k === 1 ? "So " : `Multiplying by $${k}$ gives `;
+    const scaledZh = k === 1 ? "所以 " : `乘以 $${k}$，得 `;
+    return numberProblem({
+      prompt: t(
+        `$\\int ${signedCoefficient(k)}${fn}^4 x\\,dx = Ax + B\\sinh 2x + D\\sinh 4x + C$. Find $${letter}$.`,
+        `$\\int ${signedCoefficient(k)}${fn}^4 x\\,dx = Ax + B\\sinh 2x + D\\sinh 4x + C$。求 $${letter}$。`,
+      ),
+      answer,
+      wrong,
+      solution: t(
+        `Applying the double angle formula twice gives $${fn}^4 x = ${lowered}$, whose antiderivative is $${integrated}$. ${scaled}$${letter} = ${answer.toLatex()}$.`,
+        `用两次二倍角公式，得 $${fn}^4 x = ${lowered}$，其原函数是 $${integrated}$。${scaledZh}$${letter} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const convenientConstantInV: KnowledgePointDef = {
+  id: "a-convenient-constant-in-v",
+  title: t("A convenient constant in v", "选取 v 中方便的常数"),
+  explanation: t(
+    "In integration by parts, $v$ can be any antiderivative of $dv$, so a constant may be added to it freely. For $\\int \\ln(ax + b)\\,dx$, the plain choice $v = x$ leaves a quotient that needs division. Choosing the constant so that $v$ is a multiple of $ax + b$ cancels the denominator of $du$, and the remaining integral is immediate.",
+    "分部积分时，$v$ 可以是 $dv$ 的任何一个原函数，所以可以随意加一个常数。对 $\\int \\ln(ax + b)\\,dx$，直接取 $v = x$ 会留下需要做除法的分式。选取常数使 $v$ 成为 $ax + b$ 的倍数，就能约去 $du$ 的分母，剩下的积分立刻可得。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 9);
+    const b = rng.int(1, 9);
+    const answer = Q.of(b, a);
+    const inner = poly([a, "x"], [b, ""]);
+    return numberProblem({
+      prompt: t(
+        `$\\int \\ln(${inner})\\,dx = (x + p)\\ln(${inner}) - x + C$. Find $p$.`,
+        `$\\int \\ln(${inner})\\,dx = (x + p)\\ln(${inner}) - x + C$。求 $p$。`,
+      ),
+      answer,
+      wrong: [Q.of(b), Q.of(a, b), answer.neg(), Q.of(b, 2 * a)],
+      solution: t(
+        `Take $u = \\ln(${inner})$, so $du = \\frac{${a}}{${inner}}\\,dx$, and $v = x + p$. Then $v\\,du$ is simply $dx$ exactly when $x + p = \\frac{${inner}}{${a}}$, which leaves $-x$ as the second term and gives $p = ${answer.toLatex()}$.`,
+        `取 $u = \\ln(${inner})$，则 $du = \\frac{${a}}{${inner}}\\,dx$，再取 $v = x + p$。当 $x + p = \\frac{${inner}}{${a}}$ 时，$v\\,du$ 正好是 $dx$，于是第二项是 $-x$，得 $p = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const reductionForPowerTimesExponential: KnowledgePointDef = {
+  id: "a-reduction-formula-for-a-power-times-an-exponential",
+  title: t("A reduction formula for a power times an exponential", "幂乘指数函数的递推公式"),
+  explanation: t(
+    "Repeating integration by parts on a high power is long, but one step can be done in general. Let $I_n = \\int_0^1 x^ne^x\\,dx$. Parts with $u = x^n$ gives a relation between $I_n$ and $I_{n-1}$, which lowers the power by one each time. Starting from $I_0$, the value climbs step by step to any power needed.",
+    "对高次幂反复分部积分很长，但可以一般地做一步。设 $I_n = \\int_0^1 x^ne^x\\,dx$。取 $u = x^n$ 分部积分，得到 $I_n$ 与 $I_{n-1}$ 的关系，每次把幂降低一次。从 $I_0$ 出发，一步一步就能算到需要的幂。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 6);
+    const k = rng.int(1, 5);
+    const askA = rng.pick([true, false]);
+    let A = 1;
+    let B = -1;
+    let previousA = 1;
+    let previousB = -1;
+    const chain: string[] = [];
+    for (let i = 1; i <= n; i++) {
+      previousA = A;
+      previousB = B;
+      A = 1 - i * previousA;
+      B = -i * previousB;
+      chain.push(`I_${i} = ${poly([A, "e"], [B, ""])}`);
+    }
+    const value = askA ? k * A : k * B;
+    const letter = askA ? "A" : "B";
+    const last = k === 1 ? "" : `, and multiplying by $${k}$ gives $${letter} = ${value}$`;
+    const lastZh = k === 1 ? "" : `，乘以 $${k}$ 得 $${letter} = ${value}$`;
+    return numberProblem({
+      prompt: t(
+        `$\\int_0^1 ${coefficientOf(k)}x^${n}e^x\\,dx = Ae + B$ for integers $A$ and $B$. Find $${letter}$.`,
+        `$\\int_0^1 ${coefficientOf(k)}x^${n}e^x\\,dx = Ae + B$，其中 $A$、$B$ 是整数。求 $${letter}$。`,
+      ),
+      answer: value,
+      form: "integer",
+      wrong: askA ? [-k * A, k * B, k * previousA] : [-k * B, k * A, k * previousB, (k * B) / n],
+      solution: t(
+        `Parts with $u = x^n$ and $dv = e^x\\,dx$ gives $I_n = e - nI_{n-1}$, where $I_0 = e - 1$. So $${chain.join(", \\; ")}$${last}.`,
+        `取 $u = x^n$，$dv = e^x\\,dx$ 分部积分，得 $I_n = e - nI_{n-1}$，其中 $I_0 = e - 1$。所以 $${chain.join(", \\; ")}$${lastZh}。`,
+      ),
+    });
+  },
+};
+
+const twoRepeatedFactors: KnowledgePointDef = {
+  id: "two-repeated-factors-by-differentiating",
+  title: t("Two repeated factors by differentiating", "用求导处理两个重因式"),
+  explanation: t(
+    "Substituting a root only gives the coefficient over the highest power of a factor. For the coefficient over the first power, multiply both sides by the squared factor, so that $B$ stands alone and $A$ is multiplied by the factor once. Differentiating then removes $B$, and setting $x$ to the root removes every other term, leaving $A$ by itself.",
+    "代入根只能得到因式最高次幂上的系数。要求一次幂上的系数，先两边同乘这个因式的平方，这时 $B$ 单独成项，而 $A$ 乘着因式的一次幂。求导消去 $B$，再把 $x$ 取为根，其余各项都变成零，只剩下 $A$。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 4);
+    const b = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4].filter((v) => v !== a));
+    const p = nonzero(rng, 5);
+    let q = nonzero(rng, 9);
+    const d = b - a;
+    while (q - p * a === 0 || p * d === 2 * (q - p * a)) q += 1;
+    const atRoot = q - p * a;
+    const first = Q.of(p, d * d);
+    const second = Q.of(2 * atRoot, d * d * d);
+    const answer = first.sub(second);
+    const f1 = poly([1, "x"], [a, ""]);
+    const f2 = poly([1, "x"], [b, ""]);
+    const numerator = poly([p, "x"], [q, ""]);
+    const form = `\\frac{A}{${f1}} + \\frac{B}{(${f1})^2} + \\frac{C}{${f2}} + \\frac{D}{(${f2})^2}`;
+    return numberProblem({
+      prompt: t(
+        `Write $\\frac{${numerator}}{(${f1})^2(${f2})^2}$ in the form $${form}$. Find $A$.`,
+        `把 $\\frac{${numerator}}{(${f1})^2(${f2})^2}$ 写成 $${form}$ 的形式，求 $A$。`,
+      ),
+      answer,
+      wrong: [first, first.add(second), Q.of(atRoot, d * d), answer.neg(), second],
+      solution: t(
+        `Multiplying by $(${f1})^2$ gives $\\frac{${numerator}}{(${f2})^2} = A(${f1}) + B + (${f1})^2(\\cdots)$. Differentiating and setting $x = ${-a}$ leaves $A$ on the right. On the left, $${f2}$ equals $${d}$ and the numerator equals $${atRoot}$ there, so $A = \\frac{${p}}{${inParens(d)}^2} - \\frac{2 \\cdot ${inParens(atRoot)}}{${inParens(d)}^3} = ${answer.toLatex()}$.`,
+        `两边同乘 $(${f1})^2$，得 $\\frac{${numerator}}{(${f2})^2} = A(${f1}) + B + (${f1})^2(\\cdots)$。求导并令 $x = ${-a}$，右边只剩 $A$。在左边，此时 $${f2}$ 等于 $${d}$，分子等于 $${atRoot}$，所以 $A = \\frac{${p}}{${inParens(d)}^2} - \\frac{2 \\cdot ${inParens(atRoot)}}{${inParens(d)}^3} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const xSquaredAsOneVariable: KnowledgePointDef = {
+  id: "two-quadratic-factors-with-x-squared-as-one-variable",
+  title: t("Two quadratic factors with x squared as one variable", "把 x 的平方看作一个变量的两个二次因式"),
+  explanation: t(
+    "When a fraction contains $x$ only through $x^2$, the general numerators $Bx + C$ are more than it needs, since the linear terms must all vanish. Treat $y = x^2$ as a single variable. The fraction becomes one with two distinct linear factors in $y$, and substituting the root of a factor gives its coefficient at once, without a system of equations.",
+    "分式只通过 $x^2$ 含有 $x$ 时，不需要一般的分子 $Bx + C$，因为一次项全都为零。把 $y = x^2$ 看作一个变量，分式就变成含 $y$ 的两个不同一次因式，代入因式的根就能立刻得到系数，不用解方程组。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 9);
+    const b = different(rng, 1, 9, a);
+    const p = nonzero(rng, 6);
+    let q = nonzero(rng, 12);
+    while (q - p * a === 0 || q - p * b === 0) q += 1;
+    const answer = Q.of(q - p * a, b - a);
+    const numerator = poly([p, "x^2"], [q, ""]);
+    const form = `\\frac{C}{x^2 + ${a}} + \\frac{D}{x^2 + ${b}}`;
+    return numberProblem({
+      prompt: t(
+        `Write $\\frac{${numerator}}{(x^2 + ${a})(x^2 + ${b})}$ in the form $${form}$. Find $C$.`,
+        `把 $\\frac{${numerator}}{(x^2 + ${a})(x^2 + ${b})}$ 写成 $${form}$ 的形式，求 $C$。`,
+      ),
+      answer,
+      wrong: [Q.of(q + p * a, b - a), answer.neg(), Q.of(q - p * b, a - b), Q.of(q, b - a)],
+      solution: t(
+        `With $y = x^2$, the fraction is $\\frac{${poly([p, "y"], [q, ""])}}{(y + ${a})(y + ${b})}$. Covering $y + ${a}$ and setting $y = ${-a}$ makes the numerator $${q - p * a}$ and the other factor $${b - a}$, so $C = ${answer.toLatex()}$.`,
+        `令 $y = x^2$，分式变成 $\\frac{${poly([p, "y"], [q, ""])}}{(y + ${a})(y + ${b})}$。盖住 $y + ${a}$，令 $y = ${-a}$，分子变成 $${q - p * a}$，另一个因式变成 $${b - a}$，所以 $C = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const twoQuadraticsOverHalfLine: KnowledgePointDef = {
+  id: "two-quadratic-factors-over-an-infinite-interval",
+  title: t("Two quadratic factors over an infinite interval", "无穷区间上的两个二次因式"),
+  explanation: t(
+    "A product of two quadratics splits into a difference of two simple fractions, each with a known arctangent antiderivative. Over an infinite interval, each arctangent reaches a right angle at the far end, so each fraction contributes a multiple of $\\pi$ that depends only on the constant in its quadratic. The fraction in front then scales the difference.",
+    "两个二次式的乘积可以拆成两个简单分式之差，每个分式的原函数都是已知的反正切。在无穷区间上，每个反正切在远端都趋于直角，所以每个分式贡献 $\\pi$ 的一个倍数，这个倍数只取决于它的二次式中的常数。再用前面的分数缩放这个差。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 5);
+    const b = rng.int(a + 1, 6);
+    const n = rng.int(1, 12);
+    const answer = Q.of(n, 2 * a * b * (a + b));
+    const front = fractionBefore(n, b * b - a * a);
+    return numberProblem({
+      prompt: t(
+        `$\\int_0^\\infty \\frac{${n}}{(x^2 + ${a * a})(x^2 + ${b * b})}\\,dx = c\\pi$. Find $c$.`,
+        `$\\int_0^\\infty \\frac{${n}}{(x^2 + ${a * a})(x^2 + ${b * b})}\\,dx = c\\pi$。求 $c$。`,
+      ),
+      answer,
+      wrong: [Q.of(n, a * b * (a + b)), Q.of(n, 2 * (b * b - a * a)), Q.of(n, 2 * a * b * (b - a)), Q.of(n, 2 * a * b), Q.of(n, a + b)],
+      solution: t(
+        `The fraction equals $${front}\\left(\\frac{1}{x^2 + ${a * a}} - \\frac{1}{x^2 + ${b * b}}\\right)$. Since $\\int_0^\\infty \\frac{dx}{x^2 + s^2} = \\frac{\\pi}{2s}$, the integral is $${front}\\left(\\frac{\\pi}{${2 * a}} - \\frac{\\pi}{${2 * b}}\\right)$, so $c = ${answer.toLatex()}$.`,
+        `分式等于 $${front}\\left(\\frac{1}{x^2 + ${a * a}} - \\frac{1}{x^2 + ${b * b}}\\right)$。因为 $\\int_0^\\infty \\frac{dx}{x^2 + s^2} = \\frac{\\pi}{2s}$，积分等于 $${front}\\left(\\frac{\\pi}{${2 * a}} - \\frac{\\pi}{${2 * b}}\\right)$，所以 $c = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const exponentialFractionImproper: KnowledgePointDef = {
+  id: "an-improper-integral-of-an-exponential-fraction",
+  title: t("An improper integral of an exponential fraction", "指数分式的反常积分"),
+  explanation: t(
+    "An integrand need not look like a decaying exponential to converge. Here the numerator is the derivative of the expression inside the square, up to a constant, so the substitution $u = e^{mx} + c$ reduces the integral to a power of $u$. The upper limit moves to infinity with $x$, while the lower limit is the value of $u$ at the start.",
+    "被积函数不一定要像衰减的指数函数才收敛。这里分子只差一个常数就是平方内式子的导数，所以换元 $u = e^{mx} + c$ 把积分化成 $u$ 的幂。上限随 $x$ 趋于无穷，下限是 $u$ 在起点的值。",
+  ),
+  generate(rng) {
+    const m = rng.int(1, 4);
+    const c = rng.int(1, 9);
+    const k = rng.int(1, 9);
+    const answer = Q.of(k, m * (1 + c));
+    const power = `e^{${coefficientOf(m)}x}`;
+    const lead = fractionBefore(k, m);
+    const value = `${lead === "" ? "" : `${lead} \\cdot `}\\frac{1}{${1 + c}}`;
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\int_0^\\infty \\frac{${coefficientOf(k)}${power}}{(${power} + ${c})^2}\\,dx$.`,
+        `计算 $\\int_0^\\infty \\frac{${coefficientOf(k)}${power}}{(${power} + ${c})^2}\\,dx$。`,
+      ),
+      answer,
+      wrong: [Q.of(k, 1 + c), Q.of(k, m * c), Q.of(k, m * (1 + c) * (1 + c)), Q.of(k * m, 1 + c), Q.of(k * (1 + c), m)],
+      solution: t(
+        `Let $u = ${power} + ${c}$, so $du = ${coefficientOf(m)}${power}\\,dx$; $u$ runs from $${1 + c}$ to $\\infty$. The integral is $${lead}\\int_{${1 + c}}^\\infty u^{-2}\\,du = ${value} = ${answer.toLatex()}$, because $u^{-1} \\to 0$.`,
+        `令 $u = ${power} + ${c}$，则 $du = ${coefficientOf(m)}${power}\\,dx$，$u$ 从 $${1 + c}$ 变到 $\\infty$。因为 $u^{-1} \\to 0$，积分等于 $${lead}\\int_{${1 + c}}^\\infty u^{-2}\\,du = ${value} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const realLineCompletedSquare: KnowledgePointDef = {
+  id: "the-real-line-after-completing-the-square",
+  title: t("The real line after completing the square", "配方后在整条实轴上积分"),
+  explanation: t(
+    "Over the whole real line, shifting the variable does not change the limits. So after completing the square, the center of the quadratic plays no part in the value, and only the constant under the square matters. The arctangent then runs from one horizontal asymptote to the other, a total change of $\\pi$, scaled by the coefficient in front.",
+    "在整条实轴上，平移变量不改变积分限。所以配方之后，二次式的中心对积分值没有影响，只有平方外的常数起作用。此时反正切从一条水平渐近线变到另一条，总变化是 $\\pi$，再乘以前面的系数。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 9);
+    const a = rng.int(2, 6);
+    const p = nonzero(rng, 6);
+    const answer = Q.of(k, a);
+    const denominator = poly([1, "x^2"], [-2 * p, "x"], [p * p + a * a, ""]);
+    const lead = fractionBefore(k, a);
+    return numberProblem({
+      prompt: t(
+        `$\\int_{-\\infty}^\\infty \\frac{${k}}{${denominator}}\\,dx = c\\pi$. Find $c$.`,
+        `$\\int_{-\\infty}^\\infty \\frac{${k}}{${denominator}}\\,dx = c\\pi$。求 $c$。`,
+      ),
+      answer,
+      wrong: [Q.of(k, 2 * a), Q.of(k), Q.of(k, a * a), Q.of(2 * k, a), Q.of(k, 4 * a)],
+      solution: t(
+        `The denominator is $(${poly([1, "x"], [-p, ""])})^2 + ${a * a}$. With $u = ${poly([1, "x"], [-p, ""])}$, the limits stay $\\pm\\infty$, and the antiderivative $${lead}\\arctan\\frac{u}{${a}}$ changes by $${lead}\\left(\\frac{\\pi}{2} + \\frac{\\pi}{2}\\right)$, so $c = ${answer.toLatex()}$.`,
+        `分母等于 $(${poly([1, "x"], [-p, ""])})^2 + ${a * a}$。令 $u = ${poly([1, "x"], [-p, ""])}$，积分限仍是 $\\pm\\infty$，原函数 $${lead}\\arctan\\frac{u}{${a}}$ 的变化量是 $${lead}\\left(\\frac{\\pi}{2} + \\frac{\\pi}{2}\\right)$，所以 $c = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const absoluteValueUnderRoot: KnowledgePointDef = {
+  id: "an-absolute-value-under-a-root-at-an-interior-point",
+  title: t("An absolute value under a root at an interior point", "内点处根号下的绝对值"),
+  explanation: t(
+    "An integrand with $|x - c|$ under a root blows up at $x = c$, so an interval containing $c$ must be split there into two improper integrals. On each side the absolute value opens differently, which is why the two pieces do not cancel: both contribute positive area. Each piece converges because the power of the distance to $c$ is greater than $-1$.",
+    "根号下含 $|x - c|$ 的被积函数在 $x = c$ 处趋于无穷，所以包含 $c$ 的区间必须在那里分成两个反常积分。两侧绝对值的去法不同，所以两部分不会抵消：它们都贡献正的面积。因为到 $c$ 的距离的幂大于 $-1$，每一部分都收敛。",
+  ),
+  generate(rng) {
+    const c = nonzero(rng, 5);
+    const a = rng.int(1, 5);
+    const b = different(rng, 1, 5, a);
+    const k = rng.int(1, 6);
+    const answer = 2 * k * (a + b);
+    const inner = poly([1, "x"], [-c, ""]);
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\int_{${c - a * a}}^{${c + b * b}} \\frac{${k}}{\\sqrt{|${inner}|}}\\,dx$.`,
+        `计算 $\\int_{${c - a * a}}^{${c + b * b}} \\frac{${k}}{\\sqrt{|${inner}|}}\\,dx$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [2 * k * Math.abs(b - a), k * (a + b), 2 * k * (a * a + b * b), 2 * k * b],
+      solution: t(
+        `The integrand is unbounded at $x = ${c}$, so split there. With $u = |${inner}|$, the left piece has $u$ from $0$ to $${a * a}$ and the right piece has $u$ from $0$ to $${b * b}$. Since $\\int_0^{s^2} u^{-1/2}\\,du = 2s$, the total is $${2 * k * a} + ${2 * k * b} = ${answer}$.`,
+        `被积函数在 $x = ${c}$ 处无界，所以在那里分开。令 $u = |${inner}|$，左边一段 $u$ 从 $0$ 到 $${a * a}$，右边一段 $u$ 从 $0$ 到 $${b * b}$。因为 $\\int_0^{s^2} u^{-1/2}\\,du = 2s$，总和是 $${2 * k * a} + ${2 * k * b} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const lengthOfCatenary: KnowledgePointDef = {
+  id: "the-length-of-a-catenary",
+  title: t("The length of a catenary", "悬链线的长度"),
+  explanation: t(
+    "A hanging chain follows the curve $y = a\\cosh\\frac{x}{a}$, and its arc length has a simple form. The derivative is a hyperbolic sine, and the identity $1 + \\sinh^2 z = \\cosh^2 z$ removes the root in the length formula. The integrand is then a hyperbolic cosine, and a logarithm in the limit is evaluated through the exponential definition of $\\sinh$.",
+    "悬挂的链条沿曲线 $y = a\\cosh\\frac{x}{a}$ 分布，它的弧长形式很简单。导数是双曲正弦，恒等式 $1 + \\sinh^2 z = \\cosh^2 z$ 消去弧长公式中的根号。被积函数于是成为双曲余弦，积分限中的对数则用 $\\sinh$ 的指数定义求值。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 9);
+    const m = rng.int(2, 6);
+    const answer = Q.of(a * (m * m - 1), 2 * m);
+    return numberProblem({
+      prompt: t(
+        `Find the arc length of the catenary $y = ${a}\\cosh\\frac{x}{${a}}$ from $x = 0$ to $x = ${a}\\ln ${m}$.`,
+        `求悬链线 $y = ${a}\\cosh\\frac{x}{${a}}$ 从 $x = 0$ 到 $x = ${a}\\ln ${m}$ 的弧长。`,
+      ),
+      answer,
+      wrong: [Q.of(a * (m * m + 1), 2 * m), Q.of(m * m - 1, 2 * m), Q.of(a * (m * m - 1), m), Q.of(a * (m - 1))],
+      solution: t(
+        `$y' = \\sinh\\frac{x}{${a}}$, so $\\sqrt{1 + y'^2} = \\cosh\\frac{x}{${a}}$. The antiderivative $${a}\\sinh\\frac{x}{${a}}$ is $0$ at $x = 0$, so the length is its value at the upper limit, $${a}\\sinh(\\ln ${m}) = ${a} \\cdot \\frac{1}{2}\\left(${m} - \\frac{1}{${m}}\\right) = ${answer.toLatex()}$.`,
+        `$y' = \\sinh\\frac{x}{${a}}$，所以 $\\sqrt{1 + y'^2} = \\cosh\\frac{x}{${a}}$。原函数 $${a}\\sinh\\frac{x}{${a}}$ 在 $x = 0$ 处为 $0$，所以弧长是它在上限处的值，即 $${a}\\sinh(\\ln ${m}) = ${a} \\cdot \\frac{1}{2}\\left(${m} - \\frac{1}{${m}}\\right) = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const wedgeFromCylinder: KnowledgePointDef = {
+  id: "the-wedge-cut-from-a-cylinder",
+  title: t("The wedge cut from a cylinder", "从圆柱上切下的楔形"),
+  explanation: t(
+    "A plane through a diameter of a cylinder's base cuts off a wedge. Sliced perpendicular to that diameter, the wedge shows right triangles whose legs are both proportional to the distance from the diameter to the circle. So the area of a slice is a multiple of $r^2 - x^2$, and the volume is the integral of this across the whole diameter.",
+    "过圆柱底面直径的平面切下一个楔形。垂直于这条直径切开，截面是直角三角形，它的两条直角边都与直径到圆周的距离成正比。所以截面积是 $r^2 - x^2$ 的倍数，体积就是它在整条直径上的积分。",
+  ),
+  generate(rng) {
+    const r = rng.int(1, 9);
+    const m = rng.int(2, 6);
+    const answer = Q.of(2 * m * r ** 3, 3);
+    const half = fractionBefore(m, 2);
+    return numberProblem({
+      prompt: t(
+        `The base of a solid is the half disc $x^2 + y^2 \\le ${r * r}$, $y \\ge 0$. Cross sections perpendicular to the $x$-axis are right triangles with one leg in the base and the other leg ${m} times as long. Find the volume.`,
+        `一个立体的底面是半圆盘 $x^2 + y^2 \\le ${r * r}$，$y \\ge 0$。垂直于 $x$ 轴的截面是直角三角形，一条直角边在底面内，另一条是它的 ${m} 倍。求体积。`,
+      ),
+      answer,
+      wrong: [Q.of(4 * m * r ** 3, 3), Q.of(m * r ** 3, 3), Q.of(2 * m * r * r, 3), Q.of(m * r ** 3)],
+      solution: t(
+        `The leg in the base is $y = \\sqrt{${r * r} - x^2}$, so the area of a slice is $\\frac{1}{2} \\cdot y \\cdot ${m}y = ${half}(${r * r} - x^2)$. Integrating from $x = -${r}$ to $x = ${r}$ gives $${half}\\left(\\frac{4 \\cdot ${r ** 3}}{3}\\right) = ${answer.toLatex()}$.`,
+        `底面内的直角边是 $y = \\sqrt{${r * r} - x^2}$，所以截面积是 $\\frac{1}{2} \\cdot y \\cdot ${m}y = ${half}(${r * r} - x^2)$。从 $x = -${r}$ 积到 $x = ${r}$，得 $${half}\\left(\\frac{4 \\cdot ${r ** 3}}{3}\\right) = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const napkinRing: KnowledgePointDef = {
+  id: "the-volume-of-a-napkin-ring",
+  title: t("The volume of a napkin ring", "餐巾环的体积"),
+  explanation: t(
+    "Drilling a cylindrical hole through the center of a sphere leaves a ring. With the hole along an axis, each slice perpendicular to it is a washer whose outer radius comes from the sphere and whose inner radius is the hole. The slices stop where the two radii meet, and in the difference of squares the radius of the sphere drops out, leaving only that height.",
+    "沿球心钻一个圆柱形的孔，剩下的是一个环。让孔沿坐标轴放置，垂直于轴的每个截面都是垫圈，外半径来自球面，内半径就是孔的半径。截面在两个半径相等处终止；在平方差中，球的半径消去了，只留下这个高度。",
+  ),
+  generate(rng) {
+    const { a, b, h } = pythagorean(rng);
+    const s = rng.int(1, 2);
+    const A = s * a;
+    const B = s * b;
+    const R = s * h;
+    const answer = Q.of(4 * B ** 3, 3);
+    return numberProblem({
+      prompt: t(
+        `A cylindrical hole of radius $${A}$ is drilled through the center of a sphere of radius $${R}$. The volume of the solid that remains is $c\\pi$. Find $c$.`,
+        `沿半径为 $${R}$ 的球的球心钻一个半径为 $${A}$ 的圆柱形孔。剩下的立体的体积是 $c\\pi$。求 $c$。`,
+      ),
+      answer,
+      wrong: [Q.of(4 * R ** 3, 3), Q.of(4 * (R ** 3 - A ** 3), 3), Q.of(2 * B ** 3, 3), Q.of(4 * A ** 3, 3)],
+      solution: t(
+        `Take the hole along the $y$-axis. The washer at height $y$ has outer radius squared $${R * R} - y^2$ and inner radius squared $${A * A}$, so its area is $\\pi(${B * B} - y^2)$. It exists for $|y| \\le ${B}$, and integrating gives $\\frac{4}{3} \\cdot ${B ** 3}\\pi$, so $c = ${answer.toLatex()}$.`,
+        `让孔沿 $y$ 轴。高度 $y$ 处的垫圈，外半径的平方是 $${R * R} - y^2$，内半径的平方是 $${A * A}$，所以面积是 $\\pi(${B * B} - y^2)$。它存在于 $|y| \\le ${B}$，积分得 $\\frac{4}{3} \\cdot ${B ** 3}\\pi$，所以 $c = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const squaresOverEllipse: KnowledgePointDef = {
+  id: "squares-over-an-elliptical-base",
+  title: t("Squares over an elliptical base", "椭圆底面上的正方形截面"),
+  explanation: t(
+    "On a base bounded by a closed curve, the side of a cross section is the full chord across the region, which is twice the height of the upper half when the base is symmetric. Solving the equation of the ellipse for $y^2$ gives the area of a square directly, with no root left to handle, as a quadratic in $x$ to integrate.",
+    "底面由闭曲线围成时，截面的边长是穿过区域的整条弦；底面对称时，它等于上半部分高度的两倍。从椭圆方程解出 $y^2$，就直接得到正方形的面积，不必处理根号，它是 $x$ 的二次式，可以直接积分。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 7);
+    const b = rng.int(2, 7);
+    const answer = Q.of(16 * a * b * b, 3);
+    return numberProblem({
+      prompt: t(
+        `The base of a solid is the region inside the ellipse $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1$. Cross sections perpendicular to the $x$-axis are squares with one side in the base. Find the volume.`,
+        `一个立体的底面是椭圆 $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1$ 内部的区域。垂直于 $x$ 轴的截面是正方形，一条边在底面内。求体积。`,
+      ),
+      answer,
+      wrong: [Q.of(16 * a * a * b, 3), Q.of(8 * a * b * b, 3), Q.of(4 * a * b * b, 3), Q.of(32 * a * b * b, 3)],
+      solution: t(
+        `The side is the chord $2y$, so the area is $4y^2 = ${4 * b * b}\\left(1 - \\frac{x^2}{${a * a}}\\right)$. Integrating from $x = -${a}$ to $x = ${a}$ gives $${4 * b * b}\\left(${2 * a} - ${Q.of(2 * a, 3).toLatex()}\\right) = ${answer.toLatex()}$.`,
+        `边长是弦长 $2y$，所以面积是 $4y^2 = ${4 * b * b}\\left(1 - \\frac{x^2}{${a * a}}\\right)$。从 $x = -${a}$ 积到 $x = ${a}$，得 $${4 * b * b}\\left(${2 * a} - ${Q.of(2 * a, 3).toLatex()}\\right) = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const parametricConcavityChange: KnowledgePointDef = {
+  id: "where-a-parametric-curve-changes-concavity",
+  title: t("Where a parametric curve changes concavity", "参数曲线改变凹凸性的位置"),
+  explanation: t(
+    "For a parametric curve, $\\frac{d^{2}y}{dx^{2}}$ is the $t$-derivative of $\\frac{dy}{dx}$ divided by $\\frac{dx}{dt}$. Concavity changes where this quotient changes sign. Keep the result as a single fraction in $t$ rather than evaluating it at a point: the sign of the denominator is often fixed on the given range of $t$, so only the zeros of the numerator matter.",
+    "对参数曲线，$\\frac{d^{2}y}{dx^{2}}$ 等于 $\\frac{dy}{dx}$ 对 $t$ 的导数除以 $\\frac{dx}{dt}$。这个商改变符号的地方，就是凹凸性改变的地方。把结果保留为 $t$ 的一个分式，而不是代入某一点：分母的符号在给定的 $t$ 范围内常常是固定的，所以只需看分子的零点。",
+  ),
+  generate(rng) {
+    const m = rng.int(1, 6);
+    const alpha = rng.int(1, 4);
+    const beta = nonzero(rng, 3);
+    const y = poly([beta, "t^3"], [3 * beta * m * m, "t"]);
+    const numerator = 6 * alpha * beta;
+    return numberProblem({
+      prompt: t(
+        `A curve is given by $x = ${coefficientOf(alpha)}t^2, \\; y = ${y}$ for $t > 0$. At which value of $t$ does $\\frac{d^{2}y}{dx^{2}}$ change sign?`,
+        `曲线由 $x = ${coefficientOf(alpha)}t^2, \\; y = ${y}$（$t > 0$）给出。$\\frac{d^{2}y}{dx^{2}}$ 在 $t$ 取何值时改变符号？`,
+      ),
+      answer: m,
+      form: "integer",
+      wrong: [m * m, 3 * m * m, m + 1, 6 * m * m],
+      solution: t(
+        `$\\frac{dy}{dx} = \\frac{${poly([3 * beta, "t^2"], [3 * beta * m * m, ""])}}{${2 * alpha}t}$. Differentiating in $t$ and dividing by $${2 * alpha}t$ gives $\\frac{d^{2}y}{dx^{2}} = \\frac{${numerator}(t^2 - ${m * m})}{${8 * alpha ** 3}t^3}$. For $t > 0$ the denominator is positive, so the sign changes only at $t = ${m}$.`,
+        `$\\frac{dy}{dx} = \\frac{${poly([3 * beta, "t^2"], [3 * beta * m * m, ""])}}{${2 * alpha}t}$。对 $t$ 求导再除以 $${2 * alpha}t$，得 $\\frac{d^{2}y}{dx^{2}} = \\frac{${numerator}(t^2 - ${m * m})}{${8 * alpha ** 3}t^3}$。$t > 0$ 时分母为正，所以只在 $t = ${m}$ 处改变符号。`,
+      ),
+    });
+  },
+};
+
+const whenTwoPointsMeet: KnowledgePointDef = {
+  id: "when-two-moving-points-meet",
+  title: t("When two moving points meet", "两个运动的点何时相遇"),
+  explanation: t(
+    "Two vector-valued functions describe points at the same place only when every component agrees at the same value of $t$. Equal second components alone are not enough, since the points may then be separated horizontally. So solve the simplest component equation first, then test the candidates in the other component, and keep only a time that satisfies both.",
+    "两个向量值函数表示的点在同一位置，当且仅当在同一个 $t$ 处所有分量都相等。只有第二个分量相等还不够，因为这时两点可能在水平方向上分开。所以先解最简单的分量方程，再把解代入另一个分量检验，只保留同时满足两者的时刻。",
+  ),
+  generate(rng) {
+    const T = rng.int(1, 6);
+    const alpha = nonzero(rng, 5);
+    const beta = nonzero(rng, 5);
+    const m = rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== 2 * T));
+    const r1 = `\\langle ${poly([1, "t"], [alpha, ""])}, ${poly([1, "t^2"], [beta, ""])} \\rangle`;
+    const r2 = `\\langle ${poly([2, "t"], [alpha - T, ""])}, ${poly([m, "t"], [beta + T * T - m * T, ""])} \\rangle`;
+    return numberProblem({
+      prompt: t(
+        `Two points move along $\\mathbf{r}_1(t) = ${r1}$ and $\\mathbf{r}_2(t) = ${r2}$. At which time $t > 0$ are they at the same place?`,
+        `两个点分别沿 $\\mathbf{r}_1(t) = ${r1}$ 和 $\\mathbf{r}_2(t) = ${r2}$ 运动。在哪个时刻 $t > 0$ 它们位于同一位置？`,
+      ),
+      answer: T,
+      form: "integer",
+      wrong: [m - T, m, T * T, T + 1, T + 3],
+      solution: t(
+        `The first components agree only when $${poly([1, "t"], [alpha, ""])} = ${poly([2, "t"], [alpha - T, ""])}$, that is at $t = ${T}$. There both second components equal $${T * T + beta}$, so the points meet. The second components also agree at $t = ${m - T}$, but the first components differ there.`,
+        `第一个分量只在 $${poly([1, "t"], [alpha, ""])} = ${poly([2, "t"], [alpha - T, ""])}$ 时相等，即 $t = ${T}$。此时两个第二分量都等于 $${T * T + beta}$，所以两点相遇。第二分量在 $t = ${m - T}$ 处也相等，但那里第一分量不同。`,
+      ),
+    });
+  },
+};
+
+const lengthOfLogarithmicSpiral: KnowledgePointDef = {
+  id: "the-length-of-a-logarithmic-spiral",
+  title: t("The length of a logarithmic spiral", "对数螺线的长度"),
+  explanation: t(
+    "On the spiral $r = e^{k\\theta}$, the derivative of $r$ is $k$ times $r$, so $r^2 + \\left(\\frac{dr}{d\\theta}\\right)^2$ has $r^2$ as a factor and the root in the length formula simplifies. Changing variable from $\\theta$ to $r$ then shows that length is proportional to the change in distance from the pole, so the angle never needs to be found.",
+    "在螺线 $r = e^{k\\theta}$ 上，$r$ 的导数是 $r$ 的 $k$ 倍，所以 $r^2 + \\left(\\frac{dr}{d\\theta}\\right)^2$ 含有因子 $r^2$，弧长公式中的根号得以化简。再把变量从 $\\theta$ 换成 $r$，可以看到长度与到极点距离的变化量成正比，所以根本不需要求出角度。",
+  ),
+  generate(rng) {
+    const { a, b, h } = pythagorean(rng);
+    const p = rng.int(1, 4);
+    const q = rng.int(p + 1, 9);
+    const k = Q.of(a, b);
+    const factor = Q.of(h, a);
+    const answer = factor.mul(Q.of(q - p));
+    return numberProblem({
+      prompt: t(
+        `Find the length of the spiral $r = e^{${k.toLatex()}\\theta}$ from the point where $r = ${p}$ to the point where $r = ${q}$.`,
+        `求螺线 $r = e^{${k.toLatex()}\\theta}$ 从 $r = ${p}$ 的点到 $r = ${q}$ 的点的长度。`,
+      ),
+      answer,
+      wrong: [Q.of(h * (q - p), b), Q.of(a * (q - p), h), Q.of(q - p), Q.of(h * (q * q - p * p), 2 * a)],
+      solution: t(
+        `Here $k = ${k.toLatex()}$ and $\\frac{dr}{d\\theta} = kr$, so $ds = r\\sqrt{1 + k^2}\\,d\\theta$ with $\\sqrt{1 + k^2} = ${Q.of(h, b).toLatex()}$. Since $dr = kr\\,d\\theta$, this is $ds = ${factor.toLatex()}\\,dr$. So the length is $${factor.toLatex()} \\cdot ${q - p} = ${answer.toLatex()}$.`,
+        `这里 $k = ${k.toLatex()}$，$\\frac{dr}{d\\theta} = kr$，所以 $ds = r\\sqrt{1 + k^2}\\,d\\theta$，其中 $\\sqrt{1 + k^2} = ${Q.of(h, b).toLatex()}$。因为 $dr = kr\\,d\\theta$，所以 $ds = ${factor.toLatex()}\\,dr$。于是长度是 $${factor.toLatex()} \\cdot ${q - p} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const tailFromPartialSum: KnowledgePointDef = {
+  id: "a-tail-sum-from-the-partial-sum-formula",
+  title: t("A tail sum from the partial sum formula", "由部分和公式求尾部和"),
+  explanation: t(
+    "A formula for the partial sums contains everything about a series. Its limit as $n$ grows is the sum of the whole series. The partial sum at a given index is the total of the terms up to that index. So the sum from a later index onward is the limit minus the partial sum that stops just before that index, with no individual terms needed.",
+    "部分和公式包含了级数的全部信息。它在 $n$ 增大时的极限就是整个级数的和。某一项处的部分和就是到那一项为止各项的总和。所以从后面某一项开始的和，等于极限减去恰好停在那一项之前的部分和，不需要逐项计算。",
+  ),
+  generate(rng) {
+    const p = nonzero(rng, 9);
+    const q = rng.int(1, 6);
+    const m = rng.int(3, 8);
+    const removed = Q.of(p * (m - 1), m - 1 + q);
+    const answer = Q.of(p).sub(removed);
+    const shown = removed.sign() < 0 ? `\\left(${removed.toLatex()}\\right)` : removed.toLatex();
+    return numberProblem({
+      prompt: t(
+        `The $n$th partial sum of $\\sum_{n=1}^{\\infty} a_n$ is $S_n = \\frac{${signedCoefficient(p)}n}{n + ${q}}$. Find $\\sum_{n=${m}}^{\\infty} a_n$.`,
+        `$\\sum_{n=1}^{\\infty} a_n$ 的第 $n$ 个部分和是 $S_n = \\frac{${signedCoefficient(p)}n}{n + ${q}}$。求 $\\sum_{n=${m}}^{\\infty} a_n$。`,
+      ),
+      answer,
+      wrong: [Q.of(p), removed, Q.of(p * q, m + q), Q.of(p * m, m + q)],
+      solution: t(
+        `The whole series has sum $\\lim_{n \\to \\infty} S_n = ${p}$. The terms before $n = ${m}$ add up to $S_{${m - 1}} = ${removed.toLatex()}$. So the sum asked for is $${p} - ${shown} = ${answer.toLatex()}$.`,
+        `整个级数的和是 $\\lim_{n \\to \\infty} S_n = ${p}$。$n = ${m}$ 之前的各项之和是 $S_{${m - 1}} = ${removed.toLatex()}$。所以所求的和是 $${p} - ${shown} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const widthOfIntegralBounds: KnowledgePointDef = {
+  id: "the-width-of-the-integral-test-bounds",
+  title: t("The width of the integral test bounds", "积分判别法上下界的宽度"),
+  explanation: t(
+    "The remainder after $N$ terms lies between two improper integrals: one starting at $N + 1$ and one starting at $N$. Adding $S_N$ traps the true sum between a lower and an upper bound. The partial sum is common to both, so the distance between the bounds depends only on the two integrals, and it can be found without computing $S_N$.",
+    "前 $N$ 项之后的余项介于两个反常积分之间：一个从 $N + 1$ 开始，另一个从 $N$ 开始。加上 $S_N$，就把真正的和夹在下界和上界之间。两个界都含部分和，所以它们之间的距离只取决于这两个积分，不必计算 $S_N$ 就能求出。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 9);
+    const p = rng.int(2, 3);
+    const N = rng.int(3, 12);
+    const tail = (start: number) => Q.of(k, (p - 1) * start ** (p - 1));
+    const answer = tail(N).sub(tail(N + 1));
+    return numberProblem({
+      prompt: t(
+        `For $S = \\sum_{n=1}^{\\infty} \\frac{${k}}{n^${p}}$, the integral test traps $S$ between a lower and an upper bound that both use $S_{${N}}$. How far apart are the two bounds?`,
+        `对 $S = \\sum_{n=1}^{\\infty} \\frac{${k}}{n^${p}}$，积分判别法把 $S$ 夹在都用到 $S_{${N}}$ 的下界和上界之间。这两个界相距多远？`,
+      ),
+      answer,
+      wrong: [tail(N), tail(N + 1), tail(N).add(tail(N + 1)), Q.of(k, N ** p)],
+      solution: t(
+        `The bounds are $S_{${N}} + \\int_{${N + 1}}^\\infty f$ and $S_{${N}} + \\int_{${N}}^\\infty f$, where $f(x) = \\frac{${k}}{x^${p}}$. These integrals are $${tail(N + 1).toLatex()}$ and $${tail(N).toLatex()}$. The partial sum cancels, so the distance is $${tail(N).toLatex()} - ${tail(N + 1).toLatex()} = ${answer.toLatex()}$.`,
+        `两个界是 $S_{${N}} + \\int_{${N + 1}}^\\infty f$ 和 $S_{${N}} + \\int_{${N}}^\\infty f$，其中 $f(x) = \\frac{${k}}{x^${p}}$。这两个积分分别是 $${tail(N + 1).toLatex()}$ 和 $${tail(N).toLatex()}$。部分和相互抵消，所以距离是 $${tail(N).toLatex()} - ${tail(N + 1).toLatex()} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const degreeForAccuracy: KnowledgePointDef = {
+  id: "the-degree-needed-for-an-accuracy",
+  title: t("The degree needed for an accuracy", "达到给定精度所需的次数"),
+  explanation: t(
+    "The Lagrange bound can be read backwards. Every derivative of sine and cosine is at most $1$ in size, so the error of the polynomial of degree $n$ is bounded by a power of $|x|$ over a factorial, both with index $n + 1$. The factorial eventually wins, so try successive values of $n$ until the bound falls below the required accuracy.",
+    "拉格朗日界可以反过来用。正弦和余弦的各阶导数的绝对值都不超过 $1$，所以 $n$ 次多项式的误差不超过 $|x|$ 的幂除以阶乘，两者的指标都是 $n + 1$。阶乘最终占优，所以逐个试 $n$，直到这个界小于所要求的精度。",
+  ),
+  generate(rng) {
+    const sine = rng.pick([true, false]);
+    const x = rng.pick([Q.of(1, 2), Q.of(1), Q.of(3, 2), Q.of(2), Q.of(3)]);
+    const power = rng.int(1, 4);
+    const accuracy = Q.of(1, 10 ** power);
+    const bound = (n: number) => x.pow(n + 1).div(Q.of(factorial(n + 1)));
+    let n = 0;
+    while (bound(n).cmp(accuracy) >= 0) n += 1;
+    const fn = sine ? "\\sin" : "\\cos";
+    return numberProblem({
+      prompt: t(
+        `Find the smallest degree $n$ for which the Lagrange error bound guarantees that the Taylor polynomial of degree $n$ for $${fn} x$ centered at $0$ has error less than $${accuracy.toLatex()}$ at $x = ${x.toLatex()}$.`,
+        `求最小的次数 $n$，使拉格朗日误差界能保证 $${fn} x$ 在 $0$ 处的 $n$ 次泰勒多项式在 $x = ${x.toLatex()}$ 处的误差小于 $${accuracy.toLatex()}$。`,
+      ),
+      answer: n,
+      form: "integer",
+      wrong: [n + 1, n - 1, n + 2, n + 3],
+      solution: t(
+        `Every derivative of $${fn} x$ is at most $1$ in size, so the error is at most $\\frac{|x|^{n+1}}{(n+1)!}$. At degree $${n - 1}$ this is $${bound(n - 1).toLatex()}$, which is not below the accuracy. At degree $${n}$ it is $${bound(n).toLatex()}$, which is. So $n = ${n}$.`,
+        `$${fn} x$ 的各阶导数的绝对值都不超过 $1$，所以误差不超过 $\\frac{|x|^{n+1}}{(n+1)!}$。次数为 $${n - 1}$ 时它等于 $${bound(n - 1).toLatex()}$，没有小于所要求的精度。次数为 $${n}$ 时它等于 $${bound(n).toLatex()}$，小于精度。所以 $n = ${n}$。`,
+      ),
+    });
+  },
+};
+
+const sumWithNSquared: KnowledgePointDef = {
+  id: "a-sum-with-n-squared-by-differentiating-twice",
+  title: t("A sum with n squared by differentiating twice", "两次求导求含 n 平方的和"),
+  explanation: t(
+    "Differentiating a power series and multiplying by $x$ puts one factor of $n$ into each term. Doing this to the geometric series gives the sum of $nx^n$, and doing it once more gives the sum of $n^2x^n$. Each round is a quotient rule on a closed form, and the result holds inside the interval of convergence, so a number can then be substituted.",
+    "对幂级数求导再乘以 $x$，每一项就多一个因子 $n$。对等比级数这样做一次，得到 $nx^n$ 的和；再做一次，得到 $n^2x^n$ 的和。每一轮都是对闭式用商法则，结果在收敛区间内成立，所以可以代入具体的数。",
+  ),
+  generate(rng) {
+    const b = rng.int(2, 9);
+    const k = rng.int(1, 6);
+    const alternating = rng.pick([true, false]);
+    const x = Q.of(alternating ? -1 : 1, b);
+    const one = Q.of(1);
+    const sign = Q.of(alternating ? -k : k);
+    const closed = x.mul(one.add(x)).div(one.sub(x).pow(3));
+    const answer = sign.mul(closed);
+    const signPart = alternating ? "(-1)^{n+1} " : "";
+    const note = alternating ? ", and $(-1)^{n+1} = -(-1)^n$ puts a minus sign in front" : "";
+    const factor = k === 1 ? "" : `, multiplied by $${k}$`;
+    const factorZh = k === 1 ? "" : `，再乘以 $${k}$`;
+    const noteZh = alternating ? "，而 $(-1)^{n+1} = -(-1)^n$ 使前面多一个负号" : "";
+    return numberProblem({
+      prompt: t(
+        `Find the sum of $\\sum_{n=1}^{\\infty} \\frac{${signPart}${coefficientOf(k)}n^2}{${b}^n}$.`,
+        `求 $\\sum_{n=1}^{\\infty} \\frac{${signPart}${coefficientOf(k)}n^2}{${b}^n}$ 的和。`,
+      ),
+      answer,
+      wrong: [
+        sign.mul(x).div(one.sub(x).pow(2)),
+        sign.mul(one.add(x)).div(one.sub(x).pow(3)),
+        sign.mul(x).div(one.sub(x).pow(3)),
+        answer.neg(),
+      ],
+      solution: t(
+        `From $\\sum_{n=1}^{\\infty} nx^n = \\frac{x}{(1 - x)^2}$, differentiating and multiplying by $x$ gives $\\sum_{n=1}^{\\infty} n^2x^n = \\frac{x(1 + x)}{(1 - x)^3}$. Here $x = ${x.toLatex()}$${note}${factor}. The sum is $${answer.toLatex()}$.`,
+        `由 $\\sum_{n=1}^{\\infty} nx^n = \\frac{x}{(1 - x)^2}$，求导再乘以 $x$，得 $\\sum_{n=1}^{\\infty} n^2x^n = \\frac{x(1 + x)}{(1 - x)^3}$。这里 $x = ${x.toLatex()}$${noteZh}${factorZh}。和是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const errorOfSeriesIntegral: KnowledgePointDef = {
+  id: "the-error-of-a-series-estimate-of-an-integral",
+  title: t("The error of a series estimate of an integral", "用级数估计积分的误差"),
+  explanation: t(
+    "Integrating a Maclaurin series term by term gives a numerical series for the integral. When that series alternates and its terms shrink, the error of stopping early is at most the size of the first term left out. So the accuracy of the estimate can be read from one more term of the series, without knowing the exact value of the integral.",
+    "把麦克劳林级数逐项积分，就得到积分值的数项级数。当这个级数交错且各项递减时，提前停止的误差不超过第一个被舍去项的大小。所以只要多算一项，就能知道估计的精度，不必知道积分的精确值。",
+  ),
+  generate(rng) {
+    const [c, a] = rng.pick([
+      [1, Q.of(1, 2)],
+      [2, Q.of(1, 2)],
+      [3, Q.of(1, 2)],
+      [1, Q.of(1, 3)],
+      [2, Q.of(1, 3)],
+      [3, Q.of(1, 3)],
+      [4, Q.of(1, 3)],
+      [5, Q.of(1, 3)],
+      [1, Q.of(1, 4)],
+      [2, Q.of(1, 4)],
+      [3, Q.of(1, 4)],
+      [4, Q.of(1, 4)],
+      [5, Q.of(1, 4)],
+      [2, Q.of(2, 3)],
+      [1, Q.of(3, 4)],
+      [1, Q.of(2, 3)],
+    ]) as [number, Q];
+    const m = rng.int(2, 3);
+    const size = (n: number) => Q.of(c ** n, factorial(n) * (2 * n + 1)).mul(a.pow(2 * n + 1));
+    const answer = size(m);
+    const upper = a.toLatex();
+    const growth = c === 1 ? "" : `${c}^n `;
+    return numberProblem({
+      prompt: t(
+        `Use the first ${m} nonzero terms of a Maclaurin series to approximate $\\int_0^{${upper}} e^{-${coefficientOf(c)}t^2}\\,dt$. The series alternates and its terms decrease in size. Find the bound on the error given by the alternating series error bound.`,
+        `用麦克劳林级数的前 ${m} 个非零项近似 $\\int_0^{${upper}} e^{-${coefficientOf(c)}t^2}\\,dt$。这个级数交错，各项的大小递减。求交错级数误差界给出的误差上界。`,
+      ),
+      answer,
+      wrong: [
+        size(m - 1),
+        Q.of(c ** m, factorial(m)).mul(a.pow(2 * m + 1)),
+        Q.of(c ** m, 2 * m + 1).mul(a.pow(2 * m + 1)),
+        Q.of(c ** m, factorial(m)).mul(a.pow(2 * m)),
+      ],
+      solution: t(
+        `Integrating term by term gives terms of size $\\frac{${growth}\\left(${upper}\\right)^{2n+1}}{n!(2n+1)}$ for $n = 0, 1, 2, \\dots$. The terms kept stop at $n = ${m - 1}$, so the bound is the term with $n = ${m}$, which is $${answer.toLatex()}$.`,
+        `逐项积分，各项的大小是 $\\frac{${growth}\\left(${upper}\\right)^{2n+1}}{n!(2n+1)}$，$n = 0, 1, 2, \\dots$。保留的项到 $n = ${m - 1}$ 为止，所以误差界是 $n = ${m}$ 的项，等于 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const xFromSeriesSum: KnowledgePointDef = {
+  id: "the-value-of-x-from-the-sum-of-a-series",
+  title: t("The value of x from the sum of a series", "由级数的和求 x"),
+  explanation: t(
+    "A geometric series with ratio containing $x$ has a sum that is a function of $x$, so a given sum is an equation for $x$. Write the closed form with attention to the starting index, which decides the numerator, and solve for the ratio. Then check that the ratio is below $1$ in size, since otherwise the series does not converge to that sum at all.",
+    "公比含 $x$ 的等比级数，它的和是 $x$ 的函数，所以已知和就是关于 $x$ 的方程。写出闭式时要注意起始下标，它决定分子，然后解出公比。还要检验公比的绝对值小于 $1$，否则级数根本不收敛到这个和。",
+  ),
+  generate(rng) {
+    const start = rng.int(0, 1);
+    const k = rng.int(2, 9);
+    const s = rng.int(2, 7);
+    const fromZero = Q.of(s - 1, s);
+    const fromOne = Q.of(s, s + 1);
+    const ratio = start === 0 ? fromZero : fromOne;
+    const answer = ratio.mul(Q.of(k));
+    return numberProblem({
+      prompt: t(
+        `Find the value of $x$ for which $\\sum_{n=${start}}^{\\infty} \\left(\\frac{x}{${k}}\\right)^n = ${s}$.`,
+        `求使 $\\sum_{n=${start}}^{\\infty} \\left(\\frac{x}{${k}}\\right)^n = ${s}$ 的 $x$ 值。`,
+      ),
+      answer,
+      solveFor: "x",
+      wrong:
+        start === 0
+          ? [fromOne.mul(Q.of(k)), Q.of(k * s), Q.of(k, s), Q.of(k * (s + 1), s)]
+          : [fromZero.mul(Q.of(k)), Q.of(k * s), Q.of(k, s + 1), Q.of(k * (s + 1), s)],
+      solution: t(
+        `With ratio $r = \\frac{x}{${k}}$, the sum is $${start === 0 ? "\\frac{1}{1 - r}" : "\\frac{r}{1 - r}"}$. Setting this equal to $${s}$ gives $r = ${ratio.toLatex()}$, which is below $1$ in size, so the series converges. Then $x = ${k}r = ${answer.toLatex()}$.`,
+        `设公比 $r = \\frac{x}{${k}}$，和是 $${start === 0 ? "\\frac{1}{1 - r}" : "\\frac{r}{1 - r}"}$。令它等于 $${s}$，得 $r = ${ratio.toLatex()}$，绝对值小于 $1$，所以级数收敛。于是 $x = ${k}r = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
 /** deeperCalculusIIPoints gives, by topic id, the knowledge points added after a Calculus II topic's own. */
 export const deeperCalculusIIPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "calculating-definite-integrals-using-substitution": [scaledKnownIntegral],
@@ -1628,4 +2597,34 @@ export const deeperCalculusIIPoints: Readonly<Record<string, readonly KnowledgeP
   "radius-of-convergence-of-power-series-centered-at-the-origin": [evenPowersRadius],
   "applying-newtons-second-law-in-the-plane": [circularForce],
   "finding-velocity-vectors-in-two-dimensions-using-integration": [projectileSpeed],
+  "integrating-linear-rational-functions-using-substitution": [upperLimitFromLogarithm],
+  "integration-using-substitution": [xTimesFOfXSquared],
+  "further-integration-of-algebraic-functions-using-substitution": [xSquaredInTermsOfU],
+  "integration-by-substitution-with-inverse-hyperbolic-functions": [arsinhAsLogarithm],
+  "integrating-functions-using-polynomial-division": [constantRemovingLogarithm],
+  "integrating-functions-by-completing-the-square": [linearOverCompletedSquare],
+  "integration-using-basic-hyperbolic-identities": [powerOfCoshAndSinh],
+  "integration-using-the-hyperbolic-pythagorean-identities": [evenPowerOfSech],
+  "integration-using-the-hyperbolic-double-angle-formulas": [fourthPowerOfHyperbolic],
+  "using-integration-by-parts-to-calculate-integrals-with-logarithms": [convenientConstantInV],
+  "applying-the-integration-by-parts-twice": [reductionForPowerTimesExponential],
+  "expressing-rational-functions-with-repeated-factors-as-sums-of-partial-fractions": [twoRepeatedFactors],
+  "expressing-rational-functions-with-irreducible-quadratic-factors-as-sums-of-partial-fractions": [xSquaredAsOneVariable],
+  "integrating-rational-functions-with-irreducible-quadratic-factors": [twoQuadraticsOverHalfLine],
+  "improper-integrals-involving-exponential-functions": [exponentialFractionImproper],
+  "improper-integrals-involving-arctangent": [realLineCompletedSquare],
+  "improper-integrals-of-the-second-kind-discontinuities-at-interior-points": [absoluteValueUnderRoot],
+  "the-arc-length-of-a-planar-curve": [lengthOfCatenary],
+  "volumes-of-solids-with-triangular-cross-sections": [wedgeFromCylinder],
+  "volumes-of-revolution-using-the-washer-method-rotation-about-the-coordinate-axes": [napkinRing],
+  "volumes-of-solids-with-square-cross-sections": [squaresOverEllipse],
+  "second-derivatives-of-parametric-equations": [parametricConcavityChange],
+  "defining-vector-valued-functions": [whenTwoPointsMeet],
+  "the-arc-length-of-a-polar-curve": [lengthOfLogarithmicSpiral],
+  "infinite-series-and-partial-sums": [tailFromPartialSum],
+  "the-remainder-estimate-for-the-integral-test": [widthOfIntegralBounds],
+  "the-lagrange-error-bound": [degreeForAccuracy],
+  "differentiating-taylor-series": [sumWithNSquared],
+  "approximating-integrals-using-taylor-series": [errorOfSeriesIntegral],
+  "convergence-of-geometric-series": [xFromSeriesSum],
 };
