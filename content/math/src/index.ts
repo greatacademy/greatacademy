@@ -201,6 +201,7 @@ import { multivariableCalculusMultivariableFunctionTopics } from "./topics/multi
 import { multivariableCalculusSurfaceIntegralTopics } from "./topics/multivariable-calculus-surface-integrals.ts";
 import { multivariableCalculusVectorFunctionTopics } from "./topics/multivariable-calculus-vector-functions.ts";
 import { numberTheoryTopics } from "./topics/number-theory.ts";
+import { numberTheoryCourseTopics } from "./topics/number-theory-course.ts";
 import { outlineGapTopics } from "./topics/outline-gaps.ts";
 import { polynomialTopics } from "./topics/polynomials.ts";
 import { precalculusComplexNumberTopics } from "./topics/precalculus-complex-numbers.ts";
@@ -432,6 +433,7 @@ export const math: SubjectDef = {
     ...methodsOfProofSetTopics,
     ...methodsOfProofProofTopics,
     ...methodsOfProofNumberTheoryTopics,
+    ...numberTheoryCourseTopics,
     ...methodsOfProofFunctionTopics,
     ...methodsOfProofCongruenceTopics,
     ...methodsOfProofRelationTopics,

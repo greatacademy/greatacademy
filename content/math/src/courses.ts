@@ -17937,6 +17937,93 @@ export const fifthGradeMath: CourseDef = {
   ],
 };
 
+/** numberTheory is the course on the integers: arithmetic functions, congruences, primitive roots, residues and Diophantine equations. */
+export const numberTheory: CourseDef = {
+  id: "number-theory",
+  title: t("Number Theory", "数论"),
+  description: t(
+    "Divisors and primes, powers modulo n through the theorems of Fermat and Euler, primitive roots and discrete logarithms, quadratic residues and reciprocity, and classic equations in whole numbers.",
+    "因数和质数，通过费马定理和欧拉定理研究模 n 的幂，原根和离散对数，二次剩余和互反律，以及经典的整数方程。",
+  ),
+  units: [
+    {
+      title: t("Divisors and Primes", "因数和质数"),
+      modules: [
+        {
+          title: t("Foundations From Proof", "来自证明课的基础"),
+          topics: [
+            "the-division-algorithm",
+            "the-euclidean-algorithm",
+            "the-extended-euclidean-algorithm",
+            "linear-diophantine-equations",
+            "properties-of-prime-divisibility",
+          ],
+        },
+        {
+          title: t("Arithmetic Functions", "算术函数"),
+          topics: ["counting-divisors", "the-sum-of-divisors-function", "perfect-numbers"],
+        },
+        {
+          title: t("The Primes", "质数"),
+          topics: ["the-sieve-of-eratosthenes", "the-distribution-of-primes"],
+        },
+      ],
+    },
+    {
+      title: t("Congruences", "同余"),
+      modules: [
+        {
+          title: t("Working Modulo n", "模 n 运算"),
+          topics: [
+            "modular-congruence",
+            "the-multiplication-properties-of-modular-arithmetic",
+            "multiplicative-inverses-modulo-n",
+            "solving-linear-congruences",
+            "the-chinese-remainder-theorem",
+          ],
+        },
+        {
+          title: t("Powers", "幂"),
+          topics: [
+            "powers-modulo-n",
+            "fermats-little-theorem",
+            "using-fermats-little-theorem",
+            "eulers-totient-function",
+            "computing-and-counting-with-the-totient",
+            "eulers-theorem",
+            "reducing-exponents-with-eulers-theorem",
+            "wilsons-theorem",
+            "multiplicative-functions",
+            "the-mobius-function",
+          ],
+        },
+        {
+          title: t("Orders and Generators", "阶和生成元"),
+          topics: ["the-order-of-an-integer-modulo-n", "primitive-roots", "discrete-logarithms"],
+        },
+      ],
+    },
+    {
+      title: t("Quadratic Residues", "二次剩余"),
+      modules: [
+        {
+          title: t("Squares Modulo a Prime", "模质数的平方数"),
+          topics: ["quadratic-residues", "the-legendre-symbol", "eulers-criterion", "quadratic-reciprocity"],
+        },
+      ],
+    },
+    {
+      title: t("Equations in Whole Numbers", "整数方程"),
+      modules: [
+        {
+          title: t("Classic Equations", "经典方程"),
+          topics: ["pythagorean-triples", "sums-of-two-squares", "continued-fractions", "pells-equation"],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -17955,6 +18042,7 @@ export const mathCourses: readonly CourseDef[] = [
   methodsOfProof,
   discreteMathematics,
   abstractAlgebra,
+  numberTheory,
   integratedMathI,
   integratedMathII,
   integratedMathIII,
