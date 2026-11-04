@@ -1853,6 +1853,929 @@ const centralDifferenceError: KnowledgePointDef = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// Third pass
+// ---------------------------------------------------------------------------
+
+/** rightTriangles lists Pythagorean triples with the longest side last. */
+const rightTriangles = [
+  [3, 4, 5],
+  [4, 3, 5],
+  [5, 12, 13],
+  [12, 5, 13],
+  [8, 15, 17],
+  [15, 8, 17],
+  [7, 24, 25],
+  [24, 7, 25],
+  [20, 21, 29],
+  [21, 20, 29],
+  [9, 40, 41],
+  [40, 9, 41],
+  [12, 35, 37],
+  [35, 12, 37],
+] as const;
+
+const sechFromTanh: KnowledgePointDef = {
+  id: "sech-from-the-value-of-tanh",
+  title: t("Sech from the value of tanh", "由 tanh 的值求 sech"),
+  explanation: t(
+    "Dividing the identity $\\cosh^2 x - \\sinh^2 x = 1$ by $\\cosh^2 x$ gives $1 - \\tanh^2 x = \\operatorname{sech}^2 x$. So the value of $\\tanh x$ fixes the size of $\\operatorname{sech} x$ without any need to find $x$. The sign needs no thought at all, because $\\cosh x$ is always positive and so $\\operatorname{sech} x$ is too. Even for a negative value of $\\tanh x$, the value of $\\operatorname{sech} x$ is positive.",
+    "把恒等式 $\\cosh^2 x - \\sinh^2 x = 1$ 除以 $\\cosh^2 x$，得 $1 - \\tanh^2 x = \\operatorname{sech}^2 x$。所以 $\\tanh x$ 的值确定了 $\\operatorname{sech} x$ 的大小，不必求出 $x$。符号也不用考虑，因为 $\\cosh x$ 总是正的，所以 $\\operatorname{sech} x$ 也是正的。即使 $\\tanh x$ 的值为负，$\\operatorname{sech} x$ 的值仍是正的。",
+  ),
+  generate(rng) {
+    const [a, b, c] = rng.pick(rightTriangles);
+    const tanh = Q.of(rng.pick([1, -1]) * b, c);
+    const answer = Q.of(a, c);
+    return numberProblem({
+      prompt: t(
+        `Given $\\tanh x = ${tanh.toLatex()}$, find $\\operatorname{sech} x$.`,
+        `已知 $\\tanh x = ${tanh.toLatex()}$，求 $\\operatorname{sech} x$。`,
+      ),
+      answer,
+      wrong: [Q.of(-a, c), Q.of(c, a), Q.of(c, b), Q.of(a, b)],
+      solution: t(
+        `From $\\operatorname{sech}^2 x = 1 - \\tanh^2 x = 1 - \\frac{${b * b}}{${c * c}} = \\frac{${a * a}}{${c * c}}$, and since $\\operatorname{sech} x$ is always positive, it equals $${answer.toLatex()}$.`,
+        `由 $\\operatorname{sech}^2 x = 1 - \\tanh^2 x = 1 - \\frac{${b * b}}{${c * c}} = \\frac{${a * a}}{${c * c}}$，又因为 $\\operatorname{sech} x$ 总是正的，所以它等于 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const productLimitFromSumAndDifference: KnowledgePointDef = {
+  id: "a-product-limit-from-a-sum-and-a-difference",
+  title: t("A product limit from a sum and a difference", "由和与差的极限求积的极限"),
+  explanation: t(
+    "The limit laws can run backwards. If the limits of $f + g$ and $f - g$ both exist, then so do the limits of $f$ and $g$, since $f = \\frac{1}{2}((f + g) + (f - g))$ and $g = \\frac{1}{2}((f + g) - (f - g))$. Once the two separate limits are known, the product rule gives the limit of $fg$. Multiplying the two given limits would be a mistake, since that gives the limit of $f^2 - g^2$.",
+    "极限法则也可以反过来用。如果 $f + g$ 和 $f - g$ 的极限都存在，那么 $f$ 和 $g$ 的极限也存在，因为 $f = \\frac{1}{2}((f + g) + (f - g))$，$g = \\frac{1}{2}((f + g) - (f - g))$。知道两个单独的极限后，积的法则给出 $fg$ 的极限。把两个已知极限相乘是错的，因为那得到的是 $f^2 - g^2$ 的极限。",
+  ),
+  generate(rng) {
+    const f = nonzero(rng, 9);
+    const g = nonzero(rng, 9);
+    const c = rng.int(-5, 5);
+    const sum = f + g;
+    const difference = f - g;
+    const answer = f * g;
+    return numberProblem({
+      prompt: t(
+        `$\\lim_{x \\to ${c}} (f(x) + g(x)) = ${sum}$ and $\\lim_{x \\to ${c}} (f(x) - g(x)) = ${difference}$. Find $\\lim_{x \\to ${c}} f(x)g(x)$.`,
+        `$\\lim_{x \\to ${c}} (f(x) + g(x)) = ${sum}$，$\\lim_{x \\to ${c}} (f(x) - g(x)) = ${difference}$。求 $\\lim_{x \\to ${c}} f(x)g(x)$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [sum * difference, sum + difference, 2 * answer, -answer],
+      solution: t(
+        `Adding and subtracting the two statements shows that $f$ has limit $${f}$ and $g$ has limit $${g}$. So the product has limit $${f} \\cdot ${inParens(g)} = ${answer}$.`,
+        `把两式相加和相减，可知 $f$ 的极限是 $${f}$，$g$ 的极限是 $${g}$。所以积的极限是 $${f} \\cdot ${inParens(g)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const limitFromItsRoot: KnowledgePointDef = {
+  id: "a-limit-from-the-limit-of-its-root",
+  title: t("A limit from the limit of its root", "由根式的极限求极限"),
+  explanation: t(
+    "The root rule says that the limit of a root is the root of the limit, when the limit is positive. Read in reverse, it recovers an unknown limit: squaring both sides of a statement about $\\sqrt{f(x) + k}$ gives the limit of $f(x) + k$. The sum rule then removes the constant. These two steps undo the operations on $f$ in the opposite order, in the same way as solving an equation.",
+    "根式法则说，当极限为正时，根式的极限等于极限的根式。反过来读，可以求出未知的极限：把关于 $\\sqrt{f(x) + k}$ 的等式两边平方，得到 $f(x) + k$ 的极限。再用和的法则去掉常数。这两步按相反的顺序撤销对 $f$ 的运算，就像解方程一样。",
+  ),
+  generate(rng) {
+    const m = rng.int(2, 9);
+    const k = nonzero(rng, 12);
+    const c = rng.int(-5, 5);
+    const answer = m * m - k;
+    return numberProblem({
+      prompt: t(
+        `$\\lim_{x \\to ${c}} \\sqrt{${poly([1, "f(x)"], [k, ""])}} = ${m}$. Find $\\lim_{x \\to ${c}} f(x)$.`,
+        `$\\lim_{x \\to ${c}} \\sqrt{${poly([1, "f(x)"], [k, ""])}} = ${m}$。求 $\\lim_{x \\to ${c}} f(x)$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [m - k, m * m + k, m * m, 2 * m - k],
+      solution: t(
+        `Squaring gives $\\lim_{x \\to ${c}} (${poly([1, "f(x)"], [k, ""])}) = ${m * m}$. Removing the constant, the limit of $f(x)$ is $${m * m} - ${inParens(k)} = ${answer}$.`,
+        `平方得 $\\lim_{x \\to ${c}} (${poly([1, "f(x)"], [k, ""])}) = ${m * m}$。去掉常数，$f(x)$ 的极限是 $${m * m} - ${inParens(k)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const expandedPowersAtInfinity: KnowledgePointDef = {
+  id: "a-difference-of-expanded-powers-at-infinity",
+  title: t("A difference of expanded powers at infinity", "展开后的幂之差在无穷远处的极限"),
+  explanation: t(
+    "The leading term of a polynomial decides its limit at infinity, but only once the polynomial has been written out. In $(x + a)^n - x^n$ the terms $x^n$ cancel, and so the leading term is really the next one in the binomial expansion, $nax^{n - 1}$. Comparing the two highest powers before expanding would suggest that the numerator has degree $n$, which would make the limit look infinite. It is not.",
+    "多项式的首项决定它在无穷远处的极限，但前提是多项式已经写开。在 $(x + a)^n - x^n$ 中，$x^n$ 项抵消了，所以真正的首项是二项式展开的下一项 $nax^{n - 1}$。如果不展开就比较最高次幂，会以为分子是 $n$ 次的，从而误认为极限是无穷大。其实不是。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 9);
+    const n = rng.int(2, 4);
+    const k = rng.int(1, 5);
+    const answer = Q.of(n * a, k);
+    const denominator = poly([k, n === 2 ? "x" : `x^${n - 1}`]);
+    const inner = poly([1, "x"], [a, ""]);
+    return numberProblem({
+      prompt: t(
+        `Find $\\lim_{x \\to \\infty} \\frac{(${inner})^${n} - x^${n}}{${denominator}}$.`,
+        `求 $\\lim_{x \\to \\infty} \\frac{(${inner})^${n} - x^${n}}{${denominator}}$。`,
+      ),
+      answer,
+      wrong: [Q.of(a, k), Q.of(a ** n, k), Q.of(n * a), Q.of(n, k)],
+      solution: t(
+        `When expanded, the terms $x^${n}$ cancel and the numerator has the leading term $${poly([n * a, n === 2 ? "x" : `x^${n - 1}`])}$. Dividing by the denominator gives the limit $${answer.toLatex()}$.`,
+        `展开后 $x^${n}$ 项抵消，分子的首项是 $${poly([n * a, n === 2 ? "x" : `x^${n - 1}`])}$。除以分母，得极限 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const radicalAtNegativeInfinity: KnowledgePointDef = {
+  id: "a-radical-over-a-linear-term-at-negative-infinity",
+  title: t("A radical over a linear term at negative infinity", "负无穷处根式与一次式之比"),
+  explanation: t(
+    "For large $|x|$, the expression $\\sqrt{a^2x^2 + b}$ behaves like $\\sqrt{a^2x^2} = a|x|$, and the absolute value matters. As $x \\to -\\infty$, $x$ is negative and $|x| = -x$. Writing the root as $ax$ would give the wrong sign, a common slip because the root is always positive while $ax$ is negative there. The limit at negative infinity therefore has the opposite sign from the limit at positive infinity.",
+    "当 $|x|$ 很大时，$\\sqrt{a^2x^2 + b}$ 的表现像 $\\sqrt{a^2x^2} = a|x|$，绝对值很重要。当 $x \\to -\\infty$ 时，$x$ 为负，$|x| = -x$。把根式写成 $ax$ 会得到错误的符号，这是常见的失误，因为根式总是正的，而此时 $ax$ 是负的。所以负无穷处的极限与正无穷处的极限符号相反。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 9);
+    const b = rng.int(1, 20);
+    const c = nonzero(rng, 9);
+    const d = nonzero(rng, 9);
+    const answer = Q.of(-a, c);
+    const denominator = poly([c, "x"], [d, ""]);
+    return numberProblem({
+      prompt: t(
+        `Find $\\lim_{x \\to -\\infty} \\frac{\\sqrt{${poly([a * a, "x^2"], [b, ""])}}}{${denominator}}$.`,
+        `求 $\\lim_{x \\to -\\infty} \\frac{\\sqrt{${poly([a * a, "x^2"], [b, ""])}}}{${denominator}}$。`,
+      ),
+      answer,
+      wrong: [Q.of(a, c), Q.of(a * a, c), Q.of(-a * a, c), Q.of(-a)],
+      solution: t(
+        `For large negative $x$, the root behaves like $${a}|x| = -${a}x$, and the denominator behaves like $${poly([c, "x"])}$. Their ratio tends to $${answer.toLatex()}$.`,
+        `当 $x$ 是绝对值很大的负数时，根式的表现像 $${a}|x| = -${a}x$，分母的表现像 $${poly([c, "x"])}$。它们的比趋于 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const inverseTrigOfRatio: KnowledgePointDef = {
+  id: "an-inverse-trigonometric-function-of-a-ratio-at-infinity",
+  title: t("An inverse trigonometric function of a ratio at infinity", "比值的反三角函数在无穷远处的极限"),
+  explanation: t(
+    "Inverse trigonometric functions are continuous on their domains, so a limit can pass inside them: the limit of $\\arctan g(x)$ is the arctangent of the limit of $g(x)$. If $g$ is a ratio of two linear expressions, its limit at infinity is the ratio of the leading coefficients, whichever way $x$ goes. What remains is then a special value of the outer function, which is a simple multiple of $\\pi$.",
+    "反三角函数在定义域上连续，所以极限可以移到函数里面：$\\arctan g(x)$ 的极限是 $g(x)$ 极限的反正切。如果 $g$ 是两个一次式之比，无论 $x$ 趋向哪个方向，它在无穷远处的极限都是首项系数之比。剩下的就是外层函数的特殊值，它是 $\\pi$ 的简单倍数。",
+  ),
+  generate(rng) {
+    const sign = rng.pick([1, -1]);
+    const usesArctan = rng.pick([true, false]);
+    const b = rng.int(1, 9);
+    const c = nonzero(rng, 9);
+    const denominator = usesArctan ? b : 2 * b;
+    const parts = usesArctan ? 4 : 6;
+    const answer = Q.of(sign, parts);
+    const name = usesArctan ? "\\arctan" : "\\arcsin";
+    const ratio = Q.of(sign, usesArctan ? 1 : 2);
+    const direction = rng.pick(["\\infty", "-\\infty"]);
+    const inner = `\\frac{${poly([sign * b, "x"])}}{${poly([denominator, "x"], [c, ""])}}`;
+    return numberProblem({
+      prompt: t(
+        `$\\lim_{x \\to ${direction}} ${name}\\left(${inner}\\right) = k\\pi$. Find $k$.`,
+        `$\\lim_{x \\to ${direction}} ${name}\\left(${inner}\\right) = k\\pi$。求 $k$。`,
+      ),
+      answer,
+      wrong: [Q.of(sign, 2), Q.of(-sign, parts), Q.of(sign, 3), Q.of(sign, 12)],
+      solution: t(
+        `The ratio tends to $${ratio.toLatex()}$, and ${name === "\\arctan" ? "arctangent" : "arcsine"} is continuous, so the limit is $${name}\\left(${ratio.toLatex()}\\right)$. This equals $${answer.toLatex()}\\pi$, so $k = ${answer.toLatex()}$.`,
+        `这个比趋于 $${ratio.toLatex()}$，而${name === "\\arctan" ? "反正切" : "反正弦"}函数连续，所以极限是 $${name}\\left(${ratio.toLatex()}\\right)$。写成 $k\\pi$ 的形式，$k = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const quotientOfAbsoluteValues: KnowledgePointDef = {
+  id: "a-quotient-of-absolute-values-that-has-a-limit",
+  title: t("A quotient of absolute values that has a limit", "有极限的绝对值之商"),
+  explanation: t(
+    "A quotient like $\\frac{|x^2 - a^2|}{x - a}$ has no two-sided limit at $a$, because it takes opposite signs on either side. But when the absolute value appears in both the numerator and the denominator, the sign cancels. Since $|x^2 - a^2| = |x - a||x + a|$, the factor $|x - a|$ can be cancelled for $x \\ne a$, which leaves a continuous function. So this limit exists, even though each piece vanishes at $a$.",
+    "像 $\\frac{|x^2 - a^2|}{x - a}$ 这样的商在 $a$ 处没有双侧极限，因为两侧符号相反。但当绝对值同时出现在分子和分母中时，符号抵消了。由于 $|x^2 - a^2| = |x - a||x + a|$，当 $x \\ne a$ 时可以约去 $|x - a|$，剩下一个连续函数。所以这个极限存在，尽管分子和分母在 $a$ 处都为零。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 9);
+    const k = rng.int(1, 6);
+    const answer = 2 * k * Math.abs(a);
+    const scale = k === 1 ? "" : `${k}`;
+    return numberProblem({
+      prompt: t(
+        `Find $\\lim_{x \\to ${a}} \\frac{${scale}|x^2 - ${a * a}|}{|${poly([1, "x"], [-a, ""])}|}$.`,
+        `求 $\\lim_{x \\to ${a}} \\frac{${scale}|x^2 - ${a * a}|}{|${poly([1, "x"], [-a, ""])}|}$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-answer, k * Math.abs(a), k * a * a, 0],
+      solution: t(
+        `Factoring gives $|x^2 - ${a * a}| = |${poly([1, "x"], [-a, ""])}||${poly([1, "x"], [a, ""])}|$. Cancelling leaves $${scale}|${poly([1, "x"], [a, ""])}|$, which tends to $${answer}$ at $x = ${a}$.`,
+        `分解得 $|x^2 - ${a * a}| = |${poly([1, "x"], [-a, ""])}||${poly([1, "x"], [a, ""])}|$。约去后剩下 $${scale}|${poly([1, "x"], [a, ""])}|$，它在 $x = ${a}$ 处趋于 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const shiftedSineOverSquares: KnowledgePointDef = {
+  id: "a-shifted-sine-over-a-difference-of-squares",
+  title: t("A shifted sine over a difference of squares", "平移的正弦与平方差之比"),
+  explanation: t(
+    "The special limit $\\frac{\\sin u}{u} \\to 1$ works for any quantity $u$ that tends to zero, not just for $x$ itself. Near $x = a$, the natural choice is $u = x - a$, so the denominator must be arranged to contain this factor. Factoring a difference of squares does this, and it leaves a second factor that is continuous at $a$ and may simply be evaluated. So the limit is a product of two easy limits.",
+    "特殊极限 $\\frac{\\sin u}{u} \\to 1$ 对任何趋于零的量 $u$ 都成立，不只是 $x$ 本身。在 $x = a$ 附近，自然的选择是 $u = x - a$，所以要把分母整理成含有这个因子的形式。分解平方差正好做到这一点，并留下另一个在 $a$ 处连续的因子，可以直接代入。所以极限是两个简单极限之积。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 9);
+    const k = rng.int(1, 9);
+    const answer = Q.of(k, 2 * a);
+    const shift = poly([1, "x"], [-a, ""]);
+    const argument = k === 1 ? shift : `${k}(${shift})`;
+    return numberProblem({
+      prompt: t(
+        `Find $\\lim_{x \\to ${a}} \\frac{\\sin(${argument})}{x^2 - ${a * a}}$.`,
+        `求 $\\lim_{x \\to ${a}} \\frac{\\sin(${argument})}{x^2 - ${a * a}}$。`,
+      ),
+      answer,
+      wrong: [Q.of(k, a), Q.of(1, 2 * a), Q.of(k), Q.of(-k, 2 * a)],
+      solution: t(
+        `The denominator is $(${shift})(${poly([1, "x"], [a, ""])})$. As $x \\to ${a}$, $\\frac{\\sin(${argument})}{${shift}} \\to ${k}$ and $\\frac{1}{${poly([1, "x"], [a, ""])}} \\to ${Q.of(1, 2 * a).toLatex()}$. Their product is $${answer.toLatex()}$.`,
+        `分母是 $(${shift})(${poly([1, "x"], [a, ""])})$。当 $x \\to ${a}$ 时，$\\frac{\\sin(${argument})}{${shift}} \\to ${k}$，$\\frac{1}{${poly([1, "x"], [a, ""])}} \\to ${Q.of(1, 2 * a).toLatex()}$。它们的积是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const continuityOfRadicalQuotient: KnowledgePointDef = {
+  id: "counting-the-integers-where-a-radical-quotient-is-continuous",
+  title: t("Counting the integers where a radical quotient is continuous", "计算根式商连续的整数个数"),
+  explanation: t(
+    "A combination of continuous functions is continuous wherever it is defined. So continuity can be read off from the domain: a square root needs a nonnegative input, and a denominator must not be zero. At the left end of the domain of the root, only the right side of the point exists, so that continuity there means continuity from the right. Points outside the domain cannot be continuous, because the function has no value there.",
+    "连续函数的组合在有定义的地方都连续。所以连续性可以从定义域读出：平方根要求被开方数非负，分母不能为零。在根式定义域的左端点，只存在该点的右侧，所以那里的连续指右连续。定义域之外的点不可能连续，因为函数在那里没有值。",
+  ),
+  generate(rng) {
+    const a = rng.int(-5, 5);
+    const b = a + rng.int(1, 6);
+    const low = a - rng.int(1, 4);
+    const high = b + rng.int(1, 8);
+    const answer = high - a;
+    const f = `\\frac{\\sqrt{${poly([1, "x"], [-a, ""])}}}{${poly([1, "x"], [-b, ""])}}`;
+    return numberProblem({
+      prompt: t(
+        `Let $f(x) = ${f}$. At how many integers from $${low}$ to $${high}$ is $f$ continuous? At the left end of its domain, continuity from the right counts.`,
+        `设 $f(x) = ${f}$。从 $${low}$ 到 $${high}$ 的整数中，$f$ 在多少个处连续？在定义域的左端点，右连续也算连续。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [answer + 1, answer - 1, high - low, high - low + 1],
+      solution: t(
+        `The root needs $x \\ge ${a}$, which leaves the $${answer + 1}$ integers from $${a}$ to $${high}$. Leaving out $x = ${b}$, where the denominator vanishes, gives $${answer}$.`,
+        `根式要求 $x \\ge ${a}$，这样剩下从 $${a}$ 到 $${high}$ 的 $${answer + 1}$ 个整数。去掉使分母为零的 $x = ${b}$，得 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const jumpsOfFloor: KnowledgePointDef = {
+  id: "the-number-of-jumps-of-a-floor-function",
+  title: t("The number of jumps of a floor function", "取整函数的跳跃次数"),
+  explanation: t(
+    "The floor function $\\lfloor u \\rfloor$ jumps by 1 whenever $u$ reaches an integer. So $\\lfloor kx \\rfloor$ jumps wherever $kx$ is an integer, which happens at each multiple of $\\frac{1}{k}$. Compressing the graph horizontally in this way makes the jumps more frequent, with $k$ of them for each unit of $x$. When counting over an interval, check whether the ends are included, since a jump at an end of the interval would not count as an interior one.",
+    "取整函数 $\\lfloor u \\rfloor$ 在 $u$ 到达整数时跳跃 1。所以 $\\lfloor kx \\rfloor$ 在 $kx$ 为整数处跳跃，这发生在 $\\frac{1}{k}$ 的每个倍数处。这样水平压缩图像使跳跃更频繁，$x$ 每一个单位内有 $k$ 次。在区间上计数时要看端点是否包含，因为区间端点处的跳跃不算内部的跳跃。",
+  ),
+  generate(rng) {
+    const k = rng.int(2, 9);
+    const n = rng.int(2, 12);
+    const answer = k * n - 1;
+    return numberProblem({
+      prompt: t(
+        `How many jump discontinuities does $f(x) = \\lfloor ${k}x \\rfloor$ have on the open interval $(0, ${n})$?`,
+        `$f(x) = \\lfloor ${k}x \\rfloor$ 在开区间 $(0, ${n})$ 上有多少个跳跃间断点？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [answer + 1, answer + 2, n - 1, k - 1],
+      solution: t(
+        `A jump occurs where $${k}x$ is an integer, at $x = \\frac{j}{${k}}$. Inside the interval, $j$ runs from $1$ to $${k * n - 1}$, because $j = ${k * n}$ gives the excluded end. That makes $${answer}$.`,
+        `当 $${k}x$ 为整数时发生跳跃，即 $x = \\frac{j}{${k}}$。在区间内部，$j$ 从 $1$ 取到 $${k * n - 1}$，因为 $j = ${k * n}$ 对应被排除的端点。共 $${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const widthFromAverageRate: KnowledgePointDef = {
+  id: "the-interval-width-from-an-average-rate",
+  title: t("The interval width from an average rate", "由平均变化率求区间宽度"),
+  explanation: t(
+    "For a quadratic, the difference quotient over $[a, a + h]$ simplifies to an expression that is linear in $h$. After the expansion, $h$ cancels from the denominator, and the terms left show how the average rate depends on the width. This can be used in reverse: given an average rate, solve the linear equation for $h$. As $h$ shrinks to zero, this expression turns into the derivative at $a$.",
+    "对二次函数，$[a, a + h]$ 上的差商化简后是关于 $h$ 的一次式。展开后分母中的 $h$ 被约去，剩下的项表明平均变化率如何依赖于宽度。这可以反过来用：已知平均变化率，解这个一次方程求 $h$。当 $h$ 缩小到零时，这个式子就变成 $a$ 处的导数。",
+  ),
+  generate(rng) {
+    const p = rng.int(1, 5);
+    const q = rng.int(-9, 9);
+    const a = rng.int(-5, 5);
+    const h = rng.int(1, 9);
+    const rate = p * (2 * a + h) + q;
+    const f = poly([p, "x^2"], [q, "x"]);
+    const quotient = poly([p, "h"], [2 * a * p + q, ""]);
+    return numberProblem({
+      prompt: t(
+        `The average rate of change of $f(x) = ${f}$ over $[${a}, ${a} + h]$, with $h > 0$, is $${rate}$. Find $h$.`,
+        `$f(x) = ${f}$ 在 $[${a}, ${a} + h]$（$h > 0$）上的平均变化率是 $${rate}$。求 $h$。`,
+      ),
+      answer: h,
+      form: "integer",
+      wrong: [2 * h, rate - q, h + 2 * a, h + 1, h + 2],
+      solution: t(
+        `Expanding the difference quotient and cancelling $h$ gives $${quotient}$. Setting this equal to $${rate}$ gives $h = ${h}$.`,
+        `展开差商并约去 $h$，得 $${quotient}$。令它等于 $${rate}$，得 $h = ${h}$。`,
+      ),
+    });
+  },
+};
+
+const exponentFromDerivative: KnowledgePointDef = {
+  id: "the-exponent-from-a-derivative-value",
+  title: t("The exponent from a derivative value", "由导数值求指数"),
+  explanation: t(
+    "The power rule has the exponent in two places, as a coefficient and in the new exponent, so a value of the derivative is not simply solved for $n$ by algebra. For a positive base greater than 1, however, $nb^{n - 1}$ grows steadily as $n$ grows. So exactly one positive integer can match a given value, and it can be found by trying small values of $n$ in turn until the value is reached.",
+    "幂法则中指数出现在两处，既是系数又在新的指数中，所以不能简单地用代数解出 $n$。不过，当底数大于 1 时，$nb^{n - 1}$ 随 $n$ 增大而稳定增长。所以恰好有一个正整数能匹配给定的值，可以依次试较小的 $n$，直到达到这个值。",
+  ),
+  generate(rng) {
+    const b = rng.int(2, 3);
+    const n = rng.int(3, 8);
+    const c = rng.int(1, 6);
+    const value = c * n * b ** (n - 1);
+    const scale = c === 1 ? "" : `${c}`;
+    return numberProblem({
+      prompt: t(
+        `$f(x) = ${scale}x^n$ for a positive integer $n$, and $f'(${b}) = ${value}$. Find $n$.`,
+        `$f(x) = ${scale}x^n$，$n$ 是正整数，且 $f'(${b}) = ${value}$。求 $n$。`,
+      ),
+      answer: n,
+      form: "integer",
+      wrong: [n - 1, n + 1, n + 2, n - 2],
+      solution: t(
+        `The power rule gives $f'(${b}) = ${c} \\cdot n \\cdot ${b}^{n - 1}$, which grows with $n$. At $n = ${n}$ it is $${c} \\cdot ${n} \\cdot ${b}^{${n - 1}} = ${value}$, as required.`,
+        `幂法则给出 $f'(${b}) = ${c} \\cdot n \\cdot ${b}^{n - 1}$，它随 $n$ 增大而增大。当 $n = ${n}$ 时，它等于 $${c} \\cdot ${n} \\cdot ${b}^{${n - 1}} = ${value}$，符合要求。`,
+      ),
+    });
+  },
+};
+
+const highDerivativeOfSineCosineSum: KnowledgePointDef = {
+  id: "a-high-derivative-of-a-sine-and-cosine-sum",
+  title: t("A high derivative of a sine and cosine sum", "正弦余弦之和的高阶导数"),
+  explanation: t(
+    "The derivatives of sine and cosine repeat with period 4: $\\sin x$, $\\cos x$, $-\\sin x$, $-\\cos x$, and back to $\\sin x$. So a derivative of high order depends only on the remainder of the order on division by 4. That remainder tells us which of the four forms applies. At $x = 0$, the sine terms vanish, and only the coefficient of the cosine term of that form survives.",
+    "正弦和余弦的导数以 4 为周期重复：$\\sin x$、$\\cos x$、$-\\sin x$、$-\\cos x$，然后回到 $\\sin x$。所以高阶导数只取决于阶数除以 4 的余数。这个余数告诉我们属于四种形式中的哪一种。在 $x = 0$ 处，正弦项为零，只有该形式中余弦项的系数保留下来。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 9);
+    const b = nonzero(rng, 9);
+    const n = rng.int(10, 99);
+    const remainder = n % 4;
+    const forms = [
+      poly([a, "\\sin x"], [b, "\\cos x"]),
+      poly([a, "\\cos x"], [-b, "\\sin x"]),
+      poly([-a, "\\sin x"], [-b, "\\cos x"]),
+      poly([-a, "\\cos x"], [b, "\\sin x"]),
+    ];
+    const answer = [b, a, -b, -a][remainder] ?? 0;
+    return numberProblem({
+      prompt: t(
+        `Let $y = ${forms[0]}$. Find the value of $\\frac{d^{${n}}y}{dx^{${n}}}$ at $x = 0$.`,
+        `设 $y = ${forms[0]}$。求 $\\frac{d^{${n}}y}{dx^{${n}}}$ 在 $x = 0$ 处的值。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a, b, -a, -b, 0],
+      solution: t(
+        `The derivatives repeat with period 4, and ${n} leaves remainder ${remainder}. So this derivative is $${forms[remainder]}$, which equals $${answer}$ at $x = 0$.`,
+        `导数以 4 为周期重复，${n} 除以 4 余 ${remainder}。所以这个导数是 $${forms[remainder]}$，它在 $x = 0$ 处等于 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const coshSlopeAtHeight: KnowledgePointDef = {
+  id: "the-slope-of-a-cosh-curve-at-a-given-height",
+  title: t("The slope of a cosh curve at a given height", "cosh 曲线在给定高度处的斜率"),
+  explanation: t(
+    "The slope of $y = k\\cosh x$ is $k\\sinh x$, and the identity $\\cosh^2 x - \\sinh^2 x = 1$ gives $\\sinh x$ from $\\cosh x$ with no need to find $x$. The identity alone gives only the size of $\\sinh x$. Each value of $\\cosh x$ above 1 occurs twice, at $x$ and at $-x$, with slopes of opposite signs. So the side of the curve must be stated, and $x > 0$ gives a positive $\\sinh x$.",
+    "$y = k\\cosh x$ 的斜率是 $k\\sinh x$，恒等式 $\\cosh^2 x - \\sinh^2 x = 1$ 由 $\\cosh x$ 给出 $\\sinh x$，不必求出 $x$。恒等式只给出 $\\sinh x$ 的大小。$\\cosh x$ 大于 1 的每个值出现两次，在 $x$ 和 $-x$ 处，斜率符号相反。所以必须说明在曲线的哪一侧，$x > 0$ 时 $\\sinh x$ 为正。",
+  ),
+  generate(rng) {
+    const [a, b, c] = rng.pick(rightTriangles);
+    const k = rng.int(1, 9);
+    const answer = Q.of(k * b, a);
+    const cosh = Q.of(c, a);
+    return numberProblem({
+      prompt: t(
+        `Find the slope of $y = ${poly([k, "\\cosh x"])}$ at the point with $x > 0$ where $\\cosh x = ${cosh.toLatex()}$.`,
+        `求 $y = ${poly([k, "\\cosh x"])}$ 在 $x > 0$ 且 $\\cosh x = ${cosh.toLatex()}$ 的点处的斜率。`,
+      ),
+      answer,
+      wrong: [Q.of(k * c, a), Q.of(-k * b, a), Q.of(k * a, b), Q.of(k * b, c)],
+      solution: t(
+        `The slope is $${poly([k, "\\sinh x"])}$. From $\\sinh^2 x = \\cosh^2 x - 1 = \\frac{${b * b}}{${a * a}}$ and $x > 0$, we get $\\sinh x = ${Q.of(b, a).toLatex()}$, so the slope is $${answer.toLatex()}$.`,
+        `斜率是 $${poly([k, "\\sinh x"])}$。由 $\\sinh^2 x = \\cosh^2 x - 1 = \\frac{${b * b}}{${a * a}}$ 和 $x > 0$，得 $\\sinh x = ${Q.of(b, a).toLatex()}$，所以斜率是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const squaresOfSecantAndTangent: KnowledgePointDef = {
+  id: "a-sum-of-squares-of-secant-and-tangent",
+  title: t("A sum of squares of secant and tangent", "正割与正切的平方之和"),
+  explanation: t(
+    "By the chain rule, the derivative of $\\sec^2 x$ is $2\\sec x \\cdot \\sec x\\tan x$, and the derivative of $\\tan^2 x$ is $2\\tan x \\cdot \\sec^2 x$. These are the same expression, $2\\sec^2 x\\tan x$, which reflects the identity $\\sec^2 x = 1 + \\tan^2 x$: the two functions differ only by a constant. So a combination of them has a derivative that depends only on the sum of the two coefficients.",
+    "由链式法则，$\\sec^2 x$ 的导数是 $2\\sec x \\cdot \\sec x\\tan x$，$\\tan^2 x$ 的导数是 $2\\tan x \\cdot \\sec^2 x$。它们是同一个式子 $2\\sec^2 x\\tan x$，这反映了恒等式 $\\sec^2 x = 1 + \\tan^2 x$：两个函数只差一个常数。所以它们的组合的导数只取决于两个系数之和。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 9);
+    const b = nonzero(rng, 9);
+    const first = rng.pick([true, false]);
+    const sum = a + b;
+    const answer = (first ? 4 : -4) * sum;
+    const point = first ? "\\frac{\\pi}{4}" : "\\frac{3\\pi}{4}";
+    return numberProblem({
+      prompt: t(
+        `Let $y = ${poly([a, "\\sec^2 x"], [b, "\\tan^2 x"])}$. Find $y'$ at $x = ${point}$.`,
+        `设 $y = ${poly([a, "\\sec^2 x"], [b, "\\tan^2 x"])}$。求 $y'$ 在 $x = ${point}$ 处的值。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-answer, 2 * sum, 4 * a, 4 * b],
+      solution: t(
+        `Both terms have the same derivative form, so $y' = ${poly([2 * sum, "\\sec^2 x\\tan x"])}$. At this point, $\\sec^2 x = 2$ and $\\tan x = ${first ? 1 : -1}$, which gives $${answer}$.`,
+        `两项的导数形式相同，所以 $y' = ${poly([2 * sum, "\\sec^2 x\\tan x"])}$。在这一点，$\\sec^2 x = 2$，$\\tan x = ${first ? 1 : -1}$，得 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const secondDerivativeOfProduct: KnowledgePointDef = {
+  id: "a-second-derivative-of-a-product-from-values",
+  title: t("A second derivative of a product from values", "由函数值求积的二阶导数"),
+  explanation: t(
+    "Applying the product rule twice gives $(fg)'' = f''g + 2f'g' + fg''$, a pattern with the same coefficients as $(a + b)^2$. The middle term has a coefficient of 2, because it arises once from each of the two terms of the first derivative. Given a table of values at a point, the formula needs nothing else, so the functions themselves need not be known. Taking the product of the second derivatives is a common mistake.",
+    "用两次积法则，得 $(fg)'' = f''g + 2f'g' + fg''$，系数规律与 $(a + b)^2$ 相同。中间项系数为 2，因为它从一阶导数的两项各产生一次。给出一点处的数值表，这个公式就不需要别的了，所以不必知道函数本身。把二阶导数直接相乘是常见的错误。",
+  ),
+  generate(rng) {
+    const c = rng.int(0, 5);
+    const f0 = nonzero(rng, 5);
+    const f1 = nonzero(rng, 5);
+    const f2 = nonzero(rng, 5);
+    const g0 = nonzero(rng, 5);
+    const g1 = nonzero(rng, 5);
+    const g2 = nonzero(rng, 5);
+    const answer = f2 * g0 + 2 * f1 * g1 + f0 * g2;
+    const values = `f(${c}) = ${f0}, \\; f'(${c}) = ${f1}, \\; f''(${c}) = ${f2}, \\; g(${c}) = ${g0}, \\; g'(${c}) = ${g1}, \\; g''(${c}) = ${g2}`;
+    return numberProblem({
+      prompt: t(`$${values}$. Let $h = fg$. Find $h''(${c})$.`, `$${values}$。设 $h = fg$。求 $h''(${c})$。`),
+      answer,
+      form: "integer",
+      wrong: [f2 * g0 + f0 * g2, f2 * g2, f2 * g0 + f1 * g1 + f0 * g2, f1 * g1],
+      solution: t(
+        `Here $h'' = f''g + 2f'g' + fg''$. At this point, that is $${f2} \\cdot ${inParens(g0)} + 2 \\cdot ${inParens(f1)} \\cdot ${inParens(g1)} + ${inParens(f0)} \\cdot ${inParens(g2)} = ${answer}$.`,
+        `这里 $h'' = f''g + 2f'g' + fg''$。在这一点，它等于 $${f2} \\cdot ${inParens(g0)} + 2 \\cdot ${inParens(f1)} \\cdot ${inParens(g1)} + ${inParens(f0)} \\cdot ${inParens(g2)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const chainRuleOfThree: KnowledgePointDef = {
+  id: "the-chain-rule-for-three-functions-from-values",
+  title: t("The chain rule for three functions from values", "由函数值用链式法则求三层复合的导数"),
+  explanation: t(
+    "For $y = f(g(h(x)))$, the chain rule gives three factors: $f'(g(h(x)))$, $g'(h(x))$ and $h'(x)$. Each derivative is taken at a different point, namely at whatever is fed into that function. So working from the inside out, $h$ first turns the input into a value for $g$, and $g$ then turns that into a value for $f$. Evaluating every derivative at the original $x$ is the common mistake.",
+    "对 $y = f(g(h(x)))$，链式法则给出三个因子：$f'(g(h(x)))$、$g'(h(x))$ 和 $h'(x)$。每个导数在不同的点取值，也就是输入该函数的那个值。所以从内向外计算，先由 $h$ 把输入变成 $g$ 的输入值，再由 $g$ 把它变成 $f$ 的输入值。把每个导数都在原来的 $x$ 处取值是常见的错误。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 3);
+    const b = a + rng.int(1, 3);
+    const c = b + rng.int(1, 3);
+    const p = nonzero(rng, 6);
+    const q = nonzero(rng, 6);
+    const r = nonzero(rng, 6);
+    const decoyG = nonzero(rng, 6);
+    const decoyF = nonzero(rng, 6);
+    const answer = r * q * p;
+    const values = `h(${a}) = ${b}, \\; h'(${a}) = ${p}, \\; g(${b}) = ${c}, \\; g'(${b}) = ${q}, \\; g'(${a}) = ${decoyG}, \\; f'(${c}) = ${r}, \\; f'(${b}) = ${decoyF}`;
+    return numberProblem({
+      prompt: t(`$${values}$. Let $y = f(g(h(x)))$. Find $y'(${a})$.`, `$${values}$。设 $y = f(g(h(x)))$。求 $y'(${a})$。`),
+      answer,
+      form: "integer",
+      wrong: [decoyF * decoyG * p, r * decoyG * p, decoyF * q * p, r * q, -answer],
+      solution: t(
+        `Working from the inside, the inputs are $${a}$ for $h$, $${b}$ for $g$ and $${c}$ for $f$. So $y'(${a}) = f'(${c})g'(${b})h'(${a}) = ${r} \\cdot ${inParens(q)} \\cdot ${inParens(p)} = ${answer}$.`,
+        `从内向外，$h$ 的输入是 $${a}$，$g$ 的输入是 $${b}$，$f$ 的输入是 $${c}$。所以 $y'(${a}) = f'(${c})g'(${b})h'(${a}) = ${r} \\cdot ${inParens(q)} \\cdot ${inParens(p)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const secondDerivativeOfInverse: KnowledgePointDef = {
+  id: "the-second-derivative-of-an-inverse-function",
+  title: t("The second derivative of an inverse function", "反函数的二阶导数"),
+  explanation: t(
+    "If $g$ is the inverse of $f$, then $g'(y) = \\frac{1}{f'(g(y))}$. Differentiating this once more by the chain rule gives $g''(y) = -\\frac{f''(g(y))g'(y)}{f'(g(y))^2}$, and replacing $g'$ gives $-\\frac{f''}{(f')^3}$, with $f'$ and $f''$ evaluated at $g(y)$. The cube in the denominator comes from the extra factor of $g'$. The sign shows that reflecting a graph in $y = x$ reverses its concavity when $f$ is increasing.",
+    "如果 $g$ 是 $f$ 的反函数，那么 $g'(y) = \\frac{1}{f'(g(y))}$。用链式法则再求一次导，得 $g''(y) = -\\frac{f''(g(y))g'(y)}{f'(g(y))^2}$，代入 $g'$ 得 $-\\frac{f''}{(f')^3}$，其中 $f'$ 和 $f''$ 在 $g(y)$ 处取值。分母中的立方来自多出的因子 $g'$。这个符号说明，当 $f$ 递增时，关于 $y = x$ 反射图像会使凹凸性反转。",
+  ),
+  generate(rng) {
+    const a = rng.int(-4, 4);
+    const b = different(rng, -6, 6, a);
+    const p = nonzero(rng, 4);
+    const q = nonzero(rng, 9);
+    const answer = Q.of(-q, p ** 3);
+    return numberProblem({
+      prompt: t(
+        `$f$ is invertible with inverse $g$, and $f(${a}) = ${b}$, $f'(${a}) = ${p}$, $f''(${a}) = ${q}$. Find $g''(${b})$.`,
+        `$f$ 可逆，反函数为 $g$，且 $f(${a}) = ${b}$，$f'(${a}) = ${p}$，$f''(${a}) = ${q}$。求 $g''(${b})$。`,
+      ),
+      answer,
+      wrong: [Q.of(q, p ** 3), Q.of(-q, p * p), Q.of(1, q), Q.of(-q, p)],
+      solution: t(
+        `Differentiating $g'(y) = \\frac{1}{f'(g(y))}$ gives $g'' = -\\frac{f''}{(f')^3}$, with $f'$ and $f''$ evaluated at $g(${b}) = ${a}$. Substituting $${p}$ and $${q}$ gives $${answer.toLatex()}$.`,
+        `对 $g'(y) = \\frac{1}{f'(g(y))}$ 求导，得 $g'' = -\\frac{f''}{(f')^3}$，其中 $f'$ 和 $f''$ 在 $g(${b}) = ${a}$ 处取值。代入 $${p}$ 和 $${q}$，得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const variablePowerAtOne: KnowledgePointDef = {
+  id: "a-variable-power-at-x-equals-one",
+  title: t("A variable power at x equals one", "变量幂在 x 等于 1 处的导数"),
+  explanation: t(
+    "A function such as $x^{g(x)}$ has its variable in both the base and the exponent, so neither the power rule nor the exponential rule applies on its own. Taking logarithms first gives $\\ln y = g(x)\\ln x$, and differentiating by the product rule gives $\\frac{y'}{y} = g'(x)\\ln x + \\frac{g(x)}{x}$. At $x = 1$, the logarithm vanishes and $y = 1$, so that $y'$ reduces to the value of $g(1)$.",
+    "像 $x^{g(x)}$ 这样的函数，变量同时在底数和指数中，所以幂法则和指数法则都不能单独使用。先取对数，得 $\\ln y = g(x)\\ln x$，再用积法则求导，得 $\\frac{y'}{y} = g'(x)\\ln x + \\frac{g(x)}{x}$。在 $x = 1$ 处，对数为零且 $y = 1$，所以 $y'$ 化为 $g(1)$ 的值。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 9);
+    const m = nonzero(rng, 9);
+    const answer = k + m;
+    const exponent = poly([k, "x^2"], [m, ""]);
+    return numberProblem({
+      prompt: t(`Let $y = x^{${exponent}}$ for $x > 0$. Find $y'(1)$.`, `设 $y = x^{${exponent}}$，$x > 0$。求 $y'(1)$。`),
+      answer,
+      form: "integer",
+      wrong: [2 * k + m, k, m, 2 * k],
+      solution: t(
+        `From $\\ln y = (${exponent})\\ln x$ we get $\\frac{y'}{y} = ${poly([2 * k, "x"])}\\ln x + \\frac{${exponent}}{x}$. At $x = 1$, $y = 1$ and $\\ln 1 = 0$, so $y'(1) = ${k} + ${inParens(m)} = ${answer}$.`,
+        `由 $\\ln y = (${exponent})\\ln x$ 得 $\\frac{y'}{y} = ${poly([2 * k, "x"])}\\ln x + \\frac{${exponent}}{x}$。在 $x = 1$ 处，$y = 1$ 且 $\\ln 1 = 0$，所以 $y'(1) = ${k} + ${inParens(m)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const boatOnARope: KnowledgePointDef = {
+  id: "a-boat-pulled-by-a-rope",
+  title: t("A boat pulled by a rope", "用绳子拉船"),
+  explanation: t(
+    "A boat pulled toward a dock by a rope through a raised pulley forms a right triangle with a fixed height, a shrinking base and a shrinking rope. Differentiating $x^2 + h^2 = s^2$ removes the constant height and gives $x\\frac{dx}{dt} = s\\frac{ds}{dt}$. Since the rope is longer than the base, the boat moves faster than the rope is pulled. The closer the boat comes to the dock, the larger this speed becomes.",
+    "用穿过高处滑轮的绳子把船拉向码头，构成一个直角三角形：高固定，底边缩短，绳子也缩短。对 $x^2 + h^2 = s^2$ 求导，常数高消失，得 $x\\frac{dx}{dt} = s\\frac{ds}{dt}$。由于绳子比底边长，船的速度大于拉绳的速度。船越靠近码头，这个速度就越大。",
+  ),
+  generate(rng) {
+    const [h, x, s] = rng.pick(rightTriangles);
+    const r = rng.int(1, 6);
+    const answer = Q.of(s * r, x);
+    return numberProblem({
+      prompt: t(
+        `A rope runs from a boat to a pulley ${h} m above the level of the boat. The rope is pulled in at ${r} m/s. How fast, in m/s, is the boat moving horizontally when ${s} m of rope is out?`,
+        `一根绳子从船连到比船高 ${h} 米的滑轮。绳子以每秒 ${r} 米的速度被拉进。当绳子放出 ${s} 米时，船的水平速度是每秒多少米？`,
+      ),
+      answer,
+      wrong: [Q.of(r), Q.of(x * r, s), Q.of(h * r, x), Q.of(s * r, h)],
+      solution: t(
+        `At this moment, the horizontal distance is $\\sqrt{${s * s} - ${h * h}} = ${x}$. From $x\\frac{dx}{dt} = s\\frac{ds}{dt}$, the speed is $\\frac{${s} \\cdot ${r}}{${x}} = ${answer.toLatex()}$.`,
+        `此时水平距离是 $\\sqrt{${s * s} - ${h * h}} = ${x}$。由 $x\\frac{dx}{dt} = s\\frac{ds}{dt}$，速度是 $\\frac{${s} \\cdot ${r}}{${x}} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const concaveDownLength: KnowledgePointDef = {
+  id: "the-length-of-an-interval-where-a-quartic-is-concave-down",
+  title: t("The length of an interval where a quartic is concave down", "四次函数下凹区间的长度"),
+  explanation: t(
+    "The sign of the second derivative decides the concavity. For a quartic with a positive leading coefficient, $y''$ is a quadratic that opens upward. If this quadratic has two real roots, then it is negative only between them, and so the curve is concave down on exactly that bounded interval. Outside the interval, the curve is concave up. Each of the two roots is an inflection point, because the sign changes there.",
+    "二阶导数的符号决定凹凸性。对首项系数为正的四次函数，$y''$ 是开口向上的二次式。如果这个二次式有两个实根，那么它只在两根之间为负，所以曲线恰好在这个有界区间上下凹。在区间之外，曲线上凹。两个根都是拐点，因为符号在那里改变。",
+  ),
+  generate(rng) {
+    const r = rng.int(-6, 5);
+    const s = r + rng.int(1, 8);
+    const answer = s - r;
+    const y = poly([1, "x^4"], [-2 * (r + s), "x^3"], [6 * r * s, "x^2"]);
+    const second = poly([12, "x^2"], [-12 * (r + s), "x"], [12 * r * s, ""]);
+    return numberProblem({
+      prompt: t(
+        `The curve $y = ${y}$ is concave down on one bounded interval. Find the length of this interval.`,
+        `曲线 $y = ${y}$ 在一个有界区间上下凹。求这个区间的长度。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [2 * answer, Math.abs(r + s), Math.abs(r * s), answer + 1],
+      solution: t(
+        `Here $y'' = ${second}$, which has the roots $${r}$ and $${s}$ and is negative between them. So the length of the interval is $${answer}$.`,
+        `这里 $y'' = ${second}$，它的根是 $${r}$ 和 $${s}$，在两根之间为负。所以区间的长度是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const powerPlusReciprocalMinimum: KnowledgePointDef = {
+  id: "the-local-minimum-of-a-power-plus-a-reciprocal",
+  title: t("The local minimum of a power plus a reciprocal", "幂与倒数之和的局部极小值"),
+  explanation: t(
+    "For $x > 0$, a function like $ax^2 + \\frac{b}{x}$ grows without bound both as $x \\to 0$ and as $x \\to \\infty$, with a lowest point between. The second derivative $2a + \\frac{2b}{x^3}$ is positive for all $x > 0$ when $a$ and $b$ are, so the second derivative test confirms a minimum at any critical point. This form often appears in optimization, as one term falls while the other rises.",
+    "当 $x > 0$ 时，像 $ax^2 + \\frac{b}{x}$ 这样的函数在 $x \\to 0$ 和 $x \\to \\infty$ 时都无限增大，中间有一个最低点。当 $a$ 和 $b$ 为正时，二阶导数 $2a + \\frac{2b}{x^3}$ 对所有 $x > 0$ 都是正的，所以二阶导数判别法确认任何临界点都是极小值点。这种形式常出现在最优化中，一项减小时另一项增大。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 4);
+    const c = rng.int(1, 12);
+    const b = 2 * a * c ** 3;
+    const answer = 3 * a * c * c;
+    return numberProblem({
+      prompt: t(
+        `Find the local minimum value of $f(x) = ${poly([a, "x^2"])} + \\frac{${b}}{x}$ for $x > 0$.`,
+        `求 $f(x) = ${poly([a, "x^2"])} + \\frac{${b}}{x}$（$x > 0$）的局部极小值。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a * c * c, 2 * a * c * c, c, 3 * a * c],
+      solution: t(
+        `Setting $f'(x) = ${poly([2 * a, "x"])} - \\frac{${b}}{x^2} = 0$ gives $x = ${c}$, and $f''(${c}) = ${6 * a} > 0$ makes this a minimum. Its value is $${a * c * c} + ${2 * a * c * c} = ${answer}$.`,
+        `令 $f'(x) = ${poly([2 * a, "x"])} - \\frac{${b}}{x^2} = 0$，得 $x = ${c}$，而 $f''(${c}) = ${6 * a} > 0$ 说明这是极小值点。它的值是 $${a * c * c} + ${2 * a * c * c} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const reciprocalOfRoot: KnowledgePointDef = {
+  id: "approximating-a-reciprocal-of-a-root",
+  title: t("Approximating a reciprocal of a root", "近似计算根式的倒数"),
+  explanation: t(
+    "Local linearity works for any differentiable function, and the choice of function follows from the shape of the number. To approximate $\\frac{1}{\\sqrt{N}}$, use $f(x) = x^{-1/2}$ at a nearby perfect square, where $f$ and $f'$ have exact values. Since $f$ is decreasing, its slope is negative, so a number above the square has an approximation below the exact value at the square. Because $f$ is concave up, this estimate is slightly low.",
+    "局部线性化适用于任何可导函数，函数的选择取决于这个数的形式。要近似 $\\frac{1}{\\sqrt{N}}$，取 $f(x) = x^{-1/2}$，在附近的完全平方数处，$f$ 和 $f'$ 都有精确值。由于 $f$ 递减，斜率为负，所以大于该平方数的数，其近似值小于在平方数处的精确值。又因为 $f$ 是上凹的，这个估计略微偏低。",
+  ),
+  generate(rng) {
+    const a = rng.int(3, 10);
+    const h = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
+    const base = Q.of(1, a);
+    const step = Q.of(h, 2 * a ** 3);
+    const answer = base.sub(step);
+    const shown = Q.of(Math.abs(h), 2 * a ** 3).toLatex();
+    return numberProblem({
+      prompt: t(
+        `Use the linearization of $f(x) = \\frac{1}{\\sqrt{x}}$ at $x = ${a * a}$ to approximate $\\frac{1}{\\sqrt{${a * a + h}}}$.`,
+        `用 $f(x) = \\frac{1}{\\sqrt{x}}$ 在 $x = ${a * a}$ 处的线性化近似 $\\frac{1}{\\sqrt{${a * a + h}}}$。`,
+      ),
+      answer,
+      wrong: [base.add(step), base.sub(Q.of(h, a ** 3)), base, base.sub(Q.of(h, 2 * a))],
+      solution: t(
+        `Here $f(${a * a}) = ${base.toLatex()}$ and $f'(${a * a}) = -\\frac{1}{2 \\cdot ${a}^3}$. With the step $${h}$, the estimate is $${base.toLatex()} ${h > 0 ? "-" : "+"} ${shown} = ${answer.toLatex()}$.`,
+        `这里 $f(${a * a}) = ${base.toLatex()}$，$f'(${a * a}) = -\\frac{1}{2 \\cdot ${a}^3}$。步长为 $${h}$，估计值是 $${base.toLatex()} ${h > 0 ? "-" : "+"} ${shown} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const rectangleUnderParabola: KnowledgePointDef = {
+  id: "the-largest-rectangle-under-a-parabola",
+  title: t("The largest rectangle under a parabola", "抛物线下的最大矩形"),
+  explanation: t(
+    "A rectangle with its base on the $x$-axis and its top corners on a symmetric parabola is fixed by one number: the $x$-coordinate of its right corner. Its width is twice this, and its height is the value of the function there. Writing the area in terms of $x$ turns a geometric question into a cubic to maximize. Only values of $x$ between 0 and the root of the parabola make sense as a rectangle.",
+    "底边在 $x$ 轴上、上方两个顶点在对称抛物线上的矩形，由一个数确定：右顶点的 $x$ 坐标。宽是它的两倍，高是函数在那里的值。把面积写成 $x$ 的式子，就把几何问题变成求三次式的最大值。只有 0 和抛物线的根之间的 $x$ 才构成矩形。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 5);
+    const r = rng.int(1, 6);
+    const answer = 4 * k * r ** 3;
+    const curve = poly([3 * k * r * r, ""], [-k, "x^2"]);
+    return numberProblem({
+      prompt: t(
+        `A rectangle has its base on the $x$-axis and its two top corners on the parabola $y = ${curve}$. Find the largest possible area of the rectangle.`,
+        `一个矩形的底边在 $x$ 轴上，上方两个顶点在抛物线 $y = ${curve}$ 上。求矩形的最大面积。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [2 * k * r ** 3, 4 * k * r * r, 3 * k * r * r, 8 * k * r ** 3],
+      solution: t(
+        `With corners at $\\pm x$, the area is $A = 2x(${curve})$, and $A' = ${poly([6 * k * r * r, ""], [-6 * k, "x^2"])} = 0$ gives $x = ${r}$. The height there is $${2 * k * r * r}$ and the width is $${2 * r}$, so the area is $${answer}$.`,
+        `设顶点在 $\\pm x$ 处，面积 $A = 2x(${curve})$，由 $A' = ${poly([6 * k * r * r, ""], [-6 * k, "x^2"])} = 0$ 得 $x = ${r}$。此时高是 $${2 * k * r * r}$，宽是 $${2 * r}$，所以面积是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const distanceBetweenTurningPoints: KnowledgePointDef = {
+  id: "the-distance-between-two-turning-points",
+  title: t("The distance between two turning points", "两个转向点之间的距离"),
+  explanation: t(
+    "A particle turns around where its velocity changes sign. When the position is a cubic, the velocity is a quadratic, and its two roots give the two moments of turning. The particle reaches an extreme position at each of them. So the distance between those positions is found by evaluating the position function, not the velocity. Note that this is the difference in position at two times, and not a time difference.",
+    "质点在速度变号时转向。当位置是三次函数时，速度是二次函数，它的两个根给出两个转向时刻。质点在每个时刻都到达一个极端位置。所以这两个位置之间的距离要代入位置函数来求，而不是速度。注意这是两个时刻的位置之差，而不是时间差。",
+  ),
+  generate(rng) {
+    const p = rng.int(1, 8);
+    const d = 2 * rng.int(1, 4);
+    const q = p + d;
+    const middle = (-3 * (p + q)) / 2;
+    const position = (time: number) => time ** 3 + middle * time ** 2 + 3 * p * q * time;
+    const answer = d ** 3 / 2;
+    return numberProblem({
+      prompt: t(
+        `A particle has position $s(t) = ${poly([1, "t^3"], [middle, "t^2"], [3 * p * q, "t"])}$ for $t \\ge 0$. It changes direction twice. How far apart are the two positions where it turns?`,
+        `质点的位置是 $s(t) = ${poly([1, "t^3"], [middle, "t^2"], [3 * p * q, "t"])}$，$t \\ge 0$。它改变方向两次。两个转向位置相距多远？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [d, d ** 3, d * d, 3 * d * d],
+      solution: t(
+        `The velocity $${poly([3, "t^2"], [2 * middle, "t"], [3 * p * q, ""])}$ vanishes at $t = ${p}$ and $t = ${q}$. There $s(${p}) = ${position(p)}$ and $s(${q}) = ${position(q)}$, which are $${answer}$ apart.`,
+        `速度 $${poly([3, "t^2"], [2 * middle, "t"], [3 * p * q, ""])}$ 在 $t = ${p}$ 和 $t = ${q}$ 时为零。此时 $s(${p}) = ${position(p)}$，$s(${q}) = ${position(q)}$，相距 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const powerFromForce: KnowledgePointDef = {
+  id: "the-rate-of-work-of-the-net-force",
+  title: t("The rate of work of the net force", "合力做功的功率"),
+  explanation: t(
+    "Newton's second law gives the net force on an object as $F = ma$, and the rate at which that force does work is the power $P = Fv$. Both acceleration and velocity come from differentiating the position. With a quadratic position, the acceleration and the force are constant, yet the power still grows with time, because the object is moving faster. The unit of power is the watt, which is one newton metre per second.",
+    "牛顿第二定律给出物体所受合力 $F = ma$，这个力做功的快慢是功率 $P = Fv$。加速度和速度都由位置求导得到。当位置是二次函数时，加速度和力是常数，但功率仍随时间增大，因为物体运动得更快了。功率的单位是瓦特，即每秒一牛顿米。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 6);
+    const b = rng.int(1, 9);
+    const m = rng.int(2, 9);
+    const time = rng.int(1, 6);
+    const force = 2 * a * m;
+    const velocity = 2 * a * time + b;
+    const answer = force * velocity;
+    return numberProblem({
+      prompt: t(
+        `An object of mass ${m} kg has position $s(t) = ${poly([a, "t^2"], [b, "t"])}$ metres at time $t$ seconds. Find the power $P = Fv$ of the net force, in watts, at $t = ${time}$.`,
+        `质量为 ${m} 千克的物体在 $t$ 秒时的位置是 $s(t) = ${poly([a, "t^2"], [b, "t"])}$ 米。求 $t = ${time}$ 时合力的功率 $P = Fv$，单位为瓦特。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [force, velocity, m * velocity, force * 2 * a * time],
+      solution: t(
+        `The acceleration is $${2 * a}$, so $F = ${m} \\cdot ${2 * a} = ${force}$ N. The velocity at this time is $${velocity}$ m/s. So $P = ${force} \\cdot ${velocity} = ${answer}$ W.`,
+        `加速度是 $${2 * a}$，所以 $F = ${m} \\cdot ${2 * a} = ${force}$ 牛。此时的速度是每秒 $${velocity}$ 米。所以 $P = ${force} \\cdot ${velocity} = ${answer}$ 瓦。`,
+      ),
+    });
+  },
+};
+
+const integralAsOneLogarithm: KnowledgePointDef = {
+  id: "a-logarithmic-integral-written-as-one-logarithm",
+  title: t("A logarithmic integral written as one logarithm", "把对数积分写成一个对数"),
+  explanation: t(
+    "A definite integral of $\\frac{k}{x}$ on a positive interval gives $k(\\ln b - \\ln a)$. The rules of logarithms then combine this into a single logarithm: the difference becomes a quotient, and the coefficient becomes a power, so the result is $\\ln\\left(\\frac{b}{a}\\right)^k$. Notice that the value depends only on the ratio of the limits, so the integrals over $[1, 2]$ and $[3, 6]$ are equal. This is what makes the logarithm special.",
+    "$\\frac{k}{x}$ 在正区间上的定积分是 $k(\\ln b - \\ln a)$。再用对数法则合并成一个对数：差变成商，系数变成幂，结果是 $\\ln\\left(\\frac{b}{a}\\right)^k$。注意积分值只取决于上下限的比，所以在 $[1, 2]$ 和 $[3, 6]$ 上的积分相等。这正是对数的特别之处。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 4);
+    const ratio = rng.int(2, 5);
+    const k = rng.int(2, 4);
+    const b = a * ratio;
+    const answer = ratio ** k;
+    return numberProblem({
+      prompt: t(
+        `$\\int_{${a}}^{${b}} \\frac{${k}}{x}\\,dx = \\ln c$. Find $c$.`,
+        `$\\int_{${a}}^{${b}} \\frac{${k}}{x}\\,dx = \\ln c$。求 $c$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [ratio * k, b ** k, ratio, (b - a) ** k],
+      solution: t(
+        `The integral is $${k}(\\ln ${b} - \\ln ${a}) = ${k}\\ln ${ratio} = \\ln ${ratio}^${k}$. So $c = ${answer}$.`,
+        `积分等于 $${k}(\\ln ${b} - \\ln ${a}) = ${k}\\ln ${ratio} = \\ln ${ratio}^${k}$。所以 $c = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const exponentialOverLogOfBase: KnowledgePointDef = {
+  id: "an-exponential-integral-over-ln-of-the-base",
+  title: t("An exponential integral over the logarithm of its base", "含底数对数的指数积分"),
+  explanation: t(
+    "The derivative of $a^x$ is $a^x\\ln a$, so an antiderivative of $a^x$ is $\\frac{a^x}{\\ln a}$. Bases other than $e$ therefore leave a factor of $\\frac{1}{\\ln a}$ in every definite integral. When evaluating, remember the lower limit: at $x = 0$, the value $a^0 = 1$ is not zero, and it must be subtracted. Forgetting it, or treating $a^x$ like a power of $x$, are the usual mistakes.",
+    "$a^x$ 的导数是 $a^x\\ln a$，所以 $a^x$ 的一个原函数是 $\\frac{a^x}{\\ln a}$。因此底数不是 $e$ 时，每个定积分中都留下因子 $\\frac{1}{\\ln a}$。计算时要记住下限：在 $x = 0$ 处，$a^0 = 1$ 不是零，必须减去。忘记减去，或把 $a^x$ 当成 $x$ 的幂，是常见的错误。",
+  ),
+  generate(rng) {
+    const a = rng.pick([2, 3, 5, 6, 7, 10]);
+    const n = rng.int(2, 4);
+    const k = rng.int(1, 9);
+    const top = a ** n;
+    const answer = k * (top - 1);
+    const scale = k === 1 ? "" : `${k} \\cdot `;
+    return numberProblem({
+      prompt: t(
+        `$\\int_0^{${n}} ${scale}${a}^x\\,dx = \\frac{c}{\\ln ${a}}$. Find $c$.`,
+        `$\\int_0^{${n}} ${scale}${a}^x\\,dx = \\frac{c}{\\ln ${a}}$。求 $c$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [k * top, top - 1, k * n * a ** (n - 1), k * (a ** (n + 1) - 1)],
+      solution: t(
+        `An antiderivative is $\\frac{${scale}${a}^x}{\\ln ${a}}$. Evaluating at $x = ${n}$ and $x = 0$ gives a numerator of $${k}(${top} - 1)$, so $c = ${answer}$.`,
+        `一个原函数是 $\\frac{${scale}${a}^x}{\\ln ${a}}$。在 $x = ${n}$ 和 $x = 0$ 处取值，分子是 $${k}(${top} - 1)$，所以 $c = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const integralOfTanSquared: KnowledgePointDef = {
+  id: "an-integral-of-tan-squared-plus-a-constant",
+  title: t("An integral of tan squared plus a constant", "tan 平方加常数的积分"),
+  explanation: t(
+    "There is no direct rule for $\\tan^2 x$, but the identity $\\tan^2 x = \\sec^2 x - 1$ turns it into two functions with known antiderivatives. So the integral is $\\tan x - x$. The term $-x$ is easy to overlook, yet it is where the factor of $\\pi$ comes from on an interval with limits in terms of $\\pi$. Any added constant combines with this term, because it also integrates to a multiple of $x$.",
+    "$\\tan^2 x$ 没有直接的积分法则，但恒等式 $\\tan^2 x = \\sec^2 x - 1$ 把它变成两个已知原函数的函数。所以积分是 $\\tan x - x$。$-x$ 这一项容易被忽略，但当积分限用 $\\pi$ 表示时，$\\pi$ 的因子正是来自这里。任何加上的常数都与这一项合并，因为它积分后也是 $x$ 的倍数。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 9);
+    const m = different(rng, 1, 9, k);
+    const answer = Q.of(m - k, 4);
+    const integrand = poly([k, "\\tan^2 x"], [m, ""]);
+    const rewritten = poly([k, "\\sec^2 x"], [m - k, ""]);
+    return numberProblem({
+      prompt: t(
+        `$\\int_0^{\\pi/4} (${integrand})\\,dx = A + B\\pi$ with $A$ and $B$ rational. Find $B$.`,
+        `$\\int_0^{\\pi/4} (${integrand})\\,dx = A + B\\pi$，其中 $A$ 和 $B$ 是有理数。求 $B$。`,
+      ),
+      answer,
+      wrong: [Q.of(k, 4), Q.of(m, 4), Q.of(m + k, 4), Q.of(k - m, 4)],
+      solution: t(
+        `Since $\\tan^2 x = \\sec^2 x - 1$, the integrand is $${rewritten}$. The secant term gives the rational part $${k}$, and the constant gives $${inParens(m - k)} \\cdot \\frac{\\pi}{4}$. So $B = ${answer.toLatex()}$.`,
+        `由于 $\\tan^2 x = \\sec^2 x - 1$，被积函数是 $${rewritten}$。正割项给出有理部分 $${k}$，常数给出 $${inParens(m - k)} \\cdot \\frac{\\pi}{4}$。所以 $B = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const scaledArctangent: KnowledgePointDef = {
+  id: "an-arctangent-integral-with-a-scaled-variable",
+  title: t("An arctangent integral with a scaled variable", "变量带系数的反正切积分"),
+  explanation: t(
+    "The rule $\\int \\frac{dx}{a^2 + x^2} = \\frac{1}{a}\\arctan\\frac{x}{a} + C$ needs $x^2$ to have a coefficient of 1. When the variable has a coefficient, as in $a^2 + b^2x^2$, the substitution $u = bx$ brings this about, at the cost of an extra factor of $\\frac{1}{b}$. So the antiderivative is $\\frac{1}{ab}\\arctan\\frac{bx}{a}$. Both constants appear in the denominator, and leaving one out is the usual slip.",
+    "公式 $\\int \\frac{dx}{a^2 + x^2} = \\frac{1}{a}\\arctan\\frac{x}{a} + C$ 要求 $x^2$ 的系数为 1。当变量带系数时，如 $a^2 + b^2x^2$，代换 $u = bx$ 可以做到这一点，代价是多出因子 $\\frac{1}{b}$。所以原函数是 $\\frac{1}{ab}\\arctan\\frac{bx}{a}$。两个常数都出现在分母中，漏掉一个是常见的失误。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 9);
+    // A reduced fraction a/b, so that the limit and the arctangent read cleanly.
+    const b = rng.pick([2, 3, 4, 5, 6, 7].filter((v) => Q.of(a, v).toLatex() === `\\frac{${a}}{${v}}`));
+    const k = rng.int(1, 9);
+    const upper = Q.of(a, b);
+    const answer = Q.of(k, 4 * a * b);
+    return numberProblem({
+      prompt: t(
+        `$\\int_0^{${upper.toLatex()}} \\frac{${k}}{${a * a} + ${b * b}x^2}\\,dx = c\\pi$. Find $c$.`,
+        `$\\int_0^{${upper.toLatex()}} \\frac{${k}}{${a * a} + ${b * b}x^2}\\,dx = c\\pi$。求 $c$。`,
+      ),
+      answer,
+      wrong: [Q.of(k, 4 * a), Q.of(k, 4 * b), Q.of(k, 2 * a * b), Q.of(k, a * b)],
+      solution: t(
+        `With $u = ${b}x$, an antiderivative is $${k} \\cdot \\frac{1}{${a * b}}\\arctan\\frac{${b}x}{${a}}$. At the upper limit the arctangent is that of $1$, which is $\\frac{\\pi}{4}$, and at $0$ it vanishes. So $c = ${answer.toLatex()}$.`,
+        `令 $u = ${b}x$，一个原函数是 $${k} \\cdot \\frac{1}{${a * b}}\\arctan\\frac{${b}x}{${a}}$。在上限处是 $1$ 的反正切，即 $\\frac{\\pi}{4}$，在 $0$ 处为零。所以 $c = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const areaCutOffByParabola: KnowledgePointDef = {
+  id: "the-area-cut-off-by-a-parabola",
+  title: t("The area cut off by a parabola", "抛物线截出的面积"),
+  explanation: t(
+    "A downward parabola with two real roots encloses a region with the $x$-axis, and the roots are the limits of integration. They must be found first, since no limits are given. For the parabola $y = k(x - r)(s - x)$, this area comes to $\\frac{k(s - r)^3}{6}$, a formula due in essence to Archimedes. It depends only on the distance between the roots and the coefficient $k$, and not on where the parabola sits along the axis.",
+    "开口向下、有两个实根的抛物线与 $x$ 轴围成一个区域，根就是积分限。由于没有给出积分限，必须先求出它们。对抛物线 $y = k(x - r)(s - x)$，这个面积是 $\\frac{k(s - r)^3}{6}$，这个结果本质上源于阿基米德。它只取决于两根之间的距离和系数 $k$，与抛物线在轴上的位置无关。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 6);
+    const r = rng.int(-5, 5);
+    const d = rng.int(1, 8);
+    const s = r + d;
+    const answer = Q.of(k * d ** 3, 6);
+    const curve = poly([-k, "x^2"], [k * (r + s), "x"], [-k * r * s, ""]);
+    return numberProblem({
+      prompt: t(
+        `Find the area of the region enclosed by $y = ${curve}$ and the $x$-axis.`,
+        `求 $y = ${curve}$ 与 $x$ 轴围成的区域的面积。`,
+      ),
+      answer,
+      wrong: [Q.of(k * d ** 3, 3), Q.of(k * d ** 3, 2), Q.of(k * d * d, 6), Q.of(-k * d ** 3, 6)],
+      solution: t(
+        `The curve meets the axis at $x = ${r}$ and $x = ${s}$, and it is above the axis between them. With $u = ${poly([1, "x"], [-r, ""])}$, the area is $\\int_0^{${d}} ${poly([k, "u"])}(${d} - u)\\,du = ${answer.toLatex()}$.`,
+        `曲线与轴交于 $x = ${r}$ 和 $x = ${s}$，在两者之间位于轴上方。令 $u = ${poly([1, "x"], [-r, ""])}$，面积是 $\\int_0^{${d}} ${poly([k, "u"])}(${d} - u)\\,du = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
 /** deeperCalculusIPoints gives, by topic id, the knowledge points added after a Calculus I topic's own. */
 export const deeperCalculusIPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "limits-of-piecewise-functions": [coefficientForPiecewiseLimit],
@@ -1914,4 +2837,35 @@ export const deeperCalculusIPoints: Readonly<Record<string, readonly KnowledgePo
   "defining-definite-integrals-using-left-and-right-riemann-sums": [limitOfSumValue],
   "the-area-bounded-by-a-curve-and-the-y-axis": [enclosedByYAxis],
   "estimating-derivatives-using-a-central-difference-quotient": [centralDifferenceError],
+  "the-reciprocal-hyperbolic-functions": [sechFromTanh],
+  "the-sum-rule-for-limits": [productLimitFromSumAndDifference],
+  "the-power-and-root-rules-for-limits": [limitFromItsRoot],
+  "limits-at-infinity-of-polynomials": [expandedPowersAtInfinity],
+  "limits-of-radical-functions": [radicalAtNegativeInfinity],
+  "limits-of-inverse-trigonometric-functions": [inverseTrigOfRatio],
+  "limits-of-absolute-value-functions": [quotientOfAbsoluteValues],
+  "special-limits-involving-sine": [shiftedSineOverSquares],
+  "continuity-over-an-interval": [continuityOfRadicalQuotient],
+  "jump-discontinuities": [jumpsOfFloor],
+  "the-average-rate-of-change-of-a-function-over-a-varying-interval": [widthFromAverageRate],
+  "the-power-rule-for-differentiation": [exponentFromDerivative],
+  "differentiating-trigonometric-functions": [highDerivativeOfSineCosineSum],
+  "differentiating-hyperbolic-functions": [coshSlopeAtHeight],
+  "differentiating-reciprocal-trigonometric-functions": [squaresOfSecantAndTangent],
+  "calculating-derivatives-from-data-and-tables": [secondDerivativeOfProduct],
+  "calculating-derivatives-from-data-using-the-chain-rule": [chainRuleOfThree],
+  "differentiating-an-inverse-function-at-a-point": [secondDerivativeOfInverse],
+  "further-logarithmic-differentiation": [variablePowerAtOne],
+  "calculating-related-rates-using-the-pythagorean-theorem": [boatOnARope],
+  "relating-concavity-to-the-second-derivative": [concaveDownLength],
+  "the-second-derivative-test": [powerPlusReciprocalMinimum],
+  "approximating-the-roots-of-a-number-using-local-linearity": [reciprocalOfRoot],
+  "solving-optimization-problems-using-derivatives": [rectangleUnderParabola],
+  "calculating-velocity-for-straight-line-motion-using-differentiation": [distanceBetweenTurningPoints],
+  "newtons-second-law": [powerFromForce],
+  "integrating-the-reciprocal-function": [integralAsOneLogarithm],
+  "integrating-exponential-functions": [exponentialOverLogOfBase],
+  "integrating-trigonometric-functions": [integralOfTanSquared],
+  "integration-using-inverse-trigonometric-functions": [scaledArctangent],
+  "the-area-bounded-by-a-curve-and-the-x-axis": [areaCutOffByParabola],
 };
