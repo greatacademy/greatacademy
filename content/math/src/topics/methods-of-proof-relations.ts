@@ -650,8 +650,8 @@ export const nAryRelations: TopicDef = {
           fmt([x, y, z]),
           wrong.map(fmt),
           t(
-            `$${o === 1 ? "" : `${o} \\cdot `}${par(x)} + ${p} \\cdot ${par(y)} + ${q} = ${z}$.`,
-            `$${o === 1 ? "" : `${o} \\cdot `}${par(x)} + ${p} \\cdot ${par(y)} + ${q} = ${z}$。`,
+            `Put the first two entries into the condition; the result must equal the third entry: $${o === 1 ? "" : `${o} \\cdot `}${par(x)} + ${p} \\cdot ${par(y)} + ${q} = ${z}$.`,
+            `把前两个分量代入条件，结果必须等于第三个分量：$${o === 1 ? "" : `${o} \\cdot `}${par(x)} + ${p} \\cdot ${par(y)} + ${q} = ${z}$。`,
           ),
         );
       },

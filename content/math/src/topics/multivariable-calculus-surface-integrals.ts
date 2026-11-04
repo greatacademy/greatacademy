@@ -190,22 +190,43 @@ export const parametrizationsOfEllipsoidsAndCones: TopicDef = {
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 9);
-        const u = rng.int(2, 12);
-        const z = k * u;
-
-        const prompt = t(
-          `In the standard parametrization of the cone $z = ${k}\\sqrt{x^2 + y^2}$ given by $\\mathbf{r}(u, v) = \\langle u \\cos v, u \\sin v, ${k}u \\rangle$, find the value of $z$ when $u = ${u}$.`,
-          `在锥面 $z = ${k}\\sqrt{x^2 + y^2}$ 的标准参数化 $\\mathbf{r}(u, v) = \\langle u \\cos v, u \\sin v, ${k}u \\rangle$ 中，当参数 $u = ${u}$ 时，求 $z$ 的值。`,
-        );
-        const solution = t(
-          steps(`From the parametrization, $z(u, v) = ${k}u$.`, `Substitute $u = ${u}$: $z = ${k}(${u}) = ${z}$.`),
-          steps(`由参数方程可知，$z(u, v) = ${k}u$。`, `代入 $u = ${u}$：$z = ${k}(${u}) = ${z}$。`),
-        );
+        if (rng.bool()) {
+          // From a horizontal position to a height: u has to be recovered from x and y first.
+          const [p, q, u] = rng.pick([
+            [3, 4, 5],
+            [5, 12, 13],
+            [6, 8, 10],
+            [8, 15, 17],
+          ] as const);
+          const x = p * rng.pick([1, -1]);
+          const y = q * rng.pick([1, -1]);
+          return numberProblem({
+            prompt: t(
+              `The cone $z = ${k}\\sqrt{x^2 + y^2}$ is parametrized by $\\mathbf{r}(u, v) = \\langle u \\cos v, u \\sin v, ${k}u \\rangle$ with $u \\ge 0$. Which value of $u$ reaches the point of the cone above $(x, y) = (${x}, ${y})$?`,
+              `锥面 $z = ${k}\\sqrt{x^2 + y^2}$ 的参数化为 $\\mathbf{r}(u, v) = \\langle u \\cos v, u \\sin v, ${k}u \\rangle$，其中 $u \\ge 0$。锥面上位于 $(x, y) = (${x}, ${y})$ 上方的点对应哪个 $u$ 值？`,
+            ),
+            answer: u,
+            wrong: [k * u, u * u, p + q, Math.abs(x + y)],
+            solution: t(
+              `The horizontal part of $\\mathbf{r}$ gives $x^2 + y^2 = u^2(\\cos^2 v + \\sin^2 v) = u^2$, so $u$ is the distance from the $z$-axis:${steps(`u = \\sqrt{${x * x} + ${y * y}} = ${u}`)}`,
+              `$\\mathbf{r}$ 的水平部分给出 $x^2 + y^2 = u^2(\\cos^2 v + \\sin^2 v) = u^2$，所以 $u$ 是到 $z$ 轴的距离：${steps(`u = \\sqrt{${x * x} + ${y * y}} = ${u}`)}`,
+            ),
+          });
+        }
+        // From the equation of the cone to the coefficient in the parametrization.
+        const m = rng.int(2, 7);
+        const c = m * m;
         return numberProblem({
-          prompt,
-          solution,
-          answer: z,
-          wrong: [z + k, z - k, k * k * u],
+          prompt: t(
+            `The upper half of the cone $z^2 = ${c}(x^2 + y^2)$ is parametrized by $\\mathbf{r}(u, v) = \\langle ${k}u \\cos v, ${k}u \\sin v, Cu \\rangle$ with $u \\ge 0$. Find $C$.`,
+            `锥面 $z^2 = ${c}(x^2 + y^2)$ 的上半部分的参数化为 $\\mathbf{r}(u, v) = \\langle ${k}u \\cos v, ${k}u \\sin v, Cu \\rangle$，其中 $u \\ge 0$。求 $C$。`,
+          ),
+          answer: k * m,
+          wrong: [m, c, k * c, k + m],
+          solution: t(
+            `Substitute the parametrization into the equation of the cone. Here $x^2 + y^2 = ${k * k}u^2$, so $z^2 = ${c} \\cdot ${k * k}u^2$, and $z \\ge 0$ gives $z = ${m} \\cdot ${k}u = ${k * m}u$. So $C = ${k * m}$.`,
+            `把参数方程代入锥面方程。这里 $x^2 + y^2 = ${k * k}u^2$，所以 $z^2 = ${c} \\cdot ${k * k}u^2$，由 $z \\ge 0$ 得 $z = ${m} \\cdot ${k}u = ${k * m}u$。所以 $C = ${k * m}$。`,
+          ),
         });
       },
     },

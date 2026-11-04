@@ -1658,9 +1658,11 @@ export const factorials: TopicDef = {
             wrong: [n, n * (n - 1), (n * (n + 1)) / 2, n === 0 ? 0 : fact(n - 1)],
             solution: t(
               n === 0
-                ? "By definition, $0! = 1$."
+                ? "The factorial of zero has no factors to multiply, and by definition $0! = 1$."
                 : `Multiply the integers from $${n}$ down to $1$:${steps(`${n}! = ${factL(n)} = ${fact(n)}`)}`,
-              n === 0 ? "按规定，$0! = 1$。" : `把从 $${n}$ 到 $1$ 的整数相乘：${steps(`${n}! = ${factL(n)} = ${fact(n)}`)}`,
+              n === 0
+                ? "零的阶乘没有因数可乘，按规定 $0! = 1$。"
+                : `把从 $${n}$ 到 $1$ 的整数相乘：${steps(`${n}! = ${factL(n)} = ${fact(n)}`)}`,
             ),
           });
         }

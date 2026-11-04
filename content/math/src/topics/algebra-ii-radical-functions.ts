@@ -611,8 +611,8 @@ export const graphingTheSquareRootFunction: TopicDef = {
             answer: [k, m],
             wrong: [...(k > 1 && m > 1 ? [`\\sqrt{${n}}`] : []), radical(k * k, m), Q.of(n, 2).toLatex()],
             solution: t(
-              `${steps(`f(${n}) = \\sqrt{${n}}${k > 1 && m > 1 ? ` = \\sqrt{${k * k}} \\cdot \\sqrt{${m}}` : ""} = ${radical(k, m)}`)}`,
-              `${steps(`f(${n}) = \\sqrt{${n}}${k > 1 && m > 1 ? ` = \\sqrt{${k * k}} \\cdot \\sqrt{${m}}` : ""} = ${radical(k, m)}`)}`,
+              `Substitute into the rule, then take the largest perfect square out of the root:${steps(`f(${n}) = \\sqrt{${n}}${k > 1 && m > 1 ? ` = \\sqrt{${k * k}} \\cdot \\sqrt{${m}}` : ""} = ${radical(k, m)}`)}`,
+              `代入法则，再把最大的完全平方因数移到根号外：${steps(`f(${n}) = \\sqrt{${n}}${k > 1 && m > 1 ? ` = \\sqrt{${k * k}} \\cdot \\sqrt{${m}}` : ""} = ${radical(k, m)}`)}`,
             ),
           });
         }

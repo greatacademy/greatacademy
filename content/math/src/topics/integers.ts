@@ -132,8 +132,8 @@ export const absoluteValue: TopicDef = {
               answer: abs(a) + abs(b),
               wrong: [a + b, abs(a + b)],
               solution: t(
-                `$|${num(a)}| + |${num(b)}| = ${abs(a)} + ${abs(b)} = ${abs(a) + abs(b)}$.`,
-                `$|${num(a)}| + |${num(b)}| = ${abs(a)} + ${abs(b)} = ${abs(a) + abs(b)}$。`,
+                `Evaluate each absolute value first, then add: $|${num(a)}| + |${num(b)}| = ${abs(a)} + ${abs(b)} = ${abs(a) + abs(b)}$.`,
+                `先求出每个绝对值，再相加：$|${num(a)}| + |${num(b)}| = ${abs(a)} + ${abs(b)} = ${abs(a) + abs(b)}$。`,
               ),
             });
           default:
@@ -142,8 +142,8 @@ export const absoluteValue: TopicDef = {
               answer: abs(a) - abs(b),
               wrong: [a - b, abs(a - b), abs(b) - abs(a)],
               solution: t(
-                `$|${num(a)}| - |${num(b)}| = ${abs(a)} - ${abs(b)} = ${num(abs(a) - abs(b))}$.`,
-                `$|${num(a)}| - |${num(b)}| = ${abs(a)} - ${abs(b)} = ${num(abs(a) - abs(b))}$。`,
+                `Evaluate each absolute value first, then subtract: $|${num(a)}| - |${num(b)}| = ${abs(a)} - ${abs(b)} = ${num(abs(a) - abs(b))}$.`,
+                `先求出每个绝对值，再相减：$|${num(a)}| - |${num(b)}| = ${abs(a)} - ${abs(b)} = ${num(abs(a) - abs(b))}$。`,
               ),
             });
         }
