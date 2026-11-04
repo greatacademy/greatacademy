@@ -1728,6 +1728,778 @@ const limitFromThreeReadings: KnowledgePointDef = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// Third pass
+// ---------------------------------------------------------------------------
+
+/** signedPower writes a power of a variable, leaving out an exponent of one. */
+const signedPower = (name: string, n: number) => (n === 1 ? name : `${name}^{${n}}`);
+/** exponentOf writes the exponent c times the variable given, leaving out a coefficient of size one. */
+const exponentOf = (c: number, name: string) => (c === 1 ? name : c === -1 ? `-${name}` : `${c}${name}`);
+
+const blowUpTime: KnowledgePointDef = {
+  id: "the-time-a-separable-solution-blows-up",
+  title: t("The time a separable solution blows up", "可分离方程的解爆破的时间"),
+  explanation: t(
+    "A nonlinear equation can have a solution that stops existing, even though its right side is perfectly smooth. Separating $y' = ky^2$ gives $-\\frac{1}{y} = kt + C$, so $y$ is a constant divided by an expression that falls to zero at a finite time. As $t$ approaches that time, $y$ grows without bound, and the solution has no continuation past it. Nothing in the formula for the equation itself warns of this time; it depends on the initial value.",
+    "即使右边完全光滑，非线性方程的解也可能不再存在。分离 $y' = ky^2$ 得 $-\\frac{1}{y} = kt + C$，所以 $y$ 是一个常数除以在有限时刻降到零的式子。当 $t$ 趋近这个时刻，$y$ 无限增大，解无法延续到它之后。方程本身的公式并不提示这个时刻，它取决于初值。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 6);
+    const a = rng.int(1, 6);
+    const answer = Q.of(1, k * a);
+    return numberProblem({
+      prompt: t(
+        `The solution of $y' = ${k === 1 ? "" : k}y^2$, $y(0) = ${a}$, grows without bound as $t$ approaches a time $T > 0$. Find $T$.`,
+        `$y' = ${k === 1 ? "" : k}y^2$，$y(0) = ${a}$ 的解在 $t$ 趋近某时刻 $T > 0$ 时无限增大。求 $T$。`,
+      ),
+      answer,
+      wrong: [Q.of(k * a), Q.of(1, k), Q.of(1, a), Q.of(2, k * a), Q.of(1, k * a + 1), answer.neg()],
+      solution: t(
+        `Separating gives $\\frac{1}{y} = ${Q.of(1, a).toLatex()} - ${k === 1 ? "" : k}t$. The right side reaches zero at $t = ${answer.toLatex()}$.`,
+        `分离变量得 $\\frac{1}{y} = ${Q.of(1, a).toLatex()} - ${k === 1 ? "" : k}t$。右边在 $t = ${answer.toLatex()}$ 时变为零。`,
+      ),
+    });
+  },
+};
+
+const constantSolutionValue: KnowledgePointDef = {
+  id: "the-initial-value-that-gives-a-constant-solution",
+  title: t("The initial value that gives a constant solution", "得到常数解的初值"),
+  explanation: t(
+    "The general solution of $y' = py + q$ is a particular solution plus $Ce^{pt}$. Among all these solutions, exactly one has $C = 0$, and it is a constant. A constant has zero derivative, so setting $py + q = 0$ finds it at once, without any integration. Starting at this value, nothing ever changes. Starting anywhere else, the solution moves away from it or towards it depending on the sign of $p$.",
+    "$y' = py + q$ 的通解是一个特解加上 $Ce^{pt}$。在所有这些解中，恰有一个 $C = 0$，它是常数。常数的导数为零，所以令 $py + q = 0$ 就立刻求出它，不必积分。从这个值出发，什么都不会改变。从其他值出发，解会离开它或趋向它，取决于 $p$ 的符号。",
+  ),
+  generate(rng) {
+    const p = nonzero(rng, 9);
+    const q = nonzero(rng, 12);
+    const answer = Q.of(-q, p);
+    return numberProblem({
+      prompt: t(
+        `For which value of $y(0)$ is the solution of $y' = ${poly([p, "y"], [q, ""])}$ constant?`,
+        `当 $y(0)$ 取何值时，$y' = ${poly([p, "y"], [q, ""])}$ 的解是常数？`,
+      ),
+      answer,
+      wrong: [Q.of(q, p), Q.of(p, q), Q.of(-q), Q.of(0)],
+      solution: t(
+        `A constant solution has $y' = 0$, so $${poly([p, "y"], [q, ""])} = 0$, which gives $y = ${answer.toLatex()}$.`,
+        `常数解满足 $y' = 0$，所以 $${poly([p, "y"], [q, ""])} = 0$，得 $y = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const noTransientExponential: KnowledgePointDef = {
+  id: "the-initial-value-with-no-transient-under-exponential-forcing",
+  title: t("The initial value with no transient under exponential forcing", "指数强迫下没有瞬态项的初值"),
+  explanation: t(
+    "The solutions of a forced linear equation differ from each other only by a multiple of the homogeneous solution, which is the transient. The initial value decides that multiple. So a solution with no transient is the particular solution alone, and its value at $t = 0$ is just the coefficient found by undetermined coefficients. Any other starting value adds a term $Ce^{-at}$, in addition to the response to the forcing.",
+    "受迫线性方程的解之间只差齐次解的一个倍数，这就是瞬态项。初值决定这个倍数。所以没有瞬态项的解就是特解本身，它在 $t = 0$ 的值就是待定系数法求出的系数。任何其他初值都会在受迫响应之外增加一项 $Ce^{-at}$。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 9);
+    const c = different(rng, -6, 6, -a) || a + 1;
+    const b = rng.int(2, 12);
+    const answer = Q.of(b, a + c);
+    return numberProblem({
+      prompt: t(
+        `Find the value of $y(0)$ for which the solution of $${poly([1, "y'"], [a, "y"])} = ${b}e^{${exponentOf(c, "t")}}$ has no term in $e^{${exponentOf(-a, "t")}}$.`,
+        `求 $y(0)$ 的值，使 $${poly([1, "y'"], [a, "y"])} = ${b}e^{${exponentOf(c, "t")}}$ 的解不含 $e^{${exponentOf(-a, "t")}}$ 项。`,
+      ),
+      answer,
+      wrong: [Q.of(b, a), Q.of(b, c), Q.of(b), a === c ? Q.of(b, a + c + 1) : Q.of(b, a - c)],
+      solution: t(
+        `Trying $y = Ae^{${exponentOf(c, "t")}}$ gives $A(${c} + ${a}) = ${b}$, so $A = ${answer.toLatex()}$. With no transient, $y(0) = A$.`,
+        `设 $y = Ae^{${exponentOf(c, "t")}}$，得 $A(${c} + ${a}) = ${b}$，所以 $A = ${answer.toLatex()}$。没有瞬态项时，$y(0) = A$。`,
+      ),
+    });
+  },
+};
+
+const boundedAtOrigin: KnowledgePointDef = {
+  id: "the-solution-that-stays-bounded-at-the-origin",
+  title: t("The solution that stays bounded at the origin", "在原点附近有界的解"),
+  explanation: t(
+    "A coefficient that is singular at $x = 0$ can act in place of an initial condition. For $y' + \\frac{k}{x}y = c$, the integrating factor $x^k$ gives $y = \\frac{cx}{k + 1} + Cx^{-k}$. With $k > 0$, the second term grows without bound as $x$ approaches zero unless $C = 0$. So requiring the solution to stay bounded there picks out exactly one solution from the whole family.",
+    "在 $x = 0$ 处奇异的系数可以起到初始条件的作用。对 $y' + \\frac{k}{x}y = c$，积分因子 $x^k$ 给出 $y = \\frac{cx}{k + 1} + Cx^{-k}$。当 $k > 0$ 时，除非 $C = 0$，否则第二项在 $x$ 趋近零时无限增大。所以要求解在那里有界，就从整个解族中选出了唯一一个解。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 6);
+    const c = rng.int(2, 12);
+    const x0 = rng.int(1, 6);
+    const answer = Q.of(c * x0, k + 1);
+    return numberProblem({
+      prompt: t(
+        `A solution of $y' + \\frac{${k}}{x}y = ${c}$ on $x > 0$ stays bounded as $x \\to 0^+$. Find $y(${x0})$.`,
+        `$y' + \\frac{${k}}{x}y = ${c}$ 在 $x > 0$ 上的一个解在 $x \\to 0^+$ 时有界。求 $y(${x0})$。`,
+      ),
+      answer,
+      wrong: [Q.of(c * x0, k), Q.of(c * x0), Q.of(c, k + 1), answer.add(Q.of(1))],
+      solution: t(
+        `Integrating gives $y = \\frac{${c}x}{${k + 1}} + Cx^{-${k}}$, and boundedness forces $C = 0$. So $y(${x0}) = ${answer.toLatex()}$.`,
+        `积分得 $y = \\frac{${c}x}{${k + 1}} + Cx^{-${k}}$，有界性要求 $C = 0$。所以 $y(${x0}) = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const eulerHomogeneous: KnowledgePointDef = {
+  id: "eulers-theorem-for-homogeneous-functions",
+  title: t("Euler's theorem for homogeneous functions", "齐次函数的欧拉定理"),
+  explanation: t(
+    "A function homogeneous of degree $n$ satisfies $f(sx, sy) = s^n f(x, y)$ for all $s$. Differentiating both sides with respect to $s$ and then setting $s = 1$ gives $xf_x + yf_y = nf$. So this particular combination of partial derivatives depends only on the degree and on the value of the function at the point. Neither the formula for $f$ nor the separate partial derivatives need to be known.",
+    "$n$ 次齐次函数对所有 $s$ 满足 $f(sx, sy) = s^n f(x, y)$。两边对 $s$ 求导，再令 $s = 1$，得 $xf_x + yf_y = nf$。所以这个特定的偏导数组合只取决于次数和函数在该点的值。既不需要知道 $f$ 的公式，也不需要知道各个偏导数。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 6);
+    const a = rng.int(1, 6);
+    const b = rng.int(1, 6);
+    const v = nonzero(rng, 9);
+    const answer = n * v;
+    return numberProblem({
+      prompt: t(
+        `A differentiable function $f$ is homogeneous of degree ${n}, with $f(${a}, ${b}) = ${v}$. Find $${a}f_x(${a}, ${b}) + ${b}f_y(${a}, ${b})$.`,
+        `可微函数 $f$ 是 ${n} 次齐次函数，$f(${a}, ${b}) = ${v}$。求 $${a}f_x(${a}, ${b}) + ${b}f_y(${a}, ${b})$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [v, n + v, (n - 1) * v, -answer, answer + 1],
+      solution: t(
+        `Euler's theorem gives $xf_x + yf_y = nf$, which here is $${n} \\cdot ${inParens(v)} = ${answer}$.`,
+        `欧拉定理给出 $xf_x + yf_y = nf$，这里是 $${n} \\cdot ${inParens(v)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const powerMakingExact: KnowledgePointDef = {
+  id: "the-power-of-x-that-makes-an-equation-exact",
+  title: t("The power of x that makes an equation exact", "使方程恰当的 x 的幂"),
+  explanation: t(
+    "To find an integrating factor of a given shape, multiply through by it and apply the test for exactness. With the factor $x^m$, the equation $ay\\,dx + bx\\,dy = 0$ has $M = ax^m y$ and $N = bx^{m + 1}$. So $M_y = ax^m$ and $N_x = b(m + 1)x^m$. The powers of $x$ agree automatically, so exactness becomes one equation for $m$, and the exponent need not be a whole number.",
+    "要求给定形状的积分因子，就乘上它，再用恰当性检验。用因子 $x^m$，方程 $ay\\,dx + bx\\,dy = 0$ 有 $M = ax^m y$，$N = bx^{m + 1}$。所以 $M_y = ax^m$，$N_x = b(m + 1)x^m$。$x$ 的幂自动相同，于是恰当性成为关于 $m$ 的一个方程，指数不一定是整数。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 9);
+    const b = different(rng, 1, 9, a);
+    const ratio = Q.of(a, b);
+    const answer = ratio.sub(Q.of(1));
+    return numberProblem({
+      prompt: t(
+        `Find $m$ so that multiplying $${a === 1 ? "" : a}y\\,dx + ${b === 1 ? "" : b}x\\,dy = 0$ by $x^m$ makes the equation exact.`,
+        `求 $m$，使 $${a === 1 ? "" : a}y\\,dx + ${b === 1 ? "" : b}x\\,dy = 0$ 乘以 $x^m$ 后成为恰当方程。`,
+      ),
+      answer,
+      wrong: [ratio, Q.of(b, a).sub(Q.of(1)), ratio.add(Q.of(1)), answer.neg()],
+      solution: t(
+        `Exactness requires $${a} = ${b}(m + 1)$, so $m = ${ratio.toLatex()} - 1 = ${answer.toLatex()}$.`,
+        `恰当性要求 $${a} = ${b}(m + 1)$，所以 $m = ${ratio.toLatex()} - 1 = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const semistableLimit: KnowledgePointDef = {
+  id: "the-limit-near-a-semistable-equilibrium",
+  title: t("The limit near a semistable equilibrium", "半稳定平衡点附近的极限"),
+  explanation: t(
+    "At a double root of the right side of an autonomous equation, $y'$ does not change sign. So solutions on one side approach that equilibrium, while solutions on the other side move away from it. Such an equilibrium is called semistable. To find a limit, look at the sign of $y'$ at the starting value, then follow the solution in that direction until it reaches the first equilibrium, which it can never cross.",
+    "在自治方程右边的二重根处，$y'$ 不变号。所以一侧的解趋向这个平衡点，另一侧的解离开它。这样的平衡点称为半稳定的。要求极限，先看 $y'$ 在初值处的符号，然后沿这个方向跟随解，直到它到达第一个平衡点，它永远无法越过这个点。",
+  ),
+  generate(rng) {
+    const a = rng.int(-6, 3);
+    const b = a + rng.int(2, 6);
+    const place = rng.pick(["below", "between", "above"] as const);
+    const y0 = place === "below" ? a - rng.int(1, 4) : place === "between" ? a + rng.int(1, b - a - 1) : b + rng.int(1, 4);
+    const answer = place === "below" ? a : b;
+    const other = place === "below" ? b : a;
+    const first = poly([1, "y"], [-a, ""]);
+    const second = poly([b, ""], [-1, "y"]);
+    const sign = place === "above" ? "negative" : "positive";
+    const signZh = place === "above" ? "负" : "正";
+    return numberProblem({
+      prompt: t(
+        `Let $y' = (${first})^2(${second})$ with $y(0) = ${y0}$. Find $\\lim_{t \\to \\infty} y(t)$.`,
+        `设 $y' = (${first})^2(${second})$，$y(0) = ${y0}$。求 $\\lim_{t \\to \\infty} y(t)$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [other, y0, a + b, answer + 1],
+      solution: t(
+        `The equilibria are $${a}$ and $${b}$. At $y = ${y0}$, the derivative is ${sign}, so $y$ moves towards $${answer}$ and stops there.`,
+        `平衡点是 $${a}$ 和 $${b}$。在 $y = ${y0}$ 处导数为${signZh}，所以 $y$ 向 $${answer}$ 移动并停在那里。`,
+      ),
+    });
+  },
+};
+
+const isoclineOfSlope: KnowledgePointDef = {
+  id: "the-isocline-of-a-given-slope",
+  title: t("The isocline of a given slope", "给定斜率的等斜线"),
+  explanation: t(
+    "An isocline is the set of points where the slope field has one fixed value. Setting the right side of $y' = f(x, y)$ equal to a constant $m$ describes it, so no solving of the differential equation is needed. For a linear right side, each isocline is a straight line, and these lines are all parallel. Drawing a few of them, with short segments of the matching slope, is a fast way to sketch a field.",
+    "等斜线是斜率场取同一固定值的点集。令 $y' = f(x, y)$ 的右边等于常数 $m$ 就描述了它，所以不需要解微分方程。对线性的右边，每条等斜线都是直线，而且彼此平行。画出其中几条，并标上相应斜率的短线段，是快速勾画斜率场的方法。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 6);
+    const b = nonzero(rng, 6);
+    const m = nonzero(rng, 9);
+    const answer = Q.of(m, b);
+    return numberProblem({
+      prompt: t(
+        `For $y' = ${poly([a, "x"], [b, "y"])}$, the points where the slope field has slope $${m}$ form a line. Find its $y$-intercept.`,
+        `对 $y' = ${poly([a, "x"], [b, "y"])}$，斜率场中斜率为 $${m}$ 的点构成一条直线。求它的 $y$ 轴截距。`,
+      ),
+      answer,
+      wrong: [Q.of(m, a), Q.of(-m, b), Q.of(m), Q.of(m * b)],
+      solution: t(
+        `The line is $${poly([a, "x"], [b, "y"])} = ${m}$. Setting $x = 0$ gives $y = ${answer.toLatex()}$.`,
+        `这条直线是 $${poly([a, "x"], [b, "y"])} = ${m}$。令 $x = 0$，得 $y = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const tankTransient: KnowledgePointDef = {
+  id: "the-transient-coefficient-of-a-mixing-tank",
+  title: t("The transient coefficient of a mixing tank", "混合罐的瞬态系数"),
+  explanation: t(
+    "When brine flows in and out at the same rate, the amount of salt obeys a linear equation, and its solution has two parts. The constant part is the amount that the tank would hold at the concentration of the incoming brine. The other part is an exponential decay that carries the initial difference from this amount. Since it equals the whole difference at $t = 0$, its coefficient can be negative, if the tank starts with too little salt.",
+    "当盐水以相同速率流入流出时，盐量服从线性方程，它的解有两部分。常数部分是罐内浓度等于流入盐水浓度时的盐量。另一部分是指数衰减，携带着初始时与这个量的差。由于它在 $t = 0$ 时等于全部差值，如果罐里起初盐太少，它的系数可以是负的。",
+  ),
+  generate(rng) {
+    const volume = rng.int(2, 20) * 10;
+    const c = rng.int(1, 6);
+    const r = rng.int(1, 9);
+    const start = rng.int(0, 40) * 10;
+    const limit = c * volume;
+    const answer = start - limit;
+    return numberProblem({
+      prompt: t(
+        `A tank holds ${volume} L of water containing ${start} g of salt. Brine with ${c} g/L flows in at ${r} L/min, and the stirred mixture flows out at the same rate. The salt has the form $A(t) = M + Ke^{-kt}$. Find $K$.`,
+        `一个罐装有 ${volume} L 水，含盐 ${start} g。浓度为 ${c} g/L 的盐水以 ${r} L/min 流入，搅拌后的混合液以相同速率流出。盐量的形式是 $A(t) = M + Ke^{-kt}$。求 $K$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [start, limit, limit - start, c * r, answer + 10],
+      solution: t(
+        `The long-run amount is $M = ${c} \\cdot ${volume} = ${limit}$. At $t = 0$, $M + K = ${start}$, so $K = ${answer}$.`,
+        `长期盐量是 $M = ${c} \\cdot ${volume} = ${limit}$。在 $t = 0$ 时，$M + K = ${start}$，所以 $K = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const orthogonalThroughPoint: KnowledgePointDef = {
+  id: "the-orthogonal-trajectory-through-a-point",
+  title: t("The orthogonal trajectory through a point", "过一点的正交轨线"),
+  explanation: t(
+    "To find orthogonal trajectories, first remove the constant from the family. For $y = cx^n$, dividing gives $y' = \\frac{ny}{x}$, a slope that holds for every curve in the family. A curve crossing at right angles has the negative reciprocal slope, $y' = -\\frac{x}{ny}$. This equation is separable, and its solutions are ellipses. The initial point then fixes the particular ellipse, just as for any other family of solutions.",
+    "求正交轨线时，先从曲线族中消去常数。对 $y = cx^n$，相除得 $y' = \\frac{ny}{x}$，这个斜率对族中每条曲线都成立。以直角相交的曲线有负倒数斜率 $y' = -\\frac{x}{ny}$。这个方程可分离变量，解是椭圆。然后由给定的点确定具体的椭圆，就像其他解族一样。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 5);
+    const a = nonzero(rng, 6);
+    const b = nonzero(rng, 6);
+    const answer = a * a + n * b * b;
+    return numberProblem({
+      prompt: t(
+        `The orthogonal trajectory of the family $y = cx^{${n}}$ through $(${a}, ${b})$ has an equation $x^2 + py^2 = K$. Find $K$.`,
+        `曲线族 $y = cx^{${n}}$ 过 $(${a}, ${b})$ 的正交轨线的方程是 $x^2 + py^2 = K$。求 $K$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a * a + b * b, n * a * a + b * b, n * (a * a + b * b), answer + 1],
+      solution: t(
+        `Separating $y' = -\\frac{x}{${n}y}$ gives $x^2 + ${n}y^2 = K$. At the point, $K = ${a * a} + ${n} \\cdot ${b * b} = ${answer}$.`,
+        `分离 $y' = -\\frac{x}{${n}y}$，得 $x^2 + ${n}y^2 = K$。在该点，$K = ${a * a} + ${n} \\cdot ${b * b} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const accelerationFromPower: KnowledgePointDef = {
+  id: "the-acceleration-when-speed-is-a-power-of-position",
+  title: t("The acceleration when speed is a power of position", "速度是位置的幂时的加速度"),
+  explanation: t(
+    "If velocity is given as a function of position, $\\frac{dv}{dx}$ alone is not the acceleration, because it measures the change per metre and not per second. The chain rule supplies the missing factor: $a = \\frac{dv}{dt} = \\frac{dv}{dx}\\frac{dx}{dt} = v\\frac{dv}{dx}$. So the acceleration at a point is the speed there times the slope of the velocity graph. The time never needs to appear in the calculation.",
+    "如果速度是位置的函数，$\\frac{dv}{dx}$ 本身不是加速度，因为它度量的是每米而不是每秒的变化。链式法则补上缺少的因子：$a = \\frac{dv}{dt} = \\frac{dv}{dx}\\frac{dx}{dt} = v\\frac{dv}{dx}$。所以一点处的加速度是该点的速度乘以速度图的斜率。计算中根本不需要出现时间。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 4);
+    const n = rng.int(1, 3);
+    const x0 = rng.int(1, 3);
+    const velocity = k * x0 ** n;
+    const slope = k * n * x0 ** (n - 1);
+    const answer = velocity * slope;
+    return numberProblem({
+      prompt: t(
+        `A particle moving along a line has velocity $v = ${k === 1 ? "" : k}${signedPower("x", n)}$ at position $x$. Find its acceleration at $x = ${x0}$.`,
+        `沿直线运动的质点在位置 $x$ 的速度是 $v = ${k === 1 ? "" : k}${signedPower("x", n)}$。求它在 $x = ${x0}$ 处的加速度。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [slope, velocity, velocity * velocity, answer + 1],
+      solution: t(
+        `At $x = ${x0}$, $v = ${velocity}$ and $\\frac{dv}{dx} = ${slope}$. So $a = v\\frac{dv}{dx} = ${answer}$.`,
+        `在 $x = ${x0}$ 处，$v = ${velocity}$，$\\frac{dv}{dx} = ${slope}$。所以 $a = v\\frac{dv}{dx} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const periodOfOrbit: KnowledgePointDef = {
+  id: "the-period-of-a-larger-circular-orbit",
+  title: t("The period of a larger circular orbit", "更大圆轨道的周期"),
+  explanation: t(
+    "For a circular orbit, gravity supplies the centripetal force, so $\\frac{GMm}{r^2} = \\frac{mv^2}{r}$, and the speed satisfies $v^2 = \\frac{GM}{r}$. One full turn takes $T = \\frac{2\\pi r}{v}$, and combining these gives $T^2 = \\frac{4\\pi^2 r^3}{GM}$. So the square of the period is proportional to the cube of the radius, which is Kepler's third law. Neither the mass of the satellite nor the value of $G$ matters in a comparison.",
+    "对圆轨道，引力提供向心力，所以 $\\frac{GMm}{r^2} = \\frac{mv^2}{r}$，速度满足 $v^2 = \\frac{GM}{r}$。转一整圈需要 $T = \\frac{2\\pi r}{v}$，合起来得 $T^2 = \\frac{4\\pi^2 r^3}{GM}$。所以周期的平方与半径的立方成正比，这就是开普勒第三定律。做比较时，卫星的质量和 $G$ 的值都不起作用。",
+  ),
+  generate(rng) {
+    const k = rng.int(2, 5);
+    const period = rng.int(1, 12);
+    const ratio = k * k;
+    const answer = k ** 3 * period;
+    return numberProblem({
+      prompt: t(
+        `Two satellites circle the same planet. The outer orbit has ${ratio} times the radius of the inner one, and the inner satellite has a period of ${period} hours. Find the period of the outer satellite, in hours.`,
+        `两颗卫星绕同一行星运行。外轨道的半径是内轨道的 ${ratio} 倍，内侧卫星的周期是 ${period} 小时。求外侧卫星的周期（小时）。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [ratio * period, k * period, ratio * ratio * period, answer + 1],
+      solution: t(
+        `Since $T^2$ is proportional to $r^3$, the period is multiplied by $${ratio}^{3/2} = ${k ** 3}$. This gives $${answer}$ hours.`,
+        `由于 $T^2$ 与 $r^3$ 成正比，周期乘以 $${ratio}^{3/2} = ${k ** 3}$。这样得 $${answer}$ 小时。`,
+      ),
+    });
+  },
+};
+
+const initialCurrent: KnowledgePointDef = {
+  id: "the-initial-current-of-a-charging-circuit",
+  title: t("The initial current of a charging circuit", "充电电路的初始电流"),
+  explanation: t(
+    "In the equation $Rq' + \\frac{q}{C} = V$, an uncharged capacitor has $q = 0$ at the moment the switch closes, and so no voltage across it. The whole battery voltage then falls across the resistor, and $q'(0) = \\frac{V}{R}$. The capacitance does not enter, because it only matters once charge has built up. As charging goes on, the current falls towards zero, with time constant $RC$.",
+    "在方程 $Rq' + \\frac{q}{C} = V$ 中，未充电的电容器在开关闭合瞬间 $q = 0$，所以两端没有电压。这时电池的全部电压都加在电阻上，$q'(0) = \\frac{V}{R}$。电容不出现，因为只有积累了电荷它才起作用。随着充电进行，电流趋于零，时间常数是 $RC$。",
+  ),
+  generate(rng) {
+    const r = rng.int(2, 20);
+    const v = rng.int(6, 24);
+    const n = rng.int(2, 9);
+    const answer = Q.of(v, r);
+    return numberProblem({
+      prompt: t(
+        `An uncharged capacitor of $\\frac{1}{${n}}$ F, a resistor of ${r} Ω and a ${v} V battery are connected in series. Find the current, in amperes, at the moment the circuit is closed.`,
+        `未充电的 $\\frac{1}{${n}}$ F 电容器、${r} Ω 电阻和 ${v} V 电池串联。求电路闭合瞬间的电流（安培）。`,
+      ),
+      answer,
+      wrong: [Q.of(v, n), Q.of(v * r), Q.of(r, v), Q.of(0)],
+      solution: t(
+        `At first $q = 0$, so the equation gives $${r}q'(0) = ${v}$. Thus the current is $${answer.toLatex()}$ A.`,
+        `起初 $q = 0$，所以方程给出 $${r}q'(0) = ${v}$。于是电流是 $${answer.toLatex()}$ A。`,
+      ),
+    });
+  },
+};
+
+const operatorOnExponential: KnowledgePointDef = {
+  id: "a-product-of-operators-on-an-exponential",
+  title: t("A product of operators on an exponential", "算子之积作用于指数函数"),
+  explanation: t(
+    "Since $De^{cx} = ce^{cx}$, the operator $D - a$ acts on $e^{cx}$ simply by multiplying it by the number $c - a$. Applying a product of such operators then multiplies these numbers together, so a polynomial in $D$ acts on $e^{cx}$ as that polynomial evaluated at $c$. This is the reason the characteristic equation works. If $c$ is a root, the result is zero, and $e^{cx}$ solves the homogeneous equation.",
+    "由于 $De^{cx} = ce^{cx}$，算子 $D - a$ 作用于 $e^{cx}$ 只是乘以数 $c - a$。于是这种算子之积作用时，就把这些数相乘，所以 $D$ 的多项式作用于 $e^{cx}$ 等于该多项式在 $c$ 处的值。这正是特征方程有效的原因。如果 $c$ 是根，结果为零，$e^{cx}$ 就是齐次方程的解。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 5);
+    const b = nonzero(rng, 5);
+    const c = nonzero(rng, 5);
+    const answer = (c - a) * (c - b);
+    return numberProblem({
+      prompt: t(
+        `The operator $(${poly([1, "D"], [-a, ""])})(${poly([1, "D"], [-b, ""])})$ sends $e^{${exponentOf(c, "x")}}$ to $Ke^{${exponentOf(c, "x")}}$. Find $K$.`,
+        `算子 $(${poly([1, "D"], [-a, ""])})(${poly([1, "D"], [-b, ""])})$ 把 $e^{${exponentOf(c, "x")}}$ 变成 $Ke^{${exponentOf(c, "x")}}$。求 $K$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [c * c + a * b, (c + a) * (c + b), c - a + (c - b), answer + 1],
+      solution: t(
+        `Each factor $D - r$ multiplies the exponential by $${c} - r$. So $K = (${c} - ${inParens(a)})(${c} - ${inParens(b)}) = ${answer}$.`,
+        `每个因子 $D - r$ 把指数函数乘以 $${c} - r$。所以 $K = (${c} - ${inParens(a)})(${c} - ${inParens(b)}) = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const companionProduct: KnowledgePointDef = {
+  id: "the-product-of-the-eigenvalues-of-a-companion-matrix",
+  title: t("The product of the eigenvalues of a companion matrix", "友矩阵特征值之积"),
+  explanation: t(
+    "When $y''' + ay'' + by' + cy = 0$ is written as a system for $(y, y', y'')$, the eigenvalues of the matrix are the roots of $r^3 + ar^2 + br + c$. By Vieta's formulas, the product of three roots of a monic cubic is $-c$, and their sum is $-a$. For a matrix, these numbers are the determinant and the trace, so a quick check of the sign against the bottom row of the matrix is available.",
+    "把 $y''' + ay'' + by' + cy = 0$ 写成 $(y, y', y'')$ 的方程组时，矩阵的特征值是 $r^3 + ar^2 + br + c$ 的根。由韦达定理，首一三次多项式三个根之积是 $-c$，和是 $-a$。对矩阵来说，这两个数就是行列式和迹，所以可以对照矩阵的最后一行快速检查符号。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 9);
+    const b = nonzero(rng, 9);
+    const c = nonzero(rng, 12);
+    const answer = -c;
+    return numberProblem({
+      prompt: t(
+        `The equation $${poly([1, "y'''"], [a, "y''"], [b, "y'"], [c, "y"])} = 0$ is written as a system $\\mathbf{x}' = A\\mathbf{x}$ with $\\mathbf{x} = (y, y', y'')$. Find the product of the eigenvalues of $A$.`,
+        `方程 $${poly([1, "y'''"], [a, "y''"], [b, "y'"], [c, "y"])} = 0$ 写成方程组 $\\mathbf{x}' = A\\mathbf{x}$，其中 $\\mathbf{x} = (y, y', y'')$。求 $A$ 的特征值之积。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [c, -a, -b, a, answer + 1],
+      solution: t(
+        `The eigenvalues are the roots of the cubic with constant term $${c}$. The product of its roots is the negative of this, which is $${answer}$.`,
+        `特征值是常数项为 $${c}$ 的三次多项式的根。根之积是常数项的相反数，即 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const oscillationRate: KnowledgePointDef = {
+  id: "the-growth-rate-of-an-oscillating-system",
+  title: t("The growth rate of an oscillating system", "振荡系统的增长率"),
+  explanation: t(
+    "When a real two-by-two matrix has complex eigenvalues $\\alpha \\pm i\\beta$, every solution of $\\mathbf{x}' = A\\mathbf{x}$ is $e^{\\alpha t}$ times a combination of a sine and a cosine. So $\\alpha$ alone decides whether the spiral grows, shrinks or closes. The two eigenvalues add to the trace of the matrix, and the imaginary parts cancel. Hence $\\alpha$ is half of the trace, and there is no need to solve a quadratic equation to find it.",
+    "当实二阶矩阵有复特征值 $\\alpha \\pm i\\beta$ 时，$\\mathbf{x}' = A\\mathbf{x}$ 的每个解都是 $e^{\\alpha t}$ 乘以正弦和余弦的组合。所以只有 $\\alpha$ 决定螺线是增长、收缩还是闭合。两个特征值之和是矩阵的迹，虚部相消。因此 $\\alpha$ 是迹的一半，不必解二次方程。",
+  ),
+  generate(rng) {
+    const a = rng.int(-6, 6);
+    const d = rng.int(-6, 6);
+    const b = rng.int(1, 5);
+    const m = Math.floor(((a - d) * (a - d)) / (4 * b)) + rng.int(1, 3);
+    const flip = rng.pick([1, -1]);
+    const answer = Q.of(a + d, 2);
+    return numberProblem({
+      prompt: t(
+        `The matrix $A = ${matrix2(a, flip * b, -flip * m, d)}$ has complex eigenvalues. Every solution of $\\mathbf{x}' = A\\mathbf{x}$ is $e^{\\alpha t}$ times a bounded oscillation. Find $\\alpha$.`,
+        `矩阵 $A = ${matrix2(a, flip * b, -flip * m, d)}$ 有复特征值。$\\mathbf{x}' = A\\mathbf{x}$ 的每个解都是 $e^{\\alpha t}$ 乘以有界振荡。求 $\\alpha$。`,
+      ),
+      answer,
+      wrong: [Q.of(a + d), answer.neg(), Q.of(a * d + b * m), answer.add(Q.of(1))],
+      solution: t(
+        `The real part of the eigenvalues is half of the trace, so $\\alpha = \\frac{${inParens(a)} + ${inParens(d)}}{2} = ${answer.toLatex()}$.`,
+        `特征值的实部是迹的一半，所以 $\\alpha = \\frac{${inParens(a)} + ${inParens(d)}}{2} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const polynomialTransform: KnowledgePointDef = {
+  id: "the-transform-of-a-polynomial-at-a-point",
+  title: t("The transform of a polynomial at a point", "多项式的变换在一点的值"),
+  explanation: t(
+    "By linearity, a polynomial transforms one term at a time, using $\\mathcal{L}\\{t^n\\} = \\frac{n!}{s^{n + 1}}$. The factorial is the part that is easy to forget, since it does not appear for $1$ or $t$ and first matters at $t^2$. The power of $s$ is one more than the power of $t$. Once the transform is known as a function of $s$, its value at a point follows by substitution.",
+    "由线性性，多项式逐项变换，用 $\\mathcal{L}\\{t^n\\} = \\frac{n!}{s^{n + 1}}$。阶乘这部分容易被忘记，因为对 $1$ 或 $t$ 它不出现，到 $t^2$ 才开始起作用。$s$ 的幂比 $t$ 的幂大一。知道了变换作为 $s$ 的函数之后，代入就得到它在一点的值。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 9);
+    const b = nonzero(rng, 9);
+    const c = nonzero(rng, 9);
+    const s = rng.int(1, 4);
+    const at = (x: number, y: number, z: number) =>
+      Q.of(x, s)
+        .add(Q.of(y, s * s))
+        .add(Q.of(z, s ** 3));
+    const fraction = (n: number, den: string) => `${n < 0 ? "-" : "+"} \\frac{${Math.abs(n)}}{${den}}`;
+    const transform = `${a < 0 ? "-" : ""}\\frac{${Math.abs(a)}}{s} ${fraction(b, "s^2")} ${fraction(2 * c, "s^3")}`;
+    const answer = at(a, b, 2 * c);
+    return numberProblem({
+      prompt: t(
+        `Let $F(s)$ be the Laplace transform of $f(t) = ${poly([a, ""], [b, "t"], [c, "t^2"])}$. Find $F(${s})$.`,
+        `设 $F(s)$ 是 $f(t) = ${poly([a, ""], [b, "t"], [c, "t^2"])}$ 的拉普拉斯变换。求 $F(${s})$。`,
+      ),
+      answer,
+      wrong: [at(a, b, c), Q.of(a + b + c, s), answer.add(Q.of(1)), answer.sub(Q.of(1))],
+      solution: t(
+        `The transform is $${transform}$. At $s = ${s}$, this equals $${answer.toLatex()}$.`,
+        `变换是 $${transform}$。在 $s = ${s}$ 处，它等于 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const powerTimesExponentialTransform: KnowledgePointDef = {
+  id: "the-transform-of-a-power-times-an-exponential",
+  title: t("The transform of a power times an exponential", "幂乘指数函数的变换"),
+  explanation: t(
+    "Multiplying by $t$ corresponds to taking $-\\frac{d}{ds}$ of the transform. Starting with $\\frac{1}{s - a}$ for $e^{at}$ and repeating this gives $\\frac{n!}{(s - a)^{n + 1}}$ for $t^n e^{at}$. Each derivative raises the power in the denominator by one, and brings down a factor that builds the factorial. The minus sign in the rule cancels the minus sign from differentiating, so the result is positive for $s > a$.",
+    "乘以 $t$ 对应于对变换取 $-\\frac{d}{ds}$。从 $e^{at}$ 的 $\\frac{1}{s - a}$ 出发，反复这样做，就得到 $t^n e^{at}$ 的 $\\frac{n!}{(s - a)^{n + 1}}$。每次求导都把分母的幂升高一次，并带下一个构成阶乘的因子。法则中的负号抵消了求导产生的负号，所以当 $s > a$ 时结果为正。",
+  ),
+  generate(rng) {
+    const n = rng.int(1, 3);
+    const a = nonzero(rng, 3);
+    const gap = rng.int(1, 4);
+    const s = a + gap;
+    const factorial = [1, 1, 2, 6][n] ?? 1;
+    const answer = Q.of(factorial, gap ** (n + 1));
+    const other = Math.abs(s + a) || 1;
+    return numberProblem({
+      prompt: t(
+        `Find the Laplace transform of $${signedPower("t", n)}e^{${exponentOf(a, "t")}}$ at $s = ${s}$.`,
+        `求 $${signedPower("t", n)}e^{${exponentOf(a, "t")}}$ 的拉普拉斯变换在 $s = ${s}$ 处的值。`,
+      ),
+      answer,
+      wrong: [
+        Q.of(1, gap ** (n + 1)),
+        Q.of(factorial, gap ** n),
+        Q.of(factorial, other ** (n + 1)),
+        answer.add(Q.of(1)),
+        Q.of(factorial, (gap + 1) ** (n + 1)),
+        Q.of(factorial + 1, gap ** (n + 1)),
+      ],
+      solution: t(
+        `The transform is $\\frac{${factorial}}{(${poly([1, "s"], [-a, ""])})^{${n + 1}}}$, and here $${poly([1, "s"], [-a, ""])} = ${gap}$. This gives $${answer.toLatex()}$.`,
+        `变换是 $\\frac{${factorial}}{(${poly([1, "s"], [-a, ""])})^{${n + 1}}}$，这里 $${poly([1, "s"], [-a, ""])} = ${gap}$。于是得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const transformedNumerator: KnowledgePointDef = {
+  id: "the-numerator-of-a-transformed-equation",
+  title: t("The numerator of a transformed equation", "变换后方程的分子"),
+  explanation: t(
+    "Transforming $y'' + ay' + by = 0$ uses $\\mathcal{L}\\{y''\\} = s^2Y - sy(0) - y'(0)$ and $\\mathcal{L}\\{y'\\} = sY - y(0)$. Gathering the terms in $Y$ gives the characteristic polynomial as denominator, and the initial values all collect in the numerator. Notice that $y(0)$ appears twice, because the damping term contributes to the constant part. This extra product $ay(0)$ is the part of the numerator that is most often left out.",
+    "变换 $y'' + ay' + by = 0$ 要用 $\\mathcal{L}\\{y''\\} = s^2Y - sy(0) - y'(0)$ 和 $\\mathcal{L}\\{y'\\} = sY - y(0)$。合并 $Y$ 的项后，分母是特征多项式，初值都集中在分子。注意 $y(0)$ 出现两次，因为阻尼项也贡献给常数部分。这个额外的乘积 $ay(0)$ 是分子中最常被遗漏的部分。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 6);
+    const b = nonzero(rng, 9);
+    const p = nonzero(rng, 6);
+    const q = nonzero(rng, 9);
+    const answer = q + a * p;
+    return numberProblem({
+      prompt: t(
+        `For $${poly([1, "y''"], [a, "y'"], [b, "y"])} = 0$ with $y(0) = ${p}$ and $y'(0) = ${q}$, the transform has the form $Y(s) = \\frac{As + K}{${poly([1, "s^2"], [a, "s"], [b, ""])}}$. Find $K$.`,
+        `对 $${poly([1, "y''"], [a, "y'"], [b, "y"])} = 0$，$y(0) = ${p}$，$y'(0) = ${q}$，变换的形式是 $Y(s) = \\frac{As + K}{${poly([1, "s^2"], [a, "s"], [b, ""])}}$。求 $K$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [q, q - a * p, a * p, answer + 1, answer - 1],
+      solution: t(
+        `The numerator is $y(0)s + y'(0) + ay(0)$ with $a = ${a}$, so $K = ${q} + ${inParens(a)} \\cdot ${inParens(p)} = ${answer}$.`,
+        `分子是 $y(0)s + y'(0) + ay(0)$，其中 $a = ${a}$，所以 $K = ${q} + ${inParens(a)} \\cdot ${inParens(p)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const mixedEndEigenvalue: KnowledgePointDef = {
+  id: "eigenvalues-with-one-fixed-end-and-one-free-end",
+  title: t("Eigenvalues with one fixed end and one free end", "一端固定一端自由的特征值"),
+  explanation: t(
+    "For $y'' + \\lambda y = 0$ with $y(0) = 0$, the first condition leaves $y = \\sin(kx)$, where $k^2 = \\lambda$. The condition $y'(L) = 0$ then needs $\\cos(kL) = 0$, so $kL$ is an odd multiple of $\\frac{\\pi}{2}$. This differs from two fixed ends, where $kL$ is any multiple of $\\pi$. So the lowest mode fits only a quarter of a wave on the interval, and the eigenvalues involve the odd numbers only.",
+    "对 $y'' + \\lambda y = 0$，$y(0) = 0$，第一个条件留下 $y = \\sin(kx)$，其中 $k^2 = \\lambda$。条件 $y'(L) = 0$ 又要求 $\\cos(kL) = 0$，所以 $kL$ 是 $\\frac{\\pi}{2}$ 的奇数倍。这与两端固定不同，那时 $kL$ 是 $\\pi$ 的任意整数倍。所以最低模式在区间上只有四分之一个波，特征值只涉及奇数。",
+  ),
+  generate(rng) {
+    const n = rng.int(1, 4);
+    const length = rng.int(1, 8);
+    const odd = 2 * n - 1;
+    const answer = Q.of(odd * odd, 4 * length * length);
+    const en = ["smallest", "second smallest", "third smallest", "fourth smallest"][n - 1];
+    const zh = ["最小的", "第二小的", "第三小的", "第四小的"][n - 1];
+    return numberProblem({
+      prompt: t(
+        `For $y'' + \\lambda y = 0$ with $y(0) = 0$ and $y'(${length}) = 0$, the ${en} eigenvalue is $c\\pi^2$. Find $c$.`,
+        `对 $y'' + \\lambda y = 0$，$y(0) = 0$，$y'(${length}) = 0$，${zh}特征值是 $c\\pi^2$。求 $c$。`,
+      ),
+      answer,
+      wrong: [
+        Q.of(n * n, length * length),
+        Q.of(odd * odd, length * length),
+        Q.of((odd + 2) ** 2, 4 * length * length),
+        Q.of(n * n, 4 * length * length),
+        Q.of(odd * odd, 2 * length * length),
+      ],
+      solution: t(
+        `Here $k \\cdot ${length} = \\frac{${odd === 1 ? "" : odd}\\pi}{2}$, so $\\lambda = k^2 = \\frac{${odd === 1 ? "" : odd * odd}\\pi^2}{${4 * length * length}}$. Thus $c = ${answer.toLatex()}$.`,
+        `这里 $k \\cdot ${length} = \\frac{${odd === 1 ? "" : odd}\\pi}{2}$，所以 $\\lambda = k^2 = \\frac{${odd === 1 ? "" : odd * odd}\\pi^2}{${4 * length * length}}$。于是 $c = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const loadedEndSlope: KnowledgePointDef = {
+  id: "the-end-slope-of-a-loaded-boundary-value-problem",
+  title: t("The end slope of a loaded boundary value problem", "受载边值问题的端点斜率"),
+  explanation: t(
+    "Integrating $y'' = c$ twice gives $y = \\frac{c}{2}x^2 + Ax + B$, with two constants that the boundary conditions must fix. Unlike an initial value problem, the slope at the left end is not given in advance: it is whatever makes the curve arrive correctly at the far end. With $y(0) = y(L) = 0$, the parabola is symmetric about the midpoint, so the two end slopes are equal and opposite.",
+    "对 $y'' = c$ 积分两次，得 $y = \\frac{c}{2}x^2 + Ax + B$，两个常数由边界条件确定。与初值问题不同，左端的斜率不是预先给定的，它要使曲线正确到达另一端。当 $y(0) = y(L) = 0$ 时，抛物线关于中点对称，所以两端的斜率大小相等、方向相反。",
+  ),
+  generate(rng) {
+    const c = nonzero(rng, 9);
+    const length = rng.int(1, 9);
+    const answer = Q.of(-c * length, 2);
+    return numberProblem({
+      prompt: t(
+        `Let $y'' = ${c}$ with $y(0) = 0$ and $y(${length}) = 0$. Find $y'(0)$.`,
+        `设 $y'' = ${c}$，$y(0) = 0$，$y(${length}) = 0$。求 $y'(0)$。`,
+      ),
+      answer,
+      wrong: [answer.neg(), Q.of(c * length), Q.of(-c * length), Q.of(-c * length * length, 8)],
+      solution: t(
+        `The solution is $y = \\frac{c}{2}x(x - ${length})$ with $c = ${c}$. Differentiating at $x = 0$ gives $${answer.toLatex()}$.`,
+        `解是 $y = \\frac{c}{2}x(x - ${length})$，其中 $c = ${c}$。在 $x = 0$ 处求导，得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const airyCoefficient: KnowledgePointDef = {
+  id: "a-series-coefficient-of-the-equation-y-double-prime-equals-xy",
+  title: t("A series coefficient of the equation y'' = xy", "方程 y'' = xy 的级数系数"),
+  explanation: t(
+    "The equation $y'' = xy$ has no solutions in elementary functions, but a power series handles it well. Comparing coefficients of $x^n$ gives $(n + 2)(n + 1)a_{n + 2} = a_{n - 1}$, so each coefficient is tied to the one three places back. Two free constants, $a_0 = y(0)$ and $a_1 = y'(0)$, start two separate chains of coefficients, and the coefficient $a_2$ is zero, starting a third chain of zeros.",
+    "方程 $y'' = xy$ 没有初等函数解，但幂级数能很好地处理它。比较 $x^n$ 的系数，得 $(n + 2)(n + 1)a_{n + 2} = a_{n - 1}$，所以每个系数与前面第三个系数相关。两个自由常数 $a_0 = y(0)$ 和 $a_1 = y'(0)$ 开始两条独立的系数链，系数 $a_2$ 为零，开始第三条全为零的链。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 12);
+    const b = nonzero(rng, 12);
+    const cubic = rng.pick([true, false]);
+    const power = cubic ? 3 : 4;
+    const start = cubic ? a : b;
+    const other = cubic ? b : a;
+    const denominator = cubic ? 6 : 12;
+    const answer = Q.of(start, denominator);
+    return numberProblem({
+      prompt: t(
+        `The solution of $y'' = xy$ with $y(0) = ${a}$ and $y'(0) = ${b}$ has a power series about $x = 0$. Find the coefficient of $x^${power}$.`,
+        `$y'' = xy$，$y(0) = ${a}$，$y'(0) = ${b}$ 的解在 $x = 0$ 处有幂级数。求 $x^${power}$ 的系数。`,
+      ),
+      answer,
+      wrong: [Q.of(other, denominator), Q.of(start, power), Q.of(start, power - 1), Q.of(start, 2 * denominator)],
+      solution: t(
+        `Comparing coefficients gives $${power}\\cdot${power - 1}\\,a_${power} = a_${power - 3}$, and $a_${power - 3} = ${start}$. So $a_${power} = ${answer.toLatex()}$.`,
+        `比较系数，得 $${power}\\cdot${power - 1}\\,a_${power} = a_${power - 3}$，且 $a_${power - 3} = ${start}$。所以 $a_${power} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const indicialSum: KnowledgePointDef = {
+  id: "the-sum-of-the-indicial-roots",
+  title: t("The sum of the indicial roots", "指标根之和"),
+  explanation: t(
+    "For $x^2y'' + xP(x)y' + Q(x)y = 0$ with a regular singular point at the origin, only $p = P(0)$ and $q = Q(0)$ enter the indicial equation $r(r - 1) + pr + q = 0$. Written out, this is $r^2 + (p - 1)r + q = 0$, and by Vieta's formulas the roots add to $1 - p$. So $q$ and the higher terms of the coefficients play no part in the sum of the roots.",
+    "对原点为正则奇点的 $x^2y'' + xP(x)y' + Q(x)y = 0$，只有 $p = P(0)$ 和 $q = Q(0)$ 进入指标方程 $r(r - 1) + pr + q = 0$。展开得 $r^2 + (p - 1)r + q = 0$，由韦达定理，两根之和是 $1 - p$。所以 $q$ 和系数的高次项对根之和都不起作用。",
+  ),
+  generate(rng) {
+    const p = nonzero(rng, 9);
+    const q = nonzero(rng, 9);
+    const c = nonzero(rng, 5);
+    const answer = 1 - p;
+    return numberProblem({
+      prompt: t(
+        `Find the sum of the indicial roots at $x = 0$ of $x^2y'' + ${p === 1 ? "" : p === -1 ? "-" : p}xy' + (${poly([q, ""], [c, "x"])})y = 0$.`.replace(
+          "+ -",
+          "- ",
+        ),
+        `求 $x^2y'' + ${p === 1 ? "" : p === -1 ? "-" : p}xy' + (${poly([q, ""], [c, "x"])})y = 0$ 在 $x = 0$ 处的指标根之和。`.replace(
+          "+ -",
+          "- ",
+        ),
+      ),
+      answer,
+      form: "integer",
+      wrong: [-p, p, p - 1, q, answer + 1],
+      solution: t(
+        `The indicial equation is $r(r - 1) + ${inParens(p)}r + ${inParens(q)} = 0$, in which $r$ has coefficient $${p - 1}$. So the roots add to $${answer}$.`,
+        `指标方程是 $r(r - 1) + ${inParens(p)}r + ${inParens(q)} = 0$，其中 $r$ 的系数是 $${p - 1}$。所以两根之和是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const twoTrapezoidalSteps: KnowledgePointDef = {
+  id: "two-trapezoidal-steps-for-pure-decay",
+  title: t("Two trapezoidal steps for pure decay", "纯衰减的两个梯形步"),
+  explanation: t(
+    "For $y' = -ky$, the trapezoidal rule reads $y_{n + 1} = y_n + \\frac{h}{2}(-ky_n - ky_{n + 1})$. Although the method is implicit, this equation is linear in the new value, so it can be solved at once to give $y_{n + 1} = \\frac{2 - hk}{2 + hk}y_n$. Each step multiplies by the same factor, so two steps multiply by its square. The size of the factor is always below 1, which is why the method is stable.",
+    "对 $y' = -ky$，梯形法则是 $y_{n + 1} = y_n + \\frac{h}{2}(-ky_n - ky_{n + 1})$。虽然方法是隐式的，但这个方程对新值是线性的，所以可以立即解出 $y_{n + 1} = \\frac{2 - hk}{2 + hk}y_n$。每一步都乘以同样的因子，所以两步乘以它的平方。因子的大小总小于 1，这就是这个方法稳定的原因。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 6);
+    const d = rng.pick([1, 2, 4]);
+    const start = rng.int(1, 9);
+    const top = 2 * d - k;
+    const bottom = 2 * d + k;
+    const factor = Q.of(top, bottom);
+    const answer = factor.mul(factor).mul(Q.of(start));
+    const forward = Q.of(d - k, d);
+    return numberProblem({
+      prompt: t(
+        `Apply two steps of the trapezoidal method with $h = ${Q.of(1, d).toLatex()}$ to $y' = ${k === 1 ? "-" : `-${k}`}y$, $y(0) = ${start}$. Find the value it gives for $y(${Q.of(2, d).toLatex()})$.`,
+        `对 $y' = ${k === 1 ? "-" : `-${k}`}y$，$y(0) = ${start}$，用 $h = ${Q.of(1, d).toLatex()}$ 的梯形法走两步。求它给出的 $y(${Q.of(2, d).toLatex()})$ 的值。`,
+      ),
+      answer,
+      wrong: [factor.mul(Q.of(start)), forward.mul(forward).mul(Q.of(start)), Q.of(d * d * start, (d + k) * (d + k)), answer.add(Q.of(1))],
+      solution: t(
+        `Each step multiplies by $\\frac{2 - hk}{2 + hk} = ${factor.toLatex()}$. Two steps give $${start} \\cdot \\left(${factor.toLatex()}\\right)^2 = ${answer.toLatex()}$.`,
+        `每一步乘以 $\\frac{2 - hk}{2 + hk} = ${factor.toLatex()}$。两步得 $${start} \\cdot \\left(${factor.toLatex()}\\right)^2 = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const invariantLineSlope: KnowledgePointDef = {
+  id: "the-slope-of-a-straight-line-solution",
+  title: t("The slope of a straight-line solution", "直线解的斜率"),
+  explanation: t(
+    "A trajectory through the origin that stays on a straight line must have velocity along that line at every point, so its direction is an eigenvector. For an upper triangular matrix, the eigenvalues can be read off the diagonal, and the $x$-axis is one of these lines. The other line comes from solving $(A - dI)\\mathbf{v} = \\mathbf{0}$ for the second eigenvalue $d$, whose first row gives the slope of the line directly.",
+    "过原点且保持在直线上的轨线，在每一点的速度都必须沿这条直线，所以它的方向是特征向量。对上三角矩阵，特征值可以从对角线读出，$x$ 轴是其中一条直线。另一条直线由第二个特征值 $d$ 解 $(A - dI)\\mathbf{v} = \\mathbf{0}$ 得到，它的第一行直接给出直线的斜率。",
+  ),
+  generate(rng) {
+    const a = rng.int(-6, 6);
+    const d = different(rng, -6, 6, a);
+    const b = nonzero(rng, 6);
+    const answer = Q.of(d - a, b);
+    return numberProblem({
+      prompt: t(
+        `The system $\\mathbf{x}' = ${matrix2(a, b, 0, d)}\\mathbf{x}$ has solutions that stay on the $x$-axis, and also on one other line through the origin. Find the slope of that line.`,
+        `方程组 $\\mathbf{x}' = ${matrix2(a, b, 0, d)}\\mathbf{x}$ 有保持在 $x$ 轴上的解，也有保持在另一条过原点直线上的解。求那条直线的斜率。`,
+      ),
+      answer,
+      wrong: [Q.of(a - d, b), Q.of(b, d - a), Q.of(d - a), Q.of(d + a, b)],
+      solution: t(
+        `The eigenvalue $${d}$ has an eigenvector with $${poly([a - d, "x"], [b, "y"])} = 0$. This gives $\\frac{y}{x} = ${answer.toLatex()}$.`,
+        `特征值 $${d}$ 的特征向量满足 $${poly([a - d, "x"], [b, "y"])} = 0$。于是 $\\frac{y}{x} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const bernoulliCoefficient: KnowledgePointDef = {
+  id: "the-coefficient-after-a-bernoulli-substitution",
+  title: t("The coefficient after a Bernoulli substitution", "伯努利代换后的系数"),
+  explanation: t(
+    "The substitution $v = y^{1 - n}$ turns $y' + py = qy^n$ into a linear equation. Dividing by $y^n$ gives $y^{-n}y' + py^{1 - n} = q$, and since $v' = (1 - n)y^{-n}y'$, multiplying by $1 - n$ gives $v' + (1 - n)pv = (1 - n)q$. Both the coefficient of $v$ and the new right side pick up the factor $1 - n$. For $n \\ge 2$, this factor is negative, which reverses the sign of the coefficient.",
+    "代换 $v = y^{1 - n}$ 把 $y' + py = qy^n$ 变成线性方程。除以 $y^n$ 得 $y^{-n}y' + py^{1 - n} = q$，由于 $v' = (1 - n)y^{-n}y'$，再乘以 $1 - n$ 得 $v' + (1 - n)pv = (1 - n)q$。$v$ 的系数和新的右边都多了因子 $1 - n$。当 $n \\ge 2$ 时，这个因子是负的，使系数变号。",
+  ),
+  generate(rng) {
+    const p = nonzero(rng, 9);
+    const q = rng.int(2, 9);
+    const n = rng.int(2, 6);
+    const answer = (1 - n) * p;
+    return numberProblem({
+      prompt: t(
+        `The substitution $v = y^{${1 - n}}$ turns $${poly([1, "y'"], [p, "y"])} = ${q}y^{${n}}$ into a linear equation $v' + Kv = g$. Find $K$.`,
+        `代换 $v = y^{${1 - n}}$ 把 $${poly([1, "y'"], [p, "y"])} = ${q}y^{${n}}$ 变成线性方程 $v' + Kv = g$。求 $K$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [p, -answer, (1 - n) * q, n * p],
+      solution: t(
+        `Multiplying the equation by $(1 - n)y^{-n}$ with $n = ${n}$ gives $K = ${1 - n} \\cdot ${inParens(p)} = ${answer}$.`,
+        `当 $n = ${n}$ 时，方程乘以 $(1 - n)y^{-n}$，得 $K = ${1 - n} \\cdot ${inParens(p)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
 /** deeperDifferentialEquationsPoints gives, by topic id, the knowledge points added after a Differential Equations topic's own. */
 export const deeperDifferentialEquationsPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "exact-differential-equations": [levelThroughAPoint],
@@ -1787,4 +2559,30 @@ export const deeperDifferentialEquationsPoints: Readonly<Record<string, readonly
   "bernoulli-differential-equations": [constantBernoulliSolution],
   "clairaut-differential-equations": [clairautLinesThroughPoint],
   "inhibited-growth-models-with-first-order-odes": [limitFromThreeReadings],
+  "solving-first-order-odes-using-separation-of-variables": [blowUpTime],
+  "general-solutions-of-first-order-linear-odes": [constantSolutionValue],
+  "solving-first-order-linear-odes-with-exponential-forcing": [noTransientExponential],
+  "solving-first-order-linear-odes-using-integrating-factors": [boundedAtOrigin],
+  "homogeneous-functions": [eulerHomogeneous],
+  "solving-exact-odes-using-integrating-factors": [powerMakingExact],
+  "equilibrium-solutions-of-first-order-odes": [semistableLimit],
+  "analyzing-slope-fields-for-nonautonomous-differential-equations": [isoclineOfSlope],
+  "modeling-mixture-problems-with-first-order-separable-odes": [tankTransient],
+  "orthogonal-trajectories": [orthogonalThroughPoint],
+  "velocity-and-acceleration-as-functions-of-displacement": [accelerationFromPower],
+  "newtons-law-of-universal-gravitation": [periodOfOrbit],
+  "modeling-rc-circuits-with-first-order-odes": [initialCurrent],
+  "differential-operators": [operatorOnExponential],
+  "expressing-homogeneous-odes-as-first-order-systems": [companionProduct],
+  "solving-homogeneous-systems-of-odes-with-complex-eigenvalues": [oscillationRate],
+  "linearity-of-laplace-transforms": [polynomialTransform],
+  "the-smoothness-property-of-laplace-transforms": [powerTimesExponentialTransform],
+  "solving-second-order-odes-using-laplace-transforms": [transformedNumerator],
+  "second-order-homogeneous-boundary-value-problems": [mixedEndEigenvalue],
+  "second-order-inhomogeneous-boundary-value-problems": [loadedEndSlope],
+  "taylor-series-solutions-of-differential-equations": [airyCoefficient],
+  "the-method-of-frobenius": [indicialSum],
+  "the-trapezoidal-method": [twoTrapezoidalSteps],
+  "phase-portraits-for-linear-systems-with-real-distinct-eigenvalues": [invariantLineSlope],
+  "reducing-odes-to-first-order-linear-by-substitution": [bernoulliCoefficient],
 };
