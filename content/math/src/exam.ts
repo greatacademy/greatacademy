@@ -132,3 +132,86 @@ export const tx = (c: number, v = "x"): string => `${c < 0 ? "-" : "+"} ${Math.a
 export function table(x1: string, y1: string, xs: readonly (number | string)[], ys: readonly (number | string)[]): string {
   return `$$\\begin{array}{c|${"c".repeat(xs.length)}} ${x1} & ${xs.join(" & ")} \\\\ \\hline ${y1} & ${ys.join(" & ")} \\end{array}$$`;
 }
+
+/** PlotView is the window of a coordinate figure: its ranges and the spacing of its grid lines. */
+export interface PlotView {
+  readonly x: readonly [number, number];
+  readonly y: readonly [number, number];
+  readonly dx: number;
+  readonly dy: number;
+}
+
+const round1 = (n: number): string => String(Math.round(n * 10) / 10);
+
+const plotFrame = (v: PlotView, body: (px: (x: number) => number, py: (y: number) => number) => string, alt: Text): Figure => {
+  const [W, H, M] = [320, 240, 26];
+  const px = (x: number) => M + ((x - v.x[0]) / (v.x[1] - v.x[0])) * (W - 2 * M);
+  const py = (y: number) => H - M - ((y - v.y[0]) / (v.y[1] - v.y[0])) * (H - 2 * M);
+  const x0 = Math.min(Math.max(0, v.x[0]), v.x[1]);
+  const y0 = Math.min(Math.max(0, v.y[0]), v.y[1]);
+  const parts: string[] = [];
+  for (let x = v.x[0]; x <= v.x[1] + 1e-9; x += v.dx) {
+    parts.push(`<line x1="${round1(px(x))}" y1="${M}" x2="${round1(px(x))}" y2="${H - M}" stroke-width="0.4" opacity="0.4"/>`);
+    if (Math.abs(x - x0) > 1e-9 || x0 === v.x[0])
+      parts.push(
+        `<text x="${round1(px(x))}" y="${round1(py(y0) + 13)}" font-size="10" text-anchor="middle" fill="currentColor" stroke="none">${round1(x)}</text>`,
+      );
+  }
+  for (let y = v.y[0]; y <= v.y[1] + 1e-9; y += v.dy) {
+    parts.push(`<line x1="${M}" y1="${round1(py(y))}" x2="${W - M}" y2="${round1(py(y))}" stroke-width="0.4" opacity="0.4"/>`);
+    if (Math.abs(y - y0) > 1e-9)
+      parts.push(
+        `<text x="${round1(px(x0) - 4)}" y="${round1(py(y) + 3)}" font-size="10" text-anchor="end" fill="currentColor" stroke="none">${round1(y)}</text>`,
+      );
+  }
+  parts.push(`<line x1="${M}" y1="${round1(py(y0))}" x2="${W - M}" y2="${round1(py(y0))}" stroke-width="1.2"/>`);
+  parts.push(`<line x1="${round1(px(x0))}" y1="${M}" x2="${round1(px(x0))}" y2="${H - M}" stroke-width="1.2"/>`);
+  return {
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" fill="none" stroke="currentColor">${parts.join("")}${body(px, py)}</svg>`,
+    alt,
+  };
+};
+
+/** curveFigure draws the graph of f over a grid, leaving out the parts outside the window. */
+export function curveFigure(f: (x: number) => number, view: PlotView, alt: Text): Figure {
+  return plotFrame(
+    view,
+    (px, py) => {
+      const runs: string[][] = [[]];
+      const n = 160;
+      for (let i = 0; i <= n; i++) {
+        const x = view.x[0] + ((view.x[1] - view.x[0]) * i) / n;
+        const y = f(x);
+        if (y >= view.y[0] && y <= view.y[1]) runs[runs.length - 1]?.push(`${round1(px(x))},${round1(py(y))}`);
+        else runs.push([]);
+      }
+      return runs
+        .filter((r) => r.length > 1)
+        .map((r) => `<polyline class="accent" points="${r.join(" ")}" stroke-width="2"/>`)
+        .join("");
+    },
+    alt,
+  );
+}
+
+/** dotsFigure draws points on a grid, with an optional line of best fit through two points. */
+export function dotsFigure(
+  points: readonly (readonly [number, number])[],
+  view: PlotView,
+  alt: Text,
+  line?: readonly [readonly [number, number], readonly [number, number]],
+): Figure {
+  return plotFrame(
+    view,
+    (px, py) => {
+      const dots = points
+        .map(([x, y]) => `<circle cx="${round1(px(x))}" cy="${round1(py(y))}" r="3.2" fill="currentColor" stroke="none"/>`)
+        .join("");
+      const fit = line
+        ? `<line class="accent" x1="${round1(px(line[0][0]))}" y1="${round1(py(line[0][1]))}" x2="${round1(px(line[1][0]))}" y2="${round1(py(line[1][1]))}" stroke-width="2"/>`
+        : "";
+      return dots + fit;
+    },
+    alt,
+  );
+}
