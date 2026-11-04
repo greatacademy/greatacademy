@@ -1568,6 +1568,803 @@ const geometricMle: KnowledgePointDef = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// Third pass
+// ---------------------------------------------------------------------------
+
+/** otherThan picks an integer from lo to hi other than the one given. */
+const otherThan = (rng: Rng, lo: number, hi: number, other: number) =>
+  rng.pick([...Array(hi - lo + 1).keys()].map((i) => i + lo).filter((i) => i !== other));
+/** powerOf writes a power of a variable, leaving out an exponent of one. */
+const powerOf = (name: string, n: number) => (n === 1 ? name : `${name}^{${n}}`);
+/** timesVariable writes a positive multiple of a variable, leaving out a coefficient of one. */
+const timesVariable = (c: number, name: string) => (c === 1 ? name : `${c}${name}`);
+
+const modeOfPowerDensity: KnowledgePointDef = {
+  id: "the-mode-of-a-density-with-two-power-factors",
+  title: t("The mode of a density with two power factors", "含两个幂因子的密度的众数"),
+  explanation: t(
+    "To find the mode, maximize the density, and the normalizing constant makes no difference to where the maximum lies. With a product of powers, it is easier to take the logarithm first, because a logarithm turns the product into a sum, and the derivative becomes $\\frac{a}{x} - \\frac{b}{c - x}$. Setting this to zero gives a point that divides the interval in the ratio $a : b$. This is not the mean, which lies closer to the middle of the interval.",
+    "求众数就是使密度最大，归一化常数不影响最大值的位置。对幂的乘积，先取对数更容易，因为对数把乘积变成和，导数变成 $\\frac{a}{x} - \\frac{b}{c - x}$。令它为零，得到把区间按 $a : b$ 分开的点。它不是均值，均值更靠近区间的中间。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 6);
+    const b = otherThan(rng, 1, 6, a);
+    const c = rng.int(1, 12);
+    const answer = Q.of(a * c, a + b);
+    return numberProblem({
+      prompt: t(
+        `A random variable has density proportional to $${powerOf("x", a)}(${c} - x)${b === 1 ? "" : `^{${b}}`}$ on $[0, ${c}]$. Find its mode.`,
+        `一个随机变量在 $[0, ${c}]$ 上的密度与 $${powerOf("x", a)}(${c} - x)${b === 1 ? "" : `^{${b}}`}$ 成正比。求它的众数。`,
+      ),
+      answer,
+      wrong: [Q.of(c, 2), Q.of(b * c, a + b), Q.of(a, a + b), Q.of((a + 1) * c, a + b + 2)],
+      solution: t(
+        `Setting $\\frac{${a}}{x} = \\frac{${b}}{${c} - x}$ gives $x = \\frac{${a} \\cdot ${c}}{${a + b}} = ${answer.toLatex()}$.`,
+        `令 $\\frac{${a}}{x} = \\frac{${b}}{${c} - x}$，得 $x = \\frac{${a} \\cdot ${c}}{${a + b}} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const powerOfUniform: KnowledgePointDef = {
+  id: "a-probability-for-a-power-of-a-uniform-variable",
+  title: t("A probability for a power of a uniform variable", "均匀变量的幂的概率"),
+  explanation: t(
+    "The distribution function method rewrites an event about $Y$ as an event about $X$. For $Y = X^n$ with $X$ uniform on $[0, 1]$, the event $Y \\le y$ is the same as $X \\le y^{1/n}$, because the power function is increasing there. So $F_Y(y) = y^{1/n}$. This is larger than $y$ itself, as it should be, since raising a number below 1 to a power pushes it towards zero.",
+    "分布函数法把关于 $Y$ 的事件改写成关于 $X$ 的事件。对 $Y = X^n$，$X$ 在 $[0, 1]$ 上均匀，事件 $Y \\le y$ 等同于 $X \\le y^{1/n}$，因为幂函数在那里是增函数。所以 $F_Y(y) = y^{1/n}$。它比 $y$ 本身大，这是应该的，因为小于 1 的数取幂后会被推向零。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 3);
+    const b = rng.int(2, 7);
+    const a = rng.int(1, b - 1);
+    const answer = Q.of(a, b);
+    const y = power(answer, n);
+    return numberProblem({
+      prompt: t(
+        `Let $X$ be uniform on $[0, 1]$ and $Y = X^${n}$. Find $P\\left(Y \\le ${y.toLatex()}\\right)$.`,
+        `设 $X$ 在 $[0, 1]$ 上均匀，$Y = X^${n}$。求 $P\\left(Y \\le ${y.toLatex()}\\right)$。`,
+      ),
+      answer,
+      wrong: [y, Q.of(1).sub(answer), answer.div(Q.of(n)), Q.of(1).sub(y)],
+      solution: t(
+        `The event is the same as $X \\le ${answer.toLatex()}$, whose probability is $${answer.toLatex()}$.`,
+        `这个事件等同于 $X \\le ${answer.toLatex()}$，其概率是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const squareOnUnevenInterval: KnowledgePointDef = {
+  id: "the-square-of-a-uniform-variable-on-an-uneven-interval",
+  title: t("The square of a uniform variable on an uneven interval", "不对称区间上均匀变量的平方"),
+  explanation: t(
+    "The map $x \\mapsto x^2$ is many-to-one, so the event $X^2 \\le c^2$ is the interval $-c \\le X \\le c$. When the support of $X$ reaches further on the right than on the left, part of this interval may fall outside the support, and that part contributes no probability. So there are two cases: while $c$ is at most the left reach, the length is $2c$; after that, the left end stops at the edge of the support.",
+    "映射 $x \\mapsto x^2$ 是多对一的，所以事件 $X^2 \\le c^2$ 就是区间 $-c \\le X \\le c$。当 $X$ 的支撑在右边比左边伸得更远时，这个区间的一部分可能落在支撑之外，那部分不贡献概率。所以有两种情况：当 $c$ 不超过左边的范围时，长度是 $2c$；超过之后，左端点停在支撑的边缘。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 6);
+    const b = a + rng.int(1, 6);
+    const c = rng.int(1, b - 1);
+    const inside = c <= a;
+    const length = inside ? 2 * c : c + a;
+    const answer = Q.of(length, a + b);
+    return numberProblem({
+      prompt: t(
+        `Let $X$ be uniform on $[-${a}, ${b}]$. Find $P(X^2 \\le ${c * c})$.`,
+        `设 $X$ 在 $[-${a}, ${b}]$ 上均匀。求 $P(X^2 \\le ${c * c})$。`,
+      ),
+      answer,
+      wrong: [Q.of(inside ? c + a : 2 * c, a + b), Q.of(c, a + b), Q.of(c * c, a + b + c * c), Q.of(c, b)],
+      solution: t(
+        `The event is $${-c} \\le X \\le ${c}$. Inside $[-${a}, ${b}]$, this has length $${length}$, out of a total of $${a + b}$. So the probability is $${answer.toLatex()}$.`,
+        `事件是 $${-c} \\le X \\le ${c}$。在 $[-${a}, ${b}]$ 内，它的长度是 $${length}$，总长度是 $${a + b}$。所以概率是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const expectedEmptyBoxes: KnowledgePointDef = {
+  id: "the-expected-number-of-empty-boxes",
+  title: t("The expected number of empty boxes", "空盒子的期望个数"),
+  explanation: t(
+    "Counting the empty boxes directly leads to a complicated distribution, but its mean is simple. Give each box an indicator, equal to 1 if the box is empty, so that the count is the sum of the indicators. Linearity of expectation does not require independence, and the indicators here are certainly dependent. It only requires the mean of each indicator, which is the probability that every ball misses that particular box.",
+    "直接数空盒子会得到复杂的分布，但它的均值很简单。给每个盒子一个示性变量，盒子为空时等于 1，于是个数就是示性变量之和。期望的线性性不要求独立，这里的示性变量显然不独立。只需要每个示性变量的均值，也就是所有球都没落入那个盒子的概率。",
+  ),
+  generate(rng) {
+    const m = rng.int(2, 8);
+    const n = rng.int(2, 5);
+    const miss = power(Q.of(m - 1, m), n);
+    const answer = miss.mul(Q.of(m));
+    return numberProblem({
+      prompt: t(
+        `Each of ${n} balls is placed independently into one of ${m} equally likely boxes. Find the expected number of empty boxes.`,
+        `${n} 个球分别独立地等可能放入 ${m} 个盒子之一。求空盒子的期望个数。`,
+      ),
+      answer,
+      wrong: [miss, power(Q.of(m - 1, m), n - 1).mul(Q.of(m)), power(Q.of(1, m), n).mul(Q.of(m)), answer.add(Q.of(1))],
+      solution: t(
+        `A given box is empty with probability $\\left(${Q.of(m - 1, m).toLatex()}\\right)^${n}$. Adding this over the ${m} boxes gives $${answer.toLatex()}$.`,
+        `一个给定的盒子为空的概率是 $\\left(${Q.of(m - 1, m).toLatex()}\\right)^${n}$。对 ${m} 个盒子求和，得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const momentOfPowerDensity: KnowledgePointDef = {
+  id: "a-moment-of-a-power-density",
+  title: t("A moment of a power density", "幂密度的矩"),
+  explanation: t(
+    "The density $f(x) = (k + 1)x^k$ on $[0, 1]$ is a family with a simple moment formula. Multiplying by $x^n$ just raises the exponent, so $E(X^n) = (k + 1)\\int_0^1 x^{k + n}\\,dx = \\frac{k + 1}{k + n + 1}$. The moments fall as $n$ grows, because a number below 1 shrinks when it is raised to a higher power. Larger values of $k$ bring them closer to 1, because the mass then lies nearer to 1.",
+    "$[0, 1]$ 上的密度 $f(x) = (k + 1)x^k$ 是一族矩公式很简单的分布。乘以 $x^n$ 只是提高指数，所以 $E(X^n) = (k + 1)\\int_0^1 x^{k + n}\\,dx = \\frac{k + 1}{k + n + 1}$。矩随 $n$ 增大而减小，因为小于 1 的数取更高次幂时会变小。$k$ 越大，矩越接近 1，因为这时质量更靠近 1。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 9);
+    const n = rng.int(2, 7);
+    const answer = Q.of(k + 1, k + n + 1);
+    return numberProblem({
+      prompt: t(
+        `A random variable has density $f(x) = ${k + 1}${powerOf("x", k)}$ on $[0, 1]$. Find $E(X^${n})$.`,
+        `一个随机变量在 $[0, 1]$ 上的密度是 $f(x) = ${k + 1}${powerOf("x", k)}$。求 $E(X^${n})$。`,
+      ),
+      answer,
+      wrong: [Q.of(k + 1, k + n), Q.of(1, n + 1), Q.of(k, k + n), Q.of(k + 1, n + 1)],
+      solution: t(
+        `The integral is $${k + 1}\\int_0^1 x^{${k + n}}\\,dx = ${answer.toLatex()}$.`,
+        `积分是 $${k + 1}\\int_0^1 x^{${k + n}}\\,dx = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const varianceOfTriangularDensity: KnowledgePointDef = {
+  id: "the-variance-of-a-right-triangular-density",
+  title: t("The variance of a right triangular density", "直角三角形密度的方差"),
+  explanation: t(
+    "A density that rises in a straight line from zero has the shape of a right triangle. Its first two moments come from single integrals, with mean $\\frac{2c}{3}$ and second moment $\\frac{c^2}{2}$. Subtracting the square of the mean gives the variance $\\frac{c^2}{18}$. This is smaller than the uniform value $\\frac{c^2}{12}$ on the same interval, because the mass is concentrated towards one end instead of being spread evenly.",
+    "从零开始沿直线上升的密度形如直角三角形。它的前两阶矩由单积分得到，均值是 $\\frac{2c}{3}$，二阶矩是 $\\frac{c^2}{2}$。减去均值的平方，得方差 $\\frac{c^2}{18}$。它小于同一区间上均匀分布的值 $\\frac{c^2}{12}$，因为质量集中在一端而不是均匀分布。",
+  ),
+  generate(rng) {
+    const c = rng.int(2, 30);
+    const answer = Q.of(c * c, 18);
+    return numberProblem({
+      prompt: t(
+        `A random variable has density $f(x) = \\frac{2x}{${c * c}}$ on $[0, ${c}]$. Find its variance.`,
+        `一个随机变量在 $[0, ${c}]$ 上的密度是 $f(x) = \\frac{2x}{${c * c}}$。求它的方差。`,
+      ),
+      answer,
+      wrong: [Q.of(c * c, 2), Q.of(4 * c * c, 9), Q.of(c * c, 12), Q.of(c * c, 9)],
+      solution: t(
+        `The mean is $${Q.of(2 * c, 3).toLatex()}$ and the second moment is $${Q.of(c * c, 2).toLatex()}$. Subtracting the square of the mean gives $${answer.toLatex()}$.`,
+        `均值是 $${Q.of(2 * c, 3).toLatex()}$，二阶矩是 $${Q.of(c * c, 2).toLatex()}$。减去均值的平方，得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const varianceFromFiniteMgf: KnowledgePointDef = {
+  id: "the-variance-read-from-a-finite-mgf",
+  title: t("The variance read from a finite MGF", "由有限项矩母函数读出方差"),
+  explanation: t(
+    "The moment generating function of a discrete variable is $\\sum p_i e^{x_i t}$. So a function written as a sum of exponentials can be read as a table: each exponent is a value of the variable, and its coefficient is the probability. Then the moments can be calculated from this table directly, without differentiating anything. A constant term in the function is the probability of the value 0, since $e^{0t} = 1$.",
+    "离散变量的矩母函数是 $\\sum p_i e^{x_i t}$。所以写成指数函数之和的函数可以读成一张表：每个指数是变量的一个取值，它的系数是相应的概率。于是可以直接从表计算矩，不必求导。函数中的常数项是取值 0 的概率，因为 $e^{0t} = 1$。",
+  ),
+  generate(rng) {
+    const first = rng.int(1, 8);
+    const second = rng.int(1, 9 - first);
+    const third = 10 - first - second;
+    const d = rng.int(1, 3);
+    const e = d + rng.int(1, 3);
+    const p = Q.of(second, 10);
+    const q = Q.of(third, 10);
+    const mean = p.mul(Q.of(d)).add(q.mul(Q.of(e)));
+    const moment = p.mul(Q.of(d * d)).add(q.mul(Q.of(e * e)));
+    const answer = moment.sub(mean.mul(mean));
+    return numberProblem({
+      prompt: t(
+        `A random variable has moment generating function $M(t) = ${Q.of(first, 10).toLatex()} + ${p.toLatex()}e^{${timesVariable(d, "t")}} + ${q.toLatex()}e^{${timesVariable(e, "t")}}$. Find its variance.`,
+        `一个随机变量的矩母函数是 $M(t) = ${Q.of(first, 10).toLatex()} + ${p.toLatex()}e^{${timesVariable(d, "t")}} + ${q.toLatex()}e^{${timesVariable(e, "t")}}$。求它的方差。`,
+      ),
+      answer,
+      wrong: [moment, mean, mean.mul(mean), moment.add(mean.mul(mean))],
+      solution: t(
+        `The variable takes the values $0$, $${d}$ and $${e}$. Its mean is $${mean.toLatex()}$ and its second moment is $${moment.toLatex()}$, so the variance is $${answer.toLatex()}$.`,
+        `变量取值 $0$、$${d}$、$${e}$。均值是 $${mean.toLatex()}$，二阶矩是 $${moment.toLatex()}$，所以方差是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const divisibleByEither: KnowledgePointDef = {
+  id: "a-uniform-value-divisible-by-one-of-two-numbers",
+  title: t("A uniform value divisible by one of two numbers", "均匀取值能被两数之一整除"),
+  explanation: t(
+    "Divisible values are easy to count, since $\\lfloor \\frac{N}{a} \\rfloor$ of the numbers from 1 to $N$ are multiples of $a$. But adding the counts for two divisors counts the common multiples twice. Inclusion and exclusion removes them once. For two numbers without a common factor, the common multiples are the multiples of the product. Dividing the final count by $N$ gives the probability, since all values are equally likely.",
+    "能整除的值很容易数，从 1 到 $N$ 中有 $\\lfloor \\frac{N}{a} \\rfloor$ 个 $a$ 的倍数。但把两个除数的个数相加时，公倍数被数了两次。容斥原理把它们去掉一次。对没有公因数的两个数，公倍数就是乘积的倍数。最后的个数除以 $N$ 就是概率，因为所有值等可能。",
+  ),
+  generate(rng) {
+    const [a, b] = rng.pick([
+      [2, 3],
+      [2, 5],
+      [3, 4],
+      [3, 5],
+      [3, 7],
+      [4, 5],
+      [5, 7],
+      [2, 7],
+    ] as const);
+    const n = rng.int(30, 200);
+    const countA = Math.floor(n / a);
+    const countB = Math.floor(n / b);
+    const both = Math.floor(n / (a * b));
+    const answer = Q.of(countA + countB - both, n);
+    return numberProblem({
+      prompt: t(
+        `An integer $X$ is uniform on $\\{1, 2, \\dots, ${n}\\}$. Find the probability that $X$ is divisible by ${a} or by ${b}.`,
+        `整数 $X$ 在 $\\{1, 2, \\dots, ${n}\\}$ 上均匀。求 $X$ 能被 ${a} 或 ${b} 整除的概率。`,
+      ),
+      answer,
+      wrong: [Q.of(countA + countB, n), Q.of(both, n), Q.of(countA, n), Q.of(countB, n)],
+      solution: t(
+        `There are $${countA}$ multiples of ${a}, $${countB}$ of ${b} and $${both}$ of ${a * b}. This gives $${countA} + ${countB} - ${both} = ${countA + countB - both}$ values, out of ${n}, so the probability is $${answer.toLatex()}$.`,
+        `${a} 的倍数有 $${countA}$ 个，${b} 的倍数有 $${countB}$ 个，${a * b} 的倍数有 $${both}$ 个。所以共有 $${countA} + ${countB} - ${both} = ${countA + countB - both}$ 个值，总数是 ${n}，概率是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const expectedMaximumOfTwo: KnowledgePointDef = {
+  id: "the-expected-maximum-of-two-uniform-draws",
+  title: t("The expected maximum of two uniform draws", "两次均匀抽取的期望最大值"),
+  explanation: t(
+    "The maximum of two independent draws is at most $k$ exactly when both draws are, which has probability $\\frac{k^2}{n^2}$. Subtracting the value for $k - 1$ gives $P(\\max = k) = \\frac{2k - 1}{n^2}$. So large values are more likely than small ones, and the mean lies above the middle of the range. The sum $\\sum k(2k - 1)$ then simplifies by the standard formulas for sums of powers of integers.",
+    "两次独立抽取的最大值不超过 $k$，当且仅当两次都不超过 $k$，概率是 $\\frac{k^2}{n^2}$。减去 $k - 1$ 对应的值，得 $P(\\max = k) = \\frac{2k - 1}{n^2}$。所以大的值比小的值更可能，均值在范围中点之上。然后用整数幂之和的标准公式化简 $\\sum k(2k - 1)$。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 30);
+    const answer = Q.of((n + 1) * (4 * n - 1), 6 * n);
+    return numberProblem({
+      prompt: t(
+        `Two independent draws are made from the numbers $1, 2, \\dots, ${n}$, each equally likely. Find the expected value of the larger draw.`,
+        `从 $1, 2, \\dots, ${n}$ 中独立抽取两次，每个数等可能。求较大的一次的期望值。`,
+      ),
+      answer,
+      wrong: [Q.of(n + 1, 2), Q.of(2 * (n + 1), 3), Q.of(2 * n, 3), answer.add(Q.of(1))],
+      solution: t(
+        `Here $P(\\max = k) = \\frac{2k - 1}{${n * n}}$. Summing $k$ times this from $1$ to $${n}$ gives $\\frac{(n + 1)(4n - 1)}{6n} = ${answer.toLatex()}$.`,
+        `这里 $P(\\max = k) = \\frac{2k - 1}{${n * n}}$。把 $k$ 乘以它从 $1$ 到 $${n}$ 求和，得 $\\frac{(n + 1)(4n - 1)}{6n} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const twoBernoulliDiffer: KnowledgePointDef = {
+  id: "the-probability-that-two-bernoulli-variables-differ",
+  title: t("The probability that two Bernoulli variables differ", "两个伯努利变量不相等的概率"),
+  explanation: t(
+    "Two independent Bernoulli variables differ in two separate ways: the first is 1 and the second is 0, or the other way round. These cases cannot happen together, so their probabilities add, and each one is a product by independence. Notice that if one of the two parameters is $\\frac{1}{2}$, then the answer is $\\frac{1}{2}$, whatever the other parameter may be. This fact is the basis of some simple randomized schemes.",
+    "两个独立的伯努利变量有两种不相等的方式：第一个是 1 而第二个是 0，或者反过来。这两种情况不能同时发生，所以概率相加，每个概率由独立性是乘积。注意，如果其中一个参数是 $\\frac{1}{2}$，答案就是 $\\frac{1}{2}$，无论另一个参数是多少。这个事实是一些简单随机化方案的基础。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 9);
+    const b = rng.int(1, 9);
+    const p = Q.of(a, 10);
+    const q = Q.of(b, 10);
+    const one = Q.of(1);
+    const answer = p.mul(one.sub(q)).add(q.mul(one.sub(p)));
+    return numberProblem({
+      prompt: t(
+        `Independent Bernoulli variables $X$ and $Y$ have parameters $${tenths(a)}$ and $${tenths(b)}$. Find $P(X \\ne Y)$.`,
+        `独立的伯努利变量 $X$ 和 $Y$ 的参数是 $${tenths(a)}$ 和 $${tenths(b)}$。求 $P(X \\ne Y)$。`,
+      ),
+      answer,
+      wrong: [p.mul(q), p.add(q), p.mul(q).add(one.sub(p).mul(one.sub(q))), Q.of(Math.abs(a - b), 10)],
+      solution: t(
+        `The two ways give $${tenths(a)} \\cdot ${tenths(10 - b)} + ${tenths(b)} \\cdot ${tenths(10 - a)} = ${answer.toLatex()}$.`,
+        `两种方式给出 $${tenths(a)} \\cdot ${tenths(10 - b)} + ${tenths(b)} \\cdot ${tenths(10 - a)} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const binomialFactorialMoment: KnowledgePointDef = {
+  id: "the-factorial-moment-of-a-binomial-variable",
+  title: t("The factorial moment of a binomial variable", "二项变量的阶乘矩"),
+  explanation: t(
+    "For a binomial count, $X(X - 1)$ counts the ordered pairs of different trials that both succeed. There are $n(n - 1)$ such pairs, and each succeeds with probability $p^2$, so linearity gives $E[X(X - 1)] = n(n - 1)p^2$. No sum over the distribution is needed. This value is also a quick route to the variance, since $E(X^2)$ equals this factorial moment plus the mean.",
+    "对二项计数，$X(X - 1)$ 数的是两次都成功的不同试验的有序对。这样的对有 $n(n - 1)$ 个，每对成功的概率是 $p^2$，所以由线性性 $E[X(X - 1)] = n(n - 1)p^2$。不需要对分布求和。这个值也是求方差的捷径，因为 $E(X^2)$ 等于这个阶乘矩加上均值。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 30);
+    const p = rng.pick([Q.of(1, 2), Q.of(1, 3), Q.of(1, 4), Q.of(1, 5), Q.of(2, 5), Q.of(3, 10), Q.of(3, 5), Q.of(3, 4)]);
+    const size = Q.of(n);
+    const answer = size
+      .mul(Q.of(n - 1))
+      .mul(p)
+      .mul(p);
+    return numberProblem({
+      prompt: t(
+        `Let $X$ be binomial with $n = ${n}$ and $p = ${p.toLatex()}$. Find $E[X(X - 1)]$.`,
+        `设 $X$ 服从二项分布，$n = ${n}$，$p = ${p.toLatex()}$。求 $E[X(X - 1)]$。`,
+      ),
+      answer,
+      wrong: [size.mul(size).mul(p).mul(p), size.mul(Q.of(n - 1)).mul(p), size.mul(p).mul(Q.of(1).sub(p)), answer.add(size.mul(p))],
+      solution: t(
+        `There are $${n} \\cdot ${n - 1}$ ordered pairs of trials, each succeeding together with probability $\\left(${p.toLatex()}\\right)^2$. So the value is $${answer.toLatex()}$.`,
+        `试验的有序对有 $${n} \\cdot ${n - 1}$ 个，每对同时成功的概率是 $\\left(${p.toLatex()}\\right)^2$。所以值是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const thinningPoisson: KnowledgePointDef = {
+  id: "the-variance-of-a-thinned-poisson-count",
+  title: t("The variance of a thinned Poisson count", "稀疏化泊松计数的方差"),
+  explanation: t(
+    "If each event of a Poisson process is kept independently with probability $p$, the events that are kept also form a Poisson process, with rate multiplied by $p$. A Poisson count has variance equal to its mean, so the variance is simply the new mean. The formula for a binomial variance, with its factor $1 - p$, does not apply here, because the total number of events is itself random.",
+    "如果泊松过程的每个事件以概率 $p$ 独立地保留，那么保留下来的事件也构成泊松过程，速率乘以 $p$。泊松计数的方差等于均值，所以方差就是新的均值。带因子 $1 - p$ 的二项方差公式在这里不适用，因为事件总数本身是随机的。",
+  ),
+  generate(rng) {
+    const rate = rng.int(2, 20);
+    const part = rng.int(1, 9);
+    const hours = rng.int(1, 8);
+    const total = rate * hours;
+    const answer = Q.of(total * part, 10);
+    return numberProblem({
+      prompt: t(
+        `Calls arrive as a Poisson process at ${rate} per hour, and each is urgent with probability $${tenths(part)}$, independently. Find the variance of the number of urgent calls in ${hours === 1 ? "one hour" : `${hours} hours`}.`,
+        `电话按每小时 ${rate} 个的泊松过程到达，每个电话独立地以概率 $${tenths(part)}$ 为紧急电话。求 ${hours} 小时内紧急电话数的方差。`,
+      ),
+      answer,
+      wrong: [Q.of(total), Q.of(total * part * (10 - part), 100), Q.of(rate * part, 10), answer.add(Q.of(1))],
+      solution: t(
+        `The urgent calls form a Poisson process with mean $${total} \\cdot ${tenths(part)} = ${answer.toLatex()}$ over this time, and a Poisson count has variance equal to its mean.`,
+        `紧急电话构成泊松过程，这段时间内的均值是 $${total} \\cdot ${tenths(part)} = ${answer.toLatex()}$，而泊松计数的方差等于均值。`,
+      ),
+    });
+  },
+};
+
+const poissonIntervalMultiple: KnowledgePointDef = {
+  id: "a-poisson-interval-as-a-multiple-of-an-exponential",
+  title: t("A Poisson interval as a multiple of an exponential", "泊松区间概率写成指数的倍数"),
+  explanation: t(
+    "Every Poisson probability carries the same factor $e^{-\\lambda}$, so a sum of consecutive probabilities can be written as this factor times a sum of terms $\\frac{\\lambda^k}{k!}$. Writing it in this way keeps the exact value, with no rounding. Take care with which terms belong: both ends of the interval count if the inequalities are not strict, and the term for $k = 0$ equals 1 when it is included.",
+    "每个泊松概率都带有相同的因子 $e^{-\\lambda}$，所以连续几个概率之和可以写成这个因子乘以若干项 $\\frac{\\lambda^k}{k!}$ 之和。这样写保留了精确值，没有舍入。要注意哪些项属于这个和：不等式不严格时，区间两端都算，$k = 0$ 的项如果包含在内就等于 1。",
+  ),
+  generate(rng) {
+    const lambda = rng.int(1, 9);
+    const lo = rng.int(0, 2);
+    const hi = lo + rng.int(1, 3);
+    const total = (from: number, to: number) => {
+      let sum = Q.of(0);
+      for (let k = from; k <= to; k++) sum = sum.add(Q.of(lambda ** k, factorial(k)));
+      return sum;
+    };
+    const answer = total(lo, hi);
+    return numberProblem({
+      prompt: t(
+        `For a Poisson variable with mean ${lambda}, $P(${lo} \\le X \\le ${hi}) = ce^{-${lambda}}$. Find $c$.`,
+        `对均值为 ${lambda} 的泊松变量，$P(${lo} \\le X \\le ${hi}) = ce^{-${lambda}}$。求 $c$。`,
+      ),
+      answer,
+      wrong: [total(lo + 1, hi), total(lo, hi - 1), total(lo, hi + 1), answer.add(Q.of(1))],
+      solution: t(
+        `The value of $c$ is the sum of $\\frac{${lambda}^k}{k!}$ for $k$ from ${lo} to ${hi}, which is $${answer.toLatex()}$.`,
+        `$c$ 的值是 $k$ 从 ${lo} 到 ${hi} 时 $\\frac{${lambda}^k}{k!}$ 的和，等于 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const expectedFailures: KnowledgePointDef = {
+  id: "the-expected-failures-before-the-last-success",
+  title: t("The expected failures before the last success", "最后一次成功前的期望失败次数"),
+  explanation: t(
+    "The negative binomial variable can count either all the attempts up to the $r$-th success or only the failures, and it pays to check which is meant. Attempts have mean $\\frac{r}{p}$. Every attempt is either a failure or one of the $r$ successes, so the failures have mean $\\frac{r}{p} - r = \\frac{r(1 - p)}{p}$. Both versions of the variable have the same variance, because they differ only by the constant $r$.",
+    "负二项变量可以数到第 $r$ 次成功为止的全部尝试，也可以只数失败，值得确认指的是哪一个。尝试次数的均值是 $\\frac{r}{p}$。每次尝试要么是失败，要么是 $r$ 次成功之一，所以失败次数的均值是 $\\frac{r}{p} - r = \\frac{r(1 - p)}{p}$。两种变量的方差相同，因为它们只差常数 $r$。",
+  ),
+  generate(rng) {
+    const r = rng.int(2, 9);
+    const b = rng.int(2, 10);
+    const a = rng.int(1, b - 1);
+    const p = Q.of(a, b);
+    const q = Q.of(1).sub(p);
+    const count = Q.of(r);
+    const attempts = count.div(p);
+    const answer = attempts.sub(count);
+    return numberProblem({
+      prompt: t(
+        `A player scores each shot with probability $${p.toLatex()}$, independently, and shoots until reaching ${r} scores. Find the expected number of misses.`,
+        `一名选手每次投篮独立地以概率 $${p.toLatex()}$ 命中，一直投到命中 ${r} 次为止。求未命中次数的期望。`,
+      ),
+      answer,
+      wrong: [attempts, count.mul(q), count.mul(p).div(q), answer.add(Q.of(1))],
+      solution: t(
+        `The expected number of shots is $${attempts.toLatex()}$, and ${r} of them are scores. So the expected number of misses is $${answer.toLatex()}$.`,
+        `投篮次数的期望是 $${attempts.toLatex()}$，其中 ${r} 次命中。所以未命中次数的期望是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const remainingUniformWait: KnowledgePointDef = {
+  id: "the-expected-remaining-wait-for-a-uniform-time",
+  title: t("The expected remaining wait for a uniform time", "均匀时间的期望剩余等待"),
+  explanation: t(
+    "Given that a uniform waiting time on $[0, T]$ has already passed $a$, its conditional distribution is uniform on the rest of the interval, $[a, T]$. So the mean remaining wait is half of what is left, $\\frac{T - a}{2}$, and it shrinks as time passes. This is the opposite of the exponential distribution, which forgets the past: there, the expected remaining wait stays the same however long one has waited.",
+    "在 $[0, T]$ 上均匀的等待时间已经超过 $a$ 的条件下，它的条件分布在区间其余部分 $[a, T]$ 上均匀。所以平均剩余等待是剩下部分的一半，$\\frac{T - a}{2}$，它随时间流逝而缩短。这与指数分布相反，指数分布会遗忘过去：无论已经等了多久，期望的剩余等待都不变。",
+  ),
+  generate(rng) {
+    const total = rng.int(10, 60);
+    const a = rng.int(1, total - 1);
+    const answer = Q.of(total - a, 2);
+    return numberProblem({
+      prompt: t(
+        `The waiting time for a bus is uniform on $[0, ${total}]$ minutes. Someone has already waited ${a === 1 ? "one minute" : `${a} minutes`} without a bus. Find the expected additional wait, in minutes.`,
+        `等公交车的时间在 $[0, ${total}]$ 分钟上均匀。有人已经等了 ${a} 分钟，车还没来。求期望的额外等待时间（分钟）。`,
+      ),
+      answer,
+      wrong: [Q.of(total, 2), Q.of(total + a, 2), Q.of(total - a), Q.of(a, 2)],
+      solution: t(
+        `Given the wait so far, the time is uniform on $[${a}, ${total}]$, so the remaining time is uniform on $[0, ${total - a}]$. Its mean is $${answer.toLatex()}$.`,
+        `已知已等待的时间，总时间在 $[${a}, ${total}]$ 上均匀，所以剩余时间在 $[0, ${total - a}]$ 上均匀。它的均值是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const exponentialGivenExceeds: KnowledgePointDef = {
+  id: "the-mean-of-an-exponential-given-that-it-exceeds-a-value",
+  title: t("The mean of an exponential given that it exceeds a value", "指数变量超过某值时的均值"),
+  explanation: t(
+    "The exponential distribution is memoryless, so given $X > a$, the excess $X - a$ has the same distribution as $X$ itself. The excess therefore has mean $\\frac{1}{\\lambda}$, and adding $a$ back gives $E(X \\mid X > a) = a + \\frac{1}{\\lambda}$. This avoids an integration by parts. Note that this conditional mean is the total time, and not just the extra part, so the value $a$ must be included.",
+    "指数分布无记忆，所以在 $X > a$ 的条件下，超出量 $X - a$ 与 $X$ 本身同分布。因此超出量的均值是 $\\frac{1}{\\lambda}$，再加回 $a$，得 $E(X \\mid X > a) = a + \\frac{1}{\\lambda}$。这样就不必分部积分。注意这个条件均值是总时间，不只是多出来的部分，所以必须包含 $a$。",
+  ),
+  generate(rng) {
+    const rate = rng.pick([Q.of(1, 2), Q.of(1, 3), Q.of(1, 4), Q.of(2), Q.of(3), Q.of(2, 3), Q.of(3, 2), Q.of(1, 5), Q.of(4)]);
+    const a = rng.int(1, 9);
+    const mean = Q.of(1).div(rate);
+    const start = Q.of(a);
+    const answer = start.add(mean);
+    return numberProblem({
+      prompt: t(
+        `Let $X$ be exponential with rate $\\lambda = ${rate.toLatex()}$. Find $E(X \\mid X > ${a})$.`,
+        `设 $X$ 服从速率 $\\lambda = ${rate.toLatex()}$ 的指数分布。求 $E(X \\mid X > ${a})$。`,
+      ),
+      answer,
+      wrong: [mean, start, start.add(rate), start.mul(mean)],
+      solution: t(
+        `By memorylessness, the excess over ${a} has mean $${mean.toLatex()}$. So the conditional mean is $${a} + ${mean.toLatex()} = ${answer.toLatex()}$.`,
+        `由无记忆性，超过 ${a} 的部分均值是 $${mean.toLatex()}$。所以条件均值是 $${a} + ${mean.toLatex()} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const conditionalMeanFromJoint: KnowledgePointDef = {
+  id: "a-conditional-mean-from-joint-probabilities",
+  title: t("A conditional mean from joint probabilities", "由联合概率求条件均值"),
+  explanation: t(
+    "Fixing $X = x$ picks out one row of the joint table. The entries of that row do not add to 1, so they must be divided by the marginal probability of the row before they can be used as a distribution. Only then can they be weighted by the values of $Y$. In effect, the conditional mean is the weighted sum of the row divided by the sum of the row, and the rest of the table plays no part.",
+    "固定 $X = x$ 就选出了联合表的一行。这一行的元素之和不是 1，所以必须除以这一行的边缘概率，才能作为分布使用。然后才能用 $Y$ 的值加权。实际上，条件均值是这一行的加权和除以这一行的和，表的其余部分不起作用。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 9) * 2;
+    const b = rng.int(1, 9) * 2;
+    const c = rng.int(1, 9) * 2;
+    const x = rng.int(1, 5);
+    const sum = a + b + c;
+    const weighted = b + 2 * c;
+    const answer = Q.of(weighted, sum);
+    const shown = (n: number) => (n / 100).toFixed(2);
+    const list = `P(X = ${x}, Y = 0) = ${shown(a)}$, $P(X = ${x}, Y = 1) = ${shown(b)}$`;
+    return numberProblem({
+      prompt: t(
+        `A joint distribution has $${list} and $P(X = ${x}, Y = 2) = ${shown(c)}$. Find $E(Y \\mid X = ${x})$.`,
+        `一个联合分布满足 $${list}，$P(X = ${x}, Y = 2) = ${shown(c)}$。求 $E(Y \\mid X = ${x})$。`,
+      ),
+      answer,
+      wrong: [Q.of(weighted, 100), Q.of(1), Q.of(sum, 100), Q.of(b + c, sum)],
+      solution: t(
+        `The row adds to $${shown(sum)}$, and its weighted sum is $${shown(weighted)}$. Dividing gives $${answer.toLatex()}$.`,
+        `这一行的和是 $${shown(sum)}$，加权和是 $${shown(weighted)}$。相除得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const conditionalVarianceOnTriangle: KnowledgePointDef = {
+  id: "a-conditional-variance-on-a-uniform-triangle",
+  title: t("A conditional variance on a uniform triangle", "均匀三角形上的条件方差"),
+  explanation: t(
+    "When a point is uniform on a region, fixing one coordinate leaves the other uniform along the corresponding slice of the region. On the triangle $0 < y < x < c$, the slice at $X = x$ is the interval from $0$ to $x$. So the conditional distribution depends on $x$ but not on the size $c$ of the triangle. The formula for the variance of a uniform variable then applies at once, with no integration needed.",
+    "当点在区域上均匀时，固定一个坐标后，另一个坐标沿区域的相应切片均匀。在三角形 $0 < y < x < c$ 上，$X = x$ 处的切片是从 $0$ 到 $x$ 的区间。所以条件分布取决于 $x$，但与三角形的大小 $c$ 无关。于是均匀变量的方差公式可以立即应用，不必积分。",
+  ),
+  generate(rng) {
+    const c = rng.int(2, 12);
+    const x = rng.int(1, c - 1);
+    const answer = Q.of(x * x, 12);
+    return numberProblem({
+      prompt: t(
+        `A point $(X, Y)$ is uniform on the triangle $0 < y < x < ${c}$. Find $\\operatorname{Var}(Y \\mid X = ${x})$.`,
+        `点 $(X, Y)$ 在三角形 $0 < y < x < ${c}$ 上均匀。求 $\\operatorname{Var}(Y \\mid X = ${x})$。`,
+      ),
+      answer,
+      wrong: [Q.of(x, 2), Q.of(x * x, 4), Q.of(x * x, 3), Q.of(c * c, 12)],
+      solution: t(
+        `Given $X = ${x}$, the variable $Y$ is uniform on $[0, ${x}]$. Its variance is $\\frac{${x}^2}{12} = ${answer.toLatex()}$.`,
+        `已知 $X = ${x}$，变量 $Y$ 在 $[0, ${x}]$ 上均匀。它的方差是 $\\frac{${x}^2}{12} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const rectangleFromJointCdf: KnowledgePointDef = {
+  id: "a-rectangle-probability-from-a-joint-cdf",
+  title: t("A rectangle probability from a joint CDF", "由联合分布函数求矩形的概率"),
+  explanation: t(
+    "A joint CDF gives the probability of a quarter-plane, and a rectangle can be built from four of these. The probability that $a < X \\le b$ and $c < Y \\le d$ is $F(b, d) - F(a, d) - F(b, c) + F(a, c)$. The last term is added back because the corner below and to the left of the rectangle was subtracted twice. Leaving out either of the middle terms would count regions that lie outside the rectangle.",
+    "联合分布函数给出四分之一平面的概率，矩形可以由四个这样的区域组成。$a < X \\le b$ 且 $c < Y \\le d$ 的概率是 $F(b, d) - F(a, d) - F(b, c) + F(a, c)$。最后一项要加回来，因为矩形左下方的角被减了两次。漏掉中间任何一项，都会把矩形外的区域算进去。",
+  ),
+  generate(rng) {
+    const big = rng.int(2, 6);
+    const tall = rng.int(2, 6);
+    const b = rng.int(2, big);
+    const a = rng.int(1, b - 1);
+    const d = rng.int(2, tall);
+    const c = rng.int(1, d - 1);
+    const scale = big * big * tall * tall;
+    const answer = Q.of((b * b - a * a) * (d * d - c * c), scale);
+    return numberProblem({
+      prompt: t(
+        `On $[0, ${big}] \\times [0, ${tall}]$, a joint CDF is $F(x, y) = \\frac{x^2y^2}{${scale}}$. Find $P(${a} < X \\le ${b},\\ ${c} < Y \\le ${d})$.`,
+        `在 $[0, ${big}] \\times [0, ${tall}]$ 上，联合分布函数是 $F(x, y) = \\frac{x^2y^2}{${scale}}$。求 $P(${a} < X \\le ${b},\\ ${c} < Y \\le ${d})$。`,
+      ),
+      answer,
+      wrong: [
+        Q.of(b * b * d * d, scale),
+        Q.of(b * b * d * d - a * a * c * c, scale),
+        Q.of((b - a) * (d - c), big * tall),
+        Q.of(b * b * (d * d - c * c), scale),
+      ],
+      solution: t(
+        `The four terms factor as $\\frac{(${b * b} - ${a * a})(${d * d} - ${c * c})}{${scale}}$, which equals $${answer.toLatex()}$.`,
+        `这四项可分解为 $\\frac{(${b * b} - ${a * a})(${d * d} - ${c * c})}{${scale}}$，它等于 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const expectedSquareOfSum: KnowledgePointDef = {
+  id: "the-expected-square-of-a-sum",
+  title: t("The expected square of a sum", "和的平方的期望"),
+  explanation: t(
+    "Expanding gives $E[(X + Y)^2] = E(X^2) + 2E(XY) + E(Y^2)$, and independence turns the middle term into $2E(X)E(Y)$. A tidier way is to use $E(W^2) = \\operatorname{Var}(W) + E(W)^2$ with $W = X + Y$. For independent variables the variances add, so the result is the sum of the variances plus the square of the sum of the means. Both routes give the same value.",
+    "展开得 $E[(X + Y)^2] = E(X^2) + 2E(XY) + E(Y^2)$，独立性把中间项变成 $2E(X)E(Y)$。更简洁的方法是对 $W = X + Y$ 用 $E(W^2) = \\operatorname{Var}(W) + E(W)^2$。对独立变量，方差相加，所以结果是方差之和加上均值之和的平方。两条路得到相同的值。",
+  ),
+  generate(rng) {
+    const mx = nonzero(rng, 6);
+    const my = nonzero(rng, 6);
+    const vx = rng.int(1, 12);
+    const vy = rng.int(1, 12);
+    const answer = vx + vy + (mx + my) ** 2;
+    return numberProblem({
+      prompt: t(
+        `Independent variables have $E(X) = ${mx}$, $\\operatorname{Var}(X) = ${vx}$, $E(Y) = ${my}$ and $\\operatorname{Var}(Y) = ${vy}$. Find $E[(X + Y)^2]$.`,
+        `独立变量满足 $E(X) = ${mx}$，$\\operatorname{Var}(X) = ${vx}$，$E(Y) = ${my}$，$\\operatorname{Var}(Y) = ${vy}$。求 $E[(X + Y)^2]$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [vx + vy, (mx + my) ** 2, vx + vy + mx * mx + my * my, answer + 1],
+      solution: t(
+        `The sum has variance $${vx + vy}$ and mean $${mx + my}$, so the value is $${vx + vy} + ${inParens(mx + my)}^2 = ${answer}$.`,
+        `和的方差是 $${vx + vy}$，均值是 $${mx + my}$，所以值是 $${vx + vy} + ${inParens(mx + my)}^2 = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const varianceOfProduct: KnowledgePointDef = {
+  id: "the-variance-of-a-product-of-independent-variables",
+  title: t("The variance of a product of independent variables", "独立变量之积的方差"),
+  explanation: t(
+    "Variances add for a sum of independent variables, but they do not multiply for a product. Independence does give $E(XY) = E(X)E(Y)$ and $E(X^2Y^2) = E(X^2)E(Y^2)$, since $X^2$ and $Y^2$ are also independent. So $\\operatorname{Var}(XY) = E(X^2)E(Y^2) - (E(X)E(Y))^2$. Each second moment is the variance plus the square of the mean, which shows why the means must be known too, and not only the variances.",
+    "独立变量之和的方差相加，但乘积的方差并不相乘。独立性确实给出 $E(XY) = E(X)E(Y)$ 和 $E(X^2Y^2) = E(X^2)E(Y^2)$，因为 $X^2$ 和 $Y^2$ 也独立。所以 $\\operatorname{Var}(XY) = E(X^2)E(Y^2) - (E(X)E(Y))^2$。每个二阶矩是方差加均值的平方，这说明除了方差，还必须知道均值。",
+  ),
+  generate(rng) {
+    const mx = nonzero(rng, 5);
+    const my = nonzero(rng, 5);
+    const vx = rng.int(1, 9);
+    const vy = rng.int(1, 9);
+    const sx = vx + mx * mx;
+    const sy = vy + my * my;
+    const answer = sx * sy - (mx * my) ** 2;
+    return numberProblem({
+      prompt: t(
+        `Independent variables have $E(X) = ${mx}$, $\\operatorname{Var}(X) = ${vx}$, $E(Y) = ${my}$ and $\\operatorname{Var}(Y) = ${vy}$. Find $\\operatorname{Var}(XY)$.`,
+        `独立变量满足 $E(X) = ${mx}$，$\\operatorname{Var}(X) = ${vx}$，$E(Y) = ${my}$，$\\operatorname{Var}(Y) = ${vy}$。求 $\\operatorname{Var}(XY)$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [vx * vy, sx * sy, vx * my * my + vy * mx * mx, answer + 1],
+      solution: t(
+        `The second moments are $${sx}$ and $${sy}$, and $E(XY) = ${mx * my}$. So the variance is $${sx} \\cdot ${sy} - ${inParens(mx * my)}^2 = ${answer}$.`,
+        `二阶矩是 $${sx}$ 和 $${sy}$，$E(XY) = ${mx * my}$。所以方差是 $${sx} \\cdot ${sy} - ${inParens(mx * my)}^2 = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const momentsForPowerDensity: KnowledgePointDef = {
+  id: "the-method-of-moments-for-a-power-density",
+  title: t("The method of moments for a power density", "幂密度的矩估计"),
+  explanation: t(
+    "The method of moments sets the mean of the model equal to the sample mean, and solves for the parameter. For the density $(\\theta + 1)x^\\theta$ on $[0, 1]$, the mean is $\\frac{\\theta + 1}{\\theta + 2}$. Setting this equal to $m$ and clearing the fraction gives a linear equation, with solution $\\hat{\\theta} = \\frac{2m - 1}{1 - m}$. A larger sample mean gives a larger estimate, because mass near 1 needs a large exponent.",
+    "矩估计令模型的均值等于样本均值，再解出参数。对 $[0, 1]$ 上的密度 $(\\theta + 1)x^\\theta$，均值是 $\\frac{\\theta + 1}{\\theta + 2}$。令它等于 $m$ 并去分母，得到线性方程，解是 $\\hat{\\theta} = \\frac{2m - 1}{1 - m}$。样本均值越大，估计也越大，因为质量靠近 1 需要大的指数。",
+  ),
+  generate(rng) {
+    const q = rng.int(3, 15);
+    const p = rng.int(Math.floor(q / 2) + 1, q - 1);
+    const m = Q.of(p, q);
+    const one = Q.of(1);
+    const rest = one.sub(m);
+    const answer = m.mul(Q.of(2)).sub(one).div(rest);
+    return numberProblem({
+      prompt: t(
+        `A sample from the density $f(x) = (\\theta + 1)x^\\theta$ on $[0, 1]$ has mean $${m.toLatex()}$. Find the method of moments estimate of $\\theta$.`,
+        `来自 $[0, 1]$ 上密度 $f(x) = (\\theta + 1)x^\\theta$ 的样本均值是 $${m.toLatex()}$。求 $\\theta$ 的矩估计。`,
+      ),
+      answer,
+      wrong: [m.div(rest), one.div(rest), answer.add(one), answer.neg()],
+      solution: t(
+        `Solving $\\frac{\\theta + 1}{\\theta + 2} = ${m.toLatex()}$ gives $\\theta = \\frac{2m - 1}{1 - m} = ${answer.toLatex()}$.`,
+        `解 $\\frac{\\theta + 1}{\\theta + 2} = ${m.toLatex()}$，得 $\\theta = \\frac{2m - 1}{1 - m} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const narrowingTheMargin: KnowledgePointDef = {
+  id: "the-sample-size-after-narrowing-the-margin",
+  title: t("The sample size after narrowing the margin", "缩小误差范围后的样本量"),
+  explanation: t(
+    "The margin of error of a mean is $z\\frac{\\sigma}{\\sqrt{n}}$, so it shrinks only with the square root of the sample size. To divide the margin by $k$ with the same confidence and spread, the sample must be multiplied by $k^2$. This means that precision gets expensive quickly: halving the margin needs four times as much data. The actual values of $z$ and $\\sigma$ cancel in the comparison and do not need to be known.",
+    "均值的误差范围是 $z\\frac{\\sigma}{\\sqrt{n}}$，所以它只随样本量的平方根缩小。要在相同置信度和离散程度下把误差范围除以 $k$，样本量必须乘以 $k^2$。这意味着精度很快变得昂贵：误差范围减半需要四倍的数据。在比较中 $z$ 和 $\\sigma$ 的实际值相消，不需要知道。",
+  ),
+  generate(rng) {
+    const n = rng.int(4, 40) * 5;
+    const k = rng.int(2, 6);
+    const answer = n * k * k;
+    return numberProblem({
+      prompt: t(
+        `A sample of ${n} gives a confidence interval for a mean. How large a sample gives a margin of error $\\frac{1}{${k}}$ as large, at the same confidence level and with the same $\\sigma$?`,
+        `容量为 ${n} 的样本给出均值的置信区间。要使误差范围变为原来的 $\\frac{1}{${k}}$，且置信水平和 $\\sigma$ 不变，样本量应为多少？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n * k, n + k, n * k * k * k, 2 * n * k],
+      solution: t(
+        `The margin varies as $\\frac{1}{\\sqrt{n}}$, so $n$ must be multiplied by $${k}^2$. This gives $${answer}$.`,
+        `误差范围与 $\\frac{1}{\\sqrt{n}}$ 成比例，所以 $n$ 必须乘以 $${k}^2$。这样得 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const testOnUniform: KnowledgePointDef = {
+  id: "the-size-and-power-of-a-test-on-a-uniform-variable",
+  title: t("The size and power of a test on a uniform variable", "均匀变量检验的水平和功效"),
+  explanation: t(
+    "The size of a test is the probability of rejecting when the null hypothesis is true, and its power is the probability of rejecting when the alternative is true. Both are the probability of the same event, the critical region, computed under different distributions. For one observation of a uniform variable on $[0, \\theta]$, rejecting for values above $c$ has probability $\\frac{\\theta - c}{\\theta}$, so a larger $\\theta$ gives greater power.",
+    "检验的水平是原假设为真时拒绝的概率，功效是备择假设为真时拒绝的概率。两者是同一事件（拒绝域）在不同分布下的概率。对 $[0, \\theta]$ 上均匀变量的一个观测，当值超过 $c$ 时拒绝的概率是 $\\frac{\\theta - c}{\\theta}$，所以 $\\theta$ 越大，功效越大。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 12);
+    const b = a + rng.int(1, 10);
+    const c = rng.int(1, a - 1);
+    const asksPower = rng.pick([true, false]);
+    const size = Q.of(a - c, a);
+    const strength = Q.of(b - c, b);
+    const answer = asksPower ? strength : size;
+    return numberProblem({
+      prompt: t(
+        `One observation $X$ of a uniform variable on $[0, \\theta]$ tests $H_0: \\theta = ${a}$ against $H_1: \\theta = ${b}$, rejecting $H_0$ when $X > ${c}$. Find the ${asksPower ? "power" : "size"} of the test.`,
+        `用 $[0, \\theta]$ 上均匀变量的一个观测 $X$ 检验 $H_0: \\theta = ${a}$ 对 $H_1: \\theta = ${b}$，当 $X > ${c}$ 时拒绝 $H_0$。求检验的${asksPower ? "功效" : "水平"}。`,
+      ),
+      answer,
+      wrong: [asksPower ? size : strength, Q.of(c, asksPower ? b : a), Q.of(c, asksPower ? a : b), Q.of(b - a, b)],
+      solution: t(
+        `Under $\\theta = ${asksPower ? b : a}$, the probability of $X > ${c}$ is $1 - \\frac{${c}}{${asksPower ? b : a}} = ${answer.toLatex()}$.`,
+        `当 $\\theta = ${asksPower ? b : a}$ 时，$X > ${c}$ 的概率是 $1 - \\frac{${c}}{${asksPower ? b : a}} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const anovaFFromTotals: KnowledgePointDef = {
+  id: "the-f-statistic-from-the-total-and-within-sums-of-squares",
+  title: t("The F statistic from the total and within sums of squares", "由总平方和与组内平方和求 F 统计量"),
+  explanation: t(
+    "The identity $SST = SSB + SSW$ means that the between-groups sum of squares can be found by subtraction. Each sum of squares must then be divided by its degrees of freedom before they are compared, $k - 1$ between $k$ groups and $N - k$ within them. The statistic $F$ is the ratio of these two mean squares. Comparing raw sums of squares would be misleading, because there are usually far more degrees of freedom within groups.",
+    "恒等式 $SST = SSB + SSW$ 说明组间平方和可以用减法求得。比较之前，每个平方和必须除以它的自由度：$k$ 组之间是 $k - 1$，组内是 $N - k$。统计量 $F$ 是这两个均方之比。直接比较平方和会产生误导，因为组内的自由度通常多得多。",
+  ),
+  generate(rng) {
+    const k = rng.int(3, 7);
+    const n = k * rng.int(3, 8);
+    const between = rng.int(2, 30);
+    const within = rng.int(2, 15);
+    const ssb = (k - 1) * between;
+    const ssw = (n - k) * within;
+    const sst = ssb + ssw;
+    const answer = Q.of(between, within);
+    return numberProblem({
+      prompt: t(
+        `A one-way analysis of variance of ${k} groups and ${n} observations in all has $SST = ${sst}$ and $SSW = ${ssw}$. Find the $F$ statistic.`,
+        `对 ${k} 组、共 ${n} 个观测做单因素方差分析，$SST = ${sst}$，$SSW = ${ssw}$。求 $F$ 统计量。`,
+      ),
+      answer,
+      wrong: [Q.of(ssb, ssw), Q.of(sst, ssw), Q.of(within, between), Q.of(between * (n - 1), sst)],
+      solution: t(
+        `Here $SSB = ${sst} - ${ssw} = ${ssb}$. The mean squares are $\\frac{${ssb}}{${k - 1}} = ${between}$ and $\\frac{${ssw}}{${n - k}} = ${within}$, so $F = ${answer.toLatex()}$.`,
+        `这里 $SSB = ${sst} - ${ssw} = ${ssb}$。均方是 $\\frac{${ssb}}{${k - 1}} = ${between}$ 和 $\\frac{${ssw}}{${n - k}} = ${within}$，所以 $F = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const reversedRanks: KnowledgePointDef = {
+  id: "the-squared-rank-differences-of-reversed-rankings",
+  title: t("The squared rank differences of reversed rankings", "完全相反排名的秩差平方和"),
+  explanation: t(
+    "When one ranking is exactly the reverse of another, the rank differences are as large as they can be, and Spearman's coefficient reaches its lowest value of $-1$. Setting $r_s = 1 - \\frac{6\\sum d^2}{n(n^2 - 1)} = -1$ and solving shows that $\\sum d^2 = \\frac{n(n^2 - 1)}{3}$. So this formula gives the largest possible sum of squared differences for $n$ items, which is a useful check on hand calculations.",
+    "当一个排名恰好是另一个的逆序时，秩差达到最大，斯皮尔曼系数达到最小值 $-1$。令 $r_s = 1 - \\frac{6\\sum d^2}{n(n^2 - 1)} = -1$ 并求解，得 $\\sum d^2 = \\frac{n(n^2 - 1)}{3}$。所以这个公式给出 $n$ 个项目的秩差平方和的最大可能值，这是手算时有用的检查。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 30);
+    const answer = (n * (n * n - 1)) / 3;
+    return numberProblem({
+      prompt: t(
+        `Two judges rank ${n} items in exactly opposite orders, with no ties. Find $\\sum d^2$, the sum of the squared rank differences.`,
+        `两位评委把 ${n} 个项目排成完全相反的顺序，没有并列。求秩差平方和 $\\sum d^2$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [(n * (n * n - 1)) / 6, n * n, n * (n - 1), answer + 1],
+      solution: t(
+        `Reversed rankings have $r_s = -1$, so $\\frac{6\\sum d^2}{${n * (n * n - 1)}} = 2$. This gives $\\sum d^2 = ${answer}$.`,
+        `相反的排名有 $r_s = -1$，所以 $\\frac{6\\sum d^2}{${n * (n * n - 1)}} = 2$。于是 $\\sum d^2 = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const expectedRange: KnowledgePointDef = {
+  id: "the-expected-range-of-a-uniform-sample",
+  title: t("The expected range of a uniform sample", "均匀样本的期望极差"),
+  explanation: t(
+    "On average, $n$ uniform points divide $[0, \\theta]$ into $n + 1$ gaps of equal expected length $\\frac{\\theta}{n + 1}$. The largest point then has mean $\\frac{n\\theta}{n + 1}$, and the smallest has mean $\\frac{\\theta}{n + 1}$. The range is their difference, and expectation is linear, even though the two order statistics are dependent. So the expected range covers $n - 1$ of the gaps, and it never quite reaches the full length $\\theta$.",
+    "平均而言，$n$ 个均匀点把 $[0, \\theta]$ 分成 $n + 1$ 段，每段的期望长度都是 $\\frac{\\theta}{n + 1}$。于是最大点的均值是 $\\frac{n\\theta}{n + 1}$，最小点的均值是 $\\frac{\\theta}{n + 1}$。极差是它们的差，而且期望是线性的，尽管这两个顺序统计量并不独立。所以期望极差覆盖 $n - 1$ 段，永远达不到全长 $\\theta$。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 12);
+    const theta = rng.int(1, 20);
+    const answer = Q.of(theta * (n - 1), n + 1);
+    return numberProblem({
+      prompt: t(
+        `A sample of ${n} independent values is taken from the uniform distribution on $[0, ${theta}]$. Find the expected value of the largest minus the smallest.`,
+        `从 $[0, ${theta}]$ 上的均匀分布中独立抽取 ${n} 个值。求最大值减最小值的期望。`,
+      ),
+      answer,
+      wrong: [Q.of(theta * n, n + 1), Q.of(theta, n + 1), Q.of(theta * (n - 1), n), Q.of(theta)],
+      solution: t(
+        `The largest has mean $${Q.of(theta * n, n + 1).toLatex()}$, and the smallest has mean $${Q.of(theta, n + 1).toLatex()}$. Their difference is $${answer.toLatex()}$.`,
+        `最大值的均值是 $${Q.of(theta * n, n + 1).toLatex()}$，最小值的均值是 $${Q.of(theta, n + 1).toLatex()}$。它们的差是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
 /** deeperProbabilityStatisticsPoints gives, by topic id, the knowledge points added after a Probability & Statistics topic's own. */
 export const deeperProbabilityStatisticsPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "extending-bayes-theorem": [bayesTwice],
@@ -1622,4 +2419,31 @@ export const deeperProbabilityStatisticsPoints: Readonly<Record<string, readonly
   "log-likelihood-functions-for-discrete-probability-distributions": [poissonMle],
   "log-likelihood-functions-for-continuous-probability-distributions": [exponentialMle],
   "likelihood-functions-for-discrete-probability-distributions": [geometricMle],
+  "finding-the-mode-of-a-continuous-random-variable": [modeOfPowerDensity],
+  "the-distribution-function-method": [powerOfUniform],
+  "the-distribution-function-method-with-many-to-one-transformations": [squareOnUnevenInterval],
+  "properties-of-expectation-for-discrete-random-variables": [expectedEmptyBoxes],
+  "moments-of-continuous-random-variables": [momentOfPowerDensity],
+  "variance-of-continuous-random-variables": [varianceOfTriangularDensity],
+  "constructing-moment-generating-functions-for-discrete-probability-distributions": [varianceFromFiniteMgf],
+  "the-discrete-uniform-distribution": [divisibleByEither],
+  "modeling-with-discrete-uniform-distributions": [expectedMaximumOfTwo],
+  "the-bernoulli-distribution": [twoBernoulliDiffer],
+  "mean-and-variance-of-the-binomial-distribution": [binomialFactorialMoment],
+  "modeling-with-the-poisson-distribution": [thinningPoisson],
+  "the-cdf-of-the-poisson-distribution": [poissonIntervalMultiple],
+  "modeling-with-the-negative-binomial-distribution": [expectedFailures],
+  "modeling-with-continuous-uniform-distributions": [remainingUniformWait],
+  "mean-and-variance-of-the-exponential-distribution": [exponentialGivenExceeds],
+  "conditional-distributions-for-discrete-random-variables": [conditionalMeanFromJoint],
+  "conditional-distributions-for-continuous-random-variables": [conditionalVarianceOnTriangle],
+  "the-joint-cdf-of-two-continuous-random-variables": [rectangleFromJointCdf],
+  "expected-values-of-sums-and-products-of-random-variables": [expectedSquareOfSum],
+  "variance-of-sums-of-independent-random-variables": [varianceOfProduct],
+  "the-method-of-moments": [momentsForPowerDensity],
+  "sample-size-determination-for-estimating-means": [narrowingTheMargin],
+  "type-i-and-type-ii-errors": [testOnUniform],
+  "the-relationship-between-ssw-ssb-sst": [anovaFFromTotals],
+  "spearmans-rank-correlation-coefficient": [reversedRanks],
+  "introduction-to-order-statistics": [expectedRange],
 };
