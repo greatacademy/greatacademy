@@ -729,6 +729,849 @@ const orthogonalSines: KnowledgePointDef = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// Second pass
+// ---------------------------------------------------------------------------
+
+/** coefficientOf writes a positive number before a symbol, leaving out 1. */
+const coefficientOf = (n: number) => (n === 1 ? "" : `${n}`);
+/** fractionBefore writes a fraction before a symbol, leaving out 1. */
+const fractionBefore = (n: number, d: number) => (n === d ? "" : Q.of(n, d).toLatex());
+/** factorial multiplies the whole numbers from 1 to n. */
+const factorial = (n: number): number => (n <= 1 ? 1 : n * factorial(n - 1));
+/** pythagorean picks the legs and hypotenuse of a right triangle with whole sides. */
+const pythagorean = (rng: Rng) => {
+  const [a, b, h] = rng.pick([
+    [3, 4, 5],
+    [5, 12, 13],
+    [8, 15, 17],
+    [6, 8, 10],
+    [7, 24, 25],
+    [20, 21, 29],
+    [9, 12, 15],
+  ]) as [number, number, number];
+  return rng.pick([true, false]) ? { a, b, h } : { a: b, b: a, h };
+};
+
+const changedLimits: KnowledgePointDef = {
+  id: "a-definite-integral-with-changed-limits",
+  title: t("A definite integral with changed limits", "换限的定积分"),
+  explanation: t(
+    "In a definite integral, a substitution changes the limits as well as the integrand. Once the limits are written in terms of $u$, there is no need to return to $x$ at the end. For $\\int x\\sqrt{x^2 + a^2}\\,dx$, take $u = x^2 + a^2$, so that the lower limit $x = 0$ becomes $u = a^2$.",
+    "在定积分中，换元既改变被积函数，也改变积分限。积分限一旦写成 $u$ 的值，最后就不必再换回 $x$。对 $\\int x\\sqrt{x^2 + a^2}\\,dx$，取 $u = x^2 + a^2$，于是下限 $x = 0$ 变成 $u = a^2$。",
+  ),
+  generate(rng) {
+    const { a, b, h } = pythagorean(rng);
+    const k = rng.int(1, 6);
+    const difference = h ** 3 - a ** 3;
+    const answer = Q.of(k * difference, 3);
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\int_0^{${b}} ${coefficientOf(k)}x\\sqrt{x^2 + ${a * a}}\\,dx$.`,
+        `计算 $\\int_0^{${b}} ${coefficientOf(k)}x\\sqrt{x^2 + ${a * a}}\\,dx$。`,
+      ),
+      answer,
+      wrong: [Q.of(k * h ** 3, 3), Q.of(2 * k * difference, 3), Q.of(k * (h * h - a * a), 2)],
+      solution: t(
+        `Let $u = x^2 + ${a * a}$, so $u$ runs from ${a * a} to ${h * h} and $x\\,dx = \\frac{1}{2}du$. The integral is $\\frac{${k}}{3}\\left(${h}^3 - ${a}^3\\right) = ${answer.toLatex()}$.`,
+        `令 $u = x^2 + ${a * a}$，则 $u$ 从 ${a * a} 到 ${h * h}，且 $x\\,dx = \\frac{1}{2}du$。积分是 $\\frac{${k}}{3}\\left(${h}^3 - ${a}^3\\right) = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const limitWithLogarithm: KnowledgePointDef = {
+  id: "an-exponential-integral-with-a-logarithm-in-the-limit",
+  title: t("An exponential integral with a logarithm in the limit", "积分限含对数的指数积分"),
+  explanation: t(
+    "After the substitution $u = x^2$, the integral of $xe^{x^2}$ is $\\frac{1}{2}e^{x^2}$. Limits are sometimes chosen so that the exponential simplifies. Since $e^{\\ln c} = c$, an upper limit of $\\sqrt{\\ln c}$ makes the antiderivative a plain number, and an answer that looks irrational turns out to be rational.",
+    "经过换元 $u = x^2$，$xe^{x^2}$ 的积分是 $\\frac{1}{2}e^{x^2}$。积分限有时是特意选取的，以使指数化简。由于 $e^{\\ln c} = c$，上限取 $\\sqrt{\\ln c}$ 时，原函数的值就是一个普通的数，看起来超越的答案其实是有理数。",
+  ),
+  generate(rng) {
+    const c = rng.int(2, 12);
+    const k = rng.int(1, 9);
+    const answer = Q.of(k * (c - 1), 2);
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\int_0^{\\sqrt{\\ln ${c}}} ${coefficientOf(k)}xe^{x^2}\\,dx$.`,
+        `计算 $\\int_0^{\\sqrt{\\ln ${c}}} ${coefficientOf(k)}xe^{x^2}\\,dx$。`,
+      ),
+      answer,
+      wrong: [Q.of(k * (c - 1)), Q.of(k * c, 2), Q.of(k * (c - 1), 4)],
+      solution: t(
+        `An antiderivative is $\\frac{${k}}{2}e^{x^2}$. At the upper limit $e^{x^2} = ${c}$ and at 0 it is 1, so the value is $\\frac{${k}}{2}(${c} - 1) = ${answer.toLatex()}$.`,
+        `原函数是 $\\frac{${k}}{2}e^{x^2}$。在上限处 $e^{x^2} = ${c}$，在 0 处是 1，所以值是 $\\frac{${k}}{2}(${c} - 1) = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const logLimits: KnowledgePointDef = {
+  id: "a-definite-integral-of-a-power-of-ln-x-over-x",
+  title: t("A definite integral of a power of $\\ln x$ over $x$", "$\\ln x$ 的幂除以 $x$ 的定积分"),
+  explanation: t(
+    "With $u = \\ln x$, the factor $\\frac{dx}{x}$ becomes $du$, and the limits transform as well: $x = 1$ gives $u = 0$, and $x = e^n$ gives $u = n$. What remains is the integral of a plain power of $u$. Limits that are powers of $e$ are therefore a strong signal to use this substitution.",
+    "令 $u = \\ln x$，因子 $\\frac{dx}{x}$ 变成 $du$，积分限也随之变化：$x = 1$ 对应 $u = 0$，$x = e^n$ 对应 $u = n$。剩下的就是 $u$ 的普通幂函数的积分。所以积分限是 $e$ 的幂时，就是使用这个换元的明显信号。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 5);
+    const m = rng.int(1, 4);
+    const k = rng.int(1, 6);
+    const answer = Q.of(k * n ** (m + 1), m + 1);
+    const power = m === 1 ? "\\ln x" : `(\\ln x)^{${m}}`;
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\int_1^{e^{${n}}} \\frac{${coefficientOf(k)}${power}}{x}\\,dx$.`,
+        `计算 $\\int_1^{e^{${n}}} \\frac{${coefficientOf(k)}${power}}{x}\\,dx$。`,
+      ),
+      answer,
+      wrong: [Q.of(k * n ** m, m), Q.of(k * n ** (m + 1)), Q.of(k * n ** (m + 1), m + 2)],
+      solution: t(
+        `With $u = \\ln x$, the limits become 0 and ${n}, and the integral is $\\int_0^{${n}} ${coefficientOf(k)}${m === 1 ? "u" : `u^{${m}}`}\\,du = \\frac{${k} \\cdot ${n}^{${m + 1}}}{${m + 1}} = ${answer.toLatex()}$.`,
+        `令 $u = \\ln x$，积分限变成 0 和 ${n}，积分是 $\\int_0^{${n}} ${coefficientOf(k)}${m === 1 ? "u" : `u^{${m}}`}\\,du = \\frac{${k} \\cdot ${n}^{${m + 1}}}{${m + 1}} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const powerOverQuarterTurn: KnowledgePointDef = {
+  id: "a-power-of-sine-or-cosine-over-a-quarter-turn",
+  title: t("A power of sine or cosine over a quarter turn", "正弦或余弦的幂在四分之一周期上的积分"),
+  explanation: t(
+    "When a single factor of cosine sits beside a power of sine, take $u = \\sin x$, and the cosine is absorbed into $du$. Over $[0, \\frac{\\pi}{2}]$, $u$ runs from 0 to 1 in either version of the integral, whether sine or cosine carries the power. So the answer is simply one over one more than the power.",
+    "一个余弦因子紧挨着正弦的幂时，取 $u = \\sin x$，余弦就被吸收进 $du$。在 $[0, \\frac{\\pi}{2}]$ 上，无论幂在正弦还是余弦上，$u$ 都是在 0 与 1 之间变化。所以答案就是幂次加一的倒数。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 9);
+    const k = rng.int(1, 12);
+    const answer = Q.of(k, n + 1);
+    const integrand = rng.pick([`\\sin^{${n}} x\\cos x`, `\\cos^{${n}} x\\sin x`]);
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\int_0^{\\pi/2} ${coefficientOf(k)}${integrand}\\,dx$.`,
+        `计算 $\\int_0^{\\pi/2} ${coefficientOf(k)}${integrand}\\,dx$。`,
+      ),
+      answer,
+      wrong: [Q.of(k, n), Q.of(k), answer.neg()],
+      solution: t(
+        `The substitution turns this into $${coefficientOf(k)}\\int_0^1 u^{${n}}\\,du = ${answer.toLatex()}$.`,
+        `换元后变成 $${coefficientOf(k)}\\int_0^1 u^{${n}}\\,du = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const sinhCoshLimit: KnowledgePointDef = {
+  id: "a-hyperbolic-integral-with-a-logarithm-in-the-limit",
+  title: t("A hyperbolic integral with a logarithm in the limit", "积分限含对数的双曲积分"),
+  explanation: t(
+    "The substitution $u = \\sinh x$ gives $\\int \\sinh x\\cosh x\\,dx = \\frac{1}{2}\\sinh^2 x$. To evaluate at a limit such as $\\ln a$, return to the exponential definition: $\\sinh(\\ln a) = \\frac{1}{2}\\left(a - \\frac{1}{a}\\right)$. The exponentials and logarithm then cancel, so the result is a rational number whenever $a$ is one.",
+    "换元 $u = \\sinh x$ 给出 $\\int \\sinh x\\cosh x\\,dx = \\frac{1}{2}\\sinh^2 x$。在 $\\ln a$ 这样的积分限处求值时，要回到指数定义：$\\sinh(\\ln a) = \\frac{1}{2}\\left(a - \\frac{1}{a}\\right)$。指数和对数相互抵消，所以只要 $a$ 是有理数，结果就是有理数。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 9);
+    const k = rng.int(1, 12);
+    const top = a * a - 1;
+    const answer = Q.of(k * top * top, 8 * a * a);
+    const sinhValue = Q.of(top, 2 * a);
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\int_0^{\\ln ${a}} ${coefficientOf(k)}\\sinh x\\cosh x\\,dx$.`,
+        `计算 $\\int_0^{\\ln ${a}} ${coefficientOf(k)}\\sinh x\\cosh x\\,dx$。`,
+      ),
+      answer,
+      wrong: [Q.of(k * top * top, 4 * a * a), Q.of(k * top, 2 * a), Q.of(k * top * top, 2 * a * a)],
+      solution: t(
+        `Here $\\sinh(\\ln ${a}) = ${sinhValue.toLatex()}$, and the integral is $\\frac{${k}}{2}\\sinh^2(\\ln ${a}) = ${answer.toLatex()}$.`,
+        `这里 $\\sinh(\\ln ${a}) = ${sinhValue.toLatex()}$，积分是 $\\frac{${k}}{2}\\sinh^2(\\ln ${a}) = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const inverseTrigDefinite: KnowledgePointDef = {
+  id: "definite-integrals-giving-a-rational-multiple-of-pi",
+  title: t("Definite integrals giving a rational multiple of $\\pi$", "结果为 $\\pi$ 的有理数倍的定积分"),
+  explanation: t(
+    "Inverse trigonometric antiderivatives evaluate to angles at familiar limits. Since $\\arcsin\\frac{1}{2} = \\frac{\\pi}{6}$ and $\\arctan 1 = \\frac{\\pi}{4}$, integrals with these limits come out as rational multiples of $\\pi$. Remember that the arcsine form carries no extra factor from $a$, whereas the arctangent form has a factor of $\\frac{1}{a}$ in front.",
+    "反三角原函数在常见积分限处的值是角度。由于 $\\arcsin\\frac{1}{2} = \\frac{\\pi}{6}$，$\\arctan 1 = \\frac{\\pi}{4}$，这样的定积分结果是 $\\pi$ 的有理数倍。要记住，反正弦形式没有来自 $a$ 的额外因子，而反正切形式前面有因子 $\\frac{1}{a}$。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 12);
+    const half = rng.int(1, 6);
+    const a = 2 * half;
+    const sine = rng.pick([true, false]);
+    const integrand = sine ? `\\frac{${k}}{\\sqrt{${a * a} - x^2}}` : `\\frac{${k}}{x^2 + ${half * half}}`;
+    const top = half;
+    const answer = sine ? Q.of(k, 6) : Q.of(k, 4 * half);
+    return numberProblem({
+      prompt: t(
+        `The integral $\\int_0^{${top}} ${integrand}\\,dx$ equals $c\\pi$. Find $c$.`,
+        `积分 $\\int_0^{${top}} ${integrand}\\,dx$ 等于 $c\\pi$。求 $c$。`,
+      ),
+      answer,
+      wrong: sine ? [Q.of(k, 3), Q.of(k, 6 * a), Q.of(k, 4)] : [Q.of(k, 4), Q.of(k, 2 * half), Q.of(k, 6 * half)],
+      solution: sine
+        ? t(
+            `An antiderivative is $${coefficientOf(k)}\\arcsin\\frac{x}{${a}}$, and $\\arcsin\\frac{1}{2} = \\frac{\\pi}{6}$. So $c = ${answer.toLatex()}$.`,
+            `原函数是 $${coefficientOf(k)}\\arcsin\\frac{x}{${a}}$，且 $\\arcsin\\frac{1}{2} = \\frac{\\pi}{6}$。所以 $c = ${answer.toLatex()}$。`,
+          )
+        : t(
+            `An antiderivative is $${fractionBefore(k, half)}\\arctan${half === 1 ? " x" : `\\frac{x}{${half}}`}$, and $\\arctan 1 = \\frac{\\pi}{4}$. So $c = ${answer.toLatex()}$.`,
+            `原函数是 $${fractionBefore(k, half)}\\arctan${half === 1 ? " x" : `\\frac{x}{${half}}`}$，且 $\\arctan 1 = \\frac{\\pi}{4}$。所以 $c = ${answer.toLatex()}$。`,
+          ),
+    });
+  },
+};
+
+const doubleAngleTwice: KnowledgePointDef = {
+  id: "applying-a-double-angle-formula-twice",
+  title: t("Applying a double angle formula twice", "两次使用二倍角公式"),
+  explanation: t(
+    "A fourth power of sine or cosine needs the double angle formula twice: square the half-angle form, then reduce the $\\cos^2 2x$ that appears. Over a whole period every oscillating cosine term vanishes, so only the constant term survives. A product $\\sin^2 x\\cos^2 x$ reduces the same way, by way of $\\frac{1}{4}\\sin^2 2x$.",
+    "正弦或余弦的四次幂需要两次使用二倍角公式：先把半角形式平方，再化简出现的 $\\cos^2 2x$。在一个完整周期上，每个振荡的余弦项都消失，只有常数项留下。乘积 $\\sin^2 x\\cos^2 x$ 也同样化简，先写成 $\\frac{1}{4}\\sin^2 2x$。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 40);
+    const kind = rng.pick([
+      { latex: "\\sin^4 x", value: Q.of(3 * k, 4), constant: "\\frac{3}{8}" },
+      { latex: "\\cos^4 x", value: Q.of(3 * k, 4), constant: "\\frac{3}{8}" },
+      { latex: "\\sin^2 x\\cos^2 x", value: Q.of(k, 4), constant: "\\frac{1}{8}" },
+    ]);
+    return numberProblem({
+      prompt: t(
+        `The integral $\\int_0^{2\\pi} ${coefficientOf(k)}${kind.latex}\\,dx$ equals $c\\pi$. Find $c$.`,
+        `积分 $\\int_0^{2\\pi} ${coefficientOf(k)}${kind.latex}\\,dx$ 等于 $c\\pi$。求 $c$。`,
+      ),
+      answer: kind.value,
+      wrong: [Q.of(k, 2), Q.of(3 * k, 8), Q.of(k), Q.of(k, 8)],
+      solution: t(
+        `After reducing, the constant term of $${kind.latex}$ is $${kind.constant}$, and the cosine terms integrate to zero. So $c = ${k} \\cdot 2 \\cdot ${kind.constant} = ${kind.value.toLatex()}$.`,
+        `化简后，$${kind.latex}$ 的常数项是 $${kind.constant}$，余弦项积分为零。所以 $c = ${k} \\cdot 2 \\cdot ${kind.constant} = ${kind.value.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const cyclicImproper: KnowledgePointDef = {
+  id: "a-cyclic-integral-over-an-infinite-interval",
+  title: t("A cyclic integral over an infinite interval", "无穷区间上的循环积分"),
+  explanation: t(
+    "Integrating by parts twice brings the original integral back, which gives an equation to solve. When the exponential decays, the boundary terms at infinity vanish and only those at zero remain. The result is $\\int_0^\\infty e^{-ax}\\sin bx\\,dx = \\frac{b}{a^2 + b^2}$, and the same with a numerator of $a$ when cosine replaces sine.",
+    "分部积分两次后原积分又出现，于是得到一个可解的方程。指数衰减时，无穷远处的边界项消失，只留下零处的边界项。结果是 $\\int_0^\\infty e^{-ax}\\sin bx\\,dx = \\frac{b}{a^2 + b^2}$；把正弦换成余弦，分子就变成 $a$。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 9);
+    const b = rng.int(2, 9);
+    const sum = a * a + b * b;
+    const sine = rng.pick([true, false]);
+    const answer = Q.of(sine ? b : a, sum);
+    const other = Q.of(sine ? a : b, sum);
+    const trig = sine ? `\\sin ${b}x` : `\\cos ${b}x`;
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\int_0^\\infty e^{-${coefficientOf(a)}x}${trig}\\,dx$.`,
+        `计算 $\\int_0^\\infty e^{-${coefficientOf(a)}x}${trig}\\,dx$。`,
+      ),
+      answer,
+      wrong: [other, Q.of(1, sum), Q.of(sine ? b : a, a + b)],
+      solution: t(
+        `Two integrations by parts give $I = ${sine ? Q.of(b, a * a).toLatex() : Q.of(1, a).toLatex()} - ${Q.of(b * b, a * a).toLatex()}I$. Solving gives $I = \\frac{${sine ? b : a}}{${sum}} = ${answer.toLatex()}$.`,
+        `两次分部积分给出 $I = ${sine ? Q.of(b, a * a).toLatex() : Q.of(1, a).toLatex()} - ${Q.of(b * b, a * a).toLatex()}I$。解得 $I = \\frac{${sine ? b : a}}{${sum}} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const tabularValue: KnowledgePointDef = {
+  id: "the-polynomial-factor-of-a-tabular-integral",
+  title: t("The polynomial factor of a tabular integral", "表格法积分的多项式因子"),
+  explanation: t(
+    "For $\\int x^ne^x\\,dx$, the tabular method keeps differentiating the power while the exponential stays unchanged, with alternating signs. So the result is $e^x$ times the polynomial $x^n - nx^{n-1} + n(n-1)x^{n-2} - \\dots$, the terms being successive derivatives of $x^n$. A question about one value of this polynomial tests the entire table.",
+    "对 $\\int x^ne^x\\,dx$，表格法不断对幂函数求导，指数函数保持不变，符号交替。所以结果是 $e^x$ 乘以多项式 $x^n - nx^{n-1} + n(n-1)x^{n-2} - \\dots$，各项是 $x^n$ 的逐阶导数。问这个多项式的一个值，就是在检验整张表。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 4);
+    const m = nonzero(rng, 6);
+    const coefficients = [...Array(n + 1).keys()].map((j) => factorial(n) / factorial(n - j));
+    const signedValue = coefficients.reduce((sum, c, j) => sum + (j % 2 === 0 ? c : -c) * m ** (n - j), 0);
+    const plainValue = coefficients.reduce((sum, c, j) => sum + c * m ** (n - j), 0);
+    const last = (n % 2 === 0 ? 1 : -1) * factorial(n);
+    const terms = coefficients.map((c, j): [number, string] => [j % 2 === 0 ? c : -c, n - j === 0 ? "" : n - j === 1 ? "x" : `x^${n - j}`]);
+    const P = poly(...terms);
+    return numberProblem({
+      prompt: t(
+        `Write $\\int x^${n}e^x\\,dx = e^xP(x) + C$, where $P$ is a polynomial. Find $P(${m})$.`,
+        `写成 $\\int x^${n}e^x\\,dx = e^xP(x) + C$，其中 $P$ 是多项式。求 $P(${m})$。`,
+      ),
+      answer: signedValue,
+      form: "integer",
+      wrong: [plainValue, m ** n, signedValue - last],
+      solution: t(
+        `The table gives $P(x) = ${P}$. Substituting $x = ${m}$ gives $${signedValue}$.`,
+        `表格给出 $P(x) = ${P}$。代入 $x = ${m}$，得 $${signedValue}$。`,
+      ),
+    });
+  },
+};
+
+const improperPartialFractions: KnowledgePointDef = {
+  id: "an-improper-integral-by-partial-fractions",
+  title: t("An improper integral by partial fractions", "用部分分式求反常积分"),
+  explanation: t(
+    "Each partial fraction alone gives a logarithm that diverges at infinity, so they must be combined before taking the limit. Writing the antiderivative as one logarithm of a quotient, $\\ln\\frac{x}{x + a}$, shows that the value at infinity is $\\ln 1 = 0$. Splitting the improper integral into two separate divergent pieces would fail.",
+    "每个部分分式单独积分都得到在无穷远处发散的对数，所以必须先合并，再取极限。把原函数写成一个商的对数 $\\ln\\frac{x}{x + a}$，就能看出它在无穷远处的值是 $\\ln 1 = 0$。如果把反常积分拆成两个各自发散的部分，这样做是行不通的。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 9);
+    const k = rng.int(1, 9);
+    const answer = Q.of(k, a);
+    return numberProblem({
+      prompt: t(
+        `The integral $\\int_1^\\infty \\frac{${k}}{x(x + ${a})}\\,dx$ equals $c\\ln ${a + 1}$. Find $c$.`,
+        `积分 $\\int_1^\\infty \\frac{${k}}{x(x + ${a})}\\,dx$ 等于 $c\\ln ${a + 1}$。求 $c$。`,
+      ),
+      answer,
+      wrong: [Q.of(k), answer.neg(), Q.of(k, a + 1)],
+      solution: t(
+        `An antiderivative is $${fractionBefore(k, a)}\\ln\\frac{x}{x + ${a}}$. It is 0 at infinity and $-${fractionBefore(k, a)}\\ln ${a + 1}$ at 1, so $c = ${answer.toLatex()}$.`,
+        `原函数是 $${fractionBefore(k, a)}\\ln\\frac{x}{x + ${a}}$。它在无穷远处是 0，在 1 处是 $-${fractionBefore(k, a)}\\ln ${a + 1}$，所以 $c = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const overCubedFactor: KnowledgePointDef = {
+  id: "a-numerator-over-a-cubed-linear-factor",
+  title: t("A numerator over a cubed linear factor", "分母为线性因子立方的积分"),
+  explanation: t(
+    "A linear factor repeated three times normally gives partial fractions up to the third power. Here the numerator is $x$, and rewriting it as $(x + a) - a$ gives the decomposition immediately, with no equations to solve. Each piece is then a negative power of $x + a$, and these integrate directly with no logarithms at all.",
+    "重复三次的线性因子，一般分解出直到三次幂的部分分式。这里分子是 $x$，把它改写成 $(x + a) - a$，就立刻得到分解，不用解方程。每一部分都是 $x + a$ 的负幂，可以直接积分，完全不出现对数。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 12);
+    const k = rng.int(1, 9);
+    const answer = Q.of(k, 2 * a);
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\int_0^\\infty \\frac{${coefficientOf(k)}x}{(x + ${a})^3}\\,dx$.`,
+        `计算 $\\int_0^\\infty \\frac{${coefficientOf(k)}x}{(x + ${a})^3}\\,dx$。`,
+      ),
+      answer,
+      wrong: [Q.of(k, a), Q.of(k, 2 * a * a), Q.of(k, 3 * a)],
+      solution: t(
+        `Split the fraction as $\\frac{1}{(x + ${a})^2} - \\frac{${a}}{(x + ${a})^3}$. These integrate to $${Q.of(1, a).toLatex()}$ and $\\frac{1}{${2 * a}}$, whose difference is $\\frac{1}{${2 * a}}$. Multiplying by ${k} gives $${answer.toLatex()}$.`,
+        `把分式拆成 $\\frac{1}{(x + ${a})^2} - \\frac{${a}}{(x + ${a})^3}$。它们的积分分别是 $${Q.of(1, a).toLatex()}$ 和 $\\frac{1}{${2 * a}}$，差是 $\\frac{1}{${2 * a}}$。乘以 ${k}，得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const evenOverRealLine: KnowledgePointDef = {
+  id: "doubling-an-even-integrand-over-the-real-line",
+  title: t("Doubling an even integrand over the real line", "实轴上偶函数积分加倍"),
+  explanation: t(
+    "An integral over the whole real line must be split at a finite point, and for an even integrand that split saves work. It equals twice the integral from zero to infinity. This also removes an absolute value, since $|x| = x$ on the positive half, and then a substitution such as $u = ax^2$ finishes the calculation.",
+    "实轴上的积分必须在某个有限点分开，而对偶函数，这样分开还能省事。它等于从零到无穷积分的两倍。这也去掉了绝对值，因为在正半轴上 $|x| = x$，然后用 $u = ax^2$ 这样的换元就能算完。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 9);
+    const k = rng.int(1, 12);
+    const answer = Q.of(k, a);
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\int_{-\\infty}^\\infty ${coefficientOf(k)}|x|e^{-${coefficientOf(a)}x^2}\\,dx$.`,
+        `计算 $\\int_{-\\infty}^\\infty ${coefficientOf(k)}|x|e^{-${coefficientOf(a)}x^2}\\,dx$。`,
+      ),
+      answer,
+      wrong: [Q.of(2 * k, a), Q.of(k, 2 * a), Q.of(0)],
+      solution: t(
+        `The integrand is even, so this is $2\\int_0^\\infty ${coefficientOf(k)}xe^{-${coefficientOf(a)}x^2}\\,dx = 2 \\cdot \\frac{${k}}{${2 * a}} = ${answer.toLatex()}$.`,
+        `被积函数是偶函数，所以它等于 $2\\int_0^\\infty ${coefficientOf(k)}xe^{-${coefficientOf(a)}x^2}\\,dx = 2 \\cdot \\frac{${k}}{${2 * a}} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const unboundedAtTop: KnowledgePointDef = {
+  id: "an-integrand-unbounded-at-the-upper-limit",
+  title: t("An integrand unbounded at the upper limit", "在上限处无界的被积函数"),
+  explanation: t(
+    "An integrand may blow up at the upper limit rather than the lower one, and then the limit is taken from the left. With $\\frac{x}{\\sqrt{a^2 - x^2}}$, the numerator is exactly what the substitution $u = a^2 - x^2$ needs, and the antiderivative $-\\sqrt{a^2 - x^2}$ stays finite as $x$ approaches $a$, so the integral converges.",
+    "被积函数也可能在上限而不是下限处趋于无穷，这时从左侧取极限。对 $\\frac{x}{\\sqrt{a^2 - x^2}}$，分子恰好是换元 $u = a^2 - x^2$ 所需要的，原函数 $-\\sqrt{a^2 - x^2}$ 在 $x$ 趋于 $a$ 时保持有限，所以积分收敛。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 12);
+    const k = rng.int(1, 9);
+    const answer = k * a;
+    return numberProblem({
+      prompt: t(
+        `Evaluate $\\int_0^{${a}} \\frac{${coefficientOf(k)}x}{\\sqrt{${a * a} - x^2}}\\,dx$.`,
+        `计算 $\\int_0^{${a}} \\frac{${coefficientOf(k)}x}{\\sqrt{${a * a} - x^2}}\\,dx$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [k * a * a, 2 * k * a, k],
+      solution: t(
+        `An antiderivative is $-${coefficientOf(k)}\\sqrt{${a * a} - x^2}$. It tends to 0 at the upper limit and equals $-${answer}$ at 0, so the value is $${answer}$.`,
+        `原函数是 $-${coefficientOf(k)}\\sqrt{${a * a} - x^2}$。它在上限处趋于 0，在 0 处等于 $-${answer}$，所以值是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const massShare: KnowledgePointDef = {
+  id: "the-point-that-cuts-off-a-share-of-the-mass",
+  title: t("The point that cuts off a share of the mass", "截取一定比例质量的位置"),
+  explanation: t(
+    "On a rod with density $kx$, the mass from 0 to $m$ is $\\frac{km^2}{2}$, which grows with the square of the position. So the share of the mass up to $m$ is $\\left(\\frac{m}{L}\\right)^2$, and the constant $k$ cancels. To cut off a given share, take a square root rather than dividing the rod in proportion.",
+    "在密度为 $kx$ 的杆上，从 0 到 $m$ 的质量是 $\\frac{km^2}{2}$，随位置的平方增长。所以到 $m$ 为止的质量比例是 $\\left(\\frac{m}{L}\\right)^2$，常数 $k$ 被约去。要截取给定比例，就要开平方，而不是按比例分割杆。",
+  ),
+  generate(rng) {
+    const q = rng.int(2, 5);
+    const p = rng.int(1, q - 1);
+    const n = rng.int(1, 6);
+    const k = rng.int(2, 9);
+    const L = q * n;
+    const answer = p * n;
+    const share = Q.of(p * p, q * q);
+    return numberProblem({
+      prompt: t(
+        `A rod on $[0, ${L}]$ has density $${k}x$. At what position $m$ does $[0, m]$ hold $${share.toLatex()}$ of the rod's mass?`,
+        `$[0, ${L}]$ 上的杆，密度是 $${k}x$。在什么位置 $m$，$[0, m]$ 含有杆的质量的 $${share.toLatex()}$？`,
+      ),
+      answer,
+      wrong: [Q.of(L * p * p, q * q), Q.of(L, 2), Q.of(L * p * p, q), Q.of(L * (q * q - p * p), q * q)],
+      solution: t(
+        `The share up to $m$ is $\\left(\\frac{m}{${L}}\\right)^2$. Setting this to $${share.toLatex()}$ gives $\\frac{m}{${L}} = ${Q.of(p, q).toLatex()}$, so $m = ${answer}$.`,
+        `到 $m$ 为止的比例是 $\\left(\\frac{m}{${L}}\\right)^2$。令它等于 $${share.toLatex()}$，得 $\\frac{m}{${L}} = ${Q.of(p, q).toLatex()}$，所以 $m = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const pappusVolume: KnowledgePointDef = {
+  id: "the-volume-of-a-torus-from-the-theorem-of-pappus",
+  title: t("The volume of a torus from the theorem of Pappus", "用帕普斯定理求环体的体积"),
+  explanation: t(
+    "The theorem of Pappus says that rotating a region about an outside axis gives a volume equal to the region's area times the distance travelled by its centroid. A disk's centroid is its centre, so a torus has volume $\\pi r^2 \\cdot 2\\pi R$. The washer integral gives the same answer, with considerably more work.",
+    "帕普斯定理说，把区域绕区域外的轴旋转，体积等于区域面积乘以形心走过的距离。圆盘的形心就是圆心，所以环体的体积是 $\\pi r^2 \\cdot 2\\pi R$。用垫圈法积分也得到同样的答案，只是要费事得多。",
+  ),
+  generate(rng) {
+    const R = rng.int(2, 12);
+    const r = rng.int(1, R - 1);
+    const answer = 2 * R * r * r;
+    return numberProblem({
+      prompt: t(
+        `The disk $x^2 + y^2 \\le ${r * r}$ is rotated about the line $x = ${R}$. The volume is $c\\pi^2$. Find $c$.`,
+        `圆盘 $x^2 + y^2 \\le ${r * r}$ 绕直线 $x = ${R}$ 旋转。体积是 $c\\pi^2$。求 $c$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [R * r * r, 2 * R * R * r, 2 * R * r],
+      solution: t(
+        `The centre travels $2\\pi \\cdot ${R}$, and the area is $${r === 1 ? "" : r * r}\\pi$. Their product is $${answer}\\pi^2$.`,
+        `圆心走过 $2\\pi \\cdot ${R}$，面积是 $${r === 1 ? "" : r * r}\\pi$。它们的积是 $${answer}\\pi^2$。`,
+      ),
+    });
+  },
+};
+
+const distanceGap: KnowledgePointDef = {
+  id: "the-gap-between-distance-and-displacement",
+  title: t("The gap between distance and displacement", "路程与位移之差"),
+  explanation: t(
+    "Distance and the size of the displacement agree when a particle never turns around. When it reverses, the shorter of the two legs is walked back, and it counts for the distance but cancels in the displacement. The gap is therefore twice the shorter leg. Comparing the two areas between the velocity graph and the axis shows this.",
+    "质点不折返时，路程和位移的大小相同。折返时，较短的那一段走回头路，它计入路程，却在位移中抵消。所以差是较短那段的两倍。比较速度图像与横轴之间的两块面积就能看出这一点。",
+  ),
+  generate(rng) {
+    const k = rng.int(1, 6);
+    const a = rng.int(1, 6);
+    const b = rng.int(1, 6);
+    const T = a + b;
+    const shorter = Math.min(a, b);
+    const answer = k * shorter * shorter;
+    const distance = Q.of(k * (a * a + b * b), 2);
+    const displacement = Q.of(k * Math.abs(b * b - a * a), 2);
+    return numberProblem({
+      prompt: t(
+        `A particle has velocity $v(t) = ${poly([k, "t"], [-k * a, ""])}$ for $0 \\le t \\le ${T}$. By how much does its total distance exceed the size of its displacement?`,
+        `质点的速度是 $v(t) = ${poly([k, "t"], [-k * a, ""])}$，$0 \\le t \\le ${T}$。它的总路程比位移的大小多多少？`,
+      ),
+      answer,
+      wrong: [distance, displacement, Q.of(2 * answer)],
+      solution: t(
+        `The two areas are $${Q.of(k * a * a, 2).toLatex()}$ and $${Q.of(k * b * b, 2).toLatex()}$. Distance is their sum $${distance.toLatex()}$, and the displacement has size $${displacement.toLatex()}$. The gap is $${answer}$.`,
+        `两块面积是 $${Q.of(k * a * a, 2).toLatex()}$ 和 $${Q.of(k * b * b, 2).toLatex()}$。路程是它们的和 $${distance.toLatex()}$，位移的大小是 $${displacement.toLatex()}$。差是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const stoppingTime: KnowledgePointDef = {
+  id: "the-time-to-stop-after-speeding-up",
+  title: t("The time to stop after speeding up", "加速后到停止的时间"),
+  explanation: t(
+    "When the acceleration is given in stages, integrate one stage at a time, using the final velocity of each stage as the starting velocity of the next. The constant of integration carries that information across. A vehicle that speeds up and then slows down stops at the moment its velocity function returns to zero.",
+    "加速度分阶段给出时，要逐段积分，每一段的末速度就是下一段的初速度。积分常数正是把这个信息传递下去。先加速再减速的车辆，在速度函数回到零的时刻停下来。",
+  ),
+  generate(rng) {
+    const d = rng.int(1, 6);
+    const m = rng.int(1, 5);
+    const up = d * m;
+    const t1 = rng.int(1, 12);
+    const peak = up * t1;
+    const answer = t1 * (1 + m);
+    return numberProblem({
+      prompt: t(
+        `A cart starts from rest with acceleration ${up} for ${t1} ${t1 === 1 ? "second" : "seconds"}, and then has acceleration $-${d}$ until it stops. At what time, in seconds after the start, does it stop?`,
+        `小车从静止出发，以加速度 ${up} 运动 ${t1} 秒，然后以加速度 $-${d}$ 运动直到停止。它在出发后多少秒停下？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [t1 * m, peak, t1 + d],
+      solution: t(
+        `The velocity reaches $${up} \\cdot ${t1} = ${peak}$. It falls to zero in another $${peak} \\div ${d} = ${t1 * m}$ seconds, so the cart stops at $${answer}$.`,
+        `速度达到 $${up} \\cdot ${t1} = ${peak}$。再过 $${peak} \\div ${d} = ${t1 * m}$ 秒降到零，所以小车在第 $${answer}$ 秒停下。`,
+      ),
+    });
+  },
+};
+
+const astroidLength: KnowledgePointDef = {
+  id: "the-length-of-an-astroid",
+  title: t("The length of an astroid", "星形线的长度"),
+  explanation: t(
+    "The astroid $x = a\\cos^3 t$, $y = a\\sin^3 t$ has speed $3a|\\sin t\\cos t|$. The absolute value means that a direct integral over the whole turn would give zero if the bars were dropped. So use symmetry: integrate over a quarter of the curve, where the sine and cosine are both positive, and multiply by four.",
+    "星形线 $x = a\\cos^3 t$，$y = a\\sin^3 t$ 的速率是 $3a|\\sin t\\cos t|$。如果去掉绝对值，直接在一整圈上积分会得到零。所以要利用对称性：在四分之一条曲线上积分，这里正弦和余弦都是正的，再乘以四。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 30);
+    const answer = 6 * a;
+    return numberProblem({
+      prompt: t(
+        `Find the length of the curve $x = ${coefficientOf(a)}\\cos^3 t$, $y = ${coefficientOf(a)}\\sin^3 t$, $0 \\le t \\le 2\\pi$.`,
+        `求曲线 $x = ${coefficientOf(a)}\\cos^3 t$，$y = ${coefficientOf(a)}\\sin^3 t$（$0 \\le t \\le 2\\pi$）的长度。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [0, 3 * a, 12 * a],
+      solution: t(
+        `On a quarter of the curve the length is $\\int_0^{\\pi/2} ${3 * a}\\sin t\\cos t\\,dt = ${Q.of(3 * a, 2).toLatex()}$. Four of these give $${answer}$.`,
+        `四分之一条曲线的长度是 $\\int_0^{\\pi/2} ${3 * a}\\sin t\\cos t\\,dt = ${Q.of(3 * a, 2).toLatex()}$。四段合计 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const astroidArea: KnowledgePointDef = {
+  id: "the-area-inside-an-astroid",
+  title: t("The area inside an astroid", "星形线围成的面积"),
+  explanation: t(
+    "The area inside a closed parametric curve is the integral of $y\\,dx$ with suitable orientation. For the astroid this gives a constant times $\\int \\sin^4 t\\cos^2 t\\,dt$, which reduces by the double angle formulas. Using symmetry, take one quarter of the region, where the integrand has a single sign, and multiply by four.",
+    "参数曲线围成的面积，是取合适方向的 $y\\,dx$ 的积分。对星形线，这给出常数乘以 $\\int \\sin^4 t\\cos^2 t\\,dt$，可以用二倍角公式化简。利用对称性，取区域的四分之一，这里被积函数符号不变，再乘以四。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 30);
+    const answer = Q.of(3 * a * a, 8);
+    return numberProblem({
+      prompt: t(
+        `The region enclosed by $x = ${coefficientOf(a)}\\cos^3 t$, $y = ${coefficientOf(a)}\\sin^3 t$ has area $c\\pi$. Find $c$.`,
+        `曲线 $x = ${coefficientOf(a)}\\cos^3 t$，$y = ${coefficientOf(a)}\\sin^3 t$ 围成的区域面积是 $c\\pi$。求 $c$。`,
+      ),
+      answer,
+      wrong: [Q.of(3 * a * a, 4), Q.of(a * a, 2), Q.of(3 * a * a, 16)],
+      solution: t(
+        `A quarter of the area is $3 \\cdot ${a * a} \\cdot \\int_0^{\\pi/2} \\sin^4 t\\cos^2 t\\,dt = 3 \\cdot ${a * a} \\cdot \\frac{\\pi}{32}$. Multiplying by four gives $c = ${answer.toLatex()}$.`,
+        `四分之一的面积是 $3 \\cdot ${a * a} \\cdot \\int_0^{\\pi/2} \\sin^4 t\\cos^2 t\\,dt = 3 \\cdot ${a * a} \\cdot \\frac{\\pi}{32}$。乘以四，得 $c = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const roseArea: KnowledgePointDef = {
+  id: "the-total-area-of-a-rose-curve",
+  title: t("The total area of a rose curve", "玫瑰线的总面积"),
+  explanation: t(
+    "A rose $r = a\\cos n\\theta$ has $n$ petals when $n$ is odd and $2n$ when $n$ is even. When $n$ is odd, the curve is traced twice over $[0, 2\\pi]$, so one must integrate only over $[0, \\pi]$. As a result, the total area is $\\frac{\\pi a^2}{4}$ for odd $n$ and $\\frac{\\pi a^2}{2}$ for even $n$, whatever $n$ is.",
+    "玫瑰线 $r = a\\cos n\\theta$ 在 $n$ 为奇数时有 $n$ 片花瓣，为偶数时有 $2n$ 片。$n$ 为奇数时，曲线在 $[0, 2\\pi]$ 上被描了两遍，所以只应在 $[0, \\pi]$ 上积分。因此总面积在 $n$ 为奇数时是 $\\frac{\\pi a^2}{4}$，为偶数时是 $\\frac{\\pi a^2}{2}$，与 $n$ 的具体值无关。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 7);
+    const a = rng.int(1, 9);
+    const odd = n % 2 === 1;
+    const answer = Q.of(a * a, odd ? 4 : 2);
+    const other = Q.of(a * a, odd ? 2 : 4);
+    const petals = odd ? n : 2 * n;
+    return numberProblem({
+      prompt: t(
+        `The total area enclosed by all the petals of $r = ${coefficientOf(a)}\\cos ${n}\\theta$ is $c\\pi$. Find $c$.`,
+        `$r = ${coefficientOf(a)}\\cos ${n}\\theta$ 所有花瓣围成的总面积是 $c\\pi$。求 $c$。`,
+      ),
+      answer,
+      wrong: [other, Q.of(a * a), Q.of(n * a * a, 4)],
+      solution: t(
+        `The rose has ${petals} petals, each of area $\\frac{${a === 1 ? "" : a * a}\\pi}{${4 * n}}$. Their total gives $c = ${answer.toLatex()}$.`,
+        `这条玫瑰线有 ${petals} 片花瓣，每片的面积是 $\\frac{${a === 1 ? "" : a * a}\\pi}{${4 * n}}$。它们的总和给出 $c = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const conjugateLimit: KnowledgePointDef = {
+  id: "the-limit-of-a-root-minus-n",
+  title: t("The limit of a root minus $n$", "根式减 $n$ 的极限"),
+  explanation: t(
+    "In $\\sqrt{n^2 + an + b} - n$, both terms grow without bound, and comparing their dominant terms alone suggests a limit of zero, which is wrong. Multiplying by the conjugate gives the quotient $\\frac{an + b}{\\sqrt{n^2 + an + b} + n}$. Its dominant terms are $an$ over $2n$, so the limit is $\\frac{a}{2}$, and $b$ plays no part.",
+    "在 $\\sqrt{n^2 + an + b} - n$ 中，两项都无限增大，只比较主导项会以为极限是零，这是错的。乘以共轭式得到商 $\\frac{an + b}{\\sqrt{n^2 + an + b} + n}$。它的主导项是 $an$ 比 $2n$，所以极限是 $\\frac{a}{2}$，$b$ 不起作用。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 12);
+    const b = rng.int(1, 12);
+    const answer = Q.of(a, 2);
+    return numberProblem({
+      prompt: t(
+        `Find $\\lim_{n \\to \\infty} \\left(\\sqrt{${poly([1, "n^2"], [a, "n"], [b, ""])}} - n\\right)$.`,
+        `求 $\\lim_{n \\to \\infty} \\left(\\sqrt{${poly([1, "n^2"], [a, "n"], [b, ""])}} - n\\right)$。`,
+      ),
+      answer,
+      wrong: [Q.of(a), Q.of(0), Q.of(b, 2)],
+      solution: t(
+        `Multiplying by the conjugate gives $\\frac{${poly([a, "n"], [b, ""])}}{\\sqrt{${poly([1, "n^2"], [a, "n"], [b, ""])}} + n}$. The dominant terms give $\\frac{${a}}{2} = ${answer.toLatex()}$.`,
+        `乘以共轭式得 $\\frac{${poly([a, "n"], [b, ""])}}{\\sqrt{${poly([1, "n^2"], [a, "n"], [b, ""])}} + n}$。主导项给出 $\\frac{${a}}{2} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const telescopingWithGap: KnowledgePointDef = {
+  id: "a-telescoping-series-with-a-gap",
+  title: t("A telescoping series with a gap", "有间隔的裂项级数"),
+  explanation: t(
+    "Partial fractions write $\\frac{1}{n(n + a)}$ as $\\frac{1}{a}\\left(\\frac{1}{n} - \\frac{1}{n + a}\\right)$. In the partial sums, each negative term cancels a positive term $a$ places later. So the first $a$ positive terms survive, while the remaining terms tend to zero. The sum is therefore $\\frac{1}{a}$ times the sum of the reciprocals from 1 to $a$.",
+    "部分分式把 $\\frac{1}{n(n + a)}$ 写成 $\\frac{1}{a}\\left(\\frac{1}{n} - \\frac{1}{n + a}\\right)$。在部分和中，每个负项抵消 $a$ 个位置之后的一个正项。所以前 $a$ 个正项留下，其余的项趋于零。因此和是 $\\frac{1}{a}$ 乘以从 1 到 $a$ 的倒数之和。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 4);
+    const k = rng.int(1, 12);
+    const reciprocals = [...Array(a).keys()].map((i) => Q.of(1, i + 1));
+    const harmonic = reciprocals.reduce((sum, r) => sum.add(r), Q.of(0));
+    const answer = Q.of(k, a).mul(harmonic);
+    return numberProblem({
+      prompt: t(`Find $\\sum_{n=1}^\\infty \\frac{${k}}{n(n + ${a})}$.`, `求 $\\sum_{n=1}^\\infty \\frac{${k}}{n(n + ${a})}$。`),
+      answer,
+      wrong: [Q.of(k, a), Q.of(k), Q.of(k, a + 1), Q.of(2 * k)],
+      solution: t(
+        `The terms telescope and leave $${Q.of(k, a).toLatex()}$ times $${reciprocals.map((r) => r.toLatex()).join(" + ")}$, which is $${answer.toLatex()}$.`,
+        `各项裂项相消后，留下 $${Q.of(k, a).toLatex()}$ 乘以 $${reciprocals.map((r) => r.toLatex()).join(" + ")}$，即 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const bouncingBall: KnowledgePointDef = {
+  id: "the-total-distance-of-a-bouncing-ball",
+  title: t("The total distance of a bouncing ball", "弹跳小球的总路程"),
+  explanation: t(
+    "A ball that loses a fixed share of its height on every bounce travels a geometric total. The first drop happens only once, but each later height is covered twice, going up and coming down. So the total is the initial height plus twice a geometric series that starts from the first rebound, not from the initial drop.",
+    "每次弹跳都损失固定比例高度的小球，走过的总路程是一个几何级数。第一次下落只发生一次，但之后的每个高度都走两遍，上去一次，下来一次。所以总路程是初始高度加上两倍的几何级数，这个级数从第一次反弹开始，而不是从初始下落开始。",
+  ),
+  generate(rng) {
+    const [p, q] = rng.pick([
+      [1, 2],
+      [1, 3],
+      [2, 3],
+      [1, 4],
+      [3, 4],
+      [2, 5],
+      [3, 5],
+    ]) as [number, number];
+    const h = rng.int(1, 12) * (q - p);
+    const answer = Q.of(h * (q + p), q - p);
+    const rebound = Q.of(h * p, q - p);
+    const ratio = Q.of(p, q);
+    return numberProblem({
+      prompt: t(
+        `A ball is dropped from a height of ${h} metres, and each bounce rises to $${ratio.toLatex()}$ of the previous height. Find the total vertical distance it travels, in metres.`,
+        `小球从 ${h} 米高处落下，每次弹起的高度是前一次的 $${ratio.toLatex()}$。求它走过的总竖直路程（单位：米）。`,
+      ),
+      answer,
+      wrong: [Q.of(h * q, q - p), Q.of(2 * h * q, q - p), rebound],
+      solution: t(
+        `The rebound heights add up to $\\frac{${h} \\cdot ${ratio.toLatex()}}{1 - ${ratio.toLatex()}} = ${rebound.toLatex()}$. Each is travelled twice, so the total is $${h} + 2 \\cdot ${rebound.toLatex()} = ${answer.toLatex()}$.`,
+        `各次弹起的高度之和是 $\\frac{${h} \\cdot ${ratio.toLatex()}}{1 - ${ratio.toLatex()}} = ${rebound.toLatex()}$。每段都走两遍，所以总路程是 $${h} + 2 \\cdot ${rebound.toLatex()} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const taylorBySubstitution: KnowledgePointDef = {
+  id: "a-taylor-coefficient-by-substitution",
+  title: t("A Taylor coefficient by substitution", "用代入法求泰勒系数"),
+  explanation: t(
+    "Computing many derivatives of $e^{ax^2}$ would be painful, but its series comes straight from that of $e^u$ with $u = ax^2$. Only even powers of $x$ appear, and the term in $x^{2m}$ is the term in $u^m$. So the coefficient is $\\frac{a^m}{m!}$. The factorial belongs to $m$, not to the power $2m$.",
+    "计算 $e^{ax^2}$ 的多阶导数很麻烦，但它的级数可以直接由 $e^u$ 的级数令 $u = ax^2$ 得到。只出现 $x$ 的偶次幂，$x^{2m}$ 项就是 $u^m$ 项。所以系数是 $\\frac{a^m}{m!}$。阶乘属于 $m$，而不是幂次 $2m$。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 5);
+    const m = rng.int(2, 5);
+    const answer = Q.of(a ** m, factorial(m));
+    return numberProblem({
+      prompt: t(
+        `Find the coefficient of $x^{${2 * m}}$ in the Taylor series of $e^{${poly([a, "x^2"])}}$ about 0.`,
+        `求 $e^{${poly([a, "x^2"])}}$ 在 0 处的泰勒级数中 $x^{${2 * m}}$ 的系数。`,
+      ),
+      answer,
+      wrong: [Q.of(a ** m, factorial(2 * m)), Q.of(a ** m), Q.of(a, factorial(m))],
+      solution: t(
+        `With $u = ${poly([a, "x^2"])}$, the term in $x^{${2 * m}}$ comes from $\\frac{u^{${m}}}{${m}!}$. Its coefficient is $\\frac{${a < 0 ? `(${a})` : a}^{${m}}}{${factorial(m)}} = ${answer.toLatex()}$.`,
+        `令 $u = ${poly([a, "x^2"])}$，$x^{${2 * m}}$ 项来自 $\\frac{u^{${m}}}{${m}!}$。它的系数是 $\\frac{${a < 0 ? `(${a})` : a}^{${m}}}{${factorial(m)}} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const geometricSubstitution: KnowledgePointDef = {
+  id: "a-coefficient-of-a-geometric-series-in-x-squared",
+  title: t("A coefficient of a geometric series in $x^2$", "关于 $x^2$ 的几何级数的系数"),
+  explanation: t(
+    "The fraction $\\frac{k}{1 + ax^2}$ is a geometric series with first term $k$ and ratio $-ax^2$. Keep the minus sign with the ratio, because it makes the coefficients alternate. The term in $x^{2m}$ uses the ratio $m$ times, and so its coefficient is $k(-a)^m$. Odd powers of $x$ have coefficient zero.",
+    "分式 $\\frac{k}{1 + ax^2}$ 是首项为 $k$、公比为 $-ax^2$ 的几何级数。负号要留在公比里，正是它使系数正负交替。$x^{2m}$ 项用了 $m$ 次公比，所以系数是 $k(-a)^m$。$x$ 的奇次幂系数为零。",
+  ),
+  generate(rng) {
+    const a = rng.int(1, 4);
+    const k = rng.int(1, 6);
+    const m = rng.int(2, 5);
+    const answer = k * (-a) ** m;
+    return numberProblem({
+      prompt: t(
+        `Find the coefficient of $x^{${2 * m}}$ in the power series of $\\frac{${k}}{1 + ${coefficientOf(a)}x^2}$ about 0.`,
+        `求 $\\frac{${k}}{1 + ${coefficientOf(a)}x^2}$ 在 0 处的幂级数中 $x^{${2 * m}}$ 的系数。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-answer, k * (-a) ** (2 * m), k * (-a) ** (m + 1), k * a * m],
+      solution: t(
+        `The ratio is $-${coefficientOf(a)}x^2$, used ${m} times, so the coefficient is $${k} \\cdot (-${a})^{${m}} = ${answer}$.`,
+        `公比是 $-${coefficientOf(a)}x^2$，用了 ${m} 次，所以系数是 $${k} \\cdot (-${a})^{${m}} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const highDerivativeOfProduct: KnowledgePointDef = {
+  id: "a-high-derivative-of-a-product-from-its-series",
+  title: t("A high derivative of a product from its series", "由级数求乘积的高阶导数"),
+  explanation: t(
+    "Multiplying a series by $x^2$ shifts every term up by two places. So the coefficient of $x^n$ in $x^2e^{ax}$ is the coefficient of $x^{n-2}$ in $e^{ax}$. The derivative at 0 is then $n!$ times that coefficient. This avoids differentiating a product $n$ times, which would be slow and prone to mistakes.",
+    "把级数乘以 $x^2$，每一项都上移两位。所以 $x^2e^{ax}$ 中 $x^n$ 的系数，就是 $e^{ax}$ 中 $x^{n-2}$ 的系数。在 0 处的导数就是 $n!$ 乘以这个系数。这样就不用对乘积求 $n$ 次导，那样既慢又容易出错。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 3);
+    const n = rng.int(4, 8);
+    const power = a ** (n - 2);
+    const answer = n * (n - 1) * power;
+    return numberProblem({
+      prompt: t(
+        `Let $f(x) = x^2e^{${poly([a, "x"])}}$. Find $f^{(${n})}(0)$.`,
+        `设 $f(x) = x^2e^{${poly([a, "x"])}}$。求 $f^{(${n})}(0)$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [power, n * power, n * (n - 1) * a ** n],
+      solution: t(
+        `The coefficient of $x^{${n}}$ is $\\frac{${inParens(a)}^{${n - 2}}}{${n - 2}!}$. Multiplying by $${n}!$ gives $${n} \\cdot ${n - 1} \\cdot ${inParens(a)}^{${n - 2}} = ${answer}$.`,
+        `$x^{${n}}$ 的系数是 $\\frac{${inParens(a)}^{${n - 2}}}{${n - 2}!}$。乘以 $${n}!$，得 $${n} \\cdot ${n - 1} \\cdot ${inParens(a)}^{${n - 2}} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const evenPowersRadius: KnowledgePointDef = {
+  id: "the-radius-of-a-series-in-even-powers",
+  title: t("The radius of a series in even powers", "偶次幂级数的收敛半径"),
+  explanation: t(
+    "A series with only even powers of $x$ skips terms, so the usual ratio of coefficients does not give the radius directly. Treat it as a geometric series in $x^2$ instead. It converges when the ratio has size less than one, which bounds $x^2$. Then take a square root, and this is the step most easily forgotten.",
+    "只含 $x$ 偶次幂的级数跳过了一些项，所以通常的系数之比不能直接给出半径。可以把它看作关于 $x^2$ 的几何级数。公比的大小小于一时收敛，这就限定了 $x^2$。然后要开平方，这是最容易忘记的一步。",
+  ),
+  generate(rng) {
+    const s = rng.int(2, 9);
+    const u = rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== s));
+    const answer = Q.of(s, u);
+    const top = u === 1 ? "" : `${u * u}^n`;
+    return numberProblem({
+      prompt: t(
+        `Find the radius of convergence of $\\sum_{n=0}^\\infty \\frac{${top}x^{2n}}{${s * s}^n}$.`,
+        `求 $\\sum_{n=0}^\\infty \\frac{${top}x^{2n}}{${s * s}^n}$ 的收敛半径。`,
+      ),
+      answer,
+      wrong: [Q.of(s * s, u * u), Q.of(u, s), Q.of(s * s, u)],
+      solution: t(
+        `The ratio is $${Q.of(u * u, s * s).toLatex()}x^2$, and it has size below 1 when $x^2 < ${Q.of(s * s, u * u).toLatex()}$. The square root gives $${answer.toLatex()}$.`,
+        `公比是 $${Q.of(u * u, s * s).toLatex()}x^2$，当 $x^2 < ${Q.of(s * s, u * u).toLatex()}$ 时它的大小小于 1。开平方得 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const circularForce: KnowledgePointDef = {
+  id: "the-size-of-the-force-in-circular-motion",
+  title: t("The size of the force in circular motion", "圆周运动中力的大小"),
+  explanation: t(
+    "A particle moving as $\\mathbf{r}(t) = \\langle A\\cos\\omega t, A\\sin\\omega t \\rangle$ has acceleration $-\\omega^2\\mathbf{r}$, which points toward the centre. By Newton's second law, the force has size $mA\\omega^2$ at every moment. The size is constant even though the direction changes, and doubling the angular speed multiplies the force by four.",
+    "按 $\\mathbf{r}(t) = \\langle A\\cos\\omega t, A\\sin\\omega t \\rangle$ 运动的质点，加速度是 $-\\omega^2\\mathbf{r}$，指向圆心。由牛顿第二定律，力的大小在每一时刻都是 $mA\\omega^2$。尽管方向变化，大小却不变；角速度加倍，力就变为四倍。",
+  ),
+  generate(rng) {
+    const m = rng.int(1, 9);
+    const A = rng.int(1, 9);
+    const w = rng.int(2, 5);
+    const answer = m * A * w * w;
+    return numberProblem({
+      prompt: t(
+        `A particle of mass ${m} has position $\\mathbf{r}(t) = \\langle ${coefficientOf(A)}\\cos ${w}t, ${coefficientOf(A)}\\sin ${w}t \\rangle$. Find the magnitude of the force on it.`,
+        `质量为 ${m} 的质点，位置是 $\\mathbf{r}(t) = \\langle ${coefficientOf(A)}\\cos ${w}t, ${coefficientOf(A)}\\sin ${w}t \\rangle$。求它受到的力的大小。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [m * A * w, A * w * w, m * w * w],
+      solution: t(
+        `The acceleration has magnitude $${A} \\cdot ${w}^2 = ${A * w * w}$. Multiplying by the mass ${m} gives $${answer}$.`,
+        `加速度的大小是 $${A} \\cdot ${w}^2 = ${A * w * w}$。乘以质量 ${m}，得 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const projectileSpeed: KnowledgePointDef = {
+  id: "the-speed-of-a-projectile-at-a-given-time",
+  title: t("The speed of a projectile at a given time", "抛体在给定时刻的速率"),
+  explanation: t(
+    "Integrating a constant acceleration $\\langle 0, -g \\rangle$ leaves the horizontal velocity alone and reduces the vertical velocity at a steady rate. So at time $T$ the velocity is $\\langle v_x, v_y - gT \\rangle$. The speed is the magnitude of this vector, and neither the initial speed nor the height is needed to calculate it.",
+    "对常加速度 $\\langle 0, -g \\rangle$ 积分，水平速度不变，竖直速度匀速减小。所以在时刻 $T$，速度是 $\\langle v_x, v_y - gT \\rangle$。速率是这个向量的大小，计算时既不需要初速率，也不需要高度。",
+  ),
+  generate(rng) {
+    const { a, b, h } = pythagorean(rng);
+    const sign = rng.pick([1, -1]);
+    const g = rng.int(2, 10);
+    const T = rng.int(1, 6);
+    const vertical = sign * b;
+    const start = vertical + g * T;
+    return numberProblem({
+      prompt: t(
+        `A projectile has acceleration $\\langle 0, -${g} \\rangle$ and initial velocity $\\langle ${a}, ${start} \\rangle$. Find its speed at $t = ${T}$.`,
+        `抛体的加速度是 $\\langle 0, -${g} \\rangle$，初速度是 $\\langle ${a}, ${start} \\rangle$。求它在 $t = ${T}$ 时的速率。`,
+      ),
+      answer: h,
+      form: "integer",
+      wrong: [a + b, g * T, a],
+      solution: t(
+        `The velocity at $t = ${T}$ is $\\langle ${a}, ${start} - ${g * T} \\rangle = \\langle ${a}, ${vertical} \\rangle$. Its magnitude is $\\sqrt{${a}^2 + ${inParens(vertical)}^2} = ${h}$.`,
+        `$t = ${T}$ 时的速度是 $\\langle ${a}, ${start} - ${g * T} \\rangle = \\langle ${a}, ${vertical} \\rangle$。它的大小是 $\\sqrt{${a}^2 + ${inParens(vertical)}^2} = ${h}$。`,
+      ),
+    });
+  },
+};
+
 /** deeperCalculusIIPoints gives, by topic id, the knowledge points added after a Calculus II topic's own. */
 export const deeperCalculusIIPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "calculating-definite-integrals-using-substitution": [scaledKnownIntegral],
@@ -756,4 +1599,33 @@ export const deeperCalculusIIPoints: Readonly<Record<string, readonly KnowledgeP
   "eulers-method-calculating-one-step": [stepSizeFromEuler],
   "integration-using-the-pythagorean-identities": [evenPowerOfSecant],
   "integrating-products-of-trigonometric-functions": [orthogonalSines],
+  "integrating-algebraic-functions-using-substitution": [changedLimits],
+  "integrating-exponential-functions-using-substitution": [limitWithLogarithm],
+  "integrating-logarithmic-functions-using-substitution": [logLimits],
+  "integrating-trigonometric-functions-using-substitution": [powerOverQuarterTurn],
+  "integrating-hyperbolic-functions-using-substitution": [sinhCoshLimit],
+  "integration-by-substitution-with-inverse-trigonometric-functions": [inverseTrigDefinite],
+  "integration-using-the-double-angle-formulas": [doubleAngleTwice],
+  "integration-by-parts-in-cyclic-cases": [cyclicImproper],
+  "the-tabular-method-of-integration-by-parts": [tabularValue],
+  "integrating-rational-functions-using-partial-fractions": [improperPartialFractions],
+  "integrating-rational-functions-with-repeated-factors": [overCubedFactor],
+  "improper-integrals-over-the-real-line": [evenOverRealLine],
+  "improper-integrals-of-the-second-kind": [unboundedAtTop],
+  "integrating-density-functions": [massShare],
+  "volumes-of-revolution-using-the-washer-method-rotation-about-other-axes": [pappusVolume],
+  "calculating-the-total-distance-traveled-by-a-particle": [distanceGap],
+  "calculating-velocity-using-integration": [stoppingTime],
+  "the-arc-length-of-a-parametric-curve": [astroidLength],
+  "calculating-areas-bounded-by-parametric-functions": [astroidArea],
+  "finding-the-area-of-a-polar-region": [roseArea],
+  "further-determining-limits-of-sequences-using-relative-magnitudes": [conjugateLimit],
+  "convergent-and-divergent-infinite-series": [telescopingWithGap],
+  "finding-the-sum-of-an-infinite-geometric-series": [bouncingBall],
+  "taylor-series": [taylorBySubstitution],
+  "representing-functions-as-power-series": [geometricSubstitution],
+  "higher-degree-taylor-polynomials": [highDerivativeOfProduct],
+  "radius-of-convergence-of-power-series-centered-at-the-origin": [evenPowersRadius],
+  "applying-newtons-second-law-in-the-plane": [circularForce],
+  "finding-velocity-vectors-in-two-dimensions-using-integration": [projectileSpeed],
 };
