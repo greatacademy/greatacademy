@@ -185,6 +185,7 @@ import { linearAlgebraQuadraticFormsApplicationsTopics } from "./topics/linear-a
 import { linearAlgebraTransformationsEigenvaluesTopics } from "./topics/linear-algebra-transformations-eigenvalues.ts";
 import { linearAlgebraVectorSpaceTopics } from "./topics/linear-algebra-vector-spaces.ts";
 import { linearEquationTopics } from "./topics/linear-equations.ts";
+import { linearProgrammingTopics } from "./topics/linear-programming.ts";
 import { lineTopics } from "./topics/lines.ts";
 import { mathematicsForMachineLearningContinuousConditioningTopics } from "./topics/mathematics-for-machine-learning-continuous-conditioning.ts";
 import { mathematicsForMachineLearningMatrixCalculusTopics } from "./topics/mathematics-for-machine-learning-matrix-calculus.ts";
@@ -440,6 +441,7 @@ export const math: SubjectDef = {
     ...methodsOfProofProofTopics,
     ...methodsOfProofNumberTheoryTopics,
     ...numberTheoryCourseTopics,
+    ...linearProgrammingTopics,
     ...complexAnalysisTopics,
     ...realAnalysisTopics,
     ...methodsOfProofFunctionTopics,

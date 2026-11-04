@@ -18373,6 +18373,68 @@ export const complexAnalysis: CourseDef = {
   ],
 };
 
+/** linearProgramming is the course on linear programs, the simplex method, duality and network problems. */
+export const linearProgramming: CourseDef = {
+  id: "linear-programming",
+  title: t("Linear Programming", "线性规划"),
+  description: t(
+    "Optimization with linear constraints: formulating programs, the graphical and simplex methods, duality and sensitivity, transportation, assignment and flow problems, integer programs, and matrix games.",
+    "线性约束下的优化：建立规划，图解法和单纯形法，对偶和灵敏度，运输、指派和流问题，整数规划，以及矩阵博弈。",
+  ),
+  units: [
+    {
+      title: t("Foundations", "基础"),
+      modules: [
+        {
+          title: t("Linear Programs", "线性规划"),
+          topics: [
+            "formulating-linear-programs",
+            "the-graphical-method-for-linear-programs",
+            "standard-form-and-slack-variables",
+            "basic-feasible-solutions",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("The Simplex Method", "单纯形法"),
+      modules: [
+        {
+          title: t("Tableaus and Pivots", "单纯形表和主元运算"),
+          topics: ["the-simplex-tableau", "pivoting-in-the-simplex-method", "the-two-phase-method", "unboundedness-and-degeneracy"],
+        },
+      ],
+    },
+    {
+      title: t("Duality", "对偶"),
+      modules: [
+        {
+          title: t("Duality and Sensitivity", "对偶和灵敏度"),
+          topics: ["the-dual-of-a-linear-program", "weak-duality", "strong-duality-and-complementary-slackness", "sensitivity-analysis"],
+        },
+      ],
+    },
+    {
+      title: t("Applications", "应用"),
+      modules: [
+        {
+          title: t("Network Problems", "网络问题"),
+          topics: [
+            "the-transportation-problem",
+            "improving-a-transportation-plan",
+            "the-assignment-problem",
+            "maximum-flow-and-minimum-cut",
+          ],
+        },
+        {
+          title: t("Beyond the Continuous Case", "连续情形之外"),
+          topics: ["integer-programming", "matrix-games"],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -18394,6 +18456,7 @@ export const mathCourses: readonly CourseDef[] = [
   numberTheory,
   realAnalysis,
   complexAnalysis,
+  linearProgramming,
   integratedMathI,
   integratedMathII,
   integratedMathIII,
