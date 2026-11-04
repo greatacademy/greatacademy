@@ -125,6 +125,8 @@ Each correct answer is an explicit repetition with result 0.5, and each wrong an
 | `minCoverWeight` | 0.5 | A repetition repairs a due topic only if it practices at least half of it |
 | `minSpeed`, `maxSpeed` | 0.5, 1.5 | Speed scales credit; the bounds keep one lesson from dominating |
 | `placedRepNum` | 1 (+0.5 if asked) | Placed topics are known but not recently practiced; a direct correct answer is stronger evidence |
+| `inferFoundationsMinAnswers` | 8 | Fewer answers say too little about the foundations as a whole |
+| `inferFoundationsRate` | 0.85 | Admits a learner who knows the foundations and slips now and then; a learner missing half of them scores about 0.5 |
 | `kpStreak` | 2 | Two in a row is unlikely by chance yet quick for a learner who understands |
 | `kpMaxQuestions` | 5 | Enough room for one or two slips; beyond that, a prerequisite is the likelier problem |
 | `reviewQuestions`, `reviewPass` | 3, 2 | A short review that tolerates one slip |
@@ -165,7 +167,9 @@ A learner new to a course is placed by an adaptive diagnostic over the topics of
 
 The next question is the unresolved topic that maximizes min(topics resolved if correct, topics resolved if wrong), a binary search over the graph. The diagnostic asks at most min(n, 4 + ⌈2·log₂(n+1)⌉) questions for n topics. Each question uses the topic's diagnostic knowledge point ([Content §3](content.md#3-topics)).
 
-Topics left unresolved count as **not known**: placement errs on the side of teaching, since a lesson on something already known costs minutes, while a gap costs much more later. Placed topics start at `placedRepNum`, so they come back for review soon and a lucky placement is corrected by the first review.
+Course topics left unresolved count as **not known**: placement errs on the side of teaching, since a lesson on something already known costs minutes, while a gap costs much more later. Foundations are different: a broad course has hundreds, and no affordable number of questions resolves them, so a learner who knows them all would sit through hundreds of lessons they do not need. Foundations left unresolved are therefore placed as known when the answers on foundations show the learner has them: at least `inferFoundationsMinAnswers` answers, of which at least `inferFoundationsRate` are correct. Otherwise they count as not known, and a foundation an answer showed is not known is never placed.
+
+Placed topics start at `placedRepNum`, so they come back for review soon and a lucky placement is corrected by the first review.
 
 ## 10. XP
 

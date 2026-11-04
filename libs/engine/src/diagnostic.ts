@@ -1,4 +1,5 @@
 import type { EngineGraph } from "./graph.ts";
+import type { Planner } from "./tasks.ts";
 
 /**
  * DiagnosticProgress is the state of a placement diagnostic. Each answer
@@ -77,8 +78,22 @@ export interface Placement {
   readonly tested: readonly string[];
 }
 
-/** finishDiagnostic ends a diagnostic. Topics left unresolved are treated as not known: placement errs on the side of teaching. */
-export function finishDiagnostic(d: DiagnosticProgress): Placement {
+/**
+ * finishDiagnostic ends a diagnostic. Course topics left unresolved are treated
+ * as not known: placement errs on the side of teaching. Foundations left
+ * unresolved are placed as known only when the answers on foundations show the
+ * learner has them: at least inferFoundationsMinAnswers answers, of which at
+ * least inferFoundationsRate are correct.
+ */
+export function finishDiagnostic(pl: Planner, d: DiagnosticProgress): Placement {
+  const { inCourse } = pl.scope;
   const correct = new Set(d.asked.filter((a) => a.correct).map((a) => a.topic));
-  return { known: d.known, tested: d.known.filter((t) => correct.has(t)) };
+  const foundationAnswers = d.asked.filter((a) => !inCourse.has(a.topic));
+  const inferred =
+    foundationAnswers.length >= pl.params.inferFoundationsMinAnswers &&
+    foundationAnswers.filter((a) => a.correct).length >= pl.params.inferFoundationsRate * foundationAnswers.length;
+  const known = new Set(d.known);
+  const unknown = new Set(d.unknown);
+  const placed = d.candidates.filter((t) => known.has(t) || (inferred && !inCourse.has(t) && !unknown.has(t)));
+  return { known: placed, tested: d.known.filter((t) => correct.has(t)) };
 }

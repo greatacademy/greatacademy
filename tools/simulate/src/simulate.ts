@@ -91,7 +91,7 @@ export function simulate(
         let d = startDiagnostic(diagnosticCandidates(pl, state));
         for (let t = nextDiagnosticTopic(graph, d); t; t = nextDiagnosticTopic(graph, d))
           d = answerDiagnostic(graph, d, t, rng.bool(knows.has(t) ? 0.95 : 0.05));
-        const placement = finishDiagnostic(d);
+        const placement = finishDiagnostic(pl, d);
         record({ type: "placed", at: now, course: courseId, ...placement });
       } else if (task.kind === "lesson") {
         const kpCount = graph.graph.topics.get(task.topic)!.knowledgePoints.length;

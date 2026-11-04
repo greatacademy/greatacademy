@@ -142,7 +142,7 @@ describe("diagnostic", () => {
   const place = (knows: Set<string>) => {
     let d = startDiagnostic(candidates);
     for (let t = nextDiagnosticTopic(graph, d); t; t = nextDiagnosticTopic(graph, d)) d = answerDiagnostic(graph, d, t, knows.has(t));
-    return { d, placement: finishDiagnostic(d) };
+    return { d, placement: finishDiagnostic(planner, d) };
   };
   it("places a learner with few questions by searching the chain", () => {
     const { d, placement } = place(new Set(["a", "b", "c", "d"]));
@@ -157,6 +157,39 @@ describe("diagnostic", () => {
     const { d, placement } = place(new Set(["a", "b"]));
     const correct = d.asked.filter((x) => x.correct).map((x) => x.topic);
     expect(placement.tested).toEqual(placement.known.filter((t) => correct.includes(t)));
+  });
+
+  describe("foundations left unresolved", () => {
+    // a to e are foundations and f, g and s the course; the answers are given directly, as a broad graph leaves many topics open.
+    const scoped = { ...planner, scope: { ...planner.scope, inCourse: new Set(["f", "g", "s"]) } };
+    const finish = (answers: boolean[], known: string[] = [], unknown: string[] = []) => {
+      const asked = answers.map((correct) => ({ topic: "a", correct }));
+      return finishDiagnostic(scoped, { candidates, known, unknown, asked, maxQuestions: 30 });
+    };
+    const right = (n: number) => Array.from({ length: n }, () => true);
+
+    it("are placed when the answers on foundations are mostly correct", () => {
+      expect(finish([...right(6), ...right(6), false]).known).toEqual(["a", "b", "c", "d", "e"]);
+    });
+    it("stay to teach below the rate", () => {
+      expect(finish([...right(5), false, false, false, false, false]).known).toEqual([]);
+    });
+    it("stay to teach on too few answers", () => {
+      expect(finish(right(7)).known).toEqual([]);
+    });
+    it("never include what an answer showed is not known", () => {
+      expect(finish(right(8), [], ["d", "e"]).known).toEqual(["a", "b", "c"]);
+    });
+    it("never include course topics, and do not count as tested", () => {
+      const placement = finish(right(8), ["f"]);
+      expect(placement.known).toEqual(["a", "b", "c", "d", "e", "f"]);
+      expect(finish(right(8)).known).not.toContain("g");
+      expect(finish(right(8)).tested).toEqual([]);
+    });
+    it("do not count answers on course topics", () => {
+      const asked = right(8).map((correct) => ({ topic: "g", correct }));
+      expect(finishDiagnostic(scoped, { candidates, known: [], unknown: [], asked, maxQuestions: 30 }).known).toEqual([]);
+    });
   });
 });
 

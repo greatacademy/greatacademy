@@ -25,6 +25,10 @@ export interface Params {
   readonly maxSpeed: number;
   /** placedRepNum is the repetition number of topics the diagnostic places as known. */
   readonly placedRepNum: number;
+  /** inferFoundationsMinAnswers is the fewest answers on foundations from which a diagnostic may infer the foundations it did not resolve. */
+  readonly inferFoundationsMinAnswers: number;
+  /** inferFoundationsRate is the fraction of those answers that must be correct for it to place them as known. */
+  readonly inferFoundationsRate: number;
   /** kpStreak is the number of consecutive correct answers that passes a knowledge point. */
   readonly kpStreak: number;
   /** kpMaxQuestions is the number of questions after which an unpassed knowledge point fails the lesson. */
@@ -59,6 +63,8 @@ export const defaultParams: Params = {
   minSpeed: 0.5,
   maxSpeed: 1.5,
   placedRepNum: 1,
+  inferFoundationsMinAnswers: 8,
+  inferFoundationsRate: 0.85,
   kpStreak: 2,
   kpMaxQuestions: 5,
   reviewQuestions: 3,

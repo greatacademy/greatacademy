@@ -60,7 +60,6 @@ The board tracks whether a course exists, not whether it is finished. Measured o
   - 61 exam topics, most of them in geometry, ask about a figure in words and draw none, unlike the real test.
   - About 124 ACT exam topics reuse the SAT generators through `multipleChoice`, so a learner taking both courses sees similar questions.
   - Options are shuffled, while the real tests list numeric options in order.
-  - A learner who starts Prep without having taken Fundamentals is taught many foundations they know. The diagnostic asks about 25 questions, and what it leaves unresolved counts as unknown: in one simulated run each with every foundation known, SAT Prep taught 618 topics for its 284 and ACT Prep 840 for its 347. Taking Fundamentals first avoids this, because learned topics carry over.
   - The ACT outline lists "Solving Exponential Equations" twice, and the course has it once, so the course has 347 topics against 348 outline entries.
 - **University courses have almost no figures.** About 1% of the topics of Linear Algebra, Multivariable Calculus and Probability & Statistics have one, and none in the Multivariable Calculus topics on vector fields, level curves and surfaces.
 - **University topics are shallow.** They average about 2.0 knowledge points, against the 3 to 4 of the design.

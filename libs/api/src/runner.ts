@@ -184,7 +184,7 @@ export function answerRun(c: CourseEntry, run: RunState, response: string, skip:
       const next = { ...run, diagnostic, asked };
       const topic = nextDiagnosticTopic(c.ctx.graph, diagnostic);
       if (!topic) {
-        const placement = finishDiagnostic(diagnostic);
+        const placement = finishDiagnostic(c.planner, diagnostic);
         return finish(next, { type: "placed", at: now, course: c.id, ...placement }, true, placement.known.length);
       }
       return { run: { ...next, current: diagnosticRef(c, topic, rng) }, problem, verdict, skipped };
