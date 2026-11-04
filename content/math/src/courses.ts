@@ -18435,6 +18435,68 @@ export const linearProgramming: CourseDef = {
   ],
 };
 
+/** partialDifferentialEquations is the course on the heat, wave and Laplace equations and how to solve them. */
+export const partialDifferentialEquations: CourseDef = {
+  id: "partial-differential-equations",
+  title: t("Partial Differential Equations", "偏微分方程"),
+  description: t(
+    "Equations in several variables: classification, characteristics, separation of variables, the heat, wave and Laplace equations, Fourier series for initial data, and finite differences.",
+    "多变量的方程：分类，特征线，分离变量，热方程、波动方程和拉普拉斯方程，初始数据的傅里叶级数，以及有限差分。",
+  ),
+  units: [
+    {
+      title: t("First Ideas", "初步概念"),
+      modules: [
+        {
+          title: t("Equations and Their Types", "方程及其类型"),
+          topics: ["introduction-to-partial-differential-equations", "classifying-second-order-equations"],
+        },
+        {
+          title: t("First-Order Equations", "一阶方程"),
+          topics: ["the-transport-equation", "the-method-of-characteristics"],
+        },
+        {
+          title: t("Separation of Variables", "分离变量"),
+          topics: ["separation-of-variables-for-pdes", "orthogonal-eigenfunctions-for-pdes", "matching-initial-data-with-fourier-series"],
+        },
+      ],
+    },
+    {
+      title: t("The Heat Equation", "热方程"),
+      modules: [
+        {
+          title: t("Diffusion", "扩散"),
+          topics: [
+            "the-heat-equation",
+            "solving-the-heat-equation-on-an-interval",
+            "the-heat-equation-with-insulated-ends",
+            "nonhomogeneous-heat-problems",
+            "finite-differences-for-the-heat-equation",
+          ],
+        },
+      ],
+    },
+    {
+      title: t("The Wave Equation", "波动方程"),
+      modules: [
+        {
+          title: t("Waves", "波"),
+          topics: ["the-wave-equation", "dalemberts-formula", "the-wave-equation-on-a-finite-string"],
+        },
+      ],
+    },
+    {
+      title: t("Laplace's Equation", "拉普拉斯方程"),
+      modules: [
+        {
+          title: t("Equilibrium", "平衡"),
+          topics: ["laplaces-equation", "laplaces-equation-in-a-rectangle-and-a-disc"],
+        },
+      ],
+    },
+  ],
+};
+
 /** mathCourses are the courses of the mathematics subject. */
 export const mathCourses: readonly CourseDef[] = [
   algebraFoundations,
@@ -18457,6 +18519,7 @@ export const mathCourses: readonly CourseDef[] = [
   realAnalysis,
   complexAnalysis,
   linearProgramming,
+  partialDifferentialEquations,
   integratedMathI,
   integratedMathII,
   integratedMathIII,
