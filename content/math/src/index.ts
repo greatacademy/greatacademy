@@ -87,9 +87,11 @@ import { deeperCalculusIIPoints } from "./topics/deeper-calculus-ii.ts";
 import { deeperDifferentialEquationsPoints } from "./topics/deeper-differential-equations.ts";
 import { deeperDiscreteMathematicsPoints } from "./topics/deeper-discrete-mathematics.ts";
 import { deeperGrade4Points } from "./topics/deeper-grade-4.ts";
+import { deeperGrade5Points } from "./topics/deeper-grade-5.ts";
 import { deeperLinearAlgebraPoints } from "./topics/deeper-linear-algebra.ts";
 import { deeperMethodsOfProofPoints } from "./topics/deeper-methods-of-proof.ts";
 import { deeperMultivariableCalculusPoints } from "./topics/deeper-multivariable-calculus.ts";
+import { deeperPrecalculusPoints } from "./topics/deeper-precalculus.ts";
 import { deeperProbabilityStatisticsPoints } from "./topics/deeper-probability-statistics.ts";
 import { differentialEquationsBvpTopics } from "./topics/differential-equations-bvp.ts";
 import { differentialEquationsFirstOrderTopics } from "./topics/differential-equations-first-order.ts";
@@ -253,6 +255,7 @@ function finished(topic: TopicDef): TopicDef {
     encompasses: topic.encompasses.length ? topic.encompasses : (inferredEncompassings[topic.id] ?? []),
     knowledgePoints: [
       ...topic.knowledgePoints,
+      ...(deeperGrade5Points[topic.id] ?? []),
       ...(deeperGrade4Points[topic.id] ?? []),
       ...(deeperAbstractAlgebraPoints[topic.id] ?? []),
       ...(deeperCalculusIPoints[topic.id] ?? []),
@@ -262,6 +265,7 @@ function finished(topic: TopicDef): TopicDef {
       ...(deeperLinearAlgebraPoints[topic.id] ?? []),
       ...(deeperMethodsOfProofPoints[topic.id] ?? []),
       ...(deeperMultivariableCalculusPoints[topic.id] ?? []),
+      ...(deeperPrecalculusPoints[topic.id] ?? []),
       ...(deeperProbabilityStatisticsPoints[topic.id] ?? []),
       ...(figureReadingPoints[topic.id] ?? []),
     ],
