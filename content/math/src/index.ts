@@ -22,6 +22,9 @@ import { actFundamentalsFunctionTopics } from "./topics/act-fundamentals-functio
 import { actFundamentalsGeometryTopics } from "./topics/act-fundamentals-geometry.ts";
 import { actFundamentalsModelingTopics } from "./topics/act-fundamentals-modeling.ts";
 import { actFundamentalsNumberTopics } from "./topics/act-fundamentals-number.ts";
+import { actFundamentalsReasoningAlgebraTopics } from "./topics/act-fundamentals-reasoning-algebra.ts";
+import { actFundamentalsReasoningDataTopics } from "./topics/act-fundamentals-reasoning-data.ts";
+import { actFundamentalsReasoningGeometryTopics } from "./topics/act-fundamentals-reasoning-geometry.ts";
 import { actGeometryDataTopics } from "./topics/act-geometry-data.ts";
 import { actNumberAlgebraTopics } from "./topics/act-number-algebra.ts";
 import { approximatingSystemsTopics } from "./topics/algebra-i-approximating-systems.ts";
@@ -442,6 +445,9 @@ export const math: SubjectDef = {
     ...actFundamentalsModelingTopics,
     ...actFundamentalsChanceConicsTopics,
     ...actFundamentalsFigureUnitTopics,
+    ...actFundamentalsReasoningAlgebraTopics,
+    ...actFundamentalsReasoningGeometryTopics,
+    ...actFundamentalsReasoningDataTopics,
     ...actGeometryDataTopics,
     ...satMathStrategyTopics,
     ...examTopics,
