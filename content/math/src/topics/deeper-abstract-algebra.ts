@@ -939,6 +939,740 @@ const orderOfAnAffineMap: KnowledgePointDef = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// Second pass
+// ---------------------------------------------------------------------------
+
+/** signed writes an integer as a term to be added, with its sign and a space. */
+const signed = (n: number) => (n < 0 ? `- ${-n}` : `+ ${n}`);
+/** primeList lists the primes up to hi. */
+const primeList = (hi: number) => range(2, hi).filter((n) => divisors(n).length === 2);
+/** compositeList lists the composite numbers from lo to hi. */
+const compositeList = (lo: number, hi: number) => range(lo, hi).filter((n) => divisors(n).length > 2);
+
+const associativityDefect: KnowledgePointDef = {
+  id: "measuring-how-far-an-operation-is-from-associative",
+  title: t("Measuring how far an operation is from associative", "度量运算与结合律的差距"),
+  explanation: t(
+    "Many formulas define a closed operation without being associative, and a single computation can show it. Evaluate $(x \\ast y) \\ast z$ and $x \\ast (y \\ast z)$ separately, always working inside the parentheses first, and compare the results. A nonzero difference for one triple is enough to prove that the operation is not associative.",
+    "许多公式定义的运算封闭但不满足结合律，一次计算就能说明这一点。分别计算 $(x \\ast y) \\ast z$ 和 $x \\ast (y \\ast z)$，总是先算括号内的部分，再比较结果。只要有一组三元数使差不为零，就足以证明这个运算不满足结合律。",
+  ),
+  generate(rng) {
+    const p = rng.int(2, 5);
+    const q = rng.int(2, 5);
+    const x = rng.int(1, 9);
+    const y = rng.int(1, 9);
+    const z = rng.int(1, 9);
+    const left = p * (p * x + q * y) + q * z;
+    const right = p * x + q * (p * y + q * z);
+    const answer = left - right;
+    return numberProblem({
+      prompt: t(
+        `On $\\mathbb{Z}$, let $a \\ast b = ${p}a + ${q}b$. Find $(${x} \\ast ${y}) \\ast ${z} - ${x} \\ast (${y} \\ast ${z})$.`,
+        `在 $\\mathbb{Z}$ 上，设 $a \\ast b = ${p}a + ${q}b$。求 $(${x} \\ast ${y}) \\ast ${z} - ${x} \\ast (${y} \\ast ${z})$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [0, -answer, left + right, p * (p - 1) * x],
+      solution: t(
+        `First $${x} \\ast ${y} = ${p * x + q * y}$, so the left term is $${left}$. Next $${y} \\ast ${z} = ${p * y + q * z}$, so the right term is $${right}$. The difference is $${answer}$.`,
+        `先算 $${x} \\ast ${y} = ${p * x + q * y}$，所以左项是 $${left}$。再算 $${y} \\ast ${z} = ${p * y + q * z}$，所以右项是 $${right}$。差是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const commutingPairs: KnowledgePointDef = {
+  id: "counting-the-pairs-that-commute",
+  title: t("Counting the pairs that commute", "计算可交换的元素对"),
+  explanation: t(
+    "An operation that is not commutative may still commute on many pairs. For $a \\ast b = a + kb$ on $\\mathbb{Z}_n$, the condition $a \\ast b = b \\ast a$ reduces to $(k - 1)(a - b) = 0$. This depends only on the difference $a - b$. The difference can take $\\gcd(k - 1, n)$ values, and each works with any of the $n$ choices of $b$.",
+    "不满足交换律的运算，仍可能在很多对元素上可交换。对 $\\mathbb{Z}_n$ 上的 $a \\ast b = a + kb$，条件 $a \\ast b = b \\ast a$ 化为 $(k - 1)(a - b) = 0$。这只取决于差 $a - b$。这个差可以取 $\\gcd(k - 1, n)$ 个值，每个值都可以搭配 $b$ 的 $n$ 种选择。",
+  ),
+  generate(rng) {
+    const n = rng.int(6, 36);
+    const k = rng.int(2, 13);
+    const g = gcd(k - 1, n);
+    const answer = n * g;
+    return numberProblem({
+      prompt: t(
+        `On ${"$"}${Zn(n)}$, let $a \\ast b = a + ${k}b$. How many ordered pairs $(a, b)$ satisfy $a \\ast b = b \\ast a$?`,
+        `在 ${"$"}${Zn(n)}$ 上，设 $a \\ast b = a + ${k}b$。有多少个有序对 $(a, b)$ 满足 $a \\ast b = b \\ast a$？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n, n * n, g, n * (k - 1)],
+      solution: t(
+        `The condition is $${k - 1}(a - b) = 0$, which $\\gcd(${k - 1}, ${n}) = ${g}$ differences satisfy. With ${n} choices of $b$, there are $${answer}$ pairs.`,
+        `条件是 $${k - 1}(a - b) = 0$，有 $\\gcd(${k - 1}, ${n}) = ${g}$ 个差满足它。$b$ 有 ${n} 种选择，所以有 $${answer}$ 对。`,
+      ),
+    });
+  },
+};
+
+const shiftedIdentity: KnowledgePointDef = {
+  id: "the-identity-of-a-shifted-product",
+  title: t("The identity of a shifted product", "平移乘积的单位元"),
+  explanation: t(
+    "An operation such as $a \\ast b = (a + c)(b + c) - c$ is ordinary multiplication in disguise, because $a \\ast b + c$ equals $(a + c)(b + c)$. So the map $a \\mapsto a + c$ carries it to multiplication, whose identity is 1. The identity of the new operation is the element sent to 1, that is $1 - c$.",
+    "$a \\ast b = (a + c)(b + c) - c$ 这样的运算其实是伪装的普通乘法，因为 $a \\ast b + c$ 等于 $(a + c)(b + c)$。所以映射 $a \\mapsto a + c$ 把它变成乘法，而乘法的单位元是 1。新运算的单位元就是被映到 1 的元素，即 $1 - c$。",
+  ),
+  generate(rng) {
+    const c = pickNonzero(rng, 20);
+    const answer = 1 - c;
+    const operation = `(a ${signed(c)})(b ${signed(c)}) ${signed(-c)}`;
+    return numberProblem({
+      prompt: t(
+        `Find the identity element of the operation $a \\ast b = ${operation}$ on $\\mathbb{Z}$.`,
+        `求 $\\mathbb{Z}$ 上运算 $a \\ast b = ${operation}$ 的单位元。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-c, c, 1 + c],
+      solution: t(
+        `We need $(a ${signed(c)})(e ${signed(c)}) = a ${signed(c)}$ for all $a$, so $e ${signed(c)} = 1$ and $e = ${answer}$.`,
+        `需要对所有 $a$ 有 $(a ${signed(c)})(e ${signed(c)}) = a ${signed(c)}$，所以 $e ${signed(c)} = 1$，$e = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const noInverse: KnowledgePointDef = {
+  id: "the-element-with-no-inverse",
+  title: t("The element with no inverse", "没有逆元的元素"),
+  explanation: t(
+    "Under $a \\ast b = a + b + kab$ on the rationals, the identity is 0, so an inverse of $a$ must solve $b(1 + ka) = -a$. Dividing by $1 + ka$ works except when this factor vanishes. At $a = -\\frac{1}{k}$ the equation reads $0 = -a$, which is false. That single element keeps the operation from being a group on all of the rationals.",
+    "在有理数上的 $a \\ast b = a + b + kab$ 之下，单位元是 0，所以 $a$ 的逆元必须满足 $b(1 + ka) = -a$。除以 $1 + ka$ 是可行的，除非这个因子为零。在 $a = -\\frac{1}{k}$ 处，方程变成 $0 = -a$，这不成立。正是这一个元素，使这个运算在全体有理数上不构成群。",
+  ),
+  generate(rng) {
+    const q = rng.int(1, 9);
+    const p = rng.pick(range(1, 9).filter((v) => gcd(v, q) === 1));
+    const negative = rng.pick([false, true]);
+    const size = Q.of(p, q);
+    const k = negative ? size.neg() : size;
+    const coefficient = p === q ? "" : size.toLatex();
+    const sign = negative ? "-" : "+";
+    const answer = Q.of(negative ? q : -q, p);
+    return numberProblem({
+      prompt: t(
+        `On $\\mathbb{Q}$, the operation $a \\ast b = a + b ${sign} ${coefficient}ab$ has identity 0. Which element has no inverse?`,
+        `在 $\\mathbb{Q}$ 上，运算 $a \\ast b = a + b ${sign} ${coefficient}ab$ 的单位元是 0。哪个元素没有逆元？`,
+      ),
+      answer,
+      wrong: [answer.neg(), k, k.neg(), Q.of(0)],
+      solution: t(
+        `An inverse $b$ of $a$ must satisfy $b(1 ${sign} ${coefficient}a) = -a$. This has no solution when $1 ${sign} ${coefficient}a = 0$, that is at $a = ${answer.toLatex()}$.`,
+        `$a$ 的逆元 $b$ 必须满足 $b(1 ${sign} ${coefficient}a) = -a$。当 $1 ${sign} ${coefficient}a = 0$，即 $a = ${answer.toLatex()}$ 时，它没有解。`,
+      ),
+    });
+  },
+};
+
+const triangularInverse: KnowledgePointDef = {
+  id: "the-inverse-of-an-upper-triangular-matrix",
+  title: t("The inverse of an upper triangular matrix", "上三角矩阵的逆"),
+  explanation: t(
+    "Invertible upper triangular matrices form a subgroup of $GL(2, \\mathbb{Q})$, so an inverse of one is again upper triangular. Its diagonal entries are simply the reciprocals of the originals. The top right entry takes more care: it is $-\\frac{b}{ad}$, which comes from the usual formula, with the determinant $ad$ dividing the swapped and negated entries.",
+    "可逆上三角矩阵构成 $GL(2, \\mathbb{Q})$ 的子群，所以它的逆仍是上三角矩阵。逆的对角元就是原对角元的倒数。右上角元素要多加小心：它是 $-\\frac{b}{ad}$，来自通常的公式，其中行列式 $ad$ 去除交换并取负后的元素。",
+  ),
+  generate(rng) {
+    const a = pickNonzero(rng, 9);
+    const b = pickNonzero(rng, 9);
+    const d = pickNonzero(rng, 9);
+    const answer = Q.of(-b, a * d);
+    return numberProblem({
+      prompt: t(
+        `Let $A = \\begin{pmatrix} ${a} & ${b} \\\\ 0 & ${d} \\end{pmatrix}$ in $GL(2, \\mathbb{Q})$. Find the top right entry of $A^{-1}$.`,
+        `设 $GL(2, \\mathbb{Q})$ 中的 $A = \\begin{pmatrix} ${a} & ${b} \\\\ 0 & ${d} \\end{pmatrix}$。求 $A^{-1}$ 右上角的元素。`,
+      ),
+      answer,
+      wrong: [answer.neg(), Q.of(-b), Q.of(-b, a * a), Q.of(1, a)],
+      solution: t(
+        `Here $A^{-1} = \\frac{1}{\\det A}\\begin{pmatrix} ${d} & ${-b} \\\\ 0 & ${a} \\end{pmatrix}$ with $\\det A = ${a * d}$. So the entry is $${answer.toLatex()}$.`,
+        `这里 $A^{-1} = \\frac{1}{\\det A}\\begin{pmatrix} ${d} & ${-b} \\\\ 0 & ${a} \\end{pmatrix}$，$\\det A = ${a * d}$。所以这个元素是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const orderFromTwoPowers: KnowledgePointDef = {
+  id: "the-order-allowed-by-two-powers",
+  title: t("The order allowed by two powers", "两个幂所允许的阶"),
+  explanation: t(
+    "If $a^m = e$ then the order of $a$ divides $m$, because the powers of $a$ repeat with that order as period. So two such equations force the order to divide both exponents, and hence their greatest common divisor. An element of that exact order exists in a cyclic group of that size, so the bound cannot be improved.",
+    "如果 $a^m = e$，那么 $a$ 的阶整除 $m$，因为 $a$ 的幂以阶为周期重复。所以两个这样的方程迫使阶同时整除两个指数，从而整除它们的最大公约数。在这个大小的循环群中，恰好有这个阶的元素，所以这个界不能再改进。",
+  ),
+  generate(rng) {
+    const m = rng.int(4, 60);
+    const n = rng.pick(range(4, 60).filter((v) => v !== m));
+    const answer = gcd(m, n);
+    return numberProblem({
+      prompt: t(
+        `In a group, an element $a$ satisfies $a^{${m}} = e$ and $a^{${n}} = e$. What is the largest possible order of $a$?`,
+        `在一个群中，元素 $a$ 满足 $a^{${m}} = e$ 和 $a^{${n}} = e$。$a$ 的阶最大可能是多少？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [lcm(m, n), Math.min(m, n), Math.abs(m - n)],
+      solution: t(
+        `The order must divide both ${m} and ${n}, so it divides $\\gcd(${m}, ${n}) = ${answer}$. A cyclic group of order ${answer} reaches this value.`,
+        `阶必须同时整除 ${m} 和 ${n}，所以它整除 $\\gcd(${m}, ${n}) = ${answer}$。${answer} 阶循环群达到了这个值。`,
+      ),
+    });
+  },
+};
+
+const orderOfProductWithUnits: KnowledgePointDef = {
+  id: "the-order-of-a-units-group-times-a-cyclic-group",
+  title: t("The order of a units group times a cyclic group", "单位群与循环群之积的阶"),
+  explanation: t(
+    "The order of a direct product is the product of the orders, because an element is a free choice of one coordinate from each factor. The first factor here must be counted with care: $U(m)$ has $\\varphi(m)$ elements, not $m$, since only residues coprime to $m$ belong to it. So the total is $\\varphi(m)$ times the size of the other factor.",
+    "直积的阶是各因子阶的乘积，因为一个元素就是从每个因子中自由选一个坐标。这里第一个因子要仔细数：$U(m)$ 有 $\\varphi(m)$ 个元素，而不是 $m$ 个，因为只有与 $m$ 互素的剩余才属于它。所以总数是 $\\varphi(m)$ 乘以另一个因子的大小。",
+  ),
+  generate(rng) {
+    const m = rng.int(3, 30);
+    const n = rng.int(2, 20);
+    const answer = totient(m) * n;
+    return numberProblem({
+      prompt: t(`Find the order of the group $U(${m}) \\times ${Zn(n)}$.`, `求群 $U(${m}) \\times ${Zn(n)}$ 的阶。`),
+      answer,
+      form: "integer",
+      wrong: [m * n, totient(m) + n, (m - 1) * n],
+      solution: t(
+        `The group $U(${m})$ has $\\varphi(${m}) = ${totient(m)}$ elements. Multiplying by ${n} gives $${answer}$.`,
+        `群 $U(${m})$ 有 $\\varphi(${m}) = ${totient(m)}$ 个元素。乘以 ${n}，得 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const inverseOfSquare: KnowledgePointDef = {
+  id: "the-inverse-of-a-square-from-a-known-inverse",
+  title: t("The inverse of a square from a known inverse", "由已知逆元求平方的逆元"),
+  explanation: t(
+    "In any group, the inverse of a power is the same power of the inverse, since $a^2 \\cdot (a^{-1})^2 = e$. So once one inverse in $U(p)$ has been found, others come cheaply. Squaring the known inverse and reducing modulo $p$ gives the inverse of $a^2$, without running the Euclidean algorithm a second time.",
+    "在任何群中，幂的逆元就是逆元的同次幂，因为 $a^2 \\cdot (a^{-1})^2 = e$。所以在 $U(p)$ 中求出一个逆元后，其他逆元就很容易得到。把已知逆元平方并模 $p$ 化简，就得到 $a^2$ 的逆元，不必再做一次欧几里得算法。",
+  ),
+  generate(rng) {
+    const p = rng.pick(primeList(47).filter((v) => v >= 7));
+    const a = rng.int(2, p - 2);
+    const c = range(1, p - 1).find((v) => (v * a) % p === 1) ?? 1;
+    const answer = (c * c) % p;
+    return numberProblem({
+      prompt: t(
+        `In $U(${p})$, the inverse of $${a}$ is $${c}$. Find the inverse of $${a}^2$. Give an answer between $0$ and $${p - 1}$.`,
+        `在 $U(${p})$ 中，$${a}$ 的逆元是 $${c}$。求 $${a}^2$ 的逆元。答案取 $0$ 到 $${p - 1}$ 之间的数。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [c, (a * a) % p, (2 * c) % p],
+      solution: t(
+        `The inverse of the square is the square of the inverse: $${c}^2 = ${c * c} \\equiv ${answer} \\pmod{${p}}$.`,
+        `平方的逆元是逆元的平方：$${c}^2 = ${c * c} \\equiv ${answer} \\pmod{${p}}$。`,
+      ),
+    });
+  },
+};
+
+const productSetSize: KnowledgePointDef = {
+  id: "the-size-of-a-product-of-two-subgroups",
+  title: t("The size of a product of two subgroups", "两个子群乘积的大小"),
+  explanation: t(
+    "The set $HK$ of all products $hk$ need not be a subgroup, but its size can still be counted. There are $|H||K|$ pairs $(h, k)$, and each product arises from exactly $|H \\cap K|$ of them, because an element of the intersection can be moved from one factor to the other. So $|HK| = \\frac{|H||K|}{|H \\cap K|}$.",
+    "所有乘积 $hk$ 构成的集合 $HK$ 不一定是子群，但它的大小仍然可以计算。有 $|H||K|$ 个对 $(h, k)$，每个乘积恰好由其中 $|H \\cap K|$ 个对得到，因为交集中的元素可以从一个因子移到另一个因子。所以 $|HK| = \\frac{|H||K|}{|H \\cap K|}$。",
+  ),
+  generate(rng) {
+    const g = rng.int(1, 9);
+    const a = rng.int(2, 9);
+    const b = rng.int(2, 9);
+    const answer = g * a * b;
+    const m = g * a;
+    const n = g * b;
+    return numberProblem({
+      prompt: t(
+        `Subgroups $H$ and $K$ of a group have orders ${m} and ${n}, and $|H \\cap K| = ${g}$. How many elements does the set $HK$ have?`,
+        `群的子群 $H$、$K$ 的阶分别是 ${m} 和 ${n}，且 $|H \\cap K| = ${g}$。集合 $HK$ 有多少个元素？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [m * n, m + n - g, m + n, lcm(m, n)],
+      solution: t(
+        `The ${m * n} pairs give each product ${g} ${g === 1 ? "time" : "times"}, so $|HK| = ${m * n} \\div ${g} = ${answer}$.`,
+        `${m * n} 个对中，每个乘积出现 ${g} 次，所以 $|HK| = ${m * n} \\div ${g} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const annihilatedElements: KnowledgePointDef = {
+  id: "the-solutions-of-kx-equals-zero-in-zn",
+  title: t("The solutions of $kx = 0$ in $\\mathbb{Z}_n$", "$\\mathbb{Z}_n$ 中 $kx = 0$ 的解"),
+  explanation: t(
+    "The map $x \\mapsto kx$ is a homomorphism from $\\mathbb{Z}_n$ to itself, and the solutions of $kx = 0$ are its kernel. The image is the subgroup generated by $k$, which has $\\frac{n}{\\gcd(k, n)}$ elements. Dividing $n$ by this size leaves $\\gcd(k, n)$ for the kernel. The solutions are exactly the multiples of $\\frac{n}{\\gcd(k, n)}$.",
+    "映射 $x \\mapsto kx$ 是 $\\mathbb{Z}_n$ 到自身的同态，$kx = 0$ 的解就是它的核。像是由 $k$ 生成的子群，有 $\\frac{n}{\\gcd(k, n)}$ 个元素。用 $n$ 除以这个大小，得到核的大小 $\\gcd(k, n)$。这些解恰好是 $\\frac{n}{\\gcd(k, n)}$ 的倍数。",
+  ),
+  generate(rng) {
+    const n = rng.int(6, 60);
+    const k = rng.int(2, n - 1);
+    const answer = gcd(k, n);
+    return numberProblem({
+      prompt: t(`How many elements $x$ of ${"$"}${Zn(n)}$ satisfy $${k}x = 0$?`, `${"$"}${Zn(n)}$ 中有多少个元素 $x$ 满足 $${k}x = 0$？`),
+      answer,
+      form: "integer",
+      wrong: [1, n, n / answer, k, answer + 1],
+      solution: t(`The number of solutions is $\\gcd(${k}, ${n}) = ${answer}$.`, `解的个数是 $\\gcd(${k}, ${n}) = ${answer}$。`),
+    });
+  },
+};
+
+const subgroupOfGivenOrder: KnowledgePointDef = {
+  id: "the-smallest-element-of-the-subgroup-of-a-given-order",
+  title: t("The smallest element of the subgroup of a given order", "给定阶子群的最小元素"),
+  explanation: t(
+    "For each divisor $d$ of $n$, the group $\\mathbb{Z}_n$ has exactly one subgroup of order $d$. It consists of the multiples of $\\frac{n}{d}$, since those are the elements that $d$ annihilates. So its smallest positive element, which also generates it, is $\\frac{n}{d}$. Confusing the order with the generator gives the wrong subgroup.",
+    "对 $n$ 的每个因子 $d$，群 $\\mathbb{Z}_n$ 恰有一个 $d$ 阶子群。它由 $\\frac{n}{d}$ 的倍数组成，因为这些元素正是乘以 $d$ 后为零的元素。所以它的最小正元素，也是它的生成元，是 $\\frac{n}{d}$。把阶和生成元混淆，就会得到错误的子群。",
+  ),
+  generate(rng) {
+    const n = rng.pick(compositeList(12, 120));
+    const d = rng.pick(divisors(n).filter((v) => v > 1 && v < n));
+    const answer = n / d;
+    return numberProblem({
+      prompt: t(
+        `Find the smallest positive element of the subgroup of order ${d} in ${"$"}${Zn(n)}$.`,
+        `求 ${"$"}${Zn(n)}$ 中 ${d} 阶子群的最小正元素。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [d, n - d, 2 * answer],
+      solution: t(
+        `The subgroup of order ${d} consists of the multiples of $\\frac{${n}}{${d}} = ${answer}$, and its smallest positive element is that number.`,
+        `${d} 阶子群由 $\\frac{${n}}{${d}} = ${answer}$ 的倍数组成，它的最小正元素就是这个数。`,
+      ),
+    });
+  },
+};
+
+const sumOfGenerators: KnowledgePointDef = {
+  id: "the-sum-of-the-generators-of-zn",
+  title: t("The sum of the generators of $\\mathbb{Z}_n$", "$\\mathbb{Z}_n$ 生成元之和"),
+  explanation: t(
+    "The generators of $\\mathbb{Z}_n$ are the residues coprime to $n$. If $k$ is one, so is $n - k$, since the two share their common divisors with $n$. For $n > 2$ these pair up, with $k \\ne n - k$, and each pair adds to $n$. There are $\\frac{\\varphi(n)}{2}$ pairs, so the total of the representatives is $\\frac{n\\varphi(n)}{2}$.",
+    "$\\mathbb{Z}_n$ 的生成元是与 $n$ 互素的剩余。如果 $k$ 是生成元，$n - k$ 也是，因为它们与 $n$ 有相同的公因子。当 $n > 2$ 时，它们两两配对，$k \\ne n - k$，每对之和是 $n$。一共有 $\\frac{\\varphi(n)}{2}$ 对，所以代表元的总和是 $\\frac{n\\varphi(n)}{2}$。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 60);
+    const phi = totient(n);
+    const answer = (n * phi) / 2;
+    return numberProblem({
+      prompt: t(
+        `Add the integers from 1 to $${n - 1}$ that generate ${"$"}${Zn(n)}$. What is the total?`,
+        `把 1 到 $${n - 1}$ 中能生成 ${"$"}${Zn(n)}$ 的整数相加。总和是多少？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [phi, n * phi, (n * (n - 1)) / 2],
+      solution: t(
+        `There are $\\varphi(${n}) = ${phi}$ generators, and they pair up as $k$ and ${n} minus $k$. That gives $\\frac{${n} \\cdot ${phi}}{2} = ${answer}$.`,
+        `有 $\\varphi(${n}) = ${phi}$ 个生成元，它们按 $k$ 和 ${n} 减 $k$ 配对。于是得 $\\frac{${n} \\cdot ${phi}}{2} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const surjectionsFromFree: KnowledgePointDef = {
+  id: "counting-surjections-from-a-free-group",
+  title: t("Counting surjections from a free group", "计算自由群的满同态"),
+  explanation: t(
+    "The universal property says a homomorphism from a free group is a free choice of an image for each generator. Mapping to a group of prime order, the image is either trivial or the whole group, by Lagrange's theorem. So a homomorphism fails to be onto only if every generator goes to 0. That excludes exactly one of the choices.",
+    "泛性质说，自由群的同态就是为每个生成元自由选择一个像。映到素数阶群时，由拉格朗日定理，像要么是平凡群，要么是整个群。所以同态不是满射，只有在每个生成元都映到 0 时才发生。这恰好排除了其中一种选择。",
+  ),
+  generate(rng) {
+    const p = rng.pick(primeList(23));
+    const r = rng.int(2, 5);
+    const answer = p ** r - 1;
+    return numberProblem({
+      prompt: t(
+        `How many surjective homomorphisms are there from the free group on ${r} generators to ${"$"}${Zn(p)}$?`,
+        `从 ${r} 个生成元的自由群到 ${"$"}${Zn(p)}$ 的满同态有多少个？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [p ** r, p ** r - p, r * (p - 1)],
+      solution: t(
+        `There are $${p}^${r}$ homomorphisms, and only the zero map is not onto. That leaves $${answer}$.`,
+        `一共有 $${p}^${r}$ 个同态，只有零映射不是满射。剩下 $${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const twoRelationsOnOneGenerator: KnowledgePointDef = {
+  id: "two-relations-on-one-generator",
+  title: t("Two relations on one generator", "一个生成元上的两个关系"),
+  explanation: t(
+    "A presentation with one generator describes a cyclic group, and the relations decide its size. The relations $a^m = e$ and $a^n = e$ together imply $a^{\\gcd(m, n)} = e$, because the greatest common divisor is an integer combination of $m$ and $n$. Nothing further is forced, so the group is cyclic of order $\\gcd(m, n)$.",
+    "只有一个生成元的表现描述一个循环群，关系决定它的大小。关系 $a^m = e$ 和 $a^n = e$ 合起来推出 $a^{\\gcd(m, n)} = e$，因为最大公约数是 $m$ 和 $n$ 的整数线性组合。没有更多的限制，所以这个群是 $\\gcd(m, n)$ 阶循环群。",
+  ),
+  generate(rng) {
+    const m = rng.int(4, 60);
+    const n = rng.pick(range(4, 60).filter((v) => v !== m));
+    const answer = gcd(m, n);
+    return numberProblem({
+      prompt: t(
+        `Find the order of the group $\\langle a \\mid a^{${m}} = a^{${n}} = e \\rangle$.`,
+        `求群 $\\langle a \\mid a^{${m}} = a^{${n}} = e \\rangle$ 的阶。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [lcm(m, n), m * n, Math.min(m, n)],
+      solution: t(
+        `Both exponents are multiples of the order, and $\\gcd(${m}, ${n}) = ${answer}$ is a combination of them. So the group is cyclic of order $${answer}$.`,
+        `两个指数都是阶的倍数，而 $\\gcd(${m}, ${n}) = ${answer}$ 是它们的组合。所以这个群是 $${answer}$ 阶循环群。`,
+      ),
+    });
+  },
+};
+
+const generatorsOfProduct: KnowledgePointDef = {
+  id: "counting-generators-of-a-cyclic-direct-product",
+  title: t("Counting generators of a cyclic direct product", "循环直积的生成元个数"),
+  explanation: t(
+    "When $\\gcd(m, n) = 1$, the group $\\mathbb{Z}_m \\times \\mathbb{Z}_n$ is cyclic of order $mn$. An element $(a, b)$ has order $mn$ exactly when $a$ generates the first factor and $b$ generates the second, because its order is the least common multiple of the orders of its coordinates. So the choices multiply, and the count is $\\varphi(m)\\varphi(n)$.",
+    "当 $\\gcd(m, n) = 1$ 时，群 $\\mathbb{Z}_m \\times \\mathbb{Z}_n$ 是 $mn$ 阶循环群。元素 $(a, b)$ 的阶为 $mn$，当且仅当 $a$ 生成第一个因子且 $b$ 生成第二个因子，因为它的阶是各坐标阶的最小公倍数。所以选择数相乘，个数是 $\\varphi(m)\\varphi(n)$。",
+  ),
+  generate(rng) {
+    const m = rng.int(2, 20);
+    const n = rng.pick(range(2, 20).filter((v) => gcd(v, m) === 1));
+    const answer = totient(m) * totient(n);
+    return numberProblem({
+      prompt: t(
+        `How many elements generate the cyclic group $${Zn(m)} \\times ${Zn(n)}$?`,
+        `有多少个元素能生成循环群 $${Zn(m)} \\times ${Zn(n)}$？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [m * n, totient(m) + totient(n), (m - 1) * n],
+      solution: t(
+        `Each coordinate must be a generator, which allows $\\varphi(${m}) = ${totient(m)}$ and $\\varphi(${n}) = ${totient(n)}$ choices. The product is $${answer}$.`,
+        `每个坐标都必须是生成元，分别有 $\\varphi(${m}) = ${totient(m)}$ 和 $\\varphi(${n}) = ${totient(n)}$ 种选择。乘积是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const torsionOrder: KnowledgePointDef = {
+  id: "the-order-of-an-element-of-a-product-of-rationals-modulo-integers",
+  title: t("Orders in a product of rationals modulo integers", "有理数模整数之积中的阶"),
+  explanation: t(
+    "Every element of $\\mathbb{Q}/\\mathbb{Z}$ has finite order, so the whole group is torsion even though $\\mathbb{Q}$ has no torsion at all. The order of $\\frac{a}{b} + \\mathbb{Z}$, in lowest terms, is $b$, because that is the first multiple to reach an integer. In a product, both coordinates must reach an integer together, so the denominators combine by their least common multiple.",
+    "$\\mathbb{Q}/\\mathbb{Z}$ 的每个元素都有有限阶，所以整个群都是挠群，尽管 $\\mathbb{Q}$ 本身完全没有挠元。最简形式的 $\\frac{a}{b} + \\mathbb{Z}$ 的阶是 $b$，因为这是第一个达到整数的倍数。在乘积中，两个坐标必须同时达到整数，所以分母按最小公倍数合并。",
+  ),
+  generate(rng) {
+    const b = rng.int(2, 12);
+    const a = rng.pick(range(1, b - 1).filter((v) => gcd(v, b) === 1));
+    const d = rng.int(2, 12);
+    const c = rng.pick(range(1, d - 1).filter((v) => gcd(v, d) === 1));
+    const answer = lcm(b, d);
+    return numberProblem({
+      prompt: t(
+        `Find the order of $\\left(\\frac{${a}}{${b}} + \\mathbb{Z}, \\frac{${c}}{${d}} + \\mathbb{Z}\\right)$ in $\\mathbb{Q}/\\mathbb{Z} \\times \\mathbb{Q}/\\mathbb{Z}$.`,
+        `求 $\\left(\\frac{${a}}{${b}} + \\mathbb{Z}, \\frac{${c}}{${d}} + \\mathbb{Z}\\right)$ 在 $\\mathbb{Q}/\\mathbb{Z} \\times \\mathbb{Q}/\\mathbb{Z}$ 中的阶。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [b * d, Math.max(b, d), b + d],
+      solution: t(
+        `The coordinates have orders ${b} and ${d}, so the element has order $\\text{lcm}(${b}, ${d}) = ${answer}$.`,
+        `两个坐标的阶分别是 ${b} 和 ${d}，所以这个元素的阶是 $\\text{lcm}(${b}, ${d}) = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const centerOfProduct: KnowledgePointDef = {
+  id: "the-center-of-a-dihedral-group-times-a-cyclic-group",
+  title: t("The center of a dihedral group times a cyclic group", "二面体群与循环群之积的中心"),
+  explanation: t(
+    "An element of a direct product is central exactly when each of its coordinates is central in its own factor, because products are computed coordinate by coordinate. So the center of a product is the product of the centers. A cyclic group is its own center, while the center of $D_n$, for $n \\ge 3$, has two elements if $n$ is even and one if $n$ is odd.",
+    "直积的元素在中心里，当且仅当它的每个坐标都在各自因子的中心里，因为乘积是逐坐标计算的。所以乘积的中心是中心的乘积。循环群的中心是它自身，而 $D_n$（$n \\ge 3$）的中心在 $n$ 为偶数时有两个元素，在 $n$ 为奇数时有一个元素。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 20);
+    const m = rng.int(2, 20);
+    const center = n % 2 === 0 ? 2 : 1;
+    const answer = center * m;
+    return numberProblem({
+      prompt: t(
+        `How many elements does the center of $D_{${n}} \\times ${Zn(m)}$ have, where $D_{${n}}$ has order ${2 * n}?`,
+        `$D_{${n}} \\times ${Zn(m)}$ 的中心有多少个元素？其中 $D_{${n}}$ 的阶是 ${2 * n}。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [m, 2 * m, 2 * n * m, center],
+      solution: t(
+        `The center of $D_{${n}}$ has ${center} ${center === 1 ? "element" : "elements"}, since ${n} is ${center === 1 ? "odd" : "even"}, and all ${m} elements of the cyclic factor are central. The product is $${answer}$.`,
+        `由于 ${n} 是${center === 1 ? "奇" : "偶"}数，$D_{${n}}$ 的中心有 ${center} 个元素，循环因子的 ${m} 个元素都在中心里。乘积是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const centralizerFromClass: KnowledgePointDef = {
+  id: "a-centralizer-from-the-size-of-a-conjugacy-class",
+  title: t("A centralizer from the size of a conjugacy class", "由共轭类大小求中心化子"),
+  explanation: t(
+    "A group acts on itself by conjugation. The orbit of $g$ is its conjugacy class, and the stabilizer of $g$ is its centralizer, so the orbit-stabilizer theorem gives $|\\text{cl}(g)| \\cdot |C(g)| = |G|$. A large class therefore means few elements commute with $g$. This also explains why the size of any conjugacy class divides the order of the group.",
+    "群通过共轭作用于自身。$g$ 的轨道是它的共轭类，$g$ 的稳定子是它的中心化子，所以轨道-稳定子定理给出 $|\\text{cl}(g)| \\cdot |C(g)| = |G|$。因此，共轭类越大，与 $g$ 可交换的元素就越少。这也解释了为什么任何共轭类的大小都整除群的阶。",
+  ),
+  generate(rng) {
+    const size = rng.int(2, 30);
+    const answer = rng.int(2, 30);
+    const order = size * answer;
+    return numberProblem({
+      prompt: t(
+        `In a group of order ${order}, the conjugacy class of $g$ has ${size} elements. How many elements does the centralizer of $g$ have?`,
+        `在一个 ${order} 阶群中，$g$ 的共轭类有 ${size} 个元素。$g$ 的中心化子有多少个元素？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [size, order - size, order - answer],
+      solution: t(
+        `The class size times the centralizer size is the group order, so the centralizer has $\\frac{${order}}{${size}} = ${answer}$ elements.`,
+        `共轭类大小乘以中心化子大小等于群的阶，所以中心化子有 $\\frac{${order}}{${size}} = ${answer}$ 个元素。`,
+      ),
+    });
+  },
+};
+
+const smallestKernel: KnowledgePointDef = {
+  id: "the-smallest-possible-kernel-between-cyclic-groups",
+  title: t("The smallest possible kernel between cyclic groups", "循环群之间最小可能的核"),
+  explanation: t(
+    "The size of the image of a homomorphism divides both the size of the source and the size of the target, so it is at most $\\gcd(m, n)$ for cyclic groups of orders $m$ and $n$. The kernel and image sizes multiply to $m$. So the kernel has at least $\\frac{m}{\\gcd(m, n)}$ elements, and the homomorphism is injective only when $m$ divides $n$.",
+    "同态的像的大小同时整除源群和目标群的大小，所以对 $m$ 阶和 $n$ 阶循环群，它不超过 $\\gcd(m, n)$。核和像的大小之积是 $m$。所以核至少有 $\\frac{m}{\\gcd(m, n)}$ 个元素，只有当 $m$ 整除 $n$ 时，同态才可能是单射。",
+  ),
+  generate(rng) {
+    const m = rng.int(4, 60);
+    const n = rng.pick(range(4, 60).filter((v) => v !== m));
+    const g = gcd(m, n);
+    const answer = m / g;
+    return numberProblem({
+      prompt: t(
+        `What is the smallest possible size of the kernel of a homomorphism from $${Zn(m)}$ to $${Zn(n)}$?`,
+        `从 $${Zn(m)}$ 到 $${Zn(n)}$ 的同态，核最小可能有多少个元素？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [g, m, n / g, answer + g],
+      solution: t(
+        `The image has at most $\\gcd(${m}, ${n}) = ${g}$ elements, so the kernel has at least $${m} \\div ${g} = ${answer}$ elements.`,
+        `像最多有 $\\gcd(${m}, ${n}) = ${g}$ 个元素，所以核至少有 $${m} \\div ${g} = ${answer}$ 个元素。`,
+      ),
+    });
+  },
+};
+
+const orderPElements: KnowledgePointDef = {
+  id: "elements-of-prime-order-in-a-nonabelian-group",
+  title: t("Elements of prime order in a nonabelian group", "非阿贝尔群中素数阶的元素"),
+  explanation: t(
+    "A nonabelian group of order $pq$, with primes $p < q$, has a normal subgroup of order $q$. If its Sylow $p$-subgroups were also normal, the group would be their direct product, and so abelian. So there are $q$ Sylow $p$-subgroups, the only other value the third Sylow theorem allows. Any two meet trivially, and each contains $p - 1$ elements of order $p$.",
+    "素数 $p < q$ 时，$pq$ 阶非阿贝尔群有一个 $q$ 阶正规子群。如果它的西罗 $p$-子群也是正规的，这个群就是它们的直积，因而是阿贝尔群。所以有 $q$ 个西罗 $p$-子群，这是第三西罗定理允许的唯一另一个值。任意两个的交是平凡的，每个含有 $p - 1$ 个 $p$ 阶元素。",
+  ),
+  generate(rng) {
+    const pairs = primeList(13).flatMap((p) =>
+      primeList(97)
+        .filter((q) => q > p && q % p === 1)
+        .map((q) => [p, q] as [number, number]),
+    );
+    const [p, q] = rng.pick(pairs);
+    const answer = q * (p - 1);
+    return numberProblem({
+      prompt: t(
+        `A nonabelian group has order $${p * q} = ${p} \\cdot ${q}$. How many of its elements have order ${p}?`,
+        `一个非阿贝尔群的阶是 $${p * q} = ${p} \\cdot ${q}$。它有多少个 ${p} 阶元素？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [p - 1, q - 1, q * p - 1, p * (q - 1)],
+      solution: t(
+        `There are ${q} Sylow ${p}-subgroups, meeting only in the identity, and each has ${p - 1} ${p === 2 ? "element" : "elements"} of order ${p}. That makes $${answer}$.`,
+        `有 ${q} 个西罗 ${p}-子群，它们只相交于单位元，每个有 ${p - 1} 个 ${p} 阶元素。总共 $${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
+const orderFromCycleType: KnowledgePointDef = {
+  id: "the-order-of-a-permutation-from-its-cycle-type",
+  title: t("The order of a permutation from its cycle type", "由循环类型求置换的阶"),
+  explanation: t(
+    "Disjoint cycles commute, so a power of a permutation is computed one cycle at a time. A power is the identity exactly when it is the identity on each cycle, which requires the exponent to be a multiple of each cycle length. So the order is the least common multiple of the lengths, and conjugate permutations have the same order.",
+    "不相交的循环可交换，所以置换的幂可以逐个循环计算。一个幂是恒等置换，当且仅当它在每个循环上都是恒等的，这要求指数是每个循环长度的倍数。所以阶是各长度的最小公倍数，共轭的置换有相同的阶。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 9);
+    const b = rng.int(2, 9);
+    const c = rng.int(2, 9);
+    const answer = lcm(lcm(a, b), c);
+    return numberProblem({
+      prompt: t(
+        `A permutation is a product of three disjoint cycles of lengths ${a}, ${b} and ${c}, and fixes every other symbol. Find its order.`,
+        `一个置换是长度为 ${a}、${b}、${c} 的三个不相交循环之积，并固定其他所有符号。求它的阶。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a + b + c, a * b * c, Math.max(a, b, c)],
+      solution: t(`The order is $\\text{lcm}(${a}, ${b}, ${c}) = ${answer}$.`, `阶是 $\\text{lcm}(${a}, ${b}, ${c}) = ${answer}$。`),
+    });
+  },
+};
+
+const polynomialQuotientSize: KnowledgePointDef = {
+  id: "the-size-of-a-quotient-of-a-polynomial-ring",
+  title: t("The size of a quotient of a polynomial ring", "多项式环商环的大小"),
+  explanation: t(
+    "Dividing by a monic polynomial of degree $d$ is always possible over $\\mathbb{Z}_n$, even if $n$ is not prime, because no leading coefficient has to be inverted. So each coset has exactly one representative of degree below $d$. Such a representative is a free choice of $d$ coefficients from $\\mathbb{Z}_n$, which gives $n^d$ elements in the quotient.",
+    "在 $\\mathbb{Z}_n$ 上，除以 $d$ 次首一多项式总是可行的，即使 $n$ 不是素数，因为不需要对首项系数求逆。所以每个陪集恰有一个次数低于 $d$ 的代表元。这样的代表元就是从 $\\mathbb{Z}_n$ 中自由选取 $d$ 个系数，因此商环有 $n^d$ 个元素。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 9);
+    const d = rng.int(2, 5);
+    const c = rng.int(1, n - 1);
+    const answer = n ** d;
+    return numberProblem({
+      prompt: t(
+        `How many elements does ${"$"}${Zn(n)}[x]/\\langle x^{${d}} + ${c} \\rangle$ have?`,
+        `${"$"}${Zn(n)}[x]/\\langle x^{${d}} + ${c} \\rangle$ 有多少个元素？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n * d, n ** (d - 1), n ** (d + 1)],
+      solution: t(
+        `Each coset has one representative of degree below ${d}, with ${d} free coefficients in ${"$"}${Zn(n)}$. That gives $${n}^${d} = ${answer}$.`,
+        `每个陪集有一个次数低于 ${d} 的代表元，它有 ${d} 个可在 ${"$"}${Zn(n)}$ 中自由选取的系数。于是得 $${n}^${d} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const solutionSpaceSize: KnowledgePointDef = {
+  id: "the-size-of-a-solution-space-over-a-finite-field",
+  title: t("The size of a solution space over a finite field", "有限域上解空间的大小"),
+  explanation: t(
+    "The rank-nullity theorem holds over any field. A homogeneous system in $n$ unknowns whose matrix has rank $r$ has a solution space of dimension $n - r$. Over $\\mathbb{Z}_p$, a space of dimension $k$ has exactly $p^k$ vectors, since each of $k$ coordinates is a free choice. So dimension counts become exact element counts.",
+    "秩-零化度定理在任何域上都成立。$n$ 个未知数、矩阵秩为 $r$ 的齐次方程组，解空间的维数是 $n - r$。在 $\\mathbb{Z}_p$ 上，$k$ 维空间恰有 $p^k$ 个向量，因为 $k$ 个坐标都可以自由选择。所以维数的计算就成为元素个数的精确计算。",
+  ),
+  generate(rng) {
+    const p = rng.pick(primeList(13));
+    const n = rng.int(3, 6);
+    const r = rng.int(1, n - 1);
+    const m = r + rng.int(0, 2);
+    const answer = p ** (n - r);
+    const count = n - r === 1 ? `${answer}` : `${p}^{${n - r}} = ${answer}`;
+    return numberProblem({
+      prompt: t(
+        `A homogeneous system of ${m} ${m === 1 ? "equation" : "equations"} in ${n} unknowns over ${"$"}${Zn(p)}$ has a coefficient matrix of rank ${r}. How many solutions does it have?`,
+        `${"$"}${Zn(p)}$ 上有 ${n} 个未知数、${m} 个方程的齐次方程组，系数矩阵的秩是 ${r}。它有多少个解？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [p ** r, p ** n, (n - r) * p, p ** (n - r + 1)],
+      solution: t(
+        `The solution space has dimension $${n} - ${r} = ${n - r}$, so it has $${count}$ vectors.`,
+        `解空间的维数是 $${n} - ${r} = ${n - r}$，所以它有 $${count}$ 个向量。`,
+      ),
+    });
+  },
+};
+
+const productDimension: KnowledgePointDef = {
+  id: "the-dimension-of-a-product-of-abstract-spaces",
+  title: t("The dimension of a product of abstract spaces", "抽象空间之积的维数"),
+  explanation: t(
+    "Abstract vector spaces have dimensions that come from counting free coefficients. Polynomials of degree at most $a$ have $a + 1$ coefficients, because the constant term counts too, and $b \\times c$ matrices have $bc$ entries. A pair drawn from two spaces has all the coordinates of both, so the dimension of a product is the sum of the two dimensions.",
+    "抽象向量空间的维数来自对自由系数的计数。次数不超过 $a$ 的多项式有 $a + 1$ 个系数，因为常数项也算在内，$b \\times c$ 矩阵有 $bc$ 个元素。从两个空间各取一个组成的对，含有两者的全部坐标，所以乘积的维数是两个维数之和。",
+  ),
+  generate(rng) {
+    const a = rng.int(2, 9);
+    const b = rng.int(2, 6);
+    const c = rng.int(2, 6);
+    const answer = a + 1 + b * c;
+    return numberProblem({
+      prompt: t(
+        `Find the dimension of $\\mathbb{P}_{${a}} \\times M_{${b} \\times ${c}}$, where $\\mathbb{P}_{${a}}$ is the space of polynomials of degree at most ${a}.`,
+        `求 $\\mathbb{P}_{${a}} \\times M_{${b} \\times ${c}}$ 的维数，其中 $\\mathbb{P}_{${a}}$ 是次数不超过 ${a} 的多项式空间。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [a + b * c, (a + 1) * b * c, a + 1 + b + c],
+      solution: t(
+        `The dimensions are ${a + 1} and $${b} \\cdot ${c} = ${b * c}$, and they add to $${answer}$.`,
+        `维数分别是 ${a + 1} 和 $${b} \\cdot ${c} = ${b * c}$，相加得 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const shiftedBasisCoordinate: KnowledgePointDef = {
+  id: "a-coordinate-in-a-shifted-polynomial-basis",
+  title: t("A coordinate in a shifted polynomial basis", "平移多项式基下的坐标"),
+  explanation: t(
+    "The polynomials $1, t - c, (t - c)^2$ form a basis of $\\mathbb{P}_2$, and it is well suited to working near $t = c$. Differentiating an expansion $p(t) = x + y(t - c) + z(t - c)^2$ and setting $t = c$ removes every term except $y$. So the coordinate on $t - c$ is the derivative $p'(c)$, and no linear system has to be solved.",
+    "多项式 $1, t - c, (t - c)^2$ 构成 $\\mathbb{P}_2$ 的一组基，它很适合在 $t = c$ 附近使用。对展开式 $p(t) = x + y(t - c) + z(t - c)^2$ 求导并令 $t = c$，除了 $y$ 之外的项都消失了。所以 $t - c$ 上的坐标就是导数 $p'(c)$，不必解线性方程组。",
+  ),
+  generate(rng) {
+    const a = pickNonzero(rng, 5);
+    const b = pickNonzero(rng, 9);
+    const g = pickNonzero(rng, 9);
+    const c = pickNonzero(rng, 5);
+    const answer = 2 * a * c + b;
+    const polynomial = poly([a, "t^2"], [b, "t"], [g, ""]);
+    const linear = `t ${signed(-c)}`;
+    return numberProblem({
+      prompt: t(
+        `Write $p(t) = ${polynomial}$ in the basis $1, ${linear}, (${linear})^2$ of $\\mathbb{P}_2$. Find the coordinate on $${linear}$.`,
+        `把 $p(t) = ${polynomial}$ 写成 $\\mathbb{P}_2$ 的基 $1, ${linear}, (${linear})^2$ 下的形式。求 $${linear}$ 上的坐标。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [b, 2 * a * c, a * c + b, a * c * c + b * c + g],
+      solution: t(
+        `The coordinate is $p'(${c})$. Since $p'(t) = ${poly([2 * a, "t"], [b, ""])}$, this equals $${answer}$.`,
+        `这个坐标是 $p'(${c})$。由于 $p'(t) = ${poly([2 * a, "t"], [b, ""])}$，它等于 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const matrixSubspaceDimension: KnowledgePointDef = {
+  id: "the-dimension-of-a-subspace-of-square-matrices",
+  title: t("The dimension of a subspace of square matrices", "方阵子空间的维数"),
+  explanation: t(
+    "A symmetric matrix is decided by its entries on and above the diagonal, which number $\\frac{n(n + 1)}{2}$. A skew-symmetric matrix has a zero diagonal, because each diagonal entry equals its own negative, so it is decided by the $\\frac{n(n - 1)}{2}$ entries above it. The two dimensions add to $n^2$, since every square matrix splits uniquely into these two kinds.",
+    "对称矩阵由对角线及其上方的元素决定，共 $\\frac{n(n + 1)}{2}$ 个。反对称矩阵的对角线为零，因为每个对角元等于自身的相反数，所以它由对角线上方的 $\\frac{n(n - 1)}{2}$ 个元素决定。两个维数之和是 $n^2$，因为每个方阵都能唯一地分解成这两类之和。",
+  ),
+  generate(rng) {
+    const n = rng.int(2, 25);
+    const symmetric = rng.pick([true, false]);
+    const answer = symmetric ? (n * (n + 1)) / 2 : (n * (n - 1)) / 2;
+    const other = symmetric ? (n * (n - 1)) / 2 : (n * (n + 1)) / 2;
+    return numberProblem({
+      prompt: t(
+        `Find the dimension of the subspace of ${symmetric ? "symmetric" : "skew-symmetric"} matrices in $M_{${n} \\times ${n}}$.`,
+        `求 $M_{${n} \\times ${n}}$ 中${symmetric ? "对称" : "反对称"}矩阵子空间的维数。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [other, n * n, n],
+      solution: t(
+        `A ${symmetric ? "symmetric matrix is decided by its entries on and above the diagonal" : "skew-symmetric matrix has a zero diagonal and is decided by its entries above it"}, and there are $${answer}$ of them.`,
+        `${symmetric ? "对称矩阵由对角线及其上方的元素决定" : "反对称矩阵对角线为零，由对角线上方的元素决定"}，共有 $${answer}$ 个。`,
+      ),
+    });
+  },
+};
+
 /** deeperAbstractAlgebraPoints gives, by topic id, the knowledge points added after an Abstract Algebra topic's own. */
 export const deeperAbstractAlgebraPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "associative-binary-operations": [associativityParameter],
@@ -971,4 +1705,30 @@ export const deeperAbstractAlgebraPoints: Readonly<Record<string, readonly Knowl
   "the-division-ring-of-quaternions": [squareOfAPureQuaternion],
   "inverting-quaternions": [normOfAProduct],
   "linear-independence-in-abstract-vector-spaces": [dependentPolynomials],
+  "introduction-to-binary-operations": [associativityDefect],
+  "commutative-binary-operations": [commutingPairs],
+  "identities-of-binary-operations": [shiftedIdentity],
+  "inverses-under-binary-operations": [noInverse],
+  "matrix-groups": [triangularInverse],
+  "general-groups": [orderFromTwoPowers],
+  "the-order-of-a-group": [orderOfProductWithUnits],
+  "computing-inverses-of-elements-in-zn": [inverseOfSquare],
+  "properties-of-subgroups": [productSetSize],
+  "finite-cyclic-groups": [annihilatedElements],
+  "cyclic-subgroups": [subgroupOfGivenOrder],
+  "generators-of-cyclic-groups": [sumOfGenerators],
+  "universal-property-of-free-groups": [surjectionsFromFree],
+  "presentations-of-groups": [twoRelationsOnOneGenerator],
+  "cyclic-direct-product-groups": [generatorsOfProduct],
+  "torsion-groups": [torsionOrder],
+  "the-center-of-a-group": [centerOfProduct],
+  "conjugation-and-conjugacy-classes": [centralizerFromClass],
+  "the-kernel-of-a-group-homomorphism": [smallestKernel],
+  "the-third-sylow-theorem": [orderPElements],
+  "cycle-types-of-permutations": [orderFromCycleType],
+  "quotient-rings": [polynomialQuotientSize],
+  "vector-spaces-over-finite-fields": [solutionSpaceSize],
+  "introduction-to-abstract-vector-spaces": [productDimension],
+  "bases-in-abstract-vector-spaces": [shiftedBasisCoordinate],
+  "subspaces-of-abstract-vector-spaces": [matrixSubspaceDimension],
 };
