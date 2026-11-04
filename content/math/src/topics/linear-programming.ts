@@ -2,7 +2,8 @@
 // sensitivity, transportation and assignment, network flows, integer programs and matrix games.
 
 import type { Rng, TopicDef } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { t } from "@ga/content";
+import { plane, Q } from "@ga/subject-math";
 
 import { ask, choose, type Pair, point, same, topic } from "../university-kit.ts";
 
@@ -136,6 +137,16 @@ const graphical = topic(
         const answer = Math.max(...values);
         const best = corners[values.indexOf(answer)] as readonly [number, number];
         const objective = `${term(p, "x")} + ${term(q, "y")}`;
+        const svg = plane({ xMin: -1, xMax: a + 1, yMin: -1, yMax: a + 1, labelEvery: 2 }, [
+          { kind: "polygon", points: [[0, 0], ...corners] },
+        ]);
+        const figure = {
+          svg,
+          alt: t(
+            `The feasible region, a polygon with corners at the origin, (${b}, 0), (${b}, ${a - b}), (${a - c}, ${c}) and (0, ${c}).`,
+            `可行域是一个多边形，顶点是原点，(${b}, 0)，(${b}, ${a - b})，(${a - c}, ${c}) 和 (0, ${c})。`,
+          ),
+        };
         return ask(
           [
             `Maximize $${objective}$ subject to $x + y \\le ${a}$, $x \\le ${b}$, $y \\le ${c}$, $x, y \\ge 0$. What is the maximum value?`,
@@ -147,6 +158,7 @@ const graphical = topic(
             `The corners other than the origin are $(${b}, 0)$, $(${b}, ${a - b})$, $(${a - c}, ${c})$ and $(0, ${c})$. The largest value, ${answer}, occurs at $(${best[0]}, ${best[1]})$.`,
             `除原点外，顶点是 $(${b}, 0)$，$(${b}, ${a - b})$，$(${a - c}, ${c})$ 和 $(0, ${c})$。最大值 ${answer} 在 $(${best[0]}, ${best[1]})$ 处取得。`,
           ],
+          figure,
         );
       },
     ),
