@@ -49,13 +49,18 @@ The report lists outline topics missing from each course and the findings of heu
   - *visual topic without a figure*: titles that say "graphing calculator" or "significant figures", where the problems use tables or no picture.
   - *canonical answer appears in the prompt*: questions where the answer is an equal quantity named in the prompt, such as $\sin T = \cos S$ or $\varnothing$ in the input instructions.
   - *topic in no course*: older topics whose ids must stay. Most are computed foundations, because course topics list them as prerequisites.
-  - *duplicate topic titles*: `units-of-time` and `units-of-time-and-elapsed-time`, and `mean-of-a-data-set` and `the-mean-of-a-data-set`, are different topics with one outline title, and no course contains both.
+  - *duplicate topic titles*: an exam topic shares its outline title with the Fundamentals topic it builds on (about 60 findings). Also `units-of-time` and `units-of-time-and-elapsed-time`, and `mean-of-a-data-set` and `the-mean-of-a-data-set`, are different topics with one outline title, and no course contains both.
 
 ## Open Gaps
 
 The board tracks whether a course exists, not whether it is finished. Measured on 2026-11-03:
 
-- **SAT and ACT Math Prep are not exam-style.** 233 of the 292 SAT Prep topics and 237 of the 321 ACT Prep topics are shared with Fundamentals, and they are ordinary lessons. The SAT outline asks for practice only, with problems that mirror the exam.
+- **SAT and ACT Math Prep are exam-style in their questions, not yet in everything.** 252 of the 284 SAT Prep topics and 345 of the 347 ACT Prep topics are exam topics (`exam.ts`), and what is left is:
+  - Lessons still show an explanation and a worked example, because the engine has no practice-only mode. The SAT outline asks for practice only, so the explanation is a short tip.
+  - 61 exam topics, most of them in geometry, ask about a figure in words and draw none, unlike the real test.
+  - About 124 ACT exam topics reuse the SAT generators through `multipleChoice`, so a learner taking both courses sees similar questions.
+  - Options are shuffled, while the real tests list numeric options in order.
+  - The ACT outline lists "Solving Exponential Equations" twice, and the course has it once, so the course has 347 topics against 348 outline entries.
 - **University courses have almost no figures.** About 1% of the topics of Linear Algebra, Multivariable Calculus and Probability & Statistics have one, and none in the Multivariable Calculus topics on vector fields, level curves and surfaces.
 - **University topics are shallow.** They average about 2.0 knowledge points, against the 3 to 4 of the design.
 - **Some questions test little.** A few reduce a skill to reading a number off the prompt, such as a cone's parametrization where the learner only computes $8u$.
@@ -87,8 +92,8 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Mathematics for Machine Learning | Calculus II, Linear Algebra | done | | 12 units, 301 topics (283 reused, 18 new) |
 | Mathematical Methods for the Physical Sciences I, II | Calculus II | done | | 13 units (294 topics) and 12 units (238 topics) |
 | Abstract Algebra | Methods of Proof, Linear Algebra | done | | 9 units, 129 topics |
-| SAT Math Fundamentals, SAT Math Prep | Algebra II | done | | Assigned slot **F**. 2 courses: SAT Math Fundamentals (rebuilt to the full outline: 17 units, 658 topics, `sat-fundamentals-*.ts` for the 76 new ones) and SAT Math Prep (rebuilt to the full outline: 4 units, 292 topics, `sat-prep-*.ts` for the 32 new ones) |
-| ACT Math Fundamentals, ACT Math Prep | Precalculus | done | | Assigned slot **G**. 2 courses: ACT Math Fundamentals (rebuilt to the full outline: 7 units, 888 topics) and ACT Math Prep (rebuilt to the full outline: 6 units, 321 topics); `act-*.ts` hold the 27 new topics and `act-fundamentals-*.ts` 29 more for outline titles that had no topic of their own; most outline titles the audit lists have an existing topic with the same mathematics, but not the exam-style practice the Prep outlines ask for (see *Open Gaps*) |
+| SAT Math Fundamentals, SAT Math Prep | Algebra II | done | | Assigned slot **F**. 2 courses: SAT Math Fundamentals (rebuilt to the full outline: 17 units, 658 topics, `sat-fundamentals-*.ts` for the 76 new ones) and SAT Math Prep (rebuilt as exam topics: 4 units, 284 topics, `sat-exam-*.ts`, with 32 ordinary topics kept) |
+| ACT Math Fundamentals, ACT Math Prep | Precalculus | done | | Assigned slot **G**. 2 courses: ACT Math Fundamentals (rebuilt to the full outline: 7 units, 888 topics) and ACT Math Prep (rebuilt as exam topics: 6 units, 347 topics, `act-exam-*.ts`, with 2 ordinary topics kept); `act-*.ts` hold 27 topics and `act-fundamentals-*.ts` 29 more for outline titles that had no topic of their own (see *Open Gaps* for what Prep still lacks) |
 
 ## Requests
 
