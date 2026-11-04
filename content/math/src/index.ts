@@ -83,6 +83,7 @@ import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
 import { deeperCalculusIPoints } from "./topics/deeper-calculus-i.ts";
 import { deeperCalculusIIPoints } from "./topics/deeper-calculus-ii.ts";
+import { deeperDifferentialEquationsPoints } from "./topics/deeper-differential-equations.ts";
 import { deeperLinearAlgebraPoints } from "./topics/deeper-linear-algebra.ts";
 import { deeperMultivariableCalculusPoints } from "./topics/deeper-multivariable-calculus.ts";
 import { deeperProbabilityStatisticsPoints } from "./topics/deeper-probability-statistics.ts";
@@ -250,6 +251,7 @@ function finished(topic: TopicDef): TopicDef {
       ...topic.knowledgePoints,
       ...(deeperCalculusIPoints[topic.id] ?? []),
       ...(deeperCalculusIIPoints[topic.id] ?? []),
+      ...(deeperDifferentialEquationsPoints[topic.id] ?? []),
       ...(deeperLinearAlgebraPoints[topic.id] ?? []),
       ...(deeperMultivariableCalculusPoints[topic.id] ?? []),
       ...(deeperProbabilityStatisticsPoints[topic.id] ?? []),
