@@ -86,6 +86,7 @@ import { deeperCalculusIIPoints } from "./topics/deeper-calculus-ii.ts";
 import { deeperDifferentialEquationsPoints } from "./topics/deeper-differential-equations.ts";
 import { deeperDiscreteMathematicsPoints } from "./topics/deeper-discrete-mathematics.ts";
 import { deeperLinearAlgebraPoints } from "./topics/deeper-linear-algebra.ts";
+import { deeperMethodsOfProofPoints } from "./topics/deeper-methods-of-proof.ts";
 import { deeperMultivariableCalculusPoints } from "./topics/deeper-multivariable-calculus.ts";
 import { deeperProbabilityStatisticsPoints } from "./topics/deeper-probability-statistics.ts";
 import { differentialEquationsBvpTopics } from "./topics/differential-equations-bvp.ts";
@@ -255,6 +256,7 @@ function finished(topic: TopicDef): TopicDef {
       ...(deeperDifferentialEquationsPoints[topic.id] ?? []),
       ...(deeperDiscreteMathematicsPoints[topic.id] ?? []),
       ...(deeperLinearAlgebraPoints[topic.id] ?? []),
+      ...(deeperMethodsOfProofPoints[topic.id] ?? []),
       ...(deeperMultivariableCalculusPoints[topic.id] ?? []),
       ...(deeperProbabilityStatisticsPoints[topic.id] ?? []),
       ...(figureReadingPoints[topic.id] ?? []),
