@@ -178,8 +178,8 @@ export const actOwnData: Record<string, ExamSpec["make"]> = {
         `A mean times the number of values gives the total: $${n}(${m}) = ${n * m}$.`,
         `平均数乘以个数得到总和：$${n}(${m}) = ${n * m}$。`,
       );
-    const [p, d] = [rng.int(2, 6), rng.int(1, 3)];
-    const o = m + 20;
+    const [p, d] = [rng.int(2, 6), rng.int(1, 2)];
+    const o = rng.int(60, 75);
     const [a, b] = [o + n * d, o - p * d];
     return ask(
       rng,
@@ -748,7 +748,7 @@ export const actOwnData: Record<string, ExamSpec["make"]> = {
     );
   },
   "Partitioning a Total in a Given Ratio": (rng, hard) => {
-    const [a, b, c, k] = [rng.int(1, 6), rng.int(7, 11), rng.int(2, 6), rng.int(3, 25)];
+    const [a, b, c, k] = [rng.int(1, 6), rng.pick([7, 11, 13]), rng.int(2, 6), rng.int(3, 25)];
     if (!hard)
       return ask(
         rng,
@@ -762,7 +762,7 @@ export const actOwnData: Record<string, ExamSpec["make"]> = {
     const T = (a + b + c) * k;
     return ask(
       rng,
-      `A $${T}$-inch wire is cut into three pieces in the ratio $${a}:${b}:${c}$. How many inches longer is the longest piece than the shortest?`,
+      `A wire $${T}$ inches long is cut into three pieces in the ratio $${a}:${b}:${c}$. How many inches longer is the longest piece than the shortest?`,
       `一根 $${T}$ 英寸的金属丝按 $${a}:${b}:${c}$ 剪成三段。最长的一段比最短的一段长多少英寸？`,
       (b - Math.min(a, c)) * k,
       [b * k, Math.min(a, c) * k, (b - Math.min(a, c)) * (k + 1)],
@@ -960,7 +960,7 @@ export const actOwnData: Record<string, ExamSpec["make"]> = {
     if (!hard)
       return ask(
         rng,
-        `A $\\$${k}$ bill has a $${p}\\%$ tip added. What is the total, in dollars?`,
+        `A bill of $\\$${k}$ has a $${p}\\%$ tip added. What is the total, in dollars?`,
         `一张 $\\$${k}$ 的账单加 $${p}\\%$ 小费。总额是多少美元？`,
         k + (k * p) / 100,
         [k + p, (k * p) / 100, k - (k * p) / 100],
@@ -1010,7 +1010,7 @@ export const actOwnData: Record<string, ExamSpec["make"]> = {
     if (!hard)
       return ask(
         rng,
-        `A $\\$${n}$ stock rises $${p}\\%$ one month and falls $${q}\\%$ the next. What is its value then, in dollars?`,
+        `A stock worth $\\$${n}$ rises $${p}\\%$ one month and falls $${q}\\%$ the next. What is its value then, in dollars?`,
         `一只价值 $\\$${n}$ 的股票一个月涨 $${p}\\%$，下个月跌 $${q}\\%$。此时价值多少美元？`,
         after,
         [((100 + p - q) * n) / 100, ((100 + p) * n) / 100, ((100 - q) * n) / 100],

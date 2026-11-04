@@ -296,7 +296,7 @@ export const actOwnGeometry: Record<string, ExamSpec["make"]> = {
     const [h, s] = [rng.int(3, 9), rng.int(2, 6)];
     return ask(
       rng,
-      `A $${h}$-foot post casts a $${s}$-foot shadow at the same moment a tree casts a $${s * k * 2}$-foot shadow. How tall is the tree, in feet?`,
+      `A post $${h}$ feet tall casts a shadow $${s}$ feet long at the same moment a tree casts a shadow $${s * k * 2}$ feet long. How tall is the tree, in feet?`,
       `同一时刻，一根 $${h}$ 英尺的柱子投下 $${s}$ 英尺的影子，一棵树投下 $${s * k * 2}$ 英尺的影子。树高多少英尺？`,
       h * k * 2,
       [h + s * k * 2 - s, s * k * 2, h * k],
