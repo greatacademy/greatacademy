@@ -289,6 +289,37 @@ export const actExamFunctions: ExamSpec[] = [
       );
     },
   ),
+  logTips(
+    "Finding Inputs of Exponential Functions",
+    "求指数函数的输入值",
+    ["solving-exponential-equations-using-logarithms", "negative-exponents"],
+    (rng, hard) => {
+      const [a, b, c, x] = [rng.int(2, 9), rng.pick([2, 3, 5]), rng.int(1, 40), rng.int(1, 4)];
+      if (!hard) {
+        const v = a * b ** x + c;
+        return ask(
+          rng,
+          `The function $f$ is defined by $f(x) = ${a} \\cdot ${b}^x + ${c}$. For what value of $x$ is $f(x) = ${v}$?`,
+          `函数 $f$ 定义为 $f(x) = ${a} \\cdot ${b}^x + ${c}$。$x$ 取何值时 $f(x) = ${v}$？`,
+          x,
+          [x + 1, x + 2, b ** x],
+          `Undo the outer steps first: $${a} \\cdot ${b}^x = ${v - c}$, then $${b}^x = ${b ** x}$. So $x = ${x}$.`,
+          `先逐步还原外层：$${a} \\cdot ${b}^x = ${v - c}$，再得 $${b}^x = ${b ** x}$。所以 $x = ${x}$。`,
+        );
+      }
+      const [p, q] = [rng.int(1, 5), rng.int(1, 6)];
+      const meet = q + 2 * p;
+      return ask(
+        rng,
+        `The graphs of $g(x) = ${b}^{3x - ${q}}$ and $h(x) = ${b * b}^{x + ${p}}$ meet at one point. What is the $x$-coordinate of that point?`,
+        `$g(x) = ${b}^{3x - ${q}}$ 与 $h(x) = ${b * b}^{x + ${p}}$ 的图象交于一点。这一点的 $x$ 坐标是多少？`,
+        meet,
+        [q + p, Q.of(p + q, 2), 2 * meet],
+        `Write both with base $${b}$: $${b * b}^{x + ${p}} = ${b}^{2x + ${2 * p}}$. Equal bases need equal exponents: $3x - ${q} = 2x + ${2 * p}$, so $x = ${meet}$.`,
+        `都写成底数 $${b}$：$${b * b}^{x + ${p}} = ${b}^{2x + ${2 * p}}$。底数相同则指数相等：$3x - ${q} = 2x + ${2 * p}$，所以 $x = ${meet}$。`,
+      );
+    },
+  ),
   logTips("Evaluating Logarithms", "对数求值", ["converting-between-exponential-and-logarithmic-form"], (rng, hard) => {
     const [b, n, m] = [rng.int(2, 7), rng.int(2, 4), rng.int(1, 3)];
     if (!hard)

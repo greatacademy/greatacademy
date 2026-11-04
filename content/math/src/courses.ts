@@ -16820,6 +16820,7 @@ export const actMathPrep: CourseDef = {
             "act-exam-evaluating-exponential-functions",
             "act-exam-constructing-exponential-models",
             "act-exam-identifying-features-of-exponential-functions",
+            "act-exam-finding-inputs-of-exponential-functions",
             "act-exam-evaluating-logarithms",
             "act-exam-applying-logarithm-properties",
             "act-exam-relating-exponential-and-logarithmic-forms",

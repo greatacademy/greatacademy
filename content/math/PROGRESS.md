@@ -55,8 +55,6 @@ The report lists outline topics missing from each course and the findings of heu
 
 The board tracks whether a course exists, not whether it is finished. Measured on 2026-11-03:
 
-- **SAT and ACT Math Prep are exam-style in their questions, not yet in everything.** 252 of the 284 SAT Prep topics and 345 of the 347 ACT Prep topics are exam topics (`exam.ts`), and what is left is:
-  - The ACT outline lists "Solving Exponential Equations" twice, and the course has it once, so the course has 347 topics against 348 outline entries.
 - **University courses have almost no figures.** About 1% of the topics of Linear Algebra, Multivariable Calculus and Probability & Statistics have one, and none in the Multivariable Calculus topics on vector fields, level curves and surfaces.
 - **University topics are shallow.** They average about 2.0 knowledge points, against the 3 to 4 of the design.
 - **Some questions test little.** A few reduce a skill to reading a number off the prompt, such as a cone's parametrization where the learner only computes $8u$.
@@ -89,7 +87,7 @@ Status: `done`, `in progress`, `open` (claimable now), or `blocked` (prerequisit
 | Mathematical Methods for the Physical Sciences I, II | Calculus II | done | | 13 units (294 topics) and 12 units (238 topics) |
 | Abstract Algebra | Methods of Proof, Linear Algebra | done | | 9 units, 129 topics |
 | SAT Math Fundamentals, SAT Math Prep | Algebra II | done | | Assigned slot **F**. 2 courses: SAT Math Fundamentals (rebuilt to the full outline: 17 units, 658 topics, `sat-fundamentals-*.ts` for the 76 new ones) and SAT Math Prep (rebuilt as exam topics: 4 units, 284 topics, `sat-exam-*.ts`, with 32 ordinary topics kept) |
-| ACT Math Fundamentals, ACT Math Prep | Precalculus | done | | Assigned slot **G**. 2 courses: ACT Math Fundamentals (rebuilt to the full outline: 7 units, 888 topics) and ACT Math Prep (rebuilt as exam topics: 6 units, 347 topics, `act-exam-*.ts`, with 2 ordinary topics kept); `act-*.ts` hold 27 topics and `act-fundamentals-*.ts` 29 more for outline titles that had no topic of their own (see *Open Gaps* for what Prep still lacks) |
+| ACT Math Fundamentals, ACT Math Prep | Precalculus | done | | Assigned slot **G**. 2 courses: ACT Math Fundamentals (rebuilt to the full outline: 7 units, 888 topics) and ACT Math Prep (rebuilt as exam topics: 6 units, 348 topics, `act-exam-*.ts`, with 2 ordinary topics kept; the outline lists "Solving Exponential Equations" in modules 1.1 and 3.16, and 3.16 holds "Finding Inputs of Exponential Functions" because a course lists a topic once); `act-*.ts` hold 27 topics and `act-fundamentals-*.ts` 29 more for outline titles that had no topic of their own |
 
 ## Requests
 
