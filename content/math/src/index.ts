@@ -83,6 +83,7 @@ import { compoundInequalityTopics } from "./topics/compound-inequalities.ts";
 import { decimalAndPercentTopics } from "./topics/decimals-and-percents.ts";
 import { deeperLinearAlgebraPoints } from "./topics/deeper-linear-algebra.ts";
 import { deeperMultivariableCalculusPoints } from "./topics/deeper-multivariable-calculus.ts";
+import { deeperProbabilityStatisticsPoints } from "./topics/deeper-probability-statistics.ts";
 import { differentialEquationsBvpTopics } from "./topics/differential-equations-bvp.ts";
 import { differentialEquationsFirstOrderTopics } from "./topics/differential-equations-first-order.ts";
 import { differentialEquationsLaplaceTopics } from "./topics/differential-equations-laplace.ts";
@@ -247,6 +248,7 @@ function finished(topic: TopicDef): TopicDef {
       ...topic.knowledgePoints,
       ...(deeperLinearAlgebraPoints[topic.id] ?? []),
       ...(deeperMultivariableCalculusPoints[topic.id] ?? []),
+      ...(deeperProbabilityStatisticsPoints[topic.id] ?? []),
       ...(figureReadingPoints[topic.id] ?? []),
     ],
   };
