@@ -77,6 +77,15 @@ export type Option = Coefficient | string;
 
 const latexOf = (o: Option): string => (typeof o === "string" ? o : (o instanceof Q ? o : Q.of(o)).toLatex());
 
+/** concluded ends a solution by stating the answer, unless it already explains itself and names it. */
+function concluded(solution: Text, answer: Text): Text {
+  if (solution.en.length >= 25 && solution.en.includes(answer.en.replace(/\.$/, ""))) return solution;
+  return t(
+    `${solution.en} So the answer is ${answer.en.replace(/\.$/, "")}.`,
+    `${solution["zh-CN"]} 所以答案是 ${answer["zh-CN"].replace(/。$/, "")}。`,
+  );
+}
+
 /** mc builds a four-option question from a correct option and its distractors, in shuffled order so that the position of the answer tells nothing; missing distractors are filled with nearby values. */
 export function mc(rng: Rng, prompt: Text, correct: Option, wrong: readonly Option[], solution: Text, figure?: Figure): Problem {
   const key = latexOf(correct);
@@ -103,7 +112,10 @@ export function mc(rng: Rng, prompt: Text, correct: Option, wrong: readonly Opti
   }
   const ordered = rng.shuffle([key, ...rest]);
   const options = ordered.map((l) => t(`$${l}$`, `$${l}$`));
-  return { ...choiceProblem({ prompt, options, correct: ordered.indexOf(key), solution }), ...(figure && { figure }) };
+  return {
+    ...choiceProblem({ prompt, options, correct: ordered.indexOf(key), solution: concluded(solution, t(`$${key}$`, `$${key}$`)) }),
+    ...(figure && { figure }),
+  };
 }
 
 /** words builds a four-option question whose options are sentences or phrases, in shuffled order. */
@@ -111,12 +123,19 @@ export function words(rng: Rng, prompt: Text, correct: Text, wrong: readonly Tex
   const seen = new Set([correct.en]);
   const rest = wrong.filter((w) => !seen.has(w.en) && Boolean(seen.add(w.en))).slice(0, 3);
   const options = rng.shuffle([correct, ...rest]);
-  return { ...choiceProblem({ prompt, options, correct: options.indexOf(correct), solution }), ...(figure && { figure }) };
+  return {
+    ...choiceProblem({ prompt, options, correct: options.indexOf(correct), solution: concluded(solution, correct) }),
+    ...(figure && { figure }),
+  };
 }
 
 /** spr builds a student-produced response: a number typed in, as a fraction or a decimal. */
 export function spr(prompt: Text, answer: Coefficient, wrong: readonly Coefficient[], solution: Text, figure?: Figure): Problem {
-  return { ...numberProblem({ prompt, answer, wrong, solution }), ...(figure && { figure }) };
+  const key = latexOf(answer);
+  return {
+    ...numberProblem({ prompt, answer, wrong, solution: concluded(solution, t(`$${key}$`, `$${key}$`)) }),
+    ...(figure && { figure }),
+  };
 }
 
 /** sg writes a signed term after an expression: sg(3) is "+ 3" and sg(-3) is "- 3". */
@@ -234,4 +253,30 @@ export function sketchFigure(s: Sketch, alt: Text): Figure {
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" fill="none" stroke="currentColor">${[...segs, ...circles, ...labels].join("")}</svg>`,
     alt,
   };
+}
+
+/** ask builds a four-option question from English and Chinese strings, the short form used across ACT Math Prep. */
+export function ask(
+  rng: Rng,
+  en: string,
+  zh: string,
+  correct: Option,
+  wrong: readonly Option[],
+  solEn: string,
+  solZh: string,
+  figure?: Figure,
+): Problem {
+  return mc(rng, t(en, zh), correct, wrong, t(solEn, solZh), figure);
+}
+
+/** asChoice gives a typed-answer problem four options, using its listed mistakes as distractors; every question on the ACT is multiple choice. */
+export function asChoice(rng: Rng, p: Problem): Problem {
+  if (p.answer.checker !== "number") return p;
+  const value = Q.parse((p.answer.expected as { value: string }).value);
+  return mc(rng, p.prompt, value, p.wrong ?? [], p.solution, p.figure);
+}
+
+/** multipleChoice retitles a spec for another exam outline and makes every one of its questions multiple choice. */
+export function multipleChoice(spec: ExamSpec, en: string, zh: string): ExamSpec {
+  return { ...spec, title: t(en, zh), make: (rng, hard) => asChoice(rng, spec.make(rng, hard)) };
 }

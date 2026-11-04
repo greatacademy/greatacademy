@@ -1,6 +1,13 @@
 import type { TopicDef } from "@ga/content";
 
 import { examTopic } from "../exam.ts";
+import { actExamAlgebra } from "./act-exam-algebra.ts";
+import { actExamFoundations } from "./act-exam-foundations.ts";
+import { actExamFunctions } from "./act-exam-functions.ts";
+import { actExamGeometry } from "./act-exam-geometry.ts";
+import { actExamNumbers } from "./act-exam-numbers.ts";
+import { actExamShared } from "./act-exam-shared.ts";
+import { actExamStatistics } from "./act-exam-statistics.ts";
 import { satExamAdvanced1 } from "./sat-exam-advanced-1.ts";
 import { satExamAdvanced2 } from "./sat-exam-advanced-2.ts";
 import { satExamAdvanced3 } from "./sat-exam-advanced-3.ts";
@@ -28,4 +35,13 @@ export const examTopics: TopicDef[] = [
     ...satExamGeometry1,
     ...satExamGeometry2,
   ].map((spec) => examTopic("sat", spec)),
+  ...[
+    ...actExamAlgebra,
+    ...actExamFoundations,
+    ...actExamFunctions,
+    ...actExamGeometry,
+    ...actExamNumbers,
+    ...actExamShared,
+    ...actExamStatistics,
+  ].map((spec) => examTopic("act", spec)),
 ];
