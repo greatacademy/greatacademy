@@ -404,7 +404,7 @@ const limsup = topic(
 
 const absoluteConvergence = topic(
   "absolute-and-conditional-convergence-of-series",
-  ["Absolute and Conditional Convergence", "绝对收敛和条件收敛"],
+  ["Alternating Series: Convergence Type and Error", "交错级数的收敛类型和误差"],
   ["Classify an alternating series and bound its error.", "判断交错级数的收敛类型并估计误差。"],
   ["harmonic-series-and-p-series", "cauchy-sequences"],
   [["harmonic-series-and-p-series", 0.4]],
