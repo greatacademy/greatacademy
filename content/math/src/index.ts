@@ -94,6 +94,7 @@ import { discreteMathematicsRandomVariableTopics } from "./topics/discrete-mathe
 import { discreteMathematicsRecurrenceTopics } from "./topics/discrete-mathematics-recurrences.ts";
 import { discreteMathematicsSeriesTopics } from "./topics/discrete-mathematics-series.ts";
 import { equationTopics } from "./topics/equations.ts";
+import { examTopics } from "./topics/exam-topics.ts";
 import { exponentialFunctionTopics } from "./topics/exponential-functions.ts";
 import { exponentTopics } from "./topics/exponents.ts";
 import { expressionTopics } from "./topics/expressions.ts";
@@ -443,6 +444,7 @@ export const math: SubjectDef = {
     ...actFundamentalsFigureUnitTopics,
     ...actGeometryDataTopics,
     ...satMathStrategyTopics,
+    ...examTopics,
   ].map((topic) => polishTopic(topic.encompasses.length ? topic : { ...topic, encompasses: inferredEncompassings[topic.id] ?? [] })),
   courses: mathCourses,
   checkers: mathCheckers,
