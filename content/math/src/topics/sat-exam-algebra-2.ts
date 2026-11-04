@@ -206,7 +206,7 @@ export const satExamAlgebra2: ExamSpec[] = [
           `顾客支付${p.fixed["zh-CN"]} $${f}$ 美元，每${p.one["zh-CN"]}另付 $${m}$ 美元。${pr["zh-CN"]}顾客对 $n$ ${p.unit["zh-CN"]}共支付 $${T}$ 美元。哪个方程表示这一情境？`,
         ),
         `${f} + ${r}n = ${T}`,
-        [`${r} + ${f}n = ${T}`, `${f + r}n = ${T}`, `${f}n - ${r} = ${T}`],
+        [`${r} + ${f}n = ${T}`, `${f + r}n = ${T}`, `${f}n - ${r} = ${T}`, `${f} + ${r + 1}n = ${T}`],
         t(
           `The fee is paid once, so it is the constant. The rate${hard ? ` after the coupon is $${m} - ${d} = ${r}$ and it` : ""} multiplies $n$. Hence $${f} + ${r}n = ${T}$.`,
           `费用只付一次，所以是常数。${hard ? `优惠后的单价是 $${m} - ${d} = ${r}$，` : ""}单价乘以 $n$。因此 $${f} + ${r}n = ${T}$。`,
@@ -525,10 +525,11 @@ export const satExamAlgebra2: ExamSpec[] = [
   }),
   fnTips("Working With Function Composition", "函数复合运算", ["function-composition"], (rng, hard) => {
     const m = rng.int(2, 6);
-    const b = rng.int(-6, 8);
+    const b0 = rng.nonZero(-6, 8);
     const n = rng.int(2, 5);
-    const c = rng.int(-5, 6);
+    const c = rng.nonZero(-5, 6);
     const a = rng.int(1, 5);
+    const b = m * c + b0 === 0 ? b0 + 1 : b0;
     const f = `f(x) = ${m}x ${sg(b)}`;
     const g = `g(x) = ${n}x ${sg(c)}`;
     const inner = n * a + c;
@@ -557,6 +558,7 @@ export const satExamAlgebra2: ExamSpec[] = [
         `${out}x ${sg(cst + 1)}`,
         `${m + n}x ${sg(cst)}`,
         `${out + 1}x ${sg(cst)}`,
+        `${out + 2}x ${sg(cst + 2)}`,
       ],
       t(
         `Substitute: $f(g(x)) = ${m}(${n}x ${sg(c)}) ${sg(b)} = ${out}x ${sg(m * c)} ${sg(b)} = ${out}x ${sg(cst)}$.`,

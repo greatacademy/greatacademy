@@ -62,7 +62,7 @@ export const satExamAlgebra4: ExamSpec[] = [
         rng,
         t(`What is the solution $(x, y)$ to the system?\n$$${sys}$$`, `方程组的解 $(x, y)$ 是什么？\n$$${sys}$$`),
         `(${x0}, ${y0})`,
-        [`(${y0}, ${x0})`, `(${x0}, ${T - y0})`, `(${x0 + 1}, ${y0})`, `(${x0}, ${y0 + 1})`],
+        [`(${y0}, ${x0})`, `(${x0}, ${T - y0})`, `(${x0 + 1}, ${y0})`, `(${x0}, ${y0 + 1})`, `(${x0 + 1}, ${y0 + 2})`],
         t(
           `Substitute $y$: $${c}x + ${m}x ${sg(b)} = ${T}$, so $x = ${x0}$ and $y = ${y0}$.`,
           `代入 $y$：$${c}x + ${m}x ${sg(b)} = ${T}$，所以 $x = ${x0}$，$y = ${y0}$。`,
@@ -631,7 +631,7 @@ export const satExamAlgebra4: ExamSpec[] = [
             `某社团有 $${f}$ 美元，每卖一件物品赚 $${r}$ 美元。它希望总共${w["zh-CN"]}有 $${T}$ 美元。设卖出 $n$ 件，哪个不等式表示这一情况？`,
           ),
           `${f} + ${r}n ${sym} ${T}`,
-          [`${f} + ${r}n ${flip} ${T}`, `${r} + ${f}n ${sym} ${T}`, `${f}n + ${r} ${flip} ${T}`],
+          [`${f} + ${r}n ${flip} ${T}`, `${r} + ${f}n ${sym} ${T}`, `${f}n + ${r} ${flip} ${T}`, `${f + r}n ${sym} ${T}`],
           t(
             `The money so far plus the earnings is $${f} + ${r}n$, and ${w.en} gives $${sym}$.`,
             `已有的钱加上收入是 $${f} + ${r}n$，“${w["zh-CN"]}”对应 $${sym}$。`,
