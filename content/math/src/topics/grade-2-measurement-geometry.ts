@@ -64,13 +64,13 @@ const meter: LengthUnit = { one: "meter", many: "meters", zh: "米", symbol: "m"
 const unitCount = (n: number, unit: LengthUnit) => `${n} ${n === 1 ? unit.one : unit.many}`;
 
 /** smallObjects are things short enough to lay along a ruler. */
-const smallObjects: readonly { readonly en: string; readonly zh: string }[] = [
-  { en: "crayon", zh: "蜡笔" },
-  { en: "pencil", zh: "铅笔" },
-  { en: "ribbon", zh: "丝带" },
-  { en: "paper strip", zh: "纸条" },
-  { en: "stick", zh: "木棍" },
-  { en: "straw", zh: "吸管" },
+const smallObjects: readonly { readonly en: string; readonly zh: string; readonly measure: string }[] = [
+  { en: "crayon", zh: "蜡笔", measure: "支" },
+  { en: "pencil", zh: "铅笔", measure: "支" },
+  { en: "ribbon", zh: "丝带", measure: "条" },
+  { en: "paper strip", zh: "纸条", measure: "张" },
+  { en: "stick", zh: "木棍", measure: "根" },
+  { en: "straw", zh: "吸管", measure: "根" },
 ];
 
 const measuringInchesCentimeters = earlyTopic(
@@ -96,7 +96,7 @@ const measuringInchesCentimeters = earlyTopic(
         const length = rng.int(2, max);
         const object = rng.pick(smallObjects);
         return whole(
-          [`How long is this ${object.en}, in ${unit.many}?`, `这个${object.zh}有多长？（单位：${unit.zh}）`],
+          [`How long is this ${object.en}, in ${unit.many}?`, `这${object.measure}${object.zh}有多长？（单位：${unit.zh}）`],
           length,
           [max, length + 2],
           [
@@ -121,7 +121,7 @@ const measuringInchesCentimeters = earlyTopic(
         const length = rng.int(2, max - start);
         const object = rng.pick(smallObjects);
         return whole(
-          [`How long is this ${object.en}, in ${unit.many}?`, `这个${object.zh}有多长？（单位：${unit.zh}）`],
+          [`How long is this ${object.en}, in ${unit.many}?`, `这${object.measure}${object.zh}有多长？（单位：${unit.zh}）`],
           length,
           [start + length, start, length + 1],
           [
@@ -493,7 +493,7 @@ const estimatingLengths = earlyTopic(
           rng,
           t(
             `${name} estimates how long or tall ${item.en} is. Which estimate makes the most sense?`,
-            `${name} 估计${item.zh}的长度或高度。哪个估计最合理？`,
+            `${name} 估计${item.zh}有多长或多高。哪个估计最合理？`,
           ),
           line(item.right, item.unit),
           [line(w1[0], w1[1]), line(w2[0], w2[1]), line(item.right * 20, item.unit)],
@@ -590,7 +590,7 @@ const comparingLengths = earlyTopic(
         return whole(
           [
             `A second ${object.en} is ${unitCount(other, unit)} long. How much longer is it than the ${object.en} shown on the ruler, in ${unit.many}?`,
-            `另一个${object.zh}长 ${other} ${unit.zh}。它比尺子上的${object.zh}长多少${unit.zh}？`,
+            `另一${object.measure}${object.zh}长 ${other} ${unit.zh}。它比尺子上的${object.zh}长多少${unit.zh}？`,
           ],
           diff,
           [length, other, length + other],
@@ -850,7 +850,7 @@ const amAndPm = earlyTopic(
           { en: "wake up for school", zh: "起床上学", hour: 6, minute: 45, am: true },
           { en: "ride the bus to school", zh: "坐校车上学", hour: 7, minute: 50, am: true },
           { en: "start the first lesson of the school day", zh: "上第一节课", hour: 8, minute: 15, am: true },
-          { en: "play at morning recess", zh: "上午课间玩耍", hour: 10, minute: 20, am: true },
+          { en: "play at morning recess", zh: "课间玩耍", hour: 10, minute: 20, am: true },
           { en: "eat lunch", zh: "吃午饭", hour: 12, minute: 15, am: false },
           { en: "come home from school", zh: "放学回家", hour: 3, minute: 30, am: false },
           { en: "go to soccer practice after school", zh: "放学后去踢足球", hour: 4, minute: 15, am: false },
@@ -863,7 +863,7 @@ const amAndPm = earlyTopic(
         const elsewhere = act.hour <= 3 || act.hour === 12 ? 9 : 2;
         return pickChoice(
           rng,
-          t(`Which is the most likely time for ${name} to ${act.en}?`, `${name} 最有可能在什么时间${act.zh}？`),
+          t(`Which is the most likely time for ${name} to ${act.en}?`, `${name} 什么时间最有可能${act.zh}？`),
           clock(act.hour, act.minute, act.am),
           [clock(act.hour, act.minute, !act.am), clock(elsewhere, act.minute, !act.am), clock(elsewhere + 1, act.minute, !act.am)],
           act.am
@@ -1251,7 +1251,7 @@ const pictureGraphs = earlyTopic(
         return whole(
           [
             `${story.en} How many more ${story.thing} does row ${labels[hi]} have than row ${labels[lo]}?`,
-            `${story.zh} ${labels[hi]} 行比 ${labels[lo]} 行多多少${story.zhThing}？`,
+            `${story.zh}${labels[hi]} 行比 ${labels[lo]} 行多多少${story.zhThing}？`,
           ],
           answer,
           [vi + vj, Math.max(vi, vj)],
@@ -1280,10 +1280,10 @@ const pictureGraphs = earlyTopic(
         const answer = shown.reduce((s, v) => s + v, 0);
         return whole(
           all
-            ? [`${story.en} How many ${story.thing} are there in all?`, `${story.zh} 一共有多少${story.zhThing}？`]
+            ? [`${story.en} How many ${story.thing} are there in all?`, `${story.zh}一共有多少${story.zhThing}？`]
             : [
                 `${story.en} How many ${story.thing} do rows ${labels[i]} and ${labels[j]} have together?`,
-                `${story.zh} ${labels[i]} 行和 ${labels[j]} 行一共有多少${story.zhThing}？`,
+                `${story.zh}${labels[i]} 行和 ${labels[j]} 行一共有多少${story.zhThing}？`,
               ],
           answer,
           all
@@ -1842,7 +1842,7 @@ const halvesThirdsFourths = earlyTopic(
         const parts = rng.int(2, 4);
         const shaded = rng.int(1, parts - 1);
         const object = rng.pick([
-          { en: "pizza", zh: "比萨", round: true },
+          { en: "pizza", zh: "披萨", round: true },
           { en: "pie", zh: "馅饼", round: true },
           { en: "cake", zh: "蛋糕", round: true },
           { en: "flag", zh: "旗子", round: false },
@@ -1862,7 +1862,7 @@ const halvesThirdsFourths = earlyTopic(
         const figure = object.round ? slicedCircleFigure(parts, shaded) : sharedRectangle(parts, shaded);
         return pickChoice(
           rng,
-          t(`This ${object.en} is cut into equal shares. How much of it is shaded?`, `这个${object.zh}被平均分了。涂色的部分占多少？`),
+          t(`This ${object.en} is cut into equal shares. How much of it is shaded?`, `${object.zh}被平均分了。涂色的部分占多少？`),
           options[0] as Text,
           options.slice(1, 4),
           t(
@@ -1887,7 +1887,7 @@ const halvesThirdsFourths = earlyTopic(
         const answer = parts - eaten;
         const food = rng.pick([
           { en: "sandwich", zh: "三明治" },
-          { en: "pizza", zh: "比萨" },
+          { en: "pizza", zh: "披萨" },
           { en: "pie", zh: "馅饼" },
           { en: "brownie", zh: "巧克力蛋糕" },
           { en: "pancake", zh: "煎饼" },

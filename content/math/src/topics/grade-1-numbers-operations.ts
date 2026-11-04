@@ -1081,7 +1081,7 @@ const takingAwayStories = earlyTopic(
   [
     earlyPoint(
       "some-go-away",
-      ["Some go away", "走了一些"],
+      ["Some go away", "少了一些"],
       [
         "In this kind of story you start with some things and then a few are eaten, lost or given away. The amount shrinks, so you subtract. Act it out by putting out the first number of counters and taking some of them away. Whatever is still on the table when you stop is the answer to the question.",
         "这种故事里，开始有一些东西，后来吃掉了、丢了或送走了几个。数量变少了，所以用减法。摆出第一个数量的圆片，再拿走一些。停下来时桌上还剩多少，就是答案。",
@@ -1099,7 +1099,7 @@ const takingAwayStories = earlyTopic(
           ],
           answer,
           [a + b, a, b],
-          [`Some go away, so subtract: $${a} - ${b} = ${answer}$.`, `走了一些，所以相减：$${a} - ${b} = ${answer}$。`],
+          [`Some go away, so subtract: $${a} - ${b} = ${answer}$.`, `少了一些，所以相减：$${a} - ${b} = ${answer}$。`],
         );
       },
     ),
@@ -1112,7 +1112,7 @@ const takingAwayStories = earlyTopic(
       ],
       (rng) => {
         const color = rng.pick([
-          { one: "red", other: "blue", zh1: "红色", zh2: "蓝色" },
+          { one: "red", other: "green", zh1: "红色", zh2: "绿色" },
           { one: "big", other: "small", zh1: "大", zh2: "小" },
           { one: "green", other: "yellow", zh1: "绿色", zh2: "黄色" },
         ]);
@@ -1404,7 +1404,7 @@ const addingTensToTwoDigit = earlyTopic(
       ["Adding whole tens", "加整十数"],
       [
         "When you add a round number to a two-digit number, only the tens change. The ones have nothing to add to, so they stay as they are. For $34 + 20$, the 3 tens and 2 tens make 5 tens, and the 4 ones stay put, which gives 54. Blocks make this easy to see, as only the rods change.",
-        "两位数加整十数，只有十位变。一没有东西可加，所以保持不变。算 $34 + 20$ 时，3 个十和 2 个十是 5 个十，4 个一不变，得到 54。用积木很容易看出，只有长条变了。",
+        "两位数加整十数，只有十位变。个位没有东西可加，所以保持不变。算 $34 + 20$ 时，3 个十和 2 个十是 5 个十，4 个一不变，得到 54。用积木很容易看出，只有长条变了。",
       ],
       (rng) => {
         const at = rng.int(1, 7);
@@ -1442,7 +1442,7 @@ const addingTensToTwoDigit = earlyTopic(
           [a + 10 * b, a - b, tens + ao + b],
           [
             `The ones add up to ${ao + b}, and the ${plural(tens, "ten")} stay${tens === 1 ? "s" : ""} the same, which gives ${answer}.`,
-            `一相加是 ${ao + b}，${tens} 个十不变，得到 ${answer}。`,
+            `个位相加是 ${ao + b}，${tens} 个十不变，得到 ${answer}。`,
           ],
           blocksFigure(0, tens, ao),
         );
@@ -1453,7 +1453,7 @@ const addingTensToTwoDigit = earlyTopic(
 
 const tenMoreTenLess = earlyTopic(
   "ten-more-and-ten-less",
-  ["Ten More and Ten Less", "多十和少十"],
+  ["Ten More and Ten Less", "多 10 和少 10"],
   [
     "Find the number that is 10 more or 10 less than a two-digit number without counting.",
     "不用数，就能说出比一个两位数多 10 或少 10 的数。",
@@ -1463,10 +1463,10 @@ const tenMoreTenLess = earlyTopic(
   [
     earlyPoint(
       "ten-more",
-      ["Ten more", "多十"],
+      ["Ten more", "多 10"],
       [
         "Ten more is one more rod. The tens digit goes up by one, and the ones digit does not change at all. So ten more than 47 is 57. You can see the pattern on a hundred chart, where ten more is the number straight below. There is no need to count on ten times, as one look at the tens will do.",
-        "多十就是多一根长条。十位加 1，个位完全不变。所以比 47 多十的数是 57。在百数表上也能看出规律，多十的数就在正下方。不需要往后数十次，只要看一下十位就行。",
+        "多 10 就是多一根长条。十位加 1，个位完全不变。所以比 47 多 10 的数是 57。在百数表上也能看出规律，多 10 的数就在正下方。不需要往后数十次，只要看一下十位就行。",
       ],
       (rng) => {
         const n = rng.int(11, 89);
@@ -1485,10 +1485,10 @@ const tenMoreTenLess = earlyTopic(
     ),
     earlyPoint(
       "ten-less",
-      ["Ten less", "少十"],
+      ["Ten less", "少 10"],
       [
         "Ten less is one rod fewer. The tens digit goes down by one, and the ones digit does not change. So ten less than 47 is 37. On a hundred chart, this is the number straight above. A common mix-up is to change the ones digit, which would give one less rather than ten less, a much smaller change.",
-        "少十就是少一根长条。十位减 1，个位不变。所以比 47 少十的数是 37。在百数表上，就是正上方的数。常见的混淆是去改个位，那样是少一，不是少十，变化小得多。",
+        "少 10 就是少一根长条。十位减 1，个位不变。所以比 47 少 10 的数是 37。在百数表上，就是正上方的数。常见的混淆是去改个位，那样是少 1，不是少 10，变化小得多。",
       ],
       (rng) => {
         const n = rng.int(20, 99);

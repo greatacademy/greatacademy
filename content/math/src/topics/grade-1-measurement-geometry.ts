@@ -156,7 +156,7 @@ const nonStandardUnits = earlyTopic(
         return whole(
           [
             `Each section of these bars is one ${unit.en} long. How long is bar ${label}, in ${unit.many}?`,
-            `这些长条的每一格长一${unit.zh}。长条 ${label} 有多长，是几${unit.zh}？`,
+            `这些长条的每一格和一${unit.zh}一样长。长条 ${label} 有多长，是几${unit.zh}？`,
           ],
           answer,
           [asksFirst ? b : a, a + b, answer + 1],
@@ -187,7 +187,7 @@ const nonStandardUnits = earlyTopic(
         return whole(
           [
             `Each section is one ${unit.en} long. How many ${unit.many} longer is bar ${longLabel} than bar ${shortLabel}?`,
-            `每一格长一${unit.zh}。长条 ${longLabel} 比长条 ${shortLabel} 长几${unit.zh}？`,
+            `每一格和一${unit.zh}一样长。长条 ${longLabel} 比长条 ${shortLabel} 长几${unit.zh}？`,
           ],
           answer,
           [longer, shorter, longer + shorter],
@@ -429,7 +429,7 @@ function readingFromGraph(rng: Rng, mark: GraphMark, values: readonly number[], 
     const label = graphLabels[i] as string;
     const others = values.filter((v) => v !== answer);
     return whole(
-      [`${lead[0]} How many ${story.many} does ${label} have?`, `${lead[1]} ${label} 有多少${story.zhOne}？`],
+      [`${lead[0]} How many ${story.many} does ${label} have?`, `${lead[1]}${label} 有多少${story.zhOne}？`],
       answer,
       [...others, answer + 1],
       [
@@ -446,7 +446,7 @@ function readingFromGraph(rng: Rng, mark: GraphMark, values: readonly number[], 
     rng,
     t(
       `${lead[0]} Which has the ${asksMost ? "most" : "fewest"} ${story.many}?`,
-      `${lead[1]} 哪个的${story.zhMark}${asksMost ? "最多" : "最少"}？`,
+      `${lead[1]}哪一组的${story.zhMark}${asksMost ? "最多" : "最少"}？`,
     ),
     letter(correct),
     graphLabels.filter((label) => label !== correct).map(letter),
@@ -469,7 +469,7 @@ function comparingOnGraph(rng: Rng, mark: GraphMark, values: readonly number[], 
   const lb = graphLabels[j] as string;
   if (rng.bool()) {
     return whole(
-      [`${lead[0]} How many ${story.many} do ${la} and ${lb} have together?`, `${lead[1]} ${la} 和 ${lb} 一共有多少${story.zhOne}？`],
+      [`${lead[0]} How many ${story.many} do ${la} and ${lb} have together?`, `${lead[1]}${la} 和 ${lb} 一共有多少${story.zhOne}？`],
       a + b,
       [a, b, Math.abs(a - b)],
       [`${la} has ${a} and ${lb} has ${b}, and $${a} + ${b} = ${a + b}$.`, `${la} 有 ${a}，${lb} 有 ${b}，$${a} + ${b} = ${a + b}$。`],
@@ -483,7 +483,7 @@ function comparingOnGraph(rng: Rng, mark: GraphMark, values: readonly number[], 
   return whole(
     [
       `${lead[0]} How many more ${story.many} does ${bigLabel} have than ${smallLabel}?`,
-      `${lead[1]} ${bigLabel} 比 ${smallLabel} 多多少${story.zhOne}？`,
+      `${lead[1]}${bigLabel} 比 ${smallLabel} 多多少${story.zhOne}？`,
     ],
     big - small,
     [big, small, big + small],
@@ -827,7 +827,7 @@ const piecePath = (d: string): string => `<path d="${d}" class="accent" fill="cu
 const compositions = [
   {
     body: piecePolygon("70,20 130,20 130,80 70,80") + piecePolygon("190,20 250,20 250,80 190,80"),
-    pieces: ["two same-size squares", "两个一样大的正方形"],
+    pieces: ["two same-size squares", "两个一样大的正方形拼在一起"],
     answer: ["A rectangle", "长方形"],
     wrong: [
       ["A triangle", "三角形"],
@@ -842,7 +842,7 @@ const compositions = [
   },
   {
     body: piecePolygon("60,20 60,80 120,80") + piecePolygon("200,20 260,20 260,80"),
-    pieces: ["two same-size triangles, joined along their longest sides", "两个一样大的三角形，沿最长的边拼起来"],
+    pieces: ["two same-size triangles, joined along their longest sides", "两个一样大的三角形沿最长的边拼在一起"],
     answer: ["A square", "正方形"],
     wrong: [
       ["A circle", "圆"],
@@ -857,7 +857,7 @@ const compositions = [
   },
   {
     body: piecePath("M 110 20 A 40 40 0 0 0 110 100 Z") + piecePath("M 190 20 A 40 40 0 0 1 190 100 Z"),
-    pieces: ["two half circles, joined along their straight sides", "两个半圆，沿直边拼起来"],
+    pieces: ["two half circles, joined along their straight sides", "两个半圆沿直边拼在一起"],
     answer: ["A circle", "圆"],
     wrong: [
       ["A square", "正方形"],
@@ -873,7 +873,7 @@ const compositions = [
   },
   {
     body: piecePolygon("30,70 60,20 110,20 140,70") + piecePolygon("180,20 290,20 260,70 210,70"),
-    pieces: ["two same-size pieces, joined along their longest sides", "两个一样大的图形，沿最长的边拼起来"],
+    pieces: ["two same-size pieces, joined along their longest sides", "两个一样大的小块沿最长的边拼在一起"],
     answer: ["A hexagon", "六边形"],
     wrong: [
       ["A triangle", "三角形"],
@@ -888,7 +888,7 @@ const compositions = [
   },
   {
     body: piecePolygon("60,50 120,50 120,110 60,110") + piecePolygon("190,70 250,70 220,20"),
-    pieces: ["a triangle set on top of a square", "把一个三角形放在一个正方形上面"],
+    pieces: ["a triangle set on top of a square", "一个三角形放在一个正方形上面，拼在一起"],
     answer: ["A pentagon", "五边形"],
     wrong: [
       ["A circle", "圆"],
@@ -908,7 +908,7 @@ const compositions = [
       piecePolygon("110,30 150,30 150,70 110,70") +
       piecePolygon("180,30 220,30 220,70 180,70") +
       piecePolygon("250,30 290,30 290,70 250,70"),
-    pieces: ["four same-size squares, in two rows of two", "四个一样大的正方形，排成两行，每行两个"],
+    pieces: ["four same-size squares, in two rows of two", "四个一样大的正方形排成两行、每行两个，拼在一起"],
     answer: ["A square", "正方形"],
     wrong: [
       ["A triangle", "三角形"],
@@ -1002,16 +1002,16 @@ function cutBarsFigure(labels: readonly string[], rows: readonly (readonly numbe
 
 /** sharedObjects are things that can be cut into equal shares, round or not. */
 const sharedObjects = [
-  { en: "pizza", zh: "披萨", round: true },
-  { en: "pie", zh: "馅饼", round: true },
-  { en: "round cake", zh: "圆蛋糕", round: true },
-  { en: "sandwich", zh: "三明治", round: false },
-  { en: "sheet of paper", zh: "纸", round: false },
-  { en: "brownie", zh: "布朗尼", round: false },
-  { en: "pancake", zh: "煎饼", round: true },
-  { en: "cookie", zh: "饼干", round: true },
-  { en: "chocolate bar", zh: "巧克力", round: false },
-  { en: "piece of toast", zh: "吐司", round: false },
+  { en: "pizza", zh: "披萨", round: true, measure: "个" },
+  { en: "pie", zh: "馅饼", round: true, measure: "个" },
+  { en: "round cake", zh: "圆蛋糕", round: true, measure: "个" },
+  { en: "sandwich", zh: "三明治", round: false, measure: "个" },
+  { en: "sheet of paper", zh: "纸", round: false, measure: "张" },
+  { en: "brownie", zh: "布朗尼", round: false, measure: "块" },
+  { en: "pancake", zh: "煎饼", round: true, measure: "张" },
+  { en: "cookie", zh: "饼干", round: true, measure: "块" },
+  { en: "chocolate bar", zh: "巧克力", round: false, measure: "块" },
+  { en: "piece of toast", zh: "吐司", round: false, measure: "片" },
 ];
 
 const halvesAndFourths = earlyTopic(
@@ -1129,12 +1129,12 @@ const halvesAndFourths = earlyTopic(
           const parts = rng.pick([2, 4]);
           const name = parts === 2 ? ["halves", "二分之一"] : ["fourths", "四分之一"];
           return whole(
-            [`How many ${name[0]} make one whole ${object.en}?`, `多少个${name[1]}合成一整个${object.zh}？`],
+            [`How many ${name[0]} make one whole ${object.en}?`, `多少个${name[1]}合成一整${object.measure}${object.zh}？`],
             parts,
             [parts === 2 ? 4 : 2, parts + 1, 1],
             [
               `Cutting into ${name[0]} makes ${parts} equal shares, and together they make the whole ${object.en}.`,
-              `分成${name[1]}就是平均分成 ${parts} 份，合起来就是整个${object.zh}。`,
+              `分成${name[1]}就是平均分成 ${parts} 份，合起来就是整${object.measure}${object.zh}。`,
             ],
           );
         }
@@ -1145,7 +1145,7 @@ const halvesAndFourths = earlyTopic(
           rng,
           t(
             `Which share of the same ${object.en} is ${asksBigger ? "bigger" : "smaller"}?`,
-            `同一个${object.zh}，哪一份${asksBigger ? "更大" : "更小"}？`,
+            `同一${object.measure}${object.zh}，哪一份${asksBigger ? "更大" : "更小"}？`,
           ),
           asksBigger ? halfOption : fourthOption,
           [asksBigger ? fourthOption : halfOption, t("They are the same size", "它们一样大"), t("It depends on the color", "要看颜色")],

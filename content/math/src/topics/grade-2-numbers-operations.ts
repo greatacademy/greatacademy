@@ -610,7 +610,7 @@ const numberNames = earlyTopic(
       ["From a number to words", "由数写出读法"],
       [
         "To say a three-digit number, read the hundreds digit and say the word hundred, and then say the rest as a two-digit number. A zero in the tens place is not said in English, and it is read as a linking word in Chinese. Check your words by writing the digits again from what you said.",
-        "读三位数时，先读百位上的数字，加上“百”字，再把后面两位当作两位数来读。十位上的 0，在英语里不读，在中文里读作“零”。读完之后，再按读法写出数字，检查一下。",
+        "读三位数时，先读百位上的数字，加上“百”字，再把后面两位当作两位数来读。十位上的 0 读作“零”。读完之后，再按读法写出数字，检查一下。",
       ],
       (rng) => {
         const h = rng.int(1, 8);
@@ -833,7 +833,7 @@ const addingWithinHundred = earlyTopic(
       ["Adding tens and ones", "十和一分别相加"],
       [
         "A two-digit number is some tens and some ones, so you can add the tens together and the ones together. Keeping the two kinds apart makes the work small: two little sums rather than one big one. Then put the two results back together. Your answer should be a bit larger than the bigger number you started with.",
-        "两位数由几个十和几个一组成，所以可以十和十相加，一和一相加。两种分开，计算就变小了：两个小的加法，而不是一个大的。最后把两个结果合起来。答案应该比开始时较大的那个数大一些。",
+        "两位数由几个十和几个一组成，所以可以整十和整十相加，个位和个位相加。两种分开，计算就变小了：两个小的加法，而不是一个大的。最后把两个结果合起来。答案应该比开始时较大的那个数大一些。",
       ],
       (rng) => {
         const at = rng.int(1, 7);
@@ -849,7 +849,7 @@ const addingWithinHundred = earlyTopic(
           [answer + 10, answer - 10, at + bt + ao + bo],
           [
             `Tens: $${10 * at} + ${10 * bt} = ${10 * (at + bt)}$. Ones: $${ao} + ${bo} = ${ao + bo}$. Together they make ${answer}.`,
-            `十：$${10 * at} + ${10 * bt} = ${10 * (at + bt)}$。一：$${ao} + ${bo} = ${ao + bo}$。合起来是 ${answer}。`,
+            `整十：$${10 * at} + ${10 * bt} = ${10 * (at + bt)}$。个位：$${ao} + ${bo} = ${ao + bo}$。合起来是 ${answer}。`,
           ],
         );
       },
@@ -859,7 +859,7 @@ const addingWithinHundred = earlyTopic(
       ["Trading ten ones for a ten", "把十个一换成一个十"],
       [
         "If you have more than nine ones, you have enough to make a new ten. Take ten of the small squares, trade them for one rod, and put it with the other tens. What is left of the ones stays in the ones place. The number has not changed, only the way it is shown, and now it is easy to read.",
-        "如果一超过九个，就够组成一个新的十了。拿十个小方块，换成一根长条，和别的十放在一起。剩下的一还在个位。这个数并没有变，变的只是表示方法，现在就很容易读了。",
+        "如果个位上的一超过九个，就够组成一个新的十了。拿十个小方块，换成一根长条，和别的十放在一起。剩下的一还在个位。这个数并没有变，变的只是表示方法，现在就很容易读了。",
       ],
       (rng) => {
         const tens = rng.int(2, 6);
@@ -882,7 +882,7 @@ const addingWithinHundred = earlyTopic(
       ["Adding with a new ten", "相加时产生新的十"],
       [
         "Sometimes the ones add up to ten or more, such as 7 and 8 making 15. That 15 is a ten and 5 ones, so the ten goes with the other tens. Add the tens as usual and then count one more. Forgetting that extra ten is the most common slip, so check that your answer makes sense.",
-        "有时一加起来达到十或更多，比如 7 加 8 得 15。15 是一个十和 5 个一，所以这个十要和别的十放在一起。先像平常一样把十相加，再多算一个十。忘记这个十是最常见的差错，所以要检查答案合不合理。",
+        "有时个位加起来达到十或更多，比如 7 加 8 得 15。15 是一个十和 5 个一，所以这个十要和别的十放在一起。先像平常一样把十相加，再多算一个十。忘记这个十是最常见的差错，所以要检查答案合不合理。",
       ],
       (rng) => {
         const ao = rng.int(2, 9);
@@ -898,7 +898,7 @@ const addingWithinHundred = earlyTopic(
           [answer - 10, answer + 10, at + bt + ao + bo],
           [
             `Ones: $${ao} + ${bo} = ${ao + bo}$, which is ${ao + bo === 10 ? "a new ten" : `a new ten and ${ao + bo - 10} more`}. Tens: $${10 * at} + ${10 * bt} + 10 = ${10 * (at + bt + 1)}$. Together they make ${answer}.`,
-            `一：$${ao} + ${bo} = ${ao + bo}$，是${ao + bo === 10 ? "一个新的十" : `一个新的十和 ${ao + bo - 10}`}。十：$${10 * at} + ${10 * bt} + 10 = ${10 * (at + bt + 1)}$。合起来是 ${answer}。`,
+            `个位：$${ao} + ${bo} = ${ao + bo}$，是${ao + bo === 10 ? "一个新的十" : `一个新的十和 ${ao + bo - 10}`}。十位：$${10 * at} + ${10 * bt} + 10 = ${10 * (at + bt + 1)}$。合起来是 ${answer}。`,
           ],
         );
       },
@@ -921,7 +921,7 @@ const subtractingWithinHundred = earlyTopic(
       ["Taking away tens and ones", "十和一分别相减"],
       [
         "To subtract a two-digit number, take away its tens from the tens and its ones from the ones. When there are enough ones to take, this works straight away. Then put the tens and ones that remain together. You can check by adding your answer to the number you took away, which should bring you back to where you began.",
-        "减两位数时，十减十，一减一。如果一够减，直接就能算。再把剩下的十和一合起来。可以把答案和减去的数相加来检验，应该回到开始的那个数。",
+        "减两位数时，十位减十位，个位减个位。如果个位够减，直接就能算。再把剩下的十和一合起来。可以把答案和减去的数相加来检验，应该回到开始的那个数。",
       ],
       (rng) => {
         const at = rng.int(3, 9);
@@ -937,7 +937,7 @@ const subtractingWithinHundred = earlyTopic(
           [a + b, answer + 10, answer - 10],
           [
             `Tens: $${at * 10} - ${bt * 10} = ${(at - bt) * 10}$. Ones: $${ao} - ${bo} = ${ao - bo}$. Together they make ${answer}.`,
-            `十：$${at * 10} - ${bt * 10} = ${(at - bt) * 10}$。一：$${ao} - ${bo} = ${ao - bo}$。合起来是 ${answer}。`,
+            `整十：$${at * 10} - ${bt * 10} = ${(at - bt) * 10}$。个位：$${ao} - ${bo} = ${ao - bo}$。合起来是 ${answer}。`,
           ],
         );
       },
@@ -947,7 +947,7 @@ const subtractingWithinHundred = earlyTopic(
       ["Trading a ten for ten ones", "把一个十换成十个一"],
       [
         "If there are not enough ones to take away, open up one of the tens. Trade one rod for ten small squares, and add those to the ones you already have. You now have one ten fewer and ten ones more, and the number itself has not changed. Now there are enough ones, and the subtraction can go ahead.",
-        "如果一不够减，就打开一个十。把一根长条换成十个小方块，和原来的一放在一起。现在少了一个十，多了十个一，这个数本身没有变。这样一就够减了，可以接着算。",
+        "如果个位不够减，就打开一个十。把一根长条换成十个小方块，和原来的一放在一起。现在少了一个十，多了十个一，这个数本身没有变。这样一就够减了，可以接着算。",
       ],
       (rng) => {
         const at = rng.int(2, 9);
@@ -976,7 +976,7 @@ const subtractingWithinHundred = earlyTopic(
       ["Subtracting with a trade", "需要换的减法"],
       [
         "Look at the ones first. If the top ones are fewer than the ones being taken away, trade a ten, so that the top has ten more ones and one less ten. Then subtract the ones and the tens. A common slip is to take the smaller digit from the larger one, whichever it belongs to, and that gives a wrong answer.",
-        "先看个位。如果上面的一比要减去的一少，就换一个十，这样上面多了十个一，少了一个十。再分别减一和减十。常见的差错是不管哪个在上，都用大数字减小数字，这样答案就错了。",
+        "先看个位。如果上面个位的数比要减去的数小，就换一个十，这样上面多了十个一，少了一个十。再分别减个位和十位。常见的差错是不管哪个在上，都用大数字减小数字，这样答案就错了。",
       ],
       (rng) => {
         const at = rng.int(3, 9);
@@ -992,7 +992,7 @@ const subtractingWithinHundred = earlyTopic(
           [10 * (at - bt) + (bo - ao), answer + 10, answer - 10],
           [
             `Trade a ten: ${a} is ${plural(at - 1, "ten")} and ${ao + 10} ones. Ones: $${ao + 10} - ${bo} = ${ao + 10 - bo}$. Tens: $${at - 1} - ${bt} = ${at - 1 - bt}$. The answer is ${answer}.`,
-            `换一个十：${a} 是 ${at - 1} 个十和 ${ao + 10} 个一。一：$${ao + 10} - ${bo} = ${ao + 10 - bo}$。十：$${at - 1} - ${bt} = ${at - 1 - bt}$。答案是 ${answer}。`,
+            `换一个十：${a} 是 ${at - 1} 个十和 ${ao + 10} 个一。个位：$${ao + 10} - ${bo} = ${ao + 10 - bo}$。十位：$${at - 1} - ${bt} = ${at - 1 - bt}$。答案是 ${answer}。`,
           ],
         );
       },
@@ -1029,7 +1029,7 @@ const addingSeveral = earlyTopic(
           [answer - 10, answer + 10, a + b],
           [
             `The tens make ${tens} and the ones make ${single}, and $${tens} + ${single} = ${answer}$.`,
-            `十加起来是 ${tens}，一加起来是 ${single}，$${tens} + ${single} = ${answer}$。`,
+            `整十加起来是 ${tens}，个位加起来是 ${single}，$${tens} + ${single} = ${answer}$。`,
           ],
         );
       },
@@ -1053,7 +1053,7 @@ const addingSeveral = earlyTopic(
           [answer - 10, answer + 10, answer - (nums[3] as number)],
           [
             `The tens make ${tens} and the ones make ${single}, and $${tens} + ${single} = ${answer}$.`,
-            `十加起来是 ${tens}，一加起来是 ${single}，$${tens} + ${single} = ${answer}$。`,
+            `整十加起来是 ${tens}，个位加起来是 ${single}，$${tens} + ${single} = ${answer}$。`,
           ],
         );
       },
@@ -1169,7 +1169,7 @@ const addingWithModels = earlyTopic(
       ["Making a new ten", "凑成新的十"],
       [
         "If the ones add up to ten or more, you can bundle ten of them into a new ten, just as you did with smaller numbers. Add the ones and make the trade, then add the tens and that new ten, and finally add the hundreds. Picturing the blocks helps you see where the new ten has to go.",
-        "如果一加起来达到十或更多，就可以把其中十个捆成一个新的十，和小一些的数一样。先加一并换好，再把十和这个新的十相加，最后加百。在心里想着积木，就能看出这个新的十该放在哪里。",
+        "如果个位加起来达到十或更多，就可以把其中十个捆成一个新的十，和小一些的数一样。先加个位并换好，再把十和这个新的十相加，最后加百。在心里想着积木，就能看出这个新的十该放在哪里。",
       ],
       (rng) => {
         const h = rng.int(1, 3);
@@ -1187,7 +1187,7 @@ const addingWithModels = earlyTopic(
           [answer - 10, answer + 100, answer + 10],
           [
             `The blocks show ${n}. The ones make $${single} + ${bo} = ${single + bo}$, which is a new ten and ${plural(single + bo - 10, "one")}. So the total has ${placeWords(h + bh, tens + bt + 1, single + bo - 10)}, which is ${answer}.`,
-            `积木表示 ${n}。一相加是 $${single} + ${bo} = ${single + bo}$，是一个新的十和 ${single + bo - 10} 个一。所以总数有 ${h + bh} 个百、${tens + bt + 1} 个十和 ${single + bo - 10} 个一，也就是 ${answer}。`,
+            `积木表示 ${n}。个位相加是 $${single} + ${bo} = ${single + bo}$，是一个新的十和 ${single + bo - 10} 个一。所以总数有 ${h + bh} 个百、${tens + bt + 1} 个十和 ${single + bo - 10} 个一，也就是 ${answer}。`,
           ],
           blocksFigure(h, tens, single),
         );
