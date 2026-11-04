@@ -2451,6 +2451,863 @@ const trigonometricNorm: KnowledgePointDef = {
   },
 };
 
+// ---------------------------------------------------------------------------
+// Third pass
+// ---------------------------------------------------------------------------
+
+/** rootFactor writes the factor of a characteristic polynomial for one eigenvalue, with its multiplicity. */
+const rootFactor = (value: number, multiplicity: number) =>
+  `(${poly([1, "x"], [-value, ""])})${multiplicity === 1 ? "" : `^{${multiplicity}}`}`;
+/** sumOfDiagonal adds the diagonal entries of a square matrix. */
+const sumOfDiagonal = (m: Grid) => m.reduce((total, row, i) => total + (row[i] ?? 0), 0);
+/** range1to9 lists the integers from 1 to 9. */
+const range1to9 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+/** distinctNonzero picks several different nonzero integers of size at most r. */
+const distinctNonzero = (rng: Rng, r: number, count: number) => {
+  const chosen: number[] = [];
+  while (chosen.length < count) {
+    const value = nonzero(rng, r);
+    if (!chosen.includes(value)) chosen.push(value);
+  }
+  return chosen;
+};
+
+const numeratorDeterminant: KnowledgePointDef = {
+  id: "the-numerator-determinant-in-cramers-rule",
+  title: t("The numerator determinant in Cramer's rule", "克拉默法则中分子的行列式"),
+  explanation: t(
+    "Cramer's rule says that an unknown of the system $A\\mathbf{x} = \\mathbf{b}$ equals $\\frac{\\det A_j}{\\det A}$, where $A_j$ is the matrix $A$ with its $j$th column replaced by $\\mathbf{b}$. The rule can be read backwards as well. If the value of an unknown and the determinant of $A$ are known, the determinant of $A_j$ is their product, and it can be found without seeing a single entry of either matrix.",
+    "克拉默法则指出，方程组 $A\\mathbf{x} = \\mathbf{b}$ 的未知数等于 $\\frac{\\det A_j}{\\det A}$，其中 $A_j$ 是把 $A$ 的第 $j$ 列换成 $\\mathbf{b}$ 得到的矩阵。这个法则也可以反过来读。如果知道未知数的值和 $A$ 的行列式，$A_j$ 的行列式就是它们的积，不必看到两个矩阵的任何元素就能求出。",
+  ),
+  generate(rng) {
+    const d = nonzero(rng, 12);
+    const k = nonzero(rng, 12);
+    const j = rng.int(1, 3);
+    const answer = d * k;
+    return numberProblem({
+      prompt: t(
+        `A system $A\\mathbf{x} = \\mathbf{b}$ of three equations has $\\det A = ${d}$, and its unique solution has $x_${j} = ${k}$. Let $A_${j}$ be $A$ with column ${j} replaced by $\\mathbf{b}$. Find $\\det A_${j}$.`,
+        `三个方程的方程组 $A\\mathbf{x} = \\mathbf{b}$ 满足 $\\det A = ${d}$，它的唯一解满足 $x_${j} = ${k}$。设 $A_${j}$ 是把 $A$ 的第 ${j} 列换成 $\\mathbf{b}$ 得到的矩阵。求 $\\det A_${j}$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-answer, d + k, answer + 1, 2 * answer, answer - 1],
+      solution: t(
+        `By Cramer's rule, $x_${j} = \\frac{\\det A_${j}}{\\det A}$. So $\\det A_${j} = ${inParens(k)} \\cdot ${inParens(d)} = ${answer}$.`,
+        `由克拉默法则，$x_${j} = \\frac{\\det A_${j}}{\\det A}$。所以 $\\det A_${j} = ${inParens(k)} \\cdot ${inParens(d)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const determinantAfterOperations: KnowledgePointDef = {
+  id: "the-determinant-after-a-sequence-of-row-operations",
+  title: t("The determinant after a sequence of row operations", "一系列行变换后的行列式"),
+  explanation: t(
+    "Each kind of row operation has its own effect on a determinant, and in a sequence the effects simply multiply. Swapping two rows changes the sign, and multiplying a row by $c$ multiplies the determinant by $c$. Adding a multiple of one row to another changes nothing at all, however large that multiple is. So in a long sequence, only the swaps and the scalings need to be tracked, and the order does not matter.",
+    "每种行变换对行列式都有各自的影响，在一系列变换中这些影响直接相乘。交换两行改变符号，把一行乘以 $c$ 使行列式乘以 $c$。把一行的倍数加到另一行则完全不改变行列式，不管这个倍数多大。所以在一长串变换中，只需跟踪交换和数乘，顺序无关紧要。",
+  ),
+  generate(rng) {
+    const d = nonzero(rng, 9);
+    const c = rng.int(2, 6);
+    const m = nonzero(rng, 7);
+    const swaps = rng.int(1, 2);
+    const sign = swaps === 1 ? -1 : 1;
+    const answer = sign * c * d;
+    const moves =
+      swaps === 1
+        ? ["swap rows 1 and 2", "交换第 1、2 行"]
+        : ["swap rows 1 and 2, then swap rows 2 and 3", "交换第 1、2 行，再交换第 2、3 行"];
+    return numberProblem({
+      prompt: t(
+        `A $3 \\times 3$ matrix has determinant $${d}$. In turn, ${moves[0]}, multiply row 3 by ${c}, and add $${m}$ times row 1 to row 2. Find the new determinant.`,
+        `一个 $3 \\times 3$ 矩阵的行列式是 $${d}$。依次${moves[1]}，把第 3 行乘以 ${c}，再把第 1 行的 $${m}$ 倍加到第 2 行。求新的行列式。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-answer, answer * m, answer + m, d, c + d],
+      solution: t(
+        `${swaps === 1 ? "The swap changes the sign" : "The two swaps cancel"}, the scaling multiplies by ${c}, and adding a multiple of a row changes nothing. So the result is $${answer}$.`,
+        `${swaps === 1 ? "交换改变符号" : "两次交换相互抵消"}，数乘使行列式乘以 ${c}，加上一行的倍数不改变行列式。所以结果是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const equalOffDiagonalSingular: KnowledgePointDef = {
+  id: "the-parameter-that-makes-an-equal-off-diagonal-matrix-singular",
+  title: t("The parameter that makes an equal off-diagonal matrix singular", "使非对角元相等的矩阵奇异的参数"),
+  explanation: t(
+    "A determinant with a pattern can often be factored by row operations instead of being expanded. In a matrix with $x$ on the diagonal and one constant $a$ everywhere else, every row has the same sum $x + 2a$. Adding all the rows to the first makes this a common factor. Subtracting $a$ times that row of ones from the others then leaves a triangular matrix, and the determinant is $(x - a)^2(x + 2a)$.",
+    "有规律的行列式常常可以用行变换分解因式，而不必展开。对角线上是 $x$、其他位置都是常数 $a$ 的矩阵，每一行的和都是 $x + 2a$。把所有行加到第一行，这就成为公因子。再从其他行减去这个全 1 行的 $a$ 倍，就得到三角矩阵，行列式是 $(x - a)^2(x + 2a)$。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 20);
+    const answer = -2 * a;
+    return numberProblem({
+      prompt: t(
+        `The matrix $${mat([
+          ["x", a, a],
+          [a, "x", a],
+          [a, a, "x"],
+        ])}$ is singular when $x = ${a}$ and for one other value of $x$. Find that other value.`,
+        `矩阵 $${mat([
+          ["x", a, a],
+          [a, "x", a],
+          [a, a, "x"],
+        ])}$ 在 $x = ${a}$ 时奇异，另外还有一个 $x$ 值使它奇异。求这个值。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-a, 2 * a, 3 * a, -3 * a],
+      solution: t(
+        `Each row has the sum $${poly([1, "x"], [2 * a, ""])}$, and row operations give the determinant $(${poly([1, "x"], [-a, ""])})^2(${poly([1, "x"], [2 * a, ""])})$. So the other value is $x = ${answer}$.`,
+        `每一行的和都是 $${poly([1, "x"], [2 * a, ""])}$，行变换给出行列式 $(${poly([1, "x"], [-a, ""])})^2(${poly([1, "x"], [2 * a, ""])})$。所以另一个值是 $x = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const firstUnknownOfBidiagonal: KnowledgePointDef = {
+  id: "the-first-unknown-of-a-4x4-bidiagonal-system",
+  title: t("The first unknown of a 4×4 bidiagonal system", "4×4 双对角方程组的第一个未知数"),
+  explanation: t(
+    "In a triangular system with only one extra term in each equation, back substitution becomes a short chain. The last equation gives the last unknown at once, and each equation above it uses only the value just found. So the work grows with the number of equations, not its square, and this is why banded systems are so cheap to solve. The first unknown is found last, and any slip along the chain will reach it.",
+    "在每个方程只多一项的三角方程组中，回代变成一条短链。最后一个方程直接给出最后一个未知数，它上面的每个方程只用刚求出的值。所以工作量随方程个数增长，而不是随其平方增长，这就是带状方程组容易求解的原因。第一个未知数最后求出，链上的任何差错都会影响它。",
+  ),
+  generate(rng) {
+    const [a, b, c] = [nonzero(rng, 4), nonzero(rng, 4), nonzero(rng, 4)];
+    const x4 = rng.int(-5, 5);
+    const x3 = rng.int(-5, 5);
+    const x2 = rng.int(-5, 5);
+    const answer = rng.int(-5, 5);
+    const r3 = x3 + c * x4;
+    const r2 = x2 + b * x3;
+    const r1 = answer + a * x2;
+    const system = `${poly([1, "x_1"], [a, "x_2"])} = ${r1}, \\quad ${poly([1, "x_2"], [b, "x_3"])} = ${r2}, \\quad ${poly([1, "x_3"], [c, "x_4"])} = ${r3}, \\quad x_4 = ${x4}`;
+    return numberProblem({
+      prompt: t(`Solve by back substitution: $${system}$. Find $x_1$.`, `用回代求解：$${system}$。求 $x_1$。`),
+      answer,
+      form: "integer",
+      wrong: [r1, x2, r1 - a * r2, -answer, answer + 1, answer + 2, answer - 1],
+      solution: t(
+        `Working upward, $x_3 = ${x3}$, then $x_2 = ${x2}$, and then $x_1 = ${r1} ${a > 0 ? "-" : "+"} ${Math.abs(a)} \\cdot ${inParens(x2)} = ${answer}$.`,
+        `自下而上，$x_3 = ${x3}$，然后 $x_2 = ${x2}$，再得 $x_1 = ${r1} ${a > 0 ? "-" : "+"} ${Math.abs(a)} \\cdot ${inParens(x2)} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const dimensionOfIntersection: KnowledgePointDef = {
+  id: "the-smallest-possible-intersection-of-two-subspaces",
+  title: t("The smallest possible intersection of two subspaces", "两个子空间最小可能的交"),
+  explanation: t(
+    "Two subspaces cannot avoid each other if they are large enough. The sum $U + V$ lies inside the whole space, so its dimension is at most $n$, and the formula $\\dim(U \\cap V) = \\dim U + \\dim V - \\dim(U + V)$ then forces the intersection to have dimension at least $\\dim U + \\dim V - n$. This is why two planes through the origin in three dimensions always share a line, and it holds whatever the planes are.",
+    "两个子空间足够大时就无法彼此避开。和 $U + V$ 位于整个空间内，所以它的维数至多是 $n$，于是公式 $\\dim(U \\cap V) = \\dim U + \\dim V - \\dim(U + V)$ 迫使交的维数至少是 $\\dim U + \\dim V - n$。这就是三维空间中过原点的两个平面总有一条公共直线的原因，不管是什么平面都成立。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 12);
+    const a = rng.int(2, n - 1);
+    const b = rng.int(n - a + 1, n - 1);
+    const answer = a + b - n;
+    return numberProblem({
+      prompt: t(
+        `In $\\mathbb{R}^{${n}}$, subspaces $U$ and $V$ have dimensions ${a} and ${b}. What is the smallest possible dimension of $U \\cap V$?`,
+        `在 $\\mathbb{R}^{${n}}$ 中，子空间 $U$、$V$ 的维数分别是 ${a} 和 ${b}。$U \\cap V$ 最小可能的维数是多少？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [Math.min(a, b), a + b, answer + 1, answer - 1, n - a],
+      solution: t(
+        `The sum has dimension at most ${n}, so $\\dim(U \\cap V) \\ge ${a} + ${b} - ${n} = ${answer}$. This is reached when $U + V$ is the whole space.`,
+        `和的维数至多是 ${n}，所以 $\\dim(U \\cap V) \\ge ${a} + ${b} - ${n} = ${answer}$。当 $U + V$ 是整个空间时取到这个值。`,
+      ),
+    });
+  },
+};
+
+const coefficientOfDependentVector: KnowledgePointDef = {
+  id: "a-coefficient-in-a-relation-among-dependent-vectors",
+  title: t("A coefficient in a relation among dependent vectors", "相关向量关系式中的系数"),
+  explanation: t(
+    "When a spanning set contains a dependent vector, removing it leaves a smaller set that spans the same space, and the relation shows exactly why. Writing $\\mathbf{v}_3 = a\\mathbf{v}_1 + b\\mathbf{v}_2$ gives one equation per coordinate, more than the two unknowns need. If $\\mathbf{v}_1$ and $\\mathbf{v}_2$ are in a staircase shape, the first coordinate gives $a$ at once, and the second coordinate then gives $b$ after allowing for $a$.",
+    "当张成集包含一个相关向量时，去掉它后剩下的较小集合张成同一空间，关系式说明了原因。写出 $\\mathbf{v}_3 = a\\mathbf{v}_1 + b\\mathbf{v}_2$，每个坐标给出一个方程，比两个未知数需要的多。如果 $\\mathbf{v}_1$、$\\mathbf{v}_2$ 呈阶梯形，第一个坐标直接给出 $a$，第二个坐标在考虑 $a$ 之后给出 $b$。",
+  ),
+  generate(rng) {
+    const [p, q, r] = [nonzero(rng, 4), nonzero(rng, 4), nonzero(rng, 4)];
+    const a = nonzero(rng, 5);
+    const b = nonzero(rng, 5);
+    const v3 = [a, a * p + b, a * q + b * r];
+    const vectors = `\\mathbf{v}_1 = ${col(1, p, q)}, \\mathbf{v}_2 = ${col(0, 1, r)}, \\mathbf{v}_3 = ${col(...v3)}`;
+    return numberProblem({
+      prompt: t(
+        `The vectors $${vectors}$ satisfy $\\mathbf{v}_3 = a\\mathbf{v}_1 + b\\mathbf{v}_2$. Find $b$.`,
+        `向量 $${vectors}$ 满足 $\\mathbf{v}_3 = a\\mathbf{v}_1 + b\\mathbf{v}_2$。求 $b$。`,
+      ),
+      answer: b,
+      form: "integer",
+      wrong: [a, -b, v3[1] ?? 0, v3[2] ?? 0, b + 1],
+      solution: t(
+        `The first coordinate gives $a = ${a}$. The second gives $${inParens(a)} \\cdot ${inParens(p)} + b = ${v3[1]}$, so $b = ${b}$.`,
+        `第一个坐标给出 $a = ${a}$。第二个坐标给出 $${inParens(a)} \\cdot ${inParens(p)} + b = ${v3[1]}$，所以 $b = ${b}$。`,
+      ),
+    });
+  },
+};
+
+const determinantOfChangeOfBasis: KnowledgePointDef = {
+  id: "the-determinant-of-a-change-of-coordinates-matrix",
+  title: t("The determinant of a change of coordinates matrix", "坐标变换矩阵的行列式"),
+  explanation: t(
+    "Let the matrices $B$ and $C$ have two bases as their columns. A vector with $B$-coordinates $\\mathbf{x}$ is $B\\mathbf{x}$, and its $C$-coordinates are therefore $C^{-1}B\\mathbf{x}$. So the matrix that changes coordinates from $B$ to $C$ is $C^{-1}B$, and its determinant is the ratio $\\frac{\\det B}{\\det C}$. The ratio measures how the area of the $B$ parallelogram compares with that of the $C$ parallelogram, and the reverse change has the reciprocal determinant.",
+    "设矩阵 $B$、$C$ 的列是两组基。$B$-坐标为 $\\mathbf{x}$ 的向量是 $B\\mathbf{x}$，所以它的 $C$-坐标是 $C^{-1}B\\mathbf{x}$。因此把坐标从 $B$ 变到 $C$ 的矩阵是 $C^{-1}B$，它的行列式是比值 $\\frac{\\det B}{\\det C}$。这个比值衡量 $B$ 平行四边形的面积与 $C$ 平行四边形面积的比较，反向变换的行列式是其倒数。",
+  ),
+  generate(rng) {
+    const pickBasis = (): number[][] => {
+      for (;;) {
+        const m = [
+          [rng.int(-5, 5), rng.int(-5, 5)],
+          [rng.int(-5, 5), rng.int(-5, 5)],
+        ];
+        if (det(m) !== 0) return m;
+      }
+    };
+    const b = pickBasis();
+    const c = pickBasis();
+    const db = det(b);
+    const dc = det(c);
+    const answer = Q.of(db, dc);
+    const basis = (m: number[][]) => `${col(m[0]?.[0] ?? 0, m[1]?.[0] ?? 0)}, ${col(m[0]?.[1] ?? 0, m[1]?.[1] ?? 0)}`;
+    return numberProblem({
+      prompt: t(
+        `Let $\\mathcal{B}$ be the basis $${basis(b)}$ and $\\mathcal{C}$ the basis $${basis(c)}$ of $\\mathbb{R}^2$. Find the determinant of the matrix that changes coordinates from $\\mathcal{B}$ to $\\mathcal{C}$.`,
+        `设 $\\mathcal{B}$ 是 $\\mathbb{R}^2$ 的基 $${basis(b)}$，$\\mathcal{C}$ 是基 $${basis(c)}$。求把坐标从 $\\mathcal{B}$ 变到 $\\mathcal{C}$ 的矩阵的行列式。`,
+      ),
+      answer,
+      wrong: [Q.of(dc, db), Q.of(db * dc), answer.neg(), answer.add(Q.of(1)), answer.sub(Q.of(1))],
+      solution: t(
+        `The matrix is $C^{-1}B$, whose determinant is $\\frac{\\det B}{\\det C}$. Here $\\det B = ${db}$ and $\\det C = ${dc}$, so the value is $${answer.toLatex()}$.`,
+        `这个矩阵是 $C^{-1}B$，它的行列式是 $\\frac{\\det B}{\\det C}$。这里 $\\det B = ${db}$，$\\det C = ${dc}$，所以值是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const rankFromFormula: KnowledgePointDef = {
+  id: "the-rank-of-a-matrix-given-by-a-formula",
+  title: t("The rank of a matrix given by a formula", "由公式给出的矩阵的秩"),
+  explanation: t(
+    "A large matrix can have a small rank when a formula defines its entries. If the entries expand as a sum of terms, each a function of the row times a function of the column, then every column is a combination of the same few column vectors. So the dimension of the span of the columns is at most the number of such terms. For example, $a_{ij} = i + j$ has every column in the span of $(i)$ and $(1)$.",
+    "当公式定义矩阵的元素时，大矩阵可以有很小的秩。如果元素能展开为若干项之和，每项是行的函数乘以列的函数，那么每一列都是相同几个列向量的组合。所以各列张成空间的维数至多是这种项的个数。例如，$a_{ij} = i + j$ 的每一列都在 $(i)$ 和 $(1)$ 张成的空间中。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 9);
+    const p = nonzero(rng, 6);
+    const q = nonzero(rng, 6);
+    const kind = rng.int(0, 3);
+    const formula = [poly([p, "i"], [q, "j"]), poly([p, "ij"]), "(i + j)^2", "(i - j)^2"][kind] ?? "";
+    const answer = [2, 1, 3, 3][kind] ?? 1;
+    const en =
+      [
+        "the vectors $(i)$ and $(1)$, so two vectors span the columns",
+        "a multiple of the single vector $(i)$",
+        "$i^2$, $i$ and $1$, each times a function of $j$, so three vectors span the columns",
+        "$i^2$, $i$ and $1$, each times a function of $j$, so three vectors span the columns",
+      ][kind] ?? "";
+    const zh =
+      [
+        "向量 $(i)$ 和 $(1)$，所以两个向量张成各列",
+        "单个向量 $(i)$ 的倍数",
+        "$i^2$、$i$、$1$ 各乘以 $j$ 的函数，所以三个向量张成各列",
+        "$i^2$、$i$、$1$ 各乘以 $j$ 的函数，所以三个向量张成各列",
+      ][kind] ?? "";
+    return numberProblem({
+      prompt: t(
+        `The $${n} \\times ${n}$ matrix $A$ has the entries $a_{ij} = ${formula}$. Find its rank.`,
+        `一个 $${n} \\times ${n}$ 矩阵的元素是 $a_{ij} = ${formula}$。求它的秩。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n, n - 1, 1, 2, 3],
+      solution: t(
+        `Expanding the formula, each column is built from ${en}. These vectors are independent, so the rank is $${answer}$.`,
+        `展开公式，每一列由以下部分构成：${zh}。这些向量线性无关，所以秩是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const largestNullityOfComposition: KnowledgePointDef = {
+  id: "the-largest-nullity-of-a-composition",
+  title: t("The largest nullity of a composition", "复合映射最大的零度"),
+  explanation: t(
+    "A vector is killed by $S \\circ T$ when $T$ kills it, or when $T$ sends it into the kernel of $S$. So the kernel of the composition is made of the kernel of $T$ and those vectors that land in the kernel of $S$. Counting dimensions gives $\\operatorname{null}(S \\circ T) \\le \\operatorname{null}(T) + \\operatorname{null}(S)$. The bound is reached when the image of $T$ contains the whole kernel of $S$, which is possible if the two nullities fit in the space.",
+    "向量被 $S \\circ T$ 消灭，是当 $T$ 消灭它，或者 $T$ 把它送入 $S$ 的核时。所以复合映射的核由 $T$ 的核和落入 $S$ 的核的那些向量组成。计算维数得 $\\operatorname{null}(S \\circ T) \\le \\operatorname{null}(T) + \\operatorname{null}(S)$。当 $T$ 的像包含 $S$ 的整个核时取到这个上界，只要两个零度之和不超过空间的维数，这就是可能的。",
+  ),
+  generate(rng) {
+    const n = rng.int(5, 15);
+    const a = rng.int(1, n - 2);
+    const b = rng.int(1, n - a);
+    const answer = a + b;
+    return numberProblem({
+      prompt: t(
+        `Linear maps $T$ and $S$ act on a space of dimension ${n}, with $T$ of nullity ${a} and $S$ of nullity ${b}. What is the largest possible nullity of $S \\circ T$?`,
+        `线性映射 $T$、$S$ 作用在 ${n} 维空间上，$T$ 的零度是 ${a}，$S$ 的零度是 ${b}。$S \\circ T$ 最大可能的零度是多少？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [Math.max(a, b), Math.min(a, b), a * b, n, n - answer, answer + 1],
+      solution: t(
+        `The nullity of a composition is at most the sum of the nullities, here $${a} + ${b} = ${answer}$. Since this does not exceed ${n}, the image of $T$ can contain the kernel of $S$, and so the bound is reached.`,
+        `复合映射的零度至多是两个零度之和，这里是 $${a} + ${b} = ${answer}$。由于它不超过 ${n}，$T$ 的像可以包含 $S$ 的核，所以能取到这个上界。`,
+      ),
+    });
+  },
+};
+
+const rankOfRepeatedDerivative: KnowledgePointDef = {
+  id: "the-rank-of-a-repeated-derivative",
+  title: t("The rank of a repeated derivative", "重复求导的秩"),
+  explanation: t(
+    "Differentiation is a linear map on the polynomials of degree at most $n$, a space of dimension $n + 1$ with the powers of $x$ as a basis. Differentiating $k$ times sends $x^j$ to a nonzero multiple of $x^{j - k}$ when $j \\ge k$, and to zero otherwise. So the image is spanned by the powers up to $x^{n - k}$, while the kernel is made of the polynomials of degree below $k$. The dimensions add up to $n + 1$.",
+    "求导是次数不超过 $n$ 的多项式空间上的线性映射，这个空间的维数是 $n + 1$，以 $x$ 的幂为基。求导 $k$ 次，当 $j \\ge k$ 时把 $x^j$ 映到 $x^{j - k}$ 的非零倍数，否则映到零。所以像由不超过 $x^{n - k}$ 的幂张成，而核由次数低于 $k$ 的多项式组成。两个维数之和是 $n + 1$。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 15);
+    const k = rng.int(1, n);
+    const answer = n + 1 - k;
+    return numberProblem({
+      prompt: t(
+        `The map $T$ sends each polynomial $p$ of degree at most ${n} to its derivative of order ${k}. Find the rank of $T$.`,
+        `映射 $T$ 把每个次数不超过 ${n} 的多项式 $p$ 映到它的 ${k} 阶导数。求 $T$ 的秩。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [n - k, n + 1, answer + 1, k + 1, n, answer - 1, answer + 2],
+      solution: t(
+        `The domain has dimension $${n + 1}$. The kernel is made of the polynomials of degree below ${k}, with dimension ${k}, so the rank is $${n + 1} - ${k} = ${answer}$.`,
+        `定义域的维数是 $${n + 1}$。核由次数低于 ${k} 的多项式组成，维数是 ${k}，所以秩是 $${n + 1} - ${k} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const countingDiagonalForms: KnowledgePointDef = {
+  id: "counting-the-diagonal-forms-of-a-matrix",
+  title: t("Counting the diagonal forms of a matrix", "计算矩阵的对角形式"),
+  explanation: t(
+    "A diagonalization $A = PDP^{-1}$ is not unique, because the columns of $P$ can be listed in any order. Reordering them reorders the entries of $D$. So the diagonal matrices similar to $A$ are exactly the arrangements of its eigenvalues along the diagonal, each repeated according to its multiplicity. Equal eigenvalues produce no new matrix when they trade places, so the count is a multinomial coefficient, not a plain factorial.",
+    "对角化 $A = PDP^{-1}$ 不是唯一的，因为 $P$ 的各列可以按任意顺序排列。重排它们也就重排了 $D$ 的元素。所以与 $A$ 相似的对角矩阵恰好是特征值（按重数重复）沿对角线的各种排列。相等的特征值交换位置不产生新矩阵，所以个数是多项式系数，而不是单纯的阶乘。",
+  ),
+  generate(rng) {
+    const [l1, l2, l3] = distinctNonzero(rng, 6, 3) as [number, number, number];
+    const m1 = rng.int(1, 4);
+    const m2 = rng.int(1, 4);
+    const m3 = rng.int(1, 3);
+    const n = m1 + m2 + m3;
+    const answer = factorial(n) / (factorial(m1) * factorial(m2) * factorial(m3));
+    const characteristic = `${rootFactor(l1, m1)}${rootFactor(l2, m2)}${rootFactor(l3, m3)}`;
+    return numberProblem({
+      prompt: t(
+        `A diagonalizable matrix $A$ has characteristic polynomial $${characteristic}$. How many different diagonal matrices are similar to $A$?`,
+        `可对角化矩阵 $A$ 的特征多项式是 $${characteristic}$。有多少个不同的对角矩阵与 $A$ 相似？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [factorial(n), 6, n, answer + 1, 2 * answer],
+      solution: t(
+        `A similar diagonal matrix is an arrangement of the eigenvalues, with multiplicities ${m1}, ${m2} and ${m3}. There are $\\frac{${n}!}{${m1}! \\, ${m2}! \\, ${m3}!} = ${answer}$ arrangements.`,
+        `相似的对角矩阵就是特征值的一种排列，重数分别是 ${m1}、${m2}、${m3}。共有 $\\frac{${n}!}{${m1}! \\, ${m2}! \\, ${m3}!} = ${answer}$ 种排列。`,
+      ),
+    });
+  },
+};
+
+const angleInRotationScaling: KnowledgePointDef = {
+  id: "the-angle-in-a-rotation-scaling-form",
+  title: t("The angle in a rotation-scaling form", "旋转缩放形式中的角"),
+  explanation: t(
+    "The matrix with rows $(a, -b)$ and $(b, a)$ is a rotation followed by a scaling. Its scaling factor is $r = \\sqrt{a^2 + b^2}$, and dividing every entry by $r$ leaves the rotation matrix for an angle $\\theta$. Comparing entries gives $\\cos\\theta = \\frac{a}{r}$ and $\\sin\\theta = \\frac{b}{r}$. In terms of eigenvalues, $a \\pm bi = re^{\\pm i\\theta}$, so that this angle is the argument of a complex eigenvalue.",
+    "行为 $(a, -b)$ 和 $(b, a)$ 的矩阵是一个旋转接一个缩放。它的缩放因子是 $r = \\sqrt{a^2 + b^2}$，把每个元素除以 $r$，就得到角 $\\theta$ 的旋转矩阵。比较元素得 $\\cos\\theta = \\frac{a}{r}$，$\\sin\\theta = \\frac{b}{r}$。用特征值来说，$a \\pm bi = re^{\\pm i\\theta}$，所以这个角就是复特征值的辐角。",
+  ),
+  generate(rng) {
+    const [u, v, w] = rng.pick([
+      [3, 4, 5],
+      [4, 3, 5],
+      [5, 12, 13],
+      [12, 5, 13],
+      [8, 15, 17],
+      [15, 8, 17],
+      [7, 24, 25],
+      [24, 7, 25],
+    ]) as [number, number, number];
+    const k = rng.int(1, 4);
+    const a = rng.pick([1, -1]) * k * u;
+    const b = rng.pick([1, -1]) * k * v;
+    const r = k * w;
+    const asksCos = rng.pick([true, false]);
+    const answer = Q.of(asksCos ? a : b, r);
+    const fn = asksCos ? "\\cos\\theta" : "\\sin\\theta";
+    return numberProblem({
+      prompt: t(
+        `The matrix $${mat([
+          [a, -b],
+          [b, a],
+        ])}$ is written as a scaling by $r > 0$ times the rotation through the angle $\\theta$. Find $${fn}$.`,
+        `矩阵 $${mat([
+          [a, -b],
+          [b, a],
+        ])}$ 写成缩放 $r > 0$ 乘以转角为 $\\theta$ 的旋转。求 $${fn}$。`,
+      ),
+      answer,
+      wrong: [Q.of(asksCos ? b : a, r), answer.neg(), Q.of(asksCos ? a : b, asksCos ? b : a), Q.of(r, asksCos ? a : b)],
+      solution: t(
+        `Here $r = \\sqrt{${a * a} + ${b * b}} = ${r}$, and so $${fn} = \\frac{${asksCos ? a : b}}{${r}} = ${answer.toLatex()}$.`,
+        `这里 $r = \\sqrt{${a * a} + ${b * b}} = ${r}$，所以 $${fn} = \\frac{${asksCos ? a : b}}{${r}} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const generalizedEigenspaceDimension: KnowledgePointDef = {
+  id: "the-dimension-of-a-generalized-eigenspace",
+  title: t("The dimension of a generalized eigenspace", "广义特征空间的维数"),
+  explanation: t(
+    "The ordinary eigenspace of $\\lambda$ may be too small to match the multiplicity of $\\lambda$ in the characteristic polynomial, and this is what stops a matrix from being diagonalizable. The generalized eigenspace, the vectors killed by some power of $A - \\lambda I$, repairs the shortage. Its dimension always equals the algebraic multiplicity. So the characteristic polynomial alone decides this dimension, and the size of the ordinary eigenspace has no effect on it.",
+    "$\\lambda$ 的普通特征空间可能太小，配不上 $\\lambda$ 在特征多项式中的重数，这正是矩阵不能对角化的原因。广义特征空间，即被 $A - \\lambda I$ 的某个幂消灭的向量，弥补了这一不足。它的维数总是等于代数重数。所以仅由特征多项式就能决定这个维数，普通特征空间的大小对它没有影响。",
+  ),
+  generate(rng) {
+    const [l1, l2, l3] = distinctNonzero(rng, 7, 3) as [number, number, number];
+    const m1 = rng.int(2, 5);
+    const m2 = rng.int(1, 4);
+    const m3 = rng.int(1, 3);
+    const n = m1 + m2 + m3;
+    const geometric = rng.int(1, m1 - 1);
+    return numberProblem({
+      prompt: t(
+        `A $${n} \\times ${n}$ matrix has characteristic polynomial $${rootFactor(l1, m1)}${rootFactor(l2, m2)}${rootFactor(l3, m3)}$, and the eigenvalue $${l1}$ has an eigenspace of dimension ${geometric}. Find the dimension of the generalized eigenspace of $${l1}$.`,
+        `一个 $${n} \\times ${n}$ 矩阵的特征多项式是 $${rootFactor(l1, m1)}${rootFactor(l2, m2)}${rootFactor(l3, m3)}$，特征值 $${l1}$ 的特征空间维数是 ${geometric}。求 $${l1}$ 的广义特征空间的维数。`,
+      ),
+      answer: m1,
+      form: "integer",
+      wrong: [geometric, n, m1 - geometric, m1 + 1, n - m1],
+      solution: t(
+        `The dimension of a generalized eigenspace equals the algebraic multiplicity, whatever the eigenspace is. The multiplicity of $${l1}$ is $${m1}$.`,
+        `广义特征空间的维数等于代数重数，不管特征空间是怎样的。$${l1}$ 的重数是 $${m1}$。`,
+      ),
+    });
+  },
+};
+
+const countingJordanForms: KnowledgePointDef = {
+  id: "counting-jordan-forms-with-a-given-characteristic-polynomial",
+  title: t("Counting Jordan forms with a given characteristic polynomial", "计算给定特征多项式的若尔当形"),
+  explanation: t(
+    "The Jordan form of a matrix is decided, up to the order of its blocks, by the block sizes for each eigenvalue. The sizes for an eigenvalue of multiplicity $m$ form a partition of $m$, and there are $1, 2, 3, 5, 7$ partitions of the numbers $1$ to $5$. The choices for different eigenvalues are independent, so these counts multiply. The result counts the similarity classes of matrices with that characteristic polynomial.",
+    "矩阵的若尔当形由每个特征值的块大小决定（不计块的顺序）。重数为 $m$ 的特征值的块大小构成 $m$ 的一个分拆，数 $1$ 到 $5$ 的分拆个数分别是 $1, 2, 3, 5, 7$。不同特征值的选择彼此独立，所以这些个数相乘。结果就是具有该特征多项式的矩阵的相似类个数。",
+  ),
+  generate(rng) {
+    const partitions = [0, 1, 2, 3, 5, 7];
+    const [l1, l2] = distinctNonzero(rng, 9, 2) as [number, number];
+    const m1 = rng.int(2, 5);
+    const m2 = rng.int(1, 5);
+    const c1 = partitions[m1] ?? 1;
+    const c2 = partitions[m2] ?? 1;
+    const answer = c1 * c2;
+    return numberProblem({
+      prompt: t(
+        `How many different Jordan forms, ignoring the order of the blocks, can a matrix with characteristic polynomial $${rootFactor(l1, m1)}${rootFactor(l2, m2)}$ have?`,
+        `特征多项式为 $${rootFactor(l1, m1)}${rootFactor(l2, m2)}$ 的矩阵可以有多少种不同的若尔当形（不计块的顺序）？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [c1 + c2, m1 * m2, m1 + m2, answer + 1, answer * 2, answer + 2],
+      solution: t(
+        `The block sizes form a partition of each multiplicity. There are ${c1} partitions of ${m1} and ${c2} of ${m2}, which gives $${c1} \\cdot ${c2} = ${answer}$ forms.`,
+        `块的大小构成每个重数的一个分拆。${m1} 有 ${c1} 个分拆，${m2} 有 ${c2} 个分拆，所以有 $${c1} \\cdot ${c2} = ${answer}$ 种形式。`,
+      ),
+    });
+  },
+};
+
+const traceInnerProduct: KnowledgePointDef = {
+  id: "the-trace-inner-product-of-two-matrices",
+  title: t("The trace inner product of two matrices", "两个矩阵的迹内积"),
+  explanation: t(
+    "The formula $\\langle A, B \\rangle = \\operatorname{tr}(A^TB)$ makes the space of matrices into an inner product space. Each diagonal entry of $A^TB$ is the dot product of a column of $A$ with the matching column of $B$, so the trace adds up the products of all the matching entries. So this is just the usual dot product with the matrices written out as long vectors, and it does not need the matrix product to be computed in full.",
+    "公式 $\\langle A, B \\rangle = \\operatorname{tr}(A^TB)$ 使矩阵空间成为内积空间。$A^TB$ 的每个对角元是 $A$ 的一列与 $B$ 对应列的点积，所以迹把所有对应元素之积加起来。因此这就是把矩阵写成长向量后通常的点积，不需要完整计算矩阵乘积。",
+  ),
+  generate(rng) {
+    const entry = () => rng.int(-5, 5);
+    const a = [
+      [entry(), entry()],
+      [entry(), entry()],
+    ];
+    const b = [
+      [entry(), entry()],
+      [entry(), entry()],
+    ];
+    const aFlat = a.flat();
+    const bFlat = b.flat();
+    const answer = dot(aFlat, bFlat);
+    const traceOfProduct = sumOfDiagonal(times(a, b));
+    const terms = aFlat.map((x, i) => `${inParens(x)} \\cdot ${inParens(bFlat[i] ?? 0)}`).join(" + ");
+    return numberProblem({
+      prompt: t(
+        `With the inner product $\\langle A, B \\rangle = \\operatorname{tr}(A^TB)$, find $\\langle A, B \\rangle$ for $A = ${mat(a)}$ and $B = ${mat(b)}$.`,
+        `使用内积 $\\langle A, B \\rangle = \\operatorname{tr}(A^TB)$，对 $A = ${mat(a)}$ 和 $B = ${mat(b)}$ 求 $\\langle A, B \\rangle$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [traceOfProduct, sumOfDiagonal(a) * sumOfDiagonal(b), -answer, answer + 1, answer - 1, answer + 2],
+      solution: t(
+        `The trace adds up the products of the matching entries: $${terms} = ${answer}$.`,
+        `迹把对应元素之积加起来：$${terms} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const scalarInComplexInnerProduct: KnowledgePointDef = {
+  id: "pulling-a-scalar-out-of-a-complex-inner-product",
+  title: t("Pulling a scalar out of a complex inner product", "从复内积中提出标量"),
+  explanation: t(
+    "A complex inner product treats its two slots differently. Under the convention that it is linear in the first slot, a scalar comes out of that slot unchanged, but it comes out of the second slot conjugated. Swapping the two vectors also conjugates the value. These rules are needed to keep $\\langle \\mathbf{v}, \\mathbf{v} \\rangle$ real and positive. Some books use the opposite convention, which is why the slot that is linear must always be stated.",
+    "复内积对两个位置的处理不同。按第一个位置线性的约定，标量从这个位置提出时不变，但从第二个位置提出时要取共轭。交换两个向量也使值取共轭。这些规则是为了保持 $\\langle \\mathbf{v}, \\mathbf{v} \\rangle$ 为正实数。有些书使用相反的约定，所以必须说明哪个位置是线性的。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 6);
+    const b = nonzero(rng, 6);
+    const p = nonzero(rng, 5);
+    const q = nonzero(rng, 5);
+    const kind = rng.int(0, 2);
+    const scalar = poly([p, ""], [q, "i"]);
+    const value = poly([a, ""], [b, "i"]);
+    const straight = [p * a - q * b, p * b + q * a];
+    const conjugated = [p * a + q * b, p * b - q * a];
+    const [re, im] = (kind === 0 ? straight : kind === 1 ? conjugated : [straight[0], -(straight[1] ?? 0)]) as [number, number];
+    const asksReal = kind === 0 ? rng.pick([true, false]) : false;
+    const answer = asksReal ? re : im;
+    const expression =
+      [
+        `\\langle (${scalar})\\mathbf{u}, \\mathbf{v} \\rangle`,
+        `\\langle \\mathbf{u}, (${scalar})\\mathbf{v} \\rangle`,
+        `\\langle \\mathbf{v}, (${scalar})\\mathbf{u} \\rangle`,
+      ][kind] ?? "";
+    const reason =
+      [
+        "The scalar comes out of the first slot unchanged",
+        "The scalar comes out of the second slot conjugated",
+        "Swapping the slots conjugates the whole value of the inner product with the scalar in the first slot",
+      ][kind] ?? "";
+    const reasonZh =
+      ["标量从第一个位置提出时不变", "标量从第二个位置提出时取共轭", "交换位置使标量在第一个位置时的内积值整体取共轭"][kind] ?? "";
+    return numberProblem({
+      prompt: t(
+        `A complex inner product is linear in its first slot, and $\\langle \\mathbf{u}, \\mathbf{v} \\rangle = ${value}$. Write $${expression} = x + yi$. Find ${asksReal ? "$x$" : "$y$"}.`,
+        `一个复内积对第一个位置是线性的，且 $\\langle \\mathbf{u}, \\mathbf{v} \\rangle = ${value}$。写成 $${expression} = x + yi$。求 ${asksReal ? "$x$" : "$y$"}。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [
+        -answer,
+        asksReal ? (conjugated[0] ?? 0) : kind === 0 ? (conjugated[1] ?? 0) : (straight[1] ?? 0),
+        asksReal ? im : re,
+        answer + 1,
+        answer - 1,
+      ],
+      solution: t(
+        `${reason}. So the value is $${poly([re, ""], [im, "i"])}$, and ${asksReal ? "$x$" : "$y$"} is $${answer}$.`,
+        `${reasonZh}。所以值是 $${poly([re, ""], [im, "i"])}$，${asksReal ? "$x$" : "$y$"} 是 $${answer}$。`,
+      ),
+    });
+  },
+};
+
+const traceOfReflection: KnowledgePointDef = {
+  id: "the-trace-of-a-reflection-through-a-subspace",
+  title: t("The trace of a reflection through a subspace", "关于子空间的反射的迹"),
+  explanation: t(
+    "The orthogonal projection $P$ onto a subspace has the eigenvalue 1 on the subspace and 0 on its orthogonal complement. The reflection through the subspace is $R = 2P - I$, which keeps the subspace and reverses its complement, so that its eigenvalues are $1$ and $-1$. Since the trace is the sum of the eigenvalues, it counts the dimension of the subspace minus that of its complement, with no need to know any entry of the matrix.",
+    "到子空间的正交投影 $P$ 在子空间上特征值为 1，在其正交补上特征值为 0。关于子空间的反射是 $R = 2P - I$，它保持子空间不动，把正交补反向，所以特征值是 $1$ 和 $-1$。由于迹是特征值之和，它等于子空间的维数减去其正交补的维数，不需要知道矩阵的任何元素。",
+  ),
+  generate(rng) {
+    const n = rng.int(3, 15);
+    const k = rng.int(1, n - 1);
+    const answer = 2 * k - n;
+    return numberProblem({
+      prompt: t(
+        `Let $R$ be the reflection of $\\mathbb{R}^{${n}}$ through a subspace of dimension ${k}, so that $R = 2P - I$ with $P$ the orthogonal projection onto the subspace. Find the trace of $R$.`,
+        `设 $R$ 是 $\\mathbb{R}^{${n}}$ 关于 ${k} 维子空间的反射，即 $R = 2P - I$，其中 $P$ 是到该子空间的正交投影。求 $R$ 的迹。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [-answer, 2 * k, n - k, 2 * k + n, answer + 1],
+      solution: t(
+        `The eigenvalue 1 occurs ${k} ${k === 1 ? "time" : "times"} and the eigenvalue $-1$ occurs ${n - k} ${n - k === 1 ? "time" : "times"}. So the trace is $${k} - ${n - k} = ${answer}$.`,
+        `特征值 1 出现 ${k} 次，特征值 $-1$ 出现 ${n - k} 次。所以迹是 $${k} - ${n - k} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const determinantFromQr: KnowledgePointDef = {
+  id: "the-determinant-from-a-qr-factorization",
+  title: t("The determinant from a QR factorization", "由 QR 分解求行列式"),
+  explanation: t(
+    "In a factorization $A = QR$ of a square matrix, $Q$ is orthogonal, so that its determinant is $1$ or $-1$, and $R$ is upper triangular, so that its determinant is the product of its diagonal entries. Together these give the absolute value of $\\det A$, but they do not need any of the entries above the diagonal. Geometrically, the diagonal entries of $R$ are the lengths left over after each step of the Gram-Schmidt process.",
+    "在方阵的分解 $A = QR$ 中，$Q$ 是正交矩阵，行列式是 $1$ 或 $-1$，$R$ 是上三角矩阵，行列式是对角元之积。两者合起来给出 $\\det A$ 的绝对值，不需要对角线上方的任何元素。从几何上看，$R$ 的对角元是格拉姆-施密特过程每一步后剩下的长度。",
+  ),
+  generate(rng) {
+    const [r1, r2, r3] = [rng.int(1, 9), rng.int(1, 9), rng.int(2, 9)];
+    const [p, q, s] = [nonzero(rng, 6), nonzero(rng, 6), nonzero(rng, 6)];
+    const answer = r1 * r2 * r3;
+    return numberProblem({
+      prompt: t(
+        `A $3 \\times 3$ matrix $A$ has the factorization $A = QR$ with $Q$ orthogonal and $R = ${mat([
+          [r1, p, q],
+          [0, r2, s],
+          [0, 0, r3],
+        ])}$. Find $|\\det A|$.`,
+        `$3 \\times 3$ 矩阵 $A$ 有分解 $A = QR$，其中 $Q$ 是正交矩阵，$R = ${mat([
+          [r1, p, q],
+          [0, r2, s],
+          [0, 0, r3],
+        ])}$。求 $|\\det A|$。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [r1 + r2 + r3, answer * Math.abs(p), answer * Math.abs(p * q * s), answer + 1, answer * answer],
+      solution: t(
+        `Since $|\\det Q| = 1$, we get $|\\det A| = \\det R = ${r1} \\cdot ${r2} \\cdot ${r3} = ${answer}$.`,
+        `由于 $|\\det Q| = 1$，得 $|\\det A| = \\det R = ${r1} \\cdot ${r2} \\cdot ${r3} = ${answer}$。`,
+      ),
+    });
+  },
+};
+
+const squareRootOfSymmetric: KnowledgePointDef = {
+  id: "an-entry-of-the-positive-square-root-of-a-symmetric-matrix",
+  title: t("An entry of the positive square root of a symmetric matrix", "对称矩阵正平方根的元素"),
+  explanation: t(
+    "The spectral theorem writes a symmetric matrix as $\\lambda_1P_1 + \\lambda_2P_2$, where $P_1$ and $P_2$ are the orthogonal projections onto the eigenspaces. Since $P_1P_2 = 0$ and each $P_i^2 = P_i$, a function can be applied through the eigenvalues alone. So the positive square root of a matrix with positive eigenvalues is $\\sqrt{\\lambda_1}P_1 + \\sqrt{\\lambda_2}P_2$. Each projection is $\\frac{\\mathbf{v}\\mathbf{v}^T}{\\mathbf{v}^T\\mathbf{v}}$ for an eigenvector $\\mathbf{v}$.",
+    "谱定理把对称矩阵写成 $\\lambda_1P_1 + \\lambda_2P_2$，其中 $P_1$、$P_2$ 是到特征空间的正交投影。由于 $P_1P_2 = 0$ 且 $P_i^2 = P_i$，函数可以只通过特征值作用。所以特征值为正的矩阵的正平方根是 $\\sqrt{\\lambda_1}P_1 + \\sqrt{\\lambda_2}P_2$。对特征向量 $\\mathbf{v}$，每个投影是 $\\frac{\\mathbf{v}\\mathbf{v}^T}{\\mathbf{v}^T\\mathbf{v}}$。",
+  ),
+  generate(rng) {
+    const [p, q] = rng.pick([
+      [1, 1],
+      [1, -1],
+      [1, 2],
+      [2, 1],
+      [1, -2],
+      [2, -1],
+      [1, 3],
+      [3, 1],
+      [2, 3],
+      [3, 2],
+    ]) as [number, number];
+    const s = rng.int(1, 9);
+    const u = rng.pick(range1to9.filter((v) => v !== s));
+    const norm = p * p + q * q;
+    const diagonal = rng.pick([true, false]);
+    const answer = diagonal ? Q.of(s * p * p + u * q * q, norm) : Q.of((s - u) * p * q, norm);
+    const position = diagonal ? ["row 1, column 1", "第 1 行第 1 列"] : ["row 1, column 2", "第 1 行第 2 列"];
+    return numberProblem({
+      prompt: t(
+        `A symmetric matrix $A$ has the eigenvalue ${s * s} with eigenvector $${col(p, q)}$ and the eigenvalue ${u * u} with eigenvector $${col(-q, p)}$. Find the entry in ${position[0]} of the positive square root of $A$.`,
+        `对称矩阵 $A$ 有特征值 ${s * s}，特征向量为 $${col(p, q)}$，还有特征值 ${u * u}，特征向量为 $${col(-q, p)}$。求 $A$ 的正平方根${position[1]}的元素。`,
+      ),
+      answer,
+      wrong: [
+        diagonal ? Q.of(s * s * p * p + u * u * q * q, norm) : Q.of((s * s - u * u) * p * q, norm),
+        diagonal ? Q.of(s * q * q + u * p * p, norm) : Q.of((u - s) * p * q, norm),
+        Q.of(s + u, 2),
+        answer.add(Q.of(1)),
+        answer.neg(),
+      ],
+      solution: t(
+        `The square root is $${s}P_1 + ${u}P_2$, with $P_1$ and $P_2$ built from the eigenvectors over their common squared length ${norm}. The entry is $${diagonal ? `\\frac{${s} \\cdot ${p * p} + ${u} \\cdot ${q * q}}{${norm}}` : `\\frac{${s} \\cdot ${inParens(p * q)} - ${u} \\cdot ${inParens(p * q)}}{${norm}}`} = ${answer.toLatex()}$.`,
+        `平方根是 $${s}P_1 + ${u}P_2$，其中 $P_1$、$P_2$ 由特征向量除以它们共同的长度平方 ${norm} 构成。这个元素是 $${diagonal ? `\\frac{${s} \\cdot ${p * p} + ${u} \\cdot ${q * q}}{${norm}}` : `\\frac{${s} \\cdot ${inParens(p * q)} - ${u} \\cdot ${inParens(p * q)}}{${norm}}`} = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const symmetricMatrixOfForm: KnowledgePointDef = {
+  id: "the-symmetric-matrix-with-the-same-quadratic-form",
+  title: t("The symmetric matrix with the same quadratic form", "具有相同二次型的对称矩阵"),
+  explanation: t(
+    "Different matrices can give the same quadratic form $\\mathbf{x}^TA\\mathbf{x}$, because only the sum of the two off-diagonal entries reaches the coefficient of $xy$. Among these matrices exactly one is symmetric, the symmetric part $\\frac{1}{2}(A + A^T)$, which shares the off-diagonal sum equally. This is why a quadratic form is always written with a symmetric matrix: it is then unique, and the spectral theorem applies to it.",
+    "不同的矩阵可以给出相同的二次型 $\\mathbf{x}^TA\\mathbf{x}$，因为只有两个非对角元之和才影响 $xy$ 的系数。这些矩阵中恰有一个是对称的，即对称部分 $\\frac{1}{2}(A + A^T)$，它把非对角元之和平均分配。这就是二次型总用对称矩阵写出的原因：这样矩阵就是唯一的，并且可以应用谱定理。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 9);
+    const d = nonzero(rng, 9);
+    const b = nonzero(rng, 9);
+    const c = rng.pick([-9, -7, -5, -3, -2, -1, 1, 2, 3, 5, 7, 9].filter((v) => v !== b));
+    const answer = Q.of(b + c, 2);
+    return numberProblem({
+      prompt: t(
+        `The form $\\mathbf{x}^TA\\mathbf{x}$ comes from $A = ${mat([
+          [a, b],
+          [c, d],
+        ])}$. Find the entry in row 1, column 2 of the symmetric matrix that gives the same form.`,
+        `二次型 $\\mathbf{x}^TA\\mathbf{x}$ 来自 $A = ${mat([
+          [a, b],
+          [c, d],
+        ])}$。求给出相同二次型的对称矩阵第 1 行第 2 列的元素。`,
+      ),
+      answer,
+      wrong: [Q.of(b), Q.of(c), Q.of(b + c), Q.of(b - c, 2), answer.add(Q.of(1))],
+      solution: t(
+        `The coefficient of $xy$ is $${b} ${signedTerm(c)} = ${b + c}$, and the symmetric matrix shares it equally between its two off-diagonal entries. So the entry is $${answer.toLatex()}$.`,
+        `$xy$ 的系数是 $${b} ${signedTerm(c)} = ${b + c}$，对称矩阵把它平均分给两个非对角元。所以这个元素是 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const indexAfterCompletingSquare: KnowledgePointDef = {
+  id: "the-signs-of-a-form-after-completing-the-square",
+  title: t("The signs of a form after completing the square", "配方后二次型的符号"),
+  explanation: t(
+    "Lagrange's method turns a quadratic form into a sum of multiples of squares. The coefficients depend on the choices made along the way, but Sylvester's law of inertia says that the numbers of positive and of negative coefficients never change. So these two counts are properties of the form itself. The cross term is what makes this subtle, because completing the square moves part of a coefficient into the square, and this can change its sign.",
+    "拉格朗日方法把二次型化为平方项的倍数之和。系数取决于过程中的选择，但西尔维斯特惯性定律指出，正系数和负系数的个数不变。所以这两个个数是二次型本身的性质。微妙之处在于交叉项，因为配方把系数的一部分移进平方，这可能改变它的符号。",
+  ),
+  generate(rng) {
+    const a = nonzero(rng, 4);
+    const b = rng.pick([...Array(31).keys()].map((i) => i - 10).filter((v) => v !== a * a));
+    const c = nonzero(rng, 9);
+    const left = b - a * a;
+    const coefficients = [1, left, c];
+    const asksPositive = rng.pick([true, false]);
+    const answer = coefficients.filter((v) => (asksPositive ? v > 0 : v < 0)).length;
+    const form = poly([1, "x^2"], [2 * a, "xy"], [b, "y^2"], [c, "z^2"]);
+    const squares = poly([1, `(${poly([1, "x"], [a, "y"])})^2`], [left, "y^2"], [c, "z^2"]);
+    return numberProblem({
+      prompt: t(
+        `Reduce the form $${form}$ to a sum of multiples of squares. How many of the coefficients are ${asksPositive ? "positive" : "negative"}?`,
+        `把二次型 $${form}$ 化为平方项的倍数之和。有多少个系数是${asksPositive ? "正" : "负"}的？`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [0, 1, 2, 3],
+      solution: t(
+        `Completing the square gives $${squares}$. The coefficients are $${coefficients.join(", ")}$, of which $${answer}$ ${answer === 1 ? "is" : "are"} ${asksPositive ? "positive" : "negative"}.`,
+        `配方得 $${squares}$。系数是 $${coefficients.join(", ")}$，其中有 $${answer}$ 个是${asksPositive ? "正" : "负"}的。`,
+      ),
+    });
+  },
+};
+
+/** ellipseForms lists the forms ax^2 + 2bxy + cy^2 with a positive perfect square for ac - b^2. */
+const ellipseForms = [...Array(12).keys()].flatMap((i) =>
+  [...Array(12).keys()].flatMap((j) =>
+    [-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6].flatMap((b) => {
+      const value = (i + 1) * (j + 1) - b * b;
+      const root = Math.round(Math.sqrt(Math.max(value, 0)));
+      return value > 0 && root * root === value ? [[i + 1, b, j + 1, root] as const] : [];
+    }),
+  ),
+);
+
+const ellipseAreaFromForm: KnowledgePointDef = {
+  id: "the-area-of-an-ellipse-from-its-quadratic-form",
+  title: t("The area of an ellipse from its quadratic form", "由二次型求椭圆的面积"),
+  explanation: t(
+    "After rotating to principal axes, a positive definite form becomes $\\lambda_1u^2 + \\lambda_2v^2 = d$, an ellipse with semi-axes $\\sqrt{\\frac{d}{\\lambda_1}}$ and $\\sqrt{\\frac{d}{\\lambda_2}}$. Its area is $\\pi$ times their product, $\\frac{\\pi d}{\\sqrt{\\lambda_1\\lambda_2}}$. Since the product of the eigenvalues is the determinant of the matrix, the eigenvalues never need to be found. For $ax^2 + 2bxy + cy^2$, the determinant is $ac - b^2$, and the rotation does not change the area.",
+    "旋转到主轴后，正定二次型变成 $\\lambda_1u^2 + \\lambda_2v^2 = d$，这是半轴为 $\\sqrt{\\frac{d}{\\lambda_1}}$、$\\sqrt{\\frac{d}{\\lambda_2}}$ 的椭圆。它的面积是 $\\pi$ 乘以它们的积，即 $\\frac{\\pi d}{\\sqrt{\\lambda_1\\lambda_2}}$。由于特征值之积是矩阵的行列式，不必求出特征值。对 $ax^2 + 2bxy + cy^2$，行列式是 $ac - b^2$，旋转不改变面积。",
+  ),
+  generate(rng) {
+    const [a, b, c, root] = rng.pick(ellipseForms);
+    const d = rng.int(1, 9);
+    const answer = Q.of(d, root);
+    const value = a * c - b * b;
+    return numberProblem({
+      prompt: t(
+        `The area enclosed by the ellipse $${poly([a, "x^2"], [2 * b, "xy"], [c, "y^2"])} = ${d}$ is $k\\pi$. Find $k$.`,
+        `椭圆 $${poly([a, "x^2"], [2 * b, "xy"], [c, "y^2"])} = ${d}$ 围成的面积是 $k\\pi$。求 $k$。`,
+      ),
+      answer,
+      wrong: [Q.of(d, value), Q.of(1, root), Q.of(d * root), Q.of(2 * d, root), answer.add(Q.of(1)), Q.of(root, d), answer.add(Q.of(2))],
+      solution: t(
+        `The matrix has determinant $${a} \\cdot ${c} - ${b * b} = ${value}$, which is the product of the eigenvalues. So the area is $\\frac{${d === 1 ? "" : d}\\pi}{\\sqrt{${value}}}$, and $k = ${answer.toLatex()}$.`,
+        `矩阵的行列式是 $${a} \\cdot ${c} - ${b * b} = ${value}$，它是特征值之积。所以面积是 $\\frac{${d === 1 ? "" : d}\\pi}{\\sqrt{${value}}}$，$k = ${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
+const traceOfHatMatrix: KnowledgePointDef = {
+  id: "the-trace-of-a-hat-matrix",
+  title: t("The trace of a hat matrix", "帽子矩阵的迹"),
+  explanation: t(
+    "The hat matrix $H = X(X^TX)^{-1}X^T$ is the orthogonal projection onto the column space of $X$. A projection has only the eigenvalues 1 and 0, so its trace equals its rank. With an intercept and $k$ predictors, independent columns give the rank $k + 1$, which is the number of fitted coefficients. The complementary projection $I - H$ makes the residuals, and its trace, $n - k - 1$, is the number of residual degrees of freedom.",
+    "帽子矩阵 $H = X(X^TX)^{-1}X^T$ 是到 $X$ 的列空间的正交投影。投影只有特征值 1 和 0，所以它的迹等于它的秩。有截距和 $k$ 个预测变量时，列线性无关，秩是 $k + 1$，也就是拟合系数的个数。互补投影 $I - H$ 给出残差，它的迹 $n - k - 1$ 是残差的自由度。",
+  ),
+  generate(rng) {
+    const n = rng.int(10, 60);
+    const k = rng.int(1, 7);
+    const hat = rng.pick([true, false]);
+    const answer = hat ? k + 1 : n - k - 1;
+    const symbol = hat ? "H" : "I - H";
+    return numberProblem({
+      prompt: t(
+        `A multiple regression with an intercept and ${k === 1 ? "one predictor" : `${k} predictors`}, with independent columns, is fitted to ${n} observations. Let $H$ be its hat matrix. Find the trace of $${symbol}$.`,
+        `对 ${n} 个观测值拟合一个带截距、有 ${k} 个预测变量的多元回归，各列线性无关。设 $H$ 是它的帽子矩阵。求 $${symbol}$ 的迹。`,
+      ),
+      answer,
+      form: "integer",
+      wrong: [hat ? k : n - k, hat ? n - k - 1 : k + 1, n, answer + 1, answer + 2],
+      solution: t(
+        `The matrix $H$ is a projection onto a space of dimension $${k + 1}$, and the trace of a projection equals its rank. ${hat ? `So the trace is $${answer}$.` : `So the trace of $I - H$ is $${n} - ${k + 1} = ${answer}$.`}`,
+        `矩阵 $H$ 是到 $${k + 1}$ 维空间的投影，投影的迹等于它的秩。${hat ? `所以迹是 $${answer}$。` : `所以 $I - H$ 的迹是 $${n} - ${k + 1} = ${answer}$。`}`,
+      ),
+    });
+  },
+};
+
+const inverseOfScaledPermutation: KnowledgePointDef = {
+  id: "an-entry-of-the-inverse-of-a-scaled-permutation-matrix",
+  title: t("An entry of the inverse of a scaled permutation matrix", "带系数置换矩阵逆的元素"),
+  explanation: t(
+    "A matrix with exactly one nonzero entry in each row and column is a permutation matrix with scaled entries, and row reduction only needs to swap and divide. If the entry $d$ lies in row $i$ and column $j$, then the column $\\mathbf{e}_j$ goes to $d\\mathbf{e}_i$, and the inverse must send $\\mathbf{e}_i$ back to $\\frac{1}{d}\\mathbf{e}_j$. So the inverse has $\\frac{1}{d}$ in row $j$ and column $i$, the mirror position across the diagonal.",
+    "每行每列恰有一个非零元的矩阵是带系数的置换矩阵，行化简只需交换和除法。如果元素 $d$ 位于第 $i$ 行第 $j$ 列，那么 $\\mathbf{e}_j$ 被映到 $d\\mathbf{e}_i$，逆矩阵必须把 $\\mathbf{e}_i$ 映回 $\\frac{1}{d}\\mathbf{e}_j$。所以逆矩阵在第 $j$ 行第 $i$ 列有 $\\frac{1}{d}$，这是关于对角线的镜像位置。",
+  ),
+  generate(rng) {
+    const pool = [-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9];
+    const entries = [rng.pick(pool), rng.pick(pool), rng.pick(pool), rng.pick(pool)] as const;
+    const [d1, d2, d3, d4] = entries;
+    const at = rng.int(0, 3);
+    const d = entries[at] ?? 2;
+    const row = ((at + 1) % 4) + 1;
+    const column = at + 1;
+    const answer = Q.of(1, d);
+    return numberProblem({
+      prompt: t(
+        `Let $A = ${mat([
+          [0, d1, 0, 0],
+          [0, 0, d2, 0],
+          [0, 0, 0, d3],
+          [d4, 0, 0, 0],
+        ])}$. Find the entry in row ${row}, column ${column} of $A^{-1}$.`,
+        `设 $A = ${mat([
+          [0, d1, 0, 0],
+          [0, 0, d2, 0],
+          [0, 0, 0, d3],
+          [d4, 0, 0, 0],
+        ])}$。求 $A^{-1}$ 第 ${row} 行第 ${column} 列的元素。`,
+      ),
+      answer,
+      wrong: [Q.of(d), answer.neg(), 0, Q.of(1, entries[(at + 1) % 4] ?? 2), Q.of(-d)],
+      solution: t(
+        `The entry $${d}$ of $A$ lies in row ${column}, column ${row}. So the inverse has its reciprocal in the mirror position, row ${row}, column ${column}, which is $${answer.toLatex()}$.`,
+        `$A$ 的元素 $${d}$ 位于第 ${column} 行第 ${row} 列。所以逆矩阵在镜像位置第 ${row} 行第 ${column} 列有它的倒数，即 $${answer.toLatex()}$。`,
+      ),
+    });
+  },
+};
+
 /** deeperLinearAlgebraPoints gives, by topic id, the knowledge points added after a Linear Algebra topic's own. */
 export const deeperLinearAlgebraPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "the-intersection-of-two-planes": [perpendicularPlanes],
@@ -2520,4 +3377,28 @@ export const deeperLinearAlgebraPoints: Readonly<Record<string, readonly Knowled
   "norm-of-a-vector-in-inner-product-spaces": [monomialNorm],
   "pythagorean-theorem-and-triangle-inequality-in-inner-product-spaces": [triangleBounds],
   "orthogonal-vectors-in-inner-product-spaces": [trigonometricNorm],
+  "cramers-rule-for-3x3-systems": [numeratorDeterminant],
+  "row-and-column-operations-on-determinants": [determinantAfterOperations],
+  "conditions-when-a-determinant-equals-zero": [equalOffDiagonalSingular],
+  "solving-systems-of-equations-using-back-substitution": [firstUnknownOfBidiagonal],
+  "finding-the-inverse-of-an-nxn-square-matrix-using-row-operations": [inverseOfScaledPermutation],
+  "subspaces-of-n-dimensional-space-geometric-interpretation": [dimensionOfIntersection],
+  "finding-a-basis-of-a-span": [coefficientOfDependentVector],
+  "the-change-of-coordinates-matrix": [determinantOfChangeOfBasis],
+  "the-dimension-of-a-span": [rankFromFormula],
+  "kernel-of-a-linear-transformation": [largestNullityOfComposition],
+  "image-and-rank-of-a-linear-transformation": [rankOfRepeatedDerivative],
+  "diagonalizing-a-3x3-matrix-in-the-general-case": [countingDiagonalForms],
+  "reducing-real-2x2-matrices-to-rotation-scaling-form": [angleInRotationScaling],
+  "generalized-eigenvectors": [generalizedEigenspaceDimension],
+  "jordan-canonical-form-of-a-3x3-matrix": [countingJordanForms],
+  "inner-product-spaces": [traceInnerProduct],
+  "inner-product-in-vector-spaces-over-the-complex-numbers": [scalarInComplexInnerProduct],
+  "projecting-vectors-onto-subspaces-in-euclidean-spaces-orthogonal-bases": [traceOfReflection],
+  "qr-factorization": [determinantFromQr],
+  "spectral-theorem": [squareRootOfSymmetric],
+  "bilinear-forms": [symmetricMatrixOfForm],
+  "canonical-form-of-a-quadratic-form-using-lagranges-method": [indexAfterCompletingSquare],
+  "reducing-a-quadratic-curve-to-its-principal-axes": [ellipseAreaFromForm],
+  "multiple-linear-regression-with-matrices": [traceOfHatMatrix],
 };
