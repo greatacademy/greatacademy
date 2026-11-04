@@ -17,7 +17,7 @@ export interface ExamSpec {
   readonly title: Text;
   /** base are the Fundamentals topics the question practices, which become prerequisites. */
   readonly base: readonly string[];
-  /** tip is what to look for on the exam, shown before the first question. */
+  /** tip is what to look for on the exam, shown when a learner comes back to a lesson they failed. */
   readonly tip: Text;
   /** hardTip is what makes the harder questions harder. */
   readonly hardTip: Text;
@@ -45,6 +45,7 @@ export function examTopic(exam: Exam, spec: ExamSpec): TopicDef {
     prerequisites: [...spec.base],
     encompasses: spec.base.map((topic) => ({ topic, weight: 0.5 })),
     xp: 8,
+    practiceOnly: true,
     knowledgePoints: [
       {
         id: "exam-question",

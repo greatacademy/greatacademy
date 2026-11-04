@@ -78,7 +78,7 @@ function question(c: CourseEntry, run: RunState): MessageInitShape<typeof Questi
   const l = run.lesson;
   const kp = c.subject.topics.get(run.topic)!.knowledgePoints[l.kp]!;
   const lesson = { knowledgePoint: l.kp, knowledgePoints: l.kpCount, streak: l.streak, needed: c.ctx.params.kpStreak };
-  if (l.kpAsked > 0) return { ...q, lesson };
+  if (l.kpAsked > 0 || run.practice) return { ...q, lesson };
   const example = generateProblem(c.subject, { topic: run.topic, kp: l.kp, seed: run.example });
   return {
     ...q,

@@ -1,18 +1,19 @@
 import { type Client, Code, ConnectError, createClient, createRouterTransport, type Interceptor } from "@connectrpc/connect";
-import { generateProblem } from "@ga/content";
+import { createRng, generateProblem } from "@ga/content";
 import { compileMath } from "@ga/content-math";
 import { type Db, events, getSession, learnerFor, loadState } from "@ga/db";
 import { createTestDb, createUser } from "@ga/db/testing";
-import { DAY, diagnosticLength, initialState, replay } from "@ga/engine";
+import { applyEvent, DAY, diagnosticLength, initialState, type LearnerState, replay } from "@ga/engine";
 import { CatalogService } from "@ga/proto/catalog/v1/catalog_pb";
 import { LearningService, type Session, TopicStatus } from "@ga/proto/learning/v1/learning_pb";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { catalogService } from "./catalog.ts";
 import { dbKey, userIdKey } from "./context.ts";
+import { sessionMessage } from "./convert.ts";
 import { learningService } from "./learning.ts";
 import { Registry } from "./registry.ts";
-import type { RunState } from "./runner.ts";
+import { type RunState, startRun } from "./runner.ts";
 
 const registry = new Registry([compileMath()]);
 const COURSE = "algebra-foundations";
@@ -167,6 +168,19 @@ describe("LearningService", () => {
     await learning.skipDiagnostic({ courseId: "prealgebra" });
     expect((await learning.getDashboard({ courseId: "prealgebra" })).diagnosed).toBe(true);
     expect((await learning.getDashboard({ courseId: COURSE })).stats?.learned).toBe(knows.size);
+  });
+
+  it("starts a practice-only lesson with practice, unless the learner failed it", () => {
+    const c = registry.courses.get("sat-math-prep")!;
+    const topic = c.course.topics.find((t) => t.includes("-exam-"))!;
+    const intro = (state: LearnerState) => {
+      const run = startRun(c, { kind: "lesson", topic }, state, createRng(1));
+      const step = sessionMessage(c, "s", run, state).step;
+      return step?.case === "question" ? step.value.intro : undefined;
+    };
+    expect(intro(initialState)).toBeUndefined();
+    const failed = applyEvent(c.ctx, initialState, { type: "lesson", at: now, topic, passed: false, asked: 5, correct: 1 });
+    expect(intro(failed)?.example?.answer).not.toBe("");
   });
 
   it("teaches a lesson knowledge point by knowledge point and awards its XP", async () => {

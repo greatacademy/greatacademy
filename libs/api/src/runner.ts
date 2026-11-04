@@ -56,6 +56,8 @@ export type RunState =
       readonly lesson: LessonProgress;
       /** example is the seed of the worked example of the current knowledge point. */
       readonly example: number;
+      /** practice skips the explanations and worked examples of a practice-only topic. */
+      readonly practice?: boolean;
     })
   | (RunBase & { readonly kind: "review"; readonly topic: string; readonly covers: readonly string[]; readonly plan: readonly number[] })
   | (RunBase & { readonly kind: "quiz"; readonly topics: readonly string[] })
@@ -83,6 +85,7 @@ export function startRun(c: CourseEntry, task: Task, state: LearnerState, rng: R
         topic: task.topic,
         lesson: startLesson(task.topic, kpCount(c, task.topic)),
         example: newSeed(rng),
+        ...(c.subject.topics.get(task.topic)?.practiceOnly && state.topics[task.topic]?.failedAt === undefined && { practice: true }),
         asked: [],
         current: { topic: task.topic, kp: 0, seed: newSeed(rng) },
       };

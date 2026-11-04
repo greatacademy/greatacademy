@@ -96,6 +96,8 @@ One review of an advanced topic thereby replaces several reviews of the simpler 
 - two correct answers **in a row** pass the knowledge point;
 - the lesson **fails** as soon as passing the knowledge point within five questions has become impossible.
 
+A **practice-only** topic ([Content §3](content.md#3-topics)) starts directly with the practice problems. A learner who failed its lesson gets the explanations and worked examples when they come back to it.
+
 Requiring a streak rather than a count means a lucky guess is not enough, and stopping at five keeps a struggling learner from grinding: the engine reroutes them to the prerequisites instead (§3).
 
 A passed lesson:

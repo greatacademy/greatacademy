@@ -77,6 +77,8 @@ export interface TopicDef {
   /** xp is the expected minutes of the lesson for a serious learner. */
   readonly xp: number;
   readonly knowledgePoints: readonly KnowledgePointDef[];
+  /** practiceOnly starts the lesson with practice, for topics that teach nothing new; a learner who failed it gets the explanations and worked examples. */
+  readonly practiceOnly?: boolean;
   /** diagnostic is the id of the knowledge point the diagnostic asks; the last one by default. */
   readonly diagnostic?: string;
   /** standards are codes of the standards the topic covers, such as "CCSS.7.NS.A.1". */

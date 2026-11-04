@@ -56,7 +56,6 @@ The report lists outline topics missing from each course and the findings of heu
 The board tracks whether a course exists, not whether it is finished. Measured on 2026-11-03:
 
 - **SAT and ACT Math Prep are exam-style in their questions, not yet in everything.** 252 of the 284 SAT Prep topics and 345 of the 347 ACT Prep topics are exam topics (`exam.ts`), and what is left is:
-  - Lessons still show an explanation and a worked example, because the engine has no practice-only mode. The SAT outline asks for practice only, so the explanation is a short tip.
   - 61 exam topics, most of them in geometry, ask about a figure in words and draw none, unlike the real test.
   - About 124 ACT exam topics reuse the SAT generators through `multipleChoice`, so a learner taking both courses sees similar questions.
   - Options are shuffled, while the real tests list numeric options in order.
