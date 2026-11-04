@@ -37,7 +37,7 @@ export function viewOf(problem: Problem): ProblemView {
 export interface SampleOptions {
   /** samples is the number of seeds tried per knowledge point. */
   readonly samples?: number;
-  /** minDistinct is the fewest distinct prompts (with their figures) expected among the samples before a warning. */
+  /** minDistinct is the fewest distinct prompts (with their figures and sets of options) expected among the samples before a warning. */
   readonly minDistinct?: number;
   /** shard limits sampling to the topics at positions index, index + count, … so that test files can sample in parallel. */
   readonly shard?: { readonly index: number; readonly count: number };
@@ -45,6 +45,11 @@ export interface SampleOptions {
   readonly textIssue?: (text: string, locale: Locale) => string | undefined;
   /** maxPositionShare is the largest share of a choice generator's samples whose answer may sit at one option position before an error. */
   readonly maxPositionShare?: number;
+}
+
+/** optionsOf lists the options of a choice problem in a fixed order, so that shuffling them does not make a new problem. */
+function optionsOf(problem: Problem): readonly string[] {
+  return problem.answer.input.kind === "choice" ? problem.answer.input.options.map((o) => o.en).sort() : [];
 }
 
 /**
@@ -71,7 +76,7 @@ export function sampleGenerators(subject: CompiledSubject, options: SampleOption
           return;
         }
         const p = generateProblem(subject, { topic: topic.id, kp: index, seed });
-        prompts.add(JSON.stringify([p.prompt, p.figure?.svg]));
+        prompts.add(JSON.stringify([p.prompt, p.figure?.svg, optionsOf(p)]));
         if (p.answer.input.kind === "choice")
           positions.set(p.answer.expected as number, (positions.get(p.answer.expected as number) ?? 0) + 1);
       }
