@@ -120,6 +120,7 @@ import { exponentTopics } from "./topics/exponents.ts";
 import { expressionTopics } from "./topics/expressions.ts";
 import { factoringTopics } from "./topics/factoring.ts";
 import { figureReadingPoints } from "./topics/figure-reading.ts";
+import { moreFigureReadingPoints } from "./topics/figure-reading-more.ts";
 import { fractionTopics } from "./topics/fractions.ts";
 import { functionTopics } from "./topics/functions.ts";
 import { circleTheoremTopics } from "./topics/geometry-circle-theorems.ts";
@@ -278,6 +279,7 @@ function finished(topic: TopicDef): TopicDef {
       ...(deeperPrecalculusPoints[topic.id] ?? []),
       ...(deeperProbabilityStatisticsPoints[topic.id] ?? []),
       ...(figureReadingPoints[topic.id] ?? []),
+      ...(moreFigureReadingPoints[topic.id] ?? []),
     ],
   };
   return polishTopic(judgedOverFourCases.has(topic.id) ? oneOfFourTopic(weighted) : weighted);

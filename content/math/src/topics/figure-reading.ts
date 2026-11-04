@@ -1923,6 +1923,11 @@ const percentileFromDensity: KnowledgePointDef = {
  * a region or a density and tying it to the symbols. They come after a topic's own knowledge points.
  */
 export const figureReadingPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
+  "area-scale-factors-of-linear-transformations": [areaFromDeterminant],
+  "the-standard-matrix-of-a-linear-transformation": [matrixFromUnitSquare],
+  "the-angle-between-two-vectors": [dotSignFromDrawing],
+  "calculating-a-vector-projection": [projectionFromDrawing],
+  "addition-and-scalar-multiplication-of-cartesian-vectors-in-2d": [combinationFromDrawing],
   "visualizing-vector-fields": [matchingFieldPlot],
   "the-divergence-of-a-vector-field": [divergenceFromPlot],
   "the-curl-of-a-vector-field": [curlFromPlot],
