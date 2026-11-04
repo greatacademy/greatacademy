@@ -103,6 +103,7 @@ import { exponentialFunctionTopics } from "./topics/exponential-functions.ts";
 import { exponentTopics } from "./topics/exponents.ts";
 import { expressionTopics } from "./topics/expressions.ts";
 import { factoringTopics } from "./topics/factoring.ts";
+import { figureReadingPoints } from "./topics/figure-reading.ts";
 import { fractionTopics } from "./topics/fractions.ts";
 import { functionTopics } from "./topics/functions.ts";
 import { circleTheoremTopics } from "./topics/geometry-circle-theorems.ts";
@@ -235,9 +236,13 @@ const judgedOverFourCases = new Set(
     .flatMap((course) => course.units.flatMap((unit) => unit.modules.flatMap((module) => module.topics))),
 );
 
-/** finished applies the passes every topic goes through: inferred encompassings, questions over four cases and polish. */
+/** finished applies the passes every topic goes through: inferred encompassings, knowledge points that read a drawing, questions over four cases and polish. */
 function finished(topic: TopicDef): TopicDef {
-  const weighted = topic.encompasses.length ? topic : { ...topic, encompasses: inferredEncompassings[topic.id] ?? [] };
+  const weighted = {
+    ...topic,
+    encompasses: topic.encompasses.length ? topic.encompasses : (inferredEncompassings[topic.id] ?? []),
+    knowledgePoints: [...topic.knowledgePoints, ...(figureReadingPoints[topic.id] ?? [])],
+  };
   return polishTopic(judgedOverFourCases.has(topic.id) ? oneOfFourTopic(weighted) : weighted);
 }
 

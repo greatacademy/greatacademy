@@ -54,11 +54,11 @@ The report lists outline topics missing from each course and the findings of heu
 
 ## Open Gaps
 
-The board tracks whether a course exists, not whether it is finished. Measured on 2026-11-03:
+The board tracks whether a course exists, not whether it is finished. Measured on 2026-11-04:
 
-- **University courses have almost no figures.** About 1% of the topics of Linear Algebra, Multivariable Calculus and Probability & Statistics have one, and none in the Multivariable Calculus topics on vector fields, level curves and surfaces.
-- **University topics are shallow.** They average about 2.0 knowledge points, against the 3 to 4 of the design.
-- **Some questions test little.** A few reduce a skill to reading a number off the prompt, such as a cone's parametrization where the learner only computes $8u$.
+- **University courses have few figures.** About 5% of the topics of Linear Algebra, Multivariable Calculus, Calculus II, Differential Equations and Probability & Statistics have one, most of them from the 27 knowledge points of `topics/figure-reading.ts`. Add more there; Methods of Proof, Abstract Algebra and the Mathematical Methods courses have almost none.
+- **University topics are shallow.** They still average about 2.05 knowledge points, against the 3 to 4 of the design.
+- **Some questions test little.** A few reduce a skill to reading a number off the prompt. They were found by reading samples, so more may remain in the university courses.
 - **`encompassings.ts` holds inferred weights** for topics with no encompassings of their own. Writing reviewed encompassings on a topic and deleting its entry improves on them.
 - **Outside the reference catalog:** grades 1 to 3, real and complex analysis, partial differential equations, linear programming and a number theory course.
 
