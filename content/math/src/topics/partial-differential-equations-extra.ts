@@ -135,13 +135,13 @@ const burgers = topic(
         const shock = rng.bool();
         const [l, r] = shock ? [a + d, a] : [a, a + d];
         const s: [string, string] = [
-          `A shock moving at speed ${Q.of(l + r, 2).toLatex()}`,
-          `以速度 ${Q.of(l + r, 2).toLatex()} 运动的激波`,
+          `A shock moving at speed $${Q.of(l + r, 2).toLatex()}$`,
+          `以速度 $${Q.of(l + r, 2).toLatex()}$ 运动的激波`,
         ];
         const fan: [string, string] = [`A rarefaction fan between speeds ${l} and ${r}`, `速度在 ${l} 和 ${r} 之间的稀疏扇形`];
         const swapped: [string, string] = [
-          `A shock moving at speed ${Q.of(l + r + 2, 2).toLatex()}`,
-          `以速度 ${Q.of(l + r + 2, 2).toLatex()} 运动的激波`,
+          `A shock moving at speed $${Q.of(l + r + 2, 2).toLatex()}$`,
+          `以速度 $${Q.of(l + r + 2, 2).toLatex()}$ 运动的激波`,
         ];
         const still: [string, string] = [`A jump that stays at $x = 0$`, `停留在 $x = 0$ 的跳跃`];
         return choose(
