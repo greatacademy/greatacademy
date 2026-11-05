@@ -778,8 +778,8 @@ export const secondOrderRecurrenceRelationsWithPolynomialForcing: TopicDef = {
           answer: value,
           wrong: [Q.of(k * s, 1 - s), Q.of(-k, p + 2 * q), Q.of(k, s), Q.of(k)],
           solution: t(
-            `$cn = ${pn(p)}c(n - 1) + ${pn(q)}c(n - 2)${term(k, "")}$. The $n$ terms cancel because $1$ is a root, leaving $0 = ${pn(-(p + 2 * q))}c${term(k, "")}$, so $c = ${value.toLatex()}$.`,
-            `$cn = ${pn(p)}c(n - 1) + ${pn(q)}c(n - 2)${term(k, "")}$。因为 $1$ 是特征根，$n$ 的项相互抵消，剩下 $0 = ${pn(-(p + 2 * q))}c${term(k, "")}$，所以 $c = ${value.toLatex()}$。`,
+            `$cn = ${p === 0 ? "" : `${pn(p)}c(n - 1) + `}${pn(q)}c(n - 2)${term(k, "")}$. The $n$ terms cancel because $1$ is a root, leaving $0 = ${pn(-(p + 2 * q))}c${term(k, "")}$, so $c = ${value.toLatex()}$.`,
+            `$cn = ${p === 0 ? "" : `${pn(p)}c(n - 1) + `}${pn(q)}c(n - 2)${term(k, "")}$。因为 $1$ 是特征根，$n$ 的项相互抵消，剩下 $0 = ${pn(-(p + 2 * q))}c${term(k, "")}$，所以 $c = ${value.toLatex()}$。`,
           ),
         });
       },

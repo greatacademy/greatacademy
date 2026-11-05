@@ -905,7 +905,7 @@ export const combiningTheRulesOfExponents = topic(
         const k = m * n + p - e;
         const coef = Q.of(c ** n, d);
         if (k === 0 && coef.isInteger() && coef.eq(Q.one)) return this.generate(rng);
-        const expr = `\\frac{(${mono(c, [["x", m]])})^{${n}} \\cdot x^{${p}}}{${mono(d, [["x", e]])}}`;
+        const expr = `\\frac{(${mono(c, [["x", m]])})^{${n}} \\cdot ${p === 1 ? "x" : `x^{${p}}`}}{${mono(d, [["x", e]])}}`;
         const answer = positive(coef, [["x", k]]);
         return expressionProblem({
           prompt: t(`Simplify $${expr}$. Use only positive exponents.`, `化简 $${expr}$，结果只用正整数指数。`),

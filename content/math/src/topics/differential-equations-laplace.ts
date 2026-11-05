@@ -1157,7 +1157,8 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
           const p = rng.int(1, 4);
           const q = p + rng.int(1, 4);
           const y0 = rng.int(-4, 6);
-          const v0 = rng.int(-6, 6);
+          // y(0) = y'(0) = 0 has only the zero solution, which leaves nothing to find.
+          const v0 = y0 === 0 ? rng.pick([-5, -3, -2, 2, 3, 5]) : rng.int(-6, 6);
           const ans = Q.of(q * y0 + v0, q - p);
           return numberProblem({
             prompt: t(

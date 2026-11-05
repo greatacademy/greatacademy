@@ -695,8 +695,9 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvaluesAndInitialCon
         "对 $\\mathbf{x}(t) = c_1e^{\\lambda_1 t}\\mathbf{v}_1 + c_2e^{\\lambda_2 t}\\mathbf{v}_2$（$\\lambda_1 > \\lambda_2$），只要 $c_1 \\ne 0$，当 $t \\to \\infty$ 时含较大特征值的项占主导，比值 $x_2/x_1$ 趋于 $\\mathbf{v}_1$ 的斜率。若初始状态落在 $\\mathbf{v}_2$ 所在直线上，则 $c_1 = 0$，解始终保持 $\\mathbf{v}_2$ 的方向。所以先由 $\\mathbf{x}(0)$ 求出常数再下结论。",
       ),
       generate(rng: Rng): Problem {
-        const l2 = rng.int(-5, 2);
-        const l1 = l2 + rng.int(1, 4);
+        // Neither eigenvalue is 0, so no solution step writes e^{0t}.
+        const l2 = rng.pick([-5, -4, -3, -2, -1, 1, 2]);
+        const l1 = rng.pick([1, 2, 3, 4].map((gap) => l2 + gap).filter((v) => v !== 0));
         const m1 = rng.int(-4, 4);
         const m2 = m1 + rng.pick([-1, 1]);
         const [a, b, c, d] = fromEigen(l1, l2, m1, m2);

@@ -722,8 +722,9 @@ export const reducingOdesToFirstOrderLinearBySubstitution: TopicDef = {
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 5);
-        const k = rng.int(1, 12);
         const y0 = rng.int(2, 6);
+        // k = y0^2 would be the constant solution, with no exponential term left to halve.
+        const k = rng.pick([1, 2, 3, 5, 6, 7, 8, 10, 11, 12].filter((v) => v !== y0 * y0));
         const ans = Q.of(k + y0 * y0, 2);
         return numberProblem({
           prompt: t(

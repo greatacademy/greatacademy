@@ -690,7 +690,9 @@ export const solvingUnitRateProblemsUsingRatiosOfMixedNumbers = topic(
       generate(rng) {
         const ctx = rng.pick(rateContexts);
         const a = mixedQ(rng, 4);
-        const b = rng.bool() ? properQ(rng, 4) : mixedQ(rng, 4);
+        let b = rng.bool() ? properQ(rng, 4) : mixedQ(rng, 4);
+        // Equal quantities would make the unit rate 1, with nothing to divide out.
+        if (b.eq(a)) b = properQ(rng, 4);
         const m = rng.bool() ? mixedQ(rng, 4) : Q.of(rng.int(2, 8));
         return scaledProblem(ctx, a, b, m, false);
       },
@@ -705,7 +707,9 @@ export const solvingUnitRateProblemsUsingRatiosOfMixedNumbers = topic(
       generate(rng) {
         const ctx = rng.pick(rateContexts);
         const a = mixedQ(rng, 4);
-        const b = rng.bool() ? properQ(rng, 4) : mixedQ(rng, 4);
+        let b = rng.bool() ? properQ(rng, 4) : mixedQ(rng, 4);
+        // Equal quantities would make the unit rate 1, with nothing to divide out.
+        if (b.eq(a)) b = properQ(rng, 4);
         const m = rng.bool() ? mixedQ(rng, 4) : Q.of(rng.int(2, 12));
         return scaledProblem(ctx, a, b, m, true);
       },

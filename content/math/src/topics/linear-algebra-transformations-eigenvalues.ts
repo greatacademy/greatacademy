@@ -4266,8 +4266,8 @@ export const matrixFunctions: TopicDef = {
           ),
         ];
         const solution = t(
-          `For $f(x) = x^{${k}}$, the derivative is $f'(x) = ${k} x^{${k - 1}}$. At $x = ${lambda}$, we have $f(${lambda}) = ${lambda}^{${k}} = ${diagVal}$ and $f'(${lambda}) = ${k}(${lambda})^{${k - 1}} = ${superVal}$. Therefore, $J^{${k}} = \\begin{pmatrix} ${diagVal} & ${superVal} \\\\ 0 & ${diagVal} \\end{pmatrix}$.`,
-          `对于 $f(x) = x^{${k}}$，其导数为 $f'(x) = ${k} x^{${k - 1}}$。在 $x = ${lambda}$ 处，$f(${lambda}) = ${lambda}^{${k}} = ${diagVal}$ 且 $f'(${lambda}) = ${k}(${lambda})^{${k - 1}} = ${superVal}$。因此 $J^{${k}} = \\begin{pmatrix} ${diagVal} & ${superVal} \\\\ 0 & ${diagVal} \\end{pmatrix}$。`,
+          `For $f(x) = x^{${k}}$, the derivative is $f'(x) = ${k}${k === 2 ? "x" : ` x^{${k - 1}}`}$. At $x = ${lambda}$, we have $f(${lambda}) = ${lambda}^{${k}} = ${diagVal}$ and $f'(${lambda}) = ${k}(${lambda})^{${k - 1}} = ${superVal}$. Therefore, $J^{${k}} = \\begin{pmatrix} ${diagVal} & ${superVal} \\\\ 0 & ${diagVal} \\end{pmatrix}$.`,
+          `对于 $f(x) = x^{${k}}$，其导数为 $f'(x) = ${k}${k === 2 ? "x" : ` x^{${k - 1}}`}$。在 $x = ${lambda}$ 处，$f(${lambda}) = ${lambda}^{${k}} = ${diagVal}$ 且 $f'(${lambda}) = ${k}(${lambda})^{${k - 1}} = ${superVal}$。因此 $J^{${k}} = \\begin{pmatrix} ${diagVal} & ${superVal} \\\\ 0 & ${diagVal} \\end{pmatrix}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
