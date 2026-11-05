@@ -5,7 +5,7 @@ import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd } from "@ga/subject-math";
-
+import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { drawn } from "./figure-reading-more.ts";
 
@@ -162,83 +162,89 @@ const distanceBetweenPoints = point(
   },
 );
 
-const principalArgument = point(
-  "the-principal-argument-from-a-drawing",
-  ["The principal argument from a drawing", "由图读主辐角"],
-  [
-    "The principal argument is the one angle of a point that lies above $-\\pi$ and at most $\\pi$. Points above the real axis have positive principal argument. Points below it have negative principal argument, measured clockwise from the positive real axis, even though the same direction also has a positive angle larger than $\\pi$.",
-    "主辐角是点的辐角中大于 $-\\pi$ 且不超过 $\\pi$ 的那一个。实轴上方的点主辐角为正。实轴下方的点主辐角为负，从正实轴按顺时针方向量取，尽管同一方向也有大于 $\\pi$ 的正角。",
-  ],
-  (rng) => {
-    const k = rng.int(-3, 4);
-    const a = rng.int(1, 4);
-    const unit = octant(k);
-    const z: Point = [a * unit[0], a * unit[1]];
-    const answer = piTimes(k, 4);
-    return choose(
-      rng,
-      [
-        "The point $z$ is drawn with the ray from the origin. What is the principal argument of $z$?",
-        "图中画出了点 $z$ 和从原点出发的射线。$z$ 的主辐角是多少？",
-      ],
-      same(answer),
-      [same(piTimes(k + 8, 4)), same(piTimes(-k, 4)), same(piTimes(k > 0 ? k - 4 : k + 4, 4)), same(piTimes(k + 2, 4))],
-      [
-        k < 0
-          ? `The point lies below the real axis, so the angle is measured clockwise and is negative: it is $${answer}$. Its positive partner $${piTimes(k + 8, 4)}$ lies outside the principal range.`
-          : `The ray turns counterclockwise from the positive real axis through $${answer}$, and this angle lies in the principal range, so it is the principal argument.`,
-        k < 0
-          ? `点在实轴下方，所以角按顺时针量取，为负：它是 $${answer}$。与之对应的正角 $${piTimes(k + 8, 4)}$ 不在主值范围内。`
-          : `射线从正实轴逆时针转过 $${answer}$，这个角在主值范围内，所以它就是主辐角。`,
-      ],
-      fig(
-        argand(5),
+const principalArgument = {
+  ...point(
+    "the-principal-argument-from-a-drawing",
+    ["The principal argument from a drawing", "由图读主辐角"],
+    [
+      "The principal argument is the one angle of a point that lies above $-\\pi$ and at most $\\pi$. Points above the real axis have positive principal argument. Points below it have negative principal argument, measured clockwise from the positive real axis, even though the same direction also has a positive angle larger than $\\pi$.",
+      "主辐角是点的辐角中大于 $-\\pi$ 且不超过 $\\pi$ 的那一个。实轴上方的点主辐角为正。实轴下方的点主辐角为负，从正实轴按顺时针方向量取，尽管同一方向也有大于 $\\pi$ 的正角。",
+    ],
+    (rng) => {
+      const k = rng.int(-3, 4);
+      const a = rng.int(1, 4);
+      const unit = octant(k);
+      const z: Point = [a * unit[0], a * unit[1]];
+      const answer = piTimes(k, 4);
+      return choose(
+        rng,
         [
-          { kind: "segment", a: [0, 0], b: z, accent: true },
-          { kind: "point", at: z, label: "z", dir: z[1] < 0 ? "s" : "n", accent: true },
+          "The point $z$ is drawn with the ray from the origin. What is the principal argument of $z$?",
+          "图中画出了点 $z$ 和从原点出发的射线。$z$ 的主辐角是多少？",
         ],
-        [`A ray from the origin to the point z at (${z[0]}, ${z[1]}).`, `从原点到点 z 的射线，z 位于 (${z[0]}, ${z[1]})。`],
-      ),
-    );
-  },
-);
+        same(answer),
+        [same(piTimes(k + 8, 4)), same(piTimes(-k, 4)), same(piTimes(k > 0 ? k - 4 : k + 4, 4)), same(piTimes(k + 2, 4))],
+        [
+          k < 0
+            ? `The point lies below the real axis, so the angle is measured clockwise and is negative: it is $${answer}$. Its positive partner $${piTimes(k + 8, 4)}$ lies outside the principal range.`
+            : `The ray turns counterclockwise from the positive real axis through $${answer}$, and this angle lies in the principal range, so it is the principal argument.`,
+          k < 0
+            ? `点在实轴下方，所以角按顺时针量取，为负：它是 $${answer}$。与之对应的正角 $${piTimes(k + 8, 4)}$ 不在主值范围内。`
+            : `射线从正实轴逆时针转过 $${answer}$，这个角在主值范围内，所以它就是主辐角。`,
+        ],
+        fig(
+          argand(5),
+          [
+            { kind: "segment", a: [0, 0], b: z, accent: true },
+            { kind: "point", at: z, label: "z", dir: z[1] < 0 ? "s" : "n", accent: true },
+          ],
+          [`A ray from the origin to the point z at (${z[0]}, ${z[1]}).`, `从原点到点 z 的射线，z 位于 (${z[0]}, ${z[1]})。`],
+        ),
+      );
+    },
+  ),
+  figure: precalculusDrawings3["the-polar-form-of-a-complex-number#the-principal-argument-from-a-drawing"],
+};
 
-const rootsFromPicture = point(
-  "the-equation-from-its-roots-on-a-circle",
-  ["The equation from its roots on a circle", "由圆上的根读方程"],
-  [
-    "The solutions of $z^n = w$ are $n$ points evenly spaced on a circle centered at the origin. So the number of dots gives $n$, the radius $R$ gives $|w| = R^n$, and multiplying the angle of any one dot by $n$ gives the angle of $w$. A dot on the positive real axis means that $w$ is positive.",
-    "$z^n = w$ 的解是以原点为圆心的圆上均匀分布的 $n$ 个点。所以点的个数给出 $n$，半径 $R$ 给出 $|w| = R^n$，任一点的辐角乘以 $n$ 给出 $w$ 的辐角。正实轴上有点就说明 $w$ 为正。",
-  ],
-  (rng) => {
-    const n = rng.int(3, 7);
-    const R = rng.int(1, 3);
-    const positive = rng.bool();
-    const start = positive ? 0 : Math.PI / n;
-    const answer = (positive ? 1 : -1) * R ** n;
-    const marks: PlaneMark[] = [{ kind: "circle", center: [0, 0], r: R, dashed: true }];
-    for (let j = 0; j < n; j++) {
-      const a = start + (2 * Math.PI * j) / n;
-      marks.push({ kind: "point", at: [R * Math.cos(a), R * Math.sin(a)], accent: true });
-    }
-    return ask(
-      [
-        "The dots are all the solutions of an equation $z^n = w$ with $w$ a real number. What is $w$?",
-        "图中的点是方程 $z^n = w$ 的全部解，其中 $w$ 是实数。$w$ 是多少？",
-      ],
-      answer,
-      [-answer, n * R, R ** (n - 1)],
-      [
-        `There are $${n}$ dots at distance $${R}$ from the origin, so $n = ${n}$ and $|w| = ${R}^{${n}}$. ${positive ? "One dot lies on the positive real axis, so $w$ is positive" : `The first dot above the positive real axis has angle $${piTimes(1, n)}$, and $${n}$ times that is $\\pi$, so $w$ is negative`}, which gives $w = ${answer}$.`,
-        `共有 $${n}$ 个点，到原点的距离为 $${R}$，所以 $n = ${n}$，$|w| = ${R}^{${n}}$。${positive ? "有一个点在正实轴上，所以 $w$ 为正" : `正实轴上方第一个点的辐角是 $${piTimes(1, n)}$，乘以 $${n}$ 得 $\\pi$，所以 $w$ 为负`}，于是 $w = ${answer}$。`,
-      ],
-      fig(argand(4), marks, [
-        `${n} dots evenly spaced on a dashed circle of radius ${R} about the origin.`,
-        `${n} 个点均匀分布在以原点为圆心、半径为 ${R} 的虚线圆上。`,
-      ]),
-    );
-  },
-);
+const rootsFromPicture = {
+  ...point(
+    "the-equation-from-its-roots-on-a-circle",
+    ["The equation from its roots on a circle", "由圆上的根读方程"],
+    [
+      "The solutions of $z^n = w$ are $n$ points evenly spaced on a circle centered at the origin. So the number of dots gives $n$, the radius $R$ gives $|w| = R^n$, and multiplying the angle of any one dot by $n$ gives the angle of $w$. A dot on the positive real axis means that $w$ is positive.",
+      "$z^n = w$ 的解是以原点为圆心的圆上均匀分布的 $n$ 个点。所以点的个数给出 $n$，半径 $R$ 给出 $|w| = R^n$，任一点的辐角乘以 $n$ 给出 $w$ 的辐角。正实轴上有点就说明 $w$ 为正。",
+    ],
+    (rng) => {
+      const n = rng.int(3, 7);
+      const R = rng.int(1, 3);
+      const positive = rng.bool();
+      const start = positive ? 0 : Math.PI / n;
+      const answer = (positive ? 1 : -1) * R ** n;
+      const marks: PlaneMark[] = [{ kind: "circle", center: [0, 0], r: R, dashed: true }];
+      for (let j = 0; j < n; j++) {
+        const a = start + (2 * Math.PI * j) / n;
+        marks.push({ kind: "point", at: [R * Math.cos(a), R * Math.sin(a)], accent: true });
+      }
+      return ask(
+        [
+          "The dots are all the solutions of an equation $z^n = w$ with $w$ a real number. What is $w$?",
+          "图中的点是方程 $z^n = w$ 的全部解，其中 $w$ 是实数。$w$ 是多少？",
+        ],
+        answer,
+        [-answer, n * R, R ** (n - 1)],
+        [
+          `There are $${n}$ dots at distance $${R}$ from the origin, so $n = ${n}$ and $|w| = ${R}^{${n}}$. ${positive ? "One dot lies on the positive real axis, so $w$ is positive" : `The first dot above the positive real axis has angle $${piTimes(1, n)}$, and $${n}$ times that is $\\pi$, so $w$ is negative`}, which gives $w = ${answer}$.`,
+          `共有 $${n}$ 个点，到原点的距离为 $${R}$，所以 $n = ${n}$，$|w| = ${R}^{${n}}$。${positive ? "有一个点在正实轴上，所以 $w$ 为正" : `正实轴上方第一个点的辐角是 $${piTimes(1, n)}$，乘以 $${n}$ 得 $\\pi$，所以 $w$ 为负`}，于是 $w = ${answer}$。`,
+        ],
+        fig(argand(4), marks, [
+          `${n} dots evenly spaced on a dashed circle of radius ${R} about the origin.`,
+          `${n} 个点均匀分布在以原点为圆心、半径为 ${R} 的虚线圆上。`,
+        ]),
+      );
+    },
+  ),
+  figure: precalculusDrawings3["higher-roots-of-complex-numbers#the-equation-from-its-roots-on-a-circle"],
+};
 
 const windingFromLoop = point(
   "the-winding-number-of-a-drawn-loop",

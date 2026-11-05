@@ -2,6 +2,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { choose, type Pair, whole } from "./early-grades-more-kit.ts";
 import { chooseFilled, frac, fraction, integer, skill } from "./third-kit.ts";
@@ -36,54 +37,57 @@ const triples: readonly (readonly [number, number, number])[] = [
 /** deeperPrecalculusThird2Points holds these third knowledge points, by topic. */
 export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "introduction-to-vectors": [
-    skill(
-      "equal-vectors-in-a-parallelogram",
-      ["Equal vectors in a parallelogram", "平行四边形中的相等向量"],
-      [
-        "Two vectors are equal when they have the same length and direction, wherever they start. Opposite sides of a parallelogram, read in the same direction, are therefore equal vectors.",
-        "两个向量长度和方向都相同就相等，不管起点在哪里。所以平行四边形的对边，按相同方向读，是相等的向量。",
-      ],
-      (rng) => {
-        const [A, B, C, D] = rng.sample(["A", "B", "C", "D", "P", "Q", "R", "S", "K", "L", "M", "N"], 4) as [
-          string,
-          string,
-          string,
-          string,
-        ];
-        return reasoned(
-          chooseFilled(
-            rng,
+    {
+      ...skill(
+        "equal-vectors-in-a-parallelogram",
+        ["Equal vectors in a parallelogram", "平行四边形中的相等向量"],
+        [
+          "Two vectors are equal when they have the same length and direction, wherever they start. Opposite sides of a parallelogram, read in the same direction, are therefore equal vectors.",
+          "两个向量长度和方向都相同就相等，不管起点在哪里。所以平行四边形的对边，按相同方向读，是相等的向量。",
+        ],
+        (rng) => {
+          const [A, B, C, D] = rng.sample(["A", "B", "C", "D", "P", "Q", "R", "S", "K", "L", "M", "N"], 4) as [
+            string,
+            string,
+            string,
+            string,
+          ];
+          return reasoned(
+            chooseFilled(
+              rng,
+              [
+                `$${A}${B}${C}${D}$ is a parallelogram, with vertices in that order. Which vector equals $\\vec{${A}${B}}$?`,
+                `$${A}${B}${C}${D}$ 是平行四边形，顶点按此顺序。哪个向量等于 $\\vec{${A}${B}}$？`,
+              ],
+              `\\vec{${D}${C}}`,
+              [`\\vec{${C}${D}}`, `\\vec{${A}${D}}`, `\\vec{${B}${C}}`],
+              [
+                `$\\vec{${D}${C}}$ runs along the opposite side in the same direction as $\\vec{${A}${B}}$.`,
+                `$\\vec{${D}${C}}$ 沿对边，方向与 $\\vec{${A}${B}}$ 相同。`,
+              ],
+            ),
             [
-              `$${A}${B}${C}${D}$ is a parallelogram, with vertices in that order. Which vector equals $\\vec{${A}${B}}$?`,
-              `$${A}${B}${C}${D}$ 是平行四边形，顶点按此顺序。哪个向量等于 $\\vec{${A}${B}}$？`,
+              [
+                `$\\vec{${C}${D}}$`,
+                "This runs along the opposite side but in the other direction, and equal vectors share their direction.",
+                "它沿对边，但方向相反，而相等的向量方向相同。",
+              ],
+              [
+                `$\\vec{${A}${D}}$`,
+                "This is a neighboring side, not the opposite one, so its direction differs.",
+                "这是相邻的边，不是对边，所以方向不同。",
+              ],
+              [
+                `$\\vec{${B}${C}}$`,
+                "This is a neighboring side, not the opposite one, so its direction differs.",
+                "这是相邻的边，不是对边，所以方向不同。",
+              ],
             ],
-            `\\vec{${D}${C}}`,
-            [`\\vec{${C}${D}}`, `\\vec{${A}${D}}`, `\\vec{${B}${C}}`],
-            [
-              `$\\vec{${D}${C}}$ runs along the opposite side in the same direction as $\\vec{${A}${B}}$.`,
-              `$\\vec{${D}${C}}$ 沿对边，方向与 $\\vec{${A}${B}}$ 相同。`,
-            ],
-          ),
-          [
-            [
-              `$\\vec{${C}${D}}$`,
-              "This runs along the opposite side but in the other direction, and equal vectors share their direction.",
-              "它沿对边，但方向相反，而相等的向量方向相同。",
-            ],
-            [
-              `$\\vec{${A}${D}}$`,
-              "This is a neighboring side, not the opposite one, so its direction differs.",
-              "这是相邻的边，不是对边，所以方向不同。",
-            ],
-            [
-              `$\\vec{${B}${C}}$`,
-              "This is a neighboring side, not the opposite one, so its direction differs.",
-              "这是相邻的边，不是对边，所以方向不同。",
-            ],
-          ],
-        );
-      },
-    ),
+          );
+        },
+      ),
+      figure: precalculusDrawings2["introduction-to-vectors#equal-vectors-in-a-parallelogram"],
+    },
   ],
   "the-triangle-law-for-the-addition-of-two-vectors": [
     skill(
@@ -117,28 +121,31 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
     ),
   ],
   "the-magnitude-of-a-vector": [
-    skill(
-      "perpendicular-vectors-and-their-sum",
-      ["Perpendicular vectors and their sum", "垂直向量及其和"],
-      [
-        "When two vectors are perpendicular, the triangle law gives a right triangle. So the magnitude of the sum comes from the Pythagorean theorem and not from adding the magnitudes.",
-        "两个向量垂直时，三角形法则得到直角三角形。所以和的模由勾股定理求，而不是把模相加。",
-      ],
-      (rng) => {
-        const [p, q, r] = rng.pick(triples);
-        const k = rng.int(1, 4);
-        const [a, b, c] = [k * p, k * q, k * r];
-        return whole(
-          [
-            `Vectors $\\mathbf{u}$ and $\\mathbf{v}$ are perpendicular, with $\\|\\mathbf{u}\\| = ${a}$ and $\\|\\mathbf{v}\\| = ${b}$. Find $\\|\\mathbf{u} + \\mathbf{v}\\|$.`,
-            `向量 $\\mathbf{u}$ 和 $\\mathbf{v}$ 垂直，$\\|\\mathbf{u}\\| = ${a}$，$\\|\\mathbf{v}\\| = ${b}$。求 $\\|\\mathbf{u} + \\mathbf{v}\\|$。`,
-          ],
-          c,
-          [a + b, b - a, a * b],
-          [`$\\sqrt{${a}^{2} + ${b}^{2}} = ${c}$.`, `$\\sqrt{${a}^{2} + ${b}^{2}} = ${c}$。`],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "perpendicular-vectors-and-their-sum",
+        ["Perpendicular vectors and their sum", "垂直向量及其和"],
+        [
+          "When two vectors are perpendicular, the triangle law gives a right triangle. So the magnitude of the sum comes from the Pythagorean theorem and not from adding the magnitudes.",
+          "两个向量垂直时，三角形法则得到直角三角形。所以和的模由勾股定理求，而不是把模相加。",
+        ],
+        (rng) => {
+          const [p, q, r] = rng.pick(triples);
+          const k = rng.int(1, 4);
+          const [a, b, c] = [k * p, k * q, k * r];
+          return whole(
+            [
+              `Vectors $\\mathbf{u}$ and $\\mathbf{v}$ are perpendicular, with $\\|\\mathbf{u}\\| = ${a}$ and $\\|\\mathbf{v}\\| = ${b}$. Find $\\|\\mathbf{u} + \\mathbf{v}\\|$.`,
+              `向量 $\\mathbf{u}$ 和 $\\mathbf{v}$ 垂直，$\\|\\mathbf{u}\\| = ${a}$，$\\|\\mathbf{v}\\| = ${b}$。求 $\\|\\mathbf{u} + \\mathbf{v}\\|$。`,
+            ],
+            c,
+            [a + b, b - a, a * b],
+            [`$\\sqrt{${a}^{2} + ${b}^{2}} = ${c}$.`, `$\\sqrt{${a}^{2} + ${b}^{2}} = ${c}$。`],
+          );
+        },
+      ),
+      figure: precalculusDrawings2["the-magnitude-of-a-vector#perpendicular-vectors-and-their-sum"],
+    },
   ],
   "problem-solving-using-vector-diagrams": [
     skill(
@@ -277,66 +284,72 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
     ),
   ],
   "calculating-the-direction-of-cartesian-vectors-in-2d": [
-    skill(
-      "bearings-from-the-direction-angle",
-      ["Bearings from the direction angle", "由方向角求方位角"],
-      [
-        "A bearing is measured clockwise from north, while a direction angle is measured counterclockwise from east. So the bearing is $90^{\\circ}$ minus the direction angle, adjusted by a full turn if negative.",
-        "方位角从正北顺时针量，方向角从正东逆时针量。所以方位角是 90 度减方向角，若为负再加一整圈。",
-      ],
-      (rng) => {
-        const angle = rng.int(1, 71) * 5;
-        const bearing = (90 - angle + 360) % 360;
-        return whole(
-          [
-            `A vector has direction angle $${angle}^{\\circ}$. What is its bearing, measured clockwise from north, in degrees from 0 up to 360?`,
-            `一个向量的方向角是 $${angle}^{\\circ}$。它的方位角（从正北顺时针量，0 到 360 度）是多少度？`,
-          ],
-          bearing,
-          [angle, (angle + 90) % 360, (bearing + 180) % 360],
-          [
-            `Bearings run the other way from north, so $90 - ${angle} = ${90 - angle}$${90 - angle < 0 ? `, and adding $360$ gives $${bearing}$` : ""}.`,
-            `方位角从正北反向量，所以 $90 - ${angle} = ${90 - angle}$${90 - angle < 0 ? `，加 360 得 ${bearing}` : ""}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "bearings-from-the-direction-angle",
+        ["Bearings from the direction angle", "由方向角求方位角"],
+        [
+          "A bearing is measured clockwise from north, while a direction angle is measured counterclockwise from east. So the bearing is $90^{\\circ}$ minus the direction angle, adjusted by a full turn if negative.",
+          "方位角从正北顺时针量，方向角从正东逆时针量。所以方位角是 90 度减方向角，若为负再加一整圈。",
+        ],
+        (rng) => {
+          const angle = rng.int(1, 71) * 5;
+          const bearing = (90 - angle + 360) % 360;
+          return whole(
+            [
+              `A vector has direction angle $${angle}^{\\circ}$. What is its bearing, measured clockwise from north, in degrees from 0 up to 360?`,
+              `一个向量的方向角是 $${angle}^{\\circ}$。它的方位角（从正北顺时针量，0 到 360 度）是多少度？`,
+            ],
+            bearing,
+            [angle, (angle + 90) % 360, (bearing + 180) % 360],
+            [
+              `Bearings run the other way from north, so $90 - ${angle} = ${90 - angle}$${90 - angle < 0 ? `, and adding $360$ gives $${bearing}$` : ""}.`,
+              `方位角从正北反向量，所以 $90 - ${angle} = ${90 - angle}$${90 - angle < 0 ? `，加 360 得 ${bearing}` : ""}。`,
+            ],
+          );
+        },
+      ),
+      figure: precalculusDrawings2["calculating-the-direction-of-cartesian-vectors-in-2d#bearings-from-the-direction-angle"],
+    },
   ],
   "calculating-the-components-of-cartesian-vectors-in-2d": [
-    skill(
-      "components-across-the-quadrants",
-      ["Components across the quadrants", "各象限的分量"],
-      [
-        "The formulas $x = r\\cos\\theta$ and $y = r\\sin\\theta$ give the signs by themselves, as cosine and sine carry them. A second quadrant angle therefore gives a negative $x$ and a positive $y$.",
-        "公式 $x = r\\cos\\theta$ 和 $y = r\\sin\\theta$ 本身就给出符号，因为余弦和正弦带符号。所以第二象限的角使 $x$ 为负、$y$ 为正。",
-      ],
-      (rng) => {
-        const r = 2 * rng.int(1, 15);
-        const row = rng.pick<[number, number, number]>([
-          [120, -1, 3],
-          [240, -1, -3],
-          [300, 1, -3],
-          [60, 1, 3],
-        ]);
-        const half = r / 2;
-        const xText = row[1] < 0 ? -half : half;
-        const yText = `${row[2] < 0 ? "-" : ""}${half === 1 ? "" : half}\\sqrt{3}`;
-        const flip = `${row[2] < 0 ? "" : "-"}${half === 1 ? "" : half}\\sqrt{3}`;
-        return chooseFilled(
-          rng,
-          [
-            `A vector has magnitude ${r} and direction angle $${row[0]}^{\\circ}$. Find its components.`,
-            `一个向量的模是 ${r}，方向角是 $${row[0]}^{\\circ}$。求它的分量。`,
-          ],
-          `\\langle ${xText}, ${yText} \\rangle`,
-          [`\\langle ${-xText}, ${yText} \\rangle`, `\\langle ${xText}, ${flip} \\rangle`, `\\langle ${yText}, ${xText} \\rangle`],
-          [
-            `$x = ${r}\\cos ${row[0]}^{\\circ} = ${xText}$, and $y = ${r}\\sin ${row[0]}^{\\circ} = ${yText}$.`,
-            `$x = ${r}\\cos ${row[0]}^{\\circ} = ${xText}$，$y = ${r}\\sin ${row[0]}^{\\circ} = ${yText}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "components-across-the-quadrants",
+        ["Components across the quadrants", "各象限的分量"],
+        [
+          "The formulas $x = r\\cos\\theta$ and $y = r\\sin\\theta$ give the signs by themselves, as cosine and sine carry them. A second quadrant angle therefore gives a negative $x$ and a positive $y$.",
+          "公式 $x = r\\cos\\theta$ 和 $y = r\\sin\\theta$ 本身就给出符号，因为余弦和正弦带符号。所以第二象限的角使 $x$ 为负、$y$ 为正。",
+        ],
+        (rng) => {
+          const r = 2 * rng.int(1, 15);
+          const row = rng.pick<[number, number, number]>([
+            [120, -1, 3],
+            [240, -1, -3],
+            [300, 1, -3],
+            [60, 1, 3],
+          ]);
+          const half = r / 2;
+          const xText = row[1] < 0 ? -half : half;
+          const yText = `${row[2] < 0 ? "-" : ""}${half === 1 ? "" : half}\\sqrt{3}`;
+          const flip = `${row[2] < 0 ? "" : "-"}${half === 1 ? "" : half}\\sqrt{3}`;
+          return chooseFilled(
+            rng,
+            [
+              `A vector has magnitude ${r} and direction angle $${row[0]}^{\\circ}$. Find its components.`,
+              `一个向量的模是 ${r}，方向角是 $${row[0]}^{\\circ}$。求它的分量。`,
+            ],
+            `\\langle ${xText}, ${yText} \\rangle`,
+            [`\\langle ${-xText}, ${yText} \\rangle`, `\\langle ${xText}, ${flip} \\rangle`, `\\langle ${yText}, ${xText} \\rangle`],
+            [
+              `$x = ${r}\\cos ${row[0]}^{\\circ} = ${xText}$, and $y = ${r}\\sin ${row[0]}^{\\circ} = ${yText}$.`,
+              `$x = ${r}\\cos ${row[0]}^{\\circ} = ${xText}$，$y = ${r}\\sin ${row[0]}^{\\circ} = ${yText}$。`,
+            ],
+          );
+        },
+      ),
+      figure: precalculusDrawings2["calculating-the-components-of-cartesian-vectors-in-2d#components-across-the-quadrants"],
+    },
   ],
   "velocity-and-acceleration-for-plane-motion": [
     skill(

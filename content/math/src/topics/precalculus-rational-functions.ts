@@ -21,7 +21,7 @@ import {
   surdLatex,
   union,
 } from "@ga/subject-math";
-
+import { precalculusDrawings } from "../explanation-drawings-precalculus.ts";
 import {
   choiceProblem,
   expressionProblem,
@@ -1184,6 +1184,7 @@ export const rootsOfRationalFunctions: TopicDef = {
     },
     {
       id: "intercepts-of-rational-functions",
+      figure: precalculusDrawings["roots-of-rational-functions#intercepts-of-rational-functions"],
       title: t("The $y$-intercept", "$y$ 轴截距"),
       explanation: t(
         "The $y$-intercept of $f(x) = \\frac{p(x)}{q(x)}$ is $(0, f(0))$, where $f(0) = \\frac{p(0)}{q(0)}$ is the constant term of the numerator over the constant term of the denominator. It exists only when $q(0) \\neq 0$.\n\n$$f(x) = \\frac{x^{2} - 3x + 6}{2x^{2} + x - 4}: \\quad f(0) = \\frac{6}{-4} = -\\frac{3}{2}$$\n\nso the graph crosses the $y$-axis at $\\left(0, -\\frac{3}{2}\\right)$.",
@@ -1246,6 +1247,7 @@ export const verticalAsymptotesOfRationalFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "denominators-with-leading-coefficients",
+      figure: precalculusDrawings["vertical-asymptotes-of-rational-functions#denominators-with-leading-coefficients"],
       title: t("Denominators with leading coefficients", "首项系数不为 1 的分母"),
       explanation: t(
         "$f(x) = \\frac{p(x)}{q(x)}$ has a **vertical asymptote** $x = a$ when $q(a) = 0$ and the factor $x - a$ does not cancel with the numerator. Near such an $a$, $f$ grows without bound.\n\nFactor the denominator completely; a factor $kx - m$ gives $x = \\frac{m}{k}$:\n\n$$f(x) = \\frac{5}{6x^{2} + x - 2} = \\frac{5}{(2x - 1)(3x + 2)}$$\n\nThe vertical asymptotes are $x = \\frac{1}{2}$ and $x = -\\frac{2}{3}$.",
@@ -1284,6 +1286,7 @@ export const verticalAsymptotesOfRationalFunctions: TopicDef = {
     },
     {
       id: "cubic-denominators",
+      figure: precalculusDrawings["vertical-asymptotes-of-rational-functions#cubic-denominators"],
       title: t("Cubic denominators", "三次分母"),
       explanation: t(
         "A cubic denominator often factors by taking out a common factor first:\n\n$$f(x) = \\frac{x + 3}{x^{3} - 9x} = \\frac{x + 3}{x(x - 3)(x + 3)}$$\n\nThe denominator is $0$ at $x = 0$, $3$ and $-3$. The factor $x + 3$ cancels with the numerator, leaving a hole at $x = -3$. So the vertical asymptotes are $x = 0$ and $x = 3$.",
@@ -1398,6 +1401,7 @@ export const locatingHolesInRationalFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "holes-of-factored-functions",
+      figure: precalculusDrawings["locating-holes-in-rational-functions#holes-of-factored-functions"],
       title: t("The coordinates of a hole", "空洞的坐标"),
       explanation: t(
         "When a factor $x - h$ cancels completely, $f$ is not defined at $x = h$ but behaves like the simplified function there. Its graph is the graph of the simplified function with one point missing, a **hole**, drawn as an open circle.\n\nTo find the hole, cancel, then substitute $x = h$ into the simplified function:\n\n$$f(x) = \\frac{2(x - 3)(x + 1)}{(x - 3)(x - 5)} = \\frac{2(x + 1)}{x - 5} \\quad (x \\neq 3)$$\n\n$$\\frac{2(3 + 1)}{3 - 5} = -4$$\n\nso the hole is at $(3, -4)$.",
@@ -1430,6 +1434,7 @@ export const locatingHolesInRationalFunctions: TopicDef = {
     },
     {
       id: "holes-after-factoring",
+      figure: precalculusDrawings["locating-holes-in-rational-functions#holes-after-factoring"],
       title: t("Holes after factoring", "因式分解后求空洞"),
       explanation: t(
         "When the numerator and denominator are expanded, factor both to find a common factor.\n\n$$f(x) = \\frac{x^{2} + x - 6}{2x^{2} - 3x - 2} = \\frac{(x - 2)(x + 3)}{(x - 2)(2x + 1)} = \\frac{x + 3}{2x + 1} \\quad (x \\neq 2)$$\n\nAt $x = 2$ the simplified function is $\\frac{5}{5} = 1$, so the hole is at $(2, 1)$. The remaining factor $2x + 1$ gives the vertical asymptote $x = -\\frac{1}{2}$.",
@@ -1468,6 +1473,7 @@ export const locatingHolesInRationalFunctions: TopicDef = {
     },
     {
       id: "hole-or-asymptote",
+      figure: precalculusDrawings["locating-holes-in-rational-functions#hole-or-asymptote"],
       title: t("Hole or vertical asymptote?", "空洞还是竖直渐近线？"),
       explanation: t(
         "At a zero $x = a$ of the denominator, count how many times $x - a$ appears on the top and on the bottom:\n\n- at least as many times on top: it cancels completely, and there is a **hole**;\n- more times on the bottom: a factor is left in the denominator, and there is a **vertical asymptote**.\n\nIf $x = a$ is not a zero of the denominator, $f(a)$ is defined: neither.\n\n$$\\frac{(x - 1)^{2}}{(x - 1)(x + 4)}: \\text{ hole at } x = 1, \\qquad \\frac{x - 1}{(x - 1)^{2}(x + 4)}: \\text{ asymptote } x = 1$$",
@@ -1533,6 +1539,7 @@ export const horizontalAsymptotesOfRationalFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "equal-degrees",
+      figure: precalculusDrawings["horizontal-asymptotes-of-rational-functions#equal-degrees"],
       title: t("Equal degrees", "次数相等"),
       explanation: t(
         "For large $|x|$, every polynomial is dominated by its leading term. So when the numerator and the denominator have the **same degree**,\n\n$$f(x) = \\frac{6x^{2} - x + 5}{3 - 4x^{2}} \\approx \\frac{6x^{2}}{-4x^{2}} = -\\frac{3}{2}$$\n\nand $f(x) \\to -\\frac{3}{2}$ as $x \\to \\pm\\infty$. The horizontal asymptote is $y = -\\frac{3}{2}$, the ratio of the **leading** coefficients. Find the leading terms carefully when the terms are not in order.",
@@ -1565,6 +1572,7 @@ export const horizontalAsymptotesOfRationalFunctions: TopicDef = {
     },
     {
       id: "comparing-degrees",
+      figure: precalculusDrawings["horizontal-asymptotes-of-rational-functions#comparing-degrees"],
       title: t("Comparing degrees", "比较次数"),
       explanation: t(
         "Let $n$ be the degree of the numerator and $m$ the degree of the denominator.\n\n- $n < m$: the denominator grows faster, $f(x) \\to 0$, and the horizontal asymptote is $y = 0$.\n- $n = m$: the horizontal asymptote is $y = \\frac{a}{b}$, the ratio of the leading coefficients.\n- $n > m$: $|f(x)|$ grows without bound, and there is **no** horizontal asymptote.\n\nFor example, $\\frac{5x + 1}{x^{2} - 4}$ has $y = 0$, $\\frac{5x^{2} + 1}{x^{2} - 4}$ has $y = 5$, and $\\frac{5x^{3} + 1}{x^{2} - 4}$ has none.",
@@ -1687,6 +1695,7 @@ export const endBehaviorOfRationalFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "limits-at-infinity",
+      figure: precalculusDrawings["end-behavior-of-rational-functions#limits-at-infinity"],
       title: t("Limits at infinity", "无穷远处的极限"),
       explanation: t(
         "$\\lim_{x \\to \\infty} f(x) = L$ means that $f(x)$ gets as close to $L$ as we like when $x$ is large enough; $\\lim_{x \\to -\\infty}$ is the same for large negative $x$. For a rational function whose numerator degree is at most the denominator degree, the limit at both ends is the horizontal asymptote:\n\n$$\\lim_{x \\to -\\infty} \\frac{4x^{3} - 1}{2x^{3} + x} = \\frac{4}{2} = 2, \\qquad \\lim_{x \\to \\infty} \\frac{4x - 1}{2x^{3} + x} = 0$$",
@@ -1750,6 +1759,7 @@ export const endBehaviorOfRationalFunctions: TopicDef = {
     },
     {
       id: "slant-asymptotes",
+      figure: precalculusDrawings["end-behavior-of-rational-functions#slant-asymptotes"],
       title: t("Slant asymptotes", "斜渐近线"),
       explanation: t(
         "When the numerator's degree is exactly one more than the denominator's, divide. The quotient is a linear function, and the remainder over the denominator tends to $0$, so the graph approaches the line $y = $ quotient: a **slant** (oblique) **asymptote**.\n\n$$f(x) = \\frac{2x^{2} - 3x + 4}{x - 2} = 2x + 1 + \\frac{6}{x - 2}$$\n\nAs $x \\to \\pm\\infty$, $\\frac{6}{x - 2} \\to 0$, so the slant asymptote is $y = 2x + 1$.",
@@ -1808,6 +1818,7 @@ export const infiniteLimitsOfRationalFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "one-sided-infinite-limits",
+      figure: precalculusDrawings["infinite-limits-of-rational-functions#one-sided-infinite-limits"],
       title: t("One-sided infinite limits", "单侧无穷极限"),
       explanation: t(
         "$\\lim_{x \\to a^{+}} f(x) = \\infty$ means that $f(x)$ grows without bound as $x$ approaches $a$ from the right ($x > a$); $x \\to a^{-}$ means from the left. At a vertical asymptote, find the sign of each factor near $a$:\n\n$$\\lim_{x \\to 2^{-}} \\frac{x + 1}{(x - 2)(x - 4)}$$\n\nNear $x = 2$, $x + 1 \\approx 3$ is positive and $x - 4 \\approx -2$ is negative. For $x$ just left of $2$, $x - 2$ is a tiny negative number. So the fraction is $\\frac{+}{(-)(-)}$, positive and huge: the limit is $\\infty$.",
@@ -2030,6 +2041,7 @@ export const theDomainAndRangeOfARationalFunction: TopicDef = {
   knowledgePoints: [
     {
       id: "domain-of-a-rational-function",
+      figure: precalculusDrawings["the-domain-and-range-of-a-rational-function#domain-of-a-rational-function"],
       title: t("The domain", "定义域"),
       explanation: t(
         "The domain of a rational function is every real number except the zeros of the denominator, **including** those that cancel. A hole is still a missing point.\n\n$$f(x) = \\frac{x - 1}{x^{2} + 2x - 3} = \\frac{x - 1}{(x - 1)(x + 3)}$$\n\nThe domain is $(-\\infty, -3) \\cup (-3, 1) \\cup (1, \\infty)$: $x = -3$ is a vertical asymptote and $x = 1$ is a hole.",
@@ -2064,6 +2076,7 @@ export const theDomainAndRangeOfARationalFunction: TopicDef = {
     },
     {
       id: "range-of-a-linear-over-linear-function",
+      figure: precalculusDrawings["the-domain-and-range-of-a-rational-function#range-of-a-linear-over-linear-function"],
       title: t("The range of $\\frac{ax + b}{cx + d}$", "$\\frac{ax + b}{cx + d}$ 的值域"),
       explanation: t(
         "A function $f(x) = \\frac{ax + b}{cx + d}$ with $ad - bc \\neq 0$ is a transformed reciprocal function. It takes every value except its horizontal asymptote $y = \\frac{a}{c}$.\n\nTo see why, solve $y = \\frac{ax + b}{cx + d}$ for $x$: $x = \\frac{b - dy}{cy - a}$, which works for every $y$ except $y = \\frac{a}{c}$.\n\nSo the range of $\\frac{4x - 1}{2x + 3}$ is $(-\\infty, 2) \\cup (2, \\infty)$.",
@@ -2099,6 +2112,7 @@ export const theDomainAndRangeOfARationalFunction: TopicDef = {
     },
     {
       id: "range-with-a-hole",
+      figure: precalculusDrawings["the-domain-and-range-of-a-rational-function#range-with-a-hole"],
       title: t("The range when there is a hole", "有空洞时的值域"),
       explanation: t(
         "A hole removes one more value from the range: the $y$-coordinate of the hole, unless the graph reaches that value somewhere else. For a simplified function $\\frac{ax + b}{cx + d}$, every value except $\\frac{a}{c}$ is reached exactly once, so the hole's value is missing.\n\n$$f(x) = \\frac{(x - 1)(2x + 1)}{(x - 1)(x + 2)} = \\frac{2x + 1}{x + 2} \\quad (x \\neq 1)$$\n\nThe hole is at $(1, 1)$ and the horizontal asymptote is $y = 2$, so the range is $(-\\infty, 1) \\cup (1, 2) \\cup (2, \\infty)$.",
@@ -2160,6 +2174,7 @@ export const identifyingARationalFunctionFromAGraph: TopicDef = {
   knowledgePoints: [
     {
       id: "linear-over-linear-from-a-graph",
+      figure: precalculusDrawings["identifying-a-rational-function-from-a-graph#linear-over-linear-from-a-graph"],
       title: t("A root and two asymptotes", "一个零点和两条渐近线"),
       explanation: t(
         "A graph with one vertical asymptote $x = p$, horizontal asymptote $y = a$ and $x$-intercept $(r, 0)$ belongs to\n\n$$f(x) = \\frac{a(x - r)}{x - p}$$\n\nThe root puts $x - r$ in the numerator, the vertical asymptote puts $x - p$ in the denominator, and since both have degree $1$, the horizontal asymptote is the leading coefficient $a$.",
@@ -2195,6 +2210,7 @@ export const identifyingARationalFunctionFromAGraph: TopicDef = {
     },
     {
       id: "two-vertical-asymptotes-and-a-point",
+      figure: precalculusDrawings["identifying-a-rational-function-from-a-graph#two-vertical-asymptotes-and-a-point"],
       title: t("Two vertical asymptotes and a point", "两条竖直渐近线和一个点"),
       explanation: t(
         "A graph with vertical asymptotes $x = p$ and $x = q$, horizontal asymptote $y = 0$ and no roots belongs to\n\n$$f(x) = \\frac{k}{(x - p)(x - q)}$$\n\nTo find $k$, substitute a marked point. If the graph passes through $(0, 2)$ and the asymptotes are $x = -1$ and $x = 3$, then $2 = \\frac{k}{(1)(-3)}$, so $k = -6$.",
@@ -2234,6 +2250,7 @@ export const identifyingARationalFunctionFromAGraph: TopicDef = {
     },
     {
       id: "even-multiplicity-asymptotes",
+      figure: precalculusDrawings["identifying-a-rational-function-from-a-graph#even-multiplicity-asymptotes"],
       title: t("Both sides going the same way", "两侧趋向相同"),
       explanation: t(
         "Near a vertical asymptote $x = p$, the power of $x - p$ shows in the graph:\n\n- $\\frac{k}{x - p}$: the two sides go in **opposite** directions;\n- $\\frac{k}{(x - p)^{2}}$: both sides go the **same** way, up when $k > 0$ and down when $k < 0$.\n\nAdding $c$ moves the horizontal asymptote to $y = c$.",
@@ -2288,6 +2305,7 @@ export const identifyingARationalFunctionFromAGraphContainingHoles: TopicDef = {
   knowledgePoints: [
     {
       id: "a-hole-and-a-root",
+      figure: precalculusDrawings["identifying-a-rational-function-from-a-graph-containing-holes#a-hole-and-a-root"],
       title: t("A hole, a root and two asymptotes", "空洞、零点和两条渐近线"),
       explanation: t(
         "An open circle at $x = h$ means a factor $x - h$ in **both** the numerator and the denominator. Read the rest of the formula as usual: roots give numerator factors, vertical asymptotes give denominator factors, and the horizontal asymptote gives the leading coefficient.\n\nA graph with a hole at $x = 1$, vertical asymptote $x = -2$, root $x = 3$ and horizontal asymptote $y = 2$ is\n\n$$f(x) = \\frac{2(x - 3)(x - 1)}{(x + 2)(x - 1)}$$",
@@ -2320,6 +2338,7 @@ export const identifyingARationalFunctionFromAGraphContainingHoles: TopicDef = {
     },
     {
       id: "reading-k-from-a-hole",
+      figure: precalculusDrawings["identifying-a-rational-function-from-a-graph-containing-holes#reading-k-from-a-hole"],
       title: t("Reading the constant from the hole", "由空洞求常数"),
       explanation: t(
         "The coordinates of a hole can fix an unknown constant. For $f(x) = \\frac{k(x - h)}{(x - p)(x - h)}$, the simplified function is $\\frac{k}{x - p}$, and the hole lies on it.\n\nIf the vertical asymptote is $x = 1$ and the hole is at $(3, -2)$, then $-2 = \\frac{k}{3 - 1}$, so $k = -4$ and\n\n$$f(x) = \\frac{-4(x - 3)}{(x - 1)(x - 3)}$$",
@@ -2425,6 +2444,7 @@ export const identifyingTheGraphOfARationalFunction: TopicDef = {
     },
     {
       id: "sign-charts",
+      figure: precalculusDrawings["identifying-the-graph-of-a-rational-function#sign-charts"],
       title: t("Sign charts", "符号表"),
       explanation: t(
         "A rational function can change sign only at its zeros and vertical asymptotes. Mark them on the number line and test one point in each interval: this is a **sign chart**, and it tells where the graph is above or below the $x$-axis.\n\n$$f(x) = \\frac{x - 2}{(x + 1)(x - 4)}$$\n\nThe critical points are $-1, 2, 4$. Testing $x = -2, 0, 3, 5$ gives the signs $-, +, -, +$, so $f(x) > 0$ on $(-1, 2) \\cup (4, \\infty)$.",
@@ -2468,6 +2488,7 @@ export const identifyingTheGraphOfARationalFunction: TopicDef = {
     },
     {
       id: "matching-graphs-with-two-vertical-asymptotes",
+      figure: precalculusDrawings["identifying-the-graph-of-a-rational-function#matching-graphs-with-two-vertical-asymptotes"],
       title: t("Graphs with two vertical asymptotes", "有两条竖直渐近线的图象"),
       explanation: t(
         "For $f(x) = \\frac{k}{(x - p)(x - q)}$, the horizontal asymptote is $y = 0$ and there are no roots. The sign of $k$ decides the middle piece: between $p$ and $q$ the denominator is negative, so the middle piece is below the $x$-axis when $k > 0$ and above it when $k < 0$. The outer pieces have the opposite sign.\n\nCompare also with $\\frac{kx}{(x - p)(x - q)}$, which has a root at $x = 0$.",

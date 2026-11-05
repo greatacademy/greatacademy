@@ -4,7 +4,7 @@ import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { algebraDrawings } from "../explanation-drawings-algebra.ts";
 import { geometryDrawings2 } from "../explanation-drawings-geometry-2.ts";
-
+import { trigDrawings } from "../explanation-drawings-trig.ts";
 import { choose, type Pair, whole } from "./early-grades-more-kit.ts";
 import { chooseFilled, decimal, frac, integer, signed, skill } from "./third-kit.ts";
 
@@ -26,31 +26,34 @@ const tableText = (xs: readonly number[], ys: readonly (number | string)[]) => x
 /** deeperRemainingAlgebraThirdPoints holds the third knowledge points of topics in the algebra shard. */
 export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "angles-in-the-coordinate-plane": [
-    skill(
-      "coterminal-angles",
-      ["Coterminal angles", "终边相同的角"],
-      [
-        "Adding or subtracting full turns leaves the terminal side where it was, so such angles are called coterminal. To find the one from $0^{\\circ}$ up to $360^{\\circ}$, add or subtract $360^{\\circ}$ until it lands there.",
-        "加减整圈不改变终边，这样的角叫终边相同的角。要找 $0^{\\circ}$ 到 $360^{\\circ}$ 之间的那个，就反复加减 $360^{\\circ}$，直到落入这个范围。",
-      ],
-      (rng) => {
-        const base = rng.int(1, 71) * 5;
-        const turns = rng.int(1, 3) * (rng.bool() ? 1 : -1);
-        const angle = base + 360 * turns;
-        return whole(
-          [
-            `Which angle from $0^{\\circ}$ up to $360^{\\circ}$ is coterminal with $${angle}^{\\circ}$? Give the number of degrees.`,
-            `在 $0^{\\circ}$ 到 $360^{\\circ}$ 之间，哪个角与 $${angle}^{\\circ}$ 终边相同？写出度数。`,
-          ],
-          base,
-          [360 - base, (base + 180) % 360, turns > 0 ? base + 360 : base - 360].filter((w) => w !== base),
-          [
-            `${Math.abs(turns) === 1 ? "One full turn lands" : `$${Math.abs(turns)}$ full turns land`} in the range: $${angle}^{\\circ} ${turns > 0 ? "-" : "+"} ${Math.abs(turns) === 1 ? "" : `${Math.abs(turns)} \\cdot `}360^{\\circ} = ${base}^{\\circ}$.`,
-            `加减 $${Math.abs(turns)}$ 整圈后落入这个范围：$${angle}^{\\circ} ${turns > 0 ? "-" : "+"} ${Math.abs(turns) === 1 ? "" : `${Math.abs(turns)} \\cdot `}360^{\\circ} = ${base}^{\\circ}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "coterminal-angles",
+        ["Coterminal angles", "终边相同的角"],
+        [
+          "Adding or subtracting full turns leaves the terminal side where it was, so such angles are called coterminal. To find the one from $0^{\\circ}$ up to $360^{\\circ}$, add or subtract $360^{\\circ}$ until it lands there.",
+          "加减整圈不改变终边，这样的角叫终边相同的角。要找 $0^{\\circ}$ 到 $360^{\\circ}$ 之间的那个，就反复加减 $360^{\\circ}$，直到落入这个范围。",
+        ],
+        (rng) => {
+          const base = rng.int(1, 71) * 5;
+          const turns = rng.int(1, 3) * (rng.bool() ? 1 : -1);
+          const angle = base + 360 * turns;
+          return whole(
+            [
+              `Which angle from $0^{\\circ}$ up to $360^{\\circ}$ is coterminal with $${angle}^{\\circ}$? Give the number of degrees.`,
+              `在 $0^{\\circ}$ 到 $360^{\\circ}$ 之间，哪个角与 $${angle}^{\\circ}$ 终边相同？写出度数。`,
+            ],
+            base,
+            [360 - base, (base + 180) % 360, turns > 0 ? base + 360 : base - 360].filter((w) => w !== base),
+            [
+              `${Math.abs(turns) === 1 ? "One full turn lands" : `$${Math.abs(turns)}$ full turns land`} in the range: $${angle}^{\\circ} ${turns > 0 ? "-" : "+"} ${Math.abs(turns) === 1 ? "" : `${Math.abs(turns)} \\cdot `}360^{\\circ} = ${base}^{\\circ}$.`,
+              `加减 $${Math.abs(turns)}$ 整圈后落入这个范围：$${angle}^{\\circ} ${turns > 0 ? "-" : "+"} ${Math.abs(turns) === 1 ? "" : `${Math.abs(turns)} \\cdot `}360^{\\circ} = ${base}^{\\circ}$。`,
+            ],
+          );
+        },
+      ),
+      figure: trigDrawings["angles-in-the-coordinate-plane#coterminal-angles"],
+    },
   ],
   "calculating-perimeters-in-the-plane": [
     {
@@ -304,47 +307,50 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
     ),
   ],
   "modeling-using-the-law-of-sines": [
-    skill(
-      "how-many-triangles-fit",
-      ["How many triangles fit", "能构成几个三角形"],
-      [
-        "Given two sides and an angle opposite one of them, the law of sines may give no triangle, one or two. Compare the side opposite with the height $b\\sin A$ and with the other side $b$.",
-        "已知两边和其中一边的对角时，由正弦定理可能得到零个、一个或两个三角形。把这个对边与高 $b\\sin A$ 和另一条边 $b$ 比较。",
-      ],
-      (rng) => {
-        const b = 2 * rng.int(3, 30);
-        const height = b / 2;
-        const a = rng.pick([rng.int(1, height - 1), height, rng.int(height + 1, b - 1), b + rng.int(1, 9)]);
-        const count = a < height ? 0 : a === height ? 1 : a < b ? 2 : 1;
-        return whole(
-          [
-            `A surveyor measures $A = 30^{\\circ}$, side $b = ${b}$ and the side opposite $A$ as $a = ${a}$. How many different triangles fit these measurements?`,
-            `测量员测得 $A = 30^{\\circ}$，边 $b = ${b}$，$A$ 的对边 $a = ${a}$。有多少个不同的三角形符合这些数据？`,
-          ],
-          count,
-          [0, 1, 2].filter((n) => n !== count),
-          a < height
-            ? [
-                `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $a = ${a} < ${height}$, the side is too short to reach the base line, so there are $0$ triangles.`,
-                `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $a = ${a} < ${height}$，这条边够不到底边所在直线，所以有 $0$ 个三角形。`,
-              ]
-            : a === height
+    {
+      ...skill(
+        "how-many-triangles-fit",
+        ["How many triangles fit", "能构成几个三角形"],
+        [
+          "Given two sides and an angle opposite one of them, the law of sines may give no triangle, one or two. Compare the side opposite with the height $b\\sin A$ and with the other side $b$.",
+          "已知两边和其中一边的对角时，由正弦定理可能得到零个、一个或两个三角形。把这个对边与高 $b\\sin A$ 和另一条边 $b$ 比较。",
+        ],
+        (rng) => {
+          const b = 2 * rng.int(3, 30);
+          const height = b / 2;
+          const a = rng.pick([rng.int(1, height - 1), height, rng.int(height + 1, b - 1), b + rng.int(1, 9)]);
+          const count = a < height ? 0 : a === height ? 1 : a < b ? 2 : 1;
+          return whole(
+            [
+              `A surveyor measures $A = 30^{\\circ}$, side $b = ${b}$ and the side opposite $A$ as $a = ${a}$. How many different triangles fit these measurements?`,
+              `测量员测得 $A = 30^{\\circ}$，边 $b = ${b}$，$A$ 的对边 $a = ${a}$。有多少个不同的三角形符合这些数据？`,
+            ],
+            count,
+            [0, 1, 2].filter((n) => n !== count),
+            a < height
               ? [
-                  `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $a$ equals the height, the side just reaches the base line at a right angle, so there is $1$ triangle.`,
-                  `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $a$ 等于高，这条边恰好垂直地碰到底边所在直线，所以有 $1$ 个三角形。`,
+                  `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $a = ${a} < ${height}$, the side is too short to reach the base line, so there are $0$ triangles.`,
+                  `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $a = ${a} < ${height}$，这条边够不到底边所在直线，所以有 $0$ 个三角形。`,
                 ]
-              : a < b
+              : a === height
                 ? [
-                    `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $${height} < ${a} < ${b}$, the side meets the base line at two points on the same side of $A$, so there are $2$ triangles.`,
-                    `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $${height} < ${a} < ${b}$，这条边与底边所在直线在 $A$ 的同一侧有两个交点，所以有 $2$ 个三角形。`,
+                    `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $a$ equals the height, the side just reaches the base line at a right angle, so there is $1$ triangle.`,
+                    `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $a$ 等于高，这条边恰好垂直地碰到底边所在直线，所以有 $1$ 个三角形。`,
                   ]
-                : [
-                    `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $a = ${a} > ${b}$, the side meets the base line at two points, but only one is on the correct side of $A$, so there is $1$ triangle.`,
-                    `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $a = ${a} > ${b}$，这条边与底边所在直线有两个交点，但只有一个在 $A$ 的正确一侧，所以有 $1$ 个三角形。`,
-                  ],
-        );
-      },
-    ),
+                : a < b
+                  ? [
+                      `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $${height} < ${a} < ${b}$, the side meets the base line at two points on the same side of $A$, so there are $2$ triangles.`,
+                      `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $${height} < ${a} < ${b}$，这条边与底边所在直线在 $A$ 的同一侧有两个交点，所以有 $2$ 个三角形。`,
+                    ]
+                  : [
+                      `The height is $${b} \\sin 30^{\\circ} = ${height}$. Since $a = ${a} > ${b}$, the side meets the base line at two points, but only one is on the correct side of $A$, so there is $1$ triangle.`,
+                      `高是 $${b} \\sin 30^{\\circ} = ${height}$。因为 $a = ${a} > ${b}$，这条边与底边所在直线有两个交点，但只有一个在 $A$ 的正确一侧，所以有 $1$ 个三角形。`,
+                    ],
+          );
+        },
+      ),
+      figure: trigDrawings["modeling-using-the-law-of-sines#how-many-triangles-fit"],
+    },
   ],
   "modeling-with-inverse-variation": [
     skill(

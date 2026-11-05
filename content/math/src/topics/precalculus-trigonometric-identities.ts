@@ -1,7 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, gcd, plane, Q } from "@ga/subject-math";
-
+import { precalculusDrawings } from "../explanation-drawings-precalculus.ts";
 import { choiceProblem, numberProblem, steps } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 
@@ -269,6 +269,7 @@ export const graphingTheInverseSineFunction: TopicDef = {
     },
     {
       id: "key-points-and-symmetry-of-arcsin",
+      figure: precalculusDrawings["graphing-the-inverse-sine-function#key-points-and-symmetry-of-arcsin"],
       title: t("Key points and odd symmetry of arcsin", "反正弦的关键点与奇函数性质"),
       explanation: t(
         "The graph of $y = \\arcsin x$ passes through $(-1, -\\pi/2)$, $(0, 0)$, and $(1, \\pi/2)$. It is an **odd function**: $\\arcsin(-x) = -\\arcsin x$, meaning its graph is symmetric about the origin.",
@@ -394,6 +395,7 @@ export const graphingTheInverseCosineFunction: TopicDef = {
     },
     {
       id: "key-points-and-symmetry-of-arccos",
+      figure: precalculusDrawings["graphing-the-inverse-cosine-function#key-points-and-symmetry-of-arccos"],
       title: t("Key points and evaluation of arccos", "反余弦的关键点与求值"),
       explanation: t(
         "The graph of inverse cosine is the reflection of the restricted cosine graph in the line $y = x$, so its key points swap coordinates. Key points on $y = \\arccos x$ include $(-1, \\pi)$, $(0, \\pi/2)$, and $(1, 0)$. Furthermore, $\\arccos(-x) = \\pi - \\arccos x$.",
@@ -515,6 +517,7 @@ export const graphingTheInverseTangentFunction: TopicDef = {
     },
     {
       id: "asymptotes-and-symmetry-of-arctan",
+      figure: precalculusDrawings["graphing-the-inverse-tangent-function#asymptotes-and-symmetry-of-arctan"],
       title: t("Horizontal asymptotes and symmetry of arctan", "反正切函数的渐近线与对称性"),
       explanation: t(
         "The vertical asymptotes of the restricted tangent become horizontal asymptotes of the inverse tangent, because the graph is reflected across the diagonal line. As $x \\to \\infty$, $\\arctan x \\to \\frac{\\pi}{2}$. As $x \\to -\\infty$, $\\arctan x \\to -\\frac{\\pi}{2}$. Its horizontal asymptotes are $y = \\pm \\frac{\\pi}{2}$, and $\\arctan(-x) = -\\arctan x$ (odd symmetry).",

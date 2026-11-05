@@ -1,6 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { gcd, linear, poly, Q, simplifyRadical, surd, surdLatex } from "@ga/subject-math";
+import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { choiceProblem, expressionProblem, numberProblem, steps } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 
@@ -634,6 +635,7 @@ export const eulersFormula: TopicDef = {
     },
     {
       id: "rectangular-form-to-exponential-form",
+      figure: precalculusDrawings3["eulers-formula#rectangular-form-to-exponential-form"],
       title: t("Convert rectangular form to exponential form", "把代数形式化为指数形式"),
       explanation: t(
         "To write $z = a + bi$ as $re^{i\\theta}$, find the modulus $r = |z| = \\sqrt{a^{2} + b^{2}}$ and the argument $\\theta$ from the quadrant of $z$, exactly as for polar form. For $z = -3 + 3i$: $r = \\sqrt{18} = 3\\sqrt{2}$ and $z$ lies in quadrant II with reference angle $\\frac{\\pi}{4}$, so $\\theta = \\frac{3\\pi}{4}$ and $z = 3\\sqrt{2}e^{i\\frac{3\\pi}{4}}$.",
@@ -763,6 +765,7 @@ export const theRootsOfUnity: TopicDef = {
   knowledgePoints: [
     {
       id: "arguments-of-roots-of-unity",
+      figure: precalculusDrawings3["the-roots-of-unity#arguments-of-roots-of-unity"],
       title: t("Find the arguments of the roots of unity", "求单位根的辐角"),
       explanation: t(
         "If $z^{n} = 1$ then $|z|^{n} = 1$, so $|z| = 1$, and by De Moivre's theorem $n\\arg(z)$ must be a multiple of $2\\pi$. The $n$ solutions, the **$n$th roots of unity**, are\n\n$$\\omega_{k} = e^{\\frac{2\\pi i k}{n}} = \\cos\\frac{2\\pi k}{n} + i\\sin\\frac{2\\pi k}{n}, \\qquad k = 0, 1, \\ldots, n - 1$$\n\nThey are equally spaced on the unit circle, $\\frac{360^{\\circ}}{n}$ apart, starting from $\\omega_{0} = 1$. For $n = 8$ and $k = 3$: $\\arg\\omega_{3} = \\frac{360^{\\circ} \\cdot 3}{8} = 135^{\\circ}$.",
@@ -789,6 +792,7 @@ export const theRootsOfUnity: TopicDef = {
     },
     {
       id: "roots-of-unity-in-rectangular-form",
+      figure: precalculusDrawings3["the-roots-of-unity#roots-of-unity-in-rectangular-form"],
       title: t("Write roots of unity in rectangular form", "把单位根写成代数形式"),
       explanation: t(
         "When $\\frac{360^{\\circ} k}{n}$ is a special angle, the root of unity has an exact rectangular form. For $n = 3$ and $k = 1$:\n\n$$e^{\\frac{2\\pi i}{3}} = \\cos\\frac{2\\pi}{3} + i\\sin\\frac{2\\pi}{3} = -\\frac{1}{2} + \\frac{\\sqrt{3}}{2}i$$\n\nso the cube roots of unity are $1$ and $-\\frac{1}{2} \\pm \\frac{\\sqrt{3}}{2}i$.",
@@ -1149,6 +1153,7 @@ export const squareRootsOfComplexNumbers: TopicDef = {
     },
     {
       id: "square-roots-in-rectangular-form",
+      figure: precalculusDrawings3["square-roots-of-complex-numbers#square-roots-in-rectangular-form"],
       title: t("Write square roots of special numbers as a + bi", "把特殊复数的平方根写成 a + bi"),
       explanation: t(
         "When the half angle is special, the polar method gives the roots exactly in rectangular form. For $w = -8 + 8i\\sqrt{3} = 16\\,\\text{cis}\\frac{2\\pi}{3}$:\n\n$$\\sqrt{16}\\,\\text{cis}\\frac{\\pi}{3} = 4\\left(\\frac{1}{2} + \\frac{\\sqrt{3}}{2}i\\right) = 2 + 2i\\sqrt{3}$$\n\nand the other square root is its opposite, $-2 - 2i\\sqrt{3}$.",

@@ -5,7 +5,8 @@
 import type { KnowledgePointDef, Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, poly, Q } from "@ga/subject-math";
-
+import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
+import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { numberProblem } from "../problems.ts";
 
 /** frac writes a rational number. */
@@ -792,6 +793,7 @@ const orthogonalCombination: KnowledgePointDef = {
 
 const distanceToLine: KnowledgePointDef = {
   id: "the-distance-from-a-point-to-a-line-through-the-origin",
+  figure: precalculusDrawings2["calculating-a-vector-projection#the-distance-from-a-point-to-a-line-through-the-origin"],
   title: t("The distance from a point to a line through the origin", "点到过原点的直线的距离"),
   explanation: t(
     "Projection gives a way to measure a distance without any equation of a line. The position vector of the point splits into a part along the direction of the line and a part orthogonal to it. The orthogonal part runs from the line straight to the point, so its length is the shortest distance. Since the two parts are perpendicular, the Pythagorean theorem finds that length from the magnitude of the vector and the scalar projection.",
@@ -965,6 +967,7 @@ const squareFromTrace: KnowledgePointDef = {
 
 const triangleArea: KnowledgePointDef = {
   id: "the-area-of-a-triangle-from-its-vertices",
+  figure: precalculusDrawings2["the-geometric-interpretation-of-the-2x2-determinant#the-area-of-a-triangle-from-its-vertices"],
   title: t("The area of a triangle from its vertices", "由顶点坐标求三角形的面积"),
   explanation: t(
     "A $2 \\times 2$ determinant measures the area of a parallelogram, and a triangle is half of one. To use this for a triangle placed anywhere in the plane, first form two vectors along its sides from a shared vertex, by subtracting coordinates. The determinant of these two side vectors gives the parallelogram on them, and half of its absolute value is the triangle's area. Skipping the subtraction measures a triangle with a vertex at the origin instead.",
@@ -1173,6 +1176,7 @@ const tangentCondition: KnowledgePointDef = {
 
 const focalTriangle: KnowledgePointDef = {
   id: "the-perimeter-of-a-triangle-with-the-two-foci",
+  figure: precalculusDrawings3["foci-of-ellipses#the-perimeter-of-a-triangle-with-the-two-foci"],
   title: t("The perimeter of a triangle with the two foci", "含两个焦点的三角形的周长"),
   explanation: t(
     "An ellipse is the set of points whose distances to the two foci have a fixed sum, equal to the length of the major axis. This definition can answer questions without coordinates. For a triangle made from the two foci and any point on the ellipse, two of its sides add up to that fixed sum, and the third side is the distance between the foci. So its perimeter is the same wherever the point sits on the ellipse.",
@@ -1285,6 +1289,7 @@ const areaNonstandard: KnowledgePointDef = {
 
 const centerFromAsymptotes: KnowledgePointDef = {
   id: "the-center-of-a-hyperbola-from-its-asymptotes",
+  figure: precalculusDrawings3["asymptotes-of-hyperbolas-centered-at-a-general-point#the-center-of-a-hyperbola-from-its-asymptotes"],
   title: t("The center of a hyperbola from its asymptotes", "由渐近线求双曲线的中心"),
   explanation: t(
     "The two asymptotes of a hyperbola cross at its center, and this gives a way to locate the center from their equations alone. Setting the two right sides equal finds the first coordinate of the crossing point, and substituting back gives the second. Since the asymptotes have opposite slopes, adding the two equations removes the term with $x$ at once, which makes the second coordinate the average of the two intercepts.",
@@ -1530,6 +1535,7 @@ const modulusOfQuotient: KnowledgePointDef = {
 
 const farthestOnCircle: KnowledgePointDef = {
   id: "the-largest-and-smallest-modulus-on-a-circle",
+  figure: precalculusDrawings3["geometry-in-the-complex-plane#the-largest-and-smallest-modulus-on-a-circle"],
   title: t("The largest and smallest modulus on a circle", "圆上模的最大值与最小值"),
   explanation: t(
     "The modulus of a complex number is its distance from the origin, so asking for the largest or smallest modulus on a circle is a question about geometry. The extreme points lie on the line through the origin and the center of the circle. The largest modulus is the distance to the center plus the radius. The smallest is the difference between these two lengths, taken in the positive order, which also covers an origin inside the circle.",

@@ -2,6 +2,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { whole } from "./early-grades-more-kit.ts";
 import { chooseFilled, decimal, frac, fraction, gcd, integer, skill } from "./third-kit.ts";
@@ -235,33 +236,36 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
     ),
   ],
   "finding-intercepts-and-intersections-of-hyperbolas": [
-    skill(
-      "a-vertical-line-and-a-hyperbola",
-      ["A vertical line and a hyperbola", "竖直线与双曲线"],
-      [
-        "A horizontal hyperbola has no points strictly between its two vertices. So a vertical line misses it inside that gap, touches it at a vertex, and crosses it twice beyond.",
-        "开口向左右的双曲线，在两个顶点之间没有点。所以竖直线在这个间隙内与它不相交，在顶点处相切，在外面相交两次。",
-      ],
-      (rng) => {
-        const a = rng.int(3, 15);
-        const b = rng.int(2, 12);
-        const distance = rng.pick([rng.int(0, a - 1), a, a + rng.int(1, 9)]);
-        const d = rng.bool() ? distance : -distance;
-        const count = distance < a ? 0 : distance === a ? 1 : 2;
-        return whole(
-          [
-            `How many points do the line $x = ${d}$ and the hyperbola $\\frac{x^{2}}{${a * a}} - \\frac{y^{2}}{${b * b}} = 1$ share?`,
-            `直线 $x = ${d}$ 与双曲线 $\\frac{x^{2}}{${a * a}} - \\frac{y^{2}}{${b * b}} = 1$ 有几个公共点？`,
-          ],
-          count,
-          [0, 1, 2, 4].filter((n) => n !== count),
-          [
-            `The vertices are at $x = \\pm ${a}$, and the line is $${distance}$ from the center, which gives $${count}$.`,
-            `顶点在 $x = \\pm ${a}$，直线到中心的距离是 $${distance}$，所以有 $${count}$ 个。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "a-vertical-line-and-a-hyperbola",
+        ["A vertical line and a hyperbola", "竖直线与双曲线"],
+        [
+          "A horizontal hyperbola has no points strictly between its two vertices. So a vertical line misses it inside that gap, touches it at a vertex, and crosses it twice beyond.",
+          "开口向左右的双曲线，在两个顶点之间没有点。所以竖直线在这个间隙内与它不相交，在顶点处相切，在外面相交两次。",
+        ],
+        (rng) => {
+          const a = rng.int(3, 15);
+          const b = rng.int(2, 12);
+          const distance = rng.pick([rng.int(0, a - 1), a, a + rng.int(1, 9)]);
+          const d = rng.bool() ? distance : -distance;
+          const count = distance < a ? 0 : distance === a ? 1 : 2;
+          return whole(
+            [
+              `How many points do the line $x = ${d}$ and the hyperbola $\\frac{x^{2}}{${a * a}} - \\frac{y^{2}}{${b * b}} = 1$ share?`,
+              `直线 $x = ${d}$ 与双曲线 $\\frac{x^{2}}{${a * a}} - \\frac{y^{2}}{${b * b}} = 1$ 有几个公共点？`,
+            ],
+            count,
+            [0, 1, 2, 4].filter((n) => n !== count),
+            [
+              `The vertices are at $x = \\pm ${a}$, and the line is $${distance}$ from the center, which gives $${count}$.`,
+              `顶点在 $x = \\pm ${a}$，直线到中心的距离是 $${distance}$，所以有 $${count}$ 个。`,
+            ],
+          );
+        },
+      ),
+      figure: precalculusDrawings3["finding-intercepts-and-intersections-of-hyperbolas#a-vertical-line-and-a-hyperbola"],
+    },
   ],
   "transverse-axes-of-hyperbolas": [
     skill(
@@ -433,42 +437,45 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
     ),
   ],
   "parametric-equations-of-ellipses": [
-    skill(
-      "the-point-at-a-given-parameter",
-      ["The point at a given parameter", "给定参数对应的点"],
-      [
-        "In $x = h + a\\cos\\theta$, $y = k + b\\sin\\theta$, the parameter is not the angle seen from the center in general. Its values at quarter turns still give the four ends of the axes.",
-        "在 $x = h + a\\cos\\theta$，$y = k + b\\sin\\theta$ 中，参数一般不是从中心看到的角。但它在四分之一圈处的值仍给出两条轴的四个端点。",
-      ],
-      (rng) => {
-        const h = rng.int(-9, 9);
-        const k = rng.int(-9, 9);
-        const a = rng.int(3, 12);
-        let b = rng.int(2, 11);
-        if (b === a) b += 1;
-        const row = rng.pick<[string, number, number]>([
-          ["0", 1, 0],
-          ["\\frac{\\pi}{2}", 0, 1],
-          ["\\pi", -1, 0],
-          ["\\frac{3\\pi}{2}", 0, -1],
-        ]);
-        const x = h + a * row[1];
-        const y = k + b * row[2];
-        return chooseFilled(
-          rng,
-          [
-            `Find the point at $\\theta = ${row[0]}$ on $x = ${shifted(h, a, "\\cos\\theta")}$, $y = ${shifted(k, b, "\\sin\\theta")}$.`,
-            `求 $x = ${shifted(h, a, "\\cos\\theta")}$，$y = ${shifted(k, b, "\\sin\\theta")}$ 上 $\\theta = ${row[0]}$ 对应的点。`,
-          ],
-          `(${x}, ${y})`,
-          [`(${h + b * row[1]}, ${k + a * row[2]})`, `(${h + a * row[2]}, ${k + b * row[1]})`, `(${h}, ${k})`],
-          [
-            `$\\cos\\theta = ${row[1]}$ and $\\sin\\theta = ${row[2]}$, which gives $(${x}, ${y})$.`,
-            `$\\cos\\theta = ${row[1]}$，$\\sin\\theta = ${row[2]}$，所以是 $(${x}, ${y})$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-point-at-a-given-parameter",
+        ["The point at a given parameter", "给定参数对应的点"],
+        [
+          "In $x = h + a\\cos\\theta$, $y = k + b\\sin\\theta$, the parameter is not the angle seen from the center in general. Its values at quarter turns still give the four ends of the axes.",
+          "在 $x = h + a\\cos\\theta$，$y = k + b\\sin\\theta$ 中，参数一般不是从中心看到的角。但它在四分之一圈处的值仍给出两条轴的四个端点。",
+        ],
+        (rng) => {
+          const h = rng.int(-9, 9);
+          const k = rng.int(-9, 9);
+          const a = rng.int(3, 12);
+          let b = rng.int(2, 11);
+          if (b === a) b += 1;
+          const row = rng.pick<[string, number, number]>([
+            ["0", 1, 0],
+            ["\\frac{\\pi}{2}", 0, 1],
+            ["\\pi", -1, 0],
+            ["\\frac{3\\pi}{2}", 0, -1],
+          ]);
+          const x = h + a * row[1];
+          const y = k + b * row[2];
+          return chooseFilled(
+            rng,
+            [
+              `Find the point at $\\theta = ${row[0]}$ on $x = ${shifted(h, a, "\\cos\\theta")}$, $y = ${shifted(k, b, "\\sin\\theta")}$.`,
+              `求 $x = ${shifted(h, a, "\\cos\\theta")}$，$y = ${shifted(k, b, "\\sin\\theta")}$ 上 $\\theta = ${row[0]}$ 对应的点。`,
+            ],
+            `(${x}, ${y})`,
+            [`(${h + b * row[1]}, ${k + a * row[2]})`, `(${h + a * row[2]}, ${k + b * row[1]})`, `(${h}, ${k})`],
+            [
+              `$\\cos\\theta = ${row[1]}$ and $\\sin\\theta = ${row[2]}$, which gives $(${x}, ${y})$.`,
+              `$\\cos\\theta = ${row[1]}$，$\\sin\\theta = ${row[2]}$，所以是 $(${x}, ${y})$。`,
+            ],
+          );
+        },
+      ),
+      figure: precalculusDrawings3["parametric-equations-of-ellipses#the-point-at-a-given-parameter"],
+    },
   ],
   "parametric-equations-of-parabolas-centered-at-hk": [
     skill(
@@ -527,71 +534,77 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
     ),
   ],
   "parametric-equations-of-vertical-hyperbolas": [
-    skill(
-      "the-point-at-parameter-zero",
-      ["The point at parameter zero", "参数为零时的点"],
-      [
-        "To find where a curve starts, put the parameter value into both equations. With a tangent in $x$ and a secant in $y$, the value $\\theta = 0$ gives the upper vertex, which sits directly above the center.",
-        "在 $x = h + b\\tan\\theta$，$y = k + a\\sec\\theta$ 中，令 $\\theta = 0$，得 $\\tan\\theta = 0$，$\\sec\\theta = 1$。这是上顶点，在中心的正上方。",
-      ],
-      (rng) => {
-        const h = rng.int(-9, 9);
-        const k = rng.int(-9, 9);
-        const a = rng.int(2, 12);
-        let b = rng.int(2, 12);
-        if (b === a) b += 1;
-        return chooseFilled(
-          rng,
-          [
-            `Find the point at $\\theta = 0$ on $x = ${shifted(h, b, "\\tan\\theta")}$, $y = ${shifted(k, a, "\\sec\\theta")}$.`,
-            `求 $x = ${shifted(h, b, "\\tan\\theta")}$，$y = ${shifted(k, a, "\\sec\\theta")}$ 上 $\\theta = 0$ 对应的点。`,
-          ],
-          `(${h}, ${k + a})`,
-          [`(${h + b}, ${k})`, `(${h + b}, ${k + a})`, `(${h}, ${k})`],
-          [
-            `$\\tan 0 = 0$ and $\\sec 0 = 1$, so $x = ${h}$ and $y = ${k + a}$.`,
-            `$\\tan 0 = 0$，$\\sec 0 = 1$，所以 $x = ${h}$，$y = ${k + a}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-point-at-parameter-zero",
+        ["The point at parameter zero", "参数为零时的点"],
+        [
+          "To find where a curve starts, put the parameter value into both equations. With a tangent in $x$ and a secant in $y$, the value $\\theta = 0$ gives the upper vertex, which sits directly above the center.",
+          "在 $x = h + b\\tan\\theta$，$y = k + a\\sec\\theta$ 中，令 $\\theta = 0$，得 $\\tan\\theta = 0$，$\\sec\\theta = 1$。这是上顶点，在中心的正上方。",
+        ],
+        (rng) => {
+          const h = rng.int(-9, 9);
+          const k = rng.int(-9, 9);
+          const a = rng.int(2, 12);
+          let b = rng.int(2, 12);
+          if (b === a) b += 1;
+          return chooseFilled(
+            rng,
+            [
+              `Find the point at $\\theta = 0$ on $x = ${shifted(h, b, "\\tan\\theta")}$, $y = ${shifted(k, a, "\\sec\\theta")}$.`,
+              `求 $x = ${shifted(h, b, "\\tan\\theta")}$，$y = ${shifted(k, a, "\\sec\\theta")}$ 上 $\\theta = 0$ 对应的点。`,
+            ],
+            `(${h}, ${k + a})`,
+            [`(${h + b}, ${k})`, `(${h + b}, ${k + a})`, `(${h}, ${k})`],
+            [
+              `$\\tan 0 = 0$ and $\\sec 0 = 1$, so $x = ${h}$ and $y = ${k + a}$.`,
+              `$\\tan 0 = 0$，$\\sec 0 = 1$，所以 $x = ${h}$，$y = ${k + a}$。`,
+            ],
+          );
+        },
+      ),
+      figure: precalculusDrawings3["parametric-equations-of-vertical-hyperbolas#the-point-at-parameter-zero"],
+    },
   ],
   "introduction-to-polar-coordinates": [
-    skill(
-      "distance-between-polar-points",
-      ["Distance between polar points", "极坐标点之间的距离"],
-      [
-        "Points with the same angle lie on one ray, and points half a turn apart lie on opposite rays. Points a quarter turn apart form a right triangle with the pole, so the Pythagorean theorem applies.",
-        "角相同的点在同一条射线上，相差半圈的点在相反的射线上。相差四分之一圈的点与极点构成直角三角形，可用勾股定理。",
-      ],
-      (rng) => {
-        const angle = rng.int(1, 12) * 5;
-        const mode = rng.int(0, 2);
-        const [a, b, c] = rng.pick(triples);
-        const second = mode === 0 ? angle : mode === 1 ? angle + 180 : angle + 90;
-        const answer = mode === 0 ? Math.abs(a - b) : mode === 1 ? a + b : c;
-        return whole(
-          [
-            `Find the distance between the polar points $(${a}, ${angle}^{\\circ})$ and $(${b}, ${second}^{\\circ})$.`,
-            `求极坐标点 $(${a}, ${angle}^{\\circ})$ 和 $(${b}, ${second}^{\\circ})$ 之间的距离。`,
-          ],
-          answer,
-          [mode === 0 ? a + b : Math.abs(a - b), mode === 2 ? a + b : c, a * b],
-          [
-            mode === 0
-              ? `They lie on one ray, so subtract: ${answer}.`
-              : mode === 1
-                ? `They lie on opposite rays through the pole, so add: ${answer}.`
-                : `The rays are perpendicular, so $\\sqrt{${a}^{2} + ${b}^{2}} = ${answer}$.`,
-            mode === 0
-              ? `它们在同一条射线上，所以相减：${answer}。`
-              : mode === 1
-                ? `它们在过极点的相反射线上，所以相加：${answer}。`
-                : `两条射线垂直，所以 $\\sqrt{${a}^{2} + ${b}^{2}} = ${answer}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "distance-between-polar-points",
+        ["Distance between polar points", "极坐标点之间的距离"],
+        [
+          "Points with the same angle lie on one ray, and points half a turn apart lie on opposite rays. Points a quarter turn apart form a right triangle with the pole, so the Pythagorean theorem applies.",
+          "角相同的点在同一条射线上，相差半圈的点在相反的射线上。相差四分之一圈的点与极点构成直角三角形，可用勾股定理。",
+        ],
+        (rng) => {
+          const angle = rng.int(1, 12) * 5;
+          const mode = rng.int(0, 2);
+          const [a, b, c] = rng.pick(triples);
+          const second = mode === 0 ? angle : mode === 1 ? angle + 180 : angle + 90;
+          const answer = mode === 0 ? Math.abs(a - b) : mode === 1 ? a + b : c;
+          return whole(
+            [
+              `Find the distance between the polar points $(${a}, ${angle}^{\\circ})$ and $(${b}, ${second}^{\\circ})$.`,
+              `求极坐标点 $(${a}, ${angle}^{\\circ})$ 和 $(${b}, ${second}^{\\circ})$ 之间的距离。`,
+            ],
+            answer,
+            [mode === 0 ? a + b : Math.abs(a - b), mode === 2 ? a + b : c, a * b],
+            [
+              mode === 0
+                ? `They lie on one ray, so subtract: ${answer}.`
+                : mode === 1
+                  ? `They lie on opposite rays through the pole, so add: ${answer}.`
+                  : `The rays are perpendicular, so $\\sqrt{${a}^{2} + ${b}^{2}} = ${answer}$.`,
+              mode === 0
+                ? `它们在同一条射线上，所以相减：${answer}。`
+                : mode === 1
+                  ? `它们在过极点的相反射线上，所以相加：${answer}。`
+                  : `两条射线垂直，所以 $\\sqrt{${a}^{2} + ${b}^{2}} = ${answer}$。`,
+            ],
+          );
+        },
+      ),
+      figure: precalculusDrawings3["introduction-to-polar-coordinates#distance-between-polar-points"],
+    },
   ],
   "converting-from-polar-coordinates-to-cartesian-coordinates": [
     skill(
@@ -621,30 +634,33 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
     ),
   ],
   "polar-equations-of-circles-centered-at-the-origin": [
-    skill(
-      "the-area-of-a-ring",
-      ["The area of a ring", "圆环的面积"],
-      [
-        "The inequality $a \\le r \\le b$ describes the ring between two circles centered at the pole. Its area is the difference of the two disks, $\\pi(b^{2} - a^{2})$, which is not $\\pi(b - a)^{2}$.",
-        "不等式 $a \\le r \\le b$ 表示以极点为圆心的两圆之间的圆环。它的面积是两个圆面积之差 $\\pi(b^{2} - a^{2})$，不是 $\\pi(b - a)^{2}$。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 12);
-        const b = a + rng.int(1, 9);
-        return whole(
-          [
-            `The region $${a} \\le r \\le ${b}$ has area $k\\pi$. What is $k$?`,
-            `区域 $${a} \\le r \\le ${b}$ 的面积是 $k\\pi$。$k$ 是多少？`,
-          ],
-          b * b - a * a,
-          [(b - a) * (b - a), b * b + a * a, 2 * (b - a)],
-          [
-            `The ring is the outer disk minus the inner disk, so $${b}^{2} - ${a}^{2} = ${b * b - a * a}$.`,
-            `圆环是外圆减去内圆，所以 $${b}^{2} - ${a}^{2} = ${b * b - a * a}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-area-of-a-ring",
+        ["The area of a ring", "圆环的面积"],
+        [
+          "The inequality $a \\le r \\le b$ describes the ring between two circles centered at the pole. Its area is the difference of the two disks, $\\pi(b^{2} - a^{2})$, which is not $\\pi(b - a)^{2}$.",
+          "不等式 $a \\le r \\le b$ 表示以极点为圆心的两圆之间的圆环。它的面积是两个圆面积之差 $\\pi(b^{2} - a^{2})$，不是 $\\pi(b - a)^{2}$。",
+        ],
+        (rng) => {
+          const a = rng.int(1, 12);
+          const b = a + rng.int(1, 9);
+          return whole(
+            [
+              `The region $${a} \\le r \\le ${b}$ has area $k\\pi$. What is $k$?`,
+              `区域 $${a} \\le r \\le ${b}$ 的面积是 $k\\pi$。$k$ 是多少？`,
+            ],
+            b * b - a * a,
+            [(b - a) * (b - a), b * b + a * a, 2 * (b - a)],
+            [
+              `The ring is the outer disk minus the inner disk, so $${b}^{2} - ${a}^{2} = ${b * b - a * a}$.`,
+              `圆环是外圆减去内圆，所以 $${b}^{2} - ${a}^{2} = ${b * b - a * a}$。`,
+            ],
+          );
+        },
+      ),
+      figure: precalculusDrawings3["polar-equations-of-circles-centered-at-the-origin#the-area-of-a-ring"],
+    },
   ],
   "polar-equations-of-radial-lines": [
     skill(
@@ -671,30 +687,33 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
     ),
   ],
   "finding-intersections-of-polar-curves": [
-    skill(
-      "the-radius-where-two-circles-meet",
-      ["The radius where two circles meet", "两圆交点处的半径"],
-      [
-        "Setting $a\\cos\\theta = b\\sin\\theta$ gives $\\tan\\theta = \\frac{a}{b}$, and a right triangle then gives the cosine. Substituting back gives the distance from the pole to the intersection.",
-        "令 $a\\cos\\theta = b\\sin\\theta$，得 $\\tan\\theta = \\frac{a}{b}$，再由直角三角形得到余弦。代回去就得到交点到极点的距离。",
-      ],
-      (rng) => {
-        const [a, b, c] = rng.pick(triples);
-        const k = rng.int(1, 5);
-        return fraction(
-          [
-            `The curves $r = ${k * a}\\cos\\theta$ and $r = ${k * b}\\sin\\theta$ meet at a point with $0 < \\theta < \\frac{\\pi}{2}$. What is $r$ there?`,
-            `曲线 $r = ${k * a}\\cos\\theta$ 和 $r = ${k * b}\\sin\\theta$ 在 $0 < \\theta < \\frac{\\pi}{2}$ 处相交。这一点的 $r$ 是多少？`,
-          ],
-          Q.of(k * a * b, c),
-          [Q.of(k * c), Q.of(k * (a + b), 2), Q.of(c, k * a * b)],
-          [
-            `$\\tan\\theta = ${frac(a, b)}$ gives $\\cos\\theta = ${frac(b, c)}$, so $r = ${k * a} \\cdot ${frac(b, c)}$.`,
-            `$\\tan\\theta = ${frac(a, b)}$ 给出 $\\cos\\theta = ${frac(b, c)}$，所以 $r = ${k * a} \\cdot ${frac(b, c)}$。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-radius-where-two-circles-meet",
+        ["The radius where two circles meet", "两圆交点处的半径"],
+        [
+          "Setting $a\\cos\\theta = b\\sin\\theta$ gives $\\tan\\theta = \\frac{a}{b}$, and a right triangle then gives the cosine. Substituting back gives the distance from the pole to the intersection.",
+          "令 $a\\cos\\theta = b\\sin\\theta$，得 $\\tan\\theta = \\frac{a}{b}$，再由直角三角形得到余弦。代回去就得到交点到极点的距离。",
+        ],
+        (rng) => {
+          const [a, b, c] = rng.pick(triples);
+          const k = rng.int(1, 5);
+          return fraction(
+            [
+              `The curves $r = ${k * a}\\cos\\theta$ and $r = ${k * b}\\sin\\theta$ meet at a point with $0 < \\theta < \\frac{\\pi}{2}$. What is $r$ there?`,
+              `曲线 $r = ${k * a}\\cos\\theta$ 和 $r = ${k * b}\\sin\\theta$ 在 $0 < \\theta < \\frac{\\pi}{2}$ 处相交。这一点的 $r$ 是多少？`,
+            ],
+            Q.of(k * a * b, c),
+            [Q.of(k * c), Q.of(k * (a + b), 2), Q.of(c, k * a * b)],
+            [
+              `$\\tan\\theta = ${frac(a, b)}$ gives $\\cos\\theta = ${frac(b, c)}$, so $r = ${k * a} \\cdot ${frac(b, c)}$.`,
+              `$\\tan\\theta = ${frac(a, b)}$ 给出 $\\cos\\theta = ${frac(b, c)}$，所以 $r = ${k * a} \\cdot ${frac(b, c)}$。`,
+            ],
+          );
+        },
+      ),
+      figure: precalculusDrawings3["finding-intersections-of-polar-curves#the-radius-where-two-circles-meet"],
+    },
   ],
   "the-complex-conjugate": [
     skill(
@@ -879,30 +898,33 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
     ),
   ],
   "the-cis-notation": [
-    skill(
-      "the-power-that-returns-to-one",
-      ["The power that returns to one", "回到 1 的幂"],
-      [
-        "Powers of $\\text{cis}\\,\\theta$ walk around the unit circle by steps of $\\theta$. The power first equals 1 when the steps add up to a whole number of full turns.",
-        "$\\text{cis}\\,\\theta$ 的幂沿单位圆按步长 $\\theta$ 前进。步长累计达到整数圈时，幂第一次等于 1。",
-      ],
-      (rng) => {
-        const angle = rng.int(1, 35) * 5;
-        const n = 360 / gcd(angle, 360);
-        return whole(
-          [
-            `What is the smallest positive integer $n$ with $(\\text{cis}\\,${angle}^{\\circ})^{n} = 1$?`,
-            `使 $(\\text{cis}\\,${angle}^{\\circ})^{n} = 1$ 的最小正整数 $n$ 是多少？`,
-          ],
-          n,
-          [n * 2, angle, 360 - angle],
-          [
-            `$n \\times ${angle}$ must be a multiple of $360$, which first happens at $n = ${n}$.`,
-            `$n \\times ${angle}$ 必须是 $360$ 的倍数，第一次是在 $n = ${n}$ 时。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "the-power-that-returns-to-one",
+        ["The power that returns to one", "回到 1 的幂"],
+        [
+          "Powers of $\\text{cis}\\,\\theta$ walk around the unit circle by steps of $\\theta$. The power first equals 1 when the steps add up to a whole number of full turns.",
+          "$\\text{cis}\\,\\theta$ 的幂沿单位圆按步长 $\\theta$ 前进。步长累计达到整数圈时，幂第一次等于 1。",
+        ],
+        (rng) => {
+          const angle = rng.int(1, 35) * 5;
+          const n = 360 / gcd(angle, 360);
+          return whole(
+            [
+              `What is the smallest positive integer $n$ with $(\\text{cis}\\,${angle}^{\\circ})^{n} = 1$?`,
+              `使 $(\\text{cis}\\,${angle}^{\\circ})^{n} = 1$ 的最小正整数 $n$ 是多少？`,
+            ],
+            n,
+            [n * 2, angle, 360 - angle],
+            [
+              `$n \\times ${angle}$ must be a multiple of $360$, which first happens at $n = ${n}$.`,
+              `$n \\times ${angle}$ 必须是 $360$ 的倍数，第一次是在 $n = ${n}$ 时。`,
+            ],
+          );
+        },
+      ),
+      figure: precalculusDrawings3["the-cis-notation#the-power-that-returns-to-one"],
+    },
   ],
   "approximating-values-using-the-binomial-theorem": [
     skill(

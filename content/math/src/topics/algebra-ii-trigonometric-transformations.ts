@@ -1,7 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { same, t } from "@ga/content";
 import { type Interval, type PlaneMark, plane, Q, q, type RealSet, union } from "@ga/subject-math";
-
+import { waveDrawings } from "../explanation-drawings-waves.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, steps } from "../problems.ts";
 
 // Algebra II, modules 9.28 and 9.29: the graphs of the six trigonometric
@@ -600,6 +600,7 @@ const verticalTranslationsOfTrigonometricFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "describing-vertical-translations",
+      figure: waveDrawings["vertical-translations-of-trigonometric-functions#describing-vertical-translations"],
       title: t("Describing the shift", "描述平移"),
       explanation: t(
         "Adding a constant $d$ to a function, $y = \\sin x + d$, adds $d$ to every $y$-value, so the whole graph moves **up** $d$ units when $d > 0$ and **down** $|d|$ units when $d < 0$. The $x$-values of the key points do not change.\n\nFor example, $y = \\cos x - 3$ is the graph of $y = \\cos x$ shifted down $3$ units. A constant added *inside*, as in $y = \\cos(x - 3)$, moves the graph sideways instead.",
@@ -832,6 +833,7 @@ const horizontalTranslationsOfTrigonometricFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "describing-horizontal-translations",
+      figure: waveDrawings["horizontal-translations-of-trigonometric-functions#describing-horizontal-translations"],
       title: t("Describing the shift", "描述平移"),
       explanation: t(
         "Replacing $x$ by $x - c$ shifts a graph **right** $c$ units: the graph of $y = \\sin(x - c)$ takes at $x$ the value $y = \\sin x$ takes at $x - c$, so every point moves $c$ to the right. Replacing $x$ by $x + c$ shifts it **left** $c$ units. For trigonometric functions the shift is usually a multiple of $\\pi$.\n\nFor example, $y = \\cos\\left(x + \\frac{\\pi}{3}\\right)$ is the graph of $y = \\cos x$ shifted left $\\frac{\\pi}{3}$ units: the sign inside is the opposite of the direction.",
@@ -872,6 +874,7 @@ const horizontalTranslationsOfTrigonometricFunctions: TopicDef = {
     },
     {
       id: "key-points-after-a-horizontal-translation",
+      figure: waveDrawings["horizontal-translations-of-trigonometric-functions#key-points-after-a-horizontal-translation"],
       title: t("Key points after the shift", "平移后的关键点"),
       explanation: t(
         "A horizontal shift moves every key point by the same amount. The maximum points of $y = \\sin x$ are at $x = \\frac{\\pi}{2} + 2k\\pi$, so those of $y = \\sin\\left(x - \\frac{\\pi}{3}\\right)$, shifted right $\\frac{\\pi}{3}$, are at\n\n$$x = \\frac{\\pi}{2} + \\frac{\\pi}{3} + 2k\\pi = \\frac{5\\pi}{6} + 2k\\pi.$$\n\nThe smallest positive one is $\\frac{5\\pi}{6}$. Equivalently, set the inside equal to the angles where sine is $1$: $x - \\frac{\\pi}{3} = \\frac{\\pi}{2} + 2k\\pi$.",
@@ -1083,6 +1086,7 @@ const combiningGraphTransformationsOfSineAndCosine: TopicDef = {
     },
     {
       id: "the-shift-of-y-a-sin-bx-phi-d",
+      figure: waveDrawings["combining-graph-transformations-of-sine-and-cosine#the-shift-of-y-a-sin-bx-phi-d"],
       title: t("The shift of y = a sin(bx − φ) + d", "y = a sin(bx − φ) + d 的平移"),
       explanation: t(
         "In $y = a \\sin(bx - \\varphi) + d$ the shift is **not** $\\varphi$. Factor $b$ out of the input first:\n\n$$bx - \\varphi = b\\left(x - \\frac{\\varphi}{b}\\right),$$\n\nso the graph is shifted right $\\frac{\\varphi}{b}$ (left when the sign is $+$). For $y = \\sin\\left(3x - \\frac{\\pi}{2}\\right)$: $3x - \\frac{\\pi}{2} = 3\\left(x - \\frac{\\pi}{6}\\right)$, a shift right $\\frac{\\pi}{6}$.",
@@ -1200,6 +1204,7 @@ const graphTransformationsOfTangentAndCotangent: TopicDef = {
     },
     {
       id: "asymptotes-after-a-translation",
+      figure: waveDrawings["graph-transformations-of-tangent-and-cotangent#asymptotes-after-a-translation"],
       title: t("Asymptotes after a translation", "平移后的渐近线"),
       explanation: t(
         "The asymptotes of $y = \\tan x$ are at $x = \\frac{\\pi}{2} + k\\pi$, and those of $y = \\cot x$ at $x = k\\pi$. A horizontal shift moves them with the graph; a vertical shift does not move them at all.\n\nFor $y = \\cot\\left(x + \\frac{\\pi}{3}\\right) + 2$: the asymptotes are where $x + \\frac{\\pi}{3} = k\\pi$, that is $x = -\\frac{\\pi}{3} + k\\pi$. The smallest positive one is $x = \\frac{2\\pi}{3}$.",
@@ -1290,6 +1295,7 @@ const combiningGraphTransformationsOfTangentAndCotangent: TopicDef = {
     },
     {
       id: "asymptotes-of-a-combined-tangent",
+      figure: waveDrawings["combining-graph-transformations-of-tangent-and-cotangent#asymptotes-of-a-combined-tangent"],
       title: t("Asymptotes", "渐近线"),
       explanation: t(
         "Let $\\theta = b(x - c)$. The graph of $y = a \\tan \\theta + d$ has asymptotes where $\\tan \\theta$ is undefined, $\\theta = \\frac{\\pi}{2} + k\\pi$ (for cotangent, $\\theta = k\\pi$). Solve for $x$:\n\nFor $y = \\tan\\left(2\\left(x - \\frac{\\pi}{6}\\right)\\right)$: $2\\left(x - \\frac{\\pi}{6}\\right) = \\frac{\\pi}{2} + k\\pi$ gives $x = \\frac{\\pi}{6} + \\frac{\\pi}{4} + \\frac{k\\pi}{2} = \\frac{5\\pi}{12} + \\frac{k\\pi}{2}$. The smallest positive asymptote is $x = \\frac{5\\pi}{12}$.",
@@ -1386,6 +1392,7 @@ const combiningGraphTransformationsOfSecantAndCosecant: TopicDef = {
     },
     {
       id: "asymptotes-of-a-transformed-secant",
+      figure: waveDrawings["combining-graph-transformations-of-secant-and-cosecant#asymptotes-of-a-transformed-secant"],
       title: t("Asymptotes", "渐近线"),
       explanation: t(
         "The graph of $y = a \\sec \\theta + d$ has asymptotes where $\\cos \\theta = 0$, $\\theta = \\frac{\\pi}{2} + k\\pi$, and that of $y = a \\csc \\theta + d$ where $\\sin \\theta = 0$, $\\theta = k\\pi$. With $\\theta = b(x - c)$, solve for $x$.\n\nFor $y = 3\\csc\\left(\\frac{1}{2}\\left(x + \\frac{\\pi}{3}\\right)\\right)$: $\\frac{1}{2}\\left(x + \\frac{\\pi}{3}\\right) = k\\pi$ gives $x = -\\frac{\\pi}{3} + 2k\\pi$, so the smallest positive asymptote is $x = \\frac{5\\pi}{3}$.",
@@ -1455,6 +1462,7 @@ const graphingReflectionsOfTrigonometricFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "reflecting-in-the-y-axis",
+      figure: waveDrawings["graphing-reflections-of-trigonometric-functions#reflecting-in-the-y-axis"],
       title: t("Reflecting in the y-axis", "关于 y 轴对称"),
       explanation: t(
         "The graph of $y = -f(x)$ is the graph of $y = f(x)$ reflected in the $x$-axis, and $y = f(-x)$ is its reflection in the $y$-axis. For the trigonometric functions a reflection in the $y$-axis is the same as either nothing or a reflection in the $x$-axis:\n\n- cosine and secant are **even**: $\\cos(-x) = \\cos x$, $\\sec(-x) = \\sec x$;\n- sine, cosecant, tangent and cotangent are **odd**: $\\sin(-x) = -\\sin x$, and so on.\n\nSo $y = 3\\sin(-x) + 2$ is the same as $y = -3\\sin x + 2$, while $y = 3\\cos(-x) + 2$ is the same as $y = 3\\cos x + 2$.",
@@ -1482,6 +1490,7 @@ const graphingReflectionsOfTrigonometricFunctions: TopicDef = {
     },
     {
       id: "extrema-of-reflected-waves",
+      figure: waveDrawings["graphing-reflections-of-trigonometric-functions#extrema-of-reflected-waves"],
       title: t("Extrema of reflected waves", "对称后波形的最值点"),
       explanation: t(
         "Reflecting in the $x$-axis swaps the highest and lowest points: $y = -\\sin x$ has its **maximum** where $\\sin x = -1$, at $x = \\frac{3\\pi}{2} + 2k\\pi$, and its minimum where $\\sin x = 1$. The midline and amplitude stay the same.\n\nFor $y = -2\\cos x + 1$: maximum $1 + 2 = 3$ where $\\cos x = -1$, so at $x = \\pi + 2k\\pi$; minimum $-1$ where $\\cos x = 1$, at $x = 2k\\pi$, so the smallest positive one is $x = 2\\pi$.",
@@ -1536,6 +1545,8 @@ const graphingReflectionsThreeOrMore: TopicDef = {
   knowledgePoints: [
     {
       id: "values-of-reflected-combined-waves",
+      figure:
+        waveDrawings["graphing-reflections-of-trigonometric-functions-three-or-more-transformations#values-of-reflected-combined-waves"],
       title: t("Maximum, minimum and period", "最大值、最小值与周期"),
       explanation: t(
         "In $y = a \\sin(b(x - c)) + d$ with $a < 0$ the amplitude is $|a|$, so the maximum is $d + |a|$ and the minimum is $d - |a|$; the reflection only changes *where* they occur. The period is still $\\frac{2\\pi}{b}$.\n\nFor $y = -3\\cos\\left(2\\left(x - \\frac{\\pi}{4}\\right)\\right) + 1$: maximum $1 + 3 = 4$, minimum $1 - 3 = -2$, period $\\pi$.",
@@ -1718,6 +1729,7 @@ const propertiesOfTransformedSineAndCosineFunctions: TopicDef = {
     },
     {
       id: "evaluating-transformed-sine-and-cosine",
+      figure: waveDrawings["properties-of-transformed-sine-and-cosine-functions#evaluating-transformed-sine-and-cosine"],
       title: t("Evaluating at special angles", "在特殊角处求值"),
       explanation: t(
         "To evaluate a transformed wave, work from the inside out: compute the input angle, take its sine or cosine from the unit circle, multiply by $a$, then add $d$. For $f(x) = 4\\cos\\left(2x - \\frac{\\pi}{3}\\right) + 1$ at $x = \\frac{\\pi}{2}$:\n\n$$2 \\cdot \\frac{\\pi}{2} - \\frac{\\pi}{3} = \\frac{2\\pi}{3}, \\quad \\cos\\frac{2\\pi}{3} = -\\frac{1}{2}, \\quad f\\left(\\frac{\\pi}{2}\\right) = 4 \\cdot \\left(-\\frac{1}{2}\\right) + 1 = -1.$$",
@@ -1790,6 +1802,7 @@ const findingZerosAndExtremaOfTransformedSineAndCosineFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "locating-the-extrema",
+      figure: waveDrawings["finding-zeros-and-extrema-of-transformed-sine-and-cosine-functions#locating-the-extrema"],
       title: t("Locating the extrema", "确定最值点"),
       explanation: t(
         "Let $\\theta$ be the input of $y = a \\sin\\theta + d$. The maximum $d + |a|$ occurs where $\\sin \\theta = 1$ if $a > 0$, or $\\sin\\theta = -1$ if $a < 0$; the minimum at the other one. Write $\\theta$ as a family of angles and solve for $x$.\n\nFor $y = 2\\cos\\left(3x - \\frac{\\pi}{2}\\right)$, the maximum occurs where $3x - \\frac{\\pi}{2} = 2k\\pi$, so $x = \\frac{\\pi}{6} + \\frac{2k\\pi}{3}$; the smallest positive one is $\\frac{\\pi}{6}$.",
@@ -1832,6 +1845,7 @@ const findingZerosAndExtremaOfTransformedSineAndCosineFunctions: TopicDef = {
     },
     {
       id: "zeros-off-the-midline",
+      figure: waveDrawings["finding-zeros-and-extrema-of-transformed-sine-and-cosine-functions#zeros-off-the-midline"],
       title: t("Zeros when the midline is shifted", "中线平移后的零点"),
       explanation: t(
         "When $d \\ne 0$, solve $a \\sin\\theta + d = 0$ for $\\sin\\theta = -\\frac{d}{a}$ first. If this is $\\pm\\frac{1}{2}$, there are two families of angles per turn: $\\sin \\theta = \\frac{1}{2}$ at $\\theta = \\frac{\\pi}{6} + 2k\\pi$ and $\\theta = \\frac{5\\pi}{6} + 2k\\pi$, and $\\cos\\theta = \\frac{1}{2}$ at $\\theta = \\frac{\\pi}{3} + 2k\\pi$ and $\\theta = \\frac{5\\pi}{3} + 2k\\pi$. Solve each for $x$ and compare.\n\nFor $y = 4\\cos 2x + 2$: $\\cos 2x = -\\frac{1}{2}$, so $2x = \\frac{2\\pi}{3} + 2k\\pi$ or $2x = \\frac{4\\pi}{3} + 2k\\pi$, giving $x = \\frac{\\pi}{3} + k\\pi$ or $x = \\frac{2\\pi}{3} + k\\pi$. The smallest positive zero is $\\frac{\\pi}{3}$.",
@@ -1864,6 +1878,7 @@ const propertiesOfTransformedTangentAndCotangentFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "period-of-transformed-tangent-and-cotangent",
+      figure: waveDrawings["properties-of-transformed-tangent-and-cotangent-functions#period-of-transformed-tangent-and-cotangent"],
       title: t("The period", "周期"),
       explanation: t(
         "The domain of $y = a\\tan(bx + \\varphi) + d$ is all real numbers except the asymptotes, and its range is all real numbers. Its period is $\\frac{\\pi}{b}$, whatever $a$, $\\varphi$ and $d$ are. For $y = -2\\cot\\left(4x - \\frac{\\pi}{3}\\right) + 5$ the period is $\\frac{\\pi}{4}$.",
@@ -1888,6 +1903,7 @@ const propertiesOfTransformedTangentAndCotangentFunctions: TopicDef = {
     },
     {
       id: "asymptotes-of-transformed-tangent-and-cotangent",
+      figure: waveDrawings["properties-of-transformed-tangent-and-cotangent-functions#asymptotes-of-transformed-tangent-and-cotangent"],
       title: t("Vertical asymptotes", "竖直渐近线"),
       explanation: t(
         "Set the input equal to the angles where the function is undefined: $bx + \\varphi = \\frac{\\pi}{2} + k\\pi$ for tangent, $bx + \\varphi = k\\pi$ for cotangent, and solve for $x$.\n\nFor $y = \\cot\\left(2x + \\frac{\\pi}{2}\\right)$: $2x + \\frac{\\pi}{2} = k\\pi$ gives $x = -\\frac{\\pi}{4} + \\frac{k\\pi}{2}$, so the smallest positive asymptote is $x = \\frac{\\pi}{4}$.",
@@ -1913,6 +1929,7 @@ const propertiesOfTransformedTangentAndCotangentFunctions: TopicDef = {
     },
     {
       id: "zeros-of-transformed-tangent-and-cotangent",
+      figure: waveDrawings["properties-of-transformed-tangent-and-cotangent-functions#zeros-of-transformed-tangent-and-cotangent"],
       title: t("Zeros", "零点"),
       explanation: t(
         "Solve $a\\tan\\theta + d = 0$ for $\\tan\\theta = -\\frac{d}{a}$. Tangent takes each value once per period: $\\tan\\theta = 0$ at $\\theta = k\\pi$, $\\tan\\theta = 1$ at $\\theta = \\frac{\\pi}{4} + k\\pi$ and $\\tan\\theta = -1$ at $\\theta = \\frac{3\\pi}{4} + k\\pi$; cotangent is $0$ at $\\theta = \\frac{\\pi}{2} + k\\pi$ and $\\pm 1$ at the same angles as tangent.\n\nFor $y = 2\\tan\\left(x - \\frac{\\pi}{3}\\right) - 2$: $\\tan\\left(x - \\frac{\\pi}{3}\\right) = 1$, so $x - \\frac{\\pi}{3} = \\frac{\\pi}{4} + k\\pi$ and $x = \\frac{7\\pi}{12} + k\\pi$; the smallest positive zero is $\\frac{7\\pi}{12}$.",
@@ -1984,6 +2001,7 @@ const propertiesOfTransformedSecantAndCosecantFunctions: TopicDef = {
     },
     {
       id: "asymptotes-of-transformed-secant-and-cosecant",
+      figure: waveDrawings["properties-of-transformed-secant-and-cosecant-functions#asymptotes-of-transformed-secant-and-cosecant"],
       title: t("Vertical asymptotes", "竖直渐近线"),
       explanation: t(
         "Secant is undefined where cosine is $0$, and cosecant where sine is $0$. Set the input $bx + \\varphi$ equal to $\\frac{\\pi}{2} + k\\pi$ (secant) or $k\\pi$ (cosecant) and solve for $x$.\n\nFor $y = 2\\sec\\left(3x - \\frac{\\pi}{4}\\right)$: $3x - \\frac{\\pi}{4} = \\frac{\\pi}{2} + k\\pi$ gives $x = \\frac{\\pi}{4} + \\frac{k\\pi}{3}$, so the smallest positive asymptote is $x = \\frac{\\pi}{4}$.",

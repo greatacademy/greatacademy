@@ -1,7 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, Q } from "@ga/subject-math";
-
+import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { choiceProblem, equationProblem, numberProblem, pointProblem, radicalProblem, steps } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
 
@@ -175,6 +175,7 @@ export const introductionToEllipses: TopicDef = {
     },
     {
       id: "major-and-minor-axes",
+      figure: precalculusDrawings3["introduction-to-ellipses#major-and-minor-axes"],
       title: t("Major and minor axes of an ellipse", "椭圆的长轴与短轴"),
       explanation: t(
         "The major axis of an ellipse passes through the foci and vertices; its length is $2a$, where $a$ is the semi-major axis.\n\nThe minor axis is perpendicular to the major axis at the center; its length is $2b$, where $b$ is the semi-minor axis ($a > b > 0$).",
@@ -388,6 +389,7 @@ export const equationsOfEllipsesCenteredAtAGeneralPoint: TopicDef = {
   knowledgePoints: [
     {
       id: "standard-form-with-center-h-k",
+      figure: precalculusDrawings3["equations-of-ellipses-centered-at-a-general-point#standard-form-with-center-h-k"],
       title: t("Standard equation with center (h, k)", "中心在 (h, k) 的标准方程"),
       explanation: t(
         "When an ellipse is translated so that its center is $(h, k)$:\n\n- Horizontal major axis: $\\frac{(x-h)^{2}}{a^{2}} + \\frac{(y-k)^{2}}{b^{2}} = 1$\n- Vertical major axis: $\\frac{(x-h)^{2}}{b^{2}} + \\frac{(y-k)^{2}}{a^{2}} = 1$",
@@ -840,6 +842,7 @@ export const fociOfEllipses: TopicDef = {
     },
     {
       id: "foci-of-shifted-ellipses",
+      figure: precalculusDrawings3["foci-of-ellipses#foci-of-shifted-ellipses"],
       title: t("Foci of translated ellipses", "平移椭圆的焦点坐标"),
       explanation: t(
         "For an ellipse with center $(h, k)$ and focal distance $c = \\sqrt{a^{2} - b^{2}}$:\n\n- Horizontal major axis: foci at $(h \\pm c, k)$\n- Vertical major axis: foci at $(h, k \\pm c)$",
@@ -926,6 +929,7 @@ export const verticesAndEccentricityOfEllipses: TopicDef = {
     },
     {
       id: "geometric-meaning-of-eccentricity",
+      figure: precalculusDrawings3["vertices-and-eccentricity-of-ellipses#geometric-meaning-of-eccentricity"],
       title: t("Geometric meaning of eccentricity", "离心率的几何意义"),
       explanation: t(
         "Eccentricity describes the roundness or elongation of an ellipse:\n\n- As $e \\to 0$, $c \\to 0$ and $b \\to a$, so the ellipse is nearly a circle.\n- As $e \\to 1$, $c \\to a$ and $b \\to 0$, so the ellipse is very long and narrow (highly elongated).",
@@ -989,6 +993,7 @@ export const directricesOfEllipses: TopicDef = {
   knowledgePoints: [
     {
       id: "equations-of-directrices-at-origin",
+      figure: precalculusDrawings3["directrices-of-ellipses#equations-of-directrices-at-origin"],
       title: t("Equations of directrices for an ellipse centered at the origin", "中心在原点的椭圆准线方程"),
       explanation: t(
         "An ellipse has two directrix lines perpendicular to the major axis:\n\n- Horizontal major axis: $x = \\pm \\frac{a^{2}}{c} = \\pm \\frac{a}{e}$\n- Vertical major axis: $y = \\pm \\frac{a^{2}}{c} = \\pm \\frac{a}{e}$",
@@ -1069,6 +1074,7 @@ export const theAreaOfAnEllipse: TopicDef = {
   knowledgePoints: [
     {
       id: "calculating-the-area-of-an-ellipse",
+      figure: precalculusDrawings3["the-area-of-an-ellipse#calculating-the-area-of-an-ellipse"],
       title: t("Calculating the area of an ellipse", "计算椭圆的面积"),
       explanation: t(
         "The area $A$ of an ellipse with semi-major axis $a$ and semi-minor axis $b$ is given by:\n\n$$A = \\pi a b$$\n\nWhen $a = b = r$, this simplifies to the area of a circle, $A = \\pi r^{2}$.",
@@ -1316,6 +1322,7 @@ export const asymptotesOfHyperbolasCenteredAtTheOrigin: TopicDef = {
   knowledgePoints: [
     {
       id: "asymptotes-of-horizontal-hyperbolas",
+      figure: precalculusDrawings3["asymptotes-of-hyperbolas-centered-at-the-origin#asymptotes-of-horizontal-hyperbolas"],
       title: t("Asymptotes of horizontal hyperbolas", "水平双曲线的渐近线方程"),
       explanation: t(
         "Far from the center, a hyperbola gets closer and closer to two lines through its center, and these asymptotes come from replacing the constant one by zero. For the horizontal hyperbola $\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 1$, setting the right side to $0$ gives:\n\n$$\\frac{x^{2}}{a^{2}} - \\frac{y^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{b}{a}x$$",
@@ -1352,6 +1359,7 @@ export const asymptotesOfHyperbolasCenteredAtTheOrigin: TopicDef = {
     },
     {
       id: "asymptotes-of-vertical-hyperbolas",
+      figure: precalculusDrawings3["asymptotes-of-hyperbolas-centered-at-the-origin#asymptotes-of-vertical-hyperbolas"],
       title: t("Asymptotes of vertical hyperbolas", "竖直双曲线的渐近线方程"),
       explanation: t(
         "When the term with the vertical variable is positive, the hyperbola opens up and down, and its asymptotes still come from replacing the constant one by zero. For the vertical hyperbola $\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 1$, setting the right side to $0$ gives:\n\n$$\\frac{y^{2}}{a^{2}} - \\frac{x^{2}}{b^{2}} = 0 \\implies y = \\pm \\frac{a}{b}x$$",
@@ -1403,6 +1411,7 @@ export const asymptotesOfHyperbolasCenteredAtAGeneralPoint: TopicDef = {
   knowledgePoints: [
     {
       id: "asymptotes-of-translated-horizontal-hyperbolas",
+      figure: precalculusDrawings3["asymptotes-of-hyperbolas-centered-at-a-general-point#asymptotes-of-translated-horizontal-hyperbolas"],
       title: t("Asymptotes of translated horizontal hyperbolas", "平移水平双曲线的渐近线"),
       explanation: t(
         "Translating a hyperbola moves its asymptotes with it, so they become lines through the new center with the same slopes as before. For $\\frac{(x-h)^{2}}{a^{2}} - \\frac{(y-k)^{2}}{b^{2}} = 1$, the asymptotes pass through the center $(h, k)$ with slopes $\\pm \\frac{b}{a}$:\n\n$$y - k = \\pm \\frac{b}{a}(x - h)$$",
@@ -1690,6 +1699,7 @@ export const conjugateAxesOfHyperbolas: TopicDef = {
     },
     {
       id: "central-fundamental-rectangle",
+      figure: precalculusDrawings3["conjugate-axes-of-hyperbolas#central-fundamental-rectangle"],
       title: t("The central fundamental rectangle", "双曲线的中心基本矩形"),
       explanation: t(
         "The central rectangle of a hyperbola has side lengths $2a$ (along the transverse axis) and $2b$ (along the conjugate axis). Its diagonals extended are the asymptotes of the hyperbola, and its area is $(2a)(2b) = 4ab$.",
@@ -1850,6 +1860,7 @@ export const eccentricityAndVerticesOfHyperbolas: TopicDef = {
     },
     {
       id: "equilateral-rectangular-hyperbolas",
+      figure: precalculusDrawings3["eccentricity-and-vertices-of-hyperbolas#equilateral-rectangular-hyperbolas"],
       title: t("Rectangular (equilateral) hyperbolas", "等轴双曲线"),
       explanation: t(
         "When $a = b$, the hyperbola is called rectangular (or equilateral):\n\n- The asymptotes $y = \\pm \\frac{a}{a}x = \\pm x$ are perpendicular ($90^{\\circ}$ angle).\n- The eccentricity is constant for all rectangular hyperbolas:\n$$e = \\frac{\\sqrt{a^{2} + a^{2}}}{a} = \\frac{a\\sqrt{2}}{a} = \\sqrt{2}$$",

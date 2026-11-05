@@ -5,7 +5,7 @@ import type { Figure, KnowledgePointDef, Problem, Rng, Text } from "@ga/content"
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd, plane, Q, svgDocument } from "@ga/subject-math";
-
+import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { numberProblem } from "../problems.ts";
 import { pickChoice as choiceFrom } from "./grade-4-fractions.ts";
 
@@ -500,6 +500,7 @@ const fociFromDrawing: KnowledgePointDef = {
 
 const asymptotesFromDrawing: KnowledgePointDef = {
   id: "asymptote-slopes-from-a-drawn-hyperbola",
+  figure: precalculusDrawings3["asymptotes-of-hyperbolas-centered-at-the-origin#asymptote-slopes-from-a-drawn-hyperbola"],
   title: t("Asymptote slopes from a drawn hyperbola", "由图中的双曲线求渐近线斜率"),
   explanation: t(
     "For a hyperbola opening left and right, the vertices are at distance $a$ from the center along the $x$-axis, and the asymptotes pass through the corners of a box with half-width $a$ and half-height $b$. So the slopes are $\\pm\\frac{b}{a}$. Reading the numbers from the grid, then checking against the dashed lines, avoids turning the fraction upside down.",
@@ -604,6 +605,7 @@ const sumOnComplexPlane: KnowledgePointDef = {
 
 const argumentFromDrawing: KnowledgePointDef = {
   id: "the-argument-from-a-drawn-point",
+  figure: precalculusDrawings3["the-argument-of-a-complex-number#the-argument-from-a-drawn-point"],
   title: t("The argument from a drawn point", "由图中的点求辐角"),
   explanation: t(
     "The principal argument is the angle from the positive real axis to the point, between $-\\pi$ and $\\pi$. The quadrant must come from the picture, because the arctangent of the imaginary part over the real part cannot tell opposite points apart. So for a point in the third quadrant, the argument is a negative angle beyond minus a right angle, and not the angle given by the arctangent.",
@@ -647,6 +649,7 @@ const argumentFromDrawing: KnowledgePointDef = {
 
 const rootsOnCircle: KnowledgePointDef = {
   id: "the-number-from-its-roots-on-a-circle",
+  figure: precalculusDrawings3["higher-roots-of-complex-numbers#the-number-from-its-roots-on-a-circle"],
   title: t("A number from its roots on a circle", "由圆上的根求原数"),
   explanation: t(
     "The $n$-th roots of a complex number lie evenly spaced on a circle around the origin. So the number of points gives $n$, and the radius of the circle is the $n$-th root of the size of the number. Reversing this, the size of the number is the radius raised to the power $n$, which can be read directly from a drawing of the roots.",

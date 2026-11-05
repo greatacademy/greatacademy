@@ -1,7 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, type Compass, dec, gcd, type Mark, type Point, Q, q, radical, simplifyRadical, sketch } from "@ga/subject-math";
-
+import { trigDrawings } from "../explanation-drawings-trig.ts";
 import { article, choiceProblem, expressionProblem, numberProblem, radicalProblem, steps, yesNo } from "../problems.ts";
 
 // Algebra II, unit 8: the unit circle — angles in standard position (positive,
@@ -554,6 +554,7 @@ export const anglesInTheCoordinatePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "quadrants-of-angles",
+      figure: trigDrawings["angles-in-the-coordinate-plane#quadrants-of-angles"],
       title: t("The quadrant of an angle", "角所在的象限"),
       explanation: t(
         "An angle is in **standard position** when its vertex is at the origin and its **initial side** lies along the positive $x$-axis. Rotating the other side, the **terminal side**, counterclockwise gives a positive angle. Every $90^\\circ$ of rotation passes one quadrant:\n\n| Angle | Terminal side |\n| :--- | :--- |\n| $0^\\circ < \\theta < 90^\\circ$ | Quadrant I |\n| $90^\\circ < \\theta < 180^\\circ$ | Quadrant II |\n| $180^\\circ < \\theta < 270^\\circ$ | Quadrant III |\n| $270^\\circ < \\theta < 360^\\circ$ | Quadrant IV |\n\nFor example, $200^\\circ$ is between $180^\\circ$ and $270^\\circ$, so its terminal side lies in Quadrant III. An angle that is a multiple of $90^\\circ$, such as $270^\\circ$, has its terminal side on an axis; it is called a **quadrantal angle**.",
@@ -566,6 +567,7 @@ export const anglesInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "angles-from-the-terminal-side",
+      figure: trigDrawings["angles-in-the-coordinate-plane#angles-from-the-terminal-side"],
       title: t("The angle from its terminal side", "由终边求角"),
       explanation: t(
         "To measure an angle in standard position, count the rotation from the positive $x$-axis. The axes are at $0^\\circ$, $90^\\circ$, $180^\\circ$ and $270^\\circ$, so start from the nearest axis the rotation has passed.\n\nIf the terminal side lies in Quadrant II and makes a $35^\\circ$ angle with the negative $x$-axis, it stops $35^\\circ$ short of $180^\\circ$:\n\n$$\\theta = 180^\\circ - 35^\\circ = 145^\\circ.$$\n\nIf it lies in Quadrant III and makes $35^\\circ$ with the negative $x$-axis, it has gone $35^\\circ$ past it: $\\theta = 180^\\circ + 35^\\circ = 215^\\circ$.",
@@ -620,6 +622,7 @@ export const negativeAnglesInTheCoordinatePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "quadrants-of-negative-angles",
+      figure: trigDrawings["negative-angles-in-the-coordinate-plane#quadrants-of-negative-angles"],
       title: t("The quadrant of a negative angle", "负角所在的象限"),
       explanation: t(
         "A **negative angle** rotates the terminal side **clockwise** from the positive $x$-axis. Going clockwise, the quadrants come in the order IV, III, II, I:\n\n| Angle | Terminal side |\n| :--- | :--- |\n| $-90^\\circ < \\theta < 0^\\circ$ | Quadrant IV |\n| $-180^\\circ < \\theta < -90^\\circ$ | Quadrant III |\n| $-270^\\circ < \\theta < -180^\\circ$ | Quadrant II |\n| $-360^\\circ < \\theta < -270^\\circ$ | Quadrant I |\n\nFor example, $-130^\\circ$ is between $-180^\\circ$ and $-90^\\circ$, so its terminal side lies in Quadrant III. Equivalently, a full turn added to $-130^\\circ$ gives $230^\\circ$, which is in Quadrant III.",
@@ -632,6 +635,7 @@ export const negativeAnglesInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "negative-angles-from-the-terminal-side",
+      figure: trigDrawings["negative-angles-in-the-coordinate-plane#negative-angles-from-the-terminal-side"],
       title: t("The negative angle from its terminal side", "由终边求负角"),
       explanation: t(
         "To give a terminal side as a negative angle, count the clockwise rotation from the positive $x$-axis. Clockwise, the axes come at $0^\\circ$, $-90^\\circ$, $-180^\\circ$ and $-270^\\circ$.\n\nIf the terminal side lies in Quadrant III and makes a $40^\\circ$ angle with the negative $y$-axis, the clockwise rotation passes $-90^\\circ$ and goes $40^\\circ$ further:\n\n$$\\theta = -90^\\circ - 40^\\circ = -130^\\circ.$$\n\nThe same terminal side measured counterclockwise is $270^\\circ - 40^\\circ = 230^\\circ$, and indeed $230^\\circ - 360^\\circ = -130^\\circ$.",
@@ -668,6 +672,7 @@ export const negativeAnglesInTheCoordinatePlane: TopicDef = {
     },
     {
       id: "negative-and-positive-measures",
+      figure: trigDrawings["negative-angles-in-the-coordinate-plane#negative-and-positive-measures"],
       title: t("Negative and positive measures of one terminal side", "同一终边的负角与正角"),
       explanation: t(
         "A terminal side reached by a counterclockwise rotation of $\\theta$ (with $0^\\circ < \\theta < 360^\\circ$) is also reached clockwise, by the rest of the full turn. So the same terminal side is described by\n\n$$\\theta \\quad \\text{and} \\quad \\theta - 360^\\circ.$$\n\nFor example, $300^\\circ$ and $300^\\circ - 360^\\circ = -60^\\circ$ have the same terminal side. Going the other way, $-110^\\circ$ and $-110^\\circ + 360^\\circ = 250^\\circ$ have the same terminal side.",
@@ -729,6 +734,7 @@ export const coterminalAngles: TopicDef = {
   knowledgePoints: [
     {
       id: "coterminal-angles-in-degrees",
+      figure: trigDrawings["coterminal-angles#coterminal-angles-in-degrees"],
       title: t("Coterminal angles in degrees", "角度制下终边相同的角"),
       explanation: t(
         "Angles in standard position with the same terminal side are **coterminal**. A full turn of $360^\\circ$ brings the terminal side back to where it was, so the angles coterminal with $\\theta$ are\n\n$$\\theta + 360^\\circ k \\quad \\text{for any integer } k.$$\n\nAn angle may rotate more than once: $850^\\circ$ is two full turns and $130^\\circ$ more. To find the coterminal angle between $0^\\circ$ and $360^\\circ$, subtract (or add) $360^\\circ$ as many times as needed:\n\n$$850^\\circ - 2 \\cdot 360^\\circ = 130^\\circ, \\qquad -500^\\circ + 2 \\cdot 360^\\circ = 220^\\circ.$$",
@@ -758,6 +764,7 @@ export const coterminalAngles: TopicDef = {
     },
     {
       id: "coterminal-angles-in-radians",
+      figure: trigDrawings["coterminal-angles#coterminal-angles-in-radians"],
       title: t("Coterminal angles in radians", "弧度制下终边相同的角"),
       explanation: t(
         "In radians a full turn is $2\\pi$, so the angles coterminal with $\\theta$ are $\\theta + 2\\pi k$. Write $2\\pi$ with the same denominator as the angle before adding or subtracting.\n\nFor $\\frac{17\\pi}{6}$: $2\\pi = \\frac{12\\pi}{6}$, so\n\n$$\\frac{17\\pi}{6} - \\frac{12\\pi}{6} = \\frac{5\\pi}{6},$$\n\nwhich is between $0$ and $2\\pi$. For $-\\frac{3\\pi}{4}$: $-\\frac{3\\pi}{4} + \\frac{8\\pi}{4} = \\frac{5\\pi}{4}$.",
@@ -788,6 +795,7 @@ export const coterminalAngles: TopicDef = {
     },
     {
       id: "testing-for-coterminal-angles",
+      figure: trigDrawings["coterminal-angles#testing-for-coterminal-angles"],
       title: t("Are two angles coterminal?", "两个角的终边是否相同"),
       explanation: t(
         "Two angles are coterminal exactly when they differ by a whole number of full turns. Subtract them and check whether the difference is a multiple of $360^\\circ$:\n\n- $-250^\\circ$ and $830^\\circ$: $830^\\circ - (-250^\\circ) = 1080^\\circ = 3 \\cdot 360^\\circ$, so they are coterminal.\n- $100^\\circ$ and $460^\\circ$: $460^\\circ - 100^\\circ = 360^\\circ$, so they are coterminal.\n- $45^\\circ$ and $225^\\circ$: the difference is $180^\\circ$, half a turn, so their terminal sides point in opposite directions and they are not coterminal.",
@@ -845,6 +853,7 @@ export const calculatingReferenceAngles: TopicDef = {
   knowledgePoints: [
     {
       id: "reference-angles-in-degrees",
+      figure: trigDrawings["calculating-reference-angles#reference-angles-in-degrees"],
       title: t("Reference angles in degrees", "角度制下的参考角"),
       explanation: t(
         `The **reference angle** of an angle in standard position is the acute angle between its terminal side and the nearer half of the $x$-axis. It depends on the quadrant, for $0^\\circ < \\theta < 360^\\circ$:\n\n${referenceTable.en}\n\nFor example, $230^\\circ$ is in Quadrant III, $50^\\circ$ past the negative $x$-axis, so its reference angle is $230^\\circ - 180^\\circ = 50^\\circ$. And $300^\\circ$ is in Quadrant IV, so its reference angle is $360^\\circ - 300^\\circ = 60^\\circ$.`,
@@ -865,6 +874,7 @@ export const calculatingReferenceAngles: TopicDef = {
     },
     {
       id: "reference-angles-of-negative-and-large-angles",
+      figure: trigDrawings["calculating-reference-angles#reference-angles-of-negative-and-large-angles"],
       title: t("Reference angles of negative and large angles", "负角与大角的参考角"),
       explanation: t(
         "For an angle outside $0^\\circ$ to $360^\\circ$, first find the coterminal angle in that range; it has the same terminal side, so the same reference angle.\n\nFor $-140^\\circ$: $-140^\\circ + 360^\\circ = 220^\\circ$, in Quadrant III, so the reference angle is $220^\\circ - 180^\\circ = 40^\\circ$. For $835^\\circ$: $835^\\circ - 2 \\cdot 360^\\circ = 115^\\circ$, in Quadrant II, so the reference angle is $180^\\circ - 115^\\circ = 65^\\circ$.",
@@ -886,6 +896,7 @@ export const calculatingReferenceAngles: TopicDef = {
     },
     {
       id: "reference-angles-in-radians",
+      figure: trigDrawings["calculating-reference-angles#reference-angles-in-radians"],
       title: t("Reference angles in radians", "弧度制下的参考角"),
       explanation: t(
         "In radians the axes are at $0$, $\\frac{\\pi}{2}$, $\\pi$, $\\frac{3\\pi}{2}$ and $2\\pi$, and the reference angle is found the same way, with $\\pi$ for $180^\\circ$ and $2\\pi$ for $360^\\circ$.\n\nFor $\\frac{7\\pi}{6}$: it is more than $\\pi = \\frac{6\\pi}{6}$ and less than $\\frac{3\\pi}{2} = \\frac{9\\pi}{6}$, so it is in Quadrant III, and its reference angle is $\\frac{7\\pi}{6} - \\pi = \\frac{\\pi}{6}$. For $\\frac{5\\pi}{3}$, in Quadrant IV, it is $2\\pi - \\frac{5\\pi}{3} = \\frac{\\pi}{3}$.",
@@ -925,6 +936,7 @@ export const propertiesOfTheUnitCircleInTheFirstQuadrant: TopicDef = {
   knowledgePoints: [
     {
       id: "coordinates-on-the-unit-circle",
+      figure: trigDrawings["properties-of-the-unit-circle-in-the-first-quadrant#coordinates-on-the-unit-circle"],
       title: t("Coordinates from the angle", "由角求坐标"),
       explanation: t(
         "The **unit circle** is the circle of radius $1$ centered at the origin, $x^2 + y^2 = 1$. Let the terminal side of an acute angle $\\theta$ meet it at $P(x, y)$. Dropping a perpendicular from $P$ to the $x$-axis makes a right triangle with hypotenuse $OP = 1$, legs $x$ and $y$, and the angle $\\theta$ at $O$. So\n\n$$\\cos \\theta = \\frac{x}{1} = x, \\qquad \\sin \\theta = \\frac{y}{1} = y,$$\n\nthat is, $P = (\\cos \\theta, \\sin \\theta)$. For example, at $\\theta = 25^\\circ$, a calculator in degree mode gives $P \\approx (0.91, 0.42)$, since $\\cos 25^\\circ \\approx 0.9063$ and $\\sin 25^\\circ \\approx 0.4226$.",
@@ -963,6 +975,7 @@ export const propertiesOfTheUnitCircleInTheFirstQuadrant: TopicDef = {
     },
     {
       id: "ratios-from-a-point-in-the-first-quadrant",
+      figure: trigDrawings["properties-of-the-unit-circle-in-the-first-quadrant#ratios-from-a-point-in-the-first-quadrant"],
       title: t("Ratios from a point on the unit circle", "由单位圆上的点求三角比"),
       explanation: t(
         "Read the ratios off the point: if the terminal side of $\\theta$ meets the unit circle at $P(x, y)$, then $\\cos \\theta = x$, $\\sin \\theta = y$, and\n\n$$\\tan \\theta = \\frac{\\text{opposite}}{\\text{adjacent}} = \\frac{y}{x}.$$\n\nFor $P\\left(\\frac{5}{13}, \\frac{12}{13}\\right)$: $\\cos \\theta = \\frac{5}{13}$, $\\sin \\theta = \\frac{12}{13}$ and $\\tan \\theta = \\frac{12}{13} \\div \\frac{5}{13} = \\frac{12}{5}$.",
@@ -972,6 +985,7 @@ export const propertiesOfTheUnitCircleInTheFirstQuadrant: TopicDef = {
     },
     {
       id: "the-missing-coordinate",
+      figure: trigDrawings["properties-of-the-unit-circle-in-the-first-quadrant#the-missing-coordinate"],
       title: t("The missing coordinate", "求另一个坐标"),
       explanation: t(
         "A point on the unit circle satisfies $x^2 + y^2 = 1$, so one coordinate gives the other. In the first quadrant both are positive.\n\nIf $P$ is in the first quadrant with $x = \\frac{1}{3}$, then\n\n$$y = \\sqrt{1 - \\left(\\frac{1}{3}\\right)^2} = \\sqrt{\\frac{8}{9}} = \\frac{2\\sqrt{2}}{3}.$$",
@@ -1034,6 +1048,7 @@ export const extendingTheTrigonometricRatiosUsingTheUnitCircle: TopicDef = {
   knowledgePoints: [
     {
       id: "ratios-from-a-point-in-any-quadrant",
+      figure: trigDrawings["extending-the-trigonometric-ratios-using-the-unit-circle#ratios-from-a-point-in-any-quadrant"],
       title: t("Ratios from a point in any quadrant", "由任意象限中的点求三角比"),
       explanation: t(
         "For any angle $\\theta$ in standard position, let its terminal side meet the unit circle at $P(x, y)$. We **define**\n\n$$\\cos \\theta = x, \\qquad \\sin \\theta = y, \\qquad \\tan \\theta = \\frac{y}{x} \\ (x \\ne 0).$$\n\nFor acute angles this agrees with the right-triangle ratios; for other angles the coordinates, and so the ratios, may be negative. For $P\\left(-\\frac{3}{5}, -\\frac{4}{5}\\right)$:\n\n$$\\cos \\theta = -\\frac{3}{5}, \\qquad \\sin \\theta = -\\frac{4}{5}, \\qquad \\tan \\theta = \\frac{-\\frac{4}{5}}{-\\frac{3}{5}} = \\frac{4}{3}.$$",
@@ -1052,6 +1067,7 @@ export const extendingTheTrigonometricRatiosUsingTheUnitCircle: TopicDef = {
     },
     {
       id: "ratios-using-the-reference-angle",
+      figure: trigDrawings["extending-the-trigonometric-ratios-using-the-unit-circle#ratios-using-the-reference-angle"],
       title: t("Ratios from the reference angle", "由参考角求三角比"),
       explanation: t(
         "The terminal sides of $\\theta$ and of its reference angle $\\alpha$ meet the unit circle at points that are mirror images across the axes, so their coordinates differ only in sign. Hence\n\n$$\\sin \\theta = \\pm \\sin \\alpha, \\quad \\cos \\theta = \\pm \\cos \\alpha, \\quad \\tan \\theta = \\pm \\tan \\alpha,$$\n\nwith the sign set by the quadrant of $\\theta$. For example, given $\\sin 40^\\circ \\approx 0.6428$: $220^\\circ$ is in Quadrant III with reference angle $220^\\circ - 180^\\circ = 40^\\circ$, and the sine is negative there, so $\\sin 220^\\circ \\approx -0.6428$.",
@@ -1147,6 +1163,7 @@ export const extendingTheTrigonometricRatiosUsingAnglesInRadians: TopicDef = {
     },
     {
       id: "ratios-in-radians-using-the-reference-angle",
+      figure: trigDrawings["extending-the-trigonometric-ratios-using-angles-in-radians#ratios-in-radians-using-the-reference-angle"],
       title: t("Ratios in radians from the reference angle", "由参考角求弧度制角的三角比"),
       explanation: t(
         "As in degrees, $\\sin \\theta$, $\\cos \\theta$ and $\\tan \\theta$ equal the ratios of the reference angle up to sign, with $\\pi$ in place of $180^\\circ$.\n\nGiven $\\cos \\frac{\\pi}{5} \\approx 0.8090$, find $\\cos \\frac{6\\pi}{5}$. The angle $\\frac{6\\pi}{5}$ is in Quadrant III, with reference angle $\\frac{6\\pi}{5} - \\pi = \\frac{\\pi}{5}$, and the cosine is negative there:\n\n$$\\cos \\frac{6\\pi}{5} = -\\cos \\frac{\\pi}{5} \\approx -0.8090.$$",
@@ -1156,6 +1173,7 @@ export const extendingTheTrigonometricRatiosUsingAnglesInRadians: TopicDef = {
     },
     {
       id: "ratios-in-radians-with-a-calculator",
+      figure: trigDrawings["extending-the-trigonometric-ratios-using-angles-in-radians#ratios-in-radians-with-a-calculator"],
       title: t("Ratios in radians with a calculator", "用计算器求弧度制角的三角比"),
       explanation: t(
         "An angle in radians need not be a multiple of $\\pi$. With a calculator in **radian mode**, $\\cos 2.5 \\approx -0.80$. The sign agrees with the quadrant: $\\frac{\\pi}{2} \\approx 1.57 < 2.5 < \\pi \\approx 3.14$, so $2.5$ is in Quadrant II, where the cosine is negative. In degree mode the calculator would instead give $\\cos 2.5^\\circ \\approx 1.00$.",
@@ -1212,6 +1230,7 @@ export const extendingTheTrigonometricRatiosToNegativeAngles: TopicDef = {
   knowledgePoints: [
     {
       id: "signs-of-the-ratios-of-negative-angles",
+      figure: trigDrawings["extending-the-trigonometric-ratios-to-negative-angles#signs-of-the-ratios-of-negative-angles"],
       title: t("Signs of the ratios of negative angles", "负角三角比的符号"),
       explanation: t(
         "A negative angle has a terminal side like any other angle, and the unit-circle definitions apply to it unchanged. Find the quadrant, adding a full turn if that helps: $-100^\\circ + 360^\\circ = 260^\\circ$, in Quadrant III, so $\\sin(-100^\\circ) < 0$, $\\cos(-100^\\circ) < 0$ and $\\tan(-100^\\circ) > 0$. In radians, $-\\frac{\\pi}{3} + 2\\pi = \\frac{5\\pi}{3}$ is in Quadrant IV.",
@@ -1225,6 +1244,7 @@ export const extendingTheTrigonometricRatiosToNegativeAngles: TopicDef = {
     },
     {
       id: "ratios-of-negative-angles-using-the-reference-angle",
+      figure: trigDrawings["extending-the-trigonometric-ratios-to-negative-angles#ratios-of-negative-angles-using-the-reference-angle"],
       title: t("Ratios of negative angles from the reference angle", "由参考角求负角的三角比"),
       explanation: t(
         "Add a full turn to reach the coterminal angle between $0^\\circ$ and $360^\\circ$ (or $0$ and $2\\pi$), then use its reference angle and quadrant.\n\nGiven $\\tan 50^\\circ \\approx 1.1918$, find $\\tan(-130^\\circ)$. Since $-130^\\circ + 360^\\circ = 230^\\circ$, in Quadrant III with reference angle $50^\\circ$, and the tangent is positive there:\n\n$$\\tan(-130^\\circ) = \\tan 50^\\circ \\approx 1.1918.$$",
@@ -1243,6 +1263,7 @@ export const extendingTheTrigonometricRatiosToNegativeAngles: TopicDef = {
     },
     {
       id: "ratios-of-opposite-angles",
+      figure: trigDrawings["extending-the-trigonometric-ratios-to-negative-angles#ratios-of-opposite-angles"],
       title: t("Ratios of $\\theta$ and $-\\theta$", "$\\theta$ 与 $-\\theta$ 的三角比"),
       explanation: t(
         "The angles $\\theta$ and $-\\theta$ turn by the same amount in opposite directions, so their terminal sides are mirror images across the $x$-axis: if one meets the unit circle at $(x, y)$, the other meets it at $(x, -y)$. Hence\n\n$$\\sin(-\\theta) = -\\sin \\theta, \\qquad \\cos(-\\theta) = \\cos \\theta, \\qquad \\tan(-\\theta) = \\frac{-y}{x} = -\\tan \\theta.$$\n\nFor example, if $\\sin \\theta = \\frac{2}{7}$, then $\\sin(-\\theta) = -\\frac{2}{7}$; if $\\cos \\theta = -\\frac{3}{4}$, then $\\cos(-\\theta) = -\\frac{3}{4}$ as well.",
@@ -1294,6 +1315,7 @@ export const extendingTheTrigonometricRatiosToLargeAngles: TopicDef = {
   knowledgePoints: [
     {
       id: "ratios-of-large-angles-in-degrees",
+      figure: trigDrawings["extending-the-trigonometric-ratios-to-large-angles#ratios-of-large-angles-in-degrees"],
       title: t("Ratios of large angles in degrees", "角度制大角的三角比"),
       explanation: t(
         "Coterminal angles share a terminal side, so they have the same ratios: $\\sin(\\theta + 360^\\circ k) = \\sin \\theta$, and likewise for cosine and tangent. Remove the full turns first, then use the reference angle.\n\nGiven $\\cos 20^\\circ \\approx 0.9397$, find $\\cos 920^\\circ$: $920^\\circ - 2 \\cdot 360^\\circ = 200^\\circ$, in Quadrant III with reference angle $20^\\circ$, where the cosine is negative, so\n\n$$\\cos 920^\\circ = -\\cos 20^\\circ \\approx -0.9397.$$",
@@ -1308,6 +1330,7 @@ export const extendingTheTrigonometricRatiosToLargeAngles: TopicDef = {
     },
     {
       id: "ratios-of-large-angles-in-radians",
+      figure: trigDrawings["extending-the-trigonometric-ratios-to-large-angles#ratios-of-large-angles-in-radians"],
       title: t("Ratios of large angles in radians", "弧度制大角的三角比"),
       explanation: t(
         "In radians, remove multiples of $2\\pi$. Given $\\sin \\frac{\\pi}{8} \\approx 0.3827$, find $\\sin \\frac{23\\pi}{8}$: $2\\pi = \\frac{16\\pi}{8}$, so $\\frac{23\\pi}{8} - \\frac{16\\pi}{8} = \\frac{7\\pi}{8}$, in Quadrant II with reference angle $\\pi - \\frac{7\\pi}{8} = \\frac{\\pi}{8}$. The sine is positive there:\n\n$$\\sin \\frac{23\\pi}{8} = \\sin \\frac{\\pi}{8} \\approx 0.3827.$$",
@@ -1317,6 +1340,7 @@ export const extendingTheTrigonometricRatiosToLargeAngles: TopicDef = {
     },
     {
       id: "signs-of-the-ratios-of-large-angles",
+      figure: trigDrawings["extending-the-trigonometric-ratios-to-large-angles#signs-of-the-ratios-of-large-angles"],
       title: t("Signs of the ratios of large angles", "大角三角比的符号"),
       explanation: t(
         "To find the sign of a ratio of a large angle, find the coterminal angle in one turn and its quadrant. For $\\tan 1000^\\circ$: $1000^\\circ - 2 \\cdot 360^\\circ = 280^\\circ$, in Quadrant IV, where only the cosine is positive, so $\\tan 1000^\\circ < 0$. For $\\cos \\frac{13\\pi}{4}$: $\\frac{13\\pi}{4} - 2\\pi = \\frac{5\\pi}{4}$, in Quadrant III, so the cosine is negative.",
@@ -1353,6 +1377,7 @@ export const usingThePythagoreanIdentityInTheFirstQuadrant: TopicDef = {
   knowledgePoints: [
     {
       id: "the-other-ratio-in-the-first-quadrant",
+      figure: trigDrawings["using-the-pythagorean-identity-in-the-first-quadrant#the-other-ratio-in-the-first-quadrant"],
       title: t("The other ratio from sine or cosine", "由正弦或余弦求另一个"),
       explanation: t(
         "The point $(\\cos \\theta, \\sin \\theta)$ lies on the unit circle $x^2 + y^2 = 1$, so for every angle\n\n$$\\sin^2 \\theta + \\cos^2 \\theta = 1,$$\n\nthe **Pythagorean identity** (here $\\sin^2 \\theta$ means $(\\sin \\theta)^2$). For an acute angle both ratios are positive, so if $\\sin \\theta = \\frac{2}{5}$, then\n\n$$\\cos \\theta = \\sqrt{1 - \\frac{4}{25}} = \\sqrt{\\frac{21}{25}} = \\frac{\\sqrt{21}}{5}.$$",
@@ -1379,6 +1404,7 @@ export const usingThePythagoreanIdentityInTheFirstQuadrant: TopicDef = {
     },
     {
       id: "the-tangent-from-sine-or-cosine",
+      figure: trigDrawings["using-the-pythagorean-identity-in-the-first-quadrant#the-tangent-from-sine-or-cosine"],
       title: t("The tangent from sine or cosine", "由正弦或余弦求正切"),
       explanation: t(
         "Find the missing ratio with the identity, then divide: $\\tan \\theta = \\frac{\\sin \\theta}{\\cos \\theta}$, since $\\tan \\theta = \\frac{y}{x}$ on the unit circle.\n\nIf $\\theta$ is acute and $\\cos \\theta = \\frac{1}{3}$, then $\\sin \\theta = \\sqrt{1 - \\frac{1}{9}} = \\frac{2\\sqrt{2}}{3}$ and\n\n$$\\tan \\theta = \\frac{2\\sqrt{2}}{3} \\div \\frac{1}{3} = 2\\sqrt{2}.$$",
@@ -1539,6 +1565,7 @@ export const extendingThePythagoreanIdentityToAllQuadrants: TopicDef = {
     },
     {
       id: "sine-and-cosine-from-the-tangent",
+      figure: trigDrawings["extending-the-pythagorean-identity-to-all-quadrants#sine-and-cosine-from-the-tangent"],
       title: t("Sine and cosine from the tangent", "由正切求正弦和余弦"),
       explanation: t(
         "If $\\tan \\theta = \\frac{y}{x}$ is known, the point on the unit circle is $(x, y)$ scaled to length $1$. Take $\\tan \\theta = -\\frac{4}{3}$ with $\\theta$ in Quadrant II, where $x < 0 < y$: the point $(-3, 4)$ lies on the terminal side, at distance $\\sqrt{9 + 16} = 5$ from the origin. Dividing by $5$ gives the point on the unit circle, $\\left(-\\frac{3}{5}, \\frac{4}{5}\\right)$, so\n\n$$\\cos \\theta = -\\frac{3}{5}, \\qquad \\sin \\theta = \\frac{4}{5}.$$\n\nCheck: $\\frac{9}{25} + \\frac{16}{25} = 1$.",

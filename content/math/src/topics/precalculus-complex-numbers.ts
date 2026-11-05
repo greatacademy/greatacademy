@@ -1,6 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly } from "@ga/subject-math";
+import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import {
   choiceProblem,
   equationProblem,
@@ -438,6 +439,7 @@ export const theArgumentOfAComplexNumber: TopicDef = {
   knowledgePoints: [
     {
       id: "argument-of-special-complex-numbers",
+      figure: precalculusDrawings3["the-argument-of-a-complex-number#argument-of-special-complex-numbers"],
       title: t("Find the principal argument of special complex numbers", "求特殊复数的主辐角"),
       explanation: t(
         "The **argument** $\\theta = \\arg(z)$ of a nonzero complex number $z = a + bi$ is the angle made by the position vector of $z$ with the positive real axis.\n\nThe **principal argument** is conventionally chosen in $[0, 2\\pi)$ (or $(-\\pi, \\pi]$).\n\nFor standard angles:\n- $z = 1 + i \\implies \\theta = \\frac{\\pi}{4}$\n- $z = -1 + i \\implies \\theta = \\frac{3\\pi}{4}$\n- $z = -1 - i \\implies \\theta = \\frac{5\\pi}{4}$\n- $z = 1 - i \\implies \\theta = \\frac{7\\pi}{4}$\n- $z = \\sqrt{3} + i \\implies \\theta = \\frac{\\pi}{6}$\n- $z = 1 + \\sqrt{3}i \\implies \\theta = \\frac{\\pi}{3}$",
@@ -587,6 +589,7 @@ export const arithmeticInTheComplexPlane: TopicDef = {
   knowledgePoints: [
     {
       id: "parallelogram-rule-for-complex-addition",
+      figure: precalculusDrawings3["arithmetic-in-the-complex-plane#parallelogram-rule-for-complex-addition"],
       title: t("Parallelogram rule for complex addition", "复数加法的平行四边形法则"),
       explanation: t(
         "Adding two complex numbers $z_1 = a_1 + b_1 i$ and $z_2 = a_2 + b_2 i$ corresponds to vector addition in $\\mathbb{R}^2$:\n\n$$z_1 + z_2 = (a_1 + a_2) + (b_1 + b_2)i$$\n\nGeometrically, the origin $0$, $z_1$, $z_2$, and the sum $z_1 + z_2$ form the four vertices of a **parallelogram** in the complex plane.",
@@ -687,6 +690,7 @@ export const geometryInTheComplexPlane: TopicDef = {
   knowledgePoints: [
     {
       id: "circle-locus-in-the-complex-plane",
+      figure: precalculusDrawings3["geometry-in-the-complex-plane#circle-locus-in-the-complex-plane"],
       title: t("Circles in the complex plane", "复平面中的圆轨迹"),
       explanation: t(
         "The equation $|z - z_0| = r$ (with $r > 0$) represents the set of all points $z$ whose distance from $z_0 = h + ki$ is equal to $r$.\n\nIn Cartesian coordinates, this is a **circle** with center $(h, k)$ and radius $r$:\n\n$$(x - h)^2 + (y - k)^2 = r^2$$",
@@ -717,6 +721,7 @@ export const geometryInTheComplexPlane: TopicDef = {
     },
     {
       id: "perpendicular-bisector-locus-in-the-complex-plane",
+      figure: precalculusDrawings3["geometry-in-the-complex-plane#perpendicular-bisector-locus-in-the-complex-plane"],
       title: t("Perpendicular bisectors as complex loci", "垂直平分线的复数轨迹"),
       explanation: t(
         "The equation $|z - z_1| = |z - z_2|$ states that point $z$ is equidistant from $z_1$ and $z_2$.\n\nGeometrically, this represents the **perpendicular bisector** of the segment joining $z_1$ and $z_2$.",
@@ -786,6 +791,7 @@ export const theComplexConjugate: TopicDef = {
   knowledgePoints: [
     {
       id: "definition-and-reflection-of-conjugates",
+      figure: precalculusDrawings3["the-complex-conjugate#definition-and-reflection-of-conjugates"],
       title: t("Definition and geometric reflection of the complex conjugate", "共轭复数的定义与几何反射"),
       explanation: t(
         "For any complex number $z = a + bi$, its **complex conjugate** is denoted $\\bar{z}$ (or $z^*$):\n\n$$\\bar{z} = a - bi$$\n\nGeometrically, taking the conjugate reflects the point $(a, b)$ across the **real axis** (the horizontal axis) to $(a, -b)$.",
@@ -1442,6 +1448,7 @@ export const productsOfComplexNumbersExpressedInPolarForm: TopicDef = {
     },
     {
       id: "geometric-rotation-and-scaling",
+      figure: precalculusDrawings3["products-of-complex-numbers-expressed-in-polar-form#geometric-rotation-and-scaling"],
       title: t("Geometric interpretation of multiplication as rotation and dilation", "复数乘法的旋转与伸缩几何意义"),
       explanation: t(
         "Multiplying any complex number $z$ by $w = r(\\cos\\theta + i\\sin\\theta)$:\n\n1. **Scales** the distance from the origin by a factor of $r = |w|$\n2. **Rotates** the point counterclockwise by an angle of $\\theta = \\arg(w)$\n\nIn particular, multiplying by $i = 1(\\cos 90^\\circ + i\\sin 90^\\circ)$ rotates $z = a + bi$ counterclockwise by $90^\\circ$ ($\\frac{\\pi}{2}$ radians), producing $i(a + bi) = -b + ai$.",

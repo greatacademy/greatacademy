@@ -2,6 +2,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
+import { precalculusDrawings } from "../explanation-drawings-precalculus.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { choose, chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 import { frac, fraction, skill } from "./third-kit.ts";
@@ -185,73 +186,79 @@ const scaledCount = (rng: Rng, name: string, values: readonly Value[]) => {
 /** deeperPrecalculusThirdPoints holds these third knowledge points, by topic. */
 export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "solving-quadratic-inequalities-from-graphs": [
-    skill(
-      "counting-integers-below-the-axis",
-      ["Counting integers below the axis", "数轴下方的整数"],
-      [
-        "An upward parabola lies below the axis only between its intercepts. The integers strictly between the two intercepts therefore number one fewer than the distance between them.",
-        "开口向上的抛物线只在两个截距之间位于轴下方。所以严格位于两个截距之间的整数，比它们的距离少一个。",
-      ],
-      (rng) => {
-        const a = rng.int(-12, 6);
-        const w = rng.int(2, 15);
-        return whole(
-          [
-            `A parabola $y = ${factor(a)}${factor(a + w)}$ opens upward. For how many integers $x$ is $y < 0$?`,
-            `抛物线 $y = ${factor(a)}${factor(a + w)}$ 开口向上。有多少个整数 $x$ 使 $y < 0$？`,
-          ],
-          w - 1,
-          [w, w + 1, w - 2 < 0 ? 3 : w - 2],
-          [
-            `The intercepts are $x = ${a}$ and $x = ${a + w}$, so $y < 0$ for $${a} < x < ${a + w}$. These are the integers from $${a + 1}$ to $${a + w - 1}$, which is $${w - 1}$ in all.`,
-            `截距是 $x = ${a}$ 和 $x = ${a + w}$，所以 $${a} < x < ${a + w}$ 时 $y < 0$。这些整数从 $${a + 1}$ 到 $${a + w - 1}$，共 $${w - 1}$ 个。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...skill(
+        "counting-integers-below-the-axis",
+        ["Counting integers below the axis", "数轴下方的整数"],
+        [
+          "An upward parabola lies below the axis only between its intercepts. The integers strictly between the two intercepts therefore number one fewer than the distance between them.",
+          "开口向上的抛物线只在两个截距之间位于轴下方。所以严格位于两个截距之间的整数，比它们的距离少一个。",
+        ],
+        (rng) => {
+          const a = rng.int(-12, 6);
+          const w = rng.int(2, 15);
+          return whole(
+            [
+              `A parabola $y = ${factor(a)}${factor(a + w)}$ opens upward. For how many integers $x$ is $y < 0$?`,
+              `抛物线 $y = ${factor(a)}${factor(a + w)}$ 开口向上。有多少个整数 $x$ 使 $y < 0$？`,
+            ],
+            w - 1,
+            [w, w + 1, w - 2 < 0 ? 3 : w - 2],
+            [
+              `The intercepts are $x = ${a}$ and $x = ${a + w}$, so $y < 0$ for $${a} < x < ${a + w}$. These are the integers from $${a + 1}$ to $${a + w - 1}$, which is $${w - 1}$ in all.`,
+              `截距是 $x = ${a}$ 和 $x = ${a + w}$，所以 $${a} < x < ${a + w}$ 时 $y < 0$。这些整数从 $${a + 1}$ 到 $${a + w - 1}$，共 $${w - 1}$ 个。`,
+            ],
+          );
+        },
+      ),
+      figure: precalculusDrawings["solving-quadratic-inequalities-from-graphs#counting-integers-below-the-axis"],
+    },
   ],
   "solving-polynomial-inequalities-using-a-graphical-method": [
-    skill(
-      "a-repeated-root-does-not-change-the-sign",
-      ["A repeated root does not change the sign", "重根不改变符号"],
-      [
-        "A squared factor is never negative, so the graph touches the axis there and turns back. It adds its root to a solution set that includes equality, without flipping the sign beyond it.",
-        "平方因子不会是负数，所以图像在那里碰到轴后折回。它把自己的根加入含等号的解集，但不会改变符号。",
-      ],
-      (rng) => {
-        const b = rng.int(-9, 6);
-        const a = b + rng.int(1, 8);
-        return reasoned(
-          chooseMath(
-            rng,
-            [`Solve $${factor(a)}^{2}${factor(b)} \\le 0$.`, `解 $${factor(a)}^{2}${factor(b)} \\le 0$。`],
-            `(-\\infty, ${b}] \\cup \\{${a}\\}`,
-            [`(-\\infty, ${b}]`, `[${b}, ${a}]`, `(-\\infty, ${b}] \\cup [${a}, \\infty)`],
+    {
+      ...skill(
+        "a-repeated-root-does-not-change-the-sign",
+        ["A repeated root does not change the sign", "重根不改变符号"],
+        [
+          "A squared factor is never negative, so the graph touches the axis there and turns back. It adds its root to a solution set that includes equality, without flipping the sign beyond it.",
+          "平方因子不会是负数，所以图像在那里碰到轴后折回。它把自己的根加入含等号的解集，但不会改变符号。",
+        ],
+        (rng) => {
+          const b = rng.int(-9, 6);
+          const a = b + rng.int(1, 8);
+          return reasoned(
+            chooseMath(
+              rng,
+              [`Solve $${factor(a)}^{2}${factor(b)} \\le 0$.`, `解 $${factor(a)}^{2}${factor(b)} \\le 0$。`],
+              `(-\\infty, ${b}] \\cup \\{${a}\\}`,
+              [`(-\\infty, ${b}]`, `[${b}, ${a}]`, `(-\\infty, ${b}] \\cup [${a}, \\infty)`],
+              [
+                `The squared factor is positive except at $x = ${a}$, where the product is $0$, so $x \\le ${b}$ or $x = ${a}$.`,
+                `平方因子除 $x = ${a}$ 外都为正，那里积为 $0$，所以 $x \\le ${b}$ 或 $x = ${a}$。`,
+              ],
+            ),
             [
-              `The squared factor is positive except at $x = ${a}$, where the product is $0$, so $x \\le ${b}$ or $x = ${a}$.`,
-              `平方因子除 $x = ${a}$ 外都为正，那里积为 $0$，所以 $x \\le ${b}$ 或 $x = ${a}$。`,
+              [
+                `$(-\\infty, ${b}]$`,
+                `This leaves out $x = ${a}$, where the product is $0$ and the inequality allows equality.`,
+                `这里漏掉了 $x = ${a}$，那里积为 $0$，而不等式包含等号。`,
+              ],
+              [
+                `$[${b}, ${a}]$`,
+                "Between the two roots the product is positive, so those values do not solve it.",
+                "在两根之间积是正的，所以那些值不是解。",
+              ],
+              [
+                `$(-\\infty, ${b}] \\cup [${a}, \\infty)$`,
+                `To the right of $x = ${a}$ the product is positive, so those values do not solve it.`,
+                `在 $x = ${a}$ 右边，积是正的，所以那些值不是解。`,
+              ],
             ],
-          ),
-          [
-            [
-              `$(-\\infty, ${b}]$`,
-              `This leaves out $x = ${a}$, where the product is $0$ and the inequality allows equality.`,
-              `这里漏掉了 $x = ${a}$，那里积为 $0$，而不等式包含等号。`,
-            ],
-            [
-              `$[${b}, ${a}]$`,
-              "Between the two roots the product is positive, so those values do not solve it.",
-              "在两根之间积是正的，所以那些值不是解。",
-            ],
-            [
-              `$(-\\infty, ${b}] \\cup [${a}, \\infty)$`,
-              `To the right of $x = ${a}$ the product is positive, so those values do not solve it.`,
-              `在 $x = ${a}$ 右边，积是正的，所以那些值不是解。`,
-            ],
-          ],
-        );
-      },
-    ),
+          );
+        },
+      ),
+      figure: precalculusDrawings["solving-polynomial-inequalities-using-a-graphical-method#a-repeated-root-does-not-change-the-sign"],
+    },
   ],
   "solving-inequalities-involving-exponential-functions-and-polynomials": [
     skill(
@@ -307,141 +314,153 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
     ),
   ],
   "solving-two-variable-nonlinear-inequalities": [
-    skill(
-      "reading-the-symbol-for-the-graph",
-      ["Reading the symbol for the graph", "由符号读图像"],
-      [
-        "A strict symbol leaves the curve out, so it is drawn dashed, while a symbol with equality includes it, so it is drawn solid. A greater-than for $y$ shades above, and a less-than shades below.",
-        "严格不等号不含曲线，所以画虚线；含等号时包含曲线，画实线。$y$ 大于时阴影在上方，小于时在下方。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 5);
-        const k = rng.int(-12, 12);
-        const sym = rng.pick([">", "<", "\\ge", "\\le"]);
-        const options: Pair[] = [
-          ["Dashed curve, shaded above", "虚线，阴影在上方"],
-          ["Dashed curve, shaded below", "虚线，阴影在下方"],
-          ["Solid curve, shaded above", "实线，阴影在上方"],
-          ["Solid curve, shaded below", "实线，阴影在下方"],
-        ];
-        const i = { ">": 0, "<": 1, "\\ge": 2, "\\le": 3 }[sym] as number;
-        return choose(
-          rng,
-          [
-            `How is the graph of $y ${sym} ${a === 1 ? "" : a}x^{2}${k < 0 ? ` - ${-k}` : ` + ${k}`}$ drawn?`,
-            `$y ${sym} ${a === 1 ? "" : a}x^{2}${k < 0 ? ` - ${-k}` : ` + ${k}`}$ 的图像怎样画？`,
-          ],
-          options[i]!,
-          options.filter((_, n) => n !== i),
-          [
-            `The symbol $${sym}$ ${i < 2 ? "leaves the curve out, so it is dashed" : "includes the curve, so it is solid"}, and points with $y$ ${i % 2 === 0 ? "greater" : "less"} than the curve lie ${i % 2 === 0 ? "above" : "below"} it.`,
-            `符号 $${sym}$ ${i < 2 ? "不含曲线本身，所以画虚线" : "包含曲线本身，所以画实线"}；$y$ ${i % 2 === 0 ? "大于" : "小于"}曲线上的值的点在曲线${i % 2 === 0 ? "上方" : "下方"}。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "graphing-the-inverse-sine-function": [
-    skill(
-      "undoing-sine-outside-the-range",
-      ["Undoing sine outside the range", "在值域之外还原正弦"],
-      [
-        "Arcsine always returns an angle from $-\\frac{\\pi}{2}$ to $\\frac{\\pi}{2}$. So for an angle outside this range, the result is the angle in the range with the same sine, not the original.",
-        "反正弦总是返回 $-\\frac{\\pi}{2}$ 到 $\\frac{\\pi}{2}$ 之间的角。所以范围外的角，结果是范围内正弦相同的角，而不是原来的角。",
-      ],
-      (rng) => {
-        const d = rng.int(3, 18);
-        const inside = rng.int(1, Math.floor((d - 1) / 2));
-        return chooseMath(
-          rng,
-          [
-            `Evaluate $\\arcsin\\left(\\sin ${piOver(d - inside, d)}\\right)$.`,
-            `计算 $\\arcsin\\left(\\sin ${piOver(d - inside, d)}\\right)$。`,
-          ],
-          piOver(inside, d),
-          [piOver(d - inside, d), piOver(-inside, d), piOver(inside + d, d)],
-          [
-            `$\\sin(\\pi - x) = \\sin x$, and $${piOver(inside, d)}$ lies in the range of arcsine.`,
-            `$\\sin(\\pi - x) = \\sin x$，而 $${piOver(inside, d)}$ 在反正弦的值域内。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "graphing-the-inverse-cosine-function": [
-    skill(
-      "undoing-cosine-outside-the-range",
-      ["Undoing cosine outside the range", "在值域之外还原余弦"],
-      [
-        "Arccosine always returns an angle from $0$ to $\\pi$. Cosine has the same value at $x$ and at $2\\pi - x$, so an angle past $\\pi$ comes back reflected, not unchanged.",
-        "反余弦总是返回 0 到 $\\pi$ 之间的角。余弦在 $x$ 和 $2\\pi - x$ 处相等，所以超过 $\\pi$ 的角会反射回来，而不是不变。",
-      ],
-      (rng) => {
-        const d = rng.pick([3, 4, 5, 6, 7, 8, 9, 10, 12]);
-        const n = rng.int(1, d - 1);
-        return chooseMath(
-          rng,
-          [
-            `Evaluate $\\arccos\\left(\\cos ${piOver(2 * d - n, d)}\\right)$.`,
-            `计算 $\\arccos\\left(\\cos ${piOver(2 * d - n, d)}\\right)$。`,
-          ],
-          piOver(n, d),
-          [piOver(2 * d - n, d), piOver(-n, d), piOver(d - n, d) === piOver(n, d) ? piOver(n + 2 * d, d) : piOver(d - n, d)],
-          [
-            `$\\cos(2\\pi - x) = \\cos x$, and $${piOver(n, d)}$ lies in the range of arccosine.`,
-            `$\\cos(2\\pi - x) = \\cos x$，而 $${piOver(n, d)}$ 在反余弦的值域内。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "graphing-the-inverse-tangent-function": [
-    skill(
-      "undoing-tangent-outside-the-range",
-      ["Undoing tangent outside the range", "在值域之外还原正切"],
-      [
-        "Arctangent returns an angle strictly between $-\\frac{\\pi}{2}$ and $\\frac{\\pi}{2}$. Tangent repeats every $\\pi$, so subtract $\\pi$ as many times as it takes to land in that range.",
-        "反正切返回严格在 $-\\frac{\\pi}{2}$ 和 $\\frac{\\pi}{2}$ 之间的角。正切的周期是 $\\pi$，所以减去若干个 $\\pi$，直到落在这个范围内。",
-      ],
-      (rng) => {
-        const d = rng.pick([3, 4, 5, 6, 7, 8, 9, 10, 12]);
-        const n = rng.int(1, Math.max(1, Math.ceil(d / 2) - 1));
-        const turns = rng.int(1, 3);
-        const small = n * 2 < d ? n : 1;
-        return reasoned(
-          chooseMath(
+    {
+      ...skill(
+        "reading-the-symbol-for-the-graph",
+        ["Reading the symbol for the graph", "由符号读图像"],
+        [
+          "A strict symbol leaves the curve out, so it is drawn dashed, while a symbol with equality includes it, so it is drawn solid. A greater-than for $y$ shades above, and a less-than shades below.",
+          "严格不等号不含曲线，所以画虚线；含等号时包含曲线，画实线。$y$ 大于时阴影在上方，小于时在下方。",
+        ],
+        (rng) => {
+          const a = rng.int(1, 5);
+          const k = rng.int(-12, 12);
+          const sym = rng.pick([">", "<", "\\ge", "\\le"]);
+          const options: Pair[] = [
+            ["Dashed curve, shaded above", "虚线，阴影在上方"],
+            ["Dashed curve, shaded below", "虚线，阴影在下方"],
+            ["Solid curve, shaded above", "实线，阴影在上方"],
+            ["Solid curve, shaded below", "实线，阴影在下方"],
+          ];
+          const i = { ">": 0, "<": 1, "\\ge": 2, "\\le": 3 }[sym] as number;
+          return choose(
             rng,
             [
-              `Evaluate $\\arctan\\left(\\tan ${piOver(small + turns * d, d)}\\right)$.`,
-              `计算 $\\arctan\\left(\\tan ${piOver(small + turns * d, d)}\\right)$。`,
+              `How is the graph of $y ${sym} ${a === 1 ? "" : a}x^{2}${k < 0 ? ` - ${-k}` : ` + ${k}`}$ drawn?`,
+              `$y ${sym} ${a === 1 ? "" : a}x^{2}${k < 0 ? ` - ${-k}` : ` + ${k}`}$ 的图像怎样画？`,
             ],
-            piOver(small, d),
-            [piOver(small + turns * d, d), piOver(-small, d), piOver(small + d + turns * d, d)],
+            options[i]!,
+            options.filter((_, n) => n !== i),
             [
-              `Subtracting ${turns === 1 ? "$\\pi$" : `$${turns}\\pi$`} keeps the tangent and lands in the range.`,
-              `减去 ${turns === 1 ? "$\\pi$" : `$${turns}\\pi$`} 不改变正切，并落在值域内。`,
+              `The symbol $${sym}$ ${i < 2 ? "leaves the curve out, so it is dashed" : "includes the curve, so it is solid"}, and points with $y$ ${i % 2 === 0 ? "greater" : "less"} than the curve lie ${i % 2 === 0 ? "above" : "below"} it.`,
+              `符号 $${sym}$ ${i < 2 ? "不含曲线本身，所以画虚线" : "包含曲线本身，所以画实线"}；$y$ ${i % 2 === 0 ? "大于" : "小于"}曲线上的值的点在曲线${i % 2 === 0 ? "上方" : "下方"}。`,
             ],
-          ),
-          [
+          );
+        },
+      ),
+      figure: precalculusDrawings["solving-two-variable-nonlinear-inequalities#reading-the-symbol-for-the-graph"],
+    },
+  ],
+  "graphing-the-inverse-sine-function": [
+    {
+      ...skill(
+        "undoing-sine-outside-the-range",
+        ["Undoing sine outside the range", "在值域之外还原正弦"],
+        [
+          "Arcsine always returns an angle from $-\\frac{\\pi}{2}$ to $\\frac{\\pi}{2}$. So for an angle outside this range, the result is the angle in the range with the same sine, not the original.",
+          "反正弦总是返回 $-\\frac{\\pi}{2}$ 到 $\\frac{\\pi}{2}$ 之间的角。所以范围外的角，结果是范围内正弦相同的角，而不是原来的角。",
+        ],
+        (rng) => {
+          const d = rng.int(3, 18);
+          const inside = rng.int(1, Math.floor((d - 1) / 2));
+          return chooseMath(
+            rng,
             [
-              `$${piOver(small + turns * d, d)}$`,
-              "Arctangent does not simply undo tangent here: this angle is outside its range, between $-\\frac{\\pi}{2}$ and $\\frac{\\pi}{2}$.",
-              "这里反正切不能直接抵消正切：这个角不在它的值域内，值域在 $-\\frac{\\pi}{2}$ 和 $\\frac{\\pi}{2}$ 之间。",
+              `Evaluate $\\arcsin\\left(\\sin ${piOver(d - inside, d)}\\right)$.`,
+              `计算 $\\arcsin\\left(\\sin ${piOver(d - inside, d)}\\right)$。`,
             ],
+            piOver(inside, d),
+            [piOver(d - inside, d), piOver(-inside, d), piOver(inside + d, d)],
             [
-              `$${piOver(-small, d)}$`,
-              "The sign is wrong: subtracting multiples of $\\pi$ keeps the tangent, and the tangent here is positive.",
-              "符号错了：减去 $\\pi$ 的整数倍不改变正切，而这里的正切是正的。",
+              `$\\sin(\\pi - x) = \\sin x$, and $${piOver(inside, d)}$ lies in the range of arcsine.`,
+              `$\\sin(\\pi - x) = \\sin x$，而 $${piOver(inside, d)}$ 在反正弦的值域内。`,
             ],
+          );
+        },
+      ),
+      figure: precalculusDrawings["graphing-the-inverse-sine-function#undoing-sine-outside-the-range"],
+    },
+  ],
+  "graphing-the-inverse-cosine-function": [
+    {
+      ...skill(
+        "undoing-cosine-outside-the-range",
+        ["Undoing cosine outside the range", "在值域之外还原余弦"],
+        [
+          "Arccosine always returns an angle from $0$ to $\\pi$. Cosine has the same value at $x$ and at $2\\pi - x$, so an angle past $\\pi$ comes back reflected, not unchanged.",
+          "反余弦总是返回 0 到 $\\pi$ 之间的角。余弦在 $x$ 和 $2\\pi - x$ 处相等，所以超过 $\\pi$ 的角会反射回来，而不是不变。",
+        ],
+        (rng) => {
+          const d = rng.pick([3, 4, 5, 6, 7, 8, 9, 10, 12]);
+          const n = rng.int(1, d - 1);
+          return chooseMath(
+            rng,
             [
-              `$${piOver(small + d + turns * d, d)}$`,
-              "This adds $\\pi$, going further from the range: subtract instead.",
-              "这里加上了 $\\pi$，离值域更远了：应该减去。",
+              `Evaluate $\\arccos\\left(\\cos ${piOver(2 * d - n, d)}\\right)$.`,
+              `计算 $\\arccos\\left(\\cos ${piOver(2 * d - n, d)}\\right)$。`,
             ],
-          ],
-        );
-      },
-    ),
+            piOver(n, d),
+            [piOver(2 * d - n, d), piOver(-n, d), piOver(d - n, d) === piOver(n, d) ? piOver(n + 2 * d, d) : piOver(d - n, d)],
+            [
+              `$\\cos(2\\pi - x) = \\cos x$, and $${piOver(n, d)}$ lies in the range of arccosine.`,
+              `$\\cos(2\\pi - x) = \\cos x$，而 $${piOver(n, d)}$ 在反余弦的值域内。`,
+            ],
+          );
+        },
+      ),
+      figure: precalculusDrawings["graphing-the-inverse-cosine-function#undoing-cosine-outside-the-range"],
+    },
+  ],
+  "graphing-the-inverse-tangent-function": [
+    {
+      ...skill(
+        "undoing-tangent-outside-the-range",
+        ["Undoing tangent outside the range", "在值域之外还原正切"],
+        [
+          "Arctangent returns an angle strictly between $-\\frac{\\pi}{2}$ and $\\frac{\\pi}{2}$. Tangent repeats every $\\pi$, so subtract $\\pi$ as many times as it takes to land in that range.",
+          "反正切返回严格在 $-\\frac{\\pi}{2}$ 和 $\\frac{\\pi}{2}$ 之间的角。正切的周期是 $\\pi$，所以减去若干个 $\\pi$，直到落在这个范围内。",
+        ],
+        (rng) => {
+          const d = rng.pick([3, 4, 5, 6, 7, 8, 9, 10, 12]);
+          const n = rng.int(1, Math.max(1, Math.ceil(d / 2) - 1));
+          const turns = rng.int(1, 3);
+          const small = n * 2 < d ? n : 1;
+          return reasoned(
+            chooseMath(
+              rng,
+              [
+                `Evaluate $\\arctan\\left(\\tan ${piOver(small + turns * d, d)}\\right)$.`,
+                `计算 $\\arctan\\left(\\tan ${piOver(small + turns * d, d)}\\right)$。`,
+              ],
+              piOver(small, d),
+              [piOver(small + turns * d, d), piOver(-small, d), piOver(small + d + turns * d, d)],
+              [
+                `Subtracting ${turns === 1 ? "$\\pi$" : `$${turns}\\pi$`} keeps the tangent and lands in the range.`,
+                `减去 ${turns === 1 ? "$\\pi$" : `$${turns}\\pi$`} 不改变正切，并落在值域内。`,
+              ],
+            ),
+            [
+              [
+                `$${piOver(small + turns * d, d)}$`,
+                "Arctangent does not simply undo tangent here: this angle is outside its range, between $-\\frac{\\pi}{2}$ and $\\frac{\\pi}{2}$.",
+                "这里反正切不能直接抵消正切：这个角不在它的值域内，值域在 $-\\frac{\\pi}{2}$ 和 $\\frac{\\pi}{2}$ 之间。",
+              ],
+              [
+                `$${piOver(-small, d)}$`,
+                "The sign is wrong: subtracting multiples of $\\pi$ keeps the tangent, and the tangent here is positive.",
+                "符号错了：减去 $\\pi$ 的整数倍不改变正切，而这里的正切是正的。",
+              ],
+              [
+                `$${piOver(small + d + turns * d, d)}$`,
+                "This adds $\\pi$, going further from the range: subtract instead.",
+                "这里加上了 $\\pi$，离值域更远了：应该减去。",
+              ],
+            ],
+          );
+        },
+      ),
+      figure: precalculusDrawings["graphing-the-inverse-tangent-function#undoing-tangent-outside-the-range"],
+    },
   ],
   "evaluating-expressions-containing-inverse-trigonometric-functions": [
     skill(

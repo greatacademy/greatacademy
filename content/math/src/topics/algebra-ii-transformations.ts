@@ -17,6 +17,7 @@ import {
   union,
 } from "@ga/subject-math";
 import { algebraDrawings2 } from "../explanation-drawings-algebra-2.ts";
+import { algebraDrawings3 } from "../explanation-drawings-algebra-3.ts";
 import { annotate, at, plain, pointMove, shift } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, pointProblem, steps } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -1013,6 +1014,7 @@ export const combiningGraphTransformationsTwoOperations: TopicDef = {
     },
     {
       id: "two-transformations-from-graphs",
+      figure: algebraDrawings3["combining-graph-transformations-two-operations#two-transformations-from-graphs"],
       title: t("Recognizing the transformations", "识别变换"),
       explanation: t(
         "To recognize a combined transformation from graphs, compare matching points, such as the endpoints: a change in width or height means a stretch, and where the points end up gives the shifts. Then check the formula with one point.",
@@ -1082,6 +1084,7 @@ export const combiningGraphTransformationsThreeOrMoreOperations: TopicDef = {
   knowledgePoints: [
     {
       id: "describing-several-transformations",
+      figure: algebraDrawings3["combining-graph-transformations-three-or-more-operations#describing-several-transformations"],
       title: t("Describing the transformations", "描述变换"),
       explanation: t(
         "The graph of $y = a f(b(x - h)) + k$ (with $a, b > 0$) comes from the graph of $f$ in this order:\n\n1. horizontally, stretch by the factor $\\frac{1}{b}$, then shift right by $h$;\n2. vertically, stretch by the factor $a$, then shift up by $k$.\n\nFor $y = 3f(2(x + 1)) - 4$: compress horizontally by $\\frac{1}{2}$, shift left $1$, stretch vertically by $3$, shift down $4$. If the argument is written as $2x + 2$, factor it first: $2x + 2 = 2(x + 1)$.",
@@ -1170,6 +1173,7 @@ export const combiningGraphTransformationsThreeOrMoreOperations: TopicDef = {
     },
     {
       id: "several-transformations-from-graphs",
+      figure: algebraDrawings3["combining-graph-transformations-three-or-more-operations#several-transformations-from-graphs"],
       title: t("Recognizing the transformations", "识别变换"),
       explanation: t(
         "To match a graph with $y = a f(b(x - h)) + k$, compare the width and height of the two graphs to find $b$ and $a$, then compare matching endpoints to find the shifts. Check the formula by moving one point of $f$ and seeing that it lands on $g$.",
@@ -1461,6 +1465,7 @@ export const verticalReflectionsOfFunctions: TopicDef = {
     },
     {
       id: "vertical-reflections-from-graphs",
+      figure: algebraDrawings3["vertical-reflections-of-functions#vertical-reflections-from-graphs"],
       title: t("Values of the reflected function", "翻折后函数的值"),
       explanation: t(
         "To find a value of $g(x) = -f(x)$ from the graph of $f$, read $f$ at the same input and change the sign. If the graph of $f$ passes through $(2, -3)$, then $g(2) = -(-3) = 3$.",
@@ -1702,6 +1707,7 @@ export const combiningReflectionsWithOtherGraphTransformations: TopicDef = {
     },
     {
       id: "reflections-and-shifts-from-graphs",
+      figure: algebraDrawings3["combining-reflections-with-other-graph-transformations#reflections-and-shifts-from-graphs"],
       title: t("Recognizing the transformations", "识别变换"),
       explanation: t(
         "First decide which reflection happened: if the graph is upside down, $f$ has a negative factor in front; if it is reversed left to right, $x$ has a negative factor. Then use a matching endpoint to find the shift, and check another point.",

@@ -19,6 +19,7 @@ import {
   union,
 } from "@ga/subject-math";
 import { algebraDrawings2 } from "../explanation-drawings-algebra-2.ts";
+import { algebraDrawings3 } from "../explanation-drawings-algebra-3.ts";
 import { annotate, at, guides, shift } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, steps } from "../problems.ts";
 
@@ -446,6 +447,7 @@ export const graphTransformationsOfReciprocalFunctions: TopicDef = {
     },
     {
       id: "equations-of-translated-reciprocals",
+      figure: algebraDrawings3["graph-transformations-of-reciprocal-functions#equations-of-translated-reciprocals"],
       title: t("Writing translated functions", "写出平移后的函数"),
       explanation: t(
         "Translate $f(x) = \\frac{a}{x}$ the same way as any graph: a shift $h$ units right replaces $x$ by $x - h$, and a shift $k$ units up adds $k$. Shifting $f(x) = \\frac{2}{x}$ $4$ units left and $1$ unit up gives\n\n$$g(x) = \\frac{2}{x + 4} + 1$$\n\nCheck with the asymptotes: they moved from $x = 0$ and $y = 0$ to $x = -4$ and $y = 1$.",
@@ -536,6 +538,7 @@ export const combiningGraphTransformationsOfReciprocalFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "moving-points-of-the-reciprocal-graph",
+      figure: algebraDrawings3["combining-graph-transformations-of-reciprocal-functions#moving-points-of-the-reciprocal-graph"],
       title: t("Moving points", "点的移动"),
       explanation: t(
         "$g(x) = \\frac{a}{x - h} + k$ is $a \\cdot f(x - h) + k$ for $f(x) = \\frac{1}{x}$: shift right $h$, multiply the outputs by $a$ (a stretch, with a reflection when $a < 0$), then shift up $k$. So the point $(x, y)$ of $f$ moves to $(x + h, ay + k)$.\n\nFor $g(x) = -\\frac{4}{x - 1} + 2$, the point $\\left(2, \\frac{1}{2}\\right)$ of $y = \\frac{1}{x}$ moves to\n\n$$\\left(2 + 1, \\; -4 \\cdot \\frac{1}{2} + 2\\right) = (3, 0)$$",
@@ -571,6 +574,7 @@ export const combiningGraphTransformationsOfReciprocalFunctions: TopicDef = {
     },
     {
       id: "functions-from-several-transformations",
+      figure: algebraDrawings3["combining-graph-transformations-of-reciprocal-functions#functions-from-several-transformations"],
       title: t("Writing the function", "写出函数"),
       explanation: t(
         "Apply the transformations to $f(x) = \\frac{1}{x}$ in the order given. Multiplying the outputs by $a$ multiplies **everything** built so far, including any shift added before it:\n\n- shift right $2$, stretch by $3$, then shift down $1$: $\\frac{1}{x - 2} \\to \\frac{3}{x - 2} \\to \\frac{3}{x - 2} - 1$;\n- shift right $2$, shift down $1$, then stretch by $3$: $\\frac{1}{x - 2} - 1 \\to 3\\left(\\frac{1}{x - 2} - 1\\right) = \\frac{3}{x - 2} - 3$.\n\nA reflection in the $x$-axis multiplies by $-1$ in the same way.",
@@ -686,6 +690,7 @@ export const domainAndRangeOfTransformedReciprocalFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "the-domain-of-a-transformed-reciprocal",
+      figure: algebraDrawings3["domain-and-range-of-transformed-reciprocal-functions#the-domain-of-a-transformed-reciprocal"],
       title: t("The domain", "定义域"),
       explanation: t(
         "$f(x) = \\frac{a}{bx + c} + k$ is defined for every $x$ except where the denominator is $0$, the vertical asymptote. For $f(x) = \\frac{3}{2x - 5} + 1$:\n\n$$2x - 5 = 0 \\implies x = \\frac{5}{2}$$\n\nso the domain is all real numbers except $\\frac{5}{2}$: $\\left(-\\infty, \\frac{5}{2}\\right) \\cup \\left(\\frac{5}{2}, \\infty\\right)$.",
@@ -714,6 +719,7 @@ export const domainAndRangeOfTransformedReciprocalFunctions: TopicDef = {
     },
     {
       id: "the-range-of-a-transformed-reciprocal",
+      figure: algebraDrawings3["domain-and-range-of-transformed-reciprocal-functions#the-range-of-a-transformed-reciprocal"],
       title: t("The range", "值域"),
       explanation: t(
         "The fraction $\\frac{a}{bx + c}$ takes every value except $0$: to get a value $v \\ne 0$, solve $bx + c = \\frac{a}{v}$. So $f(x) = \\frac{a}{bx + c} + k$ takes every value except $k$, the horizontal asymptote.\n\nFor $f(x) = -\\frac{2}{x + 6} - 4$, the range is all real numbers except $-4$: $(-\\infty, -4) \\cup (-4, \\infty)$. Neither $a$, $b$ nor $c$ changes it.",
@@ -739,6 +745,7 @@ export const domainAndRangeOfTransformedReciprocalFunctions: TopicDef = {
     },
     {
       id: "the-range-of-a-quotient-of-linear-expressions",
+      figure: algebraDrawings3["domain-and-range-of-transformed-reciprocal-functions#the-range-of-a-quotient-of-linear-expressions"],
       title: t("Quotients of linear expressions", "一次式之商"),
       explanation: t(
         "To find the range of $f(x) = \\frac{px + q}{x - h}$, split it into a constant plus a reciprocal function. Write the numerator as a multiple of the denominator plus a remainder:\n\n$$\\frac{2x + 1}{x - 3} = \\frac{2(x - 3) + 7}{x - 3} = 2 + \\frac{7}{x - 3}$$\n\nNow it is $\\frac{7}{x - 3}$ shifted up $2$: the horizontal asymptote is $y = 2$, and the range is $(-\\infty, 2) \\cup (2, \\infty)$.",
@@ -766,6 +773,7 @@ export const domainAndRangeOfTransformedReciprocalFunctions: TopicDef = {
     },
     {
       id: "the-range-on-a-restricted-domain",
+      figure: algebraDrawings3["domain-and-range-of-transformed-reciprocal-functions#the-range-on-a-restricted-domain"],
       title: t("The range on an interval", "区间上的值域"),
       explanation: t(
         "On an interval that does not contain the vertical asymptote, $f(x) = \\frac{a}{x - h} + k$ lies on a single branch, which only rises or only falls. So its least and greatest values are at the ends of the interval.\n\nFor $f(x) = \\frac{6}{x - 1} + 2$ on $3 \\le x \\le 7$: $f(3) = \\frac{6}{2} + 2 = 5$ and $f(7) = \\frac{6}{6} + 2 = 3$, so the range is $[3, 5]$.",
@@ -827,6 +835,7 @@ export const inversesOfReciprocalFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "inverse-formulas",
+      figure: algebraDrawings3["inverses-of-reciprocal-functions#inverse-formulas"],
       title: t("The inverse formula", "反函数的解析式"),
       explanation: t(
         "Swap $x$ and $y$, isolate the fraction, take reciprocals, and solve for $y$. For $f(x) = \\frac{6}{2x + 1} - 3$:\n\n$$x = \\frac{6}{2y + 1} - 3, \\quad x + 3 = \\frac{6}{2y + 1}, \\quad 2y + 1 = \\frac{6}{x + 3}, \\quad y = \\frac{6}{2(x + 3)} - \\frac{1}{2}$$\n\nso $f^{-1}(x) = \\frac{3}{x + 3} - \\frac{1}{2}$. The inverse is again a reciprocal function: its vertical asymptote $x = -3$ is the horizontal asymptote of $f$, and the other way round.",
@@ -938,6 +947,7 @@ export const inversesOfReciprocalFunctions: TopicDef = {
     },
     {
       id: "functions-that-are-their-own-inverses",
+      figure: algebraDrawings3["inverses-of-reciprocal-functions#functions-that-are-their-own-inverses"],
       title: t("Functions that are their own inverses", "以自身为反函数的函数"),
       explanation: t(
         "The inverse of $f(x) = \\frac{a}{x - h} + k$ is $f^{-1}(x) = \\frac{a}{x - k} + h$: the numbers $h$ and $k$ trade places. So $f$ is its own inverse exactly when $h = k$, that is, when the center $(h, k)$, where the asymptotes cross, lies on the line $y = x$. Then the graph is symmetric about $y = x$. The simplest example is $f(x) = \\frac{1}{x}$.\n\nFor $f(x) = \\frac{4}{2x - 6} + c$, the vertical asymptote is $x = 3$ and the horizontal one $y = c$, so $f$ is its own inverse when $c = 3$.",
@@ -1064,6 +1074,7 @@ export const findingIntersectionsOfLinesAndReciprocalFunctions: TopicDef = {
     },
     {
       id: "counting-intersections-with-reciprocals",
+      figure: algebraDrawings3["finding-intersections-of-lines-and-reciprocal-functions#counting-intersections-with-reciprocals"],
       title: t("Counting intersection points", "数交点个数"),
       explanation: t(
         "Setting $\\frac{k}{x} = mx + n$ and multiplying by $x$ gives the quadratic equation $mx^{2} + nx - k = 0$. Its discriminant $n^{2} + 4mk$ counts the intersection points: two when it is positive, one when it is $0$ (the line is **tangent** to a branch), none when it is negative.\n\nFor $y = \\frac{2}{x}$ and $y = -x + 1$: $-x^{2} + x - 2 = 0$, with discriminant $1^{2} - 4(-1)(-2) = -7 < 0$, so the line misses the graph.",

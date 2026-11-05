@@ -1,7 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { gcd, type PlaneMark, type Point, plane, poly, Q } from "@ga/subject-math";
-
+import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { choiceProblem, equationProblem, numberProblem, pointProblem, radicalProblem } from "../problems.ts";
 
 // Precalculus units 8 & 9: Parametric Equations and Polar Coordinates
@@ -655,6 +655,7 @@ export const parametricEquationsOfCircles: TopicDef = {
     },
     {
       id: "circle-parametric-to-cartesian",
+      figure: precalculusDrawings3["parametric-equations-of-circles#circle-parametric-to-cartesian"],
       title: t("Identify center and radius from parametric circle", "由圆的参数方程求圆心与半径"),
       explanation: t(
         "From the parametric equations $x = h + r\\cos\\theta$ and $y = k + r\\sin\\theta$:\n- The center is $(h, k)$.\n- The radius is $r$.\n- The Cartesian equation is $(x - h)^2 + (y - k)^2 = r^2$.\n\nFor example, $x = 3 + 5\\cos\\theta, y = -1 + 5\\sin\\theta$ represents a circle with center $(3, -1)$ and radius $5$.",
@@ -803,6 +804,7 @@ export const parametricEquationsOfParabolas: TopicDef = {
   knowledgePoints: [
     {
       id: "standard-horizontal-parabola-parametric",
+      figure: precalculusDrawings3["parametric-equations-of-parabolas#standard-horizontal-parabola-parametric"],
       title: t("Parametric equations of horizontal parabolas $y^2 = 4px$", "水平抛物线 $y^2 = 4px$ 的参数方程"),
       explanation: t(
         "A standard horizontal parabola with vertex at $(0, 0)$ has Cartesian equation $y^2 = 4px$ with focus $(p, 0)$.\nSetting $y = 2pt$ into the equation:\n$$(2pt)^2 = 4px \\implies 4p^2 t^2 = 4px \\implies x = pt^2$$\nThus, the standard parametric equations are:\n$$x = pt^2, \\quad y = 2pt \\quad (t \\in \\mathbb{R})$$\nEliminating $t = \\frac{y}{2p}$ yields $x = p\\left(\\frac{y}{2p}\\right)^2 = \\frac{y^2}{4p} \\implies y^2 = 4px$.",
@@ -1225,6 +1227,7 @@ export const introductionToPolarCoordinates: TopicDef = {
   knowledgePoints: [
     {
       id: "plotting-polar-coordinates",
+      figure: precalculusDrawings3["introduction-to-polar-coordinates#plotting-polar-coordinates"],
       title: t("Plotting points and negative r in polar coordinates", "在极坐标系中描点与负极径"),
       explanation: t(
         "In the polar coordinate system, a point $P$ is located by $(r, \\theta)$:\n- The origin is the **pole** $O$, and the positive horizontal axis is the **polar axis**.\n- $r$ is the directed distance from the pole to $P$.\n- $\\theta$ is the directed angle measured counterclockwise from the polar axis.\n\nWhen $r < 0$, plot the point $|r|$ units along the opposite ray pointing in direction $\\theta + \\pi$:\n$$(-r, \\theta) = (r, \\theta + \\pi)$$\nFor example, $(-4, \\frac{\\pi}{3}) = (4, \\frac{4\\pi}{3})$, which lies in Quadrant III.",
@@ -1354,6 +1357,7 @@ export const convertingFromPolarCoordinatesToCartesianCoordinates: TopicDef = {
   knowledgePoints: [
     {
       id: "polar-to-cartesian",
+      figure: precalculusDrawings3["converting-from-polar-coordinates-to-cartesian-coordinates#polar-to-cartesian"],
       title: t("Convert polar coordinates to Cartesian coordinates", "将极坐标转换为直角坐标"),
       explanation: t(
         "A point in polar coordinates is given by its distance from the origin and its angle, and right-triangle trigonometry gives its horizontal and vertical coordinates. To convert polar coordinates $(r, \\theta)$ to Cartesian coordinates $(x, y)$:\n$$x = r\\cos\\theta, \\quad y = r\\sin\\theta$$\nFor example, for $(r, \\theta) = (6, \\frac{2\\pi}{3})$:\n$$x = 6\\cos\\frac{2\\pi}{3} = 6\\left(-\\frac{1}{2}\\right) = -3, \\quad y = 6\\sin\\frac{2\\pi}{3} = 6\\left(\\frac{\\sqrt{3}}{2}\\right) = 3\\sqrt{3}$$\nThus $(x, y) = (-3, 3\\sqrt{3})$.",
@@ -1527,6 +1531,7 @@ export const polarEquationsOfRadialLines: TopicDef = {
   knowledgePoints: [
     {
       id: "radial-line-polar-equation",
+      figure: precalculusDrawings3["polar-equations-of-radial-lines#radial-line-polar-equation"],
       title: t("The polar equation $\\theta = \\alpha$", "极坐标方程 $\\theta = \\alpha$"),
       explanation: t(
         "The polar equation $\\theta = \\alpha$ places no restriction on $r$, allowing $r$ to be any real number:\n- For $r \\ge 0$, the points trace the ray making angle $\\alpha$ with the polar axis.\n- For $r < 0$, the points trace the opposite ray in direction $\\alpha + \\pi$.\nTogether, all values of $r \\in \\mathbb{R}$ form the complete straight line passing through the pole with slope:\n$$m = \\tan\\alpha$$",

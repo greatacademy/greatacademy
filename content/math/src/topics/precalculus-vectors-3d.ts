@@ -1,7 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
-
+import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
 import { choiceProblem, numberProblem, pointProblem } from "../problems.ts";
 
 // Precalculus unit 5: Vectors (Part 2: 3D Vectors, Dot Product, and Cross Product,
@@ -620,6 +620,7 @@ export const calculatingTheDotProductUsingAngleAndMagnitude: TopicDef = {
   knowledgePoints: [
     {
       id: "geometric-definition-of-the-dot-product",
+      figure: precalculusDrawings2["calculating-the-dot-product-using-angle-and-magnitude#geometric-definition-of-the-dot-product"],
       title: t("Geometric definition of the dot product", "数量积的几何定义"),
       explanation: t(
         "The dot product (scalar product) of two vectors $\\mathbf{u}$ and $\\mathbf{v}$ is defined geometrically as:\n\n$$\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\cos\\theta$$\n\nwhere $\\theta$ is the angle between the two vectors with $0 \\le \\theta \\le \\pi$ ($0^\\circ \\le \\theta \\le 180^\\circ$).",
@@ -656,6 +657,7 @@ export const calculatingTheDotProductUsingAngleAndMagnitude: TopicDef = {
     },
     {
       id: "sign-of-the-dot-product-and-orthogonality",
+      figure: precalculusDrawings2["calculating-the-dot-product-using-angle-and-magnitude#sign-of-the-dot-product-and-orthogonality"],
       title: t("Sign of the dot product and orthogonality", "数量积的正负与垂直关系"),
       explanation: t(
         "The sign of the dot product tells whether the angle between two vectors is acute, right or obtuse, without computing the angle itself. Because $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$ and magnitudes are positive:\n\n- $\\mathbf{u} \\cdot \\mathbf{v} > 0 \\iff 0^\\circ \\le \\theta < 90^\\circ$ (acute angle)\n- $\\mathbf{u} \\cdot \\mathbf{v} = 0 \\iff \\theta = 90^\\circ$ (orthogonal / perpendicular)\n- $\\mathbf{u} \\cdot \\mathbf{v} < 0 \\iff 90^\\circ < \\theta \\le 180^\\circ$ (obtuse angle)",
@@ -960,6 +962,7 @@ export const calculatingAScalarProjection: TopicDef = {
     },
     {
       id: "interpreting-the-sign-of-scalar-projection",
+      figure: precalculusDrawings2["calculating-a-scalar-projection#interpreting-the-sign-of-scalar-projection"],
       title: t("Interpreting the sign of scalar projection", "标量投影的正负意义与计算"),
       explanation: t(
         "Because $\\text{comp}_{\\mathbf{v}}\\mathbf{u} = \\|\\mathbf{u}\\|\\cos\\theta$:\n\n- $\\text{comp}_{\\mathbf{v}}\\mathbf{u} > 0$ when the angle $\\theta$ is acute;\n- $\\text{comp}_{\\mathbf{v}}\\mathbf{u} = 0$ when $\\mathbf{u} \\perp \\mathbf{v}$;\n- $\\text{comp}_{\\mathbf{v}}\\mathbf{u} < 0$ when $\\theta$ is obtuse, meaning the projection points opposite to $\\mathbf{v}$.",
@@ -1069,6 +1072,7 @@ export const calculatingAVectorProjection: TopicDef = {
     },
     {
       id: "orthogonal-component-and-vector-decomposition",
+      figure: precalculusDrawings2["calculating-a-vector-projection#orthogonal-component-and-vector-decomposition"],
       title: t("Orthogonal component and vector decomposition", "正交分量与向量正交分解"),
       explanation: t(
         "Any vector $\\mathbf{u}$ can be uniquely decomposed into two components relative to $\\mathbf{v}$:\n\n$$\\mathbf{u} = \\mathbf{u}_{\\parallel} + \\mathbf{u}_{\\perp}$$\n\nwhere $\\mathbf{u}_{\\parallel} = \\text{proj}_{\\mathbf{v}}\\mathbf{u}$ is parallel to $\\mathbf{v}$, and $\\mathbf{u}_{\\perp} = \\mathbf{u} - \\text{proj}_{\\mathbf{v}}\\mathbf{u}$ is orthogonal to $\\mathbf{v}$.",

@@ -1,7 +1,7 @@
 import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Mark, type Point, paren, poly, Q, sketch } from "@ga/subject-math";
-
+import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
 import { choiceProblem, numberProblem, pointProblem } from "../problems.ts";
 
 // Precalculus unit 5: Vectors (modules 5.16 and 5.17: 2D Vectors).
@@ -858,6 +858,7 @@ export const parallelVectors: TopicDef = {
     },
     {
       id: "parallel-direction-and-sign",
+      figure: precalculusDrawings2["parallel-vectors#parallel-direction-and-sign"],
       title: t("Direction and magnitude ratio of parallel vectors", "平行向量的方向与模长比"),
       explanation: t(
         "For two parallel vectors $\\mathbf{u} = k\\mathbf{v}$ ($k \\neq 0$):\n\n- If $k > 0$, $\\mathbf{u}$ and $\\mathbf{v}$ have the **same direction**.\n- If $k < 0$, $\\mathbf{u}$ and $\\mathbf{v}$ have **opposite directions**.\n\nIn both cases, their lengths satisfy $\\|\\mathbf{u}\\| = |k|\\,\\|\\mathbf{v}\\|$.",
@@ -1676,6 +1677,7 @@ export const calculatingTheDirectionOfCartesianVectorsIn2d: TopicDef = {
     },
     {
       id: "direction-angle-all-quadrants",
+      figure: precalculusDrawings2["calculating-the-direction-of-cartesian-vectors-in-2d#direction-angle-all-quadrants"],
       title: t("Direction angle in Quadrants II, III, and IV", "第二、三、四象限向量的方向角"),
       explanation: t(
         "For a vector $\\mathbf{v} = \\langle x, y \\rangle$ outside Quadrant I, first find the reference angle $\\alpha = \\arctan\\left(\\left|\\frac{y}{x}\\right|\\right)$:\n\n- Quadrant II ($x < 0, y > 0$): $\\theta = 180^\\circ - \\alpha$\n- Quadrant III ($x < 0, y < 0$): $\\theta = 180^\\circ + \\alpha$\n- Quadrant IV ($x > 0, y < 0$): $\\theta = 360^\\circ - \\alpha$",
@@ -1743,6 +1745,7 @@ export const calculatingTheComponentsOfCartesianVectorsIn2d: TopicDef = {
   knowledgePoints: [
     {
       id: "components-from-magnitude-and-angle-special",
+      figure: precalculusDrawings2["calculating-the-components-of-cartesian-vectors-in-2d#components-from-magnitude-and-angle-special"],
       title: t("Compute components for special angles", "特殊方向角的向量坐标分量计算"),
       explanation: t(
         "A vector's components are the legs of a right triangle whose hypotenuse is the magnitude, so cosine gives the horizontal part and sine the vertical part. Given magnitude $\\|\\mathbf{v}\\| = r$ and direction angle $\\theta$, the components are given by:\n\n$$x = r\\cos\\theta,\\quad y = r\\sin\\theta$$\n\nso $\\mathbf{v} = \\langle r\\cos\\theta,\\, r\\sin\\theta \\rangle$.",
@@ -2042,6 +2045,7 @@ export const calculatingDisplacementForPlaneMotion: TopicDef = {
     },
     {
       id: "total-displacement-and-distance",
+      figure: precalculusDrawings2["calculating-displacement-for-plane-motion#total-displacement-and-distance"],
       title: t("Net displacement and straight-line distance for multi-leg journeys", "多段旅程的合位移与直线距离"),
       explanation: t(
         "For an object undergoing consecutive displacements $\\vec{s}_1$ and $\\vec{s}_2$:\n\n- The **net displacement vector** is $\\vec{s}_{\\text{net}} = \\vec{s}_1 + \\vec{s}_2 = \\langle x_1 + x_2,\\, y_1 + y_2 \\rangle$\n- The **straight-line distance** from the starting point is the magnitude $\\|\\vec{s}_{\\text{net}}\\| = \\sqrt{(x_1+x_2)^2 + (y_1+y_2)^2}$",

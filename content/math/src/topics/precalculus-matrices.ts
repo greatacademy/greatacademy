@@ -1,6 +1,6 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-
+import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
 import { article, choiceProblem, numberProblem } from "../problems.ts";
 
 // Precalculus unit 6: Matrices (Part 1: Matrix Algebra and Determinants,
@@ -2199,6 +2199,7 @@ export const theGeometricInterpretationOfThe2x2Determinant: TopicDef = {
   knowledgePoints: [
     {
       id: "area-of-parallelogram-spanned-by-vectors",
+      figure: precalculusDrawings2["the-geometric-interpretation-of-the-2x2-determinant#area-of-parallelogram-spanned-by-vectors"],
       title: t("Area of parallelogram via 2x2 determinant", "由向量张成的平行四边形面积与行列式"),
       explanation: t(
         "The area of the parallelogram spanned by two vectors $\\mathbf{u} = \\langle u_1, u_2 \\rangle$ and $\\mathbf{v} = \\langle v_1, v_2 \\rangle$ in $\\mathbb{R}^2$ equals the absolute value of the determinant of the matrix formed by the vectors:\n\n$$\\text{Area} = |\\det[\\mathbf{u} \\quad \\mathbf{v}]| = |u_1 v_2 - u_2 v_1|$$",
@@ -2236,6 +2237,7 @@ export const theGeometricInterpretationOfThe2x2Determinant: TopicDef = {
     },
     {
       id: "sign-of-determinant-and-orientation",
+      figure: precalculusDrawings2["the-geometric-interpretation-of-the-2x2-determinant#sign-of-determinant-and-orientation"],
       title: t("Orientation and sign of the 2x2 determinant", "行列式的正负符号与向量定向"),
       explanation: t(
         "The sign of $\\det[\\mathbf{u} \\; \\mathbf{v}]$ encodes geometric orientation: if $\\det > 0$, turning from $\\mathbf{u}$ to $\\mathbf{v}$ through the smaller angle is counterclockwise (positive orientation); if $\\det < 0$, it is clockwise (negative orientation); if $\\det = 0$, the vectors are collinear (linearly dependent, area is 0).",

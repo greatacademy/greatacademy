@@ -1,7 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
-
+import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
 import { article, choiceProblem, numberProblem, pointProblem, vectorLatex } from "../problems.ts";
 
 // Precalculus Unit 6 Part 2: Matrix Inverses, Systems, and Linear Transformations in the Plane
@@ -1251,6 +1251,7 @@ export const linearTransformationsOfObjectsInThePlane: TopicDef = {
   knowledgePoints: [
     {
       id: "transforming-vertices-of-polygons",
+      figure: precalculusDrawings2["linear-transformations-of-objects-in-the-plane#transforming-vertices-of-polygons"],
       title: t("Transforming polygon vertices", "变换多边形的各个顶点"),
       explanation: t(
         "Because linear transformations map line segments to line segments, the image of a polygon is the polygon whose vertices are the transformed original vertices.",
@@ -1350,6 +1351,7 @@ export const dilationsAndReflectionsAsLinearTransformations: TopicDef = {
   knowledgePoints: [
     {
       id: "dilation-matrices-in-the-plane",
+      figure: precalculusDrawings2["dilations-and-reflections-as-linear-transformations#dilation-matrices-in-the-plane"],
       title: t("Dilation matrices in the plane", "平面中的位似伸缩矩阵"),
       explanation: t(
         "A dilation multiplies every distance from the origin by the same factor, so its matrix is that factor times the identity matrix. A uniform dilation with scale factor $k$ centered at the origin maps $(x, y) \\mapsto (kx, ky)$. Its standard matrix is $D_k = \\begin{pmatrix} k & 0 \\\\ 0 & k \\end{pmatrix} = k I$.",
@@ -1428,6 +1430,7 @@ export const dilationsAndReflectionsAsLinearTransformations: TopicDef = {
     },
     {
       id: "reflection-matrices-in-the-plane",
+      figure: precalculusDrawings2["dilations-and-reflections-as-linear-transformations#reflection-matrices-in-the-plane"],
       title: t("Reflection matrices in the plane", "平面中的反射变换矩阵"),
       explanation: t(
         "Standard reflection matrices:\n- Across the $x$-axis: $\\begin{pmatrix} 1 & 0 \\\\ 0 & -1 \\end{pmatrix}$\n- Across the $y$-axis: $\\begin{pmatrix} -1 & 0 \\\\ 0 & 1 \\end{pmatrix}$\n- Across the line $y = x$: $\\begin{pmatrix} 0 & 1 \\\\ 1 & 0 \\end{pmatrix}$\n- Across the line $y = -x$: $\\begin{pmatrix} 0 & -1 \\\\ -1 & 0 \\end{pmatrix}$",
@@ -1805,6 +1808,7 @@ export const rightAngleRotationsAsLinearTransformations: TopicDef = {
     },
     {
       id: "applying-right-angle-rotations-to-vectors",
+      figure: precalculusDrawings2["right-angle-rotations-as-linear-transformations#applying-right-angle-rotations-to-vectors"],
       title: t("Rotating points and vectors by right angles", "直角旋转作用于向量与点"),
       explanation: t(
         "For right angle rotations, the coordinates simply swap places and change signs, so you can rotate a point without writing out the matrix product. Applying right-angle counterclockwise rotations to point $(x, y)$:\n- $90^\\circ$: $(x, y) \\mapsto (-y, x)$\n- $180^\\circ$: $(x, y) \\mapsto (-x, -y)$\n- $270^\\circ$: $(x, y) \\mapsto (y, -x)$",

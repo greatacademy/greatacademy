@@ -16,6 +16,7 @@ import {
   realLine,
 } from "@ga/subject-math";
 import { algebraDrawings2 } from "../explanation-drawings-algebra-2.ts";
+import { algebraDrawings3 } from "../explanation-drawings-algebra-3.ts";
 import { annotate, at, guides, plain, shift } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, steps } from "../problems.ts";
 import { reasoned } from "../wrong-reasons.ts";
@@ -1015,6 +1016,7 @@ export const verticalTranslationsOfExponentialGrowthFunctions: TopicDef = {
     },
     {
       id: "values-of-translated-growth-functions",
+      figure: algebraDrawings3["vertical-translations-of-exponential-growth-functions#values-of-translated-growth-functions"],
       title: t("Values and the y-intercept", "函数值与 y 轴截距"),
       explanation: t(
         "Evaluate a translated function by computing the power first, then multiplying, then adding $k$. For $g(x) = 3(2)^{x} + 4$, the $y$-intercept is\n\n$$g(0) = 3(2)^{0} + 4 = 3 + 4 = 7$$\n\nand $g(-1) = 3 \\cdot \\frac{1}{2} + 4 = \\frac{11}{2}$. The $y$-intercept of $a \\cdot b^{x} + k$ is always $a + k$.",
@@ -1099,6 +1101,7 @@ export const verticalTranslationsOfExponentialDecayFunctions: TopicDef = {
     },
     {
       id: "translated-decay-graph-equations",
+      figure: algebraDrawings3["vertical-translations-of-exponential-decay-functions#translated-decay-graph-equations"],
       title: t("The equation from the graph", "由图象求解析式"),
       explanation: t(
         "A translated decay graph $y = \\left(\\frac{1}{b}\\right)^{x} + k$ falls from left to right toward its asymptote $y = k$. Read $k$ from the asymptote, then use a point on the left: at $x = -1$ the height is $b + k$, since $\\left(\\frac{1}{b}\\right)^{-1} = b$. With asymptote $y = 1$ and the point $(-1, 4)$: $b = 3$, so $y = \\left(\\frac{1}{3}\\right)^{x} + 1$.",
@@ -1332,6 +1335,7 @@ export const interpretingGraphsOfExponentialFunctions: TopicDef = {
     },
     {
       id: "predicting-from-a-graph",
+      figure: algebraDrawings3["interpreting-graphs-of-exponential-functions#predicting-from-a-graph"],
       title: t("Predicting later values", "预测以后的值"),
       explanation: t(
         "Once you know $a$ and $b$ from the graph, the model predicts values beyond it. From $(0, 2)$ and $(1, 3)$: $a = 2$, $b = \\frac{3}{2}$, so after $3$ time units\n\n$$y = 2\\left(\\frac{3}{2}\\right)^{3} = 2 \\cdot \\frac{27}{8} = \\frac{27}{4} = 6.75$$\n\nThe increase is not the same each step, so do not continue the graph as a straight line.",
@@ -1451,6 +1455,7 @@ export const verticalReflectionsOfExponentialFunctions: TopicDef = {
     },
     {
       id: "reflected-graph-equations",
+      figure: algebraDrawings3["vertical-reflections-of-exponential-functions#reflected-graph-equations"],
       title: t("The equation from the graph", "由图象求解析式"),
       explanation: t(
         "The graph of $y = -b^{x} + k$ is the graph of $y = b^{x}$ flipped upside down and then moved up $k$. It lies **below** its asymptote $y = k$. At $x = 0$ it is at $k - 1$, and at $x = 1$ at $k - b$. With asymptote $y = 5$ and the point $(1, 2)$: $5 - b = 2$, so $b = 3$ and $y = -3^{x} + 5$.",
@@ -1495,6 +1500,7 @@ export const verticalReflectionsOfExponentialFunctions: TopicDef = {
     },
     {
       id: "intercepts-of-reflected-graphs",
+      figure: algebraDrawings3["vertical-reflections-of-exponential-functions#intercepts-of-reflected-graphs"],
       title: t("Intercepts", "截距"),
       explanation: t(
         "A negative coefficient reflects the exponential graph across its horizontal asymptote. The intercepts are still found the usual way: set $x = 0$ for one and $g(x) = 0$ for the other.\n\nFor $g(x) = -a \\cdot b^{x} + k$ with $a > 0$ and $k > 0$, the $y$-intercept is $g(0) = k - a$, and the graph crosses the $x$-axis where $a \\cdot b^{x} = k$:\n\n$$-2(3)^{x} + 18 = 0 \\implies 2(3)^{x} = 18 \\implies 3^{x} = 9 \\implies x = 2$$",
@@ -1581,6 +1587,7 @@ export const combiningGraphTransformationsOfExponentialFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "describing-exponential-transformations",
+      figure: algebraDrawings3["combining-graph-transformations-of-exponential-functions#describing-exponential-transformations"],
       title: t("Describing the transformations", "描述变换"),
       explanation: t(
         "In $g(x) = a \\cdot b^{x - h} + k$, compared with $f(x) = b^{x}$:\n\n- $x - h$ in the exponent shifts the graph $h$ right (left when $h < 0$);\n- the factor $a$ stretches it vertically by $|a|$ and, if $a < 0$, reflects it across the $x$-axis;\n- $+ k$ shifts it $k$ up (down when $k < 0$).\n\nSo $g(x) = -2(3)^{x + 1} + 4$ is $3^{x}$ shifted $1$ left, stretched by $2$, reflected, and shifted $4$ up. Note the sign: $x + 1 = x - (-1)$ means **left**.",
@@ -1695,6 +1702,7 @@ export const combiningGraphTransformationsOfExponentialFunctions: TopicDef = {
     },
     {
       id: "the-transformed-exponential-from-its-graph",
+      figure: algebraDrawings3["combining-graph-transformations-of-exponential-functions#the-transformed-exponential-from-its-graph"],
       title: t("The equation from the graph", "由图象求解析式"),
       explanation: t(
         "To read $g(x) = a \\cdot b^{x - h} + k$ with $a = \\pm 1$ from its graph, start with the horizontal asymptote, which is $y = k$. The graph lies above it when $a = 1$ and below it when $a = -1$. At $x = h$ the power is $b^{0} = 1$, so the graph is exactly $1$ unit from the asymptote there, which locates $h$; one step to the right it is $b$ units away, which gives $b$. A graph above $y = -2$ through $(1, -1)$ and $(2, 1)$ is $g(x) = 3^{x - 1} - 2$.",
@@ -1767,6 +1775,7 @@ export const propertiesOfTransformedExponentialFunctions: TopicDef = {
   knowledgePoints: [
     {
       id: "range-of-transformed-exponentials",
+      figure: algebraDrawings3["properties-of-transformed-exponential-functions#range-of-transformed-exponentials"],
       title: t("Domain, asymptote and range", "定义域、渐近线与值域"),
       explanation: t(
         "Every exponential function $f(x) = a \\cdot b^{x - h} + k$ has domain all real numbers and the horizontal asymptote $y = k$; the shift $h$ changes neither. The range is the side of the asymptote the graph lies on:\n\n- $a > 0$: range $(k, \\infty)$;\n- $a < 0$: range $(-\\infty, k)$.\n\nFor $f(x) = -3(2)^{x + 4} + 1$ the range is $(-\\infty, 1)$.",
@@ -1804,6 +1813,7 @@ export const propertiesOfTransformedExponentialFunctions: TopicDef = {
     },
     {
       id: "intercepts-of-transformed-exponentials",
+      figure: algebraDrawings3["properties-of-transformed-exponential-functions#intercepts-of-transformed-exponentials"],
       title: t("Intercepts", "截距"),
       explanation: t(
         "A transformed exponential function crosses the $y$-axis exactly once, but it crosses the $x$-axis only if the asymptote and the graph lie on opposite sides of it.\n\nThe $y$-intercept is $f(0)$. The $x$-intercept, if there is one, solves $f(x) = 0$. For $f(x) = 2(3)^{x - 1} - 18$:\n\n$$f(0) = 2 \\cdot 3^{-1} - 18 = \\frac{2}{3} - 18 = -\\frac{52}{3}$$\n\n$$2(3)^{x - 1} = 18 \\implies 3^{x - 1} = 9 = 3^{2} \\implies x = 3$$",
@@ -2132,6 +2142,7 @@ export const combiningGraphTransformationsOfLogarithmicFunctions: TopicDef = {
     },
     {
       id: "equations-of-transformed-logarithms",
+      figure: algebraDrawings3["combining-graph-transformations-of-logarithmic-functions#equations-of-transformed-logarithms"],
       title: t("Equations from descriptions", "由描述写解析式"),
       explanation: t(
         "Build the equation from $f(x) = \\log_{b} x$ step by step: a shift $h$ right replaces $x$ by $x - h$, a stretch by $|a|$ (with a reflection when $a < 0$) multiplies by $a$, and a shift $k$ up adds $k$. Shifting $\\log_{2} x$ $3$ units left and $2$ units down gives\n\n$$g(x) = \\log_{2}(x + 3) - 2$$",
@@ -2186,6 +2197,7 @@ export const combiningGraphTransformationsOfLogarithmicFunctions: TopicDef = {
     },
     {
       id: "the-transformed-logarithm-from-its-graph",
+      figure: algebraDrawings3["combining-graph-transformations-of-logarithmic-functions#the-transformed-logarithm-from-its-graph"],
       title: t("The equation from the graph", "由图象求解析式"),
       explanation: t(
         "To read $g(x) = a\\log_{b}(x - h) + k$ with $a = \\pm 1$ from its graph, start with the vertical asymptote, which is $x = h$. One unit to its right the argument is $1$ and the logarithm is $0$, so the graph passes through $(h + 1, k)$, which gives $k$. At $x = h + b$ the logarithm is $1$, so the graph is $1$ unit above $k$ when $a = 1$ and $1$ unit below when $a = -1$; this gives $b$ and $a$. A graph with asymptote $x = 2$ through $(3, 1)$ and $(5, 2)$ is $g(x) = \\log_{3}(x - 2) + 1$.",
@@ -2312,6 +2324,7 @@ export const propertiesOfTransformedLogarithmicFunctions: TopicDef = {
     },
     {
       id: "direction-of-a-transformed-logarithm",
+      figure: algebraDrawings3["properties-of-transformed-logarithmic-functions#direction-of-a-transformed-logarithm"],
       title: t("Increasing or decreasing", "递增还是递减"),
       explanation: t(
         "With a base $b > 1$, $\\log_{b} u$ increases as $u$ increases. In $f(x) = a\\log_{b}(cx + d) + k$, a negative $c$ makes the argument decrease as $x$ increases, and a negative $a$ flips the graph. Each negative sign reverses the direction once, so $f$ increases exactly when $a$ and $c$ have the same sign: $f(x) = -2\\log_{3}(4 - x)$ is increasing.",
@@ -2388,6 +2401,7 @@ export const inversesOfExponentialAndLogarithmicFunctions: TopicDef = {
     },
     {
       id: "inverse-of-an-exponential-function",
+      figure: algebraDrawings3["inverses-of-exponential-and-logarithmic-functions#inverse-of-an-exponential-function"],
       title: t("The inverse of an exponential function", "指数函数的反函数"),
       explanation: t(
         "For an exponential function, isolate the power and convert to logarithmic form:\n\n$$x = 3^{y + 2} - 5 \\implies 3^{y + 2} = x + 5 \\implies y + 2 = \\log_{3}(x + 5)$$\n\nSo $f^{-1}(x) = \\log_{3}(x + 5) - 2$. The horizontal asymptote $y = -5$ of $f$ becomes the vertical asymptote $x = -5$ of $f^{-1}$.",

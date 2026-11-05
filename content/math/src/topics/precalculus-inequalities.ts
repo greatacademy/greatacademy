@@ -17,7 +17,7 @@ import {
   realLine,
   union,
 } from "@ga/subject-math";
-
+import { precalculusDrawings } from "../explanation-drawings-precalculus.ts";
 import { choiceProblem, intervalProblem, numberProblem, steps, yesNo } from "../problems.ts";
 
 // Precalculus unit 3: inequalities (modules 3.6 to 3.8).
@@ -514,6 +514,7 @@ export const solvingQuadraticInequalitiesFromGraphs: TopicDef = {
     },
     {
       id: "comparing-with-a-line",
+      figure: precalculusDrawings["solving-quadratic-inequalities-from-graphs#comparing-with-a-line"],
       title: t("Comparing with a horizontal line", "与水平直线比较"),
       explanation: t(
         "To solve $f(x) \\ge k$ from a graph, draw the line $y = k$: the solutions are the $x$-values where the parabola is on or above the line. They are bounded by the $x$-coordinates of the points where the two graphs meet.\n\nIf a downward parabola meets $y = 2$ at $(-3, 2)$ and $(1, 2)$, it is above the line between them, so $f(x) \\ge 2$ on $[-3, 1]$ and $f(x) < 2$ on $(-\\infty, -3) \\cup (1, \\infty)$.",
@@ -610,6 +611,8 @@ export const solvingQuadraticInequalitiesUsingTheGraphicalMethod: TopicDef = {
     },
     {
       id: "quadratic-inequalities-with-leading-coefficients",
+      figure:
+        precalculusDrawings["solving-quadratic-inequalities-using-the-graphical-method#quadratic-inequalities-with-leading-coefficients"],
       title: t("Leading coefficients", "首项系数不为 1"),
       explanation: t(
         "The roots may be fractions. For $2x^{2} + x - 6 \\le 0$:\n\n$$2x^{2} + x - 6 = (2x - 3)(x + 2)$$\n\nThe roots are $-2$ and $\\frac{3}{2}$, and the parabola opens upward, so it is on or below the $x$-axis on $\\left[-2, \\frac{3}{2}\\right]$.\n\nWhen the coefficient of $x^{2}$ is negative, the parabola opens downward, and the roles swap: $-2x^{2} - x + 6 \\le 0$ on $(-\\infty, -2] \\cup \\left[\\frac{3}{2}, \\infty\\right)$.",
@@ -748,6 +751,7 @@ export const solvingQuadraticInequalitiesUsingTheSignTableMethod: TopicDef = {
   knowledgePoints: [
     {
       id: "signs-of-a-product",
+      figure: precalculusDrawings["solving-quadratic-inequalities-using-the-sign-table-method#signs-of-a-product"],
       title: t("The sign of a product on an interval", "乘积在区间上的符号"),
       explanation: t(
         `A linear factor changes sign only at its root. The roots of $(2x - 1)(3 - x)$ are $\\frac{1}{2}$ and $3$, which cut the number line into three intervals. Pick a test number in each, such as $0$, $1$ and $4$, and record the sign of each factor; the product has the sign given by the rule of signs:${signTableExample}So the product is positive on $\\left(\\frac{1}{2}, 3\\right)$ and negative on the other two intervals. Watch the factor $3 - x$: it is positive to the left of $3$, the opposite of $x - 3$.`,
@@ -1005,6 +1009,7 @@ export const determiningUnknownParametersInQuadraticEquationsWithNoRealSolutions
     },
     {
       id: "quadratics-of-one-sign",
+      figure: precalculusDrawings["determining-unknown-parameters-in-quadratic-equations-with-no-real-solutions#quadratics-of-one-sign"],
       title: t("Quadratics that never change sign", "始终不变号的二次函数"),
       explanation: t(
         "A parabola that opens upward is above the $x$-axis everywhere exactly when it has no $x$-intercepts, that is when its discriminant is negative. It is on or above the axis everywhere when the discriminant is at most $0$, since it may touch the axis once.\n\nSo $x^{2} - 6x + k > 0$ for every $x$ exactly when $36 - 4k < 0$, that is $k > 9$. For a parabola that opens downward the same reasoning describes when it stays below the axis.",
@@ -1332,6 +1337,7 @@ export const solvingPolynomialInequalitiesUsingAGraphicalMethod: TopicDef = {
   knowledgePoints: [
     {
       id: "reading-polynomial-inequalities-from-graphs",
+      figure: precalculusDrawings["solving-polynomial-inequalities-using-a-graphical-method#reading-polynomial-inequalities-from-graphs"],
       title: t("Reading polynomial inequalities from graphs", "看多项式图象解不等式"),
       explanation: t(
         "The graph of $y = P(x)$ is above the $x$-axis where $P(x) > 0$ and below the $x$-axis where $P(x) < 0$. The roots partition the axis into intervals. The graph crosses the axis at roots of odd multiplicity, and touches without crossing at roots of even multiplicity.\n\nFor a cubic crossing at $-2, 1, 4$ and rising to the right, it is above the axis on $(-2, 1) \\cup (4, \\infty)$ and below on $(-\\infty, -2) \\cup (1, 4)$.",
@@ -1368,6 +1374,7 @@ export const solvingPolynomialInequalitiesUsingAGraphicalMethod: TopicDef = {
     },
     {
       id: "solving-polynomial-inequalities-by-sketching",
+      figure: precalculusDrawings["solving-polynomial-inequalities-using-a-graphical-method#solving-polynomial-inequalities-by-sketching"],
       title: t("Solving by sketching end behavior and roots", "利用端点行为与零点草图求解"),
       explanation: t(
         "To solve $-(x + 3)(x - 1)(x - 4) \\ge 0$ without graphing software:\n\n1. **Roots**: $-3, 1, 4$, all multiplicity $1$ (the curve crosses the axis at each).\n2. **Leading coefficient**: negative, and degree is $3$ (odd), so the curve goes up to $+\\infty$ on the far left and down to $-\\infty$ on the far right.\n3. **Signs**: positive on $(-\\infty, -3]$, negative on $[-3, 1]$, positive on $[1, 4]$, negative on $[4, \\infty)$.\n\nSo the solution is $(-\\infty, -3] \\cup [1, 4]$.",
@@ -2336,6 +2343,7 @@ export const solvingTwoVariableNonlinearInequalities: TopicDef = {
     },
     {
       id: "identifying-nonlinear-inequality-regions",
+      figure: precalculusDrawings["solving-two-variable-nonlinear-inequalities#identifying-nonlinear-inequality-regions"],
       title: t("Regions bounded by parabolas", "抛物线围成的区域"),
       explanation: t(
         "For $y \\ge ax^{2} + c$ with $a > 0$, the boundary is the solid curve $y = ax^{2} + c$, and the region contains all points **above** or on the curve. For $y < ax^{2} + c$, the boundary is dashed, and the region is **below** the curve.",

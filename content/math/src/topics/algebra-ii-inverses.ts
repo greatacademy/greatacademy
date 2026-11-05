@@ -2,6 +2,7 @@ import type { Figure, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Coefficient, linear, num, type PlaneMark, type PlaneView, type Point, plane, poly, Q } from "@ga/subject-math";
 import { algebraDrawings2 } from "../explanation-drawings-algebra-2.ts";
+import { algebraDrawings3 } from "../explanation-drawings-algebra-3.ts";
 import { annotate, at, plain, riseRun } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, numberProblem, pointProblem, solutionsProblem, steps, why } from "../problems.ts";
 
@@ -359,6 +360,7 @@ export const inversesOfQuadraticFunctions: TopicDef = {
     },
     {
       id: "inverses-in-vertex-form",
+      figure: algebraDrawings3["inverses-of-quadratic-functions#inverses-in-vertex-form"],
       title: t("Inverses in vertex form", "顶点式的反函数"),
       explanation: t(
         "With a leading coefficient, divide by it before taking the square root. For $f(x) = -2(x + 1)^{2} + 5$ with $x \\le -1$, swap and solve:\n\n$$x = -2(y + 1)^{2} + 5, \\quad (y + 1)^{2} = \\frac{5 - x}{2}, \\quad y + 1 = \\pm\\sqrt{\\frac{5 - x}{2}}.$$\n\nSince $y \\le -1$, $y + 1 \\le 0$, so $f^{-1}(x) = -\\sqrt{\\frac{5 - x}{2}} - 1$.",

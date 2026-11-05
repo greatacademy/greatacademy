@@ -14,7 +14,7 @@ import {
   surd,
   surdLatex,
 } from "@ga/subject-math";
-
+import { conicDrawings } from "../explanation-drawings-conics.ts";
 import { choiceProblem, equationProblem, numberProblem, pointProblem, solutionsProblem, steps, yesNo } from "../problems.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
@@ -214,6 +214,7 @@ export const upwardAndDownwardOpeningParabolas: TopicDef = {
   knowledgePoints: [
     {
       id: "opening-up-or-down",
+      figure: conicDrawings["upward-and-downward-opening-parabolas#opening-up-or-down"],
       title: t("Opening upward or downward", "开口向上或向下"),
       explanation: t(
         "As a **conic section**, a parabola with vertex at the origin and a vertical axis of symmetry is written\n\n$$x^{2} = 4py$$\n\nSolving for $y$ gives $y = \\frac{1}{4p}x^{2}$, so the parabola opens **upward** when $p > 0$ and **downward** when $p < 0$. Moving the vertex to $(h, k)$ gives $(x - h)^{2} = 4p(y - k)$, which opens the same way.\n\nFor $-x^{2} = 6y$, first multiply both sides by $-1$: $x^{2} = -6y$, so $4p = -6$, $p = -\\frac{3}{2} < 0$, and the parabola opens downward.",
@@ -280,6 +281,7 @@ export const upwardAndDownwardOpeningParabolas: TopicDef = {
     },
     {
       id: "equation-from-a-graph",
+      figure: conicDrawings["upward-and-downward-opening-parabolas#equation-from-a-graph"],
       title: t("The equation from a graph", "由图象求方程"),
       explanation: t(
         "To find the equation of a parabola that opens upward or downward from its graph, read the vertex $(h, k)$, write $(x - h)^{2} = 4p(y - k)$, and substitute another point to find $4p$. With vertex $(1, -2)$ and the point $(3, 0)$:\n\n$$(3 - 1)^{2} = 4p(0 - (-2)) \\Rightarrow 4 = 4p \\cdot 2 \\Rightarrow 4p = 2$$\n\nso the equation is $(x - 1)^{2} = 2(y + 2)$.",
@@ -369,6 +371,7 @@ export const leftAndRightOpeningParabolas: TopicDef = {
     },
     {
       id: "points-on-a-horizontal-parabola",
+      figure: conicDrawings["left-and-right-opening-parabolas#points-on-a-horizontal-parabola"],
       title: t("Points on a horizontal parabola", "开口向左右的抛物线上的点"),
       explanation: t(
         "In $x = ay^{2} + by + c$, the input is $y$ and the output is $x$. To find the point with a given $y$-coordinate, substitute $y$ and compute $x$. For $x = y^{2} - 2y + 3$ and $y = -1$:\n\n$$x = (-1)^{2} - 2 \\cdot (-1) + 3 = 6$$\n\nso the point is $(6, -1)$: the $x$-coordinate comes first even though it was computed last.",
@@ -400,6 +403,7 @@ export const leftAndRightOpeningParabolas: TopicDef = {
     },
     {
       id: "horizontal-equation-from-a-graph",
+      figure: conicDrawings["left-and-right-opening-parabolas#horizontal-equation-from-a-graph"],
       title: t("The equation from a graph", "由图象求方程"),
       explanation: t(
         "A parabola that opens to the left or right with vertex $(h, k)$ is $(y - k)^{2} = 4p(x - h)$; note that $k$ goes with $y$ and $h$ with $x$. Substitute another point to find $4p$. With vertex $(-1, 2)$ and the point $(1, 4)$:\n\n$$(4 - 2)^{2} = 4p(1 - (-1)) \\Rightarrow 4 = 4p \\cdot 2 \\Rightarrow 4p = 2$$\n\nso the equation is $(y - 2)^{2} = 2(x + 1)$.",
@@ -444,6 +448,7 @@ export const theVertexOfAParabola: TopicDef = {
   knowledgePoints: [
     {
       id: "vertex-of-a-vertical-parabola",
+      figure: conicDrawings["the-vertex-of-a-parabola#vertex-of-a-vertical-parabola"],
       title: t("Parabolas opening up or down", "开口向上或向下的抛物线"),
       explanation: t(
         "The parabola $(x - h)^{2} = 4p(y - k)$ has its vertex at $(h, k)$: the number subtracted from $x$ is the $x$-coordinate and the number subtracted from $y$ is the $y$-coordinate. Read each with the opposite sign of the number in its parentheses:\n\n$$(x + 3)^{2} = 8(y - 5) \\text{ is } (x - (-3))^{2} = 8(y - 5)$$\n\nso the vertex is $(-3, 5)$. The factor $4p = 8$ does not change the vertex.",
@@ -475,6 +480,7 @@ export const theVertexOfAParabola: TopicDef = {
     },
     {
       id: "vertex-of-a-horizontal-parabola",
+      figure: conicDrawings["the-vertex-of-a-parabola#vertex-of-a-horizontal-parabola"],
       title: t("Parabolas opening left or right", "开口向左或向右的抛物线"),
       explanation: t(
         "For a parabola opening left or right, the squared binomial contains $y$, so it gives the **$y$-coordinate** of the vertex:\n\n- $(y - k)^{2} = 4p(x - h)$ has vertex $(h, k)$;\n- $x = a(y - k)^{2} + h$ has vertex $(h, k)$.\n\nFor $x = 2(y - 1)^{2} - 4$, the vertex is $(-4, 1)$, not $(1, -4)$: the constant $-4$ is the $x$-coordinate.",
@@ -515,6 +521,7 @@ export const theVertexOfAParabola: TopicDef = {
     },
     {
       id: "the-axis-of-symmetry",
+      figure: conicDrawings["the-vertex-of-a-parabola#the-axis-of-symmetry"],
       title: t("The axis of symmetry", "对称轴"),
       explanation: t(
         "The axis of symmetry passes through the vertex $(h, k)$ in the direction the parabola opens:\n\n- a parabola opening up or down has the vertical axis $x = h$;\n- a parabola opening left or right has the horizontal axis $y = k$.\n\n$(y + 2)^{2} = -6(x - 1)$ opens to the left with vertex $(1, -2)$, so its axis of symmetry is $y = -2$.",
@@ -571,6 +578,7 @@ export const calculatingTheVertexOfAParabolaByCompletingTheSquare: TopicDef = {
   knowledgePoints: [
     {
       id: "completing-the-square-in-y",
+      figure: conicDrawings["calculating-the-vertex-of-a-parabola-by-completing-the-square#completing-the-square-in-y"],
       title: t("Completing the square in y", "对 y 配方"),
       explanation: t(
         "To find the vertex of $x = y^{2} + by + c$, complete the square in $y$ exactly as for $y = x^{2} + bx + c$, with the roles of $x$ and $y$ swapped:\n\n$$x = y^{2} - 4y + 1 = (y^{2} - 4y + 4) - 4 + 1 = (y - 2)^{2} - 3$$\n\nThis is $x = (y - k)^{2} + h$ with $k = 2$ and $h = -3$, so the vertex is $(-3, 2)$.",
@@ -599,6 +607,7 @@ export const calculatingTheVertexOfAParabolaByCompletingTheSquare: TopicDef = {
     },
     {
       id: "with-a-leading-coefficient",
+      figure: conicDrawings["calculating-the-vertex-of-a-parabola-by-completing-the-square#with-a-leading-coefficient"],
       title: t("With a leading coefficient", "二次项系数不为 1"),
       explanation: t(
         "When the coefficient of $y^{2}$ is not $1$, factor it out of the $y$-terms, complete the square inside, and multiply the square you take out by that coefficient:\n\n$$x = 2y^{2} + 12y + 13 = 2(y^{2} + 6y + 9) - 2 \\cdot 9 + 13 = 2(y + 3)^{2} - 5$$\n\nThe vertex is $(-5, -3)$.",
@@ -627,6 +636,7 @@ export const calculatingTheVertexOfAParabolaByCompletingTheSquare: TopicDef = {
     },
     {
       id: "from-the-general-form",
+      figure: conicDrawings["calculating-the-vertex-of-a-parabola-by-completing-the-square#from-the-general-form"],
       title: t("From the general form", "由一般方程求顶点"),
       explanation: t(
         "A parabola may be written with everything on one side, such as $x^{2} - 6x - 4y + 1 = 0$. Keep the terms of the squared variable on one side, move the rest to the other, and complete the square:\n\n$$x^{2} - 6x = 4y - 1 \\Rightarrow x^{2} - 6x + 9 = 4y + 8 \\Rightarrow (x - 3)^{2} = 4(y + 2)$$\n\nFactor the coefficient of $y$ out on the right. The vertex is $(3, -2)$. If $y$ is the squared variable, do the same with $y$, and the result is $(y - k)^{2} = 4p(x - h)$.",
@@ -711,6 +721,7 @@ export const theFocusDirectrixPropertyOfAParabola: TopicDef = {
     },
     {
       id: "is-the-point-on-the-parabola",
+      figure: conicDrawings["the-focus-directrix-property-of-a-parabola#is-the-point-on-the-parabola"],
       title: t("Is the point on the parabola?", "点是否在抛物线上"),
       explanation: t(
         "To test whether a point $P$ lies on the parabola with a given focus and directrix, compute both distances and compare them. The distance to the focus comes from the distance formula $PF = \\sqrt{(x_0 - x_F)^{2} + (y_0 - y_F)^{2}}$; comparing squares avoids square roots.\n\nFocus $F(1, 2)$, directrix $y = -2$, point $P(5, 3)$:\n\n$$PF^{2} = (5 - 1)^{2} + (3 - 2)^{2} = 17, \\qquad d = |3 - (-2)| = 5, \\quad d^{2} = 25$$\n\n$17 \\ne 25$, so $P$ is not on the parabola.",
@@ -750,6 +761,7 @@ export const theFocusDirectrixPropertyOfAParabola: TopicDef = {
     },
     {
       id: "equation-from-the-focus-and-directrix",
+      figure: conicDrawings["the-focus-directrix-property-of-a-parabola#equation-from-the-focus-and-directrix"],
       title: t("The equation from the focus and directrix", "由焦点和准线求方程"),
       explanation: t(
         "Setting the two distances equal gives the equation. For focus $(0, p)$ and directrix $y = -p$:\n\n$$\\sqrt{x^{2} + (y - p)^{2}} = |y + p| \\Rightarrow x^{2} + y^{2} - 2py + p^{2} = y^{2} + 2py + p^{2} \\Rightarrow x^{2} = 4py$$\n\nIn general, the vertex is halfway between the focus and the directrix, and $p$ is the signed distance from the vertex to the focus. Focus $(2, 1)$ and directrix $y = -3$: the vertex is $(2, -1)$, the focus is $2$ above it so $p = 2$, and the equation is $(x - 2)^{2} = 8(y + 1)$. With a vertical directrix $x = d$ the parabola opens left or right: $(y - k)^{2} = 4p(x - h)$.",
@@ -809,6 +821,7 @@ export const calculatingTheFocusOfAParabola: TopicDef = {
   knowledgePoints: [
     {
       id: "focus-from-the-conic-form",
+      figure: conicDrawings["calculating-the-focus-of-a-parabola#focus-from-the-conic-form"],
       title: t("From the conic form", "由圆锥曲线形式求焦点"),
       explanation: t(
         "The focus lies on the axis of symmetry, $p$ units from the vertex, inside the parabola:\n\n- $(x - h)^{2} = 4p(y - k)$ has focus $(h, k + p)$;\n- $(y - k)^{2} = 4p(x - h)$ has focus $(h + p, k)$.\n\nFor $(x + 1)^{2} = -12(y - 4)$: the vertex is $(-1, 4)$, $4p = -12$ so $p = -3$, and the focus is $(-1, 4 + (-3)) = (-1, 1)$. Divide the coefficient by $4$ before moving from the vertex.",
@@ -835,6 +848,7 @@ export const calculatingTheFocusOfAParabola: TopicDef = {
     },
     {
       id: "focus-from-the-vertex-form",
+      figure: conicDrawings["calculating-the-focus-of-a-parabola#focus-from-the-vertex-form"],
       title: t("From the vertex form", "由顶点式求焦点"),
       explanation: t(
         "To find the focus of $y = a(x - h)^{2} + k$, divide by $a$: $(x - h)^{2} = \\frac{1}{a}(y - k)$, so $4p = \\frac{1}{a}$ and\n\n$$p = \\frac{1}{4a}$$\n\nFor $y = 2(x - 3)^{2} + 1$: $p = \\frac{1}{8}$, and the focus is $\\left(3, 1 + \\frac{1}{8}\\right) = \\left(3, \\frac{9}{8}\\right)$. Likewise $x = a(y - k)^{2} + h$ has focus $\\left(h + \\frac{1}{4a}, k\\right)$.",
@@ -867,6 +881,7 @@ export const calculatingTheFocusOfAParabola: TopicDef = {
     },
     {
       id: "focus-from-the-general-form",
+      figure: conicDrawings["calculating-the-focus-of-a-parabola#focus-from-the-general-form"],
       title: t("From the general form", "由一般方程求焦点"),
       explanation: t(
         "When the equation is in general form, first complete the square to reach the conic form, then read the vertex and $p$:\n\n$$y^{2} + 4y - 8x + 20 = 0 \\Rightarrow y^{2} + 4y + 4 = 8x - 16 \\Rightarrow (y + 2)^{2} = 8(x - 2)$$\n\nThe vertex is $(2, -2)$ and $4p = 8$, so $p = 2$ and the focus is $(4, -2)$.",
@@ -917,6 +932,7 @@ export const calculatingTheDirectrixOfAParabola: TopicDef = {
   knowledgePoints: [
     {
       id: "directrix-from-the-conic-form",
+      figure: conicDrawings["calculating-the-directrix-of-a-parabola#directrix-from-the-conic-form"],
       title: t("From the conic form", "由圆锥曲线形式求准线"),
       explanation: t(
         "The directrix is perpendicular to the axis of symmetry, $p$ units from the vertex on the side away from the focus, outside the parabola:\n\n- $(x - h)^{2} = 4p(y - k)$ has directrix $y = k - p$;\n- $(y - k)^{2} = 4p(x - h)$ has directrix $x = h - p$.\n\nFor $(y - 1)^{2} = 6(x + 2)$: the vertex is $(-2, 1)$, $p = \\frac{6}{4} = \\frac{3}{2}$, and the directrix is $x = -2 - \\frac{3}{2} = -\\frac{7}{2}$. A parabola opening left or right has a vertical directrix $x = \\ldots$.",
@@ -948,6 +964,7 @@ export const calculatingTheDirectrixOfAParabola: TopicDef = {
     },
     {
       id: "directrix-from-the-vertex-form",
+      figure: conicDrawings["calculating-the-directrix-of-a-parabola#directrix-from-the-vertex-form"],
       title: t("From the vertex form", "由顶点式求准线"),
       explanation: t(
         "For $y = a(x - h)^{2} + k$, $p = \\frac{1}{4a}$ and the directrix is $y = k - \\frac{1}{4a}$. For $y = -\\frac{1}{8}(x + 1)^{2} + 3$: $p = \\frac{1}{4 \\cdot (-\\frac{1}{8})} = -2$, and the directrix is $y = 3 - (-2) = 5$, above the downward-opening parabola. Likewise $x = a(y - k)^{2} + h$ has directrix $x = h - \\frac{1}{4a}$.",
@@ -980,6 +997,7 @@ export const calculatingTheDirectrixOfAParabola: TopicDef = {
     },
     {
       id: "directrix-from-the-vertex-and-focus",
+      figure: conicDrawings["calculating-the-directrix-of-a-parabola#directrix-from-the-vertex-and-focus"],
       title: t("From the vertex and focus", "由顶点和焦点求准线"),
       explanation: t(
         "The vertex is the midpoint between the focus and the directrix, so the directrix is as far beyond the vertex as the focus is on the other side. Vertex $(2, 1)$ and focus $(2, 4)$: the focus is $3$ above the vertex, so the directrix is $3$ below it, $y = 1 - 3 = -2$. If the vertex and focus have the same $y$-coordinate, the axis is horizontal and the directrix is a vertical line $x = \\ldots$.",
@@ -1035,6 +1053,7 @@ export const calculatingInterceptsOfParabolas: TopicDef = {
   knowledgePoints: [
     {
       id: "the-x-intercept-of-a-horizontal-parabola",
+      figure: conicDrawings["calculating-intercepts-of-parabolas#the-x-intercept-of-a-horizontal-parabola"],
       title: t("The x-intercept of a horizontal parabola", "开口向左右的抛物线与 x 轴的交点"),
       explanation: t(
         "Every point of the $x$-axis has $y = 0$. A parabola $x = ay^{2} + by + c$ gives exactly one $x$ for each $y$, so it crosses the $x$-axis exactly once, where $y = 0$:\n\n$$x = 2(0)^{2} - 3(0) + 5 = 5$$\n\nso $x = 2y^{2} - 3y + 5$ has $x$-intercept $(5, 0)$. For $x = -(y - 2)^{2} + 1$: $x = -(0 - 2)^{2} + 1 = -3$, so the $x$-intercept is $(-3, 0)$.",
@@ -1086,6 +1105,7 @@ export const calculatingInterceptsOfParabolas: TopicDef = {
     },
     {
       id: "the-y-intercepts-of-a-horizontal-parabola",
+      figure: conicDrawings["calculating-intercepts-of-parabolas#the-y-intercepts-of-a-horizontal-parabola"],
       title: t("The y-intercepts of a horizontal parabola", "开口向左右的抛物线与 y 轴的交点"),
       explanation: t(
         "Points of the $y$-axis have $x = 0$, so the $y$-intercepts of $x = ay^{2} + by + c$ come from solving the quadratic equation $ay^{2} + by + c = 0$: there may be two, one or none.\n\n$$x = y^{2} - y - 6: \\quad y^{2} - y - 6 = 0 \\Rightarrow (y - 3)(y + 2) = 0$$\n\nso the $y$-intercepts are $(0, 3)$ and $(0, -2)$. When the vertex is on the same side of the $y$-axis as the direction the parabola opens, such as $x = (y - 1)^{2} + 4$, the parabola never reaches the $y$-axis.",
@@ -1137,6 +1157,7 @@ export const calculatingInterceptsOfParabolas: TopicDef = {
     },
     {
       id: "x-intercepts-from-the-conic-form",
+      figure: conicDrawings["calculating-intercepts-of-parabolas#x-intercepts-from-the-conic-form"],
       title: t("x-intercepts from the conic form", "由圆锥曲线形式求与 x 轴的交点"),
       explanation: t(
         "To find the $x$-intercepts of $(x - h)^{2} = 4p(y - k)$, substitute $y = 0$ and take square roots:\n\n$$(x - 1)^{2} = 4(0 - (-3)) = 12 \\Rightarrow x - 1 = \\pm\\sqrt{12} = \\pm 2\\sqrt{3} \\Rightarrow x = 1 \\pm 2\\sqrt{3}$$\n\nIf the right side is negative there are no $x$-intercepts, and if it is $0$ the vertex is on the $x$-axis.",
@@ -1198,6 +1219,7 @@ export const intersectionsOfParabolasWithLines: TopicDef = {
   knowledgePoints: [
     {
       id: "vertical-lines",
+      figure: conicDrawings["intersections-of-parabolas-with-lines#vertical-lines"],
       title: t("Vertical lines", "竖直直线"),
       explanation: t(
         "A vertical line $x = d$ can meet a parabola opening left or right at two points. Substitute $x = d$ and solve for $y$:\n\n$$x = (y - 1)^{2} - 3, \\; x = 6: \\quad 6 = (y - 1)^{2} - 3 \\Rightarrow (y - 1)^{2} = 9 \\Rightarrow y = 4 \\text{ or } y = -2$$\n\nThe intersection points are $(6, 4)$ and $(6, -2)$; both have $x = 6$.",
@@ -1269,6 +1291,7 @@ export const intersectionsOfParabolasWithLines: TopicDef = {
     },
     {
       id: "counting-intersection-points",
+      figure: conicDrawings["intersections-of-parabolas-with-lines#counting-intersection-points"],
       title: t("Counting intersection points", "数交点个数"),
       explanation: t(
         "After substituting, the discriminant of the quadratic equation in $y$ counts the intersection points: two if it is positive, one if it is $0$ (the line is **tangent** to the parabola), none if it is negative. For $x = y^{2} + 3$ and $x - 2y = 1$:\n\n$$2y + 1 = y^{2} + 3 \\Rightarrow y^{2} - 2y + 2 = 0, \\qquad (-2)^{2} - 4 \\cdot 1 \\cdot 2 = -4 < 0$$\n\nso the line misses the parabola.",

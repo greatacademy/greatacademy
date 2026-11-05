@@ -19,6 +19,7 @@ import {
   union,
 } from "@ga/subject-math";
 import { algebraDrawings2 } from "../explanation-drawings-algebra-2.ts";
+import { algebraDrawings3 } from "../explanation-drawings-algebra-3.ts";
 import { annotate, at, onAxis, setText as setAlt, shift } from "../graph-figures.ts";
 import {
   choiceProblem,
@@ -639,6 +640,7 @@ export const graphingTheSquareRootFunction: TopicDef = {
     },
     {
       id: "points-on-the-square-root-graph",
+      figure: algebraDrawings3["graphing-the-square-root-function#points-on-the-square-root-graph"],
       title: t("Points on the graph", "图象上的点"),
       explanation: t(
         "The point $(p, q)$ is on the graph of $y = \\sqrt{x}$ exactly when $q = \\sqrt{p}$, that is, when $q \\ge 0$ and $q^{2} = p$. So:\n\n- no point has a negative $x$-coordinate: $\\sqrt{x}$ is not defined for $x < 0$, and the graph lies to the right of the $y$-axis;\n- no point has a negative $y$-coordinate: the graph lies on or above the $x$-axis.\n\n$(16, 4)$ is on the graph, but $(16, -4)$ and $(4, 16)$ are not.",
@@ -765,6 +767,7 @@ export const graphTransformationsOfSquareRootFunctions: TopicDef = {
     },
     {
       id: "equations-from-transformations",
+      figure: algebraDrawings3["graph-transformations-of-square-root-functions#equations-from-transformations"],
       title: t("Equations from transformations", "由变换写解析式"),
       explanation: t(
         "Apply the transformations to $y = \\sqrt{x}$ in order:\n\n- reflect in the $y$-axis: $x$ becomes $-x$;\n- shift right $h$: $x$ becomes $x - h$;\n- reflect in the $x$-axis or stretch vertically by $a$: multiply the root by $-1$ or $a$;\n- shift up $k$: add $k$.\n\nReflecting $y = \\sqrt{x}$ in the $y$-axis gives $y = \\sqrt{-x}$; shifting it right $3$ then gives $y = \\sqrt{-(x - 3)} = \\sqrt{3 - x}$; stretching by $2$ and shifting down $1$ gives $y = 2\\sqrt{3 - x} - 1$.",
@@ -809,6 +812,7 @@ export const graphTransformationsOfSquareRootFunctions: TopicDef = {
     },
     {
       id: "equations-from-graphs",
+      figure: algebraDrawings3["graph-transformations-of-square-root-functions#equations-from-graphs"],
       title: t("Equations from graphs", "由图象写解析式"),
       explanation: t(
         "To write the equation of a transformed square-root graph:\n\n1. read the endpoint $(h, k)$;\n2. see which way the graph goes from it: to the right means $\\sqrt{x - h}$, to the left $\\sqrt{h - x}$;\n3. find $a$ from the point one unit across from the endpoint: there the root is $1$, so the graph is $a$ units above the endpoint (below when $a < 0$).\n\nA graph starting at $(2, -1)$, going right and passing through $(3, 1)$ has $a = 2$: $y = 2\\sqrt{x - 2} - 1$.",
@@ -844,6 +848,7 @@ export const graphTransformationsOfSquareRootFunctions: TopicDef = {
     },
     {
       id: "the-direction-of-the-graph",
+      figure: algebraDrawings3["graph-transformations-of-square-root-functions#the-direction-of-the-graph"],
       title: t("Which way the graph goes", "图象的延伸方向"),
       explanation: t(
         "From its endpoint, the graph of $y = a\\sqrt{bx + c} + k$ extends:\n\n- to the **right** when $b > 0$ (the radicand grows as $x$ grows) and to the **left** when $b < 0$;\n- **upward** when $a > 0$ and **downward** when $a < 0$.\n\nSo $y = -\\sqrt{4 - 2x} + 3$, with $b = -2$ and $a = -1$, extends to the left and downward.",
@@ -942,6 +947,7 @@ export const graphingTheCubeRootFunction: TopicDef = {
     },
     {
       id: "points-on-the-cube-root-graph",
+      figure: algebraDrawings3["graphing-the-cube-root-function#points-on-the-cube-root-graph"],
       title: t("Points on the graph", "图象上的点"),
       explanation: t(
         "The point $(p, q)$ is on the graph of $y = \\sqrt[3]{x}$ exactly when $q^{3} = p$. The graph lies in quadrants I and III: it runs from the lower left, through the origin, to the upper right, and it is symmetric about the origin, because $\\sqrt[3]{-x} = -\\sqrt[3]{x}$. So $(-27, -3)$ is on the graph, but $(-27, 3)$ and $(9, 3)$ are not.",
@@ -970,6 +976,7 @@ export const graphingTheCubeRootFunction: TopicDef = {
     },
     {
       id: "transformed-cube-root-graphs",
+      figure: algebraDrawings3["graphing-the-cube-root-function#transformed-cube-root-graphs"],
       title: t("Transformed cube root graphs", "变换后的立方根函数图象"),
       explanation: t(
         "The graph of $y = \\sqrt[3]{x}$ is steepest at its **center** $(0, 0)$, about which it is symmetric. The graph of $y = a\\sqrt[3]{x - h} + k$ is that graph stretched by $a$ (and reflected when $a < 0$) and moved so that its center is at $(h, k)$. One unit right of the center the root is $1$, so the graph is at height $k + a$.\n\nFor $y = -2\\sqrt[3]{x + 1} + 3$, the center is $(-1, 3)$ and the graph passes through $(0, 1)$ and $(-2, 5)$.",
@@ -1132,6 +1139,7 @@ export const propertiesOfTransformedSquareRootFunctions: TopicDef = {
     },
     {
       id: "the-y-intercept-of-a-square-root-function",
+      figure: algebraDrawings3["properties-of-transformed-square-root-functions#the-y-intercept-of-a-square-root-function"],
       title: t("The $y$-intercept", "$y$ 轴截距"),
       explanation: t(
         "The graph crosses the $y$-axis where $x = 0$, so the $y$-intercept is $f(0)$, provided $0$ is in the domain. For $f(x) = 3\\sqrt{4 - x} - 7$:\n\n$$f(0) = 3\\sqrt{4} - 7 = 3 \\cdot 2 - 7 = -1,$$\n\nso the graph crosses the $y$-axis at $(0, -1)$.",
@@ -1378,6 +1386,7 @@ export const theRangeOfATransformedRadicalFunction: TopicDef = {
     },
     {
       id: "range-from-a-graph",
+      figure: algebraDrawings3["the-range-of-a-transformed-radical-function#range-from-a-graph"],
       title: t("The range from a graph", "从图象读出值域"),
       explanation: t(
         "On the graph, the range is the set of heights the graph reaches. A transformed square-root graph starts at its endpoint $(h, k)$ and then rises or falls forever, so its range is $[k, \\infty)$ when it goes up from the endpoint and $(-\\infty, k]$ when it goes down. Whether it extends to the left or to the right does not matter.",
@@ -1595,6 +1604,7 @@ export const inversesOfRadicalFunctions: TopicDef = {
     },
     {
       id: "the-domain-of-the-inverse",
+      figure: algebraDrawings3["inverses-of-radical-functions#the-domain-of-the-inverse"],
       title: t("The domain and range of the inverse", "反函数的定义域与值域"),
       explanation: t(
         "The inverse swaps inputs and outputs, so the domain of $f^{-1}$ is the range of $f$ and the range of $f^{-1}$ is the domain of $f$. The formula of the inverse of a square-root function is a parabola, but $f^{-1}$ is only part of it.\n\nFor $f(x) = -\\sqrt{x + 2} + 5$: the range of $f$ is $(-\\infty, 5]$ and its domain is $[-2, \\infty)$, so $f^{-1}$ has domain $(-\\infty, 5]$ and range $[-2, \\infty)$.",
@@ -1742,6 +1752,7 @@ export const findingIntersectionsOfLinesAndRadicalFunctions: TopicDef = {
     },
     {
       id: "counting-intersections",
+      figure: algebraDrawings3["finding-intersections-of-lines-and-radical-functions#counting-intersections"],
       title: t("Counting intersections", "数交点的个数"),
       explanation: t(
         "A line can meet the graph of $y = \\sqrt{ax + b}$ in $0$, $1$ or $2$ points. Squaring $\\sqrt{ax + b} = mx + c$ gives a quadratic with at most two roots, but only the roots with $mx + c \\ge 0$ give intersection points. So count the roots that pass the check, not all the roots of the quadratic.",

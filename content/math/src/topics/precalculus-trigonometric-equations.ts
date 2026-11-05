@@ -1,6 +1,7 @@
 import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { gcd } from "@ga/subject-math";
+import { precalculusDrawings2 } from "../explanation-drawings-precalculus-2.ts";
 import { choiceProblem, numberProblem, solutionsProblem } from "../problems.ts";
 
 // Precalculus unit 4: Trigonometry (modules 4.13 to 4.15: elementary, transformed,
@@ -49,6 +50,7 @@ export const elementaryTrigonometricEquationsContainingSine: TopicDef = {
   knowledgePoints: [
     {
       id: "solve-elementary-sine-equations-degrees",
+      figure: precalculusDrawings2["elementary-trigonometric-equations-containing-sine#solve-elementary-sine-equations-degrees"],
       title: t("Solve sin(x) = c in degrees on [0°, 360°)", "在 [0°, 360°) 内求解正弦方程（角度制）"),
       explanation: t(
         "To solve $\\sin x^{\\circ} = c$ on $[0, 360)$:\n\n1. Find the reference angle $\\alpha = \\arcsin|c|$.\n2. Sine is positive in Quadrants I and II ($x = \\alpha, 180 - \\alpha$) and negative in Quadrants III and IV ($x = 180 + \\alpha, 360 - \\alpha$).\n\nFor example, $\\sin x^{\\circ} = \\frac{1}{2}$ has reference angle $30^{\\circ}$, giving solutions $x = 30, 150$.",
@@ -1206,6 +1208,7 @@ export const generalSolutionsOfTrigonometricEquationsWithTransformedFunctions: T
   knowledgePoints: [
     {
       id: "general-solution-multi-angle",
+      figure: precalculusDrawings2["general-solutions-of-trigonometric-equations-with-transformed-functions#general-solution-multi-angle"],
       title: t("General solution of sin(Bx) = c and cos(Bx) = c", "sin(Bx) = c 与 cos(Bx) = c 的通解"),
       explanation: t(
         "Solve for the whole inner angle first, adding multiples of the period, and only then divide by the coefficient, which also divides the period. For $\\sin(2x) = \\frac{1}{2}$:\n\n$$2x = \\frac{\\pi}{6} + 2k\\pi \\implies x = \\frac{\\pi}{12} + k\\pi$$\n\n$$2x = \\frac{5\\pi}{6} + 2k\\pi \\implies x = \\frac{5\\pi}{12} + k\\pi$$",
@@ -1439,6 +1442,10 @@ export const trigonometricEquationsContainingTransformedCosineFunctions: TopicDe
   knowledgePoints: [
     {
       id: "solve-transformed-cosine-frequency-and-phase",
+      figure:
+        precalculusDrawings2[
+          "trigonometric-equations-containing-transformed-cosine-functions#solve-transformed-cosine-frequency-and-phase"
+        ],
       title: t("Solve transformed cosine equations on [0, 2π)", "在 [0, 2π) 上求解变换余弦方程"),
       explanation: t(
         "Work with the inner expression as one angle, list its solutions across the stretched interval, and then divide or shift to recover the original variable. For $\\cos(2x) = 1$ on $[0, 2\\pi)$:\n\n$$2x = 0, \\; 2\\pi \\implies x = 0, \\; \\pi$$\n\nFor $\\cos(2x) = 0$:\n\n$$2x = \\frac{\\pi}{2}, \\; \\frac{3\\pi}{2}, \\; \\frac{5\\pi}{2}, \\; \\frac{7\\pi}{2} \\implies x = \\frac{\\pi}{4}, \\; \\frac{3\\pi}{4}, \\; \\frac{5\\pi}{4}, \\; \\frac{7\\pi}{4}$$",
@@ -1558,6 +1565,7 @@ export const trigonometricEquationsContainingTransformedTangentFunctions: TopicD
   knowledgePoints: [
     {
       id: "solve-transformed-tangent-equations",
+      figure: precalculusDrawings2["trigonometric-equations-containing-transformed-tangent-functions#solve-transformed-tangent-equations"],
       title: t("Solve transformed tangent equations on [0, π)", "在 [0, π) 上求解变换正切方程"),
       explanation: t(
         "Tangent repeats every half turn, so after finding one solution for the inner angle, add multiples of $\\pi$ to cover the whole stretched interval before solving for the variable. For $\\tan(2x) = 1$ on $[0, \\pi)$:\n\n$$2x \\in [0, 2\\pi) \\implies 2x = \\frac{\\pi}{4}, \\; \\frac{5\\pi}{4} \\implies x = \\frac{\\pi}{8}, \\; \\frac{5\\pi}{8}$$",

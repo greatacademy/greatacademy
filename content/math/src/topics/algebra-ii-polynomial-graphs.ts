@@ -16,6 +16,7 @@ import {
   union,
 } from "@ga/subject-math";
 import { algebraDrawings2 } from "../explanation-drawings-algebra-2.ts";
+import { algebraDrawings3 } from "../explanation-drawings-algebra-3.ts";
 import { annotate, guides } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, steps } from "../problems.ts";
 
@@ -374,6 +375,7 @@ export const graphingElementaryCubicFunctions: TopicDef = {
     },
     {
       id: "matching-a-cubic-to-its-graph",
+      figure: algebraDrawings3["graphing-elementary-cubic-functions#matching-a-cubic-to-its-graph"],
       title: t("Matching an equation to a cubic curve", "由三次曲线选方程"),
       explanation: t(
         "To match $y = a(x - h)^{3} + k$ to its graph, read two features:\n\n1. the center $(h, k)$, the point where the curve flattens out and about which it is symmetric;\n2. the direction: a curve that rises from left to right has $a > 0$, one that falls has $a < 0$.\n\nA curve that falls from left to right with center $(2, -1)$ is $y = a(x - 2)^{3} - 1$ with $a < 0$, such as $y = -(x - 2)^{3} - 1$.",
@@ -766,6 +768,7 @@ export const graphingCubicCurvesContainingOneDistinctRealRoot: TopicDef = {
     },
     {
       id: "counting-x-intercepts",
+      figure: algebraDrawings3["graphing-cubic-curves-containing-one-distinct-real-root#counting-x-intercepts"],
       title: t("Counting $x$-intercepts", "数 $x$ 轴截距的个数"),
       explanation: t(
         "To count the $x$-intercepts of $f(x) = (x - p)(x^{2} + bx + c)$, add the root $p$ to the distinct real roots of the quadratic, which its discriminant $D = b^{2} - 4c$ tells:\n\n- $D < 0$: no real roots, so **one** $x$-intercept;\n- $D = 0$: one double root, so **two** $x$-intercepts (the graph touches at the double root);\n- $D > 0$: two roots, so **three** $x$-intercepts.\n\nWatch for a root of the quadratic that equals $p$: $(x - 1)(x^{2} - 4x + 3) = (x - 1)^{2}(x - 3)$ has only two $x$-intercepts.",
@@ -1057,6 +1060,7 @@ export const graphingGeneralPolynomials: TopicDef = {
     },
     {
       id: "a-polynomial-from-its-graph",
+      figure: algebraDrawings3["graphing-general-polynomials#a-polynomial-from-its-graph"],
       title: t("The equation from the graph", "由图象求方程"),
       explanation: t(
         "To find a polynomial from its graph, read each $x$-intercept and its multiplicity from the shape there: crossing gives $1$, touching gives an even number, flattening while crossing gives an odd number of at least $3$. Choose the multiplicities so that they add up to the degree, then use a marked point to find $a$.\n\nA quartic whose graph touches the $x$-axis at $-1$ and crosses it at $1$ and $3$ is $f(x) = a(x + 1)^{2}(x - 1)(x - 3)$. Through $(0, -3)$:\n\n$$-3 = a(0 + 1)^{2}(0 - 1)(0 - 3) = 3a \\quad\\Rightarrow\\quad a = -1$$\n\nso $f(x) = -(x + 1)^{2}(x - 1)(x - 3)$.",

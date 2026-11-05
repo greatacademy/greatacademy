@@ -1,7 +1,7 @@
 import type { Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { gcd, lcm, linear, poly } from "@ga/subject-math";
-
+import { algebraDrawings3 } from "../explanation-drawings-algebra-3.ts";
 import { expressionProblem, factoredProblem, numberProblem, steps } from "../problems.ts";
 
 /** pw writes a power of a variable: "", "x" or "x^{3}". */
@@ -437,6 +437,7 @@ export const describingRelationshipsUsingPolynomialIdentities: TopicDef = {
     },
     {
       id: "pythagorean-triples",
+      figure: algebraDrawings3["describing-relationships-using-polynomial-identities#pythagorean-triples"],
       title: t("Generating Pythagorean triples", "构造勾股数"),
       explanation: t(
         "Expanding both sides proves the identity\n\n$$(x^{2} + y^{2})^{2} = (x^{2} - y^{2})^{2} + (2xy)^{2}$$\n\nIt has the form $c^{2} = a^{2} + b^{2}$, so for whole numbers $x > y > 0$ it produces a **Pythagorean triple**: the legs $a = x^{2} - y^{2}$ and $b = 2xy$ and the hypotenuse $c = x^{2} + y^{2}$ of a right triangle.\n\nWith $x = 3$ and $y = 2$: $a = 9 - 4 = 5$, $b = 2 \\cdot 3 \\cdot 2 = 12$ and $c = 9 + 4 = 13$. Indeed $5^{2} + 12^{2} = 25 + 144 = 169 = 13^{2}$.",

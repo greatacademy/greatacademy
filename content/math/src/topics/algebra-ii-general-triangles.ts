@@ -1,7 +1,7 @@
 import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { type Compass, dec, type Mark, type Point, Q, sketch } from "@ga/subject-math";
-
+import { trigDrawings } from "../explanation-drawings-trig.ts";
 import { choiceProblem, numberProblem, steps } from "../problems.ts";
 
 // Algebra II, unit 8 (continued): trigonometry with general triangles — the
@@ -211,6 +211,7 @@ export const theLawOfSines: TopicDef = {
   knowledgePoints: [
     {
       id: "a-side-opposite-a-known-angle",
+      figure: trigDrawings["the-law-of-sines#a-side-opposite-a-known-angle"],
       title: t("A side opposite a known angle", "已知角的对边"),
       explanation: t(
         "In $\\triangle ABC$, write $a$, $b$ and $c$ for the sides opposite the angles $A$, $B$ and $C$. The height from $C$ to $AB$ is both $b \\sin A$ and $a \\sin B$, so $\\frac{a}{\\sin A} = \\frac{b}{\\sin B}$. The same holds for every pair, which is the **law of sines**:\n\n$$\\frac{a}{\\sin A} = \\frac{b}{\\sin B} = \\frac{c}{\\sin C}.$$\n\nEach side is paired with the angle **opposite** it. With $A = 40^\\circ$, $B = 65^\\circ$ and $a = 12$:\n\n$$\\frac{b}{\\sin 65^\\circ} = \\frac{12}{\\sin 40^\\circ}, \\qquad b = \\frac{12 \\sin 65^\\circ}{\\sin 40^\\circ} \\approx 16.9.$$\n\nA calculator gives the sine of an obtuse angle as well: $\\sin 130^\\circ \\approx 0.766$, the same as $\\sin 50^\\circ$.",
@@ -258,6 +259,7 @@ export const theLawOfSines: TopicDef = {
     },
     {
       id: "two-angles-and-the-included-side",
+      figure: trigDrawings["the-law-of-sines#two-angles-and-the-included-side"],
       title: t("Two angles and the included side", "两角及其夹边"),
       explanation: t(
         "When the known side lies between the two known angles, no known angle is opposite it. Find the third angle first, since the angles add up to $180^\\circ$, then use the law of sines.\n\nWith $A = 50^\\circ$, $B = 70^\\circ$ and $c = AB = 10$: $C = 180^\\circ - 50^\\circ - 70^\\circ = 60^\\circ$, and\n\n$$\\frac{a}{\\sin 50^\\circ} = \\frac{10}{\\sin 60^\\circ}, \\qquad a = \\frac{10 \\sin 50^\\circ}{\\sin 60^\\circ} \\approx 8.8.$$",
@@ -315,6 +317,7 @@ export const theLawOfSines: TopicDef = {
     },
     {
       id: "finding-an-angle",
+      figure: trigDrawings["the-law-of-sines#finding-an-angle"],
       title: t("Finding an angle", "求角"),
       explanation: t(
         "The law of sines also finds an angle opposite a known side, when another side and its opposite angle are known. Write it with the sines on top:\n\n$$\\frac{\\sin B}{b} = \\frac{\\sin A}{a}.$$\n\nWith $a = 14$, $b = 9$ and $A = 72^\\circ$: $\\sin B = \\frac{9 \\sin 72^\\circ}{14} \\approx 0.6114$, so $B = \\sin^{-1} 0.6114 \\approx 37.7^\\circ$.\n\nAn obtuse angle has the same sine as its supplement ($180^\\circ - 37.7^\\circ = 142.3^\\circ$ also has sine $0.6114$). Here $b < a$, so $B$ is smaller than $A$ and cannot be obtuse: $37.7^\\circ$ is the only answer.",
@@ -366,6 +369,7 @@ export const theLawOfSines: TopicDef = {
     },
     {
       id: "the-ambiguous-case",
+      figure: trigDrawings["the-law-of-sines#the-ambiguous-case"],
       title: t("The ambiguous case", "多解情况"),
       explanation: t(
         "Given $A$, $a$ and $b$ with $A$ acute, swing the side $a$ from $C$ toward the line through $A$. The height from $C$ is $h = b \\sin A$:\n\n- $a < h$: $a$ does not reach the line, so there is **no** triangle;\n- $h < a < b$: $a$ meets the line at two points, so there are **two** triangles, one with $B$ acute and one with $B$ obtuse;\n- $a \\ge b$: there is exactly **one** triangle.\n\nWith $A = 35^\\circ$, $b = 12$ and $a = 9$: $h = 12 \\sin 35^\\circ \\approx 6.88$, and $6.88 < 9 < 12$, so there are two triangles. From $\\sin B = \\frac{12 \\sin 35^\\circ}{9} \\approx 0.7648$, the acute value is $B \\approx 49.9^\\circ$ and the obtuse value is $B \\approx 180^\\circ - 49.9^\\circ = 130.1^\\circ$.",
@@ -468,6 +472,7 @@ export const theLawOfCosines: TopicDef = {
   knowledgePoints: [
     {
       id: "finding-a-side",
+      figure: trigDrawings["the-law-of-cosines#finding-a-side"],
       title: t("Finding the third side", "求第三边"),
       explanation: t(
         "When two sides and the angle **between** them are known, no angle is opposite a known side, so the law of sines does not help. The **law of cosines** does:\n\n$$a^2 = b^2 + c^2 - 2bc \\cos A.$$\n\nWhen $A = 90^\\circ$, $\\cos A = 0$ and this is the Pythagorean theorem. With $b = 8$, $c = 11$ and $A = 120^\\circ$ (a calculator gives $\\cos 120^\\circ = -0.5$):\n\n$$a^2 = 8^2 + 11^2 - 2 \\cdot 8 \\cdot 11 \\cos 120^\\circ = 185 + 88 = 273, \\qquad a = \\sqrt{273} \\approx 16.5.$$\n\nThe cosine of an obtuse angle is negative, so the third side comes out longer than the Pythagorean theorem would give.",
@@ -511,6 +516,7 @@ export const theLawOfCosines: TopicDef = {
     },
     {
       id: "finding-an-angle-from-three-sides",
+      figure: trigDrawings["the-law-of-cosines#finding-an-angle-from-three-sides"],
       title: t("An angle from three sides", "由三边求角"),
       explanation: t(
         "Solve the law of cosines for the cosine of the angle:\n\n$$\\cos C = \\frac{a^2 + b^2 - c^2}{2ab},$$\n\nwhere $c$ is the side **opposite** $C$ and $a$, $b$ are the sides that form it. With $a = 7$, $b = 9$ and $c = 8$:\n\n$$\\cos C = \\frac{7^2 + 9^2 - 8^2}{2 \\cdot 7 \\cdot 9} = \\frac{66}{126} \\approx 0.5238, \\qquad C = \\cos^{-1} 0.5238 \\approx 58.4^\\circ.$$",
@@ -555,6 +561,7 @@ export const theLawOfCosines: TopicDef = {
     },
     {
       id: "an-obtuse-angle-from-three-sides",
+      figure: trigDrawings["the-law-of-cosines#an-obtuse-angle-from-three-sides"],
       title: t("An obtuse angle from three sides", "由三边求钝角"),
       explanation: t(
         "The largest angle of a triangle is opposite its longest side. When $c^2 > a^2 + b^2$, the numerator $a^2 + b^2 - c^2$ is negative, so $\\cos C < 0$ and $C$ is obtuse. The inverse cosine of a negative number gives the obtuse angle directly.\n\nWith $a = 5$, $b = 6$ and $c = 10$:\n\n$$\\cos C = \\frac{5^2 + 6^2 - 10^2}{2 \\cdot 5 \\cdot 6} = \\frac{-39}{60} = -0.65, \\qquad C = \\cos^{-1} (-0.65) \\approx 130.5^\\circ.$$\n\nUnlike the sine, the cosine tells acute and obtuse angles apart, so there is no second answer.",
@@ -614,6 +621,7 @@ export const theAreaOfAGeneralTriangle: TopicDef = {
   knowledgePoints: [
     {
       id: "two-sides-and-an-obtuse-or-acute-included-angle",
+      figure: trigDrawings["the-area-of-a-general-triangle#two-sides-and-an-obtuse-or-acute-included-angle"],
       title: t("Two sides and the included angle", "两边及其夹角"),
       explanation: t(
         "The area of a triangle with sides $a$ and $b$ and the angle $C$ between them is\n\n$$A = \\frac{1}{2} ab \\sin C.$$\n\nThis holds for an obtuse angle as well: the height then falls outside the triangle, and it equals $a \\sin(180^\\circ - C) = a \\sin C$. With $a = 9$, $b = 7$ and $C = 130^\\circ$:\n\n$$A = \\frac{1}{2} \\cdot 9 \\cdot 7 \\sin 130^\\circ \\approx 31.5 \\cdot 0.766 \\approx 24.1.$$",
@@ -656,6 +664,7 @@ export const theAreaOfAGeneralTriangle: TopicDef = {
     },
     {
       id: "a-side-from-the-area",
+      figure: trigDrawings["the-area-of-a-general-triangle#a-side-from-the-area"],
       title: t("A side from the area", "由面积求边"),
       explanation: t(
         "When the area is known, the formula $A = \\frac{1}{2} ab \\sin C$ is an equation for a missing side. A triangle has area $30$, one side $b = 8$, and the angle between $b$ and the unknown side $a$ is $48^\\circ$:\n\n$$30 = \\frac{1}{2} \\cdot 8 \\cdot a \\sin 48^\\circ, \\qquad a = \\frac{2 \\cdot 30}{8 \\sin 48^\\circ} \\approx 10.1.$$",
@@ -704,6 +713,7 @@ export const theAreaOfAGeneralTriangle: TopicDef = {
     },
     {
       id: "area-from-three-sides",
+      figure: trigDrawings["the-area-of-a-general-triangle#area-from-three-sides"],
       title: t("Area from three sides", "由三边求面积"),
       explanation: t(
         "When only the three sides are known, find one angle with the law of cosines, then use $A = \\frac{1}{2} ab \\sin C$ with the two sides that form it.\n\nFor sides $7$, $9$ and $12$, take the angle $C$ between $7$ and $9$:\n\n$$\\cos C = \\frac{7^2 + 9^2 - 12^2}{2 \\cdot 7 \\cdot 9} = \\frac{-14}{126} \\approx -0.1111, \\qquad C \\approx 96.4^\\circ,$$\n\n$$A = \\frac{1}{2} \\cdot 7 \\cdot 9 \\sin 96.4^\\circ \\approx 31.3.$$",
@@ -810,6 +820,7 @@ export const modelingUsingTheLawOfSines: TopicDef = {
   knowledgePoints: [
     {
       id: "distances-from-two-points",
+      figure: trigDrawings["modeling-using-the-law-of-sines#distances-from-two-points"],
       title: t("Sighting from two points", "从两点观测"),
       explanation: t(
         "Two observers $A$ and $B$ a known distance apart both sight a point $C$, and each measures the angle between the line $AB$ and the line of sight. That is two angles and the included side, so find the angle at $C$ and use the law of sines.\n\nWith $AB = 200$ m, $\\angle A = 62^\\circ$ and $\\angle B = 48^\\circ$: $\\angle C = 180^\\circ - 62^\\circ - 48^\\circ = 70^\\circ$. The distance $AC$ is opposite $\\angle B$:\n\n$$AC = \\frac{200 \\sin 48^\\circ}{\\sin 70^\\circ} \\approx 158.2 \\text{ m}.$$",
@@ -864,6 +875,7 @@ export const modelingUsingTheLawOfSines: TopicDef = {
     },
     {
       id: "heights-from-two-angles-of-elevation",
+      figure: trigDrawings["modeling-using-the-law-of-sines#heights-from-two-angles-of-elevation"],
       title: t("Heights from two angles of elevation", "由两个仰角求高度"),
       explanation: t(
         "From $A$ the angle of elevation of the top $T$ of a tower is $32^\\circ$; from $B$, $30$ m closer, it is $50^\\circ$. In $\\triangle ABT$, the angle at $B$ is $180^\\circ - 50^\\circ = 130^\\circ$, so the angle at $T$ is $180^\\circ - 32^\\circ - 130^\\circ = 18^\\circ$, the difference of the two angles of elevation. By the law of sines,\n\n$$BT = \\frac{30 \\sin 32^\\circ}{\\sin 18^\\circ} \\approx 51.45.$$\n\n$BT$ is the hypotenuse of the right triangle at the tower, so the height is $BT \\sin 50^\\circ \\approx 39.4$ m.",
@@ -974,6 +986,7 @@ export const modelingUsingTheLawOfCosines: TopicDef = {
   knowledgePoints: [
     {
       id: "distances-across-obstacles",
+      figure: trigDrawings["modeling-using-the-law-of-cosines#distances-across-obstacles"],
       title: t("Distances across an obstacle", "隔着障碍物的距离"),
       explanation: t(
         "To measure across a lake from $A$ to $B$, stand at a point $P$ from which both ends can be reached, measure $PA$, $PB$ and the angle $APB$ between them, and use the law of cosines.\n\nWith $PA = 420$ m, $PB = 350$ m and $\\angle APB = 75^\\circ$:\n\n$$AB^2 = 420^2 + 350^2 - 2 \\cdot 420 \\cdot 350 \\cos 75^\\circ \\approx 298900 - 76092.8, \\qquad AB \\approx 472.0 \\text{ m}.$$",
@@ -1021,6 +1034,7 @@ export const modelingUsingTheLawOfCosines: TopicDef = {
     },
     {
       id: "diverging-paths",
+      figure: trigDrawings["modeling-using-the-law-of-cosines#diverging-paths"],
       title: t("Travelers on different courses", "沿不同方向行进"),
       explanation: t(
         "Two ships leave a harbor at the same time, one at $18$ km/h and one at $24$ km/h, on straight courses that make an angle of $65^\\circ$. After $2$ hours they have gone $36$ km and $48$ km, the two sides that form the $65^\\circ$ angle at the harbor. The distance between them is the third side:\n\n$$x^2 = 36^2 + 48^2 - 2 \\cdot 36 \\cdot 48 \\cos 65^\\circ \\approx 3600 - 1460.6, \\qquad x \\approx 46.3 \\text{ km}.$$",
@@ -1069,6 +1083,7 @@ export const modelingUsingTheLawOfCosines: TopicDef = {
     },
     {
       id: "angles-of-a-triangular-plot",
+      figure: trigDrawings["modeling-using-the-law-of-cosines#angles-of-a-triangular-plot"],
       title: t("Angles of a triangular plot", "三角形地块的角"),
       explanation: t(
         "When all three sides of a real triangle are measured, the law of cosines gives its angles. A triangular garden has sides $40$ m, $55$ m and $70$ m. The angle between the $40$ m and $55$ m sides is opposite the $70$ m side:\n\n$$\\cos \\theta = \\frac{40^2 + 55^2 - 70^2}{2 \\cdot 40 \\cdot 55} = \\frac{-275}{4400} = -0.0625, \\qquad \\theta \\approx 93.6^\\circ.$$",

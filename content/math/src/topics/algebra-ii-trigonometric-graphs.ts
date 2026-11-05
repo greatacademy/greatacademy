@@ -16,7 +16,8 @@ import {
   simplifyRadical,
   union,
 } from "@ga/subject-math";
-
+import { trigDrawings } from "../explanation-drawings-trig.ts";
+import { waveDrawings } from "../explanation-drawings-waves.ts";
 import {
   choiceProblem,
   expressionProblem,
@@ -308,6 +309,7 @@ export const findingTrigonometricRatiosOfQuadrantalAngles: TopicDef = {
   knowledgePoints: [
     {
       id: "sine-and-cosine-of-quadrantal-angles",
+      figure: trigDrawings["finding-trigonometric-ratios-of-quadrantal-angles#sine-and-cosine-of-quadrantal-angles"],
       title: t("Sine and cosine of quadrantal angles", "象限角的正弦与余弦"),
       explanation: t(
         "A **quadrantal angle** has its terminal side on an axis. Its terminal side meets the unit circle at one of four points:\n\n| $\\theta$ | $0^\\circ$ | $90^\\circ$ | $180^\\circ$ | $270^\\circ$ |\n| :--- | :---: | :---: | :---: | :---: |\n| in radians | $0$ | $\\frac{\\pi}{2}$ | $\\pi$ | $\\frac{3\\pi}{2}$ |\n| point $(x, y)$ | $(1, 0)$ | $(0, 1)$ | $(-1, 0)$ | $(0, -1)$ |\n\nThe angle $360^\\circ = 2\\pi$ is a full turn and ends at $(1, 0)$ again. Since $\\cos \\theta = x$ and $\\sin \\theta = y$, read them off the point. For $180^\\circ$, the point is $(-1, 0)$, so $\\cos 180^\\circ = -1$ and $\\sin 180^\\circ = 0$.",
@@ -430,6 +432,10 @@ export const trigonometricRatiosOfQuadrantalAnglesOutsideTheStandardRange: Topic
   knowledgePoints: [
     {
       id: "quadrantal-angles-in-degrees-outside-the-standard-range",
+      figure:
+        trigDrawings[
+          "trigonometric-ratios-of-quadrantal-angles-outside-the-standard-range#quadrantal-angles-in-degrees-outside-the-standard-range"
+        ],
       title: t("Quadrantal angles in degrees", "角度制的象限角"),
       explanation: t(
         "Coterminal angles have the same ratios, so first add or subtract multiples of $360^\\circ$ to land between $0^\\circ$ and $360^\\circ$, then read the point on the unit circle.\n\nFor $\\cos 900^\\circ$: $900^\\circ - 2 \\cdot 360^\\circ = 180^\\circ$, whose terminal side meets the unit circle at $(-1, 0)$, so $\\cos 900^\\circ = -1$. For $\\tan(-270^\\circ)$: $-270^\\circ + 360^\\circ = 90^\\circ$, at $(0, 1)$, so $\\tan(-270^\\circ) = \\frac{1}{0}$ is undefined.",
@@ -439,6 +445,10 @@ export const trigonometricRatiosOfQuadrantalAnglesOutsideTheStandardRange: Topic
     },
     {
       id: "quadrantal-angles-in-radians-outside-the-standard-range",
+      figure:
+        trigDrawings[
+          "trigonometric-ratios-of-quadrantal-angles-outside-the-standard-range#quadrantal-angles-in-radians-outside-the-standard-range"
+        ],
       title: t("Quadrantal angles in radians", "弧度制的象限角"),
       explanation: t(
         "In radians the quadrantal angles are the multiples of $\\frac{\\pi}{2}$, and a full turn is $2\\pi$. For $\\sin \\frac{7\\pi}{2}$: $\\frac{7\\pi}{2} - 2\\pi = \\frac{3\\pi}{2}$, at $(0, -1)$, so $\\sin \\frac{7\\pi}{2} = -1$. For $\\sec(-3\\pi)$: $-3\\pi + 4\\pi = \\pi$, at $(-1, 0)$, so $\\sec(-3\\pi) = \\frac{1}{-1} = -1$.",
@@ -535,6 +545,8 @@ export const findingTrigonometricRatiosOfSpecialAnglesUsingTheUnitCircle: TopicD
     },
     {
       id: "special-angles-from-points-on-the-unit-circle",
+      figure:
+        trigDrawings["finding-trigonometric-ratios-of-special-angles-using-the-unit-circle#special-angles-from-points-on-the-unit-circle"],
       title: t("The angle from its point on the unit circle", "由单位圆上的点求角"),
       explanation: t(
         "Read backward: the coordinates' sizes give the reference angle, and their signs give the quadrant. If the terminal side meets the unit circle at $\\left(-\\frac{1}{2}, -\\frac{\\sqrt{3}}{2}\\right)$, then the sizes $\\frac{1}{2}$ and $\\frac{\\sqrt{3}}{2}$ of $x$ and $y$ match $60^\\circ$, and both coordinates are negative, so the angle is in Quadrant III:\n\n$$\\theta = 180^\\circ + 60^\\circ = 240^\\circ = \\frac{4\\pi}{3}.$$",
@@ -770,6 +782,7 @@ export const furtherExtensionsOfTheSpecialTrigonometricRatios: TopicDef = {
   knowledgePoints: [
     {
       id: "reciprocal-ratios-of-special-angles",
+      figure: trigDrawings["further-extensions-of-the-special-trigonometric-ratios#reciprocal-ratios-of-special-angles"],
       title: t("Reciprocal ratios of special angles", "特殊角的倒数三角比"),
       explanation: t(
         "Take the point $(x, y)$ on the unit circle and use $\\csc \\theta = \\frac{1}{y}$, $\\sec \\theta = \\frac{1}{x}$, $\\cot \\theta = \\frac{x}{y}$, then rationalize. For $\\frac{7\\pi}{6}$, in Quadrant III with reference angle $\\frac{\\pi}{6}$, the point is $\\left(-\\frac{\\sqrt{3}}{2}, -\\frac{1}{2}\\right)$:\n\n$$\\sec \\frac{7\\pi}{6} = \\frac{1}{-\\frac{\\sqrt{3}}{2}} = -\\frac{2}{\\sqrt{3}} = -\\frac{2\\sqrt{3}}{3}, \\qquad \\csc \\frac{7\\pi}{6} = \\frac{1}{-\\frac{1}{2}} = -2.$$",
@@ -779,6 +792,7 @@ export const furtherExtensionsOfTheSpecialTrigonometricRatios: TopicDef = {
     },
     {
       id: "special-angles-outside-the-standard-range",
+      figure: trigDrawings["further-extensions-of-the-special-trigonometric-ratios#special-angles-outside-the-standard-range"],
       title: t("Special angles outside the standard range", "标准范围以外的特殊角"),
       explanation: t(
         "Remove full turns first, then proceed as before. For $\\tan(-\\frac{5\\pi}{3})$: $-\\frac{5\\pi}{3} + 2\\pi = \\frac{\\pi}{3}$, in Quadrant I, at $\\left(\\frac{1}{2}, \\frac{\\sqrt{3}}{2}\\right)$, so $\\tan(-\\frac{5\\pi}{3}) = \\sqrt{3}$. For $\\cos 855^\\circ$: $855^\\circ - 2 \\cdot 360^\\circ = 135^\\circ$, so $\\cos 855^\\circ = -\\frac{\\sqrt{2}}{2}$.",
@@ -1218,6 +1232,7 @@ export const graphingTangentAndCotangent: TopicDef = {
     },
     {
       id: "intercepts-and-asymptotes-over-an-interval",
+      figure: waveDrawings["graphing-tangent-and-cotangent#intercepts-and-asymptotes-over-an-interval"],
       title: t("Intercepts and asymptotes over an interval", "区间上的交点与渐近线"),
       explanation: t(
         "The key features repeat every $\\pi$:\n\n| | $x$-intercepts | vertical asymptotes |\n| :--- | :---: | :---: |\n| $y = \\tan x$ | $k\\pi$ | $\\frac{\\pi}{2} + k\\pi$ |\n| $y = \\cot x$ | $\\frac{\\pi}{2} + k\\pi$ | $k\\pi$ |\n\nThe $x$-intercepts of one are the asymptotes of the other. For $y = \\tan x$ on $0 \\le x \\le 3\\pi$, the asymptotes are $x = \\frac{\\pi}{2}, \\frac{3\\pi}{2}, \\frac{5\\pi}{2}$: three of them.",
@@ -1263,6 +1278,7 @@ export const graphingSecantAndCosecant: TopicDef = {
     },
     {
       id: "asymptotes-and-turning-points-over-an-interval",
+      figure: waveDrawings["graphing-secant-and-cosecant#asymptotes-and-turning-points-over-an-interval"],
       title: t("Asymptotes and turning points over an interval", "区间上的渐近线与转折点"),
       explanation: t(
         "The asymptotes of $y = \\sec x$ are those of $y = \\tan x$, and the asymptotes of $y = \\csc x$ are those of $y = \\cot x$; neither graph meets the $x$-axis:\n\n| | vertical asymptotes | $y = 1$ | $y = -1$ |\n| :--- | :---: | :---: | :---: |\n| $y = \\sec x$ | $\\frac{\\pi}{2} + k\\pi$ | $2k\\pi$ | $\\pi + 2k\\pi$ |\n| $y = \\csc x$ | $k\\pi$ | $\\frac{\\pi}{2} + 2k\\pi$ | $\\frac{3\\pi}{2} + 2k\\pi$ |\n\nFor $y = \\csc x$ on $-\\pi \\le x \\le 2\\pi$, the points with $y = 1$ are at $x = \\frac{\\pi}{2}$ only (the next ones, $-\\frac{3\\pi}{2}$ and $\\frac{5\\pi}{2}$, lie outside): one point.",
@@ -1745,6 +1761,7 @@ function propertyKnowledgePoints(f: Fn, texts: PropertyTexts): KnowledgePointDef
     },
     {
       id: `period-and-symmetry-of-the-${name.en}-function`,
+      figure: waveDrawings[`describing-properties-of-the-${name.en}-function#period-and-symmetry-of-the-${name.en}-function`],
       title: t("Period and symmetry", "周期与对称性"),
       explanation: texts.periodSymmetry,
       keyPrerequisites: ["even-and-odd-functions"],
@@ -1759,6 +1776,8 @@ function propertyKnowledgePoints(f: Fn, texts: PropertyTexts): KnowledgePointDef
     },
     {
       id: `intervals-of-increase-and-decrease-of-the-${name.en}-function`,
+      figure:
+        waveDrawings[`describing-properties-of-the-${name.en}-function#intervals-of-increase-and-decrease-of-the-${name.en}-function`],
       title: t("Intervals of increase and decrease", "单调区间"),
       explanation: texts.monotony,
       keyPrerequisites: ["increasing-and-decreasing"],
