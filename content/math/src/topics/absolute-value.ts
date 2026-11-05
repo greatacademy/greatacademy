@@ -30,6 +30,7 @@ import {
   steps,
   yesNo,
 } from "../problems.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -1529,18 +1530,33 @@ export const stretchesOfAbsoluteValueGraphs: TopicDef = {
         const as = rng.sample([Q.one, ...factors], 4);
         const narrowest = rng.bool();
         const pick = as.reduce((best, a, i) => ((narrowest ? a.cmp(as[best]!) > 0 : a.cmp(as[best]!) < 0) ? i : best), 0);
-        return choiceProblem({
-          prompt: t(
-            `Which of these graphs is the ${narrowest ? "narrowest" : "widest"}: ${as.map((a) => `$y = ${absFn(a, 0, 0)}$`).join(", ")}?`,
-            `下列图象中哪个最${narrowest ? "窄" : "宽"}：${as.map((a) => `$y = ${absFn(a, 0, 0)}$`).join("、")}？`,
-          ),
-          options: as.map((a) => same(`$y = ${absFn(a, 0, 0)}$`)),
-          correct: pick,
-          solution: t(
-            `The ${narrowest ? "largest" : "smallest"} factor gives the ${narrowest ? "steepest" : "flattest"} arms: $y = ${absFn(as[pick]!, 0, 0)}$.`,
-            `系数最${narrowest ? "大" : "小"}的两支最${narrowest ? "陡" : "平缓"}：$y = ${absFn(as[pick]!, 0, 0)}$。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(
+              `Which of these graphs is the ${narrowest ? "narrowest" : "widest"}: ${as.map((a) => `$y = ${absFn(a, 0, 0)}$`).join(", ")}?`,
+              `下列图象中哪个最${narrowest ? "窄" : "宽"}：${as.map((a) => `$y = ${absFn(a, 0, 0)}$`).join("、")}？`,
+            ),
+            options: as.map((a) => same(`$y = ${absFn(a, 0, 0)}$`)),
+            correct: pick,
+            solution: t(
+              `The ${narrowest ? "largest" : "smallest"} factor gives the ${narrowest ? "steepest" : "flattest"} arms: $y = ${absFn(as[pick]!, 0, 0)}$.`,
+              `系数最${narrowest ? "大" : "小"}的两支最${narrowest ? "陡" : "平缓"}：$y = ${absFn(as[pick]!, 0, 0)}$。`,
+            ),
+          }),
+          [
+            ...as.map(
+              (a): Reason => [
+                `$y = ${absFn(a, 0, 0)}$`,
+                narrowest
+                  ? `Its factor $${a.toLatex()}$ is smaller than $${as[pick]!.toLatex()}$, so its arms are flatter and the graph is wider.`
+                  : `Its factor $${a.toLatex()}$ is larger than $${as[pick]!.toLatex()}$, so its arms are steeper and the graph is narrower.`,
+                narrowest
+                  ? `它的系数 $${a.toLatex()}$ 小于 $${as[pick]!.toLatex()}$，所以两支更平缓，图象更宽。`
+                  : `它的系数 $${a.toLatex()}$ 大于 $${as[pick]!.toLatex()}$，所以两支更陡，图象更窄。`,
+              ],
+            ),
+          ],
+        );
       },
     },
     {
@@ -1639,18 +1655,39 @@ export const combiningTransformationsOfAbsoluteValueGraphs: TopicDef = {
         const k = rng.nonZero(-6, 6);
         const options = [transformText(a, h, k), transformText(a.neg(), h, k), transformText(a, -h, k), transformText(a, h, -k)];
         const order = rng.shuffle([0, 1, 2, 3]);
-        return choiceProblem({
-          prompt: t(
-            `Which sequence of transformations takes the graph of $y = |x|$ to the graph of $y = ${absFn(a, h, k)}$?`,
-            `哪一组变换把 $y = |x|$ 的图象变成 $y = ${absFn(a, h, k)}$ 的图象？`,
-          ),
-          options: order.map((i) => options[i]!),
-          correct: order.indexOf(0),
-          solution: t(
-            `Here $a = ${a.toLatex()}$, $h = ${h}$ and $k = ${k}$. ${options[0]!.en}`,
-            `这里 $a = ${a.toLatex()}$，$h = ${h}$，$k = ${k}$。${options[0]!["zh-CN"]}`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(
+              `Which sequence of transformations takes the graph of $y = |x|$ to the graph of $y = ${absFn(a, h, k)}$?`,
+              `哪一组变换把 $y = |x|$ 的图象变成 $y = ${absFn(a, h, k)}$ 的图象？`,
+            ),
+            options: order.map((i) => options[i]!),
+            correct: order.indexOf(0),
+            solution: t(
+              `Here $a = ${a.toLatex()}$, $h = ${h}$ and $k = ${k}$. ${options[0]!.en}`,
+              `这里 $a = ${a.toLatex()}$，$h = ${h}$，$k = ${k}$。${options[0]!["zh-CN"]}`,
+            ),
+          }),
+          [
+            [
+              options[1]!.en,
+              a.sign() < 0
+                ? "This leaves out the reflection that the negative factor asks for."
+                : "This adds a reflection, but the factor is positive.",
+              a.sign() < 0 ? "这里漏掉了负系数要求的翻折。" : "这里多了翻折，但系数是正的。",
+            ],
+            [
+              options[2]!.en,
+              "The horizontal shift goes the wrong way: $|x - h|$ moves the graph $h$ to the right, against what the sign inside seems to say.",
+              "水平平移方向反了：$|x - h|$ 把图象向右移 $h$，与绝对值里看到的符号相反。",
+            ],
+            [
+              options[3]!.en,
+              "The vertical shift goes the wrong way: the number added outside moves the graph by that amount, sign included.",
+              "竖直平移方向反了：加在外面的数连同符号决定图象移动的量。",
+            ],
+          ],
+        );
       },
     },
     {
@@ -1962,15 +1999,40 @@ export const rootsOfAbsoluteValueFunctions: TopicDef = {
         const k = rng.bool(0.2) ? 0 : rng.nonZero(-9, 9);
         const count = k === 0 ? 1 : a.sign() * Math.sign(k) < 0 ? 2 : 0;
         const where = k === 0 ? t("on", "上") : k > 0 ? t("above", "上方") : t("below", "下方");
-        return choiceProblem({
-          prompt: t(`How many roots does $f(x) = ${absFn(a, h, k)}$ have?`, `$f(x) = ${absFn(a, h, k)}$ 有几个零点？`),
-          options: [same("$0$"), same("$1$"), same("$2$")],
-          correct: count,
-          solution: t(
-            `The vertex $${pt(h, k)}$ is ${where.en} the $x$-axis and the graph opens ${a.sign() > 0 ? "upward" : "downward"}, so there ${count === 1 ? "is $1$ root" : `are $${count}$ roots`}.`,
-            `顶点 $${pt(h, k)}$ 在 $x$ 轴${where["zh-CN"]}，图象开口向${a.sign() > 0 ? "上" : "下"}，所以有 $${count}$ 个零点。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`How many roots does $f(x) = ${absFn(a, h, k)}$ have?`, `$f(x) = ${absFn(a, h, k)}$ 有几个零点？`),
+            options: [same("$0$"), same("$1$"), same("$2$")],
+            correct: count,
+            solution: t(
+              `The vertex $${pt(h, k)}$ is ${where.en} the $x$-axis and the graph opens ${a.sign() > 0 ? "upward" : "downward"}, so there ${count === 1 ? "is $1$ root" : `are $${count}$ roots`}.`,
+              `顶点 $${pt(h, k)}$ 在 $x$ 轴${where["zh-CN"]}，图象开口向${a.sign() > 0 ? "上" : "下"}，所以有 $${count}$ 个零点。`,
+            ),
+          }),
+          [
+            [
+              "$0$",
+              k === 0
+                ? "The vertex lies on the $x$-axis, and that point is a root."
+                : "From the vertex the graph opens toward the $x$-axis, so it does reach the axis.",
+              k === 0 ? "顶点在 $x$ 轴上，这个点就是零点。" : "图象从顶点朝 $x$ 轴张开，所以一定会碰到 $x$ 轴。",
+            ],
+            [
+              "$1$",
+              "One root happens only when the vertex lies on the $x$-axis, and here it does not.",
+              "只有顶点在 $x$ 轴上时才恰有一个零点，而这里不是。",
+            ],
+            [
+              "$2$",
+              k === 0
+                ? "The arms leave the vertex in the same direction away from the axis, so they meet it only at the vertex."
+                : "From the vertex the graph opens away from the $x$-axis, so it never reaches the axis.",
+              k === 0
+                ? "两支从顶点朝同一方向离开 $x$ 轴，所以只在顶点处与它相遇。"
+                : "图象从顶点朝远离 $x$ 轴的方向张开，所以永远碰不到 $x$ 轴。",
+            ],
+          ],
+        );
       },
     },
     {

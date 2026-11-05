@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
 
 import { article, choiceProblem, numberProblem, pointProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 /** colVecLatex renders a column vector in LaTeX. */
 function colVecLatex(v: readonly (number | string)[]): string {
@@ -801,7 +802,16 @@ export const subspacesOfNDimensionalSpaceGeometricInterpretation: TopicDef = {
           `A subspace must contain the zero vector $\\mathbf{0} = (0, \\dots, 0)$. At $\\mathbf{0}$ the left side is $0$, so $0 = ${rhs}$ and $k = ${m}$; then the equation is homogeneous and $H$ is closed under addition and scalar multiplication.`,
           `子空间必须包含零向量 $\\mathbf{0} = (0, \\dots, 0)$。在 $\\mathbf{0}$ 处左边为 $0$，所以 $0 = ${rhs}$，$k = ${m}$；此时方程是齐次的，$H$ 对加法和数乘封闭。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          ...[-m, m + 1, m - 1, m === 0 ? 2 : 0, coeffs[0]!].map(
+            (v) =>
+              [
+                `$k = ${v}$`,
+                `At the zero vector the left side is $0$, and with this $k$ the right side is $${v - m}$, so the zero vector is not in $H$.`,
+                `在零向量处左边是 $0$，而取这个 $k$ 时右边是 $${v - m}$，所以零向量不在 $H$ 中。`,
+              ] as const,
+          ),
+        ]);
       },
     },
   ],
@@ -844,7 +854,19 @@ export const theColumnSpaceOfAMatrix: TopicDef = {
           `Each column of an $m \\times n$ matrix is a vector with $m$ rows, belonging to $\\mathbb{R}^m$. The column space $\\text{Col}(A)$ is the span of these columns, so $\\text{Col}(A) \\subseteq \\mathbb{R}^m$.`,
           `$m \\times n$ 矩阵的每个列向量含有 $m$ 个元素，属于 $\\mathbb{R}^m$。列空间是这些列向量的张成空间，因此 $\\text{Col}(A)$ 是 $\\mathbb{R}^m$ 的子空间。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `$${n}$ is the number of columns, but the space is set by how many entries each column has, which is $${m}$.`,
+            `$${n}$ 是列数，但空间由每列的元素个数决定，也就是 $${m}$。`,
+          ],
+          [wrong[1]!.en, `The two sizes are not added: each column has $${m}$ entries.`, `两个尺寸不相加：每列有 $${m}$ 个元素。`],
+          [
+            wrong[2]!.en,
+            `$${m * n}$ counts all the entries of the matrix, but each column has only $${m}$.`,
+            `$${m * n}$ 是矩阵的元素总数，而每列只有 $${m}$ 个元素。`,
+          ],
+        ]);
       },
     },
     {
@@ -957,7 +979,23 @@ export const theNullSpaceOfAMatrix: TopicDef = {
           `Matrix-vector multiplication $A\\mathbf{x}$ is defined only when $\\mathbf{x} \\in \\mathbb{R}^n$. The solutions to $A\\mathbf{x} = \\mathbf{0}$ are vectors in $\\mathbb{R}^n$, so $\\text{Null}(A)$ is a subspace of $\\mathbb{R}^n$.`,
           `矩阵乘法 $A\\mathbf{x}$ 仅在 $\\mathbf{x} \\in \\mathbb{R}^n$ 时有定义。齐次方程 $A\\mathbf{x} = \\mathbf{0}$ 的解是 $\\mathbb{R}^n$ 中的向量，因此 $\\text{Null}(A)$ 是 $\\mathbb{R}^n$ 的子空间。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `$A\\mathbf{x}$ lands in this space, but the null space holds the inputs $\\mathbf{x}$, which have $${n}$ entries.`,
+            `$A\\mathbf{x}$落在这个空间里，但零空间包含的是输入 $\\mathbf{x}$，它有 $${n}$ 个分量。`,
+          ],
+          [
+            wrong[1]!.en,
+            `The inputs $\\mathbf{x}$ have $${n}$ entries, one for each column, whatever the difference of the sizes.`,
+            `输入 $\\mathbf{x}$ 有 $${n}$ 个分量，每列一个，与两个尺寸之差无关。`,
+          ],
+          [
+            wrong[2]!.en,
+            `$${m * n}$ counts all the entries of the matrix, but $\\mathbf{x}$ has one entry per column.`,
+            `$${m * n}$ 是矩阵的元素总数，而 $\\mathbf{x}$ 每列只有一个分量。`,
+          ],
+        ]);
       },
     },
     {
@@ -1067,7 +1105,23 @@ export const findingABasisOfASpan: TopicDef = {
           `By definition, a basis of a subspace $H$ is a linearly independent subset of $H$ that spans $H$. Orthogonality or unit length is not required for a general basis.`,
           `根据定义，子空间 $H$ 的基是 $H$ 的一个线性无关且能张成 $H$ 的子集。一般基并不要求正交或单位长度。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "That describes an orthonormal basis, which is a special kind: a basis need not be orthogonal or of unit length.",
+            "这说的是标准正交基，只是一种特殊的基：基不必正交，也不必是单位长度。",
+          ],
+          [
+            wrong[1]!.en,
+            `The subspace $H$ is smaller than $\\mathbb{R}^{${n}}$: a basis of $H$ spans $H$ and has $${k}$ vectors.`,
+            `子空间 $H$ 比 $\\mathbb{R}^{${n}}$ 小：$H$ 的基张成 $H$，含 $${k}$ 个向量。`,
+          ],
+          [
+            wrong[2]!.en,
+            "Entries may be zero, and being independent in pairs is weaker than a linearly independent set. Spanning is also left out.",
+            "分量可以为零，两两无关也弱于整个集合线性无关，而且这里还漏了张成的条件。",
+          ],
+        ]);
       },
     },
     {
@@ -1212,7 +1266,15 @@ export const findingABasisOfTheColumnSpaceOfAMatrix: TopicDef = {
           `Elementary row operations modify linear combinations of rows, which preserves the null space and linear dependencies among columns, but alters the actual column space. Hence $\\text{Col}(A) \\neq \\text{Col}(R)$, and we must take columns from $A$.`,
           `初等行变换是对行向量做线性运算，保持了零空间以及列之间的线性相关性，但改变了列向量所张成的具体空间。故 $\\text{Col}(A) \\neq \\text{Col}(R)$，必须选用原矩阵 $A$ 的列。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [wrong[0]!.en, "Row operations keep the null space, so this is false.", "行变换保持零空间不变，所以这句话不对。"],
+          [wrong[1]!.en, "The pivot columns of $R$ are linearly independent, so this is false.", "$R$ 的主元列线性无关，所以这句话不对。"],
+          [
+            wrong[2]!.en,
+            "Row operations keep the rank, so the two dimensions are equal. It is the spaces that differ.",
+            "行变换保持秩不变，所以两者维数相等。不同的是空间本身。",
+          ],
+        ]);
       },
     },
   ],
@@ -1273,7 +1335,23 @@ export const findingABasisOfTheNullSpaceOfAMatrix: TopicDef = {
           `The homogeneous system is $${eq1} = 0$ and $${eq2} = 0$, with $x_3$ free. Thus $x_1 = ${x1Expr}$ and $x_2 = ${x2Expr}$. In parametric vector form:\n$$\\mathbf{x} = x_3 ${colVecLatex(basisVec)}$$\nSo a basis for $\\text{Null}(A)$ is $\\{${colVecLatex(basisVec)}\\}$.`,
           `对应齐次方程为 $${eq1} = 0$ 及 $${eq2} = 0$，其中 $x_3$ 为自由未知量。移项得 $x_1 = ${x1Expr}$，$x_2 = ${x2Expr}$。写成参数向量形式：\n$$\\mathbf{x} = x_3 ${colVecLatex(basisVec)}$$\n故 $\\text{Null}(A)$ 的一组基为 $\\{${colVecLatex(basisVec)}\\}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "The signs are wrong: moving the $x_3$ terms across the equals sign changes their signs.",
+            "符号错了：把 $x_3$ 项移到等号另一边，符号要改变。",
+          ],
+          [
+            wrong[1]!.en,
+            "The free variable must be $1$ here: this sets $x_3 = 0$ yet keeps entries that came from $x_3 = 1$.",
+            "这里自由变量应取 $1$：这个向量取 $x_3 = 0$，却保留了由 $x_3 = 1$ 得到的分量。",
+          ],
+          [
+            wrong[2]!.en,
+            "These vectors do not solve the system: each has a nonzero pivot variable while $x_3 = 0$.",
+            "这些向量不满足方程组：每个的主变量都不为零，而 $x_3 = 0$。",
+          ],
+        ]);
       },
     },
     {
@@ -1709,7 +1787,29 @@ export const changingABasisUsingTheChangeOfCoordinatesMatrix: TopicDef = {
           `Since $P_{\\mathcal{B} \\leftarrow \\mathcal{C}} = (P_{\\mathcal{C} \\leftarrow \\mathcal{B}})^{-1}$, inverting $\\begin{pmatrix} 1 & ${k} \\\\ 0 & 1 \\end{pmatrix}$ yields $\\begin{pmatrix} 1 & ${-k} \\\\ 0 & 1 \\end{pmatrix}$.`,
           `因 $P_{\\mathcal{B} \\leftarrow \\mathcal{C}} = (P_{\\mathcal{C} \\leftarrow \\mathcal{B}})^{-1}$，对 $\\begin{pmatrix} 1 & ${k} \\\\ 0 & 1 \\end{pmatrix}$ 求逆矩阵得到 $\\begin{pmatrix} 1 & ${-k} \\\\ 0 & 1 \\end{pmatrix}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            `$${matLatex(P)}$`,
+            "This is the given matrix: going back the other way needs its inverse.",
+            "这是已知矩阵：反方向需要它的逆矩阵。",
+          ],
+          [
+            `$${matLatex([
+              [1, 0],
+              [k, 1],
+            ])}$`,
+            "This is the transpose, and the inverse of a matrix is not its transpose in general.",
+            "这是转置，而矩阵的逆一般不是它的转置。",
+          ],
+          [
+            `$${matLatex([
+              [-1, -k],
+              [0, -1],
+            ])}$`,
+            "This negates every entry, but the product with the given matrix must have $1$s on the diagonal.",
+            "这里把每个元素都变号了，但它与已知矩阵的积对角线上应为 $1$。",
+          ],
+        ]);
       },
     },
     {
@@ -2401,7 +2501,11 @@ export const definingAbstractVectorSpaces: TopicDef = {
           `For scalar $c = 2$ and $\\mathbf{u} = \\mathbf{0}, \\mathbf{v} = \\mathbf{0}$, $c(\\mathbf{u} \\oplus \\mathbf{v}) = 2(${k}, 0) = (${2 * k}, 0)$, while $c\\mathbf{u} \\oplus c\\mathbf{v} = \\mathbf{0} \\oplus \\mathbf{0} = (${k}, 0) \\neq (${2 * k}, 0)$. Thus distributivity over vector addition fails.`,
           `取标量 $c = 2$ 及 $\\mathbf{u} = \\mathbf{0}, \\mathbf{v} = \\mathbf{0}$，左边 $c(\\mathbf{u} \\oplus \\mathbf{v}) = 2(${k}, 0) = (${2 * k}, 0)$，而右边 $c\\mathbf{u} \\oplus c\\mathbf{v} = \\mathbf{0} \\oplus \\mathbf{0} = (${k}, 0) \\neq (${2 * k}, 0)$。因此分配律失效。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [wrong[0]!.en, "Swapping the two vectors gives the same sums, so commutativity holds.", "交换两个向量，和不变，所以交换律成立。"],
+          [wrong[1]!.en, "The result is always a pair of real numbers, so closure holds.", "结果总是一对实数，所以封闭性成立。"],
+          [wrong[2]!.en, "Scalar multiplication is the standard one, so this law holds.", "标量乘法是标准的，所以这条规律成立。"],
+        ]);
       },
     },
   ],
@@ -2664,7 +2768,23 @@ export const basesInAbstractVectorSpaces: TopicDef = {
           `Every polynomial in $\\mathbb{P}_{${n}}$ is uniquely written as $a_0(1) + a_1(t) + \\dots + a_{${n}}(t^{${n}})$. The set of monomials $\\{${powers.join(", ")}\\}$ is linearly independent and spans $\\mathbb{P}_{${n}}$, making it the standard basis.`,
           `$\\mathbb{P}_{${n}}$ 中的任意多项式均可唯一表示为 $a_0(1) + a_1(t) + \\dots + a_{${n}}(t^{${n}})$。单项式集合 $\\{${powers.join(", ")}\\}$ 线性无关且张成全空间，故为标准基。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "The constant polynomial $1$ is missing, so no nonzero constant can be written from this set.",
+            "缺少常数多项式 $1$，所以这个集合表示不出非零常数。",
+          ],
+          [
+            wrong[1]!.en,
+            "This is one polynomial, the sum of the powers, and its multiples are not all of the space.",
+            "这只是一个多项式，即各次幂的和，它的倍数不能构成整个空间。",
+          ],
+          [
+            wrong[2]!.en,
+            "This one power spans only its own multiples, and a basis needs every power from $1$ up.",
+            "这一个幂只能张成自身的倍数，而基需要从 $1$ 起的每一个幂。",
+          ],
+        ]);
       },
     },
     {
@@ -2916,7 +3036,23 @@ export const dimensionInAbstractVectorSpaces: TopicDef = {
           `$C[${a}, ${b}]$ contains linearly independent sets of arbitrary finite size (for example, $\\{1, x, x^2, x^3, \\dots\\}$), so no finite set of functions can span it. Hence $C[${a}, ${b}]$ is infinite-dimensional. $\\mathbb{P}_{${d}}$ has dimension $${d + 1}$, $M_{2 \\times ${d}}$ has dimension $${2 * d}$, and $\\mathbb{R}^{${d}}$ has dimension $${d}$.`,
           `$C[${a}, ${b}]$ 包含任意有限大小的线性无关集（例如 $\\{1, x, x^2, x^3, \\dots\\}$），无法由有限个函数张成，故为无限维空间。$\\mathbb{P}_{${d}}$ 维数为 $${d + 1}$，$M_{2 \\times ${d}}$ 维数为 $${2 * d}$，$\\mathbb{R}^{${d}}$ 维数为 $${d}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `The powers $1$ to $t^{${d}}$ form a basis, so its dimension is the finite number $${d + 1}$.`,
+            `$1$ 到 $t^{${d}}$ 的各次幂构成一组基，所以它的维数是有限的 $${d + 1}$。`,
+          ],
+          [
+            wrong[1]!.en,
+            `A $2 \\times ${d}$ matrix has $${2 * d}$ entries, so this dimension is finite.`,
+            `一个 $2 \\times ${d}$ 矩阵有 $${2 * d}$ 个元素，所以维数是有限的。`,
+          ],
+          [
+            wrong[2]!.en,
+            `The standard basis has $${d}$ vectors, so this dimension is finite.`,
+            `标准基有 $${d}$ 个向量，所以维数是有限的。`,
+          ],
+        ]);
       },
     },
   ],

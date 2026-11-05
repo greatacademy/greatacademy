@@ -3,6 +3,7 @@ import { same, t } from "@ga/content";
 import { gcd, linear, num, paren, poly, Q, simplifyRadical } from "@ga/subject-math";
 
 import { choiceProblem, expressionProblem, numberProblem, pointProblem, steps, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // Algebra II: number systems (the real numbers and complex numbers) and
 // polynomials (least common multiples, identities, factoring, division,
@@ -210,15 +211,30 @@ export const theRealNumberSystem: TopicDef = {
       keyPrerequisites: ["fractions-and-decimals"],
       generate(rng) {
         const c = classified(rng, rng.pick([0, 1, 2, 3, 0, 2, 3] as const));
-        return choiceProblem({
-          prompt: t(`What is the smallest of these sets that contains $${c.tex}$?`, `下列集合中，包含 $${c.tex}$ 的最小集合是哪一个？`),
-          options: setNames.slice(0, 4),
-          correct: c.kind,
-          solution: t(
-            `${c.why.en} So the smallest set is the ${setNames[c.kind]!.en.toLowerCase()}.`,
-            `${c.why["zh-CN"]}所以最小的集合是${setNames[c.kind]!["zh-CN"]}集。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`What is the smallest of these sets that contains $${c.tex}$?`, `下列集合中，包含 $${c.tex}$ 的最小集合是哪一个？`),
+            options: setNames.slice(0, 4),
+            correct: c.kind,
+            solution: t(
+              `${c.why.en} So the smallest set is the ${setNames[c.kind]!.en.toLowerCase()}.`,
+              `${c.why["zh-CN"]}所以最小的集合是${setNames[c.kind]!["zh-CN"]}集。`,
+            ),
+          }),
+          [
+            ...setNames
+              .slice(0, 4)
+              .map((s, i) =>
+                i < c.kind
+                  ? ([s.en, `$${c.tex}$ is not in this set: it is too small.`, `$${c.tex}$ 不在这个集合里：这个集合太小了。`] as const)
+                  : ([
+                      s.en,
+                      `This set contains $${c.tex}$, but a smaller one does too, and the question asks for the smallest.`,
+                      `这个集合包含 $${c.tex}$，但更小的集合也包含它，而题目问的是最小的集合。`,
+                    ] as const),
+              ),
+          ],
+        );
       },
     },
     {
@@ -673,12 +689,32 @@ export const sumsAndProductsOfRationalAndIrrationalNumbers: TopicDef = {
         const en = rule.en.replace("$B$", `$${b}$`);
         const zh = rule.zh.replace("$B$", `$${b}$`);
         const why = (s: string) => s.replaceAll("A", A).replaceAll("B", b);
-        return choiceProblem({
-          prompt: t(`Suppose $${A}$ is ${en}. Is $${expr}$ rational or irrational?`, `设 $${A}$ ${zh}。$${expr}$ 是有理数还是无理数？`),
-          options: alwaysOptions,
-          correct: rule.answer,
-          solution: t(why(rule.why.en), why(rule.why["zh-CN"])),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`Suppose $${A}$ is ${en}. Is $${expr}$ rational or irrational?`, `设 $${A}$ ${zh}。$${expr}$ 是有理数还是无理数？`),
+            options: alwaysOptions,
+            correct: rule.answer,
+            solution: t(why(rule.why.en), why(rule.why["zh-CN"])),
+          }),
+          [
+            ...alwaysOptions.map(
+              (o, i) =>
+                [
+                  o.en,
+                  i === 2
+                    ? "The kind of number is settled here: it does not depend on which numbers $A$ and $B$ are."
+                    : rule.answer === 2
+                      ? "Trying one example does not settle it: other choices of the numbers give the other kind."
+                      : "This goes the other way: whichever numbers you choose, the result is always of the other kind.",
+                  i === 2
+                    ? "这里数的类型是确定的：与 $A$、$B$ 具体是什么数无关。"
+                    : rule.answer === 2
+                      ? "试一个例子说明不了问题：换别的数会得到另一种结果。"
+                      : "正好相反：无论取什么数，结果总是另一种。",
+                ] as const,
+            ),
+          ],
+        );
       },
     },
     {
@@ -716,17 +752,20 @@ export const sumsAndProductsOfRationalAndIrrationalNumbers: TopicDef = {
         const correct = rng.int(0, 3);
         const all = [...others];
         all.splice(correct, 0, odd);
-        return choiceProblem({
-          prompt: findRational
-            ? t(`Which of these expressions has a rational value?${listTex(all)}`, `下列哪个式子的值是有理数？${listTex(all)}`)
-            : t(`Which of these expressions has an irrational value?${listTex(all)}`, `下列哪个式子的值是无理数？${listTex(all)}`),
-          options: all.map((c) => same(`$${c.tex}$`)),
-          correct,
-          solution: t(
-            `${odd.why.en} Each of the other expressions is ${findRational ? "irrational" : "rational"}.`,
-            `${odd.why["zh-CN"]}其余的式子都是${findRational ? "无理数" : "有理数"}。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: findRational
+              ? t(`Which of these expressions has a rational value?${listTex(all)}`, `下列哪个式子的值是有理数？${listTex(all)}`)
+              : t(`Which of these expressions has an irrational value?${listTex(all)}`, `下列哪个式子的值是无理数？${listTex(all)}`),
+            options: all.map((c) => same(`$${c.tex}$`)),
+            correct,
+            solution: t(
+              `${odd.why.en} Each of the other expressions is ${findRational ? "irrational" : "rational"}.`,
+              `${odd.why["zh-CN"]}其余的式子都是${findRational ? "无理数" : "有理数"}。`,
+            ),
+          }),
+          [...others.map((c) => [`$${c.tex}$`, c.why.en, c.why["zh-CN"]] as const)],
+        );
       },
     },
   ],

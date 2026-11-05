@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { svgDocument } from "@ga/subject-math";
 
 import { numberProblem, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { oneOf } from "./calculus-common.ts";
 import { range, setProblem, setTex } from "./methods-of-proof-common.ts";
 import { modPow } from "./methods-of-proof-congruence.ts";
@@ -481,18 +482,33 @@ export const graphicalRepresentationsOfRelations: TopicDef = {
           .map((x) => (x === "1" ? "0" : "1"))
           .join("\\,");
         const rev = row.split("\\,").reverse().join("\\,");
-        return oneOf(
-          rng,
-          t(
-            `Let $R = ${relTex(r)}$ on $${setTex(range(1, n))}$. What is row $${i}$ of the matrix of $R$?`,
-            `设 $R = ${relTex(r)}$ 是 $${setTex(range(1, n))}$ 上的关系。$R$ 的矩阵第 $${i}$ 行是什么？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Let $R = ${relTex(r)}$ on $${setTex(range(1, n))}$. What is row $${i}$ of the matrix of $R$?`,
+              `设 $R = ${relTex(r)}$ 是 $${setTex(range(1, n))}$ 上的关系。$R$ 的矩阵第 $${i}$ 行是什么？`,
+            ),
+            math(row),
+            [col, flip, rev].map(math),
+            t(
+              `Row $${i}$ has a $1$ in column $j$ exactly when $(${i}, j) \\in R$: $${row}$.`,
+              `第 $${i}$ 行第 $j$ 列为 $1$ 当且仅当 $(${i}, j) \\in R$：$${row}$。`,
+            ),
           ),
-          math(row),
-          [col, flip, rev].map(math),
-          t(
-            `Row $${i}$ has a $1$ in column $j$ exactly when $(${i}, j) \\in R$: $${row}$.`,
-            `第 $${i}$ 行第 $j$ 列为 $1$ 当且仅当 $(${i}, j) \\in R$：$${row}$。`,
-          ),
+          [
+            [
+              math(col).en,
+              `This is column $${i}$: row $${i}$ lists the pairs that start at $${i}$.`,
+              `这是第 $${i}$ 列：第 $${i}$ 行列出的是从 $${i}$ 出发的有序对。`,
+            ],
+            [
+              math(flip).en,
+              "The $0$s and $1$s are exchanged: a $1$ marks a pair that is in the relation.",
+              "$0$ 和 $1$ 弄反了：$1$ 表示该有序对在关系中。",
+            ],
+            [math(rev).en, "The entries are in reverse order: the columns run from $1$ upward.", "元素顺序反了：列号是从 $1$ 往上排的。"],
+          ],
         );
       },
     },

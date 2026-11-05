@@ -2,6 +2,7 @@ import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 /** Topics for Unit 2: Expectation (new topics). */
 export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
@@ -532,19 +533,37 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `A random variable $X$ has binomial distribution with $n = ${n}$ trials and success probability $p = ${p}$. Which formula gives its moment-generating function $M_X(t)$?`,
-              `随机变量 $X$ 服从试验次数为 $n = ${n}$、成功概率为 $p = ${p}$ 的二项分布。下列哪个公式是其矩母函数 $M_X(t)$？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `For $X \\sim \\text{Binomial}(${n}, ${p})$, $M_X(t) = (q + p e^t)^n = (${q} + ${p} e^t)^{${n}}$.`,
-              `对于 $X \\sim \\text{Binomial}(${n}, ${p})$，矩母函数为 $M_X(t) = (q + p e^t)^n = (${q} + ${p} e^t)^{${n}}$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `A random variable $X$ has binomial distribution with $n = ${n}$ trials and success probability $p = ${p}$. Which formula gives its moment-generating function $M_X(t)$?`,
+                `随机变量 $X$ 服从试验次数为 $n = ${n}$、成功概率为 $p = ${p}$ 的二项分布。下列哪个公式是其矩母函数 $M_X(t)$？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `For $X \\sim \\text{Binomial}(${n}, ${p})$, $M_X(t) = (q + p e^t)^n = (${q} + ${p} e^t)^{${n}}$.`,
+                `对于 $X \\sim \\text{Binomial}(${n}, ${p})$，矩母函数为 $M_X(t) = (q + p e^t)^n = (${q} + ${p} e^t)^{${n}}$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                "$p$ and $q$ are exchanged: $e^t$ goes with a success, whose probability is $p$.",
+                "$p$ 和 $q$ 弄反了：$e^t$ 对应成功，其概率是 $p$。",
+              ],
+              [
+                opts[2]!.en,
+                `This multiplies one trial by $${n}$ instead of adding $${n}$ independent trials, whose generating functions multiply.`,
+                `这是把一次试验乘以 $${n}$，而不是把 $${n}$ 次独立试验相加；相加时矩母函数相乘。`,
+              ],
+              [
+                opts[3]!.en,
+                "This is the generating function of a Poisson variable with the same mean.",
+                "这是均值相同的泊松变量的矩母函数。",
+              ],
+            ],
+          );
         },
       },
       {
@@ -613,19 +632,37 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `Let $X$ be an exponentially distributed random variable with rate $\\lambda = ${lambda}$ ($f(x) = ${lambda} e^{-${lambda} x}$ for $x > 0$). What is its moment-generating function $M_X(t)$ for $t < ${lambda}$?`,
-              `设 $X$ 服从速率参数为 $\\lambda = ${lambda}$ 的指数分布（$x > 0$ 时 $f(x) = ${lambda} e^{-${lambda} x}$）。在 $t < ${lambda}$ 时其矩母函数 $M_X(t)$ 是什么？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `$M_X(t) = \\int_0^\\infty e^{tx} (${lambda} e^{-${lambda} x}) dx = ${lambda} \\int_0^\\infty e^{-(${lambda} - t)x} dx = \\frac{${lambda}}{${lambda} - t}$.`,
-              `积分计算得：$M_X(t) = \\int_0^\\infty e^{tx} (${lambda} e^{-${lambda} x}) dx = \\frac{${lambda}}{${lambda} - t}$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `Let $X$ be an exponentially distributed random variable with rate $\\lambda = ${lambda}$ ($f(x) = ${lambda} e^{-${lambda} x}$ for $x > 0$). What is its moment-generating function $M_X(t)$ for $t < ${lambda}$?`,
+                `设 $X$ 服从速率参数为 $\\lambda = ${lambda}$ 的指数分布（$x > 0$ 时 $f(x) = ${lambda} e^{-${lambda} x}$）。在 $t < ${lambda}$ 时其矩母函数 $M_X(t)$ 是什么？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `$M_X(t) = \\int_0^\\infty e^{tx} (${lambda} e^{-${lambda} x}) dx = ${lambda} \\int_0^\\infty e^{-(${lambda} - t)x} dx = \\frac{${lambda}}{${lambda} - t}$.`,
+                `积分计算得：$M_X(t) = \\int_0^\\infty e^{tx} (${lambda} e^{-${lambda} x}) dx = \\frac{${lambda}}{${lambda} - t}$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                "The sign in the denominator is wrong: combining the exponents gives $-(\\lambda - t)x$.",
+                "分母的符号错了：指数合并后是 $-(\\lambda - t)x$。",
+              ],
+              [
+                opts[2]!.en,
+                "No $t^2$ appears: the integral gives a fraction with $t$ to the first power.",
+                "这里不会出现 $t^2$：积分得到的分式中 $t$ 是一次的。",
+              ],
+              [
+                opts[3]!.en,
+                `This is the generating function of the constant $${lambda}$, not of a random variable with this density.`,
+                `这是常数 $${lambda}$ 的矩母函数，不是具有这个密度的随机变量的。`,
+              ],
+            ],
+          );
         },
       },
       {
@@ -699,19 +736,37 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `Let $X$ have moment-generating function $M_X(t)$. Define $Y = ${a} X + ${b}$. What is the moment-generating function $M_Y(t)$ in terms of $M_X$?`,
-              `设 $X$ 的矩母函数为 $M_X(t)$。定义 $Y = ${a} X + ${b}$。用 $M_X$ 表示的矩母函数 $M_Y(t)$ 是什么？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `$M_Y(t) = E[e^{t(${a} X + ${b})}] = E[e^{${b}t} e^{(${a}t)X}] = e^{${b}t} E[e^{(${a}t)X}] = e^{${b}t} M_X(${a}t)$.`,
-              `由定义推导：$M_Y(t) = E[e^{t(${a} X + ${b})}] = e^{${b}t} E[e^{(${a}t)X}] = e^{${b}t} M_X(${a}t)$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `Let $X$ have moment-generating function $M_X(t)$. Define $Y = ${a} X + ${b}$. What is the moment-generating function $M_Y(t)$ in terms of $M_X$?`,
+                `设 $X$ 的矩母函数为 $M_X(t)$。定义 $Y = ${a} X + ${b}$。用 $M_X$ 表示的矩母函数 $M_Y(t)$ 是什么？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `$M_Y(t) = E[e^{t(${a} X + ${b})}] = E[e^{${b}t} e^{(${a}t)X}] = e^{${b}t} E[e^{(${a}t)X}] = e^{${b}t} M_X(${a}t)$.`,
+                `由定义推导：$M_Y(t) = E[e^{t(${a} X + ${b})}] = e^{${b}t} E[e^{(${a}t)X}] = e^{${b}t} M_X(${a}t)$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                "The two constants are exchanged: the shift goes in the exponential and the multiplier goes inside $M_X$.",
+                "两个常数弄反了：平移量放在指数上，乘数放在 $M_X$ 里面。",
+              ],
+              [
+                opts[2]!.en,
+                "The shift is not a factor in front, and the multiplier scales the argument of $M_X$.",
+                "平移量不是前面的因子，乘数缩放的是 $M_X$ 的自变量。",
+              ],
+              [
+                opts[3]!.en,
+                "The shift does not go inside $M_X$: it comes out as a factor $e^{bt}$ for the constant $b$.",
+                "平移量不放进 $M_X$：对常数 $b$，它变成因子 $e^{bt}$ 提到外面。",
+              ],
+            ],
+          );
         },
       },
       {

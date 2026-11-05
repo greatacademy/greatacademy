@@ -2,6 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
 import { choiceProblem, isTerminating, lowestTerms, numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 /** PHI holds the standard normal cumulative probabilities the problems quote. */
 const PHI = new Map<number, string>([
@@ -439,19 +440,37 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `A random sample of size $n = ${n}$ is selected from a normal population $X \\sim N(${mu}, ${sigmaSq})$. What is the exact sampling distribution of the sample mean $\\bar{X}$?`,
-              `从正态总体 $X \\sim N(${mu}, ${sigmaSq})$ 中随机抽取容量为 $n = ${n}$ 的样本。样本均值 $\\bar{X}$ 的精确抽样分布是什么？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `Linear combinations of normal variables are strictly normal. Thus $\\bar{X} \\sim N\\left(\\mu, \\frac{\\sigma^2}{n}\\right) = N\\left(${mu}, \\frac{${sigmaSq}}{${n}}\\right)$.`,
-              `正态变量的线性组合仍严格服从正态分布。因此 $\\bar{X} \\sim N\\left(\\mu, \\frac{\\sigma^2}{n}\\right) = N\\left(${mu}, \\frac{${sigmaSq}}{${n}}\\right)$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `A random sample of size $n = ${n}$ is selected from a normal population $X \\sim N(${mu}, ${sigmaSq})$. What is the exact sampling distribution of the sample mean $\\bar{X}$?`,
+                `从正态总体 $X \\sim N(${mu}, ${sigmaSq})$ 中随机抽取容量为 $n = ${n}$ 的样本。样本均值 $\\bar{X}$ 的精确抽样分布是什么？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `Linear combinations of normal variables are strictly normal. Thus $\\bar{X} \\sim N\\left(\\mu, \\frac{\\sigma^2}{n}\\right) = N\\left(${mu}, \\frac{${sigmaSq}}{${n}}\\right)$.`,
+                `正态变量的线性组合仍严格服从正态分布。因此 $\\bar{X} \\sim N\\left(\\mu, \\frac{\\sigma^2}{n}\\right) = N\\left(${mu}, \\frac{${sigmaSq}}{${n}}\\right)$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                `This is the distribution of one observation: the variance of the mean is divided by $${n}$.`,
+                `这是单个观测值的分布：均值的方差要除以 $${n}$。`,
+              ],
+              [
+                opts[2]!.en,
+                "The $t$ distribution describes the mean standardized with the sample standard deviation, not the mean itself.",
+                "$t$ 分布描述的是用样本标准差标准化后的均值，不是均值本身。",
+              ],
+              [
+                opts[3]!.en,
+                "A chi-square variable is a sum of squared standard normals and is never negative, unlike this mean.",
+                "卡方变量是标准正态变量的平方和，不会取负值，与这个均值不同。",
+              ],
+            ],
+          );
         },
       },
       {
@@ -1200,19 +1219,37 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `In a sample of $n = ${n}$ independent Bernoulli trials with parameter $p$, exactly $k = ${k}$ successes and $${diff}$ failures are observed. What is the likelihood function $L(p)$ (omitting constant combinatorial factor)?`,
-              `在参数为 $p$ 的 $n = ${n}$ 次独立伯努利试验中，观测到恰好 $k = ${k}$ 次成功与 $${diff}$ 次失败。其似然函数 $L(p)$ 是什么（忽略常数组合数因子）？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `The joint probability of $k$ successes and $n - k = ${diff}$ failures is proportional to $L(p) = p^k (1 - p)^{n - k} = p^{${k}} (1 - p)^{${diff}}$.`,
-              `$k$ 次成功与 $n - k = ${diff}$ 次失败的联合概率与参数的函数关系为 $L(p) = p^k (1 - p)^{n - k} = p^{${k}} (1 - p)^{${diff}}$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `In a sample of $n = ${n}$ independent Bernoulli trials with parameter $p$, exactly $k = ${k}$ successes and $${diff}$ failures are observed. What is the likelihood function $L(p)$ (omitting constant combinatorial factor)?`,
+                `在参数为 $p$ 的 $n = ${n}$ 次独立伯努利试验中，观测到恰好 $k = ${k}$ 次成功与 $${diff}$ 次失败。其似然函数 $L(p)$ 是什么（忽略常数组合数因子）？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `The joint probability of $k$ successes and $n - k = ${diff}$ failures is proportional to $L(p) = p^k (1 - p)^{n - k} = p^{${k}} (1 - p)^{${diff}}$.`,
+                `$k$ 次成功与 $n - k = ${diff}$ 次失败的联合概率与参数的函数关系为 $L(p) = p^k (1 - p)^{n - k} = p^{${k}} (1 - p)^{${diff}}$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                `The exponent of $p$ is the number of successes, $${k}$, not the number of trials.`,
+                `$p$ 的指数是成功次数 $${k}$，不是试验次数。`,
+              ],
+              [
+                opts[2]!.en,
+                "The exponents are exchanged: $p$ goes with the successes and $1 - p$ with the failures.",
+                "指数弄反了：$p$ 对应成功，$1 - p$ 对应失败。",
+              ],
+              [
+                opts[3]!.en,
+                "This adds the outcomes, but independent trials multiply their probabilities.",
+                "这里把结果相加了，而独立试验的概率要相乘。",
+              ],
+            ],
+          );
         },
       },
       {
@@ -1279,19 +1316,29 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `For $n = ${n}$ independent Bernoulli trials resulting in $k = ${k}$ successes and $${diff}$ failures, what is the log-likelihood function $\\ln L(p)$?`,
-              `对于取得 $k = ${k}$ 次成功与 $${diff}$ 次失败的 $n = ${n}$ 次独立伯努利试验，其对数似然函数 $\\ln L(p)$ 是什么？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `Taking the natural log of $L(p) = p^k (1 - p)^{n - k}$ yields $\\ln L(p) = k \\ln(p) + (n - k) \\ln(1 - p) = ${k} \\ln(p) + ${diff} \\ln(1 - p)$.`,
-              `对似然函数 $L(p) = p^k (1 - p)^{n - k}$ 取自然对数得到 $\\ln L(p) = k \\ln(p) + (n - k) \\ln(1 - p) = ${k} \\ln(p) + ${diff} \\ln(1 - p)$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `For $n = ${n}$ independent Bernoulli trials resulting in $k = ${k}$ successes and $${diff}$ failures, what is the log-likelihood function $\\ln L(p)$?`,
+                `对于取得 $k = ${k}$ 次成功与 $${diff}$ 次失败的 $n = ${n}$ 次独立伯努利试验，其对数似然函数 $\\ln L(p)$ 是什么？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `Taking the natural log of $L(p) = p^k (1 - p)^{n - k}$ yields $\\ln L(p) = k \\ln(p) + (n - k) \\ln(1 - p) = ${k} \\ln(p) + ${diff} \\ln(1 - p)$.`,
+                `对似然函数 $L(p) = p^k (1 - p)^{n - k}$ 取自然对数得到 $\\ln L(p) = k \\ln(p) + (n - k) \\ln(1 - p) = ${k} \\ln(p) + ${diff} \\ln(1 - p)$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                "The coefficients are exchanged: the number of successes goes with $\\ln(p)$.",
+                "系数弄反了：成功次数对应 $\\ln(p)$。",
+              ],
+              [opts[2]!.en, "No logarithm has been taken, and the product has become a sum.", "这里没有取对数，乘积还变成了和。"],
+              [opts[3]!.en, "This counts every trial as both a success and a failure.", "这把每次试验既算作成功又算作失败。"],
+            ],
+          );
         },
       },
       {
@@ -1361,19 +1408,37 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `Let $x_1, x_2, \\dots, x_{${n}}$ be an independent random sample from an exponential distribution $f(x; \\lambda) = \\lambda e^{-\\lambda x}$ ($x \\ge 0$). What is the sample likelihood function $L(\\lambda)$?`,
-              `设 $x_1, x_2, \\dots, x_{${n}}$ 为来自指数分布 $f(x; \\lambda) = \\lambda e^{-\\lambda x}$（$x \\ge 0$）的独立随机样本。样本的似然函数 $L(\\lambda)$ 是什么？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `$L(\\lambda) = \\prod_{i=1}^{${n}} (\\lambda e^{-\\lambda x_i}) = \\lambda^{${n}} e^{-\\lambda \\sum_{i=1}^{${n}} x_i}$.`,
-              `$L(\\lambda) = \\prod_{i=1}^{${n}} (\\lambda e^{-\\lambda x_i}) = \\lambda^{${n}} e^{-\\lambda \\sum_{i=1}^{${n}} x_i}$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `Let $x_1, x_2, \\dots, x_{${n}}$ be an independent random sample from an exponential distribution $f(x; \\lambda) = \\lambda e^{-\\lambda x}$ ($x \\ge 0$). What is the sample likelihood function $L(\\lambda)$?`,
+                `设 $x_1, x_2, \\dots, x_{${n}}$ 为来自指数分布 $f(x; \\lambda) = \\lambda e^{-\\lambda x}$（$x \\ge 0$）的独立随机样本。样本的似然函数 $L(\\lambda)$ 是什么？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `$L(\\lambda) = \\prod_{i=1}^{${n}} (\\lambda e^{-\\lambda x_i}) = \\lambda^{${n}} e^{-\\lambda \\sum_{i=1}^{${n}} x_i}$.`,
+                `$L(\\lambda) = \\prod_{i=1}^{${n}} (\\lambda e^{-\\lambda x_i}) = \\lambda^{${n}} e^{-\\lambda \\sum_{i=1}^{${n}} x_i}$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                `The product of $${n}$ factors gives $\\lambda^{${n}}$, and the sum in the exponent already counts every observation.`,
+                `$${n}$ 个因子相乘得到 $\\lambda^{${n}}$，而指数中的和已经计入了每个观测值。`,
+              ],
+              [
+                opts[2]!.en,
+                "The $\\lambda$ in the exponent is lost: each factor has $e^{-\\lambda x_i}$.",
+                "指数中的 $\\lambda$ 丢了：每个因子都含 $e^{-\\lambda x_i}$。",
+              ],
+              [
+                opts[3]!.en,
+                `The likelihood is a product of densities, so $\\lambda$ appears to the power $${n}$ rather than multiplied by $${n}$.`,
+                `似然是密度的乘积，所以是 $\\lambda$ 的 $${n}$ 次方，而不是乘以 $${n}$。`,
+              ],
+            ],
+          );
         },
       },
       {
@@ -1445,19 +1510,37 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `For an independent sample of size $n = ${n}$ from $X \\sim \\text{Exp}(\\lambda)$, what is the log-likelihood function $\\ln L(\\lambda)$?`,
-              `对于来自 $X \\sim \\text{Exp}(\\lambda)$ 的容量为 $n = ${n}$ 的独立样本，其对数似然函数 $\\ln L(\\lambda)$ 是什么？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `Taking the logarithm of $L(\\lambda) = \\lambda^{${n}} e^{-\\lambda \\sum x_i}$ gives $\\ln L(\\lambda) = ${n} \\ln(\\lambda) - \\lambda \\sum_{i=1}^{${n}} x_i$.`,
-              `对似然函数 $L(\\lambda) = \\lambda^{${n}} e^{-\\lambda \\sum x_i}$ 取对数得 $\\ln L(\\lambda) = ${n} \\ln(\\lambda) - \\lambda \\sum_{i=1}^{${n}} x_i$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `For an independent sample of size $n = ${n}$ from $X \\sim \\text{Exp}(\\lambda)$, what is the log-likelihood function $\\ln L(\\lambda)$?`,
+                `对于来自 $X \\sim \\text{Exp}(\\lambda)$ 的容量为 $n = ${n}$ 的独立样本，其对数似然函数 $\\ln L(\\lambda)$ 是什么？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `Taking the logarithm of $L(\\lambda) = \\lambda^{${n}} e^{-\\lambda \\sum x_i}$ gives $\\ln L(\\lambda) = ${n} \\ln(\\lambda) - \\lambda \\sum_{i=1}^{${n}} x_i$.`,
+                `对似然函数 $L(\\lambda) = \\lambda^{${n}} e^{-\\lambda \\sum x_i}$ 取对数得 $\\ln L(\\lambda) = ${n} \\ln(\\lambda) - \\lambda \\sum_{i=1}^{${n}} x_i$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                `The logarithm of $\\lambda^{${n}}$ is $${n} \\ln(\\lambda)$, and the second term has no extra factor of $${n}$.`,
+                `$\\lambda^{${n}}$ 的对数是 $${n} \\ln(\\lambda)$，第二项也没有多余的因子 $${n}$。`,
+              ],
+              [
+                opts[2]!.en,
+                "The logarithm applies to $\\lambda$, not to the sum: the sum comes out of the exponent as it is.",
+                "取对数的是 $\\lambda$，不是那个和：和从指数上下来时保持原样。",
+              ],
+              [
+                opts[3]!.en,
+                `The first term has not been turned into a logarithm: $\\ln \\lambda^{${n}} = ${n} \\ln(\\lambda)$.`,
+                `第一项没有取对数：$\\ln \\lambda^{${n}} = ${n} \\ln(\\lambda)$。`,
+              ],
+            ],
+          );
         },
       },
       {

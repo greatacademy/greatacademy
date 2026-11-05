@@ -3,6 +3,7 @@ import { same, t } from "@ga/content";
 import { gcd, num, poly, svgDocument } from "@ga/subject-math";
 
 import { choiceProblem, type ExpressionProblem, expressionProblem, numberProblem, say, steps, why, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 /** Term is a monomial c·xᵃ·yᵇ with an integer coefficient. */
 interface Term {
@@ -922,15 +923,27 @@ export const monomialsBinomialsAndTrinomials: TopicDef = {
         const expr = write(ts);
         const name = termName(n);
         const list = ts.map((m) => `$${mono(m)}$`).join(", ");
-        return choiceProblem({
-          prompt: t(`Is $${expr}$ a monomial, a binomial or a trinomial?`, `$${expr}$ 是单项式、二项式还是三项式？`),
-          options: termNames,
-          correct: n - 1,
-          solution: t(
-            n === 1 ? `$${expr}$ is a single term, so it is ${name.en}.` : `The terms are ${list}: there are ${n}, so it is ${name.en}.`,
-            n === 1 ? `$${expr}$ 只有一项，所以它是${name["zh-CN"]}。` : `它的项是 ${list}，共 ${n} 项，所以它是${name["zh-CN"]}。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`Is $${expr}$ a monomial, a binomial or a trinomial?`, `$${expr}$ 是单项式、二项式还是三项式？`),
+            options: termNames,
+            correct: n - 1,
+            solution: t(
+              n === 1 ? `$${expr}$ is a single term, so it is ${name.en}.` : `The terms are ${list}: there are ${n}, so it is ${name.en}.`,
+              n === 1 ? `$${expr}$ 只有一项，所以它是${name["zh-CN"]}。` : `它的项是 ${list}，共 ${n} 项，所以它是${name["zh-CN"]}。`,
+            ),
+          }),
+          [
+            [termNames[0]!.en, `A monomial has one term, and this has $${n}$.`, `单项式只有一项，而它有 $${n}$ 项。`],
+            [termNames[1]!.en, `A binomial has two terms, and this has $${n}$.`, `二项式有两项，而它有 $${n}$ 项。`],
+            [termNames[2]!.en, `A trinomial has three terms, and this has $${n}$.`, `三项式有三项，而它有 $${n}$ 项。`],
+            [
+              termNames[3]!.en,
+              `One of the three names fits: count the terms, $${n}$ of them.`,
+              `三个名称中有一个符合：数一数项数，共 $${n}$ 项。`,
+            ],
+          ],
+        );
       },
     },
     {

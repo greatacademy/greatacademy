@@ -30,6 +30,7 @@ import {
   steps,
   yesNo,
 } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -413,18 +414,37 @@ export const circlesInTheCoordinatePlane: TopicDef = {
         const p: Point = [h + dx, k + dy];
         const d2 = dx * dx + dy * dy;
         const rel = ["<", "=", ">"][kind]!;
-        return choiceProblem({
-          prompt: t(
-            `A circle has center $${pointLatex([h, k])}$ and radius $${r}$. Where is the point $${pointLatex(p)}$?`,
-            `一个圆的圆心是 $${pointLatex([h, k])}$，半径是 $${r}$。点 $${pointLatex(p)}$ 在哪里？`,
-          ),
-          options: insideOnOutside,
-          correct: kind,
-          solution: t(
-            `The squared distance from the center is${steps(`d^{2} = ${squaredDistance([h, k], p)}`)}Since $${d2} ${rel} ${r}^{2} = ${r * r}$, the point is ${insideOnOutside[kind]!.en.toLowerCase()}.`,
-            `点到圆心距离的平方是${steps(`d^{2} = ${squaredDistance([h, k], p)}`)}因为 $${d2} ${rel} ${r}^{2} = ${r * r}$，所以该点${insideOnOutside[kind]!["zh-CN"]}。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(
+              `A circle has center $${pointLatex([h, k])}$ and radius $${r}$. Where is the point $${pointLatex(p)}$?`,
+              `一个圆的圆心是 $${pointLatex([h, k])}$，半径是 $${r}$。点 $${pointLatex(p)}$ 在哪里？`,
+            ),
+            options: insideOnOutside,
+            correct: kind,
+            solution: t(
+              `The squared distance from the center is${steps(`d^{2} = ${squaredDistance([h, k], p)}`)}Since $${d2} ${rel} ${r}^{2} = ${r * r}$, the point is ${insideOnOutside[kind]!.en.toLowerCase()}.`,
+              `点到圆心距离的平方是${steps(`d^{2} = ${squaredDistance([h, k], p)}`)}因为 $${d2} ${rel} ${r}^{2} = ${r * r}$，所以该点${insideOnOutside[kind]!["zh-CN"]}。`,
+            ),
+          }),
+          [
+            [
+              insideOnOutside[0]!.en,
+              `Inside needs $d^{2} < ${r}^{2}$, but $d^{2} = ${d2}$ and $${r}^{2} = ${r * r}$.`,
+              `在圆内要求 $d^{2} < ${r}^{2}$，但 $d^{2} = ${d2}$，$${r}^{2} = ${r * r}$。`,
+            ],
+            [
+              insideOnOutside[1]!.en,
+              `On the circle needs $d^{2} = ${r}^{2}$, but $d^{2} = ${d2}$ and $${r}^{2} = ${r * r}$.`,
+              `在圆上要求 $d^{2} = ${r}^{2}$，但 $d^{2} = ${d2}$，$${r}^{2} = ${r * r}$。`,
+            ],
+            [
+              insideOnOutside[2]!.en,
+              `Outside needs $d^{2} > ${r}^{2}$, but $d^{2} = ${d2}$ and $${r}^{2} = ${r * r}$.`,
+              `在圆外要求 $d^{2} > ${r}^{2}$，但 $d^{2} = ${d2}$，$${r}^{2} = ${r * r}$。`,
+            ],
+          ],
+        );
       },
     },
   ],
@@ -847,12 +867,31 @@ export const determiningCirclePropertiesByCompletingTheSquare: TopicDef = {
             "右边是负数，而平方和不可能为负，所以没有点满足方程。",
           ),
         ][kind]!;
-        return choiceProblem({
-          prompt: t(`What is the graph of $${eq}$?`, `$${eq}$ 的图形是什么？`),
-          options,
-          correct: kind,
-          solution: t(`Complete the square:${completion(h, k, F)}${verdict.en}`, `配方：${completion(h, k, F)}${verdict["zh-CN"]}`),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`What is the graph of $${eq}$?`, `$${eq}$ 的图形是什么？`),
+            options,
+            correct: kind,
+            solution: t(`Complete the square:${completion(h, k, F)}${verdict.en}`, `配方：${completion(h, k, F)}${verdict["zh-CN"]}`),
+          }),
+          [
+            [
+              options[0]!.en,
+              `A circle needs a positive right side after completing the square, and here it is $${r2}$.`,
+              `配方后右边为正才是圆，而这里它是 $${r2}$。`,
+            ],
+            [
+              options[1]!.en,
+              `A single point needs a right side of $0$ after completing the square, and here it is $${r2}$.`,
+              `配方后右边为 $0$ 才是一个点，而这里它是 $${r2}$。`,
+            ],
+            [
+              options[2]!.en,
+              `No points needs a negative right side after completing the square, and here it is $${r2}$.`,
+              `配方后右边为负才没有点，而这里它是 $${r2}$。`,
+            ],
+          ],
+        );
       },
     },
   ],

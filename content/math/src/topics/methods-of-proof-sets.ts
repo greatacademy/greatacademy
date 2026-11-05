@@ -2,6 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
 import { numberProblem, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { oneOf } from "./calculus-common.ts";
 import { range, setProblem, setTex, uniqueSorted } from "./methods-of-proof-common.ts";
 import {
@@ -469,15 +470,40 @@ export const indicatorFunctions: TopicDef = {
         ];
         const f = rng.pick(forms);
         const opt = (s: string) => t(`$${s}$`, `$${s}$`);
-        return oneOf(
-          rng,
-          t(`Which expression equals $${I(f.set)}$?`, `哪个表达式等于 $${I(f.set)}$？`),
-          opt(f.right),
-          rng.shuffle(pool.filter((p) => p !== f.right)).map(opt),
-          t(
-            `Check every case of membership in $${X}$${f.set.includes(Y!) ? ` and $${Y}$` : ""}: $${f.right}$ is $1$ exactly when $x \\in ${f.set}$.`,
-            `检验 $x$ 是否属于 $${X}$${f.set.includes(Y!) ? `、$${Y}$` : ""} 的各种情形：$${f.right}$ 恰在 $x \\in ${f.set}$ 时为 $1$。`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(`Which expression equals $${I(f.set)}$?`, `哪个表达式等于 $${I(f.set)}$？`),
+            opt(f.right),
+            rng.shuffle(pool.filter((p) => p !== f.right)).map(opt),
+            t(
+              `Check every case of membership in $${X}$${f.set.includes(Y!) ? ` and $${Y}$` : ""}: $${f.right}$ is $1$ exactly when $x \\in ${f.set}$.`,
+              `检验 $x$ 是否属于 $${X}$${f.set.includes(Y!) ? `、$${Y}$` : ""} 的各种情形：$${f.right}$ 恰在 $x \\in ${f.set}$ 时为 $1$。`,
+            ),
           ),
+          [
+            ...forms.map((g) => [opt(g.right).en, `This is the indicator of $${g.set}$.`, `这是 $${g.set}$ 的示性函数。`] as const),
+            [
+              opt(`${I(X!)} + ${I(Y!)}`).en,
+              `At a point in both sets this equals $2$, and an indicator only takes the values $0$ and $1$.`,
+              `在同时属于两个集合的点处它等于 $2$，而示性函数只取 $0$ 和 $1$。`,
+            ],
+            [
+              opt(`${I(Y!)} (1 - ${I(X!)})`).en,
+              `This is the indicator of $${Y} \\setminus ${X}$.`,
+              `这是 $${Y} \\setminus ${X}$ 的示性函数。`,
+            ],
+            [
+              opt(`1 - ${I(X!)} ${I(Y!)}`).en,
+              `This is the indicator of the complement of $${X} \\cap ${Y}$.`,
+              `这是 $${X} \\cap ${Y}$ 的补集的示性函数。`,
+            ],
+            [
+              opt(`${I(X!)} - ${I(Y!)}`).en,
+              "At a point in the second set only this equals $-1$, and an indicator only takes the values $0$ and $1$.",
+              "在只属于第二个集合的点处它等于 $-1$，而示性函数只取 $0$ 和 $1$。",
+            ],
+          ],
         );
       },
     },
@@ -705,18 +731,35 @@ export const disjointSets: TopicDef = {
           const label = (p: readonly [number, number]) =>
             t(`$A_{${p[0] + 1}}$ and $A_{${p[1] + 1}}$`, `$A_{${p[0] + 1}}$ 与 $A_{${p[1] + 1}}$`);
           const shared = sets[i]!.filter((x) => sets[j]!.includes(x));
-          return oneOf(
-            rng,
-            t(
-              `Let $A_1 = ${setTex(sets[0]!)}$, $A_2 = ${setTex(sets[1]!)}$ and $A_3 = ${setTex(sets[2]!)}$. Which pair is not disjoint?`,
-              `设 $A_1 = ${setTex(sets[0]!)}$，$A_2 = ${setTex(sets[1]!)}$，$A_3 = ${setTex(sets[2]!)}$。哪一对集合不是不相交的？`,
+          return reasoned(
+            oneOf(
+              rng,
+              t(
+                `Let $A_1 = ${setTex(sets[0]!)}$, $A_2 = ${setTex(sets[1]!)}$ and $A_3 = ${setTex(sets[2]!)}$. Which pair is not disjoint?`,
+                `设 $A_1 = ${setTex(sets[0]!)}$，$A_2 = ${setTex(sets[1]!)}$，$A_3 = ${setTex(sets[2]!)}$。哪一对集合不是不相交的？`,
+              ),
+              label([i, j]),
+              [...pairs.filter((p) => p[0] !== i || p[1] !== j).map(label), t("Every pair is disjoint", "每一对都不相交")],
+              t(
+                `$A_{${i + 1}} \\cap A_{${j + 1}} = ${setTex(shared)}$; the other intersections are empty.`,
+                `$A_{${i + 1}} \\cap A_{${j + 1}} = ${setTex(shared)}$；其余交集都为空。`,
+              ),
             ),
-            label([i, j]),
-            [...pairs.filter((p) => p[0] !== i || p[1] !== j).map(label), t("Every pair is disjoint", "每一对都不相交")],
-            t(
-              `$A_{${i + 1}} \\cap A_{${j + 1}} = ${setTex(shared)}$; the other intersections are empty.`,
-              `$A_{${i + 1}} \\cap A_{${j + 1}} = ${setTex(shared)}$；其余交集都为空。`,
-            ),
+            [
+              ...pairs.map(
+                (p) =>
+                  [
+                    label(p).en,
+                    `$A_{${p[0] + 1}}$ and $A_{${p[1] + 1}}$ have no element in common, so they are disjoint.`,
+                    `$A_{${p[0] + 1}}$ 与 $A_{${p[1] + 1}}$ 没有公共元素，所以不相交。`,
+                  ] as const,
+              ),
+              [
+                "Every pair is disjoint",
+                "One pair shares an element, so not every pair is disjoint.",
+                "有一对集合有公共元素，所以并非每一对都不相交。",
+              ],
+            ],
           );
         }
       },

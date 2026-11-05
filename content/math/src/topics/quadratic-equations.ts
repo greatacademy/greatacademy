@@ -3,6 +3,7 @@ import { same, t } from "@ga/content";
 import { type Coefficient, gcd, linear, num, poly, Q, type Surd, simplifyRadical, surd, surdLatex } from "@ga/subject-math";
 
 import { choiceProblem, equationProblem, numberProblem, pointProblem, solutionsProblem, steps, whySet, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -1699,12 +1700,31 @@ export const theDiscriminantOfAQuadraticEquation: TopicDef = {
       generate(rng) {
         const sign = rng.pick([-1, 0, 1] as const);
         const [a, b, c] = drawBySign(rng, sign);
-        return choiceProblem({
-          prompt: t(`How many real solutions does $${quad(a, b, c)} = 0$ have?`, `方程 $${quad(a, b, c)} = 0$ 有几个实数解？`),
-          options: solutionCountOptions,
-          correct: sign + 1,
-          solution: discriminantText(a, b, c, t("Compute the discriminant:", "计算判别式：")),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`How many real solutions does $${quad(a, b, c)} = 0$ have?`, `方程 $${quad(a, b, c)} = 0$ 有几个实数解？`),
+            options: solutionCountOptions,
+            correct: sign + 1,
+            solution: discriminantText(a, b, c, t("Compute the discriminant:", "计算判别式：")),
+          }),
+          [
+            [
+              solutionCountOptions[0]!.en,
+              `No real solution needs a negative discriminant, and here it is $${b * b - 4 * a * c}$.`,
+              `没有实数解要求判别式为负，而这里它等于 $${b * b - 4 * a * c}$。`,
+            ],
+            [
+              solutionCountOptions[1]!.en,
+              `Exactly one real solution needs a discriminant of $0$, and here it is $${b * b - 4 * a * c}$.`,
+              `恰有一个实数解要求判别式为 $0$，而这里它等于 $${b * b - 4 * a * c}$。`,
+            ],
+            [
+              solutionCountOptions[2]!.en,
+              `Two real solutions needs a positive discriminant, and here it is $${b * b - 4 * a * c}$.`,
+              `有两个实数解要求判别式为正，而这里它等于 $${b * b - 4 * a * c}$。`,
+            ],
+          ],
+        );
       },
     },
     {
@@ -1728,12 +1748,31 @@ export const theDiscriminantOfAQuadraticEquation: TopicDef = {
             : kind === "move-c"
               ? `${quad(a, 0, c)} = ${poly([-b, "x"])}`
               : `x${lf(1, b)} = ${-c}`;
-        return choiceProblem({
-          prompt: t(`How many real solutions does $${eq}$ have?`, `方程 $${eq}$ 有几个实数解？`),
-          options: solutionCountOptions,
-          correct: sign + 1,
-          solution: discriminantText(a, b, c, t(`In standard form, $${quad(a, b, c)} = 0$:`, `化为一般式 $${quad(a, b, c)} = 0$：`)),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`How many real solutions does $${eq}$ have?`, `方程 $${eq}$ 有几个实数解？`),
+            options: solutionCountOptions,
+            correct: sign + 1,
+            solution: discriminantText(a, b, c, t(`In standard form, $${quad(a, b, c)} = 0$:`, `化为一般式 $${quad(a, b, c)} = 0$：`)),
+          }),
+          [
+            [
+              solutionCountOptions[0]!.en,
+              `No real solution needs a negative discriminant, and here it is $${b * b - 4 * a * c}$.`,
+              `没有实数解要求判别式为负，而这里它等于 $${b * b - 4 * a * c}$。`,
+            ],
+            [
+              solutionCountOptions[1]!.en,
+              `Exactly one real solution needs a discriminant of $0$, and here it is $${b * b - 4 * a * c}$.`,
+              `恰有一个实数解要求判别式为 $0$，而这里它等于 $${b * b - 4 * a * c}$。`,
+            ],
+            [
+              solutionCountOptions[2]!.en,
+              `Two real solutions needs a positive discriminant, and here it is $${b * b - 4 * a * c}$.`,
+              `有两个实数解要求判别式为正，而这里它等于 $${b * b - 4 * a * c}$。`,
+            ],
+          ],
+        );
       },
     },
   ],

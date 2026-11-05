@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { type Mark, type Point, poly, Q, sketch } from "@ga/subject-math";
 
 import { article, functionProblem, numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { lim, oneOf, type Poly, pAt, par, pDer, pLatex, rounded, table } from "./calculus-common.ts";
 
 // Calculus I unit 6: Contextual Applications of Differentiation, modules 6.14 to 6.17.
@@ -94,19 +95,34 @@ export const interpretingTheMeaningOfTheDerivativeInContext: TopicDef = {
         const a = rng.int(1, 12);
         const per = (x: Context) => t(`${x.out.en} per ${x.one.en}`, `${x.out["zh-CN"]}每${x.one["zh-CN"]}`);
         const oneOut = c.out.en === "people" ? "person" : c.out.en === "degrees Celsius" ? "degree Celsius" : c.out.en.replace(/s$/, "");
-        return oneOf(
-          rng,
-          t(`${setting(c).en} What are the units of $${c.f}'(${a})$?`, `${setting(c)["zh-CN"]}$${c.f}'(${a})$ 的单位是什么？`),
-          per(c),
-          [
-            c.out,
-            t(`${c.one.en} per ${oneOut}`, `${c.one["zh-CN"]}每${c.out["zh-CN"]}`),
-            t(`${c.out.en} per ${c.one.en} per ${c.one.en}`, `${c.out["zh-CN"]}每${c.one["zh-CN"]}的平方`),
-          ],
-          t(
-            `$${c.f}'(${a})$ is a change in ${c.out.en} divided by a change in ${c.time.en}, so it is measured in ${per(c).en}.`,
-            `$${c.f}'(${a})$ 是${c.out["zh-CN"]}的变化量除以${c.time["zh-CN"]}的变化量，单位是${per(c)["zh-CN"]}。`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(`${setting(c).en} What are the units of $${c.f}'(${a})$?`, `${setting(c)["zh-CN"]}$${c.f}'(${a})$ 的单位是什么？`),
+            per(c),
+            [
+              c.out,
+              t(`${c.one.en} per ${oneOut}`, `${c.one["zh-CN"]}每${c.out["zh-CN"]}`),
+              t(`${c.out.en} per ${c.one.en} per ${c.one.en}`, `${c.out["zh-CN"]}每${c.one["zh-CN"]}的平方`),
+            ],
+            t(
+              `$${c.f}'(${a})$ is a change in ${c.out.en} divided by a change in ${c.time.en}, so it is measured in ${per(c).en}.`,
+              `$${c.f}'(${a})$ 是${c.out["zh-CN"]}的变化量除以${c.time["zh-CN"]}的变化量，单位是${per(c)["zh-CN"]}。`,
+            ),
           ),
+          [
+            [
+              c.out.en,
+              "These are the units of the function's value. A derivative is a change in that value divided by a change in the input.",
+              "这是函数值的单位。导数是函数值的变化量除以输入的变化量。",
+            ],
+            [`${c.one.en} per ${oneOut}`, "This is upside down: the output's units go on top.", "这里颠倒了：输出的单位在分子上。"],
+            [
+              `${c.out.en} per ${c.one.en} per ${c.one.en}`,
+              "This is the unit of the second derivative, which divides by the input's units twice.",
+              "这是二阶导数的单位，它除以输入单位两次。",
+            ],
+          ],
         );
       },
     },

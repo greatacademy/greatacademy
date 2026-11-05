@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q } from "@ga/subject-math";
 
 import { functionProblem, numberProblem, solutionsProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { oneOf, type Poly, pAt, par, pDer, pLatex, rounded } from "./calculus-common.ts";
 import { cubic, intervals, monotonicityOptions, open, zigzag, zigzagFigure, zigzagXs } from "./calculus-i-extrema.ts";
 
@@ -106,27 +107,46 @@ export const sketchingTheDerivativeOfAFunctionFromTheFunctionsGraph: TopicDef = 
         const positive = rng.bool();
         const { right, wrong } = monotonicityOptions(c, positive);
         const [lo, hi] = c.up ? [c.c2, c.c1] : [c.c1, c.c2];
-        return oneOf(
-          rng,
-          t(
-            `The graph of $f$ is shown. On which intervals is $f'(x) ${positive ? ">" : "<"} 0$?`,
-            `图中是 $f$ 的图像。$f'(x) ${positive ? ">" : "<"} 0$ 的区间是哪些？`,
-          ),
-          right,
-          wrong,
-          t(
-            `$f'(x) ${positive ? ">" : "<"} 0$ where the graph ${positive ? "rises" : "falls"}. The graph turns at $x = ${c.c1}$ and $x = ${c.c2}$, and ${positive ? "rises" : "falls"} on ${right.en}.`,
-            `$f'(x) ${positive ? ">" : "<"} 0$ 的地方图像${positive ? "上升" : "下降"}。图像在 $x = ${c.c1}$ 和 $x = ${c.c2}$ 处转向，在 ${right["zh-CN"]} 上${positive ? "上升" : "下降"}。`,
-          ),
-          smoothFigure(
-            (x) => pAt(c.p, x),
-            c.c1 - 2,
-            c.c2 + 2,
+        return reasoned(
+          oneOf(
+            rng,
             t(
-              `The graph of $f$, a smooth curve with a local maximum at $x = ${hi}$ and a local minimum at $x = ${lo}$.`,
-              `$f$ 的图像是一条光滑曲线，在 $x = ${hi}$ 处有局部极大值，在 $x = ${lo}$ 处有局部极小值。`,
+              `The graph of $f$ is shown. On which intervals is $f'(x) ${positive ? ">" : "<"} 0$?`,
+              `图中是 $f$ 的图像。$f'(x) ${positive ? ">" : "<"} 0$ 的区间是哪些？`,
+            ),
+            right,
+            wrong,
+            t(
+              `$f'(x) ${positive ? ">" : "<"} 0$ where the graph ${positive ? "rises" : "falls"}. The graph turns at $x = ${c.c1}$ and $x = ${c.c2}$, and ${positive ? "rises" : "falls"} on ${right.en}.`,
+              `$f'(x) ${positive ? ">" : "<"} 0$ 的地方图像${positive ? "上升" : "下降"}。图像在 $x = ${c.c1}$ 和 $x = ${c.c2}$ 处转向，在 ${right["zh-CN"]} 上${positive ? "上升" : "下降"}。`,
+            ),
+            smoothFigure(
+              (x) => pAt(c.p, x),
+              c.c1 - 2,
+              c.c2 + 2,
+              t(
+                `The graph of $f$, a smooth curve with a local maximum at $x = ${hi}$ and a local minimum at $x = ${lo}$.`,
+                `$f$ 的图像是一条光滑曲线，在 $x = ${hi}$ 处有局部极大值，在 $x = ${lo}$ 处有局部极小值。`,
+              ),
             ),
           ),
+          [
+            [
+              wrong[0]!.en,
+              `This is where $f'$ is ${positive ? "negative" : "positive"}: there the graph of $f$ is going ${positive ? "down" : "up"}.`,
+              `这是 $f'$ 为${positive ? "负" : "正"}的区间：那里 $f$ 的图像在${positive ? "下降" : "上升"}。`,
+            ],
+            [
+              wrong[1]!.en,
+              `This runs across $x = ${c.c1}$, where the graph of $f$ turns around.`,
+              `这个区间跨过了 $x = ${c.c1}$，$f$ 的图像在那里转向。`,
+            ],
+            [
+              wrong[2]!.en,
+              `This runs across $x = ${c.c2}$, where the graph of $f$ turns around.`,
+              `这个区间跨过了 $x = ${c.c2}$，$f$ 的图像在那里转向。`,
+            ],
+          ],
         );
       },
     },
@@ -202,19 +222,38 @@ export const interpretingTheGraphOfAFunctionsDerivative: TopicDef = {
           intervals(open(roots[0], undefined)),
           intervals(open(undefined, roots[roots.length - 1])),
         ].filter((w) => w.en !== right.en);
-        return oneOf(
-          rng,
-          t(
-            `The graph of $f'$, the derivative of $f$, is shown. On which intervals is $f$ ${increasing ? "increasing" : "decreasing"}?`,
-            `图中是 $f$ 的导数 $f'$ 的图像。$f$ 在哪些区间上${increasing ? "递增" : "递减"}？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `The graph of $f'$, the derivative of $f$, is shown. On which intervals is $f$ ${increasing ? "increasing" : "decreasing"}?`,
+              `图中是 $f$ 的导数 $f'$ 的图像。$f$ 在哪些区间上${increasing ? "递增" : "递减"}？`,
+            ),
+            right,
+            wrong,
+            t(
+              `$f$ is ${increasing ? "increasing" : "decreasing"} where $f' ${increasing ? "> 0" : "< 0"}$, that is, where the graph of $f'$ is ${increasing ? "above" : "below"} the $x$-axis: ${right.en}.`,
+              `$f$ 在 $f' ${increasing ? "> 0" : "< 0"}$ 的地方${increasing ? "递增" : "递减"}，也就是 $f'$ 的图像在 $x$ 轴${increasing ? "上方" : "下方"}的地方：${right["zh-CN"]}。`,
+            ),
+            productFigure(roots, s, "f'"),
           ),
-          right,
-          wrong,
-          t(
-            `$f$ is ${increasing ? "increasing" : "decreasing"} where $f' ${increasing ? "> 0" : "< 0"}$, that is, where the graph of $f'$ is ${increasing ? "above" : "below"} the $x$-axis: ${right.en}.`,
-            `$f$ 在 $f' ${increasing ? "> 0" : "< 0"}$ 的地方${increasing ? "递增" : "递减"}，也就是 $f'$ 的图像在 $x$ 轴${increasing ? "上方" : "下方"}的地方：${right["zh-CN"]}。`,
-          ),
-          productFigure(roots, s, "f'"),
+          [
+            [
+              wrong[0]!.en,
+              `This is where $f$ is ${increasing ? "decreasing" : "increasing"}: read the sign of $f'$ from the graph.`,
+              `这是 $f$ ${increasing ? "递减" : "递增"}的区间：要从图像读出 $f'$ 的符号。`,
+            ],
+            [
+              wrong[1]!.en,
+              "This runs across a place where the graph of $f'$ crosses the axis, so the sign changes inside it.",
+              "这个区间跨过了 $f'$ 的图像与轴的交点，所以符号在区间内会变。",
+            ],
+            [
+              wrong[2]!.en,
+              "This runs across a place where the graph of $f'$ crosses the axis, so the sign changes inside it.",
+              "这个区间跨过了 $f'$ 的图像与轴的交点，所以符号在区间内会变。",
+            ],
+          ],
         );
       },
     },

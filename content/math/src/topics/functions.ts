@@ -29,6 +29,7 @@ import {
   verdictChoice,
   yesNo,
 } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -626,15 +627,34 @@ export const domainOfAFunction: TopicDef = {
         const ps = rng.shuffle(xs.map((x, i): Point => [x, ys[i]!]));
         const candidates = [setOf(xs), setOf(ys), setOf([...xs, ...ys]), setOf(xs.slice(1))].filter((s, i, all) => all.indexOf(s) === i);
         const options = rng.shuffle(candidates);
-        return choiceProblem({
-          prompt: t(`What is the domain of the function $${pairs(ps)}$?`, `函数 $${pairs(ps)}$ 的定义域是什么？`),
-          options: options.map((s) => same(`$${s}$`)),
-          correct: options.indexOf(setOf(xs)),
-          solution: t(
-            `The domain is the set of inputs, the first coordinates: $${setOf(xs)}$.`,
-            `定义域是所有输入，即第一个坐标组成的集合：$${setOf(xs)}$。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`What is the domain of the function $${pairs(ps)}$?`, `函数 $${pairs(ps)}$ 的定义域是什么？`),
+            options: options.map((s) => same(`$${s}$`)),
+            correct: options.indexOf(setOf(xs)),
+            solution: t(
+              `The domain is the set of inputs, the first coordinates: $${setOf(xs)}$.`,
+              `定义域是所有输入，即第一个坐标组成的集合：$${setOf(xs)}$。`,
+            ),
+          }),
+          [
+            [
+              `$${setOf(ys)}$`,
+              "Those are the second coordinates, the outputs: that set is the range.",
+              "这些是第二个坐标，即输出：它们组成的是值域。",
+            ],
+            [
+              `$${setOf([...xs, ...ys])}$`,
+              "This mixes in outputs: only first coordinates belong in the domain.",
+              "这里混入了输出：定义域只包含第一个坐标。",
+            ],
+            [
+              `$${setOf(xs.slice(1))}$`,
+              "This leaves out an input: the first coordinate of every pair counts.",
+              "这里漏掉了一个输入：每一对的第一个坐标都要算。",
+            ],
+          ],
+        );
       },
     },
     {
@@ -1226,15 +1246,34 @@ export const rangeOfAFunction: TopicDef = {
         const extra = distinctFrom(rng, -9, 9, ys[0]!);
         const candidates = [answer, setOf(xs), setOf([...xs, ...ys]), setOf([...ys, extra])].filter((s, i, all) => all.indexOf(s) === i);
         const options = rng.shuffle(candidates);
-        return choiceProblem({
-          prompt: t(`What is the range of the function $${pairs(ps)}$?`, `函数 $${pairs(ps)}$ 的值域是什么？`),
-          options: options.map((s) => same(`$${s}$`)),
-          correct: options.indexOf(answer),
-          solution: t(
-            `The range is the set of outputs, the second coordinates: $${answer}$.`,
-            `值域是所有输出，即第二个坐标组成的集合：$${answer}$。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`What is the range of the function $${pairs(ps)}$?`, `函数 $${pairs(ps)}$ 的值域是什么？`),
+            options: options.map((s) => same(`$${s}$`)),
+            correct: options.indexOf(answer),
+            solution: t(
+              `The range is the set of outputs, the second coordinates: $${answer}$.`,
+              `值域是所有输出，即第二个坐标组成的集合：$${answer}$。`,
+            ),
+          }),
+          [
+            [
+              `$${setOf(xs)}$`,
+              "Those are the first coordinates, the inputs: that set is the domain.",
+              "这些是第一个坐标，即输入：它们组成的是定义域。",
+            ],
+            [
+              `$${setOf([...xs, ...ys])}$`,
+              "This mixes in inputs: only second coordinates belong in the range.",
+              "这里混入了输入：值域只包含第二个坐标。",
+            ],
+            [
+              `$${setOf([...ys, extra])}$`,
+              `This adds $${extra}$, which is not the output of any pair.`,
+              `这里多了 $${extra}$，它不是任何一对的输出。`,
+            ],
+          ],
+        );
       },
     },
     {
@@ -2574,15 +2613,30 @@ export const describingFunctionComposition: TopicDef = {
           `f(x) = ${outer.f}, \\; g(x) = ${a}x`,
         ];
         const options = rng.shuffle(candidates);
-        return choiceProblem({
-          prompt: t(`Which choice of $f$ and $g$ gives $f(g(x)) = ${h}$?`, `哪一组 $f$ 和 $g$ 满足 $f(g(x)) = ${h}$？`),
-          options: options.map((o) => same(`$${o}$`)),
-          correct: options.indexOf(candidates[0]!),
-          solution: t(
-            `The expression $${L}$ is computed first, so it is the inner function $g$; the outer function $f(x) = ${outer.f}$ then acts on it: $f(g(x)) = ${h}$.`,
-            `先计算的是 $${L}$，所以它是内层函数 $g$；外层函数 $f(x) = ${outer.f}$ 再作用于它：$f(g(x)) = ${h}$。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`Which choice of $f$ and $g$ gives $f(g(x)) = ${h}$?`, `哪一组 $f$ 和 $g$ 满足 $f(g(x)) = ${h}$？`),
+            options: options.map((o) => same(`$${o}$`)),
+            correct: options.indexOf(candidates[0]!),
+            solution: t(
+              `The expression $${L}$ is computed first, so it is the inner function $g$; the outer function $f(x) = ${outer.f}$ then acts on it: $f(g(x)) = ${h}$.`,
+              `先计算的是 $${L}$，所以它是内层函数 $g$；外层函数 $f(x) = ${outer.f}$ 再作用于它：$f(g(x)) = ${h}$。`,
+            ),
+          }),
+          [
+            [
+              `$${candidates[1]!}$`,
+              `The two functions are exchanged: $${L}$ is computed first, so it is the inner function $g$.`,
+              `两个函数弄反了：先算 $${L}$，所以它是内层函数 $g$。`,
+            ],
+            [
+              `$${candidates[2]!}$`,
+              `This adds $${b}$ after the outer function acts, but $${b}$ belongs inside it.`,
+              `这是在外层函数作用之后才加 $${b}$，但 $${b}$ 应该在里面。`,
+            ],
+            [`$${candidates[3]!}$`, `The $${b}$ has been lost: the inner function must be $${L}$.`, `$${b}$ 丢了：内层函数应该是 $${L}$。`],
+          ],
+        );
       },
     },
     {

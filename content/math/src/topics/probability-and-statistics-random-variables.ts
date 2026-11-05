@@ -2,6 +2,7 @@ import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 /** Topics for Unit 1: Probability & Random Variables (new topics). */
 export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
@@ -239,19 +240,33 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((idx) => opts[idx]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `When approximating a discrete integer random variable $X$ by a continuous random variable $Y$, which continuous interval corresponds to $P(${a} \\le X \\le ${b})$ after continuity correction?`,
-              `当用连续型随机变量 $Y$ 近似离散型整值随机变量 $X$ 时，经过连续性校正后，与概率 $P(${a} \\le X \\le ${b})$ 对应的连续区间是哪个？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `With continuity correction, each integer $k$ corresponds to $[k - 0.5, k + 0.5]$. Thus $P(${a} \\le X \\le ${b}) \\approx P(${a - 0.5} \\le Y \\le ${b + 0.5})$.`,
-              `经过连续性校正，每个整数 $k$ 对应区间 $[k - 0.5, k + 0.5]$。因此 $P(${a} \\le X \\le ${b}) \\approx P(${a - 0.5} \\le Y \\le ${b + 0.5})$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `When approximating a discrete integer random variable $X$ by a continuous random variable $Y$, which continuous interval corresponds to $P(${a} \\le X \\le ${b})$ after continuity correction?`,
+                `当用连续型随机变量 $Y$ 近似离散型整值随机变量 $X$ 时，经过连续性校正后，与概率 $P(${a} \\le X \\le ${b})$ 对应的连续区间是哪个？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `With continuity correction, each integer $k$ corresponds to $[k - 0.5, k + 0.5]$. Thus $P(${a} \\le X \\le ${b}) \\approx P(${a - 0.5} \\le Y \\le ${b + 0.5})$.`,
+                `经过连续性校正，每个整数 $k$ 对应区间 $[k - 0.5, k + 0.5]$。因此 $P(${a} \\le X \\le ${b}) \\approx P(${a - 0.5} \\le Y \\le ${b + 0.5})$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                "This shrinks the interval and cuts off half of each end value: the endpoints must move outward.",
+                "这把区间缩小了，切掉了两端各一半：端点应向外移。",
+              ],
+              [opts[2]!.en, "No correction is applied, so half of each end value is left out.", "这里没有做修正，两端的值各漏掉了一半。"],
+              [
+                opts[3]!.en,
+                "Moving by a whole unit brings in parts of the integers just outside the range: the correction is $0.5$.",
+                "移动整整一个单位会把范围外的整数也算进一部分：修正量是 $0.5$。",
+              ],
+            ],
+          );
         },
       },
       {
@@ -314,19 +329,33 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((idx) => opts[idx]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `An exponential random variable $X$ has CDF $F(x) = 1 - e^{-${lambda} x}$ for $x \\ge 0$. Which formula simulates an observation of $X$ from a uniform random draw $u \\in (0, 1)$?`,
-              `指数型随机变量 $X$ 的累积分布函数为 $F(x) = 1 - e^{-${lambda} x}$（$x \\ge 0$）。从均匀随机数 $u \\in (0, 1)$ 模拟 $X$ 的观测值时，对应的公式是哪一个？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `Setting $u = 1 - e^{-${lambda} x} \\implies e^{-${lambda} x} = 1 - u \\implies x = -\\frac{1}{${lambda}} \\ln(1 - u)$.`,
-              `令 $u = 1 - e^{-${lambda} x} \\implies e^{-${lambda} x} = 1 - u \\implies x = -\\frac{1}{${lambda}} \\ln(1 - u)$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `An exponential random variable $X$ has CDF $F(x) = 1 - e^{-${lambda} x}$ for $x \\ge 0$. Which formula simulates an observation of $X$ from a uniform random draw $u \\in (0, 1)$?`,
+                `指数型随机变量 $X$ 的累积分布函数为 $F(x) = 1 - e^{-${lambda} x}$（$x \\ge 0$）。从均匀随机数 $u \\in (0, 1)$ 模拟 $X$ 的观测值时，对应的公式是哪一个？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `Setting $u = 1 - e^{-${lambda} x} \\implies e^{-${lambda} x} = 1 - u \\implies x = -\\frac{1}{${lambda}} \\ln(1 - u)$.`,
+                `令 $u = 1 - e^{-${lambda} x} \\implies e^{-${lambda} x} = 1 - u \\implies x = -\\frac{1}{${lambda}} \\ln(1 - u)$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                "The sign is wrong: $\\ln(1 - u)$ is negative, so this value would be negative, and an exponential variable is not.",
+                "符号错了：$\\ln(1 - u)$ 是负的，这个值就是负的，而指数变量不取负值。",
+              ],
+              [
+                opts[2]!.en,
+                "This puts $u$ into the CDF, but the method applies the inverse of the CDF to $u$.",
+                "这是把 $u$ 代入分布函数，但这种方法是对 $u$ 用分布函数的反函数。",
+              ],
+              [opts[3]!.en, "The logarithm is missing: undoing the exponential needs it.", "缺了对数：要解开指数函数就需要它。"],
+            ],
+          );
         },
       },
       {
@@ -465,19 +494,37 @@ export const probabilityAndStatisticsRandomVariablesTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((idx) => opts[idx]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `Let $X$ have exponential density $f_X(x) = ${lambda} e^{-${lambda} x}$ for $x > 0$. Using the change-of-variables formula, what is the probability density function $f_Y(y)$ of $Y = ${c} X$ for $y > 0$?`,
-              `设 $X$ 服从指数分布，密度为 $f_X(x) = ${lambda} e^{-${lambda} x}$（$x > 0$）。使用变量代换公式，变换 $Y = ${c} X$（$y > 0$）的概率密度函数 $f_Y(y)$ 是什么？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `With $y = ${c} x$, $x = \\frac{y}{${c}}$ and $\\left|\\frac{dx}{dy}\\right| = \\frac{1}{${c}}$. Then $f_Y(y) = f_X\\left(\\frac{y}{${c}}\\right) \\cdot \\frac{1}{${c}} = \\frac{${lambda}}{${c}} e^{-\\frac{${lambda}}{${c}} y}$.`,
-              `由 $y = ${c} x$ 得 $x = \\frac{y}{${c}}$ 且 $\\left|\\frac{dx}{dy}\\right| = \\frac{1}{${c}}$。因此 $f_Y(y) = f_X\\left(\\frac{y}{${c}}\\right) \\cdot \\frac{1}{${c}} = \\frac{${lambda}}{${c}} e^{-\\frac{${lambda}}{${c}} y}$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `Let $X$ have exponential density $f_X(x) = ${lambda} e^{-${lambda} x}$ for $x > 0$. Using the change-of-variables formula, what is the probability density function $f_Y(y)$ of $Y = ${c} X$ for $y > 0$?`,
+                `设 $X$ 服从指数分布，密度为 $f_X(x) = ${lambda} e^{-${lambda} x}$（$x > 0$）。使用变量代换公式，变换 $Y = ${c} X$（$y > 0$）的概率密度函数 $f_Y(y)$ 是什么？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `With $y = ${c} x$, $x = \\frac{y}{${c}}$ and $\\left|\\frac{dx}{dy}\\right| = \\frac{1}{${c}}$. Then $f_Y(y) = f_X\\left(\\frac{y}{${c}}\\right) \\cdot \\frac{1}{${c}} = \\frac{${lambda}}{${c}} e^{-\\frac{${lambda}}{${c}} y}$.`,
+                `由 $y = ${c} x$ 得 $x = \\frac{y}{${c}}$ 且 $\\left|\\frac{dx}{dy}\\right| = \\frac{1}{${c}}$。因此 $f_Y(y) = f_X\\left(\\frac{y}{${c}}\\right) \\cdot \\frac{1}{${c}} = \\frac{${lambda}}{${c}} e^{-\\frac{${lambda}}{${c}} y}$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                "The rate is upside down: multiplying the variable by a constant divides the rate by it.",
+                "比率颠倒了：变量乘以常数时，比率要除以这个常数。",
+              ],
+              [
+                opts[2]!.en,
+                "Multiplying the variable by a constant divides the rate by it, rather than multiplying.",
+                "变量乘以常数时，比率要除以这个常数，而不是乘以它。",
+              ],
+              [
+                opts[3]!.en,
+                "Both places must change: the exponent also has $y$ divided by the constant.",
+                "两处都要变：指数中的 $y$ 也要除以这个常数。",
+              ],
+            ],
+          );
         },
       },
       {

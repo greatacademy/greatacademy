@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
 
 import { article, choiceProblem, numberProblem, pointProblem, solutionsProblem, steps, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // Linear Algebra Units 4 & 5: Linear Transformations, Eigenvalues, Diagonalization,
 // Complex Eigenvalues, Generalized Eigenvectors, and Jordan Canonical Form.
@@ -1536,7 +1537,28 @@ export const characteristicEquationOfAMatrix: TopicDef = {
           `The characteristic equation for a $2 \\times 2$ matrix is $\\det(A - \\lambda I) = \\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$. Here $\\operatorname{tr}(A) = ${trText}$ and $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$, giving $${formatCharEq(tr, det)}$.`,
           `$2 \\times 2$ 矩阵的特征方程为 $\\det(A - \\lambda I) = \\lambda^2 - \\operatorname{tr}(A)\\lambda + \\det(A) = 0$。这里 $\\operatorname{tr}(A) = ${trText}$ 且 $\\det(A) = (${a})(${d}) - (${b})(${c}) = ${det}$，得到 $${formatCharEq(tr, det)}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "The coefficient of $\\lambda$ is minus the trace, so its sign is wrong here.",
+            "$\\lambda$ 的系数是迹的相反数，所以这里符号错了。",
+          ],
+          [
+            wrong[1]!.en,
+            "The constant term is the determinant itself, so its sign is wrong here.",
+            "常数项就是行列式本身，所以这里符号错了。",
+          ],
+          [
+            wrong[2]!.en,
+            "Both signs are wrong: the coefficient of $\\lambda$ is minus the trace, and the constant term is the determinant.",
+            "两个符号都错了：$\\lambda$ 的系数是迹的相反数，常数项是行列式。",
+          ],
+          [
+            wrong[3]!.en,
+            `The coefficient of $\\lambda$ is off by one: the trace here is $${tr}$.`,
+            `$\\lambda$ 的系数差了 1：这里的迹是 $${tr}$。`,
+          ],
+        ]);
       },
     },
     {
@@ -1617,7 +1639,28 @@ export const cayleyHamiltonTheorem: TopicDef = {
           `The Cayley-Hamilton theorem states that a matrix satisfies its own characteristic equation: $A^2 ${formatShift(tr, "A")}${formatShift(-det, "I")} = 0$. Solving for $A^2$ gives $A^2 = ${formatCayleyComb(tr, det)}$.`,
           `凯莱-哈密顿定理指出方阵满足其自身的特征方程：$A^2 ${formatShift(tr, "A")}${formatShift(-det, "I")} = 0$。解出 $A^2$ 得到 $A^2 = ${formatCayleyComb(tr, det)}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            "The coefficient of $A$ has the wrong sign: solving for $A^2$ moves that term across the equals sign, which changes its sign.",
+            "$A$ 的系数符号错了：解出 $A^2$ 时这一项移到等号另一边，符号要改变。",
+          ],
+          [
+            wrong[1]!.en,
+            "The coefficient of $I$ has the wrong sign: solving for $A^2$ moves that term across the equals sign, which changes its sign.",
+            "$I$ 的系数符号错了：解出 $A^2$ 时这一项移到等号另一边，符号要改变。",
+          ],
+          [
+            wrong[2]!.en,
+            "Both signs are wrong: solving for $A^2$ moves both terms across the equals sign, which changes their signs.",
+            "两个符号都错了：解出 $A^2$ 时两项都移到等号另一边，符号都要改变。",
+          ],
+          [
+            wrong[3]!.en,
+            "The coefficient of $A$ comes from the characteristic equation, and it is not $1$ here.",
+            "$A$ 的系数来自特征方程，这里不是 $1$。",
+          ],
+        ]);
       },
     },
     {
@@ -2695,7 +2738,24 @@ export const findingComplexEigenvaluesOfReal2x2Matrices: TopicDef = {
           `The characteristic equation is $\\det(A - \\lambda I) = ${aPart} + ${b * b} = 0$. Solving gives $${aPart} = -${b * b}$, so $\\lambda = ${eigPair}$.`,
           `特征方程为 $\\det(A - \\lambda I) = ${aPart} + ${b * b} = 0$。解得 $${aPart} = -${b * b}$，因此 $\\lambda = ${eigPair}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [wrong[0]!.en, "The real part has the wrong sign: it equals the diagonal entry.", "实部的符号错了：它等于对角元素。"],
+          [
+            wrong[1]!.en,
+            `The real part is the diagonal entry $${a}$, and the size of the imaginary part is the off-diagonal $${b}$.`,
+            `实部是对角元素 $${a}$，虚部的大小是非对角元素 $${b}$。`,
+          ],
+          [
+            wrong[2]!.en,
+            `The factor $i$ is lost: the square equals $-${b * b}$, which is negative, so the roots are not real.`,
+            `丢了 $i$：平方等于 $-${b * b}$，是负数，所以根不是实数。`,
+          ],
+          [
+            wrong[3]!.en,
+            `The diagonal entry $${a}$ is dropped, but it is the real part of the eigenvalues.`,
+            `这里丢掉了对角元素 $${a}$，而它正是特征值的实部。`,
+          ],
+        ]);
       },
     },
     {
@@ -2773,7 +2833,24 @@ export const findingComplexEigenvectorsOfReal2x2Matrices: TopicDef = {
           `We solve $(A - (${eigStr})I)\\mathbf{v} = \\mathbf{0}$: $\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$. The first row gives $${biStr} v_1 - ${v2Term} = 0$, so $v_2 = ${si} v_1$. Choosing $v_1 = 1$ gives $\\mathbf{v} = ${vec2Latex(["1", si])}$.`,
           `求解方程 $(A - (${eigStr})I)\\mathbf{v} = \\mathbf{0}$：$\\begin{pmatrix} ${biStr} & -${b} \\\\ ${b} & ${biStr} \\end{pmatrix} \\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} 0 \\\\ 0 \\end{pmatrix}$。第一行给出 $${biStr} v_1 - ${v2Term} = 0$，即 $v_2 = ${si} v_1$。取 $v_1 = 1$ 可得 $\\mathbf{v} = ${vec2Latex(["1", si])}$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [wrong[0]!.en, "This is an eigenvector of the other, conjugate eigenvalue.", "这是另一个共轭特征值的特征向量。"],
+          [
+            wrong[1]!.en,
+            `The first row needs the second entry to be $${si}$ times the first, and this has two equal entries.`,
+            `第一行要求第二个分量是第一个的 $${si}$ 倍，而这里两个分量相等。`,
+          ],
+          [
+            wrong[2]!.en,
+            `The entries are swapped: the second entry must be $${si}$ times the first.`,
+            `两个分量弄反了：第二个分量必须是第一个的 $${si}$ 倍。`,
+          ],
+          [
+            wrong[3]!.en,
+            `The first entry has the wrong sign: the second entry must be $${si}$ times the first.`,
+            `第一个分量符号错了：第二个分量必须是第一个的 $${si}$ 倍。`,
+          ],
+        ]);
       },
     },
     {
@@ -2896,26 +2973,38 @@ export const rotationScalingMatrices: TopicDef = {
         const b = sb * k;
         const opt = (d: number): Text => t(`$${d}^{\\circ}$`, `$${d}^{\\circ}$`);
         const others = [dirs[(idx + 2) % 8]![2], dirs[(idx + 4) % 8]![2], dirs[(idx + 6) % 8]![2]];
-        return oneOf(
-          rng,
-          t(
-            `Find the rotation angle $\\theta$, with $0^{\\circ} \\le \\theta < 360^{\\circ}$, of the rotation-scaling matrix $C = ${mat2Latex(
-              [
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Find the rotation angle $\\theta$, with $0^{\\circ} \\le \\theta < 360^{\\circ}$, of the rotation-scaling matrix $C = ${mat2Latex(
+                [
+                  [a, -b],
+                  [b, a],
+                ],
+              )}$.`,
+              `求旋转伸缩矩阵 $C = ${mat2Latex([
                 [a, -b],
                 [b, a],
-              ],
-            )}$.`,
-            `求旋转伸缩矩阵 $C = ${mat2Latex([
-              [a, -b],
-              [b, a],
-            ])}$ 的旋转角 $\\theta$（$0^{\\circ} \\le \\theta < 360^{\\circ}$）。`,
+              ])}$ 的旋转角 $\\theta$（$0^{\\circ} \\le \\theta < 360^{\\circ}$）。`,
+            ),
+            opt(deg),
+            others.map(opt),
+            t(
+              `Here $(a, b) = (${a}, ${b})$, which points at angle $${deg}^{\\circ}$; the scaling factor is $r = ${b === 0 || a === 0 ? k : `${k}\\sqrt{2}`}$.`,
+              `这里 $(a, b) = (${a}, ${b})$，其方向角为 $${deg}^{\\circ}$；伸缩因子为 $r = ${b === 0 || a === 0 ? k : `${k}\\sqrt{2}`}$。`,
+            ),
           ),
-          opt(deg),
-          others.map(opt),
-          t(
-            `Here $(a, b) = (${a}, ${b})$, which points at angle $${deg}^{\\circ}$; the scaling factor is $r = ${b === 0 || a === 0 ? k : `${k}\\sqrt{2}`}$.`,
-            `这里 $(a, b) = (${a}, ${b})$，其方向角为 $${deg}^{\\circ}$；伸缩因子为 $r = ${b === 0 || a === 0 ? k : `${k}\\sqrt{2}`}$。`,
-          ),
+          [
+            ...others.map(
+              (o) =>
+                [
+                  opt(o).en,
+                  `The point $(a, b) = (${a}, ${b})$ does not lie in the direction of $${o}^{\\circ}$.`,
+                  `点 $(a, b) = (${a}, ${b})$ 不在 $${o}^{\\circ}$ 的方向上。`,
+                ] as const,
+            ),
+          ],
         );
       },
     },
@@ -3226,7 +3315,16 @@ export const generalizedEigenvectors: TopicDef = {
           `A non-zero vector $v$ is a generalized eigenvector of rank $k = ${k}$ for $\\lambda = ${lambda}$ if $(A${shiftStr})^{${k}} v = 0$ and $(A${shiftStr})^{${k - 1}} v \\neq 0$.`,
           `非零向量 $v$ 是对应于 $\\lambda = ${lambda}$ 的 $k = ${k}$ 阶广义特征向量，当且仅当 $(A${shiftStr})^{${k}} v = 0$ 且 $(A${shiftStr})^{${k - 1}} v \\neq 0$。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [wrong[0]!.en, "The power must send $v$ to $0$, not back to $v$.", "这个幂应把 $v$ 变成 $0$，而不是变回 $v$。"],
+          [wrong[1]!.en, `The rank $${k}$ is an exponent, not a scalar multiplying $v$.`, `秩 $${k}$ 是指数，不是乘 $v$ 的标量。`],
+          [
+            wrong[2]!.en,
+            "An ordinary eigenvector satisfies this, and the definition is about powers of the shifted matrix.",
+            "普通特征向量满足这个式子，而定义说的是平移后矩阵的幂。",
+          ],
+          [wrong[3]!.en, `This describes rank $${k + 1}$, one more than asked.`, `这说的是秩 $${k + 1}$，比题目要求的多 1。`],
+        ]);
       },
     },
     {

@@ -10,6 +10,7 @@ import {
   pointProblem,
   radicalProblem,
 } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // Precalculus Unit 10: Complex Numbers
 // Part 1: Modules 10.30 (The Complex Plane), 10.31 (Further Complex Numbers),
@@ -305,7 +306,16 @@ export const theComplexPlane: TopicDef = {
           `The real part is $a = ${a}$ (${a > 0 ? "positive" : "negative"}) and the imaginary part is $b = ${b}$ (${b > 0 ? "positive" : "negative"}). Therefore, the point $(${a}, ${b})$ lies in Quadrant ${quad}.`,
           `实部 $a = ${a}$（${a > 0 ? "正数" : "负数"}），虚部 $b = ${b}$（${b > 0 ? "正数" : "负数"}）。因此，点 $(${a}, ${b})$ 位于第 ${quad} 象限。`,
         );
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          ...allQuads.map((q) => {
+            const [re, im] = { I: [1, 1], II: [-1, 1], III: [-1, -1], IV: [1, -1] }[q as "I" | "II" | "III" | "IV"] as [number, number];
+            return [
+              `Quadrant ${q}`,
+              `Quadrant ${q} has a ${re > 0 ? "positive" : "negative"} real part and a ${im > 0 ? "positive" : "negative"} imaginary part, which does not match $${a}$ and $${b}$.`,
+              `第 ${q} 象限的实部为${re > 0 ? "正" : "负"}、虚部为${im > 0 ? "正" : "负"}，与 $${a}$ 和 $${b}$ 不符。`,
+            ] as const;
+          }),
+        ]);
       },
     },
   ],

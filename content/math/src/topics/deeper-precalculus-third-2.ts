@@ -2,7 +2,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
+import { reasoned } from "../wrong-reasons.ts";
 import { choose, type Pair, whole } from "./early-grades-more-kit.ts";
 import { chooseFilled, frac, fraction, integer, skill } from "./third-kit.ts";
 
@@ -50,17 +50,36 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           string,
           string,
         ];
-        return chooseFilled(
-          rng,
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `$${A}${B}${C}${D}$ is a parallelogram, with vertices in that order. Which vector equals $\\vec{${A}${B}}$?`,
+              `$${A}${B}${C}${D}$ 是平行四边形，顶点按此顺序。哪个向量等于 $\\vec{${A}${B}}$？`,
+            ],
+            `\\vec{${D}${C}}`,
+            [`\\vec{${C}${D}}`, `\\vec{${A}${D}}`, `\\vec{${B}${C}}`],
+            [
+              `$\\vec{${D}${C}}$ runs along the opposite side in the same direction as $\\vec{${A}${B}}$.`,
+              `$\\vec{${D}${C}}$ 沿对边，方向与 $\\vec{${A}${B}}$ 相同。`,
+            ],
+          ),
           [
-            `$${A}${B}${C}${D}$ is a parallelogram, with vertices in that order. Which vector equals $\\vec{${A}${B}}$?`,
-            `$${A}${B}${C}${D}$ 是平行四边形，顶点按此顺序。哪个向量等于 $\\vec{${A}${B}}$？`,
-          ],
-          `\\vec{${D}${C}}`,
-          [`\\vec{${C}${D}}`, `\\vec{${A}${D}}`, `\\vec{${B}${C}}`],
-          [
-            `$\\vec{${D}${C}}$ runs along the opposite side in the same direction as $\\vec{${A}${B}}$.`,
-            `$\\vec{${D}${C}}$ 沿对边，方向与 $\\vec{${A}${B}}$ 相同。`,
+            [
+              `$\\vec{${C}${D}}$`,
+              "This runs along the opposite side but in the other direction, and equal vectors share their direction.",
+              "它沿对边，但方向相反，而相等的向量方向相同。",
+            ],
+            [
+              `$\\vec{${A}${D}}$`,
+              "This is a neighboring side, not the opposite one, so its direction differs.",
+              "这是相邻的边，不是对边，所以方向不同。",
+            ],
+            [
+              `$\\vec{${B}${C}}$`,
+              "This is a neighboring side, not the opposite one, so its direction differs.",
+              "这是相邻的边，不是对边，所以方向不同。",
+            ],
           ],
         );
       },
@@ -333,17 +352,36 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         const a = nz(rng, 5);
         const b = nz(rng, 5);
         const t = rng.int(2, 9);
-        return chooseFilled(
-          rng,
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `An object has velocity $${vec(u, v)}$ m/s and constant acceleration $${vec(a, b)}$ m/s$^2$. What is its velocity after ${t} s?`,
+              `物体的速度是 $${vec(u, v)}$ 米/秒，恒定加速度是 $${vec(a, b)}$ 米/秒$^2$。${t} 秒后速度是多少？`,
+            ],
+            vec(u + t * a, v + t * b),
+            [vec(u + a, v + b), vec(t * u + a, t * v + b), vec(u - t * a, v - t * b)],
+            [
+              `$${vec(u, v)} + ${t}${vec(a, b)} = ${vec(u + t * a, v + t * b)}$.`,
+              `$${vec(u, v)} + ${t}${vec(a, b)} = ${vec(u + t * a, v + t * b)}$。`,
+            ],
+          ),
           [
-            `An object has velocity $${vec(u, v)}$ m/s and constant acceleration $${vec(a, b)}$ m/s$^2$. What is its velocity after ${t} s?`,
-            `物体的速度是 $${vec(u, v)}$ 米/秒，恒定加速度是 $${vec(a, b)}$ 米/秒$^2$。${t} 秒后速度是多少？`,
-          ],
-          vec(u + t * a, v + t * b),
-          [vec(u + a, v + b), vec(t * u + a, t * v + b), vec(u - t * a, v - t * b)],
-          [
-            `$${vec(u, v)} + ${t}${vec(a, b)} = ${vec(u + t * a, v + t * b)}$.`,
-            `$${vec(u, v)} + ${t}${vec(a, b)} = ${vec(u + t * a, v + t * b)}$。`,
+            [
+              `$${vec(u + a, v + b)}$`,
+              `This adds the acceleration only once, but it acts for all $${t}$ seconds.`,
+              `这里只加了一次加速度，但它作用了整整 $${t}$ 秒。`,
+            ],
+            [
+              `$${vec(t * u + a, t * v + b)}$`,
+              "Time multiplies the acceleration, not the starting velocity.",
+              "时间乘的是加速度，不是初速度。",
+            ],
+            [
+              `$${vec(u - t * a, v - t * b)}$`,
+              "Acceleration adds to the velocity, so the sign is wrong.",
+              "加速度是加到速度上的，所以符号错了。",
+            ],
           ],
         );
       },
@@ -363,17 +401,42 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         const v = nz(rng, 9);
         const x = rng.int(-9, 9);
         const y = rng.int(-9, 9);
-        return chooseFilled(
-          rng,
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `A drone flies in a straight line at constant velocity from $(${x}, ${y})$ to $(${x + t * u}, ${y + t * v})$ in ${t} seconds. What is its velocity?`,
+              `无人机以恒定速度沿直线飞行，从 $(${x}, ${y})$ 到 $(${x + t * u}, ${y + t * v})$ 用了 ${t} 秒。它的速度是多少？`,
+            ],
+            vec(u, v),
+            [vec(t * u, t * v), vec(-u, -v), vec(v, u) === vec(u, v) ? vec(u + 1, v) : vec(v, u)],
+            [
+              `The displacement is $${vec(t * u, t * v)}$, and dividing by ${t} gives $${vec(u, v)}$.`,
+              `位移是 $${vec(t * u, t * v)}$，除以 ${t} 得 $${vec(u, v)}$。`,
+            ],
+          ),
           [
-            `A drone flies in a straight line at constant velocity from $(${x}, ${y})$ to $(${x + t * u}, ${y + t * v})$ in ${t} seconds. What is its velocity?`,
-            `无人机以恒定速度沿直线飞行，从 $(${x}, ${y})$ 到 $(${x + t * u}, ${y + t * v})$ 用了 ${t} 秒。它的速度是多少？`,
-          ],
-          vec(u, v),
-          [vec(t * u, t * v), vec(-u, -v), vec(v, u) === vec(u, v) ? vec(u + 1, v) : vec(v, u)],
-          [
-            `The displacement is $${vec(t * u, t * v)}$, and dividing by ${t} gives $${vec(u, v)}$.`,
-            `位移是 $${vec(t * u, t * v)}$，除以 ${t} 得 $${vec(u, v)}$。`,
+            [
+              `$${vec(t * u, t * v)}$`,
+              "That is the whole displacement: a velocity is displacement per second, so divide by the time.",
+              "这是总位移：速度是每秒的位移，所以要除以时间。",
+            ],
+            [
+              `$${vec(-u, -v)}$`,
+              "The direction is reversed: displacement is the end point minus the start.",
+              "方向反了：位移是终点减起点。",
+            ],
+            vec(v, u) === vec(u, v)
+              ? [
+                  `$${vec(u + 1, v)}$`,
+                  "The first component is off: divide the change in $x$ by the time.",
+                  "第一个分量不对：用 $x$ 的变化量除以时间。",
+                ]
+              : [
+                  `$${vec(v, u)}$`,
+                  "The components are swapped: the first one comes from the change in $x$.",
+                  "两个分量弄反了：第一个分量来自 $x$ 的变化量。",
+                ],
           ],
         );
       },
@@ -734,15 +797,34 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       (rng) => {
         const [a, b, c, d] = [nz(rng, 9), nz(rng, 9), nz(rng, 9), nz(rng, 9)];
         const [e, f, g, h] = [nz(rng, 9), nz(rng, 9), nz(rng, 9), nz(rng, 9)];
-        return chooseFilled(
-          rng,
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `Find $X$ if $${mat([a, b], [c, d])} + X = ${mat([e, f], [g, h])}$.`,
+              `求 $X$：$${mat([a, b], [c, d])} + X = ${mat([e, f], [g, h])}$。`,
+            ],
+            mat([e - a, f - b], [g - c, h - d]),
+            [mat([a - e, b - f], [c - g, d - h]), mat([e + a, f + b], [g + c, h + d]), mat([e - a, g - c], [f - b, h - d])],
+            [`$X$ is the right side minus the given matrix, entry by entry.`, `$X$ 是右边减去给定矩阵，逐元素计算。`],
+          ),
           [
-            `Find $X$ if $${mat([a, b], [c, d])} + X = ${mat([e, f], [g, h])}$.`,
-            `求 $X$：$${mat([a, b], [c, d])} + X = ${mat([e, f], [g, h])}$。`,
+            [
+              `$${mat([a - e, b - f], [c - g, d - h])}$`,
+              "The subtraction is the wrong way around: it is the right side minus the given matrix.",
+              "减法次序反了：应该是右边减去给定矩阵。",
+            ],
+            [
+              `$${mat([e + a, f + b], [g + c, h + d])}$`,
+              "This adds the given matrix, but to undo an addition you subtract it.",
+              "这里加上了给定矩阵，但要抵消加法应该减去它。",
+            ],
+            [
+              `$${mat([e - a, g - c], [f - b, h - d])}$`,
+              "The rows and columns are swapped: each entry stays in its own position.",
+              "行和列弄反了：每个元素都留在原来的位置。",
+            ],
           ],
-          mat([e - a, f - b], [g - c, h - d]),
-          [mat([a - e, b - f], [c - g, d - h]), mat([e + a, f + b], [g + c, h + d]), mat([e - a, g - c], [f - b, h - d])],
-          [`$X$ is the right side minus the given matrix, entry by entry.`, `$X$ 是右边减去给定矩阵，逐元素计算。`],
         );
       },
     ),
@@ -808,17 +890,32 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         const n = rng.int(2, 9);
         const p = n === m ? n + 1 : rng.int(2, 9);
         const [A, B] = rng.sample(["A", "B", "C", "D", "M", "N", "P", "Q"], 2) as [string, string];
-        return chooseFilled(
-          rng,
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `$${A}$ is $${m} \\times ${n}$ and $${B}$ is $${n} \\times ${p}$. Which expression equals $(${A}${B})^{T}$?`,
+              `$${A}$ 是 $${m} \\times ${n}$ 矩阵，$${B}$ 是 $${n} \\times ${p}$ 矩阵。哪个式子等于 $(${A}${B})^{T}$？`,
+            ],
+            `${B}^{T}${A}^{T}`,
+            [`${A}^{T}${B}^{T}`, `${B}${A}`, `${A}${B}`],
+            [
+              `A transpose of a product reverses the order, and the shapes $${p} \\times ${n}$ and $${n} \\times ${m}$ fit.`,
+              `积的转置反转次序，形状 $${p} \\times ${n}$ 和 $${n} \\times ${m}$ 正好相符。`,
+            ],
+          ),
           [
-            `$${A}$ is $${m} \\times ${n}$ and $${B}$ is $${n} \\times ${p}$. Which expression equals $(${A}${B})^{T}$?`,
-            `$${A}$ 是 $${m} \\times ${n}$ 矩阵，$${B}$ 是 $${n} \\times ${p}$ 矩阵。哪个式子等于 $(${A}${B})^{T}$？`,
-          ],
-          `${B}^{T}${A}^{T}`,
-          [`${A}^{T}${B}^{T}`, `${B}${A}`, `${A}${B}`],
-          [
-            `A transpose of a product reverses the order, and the shapes $${p} \\times ${n}$ and $${n} \\times ${m}$ fit.`,
-            `积的转置反转次序，形状 $${p} \\times ${n}$ 和 $${n} \\times ${m}$ 正好相符。`,
+            [
+              `$${A}^{T}${B}^{T}$`,
+              "The factors are in the same order, but transposing a product reverses the order.",
+              "因子次序没变，但积的转置要反转次序。",
+            ],
+            [`$${B}${A}$`, "The order is reversed, but each factor must also be transposed.", "次序反转了，但每个因子还要转置。"],
+            [
+              `$${A}${B}$`,
+              "This is the product itself: its transpose has rows and columns exchanged.",
+              "这是积本身：它的转置要交换行和列。",
+            ],
           ],
         );
       },
@@ -857,18 +954,37 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       ],
       (rng) => {
         const [a, b, c, d] = [nz(rng, 6), nz(rng, 6), nz(rng, 6), nz(rng, 6)];
-        return chooseFilled(
-          rng,
-          [`Find $${mat([a, b], [c, d])}^{2}$.`, `求 $${mat([a, b], [c, d])}^{2}$。`],
-          mat([a * a + b * c, a * b + b * d], [c * a + d * c, c * b + d * d]),
+        return reasoned(
+          chooseFilled(
+            rng,
+            [`Find $${mat([a, b], [c, d])}^{2}$.`, `求 $${mat([a, b], [c, d])}^{2}$。`],
+            mat([a * a + b * c, a * b + b * d], [c * a + d * c, c * b + d * d]),
+            [
+              mat([a * a, b * b], [c * c, d * d]),
+              mat([a * a + b * c, a * b - b * d], [c * a - d * c, c * b + d * d]),
+              mat([2 * a, 2 * b], [2 * c, 2 * d]),
+            ],
+            [
+              `Top left is $${paren(a)} \\cdot ${paren(a)} + ${paren(b)} \\cdot ${paren(c)}$, and the other entries follow the same row by column rule.`,
+              `左上是 $${paren(a)} \\cdot ${paren(a)} + ${paren(b)} \\cdot ${paren(c)}$，其他元素按同样的行乘列规则计算。`,
+            ],
+          ),
           [
-            mat([a * a, b * b], [c * c, d * d]),
-            mat([a * a + b * c, a * b - b * d], [c * a - d * c, c * b + d * d]),
-            mat([2 * a, 2 * b], [2 * c, 2 * d]),
-          ],
-          [
-            `Top left is $${paren(a)} \\cdot ${paren(a)} + ${paren(b)} \\cdot ${paren(c)}$, and the other entries follow the same row by column rule.`,
-            `左上是 $${paren(a)} \\cdot ${paren(a)} + ${paren(b)} \\cdot ${paren(c)}$，其他元素按同样的行乘列规则计算。`,
+            [
+              `$${mat([a * a, b * b], [c * c, d * d])}$`,
+              "This squares each entry, but squaring a matrix means multiplying it by itself, row by column.",
+              "这里把每个元素都平方了，但矩阵的平方是矩阵乘自身，按行乘列计算。",
+            ],
+            [
+              `$${mat([a * a + b * c, a * b - b * d], [c * a - d * c, c * b + d * d])}$`,
+              "The two terms of an off-diagonal entry are added, not subtracted.",
+              "非对角元素的两项是相加，不是相减。",
+            ],
+            [
+              `$${mat([2 * a, 2 * b], [2 * c, 2 * d])}$`,
+              "This doubles the matrix: that is $A + A$, not $A \\cdot A$.",
+              "这是把矩阵加倍：那是 $A + A$，不是 $A \\cdot A$。",
+            ],
           ],
         );
       },
@@ -1372,17 +1488,29 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         const n = rng.int(5, 60);
         const r = n % 4;
         const images: readonly string[] = [`(${x}, ${y})`, `(${-y}, ${x})`, `(${-x}, ${-y})`, `(${y}, ${-x})`];
-        return chooseFilled(
-          rng,
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `The point $(${x}, ${y})$ is rotated counterclockwise by $90^{\\circ}$, ${n} times in a row. Where does it end?`,
+              `点 $(${x}, ${y})$ 逆时针旋转 $90^{\\circ}$，连续 ${n} 次。它最后在哪里？`,
+            ],
+            images[r]!,
+            images.filter((_, i) => i !== r),
+            [
+              `$${n} = 4 \\times ${Math.floor(n / 4)} + ${r}$, so only $${r}$ quarter ${r === 1 ? "turn counts" : "turns count"}.`,
+              `$${n} = 4 \\times ${Math.floor(n / 4)} + ${r}$，所以只有 $${r}$ 个四分之一圈有效。`,
+            ],
+          ),
           [
-            `The point $(${x}, ${y})$ is rotated counterclockwise by $90^{\\circ}$, ${n} times in a row. Where does it end?`,
-            `点 $(${x}, ${y})$ 逆时针旋转 $90^{\\circ}$，连续 ${n} 次。它最后在哪里？`,
-          ],
-          images[r]!,
-          images.filter((_, i) => i !== r),
-          [
-            `$${n} = 4 \\times ${Math.floor(n / 4)} + ${r}$, so only $${r}$ quarter ${r === 1 ? "turn counts" : "turns count"}.`,
-            `$${n} = 4 \\times ${Math.floor(n / 4)} + ${r}$，所以只有 $${r}$ 个四分之一圈有效。`,
+            ...images.map(
+              (im, i) =>
+                [
+                  `$${im}$`,
+                  `This is where $${i}$ quarter ${i === 1 ? "turn leads" : "turns lead"}: divide $${n}$ by $4$ and use the remainder.`,
+                  `这是转 $${i}$ 个四分之一圈的结果：用 $${n}$ 除以 $4$，取余数。`,
+                ] as const,
+            ),
           ],
         );
       },

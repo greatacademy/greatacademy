@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q, radical } from "@ga/subject-math";
 
 import { functionProblem, numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { type Exact, exactLatex, exactMul, oneOf, type Poly, pLatex, power, rounded, specialAngles, table } from "./calculus-common.ts";
 
 // Calculus I unit 8: Integration, modules 8.24 and 8.25.
@@ -213,22 +214,41 @@ export const approximatingAreasWithTheRightRiemannSum: TopicDef = {
         const rule = rng.pick(["left", "right"] as const);
         const over = increasing === (rule === "right");
         const right = over ? t("An overestimate", "高估") : t("An underestimate", "低估");
-        return oneOf(
-          rng,
-          t(
-            `The area under $y = ${f}$ on $[${a}, ${b}]$ is approximated by ${ruleWithArticle(rule)} with $${n}$ subintervals. Is the approximation an overestimate or an underestimate of the area?`,
-            `用 $${n}$ 个子区间的${ruleName[rule]["zh-CN"]}近似 $y = ${f}$ 在 $[${a}, ${b}]$ 上的图像下方面积。这个近似值是高估还是低估？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `The area under $y = ${f}$ on $[${a}, ${b}]$ is approximated by ${ruleWithArticle(rule)} with $${n}$ subintervals. Is the approximation an overestimate or an underestimate of the area?`,
+              `用 $${n}$ 个子区间的${ruleName[rule]["zh-CN"]}近似 $y = ${f}$ 在 $[${a}, ${b}]$ 上的图像下方面积。这个近似值是高估还是低估？`,
+            ),
+            right,
+            [
+              over ? t("An underestimate", "低估") : t("An overestimate", "高估"),
+              t("Exactly equal to the area", "恰好等于面积"),
+              t("It cannot be determined", "无法判断"),
+            ],
+            t(
+              `$y = ${f}$ is ${increasing ? "increasing" : "decreasing"} on $[${a}, ${b}]$, so the height at the ${rule} end of each subinterval is the ${over ? "largest" : "smallest"} value on it. Each rectangle ${over ? "contains" : "fits under"} the curve, so the sum is ${over ? "an overestimate" : "an underestimate"}.`,
+              `$y = ${f}$ 在 $[${a}, ${b}]$ 上${increasing ? "递增" : "递减"}，所以每个子区间${rule === "left" ? "左" : "右"}端点处的高是该子区间上的${over ? "最大值" : "最小值"}。每个矩形都${over ? "盖住" : "位于"}曲线${over ? "" : "下方"}，所以这个和是${over ? "高估" : "低估"}。`,
+            ),
           ),
-          right,
           [
-            over ? t("An underestimate", "低估") : t("An overestimate", "高估"),
-            t("Exactly equal to the area", "恰好等于面积"),
-            t("It cannot be determined", "无法判断"),
+            [
+              over ? "An underestimate" : "An overestimate",
+              `The height at the ${rule} end is the ${over ? "largest" : "smallest"} on each subinterval, so each rectangle is ${over ? "above" : "below"} the curve.`,
+              `${rule === "left" ? "左" : "右"}端的高度是每个小区间上${over ? "最大" : "最小"}的，所以每个矩形都在曲线${over ? "上方" : "下方"}。`,
+            ],
+            [
+              "Exactly equal to the area",
+              "Each rectangle has a flat top and the curve does not, so some area is missed or added.",
+              "每个矩形的顶是平的，而曲线不是，所以总会少算或多算一些面积。",
+            ],
+            [
+              "It cannot be determined",
+              "The function only goes one way on this interval, and that decides it.",
+              "函数在这个区间上是单调的，这就能判断了。",
+            ],
           ],
-          t(
-            `$y = ${f}$ is ${increasing ? "increasing" : "decreasing"} on $[${a}, ${b}]$, so the height at the ${rule} end of each subinterval is the ${over ? "largest" : "smallest"} value on it. Each rectangle ${over ? "contains" : "fits under"} the curve, so the sum is ${over ? "an overestimate" : "an underestimate"}.`,
-            `$y = ${f}$ 在 $[${a}, ${b}]$ 上${increasing ? "递增" : "递减"}，所以每个子区间${rule === "left" ? "左" : "右"}端点处的高是该子区间上的${over ? "最大值" : "最小值"}。每个矩形都${over ? "盖住" : "位于"}曲线${over ? "" : "下方"}，所以这个和是${over ? "高估" : "低估"}。`,
-          ),
         );
       },
     },
@@ -675,17 +695,36 @@ export const definingDefiniteIntegralsUsingLeftAndRightRiemannSums: TopicDef = {
         const sum = `\\lim_{n \\to \\infty} \\sum_{i = 1}^{n} ${at(u)} \\cdot \\frac{${w}}{n}`;
         const integral = (lo: string | number, hi: string | number, body = f) => `\\int_{${lo}}^{${hi}} ${body} \\, dx`;
         const right = integral(a, b);
-        return oneOf(
-          rng,
-          t(`Which definite integral equals $${sum}$?`, `哪个定积分等于 $${sum}$？`),
-          t(`$${right}$`, `$${right}$`),
-          [integral(0, w), integral(a, w === a ? w + 1 : w), integral(w, w + a)]
-            .filter((x) => x !== right)
-            .map((x) => t(`$${x}$`, `$${x}$`)),
-          t(
-            `The factor $\\frac{${w}}{n}$ is $\\Delta x$, so $b - a = ${w}$, and the argument $${u}$ is $a + i\\Delta x$ with $a = ${a}$. So $b = ${b}$ and the limit is $${right}$.`,
-            `因子 $\\frac{${w}}{n}$ 是 $\\Delta x$，所以 $b - a = ${w}$；自变量 $${u}$ 即 $a + i\\Delta x$，其中 $a = ${a}$。所以 $b = ${b}$，极限为 $${right}$。`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(`Which definite integral equals $${sum}$?`, `哪个定积分等于 $${sum}$？`),
+            t(`$${right}$`, `$${right}$`),
+            [integral(0, w), integral(a, w === a ? w + 1 : w), integral(w, w + a)]
+              .filter((x) => x !== right)
+              .map((x) => t(`$${x}$`, `$${x}$`)),
+            t(
+              `The factor $\\frac{${w}}{n}$ is $\\Delta x$, so $b - a = ${w}$, and the argument $${u}$ is $a + i\\Delta x$ with $a = ${a}$. So $b = ${b}$ and the limit is $${right}$.`,
+              `因子 $\\frac{${w}}{n}$ 是 $\\Delta x$，所以 $b - a = ${w}$；自变量 $${u}$ 即 $a + i\\Delta x$，其中 $a = ${a}$。所以 $b = ${b}$，极限为 $${right}$。`,
+            ),
           ),
+          [
+            [
+              `$${integral(0, w)}$`,
+              `This starts at $0$, but the argument starts at $${a}$, so the lower limit is $${a}$.`,
+              `这里从 $0$ 开始，但自变量从 $${a}$ 开始，所以下限是 $${a}$。`,
+            ],
+            [
+              `$${integral(a, w === a ? w + 1 : w)}$`,
+              `$\\Delta x$ gives the length of the interval, so the upper limit is $${a} + ${w} = ${b}$.`,
+              `$\\Delta x$ 给出的是区间长度，所以上限是 $${a} + ${w} = ${b}$。`,
+            ],
+            [
+              `$${integral(w, w + a)}$`,
+              `The lower limit comes from the constant in the argument, which is $${a}$.`,
+              `下限来自自变量中的常数，也就是 $${a}$。`,
+            ],
+          ],
         );
       },
     },

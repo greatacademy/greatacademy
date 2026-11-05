@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { type Coefficient, gcd, plane, Q } from "@ga/subject-math";
 
 import { choiceProblem, numberProblem, steps } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // Precalculus unit 4: Trigonometry (modules 4.9 to 4.12: inverse functions,
 // identities, sum/difference formulas, and double-angle formulas).
@@ -1515,22 +1516,41 @@ export const theSumAndDifferenceFormulasForSine: TopicDef = {
         const a = b + rng.int(3, 40);
         const opStr = isSum ? "+" : "-";
         const resAngle = isSum ? a + b : a - b;
-        return oneOf(
-          rng,
-          t(
-            `Simplify $\\sin(${a}^{\\circ})\\cos(${b}^{\\circ}) ${opStr} \\cos(${a}^{\\circ})\\sin(${b}^{\\circ})$.`,
-            `化简 $\\sin(${a}^{\\circ})\\cos(${b}^{\\circ}) ${opStr} \\cos(${a}^{\\circ})\\sin(${b}^{\\circ})$。`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Simplify $\\sin(${a}^{\\circ})\\cos(${b}^{\\circ}) ${opStr} \\cos(${a}^{\\circ})\\sin(${b}^{\\circ})$.`,
+              `化简 $\\sin(${a}^{\\circ})\\cos(${b}^{\\circ}) ${opStr} \\cos(${a}^{\\circ})\\sin(${b}^{\\circ})$。`,
+            ),
+            t(`$\\sin(${resAngle}^{\\circ})$`, `$\\sin(${resAngle}^{\\circ})$`),
+            [
+              t(`$\\cos(${resAngle}^{\\circ})$`, `$\\cos(${resAngle}^{\\circ})$`),
+              mathOption(`\\sin(${isSum ? a - b : a + b}^{\\circ})`),
+              mathOption(`\\cos(${isSum ? a - b : a + b}^{\\circ})`),
+            ],
+            t(
+              `By the sine ${isSum ? "sum" : "difference"} formula, $\\sin(\\alpha ${opStr} \\beta) = \\sin \\alpha \\cos \\beta ${opStr} \\cos \\alpha \\sin \\beta$, which gives $\\sin(${resAngle}^\\circ)$.`,
+              `由正弦${isSum ? "和角" : "差角"}公式，原式等于 $\\sin(${a}^\\circ ${opStr} ${b}^\\circ) = \\sin(${resAngle}^\\circ)$。`,
+            ),
           ),
-          t(`$\\sin(${resAngle}^{\\circ})$`, `$\\sin(${resAngle}^{\\circ})$`),
           [
-            t(`$\\cos(${resAngle}^{\\circ})$`, `$\\cos(${resAngle}^{\\circ})$`),
-            mathOption(`\\sin(${isSum ? a - b : a + b}^{\\circ})`),
-            mathOption(`\\cos(${isSum ? a - b : a + b}^{\\circ})`),
+            [
+              `$\\cos(${resAngle}^{\\circ})$`,
+              "The pattern sine times cosine, cosine times sine collapses to a sine: a cosine comes from cosine times cosine and sine times sine.",
+              "正弦乘余弦、余弦乘正弦的形式合并成正弦；余弦来自余弦乘余弦和正弦乘正弦。",
+            ],
+            [
+              mathOption(`\\sin(${isSum ? a - b : a + b}^{\\circ})`).en,
+              "The sign is the wrong way: in a sine formula the sign between the terms is the sign between the angles.",
+              "符号反了：正弦公式中两项之间的符号就是两角之间的符号。",
+            ],
+            [
+              mathOption(`\\cos(${isSum ? a - b : a + b}^{\\circ})`).en,
+              "Both the function and the sign are wrong: this pattern gives a sine, with the same sign between the angles.",
+              "函数和符号都错了：这个形式得到正弦，两角之间的符号也相同。",
+            ],
           ],
-          t(
-            `By the sine ${isSum ? "sum" : "difference"} formula, $\\sin(\\alpha ${opStr} \\beta) = \\sin \\alpha \\cos \\beta ${opStr} \\cos \\alpha \\sin \\beta$, which gives $\\sin(${resAngle}^\\circ)$.`,
-            `由正弦${isSum ? "和角" : "差角"}公式，原式等于 $\\sin(${a}^\\circ ${opStr} ${b}^\\circ) = \\sin(${resAngle}^\\circ)$。`,
-          ),
         );
       },
     },
@@ -1696,15 +1716,32 @@ export const theSumAndDifferenceFormulasForTangent: TopicDef = {
         const botSign = isSum ? "-" : "+";
         const ans = specialTan[target]!;
         const expr = `\\frac{\\tan(${a}^{\\circ}) ${topSign} \\tan(${b}^{\\circ})}{1 ${botSign} \\tan(${a}^{\\circ})\\tan(${b}^{\\circ})}`;
-        return oneOf(
-          rng,
-          t(`Find the exact value of $${expr}$.`, `求 $${expr}$ 的精确值。`),
-          mathOption(ans),
-          [negated(ans), "1", "\\sqrt{3}", "\\frac{\\sqrt{3}}{3}", "0"].map(mathOption),
-          t(
-            `Collapse using the tangent ${isSum ? "sum" : "difference"} formula: $\\tan(${a}^\\circ ${topSign} ${b}^\\circ) = \\tan(${target}^\\circ) = ${ans}$.`,
-            `利用正切${isSum ? "和角" : "差角"}公式合并：$\\tan(${a}^\\circ ${topSign} ${b}^\\circ) = \\tan(${target}^\\circ) = ${ans}$。`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(`Find the exact value of $${expr}$.`, `求 $${expr}$ 的精确值。`),
+            mathOption(ans),
+            [negated(ans), "1", "\\sqrt{3}", "\\frac{\\sqrt{3}}{3}", "0"].map(mathOption),
+            t(
+              `Collapse using the tangent ${isSum ? "sum" : "difference"} formula: $\\tan(${a}^\\circ ${topSign} ${b}^\\circ) = \\tan(${target}^\\circ) = ${ans}$.`,
+              `利用正切${isSum ? "和角" : "差角"}公式合并：$\\tan(${a}^\\circ ${topSign} ${b}^\\circ) = \\tan(${target}^\\circ) = ${ans}$。`,
+            ),
           ),
+          [
+            [
+              mathOption(negated(ans)).en,
+              `The sign is wrong: the expression collapses to $\\tan ${target}^{\\circ}$, sign included.`,
+              `符号错了：原式合并为 $\\tan ${target}^{\\circ}$，符号也要算上。`,
+            ],
+            ...["1", "\\sqrt{3}", "\\frac{\\sqrt{3}}{3}", "0"].map(
+              (o) =>
+                [
+                  mathOption(o).en,
+                  `That is the tangent of another angle: the expression collapses to $\\tan ${target}^{\\circ}$.`,
+                  `这是另一个角的正切值：原式合并为 $\\tan ${target}^{\\circ}$。`,
+                ] as const,
+            ),
+          ],
         );
       },
     },

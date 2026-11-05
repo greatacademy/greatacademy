@@ -2,6 +2,7 @@ import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { paren, Q } from "@ga/subject-math";
 import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 /** Topics for Unit 4: Continuous Probability Distributions (new topics). */
 export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = [
@@ -428,19 +429,29 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `Let $X \\sim \\text{Exp}(${lambda})$ with rate parameter $\\lambda = ${lambda}$ and PDF $f(x) = ${lambda} e^{-${lambda} x}$ for $x \\ge 0$. What is the survival probability $P(X > ${x})$?`,
-              `设 $X \\sim \\text{Exp}(${lambda})$，其比率参数为 $\\lambda = ${lambda}$，当 $x \\ge 0$ 时概率密度为 $f(x) = ${lambda} e^{-${lambda} x}$。求生存概率 $P(X > ${x})$ 的表达式。`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `The survival function of an exponential random variable is $P(X > x) = \\int_{x}^{\\infty} \\lambda e^{-\\lambda u} du = e^{-\\lambda x}$. Substituting $\\lambda = ${lambda}$ and $x = ${x}$ yields $e^{-(${lambda})(${x})} = e^{-${exponent}}$.`,
-              `指数随机变量的生存函数为 $P(X > x) = \\int_{x}^{\\infty} \\lambda e^{-\\lambda u} du = e^{-\\lambda x}$。代入 $\\lambda = ${lambda}$ 与 $x = ${x}$ 得 $e^{-(${lambda})(${x})} = e^{-${exponent}}$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `Let $X \\sim \\text{Exp}(${lambda})$ with rate parameter $\\lambda = ${lambda}$ and PDF $f(x) = ${lambda} e^{-${lambda} x}$ for $x \\ge 0$. What is the survival probability $P(X > ${x})$?`,
+                `设 $X \\sim \\text{Exp}(${lambda})$，其比率参数为 $\\lambda = ${lambda}$，当 $x \\ge 0$ 时概率密度为 $f(x) = ${lambda} e^{-${lambda} x}$。求生存概率 $P(X > ${x})$ 的表达式。`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `The survival function of an exponential random variable is $P(X > x) = \\int_{x}^{\\infty} \\lambda e^{-\\lambda u} du = e^{-\\lambda x}$. Substituting $\\lambda = ${lambda}$ and $x = ${x}$ yields $e^{-(${lambda})(${x})} = e^{-${exponent}}$.`,
+                `指数随机变量的生存函数为 $P(X > x) = \\int_{x}^{\\infty} \\lambda e^{-\\lambda u} du = e^{-\\lambda x}$。代入 $\\lambda = ${lambda}$ 与 $x = ${x}$ 得 $e^{-(${lambda})(${x})} = e^{-${exponent}}$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                "This is the probability of the opposite event: it is the CDF itself.",
+                "这是对立事件的概率：它就是分布函数本身。",
+              ],
+              [opts[2]!.en, "This is the density at that point, and a density is not a probability.", "这是该点的密度，而密度不是概率。"],
+              [opts[3]!.en, "The exponent is $\\lambda x$, and this leaves out $x$.", "指数是 $\\lambda x$，这里漏掉了 $x$。"],
+            ],
+          );
         },
       },
       {
@@ -803,19 +814,37 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `Let $Z_1, Z_2, \\dots, Z_{${k}}$ be independent standard normal random variables, $Z_i \\sim N(0, 1)$. What is the distribution of $W = \\sum_{i=1}^{${k}} Z_i^2$?`,
-              `设 $Z_1, Z_2, \\dots, Z_{${k}}$ 为相互独立且均服从标准正态分布 $Z_i \\sim N(0, 1)$ 的随机变量。变量 $W = \\sum_{i=1}^{${k}} Z_i^2$ 服从什么分布？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `By definition, the sum of squares of $k$ independent standard normal random variables follows a Chi-square distribution with $k$ degrees of freedom: $W \\sim \\chi^2(${k})$.`,
-              `根据定义，$k$ 个相互独立的标准正态随机变量的平方和服从自由度为 $k$ 的卡方分布：$W \\sim \\chi^2(${k})$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `Let $Z_1, Z_2, \\dots, Z_{${k}}$ be independent standard normal random variables, $Z_i \\sim N(0, 1)$. What is the distribution of $W = \\sum_{i=1}^{${k}} Z_i^2$?`,
+                `设 $Z_1, Z_2, \\dots, Z_{${k}}$ 为相互独立且均服从标准正态分布 $Z_i \\sim N(0, 1)$ 的随机变量。变量 $W = \\sum_{i=1}^{${k}} Z_i^2$ 服从什么分布？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `By definition, the sum of squares of $k$ independent standard normal random variables follows a Chi-square distribution with $k$ degrees of freedom: $W \\sim \\chi^2(${k})$.`,
+                `根据定义，$k$ 个相互独立的标准正态随机变量的平方和服从自由度为 $k$ 的卡方分布：$W \\sim \\chi^2(${k})$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                "A sum of squares is never negative, and a normal variable takes negative values.",
+                "平方和不会是负的，而正态变量可以取负值。",
+              ],
+              [
+                opts[2]!.en,
+                "The $t$ distribution is a ratio built from a normal and a chi-square, not a sum of squares.",
+                "$t$ 分布是由正态和卡方构成的比值，不是平方和。",
+              ],
+              [
+                opts[3]!.en,
+                `The degrees of freedom count the squared terms, so there are $${k}$, not twice that.`,
+                `自由度等于平方项的个数，所以是 $${k}$，不是它的两倍。`,
+              ],
+            ],
+          );
         },
       },
       {
@@ -951,19 +980,37 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `Let $U \\sim \\chi^2(${d1})$ and $V \\sim \\chi^2(${d2})$ be independent Chi-square random variables. What is the distribution of the ratio $W = \\frac{U / ${d1}}{V / ${d2}}$?`,
-              `设 $U \\sim \\chi^2(${d1})$ 与 $V \\sim \\chi^2(${d2})$ 为相互独立的卡方随机变量。比值 $W = \\frac{U / ${d1}}{V / ${d2}}$ 服从什么分布？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `By definition, the ratio of two independent Chi-square variables each divided by their respective degrees of freedom follows Snedecor's $F$-distribution: $W \\sim F(${d1}, ${d2})$.`,
-              `根据定义，两个独立的卡方变量各自除以其自由度后的比值服从费舍尔-斯内德克 $F$ 分布：$W \\sim F(${d1}, ${d2})$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `Let $U \\sim \\chi^2(${d1})$ and $V \\sim \\chi^2(${d2})$ be independent Chi-square random variables. What is the distribution of the ratio $W = \\frac{U / ${d1}}{V / ${d2}}$?`,
+                `设 $U \\sim \\chi^2(${d1})$ 与 $V \\sim \\chi^2(${d2})$ 为相互独立的卡方随机变量。比值 $W = \\frac{U / ${d1}}{V / ${d2}}$ 服从什么分布？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `By definition, the ratio of two independent Chi-square variables each divided by their respective degrees of freedom follows Snedecor's $F$-distribution: $W \\sim F(${d1}, ${d2})$.`,
+                `根据定义，两个独立的卡方变量各自除以其自由度后的比值服从费舍尔-斯内德克 $F$ 分布：$W \\sim F(${d1}, ${d2})$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                "The degrees of freedom are in the wrong order: the numerator's come first.",
+                "自由度的次序反了：分子的自由度在前。",
+              ],
+              [
+                opts[2]!.en,
+                "A $t$ variable is a normal over the root of a chi-square, and here both parts are chi-squares.",
+                "$t$ 变量是正态变量除以卡方变量的平方根，而这里两部分都是卡方变量。",
+              ],
+              [
+                opts[3]!.en,
+                "Adding the degrees of freedom belongs to a sum of chi-squares, and this is a ratio.",
+                "自由度相加对应卡方变量的和，而这里是比值。",
+              ],
+            ],
+          );
         },
       },
       {

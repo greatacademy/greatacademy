@@ -17,6 +17,7 @@ import {
 } from "@ga/subject-math";
 import { annotate, at, guides, plain, shift } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem, steps } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -1583,18 +1584,40 @@ export const combiningGraphTransformationsOfExponentialFunctions: TopicDef = {
         const h = rng.nonZero(-4, 4);
         const k = rng.nonZero(-5, 5);
         const g = expT(a, b, h, k);
-        return oneOf(rng, {
-          prompt: t(
-            `How is the graph of $g(x) = ${g}$ obtained from the graph of $f(x) = ${expT(1, b, 0, 0)}$?`,
-            `$g(x) = ${g}$ 的图象如何由 $f(x) = ${expT(1, b, 0, 0)}$ 的图象变换得到？`,
-          ),
-          right: describe(a, h, k),
-          wrong: [describe(a, -h, k), describe(a, h, -k), describe(a, -h, -k), describe(-a, h, k)],
-          solution: t(
-            `Compare $g(x) = ${g}$ with $a \\cdot b^{x - h} + k$: $h = ${h}$, $a = ${a}$, $k = ${k}$. ${describe(a, h, k).en}`,
-            `把 $g(x) = ${g}$ 与 $a \\cdot b^{x - h} + k$ 比较：$h = ${h}$，$a = ${a}$，$k = ${k}$。${describe(a, h, k)["zh-CN"]}`,
-          ),
-        });
+        return reasoned(
+          oneOf(rng, {
+            prompt: t(
+              `How is the graph of $g(x) = ${g}$ obtained from the graph of $f(x) = ${expT(1, b, 0, 0)}$?`,
+              `$g(x) = ${g}$ 的图象如何由 $f(x) = ${expT(1, b, 0, 0)}$ 的图象变换得到？`,
+            ),
+            right: describe(a, h, k),
+            wrong: [describe(a, -h, k), describe(a, h, -k), describe(a, -h, -k), describe(-a, h, k)],
+            solution: t(
+              `Compare $g(x) = ${g}$ with $a \\cdot b^{x - h} + k$: $h = ${h}$, $a = ${a}$, $k = ${k}$. ${describe(a, h, k).en}`,
+              `把 $g(x) = ${g}$ 与 $a \\cdot b^{x - h} + k$ 比较：$h = ${h}$，$a = ${a}$，$k = ${k}$。${describe(a, h, k)["zh-CN"]}`,
+            ),
+          }),
+          [
+            [
+              describe(a, -h, k).en,
+              "The horizontal shift goes the wrong way: $x - h$ moves the graph to the right when $h$ is positive.",
+              "水平平移方向反了：$h$ 为正时，$x - h$ 把图象向右移。",
+            ],
+            [
+              describe(a, h, -k).en,
+              "The vertical shift goes the wrong way: the number added outside moves the graph by that amount, sign included.",
+              "竖直平移方向反了：加在外面的数连同符号决定图象移动的量。",
+            ],
+            [describe(a, -h, -k).en, "Both shifts go the wrong way.", "两个平移方向都反了。"],
+            [
+              describe(-a, h, k).en,
+              a < 0
+                ? "This leaves out the reflection that the negative factor asks for."
+                : "This adds a reflection, but the factor is positive.",
+              a < 0 ? "这里漏掉了负系数要求的翻折。" : "这里多了翻折，但系数是正的。",
+            ],
+          ],
+        );
       },
     },
     {
@@ -2108,24 +2131,44 @@ export const combiningGraphTransformationsOfLogarithmicFunctions: TopicDef = {
         const k = rng.nonZero(-5, 5);
         const d = describe(a, h, k);
         const f = B.of("x");
-        return oneOf(rng, {
-          prompt: t(
-            `Start with the graph of $f(x) = ${f}$. ${d.en} Which function has the new graph?`,
-            `从 $f(x) = ${f}$ 的图象开始，${d["zh-CN"]}所得图象是哪个函数的图象？`,
-          ),
-          right: m(`g(x) = ${logT(a, B, h, k)}`),
-          wrong: [
-            m(`g(x) = ${logT(a, B, -h, k)}`),
-            m(`g(x) = ${logT(a, B, h, -k)}`),
-            m(`g(x) = ${logT(a, B, k, h)}`),
-            m(`g(x) = ${logT(a, B, -h, -k)}`),
+        return reasoned(
+          oneOf(rng, {
+            prompt: t(
+              `Start with the graph of $f(x) = ${f}$. ${d.en} Which function has the new graph?`,
+              `从 $f(x) = ${f}$ 的图象开始，${d["zh-CN"]}所得图象是哪个函数的图象？`,
+            ),
+            right: m(`g(x) = ${logT(a, B, h, k)}`),
+            wrong: [
+              m(`g(x) = ${logT(a, B, -h, k)}`),
+              m(`g(x) = ${logT(a, B, h, -k)}`),
+              m(`g(x) = ${logT(a, B, k, h)}`),
+              m(`g(x) = ${logT(a, B, -h, -k)}`),
+            ],
+            solution: both(
+              "Apply the transformations in order:",
+              "按顺序作变换：",
+              `${f} \\to ${logT(1, B, h, 0)} \\to ${logT(a, B, h, 0)} \\to ${logT(a, B, h, k)}`,
+            ),
+          }),
+          [
+            [
+              m(`g(x) = ${logT(a, B, -h, k)}`).en,
+              "The horizontal shift has the wrong sign inside: moving right by $h$ makes the argument $x - h$.",
+              "水平平移在括号内的符号错了：向右移 $h$，真数变成 $x - h$。",
+            ],
+            [
+              m(`g(x) = ${logT(a, B, h, -k)}`).en,
+              "The vertical shift has the wrong sign: moving up adds, and moving down subtracts.",
+              "竖直平移的符号错了：向上移是加，向下移是减。",
+            ],
+            [
+              m(`g(x) = ${logT(a, B, k, h)}`).en,
+              "The two shifts are swapped: the horizontal one goes inside the logarithm and the vertical one outside.",
+              "两个平移弄反了：水平平移在对数里面，竖直平移在外面。",
+            ],
+            [m(`g(x) = ${logT(a, B, -h, -k)}`).en, "Both shifts have the wrong sign.", "两个平移的符号都错了。"],
           ],
-          solution: both(
-            "Apply the transformations in order:",
-            "按顺序作变换：",
-            `${f} \\to ${logT(1, B, h, 0)} \\to ${logT(a, B, h, 0)} \\to ${logT(a, B, h, k)}`,
-          ),
-        });
+        );
       },
     },
     {

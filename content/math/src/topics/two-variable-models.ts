@@ -14,6 +14,7 @@ import {
   steps,
   yesNo,
 } from "../problems.ts";
+import { type Reason, reasoned } from "../wrong-reasons.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -1828,6 +1829,28 @@ const descriptions: readonly Text[] = [
 /** descriptionOf is the index in descriptions of the graph of y op mx + b. */
 const descriptionOf = (op: InequalityOp) => (isStrict(op) ? 0 : 2) + (isAbove(op) ? 0 : 1);
 
+/** descriptionReasons says what is wrong with each description of the graph of y op mx + b that does not fit. */
+const descriptionReasons = (op: InequalityOp): Reason[] =>
+  descriptions.map((d, i) => {
+    const line = i < 2 !== isStrict(op);
+    const side = (i % 2 === 0) !== isAbove(op);
+    const [en, zh] = [
+      line
+        ? isStrict(op)
+          ? "A solid line would count the points on the boundary, and a strict inequality leaves them out."
+          : "A dashed line would leave out the points on the boundary, and this inequality includes them."
+        : "",
+      line ? (isStrict(op) ? "实线会把边界上的点算进去，而严格不等式不包含它们。" : "虚线会漏掉边界上的点，而这个不等式包含它们。") : "",
+    ];
+    const [sideEn, sideZh] = side
+      ? [
+          "With $y$ alone on the left, the sign says which side to shade, and this is the other side.",
+          "把 $y$ 单独写在左边，不等号决定阴影在哪一侧，而这是另一侧。",
+        ]
+      : ["", ""];
+    return [d.en, [en, sideEn].filter(Boolean).join(" "), `${zh}${sideZh}`];
+  });
+
 /** describeGraph explains the boundary and the side of y op mx + b. */
 function describeGraph(q: Ineq): Text {
   const line = `y = ${linear(q.m, q.b)}`;
@@ -1886,14 +1909,17 @@ export const graphingStrictLinearInequalities: TopicDef = {
         const reversed = rng.bool(0.4);
         const shown = reversed ? reversedLatex(q) : ineqLatex(q);
         const graph = describeGraph(q);
-        return choiceProblem({
-          prompt: t(`Which describes the graph of $${shown}$?`, `哪一项描述了 $${shown}$ 的图像？`),
-          options: descriptions,
-          correct: descriptionOf(q.op),
-          solution: reversed
-            ? t(`$${shown}$ means $${ineqLatex(q)}$. ${graph.en}`, `$${shown}$ 就是 $${ineqLatex(q)}$。${graph["zh-CN"]}`)
-            : graph,
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`Which describes the graph of $${shown}$?`, `哪一项描述了 $${shown}$ 的图像？`),
+            options: descriptions,
+            correct: descriptionOf(q.op),
+            solution: reversed
+              ? t(`$${shown}$ means $${ineqLatex(q)}$. ${graph.en}`, `$${shown}$ 就是 $${ineqLatex(q)}$。${graph["zh-CN"]}`)
+              : graph,
+          }),
+          [...descriptionReasons(q.op)],
+        );
       },
     },
     {
@@ -1910,15 +1936,39 @@ export const graphingStrictLinearInequalities: TopicDef = {
         const candidates = [q, { ...q, op: flip[q.op] }, { ...q, op: toggle[q.op] }, { ...q, m: q.m.neg() }, { ...q, b: -q.b }];
         const order = [0, ...rng.sample([1, 2, 3, 4], 3)];
         const shuffled = rng.shuffle(order);
-        return {
-          ...choiceProblem({
-            prompt: t("Which inequality does the graph show?", "图像表示的是哪个不等式？"),
-            options: shuffled.map((i) => same(`$${ineqLatex(candidates[i]!)}$`)),
-            correct: shuffled.indexOf(0),
-            solution: describeGraph(q),
-          }),
-          figure: inequalityGraph([q]),
-        };
+        return reasoned(
+          {
+            ...choiceProblem({
+              prompt: t("Which inequality does the graph show?", "图像表示的是哪个不等式？"),
+              options: shuffled.map((i) => same(`$${ineqLatex(candidates[i]!)}$`)),
+              correct: shuffled.indexOf(0),
+              solution: describeGraph(q),
+            }),
+            figure: inequalityGraph([q]),
+          },
+          [
+            [
+              `$${ineqLatex(candidates[1]!)}$`,
+              "The side is reversed: this inequality describes the region on the other side of the line.",
+              "方向反了：这个不等式表示的是直线另一侧的区域。",
+            ],
+            [
+              `$${ineqLatex(candidates[2]!)}$`,
+              "Solid and dashed are swapped: a strict inequality has a dashed boundary and a non-strict one a solid boundary.",
+              "实线和虚线弄反了：严格不等式的边界是虚线，非严格不等式的边界是实线。",
+            ],
+            [
+              `$${ineqLatex(candidates[3]!)}$`,
+              "The slope has the wrong sign: this line would tilt the other way.",
+              "斜率的符号错了：这条直线的倾斜方向相反。",
+            ],
+            [
+              `$${ineqLatex(candidates[4]!)}$`,
+              "The $y$-intercept has the wrong sign: read where the line crosses the $y$-axis.",
+              "$y$ 轴截距的符号错了：看直线与 $y$ 轴的交点。",
+            ],
+          ],
+        );
       },
     },
   ],
@@ -1972,14 +2022,17 @@ export const graphingNonStrictLinearInequalities: TopicDef = {
         const reversed = rng.bool(0.4);
         const shown = reversed ? reversedLatex(q) : ineqLatex(q);
         const graph = describeGraph(q);
-        return choiceProblem({
-          prompt: t(`Which describes the graph of $${shown}$?`, `哪一项描述了 $${shown}$ 的图像？`),
-          options: descriptions,
-          correct: descriptionOf(q.op),
-          solution: reversed
-            ? t(`$${shown}$ means $${ineqLatex(q)}$. ${graph.en}`, `$${shown}$ 就是 $${ineqLatex(q)}$。${graph["zh-CN"]}`)
-            : graph,
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`Which describes the graph of $${shown}$?`, `哪一项描述了 $${shown}$ 的图像？`),
+            options: descriptions,
+            correct: descriptionOf(q.op),
+            solution: reversed
+              ? t(`$${shown}$ means $${ineqLatex(q)}$. ${graph.en}`, `$${shown}$ 就是 $${ineqLatex(q)}$。${graph["zh-CN"]}`)
+              : graph,
+          }),
+          [...descriptionReasons(q.op)],
+        );
       },
     },
     {
@@ -2001,15 +2054,35 @@ export const graphingNonStrictLinearInequalities: TopicDef = {
           { ...q, m: q.m.neg() },
         ];
         const order = rng.shuffle([0, 1, 2, 3, 4]);
-        return {
-          ...choiceProblem({
-            prompt: t("Which inequality does the graph show?", "图像表示的是哪个不等式？"),
-            options: order.map((i) => same(`$${ineqLatex(candidates[i]!)}$`)),
-            correct: order.indexOf(0),
-            solution: describeGraph(q),
-          }),
-          figure: inequalityGraph([q]),
-        };
+        return reasoned(
+          {
+            ...choiceProblem({
+              prompt: t("Which inequality does the graph show?", "图像表示的是哪个不等式？"),
+              options: order.map((i) => same(`$${ineqLatex(candidates[i]!)}$`)),
+              correct: order.indexOf(0),
+              solution: describeGraph(q),
+            }),
+            figure: inequalityGraph([q]),
+          },
+          [
+            [
+              `$${ineqLatex(candidates[1]!)}$`,
+              "The side is reversed: this inequality describes the region on the other side of the line.",
+              "方向反了：这个不等式表示的是直线另一侧的区域。",
+            ],
+            [
+              `$${ineqLatex(candidates[2]!)}$`,
+              "Solid and dashed are swapped: a strict inequality has a dashed boundary and a non-strict one a solid boundary.",
+              "实线和虚线弄反了：严格不等式的边界是虚线，非严格不等式的边界是实线。",
+            ],
+            [`$${ineqLatex(candidates[3]!)}$`, "Both the side and the kind of boundary are swapped.", "阴影的一侧和边界线的虚实都弄反了。"],
+            [
+              `$${ineqLatex(candidates[4]!)}$`,
+              "The slope has the wrong sign: this line would tilt the other way.",
+              "斜率的符号错了：这条直线的倾斜方向相反。",
+            ],
+          ],
+        );
       },
     },
   ],
@@ -2254,18 +2327,37 @@ export const systemsOfLinearInequalities: TopicDef = {
         const order = rng.shuffle([0, 1, 2, 3]);
         const d1 = describeGraph(q1);
         const d2 = describeGraph(q2);
-        return {
-          ...choiceProblem({
-            prompt: t("Which system of inequalities does the graph show?", "图像表示的是哪个不等式组？"),
-            options: order.map((i) => same(`$${systemLatex(candidates[i]!.map(ineqLatex))}$`)),
-            correct: order.indexOf(0),
-            solution: t(
-              `${d1.en} ${d2.en} The overlap of the two regions is the shaded part.`,
-              `${d1["zh-CN"]}${d2["zh-CN"]}两个区域的公共部分就是阴影部分。`,
-            ),
-          }),
-          figure: inequalityGraph([q1, q2]),
-        };
+        return reasoned(
+          {
+            ...choiceProblem({
+              prompt: t("Which system of inequalities does the graph show?", "图像表示的是哪个不等式组？"),
+              options: order.map((i) => same(`$${systemLatex(candidates[i]!.map(ineqLatex))}$`)),
+              correct: order.indexOf(0),
+              solution: t(
+                `${d1.en} ${d2.en} The overlap of the two regions is the shaded part.`,
+                `${d1["zh-CN"]}${d2["zh-CN"]}两个区域的公共部分就是阴影部分。`,
+              ),
+            }),
+            figure: inequalityGraph([q1, q2]),
+          },
+          [
+            [
+              `$${systemLatex(candidates[1]!.map(ineqLatex))}$`,
+              "The first inequality has its side reversed: the overlap would lie on the other side of its line.",
+              "第一个不等式方向反了：公共部分会落在它的直线的另一侧。",
+            ],
+            [
+              `$${systemLatex(candidates[2]!.map(ineqLatex))}$`,
+              "The second inequality has its side reversed: the overlap would lie on the other side of its line.",
+              "第二个不等式方向反了：公共部分会落在它的直线的另一侧。",
+            ],
+            [
+              `$${systemLatex(candidates[3]!.map(ineqLatex))}$`,
+              "Both inequalities have their sides reversed: that describes the opposite wedge.",
+              "两个不等式方向都反了：那表示的是相对的另一块区域。",
+            ],
+          ],
+        );
       },
     },
     {

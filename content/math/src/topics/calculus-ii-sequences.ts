@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { type Interval, linear, poly, Q } from "@ga/subject-math";
 
 import { functionProblem, intervalProblem, numberProblem, pointProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { gcd, type LimitValue, limitChoice, limitLatex, oneOf } from "./calculus-common.ts";
 
 // Calculus II unit 4: Sequences & Series, modules 4.17 (Sequences),
@@ -741,19 +742,38 @@ export const identifyingMonotonicSequencesUsingDifferentiation: TopicDef = {
         const an = `\\frac{${linear(p, q, "n")}}{${linear(r, s, "n")}}`;
         const increasing = t("It is increasing.", "递增。");
         const decreasing = t("It is decreasing.", "递减。");
-        return oneOf(
-          rng,
-          t(`Is the sequence $a_n = ${an}$, $n \\ge 1$, increasing or decreasing?`, `数列 $a_n = ${an}$（$n \\ge 1$）是递增还是递减？`),
-          det > 0 ? increasing : decreasing,
-          [
-            det > 0 ? decreasing : increasing,
-            t("It increases and then decreases.", "先增后减。"),
-            t("It decreases and then increases.", "先减后增。"),
-          ],
-          t(
-            `With $f(x) = \\frac{${linear(p, q, "x")}}{${linear(r, s, "x")}}$, $f'(x) = \\frac{${p} \\cdot ${s} - (${q}) \\cdot ${r}}{(${linear(r, s, "x")})^{2}} = \\frac{${det}}{(${linear(r, s, "x")})^{2}}$, which is ${det > 0 ? "positive" : "negative"} for every $x \\ge 1$. So the sequence is ${det > 0 ? "increasing" : "decreasing"}.`,
-            `设 $f(x) = \\frac{${linear(p, q, "x")}}{${linear(r, s, "x")}}$，则 $f'(x) = \\frac{${p} \\cdot ${s} - (${q}) \\cdot ${r}}{(${linear(r, s, "x")})^{2}} = \\frac{${det}}{(${linear(r, s, "x")})^{2}}$，对每个 $x \\ge 1$ 都${det > 0 ? "为正" : "为负"}。所以数列${det > 0 ? "递增" : "递减"}。`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(`Is the sequence $a_n = ${an}$, $n \\ge 1$, increasing or decreasing?`, `数列 $a_n = ${an}$（$n \\ge 1$）是递增还是递减？`),
+            det > 0 ? increasing : decreasing,
+            [
+              det > 0 ? decreasing : increasing,
+              t("It increases and then decreases.", "先增后减。"),
+              t("It decreases and then increases.", "先减后增。"),
+            ],
+            t(
+              `With $f(x) = \\frac{${linear(p, q, "x")}}{${linear(r, s, "x")}}$, $f'(x) = \\frac{${p} \\cdot ${s} - (${q}) \\cdot ${r}}{(${linear(r, s, "x")})^{2}} = \\frac{${det}}{(${linear(r, s, "x")})^{2}}$, which is ${det > 0 ? "positive" : "negative"} for every $x \\ge 1$. So the sequence is ${det > 0 ? "increasing" : "decreasing"}.`,
+              `设 $f(x) = \\frac{${linear(p, q, "x")}}{${linear(r, s, "x")}}$，则 $f'(x) = \\frac{${p} \\cdot ${s} - (${q}) \\cdot ${r}}{(${linear(r, s, "x")})^{2}} = \\frac{${det}}{(${linear(r, s, "x")})^{2}}$，对每个 $x \\ge 1$ 都${det > 0 ? "为正" : "为负"}。所以数列${det > 0 ? "递增" : "递减"}。`,
+            ),
           ),
+          [
+            [
+              (det > 0 ? decreasing : increasing).en,
+              `The numerator of $f'$ is the constant $${det}$, which is ${det > 0 ? "positive" : "negative"}.`,
+              `$f'$ 的分子是常数 $${det}$，为${det > 0 ? "正" : "负"}。`,
+            ],
+            [
+              "It increases and then decreases.",
+              "The derivative never changes sign: its numerator is constant and its denominator is a square.",
+              "导数不会变号：它的分子是常数，分母是平方。",
+            ],
+            [
+              "It decreases and then increases.",
+              "The derivative never changes sign: its numerator is constant and its denominator is a square.",
+              "导数不会变号：它的分子是常数，分母是平方。",
+            ],
+          ],
         );
       },
     },

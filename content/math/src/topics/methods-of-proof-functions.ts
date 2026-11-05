@@ -2,6 +2,7 @@ import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
 import { numberProblem, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { oneOf } from "./calculus-common.ts";
 import { range, setProblem, setTex } from "./methods-of-proof-common.ts";
 import { gcd } from "./methods-of-proof-number-theory.ts";
@@ -347,17 +348,29 @@ export const infiniteLimitsOfSequences: TopicDef = {
         ];
         const [tex, kind] = rng.pick(forms);
         const options = [math("\\infty"), math("-\\infty"), t("A finite number", "一个有限数"), t("No limit", "没有极限")];
-        return oneOf(
-          rng,
-          t(`What is the limit of $a_n = ${tex}$?`, `$a_n = ${tex}$ 的极限是什么？`),
-          options[kind]!,
-          options.filter((_, i) => i !== kind),
+        return reasoned(
+          oneOf(
+            rng,
+            t(`What is the limit of $a_n = ${tex}$?`, `$a_n = ${tex}$ 的极限是什么？`),
+            options[kind]!,
+            options.filter((_, i) => i !== kind),
+            [
+              t("The dominant term is positive and unbounded, so $a_n \\to \\infty$.", "主导项为正且无界，所以 $a_n \\to \\infty$。"),
+              t("The dominant term is negative and unbounded, so $a_n \\to -\\infty$.", "主导项为负且无界，所以 $a_n \\to -\\infty$。"),
+              t("The terms settle near a single number, so the limit is finite.", "各项趋近于一个确定的数，所以极限有限。"),
+              t("The terms alternate in sign while their size grows, so there is no limit.", "各项符号交替且绝对值增大，所以没有极限。"),
+            ][kind]!,
+          ),
           [
-            t("The dominant term is positive and unbounded, so $a_n \\to \\infty$.", "主导项为正且无界，所以 $a_n \\to \\infty$。"),
-            t("The dominant term is negative and unbounded, so $a_n \\to -\\infty$.", "主导项为负且无界，所以 $a_n \\to -\\infty$。"),
-            t("The terms settle near a single number, so the limit is finite.", "各项趋近于一个确定的数，所以极限有限。"),
-            t("The terms alternate in sign while their size grows, so there is no limit.", "各项符号交替且绝对值增大，所以没有极限。"),
-          ][kind]!,
+            ...options.map(
+              (o, i) =>
+                [
+                  o.en,
+                  `${["$\\infty$ needs the terms to grow without bound", "$-\\infty$ needs the terms to fall without bound", "A finite limit needs the terms to settle near one number", "Having no limit needs the terms neither to settle nor to run off in one direction"][i]!}, but ${["these terms grow without bound", "these terms fall without bound", "these terms settle near one number", "these terms keep switching between positive and negative values"][kind]!}.`,
+                  `${["$\\infty$ 要求各项无限增大", "$-\\infty$ 要求各项无限减小", "有限极限要求各项趋近于一个数", "没有极限要求各项既不趋近于一个数，也不朝一个方向无限发展"][i]!}，但${["这些项无限增大", "这些项无限减小", "这些项趋近于一个数", "这些项不断在正负之间切换"][kind]!}。`,
+                ] as const,
+            ),
+          ],
         );
       },
     },
@@ -1025,17 +1038,47 @@ export const bijections: TopicDef = {
           t("Surjective but not injective", "满射但非单射"),
           t("Neither injective nor surjective", "既非单射也非满射"),
         ];
-        return oneOf(
-          rng,
-          t(`Classify $f: \\mathbb{R} \\to \\mathbb{R}$, $f(x) = ${f}$.`, `对 $f: \\mathbb{R} \\to \\mathbb{R}$，$f(x) = ${f}$ 进行分类。`),
-          options[kind]!,
-          options.filter((_, i) => i !== kind),
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Classify $f: \\mathbb{R} \\to \\mathbb{R}$, $f(x) = ${f}$.`,
+              `对 $f: \\mathbb{R} \\to \\mathbb{R}$，$f(x) = ${f}$ 进行分类。`,
+            ),
+            options[kind]!,
+            options.filter((_, i) => i !== kind),
+            [
+              t("$f$ is strictly increasing and takes every real value.", "$f$ 严格递增且取遍所有实数。"),
+              t("$f$ is strictly increasing but its range is bounded on one side.", "$f$ 严格递增，但值域在一侧有界。"),
+              t("$f$ takes every real value but turns around, so some values repeat.", "$f$ 取遍所有实数，但会折返，所以有些值重复出现。"),
+              t("$f$ repeats values and its range is not all of $\\mathbb{R}$.", "$f$ 有重复的值，并且值域不是整个 $\\mathbb{R}$。"),
+            ][kind]!,
+          ),
           [
-            t("$f$ is strictly increasing and takes every real value.", "$f$ 严格递增且取遍所有实数。"),
-            t("$f$ is strictly increasing but its range is bounded on one side.", "$f$ 严格递增，但值域在一侧有界。"),
-            t("$f$ takes every real value but turns around, so some values repeat.", "$f$ 取遍所有实数，但会折返，所以有些值重复出现。"),
-            t("$f$ repeats values and its range is not all of $\\mathbb{R}$.", "$f$ 有重复的值，并且值域不是整个 $\\mathbb{R}$。"),
-          ][kind]!,
+            ...[0, 1, 2, 3].map((i) => {
+              const [isInj, isSur] = [kind < 2, kind === 0 || kind === 2];
+              const [saysInj, saysSur] = [i < 2, i === 0 || i === 2];
+              return (
+                saysInj !== isInj
+                  ? [
+                      options[i]!.en,
+                      isInj
+                        ? "Different inputs always give different outputs here, so the function is injective."
+                        : "Some output comes from two different inputs, so the function is not injective.",
+                      isInj ? "这里不同的输入总给出不同的输出，所以函数是单射。" : "有的输出来自两个不同的输入，所以函数不是单射。",
+                    ]
+                  : saysSur !== isSur
+                    ? [
+                        options[i]!.en,
+                        isSur
+                          ? "Every real number is reached as an output, so the function is surjective."
+                          : "Some real numbers are never reached as outputs, so the function is not surjective.",
+                        isSur ? "每个实数都能取到，所以函数是满射。" : "有些实数取不到，所以函数不是满射。",
+                      ]
+                    : [options[i]!.en, "", ""]
+              ) as readonly [string, string, string];
+            }),
+          ],
         );
       },
     },
@@ -1203,18 +1246,37 @@ export const discreteInfiniteSetsWithEqualCardinality: TopicDef = {
         const k = rng.int(2, 9);
         const c = rng.int(0, 12);
         const set = `\\{${c}, ${c + k}, ${c + 2 * k}, \\dots\\}`;
-        return oneOf(
-          rng,
-          t(
-            `Which function is a bijection from $\\mathbb{N} = \\{0, 1, 2, \\dots\\}$ onto $${set}$?`,
-            `哪个函数是从 $\\mathbb{N} = \\{0, 1, 2, \\dots\\}$ 到 $${set}$ 的双射？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Which function is a bijection from $\\mathbb{N} = \\{0, 1, 2, \\dots\\}$ onto $${set}$?`,
+              `哪个函数是从 $\\mathbb{N} = \\{0, 1, 2, \\dots\\}$ 到 $${set}$ 的双射？`,
+            ),
+            math(`f(n) = ${k}n${signed(c)}`),
+            [math(`f(n) = ${k}n${signed(c + k)}`), math(`f(n) = ${c === 0 ? 1 : c}n + ${k}`), math(`f(n) = ${k}n^2${signed(c)}`)],
+            t(
+              `$f(0) = ${c}$ and each step adds $${k}$, so $f$ hits every element exactly once.`,
+              `$f(0) = ${c}$，每步加 $${k}$，所以 $f$ 恰好取到每个元素一次。`,
+            ),
           ),
-          math(`f(n) = ${k}n${signed(c)}`),
-          [math(`f(n) = ${k}n${signed(c + k)}`), math(`f(n) = ${c === 0 ? 1 : c}n + ${k}`), math(`f(n) = ${k}n^2${signed(c)}`)],
-          t(
-            `$f(0) = ${c}$ and each step adds $${k}$, so $f$ hits every element exactly once.`,
-            `$f(0) = ${c}$，每步加 $${k}$，所以 $f$ 恰好取到每个元素一次。`,
-          ),
+          [
+            [
+              math(`f(n) = ${k}n${signed(c + k)}`).en,
+              `Here $f(0) = ${c + k}$, so the first element $${c}$ is never reached.`,
+              `这里 $f(0) = ${c + k}$，所以取不到第一个元素 $${c}$。`,
+            ],
+            [
+              math(`f(n) = ${c === 0 ? 1 : c}n + ${k}`).en,
+              `Consecutive outputs here differ by $${c === 0 ? 1 : c}$, but the elements of the set differ by $${k}$.`,
+              `这里相邻输出相差 $${c === 0 ? 1 : c}$，而集合中相邻元素相差 $${k}$。`,
+            ],
+            [
+              math(`f(n) = ${k}n^2${signed(c)}`).en,
+              `The squares skip elements: $${c + 2 * k}$ is in the set, but no $n$ gives it.`,
+              `平方会跳过元素：$${c + 2 * k}$ 在集合中，却没有 $n$ 能得到它。`,
+            ],
+          ],
         );
       },
     },
@@ -1329,18 +1391,37 @@ export const continuousInfiniteSetsWithEqualCardinality: TopicDef = {
         const b = a + rng.int(1, 6);
         const xa = `x${signed(-a)}`;
         const bx = `${b} - x`;
-        return oneOf(
-          rng,
-          t(
-            `Which function is a bijection from $(${a}, ${b})$ onto $(0, \\infty)$?`,
-            `哪个函数是从 $(${a}, ${b})$ 到 $(0, \\infty)$ 的双射？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Which function is a bijection from $(${a}, ${b})$ onto $(0, \\infty)$?`,
+              `哪个函数是从 $(${a}, ${b})$ 到 $(0, \\infty)$ 的双射？`,
+            ),
+            math(`f(x) = \\dfrac{${xa}}{${bx}}`),
+            [math(`f(x) = (${xa})(${bx})`), math(`f(x) = \\dfrac{${xa}}{${b - a}}`), math(`f(x) = \\dfrac{1}{${xa}} + 1`)],
+            t(
+              `$\\dfrac{${xa}}{${bx}}$ is increasing, tends to $0$ as $x \\to ${a}^{+}$ and to $\\infty$ as $x \\to ${b}^{-}$, so it takes every positive value exactly once.`,
+              `$\\dfrac{${xa}}{${bx}}$ 递增，$x \\to ${a}^{+}$ 时趋于 $0$，$x \\to ${b}^{-}$ 时趋于 $\\infty$，所以恰好取到每个正数一次。`,
+            ),
           ),
-          math(`f(x) = \\dfrac{${xa}}{${bx}}`),
-          [math(`f(x) = (${xa})(${bx})`), math(`f(x) = \\dfrac{${xa}}{${b - a}}`), math(`f(x) = \\dfrac{1}{${xa}} + 1`)],
-          t(
-            `$\\dfrac{${xa}}{${bx}}$ is increasing, tends to $0$ as $x \\to ${a}^{+}$ and to $\\infty$ as $x \\to ${b}^{-}$, so it takes every positive value exactly once.`,
-            `$\\dfrac{${xa}}{${bx}}$ 递增，$x \\to ${a}^{+}$ 时趋于 $0$，$x \\to ${b}^{-}$ 时趋于 $\\infty$，所以恰好取到每个正数一次。`,
-          ),
+          [
+            [
+              math(`f(x) = (${xa})(${bx})`).en,
+              "This product tends to $0$ at both ends, so it is bounded and takes values twice.",
+              "这个积在两端都趋于 $0$，所以它有界，而且有的值取到两次。",
+            ],
+            [
+              math(`f(x) = \\dfrac{${xa}}{${b - a}}`).en,
+              "This only stretches the interval onto $(0, 1)$, so large values are never reached.",
+              "这只是把区间变成 $(0, 1)$，取不到大的值。",
+            ],
+            [
+              math(`f(x) = \\dfrac{1}{${xa}} + 1`).en,
+              "Every value here is greater than $1$, so values near $0$ are never reached.",
+              "这里的值都大于 $1$，所以取不到接近 $0$ 的值。",
+            ],
+          ],
         );
       },
     },
@@ -1462,32 +1543,61 @@ export const cantorsDiagonalArgument: TopicDef = {
           .map((c) => (c === "0" ? "1" : "0"))
           .join("");
         const opt = (s: string) => math(`${s}\\dots`);
-        return oneOf(
-          rng,
-          t(
-            `A list of binary sequences begins ${rows.map((r, i) => `$s_{${i + 1}} = ${r}\\dots$`).join(", ")}. Which sequence does the diagonal argument build (first ${n} digits)?`,
-            `一列二进制序列开头为 ${rows.map((r, i) => `$s_{${i + 1}} = ${r}\\dots$`).join("，")}。对角线论证构造出的序列是哪一个（前 ${n} 位）？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `A list of binary sequences begins ${rows.map((r, i) => `$s_{${i + 1}} = ${r}\\dots$`).join(", ")}. Which sequence does the diagonal argument build (first ${n} digits)?`,
+              `一列二进制序列开头为 ${rows.map((r, i) => `$s_{${i + 1}} = ${r}\\dots$`).join("，")}。对角线论证构造出的序列是哪一个（前 ${n} 位）？`,
+            ),
+            opt(flip),
+            [
+              opt(diag),
+              opt(
+                rows[0]!
+                  .split("")
+                  .map((c) => (c === "0" ? "1" : "0"))
+                  .join(""),
+              ),
+              opt(
+                rows
+                  .map((r, i) => r[n - 1 - i]!)
+                  .map((c) => (c === "0" ? "1" : "0"))
+                  .join(""),
+              ),
+            ],
+            t(
+              `The diagonal digits are $${diag}$; flipping each gives $${flip}\\dots$, which differs from every $s_k$ in digit $k$.`,
+              `对角线数字为 $${diag}$；逐位翻转得 $${flip}\\dots$，它与每个 $s_k$ 在第 $k$ 位不同。`,
+            ),
           ),
-          opt(flip),
           [
-            opt(diag),
-            opt(
-              rows[0]!
-                .split("")
-                .map((c) => (c === "0" ? "1" : "0"))
-                .join(""),
-            ),
-            opt(
-              rows
-                .map((r, i) => r[n - 1 - i]!)
-                .map((c) => (c === "0" ? "1" : "0"))
-                .join(""),
-            ),
+            [
+              opt(diag).en,
+              "This keeps the diagonal digits as they are, so it can agree with every sequence on the diagonal: each digit must be flipped.",
+              "这里保留了对角线上的数字，于是在对角线上可能与每个序列都相同：每个数字都要翻转。",
+            ],
+            [
+              opt(
+                rows[0]!
+                  .split("")
+                  .map((c) => (c === "0" ? "1" : "0"))
+                  .join(""),
+              ).en,
+              "This flips the digits of the first sequence only, and the diagonal takes one digit from each sequence.",
+              "这里只翻转了第一个序列的数字，而对角线是从每个序列各取一个数字。",
+            ],
+            [
+              opt(
+                rows
+                  .map((r, i) => r[n - 1 - i]!)
+                  .map((c) => (c === "0" ? "1" : "0"))
+                  .join(""),
+              ).en,
+              "This flips the other diagonal, whose digit $k$ does not come from position $k$ of sequence $k$.",
+              "这里翻转的是另一条对角线，它的第 $k$ 位不是取自序列 $k$ 的第 $k$ 位。",
+            ],
           ],
-          t(
-            `The diagonal digits are $${diag}$; flipping each gives $${flip}\\dots$, which differs from every $s_k$ in digit $k$.`,
-            `对角线数字为 $${diag}$；逐位翻转得 $${flip}\\dots$，它与每个 $s_k$ 在第 $k$ 位不同。`,
-          ),
         );
       },
     },

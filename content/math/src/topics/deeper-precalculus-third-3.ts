@@ -2,7 +2,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
+import { reasoned } from "../wrong-reasons.ts";
 import { whole } from "./early-grades-more-kit.ts";
 import { chooseFilled, decimal, frac, fraction, gcd, integer, skill } from "./third-kit.ts";
 
@@ -762,14 +762,33 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
         const k = rng.int(2, 6);
         const m = size(rng, 9);
         const n = size(rng, 9);
-        return chooseFilled(
-          rng,
-          [`Evaluate $\\frac{${complex(k * m, k * n)}}{${k}i}$.`, `计算 $\\frac{${complex(k * m, k * n)}}{${k}i}$。`],
-          complex(n, -m),
-          [complex(-n, m), complex(m, n), complex(n, m)],
+        return reasoned(
+          chooseFilled(
+            rng,
+            [`Evaluate $\\frac{${complex(k * m, k * n)}}{${k}i}$.`, `计算 $\\frac{${complex(k * m, k * n)}}{${k}i}$。`],
+            complex(n, -m),
+            [complex(-n, m), complex(m, n), complex(n, m)],
+            [
+              `Multiplying the top and bottom by $i$ makes the bottom ${-k}, and dividing gives $${complex(n, -m)}$.`,
+              `分子分母同乘 $i$，分母变成 ${-k}，相除得 $${complex(n, -m)}$。`,
+            ],
+          ),
           [
-            `Multiplying the top and bottom by $i$ makes the bottom ${-k}, and dividing gives $${complex(n, -m)}$.`,
-            `分子分母同乘 $i$，分母变成 ${-k}，相除得 $${complex(n, -m)}$。`,
+            [
+              `$${complex(-n, m)}$`,
+              "This multiplies by $i$ instead of dividing by it: dividing by $i$ is multiplying by $-i$.",
+              "这是乘以 $i$，而不是除以 $i$：除以 $i$ 等于乘以 $-i$。",
+            ],
+            [
+              `$${complex(m, n)}$`,
+              "Dividing by $i$ exchanges the real and imaginary parts, and this keeps them in place.",
+              "除以 $i$ 会交换实部和虚部，而这里没有交换。",
+            ],
+            [
+              `$${complex(n, m)}$`,
+              "The parts are exchanged, but one must change sign because $i \\cdot i = -1$.",
+              "实部和虚部交换了，但因为 $i \\cdot i = -1$，其中一个要变号。",
+            ],
           ],
         );
       },

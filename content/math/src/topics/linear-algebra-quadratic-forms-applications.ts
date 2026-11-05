@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
 import { article, choiceProblem, numberProblem, pointProblem, solutionsProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // Linear Algebra Units 7 & 8: Diagonalization of Symmetric Matrices, Quadratic Forms,
 // Quadratic Forms in Euclidean Space, Singular Value Decomposition, Linear Least-Squares,
@@ -1215,8 +1216,28 @@ export const canonicalFormOfAQuadraticFormUsingOrthogonalTransformations: TopicD
             [k, m],
           ])}$。其特征方程为 $(${m} - \\lambda)^2 - ${k}^2 = 0$，解得特征值 $\\lambda_1 = ${l1}$，$\\lambda_2 = ${l2}$。在正交变换下，标准形的系数即为特征值，故为 $${rightStr}$。`,
         );
-
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `This uses the diagonal entry and the whole coefficient of $x_1 x_2$, but the coefficients of the canonical form are the eigenvalues $${l1}$ and $${l2}$.`,
+            `这里用了对角元素和 $x_1 x_2$ 的整个系数，但标准形的系数是特征值 $${l1}$ 和 $${l2}$。`,
+          ],
+          [
+            wrong[1]!.en,
+            `The off-diagonal entry of the symmetric matrix is half the coefficient of $x_1 x_2$, so it is $${k}$, not $${twoK}$.`,
+            `对称矩阵的非对角元素是 $x_1 x_2$ 系数的一半，所以是 $${k}$，不是 $${twoK}$。`,
+          ],
+          [
+            wrong[2]!.en,
+            `The coefficients are the eigenvalues $${l1}$ and $${l2}$, each with its own sign.`,
+            `系数是特征值 $${l1}$ 和 $${l2}$，各带自己的符号。`,
+          ],
+          [
+            wrong[3]!.en,
+            `These are entries of the symmetric matrix, not its eigenvalues $${l1}$ and $${l2}$.`,
+            `这些是对称矩阵的元素，不是它的特征值 $${l1}$ 和 $${l2}$。`,
+          ],
+        ]);
       },
     },
     {
@@ -1634,15 +1655,34 @@ export const classifyingQuadraticCurves: TopicDef = {
         const right = disc < 0 ? E : disc > 0 ? H : Pa;
         const lhs = `${formatQuadratic(a, b, c, "x", "y")} ${formatSignedTerm(d, "x")} ${formatSignedTerm(e, "y")}`;
         const rhs = rng.int(1, 9);
-        return oneOf(
-          rng,
-          t(`Assuming it is non-degenerate, what kind of curve is $${lhs} = ${rhs}$?`, `假设曲线非退化，$${lhs} = ${rhs}$ 是哪种曲线？`),
-          right,
-          [E, H, Pa].filter((o) => o !== right),
-          t(
-            `$b^2 - 4ac = ${b * b} - ${4 * a * c} = ${disc}$, which is ${disc < 0 ? "negative, so it is an ellipse" : disc > 0 ? "positive, so it is a hyperbola" : "zero, so it is a parabola"}.`,
-            `$b^2 - 4ac = ${b * b} - ${4 * a * c} = ${disc}$，${disc < 0 ? "为负，所以是椭圆" : disc > 0 ? "为正，所以是双曲线" : "为零，所以是抛物线"}。`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(`Assuming it is non-degenerate, what kind of curve is $${lhs} = ${rhs}$?`, `假设曲线非退化，$${lhs} = ${rhs}$ 是哪种曲线？`),
+            right,
+            [E, H, Pa].filter((o) => o !== right),
+            t(
+              `$b^2 - 4ac = ${b * b} - ${4 * a * c} = ${disc}$, which is ${disc < 0 ? "negative, so it is an ellipse" : disc > 0 ? "positive, so it is a hyperbola" : "zero, so it is a parabola"}.`,
+              `$b^2 - 4ac = ${b * b} - ${4 * a * c} = ${disc}$，${disc < 0 ? "为负，所以是椭圆" : disc > 0 ? "为正，所以是双曲线" : "为零，所以是抛物线"}。`,
+            ),
           ),
+          [
+            [
+              "An ellipse",
+              `An ellipse needs $b^2 - 4ac < 0$, and here it is $${disc}$.`,
+              `椭圆要求 $b^2 - 4ac < 0$，而这里它等于 $${disc}$。`,
+            ],
+            [
+              "A hyperbola",
+              `A hyperbola needs $b^2 - 4ac > 0$, and here it is $${disc}$.`,
+              `双曲线要求 $b^2 - 4ac > 0$，而这里它等于 $${disc}$。`,
+            ],
+            [
+              "A parabola",
+              `A parabola needs $b^2 - 4ac = 0$, and here it is $${disc}$.`,
+              `抛物线要求 $b^2 - 4ac = 0$，而这里它等于 $${disc}$。`,
+            ],
+          ],
         );
       },
     },
@@ -1788,8 +1828,28 @@ export const constrainedOptimizationOfQuadraticFormsDeterminingWhereExtremaAreAt
             [k, m],
           ])}$。其特征值为 $\\lambda_1 = ${m - k}$（对应特征向量 $\\begin{pmatrix} 1 \\\\ -1 \\end{pmatrix}$）与 $\\lambda_2 = ${m + k}$（对应特征向量 $\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}$）。${findMax ? "最大值" : "最小值"}对应特征值 $\\lambda = ${findMax ? m + k : m - k}$，在单位特征向量 $\\frac{1}{\\sqrt{2}} ${vec2Latex(rightVec)}$ 处取得。`,
         );
-
-        return oneOf(rng, prompt, right, wrong, solution);
+        return reasoned(oneOf(rng, prompt, right, wrong, solution), [
+          [
+            wrong[0]!.en,
+            `This is the eigenvector of the other eigenvalue, so it gives the ${findMax ? "minimum" : "maximum"}.`,
+            `这是另一个特征值的特征向量，所以它给出${findMax ? "最小值" : "最大值"}。`,
+          ],
+          [
+            wrong[1]!.en,
+            `Here $Q = ${m}$, which lies strictly between the minimum $${m - k}$ and the maximum $${m + k}$.`,
+            `这里 $Q = ${m}$，严格介于最小值 $${m - k}$ 和最大值 $${m + k}$ 之间。`,
+          ],
+          [
+            wrong[2]!.en,
+            `Here $Q = ${m}$, which lies strictly between the minimum $${m - k}$ and the maximum $${m + k}$.`,
+            `这里 $Q = ${m}$，严格介于最小值 $${m - k}$ 和最大值 $${m + k}$ 之间。`,
+          ],
+          [
+            wrong[3]!.en,
+            "This is not an eigenvector of the symmetric matrix, and the extreme values occur at eigenvectors.",
+            "这不是对称矩阵的特征向量，而极值在特征向量处取得。",
+          ],
+        ]);
       },
     },
     {

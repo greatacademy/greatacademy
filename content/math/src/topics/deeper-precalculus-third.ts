@@ -2,7 +2,7 @@
 
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
-
+import { reasoned } from "../wrong-reasons.ts";
 import { choose, chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 import { frac, fraction, skill } from "./third-kit.ts";
 
@@ -221,14 +221,33 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
       (rng) => {
         const b = rng.int(-9, 6);
         const a = b + rng.int(1, 8);
-        return chooseMath(
-          rng,
-          [`Solve $${factor(a)}^{2}${factor(b)} \\le 0$.`, `解 $${factor(a)}^{2}${factor(b)} \\le 0$。`],
-          `(-\\infty, ${b}] \\cup \\{${a}\\}`,
-          [`(-\\infty, ${b}]`, `[${b}, ${a}]`, `(-\\infty, ${b}] \\cup [${a}, \\infty)`],
+        return reasoned(
+          chooseMath(
+            rng,
+            [`Solve $${factor(a)}^{2}${factor(b)} \\le 0$.`, `解 $${factor(a)}^{2}${factor(b)} \\le 0$。`],
+            `(-\\infty, ${b}] \\cup \\{${a}\\}`,
+            [`(-\\infty, ${b}]`, `[${b}, ${a}]`, `(-\\infty, ${b}] \\cup [${a}, \\infty)`],
+            [
+              `The squared factor is positive except at $x = ${a}$, where the product is $0$, so $x \\le ${b}$ or $x = ${a}$.`,
+              `平方因子除 $x = ${a}$ 外都为正，那里积为 $0$，所以 $x \\le ${b}$ 或 $x = ${a}$。`,
+            ],
+          ),
           [
-            `The squared factor is positive except at $x = ${a}$, where the product is $0$, so $x \\le ${b}$ or $x = ${a}$.`,
-            `平方因子除 $x = ${a}$ 外都为正，那里积为 $0$，所以 $x \\le ${b}$ 或 $x = ${a}$。`,
+            [
+              `$(-\\infty, ${b}]$`,
+              `This leaves out $x = ${a}$, where the product is $0$ and the inequality allows equality.`,
+              `这里漏掉了 $x = ${a}$，那里积为 $0$，而不等式包含等号。`,
+            ],
+            [
+              `$[${b}, ${a}]$`,
+              "Between the two roots the product is positive, so those values do not solve it.",
+              "在两根之间积是正的，所以那些值不是解。",
+            ],
+            [
+              `$(-\\infty, ${b}] \\cup [${a}, \\infty)$`,
+              `To the right of $x = ${a}$ the product is positive, so those values do not solve it.`,
+              `在 $x = ${a}$ 右边，积是正的，所以那些值不是解。`,
+            ],
           ],
         );
       },
@@ -389,17 +408,36 @@ export const deeperPrecalculusThirdPoints: Readonly<Record<string, readonly Know
         const n = rng.int(1, Math.max(1, Math.ceil(d / 2) - 1));
         const turns = rng.int(1, 3);
         const small = n * 2 < d ? n : 1;
-        return chooseMath(
-          rng,
+        return reasoned(
+          chooseMath(
+            rng,
+            [
+              `Evaluate $\\arctan\\left(\\tan ${piOver(small + turns * d, d)}\\right)$.`,
+              `计算 $\\arctan\\left(\\tan ${piOver(small + turns * d, d)}\\right)$。`,
+            ],
+            piOver(small, d),
+            [piOver(small + turns * d, d), piOver(-small, d), piOver(small + d + turns * d, d)],
+            [
+              `Subtracting ${turns === 1 ? "$\\pi$" : `$${turns}\\pi$`} keeps the tangent and lands in the range.`,
+              `减去 ${turns === 1 ? "$\\pi$" : `$${turns}\\pi$`} 不改变正切，并落在值域内。`,
+            ],
+          ),
           [
-            `Evaluate $\\arctan\\left(\\tan ${piOver(small + turns * d, d)}\\right)$.`,
-            `计算 $\\arctan\\left(\\tan ${piOver(small + turns * d, d)}\\right)$。`,
-          ],
-          piOver(small, d),
-          [piOver(small + turns * d, d), piOver(-small, d), piOver(small + d + turns * d, d)],
-          [
-            `Subtracting ${turns === 1 ? "$\\pi$" : `$${turns}\\pi$`} keeps the tangent and lands in the range.`,
-            `减去 ${turns === 1 ? "$\\pi$" : `$${turns}\\pi$`} 不改变正切，并落在值域内。`,
+            [
+              `$${piOver(small + turns * d, d)}$`,
+              "Arctangent does not simply undo tangent here: this angle is outside its range, between $-\\frac{\\pi}{2}$ and $\\frac{\\pi}{2}$.",
+              "这里反正切不能直接抵消正切：这个角不在它的值域内，值域在 $-\\frac{\\pi}{2}$ 和 $\\frac{\\pi}{2}$ 之间。",
+            ],
+            [
+              `$${piOver(-small, d)}$`,
+              "The sign is wrong: subtracting multiples of $\\pi$ keeps the tangent, and the tangent here is positive.",
+              "符号错了：减去 $\\pi$ 的整数倍不改变正切，而这里的正切是正的。",
+            ],
+            [
+              `$${piOver(small + d + turns * d, d)}$`,
+              "This adds $\\pi$, going further from the range: subtract instead.",
+              "这里加上了 $\\pi$，离值域更远了：应该减去。",
+            ],
           ],
         );
       },

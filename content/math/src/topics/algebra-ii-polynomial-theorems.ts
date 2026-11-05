@@ -12,6 +12,7 @@ import {
   steps,
   yesNo,
 } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -1347,15 +1348,27 @@ export const theFactorTheorem: TopicDef = {
           const cs = mulP([1, -root], quad);
           if (cands.some((c) => c !== root && evalI(cs, c) === 0)) continue;
           const values = cands.map((c) => `p(${c}) = ${evalI(cs, c)}`).join(", \\quad ");
-          return choiceProblem({
-            prompt: t(`Which of these is a factor of $p(x) = ${P(cs)}$?`, `下列哪一个是 $p(x) = ${P(cs)}$ 的因式？`),
-            options: cands.map((c) => same(`$${xm(c)}$`)),
-            correct: cands.indexOf(root),
-            solution: t(
-              `By the factor theorem, $x - c$ is a factor exactly when $p(c) = 0$. Evaluate at each candidate:${steps(values)}Only $p(${root}) = 0$, so $${xm(root)}$ is the factor.`,
-              `由因式定理，$x - c$ 是因式当且仅当 $p(c) = 0$。逐个求值：${steps(values)}只有 $p(${root}) = 0$，所以 $${xm(root)}$ 是因式。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(`Which of these is a factor of $p(x) = ${P(cs)}$?`, `下列哪一个是 $p(x) = ${P(cs)}$ 的因式？`),
+              options: cands.map((c) => same(`$${xm(c)}$`)),
+              correct: cands.indexOf(root),
+              solution: t(
+                `By the factor theorem, $x - c$ is a factor exactly when $p(c) = 0$. Evaluate at each candidate:${steps(values)}Only $p(${root}) = 0$, so $${xm(root)}$ is the factor.`,
+                `由因式定理，$x - c$ 是因式当且仅当 $p(c) = 0$。逐个求值：${steps(values)}只有 $p(${root}) = 0$，所以 $${xm(root)}$ 是因式。`,
+              ),
+            }),
+            [
+              ...cands.map(
+                (c) =>
+                  [
+                    `$${xm(c)}$`,
+                    `This would need $p(${c}) = 0$, but $p(${c}) = ${evalI(cs, c)}$. Take care that the factor $x - c$ goes with the value at $c$, sign included.`,
+                    `这需要 $p(${c}) = 0$，但 $p(${c}) = ${evalI(cs, c)}$。注意因式 $x - c$ 对应的是 $c$ 处的值，符号也要对应。`,
+                  ] as const,
+              ),
+            ],
+          );
         }
       },
     },

@@ -2,6 +2,7 @@ import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
 import { numberProblem, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { oneOf } from "./calculus-common.ts";
 import { domainTex, isPrimeNumber, range, twoPredicates } from "./methods-of-proof-common.ts";
 
@@ -57,22 +58,41 @@ export const directProof: TopicDef = {
         const notP = `x \\le ${a}`;
         const notQ = `${m}x${signed(b)} \\le ${m * a + b}`;
         const line = (en: string, zh: string) => t(en, zh);
-        return oneOf(
-          rng,
-          t(
-            `How does a direct proof of "for every real $x$, if $${P}$ then $${Q}$" begin?`,
-            `“对每个实数 $x$，若 $${P}$，则 $${Q}$”的直接证明如何开始？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `How does a direct proof of "for every real $x$, if $${P}$ then $${Q}$" begin?`,
+              `“对每个实数 $x$，若 $${P}$，则 $${Q}$”的直接证明如何开始？`,
+            ),
+            line(`Let $x$ be a real number with $${P}$.`, `设 $x$ 是满足 $${P}$ 的实数。`),
+            [
+              line(`Let $x$ be a real number with $${Q}$.`, `设 $x$ 是满足 $${Q}$ 的实数。`),
+              line(`Let $x$ be a real number with $${notQ}$.`, `设 $x$ 是满足 $${notQ}$ 的实数。`),
+              line(`Let $x$ be a real number with $${notP}$.`, `设 $x$ 是满足 $${notP}$ 的实数。`),
+            ],
+            t(
+              `A direct proof takes an arbitrary $x$, assumes the hypothesis $${P}$ and works toward the conclusion $${Q}$.`,
+              `直接证明任取 $x$，假设前提 $${P}$，再向结论 $${Q}$ 推进。`,
+            ),
           ),
-          line(`Let $x$ be a real number with $${P}$.`, `设 $x$ 是满足 $${P}$ 的实数。`),
           [
-            line(`Let $x$ be a real number with $${Q}$.`, `设 $x$ 是满足 $${Q}$ 的实数。`),
-            line(`Let $x$ be a real number with $${notQ}$.`, `设 $x$ 是满足 $${notQ}$ 的实数。`),
-            line(`Let $x$ be a real number with $${notP}$.`, `设 $x$ 是满足 $${notP}$ 的实数。`),
+            [
+              `Let $x$ be a real number with $${Q}$.`,
+              "This assumes the conclusion, which is what must be shown.",
+              "这里假设了结论，而结论正是要证明的。",
+            ],
+            [
+              `Let $x$ be a real number with $${notQ}$.`,
+              "This assumes the negated conclusion, which is how a proof by contrapositive begins.",
+              "这里假设了结论的否定，那是逆否证法的开头。",
+            ],
+            [
+              `Let $x$ be a real number with $${notP}$.`,
+              "This assumes the negated hypothesis, and the statement says nothing about those $x$.",
+              "这里假设了假设的否定，而命题对这样的 $x$ 什么也没说。",
+            ],
           ],
-          t(
-            `A direct proof takes an arbitrary $x$, assumes the hypothesis $${P}$ and works toward the conclusion $${Q}$.`,
-            `直接证明任取 $x$，假设前提 $${P}$，再向结论 $${Q}$ 推进。`,
-          ),
         );
       },
     },
@@ -419,18 +439,30 @@ export const disprovingUniversalStatements: TopicDef = {
           const expr = `n^2${plus(b, "n")} + ${c}`;
           const v = f(n);
           const d = range(2, v).find((x) => v % x === 0)!;
-          return oneOf(
-            rng,
-            t(
-              `Claim: "$${expr}$ is prime for every positive integer $n$." Which value of $n$ is a counterexample?`,
-              `命题：“对每个正整数 $n$，$${expr}$ 都是质数。”哪个 $n$ 是反例？`,
+          return reasoned(
+            oneOf(
+              rng,
+              t(
+                `Claim: "$${expr}$ is prime for every positive integer $n$." Which value of $n$ is a counterexample?`,
+                `命题：“对每个正整数 $n$，$${expr}$ 都是质数。”哪个 $n$ 是反例？`,
+              ),
+              math(`n = ${n}`),
+              rng.shuffle(good).map((g) => math(`n = ${g}`)),
+              t(
+                `At $n = ${n}$, $${expr} = ${v} = ${d} \\cdot ${v / d}$, which is not prime. The other values give primes.`,
+                `$n = ${n}$ 时，$${expr} = ${v} = ${d} \\cdot ${v / d}$，不是质数。其余取值得到的都是质数。`,
+              ),
             ),
-            math(`n = ${n}`),
-            rng.shuffle(good).map((g) => math(`n = ${g}`)),
-            t(
-              `At $n = ${n}$, $${expr} = ${v} = ${d} \\cdot ${v / d}$, which is not prime. The other values give primes.`,
-              `$n = ${n}$ 时，$${expr} = ${v} = ${d} \\cdot ${v / d}$，不是质数。其余取值得到的都是质数。`,
-            ),
+            [
+              ...good.map(
+                (g) =>
+                  [
+                    math(`n = ${g}`).en,
+                    `At $n = ${g}$ the value is $${f(g)}$, which is prime, so it agrees with the claim.`,
+                    `在 $n = ${g}$ 处，值为 $${f(g)}$，是质数，与命题一致。`,
+                  ] as const,
+              ),
+            ],
           );
         }
       },
@@ -503,18 +535,34 @@ export const disprovingImplications: TopicDef = {
           const others = [pick(false, false), pick(true, true), pick(false, true)];
           if (ce.length === 0 || others.some((o) => o.length === 0)) continue;
           const x = rng.pick(ce);
-          return oneOf(
-            rng,
-            t(
-              `Claim: "for every $x \\in ${domainTex(n)}$, if ${P.text.en}, then ${Q.text.en}." Which value is a counterexample?`,
-              `命题：“对每个 $x \\in ${domainTex(n)}$，若${P.text["zh-CN"]}，则${Q.text["zh-CN"]}。”哪个值是反例？`,
+          return reasoned(
+            oneOf(
+              rng,
+              t(
+                `Claim: "for every $x \\in ${domainTex(n)}$, if ${P.text.en}, then ${Q.text.en}." Which value is a counterexample?`,
+                `命题：“对每个 $x \\in ${domainTex(n)}$，若${P.text["zh-CN"]}，则${Q.text["zh-CN"]}。”哪个值是反例？`,
+              ),
+              math(`x = ${x}`),
+              others.map((o) => math(`x = ${rng.pick(o)}`)),
+              t(
+                `A counterexample must make "${P.text.en}" true and "${Q.text.en}" false; only $x = ${x}$ does both.`,
+                `反例必须使“${P.text["zh-CN"]}”为真且“${Q.text["zh-CN"]}”为假；只有 $x = ${x}$ 同时满足。`,
+              ),
             ),
-            math(`x = ${x}`),
-            others.map((o) => math(`x = ${rng.pick(o)}`)),
-            t(
-              `A counterexample must make "${P.text.en}" true and "${Q.text.en}" false; only $x = ${x}$ does both.`,
-              `反例必须使“${P.text["zh-CN"]}”为真且“${Q.text["zh-CN"]}”为假；只有 $x = ${x}$ 同时满足。`,
-            ),
+            [
+              ...xs.map(
+                (y) =>
+                  [
+                    math(`x = ${y}`).en,
+                    P.holds(y)
+                      ? `At $x = ${y}$ the conclusion also holds, so the implication is true there.`
+                      : `At $x = ${y}$ the hypothesis fails, and an implication with a false hypothesis is not contradicted.`,
+                    P.holds(y)
+                      ? `在 $x = ${y}$ 处结论也成立，所以蕴含在这里为真。`
+                      : `在 $x = ${y}$ 处假设不成立，而假设为假的蕴含不会被推翻。`,
+                  ] as const,
+              ),
+            ],
           );
         }
       },

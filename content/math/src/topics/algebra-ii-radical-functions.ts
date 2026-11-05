@@ -30,6 +30,7 @@ import {
   steps,
   yesNo,
 } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -1092,14 +1093,38 @@ export const propertiesOfTransformedSquareRootFunctions: TopicDef = {
         const min = (v: Coefficient) => t(`A minimum value of $${num(v)}$`, `最小值 $${num(v)}$`);
         const max = (v: Coefficient) => t(`A maximum value of $${num(v)}$`, `最大值 $${num(v)}$`);
         const [right, other] = f.a > 0 ? [min, max] : [max, min];
-        return shuffled(
-          rng,
-          t(`Which describes ${fIs(f)}?`, `下列哪一项描述了 ${fIs(f)}？`),
-          [right(f.k), other(f.k), right(x0), other(x0), t("Neither a maximum nor a minimum value", "既没有最大值也没有最小值")],
-          t(
-            `At the endpoint $x = ${x0.toLatex()}$ the root is $0$ and $f = ${f.k}$. Away from it the root grows, and multiplying by $${f.a}$ makes $f$ ${f.a > 0 ? "grow" : "fall"}. So $${f.k}$ is the ${f.a > 0 ? "minimum" : "maximum"} value, and there is no ${f.a > 0 ? "maximum" : "minimum"}.`,
-            `在端点 $x = ${x0.toLatex()}$ 处根式为 $0$，$f = ${f.k}$。离开端点后根式增大，乘以 $${f.a}$ 使 $f$ ${f.a > 0 ? "增大" : "减小"}。所以 $${f.k}$ 是${f.a > 0 ? "最小值" : "最大值"}，没有${f.a > 0 ? "最大值" : "最小值"}。`,
+        return reasoned(
+          shuffled(
+            rng,
+            t(`Which describes ${fIs(f)}?`, `下列哪一项描述了 ${fIs(f)}？`),
+            [right(f.k), other(f.k), right(x0), other(x0), t("Neither a maximum nor a minimum value", "既没有最大值也没有最小值")],
+            t(
+              `At the endpoint $x = ${x0.toLatex()}$ the root is $0$ and $f = ${f.k}$. Away from it the root grows, and multiplying by $${f.a}$ makes $f$ ${f.a > 0 ? "grow" : "fall"}. So $${f.k}$ is the ${f.a > 0 ? "minimum" : "maximum"} value, and there is no ${f.a > 0 ? "maximum" : "minimum"}.`,
+              `在端点 $x = ${x0.toLatex()}$ 处根式为 $0$，$f = ${f.k}$。离开端点后根式增大，乘以 $${f.a}$ 使 $f$ ${f.a > 0 ? "增大" : "减小"}。所以 $${f.k}$ 是${f.a > 0 ? "最小值" : "最大值"}，没有${f.a > 0 ? "最大值" : "最小值"}。`,
+            ),
           ),
+          [
+            [
+              other(f.k).en,
+              `The value is right but not its kind: multiplying the root by $${f.a}$ makes $f$ ${f.a > 0 ? "grow" : "fall"} away from the endpoint.`,
+              `数值对了，但类型错了：根式乘以 $${f.a}$ 后，离开端点时 $f$ ${f.a > 0 ? "增大" : "减小"}。`,
+            ],
+            [
+              right(x0).en,
+              "This is the input at the endpoint: the extreme value is the output there.",
+              "这是端点处的输入：极值是那里的输出。",
+            ],
+            [
+              other(x0).en,
+              "This takes the input at the endpoint as the value, and gets the kind wrong too.",
+              "这里把端点处的输入当成了值，类型也错了。",
+            ],
+            [
+              "Neither a maximum nor a minimum value",
+              "The graph starts at its endpoint and goes only one way from there, so the endpoint gives an extreme value.",
+              "图象从端点出发只朝一个方向走，所以端点处取得极值。",
+            ],
+          ],
         );
       },
     },

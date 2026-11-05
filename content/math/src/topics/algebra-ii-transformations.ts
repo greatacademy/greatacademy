@@ -18,6 +18,7 @@ import {
 } from "@ga/subject-math";
 import { annotate, at, plain, pointMove, shift } from "../graph-figures.ts";
 import { choiceProblem, expressionProblem, intervalProblem, numberProblem, pointProblem, steps } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -642,17 +643,38 @@ export const verticalStretchesOfFunctions: TopicDef = {
         const o = stretchOptions(c);
         const correct = a.eq(c) ? o.vs : o.vc;
         const others = a.eq(c) ? [o.vc, o.hs, o.hc] : [o.vs, o.hc, o.hs];
-        return shuffled(
-          rng,
-          t(
-            `How is the graph of $y = ${front(a)}${fn}(x)$ obtained from the graph of $y = ${fn}(x)$?`,
-            `$y = ${front(a)}${fn}(x)$ 的图象是怎样由 $y = ${fn}(x)$ 的图象得到的？`,
+        return reasoned(
+          shuffled(
+            rng,
+            t(
+              `How is the graph of $y = ${front(a)}${fn}(x)$ obtained from the graph of $y = ${fn}(x)$?`,
+              `$y = ${front(a)}${fn}(x)$ 的图象是怎样由 $y = ${fn}(x)$ 的图象得到的？`,
+            ),
+            [correct, ...others].map(capText),
+            t(
+              `The factor $${a.toLatex()}$ multiplies the outputs, so every $y$-coordinate is multiplied by $${a.toLatex()}$: ${correct.en}.`,
+              `系数 $${a.toLatex()}$ 乘的是输出，所以每个纵坐标都乘以 $${a.toLatex()}$：${correct["zh-CN"]}。`,
+            ),
           ),
-          [correct, ...others].map(capText),
-          t(
-            `The factor $${a.toLatex()}$ multiplies the outputs, so every $y$-coordinate is multiplied by $${a.toLatex()}$: ${correct.en}.`,
-            `系数 $${a.toLatex()}$ 乘的是输出，所以每个纵坐标都乘以 $${a.toLatex()}$：${correct["zh-CN"]}。`,
-          ),
+          [
+            [
+              capText(a.eq(c) ? o.vc : o.vs).en,
+              a.eq(c)
+                ? "A factor greater than $1$ moves the outputs away from the $x$-axis, which is a stretch."
+                : "A factor between $0$ and $1$ moves the outputs toward the $x$-axis, which is a compression.",
+              a.eq(c) ? "大于 $1$ 的系数让输出远离 $x$ 轴，这是伸长。" : "介于 $0$ 和 $1$ 之间的系数让输出靠近 $x$ 轴，这是压缩。",
+            ],
+            [
+              capText(o.hs).en,
+              "The factor multiplies the outputs here, so the change is vertical; a factor on the input would change the graph horizontally.",
+              "这里系数乘的是输出，所以变化在竖直方向；乘在输入上的系数才改变水平方向。",
+            ],
+            [
+              capText(o.hc).en,
+              "The factor multiplies the outputs here, so the change is vertical; a factor on the input would change the graph horizontally.",
+              "这里系数乘的是输出，所以变化在竖直方向；乘在输入上的系数才改变水平方向。",
+            ],
+          ],
         );
       },
     },
@@ -748,17 +770,40 @@ export const horizontalStretchesOfFunctions: TopicDef = {
         const o = stretchOptions(c);
         const correct = b.eq(c) ? o.hc : o.hs;
         const others = b.eq(c) ? [o.hs, o.vs, o.vc] : [o.hc, o.vc, o.vs];
-        return shuffled(
-          rng,
-          t(
-            `How is the graph of $y = ${fn}(${front(b)}x)$ obtained from the graph of $y = ${fn}(x)$?`,
-            `$y = ${fn}(${front(b)}x)$ 的图象是怎样由 $y = ${fn}(x)$ 的图象得到的？`,
+        return reasoned(
+          shuffled(
+            rng,
+            t(
+              `How is the graph of $y = ${fn}(${front(b)}x)$ obtained from the graph of $y = ${fn}(x)$?`,
+              `$y = ${fn}(${front(b)}x)$ 的图象是怎样由 $y = ${fn}(x)$ 的图象得到的？`,
+            ),
+            [correct, ...others].map(capText),
+            t(
+              `The factor $${b.toLatex()}$ multiplies the input, so every $x$-coordinate is divided by $${b.toLatex()}$, that is multiplied by $${Q.one.div(b).toLatex()}$: ${correct.en}.`,
+              `系数 $${b.toLatex()}$ 乘的是输入，所以每个横坐标除以 $${b.toLatex()}$，即乘以 $${Q.one.div(b).toLatex()}$：${correct["zh-CN"]}。`,
+            ),
           ),
-          [correct, ...others].map(capText),
-          t(
-            `The factor $${b.toLatex()}$ multiplies the input, so every $x$-coordinate is divided by $${b.toLatex()}$, that is multiplied by $${Q.one.div(b).toLatex()}$: ${correct.en}.`,
-            `系数 $${b.toLatex()}$ 乘的是输入，所以每个横坐标除以 $${b.toLatex()}$，即乘以 $${Q.one.div(b).toLatex()}$：${correct["zh-CN"]}。`,
-          ),
+          [
+            [
+              capText(b.eq(c) ? o.hs : o.hc).en,
+              b.eq(c)
+                ? "On the input a factor works backward: a factor greater than $1$ compresses the graph toward the $y$-axis."
+                : "On the input a factor works backward: a factor between $0$ and $1$ stretches the graph away from the $y$-axis.",
+              b.eq(c)
+                ? "输入上的系数作用相反：大于 $1$ 的系数把图象向 $y$ 轴压缩。"
+                : "输入上的系数作用相反：介于 $0$ 和 $1$ 之间的系数把图象从 $y$ 轴拉开。",
+            ],
+            [
+              capText(o.vs).en,
+              "The factor multiplies the input here, so the change is horizontal; a factor outside would change the graph vertically.",
+              "这里系数乘的是输入，所以变化在水平方向；乘在外面的系数才改变竖直方向。",
+            ],
+            [
+              capText(o.vc).en,
+              "The factor multiplies the input here, so the change is horizontal; a factor outside would change the graph vertically.",
+              "这里系数乘的是输入，所以变化在水平方向；乘在外面的系数才改变竖直方向。",
+            ],
+          ],
         );
       },
     },
@@ -912,17 +957,46 @@ export const combiningGraphTransformationsTwoOperations: TopicDef = {
           { ...rev, h: rev.h.neg(), k: rev.k.neg() },
           { ...g, a: Q.one.div(g.a), b: Q.one.div(g.b) },
         ];
-        return shuffled(
-          rng,
-          t(
-            `The graph of $g$ is obtained from the graph of $f$ as follows. ${opsText(ops).en} Which is $g(x)$?`,
-            `$f$ 的图象按以下方式变换得到 $g$ 的图象：${opsText(ops)["zh-CN"]}$g(x)$ 是哪一个？`,
+        return reasoned(
+          shuffled(
+            rng,
+            t(
+              `The graph of $g$ is obtained from the graph of $f$ as follows. ${opsText(ops).en} Which is $g(x)$?`,
+              `$f$ 的图象按以下方式变换得到 $g$ 的图象：${opsText(ops)["zh-CN"]}$g(x)$ 是哪一个？`,
+            ),
+            candidates.map((c) => same(`$g(x) = ${tfLatex(c)}$`)),
+            t(
+              `Apply the operations in order, starting from $f(x)$. The first gives $y = ${tfLatex(compose(ops.slice(0, 1)))}$, and the second acts on that formula, so $g(x) = ${tfLatex(g)}$.`,
+              `从 $f(x)$ 出发按顺序进行变换。第一步得到 $y = ${tfLatex(compose(ops.slice(0, 1)))}$，第二步作用在这个式子上，所以 $g(x) = ${tfLatex(g)}$。`,
+            ),
           ),
-          candidates.map((c) => same(`$g(x) = ${tfLatex(c)}$`)),
-          t(
-            `Apply the operations in order, starting from $f(x)$. The first gives $y = ${tfLatex(compose(ops.slice(0, 1)))}$, and the second acts on that formula, so $g(x) = ${tfLatex(g)}$.`,
-            `从 $f(x)$ 出发按顺序进行变换。第一步得到 $y = ${tfLatex(compose(ops.slice(0, 1)))}$，第二步作用在这个式子上，所以 $g(x) = ${tfLatex(g)}$。`,
-          ),
+          [
+            [
+              `$g(x) = ${tfLatex(rev)}$`,
+              "This applies the two operations in the reverse order, and the order changes the result here.",
+              "这里把两步的顺序颠倒了，而这里顺序会影响结果。",
+            ],
+            [
+              `$g(x) = ${tfLatex({ ...g, h: g.h.neg() })}$`,
+              "The horizontal shift goes the wrong way: $x - h$ moves the graph to the right when $h$ is positive.",
+              "水平平移方向反了：$h$ 为正时，$x - h$ 把图象向右移。",
+            ],
+            [
+              `$g(x) = ${tfLatex({ ...g, k: g.k.neg() })}$`,
+              "The vertical shift goes the wrong way: the number added outside moves the graph by that amount, sign included.",
+              "竖直平移方向反了：加在外面的数连同符号决定图象移动的量。",
+            ],
+            [
+              `$g(x) = ${tfLatex({ ...rev, h: rev.h.neg(), k: rev.k.neg() })}$`,
+              "This reverses the order and also the directions of the shifts.",
+              "这里既颠倒了顺序，又把平移方向弄反了。",
+            ],
+            [
+              `$g(x) = ${tfLatex({ ...g, a: Q.one.div(g.a), b: Q.one.div(g.b) })}$`,
+              "The factors are upside down: a stretch writes its factor as given, and a horizontal change writes the factor's reciprocal.",
+              "系数颠倒了：竖直伸缩直接写系数，水平伸缩写的是它的倒数。",
+            ],
+          ],
         );
       },
     },
@@ -1012,17 +1086,46 @@ export const combiningGraphTransformationsThreeOrMoreOperations: TopicDef = {
           { ...g, a: Q.one.div(g.a) },
           { ...g, h: g.h.mul(g.b) },
         ];
-        return shuffled(
-          rng,
-          t(
-            `Which sequence of transformations takes the graph of $y = f(x)$ to the graph of $y = ${tfLatex(g)}$?`,
-            `哪一组变换把 $y = f(x)$ 的图象变成 $y = ${tfLatex(g)}$ 的图象？`,
+        return reasoned(
+          shuffled(
+            rng,
+            t(
+              `Which sequence of transformations takes the graph of $y = f(x)$ to the graph of $y = ${tfLatex(g)}$?`,
+              `哪一组变换把 $y = f(x)$ 的图象变成 $y = ${tfLatex(g)}$ 的图象？`,
+            ),
+            candidates.map((c) => opsText(standardOps(c))),
+            t(
+              `Here $a = ${g.a.toLatex()}$, $b = ${g.b.toLatex()}$, $h = ${g.h.toLatex()}$ and $k = ${g.k.toLatex()}$. ${opsText(standardOps(g)).en}`,
+              `这里 $a = ${g.a.toLatex()}$，$b = ${g.b.toLatex()}$，$h = ${g.h.toLatex()}$，$k = ${g.k.toLatex()}$。${opsText(standardOps(g))["zh-CN"]}`,
+            ),
           ),
-          candidates.map((c) => opsText(standardOps(c))),
-          t(
-            `Here $a = ${g.a.toLatex()}$, $b = ${g.b.toLatex()}$, $h = ${g.h.toLatex()}$ and $k = ${g.k.toLatex()}$. ${opsText(standardOps(g)).en}`,
-            `这里 $a = ${g.a.toLatex()}$，$b = ${g.b.toLatex()}$，$h = ${g.h.toLatex()}$，$k = ${g.k.toLatex()}$。${opsText(standardOps(g))["zh-CN"]}`,
-          ),
+          [
+            [
+              opsText(standardOps({ ...g, h: g.h.neg() })).en,
+              "The horizontal shift goes the wrong way: $x - h$ moves the graph to the right when $h$ is positive.",
+              "水平平移方向反了：$h$ 为正时，$x - h$ 把图象向右移。",
+            ],
+            [
+              opsText(standardOps({ ...g, k: g.k.neg() })).en,
+              "The vertical shift goes the wrong way: the number added outside moves the graph by that amount, sign included.",
+              "竖直平移方向反了：加在外面的数连同符号决定图象移动的量。",
+            ],
+            [
+              opsText(standardOps({ ...g, b: Q.one.div(g.b) })).en,
+              "The horizontal factor is upside down: a factor $b$ on the input multiplies the $x$-coordinates by $\\frac{1}{b}$.",
+              "水平方向的系数颠倒了：输入上的系数 $b$ 把横坐标乘以 $\\frac{1}{b}$。",
+            ],
+            [
+              opsText(standardOps({ ...g, a: Q.one.div(g.a) })).en,
+              "The vertical factor is upside down: a factor $a$ outside multiplies the $y$-coordinates by $a$ itself.",
+              "竖直方向的系数颠倒了：外面的系数 $a$ 把纵坐标乘以 $a$ 本身。",
+            ],
+            [
+              opsText(standardOps({ ...g, h: g.h.mul(g.b) })).en,
+              "The shift is too far: in $b(x - h)$ the factor is already outside, so the shift is $h$ and not $h$ times $b$.",
+              "平移量错了：在 $b(x - h)$ 中系数已提到外面，所以平移量是 $h$，不是 $h$ 乘 $b$。",
+            ],
+          ],
         );
       },
     },

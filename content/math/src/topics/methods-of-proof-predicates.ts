@@ -2,6 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
 import { yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { oneOf } from "./calculus-common.ts";
 import { domainTex, type Pred, range, setProblem, setTex, truthSet, twoPredicates } from "./methods-of-proof-common.ts";
 import {
@@ -1463,21 +1464,40 @@ export const implicationEliminationAndDenyingTheConsequent: TopicDef = {
         const ponens = rng.bool();
         const second = ponens ? f.a : not(f.b);
         const right = ponens ? f.b : not(f.a);
-        return oneOf(
-          rng,
-          t(
-            `Suppose "if ${f.a.en}, then ${f.b.en}" is true and ${second.en}. What can you conclude?`,
-            `已知“如果 ${f.a["zh-CN"]}，那么 ${f.b["zh-CN"]}”为真，且${second["zh-CN"]}。可以得出什么结论？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Suppose "if ${f.a.en}, then ${f.b.en}" is true and ${second.en}. What can you conclude?`,
+              `已知“如果 ${f.a["zh-CN"]}，那么 ${f.b["zh-CN"]}”为真，且${second["zh-CN"]}。可以得出什么结论？`,
+            ),
+            t(`${right.en[0]!.toUpperCase()}${right.en.slice(1)}.`, `${right["zh-CN"]}。`),
+            [
+              t(`${(ponens ? not(f.b) : f.a).en.replace(/^./, (c) => c.toUpperCase())}.`, `${(ponens ? not(f.b) : f.a)["zh-CN"]}。`),
+              t(`${(ponens ? not(f.a) : f.b).en.replace(/^./, (c) => c.toUpperCase())}.`, `${(ponens ? not(f.a) : f.b)["zh-CN"]}。`),
+              t("Nothing can be concluded.", "无法得出任何结论。"),
+            ],
+            ponens
+              ? t("The hypothesis holds, so by modus ponens the conclusion holds.", "前提成立，由肯定前件，结论成立。")
+              : t("The conclusion fails, so by modus tollens the hypothesis fails.", "结论不成立，由否定后件，前提不成立。"),
           ),
-          t(`${right.en[0]!.toUpperCase()}${right.en.slice(1)}.`, `${right["zh-CN"]}。`),
           [
-            t(`${(ponens ? not(f.b) : f.a).en.replace(/^./, (c) => c.toUpperCase())}.`, `${(ponens ? not(f.b) : f.a)["zh-CN"]}。`),
-            t(`${(ponens ? not(f.a) : f.b).en.replace(/^./, (c) => c.toUpperCase())}.`, `${(ponens ? not(f.a) : f.b)["zh-CN"]}。`),
-            t("Nothing can be concluded.", "无法得出任何结论。"),
+            [
+              `${(ponens ? not(f.b) : f.a).en.replace(/^./, (c) => c.toUpperCase())}.`,
+              "This cannot hold: with the conditional and the given fact it leads to a contradiction.",
+              "这不可能成立：它与条件命题和已知事实放在一起会产生矛盾。",
+            ],
+            [
+              `${(ponens ? not(f.a) : f.b).en.replace(/^./, (c) => c.toUpperCase())}.`,
+              "This contradicts the fact that was given.",
+              "这与已知事实矛盾。",
+            ],
+            [
+              "Nothing can be concluded.",
+              "The conditional and the given fact are enough to draw a conclusion here.",
+              "条件命题和已知事实足以在这里得出结论。",
+            ],
           ],
-          ponens
-            ? t("The hypothesis holds, so by modus ponens the conclusion holds.", "前提成立，由肯定前件，结论成立。")
-            : t("The conclusion fails, so by modus tollens the hypothesis fails.", "结论不成立，由否定后件，前提不成立。"),
         );
       },
     },
@@ -1535,18 +1555,33 @@ export const disjunctiveSyllogismAndTransitivityOfImplication: TopicDef = {
         const premises = [or(a, b), neg(denyFirst ? a : b)];
         const right = denyFirst ? b : a;
         const wrong = [neg(right), denyFirst ? a : b, and(a, b)];
-        return oneOf(
-          rng,
-          t(
-            `From the premises $${tex(premises[0]!)}$ and $${tex(premises[1]!)}$, which statement follows?`,
-            `由前提 $${tex(premises[0]!)}$ 与 $${tex(premises[1]!)}$，可以推出哪个命题？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `From the premises $${tex(premises[0]!)}$ and $${tex(premises[1]!)}$, which statement follows?`,
+              `由前提 $${tex(premises[0]!)}$ 与 $${tex(premises[1]!)}$，可以推出哪个命题？`,
+            ),
+            math(right),
+            wrong.map(math),
+            t(
+              `One of $${tex(a)}$, $${tex(b)}$ is true and $${tex(denyFirst ? a : b)}$ is false, so $${tex(right)}$ is true.`,
+              `$${tex(a)}$、$${tex(b)}$ 中至少一个为真，而 $${tex(denyFirst ? a : b)}$ 为假，所以 $${tex(right)}$ 为真。`,
+            ),
           ),
-          math(right),
-          wrong.map(math),
-          t(
-            `One of $${tex(a)}$, $${tex(b)}$ is true and $${tex(denyFirst ? a : b)}$ is false, so $${tex(right)}$ is true.`,
-            `$${tex(a)}$、$${tex(b)}$ 中至少一个为真，而 $${tex(denyFirst ? a : b)}$ 为假，所以 $${tex(right)}$ 为真。`,
-          ),
+          [
+            [
+              math(neg(right)).en,
+              'This is the opposite of what follows: at least one part of the "or" is true, and the other part is false.',
+              "这与结论相反：“或”的两部分至少有一个为真，而另一部分为假。",
+            ],
+            [math(denyFirst ? a : b).en, "This part is denied by the second premise.", "这一部分被第二个前提否定了。"],
+            [
+              math(and(a, b)).en,
+              "This needs both parts true, but the second premise denies one of them.",
+              "这要求两部分都为真，但第二个前提否定了其中一个。",
+            ],
+          ],
         );
       },
     },
@@ -1673,15 +1708,27 @@ export const additionalRulesOfLogicalInference: TopicDef = {
         const others = ["p", "q", "r", "s"].filter((x) => !varsOf(a, b).includes(x as Var)) as Var[];
         const c = v(rng.pick(others));
         const { premises, conclusion } = rule.make(a, b, c);
-        return oneOf(
-          rng,
-          t(
-            `Which rule of inference concludes $${tex(conclusion)}$ from ${premises.map((p) => `$${tex(p)}$`).join(" and ")}?`,
-            `由 ${premises.map((p) => `$${tex(p)}$`).join(" 与 ")} 推出 $${tex(conclusion)}$ 用的是哪条推理规则？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Which rule of inference concludes $${tex(conclusion)}$ from ${premises.map((p) => `$${tex(p)}$`).join(" and ")}?`,
+              `由 ${premises.map((p) => `$${tex(p)}$`).join(" 与 ")} 推出 $${tex(conclusion)}$ 用的是哪条推理规则？`,
+            ),
+            rule.name,
+            rng.shuffle(inferenceRules.filter((r) => r !== rule)).map((r) => r.name),
+            t(`This is ${rule.name.en.toLowerCase()}: ${rule.form.en}.`, `这是${rule.name["zh-CN"]}：${rule.form["zh-CN"]}。`),
           ),
-          rule.name,
-          rng.shuffle(inferenceRules.filter((r) => r !== rule)).map((r) => r.name),
-          t(`This is ${rule.name.en.toLowerCase()}: ${rule.form.en}.`, `这是${rule.name["zh-CN"]}：${rule.form["zh-CN"]}。`),
+          [
+            ...inferenceRules.map(
+              (r) =>
+                [
+                  r.name.en,
+                  `${r.name.en} goes ${r.form.en}, and that is not the shape of this step.`,
+                  `${r.name["zh-CN"]}是${r.form["zh-CN"]}，这一步不是这种形式。`,
+                ] as const,
+            ),
+          ],
         );
       },
     },

@@ -4,6 +4,7 @@ import type { Interval } from "@ga/subject-math";
 import { linear, poly, Q } from "@ga/subject-math";
 
 import { functionProblem, intervalProblem, numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { oneOf } from "./calculus-common.ts";
 
 // Calculus II unit 4: Sequences & Series, modules 4.22 (Taylor Polynomials) and 4.23 (Taylor Series).
@@ -236,23 +237,46 @@ export const analyzingSecondDegreeTaylorPolynomials: TopicDef = {
         const c2 = rng.nonZero(-9, 9);
         const p = taylorPoly([Q.of(c0), Q.of(c1), Q.of(c2)], a);
         const right = c1 !== 0 ? 2 : c2 > 0 ? 0 : 1;
-        return oneOf(
-          rng,
-          t(
-            `The second-degree Taylor polynomial for $f$ centered at $x = ${a}$ is $P_2(x) = ${p}$. What can you conclude about $f$ at $x = ${a}$?`,
-            `$f$ 以 $x = ${a}$ 为中心的二次泰勒多项式为 $P_2(x) = ${p}$。关于 $f$ 在 $x = ${a}$ 处能得出什么结论？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `The second-degree Taylor polynomial for $f$ centered at $x = ${a}$ is $P_2(x) = ${p}$. What can you conclude about $f$ at $x = ${a}$?`,
+              `$f$ 以 $x = ${a}$ 为中心的二次泰勒多项式为 $P_2(x) = ${p}$。关于 $f$ 在 $x = ${a}$ 处能得出什么结论？`,
+            ),
+            behaviors(a)[right]!,
+            behaviors(a).filter((_, i) => i !== right),
+            c1 !== 0
+              ? t(
+                  `$${nth(1, a)} = ${c1} \\neq 0$, so $x = ${a}$ is not a critical point and there is no local extremum there.`,
+                  `$${nth(1, a)} = ${c1} \\neq 0$，所以 $x = ${a}$ 不是临界点，那里没有局部极值。`,
+                )
+              : t(
+                  `$${nth(1, a)} = 0$ and $${nth(2, a)} = 2 \\cdot ${c2 < 0 ? `(${c2})` : c2} = ${2 * c2} ${c2 > 0 ? "> 0" : "< 0"}$, so by the second derivative test $f$ has a local ${c2 > 0 ? "minimum" : "maximum"} there.`,
+                  `$${nth(1, a)} = 0$，$${nth(2, a)} = 2 \\cdot ${c2 < 0 ? `(${c2})` : c2} = ${2 * c2} ${c2 > 0 ? "> 0" : "< 0"}$，由二阶导数判别法，$f$ 在该处取得局部${c2 > 0 ? "极小值" : "极大值"}。`,
+                ),
           ),
-          behaviors(a)[right]!,
-          behaviors(a).filter((_, i) => i !== right),
-          c1 !== 0
-            ? t(
-                `$${nth(1, a)} = ${c1} \\neq 0$, so $x = ${a}$ is not a critical point and there is no local extremum there.`,
-                `$${nth(1, a)} = ${c1} \\neq 0$，所以 $x = ${a}$ 不是临界点，那里没有局部极值。`,
-              )
-            : t(
-                `$${nth(1, a)} = 0$ and $${nth(2, a)} = 2 \\cdot ${c2 < 0 ? `(${c2})` : c2} = ${2 * c2} ${c2 > 0 ? "> 0" : "< 0"}$, so by the second derivative test $f$ has a local ${c2 > 0 ? "minimum" : "maximum"} there.`,
-                `$${nth(1, a)} = 0$，$${nth(2, a)} = 2 \\cdot ${c2 < 0 ? `(${c2})` : c2} = ${2 * c2} ${c2 > 0 ? "> 0" : "< 0"}$，由二阶导数判别法，$f$ 在该处取得局部${c2 > 0 ? "极小值" : "极大值"}。`,
-              ),
+          [
+            [
+              behaviors(a)[0]!.en,
+              c1 !== 0
+                ? `The coefficient of the linear term is $${c1}$, so this is not a critical point.`
+                : `The coefficient of the squared term is $${c2}$, which is negative, so the curve bends downward here.`,
+              c1 !== 0 ? `一次项系数是 $${c1}$，所以这不是临界点。` : `二次项系数是 $${c2}$，为负，所以曲线在这里向下弯。`,
+            ],
+            [
+              behaviors(a)[1]!.en,
+              c1 !== 0
+                ? `The coefficient of the linear term is $${c1}$, so this is not a critical point.`
+                : `The coefficient of the squared term is $${c2}$, which is positive, so the curve bends upward here.`,
+              c1 !== 0 ? `一次项系数是 $${c1}$，所以这不是临界点。` : `二次项系数是 $${c2}$，为正，所以曲线在这里向上弯。`,
+            ],
+            [
+              behaviors(a)[2]!.en,
+              `The linear term is zero, so this is a critical point, and the nonzero squared term makes it an extremum.`,
+              "一次项为零，所以这是临界点，而非零的二次项使它成为极值点。",
+            ],
+          ],
         );
       },
     },

@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { dec, poly, Q } from "@ga/subject-math";
 
 import { choiceProblem, numberProblem, steps } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // Precalculus unit 11: Probability and Statistics, modules 11.38 (Discrete
 // Random Variables) and 11.39 (The Normal Distribution).
@@ -783,15 +784,34 @@ const modelingWithTheBinomialDistribution: TopicDef = {
         const B = (n: number, p: Q) =>
           t(`$X \\sim B\\left(${n}, ${pd(p, c.decimal)}\\right)$`, `$X \\sim B\\left(${n}, ${pd(p, c.decimal)}\\right)$`);
         const half = Q.of(1, 2);
-        return oneOf(
-          rng,
-          t(`${c.setup.en} Which distribution models $X$?`, `${c.setup["zh-CN"]}哪个分布是 $X$ 的模型？`),
-          B(c.n, c.p),
-          [B(c.n, Q.one.sub(c.p)), B(c.other, c.p), B(c.n, c.p.eq(half) ? Q.of(1, 3) : half)],
-          t(
-            `There are $n = ${c.n}$ independent trials, and each is a success (counted by $X$) with probability $p = ${pd(c.p, c.decimal)}$. So $X \\sim B\\left(${c.n}, ${pd(c.p, c.decimal)}\\right)$.`,
-            `共有 $n = ${c.n}$ 次独立试验，每次“成功”（被 $X$ 计入）的概率为 $p = ${pd(c.p, c.decimal)}$。所以 $X \\sim B\\left(${c.n}, ${pd(c.p, c.decimal)}\\right)$。`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(`${c.setup.en} Which distribution models $X$?`, `${c.setup["zh-CN"]}哪个分布是 $X$ 的模型？`),
+            B(c.n, c.p),
+            [B(c.n, Q.one.sub(c.p)), B(c.other, c.p), B(c.n, c.p.eq(half) ? Q.of(1, 3) : half)],
+            t(
+              `There are $n = ${c.n}$ independent trials, and each is a success (counted by $X$) with probability $p = ${pd(c.p, c.decimal)}$. So $X \\sim B\\left(${c.n}, ${pd(c.p, c.decimal)}\\right)$.`,
+              `共有 $n = ${c.n}$ 次独立试验，每次“成功”（被 $X$ 计入）的概率为 $p = ${pd(c.p, c.decimal)}$。所以 $X \\sim B\\left(${c.n}, ${pd(c.p, c.decimal)}\\right)$。`,
+            ),
           ),
+          [
+            [
+              B(c.n, Q.one.sub(c.p)).en,
+              "This is the chance of the outcome $X$ does not count: the probability belongs to what $X$ counts.",
+              "这是 $X$ 不计数的结果的概率：参数应是 $X$ 所计数结果的概率。",
+            ],
+            [
+              B(c.other, c.p).en,
+              "The first number must be how many trials there are, and this is a different number.",
+              "第一个数必须是试验次数，而这是另一个数。",
+            ],
+            [
+              B(c.n, c.p.eq(half) ? Q.of(1, 3) : half).en,
+              "The probability has to come from the story, and this is not the one it gives.",
+              "概率要从题目中得到，而这不是题目给出的概率。",
+            ],
+          ],
         );
       },
     },

@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q } from "@ga/subject-math";
 
 import { expressionProblem, functionProblem, numberProblem, reasonChoice, solutionsProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { bare, fac, graphAltOf, lim, oneOf, type Poly, pAt, par, pDer, pLatex, power, range, sumLatex, table } from "./calculus-common.ts";
 
 // Calculus I unit 4: Introduction to Differentiation, module 4.9. Topic 4.9.1
@@ -440,20 +441,50 @@ export const continuityAndDifferentiabilityOfFunctions: TopicDef = {
         ];
         const L = pAt(left, a);
         const R = pAt(right, a);
-        return oneOf(
-          rng,
-          t(`Let $$${f}$$ Which describes $f$ at $x = ${a}$?`, `设 $$${f}$$ 下列哪一项描述了 $f$ 在 $x = ${a}$ 处的情况？`),
-          options[kind]!,
-          options.filter((_, i) => i !== kind),
-          kind === 2
-            ? t(
-                `The left piece gives $${L}$ at $x = ${a}$ but the right piece gives $${R}$, so $f$ is not continuous there, and therefore not differentiable.`,
-                `在 $x = ${a}$ 处左段的值为 $${L}$，右段的值为 $${R}$，所以 $f$ 在该处不连续，因而不可导。`,
-              )
-            : t(
-                `Both pieces give $${L}$ at $x = ${a}$, so $f$ is continuous. The slope of the left piece there is $${slope}$ and of the right piece $${m}$; ${kind === 0 ? "they are equal, so $f$ is differentiable." : "they differ, so $f$ has a corner and is not differentiable."}`,
-                `两段在 $x = ${a}$ 处的值都是 $${L}$，所以 $f$ 连续。左段在该处的斜率为 $${slope}$，右段为 $${m}$；${kind === 0 ? "二者相等，所以 $f$ 可导。" : "二者不等，所以 $f$ 有角点，不可导。"}`,
-              ),
+        return reasoned(
+          oneOf(
+            rng,
+            t(`Let $$${f}$$ Which describes $f$ at $x = ${a}$?`, `设 $$${f}$$ 下列哪一项描述了 $f$ 在 $x = ${a}$ 处的情况？`),
+            options[kind]!,
+            options.filter((_, i) => i !== kind),
+            kind === 2
+              ? t(
+                  `The left piece gives $${L}$ at $x = ${a}$ but the right piece gives $${R}$, so $f$ is not continuous there, and therefore not differentiable.`,
+                  `在 $x = ${a}$ 处左段的值为 $${L}$，右段的值为 $${R}$，所以 $f$ 在该处不连续，因而不可导。`,
+                )
+              : t(
+                  `Both pieces give $${L}$ at $x = ${a}$, so $f$ is continuous. The slope of the left piece there is $${slope}$ and of the right piece $${m}$; ${kind === 0 ? "they are equal, so $f$ is differentiable." : "they differ, so $f$ has a corner and is not differentiable."}`,
+                  `两段在 $x = ${a}$ 处的值都是 $${L}$，所以 $f$ 连续。左段在该处的斜率为 $${slope}$，右段为 $${m}$；${kind === 0 ? "二者相等，所以 $f$ 可导。" : "二者不等，所以 $f$ 有角点，不可导。"}`,
+                ),
+          ),
+          [
+            [
+              options[0]!.en,
+              kind === 1
+                ? `The two slopes at $x = ${a}$ are $${slope}$ and $${m}$, which differ, so there is a corner.`
+                : `The two pieces give different values at $x = ${a}$, so there is a break.`,
+              kind === 1
+                ? `在 $x = ${a}$ 处两个斜率是 $${slope}$ 和 $${m}$，并不相同，所以有尖角。`
+                : `在 $x = ${a}$ 处两段的值不同，所以有断开。`,
+            ],
+            [
+              options[1]!.en,
+              kind === 0
+                ? `The two slopes at $x = ${a}$ are both $${slope}$, so there is no corner.`
+                : `The two pieces give different values at $x = ${a}$, so the function is not continuous.`,
+              kind === 0 ? `在 $x = ${a}$ 处两个斜率都是 $${slope}$，所以没有尖角。` : `在 $x = ${a}$ 处两段的值不同，所以函数不连续。`,
+            ],
+            [
+              options[2]!.en,
+              `Both pieces give $${L}$ at $x = ${a}$, so the function is continuous.`,
+              `在 $x = ${a}$ 处两段都给出 $${L}$，所以函数连续。`,
+            ],
+            [
+              options[3]!.en,
+              "A function that is differentiable at a point is always continuous there, so this cannot happen.",
+              "函数在一点可导，就一定在该点连续，所以这种情况不会发生。",
+            ],
+          ],
         );
       },
     },

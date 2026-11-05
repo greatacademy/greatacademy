@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { poly, q } from "@ga/subject-math";
 
 import { choiceProblem, equationProblem, intervalProblem, numberProblem, pointProblem, solutionsProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // Linear Algebra Unit 1: Preliminaries (Modules 1.1, 1.2, 1.3)
 // 25 topics covering Set Theory, Set Operations, and 3D Vector Geometry.
@@ -520,22 +521,41 @@ export const equivalentSets: TopicDef = {
         const setAStr = `\\{${a}, ${b}, ${c}\\}`;
         const setBStr = `\\{${shuffled.join(", ")}\\}`;
         const extra = rng.pick([16, 17, 18, 19, 20]);
-        return oneOf(
-          rng,
-          t(
-            `According to the Axiom of Extensionality, which set is equal to $A = ${setAStr}$?`,
-            `根据外延公理，下列哪个集合与集合 $A = ${setAStr}$ 相等？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `According to the Axiom of Extensionality, which set is equal to $A = ${setAStr}$?`,
+              `根据外延公理，下列哪个集合与集合 $A = ${setAStr}$ 相等？`,
+            ),
+            t(`$${setBStr}$`, `$${setBStr}$`),
+            [
+              t(`$\\{${a}, ${b}\\}$`, `$\\{${a}, ${b}\\}$`),
+              t(`$\\{${a}, ${b}, ${c}, ${extra}\\}$`, `$\\{${a}, ${b}, ${c}, ${extra}\\}$`),
+              t(`$\\{${a + 1}, ${b + 1}, ${c + 1}\\}$`, `$\\{${a + 1}, ${b + 1}, ${c + 1}\\}$`),
+            ],
+            t(
+              `By the Axiom of Extensionality, two sets are equal if and only if they have the same elements. The order of elements does not matter, so $${setBStr} = ${setAStr}$.`,
+              `由外延公理可知，两集合相等当且仅当它们具有完全相同的元素。元素的列举顺序不影响集合本身，因此 $${setBStr} = ${setAStr}$。`,
+            ),
           ),
-          t(`$${setBStr}$`, `$${setBStr}$`),
           [
-            t(`$\\{${a}, ${b}\\}$`, `$\\{${a}, ${b}\\}$`),
-            t(`$\\{${a}, ${b}, ${c}, ${extra}\\}$`, `$\\{${a}, ${b}, ${c}, ${extra}\\}$`),
-            t(`$\\{${a + 1}, ${b + 1}, ${c + 1}\\}$`, `$\\{${a + 1}, ${b + 1}, ${c + 1}\\}$`),
+            [
+              `$\\{${a}, ${b}\\}$`,
+              `The element $${c}$ is missing, so the two sets do not have the same elements.`,
+              `缺少元素 $${c}$，所以两个集合的元素不相同。`,
+            ],
+            [
+              `$\\{${a}, ${b}, ${c}, ${extra}\\}$`,
+              `The element $${extra}$ is extra, so the two sets do not have the same elements.`,
+              `多了元素 $${extra}$，所以两个集合的元素不相同。`,
+            ],
+            [
+              `$\\{${a + 1}, ${b + 1}, ${c + 1}\\}$`,
+              `The element $${c + 1}$ is not in $A$: equal sets have exactly the same elements.`,
+              `元素 $${c + 1}$ 不在 $A$ 中：相等的集合元素完全相同。`,
+            ],
           ],
-          t(
-            `By the Axiom of Extensionality, two sets are equal if and only if they have the same elements. The order of elements does not matter, so $${setBStr} = ${setAStr}$.`,
-            `由外延公理可知，两集合相等当且仅当它们具有完全相同的元素。元素的列举顺序不影响集合本身，因此 $${setBStr} = ${setAStr}$。`,
-          ),
         );
       },
     },
@@ -864,10 +884,10 @@ export const describingPlanarRegionsUsingSetBuilderNotation: TopicDef = {
         // candidate points that violate ax + by <= c
         const xOut1 = xIn + (a > 0 ? 3 : -3);
         const yOut1 = yIn + (b > 0 ? 3 : -3);
-        const xOut2 = xIn + (a > 0 ? 5 : -5);
+        const xOut2 = xIn + (a > 0 ? 6 : -6);
         const yOut2 = yIn;
         const xOut3 = xIn;
-        const yOut3 = yIn + (b > 0 ? 5 : -5);
+        const yOut3 = yIn + (b > 0 ? 6 : -6);
 
         const aStr = a === 1 ? "x" : a === -1 ? "-x" : `${a}x`;
         const bStr = b === 1 ? "+ y" : b === -1 ? "- y" : b > 0 ? `+ ${b}y` : `- ${-b}y`;
@@ -1467,18 +1487,33 @@ export const theCartesianProduct: TopicDef = {
         const wrongPair1 = `(${B[0]}, ${A[0]})`; // reversed order
         const wrongPair2 = `(${A[0]}, ${A[1]})`;
         const wrongPair3 = `(${B[0]}, ${B[1]})`;
-        return oneOf(
-          rng,
-          t(
-            `Let $A = \\{${A.join(", ")}\\}$ and $B = \\{${B.join(", ")}\\}$. Which of the following ordered pairs is an element of $A \\times B$?`,
-            `设 $A = \\{${A.join(", ")}\\}$ 且 $B = \\{${B.join(", ")}\\}$。下列哪个有序对属于笛卡尔积 $A \\times B$？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Let $A = \\{${A.join(", ")}\\}$ and $B = \\{${B.join(", ")}\\}$. Which of the following ordered pairs is an element of $A \\times B$?`,
+              `设 $A = \\{${A.join(", ")}\\}$ 且 $B = \\{${B.join(", ")}\\}$。下列哪个有序对属于笛卡尔积 $A \\times B$？`,
+            ),
+            t(`$${rightPair}$`, `$${rightPair}$`),
+            [t(`$${wrongPair1}$`, `$${wrongPair1}$`), t(`$${wrongPair2}$`, `$${wrongPair2}$`), t(`$${wrongPair3}$`, `$${wrongPair3}$`)],
+            t(
+              `By definition, $(a, b) \\in A \\times B$ if and only if $a \\in A$ and $b \\in B$. Here $${A[0]} \\in A$ and $${B[0]} \\in B$, so $${rightPair} \\in A \\times B$. Note that $${wrongPair1} \\in B \\times A$, not $A \\times B$.`,
+              `根据定义，$(a, b) \\in A \\times B$ 当且仅当首元素属于 $A$ 且次元素属于 $B$。在此 $${A[0]} \\in A$ 且 $${B[0]} \\in B$，故 $${rightPair} \\in A \\times B$。注意 $${wrongPair1} \\in B \\times A$。`,
+            ),
           ),
-          t(`$${rightPair}$`, `$${rightPair}$`),
-          [t(`$${wrongPair1}$`, `$${wrongPair1}$`), t(`$${wrongPair2}$`, `$${wrongPair2}$`), t(`$${wrongPair3}$`, `$${wrongPair3}$`)],
-          t(
-            `By definition, $(a, b) \\in A \\times B$ if and only if $a \\in A$ and $b \\in B$. Here $${A[0]} \\in A$ and $${B[0]} \\in B$, so $${rightPair} \\in A \\times B$. Note that $${wrongPair1} \\in B \\times A$, not $A \\times B$.`,
-            `根据定义，$(a, b) \\in A \\times B$ 当且仅当首元素属于 $A$ 且次元素属于 $B$。在此 $${A[0]} \\in A$ 且 $${B[0]} \\in B$，故 $${rightPair} \\in A \\times B$。注意 $${wrongPair1} \\in B \\times A$。`,
-          ),
+          [
+            [`$${wrongPair1}$`, "The order is reversed: the first entry must come from $A$.", "次序反了：第一个元素必须来自 $A$。"],
+            [
+              `$${wrongPair2}$`,
+              "Both entries come from $A$, but the second must come from $B$.",
+              "两个元素都来自 $A$，但第二个必须来自 $B$。",
+            ],
+            [
+              `$${wrongPair3}$`,
+              "Both entries come from $B$, but the first must come from $A$.",
+              "两个元素都来自 $B$，但第一个必须来自 $A$。",
+            ],
+          ],
         );
       },
     },
@@ -1873,18 +1908,37 @@ export const theParametricEquationsOfALine: TopicDef = {
         const wrong1 = paramLineLatex(v, p); // swapped point and dir
         const wrong2 = paramLineLatex(p, [a, -b, c]);
         const wrong3 = paramLineLatex([x0, y0, -z0], v);
-        return oneOf(
-          rng,
-          t(
-            `Find the parametric equations of the line passing through point $P${pt3Latex(p)}$ with direction vector $\\mathbf{v} = ${vec3Latex(v)}$.`,
-            `求通过点 $P${pt3Latex(p)}$ 且以 $\\mathbf{v} = ${vec3Latex(v)}$ 为方向向量的直线的参数方程。`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Find the parametric equations of the line passing through point $P${pt3Latex(p)}$ with direction vector $\\mathbf{v} = ${vec3Latex(v)}$.`,
+              `求通过点 $P${pt3Latex(p)}$ 且以 $\\mathbf{v} = ${vec3Latex(v)}$ 为方向向量的直线的参数方程。`,
+            ),
+            t(`$${rightForm}$`, `$${rightForm}$`),
+            [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
+            t(
+              `The parametric equations are $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$:\n\n$$${rightForm}$$`,
+              `直线的参数方程为 $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$：\n\n$$${rightForm}$$`,
+            ),
           ),
-          t(`$${rightForm}$`, `$${rightForm}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `The parametric equations are $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$:\n\n$$${rightForm}$$`,
-            `直线的参数方程为 $x = x_0 + at, y = y_0 + bt, z = z_0 + ct$：\n\n$$${rightForm}$$`,
-          ),
+          [
+            [
+              `$${wrong1}$`,
+              "The point and the direction are exchanged: the coefficients of $t$ come from the direction vector.",
+              "点和方向弄反了：$t$ 的系数来自方向向量。",
+            ],
+            [
+              `$${wrong2}$`,
+              "The coefficient of $t$ in $y$ has the wrong sign: it is the second entry of the direction vector.",
+              "$y$ 中 $t$ 的系数符号错了：它是方向向量的第二个分量。",
+            ],
+            [
+              `$${wrong3}$`,
+              `The constant in $z$ has the wrong sign: at $t = 0$ the line is at $z = ${z0}$.`,
+              `$z$ 中的常数符号错了：$t = 0$ 时直线在 $z = ${z0}$ 处。`,
+            ],
+          ],
         );
       },
     },

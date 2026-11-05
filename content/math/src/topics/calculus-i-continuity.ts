@@ -3,6 +3,7 @@ import { same, t } from "@ga/content";
 import { type Interval, type PlaneMark, plane, poly, Q, union } from "@ga/subject-math";
 
 import { choiceProblem, intervalProblem, numberProblem, pointProblem, reasonChoice, solutionsProblem, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { bare, fac, graphAltOf, lim, oneOf, range, sqrtLatex, table } from "./calculus-common.ts";
 
 // Calculus I unit 3: Continuity, modules 3.7 (Continuity) and 3.8 (Removing
@@ -159,18 +160,38 @@ export const determiningContinuityFromGraphs: TopicDef = {
           `否，因为 $x = ${b.a}$ 处的实心点偏离了曲线。`,
         );
         const jump = t(`No, because the graph jumps to a new height at $x = ${b.a}$.`, `否，因为图像在 $x = ${b.a}$ 处跳到另一个高度。`);
-        return {
-          ...reasonChoice(rng, {
-            prompt: t(
-              `The graph of $y = f(x)$ is shown. Is $f$ continuous at $x = ${b.a}$?`,
-              `图中是 $y = f(x)$ 的图像。$f$ 在 $x = ${b.a}$ 处连续吗？`,
-            ),
-            correct: kind === "continuous" ? unbroken : kind === "hole" ? hole : kind === "moved" ? moved : jump,
-            wrong: [unbroken, hole, moved, jump],
-            solution: breakReason(b),
-          }),
-          figure: breakGraph(rng, b),
-        };
+        return reasoned(
+          {
+            ...reasonChoice(rng, {
+              prompt: t(
+                `The graph of $y = f(x)$ is shown. Is $f$ continuous at $x = ${b.a}$?`,
+                `图中是 $y = f(x)$ 的图像。$f$ 在 $x = ${b.a}$ 处连续吗？`,
+              ),
+              correct: kind === "continuous" ? unbroken : kind === "hole" ? hole : kind === "moved" ? moved : jump,
+              wrong: [unbroken, hole, moved, jump],
+              solution: breakReason(b),
+            }),
+            figure: breakGraph(rng, b),
+          },
+          [
+            [unbroken.en, `The graph does have a break at $x = ${b.a}$.`, `图像在 $x = ${b.a}$ 处确实有断开。`],
+            [
+              hole.en,
+              "A hole is one missing point in an otherwise unbroken curve, and that is not what this graph shows.",
+              "洞是一条本来不断的曲线上缺了一个点，而这个图像不是这样。",
+            ],
+            [
+              moved.en,
+              "A point away from the curve goes with a curve that has no other break, and that is not what this graph shows.",
+              "偏离曲线的点对应的是除此之外没有断开的曲线，而这个图像不是这样。",
+            ],
+            [
+              jump.en,
+              `The two sides of the graph meet at the same height at $x = ${b.a}$, so there is no jump.`,
+              `在 $x = ${b.a}$ 处图像两侧高度相同，所以没有跳跃。`,
+            ],
+          ],
+        );
       },
     },
     {
@@ -818,27 +839,55 @@ export const discontinuitiesDueToVerticalAsymptotes: TopicDef = {
         const ask = rng.pick([a, c, b]);
         const kind: Discontinuity = ask === a ? "point" : ask === c ? "infinite" : "none";
         const f = `\\frac{${quadraticFrom(1, a, b)}}{${quadraticFrom(1, a, c)}}`;
-        return oneOf(
-          rng,
-          t(`Let $f(x) = ${f}$. What happens at $x = ${ask}$?`, `设 $f(x) = ${f}$。$f$ 在 $x = ${ask}$ 处是什么情况？`),
-          discontinuityText(kind, ask),
-          discontinuities.filter((d) => d !== kind).map((d) => discontinuityText(d, ask)),
-          t(
-            `$f(x) = \\frac{${fac(a)}${fac(b)}}{${fac(a)}${fac(c)}} = \\frac{${bare(b)}}{${bare(c)}}$ for $x \\ne ${a}$. ${
-              kind === "point"
-                ? `The factor $${fac(a)}$ cancels, so $x = ${a}$ is a hole: a point discontinuity.`
-                : kind === "infinite"
-                  ? `The factor $${fac(c)}$ stays in the denominator, so $x = ${c}$ is a vertical asymptote: an infinite discontinuity.`
-                  : `The denominator is not zero at $x = ${b}$, so $f$ is continuous there (it has a zero there).`
-            }`,
-            `当 $x \\ne ${a}$ 时 $f(x) = \\frac{${fac(a)}${fac(b)}}{${fac(a)}${fac(c)}} = \\frac{${bare(b)}}{${bare(c)}}$。${
-              kind === "point"
-                ? `因式 $${fac(a)}$ 被约去，所以 $x = ${a}$ 处是空心点：可去间断点。`
-                : kind === "infinite"
-                  ? `因式 $${fac(c)}$ 仍留在分母中，所以 $x = ${c}$ 是竖直渐近线：无穷间断点。`
-                  : `分母在 $x = ${b}$ 处不为零，所以 $f$ 在该点连续（那里是函数的零点）。`
-            }`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(`Let $f(x) = ${f}$. What happens at $x = ${ask}$?`, `设 $f(x) = ${f}$。$f$ 在 $x = ${ask}$ 处是什么情况？`),
+            discontinuityText(kind, ask),
+            discontinuities.filter((d) => d !== kind).map((d) => discontinuityText(d, ask)),
+            t(
+              `$f(x) = \\frac{${fac(a)}${fac(b)}}{${fac(a)}${fac(c)}} = \\frac{${bare(b)}}{${bare(c)}}$ for $x \\ne ${a}$. ${
+                kind === "point"
+                  ? `The factor $${fac(a)}$ cancels, so $x = ${a}$ is a hole: a point discontinuity.`
+                  : kind === "infinite"
+                    ? `The factor $${fac(c)}$ stays in the denominator, so $x = ${c}$ is a vertical asymptote: an infinite discontinuity.`
+                    : `The denominator is not zero at $x = ${b}$, so $f$ is continuous there (it has a zero there).`
+              }`,
+              `当 $x \\ne ${a}$ 时 $f(x) = \\frac{${fac(a)}${fac(b)}}{${fac(a)}${fac(c)}} = \\frac{${bare(b)}}{${bare(c)}}$。${
+                kind === "point"
+                  ? `因式 $${fac(a)}$ 被约去，所以 $x = ${a}$ 处是空心点：可去间断点。`
+                  : kind === "infinite"
+                    ? `因式 $${fac(c)}$ 仍留在分母中，所以 $x = ${c}$ 是竖直渐近线：无穷间断点。`
+                    : `分母在 $x = ${b}$ 处不为零，所以 $f$ 在该点连续（那里是函数的零点）。`
+              }`,
+            ),
           ),
+          [
+            [
+              discontinuityText("point", ask).en,
+              kind === "infinite"
+                ? "The factor that vanishes here stays in the denominator, so this is not a removable hole."
+                : "The denominator is not zero here, so there is nothing to remove.",
+              kind === "infinite" ? "在这里为零的因子留在分母中，所以这不是可去的洞。" : "分母在这里不为零，所以没有什么可去的。",
+            ],
+            [
+              discontinuityText("infinite", ask).en,
+              kind === "point"
+                ? "The factor that vanishes here cancels, so the values do not blow up."
+                : "The denominator is not zero here, so the values do not blow up.",
+              kind === "point" ? "在这里为零的因子被约去了，所以函数值不会趋于无穷。" : "分母在这里不为零，所以函数值不会趋于无穷。",
+            ],
+            [
+              discontinuityText("none", ask).en,
+              "The denominator is zero here, so the function is not defined and cannot be continuous.",
+              "分母在这里为零，函数没有定义，所以不可能连续。",
+            ],
+            [
+              discontinuityText("jump", ask).en,
+              "A jump needs two different finite one-sided limits, and a rational function does not have that.",
+              "跳跃间断要求两个不同的有限单侧极限，而有理函数不会这样。",
+            ],
+          ],
         );
       },
     },

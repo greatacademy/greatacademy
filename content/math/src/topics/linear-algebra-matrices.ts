@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { paren, poly, Q } from "@ga/subject-math";
 
 import { article, choiceProblem, numberProblem, pointProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // Linear Algebra Unit 2: Matrices, Gaussian Elimination, Determinants,
 // Elementary Matrices, and LU Factorization (Modules 2.4, 2.5, 2.6, 2.7, 2.8).
@@ -852,20 +853,38 @@ export const conditionsWhenADeterminantEqualsZero: TopicDef = {
           `Without carrying out a full Laplace expansion, decide which of the following matrices has a determinant equal to $0$.`,
           `无需进行完整的拉普拉斯展开，判断下列哪个矩阵的行列式等于 $0$。`,
         );
-
-        return oneOf(
-          rng,
-          prompt,
-          t(`$$${matLatex(singularMat)}$$`, `$$${matLatex(singularMat)}$$`),
-          [
-            t(`$$${matLatex(inv1)}$$`, `$$${matLatex(inv1)}$$`),
-            t(`$$${matLatex(inv2)}$$`, `$$${matLatex(inv2)}$$`),
-            t(`$$${matLatex(inv3)}$$`, `$$${matLatex(inv3)}$$`),
-          ],
-          t(
-            `In the matrix $M = ${matLatex(singularMat)}$, row 2 is exactly $${factor}$ times row 1: $R_2 = ${factor} R_1$. When two rows of a square matrix are linearly dependent (proportional), subtracting $${factor} R_1$ from $R_2$ produces a row of zeros without changing the determinant. Hence $\\det(M) = 0$. The other three matrices are triangular with non-zero diagonals, so their determinants are non-zero.`,
-            `在矩阵 $M = ${matLatex(singularMat)}$ 中，第 2 行恰好是第 1 行的 $${factor}$ 倍：$R_2 = ${factor} R_1$。当方阵的两行线性相关（成比例）时，将第 1 行的 $${factor}$ 倍从第 2 行减去后，将产生一个全零行且不改变行列式的值，因此 $\\det(M) = 0$。其余三个矩阵均为对角元非零的三角矩阵，行列式均不为零。`,
+        return reasoned(
+          oneOf(
+            rng,
+            prompt,
+            t(`$$${matLatex(singularMat)}$$`, `$$${matLatex(singularMat)}$$`),
+            [
+              t(`$$${matLatex(inv1)}$$`, `$$${matLatex(inv1)}$$`),
+              t(`$$${matLatex(inv2)}$$`, `$$${matLatex(inv2)}$$`),
+              t(`$$${matLatex(inv3)}$$`, `$$${matLatex(inv3)}$$`),
+            ],
+            t(
+              `In the matrix $M = ${matLatex(singularMat)}$, row 2 is exactly $${factor}$ times row 1: $R_2 = ${factor} R_1$. When two rows of a square matrix are linearly dependent (proportional), subtracting $${factor} R_1$ from $R_2$ produces a row of zeros without changing the determinant. Hence $\\det(M) = 0$. The other three matrices are triangular with non-zero diagonals, so their determinants are non-zero.`,
+              `在矩阵 $M = ${matLatex(singularMat)}$ 中，第 2 行恰好是第 1 行的 $${factor}$ 倍：$R_2 = ${factor} R_1$。当方阵的两行线性相关（成比例）时，将第 1 行的 $${factor}$ 倍从第 2 行减去后，将产生一个全零行且不改变行列式的值，因此 $\\det(M) = 0$。其余三个矩阵均为对角元非零的三角矩阵，行列式均不为零。`,
+            ),
           ),
+          [
+            [
+              `$$${matLatex(inv1)}$$`,
+              "This matrix is triangular, so its determinant is the product of the diagonal, $1 \\cdot 3 \\cdot 2 = 6$.",
+              "这是三角矩阵，行列式等于对角线之积 $1 \\cdot 3 \\cdot 2 = 6$。",
+            ],
+            [
+              `$$${matLatex(inv2)}$$`,
+              "This matrix is triangular, so its determinant is the product of the diagonal, $2 \\cdot 3 \\cdot 1 = 6$.",
+              "这是三角矩阵，行列式等于对角线之积 $2 \\cdot 3 \\cdot 1 = 6$。",
+            ],
+            [
+              `$$${matLatex(inv3)}$$`,
+              "This matrix is triangular, so its determinant is the product of the diagonal, $1 \\cdot 2 \\cdot 3 = 6$.",
+              "这是三角矩阵，行列式等于对角线之积 $1 \\cdot 2 \\cdot 3 = 6$。",
+            ],
+          ],
         );
       },
     },
@@ -1213,15 +1232,42 @@ $$\\begin{cases} ${formatLinear3(a1, b1, c1)} = ${d1} \\\\ ${formatLinear3(a2, b
         if (!row.some((x) => x !== 0)) row[0] = 1;
         const eq = (c: readonly number[], rhs: number) =>
           t(`$${formatLinear3(c[0]!, c[1]!, c[2]!)} = ${rhs}$`, `$${formatLinear3(c[0]!, c[1]!, c[2]!)} = ${rhs}$`);
-        return oneOf(
-          rng,
-          t(`Which equation does row $${r + 1}$ of $${augLatex(A, b)}$ represent?`, `$${augLatex(A, b)}$ 的第 $${r + 1}$ 行表示哪个方程？`),
-          eq(row, b[r]!),
-          [eq([row[2]!, row[1]!, row[0]!], b[r]!), eq(row, -b[r]!), eq(A[(r + 1) % 3]!, b[r]!), eq([row[1]!, row[0]!, row[2]!], b[r]!)],
-          t(
-            `The coefficients of $x$, $y$, $z$ are $${row.join(", ")}$ and the constant is $${b[r]}$.`,
-            `$x$、$y$、$z$ 的系数为 $${row.join(", ")}$，常数为 $${b[r]}$。`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Which equation does row $${r + 1}$ of $${augLatex(A, b)}$ represent?`,
+              `$${augLatex(A, b)}$ 的第 $${r + 1}$ 行表示哪个方程？`,
+            ),
+            eq(row, b[r]!),
+            [eq([row[2]!, row[1]!, row[0]!], b[r]!), eq(row, -b[r]!), eq(A[(r + 1) % 3]!, b[r]!), eq([row[1]!, row[0]!, row[2]!], b[r]!)],
+            t(
+              `The coefficients of $x$, $y$, $z$ are $${row.join(", ")}$ and the constant is $${b[r]}$.`,
+              `$x$、$y$、$z$ 的系数为 $${row.join(", ")}$，常数为 $${b[r]}$。`,
+            ),
           ),
+          [
+            [
+              eq([row[2]!, row[1]!, row[0]!], b[r]!).en,
+              "The coefficients are in reverse order: the columns are $x$, $y$, $z$ from left to right.",
+              "系数顺序反了：从左到右各列依次是 $x$、$y$、$z$。",
+            ],
+            [
+              eq(row, -b[r]!).en,
+              "The constant keeps its sign: it is not moved across the equals sign.",
+              "常数的符号不变：它没有被移到等号另一边。",
+            ],
+            [
+              eq(A[(r + 1) % 3]!, b[r]!).en,
+              "These coefficients come from a different row than the constant.",
+              "这些系数和常数不在同一行。",
+            ],
+            [
+              eq([row[1]!, row[0]!, row[2]!], b[r]!).en,
+              "The first two coefficients are exchanged: the first column belongs to $x$.",
+              "前两个系数弄反了：第一列对应 $x$。",
+            ],
+          ],
         );
       },
     },
@@ -1507,22 +1553,40 @@ $$A = ${matLatex(A)}$$`,
 
 $$A = ${matLatex(A)}$$`,
         );
-
-        return oneOf(
-          rng,
-          prompt,
-          t(`$$${matLatex(correctMat)}$$`, `$$${matLatex(correctMat)}$$`),
-          [
-            t(`$$${matLatex(wrongMat1)}$$`, `$$${matLatex(wrongMat1)}$$`),
-            t(`$$${matLatex(wrongMat2)}$$`, `$$${matLatex(wrongMat2)}$$`),
-            t(`$$${matLatex(wrongMat3)}$$`, `$$${matLatex(wrongMat3)}$$`),
-          ],
-          t(
-            `The operation $${opStr}$ replaces row 2 by row 2 ${k > 0 ? "minus" : "plus"} $${Math.abs(k)}$ times row 1 entry by entry:
+        return reasoned(
+          oneOf(
+            rng,
+            prompt,
+            t(`$$${matLatex(correctMat)}$$`, `$$${matLatex(correctMat)}$$`),
+            [
+              t(`$$${matLatex(wrongMat1)}$$`, `$$${matLatex(wrongMat1)}$$`),
+              t(`$$${matLatex(wrongMat2)}$$`, `$$${matLatex(wrongMat2)}$$`),
+              t(`$$${matLatex(wrongMat3)}$$`, `$$${matLatex(wrongMat3)}$$`),
+            ],
+            t(
+              `The operation $${opStr}$ replaces row 2 by row 2 ${k > 0 ? "minus" : "plus"} $${Math.abs(k)}$ times row 1 entry by entry:
 $[${r2.join(", ")}] - ${paren(k)}[${r1.join(", ")}] = [${newR2.join(", ")}]$. Rows 1 and 3 are unchanged.`,
-            `变换 $${opStr}$ 将第 2 行替换为第 2 行${k > 0 ? "减去" : "加上"}第 1 行的 $${Math.abs(k)}$ 倍：
+              `变换 $${opStr}$ 将第 2 行替换为第 2 行${k > 0 ? "减去" : "加上"}第 1 行的 $${Math.abs(k)}$ 倍：
 $[${r2.join(", ")}] - ${paren(k)}[${r1.join(", ")}] = [${newR2.join(", ")}]$。第 1 行与第 3 行保持不变。`,
+            ),
           ),
+          [
+            [
+              `$$${matLatex(wrongMat1)}$$`,
+              "The sign is reversed: this adds where the operation subtracts, or subtracts where it adds.",
+              "符号反了：运算要减的地方这里加了，或者要加的地方这里减了。",
+            ],
+            [
+              `$$${matLatex(wrongMat2)}$$`,
+              "This changes row 1, but the arrow says row 2 is the one replaced.",
+              "这里改变的是第 1 行，但箭头表示被替换的是第 2 行。",
+            ],
+            [
+              `$$${matLatex(wrongMat3)}$$`,
+              "This swaps the two rows, which is a different elementary operation.",
+              "这里交换了两行，那是另一种初等行变换。",
+            ],
+          ],
         );
       },
     },
@@ -1620,16 +1684,30 @@ $$A = ${matLatex(A)}$$`,
 
 $$A = ${matLatex(A)}$$`,
         );
-
-        return oneOf(
-          rng,
-          prompt,
-          t(`$${rightOp}$`, `$${rightOp}$`),
-          [t(`$${wrongOp1}$`, `$${wrongOp1}$`), t(`$${wrongOp2}$`, `$${wrongOp2}$`), t(`$${wrongOp3}$`, `$${wrongOp3}$`)],
-          t(
-            `The required multiplier is $c = \\frac{a_{21}}{a_{11}} = \\frac{${targetVal}}{${pivot}} = ${mult}$. Subtracting $${mult}$ times row 1 from row 2 gives $${targetVal} - (${mult})(${pivot}) = 0$, so the correct operation is $${rightOp}$.`,
-            `所需的消元乘子为 $c = \\frac{a_{21}}{a_{11}} = \\frac{${targetVal}}{${pivot}} = ${mult}$。从第 2 行减去第 1 行的 $${mult}$ 倍即可得到 $${targetVal} - (${mult})(${pivot}) = 0$，故正确的行变换为 $${rightOp}$。`,
+        return reasoned(
+          oneOf(
+            rng,
+            prompt,
+            t(`$${rightOp}$`, `$${rightOp}$`),
+            [t(`$${wrongOp1}$`, `$${wrongOp1}$`), t(`$${wrongOp2}$`, `$${wrongOp2}$`), t(`$${wrongOp3}$`, `$${wrongOp3}$`)],
+            t(
+              `The required multiplier is $c = \\frac{a_{21}}{a_{11}} = \\frac{${targetVal}}{${pivot}} = ${mult}$. Subtracting $${mult}$ times row 1 from row 2 gives $${targetVal} - (${mult})(${pivot}) = 0$, so the correct operation is $${rightOp}$.`,
+              `所需的消元乘子为 $c = \\frac{a_{21}}{a_{11}} = \\frac{${targetVal}}{${pivot}} = ${mult}$。从第 2 行减去第 1 行的 $${mult}$ 倍即可得到 $${targetVal} - (${mult})(${pivot}) = 0$，故正确的行变换为 $${rightOp}$。`,
+            ),
           ),
+          [
+            [
+              `$${wrongOp1}$`,
+              `The sign is wrong: this makes the entry $${2 * targetVal}$ instead of $0$.`,
+              `符号错了：这样该元素变成 $${2 * targetVal}$，而不是 $0$。`,
+            ],
+            [
+              `$${wrongOp2}$`,
+              "This replaces row 1 and leaves row 2 as it was, so the entry in row 2 stays.",
+              "这里替换的是第 1 行，第 2 行没有变，所以第 2 行的元素还在。",
+            ],
+            [`$${wrongOp3}$`, "The multiplier is upside down: it is the entry divided by the pivot.", "乘子颠倒了：应该是该元素除以主元。"],
+          ],
         );
       },
     },
@@ -2094,20 +2172,40 @@ $$A = ${matLatex(M)}$$
         const label = (c: readonly number[]) =>
           t(`Columns $${c.map((x) => x + 1).join(", ")}$`, `第 $${c.map((x) => x + 1).join(", ")}$ 列`);
         const nonPivot = [0, 1, 2, 3, 4].filter((x) => !cols.includes(x));
-        return oneOf(
-          rng,
-          t(`Which columns of $${matLatex(M)}$ are pivot columns?`, `$${matLatex(M)}$ 的哪些列是主元列？`),
-          label(cols),
-          [
-            label(nonPivot.slice(0, k)),
-            label([0, 1, 2].slice(0, k)),
-            label(cols.map((c) => Math.min(c + 1, 4))),
-            label([...cols, nonPivot[0]!].sort((x, y) => x - y)),
-          ],
-          t(
-            `The leading entries of the nonzero rows are in columns $${cols.map((x) => x + 1).join(", ")}$.`,
-            `各非零行的首元位于第 $${cols.map((x) => x + 1).join(", ")}$ 列。`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(`Which columns of $${matLatex(M)}$ are pivot columns?`, `$${matLatex(M)}$ 的哪些列是主元列？`),
+            label(cols),
+            [
+              label(nonPivot.slice(0, k)),
+              label([0, 1, 2].slice(0, k)),
+              label(cols.map((c) => Math.min(c + 1, 4))),
+              label([...cols, nonPivot[0]!].sort((x, y) => x - y)),
+            ],
+            t(
+              `The leading entries of the nonzero rows are in columns $${cols.map((x) => x + 1).join(", ")}$.`,
+              `各非零行的首元位于第 $${cols.map((x) => x + 1).join(", ")}$ 列。`,
+            ),
           ),
+          [
+            [label(nonPivot.slice(0, k)).en, "These columns hold no leading entry of a nonzero row.", "这些列不含非零行的首元。"],
+            [
+              label([0, 1, 2].slice(0, k)).en,
+              "Pivot columns are found from the leading entries, not by taking the first columns.",
+              "主元列要看首元的位置，不是取最前面几列。",
+            ],
+            [
+              label(cols.map((c) => Math.min(c + 1, 4))).en,
+              "Not every one of these holds a leading entry: find the first nonzero entry of each nonzero row.",
+              "这些列不都含首元：要找每个非零行的第一个非零元素。",
+            ],
+            [
+              label([...cols, nonPivot[0]!].sort((x, y) => x - y)).en,
+              `There are only $${k}$ nonzero rows, so there are $${k}$ pivot columns.`,
+              `非零行只有 $${k}$ 行，所以主元列只有 $${k}$ 列。`,
+            ],
+          ],
         );
       },
     },
@@ -2219,20 +2317,43 @@ Writing in vector form gives $$${rightStr}$$.`,
         const inf = t("Infinitely many solutions", "无穷多解");
         const one = t("Exactly one solution", "恰有一个解");
         const two = t("Exactly two solutions", "恰有两个解");
-        return oneOf(
-          rng,
-          t(
-            `Elimination of a system gives $${augLatex(U, c)}$. How many solutions does the system have?`,
-            `某方程组消元后得 $${augLatex(U, c)}$。该方程组有几个解？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Elimination of a system gives $${augLatex(U, c)}$. How many solutions does the system have?`,
+              `某方程组消元后得 $${augLatex(U, c)}$。该方程组有几个解？`,
+            ),
+            f === 0 ? inf : none,
+            [f === 0 ? none : inf, one, two],
+            t(
+              f === 0
+                ? "The last row reads $0 = 0$, so $z$ is free and there are infinitely many solutions."
+                : `The last row reads $0 = ${f}$, which is impossible, so there is no solution.`,
+              f === 0 ? "最后一行为 $0 = 0$，所以 $z$ 是自由变量，有无穷多解。" : `最后一行为 $0 = ${f}$，不可能成立，所以无解。`,
+            ),
           ),
-          f === 0 ? inf : none,
-          [f === 0 ? none : inf, one, two],
-          t(
-            f === 0
-              ? "The last row reads $0 = 0$, so $z$ is free and there are infinitely many solutions."
-              : `The last row reads $0 = ${f}$, which is impossible, so there is no solution.`,
-            f === 0 ? "最后一行为 $0 = 0$，所以 $z$ 是自由变量，有无穷多解。" : `最后一行为 $0 = ${f}$，不可能成立，所以无解。`,
-          ),
+          [
+            [
+              (f === 0 ? none : inf).en,
+              f === 0
+                ? "The last row reads $0 = 0$, which is no contradiction, so a solution exists."
+                : `The last row reads $0 = ${f}$, and no choice of variables makes that true.`,
+              f === 0 ? "最后一行是 $0 = 0$，并不矛盾，所以解存在。" : `最后一行是 $0 = ${f}$，变量取什么值都不能使它成立。`,
+            ],
+            [
+              "Exactly one solution",
+              f === 0
+                ? "The zero row leaves $z$ free, and each value of $z$ gives a different solution."
+                : `The last row reads $0 = ${f}$, so there is no solution at all.`,
+              f === 0 ? "零行使 $z$ 成为自由变量，$z$ 的每个值都给出一个不同的解。" : `最后一行是 $0 = ${f}$，所以根本没有解。`,
+            ],
+            [
+              "Exactly two solutions",
+              "A linear system never has exactly two solutions: two solutions would put a whole line of solutions between them.",
+              "线性方程组不可能恰有两个解：有两个解就会有经过它们的一整条直线的解。",
+            ],
+          ],
         );
       },
     },
@@ -3287,28 +3408,46 @@ $$A = ${matLatex(A)}$$`,
 
 $$A = ${matLatex(A)}$$`,
         );
-
-        return oneOf(
-          rng,
-          prompt,
-          t(`$$${matLatex(invA)}$$`, `$$${matLatex(invA)}$$`),
-          [
-            t(`$$${matLatex(wrong1)}$$`, `$$${matLatex(wrong1)}$$`),
-            t(`$$${matLatex(wrong2)}$$`, `$$${matLatex(wrong2)}$$`),
-            t(`$$${matLatex(wrong3)}$$`, `$$${matLatex(wrong3)}$$`),
-          ],
-          t(
-            `Augmenting with $I_3$ gives $[A \\mid I_3]$. Since $A$ is already in upper triangular form with 1s on the diagonal, backward elimination clears entries above the pivots:
+        return reasoned(
+          oneOf(
+            rng,
+            prompt,
+            t(`$$${matLatex(invA)}$$`, `$$${matLatex(invA)}$$`),
+            [
+              t(`$$${matLatex(wrong1)}$$`, `$$${matLatex(wrong1)}$$`),
+              t(`$$${matLatex(wrong2)}$$`, `$$${matLatex(wrong2)}$$`),
+              t(`$$${matLatex(wrong3)}$$`, `$$${matLatex(wrong3)}$$`),
+            ],
+            t(
+              `Augmenting with $I_3$ gives $[A \\mid I_3]$. Since $A$ is already in upper triangular form with 1s on the diagonal, backward elimination clears entries above the pivots:
 1. $R_2 - (${u23}) R_3 \\to R_2$
 2. $R_1 - (${u13}) R_3 \\to R_1$
 3. $R_1 - (${u12}) R_2 \\to R_1$
 This transforms the right block into $A^{-1} = ${matLatex(invA)}$.`,
-            `增广单位矩阵得到 $[A \\mid I_3]$。由于 $A$ 已经是对角线为 1 的上三角矩阵，只需执行反向消元消去主元上方的元素：
+              `增广单位矩阵得到 $[A \\mid I_3]$。由于 $A$ 已经是对角线为 1 的上三角矩阵，只需执行反向消元消去主元上方的元素：
 1. $R_2 - (${u23}) R_3 \\to R_2$
 2. $R_1 - (${u13}) R_3 \\to R_1$
 3. $R_1 - (${u12}) R_2 \\to R_1$
 右侧对应的矩阵即为 $A^{-1} = ${matLatex(invA)}$。`,
+            ),
           ),
+          [
+            [
+              `$$${matLatex(wrong1)}$$`,
+              "Negating each entry works for the first row's middle entry but not its corner: the corner also collects a term from the two row operations.",
+              "把每个元素变号对第一行中间的元素可行，但对右上角不行：右上角还要加上两次行变换带来的一项。",
+            ],
+            [
+              `$$${matLatex(wrong2)}$$`,
+              "This is $A$ itself: its product with $A$ is not the identity.",
+              "这就是 $A$ 本身：它与 $A$ 的积不是单位矩阵。",
+            ],
+            [
+              `$$${matLatex(wrong3)}$$`,
+              "The inverse of an upper triangular matrix is upper triangular, and this is lower triangular.",
+              "上三角矩阵的逆也是上三角的，而这个是下三角的。",
+            ],
+          ],
         );
       },
     },

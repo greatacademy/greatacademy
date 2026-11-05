@@ -2,6 +2,7 @@ import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
 import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 /** SIMPLE_PROPORTIONS lists sample proportions that keep the arithmetic exact. */
 const SIMPLE_PROPORTIONS = [Q.of(1, 2), Q.of(1, 4), Q.of(3, 4), Q.of(1, 5), Q.of(2, 5), Q.of(3, 5), Q.of(4, 5)];
@@ -403,19 +404,37 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `When drawing a sample of size $n = ${n}$ without replacement from a population of size $N = ${N}$, what is the formula for the finite-population-corrected standard error of the sample proportion $\\hat{p}$?`,
-              `当从容量为 $N = ${N}$ 的总体中不放回抽取容量为 $n = ${n}$ 的样本时，样本比例 $\\hat{p}$ 经有限总体校正后的标准误差公式是什么？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `The finite-population-corrected standard error multiplies the uncorrected standard error by the FPC factor $\\sqrt{\\frac{N - n}{N - 1}}$, giving $\\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{${n}} \\left(\\frac{${N} - ${n}}{${N} - 1}\\right)}$.`,
-              `经有限总体校正的标准误差将未校正的标准误差乘以 FPC 因子 $\\sqrt{\\frac{N - n}{N - 1}}$，得到 $\\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{${n}} \\left(\\frac{${N} - ${n}}{${N} - 1}\\right)}$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `When drawing a sample of size $n = ${n}$ without replacement from a population of size $N = ${N}$, what is the formula for the finite-population-corrected standard error of the sample proportion $\\hat{p}$?`,
+                `当从容量为 $N = ${N}$ 的总体中不放回抽取容量为 $n = ${n}$ 的样本时，样本比例 $\\hat{p}$ 经有限总体校正后的标准误差公式是什么？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `The finite-population-corrected standard error multiplies the uncorrected standard error by the FPC factor $\\sqrt{\\frac{N - n}{N - 1}}$, giving $\\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{${n}} \\left(\\frac{${N} - ${n}}{${N} - 1}\\right)}$.`,
+                `经有限总体校正的标准误差将未校正的标准误差乘以 FPC 因子 $\\sqrt{\\frac{N - n}{N - 1}}$，得到 $\\sqrt{\\frac{\\hat{p}(1 - \\hat{p})}{${n}} \\left(\\frac{${N} - ${n}}{${N} - 1}\\right)}$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                "The correction factor is upside down: it must be less than $1$, and this one is greater.",
+                "修正因子颠倒了：它应小于 $1$，而这个大于 $1$。",
+              ],
+              [
+                opts[2]!.en,
+                "This leaves out the correction factor, which is needed when sampling without replacement from a finite population.",
+                "这里漏掉了修正因子，而从有限总体不放回抽样时需要它。",
+              ],
+              [
+                opts[3]!.en,
+                "The square root is missing, so this is not in the units of a standard error, and the factor's denominator is $N - 1$.",
+                "这里缺了平方根，所以不是标准误的形式，修正因子的分母也应是 $N - 1$。",
+              ],
+            ],
+          );
         },
       },
       {

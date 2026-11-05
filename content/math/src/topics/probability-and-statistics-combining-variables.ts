@@ -2,6 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
 import { choiceProblem, isTerminating, lowestTerms, numberProblem, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 /** PHI holds the standard normal cumulative probabilities the problems quote. */
 const PHI = new Map<number, string>([
@@ -472,19 +473,37 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `In a multinomial experiment with $n = ${n}$ trials and $k = 4$ categories with probabilities $p_1 = \\frac{${pFrac.num}}{${pFrac.den}}$, $p_2, p_3, p_4$, what is the exact marginal distribution of the count $X_1$?`,
-              `在进行具有 $n = ${n}$ 次试验与 $4$ 个类别的多项试验中，第一类的发生概率为 $p_1 = \\frac{${pFrac.num}}{${pFrac.den}}$。计数随机变量 $X_1$ 的精确边际分布是什么？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `By collapsing the other categories into 'not category 1', the number of outcomes of type 1 across $n$ independent trials is binomial: $X_1 \\sim \\text{Binomial}\\left(${n}, \\frac{${pFrac.num}}{${pFrac.den}}\\right)$.`,
-              `将其他类别统归为“非类别 1”，则在 $n$ 次独立试验中该类别的发生次数服从二项分布：$X_1 \\sim \\text{Binomial}\\left(${n}, \\frac{${pFrac.num}}{${pFrac.den}}\\right)$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `In a multinomial experiment with $n = ${n}$ trials and $k = 4$ categories with probabilities $p_1 = \\frac{${pFrac.num}}{${pFrac.den}}$, $p_2, p_3, p_4$, what is the exact marginal distribution of the count $X_1$?`,
+                `在进行具有 $n = ${n}$ 次试验与 $4$ 个类别的多项试验中，第一类的发生概率为 $p_1 = \\frac{${pFrac.num}}{${pFrac.den}}$。计数随机变量 $X_1$ 的精确边际分布是什么？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `By collapsing the other categories into 'not category 1', the number of outcomes of type 1 across $n$ independent trials is binomial: $X_1 \\sim \\text{Binomial}\\left(${n}, \\frac{${pFrac.num}}{${pFrac.den}}\\right)$.`,
+                `将其他类别统归为“非类别 1”，则在 $n$ 次独立试验中该类别的发生次数服从二项分布：$X_1 \\sim \\text{Binomial}\\left(${n}, \\frac{${pFrac.num}}{${pFrac.den}}\\right)$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                `A Poisson count can be any size, and this count cannot exceed the $${n}$ trials.`,
+                `泊松计数可以取任意大，而这个计数不会超过 $${n}$ 次试验。`,
+              ],
+              [
+                opts[2]!.en,
+                "This count takes whole-number values, and these numbers are not even the mean and variance of a normal approximation.",
+                "这个计数只取整数，而且这两个数也不是正态近似的均值和方差。",
+              ],
+              [
+                opts[3]!.en,
+                "A geometric variable counts trials up to the first success, and here the number of trials is fixed.",
+                "几何变量计的是到首次成功的试验次数，而这里试验次数是固定的。",
+              ],
+            ],
+          );
         },
       },
       {
@@ -878,19 +897,33 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `For any joint cumulative distribution function $F(x, y)$, which expression correctly computes the probability $P(${a} < X \\le ${b}, \\; ${c} < Y \\le ${d})$?`,
-              `对于任意联合累积分布函数 $F(x, y)$，下列哪个表达式能够正确计算矩形概率 $P(${a} < X \\le ${b}, \\; ${c} < Y \\le ${d})$？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `By the 2D inclusion-exclusion principle for joint CDFs, $P(a < X \\le b, c < Y \\le d) = F(b, d) - F(a, d) - F(b, c) + F(a, c)$. Here, that gives $F(${b}, ${d}) - F(${a}, ${d}) - F(${b}, ${c}) + F(${a}, ${c})$.`,
-              `由二维容斥原理，联合分布函数在矩形上的概率为 $P(a < X \\le b, c < Y \\le d) = F(b, d) - F(a, d) - F(b, c) + F(a, c)$。此处对应为 $F(${b}, ${d}) - F(${a}, ${d}) - F(${b}, ${c}) + F(${a}, ${c})$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `For any joint cumulative distribution function $F(x, y)$, which expression correctly computes the probability $P(${a} < X \\le ${b}, \\; ${c} < Y \\le ${d})$?`,
+                `对于任意联合累积分布函数 $F(x, y)$，下列哪个表达式能够正确计算矩形概率 $P(${a} < X \\le ${b}, \\; ${c} < Y \\le ${d})$？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `By the 2D inclusion-exclusion principle for joint CDFs, $P(a < X \\le b, c < Y \\le d) = F(b, d) - F(a, d) - F(b, c) + F(a, c)$. Here, that gives $F(${b}, ${d}) - F(${a}, ${d}) - F(${b}, ${c}) + F(${a}, ${c})$.`,
+                `由二维容斥原理，联合分布函数在矩形上的概率为 $P(a < X \\le b, c < Y \\le d) = F(b, d) - F(a, d) - F(b, c) + F(a, c)$。此处对应为 $F(${b}, ${d}) - F(${a}, ${d}) - F(${b}, ${c}) + F(${a}, ${c})$。`,
+              ),
+            }),
+            [
+              [opts[1]!.en, "Only two corners are used: inclusion and exclusion needs all four.", "这里只用了两个角：容斥需要全部四个角。"],
+              [
+                opts[2]!.en,
+                "The signs are wrong: the two corners that mix a low and a high bound are both subtracted.",
+                "符号错了：一低一高的两个角都要减去。",
+              ],
+              [
+                opts[3]!.en,
+                "Adding all four corners counts regions outside the rectangle.",
+                "把四个角全部相加，会把矩形以外的区域也算进去。",
+              ],
+            ],
+          );
         },
       },
       {
@@ -1837,19 +1870,33 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `By the 2D Law of the Unconscious Statistician (LOTUS), what is the direct double integral used to evaluate the expected value $E[${c}X + Y^2]$ for continuous random variables with joint PDF $f_{X,Y}(x, y)$?`,
-              `根据二维无意识统计学家法则（LOTUS），对于联合概率密度为 $f_{X,Y}(x, y)$ 的连续随机变量，直接计算期望值 $E[${c}X + Y^2]$ 的二重积分表达式是什么？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `LOTUS states that $E[g(X, Y)] = \\int_{-\\infty}^\\infty \\int_{-\\infty}^\\infty g(x, y) f_{X,Y}(x, y) \\, dy \\, dx$. Setting $g(x, y) = ${c}x + y^2$ gives $\\int_{-\\infty}^\\infty \\int_{-\\infty}^\\infty (${c} x + y^2) f_{X,Y}(x, y) \\, dy \\, dx$.`,
-              `LOTUS 指出 $E[g(X, Y)] = \\int_{-\\infty}^\\infty \\int_{-\\infty}^\\infty g(x, y) f_{X,Y}(x, y) \\, dy \\, dx$。令 $g(x, y) = ${c}x + y^2$ 即得所求积分表达式。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `By the 2D Law of the Unconscious Statistician (LOTUS), what is the direct double integral used to evaluate the expected value $E[${c}X + Y^2]$ for continuous random variables with joint PDF $f_{X,Y}(x, y)$?`,
+                `根据二维无意识统计学家法则（LOTUS），对于联合概率密度为 $f_{X,Y}(x, y)$ 的连续随机变量，直接计算期望值 $E[${c}X + Y^2]$ 的二重积分表达式是什么？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `LOTUS states that $E[g(X, Y)] = \\int_{-\\infty}^\\infty \\int_{-\\infty}^\\infty g(x, y) f_{X,Y}(x, y) \\, dy \\, dx$. Setting $g(x, y) = ${c}x + y^2$ gives $\\int_{-\\infty}^\\infty \\int_{-\\infty}^\\infty (${c} x + y^2) f_{X,Y}(x, y) \\, dy \\, dx$.`,
+                `LOTUS 指出 $E[g(X, Y)] = \\int_{-\\infty}^\\infty \\int_{-\\infty}^\\infty g(x, y) f_{X,Y}(x, y) \\, dy \\, dx$。令 $g(x, y) = ${c}x + y^2$ 即得所求积分表达式。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                "A sum becomes a product here, and the marginals need not describe the pair: integrate against the joint density.",
+                "这里把和变成了积，而且边缘密度不一定能描述这一对变量：要对联合密度积分。",
+              ],
+              [opts[2]!.en, "An expectation is an integral over both variables, not a derivative.", "期望是对两个变量的积分，不是导数。"],
+              [
+                opts[3]!.en,
+                "This puts expectations inside a function, and the rule averages the function itself over the joint density.",
+                "这是把期望放进函数里，而这条规则是把函数本身按联合密度取平均。",
+              ],
+            ],
+          );
         },
       },
       {
@@ -2290,19 +2337,33 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
           const correct = perm.indexOf(0);
-
-          return choiceProblem({
-            prompt: t(
-              `When calculating the unbiased sample covariance matrix $S$ from a multivariate sample of size $n = ${n}$, what divisor is used in the formula $S = \\frac{1}{d} \\sum_{i=1}^{n} (\\mathbf{x}_i - \\bar{\\mathbf{x}})(\\mathbf{x}_i - \\bar{\\mathbf{x}})^T$?`,
-              `当根据样本容量为 $n = ${n}$ 的多元样本计算无偏样本协方差矩阵 $S$ 时，公式 $S = \\frac{1}{d} \\sum_{i=1}^{n} (\\mathbf{x}_i - \\bar{\\mathbf{x}})(\\mathbf{x}_i - \\bar{\\mathbf{x}})^T$ 中的除数 $d$ 是什么？`,
-            ),
-            options,
-            correct,
-            solution: t(
-              `To ensure the estimator is unbiased, Bessel's correction uses degrees of freedom $d = n - 1 = ${n} - 1 = ${n - 1}$.`,
-              `为保证估计量的无偏性，贝塞尔校正采用自由度 $d = n - 1 = ${n} - 1 = ${n - 1}$。`,
-            ),
-          });
+          return reasoned(
+            choiceProblem({
+              prompt: t(
+                `When calculating the unbiased sample covariance matrix $S$ from a multivariate sample of size $n = ${n}$, what divisor is used in the formula $S = \\frac{1}{d} \\sum_{i=1}^{n} (\\mathbf{x}_i - \\bar{\\mathbf{x}})(\\mathbf{x}_i - \\bar{\\mathbf{x}})^T$?`,
+                `当根据样本容量为 $n = ${n}$ 的多元样本计算无偏样本协方差矩阵 $S$ 时，公式 $S = \\frac{1}{d} \\sum_{i=1}^{n} (\\mathbf{x}_i - \\bar{\\mathbf{x}})(\\mathbf{x}_i - \\bar{\\mathbf{x}})^T$ 中的除数 $d$ 是什么？`,
+              ),
+              options,
+              correct,
+              solution: t(
+                `To ensure the estimator is unbiased, Bessel's correction uses degrees of freedom $d = n - 1 = ${n} - 1 = ${n - 1}$.`,
+                `为保证估计量的无偏性，贝塞尔校正采用自由度 $d = n - 1 = ${n} - 1 = ${n - 1}$。`,
+              ),
+            }),
+            [
+              [
+                opts[1]!.en,
+                "Dividing by $n$ gives a biased estimate, because the means are estimated from the same sample.",
+                "除以 $n$ 得到的是有偏估计，因为均值是用同一样本估计的。",
+              ],
+              [
+                opts[2]!.en,
+                "This divisor makes the estimate smaller still, and nothing in the derivation adds a degree of freedom.",
+                "这个除数让估计更小，而推导中没有任何增加自由度的步骤。",
+              ],
+              [opts[3]!.en, "One degree of freedom is lost for the estimated mean, not two.", "因估计均值只失去一个自由度，不是两个。"],
+            ],
+          );
         },
       },
       {

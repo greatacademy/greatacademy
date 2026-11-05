@@ -3,6 +3,7 @@ import { same, t } from "@ga/content";
 import { type Coefficient, linear, num, paren, poly, Q } from "@ga/subject-math";
 
 import { choiceProblem, type ExpressionProblem, expressionProblem, numberProblem, steps, yesNo } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -648,15 +649,35 @@ export const recursiveFormulasForArithmeticSequences: TopicDef = {
         const d = Q.of(rng.sign() * rng.int(2, 9));
         const terms = arithmeticRecursive(a1, d).terms.slice(0, 4);
         const correct = arithmeticRecursive(a1, d);
-        return formulaChoice(
-          rng,
-          t(`Which recursive formula defines the sequence $${list(terms)}$?`, `哪个递推公式定义了数列 $${list(terms)}$？`),
-          correct,
-          [arithmeticRecursive(a1, d.neg()), arithmeticRecursive(a1.add(d), d), geometricRecursive(a1, d), arithmeticRecursive(d, a1)],
-          t(
-            `The first term is $${a1.toLatex()}$ and the common difference is $${num(terms[1]!)} - ${paren(a1)} = ${d.toLatex()}$, so $${correct.latex}$.`,
-            `首项是 $${a1.toLatex()}$，公差是 $${num(terms[1]!)} - ${paren(a1)} = ${d.toLatex()}$，所以 $${correct.latex}$。`,
+        return reasoned(
+          formulaChoice(
+            rng,
+            t(`Which recursive formula defines the sequence $${list(terms)}$?`, `哪个递推公式定义了数列 $${list(terms)}$？`),
+            correct,
+            [arithmeticRecursive(a1, d.neg()), arithmeticRecursive(a1.add(d), d), geometricRecursive(a1, d), arithmeticRecursive(d, a1)],
+            t(
+              `The first term is $${a1.toLatex()}$ and the common difference is $${num(terms[1]!)} - ${paren(a1)} = ${d.toLatex()}$, so $${correct.latex}$.`,
+              `首项是 $${a1.toLatex()}$，公差是 $${num(terms[1]!)} - ${paren(a1)} = ${d.toLatex()}$，所以 $${correct.latex}$。`,
+            ),
           ),
+          [
+            [
+              `$${arithmeticRecursive(a1, d.neg()).latex}$`,
+              "The common difference has the wrong sign: subtract a later term minus an earlier one, in that order.",
+              "公差的符号错了：应该用后一项减前一项。",
+            ],
+            [
+              `$${arithmeticRecursive(a1.add(d), d).latex}$`,
+              "This starts at the second term of the sequence instead of the first.",
+              "这里从数列的第二项开始，而不是第一项。",
+            ],
+            [
+              `$${geometricRecursive(a1, d).latex}$`,
+              "This multiplies, but this sequence adds the same amount each time.",
+              "这里用的是乘法，但这个数列每次加上同一个数。",
+            ],
+            [`$${arithmeticRecursive(d, a1).latex}$`, "The first term and the step are swapped.", "首项和每一步的量弄反了。"],
+          ],
         );
       },
     },
@@ -868,18 +889,42 @@ export const explicitAndRecursiveArithmeticFormulas: TopicDef = {
         const c = Q.of(rng.nonZero(-20, 20));
         const a1 = p.add(c);
         const correct = arithmeticRecursive(a1, p);
-        return formulaChoice(
-          rng,
-          t(
-            `Which recursive formula defines the sequence $a_n = ${poly([p, "n"], [c, ""])}$?`,
-            `哪个递推公式定义了数列 $a_n = ${poly([p, "n"], [c, ""])}$？`,
+        return reasoned(
+          formulaChoice(
+            rng,
+            t(
+              `Which recursive formula defines the sequence $a_n = ${poly([p, "n"], [c, ""])}$?`,
+              `哪个递推公式定义了数列 $a_n = ${poly([p, "n"], [c, ""])}$？`,
+            ),
+            correct,
+            [arithmeticRecursive(c, p), arithmeticRecursive(a1, c), arithmeticRecursive(a1.add(p), p), geometricRecursive(a1, p)],
+            t(
+              `The common difference is the coefficient of $n$, $${p.toLatex()}$, and $a_1 = ${p.toLatex()}${plus(c)} = ${a1.toLatex()}$, so $${correct.latex}$.`,
+              `公差是 $n$ 的系数 $${p.toLatex()}$，且 $a_1 = ${p.toLatex()}${plus(c)} = ${a1.toLatex()}$，所以 $${correct.latex}$。`,
+            ),
           ),
-          correct,
-          [arithmeticRecursive(c, p), arithmeticRecursive(a1, c), arithmeticRecursive(a1.add(p), p), geometricRecursive(a1, p)],
-          t(
-            `The common difference is the coefficient of $n$, $${p.toLatex()}$, and $a_1 = ${p.toLatex()}${plus(c)} = ${a1.toLatex()}$, so $${correct.latex}$.`,
-            `公差是 $n$ 的系数 $${p.toLatex()}$，且 $a_1 = ${p.toLatex()}${plus(c)} = ${a1.toLatex()}$，所以 $${correct.latex}$。`,
-          ),
+          [
+            [
+              `$${arithmeticRecursive(c, p).latex}$`,
+              "This starts at the constant, but $a_1$ is the value at $n = 1$, which also counts the term with $n$.",
+              "这里从常数开始，但 $a_1$ 是 $n = 1$ 时的值，还要算上含 $n$ 的项。",
+            ],
+            [
+              `$${arithmeticRecursive(a1, c).latex}$`,
+              "This adds the constant, but the common difference is the coefficient of $n$.",
+              "这里加的是常数，但公差是 $n$ 的系数。",
+            ],
+            [
+              `$${arithmeticRecursive(a1.add(p), p).latex}$`,
+              "This starts at the second term of the sequence instead of the first.",
+              "这里从数列的第二项开始，而不是第一项。",
+            ],
+            [
+              `$${geometricRecursive(a1, p).latex}$`,
+              "This multiplies, but this sequence adds the same amount each time.",
+              "这里用的是乘法，但这个数列每次加上同一个数。",
+            ],
+          ],
         );
       },
     },
@@ -1529,18 +1574,38 @@ export const nthTermOfAGeometricSequence: TopicDef = {
         const r = rng.pick(ratios.filter((x) => !x.eq(Q.one.neg())));
         const a1 = geometricStart(rng, r, 4, 9);
         const correct = geometricExplicit(a1, r, -1);
-        return formulaChoice(
-          rng,
-          t(
-            `Which formula gives the $n$th term of the geometric sequence $${list(correct.terms.slice(0, 4))}$?`,
-            `哪个公式给出等比数列 $${list(correct.terms.slice(0, 4))}$ 的第 $n$ 项？`,
+        return reasoned(
+          formulaChoice(
+            rng,
+            t(
+              `Which formula gives the $n$th term of the geometric sequence $${list(correct.terms.slice(0, 4))}$?`,
+              `哪个公式给出等比数列 $${list(correct.terms.slice(0, 4))}$ 的第 $n$ 项？`,
+            ),
+            correct,
+            [geometricExplicit(a1, r, 0), geometricExplicit(r, a1, -1), arithmeticExplicit(a1, r), geometricExplicit(a1.mul(r), r, -1)],
+            t(
+              `Here $a_1 = ${a1.toLatex()}$ and $r = ${r.toLatex()}$, so $${correct.latex}$.`,
+              `这里 $a_1 = ${a1.toLatex()}$，$r = ${r.toLatex()}$，所以 $${correct.latex}$。`,
+            ),
           ),
-          correct,
-          [geometricExplicit(a1, r, 0), geometricExplicit(r, a1, -1), arithmeticExplicit(a1, r), geometricExplicit(a1.mul(r), r, -1)],
-          t(
-            `Here $a_1 = ${a1.toLatex()}$ and $r = ${r.toLatex()}$, so $${correct.latex}$.`,
-            `这里 $a_1 = ${a1.toLatex()}$，$r = ${r.toLatex()}$，所以 $${correct.latex}$。`,
-          ),
+          [
+            [
+              `$${geometricExplicit(a1, r, 0).latex}$`,
+              "The exponent should be $n - 1$: with $n$, the first term comes out already multiplied once.",
+              "指数应是 $n - 1$：用 $n$ 的话，第一项已经被多乘了一次。",
+            ],
+            [`$${geometricExplicit(r, a1, -1).latex}$`, "The first term and the ratio are swapped.", "首项和公比弄反了。"],
+            [
+              `$${arithmeticExplicit(a1, r).latex}$`,
+              "This adds, but the terms of this sequence are multiplied to get the next.",
+              "这里用的是加法，但这个数列的项是相乘得到下一项的。",
+            ],
+            [
+              `$${geometricExplicit(a1.mul(r), r, -1).latex}$`,
+              "This starts at the second term of the sequence instead of the first.",
+              "这里从数列的第二项开始，而不是第一项。",
+            ],
+          ],
         );
       },
     },
@@ -1624,23 +1689,47 @@ export const recursiveFormulasForGeometricSequences: TopicDef = {
         const r = rng.pick(ratios.filter((x) => !x.eq(Q.one.neg())));
         const a1 = geometricStart(rng, r, 4, 9);
         const correct = geometricRecursive(a1, r);
-        return formulaChoice(
-          rng,
-          t(
-            `Which recursive formula defines the sequence $${list(correct.terms.slice(0, 4))}$?`,
-            `哪个递推公式定义了数列 $${list(correct.terms.slice(0, 4))}$？`,
+        return reasoned(
+          formulaChoice(
+            rng,
+            t(
+              `Which recursive formula defines the sequence $${list(correct.terms.slice(0, 4))}$?`,
+              `哪个递推公式定义了数列 $${list(correct.terms.slice(0, 4))}$？`,
+            ),
+            correct,
+            [
+              arithmeticRecursive(a1, r),
+              geometricRecursive(a1, Q.one.div(r)),
+              geometricRecursive(a1.mul(r), r),
+              geometricRecursive(a1, r.neg()),
+            ],
+            t(
+              `The first term is $${a1.toLatex()}$ and each term is the previous one times $${r.toLatex()}$, so $${correct.latex}$.`,
+              `首项是 $${a1.toLatex()}$，每一项都是前一项乘以 $${r.toLatex()}$，所以 $${correct.latex}$。`,
+            ),
           ),
-          correct,
           [
-            arithmeticRecursive(a1, r),
-            geometricRecursive(a1, Q.one.div(r)),
-            geometricRecursive(a1.mul(r), r),
-            geometricRecursive(a1, r.neg()),
+            [
+              `$${arithmeticRecursive(a1, r).latex}$`,
+              "This adds, but the terms of this sequence are multiplied to get the next.",
+              "这里用的是加法，但这个数列的项是相乘得到下一项的。",
+            ],
+            [
+              `$${geometricRecursive(a1, Q.one.div(r)).latex}$`,
+              "The ratio is upside down: divide a term by the one before it, not the other way.",
+              "公比颠倒了：应该用后一项除以前一项，而不是反过来。",
+            ],
+            [
+              `$${geometricRecursive(a1.mul(r), r).latex}$`,
+              "This starts at the second term of the sequence instead of the first.",
+              "这里从数列的第二项开始，而不是第一项。",
+            ],
+            [
+              `$${geometricRecursive(a1, r.neg()).latex}$`,
+              "The ratio has the wrong sign: look at whether the signs of the terms alternate.",
+              "公比的符号错了：看各项的符号是否交替。",
+            ],
           ],
-          t(
-            `The first term is $${a1.toLatex()}$ and each term is the previous one times $${r.toLatex()}$, so $${correct.latex}$.`,
-            `首项是 $${a1.toLatex()}$，每一项都是前一项乘以 $${r.toLatex()}$，所以 $${correct.latex}$。`,
-          ),
         );
       },
     },
@@ -1697,18 +1786,38 @@ export const recursiveFormulasForGeometricSequences: TopicDef = {
         const a1 = Q.of(rng.nonZero(-9, 9));
         const correct = geometricExplicit(a1, r, -1);
         const rule = poly([r, "a_{n-1}"]);
-        return formulaChoice(
-          rng,
-          t(
-            `A sequence is defined by $a_1 = ${a1.toLatex()}$ and $a_n = ${rule}$. Which is an explicit formula for it?`,
-            `数列由 $a_1 = ${a1.toLatex()}$ 和 $a_n = ${rule}$ 定义。下列哪个是它的通项公式？`,
+        return reasoned(
+          formulaChoice(
+            rng,
+            t(
+              `A sequence is defined by $a_1 = ${a1.toLatex()}$ and $a_n = ${rule}$. Which is an explicit formula for it?`,
+              `数列由 $a_1 = ${a1.toLatex()}$ 和 $a_n = ${rule}$ 定义。下列哪个是它的通项公式？`,
+            ),
+            correct,
+            [geometricExplicit(a1, r, 0), geometricExplicit(r, a1, -1), arithmeticExplicit(a1, r), geometricExplicit(a1, r.neg(), -1)],
+            t(
+              `The first term is $${a1.toLatex()}$ and the ratio is $${r.toLatex()}$, so $${correct.latex}$.`,
+              `首项是 $${a1.toLatex()}$，公比是 $${r.toLatex()}$，所以 $${correct.latex}$。`,
+            ),
           ),
-          correct,
-          [geometricExplicit(a1, r, 0), geometricExplicit(r, a1, -1), arithmeticExplicit(a1, r), geometricExplicit(a1, r.neg(), -1)],
-          t(
-            `The first term is $${a1.toLatex()}$ and the ratio is $${r.toLatex()}$, so $${correct.latex}$.`,
-            `首项是 $${a1.toLatex()}$，公比是 $${r.toLatex()}$，所以 $${correct.latex}$。`,
-          ),
+          [
+            [
+              `$${geometricExplicit(a1, r, 0).latex}$`,
+              "The exponent should be $n - 1$: with $n$, the first term comes out already multiplied once.",
+              "指数应是 $n - 1$：用 $n$ 的话，第一项已经被多乘了一次。",
+            ],
+            [`$${geometricExplicit(r, a1, -1).latex}$`, "The first term and the ratio are swapped.", "首项和公比弄反了。"],
+            [
+              `$${arithmeticExplicit(a1, r).latex}$`,
+              "This adds, but the terms of this sequence are multiplied to get the next.",
+              "这里用的是加法，但这个数列的项是相乘得到下一项的。",
+            ],
+            [
+              `$${geometricExplicit(a1, r.neg(), -1).latex}$`,
+              "The ratio has the wrong sign: it is the number that multiplies $a_{n-1}$, sign included.",
+              "公比的符号错了：它是乘以 $a_{n-1}$ 的那个数，连同符号。",
+            ],
+          ],
         );
       },
     },
@@ -1726,15 +1835,39 @@ export const recursiveFormulasForGeometricSequences: TopicDef = {
         const a1 = c.mul(r.pow(shift + 1));
         const correct = geometricRecursive(a1, r);
         const expr = times(c, `${base(r)}^{${exponent(shift)}}`);
-        return formulaChoice(
-          rng,
-          t(`Which recursive formula defines the sequence $a_n = ${expr}$?`, `哪个递推公式定义了数列 $a_n = ${expr}$？`),
-          correct,
-          [geometricRecursive(c, r), geometricRecursive(a1, c), arithmeticRecursive(a1, r), geometricRecursive(r, c)],
-          t(
-            `The ratio is the base, $${r.toLatex()}$, and $a_1 = ${times(c, `${base(r)}^{${1 + shift}}`)} = ${a1.toLatex()}$, so $${correct.latex}$.`,
-            `公比是底数 $${r.toLatex()}$，且 $a_1 = ${times(c, `${base(r)}^{${1 + shift}}`)} = ${a1.toLatex()}$，所以 $${correct.latex}$。`,
+        return reasoned(
+          formulaChoice(
+            rng,
+            t(`Which recursive formula defines the sequence $a_n = ${expr}$?`, `哪个递推公式定义了数列 $a_n = ${expr}$？`),
+            correct,
+            [geometricRecursive(c, r), geometricRecursive(a1, c), arithmeticRecursive(a1, r), geometricRecursive(r, c)],
+            t(
+              `The ratio is the base, $${r.toLatex()}$, and $a_1 = ${times(c, `${base(r)}^{${1 + shift}}`)} = ${a1.toLatex()}$, so $${correct.latex}$.`,
+              `公比是底数 $${r.toLatex()}$，且 $a_1 = ${times(c, `${base(r)}^{${1 + shift}}`)} = ${a1.toLatex()}$，所以 $${correct.latex}$。`,
+            ),
           ),
+          [
+            [
+              `$${geometricRecursive(c, r).latex}$`,
+              "This starts at the coefficient, but $a_1$ is the value at $n = 1$, with the power worked out.",
+              "这里从系数开始，但 $a_1$ 是 $n = 1$ 时的值，要把幂算出来。",
+            ],
+            [
+              `$${geometricRecursive(a1, c).latex}$`,
+              "This multiplies by the coefficient, but the ratio is the base of the power.",
+              "这里乘的是系数，但公比是幂的底数。",
+            ],
+            [
+              `$${arithmeticRecursive(a1, r).latex}$`,
+              "This adds, but the terms of this sequence are multiplied to get the next.",
+              "这里用的是加法，但这个数列的项是相乘得到下一项的。",
+            ],
+            [
+              `$${geometricRecursive(r, c).latex}$`,
+              "This uses the base as the first term and the coefficient as the ratio, the wrong way around.",
+              "这里把底数当首项、系数当公比，正好弄反了。",
+            ],
+          ],
         );
       },
     },

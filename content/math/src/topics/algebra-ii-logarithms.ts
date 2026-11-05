@@ -3,6 +3,7 @@ import { same, t } from "@ga/content";
 import { type Coefficient, dec, gcd, linear, num, paren, poly, Q, rationalRoot } from "@ga/subject-math";
 
 import { choiceProblem, expressionProblem, type NumberProblem, numberProblem, solutionsProblem, steps } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -188,18 +189,39 @@ export const convertingBetweenExponentialAndLogarithmicForm: TopicDef = {
           const wrong = [`${logL(C, X)} = ${B}`, `${logL(X, B)} = ${C}`, `${logL(B, C)} = ${X}`];
           if (c.sign() < 0) wrong[0] = `${logL(B, X)} = ${num(c.neg())}`;
           if (new Set([right, ...wrong]).size < 4) continue;
-          return oneOf(rng, {
-            prompt: t(
-              `Which equation is $${powL(b, c)} = ${X}$ written in logarithmic form?`,
-              `把 $${powL(b, c)} = ${X}$ 写成对数式，是下面哪个等式？`,
-            ),
-            right: m(right),
-            wrong: wrong.map(m),
-            solution: t(
-              `The base $${B}$ stays the base, the exponent $${C}$ is the value of the logarithm, and $${X}$ is the argument: $${right}$.`,
-              `底数 $${B}$ 仍是底数，指数 $${C}$ 是对数的值，$${X}$ 是真数：$${right}$。`,
-            ),
-          });
+          return reasoned(
+            oneOf(rng, {
+              prompt: t(
+                `Which equation is $${powL(b, c)} = ${X}$ written in logarithmic form?`,
+                `把 $${powL(b, c)} = ${X}$ 写成对数式，是下面哪个等式？`,
+              ),
+              right: m(right),
+              wrong: wrong.map(m),
+              solution: t(
+                `The base $${B}$ stays the base, the exponent $${C}$ is the value of the logarithm, and $${X}$ is the argument: $${right}$.`,
+                `底数 $${B}$ 仍是底数，指数 $${C}$ 是对数的值，$${X}$ 是真数：$${right}$。`,
+              ),
+            }),
+            [
+              [
+                m(wrong[0]!).en,
+                c.sign() < 0
+                  ? "This loses the sign of the exponent: the logarithm's value is the exponent, negative here."
+                  : "The base and the exponent are swapped: the base of the power stays the base of the logarithm.",
+                c.sign() < 0 ? "这里丢了指数的负号：对数的值就是指数，这里是负的。" : "底数和指数弄反了：幂的底数仍是对数的底数。",
+              ],
+              [
+                m(wrong[1]!).en,
+                "The base and the argument are swapped: the result of the power goes inside the logarithm.",
+                "底数和真数弄反了：幂的结果才是对数的真数。",
+              ],
+              [
+                m(wrong[2]!).en,
+                "The exponent and the result are swapped: a logarithm equals an exponent.",
+                "指数和结果弄反了：对数的值是指数。",
+              ],
+            ],
+          );
         }
       },
     },
@@ -218,18 +240,37 @@ export const convertingBetweenExponentialAndLogarithmicForm: TopicDef = {
           const right = `${powL(b, c)} = ${X}`;
           const wrong = [`${powL(c, b)} = ${X}`, `${powL(x, c)} = ${B}`, `${powL(b, x)} = ${C}`];
           if (new Set([right, ...wrong]).size < 4) continue;
-          return oneOf(rng, {
-            prompt: t(
-              `Which equation is $${logL(B, X)} = ${C}$ written in exponential form?`,
-              `把 $${logL(B, X)} = ${C}$ 写成指数式，是下面哪个等式？`,
-            ),
-            right: m(right),
-            wrong: wrong.map(m),
-            solution: t(
-              `$${logL(B, X)} = ${C}$ says that $${B}$ raised to the power $${C}$ gives $${X}$: $${right}$.`,
-              `$${logL(B, X)} = ${C}$ 表示 $${B}$ 的 $${C}$ 次幂等于 $${X}$：$${right}$。`,
-            ),
-          });
+          return reasoned(
+            oneOf(rng, {
+              prompt: t(
+                `Which equation is $${logL(B, X)} = ${C}$ written in exponential form?`,
+                `把 $${logL(B, X)} = ${C}$ 写成指数式，是下面哪个等式？`,
+              ),
+              right: m(right),
+              wrong: wrong.map(m),
+              solution: t(
+                `$${logL(B, X)} = ${C}$ says that $${B}$ raised to the power $${C}$ gives $${X}$: $${right}$.`,
+                `$${logL(B, X)} = ${C}$ 表示 $${B}$ 的 $${C}$ 次幂等于 $${X}$：$${right}$。`,
+              ),
+            }),
+            [
+              [
+                m(wrong[0]!).en,
+                "The base and the exponent are swapped: the logarithm's base is the base of the power.",
+                "底数和指数弄反了：对数的底数就是幂的底数。",
+              ],
+              [
+                m(wrong[1]!).en,
+                "The base and the result are swapped: the argument is what the power equals.",
+                "底数和结果弄反了：真数才是幂的结果。",
+              ],
+              [
+                m(wrong[2]!).en,
+                "The exponent and the result are swapped: the logarithm's value is the exponent.",
+                "指数和结果弄反了：对数的值才是指数。",
+              ],
+            ],
+          );
         }
       },
     },
@@ -1374,21 +1415,45 @@ export const changeOfBaseFormula: TopicDef = {
         const useLn = rng.bool();
         const L = (v: number) => (useLn ? lnL(String(v)) : lgL(String(v)));
         const frac = (p: string, q: string) => `\\frac{${p}}{${q}}`;
-        return oneOf(rng, {
-          prompt: t(`Which expression equals $${logL(a, String(x))}$?`, `下列哪个式子等于 $${logL(a, String(x))}$？`),
-          right: m(frac(L(x), L(a))),
-          wrong: [
-            m(frac(L(a), L(x))),
-            m(useLn ? lnL(frac(String(x), String(a))) : lgL(frac(String(x), String(a)))),
-            m(`${L(x)} - ${L(a)}`),
-            m(frac(L(x), String(a))),
+        return reasoned(
+          oneOf(rng, {
+            prompt: t(`Which expression equals $${logL(a, String(x))}$?`, `下列哪个式子等于 $${logL(a, String(x))}$？`),
+            right: m(frac(L(x), L(a))),
+            wrong: [
+              m(frac(L(a), L(x))),
+              m(useLn ? lnL(frac(String(x), String(a))) : lgL(frac(String(x), String(a)))),
+              m(`${L(x)} - ${L(a)}`),
+              m(frac(L(x), String(a))),
+            ],
+            solution: both(
+              "The argument goes on top, the old base at the bottom:",
+              "真数在分子，原来的底数在分母：",
+              `${logL(a, String(x))} = ${frac(L(x), L(a))}`,
+            ),
+          }),
+          [
+            [
+              m(frac(L(a), L(x))).en,
+              "This is upside down: the argument goes on top and the old base on the bottom.",
+              "上下颠倒了：真数在分子，原来的底数在分母。",
+            ],
+            [
+              m(useLn ? lnL(frac(String(x), String(a))) : lgL(frac(String(x), String(a)))).en,
+              "A logarithm of a quotient is a difference of logarithms, and it is not this quotient of logarithms.",
+              "商的对数等于对数的差，并不等于这里的对数之商。",
+            ],
+            [
+              m(`${L(x)} - ${L(a)}`).en,
+              "A difference of logarithms is the logarithm of a quotient: change of base divides the logarithms.",
+              "对数的差是商的对数：换底公式是把两个对数相除。",
+            ],
+            [
+              m(frac(L(x), String(a))).en,
+              "The old base must also go through the logarithm: the bottom is its logarithm, not the base itself.",
+              "原来的底数也要取对数：分母是它的对数，不是底数本身。",
+            ],
           ],
-          solution: both(
-            "The argument goes on top, the old base at the bottom:",
-            "真数在分子，原来的底数在分母：",
-            `${logL(a, String(x))} = ${frac(L(x), L(a))}`,
-          ),
-        });
+        );
       },
     },
     {
@@ -1758,23 +1823,47 @@ export const solvingExponentialEquationsWithDifferentBasesUsingLogarithms: Topic
         const [a, b] = rng.sample([2, 3, 5, 6, 7, 10], 2) as [number, number];
         const c = rng.nonZero(-4, 4);
         const right = `x = \\frac{${lnTerm(c, b)}}{${lnL(String(a))} - ${lnL(String(b))}}`;
-        return oneOf(rng, {
-          prompt: t(`Solve $${a}^{x} = ${b}^{${linear(1, c)}}$.`, `解方程 $${a}^{x} = ${b}^{${linear(1, c)}}$。`),
-          right: m(right),
-          wrong: [
-            m(`x = \\frac{${lnTerm(c, b)}}{${lnL(String(b))} - ${lnL(String(a))}}`),
-            m(`x = \\frac{${lnTerm(c, a)}}{${lnL(String(a))} - ${lnL(String(b))}}`),
-            m(`x = \\frac{${lnTerm(c, b)}}{${lnL(String(a))}}`),
-            m(`x = \\frac{${c}}{${lnL(String(a))} - ${lnL(String(b))}}`),
+        return reasoned(
+          oneOf(rng, {
+            prompt: t(`Solve $${a}^{x} = ${b}^{${linear(1, c)}}$.`, `解方程 $${a}^{x} = ${b}^{${linear(1, c)}}$。`),
+            right: m(right),
+            wrong: [
+              m(`x = \\frac{${lnTerm(c, b)}}{${lnL(String(b))} - ${lnL(String(a))}}`),
+              m(`x = \\frac{${lnTerm(c, a)}}{${lnL(String(a))} - ${lnL(String(b))}}`),
+              m(`x = \\frac{${lnTerm(c, b)}}{${lnL(String(a))}}`),
+              m(`x = \\frac{${c}}{${lnL(String(a))} - ${lnL(String(b))}}`),
+            ],
+            solution: both(
+              "Take $\\ln$ of both sides, collect the terms in $x$ and divide:",
+              "两边取 $\\ln$，合并含 $x$ 的项，再相除：",
+              `x${lnL(String(a))} = (${linear(1, c)})${lnL(String(b))}`,
+              `x${lnL(String(a))} - x${lnL(String(b))} = ${lnTerm(c, b)}`,
+              right,
+            ),
+          }),
+          [
+            [
+              m(`x = \\frac{${lnTerm(c, b)}}{${lnL(String(b))} - ${lnL(String(a))}}`).en,
+              "The denominator has the wrong sign: collecting the terms in $x$ on the left gives the logarithm of the left base first.",
+              "分母的符号错了：把含 $x$ 的项移到左边，应是左边底数的对数在前。",
+            ],
+            [
+              m(`x = \\frac{${lnTerm(c, a)}}{${lnL(String(a))} - ${lnL(String(b))}}`).en,
+              "The constant in the exponent belongs to the right side, so it multiplies the logarithm of that side's base.",
+              "指数中的常数属于右边，所以它乘的是右边底数的对数。",
+            ],
+            [
+              m(`x = \\frac{${lnTerm(c, b)}}{${lnL(String(a))}}`).en,
+              "This forgets that $x$ also appears on the right: both terms in $x$ must be collected.",
+              "这里忘了右边也有 $x$：两个含 $x$ 的项都要合并。",
+            ],
+            [
+              m(`x = \\frac{${c}}{${lnL(String(a))} - ${lnL(String(b))}}`).en,
+              "The logarithm is lost from the top: the constant still multiplies the logarithm of the right base.",
+              "分子丢了对数：常数仍要乘以右边底数的对数。",
+            ],
           ],
-          solution: both(
-            "Take $\\ln$ of both sides, collect the terms in $x$ and divide:",
-            "两边取 $\\ln$，合并含 $x$ 的项，再相除：",
-            `x${lnL(String(a))} = (${linear(1, c)})${lnL(String(b))}`,
-            `x${lnL(String(a))} - x${lnL(String(b))} = ${lnTerm(c, b)}`,
-            right,
-          ),
-        });
+        );
       },
     },
     {

@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { linear, type PlaneMark, plane, poly, Q } from "@ga/subject-math";
 
 import { functionProblem, numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { oneOf } from "./calculus-common.ts";
 
 // Calculus II unit 5: Differential Equations, modules 5.24–5.28.
@@ -336,18 +337,37 @@ export const solvingFirstOrderOdesUsingSeparationOfVariables: TopicDef = {
           t(`$\\int ${inv} \\, dy = \\int \\frac{1}{${kf}} \\, dx$`, `$\\int ${inv} \\, dy = \\int \\frac{1}{${kf}} \\, dx$`),
           t(`$\\int ${kf} \\, dy = \\int ${gy} \\, dx$`, `$\\int ${kf} \\, dy = \\int ${gy} \\, dx$`),
         ];
-        return oneOf(
-          rng,
-          t(
-            `Which equation results from separating the variables in $\\frac{dy}{dx} = ${product}$?`,
-            `对 $\\frac{dy}{dx} = ${product}$ 分离变量后得到哪个方程？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Which equation results from separating the variables in $\\frac{dy}{dx} = ${product}$?`,
+              `对 $\\frac{dy}{dx} = ${product}$ 分离变量后得到哪个方程？`,
+            ),
+            right,
+            wrong,
+            t(
+              `Divide both sides by $${gy}$ and multiply by $dx$: $${inv} \\, dy = ${kf} \\, dx$. Then integrate both sides.`,
+              `两边除以 $${gy}$ 再乘以 $dx$：$${inv} \\, dy = ${kf} \\, dx$。然后两边积分。`,
+            ),
           ),
-          right,
-          wrong,
-          t(
-            `Divide both sides by $${gy}$ and multiply by $dx$: $${inv} \\, dy = ${kf} \\, dx$. Then integrate both sides.`,
-            `两边除以 $${gy}$ 再乘以 $dx$：$${inv} \\, dy = ${kf} \\, dx$。然后两边积分。`,
-          ),
+          [
+            [
+              wrong[0]!.en,
+              `The factor with $y$ must be divided across, so it appears as its reciprocal, not as $${gy}$.`,
+              `含 $y$ 的因子要除到左边，所以它以倒数出现，而不是 $${gy}$。`,
+            ],
+            [
+              wrong[1]!.en,
+              "The factor with $x$ stays where it is, multiplying $dx$: only the factor with $y$ moves.",
+              "含 $x$ 的因子留在原处，与 $dx$ 相乘：只有含 $y$ 的因子要移动。",
+            ],
+            [
+              wrong[2]!.en,
+              "The variables are on the wrong sides: $x$ goes with $dx$ and $y$ goes with $dy$.",
+              "变量放错了边：$x$ 要和 $dx$ 在一起，$y$ 要和 $dy$ 在一起。",
+            ],
+          ],
         );
       },
     },
@@ -710,18 +730,33 @@ export const qualitativeAnalysisOfFirstOrderOdes: TopicDef = {
         const v = a * x0 + b * y0 + c;
         const rhs = poly([a, "x"], [b, "y"], [c, ""]);
         const right = v > 0 ? 0 : v < 0 ? 1 : 2;
-        return oneOf(
-          rng,
-          t(
-            `Let $y$ be the solution of $\\frac{dy}{dx} = ${rhs}$ whose graph passes through $(${x0}, ${y0})$. Is it increasing or decreasing at that point?`,
-            `设 $y$ 是 $\\frac{dy}{dx} = ${rhs}$ 的图像经过 $(${x0}, ${y0})$ 的解。它在该点递增还是递减？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Let $y$ be the solution of $\\frac{dy}{dx} = ${rhs}$ whose graph passes through $(${x0}, ${y0})$. Is it increasing or decreasing at that point?`,
+              `设 $y$ 是 $\\frac{dy}{dx} = ${rhs}$ 的图像经过 $(${x0}, ${y0})$ 的解。它在该点递增还是递减？`,
+            ),
+            directions[right],
+            directions.filter((_, i) => i !== right),
+            t(
+              `At $(${x0}, ${y0})$: $\\frac{dy}{dx} = ${a} \\cdot ${neg(x0)} + ${neg(b)} \\cdot ${neg(y0)} + ${neg(c)} = ${v}$, so the solution is ${v > 0 ? "increasing" : v < 0 ? "decreasing" : "neither increasing nor decreasing"} there.`,
+              `在 $(${x0}, ${y0})$ 处：$\\frac{dy}{dx} = ${a} \\cdot ${neg(x0)} + ${neg(b)} \\cdot ${neg(y0)} + ${neg(c)} = ${v}$，所以解在该处${v > 0 ? "递增" : v < 0 ? "递减" : "既不递增也不递减"}。`,
+            ),
           ),
-          directions[right],
-          directions.filter((_, i) => i !== right),
-          t(
-            `At $(${x0}, ${y0})$: $\\frac{dy}{dx} = ${a} \\cdot ${neg(x0)} + ${neg(b)} \\cdot ${neg(y0)} + ${neg(c)} = ${v}$, so the solution is ${v > 0 ? "increasing" : v < 0 ? "decreasing" : "neither increasing nor decreasing"} there.`,
-            `在 $(${x0}, ${y0})$ 处：$\\frac{dy}{dx} = ${a} \\cdot ${neg(x0)} + ${neg(b)} \\cdot ${neg(y0)} + ${neg(c)} = ${v}$，所以解在该处${v > 0 ? "递增" : v < 0 ? "递减" : "既不递增也不递减"}。`,
-          ),
+          [
+            [
+              directions[0]!.en,
+              `Increasing needs a positive slope, and the slope at this point is $${v}$.`,
+              `递增要求斜率为正，而这一点的斜率是 $${v}$。`,
+            ],
+            [
+              directions[1]!.en,
+              `Decreasing needs a negative slope, and the slope at this point is $${v}$.`,
+              `递减要求斜率为负，而这一点的斜率是 $${v}$。`,
+            ],
+            [directions[2]!.en, `The slope at this point is $${v}$, which is not $0$.`, `这一点的斜率是 $${v}$，不是 $0$。`],
+          ],
         );
       },
     },

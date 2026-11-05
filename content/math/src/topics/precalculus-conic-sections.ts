@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { paren, Q } from "@ga/subject-math";
 
 import { choiceProblem, equationProblem, numberProblem, pointProblem, radicalProblem, steps } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers for Conic Sections
@@ -813,7 +814,28 @@ export const fociOfEllipses: TopicDef = {
           `Calculate $c^{2} = a^{2} - b^{2} = ${a2} - ${b2} = ${c * c} \\implies c = ${c}$. Since the major axis is ${horizontal ? "horizontal" : "vertical"}, the foci are $${correct}$.`,
           `计算 $c^{2} = a^{2} - b^{2} = ${a2} - ${b2} = ${c * c} \\implies c = ${c}$。因为长轴为${horizontal ? "水平" : "竖直"}方向，所以焦点坐标为 $${correct}$。`,
         );
-        return makeChoice(rng, prompt, correct, distractors, solution);
+        return reasoned(makeChoice(rng, prompt, correct, distractors, solution), [
+          [
+            `$${distractors[0]!}$`,
+            "The foci lie on the major axis, the axis with the larger denominator, and this is the other axis.",
+            "焦点在长轴上，即分母较大的那条轴上，而这是另一条轴。",
+          ],
+          [
+            `$${distractors[1]!}$`,
+            "Those are the vertices, at distance $a$ from the center: the foci are at distance $c$.",
+            "这是顶点，到中心的距离是 $a$：焦点到中心的距离是 $c$。",
+          ],
+          [
+            `$${distractors[2]!}$`,
+            "Those are the ends of the minor axis, at distance $b$ from the center.",
+            "这是短轴的端点，到中心的距离是 $b$。",
+          ],
+          [
+            `$${distractors[3]!}$`,
+            "For an ellipse $c^{2} = a^{2} - b^{2}$, so $c$ is not $a + b$.",
+            "椭圆中 $c^{2} = a^{2} - b^{2}$，所以 $c$ 不是 $a + b$。",
+          ],
+        ]);
       },
     },
     {

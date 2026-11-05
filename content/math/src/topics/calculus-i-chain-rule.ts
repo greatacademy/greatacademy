@@ -3,6 +3,7 @@ import { same, t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q } from "@ga/subject-math";
 
 import { choiceProblem, functionProblem, numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { cdot, fracL, oneOf, type Poly, pAt, par, pDer, pLatex, power, sumLatex, table } from "./calculus-common.ts";
 
 // Calculus I unit 5: Advanced Differentiation, module 5.11.
@@ -767,15 +768,30 @@ export const selectingProceduresForCalculatingDerivatives: TopicDef = {
           `$${poly([n * k, power(n - 1)])}e^{${k}x}$`,
           `$${poly([n, power(n - 1)])}e^{${k}x} - ${k}\\left(x^{${n}} + ${c}\\right)e^{${k}x}$`,
         ];
-        return oneOf(
-          rng,
-          t(`Which is the derivative of $${f}$?`, `$${f}$ 的导数是哪一个？`),
-          same(correct),
-          wrong.map(same),
-          t(
-            `By the product rule, with $\\frac{d}{dx} e^{${k}x} = ${k}e^{${k}x}$ from the chain rule, the derivative is ${correct}.`,
-            `由乘积法则，并由链式法则得 $\\frac{d}{dx} e^{${k}x} = ${k}e^{${k}x}$，导数为 ${correct}。`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(`Which is the derivative of $${f}$?`, `$${f}$ 的导数是哪一个？`),
+            same(correct),
+            wrong.map(same),
+            t(
+              `By the product rule, with $\\frac{d}{dx} e^{${k}x} = ${k}e^{${k}x}$ from the chain rule, the derivative is ${correct}.`,
+              `由乘积法则，并由链式法则得 $\\frac{d}{dx} e^{${k}x} = ${k}e^{${k}x}$，导数为 ${correct}。`,
+            ),
           ),
+          [
+            [
+              wrong[0]!,
+              `The chain rule is missing: the derivative of $e^{${k}x}$ has a factor of $${k}$.`,
+              `漏了链式法则：$e^{${k}x}$ 的导数有因子 $${k}$。`,
+            ],
+            [
+              wrong[1]!,
+              "This multiplies the two derivatives, but the product rule has two terms.",
+              "这里把两个导数相乘了，但乘积法则有两项。",
+            ],
+            [wrong[2]!, "The product rule adds its two terms, and this subtracts.", "乘积法则是两项相加，而这里相减。"],
+          ],
         );
       },
     },

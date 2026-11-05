@@ -33,6 +33,7 @@ import {
   why,
   yesNo,
 } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 const toQ = (c: Coefficient): Q => (c instanceof Q ? c : Q.of(c));
 
@@ -744,18 +745,37 @@ export const theDiscriminantOfAQuadraticFunction: TopicDef = {
         const sign = rng.pick([-1, 0, 1] as const);
         const [a, b, c] = drawBySign(rng, sign);
         const d = b * b - 4 * a * c;
-        return choiceProblem({
-          prompt: t(
-            `How many $x$-intercepts does the graph of $y = ${quad(a, b, c)}$ have?`,
-            `$y = ${quad(a, b, c)}$ 的图象与 $x$ 轴有几个交点？`,
-          ),
-          options: interceptOptions,
-          correct: sign + 1,
-          solution: t(
-            `Compute the discriminant:${steps(discriminantSteps(a, b, c))}It is ${countWords(d).en}.`,
-            `计算判别式：${steps(discriminantSteps(a, b, c))}它${countWords(d)["zh-CN"]}。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(
+              `How many $x$-intercepts does the graph of $y = ${quad(a, b, c)}$ have?`,
+              `$y = ${quad(a, b, c)}$ 的图象与 $x$ 轴有几个交点？`,
+            ),
+            options: interceptOptions,
+            correct: sign + 1,
+            solution: t(
+              `Compute the discriminant:${steps(discriminantSteps(a, b, c))}It is ${countWords(d).en}.`,
+              `计算判别式：${steps(discriminantSteps(a, b, c))}它${countWords(d)["zh-CN"]}。`,
+            ),
+          }),
+          [
+            [
+              interceptOptions[0]!.en,
+              `No $x$-intercept needs a negative discriminant, and here it is $${d}$.`,
+              `与 $x$ 轴没有交点要求判别式为负，而这里它等于 $${d}$。`,
+            ],
+            [
+              interceptOptions[1]!.en,
+              `Exactly one $x$-intercept needs a discriminant of $0$, and here it is $${d}$.`,
+              `恰有一个交点要求判别式为 $0$，而这里它等于 $${d}$。`,
+            ],
+            [
+              interceptOptions[2]!.en,
+              `Two $x$-intercepts needs a positive discriminant, and here it is $${d}$.`,
+              `有两个交点要求判别式为正，而这里它等于 $${d}$。`,
+            ],
+          ],
+        );
       },
     },
     {

@@ -2,6 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { gcd, linear, poly, Q, simplifyRadical, surd, surdLatex } from "@ga/subject-math";
 import { choiceProblem, expressionProblem, numberProblem, steps } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 // Precalculus Unit 10: Complex Numbers
 // Part 2: Modules 10.33 (De Moivre's Theorem) and 10.34 (The Fundamental Theorem of Algebra).
@@ -799,15 +800,39 @@ export const theRootsOfUnity: TopicDef = {
         const d = (360 * k) / n;
         const w = rootOfUnity(k, n);
         const right = unitTex(d);
-        return oneOf(
-          rng,
-          t(`Write the ${ordinal(n)} root of unity $${w}$ in the form $a + bi$.`, `把 ${n} 次单位根 $${w}$ 写成 $a + bi$ 的形式。`),
-          m$(right),
-          [m$(unitTex(90 - d)), m$(unitTex(-d)), m$(unitTex(180 - d)), m$(unitTex(d + 180))],
-          t(
-            `The angle is $\\frac{2\\pi \\cdot ${k}}{${n}} = ${radTex(d)}$:${steps(`${w} = \\cos\\left(${radTex(d)}\\right) + i\\sin\\left(${radTex(d)}\\right) = ${right}`)}`,
-            `角为 $\\frac{2\\pi \\cdot ${k}}{${n}} = ${radTex(d)}$：${steps(`${w} = \\cos\\left(${radTex(d)}\\right) + i\\sin\\left(${radTex(d)}\\right) = ${right}`)}`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(`Write the ${ordinal(n)} root of unity $${w}$ in the form $a + bi$.`, `把 ${n} 次单位根 $${w}$ 写成 $a + bi$ 的形式。`),
+            m$(right),
+            [m$(unitTex(90 - d)), m$(unitTex(-d)), m$(unitTex(180 - d)), m$(unitTex(d + 180))],
+            t(
+              `The angle is $\\frac{2\\pi \\cdot ${k}}{${n}} = ${radTex(d)}$:${steps(`${w} = \\cos\\left(${radTex(d)}\\right) + i\\sin\\left(${radTex(d)}\\right) = ${right}`)}`,
+              `角为 $\\frac{2\\pi \\cdot ${k}}{${n}} = ${radTex(d)}$：${steps(`${w} = \\cos\\left(${radTex(d)}\\right) + i\\sin\\left(${radTex(d)}\\right) = ${right}`)}`,
+            ),
           ),
+          [
+            [
+              m$(unitTex(90 - d)).en,
+              "The real and imaginary parts are swapped: the real part is the cosine of the angle.",
+              "实部和虚部弄反了：实部是角的余弦。",
+            ],
+            [
+              m$(unitTex(-d)).en,
+              "The imaginary part has the wrong sign: this is its mirror image in the real axis.",
+              "虚部的符号错了：这是它关于实轴的对称点。",
+            ],
+            [
+              m$(unitTex(180 - d)).en,
+              "The real part has the wrong sign: this is its mirror image in the imaginary axis.",
+              "实部的符号错了：这是它关于虚轴的对称点。",
+            ],
+            [
+              m$(unitTex(d + 180)).en,
+              "Both parts have the wrong sign: this point is opposite through the origin.",
+              "两部分的符号都错了：这是它关于原点的对称点。",
+            ],
+          ],
         );
       },
     },

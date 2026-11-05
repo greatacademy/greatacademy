@@ -2,6 +2,7 @@ import type { Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
 import { numberProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { oneOf } from "./calculus-common.ts";
 
 // Methods of Proof unit 1, modules 1.1–1.2: statements, connectives, implications and biconditionals.
@@ -980,23 +981,58 @@ export const biconditionalStatements: TopicDef = {
           iff(a, b),
           iff(neg(a), neg(b)),
         ]);
-        return oneOf(
-          rng,
-          t(`Which statement is logically equivalent to $${tex(f)}$?`, `哪个命题与 $${tex(f)}$ 逻辑等价？`),
-          math(g),
-          wrong.map(math),
-          t(
-            [
-              "A biconditional is an implication in both directions.",
-              "A biconditional is true when both parts are true or both are false.",
-              "A negated biconditional is true when the parts differ, which is when one part matches the negation of the other.",
-            ][kind]!,
-            [
-              "双条件命题就是两个方向的蕴涵。",
-              "双条件命题在两部分同真或同假时为真。",
-              "双条件命题的否定在两部分不同时为真，即一部分与另一部分的否定相同时。",
-            ][kind]!,
+        return reasoned(
+          oneOf(
+            rng,
+            t(`Which statement is logically equivalent to $${tex(f)}$?`, `哪个命题与 $${tex(f)}$ 逻辑等价？`),
+            math(g),
+            wrong.map(math),
+            t(
+              [
+                "A biconditional is an implication in both directions.",
+                "A biconditional is true when both parts are true or both are false.",
+                "A negated biconditional is true when the parts differ, which is when one part matches the negation of the other.",
+              ][kind]!,
+              [
+                "双条件命题就是两个方向的蕴涵。",
+                "双条件命题在两部分同真或同假时为真。",
+                "双条件命题的否定在两部分不同时为真，即一部分与另一部分的否定相同时。",
+              ][kind]!,
+            ),
           ),
+          [
+            [
+              math(and(imp(a, b), imp(neg(b), neg(a)))).en,
+              "The second part is the contrapositive of the first, so this says one implication twice.",
+              "第二部分是第一部分的逆否命题，所以这只是把同一个蕴含说了两遍。",
+            ],
+            [
+              math(or(imp(a, b), imp(b, a))).en,
+              'With an "or" this is always true, since at least one of the two implications always holds.',
+              "用“或”连接时它恒为真，因为两个蕴含至少有一个总成立。",
+            ],
+            [math(imp(a, b)).en, "An implication alone says nothing about the other direction.", "单独一个蕴含没有说另一个方向。"],
+            [
+              math(and(a, b)).en,
+              "This is true only when both parts are true, which is not when the given statement is true.",
+              "它只在两部分都为真时为真，这与原命题为真的情形不同。",
+            ],
+            [
+              math(or(and(a, neg(b)), and(neg(a), b))).en,
+              "This is true when the two parts differ, which is the negation of a biconditional.",
+              "它在两部分不同时为真，这是双条件的否定。",
+            ],
+            [
+              math(iff(a, b)).en,
+              "The negation has been dropped: this is true when the parts match, and the statement is true when they differ.",
+              "这里丢掉了否定：它在两部分相同时为真，而原命题在两部分不同时为真。",
+            ],
+            [
+              math(iff(neg(a), neg(b))).en,
+              "Negating both parts gives back the same biconditional, so the negation has been lost. Negate one part only.",
+              "两部分都否定后还是原来的双条件，否定就没有了。应该只否定一部分。",
+            ],
+          ],
         );
       },
     },
@@ -1113,18 +1149,35 @@ export const converseInverseAndContrapositive: TopicDef = {
         const name = relatedForms[which]!.name;
         const sentence = (h: Text, c: Text) => t(`If ${h.en}, then ${c.en}.`, `如果 ${h["zh-CN"]}，那么 ${c["zh-CN"]}。`);
         const forms = [sentence(b.text, a.text), sentence(a.negation, b.negation), sentence(b.negation, a.negation)];
-        return oneOf(
-          rng,
-          t(
-            `What is ${name.en.toLowerCase()} of "If ${a.text.en}, then ${b.text.en}"?`,
-            `“如果 ${a.text["zh-CN"]}，那么 ${b.text["zh-CN"]}”的${name["zh-CN"]}是什么？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `What is ${name.en.toLowerCase()} of "If ${a.text.en}, then ${b.text.en}"?`,
+              `“如果 ${a.text["zh-CN"]}，那么 ${b.text["zh-CN"]}”的${name["zh-CN"]}是什么？`,
+            ),
+            forms[which]!,
+            [...forms.filter((_, i) => i !== which), sentence(a.negation, b.text)],
+            t(
+              `${name.en} of $p \\Rightarrow q$ is $${tex(relatedForms[which]!.make(v("p"), v("q")))}$.`,
+              `$p \\Rightarrow q$ 的${name["zh-CN"]}是 $${tex(relatedForms[which]!.make(v("p"), v("q")))}$。`,
+            ),
           ),
-          forms[which]!,
-          [...forms.filter((_, i) => i !== which), sentence(a.negation, b.text)],
-          t(
-            `${name.en} of $p \\Rightarrow q$ is $${tex(relatedForms[which]!.make(v("p"), v("q")))}$.`,
-            `$p \\Rightarrow q$ 的${name["zh-CN"]}是 $${tex(relatedForms[which]!.make(v("p"), v("q")))}$。`,
-          ),
+          [
+            ...forms.map(
+              (f, i) =>
+                [
+                  f.en,
+                  `That is ${relatedForms[i]!.name.en.toLowerCase()}, not what is asked.`,
+                  `那是${relatedForms[i]!.name["zh-CN"]}，不是题目问的。`,
+                ] as const,
+            ),
+            [
+              sentence(a.negation, b.text).en,
+              "This negates only the hypothesis, which gives none of the three related forms.",
+              "这里只否定了假设，不是三种相关命题中的任何一种。",
+            ],
+          ],
         );
       },
     },

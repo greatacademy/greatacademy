@@ -3,6 +3,7 @@ import { t } from "@ga/content";
 import { type PlaneMark, plane, poly, Q } from "@ga/subject-math";
 
 import { numberProblem, solutionsProblem } from "../problems.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { oneOf, type Poly, pAt, par, pDer, pLatex } from "./calculus-common.ts";
 
 // Calculus I unit 7: Analytical Applications of Differentiation, module 7.18.
@@ -579,18 +580,29 @@ export const determiningIntervalsOnWhichAFunctionIsIncreasingOrDecreasing: Topic
         const c = cubic(rng);
         const increasing = rng.bool();
         const { right, wrong } = monotonicityOptions(c, increasing);
-        return oneOf(
-          rng,
-          t(
-            `On which intervals is $f(x) = ${pLatex(c.p)}$ ${increasing ? "increasing" : "decreasing"}?`,
-            `$f(x) = ${pLatex(c.p)}$ 在哪些区间上${increasing ? "递增" : "递减"}？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `On which intervals is $f(x) = ${pLatex(c.p)}$ ${increasing ? "increasing" : "decreasing"}?`,
+              `$f(x) = ${pLatex(c.p)}$ 在哪些区间上${increasing ? "递增" : "递减"}？`,
+            ),
+            right,
+            wrong,
+            t(
+              `$f'(x) = ${derivativeFactored(c)}$, with zeros $${c.c1}$ and $${c.c2}$. Between them $f'$ is ${c.up ? "negative" : "positive"}, and outside them it is ${c.up ? "positive" : "negative"}. So $f$ is ${increasing ? "increasing" : "decreasing"} on ${right.en}.`,
+              `$f'(x) = ${derivativeFactored(c)}$，零点为 $${c.c1}$ 和 $${c.c2}$。在两者之间 $f'$ 为${c.up ? "负" : "正"}，在两侧为${c.up ? "正" : "负"}。所以 $f$ 在 ${right["zh-CN"]} 上${increasing ? "递增" : "递减"}。`,
+            ),
           ),
-          right,
-          wrong,
-          t(
-            `$f'(x) = ${derivativeFactored(c)}$, with zeros $${c.c1}$ and $${c.c2}$. Between them $f'$ is ${c.up ? "negative" : "positive"}, and outside them it is ${c.up ? "positive" : "negative"}. So $f$ is ${increasing ? "increasing" : "decreasing"} on ${right.en}.`,
-            `$f'(x) = ${derivativeFactored(c)}$，零点为 $${c.c1}$ 和 $${c.c2}$。在两者之间 $f'$ 为${c.up ? "负" : "正"}，在两侧为${c.up ? "正" : "负"}。所以 $f$ 在 ${right["zh-CN"]} 上${increasing ? "递增" : "递减"}。`,
-          ),
+          [
+            [
+              wrong[0]!.en,
+              `This is where $f$ is ${increasing ? "decreasing" : "increasing"}.`,
+              `这是 $f$ ${increasing ? "递减" : "递增"}的区间。`,
+            ],
+            [wrong[1]!.en, `This runs across $x = ${c.c1}$, where $f'$ changes sign.`, `这个区间跨过了 $x = ${c.c1}$，$f'$ 在那里变号。`],
+            [wrong[2]!.en, `This runs across $x = ${c.c2}$, where $f'$ changes sign.`, `这个区间跨过了 $x = ${c.c2}$，$f'$ 在那里变号。`],
+          ],
         );
       },
     },
@@ -616,18 +628,29 @@ export const determiningIntervalsOnWhichAFunctionIsIncreasingOrDecreasing: Topic
         const rightI = intervals(open(crit, undefined));
         const right = increasing === upFirst ? left : rightI;
         const wrong = [increasing === upFirst ? rightI : left, intervals(open(undefined, undefined)), intervals(open(undefined, -crit))];
-        return oneOf(
-          rng,
-          t(
-            `On which interval is $f(x) = ${f}$ ${increasing ? "increasing" : "decreasing"}?`,
-            `$f(x) = ${f}$ 在哪个区间上${increasing ? "递增" : "递减"}？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `On which interval is $f(x) = ${f}$ ${increasing ? "increasing" : "decreasing"}?`,
+              `$f(x) = ${f}$ 在哪个区间上${increasing ? "递增" : "递减"}？`,
+            ),
+            right,
+            wrong,
+            t(
+              `$f'(x) = ${fd}$, which is $0$ only at $x = ${crit}$. It is ${upFirst ? "positive" : "negative"} on ${left.en} and ${upFirst ? "negative" : "positive"} on ${rightI.en}, so $f$ is ${increasing ? "increasing" : "decreasing"} on ${right.en}.`,
+              `$f'(x) = ${fd}$，只在 $x = ${crit}$ 处为 $0$。它在 ${left["zh-CN"]} 上为${upFirst ? "正" : "负"}，在 ${rightI["zh-CN"]} 上为${upFirst ? "负" : "正"}，所以 $f$ 在 ${right["zh-CN"]} 上${increasing ? "递增" : "递减"}。`,
+            ),
           ),
-          right,
-          wrong,
-          t(
-            `$f'(x) = ${fd}$, which is $0$ only at $x = ${crit}$. It is ${upFirst ? "positive" : "negative"} on ${left.en} and ${upFirst ? "negative" : "positive"} on ${rightI.en}, so $f$ is ${increasing ? "increasing" : "decreasing"} on ${right.en}.`,
-            `$f'(x) = ${fd}$，只在 $x = ${crit}$ 处为 $0$。它在 ${left["zh-CN"]} 上为${upFirst ? "正" : "负"}，在 ${rightI["zh-CN"]} 上为${upFirst ? "负" : "正"}，所以 $f$ 在 ${right["zh-CN"]} 上${increasing ? "递增" : "递减"}。`,
-          ),
+          [
+            [
+              wrong[0]!.en,
+              `This is where $f$ is ${increasing ? "decreasing" : "increasing"}.`,
+              `这是 $f$ ${increasing ? "递减" : "递增"}的区间。`,
+            ],
+            [wrong[1]!.en, `This runs across $x = ${crit}$, where $f'$ changes sign.`, `这个区间跨过了 $x = ${crit}$，$f'$ 在那里变号。`],
+            [wrong[2]!.en, `The sign of $f'$ changes at $${crit}$, not at $${-crit}$.`, `$f'$ 在 $${crit}$ 处变号，不是在 $${-crit}$ 处。`],
+          ],
         );
       },
     },

@@ -1,7 +1,7 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
-
+import { reasoned } from "../wrong-reasons.ts";
 import { oneOf, power } from "./calculus-common.ts";
 import { coef, fracWith, integral, plusC, xPow } from "./calculus-ii-substitution.ts";
 
@@ -808,18 +808,37 @@ export const introductionToIntegrationByParts: TopicDef = {
           { f: `${xPow(n)}\\cos(${a}x)`, u: xPow(n), dv: `\\cos(${a}x)` },
         ];
         const c = rng.pick(cases);
-        return oneOf(
-          rng,
-          t(
-            `Which choice of $u$ and $dv$ makes $\\int ${c.f} \\, dx$ simpler by integration by parts?`,
-            `用分部积分求 $\\int ${c.f} \\, dx$ 时，哪种 $u$ 与 $dv$ 的选择能使积分变简单？`,
+        return reasoned(
+          oneOf(
+            rng,
+            t(
+              `Which choice of $u$ and $dv$ makes $\\int ${c.f} \\, dx$ simpler by integration by parts?`,
+              `用分部积分求 $\\int ${c.f} \\, dx$ 时，哪种 $u$ 与 $dv$ 的选择能使积分变简单？`,
+            ),
+            pair(c.u, c.dv),
+            [pair(c.dv, c.u), pair(c.f, "1"), pair("1", c.f)],
+            t(
+              `Differentiating $${c.u}$ simplifies it, and $${c.dv}$ can be integrated, so take $u = ${c.u}$ and $dv = ${c.dv} \\, dx$.`,
+              `对 $${c.u}$ 求导会使它变简单，而 $${c.dv}$ 可以积分，所以取 $u = ${c.u}$，$dv = ${c.dv} \\, dx$。`,
+            ),
           ),
-          pair(c.u, c.dv),
-          [pair(c.dv, c.u), pair(c.f, "1"), pair("1", c.f)],
-          t(
-            `Differentiating $${c.u}$ simplifies it, and $${c.dv}$ can be integrated, so take $u = ${c.u}$ and $dv = ${c.dv} \\, dx$.`,
-            `对 $${c.u}$ 求导会使它变简单，而 $${c.dv}$ 可以积分，所以取 $u = ${c.u}$，$dv = ${c.dv} \\, dx$。`,
-          ),
+          [
+            [
+              pair(c.dv, c.u).en,
+              "These are the right parts in the wrong places: the new integral gets no simpler this way round.",
+              "两部分放反了：这样得到的新积分不会更简单。",
+            ],
+            [
+              pair(c.f, "1").en,
+              "Taking the whole integrand as $u$ makes the new integral harder, not simpler.",
+              "把整个被积函数取作 $u$，新积分会更难，而不是更简单。",
+            ],
+            [
+              pair("1", c.f).en,
+              "To use this you would have to integrate the whole integrand, which is the original problem.",
+              "这样就得先积出整个被积函数，而这正是原来的问题。",
+            ],
+          ],
         );
       },
     },
