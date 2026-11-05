@@ -38,6 +38,8 @@ export interface NumberProblem {
   readonly percent?: boolean;
   /** unit shows a unit after the field: "°", or a unit such as "cm" or "cm^2". */
   readonly unit?: string;
+  /** mistakes are values that typical mistakes produce, with what to say about each; values equal to the answer are dropped. */
+  readonly mistakes?: readonly { readonly value: Coefficient; readonly why: Text }[];
 }
 
 /** mixedLatex writes a number as an integer or a mixed number: "2\frac{1}{3}", "-\frac{2}{3}". */
@@ -61,14 +63,18 @@ function latexIn(v: Q, form: NumberProblem["form"]): string {
 /** numberProblem builds a problem checked by the "number" checker. */
 export function numberProblem(p: NumberProblem): Problem {
   const answer = toQ(p.answer);
+  const written = (w: Q): string => (p.form === "decimal" && isTerminating(w) ? dec(w) : w.toLatex());
   const wrong = [
     ...new Set(
-      (p.wrong ?? [])
+      [...(p.wrong ?? []), ...(p.mistakes ?? []).map((m) => m.value)]
         .map(toQ)
         .filter((w) => !w.eq(answer))
-        .map((w) => (p.form === "decimal" && isTerminating(w) ? dec(w) : w.toLatex())),
+        .map(written),
     ),
   ];
+  const mistakes = (p.mistakes ?? [])
+    .filter((m) => !toQ(m.value).eq(answer))
+    .map((m) => ({ response: written(toQ(m.value)), feedback: m.why }));
   return {
     prompt: p.prompt,
     answer: {
@@ -90,6 +96,7 @@ export function numberProblem(p: NumberProblem): Problem {
     solution: p.solution,
     canonical: latexIn(answer, p.form),
     wrong,
+    ...(mistakes.length > 0 && { mistakes }),
   };
 }
 
@@ -537,4 +544,18 @@ export function verdictChoice(rng: Rng, p: VerdictChoice): Problem {
 export function steps(...lines: readonly string[]): string {
   const kept = lines.filter((l, i) => !(l.startsWith("= ") && lines[i - 1]?.endsWith(l)));
   return `\n\n${kept.map((l) => (l.includes("$") ? l : `$$${l}$$`)).join("\n\n")}\n\n`;
+}
+
+/**
+ * withMistakes gives a problem's wrong responses feedback of their own. For a math field, a response is written as a learner
+ * would; for a choice, it is the text of the option in English, and an option the problem does not list is skipped, since
+ * generators drop distractors that coincide. Responses equal to the canonical one are skipped too.
+ */
+export function withMistakes(problem: Problem, mistakes: readonly { readonly response: string; readonly why: Text }[]): Problem {
+  const { input } = problem.answer;
+  const listed = mistakes.flatMap((m) => {
+    const response = input.kind === "choice" ? String(input.options.findIndex((o) => o.en === m.response)) : m.response;
+    return response === "-1" || response === problem.canonical ? [] : [{ response, feedback: m.why }];
+  });
+  return listed.length > 0 ? { ...problem, mistakes: [...(problem.mistakes ?? []), ...listed] } : problem;
 }

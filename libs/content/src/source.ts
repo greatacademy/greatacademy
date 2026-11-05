@@ -100,7 +100,7 @@ export function topicSource(definitions: Iterable<TopicDef>, checkerList: readon
     },
     judge: async (ref, response) => {
       const problem = generate(ref);
-      return { problem, verdict: checkers.check(problem.answer.checker, problem.answer.expected, response) };
+      return { problem, verdict: checkers.judge(problem, response) };
     },
   };
 }

@@ -27,6 +27,15 @@ const feedback = {
   decimal: t("Write the answer as a decimal.", "请把答案写成小数。"),
   mixed: t("Write the answer as a mixed number.", "请把答案写成带分数。"),
   primes: t("Write the number as a product of primes, such as $2^{2} \\cdot 3$.", "请把这个数写成质数的乘积，例如 $2^{2} \\cdot 3$。"),
+  wrongSign: t("Your answer has the right size but the wrong sign.", "你的答案大小对了，但符号错了。"),
+  reciprocal: t(
+    "Your answer is the reciprocal of the correct value: check which number goes on top.",
+    "你的答案是正确值的倒数：检查哪个数应该在分子上。",
+  ),
+  powerOfTen: t(
+    "Your answer differs from the correct value by a power of ten: check the decimal point or the place value.",
+    "你的答案与正确值相差 $10$ 的整数次幂：检查小数点或数位。",
+  ),
   scientific: t(
     "Write the number in scientific notation, $a \\times 10^{n}$ with $1 \\le a < 10$.",
     "请用科学记数法写出这个数，即 $a \\times 10^{n}$，其中 $1 \\le a < 10$。",
@@ -141,6 +150,30 @@ function plainNumber(response: string): string {
   return /^-?\d{1,3}(?:,\d{3})+(?:\.\d+)?$/.test(s) ? s.replaceAll(",", "") : s;
 }
 
+/** numberObservation says how a wrong number relates to the correct value, when the relation points at a common slip. */
+function numberObservation(response: Q, value: Q): Text | undefined {
+  if (response.sign() === 0 || value.sign() === 0) return undefined;
+  if (response.eq(value.neg())) return feedback.wrongSign;
+  if (!value.abs().eq(Q.one) && response.mul(value).eq(Q.one)) return feedback.reciprocal;
+  const ratio = response.div(value).abs();
+  const big = ratio.cmp(Q.one) > 0 ? ratio : Q.one.div(ratio);
+  if (big.isInteger() && /^10+$/.test(big.toString())) return feedback.powerOfTen;
+  return undefined;
+}
+
+/** numberValue reads the number a response to a number problem means, whatever its form, or undefined if it is not one. */
+function numberValue(response: string, e: Record<string, Json>): Q | undefined {
+  const unit = typeof e.unit === "string" ? e.unit : undefined;
+  const text = e.percent === true ? response.replace(/\\?%\s*$/, "") : unit ? stripUnit(response, unit) : response;
+  const parsed = parseLatex(plainNumber(text));
+  if (isRelation(parsed)) {
+    if (parsed.op !== "=" || typeof e.var !== "string") return undefined;
+    const l = unwrap(parsed.left);
+    return numberLiteral(l.k === "var" && l.name === e.var ? parsed.right : parsed.left)?.value;
+  }
+  return numberLiteral(parsed)?.value;
+}
+
 /**
  * numberChecker accepts a single number equal to expected.value (a rational
  * such as "-3", "3/4" or "2.5"), written in expected.form:
@@ -174,7 +207,16 @@ export const numberChecker: Checker = {
       else if (r.k === "var" && r.name === variable) node = parsed.left;
       else return wrong();
     } else node = parsed;
-    return judgeLiteral(numberLiteral(node), node, value, form);
+    const literal = numberLiteral(node);
+    const verdict = judgeLiteral(literal, node, value, form);
+    if (verdict.correct || verdict.feedback || !literal) return verdict;
+    const seen = numberObservation(literal.value, value);
+    return seen ? wrong(seen) : verdict;
+  },
+  same(expected, response, mistake) {
+    const e = obj(expected);
+    const target = numberValue(mistake, e);
+    return target !== undefined && (numberValue(response, e)?.eq(target) ?? false);
   },
 };
 
@@ -202,6 +244,10 @@ export const expressionChecker: Checker = {
     if (e.form === "lowest" && !isLowestTerms(parsed)) return wrong(feedback.lowestTermsExpression);
     if (e.form === "vertex" && !isVertexForm(parsed)) return wrong(feedback.vertexForm);
     return { correct: true };
+  },
+  same(expected, response, mistake) {
+    const parsed = parseLatex(response);
+    return !isRelation(parsed) && equivalent(parsed, parseExpression(mistake), obj(expected).positive === true);
   },
 };
 

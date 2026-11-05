@@ -23,6 +23,14 @@ export interface AnswerSpec {
   readonly input: InputSpec;
 }
 
+/** Mistake is a wrong response that shows a known misunderstanding, with what to say about it. */
+export interface Mistake {
+  /** response is the wrong response, written as a learner would. */
+  readonly response: string;
+  /** feedback says what went wrong, without repeating the solution. */
+  readonly feedback: Text;
+}
+
 /** Problem is one generated problem instance. */
 export interface Problem {
   readonly prompt: Text;
@@ -35,6 +43,8 @@ export interface Problem {
   readonly canonical: string;
   /** wrong are plausible mistaken responses the checker must reject; the compiler checks them. */
   readonly wrong?: readonly string[];
+  /** mistakes are wrong responses that get feedback of their own; the compiler checks that they are rejected. */
+  readonly mistakes?: readonly Mistake[];
 }
 
 /** Generator produces a problem from a seeded Rng; it must be deterministic. */
@@ -119,6 +129,8 @@ export interface Verdict {
 export interface Checker {
   readonly id: string;
   check(expected: Json, response: string): Verdict;
+  /** same tells whether a response means the same as a listed mistake; without it they must be equal apart from spacing. */
+  same?(expected: Json, response: string, mistake: string): boolean;
 }
 
 /** SubjectDef is everything a subject contributes. */

@@ -1,4 +1,4 @@
-import { CheckerRegistry } from "@ga/content";
+import { CheckerRegistry, type Json, t } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -43,7 +43,7 @@ describe("number", () => {
   });
 
   it.each([
-    ["-7", "7", undefined],
+    ["-7", "7", "wrong sign"],
     ["-7", "-6", undefined],
     ["-7", "-3-4", "single number"],
     ["3/4", "\\frac{6}{8}", "lowest terms"],
@@ -825,5 +825,73 @@ describe("what the math field writes for ordinary keystrokes", () => {
   });
   it("reads a times sign typed as x", () => {
     accepts(scientificChecker, { value: "810000000" }, ["8.1x10^8", "8.1\\times10^8", "8.1\\cdot10^8"]);
+  });
+});
+
+describe("numbers that point at a common slip", () => {
+  const feedbackOf = (value: string, response: string) => numberChecker.check({ value }, response).feedback?.en;
+
+  it("names a wrong sign", () => {
+    expect(feedbackOf("-7", "7")).toContain("wrong sign");
+    expect(feedbackOf("3/4", "-\\frac{3}{4}")).toContain("wrong sign");
+  });
+
+  it("names a reciprocal, but not of 1 or -1", () => {
+    expect(feedbackOf("2/3", "\\frac{3}{2}")).toContain("reciprocal");
+    expect(feedbackOf("1", "1")).toBeUndefined();
+    expect(feedbackOf("1", "2")).toBeUndefined();
+  });
+
+  it("names a power of ten in either direction", () => {
+    expect(feedbackOf("35", "0.35")).toContain("power of ten");
+    expect(feedbackOf("0.4", "400")).toContain("power of ten");
+    expect(feedbackOf("-5", "50")).toContain("power of ten");
+  });
+
+  it("says nothing of a number with no such relation, or about 0", () => {
+    expect(feedbackOf("35", "36")).toBeUndefined();
+    expect(feedbackOf("0", "5")).toBeUndefined();
+    expect(feedbackOf("5", "0")).toBeUndefined();
+    expect(feedbackOf("20", "40")).toBeUndefined();
+  });
+});
+
+describe("mistakes", () => {
+  const problem = (checker: string, expected: Json, mistake: string) => ({
+    prompt: t("p", "p"),
+    solution: t("s", "s"),
+    canonical: "",
+    answer: { checker, expected, input: { kind: "math" as const } },
+    mistakes: [{ response: mistake, feedback: t("listed", "listed") }],
+  });
+
+  it("matches a number whatever way it is written", () => {
+    const p = problem("number", { value: "1/2" }, "\\frac{3}{4}");
+    for (const r of ["\\frac{3}{4}", "0.75", "\\frac{6}{8}"]) expect(registry.judge(p, r).feedback?.en).toBe("listed");
+    expect(registry.judge(p, "0.8").feedback).toBeUndefined();
+    expect(registry.judge(p, "\\frac{1}{2}").correct).toBe(true);
+  });
+
+  it("matches a number with a variable, a percent sign or a unit", () => {
+    expect(registry.judge(problem("number", { value: "2", var: "x" }, "3"), "x = 3").feedback?.en).toBe("listed");
+    expect(registry.judge(problem("number", { value: "2", percent: true }, "3"), "3\\%").feedback?.en).toBe("listed");
+    expect(registry.judge(problem("number", { value: "2", unit: "cm" }, "3"), "3 cm").feedback?.en).toBe("listed");
+  });
+
+  it("matches an equivalent expression", () => {
+    const p = problem("expression", { expr: "x^{2}+2x+1" }, "x^{2}+1");
+    expect(registry.judge(p, "1+x^{2}").feedback?.en).toBe("listed");
+    expect(registry.judge(p, "x^{2}+2").feedback).toBeUndefined();
+  });
+
+  it("puts a listed mistake before an observation, and survives an unreadable response", () => {
+    expect(registry.judge(problem("number", { value: "3" }, "-3"), "-3").feedback?.en).toBe("listed");
+    expect(registry.judge(problem("number", { value: "3" }, "4"), "\\frac{").feedback?.en).toContain("could not be read");
+  });
+
+  it("compares responses by their text for a checker with no notion of sameness", () => {
+    const p = { ...problem("choice", 1, "2"), answer: { checker: "choice", expected: 1, input: { kind: "text" as const } } };
+    expect(registry.judge(p, " 2 ").feedback?.en).toBe("listed");
+    expect(registry.judge(p, "0").feedback).toBeUndefined();
   });
 });

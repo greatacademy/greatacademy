@@ -1,5 +1,5 @@
 import { t } from "./text.ts";
-import type { Checker, Json } from "./types.ts";
+import type { Checker, Json, Problem, Verdict } from "./types.ts";
 
 /** choiceChecker accepts the index of the correct option; expected is that index. */
 export const choiceChecker: Checker = {
@@ -52,5 +52,26 @@ export class CheckerRegistry {
     } catch {
       return { correct: false };
     }
+  }
+
+  /** same tells whether a response means the same as a listed mistake; a response that makes the checker throw does not. */
+  same(id: string, expected: Json, response: string, mistake: string): boolean {
+    const checker = this.#checkers.get(id);
+    if (!checker) throw new Error(`unknown checker ${id}`);
+    if (response.length > 2000) return false;
+    try {
+      return checker.same ? checker.same(expected, response, mistake) : response.replace(/\s+/g, "") === mistake.replace(/\s+/g, "");
+    } catch {
+      return false;
+    }
+  }
+
+  /** judge checks a response to a problem; a wrong one that matches a listed mistake gets the mistake's feedback. */
+  judge(problem: Problem, response: string): Verdict {
+    const { checker, expected } = problem.answer;
+    const verdict = this.check(checker, expected, response);
+    if (verdict.correct) return verdict;
+    const mistake = problem.mistakes?.find((m) => this.same(checker, expected, response, m.response));
+    return mistake ? { correct: false, feedback: mistake.feedback } : verdict;
   }
 }

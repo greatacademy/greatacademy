@@ -115,7 +115,12 @@ function checkSample(
     }
   }
   if (textIssue) {
-    const texts = [a.prompt, a.solution, ...(a.answer.input.kind === "choice" ? a.answer.input.options : [])];
+    const texts = [
+      a.prompt,
+      a.solution,
+      ...(a.answer.input.kind === "choice" ? a.answer.input.options : []),
+      ...(a.mistakes ?? []).map((m) => m.feedback),
+    ];
     for (const locale of locales) {
       for (const text of texts.filter(isText)) {
         const found = textIssue(text[locale], locale);
@@ -139,6 +144,13 @@ function checkSample(
   if (!verdict.correct) return `canonical response ${JSON.stringify(a.canonical)} is rejected`;
   for (const w of a.wrong ?? []) {
     if (subject.checkers.check(answer.checker, answer.expected, w).correct) return `wrong response ${JSON.stringify(w)} is accepted`;
+  }
+  for (const m of a.mistakes ?? []) {
+    if (!isText(m.feedback)) return "the feedback of a mistake must be non-empty in every locale";
+    if (subject.checkers.check(answer.checker, answer.expected, m.response).correct)
+      return `mistake ${JSON.stringify(m.response)} is accepted`;
+    if (!subject.checkers.same(answer.checker, answer.expected, m.response, m.response))
+      return `mistake ${JSON.stringify(m.response)} does not match itself`;
   }
   return undefined;
 }
