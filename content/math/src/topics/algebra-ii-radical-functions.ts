@@ -898,7 +898,6 @@ export const graphingTheCubeRootFunction: TopicDef = {
   ),
   prerequisites: ["graph-transformations-of-square-root-functions", "cube-roots-of-algebraic-perfect-cubes"],
   encompasses: [
-    { topic: "graph-transformations-of-square-root-functions", weight: 0.3 },
     { topic: "cube-roots-of-algebraic-perfect-cubes", weight: 0.2 },
     { topic: "square-roots-and-cube-roots", weight: 0.3 },
   ],

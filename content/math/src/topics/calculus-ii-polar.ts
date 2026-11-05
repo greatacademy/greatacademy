@@ -782,7 +782,7 @@ export const findingTheLimitsOfIntegrationForAGivenPolarRegion: TopicDef = {
     "花瓣或圈在极点开始和结束，所以它的积分限是 r = 0 的相邻两个解。",
   ),
   prerequisites: ["finding-the-area-of-a-polar-region", "finding-intersections-of-polar-curves"],
-  encompasses: [{ topic: "finding-the-area-of-a-polar-region", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

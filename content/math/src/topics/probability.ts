@@ -891,7 +891,7 @@ export const theLikelihoodOfAnEvent: TopicDef = {
     "根据 0 到 1 之间的概率描述事件发生的可能性。",
   ),
   prerequisites: ["sample-spaces-and-events-in-probability", "percents"],
-  encompasses: [{ topic: "percents", weight: 0.1 }],
+  encompasses: [],
   xp: 8,
   standards: ["CCSS.7.SP.C.5"],
   knowledgePoints: [
@@ -993,10 +993,7 @@ export const singleEventsInProbability: TopicDef = {
     "对等可能的结果，用有利结果数除以结果总数求事件的概率。",
   ),
   prerequisites: ["the-likelihood-of-an-event"],
-  encompasses: [
-    { topic: "the-likelihood-of-an-event", weight: 0.3 },
-    { topic: "sample-spaces-and-events-in-probability", weight: 0.5 },
-  ],
+  encompasses: [{ topic: "sample-spaces-and-events-in-probability", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.7.SP.C.7.A"],
   knowledgePoints: [

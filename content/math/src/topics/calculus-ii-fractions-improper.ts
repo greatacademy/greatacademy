@@ -61,7 +61,7 @@ export const expressingRationalFunctionsAsSumsOfPartialFractions: TopicDef = {
     "把分母含不同一次因式的分式拆成若干简单分式之和。",
   ),
   prerequisites: ["adding-rational-expressions-with-unlike-denominators", "integrating-linear-rational-functions-using-substitution"],
-  encompasses: [{ topic: "adding-rational-expressions-with-unlike-denominators", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

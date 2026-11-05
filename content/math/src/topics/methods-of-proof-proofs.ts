@@ -37,7 +37,7 @@ export const directProof: TopicDef = {
     "“若 P 则 Q”的直接证明假设 P 成立，然后通过一串有效的推理得出 Q。",
   ),
   prerequisites: ["implication-elimination-and-denying-the-consequent", "universal-and-existential-quantifiers"],
-  encompasses: [{ topic: "implication-elimination-and-denying-the-consequent", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

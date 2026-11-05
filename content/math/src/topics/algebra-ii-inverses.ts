@@ -1183,7 +1183,7 @@ export const theAverageRateOfChangeOfAFunction: TopicDef = {
   ),
   prerequisites: ["slope-of-a-line", "units-of-rates-of-change", "graphs-of-functions"],
   encompasses: [
-    { topic: "units-of-rates-of-change", weight: 0.4 },
+    { topic: "units-of-rates-of-change", weight: 0.2 },
     { topic: "slope-of-a-line", weight: 0.3 },
     { topic: "graphs-of-functions", weight: 0.2 },
   ],

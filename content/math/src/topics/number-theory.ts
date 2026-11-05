@@ -300,7 +300,7 @@ export const greatestCommonFactor: TopicDef = {
   title: t("Greatest Common Factor", "最大公因数"),
   summary: t("Find the greatest common factor of two numbers from their prime factorizations.", "用质因数分解求两个数的最大公因数。"),
   prerequisites: ["prime-factorization"],
-  encompasses: [{ topic: "prime-factorization", weight: 0.6 }],
+  encompasses: [{ topic: "prime-factorization", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.6.NS.B.4"],
   knowledgePoints: [
@@ -372,7 +372,7 @@ export const leastCommonMultiple: TopicDef = {
   title: t("Least Common Multiples", "最小公倍数"),
   summary: t("Find the least common multiple of two numbers from their prime factorizations.", "用质因数分解求两个数的最小公倍数。"),
   prerequisites: ["prime-factorization"],
-  encompasses: [{ topic: "prime-factorization", weight: 0.6 }],
+  encompasses: [{ topic: "prime-factorization", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.6.NS.B.4"],
   knowledgePoints: [

@@ -42,7 +42,7 @@ export const integrationUsingBasicTrigonometricIdentities: TopicDef = {
     "用商数关系与倒数关系改写被积函数，化为标准积分。",
   ),
   prerequisites: ["integrating-trigonometric-functions-using-substitution"],
-  encompasses: [{ topic: "integrating-trigonometric-functions-using-substitution", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -275,10 +275,7 @@ export const integrationUsingTheDoubleAngleFormulas: TopicDef = {
     "用二倍角公式求正弦、余弦的偶次幂与乘积的积分。",
   ),
   prerequisites: ["integration-using-the-pythagorean-identities", "the-power-reducing-formulas-for-sine-and-cosine"],
-  encompasses: [
-    { topic: "integration-using-the-pythagorean-identities", weight: 0.3 },
-    { topic: "the-power-reducing-formulas-for-sine-and-cosine", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "the-power-reducing-formulas-for-sine-and-cosine", weight: 0.3 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -440,7 +437,7 @@ export const integrationUsingBasicHyperbolicIdentities: TopicDef = {
     "用商数关系、倒数关系与指数定义改写双曲型被积函数。",
   ),
   prerequisites: ["integrating-hyperbolic-functions-using-substitution"],
-  encompasses: [{ topic: "integrating-hyperbolic-functions-using-substitution", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -651,7 +648,7 @@ export const integrationUsingTheHyperbolicDoubleAngleFormulas: TopicDef = {
     "用双曲二倍角公式求 sinh、cosh 的偶次幂与乘积的积分。",
   ),
   prerequisites: ["integration-using-the-hyperbolic-pythagorean-identities"],
-  encompasses: [{ topic: "integration-using-the-hyperbolic-pythagorean-identities", weight: 0.4 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -735,10 +732,7 @@ export const introductionToIntegrationByParts: TopicDef = {
     "用 ∫u dv = uv − ∫v du 求乘积的积分，选取求导后变简单的因子为 u。",
   ),
   prerequisites: ["integrating-exponential-functions-using-linear-substitution"],
-  encompasses: [
-    { topic: "the-product-rule-for-differentiation", weight: 0.2 },
-    { topic: "integrating-exponential-functions-using-linear-substitution", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "integrating-exponential-functions-using-linear-substitution", weight: 0.3 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

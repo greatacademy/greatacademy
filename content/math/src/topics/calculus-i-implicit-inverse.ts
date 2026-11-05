@@ -204,10 +204,7 @@ export const calculatingSlopesOfCirclesEllipsesAndParabolas: TopicDef = {
     "用隐函数求导计算圆、椭圆和开口向左右的抛物线的斜率。",
   ),
   prerequisites: ["implicit-differentiation", "equations-of-ellipses-centered-at-the-origin"],
-  encompasses: [
-    { topic: "implicit-differentiation", weight: 0.5 },
-    { topic: "equations-of-circles", weight: 0.1 },
-  ],
+  encompasses: [{ topic: "implicit-differentiation", weight: 0.5 }],
   xp: 12,
   standards: [],
   knowledgePoints: [
@@ -619,10 +616,7 @@ export const differentiatingInverseTrigonometricFunctions: TopicDef = {
     "对 arcsin、arccos、arctan 求导，包括含内层函数的情形。",
   ),
   prerequisites: ["differentiating-inverse-functions", "evaluating-expressions-containing-inverse-trigonometric-functions"],
-  encompasses: [
-    { topic: "differentiating-inverse-functions", weight: 0.3 },
-    { topic: "the-chain-rule-with-trigonometric-functions", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 12,
   standards: [],
   knowledgePoints: [
@@ -712,7 +706,7 @@ export const differentiatingInverseReciprocalTrigonometricFunctions: TopicDef = 
   title: t("Differentiating Inverse Reciprocal Trigonometric Functions", "反倒数三角函数求导"),
   summary: t("Differentiate arccot, arcsec and arccsc, and evaluate their derivatives.", "对 arccot、arcsec、arccsc 求导并计算导数值。"),
   prerequisites: ["differentiating-inverse-trigonometric-functions"],
-  encompasses: [{ topic: "differentiating-inverse-trigonometric-functions", weight: 0.5 }],
+  encompasses: [{ topic: "differentiating-inverse-trigonometric-functions", weight: 0.2 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -802,10 +796,7 @@ export const differentiatingInverseHyperbolicFunctions: TopicDef = {
     "对 arsinh、arcosh、artanh 求导，包括含内层函数的情形。",
   ),
   prerequisites: ["differentiating-inverse-trigonometric-functions", "the-inverse-hyperbolic-functions"],
-  encompasses: [
-    { topic: "differentiating-inverse-functions", weight: 0.2 },
-    { topic: "the-inverse-hyperbolic-functions", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -888,7 +879,7 @@ export const differentiatingInverseReciprocalHyperbolicFunctions: TopicDef = {
   title: t("Differentiating Inverse Reciprocal Hyperbolic Functions", "反倒数双曲函数求导"),
   summary: t("Differentiate arsech, arcsch and arcoth, and evaluate their derivatives.", "对 arsech、arcsch、arcoth 求导并计算导数值。"),
   prerequisites: ["differentiating-inverse-hyperbolic-functions"],
-  encompasses: [{ topic: "differentiating-inverse-hyperbolic-functions", weight: 0.5 }],
+  encompasses: [{ topic: "differentiating-inverse-hyperbolic-functions", weight: 0.2 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

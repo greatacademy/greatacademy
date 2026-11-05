@@ -266,7 +266,7 @@ export const theMultiplicationPropertiesOfModularArithmetic: TopicDef = {
     "若 a ≡ b 且 c ≡ d (mod n)，则 ac ≡ bd，aᵏ ≡ bᵏ (mod n)，所以乘积与幂都可以逐步约化。",
   ),
   prerequisites: ["the-addition-property-of-modular-arithmetic", "modular-residues"],
-  encompasses: [{ topic: "the-addition-property-of-modular-arithmetic", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

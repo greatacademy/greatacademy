@@ -67,10 +67,7 @@ export const theLeastCommonMultipleOfTwoMonomials: TopicDef = {
     "求单项式的最小公倍式：系数的最小公倍数乘以每个变量的最高次幂。",
   ),
   prerequisites: ["greatest-common-factor-of-monomials", "least-common-multiple"],
-  encompasses: [
-    { topic: "least-common-multiple", weight: 0.5 },
-    { topic: "greatest-common-factor-of-monomials", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "least-common-multiple", weight: 0.5 }],
   xp: 10,
   knowledgePoints: [
     {

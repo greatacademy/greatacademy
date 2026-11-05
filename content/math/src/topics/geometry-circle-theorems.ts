@@ -2354,11 +2354,7 @@ export const circleSimilarity: TopicDef = {
     "所有的圆都相似：求两个圆之间的比例因子，并用它求周长和面积。",
   ),
   prerequisites: ["dilations-of-geometric-figures", "areas-of-circles"],
-  encompasses: [
-    { topic: "dilations-of-geometric-figures", weight: 0.3 },
-    { topic: "areas-of-circles", weight: 0.2 },
-    { topic: "the-circumference-of-a-circle", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "dilations-of-geometric-figures", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSG.C.A.1"],
   knowledgePoints: [

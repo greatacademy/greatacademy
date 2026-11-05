@@ -242,7 +242,7 @@ export const dividingPolynomialsUsingSyntheticDivision: TopicDef = {
     "只用系数把多项式除以 $x - c$：移下、乘以 $c$、相加。",
   ),
   prerequisites: ["splitting-rational-expressions-into-terms", "multiplying-polynomials"],
-  encompasses: [{ topic: "multiplying-polynomials", weight: 0.2 }],
+  encompasses: [],
   xp: 15,
   standards: ["CCSS.HSA.APR.D.6"],
   knowledgePoints: [
@@ -1270,10 +1270,7 @@ export const theFactorTheorem: TopicDef = {
     "$x - c$ 是 $p(x)$ 的因式当且仅当 $p(c) = 0$：通过求值检验因式，并把根转化为因式。",
   ),
   prerequisites: ["dividing-polynomials-using-synthetic-division", "determining-the-roots-of-polynomials"],
-  encompasses: [
-    { topic: "dividing-polynomials-using-synthetic-division", weight: 0.3 },
-    { topic: "determining-the-roots-of-polynomials", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "determining-the-roots-of-polynomials", weight: 0.4 }],
   xp: 13,
   standards: ["CCSS.HSA.APR.B.2"],
   knowledgePoints: [
@@ -1579,7 +1576,7 @@ export const factoringCubicPolynomialsUsingTheFactorTheorem: TopicDef = {
   ),
   prerequisites: ["the-factor-theorem", "further-factoring-trinomials-with-leading-coefficients"],
   encompasses: [
-    { topic: "the-factor-theorem", weight: 0.6 },
+    { topic: "the-factor-theorem", weight: 0.3 },
     { topic: "dividing-polynomials-using-synthetic-division", weight: 0.5 },
     { topic: "factoring-trinomials", weight: 0.5 },
     { topic: "factoring-trinomials-with-leading-coefficients", weight: 0.3 },
@@ -2174,10 +2171,7 @@ export const theRemainderTheorem: TopicDef = {
     "$p(x)$ 除以 $x - c$ 的余数等于 $p(c)$：用求值代替除法来求余数。",
   ),
   prerequisites: ["the-factor-theorem"],
-  encompasses: [
-    { topic: "dividing-polynomials-using-synthetic-division", weight: 0.3 },
-    { topic: "evaluating-expressions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "evaluating-expressions", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSA.APR.B.2"],
   knowledgePoints: [

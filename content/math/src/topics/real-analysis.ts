@@ -483,7 +483,7 @@ const epsilonDelta = topic(
   ["Epsilon–Delta Proofs of Limits", "极限的 ε–δ 证明"],
   ["Find a delta that works for a given tolerance.", "对给定的误差求出合适的 δ。"],
   ["defining-continuity-at-a-point"],
-  [["defining-continuity-at-a-point", 0.4]],
+  [],
   [
     point(
       "delta-for-a-linear-function",
@@ -1041,7 +1041,7 @@ const upperLowerSums = topic(
   ["Upper and Lower Darboux Sums", "达布上和与下和"],
   ["Compute upper and lower sums, and how fine a partition must be.", "计算上和与下和，以及分割要多细。"],
   ["defining-definite-integrals-using-left-and-right-riemann-sums", "suprema-of-sets-of-reals"],
-  [["defining-definite-integrals-using-left-and-right-riemann-sums", 0.5]],
+  [],
   [
     point(
       "an-upper-sum-for-a-line",
@@ -1241,7 +1241,7 @@ const weierstrassTest = topic(
   ["The Weierstrass M-Test", "魏尔斯特拉斯 M 判别法"],
   ["Bound a series of functions by a series of numbers, and estimate its tail.", "用数项级数控制函数项级数，并估计它的尾部。"],
   ["pointwise-and-uniform-convergence", "absolute-and-conditional-convergence-of-series"],
-  [["pointwise-and-uniform-convergence", 0.4]],
+  [],
   [
     point(
       "a-bound-for-a-series-of-functions",
@@ -1302,7 +1302,7 @@ const contractions = topic(
   ["The Contraction Mapping Principle", "压缩映射原理"],
   ["Find the fixed point of a contraction, and bound the error of iterating.", "求压缩映射的不动点，并估计迭代的误差。"],
   ["distances-in-metric-spaces", "cauchy-sequences"],
-  [["cauchy-sequences", 0.3]],
+  [],
   [
     point(
       "the-fixed-point-of-a-contraction",

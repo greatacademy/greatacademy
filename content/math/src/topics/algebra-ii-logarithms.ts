@@ -430,7 +430,6 @@ export const commonLogarithm: TopicDef = {
   prerequisites: ["evaluating-logarithms", "scientific-notation"],
   encompasses: [
     { topic: "evaluating-logarithms", weight: 0.3 },
-    { topic: "scientific-notation", weight: 0.2 },
     { topic: "two-step-equations", weight: 0.2 },
   ],
   xp: 12,
@@ -1368,10 +1367,7 @@ export const changeOfBaseFormula: TopicDef = {
     "把 $\\log_{a} x$ 写成 $\\frac{\\log_{b} x}{\\log_{b} a}$，计算对数的积，并用自然对数求任意对数的近似值。",
   ),
   prerequisites: ["combining-laws-of-logarithms"],
-  encompasses: [
-    { topic: "power-rule-for-logarithms", weight: 0.3 },
-    { topic: "evaluating-logarithms", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "evaluating-logarithms", weight: 0.3 }],
   xp: 15,
   standards: ["CCSS.HSF.LE.A.4"],
   knowledgePoints: [

@@ -422,7 +422,7 @@ export const theArgumentOfAComplexNumber: TopicDef = {
     "利用参考角与象限法则，确定复数 z = a + bi 在 [0, 2π) 或 (-π, π] 内的辐角与主辐角 arg(z)。",
   ),
   prerequisites: ["the-magnitude-of-a-complex-number"],
-  encompasses: [{ topic: "the-magnitude-of-a-complex-number", weight: 0.3 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.4"],
   knowledgePoints: [
@@ -571,7 +571,7 @@ export const arithmeticInTheComplexPlane: TopicDef = {
     "在复平面中将复数的加减法解释为向量加法（平行四边形法则）和位移向量。",
   ),
   prerequisites: ["the-argument-of-a-complex-number"],
-  encompasses: [{ topic: "the-argument-of-a-complex-number", weight: 0.2 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.5"],
   knowledgePoints: [
@@ -1102,7 +1102,7 @@ export const solvingEquationsByEquatingRealAndImaginaryParts: TopicDef = {
     "通过使方程两边的实部与虚部分别相等，求解关于未知实数 x 与 y 的复数方程。",
   ),
   prerequisites: ["dividing-complex-numbers"],
-  encompasses: [{ topic: "dividing-complex-numbers", weight: 0.3 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.A.1", "CCSS.HSN.CN.A.2"],
   knowledgePoints: [

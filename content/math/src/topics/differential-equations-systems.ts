@@ -44,7 +44,7 @@ export const introductionToSystemsOfLinearOdes: TopicDef = {
     "一阶线性方程组 $x_1' = ax_1 + bx_2$，$x_2' = cx_1 + dx_2$ 可写成矩阵形式 $\\mathbf{x}' = A\\mathbf{x}$，由 $A$ 的迹与行列式刻画。",
   ),
   prerequisites: ["general-solutions-of-linear-odes"],
-  encompasses: [{ topic: "general-solutions-of-linear-odes", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -297,12 +297,7 @@ export const linearIndependenceForHomogeneousSystemsOfOdes: TopicDef = {
     "向量解 $\\mathbf{x}_1(t), \\mathbf{x}_2(t)$ 线性无关当且仅当其朗斯基行列式 $W(t) = \\det\\begin{pmatrix} \\mathbf{x}_1(t) & \\mathbf{x}_2(t) \\end{pmatrix}$ 不为零。",
   ),
   prerequisites: ["expressing-homogeneous-odes-as-first-order-systems"],
-  encompasses: [
-    {
-      topic: "expressing-homogeneous-odes-as-first-order-systems",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -380,12 +375,7 @@ export const generalSolutionsOfFirstOrderLinearSystemsOfOdes: TopicDef = {
     "$\\mathbf{x}' = A\\mathbf{x}$ 的通解为 $\\mathbf{x}(t) = c_1 \\mathbf{x}_1(t) + c_2 \\mathbf{x}_2(t)$，初值条件 $\\mathbf{x}(0) = \\mathbf{x}_0$ 唯一确定常数。",
   ),
   prerequisites: ["linear-independence-for-homogeneous-systems-of-odes"],
-  encompasses: [
-    {
-      topic: "linear-independence-for-homogeneous-systems-of-odes",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -571,12 +561,7 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvalues: TopicDef = 
     "当 $A$ 有互异实特征值 $\\lambda_1 \\ne \\lambda_2$ 及特征向量 $\\mathbf{v}_1, \\mathbf{v}_2$ 时，通解为 $\\mathbf{x}(t) = c_1 e^{\\lambda_1 t}\\mathbf{v}_1 + c_2 e^{\\lambda_2 t}\\mathbf{v}_2$。",
   ),
   prerequisites: ["solving-decoupled-homogeneous-systems-of-odes"],
-  encompasses: [
-    {
-      topic: "solving-decoupled-homogeneous-systems-of-odes",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -954,12 +939,7 @@ export const solvingInhomogeneousSystemsOfOdes: TopicDef = {
     "对常向量激励 $\\mathbf{x}' = A\\mathbf{x} + \\mathbf{b}$ 且 $A$ 可逆，常数特解为 $\\mathbf{x}_p = -A^{-1}\\mathbf{b}$。",
   ),
   prerequisites: ["solving-homogeneous-systems-of-odes-with-distinct-eigenvalues"],
-  encompasses: [
-    {
-      topic: "solving-homogeneous-systems-of-odes-with-distinct-eigenvalues",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1133,7 +1113,7 @@ export const equilibriumPointsAndStabilityForSystemsOfOdes: TopicDef = {
     "平衡点满足 $A\\mathbf{x}_0 = \\mathbf{0}$。当 $\\det A \\ne 0$ 时，原点是唯一的平衡点，其类型由迹与行列式确定。",
   ),
   prerequisites: ["phase-planes-and-phase-portraits"],
-  encompasses: [{ topic: "phase-planes-and-phase-portraits", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1313,12 +1293,7 @@ export const phasePortraitsForLinearSystemsWithRealDistinctEigenvalues: TopicDef
     "当特征值异号（$\\lambda_1 < 0 < \\lambda_2$）时原点为不稳定的鞍点；同号时为稳定或不稳定的结点。",
   ),
   prerequisites: ["phase-portraits-for-decoupled-linear-systems"],
-  encompasses: [
-    {
-      topic: "phase-portraits-for-decoupled-linear-systems",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1399,12 +1374,7 @@ export const phasePortraitsForLinearSystemsWithRepeatedEigenvalues: TopicDef = {
     "重特征值在具有两个独立特征向量（A = λ I）时形成星形对称结点；在仅有一个独立特征向量时形成退化结点。",
   ),
   prerequisites: ["phase-portraits-for-linear-systems-with-real-distinct-eigenvalues"],
-  encompasses: [
-    {
-      topic: "phase-portraits-for-linear-systems-with-real-distinct-eigenvalues",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1492,12 +1462,7 @@ export const phasePortraitsForLinearSystemsWithZeroEigenvalues: TopicDef = {
     "当 det(A) = 0 时，λ = 0 是特征值，零空间 ker(A) 形成一整条非孤立平衡点构成的平衡线。",
   ),
   prerequisites: ["phase-portraits-for-linear-systems-with-real-distinct-eigenvalues"],
-  encompasses: [
-    {
-      topic: "phase-portraits-for-linear-systems-with-real-distinct-eigenvalues",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1575,12 +1540,7 @@ export const phasePortraitsForLinearSystemsWithComplexEigenvalues: TopicDef = {
     "当特征值为纯虚数（α = 0）时，原点为被封闭同心椭圆轨道包围的中心点；当实部 α ≠ 0 时，相轨迹向内或向外螺旋发散。",
   ),
   prerequisites: ["phase-portraits-for-linear-systems-with-real-distinct-eigenvalues"],
-  encompasses: [
-    {
-      topic: "phase-portraits-for-linear-systems-with-real-distinct-eigenvalues",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1772,7 +1732,7 @@ export const linearApproximationsNearEquilibria: TopicDef = {
     "在平衡点 $\\mathbf{x}_*$ 附近，非线性系统 $\\mathbf{x}' = F(\\mathbf{x})$ 可用 $\\mathbf{u}' = J(\\mathbf{x}_*)\\mathbf{u}$ 近似，其中 $J$ 为雅可比矩阵。",
   ),
   prerequisites: ["shifted-systems-of-odes"],
-  encompasses: [{ topic: "shifted-systems-of-odes", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1863,12 +1823,7 @@ export const matrixExponentials: TopicDef = {
     "矩阵指数 $e^{At} = \\sum_{k=0}^{\\infty} \\frac{(At)^k}{k!}$ 给出 $\\mathbf{x}' = A\\mathbf{x}$ 的解；当 $A^2 = 0$ 时级数截断为 $I + At$。",
   ),
   prerequisites: ["solving-homogeneous-systems-of-odes-with-distinct-eigenvalues"],
-  encompasses: [
-    {
-      topic: "solving-homogeneous-systems-of-odes-with-distinct-eigenvalues",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1952,7 +1907,7 @@ export const fundamentalMatrices: TopicDef = {
     "基本解矩阵 $\\Phi(t)$ 的各列是线性无关的解，满足 $\\Phi' = A\\Phi$，且 $e^{At} = \\Phi(t)\\Phi(0)^{-1}$。",
   ),
   prerequisites: ["matrix-exponentials"],
-  encompasses: [{ topic: "matrix-exponentials", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {

@@ -413,7 +413,7 @@ export const theLagrangeErrorBound: TopicDef = {
     "若在 a 与 x 之间 |f⁽ⁿ⁺¹⁾| ≤ M，则 |f(x) − Pₙ(x)| ≤ M|x − a|ⁿ⁺¹/(n + 1)!。",
   ),
   prerequisites: ["higher-degree-taylor-polynomials"],
-  encompasses: [{ topic: "higher-degree-taylor-polynomials", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -918,7 +918,7 @@ export const representingFunctionsAsPowerSeries: TopicDef = {
     "把 c/(b − dxᵖ) 写成 (c/b) · 1/(1 − r)，r = dxᵖ/b，得到在 |r| < 1 时成立的等比幂级数。",
   ),
   prerequisites: ["maclaurin-series", "radius-of-convergence-of-power-series"],
-  encompasses: [{ topic: "sums-of-infinite-geometric-series-given-in-sigma-notation", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1302,7 +1302,7 @@ export const approximatingIntegralsUsingTaylorSeries: TopicDef = {
     "把没有初等原函数的被积函数换成它的泰勒级数，逐项积分，再取前几项求和。",
   ),
   prerequisites: ["recognizing-standard-maclaurin-series-for-trigonometric-functions", "differentiating-taylor-series"],
-  encompasses: [{ topic: "differentiating-taylor-series", weight: 0.2 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

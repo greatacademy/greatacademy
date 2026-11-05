@@ -78,7 +78,7 @@ export const interpretingTheMeaningOfTheDerivativeInContext: TopicDef = {
     "给出导数的单位，并在实际情境中解释关于导数的陈述。",
   ),
   prerequisites: ["selecting-procedures-for-calculating-derivatives"],
-  encompasses: [{ topic: "the-instantaneous-rate-of-change-of-a-function-at-a-point", weight: 0.3 }],
+  encompasses: [],
   xp: 8,
   standards: [],
   knowledgePoints: [
@@ -368,7 +368,7 @@ export const estimatingDerivativesUsingAForwardDifferenceQuotient: TopicDef = {
     "用向前差商 (f(a + h) − f(a))/h 估计导数。",
   ),
   prerequisites: ["calculating-derivatives-from-data-and-tables"],
-  encompasses: [{ topic: "calculating-derivatives-from-data-and-tables", weight: 0.3 }],
+  encompasses: [],
   xp: 8,
   standards: [],
   knowledgePoints: [
@@ -882,10 +882,7 @@ export const calculatingRelatedRatesWithRectangularSolids: TopicDef = {
     "联系长方体和正方体的棱长、表面积和体积的变化率。",
   ),
   prerequisites: ["calculating-related-rates-with-squares", "volumes-of-rectangular-solids"],
-  encompasses: [
-    { topic: "calculating-related-rates-with-squares", weight: 0.3 },
-    { topic: "the-product-rule-for-differentiation", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "the-product-rule-for-differentiation", weight: 0.2 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

@@ -1321,7 +1321,7 @@ export const findingTheSumOfAnInfiniteGeometricSeries: TopicDef = {
     "当 |r| < 1 时，a + ar + ar² + ⋯ = a/(1 − r)，即有限和 a(1 − rⁿ)/(1 − r) 的极限。",
   ),
   prerequisites: ["convergent-and-divergent-infinite-series", "the-sum-of-a-finite-geometric-series", "convergence-of-geometric-sequences"],
-  encompasses: [{ topic: "the-sum-of-a-finite-geometric-series", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1477,7 +1477,7 @@ export const sumsOfInfiniteGeometricSeriesGivenInSigmaNotation: TopicDef = {
     "sums-of-finite-geometric-series-given-in-sigma-notation",
     "properties-of-infinite-series",
   ],
-  encompasses: [{ topic: "writing-an-infinite-geometric-series-in-sigma-notation", weight: 0.4 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1547,7 +1547,7 @@ export const convergenceOfGeometricSeries: TopicDef = {
     "等比级数收敛当且仅当 |r| < 1；当 r 含 x 时，这给出 x 的一个区间，其和是 x 的函数。",
   ),
   prerequisites: ["sums-of-infinite-geometric-series-given-in-sigma-notation"],
-  encompasses: [{ topic: "sums-of-infinite-geometric-series-given-in-sigma-notation", weight: 0.4 }],
+  encompasses: [{ topic: "sums-of-infinite-geometric-series-given-in-sigma-notation", weight: 0.2 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

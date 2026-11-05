@@ -445,7 +445,7 @@ export const conditionalProbabilitiesFromTables: TopicDef = {
     "在双向表中只看一行或一列，求条件概率。",
   ),
   prerequisites: ["conditional-probabilities-from-venn-diagrams"],
-  encompasses: [{ topic: "conditional-probabilities-from-venn-diagrams", weight: 0.4 }],
+  encompasses: [{ topic: "conditional-probabilities-from-venn-diagrams", weight: 0.2 }],
   xp: 12,
   standards: ["CCSS.HSS.CP.A.4", "CCSS.HSS.CP.B.6"],
   knowledgePoints: [
@@ -525,7 +525,6 @@ export const theMultiplicationLawForConditionalProbability: TopicDef = {
   ),
   prerequisites: ["conditional-probabilities-from-venn-diagrams", "dividing-fractions", "decimal-arithmetic"],
   encompasses: [
-    { topic: "conditional-probabilities-from-venn-diagrams", weight: 0.3 },
     { topic: "multiplying-fractions", weight: 0.4 },
     { topic: "dividing-fractions", weight: 0.2 },
   ],
@@ -990,10 +989,7 @@ export const treeDiagramsForDependentEventsApplications: TopicDef = {
     "自己画树状图解决相关事件的问题，包括“至少一个”问题和反过来的条件概率。",
   ),
   prerequisites: ["tree-diagrams-for-dependent-events"],
-  encompasses: [
-    { topic: "tree-diagrams-for-dependent-events", weight: 0.7 },
-    { topic: "conditional-probabilities-from-venn-diagrams", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "tree-diagrams-for-dependent-events", weight: 0.7 }],
   xp: 16,
   standards: ["CCSS.HSS.CP.B.8", "CCSS.HSS.CP.A.3"],
   knowledgePoints: [
@@ -1098,7 +1094,7 @@ export const independentEvents: TopicDef = {
   ),
   prerequisites: ["the-multiplication-law-for-conditional-probability", "conditional-probabilities-from-tables"],
   encompasses: [
-    { topic: "the-multiplication-law-for-conditional-probability", weight: 0.5 },
+    { topic: "the-multiplication-law-for-conditional-probability", weight: 0.3 },
     { topic: "conditional-probabilities-from-tables", weight: 0.3 },
   ],
   xp: 14,
@@ -1651,7 +1647,7 @@ export const factorials: TopicDef = {
   title: t("Factorials", "阶乘"),
   summary: t("Evaluate factorials, including 0!, and simplify quotients of factorials.", "计算阶乘（包括 0!），并化简阶乘的商。"),
   prerequisites: ["the-rules-of-sum-and-product", "equivalent-fractions"],
-  encompasses: [{ topic: "equivalent-fractions", weight: 0.1 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.HSS.CP.B.9"],
   knowledgePoints: [

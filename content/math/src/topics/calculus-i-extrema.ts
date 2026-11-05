@@ -299,7 +299,7 @@ export const globalVsLocalExtremaAndCriticalPoints: TopicDef = {
   title: t("Global vs. Local Extrema and Critical Points", "全局极值、局部极值与临界点"),
   summary: t("Read global and local extrema from graphs, and recognize critical points.", "由图像读出全局极值和局部极值，并识别临界点。"),
   prerequisites: ["the-mean-value-theorem", "calculating-derivatives-from-graphs"],
-  encompasses: [{ topic: "calculating-derivatives-from-graphs", weight: 0.2 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -455,7 +455,7 @@ export const usingDifferentiationToCalculateCriticalPoints: TopicDef = {
   title: t("Using Differentiation to Calculate Critical Points", "用求导计算临界点"),
   summary: t("Find critical points, where the derivative is zero or does not exist.", "求临界点，即导数为零或不存在的点。"),
   prerequisites: ["global-vs-local-extrema-and-critical-points"],
-  encompasses: [{ topic: "global-vs-local-extrema-and-critical-points", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -719,10 +719,7 @@ export const theCandidatesTest: TopicDef = {
     "比较临界点与端点处的函数值，求闭区间上的全局最值。",
   ),
   prerequisites: ["using-the-first-derivative-test-to-classify-local-extrema", "the-extreme-value-theorem"],
-  encompasses: [
-    { topic: "the-extreme-value-theorem", weight: 0.3 },
-    { topic: "using-differentiation-to-calculate-critical-points", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "using-differentiation-to-calculate-critical-points", weight: 0.3 }],
   xp: 12,
   standards: [],
   knowledgePoints: [
@@ -800,7 +797,7 @@ export const intervalsOfConcavity: TopicDef = {
     "根据导数的变化判断函数在哪些区间上凹或凸。",
   ),
   prerequisites: ["determining-intervals-on-which-a-function-is-increasing-or-decreasing", "second-and-higher-order-derivatives"],
-  encompasses: [{ topic: "determining-intervals-on-which-a-function-is-increasing-or-decreasing", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -893,7 +890,7 @@ export const relatingConcavityToTheSecondDerivative: TopicDef = {
     "计算二阶导数，用它的符号确定函数的凹凸区间。",
   ),
   prerequisites: ["intervals-of-concavity"],
-  encompasses: [{ topic: "intervals-of-concavity", weight: 0.5 }],
+  encompasses: [{ topic: "intervals-of-concavity", weight: 0.3 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1078,10 +1075,7 @@ export const theSecondDerivativeTest: TopicDef = {
     "用二阶导数的符号判定临界点，并识别检验法失效的情形。",
   ),
   prerequisites: ["points-of-inflection", "using-the-first-derivative-test-to-classify-local-extrema"],
-  encompasses: [
-    { topic: "relating-concavity-to-the-second-derivative", weight: 0.3 },
-    { topic: "using-the-first-derivative-test-to-classify-local-extrema", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "relating-concavity-to-the-second-derivative", weight: 0.3 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

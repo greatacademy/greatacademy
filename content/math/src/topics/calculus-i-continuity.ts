@@ -971,10 +971,7 @@ export const continuityOfFunctions: TopicDef = {
     "利用多项式、有理、根式、指数、对数和三角函数在其定义域上的连续性。",
   ),
   prerequisites: ["continuity-over-an-interval", "limits-of-logarithmic-functions", "limits-of-radical-functions"],
-  encompasses: [
-    { topic: "continuity-over-an-interval", weight: 0.4 },
-    { topic: "limits-of-radical-functions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "continuity-over-an-interval", weight: 0.4 }],
   xp: 12,
   standards: [],
   knowledgePoints: [

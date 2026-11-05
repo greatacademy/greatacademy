@@ -228,7 +228,7 @@ export const graphingCurvesDefinedParametrically: TopicDef = {
     "通过数值表绘制参数方程 x = f(t) 与 y = g(t) 定义的平面曲线，并确定随着参数 t 增大曲线的方向（运动取向）。",
   ),
   prerequisites: ["equations-of-circles"],
-  encompasses: [{ topic: "equations-of-circles", weight: 0.3 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSF.IF.C.7", "CCSS.HSN.VM.A.1"],
   knowledgePoints: [
@@ -1222,7 +1222,7 @@ export const introductionToPolarCoordinates: TopicDef = {
     "理解由极点和极轴构成的极坐标系，绘制坐标为 (r, θ) 的点，掌握负极径表示法 (-r, θ) = (r, θ + π) 以及极坐标的多重非唯一性表示。",
   ),
   prerequisites: ["cartesian-equations-of-parametric-curves"],
-  encompasses: [{ topic: "cartesian-equations-of-parametric-curves", weight: 0.3 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.CN.B.4"],
   knowledgePoints: [

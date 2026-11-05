@@ -86,7 +86,7 @@ export const theFiniteLimitOfAFunction: TopicDef = {
     "从函数图像或数值表读出函数在一点处的极限，并把它与函数值区分开。",
   ),
   prerequisites: ["piecewise-functions"],
-  encompasses: [{ topic: "piecewise-functions", weight: 0.1 }],
+  encompasses: [],
   xp: 12,
   standards: [],
   knowledgePoints: [
@@ -202,7 +202,7 @@ export const theLeftAndRightSidedLimitsOfAFunction: TopicDef = {
   title: t("The Left and Right-Sided Limits of a Function", "函数的左极限与右极限"),
   summary: t("Read left- and right-sided limits from graphs and tables.", "从图像和数值表读出左极限和右极限。"),
   prerequisites: ["the-finite-limit-of-a-function"],
-  encompasses: [{ topic: "the-finite-limit-of-a-function", weight: 0.5 }],
+  encompasses: [{ topic: "the-finite-limit-of-a-function", weight: 0.3 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -566,7 +566,7 @@ export const limitsOfPowerFunctionsAndTheConstantRuleForLimits: TopicDef = {
   title: t("Limits of Power Functions, and the Constant Rule for Limits", "幂函数的极限与常数法则"),
   summary: t("Evaluate limits of constants and of power functions cxⁿ by substitution.", "用代入法求常数和幂函数 cxⁿ 的极限。"),
   prerequisites: ["the-finite-limit-of-a-function"],
-  encompasses: [{ topic: "the-finite-limit-of-a-function", weight: 0.3 }],
+  encompasses: [],
   xp: 8,
   standards: [],
   knowledgePoints: [
@@ -797,7 +797,7 @@ export const thePowerAndRootRulesForLimits: TopicDef = {
     "对已知极限取幂和开方，并求多项式开方的极限。",
   ),
   prerequisites: ["the-product-and-quotient-rules-for-limits"],
-  encompasses: [{ topic: "the-product-and-quotient-rules-for-limits", weight: 0.4 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -882,7 +882,7 @@ export const limitsAtInfinityOfPolynomials: TopicDef = {
   title: t("Limits at Infinity of Polynomials", "多项式在无穷远处的极限"),
   summary: t("Find the limits of a polynomial as x → ±∞ from its leading term.", "由首项求多项式在 x → ±∞ 时的极限。"),
   prerequisites: ["limits-at-infinity-from-graphs"],
-  encompasses: [{ topic: "limits-at-infinity-from-graphs", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -959,10 +959,7 @@ export const limitsOfReciprocalFunctions: TopicDef = {
     "求 k/(x − h)ⁿ + c 在竖直渐近线处以及 x → ±∞ 时的极限。",
   ),
   prerequisites: ["infinite-limits-from-graphs", "limits-at-infinity-from-graphs"],
-  encompasses: [
-    { topic: "infinite-limits-from-graphs", weight: 0.3 },
-    { topic: "limits-at-infinity-from-graphs", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1037,7 +1034,7 @@ export const limitsOfExponentialFunctions: TopicDef = {
   title: t("Limits of Exponential Functions", "指数函数的极限"),
   summary: t("Find limits of a·bˣ + c as x → ±∞ and at a point.", "求 a·bˣ + c 在 x → ±∞ 时以及在一点处的极限。"),
   prerequisites: ["limits-at-infinity-from-graphs", "properties-of-transformed-exponential-functions"],
-  encompasses: [{ topic: "properties-of-transformed-exponential-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1126,7 +1123,7 @@ export const limitsOfLogarithmicFunctions: TopicDef = {
     "求对数函数在定义域边界处、无穷远处以及一点处的极限。",
   ),
   prerequisites: ["infinite-limits-from-graphs", "properties-of-transformed-logarithmic-functions"],
-  encompasses: [{ topic: "properties-of-transformed-logarithmic-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1200,10 +1197,7 @@ export const limitsOfRadicalFunctions: TopicDef = {
     "求根式函数在定义域内、端点处以及无穷远处的极限。",
   ),
   prerequisites: ["the-power-and-root-rules-for-limits", "finding-the-existence-of-a-limit-using-one-sided-limits"],
-  encompasses: [
-    { topic: "the-power-and-root-rules-for-limits", weight: 0.4 },
-    { topic: "finding-the-existence-of-a-limit-using-one-sided-limits", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "the-power-and-root-rules-for-limits", weight: 0.4 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1311,10 +1305,7 @@ export const limitsOfTrigonometricFunctions: TopicDef = {
     "求正弦、余弦、正切在特殊角处、正切的渐近线处以及无穷远处的极限。",
   ),
   prerequisites: ["infinite-limits-from-graphs", "graphing-tangent-and-cotangent"],
-  encompasses: [
-    { topic: "finding-trigonometric-ratios-of-special-angles-using-the-unit-circle", weight: 0.3 },
-    { topic: "infinite-limits-from-graphs", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "finding-trigonometric-ratios-of-special-angles-using-the-unit-circle", weight: 0.3 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1525,10 +1516,7 @@ export const limitsOfInverseTrigonometricFunctions: TopicDef = {
     "further-evaluating-expressions-containing-inverse-trigonometric-functions",
     "graphing-the-inverse-tangent-function",
   ],
-  encompasses: [
-    { topic: "limits-of-trigonometric-functions", weight: 0.2 },
-    { topic: "further-evaluating-expressions-containing-inverse-trigonometric-functions", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

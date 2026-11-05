@@ -976,7 +976,7 @@ export const findingIntersectionsOfLinesAndReciprocalFunctions: TopicDef = {
   ),
   prerequisites: ["combining-graph-transformations-of-reciprocal-functions", "finding-intersections-of-lines-and-quadratic-functions"],
   encompasses: [
-    { topic: "finding-intersections-of-lines-and-quadratic-functions", weight: 0.5 },
+    { topic: "finding-intersections-of-lines-and-quadratic-functions", weight: 0.3 },
     { topic: "solving-systems-of-nonlinear-equations", weight: 0.3 },
     { topic: "graphing-reciprocal-functions", weight: 0.2 },
   ],

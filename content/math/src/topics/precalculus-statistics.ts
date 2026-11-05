@@ -336,10 +336,7 @@ const varianceAndStandardDeviation: TopicDef = {
     "用离均差平方的平均数（方差）及其平方根（标准差）度量数据的离散程度，分别针对总体和样本。",
   ),
   prerequisites: ["mean-absolute-deviation"],
-  encompasses: [
-    { topic: "mean-absolute-deviation", weight: 0.3 },
-    { topic: "mean-of-a-data-set", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "mean-of-a-data-set", weight: 0.2 }],
   xp: 16,
   standards: ["CCSS.HSS.ID.A.2"],
   knowledgePoints: [
@@ -866,7 +863,7 @@ const theZScore: TopicDef = {
     "用 z 分数把数值标准化，由 z 分数求数值，并比较来自不同分布的数值。",
   ),
   prerequisites: ["variance-and-standard-deviation"],
-  encompasses: [{ topic: "variance-and-standard-deviation", weight: 0.2 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSS.ID.A.4"],
   knowledgePoints: [
@@ -1138,10 +1135,7 @@ const theLinearCorrelationCoefficient: TopicDef = {
     "由平方和、以及由协方差和标准差计算相关系数 $r$，并了解数据作线性变换时 $r$ 如何变化。",
   ),
   prerequisites: ["sums-of-squares", "linear-correlation"],
-  encompasses: [
-    { topic: "sums-of-squares", weight: 0.3 },
-    { topic: "linear-correlation", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSS.ID.C.8"],
   knowledgePoints: [
@@ -1252,10 +1246,7 @@ const linearRegression: TopicDef = {
     "由汇总统计量求 $y$ 关于 $x$ 的最小二乘回归直线的斜率和截距，并用它作预测。",
   ),
   prerequisites: ["sums-of-squares", "predictions-with-trend-lines"],
-  encompasses: [
-    { topic: "sums-of-squares", weight: 0.3 },
-    { topic: "predictions-with-trend-lines", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "predictions-with-trend-lines", weight: 0.3 }],
   xp: 16,
   standards: ["CCSS.HSS.ID.B.6.A", "CCSS.HSS.ID.C.7"],
   knowledgePoints: [
@@ -1383,10 +1374,7 @@ const quadraticRegression: TopicDef = {
     "用二次回归模型作预测、计算残差，并求模型预测的最大值或最小值。",
   ),
   prerequisites: ["linear-regression", "selecting-a-regression-model", "the-vertex-of-a-parabola"],
-  encompasses: [
-    { topic: "selecting-a-regression-model", weight: 0.2 },
-    { topic: "the-vertex-of-a-parabola", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSS.ID.B.6.A"],
   knowledgePoints: [
@@ -1674,10 +1662,7 @@ const exponentialRegression: TopicDef = {
     "用指数回归模型作预测，读出其百分变化率，并把 $\\ln y$ 的线性拟合化为指数模型。",
   ),
   prerequisites: ["semi-log-scatter-plots", "linear-regression"],
-  encompasses: [
-    { topic: "semi-log-scatter-plots", weight: 0.3 },
-    { topic: "linear-regression", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "semi-log-scatter-plots", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSS.ID.B.6.A", "CCSS.HSF.LE.B.5"],
   knowledgePoints: [

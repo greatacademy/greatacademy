@@ -38,12 +38,7 @@ export const introductionToFirstOrderLinearOdes: TopicDef = {
     "一阶常微分方程若能写成 y' + P(x)y = Q(x) 的形式则为线性方程；当 Q(x) = 0 时为齐次方程。",
   ),
   prerequisites: ["solving-first-order-odes-using-separation-of-variables"],
-  encompasses: [
-    {
-      topic: "solving-first-order-odes-using-separation-of-variables",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -766,7 +761,7 @@ export const homogeneousFunctions: TopicDef = {
     "若对任意 $t > 0$ 都有 $f(tx, ty) = t^n f(x, y)$，则称 $f(x, y)$ 为 $n$ 次齐次函数。",
   ),
   prerequisites: ["introduction-to-first-order-linear-odes"],
-  encompasses: [{ topic: "introduction-to-first-order-linear-odes", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1205,7 +1200,7 @@ export const riccatiDifferentialEquations: TopicDef = {
     "已知黎卡提方程 $y' = q_0 + q_1 y + q_2 y^2$ 的一个特解 $y_1$，代换 $y = y_1 + \\frac{1}{u}$ 可将其化为线性方程。",
   ),
   prerequisites: ["bernoulli-differential-equations"],
-  encompasses: [{ topic: "bernoulli-differential-equations", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {

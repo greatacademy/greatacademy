@@ -129,10 +129,7 @@ export const limitsOfAbsoluteValueFunctions: TopicDef = {
     "calculating-limits-of-rational-functions-by-factoring",
     "absolute-value-graphs",
   ],
-  encompasses: [
-    { topic: "finding-the-existence-of-a-limit-using-one-sided-limits", weight: 0.3 },
-    { topic: "absolute-value-graphs", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "finding-the-existence-of-a-limit-using-one-sided-limits", weight: 0.3 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -861,7 +858,7 @@ export const specialLimitsInvolvingSine: TopicDef = {
     "利用 lim sin x / x = 1 求正弦、正切与 x 的倍数之商的极限。",
   ),
   prerequisites: ["the-squeeze-theorem", "the-product-and-quotient-rules-for-limits"],
-  encompasses: [{ topic: "the-squeeze-theorem", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1084,10 +1081,7 @@ export const limitsInvolvingTheExponentialFunction: TopicDef = {
     "利用 $\\lim_{x \\to \\infty} \\left(1 + \\frac{1}{x}\\right)^x = e$ 求形如 $\\left(1 + \\frac{a}{x}\\right)^{bx}$ 与 $(1 + ax)^{b/x}$ 的极限。",
   ),
   prerequisites: ["limits-of-exponential-functions", "continuously-compounded-interest"],
-  encompasses: [
-    { topic: "limits-of-exponential-functions", weight: 0.3 },
-    { topic: "continuously-compounded-interest", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1154,7 +1148,7 @@ export const furtherLimitsInvolvingTheExponentialFunction: TopicDef = {
     "利用 $\\lim_{x \\to 0} \\frac{e^x - 1}{x} = 1$ 求含 $e^{ax} - 1$ 的商的极限。",
   ),
   prerequisites: ["limits-involving-the-exponential-function", "special-limits-involving-sine"],
-  encompasses: [{ topic: "limits-involving-the-exponential-function", weight: 0.4 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

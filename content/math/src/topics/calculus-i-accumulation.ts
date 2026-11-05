@@ -165,7 +165,7 @@ export const evaluatingDefiniteIntegralsUsingSymmetry: TopicDef = {
   title: t("Evaluating Definite Integrals Using Symmetry", "利用对称性计算定积分"),
   summary: t("Integrate odd and even functions over intervals symmetric about zero.", "在关于零对称的区间上积分奇函数和偶函数。"),
   prerequisites: ["the-area-bounded-by-a-curve-and-the-x-axis", "properties-of-definite-integrals-involving-the-limits-of-integration"],
-  encompasses: [{ topic: "properties-of-definite-integrals-involving-the-limits-of-integration", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -412,7 +412,7 @@ export const calculatingTheDefiniteIntegralOfAFunctionGivenItsGraph: TopicDef = 
   title: t("Calculating the Definite Integral of a Function Given Its Graph", "由函数图像计算定积分"),
   summary: t("Evaluate definite integrals of piecewise linear graphs as signed areas.", "把分段线性图像的定积分作为有向面积计算。"),
   prerequisites: ["finding-the-area-between-a-curve-and-the-x-axis-when-they-intersect"],
-  encompasses: [{ topic: "finding-the-area-between-a-curve-and-the-x-axis-when-they-intersect", weight: 0.4 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -738,7 +738,7 @@ export const theSecondFundamentalTheoremOfCalculus: TopicDef = {
     "对变限积分求导，上限是 x 的函数时用链式法则。",
   ),
   prerequisites: ["the-integral-as-an-accumulation-function"],
-  encompasses: [{ topic: "the-integral-as-an-accumulation-function", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

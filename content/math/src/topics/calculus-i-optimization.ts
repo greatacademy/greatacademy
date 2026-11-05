@@ -720,7 +720,7 @@ export const newtonsMethod: TopicDef = {
     "沿切线反复逼近 x 轴，求方程根的近似值。",
   ),
   prerequisites: ["approximating-functions-using-local-linearity-and-linearization"],
-  encompasses: [{ topic: "approximating-functions-using-local-linearity-and-linearization", weight: 0.4 }],
+  encompasses: [{ topic: "approximating-functions-using-local-linearity-and-linearization", weight: 0.2 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

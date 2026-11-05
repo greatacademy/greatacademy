@@ -37,7 +37,7 @@ export const simpleClosedAndOrientedCurves: TopicDef = {
     "简单曲线不自交，闭曲线起点与终点重合，有向曲线具有指定的遍历行进方向。",
   ),
   prerequisites: ["the-arc-length-of-a-vector-valued-function"],
-  encompasses: [{ topic: "the-arc-length-of-a-vector-valued-function", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -156,7 +156,7 @@ export const lineIntegralsOfScalarFunctions: TopicDef = {
     "标量函数的曲线积分 $\\int_C f\\,ds$ 沿曲线对弧长微元 $ds = \\|\\mathbf{r}'(t)\\|\\,dt$ 积分。",
   ),
   prerequisites: ["simple-closed-and-oriented-curves"],
-  encompasses: [{ topic: "simple-closed-and-oriented-curves", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -242,7 +242,7 @@ export const propertiesOfLineIntegralsOfScalarFunctions: TopicDef = {
     "标量曲线积分与曲线方向无关：$\\int_{-C} f\\,ds = \\int_C f\\,ds$，且对被积函数是线性的。",
   ),
   prerequisites: ["line-integrals-of-scalar-functions"],
-  encompasses: [{ topic: "line-integrals-of-scalar-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -599,12 +599,7 @@ export const lineIntegralsOfScalarFunctionsOverCircles: TopicDef = {
     "在半径为 R 的圆周上，弧长微元 ds = R dθ，将标量曲线积分化为 0 到 2π 的一元定积分。",
   ),
   prerequisites: ["line-integrals-of-scalar-functions-over-line-segments"],
-  encompasses: [
-    {
-      topic: "line-integrals-of-scalar-functions-over-line-segments",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1114,12 +1109,7 @@ export const sumsOfLineIntegralsWithRespectToXAndYOverParametricCurves: TopicDef
     "沿参数曲线，$\\int_C (P\\,dx + Q\\,dy) = \\int_a^b \\left[P(x, y)\\,x'(t) + Q(x, y)\\,y'(t)\\right] dt$。",
   ),
   prerequisites: ["properties-of-line-integrals-with-respect-to-x-and-y"],
-  encompasses: [
-    {
-      topic: "properties-of-line-integrals-with-respect-to-x-and-y",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1713,12 +1703,7 @@ export const workDoneByAForceField: TopicDef = {
     "力场 $\\mathbf{F}$ 推动质点沿曲线 $C$ 运动所做的功为 $W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。",
   ),
   prerequisites: ["properties-of-line-integrals-of-vector-valued-functions"],
-  encompasses: [
-    {
-      topic: "properties-of-line-integrals-of-vector-valued-functions",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1809,13 +1794,7 @@ export const theFundamentalTheoremOfLineIntegrals: TopicDef = {
     "若 $\\mathbf{F} = \\nabla f$ 为保守场，则 $\\int_C \\nabla f \\cdot d\\mathbf{r} = f(\\mathbf{r}(b)) - f(\\mathbf{r}(a))$，只取决于 $C$ 的端点。",
   ),
   prerequisites: ["gradient-vector-fields", "line-integrals-of-vector-valued-functions-over-parametric-curves"],
-  encompasses: [
-    { topic: "gradient-vector-fields", weight: 0.3 },
-    {
-      topic: "line-integrals-of-vector-valued-functions-over-parametric-curves",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -2273,7 +2252,7 @@ export const conservationOfMechanicalEnergy: TopicDef = {
     "保守力 F = -∇U 所做的功等于势能增量的相反数，保证了系统总机械能 E = K + U 保持守恒。",
   ),
   prerequisites: ["the-fundamental-theorem-of-line-integrals"],
-  encompasses: [{ topic: "the-fundamental-theorem-of-line-integrals", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -2940,13 +2919,7 @@ export const greensTheoremInCirculationCurlForm: TopicDef = {
     "格林公式把逆时针方向的环量与旋度的二重积分联系起来：$\\oint_C (P\\,dx + Q\\,dy) = \\iint_D (Q_x - P_y)\\,dA$。",
   ),
   prerequisites: ["circulation-and-flux-across-simple-closed-plane-curves", "double-integrals-over-rectangular-domains"],
-  encompasses: [
-    {
-      topic: "circulation-and-flux-across-simple-closed-plane-curves",
-      weight: 0.3,
-    },
-    { topic: "double-integrals-over-rectangular-domains", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "double-integrals-over-rectangular-domains", weight: 0.3 }],
   xp: 10,
   knowledgePoints: [
     {

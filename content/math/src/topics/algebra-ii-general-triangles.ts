@@ -207,7 +207,6 @@ export const theLawOfSines: TopicDef = {
   prerequisites: ["calculating-angles-in-right-triangles-using-trigonometry", "angles-of-a-triangle"],
   encompasses: [
     { topic: "calculating-angles-in-right-triangles-using-trigonometry", weight: 0.3 },
-    { topic: "calculating-side-lengths-of-right-triangles-using-trigonometry", weight: 0.3 },
     { topic: "angles-of-a-triangle", weight: 0.1 },
   ],
   xp: 18,

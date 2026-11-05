@@ -237,10 +237,7 @@ export const calculatingArcLengthUsingRadians: TopicDef = {
     "用半径乘以弧度求弧长，并由弧长求半径或圆心角。",
   ),
   prerequisites: ["introduction-to-radians"],
-  encompasses: [
-    { topic: "introduction-to-radians", weight: 0.6 },
-    { topic: "calculating-arc-lengths-of-circular-sectors", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "introduction-to-radians", weight: 0.6 }],
   xp: 14,
   standards: ["CCSS.HSG.C.B.5"],
   knowledgePoints: [

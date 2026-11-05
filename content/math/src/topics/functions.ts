@@ -1182,7 +1182,7 @@ export const rangeOfAFunction: TopicDef = {
     "由数对集合、图象或区间上的一次函数公式求函数的值域。",
   ),
   prerequisites: ["domain-of-a-function", "global-extrema"],
-  encompasses: [{ topic: "global-extrema", weight: 0.5 }],
+  encompasses: [{ topic: "global-extrema", weight: 0.3 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.A.1", "CCSS.HSF.IF.B.5"],
   knowledgePoints: [

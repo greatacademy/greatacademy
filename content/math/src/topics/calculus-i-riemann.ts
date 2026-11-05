@@ -332,7 +332,7 @@ export const leftAndRightRiemannSumsInSigmaNotation: TopicDef = {
   summary: t("Write left and right Riemann sums in sigma notation and evaluate them.", "用求和符号写出左、右黎曼和并求值。"),
   prerequisites: ["approximating-areas-with-the-right-riemann-sum", "sigma-notation"],
   encompasses: [
-    { topic: "approximating-areas-with-the-right-riemann-sum", weight: 0.4 },
+    { topic: "approximating-areas-with-the-right-riemann-sum", weight: 0.2 },
     { topic: "sigma-notation", weight: 0.3 },
   ],
   xp: 10,
@@ -963,7 +963,7 @@ export const theSumAndConstantMultipleRulesForDefiniteIntegrals: TopicDef = {
   title: t("The Sum and Constant Multiple Rules for Definite Integrals", "定积分的和法则与常数倍法则"),
   summary: t("Combine known definite integrals using linearity.", "利用线性性组合已知的定积分。"),
   prerequisites: ["the-fundamental-theorem-of-calculus"],
-  encompasses: [{ topic: "the-fundamental-theorem-of-calculus", weight: 0.2 }],
+  encompasses: [],
   xp: 8,
   standards: [],
   knowledgePoints: [

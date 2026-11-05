@@ -607,7 +607,6 @@ export const areasOfSimilarPolygons: TopicDef = {
     { topic: "similarity-and-similar-polygons", weight: 0.3 },
     { topic: "side-lengths-and-angle-measures-of-similar-polygons", weight: 0.2 },
     { topic: "multiplying-fractions", weight: 0.2 },
-    { topic: "area-of-triangles", weight: 0.1 },
   ],
   xp: 12,
   standards: ["CCSS.HSG.SRT.A.2", "CCSS.7.G.A.1"],
@@ -2384,7 +2383,6 @@ export const theMidpointTheorem: TopicDef = {
   ),
   prerequisites: ["the-sas-similarity-criterion", "equations-with-parentheses"],
   encompasses: [
-    { topic: "the-sas-similarity-criterion", weight: 0.2 },
     { topic: "parallel-lines-and-transversals", weight: 0.2 },
     { topic: "equations-with-parentheses", weight: 0.2 },
   ],
@@ -2938,8 +2936,6 @@ export const theTriangleProportionalityTheorem: TopicDef = {
   prerequisites: ["the-midpoint-theorem"],
   encompasses: [
     { topic: "proportions", weight: 0.4 },
-    { topic: "the-midpoint-theorem", weight: 0.3 },
-    { topic: "the-aa-similarity-criterion", weight: 0.3 },
     { topic: "equations-with-parentheses", weight: 0.2 },
   ],
   xp: 14,

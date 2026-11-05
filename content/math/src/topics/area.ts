@@ -549,7 +549,7 @@ export const areaOfTrapezoids: TopicDef = {
   title: t("Areas of Trapezoids", "梯形的面积"),
   summary: t("Find the area of a trapezoid from its two bases and its height.", "由上下底和高求梯形的面积。"),
   prerequisites: ["area-of-triangles"],
-  encompasses: [{ topic: "area-of-triangles", weight: 0.4 }],
+  encompasses: [],
   xp: 8,
   standards: ["CCSS.6.G.A.1"],
   knowledgePoints: [
@@ -673,7 +673,6 @@ export const compositeShapes: TopicDef = {
   summary: t("Find the area and perimeter of shapes made of rectangles and triangles.", "求由长方形和三角形组成的图形的面积和周长。"),
   prerequisites: ["area-of-triangles"],
   encompasses: [
-    { topic: "area-of-triangles", weight: 0.4 },
     { topic: "area-of-rectangles-and-squares", weight: 0.6 },
     { topic: "perimeter", weight: 0.4 },
   ],

@@ -1868,10 +1868,7 @@ export const propertiesOfCongruence: TopicDef = {
     "运用全等的自反性、对称性和传递性，并改写全等式。",
   ),
   prerequisites: ["the-asa-congruence-criterion"],
-  encompasses: [
-    { topic: "equations-with-variables-on-both-sides", weight: 0.2 },
-    { topic: "the-asa-congruence-criterion", weight: 0.1 },
-  ],
+  encompasses: [{ topic: "equations-with-variables-on-both-sides", weight: 0.2 }],
   xp: 11,
   standards: ["CCSS.HSG.CO.C.9"],
   knowledgePoints: [

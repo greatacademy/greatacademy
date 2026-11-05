@@ -361,7 +361,7 @@ export const multiplesOfANumber: TopicDef = {
     "列出一个数的倍数，判断一个数是不是另一个数的倍数。",
   ),
   prerequisites: ["products-and-factors"],
-  encompasses: [{ topic: "products-and-factors", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.4.OA.B.4"],
   knowledgePoints: [
@@ -991,7 +991,7 @@ export const multiplyingUsingRepeatedAddition: TopicDef = {
     "通过把相同的数连加来做乘法，并用已知的积求下一个积。",
   ),
   prerequisites: ["products-and-factors"],
-  encompasses: [{ topic: "products-and-factors", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.3.OA.A.1", "CCSS.4.NBT.B.5"],
   knowledgePoints: [
@@ -1080,7 +1080,7 @@ export const multiplyingUsingRepeatedSubtraction: TopicDef = {
     "乘一个接近整十或整百的数时，先多乘再减去一组：9 × 24 = 10 × 24 − 24。",
   ),
   prerequisites: ["multiplying-using-repeated-addition", "multiplying-numbers-ending-in-zeros"],
-  encompasses: [{ topic: "multiplying-using-repeated-addition", weight: 0.4 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.4.NBT.B.5"],
   knowledgePoints: [
@@ -1759,7 +1759,7 @@ export const relationshipBetweenMultiplicationAndDivision: TopicDef = {
   title: t("The Relationship Between Multiplication and Division", "乘法与除法的关系"),
   summary: t("Use fact families and multiplication facts to divide.", "利用一组相关的乘除算式和乘法口诀做除法。"),
   prerequisites: ["products-and-factors"],
-  encompasses: [{ topic: "products-and-factors", weight: 0.4 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.3.OA.B.6", "CCSS.3.OA.C.7"],
   knowledgePoints: [
@@ -2002,7 +2002,7 @@ export const dividendsDivisorsQuotientsAndRemainders: TopicDef = {
     "说出除法各部分的名称，并运用 被除数 = 除数 × 商 + 余数。",
   ),
   prerequisites: ["finding-remainders"],
-  encompasses: [{ topic: "finding-remainders", weight: 0.4 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.4.NBT.B.6"],
   knowledgePoints: [
@@ -2112,7 +2112,7 @@ export const divisionWithRemainders: TopicDef = {
   summary: t("Find the quotient and the remainder of a division by a one-digit number.", "求除数是一位数的除法的商和余数。"),
   prerequisites: ["dividends-divisors-quotients-and-remainders"],
   encompasses: [
-    { topic: "dividends-divisors-quotients-and-remainders", weight: 0.5 },
+    { topic: "dividends-divisors-quotients-and-remainders", weight: 0.2 },
     { topic: "finding-remainders", weight: 0.8 },
   ],
   xp: 10,
@@ -2320,7 +2320,7 @@ export const dividingBy10100And1000: TopicDef = {
     "用末尾有 0 的数除以 10、100、1,000，以及除以 60、400 这样的数。",
   ),
   prerequisites: ["multiplying-by-10-100-and-1000", "relationship-between-multiplication-and-division"],
-  encompasses: [{ topic: "relationship-between-multiplication-and-division", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.4.NBT.B.6", "CCSS.5.NBT.A.2"],
   knowledgePoints: [
@@ -2448,10 +2448,7 @@ export const dividingUsingPlaceValueStrategies: TopicDef = {
     "把被除数拆成能整除的几部分，计算多位数除以一位数。",
   ),
   prerequisites: ["dividing-by-one-digit-numbers-using-multiplication", "dividing-by-10-100-and-1000"],
-  encompasses: [
-    { topic: "dividing-by-one-digit-numbers-using-multiplication", weight: 0.6 },
-    { topic: "dividing-by-10-100-and-1000", weight: 0.5 },
-  ],
+  encompasses: [{ topic: "dividing-by-one-digit-numbers-using-multiplication", weight: 0.6 }],
   xp: 12,
   standards: ["CCSS.4.NBT.B.6"],
   knowledgePoints: [
@@ -2522,7 +2519,7 @@ export const estimatingMultiDigitDivision: TopicDef = {
     "用相容数估算商：把被除数换成附近一个容易整除的数。",
   ),
   prerequisites: ["dividing-by-10-100-and-1000"],
-  encompasses: [{ topic: "dividing-by-10-100-and-1000", weight: 0.5 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.4.NBT.B.6"],
   knowledgePoints: [
@@ -2780,10 +2777,7 @@ export const multiDigitByOneDigitDivisionUsingAreaModels: TopicDef = {
     "用分成百、十、一三部分的面积模型计算三位数除以一位数。",
   ),
   prerequisites: ["two-digit-by-one-digit-division-using-area-models", "dividing-by-10-100-and-1000"],
-  encompasses: [
-    { topic: "two-digit-by-one-digit-division-using-area-models", weight: 0.8 },
-    { topic: "dividing-by-10-100-and-1000", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "two-digit-by-one-digit-division-using-area-models", weight: 0.8 }],
   xp: 12,
   standards: ["CCSS.4.NBT.B.6"],
   knowledgePoints: [

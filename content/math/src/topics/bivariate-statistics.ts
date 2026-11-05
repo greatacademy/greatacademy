@@ -1359,7 +1359,7 @@ export const correlationAndCausation: TopicDef = {
     "认识到相关不等于因果，找出潜在变量，并判断一项研究何时能说明因果关系。",
   ),
   prerequisites: ["linear-correlation"],
-  encompasses: [{ topic: "linear-correlation", weight: 0.2 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.HSS.ID.C.9"],
   knowledgePoints: [

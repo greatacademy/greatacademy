@@ -401,7 +401,7 @@ export const harmonicSeriesAndPSeries: TopicDef = {
     "p 级数 Σ 1/nᵖ 在 p > 1 时收敛，在 p ≤ 1 时发散；调和级数 Σ 1/n 发散。",
   ),
   prerequisites: ["the-integral-test"],
-  encompasses: [{ topic: "the-integral-test", weight: 0.4 }],
+  encompasses: [{ topic: "the-integral-test", weight: 0.2 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -627,7 +627,7 @@ export const theLimitComparisonTest: TopicDef = {
     "若 aₙ, bₙ > 0 且 aₙ/bₙ → L，0 < L < ∞，则 Σaₙ 与 Σbₙ 同时收敛或同时发散。",
   ),
   prerequisites: ["the-comparison-test"],
-  encompasses: [{ topic: "the-comparison-test", weight: 0.4 }],
+  encompasses: [{ topic: "the-comparison-test", weight: 0.2 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -862,7 +862,7 @@ export const theRatioTest: TopicDef = {
     "若 |aₙ₊₁/aₙ| → L，则 L < 1 时级数绝对收敛，L > 1 时发散，L = 1 时无法判断。",
   ),
   prerequisites: ["the-nth-term-test-for-divergence", "identifying-monotonic-sequences-using-ratios", "convergence-of-geometric-series"],
-  encompasses: [{ topic: "convergence-of-geometric-series", weight: 0.2 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1231,7 +1231,7 @@ export const determiningConvergenceParametersForInfiniteSeries: TopicDef = {
     "把含参数的级数化为 p 级数或等比级数，再解收敛的条件。",
   ),
   prerequisites: ["the-limit-comparison-test", "the-ratio-test"],
-  encompasses: [{ topic: "the-limit-comparison-test", weight: 0.2 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

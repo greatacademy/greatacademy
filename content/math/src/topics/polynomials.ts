@@ -1351,11 +1351,7 @@ export const expandingBinomialsUsingPascalsTriangle: TopicDef = {
     "用杨辉三角中的系数展开 $(a + b)^{n}$，并求展开式中某一项的系数。",
   ),
   prerequisites: ["squaring-binomials", "multiplying-polynomials"],
-  encompasses: [
-    { topic: "squaring-binomials", weight: 0.5 },
-    { topic: "power-rules", weight: 0.4 },
-    { topic: "multiplying-polynomials", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "power-rules", weight: 0.4 }],
   xp: 16,
   standards: ["CCSS.HSA.APR.C.5"],
   knowledgePoints: [

@@ -541,7 +541,6 @@ const theBinomialDistribution: TopicDef = {
   encompasses: [
     { topic: "combinations", weight: 0.3 },
     { topic: "tree-diagrams-for-independent-events", weight: 0.4 },
-    { topic: "expected-values-of-discrete-random-variables", weight: 0.2 },
     { topic: "cumulative-distribution-functions-for-discrete-random-variables", weight: 0.2 },
   ],
   xp: 20,

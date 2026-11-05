@@ -22,7 +22,7 @@ export const differentialOperators: TopicDef = {
     "微分算子把求导记为代数符号 $D = \\frac{d}{dx}$；多项式微分算子满足 $P(D)e^{rx} = P(r)e^{rx}$。",
   ),
   prerequisites: ["general-solutions-of-first-order-linear-odes"],
-  encompasses: [{ topic: "general-solutions-of-first-order-linear-odes", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -194,7 +194,7 @@ export const introductionToSecondOrderLinearOdes: TopicDef = {
     "二阶线性常微分方程 $y'' + P(x)y' + Q(x)y = g(x)$ 由初值 $y(x_0)$ 和 $y'(x_0)$ 确定 $y''(x_0)$。",
   ),
   prerequisites: ["linear-differential-operators"],
-  encompasses: [{ topic: "linear-differential-operators", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -275,7 +275,7 @@ export const theSuperpositionPrinciple: TopicDef = {
     "若 $y_1$ 与 $y_2$ 是齐次线性微分方程 $L[y] = 0$ 的解，则任意线性组合 $c_1 y_1 + c_2 y_2$ 仍是解。",
   ),
   prerequisites: ["introduction-to-second-order-linear-odes"],
-  encompasses: [{ topic: "introduction-to-second-order-linear-odes", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -357,7 +357,7 @@ export const reductionOfOrder: TopicDef = {
     "已知 $y'' + P(x)y' + Q(x)y = 0$ 的一个解 $y_1$，设 $y_2 = u(x)y_1$ 可将方程降为关于 $v = u'$ 的一阶方程。",
   ),
   prerequisites: ["the-superposition-principle"],
-  encompasses: [{ topic: "the-superposition-principle", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -437,7 +437,7 @@ export const linearIndependenceOfSolutionsToHomogeneousOdes: TopicDef = {
     "区间上的解 $y_1, y_2$ 线性无关当且仅当朗斯基行列式 $W(y_1, y_2) = y_1 y_2' - y_1' y_2$ 不为零。",
   ),
   prerequisites: ["the-superposition-principle"],
-  encompasses: [{ topic: "the-superposition-principle", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -516,12 +516,7 @@ export const generalSolutionsOfLinearOdes: TopicDef = {
     "非齐次线性常微分方程的通解为 $y = c_1 y_1 + c_2 y_2 + y_p$：齐次通解加上任一特解 $y_p$。",
   ),
   prerequisites: ["linear-independence-of-solutions-to-homogeneous-odes"],
-  encompasses: [
-    {
-      topic: "linear-independence-of-solutions-to-homogeneous-odes",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -613,12 +608,7 @@ export const abelsIdentity: TopicDef = {
     "阿贝尔恒等式：$y'' + P(x)y' + Q(x)y = 0$ 的两个解的朗斯基行列式为 $W(x) = W(x_0)\\exp\\left(-\\int_{x_0}^{x} P(t)\\,dt\\right)$。",
   ),
   prerequisites: ["linear-independence-of-solutions-to-homogeneous-odes"],
-  encompasses: [
-    {
-      topic: "linear-independence-of-solutions-to-homogeneous-odes",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1077,12 +1067,7 @@ export const secondOrderInhomogeneousOdesWithPolynomialForcing: TopicDef = {
     "当 $c \\ne 0$ 时，对 $y'' + by' + cy = P(x)$，待定系数法设同次多项式特解 $y_p = A_n x^n + \\cdots + A_0$。",
   ),
   prerequisites: ["second-order-homogeneous-initial-value-problems"],
-  encompasses: [
-    {
-      topic: "second-order-homogeneous-initial-value-problems",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1174,12 +1159,7 @@ export const secondOrderInhomogeneousOdesWithExponentialForcing: TopicDef = {
     "对 $y'' + by' + cy = Ke^{mx}$，当 $m$ 不是特征根时，特解为 $y_p = Ae^{mx}$，其中 $A = \\frac{K}{P(m)}$。",
   ),
   prerequisites: ["second-order-inhomogeneous-odes-with-polynomial-forcing"],
-  encompasses: [
-    {
-      topic: "second-order-inhomogeneous-odes-with-polynomial-forcing",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1264,12 +1244,7 @@ export const secondOrderInhomogeneousOdesWithSinusoidalForcing: TopicDef = {
     "对 $y'' + \\omega_0^2 y = F_0 \\cos \\omega x$（$\\omega \\ne \\omega_0$），特解为 $y_p = \\frac{F_0}{\\omega_0^2 - \\omega^2} \\cos \\omega x$。",
   ),
   prerequisites: ["second-order-inhomogeneous-odes-with-exponential-forcing"],
-  encompasses: [
-    {
-      topic: "second-order-inhomogeneous-odes-with-exponential-forcing",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1834,12 +1809,7 @@ export const variationOfParametersForSecondOrderOdes: TopicDef = {
     "对 $y'' + P(x)y' + Q(x)y = g(x)$，设 $y_p = u_1 y_1 + u_2 y_2$ 并附加条件 $u_1' y_1 + u_2' y_2 = 0$，得 $u_1' = -\\frac{y_2 g}{W}$、$u_2' = \\frac{y_1 g}{W}$。",
   ),
   prerequisites: ["variation-of-parameters-for-first-order-linear-odes", "linear-independence-of-solutions-to-homogeneous-odes"],
-  encompasses: [
-    {
-      topic: "variation-of-parameters-for-first-order-linear-odes",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {

@@ -37,7 +37,7 @@ export const doubleSummations: TopicDef = {
     "二重求和对两个指标变量上的项求和，先计算内层求和，或在可分离时拆分计算。",
   ),
   prerequisites: ["left-and-right-riemann-sums-in-sigma-notation"],
-  encompasses: [{ topic: "left-and-right-riemann-sums-in-sigma-notation", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -119,7 +119,7 @@ export const partitionsOfIntervals: TopicDef = {
     "区间 [a, b] 的分割 P 将区间划分为子区间；分割的模 ||P|| 是各子区间宽度的最大值。",
   ),
   prerequisites: ["double-summations"],
-  encompasses: [{ topic: "double-summations", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -764,7 +764,7 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
     "由富比尼定理，连续函数在矩形 [a, b] × [c, d] 上的二重积分等于按任意顺序计算的二次积分。",
   ),
   prerequisites: ["defining-double-integrals-using-lower-and-upper-riemann-sums"],
-  encompasses: [{ topic: "defining-double-integrals-using-lower-and-upper-riemann-sums", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1269,10 +1269,7 @@ export const doubleIntegralsOverPartitionedRegions: TopicDef = {
     "当区域的上下边界呈分段定义时，将二重积分拆分为各不重叠子区域上的积分之和。",
   ),
   prerequisites: ["double-integrals-over-type-i-regions", "double-integrals-over-type-ii-regions"],
-  encompasses: [
-    { topic: "double-integrals-over-type-i-regions", weight: 0.3 },
-    { topic: "double-integrals-over-type-ii-regions", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1360,7 +1357,7 @@ export const changingTheOrderOfIntegrationInDoubleIntegrals: TopicDef = {
     "通过交换积分次序，往往能将原本难以甚至无法求出初等原函数的二次积分转化为易求的积分。",
   ),
   prerequisites: ["double-integrals-over-partitioned-regions"],
-  encompasses: [{ topic: "double-integrals-over-partitioned-regions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1603,7 +1600,7 @@ export const typeIIiAndIiiRegionsInThreeDimensionalSpace: TopicDef = {
     "Type I 型区域向 xy 平面投影（z 处于两曲面之间），Type II 向 xz 平面投影（y 处于两曲面之间），Type III 向 yz 平面投影（x 处于两曲面之间）。",
   ),
   prerequisites: ["triple-integrals-over-rectangular-domains"],
-  encompasses: [{ topic: "triple-integrals-over-rectangular-domains", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -2212,13 +2209,7 @@ export const doubleIntegralsInPlanePolarCoordinates: TopicDef = {
     "转化为平面极坐标会引入面积微元 dA = r dr dθ，能极大简化在圆形或扇形区域上的积分计算。",
   ),
   prerequisites: ["changing-the-order-of-integration-in-double-integrals", "polar-coordinate-transformations"],
-  encompasses: [
-    {
-      topic: "changing-the-order-of-integration-in-double-integrals",
-      weight: 0.3,
-    },
-    { topic: "polar-coordinate-transformations", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "polar-coordinate-transformations", weight: 0.3 }],
   xp: 10,
   knowledgePoints: [
     {
@@ -2490,10 +2481,7 @@ export const computingDoubleIntegralsUsingAChangeOfVariables: TopicDef = {
     "变量代换公式 $\\iint_R f(x, y)\\,dA = \\iint_G f(x(u, v), y(u, v))\\,|J(u, v)|\\,du\\,dv$ 把复杂区域化为矩形等简单区域。",
   ),
   prerequisites: ["computing-areas-using-a-change-of-variables", "double-integrals-in-plane-polar-coordinates"],
-  encompasses: [
-    { topic: "computing-areas-using-a-change-of-variables", weight: 0.3 },
-    { topic: "double-integrals-in-plane-polar-coordinates", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "computing-areas-using-a-change-of-variables", weight: 0.3 }],
   xp: 10,
   knowledgePoints: [
     {
@@ -2956,10 +2944,6 @@ export const tripleIntegralsInCylindricalPolarCoordinates: TopicDef = {
       topic: "surfaces-in-cylindrical-polar-coordinates",
       weight: 0.3,
     },
-    {
-      topic: "changing-the-order-of-integration-in-triple-integrals-changing-region",
-      weight: 0.3,
-    },
   ],
   xp: 10,
   knowledgePoints: [
@@ -3041,10 +3025,6 @@ export const tripleIntegralsInSphericalPolarCoordinates: TopicDef = {
   encompasses: [
     {
       topic: "surfaces-in-spherical-polar-coordinates",
-      weight: 0.3,
-    },
-    {
-      topic: "triple-integrals-in-cylindrical-polar-coordinates",
       weight: 0.3,
     },
   ],

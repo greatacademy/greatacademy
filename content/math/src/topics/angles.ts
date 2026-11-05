@@ -189,7 +189,7 @@ export const complementaryAndSupplementaryAngles: TopicDef = {
   title: t("Complementary and Supplementary Angles", "互余与互补的角"),
   summary: t("Find the complement and the supplement of an angle.", "求一个角的余角和补角。"),
   prerequisites: ["angles-and-angle-measures"],
-  encompasses: [{ topic: "angles-and-angle-measures", weight: 0.5 }],
+  encompasses: [{ topic: "angles-and-angle-measures", weight: 0.2 }],
   xp: 8,
   standards: ["CCSS.7.G.B.5"],
   knowledgePoints: [
@@ -319,7 +319,7 @@ export const verticalAngles: TopicDef = {
   ),
   prerequisites: ["complementary-and-supplementary-angles", "equations-with-variables-on-both-sides"],
   encompasses: [
-    { topic: "complementary-and-supplementary-angles", weight: 0.4 },
+    { topic: "complementary-and-supplementary-angles", weight: 0.2 },
     { topic: "equations-with-variables-on-both-sides", weight: 0.3 },
   ],
   xp: 10,
@@ -725,7 +725,7 @@ export const anglesOfATriangle: TopicDef = {
   title: t("Interior Angles of Triangles", "三角形的内角"),
   summary: t("Use the fact that the angles of a triangle add up to 180° to find unknown angles.", "利用三角形内角和为 180° 求未知角。"),
   prerequisites: ["parallel-lines-and-transversals"],
-  encompasses: [{ topic: "complementary-and-supplementary-angles", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: ["CCSS.8.G.A.5"],
   knowledgePoints: [

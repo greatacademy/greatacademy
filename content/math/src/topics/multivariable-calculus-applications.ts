@@ -16,12 +16,7 @@ export const velocityAndAccelerationAsFunctionsOfDisplacement: TopicDef = {
     "当速度以位置的函数 v(x) 给出时，通过链式法则计算加速度：a(x) = v dv/dx。",
   ),
   prerequisites: ["calculating-velocity-for-straight-line-motion-using-differentiation"],
-  encompasses: [
-    {
-      topic: "calculating-velocity-for-straight-line-motion-using-differentiation",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -193,7 +188,7 @@ export const theComponentsOfAcceleration: TopicDef = {
     "加速度可正交分解为切向分量与法向分量：$\\mathbf{a} = a_T\\mathbf{T} + a_N\\mathbf{N}$，其中 $a_T = v'$，$a_N = \\kappa v^2$。",
   ),
   prerequisites: ["principal-normal-vectors", "differentiation-rules-for-vector-valued-functions"],
-  encompasses: [{ topic: "principal-normal-vectors", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -280,12 +275,7 @@ export const theWorkEnergyPrinciple: TopicDef = {
     "合外力沿路径的线积分等于所做的总功，也等于动能的变化量：$W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\Delta K$。",
   ),
   prerequisites: ["interpreting-line-integrals-of-vector-valued-functions"],
-  encompasses: [
-    {
-      topic: "interpreting-line-integrals-of-vector-valued-functions",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -711,7 +701,7 @@ export const momentsAndCentersOfMassOfThinRods: TopicDef = {
     "对于位于 [0, L] 且线密度为 λ(x) 的细直棒，总质量为 m = ∫ λ dx，质心坐标为 x̄ = (1/m) ∫ x λ dx。",
   ),
   prerequisites: ["moments-and-center-of-mass"],
-  encompasses: [{ topic: "moments-and-center-of-mass", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -878,12 +868,7 @@ export const momentsOfInertiaOfLaminasAboutTheCoordinateAxes: TopicDef = {
     "薄片对坐标轴的转动惯量为 $I_x = \\iint y^2\\rho\\,dA$ 与 $I_y = \\iint x^2\\rho\\,dA$。",
   ),
   prerequisites: ["moments-and-centers-of-mass-of-plane-laminas"],
-  encompasses: [
-    {
-      topic: "moments-and-centers-of-mass-of-plane-laminas",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {

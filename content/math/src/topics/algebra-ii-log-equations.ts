@@ -761,7 +761,6 @@ export const solvingLogarithmicEquationsUsingTheZeroProductProperty: TopicDef = 
   prerequisites: ["solving-logarithmic-equations", "solving-exponential-equations-using-the-zero-product-property"],
   encompasses: [
     { topic: "solving-logarithmic-equations", weight: 0.5 },
-    { topic: "solving-exponential-equations-using-the-zero-product-property", weight: 0.3 },
     { topic: "solving-quadratic-equations-by-factoring", weight: 0.3 },
   ],
   xp: 15,

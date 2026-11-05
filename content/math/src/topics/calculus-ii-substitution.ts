@@ -97,10 +97,7 @@ export const integratingAlgebraicFunctionsUsingSubstitution: TopicDef = {
     "用 u 代换内层函数，求以一次式或 x 的幂为内层的幂函数的积分。",
   ),
   prerequisites: ["the-constant-multiple-rule-for-indefinite-integrals"],
-  encompasses: [
-    { topic: "the-constant-multiple-rule-for-indefinite-integrals", weight: 0.4 },
-    { topic: "the-chain-rule-for-differentiation", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "the-constant-multiple-rule-for-indefinite-integrals", weight: 0.4 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -296,7 +293,7 @@ export const integrationUsingSubstitution: TopicDef = {
     "选取导数作为因子出现的内层函数为 u，求 f(g(x))g'(x) 的积分。",
   ),
   prerequisites: ["integrating-algebraic-functions-using-substitution"],
-  encompasses: [{ topic: "integrating-algebraic-functions-using-substitution", weight: 0.5 }],
+  encompasses: [{ topic: "integrating-algebraic-functions-using-substitution", weight: 0.3 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

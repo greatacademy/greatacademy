@@ -2129,10 +2129,7 @@ export const calculatingAnglesInRightTrianglesUsingTrigonometry: TopicDef = {
     "用反正弦、反余弦和反正切，由直角三角形的两条边求锐角。",
   ),
   prerequisites: ["calculating-side-lengths-of-right-triangles-using-trigonometry"],
-  encompasses: [
-    { topic: "the-trigonometric-ratios", weight: 0.4 },
-    { topic: "calculating-side-lengths-of-right-triangles-using-trigonometry", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "the-trigonometric-ratios", weight: 0.4 }],
   xp: 14,
   standards: ["CCSS.HSG.SRT.C.8"],
   knowledgePoints: [
@@ -3207,7 +3204,7 @@ export const solvingMultipleRightTrianglesUsingTrigonometry: TopicDef = {
   ),
   prerequisites: ["modeling-with-trigonometry"],
   encompasses: [
-    { topic: "modeling-with-trigonometry", weight: 0.4 },
+    { topic: "modeling-with-trigonometry", weight: 0.2 },
     { topic: "calculating-side-lengths-of-right-triangles-using-trigonometry", weight: 0.4 },
   ],
   xp: 18,

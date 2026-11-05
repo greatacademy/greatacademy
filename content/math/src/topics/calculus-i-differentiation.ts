@@ -317,10 +317,7 @@ export const continuityAndDifferentiabilityOfFunctions: TopicDef = {
     "识别函数在何处不可导，并理解可导性与连续性的关系。",
   ),
   prerequisites: ["defining-the-derivative-using-derivative-notation", "defining-continuity-at-a-point"],
-  encompasses: [
-    { topic: "defining-the-derivative-using-derivative-notation", weight: 0.3 },
-    { topic: "defining-continuity-at-a-point", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "defining-continuity-at-a-point", weight: 0.3 }],
   xp: 12,
   standards: [],
   knowledgePoints: [
@@ -498,10 +495,7 @@ export const thePowerRuleForDifferentiation: TopicDef = {
     "用幂法则对 x 的幂求导，包括负指数幂和分数指数幂。",
   ),
   prerequisites: ["defining-the-derivative-using-derivative-notation", "writing-radicals-using-fractional-exponents"],
-  encompasses: [
-    { topic: "defining-the-derivative-using-derivative-notation", weight: 0.3 },
-    { topic: "writing-radicals-using-fractional-exponents", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "writing-radicals-using-fractional-exponents", weight: 0.2 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

@@ -133,10 +133,7 @@ export const findingRootsOfFunctionsUsingAGraphingCalculator: TopicDef = {
     "利用连续函数变号处的左、右边界锁定根所在的区间，并通过求差函数 g(x) - c = 0 的零点求解方程 g(x) = c。",
   ),
   prerequisites: ["evaluating-expressions-using-a-graphing-calculator", "the-intermediate-value-theorem"],
-  encompasses: [
-    { topic: "evaluating-expressions-using-a-graphing-calculator", weight: 0.4 },
-    { topic: "the-intermediate-value-theorem", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "the-intermediate-value-theorem", weight: 0.4 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -293,10 +290,7 @@ export const findingExtremaOfFunctionsUsingAGraphingCalculator: TopicDef = {
     "使用最小值/最大值命令直接定位局部极值，或通过寻找导函数图像变号的零点求极值位置。",
   ),
   prerequisites: ["finding-roots-of-functions-using-a-graphing-calculator", "using-the-first-derivative-test-to-classify-local-extrema"],
-  encompasses: [
-    { topic: "finding-roots-of-functions-using-a-graphing-calculator", weight: 0.5 },
-    { topic: "using-the-first-derivative-test-to-classify-local-extrema", weight: 0.4 },
-  ],
+  encompasses: [{ topic: "using-the-first-derivative-test-to-classify-local-extrema", weight: 0.2 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -375,10 +369,7 @@ export const findingDerivativesUsingAGraphingCalculator: TopicDef = {
     "使用计算器的对称差商求导命令计算数值导数，并理解其在尖角不可导点处的表现。",
   ),
   prerequisites: ["evaluating-expressions-using-a-graphing-calculator", "estimating-derivatives-using-a-central-difference-quotient"],
-  encompasses: [
-    { topic: "evaluating-expressions-using-a-graphing-calculator", weight: 0.3 },
-    { topic: "estimating-derivatives-using-a-central-difference-quotient", weight: 0.7 },
-  ],
+  encompasses: [{ topic: "estimating-derivatives-using-a-central-difference-quotient", weight: 0.7 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -450,10 +441,7 @@ export const findingDefiniteIntegralsUsingAGraphingCalculator: TopicDef = {
     "结合微积分基本定理与绝对值被积函数，使用数值积分（fnInt）计算净变化量与总路程。",
   ),
   prerequisites: ["finding-derivatives-using-a-graphing-calculator", "the-fundamental-theorem-of-calculus"],
-  encompasses: [
-    { topic: "finding-derivatives-using-a-graphing-calculator", weight: 0.4 },
-    { topic: "the-fundamental-theorem-of-calculus", weight: 0.5 },
-  ],
+  encompasses: [{ topic: "the-fundamental-theorem-of-calculus", weight: 0.3 }],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -540,7 +528,7 @@ export const findingImproperIntegralsUsingAGraphingCalculator: TopicDef = {
   prerequisites: ["finding-definite-integrals-using-a-graphing-calculator", "improper-integrals"],
   encompasses: [
     { topic: "finding-definite-integrals-using-a-graphing-calculator", weight: 0.4 },
-    { topic: "improper-integrals", weight: 0.6 },
+    { topic: "improper-integrals", weight: 0.3 },
   ],
   xp: 10,
   standards: [],
@@ -768,10 +756,7 @@ export const plottingParametricAndPolarCurvesUsingTechnology: TopicDef = {
     "在计算器上绘制参数曲线与极坐标曲线，以计算质点速率、切线斜率以及极坐标曲线的变化率。",
   ),
   prerequisites: ["exploring-functions-using-technology", "differentiating-curves-given-in-polar-form"],
-  encompasses: [
-    { topic: "exploring-functions-using-technology", weight: 0.3 },
-    { topic: "differentiating-curves-given-in-polar-form", weight: 0.5 },
-  ],
+  encompasses: [{ topic: "differentiating-curves-given-in-polar-form", weight: 0.5 }],
   xp: 10,
   standards: [],
   knowledgePoints: [

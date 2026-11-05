@@ -2336,7 +2336,6 @@ export const intersectionOfTwoLines: TopicDef = {
   prerequisites: ["solving-systems-by-substitution", "elimination-with-two-transformations"],
   encompasses: [
     { topic: "solving-systems-by-substitution", weight: 0.5 },
-    { topic: "elimination-with-two-transformations", weight: 0.3 },
     { topic: "slope-of-a-line", weight: 0.3 },
     { topic: "operations-with-rational-numbers", weight: 0.2 },
   ],

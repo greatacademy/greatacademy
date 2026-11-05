@@ -86,7 +86,7 @@ const graphical = topic(
   ["The Graphical Method for Linear Programs", "线性规划的图解法"],
   ["Find corner points of a feasible region, and locate the optimum among them.", "求可行域的顶点，并在其中找到最优解。"],
   ["formulating-linear-programs"],
-  [["formulating-linear-programs", 0.3]],
+  [],
   [
     point(
       "finding-a-corner-point",

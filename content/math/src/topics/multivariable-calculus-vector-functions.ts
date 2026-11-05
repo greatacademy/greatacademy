@@ -65,7 +65,7 @@ export const theDomainOfAVectorValuedFunction: TopicDef = {
     "向量值函数的定义域是其所有分量函数定义域的交集。",
   ),
   prerequisites: ["defining-vector-valued-functions", "describing-sets-using-set-builder-notation"],
-  encompasses: [{ topic: "defining-vector-valued-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -356,7 +356,7 @@ export const continuityAndDifferentiabilityOfVectorValuedFunctions: TopicDef = {
     "向量值函数在某点连续或可微，当且仅当其每一个分量函数在该点连续或可微。",
   ),
   prerequisites: ["defining-vector-valued-functions", "defining-continuity-at-a-point"],
-  encompasses: [{ topic: "defining-vector-valued-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1543,7 +1543,7 @@ export const theCurvatureOfAPlaneCurve: TopicDef = {
     "对于平面曲线 $y = f(x)$，曲率为 $\\kappa(x) = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}$。",
   ),
   prerequisites: ["introduction-to-curvature", "second-and-higher-order-derivatives"],
-  encompasses: [{ topic: "introduction-to-curvature", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1637,7 +1637,7 @@ export const vectorFields: TopicDef = {
     "向量场为空间中的每个点赋予一个向量 F(x, y) 或 F(x, y, z)。",
   ),
   prerequisites: ["defining-vector-valued-functions", "three-dimensional-vectors-in-component-form"],
-  encompasses: [{ topic: "defining-vector-valued-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -2047,7 +2047,7 @@ export const calculatingPotentialFunctions: TopicDef = {
     "势函数 f 满足 ∇f = F，可通过偏积分和比较分量求得。",
   ),
   prerequisites: ["conservative-vector-fields-in-the-cartesian-plane"],
-  encompasses: [{ topic: "conservative-vector-fields-in-the-cartesian-plane", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -2138,7 +2138,7 @@ export const connectedAndSimplyConnectedRegions: TopicDef = {
     "若区域内任意两点可用路径相连则为连通区域；若每条闭曲线均可在区域内连续收缩为一点（无孔洞）则为单连通区域。",
   ),
   prerequisites: ["conservative-vector-fields-in-the-cartesian-plane"],
-  encompasses: [{ topic: "conservative-vector-fields-in-the-cartesian-plane", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -2377,7 +2377,7 @@ export const theDivergenceOfAVectorField: TopicDef = {
     "散度 div F = ∇ · F 度量向量场单位体积向外的净通量。",
   ),
   prerequisites: ["vector-fields"],
-  encompasses: [{ topic: "vector-fields", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -2545,7 +2545,7 @@ export const theCurlOfAVectorField: TopicDef = {
     "F 的旋度 curl F = ∇ × F 是一个度量流体微元在各点附近旋转趋势的向量场。",
   ),
   prerequisites: ["the-cross-product-of-two-vectors", "vector-fields"],
-  encompasses: [{ topic: "vector-fields", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {

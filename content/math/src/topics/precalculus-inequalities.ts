@@ -475,10 +475,7 @@ export const solvingQuadraticInequalitiesFromGraphs: TopicDef = {
     "由二次函数的图象读出 $f(x) > 0$、$f(x) \\le 0$ 和 $f(x) \\ge k$ 的解。",
   ),
   prerequisites: ["solving-elementary-quadratic-inequalities", "roots-of-quadratic-functions"],
-  encompasses: [
-    { topic: "roots-of-quadratic-functions", weight: 0.3 },
-    { topic: "solving-elementary-quadratic-inequalities", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "roots-of-quadratic-functions", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSA.REI.D.11"],
   knowledgePoints: [

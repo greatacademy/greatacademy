@@ -213,7 +213,7 @@ export const orthogonalTrajectories: TopicDef = {
     "处处与已知曲线族垂直相交的曲线族称为正交轨迹族，其满足微分方程 dy/dx = -1/f(x, y)，其中 dy/dx = f(x, y) 为原曲线族的微分方程。",
   ),
   prerequisites: ["general-solutions-of-first-order-linear-odes"],
-  encompasses: [{ topic: "general-solutions-of-first-order-linear-odes", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -511,12 +511,7 @@ export const fallingBodyProblemsWithLinearDrag: TopicDef = {
     "在重力与线性阻力 $-bv$ 作用下，向下速度满足 $m\\frac{dv}{dt} = mg - bv$，终端速度为 $v_{\\text{term}} = \\frac{mg}{b}$。",
   ),
   prerequisites: ["determining-properties-of-objects-described-as-functions-of-displacement"],
-  encompasses: [
-    {
-      topic: "determining-properties-of-objects-described-as-functions-of-displacement",
-      weight: 0.3,
-    },
-  ],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {

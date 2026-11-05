@@ -1293,10 +1293,7 @@ export const speedTimeGraphs: TopicDef = {
     "从速度—时间图中读出速度，描述运动，并由斜率求加速度。",
   ),
   prerequisites: ["distance-time-graphs"],
-  encompasses: [
-    { topic: "distance-time-graphs", weight: 0.3 },
-    { topic: "slope-of-a-line", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "slope-of-a-line", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.8.F.B.5", "CCSS.HSF.IF.B.6"],
   knowledgePoints: [

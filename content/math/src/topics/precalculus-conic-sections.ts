@@ -142,7 +142,7 @@ export const introductionToEllipses: TopicDef = {
     "理解椭圆的几何定义（到两焦点的距离之和为定值 2a），并识别椭圆的中心、长轴和短轴。",
   ),
   prerequisites: ["equations-of-circles"],
-  encompasses: [{ topic: "equations-of-circles", weight: 0.5 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.HSG.GPE.A.3"],
   knowledgePoints: [
@@ -1637,7 +1637,7 @@ export const conjugateAxesOfHyperbolas: TopicDef = {
     "识别双曲线长为 2b 的虚轴以及尺寸为 2a × 2b 的中心基本矩形。",
   ),
   prerequisites: ["transverse-axes-of-hyperbolas"],
-  encompasses: [{ topic: "transverse-axes-of-hyperbolas", weight: 0.6 }],
+  encompasses: [{ topic: "transverse-axes-of-hyperbolas", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.HSG.GPE.A.3"],
   knowledgePoints: [

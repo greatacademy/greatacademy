@@ -1947,10 +1947,7 @@ export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
     "把杨辉三角中的数读作 $\\binom{n}{k}$，并运用帕斯卡法则 $\\binom{n}{k} + \\binom{n}{k+1} = \\binom{n+1}{k+1}$ 和对称性 $\\binom{n}{k} = \\binom{n}{n-k}$。",
   ),
   prerequisites: ["combinations", "expanding-binomials-using-pascals-triangle"],
-  encompasses: [
-    { topic: "combinations", weight: 0.4 },
-    { topic: "expanding-binomials-using-pascals-triangle", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "combinations", weight: 0.4 }],
   xp: 14,
   standards: ["CCSS.HSA.APR.C.5"],
   knowledgePoints: [

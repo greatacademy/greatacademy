@@ -292,10 +292,7 @@ export const graphingElementaryCubicFunctions: TopicDef = {
     "画出 $y = x^{3}$ 及其变换 $y = a(x - h)^{3} + k$ 的图象，读出曲线的对称中心和走向。",
   ),
   prerequisites: ["combining-graph-transformations-two-operations"],
-  encompasses: [
-    { topic: "combining-graph-transformations-two-operations", weight: 0.3 },
-    { topic: "graphing-elementary-quadratic-functions", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "combining-graph-transformations-two-operations", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.IF.C.7.C", "CCSS.HSF.BF.B.3"],
   knowledgePoints: [

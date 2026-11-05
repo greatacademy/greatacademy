@@ -301,7 +301,7 @@ export const theTriangleLawForTheAdditionOfTwoVectors: TopicDef = {
     "应用三角形法则与平行四边形法则求解向量的和（合向量）与差。",
   ),
   prerequisites: ["introduction-to-vectors"],
-  encompasses: [{ topic: "introduction-to-vectors", weight: 0.5 }],
+  encompasses: [{ topic: "introduction-to-vectors", weight: 0.2 }],
   xp: 16,
   standards: ["CCSS.HSN.VM.B.4"],
   knowledgePoints: [
@@ -1632,7 +1632,7 @@ export const calculatingTheDirectionOfCartesianVectorsIn2d: TopicDef = {
     "利用反正切函数与象限分析，由二维向量的坐标分量计算其方向角 θ ∈ [0°, 360°)。",
   ),
   prerequisites: ["calculating-the-magnitude-of-cartesian-vectors-in-2d"],
-  encompasses: [{ topic: "calculating-the-magnitude-of-cartesian-vectors-in-2d", weight: 0.5 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.A.1"],
   knowledgePoints: [
@@ -1737,7 +1737,7 @@ export const calculatingTheComponentsOfCartesianVectorsIn2d: TopicDef = {
     "利用三角函数，根据二维向量的模长与方向角求解其水平与垂直坐标分量。",
   ),
   prerequisites: ["calculating-the-direction-of-cartesian-vectors-in-2d"],
-  encompasses: [{ topic: "calculating-the-direction-of-cartesian-vectors-in-2d", weight: 0.5 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.A.1", "CCSS.HSN.VM.A.2"],
   knowledgePoints: [
@@ -1869,7 +1869,7 @@ export const velocityAndAccelerationForPlaneMotion: TopicDef = {
     "使用速度与加速度向量为平面运动建模，将速率计算为速度向量的模长，并求解合速度。",
   ),
   prerequisites: ["calculating-the-components-of-cartesian-vectors-in-2d"],
-  encompasses: [{ topic: "calculating-the-components-of-cartesian-vectors-in-2d", weight: 0.5 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.A.3"],
   knowledgePoints: [

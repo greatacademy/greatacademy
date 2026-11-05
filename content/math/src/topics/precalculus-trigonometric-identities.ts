@@ -184,7 +184,7 @@ export const graphingTheInverseSineFunction: TopicDef = {
     "描述反正弦函数 y = arcsin(x) 的定义域、值域、关键点与对称性。",
   ),
   prerequisites: ["graphing-sine-and-cosine", "calculating-the-inverse-of-a-function"],
-  encompasses: [{ topic: "calculating-the-inverse-of-a-function", weight: 0.3 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.TF.B.6"],
   knowledgePoints: [
@@ -834,7 +834,7 @@ export const simplifyingExpressionsUsingBasicTrigonometricIdentities: TopicDef =
     "利用倒数关系与商数关系化简三角函数的乘积与分式。",
   ),
   prerequisites: ["further-extensions-of-the-special-trigonometric-ratios"],
-  encompasses: [{ topic: "further-extensions-of-the-special-trigonometric-ratios", weight: 0.3 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.TF.C.8"],
   knowledgePoints: [
@@ -2145,7 +2145,7 @@ export const theDoubleAngleFormulaForSine: TopicDef = {
     "利用 sin(2θ) = 2 sin(θ) cos(θ) 改写或求值三角表达式。",
   ),
   prerequisites: ["the-sum-and-difference-formulas-for-sine"],
-  encompasses: [{ topic: "the-sum-and-difference-formulas-for-sine", weight: 0.4 }],
+  encompasses: [],
   xp: 16,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [
@@ -3062,11 +3062,7 @@ export const simplifyingExpressionsUsingTheDoubleAngleFormulaForTangent: TopicDe
     "the-double-angle-formula-for-sine",
     "the-double-angle-formula-for-cosine",
   ],
-  encompasses: [
-    { topic: "the-sum-and-difference-formulas-for-tangent", weight: 0.4 },
-    { topic: "the-double-angle-formula-for-sine", weight: 0.2 },
-    { topic: "the-double-angle-formula-for-cosine", weight: 0.2 },
-  ],
+  encompasses: [],
   xp: 18,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [

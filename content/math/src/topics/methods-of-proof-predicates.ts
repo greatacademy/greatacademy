@@ -930,7 +930,7 @@ export const negatingQuantifiedStatements: TopicDef = {
   title: t("Negating Quantified Statements", "否定量化命题"),
   summary: t("¬(∀x, P(x)) ≡ ∃x, ¬P(x) and ¬(∃x, P(x)) ≡ ∀x, ¬P(x).", "¬(∀x, P(x)) ≡ ∃x, ¬P(x)，¬(∃x, P(x)) ≡ ∀x, ¬P(x)。"),
   prerequisites: ["universal-and-existential-quantifiers", "simplifying-predicate-expressions-using-de-morgans-laws"],
-  encompasses: [{ topic: "universal-and-existential-quantifiers", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1518,7 +1518,7 @@ export const disjunctiveSyllogismAndTransitivityOfImplication: TopicDef = {
   title: t("Disjunctive Syllogism and Transitivity of Implication", "选言推理与蕴涵的传递性"),
   summary: t("From p ∨ q and ¬p conclude q; from p ⇒ q and q ⇒ r conclude p ⇒ r.", "由 p ∨ q 与 ¬p 推出 q；由 p ⇒ q 与 q ⇒ r 推出 p ⇒ r。"),
   prerequisites: ["implication-elimination-and-denying-the-consequent"],
-  encompasses: [{ topic: "implication-elimination-and-denying-the-consequent", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

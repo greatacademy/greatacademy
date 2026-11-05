@@ -16,7 +16,7 @@ export const parametricSurfaces: TopicDef = {
     "空间中的参数曲面由向量函数 r(u, v) = ⟨x(u, v), y(u, v), z(u, v)⟩ 在参数区域 D 上的变动所描述。",
   ),
   prerequisites: ["tangent-planes-to-surfaces"],
-  encompasses: [{ topic: "tangent-planes-to-surfaces", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -612,7 +612,7 @@ export const areasOfSurfaces: TopicDef = {
     "对于曲面 $z = f(x, y)$，面积微元为 $dS = \\sqrt{1 + f_x^2 + f_y^2}\\,dA$。",
   ),
   prerequisites: ["double-integrals-over-rectangular-domains", "tangent-planes-to-surfaces"],
-  encompasses: [{ topic: "tangent-planes-to-surfaces", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1309,7 +1309,7 @@ export const theDivergenceTheorem: TopicDef = {
     "the-divergence-of-a-vector-field",
     "triple-integrals-over-rectangular-domains",
   ],
-  encompasses: [{ topic: "calculating-flux-through-closed-surfaces", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {

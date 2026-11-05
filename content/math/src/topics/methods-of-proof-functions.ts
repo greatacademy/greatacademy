@@ -201,7 +201,7 @@ export const provingTheFiniteLimitOfASequence: TopicDef = {
     "aₙ → L 意味着 |aₙ − L| → 0；化简 |aₙ − L|，再对每个 ε 求出 N。",
   ),
   prerequisites: ["proving-the-limit-of-a-null-sequence"],
-  encompasses: [{ topic: "limits-of-sequences", weight: 0.2 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

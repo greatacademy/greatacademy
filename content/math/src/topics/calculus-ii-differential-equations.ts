@@ -116,7 +116,7 @@ export const verifyingSolutionsOfDifferentialEquations: TopicDef = {
     "对候选函数求导，把它及其导数代入方程，检查两边对所有 x 都相等。",
   ),
   prerequisites: ["introduction-to-differential-equations"],
-  encompasses: [{ topic: "introduction-to-differential-equations", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -1118,7 +1118,7 @@ export const logisticGrowthModelsWithFirstOrderOdes: TopicDef = {
     "dP/dt = kP(1 − P/K) 描述的增长在 P 接近环境容纳量 K 时放缓。",
   ),
   prerequisites: ["exponential-growth-and-decay-models-with-first-order-odes", "equilibrium-solutions-of-first-order-odes"],
-  encompasses: [{ topic: "exponential-growth-and-decay-models-with-first-order-odes", weight: 0.2 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

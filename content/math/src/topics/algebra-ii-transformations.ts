@@ -369,10 +369,7 @@ export const verticalTranslationsOfFunctions: TopicDef = {
     "把任意函数的图象上下平移：y = f(x) + k 把每个点竖直移动 k 个单位。",
   ),
   prerequisites: ["absolute-value-graphs", "the-vertex-form-of-a-parabola"],
-  encompasses: [
-    { topic: "the-vertex-form-of-a-parabola", weight: 0.1 },
-    { topic: "graphs-of-functions", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "graphs-of-functions", weight: 0.3 }],
   xp: 12,
   standards: ["CCSS.HSF.BF.B.3"],
   knowledgePoints: [
@@ -570,7 +567,7 @@ export const verticalStretchesOfFunctions: TopicDef = {
     "把图象竖直伸缩：y = a·f(x) 把每个纵坐标乘以 a。",
   ),
   prerequisites: ["vertical-translations-of-functions", "stretches-of-absolute-value-graphs"],
-  encompasses: [{ topic: "stretches-of-absolute-value-graphs", weight: 0.3 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSF.BF.B.3"],
   knowledgePoints: [

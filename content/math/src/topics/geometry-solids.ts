@@ -1981,7 +1981,7 @@ export const volumesOfRectangularSolids: TopicDef = {
     "求长方体的体积，由体积求未知的棱长，并求由长方体组成的立体图形的体积。",
   ),
   prerequisites: ["volumes-of-cubes"],
-  encompasses: [{ topic: "volumes-of-cubes", weight: 0.4 }],
+  encompasses: [{ topic: "volumes-of-cubes", weight: 0.2 }],
   xp: 10,
   standards: ["CCSS.5.MD.C.5"],
   knowledgePoints: [

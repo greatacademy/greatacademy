@@ -33,7 +33,7 @@ export const equivalentFractions: TopicDef = {
     "把分数化成最简分数，求等值分数中缺少的项。",
   ),
   prerequisites: ["greatest-common-factor"],
-  encompasses: [{ topic: "greatest-common-factor", weight: 0.4 }],
+  encompasses: [{ topic: "greatest-common-factor", weight: 0.2 }],
   xp: 10,
   standards: ["CCSS.4.NF.A.1"],
   knowledgePoints: [
@@ -189,7 +189,7 @@ export const mixedNumbers: TopicDef = {
     "带分数与假分数互化，带分数的加减。",
   ),
   prerequisites: ["adding-and-subtracting-fractions"],
-  encompasses: [{ topic: "adding-and-subtracting-fractions", weight: 0.6 }],
+  encompasses: [],
   xp: 12,
   standards: ["CCSS.4.NF.B.3.C", "CCSS.5.NF.A.1"],
   knowledgePoints: [

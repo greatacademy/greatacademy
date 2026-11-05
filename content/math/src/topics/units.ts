@@ -1280,10 +1280,7 @@ export const degreesOfAccuracy: TopicDef = {
     "按要求的数位取近似值，按测量的精确度给出结果，求测量值的上下界。",
   ),
   prerequisites: ["unit-rates"],
-  encompasses: [
-    { topic: "unit-rates", weight: 0.2 },
-    { topic: "decimal-arithmetic", weight: 0.1 },
-  ],
+  encompasses: [{ topic: "decimal-arithmetic", weight: 0.1 }],
   xp: 12,
   standards: ["CCSS.HSN.Q.A.3"],
   knowledgePoints: [

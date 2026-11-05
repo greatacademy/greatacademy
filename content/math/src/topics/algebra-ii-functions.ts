@@ -414,7 +414,6 @@ export const oneToOneFunctions: TopicDef = {
   ),
   prerequisites: ["vertical-line-test", "absolute-value-graphs", "graphing-elementary-quadratic-functions"],
   encompasses: [
-    { topic: "vertical-line-test", weight: 0.3 },
     { topic: "absolute-value-graphs", weight: 0.2 },
     { topic: "graphing-elementary-quadratic-functions", weight: 0.2 },
   ],

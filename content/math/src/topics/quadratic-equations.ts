@@ -1630,10 +1630,7 @@ export const theDiscriminantOfAQuadraticEquation: TopicDef = {
     "计算 $b^{2} - 4ac$，并根据它的符号判断方程有几个实数解。",
   ),
   prerequisites: ["the-quadratic-formula"],
-  encompasses: [
-    { topic: "the-quadratic-formula", weight: 0.3 },
-    { topic: "order-of-operations-with-integers", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "order-of-operations-with-integers", weight: 0.3 }],
   xp: 10,
   standards: ["CCSS.HSA.REI.B.4.B"],
   knowledgePoints: [
@@ -2070,10 +2067,7 @@ export const vietasFormulas: TopicDef = {
     "把 $ax^{2} + bx + c = 0$ 的两根之和与两根之积与系数联系起来：$-\\frac{b}{a}$ 与 $\\frac{c}{a}$。",
   ),
   prerequisites: ["equating-polynomial-coefficients", "solving-quadratic-equations-by-factoring"],
-  encompasses: [
-    { topic: "equating-polynomial-coefficients", weight: 0.4 },
-    { topic: "multiplying-binomials", weight: 0.2 },
-  ],
+  encompasses: [{ topic: "multiplying-binomials", weight: 0.2 }],
   xp: 12,
   standards: ["CCSS.HSA.APR.B.2"],
   knowledgePoints: [

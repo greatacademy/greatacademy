@@ -147,7 +147,7 @@ export const definingVectorValuedFunctions: TopicDef = {
     "graphing-curves-defined-parametrically",
     "calculating-limits-of-rational-functions-by-factoring",
   ],
-  encompasses: [{ topic: "two-dimensional-vectors-expressed-in-component-form", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

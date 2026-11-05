@@ -56,7 +56,7 @@ export const interiorAndBoundaryPoints: TopicDef = {
     "若以某点为圆心的某个开圆盘完全包含在集合 S 内，则该点为 S 的内点；若以该点为圆心的每个开圆盘都既包含 S 内的点又包含 S 外的点，则该点为 S 的边界点。",
   ),
   prerequisites: ["describing-sets-using-set-builder-notation"],
-  encompasses: [{ topic: "describing-sets-using-set-builder-notation", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -343,7 +343,7 @@ export const theDomainOfAMultivariableFunction: TopicDef = {
     "多元函数的定义域是使解析式具有数学意义的所有输入点的集合。",
   ),
   prerequisites: ["open-and-closed-sets"],
-  encompasses: [{ topic: "open-and-closed-sets", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -422,7 +422,7 @@ export const levelCurves: TopicDef = {
     "函数 f(x, y) 的等值线是 xy 平面内满足方程 f(x, y) = c 的曲线，其中 c 为函数值域内的常数。",
   ),
   prerequisites: ["the-domain-of-a-multivariable-function"],
-  encompasses: [{ topic: "the-domain-of-a-multivariable-function", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -681,7 +681,7 @@ export const ellipsoids: TopicDef = {
     "椭球面是二次曲面，其标准方程为 x²/a² + y²/b² + z²/c² = 1。",
   ),
   prerequisites: ["level-surfaces"],
-  encompasses: [{ topic: "level-surfaces", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -752,7 +752,7 @@ export const hyperboloids: TopicDef = {
     "单叶双曲面的标准方程中含有一个负号，而双叶双曲面的标准方程中含有两个负号。",
   ),
   prerequisites: ["ellipsoids"],
-  encompasses: [{ topic: "ellipsoids", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -825,7 +825,7 @@ export const paraboloids: TopicDef = {
     "椭圆抛物面的方程为 z/c = x²/a² + y²/b²，而双曲抛物面（马鞍面）的方程为 z/c = x²/a² - y²/b²。",
   ),
   prerequisites: ["hyperboloids"],
-  encompasses: [{ topic: "hyperboloids", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -893,7 +893,7 @@ export const ellipticCones: TopicDef = {
     "椭圆锥面的标准方程为 z²/c² = x²/a² + y²/b²，其水平截痕为椭圆，通过顶点的垂直截痕为相交直线。",
   ),
   prerequisites: ["paraboloids"],
-  encompasses: [{ topic: "paraboloids", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -979,7 +979,7 @@ export const cylinders: TopicDef = {
     "柱面是由平行于定直线且通过定平面曲线的一族平行直线（母线）生成的曲面。",
   ),
   prerequisites: ["elliptic-cones"],
-  encompasses: [{ topic: "elliptic-cones", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1061,7 +1061,7 @@ export const intersectionsOfLinesAndPlanesWithSurfaces: TopicDef = {
     "用坐标平面或平行平面截二次曲面，得到的交线（截痕）为二维圆锥曲线。",
   ),
   prerequisites: ["cylinders"],
-  encompasses: [{ topic: "cylinders", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1156,7 +1156,7 @@ export const identifyingQuadricSurfaces: TopicDef = {
     "通过分析二次项的符号以及是否包含一次项来识别二次曲面的类型。",
   ),
   prerequisites: ["intersections-of-lines-and-planes-with-surfaces"],
-  encompasses: [{ topic: "intersections-of-lines-and-planes-with-surfaces", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -1290,7 +1290,7 @@ export const introductionToPartialDerivatives: TopicDef = {
     "偏导数 fx 是将 y 视为常数对 x 求导所得的导数。",
   ),
   prerequisites: ["identifying-quadric-surfaces", "defining-the-derivative-using-derivative-notation"],
-  encompasses: [{ topic: "identifying-quadric-surfaces", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -2553,7 +2553,7 @@ export const theMultivariableMeanValueTheorem: TopicDef = {
     "多元拉格朗日中值定理表明，连接 a 与 b 的线段上存在某点 c，使得 f(b) - f(a) = ∇f(c) · (b - a)。",
   ),
   prerequisites: ["directional-derivatives"],
-  encompasses: [{ topic: "directional-derivatives", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -2916,7 +2916,7 @@ export const differentials: TopicDef = {
     "全微分 dz = fx dx + fy dy 在自变量有微小增量 dx 与 dy 时近似表示函数值的增量 Δz。",
   ),
   prerequisites: ["the-multivariable-chain-rule"],
-  encompasses: [{ topic: "the-multivariable-chain-rule", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -3201,7 +3201,7 @@ export const theInverseOfAnAffineTransformation: TopicDef = {
     "若 det A ≠ 0，则 T(x) = Ax + b 的逆变换为 T⁻¹(y) = A⁻¹(y - b)。",
   ),
   prerequisites: ["affine-transformations"],
-  encompasses: [{ topic: "affine-transformations", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -3299,7 +3299,7 @@ export const nonlinearTransformationsOfPlaneRegions: TopicDef = {
     "非线性坐标变换 u = u(x, y)、v = v(x, y) 将 xy 平面内的弯曲区域映射为 uv 平面内更简单的区域。",
   ),
   prerequisites: ["affine-transformations"],
-  encompasses: [{ topic: "affine-transformations", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -3387,7 +3387,7 @@ export const polarCoordinateTransformations: TopicDef = {
     "极坐标变换 x = r cos θ、y = r sin θ 的雅可比行列式为 ∂(x, y)/∂(r, θ) = r，对应的面积微元为 dA = r dr dθ。",
   ),
   prerequisites: ["nonlinear-transformations-of-plane-regions"],
-  encompasses: [{ topic: "nonlinear-transformations-of-plane-regions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -3575,7 +3575,7 @@ export const theJacobian: TopicDef = {
     "雅可比行列式 ∂(x, y)/∂(u, v) = xu yv - xv yu 度量了坐标变换的局部面积伸缩因子。",
   ),
   prerequisites: ["polar-coordinate-transformations"],
-  encompasses: [{ topic: "polar-coordinate-transformations", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -4264,7 +4264,7 @@ export const theSecondPartialDerivativesTest: TopicDef = {
     "global-vs-local-extrema-and-critical-points-of-multivariable-functions",
     "the-second-derivative-of-a-multivariable-function",
   ],
-  encompasses: [{ topic: "global-vs-local-extrema-and-critical-points-of-multivariable-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -4393,7 +4393,7 @@ export const calculatingGlobalExtremaOfMultivariableFunctions: TopicDef = {
     "求有界闭集上连续函数的全局极值，需比较内部所有临界点处及边界上的函数值。",
   ),
   prerequisites: ["the-second-partial-derivatives-test"],
-  encompasses: [{ topic: "the-second-partial-derivatives-test", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {
@@ -4480,7 +4480,7 @@ export const lagrangeMultipliersWithOneConstraint: TopicDef = {
     "拉格朗日乘数法通过求解 ∇f = λ∇g 与 g(x, y) = k 来寻找满足约束条件 g(x, y) = k 的函数 f(x, y) 的极值。",
   ),
   prerequisites: ["calculating-global-extrema-of-multivariable-functions", "the-gradient-as-a-normal-vector"],
-  encompasses: [{ topic: "calculating-global-extrema-of-multivariable-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   knowledgePoints: [
     {

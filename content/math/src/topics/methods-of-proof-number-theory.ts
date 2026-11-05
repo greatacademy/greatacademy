@@ -58,7 +58,7 @@ export const parity: TopicDef = {
     "每个整数要么是偶数，要么是奇数；和与积的奇偶性遵循简单的规则。",
   ),
   prerequisites: ["proving-parity"],
-  encompasses: [{ topic: "proving-parity", weight: 0.2 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -136,7 +136,7 @@ export const integerDivisibility: TopicDef = {
     "对整数 a、b，若存在整数 k 使 b = ak，则 a | b；负数和 0 也遵循同样的定义。",
   ),
   prerequisites: ["proving-divisibility"],
-  encompasses: [{ topic: "proving-divisibility", weight: 0.2 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

@@ -614,7 +614,7 @@ export const calculatingTheDotProductUsingAngleAndMagnitude: TopicDef = {
     "利用向量的模长及夹角计算数量积，并理解数量积正负的几何意义。",
   ),
   prerequisites: ["calculating-the-magnitude-of-cartesian-vectors-in-2d"],
-  encompasses: [{ topic: "calculating-the-magnitude-of-cartesian-vectors-in-2d", weight: 0.3 }],
+  encompasses: [],
   xp: 14,
   standards: ["CCSS.HSN.VM.C.11"],
   knowledgePoints: [

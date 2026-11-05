@@ -982,7 +982,7 @@ export const multiplyingAMatrixByAColumnVector: TopicDef = {
     "通过行与列对应相乘求和计算矩阵与列向量的乘积，并理解其为列向量的线性组合。",
   ),
   prerequisites: ["scalar-multiplication-of-matrices"],
-  encompasses: [{ topic: "scalar-multiplication-of-matrices", weight: 0.4 }],
+  encompasses: [{ topic: "scalar-multiplication-of-matrices", weight: 0.2 }],
   xp: 12,
   standards: ["CCSS.HSN.VM.C.8"],
   knowledgePoints: [
@@ -1854,7 +1854,7 @@ export const representing2x2SystemsOfEquationsUsingAMatrixProduct: TopicDef = {
     "将二元一次方程组表示为单一矩阵方程 A x = b 的形式。",
   ),
   prerequisites: ["multiplying-a-matrix-by-a-column-vector"],
-  encompasses: [{ topic: "multiplying-a-matrix-by-a-column-vector", weight: 0.4 }],
+  encompasses: [{ topic: "multiplying-a-matrix-by-a-column-vector", weight: 0.2 }],
   xp: 12,
   standards: ["CCSS.HSA.REI.C.8"],
   knowledgePoints: [

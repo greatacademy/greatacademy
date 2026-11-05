@@ -429,7 +429,7 @@ export const integratingExponentialFunctions: TopicDef = {
   title: t("Integrating Exponential Functions", "指数函数的积分"),
   summary: t("Integrate natural and general exponential functions.", "求自然指数函数和一般指数函数的积分。"),
   prerequisites: ["the-sum-rule-for-indefinite-integrals"],
-  encompasses: [{ topic: "the-sum-rule-for-indefinite-integrals", weight: 0.3 }],
+  encompasses: [],
   xp: 8,
   standards: [],
   knowledgePoints: [
@@ -616,7 +616,7 @@ export const integrationUsingInverseTrigonometricFunctions: TopicDef = {
     "把 1/√(a² − x²)、1/(a² + x²) 和 1/(x√(x² − 1)) 积分为反三角函数。",
   ),
   prerequisites: ["integrating-trigonometric-functions", "differentiating-inverse-reciprocal-trigonometric-functions"],
-  encompasses: [{ topic: "differentiating-inverse-trigonometric-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -708,7 +708,7 @@ export const integratingHyperbolicFunctions: TopicDef = {
     "求 sinh、cosh 以及作为导数出现的双曲表达式的积分。",
   ),
   prerequisites: ["integrating-exponential-functions", "differentiating-reciprocal-hyperbolic-functions"],
-  encompasses: [{ topic: "differentiating-hyperbolic-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -789,7 +789,7 @@ export const integrationUsingInverseHyperbolicFunctions: TopicDef = {
     "integration-using-inverse-trigonometric-functions",
     "differentiating-inverse-hyperbolic-functions",
   ],
-  encompasses: [{ topic: "differentiating-inverse-hyperbolic-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [
@@ -888,7 +888,7 @@ export const integrationUsingInverseReciprocalHyperbolicFunctions: TopicDef = {
     "把 1/(x√(a² − x²)) 和 1/(x√(a² + x²)) 积分为 arsech 和 arcsch。",
   ),
   prerequisites: ["integration-using-inverse-hyperbolic-functions", "differentiating-inverse-reciprocal-hyperbolic-functions"],
-  encompasses: [{ topic: "differentiating-inverse-reciprocal-hyperbolic-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

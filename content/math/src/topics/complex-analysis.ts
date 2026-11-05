@@ -437,7 +437,7 @@ const complexLog = topic(
   ["The Complex Logarithm", "复对数"],
   ["Find the principal logarithm, and see why it needs a branch.", "求主值对数，并了解为什么需要分支。"],
   ["the-complex-exponential-function"],
-  [["the-complex-exponential-function", 0.4]],
+  [],
   [
     point(
       "the-principal-argument-in-a-logarithm",
@@ -506,7 +506,7 @@ const contourIntegrals = topic(
   ["Contour Integrals", "围道积分"],
   ["Integrate along a path by parametrizing it.", "把路径参数化后沿路径积分。"],
   ["the-complex-derivative", "line-integrals-of-scalar-functions"],
-  [["line-integrals-of-scalar-functions", 0.2]],
+  [],
   [
     point(
       "the-conjugate-around-a-circle",
@@ -570,7 +570,7 @@ const cauchyTheorem = topic(
   ["Cauchy's Integral Theorem", "柯西积分定理"],
   ["Decide whether a closed contour integral vanishes, and use antiderivatives.", "判断闭围道积分是否为零，并使用原函数。"],
   ["contour-integrals"],
-  [["contour-integrals", 0.5]],
+  [["contour-integrals", 0.3]],
   [
     point(
       "whether-a-pole-is-enclosed",

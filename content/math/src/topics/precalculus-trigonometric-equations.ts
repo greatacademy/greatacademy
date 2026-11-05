@@ -43,7 +43,7 @@ export const elementaryTrigonometricEquationsContainingSine: TopicDef = {
     "利用参考角与象限知识在 [0, 2π) 或 [0°, 360°) 上求解形如 sin(x) = c 的方程。",
   ),
   prerequisites: ["graphing-the-inverse-sine-function"],
-  encompasses: [{ topic: "graphing-the-inverse-sine-function", weight: 0.4 }],
+  encompasses: [{ topic: "graphing-the-inverse-sine-function", weight: 0.2 }],
   xp: 16,
   standards: ["CCSS.HSF.TF.C.9"],
   knowledgePoints: [

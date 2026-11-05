@@ -340,7 +340,7 @@ export const graphsOfTheHyperbolicFunctions: TopicDef = {
     "识别 sinh、cosh、tanh 及其变换的图像，读出最值和渐近线。",
   ),
   prerequisites: ["the-hyperbolic-functions"],
-  encompasses: [{ topic: "the-hyperbolic-functions", weight: 0.3 }],
+  encompasses: [],
   xp: 12,
   standards: [],
   knowledgePoints: [
@@ -412,10 +412,7 @@ export const graphsOfTheReciprocalHyperbolicFunctions: TopicDef = {
     "识别 sech、csch、coth 及其变换的图像，求出渐近线。",
   ),
   prerequisites: ["graphs-of-the-hyperbolic-functions", "the-reciprocal-hyperbolic-functions"],
-  encompasses: [
-    { topic: "graphs-of-the-hyperbolic-functions", weight: 0.3 },
-    { topic: "the-reciprocal-hyperbolic-functions", weight: 0.3 },
-  ],
+  encompasses: [],
   xp: 12,
   standards: [],
   knowledgePoints: [
@@ -514,7 +511,7 @@ export const theInverseHyperbolicFunctions: TopicDef = {
     "利用对数形式计算反双曲正弦、反双曲余弦和反双曲正切。",
   ),
   prerequisites: ["solving-equations-containing-hyperbolic-functions"],
-  encompasses: [{ topic: "solving-equations-containing-hyperbolic-functions", weight: 0.5 }],
+  encompasses: [{ topic: "solving-equations-containing-hyperbolic-functions", weight: 0.3 }],
   xp: 14,
   standards: [],
   knowledgePoints: [

@@ -119,7 +119,7 @@ export const differentiatingParametricCurves: TopicDef = {
     "对 x = f(t)、y = g(t)，在 dx/dt ≠ 0 处斜率为 dy/dx = (dy/dt)/(dx/dt)。",
   ),
   prerequisites: ["graphing-curves-defined-parametrically", "the-chain-rule-for-differentiation"],
-  encompasses: [{ topic: "the-chain-rule-for-differentiation", weight: 0.3 }],
+  encompasses: [],
   xp: 10,
   standards: [],
   knowledgePoints: [

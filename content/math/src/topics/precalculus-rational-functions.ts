@@ -1541,10 +1541,7 @@ export const horizontalAsymptotesOfRationalFunctions: TopicDef = {
     "比较分子与分母的次数和首项系数，求分式函数的水平渐近线。",
   ),
   prerequisites: ["roots-of-rational-functions", "graph-transformations-of-reciprocal-functions"],
-  encompasses: [
-    { topic: "graph-transformations-of-reciprocal-functions", weight: 0.2 },
-    { topic: "end-behavior", weight: 0.3 },
-  ],
+  encompasses: [{ topic: "end-behavior", weight: 0.3 }],
   xp: 13,
   standards: ["CCSS.HSF.IF.C.7.D"],
   knowledgePoints: [

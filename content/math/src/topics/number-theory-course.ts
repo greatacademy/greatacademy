@@ -56,7 +56,7 @@ const countingDivisors = topic(
   ["Counting Divisors", "因数的个数"],
   ["Count the divisors of a number from its prime factorization.", "由质因数分解求一个数的因数个数。"],
   ["properties-of-prime-divisibility"],
-  [["properties-of-prime-divisibility", 0.3]],
+  [],
   [
     point(
       "divisors-from-a-factorization",
@@ -112,7 +112,7 @@ const sumOfDivisors = topic(
   ["The Sum of Divisors Function", "因数和函数"],
   ["Add the divisors of a number, directly or through its factorization.", "直接或通过分解式求一个数的因数和。"],
   ["counting-divisors"],
-  [["counting-divisors", 0.5]],
+  [],
   [
     point(
       "sigma-of-a-number",
@@ -521,7 +521,7 @@ const eulerTheorem = topic(
   ["eulers-theorem", "using-fermats-little-theorem", "computing-and-counting-with-the-totient"],
   [
     ["eulers-theorem", 0.6],
-    ["using-fermats-little-theorem", 0.5],
+    ["using-fermats-little-theorem", 0.2],
     ["computing-and-counting-with-the-totient", 0.4],
   ],
   [
@@ -651,7 +651,7 @@ const orders = topic(
   ["The Order of an Integer Modulo n", "整数模 n 的阶"],
   ["Find the least power that gives one, and what orders are possible.", "求得到 1 的最小幂，并判断哪些阶是可能的。"],
   ["reducing-exponents-with-eulers-theorem"],
-  [["reducing-exponents-with-eulers-theorem", 0.4]],
+  [],
   [
     point(
       "finding-an-order",
@@ -781,7 +781,7 @@ const discreteLogs = topic(
   ["Discrete Logarithms", "离散对数"],
   ["Solve for an exponent modulo a prime, and see how a key exchange uses it.", "求模质数的指数，并了解密钥交换怎样使用它。"],
   ["primitive-roots"],
-  [["primitive-roots", 0.4]],
+  [],
   [
     point(
       "solving-for-the-exponent",
@@ -990,7 +990,7 @@ const eulerCriterion = topic(
   ["Euler's Criterion", "欧拉判别法"],
   ["Decide residues with a power, including when −1 is a square.", "用幂判断二次剩余，包括 −1 何时是平方数。"],
   ["the-legendre-symbol", "using-fermats-little-theorem"],
-  [["the-legendre-symbol", 0.5]],
+  [["the-legendre-symbol", 0.3]],
   [
     point(
       "the-half-power",
@@ -1050,7 +1050,7 @@ const reciprocity = topic(
   ["Quadratic Reciprocity", "二次互反律"],
   ["Flip a Legendre symbol, and use the rule for the numerator 2.", "翻转勒让德符号，并使用分子为 2 的规则。"],
   ["eulers-criterion"],
-  [["eulers-criterion", 0.4]],
+  [],
   [
     point(
       "flipping-a-symbol",
@@ -1330,7 +1330,7 @@ const mobiusFunction = topic(
   ["The Möbius Function", "默比乌斯函数"],
   ["Evaluate the function and invert a divisor sum.", "计算这个函数并反演因数和。"],
   ["multiplicative-functions"],
-  [["multiplicative-functions", 0.3]],
+  [],
   [
     point(
       "evaluating-mu",
@@ -1406,7 +1406,7 @@ const continuedFractions = topic(
   ["Continued Fractions", "连分数"],
   ["Evaluate a continued fraction, and expand a rational number as one.", "计算连分数，并把有理数展开成连分数。"],
   ["the-euclidean-algorithm"],
-  [["the-euclidean-algorithm", 0.4]],
+  [["the-euclidean-algorithm", 0.2]],
   [
     point(
       "evaluating-a-continued-fraction",
