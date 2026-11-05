@@ -47,6 +47,13 @@ import { deeperDifferentialEquationsPoints } from "../topics/deeper-differential
 import { deeperDifferentialEquationsThirdPoints } from "../topics/deeper-differential-equations-third.ts";
 import { deeperDifferentialEquationsThird2Points } from "../topics/deeper-differential-equations-third-2.ts";
 import { deeperDiscreteMathematicsPoints } from "../topics/deeper-discrete-mathematics.ts";
+import { deeperFiguresCalculusIiPoints } from "../topics/deeper-figures-calculus-ii.ts";
+import { deeperFiguresComplexAnalysisPoints } from "../topics/deeper-figures-complex-analysis.ts";
+import { deeperFiguresDifferentialEquationsPoints } from "../topics/deeper-figures-differential-equations.ts";
+import { deeperFiguresMultivariableCalculusPoints } from "../topics/deeper-figures-multivariable-calculus.ts";
+import { deeperFiguresPartialDifferentialEquationsPoints } from "../topics/deeper-figures-partial-differential-equations.ts";
+import { deeperFiguresProbabilityCalculusPoints } from "../topics/deeper-figures-probability-and-statistics.ts";
+import { deeperFiguresRealAnalysisPoints } from "../topics/deeper-figures-real-analysis.ts";
 import { deeperMultivariableCalculusPoints } from "../topics/deeper-multivariable-calculus.ts";
 import { deeperMultivariableCalculusThirdPoints } from "../topics/deeper-multivariable-calculus-third.ts";
 import { deeperMultivariableCalculusThird2Points } from "../topics/deeper-multivariable-calculus-third-2.ts";
@@ -197,5 +204,12 @@ export const calculusShardTopics: readonly TopicDef[] = finishTopics(
     deeperRealAnalysisThirdPoints,
     deeperComplexAnalysisThirdPoints,
     deeperPartialDifferentialEquationsThirdPoints,
+    deeperFiguresComplexAnalysisPoints,
+    deeperFiguresMultivariableCalculusPoints,
+    deeperFiguresDifferentialEquationsPoints,
+    deeperFiguresCalculusIiPoints,
+    deeperFiguresRealAnalysisPoints,
+    deeperFiguresPartialDifferentialEquationsPoints,
+    deeperFiguresProbabilityCalculusPoints,
   ],
 );
