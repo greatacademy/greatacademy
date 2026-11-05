@@ -63,6 +63,7 @@ import { methodsOfProofRelationTopics } from "../topics/methods-of-proof-relatio
 import { methodsOfProofSetTopics } from "../topics/methods-of-proof-sets.ts";
 import { numberTheoryTopics } from "../topics/number-theory.ts";
 import { numberTheoryCourseTopics } from "../topics/number-theory-course.ts";
+import { numberTheoryExtraTopics } from "../topics/number-theory-extra.ts";
 import { numberTheoryMoreTopics } from "../topics/number-theory-more.ts";
 import { probabilityTopics } from "../topics/probability.ts";
 import { probabilityAndStatisticsCombiningVariablesTopics } from "../topics/probability-and-statistics-combining-variables.ts";
@@ -95,6 +96,7 @@ export const collegeShardTopics: readonly TopicDef[] = finishTopics(
     ...methodsOfProofNumberTheoryTopics,
     ...numberTheoryCourseTopics,
     ...numberTheoryMoreTopics,
+    ...numberTheoryExtraTopics,
     ...linearProgrammingTopics,
     ...linearProgrammingMoreTopics,
     ...methodsOfProofFunctionTopics,

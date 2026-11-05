@@ -764,7 +764,7 @@ const greens1d = topic(
         const big = rng.int(4, 16);
         const p = rng.int(2, 15);
         const s1 = rng.int(1, big - 1);
-        const s2 = rng.int(1, big - 1);
+        const s2 = s1 === big - 1 ? s1 - 1 : s1 + 1;
         const x = rng.int(1, big - 1);
         const g = (u: number, v: number) => Math.min(u, v) * (big - Math.max(u, v));
         const total = p * g(x, s1) + p * g(x, s2);
@@ -1258,8 +1258,9 @@ const wedge = topic(
         "在角度为 $\\beta$、两边为零的楔形上，调和解是 $r^{\\nu}\\sin(\\nu\\theta)$，其中 $\\nu = \\frac{n\\pi}{\\beta}$。所以角的几何决定允许 $r$ 的哪个幂。",
       ],
       (rng) => {
-        const q = rng.int(2, 12);
+        const q0 = rng.int(2, 12);
         const p = rng.int(1, 3);
+        const q = p === q0 || q0 % p === 0 ? q0 * p + 1 : q0;
         const n = rng.int(1, 6);
         return ask(
           [

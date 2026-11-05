@@ -18146,8 +18146,8 @@ export const numberTheory: CourseDef = {
   id: "number-theory",
   title: t("Number Theory", "数论"),
   description: t(
-    "Divisors and primes, powers modulo n through the theorems of Fermat and Euler, primitive roots and discrete logarithms, quadratic residues and reciprocity, and classic equations in whole numbers.",
-    "因数和质数，通过费马定理和欧拉定理研究模 n 的幂，原根和离散对数，二次剩余和互反律，以及经典的整数方程。",
+    "Divisors and primes, powers modulo n through the theorems of Fermat and Euler, primitive roots and discrete logarithms, quadratic residues and reciprocity, arithmetic functions and the size of the primes, classic equations in whole numbers, and factoring and public-key cryptography.",
+    "因数和质数，通过费马定理和欧拉定理研究模 n 的幂，原根和离散对数，二次剩余和互反律，算术函数和质数的大小，经典的整数方程，以及分解和公钥密码学。",
   ),
   units: [
     {
@@ -18157,12 +18157,17 @@ export const numberTheory: CourseDef = {
           title: t("Foundations From Proof", "来自证明课的基础"),
           topics: [
             "the-division-algorithm",
+            "base-expansions",
             "the-euclidean-algorithm",
             "divisibility-of-fibonacci-numbers",
             "the-extended-euclidean-algorithm",
             "linear-diophantine-equations",
             "properties-of-prime-divisibility",
+            "the-fundamental-theorem-of-arithmetic",
+            "gcd-and-lcm-from-prime-exponents",
+            "fermat-factorization",
             "prime-valuations",
+            "legendres-formula-and-kummers-theorem",
           ],
         },
         {
@@ -18171,7 +18176,7 @@ export const numberTheory: CourseDef = {
         },
         {
           title: t("The Primes", "质数"),
-          topics: ["the-sieve-of-eratosthenes", "the-distribution-of-primes"],
+          topics: ["the-sieve-of-eratosthenes", "the-distribution-of-primes", "the-prime-number-theorem"],
         },
       ],
     },
@@ -18188,6 +18193,7 @@ export const numberTheory: CourseDef = {
             "hensels-lemma",
             "solving-linear-congruences",
             "the-chinese-remainder-theorem",
+            "systems-with-non-coprime-moduli",
           ],
         },
         {
@@ -18197,6 +18203,7 @@ export const numberTheory: CourseDef = {
             "fermats-little-theorem",
             "mersenne-and-fermat-numbers",
             "using-fermats-little-theorem",
+            "lucas-theorem",
             "eulers-totient-function",
             "primes-in-arithmetic-progressions",
             "computing-and-counting-with-the-totient",
@@ -18205,8 +18212,11 @@ export const numberTheory: CourseDef = {
             "reducing-exponents-with-eulers-theorem",
             "wilsons-theorem",
             "multiplicative-functions",
+            "averages-of-arithmetic-functions",
             "the-mobius-function",
             "dirichlet-convolution",
+            "mobius-inversion",
+            "dirichlet-series-and-the-zeta-function",
           ],
         },
         {
@@ -18217,6 +18227,8 @@ export const numberTheory: CourseDef = {
             "pseudoprimes-and-carmichael-numbers",
             "primitive-roots",
             "discrete-logarithms",
+            "which-moduli-have-primitive-roots",
+            "index-arithmetic",
           ],
         },
       ],
@@ -18226,7 +18238,15 @@ export const numberTheory: CourseDef = {
       modules: [
         {
           title: t("Squares Modulo a Prime", "模质数的平方数"),
-          topics: ["quadratic-residues", "the-legendre-symbol", "eulers-criterion", "quadratic-reciprocity", "the-jacobi-symbol"],
+          topics: [
+            "quadratic-residues",
+            "the-legendre-symbol",
+            "eulers-criterion",
+            "gausss-lemma",
+            "quadratic-reciprocity",
+            "the-jacobi-symbol",
+            "quadratic-congruences-modulo-composites",
+          ],
         },
       ],
     },
@@ -18237,13 +18257,31 @@ export const numberTheory: CourseDef = {
           title: t("Classic Equations", "经典方程"),
           topics: [
             "pythagorean-triples",
+            "infinite-descent-and-modular-obstructions",
             "sums-of-two-squares",
+            "the-sum-of-squares-function",
+            "binary-quadratic-forms",
             "gaussian-integers",
+            "unique-factorization-in-quadratic-integers",
             "sums-of-three-and-four-squares",
             "continued-fractions",
+            "periodic-continued-fractions",
             "best-rational-approximations",
             "pells-equation",
           ],
+        },
+      ],
+    },
+    {
+      title: t("Computation and Cryptography", "计算和密码学"),
+      modules: [
+        {
+          title: t("Factoring and Primality", "分解和素性"),
+          topics: ["pollards-rho-method", "the-miller-rabin-test"],
+        },
+        {
+          title: t("Public-Key Cryptography", "公钥密码学"),
+          topics: ["the-linear-cipher", "the-rsa-cryptosystem", "the-diffie-hellman-key-exchange"],
         },
       ],
     },
