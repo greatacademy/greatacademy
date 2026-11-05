@@ -104,8 +104,8 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `A sample of $n = ${n}$ items was ranked on two criteria, producing the corresponding rank pairs $(R(X_i), R(Y_i))$: ${pairsStr}. Assuming no tied ranks, calculate the exact rational value of Spearman's rank correlation coefficient $r_s = 1 - \\frac{6 \\sum_{i=1}^n d_i^2}{n(n^2 - 1)}$, where $d_i = R(X_i) - R(Y_i)$.`,
-              `对 $n = ${n}$ 个样本按两项指标进行排序，得到相应的等级配对 $(R(X_i), R(Y_i))$ 为：${pairsStr}。假设没有并列秩，计算斯皮尔曼等级相关系数 $r_s = 1 - \\frac{6 \\sum_{i=1}^n d_i^2}{n(n^2 - 1)}$ 的精确有理数值，其中 $d_i = R(X_i) - R(Y_i)$。`,
+              `A sample of $n = ${n}$ items was ranked on two criteria, producing the corresponding rank pairs $(R(X_i), R(Y_i))$: ${pairsStr}. Assuming no tied ranks, calculate the exact rational value of Spearman's rank correlation coefficient $r_s$.`,
+              `对 $n = ${n}$ 个样本按两项指标进行排序，得到相应的等级配对 $(R(X_i), R(Y_i))$ 为：${pairsStr}。假设没有并列秩，计算斯皮尔曼等级相关系数 $r_s$ 的精确有理数值。`,
             ),
             answer: ans,
             wrong: [Q.of(denom + num, denom), Q.of(num, denom), Q.of(n * n * n - 6 * sumDSq, n * n * n)],
@@ -185,8 +185,8 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `In a simple linear regression analysis with $n$ data points, the residual standard error is $s_e = ${se}$ and the sum of squared deviations for the predictor variable is $S_{xx} = \\sum (x_i - \\bar{x})^2 = ${sxx}$. Calculate the exact rational value of the standard error of the slope $s_{b_1} = \\frac{s_e}{\\sqrt{S_{xx}}}$.`,
-              `在样本量为 $n$ 的一元线性回归分析中，残差标准误差为 $s_e = ${se}$，自变量的离差平方和为 $S_{xx} = \\sum (x_i - \\bar{x})^2 = ${sxx}$。计算斜率标准误差 $s_{b_1} = \\frac{s_e}{\\sqrt{S_{xx}}}$ 的精确有理数值。`,
+              `In a simple linear regression analysis with $n$ data points, the residual standard error is $s_e = ${se}$ and the sum of squared deviations for the predictor variable is $S_{xx} = \\sum (x_i - \\bar{x})^2 = ${sxx}$. Calculate the exact rational value of the standard error of the slope $s_{b_1}$.`,
+              `在样本量为 $n$ 的一元线性回归分析中，残差标准误差为 $s_e = ${se}$，自变量的离差平方和为 $S_{xx} = \\sum (x_i - \\bar{x})^2 = ${sxx}$。计算斜率标准误差 $s_{b_1}$ 的精确有理数值。`,
             ),
             answer: ans,
             wrong: [Q.of(se, sxx), Q.of(se * se, sxx), se * k],
@@ -252,8 +252,8 @@ export const probabilityAndStatisticsRegressionTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `A simple linear regression fitted to $n = ${n}$ points has sample mean $\\bar{x} = ${xBar}$, predictor sum of squares $S_{xx} = ${sxx}$, and mean square error $s_e^2 = ${seSq}$. Compute the exact rational value of the squared standard error of the intercept $s_{b_0}^2 = s_e^2 \\left( \\frac{1}{n} + \\frac{\\bar{x}^2}{S_{xx}} \\right)$.`,
-              `对 $n = ${n}$ 个数据点拟合的一元线性回归中，自变量样本均值为 $\\bar{x} = ${xBar}$，自变量离差平方和为 $S_{xx} = ${sxx}$，残差均方为 $s_e^2 = ${seSq}$。计算截距的标准误差平方 $s_{b_0}^2 = s_e^2 \\left( \\frac{1}{n} + \\frac{\\bar{x}^2}{S_{xx}} \\right)$ 的精确有理数值。`,
+              `A simple linear regression fitted to $n = ${n}$ points has sample mean $\\bar{x} = ${xBar}$, predictor sum of squares $S_{xx} = ${sxx}$, and mean square error $s_e^2 = ${seSq}$. Compute the exact rational value of the squared standard error of the intercept $s_{b_0}^2$.`,
+              `对 $n = ${n}$ 个数据点拟合的一元线性回归中，自变量样本均值为 $\\bar{x} = ${xBar}$，自变量离差平方和为 $S_{xx} = ${sxx}$，残差均方为 $s_e^2 = ${seSq}$。计算截距的标准误差平方 $s_{b_0}^2$ 的精确有理数值。`,
             ),
             answer: ans,
             wrong: [Q.of(seSq, n), inner, Q.of(seSq * xBar * xBar, sxx)],

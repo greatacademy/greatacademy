@@ -15,6 +15,9 @@ import {
 } from "./abstract-algebra-permutations.ts";
 import { range } from "./methods-of-proof-common.ts";
 
+/** rPow writes the rotation rᵏ, without a redundant exponent. */
+const rPow = (k: number) => (k === 0 ? "e" : k === 1 ? "r" : `r^{${k}}`);
+
 // Abstract Algebra unit 6: group actions, orbits, stabilizers, Burnside's lemma and conjugacy.
 
 /** factorial is n!. */
@@ -27,7 +30,7 @@ const choose = (n: number, k: number) => factorial(n) / (factorial(k) * factoria
 const zTex = (n: number) => `\\mathbb{Z}_{${n}}`;
 
 /** rsTex writes the dihedral element rᵏs. */
-const rsTex = (k: number) => (k === 0 ? "s" : k === 1 ? "rs" : `r^{${k}}s`);
+const rsTex = (k: number) => (k === 0 ? "s" : k === 1 ? "rs" : `${rPow(k)}s`);
 
 /** randomCyclePerm is a product of one or two disjoint cycles among n points, with its cycles. */
 function randomCyclePerm(rng: Rng, n: number): Perm {
@@ -102,8 +105,8 @@ export const naturalActionsOfSymmetricAndDihedralGroups: TopicDef = {
           answer: value,
           wrong: [mod(k + v, n), mod(v - k, n), mod(-k - v, n)],
           solution: t(
-            `$s \\cdot ${v} = ${mod(-v, n)}$, then $r^{${k}}$ adds $${k}$: $${mod(-v, n)} + ${k} \\equiv ${value} \\pmod{${n}}$.`,
-            `$s \\cdot ${v} = ${mod(-v, n)}$，再由 $r^{${k}}$ 加 $${k}$：$${mod(-v, n)} + ${k} \\equiv ${value} \\pmod{${n}}$。`,
+            `$s \\cdot ${v} = ${mod(-v, n)}$, then $${rPow(k)}$ adds $${k}$: $${mod(-v, n)} + ${k} \\equiv ${value} \\pmod{${n}}$.`,
+            `$s \\cdot ${v} = ${mod(-v, n)}$，再由 $${rPow(k)}$ 加 $${k}$：$${mod(-v, n)} + ${k} \\equiv ${value} \\pmod{${n}}$。`,
           ),
         });
       },
@@ -749,7 +752,7 @@ export const conjugationAndConjugacyClasses: TopicDef = {
         const n = rng.int(3, 20);
         const reflection = rng.bool();
         const k = n % 2 === 0 && rng.bool(0.25) ? n / 2 : rng.int(1, n - 1);
-        const h = reflection ? rsTex(k) : `r^{${k}}`;
+        const h = reflection ? rsTex(k) : `${rPow(k)}`;
         const value = reflection ? (n % 2 === 0 ? n / 2 : n) : mod(2 * k, n) === 0 ? 1 : 2;
         return numberProblem({
           prompt: t(
@@ -766,10 +769,13 @@ export const conjugationAndConjugacyClasses: TopicDef = {
                 )
               : t(`$${n}$ is odd, so all $${n}$ reflections are conjugate.`, `$${n}$ 为奇数，所以全部 $${n}$ 个反射互相共轭。`)
             : value === 1
-              ? t(`$r^{${k}}$ is central, so its class is $\\{r^{${k}}\\}$.`, `$r^{${k}}$ 在中心中，所以它的共轭类为 $\\{r^{${k}}\\}$。`)
+              ? t(
+                  `$${rPow(k)}$ is central, so its class is $\\{${rPow(k)}\\}$.`,
+                  `$${rPow(k)}$ 在中心中，所以它的共轭类为 $\\{${rPow(k)}\\}$。`,
+                )
               : t(
-                  `The class is $\\{r^{${k}}, r^{${n - k}}\\}$, since $sr^{${k}}s^{-1} = r^{-${k}}$.`,
-                  `共轭类为 $\\{r^{${k}}, r^{${n - k}}\\}$，因为 $sr^{${k}}s^{-1} = r^{-${k}}$。`,
+                  `The class is $\\{${rPow(k)}, ${rPow(n - k)}\\}$, since $s${rPow(k)}s^{-1} = r^{-${k}}$.`,
+                  `共轭类为 $\\{${rPow(k)}, ${rPow(n - k)}\\}$，因为 $s${rPow(k)}s^{-1} = r^{-${k}}$。`,
                 ),
         });
       },
@@ -1042,12 +1048,12 @@ export const cycleTypesOfPermutationsOfSomeGroups: TopicDef = {
         return numberProblem({
           prompt: askCount
             ? t(
-                `Into how many cycles does $r^{${k}}$ split the vertices of a regular ${n}-gon?`,
-                `$r^{${k}}$ 把正 ${n} 边形的顶点分成多少个轮换？`,
+                `Into how many cycles does $${rPow(k)}$ split the vertices of a regular ${n}-gon?`,
+                `$${rPow(k)}$ 把正 ${n} 边形的顶点分成多少个轮换？`,
               )
             : t(
-                `How long are the cycles of $r^{${k}}$ acting on the vertices of a regular ${n}-gon?`,
-                `$r^{${k}}$ 作用于正 ${n} 边形的顶点时，各轮换的长度是多少？`,
+                `How long are the cycles of $${rPow(k)}$ acting on the vertices of a regular ${n}-gon?`,
+                `$${rPow(k)}$ 作用于正 ${n} 边形的顶点时，各轮换的长度是多少？`,
               ),
           answer: askCount ? g : n / g,
           wrong: askCount ? [n / g, k, n - k] : [g, k, n / k > 1 ? Math.floor(n / k) : n],

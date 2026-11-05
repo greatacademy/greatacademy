@@ -768,7 +768,7 @@ export const deeperGrade4ThirdPoints: Readonly<Record<string, readonly Knowledge
         const friends = rng.int(3, 9);
         const each = rng.int(5, 30);
         const extra = boxes * per - friends * each;
-        const keep = extra > 0 ? extra : 0;
+        const keep = Math.max(extra, 0);
         const b2 = extra > 0 ? boxes : Math.ceil((friends * each) / per) + 1;
         const keep2 = extra > 0 ? keep : b2 * per - friends * each;
         return whole(

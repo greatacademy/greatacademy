@@ -1,6 +1,6 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { dec, Q } from "@ga/subject-math";
+import { dec, poly, Q } from "@ga/subject-math";
 import { choiceProblem, isTerminating, lowestTerms, numberProblem, steps, yesNo } from "../problems.ts";
 
 /** par writes a value in parentheses when it is negative. */
@@ -196,28 +196,29 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "identifying-regular-singular-point",
         title: t("Locating a non-zero regular singular point", "确定非零正则奇点的位置"),
         explanation: t(
-          "For $x^2 (x - a) y'' + x y' + y = 0$, the roots of $P(x) = 0$ are $x = 0$ and $x = a$. Both satisfy the Fuchs condition and are regular singular points.",
-          "对于方程 $x^2 (x - a) y'' + x y' + y = 0$，$P(x) = 0$ 的根为 $x = 0$ 与 $x = a$。两者均满足富克斯条件，均为正则奇点。",
+          "In $P(x)y'' + Q(x)y' + R(x)y = 0$, a zero $x_0$ of $P$ is a regular singular point when $(x - x_0)\\frac{Q}{P}$ and $(x - x_0)^2\\frac{R}{P}$ are both analytic at $x_0$. For $x^2 (x - a) y'' + x y' + y = 0$, the zeros of $P$ are $x = 0$ and $x = a$, and both are regular singular points.",
+          "在 $P(x)y'' + Q(x)y' + R(x)y = 0$ 中，若 $P$ 的零点 $x_0$ 使 $(x - x_0)\\frac{Q}{P}$ 与 $(x - x_0)^2\\frac{R}{P}$ 在 $x_0$ 处都解析，则 $x_0$ 是正则奇点。对于方程 $x^2 (x - a) y'' + x y' + y = 0$，$P$ 的零点为 $x = 0$ 与 $x = a$，两者都是正则奇点。",
         ),
         generate(rng: Rng): Problem {
           const a = rng.int(2, 35);
           const ans = a;
+          const sq = a * a;
 
           const prompt = t(
-            `Find the positive regular singular point $x_0 > 0$ of the differential equation $x^2 (x - ${a}) y'' + x y' + y = 0$.`,
-            `求微分方程 $x^2 (x - ${a}) y'' + x y' + y = 0$ 的正正则奇点 $x_0 > 0$。`,
+            `Find the positive regular singular point $x_0 > 0$ of the differential equation $x^2 (x^2 - ${sq}) y'' + x y' + y = 0$.`,
+            `求微分方程 $x^2 (x^2 - ${sq}) y'' + x y' + y = 0$ 的正正则奇点 $x_0 > 0$。`,
           );
           const solution = t(
             steps(
-              `The leading coefficient polynomial is $P(x) = x^2 (x - ${a})$. Its zeros are $x = 0$ and $x = ${a}$.`,
-              `For $x = ${a}$, $(x - ${a}) \\frac{Q(x)}{P(x)} = \\frac{x(x - ${a})}{x^2(x - ${a})} = \\frac{1}{x}$, which is analytic at $x = ${a}$.`,
-              `Similarly, $(x - ${a})^2 \\frac{R(x)}{P(x)} = \\frac{(x - ${a})^2}{x^2(x - ${a})} = \\frac{x - ${a}}{x^2}$, which is analytic at $x = ${a}$.`,
+              `The leading coefficient is $P(x) = x^2 (x - ${a})(x + ${a})$. Its zeros are $x = 0$, $x = ${a}$ and $x = -${a}$, and only $x = ${a}$ is positive.`,
+              `For $x = ${a}$, $(x - ${a}) \\frac{Q(x)}{P(x)} = \\frac{x(x - ${a})}{x^2(x - ${a})(x + ${a})} = \\frac{1}{x(x + ${a})}$, which is analytic at $x = ${a}$.`,
+              `Similarly, $(x - ${a})^2 \\frac{R(x)}{P(x)} = \\frac{x - ${a}}{x^2(x + ${a})}$, which is analytic at $x = ${a}$.`,
               `Thus $x = ${ans}$ is a regular singular point.`,
             ),
             steps(
-              `最高阶导数系数多项式为 $P(x) = x^2 (x - ${a})$，其零点为 $x = 0$ 与 $x = ${a}$。`,
-              `在 $x = ${a}$ 处，$(x - ${a}) \\frac{Q(x)}{P(x)} = \\frac{1}{x}$ 在该点解析。`,
-              `同理，$(x - ${a})^2 \\frac{R(x)}{P(x)} = \\frac{x - ${a}}{x^2}$ 在该点亦解析。`,
+              `最高阶导数的系数为 $P(x) = x^2 (x - ${a})(x + ${a})$，其零点为 $x = 0$、$x = ${a}$ 与 $x = -${a}$，其中只有 $x = ${a}$ 为正。`,
+              `在 $x = ${a}$ 处，$(x - ${a}) \\frac{Q(x)}{P(x)} = \\frac{x(x - ${a})}{x^2(x - ${a})(x + ${a})} = \\frac{1}{x(x + ${a})}$ 在该点解析。`,
+              `同理，$(x - ${a})^2 \\frac{R(x)}{P(x)} = \\frac{x - ${a}}{x^2(x + ${a})}$ 在该点亦解析。`,
               `因此正正则奇点为 $x = ${ans}$。`,
             ),
           );
@@ -226,7 +227,7 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
             prompt,
             solution,
             answer: ans,
-            wrong: [2 * a, a * a, ans + 1, ans - 1],
+            wrong: [sq, 2 * a, 2 * sq, ans + 1],
           });
         },
       },
@@ -280,29 +281,34 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
         id: "frobenius-indicial-root",
         title: t("Larger root of the Frobenius indicial equation", "弗罗贝尼乌斯指标方程的较大根"),
         explanation: t(
-          "The indicial equation comes from the lowest power of the variable after substitution, and its roots give the possible starting exponents of the series. For $x^2 y'' - r_1 x y' + r_1 y = 0$, the indicial equation is $r(r - 1) - r_1 r + r_1 = (r - 1)(r - r_1) = 0$. The roots are $r = 1$ and $r = r_1$.",
-          "指标方程来自代入后变量的最低次幂，它的根给出级数可能的起始指数。对于方程 $x^2 y'' - r_1 x y' + r_1 y = 0$，指标方程为 $r(r - 1) - r_1 r + r_1 = (r - 1)(r - r_1) = 0$。其根为 $r = 1$ 与 $r = r_1$。",
+          "The indicial equation comes from the lowest power of the variable after substitution, and its roots give the possible starting exponents of the series. For $x^2 y'' - r_1 x y' + r_1 y = 0$, the indicial equation is $r(r - 1) - r_1 r + r_1 = (r - 1)(r - r_1) = 0$. The roots are $r = 1$ and $r = r_1$. In general, $x^2 y'' + bxy' + cy = 0$ has the indicial equation $r(r - 1) + br + c = 0$.",
+          "指标方程来自代入后变量的最低次幂，它的根给出级数可能的起始指数。对于方程 $x^2 y'' - r_1 x y' + r_1 y = 0$，指标方程为 $r(r - 1) - r_1 r + r_1 = (r - 1)(r - r_1) = 0$。其根为 $r = 1$ 与 $r = r_1$。 一般地，$x^2 y'' + bxy' + cy = 0$ 的指标方程为 $r(r - 1) + br + c = 0$。",
         ),
         generate(rng: Rng): Problem {
-          const r1 = rng.int(2, 35);
-          const ans = r1;
+          const p = rng.nonZero(-3, 6);
+          const q = p + rng.int(1, 6) || p + 7;
+          const ans = q;
+          const b = p + q - 1;
+          const eq = poly([1, "x^2y''"], [-b, "xy'"], [p * q, "y"]);
+          const ind = poly([1, "r^2"], [-(p + q), "r"], [p * q, ""]);
+          const fac = `(${poly([1, "r"], [-p, ""])})(${poly([1, "r"], [-q, ""])})`;
 
           const prompt = t(
-            `Find the larger root of the indicial equation for the differential equation $x^2 y'' - ${r1} x y' + ${r1} y = 0$ about the regular singular point $x = 0$.`,
-            `求微分方程 $x^2 y'' - ${r1} x y' + ${r1} y = 0$ 在正则奇点 $x = 0$ 处的指标方程的较大根。`,
+            `Find the larger root of the indicial equation for the differential equation $${eq} = 0$ about the regular singular point $x = 0$.`,
+            `求微分方程 $${eq} = 0$ 在正则奇点 $x = 0$ 处的指标方程的较大根。`,
           );
           const solution = t(
             steps(
               `Assume the Frobenius series $y = \\sum_{n=0}^\\infty a_n x^{n+r}$ with $a_0 \\ne 0$.`,
-              `The lowest power of $x$ gives the indicial equation: $r(r - 1) - ${r1}r + ${r1} = 0$.`,
-              `Factor the quadratic: $r^2 - (${r1 + 1})r + ${r1} = (r - 1)(r - ${r1}) = 0$.`,
-              `The roots are $r = 1$ and $r = ${ans}$. The larger root is $${ans}$.`,
+              `The lowest power of $x$ gives the indicial equation: $${poly([1, "r(r - 1)"], [-b, "r"], [p * q, ""])} = 0$.`,
+              `Factor the quadratic: $${ind} = ${fac} = 0$.`,
+              `The roots are $r = ${p}$ and $r = ${q}$. The larger root is $${ans}$.`,
             ),
             steps(
               `设弗罗贝尼乌斯级数 $y = \\sum_{n=0}^\\infty a_n x^{n+r}$（$a_0 \\ne 0$）。`,
-              `考察最低次幂系数，导出指标方程：$r(r - 1) - ${r1}r + ${r1} = 0$。`,
-              `分解二次方程：$r^2 - (${r1 + 1})r + ${r1} = (r - 1)(r - ${r1}) = 0$。`,
-              `方程的两根为 $r = 1$ 与 $r = ${ans}$。较大根为 $${ans}$。`,
+              `考察最低次幂系数，导出指标方程：$${poly([1, "r(r - 1)"], [-b, "r"], [p * q, ""])} = 0$。`,
+              `分解二次方程：$${ind} = ${fac} = 0$。`,
+              `方程的两根为 $r = ${p}$ 与 $r = ${q}$。较大根为 $${ans}$。`,
             ),
           );
 
@@ -310,7 +316,7 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
             prompt,
             solution,
             answer: ans,
-            wrong: [1, r1 + 1, r1 - 1, 2 * r1],
+            wrong: [p, b, p + q, p * q],
           });
         },
       },
@@ -633,25 +639,32 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
           "方程组的欧拉法同时更新所有分量，每个分量加上步长乘以导数向量的相应分量。对于系统 $\\mathbf{x}' = A \\mathbf{x}$（初值 $\\mathbf{x}_0 = \\begin{pmatrix} 0 \\\\ v_0 \\end{pmatrix}$，转移矩阵 $A = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix}$），导数向量为 $A \\mathbf{x}_0 = \\begin{pmatrix} v_0 \\\\ 0 \\end{pmatrix}$。步长 $h = 1$ 时，$\\mathbf{x}_1 = \\begin{pmatrix} v_0 \\\\ v_0 \\end{pmatrix}$，第一分量为 $v_0$。",
         ),
         generate(rng: Rng): Problem {
-          const v0 = rng.int(2, 35);
-          const ans = v0;
+          const a = rng.nonZero(-3, 4);
+          const b = rng.nonZero(-3, 4);
+          const c = rng.nonZero(-3, 4);
+          const d = rng.nonZero(-3, 4);
+          const u = rng.nonZero(-5, 6);
+          const v = rng.nonZero(-5, 6);
+          const h = rng.pick([Q.of(1, 2), Q.of(1, 4), Q.of(2), Q.of(3)]);
+          const slope = a * u + b * v;
+          const ans = Q.of(u).add(h.mul(Q.of(slope)));
+          const A = `\\begin{pmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{pmatrix}`;
+          const x0 = `\\begin{pmatrix} ${u} \\\\ ${v} \\end{pmatrix}`;
 
           const prompt = t(
-            `Apply one step of Euler's method with step size $h = 1$ to the system $\\mathbf{x}' = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix} \\mathbf{x}$ with initial state $\\mathbf{x}_0 = \\begin{pmatrix} 0 \\\\ ${v0} \\end{pmatrix}$. Find the first component $x_1(1)$ of the state vector.`,
-            `对系统 $\\mathbf{x}' = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix} \\mathbf{x}$（初值 $\\mathbf{x}_0 = \\begin{pmatrix} 0 \\\\ ${v0} \\end{pmatrix}$）应用步长 $h = 1$ 的欧拉法计算一步。求状态向量的第一分量 $x_1(1)$。`,
+            `Apply one step of Euler's method with step size $h = ${h.toLatex()}$ to the system $\\mathbf{x}' = ${A} \\mathbf{x}$ with initial state $\\mathbf{x}_0 = ${x0}$. Find the first component of the new state $\\mathbf{x}_1$.`,
+            `对系统 $\\mathbf{x}' = ${A} \\mathbf{x}$（初值 $\\mathbf{x}_0 = ${x0}$）应用步长 $h = ${h.toLatex()}$ 的欧拉法计算一步。求新状态 $\\mathbf{x}_1$ 的第一分量。`,
           );
           const solution = t(
             steps(
               `The vector Euler update is $\\mathbf{x}_1 = \\mathbf{x}_0 + h A \\mathbf{x}_0$.`,
-              `Compute $A \\mathbf{x}_0 = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix} \\begin{pmatrix} 0 \\\\ ${v0} \\end{pmatrix} = \\begin{pmatrix} ${v0} \\\\ 0 \\end{pmatrix}$.`,
-              `Add to the initial state: $\\mathbf{x}_1 = \\begin{pmatrix} 0 \\\\ ${v0} \\end{pmatrix} + 1 \\begin{pmatrix} ${v0} \\\\ 0 \\end{pmatrix} = \\begin{pmatrix} ${ans} \\\\ ${v0} \\end{pmatrix}$.`,
-              `The first component is $${ans}$.`,
+              `The first component of $A \\mathbf{x}_0$ is $${par(Q.of(a))} \\cdot ${par(Q.of(u))} + ${par(Q.of(b))} \\cdot ${par(Q.of(v))} = ${slope}$.`,
+              `So the first component of $\\mathbf{x}_1$ is $${u} + ${h.toLatex()} \\cdot ${par(Q.of(slope))} = ${ans.toLatex()}$.`,
             ),
             steps(
               `向量欧拉更新公式为 $\\mathbf{x}_1 = \\mathbf{x}_0 + h A \\mathbf{x}_0$。`,
-              `计算变化率向量：$A \\mathbf{x}_0 = \\begin{pmatrix} 0 & 1 \\\\ -1 & 0 \\end{pmatrix} \\begin{pmatrix} 0 \\\\ ${v0} \\end{pmatrix} = \\begin{pmatrix} ${v0} \\\\ 0 \\end{pmatrix}$。`,
-              `与初值相加：$\\mathbf{x}_1 = \\begin{pmatrix} 0 \\\\ ${v0} \\end{pmatrix} + 1 \\begin{pmatrix} ${v0} \\\\ 0 \\end{pmatrix} = \\begin{pmatrix} ${ans} \\\\ ${v0} \\end{pmatrix}$。`,
-              `因此第一分量为 $${ans}$。`,
+              `$A \\mathbf{x}_0$ 的第一分量为 $${par(Q.of(a))} \\cdot ${par(Q.of(u))} + ${par(Q.of(b))} \\cdot ${par(Q.of(v))} = ${slope}$。`,
+              `所以 $\\mathbf{x}_1$ 的第一分量为 $${u} + ${h.toLatex()} \\cdot ${par(Q.of(slope))} = ${ans.toLatex()}$。`,
             ),
           );
 
@@ -659,7 +672,7 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
             prompt,
             solution,
             answer: ans,
-            wrong: [0, -v0, 2 * v0, ans + 1, ans - 1],
+            wrong: [Q.of(slope), h.mul(Q.of(slope)), Q.of(u + slope), Q.of(u).add(h.mul(Q.of(a * u + c * v)))],
           });
         },
       },
@@ -732,24 +745,26 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
           "把速度作为第二个未知函数，就把二阶方程化为方程组，位置的更新以当前速度作为斜率。令 $y' = v$，二阶微分方程的位置更新公式为 $y_1 = y_0 + h v_0$。当 $y_0 = 0$ 且 $h = 1$ 时，一步后的位置即为 $y_1 = v_0$。",
         ),
         generate(rng: Rng): Problem {
-          const v0 = rng.int(2, 35);
+          const y0 = rng.nonZero(-6, 8);
+          const v0 = rng.nonZero(-9, 9);
           const omegaSq = rng.int(2, 10);
-          const ans = v0;
+          const h = rng.pick([Q.of(1, 2), Q.of(1, 4), Q.of(2), Q.of(3)]);
+          const ans = Q.of(y0).add(h.mul(Q.of(v0)));
 
           const prompt = t(
-            `Apply one step of Euler's method with step size $h = 1$ to the oscillator $y'' + ${omegaSq}y = 0$ with initial conditions $y(0) = 0$ and $y'(0) = ${v0}$. Find the estimated position $y_1$.`,
-            `对谐振子方程 $y'' + ${omegaSq}y = 0$（初值 $y(0) = 0$ 与 $y'(0) = ${v0}$）应用步长 $h = 1$ 的欧拉法计算一步。求估算的位置值 $y_1$。`,
+            `Apply one step of Euler's method with step size $h = ${h.toLatex()}$ to the oscillator $y'' + ${omegaSq}y = 0$ with initial conditions $y(0) = ${y0}$ and $y'(0) = ${v0}$. Find the estimated position $y_1$.`,
+            `对谐振子方程 $y'' + ${omegaSq}y = 0$（初值 $y(0) = ${y0}$ 与 $y'(0) = ${v0}$）应用步长 $h = ${h.toLatex()}$ 的欧拉法计算一步。求估算的位置值 $y_1$。`,
           );
           const solution = t(
             steps(
               `Convert to a first-order system with state variables $y$ (position) and $v = y'$ (velocity): $y' = v$, $v' = -${omegaSq}y$.`,
               `The Euler update for position is $y_1 = y_0 + h v_0$.`,
-              `Substitute values: $y_1 = 0 + 1(${v0}) = ${ans}$.`,
+              `Substitute values: $y_1 = ${y0} + ${h.toLatex()} \\cdot ${par(Q.of(v0))} = ${ans.toLatex()}$.`,
             ),
             steps(
               `引入状态变量 $y$（位置）与 $v = y'$（速度），化为一阶系统：$y' = v$，$v' = -${omegaSq}y$。`,
               `位置分量的欧拉更新公式为 $y_1 = y_0 + h v_0$。`,
-              `代入初值与步长：$y_1 = 0 + 1(${v0}) = ${ans}$。`,
+              `代入初值与步长：$y_1 = ${y0} + ${h.toLatex()} \\cdot ${par(Q.of(v0))} = ${ans.toLatex()}$。`,
             ),
           );
 
@@ -757,7 +772,7 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
             prompt,
             solution,
             answer: ans,
-            wrong: [0, -v0, omegaSq * v0, ans + 1, ans - 1],
+            wrong: [Q.of(y0 + v0), Q.of(y0).add(h.mul(Q.of(-omegaSq * y0))), h.mul(Q.of(v0)), Q.of(v0)],
           });
         },
       },
@@ -825,22 +840,25 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
           const k2 = rng.int(2, 20);
           const k3 = rng.int(2, 20);
           const k4 = rng.int(2, 20);
-          const ans = y0 + k1 + 2 * k2 + 2 * k3 + k4;
+          const h = rng.pick([6, 3, 2, 12]);
+          const sum = k1 + 2 * k2 + 2 * k3 + k4;
+          const part = Q.of(h, 6);
+          const ans = part.mul(Q.of(sum)).add(Q.of(y0));
 
           const prompt = t(
-            `In a step of the classical fourth-order Runge-Kutta method (RK4) with step size $h = 6$, the current state is $y_0 = ${y0}$ and the four stage slopes are $k_1 = ${k1}$, $k_2 = ${k2}$, $k_3 = ${k3}$, and $k_4 = ${k4}$. Compute the updated state $y_1$ using $y_1 = y_0 + \\frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)$.`,
-            `在使用经典四阶龙格-库塔法（RK4，步长 $h = 6$）计算一步时，当前状态为 $y_0 = ${y0}$，四级斜率分别为 $k_1 = ${k1}$、$k_2 = ${k2}$、$k_3 = ${k3}$ 与 $k_4 = ${k4}$。利用公式 $y_1 = y_0 + \\frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)$ 计算更新后的值 $y_1$。`,
+            `In a step of the classical fourth-order Runge-Kutta method (RK4) with step size $h = ${h}$, the current state is $y_0 = ${y0}$ and the four stage slopes are $k_1 = ${k1}$, $k_2 = ${k2}$, $k_3 = ${k3}$, and $k_4 = ${k4}$. Compute the updated state $y_1$.`,
+            `在使用经典四阶龙格-库塔法（RK4，步长 $h = ${h}$）计算一步时，当前状态为 $y_0 = ${y0}$，四级斜率分别为 $k_1 = ${k1}$、$k_2 = ${k2}$、$k_3 = ${k3}$ 与 $k_4 = ${k4}$。计算更新后的值 $y_1$。`,
           );
           const solution = t(
             steps(
               `The RK4 update formula is $y_1 = y_0 + \\frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)$.`,
-              `Substitute $h = 6$: $\\frac{6}{6} = 1$, so $y_1 = y_0 + k_1 + 2k_2 + 2k_3 + k_4$.`,
-              `Compute the weighted sum: $${y0} + ${k1} + 2(${k2}) + 2(${k3}) + ${k4} = ${y0} + ${k1} + ${2 * k2} + ${2 * k3} + ${k4} = ${ans}$.`,
+              `The weighted sum is $${k1} + 2 \\cdot ${k2} + 2 \\cdot ${k3} + ${k4} = ${sum}$.`,
+              `So $y_1 = ${y0} + \\frac{${h}}{6} \\cdot ${sum} = ${ans.toLatex()}$.`,
             ),
             steps(
               `RK4 的更新公式为 $y_1 = y_0 + \\frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)$。`,
-              `代入步长 $h = 6$ 得 $\\frac{6}{6} = 1$，因此 $y_1 = y_0 + k_1 + 2k_2 + 2k_3 + k_4$。`,
-              `代入各数值计算加权和：$${y0} + ${k1} + 2(${k2}) + 2(${k3}) + ${k4} = ${ans}$。`,
+              `加权和为 $${k1} + 2 \\cdot ${k2} + 2 \\cdot ${k3} + ${k4} = ${sum}$。`,
+              `所以 $y_1 = ${y0} + \\frac{${h}}{6} \\cdot ${sum} = ${ans.toLatex()}$。`,
             ),
           );
 
@@ -848,7 +866,7 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
             prompt,
             solution,
             answer: ans,
-            wrong: [y0 + k1 + k2 + k3 + k4, ans + 6, ans - 6, y0 + 2 * (k1 + k2 + k3 + k4)],
+            wrong: [part.mul(Q.of(k1 + k2 + k3 + k4)).add(Q.of(y0)), part.mul(Q.of(sum)), Q.of(y0 + h * sum), Q.of(y0 + sum)],
           });
         },
       },
@@ -920,21 +938,26 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
           "多步法重复使用前几步的斜率，而不是计算新的中间斜率，把斜率的变化趋势向前外推。二步显式亚当斯-巴什福思预测公式为 $y_{n+1}^{(p)} = y_n + \\frac{h}{2}(3 f_n - f_{n-1})$。当 $y_n = 0$，$h = 2$，$f_{n-1} = 1$，$f_n = a$ 时，预测值为 $y_{n+1}^{(p)} = 3a - 1$。",
         ),
         generate(rng: Rng): Problem {
-          const a = rng.int(2, 35);
-          const ans = 3 * a - 1;
+          const a = rng.int(2, 20);
+          const b = rng.int(1, 12);
+          const y = rng.nonZero(-9, 12);
+          const h = rng.pick([1, 2, 4]);
+          const inner = 3 * a - b;
+          const part = Q.of(h, 2);
+          const ans = part.mul(Q.of(inner)).add(Q.of(y));
 
           const prompt = t(
-            `In the ABM2 multistep method with step size $h = 2$, suppose $y_n = 0$, previous slope $f_{n-1} = 1$, and current slope $f_n = ${a}$. Compute the predicted value $y_{n+1}^{(p)}$ using the Adams-Bashforth 2 predictor formula $y_{n+1}^{(p)} = y_n + \\frac{h}{2}(3 f_n - f_{n-1})$.`,
-            `在步长 $h = 2$ 的 ABM2 多步法中，已知当前值 $y_n = 0$，前一步斜率 $f_{n-1} = 1$，当前斜率 $f_n = ${a}$。应用二步亚当斯-巴什福思公式 $y_{n+1}^{(p)} = y_n + \\frac{h}{2}(3 f_n - f_{n-1})$ 计算预测值 $y_{n+1}^{(p)}$。`,
+            `In the ABM2 multistep method with step size $h = ${h}$, suppose $y_n = ${y}$, previous slope $f_{n-1} = ${b}$, and current slope $f_n = ${a}$. Compute the predicted value $y_{n+1}^{(p)}$ from the Adams-Bashforth 2 predictor.`,
+            `在步长 $h = ${h}$ 的 ABM2 多步法中，已知当前值 $y_n = ${y}$，前一步斜率 $f_{n-1} = ${b}$，当前斜率 $f_n = ${a}$。用二步亚当斯-巴什福思预测公式计算预测值 $y_{n+1}^{(p)}$。`,
           );
           const solution = t(
             steps(
               `The predictor formula is $y_{n+1}^{(p)} = y_n + \\frac{h}{2}(3 f_n - f_{n-1})$.`,
-              `Substitute $y_n = 0$, $h = 2$, $f_n = ${a}$, and $f_{n-1} = 1$: $y_{n+1}^{(p)} = 0 + \\frac{2}{2}(3(${a}) - 1) = 3(${a}) - 1 = ${ans}$.`,
+              `Substitute: $y_{n+1}^{(p)} = ${y} + \\frac{${h}}{2}(3 \\cdot ${a} - ${b}) = ${y} + \\frac{${h}}{2} \\cdot ${par(Q.of(inner))} = ${ans.toLatex()}$.`,
             ),
             steps(
               `预测公式为 $y_{n+1}^{(p)} = y_n + \\frac{h}{2}(3 f_n - f_{n-1})$。`,
-              `代入各数值：$y_{n+1}^{(p)} = 0 + \\frac{2}{2}(3(${a}) - 1) = 3(${a}) - 1 = ${ans}$。`,
+              `代入各数值：$y_{n+1}^{(p)} = ${y} + \\frac{${h}}{2}(3 \\cdot ${a} - ${b}) = ${y} + \\frac{${h}}{2} \\cdot ${par(Q.of(inner))} = ${ans.toLatex()}$。`,
             ),
           );
 
@@ -942,7 +965,7 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
             prompt,
             solution,
             answer: ans,
-            wrong: [3 * a, 3 * a + 1, a - 1, ans + 2, ans - 2],
+            wrong: [part.mul(Q.of(3 * b - a)).add(Q.of(y)), part.mul(Q.of(a - b)).add(Q.of(y)), part.mul(Q.of(inner)), Q.of(y + h * inner)],
           });
         },
       },
@@ -1097,24 +1120,24 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
           "梯形法取步长两端斜率的平均值，所以放大因子是两个关于步长的一次式之比。将梯形法应用于 $y' = -\\lambda y$ 导出 $y_{n+1} = \\frac{1 - z/2}{1 + z/2} y_n$（其中 $z = h\\lambda$）。当 $z = 2k$ 时，分母值为 $1 + k$。",
         ),
         generate(rng: Rng): Problem {
-          const k = rng.int(2, 35);
-          const z = 2 * k;
-          const ans = 1 + k;
+          const z = rng.int(2, 35);
+          const half = Q.of(z, 2);
+          const ans = Q.one.add(half);
 
           const prompt = t(
-            `In the implicit trapezoidal scheme applied to the test equation $y' = -\\lambda y$, the solution updates as $y_{n+1} = \\frac{1 - z/2}{1 + z/2} y_n$ with dimensionless parameter $z = \\lambda h$. When $z = ${z}$, evaluate the denominator $1 + z/2$.`,
-            `将隐式梯形法应用于试验方程 $y' = -\\lambda y$，解的步进公式为 $y_{n+1} = \\frac{1 - z/2}{1 + z/2} y_n$（其中无量纲参数 $z = \\lambda h$）。当 $z = ${z}$ 时，求分母项 $1 + z/2$ 的值。`,
+            `The implicit trapezoidal scheme $y_{n+1} = y_n + \\frac{h}{2}(f_n + f_{n+1})$ is applied to the test equation $y' = -\\lambda y$, with $z = \\lambda h$. Collecting terms gives $D\\,y_{n+1} = \\left(1 - \\frac{z}{2}\\right) y_n$. Find $D$ when $z = ${z}$.`,
+            `将隐式梯形法 $y_{n+1} = y_n + \\frac{h}{2}(f_n + f_{n+1})$ 应用于试验方程 $y' = -\\lambda y$，记 $z = \\lambda h$。整理得 $D\\,y_{n+1} = \\left(1 - \\frac{z}{2}\\right) y_n$。求 $z = ${z}$ 时的 $D$。`,
           );
           const solution = t(
             steps(
-              `The trapezoidal update is $y_{n+1} = y_n + \\frac{h}{2}(-\\lambda y_n - \\lambda y_{n+1})$.`,
-              `Rearrange: $\\left(1 + \\frac{z}{2}\\right) y_{n+1} = \\left(1 - \\frac{z}{2}\\right) y_n$.`,
-              `Substitute $z = ${z}$: $1 + \\frac{${z}}{2} = 1 + ${k} = ${ans}$.`,
+              `Here $f_n = -\\lambda y_n$ and $f_{n+1} = -\\lambda y_{n+1}$, so $y_{n+1} = y_n - \\frac{z}{2} y_n - \\frac{z}{2} y_{n+1}$.`,
+              `Rearrange: $\\left(1 + \\frac{z}{2}\\right) y_{n+1} = \\left(1 - \\frac{z}{2}\\right) y_n$, so $D = 1 + \\frac{z}{2}$.`,
+              `Substitute $z = ${z}$: $D = 1 + \\frac{${z}}{2} = ${ans.toLatex()}$.`,
             ),
             steps(
-              `梯形法步进关系为 $y_{n+1} = y_n + \\frac{h}{2}(-\\lambda y_n - \\lambda y_{n+1})$。`,
-              `移项整理：$\\left(1 + \\frac{z}{2}\\right) y_{n+1} = \\left(1 - \\frac{z}{2}\\right) y_n$。`,
-              `代入 $z = ${z}$：$1 + \\frac{${z}}{2} = 1 + ${k} = ${ans}$。`,
+              `这里 $f_n = -\\lambda y_n$，$f_{n+1} = -\\lambda y_{n+1}$，所以 $y_{n+1} = y_n - \\frac{z}{2} y_n - \\frac{z}{2} y_{n+1}$。`,
+              `移项整理：$\\left(1 + \\frac{z}{2}\\right) y_{n+1} = \\left(1 - \\frac{z}{2}\\right) y_n$，所以 $D = 1 + \\frac{z}{2}$。`,
+              `代入 $z = ${z}$：$D = 1 + \\frac{${z}}{2} = ${ans.toLatex()}$。`,
             ),
           );
 
@@ -1122,7 +1145,7 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
             prompt,
             solution,
             answer: ans,
-            wrong: [k, z, 1 + z, ans + 1, ans - 1],
+            wrong: [half, Q.of(z), Q.of(1 + z), Q.one.sub(half)],
           });
         },
       },
@@ -1510,28 +1533,27 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
           "对于试验方程 $y' = -\\lambda y$，显式欧拉法的增长因子为 $R(h\\lambda) = 1 - h\\lambda$。数值稳定性要求 $|1 - h\\lambda| \\le 1 \\implies h\\lambda \\le 2$。对于给定步长 $h$，允许的最大衰减率为 $\\lambda_{\\max} = 2 / h$。",
         ),
         generate(rng: Rng): Problem {
-          const k = rng.int(2, 35);
-          const ans = k;
-          // Let h = 2 / k, so lambda_max = k. To keep h integer in problem text, formulate as:
-          // For decay rate lambda = 2*k, maximum stable step size is 1/k.
-          // Or: amplification factor magnitude when h*lambda = 1 + k is |1 - (1 + k)| = k.
+          const lambda = rng.int(2, 18) * 2;
+          const h = rng.pick([Q.of(1, 2), Q.of(1, 4), Q.of(1), Q.of(1, 8)]);
+          const z = h.mul(Q.of(lambda));
+          const R = Q.one.sub(z);
+          const ans = R.abs();
+          const unstable = ans.sub(Q.one).sign() > 0;
 
           const prompt = t(
-            `In explicit Euler integration with step size $h = 1$, suppose the test equation is $y' = -${k + 1}y$. Evaluate the magnitude of the amplification factor $|R(h\\lambda)| = |1 - h\\lambda|$.`,
-            `在使用步长 $h = 1$ 的显式欧拉法求解试验方程 $y' = -${k + 1}y$ 时，计算单步增长因子的绝对值 $|R(h\\lambda)| = |1 - h\\lambda|$。`,
+            `Explicit Euler with step size $h = ${h.toLatex()}$ is applied to the test equation $y' = -${lambda}y$, so that $y_{n+1} = R\\,y_n$. Find $|R|$.`,
+            `用步长 $h = ${h.toLatex()}$ 的显式欧拉法求解试验方程 $y' = -${lambda}y$，于是 $y_{n+1} = R\\,y_n$。求 $|R|$。`,
           );
           const solution = t(
             steps(
-              `The amplification factor for explicit Euler on $y' = -\\lambda y$ is $R(z) = 1 - z$, where $z = h\\lambda$.`,
-              `Substitute $h = 1$ and $\\lambda = ${k + 1}$: $z = 1(${k + 1}) = ${k + 1}$.`,
-              `Thus $R(z) = 1 - (${k + 1}) = -${k}$.`,
-              `The magnitude is $|R(z)| = |-${k}| = ${ans}$. Since this exceeds $1$, the numerical solution is unstable.`,
+              `Euler's update is $y_{n+1} = y_n + h(-\\lambda y_n) = (1 - z)y_n$, where $z = h\\lambda$.`,
+              `Here $z = ${h.toLatex()} \\cdot ${lambda} = ${z.toLatex()}$, so $R = 1 - ${z.toLatex()} = ${R.toLatex()}$.`,
+              `The magnitude is $|R| = ${ans.toLatex()}$, ${unstable ? "which exceeds $1$, so the numerical solution grows without bound" : "which does not exceed $1$, so the numerical solution does not grow"}.`,
             ),
             steps(
-              `显式欧拉法在试验方程 $y' = -\\lambda y$ 上的单步增长因子为 $R(z) = 1 - z$（其中 $z = h\\lambda$）。`,
-              `代入 $h = 1$ 与 $\\lambda = ${k + 1}$：$z = 1(${k + 1}) = ${k + 1}$。`,
-              `因此 $R(z) = 1 - (${k + 1}) = -${k}$。`,
-              `取绝对值得到放大倍数 $|R(z)| = |-${k}| = ${ans}$。因该值大于 $1$，数值计算呈发散不稳定状态。`,
+              `欧拉法的更新式为 $y_{n+1} = y_n + h(-\\lambda y_n) = (1 - z)y_n$，其中 $z = h\\lambda$。`,
+              `这里 $z = ${h.toLatex()} \\cdot ${lambda} = ${z.toLatex()}$，所以 $R = 1 - ${z.toLatex()} = ${R.toLatex()}$。`,
+              `其绝对值为 $|R| = ${ans.toLatex()}$，${unstable ? "大于 $1$，所以数值解会无界增长" : "不大于 $1$，所以数值解不会增长"}。`,
             ),
           );
 
@@ -1539,7 +1561,7 @@ export const differentialEquationsNumericalTopics: TopicDef[] = [
             prompt,
             solution,
             answer: ans,
-            wrong: [k + 1, k - 1, 1, 2 * k],
+            wrong: [z, Q.one.add(z), Q.of(lambda), Q.of(lambda - 1)],
           });
         },
       },

@@ -88,8 +88,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
 
           return numberProblem({
             prompt: t(
-              `A random variable $X \\sim \\text{Binomial}\\left(${n}, \\frac{${pFrac.num}}{${pFrac.den}}\\right)$ is approximated by a normal distribution $N(\\mu, \\sigma^2)$. Find the variance $\\sigma^2 = np(1 - p)$.`,
-              `随机变量 $X \\sim \\text{Binomial}\\left(${n}, \\frac{${pFrac.num}}{${pFrac.den}}\\right)$ 用正态分布 $N(\\mu, \\sigma^2)$ 近似。求方差 $\\sigma^2 = np(1 - p)$。`,
+              `A random variable $X \\sim \\text{Binomial}\\left(${n}, \\frac{${pFrac.num}}{${pFrac.den}}\\right)$ is approximated by a normal distribution $N(\\mu, \\sigma^2)$. Find the variance $\\sigma^2$.`,
+              `随机变量 $X \\sim \\text{Binomial}\\left(${n}, \\frac{${pFrac.num}}{${pFrac.den}}\\right)$ 用正态分布 $N(\\mu, \\sigma^2)$ 近似。求方差 $\\sigma^2$。`,
             ),
             answer: variance,
             wrong: [mean, variance * pFrac.den, n],
@@ -128,8 +128,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
 
           return numberProblem({
             prompt: t(
-              `A Poisson random variable $X \\sim \\text{Poisson}(${lambda})$ is approximated by a normal distribution $N(\\mu, \\sigma^2)$. Find the standard deviation $\\sigma = \\sqrt{\\lambda}$.`,
-              `泊松随机变量 $X \\sim \\text{Poisson}(${lambda})$ 用正态分布 $N(\\mu, \\sigma^2)$ 近似。求其标准差 $\\sigma = \\sqrt{\\lambda}$。`,
+              `A Poisson random variable $X \\sim \\text{Poisson}(${lambda})$ is approximated by a normal distribution $N(\\mu, \\sigma^2)$. Find the standard deviation $\\sigma$.`,
+              `泊松随机变量 $X \\sim \\text{Poisson}(${lambda})$ 用正态分布 $N(\\mu, \\sigma^2)$ 近似。求其标准差 $\\sigma$。`,
             ),
             answer: k,
             wrong: [lambda, 2 * k, Q.of(lambda, 2)],
@@ -721,8 +721,8 @@ export const probabilityAndStatisticsContinuousDistributionTopics: TopicDef[] = 
 
           return numberProblem({
             prompt: t(
-              `A random variable $X \\sim \\text{Gamma}(\\alpha = ${alpha}, \\beta = ${beta})$ has shape parameter $\\alpha = ${alpha}$ and rate parameter $\\beta = ${beta}$. Find its variance $\\text{Var}(X) = \\frac{\\alpha}{\\beta^2}$.`,
-              `随机变量 $X \\sim \\text{Gamma}(\\alpha = ${alpha}, \\beta = ${beta})$ 的形状参数为 $\\alpha = ${alpha}$，比率参数为 $\\beta = ${beta}$。求其方差 $\\text{Var}(X) = \\frac{\\alpha}{\\beta^2}$。`,
+              `A random variable $X \\sim \\text{Gamma}(\\alpha = ${alpha}, \\beta = ${beta})$ has shape parameter $\\alpha = ${alpha}$ and rate parameter $\\beta = ${beta}$. Find its variance $\\text{Var}(X)$.`,
+              `随机变量 $X \\sim \\text{Gamma}(\\alpha = ${alpha}, \\beta = ${beta})$ 的形状参数为 $\\alpha = ${alpha}$，比率参数为 $\\beta = ${beta}$。求其方差 $\\text{Var}(X)$。`,
             ),
             answer: Q.of(alpha, varDen),
             wrong: [Q.of(alpha, beta), alpha * beta, alpha * beta * beta],

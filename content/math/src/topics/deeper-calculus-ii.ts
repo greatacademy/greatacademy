@@ -1655,7 +1655,10 @@ const xSquaredInTermsOfU: KnowledgePointDef = {
     const square = poly([1, "u^2"], [2 * a, "u"], [a * a, ""]);
     const sum = poly([one, ""], [two, ""], [three, ""]);
     return numberProblem({
-      prompt: t(`Evaluate $\\int_{${a}}^{${a + 1}} x^2(${inner})^{${n}}\\,dx$.`, `计算 $\\int_{${a}}^{${a + 1}} x^2(${inner})^{${n}}\\,dx$。`),
+      prompt: t(
+        `Evaluate $\\int_{${a}}^{${a + 1}} x^2(${inner})^{${n}}\\,dx$.`,
+        `计算 $\\int_{${a}}^{${a + 1}} x^2(${inner})^{${n}}\\,dx$。`,
+      ),
       answer,
       wrong: [one.add(three), one.add(Q.of(a, n + 2)).add(three), Q.of((a + 1) * (a + 1), n + 1), one],
       solution: t(

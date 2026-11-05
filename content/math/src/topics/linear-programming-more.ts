@@ -421,7 +421,7 @@ const reducedCosts = topic(
         const values = optimal
           ? [-rng.int(1, 9), -rng.int(1, 9), -rng.int(0, 9)]
           : rng.shuffle([rng.int(6, 9), rng.int(1, 5), -rng.int(1, 9)]);
-        const list = names.map((n, i) => `r_{${i + 1}} = ${values[i]}`).join(",\\ ");
+        const list = names.map((_n, i) => `r_{${i + 1}} = ${values[i]}`).join(",\\ ");
         const top = values.indexOf(Math.max(...values));
         const correct: Pair = optimal ? ["The current basis is optimal", "当前基已是最优"] : same(names[top] as string);
         return choose(

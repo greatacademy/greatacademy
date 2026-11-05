@@ -771,7 +771,7 @@ export const orthogonalVectorsInInnerProductSpaces: TopicDef = {
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.int(2, 5);
-        const b = rng.int(1, 4);
+        const b = rng.pick([1, 2, 3, 4, 5].filter((w) => w !== a));
         const p = rng.nonZero(-4, 4);
         const q = rng.nonZero(-4, 4);
         const k = Q.of(-a * p, b * q);
@@ -1474,8 +1474,8 @@ export const orthogonalLinearTransformations: TopicDef = {
         );
 
         const solution = t(
-          `Because $T$ is an orthogonal transformation, it is an isometry that preserves lengths and dot products:\n$$\\|T(${c1Str}u - ${c2Str}v)\\|^2 = \\|${c1Str}u - ${c2Str}v\\|^2 = ${c1 * c1}\\|u\\|^2 - ${2 * c1 * c2}(u \\cdot v) + ${c2 * c2}\\|v\\|^2 = ${c1 * c1}(${nu * nu}) - ${2 * c1 * c2}(${dot}) + ${c2 * c2}(${nv * nv}) = ${val}$$`,
-          `因为 $T$ 是正交变换，它是保持长度与点积不变的等距变换：\n$$\\|T(${c1Str}u - ${c2Str}v)\\|^2 = \\|${c1Str}u - ${c2Str}v\\|^2 = ${c1 * c1}\\|u\\|^2 - ${2 * c1 * c2}(u \\cdot v) + ${c2 * c2}\\|v\\|^2 = ${c1 * c1}(${nu * nu}) - ${2 * c1 * c2}(${dot}) + ${c2 * c2}(${nv * nv}) = ${val}$$`,
+          `Because $T$ is an orthogonal transformation, it is an isometry that preserves lengths and dot products:\n$$\\|T(${c1Str}u - ${c2Str}v)\\|^2 = \\|${c1Str}u - ${c2Str}v\\|^2 = ${c1 === 1 ? "" : c1 * c1}\\|u\\|^2 - ${2 * c1 * c2}(u \\cdot v) + ${c2 === 1 ? "" : c2 * c2}\\|v\\|^2 = ${c1 * c1}(${nu * nu}) - ${2 * c1 * c2}(${dot}) + ${c2 * c2}(${nv * nv}) = ${val}$$`,
+          `因为 $T$ 是正交变换，它是保持长度与点积不变的等距变换：\n$$\\|T(${c1Str}u - ${c2Str}v)\\|^2 = \\|${c1Str}u - ${c2Str}v\\|^2 = ${c1 === 1 ? "" : c1 * c1}\\|u\\|^2 - ${2 * c1 * c2}(u \\cdot v) + ${c2 === 1 ? "" : c2 * c2}\\|v\\|^2 = ${c1 * c1}(${nu * nu}) - ${2 * c1 * c2}(${dot}) + ${c2 * c2}(${nv * nv}) = ${val}$$`,
         );
 
         return numberProblem({
@@ -2014,11 +2014,14 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBasesApplic
         const item = rng.pick(normals);
         const { n, norm } = item;
 
-        const dist = rng.pick([1, 2, 3, 4, 5]);
+        const multiple = rng.pick([1, 2, 3]);
         const sign = rng.pick([1, -1]);
-        const targetDot = sign * dist * norm;
+        const dist = multiple * norm;
+        const targetDot = sign * multiple * norm * norm;
 
-        const y = [sign * dist * n[0]!, sign * dist * n[1]!, sign * dist * n[2]!];
+        // A part inside the plane keeps y off the normal line.
+        const inside = rng.pick([-1, 1, 2]);
+        const y = [sign * multiple * n[0]! + inside * n[1]!, sign * multiple * n[1]! - inside * n[0]!, sign * multiple * n[2]!];
 
         const eqStr = `${formatLinEq(n, ["x_1", "x_2", "x_3"])} = 0`;
         const prompt = t(
@@ -2035,7 +2038,7 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBasesApplic
           prompt,
           answer: dist,
           solution,
-          wrong: [dist * norm, dist * dist, dist + 1, Math.abs(dist - 1) || dist + 2],
+          wrong: [Math.abs(targetDot), multiple, dist + 1, dist * dist],
         });
       },
     },
@@ -2053,7 +2056,7 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBasesApplic
         const sxy = xs.reduce((s, x, i) => s + x * ys[i]!, 0);
         const sxx = xs.reduce((s, x) => s + x * x, 0);
         const m = Q.of(sxy, sxx);
-        const pts = xs.map((x, i) => `(${x}, ${ys[i]!})`).join(", ");
+        const pts = xs.map((x, i) => `$(${x}, ${ys[i]!})$`).join(", ");
         return numberProblem({
           prompt: t(
             `Find the slope $m$ of the least-squares line $y = mx$ through the origin for the points ${pts}.`,

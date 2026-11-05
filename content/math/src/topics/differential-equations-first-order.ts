@@ -726,14 +726,14 @@ export const reducingOdesToFirstOrderLinearBySubstitution: TopicDef = {
         "由于 $(y^{2})' = 2yy'$，令 $v = y^{2}$，方程 $2yy' + ay^{2} = b$ 化为 $v' + av = b$。其解为\n\n$$v = \\frac{b}{a} + \\left(y_0^{2} - \\frac{b}{a}\\right)e^{-ax},$$\n\n对正解有 $y = \\sqrt{v}$。注意 $v$ 的初值是 $y_0^{2}$，而不是 $y_0$。",
       ),
       generate(rng: Rng): Problem {
-        const a = rng.int(1, 5);
+        const a = rng.int(2, 5);
         const k = rng.int(1, 12);
         const y0 = rng.int(2, 6);
         const ans = Q.of(k + y0 * y0, 2);
         return numberProblem({
           prompt: t(
-            `$y > 0$ satisfies $2yy' + ${a === 1 ? "" : a}y^{2} = ${a * k}$ with $y(0) = ${y0}$. Find $y\\left(\\frac{\\ln 2}{${a}}\\right)^{2}$.`,
-            `$y > 0$ 满足 $2yy' + ${a === 1 ? "" : a}y^{2} = ${a * k}$，$y(0) = ${y0}$。求 $y\\left(\\frac{\\ln 2}{${a}}\\right)^{2}$。`,
+            `$y > 0$ satisfies $2yy' + ${a === 1 ? "" : a}y^{2} = ${a * k}$ with $y(0) = ${y0}$. Find $\\left[y\\left(\\frac{\\ln 2}{${a}}\\right)\\right]^{2}$.`,
+            `$y > 0$ 满足 $2yy' + ${a === 1 ? "" : a}y^{2} = ${a * k}$，$y(0) = ${y0}$。求 $\\left[y\\left(\\frac{\\ln 2}{${a}}\\right)\\right]^{2}$。`,
           ),
           answer: ans,
           wrong: [Q.of(k + y0, 2), Q.of(k), Q.of(y0 * y0, 2)].filter((v) => !v.eq(ans)),
@@ -824,16 +824,18 @@ export const homogeneousFunctions: TopicDef = {
         const ans = tq.pow(n).mul(Q.of(c));
         const sx = tq.mul(Q.of(x0));
         const sy = tq.mul(Q.of(y0));
+        const scale = n === 1 ? "t" : `t^{${n}}`;
+        const power = n === 1 ? tq.toLatex() : `\\left(${tq.toLatex()}\\right)^{${n}}`;
         return numberProblem({
           prompt: t(
-            `$f(x, y)$ is homogeneous of degree $${n}$ in the sense $f(tx, ty) = t^{${n}}f(x, y)$ for all $t \\ne 0$, and $f(${x0}, ${y0}) = ${c}$. Find $f(${sx.toLatex()}, ${sy.toLatex()})$.`,
-            `$f(x, y)$ 是 $${n}$ 次齐次函数，即对所有 $t \\ne 0$ 有 $f(tx, ty) = t^{${n}}f(x, y)$，且 $f(${x0}, ${y0}) = ${c}$。求 $f(${sx.toLatex()}, ${sy.toLatex()})$。`,
+            `$f(x, y)$ is homogeneous of degree $${n}$ in the sense $f(tx, ty) = ${scale}f(x, y)$ for all $t \\ne 0$, and $f(${x0}, ${y0}) = ${c}$. Find $f(${sx.toLatex()}, ${sy.toLatex()})$.`,
+            `$f(x, y)$ 是 $${n}$ 次齐次函数，即对所有 $t \\ne 0$ 有 $f(tx, ty) = ${scale}f(x, y)$，且 $f(${x0}, ${y0}) = ${c}$。求 $f(${sx.toLatex()}, ${sy.toLatex()})$。`,
           ),
           answer: ans,
           wrong: [tq.mul(Q.of(c)), tq.pow(n + 1).mul(Q.of(c)), Q.of(n).mul(tq).mul(Q.of(c))].filter((v) => !v.eq(ans)),
           solution: t(
-            `$(${sx.toLatex()}, ${sy.toLatex()}) = t(${x0}, ${y0})$ with $t = ${tq.toLatex()}$, so $f = \\left(${tq.toLatex()}\\right)^{${n}} \\cdot ${par(c)} = ${ans.toLatex()}$.`,
-            `$(${sx.toLatex()}, ${sy.toLatex()}) = t(${x0}, ${y0})$，其中 $t = ${tq.toLatex()}$，所以 $f = \\left(${tq.toLatex()}\\right)^{${n}} \\cdot ${par(c)} = ${ans.toLatex()}$。`,
+            `$(${sx.toLatex()}, ${sy.toLatex()}) = t(${x0}, ${y0})$ with $t = ${tq.toLatex()}$, so $f = ${power} \\cdot ${par(c)} = ${ans.toLatex()}$.`,
+            `$(${sx.toLatex()}, ${sy.toLatex()}) = t(${x0}, ${y0})$，其中 $t = ${tq.toLatex()}$，所以 $f = ${power} \\cdot ${par(c)} = ${ans.toLatex()}$。`,
           ),
         });
       },

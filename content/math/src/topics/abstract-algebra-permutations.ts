@@ -6,6 +6,9 @@ import { article, numberProblem } from "../problems.ts";
 import { factProblem, gcd, lcm, mod, phi, texChoice, textChoice } from "./abstract-algebra-common.ts";
 import { range } from "./methods-of-proof-common.ts";
 
+/** rPow writes the rotation rᵏ, without a redundant exponent. */
+const rPow = (k: number) => (k === 0 ? "e" : k === 1 ? "r" : `r^{${k}}`);
+
 // Abstract Algebra unit 3: permutations and cycles, symmetric and alternating groups, and symmetry groups of figures.
 
 /** Perm is a permutation of {0, …, n − 1}, listing the image of each point; points are shown to learners as 1, …, n. */
@@ -986,16 +989,16 @@ export const dihedralGroup: TopicDef = {
         const value = reflection ? 2 : n / gcd(k, n);
         return numberProblem({
           prompt: t(
-            `In the dihedral group $D_{${n}}$ of order $${2 * n}$, with $r$ the rotation by $\\frac{360^\\circ}{${n}}$ and $s$ a reflection, find the order of $${reflection ? `r^{${k}}s` : `r^{${k}}`}$.`,
-            `在 $${2 * n}$ 阶二面体群 $D_{${n}}$ 中，$r$ 为旋转 $\\frac{360^\\circ}{${n}}$，$s$ 为一个反射。求 $${reflection ? `r^{${k}}s` : `r^{${k}}`}$ 的阶。`,
+            `In the dihedral group $D_{${n}}$ of order $${2 * n}$, with $r$ the rotation by $\\frac{360^\\circ}{${n}}$ and $s$ a reflection, find the order of $${reflection ? `${rPow(k)}s` : `${rPow(k)}`}$.`,
+            `在 $${2 * n}$ 阶二面体群 $D_{${n}}$ 中，$r$ 为旋转 $\\frac{360^\\circ}{${n}}$，$s$ 为一个反射。求 $${reflection ? `${rPow(k)}s` : `${rPow(k)}`}$ 的阶。`,
           ),
           answer: value,
           wrong: reflection ? [n / gcd(k, n), 2 * n, n] : [n, gcd(k, n), 2 * value],
           solution: reflection
-            ? t(`$r^{${k}}s$ is a reflection, so its order is $2$.`, `$r^{${k}}s$ 是反射，所以阶为 $2$。`)
+            ? t(`$${rPow(k)}s$ is a reflection, so its order is $2$.`, `$${rPow(k)}s$ 是反射，所以阶为 $2$。`)
             : t(
-                `$r^{${k}}$ has order $\\frac{${n}}{\\gcd(${k}, ${n})} = ${value}$.`,
-                `$r^{${k}}$ 的阶为 $\\frac{${n}}{\\gcd(${k}, ${n})} = ${value}$。`,
+                `$${rPow(k)}$ has order $\\frac{${n}}{\\gcd(${k}, ${n})} = ${value}$.`,
+                `$${rPow(k)}$ 的阶为 $\\frac{${n}}{\\gcd(${k}, ${n})} = ${value}$。`,
               ),
         });
       },

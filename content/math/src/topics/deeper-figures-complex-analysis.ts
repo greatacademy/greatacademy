@@ -249,7 +249,7 @@ const windingFromLoop = point(
   ],
   (rng) => {
     const quarter = rng.int(0, 3);
-    const s = rng.pick([1, 1.25, 1.5]);
+    const s = rng.pick([1.25, 1.5]);
     const counterclockwise = rng.bool();
     const turn = ([x, y]: Point): Point => {
       const c = [1, 0, -1, 0][quarter] as number;
@@ -295,7 +295,14 @@ const windingFromLoop = point(
           arrow(0),
           arrow(Math.PI / 2),
           arrow((3 * Math.PI) / 2),
-          { kind: "point", at, label: "P", dir: "n" },
+          // The inner loop is too small to hold a label, so a thin arrow leads to the point from the space outside the loop.
+          ...(spot === "inner"
+            ? ([
+                { kind: "point", at },
+                { kind: "label", at: turn([0.5, 1.15]), text: "P", dir: "n" },
+                { kind: "arrow", from: turn([0.5, 0.95]), to: turn([0.5, 0.12]), thin: true },
+              ] as PlaneMark[])
+            : ([{ kind: "point", at, label: "P", dir: "n" }] as PlaneMark[])),
         ],
         [
           `A closed curve with a small inner loop, traced ${counterclockwise ? "counterclockwise" : "clockwise"}, and a point P.`,

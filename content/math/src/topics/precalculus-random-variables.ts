@@ -394,8 +394,8 @@ const cumulativeDistributionFunctions: TopicDef = {
           form: "decimal",
           wrong: [F(b) - F(a), F(b) - F(a - 1), F(b - 1) - F(a), F(hi) + F(lo - 1)].map((w) => Q.of(w, 100)),
           solution: t(
-            `The event contains the values from $${xs[lo]}$ to $${xs[hi]}$:${steps(line)}`,
-            `这个事件包含从 $${xs[lo]}$ 到 $${xs[hi]}$ 的取值：${steps(line)}`,
+            `The event contains ${lo === hi ? `only the value $${xs[lo]}$` : `the values from $${xs[lo]}$ to $${xs[hi]}$`}:${steps(line)}`,
+            `这个事件${lo === hi ? `只包含取值 $${xs[lo]}$` : `包含从 $${xs[lo]}$ 到 $${xs[hi]}$ 的取值`}：${steps(line)}`,
           ),
         });
       },
@@ -1306,7 +1306,12 @@ const zs = (z: number) => dec(Q.of(z, 100));
 
 /** given lists table values Φ(z) for the positive z, in hundredths. */
 function given(zsList: readonly number[]): Text {
-  const uniq = [...new Set(zsList.map(Math.abs))].sort((a, b) => a - b);
+  const asked = [...new Set(zsList.map(Math.abs))];
+  // A single value would be the answer itself, so its neighbors in the table are listed too.
+  const keys = [...PHI.keys()];
+  const at = keys.indexOf(asked[0] as number);
+  const shown = asked.length === 1 && at >= 0 ? keys.slice(Math.max(0, at - 1), at + 2) : asked;
+  const uniq = [...shown].sort((a, b) => a - b);
   const items = uniq.map((z) => `$\\Phi(${zs(z)}) = ${tt(phi(z))}$`);
   return t(` Use ${items.join(", ")}.`, `使用 ${items.join("、")}。`);
 }

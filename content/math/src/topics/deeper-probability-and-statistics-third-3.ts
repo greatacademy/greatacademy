@@ -6,7 +6,7 @@ import type { KnowledgePointDef } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
 
 import { ask, choose, type Pair, point } from "../university-kit.ts";
-import { askDecimal, given, nz, oneMinus, phi, zText } from "./deeper-probability-and-statistics-third.ts";
+import { askDecimal, given, givenAmong, nz, oneMinus, phi, zText } from "./deeper-probability-and-statistics-third.ts";
 
 /** TWO_SIDED_T lists two-sided five percent critical values of the t distribution, in thousandths, by degrees of freedom. */
 const TWO_SIDED_T: Readonly<Record<number, number>> = {
@@ -122,8 +122,8 @@ const leftPower = point(
     const answer = above ? phi(z) : oneMinus(phi(z));
     return askDecimal(
       [
-        `A test of $H_{0}: \\mu = ${mu0}$ against $\\mu < ${mu0}$ rejects when $\\bar{X} < ${c}$, with $n = ${k * k}$ and $\\sigma = ${k * se}$. Find the power when $\\mu = ${mu1}$. Use $${given(z)}$.`,
-        `检验 $H_{0}: \\mu = ${mu0}$ 对 $\\mu < ${mu0}$，当 $\\bar{X} < ${c}$ 时拒绝，$n = ${k * k}$，$\\sigma = ${k * se}$。求 $\\mu = ${mu1}$ 时的功效。利用 $${given(z)}$。`,
+        `A test of $H_{0}: \\mu = ${mu0}$ against $\\mu < ${mu0}$ rejects when $\\bar{X} < ${c}$, with $n = ${k * k}$ and $\\sigma = ${k * se}$. Find the power when $\\mu = ${mu1}$. Use $${givenAmong(z)}$.`,
+        `检验 $H_{0}: \\mu = ${mu0}$ 对 $\\mu < ${mu0}$，当 $\\bar{X} < ${c}$ 时拒绝，$n = ${k * k}$，$\\sigma = ${k * se}$。求 $\\mu = ${mu1}$ 时的功效。利用 $${givenAmong(z)}$。`,
       ],
       answer,
       [oneMinus(answer), phi(z === 100 ? 150 : 100), oneMinus(phi(z === 100 ? 150 : 100))],
@@ -154,8 +154,8 @@ const rightBeta = point(
     const answer = beyond ? oneMinus(phi(z)) : phi(z);
     return askDecimal(
       [
-        `A test of $H_{0}: \\mu = ${mu0}$ against $\\mu > ${mu0}$ rejects when $\\bar{X} > ${c}$, with $n = ${k * k}$ and $\\sigma = ${k * se}$. Find the probability of a Type II error when $\\mu = ${mu1}$. Use $${given(z)}$.`,
-        `检验 $H_{0}: \\mu = ${mu0}$ 对 $\\mu > ${mu0}$，当 $\\bar{X} > ${c}$ 时拒绝，$n = ${k * k}$，$\\sigma = ${k * se}$。求 $\\mu = ${mu1}$ 时犯第二类错误的概率。利用 $${given(z)}$。`,
+        `A test of $H_{0}: \\mu = ${mu0}$ against $\\mu > ${mu0}$ rejects when $\\bar{X} > ${c}$, with $n = ${k * k}$ and $\\sigma = ${k * se}$. Find the probability of a Type II error when $\\mu = ${mu1}$. Use $${givenAmong(z)}$.`,
+        `检验 $H_{0}: \\mu = ${mu0}$ 对 $\\mu > ${mu0}$，当 $\\bar{X} > ${c}$ 时拒绝，$n = ${k * k}$，$\\sigma = ${k * se}$。求 $\\mu = ${mu1}$ 时犯第二类错误的概率。利用 $${givenAmong(z)}$。`,
       ],
       answer,
       [oneMinus(answer), phi(z === 100 ? 150 : 100), oneMinus(phi(z === 100 ? 150 : 100))],

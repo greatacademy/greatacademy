@@ -287,8 +287,8 @@ const freshmansDream = point(
     const answer = c % n;
     return ask(
       [
-        `In $\\mathbb{Z}_{${n}}[x, y]$, find the coefficient of $x^{${k}}y^{${n - k}}$ in $(x + y)^{${n}}$, as a value from $0$ to $${n - 1}$.`,
-        `在 $\\mathbb{Z}_{${n}}[x, y]$ 中，求 $(x + y)^{${n}}$ 里 $x^{${k}}y^{${n - k}}$ 的系数，取值范围为 $0$ 到 $${n - 1}$。`,
+        `In $\\mathbb{Z}_{${n}}[x, y]$, find the coefficient of $${k === 1 ? "x" : `x^{${k}}`}${n - k === 1 ? "y" : `y^{${n - k}}`}$ in $(x + y)^{${n}}$, as a value from $0$ to $${n - 1}$.`,
+        `在 $\\mathbb{Z}_{${n}}[x, y]$ 中，求 $(x + y)^{${n}}$ 里 $${k === 1 ? "x" : `x^{${k}}`}${n - k === 1 ? "y" : `y^{${n - k}}`}$ 的系数，取值范围为 $0$ 到 $${n - 1}$。`,
       ],
       answer,
       [c === answer ? answer + 1 : c, 0, 1],

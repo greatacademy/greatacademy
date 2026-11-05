@@ -1700,10 +1700,7 @@ const uniformFromDensity: KnowledgePointDef = {
             [d, 0],
           ],
         },
-        t(
-          `A flat density of height 1/${w} from ${a} to ${b}, shaded from ${c} to ${d}.`,
-          `从 ${a} 到 ${b}、高为 1/${w} 的平顶密度，从 ${c} 到 ${d} 有阴影。`,
-        ),
+        t(`A flat density from ${a} to ${b}, shaded from ${c} to ${d}.`, `从 ${a} 到 ${b} 的平顶密度，从 ${c} 到 ${d} 有阴影。`),
       ),
     );
   },
@@ -1785,16 +1782,16 @@ const cdfFromGraph: KnowledgePointDef = {
     const heights = [0];
     let left = 10;
     for (let i = 0; i < 5; i++) {
-      const rise = i === 4 ? left : rng.int(0, Math.min(left, 4));
+      const rise = i === 4 ? left : rng.int(i === 0 ? 1 : 0, Math.min(left, 4));
       heights.push(heights[i]! + rise);
       left -= rise;
     }
     let a: number;
     let b: number;
     do {
-      a = rng.int(0, 3);
+      a = rng.int(1, 3);
       b = rng.int(a + 1, 5);
-    } while (heights[a] === heights[b]);
+    } while (heights[a] === heights[b] || heights[a] === 0);
     const F = (x: number) => (heights[x] as number) / 10;
     const points = heights.map((h, x): Point => [x, h / 10]);
     const answer = Q.of((heights[b] as number) - (heights[a] as number), 10);

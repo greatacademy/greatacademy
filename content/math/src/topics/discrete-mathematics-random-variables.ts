@@ -1199,7 +1199,7 @@ export const modelingWithThePoissonDistribution: TopicDef = {
           lambda = Math.round(s.rate * s.over * 1000) / 1000;
           k = rng.int(0, 4);
           value = round4(poissonP(lambda, k));
-        } while (!value || !Number.isInteger(lambda * 10));
+        } while (!value || !Number.isInteger(lambda * 10) || lambda > 6);
         return numberProblem({
           prompt: t(
             `${s.what.en} independently at a constant average rate of $${s.rate}$ ${s.per.en}. Find the probability of exactly $${k}$ in ${s.span.en}.${FOUR.en}`,
@@ -1209,8 +1209,8 @@ export const modelingWithThePoissonDistribution: TopicDef = {
           form: "decimal",
           wrong: [r4(poissonP(s.rate, k)), r4(poissonCdf(lambda, k)), r4(poissonP(lambda, k + 1))],
           solution: t(
-            `The mean for this interval is $\\lambda = ${lambda}$, so $P(X = ${k}) = e^{-${lambda}} \\frac{${lambda}^{${k}}}{${k}!} \\approx ${dec(value)}$.`,
-            `该区间的均值为 $\\lambda = ${lambda}$，所以 $P(X = ${k}) = e^{-${lambda}} \\frac{${lambda}^{${k}}}{${k}!} \\approx ${dec(value)}$。`,
+            `The mean for this interval is $\\lambda = ${lambda}$, so $P(X = ${k}) = e^{-${lambda}} \\frac{${k === 1 ? lambda : `${lambda}^{${k}}`}}{${k}!} \\approx ${dec(value)}$.`,
+            `该区间的均值为 $\\lambda = ${lambda}$，所以 $P(X = ${k}) = e^{-${lambda}} \\frac{${k === 1 ? lambda : `${lambda}^{${k}}`}}{${k}!} \\approx ${dec(value)}$。`,
           ),
         });
       },
@@ -1230,7 +1230,7 @@ export const modelingWithThePoissonDistribution: TopicDef = {
           s = poissonStory(rng);
           lambda = Math.round(s.rate * s.over * 1000) / 1000;
           value = round4(1 - Math.exp(-lambda));
-        } while (!value || !Number.isInteger(lambda * 10));
+        } while (!value || !Number.isInteger(lambda * 10) || lambda > 4);
         return numberProblem({
           prompt: t(
             `${s.what.en} independently at a constant average rate of $${s.rate}$ ${s.per.en}. Find the probability of at least one in ${s.span.en}.${FOUR.en}`,
@@ -1827,8 +1827,14 @@ export const thePmfOfTheHypergeometricDistribution: TopicDef = {
         const value = atLeast ? Q.of(1).sub(hyperP(s.N, s.K, s.n, 0)) : hyperP(s.N, s.K, s.n, 0).add(hyperP(s.N, s.K, s.n, 1));
         return numberProblem({
           prompt: atLeast
-            ? t(`${s.en}. Find the probability of at least one of the ${s.item.en}.`, `${s.zh}。求至少有一个${s.item["zh-CN"]}的概率。`)
-            : t(`${s.en}. Find the probability of at most one of the ${s.item.en}.`, `${s.zh}。求至多有一个${s.item["zh-CN"]}的概率。`),
+            ? t(
+                `${s.en}. Find the probability that at least one of the ${s.item.en} is chosen.`,
+                `${s.zh}。求至少有一个${s.item["zh-CN"]}的概率。`,
+              )
+            : t(
+                `${s.en}. Find the probability that at most one of the ${s.item.en} is chosen.`,
+                `${s.zh}。求至多有一个${s.item["zh-CN"]}的概率。`,
+              ),
           answer: value,
           wrong: atLeast
             ? [hyperP(s.N, s.K, s.n, 1), hyperP(s.N, s.K, s.n, 0)]

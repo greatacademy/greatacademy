@@ -6,7 +6,7 @@ import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd, Q, svgDocument } from "@ga/subject-math";
 
-import { ask, choose, observed, type Pair, point, same } from "../university-kit.ts";
+import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { drawn, label } from "./figure-reading-more.ts";
 
 /** fig wraps marks in a figure with its description in both languages. */
@@ -593,7 +593,10 @@ const seriesBehaviour = point(
       fig(
         { xMin: 0, xMax: 13, yMin: -6, yMax: 9, xName: "n", yName: "S" },
         [...dots(values), { kind: "segment", a: [0, L], b: [13, L], dashed: true }],
-        [`Partial sums of a series. ${observed(seen)[0].replaceAll("$", "")}.`, `某级数的部分和。${observed(seen)[1].replaceAll("$", "")}。`],
+        [
+          `Partial sums of a series for n from 1 to 12, at heights ${values.map((v) => Math.round(v * 10) / 10).join(", ")}, with a dashed horizontal line at height ${L}.`,
+          `某级数在 n 从 1 到 12 时的部分和，高度依次为 ${values.map((v) => Math.round(v * 10) / 10).join("、")}，并有一条高度为 ${L} 的水平虚线。`,
+        ],
       ),
     );
   },

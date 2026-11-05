@@ -1154,7 +1154,10 @@ const hungarian = topic(
           ],
           (row[i] as number) - m,
           [row[i] as number, m, (row[i] as number) - m + 1],
-          [`The smallest entry of the row is ${m}, and it is subtracted from every entry, so ${row[i]} becomes $${row[i]} - ${m} = ${(row[i] as number) - m}$.`, `这一行最小的元素是 ${m}，每个元素都减去它，所以 ${row[i]} 变成 $${row[i]} - ${m} = ${(row[i] as number) - m}$。`],
+          [
+            `The smallest entry of the row is ${m}, and it is subtracted from every entry, so ${row[i]} becomes $${row[i]} - ${m} = ${(row[i] as number) - m}$.`,
+            `这一行最小的元素是 ${m}，每个元素都减去它，所以 ${row[i]} 变成 $${row[i]} - ${m} = ${(row[i] as number) - m}$。`,
+          ],
         );
       },
     ),

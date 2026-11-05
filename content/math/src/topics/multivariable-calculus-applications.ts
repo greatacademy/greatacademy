@@ -1570,36 +1570,40 @@ export const jointDistributionsForContinuousRandomVariables: TopicDef = {
       id: "marginal-densities-and-independence-of-continuous-variables",
       title: t("Marginal densities and independence of continuous variables", "连续型随机变量边际密度的积分求解"),
       explanation: t(
-        "Integrating out the other variable gives the marginal density, and the variables are independent when the joint density equals the product of the marginals. The marginal probability density function of $X$ is $f_X(x) = \\int_{-\\infty}^\\infty f(x, y)\\,dy$. For $f(x, y) = c(x + a)$ on $[0, 1] \\times [0, 1]$, $f_X(x) = \\int_0^1 c(x + a)\\,dy = c(x + a)$.",
-        "把另一个变量积分掉就得到边缘密度，当联合密度等于边缘密度之积时，两个变量相互独立。随机变量 $X$ 的边际概率密度函数为 $f_X(x) = \\int_{-\\infty}^\\infty f(x, y)\\,dy$。对于在 $[0, 1] \\times [0, 1]$ 上的联合密度 $f(x, y) = c(x + a)$，$f_X(x) = \\int_0^1 c(x + a)\\,dy = c(x + a)$。",
+        "Integrating out the other variable gives the marginal density, and the variables are independent when the joint density equals the product of the marginals. The marginal probability density function of $X$ is $f_X(x) = \\int_{-\\infty}^\\infty f(x, y)\\,dy$. For $f(x, y) = x + y$ on $[0, 1] \\times [0, 1]$, $f_X(x) = \\int_0^1 (x + y)\\,dy = x + \\frac{1}{2}$.",
+        "把另一个变量积分掉就得到边缘密度，当联合密度等于边缘密度之积时，两个变量相互独立。随机变量 $X$ 的边际概率密度函数为 $f_X(x) = \\int_{-\\infty}^\\infty f(x, y)\\,dy$。对于在 $[0, 1] \\times [0, 1]$ 上的联合密度 $f(x, y) = x + y$，$f_X(x) = \\int_0^1 (x + y)\\,dy = x + \\frac{1}{2}$。",
       ),
       generate(rng: Rng): Problem {
-        const a = rng.int(1, 5);
-        const c = rng.int(2, 7);
-        const xVal = 1;
-        const ans = c * (xVal + a);
+        // f(x, y) = (2 / (1 + a))(x + a y) has total integral 1 on the unit square.
+        const a = rng.int(2, 7);
+        const xVal = rng.pick([Q.of(1, 4), Q.of(1, 3), Q.of(1, 2), Q.of(2, 3), Q.of(3, 4)]);
+        const c = Q.of(2, 1 + a);
+        const ans = c.mul(xVal.add(Q.of(a, 2)));
+        const f = `${c.toLatex()}(x + ${a}y)`;
+        const marginal = `${c.toLatex()}\\left(x + ${Q.of(a, 2).toLatex()}\\right)`;
+        const inner = xVal.add(Q.of(a, 2));
 
         const prompt = t(
-          `A continuous random vector $(X, Y)$ on $[0, 1] \\times [0, 1]$ has joint density $f(x, y) = ${c}(x + ${a})$. Evaluate the marginal probability density $f_X(x)$ at $x = ${xVal}$.`,
-          `定义在 $[0, 1] \\times [0, 1]$ 上的连续型随机向量 $(X, Y)$ 具有联合密度 $f(x, y) = ${c}(x + ${a})$。求边际概率密度 $f_X(x)$ 在 $x = ${xVal}$ 处的值。`,
+          `A continuous random vector $(X, Y)$ on $[0, 1] \\times [0, 1]$ has joint density $f(x, y) = ${f}$. Evaluate the marginal probability density $f_X(x)$ at $x = ${xVal.toLatex()}$.`,
+          `定义在 $[0, 1] \\times [0, 1]$ 上的连续型随机向量 $(X, Y)$ 具有联合密度 $f(x, y) = ${f}$。求边际概率密度 $f_X(x)$ 在 $x = ${xVal.toLatex()}$ 处的值。`,
         );
         const solution = t(
           steps(
-            `Integrate out $y$ over its domain $[0, 1]$: $f_X(x) = \\int_0^1 f(x, y)\\,dy = \\int_0^1 ${c}(x + ${a})\\,dy$.`,
-            `Because ${c}(x + ${a}) does not depend on $y$, the integral is $f_X(x) = ${c}(x + ${a}) [y]_0^1 = ${c}(x + ${a})$.`,
-            `Evaluate at $x = ${xVal}$: $f_X(${xVal}) = ${c}(${xVal} + ${a}) = ${c}(${xVal + a}) = ${ans}$.`,
+            `Integrate out $y$ over its domain $[0, 1]$: $f_X(x) = \\int_0^1 ${f}\\,dy$.`,
+            `Here $x$ is constant, and $\\int_0^1 ${a}y\\,dy = ${Q.of(a, 2).toLatex()}$, so $f_X(x) = ${marginal}$.`,
+            `Evaluate at $x = ${xVal.toLatex()}$: $f_X\\left(${xVal.toLatex()}\\right) = ${c.toLatex()} \\cdot ${inner.toLatex()} = ${ans.toLatex()}$.`,
           ),
           steps(
-            `对 $y$ 在其取值区间 $[0, 1]$ 上积分：$f_X(x) = \\int_0^1 f(x, y)\\,dy = \\int_0^1 ${c}(x + ${a})\\,dy$。`,
-            `由于被积式不含 $y$，$f_X(x) = ${c}(x + ${a}) [y]_0^1 = ${c}(x + ${a})$。`,
-            `代入 $x = ${xVal}$：$f_X(${xVal}) = ${c}(${xVal} + ${a}) = ${ans}$。`,
+            `对 $y$ 在其取值区间 $[0, 1]$ 上积分：$f_X(x) = \\int_0^1 ${f}\\,dy$。`,
+            `这里 $x$ 是常数，且 $\\int_0^1 ${a}y\\,dy = ${Q.of(a, 2).toLatex()}$，所以 $f_X(x) = ${marginal}$。`,
+            `代入 $x = ${xVal.toLatex()}$：$f_X\\left(${xVal.toLatex()}\\right) = ${c.toLatex()} \\cdot ${inner.toLatex()} = ${ans.toLatex()}$。`,
           ),
         );
         return numberProblem({
           prompt,
           solution,
           answer: ans,
-          wrong: [c * a, c * xVal, ans + c],
+          wrong: [c.mul(xVal), c.mul(xVal.add(Q.of(a, 1))), c.mul(Q.of(a, 2))],
         });
       },
     },

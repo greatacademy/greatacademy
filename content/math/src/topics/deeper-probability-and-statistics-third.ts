@@ -58,6 +58,17 @@ export const phi = (z100: number) => Q.of(PHI[z100] as number, 10000);
 export const zText = (z100: number) => dec(Q.of(z100, 100));
 /** given writes the table value of the distribution function at z hundredths. */
 export const given = (z100: number) => `\\Phi(${zText(z100)}) = ${dec(phi(z100))}`;
+/** givenAmong writes the table value at z hundredths with its neighbors in the table, so that the learner must work out which one applies. */
+export const givenAmong = (z100: number) => {
+  const keys = Object.keys(PHI)
+    .map(Number)
+    .sort((a, b) => a - b);
+  const at = keys.indexOf(z100);
+  return keys
+    .slice(Math.max(0, at - 1), at + 2)
+    .map(given)
+    .join(", \\quad ");
+};
 /** oneMinus gives one minus a probability. */
 export const oneMinus = (p: Q) => Q.of(1, 1).sub(p);
 
@@ -517,8 +528,8 @@ const poissonProbability = point(
     const answer = upper ? oneMinus(phi(z)) : phi(z);
     return askDecimal(
       [
-        `$X \\sim \\operatorname{Po}(${l})$. Use a normal approximation with continuity correction to find $P(${event})$. Use $${given(z)}$.`,
-        `$X \\sim \\operatorname{Po}(${l})$。用带连续性校正的正态近似求 $P(${event})$。利用 $${given(z)}$。`,
+        `$X \\sim \\operatorname{Po}(${l})$. Use a normal approximation with continuity correction to find $P(${event})$. Use $${givenAmong(z)}$.`,
+        `$X \\sim \\operatorname{Po}(${l})$。用带连续性校正的正态近似求 $P(${event})$。利用 $${givenAmong(z)}$。`,
       ],
       answer,
       [oneMinus(answer), phi(z).sub(Q.of(1, 2)), Q.of(1, 1).sub(phi(z).sub(Q.of(1, 2)))],
@@ -729,8 +740,8 @@ const scaledComparison = point(
     const right = poly([q, "Y"]);
     return askDecimal(
       [
-        `$X \\sim N(${m1}, ${s1 * s1})$ and $Y \\sim N(${m2}, ${s2 * s2})$ are independent. Find $P(${left} > ${right})$. Use $${given(z)}$.`,
-        `$X \\sim N(${m1}, ${s1 * s1})$ 与 $Y \\sim N(${m2}, ${s2 * s2})$ 独立。求 $P(${left} > ${right})$。利用 $${given(z)}$。`,
+        `$X \\sim N(${m1}, ${s1 * s1})$ and $Y \\sim N(${m2}, ${s2 * s2})$ are independent. Find $P(${left} > ${right})$. Use $${givenAmong(z)}$.`,
+        `$X \\sim N(${m1}, ${s1 * s1})$ 与 $Y \\sim N(${m2}, ${s2 * s2})$ 独立。求 $P(${left} > ${right})$。利用 $${givenAmong(z)}$。`,
       ],
       phi(z),
       [oneMinus(phi(z)), phi(z).sub(Q.of(1, 2)), Q.of(1, 2)],
@@ -771,7 +782,10 @@ const threeNormals = point(
     const event = `${sum} ${lower ? "\\le" : ">"} ${bound}`;
     const data = `X_{1} \\sim N(${m1}, ${a})$, $X_{2} \\sim N(${m2}, ${b})$, $X_{3} \\sim N(${m3}, ${c})`;
     return askDecimal(
-      [`$${data}$ are independent. Find $P(${event})$. Use $${given(z)}$.`, `$${data}$ 相互独立。求 $P(${event})$。利用 $${given(z)}$。`],
+      [
+        `$${data}$ are independent. Find $P(${event})$. Use $${givenAmong(z)}$.`,
+        `$${data}$ 相互独立。求 $P(${event})$。利用 $${givenAmong(z)}$。`,
+      ],
       answer,
       [oneMinus(answer), phi(z).sub(Q.of(1, 2)), Q.of(1, 2)],
       [

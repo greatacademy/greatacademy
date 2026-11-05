@@ -1,7 +1,7 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { poly, Q } from "@ga/subject-math";
-import { choiceProblem, numberProblem, steps, yesNo } from "../problems.ts";
+import { choiceProblem, lowestTerms, numberProblem, steps, yesNo } from "../problems.ts";
 
 /** par wraps a negative number in parentheses for use as a factor. */
 const par = (n: number): string => (n < 0 ? `(${n})` : String(n));
@@ -433,9 +433,9 @@ export const generalSolutionsOfFirstOrderLinearSystemsOfOdes: TopicDef = {
         "通解 $\\mathbf{x}(t) = c_1 e^{\\lambda_1 t}\\mathbf{v}_1 + c_2 e^{\\lambda_2 t}\\mathbf{v}_2$ 在 $t = 0$ 时化为 $c_1\\mathbf{v}_1 + c_2\\mathbf{v}_2 = \\mathbf{x}(0)$，因为那时每个指数都等于 $1$。这是关于常数的线性方程组。当 $\\mathbf{v}_1 = (1, m_1)$，$\\mathbf{v}_2 = (1, m_2)$ 时，\n\n$$c_1 + c_2 = x_1(0), \\qquad m_1c_1 + m_2c_2 = x_2(0).$$",
       ),
       generate(rng: Rng): Problem {
-        const l1 = rng.int(-4, 4);
-        const l2 = l1 + rng.int(1, 4);
-        const m1 = rng.int(-4, 4);
+        const l1 = rng.nonZero(-4, 4);
+        const l2 = l1 + rng.int(1, 4) || l1 + 5;
+        const m1 = rng.nonZero(-4, 4);
         const m2 = m1 + rng.pick([-2, -1, 1, 2]);
         const c1 = rng.int(-5, 5) || 2;
         const c2 = rng.int(-5, 5) || -3;
@@ -626,7 +626,7 @@ export const solvingHomogeneousSystemsOfOdesWithDistinctEigenvalues: TopicDef = 
         "$A$ 的每个特征值 $\\lambda$ 给出一个解 $e^{\\lambda t}\\mathbf{v}$，其中 $\\mathbf{v}$ 满足 $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$。由于 $A - \\lambda I$ 奇异，它的两行成比例，只用一行就够了。设 $\\mathbf{v} = (1, m)$，由 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 的第一行得\n\n$$(a - \\lambda) + bm = 0, \\qquad m = \\frac{\\lambda - a}{b}.$$",
       ),
       generate(rng: Rng): Problem {
-        const l1 = rng.int(-5, 5);
+        const l1 = rng.nonZero(-5, 5);
         const l2 = l1 + rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
         const m1 = rng.int(-4, 4);
         const m2 = m1 + rng.pick([-1, 1]);
@@ -770,26 +770,34 @@ export const solvingHomogeneousSystemsOfOdesWithRepeatedEigenvalues: TopicDef = 
       id: "generalized-eigenvectors-for-defective-systems",
       title: t("Generalized eigenvectors for defective systems", "亏损矩阵的广义特征向量"),
       explanation: t(
-        "When a matrix lacks enough eigenvectors, a generalized eigenvector provides a second solution that includes a factor of time. For a Jordan block $A = \\begin{pmatrix} \\lambda & k \\\\ 0 & \\lambda \\end{pmatrix}$, $(A - \\lambda I) = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$. If the eigenvector is $\\mathbf{v} = \\begin{pmatrix} k \\\\ 0 \\end{pmatrix}$, then $\\mathbf{w} = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ satisfies $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$.",
-        "当矩阵的特征向量不够时，广义特征向量提供了含有时间因子的第二个解。对于若尔当块矩阵 $A = \\begin{pmatrix} \\lambda & k \\\\ 0 & \\lambda \\end{pmatrix}$，有 $(A - \\lambda I) = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$。若特征向量为 $\\mathbf{v} = \\begin{pmatrix} k \\\\ 0 \\end{pmatrix}$，则广义特征向量 $\\mathbf{w} = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ 满足 $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$。",
+        "When a matrix lacks enough eigenvectors, a generalized eigenvector provides a second solution that includes a factor of time. For a Jordan block $A = \\begin{pmatrix} \\lambda & k \\\\ 0 & \\lambda \\end{pmatrix}$, $(A - \\lambda I) = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$. If the eigenvector is $\\mathbf{v} = \\begin{pmatrix} k \\\\ 0 \\end{pmatrix}$, then $\\mathbf{w} = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ satisfies $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$. A repeated eigenvalue $\\lambda$ makes the characteristic polynomial $(r - \\lambda)^2$, so a trace of $2\\lambda$ and a determinant of $\\lambda^2$.",
+        "当矩阵的特征向量不够时，广义特征向量提供了含有时间因子的第二个解。对于若尔当块矩阵 $A = \\begin{pmatrix} \\lambda & k \\\\ 0 & \\lambda \\end{pmatrix}$，有 $(A - \\lambda I) = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$。若特征向量为 $\\mathbf{v} = \\begin{pmatrix} k \\\\ 0 \\end{pmatrix}$，则广义特征向量 $\\mathbf{w} = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ 满足 $(A - \\lambda I)\\mathbf{w} = \\mathbf{v}$。 二重特征值 $\\lambda$ 使特征多项式为 $(r - \\lambda)^2$，所以迹为 $2\\lambda$，行列式为 $\\lambda^2$。",
       ),
       generate(rng: Rng): Problem {
-        const lambda = rng.int(2, 35);
+        const lambda = rng.int(2, 12);
+        const u = rng.int(1, 3);
+        const v = rng.int(1, 3);
+        const a = rng.pick([1, -1]) * u * v;
+        const s = rng.pick([1, -1]);
+        const b = s * u * u;
+        const c = -s * v * v;
         const ans = lambda;
+        const p = lambda + a;
+        const q = lambda - a;
 
         const prompt = t(
-          `Find the repeated eigenvalue $\\lambda$ of the defective system matrix $A = \\begin{pmatrix} ${lambda} & 1 \\\\ 0 & ${lambda} \\end{pmatrix}$.`,
-          `求亏损系统矩阵 $A = \\begin{pmatrix} ${lambda} & 1 \\\\ 0 & ${lambda} \\end{pmatrix}$ 的二重特征值 $\\lambda$。`,
+          `Find the repeated eigenvalue $\\lambda$ of the defective system matrix $A = \\begin{pmatrix} ${p} & ${b} \\\\ ${c} & ${q} \\end{pmatrix}$.`,
+          `求亏损系统矩阵 $A = \\begin{pmatrix} ${p} & ${b} \\\\ ${c} & ${q} \\end{pmatrix}$ 的二重特征值 $\\lambda$。`,
         );
         const solution = t(
           steps(
-            `The matrix is upper triangular with diagonal entries $A_{11} = ${lambda}$ and $A_{22} = ${lambda}$.`,
-            `The characteristic polynomial is $\\det(A - \\lambda I) = (${lambda} - \\lambda)^2 = (r - ${lambda})^2 = 0$.`,
+            `The trace is $${2 * lambda}$ and the determinant is $${par(p)} \\cdot ${par(q)} - ${par(b)} \\cdot ${par(c)} = ${lambda * lambda}$.`,
+            `The characteristic polynomial is $\\lambda^2 - ${2 * lambda}\\lambda + ${lambda * lambda} = (\\lambda - ${lambda})^2$.`,
             `The repeated eigenvalue is $\\lambda = ${ans}$.`,
           ),
           steps(
-            `该矩阵为上三角矩阵，对角线元素分别为 $A_{11} = ${lambda}$ 与 $A_{22} = ${lambda}$。`,
-            `特征多项式为 $\\det(A - r I) = (${lambda} - r)^2 = 0$。`,
+            `迹为 $${2 * lambda}$，行列式为 $${par(p)} \\cdot ${par(q)} - ${par(b)} \\cdot ${par(c)} = ${lambda * lambda}$。`,
+            `特征多项式为 $\\lambda^2 - ${2 * lambda}\\lambda + ${lambda * lambda} = (\\lambda - ${lambda})^2$。`,
             `解得二重特征值为 $\\lambda = ${ans}$。`,
           ),
         );
@@ -798,7 +806,7 @@ export const solvingHomogeneousSystemsOfOdesWithRepeatedEigenvalues: TopicDef = 
           prompt,
           solution,
           answer: ans,
-          wrong: [2 * lambda, lambda * lambda, ans + 1],
+          wrong: [2 * lambda, p, q, lambda * lambda],
         });
       },
     },
@@ -1061,21 +1069,24 @@ export const phasePlanesAndPhasePortraits: TopicDef = {
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
-        const b = rng.int(2, 35);
-        const ans = b;
+        const b = rng.int(2, 12);
+        const x0 = rng.nonZero(-4, 5);
+        const y0 = rng.nonZero(-5, 5);
+        const ans = Q.of(b * y0, a * x0);
+        const xp = poly([a, "x"]);
 
         const prompt = t(
-          `For the linear autonomous system $x' = ${poly([a, "x"])}$ and $y' = ${poly([b, "y"])}$, evaluate the trajectory slope $\\frac{dy}{dx}$ at the point $(x, y) = (1, ${a})$ in the phase plane.`,
-          `对于线性自自治方程组 $x' = ${poly([a, "x"])}$ 与 $y' = ${poly([b, "y"])}$，计算相平面上在点 $(x, y) = (1, ${a})$ 处的轨迹切线斜率 $\\frac{dy}{dx}$。`,
+          `For the linear autonomous system $x' = ${xp}$ and $y' = ${b}y$, evaluate the trajectory slope $\\frac{dy}{dx}$ at the point $(x, y) = (${x0}, ${y0})$ in the phase plane.`,
+          `对于线性自治方程组 $x' = ${xp}$ 与 $y' = ${b}y$，计算相平面上在点 $(x, y) = (${x0}, ${y0})$ 处的轨迹切线斜率 $\\frac{dy}{dx}$。`,
         );
         const solution = t(
           steps(
-            `Apply the chain rule for the parametric trajectory: $\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${poly([b, "y"])}}{${poly([a, "x"])}}$.`,
-            `Substitute $(x, y) = (1, ${a})$: $\\frac{dy}{dx} = \\frac{${b}(${a})}{${a}(1)} = \\frac{${b * a}}{${a}} = ${ans}$.`,
+            `Apply the chain rule for the parametric trajectory: $\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${b}y}{${xp}}$.`,
+            `Substitute $(x, y) = (${x0}, ${y0})$: $\\frac{dy}{dx} = \\frac{${b} \\cdot ${par(y0)}}{${a} \\cdot ${par(x0)}} = ${ans.toLatex()}$.`,
           ),
           steps(
-            `由参数曲线求导法则：$\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${poly([b, "y"])}}{${poly([a, "x"])}}$。`,
-            `代入点 $(x, y) = (1, ${a})$：$\\frac{dy}{dx} = \\frac{${b}(${a})}{${a}(1)} = \\frac{${b * a}}{${a}} = ${ans}$。`,
+            `由参数曲线求导法则：$\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${b}y}{${xp}}$。`,
+            `代入点 $(x, y) = (${x0}, ${y0})$：$\\frac{dy}{dx} = \\frac{${b} \\cdot ${par(y0)}}{${a} \\cdot ${par(x0)}} = ${ans.toLatex()}$。`,
           ),
         );
 
@@ -1083,7 +1094,7 @@ export const phasePlanesAndPhasePortraits: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [a, b * a, ans + 1],
+          wrong: [Q.of(a * x0, b * y0), Q.of(b, a), Q.of(y0, x0), Q.of(b * x0, a * y0)],
         });
       },
     },
@@ -1217,24 +1228,26 @@ export const phasePortraitsForDecoupledLinearSystems: TopicDef = {
         "对轨线方程分离变量可以看出，路径是一条幂曲线，指数是两个速率之比。对于 $\\frac{dy}{dx} = \\frac{\\lambda_2 y}{\\lambda_1 x}$，分离变量积分可得 $\\ln|y| = \\frac{\\lambda_2}{\\lambda_1}\\ln|x| + C \\implies y = K x^p$，其中幂指数 $p = \\frac{\\lambda_2}{\\lambda_1}$。",
       ),
       generate(rng: Rng): Problem {
-        const p = rng.int(2, 35);
+        const a = rng.int(2, 7);
+        const p = rng.pick([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8]);
+        const b = a * p;
         const ans = p;
 
         const prompt = t(
-          `In the phase plane for $x' = x$ and $y' = ${p}y$, trajectories follow power curves $y = C x^p$ (for $x > 0$). Find the power exponent $p$.`,
-          `在相平面上，微分方程组 $x' = x$ 与 $y' = ${p}y$ 的状态轨迹服从幂函数曲线 $y = C x^p$（$x > 0$）。求幂指数 $p$ 的值。`,
+          `In the phase plane for $x' = ${a}x$ and $y' = ${b}y$, trajectories follow power curves $y = C x^p$ (for $x > 0$). Find the power exponent $p$.`,
+          `在相平面上，微分方程组 $x' = ${a}x$ 与 $y' = ${b}y$ 的状态轨迹服从幂函数曲线 $y = C x^p$（$x > 0$）。求幂指数 $p$ 的值。`,
         );
         const solution = t(
           steps(
-            `Divide the equations: $\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${p}y}{x}$.`,
+            `Divide the equations: $\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${b}y}{${a}x} = \\frac{${p}y}{x}$.`,
             `Separate variables: $\\frac{dy}{y} = ${p} \\frac{dx}{x}$.`,
-            `Integrate both sides: $\\ln y = ${p}\\ln x + \\ln C \\implies y = C x^{${p}}$.`,
+            `Integrate both sides: $\\ln |y| = ${p}\\ln x + \\ln |C|$, so $y = C x^{${p}}$.`,
             `Therefore, the power exponent is $p = ${ans}$.`,
           ),
           steps(
-            `两式相比：$\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${p}y}{x}$。`,
+            `两式相比：$\\frac{dy}{dx} = \\frac{y'}{x'} = \\frac{${b}y}{${a}x} = \\frac{${p}y}{x}$。`,
             `分离变量：$\\frac{dy}{y} = ${p} \\frac{dx}{x}$。`,
-            `两边积分：$\\ln y = ${p}\\ln x + \\ln C \\implies y = C x^{${p}}$。`,
+            `两边积分：$\\ln |y| = ${p}\\ln x + \\ln |C|$，所以 $y = C x^{${p}}$。`,
             `因此，幂指数为 $p = ${ans}$。`,
           ),
         );
@@ -1243,7 +1256,7 @@ export const phasePortraitsForDecoupledLinearSystems: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [p + 1, 2 * p, p * p],
+          wrong: [b, Q.of(a, b), -p, a],
         });
       },
     },
@@ -1402,26 +1415,35 @@ export const phasePortraitsForLinearSystemsWithRepeatedEigenvalues: TopicDef = {
         "对于数量矩阵 $A = -k I$（$k > 0$），平面上任意向量均为特征向量，所有相轨迹均为当 $t \\to \\infty$ 时直线趋向原点的径向射线。",
       ),
       generate(rng: Rng): Problem {
-        const k = rng.int(2, 35);
-        const ans = k;
+        const k = rng.int(2, 9);
+        const m = rng.int(2, 5);
+        const d = rng.nonZero(-4, 4);
+        const p = m * d;
+        const q = rng.nonZero(-9, 9);
+        const ans = Q.of(q, m);
 
         const prompt = t(
-          `Find the decay rate $k$ for the star node system $\\mathbf{x}' = \\begin{pmatrix} -${k} & 0 \\\\ 0 & -${k} \\end{pmatrix} \\mathbf{x}$.`,
-          `求星形稳定结点系统 $\\mathbf{x}' = \\begin{pmatrix} -${k} & 0 \\\\ 0 & -${k} \\end{pmatrix} \\mathbf{x}$ 的径向衰减速率 $k$。`,
+          `A trajectory of the star node system $\\mathbf{x}' = \\begin{pmatrix} -${k} & 0 \\\\ 0 & -${k} \\end{pmatrix} \\mathbf{x}$ starts at $(x, y) = (${p}, ${q})$. Find $y$ at the moment when $x = ${d}$.`,
+          `星形稳定结点系统 $\\mathbf{x}' = \\begin{pmatrix} -${k} & 0 \\\\ 0 & -${k} \\end{pmatrix} \\mathbf{x}$ 的一条轨迹从 $(x, y) = (${p}, ${q})$ 出发。求 $x = ${d}$ 时的 $y$。`,
         );
         const solution = t(
           steps(
-            `The system is $x' = -${k}x$ and $y' = -${k}y$.`,
-            `Both state variables decay as $e^{-${k}t}$, so the decay rate is $k = ${ans}$.`,
+            `The system is $x' = -${k}x$ and $y' = -${k}y$, so $x = ${p}e^{-${k}t}$ and $y = ${par(q)}e^{-${k}t}$.`,
+            `Both coordinates shrink by the same factor, so the trajectory is a straight ray to the origin. $x = ${d}$ means that factor is $\\frac{1}{${m}}$.`,
+            `So $y = \\frac{${q}}{${m}}${lowestTerms(q, m)}$.`,
           ),
-          steps(`系统展开为 $x' = -${k}x$ 与 $y' = -${k}y$。`, `两个状态变量均按 $e^{-${k}t}$ 衰减，因此径向衰减速率为 $k = ${ans}$。`),
+          steps(
+            `系统展开为 $x' = -${k}x$ 与 $y' = -${k}y$，所以 $x = ${p}e^{-${k}t}$，$y = ${par(q)}e^{-${k}t}$。`,
+            `两个坐标按同一因子缩小，所以轨迹是通向原点的直线射线。$x = ${d}$ 说明该因子为 $\\frac{1}{${m}}$。`,
+            `所以 $y = \\frac{${q}}{${m}}${lowestTerms(q, m)}$。`,
+          ),
         );
 
         return numberProblem({
           prompt,
           solution,
           answer: ans,
-          wrong: [2 * k, k * k, ans + 1],
+          wrong: [Q.of(q), Q.of(q * m), Q.of(q, k), Q.of(q - p + d)],
         });
       },
     },
@@ -1565,27 +1587,32 @@ export const phasePortraitsForLinearSystemsWithComplexEigenvalues: TopicDef = {
       id: "centers-and-spiral-points",
       title: t("Frequency of closed orbits around a center", "中心点周围封闭轨道的循环频率"),
       explanation: t(
-        "Purely imaginary eigenvalues give closed orbits that circle the origin forever, and their frequency is the imaginary part. For $A = \\begin{pmatrix} 0 & -\\omega \\\\ \\omega & 0 \\end{pmatrix}$, eigenvalues are $\\pm i\\omega$, producing a center with angular frequency $\\omega$.",
-        "纯虚特征值给出永远绕原点运行的闭轨道，频率就是虚部。对于系统 $A = \\begin{pmatrix} 0 & -\\omega \\\\ \\omega & 0 \\end{pmatrix}$，特征值为纯虚根 $\\pm i\\omega$，原点为中心点，闭轨道的角频率为 $\\omega$。",
+        "Purely imaginary eigenvalues give closed orbits that circle the origin forever, and their frequency is the imaginary part. For $A = \\begin{pmatrix} 0 & -\\omega \\\\ \\omega & 0 \\end{pmatrix}$, eigenvalues are $\\pm i\\omega$, producing a center with angular frequency $\\omega$. More generally, $\\begin{pmatrix} 0 & a \\\\ b & 0 \\end{pmatrix}$ with $ab < 0$ has eigenvalues $\\pm i\\sqrt{-ab}$.",
+        "纯虚特征值给出永远绕原点运行的闭轨道，频率就是虚部。对于系统 $A = \\begin{pmatrix} 0 & -\\omega \\\\ \\omega & 0 \\end{pmatrix}$，特征值为纯虚根 $\\pm i\\omega$，原点为中心点，闭轨道的角频率为 $\\omega$。 更一般地，当 $ab < 0$ 时，$\\begin{pmatrix} 0 & a \\\\ b & 0 \\end{pmatrix}$ 的特征值为 $\\pm i\\sqrt{-ab}$。",
       ),
       generate(rng: Rng): Problem {
-        const omega = rng.int(2, 35);
-        const ans = omega;
+        const u = rng.int(1, 6);
+        const v = u + rng.int(1, 5);
+        const flip = rng.pick([1, -1]);
+        const a = flip * u * u;
+        const b = -flip * v * v;
+        const ans = u * v;
+        const product = u * u * v * v;
 
         const prompt = t(
-          `A linear system has phase portrait consisting of closed circular orbits governed by $\\mathbf{x}' = \\begin{pmatrix} 0 & -${omega} \\\\ ${omega} & 0 \\end{pmatrix} \\mathbf{x}$. Find the natural angular frequency $\\omega$ in $\\text{rad/s}$.`,
-          `某线性系统的相图由同心圆封闭轨道组成，满足 $\\mathbf{x}' = \\begin{pmatrix} 0 & -${omega} \\\\ ${omega} & 0 \\end{pmatrix} \\mathbf{x}$。求中心点封闭轨道的固有角频率 $\\omega$（单位：$\\text{弧度/秒}$）。`,
+          `The phase portrait of $\\mathbf{x}' = \\begin{pmatrix} 0 & ${a} \\\\ ${b} & 0 \\end{pmatrix} \\mathbf{x}$ consists of closed elliptical orbits around a center. Find the angular frequency $\\omega$ of the motion on these orbits.`,
+          `系统 $\\mathbf{x}' = \\begin{pmatrix} 0 & ${a} \\\\ ${b} & 0 \\end{pmatrix} \\mathbf{x}$ 的相图由围绕中心的封闭椭圆轨道组成。求轨道上运动的角频率 $\\omega$。`,
         );
         const solution = t(
           steps(
-            `Compute the characteristic equation: $\\det(A - \\lambda I) = \\lambda^2 + ${omega * omega} = 0$.`,
-            `The roots are $\\lambda = \\pm ${omega}i$.`,
-            `The angular frequency is $\\omega = ${ans}\\text{ rad/s}$.`,
+            `Compute the characteristic equation: $\\det(A - \\lambda I) = \\lambda^2 - ${par(a)} \\cdot ${par(b)} = \\lambda^2 + ${product} = 0$.`,
+            `The roots are $\\lambda = \\pm ${ans}i$.`,
+            `Purely imaginary roots $\\pm \\omega i$ give motion with $\\cos\\omega t$ and $\\sin\\omega t$, so $\\omega = ${ans}$.`,
           ),
           steps(
-            `计算特征方程：$\\det(A - \\lambda I) = \\lambda^2 + ${omega * omega} = 0$。`,
-            `解得纯虚根：$\\lambda = \\pm ${omega}i$。`,
-            `因此角频率为 $\\omega = ${ans}\\text{ 弧度/秒}$。`,
+            `计算特征方程：$\\det(A - \\lambda I) = \\lambda^2 - ${par(a)} \\cdot ${par(b)} = \\lambda^2 + ${product} = 0$。`,
+            `解得纯虚根：$\\lambda = \\pm ${ans}i$。`,
+            `纯虚根 $\\pm \\omega i$ 对应含 $\\cos\\omega t$ 与 $\\sin\\omega t$ 的运动，所以 $\\omega = ${ans}$。`,
           ),
         );
 
@@ -1593,7 +1620,7 @@ export const phasePortraitsForLinearSystemsWithComplexEigenvalues: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [omega * omega, 2 * omega, ans + 1],
+          wrong: [product, u * u + v * v, u * u, v * v],
         });
       },
     },
@@ -1662,28 +1689,30 @@ export const shiftedSystemsOfOdes: TopicDef = {
       id: "translation-of-equilibrium-to-the-origin",
       title: t("Coordinates of a shifted equilibrium point", "平移平衡点的空间坐标"),
       explanation: t(
-        "Shifting the variable by the equilibrium value moves the equilibrium to the origin, where the standard analysis applies. For $x' = -a(x - x_*)$, the equilibrium point is located at $x = x_*$.",
-        "把变量平移一个平衡值，就把平衡点移到原点，在那里可以使用标准的分析方法。对于方程 $x' = -a(x - x_*)$，系统的稳定平衡点位于 $x = x_*$。",
+        "Shifting the variable by the equilibrium value moves the equilibrium to the origin, where the standard analysis applies. For $x' = -a(x - x_*)$, the equilibrium point is located at $x = x_*$. So $x' = -ax + b$ has its equilibrium where $-ax + b = 0$.",
+        "把变量平移一个平衡值，就把平衡点移到原点，在那里可以使用标准的分析方法。对于方程 $x' = -a(x - x_*)$，系统的稳定平衡点位于 $x = x_*$。 所以 $x' = -ax + b$ 的平衡点满足 $-ax + b = 0$。",
       ),
       generate(rng: Rng): Problem {
-        const xStar = rng.int(2, 35);
+        const xStar = rng.nonZero(-9, 12);
         const a = rng.int(2, 8);
+        const b = a * xStar;
         const ans = xStar;
+        const rhs = poly([-a, "x"], [b, ""]);
 
         const prompt = t(
-          `Find the equilibrium coordinate $x_*$ for the system $x' = -${a}(x - ${xStar})$.`,
-          `求微分方程 $x' = -${a}(x - ${xStar})$ 的平衡点坐标 $x_*$。`,
+          `The substitution $z = x - x_*$ moves the equilibrium of $x' = ${rhs}$ to the origin. Find $x_*$.`,
+          `代换 $z = x - x_*$ 把 $x' = ${rhs}$ 的平衡点移到原点。求 $x_*$。`,
         );
         const solution = t(
           steps(
-            `At the equilibrium point, the rate of change is zero: $x' = 0$.`,
-            `Set the equation to zero: $-${a}(x_* - ${xStar}) = 0$.`,
-            `Solve for $x_*$: $x_* = ${ans}$.`,
+            `At the equilibrium point, the rate of change is zero: $${rhs} = 0$.`,
+            `Solve for $x$: $x_* = \\frac{${b}}{${a}} = ${ans}$.`,
+            `Then $z' = x' = -${a}z$, which has its equilibrium at the origin.`,
           ),
           steps(
-            `在平衡点处，状态变化率为零：$x' = 0$。`,
-            `令方程右端为零：$-${a}(x_* - ${xStar}) = 0$。`,
-            `解得平衡点坐标：$x_* = ${ans}$。`,
+            `在平衡点处，状态变化率为零：$${rhs} = 0$。`,
+            `解得：$x_* = \\frac{${b}}{${a}} = ${ans}$。`,
+            `于是 $z' = x' = -${a}z$，其平衡点在原点。`,
           ),
         );
 
@@ -1691,7 +1720,7 @@ export const shiftedSystemsOfOdes: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [a * xStar, a, ans + 2],
+          wrong: [b, a, -xStar, Q.of(a, b)],
         });
       },
     },
@@ -1750,25 +1779,28 @@ export const linearApproximationsNearEquilibria: TopicDef = {
       id: "jacobian-matrix-and-local-linearization",
       title: t("Jacobian entry of a nonlinear system", "非线性系统在平衡点处的雅可比矩阵元素"),
       explanation: t(
-        "Near an equilibrium a nonlinear system behaves like its linearization, whose matrix is the Jacobian of partial derivatives evaluated there. For $x' = f(x, y) = a x - x^2$, the partial derivative $\\frac{\\partial f}{\\partial x} = a - 2x$. At the origin $(0, 0)$, $J_{11} = a$.",
-        "在平衡点附近，非线性方程组的行为与它的线性化相似，其矩阵是在该点处求值的偏导数雅可比矩阵。对于 $x' = f(x, y) = a x - x^2$，偏导数为 $\\frac{\\partial f}{\\partial x} = a - 2x$。在原点平衡点 $(0, 0)$ 处，雅可比元素为 $J_{11} = a$。",
+        "Near an equilibrium a nonlinear system behaves like its linearization, whose matrix is the Jacobian of partial derivatives evaluated there. For $x' = f(x, y) = a x - x^2$, the partial derivative $\\frac{\\partial f}{\\partial x} = a - 2x$. At the origin $(0, 0)$, $J_{11} = a$. At the other equilibrium $(a, 0)$, $J_{11} = a - 2a = -a$.",
+        "在平衡点附近，非线性方程组的行为与它的线性化相似，其矩阵是在该点处求值的偏导数雅可比矩阵。对于 $x' = f(x, y) = a x - x^2$，偏导数为 $\\frac{\\partial f}{\\partial x} = a - 2x$。在原点平衡点 $(0, 0)$ 处，雅可比元素为 $J_{11} = a$。 在另一个平衡点 $(a, 0)$ 处，$J_{11} = a - 2a = -a$。",
       ),
       generate(rng: Rng): Problem {
-        const a = rng.int(2, 35);
-        const ans = a;
+        const b = rng.int(1, 5);
+        const e = rng.int(2, 9);
+        const a = b * e;
+        const ans = -a;
+        const f1 = poly([a, "x"], [-b, "x^2"]);
 
         const prompt = t(
-          `Consider the nonlinear system $x' = ${a}x - x^2$ and $y' = -y$. Evaluate the entry $J_{11} = \\frac{\\partial f_1}{\\partial x}$ of the Jacobian matrix evaluated at the equilibrium $(x, y) = (0, 0)$.`,
-          `考虑非线性动力系统 $x' = ${a}x - x^2$ 与 $y' = -y$。计算在平衡点 $(x, y) = (0, 0)$ 处雅可比矩阵的元素 $J_{11} = \\frac{\\partial f_1}{\\partial x}$。`,
+          `Consider the nonlinear system $x' = ${f1}$ and $y' = -y$. Evaluate the entry $J_{11} = \\frac{\\partial f_1}{\\partial x}$ of the Jacobian matrix at the equilibrium $(x, y) = (${e}, 0)$.`,
+          `考虑非线性动力系统 $x' = ${f1}$ 与 $y' = -y$。计算在平衡点 $(x, y) = (${e}, 0)$ 处雅可比矩阵的元素 $J_{11} = \\frac{\\partial f_1}{\\partial x}$。`,
         );
         const solution = t(
           steps(
-            `Compute the partial derivative: $\\frac{\\partial f_1}{\\partial x} = \\frac{\\partial}{\\partial x}(${a}x - x^2) = ${a} - 2x$.`,
-            `Evaluate at $x = 0$: $J_{11} = ${a} - 2(0) = ${ans}$.`,
+            `Compute the partial derivative: $\\frac{\\partial f_1}{\\partial x} = ${poly([a, ""], [-2 * b, "x"])}$.`,
+            `Evaluate at $x = ${e}$: $J_{11} = ${a} - ${2 * b} \\cdot ${e} = ${ans}$.`,
           ),
           steps(
-            `计算关于 $x$ 的偏导数：$\\frac{\\partial f_1}{\\partial x} = \\frac{\\partial}{\\partial x}(${a}x - x^2) = ${a} - 2x$。`,
-            `在平衡点 $x = 0$ 处求值：$J_{11} = ${a} - 2(0) = ${ans}$。`,
+            `计算关于 $x$ 的偏导数：$\\frac{\\partial f_1}{\\partial x} = ${poly([a, ""], [-2 * b, "x"])}$。`,
+            `在 $x = ${e}$ 处求值：$J_{11} = ${a} - ${2 * b} \\cdot ${e} = ${ans}$。`,
           ),
         );
 
@@ -1776,7 +1808,7 @@ export const linearApproximationsNearEquilibria: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [-a, 2 * a, ans + 1],
+          wrong: [a, a - 2 * b, a - b * e * e, 2 * a],
         });
       },
     },
@@ -1847,25 +1879,26 @@ export const matrixExponentials: TopicDef = {
         "矩阵指数由与普通指数相同的幂级数定义，当矩阵的某次幂为零时，级数就终止了。对于矩阵 $A = \\begin{pmatrix} 0 & k \\\\ 0 & 0 \\end{pmatrix}$，有 $A^2 = 0$。因此 $e^{At} = I + At = \\begin{pmatrix} 1 & kt \\\\ 0 & 1 \\end{pmatrix}$。在 $t = 1$ 处右上角元素即为 $k$。",
       ),
       generate(rng: Rng): Problem {
-        const k = rng.int(2, 35);
-        const ans = k;
+        const k = rng.int(2, 12);
+        const T = rng.int(2, 6);
+        const ans = k * T;
 
         const prompt = t(
-          `For the nilpotent matrix $A = \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix}$, calculate the upper right entry $(e^A)_{12}$ of the matrix exponential $e^A$ (evaluated at $t = 1$).`,
-          `对于幂零矩阵 $A = \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix}$，计算矩阵指数 $e^A$（即 $t = 1$ 时）的右上角元素 $(e^A)_{12}$。`,
+          `For the nilpotent matrix $A = \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix}$, calculate the upper right entry of the matrix exponential $e^{At}$ at $t = ${T}$.`,
+          `对于幂零矩阵 $A = \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix}$，计算矩阵指数 $e^{At}$ 在 $t = ${T}$ 时的右上角元素。`,
         );
         const solution = t(
           steps(
             `Compute $A^2$: $A^2 = \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} = \\begin{pmatrix} 0 & 0 \\\\ 0 & 0 \\end{pmatrix}$.`,
-            `The power series for $e^A$ terminates after two terms: $e^A = I + A$.`,
-            `Substitute: $e^A = \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix} + \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} = \\begin{pmatrix} 1 & ${k} \\\\ 0 & 1 \\end{pmatrix}$.`,
-            `The upper right entry is $(e^A)_{12} = ${ans}$.`,
+            `The power series for $e^{At}$ terminates after two terms: $e^{At} = I + At$.`,
+            `At $t = ${T}$: $e^{${T}A} = \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix} + ${T}\\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} = \\begin{pmatrix} 1 & ${ans} \\\\ 0 & 1 \\end{pmatrix}$.`,
+            `The upper right entry is $${ans}$.`,
           ),
           steps(
             `计算矩阵平方：$A^2 = \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} = \\begin{pmatrix} 0 & 0 \\\\ 0 & 0 \\end{pmatrix}$。`,
-            `矩阵指数幂级数展开截断为前两项：$e^A = I + A$。`,
-            `代入矩阵相加：$e^A = \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix} + \\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} = \\begin{pmatrix} 1 & ${k} \\\\ 0 & 1 \\end{pmatrix}$。`,
-            `右上角元素为 $(e^A)_{12} = ${ans}$。`,
+            `$e^{At}$ 的幂级数在前两项后终止：$e^{At} = I + At$。`,
+            `在 $t = ${T}$ 处：$e^{${T}A} = \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix} + ${T}\\begin{pmatrix} 0 & ${k} \\\\ 0 & 0 \\end{pmatrix} = \\begin{pmatrix} 1 & ${ans} \\\\ 0 & 1 \\end{pmatrix}$。`,
+            `右上角元素为 $${ans}$。`,
           ),
         );
 
@@ -1873,7 +1906,7 @@ export const matrixExponentials: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [k * k, 1, 0],
+          wrong: [k, k * T * T, k * k * T, 1],
         });
       },
     },
@@ -2008,28 +2041,34 @@ export const solvingHomogeneousSystemsOfOdesUsingMatrixMethods: TopicDef = {
       id: "solution-via-matrix-exponential",
       title: t("Initial state evaluation via matrix exponential", "矩阵指数解在初始状态下的验证"),
       explanation: t(
-        "Multiplying the matrix exponential by the initial vector solves the system, and at time zero the exponential is the identity, so the initial condition holds. Since $e^{A \\cdot 0} = I$, the solution $\\mathbf{x}(t) = e^{At}\\mathbf{x}_0$ satisfies $\\mathbf{x}(0) = I \\mathbf{x}_0 = \\mathbf{x}_0$.",
-        "用矩阵指数乘以初始向量就解出了方程组，在零时刻指数是单位矩阵，所以初始条件成立。因为 $e^{A \\cdot 0} = I$，解向量 $\\mathbf{x}(t) = e^{At}\\mathbf{x}_0$ 在 $t = 0$ 处满足 $\\mathbf{x}(0) = I \\mathbf{x}_0 = \\mathbf{x}_0$。",
+        "Multiplying the matrix exponential by the initial vector solves the system, and at time zero the exponential is the identity, so the initial condition holds. Since $e^{A \\cdot 0} = I$, the solution $\\mathbf{x}(t) = e^{At}\\mathbf{x}_0$ satisfies $\\mathbf{x}(0) = I \\mathbf{x}_0 = \\mathbf{x}_0$. Differentiating gives $\\mathbf{x}'(t) = Ae^{At}\\mathbf{x}_0$, so $\\mathbf{x}'(0) = A\\mathbf{x}_0$.",
+        "用矩阵指数乘以初始向量就解出了方程组，在零时刻指数是单位矩阵，所以初始条件成立。因为 $e^{A \\cdot 0} = I$，解向量 $\\mathbf{x}(t) = e^{At}\\mathbf{x}_0$ 在 $t = 0$ 处满足 $\\mathbf{x}(0) = I \\mathbf{x}_0 = \\mathbf{x}_0$。 求导得 $\\mathbf{x}'(t) = Ae^{At}\\mathbf{x}_0$，所以 $\\mathbf{x}'(0) = A\\mathbf{x}_0$。",
       ),
       generate(rng: Rng): Problem {
-        const x0 = rng.int(2, 20);
-        const y0 = rng.int(2, 20);
-        const ans = x0 + y0;
+        const a = rng.nonZero(-4, 5);
+        const b = rng.nonZero(-4, 5);
+        const c = rng.nonZero(-4, 5);
+        const d = rng.nonZero(-4, 5);
+        const x0 = rng.nonZero(-5, 6);
+        const y0 = rng.nonZero(-5, 6);
+        const ans = a * x0 + b * y0;
+        const A = `\\begin{pmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{pmatrix}`;
+        const v = `\\begin{pmatrix} ${x0} \\\\ ${y0} \\end{pmatrix}`;
 
         const prompt = t(
-          `Given the solution $\\mathbf{x}(t) = e^{At}\\begin{pmatrix} ${x0} \\\\ ${y0} \\end{pmatrix}$ to a homogeneous system, find the sum of coordinates $x_1(0) + x_2(0)$ at $t = 0$.`,
-          `已知齐次系统的解向量为 $\\mathbf{x}(t) = e^{At}\\begin{pmatrix} ${x0} \\\\ ${y0} \\end{pmatrix}$。求在 $t = 0$ 时状态坐标之和 $x_1(0) + x_2(0)$。`,
+          `Let $\\mathbf{x}(t) = e^{At}${v}$ with $A = ${A}$. Find $x_1'(0)$, the rate of change of the first coordinate at $t = 0$.`,
+          `设 $\\mathbf{x}(t) = e^{At}${v}$，其中 $A = ${A}$。求第一个坐标在 $t = 0$ 时的变化率 $x_1'(0)$。`,
         );
         const solution = t(
           steps(
-            `At $t = 0$, the matrix exponential is the identity matrix: $e^{A \\cdot 0} = I$.`,
-            `Therefore, $\\mathbf{x}(0) = I \\begin{pmatrix} ${x0} \\\\ ${y0} \\end{pmatrix} = \\begin{pmatrix} ${x0} \\\\ ${y0} \\end{pmatrix}$.`,
-            `The sum is $x_1(0) + x_2(0) = ${x0} + ${y0} = ${ans}$.`,
+            `Differentiating gives $\\mathbf{x}'(t) = Ae^{At}${v}$, and $e^{A \\cdot 0} = I$.`,
+            `Therefore, $\\mathbf{x}'(0) = A${v}$.`,
+            `The first coordinate is $${par(a)} \\cdot ${par(x0)} + ${par(b)} \\cdot ${par(y0)} = ${ans}$.`,
           ),
           steps(
-            `在 $t = 0$ 时，矩阵指数退化为单位矩阵：$e^{A \\cdot 0} = I$。`,
-            `因此，$\\mathbf{x}(0) = I \\begin{pmatrix} ${x0} \\\\ ${y0} \\end{pmatrix} = \\begin{pmatrix} ${x0} \\\\ ${y0} \\end{pmatrix}$。`,
-            `坐标之和为 $x_1(0) + x_2(0) = ${x0} + ${y0} = ${ans}$。`,
+            `求导得 $\\mathbf{x}'(t) = Ae^{At}${v}$，而 $e^{A \\cdot 0} = I$。`,
+            `因此，$\\mathbf{x}'(0) = A${v}$。`,
+            `第一个坐标为 $${par(a)} \\cdot ${par(x0)} + ${par(b)} \\cdot ${par(y0)} = ${ans}$。`,
           ),
         );
 
@@ -2037,7 +2076,7 @@ export const solvingHomogeneousSystemsOfOdesUsingMatrixMethods: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [x0 * y0, Math.abs(x0 - y0), ans + 1],
+          wrong: [a * x0 + c * y0, c * x0 + d * y0, x0, a * y0 + b * x0],
         });
       },
     },
@@ -2193,38 +2232,47 @@ export const solvingSystemsOfOdesUsingVariationOfParameters: TopicDef = {
       id: "vector-variation-of-parameters-system",
       title: t("Parameter derivative vector in variation of parameters", "常数变易法中的参数导数向量"),
       explanation: t(
-        "Writing the solution as the fundamental matrix times an unknown vector leads to an equation for the derivative of that vector. For $\\Phi(0) = I$, the parameter derivative at $t = 0$ is $\\mathbf{u}'(0) = \\Phi(0)^{-1}\\mathbf{g}(0) = \\mathbf{g}(0)$.",
-        "把解写成基本矩阵乘以一个未知向量，就得到关于这个向量导数的方程。当规范化基本解矩阵满足 $\\Phi(0) = I$ 时，在 $t = 0$ 处的参数导数向量为 $\\mathbf{u}'(0) = \\Phi(0)^{-1}\\mathbf{g}(0) = \\mathbf{g}(0)$。",
+        "Writing the solution as the fundamental matrix times an unknown vector leads to an equation for the derivative of that vector. For $\\Phi(0) = I$, the parameter derivative at $t = 0$ is $\\mathbf{u}'(0) = \\Phi(0)^{-1}\\mathbf{g}(0) = \\mathbf{g}(0)$. For any other $\\Phi(0)$, solve the linear system $\\Phi(0)\\mathbf{u}'(0) = \\mathbf{g}(0)$.",
+        "把解写成基本矩阵乘以一个未知向量，就得到关于这个向量导数的方程。当规范化基本解矩阵满足 $\\Phi(0) = I$ 时，在 $t = 0$ 处的参数导数向量为 $\\mathbf{u}'(0) = \\Phi(0)^{-1}\\mathbf{g}(0) = \\mathbf{g}(0)$。 对其他 $\\Phi(0)$，解线性方程组 $\\Phi(0)\\mathbf{u}'(0) = \\mathbf{g}(0)$。",
       ),
       generate(rng: Rng): Problem {
-        const g2 = rng.int(2, 35);
-        const ans = g2;
+        for (;;) {
+          const a = rng.nonZero(-4, 5);
+          const b = rng.nonZero(-4, 5);
+          const c = rng.nonZero(-4, 5);
+          const d = rng.nonZero(-4, 5);
+          const g1 = rng.pick([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6]);
+          const g2 = rng.nonZero(-6, 6);
+          const det = a * d - b * c;
+          if (det === 0) continue;
+          const num = a * g2 - c * g1;
+          const ans = Q.of(num, det);
+          const phi = `\\begin{pmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{pmatrix}`;
 
-        const prompt = t(
-          `In solving a system by variation of parameters $\\mathbf{x} = \\Phi(t)\\mathbf{u}$, the fundamental matrix satisfies $\\Phi(0) = I$ and the forcing vector is $\\mathbf{g}(t) = \\begin{pmatrix} 3e^t \\\\ ${g2} \\end{pmatrix}$. Find the second parameter derivative component $u_2'(0)$.`,
-          `用常数变易法 $\\mathbf{x} = \\Phi(t)\\mathbf{u}$ 求解系统，已知基本矩阵满足 $\\Phi(0) = I$，激励向量为 $\\mathbf{g}(t) = \\begin{pmatrix} 3e^t \\\\ ${g2} \\end{pmatrix}$。求参数导数第二分量在 $t = 0$ 处的值 $u_2'(0)$。`,
-        );
-        const solution = t(
-          steps(
-            `The parameter derivative satisfies $\\Phi(t)\\mathbf{u}'(t) = \\mathbf{g}(t)$.`,
-            `Evaluating at $t = 0$ with $\\Phi(0) = I$: $\\mathbf{u}'(0) = I^{-1}\\mathbf{g}(0) = \\mathbf{g}(0)$.`,
-            `The second component of $\\mathbf{g}(0)$ is $g_2(0) = ${ans}$.`,
-            `Therefore, $u_2'(0) = ${ans}$.`,
-          ),
-          steps(
-            `常数变易参数导数满足线性代数方程组：$\\Phi(t)\\mathbf{u}'(t) = \\mathbf{g}(t)$。`,
-            `代入 $t = 0$ 处的已知条件 $\\Phi(0) = I$：$\\mathbf{u}'(0) = I^{-1}\\mathbf{g}(0) = \\mathbf{g}(0)$。`,
-            `激励向量第二分量为 $g_2(0) = ${ans}$。`,
-            `因此，求得 $u_2'(0) = ${ans}$。`,
-          ),
-        );
+          const prompt = t(
+            `In solving a system by variation of parameters $\\mathbf{x} = \\Phi(t)\\mathbf{u}$, the fundamental matrix satisfies $\\Phi(0) = ${phi}$ and the forcing vector is $\\mathbf{g}(t) = \\begin{pmatrix} ${g1}e^t \\\\ ${g2} \\end{pmatrix}$. Find the second parameter derivative component $u_2'(0)$.`,
+            `用常数变易法 $\\mathbf{x} = \\Phi(t)\\mathbf{u}$ 求解系统，已知基本矩阵满足 $\\Phi(0) = ${phi}$，激励向量为 $\\mathbf{g}(t) = \\begin{pmatrix} ${g1}e^t \\\\ ${g2} \\end{pmatrix}$。求参数导数第二分量在 $t = 0$ 处的值 $u_2'(0)$。`,
+          );
+          const solution = t(
+            steps(
+              `The parameter derivative satisfies $\\Phi(t)\\mathbf{u}'(t) = \\mathbf{g}(t)$. At $t = 0$: $\\Phi(0)\\mathbf{u}'(0) = \\begin{pmatrix} ${g1} \\\\ ${g2} \\end{pmatrix}$.`,
+              `$\\det \\Phi(0) = ${par(a)} \\cdot ${par(d)} - ${par(b)} \\cdot ${par(c)} = ${det}$.`,
+              `Cramer's rule: $u_2'(0) = \\frac{${par(a)} \\cdot ${par(g2)} - ${par(c)} \\cdot ${par(g1)}}{${det}} = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `参数导数满足 $\\Phi(t)\\mathbf{u}'(t) = \\mathbf{g}(t)$。在 $t = 0$ 处：$\\Phi(0)\\mathbf{u}'(0) = \\begin{pmatrix} ${g1} \\\\ ${g2} \\end{pmatrix}$。`,
+              `$\\det \\Phi(0) = ${par(a)} \\cdot ${par(d)} - ${par(b)} \\cdot ${par(c)} = ${det}$。`,
+              `由克莱姆法则：$u_2'(0) = \\frac{${par(a)} \\cdot ${par(g2)} - ${par(c)} \\cdot ${par(g1)}}{${det}} = ${ans.toLatex()}$。`,
+            ),
+          );
 
-        return numberProblem({
-          prompt,
-          solution,
-          answer: ans,
-          wrong: [3, ans + 1, 0],
-        });
+          return numberProblem({
+            prompt,
+            solution,
+            answer: ans,
+            wrong: [Q.of(g2), Q.of(d * g1 - b * g2, det), Q.of(g2, d), Q.of(-num, det)],
+          });
+        }
       },
     },
     {
@@ -2255,10 +2303,10 @@ export const solvingSystemsOfOdesUsingVariationOfParameters: TopicDef = {
             : [Q.of(m, b - c), Q.of(m), ...(c === 0 ? [] : [Q.of(m, c)]), Q.of(m, c + b || 7)],
           solution: t(
             first
-              ? `$u_1' = e^{${ex(-a)}} \\cdot ${poly([k, `e^{${ex(a)}}`])} = ${k}$, so $u_1 = ${poly([k, "t"])}$ and $x_{p,1} = ${poly([k, `te^{${ex(a)}}`])}$. The coefficient is $${k}$.`
+              ? `$u_1' = e^{${ex(-a)}} \\cdot (${poly([k, `e^{${ex(a)}}`])}) = ${k}$, so $u_1 = ${poly([k, "t"])}$ and $x_{p,1} = ${poly([k, `te^{${ex(a)}}`])}$. The coefficient is $${k}$.`
               : `$u_2' = ${poly([m, `e^{${ex(c - b)}}`])}$, so $u_2 = ${poly([Q.of(m, c - b), `e^{${ex(c - b)}}`])} + C$, and multiplying by $e^{${ex(b)}}$ gives the coefficient $${ans.toLatex()}$; the constant $C$ only adds a homogeneous term $Ce^{${ex(b)}}$.`,
             first
-              ? `$u_1' = e^{${ex(-a)}} \\cdot ${poly([k, `e^{${ex(a)}}`])} = ${k}$，所以 $u_1 = ${poly([k, "t"])}$，$x_{p,1} = ${poly([k, `te^{${ex(a)}}`])}$，系数为 $${k}$。`
+              ? `$u_1' = e^{${ex(-a)}} \\cdot (${poly([k, `e^{${ex(a)}}`])}) = ${k}$，所以 $u_1 = ${poly([k, "t"])}$，$x_{p,1} = ${poly([k, `te^{${ex(a)}}`])}$，系数为 $${k}$。`
               : `$u_2' = ${poly([m, `e^{${ex(c - b)}}`])}$，所以 $u_2 = ${poly([Q.of(m, c - b), `e^{${ex(c - b)}}`])} + C$，乘以 $e^{${ex(b)}}$ 得系数 $${ans.toLatex()}$；常数 $C$ 只添加齐次项 $Ce^{${ex(b)}}$。`,
           ),
         });
@@ -2376,26 +2424,30 @@ export const theLotkaVolterraModelWithCarryingCapacity: TopicDef = {
       id: "predator-prey-dynamics-with-logistic-prey-growth",
       title: t("Carrying capacity of prey in predator-prey systems", "捕食系统中猎物的环境容纳量"),
       explanation: t(
-        "In the absence of predators ($y = 0$), prey dynamics reduce to logistic growth $\\frac{dx}{dt} = r x \\left(1 - \\frac{x}{K}\\right)$, converging to carrying capacity $x = K$.",
-        "在没有捕食者（$y = 0$）的情况下，猎物种群演化退化为逻辑斯谛增长 $\\frac{dx}{dt} = r x \\left(1 - \\frac{x}{K}\\right)$，其极限稳态即为环境容纳量 $x = K$。",
+        "In the absence of predators ($y = 0$), prey dynamics reduce to logistic growth $\\frac{dx}{dt} = r x \\left(1 - \\frac{x}{K}\\right)$, converging to carrying capacity $x = K$. Written out, this is $\\frac{dx}{dt} = rx - \\frac{r}{K}x^2$, and $K$ is the non-zero value of $x$ where the rate is $0$.",
+        "在没有捕食者（$y = 0$）的情况下，猎物种群演化退化为逻辑斯谛增长 $\\frac{dx}{dt} = r x \\left(1 - \\frac{x}{K}\\right)$，其极限稳态即为环境容纳量 $x = K$。 展开后为 $\\frac{dx}{dt} = rx - \\frac{r}{K}x^2$，$K$ 是使变化率为 $0$ 的非零 $x$ 值。",
       ),
       generate(rng: Rng): Problem {
-        const K = rng.int(10, 80) * 10; // 100 to 800
-        const r = rng.int(2, 8);
+        const K = rng.int(1, 8) * 10;
+        const s = rng.int(2, 9);
+        const r = s * K;
+        const rhs = poly([r, "x"], [-s, "x^2"]);
         const ans = K;
 
         const prompt = t(
-          `In an ecosystem with logistic prey dynamics, prey population $x(t)$ in the absence of predators follows $\\frac{dx}{dt} = ${r}x \\left(1 - \\frac{x}{${K}}\\right)$. What is the carrying capacity $K$ of the prey population?`,
-          `在具有逻辑斯谛猎物增长的生态系统中，当无捕食者存在时猎物种群满足 $\\frac{dx}{dt} = ${r}x \\left(1 - \\frac{x}{${K}}\\right)$。求猎物种群的环境容纳量 $K$。`,
+          `In an ecosystem with logistic prey dynamics, prey population $x(t)$ in the absence of predators follows $\\frac{dx}{dt} = ${rhs}$. What is the carrying capacity $K$ of the prey population?`,
+          `在具有逻辑斯谛猎物增长的生态系统中，当无捕食者存在时猎物种群满足 $\\frac{dx}{dt} = ${rhs}$。求猎物种群的环境容纳量 $K$。`,
         );
         const solution = t(
           steps(
-            `In the logistic equation $\\frac{dx}{dt} = r x \\left(1 - \\frac{x}{K}\\right)$, the non-zero equilibrium occurs where $1 - \\frac{x}{K} = 0$.`,
-            `Here $K = ${K}$, so the carrying capacity is $K = ${ans}$.`,
+            `The carrying capacity is the non-zero equilibrium, where $\\frac{dx}{dt} = 0$.`,
+            `Factor: $\\frac{dx}{dt} = ${s}x(${K} - x)$, which is $0$ at $x = 0$ and at $x = ${K}$.`,
+            `So $K = ${ans}$.`,
           ),
           steps(
-            `在逻辑斯谛微分方程 $\\frac{dx}{dt} = r x \\left(1 - \\frac{x}{K}\\right)$ 中，非零稳态平衡点由 $1 - \\frac{x}{K} = 0$ 确定。`,
-            `对比参数可知 $K = ${K}$，因此环境容纳量为 $K = ${ans}$。`,
+            `环境容纳量是非零平衡点，即 $\\frac{dx}{dt} = 0$ 处。`,
+            `因式分解：$\\frac{dx}{dt} = ${s}x(${K} - x)$，它在 $x = 0$ 与 $x = ${K}$ 处为 $0$。`,
+            `所以 $K = ${ans}$。`,
           ),
         );
 
@@ -2403,7 +2455,7 @@ export const theLotkaVolterraModelWithCarryingCapacity: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [K / 2, r * 100, ans + 50],
+          wrong: [r, s, K / 2, Q.of(s, r)],
         });
       },
     },

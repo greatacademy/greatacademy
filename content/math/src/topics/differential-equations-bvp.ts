@@ -1,7 +1,14 @@
 import type { Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
-import { choiceProblem, numberProblem, steps } from "../problems.ts";
+import { choiceProblem, lowestTerms, numberProblem, steps } from "../problems.ts";
+
+/** overPi writes a number divided by pi with one fraction bar: "-\\frac{12}{5\\pi}". */
+const overPi = (v: Q): string => {
+  if (v.isZero()) return "0";
+  const a = v.abs();
+  return `${v.sign() < 0 ? "-" : ""}\\frac{${a.n}}{${a.d === 1n ? "" : a.d}\\pi}`;
+};
 
 /** par writes a number, in parentheses when it is negative. */
 const par = (v: number | Q): string => {
@@ -602,26 +609,28 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "fourier-sine-coefficient-pure-tone",
         title: t("Fourier sine coefficient of a harmonic component", "谐波分量的傅里叶正弦系数"),
         explanation: t(
-          "A function that is already a single sine mode has that mode as its only Fourier component, so every other coefficient is zero. For $f(x) = k \\sin(m x)$ on $(0, \\pi)$, orthogonality implies that $b_n = k$ when $n = m$ and $0$ for all $n \\ne m$.",
-          "本身就是单个正弦模式的函数，其傅里叶分量只有这一个模式，所以其他系数都为零。对于在 $(0, \\pi)$ 上定义的正弦函数 $f(x) = k \\sin(m x)$，由正交性可知，当 $n = m$ 时其傅里叶正弦系数 $b_m = k$，其余系数均为 $0$。",
+          "A function that is already a single sine mode has that mode as its only Fourier component, so every other coefficient is zero. For $f(x) = k \\sin(m x)$ on $(0, \\pi)$, orthogonality implies that $b_n = k$ when $n = m$ and $0$ for all $n \\ne m$. The value $b_m = k$ comes from $\\int_0^\\pi \\sin^2(mx)\\,dx = \\frac{\\pi}{2}$, since $\\sin^2(mx) = \\frac{1 - \\cos(2mx)}{2}$.",
+          "本身就是单个正弦模式的函数，其傅里叶分量只有这一个模式，所以其他系数都为零。对于在 $(0, \\pi)$ 上定义的正弦函数 $f(x) = k \\sin(m x)$，由正交性可知，当 $n = m$ 时其傅里叶正弦系数 $b_m = k$，其余系数均为 $0$。 其中 $b_m = k$ 来自 $\\int_0^\\pi \\sin^2(mx)\\,dx = \\frac{\\pi}{2}$，因为 $\\sin^2(mx) = \\frac{1 - \\cos(2mx)}{2}$。",
         ),
         generate(rng: Rng): Problem {
           const k = rng.int(2, 35);
           const m = rng.int(2, 10);
-          const ans = k;
+          const ans = Q.of(k, 2);
 
           const prompt = t(
-            `Find the $m = ${m}$ Fourier sine coefficient $b_{${m}} = \\frac{2}{\\pi} \\int_0^\\pi f(x) \\sin(${m}x)\\,dx$ for $f(x) = ${k} \\sin(${m}x)$ on $(0, \\pi)$.`,
-            `求函数 $f(x) = ${k} \\sin(${m}x)$ 在 $(0, \\pi)$ 上的第 $m = ${m}$ 个傅里叶正弦系数 $b_{${m}} = \\frac{2}{\\pi} \\int_0^\\pi f(x) \\sin(${m}x)\\,dx$。`,
+            `For $f(x) = ${k} \\sin(${m}x)$ on $(0, \\pi)$, the integral in the Fourier coefficient of $\\sin(${m}x)$ is $\\int_0^\\pi f(x) \\sin(${m}x)\\,dx = K\\pi$. Find $K$.`,
+            `对 $(0, \\pi)$ 上的 $f(x) = ${k} \\sin(${m}x)$，关于 $\\sin(${m}x)$ 的傅里叶系数中的积分为 $\\int_0^\\pi f(x) \\sin(${m}x)\\,dx = K\\pi$。求 $K$。`,
           );
           const solution = t(
             steps(
-              `The coefficient formula is $b_{${m}} = \\frac{2}{\\pi} \\int_0^\\pi (${k} \\sin(${m}x)) \\sin(${m}x)\\,dx = \\frac{2(${k})}{\\pi} \\int_0^\\pi \\sin^2(${m}x)\\,dx$.`,
-              `Since $\\int_0^\\pi \\sin^2(${m}x)\\,dx = \\frac{\\pi}{2}$, we have $b_{${m}} = \\frac{2(${k})}{\\pi} \\left(\\frac{\\pi}{2}\\right) = ${ans}$.`,
+              `The integrand is $${k} \\sin^2(${m}x)$, and $\\sin^2(${m}x) = \\frac{1 - \\cos(${2 * m}x)}{2}$.`,
+              `The cosine term integrates to $0$ over $(0, \\pi)$, so $\\int_0^\\pi \\sin^2(${m}x)\\,dx = \\frac{\\pi}{2}$.`,
+              `So the integral is $\\frac{${k}\\pi}{2}$ and $K = \\frac{${k}}{2}${lowestTerms(k, 2)}$.`,
             ),
             steps(
-              `由正弦系数计算公式：$b_{${m}} = \\frac{2}{\\pi} \\int_0^\\pi (${k} \\sin(${m}x)) \\sin(${m}x)\\,dx = \\frac{2(${k})}{\\pi} \\int_0^\\pi \\sin^2(${m}x)\\,dx$。`,
-              `因为 $\\int_0^\\pi \\sin^2(${m}x)\\,dx = \\frac{\\pi}{2}$，所以 $b_{${m}} = \\frac{2(${k})}{\\pi} \\left(\\frac{\\pi}{2}\\right) = ${ans}$。`,
+              `被积函数为 $${k} \\sin^2(${m}x)$，而 $\\sin^2(${m}x) = \\frac{1 - \\cos(${2 * m}x)}{2}$。`,
+              `余弦项在 $(0, \\pi)$ 上的积分为 $0$，所以 $\\int_0^\\pi \\sin^2(${m}x)\\,dx = \\frac{\\pi}{2}$。`,
+              `所以积分为 $\\frac{${k}\\pi}{2}$，$K = \\frac{${k}}{2}${lowestTerms(k, 2)}$。`,
             ),
           );
 
@@ -629,7 +638,7 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
             prompt,
             solution,
             answer: ans,
-            wrong: [k * m, m, 2 * k, ans - 1, ans + 1],
+            wrong: [Q.of(k), Q.of(2 * k), Q.of(k * m), Q.of(k, 2 * m)],
           });
         },
       },
@@ -683,26 +692,28 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "fourier-cosine-coefficient-pure-tone",
         title: t("Fourier cosine coefficient of a harmonic component", "谐波分量的傅里叶余弦系数"),
         explanation: t(
-          "A function that is already a single cosine mode has only one nonzero cosine coefficient, equal to its amplitude. For $f(x) = k \\cos(m x)$ on $(0, \\pi)$, orthogonality implies that $a_m = k$ and all other $a_n = 0$.",
-          "本身就是单个余弦模式的函数只有一个非零的余弦系数，等于它的振幅。对于在 $(0, \\pi)$ 上定义的余弦函数 $f(x) = k \\cos(m x)$，由正交性可知，当 $n = m$ 时其傅里叶余弦系数 $a_m = k$，其余系数均为 $0$。",
+          "A function that is already a single cosine mode has only one nonzero cosine coefficient, equal to its amplitude. For $f(x) = k \\cos(m x)$ on $(0, \\pi)$, orthogonality implies that $a_m = k$ and all other $a_n = 0$. The value $a_m = k$ comes from $\\int_0^\\pi \\cos^2(mx)\\,dx = \\frac{\\pi}{2}$, since $\\cos^2(mx) = \\frac{1 + \\cos(2mx)}{2}$.",
+          "本身就是单个余弦模式的函数只有一个非零的余弦系数，等于它的振幅。对于在 $(0, \\pi)$ 上定义的余弦函数 $f(x) = k \\cos(m x)$，由正交性可知，当 $n = m$ 时其傅里叶余弦系数 $a_m = k$，其余系数均为 $0$。 其中 $a_m = k$ 来自 $\\int_0^\\pi \\cos^2(mx)\\,dx = \\frac{\\pi}{2}$，因为 $\\cos^2(mx) = \\frac{1 + \\cos(2mx)}{2}$。",
         ),
         generate(rng: Rng): Problem {
           const k = rng.int(2, 35);
           const m = rng.int(2, 10);
-          const ans = k;
+          const ans = Q.of(k, 2);
 
           const prompt = t(
-            `Find the $m = ${m}$ Fourier cosine coefficient $a_{${m}} = \\frac{2}{\\pi} \\int_0^\\pi f(x) \\cos(${m}x)\\,dx$ for $f(x) = ${k} \\cos(${m}x)$ on $(0, \\pi)$.`,
-            `求函数 $f(x) = ${k} \\cos(${m}x)$ 在 $(0, \\pi)$ 上的第 $m = ${m}$ 个傅里叶余弦系数 $a_{${m}} = \\frac{2}{\\pi} \\int_0^\\pi f(x) \\cos(${m}x)\\,dx$。`,
+            `For $f(x) = ${k} \\cos(${m}x)$ on $(0, \\pi)$, the integral in the Fourier coefficient of $\\cos(${m}x)$ is $\\int_0^\\pi f(x) \\cos(${m}x)\\,dx = K\\pi$. Find $K$.`,
+            `对 $(0, \\pi)$ 上的 $f(x) = ${k} \\cos(${m}x)$，关于 $\\cos(${m}x)$ 的傅里叶系数中的积分为 $\\int_0^\\pi f(x) \\cos(${m}x)\\,dx = K\\pi$。求 $K$。`,
           );
           const solution = t(
             steps(
-              `The formula is $a_{${m}} = \\frac{2}{\\pi} \\int_0^\\pi (${k} \\cos(${m}x)) \\cos(${m}x)\\,dx = \\frac{2(${k})}{\\pi} \\int_0^\\pi \\cos^2(${m}x)\\,dx$.`,
-              `Since $\\int_0^\\pi \\cos^2(${m}x)\\,dx = \\frac{\\pi}{2}$, we have $a_{${m}} = \\frac{2(${k})}{\\pi} \\left(\\frac{\\pi}{2}\\right) = ${ans}$.`,
+              `The integrand is $${k} \\cos^2(${m}x)$, and $\\cos^2(${m}x) = \\frac{1 + \\cos(${2 * m}x)}{2}$.`,
+              `The cosine term integrates to $0$ over $(0, \\pi)$, so $\\int_0^\\pi \\cos^2(${m}x)\\,dx = \\frac{\\pi}{2}$.`,
+              `So the integral is $\\frac{${k}\\pi}{2}$ and $K = \\frac{${k}}{2}${lowestTerms(k, 2)}$.`,
             ),
             steps(
-              `余弦系数公式为：$a_{${m}} = \\frac{2}{\\pi} \\int_0^\\pi (${k} \\cos(${m}x)) \\cos(${m}x)\\,dx = \\frac{2(${k})}{\\pi} \\int_0^\\pi \\cos^2(${m}x)\\,dx$。`,
-              `因为 $\\int_0^\\pi \\cos^2(${m}x)\\,dx = \\frac{\\pi}{2}$，所以 $a_{${m}} = \\frac{2(${k})}{\\pi} \\left(\\frac{\\pi}{2}\\right) = ${ans}$。`,
+              `被积函数为 $${k} \\cos^2(${m}x)$，而 $\\cos^2(${m}x) = \\frac{1 + \\cos(${2 * m}x)}{2}$。`,
+              `余弦项在 $(0, \\pi)$ 上的积分为 $0$，所以 $\\int_0^\\pi \\cos^2(${m}x)\\,dx = \\frac{\\pi}{2}$。`,
+              `所以积分为 $\\frac{${k}\\pi}{2}$，$K = \\frac{${k}}{2}${lowestTerms(k, 2)}$。`,
             ),
           );
 
@@ -710,7 +721,7 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
             prompt,
             solution,
             answer: ans,
-            wrong: [k * m, m, 2 * k, ans - 1, ans + 1],
+            wrong: [Q.of(k), Q.of(2 * k), Q.of(k * m), Q.of(k, 2 * m)],
           });
         },
       },
@@ -736,11 +747,11 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
             solution: t(
               steps(
                 `$a_n = \\frac{2}{\\pi}\\int_{0}^{\\pi} ${f}\\cos nx\\,dx = \\frac{2 \\cdot ${par(c)}\\left((-1)^{n} - 1\\right)}{n^{2}\\pi}$.`,
-                `For $n = ${n}$, $(-1)^{${n}} - 1 = ${n % 2 === 1 ? -2 : 0}$, so $a_{${n}} = \\frac{${ans.toLatex()}}{\\pi}$ and $K = ${ans.toLatex()}$.`,
+                `For $n = ${n}$, $(-1)^{${n}} - 1 = ${n % 2 === 1 ? -2 : 0}$, so $a_{${n}} = ${overPi(ans)}$ and $K = ${ans.toLatex()}$.`,
               ),
               steps(
                 `$a_n = \\frac{2}{\\pi}\\int_{0}^{\\pi} ${f}\\cos nx\\,dx = \\frac{2 \\cdot ${par(c)}\\left((-1)^{n} - 1\\right)}{n^{2}\\pi}$。`,
-                `当 $n = ${n}$ 时，$(-1)^{${n}} - 1 = ${n % 2 === 1 ? -2 : 0}$，所以 $a_{${n}} = \\frac{${ans.toLatex()}}{\\pi}$，$K = ${ans.toLatex()}$。`,
+                `当 $n = ${n}$ 时，$(-1)^{${n}} - 1 = ${n % 2 === 1 ? -2 : 0}$，所以 $a_{${n}} = ${overPi(ans)}$，$K = ${ans.toLatex()}$。`,
               ),
             ),
           });
@@ -826,11 +837,11 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
             solution: t(
               steps(
                 `By parts, $b_n = \\frac{1}{${L}}\\int_{-${L}}^{${L}} ${f}\\sin\\frac{n\\pi x}{${L}}\\,dx = \\frac{2 \\cdot ${L} \\cdot ${par(c)}(-1)^{n+1}}{n\\pi}$.`,
-                `For $n = ${n}$: $b_{${n}} = \\frac{${ans.toLatex()}}{\\pi}$, so $K = ${ans.toLatex()}$.`,
+                `For $n = ${n}$: $b_{${n}} = ${overPi(ans)}$, so $K = ${ans.toLatex()}$.`,
               ),
               steps(
                 `分部积分，$b_n = \\frac{1}{${L}}\\int_{-${L}}^{${L}} ${f}\\sin\\frac{n\\pi x}{${L}}\\,dx = \\frac{2 \\cdot ${L} \\cdot ${par(c)}(-1)^{n+1}}{n\\pi}$。`,
-                `当 $n = ${n}$ 时：$b_{${n}} = \\frac{${ans.toLatex()}}{\\pi}$，所以 $K = ${ans.toLatex()}$。`,
+                `当 $n = ${n}$ 时：$b_{${n}} = ${overPi(ans)}$，所以 $K = ${ans.toLatex()}$。`,
               ),
             ),
           });
@@ -1082,11 +1093,11 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
             solution: t(
               steps(
                 `The forcing coefficient of $\\sin ${n === 1 ? "" : n}x$ is $F_{${n}} = \\frac{4}{${n}\\pi}$.`,
-                `Substituting $Y_{${n}}\\sin ${n === 1 ? "" : n}x$ gives $(${w} - ${n * n})Y_{${n}} = F_{${n}}$, so $Y_{${n}} = \\frac{4}{${n} \\cdot ${par(w - n * n)}\\pi} = \\frac{${ans.toLatex()}}{\\pi}$ and $K = ${ans.toLatex()}$.`,
+                `Substituting $Y_{${n}}\\sin ${n === 1 ? "" : n}x$ gives $(${w} - ${n * n})Y_{${n}} = F_{${n}}$, so $Y_{${n}} = \\frac{4}{${n} \\cdot ${par(w - n * n)}\\pi} = ${overPi(ans)}$ and $K = ${ans.toLatex()}$.`,
               ),
               steps(
                 `$\\sin ${n === 1 ? "" : n}x$ 的激励系数为 $F_{${n}} = \\frac{4}{${n}\\pi}$。`,
-                `代入 $Y_{${n}}\\sin ${n === 1 ? "" : n}x$ 得 $(${w} - ${n * n})Y_{${n}} = F_{${n}}$，所以 $Y_{${n}} = \\frac{4}{${n} \\cdot ${par(w - n * n)}\\pi} = \\frac{${ans.toLatex()}}{\\pi}$，$K = ${ans.toLatex()}$。`,
+                `代入 $Y_{${n}}\\sin ${n === 1 ? "" : n}x$ 得 $(${w} - ${n * n})Y_{${n}} = F_{${n}}$，所以 $Y_{${n}} = \\frac{4}{${n} \\cdot ${par(w - n * n)}\\pi} = ${overPi(ans)}$，$K = ${ans.toLatex()}$。`,
               ),
             ),
           });
@@ -1111,28 +1122,30 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
         id: "fourier-ivp-constant-determination",
         title: t("Determining homogeneous coefficient in a driven IVP", "确定受迫初值问题中的齐次项系数"),
         explanation: t(
-          "The particular solution handles the forcing, and the initial conditions then fix the coefficients of the homogeneous part of the solution. For $y'' + \\omega_0^2 y = F(t)$ with a particular solution satisfying $y_p(0) = 0$, the general solution is $y(t) = y_p(t) + c_1 \\cos(\\omega_0 t) + c_2 \\sin(\\omega_0 t)$. Setting $t = 0$ yields $y(0) = c_1 = y_0$.",
-          "特解处理强迫项，再由初始条件确定解中齐次部分的系数。对于包含满足 $y_p(0) = 0$ 的特解的方程 $y'' + \\omega_0^2 y = F(t)$，通解为 $y(t) = y_p(t) + c_1 \\cos(\\omega_0 t) + c_2 \\sin(\\omega_0 t)$。在 $t = 0$ 处代入即得 $y(0) = c_1 = y_0$。",
+          "The particular solution handles the forcing, and the initial conditions then fix the coefficients of the homogeneous part of the solution. For $y'' + \\omega_0^2 y = F(t)$ with a particular solution satisfying $y_p(0) = 0$, the general solution is $y(t) = y_p(t) + c_1 \\cos(\\omega_0 t) + c_2 \\sin(\\omega_0 t)$. Setting $t = 0$ yields $y(0) = c_1 = y_0$. Differentiating and setting $t = 0$ yields $y'(0) = y_p'(0) + \\omega_0 c_2$.",
+          "特解处理强迫项，再由初始条件确定解中齐次部分的系数。对于包含满足 $y_p(0) = 0$ 的特解的方程 $y'' + \\omega_0^2 y = F(t)$，通解为 $y(t) = y_p(t) + c_1 \\cos(\\omega_0 t) + c_2 \\sin(\\omega_0 t)$。在 $t = 0$ 处代入即得 $y(0) = c_1 = y_0$。 求导后令 $t = 0$ 得 $y'(0) = y_p'(0) + \\omega_0 c_2$。",
         ),
         generate(rng: Rng): Problem {
           const omega0 = rng.int(2, 6);
-          const ans = rng.int(2, 35);
           const omega0Sq = omega0 * omega0;
+          const p = rng.nonZero(-6, 8);
+          const ans = rng.nonZero(-6, 8);
+          const v = 1 + omega0 * ans;
 
           const prompt = t(
-            `A driven oscillator satisfies $y'' + ${omega0Sq}y = \\sin(t)$ with initial conditions $y(0) = ${ans}$ and $y'(0) = 0$. In the solution $y(t) = y_p(t) + c_1 \\cos(${omega0}t) + c_2 \\sin(${omega0}t)$, where $y_p(t) = \\frac{1}{${omega0Sq - 1}} \\sin(t)$, find the coefficient $c_1$.`,
-            `受迫振子满足 $y'' + ${omega0Sq}y = \\sin(t)$，初始条件为 $y(0) = ${ans}$ 与 $y'(0) = 0$。在解 $y(t) = y_p(t) + c_1 \\cos(${omega0}t) + c_2 \\sin(${omega0}t)$（其中特解为 $y_p(t) = \\frac{1}{${omega0Sq - 1}} \\sin(t)$）中，求齐次系数 $c_1$。`,
+            `A driven oscillator satisfies $y'' + ${omega0Sq}y = ${omega0Sq - 1}\\sin t$ with initial conditions $y(0) = ${p}$ and $y'(0) = ${v}$. In the solution $y(t) = y_p(t) + c_1 \\cos(${omega0}t) + c_2 \\sin(${omega0}t)$, where $y_p(t) = \\sin t$, find the coefficient $c_2$.`,
+            `受迫振子满足 $y'' + ${omega0Sq}y = ${omega0Sq - 1}\\sin t$，初始条件为 $y(0) = ${p}$ 与 $y'(0) = ${v}$。在解 $y(t) = y_p(t) + c_1 \\cos(${omega0}t) + c_2 \\sin(${omega0}t)$（其中特解为 $y_p(t) = \\sin t$）中，求系数 $c_2$。`,
           );
           const solution = t(
             steps(
-              `The particular solution is $y_p(t) = \\frac{1}{${omega0Sq - 1}} \\sin(t)$, so $y_p(0) = 0$.`,
-              `Evaluating the general solution at $t = 0$: $y(0) = y_p(0) + c_1 \\cos(0) + c_2 \\sin(0) = c_1$.`,
-              `Since $y(0) = ${ans}$, we immediately find $c_1 = ${ans}$.`,
+              `Differentiate: $y'(t) = \\cos t - ${omega0}c_1 \\sin(${omega0}t) + ${omega0}c_2 \\cos(${omega0}t)$.`,
+              `At $t = 0$: $y'(0) = 1 + ${omega0}c_2 = ${v}$.`,
+              `So $c_2 = \\frac{${v} - 1}{${omega0}} = ${ans}$.`,
             ),
             steps(
-              `特解为 $y_p(t) = \\frac{1}{${omega0Sq - 1}} \\sin(t)$，其在 $t = 0$ 处的取值为 $y_p(0) = 0$。`,
-              `在 $t = 0$ 处计算通解：$y(0) = y_p(0) + c_1 \\cos(0) + c_2 \\sin(0) = c_1$。`,
-              `由初始条件 $y(0) = ${ans}$，直接可得 $c_1 = ${ans}$。`,
+              `求导：$y'(t) = \\cos t - ${omega0}c_1 \\sin(${omega0}t) + ${omega0}c_2 \\cos(${omega0}t)$。`,
+              `在 $t = 0$ 处：$y'(0) = 1 + ${omega0}c_2 = ${v}$。`,
+              `所以 $c_2 = \\frac{${v} - 1}{${omega0}} = ${ans}$。`,
             ),
           );
 
@@ -1140,7 +1153,7 @@ export const differentialEquationsBvpTopics: TopicDef[] = [
             prompt,
             solution,
             answer: ans,
-            wrong: [omega0, omega0Sq, ans + 1, ans - 1],
+            wrong: [Q.of(v), Q.of(v, omega0), Q.of(v + 1, omega0), Q.of(p)],
           });
         },
       },

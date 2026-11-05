@@ -449,6 +449,8 @@ export const solvingFirstOrderIvpsUsingSeparationOfVariables: TopicDef = {
           const inv = Q.of(1, y0).sub(Q.of(k, 2).mul(x1).mul(x1));
           const flipped = Q.of(1, y0).add(Q.of(k, 2).mul(x1).mul(x1));
           if (inv.isZero() || flipped.isZero()) continue;
+          // The solution must exist on the whole way from 0 to x₁: 1/y keeps the sign of 1/y₀.
+          if (inv.sign() * Math.sign(y0) < 0) continue;
           const answer = Q.one.div(inv);
           return numberProblem({
             prompt: t(
@@ -1147,8 +1149,8 @@ export const logisticGrowthModelsWithFirstOrderOdes: TopicDef = {
       id: "logistic-growth-rates",
       title: t("Growth rates in a logistic model", "逻辑斯谛模型中的增长速率"),
       explanation: t(
-        "In a logistic model the growth rate is proportional to both the population and the room left before the carrying capacity, so substitute the current population. Substitute the current population. For $\\frac{dP}{dt} = 0.1P\\left(1 - \\frac{P}{500}\\right)$ at $P = 100$: $0.1 \\cdot 100 \\cdot \\frac{4}{5} = 8$ individuals per unit of time.",
-        "在逻辑斯谛模型中，增长率既与种群数量成正比，也与距离环境容量的余量成正比，所以代入当前的种群数量。代入当前种群数量。对 $\\frac{dP}{dt} = 0.1P\\left(1 - \\frac{P}{500}\\right)$，在 $P = 100$ 时：$0.1 \\cdot 100 \\cdot \\frac{4}{5} = 8$，即每单位时间增加 $8$ 个个体。",
+        "In a logistic model the growth rate is proportional to both the population and the room left before the carrying capacity, so substitute the current population. For $\\frac{dP}{dt} = 0.1P\\left(1 - \\frac{P}{500}\\right)$ at $P = 100$: $0.1 \\cdot 100 \\cdot \\frac{4}{5} = 8$ individuals per unit of time.",
+        "在逻辑斯谛模型中，增长率既与种群数量成正比，也与距离环境容量的余量成正比，所以代入当前的种群数量。对 $\\frac{dP}{dt} = 0.1P\\left(1 - \\frac{P}{500}\\right)$，在 $P = 100$ 时：$0.1 \\cdot 100 \\cdot \\frac{4}{5} = 8$，即每单位时间增加 $8$ 个个体。",
       ),
       generate(rng) {
         const L = logistic(rng);
@@ -1414,8 +1416,8 @@ function slopeAtPointProblem(rng: Rng, family: SlopeFamily) {
     answer,
     wrong: [right.f(y0, x0), -answer, answer + 1],
     solution: t(
-      `The segment at $(${x0}, ${y0})$ has slope $\\frac{dy}{dx}$ evaluated there: $${answer}$.`,
-      `$(${x0}, ${y0})$ 处线段的斜率就是 $\\frac{dy}{dx}$ 在该点的值：$${answer}$。`,
+      `The segment at a point has slope $\\frac{dy}{dx}$ evaluated there. Substituting $x = ${x0}$ and $y = ${y0}$ into $${right.tex}$ gives $${answer}$.`,
+      `线段的斜率就是 $\\frac{dy}{dx}$ 在该点的值。把 $x = ${x0}$，$y = ${y0}$ 代入 $${right.tex}$，得 $${answer}$。`,
     ),
   });
 }

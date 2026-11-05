@@ -340,8 +340,8 @@ const separation = topic(
         const answer = c * lambda * (asksRate ? 1 : t);
         return ask(
           [
-            `Separating $u_t = ${c}u_{xx}$ gives $T' = -${c}\\lambda T$. With $\\lambda = ${lambda}$ and $T(0) = ${T0}$, ${asksRate ? "$T(t) = " + T0 + "e^{-kt}$. What is $k$?" : `$T(${t}) = ${T0}e^{-k}$. What is $k$?`}`,
-            `分离 $u_t = ${c}u_{xx}$ 得 $T' = -${c}\\lambda T$。若 $\\lambda = ${lambda}$，$T(0) = ${T0}$，${asksRate ? "$T(t) = " + T0 + "e^{-kt}$。$k$ 是多少？" : `$T(${t}) = ${T0}e^{-k}$。$k$ 是多少？`}`,
+            `Separating $u_t = ${c}u_{xx}$ gives $T' = -${c}\\lambda T$. With $\\lambda = ${lambda}$ and $T(0) = ${T0}$, ${asksRate ? `$T(t) = ${T0}e^{-kt}$. What is $k$?` : `$T(${t}) = ${T0}e^{-k}$. What is $k$?`}`,
+            `分离 $u_t = ${c}u_{xx}$ 得 $T' = -${c}\\lambda T$。若 $\\lambda = ${lambda}$，$T(0) = ${T0}$，${asksRate ? `$T(t) = ${T0}e^{-kt}$。$k$ 是多少？` : `$T(${t}) = ${T0}e^{-k}$。$k$ 是多少？`}`,
           ],
           answer,
           [lambda, c, answer + c, T0 * answer],

@@ -406,7 +406,10 @@ interface Roots {
 
 /** randomRoots picks distinct integer roots and the recurrence aₙ = p aₙ₋₁ + q aₙ₋₂ they solve. */
 function randomRoots(rng: Rng): Roots {
-  const [x, y] = rng.sample([-3, -2, -1, 1, 2, 3, 4, 5], 2);
+  let x: number;
+  let y: number;
+  do [x, y] = rng.sample([-3, -2, -1, 2, 3, 4, 5], 2) as [number, number];
+  while (x + y === 0);
   const r1 = Math.max(x!, y!);
   const r2 = Math.min(x!, y!);
   return { r1, r2, p: r1 + r2, q: -r1 * r2 };
@@ -534,7 +537,7 @@ export const secondOrderHomogeneousRecurrenceRelationsWithRepeatedRoots: TopicDe
         "重根给出该幂以及下标乘以该幂两个解，初始项确定这两个常数。$a_n = 4a_{n-1} - 4a_{n-2}$ 的特征方程为 $(x - 2)^2 = 0$。由 $a_0 = 1$，$a_1 = 6$：$A = 1$，$(A + B) \\cdot 2 = 6$，所以 $B = 2$，$a_n = (1 + 2n)2^n$。",
       ),
       generate(rng) {
-        const r = rng.pick([-3, -2, -1, 1, 2, 3, 4]);
+        const r = rng.pick([-3, -2, -1, 2, 3, 4]);
         const A = rng.int(-4, 4);
         const B = rng.nonZero(-4, 4);
         const a0 = A;

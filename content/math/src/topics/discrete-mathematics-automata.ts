@@ -533,6 +533,20 @@ export const nondeterministicFiniteAutomata: TopicDef = {
   ],
 };
 
+/** countsByLength lists, for each length up to n, how many strings reach each state. */
+function countsByLength(m: Machine, n: number): number[][] {
+  const rows: number[][] = [range(0, m.k - 1).map((q) => (q === 0 ? 1 : 0))];
+  for (let i = 0; i < n; i++) {
+    const next = range(0, m.k - 1).map(() => 0);
+    rows[i]!.forEach((c, q) => {
+      next[m.delta[q]![0]!]! += c;
+      next[m.delta[q]![1]!]! += c;
+    });
+    rows.push(next);
+  }
+  return rows;
+}
+
 /** countAccepted counts the strings of length n a DFA accepts by dynamic programming over states. */
 function countAccepted(m: Machine, n: number): number {
   let ways: number[] = range(0, m.k - 1).map((q) => (q === 0 ? 1 : 0));
@@ -571,9 +585,17 @@ export const theLanguageOfAutomata: TopicDef = {
         "开始时 $q_0$ 处有 $1$ 个串（空串）。每一步，每个状态把它的计数传给它的转移所指向的状态。$n$ 步之后，把接受状态处的计数相加。",
       ),
       generate(rng) {
-        const m = randomMachine(rng, 3);
-        const n = rng.int(3, 6);
-        const value = countAccepted(m, n);
+        let m: Machine;
+        let n: number;
+        let value: number;
+        do {
+          m = randomMachine(rng, 3);
+          n = rng.int(3, 6);
+          value = countAccepted(m, n);
+        } while (value === 0 || value === 2 ** n);
+        const counts = countsByLength(m, n)
+          .map((c) => `(${c.join(", ")})`)
+          .join(" \\to ");
         return numberProblem({
           prompt: t(
             `A DFA over $\\{0, 1\\}$ has transition table $${dfaTable(m)}$ ${DFA_NOTE.en} How many strings of length $${n}$ are in its language?`,
@@ -582,8 +604,8 @@ export const theLanguageOfAutomata: TopicDef = {
           answer: value,
           wrong: [2 ** n - value, countAccepted(m, n - 1), countAccepted(m, n + 1), value + 1],
           solution: t(
-            `Tracking how many strings reach each state, after $${n}$ steps the accepting states hold $${value}$ of the $${2 ** n}$ strings.`,
-            `追踪到达每个状态的串的个数，$${n}$ 步之后接受状态处共有 $${2 ** n}$ 个串中的 $${value}$ 个。`,
+            `Track how many strings reach each of the three states, in the order of the table, one symbol at a time: $${counts}$. The accepting states hold $${value}$ of the $${2 ** n}$ strings.`,
+            `按转移表的顺序，逐个符号追踪到达三个状态的串的个数：$${counts}$。接受状态处共有 $${2 ** n}$ 个串中的 $${value}$ 个。`,
           ),
         });
       },
@@ -705,7 +727,7 @@ export const regularExpressions: TopicDef = {
           n = rng.int(4, 7);
           const re = new RegExp(`^(?:${r})$`);
           count = allWords(n).filter((w) => re.test(w)).length;
-        } while (count < 2);
+        } while (count < 2 || count === 2 ** n);
         const re = new RegExp(`^(?:${r})$`);
         const shorter = allWords(n - 1).filter((w) => re.test(w)).length;
         return numberProblem({
@@ -1180,7 +1202,7 @@ export const bigOmegaNotation: TopicDef = {
         const [i, j] = rng.sample(range(0, FAMILIES.length - 1), 2);
         const c = rng.int(2, 50);
         const yes = i! >= j!;
-        const f = `${c}${FAMILIES[i!]}`;
+        const f = `${c} \\cdot ${FAMILIES[i!]}`;
         return choiceProblem({
           prompt: t(`Is $${f} = \\Omega(${FAMILIES[j!]})$?`, `$${f} = \\Omega(${FAMILIES[j!]})$ 成立吗？`),
           options: yesNo,
@@ -1202,6 +1224,8 @@ export const bigOmegaNotation: TopicDef = {
 
 /** Loop is a loop nest with its exact count, written as pseudocode. */
 interface Loop {
+  /** how writes the count as a sum or product of the loop's bounds. */
+  readonly how?: string;
   readonly en: string;
   readonly zh: string;
   readonly count: (n: number) => number;
@@ -1214,30 +1238,35 @@ const LOOPS: readonly Loop[] = [
     en: "for $i = 1$ to $n$: for $j = 1$ to $i$: $x \\leftarrow x + 1$",
     zh: "对 $i = 1$ 到 $n$：对 $j = 1$ 到 $i$：$x \\leftarrow x + 1$",
     count: (n) => (n * (n + 1)) / 2,
+    how: "\\sum_{i=1}^{n} i = \\frac{n(n + 1)}{2}",
     theta: "n^2",
   },
   {
     en: "for $i = 1$ to $n$: for $j = i + 1$ to $n$: $x \\leftarrow x + 1$",
     zh: "对 $i = 1$ 到 $n$：对 $j = i + 1$ 到 $n$：$x \\leftarrow x + 1$",
     count: (n) => (n * (n - 1)) / 2,
+    how: "\\sum_{i=1}^{n} (n - i) = \\frac{n(n - 1)}{2}",
     theta: "n^2",
   },
   {
     en: "for $i = 1$ to $n$: for $j = 1$ to $n$: $x \\leftarrow x + 1$",
     zh: "对 $i = 1$ 到 $n$：对 $j = 1$ 到 $n$：$x \\leftarrow x + 1$",
     count: (n) => n * n,
+    how: "n \\cdot n",
     theta: "n^2",
   },
   {
     en: "for $i = 1$ to $n$: for $j = 1$ to $i$: for $k = 1$ to $j$: $x \\leftarrow x + 1$",
     zh: "对 $i = 1$ 到 $n$：对 $j = 1$ 到 $i$：对 $k = 1$ 到 $j$：$x \\leftarrow x + 1$",
     count: (n) => (n * (n + 1) * (n + 2)) / 6,
+    how: "\\sum_{i=1}^{n} \\sum_{j=1}^{i} j = \\frac{n(n + 1)(n + 2)}{6}",
     theta: "n^3",
   },
   {
     en: "$i \\leftarrow 1$; while $i \\le n$: $x \\leftarrow x + 1$; $i \\leftarrow 2i$",
     zh: "$i \\leftarrow 1$；当 $i \\le n$ 时：$x \\leftarrow x + 1$；$i \\leftarrow 2i$",
     count: (n) => Math.floor(Math.log2(n)) + 1,
+    how: "\\lfloor \\log_2 n \\rfloor + 1",
     theta: "\\log n",
   },
   {
@@ -1311,8 +1340,8 @@ export const bigThetaNotation: TopicDef = {
           answer: value,
           wrong: [n * n, value + n, value - 1, Math.floor(Math.log2(n))].filter((x) => x !== value),
           solution: t(
-            `The statement runs $${value}$ times; in general this loop is $\\Theta(${loop.theta})$.`,
-            `该语句执行 $${value}$ 次；一般地，这个循环是 $\\Theta(${loop.theta})$。`,
+            `${loop.how ? `The count is $${loop.how}$, so with $n = ${n}$ the` : "The"} statement runs $${value}$ times; in general this loop is $\\Theta(${loop.theta})$.`,
+            `${loop.how ? `次数为 $${loop.how}$，所以当 $n = ${n}$ 时` : ""}该语句执行 $${value}$ 次；一般地，这个循环是 $\\Theta(${loop.theta})$。`,
           ),
         });
       },

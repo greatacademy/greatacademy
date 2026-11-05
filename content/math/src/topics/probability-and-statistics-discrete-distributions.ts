@@ -137,8 +137,8 @@ export const probabilityAndStatisticsDiscreteDistributionTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Let $X \\sim \\text{Poisson}(${lambda})$. The cumulative probability $P(X \\le 2)$ can be written in the form $C e^{-${lambda}}$. Find the rational value of the coefficient $C = 1 + \\lambda + \\frac{\\lambda^2}{2}$.`,
-              `设 $X \\sim \\text{Poisson}(${lambda})$。累积概率 $P(X \\le 2)$ 可表示为 $C e^{-${lambda}}$ 的形式。求系数 $C = 1 + \\lambda + \\frac{\\lambda^2}{2}$ 的有理数值。`,
+              `Let $X \\sim \\text{Poisson}(${lambda})$. The cumulative probability $P(X \\le 2)$ can be written in the form $C e^{-${lambda}}$. Find the rational value of the coefficient $C$.`,
+              `设 $X \\sim \\text{Poisson}(${lambda})$。累积概率 $P(X \\le 2)$ 可表示为 $C e^{-${lambda}}$ 的形式。求系数 $C$ 的有理数值。`,
             ),
             answer: Q.of(num, den),
             wrong: [1 + lambda + lambda * lambda, 1 + lambda, Q.of(lambda * lambda, 2)],

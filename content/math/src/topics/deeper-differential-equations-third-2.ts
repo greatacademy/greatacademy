@@ -504,7 +504,9 @@ const pulseAmplitude = point(
     const F = rng.int(1, 40);
     const j = rng.int(1, 4);
     const piPart = j === 1 ? "\\pi" : `${j}\\pi`;
-    const T = w === 1 ? piPart : `\\frac{${piPart}}{${w}}`;
+    const lowest = Q.of(j, w);
+    const top = lowest.n === 1n ? "\\pi" : `${lowest.n}\\pi`;
+    const T = lowest.d === 1n ? top : `\\frac{${top}}{${lowest.d}}`;
     const full = Q.of(2 * F, w * w);
     const odd = j % 2 === 1;
     const answer = odd ? full : Q.of(0);

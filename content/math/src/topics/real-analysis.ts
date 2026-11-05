@@ -1086,14 +1086,14 @@ const upperLowerSums = topic(
         const answer = rise * length * k + 1;
         return ask(
           [
-            `An increasing $f$ on an interval of length ${length} rises by ${rise} in total. What is the smallest number of equal parts that makes the upper and lower sums differ by less than ${"$" + tex + "$"}?`,
-            `长度为 ${length} 的区间上的递增函数 $f$ 总共上升了 ${rise}。使上和与下和之差小于 ${"$" + tex + "$"} 的最少等份数是多少？`,
+            `An increasing $f$ on an interval of length ${length} rises by ${rise} in total. What is the smallest number of equal parts that makes the upper and lower sums differ by less than ${`$${tex}$`}?`,
+            `长度为 ${length} 的区间上的递增函数 $f$ 总共上升了 ${rise}。使上和与下和之差小于 ${`$${tex}$`} 的最少等份数是多少？`,
           ],
           answer,
           [answer - 1, rise * k + 1, length * k + 1, rise + length + k],
           [
-            `The difference is $\\frac{${rise * length}}{n}$, and this is below ${"$" + tex + "$"} when $n > ${rise * length * k}$.`,
-            `差是 $\\frac{${rise * length}}{n}$，当 $n > ${rise * length * k}$ 时它小于 ${"$" + tex + "$"}。`,
+            `The difference is $\\frac{${rise * length}}{n}$, and this is below ${`$${tex}$`} when $n > ${rise * length * k}$.`,
+            `差是 $\\frac{${rise * length}}{n}$，当 $n > ${rise * length * k}$ 时它小于 ${`$${tex}$`}。`,
           ],
         );
       },

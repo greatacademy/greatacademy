@@ -304,9 +304,11 @@ export const readingAndWritingDecimalsWrittenInWords = topic(
           rng,
           t(`How is $${fix(n, p)}$ read?`, `$${fix(n, p)}$ 怎么读？`),
           decimalWords(n, p),
-          [moved(p - 1), ...(p < 3 ? [moved(p + 1)] : []), decimalWords(whole * pow10(p) + Math.floor(part / 10) + (part % 10) * pow10(p - 1), p)].filter(
-            (w) => w.en !== decimalWords(n, p).en,
-          ),
+          [
+            moved(p - 1),
+            ...(p < 3 ? [moved(p + 1)] : []),
+            decimalWords(whole * pow10(p) + Math.floor(part / 10) + (part % 10) * pow10(p - 1), p),
+          ].filter((w) => w.en !== decimalWords(n, p).en),
           t(
             `The last digit is in the ${placeName(p).en} place, so it is read "${decimalWordsEn(n, p)}".`,
             `整数部分读作${wordsZh(whole)}，小数部分依次读出每个数字："${decimalWordsZh(n, p)}"。`,

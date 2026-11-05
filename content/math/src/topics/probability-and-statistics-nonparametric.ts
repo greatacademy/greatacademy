@@ -43,8 +43,8 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `An experiment with $k = 3$ categories records observed frequencies $O_1 = ${o1}$, $O_2 = ${o2}$, $O_3 = ${o3}$ against expected frequencies $E_1 = ${e1}$, $E_2 = ${e2}$, $E_3 = ${e3}$. Calculate the exact rational value of the chi-square test statistic $\\chi^2 = \\sum_{i=1}^3 \\frac{(O_i - E_i)^2}{E_i}$.`,
-              `一个包含 $k = 3$ 个类别的试验记录了观测频数 $O_1 = ${o1}$、$O_2 = ${o2}$、$O_3 = ${o3}$，理论期望频数分别为 $E_1 = ${e1}$、$E_2 = ${e2}$、$E_3 = ${e3}$。计算卡方检验统计量 $\\chi^2 = \\sum_{i=1}^3 \\frac{(O_i - E_i)^2}{E_i}$ 的精确有理数值。`,
+              `An experiment with $k = 3$ categories records observed frequencies $O_1 = ${o1}$, $O_2 = ${o2}$, $O_3 = ${o3}$ against expected frequencies $E_1 = ${e1}$, $E_2 = ${e2}$, $E_3 = ${e3}$. Calculate the exact rational value of the chi-square test statistic $\\chi^2$.`,
+              `一个包含 $k = 3$ 个类别的试验记录了观测频数 $O_1 = ${o1}$、$O_2 = ${o2}$、$O_3 = ${o3}$，理论期望频数分别为 $E_1 = ${e1}$、$E_2 = ${e2}$、$E_3 = ${e3}$。计算卡方检验统计量 $\\chi^2$ 的精确有理数值。`,
             ),
             answer: ans,
             wrong: [
@@ -433,8 +433,8 @@ export const probabilityAndStatisticsNonparametricTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `In an $r \\times c = ${r} \\times ${c}$ contingency table with grand total $N = ${grandTotal}$, row 1 has marginal total $R_1 = ${rTotal}$ and column 1 has marginal total $C_1 = ${cTotal}$. Under the null hypothesis of independence, find the exact rational value of the expected cell count $E_{11} = \\frac{R_1 C_1}{N}$.`,
-              `在总样本量为 $N = ${grandTotal}$ 的 $r \\times c = ${r} \\times ${c}$ 列联表中，第 1 行的边际合计为 $R_1 = ${rTotal}$，第 1 列的边际合计为 $C_1 = ${cTotal}$。在变量相互独立的原假设下，求期望单元格频数 $E_{11} = \\frac{R_1 C_1}{N}$ 的精确有理数值。`,
+              `In an $r \\times c = ${r} \\times ${c}$ contingency table with grand total $N = ${grandTotal}$, row 1 has marginal total $R_1 = ${rTotal}$ and column 1 has marginal total $C_1 = ${cTotal}$. Under the null hypothesis of independence, find the exact rational value of the expected cell count $E_{11}$.`,
+              `在总样本量为 $N = ${grandTotal}$ 的 $r \\times c = ${r} \\times ${c}$ 列联表中，第 1 行的边际合计为 $R_1 = ${rTotal}$，第 1 列的边际合计为 $C_1 = ${cTotal}$。在变量相互独立的原假设下，求期望单元格频数 $E_{11}$ 的精确有理数值。`,
             ),
             answer: ans,
             wrong: [Q.of(rTotal + cTotal, grandTotal), Q.of(rTotal * cTotal, r * c), Q.of(rTotal, grandTotal)],

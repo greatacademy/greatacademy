@@ -878,54 +878,54 @@ const fieldChoices: readonly { tex: string; f: (x: number, y: number) => number;
     {
       tex: `y' = ${shifted("y", c)}`,
       f: (_x: number, y: number) => y - c,
-      en: `slopes depend only on y, are zero along y = ${c}, and are positive above it`,
-      zh: `斜率只取决于 y，沿 y = ${c} 为零，在它上方为正`,
+      en: `slopes depend only on $y$, are zero along $y = ${c}$, and are positive above it`,
+      zh: `斜率只取决于 $y$，沿 $y = ${c}$ 为零，在它上方为正`,
     },
     {
       tex: `y' = ${c === 0 ? "-y" : `${c} - y`}`,
       f: (_x: number, y: number) => c - y,
-      en: `slopes depend only on y, are zero along y = ${c}, and are negative above it`,
-      zh: `斜率只取决于 y，沿 y = ${c} 为零，在它上方为负`,
+      en: `slopes depend only on $y$, are zero along $y = ${c}$, and are negative above it`,
+      zh: `斜率只取决于 $y$，沿 $y = ${c}$ 为零，在它上方为负`,
     },
     {
       tex: `y' = ${shifted("x", c)}`,
       f: (x: number) => x - c,
-      en: `slopes depend only on x, are zero along x = ${c}, and are positive to its right`,
-      zh: `斜率只取决于 x，沿 x = ${c} 为零，在它右边为正`,
+      en: `slopes depend only on $x$, are zero along $x = ${c}$, and are positive to its right`,
+      zh: `斜率只取决于 $x$，沿 $x = ${c}$ 为零，在它右边为正`,
     },
     {
       tex: `y' = ${c === 0 ? "-x" : `${c} - x`}`,
       f: (x: number) => c - x,
-      en: `slopes depend only on x, are zero along x = ${c}, and are negative to its right`,
-      zh: `斜率只取决于 x，沿 x = ${c} 为零，在它右边为负`,
+      en: `slopes depend only on $x$, are zero along $x = ${c}$, and are negative to its right`,
+      zh: `斜率只取决于 $x$，沿 $x = ${c}$ 为零，在它右边为负`,
     },
   ]),
   {
     tex: "y' = x + y",
     f: (x, y) => x + y,
-    en: "slopes are zero along the line y = -x, and are positive above it",
-    zh: "沿直线 y = -x 斜率为零，在它上方为正",
+    en: "slopes are zero along the line $y = -x$, and are positive above it",
+    zh: "沿直线 $y = -x$ 斜率为零，在它上方为正",
   },
   {
     tex: "y' = -x - y",
     f: (x, y) => -x - y,
-    en: "slopes are zero along the line y = -x, and are negative above it",
-    zh: "沿直线 y = -x 斜率为零，在它上方为负",
+    en: "slopes are zero along the line $y = -x$, and are negative above it",
+    zh: "沿直线 $y = -x$ 斜率为零，在它上方为负",
   },
   {
     tex: "y' = x - y",
     f: (x, y) => x - y,
-    en: "slopes are zero along the line y = x, and are negative above it",
-    zh: "沿直线 y = x 斜率为零，在它上方为负",
+    en: "slopes are zero along the line $y = x$, and are negative above it",
+    zh: "沿直线 $y = x$ 斜率为零，在它上方为负",
   },
   {
     tex: "y' = y - x",
     f: (x, y) => y - x,
-    en: "slopes are zero along the line y = x, and are positive above it",
-    zh: "沿直线 y = x 斜率为零，在它上方为正",
+    en: "slopes are zero along the line $y = x$, and are positive above it",
+    zh: "沿直线 $y = x$ 斜率为零，在它上方为正",
   },
-  { tex: "y' = y^2", f: (_x, y) => y * y, en: "slopes depend only on y, and are never negative", zh: "斜率只取决于 y，且不为负" },
-  { tex: "y' = -y^2", f: (_x, y) => -y * y, en: "slopes depend only on y, and are never positive", zh: "斜率只取决于 y，且不为正" },
+  { tex: "y' = y^2", f: (_x, y) => y * y, en: "slopes depend only on $y$, and are never negative", zh: "斜率只取决于 $y$，且不为负" },
+  { tex: "y' = -y^2", f: (_x, y) => -y * y, en: "slopes depend only on $y$, and are never positive", zh: "斜率只取决于 $y$，且不为正" },
   {
     tex: "y' = xy",
     f: (x, y) => x * y,
@@ -944,8 +944,8 @@ const matchingSlopeField: KnowledgePointDef = {
   id: "matching-a-slope-field-to-its-equation",
   title: t("Matching a slope field to its equation", "把斜率场与方程对应"),
   explanation: t(
-    "Look at a slope field in columns and rows. If the segments in each vertical column are parallel, the slope depends only on x. If those in each horizontal row are parallel, it depends only on y. Then find where the segments are flat, since those are the places where the right side is zero. These two checks usually settle which equation it is.",
-    "按列和行来看斜率场。如果每一竖列的线段都平行，斜率只取决于 x。如果每一横行的线段都平行，斜率只取决于 y。再找线段水平的地方，那里右端等于零。这两项检查通常就能确定是哪个方程。",
+    "Look at a slope field in columns and rows. If the segments in each vertical column are parallel, the slope depends only on $x$. If those in each horizontal row are parallel, it depends only on $y$. Then find where the segments are flat, since those are the places where the right side is zero. These two checks usually settle which equation it is.",
+    "按列和行来看斜率场。如果每一竖列的线段都平行，斜率只取决于 $x$。如果每一横行的线段都平行，斜率只取决于 $y$。再找线段水平的地方，那里右端等于零。这两项检查通常就能确定是哪个方程。",
   ),
   generate(rng) {
     const right = rng.pick(fieldChoices);
@@ -956,7 +956,11 @@ const matchingSlopeField: KnowledgePointDef = {
       math(right.tex),
       others.map((c) => math(c.tex)),
       t(`Here ${right.en}, which matches $${right.tex}$.`, `这里${right.zh}，与 $${right.tex}$ 相符。`),
-      drawn(square(4), slopeField(right.f), t(`A slope field in which ${right.en}.`, `一个斜率场：${right.zh}。`)),
+      drawn(
+        square(4),
+        slopeField(right.f),
+        t(`A slope field in which ${right.en.replaceAll("$", "")}.`, `一个斜率场：${right.zh.replaceAll("$", "")}。`),
+      ),
     );
   },
 };
@@ -2242,7 +2246,7 @@ const adjacencyFromGraph: KnowledgePointDef = {
       t(
         answer === 0
           ? `${names[a]} and ${names[b]} have no common neighbor, so there are no such walks.`
-          : `The common neighbors of ${names[a]} and ${names[b]} are ${common.map((i) => names[i]).join(", ")}, and each gives one walk.`,
+          : `${common.length === 1 ? "The only common neighbor" : "The common neighbors"} of ${names[a]} and ${names[b]} ${common.length === 1 ? "is" : "are"} ${common.map((i) => names[i]).join(", ")}, and each gives one walk.`,
         answer === 0
           ? `${names[a]} 和 ${names[b]} 没有公共邻点，所以没有这样的走法。`
           : `${names[a]} 和 ${names[b]} 的公共邻点是 ${common.map((i) => names[i]).join("、")}，每个给出一种走法。`,

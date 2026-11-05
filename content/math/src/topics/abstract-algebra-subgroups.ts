@@ -20,6 +20,9 @@ import {
 import { ANHARMONIC, mul2, sameMobius } from "./abstract-algebra-groups.ts";
 import { range } from "./methods-of-proof-common.ts";
 
+/** rPow writes the rotation rᵏ, without a redundant exponent. */
+const rPow = (k: number) => (k === 0 ? "e" : k === 1 ? "r" : `r^{${k}}`);
+
 // Abstract Algebra unit 2, modules 2.4 to 2.6: subgroups, cyclic groups, generating sets and presentations.
 
 /** subgroupPrompt asks whether H is a subgroup of G. */
@@ -1376,14 +1379,14 @@ export const presentationsOfGroups: TopicDef = {
         const value = mod(i - j, n);
         return numberProblem({
           prompt: t(
-            `In $\\langle r, s \\mid r^{${n}} = s^2 = e, srs = r^{-1} \\rangle$, the element $r^{${i}} s r^{${j}}$ equals $r^k s$ with $0 \\le k < ${n}$. Find $k$.`,
-            `在 $\\langle r, s \\mid r^{${n}} = s^2 = e, srs = r^{-1} \\rangle$ 中，元素 $r^{${i}} s r^{${j}}$ 等于 $r^k s$，$0 \\le k < ${n}$。求 $k$。`,
+            `In $\\langle r, s \\mid r^{${n}} = s^2 = e, srs = r^{-1} \\rangle$, the element $${rPow(i)} s ${rPow(j)}$ equals $r^k s$ with $0 \\le k < ${n}$. Find $k$.`,
+            `在 $\\langle r, s \\mid r^{${n}} = s^2 = e, srs = r^{-1} \\rangle$ 中，元素 $${rPow(i)} s ${rPow(j)}$ 等于 $r^k s$，$0 \\le k < ${n}$。求 $k$。`,
           ),
           answer: value,
           wrong: [mod(i + j, n), mod(j - i, n), i * j === value ? i : mod(i * j, n)],
           solution: t(
-            `$sr^{${j}} = r^{-${j}}s$, so $r^{${i}} s r^{${j}} = r^{${i} - ${j}} s = r^{${value}} s$.`,
-            `$sr^{${j}} = r^{-${j}}s$，所以 $r^{${i}} s r^{${j}} = r^{${i} - ${j}} s = r^{${value}} s$。`,
+            `$s${rPow(j)} = r^{-${j}}s$, so $${rPow(i)} s ${rPow(j)} = r^{${i} - ${j}} s = r^{${value}} s$.`,
+            `$s${rPow(j)} = r^{-${j}}s$，所以 $${rPow(i)} s ${rPow(j)} = r^{${i} - ${j}} s = r^{${value}} s$。`,
           ),
         });
       },

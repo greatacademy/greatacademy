@@ -1,7 +1,7 @@
 // A third knowledge point for the discrete mathematics and machine learning topics that still had two.
 
 import type { KnowledgePointDef } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { dec, Q } from "@ga/subject-math";
 
 import { whole } from "./early-grades-more-kit.ts";
 import { chooseFilled, decimal, frac, fraction, integer, signed, skill } from "./third-kit.ts";
@@ -743,8 +743,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
           start - k,
           [start + k, k, start],
           [
-            `Substituting $K \\cdot ${t}^{n}$ gives $K = ${k}$, and $A + B + K = ${start}$.`,
-            `代入 $K \\cdot ${t}^{n}$ 得 $K = ${k}$，且 $A + B + K = ${start}$。`,
+            `Substituting $K \\cdot ${t}^{n}$ and dividing by $${t}^{n-2}$ gives $K(${t} - ${paren(r)})(${t} - ${paren(s)}) = ${paren(c)} \\cdot ${t * t}$, so $K = ${k}$. At $n = 0$, $A + B + K = ${start}$, so $A + B = ${start - k}$.`,
+            `代入 $K \\cdot ${t}^{n}$ 并除以 $${t}^{n-2}$，得 $K(${t} - ${paren(r)})(${t} - ${paren(s)}) = ${paren(c)} \\cdot ${t * t}$，所以 $K = ${k}$。当 $n = 0$ 时 $A + B + K = ${start}$，所以 $A + B = ${start - k}$。`,
           ],
         );
       },
@@ -986,14 +986,22 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
         "邻接矩阵 $k$ 次幂的 $(i, j)$ 元素，就是从 $i$ 到 $j$ 长度为 $k$ 的路线数。所以长度为 3 的路线数由矩阵自乘两次得到。",
       ],
       (rng) => {
-        const m = [0, 1, 2].map(() => [0, 1, 2].map(() => rng.int(0, 1)));
         const mul = (x: number[][], y: number[][]) =>
           x.map((row) => [0, 1, 2].map((j) => row.reduce((s, v, k) => s + v * ((y[k] as number[])[j] as number), 0)));
-        const cube = mul(mul(m, m), m);
-        const i = rng.int(0, 2);
-        const j = rng.int(0, 2);
-        const square = (mul(m, m)[i] as number[])[j] as number;
-        const answer = (cube[i] as number[])[j] as number;
+        let m: number[][];
+        let i: number;
+        let j: number;
+        let answer: number;
+        do {
+          m = [0, 1, 2].map(() => [0, 1, 2].map(() => rng.int(0, 1)));
+          i = rng.int(0, 2);
+          j = rng.int(0, 2);
+          answer = (mul(mul(m, m), m)[i] as number[])[j] as number;
+        } while (answer === 0 || m.some((row) => row.every((v) => v === 0)));
+        const squared = mul(m, m);
+        const square = (squared[i] as number[])[j] as number;
+        const rowOfSquare = squared[i] as number[];
+        const column = m.map((row) => row[j] as number);
         const names = ["A", "B", "C"];
         return whole(
           [
@@ -1006,7 +1014,10 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
             answer + 2,
             (m[i] as number[])[j] === answer ? answer + 3 : ((m[i] as number[])[j] as number),
           ],
-          [`The cube of the matrix has ${answer} in that position.`, `矩阵的立方在这个位置上是 ${answer}。`],
+          [
+            `Row $${names[i]}$ of the matrix squared is $(${rowOfSquare.join(", ")})$. Multiply it by column $${names[j]}$ of the matrix, $(${column.join(", ")})$: $${rowOfSquare.map((v, k) => `${v} \\cdot ${column[k]}`).join(" + ")} = ${answer}$.`,
+            `矩阵平方的 $${names[i]}$ 行是 $(${rowOfSquare.join(", ")})$。乘以矩阵的 $${names[j]}$ 列 $(${column.join(", ")})$：$${rowOfSquare.map((v, k) => `${v} \\cdot ${column[k]}`).join(" + ")} = ${answer}$。`,
+          ],
         );
       },
     ),
@@ -1042,8 +1053,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
           answer,
           [Q.of(1).add(x), Q.of(1).add(Q.of(-row[1], row[2]).mul(x)), Q.of(row[1], row[2]).mul(x)],
           [
-            `With $x = ${(k / 100).toFixed(2)}$ and $r = ${row[0]}$, the estimate is $1 + rx$.`,
-            `$x = ${(k / 100).toFixed(2)}$，$r = ${row[0]}$，估计值是 $1 + rx$。`,
+            `With $x = ${(k / 100).toFixed(2)}$ and $r = ${row[0]}$, the estimate is $1 + rx = 1 + ${row[1] < 0 ? `\\left(${row[0]}\\right)` : row[0]} \\cdot ${k < 0 ? `(${(k / 100).toFixed(2)})` : (k / 100).toFixed(2)} = ${dec(answer)}$.`,
+            `$x = ${(k / 100).toFixed(2)}$，$r = ${row[0]}$，估计值是 $1 + rx = 1 + ${row[1] < 0 ? `\\left(${row[0]}\\right)` : row[0]} \\cdot ${k < 0 ? `(${(k / 100).toFixed(2)})` : (k / 100).toFixed(2)} = ${dec(answer)}$。`,
           ],
         );
       },

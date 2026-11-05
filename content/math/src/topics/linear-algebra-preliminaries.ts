@@ -124,15 +124,6 @@ function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solu
       if (rest.length === 3) break;
     }
   }
-  let fallbackCount = 1;
-  while (rest.length < 3) {
-    const fb = t(`None of the other options (${fallbackCount})`, `以上选项均不正确 (${fallbackCount})`);
-    if (!seen.has(fb.en)) {
-      seen.add(fb.en);
-      rest.push(fb);
-    }
-    fallbackCount++;
-  }
   const options = [right, ...rest];
   const order = rng.shuffle(options.map((_, i) => i));
   return choiceProblem({ prompt, options: order.map((i) => options[i]!), correct: order.indexOf(0), solution });
@@ -1969,6 +1960,8 @@ export const theCartesianEquationOfALine: TopicDef = {
         const wrong1 = `${symPart(a, x0 || 1, "x")} = ${symPart(b, y0 || 1, "y")} = ${symPart(c, z0 || 1, "z")}`;
         const wrong2 = `${symPart(-x0, a, "x")} = ${symPart(y0, b, "y")} = ${symPart(z0, c, "z")}`;
         const wrong3 = `${symPart(x0, a, "x")} = ${symPart(y0, -b, "y")} = ${symPart(z0, c, "z")}`;
+        const wrong4 = `${symPart(x0, a, "x")} = ${symPart(-y0, b, "y")} = ${symPart(z0, c, "z")}`;
+        const wrong5 = `${symPart(x0, -a, "x")} = ${symPart(y0, b, "y")} = ${symPart(z0, c, "z")}`;
 
         const p: Vec3 = [x0, y0, z0];
         const v: Vec3 = [a, b, c];
@@ -1979,7 +1972,7 @@ export const theCartesianEquationOfALine: TopicDef = {
             `求通过点 $P${pt3Latex(p)}$ 且以 $\\mathbf{v} = ${vec3Latex(v)}$ 为方向向量的直线的对称式方程。`,
           ),
           t(`$${rightSym}$`, `$${rightSym}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
+          [wrong1, wrong2, wrong3, wrong4, wrong5].map((w) => t(`$${w}$`, `$${w}$`)),
           t(
             `Solving for $t$ in each coordinate gives $t = \\frac{${symNum("x", x0)}}{${a}} = \\frac{${symNum("y", y0)}}{${b}} = \\frac{${symNum("z", z0)}}{${c}}$. Thus the symmetric equations are:\n\n$$${rightSym}$$`,
             `在每个参数方程中解出 $t$，得 $t = \\frac{${symNum("x", x0)}}{${a}} = \\frac{${symNum("y", y0)}}{${b}} = \\frac{${symNum("z", z0)}}{${c}}$。联立即得对称式方程：\n\n$$${rightSym}$$`,
@@ -2007,9 +2000,11 @@ export const theCartesianEquationOfALine: TopicDef = {
           return `\\frac{${num}}{${dir}}`;
         };
         const rightEq = `${symPart(x0, a, "x")} = ${symPart(y0, b, "y")}, \\quad z = ${z0}`;
-        const wrong1 = `${symPart(x0, a, "x")} = ${symPart(y0, b, "y")} = \\frac{${z0 < 0 ? `z + ${-z0}` : `z - ${z0}`}}{0}`;
+        const wrong1 = `${symPart(x0, a, "x")} = ${symPart(y0, b, "y")} = \\frac{${z0 === 0 ? "z" : z0 < 0 ? `z + ${-z0}` : `z - ${z0}`}}{0}`;
         const wrong2 = `${symPart(x0, a, "x")} = ${symPart(y0, b, "y")}, \\quad z = 0`;
         const wrong3 = `${symPart(x0, a, "x")} = ${symPart(y0, b, "y")}, \\quad z = ${x0}`;
+        const wrong4 = `${symPart(x0, a, "x")} = ${symPart(y0, b, "y")}, \\quad z = ${z0 + 1}`;
+        const wrong5 = `${symPart(x0, b, "x")} = ${symPart(y0, a, "y")}, \\quad z = ${z0}`;
 
         const p: Vec3 = [x0, y0, z0];
         const v: Vec3 = [a, b, c];
@@ -2020,7 +2015,7 @@ export const theCartesianEquationOfALine: TopicDef = {
             `一条直线过点 $P${pt3Latex(p)}$，其方向向量为 $\\mathbf{v} = ${vec3Latex(v)}$。下列哪个表达式正确表示了其对称式方程？`,
           ),
           t(`$${rightEq}$`, `$${rightEq}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
+          [wrong1, wrong2, wrong3, wrong4, wrong5].map((w) => t(`$${w}$`, `$${w}$`)),
           t(
             `Because the $z$-component of the direction vector is $0$, $z$ remains constantly equal to $z_0 = ${z0}$. Equating the parameters for $x$ and $y$ gives:\n\n$$${rightEq}$$`,
             `因为方向向量的 $z$ 分量为 $0$，所以 $z$ 恒等于常数 $z_0 = ${z0}$。将 $x$ 与 $y$ 的参数联立，得到方程为 $${rightEq}$。`,

@@ -46,8 +46,8 @@ const bayesTwice: KnowledgePointDef = {
       answer,
       wrong: [once.div(once.add(onceNo)), yes, Q.of(s, 10)],
       solution: t(
-        `The true branch has probability ${tenths(p)} times ${tenths(s)} squared, which is $${yes.toLatex()}$. The false branch has ${tenths(10 - p)} times ${tenths(f)} squared, which is $${no.toLatex()}$. The posterior is the share of the true branch, $${answer.toLatex()}$.`,
-        `真实分支的概率是 ${tenths(p)} 乘 ${tenths(s)} 的平方，即 $${yes.toLatex()}$。错误分支的概率是 ${tenths(10 - p)} 乘 ${tenths(f)} 的平方，即 $${no.toLatex()}$。后验概率是真实分支所占的比例，$${answer.toLatex()}$。`,
+        `The true branch has probability $${tenths(p)} \\cdot ${tenths(s)}^2 = ${yes.toLatex()}$. The false branch has probability $${tenths(10 - p)} \\cdot ${tenths(f)}^2 = ${no.toLatex()}$. The posterior is the share of the true branch, $${answer.toLatex()}$.`,
+        `真实分支的概率是 $${tenths(p)} \\cdot ${tenths(s)}^2 = ${yes.toLatex()}$。错误分支的概率是 $${tenths(10 - p)} \\cdot ${tenths(f)}^2 = ${no.toLatex()}$。后验概率是真实分支所占的比例，$${answer.toLatex()}$。`,
       ),
     });
   },
@@ -1465,7 +1465,7 @@ const logDerivativeAtZero: KnowledgePointDef = {
   generate(rng) {
     const a = rng.int(1, 6);
     const b = rng.int(1, 6);
-    const c = rng.int(1, 6);
+    const c = rng.pick([1, 2, 3, 4, 5, 6, 7, 8].filter((v) => v !== a && v !== b));
     const p = rng.int(2, 4);
     const q = rng.int(2, 4);
     const r = rng.int(2, 4);

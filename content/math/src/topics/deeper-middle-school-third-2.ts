@@ -103,10 +103,7 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const c = d * value - x;
         const top = (n: number) => (n === 0 ? "x" : `x${signed(n)}`);
         return integer(
-          [
-            `Solve $${frac(top(a), b)} = ${frac(top(c), d)}$.`,
-            `解方程 $${frac(top(a), b)} = ${frac(top(c), d)}$。`,
-          ],
+          [`Solve $${frac(top(a), b)} = ${frac(top(c), d)}$.`, `解方程 $${frac(top(a), b)} = ${frac(top(c), d)}$。`],
           x,
           [-x, x + 1, a - c],
           [

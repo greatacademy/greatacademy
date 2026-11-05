@@ -643,7 +643,7 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
               `No, because the variables share the same constant factor $${(m + 1) * (n + 1)}$.`,
               `否，因为两个变量共享相同的常数因子 $${(m + 1) * (n + 1)}$。`,
             ),
-            t(`No, because independence requires $m = n$.`, `否，因为独立性要求幂次满足 $m = n$。`),
+            t("No, because independence requires the two exponents to be equal.", "否，因为独立性要求两个指数相等。"),
             t(`Cannot be determined without computing higher-order joint moments.`, `不计算更高阶联合矩则无法确定。`),
           ];
           const perm = rng.shuffle([0, 1, 2, 3]);
@@ -953,15 +953,15 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
           const opts = isZero
             ? [
                 t(
-                  "Yes, because for bivariate normal random variables, zero correlation (ρ = 0) is equivalent to independence.",
-                  "是，因为对于二元正态随机变量，零相关系数（ρ = 0）等价于相互独立。",
+                  "Yes, because for bivariate normal random variables, zero correlation ($\\rho = 0$) is equivalent to independence.",
+                  "是，因为对于二元正态随机变量，零相关系数（$\\rho = 0$）等价于相互独立。",
                 ),
                 t(
                   "No, zero correlation never guarantees independence for continuous variables.",
                   "否，零相关在连续变量中绝不能保证相互独立。",
                 ),
                 t("Only if the means are both zero.", "仅当两个均值都为零时才成立。"),
-                t("Only if the variances are equal (σ_X = σ_Y).", "仅当方差相等（σ_X = σ_Y）时才成立。"),
+                t("Only if the variances are equal ($\\sigma_X = \\sigma_Y$).", "仅当方差相等（$\\sigma_X = \\sigma_Y$）时才成立。"),
               ]
             : [
                 t(
@@ -970,7 +970,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
                 ),
                 t("Yes, any bivariate normal distribution has independent marginals.", "是，任意二元正态分布都具有相互独立的边际分布。"),
                 t("Yes, provided the conditional distribution is symmetric.", "是，只要条件分布对称即可。"),
-                t("Cannot be determined without knowing the means μ_X and μ_Y.", "在未知均值 μ_X 与 μ_Y 的情况下无法确定。"),
+                t(
+                  "Cannot be determined without knowing the means $\\mu_X$ and $\\mu_Y$.",
+                  "在未知均值 $\\mu_X$ 与 $\\mu_Y$ 的情况下无法确定。",
+                ),
               ];
           const perm = rng.shuffle([0, 1, 2, 3]);
           const options = perm.map((i) => opts[i]!);
@@ -985,10 +988,10 @@ export const probabilityAndStatisticsCombiningVariablesTopics: TopicDef[] = [
             correct,
             solution: t(
               isZero
-                ? "For jointly normal variables, the joint PDF factors if and only if ρ = 0. Therefore, zero correlation implies independence."
+                ? "For jointly normal variables, the joint PDF factors if and only if $\\rho = 0$. Therefore, zero correlation implies independence."
                 : `Because $\\rho = ${rho} \\ne 0$, $X$ and $Y$ are correlated, so they cannot be independent.`,
               isZero
-                ? "对于联合正态变量，联合密度函数可分解当且仅当相关系数 ρ = 0。因此零相关意味着独立。"
+                ? "对于联合正态变量，联合密度函数可分解当且仅当相关系数 $\\rho = 0$。因此零相关意味着独立。"
                 : `因为 $\\rho = ${rho} \\ne 0$，故 $X$ 与 $Y$ 相关，因而不能独立。`,
             ),
           });

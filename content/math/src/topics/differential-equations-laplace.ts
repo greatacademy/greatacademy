@@ -279,7 +279,7 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         id: "evaluating-linear-combinations-of-transforms",
         title: t("Transforming linear combinations of powers of t", "变换 t 的幂的线性组合"),
         explanation: t(
-          "The transform is linear, so a combination of powers of time transforms into the same combination of their known transforms. Recall $\\mathcal{L}\\{1\\} = \\frac{1}{s}$, $\\mathcal{L}\\{t\\} = \\frac{1}{s^2}$, and $\\mathcal{L}\\{t^2\\} = \\frac{2}{s^3}$. The leading high-frequency coefficient of $s^3 \\mathcal{L}\\{a t^2 + b t + c\\}$ as $s \\to 0$ is $2a$.",
+          "The transform is linear, so a combination of powers of time transforms into the same combination of their known transforms. Recall $\\mathcal{L}\\{1\\} = \\frac{1}{s}$, $\\mathcal{L}\\{t\\} = \\frac{1}{s^2}$, and $\\mathcal{L}\\{t^2\\} = \\frac{2}{s^3}$. The coefficient of $1/s^3$ in $\\mathcal{L}\\{a t^2 + b t + c\\}$ is $2a$.",
           "这个变换是线性的，所以时间的幂的组合变换为它们已知变换的同样组合。已知 $\\mathcal{L}\\{1\\} = \\frac{1}{s}$，$\\mathcal{L}\\{t\\} = \\frac{1}{s^2}$，$\\mathcal{L}\\{t^2\\} = \\frac{2}{s^3}$。$\\mathcal{L}\\{a t^2 + b t + c\\}$ 中 $1/s^3$ 项的系数为 $2a$。",
         ),
         generate(rng: Rng): Problem {
@@ -442,24 +442,26 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         generate(rng: Rng): Problem {
           const a = rng.int(2, 10);
           const c = rng.int(2, 35);
-          const ans = c;
+          const k = rng.int(2, 6);
+          const s0 = a + k;
+          const ans = Q.of(c, k * k);
 
           const prompt = t(
-            `Let $f(t) = ${c} t e^{${a}t}$. Evaluate the algebraic expression $(s - ${a})^2 \\mathcal{L}\\{f(t)\\}$.`,
-            `设 $f(t) = ${c} t e^{${a}t}$。求代数表达式 $(s - ${a})^2 \\mathcal{L}\\{f(t)\\}$ 的值。`,
+            `Let $f(t) = ${c} t e^{${a}t}$ and let $F(s) = \\mathcal{L}\\{f(t)\\}$. Find $F(${s0})$.`,
+            `设 $f(t) = ${c} t e^{${a}t}$，$F(s) = \\mathcal{L}\\{f(t)\\}$。求 $F(${s0})$。`,
           );
           const solution = t(
             steps(
               `The differentiation rule gives $\\mathcal{L}\\{t g(t)\\} = -G'(s)$.`,
               `For $g(t) = e^{${a}t}$, $G(s) = \\frac{1}{s - ${a}}$, so $-G'(s) = \\frac{1}{(s - ${a})^2}$.`,
-              `Multiplying by the coefficient $${c}$, $\\mathcal{L}\\{f(t)\\} = \\frac{${c}}{(s - ${a})^2}$.`,
-              `Therefore, $(s - ${a})^2 \\mathcal{L}\\{f(t)\\} = ${ans}$.`,
+              `Multiplying by the coefficient $${c}$, $F(s) = \\frac{${c}}{(s - ${a})^2}$.`,
+              `Therefore, $F(${s0}) = \\frac{${c}}{${k}^2}${lowestTerms(c, k * k)}$.`,
             ),
             steps(
               `频域求导法则为 $\\mathcal{L}\\{t g(t)\\} = -G'(s)$。`,
               `当 $g(t) = e^{${a}t}$ 时，$G(s) = \\frac{1}{s - ${a}}$，故 $-G'(s) = \\frac{1}{(s - ${a})^2}$。`,
-              `乘以系数 $${c}$，得 $\\mathcal{L}\\{f(t)\\} = \\frac{${c}}{(s - ${a})^2}$。`,
-              `因此，$(s - ${a})^2 \\mathcal{L}\\{f(t)\\} = ${ans}$。`,
+              `乘以系数 $${c}$，得 $F(s) = \\frac{${c}}{(s - ${a})^2}$。`,
+              `因此，$F(${s0}) = \\frac{${c}}{${k}^2}${lowestTerms(c, k * k)}$。`,
             ),
           );
 
@@ -467,7 +469,7 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
             prompt,
             solution,
             answer: ans,
-            wrong: [a * c, a, 2 * c, ans + 1, ans - 1],
+            wrong: [Q.of(c, k), Q.of(-c, k * k), Q.of(c, s0 * s0), Q.of(c)],
           });
         },
       },
@@ -609,24 +611,27 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         generate(rng: Rng): Problem {
           const a = rng.int(2, 10);
           const c = rng.int(2, 35);
-          const ans = c;
+          const k = rng.int(1, 5);
+          const s0 = a + k;
+          const den = s0 * k;
+          const ans = Q.of(c, den);
 
           const prompt = t(
-            `Let $g(t) = \\int_0^t ${c} e^{${a}\\tau}\\,d\\tau$. Find the value of the product $s(s - ${a}) \\mathcal{L}\\{g(t)\\}$.`,
-            `设 $g(t) = \\int_0^t ${c} e^{${a}\\tau}\\,d\\tau$。求乘积 $s(s - ${a}) \\mathcal{L}\\{g(t)\\}$ 的值。`,
+            `Let $g(t) = \\int_0^t ${c} e^{${a}\\tau}\\,d\\tau$ and let $G(s) = \\mathcal{L}\\{g(t)\\}$. Find $G(${s0})$.`,
+            `设 $g(t) = \\int_0^t ${c} e^{${a}\\tau}\\,d\\tau$，$G(s) = \\mathcal{L}\\{g(t)\\}$。求 $G(${s0})$。`,
           );
           const solution = t(
             steps(
               `By the integration property of Laplace transforms, $\\mathcal{L}\\left\\{\\int_0^t f(\\tau)\\,d\\tau\\right\\} = \\frac{1}{s} F(s)$.`,
               `Here $f(t) = ${c} e^{${a}t}$, so $F(s) = \\frac{${c}}{s - ${a}}$.`,
-              `Thus $\\mathcal{L}\\{g(t)\\} = \\frac{${c}}{s(s - ${a})}$.`,
-              `Multiplying by $s(s - ${a})$ yields $${ans}$.`,
+              `Thus $G(s) = \\frac{${c}}{s(s - ${a})}$.`,
+              `At $s = ${s0}$: $G(${s0}) = \\frac{${c}}{${s0} \\cdot ${k}}${lowestTerms(c, den)}$.`,
             ),
             steps(
               `根据拉普拉斯变换的积分性质，$\\mathcal{L}\\left\\{\\int_0^t f(\\tau)\\,d\\tau\\right\\} = \\frac{1}{s} F(s)$。`,
               `此处 $f(t) = ${c} e^{${a}t}$，其变换为 $F(s) = \\frac{${c}}{s - ${a}}$。`,
-              `因此 $\\mathcal{L}\\{g(t)\\} = \\frac{${c}}{s(s - ${a})}$。`,
-              `两端乘以 $s(s - ${a})$ 即得 $${ans}$。`,
+              `因此 $G(s) = \\frac{${c}}{s(s - ${a})}$。`,
+              `在 $s = ${s0}$ 处：$G(${s0}) = \\frac{${c}}{${s0} \\cdot ${k}}${lowestTerms(c, den)}$。`,
             ),
           );
 
@@ -634,7 +639,7 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
             prompt,
             solution,
             answer: ans,
-            wrong: [a * c, a, 2 * c, ans + a, ans - 1, ans + 1],
+            wrong: [Q.of(c, k), Q.of(c, s0), Q.of(c * s0, k), Q.of(c, s0 * s0)],
           });
         },
       },
@@ -774,24 +779,24 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
         generate(rng: Rng): Problem {
           const c = rng.int(1, 8);
           const k = rng.int(2, 35);
-          const ans = k;
+          const ans = 2 * k;
 
           const prompt = t(
-            `Let $f(t) = ${k} u(t - ${c})(t - ${c})$. Evaluate the expression $s^2 e^{${c}s} \\mathcal{L}\\{f(t)\\}$.`,
-            `设 $f(t) = ${k} u(t - ${c})(t - ${c})$。计算表达式 $s^2 e^{${c}s} \\mathcal{L}\\{f(t)\\}$ 的值。`,
+            `Let $f(t) = ${k} u(t - ${c})(t - ${c})^2$. Evaluate the expression $s^3 e^{${c}s} \\mathcal{L}\\{f(t)\\}$.`,
+            `设 $f(t) = ${k} u(t - ${c})(t - ${c})^2$。计算表达式 $s^3 e^{${c}s} \\mathcal{L}\\{f(t)\\}$ 的值。`,
           );
           const solution = t(
             steps(
               `The second shifting theorem states that $\\mathcal{L}\\{u(t - c) g(t - c)\\} = e^{-cs} G(s)$.`,
-              `Here $g(t) = ${k}t$, so $G(s) = \\mathcal{L}\\{${k}t\\} = \\frac{${k}}{s^2}$.`,
-              `Thus $\\mathcal{L}\\{f(t)\\} = \\frac{${k} e^{-${c}s}}{s^2}$.`,
-              `Multiplying by $s^2 e^{${c}s}$ cancels both denominators and exponentials, leaving $${ans}$.`,
+              `Here $g(t) = ${k}t^2$, so $G(s) = ${k} \\cdot \\frac{2!}{s^3} = \\frac{${ans}}{s^3}$.`,
+              `Thus $\\mathcal{L}\\{f(t)\\} = \\frac{${ans} e^{-${c}s}}{s^3}$.`,
+              `Multiplying by $s^3 e^{${c}s}$ cancels both the denominator and the exponential, leaving $${ans}$.`,
             ),
             steps(
               `第二位移定理表明 $\\mathcal{L}\\{u(t - c) g(t - c)\\} = e^{-cs} G(s)$。`,
-              `此处 $g(t) = ${k}t$，故 $G(s) = \\mathcal{L}\\{${k}t\\} = \\frac{${k}}{s^2}$。`,
-              `因此 $\\mathcal{L}\\{f(t)\\} = \\frac{${k} e^{-${c}s}}{s^2}$。`,
-              `乘以 $s^2 e^{${c}s}$ 后消去分母与指数因子，结果为 $${ans}$。`,
+              `此处 $g(t) = ${k}t^2$，故 $G(s) = ${k} \\cdot \\frac{2!}{s^3} = \\frac{${ans}}{s^3}$。`,
+              `因此 $\\mathcal{L}\\{f(t)\\} = \\frac{${ans} e^{-${c}s}}{s^3}$。`,
+              `乘以 $s^3 e^{${c}s}$ 后消去分母与指数因子，结果为 $${ans}$。`,
             ),
           );
 
@@ -799,7 +804,7 @@ export const differentialEquationsLaplaceTopics: TopicDef[] = [
             prompt,
             solution,
             answer: ans,
-            wrong: [c * k, c, 2 * k, ans + 1, ans - 1],
+            wrong: [k, 6 * k, c * k, 2 * c * k, 3 * k],
           });
         },
       },

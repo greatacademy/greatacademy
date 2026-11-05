@@ -579,8 +579,8 @@ const schwarzLemma = topic(
               Q.of(m, big),
               [1, m, Q.of(big, m)],
               [
-                `Equality forces the linear map $f(z) = ${Q.of(m, big).toLatex()} z$, and the input is 1.`,
-                `取等号迫使 $f(z) = ${Q.of(m, big).toLatex()} z$ 是线性映射，输入是 1。`,
+                `Equality forces the linear map $f(z) = ${m === big ? "" : Q.of(m, big).toLatex()} z$, and the input is 1.`,
+                `取等号迫使 $f(z) = ${m === big ? "" : Q.of(m, big).toLatex()} z$ 是线性映射，输入是 1。`,
               ],
             );
       },

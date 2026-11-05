@@ -3,6 +3,9 @@ import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
 import { choiceProblem, lowestTerms, numberProblem } from "../problems.ts";
 
+/** SIMPLE_PROPORTIONS lists sample proportions that keep the arithmetic exact. */
+const SIMPLE_PROPORTIONS = [Q.of(1, 2), Q.of(1, 4), Q.of(3, 4), Q.of(1, 5), Q.of(2, 5), Q.of(3, 5), Q.of(4, 5)];
+
 /** pickLevel picks a common confidence level and its two-sided $z$ critical value. */
 const pickLevel = (rng: Rng): [number, Q] =>
   rng.pick([
@@ -62,8 +65,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `A random sample of size $n = ${n}$ is drawn from a normal population with standard deviation $\\sigma = ${sigma}$. For a critical value $z_{\\alpha/2} = ${z}$, calculate the margin of error $E = z_{\\alpha/2} \\frac{\\sigma}{\\sqrt{n}}$.`,
-              `从标准差为 $\\sigma = ${sigma}$ 的正态总体中抽取容量为 $n = ${n}$ 的随机样本。取临界值 $z_{\\alpha/2} = ${z}$，计算误差范围 $E = z_{\\alpha/2} \\frac{\\sigma}{\\sqrt{n}}$。`,
+              `A random sample of size $n = ${n}$ is drawn from a normal population with standard deviation $\\sigma = ${sigma}$. For a critical value $z_{\\alpha/2} = ${z}$, calculate the margin of error $E$.`,
+              `从标准差为 $\\sigma = ${sigma}$ 的正态总体中抽取容量为 $n = ${n}$ 的随机样本。取临界值 $z_{\\alpha/2} = ${z}$，计算误差范围 $E$。`,
             ),
             answer: margin,
             wrong: [Q.of(z * sigma, n), z * sigma, Q.of(sigma, k)],
@@ -226,7 +229,7 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
               "It becomes wider (larger margin of error) because finite populations introduce extra variance.",
               "置信区间变得更宽（误差范围更大），因为有限总体引入了额外方差。",
             ),
-            t("The width remains unchanged because sample size n is unchanged.", "区间宽度保持不变，因为样本容量 n 未发生变化。"),
+            t("The width remains unchanged because the sample size $n$ is unchanged.", "区间宽度保持不变，因为样本容量 $n$ 未发生变化。"),
             t("It shifts the center of the interval away from the sample mean.", "它会使置信区间的中心偏离样本均值。"),
           ];
           const perm = rng.shuffle([0, 1, 2, 3]);
@@ -306,8 +309,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `In a sample of size $n = ${n}$, the sample proportion is $\\hat{p} = \\frac{${numP}}{${denP}}$. Find the estimated variance of the sample proportion, $\\widehat{\\text{Var}}(\\hat{p}) = \\frac{\\hat{p}(1 - \\hat{p})}{n}$.`,
-              `在容量为 $n = ${n}$ 的样本中，样本比例为 $\\hat{p} = \\frac{${numP}}{${denP}}$。求样本比例的估计方差 $\\widehat{\\text{Var}}(\\hat{p}) = \\frac{\\hat{p}(1 - \\hat{p})}{n}$。`,
+              `In a sample of size $n = ${n}$, the sample proportion is $\\hat{p} = \\frac{${numP}}{${denP}}$. Find the estimated variance of the sample proportion.`,
+              `在容量为 $n = ${n}$ 的样本中，样本比例为 $\\hat{p} = \\frac{${numP}}{${denP}}$。求样本比例的估计方差。`,
             ),
             answer: Q.of(num, den),
             wrong: [Q.of(num, 100), Q.of(numP, denP * n), Q.of(num * n, 100)],
@@ -496,8 +499,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
 
           return choiceProblem({
             prompt: t(
-              `A random sample of size $n = ${n}$ from a normal distribution yields sample variance $s^2 = ${sSq}$. What is the correct formula for the $100(1 - \\alpha)\\%$ confidence interval for the population variance $\\sigma^2$?`,
-              `从正态分布中抽取容量为 $n = ${n}$ 的随机样本，测得样本方差为 $s^2 = ${sSq}$。求总体方差 $\\sigma^2$ 的 $100(1 - \\alpha)\\%$ 置信区间的正确公式。`,
+              `A random sample of size $n = ${n}$ from a normal distribution yields sample variance $s^2 = ${sSq}$. Write $\\chi^2_{p, \\nu}$ for the value that cuts off upper-tail area $p$. What is the correct formula for the $100(1 - \\alpha)\\%$ confidence interval for the population variance $\\sigma^2$?`,
+              `从正态分布中抽取容量为 $n = ${n}$ 的随机样本，测得样本方差为 $s^2 = ${sSq}$。记 $\\chi^2_{p, \\nu}$ 为右侧尾部面积为 $p$ 的临界值。求总体方差 $\\sigma^2$ 的 $100(1 - \\alpha)\\%$ 置信区间的正确公式。`,
             ),
             options,
             correct,
@@ -573,8 +576,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Independent samples from two populations have sizes $n_1 = ${n1}$, $n_2 = ${n2}$ and known population variances $\\sigma_1^2 = ${v1}$, $\\sigma_2^2 = ${v2}$. Find the squared standard error of the difference between sample means, $\\text{SE}^2 = \\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}$.`,
-              `来自两个总体的独立样本容量分别为 $n_1 = ${n1}$ 与 $n_2 = ${n2}$，已知总体方差分别为 $\\sigma_1^2 = ${v1}$ 与 $\\sigma_2^2 = ${v2}$。求样本均值之差的标准误差平方 $\\text{SE}^2 = \\frac{\\sigma_1^2}{n_1} + \\frac{\\sigma_2^2}{n_2}$。`,
+              `Independent samples from two populations have sizes $n_1 = ${n1}$, $n_2 = ${n2}$ and known population variances $\\sigma_1^2 = ${v1}$, $\\sigma_2^2 = ${v2}$. Find the squared standard error of the difference between sample means.`,
+              `来自两个总体的独立样本容量分别为 $n_1 = ${n1}$ 与 $n_2 = ${n2}$，已知总体方差分别为 $\\sigma_1^2 = ${v1}$ 与 $\\sigma_2^2 = ${v2}$。求样本均值之差的标准误差平方。`,
             ),
             answer: Q.of(num, den),
             wrong: [Q.of(v1 + v2, n1 + n2), Q.of(v1 - v2, n1 - n2 === 0 ? 1 : n1 - n2), Q.of(v1 * v2, n1 * n2)],
@@ -663,8 +666,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Two independent samples of sizes $n_1 = ${n1}$ and $n_2 = ${n2}$ are drawn from normal populations with unknown but equal variances. How many degrees of freedom $\\nu = n_1 + n_2 - 2$ are associated with the pooled $t$ statistic?`,
-              `从方差未知但假定相等的正态总体中分别抽取容量为 $n_1 = ${n1}$ 与 $n_2 = ${n2}$ 的独立样本。合并 $t$ 统计量的自由度 $\\nu = n_1 + n_2 - 2$ 是多少？`,
+              `Two independent samples of sizes $n_1 = ${n1}$ and $n_2 = ${n2}$ are drawn from normal populations with unknown but equal variances. How many degrees of freedom are associated with the pooled $t$ statistic?`,
+              `从方差未知但假定相等的正态总体中分别抽取容量为 $n_1 = ${n1}$ 与 $n_2 = ${n2}$ 的独立样本。合并 $t$ 统计量的自由度 是多少？`,
             ),
             answer: n1 + n2 - 2,
             wrong: [n1 + n2 - 1, n1 + n2, Math.min(n1, n2) - 1],
@@ -741,8 +744,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Two independent samples have sizes $n_1 = ${n1}$, $n_2 = ${n2}$ and sample variances $s_1^2 = ${s1Sq}$, $s_2^2 = ${s2Sq}$. For Welch's $t$ procedure with unequal variances, calculate the squared standard error $\\text{SE}^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}$.`,
-              `两个独立样本的容量分别为 $n_1 = ${n1}$ 与 $n_2 = ${n2}$，样本方差分别为 $s_1^2 = ${s1Sq}$ 与 $s_2^2 = ${s2Sq}$。在不等方差的韦尔奇 $t$ 程序下，计算标准误差的平方 $\\text{SE}^2 = \\frac{s_1^2}{n_1} + \\frac{s_2^2}{n_2}$。`,
+              `Two independent samples have sizes $n_1 = ${n1}$, $n_2 = ${n2}$ and sample variances $s_1^2 = ${s1Sq}$, $s_2^2 = ${s2Sq}$. For Welch's $t$ procedure with unequal variances, calculate the squared standard error.`,
+              `两个独立样本的容量分别为 $n_1 = ${n1}$ 与 $n_2 = ${n2}$，样本方差分别为 $s_1^2 = ${s1Sq}$ 与 $s_2^2 = ${s2Sq}$。在不等方差的韦尔奇 $t$ 程序下，计算标准误差的平方。`,
             ),
             answer: Q.of(num, den),
             wrong: [Q.of(s1Sq + s2Sq, n1 + n2), Q.of(s1Sq * n1 + s2Sq * n2, den), Q.of(s1Sq + s2Sq, den)],
@@ -823,8 +826,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `A paired sample of size $n = ${n}$ is drawn where the difference population has known standard deviation $\\sigma_d = ${sigmaD}$. For critical value $z_{\\alpha/2} = ${z}$, calculate the margin of error $E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}}$.`,
-              `抽取容量为 $n = ${n}$ 的配对样本，已知差值总体的标准差为 $\\sigma_d = ${sigmaD}$。取临界值 $z_{\\alpha/2} = ${z}$，计算误差范围 $E = z_{\\alpha/2} \\frac{\\sigma_d}{\\sqrt{n}}$。`,
+              `A paired sample of size $n = ${n}$ is drawn where the difference population has known standard deviation $\\sigma_d = ${sigmaD}$. For critical value $z_{\\alpha/2} = ${z}$, calculate the margin of error $E$.`,
+              `抽取容量为 $n = ${n}$ 的配对样本，已知差值总体的标准差为 $\\sigma_d = ${sigmaD}$。取临界值 $z_{\\alpha/2} = ${z}$，计算误差范围 $E$。`,
             ),
             answer: margin,
             wrong: [Q.of(z * sigmaD, n), z * sigmaD, Q.of(sigmaD, k)],
@@ -908,8 +911,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `In a paired-sample study with $n = ${n}$ subject pairs, the individual differences $d_i = x_{1i} - x_{2i}$ are: $${diffStr}$. Calculate the sample mean difference $\\bar{d} = \\frac{1}{n} \\sum_{i=1}^n d_i$.`,
-              `在包含 $n = ${n}$ 对受试对象的配对样本研究中，各对差值 $d_i = x_{1i} - x_{2i}$ 分别为：$${diffStr}$。计算样本平均差值 $\\bar{d} = \\frac{1}{n} \\sum_{i=1}^n d_i$。`,
+              `In a paired-sample study with $n = ${n}$ subject pairs, the individual differences $d_i = x_{1i} - x_{2i}$ are: $${diffStr}$. Calculate the sample mean difference $\\bar{d}$.`,
+              `在包含 $n = ${n}$ 对受试对象的配对样本研究中，各对差值 $d_i = x_{1i} - x_{2i}$ 分别为：$${diffStr}$。计算样本平均差值 $\\bar{d}$。`,
             ),
             answer: Q.of(sumD, n),
             wrong: [Q.of(sumD, n - 1), sumD, Q.of(sumD, n + 1)],
@@ -988,23 +991,23 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
           "两个样本比例相互独立，所以它们之差的方差是各自估计方差之和。$\\operatorname{Var}(\\hat{p}_1 - \\hat{p}_2) = \\frac{\\hat{p}_1(1 - \\hat{p}_1)}{n_1} + \\frac{\\hat{p}_2(1 - \\hat{p}_2)}{n_2}$。",
         ),
         generate: (rng: Rng): Problem => {
-          const n1 = rng.int(50, 200);
-          const n2 = rng.int(50, 200);
-          // Let p1 = 0.5, p2 = 0.5 for clean product 1/4
-          // Var = (1/4)/n1 + (1/4)/n2 = (n1 + n2) / (4 * n1 * n2)
-          const num = n1 + n2;
-          const den = 4 * n1 * n2;
+          const n1 = 10 * rng.int(5, 20);
+          const n2 = 10 * rng.int(5, 20);
+          const [p1, p2] = [rng.pick(SIMPLE_PROPORTIONS), rng.pick(SIMPLE_PROPORTIONS)];
+          const v1 = p1.mul(Q.of(1).sub(p1));
+          const v2 = p2.mul(Q.of(1).sub(p2));
+          const answer = v1.div(Q.of(n1)).add(v2.div(Q.of(n2)));
 
           return numberProblem({
             prompt: t(
-              `Two independent samples of sizes $n_1 = ${n1}$ and $n_2 = ${n2}$ have sample proportions $\\hat{p}_1 = \\frac{1}{2}$ and $\\hat{p}_2 = \\frac{1}{2}$. Find the estimated variance of their difference, $\\widehat{\\text{Var}}(\\hat{p}_1 - \\hat{p}_2) = \\frac{\\hat{p}_1(1 - \\hat{p}_1)}{n_1} + \\frac{\\hat{p}_2(1 - \\hat{p}_2)}{n_2}$.`,
-              `容量分别为 $n_1 = ${n1}$ 与 $n_2 = ${n2}$ 的两个独立样本，样本比例分别为 $\\hat{p}_1 = \\frac{1}{2}$ 与 $\\hat{p}_2 = \\frac{1}{2}$。求两者之差的估计方差 $\\widehat{\\text{Var}}(\\hat{p}_1 - \\hat{p}_2) = \\frac{\\hat{p}_1(1 - \\hat{p}_1)}{n_1} + \\frac{\\hat{p}_2(1 - \\hat{p}_2)}{n_2}$。`,
+              `Two independent samples of sizes $n_1 = ${n1}$ and $n_2 = ${n2}$ have sample proportions $\\hat{p}_1 = ${p1.toLatex()}$ and $\\hat{p}_2 = ${p2.toLatex()}$. Find the estimated variance of their difference.`,
+              `容量分别为 $n_1 = ${n1}$ 与 $n_2 = ${n2}$ 的两个独立样本，样本比例分别为 $\\hat{p}_1 = ${p1.toLatex()}$ 与 $\\hat{p}_2 = ${p2.toLatex()}$。求两者之差的估计方差。`,
             ),
-            answer: Q.of(num, den),
-            wrong: [Q.of(1, 4 * num), Q.of(num, 2 * n1 * n2), Q.of(1, 4 * n1)],
+            answer,
+            wrong: [v1.div(Q.of(n1)).sub(v2.div(Q.of(n2))), v1.add(v2), v1.div(Q.of(n1))],
             solution: t(
-              `Since $\\hat{p}_1(1 - \\hat{p}_1) = \\frac{1}{4}$ and $\\hat{p}_2(1 - \\hat{p}_2) = \\frac{1}{4}$, $\\widehat{\\text{Var}}(\\hat{p}_1 - \\hat{p}_2) = \\frac{1}{4(${n1})} + \\frac{1}{4(${n2})} = \\frac{${n1} + ${n2}}{4(${n1})(${n2})} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$.`,
-              `由于 $\\hat{p}_1(1 - \\hat{p}_1) = \\frac{1}{4}$ 且 $\\hat{p}_2(1 - \\hat{p}_2) = \\frac{1}{4}$，故 $\\widehat{\\text{Var}}(\\hat{p}_1 - \\hat{p}_2) = \\frac{1}{4(${n1})} + \\frac{1}{4(${n2})} = \\frac{${num}}{${den}}${lowestTerms(num, den)}$。`,
+              `Each proportion contributes its own term, and the variances add even for a difference: $\\frac{${v1.toLatex()}}{${n1}} + \\frac{${v2.toLatex()}}{${n2}} = ${answer.toLatex()}$.`,
+              `每个比例贡献各自的一项，即使是差，方差也相加：$\\frac{${v1.toLatex()}}{${n1}} + \\frac{${v2.toLatex()}}{${n2}} = ${answer.toLatex()}$。`,
             ),
           });
         },
@@ -1044,8 +1047,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
             form: "decimal",
             wrong,
             solution: t(
-              `$\\hat{p}_1 = ${dec(Q.of(x1, n1))}$ and $\\hat{p}_2 = ${dec(Q.of(x2, n2))}$. The variance terms sum to $${v.toFixed(6)}$, so the standard error is $${se.toFixed(4)}$ and the margin is $${dec(z)} \\cdot ${se.toFixed(4)} \\approx ${(zn * se).toFixed(4)}$. The endpoint is $${(p1 - p2).toFixed(3)} ${upper ? "+" : "-"} ${(zn * se).toFixed(4)} \\approx ${dec(ans)}$.`,
-              `$\\hat{p}_1 = ${dec(Q.of(x1, n1))}$，$\\hat{p}_2 = ${dec(Q.of(x2, n2))}$。两项方差之和为 $${v.toFixed(6)}$，标准误为 $${se.toFixed(4)}$，误差界为 $${dec(z)} \\cdot ${se.toFixed(4)} \\approx ${(zn * se).toFixed(4)}$。端点为 $${(p1 - p2).toFixed(3)} ${upper ? "+" : "-"} ${(zn * se).toFixed(4)} \\approx ${dec(ans)}$。`,
+              `$\\hat{p}_1 = ${dec(Q.of(x1, n1))}$ and $\\hat{p}_2 = ${dec(Q.of(x2, n2))}$. The variance terms sum to $${v.toFixed(6)}$, so the standard error is $${se.toFixed(4)}$ and the margin is $${dec(z)} \\cdot ${se.toFixed(4)} \\approx ${(zn * se).toFixed(4)}$. The endpoint is $${(p1 - p2).toFixed(4)} ${upper ? "+" : "-"} ${(zn * se).toFixed(4)} \\approx ${dec(ans)}$.`,
+              `$\\hat{p}_1 = ${dec(Q.of(x1, n1))}$，$\\hat{p}_2 = ${dec(Q.of(x2, n2))}$。两项方差之和为 $${v.toFixed(6)}$，标准误为 $${se.toFixed(4)}$，误差界为 $${dec(z)} \\cdot ${se.toFixed(4)} \\approx ${(zn * se).toFixed(4)}$。端点为 $${(p1 - p2).toFixed(4)} ${upper ? "+" : "-"} ${(zn * se).toFixed(4)} \\approx ${dec(ans)}$。`,
             ),
           });
         },
@@ -1082,8 +1085,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `To estimate a population mean with standard deviation $\\sigma = ${sigma}$ within a desired margin of error $E = ${E}$ using critical value $z_{\\alpha/2} = ${z}$, calculate the required sample size $n = \\left(\\frac{z_{\\alpha/2} \\sigma}{E}\\right)^2$.`,
-              `已知总体标准差 $\\sigma = ${sigma}$，取临界值 $z_{\\alpha/2} = ${z}$，若期望将总体均值的误差范围控制在 $E = ${E}$ 之内，计算所需的样本容量 $n = \\left(\\frac{z_{\\alpha/2} \\sigma}{E}\\right)^2$。`,
+              `To estimate a population mean with standard deviation $\\sigma = ${sigma}$ within a desired margin of error $E = ${E}$ using critical value $z_{\\alpha/2} = ${z}$, calculate the required sample size.`,
+              `已知总体标准差 $\\sigma = ${sigma}$，取临界值 $z_{\\alpha/2} = ${z}$，若期望将总体均值的误差范围控制在 $E = ${E}$ 之内，计算所需的样本容量。`,
             ),
             answer: requiredN,
             wrong: [base, z * base, base * base + 1],
@@ -1162,8 +1165,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `A researcher finds that an infinite-population sample size calculation gives $n_0 = ${n0}$. The actual finite population has size $N = ${N}$. Calculate the exact rational value of the adjusted sample size $n = \\frac{N n_0}{n_0 + N - 1}$.`,
-              `研究人员计算得到假定无限总体下的样本容量为 $n_0 = ${n0}$。实际有限总体容量为 $N = ${N}$。计算经校正后的必要样本容量 $n = \\frac{N n_0}{n_0 + N - 1}$ 的精确有理数值。`,
+              `A researcher finds that an infinite-population sample size calculation gives $n_0 = ${n0}$. The actual finite population has size $N = ${N}$. Calculate the exact rational value of the adjusted sample size $n$.`,
+              `研究人员计算得到假定无限总体下的样本容量为 $n_0 = ${n0}$。实际有限总体容量为 $N = ${N}$。计算经校正后的必要样本容量 $n$ 的精确有理数值。`,
             ),
             answer: Q.of(num, den),
             wrong: [Q.of(num, n0 + N), Q.of(n0 * (N - 1), N), n0],
@@ -1234,8 +1237,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Using $z_{\\alpha/2} = 2$ and the conservative planning value $p = 0.5$, calculate the required sample size $n = \\frac{z_{\\alpha/2}^2 p(1 - p)}{E^2}$ to estimate a population proportion within a margin of error $E = \\frac{1}{${k}}${lowestTerms(1, k)}$.`,
-              `取临界值 $z_{\\alpha/2} = 2$ 并采用最保守的规划值 $p = 0.5$，若要将总体比例的误差范围控制在 $E = \\frac{1}{${k}}$ 之内，计算所需的样本容量 $n = \\frac{z_{\\alpha/2}^2 p(1 - p)}{E^2}$。`,
+              `Using $z_{\\alpha/2} = 2$ and the conservative planning value $p = 0.5$, calculate the required sample size to estimate a population proportion within a margin of error $E = \\frac{1}{${k}}${lowestTerms(1, k)}$.`,
+              `取临界值 $z_{\\alpha/2} = 2$ 并采用最保守的规划值 $p = 0.5$，若要将总体比例的误差范围控制在 $E = \\frac{1}{${k}}$ 之内，计算所需的样本容量。`,
             ),
             answer: n,
             wrong: [4 * n, 2 * n, k],
@@ -1309,8 +1312,8 @@ export const probabilityAndStatisticsConfidenceIntervalTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `An initial proportion sample size calculation yields $n_0 = ${n0}$. The finite population contains $N = ${N}$ items. Find the exact rational value of the adjusted sample size $n = \\frac{N n_0}{n_0 + N - 1}$.`,
-              `初始比例样本容量计算结果为 $n_0 = ${n0}$。实际有限总体包含 $N = ${N}$ 个个体。求经有限校正后的样本容量 $n = \\frac{N n_0}{n_0 + N - 1}$ 的精确有理数值。`,
+              `An initial proportion sample size calculation yields $n_0 = ${n0}$. The finite population contains $N = ${N}$ items. Find the exact rational value of the adjusted sample size $n$.`,
+              `初始比例样本容量计算结果为 $n_0 = ${n0}$。实际有限总体包含 $N = ${N}$ 个个体。求经有限校正后的样本容量 $n$ 的精确有理数值。`,
             ),
             answer: Q.of(num, den),
             wrong: [Q.of(num, n0 + N), Q.of(n0 * (N - 1), N), n0],

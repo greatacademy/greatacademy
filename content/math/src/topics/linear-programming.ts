@@ -1251,8 +1251,8 @@ const matrixGames = topic(
         "没有鞍点时，每一方都随机混合各行或各列，冯·诺伊曼的极小极大定理说，这时双方的保证值相等，这相当于一对相应规划的强对偶。对二乘二博弈，行方使对手在各列之间无差别。这就给出公式：值等于 $\\frac{ad - bc}{a + d - b - c}$。",
       ],
       (rng) => {
-        const low1 = rng.int(0, 4);
-        const low2 = rng.int(0, 4);
+        const low1 = rng.int(1, 4);
+        const low2 = rng.int(1, 4);
         const a = rng.int(5, 12);
         const d = rng.int(5, 12);
         const denominator = a + d - low1 - low2;

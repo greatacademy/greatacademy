@@ -972,7 +972,10 @@ function gridFigure(n: number): Figure {
   }
   return {
     svg: svgDocument(176, body),
-    alt: t(`A 10-by-10 grid of 100 squares with ${n} squares shaded.`, `一个 10 × 10 的方格图，共 100 格，其中 ${n} 格涂色。`),
+    alt: t(
+      `A 10-by-10 grid of squares with ${Math.floor(n / 10)} full rows shaded and ${n % 10} more squares shaded in the next row.`,
+      `一个 10 × 10 的方格图，涂色的有 ${Math.floor(n / 10)} 个整行，下一行另有 ${n % 10} 格。`,
+    ),
   };
 }
 

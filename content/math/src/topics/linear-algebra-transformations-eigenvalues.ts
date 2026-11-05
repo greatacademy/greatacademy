@@ -1554,21 +1554,23 @@ export const characteristicEquationOfAMatrix: TopicDef = {
           M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1]) -
           M[0][1] * (M[1][0] * M[2][2] - M[1][2] * M[2][0]) +
           M[0][2] * (M[1][0] * M[2][1] - M[1][1] * M[2][0]);
-        const wantConst = rng.int(0, 1) === 1;
-        const ans = wantConst ? -det : -tr;
+        const minors =
+          M[0][0] * M[1][1] - M[0][1] * M[1][0] + (M[0][0] * M[2][2] - M[0][2] * M[2][0]) + (M[1][1] * M[2][2] - M[1][2] * M[2][1]);
+        const wantLinear = rng.int(0, 1) === 1;
+        const ans = wantLinear ? minors : -tr;
         return numberProblem({
           prompt: t(
-            `Find the ${wantConst ? "constant term" : "coefficient of $\\lambda^2$"} of $\\det(\\lambda I - A)$ for $A = ${mat3Latex(M)}$.`,
-            `对 $A = ${mat3Latex(M)}$，求 $\\det(\\lambda I - A)$ 的${wantConst ? "常数项" : " $\\lambda^2$ 系数"}。`,
+            `Find the coefficient of ${wantLinear ? "$\\lambda$" : "$\\lambda^2$"} in $\\det(\\lambda I - A)$ for $A = ${mat3Latex(M)}$.`,
+            `对 $A = ${mat3Latex(M)}$，求 $\\det(\\lambda I - A)$ 中 ${wantLinear ? "$\\lambda$" : "$\\lambda^2$"} 的系数。`,
           ),
           answer: ans,
-          wrong: wantConst ? [det, -tr, tr] : [tr, -det, det],
+          wrong: wantLinear ? [-minors, tr, -det] : [tr, minors, -det],
           solution: t(
-            wantConst
-              ? `The constant term is $-\\det A$, and $\\det A = ${det}$, so it is $${-det}$.`
+            wantLinear
+              ? `The coefficient of $\\lambda$ is the sum of the three $2 \\times 2$ principal minors, which is $${minors}$.`
               : `The coefficient of $\\lambda^2$ is $-\\operatorname{tr} A = -(${M[0][0]} + ${paren(M[1][1])} + ${paren(M[2][2])}) = ${-tr}$.`,
-            wantConst
-              ? `常数项为 $-\\det A$，而 $\\det A = ${det}$，所以它是 $${-det}$。`
+            wantLinear
+              ? `$\\lambda$ 的系数是三个 $2 \\times 2$ 主子式之和，即 $${minors}$。`
               : `$\\lambda^2$ 的系数为 $-\\operatorname{tr} A = -(${M[0][0]} + ${paren(M[1][1])} + ${paren(M[2][2])}) = ${-tr}$。`,
           ),
         });
@@ -1882,8 +1884,8 @@ export const invertibleMatrixTheoremInTermsOfEigenvalues: TopicDef = {
         );
         const ans = Q.of(1, l1);
         const solution = t(
-          `If $A\\mathbf{v} = \\lambda \\mathbf{v}$ with $\\lambda = ${l1} \\neq 0$, multiplying both sides by $A^{-1}$ yields $\\mathbf{v} = \\lambda A^{-1}\\mathbf{v}$, so $A^{-1}\\mathbf{v} = \\frac{1}{\\lambda}\\mathbf{v}$. Thus, the eigenvalue of $A^{-1}$ is $\\frac{1}{${l1}} = ${ans.toLatex()}$.`,
-          `若 $A\\mathbf{v} = \\lambda \\mathbf{v}$ 且 $\\lambda = ${l1} \\neq 0$，两边同乘 $A^{-1}$ 可得 $\\mathbf{v} = \\lambda A^{-1}\\mathbf{v}$，即 $A^{-1}\\mathbf{v} = \\frac{1}{\\lambda}\\mathbf{v}$。因此 $A^{-1}$ 对应的特征值为 $\\frac{1}{${l1}} = ${ans.toLatex()}$。`,
+          `If $A\\mathbf{v} = \\lambda \\mathbf{v}$ with $\\lambda = ${l1} \\neq 0$, multiplying both sides by $A^{-1}$ yields $\\mathbf{v} = \\lambda A^{-1}\\mathbf{v}$, so $A^{-1}\\mathbf{v} = \\frac{1}{\\lambda}\\mathbf{v}$. Thus, the eigenvalue of $A^{-1}$ is $\\frac{1}{\\lambda} = ${ans.toLatex()}$.`,
+          `若 $A\\mathbf{v} = \\lambda \\mathbf{v}$ 且 $\\lambda = ${l1} \\neq 0$，两边同乘 $A^{-1}$ 可得 $\\mathbf{v} = \\lambda A^{-1}\\mathbf{v}$，即 $A^{-1}\\mathbf{v} = \\frac{1}{\\lambda}\\mathbf{v}$。因此 $A^{-1}$ 对应的特征值为 $\\frac{1}{\\lambda} = ${ans.toLatex()}$。`,
         );
         return numberProblem({
           prompt,
@@ -2100,13 +2102,14 @@ export const propertiesOfDiagonalization: TopicDef = {
         const l1 = rng.int(2, 4);
         const l2 = rng.pick([-3, -2, 5])!;
         const k = rng.int(3, 7);
+        const base2 = l2 < 0 ? `(${l2})` : `${l2}`;
         const prompt = t(
           `If a matrix $A$ is diagonalized as $A = P D P^{-1}$ with $D = \\begin{pmatrix} ${l1} & 0 \\\\ 0 & ${l2} \\end{pmatrix}$, what is the diagonal matrix $D^{${k}}$ used in computing $A^{${k}} = P D^{${k}} P^{-1}$?`,
           `若矩阵 $A$ 可对角化为 $A = P D P^{-1}$，其中 $D = \\begin{pmatrix} ${l1} & 0 \\\\ 0 & ${l2} \\end{pmatrix}$，求计算 $A^{${k}} = P D^{${k}} P^{-1}$ 时所用的对角矩阵 $D^{${k}}$。`,
         );
         const right = t(
-          `$\\begin{pmatrix} ${l1}^{${k}} & 0 \\\\ 0 & (${l2})^{${k}} \\end{pmatrix}$`,
-          `$\\begin{pmatrix} ${l1}^{${k}} & 0 \\\\ 0 & (${l2})^{${k}} \\end{pmatrix}$`,
+          `$\\begin{pmatrix} ${l1}^{${k}} & 0 \\\\ 0 & ${base2}^{${k}} \\end{pmatrix}$`,
+          `$\\begin{pmatrix} ${l1}^{${k}} & 0 \\\\ 0 & ${base2}^{${k}} \\end{pmatrix}$`,
         );
         const wrong = [
           t(
@@ -2115,8 +2118,8 @@ export const propertiesOfDiagonalization: TopicDef = {
           ),
           t(`$\\begin{pmatrix} ${l1} & 0 \\\\ 0 & ${l2} \\end{pmatrix}$`, `$\\begin{pmatrix} ${l1} & 0 \\\\ 0 & ${l2} \\end{pmatrix}$`),
           t(
-            `$\\begin{pmatrix} (${l2})^{${k}} & 0 \\\\ 0 & ${l1}^{${k}} \\end{pmatrix}$`,
-            `$\\begin{pmatrix} (${l2})^{${k}} & 0 \\\\ 0 & ${l1}^{${k}} \\end{pmatrix}$`,
+            `$\\begin{pmatrix} ${base2}^{${k}} & 0 \\\\ 0 & ${l1}^{${k}} \\end{pmatrix}$`,
+            `$\\begin{pmatrix} ${base2}^{${k}} & 0 \\\\ 0 & ${l1}^{${k}} \\end{pmatrix}$`,
           ),
           t(
             `$\\begin{pmatrix} ${l1 + k} & 0 \\\\ 0 & ${l2 + k} \\end{pmatrix}$`,
@@ -2124,8 +2127,8 @@ export const propertiesOfDiagonalization: TopicDef = {
           ),
         ];
         const solution = t(
-          `For a diagonal matrix $D = \\operatorname{diag}(\\lambda_1, \\lambda_2)$, its $k$-th power is obtained by raising each diagonal entry to the $k$-th power: $D^{${k}} = \\begin{pmatrix} ${l1}^{${k}} & 0 \\\\ 0 & (${l2})^{${k}} \\end{pmatrix}$.`,
-          `对角矩阵 $D = \\operatorname{diag}(\\lambda_1, \\lambda_2)$ 的 $k$ 次幂等于将其对角线上的每个元素分别取 $k$ 次幂：$D^{${k}} = \\begin{pmatrix} ${l1}^{${k}} & 0 \\\\ 0 & (${l2})^{${k}} \\end{pmatrix}$。`,
+          `For a diagonal matrix $D = \\operatorname{diag}(\\lambda_1, \\lambda_2)$, its $k$-th power is obtained by raising each diagonal entry to the $k$-th power: $D^{${k}} = \\begin{pmatrix} ${l1}^{${k}} & 0 \\\\ 0 & ${base2}^{${k}} \\end{pmatrix}$.`,
+          `对角矩阵 $D = \\operatorname{diag}(\\lambda_1, \\lambda_2)$ 的 $k$ 次幂等于将其对角线上的每个元素分别取 $k$ 次幂：$D^{${k}} = \\begin{pmatrix} ${l1}^{${k}} & 0 \\\\ 0 & ${base2}^{${k}} \\end{pmatrix}$。`,
         );
         return oneOf(rng, prompt, right, wrong, solution);
       },
@@ -2853,8 +2856,8 @@ export const rotationScalingMatrices: TopicDef = {
           [b, a],
         ];
         const prompt = t(
-          `A rotation-scaling matrix has the form $C = ${mat2Latex(mat)}$. What is its scaling factor $r = \\sqrt{a^2 + b^2}$?`,
-          `旋转缩放矩阵具有形式 $C = ${mat2Latex(mat)}$。求其缩放因子 $r = \\sqrt{a^2 + b^2}$。`,
+          `A rotation-scaling matrix has the form $C = ${mat2Latex(mat)}$. What is its scaling factor $r$?`,
+          `旋转缩放矩阵具有形式 $C = ${mat2Latex(mat)}$。求其缩放因子 $r$。`,
         );
         const solution = t(
           `A rotation-scaling matrix can be factored as $r \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$, where $r = \\sqrt{a^2 + b^2} = \\sqrt{(${a})^2 + (${b})^2} = \\sqrt{${a * a + b * b}} = ${r}$.`,
@@ -3122,8 +3125,8 @@ export const nilpotentAndIdempotentMatrices: TopicDef = {
         "把定义方程作用在特征向量上，就得到关于特征值的方程，从而限制了特征值可能的取值。认识到幂零矩阵的特征值只能为 0，而幂等矩阵的特征值只能为 0 或 1。",
       ),
       generate: (rng: Rng): Problem => {
-        const n = rng.int(2, 8);
-        const k = rng.int(2, 7);
+        const n = rng.int(3, 9);
+        const k = rng.int(2, n);
         const prompt = t(
           `Let $N$ be a non-zero $${n} \\times ${n}$ nilpotent matrix with nilpotency index $k = ${k}$ (satisfying $N^{${k}} = 0$ and $N^{${k - 1}} \\neq 0$), and let $M$ be an idempotent projection matrix on $\\mathbb{R}^{${n}}$ satisfying $M^2 = M$. What are the possible eigenvalues of $N$ and $M$?`,
           `设 $N$ 为非零 $${n} \\times ${n}$ 幂零矩阵，其幂零指数为 $k = ${k}$（满足 $N^{${k}} = 0$ 且 $N^{${k - 1}} \\neq 0$），设 $M$ 为 $\\mathbb{R}^{${n}}$ 上的幂等投影矩阵，满足 $M^2 = M$。求 $N$ 与 $M$ 各自可能的特征值。`,
@@ -3198,7 +3201,7 @@ export const generalizedEigenvectors: TopicDef = {
         "当特征向量不够时，广义特征向量会被平移矩阵的更高次幂映射到零，从而补足一组基。识别广义特征向量的定义条件 $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$。",
       ),
       generate: (rng: Rng): Problem => {
-        const lambda = rng.int(-5, 5);
+        const lambda = rng.nonZero(-5, 5);
         const k = rng.int(2, 6);
         const n = rng.int(k, k + 3);
         const prompt = t(
@@ -3279,7 +3282,7 @@ export const ranksOfGeneralizedEigenvectors: TopicDef = {
         "反复用平移后的矩阵作用于这个向量，数出需要作用多少次才能得到零向量。求满足 $(A - \\lambda I)^k \\mathbf{v} = \\mathbf{0}$ 的最小正整数 $k$。",
       ),
       generate: (rng: Rng): Problem => {
-        const lambda = rng.int(-3, 3);
+        const lambda = rng.nonZero(-3, 3);
         const rankCase = rng.pick([1, 2, 3])!;
         const c = rng.pick([-4, -3, -2, 2, 3, 4])!;
         // Jordan block J = [[lambda, 1, 0], [0, lambda, 1], [0, 0, lambda]]
@@ -3385,7 +3388,7 @@ export const findingGeneralizedEigenvectorsOfSpecificRanks: TopicDef = {
         "二阶广义特征向量被平移矩阵映射为一个普通特征向量，所以要解右边为该特征向量的线性方程组。求解 $(A - \\lambda I)\\mathbf{v}_2 = \\mathbf{v}_1$，其中 $\\mathbf{v}_1$ 为普通特征向量。",
       ),
       generate: (rng: Rng): Problem => {
-        const lambda = rng.int(-5, 5);
+        const lambda = rng.nonZero(-5, 5);
         const k = rng.pick([-4, -3, -2, 2, 3, 4])!;
         // A = [[lambda, k], [0, lambda]]
         // (A - lambda I) = [[0, k], [0, 0]]
@@ -3979,7 +3982,7 @@ export const jordanCanonicalFormOfA3x3Matrix: TopicDef = {
         "块的个数等于线性无关特征向量的个数，所以几何重数告诉你三个维度怎样分成若干块。判定若尔当标准型 $J$ 是 $J_3(\\lambda)$、$\\operatorname{diag}(J_2(\\lambda), J_1(\\lambda))$ 还是 $\\operatorname{diag}(J_1(\\lambda), J_1(\\lambda), J_1(\\lambda))$。",
       ),
       generate: (rng: Rng): Problem => {
-        const c = rng.int(-9, 9);
+        const c = rng.nonZero(-9, 9);
         const rankCase = rng.pick([1, 2])!;
         // If rank(A - cI) = 1, nullity = 2 => 2 Jordan blocks => sizes 2 + 1.
         // If rank(A - cI) = 2, nullity = 1 => 1 Jordan block => size 3.
@@ -4144,7 +4147,7 @@ export const jordanCanonicalDecompositionOfA3x3Matrix: TopicDef = {
         "在一条链中，平移后的矩阵把每一列映射到前一列，并把第一列（一个普通特征向量）映射到零。识别对应 3 阶若尔当块的变换矩阵 P 各列向量之间的链式关系。",
       ),
       generate: (rng: Rng): Problem => {
-        const lambda = rng.int(-15, 15);
+        const lambda = rng.nonZero(-15, 15);
         const shiftStr = formatShift(lambda, "I");
         const prompt = t(
           `Let $A$ be a $3 \\times 3$ matrix with a single Jordan block $J_3(${lambda})$. How are the column vectors $v_1, v_2, v_3$ of the transition matrix $P = \\begin{pmatrix} v_1 & v_2 & v_3 \\end{pmatrix}$ (satisfying $P^{-1} A P = J_3(${lambda})$) related?`,

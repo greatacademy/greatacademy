@@ -5,8 +5,8 @@ import { range } from "./methods-of-proof-common.ts";
 
 // Shared helpers for the graph theory topics of Discrete Mathematics. Vertices are numbered from 0 and named A, B, C, ….
 
-/** vx names vertex i by a capital letter. */
-export const vx = (i: number) => "ABCDEFGHIJKL"[i]!;
+/** vx names vertex i by a capital letter, skipping G, which names the graph. */
+export const vx = (i: number) => "ABCDEFHIJKLM"[i]!;
 
 /** Edge is an edge or arc between two vertices; undirected edges keep the smaller vertex first. */
 export type Edge = readonly [number, number];

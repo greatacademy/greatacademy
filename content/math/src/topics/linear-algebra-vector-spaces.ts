@@ -325,8 +325,8 @@ export const linearSpanOfVectorsInNDimensionalEuclideanSpace: TopicDef = {
         const u2 = rng.nonZero(-3, 3);
         const v1 = [1, u1, 0];
         const v2 = [0, u2, 1];
-        const c1 = rng.int(-3, 3);
-        const c2 = rng.int(-3, 3);
+        const c1 = rng.nonZero(-3, 3);
+        const c2 = rng.nonZero(-3, 3);
         const inSpan = rng.bool();
         const delta = inSpan ? 0 : rng.pick([-4, -2, 2, 4]);
         const w = [c1, c1 * u1 + c2 * u2 + delta, c2];
@@ -335,14 +335,14 @@ export const linearSpanOfVectorsInNDimensionalEuclideanSpace: TopicDef = {
           [c2, "\\mathbf{v}_2"],
         ]);
         const prompt = t(
-          `Does $\\mathbf{w} = ${colVecLatex(w)}$ belong to $\\text{Span}\\left\\{ ${colVecLatex(v1)}, ${colVecLatex(v2)} \\right\\}$?`,
-          `向量 $\\mathbf{w} = ${colVecLatex(w)}$ 是否属于 $\\text{Span}\\left\\{ ${colVecLatex(v1)}, ${colVecLatex(v2)} \\right\\}$？`,
+          `Let $\\mathbf{v}_1 = ${colVecLatex(v1)}$ and $\\mathbf{v}_2 = ${colVecLatex(v2)}$. Does $\\mathbf{w} = ${colVecLatex(w)}$ belong to $\\text{Span}\\{\\mathbf{v}_1, \\mathbf{v}_2\\}$?`,
+          `设 $\\mathbf{v}_1 = ${colVecLatex(v1)}$，$\\mathbf{v}_2 = ${colVecLatex(v2)}$。向量 $\\mathbf{w} = ${colVecLatex(w)}$ 是否属于 $\\text{Span}\\{\\mathbf{v}_1, \\mathbf{v}_2\\}$？`,
         );
         const right = inSpan
           ? t(`Yes, because $\\mathbf{w} = ${combStr}$`, `是，因为 $\\mathbf{w} = ${combStr}$`)
           : t(
-              `No, because the required second component would be ${c1 * u1 + c2 * u2}, but here it is ${w[1]}`,
-              `否，因为第二分量需满足 ${c1 * u1 + c2 * u2}，但此处为 ${w[1]}`,
+              `No, because the required second component would be $${c1 * u1 + c2 * u2}$, but here it is $${w[1]}$`,
+              `否，因为第二分量需为 $${c1 * u1 + c2 * u2}$，但此处为 $${w[1]}$`,
             );
         const wrong = inSpan
           ? [
@@ -416,8 +416,8 @@ export const linearSpanOfVectorsInNDimensionalEuclideanSpace: TopicDef = {
             `向量组 $\\left\\{ ${colVecLatex(v1)}, ${colVecLatex(v2)}, ${colVecLatex(v3)} \\right\\}$ 能否张成 $\\mathbb{R}^3$？`,
           );
           const right = t(
-            `No, because the third component of all three vectors is 0, so they only span the xy-plane`,
-            `否，因为三个向量的第三分量全为 0，只能张成 xy 平面`,
+            `No, because the third component of all three vectors is 0, so they only span the $xy$-plane`,
+            `否，因为三个向量的第三分量全为 0，只能张成 $xy$ 平面`,
           );
           const wrong = [
             t(`Yes, because there are 3 vectors in $\\mathbb{R}^3$`, `是，因为在 $\\mathbb{R}^3$ 中有 3 个向量`),
@@ -494,8 +494,8 @@ export const linearDependenceAndIndependence: TopicDef = {
           v3 = [b, c, 1];
         }
         const prompt = t(
-          `Determine whether the set $S = \\left\\{ ${colVecLatex(v1)}, ${colVecLatex(v2)}, ${colVecLatex(v3)} \\right\\}$ in $\\mathbb{R}^3$ is linearly independent or linearly dependent.`,
-          `判断 $\\mathbb{R}^3$ 中的向量组 $S = \\left\\{ ${colVecLatex(v1)}, ${colVecLatex(v2)}, ${colVecLatex(v3)} \\right\\}$ 是线性无关还是线性相关。`,
+          `Let $\\mathbf{v}_1 = ${colVecLatex(v1)}$, $\\mathbf{v}_2 = ${colVecLatex(v2)}$ and $\\mathbf{v}_3 = ${colVecLatex(v3)}$. Determine whether the set $\\{\\mathbf{v}_1, \\mathbf{v}_2, \\mathbf{v}_3\\}$ in $\\mathbb{R}^3$ is linearly independent or linearly dependent.`,
+          `设 $\\mathbf{v}_1 = ${colVecLatex(v1)}$，$\\mathbf{v}_2 = ${colVecLatex(v2)}$，$\\mathbf{v}_3 = ${colVecLatex(v3)}$。判断 $\\mathbb{R}^3$ 中的向量组 $\\{\\mathbf{v}_1, \\mathbf{v}_2, \\mathbf{v}_3\\}$ 是线性无关还是线性相关。`,
         );
         const right = isDep
           ? t(
@@ -525,8 +525,8 @@ export const linearDependenceAndIndependence: TopicDef = {
             ];
         const solution = isDep
           ? t(
-              `Row reducing the matrix $[\\mathbf{v}_1 \\; \\mathbf{v}_2 \\; \\mathbf{v}_3]$ yields fewer than 3 pivots (a free variable exists). Hence non-trivial relations exist and the set is linearly dependent.`,
-              `对矩阵 $[\\mathbf{v}_1 \\; \\mathbf{v}_2 \\; \\mathbf{v}_3]$ 进行初等行变换可知其主元数小于 3（存在自由未知量），故方程存在非零解，该向量组线性相关。`,
+              `Here $\\mathbf{v}_3 = ${c === 1 ? "" : c === -1 ? "-" : c}\\mathbf{v}_1 + 2\\mathbf{v}_2$, which is a relation with weights not all zero. Hence non-trivial relations exist and the set is linearly dependent.`,
+              `这里 $\\mathbf{v}_3 = ${c === 1 ? "" : c === -1 ? "-" : c}\\mathbf{v}_1 + 2\\mathbf{v}_2$，这是一个权重不全为零的关系，故方程存在非零解，该向量组线性相关。`,
             )
           : t(
               `The matrix $[\\mathbf{v}_1 \\; \\mathbf{v}_2 \\; \\mathbf{v}_3]$ has 3 pivot columns (determinant is 1 $\\neq 0$), so the only solution to the homogeneous equation is the trivial solution. Thus the set is linearly independent.`,
@@ -681,7 +681,7 @@ export const subspacesOfNDimensionalSpace: TopicDef = {
         );
         const wrong = [
           t(`$W$ is a subspace only if the vectors in $S$ are linearly independent`, `只有当 $S$ 中的向量线性无关时，$W$ 才是子空间`),
-          t(`$W$ is a subspace only if $k \\ge ${n}$`, `只有当 $k \\ge ${n}$ 时，$W$ 才是子空间`),
+          t(`$W$ is a subspace only if $S$ has at least $${n}$ vectors`, `只有当 $S$ 至少含 $${n}$ 个向量时，$W$ 才是子空间`),
           t(`$W = \\mathbb{R}^{${n}}$ regardless of which vectors are in $S$`, `无论 $S$ 中是何向量，$W$ 恒等于 $\\mathbb{R}^{${n}}$`),
         ];
         const solution = t(
@@ -1040,7 +1040,7 @@ export const findingABasisOfASpan: TopicDef = {
       ),
       generate(rng) {
         const k = rng.int(2, 8);
-        const n = rng.int(k, 12);
+        const n = rng.int(k + 1, 12);
         const prompt = t(
           `Let $H$ be ${article(k)} $${k}$-dimensional subspace of $\\mathbb{R}^{${n}}$. What two conditions must a set of vectors $\\mathcal{B} = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_{${k}}\\}$ satisfy to be a basis for $H$?`,
           `设 $H$ 为 $\\mathbb{R}^{${n}}$ 的一个 $${k}$ 维子空间。向量组 $\\mathcal{B} = \\{\\mathbf{v}_1, \\dots, \\mathbf{v}_{${k}}\\}$ 成为 $H$ 的一组基必须满足哪两个条件？`,
@@ -1055,8 +1055,8 @@ export const findingABasisOfASpan: TopicDef = {
             `$\\mathcal{B}$ 必须正交，且所有向量必须为单位向量`,
           ),
           t(
-            `$\\mathcal{B}$ must span all of $\\mathbb{R}^{${n}}$, and $k$ must equal $${n}$`,
-            `$\\mathcal{B}$ 必须张成整个 $\\mathbb{R}^{${n}}$，且 $k$ 必须等于 $${n}$`,
+            `$\\mathcal{B}$ must span all of $\\mathbb{R}^{${n}}$, and it must have $${n}$ vectors`,
+            `$\\mathcal{B}$ 必须张成整个 $\\mathbb{R}^{${n}}$，且必须含 $${n}$ 个向量`,
           ),
           t(
             `The vectors in $\\mathcal{B}$ must have non-zero entries and be pairwise linearly independent`,
@@ -1877,22 +1877,36 @@ export const theRankOfAMatrix: TopicDef = {
         "矩阵 $A$ 的秩记作 $\\operatorname{rank}(A)$，是列空间 $\\operatorname{Col}(A)$ 的维数，等于 $A$ 的任意阶梯形中主元列的个数。",
       ),
       generate(rng) {
-        const rows = rng.int(3, 10);
-        const cols = rng.int(3, 10);
-        const r = rng.int(1, Math.min(rows, cols));
+        const rows = rng.int(3, 5);
+        const cols = rng.int(rows, 6);
+        const r = rng.int(1, rows);
+        // Pivot columns chosen at random, with free entries to the right of each pivot.
+        const pivotCols = rng
+          .shuffle(Array.from({ length: cols }, (_, i) => i))
+          .slice(0, r)
+          .sort((a, b) => a - b);
+        const echelon = Array.from({ length: rows }, (_, i) =>
+          Array.from({ length: cols }, (_, j) => {
+            const pivot = pivotCols[i];
+            if (pivot === undefined || j < pivot) return 0;
+            if (j === pivot) return rng.pick([1, 2, 3, -1, -2]);
+            return pivotCols.includes(j) ? 0 : rng.int(-3, 3);
+          }),
+        );
+        const columnList = pivotCols.map((c) => c + 1).join(", ");
         const prompt = t(
-          `${article(rows, true)} $${rows} \\times ${cols}$ matrix $A$ has reduced row echelon form containing exactly $${r}$ pivot positions (non-zero rows). What is $\\text{rank}(A)$?`,
-          `一个 $${rows} \\times ${cols}$ 矩阵 $A$ 的简化行阶梯形中恰好有 $${r}$ 个主元位置（非零行）。矩阵 $A$ 的秩 $\\text{rank}(A)$ 是多少？`,
+          `An echelon form of the matrix $A$ is $$${matLatex(echelon)}.$$ What is $\\text{rank}(A)$?`,
+          `矩阵 $A$ 的一个阶梯形为 $$${matLatex(echelon)}。$$ $\\text{rank}(A)$ 是多少？`,
         );
         const solution = t(
-          `By definition, $\\text{rank}(A) = \\dim(\\text{Col}(A))$, which equals the number of pivot columns in echelon form. Here there are $${r}$ pivots, so $\\text{rank}(A) = ${r}$.`,
-          `按定义，$\\text{rank}(A) = \\dim(\\text{Col}(A))$ 等于行阶梯形中主元的个数。此处有 $${r}$ 个主元，故 $\\text{rank}(A) = ${r}$。`,
+          `By definition, $\\text{rank}(A) = \\dim(\\text{Col}(A))$, which equals the number of pivot columns in echelon form. The pivots are in columns $${columnList}$, so there are $${r}$ of them and $\\text{rank}(A) = ${r}$.`,
+          `按定义，$\\text{rank}(A) = \\dim(\\text{Col}(A))$ 等于行阶梯形中主元的个数。此处主元在第 $${columnList}$ 列，共 $${r}$ 个，故 $\\text{rank}(A) = ${r}$。`,
         );
         return numberProblem({
           prompt,
           answer: r,
           form: "integer",
-          wrong: [r + 1, r > 1 ? r - 1 : r + 2, 0],
+          wrong: [r + 1, r > 1 ? r - 1 : r + 2, cols, rows].filter((w) => w !== r),
           solution,
         });
       },

@@ -1125,8 +1125,8 @@ const blocksFromNullities: KnowledgePointDef = {
     const singles = sizes.filter((x) => x === 1).length;
     const askSingles = rng.int(0, 1) === 0;
     const answer = askSingles ? singles : n2 - n1;
-    const given = `$A$ is a ${total}×${total} matrix whose only eigenvalue is $${l}$. With $N = A - (${l})I$, the nullity of $N$ is $${n1}$ and the nullity of $N^2$ is $${n2}$.`;
-    const givenZh = `$A$ 是 ${total} 阶矩阵，唯一的特征值是 $${l}$。设 $N = A - (${l})I$，$N$ 的零度是 $${n1}$，$N^2$ 的零度是 $${n2}$。`;
+    const given = `$A$ is a ${total}×${total} matrix whose only eigenvalue is $${l}$. With $N = A - ${l < 0 ? `(${l})` : l}I$, the nullity of $N$ is $${n1}$ and the nullity of $N^2$ is $${n2}$.`;
+    const givenZh = `$A$ 是 ${total} 阶矩阵，唯一的特征值是 $${l}$。设 $N = A - ${l < 0 ? `(${l})` : l}I$，$N$ 的零度是 $${n1}$，$N^2$ 的零度是 $${n2}$。`;
     return numberProblem({
       prompt: askSingles
         ? t(`${given} How many Jordan blocks have size exactly 1?`, `${givenZh}大小恰为 1 的若尔当块有多少个？`)
@@ -2480,8 +2480,9 @@ const numeratorDeterminant: KnowledgePointDef = {
     "克拉默法则指出，方程组 $A\\mathbf{x} = \\mathbf{b}$ 的未知数等于 $\\frac{\\det A_j}{\\det A}$，其中 $A_j$ 是把 $A$ 的第 $j$ 列换成 $\\mathbf{b}$ 得到的矩阵。这个法则也可以反过来读。如果知道未知数的值和 $A$ 的行列式，$A_j$ 的行列式就是它们的积，不必看到两个矩阵的任何元素就能求出。",
   ),
   generate(rng) {
-    const d = nonzero(rng, 12);
-    const k = nonzero(rng, 12);
+    // A factor of size one would make the answer one of the numbers given.
+    const d = rng.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]) * rng.pick([1, -1]);
+    const k = rng.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]) * rng.pick([1, -1]);
     const j = rng.int(1, 3);
     const answer = d * k;
     return numberProblem({

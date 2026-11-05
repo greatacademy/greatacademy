@@ -368,25 +368,27 @@ export const reductionOfOrder: TopicDef = {
         "把已知解乘以一个未知函数再代入，得到关于这个函数的更简单的方程，解出它就得到第二个线性无关的解。对于微分方程 $y'' - 2a y' + a^2 y = 0$，已知特解为 $y_1 = e^{ax}$。代换 $y = u e^{ax}$ 可降阶得 $u'' = 0 \\implies u(x) = x$，从而得到第二个线性无关解 $y_2 = x e^{ax}$。",
       ),
       generate(rng: Rng): Problem {
-        const a = rng.int(2, 35);
-        const ans = a;
+        const a = rng.int(2, 9);
+        const p = rng.nonZero(-5, 5);
+        const ans = rng.nonZero(-6, 6);
+        const q = ans + a * p;
 
         const prompt = t(
-          `Given that $y_1 = e^{${a}x}$ is a solution to $y'' - ${2 * a}y' + ${a * a}y = 0$, the method of reduction of order with $y = u(x) e^{${a}x}$ yields a second linearly independent solution $y_2 = x e^{K x}$. Find the constant $K$.`,
-          `已知 $y_1 = e^{${a}x}$ 是方程 $y'' - ${2 * a}y' + ${a * a}y = 0$ 的一个特解。通过降阶法设 $y = u(x) e^{${a}x}$，求得第二个线性无关特解形式为 $y_2 = x e^{K x}$。求常数 $K$ 的值。`,
+          `$y_1 = e^{${a}x}$ is a solution of $y'' - ${2 * a}y' + ${a * a}y = 0$. Use reduction of order with $y = u(x) e^{${a}x}$ to find the general solution $y = (c_1 + c_2 x)e^{${a}x}$, and find $c_2$ for the solution with $y(0) = ${p}$ and $y'(0) = ${q}$.`,
+          `$y_1 = e^{${a}x}$ 是方程 $y'' - ${2 * a}y' + ${a * a}y = 0$ 的一个解。用降阶法设 $y = u(x) e^{${a}x}$，求出通解 $y = (c_1 + c_2 x)e^{${a}x}$，并对满足 $y(0) = ${p}$，$y'(0) = ${q}$ 的解求 $c_2$。`,
         );
         const solution = t(
           steps(
-            `Substitute $y = u(x) e^{${a}x}$ into the ODE: $y' = u' e^{${a}x} + ${a}u e^{${a}x}$ and $y'' = u'' e^{${a}x} + ${2 * a}u' e^{${a}x} + ${a * a}u e^{${a}x}$.`,
-            `Plug into $y'' - ${2 * a}y' + ${a * a}y = 0$: $e^{${a}x}[u'' + (${2 * a} - ${2 * a})u' + (${a * a} - ${2 * a * a} + ${a * a})u] = 0$.`,
-            `The equation simplifies to $u'' = 0$, which integrates to $u(x) = c_1 x + c_2$.`,
-            `Choosing $u(x) = x$ gives the second solution $y_2 = x e^{${a}x}$, so $K = ${ans}$.`,
+            `Substitute $y = u e^{${a}x}$: $y' = (u' + ${a}u) e^{${a}x}$ and $y'' = (u'' + ${2 * a}u' + ${a * a}u) e^{${a}x}$.`,
+            `The terms in $u'$ and $u$ cancel, which leaves $u'' = 0$, so $u = c_1 + c_2 x$ and $y = (c_1 + c_2 x)e^{${a}x}$.`,
+            `$y(0) = c_1 = ${p}$, and $y'(0) = c_2 + ${a}c_1 = ${q}$.`,
+            `So $c_2 = ${q} - ${a} \\cdot ${par(p)} = ${ans}$.`,
           ),
           steps(
-            `将 $y = u(x) e^{${a}x}$ 代入微分方程：$y' = u' e^{${a}x} + ${a}u e^{${a}x}$，$y'' = u'' e^{${a}x} + ${2 * a}u' e^{${a}x} + ${a * a}u e^{${a}x}$。`,
-            `代入方程 $y'' - ${2 * a}y' + ${a * a}y = 0$：$e^{${a}x}[u'' + (${2 * a} - ${2 * a})u' + (${a * a} - ${2 * a * a} + ${a * a})u] = 0$。`,
-            `方程简化为 $u'' = 0$，积分得到 $u(x) = c_1 x + c_2$。`,
-            `选取最简特解 $u(x) = x$，得第二个解为 $y_2 = x e^{${a}x}$，因此 $K = ${ans}$。`,
+            `代入 $y = u e^{${a}x}$：$y' = (u' + ${a}u) e^{${a}x}$，$y'' = (u'' + ${2 * a}u' + ${a * a}u) e^{${a}x}$。`,
+            `含 $u'$ 与 $u$ 的项相互抵消，剩下 $u'' = 0$，所以 $u = c_1 + c_2 x$，$y = (c_1 + c_2 x)e^{${a}x}$。`,
+            `$y(0) = c_1 = ${p}$，$y'(0) = c_2 + ${a}c_1 = ${q}$。`,
+            `所以 $c_2 = ${q} - ${a} \\cdot ${par(p)} = ${ans}$。`,
           ),
         );
 
@@ -394,7 +396,7 @@ export const reductionOfOrder: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [2 * a, a * a, a + 1],
+          wrong: [q, q + a * p, p],
         });
       },
     },
@@ -417,8 +419,8 @@ export const reductionOfOrder: TopicDef = {
           answer: ans,
           wrong: [b, b - 1, -b - 2, b + 2],
           solution: t(
-            `In standard form $p = ${Q.of(-b).toLatex()}/x$, so $e^{-\\int p\\,dx} = x^{${b}}$ and $u' = \\frac{C x^{${b}}}{x^2} = Cx^{${ans}}$.`,
-            `标准形式中 $p = ${Q.of(-b).toLatex()}/x$，所以 $e^{-\\int p\\,dx} = x^{${b}}$，$u' = \\frac{C x^{${b}}}{x^2} = Cx^{${ans}}$。`,
+            `In standard form $p = ${Q.of(-b).toLatex()}/x$, so $e^{-\\int p\\,dx} = x^{${b}}$ and $u' = \\frac{C x^{${b}}}{x^2} = ${ans === 1 ? "Cx" : `Cx^{${ans}}`}$.`,
+            `标准形式中 $p = ${Q.of(-b).toLatex()}/x$，所以 $e^{-\\int p\\,dx} = x^{${b}}$，$u' = \\frac{C x^{${b}}}{x^2} = ${ans === 1 ? "Cx" : `Cx^{${ans}}`}$。`,
           ),
         });
       },
@@ -571,7 +573,7 @@ export const generalSolutionsOfLinearOdes: TopicDef = {
         "线性非齐次方程的通解为 $y = c_1y_1 + c_2y_2 + y_p$。初始条件作用于整个通解，包括特解部分：\n\n$$c_1y_1(0) + c_2y_2(0) + y_p(0) = y(0), \\qquad c_1y_1'(0) + c_2y_2'(0) + y_p'(0) = y'(0).$$\n\n先把 $y_p$ 的已知值移到右边，再求常数。",
       ),
       generate(rng: Rng): Problem {
-        const r1 = rng.int(-4, 3);
+        const r1 = rng.nonZero(-4, 3);
         const r2 = r1 + rng.int(1, 3);
         const k = rng.int(-4, 4) || 2;
         const c1 = rng.int(-5, 5);
@@ -756,15 +758,15 @@ export const secondOrderHomogeneousOdesCharacteristicEquationsWithDistinctRealRo
         "当特征方程 $r^2 + br + c = 0$ 有互异实根 $r_1$、$r_2$ 时，通解为 $y = c_1e^{r_1x} + c_2e^{r_2x}$。初始条件给出\n\n$$c_1 + c_2 = y(0), \\qquad r_1c_1 + r_2c_2 = y'(0),$$\n\n这是关于两个常数的二元线性方程组。",
       ),
       generate(rng: Rng): Problem {
-        const r1 = rng.int(-5, 4);
-        const r2 = r1 + rng.int(1, 4);
+        const r1 = rng.nonZero(-5, 4);
+        const r2 = r1 + rng.int(1, 4) || r1 + 5;
         const c1 = rng.int(-5, 5) || 3;
         const c2 = rng.int(-5, 5) || -2;
         const p = c1 + c2;
         const q = r1 * c1 + r2 * c2;
         const which = rng.int(1, 2);
         const ans = which === 1 ? c1 : c2;
-        const e = (r: number) => (r === 0 ? "1" : r === 1 ? "e^{x}" : r === -1 ? "e^{-x}" : `e^{${r}x}`);
+        const e = (r: number) => (r === 1 ? "e^{x}" : r === -1 ? "e^{-x}" : `e^{${r}x}`);
         return numberProblem({
           prompt: t(
             `Solve $${poly([1, "y''"], [-(r1 + r2), "y'"], [r1 * r2, "y"])} = 0$ with $y(0) = ${p}$, $y'(0) = ${q}$. Find the coefficient of $${e(which === 1 ? r1 : r2)}$.`,
@@ -1759,25 +1761,27 @@ export const variationOfParametersForFirstOrderLinearOdes: TopicDef = {
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 8);
-        const K = rng.int(2, 35);
-        const ans = K;
+        const K = rng.int(2, 12);
+        const y0 = rng.nonZero(-6, 6);
+        const T = rng.int(2, 5);
+        const ans = K * T + y0;
 
         const prompt = t(
-          `Apply variation of parameters to $y' + ${poly([a, "y"])} = ${K}e^{-${poly([a, "x"])}}$ by setting $y(x) = u(x) e^{-${poly([a, "x"])}}$. Find the derivative $u'(x)$.`,
-          `利用常数变易法求解 $y' + ${poly([a, "y"])} = ${K}e^{-${poly([a, "x"])}}$，设 $y(x) = u(x) e^{-${poly([a, "x"])}}$。求导函数 $u'(x)$ 的常数值。`,
+          `Apply variation of parameters to $y' + ${poly([a, "y"])} = ${K}e^{-${poly([a, "x"])}}$, $y(0) = ${y0}$, by setting $y(x) = u(x) e^{-${poly([a, "x"])}}$. Find $u(${T})$.`,
+          `利用常数变易法求解 $y' + ${poly([a, "y"])} = ${K}e^{-${poly([a, "x"])}}$，$y(0) = ${y0}$，设 $y(x) = u(x) e^{-${poly([a, "x"])}}$。求 $u(${T})$。`,
         );
         const solution = t(
           steps(
             `Compute $y'(x) = u'(x)e^{-${poly([a, "x"])}} - ${a}u(x)e^{-${poly([a, "x"])}}$.`,
-            `Substitute into $y' + ${poly([a, "y"])}$: $[u'e^{-${poly([a, "x"])}} - ${a}ue^{-${poly([a, "x"])}}] + ${a}[ue^{-${poly([a, "x"])}}] = ${K}e^{-${poly([a, "x"])}}$.`,
-            `The terms in $u$ cancel: $u'(x)e^{-${poly([a, "x"])}} = ${K}e^{-${poly([a, "x"])}}$.`,
-            `Multiply by $e^{${poly([a, "x"])}}$: $u'(x) = ${ans}$.`,
+            `Substitute into the equation: the terms in $u$ cancel, which leaves $u'(x)e^{-${poly([a, "x"])}} = ${K}e^{-${poly([a, "x"])}}$, so $u'(x) = ${K}$.`,
+            `Integrate: $u(x) = ${K}x + C$. Since $e^{0} = 1$, $u(0) = y(0)$, so $C = ${y0}$.`,
+            `Therefore $u(${T}) = ${K} \\cdot ${T} ${signed(y0)} = ${ans}$.`,
           ),
           steps(
             `求导：$y'(x) = u'(x)e^{-${poly([a, "x"])}} - ${a}u(x)e^{-${poly([a, "x"])}}$。`,
-            `代入方程 $y' + ${poly([a, "y"])}$：$[u'e^{-${poly([a, "x"])}} - ${a}ue^{-${poly([a, "x"])}}] + ${a}[ue^{-${poly([a, "x"])}}] = ${K}e^{-${poly([a, "x"])}}$。`,
-            `关于 $u$ 的项相互抵消：$u'(x)e^{-${poly([a, "x"])}} = ${K}e^{-${poly([a, "x"])}}$。`,
-            `两端乘以 $e^{${poly([a, "x"])}}$：$u'(x) = ${ans}$。`,
+            `代入方程：含 $u$ 的项相互抵消，剩下 $u'(x)e^{-${poly([a, "x"])}} = ${K}e^{-${poly([a, "x"])}}$，所以 $u'(x) = ${K}$。`,
+            `积分：$u(x) = ${K}x + C$。因为 $e^{0} = 1$，所以 $u(0) = y(0)$，$C = ${y0}$。`,
+            `因此 $u(${T}) = ${K} \\cdot ${T} ${signed(y0)} = ${ans}$。`,
           ),
         );
 
@@ -1785,7 +1789,7 @@ export const variationOfParametersForFirstOrderLinearOdes: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [a * K, ans + a, Math.round(K / a)],
+          wrong: [K * T, K + y0, K * T - y0, a * K * T + y0],
         });
       },
     },
@@ -1846,34 +1850,41 @@ export const variationOfParametersForSecondOrderOdes: TopicDef = {
         "附加条件使参数的导数满足一个线性方程组，用克拉默法则求解时分母是朗斯基行列式。常数变易法联立代数方程组为 $u_1' y_1 + u_2' y_2 = 0$ 与 $u_1' y_1' + u_2' y_2' = g(x)$。由克莱姆法则解得 $u_2' = \\frac{y_1 g}{W}$。",
       ),
       generate(rng: Rng): Problem {
-        const factor = rng.int(2, 25);
-        const W = rng.int(2, 8);
-        const y1Val = factor * W;
-        const ans = factor;
+        for (;;) {
+          const a = rng.nonZero(-5, 6);
+          const b = rng.nonZero(-4, 4);
+          const c = rng.nonZero(-4, 4);
+          const d = rng.nonZero(-4, 5);
+          const g = rng.nonZero(-6, 6);
+          const W = a * d - b * c;
+          const flipped = a * d + b * c;
+          if (W === 0 || flipped === 0) continue;
+          const ans = Q.of(a * g, W);
 
-        const prompt = t(
-          `In solving a second-order ODE $y'' + P(x)y' + Q(x)y = g(x)$ by variation of parameters, the homogeneous solutions have Wronskian $W(0) = ${W}$, with $y_1(0) = ${y1Val}$ and forcing $g(0) = 1$. Evaluate the parameter derivative $u_2'(0) = \\frac{y_1(0) g(0)}{W(0)}$.`,
-          `用常数变易法求解二阶微分方程 $y'' + P(x)y' + Q(x)y = g(x)$。已知齐次解的朗斯基行列式在 $x = 0$ 处为 $W(0) = ${W}$，且 $y_1(0) = ${y1Val}$，激励函数 $g(0) = 1$。计算变易参数导数值 $u_2'(0) = \\frac{y_1(0) g(0)}{W(0)}$。`,
-        );
-        const solution = t(
-          steps(
-            `From Cramer's rule applied to the variation of parameters system, $u_2'(x) = \\frac{y_1(x) g(x)}{W(x)}$.`,
-            `Substitute the given values at $x = 0$: $u_2'(0) = \\frac{${y1Val} \\times 1}{${W}}$.`,
-            `Calculate the quotient: $u_2'(0) = \\frac{${y1Val}}{${W}} = ${ans}$.`,
-          ),
-          steps(
-            `应用克莱姆法则求解常数变易导数方程组：$u_2'(x) = \\frac{y_1(x) g(x)}{W(x)}$。`,
-            `代入 $x = 0$ 处的各已知值：$u_2'(0) = \\frac{${y1Val} \\times 1}{${W}}$。`,
-            `计算得出结果：$u_2'(0) = \\frac{${y1Val}}{${W}} = ${ans}$。`,
-          ),
-        );
+          const prompt = t(
+            `Solve $y'' + P(x)y' + Q(x)y = g(x)$ by variation of parameters, with $y = u_1 y_1 + u_2 y_2$. At $x = 0$: $y_1 = ${a}$, $y_1' = ${b}$, $y_2 = ${c}$, $y_2' = ${d}$, and $g = ${g}$. Find $u_2'(0)$.`,
+            `用常数变易法求解 $y'' + P(x)y' + Q(x)y = g(x)$，设 $y = u_1 y_1 + u_2 y_2$。在 $x = 0$ 处：$y_1 = ${a}$，$y_1' = ${b}$，$y_2 = ${c}$，$y_2' = ${d}$，$g = ${g}$。求 $u_2'(0)$。`,
+          );
+          const solution = t(
+            steps(
+              `The parameters satisfy $u_1' y_1 + u_2' y_2 = 0$ and $u_1' y_1' + u_2' y_2' = g$, and Cramer's rule gives $u_2' = \\frac{y_1 g}{W}$ with $W = y_1 y_2' - y_1' y_2$.`,
+              `$W(0) = ${par(a)} \\cdot ${par(d)} - ${par(b)} \\cdot ${par(c)} = ${W}$.`,
+              `$u_2'(0) = \\frac{${par(a)} \\cdot ${par(g)}}{${W}} = ${ans.toLatex()}$.`,
+            ),
+            steps(
+              `变易参数满足 $u_1' y_1 + u_2' y_2 = 0$ 与 $u_1' y_1' + u_2' y_2' = g$，由克莱姆法则得 $u_2' = \\frac{y_1 g}{W}$，其中 $W = y_1 y_2' - y_1' y_2$。`,
+              `$W(0) = ${par(a)} \\cdot ${par(d)} - ${par(b)} \\cdot ${par(c)} = ${W}$。`,
+              `$u_2'(0) = \\frac{${par(a)} \\cdot ${par(g)}}{${W}} = ${ans.toLatex()}$。`,
+            ),
+          );
 
-        return numberProblem({
-          prompt,
-          solution,
-          answer: ans,
-          wrong: [ans * W, ans + 1, W],
-        });
+          return numberProblem({
+            prompt,
+            solution,
+            answer: ans,
+            wrong: [Q.of(-c * g, W), Q.of(-a * g, W), Q.of(a * g, flipped), Q.of(a * g)],
+          });
+        }
       },
     },
     {
@@ -1901,8 +1912,8 @@ export const variationOfParametersForSecondOrderOdes: TopicDef = {
           answer: ans,
           wrong: [ans.neg(), Q.of(k), Q.of(k, r1 - r2 - 1)],
           solution: t(
-            `$W = ${r2 - r1}${e(r1 + r2) === "1" ? "" : e(r1 + r2)}$, so $u_{${first ? 1 : 2}}' = ${first ? "-" : ""}\\frac{${first ? "y_2" : "y_1"} \\cdot ${g}}{W}$ and $C = ${ans.toLatex()}$.`,
-            `$W = ${r2 - r1}${e(r1 + r2) === "1" ? "" : e(r1 + r2)}$，所以 $u_{${first ? 1 : 2}}' = ${first ? "-" : ""}\\frac{${first ? "y_2" : "y_1"} \\cdot ${g}}{W}$，$C = ${ans.toLatex()}$。`,
+            `$W = ${r2 - r1}${e(r1 + r2) === "1" ? "" : e(r1 + r2)}$, so $u_{${first ? 1 : 2}}' = ${first ? "-" : ""}\\frac{${first ? "y_2" : "y_1"} \\cdot (${g})}{W}$ and $C = ${ans.toLatex()}$.`,
+            `$W = ${r2 - r1}${e(r1 + r2) === "1" ? "" : e(r1 + r2)}$，所以 $u_{${first ? 1 : 2}}' = ${first ? "-" : ""}\\frac{${first ? "y_2" : "y_1"} \\cdot (${g})}{W}$，$C = ${ans.toLatex()}$。`,
           ),
         });
       },
@@ -1926,27 +1937,28 @@ export const solvingSecondOrderOdesUsingVariationOfParameters: TopicDef = {
       id: "variation-of-parameters-secant-forcing",
       title: t("Particular solution with secant forcing", "正割函数右端项的常数变易法特解"),
       explanation: t(
-        "Undetermined coefficients cannot handle a secant forcing term, but variation of parameters works for any continuous forcing function. For $y'' + y = \\sec x$, fundamental solutions are $y_1 = \\cos x, y_2 = \\sin x$ with $W = 1$. Then $u_2' = \\cos x \\sec x = 1 \\implies u_2(x) = x$.",
-        "待定系数法无法处理正割型强迫项，但常数变易法适用于任何连续的强迫函数。对于 $y'' + y = \\sec x$，基本齐次解为 $y_1 = \\cos x, y_2 = \\sin x$（$W = 1$）。由公式得 $u_2' = \\cos x \\sec x = 1 \\implies u_2(x) = x$。",
+        "Undetermined coefficients cannot handle a secant forcing term, but variation of parameters works for any continuous forcing function. For $y'' + y = \\sec x$, fundamental solutions are $y_1 = \\cos x, y_2 = \\sin x$ with $W = 1$. Then $u_2' = \\cos x \\sec x = 1 \\implies u_2(x) = x$. For $\\cos\\omega x$ and $\\sin\\omega x$, $W = \\omega$.",
+        "待定系数法无法处理正割型强迫项，但常数变易法适用于任何连续的强迫函数。对于 $y'' + y = \\sec x$，基本齐次解为 $y_1 = \\cos x, y_2 = \\sin x$（$W = 1$）。由公式得 $u_2' = \\cos x \\sec x = 1 \\implies u_2(x) = x$。 对 $\\cos\\omega x$ 与 $\\sin\\omega x$，$W = \\omega$。",
       ),
       generate(rng: Rng): Problem {
+        const omega = rng.int(2, 6);
         const k = rng.int(2, 30);
-        const ans = k;
+        const ans = Q.of(k, omega);
 
         const prompt = t(
-          `When solving $y'' + y = ${k}\\sec x$ using variation of parameters with $y_1 = \\cos x$ and $y_2 = \\sin x$, the second parameter derivative is $u_2'(x) = C$. Find the constant $C$.`,
-          `利用常数变易法求解 $y'' + y = ${k}\\sec x$（其中 $y_1 = \\cos x, y_2 = \\sin x$），求得第二个变易参数的导数为常数 $u_2'(x) = C$。求常数 $C$ 的值。`,
+          `When solving $y'' + ${omega * omega}y = ${k}\\sec ${omega}x$ using variation of parameters with $y_1 = \\cos ${omega}x$ and $y_2 = \\sin ${omega}x$, the second parameter derivative is a constant: $u_2'(x) = C$. Find $C$.`,
+          `利用常数变易法求解 $y'' + ${omega * omega}y = ${k}\\sec ${omega}x$（其中 $y_1 = \\cos ${omega}x$，$y_2 = \\sin ${omega}x$），第二个变易参数的导数为常数 $u_2'(x) = C$。求 $C$。`,
         );
         const solution = t(
           steps(
-            `The Wronskian of $y_1 = \\cos x$ and $y_2 = \\sin x$ is $W = (\\cos x)(\\cos x) - (-\\sin x)(\\sin x) = 1$.`,
-            `The formula for $u_2'(x)$ is $u_2'(x) = \\frac{y_1(x) g(x)}{W(x)} = \\frac{(\\cos x)(${k}\\sec x)}{1}$.`,
-            `Since $\\cos x \\sec x = 1$, we obtain $u_2'(x) = ${k}(1) = ${ans}$.`,
+            `The Wronskian is $W = y_1 y_2' - y_1' y_2 = ${omega}\\cos^2 ${omega}x + ${omega}\\sin^2 ${omega}x = ${omega}$.`,
+            `Then $u_2'(x) = \\frac{y_1 g}{W} = \\frac{(\\cos ${omega}x)(${k}\\sec ${omega}x)}{${omega}}$.`,
+            `Since $\\cos ${omega}x \\sec ${omega}x = 1$, we obtain $C = \\frac{${k}}{${omega}}${lowestTerms(k, omega)}$.`,
           ),
           steps(
-            `齐次解 $y_1 = \\cos x$ 与 $y_2 = \\sin x$ 的朗斯基行列式为 $W = (\\cos x)(\\cos x) - (-\\sin x)(\\sin x) = 1$。`,
-            `应用参数导数公式：$u_2'(x) = \\frac{y_1(x) g(x)}{W(x)} = \\frac{(\\cos x)(${k}\\sec x)}{1}$。`,
-            `根据恒等式 $\\cos x \\sec x = 1$，可得 $u_2'(x) = ${k}(1) = ${ans}$。`,
+            `朗斯基行列式为 $W = y_1 y_2' - y_1' y_2 = ${omega}\\cos^2 ${omega}x + ${omega}\\sin^2 ${omega}x = ${omega}$。`,
+            `于是 $u_2'(x) = \\frac{y_1 g}{W} = \\frac{(\\cos ${omega}x)(${k}\\sec ${omega}x)}{${omega}}$。`,
+            `因为 $\\cos ${omega}x \\sec ${omega}x = 1$，所以 $C = \\frac{${k}}{${omega}}${lowestTerms(k, omega)}$。`,
           ),
         );
 
@@ -1954,7 +1966,7 @@ export const solvingSecondOrderOdesUsingVariationOfParameters: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [k * k, 1, 0],
+          wrong: [Q.of(k), Q.of(k * omega), Q.of(-k, omega), Q.of(omega, k)],
         });
       },
     },
@@ -2274,24 +2286,26 @@ export const forcedOscillators: TopicDef = {
         "对于阻尼系数 $c > 0$ 的欠阻尼系统，特征根具有负实部 $-\\frac{c}{2m}$，因此当 $t \\to \\infty$ 时齐次瞬态解按指数规律衰减趋于零。",
       ),
       generate(rng: Rng): Problem {
-        const decayRate = rng.int(1, 30);
+        const decayRate = rng.int(1, 12);
+        const beta = rng.int(1, 12);
         const c = 2 * decayRate;
+        const k = decayRate * decayRate + beta * beta;
         const ans = decayRate;
 
         const prompt = t(
-          `In a damped forced oscillator $y'' + ${c}y' + 25y = 10\\cos(3t)$, the transient homogeneous solution decays proportional to $e^{-\\gamma t}$. Find the decay coefficient $\\gamma$.`,
-          `在阻尼受迫振子系统 $y'' + ${c}y' + 25y = 10\\cos(3t)$ 中，齐次瞬态响应解按 $e^{-\\gamma t}$ 规律衰减。求衰减系数 $\\gamma$ 的值。`,
+          `In a damped forced oscillator $y'' + ${c}y' + ${k}y = 10\\cos(3t)$, the transient homogeneous solution decays proportional to $e^{-\\gamma t}$. Find the decay coefficient $\\gamma$.`,
+          `在阻尼受迫振子系统 $y'' + ${c}y' + ${k}y = 10\\cos(3t)$ 中，齐次瞬态响应解按 $e^{-\\gamma t}$ 规律衰减。求衰减系数 $\\gamma$ 的值。`,
         );
         const solution = t(
           steps(
-            `The characteristic equation of the homogeneous system is $r^2 + ${c}r + 25 = 0$.`,
-            `The roots are $r = -\\frac{${c}}{2} \\pm \\sqrt{\\left(\\frac{${c}}{2}\\right)^2 - 25} = -${decayRate} \\pm i\\beta$.`,
+            `The characteristic equation of the homogeneous system is $r^2 + ${c}r + ${k} = 0$.`,
+            `The roots are $r = -\\frac{${c}}{2} \\pm \\sqrt{${decayRate * decayRate} - ${k}} = -${decayRate} \\pm ${beta}i$.`,
             `The homogeneous solution has exponential factor $e^{-${decayRate}t}$.`,
             `Therefore, the decay coefficient is $\\gamma = ${ans}$.`,
           ),
           steps(
-            `齐次部分的特征方程为 $r^2 + ${c}r + 25 = 0$。`,
-            `求根公式：$r = -\\frac{${c}}{2} \\pm \\sqrt{\\left(\\frac{${c}}{2}\\right)^2 - 25} = -${decayRate} \\pm i\\beta$。`,
+            `齐次部分的特征方程为 $r^2 + ${c}r + ${k} = 0$。`,
+            `求根公式：$r = -\\frac{${c}}{2} \\pm \\sqrt{${decayRate * decayRate} - ${k}} = -${decayRate} \\pm ${beta}i$。`,
             `齐次解包含指数包络因子 $e^{-${decayRate}t}$。`,
             `因此，衰减系数为 $\\gamma = ${ans}$。`,
           ),
@@ -2301,7 +2315,7 @@ export const forcedOscillators: TopicDef = {
           prompt,
           solution,
           answer: ans,
-          wrong: [c, c * 2, 25],
+          wrong: [c, beta, k],
         });
       },
     },

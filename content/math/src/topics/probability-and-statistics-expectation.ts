@@ -27,7 +27,7 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
         generate: (rng: Rng): Problem => {
           const b = rng.int(2, 35);
           const n = rng.pick([1, 2, 3]);
-      const power = (base: string) => (n === 1 ? base : `${base}^{${n}}`);
+          const power = (base: string) => (n === 1 ? base : `${base}^{${n}}`);
           // f(x) = 2x / b^2 on [0, b], so k = 1.
           // E[X^n] = 2 b^n / (n + 2)
           let bPow = 1;
@@ -390,8 +390,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `The moment-generating function of a continuous random variable $X$ is $M_X(t) = (1 - ${theta} t)^{-${k}}$ for $t < \\frac{1}{${theta}}$. Find $E[X] = M_X'(0)$.`,
-              `连续型随机变量 $X$ 的矩母函数为 $M_X(t) = (1 - ${theta} t)^{-${k}}$（$t < \\frac{1}{${theta}}$）。求 $E[X] = M_X'(0)$。`,
+              `The moment-generating function of a continuous random variable $X$ is $M_X(t) = (1 - ${theta} t)^{-${k}}$ for $t < \\frac{1}{${theta}}$. Find $E[X]$.`,
+              `连续型随机变量 $X$ 的矩母函数为 $M_X(t) = (1 - ${theta} t)^{-${k}}$（$t < \\frac{1}{${theta}}$）。求 $E[X]$。`,
             ),
             answer: mean,
             wrong: [k, theta, Q.of(k, theta)],
@@ -417,8 +417,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `The moment-generating function of $X$ is $M_X(t) = (1 - ${theta} t)^{-${k}}$ for $t < \\frac{1}{${theta}}$. Find the second moment $E[X^2] = M_X''(0)$.`,
-              `随机变量 $X$ 的矩母函数为 $M_X(t) = (1 - ${theta} t)^{-${k}}$（$t < \\frac{1}{${theta}}$）。求二阶原点矩 $E[X^2] = M_X''(0)$。`,
+              `The moment-generating function of $X$ is $M_X(t) = (1 - ${theta} t)^{-${k}}$ for $t < \\frac{1}{${theta}}$. Find the second moment $E[X^2]$.`,
+              `随机变量 $X$ 的矩母函数为 $M_X(t) = (1 - ${theta} t)^{-${k}}$（$t < \\frac{1}{${theta}}$）。求二阶原点矩 $E[X^2]$。`,
             ),
             answer: secondMoment,
             wrong: [k * k * theta * theta, k * (k + 1) * theta, k * theta * theta],
@@ -458,8 +458,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `The moment-generating function of $X$ is $M_X(t) = (1 - ${theta} t)^{-${k}}$. Find $\\text{Var}(X) = M_X''(0) - (M_X'(0))^2$.`,
-              `设 $X$ 的矩母函数为 $M_X(t) = (1 - ${theta} t)^{-${k}}$。计算方差 $\\text{Var}(X) = M_X''(0) - (M_X'(0))^2$。`,
+              `The moment-generating function of $X$ is $M_X(t) = (1 - ${theta} t)^{-${k}}$. Find $\\text{Var}(X)$.`,
+              `设 $X$ 的矩母函数为 $M_X(t) = (1 - ${theta} t)^{-${k}}$。计算方差 $\\text{Var}(X)$。`,
             ),
             answer: variance,
             wrong: [k * theta, k * k * theta * theta, k * (k + 1) * theta * theta],
@@ -770,8 +770,8 @@ export const probabilityAndStatisticsExpectationTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `A random variable $X$ has moment-generating function $M_X(t) = (${q} + ${p} e^t)^{${n}}$. By the uniqueness theorem, identify the mean $E[X] = n p$.`,
-              `随机变量 $X$ 的矩母函数为 $M_X(t) = (${q} + ${p} e^t)^{${n}}$。由唯一性定理识别该分布并计算其均值 $E[X] = n p$。`,
+              `A random variable $X$ has moment-generating function $M_X(t) = (${q} + ${p} e^t)^{${n}}$. By the uniqueness theorem, find the mean $E[X]$.`,
+              `随机变量 $X$ 的矩母函数为 $M_X(t) = (${q} + ${p} e^t)^{${n}}$。由唯一性定理识别该分布并计算其均值 $E[X]$。`,
             ),
             answer: Q.parse(String(mean)),
             wrong: [Q.parse(String(Number((n * q).toFixed(2)))), n, Q.parse(String(Number((n * p * q).toFixed(2))))],

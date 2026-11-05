@@ -23,6 +23,55 @@ import { range } from "./methods-of-proof-common.ts";
 
 // Discrete Mathematics unit 7, part 1: graphs, connectivity and trees.
 
+/** neighborsOf lists the neighbors of each vertex. */
+const neighborsOf = (g: Graph): number[][] =>
+  range(0, g.n - 1).map((v) => g.edges.flatMap(([a, b]) => (a === v ? [b] : b === v ? [a] : [])));
+
+/** cycleTex writes a cycle of the given length, from its smallest vertex: "A - B - C - A". */
+function cycleTex(g: Graph, length: number): string {
+  const adjacent = neighborsOf(g);
+  const path: number[] = [];
+  const extend = (v: number): boolean => {
+    path.push(v);
+    if (path.length === length) {
+      if (adjacent[v]!.includes(path[0]!)) return true;
+    } else {
+      for (const w of adjacent[v]!) if (w > path[0]! && !path.includes(w) && extend(w)) return true;
+    }
+    path.pop();
+    return false;
+  };
+  for (let s = 0; s < g.n; s++) if (extend(s)) break;
+  return [...path, path[0]!].map((v) => vx(v)).join(" - ");
+}
+
+/** piecesTex writes the vertex sets of the connected components: "\{A, B\}, \{C\}". */
+function piecesTex(g: Graph): string {
+  const adjacent = neighborsOf(g);
+  const seen = new Set<number>();
+  const pieces: string[] = [];
+  for (let s = 0; s < g.n; s++) {
+    if (seen.has(s)) continue;
+    const piece = [s];
+    seen.add(s);
+    for (let i = 0; i < piece.length; i++) {
+      for (const w of adjacent[piece[i]!]!) {
+        if (!seen.has(w)) {
+          seen.add(w);
+          piece.push(w);
+        }
+      }
+    }
+    pieces.push(
+      `\\{${piece
+        .sort((a, b) => a - b)
+        .map((v) => vx(v))
+        .join(", ")}\\}`,
+    );
+  }
+  return pieces.join(", ");
+}
+
 /** choose computes the binomial coefficient C(n, k). */
 const choose = (n: number, k: number) => {
   let c = 1;
@@ -809,8 +858,8 @@ export const regularGraphs: TopicDef = {
                   `不存在：度数和将为 $${n} \\cdot ${r} = ${n * r}$，是奇数。`,
                 )
               : t(
-                  `Yes: $${n} \\cdot ${r}$ is even and $${r} \\le ${n - 1}$. For example, arrange the vertices in a circle and join each to the nearest ones on both sides (and, if $${r}$ is odd, to the opposite one).`,
-                  `存在：$${n} \\cdot ${r}$ 是偶数且 $${r} \\le ${n - 1}$。例如把顶点排成一圈，把每个顶点与两侧最近的若干顶点相连（若 $${r}$ 为奇数，再与正对面的顶点相连）。`,
+                  `Yes: $${n} \\cdot ${r}$ is even and $${r} \\le ${n - 1}$. For example, arrange the vertices in a circle and join each to the nearest ones on both sides${r % 2 === 1 ? ", and to the opposite one" : ""}.`,
+                  `存在：$${n} \\cdot ${r}$ 是偶数且 $${r} \\le ${n - 1}$。例如把顶点排成一圈，把每个顶点与两侧最近的若干顶点相连${r % 2 === 1 ? "，再与正对面的顶点相连" : ""}。`,
                 ),
         });
       },
@@ -971,8 +1020,8 @@ export const cyclesInGraphs: TopicDef = {
             answer: gi,
             wrong: [gi + 1, gi - 1, 3, n],
             solution: t(
-              `Checking from each vertex for the first time two search branches meet, the shortest cycle has length $${gi}$.`,
-              `从每个顶点出发搜索，找出两条分支第一次相遇的位置，最短圈的长度为 $${gi}$。`,
+              `The cycle $${cycleTex(g, gi)}$ has length $${gi}$, and $G$ has no shorter cycle.`,
+              `圈 $${cycleTex(g, gi)}$ 的长度为 $${gi}$，$G$ 中没有更短的圈。`,
             ),
           }),
           g,
@@ -1053,8 +1102,8 @@ export const connectedGraphs: TopicDef = {
             answer: c,
             wrong: [c + 1, c - 1, n - g.edges.length],
             solution: t(
-              `Following edges from each unvisited vertex finds $${c}$ separate pieces.`,
-              `从每个尚未访问的顶点出发沿边搜索，共找到 $${c}$ 个互不相连的部分。`,
+              `Following edges from each unvisited vertex finds the separate pieces $${piecesTex(g)}$, which makes $${c}$.`,
+              `从每个尚未访问的顶点出发沿边搜索，得到互不相连的部分 $${piecesTex(g)}$，共 $${c}$ 个。`,
             ),
           }),
           g,
@@ -1133,7 +1182,7 @@ export const cutVerticesAndCutEdges: TopicDef = {
             solution: t(
               cuts.length === 0
                 ? "Removing any single vertex leaves the rest connected, so there are none."
-                : `Removing ${cuts.map((v) => `$${vx(v)}$`).join(", ")} disconnects $G$, and no other vertex does: $${cuts.length}$ cut vertices.`,
+                : `Removing ${cuts.map((v) => `$${vx(v)}$`).join(", ")} disconnects $G$, and no other vertex does: $${cuts.length}$ cut ${cuts.length === 1 ? "vertex" : "vertices"}.`,
               cuts.length === 0
                 ? "删去任何一个顶点后其余部分仍连通，所以没有割点。"
                 : `删去 ${cuts.map((v) => `$${vx(v)}$`).join("、")} 会使 $G$ 不连通，删去其他顶点则不会：共 $${cuts.length}$ 个割点。`,
@@ -1162,7 +1211,7 @@ export const cutVerticesAndCutEdges: TopicDef = {
             solution: t(
               bridges.length === 0
                 ? "Every edge lies on a cycle, so there are none."
-                : `The edges on no cycle are $${bridges.map(edgeTex).join(", ")}$: $${bridges.length}$ cut edges.`,
+                : `The edges on no cycle are $${bridges.map(edgeTex).join(", ")}$: $${bridges.length}$ cut ${bridges.length === 1 ? "edge" : "edges"}.`,
               bridges.length === 0
                 ? "每条边都在某个圈上，所以没有割边。"
                 : `不在任何圈上的边为 $${bridges.map(edgeTex).join(", ")}$：共 $${bridges.length}$ 条割边。`,

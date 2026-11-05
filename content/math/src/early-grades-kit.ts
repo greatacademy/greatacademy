@@ -86,7 +86,10 @@ export function countersFigure(n: number, perRow = 5, accented = 0): Figure {
   }
   return {
     svg: svgDocument(rows * 26 + 10, body),
-    alt: t(`${n} counters in rows of ${perRow}.`, `${n} 个圆片，每行 ${perRow} 个。`),
+    alt: t(
+      `Counters in ${Math.floor(n / perRow)} full ${Math.floor(n / perRow) === 1 ? "row" : "rows"} of ${perRow}${n % perRow === 0 ? "" : `, with ${n % perRow} more in the last row`}.`,
+      `圆片排成 ${Math.floor(n / perRow)} 个整行，每行 ${perRow} 个${n % perRow === 0 ? "" : `，最后一行还有 ${n % perRow} 个`}。`,
+    ),
   };
 }
 
@@ -208,8 +211,12 @@ export function gridFigure(rows: number, columns: number, shaded = rows * column
   return {
     svg: svgDocument(rows * size + 12, body),
     alt: t(
-      `A rectangle cut into ${rows} rows of ${columns} equal squares, ${shaded} of them shaded.`,
-      `一个长方形被分成 ${rows} 行、每行 ${columns} 个相同的正方形，其中 ${shaded} 个涂了颜色。`,
+      shaded === rows * columns
+        ? `A rectangle cut into ${rows} rows of ${columns} equal squares, all shaded.`
+        : `A rectangle cut into ${rows} rows of ${columns} equal squares, ${shaded} of them shaded.`,
+      shaded === rows * columns
+        ? `一个长方形，分成 ${rows} 行，每行 ${columns} 个相同的方格，全部涂色。`
+        : `一个长方形，分成 ${rows} 行，每行 ${columns} 个相同的方格，其中 ${shaded} 个涂色。`,
     ),
   };
 }

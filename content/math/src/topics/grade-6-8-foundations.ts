@@ -1,9 +1,7 @@
 import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { gcd } from "@ga/subject-math";
 
 import { choiceProblem, numberProblem } from "../problems.ts";
-import { tableLatex, tapeFigure } from "./grade-6-ratios.ts";
 import { histogramSvg } from "./grade-7-statistics.ts";
 
 /** unitPricesAndSpeed computes unit rates, prices per unit, and constant speed. */

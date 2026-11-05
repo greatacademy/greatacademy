@@ -207,8 +207,8 @@ export const adjacencyMatrices: TopicDef = {
       id: "counting-walks-with-powers-of-the-adjacency-matrix",
       title: t("Counting walks", "数途径"),
       explanation: t(
-        "$(A^2)_{ij} = \\sum_k a_{ik}a_{kj}$ counts the vertices $k$ adjacent to both $i$ and $j$: the walks $i, k, j$ of length $2$. In general $(A^k)_{ij}$ counts walks of length $k$ from $i$ to $j$.",
-        "$(A^2)_{ij} = \\sum_k a_{ik}a_{kj}$ 数的是同时与 $i$、$j$ 相邻的顶点 $k$，即长度为 $2$ 的途径 $i, k, j$。一般地，$(A^k)_{ij}$ 是从 $i$ 到 $j$ 长度为 $k$ 的途径数。",
+        "$(M^2)_{ij} = \\sum_k m_{ik}m_{kj}$ counts the vertices $k$ adjacent to both $i$ and $j$: the walks $i, k, j$ of length $2$. In general $(M^k)_{ij}$ counts walks of length $k$ from $i$ to $j$.",
+        "$(M^2)_{ij} = \\sum_k m_{ik}m_{kj}$ 数的是同时与 $i$、$j$ 相邻的顶点 $k$，即长度为 $2$ 的途径 $i, k, j$。一般地，$(M^k)_{ij}$ 是从 $i$ 到 $j$ 长度为 $k$ 的途径数。",
       ),
       generate(rng) {
         const n = rng.int(4, 5);
@@ -223,14 +223,14 @@ export const adjacencyMatrices: TopicDef = {
         return fig(
           numberProblem({
             prompt: t(
-              `${graphIntro(g).en} With rows and columns in the order $${orderTex(n)}$, let $A$ be its adjacency matrix. Find the $(${vx(i)}, ${vx(j)})$ entry of $A^{${k}}$.`,
-              `${graphIntro(g)["zh-CN"]}行与列按 $${orderTex(n)}$ 排列，设 $A$ 为其邻接矩阵。求 $A^{${k}}$ 的 $(${vx(i)}, ${vx(j)})$ 元。`,
+              `${graphIntro(g).en} With rows and columns in the order $${orderTex(n)}$, let $M$ be its adjacency matrix. Find the $(${vx(i)}, ${vx(j)})$ entry of $M^{${k}}$.`,
+              `${graphIntro(g)["zh-CN"]}行与列按 $${orderTex(n)}$ 排列，设 $M$ 为其邻接矩阵。求 $M^{${k}}$ 的 $(${vx(i)}, ${vx(j)})$ 元。`,
             ),
             answer: value,
             wrong: [other, A[i]![j]!, value + 1, Math.max(0, value - 1)],
             solution: t(
-              `The entry counts walks of length $${k}$ from $${vx(i)}$ to $${vx(j)}$. Computing $A^{${k}} = ${matTex(P)}$ gives $${value}$.`,
-              `该元等于从 $${vx(i)}$ 到 $${vx(j)}$ 长度为 $${k}$ 的途径数。计算得 $A^{${k}} = ${matTex(P)}$，所以为 $${value}$。`,
+              `The entry counts walks of length $${k}$ from $${vx(i)}$ to $${vx(j)}$. Computing $M^{${k}} = ${matTex(P)}$ gives $${value}$.`,
+              `该元等于从 $${vx(i)}$ 到 $${vx(j)}$ 长度为 $${k}$ 的途径数。计算得 $M^{${k}} = ${matTex(P)}$，所以为 $${value}$。`,
             ),
           }),
           g,

@@ -37,7 +37,8 @@ export const actOwnAlgebra2: Record<string, ExamSpec["make"]> = {
     );
   },
   "Using Factors of a Quadratic": (rng, hard) => {
-    const [r, s] = [rng.int(-9, -1), rng.int(1, 12)];
+    const r = rng.int(-9, -1);
+    const s = rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].filter((v) => v !== -r));
     if (!hard)
       return ask(
         rng,
@@ -260,7 +261,8 @@ export const actOwnAlgebra2: Record<string, ExamSpec["make"]> = {
     );
   },
   "Combining Rational Expressions": (rng, hard) => {
-    const [a, b, c] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 7)];
+    const [b, c] = [rng.int(2, 9), rng.int(2, 7)];
+    const a = rng.pick([2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== c));
     if (!hard)
       return ask(
         rng,

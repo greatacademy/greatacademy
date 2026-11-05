@@ -1105,18 +1105,20 @@ const orderFromTwoPowers: KnowledgePointDef = {
   generate(rng) {
     // Mostly a common factor above one, so that the answer is rarely the trivial order.
     const common = rng.int(1, 12);
-    const [p, q] = rng.shuffle(rng.pick([
-      [2, 3],
-      [2, 5],
-      [2, 7],
-      [3, 4],
-      [3, 5],
-      [3, 7],
-      [4, 5],
-      [4, 7],
-      [5, 6],
-      [5, 7],
-    ] as const));
+    const [p, q] = rng.shuffle(
+      rng.pick([
+        [2, 3],
+        [2, 5],
+        [2, 7],
+        [3, 4],
+        [3, 5],
+        [3, 7],
+        [4, 5],
+        [4, 7],
+        [5, 6],
+        [5, 7],
+      ] as const),
+    );
     const m = common * (p as number);
     const n = common * (q as number);
     const answer = gcd(m, n);
@@ -1337,18 +1339,20 @@ const twoRelationsOnOneGenerator: KnowledgePointDef = {
   generate(rng) {
     // Mostly a common factor above one, so that the answer is rarely the trivial group.
     const common = rng.int(1, 12);
-    const [p, q] = rng.shuffle(rng.pick([
-      [2, 3],
-      [2, 5],
-      [2, 7],
-      [3, 4],
-      [3, 5],
-      [3, 7],
-      [4, 5],
-      [4, 7],
-      [5, 6],
-      [5, 7],
-    ] as const));
+    const [p, q] = rng.shuffle(
+      rng.pick([
+        [2, 3],
+        [2, 5],
+        [2, 7],
+        [3, 4],
+        [3, 5],
+        [3, 7],
+        [4, 5],
+        [4, 7],
+        [5, 6],
+        [5, 7],
+      ] as const),
+    );
     const m = common * (p as number);
     const n = common * (q as number);
     const answer = gcd(m, n);

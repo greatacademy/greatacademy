@@ -145,7 +145,10 @@ const formulaFromLevelCurves = point(
       fig(
         square(4),
         right.levels.map((level): PlaneMark => ({ kind: "contour", f: right.f, level, accent: true })),
-        [`Level curves in the plane: ${observed(right.clue)[0].replaceAll("$", "")}.`, `平面上的等值线：${observed(right.clue)[1].replaceAll("$", "")}。`],
+        [
+          `Level curves in the plane: ${observed(right.clue)[0].replaceAll("$", "")}.`,
+          `平面上的等值线：${observed(right.clue)[1].replaceAll("$", "")}。`,
+        ],
       ),
     );
   },

@@ -166,8 +166,8 @@ export const deeperRemainingAlgebraThirdPoints: Readonly<Record<string, readonly
         return choose(
           rng,
           [
-            `Describe the end behavior of $f(x) = ${a === 1 ? "" : a === -1 ? "-" : a}${factorOf(p)}^{${m}}${factorOf(q)}^{${n}}$.`,
-            `描述 $f(x) = ${a === 1 ? "" : a === -1 ? "-" : a}${factorOf(p)}^{${m}}${factorOf(q)}^{${n}}$ 的端点行为。`,
+            `Describe the end behavior of $f(x) = ${a === 1 ? "" : a === -1 ? "-" : a}${factorOf(p)}${m === 1 ? "" : `^{${m}}`}${factorOf(q)}${n === 1 ? "" : `^{${n}}`}$.`,
+            `描述 $f(x) = ${a === 1 ? "" : a === -1 ? "-" : a}${factorOf(p)}${m === 1 ? "" : `^{${m}}`}${factorOf(q)}${n === 1 ? "" : `^{${n}}`}$ 的端点行为。`,
           ],
           text(leftUp, rightUp),
           [text(!leftUp, rightUp), text(leftUp, !rightUp), text(!leftUp, !rightUp)],

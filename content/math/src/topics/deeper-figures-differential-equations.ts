@@ -612,8 +612,8 @@ const rootsFromGraph = point(
         same(`r = ${alpha === 0 ? 1 : alpha}, \\; r = ${alpha === 0 ? -1 : 2 * alpha}`),
       ],
       [
-        `The peaks are $${period}$ apart, so $\\beta = \\frac{2\\pi}{${period}}$, which is $${betaTex}$. The wave ${alpha < 0 ? "shrinks, so $\\alpha$ is negative" : alpha > 0 ? "grows, so $\\alpha$ is positive" : "keeps its size, so $\\alpha = 0$"}.`,
-        `波峰相距 $${period}$，所以 $\\beta = \\frac{2\\pi}{${period}}$，即 $${betaTex}$。波${alpha < 0 ? "变小，所以 $\\alpha$ 为负" : alpha > 0 ? "变大，所以 $\\alpha$ 为正" : "大小不变，所以 $\\alpha = 0$"}。`,
+        `The peaks are $${period}$ apart, so $\\beta = ${period === 3 ? betaTex : `\\frac{2\\pi}{${period}} = ${betaTex}`}$. The wave ${alpha < 0 ? "shrinks, so $\\alpha$ is negative" : alpha > 0 ? "grows, so $\\alpha$ is positive" : "keeps its size, so $\\alpha = 0$"}.`,
+        `波峰相距 $${period}$，所以 $\\beta = ${period === 3 ? betaTex : `\\frac{2\\pi}{${period}} = ${betaTex}`}$。波${alpha < 0 ? "变小，所以 $\\alpha$ 为负" : alpha > 0 ? "变大，所以 $\\alpha$ 为正" : "大小不变，所以 $\\alpha = 0$"}。`,
       ],
       fig(
         { xMin: 0, xMax: 12, yMin: -5, yMax: 5, xName: "t" },

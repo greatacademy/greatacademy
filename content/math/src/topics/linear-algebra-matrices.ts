@@ -74,15 +74,6 @@ function oneOf(rng: Rng, prompt: Text, right: Text, wrong: readonly Text[], solu
       if (rest.length === 3) break;
     }
   }
-  let fallbackCount = 1;
-  while (rest.length < 3) {
-    const fb = t(`None of the other options (${fallbackCount})`, `以上选项均不正确 (${fallbackCount})`);
-    if (!seen.has(fb.en)) {
-      seen.add(fb.en);
-      rest.push(fb);
-    }
-    fallbackCount++;
-  }
   const options = [right, ...rest];
   const order = rng.shuffle(options.map((_, i) => i));
   return choiceProblem({ prompt, options: order.map((i) => options[i]!), correct: order.indexOf(0), solution });
@@ -390,8 +381,8 @@ export const theDeterminantOfAnNxnMatrix: TopicDef = {
           rng,
           prompt,
           t(
-            `$\\text{inv}(\\sigma) = ${invCount}$, so $\\text{sgn}(\\sigma) = ${signStr}$ (${parityEn})`,
-            `$\\text{inv}(\\sigma) = ${invCount}$，故 $\\text{sgn}(\\sigma) = ${signStr}$（${parityZh}置换）`,
+            `$\\text{inv}(\\sigma) = ${invCount}$, so $\\text{sgn}(\\sigma) = ${signStr}$`,
+            `$\\text{inv}(\\sigma) = ${invCount}$，故 $\\text{sgn}(\\sigma) = ${signStr}$`,
           ),
           [
             t(
@@ -858,12 +849,8 @@ export const conditionsWhenADeterminantEqualsZero: TopicDef = {
         ];
 
         const prompt = t(
-          `Which of the following matrices has a determinant equal to $0$ without carrying out a full Laplace expansion?
-
-$$M = ${matLatex(singularMat)}$$`,
-          `无需进行完整的拉普拉斯展开，下列哪个矩阵的行列式必然等于 $0$？
-
-$$M = ${matLatex(singularMat)}$$`,
+          `Without carrying out a full Laplace expansion, decide which of the following matrices has a determinant equal to $0$.`,
+          `无需进行完整的拉普拉斯展开，判断下列哪个矩阵的行列式等于 $0$。`,
         );
 
         return oneOf(
@@ -876,8 +863,8 @@ $$M = ${matLatex(singularMat)}$$`,
             t(`$$${matLatex(inv3)}$$`, `$$${matLatex(inv3)}$$`),
           ],
           t(
-            `In matrix $M$, row 2 is exactly $${factor}$ times row 1: $R_2 = ${factor} R_1$. When two rows of a square matrix are linearly dependent (proportional), subtracting $${factor} R_1$ from $R_2$ produces a row of zeros without changing the determinant. Hence $\\det(M) = 0$. The other three matrices are triangular with non-zero diagonals, so their determinants are non-zero.`,
-            `在矩阵 $M$ 中，第 2 行恰好是第 1 行的 $${factor}$ 倍：$R_2 = ${factor} R_1$。当方阵的两行线性相关（成比例）时，将第 1 行的 $${factor}$ 倍从第 2 行减去后，将产生一个全零行且不改变行列式的值，因此 $\\det(M) = 0$。其余三个矩阵均为对角元非零的三角矩阵，行列式均不为零。`,
+            `In the matrix $M = ${matLatex(singularMat)}$, row 2 is exactly $${factor}$ times row 1: $R_2 = ${factor} R_1$. When two rows of a square matrix are linearly dependent (proportional), subtracting $${factor} R_1$ from $R_2$ produces a row of zeros without changing the determinant. Hence $\\det(M) = 0$. The other three matrices are triangular with non-zero diagonals, so their determinants are non-zero.`,
+            `在矩阵 $M = ${matLatex(singularMat)}$ 中，第 2 行恰好是第 1 行的 $${factor}$ 倍：$R_2 = ${factor} R_1$。当方阵的两行线性相关（成比例）时，将第 1 行的 $${factor}$ 倍从第 2 行减去后，将产生一个全零行且不改变行列式的值，因此 $\\det(M) = 0$。其余三个矩阵均为对角元非零的三角矩阵，行列式均不为零。`,
           ),
         );
       },
@@ -1531,9 +1518,9 @@ $$A = ${matLatex(A)}$$`,
             t(`$$${matLatex(wrongMat3)}$$`, `$$${matLatex(wrongMat3)}$$`),
           ],
           t(
-            `The operation $${opStr}$ replaces row 2 by row 2 minus $${k}$ times row 1 entry by entry:
+            `The operation $${opStr}$ replaces row 2 by row 2 ${k > 0 ? "minus" : "plus"} $${Math.abs(k)}$ times row 1 entry by entry:
 $[${r2.join(", ")}] - ${paren(k)}[${r1.join(", ")}] = [${newR2.join(", ")}]$. Rows 1 and 3 are unchanged.`,
-            `变换 $${opStr}$ 将第 2 行替换为第 2 行减去第 1 行的 $${k}$ 倍：
+            `变换 $${opStr}$ 将第 2 行替换为第 2 行${k > 0 ? "减去" : "加上"}第 1 行的 $${Math.abs(k)}$ 倍：
 $[${r2.join(", ")}] - ${paren(k)}[${r1.join(", ")}] = [${newR2.join(", ")}]$。第 1 行与第 3 行保持不变。`,
           ),
         );
@@ -1554,13 +1541,19 @@ $[${r2.join(", ")}] - ${paren(k)}[${r1.join(", ")}] = [${newR2.join(", ")}]$。�
         const o = (s: string) => t(`$${s}$`, `$${s}$`);
         const kl = (v: number) => (v < 0 ? `- ${-v}` : `+ ${v}`);
         const op = [`R_{${i}} \\leftrightarrow R_{${j}}`, `${k}R_{${i}} \\to R_{${i}}`, `R_{${i}} ${kl(k)}R_{${j}} \\to R_{${i}}`][kind]!;
-        const inv = [`R_{${i}} \\leftrightarrow R_{${j}}`, `${Q.of(1, k).toLatex()}R_{${i}} \\to R_{${i}}`, `R_{${i}} ${kl(-k)}R_{${j}} \\to R_{${i}}`][
-          kind
-        ]!;
+        const inv = [
+          `R_{${i}} \\leftrightarrow R_{${j}}`,
+          `${Q.of(1, k).toLatex()}R_{${i}} \\to R_{${i}}`,
+          `R_{${i}} ${kl(-k)}R_{${j}} \\to R_{${i}}`,
+        ][kind]!;
         const wrong = [
           [`R_{${j}} ${kl(1)}R_{${i}} \\to R_{${j}}`, `-R_{${i}} \\to R_{${i}}`, `R_{${i}} ${kl(-1)}R_{${j}} \\to R_{${i}}`],
           [`${-k}R_{${i}} \\to R_{${i}}`, `R_{${i}} ${kl(-k)}R_{${j}} \\to R_{${i}}`, `${Q.of(1, k).toLatex()}R_{${j}} \\to R_{${j}}`],
-          [`R_{${i}} ${kl(k)}R_{${j}} \\to R_{${i}}`, `R_{${j}} ${kl(-k)}R_{${i}} \\to R_{${j}}`, `${Q.of(1, k).toLatex()}R_{${i}} \\to R_{${i}}`],
+          [
+            `R_{${i}} ${kl(k)}R_{${j}} \\to R_{${i}}`,
+            `R_{${j}} ${kl(-k)}R_{${i}} \\to R_{${j}}`,
+            `${Q.of(1, k).toLatex()}R_{${i}} \\to R_{${i}}`,
+          ],
         ][kind]!;
         return oneOf(
           rng,
@@ -2300,8 +2293,8 @@ export const reducedRowEchelonForm: TopicDef = {
         ];
 
         const prompt = t(
-          `Which of the following $3 \\times 4$ matrices with non-pivot entries $c_1 = ${c1}$ and $c_2 = ${c2}$ is in **Reduced Row Echelon Form (RREF)**?`,
-          `下列包含非主元参数 $c_1 = ${c1}$ 与 $c_2 = ${c2}$ 的 $3 \\times 4$ 矩阵中，哪一个是**简化行阶梯形矩阵 (RREF)**？`,
+          `Which of the following $3 \\times 4$ matrices is in **Reduced Row Echelon Form (RREF)**?`,
+          `下列 $3 \\times 4$ 矩阵中，哪一个是**简化行阶梯形矩阵 (RREF)**？`,
         );
 
         return oneOf(
@@ -2773,7 +2766,9 @@ export const elementary3x3Matrices: TopicDef = {
         const [targetRow, sourceRow] = rng.pick(rowPairs);
 
         const opStr =
-          c > 0 ? `R_{${targetRow}} + ${c} R_{${sourceRow}} \\to R_{${targetRow}}` : `R_{${targetRow}} - ${-c} R_{${sourceRow}} \\to R_{${targetRow}}`;
+          c > 0
+            ? `R_{${targetRow}} + ${c} R_{${sourceRow}} \\to R_{${targetRow}}`
+            : `R_{${targetRow}} - ${-c} R_{${sourceRow}} \\to R_{${targetRow}}`;
 
         // Create 3x3 identity with c at (targetRow-1, sourceRow-1)
         const E: Mat = [
@@ -2884,6 +2879,7 @@ export const rowOperationsOn3x3MatricesAsProductsOfElementaryMatrices: TopicDef 
       generate(rng) {
         const c1 = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
         const c2 = rng.pick([-5, -4, -3, -1, 1, 2, 3, 4, 5]);
+        const rowOp = (row: number, c: number) => `R_${row} ${c < 0 ? "-" : "+"} ${Math.abs(c) === 1 ? "" : Math.abs(c)}R_1`;
 
         const E1: Mat = [
           [1, 0, 0],
@@ -2924,8 +2920,8 @@ export const rowOperationsOn3x3MatricesAsProductsOfElementaryMatrices: TopicDef 
         ];
 
         const prompt = t(
-          `Let $E_1$ represent the row operation $R_2 + (${c1}) R_1 \\to R_2$ and $E_2$ represent $R_3 + (${c2}) R_1 \\to R_3$. What single matrix $M = E_2 E_1$ performs both operations simultaneously on any $3 \\times 3$ matrix $A$?`,
-          `设 $E_1$ 表示行变换 $R_2 + (${c1}) R_1 \\to R_2$，$E_2$ 表示行变换 $R_3 + (${c2}) R_1 \\to R_3$。对任意 $3 \\times 3$ 矩阵 $A$，能够同时执行这两个行变换的矩阵乘积 $M = E_2 E_1$ 是哪一个？`,
+          `Let $E_1$ represent the row operation $${rowOp(2, c1)} \\to R_2$ and $E_2$ represent $${rowOp(3, c2)} \\to R_3$. What single matrix $M = E_2 E_1$ performs both operations simultaneously on any $3 \\times 3$ matrix $A$?`,
+          `设 $E_1$ 表示行变换 $${rowOp(2, c1)} \\to R_2$，$E_2$ 表示行变换 $${rowOp(3, c2)} \\to R_3$。对任意 $3 \\times 3$ 矩阵 $A$，能够同时执行这两个行变换的矩阵乘积 $M = E_2 E_1$ 是哪一个？`,
         );
 
         return oneOf(
@@ -3009,8 +3005,11 @@ export const theInvertibleMatrixTheoremInTermsOf2x2SystemsOfEquations: TopicDef 
       generate(rng) {
         const a = rng.pick([1, 2, 3]);
         const b = rng.pick([-2, 1, 2]);
-        const c = rng.pick([2, -1, 3]);
-        const d = rng.pick([4, 5, -2]);
+        // Half of the matrices have proportional rows, so that both outcomes occur.
+        const singular = rng.bool();
+        const m = rng.pick([-2, 2, 3]);
+        const c = singular ? m * a : rng.pick([2, -1, 3]);
+        const d = singular ? m * b : rng.pick([4, 5, -2]);
 
         const detA = a * d - b * c;
         const isInvertible = detA !== 0;
@@ -3021,8 +3020,8 @@ export const theInvertibleMatrixTheoremInTermsOf2x2SystemsOfEquations: TopicDef 
         ];
 
         const prompt = t(
-          `Consider the matrix $A = ${matLatex(A)}$ with $\\det(A) = ${detA}$. According to the Invertible Matrix Theorem, what is the solution set to the homogeneous system $A\\mathbf{x} = \\mathbf{0}$?`,
-          `考虑矩阵 $A = ${matLatex(A)}$，已知 $\\det(A) = ${detA}$。根据可逆矩阵定理，齐次线性系统 $A\\mathbf{x} = \\mathbf{0}$ 的解集是怎样的？`,
+          `Consider the matrix $A = ${matLatex(A)}$. According to the Invertible Matrix Theorem, what is the solution set to the homogeneous system $A\\mathbf{x} = \\mathbf{0}$?`,
+          `考虑矩阵 $A = ${matLatex(A)}$。根据可逆矩阵定理，齐次线性系统 $A\\mathbf{x} = \\mathbf{0}$ 的解集是怎样的？`,
         );
 
         const rightText = isInvertible
@@ -3048,11 +3047,11 @@ export const theInvertibleMatrixTheoremInTermsOf2x2SystemsOfEquations: TopicDef 
           wrongTexts,
           t(
             isInvertible
-              ? `Since $\\det(A) = ${detA} \\ne 0$, matrix $A$ is invertible. By the Invertible Matrix Theorem, $A\\mathbf{x} = \\mathbf{0} \\iff \\mathbf{x} = A^{-1}\\mathbf{0} = \\mathbf{0}$, meaning it has only the trivial solution.`
-              : `Since $\\det(A) = ${detA} = 0$, matrix $A$ is singular (not invertible). Thus the system has free variables and possesses infinitely many non-trivial solutions.`,
+              ? `Since $\\det(A) = ${a}(${d}) - (${b})(${c}) = ${detA} \\ne 0$, matrix $A$ is invertible. By the Invertible Matrix Theorem, $A\\mathbf{x} = \\mathbf{0} \\iff \\mathbf{x} = A^{-1}\\mathbf{0} = \\mathbf{0}$, meaning it has only the trivial solution.`
+              : `Since $\\det(A) = ${a}(${d}) - (${b})(${c}) = 0$, matrix $A$ is singular (not invertible). Thus the system has free variables and possesses infinitely many non-trivial solutions.`,
             isInvertible
-              ? `由于 $\\det(A) = ${detA} \\ne 0$，矩阵 $A$ 可逆。根据可逆矩阵定理，$A\\mathbf{x} = \\mathbf{0} \\iff \\mathbf{x} = A^{-1}\\mathbf{0} = \\mathbf{0}$，因此只有平凡零解。`
-              : `由于 $\\det(A) = ${detA} = 0$，矩阵 $A$ 奇异不可逆。因此该齐次系统存在自由变量，包含无穷多非零解。`,
+              ? `由于 $\\det(A) = ${a}(${d}) - (${b})(${c}) = ${detA} \\ne 0$，矩阵 $A$ 可逆。根据可逆矩阵定理，$A\\mathbf{x} = \\mathbf{0} \\iff \\mathbf{x} = A^{-1}\\mathbf{0} = \\mathbf{0}$，因此只有平凡零解。`
+              : `由于 $\\det(A) = ${a}(${d}) - (${b})(${c}) = 0$，矩阵 $A$ 奇异不可逆。因此该齐次系统存在自由变量，包含无穷多非零解。`,
           ),
         );
       },

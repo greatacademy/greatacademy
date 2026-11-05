@@ -443,7 +443,10 @@ const numberLinesTo120 = earlyTopic(
           ["What number does the dot show?", "这个点表示什么数？"],
           mark,
           [mark - lo, lo + 10 - (mark - lo), mark + 10],
-          [`The dot is ${mark - lo} ${mark - lo === 1 ? "space" : "spaces"} past ${lo}, so it shows ${mark}.`, `这个点在 ${lo} 后面第 ${mark - lo} 格，所以表示 ${mark}。`],
+          [
+            `The dot is ${mark - lo} ${mark - lo === 1 ? "space" : "spaces"} past ${lo}, so it shows ${mark}.`,
+            `这个点在 ${lo} 后面第 ${mark - lo} 格，所以表示 ${mark}。`,
+          ],
           numberLineFigure(lo, lo + 10, 1, mark, false),
         );
       },

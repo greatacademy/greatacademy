@@ -1015,6 +1015,30 @@ const primitiveRoot = (p: number) => range(2, p - 1).find((g) => factorize(p - 1
 /** DH_PRIMES are primes for Diffie–Hellman exercises. */
 const DH_PRIMES = [11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97] as const;
 
+/** squaringWork shows g^e mod p by repeated squaring: the powers, then the product of those that make up e. */
+function squaringWork(g: number, e: number, p: number): { en: string; zh: string } {
+  const rows: string[] = [];
+  const parts: number[] = [];
+  const values: number[] = [];
+  let current = g % p;
+  for (let b = 1; b <= e; b *= 2) {
+    rows.push(`${g}${b === 1 ? "" : `^{${b}}`} \\equiv ${current}`);
+    if (Math.floor(e / b) % 2 === 1) {
+      parts.push(b);
+      values.push(current);
+    }
+    current = (current * current) % p;
+  }
+  const table = `$${rows.join(", \\; ")} \\pmod{${p}}$`;
+  if (values.length === 1) return { en: `Repeated squaring gives ${table}.`, zh: `反复平方得 ${table}。` };
+  const sum = parts.join(" + ");
+  const product = `$${values.join(" \\cdot ")} \\equiv ${modPow(g, e, p)}$`;
+  return {
+    en: `Repeated squaring gives ${table}. Since $${e} = ${sum}$, the result is ${product}.`,
+    zh: `反复平方得 ${table}。因为 $${e} = ${sum}$，结果为 ${product}。`,
+  };
+}
+
 /** theDiffieHellmanProtocol agrees on a shared key over an open channel. */
 export const theDiffieHellmanProtocol: TopicDef = {
   id: "the-diffie-hellman-protocol",
@@ -1040,6 +1064,7 @@ export const theDiffieHellmanProtocol: TopicDef = {
         const g = primitiveRoot(p);
         const a = rng.int(3, p - 2);
         const value = modPow(g, a, p);
+        const work = squaringWork(g, a, p);
         return numberProblem({
           prompt: t(
             `In Diffie–Hellman with $p = ${p}$ and $g = ${g}$, Alice's secret is $a = ${a}$. What value $A$ does she send?`,
@@ -1047,7 +1072,7 @@ export const theDiffieHellmanProtocol: TopicDef = {
           ),
           answer: value,
           wrong: [(g * a) % p, modPow(a, g, p), modPow(g, a - 1, p), modPow(g, a + 1, p)],
-          solution: t(`$A = ${g}^{${a}} \\bmod ${p} = ${value}$.`, `$A = ${g}^{${a}} \\bmod ${p} = ${value}$。`),
+          solution: t(`$A = ${g}^{${a}} \\bmod ${p}$. ${work.en}`, `$A = ${g}^{${a}} \\bmod ${p}$。${work.zh}`),
         });
       },
     },
@@ -1065,6 +1090,7 @@ export const theDiffieHellmanProtocol: TopicDef = {
         const b = rng.int(3, p - 2);
         const B = modPow(g, b, p);
         const value = modPow(B, a, p);
+        const work = squaringWork(B, a, p);
         return numberProblem({
           prompt: t(
             `In Diffie–Hellman with $p = ${p}$ and $g = ${g}$, Alice's secret is $a = ${a}$ and Bob sends $B = ${B}$. What is the shared key?`,
@@ -1073,8 +1099,8 @@ export const theDiffieHellmanProtocol: TopicDef = {
           answer: value,
           wrong: [modPow(g, a, p), modPow(g, a + b, p), (B * a) % p, modPow(a, B, p)],
           solution: t(
-            `Alice computes $B^a = ${B}^{${a}} \\bmod ${p} = ${value}$, which equals $g^{ab}$.`,
-            `爱丽丝计算 $B^a = ${B}^{${a}} \\bmod ${p} = ${value}$，它等于 $g^{ab}$。`,
+            `Alice computes $B^a = ${B}^{${a}} \\bmod ${p}$, which equals $g^{ab}$. ${work.en}`,
+            `爱丽丝计算 $B^a = ${B}^{${a}} \\bmod ${p}$，它等于 $g^{ab}$。${work.zh}`,
           ),
         });
       },

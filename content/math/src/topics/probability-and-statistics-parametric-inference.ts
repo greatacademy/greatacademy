@@ -56,8 +56,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Given the sample observations: $${listStr}$, calculate the sample mean $\\bar{x} = \\frac{1}{n} \\sum_{i=1}^n x_i$.`,
-              `已知样本观测值数据：$${listStr}$，计算样本均值 $\\bar{x} = \\frac{1}{n} \\sum_{i=1}^n x_i$。`,
+              `Given the sample observations: $${listStr}$, calculate the sample mean $\\bar{x}$.`,
+              `已知样本观测值数据：$${listStr}$，计算样本均值 $\\bar{x}$。`,
             ),
             answer: Q.of(sum, n),
             wrong: [Q.of(sum, n - 1), sum, Q.of(sum, n + 1)],
@@ -206,8 +206,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `Calculate the unbiased sample variance $s^2 = \\frac{1}{n - 1} \\sum_{i=1}^n (x_i - \\bar{x})^2$ for the sample dataset: $${listStr}$.`,
-              `计算样本数据集 $${listStr}$ 的无偏样本方差 $s^2 = \\frac{1}{n - 1} \\sum_{i=1}^n (x_i - \\bar{x})^2$。`,
+              `Calculate the unbiased sample variance $s^2$ for the sample dataset: $${listStr}$.`,
+              `计算样本数据集 $${listStr}$ 的无偏样本方差 $s^2$。`,
             ),
             answer: Q.of(ss, 2),
             wrong: [Q.of(ss, 3), ss, Q.of(ss, 4)],
@@ -366,8 +366,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `A sample of size $n = ${n}$ is randomly selected from a population with standard deviation $\\sigma = ${sigma}$. Find the standard error of the sample mean, $\\text{SE}(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}}$.`,
-              `从标准差为 $\\sigma = ${sigma}$ 的总体中随机抽取容量为 $n = ${n}$ 的样本。求样本均值的标准误差 $\\text{SE}(\\bar{X}) = \\frac{\\sigma}{\\sqrt{n}}$。`,
+              `A sample of size $n = ${n}$ is randomly selected from a population with standard deviation $\\sigma = ${sigma}$. Find the standard error of the sample mean.`,
+              `从标准差为 $\\sigma = ${sigma}$ 的总体中随机抽取容量为 $n = ${n}$ 的样本。求样本均值的标准误差。`,
             ),
             answer: Q.of(sigma, k),
             wrong: [Q.of(sigma, n), sigma * k, Q.of(sigma * sigma, n)],
@@ -942,8 +942,8 @@ export const probabilityAndStatisticsParametricInferenceTopics: TopicDef[] = [
 
           return numberProblem({
             prompt: t(
-              `In a sample of $n = ${n}$ tested components, exactly $x = ${x}$ met all quality specifications. Find the point estimate of the population proportion $\\hat{p} = \\frac{x}{n}$.`,
-              `在抽检的 $n = ${n}$ 个零部件中，恰好有 $x = ${x}$ 个符合全部质量规范。求总体合格比例的点估计值 $\\hat{p} = \\frac{x}{n}$。`,
+              `In a sample of $n = ${n}$ tested components, exactly $x = ${x}$ met all quality specifications. Find the point estimate of the population proportion.`,
+              `在抽检的 $n = ${n}$ 个零部件中，恰好有 $x = ${x}$ 个符合全部质量规范。求总体合格比例的点估计值。`,
             ),
             answer: Q.of(x, n),
             wrong: [Q.of(n - x, n), Q.of(x, n - x), Q.of(n, x)],

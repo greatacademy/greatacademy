@@ -957,7 +957,9 @@ export const changeOfVariablesInQuadraticForms: TopicDef = {
         const p11 = rng.nonZero(-2, 2);
         const p12 = rng.int(-2, 2);
         const p21 = rng.int(-2, 2);
-        const p22 = rng.nonZero(-2, 2);
+        let p22 = rng.nonZero(-2, 2);
+        // The change of variables must be invertible.
+        if (p11 * p22 === p12 * p21) p22 = p22 === 2 ? 1 : p22 + 1 || 1;
 
         const b11 = d1 * p11 * p11 + d2 * p21 * p21;
         const b12 = d1 * p11 * p12 + d2 * p21 * p22;
@@ -1141,20 +1143,19 @@ export const canonicalFormOfAQuadraticFormUsingLagrangesMethod: TopicDef = {
       generate(rng: Rng): Problem {
         const k = rng.nonZero(-9, 9);
         const c = rng.int(1, 3);
-        const askFirst = rng.int(0, 1) === 0;
         const d1 = k;
         const d2 = -k * c * c;
         const cy = c === 1 ? "y_2" : `${c}y_2`;
         return numberProblem({
           prompt: t(
-            `Substitute $x_1 = y_1 + ${cy}$, $x_2 = y_1 - ${cy}$ into $Q = ${formatFirstTerm(k, "x_1x_2")}$ to get $d_1y_1^2 + d_2y_2^2$. Find $${askFirst ? "d_1" : "d_2"}$.`,
-            `把 $x_1 = y_1 + ${cy}$，$x_2 = y_1 - ${cy}$ 代入 $Q = ${formatFirstTerm(k, "x_1x_2")}$，得到 $d_1y_1^2 + d_2y_2^2$。求 $${askFirst ? "d_1" : "d_2"}$。`,
+            `Substitute $x_1 = y_1 + ${cy}$, $x_2 = y_1 - ${cy}$ into $Q = ${formatFirstTerm(k, "x_1x_2")}$ to get $d_1y_1^2 + d_2y_2^2$. Find $d_2$.`,
+            `把 $x_1 = y_1 + ${cy}$，$x_2 = y_1 - ${cy}$ 代入 $Q = ${formatFirstTerm(k, "x_1x_2")}$，得到 $d_1y_1^2 + d_2y_2^2$。求 $d_2$。`,
           ),
-          answer: askFirst ? d1 : d2,
-          wrong: askFirst ? [-k, 2 * k, k * c * c] : [k * c * c, -k * c, -k],
+          answer: d2,
+          wrong: [k * c * c, -2 * k * c, k],
           solution: t(
-            `$(y_1 + ${cy})(y_1 - ${cy}) = y_1^2 - ${c * c === 1 ? "" : c * c}y_2^2$, so $Q = ${formatDiagonalForm(d1, d2)}$ and $${askFirst ? "d_1" : "d_2"} = ${askFirst ? d1 : d2}$.`,
-            `$(y_1 + ${cy})(y_1 - ${cy}) = y_1^2 - ${c * c === 1 ? "" : c * c}y_2^2$，所以 $Q = ${formatDiagonalForm(d1, d2)}$，$${askFirst ? "d_1" : "d_2"} = ${askFirst ? d1 : d2}$。`,
+            `$(y_1 + ${cy})(y_1 - ${cy}) = y_1^2 - ${c * c === 1 ? "" : c * c}y_2^2$, so $Q = ${formatDiagonalForm(d1, d2)}$ and $d_2 = ${d2}$.`,
+            `$(y_1 + ${cy})(y_1 - ${cy}) = y_1^2 - ${c * c === 1 ? "" : c * c}y_2^2$，所以 $Q = ${formatDiagonalForm(d1, d2)}$，$d_2 = ${d2}$。`,
           ),
         });
       },
@@ -1635,10 +1636,7 @@ export const classifyingQuadraticCurves: TopicDef = {
         const rhs = rng.int(1, 9);
         return oneOf(
           rng,
-          t(
-            `Assuming it is non-degenerate, what kind of curve is $${lhs} = ${rhs}$?`,
-            `假设曲线非退化，$${lhs} = ${rhs}$ 是哪种曲线？`,
-          ),
+          t(`Assuming it is non-degenerate, what kind of curve is $${lhs} = ${rhs}$?`, `假设曲线非退化，$${lhs} = ${rhs}$ 是哪种曲线？`),
           right,
           [E, H, Pa].filter((o) => o !== right),
           t(
@@ -1948,21 +1946,30 @@ export const computingTheSingularValuesOfAMatrix: TopicDef = {
         "计算 $A$ 的奇异值时，先求 $n \\times n$ 对称矩阵 $A^T A$，求其降序特征值 $\\lambda_1 \\ge \\lambda_2 \\ge \\dots \\ge 0$，再取平方根 $\\sigma_i = \\sqrt{\\lambda_i}$。",
       ),
       generate: (rng: Rng): Problem => {
-        const c = rng.int(2, 12);
-        const d = rng.int(1, c - 1);
+        // The columns are orthogonal multiples of a rotation, so that the values are not read off the entries.
+        const [p, q, h] = rng.pick([
+          [3, 4, 5],
+          [4, 3, 5],
+          [5, 12, 13],
+          [12, 5, 13],
+        ] as const);
+        const big = rng.int(2, 5);
+        const small = rng.int(1, big - 1);
         const flip = rng.bool();
-        const a11 = flip ? d : c;
-        const a22 = flip ? c : d;
+        const left = flip ? small : big;
+        const right = flip ? big : small;
+        const c = h * big;
+        const d = h * small;
+        const a11 = h * left;
+        const a22 = h * right;
+        const shown: Mat2 = [
+          [p * left, -q * right],
+          [q * left, p * right],
+        ];
 
         const prompt = t(
-          `Compute all singular values of the matrix\n\n$$A = ${mat2Latex([
-            [a11, 0],
-            [0, a22],
-          ])}.$$\n\nEnter the singular values separated by commas.`,
-          `计算矩阵 $A = ${mat2Latex([
-            [a11, 0],
-            [0, a22],
-          ])}$ 的所有奇异值。多个奇异值用逗号隔开。`,
+          `Compute all singular values of the matrix\n\n$$A = ${mat2Latex(shown)}.$$\n\nEnter the singular values separated by commas.`,
+          `计算矩阵 $A = ${mat2Latex(shown)}$ 的所有奇异值。多个奇异值用逗号隔开。`,
         );
 
         const solution = t(
@@ -1980,7 +1987,7 @@ export const computingTheSingularValuesOfAMatrix: TopicDef = {
           prompt,
           values: [String(c), String(d)],
           solution,
-          wrong: [[String(c * c), String(d * d)], [String(c), String(c + d)], [String(d)], [String(c)]],
+          wrong: [[String(c * c), String(d * d)], [String(c), String(c + d)], [String(p * left), String(p * right)], [String(c)]],
         });
       },
     },
@@ -2192,7 +2199,9 @@ export const singularValueDecompositionOf2x2MatricesWithZeroOrRepeatedEigenvalue
       ),
       generate: (rng: Rng): Problem => {
         const u1 = rng.nonZero(-5, 5);
-        const u2 = rng.nonZero(-5, 5);
+        // Equal sizes would make the option (u1, -u2) orthogonal to the first column too.
+        let u2 = rng.nonZero(-5, 5);
+        while (Math.abs(u2) === Math.abs(u1)) u2 = rng.nonZero(-5, 5);
         const hypSq = u1 * u1 + u2 * u2;
 
         const prompt = t(
@@ -2277,20 +2286,31 @@ export const singularValueDecompositionOfLargerMatrices: TopicDef = {
         "任意秩为 $r$ 的矩阵 $A$ 均可展开为 $r$ 个秩 1 矩阵之和：$A = \\sum_{i=1}^r \\sigma_i u_i v_i^T$。根据 Eckart-Young-Mirsky 定理，在 Frobenius 范数和谱范数下，$A$ 的最佳秩 $k$ 逼近为截断和 $A_k = \\sum_{i=1}^k \\sigma_i u_i v_i^T$。",
       ),
       generate: (rng: Rng): Problem => {
-        const s1 = rng.int(2, 6);
-        const u1 = rng.nonZero(-3, 3);
-        const u2 = rng.nonZero(-3, 3);
-        const v1 = rng.nonZero(-3, 3);
-        const v2 = rng.nonZero(-3, 3);
+        // Singular vectors have length one, so both are written as a fifth of a (3, 4) vector.
+        const scale = rng.int(2, 5);
+        const s1 = 25 * scale;
+        const unit: [number, number][] = [
+          [3, 4],
+          [4, 3],
+          [3, -4],
+          [4, -3],
+          [-3, 4],
+          [-4, 3],
+          [-3, -4],
+          [-4, -3],
+        ];
+        const [u1, u2] = rng.pick(unit);
+        // Parallel vectors would give a symmetric result, which is its own transpose.
+        const [v1, v2] = rng.pick(unit.filter(([p, q]) => u1 * q !== u2 * p));
 
-        const a11 = s1 * u1 * v1;
-        const a12 = s1 * u1 * v2;
-        const a21 = s1 * u2 * v1;
-        const a22 = s1 * u2 * v2;
+        const a11 = scale * u1 * v1;
+        const a12 = scale * u1 * v2;
+        const a21 = scale * u2 * v1;
+        const a22 = scale * u2 * v2;
 
         const prompt = t(
-          `In the outer product expansion of the SVD of a matrix $A$, the leading term is $A_1 = \\sigma_1 u_1 v_1^T$. Given $\\sigma_1 = ${s1}$, $u_1 = ${vec2Latex([u1, u2])}$, and $v_1 = ${vec2Latex([v1, v2])}$, calculate the rank-1 matrix $A_1$.`,
-          `在矩阵 $A$ 的 SVD 外积展开式中，第一项为最佳秩 1 逼近 $A_1 = \\sigma_1 u_1 v_1^T$。已知 $\\sigma_1 = ${s1}$，$u_1 = ${vec2Latex([u1, u2])}$，$v_1 = ${vec2Latex([v1, v2])}$，计算该秩 1 矩阵 $A_1$。`,
+          `In the outer product expansion of the SVD of a matrix $A$, the leading term is $A_1 = \\sigma_1 u_1 v_1^T$. Given $\\sigma_1 = ${s1}$, $u_1 = \\frac{1}{5}${vec2Latex([u1, u2])}$, and $v_1 = \\frac{1}{5}${vec2Latex([v1, v2])}$, calculate the rank-1 matrix $A_1$.`,
+          `在矩阵 $A$ 的 SVD 外积展开式中，第一项为最佳秩 1 逼近 $A_1 = \\sigma_1 u_1 v_1^T$。已知 $\\sigma_1 = ${s1}$，$u_1 = \\frac{1}{5}${vec2Latex([u1, u2])}$，$v_1 = \\frac{1}{5}${vec2Latex([v1, v2])}$，计算该秩 1 矩阵 $A_1$。`,
         );
 
         const right = t(
@@ -2347,17 +2367,21 @@ export const singularValueDecompositionOfLargerMatrices: TopicDef = {
         ];
 
         const solution = t(
-          `Compute the outer product $u_1 v_1^T = ${vec2Latex([u1, u2])} \\begin{pmatrix} ${v1} & ${v2} \\end{pmatrix} = ${mat2Latex([
-            [u1 * v1, u1 * v2],
-            [u2 * v1, u2 * v2],
-          ])}$. Multiplying by $\\sigma_1 = ${s1}$ gives $A_1 = ${mat2Latex([
+          `Compute the outer product $u_1 v_1^T = \\frac{1}{25}${vec2Latex([u1, u2])} \\begin{pmatrix} ${v1} & ${v2} \\end{pmatrix} = \\frac{1}{25}${mat2Latex(
+            [
+              [u1 * v1, u1 * v2],
+              [u2 * v1, u2 * v2],
+            ],
+          )}$. Multiplying by $\\sigma_1 = ${s1}$ gives $A_1 = ${mat2Latex([
             [a11, a12],
             [a21, a22],
           ])}$.`,
-          `计算外积 $u_1 v_1^T = ${vec2Latex([u1, u2])} \\begin{pmatrix} ${v1} & ${v2} \\end{pmatrix} = ${mat2Latex([
-            [u1 * v1, u1 * v2],
-            [u2 * v1, u2 * v2],
-          ])}$。乘上奇异值 $\\sigma_1 = ${s1}$ 即得 $A_1 = ${mat2Latex([
+          `计算外积 $u_1 v_1^T = \\frac{1}{25}${vec2Latex([u1, u2])} \\begin{pmatrix} ${v1} & ${v2} \\end{pmatrix} = \\frac{1}{25}${mat2Latex(
+            [
+              [u1 * v1, u1 * v2],
+              [u2 * v1, u2 * v2],
+            ],
+          )}$。乘上奇异值 $\\sigma_1 = ${s1}$ 即得 $A_1 = ${mat2Latex([
             [a11, a12],
             [a21, a22],
           ])}$。`,
@@ -2427,8 +2451,9 @@ export const singularValueDecompositionAndThePseudoinverseMatrix: TopicDef = {
         "若矩阵 $A$ 的 SVD 分解为 $A = U \\Sigma V^T$，则其摩尔-彭罗斯伪逆为 $A^+ = V \\Sigma^+ U^T$。其中 $\\Sigma^+$ 是将 $\\Sigma$ 的每个非零奇异值 $\\sigma_i$ 替换为其倒数 $\\frac{1}{\\sigma_i}$ 并转置后得到的矩阵。",
       ),
       generate: (rng: Rng): Problem => {
-        const s1 = rng.int(2, 8);
-        const s2 = rng.int(2, 8);
+        // Singular values are listed from largest to smallest.
+        const s1 = rng.int(3, 10);
+        const s2 = rng.int(2, s1 - 1);
 
         const prompt = t(
           `Let $\\Sigma = ${mat2Latex([

@@ -181,8 +181,8 @@ export const extendingTheLawOfTotalProbability: TopicDef = {
       id: "total-probability-over-a-partition",
       title: t("Total probability over a partition", "对划分求全概率"),
       explanation: t(
-        "When the outcomes split into separate cases that cover everything, the probability of an event is the sum over the cases of the case probability times the chance of the event in that case. Machines A, B, C make $50\\%$, $30\\%$, $20\\%$ of the parts, with $2\\%$, $3\\%$, $5\\%$ defective: $P(D) = 0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 + 0.2 \\cdot 0.05 = 0.029$.",
-        "当结果被分成互不重叠且覆盖全部的情形时，事件的概率等于各情形的概率乘以该情形下事件发生的概率，再全部相加。机器 A、B、C 分别生产 $50\\%$、$30\\%$、$20\\%$ 的零件，次品率为 $2\\%$、$3\\%$、$5\\%$：$P(D) = 0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 + 0.2 \\cdot 0.05 = 0.029$。",
+        "When the outcomes split into separate cases that cover everything, the probability of an event is the sum over the cases of the case probability times the chance of the event in that case. Machines A, B, C make $50\\%$, $30\\%$, $20\\%$ of the parts, with $2\\%$, $3\\%$, $5\\%$ defective. Writing $F$ for a defective part: $P(F) = 0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 + 0.2 \\cdot 0.05 = 0.029$.",
+        "当结果被分成互不重叠且覆盖全部的情形时，事件的概率等于各情形的概率乘以该情形下事件发生的概率，再全部相加。机器 A、B、C 分别生产 $50\\%$、$30\\%$、$20\\%$ 的零件，次品率为 $2\\%$、$3\\%$、$5\\%$。记 $F$ 为次品：$P(F) = 0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 + 0.2 \\cdot 0.05 = 0.029$。",
       ),
       generate(rng) {
         const m = randomMachines(rng);
@@ -204,7 +204,10 @@ export const extendingTheLawOfTotalProbability: TopicDef = {
             pct(m.rates.reduce((a, b) => a + b, 0)),
             value.mul(Q.of(10)),
           ],
-          solution: t(`$P(D) = ${terms} = ${dec(value)}$.`, `$P(D) = ${terms} = ${dec(value)}$。`),
+          solution: t(
+            `Write $F$ for a defective part. $P(F) = ${terms} = ${dec(value)}$.`,
+            `记 $F$ 为次品。$P(F) = ${terms} = ${dec(value)}$。`,
+          ),
         });
       },
     },
@@ -212,8 +215,8 @@ export const extendingTheLawOfTotalProbability: TopicDef = {
       id: "a-missing-conditional-probability",
       title: t("A missing conditional probability", "求缺失的条件概率"),
       explanation: t(
-        "If the total probability is known, subtract the contributions of the known cases to find the contribution of the missing one, then divide by its case probability. If $P(D) = 0.029$ and machines A and B contribute $0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 = 0.019$, then C contributes $0.01 = 0.2 \\cdot P(D \\mid C)$, so $P(D \\mid C) = 0.05$.",
-        "如果已知总概率，就减去已知情形的贡献，得到缺少的那个情形的贡献，再除以该情形的概率。若 $P(D) = 0.029$，机器 A、B 贡献 $0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 = 0.019$，则 C 贡献 $0.01 = 0.2 \\cdot P(D \\mid C)$，所以 $P(D \\mid C) = 0.05$。",
+        "If the total probability is known, subtract the contributions of the known cases to find the contribution of the missing one, then divide by its case probability. Write $F$ for a defective part. If $P(F) = 0.029$ and machines A and B contribute $0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 = 0.019$, then C contributes $0.01 = 0.2 \\cdot P(F \\mid C)$, so $P(F \\mid C) = 0.05$.",
+        "如果已知总概率，就减去已知情形的贡献，得到缺少的那个情形的贡献，再除以该情形的概率。记 $F$ 为次品。若 $P(F) = 0.029$，机器 A、B 贡献 $0.5 \\cdot 0.02 + 0.3 \\cdot 0.03 = 0.019$，则 C 贡献 $0.01 = 0.2 \\cdot P(F \\mid C)$，所以 $P(F \\mid C) = 0.05$。",
       ),
       generate(rng) {
         const m = randomMachines(rng);
@@ -232,8 +235,8 @@ export const extendingTheLawOfTotalProbability: TopicDef = {
           form: "decimal",
           wrong: [total.sub(rest), total.div(pct(m.shares[k]!)), total],
           solution: t(
-            `The other machines contribute $${dec(rest)}$, so $${dec(pct(m.shares[k]!))} \\cdot P(D \\mid ${last}) = ${dec(total)} - ${dec(rest)} = ${dec(total.sub(rest))}$, and $P(D \\mid ${last}) = ${dec(value)}$.`,
-            `其他机器贡献 $${dec(rest)}$，所以 $${dec(pct(m.shares[k]!))} \\cdot P(D \\mid ${last}) = ${dec(total)} - ${dec(rest)} = ${dec(total.sub(rest))}$，$P(D \\mid ${last}) = ${dec(value)}$。`,
+            `Write $F$ for a defective part. The other machines contribute $${dec(rest)}$, so $${dec(pct(m.shares[k]!))} \\cdot P(F \\mid ${last}) = ${dec(total)} - ${dec(rest)} = ${dec(total.sub(rest))}$, and $P(F \\mid ${last}) = ${dec(value)}$.`,
+            `记 $F$ 为次品。其他机器贡献 $${dec(rest)}$，所以 $${dec(pct(m.shares[k]!))} \\cdot P(F \\mid ${last}) = ${dec(total)} - ${dec(rest)} = ${dec(total.sub(rest))}$，$P(F \\mid ${last}) = ${dec(value)}$。`,
           ),
         });
       },
@@ -258,8 +261,8 @@ export const extendingBayesTheorem: TopicDef = {
       id: "bayes-theorem-over-a-partition",
       title: t("Bayes' theorem over a partition", "对划分使用贝叶斯定理"),
       explanation: t(
-        "The denominator is the total probability of the evidence over all cases, and the numerator is the one path through the case you are asking about. With shares $50\\%$, $30\\%$, $20\\%$ and defect rates $2\\%$, $3\\%$, $5\\%$: $P(D) = 0.029$, so $P(C \\mid D) = \\frac{0.2 \\cdot 0.05}{0.029} = \\frac{10}{29}$.",
-        "分母是证据在所有情形下的总概率，分子是经过所问情形的那一条路径的概率。份额为 $50\\%$、$30\\%$、$20\\%$，次品率为 $2\\%$、$3\\%$、$5\\%$：$P(D) = 0.029$，所以 $P(C \\mid D) = \\frac{0.2 \\cdot 0.05}{0.029} = \\frac{10}{29}$。",
+        "The denominator is the total probability of the evidence over all cases, and the numerator is the one path through the case you are asking about. With shares $50\\%$, $30\\%$, $20\\%$ and defect rates $2\\%$, $3\\%$, $5\\%$. Writing $F$ for a defective part: $P(F) = 0.029$, so $P(C \\mid F) = \\frac{0.2 \\cdot 0.05}{0.029} = \\frac{10}{29}$.",
+        "分母是证据在所有情形下的总概率，分子是经过所问情形的那一条路径的概率。份额为 $50\\%$、$30\\%$、$20\\%$，次品率为 $2\\%$、$3\\%$、$5\\%$。记 $F$ 为次品：$P(F) = 0.029$，所以 $P(C \\mid F) = \\frac{0.2 \\cdot 0.05}{0.029} = \\frac{10}{29}$。",
       ),
       generate(rng) {
         const m = randomMachines(rng);
@@ -284,8 +287,8 @@ export const extendingBayesTheorem: TopicDef = {
             ),
           ],
           solution: t(
-            `$P(D) = ${dec(total)}$, so $P(${name} \\mid D) = \\frac{${dec(pct(m.shares[i]!))} \\cdot ${dec(pct(m.rates[i]!))}}{${dec(total)}} = ${value.toLatex()}$.`,
-            `$P(D) = ${dec(total)}$，所以 $P(${name} \\mid D) = \\frac{${dec(pct(m.shares[i]!))} \\cdot ${dec(pct(m.rates[i]!))}}{${dec(total)}} = ${value.toLatex()}$。`,
+            `Write $F$ for a defective part. $P(F) = ${dec(total)}$, so $P(${name} \\mid F) = \\frac{${dec(pct(m.shares[i]!))} \\cdot ${dec(pct(m.rates[i]!))}}{${dec(total)}} = ${value.toLatex()}$.`,
+            `记 $F$ 为次品。$P(F) = ${dec(total)}$，所以 $P(${name} \\mid F) = \\frac{${dec(pct(m.shares[i]!))} \\cdot ${dec(pct(m.rates[i]!))}}{${dec(total)}} = ${value.toLatex()}$。`,
           ),
         });
       },

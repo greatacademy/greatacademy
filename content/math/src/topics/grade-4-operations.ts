@@ -1920,7 +1920,11 @@ export const understandingRemaindersUsingModels: TopicDef = {
               `共有 $${n}$ 个圆片。分成 $${q}$ 组，每组 $${d}$ 个，用去 $${d * q}$ 个，还剩 $${n} - ${d * q} = ${r}$ 个。`,
             ),
           }),
-          figure: figure(rowsOfTen(n), `${n} counters in rows of ten.`, `${n} 个圆片，每行十个。`),
+          figure: figure(
+            rowsOfTen(n),
+            `${Math.floor(n / 10)} full rows of ten counters and ${n % 10} more counters.`,
+            `${Math.floor(n / 10)} 个满行的圆片，每行十个，另有 ${n % 10} 个。`,
+          ),
         };
       },
     },

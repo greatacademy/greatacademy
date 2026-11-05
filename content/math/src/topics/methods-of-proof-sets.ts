@@ -517,15 +517,16 @@ function inclusion(rng: Rng): Inclusion {
     const b = a + rng.int(-3, 3);
     const s = rng.int(1, 6);
     const value = Math.abs(a - b) + r <= s;
-    const show = (c: number, d: number) => `\\{x \\in \\mathbb{R} : |x ${c < 0 ? "+" : "-"} ${Math.abs(c)}| < ${d}\\}`;
+    const gap = (c: number) => (c === 0 ? "|x|" : `|x ${c < 0 ? "+" : "-"} ${Math.abs(c)}|`);
+    const show = (c: number, d: number) => `\\{x \\in \\mathbb{R} : ${gap(c)} < ${d}\\}`;
     return {
       s: show(a, r),
       t: show(b, s),
       value,
       why: value
         ? t(
-            `If $|x - (${a})| < ${r}$, then $|x - (${b})| \\le |x - (${a})| + |${a - b}| < ${r} + ${Math.abs(a - b)} \\le ${s}$.`,
-            `若 $|x - (${a})| < ${r}$，则 $|x - (${b})| \\le |x - (${a})| + |${a - b}| < ${r} + ${Math.abs(a - b)} \\le ${s}$。`,
+            `If $${gap(a)} < ${r}$, then $${gap(b)} \\le ${gap(a)} + |${a - b}| < ${r} + ${Math.abs(a - b)} \\le ${s}$.`,
+            `若 $${gap(a)} < ${r}$，则 $${gap(b)} \\le ${gap(a)} + |${a - b}| < ${r} + ${Math.abs(a - b)} \\le ${s}$。`,
           )
         : t(
             `The first set is $(${a - r}, ${a + r})$ and the second is $(${b - s}, ${b + s})$; the first sticks out of the second.`,

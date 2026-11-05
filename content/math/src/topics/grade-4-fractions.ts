@@ -123,8 +123,8 @@ export function barFigure(d: number, shaded: number, count = 1): Figure {
   return {
     svg: barsSvg(d, shaded, count),
     alt: t(
-      `${count === 1 ? "A bar" : `${count} equal bars`}, each cut into ${d} equal parts; ${shaded} part${shaded === 1 ? " is" : "s are"} shaded.`,
-      `${count === 1 ? "一个长条" : `${count} 个同样的长条`}，每个都平均分成 ${d} 份，其中 ${shaded} 份涂了颜色。`,
+      `${count === 1 ? "A bar cut" : `${count} equal bars, each cut`} into ${d} equal parts; ${shaded} part${shaded === 1 ? " is" : "s are"} shaded.`,
+      `${count === 1 ? "一个长条，平均分成" : `${count} 个同样的长条，每个都平均分成`} ${d} 份，其中 ${shaded} 份涂了颜色。`,
     ),
   };
 }

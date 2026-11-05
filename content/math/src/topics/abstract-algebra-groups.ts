@@ -1695,10 +1695,7 @@ export const abelianGroups: TopicDef = {
             reason: t("Multiplication modulo $n$ is commutative.", "模 $n$ 乘法可交换。"),
           },
           {
-            prompt: t(
-              `Is $GL(${size}, \\mathbb{Z}_{${p}})$ abelian?`,
-              `$GL(${size}, \\mathbb{Z}_{${p}})$ 是阿贝尔群吗？`,
-            ),
+            prompt: t(`Is $GL(${size}, \\mathbb{Z}_{${p}})$ abelian?`, `$GL(${size}, \\mathbb{Z}_{${p}})$ 是阿贝尔群吗？`),
             holds: false,
             reason: t(
               "Elementary matrices that add row 1 to row 2 and row 2 to row 1 do not commute.",
