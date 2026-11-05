@@ -1,5 +1,5 @@
 import type { Checker, Json, Text, Verdict } from "@ga/content";
-import { t } from "@ga/content";
+import { plottedPoints, t } from "@ga/content";
 
 import { equivalent, evaluate, type Poly, toPoly } from "./algebra.ts";
 import {
@@ -78,6 +78,7 @@ const feedback = {
   factorCompletely: t("Factor completely.", "请彻底分解因式。"),
   commonFactor: t("Factor out the greatest common factor of the coefficients.", "请提出各项系数的最大公因数。"),
   point: t("Write the ordered pair or vector, such as $(3, -2)$.", "请写出有序数对或向量，例如 $(3, -2)$。"),
+  twoPoints: t("A line needs two different points.", "一条直线需要两个不同的点。"),
   solutions: t(
     "List the solutions separated by commas, such as $x = 2, x = -5$, or type none if there are none.",
     "请用逗号分隔列出所有解，例如 $x = 2, x = -5$；如果无解，请输入 none。",
@@ -792,6 +793,49 @@ export const pointChecker: Checker = {
   },
 };
 
+/** plottedSet is the distinct points of a response to a plot, each written the same way, or undefined if it is not one. */
+function plottedSet(response: string): readonly string[] | undefined {
+  const points = plottedPoints(response);
+  return points && [...new Set(points.map(([x, y]) => `${x},${y}`))].sort();
+}
+
+/**
+ * pointsChecker accepts exactly the points of expected.points, in any order; each is a pair of numbers. It answers responses
+ * to a plot of several points.
+ */
+export const pointsChecker: Checker = {
+  id: "points",
+  check(expected, response) {
+    const e = obj(expected);
+    if (!Array.isArray(e.points)) throw new TypeError("expected.points must be an array of pairs");
+    const target = (e.points as readonly (readonly [number, number])[]).map(([x, y]) => `${x},${y}`).sort();
+    const given = plottedSet(response);
+    if (!given) return wrong(feedback.point);
+    return given.length === target.length && given.every((p, i) => p === target[i]) ? { correct: true } : wrong();
+  },
+  same(_expected, response, mistake) {
+    const [a, b] = [plottedSet(response), plottedSet(mistake)];
+    return !!a && !!b && a.join(";") === b.join(";");
+  },
+};
+
+/**
+ * lineThroughChecker accepts two different points on the line a·x + b·y = c, given by expected.a, expected.b and expected.c.
+ * It answers a plot that draws a line: any two of its points fix it.
+ */
+export const lineThroughChecker: Checker = {
+  id: "line-through",
+  check(expected, response) {
+    const e = obj(expected);
+    const [a, b, c] = [e.a, e.b, e.c];
+    if (typeof a !== "number" || typeof b !== "number" || typeof c !== "number") throw new TypeError("expected.a, b and c must be numbers");
+    const given = plottedPoints(response);
+    if (given?.length !== 2) return wrong(feedback.point);
+    if (given[0]![0] === given[1]![0] && given[0]![1] === given[1]![1]) return wrong(feedback.twoPoints);
+    return given.every(([x, y]) => Math.abs(a * x + b * y - c) < 1e-9) ? { correct: true } : wrong();
+  },
+};
+
 /** proportional tells whether two polynomials are nonzero multiples of each other. */
 function proportional(a: Poly, b: Poly): boolean {
   if (a.size === 0 || a.size !== b.size) return false;
@@ -960,6 +1004,8 @@ export const mathCheckers: readonly Checker[] = [
   solutionsChecker,
   intervalChecker,
   pointChecker,
+  pointsChecker,
+  lineThroughChecker,
   equationChecker,
   factoredChecker,
 ];

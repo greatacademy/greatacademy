@@ -2,6 +2,8 @@
 // docs/content.md §4. SVG clip paths are not allowed in figures, so every
 // curve, line and region is clipped to the view here.
 
+import type { PlotGrid } from "@ga/content";
+
 import { type Compass, type Point, type Tone, toneClass } from "./figures.ts";
 
 /** PlaneView is the visible window of the coordinate plane, with grid lines every step and numbers every labelEvery grid lines. */
@@ -105,6 +107,12 @@ export type PlaneMark =
 
 const size = 260;
 const pad = 22;
+
+/** planeGrid gives where a view's coordinates lie in its drawing, so that points can be marked on it; step is the distance between such points, one by default. */
+export function planeGrid(view: PlaneView, step = 1): PlotGrid {
+  const { xMin, xMax, yMin, yMax } = view;
+  return { xMin, xMax, yMin, yMax, step, left: pad, top: pad, scale: Math.min(size / (xMax - xMin), size / (yMax - yMin)) };
+}
 const round = (x: number) => Math.round(x * 100) / 100;
 
 const offsets: Record<Compass, Point> = {

@@ -5,9 +5,11 @@ import {
   expressionChecker,
   functionChecker,
   intervalChecker,
+  lineThroughChecker,
   mathCheckers,
   numberChecker,
   pointChecker,
+  pointsChecker,
   scientificChecker,
   solutionsChecker,
 } from "./checkers.ts";
@@ -919,5 +921,49 @@ describe("solutionsChecker.same", () => {
   it("leaves other sets and the answer alone", () => {
     expect(registry.judge(p, "x = 3").feedback?.en).not.toBe("signs");
     expect(registry.judge(p, "x = 3, x = -2").correct).toBe(true);
+  });
+});
+
+describe("pointsChecker", () => {
+  const expected = {
+    points: [
+      [1, 2],
+      [-3, 0.5],
+    ],
+  };
+
+  it("accepts the points in any order", () => {
+    expect(pointsChecker.check(expected, "(1, 2); (-3, 0.5)").correct).toBe(true);
+    expect(pointsChecker.check(expected, "(-3, 0.5); (1, 2)").correct).toBe(true);
+  });
+
+  it("rejects missing, repeated or other points", () => {
+    expect(pointsChecker.check(expected, "(1, 2)").correct).toBe(false);
+    expect(pointsChecker.check(expected, "(1, 2); (1, 2)").correct).toBe(false);
+    expect(pointsChecker.check(expected, "(1, 2); (3, 0.5)").correct).toBe(false);
+    expect(pointsChecker.check(expected, "nonsense").correct).toBe(false);
+  });
+
+  it("takes a listed mistake in any order", () => {
+    expect(pointsChecker.same?.(expected, "(2, 1); (0, 3)", "(0, 3); (2, 1)")).toBe(true);
+    expect(pointsChecker.same?.(expected, "(2, 1); (0, 3)", "(0, 3); (2, 2)")).toBe(false);
+  });
+});
+
+describe("lineThroughChecker", () => {
+  // y = 2x + 1
+  const expected = { a: 2, b: -1, c: -1 };
+
+  it("accepts any two different points of the line", () => {
+    expect(lineThroughChecker.check(expected, "(0, 1); (1, 3)").correct).toBe(true);
+    expect(lineThroughChecker.check(expected, "(-2, -3); (2, 5)").correct).toBe(true);
+  });
+
+  it("rejects a point off the line, a repeated point and a single point", () => {
+    expect(lineThroughChecker.check(expected, "(0, 1); (1, 4)").correct).toBe(false);
+    const same = lineThroughChecker.check(expected, "(0, 1); (0, 1)");
+    expect(same.correct).toBe(false);
+    expect(same.feedback).toBeDefined();
+    expect(lineThroughChecker.check(expected, "(0, 1)").correct).toBe(false);
   });
 });

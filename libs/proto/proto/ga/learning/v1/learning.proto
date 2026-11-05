@@ -265,6 +265,7 @@ message Input {
     ChoiceInput choice = 1;
     MathInput math = 2;
     TextInput text = 3;
+    PlotInput plot = 4;
   }
 }
 
@@ -283,6 +284,23 @@ message MathInput {
 }
 
 message TextInput {}
+
+// PlotInput: points are marked on the problem's figure. The response lists them as "(x, y)", joined by "; ".
+message PlotInput {
+  double x_min = 1;
+  double x_max = 2;
+  double y_min = 3;
+  double y_max = 4;
+  // step is the distance between the points that can be marked.
+  double step = 5;
+  // left and top are the position in the figure's viewBox of the corner (x_min, y_max).
+  double left = 6;
+  double top = 7;
+  // scale is the length in the viewBox of one unit along either axis.
+  double scale = 8;
+  // points is how many points to mark.
+  int32 points = 9;
+}
 
 message SubmitAnswerRequest {
   string session_id = 1;

@@ -866,6 +866,12 @@ export declare type Input = Message<"ga.learning.v1.Input"> & {
      */
     value: TextInput;
     case: "text";
+  } | {
+    /**
+     * @generated from field: ga.learning.v1.PlotInput plot = 4;
+     */
+    value: PlotInput;
+    case: "plot";
   } | { case: undefined; value?: undefined };
 };
 
@@ -936,6 +942,72 @@ export declare type TextInput = Message<"ga.learning.v1.TextInput"> & {
  * Use `create(TextInputSchema)` to create a new message.
  */
 export declare const TextInputSchema: GenMessage<TextInput>;
+
+/**
+ * PlotInput: points are marked on the problem's figure. The response lists them as "(x, y)", joined by "; ".
+ *
+ * @generated from message ga.learning.v1.PlotInput
+ */
+export declare type PlotInput = Message<"ga.learning.v1.PlotInput"> & {
+  /**
+   * @generated from field: double x_min = 1;
+   */
+  xMin: number;
+
+  /**
+   * @generated from field: double x_max = 2;
+   */
+  xMax: number;
+
+  /**
+   * @generated from field: double y_min = 3;
+   */
+  yMin: number;
+
+  /**
+   * @generated from field: double y_max = 4;
+   */
+  yMax: number;
+
+  /**
+   * step is the distance between the points that can be marked.
+   *
+   * @generated from field: double step = 5;
+   */
+  step: number;
+
+  /**
+   * left and top are the position in the figure's viewBox of the corner (x_min, y_max).
+   *
+   * @generated from field: double left = 6;
+   */
+  left: number;
+
+  /**
+   * @generated from field: double top = 7;
+   */
+  top: number;
+
+  /**
+   * scale is the length in the viewBox of one unit along either axis.
+   *
+   * @generated from field: double scale = 8;
+   */
+  scale: number;
+
+  /**
+   * points is how many points to mark.
+   *
+   * @generated from field: int32 points = 9;
+   */
+  points: number;
+};
+
+/**
+ * Describes the message ga.learning.v1.PlotInput.
+ * Use `create(PlotInputSchema)` to create a new message.
+ */
+export declare const PlotInputSchema: GenMessage<PlotInput>;
 
 /**
  * @generated from message ga.learning.v1.SubmitAnswerRequest

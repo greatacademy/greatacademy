@@ -1,9 +1,9 @@
 import type { CompiledSubject, Issue } from "./compile.ts";
-import { type Figure, figureIssue } from "./figure.ts";
+import { type Figure, figureIssue, plottedPoints } from "./figure.ts";
 import { createRng } from "./rng.ts";
 import type { Locale, Text } from "./text.ts";
 import { isText, locales } from "./text.ts";
-import type { Problem, TopicDef } from "./types.ts";
+import type { PlotGrid, Problem, TopicDef } from "./types.ts";
 
 /** ProblemRef identifies a problem instance: the knowledge point that generates it and its seed. */
 export interface ProblemRef {
@@ -92,6 +92,19 @@ export function sampleGenerators(subject: CompiledSubject, options: SampleOption
   return issues;
 }
 
+/** plotIssue tells what keeps a plot's canonical response from being marked on its grid. */
+function plotIssue(grid: PlotGrid, points: number, canonical: string): string | undefined {
+  if (!(grid.step > 0) || !(grid.scale > 0) || grid.xMin >= grid.xMax || grid.yMin >= grid.yMax) return "the grid of a plot is empty";
+  const marked = plottedPoints(canonical);
+  if (!marked || marked.length !== points) return `canonical response ${JSON.stringify(canonical)} does not list ${points} points`;
+  const onGrid = (v: number, from: number) => Math.abs((v - from) / grid.step - Math.round((v - from) / grid.step)) < 1e-9;
+  for (const [x, y] of marked) {
+    if (x < grid.xMin || x > grid.xMax || y < grid.yMin || y > grid.yMax) return `(${x}, ${y}) lies outside the grid of the plot`;
+    if (!onGrid(x, grid.xMin) || !onGrid(y, grid.yMin)) return `(${x}, ${y}) is not a point of the grid of the plot`;
+  }
+  return undefined;
+}
+
 function checkSample(
   subject: CompiledSubject,
   topic: TopicDef,
@@ -150,6 +163,11 @@ function checkSample(
     }
     if (typeof answer.expected !== "number" || answer.expected < 0 || answer.expected >= options.length)
       return "expected must be an option index";
+  }
+  if (answer.input.kind === "plot") {
+    if (!a.figure) return "a plot needs a figure to mark";
+    const issue = plotIssue(answer.input.grid, answer.input.points, a.canonical);
+    if (issue) return issue;
   }
   const verdict = subject.checkers.check(answer.checker, answer.expected, a.canonical);
   if (!verdict.correct) return `canonical response ${JSON.stringify(a.canonical)} is rejected`;

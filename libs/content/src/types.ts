@@ -12,7 +12,27 @@ export type InputSpec =
   /** A math field; the response is the LaTeX the learner entered. */
   | { readonly kind: "math"; readonly prefix?: string; readonly suffix?: string }
   /** A plain text field. */
-  | { readonly kind: "text" };
+  | { readonly kind: "text" }
+  /**
+   * Points marked on the problem's figure; the response lists them as "(x, y)", joined by "; " when there are several, once
+   * all of them are marked.
+   */
+  | { readonly kind: "plot"; readonly grid: PlotGrid; readonly points: number };
+
+/** PlotGrid says where a figure's coordinates lie and which points of it a learner can mark. */
+export interface PlotGrid {
+  readonly xMin: number;
+  readonly xMax: number;
+  readonly yMin: number;
+  readonly yMax: number;
+  /** step is the distance between the points that can be marked. */
+  readonly step: number;
+  /** left and top are the position in the figure's viewBox of the corner (xMin, yMax). */
+  readonly left: number;
+  readonly top: number;
+  /** scale is the length in the viewBox of one unit along either axis. */
+  readonly scale: number;
+}
 
 /** AnswerSpec is how a response to a problem is checked. */
 export interface AnswerSpec {

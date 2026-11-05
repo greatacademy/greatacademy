@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { CompileError, compileSubject } from "./compile.ts";
-import { explanationParts, type Figure, figureIssue } from "./figure.ts";
+import { explanationParts, type Figure, figureIssue, plottedPoints } from "./figure.ts";
 import { sampleGenerators } from "./problems.ts";
 import { same, t } from "./text.ts";
 import type { CourseDef, Problem, SubjectDef, TopicDef } from "./types.ts";
@@ -226,12 +226,49 @@ describe("sampleGenerators", () => {
     expect(errors([drawn(good), drawn('<svg viewBox="0 0 2 2"><line/></svg>')])).toEqual([]);
   });
 
+  it("checks that the answer to a plot can be marked", () => {
+    const grid = { xMin: -2, xMax: 2, yMin: -2, yMax: 2, step: 1, left: 0, top: 0, scale: 10 };
+    const plot = (canonical: string, points = 1, figure?: Figure): Problem => ({
+      ...problem(1),
+      ...(figure && { figure }),
+      answer: { checker: "choice", expected: 0, input: { kind: "plot", grid, points } },
+      canonical,
+      wrong: [],
+    });
+    const drawn: Figure = { svg: '<svg viewBox="0 0 1 1"><line/></svg>', alt: same("a grid") };
+    const errors = (p: Problem) =>
+      sampleGenerators(
+        withGenerator(() => p),
+        { samples: 1 },
+      ).map((i) => i.message);
+    expect(errors(plot("(1, 1)"))[0]).toMatch(/needs a figure/);
+    expect(errors(plot("(1, 1)", 2, drawn))[0]).toMatch(/does not list 2 points/);
+    expect(errors(plot("(3, 1)", 1, drawn))[0]).toMatch(/outside the grid/);
+    expect(errors(plot("(0.5, 1)", 1, drawn))[0]).toMatch(/not a point of the grid/);
+  });
+
   it("warns about generators without variety", () => {
     const issues = sampleGenerators(
       withGenerator(() => problem(1)),
       { samples: 20 },
     );
     expect(issues).toEqual([{ severity: "warning", path: "topic a › kp kp", message: "only 1 distinct prompts in 20 samples" }]);
+  });
+});
+
+describe("plottedPoints", () => {
+  it("reads points joined by semicolons", () => {
+    expect(plottedPoints("(1, -2)")).toEqual([[1, -2]]);
+    expect(plottedPoints("(1.5, 0); (-3,4)")).toEqual([
+      [1.5, 0],
+      [-3, 4],
+    ]);
+  });
+
+  it("refuses anything else", () => {
+    expect(plottedPoints("1, 2")).toBeUndefined();
+    expect(plottedPoints("(1, 2);")).toBeUndefined();
+    expect(plottedPoints("(1, 2, 3)")).toBeUndefined();
   });
 });
 

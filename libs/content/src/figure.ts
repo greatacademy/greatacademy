@@ -1,6 +1,21 @@
 import { isText, type Text } from "./text.ts";
 
 /**
+ * plottedPoints reads a response to a plot: points written "(x, y)", joined by ";". It returns undefined when the response
+ * is not of that form.
+ */
+export function plottedPoints(response: string): readonly (readonly [number, number])[] | undefined {
+  const parts = response.split(";");
+  const points: (readonly [number, number])[] = [];
+  for (const part of parts) {
+    const m = /^\s*\(\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\)\s*$/.exec(part);
+    if (!m) return undefined;
+    points.push([Number(m[1]), Number(m[2])]);
+  }
+  return points;
+}
+
+/**
  * Figure is a static drawing shown with a problem or an explanation. svg is
  * a self-contained SVG document drawn in `currentColor`, so that it follows
  * the client's text color in light and dark themes. Three classes mark the
