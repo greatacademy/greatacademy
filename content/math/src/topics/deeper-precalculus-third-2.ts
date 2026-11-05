@@ -269,8 +269,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           bearing,
           [angle, (angle + 90) % 360, (bearing + 180) % 360],
           [
-            `$90 - ${angle} = ${90 - angle}$${90 - angle < 0 ? `, and adding 360 gives ${bearing}` : ""}.`,
-            `$90 - ${angle} = ${90 - angle}$${90 - angle < 0 ? `，加 360 得 ${bearing}` : ""}。`,
+            `Bearings run the other way from north, so $90 - ${angle} = ${90 - angle}$${90 - angle < 0 ? `, and adding 360 gives ${bearing}` : ""}.`,
+            `方位角从正北反向量，所以 $90 - ${angle} = ${90 - angle}$${90 - angle < 0 ? `，加 360 得 ${bearing}` : ""}。`,
           ],
         );
       },
@@ -1424,7 +1424,10 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           ],
           p ** r * q,
           [p * q, r * p * q, p ** r + q],
-          [`$(${p})^{${r}} \\cdot (${q}) = ${p ** r * q}$.`, `$(${p})^{${r}} \\cdot (${q}) = ${p ** r * q}$。`],
+          [
+            `Determinants multiply, so $(${p})^{${r}} \\cdot (${q}) = ${p ** r * q}$.`,
+            `行列式可以相乘，所以 $(${p})^{${r}} \\cdot (${q}) = ${p ** r * q}$。`,
+          ],
         );
       },
     ),

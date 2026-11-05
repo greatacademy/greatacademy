@@ -817,7 +817,10 @@ export const deeperRemainingCalculusThirdPoints: Readonly<Record<string, readonl
           ],
           value,
           [m * 10 ** n, m + n, Math.round(m / 10) ** n],
-          [`$${m / 10} \\times 10^{${n}} = ${value}$.`, `$${m / 10} \\times 10^{${n}} = ${value}$。`],
+          [
+            `The E means times a power of ten: $${m / 10} \\times 10^{${n}} = ${value}$.`,
+            `E 表示乘 10 的幂：$${m / 10} \\times 10^{${n}} = ${value}$。`,
+          ],
         );
       },
     ),

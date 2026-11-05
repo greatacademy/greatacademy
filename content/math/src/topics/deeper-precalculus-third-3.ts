@@ -638,7 +638,10 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           ],
           b * b - a * a,
           [(b - a) * (b - a), b * b + a * a, 2 * (b - a)],
-          [`$${b}^{2} - ${a}^{2} = ${b * b - a * a}$.`, `$${b}^{2} - ${a}^{2} = ${b * b - a * a}$。`],
+          [
+            `The ring is the outer disk minus the inner disk, so $${b}^{2} - ${a}^{2} = ${b * b - a * a}$.`,
+            `圆环是外圆减去内圆，所以 $${b}^{2} - ${a}^{2} = ${b * b - a * a}$。`,
+          ],
         );
       },
     ),

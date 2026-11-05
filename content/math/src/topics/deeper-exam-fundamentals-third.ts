@@ -300,7 +300,10 @@ export const deeperExamFundamentalsThirdPoints: Readonly<Record<string, readonly
           ],
           a * a - c * c * b,
           [a * a + c * c * b, a * a - c * b, a * a - b],
-          [`$${a}^{2} - ${c * c} \\cdot ${b} = ${a * a - c * c * b}$.`, `$${a}^{2} - ${c * c} \\cdot ${b} = ${a * a - c * c * b}$。`],
+          [
+            `The middle terms cancel, leaving $${a}^{2} - ${c * c} \\cdot ${b} = ${a * a - c * c * b}$.`,
+            `中间两项抵消，剩下 $${a}^{2} - ${c * c} \\cdot ${b} = ${a * a - c * c * b}$。`,
+          ],
         );
       },
     ),
@@ -379,7 +382,10 @@ export const deeperExamFundamentalsThirdPoints: Readonly<Record<string, readonly
           ],
           d,
           [d / 2 === Math.floor(d / 2) ? d / 2 : d + 1, 2 * d, (d * e) / 2 - e],
-          [`$2 \\cdot ${(d * e) / 2} \\div ${e} = ${d}$.`, `$2 \\cdot ${(d * e) / 2} \\div ${e} = ${d}$。`],
+          [
+            `The area is half the product of the diagonals, so $2 \\cdot ${(d * e) / 2} \\div ${e} = ${d}$.`,
+            `面积是两条对角线之积的一半，所以 $2 \\cdot ${(d * e) / 2} \\div ${e} = ${d}$。`,
+          ],
         );
       },
     ),
@@ -1042,7 +1048,10 @@ export const deeperExamFundamentalsThirdPoints: Readonly<Record<string, readonly
           ],
           total,
           [a + b + c, a + b + c - ab - bc - ac, total + all],
-          [`$${a + b + c} - ${ab + bc + ac} + ${all} = ${total}$.`, `$${a + b + c} - ${ab + bc + ac} + ${all} = ${total}$。`],
+          [
+            `Add the groups, subtract the pairs and add back the triple: $${a + b + c} - ${ab + bc + ac} + ${all} = ${total}$.`,
+            `把各组相加，减去两两重叠，再加回三者重叠：$${a + b + c} - ${ab + bc + ac} + ${all} = ${total}$。`,
+          ],
         );
       },
     ),

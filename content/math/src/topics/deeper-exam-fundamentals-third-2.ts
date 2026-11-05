@@ -983,7 +983,10 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
           ],
           h,
           [h / 3, r * h, h + r],
-          [`$3 \\cdot ${(r * r * h) / 3} \\div ${r * r} = ${h}$.`, `$3 \\cdot ${(r * r * h) / 3} \\div ${r * r} = ${h}$。`],
+          [
+            `Undo the one third and the squared radius: $3 \\cdot ${(r * r * h) / 3} \\div ${r * r} = ${h}$.`,
+            `消去三分之一和半径的平方：$3 \\cdot ${(r * r * h) / 3} \\div ${r * r} = ${h}$。`,
+          ],
         );
       },
     ),
@@ -1305,7 +1308,10 @@ export const deeperExamFundamentalsThird2Points: Readonly<Record<string, readonl
           ],
           p * p * q,
           [p * q, p * q * q, p + q],
-          [`$${p}^{2} \\cdot ${q} = ${p * p * q}$.`, `$${p}^{2} \\cdot ${q} = ${p * p * q}$。`],
+          [
+            `The radius is squared and the height is not, so $${p}^{2} \\cdot ${q} = ${p * p * q}$.`,
+            `半径要平方，高不用，所以 $${p}^{2} \\cdot ${q} = ${p * p * q}$。`,
+          ],
         );
       },
     ),
@@ -2288,7 +2294,10 @@ export const deeperSchoolFundamentalsThirdPoints: Readonly<Record<string, readon
           ],
           u,
           [d * u, d, u + d],
-          [`$${d * u} \\div ${d} = ${u}$.`, `$${d * u} \\div ${d} = ${u}$。`],
+          [
+            `Each of the ${d} cm stands for the same length, so $${d * u} \\div ${d} = ${u}$.`,
+            `这 ${d} 厘米中每厘米代表相同的长度，所以 $${d * u} \\div ${d} = ${u}$。`,
+          ],
         );
       },
     ),

@@ -837,7 +837,10 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
           ],
           hi - lo,
           [Math.abs(hi + lo), hi, -lo],
-          [`$${hi} - (${lo}) = ${hi - lo}$.`, `$${hi} - (${lo}) = ${hi - lo}$。`],
+          [
+            `The distance is the difference of the floors, $${hi} - (${lo}) = ${hi - lo}$.`,
+            `距离是两个楼层之差，$${hi} - (${lo}) = ${hi - lo}$。`,
+          ],
         );
       },
     ),
@@ -900,7 +903,10 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
           ],
           total / days,
           [-total / days, total + days, total],
-          [`$${total} \\div ${days} = ${total / days}$.`, `$${total} \\div ${days} = ${total / days}$。`],
+          [
+            `Share the total change equally among the days: $${total} \\div ${days} = ${total / days}$.`,
+            `把总变化平均分到每一天：$${total} \\div ${days} = ${total / days}$。`,
+          ],
         );
       },
     ),

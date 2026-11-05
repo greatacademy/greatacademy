@@ -340,8 +340,8 @@ export const deeperRemainingCollegeThirdPoints: Readonly<Record<string, readonly
           upper * upper - lower * lower,
           [upper * upper, upper * upper - (((m * (m + 1)) / 2) * (m * (m + 1))) / 2, (upper - lower) ** 2],
           [
-            `$${upper}^{2} - ${lower}^{2} = ${upper * upper - lower * lower}$.`,
-            `$${upper}^{2} - ${lower}^{2} = ${upper * upper - lower * lower}$。`,
+            `Take the sum up to ${n} minus the sum up to ${m - 1}, each a square of a triangular number: $${upper}^{2} - ${lower}^{2} = ${upper * upper - lower * lower}$.`,
+            `用到 ${n} 的和减去到 ${m - 1} 的和，它们都是三角形数的平方：$${upper}^{2} - ${lower}^{2} = ${upper * upper - lower * lower}$。`,
           ],
         );
       },

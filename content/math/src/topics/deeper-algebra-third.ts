@@ -101,7 +101,10 @@ export const deeperAlgebraThirdPoints: Readonly<Record<string, readonly Knowledg
           ],
           each,
           [whole_ - k, whole_ * k, k + each],
-          [`$${whole_} \\div ${k} = ${each}$.`, `$${whole_} \\div ${k} = ${each}$。`],
+          [
+            `The ${k} equal angles fill the whole angle, so $${whole_} \\div ${k} = ${each}$.`,
+            `${k} 个相等的角合成整个角，所以 $${whole_} \\div ${k} = ${each}$。`,
+          ],
         );
       },
     ),

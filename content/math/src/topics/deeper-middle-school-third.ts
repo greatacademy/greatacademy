@@ -1187,7 +1187,10 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
           ],
           c,
           [g * c, g * c - g, c + g],
-          [`$${g * c} \\div ${g} = ${c}$.`, `$${g * c} \\div ${g} = ${c}$。`],
+          [
+            `Each term inside is the term divided by the factor, so $${g * c} \\div ${g} = ${c}$.`,
+            `括号内每一项等于原项除以公因数，所以 $${g * c} \\div ${g} = ${c}$。`,
+          ],
         );
       },
     ),

@@ -886,7 +886,10 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
           ],
           fs[i]!,
           [totals[i]!, totals[i - 1]!, totals[i]! + totals[i - 1]!],
-          [`$${totals[i]} - ${totals[i - 1]} = ${fs[i]}$.`, `$${totals[i]} - ${totals[i - 1]} = ${fs[i]}$。`],
+          [
+            `A frequency is the jump between running totals, so $${totals[i]} - ${totals[i - 1]} = ${fs[i]}$.`,
+            `频数是累积总数的增量，所以 $${totals[i]} - ${totals[i - 1]} = ${fs[i]}$。`,
+          ],
         );
       },
     ),
@@ -948,7 +951,10 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
           answer,
           [answer + 1, answer - 1, n],
           odd
-            ? [`$(${n} + 1) \\div 2 = ${answer}$.`, `$(${n} + 1) \\div 2 = ${answer}$。`]
+            ? [
+                `With an odd count the middle position is $(${n} + 1) \\div 2 = ${answer}$.`,
+                `个数为奇数时，中间位置是 $(${n} + 1) \\div 2 = ${answer}$。`,
+              ]
             : [
                 `$${n} \\div 2 = ${answer}$, so the median is between positions ${answer} and ${answer + 1}.`,
                 `$${n} \\div 2 = ${answer}$，所以中位数在第 ${answer} 和第 ${answer + 1} 个之间。`,
@@ -1149,7 +1155,10 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
           ],
           (n * p) / 100,
           [p, n - (n * p) / 100, p / 10 === (n * p) / 100 ? p / 10 + 1 : p / 10],
-          [`$${p}\\%$ of ${n} is ${(n * p) / 100}.`, `${n} 的 $${p}\\%$ 是 ${(n * p) / 100}。`],
+          [
+            `Each number is equally likely, so use $${p}\\%$ of the ${n} numbers, which is ${(n * p) / 100}.`,
+            `每个数的可能性相同，所以取 ${n} 个数的 $${p}\\%$，即 ${(n * p) / 100} 个。`,
+          ],
         );
       },
     ),
@@ -1283,7 +1292,7 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
           [`Solve $(x + ${a})^{3} = ${value}$.`, `解方程 $(x + ${a})^{3} = ${value}$。`],
           root - a,
           [root + a, -root - a, value - a],
-          [`$x + ${a} = ${root}$, so $x = ${root - a}$.`, `$x + ${a} = ${root}$，所以 $x = ${root - a}$。`],
+          [`The cube root gives $x + ${a} = ${root}$, so $x = ${root - a}$.`, `开立方得 $x + ${a} = ${root}$，所以 $x = ${root - a}$。`],
         );
       },
     ),
