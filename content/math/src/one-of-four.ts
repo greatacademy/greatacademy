@@ -14,7 +14,7 @@ function twoOptions(problem: Problem): { readonly options: readonly Text[]; read
   const { answer } = problem;
   if (answer.checker !== "choice" || problem.figure || problem.solutionFigure) return undefined;
   const input = answer.input as { readonly kind?: string; readonly options?: readonly Text[] } | undefined;
-  if (input?.kind !== "choice" || input.options?.length !== 2) return undefined;
+  if (input?.kind !== "choice" || input.options?.length !== 2 || "figures" in input) return undefined;
   if (problem.prompt.en.length > maxOptionLength || problem.prompt.en.includes("$$")) return undefined;
   return { options: input.options, correct: answer.expected as number };
 }

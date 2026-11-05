@@ -7,8 +7,8 @@ export type Json = null | boolean | number | string | readonly Json[] | { readon
 
 /** InputSpec tells the client which input to show for a problem. */
 export type InputSpec =
-  /** A multiple-choice question; the response is the index of the chosen option. */
-  | { readonly kind: "choice"; readonly options: readonly Text[] }
+  /** A multiple-choice question; the response is the index of the chosen option. When figures is given, each option is shown as the drawing at its index, and its text only names it. */
+  | { readonly kind: "choice"; readonly options: readonly Text[]; readonly figures?: readonly Figure[] }
   /** A math field; the response is the LaTeX the learner entered. */
   | { readonly kind: "math"; readonly prefix?: string; readonly suffix?: string }
   /** A plain text field. */

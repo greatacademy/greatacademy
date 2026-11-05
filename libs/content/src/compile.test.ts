@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { CompileError, compileSubject } from "./compile.ts";
-import { explanationParts, figureIssue } from "./figure.ts";
+import { explanationParts, type Figure, figureIssue } from "./figure.ts";
 import { sampleGenerators } from "./problems.ts";
 import { same, t } from "./text.ts";
 import type { CourseDef, Problem, SubjectDef, TopicDef } from "./types.ts";
@@ -204,6 +204,26 @@ describe("sampleGenerators", () => {
     );
     const varied = withGenerator((rng) => choice(rng.int(0, 1)));
     expect(sampleGenerators(varied, { samples: 40, maxPositionShare: 0.8 }).filter((i) => i.severity === "error")).toEqual([]);
+  });
+
+  it("checks the figures of a choice", () => {
+    const drawn = (svg: string): Figure => ({ svg, alt: same("a drawing") });
+    const good = '<svg viewBox="0 0 1 1"><line/></svg>';
+    const choice = (figures: readonly Figure[]): Problem => ({
+      ...problem(1),
+      answer: { checker: "choice", expected: 0, input: { kind: "choice", options: [same("a"), same("b")], figures } },
+      canonical: "0",
+      wrong: ["1"],
+    });
+    const errors = (figures: readonly Figure[]) =>
+      sampleGenerators(
+        withGenerator(() => choice(figures)),
+        { samples: 1 },
+      ).map((i) => i.message);
+    expect(errors([drawn(good)])[0]).toMatch(/one figure for each option/);
+    expect(errors([drawn(good), drawn(good)])[0]).toMatch(/must be distinct/);
+    expect(errors([drawn(good), drawn('<svg viewBox="0 0 1 1"><script/></svg>')])[0]).toMatch(/script/);
+    expect(errors([drawn(good), drawn('<svg viewBox="0 0 2 2"><line/></svg>')])).toEqual([]);
   });
 
   it("warns about generators without variety", () => {

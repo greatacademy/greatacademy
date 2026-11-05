@@ -1,4 +1,4 @@
-import type { Problem, Rng, Text } from "@ga/content";
+import type { Figure, Problem, Rng, Text } from "@ga/content";
 import { t } from "@ga/content";
 import {
   type Coefficient,
@@ -522,6 +522,44 @@ export function choiceProblem(p: ChoiceProblem): Problem {
     solution: p.solution,
     canonical: String(p.correct),
     wrong: p.options.map((_, i) => String(i)).filter((i) => i !== String(p.correct)),
+  };
+}
+
+/** FigureChoice describes a choice among drawings, of which one is right. */
+export interface FigureChoice {
+  readonly prompt: Text;
+  readonly correct: Figure;
+  /** wrong are the other drawings; one that repeats an earlier drawing is dropped. */
+  readonly wrong: readonly Figure[];
+  readonly solution: Text;
+  /** solutionFigure shows the solution; it defaults to the correct drawing. */
+  readonly solutionFigure?: Figure;
+  /** figure is a drawing the problem starts from, shown above the options. */
+  readonly figure?: Figure;
+}
+
+/** figureChoice builds a choice problem whose options are drawings, in a random order, named by their positions. */
+export function figureChoice(rng: Rng, p: FigureChoice): Problem {
+  const seen = new Set([p.correct.svg]);
+  const wrong = p.wrong.filter((f) => {
+    if (seen.has(f.svg)) return false;
+    seen.add(f.svg);
+    return true;
+  });
+  const figures = rng.shuffle([p.correct, ...wrong]);
+  const options = figures.map((_, i) => {
+    const letter = String.fromCharCode(65 + i);
+    return t(`Drawing ${letter}`, `图 ${letter}`);
+  });
+  const correct = figures.indexOf(p.correct);
+  return {
+    prompt: p.prompt,
+    ...(p.figure && { figure: p.figure }),
+    answer: { checker: "choice", expected: correct, input: { kind: "choice", options, figures } },
+    solution: p.solution,
+    solutionFigure: p.solutionFigure ?? p.correct,
+    canonical: String(correct),
+    wrong: options.map((_, i) => String(i)).filter((i) => i !== String(correct)),
   };
 }
 

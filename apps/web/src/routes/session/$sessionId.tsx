@@ -265,7 +265,14 @@ function AnswerText({ problem, answer }: { problem?: ProblemView; answer: string
   const { tx, m } = useI18n();
   const input = problem?.input?.kind;
   if (answer === "") return <span className="text-muted italic">{m.skipped}</span>;
-  if (input?.case === "choice") return <Markdown source={tx(input.value.options[Number(answer)])} inline />;
+  if (input?.case === "choice") {
+    const drawn = input.value.figures[Number(answer)];
+    return drawn ? (
+      <FigureView figure={drawn} className="answer-figure" />
+    ) : (
+      <Markdown source={tx(input.value.options[Number(answer)])} inline />
+    );
+  }
   if (input?.case === "math") return <Tex tex={[input.value.prefix, answer, input.value.suffix].filter(Boolean).join(" ")} />;
   return <span>{answer}</span>;
 }
@@ -309,7 +316,7 @@ function AnswerInput({
   switch (input?.case) {
     case "choice":
       return (
-        <div role="radiogroup" className="grid gap-2">
+        <div role="radiogroup" className={`grid gap-2 ${input.value.figures.length > 0 ? "sm:grid-cols-2" : ""}`}>
           {input.value.options.map((o, i) => {
             const selected = value === String(i);
             const verdict =
@@ -336,16 +343,20 @@ function AnswerInput({
                   onChange(String(i));
                   onSubmit();
                 }}
-                className={`flex items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition disabled:cursor-default ${tone}`}
+                className={`flex gap-3 rounded-xl border-2 px-4 py-3 text-left transition disabled:cursor-default ${input.value.figures[i] ? "items-start" : "items-center"} ${tone}`}
               >
                 <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-sm font-medium">
                   {String.fromCharCode(65 + i)}
                 </span>
-                <Markdown source={tx(o)} inline />
+                {input.value.figures[i] ? (
+                  <FigureView figure={input.value.figures[i]} className="min-w-0 flex-1" />
+                ) : (
+                  <Markdown source={tx(o)} inline />
+                )}
               </button>
             );
           })}
-          {!disabled && <p className="text-xs text-muted">{m.choiceHint}</p>}
+          {!disabled && <p className="text-xs text-muted sm:col-span-2">{m.choiceHint}</p>}
         </div>
       );
     case "math":

@@ -49,7 +49,9 @@ export interface SampleOptions {
 
 /** optionsOf lists the options of a choice problem in a fixed order, so that shuffling them does not make a new problem. */
 function optionsOf(problem: Problem): readonly string[] {
-  return problem.answer.input.kind === "choice" ? problem.answer.input.options.map((o) => o.en).sort() : [];
+  const { input } = problem.answer;
+  if (input.kind !== "choice") return [];
+  return (input.figures?.map((f) => f.svg) ?? input.options.map((o) => o.en)).sort();
 }
 
 /**
@@ -139,6 +141,13 @@ function checkSample(
     if (options.length < 2) return "a choice needs at least two options";
     if (!options.every(isText)) return "every option must be non-empty in every locale";
     if (new Set(options.map((o) => o.en)).size !== options.length) return "options must be distinct";
+    const { figures } = answer.input;
+    if (figures) {
+      if (figures.length !== options.length) return "a choice with figures needs one figure for each option";
+      if (new Set(figures.map((f) => f.svg)).size !== figures.length) return "the figures of a choice must be distinct";
+      const issue = figures.map(figureIssue).find(Boolean);
+      if (issue) return issue;
+    }
     if (typeof answer.expected !== "number" || answer.expected < 0 || answer.expected >= options.length)
       return "expected must be an option index";
   }

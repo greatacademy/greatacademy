@@ -103,6 +103,9 @@
   stroke: none;
   font-family: inherit;
 }
+.answer-figure svg {
+  max-width: 12rem;
+}
 .figure-ga .accent {
   color: var(--color-accent);
 }

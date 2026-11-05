@@ -885,6 +885,13 @@ export declare type ChoiceInput = Message<"ga.learning.v1.ChoiceInput"> & {
    * @generated from field: repeated ga.common.v1.Text options = 1;
    */
   options: Text[];
+
+  /**
+   * figures, when present, holds one drawing per option; each option is shown as its drawing, and its text only names it.
+   *
+   * @generated from field: repeated ga.common.v1.Figure figures = 2;
+   */
+  figures: Figure[];
 };
 
 /**

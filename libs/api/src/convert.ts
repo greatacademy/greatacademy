@@ -28,7 +28,7 @@ export function figure(f: Figure): MessageInitShape<typeof FigureSchema> {
 function input(spec: InputSpec): MessageInitShape<typeof InputSchema> {
   switch (spec.kind) {
     case "choice":
-      return { kind: { case: "choice", value: { options: spec.options.map(text) } } };
+      return { kind: { case: "choice", value: { options: spec.options.map(text), figures: (spec.figures ?? []).map(figure) } } };
     case "math":
       return { kind: { case: "math", value: { prefix: spec.prefix ?? "", suffix: spec.suffix ?? "" } } };
     case "text":

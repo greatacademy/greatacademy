@@ -267,6 +267,8 @@ message Input {
 // ChoiceInput: the response is the index of the chosen option, in decimal.
 message ChoiceInput {
   repeated ga.common.v1.Text options = 1;
+  // figures, when present, holds one drawing per option; each option is shown as its drawing, and its text only names it.
+  repeated ga.common.v1.Figure figures = 2;
 }
 
 // MathInput: the response is LaTeX.
