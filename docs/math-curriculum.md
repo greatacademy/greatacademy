@@ -26,7 +26,7 @@ This document records Math Academy's complete math course system as the referenc
 - "All of our courses are comprehensive and standards-based, typically covering hundreds of individual topics."
 - Every course starts with an adaptive diagnostic that identifies missing prerequisite knowledge and material the student already knows.
 - **Accreditation:** The courses are fully accredited by ACS WASC (Accrediting Commission for Schools, Western Association of Schools and Colleges).
-- **UC a-g:** Math Academy, LLC is listed in UC's Directory of Online Publishers. A student's home school, the school they attend, can add the courses through its UC course-management portal, so that Math Academy can issue transcripts for UC a-g credit.
+- **UC a-g:** Math Academy, LLC is listed in UC's Directory of Online Publishers. The catalog says a student's home school, meaning the school where the student is enrolled, can add the courses through its UC course-management portal, so that Math Academy can issue transcripts for UC a-g credit. UC's own criteria for online publishers say the student's home high school reports the completed course on the official transcript.
 - **Entry point:** The lowest course is 4th Grade Math. It requires knowing the multiplication tables up to 12 and being able to read independently.
 - **Prealgebra vs. 6th–8th:** Prealgebra covers the same content as the 6th–8th grade courses in a streamlined format, for students who can move faster.
 - **High-school sequences:**

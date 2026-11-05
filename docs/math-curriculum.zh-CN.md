@@ -36,7 +36,7 @@
 - 原文称所有课程都 "comprehensive and standards-based"，通常涵盖数百个知识点。
 - 每门课都以自适应诊断开始，找出学生缺失的先修知识和已经掌握的内容。
 - **认证：** 课程获 ACS WASC（美国西部院校协会学校认证委员会）完全认证。
-- **UC a-g：** Math Academy, LLC 已列入加州大学的 Directory of Online Publishers。学生就读的学校（home school）可以通过 UC 课程管理门户添加这些课程，之后 Math Academy 即可出具成绩单，用于 UC a-g 学分。
+- **UC a-g：** Math Academy, LLC 已列入加州大学的 Directory of Online Publishers。目录页称，学生的学籍所在学校（home school，即学生注册就读的学校）可以通过 UC 课程管理门户添加这些课程，之后 Math Academy 即可出具成绩单，用于 UC a-g 学分。UC 对在线课程发布方的要求则是，由学生的学籍所在高中（home high school）把修完的课程记入正式成绩单。
 - **起点：** 最低一门是 4th Grade Math，要求会 12 以内的乘法表，并能独立阅读。
 - **Prealgebra 与 6–8 年级：** Prealgebra 以精简形式覆盖 6–8 年级课程的相同内容，适合学得快的学生。
 - **高中序列：**
