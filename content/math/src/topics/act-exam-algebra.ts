@@ -2,90 +2,9 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
 import type { ExamSpec } from "../exam.ts";
-import { ask, askExact, mod, sg, words } from "../exam.ts";
+import { ask, askExact, sg, spec, words } from "../exam.ts";
 
 // ACT Math Prep, Algebra: the expressions, equations, inequalities and models that have no SAT Math Prep counterpart.
-
-const exprTips = mod(
-  t(
-    "Expand one factor at a time and collect like terms at the end. For a squared binomial, remember that the middle term is twice the product of the two terms.",
-    "每次展开一个因式，最后合并同类项。二项式平方时，记住中间项是两项之积的两倍。",
-  ),
-  t(
-    "Use the coefficients from Pascal's triangle for higher powers of a binomial, and when a relation is given, substitute it into the expression rather than solving for each variable.",
-    "二项式的高次幂用杨辉三角的系数；已知关系式时，把它代入所求式子，而不是逐个求出变量。",
-  ),
-);
-const eqTips = mod(
-  t(
-    "Undo operations in reverse order and keep both sides balanced. Check the question: it often asks for an expression in the unknown, not for the unknown itself.",
-    "按相反顺序撤销运算，并保持两边平衡。注意题目所问：常常问含未知数的式子，而不是未知数本身。",
-  ),
-  t(
-    "Sometimes the expression asked for appears inside the equation, so it can be read off without solving. When a formula is given, substitute the known values before rearranging it.",
-    "所求的式子有时就在方程之中，不必求解就能读出。给出公式时，先代入已知值再变形。",
-  ),
-);
-const ineqTips = mod(
-  t(
-    "Solve an inequality like an equation, but reverse the sign whenever you multiply or divide both sides by a negative number.",
-    "解不等式与解方程相似，但两边同乘或同除负数时要改变不等号的方向。",
-  ),
-  t(
-    "To decide what must follow from an inequality, test the boundary values and remember that a statement must hold for every allowed value, not only for one of them.",
-    "判断不等式能推出什么时，检验边界值，并记住结论必须对所有允许的值都成立，而不只是其中一个。",
-  ),
-);
-const systemTips = mod(
-  t(
-    "With three equations, use one pair to eliminate a variable and a second pair to eliminate the same variable, then solve the resulting system of two equations.",
-    "三个方程时，用一对方程消去一个变量，再用另一对消去同一个变量，然后解得到的二元方程组。",
-  ),
-  t(
-    "Look for a shortcut before eliminating. Adding all three equations often gives the sum of the variables directly, and each variable then follows by subtraction.",
-    "消元之前先找捷径。三个方程相加常常直接得到变量之和，再相减就能得到每个变量。",
-  ),
-);
-const polyTips = mod(
-  t(
-    "Factor out what is common, then use grouping or a known pattern. Set each factor equal to zero, because a product is zero only when one of its factors is.",
-    "先提取公因式，再用分组或已知公式。令每个因式为零，因为只有某个因式为零时乘积才为零。",
-  ),
-  t(
-    "A polynomial of degree $n$ has at most $n$ real solutions, so count them after factoring. A repeated factor gives one distinct solution, and a sum of squares may give none.",
-    "$n$ 次多项式最多有 $n$ 个实数解，所以因式分解后再计数。重复的因式只给一个不同的解，平方和可能没有实数解。",
-  ),
-);
-const radTips = mod(
-  t(
-    "A rational expression is not defined where its denominator is zero. In a proportion, cross-multiply to remove the fractions before solving for the unknown.",
-    "分母为零时有理式没有定义。解比例时，先交叉相乘去掉分数，再求未知数。",
-  ),
-  t(
-    "Undo a power with the matching root, and remember that an even power has two real roots. A square root is never negative, so check each candidate in the original equation.",
-    "用相应的根式撤销乘方，并记住偶次幂有两个实数根。平方根不能为负，所以要把每个候选值代回原方程检验。",
-  ),
-);
-const absTips = mod(
-  t(
-    "The absolute value of a number is its distance from zero, so it is never negative. The equation $|x - c| = d$ with $d > 0$ has the two solutions $c + d$ and $c - d$.",
-    "一个数的绝对值是它到零的距离，所以不可能为负。方程 $|x - c| = d$（$d > 0$）有两个解 $c + d$ 和 $c - d$。",
-  ),
-  t(
-    "The inequality $|x - c| < d$ describes the values within $d$ of $c$, written as one compound inequality, and $|x - c| > d$ describes the values farther than $d$ from $c$, which form two separate rays.",
-    "不等式 $|x - c| < d$ 表示与 $c$ 的距离小于 $d$ 的值，写成一个复合不等式；$|x - c| > d$ 表示距离大于 $d$ 的值，形成两条分开的射线。",
-  ),
-);
-const modelTips = mod(
-  t(
-    "Name the unknown first, then translate the sentence phrase by phrase. A fixed amount stands alone, and an amount charged per unit is multiplied by the number of units.",
-    "先设未知数，再逐句翻译。固定数额单独成项，按单位计的数额要乘单位数。",
-  ),
-  t(
-    "When two plans or quantities become equal, set their expressions equal. In a mixture, the amounts of the pure ingredient add up, not the percents.",
-    "两种方案或数量相等时，令它们的式子相等。混合问题中相加的是纯成分的量，而不是百分比。",
-  ),
-);
 
 const names = [
   ["A gym", "健身房"],
@@ -96,7 +15,7 @@ const names = [
 
 /** actExamAlgebra are the exam-style questions of the ACT Algebra unit that have no SAT counterpart. */
 export const actExamAlgebra: ExamSpec[] = [
-  exprTips("Expanding Powers of Binomials", "展开二项式的幂", ["squaring-binomials"], (rng, hard) => {
+  spec("Expanding Powers of Binomials", "展开二项式的幂", ["squaring-binomials"], (rng, hard) => {
     const [a, b, n] = [rng.int(2, 9), rng.nonZero(-9, 9), rng.int(2, 6)];
     const v = rng.pick(["x", "y", "t", "n"]);
     if (!hard)
@@ -130,7 +49,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `每项平方，再加两项之积的两倍 $2(${a}x)(${b * n}y)$。`,
     );
   }),
-  exprTips("Rewriting Expressions Using Relations", "用关系式改写式子", ["evaluating-expressions-using-given-relations"], (rng, hard) => {
+  spec("Rewriting Expressions Using Relations", "用关系式改写式子", ["evaluating-expressions-using-given-relations"], (rng, hard) => {
     const [k, a, b, c] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 12), rng.int(1, 12)];
     if (!hard)
       return ask(
@@ -157,7 +76,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `$a = ${k * (c + 1)}c$，加上 $b$ 得 $${(k + 1) * (c + 1)}c$。`,
     );
   }),
-  eqTips("Working Backward to Find an Unknown", "倒推求未知数", ["two-step-equations"], (rng, hard) => {
+  spec("Working Backward to Find an Unknown", "倒推求未知数", ["two-step-equations"], (rng, hard) => {
     const [x, a, b, c] = [rng.int(2, 30), rng.int(2, 6), rng.int(2, 20), rng.int(2, 5)];
     if (!hard)
       return ask(
@@ -179,7 +98,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `加 $${c}$，除以 $${a}$，再减 $${b}$。`,
     );
   }),
-  eqTips("Evaluating Expressions After Solving", "解方程后求值", ["equations-with-variables-on-both-sides"], (rng, hard) => {
+  spec("Evaluating Expressions After Solving", "解方程后求值", ["equations-with-variables-on-both-sides"], (rng, hard) => {
     const [x, a, b, c, d] = [rng.int(1, 12), rng.int(2, 9), rng.int(1, 15), rng.int(2, 9), rng.int(1, 20)];
     if (!hard)
       return ask(
@@ -201,7 +120,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `整个方程除以 $${c}$，不必先求 $x$。`,
     );
   }),
-  eqTips("Applying Linear Formulas", "应用线性公式", ["rearranging-formulas"], (rng, hard) => {
+  spec("Applying Linear Formulas", "应用线性公式", ["rearranging-formulas"], (rng, hard) => {
     const [c, l, w, k] = [rng.int(1, 30) * 5, rng.int(5, 30), rng.int(2, 20), rng.int(2, 9)];
     if (!hard)
       return ask(
@@ -223,7 +142,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `$2w = ${2 * l + 2 * (w + k)} - ${2 * l} = ${2 * (w + k)}$。`,
     );
   }),
-  ineqTips("Solving Linear Inequalities", "解一次不等式", ["further-solving-linear-inequalities"], (rng, hard) => {
+  spec("Solving Linear Inequalities", "解一次不等式", ["further-solving-linear-inequalities"], (rng, hard) => {
     const [a, x, b, c] = [rng.int(2, 9), rng.int(-9, 12), rng.int(1, 20), rng.int(2, 9)];
     if (!hard)
       return ask(
@@ -245,7 +164,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `除以 $-${c}$ 时不等号方向改变。`,
     );
   }),
-  ineqTips("Identifying Consequences of Inequalities", "判断不等式的推论", ["further-solving-linear-inequalities"], (rng, hard) => {
+  spec("Identifying Consequences of Inequalities", "判断不等式的推论", ["further-solving-linear-inequalities"], (rng, hard) => {
     const [a, b, c] = [rng.int(1, 20), rng.int(2, 9), rng.int(1, 9)];
     if (!hard)
       return words(
@@ -266,35 +185,30 @@ export const actExamAlgebra: ExamSpec[] = [
       ),
     );
   }),
-  systemTips(
-    "Solving Three-Variable Systems",
-    "解三元方程组",
-    ["solving-3x3-systems-of-equations-using-gaussian-elimination"],
-    (rng, hard) => {
-      const [x, y, z] = [rng.int(1, 9), rng.int(1, 9), rng.int(1, 9)];
-      const [a, b] = [rng.int(2, 4), rng.int(2, 4)];
-      if (!hard)
-        return ask(
-          rng,
-          `If $x + y = ${x + y}$, $y + z = ${y + z}$ and $x + z = ${x + z}$, what is the value of $x + y + z$?`,
-          `若 $x + y = ${x + y}$，$y + z = ${y + z}$，$x + z = ${x + z}$，$x + y + z$ 的值是多少？`,
-          x + y + z,
-          [2 * (x + y + z), x + y, x + y + z + 1, x + y + z + 2],
-          `Add the equations to get $2(x + y + z) = ${2 * (x + y + z)}$.`,
-          `三式相加得 $2(x + y + z) = ${2 * (x + y + z)}$。`,
-        );
+  spec("Solving Three-Variable Systems", "解三元方程组", ["solving-3x3-systems-of-equations-using-gaussian-elimination"], (rng, hard) => {
+    const [x, y, z] = [rng.int(1, 9), rng.int(1, 9), rng.int(1, 9)];
+    const [a, b] = [rng.int(2, 4), rng.int(2, 4)];
+    if (!hard)
       return ask(
         rng,
-        `The system $x + y + z = ${x + y + z}$, $${a}x + y + z = ${a * x + y + z}$ and $x + ${b}y + z = ${x + b * y + z}$ has one solution. What is the value of $z$?`,
-        `方程组 $x + y + z = ${x + y + z}$，$${a}x + y + z = ${a * x + y + z}$，$x + ${b}y + z = ${x + b * y + z}$ 有唯一解。$z$ 的值是多少？`,
-        z,
-        [x === z ? z + 1 : x, y === z ? z + 2 : y, x + y + z, z + 3],
-        `Subtracting the first equation gives $${a - 1}x = ${(a - 1) * x}$ and $${b - 1}y = ${(b - 1) * y}$, so $x = ${x}$ and $y = ${y}$. Then $z = ${x + y + z} - ${x} - ${y} = ${z}$.`,
-        `减去第一个方程得 $${a - 1}x = ${(a - 1) * x}$，$${b - 1}y = ${(b - 1) * y}$，所以 $x = ${x}$，$y = ${y}$。于是 $z = ${x + y + z} - ${x} - ${y} = ${z}$。`,
+        `If $x + y = ${x + y}$, $y + z = ${y + z}$ and $x + z = ${x + z}$, what is the value of $x + y + z$?`,
+        `若 $x + y = ${x + y}$，$y + z = ${y + z}$，$x + z = ${x + z}$，$x + y + z$ 的值是多少？`,
+        x + y + z,
+        [2 * (x + y + z), x + y, x + y + z + 1, x + y + z + 2],
+        `Add the equations to get $2(x + y + z) = ${2 * (x + y + z)}$.`,
+        `三式相加得 $2(x + y + z) = ${2 * (x + y + z)}$。`,
       );
-    },
-  ),
-  exprTips("Expanding Binomial Powers", "展开二项式幂", ["expanding-a-binomial-using-binomial-coefficients"], (rng, hard) => {
+    return ask(
+      rng,
+      `The system $x + y + z = ${x + y + z}$, $${a}x + y + z = ${a * x + y + z}$ and $x + ${b}y + z = ${x + b * y + z}$ has one solution. What is the value of $z$?`,
+      `方程组 $x + y + z = ${x + y + z}$，$${a}x + y + z = ${a * x + y + z}$，$x + ${b}y + z = ${x + b * y + z}$ 有唯一解。$z$ 的值是多少？`,
+      z,
+      [x === z ? z + 1 : x, y === z ? z + 2 : y, x + y + z, z + 3],
+      `Subtracting the first equation gives $${a - 1}x = ${(a - 1) * x}$ and $${b - 1}y = ${(b - 1) * y}$, so $x = ${x}$ and $y = ${y}$. Then $z = ${x + y + z} - ${x} - ${y} = ${z}$.`,
+      `减去第一个方程得 $${a - 1}x = ${(a - 1) * x}$，$${b - 1}y = ${(b - 1) * y}$，所以 $x = ${x}$，$y = ${y}$。于是 $z = ${x + y + z} - ${x} - ${y} = ${z}$。`,
+    );
+  }),
+  spec("Expanding Binomial Powers", "展开二项式幂", ["expanding-a-binomial-using-binomial-coefficients"], (rng, hard) => {
     const [a, b, first] = [rng.int(2, 15), rng.int(2, 7), rng.int(0, 1) === 0];
     if (!hard)
       return ask(
@@ -316,7 +230,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `二项式系数是 $6$，所以该项为 $6(${a})^2x^2$，再乘 $${b}$。`,
     );
   }),
-  polyTips("Solving Higher-Degree Equations", "解高次方程", ["solving-cubic-equations-by-grouping"], (rng, hard) => {
+  spec("Solving Higher-Degree Equations", "解高次方程", ["solving-cubic-equations-by-grouping"], (rng, hard) => {
     const [r, s, a] = [rng.int(1, 12), rng.int(2, 9), rng.int(2, 7)];
     if (!hard)
       return ask(
@@ -338,7 +252,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `分组后可分解为 $(x + ${a})(x - ${s})(x + ${s})$。`,
     );
   }),
-  radTips(
+  spec(
     "Identifying Characteristics of Rational Expressions",
     "判断有理式的特征",
     ["the-domain-and-range-of-a-rational-function"],
@@ -366,7 +280,7 @@ export const actExamAlgebra: ExamSpec[] = [
       );
     },
   ),
-  radTips("Solving Proportions", "解比例", ["proportions"], (rng, hard) => {
+  spec("Solving Proportions", "解比例", ["proportions"], (rng, hard) => {
     const [a, b, k, c] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 9), rng.int(1, 9)];
     if (!hard)
       return ask(
@@ -388,7 +302,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `右边等于 $${k}$，所以 $x + ${c} = ${a * k}$。`,
     );
   }),
-  radTips("Isolating Variables From Powers", "从幂中分离变量", ["solving-equations-using-cube-roots"], (rng, hard) => {
+  spec("Isolating Variables From Powers", "从幂中分离变量", ["solving-equations-using-cube-roots"], (rng, hard) => {
     const [x, a, b] = [rng.int(2, 7), rng.int(2, 6), rng.int(1, 30)];
     if (!hard)
       return ask(
@@ -410,34 +324,29 @@ export const actExamAlgebra: ExamSpec[] = [
       `加 $${b}$ 再除以 $${a}$，得 $x^2 = ${x * x}$，它有两个实数根。`,
     );
   }),
-  radTips(
-    "Identifying Characteristics of Radical Expressions",
-    "判断根式的特征",
-    ["square-roots-with-domain-restrictions"],
-    (rng, hard) => {
-      const [a, c] = [rng.int(1, 30), rng.int(2, 9)];
-      if (!hard)
-        return ask(
-          rng,
-          `What is the least value of $x$ for which $\\sqrt{x - ${a}}$ is a real number?`,
-          `使 $\\sqrt{x - ${a}}$ 为实数的 $x$ 的最小值是多少？`,
-          a,
-          [-a, 0, a + 1, a - 1],
-          `The expression under the root must be at least $0$, so $x \\ge ${a}$.`,
-          `根号内必须不小于 $0$，所以 $x \\ge ${a}$。`,
-        );
+  spec("Identifying Characteristics of Radical Expressions", "判断根式的特征", ["square-roots-with-domain-restrictions"], (rng, hard) => {
+    const [a, c] = [rng.int(1, 30), rng.int(2, 9)];
+    if (!hard)
       return ask(
         rng,
-        `What is the greatest value of $x$ for which $\\sqrt{${c * a} - ${c}x}$ is a real number?`,
-        `使 $\\sqrt{${c * a} - ${c}x}$ 为实数的 $x$ 的最大值是多少？`,
+        `What is the least value of $x$ for which $\\sqrt{x - ${a}}$ is a real number?`,
+        `使 $\\sqrt{x - ${a}}$ 为实数的 $x$ 的最小值是多少？`,
         a,
-        [c * a, -a, a + c, a - 1],
-        `$${c * a} - ${c}x \\ge 0$ means $x \\le ${a}$.`,
-        `$${c * a} - ${c}x \\ge 0$ 即 $x \\le ${a}$。`,
+        [-a, 0, a + 1, a - 1],
+        `The expression under the root must be at least $0$, so $x \\ge ${a}$.`,
+        `根号内必须不小于 $0$，所以 $x \\ge ${a}$。`,
       );
-    },
-  ),
-  absTips("Identifying Characteristics of Absolute Values", "判断绝对值的特征", ["absolute-value-expressions"], (rng, hard) => {
+    return ask(
+      rng,
+      `What is the greatest value of $x$ for which $\\sqrt{${c * a} - ${c}x}$ is a real number?`,
+      `使 $\\sqrt{${c * a} - ${c}x}$ 为实数的 $x$ 的最大值是多少？`,
+      a,
+      [c * a, -a, a + c, a - 1],
+      `$${c * a} - ${c}x \\ge 0$ means $x \\le ${a}$.`,
+      `$${c * a} - ${c}x \\ge 0$ 即 $x \\le ${a}$。`,
+    );
+  }),
+  spec("Identifying Characteristics of Absolute Values", "判断绝对值的特征", ["absolute-value-expressions"], (rng, hard) => {
     const [a, b, c] = [rng.int(1, 20), rng.int(1, 20), rng.int(1, 9)];
     if (!hard)
       return ask(
@@ -459,7 +368,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `绝对值至少为 $0$，当 $x = ${a}$ 时等于 $0$。`,
     );
   }),
-  absTips("Determining Absolute-Value Solution Sets", "确定绝对值方程的解集", ["absolute-value-equations"], (rng, hard) => {
+  spec("Determining Absolute-Value Solution Sets", "确定绝对值方程的解集", ["absolute-value-equations"], (rng, hard) => {
     const [c, d, a] = [rng.int(-9, 12), rng.int(1, 15), rng.int(2, 6)];
     if (!hard)
       return ask(
@@ -495,7 +404,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `得到 $${inner} = ${v}$，而${whyZh}。`,
     );
   }),
-  absTips("Solving Absolute Value Inequalities", "解绝对值不等式", ["absolute-value-inequalities"], (rng, hard) => {
+  spec("Solving Absolute Value Inequalities", "解绝对值不等式", ["absolute-value-inequalities"], (rng, hard) => {
     const [c, d] = [rng.int(1, 12), rng.int(1, 15)];
     if (!hard)
       return ask(
@@ -522,7 +431,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `这些值与 $${c}$ 的距离至少是 $${d}$，形成两条射线。`,
     );
   }),
-  modelTips("Writing Structural Linear Models", "列结构性线性模型", ["modeling-with-linear-equations"], (rng, hard) => {
+  spec("Writing Structural Linear Models", "列结构性线性模型", ["modeling-with-linear-equations"], (rng, hard) => {
     const [h, r, s, x] = [rng.int(2, 9) * 5, rng.int(2, 9), rng.int(2, 9), rng.int(2, 6)];
     if (!hard)
       return ask(
@@ -544,7 +453,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `把 $w$ 与 $${x}w + ${s}$ 的和乘 $2$。`,
     );
   }),
-  modelTips("Writing Quantity and Spending Models", "列数量和花费模型", ["modeling-with-linear-equations"], (rng, hard) => {
+  spec("Writing Quantity and Spending Models", "列数量和花费模型", ["modeling-with-linear-equations"], (rng, hard) => {
     const [p, q, m, n] = [rng.int(2, 9), rng.int(10, 19), rng.int(40, 200), rng.int(2, 6)];
     if (!hard)
       return ask(
@@ -566,7 +475,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `钢笔花 $${p}(${n}y)$，笔记本花 $${q}y$。`,
     );
   }),
-  modelTips("Modeling Mixture Problems", "混合问题建模", ["modeling-with-systems"], (rng, hard) => {
+  spec("Modeling Mixture Problems", "混合问题建模", ["modeling-with-systems"], (rng, hard) => {
     const [a, p, b, q] = [rng.int(1, 8) * 10, rng.int(1, 4) * 10, rng.int(1, 8) * 10, rng.int(5, 9) * 10];
     const acid = (a * p + b * q) / 100;
     if (!hard)
@@ -589,7 +498,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `酸有 $${acid}$ 升，总量是 $${a + b}$ 升。`,
     );
   }),
-  modelTips("Equating Linear Models", "令线性模型相等", ["systems-of-linear-equations"], (rng, hard) => {
+  spec("Equating Linear Models", "令线性模型相等", ["systems-of-linear-equations"], (rng, hard) => {
     const [name, nameZh] = rng.pick(names);
     const [r, d, m] = [rng.int(2, 15), rng.int(1, 6), rng.int(2, 20)];
     const [f] = [rng.int(1, 12) * 5];
@@ -613,7 +522,7 @@ export const actExamAlgebra: ExamSpec[] = [
       `$${m}$ 个月时相等，所以费用是 $${f} + ${r + d}(${m})$。`,
     );
   }),
-  modelTips(
+  spec(
     "Modeling With Nonlinear Equations",
     "用非线性方程建模",
     ["modeling-with-quadratic-equations", "modeling-with-linear-equations"],

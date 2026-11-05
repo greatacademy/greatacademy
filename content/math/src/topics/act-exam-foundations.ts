@@ -1,101 +1,10 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import type { ExamSpec } from "../exam.ts";
-import { ask, mod, words } from "../exam.ts";
+import { ask, lowest, spec, words } from "../exam.ts";
 import { heightFigure, nestedSquaresFigure, numberLineFigure, polyFigure, rightPts, stripFigure } from "../exam-figures.ts";
 
 // ACT Math Prep, Foundations: arithmetic, fractions, ratios and rates, word problems, and basic data and geometry.
-
-const arithTips = mod(
-  t(
-    "Work inside parentheses and absolute value bars first, then powers, then multiplication and division from left to right, and finally addition and subtraction from left to right.",
-    "先算括号和绝对值符号内的部分，再算乘方，然后从左到右算乘除，最后从左到右算加减。",
-  ),
-  t(
-    "Keep track of signs at every step: subtracting a negative adds, and the product of two negatives is positive. A factorial multiplies all the whole numbers down to $1$, so cancel before multiplying.",
-    "每一步都注意符号：减去负数等于加，两个负数之积为正。阶乘是一直乘到 $1$ 的连乘，所以先约分再相乘。",
-  ),
-);
-const fracTips = mod(
-  t(
-    "To add or subtract fractions, rewrite them over a common denominator. To multiply, multiply the tops and the bottoms. To divide, multiply by the reciprocal of the divisor.",
-    "分数加减要先通分。分数相乘时分子乘分子、分母乘分母。除以一个数等于乘它的倒数。",
-  ),
-  t(
-    "Simplify before you choose an answer. The number halfway between two fractions is their average, and a mixed number is easiest to work with as an improper fraction.",
-    "选答案之前先化简。两个分数正中间的数是它们的平均数，带分数写成假分数后最容易计算。",
-  ),
-);
-const orderTips = mod(
-  t(
-    "Compare numbers by writing them in the same form, as decimals or over a common denominator. On a number line, values increase from left to right, including negatives.",
-    "比较数时要写成相同形式，都化成小数或通分。数轴上的值从左到右递增，负数也一样。",
-  ),
-  t(
-    "To estimate a square root, find the two perfect squares around the number. Its root lies between their roots, and closer to the root of the nearer perfect square.",
-    "估计平方根时，找出这个数两侧的完全平方数。它的根介于两者的根之间，并且更接近较近的那个完全平方数的根。",
-  ),
-);
-const ratioTips = mod(
-  t(
-    "A ratio $a : b$ splits a whole into $a + b$ equal parts. Find the size of one part from what you know, and then multiply to find the quantity the question asks for.",
-    "比 $a : b$ 把整体分成 $a + b$ 等份。由已知条件求出一份的大小，再相乘求题目要的量。",
-  ),
-  t(
-    "To compare ratios, rewrite them with a common term or as decimals. Fuel mileage is distance divided by fuel, so the fuel needed is the distance divided by the mileage.",
-    "比较比时，把它们写成有公共项的形式或小数。油耗里程是距离除以油量，所以所需油量是距离除以每单位油量的里程。",
-  ),
-);
-const rateTips = mod(
-  t(
-    "Distance is rate times time. Keep the units consistent, and turn minutes into hours before you use a speed in miles per hour. A rate of change is the change in amount per unit.",
-    "距离等于速度乘时间。单位要一致，用每小时英里的速度之前，要把分钟换成小时。变化率是每单位的变化量。",
-  ),
-  t(
-    "Average speed is the total distance divided by the total time, not the mean of the speeds. Rates of workers add, so their combined time is one divided by the sum of their rates.",
-    "平均速度是总距离除以总时间，而不是速度的平均数。工人的效率可以相加，所以合作时间等于 $1$ 除以效率之和。",
-  ),
-);
-const moneyTips = mod(
-  t(
-    "Multiply each unit price by the number of units, then add. Read carefully to see whether the question wants a total, an amount remaining, a difference or a price per unit.",
-    "每个单价乘数量后相加。仔细读题，看题目要的是总数、剩余量、差额还是单价。",
-  ),
-  t(
-    "With several steps, write down each intermediate amount. Overtime hours are paid at the higher rate, and net profit is the income minus every cost.",
-    "步骤多时，写下每个中间量。加班小时按更高的工资计算，净利润是收入减去所有成本。",
-  ),
-);
-const partTips = mod(
-  t(
-    "A fraction of a whole is the fraction times the whole. The word of means multiply, so a fraction of what remains is computed from the remainder and not from the original amount.",
-    "整体的几分之几等于分数乘整体。“的”表示相乘，所以剩余部分的几分之几要用剩余量计算，而不是原来的量。",
-  ),
-  t(
-    "When items pack into whole groups, divide and then decide whether to round. Round up if everything must fit, and round down when only complete groups count.",
-    "把物品装成整组时，先做除法，再决定如何取整。全部都要装下就向上取整，只算完整的组就向下取整。",
-  ),
-);
-const statTips = mod(
-  t(
-    "A mean is the total divided by the count, so the total equals the mean times the count. The median is the middle value once the data are sorted.",
-    "平均数等于总和除以个数，所以总和等于平均数乘个数。中位数是排序后位于中间的值。",
-  ),
-  t(
-    "To find a missing value from a mean, subtract the known values from the required total. A mean and a median can differ when one value is far from the others.",
-    "由平均数求缺失值时，用要求的总和减去已知值。当有一个值远离其他值时，平均数和中位数可能不同。",
-  ),
-);
-const shapeTips = mod(
-  t(
-    "The perimeter of a rectangle is $2(l + w)$ and its area is $lw$. A square has four equal sides, and a triangle has area $\\frac{1}{2}bh$. A box has volume $lwh$.",
-    "长方形周长是 $2(l + w)$，面积是 $lw$。正方形四边相等，三角形面积是 $\\frac{1}{2}bh$。长方体体积是 $lwh$。",
-  ),
-  t(
-    "When a shape is scaled by a factor, lengths scale by it, areas by its square and volumes by its cube. When two figures have equal areas, set their area formulas equal and solve.",
-    "图形按比例缩放时，长度乘比例因子，面积乘它的平方，体积乘它的立方。两个图形面积相等时，令面积公式相等再求解。",
-  ),
-);
 
 const facts = [1, 1, 2, 6, 24, 120, 720, 5040, 40320] as const;
 
@@ -105,7 +14,7 @@ function sortedOf(xs: readonly number[]) {
 
 /** actExamFoundations are the exam-style questions of the ACT Foundations unit that have no SAT counterpart. */
 export const actExamFoundations: ExamSpec[] = [
-  arithTips("Evaluating Absolute-Value Expressions", "计算绝对值表达式", ["absolute-value"], (rng, hard) => {
+  spec("Evaluating Absolute-Value Expressions", "计算绝对值表达式", ["absolute-value"], (rng, hard) => {
     const [a, b, c] = [rng.int(2, 15), rng.int(16, 30), rng.int(2, 9)];
     if (!hard)
       return ask(
@@ -127,34 +36,29 @@ export const actExamFoundations: ExamSpec[] = [
       `$${c}(${b - a}) - ${c}$。`,
     );
   }),
-  arithTips(
-    "Evaluating Numeric Expressions",
-    "计算数值表达式",
-    ["evaluating-rational-number-expressions-without-exponents"],
-    (rng, hard) => {
-      const [a, b, c, d] = [rng.int(2, 15), rng.int(2, 9), rng.int(2, 9), rng.int(2, 9)];
-      if (!hard)
-        return ask(
-          rng,
-          `What is the value of $${a} + ${b} \\times ${c}$?`,
-          `$${a} + ${b} \\times ${c}$ 的值是多少？`,
-          a + b * c,
-          [(a + b) * c, a * b + c, a + b + c, a + b * c + 1],
-          `Multiply before adding.`,
-          `先乘后加。`,
-        );
+  spec("Evaluating Numeric Expressions", "计算数值表达式", ["evaluating-rational-number-expressions-without-exponents"], (rng, hard) => {
+    const [a, b, c, d] = [rng.int(2, 15), rng.int(2, 9), rng.int(2, 9), rng.int(2, 9)];
+    if (!hard)
       return ask(
         rng,
-        `What is the value of $${a} - ${b}(${c} - ${c + d})^2$?`,
-        `$${a} - ${b}(${c} - ${c + d})^2$ 的值是多少？`,
-        a - b * d * d,
-        [(a - b) * d * d, a + b * d * d, a - b * d, a - b * d * d + 1],
-        `The parentheses give $${-d}$, and its square is $${d * d}$.`,
-        `括号内得 $${-d}$，平方是 $${d * d}$。`,
+        `What is the value of $${a} + ${b} \\times ${c}$?`,
+        `$${a} + ${b} \\times ${c}$ 的值是多少？`,
+        a + b * c,
+        [(a + b) * c, a * b + c, a + b + c, a + b * c + 1],
+        `Multiply before adding.`,
+        `先乘后加。`,
       );
-    },
-  ),
-  arithTips("Evaluating Factorials and Quotients", "计算阶乘和商", ["factorials"], (rng, hard) => {
+    return ask(
+      rng,
+      `What is the value of $${a} - ${b}(${c} - ${c + d})^2$?`,
+      `$${a} - ${b}(${c} - ${c + d})^2$ 的值是多少？`,
+      a - b * d * d,
+      [(a - b) * d * d, a + b * d * d, a - b * d, a - b * d * d + 1],
+      `The parentheses give $${-d}$, and its square is $${d * d}$.`,
+      `括号内得 $${-d}$，平方是 $${d * d}$。`,
+    );
+  }),
+  spec("Evaluating Factorials and Quotients", "计算阶乘和商", ["factorials"], (rng, hard) => {
     const n = rng.int(3, 8);
     const k = rng.int(2, 9);
     const m = rng.int(6, 14);
@@ -180,7 +84,7 @@ export const actExamFoundations: ExamSpec[] = [
       `约去公因子 $${m - r}!$。`,
     );
   }),
-  arithTips(
+  spec(
     "Comparing Signed Number Changes",
     "比较有符号数的变化",
     ["solving-problems-using-addition-and-subtraction-of-rational-numbers"],
@@ -207,7 +111,7 @@ export const actExamFoundations: ExamSpec[] = [
       );
     },
   ),
-  arithTips(
+  spec(
     "Computing Integer Amounts in Context",
     "在情境中计算整数量",
     ["solving-problems-using-the-four-operations-on-rational-numbers"],
@@ -235,7 +139,7 @@ export const actExamFoundations: ExamSpec[] = [
       );
     },
   ),
-  arithTips("Identifying Place Value and Properties", "判断位值和运算性质", ["properties-of-real-number-operations"], (rng, hard) => {
+  spec("Identifying Place Value and Properties", "判断位值和运算性质", ["properties-of-real-number-operations"], (rng, hard) => {
     const [a, b, c, d] = [rng.int(1, 9), rng.int(0, 9), rng.int(1, 9), rng.int(1, 9)];
     const [x, y, z] = [rng.int(2, 15), rng.int(2, 15), rng.int(2, 15)];
     if (!hard)
@@ -259,8 +163,9 @@ export const actExamFoundations: ExamSpec[] = [
       t("Multiplying across a sum is the distributive property.", "把乘法分配到和的每一项上就是分配律。"),
     );
   }),
-  fracTips("Adding Fractions", "分数加法", ["adding-fractions-with-unlike-denominators"], (rng, hard) => {
-    const [a, b, c, d] = [rng.int(1, 7), rng.int(2, 9), rng.int(1, 7), rng.int(2, 9)];
+  spec("Adding Fractions", "分数加法", ["adding-fractions-with-unlike-denominators"], (rng, hard) => {
+    const [a0, b, c0, d] = [rng.int(1, 7), rng.int(2, 9), rng.int(1, 7), rng.int(2, 9)];
+    const [a, c] = [lowest(a0, b), lowest(c0, d)];
     const p = rng.int(1, 3);
     if (!hard)
       return ask(
@@ -289,8 +194,9 @@ export const actExamFoundations: ExamSpec[] = [
       `分数部分相加，保留整数部分 $${p}$。`,
     );
   }),
-  fracTips("Subtracting Fractions", "分数减法", ["adding-and-subtracting-fractions"], (rng, hard) => {
-    const [a, b, c, d] = [rng.int(5, 12), rng.int(2, 6), rng.int(1, 4), rng.int(7, 11)];
+  spec("Subtracting Fractions", "分数减法", ["adding-and-subtracting-fractions"], (rng, hard) => {
+    const [a0, b, c0, d] = [rng.int(5, 12), rng.int(2, 6), rng.int(1, 4), rng.int(7, 11)];
+    const [a, c] = [lowest(a0, b), lowest(c0, d)];
     const p = rng.int(2, 6);
     if (!hard)
       return ask(
@@ -319,8 +225,9 @@ export const actExamFoundations: ExamSpec[] = [
       `把长度写成 $\\frac{${p * b + 1}}{${b}}$。`,
     );
   }),
-  fracTips("Multiplying Fractions", "分数乘法", ["fractions-of-fractions"], (rng, hard) => {
-    const [a, b, c, d] = [rng.int(1, 8), rng.int(2, 9), rng.int(1, 8), rng.int(2, 9)];
+  spec("Multiplying Fractions", "分数乘法", ["fractions-of-fractions"], (rng, hard) => {
+    const [a0, b, c0, d] = [rng.int(1, 8), rng.int(2, 9), rng.int(1, 8), rng.int(2, 9)];
+    const [a, c] = [lowest(a0, b), lowest(c0, d)];
     const k = rng.int(2, 9);
     if (!hard)
       return ask(
@@ -342,8 +249,9 @@ export const actExamFoundations: ExamSpec[] = [
       `用 $${k * b}$ 约去分母中的 $${b}$。`,
     );
   }),
-  fracTips("Dividing With Fractions", "分数除法", ["dividing-fractions"], (rng, hard) => {
-    const [a, b, c, d] = [rng.int(1, 8), rng.int(2, 9), rng.int(1, 8), rng.int(2, 9)];
+  spec("Dividing With Fractions", "分数除法", ["dividing-fractions"], (rng, hard) => {
+    const [a0, b, c0, d] = [rng.int(1, 8), rng.int(2, 9), rng.int(1, 8), rng.int(2, 9)];
+    const [a, c] = [lowest(a0, b), lowest(c0, d)];
     const [n, k] = [rng.int(2, 9), rng.int(2, 6)];
     if (!hard)
       return ask(
@@ -365,8 +273,9 @@ export const actExamFoundations: ExamSpec[] = [
       `$${n * a} \\div \\frac{${a}}{${k}} = ${n * a} \\cdot \\frac{${k}}{${a}}$。`,
     );
   }),
-  fracTips("Finding a Midpoint Between Fractions", "求两个分数的中点", ["adding-and-subtracting-fractions"], (rng, hard) => {
-    const [a, b, c, d] = [rng.int(1, 8), rng.int(2, 9), rng.int(1, 8), rng.int(2, 9)];
+  spec("Finding a Midpoint Between Fractions", "求两个分数的中点", ["adding-and-subtracting-fractions"], (rng, hard) => {
+    const [a0, b, c0, d] = [rng.int(1, 8), rng.int(2, 9), rng.int(1, 8), rng.int(2, 9)];
+    const [a, c] = [lowest(a0, b), lowest(c0, d)];
     const u = rng.int(1, 3);
     if (!hard)
       return ask(
@@ -393,7 +302,7 @@ export const actExamFoundations: ExamSpec[] = [
       `两分数相加再除以 $2$。`,
     );
   }),
-  orderTips("Locating Numbers on a Number Line", "在数轴上定位", ["identifying-rational-numbers-on-a-number-line"], (rng, hard) => {
+  spec("Locating Numbers on a Number Line", "在数轴上定位", ["identifying-rational-numbers-on-a-number-line"], (rng, hard) => {
     const [a, d, k, n] = [rng.int(-9, 9), rng.int(2, 8), rng.int(1, 3), rng.pick([4, 5])];
     const m = rng.int(1, n - 1);
     if (!hard)
@@ -417,8 +326,9 @@ export const actExamFoundations: ExamSpec[] = [
       numberLineFigure(a, a + k * n, n, m),
     );
   }),
-  orderTips("Ordering Rational Numbers", "给有理数排序", ["comparing-rational-numbers"], (rng, hard) => {
-    const [a, b, c] = [rng.int(1, 3), rng.int(5, 9), rng.int(1, 9)];
+  spec("Ordering Rational Numbers", "给有理数排序", ["comparing-rational-numbers"], (rng, hard) => {
+    const [a0, b, c] = [rng.int(1, 3), rng.int(5, 9), rng.int(1, 9)];
+    const a = lowest(a0, b);
     const v1 = -c;
     const v2 = c * 10 + b;
     if (!hard)
@@ -453,7 +363,7 @@ export const actExamFoundations: ExamSpec[] = [
       ),
     );
   }),
-  orderTips("Estimating Square Roots", "估计平方根", ["approximating-square-roots"], (rng, hard) => {
+  spec("Estimating Square Roots", "估计平方根", ["approximating-square-roots"], (rng, hard) => {
     const n = rng.int(3, 15);
     const add = rng.int(1, 2 * n);
     const v = n * n + add;
@@ -483,7 +393,7 @@ export const actExamFoundations: ExamSpec[] = [
       `比较 $${v}$ 与 $${n}^2$、$${n + 1}^2$；它更接近 $${near}$ 的平方。`,
     );
   }),
-  ratioTips("Finding a Whole From a Ratio", "由比求整体", ["reasoning-with-equivalent-ratios"], (rng, hard) => {
+  spec("Finding a Whole From a Ratio", "由比求整体", ["reasoning-with-equivalent-ratios"], (rng, hard) => {
     const [a, b, u, c] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 12), rng.int(1, 5)];
     if (!hard)
       return ask(
@@ -505,7 +415,7 @@ export const actExamFoundations: ExamSpec[] = [
       `一份是 $${u}$，红珠比绿珠多 $${a}$ 份。`,
     );
   }),
-  ratioTips("Comparing Ratios", "比较比", ["further-reasoning-with-equivalent-ratios"], (rng, hard) => {
+  spec("Comparing Ratios", "比较比", ["further-reasoning-with-equivalent-ratios"], (rng, hard) => {
     const [a, b, c, k] = [rng.int(2, 9), rng.int(10, 15), rng.int(2, 9), rng.int(2, 5)];
     const d = rng.int(16, 20);
     const ac = a * d;
@@ -546,7 +456,7 @@ export const actExamFoundations: ExamSpec[] = [
       ),
     );
   }),
-  ratioTips("Solving Fuel Mileage Problems", "解决油耗问题", ["solving-problems-using-unit-rates"], (rng, hard) => {
+  spec("Solving Fuel Mileage Problems", "解决油耗问题", ["solving-problems-using-unit-rates"], (rng, hard) => {
     const [m, g, p, k] = [rng.int(15, 45), rng.int(2, 20), rng.int(2, 6), rng.int(2, 9)];
     if (!hard)
       return ask(
@@ -568,7 +478,7 @@ export const actExamFoundations: ExamSpec[] = [
       `这次行程用 $${g * k}$ 加仑。`,
     );
   }),
-  rateTips("Working With a Rate of Change", "变化率", ["rates-of-change-in-applied-contexts"], (rng, hard) => {
+  spec("Working With a Rate of Change", "变化率", ["rates-of-change-in-applied-contexts"], (rng, hard) => {
     const [s, r, h, k] = [rng.int(20, 200), rng.int(2, 15), rng.int(2, 12), rng.int(2, 9)];
     if (!hard)
       return ask(
@@ -590,38 +500,33 @@ export const actExamFoundations: ExamSpec[] = [
       `速率是每小时 $${r}$ 加仑。`,
     );
   }),
-  rateTips(
-    "Finding Position or Travel Time",
-    "求位置或行驶时间",
-    ["speed-distance-time", "units-of-time-and-elapsed-time"],
-    (rng, hard) => {
-      const [v, h, st, m] = [rng.int(4, 14) * 5, rng.int(2, 8), rng.int(1, 9), rng.pick([15, 30, 45])];
-      if (!hard)
-        return ask(
-          rng,
-          `A train travels at $${v}$ miles per hour. How many hours does it take to go $${v * h}$ miles?`,
-          `火车每小时行驶 $${v}$ 英里。走 $${v * h}$ 英里需要多少小时？`,
-          h,
-          [v * v * h, v + h, h + 1, 2 * h],
-          `Time is distance divided by rate.`,
-          `时间等于距离除以速度。`,
-        );
-      const end = st * 60 + h * 60 + m;
-      const hh = Math.floor(end / 60);
-      const mm = end % 60;
-      const fmt = (a: number, b: number) => `${a}{:}${b === 0 ? "00" : b}`;
+  spec("Finding Position or Travel Time", "求位置或行驶时间", ["speed-distance-time", "units-of-time-and-elapsed-time"], (rng, hard) => {
+    const [v, h, st, m] = [rng.int(4, 14) * 5, rng.int(2, 8), rng.int(1, 9), rng.pick([15, 30, 45])];
+    if (!hard)
       return ask(
         rng,
-        `A bus leaves at $${st}{:}00$, and the trip takes $${h}$ hours and $${m}$ minutes. Using a $24$-hour clock, at what time does it arrive?`,
-        `公共汽车 $${st}{:}00$ 出发，行程 $${h}$ 小时 $${m}$ 分钟。按 $24$ 小时制，它几点到达？`,
-        fmt(hh, mm),
-        [fmt(hh + 1, mm), fmt(hh, (mm + 15) % 60), fmt(hh - 1, mm), fmt(st + h, (m + 30) % 60), fmt(hh + 2, mm)],
-        `Add the hours, then the minutes.`,
-        `先加小时，再加分钟。`,
+        `A train travels at $${v}$ miles per hour. How many hours does it take to go $${v * h}$ miles?`,
+        `火车每小时行驶 $${v}$ 英里。走 $${v * h}$ 英里需要多少小时？`,
+        h,
+        [v * v * h, v + h, h + 1, 2 * h],
+        `Time is distance divided by rate.`,
+        `时间等于距离除以速度。`,
       );
-    },
-  ),
-  rateTips("Finding an Average Speed", "求平均速度", ["further-speed-distance-time"], (rng, hard) => {
+    const end = st * 60 + h * 60 + m;
+    const hh = Math.floor(end / 60);
+    const mm = end % 60;
+    const fmt = (a: number, b: number) => `${a}{:}${b === 0 ? "00" : b}`;
+    return ask(
+      rng,
+      `A bus leaves at $${st}{:}00$, and the trip takes $${h}$ hours and $${m}$ minutes. Using a $24$-hour clock, at what time does it arrive?`,
+      `公共汽车 $${st}{:}00$ 出发，行程 $${h}$ 小时 $${m}$ 分钟。按 $24$ 小时制，它几点到达？`,
+      fmt(hh, mm),
+      [fmt(hh + 1, mm), fmt(hh, (mm + 15) % 60), fmt(hh - 1, mm), fmt(st + h, (m + 30) % 60), fmt(hh + 2, mm)],
+      `Add the hours, then the minutes.`,
+      `先加小时，再加分钟。`,
+    );
+  }),
+  spec("Finding an Average Speed", "求平均速度", ["further-speed-distance-time"], (rng, hard) => {
     const [d, h, v1, v2, t1, t2] = [
       rng.int(4, 12) * 10,
       rng.int(2, 8),
@@ -655,7 +560,7 @@ export const actExamFoundations: ExamSpec[] = [
       `总距离 $${v1 * t1 + v2 * t2}$ 除以总时间 $${t1 + t2}$。`,
     );
   }),
-  rateTips("Solving Multi-Leg Speed Problems", "解决多段速度问题", ["further-speed-distance-time"], (rng, hard) => {
+  spec("Solving Multi-Leg Speed Problems", "解决多段速度问题", ["further-speed-distance-time"], (rng, hard) => {
     const [v, h, w, k] = [rng.int(6, 14) * 5, rng.int(1, 5), rng.int(4, 12) * 5, rng.int(1, 4)];
     if (!hard)
       return ask(
@@ -677,7 +582,7 @@ export const actExamFoundations: ExamSpec[] = [
       `第二段是 $${w * k}$ 英里。`,
     );
   }),
-  rateTips("Combining Rates", "合并速率", ["work-problems"], (rng, hard) => {
+  spec("Combining Rates", "合并速率", ["work-problems"], (rng, hard) => {
     const [a, b, c, h] = [rng.int(2, 12), rng.int(2, 12), rng.int(2, 9), rng.int(2, 9)];
     const [p, q] = rng.pick([
       [3, 6],
@@ -711,7 +616,7 @@ export const actExamFoundations: ExamSpec[] = [
       `效率相加：$\\frac{1}{${p}} + \\frac{1}{${q}} = \\frac{${p + q}}{${p * q}}$。`,
     );
   }),
-  partTips("Finding a Percent in a Mixture", "求混合物中的百分比", ["percent-of-a-number"], (rng, hard) => {
+  spec("Finding a Percent in a Mixture", "求混合物中的百分比", ["percent-of-a-number"], (rng, hard) => {
     const [a, b, u, p, q] = [rng.int(1, 9), rng.int(1, 9), rng.int(2, 6), rng.int(2, 8) * 5, rng.int(2, 8) * 5];
     if (!hard)
       return ask(
@@ -734,7 +639,7 @@ export const actExamFoundations: ExamSpec[] = [
       `等量混合时，浓度是两个百分比的平均数。`,
     );
   }),
-  rateTips("Converting a Rate", "换算速率", ["unit-conversions-using-units-of-time"], (rng, hard) => {
+  spec("Converting a Rate", "换算速率", ["unit-conversions-using-units-of-time"], (rng, hard) => {
     const [v, w, k] = [rng.int(1, 30) * 60, rng.int(1, 20) * 5, rng.int(2, 5)];
     if (!hard)
       return ask(
@@ -756,7 +661,7 @@ export const actExamFoundations: ExamSpec[] = [
       `$${k}$ 小时有 $${60 * k}$ 分钟。`,
     );
   }),
-  moneyTips("Computing a Total From Unit Prices", "由单价计算总价", ["working-with-unit-prices"], (rng, hard) => {
+  spec("Computing a Total From Unit Prices", "由单价计算总价", ["working-with-unit-prices"], (rng, hard) => {
     const [a, b, n, m] = [rng.int(2, 15), rng.int(2, 15), rng.int(2, 12), rng.int(2, 12)];
     const [c, l] = [rng.int(2, 9), rng.int(2, 9)];
     if (!hard)
@@ -779,7 +684,7 @@ export const actExamFoundations: ExamSpec[] = [
       `把三个积相加。`,
     );
   }),
-  moneyTips(
+  spec(
     "Finding a Total From Repeated Amounts",
     "由重复量求总量",
     ["solving-multistep-word-problems-using-number-operations"],
@@ -806,7 +711,7 @@ export const actExamFoundations: ExamSpec[] = [
       );
     },
   ),
-  moneyTips("Computing a Cost From a Unit Rate", "由单位率计算费用", ["solving-multi-step-unit-price-problems"], (rng, hard) => {
+  spec("Computing a Cost From a Unit Rate", "由单位率计算费用", ["solving-multi-step-unit-price-problems"], (rng, hard) => {
     const [n, k, u, f] = [rng.int(2, 9), rng.int(2, 12), rng.int(2, 9), rng.int(5, 40)];
     if (!hard)
       return ask(
@@ -828,34 +733,29 @@ export const actExamFoundations: ExamSpec[] = [
       `时薪是 $${u * 5}$ 美元，固定费只收一次。`,
     );
   }),
-  moneyTips(
-    "Finding a Remaining Amount",
-    "求剩余量",
-    ["further-solving-multistep-word-problems-using-the-four-operations"],
-    (rng, hard) => {
-      const [t0, a, n, b, m] = [rng.int(200, 400), rng.int(3, 12), rng.int(2, 8), rng.int(2, 9), rng.int(2, 8)];
-      if (!hard)
-        return ask(
-          rng,
-          `A student has $\\$${t0}$ and buys $${n}$ shirts at $\\$${a}$ each. How much money is left, in dollars?`,
-          `学生有 $${t0}$ 美元，买 $${n}$ 件衬衫，每件 $${a}$ 美元。还剩多少美元？`,
-          t0 - n * a,
-          [n * a, t0 - a, t0 + n * a, t0 - n * a - a],
-          `Subtract the $${n * a}$ spent.`,
-          `减去花掉的 $${n * a}$。`,
-        );
+  spec("Finding a Remaining Amount", "求剩余量", ["further-solving-multistep-word-problems-using-the-four-operations"], (rng, hard) => {
+    const [t0, a, n, b, m] = [rng.int(200, 400), rng.int(3, 12), rng.int(2, 8), rng.int(2, 9), rng.int(2, 8)];
+    if (!hard)
       return ask(
         rng,
-        `A student has $\\$${t0}$, buys $${n}$ shirts at $\\$${a}$ each and $${m}$ caps at $\\$${b}$ each. How much money is left, in dollars?`,
-        `学生有 $${t0}$ 美元，买 $${n}$ 件衬衫每件 $${a}$ 美元，再买 $${m}$ 顶帽子每顶 $${b}$ 美元。还剩多少美元？`,
-        t0 - n * a - m * b,
-        [n * a + m * b, t0 - n * a, t0 - (n + m) * (a + b), t0 - n * a - m * b + b],
-        `The student spends $${n * a + m * b}$ in all.`,
-        `一共花 $${n * a + m * b}$。`,
+        `A student has $\\$${t0}$ and buys $${n}$ shirts at $\\$${a}$ each. How much money is left, in dollars?`,
+        `学生有 $${t0}$ 美元，买 $${n}$ 件衬衫，每件 $${a}$ 美元。还剩多少美元？`,
+        t0 - n * a,
+        [n * a, t0 - a, t0 + n * a, t0 - n * a - a],
+        `Subtract the $${n * a}$ spent.`,
+        `减去花掉的 $${n * a}$。`,
       );
-    },
-  ),
-  moneyTips("Comparing Two Totals", "比较两个总量", ["numerical-word-problems"], (rng, hard) => {
+    return ask(
+      rng,
+      `A student has $\\$${t0}$, buys $${n}$ shirts at $\\$${a}$ each and $${m}$ caps at $\\$${b}$ each. How much money is left, in dollars?`,
+      `学生有 $${t0}$ 美元，买 $${n}$ 件衬衫每件 $${a}$ 美元，再买 $${m}$ 顶帽子每顶 $${b}$ 美元。还剩多少美元？`,
+      t0 - n * a - m * b,
+      [n * a + m * b, t0 - n * a, t0 - (n + m) * (a + b), t0 - n * a - m * b + b],
+      `The student spends $${n * a + m * b}$ in all.`,
+      `一共花 $${n * a + m * b}$。`,
+    );
+  }),
+  spec("Comparing Two Totals", "比较两个总量", ["numerical-word-problems"], (rng, hard) => {
     const [a, b, n, f, g] = [rng.int(5, 15), rng.int(16, 25), rng.int(3, 12), rng.int(5, 30), rng.int(31, 70)];
     if (!hard)
       return ask(
@@ -877,7 +777,7 @@ export const actExamFoundations: ExamSpec[] = [
       `总费用是 $${g + a * n}$ 和 $${f + b * n}$。`,
     );
   }),
-  moneyTips("Finding a Net Cost or Profit", "求净成本或利润", ["percentages-in-commerce-and-finance"], (rng, hard) => {
+  spec("Finding a Net Cost or Profit", "求净成本或利润", ["percentages-in-commerce-and-finance"], (rng, hard) => {
     const [c, p, n, f, d] = [rng.int(2, 9), rng.int(10, 25), rng.int(5, 40), rng.int(20, 90), rng.pick([10, 20, 25, 50])];
     if (!hard)
       return ask(
@@ -902,7 +802,7 @@ export const actExamFoundations: ExamSpec[] = [
       `折后每件售价 $${sale}$ 美元，所以销售额为 $${n * 4}(${sale}) = ${n * 4 * sale}$ 美元。减去进货成本 $${n * 4}(${c}) = ${n * 4 * c}$ 和摊位费 $${fee}$。`,
     );
   }),
-  moneyTips("Computing Overtime Pay", "计算加班工资", ["multistep-numerical-word-problems"], (rng, hard) => {
+  spec("Computing Overtime Pay", "计算加班工资", ["multistep-numerical-word-problems"], (rng, hard) => {
     const [r, o, h] = [rng.int(5, 20) * 2, rng.int(2, 15), rng.int(30, 39)];
     if (!hard)
       return ask(
@@ -924,7 +824,7 @@ export const actExamFoundations: ExamSpec[] = [
       `加班费 $${2 * o * r}$ 美元相当于 $${o}$ 小时，每小时 $${2 * r}$ 美元。`,
     );
   }),
-  moneyTips("Finding a Unit Amount", "求单位量", ["unit-prices-and-speed"], (rng, hard) => {
+  spec("Finding a Unit Amount", "求单位量", ["unit-prices-and-speed"], (rng, hard) => {
     const [u, n, k, f] = [rng.int(2, 20), rng.int(3, 20), rng.int(2, 9), rng.int(2, 15)];
     if (!hard)
       return ask(
@@ -946,8 +846,9 @@ export const actExamFoundations: ExamSpec[] = [
       `先去掉手续费，每张票 $${u}$ 美元。`,
     );
   }),
-  partTips("Finding a Fractional Part of a Whole", "求整体的几分之几", ["fractions-of-fractions"], (rng, hard) => {
-    const [a, b, u, k] = [rng.int(1, 8), rng.int(2, 9), rng.int(2, 20), rng.int(2, 9)];
+  spec("Finding a Fractional Part of a Whole", "求整体的几分之几", ["fractions-of-fractions"], (rng, hard) => {
+    const [a0, b, u, k] = [rng.int(1, 8), rng.int(2, 9), rng.int(2, 20), rng.int(2, 9)];
+    const a = lowest(a0, b);
     if (!hard)
       return ask(
         rng,
@@ -968,8 +869,9 @@ export const actExamFoundations: ExamSpec[] = [
       `一份是 $${u * k}$，共 $${b}$ 份。`,
     );
   }),
-  partTips("Applying Successive Fractions", "连续应用分数", ["fractions-of-fractions-with-algebraic-expressions"], (rng, hard) => {
-    const [a, b, u, k] = [rng.int(1, 3), rng.int(4, 6), rng.int(2, 9), rng.int(2, 5)];
+  spec("Applying Successive Fractions", "连续应用分数", ["fractions-of-fractions-with-algebraic-expressions"], (rng, hard) => {
+    const [a0, b, u, k] = [rng.int(1, 3), rng.int(4, 6), rng.int(2, 9), rng.int(2, 5)];
+    const a = lowest(a0, b);
     const whole = b * k * u;
     if (!hard)
       return ask(
@@ -993,7 +895,7 @@ export const actExamFoundations: ExamSpec[] = [
       `第一次之后剩 $${left * k}$ 美元，它的 $\\frac{1}{${k}}$ 是 $${left}$ 美元。`,
     );
   }),
-  partTips("Packing Into Whole Groups", "装成整组", ["division-of-whole-numbers-with-decimal-quotients-and-rounding"], (rng, hard) => {
+  spec("Packing Into Whole Groups", "装成整组", ["division-of-whole-numbers-with-decimal-quotients-and-rounding"], (rng, hard) => {
     const [g, q, r] = [rng.int(4, 15), rng.int(3, 15), rng.int(1, 3)];
     const n = g * q + r;
     if (!hard)
@@ -1021,7 +923,7 @@ export const actExamFoundations: ExamSpec[] = [
       `$${n} = ${g}(${q}) + ${r}$。`,
     );
   }),
-  partTips("Finding Counts From Waste and Limits", "由损耗和限制求数量", ["multistep-numerical-word-problems"], (rng, hard) => {
+  spec("Finding Counts From Waste and Limits", "由损耗和限制求数量", ["multistep-numerical-word-problems"], (rng, hard) => {
     const [L, c, w, b, cap] = [rng.int(5, 20), rng.int(2, 6), rng.int(1, 4) * 10, rng.int(2, 9), rng.int(2, 5)];
     if (!hard)
       return ask(
@@ -1046,7 +948,7 @@ export const actExamFoundations: ExamSpec[] = [
       `剩下 $${kept}$ 个合格品，再除以 $${cap}$，舍去余数。`,
     );
   }),
-  rateTips("Combining Segments of a Trip", "合并行程的各段", ["speed-distance-time"], (rng, hard) => {
+  spec("Combining Segments of a Trip", "合并行程的各段", ["speed-distance-time"], (rng, hard) => {
     const [a, b, c, h] = [rng.int(5, 80), rng.int(5, 80), rng.int(5, 80), rng.int(2, 6)];
     if (!hard)
       return ask(
@@ -1068,7 +970,7 @@ export const actExamFoundations: ExamSpec[] = [
       `总长 $${(a + b + c) * h}$ 英里，再除以 $${h}$。`,
     );
   }),
-  partTips("Identifying a Necessary Conclusion", "判断必然结论", ["necessary-and-sufficient-conditions"], (rng, hard) => {
+  spec("Identifying a Necessary Conclusion", "判断必然结论", ["necessary-and-sufficient-conditions"], (rng, hard) => {
     const [n, k] = [rng.int(10, 60), rng.int(2, 9)];
     const [subject, zhSubject] = rng.pick([
       ["club", "俱乐部"],
@@ -1111,7 +1013,7 @@ export const actExamFoundations: ExamSpec[] = [
       ),
     );
   }),
-  statTips("Finding a Value From a Mean", "由平均数求值", ["mean-of-a-data-set"], (rng, hard) => {
+  spec("Finding a Value From a Mean", "由平均数求值", ["mean-of-a-data-set"], (rng, hard) => {
     const [i, j, l, m] = [rng.int(-8, 8), rng.int(-8, 8), rng.int(-8, 8), rng.int(70, 75)];
     const [a, b, c] = [m + i, m + j, m + l];
     const e = rng.int(2, 6);
@@ -1135,7 +1037,7 @@ export const actExamFoundations: ExamSpec[] = [
       `总和从 $${(e + 3) * m}$ 降到 $${(e + 2) * (m - e)}$。`,
     );
   }),
-  statTips("Finding a Difference of Center Measures", "求集中量数之差", ["comparing-medians"], (rng, hard) => {
+  spec("Finding a Difference of Center Measures", "求集中量数之差", ["comparing-medians"], (rng, hard) => {
     const base = rng.int(2, 10);
     const steps = [rng.int(1, 4), rng.int(1, 4), rng.int(1, 4), rng.int(1, 4)] as const;
     const xs = [
@@ -1170,7 +1072,7 @@ export const actExamFoundations: ExamSpec[] = [
       `总和增加 $${extra}$，由 $5$ 个值分摊，而中位数仍是 $${med}$。`,
     );
   }),
-  shapeTips("Finding the Area of a Square", "求正方形的面积", ["area-of-rectangles-and-squares"], (rng, hard) => {
+  spec("Finding the Area of a Square", "求正方形的面积", ["area-of-rectangles-and-squares"], (rng, hard) => {
     const s = rng.int(2, 30);
     const k = rng.int(2, 6);
     if (!hard)
@@ -1193,7 +1095,7 @@ export const actExamFoundations: ExamSpec[] = [
       `每边长 $${s * k}$。`,
     );
   }),
-  shapeTips("Finding the Area of a Triangle", "求三角形的面积", ["areas-of-triangles"], (rng, hard) => {
+  spec("Finding the Area of a Triangle", "求三角形的面积", ["areas-of-triangles"], (rng, hard) => {
     const [b, h, k] = [rng.int(1, 15) * 2, rng.int(2, 20), rng.int(2, 5)];
     if (!hard)
       return ask(
@@ -1217,7 +1119,7 @@ export const actExamFoundations: ExamSpec[] = [
       polyFigure(rightPts(b, k * h), { s: [`${k * h}`, `${b}`, null], right: 1 }),
     );
   }),
-  shapeTips(
+  spec(
     "Finding a Side From Equal Areas",
     "由相等面积求边",
     ["finding-side-lengths-of-squares-and-cubes-from-area-or-volume"],
@@ -1244,7 +1146,7 @@ export const actExamFoundations: ExamSpec[] = [
       );
     },
   ),
-  shapeTips("Combining Rectangle Areas", "合并长方形面积", ["composite-shapes"], (rng, hard) => {
+  spec("Combining Rectangle Areas", "合并长方形面积", ["composite-shapes"], (rng, hard) => {
     const [a, b, c, d, e, f] = [rng.int(2, 15), rng.int(2, 15), rng.int(2, 15), rng.int(2, 15), rng.int(2, 9), rng.int(2, 9)];
     if (!hard)
       return ask(
@@ -1266,7 +1168,7 @@ export const actExamFoundations: ExamSpec[] = [
       `两个房间相加，再减去壁橱。`,
     );
   }),
-  shapeTips("Finding a Shaded Fractional Area", "求阴影部分占的比例", ["finding-areas-between-shapes"], (rng, hard) => {
+  spec("Finding a Shaded Fractional Area", "求阴影部分占的比例", ["finding-areas-between-shapes"], (rng, hard) => {
     const [n, m, k] = [rng.int(6, 16), rng.int(2, 12), rng.int(2, 4)];
     const cells = rng.int(1, n - 1);
     if (!hard)
@@ -1296,7 +1198,7 @@ export const actExamFoundations: ExamSpec[] = [
       nestedSquaresFigure(`${m * k}`, `${m}`, k),
     );
   }),
-  shapeTips("Finding the Perimeter of a Rectangle", "求长方形的周长", ["perimeter"], (rng, hard) => {
+  spec("Finding the Perimeter of a Rectangle", "求长方形的周长", ["perimeter"], (rng, hard) => {
     const [l, w, k] = [rng.int(3, 25), rng.int(2, 15), rng.int(2, 5)];
     if (!hard)
       return ask(
@@ -1318,7 +1220,7 @@ export const actExamFoundations: ExamSpec[] = [
       `长是 $${k * w}$。`,
     );
   }),
-  shapeTips("Finding the Perimeter of a Square", "求正方形的周长", ["perimeter"], (rng, hard) => {
+  spec("Finding the Perimeter of a Square", "求正方形的周长", ["perimeter"], (rng, hard) => {
     const [s, k] = [rng.int(3, 40), rng.int(2, 5)];
     if (!hard)
       return ask(
@@ -1340,34 +1242,29 @@ export const actExamFoundations: ExamSpec[] = [
       `边长是 $${s * k}$。`,
     );
   }),
-  shapeTips(
-    "Scaling a Rectangular Prism Volume",
-    "按比例缩放长方体体积",
-    ["volumes-of-right-rectangular-prisms-word-problems"],
-    (rng, hard) => {
-      const [l, w, h, k] = [rng.int(2, 12), rng.int(2, 12), rng.int(2, 12), rng.int(2, 4)];
-      if (!hard)
-        return ask(
-          rng,
-          `A box measures $${l}$ by $${w}$ by $${h}$. If its height is multiplied by $${k}$, what is the new volume?`,
-          `盒子长宽高为 $${l}$、$${w}$、$${h}$。若高乘 $${k}$，新体积是多少？`,
-          l * w * h * k,
-          [l * w * h, l * w * h + k, k ** 3 * l * w * h, k * k * l * w * h],
-          `Volume is proportional to height.`,
-          `体积与高成正比。`,
-        );
+  spec("Scaling a Rectangular Prism Volume", "按比例缩放长方体体积", ["volumes-of-right-rectangular-prisms-word-problems"], (rng, hard) => {
+    const [l, w, h, k] = [rng.int(2, 12), rng.int(2, 12), rng.int(2, 12), rng.int(2, 4)];
+    if (!hard)
       return ask(
         rng,
-        `A box measures $${l}$ by $${w}$ by $${h}$. If each dimension is multiplied by $${k}$, what is the new volume?`,
-        `盒子长宽高为 $${l}$、$${w}$、$${h}$。若每个尺寸都乘 $${k}$，新体积是多少？`,
-        k ** 3 * l * w * h,
-        [k * l * w * h, k * k * l * w * h, 3 * k * l * w * h, k ** 3 * l * w * h + k],
-        `Volume scales by $${k}^3$.`,
-        `体积乘 $${k}^3$。`,
+        `A box measures $${l}$ by $${w}$ by $${h}$. If its height is multiplied by $${k}$, what is the new volume?`,
+        `盒子长宽高为 $${l}$、$${w}$、$${h}$。若高乘 $${k}$，新体积是多少？`,
+        l * w * h * k,
+        [l * w * h, l * w * h + k, k ** 3 * l * w * h, k * k * l * w * h],
+        `Volume is proportional to height.`,
+        `体积与高成正比。`,
       );
-    },
-  ),
-  shapeTips("Counting Packed Rectangular Units", "计算装入的长方体单位数", ["packing-rectangular-boxes"], (rng, hard) => {
+    return ask(
+      rng,
+      `A box measures $${l}$ by $${w}$ by $${h}$. If each dimension is multiplied by $${k}$, what is the new volume?`,
+      `盒子长宽高为 $${l}$、$${w}$、$${h}$。若每个尺寸都乘 $${k}$，新体积是多少？`,
+      k ** 3 * l * w * h,
+      [k * l * w * h, k * k * l * w * h, 3 * k * l * w * h, k ** 3 * l * w * h + k],
+      `Volume scales by $${k}^3$.`,
+      `体积乘 $${k}^3$。`,
+    );
+  }),
+  spec("Counting Packed Rectangular Units", "计算装入的长方体单位数", ["packing-rectangular-boxes"], (rng, hard) => {
     const [a, b, c, u] = [rng.int(2, 8), rng.int(2, 8), rng.int(2, 8), rng.int(2, 4)];
     if (!hard)
       return ask(

@@ -2,40 +2,9 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
 import type { ExamSpec } from "../exam.ts";
-import { curveFigure, mc, mod, sg, spr, table, tx, words } from "../exam.ts";
+import { curveFigure, mc, sg, spec, spr, table, tx, words } from "../exam.ts";
 
 // SAT Math Prep, Advanced Math: quadratic functions, quadratic models and polynomials.
-
-const fnTips = mod(
-  t(
-    "Each form of a quadratic shows something at once: vertex form the extreme point, factored form the zeros, and standard form the $y$-intercept.",
-    "二次函数的每种形式都直接显示某个特征：顶点式显示极值点，因式式显示零点，一般式显示 $y$ 轴截距。",
-  ),
-  t(
-    "A parabola is symmetric about the vertical line through its vertex, so two points with equal outputs have the axis halfway between them.",
-    "抛物线关于过顶点的竖直线对称，所以输出相等的两点，其对称轴在它们的正中间。",
-  ),
-);
-const modelTips = mod(
-  t(
-    "Say what the variable stands for before you write the equation, and check that the answer makes sense in the situation. A negative length or time gets rejected.",
-    "列方程前先说清变量的含义，并检查答案是否符合情境。负的长度或时间要舍去。",
-  ),
-  t(
-    "In a quadratic model, the constant term is the starting value and the vertex gives the greatest or least value, and when it occurs.",
-    "在二次模型中，常数项是起始值，顶点给出最大或最小值及其出现的时间。",
-  ),
-);
-const polyTips = mod(
-  t(
-    "A zero $r$ of a polynomial means $x - r$ is a factor, and the graph crosses or touches the $x$-axis there. A squared factor touches without crossing.",
-    "多项式的零点 $r$ 表示 $x - r$ 是因式，图象在该处穿过或接触 $x$ 轴。平方因式只接触不穿过。",
-  ),
-  t(
-    "Replacing $x$ by $x - h$ moves a graph right by $h$, and adding $k$ moves it up by $k$. Multiplying the output stretches it vertically.",
-    "把 $x$ 换成 $x - h$ 使图象右移 $h$，加上 $k$ 使其上移 $k$。输出乘以一个数使图象竖直伸缩。",
-  ),
-);
 
 const parabolaFig = (a: number, h: number, k: number) =>
   curveFigure(
@@ -46,7 +15,7 @@ const parabolaFig = (a: number, h: number, k: number) =>
 
 /** satExamAdvanced2 are the exam-style questions on quadratic functions, quadratic models and polynomials. */
 export const satExamAdvanced2: ExamSpec[] = [
-  fnTips("Quadratic Functions", "二次函数", ["graphs-of-general-quadratic-functions"], (rng, hard) => {
+  spec("Quadratic Functions", "二次函数", ["graphs-of-general-quadratic-functions"], (rng, hard) => {
     const [a, b, c, k] = [rng.int(2, 5), rng.nonZero(-6, 6), rng.nonZero(-9, 9), rng.int(1, 5)];
     const f = `${a}x^2 ${tx(b)} ${sg(c)}`;
     if (!hard)
@@ -73,7 +42,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       ),
     );
   }),
-  fnTips("Graphs of Quadratic Functions", "二次函数的图象", ["graphs-of-general-quadratic-functions"], (rng, hard) => {
+  spec("Graphs of Quadratic Functions", "二次函数的图象", ["graphs-of-general-quadratic-functions"], (rng, hard) => {
     const a = rng.pick([1, -1]);
     const [h, k] = [rng.nonZero(-4, 4), rng.nonZero(-6, 6)];
     const fig = parabolaFig(a, h, k);
@@ -109,7 +78,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       fig,
     );
   }),
-  fnTips(
+  spec(
     "Finding Extreme Values of Quadratic Functions in Vertex Form",
     "由顶点式求二次函数的极值",
     ["the-vertex-form-of-a-parabola"],
@@ -143,7 +112,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       );
     },
   ),
-  fnTips(
+  spec(
     "Using Standard and Factored Forms to Reason About Quadratic Functions",
     "用一般式和因式式分析二次函数",
     ["reasoning-about-coefficients-of-quadratics-using-standard-and-factored-forms"],
@@ -174,7 +143,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       );
     },
   ),
-  fnTips(
+  spec(
     "Using Symmetry to Reason About Quadratic Functions",
     "用对称性分析二次函数",
     ["reasoning-about-coefficients-of-quadratics-using-symmetry"],
@@ -210,7 +179,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       );
     },
   ),
-  fnTips(
+  spec(
     "Identifying Quadratic Functions From Tabular Data",
     "由表格识别二次函数",
     ["fitting-quadratic-functions-to-data-using-vertex-form"],
@@ -253,39 +222,34 @@ export const satExamAdvanced2: ExamSpec[] = [
       );
     },
   ),
-  modelTips(
-    "Modeling Number Problems With Quadratic Equations",
-    "用二次方程解数字问题",
-    ["modeling-with-quadratic-equations"],
-    (rng, hard) => {
-      const n = rng.int(3, 15);
-      const d = rng.int(1, 6);
-      if (!hard)
-        return mc(
-          rng,
-          t(
-            `The product of a positive number $x$ and a number $${d}$ greater than $x$ is $${n * (n + d)}$. Which equation represents this situation?`,
-            `一个正数 $x$ 与比 $x$ 大 $${d}$ 的数之积为 $${n * (n + d)}$。哪个方程表示这个情形？`,
-          ),
-          `x(x + ${d}) = ${n * (n + d)}`,
-          [`x + (x + ${d}) = ${n * (n + d)}`, `${d}x = ${n * (n + d)}`, `x^2 + ${d} = ${n * (n + d)}`, `x(x - ${d}) = ${n * (n + d)}`],
-          t(`The second number is $x + ${d}$, and "product" means multiply.`, `第二个数是 $x + ${d}$，“积”表示相乘。`),
-        );
-      return spr(
+  spec("Modeling Number Problems With Quadratic Equations", "用二次方程解数字问题", ["modeling-with-quadratic-equations"], (rng, hard) => {
+    const n = rng.int(3, 15);
+    const d = rng.int(1, 6);
+    if (!hard)
+      return mc(
+        rng,
         t(
-          `Two positive integers differ by $${d}$ and have a product of $${n * (n + d)}$. What is the greater integer?`,
-          `两个正整数相差 $${d}$，积为 $${n * (n + d)}$。较大的整数是多少？`,
+          `The product of a positive number $x$ and a number $${d}$ greater than $x$ is $${n * (n + d)}$. Which equation represents this situation?`,
+          `一个正数 $x$ 与比 $x$ 大 $${d}$ 的数之积为 $${n * (n + d)}$。哪个方程表示这个情形？`,
         ),
-        n + d,
-        [n, 2 * n + d, n + 2 * d],
-        t(
-          `Solve $x(x + ${d}) = ${n * (n + d)}$. The positive solution is $x = ${n}$, so the greater integer is $${n + d}$.`,
-          `解 $x(x + ${d}) = ${n * (n + d)}$。正解为 $x = ${n}$，所以较大的整数是 $${n + d}$。`,
-        ),
+        `x(x + ${d}) = ${n * (n + d)}`,
+        [`x + (x + ${d}) = ${n * (n + d)}`, `${d}x = ${n * (n + d)}`, `x^2 + ${d} = ${n * (n + d)}`, `x(x - ${d}) = ${n * (n + d)}`],
+        t(`The second number is $x + ${d}$, and "product" means multiply.`, `第二个数是 $x + ${d}$，“积”表示相乘。`),
       );
-    },
-  ),
-  modelTips("Solving Border Problems With Quadratic Equations", "解边框问题", ["border-problems"], (rng, hard) => {
+    return spr(
+      t(
+        `Two positive integers differ by $${d}$ and have a product of $${n * (n + d)}$. What is the greater integer?`,
+        `两个正整数相差 $${d}$，积为 $${n * (n + d)}$。较大的整数是多少？`,
+      ),
+      n + d,
+      [n, 2 * n + d, n + 2 * d],
+      t(
+        `Solve $x(x + ${d}) = ${n * (n + d)}$. The positive solution is $x = ${n}$, so the greater integer is $${n + d}$.`,
+        `解 $x(x + ${d}) = ${n * (n + d)}$。正解为 $x = ${n}$，所以较大的整数是 $${n + d}$。`,
+      ),
+    );
+  }),
+  spec("Solving Border Problems With Quadratic Equations", "解边框问题", ["border-problems"], (rng, hard) => {
     const [w, l, b] = [rng.int(4, 12), rng.int(13, 22), rng.int(1, 4)];
     const area = (l + 2 * b) * (w + 2 * b);
     if (!hard)
@@ -312,7 +276,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       ),
     );
   }),
-  modelTips(
+  spec(
     "Interpreting Quadratic Functions in Modeling Contexts",
     "在建模情境中解释二次函数",
     ["revenue-cost-and-profit-functions"],
@@ -356,7 +320,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       );
     },
   ),
-  modelTips(
+  spec(
     "Interpreting Graphs of Quadratic Functions in Modeling Contexts",
     "在建模情境中解释二次函数图象",
     ["maximizing-profit-and-break-even-points"],
@@ -396,7 +360,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       );
     },
   ),
-  modelTips("Modeling Planar Motion Using Quadratic Functions", "用二次函数为平面运动建模", ["vertical-motion"], (rng, hard) => {
+  spec("Modeling Planar Motion Using Quadratic Functions", "用二次函数为平面运动建模", ["vertical-motion"], (rng, hard) => {
     const v = rng.pick([16, 32, 48, 64, 80, 96, 112]);
     const s = rng.pick([0, 16, 32, 48]);
     const h = `-16t^2 + ${v}t${s ? ` + ${s}` : ""}`;
@@ -428,7 +392,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       ),
     );
   }),
-  polyTips("Elementary Cubic Functions", "基本三次函数", ["graphing-elementary-cubic-functions"], (rng, hard) => {
+  spec("Elementary Cubic Functions", "基本三次函数", ["graphing-elementary-cubic-functions"], (rng, hard) => {
     const [a, k, c] = [rng.int(2, 12), rng.int(2, 4), rng.nonZero(-9, 9)];
     if (!hard)
       return mc(
@@ -448,7 +412,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       t(`Dividing by $${a}$ gives $x^3 = ${k ** 3}$, so $x = ${k}$.`, `除以 $${a}$ 得 $x^3 = ${k ** 3}$，所以 $x = ${k}$。`),
     );
   }),
-  polyTips("Higher-Degree Polynomials", "高次多项式", ["end-behavior"], (rng, hard) => {
+  spec("Higher-Degree Polynomials", "高次多项式", ["end-behavior"], (rng, hard) => {
     const [r, s] = [rng.int(1, 5), rng.int(1, 6)];
     if (!hard)
       return mc(
@@ -477,7 +441,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       ),
     );
   }),
-  polyTips("Graphs of Higher-Degree Polynomials", "高次多项式的图象", ["graphing-general-polynomials"], (rng, hard) => {
+  spec("Graphs of Higher-Degree Polynomials", "高次多项式的图象", ["graphing-general-polynomials"], (rng, hard) => {
     const r = rng.int(1, 3);
     const s = rng.int(1, 3);
     const scale = rng.pick([0.25, 0.5, 0.75]);
@@ -506,7 +470,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       fig,
     );
   }),
-  polyTips("Polynomial Transformations", "多项式变换", ["horizontal-translations-of-functions"], (rng, hard) => {
+  spec("Polynomial Transformations", "多项式变换", ["horizontal-translations-of-functions"], (rng, hard) => {
     const [h, k] = [rng.int(1, 7), rng.int(1, 9)];
     if (!hard)
       return mc(
@@ -532,7 +496,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       ),
     );
   }),
-  polyTips("Further Polynomial Transformations", "进一步的多项式变换", ["horizontal-translations-of-functions"], (rng, hard) => {
+  spec("Further Polynomial Transformations", "进一步的多项式变换", ["horizontal-translations-of-functions"], (rng, hard) => {
     const [a, r, s] = [rng.int(2, 6), rng.int(1, 6), rng.int(1, 7)];
     if (!hard)
       return mc(
@@ -561,7 +525,7 @@ export const satExamAdvanced2: ExamSpec[] = [
       ),
     );
   }),
-  polyTips(
+  spec(
     "Using the Factor Theorem to Reason About Polynomials",
     "用因式定理分析多项式",
     ["reasoning-about-coefficients-in-quadratic-equations-using-the-factor-theorem"],

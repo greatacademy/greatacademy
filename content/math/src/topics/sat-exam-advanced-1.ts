@@ -2,54 +2,13 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
 import type { ExamSpec } from "../exam.ts";
-import { cx, mc, mcExact, mod, sg, spr, tx, words } from "../exam.ts";
+import { cx, mc, mcExact, sg, spec, spr, tx, words } from "../exam.ts";
 
 // SAT Math Prep, Advanced Math: polynomial, rational and exponential expressions, and quadratic equations.
 
-const polyTips = mod(
-  t(
-    "Equivalent-form questions list expressions that look alike. Expand or factor carefully and compare term by term, watching the sign of each term.",
-    "等价形式题的选项看起来相似。仔细展开或因式分解，逐项比较，注意每一项的符号。",
-  ),
-  t(
-    "Harder questions leave a constant unknown. Match the coefficients of the same power on both sides to find it.",
-    "较难的题留一个未知常数。比较两边同次项的系数求出它。",
-  ),
-);
-const ratTips = mod(
-  t(
-    "Factor first and cancel only whole factors, never single terms. The wrong options usually come from canceling terms.",
-    "先因式分解，只约去整个因式，绝不能约去单独的项。错误选项常来自约去单项。",
-  ),
-  t(
-    "To add fractions with different denominators, write them over a common denominator, and keep parentheses around a numerator you subtract.",
-    "异分母分式相加时，化为公分母；相减时要给被减的分子加括号。",
-  ),
-);
-const expTips = mod(
-  t(
-    "Multiplying powers of a base adds exponents, dividing subtracts, and a power of a power multiplies. Write roots as fractional exponents to use these rules.",
-    "同底数幂相乘指数相加，相除指数相减，幂的幂指数相乘。把根式写成分数指数后就能使用这些规则。",
-  ),
-  t(
-    "Harder questions ask for the exponent of an equivalent form, so rewrite both sides with the same base and compare exponents.",
-    "较难的题问等价形式中的指数，所以把两边化为同底数，再比较指数。",
-  ),
-);
-const quadTips = mod(
-  t(
-    "Choose the fastest method: take a square root for a perfect square, factor when the numbers are small, and use the quadratic formula otherwise.",
-    "选最快的方法：完全平方式开方，数字小时因式分解，否则用求根公式。",
-  ),
-  t(
-    "Harder questions ask about the solutions rather than for them. The discriminant counts real solutions, and the sum of the solutions is $-\\frac{b}{a}$.",
-    "较难的题问解的性质而不是解本身。判别式决定实数解的个数，解的和为 $-\\frac{b}{a}$。",
-  ),
-);
-
 /** satExamAdvanced1 are the exam-style questions of the first modules of the SAT Advanced Math unit. */
 export const satExamAdvanced1: ExamSpec[] = [
-  polyTips("Adding Polynomials", "多项式相加", ["adding-and-subtracting-polynomials"], (rng, hard) => {
+  spec("Adding Polynomials", "多项式相加", ["adding-and-subtracting-polynomials"], (rng, hard) => {
     const [a, b, c, d, e, f] = [rng.int(2, 7), rng.int(2, 9), rng.int(1, 9), rng.int(2, 7), rng.int(1, 9), rng.int(1, 9)];
     if (!hard)
       return mc(
@@ -83,7 +42,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       ),
     );
   }),
-  polyTips("Adding Polynomials Using the Distributive Law", "用分配律做多项式加法", ["distributive-law-for-polynomials"], (rng, hard) => {
+  spec("Adding Polynomials Using the Distributive Law", "用分配律做多项式加法", ["distributive-law-for-polynomials"], (rng, hard) => {
     const [k, a, b, m, c, d] = [rng.int(2, 6), rng.int(2, 6), rng.int(1, 9), rng.int(2, 5), rng.int(1, 6), rng.int(1, 9)];
     const X = k * a + m * c;
     const C = k * b - m * d;
@@ -114,7 +73,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       ),
     );
   }),
-  polyTips("Multiplying Binomials", "二项式相乘", ["multiplying-binomials"], (rng, hard) => {
+  spec("Multiplying Binomials", "二项式相乘", ["multiplying-binomials"], (rng, hard) => {
     const [a, b, c, d] = [rng.int(1, 5), rng.nonZero(-7, 7), rng.int(2, 5), rng.nonZero(-7, 7)];
     const mid = a * d + b * c === 0 ? null : a * d + b * c;
     if (!hard)
@@ -149,7 +108,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       ),
     );
   }),
-  polyTips("Factoring Polynomials Using the GCF", "提公因式分解多项式", ["factoring-polynomials-using-gcfs"], (rng, hard) => {
+  spec("Factoring Polynomials Using the GCF", "提公因式分解多项式", ["factoring-polynomials-using-gcfs"], (rng, hard) => {
     const g = rng.int(2, 6);
     const [a, b, c] = [rng.pick([2, 3, 5]), rng.pick([3, 7]), rng.int(1, 9)];
     if (!hard)
@@ -173,7 +132,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       ),
     );
   }),
-  polyTips("Factoring Binomials Using Differences of Squares", "用平方差分解二项式", ["factoring-differences-of-squares"], (rng, hard) => {
+  spec("Factoring Binomials Using Differences of Squares", "用平方差分解二项式", ["factoring-differences-of-squares"], (rng, hard) => {
     const a = rng.int(2, 9);
     const b = rng.int(1, 9);
     if (!hard)
@@ -198,7 +157,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       ),
     );
   }),
-  polyTips("Factoring Trinomials", "分解三项式", ["factoring-trinomials"], (rng, hard) => {
+  spec("Factoring Trinomials", "分解三项式", ["factoring-trinomials"], (rng, hard) => {
     const r = rng.int(2, 9);
     const s = r + rng.int(1, 6);
     if (!hard)
@@ -225,7 +184,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       ),
     );
   }),
-  polyTips(
+  spec(
     "Factoring Higher-Order Polynomials",
     "分解高次多项式",
     ["factoring-higher-order-polynomials-as-a-difference-of-squares"],
@@ -256,7 +215,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       );
     },
   ),
-  ratTips(
+  spec(
     "Simplifying Rational Expressions by Factoring",
     "因式分解化简分式",
     ["simplifying-rational-expressions-by-factoring"],
@@ -289,7 +248,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       );
     },
   ),
-  ratTips(
+  spec(
     "Simplifying Rational Expressions Using Polynomial Factorization",
     "用多项式分解化简分式",
     ["simplifying-rational-expressions-using-polynomial-factorization"],
@@ -327,7 +286,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       );
     },
   ),
-  ratTips("Adding Rational Expressions", "分式相加", ["adding-and-subtracting-rational-expressions"], (rng, hard) => {
+  spec("Adding Rational Expressions", "分式相加", ["adding-and-subtracting-rational-expressions"], (rng, hard) => {
     const [a, b, d] = [rng.int(2, 9), rng.int(1, 9), rng.int(2, 9)];
     const e = d + rng.int(1, 5);
     if (!hard)
@@ -367,7 +326,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       ),
     );
   }),
-  ratTips(
+  spec(
     "Further Adding Rational Expressions",
     "进一步的分式相加",
     ["adding-rational-expressions-using-polynomial-factorization"],
@@ -408,7 +367,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       );
     },
   ),
-  ratTips("Fractions of Fractions", "繁分式", ["fractions-of-fractions"], (rng, hard) => {
+  spec("Fractions of Fractions", "繁分式", ["fractions-of-fractions"], (rng, hard) => {
     const [a, b, c] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 9)];
     if (!hard)
       return mc(
@@ -437,7 +396,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       ),
     );
   }),
-  expTips("Exponential Expressions", "指数表达式", ["product-and-quotient-rules"], (rng, hard) => {
+  spec("Exponential Expressions", "指数表达式", ["product-and-quotient-rules"], (rng, hard) => {
     const [a, b, c] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 6)];
     if (!hard)
       return mc(
@@ -460,7 +419,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       t(`Add and subtract exponents: $${a + b} + ${c} - ${b} = ${a + c}$.`, `指数相加减：$${a + b} + ${c} - ${b} = ${a + c}$。`),
     );
   }),
-  expTips("Simplifying Exponential Expressions", "化简指数表达式", ["combining-exponential-expressions"], (rng, hard) => {
+  spec("Simplifying Exponential Expressions", "化简指数表达式", ["combining-exponential-expressions"], (rng, hard) => {
     const [a, b, c] = [rng.int(2, 5), rng.int(2, 5), rng.int(2, 4)];
     if (!hard)
       return mc(
@@ -500,7 +459,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       ),
     );
   }),
-  expTips(
+  spec(
     "Simplifying Exponential Expressions Using the Distributive Law",
     "用分配律化简指数表达式",
     ["applying-the-distributive-law-to-exponential-expressions"],
@@ -536,7 +495,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       );
     },
   ),
-  quadTips("Perfect Square Quadratic Equations", "完全平方二次方程", ["solving-perfect-square-quadratic-equations"], (rng, hard) => {
+  spec("Perfect Square Quadratic Equations", "完全平方二次方程", ["solving-perfect-square-quadratic-equations"], (rng, hard) => {
     const [k, b] = [rng.int(2, 9), rng.int(1, 9)];
     if (!hard)
       return mc(
@@ -559,7 +518,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       ),
     );
   }),
-  quadTips("Solving Quadratic Equations Using the Zero-Product Rule", "用零积法解二次方程", ["zero-product-rule"], (rng, hard) => {
+  spec("Solving Quadratic Equations Using the Zero-Product Rule", "用零积法解二次方程", ["zero-product-rule"], (rng, hard) => {
     const [a, b, d0] = [rng.int(2, 6), rng.int(1, 9), rng.int(1, 9)];
     const d = d0 === b ? d0 + 1 : d0;
     if (!hard)
@@ -586,7 +545,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       ),
     );
   }),
-  quadTips("Solving Quadratic Equations by Factoring", "因式分解解二次方程", ["solving-quadratic-equations-by-factoring"], (rng, hard) => {
+  spec("Solving Quadratic Equations by Factoring", "因式分解解二次方程", ["solving-quadratic-equations-by-factoring"], (rng, hard) => {
     const r = rng.int(1, 9);
     const s = r + rng.int(1, 8);
     if (!hard)
@@ -613,7 +572,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       ),
     );
   }),
-  quadTips(
+  spec(
     "Solving Quadratic Equations With Leading Coefficients by Factoring",
     "因式分解解首项系数不为 1 的二次方程",
     ["solving-quadratic-equations-with-leading-coefficients-by-factoring"],
@@ -649,7 +608,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       );
     },
   ),
-  quadTips("Solving Quadratic Equations Using the Quadratic Formula", "用求根公式解二次方程", ["the-quadratic-formula"], (rng, hard) => {
+  spec("Solving Quadratic Equations Using the Quadratic Formula", "用求根公式解二次方程", ["the-quadratic-formula"], (rng, hard) => {
     const p = rng.int(1, 6);
     const d = rng.pick([2, 3, 5, 6, 7]);
     const c = p * p - d;
@@ -678,7 +637,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       ),
     );
   }),
-  quadTips(
+  spec(
     "Quadratic Equations With One Real Solution",
     "有一个实数解的二次方程",
     ["quadratic-equations-with-one-real-solution"],
@@ -712,7 +671,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       );
     },
   ),
-  quadTips(
+  spec(
     "Quadratic Equations With Two Real Solutions",
     "有两个实数解的二次方程",
     ["determining-unknown-parameters-in-quadratic-equations-with-real-solutions"],
@@ -760,7 +719,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       );
     },
   ),
-  quadTips(
+  spec(
     "Quadratic Equations With No Real Solutions",
     "没有实数解的二次方程",
     ["determining-unknown-parameters-in-quadratic-equations-with-no-real-solutions"],
@@ -808,35 +767,30 @@ export const satExamAdvanced1: ExamSpec[] = [
       );
     },
   ),
-  quadTips(
-    "Counting Solutions to Quadratic Equations",
-    "判断二次方程解的个数",
-    ["the-discriminant-of-a-quadratic-equation"],
-    (rng, hard) => {
-      const a = hard ? rng.int(2, 5) : 1;
-      const b = rng.int(2, 9);
-      const kind = rng.int(0, 2);
-      const k = Math.floor((b * b) / (4 * a));
-      const exact = (b * b) % (4 * a) === 0;
-      const useKind = kind === 1 && !exact ? 0 : kind;
-      const c0 = useKind === 0 ? k - rng.int(1, 3) : useKind === 1 ? k : k + rng.int(1, 3);
-      const c = c0 === 0 ? -1 : c0;
-      const D = b * b - 4 * a * c;
-      const ans = [t("Exactly two", "恰好两个"), t("Exactly one", "恰好一个"), t("Zero", "零个")];
-      const eq = `${cx(a, "x^2")} + ${b}x ${sg(c)} = 0`;
-      return words(
-        rng,
-        t(`How many distinct real solutions does $${eq}$ have?`, `$${eq}$ 有多少个不同的实数解？`),
-        ans[useKind]!,
-        [...ans.filter((_, i) => i !== useKind), t("Infinitely many", "无穷多个")],
-        t(
-          `The discriminant is $${b}^2 - 4(${a})(${c}) = ${D}$, which is ${D > 0 ? "positive" : D === 0 ? "zero" : "negative"}.`,
-          `判别式为 $${b}^2 - 4(${a})(${c}) = ${D}$，它${D > 0 ? "为正" : D === 0 ? "为零" : "为负"}。`,
-        ),
-      );
-    },
-  ),
-  quadTips("Applying Vieta's Formulas", "应用韦达定理", ["vietas-formulas"], (rng, hard) => {
+  spec("Counting Solutions to Quadratic Equations", "判断二次方程解的个数", ["the-discriminant-of-a-quadratic-equation"], (rng, hard) => {
+    const a = hard ? rng.int(2, 5) : 1;
+    const b = rng.int(2, 9);
+    const kind = rng.int(0, 2);
+    const k = Math.floor((b * b) / (4 * a));
+    const exact = (b * b) % (4 * a) === 0;
+    const useKind = kind === 1 && !exact ? 0 : kind;
+    const c0 = useKind === 0 ? k - rng.int(1, 3) : useKind === 1 ? k : k + rng.int(1, 3);
+    const c = c0 === 0 ? -1 : c0;
+    const D = b * b - 4 * a * c;
+    const ans = [t("Exactly two", "恰好两个"), t("Exactly one", "恰好一个"), t("Zero", "零个")];
+    const eq = `${cx(a, "x^2")} + ${b}x ${sg(c)} = 0`;
+    return words(
+      rng,
+      t(`How many distinct real solutions does $${eq}$ have?`, `$${eq}$ 有多少个不同的实数解？`),
+      ans[useKind]!,
+      [...ans.filter((_, i) => i !== useKind), t("Infinitely many", "无穷多个")],
+      t(
+        `The discriminant is $${b}^2 - 4(${a})(${c}) = ${D}$, which is ${D > 0 ? "positive" : D === 0 ? "zero" : "negative"}.`,
+        `判别式为 $${b}^2 - 4(${a})(${c}) = ${D}$，它${D > 0 ? "为正" : D === 0 ? "为零" : "为负"}。`,
+      ),
+    );
+  }),
+  spec("Applying Vieta's Formulas", "应用韦达定理", ["vietas-formulas"], (rng, hard) => {
     const a = rng.int(2, 6);
     const b = rng.nonZero(-9, 9);
     const c0 = rng.nonZero(-9, 9);
@@ -865,7 +819,7 @@ export const satExamAdvanced1: ExamSpec[] = [
       ),
     );
   }),
-  quadTips("Solving Quadratic Equations With Unknown Parameters", "解含未知参数的二次方程", ["vietas-formulas"], (rng, hard) => {
+  spec("Solving Quadratic Equations With Unknown Parameters", "解含未知参数的二次方程", ["vietas-formulas"], (rng, hard) => {
     const r = rng.int(1, 8);
     const s = rng.int(1, 8) + r;
     if (!hard)

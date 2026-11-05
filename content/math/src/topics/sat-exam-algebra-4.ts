@@ -1,55 +1,14 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import type { ExamSpec } from "../exam.ts";
-import { cx, mc, mcExact, mod, par, sg, spr, words } from "../exam.ts";
+import { cx, mc, mcExact, par, sg, spec, spr, words } from "../exam.ts";
 import { linesFigure } from "../exam-figures.ts";
 
 // SAT Math Prep, Algebra: systems of linear equations, special solution counts, and linear inequalities.
 
-const sysTips = mod(
-  t(
-    "Look at the system before choosing a method. If adding or subtracting the equations gives the requested expression at once, you can skip solving for each variable.",
-    "选择方法之前先观察方程组。如果把两个方程相加或相减能直接得到所求式子，就不必分别解出每个变量。",
-  ),
-  t(
-    "Harder systems need one equation scaled first, or ask for a combination such as $x + y$. Decide on the target before you start eliminating.",
-    "较难的方程组要先把一个方程乘以某数，或问 $x + y$ 这样的组合。开始消元之前先确定目标。",
-  ),
-);
-const countTips = mod(
-  t(
-    "Reduce a linear equation to $ax = b$. If $a \\neq 0$ there is one solution; if $a = 0$ and $b = 0$ there are infinitely many; if $a = 0$ and $b \\neq 0$ there are none.",
-    "把一次方程化为 $ax = b$。若 $a \\neq 0$，有一个解；若 $a = 0$ 且 $b = 0$，有无穷多解；若 $a = 0$ 且 $b \\neq 0$，无解。",
-  ),
-  t(
-    "For a system, compare the ratios of coefficients: unequal ratios give one solution, equal ratios with an unequal constant ratio give none, and all equal gives infinitely many.",
-    "对方程组，比较系数之比：比值不等时有一个解；系数比相等而常数比不等时无解；全部相等时有无穷多解。",
-  ),
-);
-const ineqTips = mod(
-  t(
-    "Words such as at least and no more than choose the inequality sign. Write the total on one side and the limit on the other before you solve.",
-    "“至少”“不超过”这样的词决定不等号。先把总量写在一边、限制写在另一边，再求解。",
-  ),
-  t(
-    "After solving, think about what the variable counts. A count must be a whole number, so a boundary such as $7.5$ rounds in the direction the inequality allows.",
-    "求解之后想一想变量在数什么。数量必须是整数，所以 $7.5$ 这样的边界要按不等式允许的方向取整。",
-  ),
-);
-const twoIneqTips = mod(
-  t(
-    "To test a point, substitute it into every inequality. A point is a solution only when each inequality is true, and a strict sign excludes points on the boundary.",
-    "检验一个点时，把它代入每个不等式。只有每个不等式都成立才是解，严格不等号排除边界上的点。",
-  ),
-  t(
-    "In context, each inequality states one constraint. Harder questions fix one variable and ask for the largest or smallest allowed value of the other.",
-    "在情境中，每个不等式表示一个约束。较难的题固定一个变量，问另一个变量允许的最大或最小值。",
-  ),
-);
-
 /** satExamAlgebra4 finishes the SAT Algebra unit. */
 export const satExamAlgebra4: ExamSpec[] = [
-  sysTips("Solving Simple Systems of Linear Equations", "解简单的二元一次方程组", ["systems-of-linear-equations"], (rng, hard) => {
+  spec("Solving Simple Systems of Linear Equations", "解简单的二元一次方程组", ["systems-of-linear-equations"], (rng, hard) => {
     const x0 = rng.int(1, 9);
     const m = rng.int(2, 6);
     const b = rng.int(-6, 9);
@@ -81,7 +40,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       ),
     );
   }),
-  sysTips(
+  spec(
     "Identifying Structure in Systems of Linear Equations",
     "识别线性方程组的结构",
     ["solving-systems-of-linear-equations-by-identifying-structure"],
@@ -115,45 +74,40 @@ export const satExamAlgebra4: ExamSpec[] = [
       );
     },
   ),
-  sysTips(
-    "Solving Systems of Equations Using Addition or Subtraction",
-    "用加减法解方程组",
-    ["introduction-to-elimination"],
-    (rng, hard) => {
-      const x0 = rng.int(1, 9);
-      const y0 = rng.int(-5, 9);
-      const a = rng.int(2, 6);
-      const b = rng.int(2, 6);
-      const c = rng.int(1, 5);
-      const sys = hard
-        ? `\\begin{cases} ${a + c}x + ${b}y = ${(a + c) * x0 + b * y0} \\\\ ${a}x + ${b}y = ${a * x0 + b * y0} \\end{cases}`
-        : `\\begin{cases} ${a}x + ${b}y = ${a * x0 + b * y0} \\\\ ${c}x - ${b}y = ${c * x0 - b * y0} \\end{cases}`;
-      if (!hard)
-        return mc(
-          rng,
-          t(`What is the value of $x$ in the solution to the system?\n$$${sys}$$`, `方程组解中 $x$ 的值是多少？\n$$${sys}$$`),
-          x0,
-          [y0 === x0 ? x0 + 2 : y0, x0 + 1, x0 - 1],
-          t(
-            `Adding the equations cancels $y$: $${a + c}x = ${(a + c) * x0}$, so $x = ${x0}$.`,
-            `两式相加消去 $y$：$${a + c}x = ${(a + c) * x0}$，所以 $x = ${x0}$。`,
-          ),
-        );
-      return spr(
+  spec("Solving Systems of Equations Using Addition or Subtraction", "用加减法解方程组", ["introduction-to-elimination"], (rng, hard) => {
+    const x0 = rng.int(1, 9);
+    const y0 = rng.int(-5, 9);
+    const a = rng.int(2, 6);
+    const b = rng.int(2, 6);
+    const c = rng.int(1, 5);
+    const sys = hard
+      ? `\\begin{cases} ${a + c}x + ${b}y = ${(a + c) * x0 + b * y0} \\\\ ${a}x + ${b}y = ${a * x0 + b * y0} \\end{cases}`
+      : `\\begin{cases} ${a}x + ${b}y = ${a * x0 + b * y0} \\\\ ${c}x - ${b}y = ${c * x0 - b * y0} \\end{cases}`;
+    if (!hard)
+      return mc(
+        rng,
+        t(`What is the value of $x$ in the solution to the system?\n$$${sys}$$`, `方程组解中 $x$ 的值是多少？\n$$${sys}$$`),
+        x0,
+        [y0 === x0 ? x0 + 2 : y0, x0 + 1, x0 - 1],
         t(
-          `If $(x, y)$ satisfies the system, what is the value of $y$?\n$$${sys}$$`,
-          `若 $(x, y)$ 满足方程组，则 $y$ 的值是多少？\n$$${sys}$$`,
-        ),
-        y0,
-        [x0, y0 + 1, -y0],
-        t(
-          `Subtract the second equation to cancel $y$: $${c}x = ${c * x0}$, so $x = ${x0}$. Then $${a}(${x0}) + ${b}y = ${a * x0 + b * y0}$ gives $y = ${y0}$.`,
-          `第一式减第二式消去 $y$：$${c}x = ${c * x0}$，所以 $x = ${x0}$。再由 $${a}(${x0}) + ${b}y = ${a * x0 + b * y0}$ 得 $y = ${y0}$。`,
+          `Adding the equations cancels $y$: $${a + c}x = ${(a + c) * x0}$, so $x = ${x0}$.`,
+          `两式相加消去 $y$：$${a + c}x = ${(a + c) * x0}$，所以 $x = ${x0}$。`,
         ),
       );
-    },
-  ),
-  sysTips("Solving Systems of Equations Using Elimination", "用消元法解方程组", ["elimination-with-two-transformations"], (rng, hard) => {
+    return spr(
+      t(
+        `If $(x, y)$ satisfies the system, what is the value of $y$?\n$$${sys}$$`,
+        `若 $(x, y)$ 满足方程组，则 $y$ 的值是多少？\n$$${sys}$$`,
+      ),
+      y0,
+      [x0, y0 + 1, -y0],
+      t(
+        `Subtract the second equation to cancel $y$: $${c}x = ${c * x0}$, so $x = ${x0}$. Then $${a}(${x0}) + ${b}y = ${a * x0 + b * y0}$ gives $y = ${y0}$.`,
+        `第一式减第二式消去 $y$：$${c}x = ${c * x0}$，所以 $x = ${x0}$。再由 $${a}(${x0}) + ${b}y = ${a * x0 + b * y0}$ 得 $y = ${y0}$。`,
+      ),
+    );
+  }),
+  spec("Solving Systems of Equations Using Elimination", "用消元法解方程组", ["elimination-with-two-transformations"], (rng, hard) => {
     const x0 = rng.int(-4, 8);
     const y0 = rng.int(-4, 8);
     const a = rng.pick([2, 3, 5]);
@@ -176,7 +130,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       ),
     );
   }),
-  sysTips("Modeling Word Problems With Systems of Linear Equations", "用方程组为应用题建模", ["modeling-with-systems"], (rng, hard) => {
+  spec("Modeling Word Problems With Systems of Linear Equations", "用方程组为应用题建模", ["modeling-with-systems"], (rng, hard) => {
     const a = rng.int(6, 15);
     const b = rng.int(2, a - 2);
     const n = rng.int(20, 60);
@@ -215,7 +169,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       ),
     );
   }),
-  sysTips("Solving Problems With Systems of Linear Equations", "用方程组解决问题", ["modeling-with-systems"], (rng, hard) => {
+  spec("Solving Problems With Systems of Linear Equations", "用方程组解决问题", ["modeling-with-systems"], (rng, hard) => {
     const p = rng.int(3, 12);
     const q = rng.int(2, 9);
     const a = rng.int(2, 5);
@@ -273,7 +227,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       ),
     );
   }),
-  sysTips(
+  spec(
     "Solving Problems With Systems of Linear Equations in Standard Form",
     "解一般式方程组问题",
     ["elimination-with-two-transformations"],
@@ -313,7 +267,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       );
     },
   ),
-  sysTips("The Intersection of Two Lines", "两直线的交点", ["intersection-of-two-lines"], (rng, hard) => {
+  spec("The Intersection of Two Lines", "两直线的交点", ["intersection-of-two-lines"], (rng, hard) => {
     const x0 = rng.int(-5, 8);
     const m1 = rng.int(1, 6);
     const m2 = -rng.int(1, 5);
@@ -343,7 +297,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       ),
     );
   }),
-  sysTips(
+  spec(
     "The Relationship Between Systems of Linear Equations and Graphs",
     "方程组与图象的关系",
     ["intersection-of-two-lines", "consistency-and-dependency"],
@@ -395,7 +349,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       );
     },
   ),
-  countTips(
+  spec(
     "Determining the Number of Solutions to a Linear Equation",
     "判断一次方程解的个数",
     ["determining-the-number-of-solutions-of-a-linear-equation"],
@@ -420,7 +374,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       );
     },
   ),
-  countTips(
+  spec(
     "Linear Equations With Infinitely Many Solutions",
     "有无穷多解的一次方程",
     ["linear-equations-with-infinitely-many-solutions"],
@@ -455,7 +409,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       );
     },
   ),
-  countTips("Linear Equations With No Solutions", "无解的一次方程", ["linear-equations-with-no-solutions"], (rng, hard) => {
+  spec("Linear Equations With No Solutions", "无解的一次方程", ["linear-equations-with-no-solutions"], (rng, hard) => {
     const a = rng.int(2, 7);
     const b = rng.int(1, 9);
     const k = rng.int(2, 5);
@@ -486,40 +440,35 @@ export const satExamAlgebra4: ExamSpec[] = [
       ),
     );
   }),
-  countTips(
-    "Determining the Number of Solutions to a Linear System",
-    "判断线性方程组解的个数",
-    ["consistency-and-dependency"],
-    (rng, hard) => {
-      const a = rng.int(2, 6);
-      const b = rng.int(2, 6);
-      const c = rng.int(3, 12);
-      const k = rng.int(2, 4);
-      const kind = rng.int(0, 2);
-      const sec =
-        kind === 0
-          ? `${k * a}x + ${k * b}y = ${k * c}`
-          : kind === 1
-            ? `${k * a}x + ${k * b}y = ${k * c + 1}`
-            : `${k * a + 1}x + ${k * b}y = ${k * c}`;
-      const first = hard ? `y = ${Q.of(-a, b).toLatex()}x + ${Q.of(c, b).toLatex()}` : `${a}x + ${b}y = ${c}`;
-      const ans = [t("Infinitely many", "无穷多个"), t("Zero", "零个"), t("Exactly one", "恰好一个")];
-      return words(
-        rng,
-        t(
-          `How many solutions does the system have?\n$$\\begin{cases} ${first} \\\\ ${sec} \\end{cases}$$`,
-          `方程组有多少个解？\n$$\\begin{cases} ${first} \\\\ ${sec} \\end{cases}$$`,
-        ),
-        ans[kind]!,
-        [...ans.filter((_, i) => i !== kind), t("Exactly two", "恰好两个")],
-        t(
-          `${hard ? `The first line is $${a}x + ${b}y = ${c}$. ` : ""}${kind === 0 ? `The second equation is $${k}$ times the first, so they are the same line.` : kind === 1 ? `The left side of the second is $${k}$ times the first, but its constant is not, so the lines are parallel.` : "The coefficient ratios differ, so the lines have different slopes and cross once."}`,
-          `${hard ? `第一条直线即 $${a}x + ${b}y = ${c}$。` : ""}${kind === 0 ? `第二式是第一式的 $${k}$ 倍，所以是同一条直线。` : kind === 1 ? `第二式左边是第一式左边的 $${k}$ 倍，但常数不是，所以两线平行。` : "系数比不同，所以斜率不同，交于一点。"}`,
-        ),
-      );
-    },
-  ),
-  countTips(
+  spec("Determining the Number of Solutions to a Linear System", "判断线性方程组解的个数", ["consistency-and-dependency"], (rng, hard) => {
+    const a = rng.int(2, 6);
+    const b = rng.int(2, 6);
+    const c = rng.int(3, 12);
+    const k = rng.int(2, 4);
+    const kind = rng.int(0, 2);
+    const sec =
+      kind === 0
+        ? `${k * a}x + ${k * b}y = ${k * c}`
+        : kind === 1
+          ? `${k * a}x + ${k * b}y = ${k * c + 1}`
+          : `${k * a + 1}x + ${k * b}y = ${k * c}`;
+    const first = hard ? `y = ${Q.of(-a, b).toLatex()}x + ${Q.of(c, b).toLatex()}` : `${a}x + ${b}y = ${c}`;
+    const ans = [t("Infinitely many", "无穷多个"), t("Zero", "零个"), t("Exactly one", "恰好一个")];
+    return words(
+      rng,
+      t(
+        `How many solutions does the system have?\n$$\\begin{cases} ${first} \\\\ ${sec} \\end{cases}$$`,
+        `方程组有多少个解？\n$$\\begin{cases} ${first} \\\\ ${sec} \\end{cases}$$`,
+      ),
+      ans[kind]!,
+      [...ans.filter((_, i) => i !== kind), t("Exactly two", "恰好两个")],
+      t(
+        `${hard ? `The first line is $${a}x + ${b}y = ${c}$. ` : ""}${kind === 0 ? `The second equation is $${k}$ times the first, so they are the same line.` : kind === 1 ? `The left side of the second is $${k}$ times the first, but its constant is not, so the lines are parallel.` : "The coefficient ratios differ, so the lines have different slopes and cross once."}`,
+        `${hard ? `第一条直线即 $${a}x + ${b}y = ${c}$。` : ""}${kind === 0 ? `第二式是第一式的 $${k}$ 倍，所以是同一条直线。` : kind === 1 ? `第二式左边是第一式左边的 $${k}$ 倍，但常数不是，所以两线平行。` : "系数比不同，所以斜率不同，交于一点。"}`,
+      ),
+    );
+  }),
+  spec(
     "Linear Systems With Infinitely Many Solutions",
     "有无穷多解的线性方程组",
     ["systems-with-no-solution-or-infinitely-many-solutions"],
@@ -555,7 +504,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       );
     },
   ),
-  countTips(
+  spec(
     "Parametrizing Systems of Linear Equations",
     "线性方程组的参数化",
     ["parametrizing-systems-with-infinitely-many-solutions"],
@@ -593,7 +542,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       );
     },
   ),
-  countTips("Linear Systems With No Solution", "无解的线性方程组", ["sat-linear-systems-unknown-constants"], (rng, hard) => {
+  spec("Linear Systems With No Solution", "无解的线性方程组", ["sat-linear-systems-unknown-constants"], (rng, hard) => {
     const a = rng.int(2, 6);
     const b = rng.int(2, 6);
     const c = rng.int(3, 12);
@@ -626,7 +575,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       ),
     );
   }),
-  ineqTips(
+  spec(
     "Constructing Models With One-Variable Linear Inequalities",
     "构造一元一次不等式模型",
     ["introduction-to-modeling-with-inequalities"],
@@ -665,7 +614,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       );
     },
   ),
-  ineqTips(
+  spec(
     "Modeling and Solving With One-Variable Linear Inequalities",
     "用一元不等式建模并求解",
     ["modeling-with-one-step-inequalities", "modeling-real-world-problems-using-inequalities"],
@@ -704,7 +653,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       );
     },
   ),
-  ineqTips(
+  spec(
     "Modeling and Solving With One-Variable Linear Inequalities: Advanced Cases",
     "一元不等式建模求解：进阶情形",
     ["modeling-real-world-problems-using-inequalities"],
@@ -745,7 +694,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       );
     },
   ),
-  ineqTips("Compound Inequalities", "复合不等式", ["compound-inequalities"], (rng, hard) => {
+  spec("Compound Inequalities", "复合不等式", ["compound-inequalities"], (rng, hard) => {
     const a = rng.int(2, 5);
     const b = rng.int(1, 9);
     const lo = rng.int(-3, 3);
@@ -779,7 +728,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       ),
     );
   }),
-  ineqTips("Constructing Models With Compound Inequalities", "构造复合不等式模型", ["compound-inequalities"], (rng, hard) => {
+  spec("Constructing Models With Compound Inequalities", "构造复合不等式模型", ["compound-inequalities"], (rng, hard) => {
     const lo = 5 * rng.int(4, 10);
     const hi = lo + 5 * rng.int(2, 8);
     const f = rng.int(5, 15);
@@ -814,82 +763,72 @@ export const satExamAlgebra4: ExamSpec[] = [
       ),
     );
   }),
-  twoIneqTips(
-    "Solutions of Two-Variable Linear Inequalities",
-    "二元一次不等式的解",
-    ["graphing-strict-linear-inequalities"],
-    (rng, hard) => {
-      const a = rng.int(2, 6);
-      const b = rng.int(2, 6);
-      const c = rng.int(10, 30);
-      const x0 = rng.int(0, 2);
-      const y0 = rng.int(0, 1);
-      const fine = `(${x0}, ${y0})`;
-      const big = (k: number) => `(${Math.ceil(c / a) + k}, ${Math.ceil(c / b) + k})`;
-      const safe = a * x0 + b * y0 < c;
-      if (!hard)
-        return mc(
-          rng,
-          t(`Which point is a solution of $${a}x + ${b}y < ${c}$?`, `哪个点是 $${a}x + ${b}y < ${c}$ 的解？`),
-          safe ? fine : "(0, 0)",
-          [big(0), big(1), big(2)],
-          t(
-            `Substitute each point. Only the correct point gives a value below $${c}$; the others are too large.`,
-            `逐点代入。只有正确的点给出小于 $${c}$ 的值，其他点都太大。`,
-          ),
-        );
-      const k = rng.int(1, 5);
-      const lim = a * k + b * y0;
-      return spr(
+  spec("Solutions of Two-Variable Linear Inequalities", "二元一次不等式的解", ["graphing-strict-linear-inequalities"], (rng, hard) => {
+    const a = rng.int(2, 6);
+    const b = rng.int(2, 6);
+    const c = rng.int(10, 30);
+    const x0 = rng.int(0, 2);
+    const y0 = rng.int(0, 1);
+    const fine = `(${x0}, ${y0})`;
+    const big = (k: number) => `(${Math.ceil(c / a) + k}, ${Math.ceil(c / b) + k})`;
+    const safe = a * x0 + b * y0 < c;
+    if (!hard)
+      return mc(
+        rng,
+        t(`Which point is a solution of $${a}x + ${b}y < ${c}$?`, `哪个点是 $${a}x + ${b}y < ${c}$ 的解？`),
+        safe ? fine : "(0, 0)",
+        [big(0), big(1), big(2)],
         t(
-          `The point $(x, ${y0})$ is a solution of $${a}x + ${b}y \\le ${lim}$. What is the greatest possible value of $x$?`,
-          `点 $(x, ${y0})$ 是 $${a}x + ${b}y \\le ${lim}$ 的解。$x$ 的最大可能值是多少？`,
-        ),
-        k,
-        [k + 1, lim, y0 + k + 1],
-        t(
-          `Substitute $y = ${y0}$: $${a}x + ${b * y0} \\le ${lim}$, so $${a}x \\le ${a * k}$ and $x \\le ${k}$.`,
-          `代入 $y = ${y0}$：$${a}x + ${b * y0} \\le ${lim}$，所以 $${a}x \\le ${a * k}$，$x \\le ${k}$。`,
+          `Substitute each point. Only the correct point gives a value below $${c}$; the others are too large.`,
+          `逐点代入。只有正确的点给出小于 $${c}$ 的值，其他点都太大。`,
         ),
       );
-    },
-  ),
-  twoIneqTips(
-    "Modeling With Two-Variable Linear Inequalities",
-    "用二元不等式建模",
-    ["modeling-with-two-variable-inequalities"],
-    (rng, hard) => {
-      const a = rng.int(5, 15);
-      const b = rng.int(2, a - 1);
-      const T = 10 * rng.int(10, 50);
-      if (!hard)
-        return mc(
-          rng,
-          t(
-            `Pizzas cost $\\$${a}$ and salads cost $\\$${b}$. A group can spend at most $\\$${T}$. Which inequality represents $p$ pizzas and $s$ salads within the budget?`,
-            `比萨 $${a}$ 美元，沙拉 $${b}$ 美元。一个小组最多花 $${T}$ 美元。哪个不等式表示预算内的 $p$ 个比萨和 $s$ 份沙拉？`,
-          ),
-          `${a}p + ${b}s \\le ${T}`,
-          [`${a}p + ${b}s \\ge ${T}`, `${b}p + ${a}s \\le ${T}`, `p + s \\le ${T}`],
-          t(`The cost is price times count for each item, and at most means $\\le$.`, `每种费用是单价乘以数量，“最多”对应 $\\le$。`),
-        );
-      const k = rng.int(5, 12);
+    const k = rng.int(1, 5);
+    const lim = a * k + b * y0;
+    return spr(
+      t(
+        `The point $(x, ${y0})$ is a solution of $${a}x + ${b}y \\le ${lim}$. What is the greatest possible value of $x$?`,
+        `点 $(x, ${y0})$ 是 $${a}x + ${b}y \\le ${lim}$ 的解。$x$ 的最大可能值是多少？`,
+      ),
+      k,
+      [k + 1, lim, y0 + k + 1],
+      t(
+        `Substitute $y = ${y0}$: $${a}x + ${b * y0} \\le ${lim}$, so $${a}x \\le ${a * k}$ and $x \\le ${k}$.`,
+        `代入 $y = ${y0}$：$${a}x + ${b * y0} \\le ${lim}$，所以 $${a}x \\le ${a * k}$，$x \\le ${k}$。`,
+      ),
+    );
+  }),
+  spec("Modeling With Two-Variable Linear Inequalities", "用二元不等式建模", ["modeling-with-two-variable-inequalities"], (rng, hard) => {
+    const a = rng.int(5, 15);
+    const b = rng.int(2, a - 1);
+    const T = 10 * rng.int(10, 50);
+    if (!hard)
       return mc(
         rng,
         t(
-          `A worker earns $\\$${a}$ per hour tutoring and $\\$${b}$ per hour at a shop. Each week the worker tutors for $t$ hours, which must be at least $${k}$, and works $h$ hours at the shop, and wants to earn at least $\\$${T}$. Which inequality gives the earnings condition?`,
-          `一名员工做家教每小时赚 $${a}$ 美元，在商店每小时赚 $${b}$ 美元，每周做家教 $t$ 小时（至少 $${k}$ 小时），在商店工作 $h$ 小时，目标是至少赚 $${T}$ 美元。哪个不等式给出收入条件？`,
+          `Pizzas cost $\\$${a}$ and salads cost $\\$${b}$. A group can spend at most $\\$${T}$. Which inequality represents $p$ pizzas and $s$ salads within the budget?`,
+          `比萨 $${a}$ 美元，沙拉 $${b}$ 美元。一个小组最多花 $${T}$ 美元。哪个不等式表示预算内的 $p$ 个比萨和 $s$ 份沙拉？`,
         ),
-        `${a}t + ${b}h \\ge ${T}`,
-        [`${a}t + ${b}h \\le ${T}`, `t + h \\ge ${T}`, `${b}t + ${a}h \\ge ${T}`],
-        t(
-          `The earnings add the two jobs, and at least means $\\ge$. The minimum of $${k}$ tutoring hours is a separate condition on $t$.`,
-          `收入是两份工作之和，“至少”对应 $\\ge$。至少 $${k}$ 小时家教是关于 $t$ 的另一个条件。`,
-        ),
+        `${a}p + ${b}s \\le ${T}`,
+        [`${a}p + ${b}s \\ge ${T}`, `${b}p + ${a}s \\le ${T}`, `p + s \\le ${T}`],
+        t(`The cost is price times count for each item, and at most means $\\le$.`, `每种费用是单价乘以数量，“最多”对应 $\\le$。`),
       );
-    },
-  ),
-  twoIneqTips(
+    const k = rng.int(5, 12);
+    return mc(
+      rng,
+      t(
+        `A worker earns $\\$${a}$ per hour tutoring and $\\$${b}$ per hour at a shop. Each week the worker tutors for $t$ hours, which must be at least $${k}$, and works $h$ hours at the shop, and wants to earn at least $\\$${T}$. Which inequality gives the earnings condition?`,
+        `一名员工做家教每小时赚 $${a}$ 美元，在商店每小时赚 $${b}$ 美元，每周做家教 $t$ 小时（至少 $${k}$ 小时），在商店工作 $h$ 小时，目标是至少赚 $${T}$ 美元。哪个不等式给出收入条件？`,
+      ),
+      `${a}t + ${b}h \\ge ${T}`,
+      [`${a}t + ${b}h \\le ${T}`, `t + h \\ge ${T}`, `${b}t + ${a}h \\ge ${T}`],
+      t(
+        `The earnings add the two jobs, and at least means $\\ge$. The minimum of $${k}$ tutoring hours is a separate condition on $t$.`,
+        `收入是两份工作之和，“至少”对应 $\\ge$。至少 $${k}$ 小时家教是关于 $t$ 的另一个条件。`,
+      ),
+    );
+  }),
+  spec(
     "Modeling and Solving Two-Variable Linear Inequalities",
     "二元不等式建模并求解",
     ["modeling-with-two-variable-inequalities"],
@@ -927,7 +866,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       );
     },
   ),
-  twoIneqTips("Systems of Two-Variable Inequalities", "二元不等式组", ["systems-of-linear-inequalities"], (rng, hard) => {
+  spec("Systems of Two-Variable Inequalities", "二元不等式组", ["systems-of-linear-inequalities"], (rng, hard) => {
     const m = rng.int(1, 4);
     const b = rng.int(1, 6);
     const x0 = rng.int(1, 3);
@@ -958,7 +897,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       ),
     );
   }),
-  twoIneqTips("Modeling With Systems of Inequalities", "用不等式组建模", ["modeling-with-systems-of-inequalities"], (rng, hard) => {
+  spec("Modeling With Systems of Inequalities", "用不等式组建模", ["modeling-with-systems-of-inequalities"], (rng, hard) => {
     const a = rng.int(5, 15);
     const b = rng.int(2, a - 1);
     const T = 10 * rng.int(10, 50);
@@ -992,7 +931,7 @@ export const satExamAlgebra4: ExamSpec[] = [
       ),
     );
   }),
-  twoIneqTips(
+  spec(
     "Modeling and Solving Systems of Linear Inequalities",
     "不等式组建模并求解",
     ["modeling-with-systems-of-inequalities"],

@@ -1,41 +1,10 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import type { ExamSpec } from "../exam.ts";
-import { mc, mod, sketchFigure, spr, words } from "../exam.ts";
+import { mc, sketchFigure, spec, spr, words } from "../exam.ts";
 import { altitudeFigure, anglePts, polyFigure, rightPts, twoTrianglesFigure } from "../exam-figures.ts";
 
 // SAT Math Prep, Geometry and Trigonometry: surface area and volume, congruence and similarity, and trigonometry.
-
-const solidTips = mod(
-  t(
-    "The test gives formulas for common solids: a prism or cylinder has volume base area times height, a cone $\\frac{1}{3}\\pi r^2h$ and a sphere $\\frac{4}{3}\\pi r^3$. Surface area adds the area of every face.",
-    "考试会给出常见立体的公式：棱柱或圆柱的体积是底面积乘高，圆锥是 $\\frac{1}{3}\\pi r^2h$，球是 $\\frac{4}{3}\\pi r^3$。表面积是所有面的面积之和。",
-  ),
-  t(
-    "If a question gives the volume, substitute it and solve for the missing length. Watch whether a question gives the diameter or the radius, and split a composite solid into simple parts.",
-    "如果题目给出体积，代入后解出未知长度。注意给的是直径还是半径，并把组合体分成简单部分。",
-  ),
-);
-const simTips = mod(
-  t(
-    "Similar shapes have equal corresponding angles and proportional corresponding sides. Match the vertices in order before you write a proportion.",
-    "相似图形的对应角相等，对应边成比例。列比例式之前，先按顺序对应顶点。",
-  ),
-  t(
-    "If lengths scale by $k$, areas scale by $k^2$ and volumes by $k^3$. Two pairs of equal angles are enough to show that two triangles are similar.",
-    "长度按 $k$ 缩放时，面积按 $k^2$ 缩放，体积按 $k^3$ 缩放。两组对应角相等就足以说明两个三角形相似。",
-  ),
-);
-const trigTips = mod(
-  t(
-    "For an acute angle in a right triangle, $\\sin$ is opposite over hypotenuse, $\\cos$ is adjacent over hypotenuse, and $\\tan$ is opposite over adjacent. Identify the sides from the angle named.",
-    "对于直角三角形的锐角，$\\sin$ 是对边比斜边，$\\cos$ 是邻边比斜边，$\\tan$ 是对边比邻边。根据所给的角确定各边。",
-  ),
-  t(
-    "Complementary angles swap sine and cosine: $\\sin x^\\circ = \\cos(90 - x)^\\circ$. Similar right triangles have equal ratios, so a ratio depends only on the angle.",
-    "互余的角交换正弦和余弦：$\\sin x^\\circ = \\cos(90 - x)^\\circ$。相似直角三角形的比值相等，所以比值只取决于角。",
-  ),
-);
 
 const triples = [
   [3, 4, 5],
@@ -72,7 +41,7 @@ const trigFig = (a: string, b: string, c: string) =>
 
 /** satExamGeometry2 are the exam-style questions on surface area and volume, congruence and similarity, and trigonometry. */
 export const satExamGeometry2: ExamSpec[] = [
-  solidTips("Volumes of Right Rectangular Prisms", "长方体的体积", ["volumes-of-right-rectangular-prisms"], (rng, hard) => {
+  spec("Volumes of Right Rectangular Prisms", "长方体的体积", ["volumes-of-right-rectangular-prisms"], (rng, hard) => {
     const [l, w, h] = [rng.int(2, 15), rng.int(2, 12), rng.int(2, 10)];
     if (!hard)
       return mc(
@@ -95,7 +64,7 @@ export const satExamGeometry2: ExamSpec[] = [
       t(`Divide the volume by the base area $${l * w}$: $${h}$.`, `体积除以底面积 $${l * w}$：$${h}$。`),
     );
   }),
-  solidTips("Surface Areas of Right Rectangular Prisms", "长方体的表面积", ["surface-areas-of-rectangular-solids"], (rng, hard) => {
+  spec("Surface Areas of Right Rectangular Prisms", "长方体的表面积", ["surface-areas-of-rectangular-solids"], (rng, hard) => {
     const [l, w, h] = [rng.int(2, 15), rng.int(2, 12), rng.int(2, 10)];
     const sa = 2 * (l * w + l * h + w * h);
     if (!hard)
@@ -125,7 +94,7 @@ export const satExamGeometry2: ExamSpec[] = [
       ),
     );
   }),
-  solidTips("Volumes and Surface Areas of Cubes", "正方体的体积和表面积", ["surface-areas-of-cubes"], (rng, hard) => {
+  spec("Volumes and Surface Areas of Cubes", "正方体的体积和表面积", ["surface-areas-of-cubes"], (rng, hard) => {
     const s = rng.int(2, 30);
     if (!hard)
       return mc(
@@ -145,7 +114,7 @@ export const satExamGeometry2: ExamSpec[] = [
       ),
     );
   }),
-  solidTips("Volumes of Cylinders", "圆柱的体积", ["volumes-of-cylinders"], (rng, hard) => {
+  spec("Volumes of Cylinders", "圆柱的体积", ["volumes-of-cylinders"], (rng, hard) => {
     const [r, h] = [rng.int(2, 12), rng.int(2, 15)];
     if (!hard)
       return mc(
@@ -171,7 +140,7 @@ export const satExamGeometry2: ExamSpec[] = [
       ),
     );
   }),
-  solidTips(
+  spec(
     "Volumes of Cylinders: Word Problems",
     "圆柱体积应用题",
     ["solving-real-world-problems-involving-volumes-of-cylinders-cones-and-spheres"],
@@ -205,7 +174,7 @@ export const satExamGeometry2: ExamSpec[] = [
       );
     },
   ),
-  solidTips("Volumes of Spheres", "球的体积", ["volumes-of-spheres"], (rng, hard) => {
+  spec("Volumes of Spheres", "球的体积", ["volumes-of-spheres"], (rng, hard) => {
     const r = rng.int(2, 30);
     const v = Q.of(4 * r ** 3, 3).toLatex();
     if (!hard)
@@ -226,7 +195,7 @@ export const satExamGeometry2: ExamSpec[] = [
       ),
     );
   }),
-  solidTips("Volumes of Cones", "圆锥的体积", ["volumes-of-right-cones"], (rng, hard) => {
+  spec("Volumes of Cones", "圆锥的体积", ["volumes-of-right-cones"], (rng, hard) => {
     const [r, h] = [rng.int(2, 12), rng.int(1, 8) * 3];
     if (!hard)
       return mc(
@@ -252,7 +221,7 @@ export const satExamGeometry2: ExamSpec[] = [
       ),
     );
   }),
-  solidTips("Volumes of Composite Solids", "组合体的体积", ["volumes-of-right-cones"], (rng, hard) => {
+  spec("Volumes of Composite Solids", "组合体的体积", ["volumes-of-right-cones"], (rng, hard) => {
     const [r, h, k] = [rng.int(2, 9), rng.int(2, 12), rng.int(1, 5) * 3];
     if (!hard)
       return mc(
@@ -282,7 +251,7 @@ export const satExamGeometry2: ExamSpec[] = [
       ),
     );
   }),
-  solidTips(
+  spec(
     "Constructing Functions Representing Surface Area and Volume",
     "构造表示表面积和体积的函数",
     ["constructing-functions-representing-volumes-of-cylinders-cones-and-pyramids"],
@@ -311,13 +280,13 @@ export const satExamGeometry2: ExamSpec[] = [
       );
     },
   ),
-  solidTips(
+  spec(
     "Surface Areas of Combined Rectangular Prisms",
     "组合长方体的表面积",
     ["surface-areas-of-combined-rectangular-prisms"],
     (rng, hard) => {
       const s = rng.int(2, 30);
-      const n = rng.int(2, 6);
+      const n = rng.int(3, 6);
       if (!hard)
         return mc(
           rng,
@@ -346,7 +315,7 @@ export const satExamGeometry2: ExamSpec[] = [
       );
     },
   ),
-  simTips("Congruent Triangles", "全等三角形", ["solving-problems-describing-congruent-triangles"], (rng, hard) => {
+  spec("Congruent Triangles", "全等三角形", ["solving-problems-describing-congruent-triangles"], (rng, hard) => {
     const [a, b, x, c] = [rng.int(25, 70), rng.int(30, 75), rng.int(4, 20), rng.int(1, 9)];
     if (!hard)
       return mc(
@@ -385,7 +354,7 @@ export const satExamGeometry2: ExamSpec[] = [
       ),
     );
   }),
-  simTips(
+  spec(
     "Finding Corresponding Angles in Similar Shapes",
     "求相似图形的对应角",
     ["side-lengths-and-angle-measures-of-similar-polygons"],
@@ -416,7 +385,7 @@ export const satExamGeometry2: ExamSpec[] = [
       );
     },
   ),
-  simTips(
+  spec(
     "Finding Corresponding Lengths in Similar Shapes",
     "求相似图形的对应长度",
     ["side-lengths-and-angle-measures-of-similar-polygons"],
@@ -458,7 +427,7 @@ export const satExamGeometry2: ExamSpec[] = [
       );
     },
   ),
-  simTips("Solving Problems With Similar Triangles", "用相似三角形解题", ["reasoning-about-similar-triangles"], (rng, hard) => {
+  spec("Solving Problems With Similar Triangles", "用相似三角形解题", ["reasoning-about-similar-triangles"], (rng, hard) => {
     const [a, b, k] = [rng.int(2, 10), rng.int(2, 10), rng.int(2, 5)];
     const fig = sketchFigure(
       {
@@ -507,7 +476,7 @@ export const satExamGeometry2: ExamSpec[] = [
       fig,
     );
   }),
-  simTips(
+  spec(
     "Further Problem-Solving With Embedded Right Triangles",
     "进一步解嵌入直角三角形问题",
     ["the-aa-similarity-criterion"],
@@ -569,50 +538,45 @@ export const satExamGeometry2: ExamSpec[] = [
       );
     },
   ),
-  simTips(
-    "Identifying Information Needed to Determine Similarity",
-    "判断确定相似所需的信息",
-    ["the-aa-similarity-criterion"],
-    (rng, hard) => {
-      const [a, b, c] = [rng.int(25, 75), rng.int(30, 70), rng.int(1, 9)];
-      if (!hard)
-        return words(
-          rng,
-          t(
-            `In triangles $ABC$ and $DEF$, angle $A$ and angle $D$ both measure $${a}^\\circ$. Which additional fact is enough to conclude that the triangles are similar?`,
-            `在三角形 $ABC$ 和 $DEF$ 中，$\\angle A$ 和 $\\angle D$ 都是 $${a}^\\circ$。再知道哪个事实就足以断定两个三角形相似？`,
-          ),
-          t(`Angle $B$ and angle $E$ both measure $${b}^\\circ$.`, `$\\angle B$ 和 $\\angle E$ 都是 $${b}^\\circ$。`),
-          [
-            t(`$AB = ${c + 2}$ and $DE = ${c + 3}$`, `$AB = ${c + 2}$，$DE = ${c + 3}$`),
-            t(`$BC = EF$`, `$BC = EF$`),
-            t(`$AC = DF$`, `$AC = DF$`),
-          ],
-          t(
-            `Two pairs of equal corresponding angles establish similarity, so the angle fact is enough.`,
-            `两组对应角相等即可确定相似，所以这个角的事实就足够了。`,
-          ),
-        );
+  spec("Identifying Information Needed to Determine Similarity", "判断确定相似所需的信息", ["the-aa-similarity-criterion"], (rng, hard) => {
+    const [a, b, c] = [rng.int(25, 75), rng.int(30, 70), rng.int(1, 9)];
+    if (!hard)
       return words(
         rng,
         t(
-          `In triangles $ABC$ and $DEF$, $\\frac{AB}{DE} = \\frac{AC}{DF} = \\frac{${c + 1}}{${b}}$. Which additional fact is enough to conclude that the triangles are similar?`,
-          `在三角形 $ABC$ 和 $DEF$ 中，$\\frac{AB}{DE} = \\frac{AC}{DF} = \\frac{${c + 1}}{${b}}$。再知道哪个事实就足以断定两个三角形相似？`,
+          `In triangles $ABC$ and $DEF$, angle $A$ and angle $D$ both measure $${a}^\\circ$. Which additional fact is enough to conclude that the triangles are similar?`,
+          `在三角形 $ABC$ 和 $DEF$ 中，$\\angle A$ 和 $\\angle D$ 都是 $${a}^\\circ$。再知道哪个事实就足以断定两个三角形相似？`,
         ),
-        t(`Angle $A$ and angle $D$ both measure $${a}^\\circ$.`, `$\\angle A$ 和 $\\angle D$ 都是 $${a}^\\circ$。`),
+        t(`Angle $B$ and angle $E$ both measure $${b}^\\circ$.`, `$\\angle B$ 和 $\\angle E$ 都是 $${b}^\\circ$。`),
         [
-          t(`Angle $B$ and angle $F$ both measure $${a}^\\circ$.`, `$\\angle B$ 和 $\\angle F$ 都是 $${a}^\\circ$。`),
-          t(`$BC = ${c + 4}$`, `$BC = ${c + 4}$`),
-          t(`$AB = ${c + 2}$`, `$AB = ${c + 2}$`),
+          t(`$AB = ${c + 2}$ and $DE = ${c + 3}$`, `$AB = ${c + 2}$，$DE = ${c + 3}$`),
+          t(`$BC = EF$`, `$BC = EF$`),
+          t(`$AC = DF$`, `$AC = DF$`),
         ],
         t(
-          `Two proportional sides need the included angles to be equal, which is angle $A$ and angle $D$.`,
-          `两组成比例的边需要夹角相等，也就是 $\\angle A$ 和 $\\angle D$。`,
+          `Two pairs of equal corresponding angles establish similarity, so the angle fact is enough.`,
+          `两组对应角相等即可确定相似，所以这个角的事实就足够了。`,
         ),
       );
-    },
-  ),
-  simTips("Relating Length and Area in Similar Shapes", "相似图形的长度与面积", ["areas-of-similar-polygons"], (rng, hard) => {
+    return words(
+      rng,
+      t(
+        `In triangles $ABC$ and $DEF$, $\\frac{AB}{DE} = \\frac{AC}{DF} = \\frac{${c + 1}}{${b}}$. Which additional fact is enough to conclude that the triangles are similar?`,
+        `在三角形 $ABC$ 和 $DEF$ 中，$\\frac{AB}{DE} = \\frac{AC}{DF} = \\frac{${c + 1}}{${b}}$。再知道哪个事实就足以断定两个三角形相似？`,
+      ),
+      t(`Angle $A$ and angle $D$ both measure $${a}^\\circ$.`, `$\\angle A$ 和 $\\angle D$ 都是 $${a}^\\circ$。`),
+      [
+        t(`Angle $B$ and angle $F$ both measure $${a}^\\circ$.`, `$\\angle B$ 和 $\\angle F$ 都是 $${a}^\\circ$。`),
+        t(`$BC = ${c + 4}$`, `$BC = ${c + 4}$`),
+        t(`$AB = ${c + 2}$`, `$AB = ${c + 2}$`),
+      ],
+      t(
+        `Two proportional sides need the included angles to be equal, which is angle $A$ and angle $D$.`,
+        `两组成比例的边需要夹角相等，也就是 $\\angle A$ 和 $\\angle D$。`,
+      ),
+    );
+  }),
+  spec("Relating Length and Area in Similar Shapes", "相似图形的长度与面积", ["areas-of-similar-polygons"], (rng, hard) => {
     const [a, k] = [rng.int(2, 30), rng.int(2, 6)];
     if (!hard)
       return mc(
@@ -642,7 +606,7 @@ export const satExamGeometry2: ExamSpec[] = [
       twoTrianglesFigure(anglePts(50, 70), { s: [null, `${a + 1}`, null] }, { s: [null, "?", null] }, 1.6),
     );
   }),
-  simTips(
+  spec(
     "Length, Surface Area, and Volume in Similar Solids",
     "相似立体的长度、表面积和体积",
     ["surface-areas-and-volumes-of-similar-solids"],
@@ -673,7 +637,7 @@ export const satExamGeometry2: ExamSpec[] = [
       );
     },
   ),
-  trigTips("Trigonometric Ratios in Right Triangles", "直角三角形中的三角比", ["the-trigonometric-ratios"], (rng, hard) => {
+  spec("Trigonometric Ratios in Right Triangles", "直角三角形中的三角比", ["the-trigonometric-ratios"], (rng, hard) => {
     const [p, q, c] = rng.pick(triples);
     const s = rng.int(1, 6);
     const fig = trigFig(`${p * s}`, `${q * s}`, `${c * s}`);
@@ -702,7 +666,7 @@ export const satExamGeometry2: ExamSpec[] = [
       fig,
     );
   }),
-  trigTips(
+  spec(
     "Calculating Lengths and Areas Using Trigonometry",
     "用三角函数计算长度和面积",
     ["calculating-side-lengths-of-right-triangles-using-trigonometry"],
@@ -737,7 +701,7 @@ export const satExamGeometry2: ExamSpec[] = [
       );
     },
   ),
-  trigTips(
+  spec(
     "Calculating Trigonometric Ratios Using the Pythagorean Theorem",
     "用勾股定理计算三角比",
     ["calculating-trigonometric-ratios-from-descriptions"],
@@ -769,7 +733,7 @@ export const satExamGeometry2: ExamSpec[] = [
       );
     },
   ),
-  trigTips(
+  spec(
     "Cofunction Relationships and Identities",
     "余函数关系和恒等式",
     ["trigonometric-functions-of-complementary-angles"],
@@ -799,7 +763,7 @@ export const satExamGeometry2: ExamSpec[] = [
       );
     },
   ),
-  trigTips(
+  spec(
     "Relations Between Trigonometric Ratios in Similar Right Triangles",
     "相似直角三角形中三角比的关系",
     ["trigonometric-ratios-in-similar-right-triangles"],
@@ -837,7 +801,7 @@ export const satExamGeometry2: ExamSpec[] = [
       );
     },
   ),
-  trigTips(
+  spec(
     "Problem-Solving Using Trigonometric Ratios in Similar Right Triangles",
     "用相似直角三角形的三角比解题",
     ["trigonometric-ratios-in-similar-right-triangles"],
@@ -873,7 +837,7 @@ export const satExamGeometry2: ExamSpec[] = [
       );
     },
   ),
-  trigTips(
+  spec(
     "Trigonometric Ratios of Large Special Angles",
     "大特殊角的三角比",
     ["extending-the-trigonometric-ratios-to-large-angles"],

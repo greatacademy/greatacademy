@@ -1,6 +1,6 @@
 import { t } from "@ga/content";
 import type { ExamSpec } from "../exam.ts";
-import { mc, mod, sg, sketchFigure, spr } from "../exam.ts";
+import { mc, sg, sketchFigure, spec, spr } from "../exam.ts";
 import {
   bowtieFigure,
   cevianFigure,
@@ -19,67 +19,6 @@ import {
 } from "../exam-figures.ts";
 
 // SAT Math Prep, Geometry and Trigonometry: lines and angles, area and perimeter, right triangles, circles and inscribed shapes.
-
-const angleTips = mod(
-  t(
-    "With parallel lines, corresponding and alternate angles are equal and consecutive angles add to $180^\\circ$. Vertical angles are equal. The angles of a triangle add to $180^\\circ$.",
-    "平行线中，同位角和内错角相等，同旁内角和为 $180^\\circ$。对顶角相等。三角形内角和为 $180^\\circ$。",
-  ),
-  t(
-    "When several angles are unknown, write an equation from one fact at a time, starting with the angle the two shapes share. Figures are not always drawn to scale, so trust the numbers.",
-    "几个角都未知时，每次用一个事实列方程，从两个图形共有的角开始。图不一定按比例，要相信数字。",
-  ),
-);
-const areaTips = mod(
-  t(
-    "Write the formula first, then substitute. Perimeter adds side lengths, while area multiplies two perpendicular lengths and has square units.",
-    "先写公式再代入。周长是边长相加，面积是两条垂直长度相乘，单位是平方单位。",
-  ),
-  t(
-    "If a question describes one side in terms of another, name one side $x$ and write everything with it. On a grid, read horizontal and vertical lengths by subtracting coordinates.",
-    "如果题目用一条边描述另一条边，设其中一条为 $x$，全部用它表示。在坐标平面上，用坐标相减求水平和竖直长度。",
-  ),
-);
-const rightTips = mod(
-  t(
-    "In a right triangle, $a^2 + b^2 = c^2$ with $c$ opposite the right angle. A $45$-$45$-$90$ triangle has sides $x, x, x\\sqrt{2}$ and a $30$-$60$-$90$ triangle has sides $x, x\\sqrt{3}, 2x$.",
-    "直角三角形中，$a^2 + b^2 = c^2$，$c$ 是直角所对的边。$45$-$45$-$90$ 三角形三边为 $x, x, x\\sqrt{2}$，$30$-$60$-$90$ 三角形三边为 $x, x\\sqrt{3}, 2x$。",
-  ),
-  t(
-    "Simplify radicals by taking out perfect squares, and remember $(k\\sqrt{n})^2 = k^2n$. Look for a right triangle hiding in the figure, such as one made by an altitude.",
-    "化简根式时提出完全平方因数，并记住 $(k\\sqrt{n})^2 = k^2n$。留意图中隐藏的直角三角形，比如由高构成的直角三角形。",
-  ),
-);
-const circleTips = mod(
-  t(
-    "Circumference is $2\\pi r$ and area is $\\pi r^2$. A central angle of $\\theta$ radians cuts an arc of length $r\\theta$, and $180^\\circ$ equals $\\pi$ radians.",
-    "周长是 $2\\pi r$，面积是 $\\pi r^2$。$\\theta$ 弧度的圆心角所对的弧长是 $r\\theta$，$180^\\circ$ 等于 $\\pi$ 弧度。",
-  ),
-  t(
-    "A radius meets a tangent at a right angle, a radius perpendicular to a chord bisects it, and two radii form an isosceles triangle. Each fact gives a right triangle or equal angles to use.",
-    "半径与切线垂直，垂直于弦的半径平分弦，两条半径构成等腰三角形。这些事实都能提供直角三角形或相等的角。",
-  ),
-);
-const eqTips = mod(
-  t(
-    "The circle with center $(h, k)$ and radius $r$ has equation $(x - h)^2 + (y - k)^2 = r^2$. The right side is the radius squared, and the signs inside are opposite to the center's.",
-    "圆心为 $(h, k)$、半径为 $r$ 的圆的方程是 $(x - h)^2 + (y - k)^2 = r^2$。右边是半径的平方，括号内的符号与圆心坐标相反。",
-  ),
-  t(
-    "If the equation is expanded, complete the square in $x$ and in $y$. Add the same numbers to both sides, then read the center and radius.",
-    "如果方程已展开，分别对 $x$ 和 $y$ 配方。两边加上相同的数，再读出圆心和半径。",
-  ),
-);
-const inscribedTips = mod(
-  t(
-    "Find the length both shapes share. A square inside a circle has its diagonal as a diameter. A circle inside a square has its diameter equal to the side.",
-    "找出两个图形共有的长度。圆内接正方形的对角线是直径。正方形内切圆的直径等于边长。",
-  ),
-  t(
-    "For an equilateral triangle with side $s$, the height is $\\frac{s\\sqrt{3}}{2}$. Its center divides the height so that the inscribed radius is $\\frac{1}{3}$ of it and the circumscribed radius is $\\frac{2}{3}$ of it.",
-    "边长为 $s$ 的等边三角形高为 $\\frac{s\\sqrt{3}}{2}$。中心把高分成两段，内切圆半径是高的 $\\frac{1}{3}$，外接圆半径是高的 $\\frac{2}{3}$。",
-  ),
-);
 
 const spots: Record<string, readonly [number, number]> = {
   UL: [170, 60],
@@ -151,7 +90,7 @@ const rightFig = (leg1: string, leg2: string, hyp: string) =>
 
 /** satExamGeometry1 are the exam-style questions on lines and angles, area and perimeter, right triangles, circles and inscribed shapes. */
 export const satExamGeometry1: ExamSpec[] = [
-  angleTips("Corresponding Angles", "同位角", ["corresponding-angles"], (rng, hard) => {
+  spec("Corresponding Angles", "同位角", ["corresponding-angles"], (rng, hard) => {
     const a = rng.int(35, 85) + rng.pick([0, 60]);
     if (!hard)
       return mc(
@@ -185,7 +124,7 @@ export const satExamGeometry1: ExamSpec[] = [
       parallelFig({ UL: l1, ul: l2 }),
     );
   }),
-  angleTips("Consecutive Angles", "同旁内角", ["consecutive-angles"], (rng, hard) => {
+  spec("Consecutive Angles", "同旁内角", ["consecutive-angles"], (rng, hard) => {
     const a = rng.int(35, 145);
     if (!hard)
       return mc(
@@ -216,7 +155,7 @@ export const satExamGeometry1: ExamSpec[] = [
       parallelFig({ DR: `(3x ${sg(b)})°`, ur: `(x ${sg(c)})°` }),
     );
   }),
-  angleTips("Vertical Angles", "对顶角", ["vertical-angles"], (rng, hard) => {
+  spec("Vertical Angles", "对顶角", ["vertical-angles"], (rng, hard) => {
     const a = rng.int(25, 155);
     if (!hard)
       return mc(
@@ -246,7 +185,7 @@ export const satExamGeometry1: ExamSpec[] = [
       ),
     );
   }),
-  angleTips("Problem-Solving With Corresponding Angles", "用同位角解题", ["parallel-lines-and-transversals"], (rng, hard) => {
+  spec("Problem-Solving With Corresponding Angles", "用同位角解题", ["parallel-lines-and-transversals"], (rng, hard) => {
     const [a, c] = [rng.int(40, 80), rng.int(30, 70)];
     if (!hard)
       return mc(
@@ -277,7 +216,7 @@ export const satExamGeometry1: ExamSpec[] = [
       ),
     );
   }),
-  angleTips("Interior Angles of Triangles", "三角形的内角", ["angles-of-a-triangle"], (rng, hard) => {
+  spec("Interior Angles of Triangles", "三角形的内角", ["angles-of-a-triangle"], (rng, hard) => {
     const [a, b] = [rng.int(25, 85), rng.int(25, 65)];
     if (!hard)
       return mc(
@@ -306,7 +245,7 @@ export const satExamGeometry1: ExamSpec[] = [
       ),
     );
   }),
-  angleTips("Interior Angles of Special Triangles", "特殊三角形的内角", ["isosceles-triangles"], (rng, hard) => {
+  spec("Interior Angles of Special Triangles", "特殊三角形的内角", ["isosceles-triangles"], (rng, hard) => {
     const apex = rng.int(10, 80) * 2;
     if (!hard)
       return mc(
@@ -338,7 +277,7 @@ export const satExamGeometry1: ExamSpec[] = [
       polyFigure(isoPts(180 - 2 * base), { a: [`${base}°`, null, "?"] }),
     );
   }),
-  angleTips("Exterior Angles of Triangles", "三角形的外角", ["exterior-angles-of-triangles"], (rng, hard) => {
+  spec("Exterior Angles of Triangles", "三角形的外角", ["exterior-angles-of-triangles"], (rng, hard) => {
     const [a, b] = [rng.int(25, 75), rng.int(25, 75)];
     if (!hard)
       return mc(
@@ -371,7 +310,7 @@ export const satExamGeometry1: ExamSpec[] = [
       exteriorFigure(42, 62, "x°", `(${k}x + ${a})°`, `${(k + 1) * x + a}°`),
     );
   }),
-  angleTips("Solving Problems With Multiple Triangles", "解多个三角形的问题", ["problem-solving-with-angles-of-triangles"], (rng, hard) => {
+  spec("Solving Problems With Multiple Triangles", "解多个三角形的问题", ["problem-solving-with-angles-of-triangles"], (rng, hard) => {
     const [a, b, c] = [rng.int(30, 60), rng.int(40, 70), rng.int(30, 60)];
     const shared = 180 - a - b;
     if (!hard)
@@ -403,44 +342,39 @@ export const satExamGeometry1: ExamSpec[] = [
       kiteFigure(a, b, a - 5, c),
     );
   }),
-  angleTips(
-    "Interior and Exterior Angles in Connected Triangles",
-    "相连三角形的内角和外角",
-    ["the-exterior-angle-theorem"],
-    (rng, hard) => {
-      const [a, b] = [rng.int(20, 50), rng.int(30, 60)];
-      if (!hard)
-        return mc(
-          rng,
-          t(
-            `Point $D$ lies on side $BC$ of triangle $ABC$. Angle $ABD$ is $${b}^\\circ$ and angle $BAD$ is $${a}^\\circ$. What is the measure of angle $ADC$, in degrees?`,
-            `点 $D$ 在三角形 $ABC$ 的边 $BC$ 上。$\\angle ABD = ${b}^\\circ$，$\\angle BAD = ${a}^\\circ$。$\\angle ADC$ 是多少度？`,
-          ),
-          a + b,
-          [180 - a - b, 180 - a, 180 - b],
-          t(
-            `Angle $ADC$ is an exterior angle of triangle $ABD$, so it equals $${a} + ${b} = ${a + b}$.`,
-            `$\\angle ADC$ 是三角形 $ABD$ 的外角，所以等于 $${a} + ${b} = ${a + b}$。`,
-          ),
-          cevianFigure(a, b),
-        );
-      const c = rng.int(20, 40);
-      return spr(
+  spec("Interior and Exterior Angles in Connected Triangles", "相连三角形的内角和外角", ["the-exterior-angle-theorem"], (rng, hard) => {
+    const [a, b] = [rng.int(20, 50), rng.int(30, 60)];
+    if (!hard)
+      return mc(
+        rng,
         t(
-          `Point $D$ lies on side $BC$ of triangle $ABC$. Angle $ABD$ is $${b}^\\circ$, angle $BAD$ is $${a}^\\circ$ and angle $DAC$ is $${c}^\\circ$. What is the measure of angle $ACD$, in degrees?`,
-          `点 $D$ 在三角形 $ABC$ 的边 $BC$ 上。$\\angle ABD = ${b}^\\circ$，$\\angle BAD = ${a}^\\circ$，$\\angle DAC = ${c}^\\circ$。$\\angle ACD$ 是多少度？`,
+          `Point $D$ lies on side $BC$ of triangle $ABC$. Angle $ABD$ is $${b}^\\circ$ and angle $BAD$ is $${a}^\\circ$. What is the measure of angle $ADC$, in degrees?`,
+          `点 $D$ 在三角形 $ABC$ 的边 $BC$ 上。$\\angle ABD = ${b}^\\circ$，$\\angle BAD = ${a}^\\circ$。$\\angle ADC$ 是多少度？`,
         ),
-        180 - a - b - c,
-        [a + b, a + b + c, 180 - a - c],
+        a + b,
+        [180 - a - b, 180 - a, 180 - b],
         t(
-          `In the large triangle, the angles at $A$, $B$ and $C$ add to $180$: $(${a} + ${c}) + ${b} + \\angle ACD = 180$. So the angle is $${180 - a - b - c}$.`,
-          `在大三角形中，$A$、$B$、$C$ 处的角和为 $180$：$(${a} + ${c}) + ${b} + \\angle ACD = 180$。所以该角为 $${180 - a - b - c}$。`,
+          `Angle $ADC$ is an exterior angle of triangle $ABD$, so it equals $${a} + ${b} = ${a + b}$.`,
+          `$\\angle ADC$ 是三角形 $ABD$ 的外角，所以等于 $${a} + ${b} = ${a + b}$。`,
         ),
-        cevianFigure(a, b, c),
+        cevianFigure(a, b),
       );
-    },
-  ),
-  areaTips("Areas of Rectangles and Squares", "矩形和正方形的面积", ["area-of-rectangles-and-squares"], (rng, hard) => {
+    const c = rng.int(20, 40);
+    return spr(
+      t(
+        `Point $D$ lies on side $BC$ of triangle $ABC$. Angle $ABD$ is $${b}^\\circ$, angle $BAD$ is $${a}^\\circ$ and angle $DAC$ is $${c}^\\circ$. What is the measure of angle $ACD$, in degrees?`,
+        `点 $D$ 在三角形 $ABC$ 的边 $BC$ 上。$\\angle ABD = ${b}^\\circ$，$\\angle BAD = ${a}^\\circ$，$\\angle DAC = ${c}^\\circ$。$\\angle ACD$ 是多少度？`,
+      ),
+      180 - a - b - c,
+      [a + b, a + b + c, 180 - a - c],
+      t(
+        `In the large triangle, the angles at $A$, $B$ and $C$ add to $180$: $(${a} + ${c}) + ${b} + \\angle ACD = 180$. So the angle is $${180 - a - b - c}$.`,
+        `在大三角形中，$A$、$B$、$C$ 处的角和为 $180$：$(${a} + ${c}) + ${b} + \\angle ACD = 180$。所以该角为 $${180 - a - b - c}$。`,
+      ),
+      cevianFigure(a, b, c),
+    );
+  }),
+  spec("Areas of Rectangles and Squares", "矩形和正方形的面积", ["area-of-rectangles-and-squares"], (rng, hard) => {
     const [l, w, s] = [rng.int(6, 25), rng.int(2, 15), rng.int(3, 30)];
     if (!hard)
       return mc(
@@ -463,7 +397,7 @@ export const satExamGeometry1: ExamSpec[] = [
       ),
     );
   }),
-  areaTips("Perimeters of Squares, Rectangles, and Triangles", "正方形、矩形和三角形的周长", ["perimeter"], (rng, hard) => {
+  spec("Perimeters of Squares, Rectangles, and Triangles", "正方形、矩形和三角形的周长", ["perimeter"], (rng, hard) => {
     const [l, w, k] = [rng.int(6, 25), rng.int(2, 15), rng.int(2, 5)];
     if (!hard)
       return mc(
@@ -488,7 +422,7 @@ export const satExamGeometry1: ExamSpec[] = [
       rectFigure(k, 1, `${k}x`, "x"),
     );
   }),
-  areaTips(
+  spec(
     "Calculating Areas in the Coordinate Plane",
     "在坐标平面中计算面积",
     ["finding-areas-and-perimeters-in-the-coordinate-plane"],
@@ -519,7 +453,7 @@ export const satExamGeometry1: ExamSpec[] = [
       );
     },
   ),
-  areaTips(
+  spec(
     "Constructing Functions Representing Area and Perimeter",
     "构造表示面积和周长的函数",
     ["area-of-rectangles-and-squares"],
@@ -548,7 +482,7 @@ export const satExamGeometry1: ExamSpec[] = [
       );
     },
   ),
-  rightTips("Areas of Right Triangles", "直角三角形的面积", ["areas-of-right-triangles"], (rng, hard) => {
+  spec("Areas of Right Triangles", "直角三角形的面积", ["areas-of-right-triangles"], (rng, hard) => {
     const [a, b] = [rng.int(2, 15) * 2, rng.int(3, 20)];
     const [p, q, c, k] = rng.pick([
       [3, 4, 5, 2],
@@ -587,7 +521,7 @@ export const satExamGeometry1: ExamSpec[] = [
       ),
     );
   }),
-  rightTips("The Pythagorean Theorem", "勾股定理", ["the-pythagorean-theorem"], (rng, hard) => {
+  spec("The Pythagorean Theorem", "勾股定理", ["the-pythagorean-theorem"], (rng, hard) => {
     const [p, q, c] = rng.pick([
       [3, 4, 5],
       [5, 12, 13],
@@ -624,7 +558,7 @@ export const satExamGeometry1: ExamSpec[] = [
       ),
     );
   }),
-  rightTips(
+  spec(
     "Modeling Situations Using the Pythagorean Theorem",
     "用勾股定理为情境建模",
     ["solving-real-world-problems-using-the-pythagorean-theorem"],
@@ -664,7 +598,7 @@ export const satExamGeometry1: ExamSpec[] = [
       );
     },
   ),
-  rightTips("Problem-Solving With Isosceles Right Triangles", "用等腰直角三角形解题", ["isosceles-right-triangles"], (rng, hard) => {
+  spec("Problem-Solving With Isosceles Right Triangles", "用等腰直角三角形解题", ["isosceles-right-triangles"], (rng, hard) => {
     const a = rng.int(2, 30);
     if (!hard)
       return mc(
@@ -692,7 +626,7 @@ export const satExamGeometry1: ExamSpec[] = [
       polyFigure(rightPts(1, 1), { s: ["", "", `${2 * a}`], right: 1 }),
     );
   }),
-  rightTips("Problem-Solving With Special Triangles", "用特殊三角形解题", ["thirty-sixty-ninety-triangles"], (rng, hard) => {
+  spec("Problem-Solving With Special Triangles", "用特殊三角形解题", ["thirty-sixty-ninety-triangles"], (rng, hard) => {
     const a = rng.int(2, 30);
     if (!hard)
       return mc(
@@ -721,7 +655,7 @@ export const satExamGeometry1: ExamSpec[] = [
       polyFigure(rightPts(Math.sqrt(3), 1), { a: ["60°", null, "30°"], s: [null, "?", `${2 * a}`], right: 1 }),
     );
   }),
-  rightTips(
+  spec(
     "Further Problem-Solving With Special Triangles",
     "进一步用特殊三角形解题",
     ["area-of-thirty-sixty-ninety-triangles"],
@@ -754,7 +688,7 @@ export const satExamGeometry1: ExamSpec[] = [
       );
     },
   ),
-  rightTips(
+  spec(
     "Solving Right Triangle Problems by Manipulating Radicals",
     "通过根式运算解直角三角形问题",
     ["the-pythagorean-theorem"],
@@ -795,7 +729,7 @@ export const satExamGeometry1: ExamSpec[] = [
       );
     },
   ),
-  circleTips("Radians", "弧度", ["introduction-to-radians"], (rng, hard) => {
+  spec("Radians", "弧度", ["introduction-to-radians"], (rng, hard) => {
     const d = rng.pick([15, 30, 36, 40, 45, 60, 72, 90, 120, 135, 144, 150, 180, 210, 225, 240, 270, 300, 315, 330, 360, 20, 10, 18, 12]);
     const g = gcd2(d, 180);
     const frac = d === 180 ? "\\pi" : `\\frac{${d / g === 1 ? "" : d / g}\\pi}{${180 / g}}`;
@@ -815,7 +749,7 @@ export const satExamGeometry1: ExamSpec[] = [
       t(`Multiply radians by $\\frac{180}{\\pi}$ to get $${d}$.`, `弧度乘以 $\\frac{180}{\\pi}$ 得 $${d}$。`),
     );
   }),
-  circleTips("Arc Lengths of Sectors", "扇形的弧长", ["calculating-arc-lengths-of-circular-sectors"], (rng, hard) => {
+  spec("Arc Lengths of Sectors", "扇形的弧长", ["calculating-arc-lengths-of-circular-sectors"], (rng, hard) => {
     const [r, k, d] = [rng.int(2, 12), rng.int(1, 5), rng.pick([3, 4, 6])];
     const theta = 180 / d;
     if (!hard)
@@ -845,7 +779,7 @@ export const satExamGeometry1: ExamSpec[] = [
       ),
     );
   }),
-  circleTips("Areas and Circumferences of Circles", "圆的面积和周长", ["areas-of-circles"], (rng, hard) => {
+  spec("Areas and Circumferences of Circles", "圆的面积和周长", ["areas-of-circles"], (rng, hard) => {
     const r = rng.int(2, 40);
     if (!hard)
       return mc(
@@ -866,7 +800,7 @@ export const satExamGeometry1: ExamSpec[] = [
       t(`The radius is $${r}$, so the area is $${r * r}\\pi$.`, `半径为 $${r}$，所以面积为 $${r * r}\\pi$。`),
     );
   }),
-  circleTips("Isosceles Triangles Formed Within Circles", "圆内的等腰三角形", ["isosceles-triangles-in-circles"], (rng, hard) => {
+  spec("Isosceles Triangles Formed Within Circles", "圆内的等腰三角形", ["isosceles-triangles-in-circles"], (rng, hard) => {
     const a = rng.int(10, 80) * 2;
     if (!hard)
       return mc(
@@ -898,7 +832,7 @@ export const satExamGeometry1: ExamSpec[] = [
       chordFigure(180 - 2 * b, "?", `${b}°`),
     );
   }),
-  circleTips("Tangent Lines to Circles", "圆的切线", ["tangent-lines-to-circles"], (rng, hard) => {
+  spec("Tangent Lines to Circles", "圆的切线", ["tangent-lines-to-circles"], (rng, hard) => {
     const [p, q, c] = rng.pick([
       [3, 4, 5],
       [5, 12, 13],
@@ -954,7 +888,7 @@ export const satExamGeometry1: ExamSpec[] = [
       fig,
     );
   }),
-  circleTips("Bisectors of Chords", "弦的垂直平分线", ["perpendicular-bisectors-of-chords"], (rng, hard) => {
+  spec("Bisectors of Chords", "弦的垂直平分线", ["perpendicular-bisectors-of-chords"], (rng, hard) => {
     const [p, q, c] = rng.pick([
       [3, 4, 5],
       [5, 12, 13],
@@ -989,7 +923,7 @@ export const satExamGeometry1: ExamSpec[] = [
       ),
     );
   }),
-  eqTips("The Canonical Equation of a Circle", "圆的标准方程", ["equations-of-circles"], (rng, hard) => {
+  spec("The Canonical Equation of a Circle", "圆的标准方程", ["equations-of-circles"], (rng, hard) => {
     const [h, k, r] = [rng.nonZero(-9, 9), rng.nonZero(-9, 9), rng.int(2, 12)];
     if (!hard)
       return mc(
@@ -1017,7 +951,7 @@ export const satExamGeometry1: ExamSpec[] = [
       t(`The right side is $r^2$, so $r = \\sqrt{${r * r}} = ${r}$.`, `右边是 $r^2$，所以 $r = \\sqrt{${r * r}} = ${r}$。`),
     );
   }),
-  eqTips("Canonical Equations of Transformed Circles", "变换后的圆的标准方程", ["transforming-circles"], (rng, hard) => {
+  spec("Canonical Equations of Transformed Circles", "变换后的圆的标准方程", ["transforming-circles"], (rng, hard) => {
     const [h, k, r, a, b] = [rng.nonZero(-6, 6), rng.nonZero(-6, 6), rng.int(2, 9), rng.int(1, 5), rng.int(1, 5)];
     if (!hard)
       return mc(
@@ -1046,7 +980,7 @@ export const satExamGeometry1: ExamSpec[] = [
       ),
     );
   }),
-  eqTips(
+  spec(
     "General Equations of Circles in the Coordinate Plane",
     "坐标平面中圆的一般方程",
     ["determining-circle-properties-by-completing-the-square"],
@@ -1076,7 +1010,7 @@ export const satExamGeometry1: ExamSpec[] = [
       );
     },
   ),
-  eqTips(
+  spec(
     "Solving Problems Involving the Canonical Equation of a Circle",
     "用圆的标准方程解题",
     ["circles-in-the-coordinate-plane"],
@@ -1118,7 +1052,7 @@ export const satExamGeometry1: ExamSpec[] = [
       );
     },
   ),
-  inscribedTips("Solving Problems Involving Inscribed Squares", "解内接正方形问题", ["squares-inscribed-in-circles"], (rng, hard) => {
+  spec("Solving Problems Involving Inscribed Squares", "解内接正方形问题", ["squares-inscribed-in-circles"], (rng, hard) => {
     const s = rng.int(2, 30);
     const half = s % 2 === 0 ? `${s / 2}` : `\\frac{${s}}{2}`;
     const radius = s === 2 ? "\\sqrt{2}" : s % 2 === 0 ? `${s / 2}\\sqrt{2}` : `\\frac{${s}\\sqrt{2}}{2}`;
@@ -1149,7 +1083,7 @@ export const satExamGeometry1: ExamSpec[] = [
       ),
     );
   }),
-  inscribedTips("Solving Problems Involving Inscribed Circles", "解内切圆问题", ["circles-inscribed-in-squares"], (rng, hard) => {
+  spec("Solving Problems Involving Inscribed Circles", "解内切圆问题", ["circles-inscribed-in-squares"], (rng, hard) => {
     const r = rng.int(2, 30);
     if (!hard)
       return mc(
@@ -1181,7 +1115,7 @@ export const satExamGeometry1: ExamSpec[] = [
       squareCircleFigure({ side: `${2 * r}`, shade: true }),
     );
   }),
-  inscribedTips(
+  spec(
     "Solving Problems Involving Circles Inscribed in Equilateral Triangles",
     "解等边三角形内切圆问题",
     ["circles-inscribed-in-equilateral-triangles"],
@@ -1218,7 +1152,7 @@ export const satExamGeometry1: ExamSpec[] = [
       );
     },
   ),
-  inscribedTips(
+  spec(
     "Solving Problems Involving Equilateral Triangles Inscribed in Circles",
     "解圆内接等边三角形问题",
     ["equilateral-triangles-inscribed-in-circles"],

@@ -2,70 +2,9 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
 import type { ExamSpec } from "../exam.ts";
-import { mc, mod, spr } from "../exam.ts";
+import { mc, spec, spr } from "../exam.ts";
 
 // SAT Math Prep, Problem-Solving and Data Analysis: percentages, percentage change, unit conversions, ratios and rates.
-
-const pctTips = mod(
-  t(
-    "$p\\%$ of a number means $\\frac{p}{100}$ times it. To find what percent $a$ is of $b$, compute $\\frac{a}{b}$ and multiply by $100$.",
-    "一个数的 $p\\%$ 就是它乘 $\\frac{p}{100}$。求 $a$ 是 $b$ 的百分之几，先算 $\\frac{a}{b}$ 再乘 $100$。",
-  ),
-  t(
-    "If the part and percent are known, the whole is the part divided by $\\frac{p}{100}$. In a chain of percentages, each percent applies to the result of the step before.",
-    "已知部分和百分比时，整体等于部分除以 $\\frac{p}{100}$。连续取百分比时，每个百分比都作用于上一步的结果。",
-  ),
-);
-const changeTips = mod(
-  t(
-    "An increase of $p\\%$ multiplies by $1 + \\frac{p}{100}$, and a decrease of $p\\%$ multiplies by $1 - \\frac{p}{100}$. Percent change is the change divided by the original value.",
-    "增加 $p\\%$ 是乘 $1 + \\frac{p}{100}$，减少 $p\\%$ 是乘 $1 - \\frac{p}{100}$。百分比变化是变化量除以原值。",
-  ),
-  t(
-    "To undo a percent change, divide by its multiplier. Successive changes multiply, so an increase and a decrease of the same percent do not cancel.",
-    "要还原百分比变化，就除以它的乘数。连续变化要相乘，所以同样百分比的一增一减不会抵消。",
-  ),
-);
-const unitTips = mod(
-  t(
-    "Multiply by a conversion factor written so the unwanted unit cancels. Converting to a smaller unit gives a larger number.",
-    "乘以转换系数，使不需要的单位约去。换算成更小的单位时数值变大。",
-  ),
-  t(
-    "Chain conversion factors one at a time. A squared unit converts with the square of the factor, so $1$ square foot is $144$ square inches.",
-    "逐个连乘转换系数。平方单位要用系数的平方换算，所以 $1$ 平方英尺等于 $144$ 平方英寸。",
-  ),
-);
-const ratioTips = mod(
-  t(
-    "A ratio compares two quantities by splitting the total into equal parts, so $a:b$ means $a + b$ parts in all. Quantities in that ratio are $ak$ and $bk$, where the same scale $k$ applies to both.",
-    "比通过把总量分成若干等份来比较两个量，所以 $a:b$ 表示共 $a + b$ 份。成这个比的量可写成 $ak$ 和 $bk$，两者用同一个倍数 $k$。",
-  ),
-  t(
-    "Find the scale first, then apply it to the part you were asked about. To combine two ratios, rewrite them so the shared quantity has the same number.",
-    "先求倍数，再用到所问的部分。合并两个比时，先让共同的量取相同的数。",
-  ),
-);
-const rateTips = mod(
-  t(
-    "Amount equals rate times time. Keep the units of the rate in view and let them tell you whether to multiply or divide.",
-    "数量等于速率乘时间。留意速率的单位，它会告诉你该乘还是该除。",
-  ),
-  t(
-    "Break a multistep rate question into stages, and convert units before combining. Average speed is total distance over total time, not the mean of the speeds.",
-    "把多步速率题分成几个阶段，合并前先统一单位。平均速度是总路程除以总时间，不是速度的平均数。",
-  ),
-);
-const propTips = mod(
-  t(
-    "If $y$ is proportional to $x$, then $y = kx$. Use a known pair to find $k$, and density is mass divided by volume.",
-    "若 $y$ 与 $x$ 成正比，则 $y = kx$。用已知的一组值求 $k$；密度等于质量除以体积。",
-  ),
-  t(
-    "In a formula, the exponent on a variable controls how the result scales when that variable changes: if $y = kx^2$, doubling $x$ multiplies $y$ by $4$, and if $y = \\frac{k}{x}$, doubling $x$ cuts $y$ in half.",
-    "公式中变量的指数决定该变量变化时结果如何缩放：若 $y = kx^2$，$x$ 加倍则 $y$ 乘 $4$；若 $y = \\frac{k}{x}$，$x$ 加倍则 $y$ 减半。",
-  ),
-);
 
 const items = [
   ["jacket", "夹克"],
@@ -76,7 +15,7 @@ const items = [
 
 /** satExamData2 are the exam-style questions on percentages, percentage change, unit conversions, ratios and rates. */
 export const satExamData2: ExamSpec[] = [
-  pctTips(
+  spec(
     "Finding Parts of Numbers From Percentages",
     "由百分比求数的一部分",
     ["finding-part-of-a-number-given-a-whole-and-a-percentage"],
@@ -105,36 +44,31 @@ export const satExamData2: ExamSpec[] = [
       );
     },
   ),
-  pctTips(
-    "Expressing Ratios of Numbers as Percentages",
-    "把数的比表示为百分比",
-    ["finding-a-percentage-given-two-numbers"],
-    (rng, hard) => {
-      const [b, k] = [rng.pick([20, 40, 60, 80, 100, 200, 300, 400]), rng.int(1, 19)];
-      const a = (b * k * 5) / 100;
-      if (!hard)
-        return mc(
-          rng,
-          t(`$${a}$ is what percent of $${b}$?`, `$${a}$ 是 $${b}$ 的百分之几？`),
-          `${k * 5}\\%`,
-          [`${100 - k * 5}\\%`, `${k * 5 + 10}\\%`, `${k * 5 + 5}\\%`, `${Math.max(1, k * 5 - 3)}\\%`],
-          t(`$\\frac{${a}}{${b}} \\times 100 = ${k * 5}$.`, `$\\frac{${a}}{${b}} \\times 100 = ${k * 5}$。`),
-        );
-      return spr(
-        t(
-          `A team won $${a}$ of its $${b}$ games and lost the rest. What percent of its games did it lose? Give the number without the percent sign.`,
-          `一支球队 $${b}$ 场比赛赢了 $${a}$ 场，其余都输了。它输了百分之几的比赛？（只填数字，不写百分号。）`,
-        ),
-        100 - k * 5,
-        [k * 5, b - a, a],
-        t(
-          `It lost $${b - a}$ of $${b}$ games, which is $${100 - k * 5}\\%$.`,
-          `它输了 $${b}$ 场中的 $${b - a}$ 场，即 $${100 - k * 5}\\%$。`,
-        ),
+  spec("Expressing Ratios of Numbers as Percentages", "把数的比表示为百分比", ["finding-a-percentage-given-two-numbers"], (rng, hard) => {
+    const [b, k] = [rng.pick([20, 40, 60, 80, 100, 200, 300, 400]), rng.int(1, 19)];
+    const a = (b * k * 5) / 100;
+    if (!hard)
+      return mc(
+        rng,
+        t(`$${a}$ is what percent of $${b}$?`, `$${a}$ 是 $${b}$ 的百分之几？`),
+        `${k * 5}\\%`,
+        [`${100 - k * 5}\\%`, `${k * 5 + 10}\\%`, `${k * 5 + 5}\\%`, `${Math.max(1, k * 5 - 3)}\\%`],
+        t(`$\\frac{${a}}{${b}} \\times 100 = ${k * 5}$.`, `$\\frac{${a}}{${b}} \\times 100 = ${k * 5}$。`),
       );
-    },
-  ),
-  pctTips("Finding Totals From Percentages", "由百分比求总数", ["finding-a-total-given-a-part-and-a-percentage"], (rng, hard) => {
+    return spr(
+      t(
+        `A team won $${a}$ of its $${b}$ games and lost the rest. What percent of its games did it lose? Give the number without the percent sign.`,
+        `一支球队 $${b}$ 场比赛赢了 $${a}$ 场，其余都输了。它输了百分之几的比赛？（只填数字，不写百分号。）`,
+      ),
+      100 - k * 5,
+      [k * 5, b - a, a],
+      t(
+        `It lost $${b - a}$ of $${b}$ games, which is $${100 - k * 5}\\%$.`,
+        `它输了 $${b}$ 场中的 $${b - a}$ 场，即 $${100 - k * 5}\\%$。`,
+      ),
+    );
+  }),
+  spec("Finding Totals From Percentages", "由百分比求总数", ["finding-a-total-given-a-part-and-a-percentage"], (rng, hard) => {
     const [p, n] = [rng.int(1, 19) * 5, rng.int(2, 40) * 20];
     const part = (p * n) / 100;
     if (!hard)
@@ -155,40 +89,35 @@ export const satExamData2: ExamSpec[] = [
       t(`The total is $${n}$, so $${n} - ${part} = ${n - part}$ did not.`, `总数是 $${n}$，所以 $${n} - ${part} = ${n - part}$ 人没有。`),
     );
   }),
-  pctTips(
-    "Applying Percentages in Succession",
-    "连续应用百分比",
-    ["finding-part-of-a-number-given-a-whole-and-a-percentage"],
-    (rng, hard) => {
-      const [p, q, n] = [rng.int(1, 9) * 10, rng.int(1, 9) * 10, rng.int(1, 12) * 100];
-      const a = (p * n) / 100;
-      const b = (q * a) / 100;
-      if (!hard)
-        return mc(
-          rng,
-          t(`What is $${q}\\%$ of $${p}\\%$ of $${n}$?`, `$${n}$ 的 $${p}\\%$ 的 $${q}\\%$ 是多少？`),
-          Q.of(p * q * n, 10000),
-          [Q.of((p + q) * n, 100), a, Q.of(q * n, 100).add(Q.of(1))],
-          t(
-            `$${p}\\%$ of $${n}$ is $${a}$, and $${q}\\%$ of that is $${Q.of(p * q * n, 10000).toLatex()}$.`,
-            `$${n}$ 的 $${p}\\%$ 是 $${a}$，再取 $${q}\\%$ 得 $${Q.of(p * q * n, 10000).toLatex()}$。`,
-          ),
-        );
-      return spr(
+  spec("Applying Percentages in Succession", "连续应用百分比", ["finding-part-of-a-number-given-a-whole-and-a-percentage"], (rng, hard) => {
+    const [p, q, n] = [rng.int(1, 9) * 10, rng.int(1, 9) * 10, rng.int(1, 12) * 100];
+    const a = (p * n) / 100;
+    const b = (q * a) / 100;
+    if (!hard)
+      return mc(
+        rng,
+        t(`What is $${q}\\%$ of $${p}\\%$ of $${n}$?`, `$${n}$ 的 $${p}\\%$ 的 $${q}\\%$ 是多少？`),
+        Q.of(p * q * n, 10000),
+        [Q.of((p + q) * n, 100), a, Q.of(q * n, 100).add(Q.of(1))],
         t(
-          `Of $${n}$ applicants, $${p}\\%$ pass a first test, and $${q}\\%$ of those pass a second test. How many pass the first test but not the second? Give an exact value.`,
-          `$${n}$ 名申请者中，$${p}\\%$ 通过第一次测试，其中 $${q}\\%$ 通过第二次测试。有多少人通过第一次但未通过第二次？（给出确切值。）`,
-        ),
-        Q.of(p * (100 - q) * n, 10000),
-        [Q.of(p * q * n, 10000), a, n - a],
-        t(
-          `$${a}$ pass the first test, and $${100 - q}\\%$ of them fail the second: $${Q.of(p * (100 - q) * n, 10000).toLatex()}$. (That is $${a} - ${Q.of(Math.round(b * 100), 100).toLatex()}$.)`,
-          `$${a}$ 人通过第一次，其中 $${100 - q}\\%$ 未通过第二次：$${Q.of(p * (100 - q) * n, 10000).toLatex()}$。（即 $${a} - ${Q.of(Math.round(b * 100), 100).toLatex()}$。）`,
+          `$${p}\\%$ of $${n}$ is $${a}$, and $${q}\\%$ of that is $${Q.of(p * q * n, 10000).toLatex()}$.`,
+          `$${n}$ 的 $${p}\\%$ 是 $${a}$，再取 $${q}\\%$ 得 $${Q.of(p * q * n, 10000).toLatex()}$。`,
         ),
       );
-    },
-  ),
-  changeTips("Expressing Percentage Change Using Decimals", "用小数表示百分比变化", ["percent-change"], (rng, hard) => {
+    return spr(
+      t(
+        `Of $${n}$ applicants, $${p}\\%$ pass a first test, and $${q}\\%$ of those pass a second test. How many pass the first test but not the second? Give an exact value.`,
+        `$${n}$ 名申请者中，$${p}\\%$ 通过第一次测试，其中 $${q}\\%$ 通过第二次测试。有多少人通过第一次但未通过第二次？（给出确切值。）`,
+      ),
+      Q.of(p * (100 - q) * n, 10000),
+      [Q.of(p * q * n, 10000), a, n - a],
+      t(
+        `$${a}$ pass the first test, and $${100 - q}\\%$ of them fail the second: $${Q.of(p * (100 - q) * n, 10000).toLatex()}$. (That is $${a} - ${Q.of(Math.round(b * 100), 100).toLatex()}$.)`,
+        `$${a}$ 人通过第一次，其中 $${100 - q}\\%$ 未通过第二次：$${Q.of(p * (100 - q) * n, 10000).toLatex()}$。（即 $${a} - ${Q.of(Math.round(b * 100), 100).toLatex()}$。）`,
+      ),
+    );
+  }),
+  spec("Expressing Percentage Change Using Decimals", "用小数表示百分比变化", ["percent-change"], (rng, hard) => {
     const p = rng.int(1, 45) * 2;
     const dec = (100 + p) / 100;
     const down = (100 - p) / 100;
@@ -209,7 +138,7 @@ export const satExamData2: ExamSpec[] = [
       t(`Multiply by $1 - ${(p / 100).toFixed(2)} = ${down.toFixed(2)}$.`, `乘 $1 - ${(p / 100).toFixed(2)} = ${down.toFixed(2)}$。`),
     );
   }),
-  changeTips("Calculating Percentage Change", "计算百分比变化", ["percent-change"], (rng, hard) => {
+  spec("Calculating Percentage Change", "计算百分比变化", ["percent-change"], (rng, hard) => {
     const [a, k] = [rng.pick([20, 40, 60, 80, 100, 120, 200, 300, 400]), rng.int(1, 16)];
     const d = (a * k * 5) / 100;
     if (!hard)
@@ -236,7 +165,7 @@ export const satExamData2: ExamSpec[] = [
       t(`Divide the change by the original value: $\\frac{${d}}{${b}} \\times 100$.`, `变化量除以原值：$\\frac{${d}}{${b}} \\times 100$。`),
     );
   }),
-  changeTips("Applying Percentage Change", "应用百分比变化", ["applying-percentage-increases"], (rng, hard) => {
+  spec("Applying Percentage Change", "应用百分比变化", ["applying-percentage-increases"], (rng, hard) => {
     const [item, itemZh] = rng.pick(items);
     const [p, a] = [rng.int(1, 9) * 10, rng.int(2, 30) * 10];
     if (!hard)
@@ -264,7 +193,7 @@ export const satExamData2: ExamSpec[] = [
       ),
     );
   }),
-  changeTips(
+  spec(
     "Finding Original Values From Percentage Change",
     "由百分比变化求原值",
     ["finding-original-values-from-percentage-increases"],
@@ -302,41 +231,36 @@ export const satExamData2: ExamSpec[] = [
       );
     },
   ),
-  changeTips(
-    "Applying Successive Percentage Changes",
-    "应用连续百分比变化",
-    ["percent-applications-interest-and-discounts"],
-    (rng, hard) => {
-      const [p, q, a] = [rng.int(1, 8) * 10, rng.int(1, 8) * 10, rng.int(1, 20) * 100];
-      if (!hard)
-        return mc(
-          rng,
-          t(
-            `A value of $${a}$ is increased by $${p}\\%$, and the result is decreased by $${q}\\%$. What is the final value?`,
-            `值 $${a}$ 先增加 $${p}\\%$，结果再减少 $${q}\\%$。最终值是多少？`,
-          ),
-          Q.of(a * (100 + p) * (100 - q), 10000),
-          [Q.of(a * (100 + p - q), 100), Q.of(a * (100 + p), 100), Q.of(a * (100 - p) * (100 + q), 10000), a],
-          t(
-            `$${a}\\left(1 + ${p / 100}\\right)\\left(1 - ${q / 100}\\right)$.`,
-            `$${a}\\left(1 + ${p / 100}\\right)\\left(1 - ${q / 100}\\right)$。`,
-          ),
-        );
-      return spr(
+  spec("Applying Successive Percentage Changes", "应用连续百分比变化", ["percent-applications-interest-and-discounts"], (rng, hard) => {
+    const [p, q, a] = [rng.int(1, 8) * 10, rng.int(1, 8) * 10, rng.int(1, 20) * 100];
+    if (!hard)
+      return mc(
+        rng,
         t(
-          `A price of $\\$${a}$ is increased by $${p}\\%$, and then the new price is decreased by $${p}\\%$. What is the final price, in dollars?`,
-          `价格 $\\$${a}$ 先涨 $${p}\\%$，新价格再降 $${p}\\%$。最终价格是多少美元？`,
+          `A value of $${a}$ is increased by $${p}\\%$, and the result is decreased by $${q}\\%$. What is the final value?`,
+          `值 $${a}$ 先增加 $${p}\\%$，结果再减少 $${q}\\%$。最终值是多少？`,
         ),
-        Q.of(a * (10000 - p * p), 10000),
-        [a, Q.of(a * (100 - p), 100), Q.of(a * (100 + p), 100)],
+        Q.of(a * (100 + p) * (100 - q), 10000),
+        [Q.of(a * (100 + p - q), 100), Q.of(a * (100 + p), 100), Q.of(a * (100 - p) * (100 + q), 10000), a],
         t(
-          `$${a}(1 + ${p / 100})(1 - ${p / 100})$, and the two changes do not cancel.`,
-          `$${a}(1 + ${p / 100})(1 - ${p / 100})$，两次变化不会抵消。`,
+          `$${a}\\left(1 + ${p / 100}\\right)\\left(1 - ${q / 100}\\right)$.`,
+          `$${a}\\left(1 + ${p / 100}\\right)\\left(1 - ${q / 100}\\right)$。`,
         ),
       );
-    },
-  ),
-  changeTips("Multistep Percentage Problems", "多步百分比问题", ["percent-applications-interest-and-discounts"], (rng, hard) => {
+    return spr(
+      t(
+        `A price of $\\$${a}$ is increased by $${p}\\%$, and then the new price is decreased by $${p}\\%$. What is the final price, in dollars?`,
+        `价格 $\\$${a}$ 先涨 $${p}\\%$，新价格再降 $${p}\\%$。最终价格是多少美元？`,
+      ),
+      Q.of(a * (10000 - p * p), 10000),
+      [a, Q.of(a * (100 - p), 100), Q.of(a * (100 + p), 100)],
+      t(
+        `$${a}(1 + ${p / 100})(1 - ${p / 100})$, and the two changes do not cancel.`,
+        `$${a}(1 + ${p / 100})(1 - ${p / 100})$，两次变化不会抵消。`,
+      ),
+    );
+  }),
+  spec("Multistep Percentage Problems", "多步百分比问题", ["percent-applications-interest-and-discounts"], (rng, hard) => {
     const [n, p, q] = [rng.int(2, 15) * 100, rng.int(1, 9) * 10, rng.int(1, 9) * 10];
     const A = (n * p) / 100;
     if (!hard)
@@ -365,7 +289,7 @@ export const satExamData2: ExamSpec[] = [
       ),
     );
   }),
-  unitTips(
+  spec(
     "Unit Conversions to Smaller Units of Length",
     "换算成更小的长度单位",
     ["unit-conversions-using-base-units-of-length"],
@@ -390,7 +314,7 @@ export const satExamData2: ExamSpec[] = [
       );
     },
   ),
-  unitTips(
+  spec(
     "Unit Conversions to Larger Units of Length",
     "换算成更大的长度单位",
     ["converting-metric-units-of-length-to-larger-units"],
@@ -418,7 +342,7 @@ export const satExamData2: ExamSpec[] = [
       );
     },
   ),
-  unitTips(
+  spec(
     "Unit Conversions Between Units of Mass and Volume",
     "质量和体积单位换算",
     ["unit-conversions-using-base-units-of-mass"],
@@ -447,7 +371,7 @@ export const satExamData2: ExamSpec[] = [
       );
     },
   ),
-  unitTips("Two-Step Unit Conversions", "两步单位换算", ["two-step-unit-conversions"], (rng, hard) => {
+  spec("Two-Step Unit Conversions", "两步单位换算", ["two-step-unit-conversions"], (rng, hard) => {
     const [a, b] = [rng.int(2, 40), rng.int(2, 12)];
     if (!hard)
       return mc(
@@ -467,7 +391,7 @@ export const satExamData2: ExamSpec[] = [
       t(`$${b}(${a})(4) = ${4 * a * b}$.`, `$${b}(${a})(4) = ${4 * a * b}$。`),
     );
   }),
-  unitTips("Unit Conversions Between Mixed Units", "混合单位换算", ["mixed-units"], (rng, hard) => {
+  spec("Unit Conversions Between Mixed Units", "混合单位换算", ["mixed-units"], (rng, hard) => {
     const [a, b, c] = [rng.int(2, 20), rng.int(1, 11), rng.int(1, 59)];
     if (!hard)
       return mc(
@@ -487,7 +411,7 @@ export const satExamData2: ExamSpec[] = [
       t(`$${a}(60) + ${c} = ${60 * a + c}$.`, `$${a}(60) + ${c} = ${60 * a + c}$。`),
     );
   }),
-  unitTips(
+  spec(
     "Converting Between Mixed Units Containing Squares",
     "换算含平方的混合单位",
     ["converting-between-mixed-units-containing-squares"],
@@ -515,7 +439,7 @@ export const satExamData2: ExamSpec[] = [
       );
     },
   ),
-  ratioTips("Ratios", "比", ["ratios"], (rng, hard) => {
+  spec("Ratios", "比", ["ratios"], (rng, hard) => {
     const [a, b, k] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 15)];
     if (!hard)
       return mc(
@@ -538,7 +462,7 @@ export const satExamData2: ExamSpec[] = [
       t(`The scale is $${k}$, so $y = ${b}(${k}) = ${b * k}$.`, `倍数是 $${k}$，所以 $y = ${b}(${k}) = ${b * k}$。`),
     );
   }),
-  ratioTips("Applying Ratios", "应用比", ["manipulating-ratios-in-various-contexts"], (rng, hard) => {
+  spec("Applying Ratios", "应用比", ["manipulating-ratios-in-various-contexts"], (rng, hard) => {
     const [a, b, k] = [rng.int(2, 9), rng.int(2, 9), rng.int(3, 20)];
     if (!hard)
       return mc(
@@ -567,7 +491,7 @@ export const satExamData2: ExamSpec[] = [
       ),
     );
   }),
-  ratioTips("Working With Ratios in Various Settings", "在各种情境中运用比", ["manipulating-ratios-in-various-contexts"], (rng, hard) => {
+  spec("Working With Ratios in Various Settings", "在各种情境中运用比", ["manipulating-ratios-in-various-contexts"], (rng, hard) => {
     const [a, b, c, k] = [rng.int(2, 7), rng.int(2, 7), rng.int(2, 7), rng.int(2, 12)];
     if (!hard)
       return spr(
@@ -594,7 +518,7 @@ export const satExamData2: ExamSpec[] = [
       ),
     );
   }),
-  rateTips("Rate Problems", "速率问题", ["unit-prices-and-speed"], (rng, hard) => {
+  spec("Rate Problems", "速率问题", ["unit-prices-and-speed"], (rng, hard) => {
     const [r, h, u] = [rng.int(2, 25), rng.int(2, 12), rng.int(2, 9)];
     if (!hard)
       return mc(
@@ -617,7 +541,7 @@ export const satExamData2: ExamSpec[] = [
       t(`The hourly rate is $\\$${r}$, so $${r}(${h}) = ${r * h}$.`, `每小时 $\\$${r}$，所以 $${r}(${h}) = ${r * h}$。`),
     );
   }),
-  rateTips("Multistep Rate Problems", "多步速率问题", ["solving-multi-step-unit-price-problems"], (rng, hard) => {
+  spec("Multistep Rate Problems", "多步速率问题", ["solving-multi-step-unit-price-problems"], (rng, hard) => {
     const [r, h, p, q] = [rng.int(2, 9) * 5, rng.int(2, 12), rng.int(2, 9), rng.int(2, 8)];
     if (!hard)
       return spr(
@@ -642,7 +566,7 @@ export const satExamData2: ExamSpec[] = [
       t(`Together they deliver $${2 * r + p}$ liters per minute.`, `两台合起来每分钟输送 $${2 * r + p}$ 升。`),
     );
   }),
-  rateTips("Speed Problems", "速度问题", ["unit-prices-and-speed"], (rng, hard) => {
+  spec("Speed Problems", "速度问题", ["unit-prices-and-speed"], (rng, hard) => {
     const [v, h, w, g] = [rng.int(5, 14) * 5, rng.int(2, 8), rng.int(3, 16) * 5, rng.int(2, 8)];
     if (!hard)
       return mc(
@@ -668,7 +592,7 @@ export const satExamData2: ExamSpec[] = [
       ),
     );
   }),
-  propTips("Solving Equations Describing Proportional Relationships", "解描述比例关系的方程", ["ratios"], (rng, hard) => {
+  spec("Solving Equations Describing Proportional Relationships", "解描述比例关系的方程", ["ratios"], (rng, hard) => {
     const [k, a, b] = [rng.int(2, 12), rng.int(2, 12), rng.int(2, 15)];
     if (!hard)
       return mc(
@@ -688,7 +612,7 @@ export const satExamData2: ExamSpec[] = [
       t(`The right side is $${k}$, so $x = ${k}(${a}) = ${k * a}$.`, `右边等于 $${k}$，所以 $x = ${k}(${a}) = ${k * a}$。`),
     );
   }),
-  propTips("Calculating Density", "计算密度", ["density"], (rng, hard) => {
+  spec("Calculating Density", "计算密度", ["density"], (rng, hard) => {
     const [d, v, s] = [rng.int(2, 19), rng.int(3, 30), rng.int(2, 6)];
     if (!hard)
       return mc(
@@ -714,7 +638,7 @@ export const satExamData2: ExamSpec[] = [
       ),
     );
   }),
-  propTips("Descriptions of Physical Phenomena", "描述物理现象", ["interpreting-descriptions-of-physical-phenomena"], (rng, hard) => {
+  spec("Descriptions of Physical Phenomena", "描述物理现象", ["interpreting-descriptions-of-physical-phenomena"], (rng, hard) => {
     const [g, k, f] = [rng.int(2, 9), rng.int(2, 12), rng.int(2, 6)];
     if (!hard)
       return mc(

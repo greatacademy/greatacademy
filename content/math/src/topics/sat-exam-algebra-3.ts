@@ -2,41 +2,10 @@ import type { Rng } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import type { ExamSpec } from "../exam.ts";
-import { cx, mc, mod, par, sg, spr, tx, words } from "../exam.ts";
+import { cx, mc, par, sg, spec, spr, tx, words } from "../exam.ts";
 import { lineFigure, pointsFigure } from "../exam-figures.ts";
 
 // SAT Math Prep, Algebra: graphs of lines, parallel and perpendicular lines, and modeling with linear functions.
-
-const lineTips = mod(
-  t(
-    "Rewrite a line in slope-intercept form when you can: $m$ is the change in $y$ for each added $x$, and $b$ is the value at $x = 0$.",
-    "尽量把直线改写为斜截式：$m$ 是 $x$ 每增加 1 时 $y$ 的变化量，$b$ 是 $x = 0$ 时的值。",
-  ),
-  t(
-    "Harder questions give the line by two points or in general form. Find the slope first, since everything else follows from it.",
-    "较难的题用两点或一般式给出直线。先求斜率，其余都由它得出。",
-  ),
-);
-const parTips = mod(
-  t(
-    "Parallel lines have equal slopes, and perpendicular slopes multiply to $-1$. Convert the given line to slope-intercept form before comparing.",
-    "平行线斜率相等，垂直线斜率之积为 $-1$。比较之前先把给定直线化为斜截式。",
-  ),
-  t(
-    "Harder questions combine the slope condition with a point the new line passes through, so finish by finding the intercept.",
-    "较难的题把斜率条件与新直线经过的点结合起来，所以最后要求出截距。",
-  ),
-);
-const modelTips = mod(
-  t(
-    "In a linear model the starting amount is the constant and the rate multiplies the input. A value that falls over time gives a negative slope.",
-    "线性模型中，初始量是常数，变化率乘以输入。随时间下降的量对应负斜率。",
-  ),
-  t(
-    "Harder questions describe the model with two data points. Use them to find the rate first, and watch for units such as minutes and hours.",
-    "较难的题用两个数据点描述模型。先用它们求变化率，并注意分钟与小时等单位。",
-  ),
-);
 
 /** lineSetup picks a line with a nonzero integer slope and a nonzero intercept. */
 function lineSetup(rng: Rng): { m: number; b: number } {
@@ -83,7 +52,7 @@ function runner(rng: Rng) {
 
 /** satExamAlgebra3 continues the SAT Algebra unit through graphs and linear models. */
 export const satExamAlgebra3: ExamSpec[] = [
-  lineTips("Interpreting Coefficients of Lines in Slope-Intercept Form", "解释斜截式直线的系数", ["slope-intercept-form"], (rng, hard) => {
+  spec("Interpreting Coefficients of Lines in Slope-Intercept Form", "解释斜截式直线的系数", ["slope-intercept-form"], (rng, hard) => {
     const c = runner(rng);
     const r = rng.int(2, 15);
     const s = rng.int(20, 90);
@@ -120,7 +89,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       ),
     );
   }),
-  lineTips("Finding Equations of Lines Using Slopes and Points", "用斜率和点求直线方程", ["point-slope-form"], (rng, hard) => {
+  spec("Finding Equations of Lines Using Slopes and Points", "用斜率和点求直线方程", ["point-slope-form"], (rng, hard) => {
     const { m, b } = lineSetup(rng);
     const x1 = rng.int(1, 6);
     const y1 = m * x1 + b;
@@ -161,7 +130,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       ),
     );
   }),
-  lineTips(
+  spec(
     "Graphs of Linear Equations in Slope-Intercept Form",
     "斜截式直线的图象",
     ["properties-of-lines-in-slope-intercept-form"],
@@ -203,7 +172,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       );
     },
   ),
-  lineTips(
+  spec(
     "Constructing and Analyzing Slope-Intercept Equations",
     "构造并分析斜截式方程",
     ["analyzing-graphs-of-linear-models"],
@@ -238,7 +207,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       );
     },
   ),
-  lineTips(
+  spec(
     "Properties of Lines Given in Standard or General Form",
     "一般式直线的性质",
     ["properties-of-lines-in-standard-form"],
@@ -273,7 +242,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       );
     },
   ),
-  lineTips("Analyzing Linear Equations in General Form", "分析一般式一次方程", ["properties-of-lines-in-standard-form"], (rng, hard) => {
+  spec("Analyzing Linear Equations in General Form", "分析一般式一次方程", ["properties-of-lines-in-standard-form"], (rng, hard) => {
     const a = rng.int(2, 6);
     const b = rng.int(2, 6);
     const k = rng.int(2, 5);
@@ -303,7 +272,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       ),
     );
   }),
-  lineTips(
+  spec(
     "Constructing Linear Functions Using Slope-Intercept Form",
     "用斜截式构造一次函数",
     ["constructing-linear-functions"],
@@ -348,7 +317,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       );
     },
   ),
-  parTips("Parallel Lines", "平行线", ["parallel-lines-in-the-coordinate-plane"], (rng, hard) => {
+  spec("Parallel Lines", "平行线", ["parallel-lines-in-the-coordinate-plane"], (rng, hard) => {
     const a = rng.int(2, 6);
     const b = rng.int(2, 6);
     const c = rng.int(3, 20);
@@ -383,7 +352,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       ),
     );
   }),
-  parTips("Slopes of Perpendicular Lines", "垂直线的斜率", ["perpendicular-lines-in-the-coordinate-plane"], (rng, hard) => {
+  spec("Slopes of Perpendicular Lines", "垂直线的斜率", ["perpendicular-lines-in-the-coordinate-plane"], (rng, hard) => {
     const p = rng.int(1, 7);
     const q = rng.int(2, 7);
     const s = rng.sign();
@@ -420,7 +389,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       ),
     );
   }),
-  parTips("Perpendicular Lines", "垂直线", ["finding-equations-of-perpendicular-lines"], (rng, hard) => {
+  spec("Perpendicular Lines", "垂直线", ["finding-equations-of-perpendicular-lines"], (rng, hard) => {
     const m = rng.pick([2, 3, 4, 5, -2, -3, -4, -5]);
     const x0 = m * rng.int(1, 3);
     const k = rng.nonZero(-6, 8);
@@ -459,7 +428,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       ),
     );
   }),
-  modelTips("Modeling With Linear Functions", "用一次函数建模", ["modeling-with-linear-functions"], (rng, hard) => {
+  spec("Modeling With Linear Functions", "用一次函数建模", ["modeling-with-linear-functions"], (rng, hard) => {
     const c = runner(rng);
     const r = rng.int(3, 15);
     const s = 10 * rng.int(10, 40);
@@ -489,7 +458,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       ),
     );
   }),
-  modelTips("Constructing Models Using Linear Functions", "用一次函数构造模型", ["constructing-linear-functions"], (rng, hard) => {
+  spec("Constructing Models Using Linear Functions", "用一次函数构造模型", ["constructing-linear-functions"], (rng, hard) => {
     const c = runner(rng);
     const r = rng.int(3, 15);
     const s = 10 * rng.int(10, 40);
@@ -523,7 +492,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       ),
     );
   }),
-  modelTips(
+  spec(
     "Further Constructing Models Using Linear Functions",
     "进一步用一次函数构造模型",
     ["further-modeling-with-two-variable-equations"],
@@ -560,7 +529,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       );
     },
   ),
-  modelTips(
+  spec(
     "Interpreting Coefficients of Linear Functions in Context",
     "解释情境中一次函数的系数",
     ["interpreting-coefficients-of-two-variable-equations"],
@@ -611,7 +580,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       );
     },
   ),
-  modelTips("Interpreting Graphs of Linear Functions", "解释一次函数的图象", ["analyzing-graphs-of-linear-models"], (rng, hard) => {
+  spec("Interpreting Graphs of Linear Functions", "解释一次函数的图象", ["analyzing-graphs-of-linear-models"], (rng, hard) => {
     const c = runner(rng);
     const r = rng.int(2, 9);
     const s = 10 * rng.int(4, 20);
@@ -668,7 +637,7 @@ export const satExamAlgebra3: ExamSpec[] = [
       ),
     );
   }),
-  modelTips("Modeling Using Slope-Intercept Form", "用斜截式建模", ["modeling-with-two-variable-linear-equations"], (rng, hard) => {
+  spec("Modeling Using Slope-Intercept Form", "用斜截式建模", ["modeling-with-two-variable-linear-equations"], (rng, hard) => {
     const r = rng.int(2, 9);
     const s = rng.int(10, 50);
     const n = rng.int(5, 25);

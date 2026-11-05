@@ -3,7 +3,7 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
 import type { ExamSpec } from "../exam.ts";
-import { cx, mc, mod, sg, spr, table, words } from "../exam.ts";
+import { cx, mc, sg, spec, spr, table, words } from "../exam.ts";
 
 // SAT Math Prep, Algebra: equations with binomials, word problems, two-variable models, linear functions and tables.
 
@@ -42,57 +42,6 @@ const pairs: readonly Pair[] = [
   { a: t("shirts", "衬衫"), b: t("hats", "帽子") },
 ];
 
-const eqTips = mod(
-  t(
-    "Keep a repeated binomial whole when you can. Treating it as one quantity is faster than distributing, and exam questions are built to reward it.",
-    "能把重复的二项式当作整体时就当作整体。这比展开更快，考试题正是为此设计的。",
-  ),
-  t(
-    "Harder questions ask for an expression rather than the variable, so compare what is asked with what is given before you start solving.",
-    "较难的题问的是式子而不是变量，所以动手之前先比较所求与已知。",
-  ),
-);
-const wordTips = mod(
-  t(
-    "Name the unknown, write one equation from the sentences, and answer the exact quantity asked. Wrong options are often correct values of other quantities in the story.",
-    "设出未知数，根据句子写出一个方程，并回答题目确切问的量。错误选项常常是故事中其他量的正确值。",
-  ),
-  t(
-    "Harder word problems add a condition or a second step. Translate each sentence on its own, and check units before choosing an option.",
-    "较难的应用题多一个条件或一步推理。逐句翻译，并在选择前检查单位。",
-  ),
-);
-const twoVarTips = mod(
-  t(
-    "In a model such as $ax + by = c$, each term is a part of the total. Ask what one unit of each variable contributes, since this is how meaning questions are answered.",
-    "在 $ax + by = c$ 这样的模型中，每一项都是总量的一部分。想一想每个变量的一个单位贡献多少，含义题就这样回答。",
-  ),
-  t(
-    "Harder questions change one quantity and ask for the effect on another. Substitute the known value, then solve for what remains.",
-    "较难的题改变一个量，问对另一个量的影响。代入已知值，再解出剩下的量。",
-  ),
-);
-const fnTips = mod(
-  t(
-    "Read $f(a)$ as the output at input $a$. Decide whether the question gives the input or the output, since confusing them gives a listed wrong option.",
-    "把 $f(a)$ 读作输入 $a$ 时的输出。先判断题目给的是输入还是输出，混淆两者就会选中错误选项。",
-  ),
-  t(
-    "Harder questions combine functions or hide a constant. Find the constant from the given point first, and then answer the question.",
-    "较难的题会复合函数或隐藏常数。先用给定的点求出常数，再回答问题。",
-  ),
-);
-const tableTips = mod(
-  t(
-    "A table is linear when equal steps in $x$ give equal steps in $y$. Find the slope from two rows and the intercept from any row.",
-    "当 $x$ 的等距变化对应 $y$ 的等距变化时，表格是线性的。用两行求斜率，用任一行求截距。",
-  ),
-  t(
-    "If the $x$ values do not increase by $1$, divide the change in $y$ by the change in $x$. Unknown entries then follow from the same slope.",
-    "如果 $x$ 不是每次增加 $1$，就用 $y$ 的变化量除以 $x$ 的变化量。未知项也由同一斜率得出。",
-  ),
-);
-
 /** linearTable makes rows of y = mx + b at unevenly spaced inputs when hard. */
 function linearTable(rng: Rng, hard: boolean): { m: number; b: number; xs: number[]; ys: number[] } {
   const m = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5, 6]);
@@ -104,7 +53,7 @@ function linearTable(rng: Rng, hard: boolean): { m: number; b: number; xs: numbe
 
 /** satExamAlgebra2 continues the SAT Algebra unit through functions in tables. */
 export const satExamAlgebra2: ExamSpec[] = [
-  eqTips(
+  spec(
     "Solving Linear Equations Containing Binomials by Factoring",
     "用提公因式解含二项式的一次方程",
     ["solving-linear-equations-containing-binomials-by-factoring"],
@@ -141,7 +90,7 @@ export const satExamAlgebra2: ExamSpec[] = [
       );
     },
   ),
-  eqTips(
+  spec(
     "Solving Linear Equations With Binomials on Both Sides",
     "解两边都有二项式的一次方程",
     ["equations-with-parentheses"],
@@ -187,7 +136,7 @@ export const satExamAlgebra2: ExamSpec[] = [
       );
     },
   ),
-  wordTips(
+  spec(
     "Constructing Models With One-Variable Linear Equations",
     "构造一元一次方程模型",
     ["modeling-with-linear-equations"],
@@ -214,48 +163,43 @@ export const satExamAlgebra2: ExamSpec[] = [
       );
     },
   ),
-  wordTips(
-    "Modeling and Solving Problems Using Linear Equations",
-    "用一次方程建模并求解",
-    ["modeling-with-linear-equations"],
-    (rng, hard) => {
-      const p = rng.pick(plans);
-      const f = 5 * rng.int(2, 12);
-      const r = rng.int(3, 15);
-      const n = rng.int(4, 14);
-      if (!hard)
-        return spr(
-          t(
-            `A company charges ${p.fixed.en} of $\\$${f}$ and $\\$${r}$ per ${p.one.en}. A customer was charged $\\$${f + r * n}$. How many ${p.unit.en} did the customer pay for?`,
-            `某公司收取${p.fixed["zh-CN"]} $${f}$ 美元，每${p.one["zh-CN"]}收 $${r}$ 美元。一位顾客被收取 $${f + r * n}$ 美元。这位顾客购买了多少${p.unit["zh-CN"]}？`,
-          ),
-          n,
-          [Q.of(f + r * n, r), n + 1, Q.of(f + r * n, f + r)],
-          t(
-            `Solve $${f} + ${r}n = ${f + r * n}$: $${r}n = ${r * n}$, so $n = ${n}$.`,
-            `解 $${f} + ${r}n = ${f + r * n}$：$${r}n = ${r * n}$，所以 $n = ${n}$。`,
-          ),
-        );
-      const s = r - rng.int(1, r > 4 ? 3 : 2);
-      const c = r - s;
-      const nn = c * rng.int(2, 5);
-      const gg = f + (r - s) * nn;
-      return mc(
-        rng,
+  spec("Modeling and Solving Problems Using Linear Equations", "用一次方程建模并求解", ["modeling-with-linear-equations"], (rng, hard) => {
+    const p = rng.pick(plans);
+    const f = 5 * rng.int(2, 12);
+    const r = rng.int(3, 15);
+    const n = rng.int(4, 14);
+    if (!hard)
+      return spr(
         t(
-          `Company A charges $\\$${f}$ plus $\\$${r}$ per ${p.one.en}. Company B charges $\\$${gg}$ plus $\\$${s}$ per ${p.one.en}. For how many ${p.unit.en} do the two companies charge the same total?`,
-          `A 公司收 $${f}$ 美元，并按每${p.one["zh-CN"]}收 $${r}$ 美元。B 公司收 $${gg}$ 美元，每${p.one["zh-CN"]}收 $${s}$ 美元。多少${p.unit["zh-CN"]}时两家公司总收费相同？`,
+          `A company charges ${p.fixed.en} of $\\$${f}$ and $\\$${r}$ per ${p.one.en}. A customer was charged $\\$${f + r * n}$. How many ${p.unit.en} did the customer pay for?`,
+          `某公司收取${p.fixed["zh-CN"]} $${f}$ 美元，每${p.one["zh-CN"]}收 $${r}$ 美元。一位顾客被收取 $${f + r * n}$ 美元。这位顾客购买了多少${p.unit["zh-CN"]}？`,
         ),
-        nn,
-        [Q.of(gg - f, r + s), Q.of(gg + f, r - s), nn + 1],
+        n,
+        [Q.of(f + r * n, r), n + 1, Q.of(f + r * n, f + r)],
         t(
-          `Set the totals equal: $${f} + ${r}n = ${gg} + ${s}n$. Then ${c === 1 ? `$n = ${nn}$` : `$${c}n = ${gg - f}$, so $n = ${nn}$`}.`,
-          `令总额相等：$${f} + ${r}n = ${gg} + ${s}n$。于是 ${c === 1 ? `$n = ${nn}$` : `$${c}n = ${gg - f}$，所以 $n = ${nn}$`}。`,
+          `Solve $${f} + ${r}n = ${f + r * n}$: $${r}n = ${r * n}$, so $n = ${n}$.`,
+          `解 $${f} + ${r}n = ${f + r * n}$：$${r}n = ${r * n}$，所以 $n = ${n}$。`,
         ),
       );
-    },
-  ),
-  twoVarTips("Solving Two-Variable Linear Models", "求解二元一次模型", ["modeling-with-two-variable-linear-equations"], (rng, hard) => {
+    const s = r - rng.int(1, r > 4 ? 3 : 2);
+    const c = r - s;
+    const nn = c * rng.int(2, 5);
+    const gg = f + (r - s) * nn;
+    return mc(
+      rng,
+      t(
+        `Company A charges $\\$${f}$ plus $\\$${r}$ per ${p.one.en}. Company B charges $\\$${gg}$ plus $\\$${s}$ per ${p.one.en}. For how many ${p.unit.en} do the two companies charge the same total?`,
+        `A 公司收 $${f}$ 美元，并按每${p.one["zh-CN"]}收 $${r}$ 美元。B 公司收 $${gg}$ 美元，每${p.one["zh-CN"]}收 $${s}$ 美元。多少${p.unit["zh-CN"]}时两家公司总收费相同？`,
+      ),
+      nn,
+      [Q.of(gg - f, r + s), Q.of(gg + f, r - s), nn + 1],
+      t(
+        `Set the totals equal: $${f} + ${r}n = ${gg} + ${s}n$. Then ${c === 1 ? `$n = ${nn}$` : `$${c}n = ${gg - f}$, so $n = ${nn}$`}.`,
+        `令总额相等：$${f} + ${r}n = ${gg} + ${s}n$。于是 ${c === 1 ? `$n = ${nn}$` : `$${c}n = ${gg - f}$，所以 $n = ${nn}$`}。`,
+      ),
+    );
+  }),
+  spec("Solving Two-Variable Linear Models", "求解二元一次模型", ["modeling-with-two-variable-linear-equations"], (rng, hard) => {
     const p = rng.pick(pairs);
     const a = rng.int(3, 12);
     const b = rng.int(2, a - 1 || 2);
@@ -289,12 +233,12 @@ export const satExamAlgebra2: ExamSpec[] = [
       `y \\text{ decreases by } ${(a * more) / b}`,
       [`y \\text{ decreases by } ${more}`, `y \\text{ increases by } ${(a * more) / b}`, `y \\text{ decreases by } ${a * more}`],
       t(
-        `The extra sales bring $${a} \\cdot ${more} = ${a * more}$ dollars, so the other item must bring that much less. Each ${p.b.en.replace(/s$/, "")} is worth $${b}$ dollars, so $y$ falls by $${(a * more) / b}$.`,
+        `The extra sales bring $${a} \\cdot ${more} = ${a * more}$ dollars, so the other item must bring that much less. Each ${p.b.en.replace(/(x)?(?:(?<=x)e)?s$/, "$1")} is worth $${b}$ dollars, so $y$ falls by $${(a * more) / b}$.`,
         `多卖带来 $${a} \\cdot ${more} = ${a * more}$ 美元，所以另一种商品要少带来这么多。它每件值 $${b}$ 美元，所以 $y$ 减少 $${(a * more) / b}$。`,
       ),
     );
   }),
-  twoVarTips(
+  spec(
     "Constructing Models With Two-Variable Linear Equations",
     "构造二元一次方程模型",
     ["modeling-with-two-variable-linear-equations"],
@@ -325,7 +269,7 @@ export const satExamAlgebra2: ExamSpec[] = [
       );
     },
   ),
-  twoVarTips(
+  spec(
     "Interpreting Two-Variable Linear Equations",
     "解释二元一次方程",
     ["interpreting-coefficients-of-two-variable-equations"],
@@ -375,7 +319,7 @@ export const satExamAlgebra2: ExamSpec[] = [
       );
     },
   ),
-  twoVarTips(
+  spec(
     "Interpreting Coefficients of Two-Variable Linear Equations",
     "解释二元一次方程的系数",
     ["interpreting-coefficients-of-two-variable-equations"],
@@ -420,7 +364,7 @@ export const satExamAlgebra2: ExamSpec[] = [
       );
     },
   ),
-  twoVarTips(
+  spec(
     "Modeling Totals Using Two-Variable Linear Equations",
     "用二元一次方程为总量建模",
     ["modeling-totals-with-two-variable-equations"],
@@ -459,7 +403,7 @@ export const satExamAlgebra2: ExamSpec[] = [
       );
     },
   ),
-  wordTips(
+  spec(
     "Modeling Geometry Problems Using Linear Equations",
     "用一次方程为几何问题建模",
     ["modeling-with-linear-equations", "perimeter"],
@@ -496,7 +440,7 @@ export const satExamAlgebra2: ExamSpec[] = [
       );
     },
   ),
-  fnTips("Evaluating Linear Functions", "求一次函数的值", ["introduction-to-functions"], (rng, hard) => {
+  spec("Evaluating Linear Functions", "求一次函数的值", ["introduction-to-functions"], (rng, hard) => {
     const m = rng.pick([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7]);
     const b = rng.int(-9, 12);
     const a = rng.int(2, 9);
@@ -523,7 +467,7 @@ export const satExamAlgebra2: ExamSpec[] = [
       ),
     );
   }),
-  fnTips("Working With Function Composition", "函数复合运算", ["function-composition"], (rng, hard) => {
+  spec("Working With Function Composition", "函数复合运算", ["function-composition"], (rng, hard) => {
     const m = rng.int(2, 6);
     const b0 = rng.nonZero(-6, 8);
     const n = rng.int(2, 5);
@@ -566,7 +510,7 @@ export const satExamAlgebra2: ExamSpec[] = [
       ),
     );
   }),
-  tableTips(
+  spec(
     "Identifying Tables Corresponding to Linear Functions",
     "识别对应一次函数的表格",
     ["linear-functions-in-tabular-form"],
@@ -586,7 +530,7 @@ export const satExamAlgebra2: ExamSpec[] = [
       );
     },
   ),
-  tableTips(
+  spec(
     "Identifying Linear Functions Corresponding to Tables",
     "识别对应表格的一次函数",
     ["linear-functions-in-tabular-form"],
@@ -613,7 +557,7 @@ export const satExamAlgebra2: ExamSpec[] = [
       );
     },
   ),
-  tableTips("Analyzing Functions in Tabular Form", "分析表格形式的函数", ["analyzing-linear-functions-in-tabular-form"], (rng, hard) => {
+  spec("Analyzing Functions in Tabular Form", "分析表格形式的函数", ["analyzing-linear-functions-in-tabular-form"], (rng, hard) => {
     const { m, b, xs, ys } = linearTable(rng, hard);
     const a = xs[3]! + rng.int(1, 6);
     if (!hard)
@@ -642,7 +586,7 @@ export const satExamAlgebra2: ExamSpec[] = [
       ),
     );
   }),
-  tableTips(
+  spec(
     "Function Tables Containing Unknown Parameters",
     "含未知参数的函数表格",
     ["linear-functions-in-tabular-form-containing-unknown-parameters"],

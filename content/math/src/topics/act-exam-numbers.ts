@@ -3,70 +3,9 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
 import type { ExamSpec } from "../exam.ts";
-import { ask, askExact, mod, ordinal, sg, words } from "../exam.ts";
+import { ask, askExact, lowest, ordinal, sg, spec, words } from "../exam.ts";
 
 // ACT Math Prep, Number and Quantity: exponents and radicals, number theory, complex numbers, matrices and vectors.
-
-const powTips = mod(
-  t(
-    "Apply the laws of exponents one step at a time: add exponents when multiplying like bases, subtract when dividing, and multiply when raising a power to a power.",
-    "逐步应用指数法则：同底相乘指数相加，相除指数相减，幂的乘方指数相乘。",
-  ),
-  t(
-    "A negative exponent means a reciprocal, and a fractional exponent means a root. Rewrite every base as a power of the same number before comparing exponents.",
-    "负指数表示倒数，分数指数表示开方。比较指数之前，先把各个底数写成同一个数的幂。",
-  ),
-);
-const rootTips = mod(
-  t(
-    "Pull the largest perfect square out of a square root, and combine radicals only when what remains under the root sign is the same.",
-    "把最大的完全平方因子从根号中提出来，只有根号内剩下的部分相同时才能合并。",
-  ),
-  t(
-    "To estimate a root, find the two perfect squares on either side of the number. To expand a binomial containing radicals, multiply term by term as usual.",
-    "估计平方根时，找出该数两侧的完全平方数。展开含根式的二项式时，照常逐项相乘。",
-  ),
-);
-const numTips = mod(
-  t(
-    "Write each number as a product of primes. The greatest common factor takes the lowest power of each shared prime, and the least common multiple takes the highest power of every prime.",
-    "把每个数写成质数之积。最大公因数取公共质因数的最低次幂，最小公倍数取所有质因数的最高次幂。",
-  ),
-  t(
-    "Try small cases when a question is about all integers, and look for a repeating cycle when it asks about a far-off digit or remainder.",
-    "问题涉及所有整数时先试小的例子；问题问很远的数位或余数时，寻找重复的周期。",
-  ),
-);
-const complexTips = mod(
-  t(
-    "Treat $i$ like a variable while adding and multiplying, then replace $i^2$ with $-1$. Powers of $i$ repeat in a cycle of four, so only the remainder of the exponent matters.",
-    "加法和乘法时把 $i$ 当作变量，然后把 $i^2$ 换成 $-1$。$i$ 的幂每四次循环，所以只需看指数除以四的余数。",
-  ),
-  t(
-    "The conjugate of $a + bi$ is $a - bi$, and their product is the real number $a^2 + b^2$. To divide, multiply the top and bottom by the conjugate of the denominator.",
-    "$a + bi$ 的共轭是 $a - bi$，它们的积是实数 $a^2 + b^2$。做除法时，分子分母同乘分母的共轭。",
-  ),
-);
-const matTips = mod(
-  t(
-    "Matrices add entry by entry, and only when they have the same dimensions. A scalar multiplies every entry of the matrix.",
-    "矩阵逐项相加，且只有维数相同时才能相加。标量要乘矩阵的每一项。",
-  ),
-  t(
-    "In a matrix product, each entry combines a row of the first matrix with a column of the second. The determinant of a two-by-two matrix is $ad - bc$.",
-    "矩阵乘积中，每一项由第一个矩阵的一行与第二个矩阵的一列组合而成。二阶矩阵的行列式是 $ad - bc$。",
-  ),
-);
-const vecTips = mod(
-  t(
-    "The components of a vector are its change in $x$ and its change in $y$, so subtract the coordinates of the start from the coordinates of the end.",
-    "向量的分量是 $x$ 的变化量和 $y$ 的变化量，所以用终点坐标减起点坐标。",
-  ),
-  t(
-    "Vectors add component by component, and a scalar multiplies both components. The magnitude of a vector comes from the Pythagorean theorem applied to its components.",
-    "向量按分量相加，标量乘两个分量。向量的模由其分量用勾股定理求得。",
-  ),
-);
 
 const mat = (a: number, b: number, c: number, d: number) => `\\begin{bmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{bmatrix}`;
 const four = (rng: Rng, lo: number, hi: number) => [rng.int(lo, hi), rng.int(lo, hi), rng.int(lo, hi), rng.int(lo, hi)] as const;
@@ -76,7 +15,7 @@ const composites = [21, 27, 33, 39, 49, 51, 57, 63, 69, 77, 81, 87, 91, 93, 99];
 
 /** actExamNumbers are the exam-style questions of the ACT Number and Quantity unit. */
 export const actExamNumbers: ExamSpec[] = [
-  powTips("Simplifying Integer Powers", "化简整数次幂", ["powers-of-integers"], (rng, hard) => {
+  spec("Simplifying Integer Powers", "化简整数次幂", ["powers-of-integers"], (rng, hard) => {
     const [a, b, c] = [rng.int(2, 9), rng.int(2, 12), rng.int(2, 9)];
     const v = rng.pick(["x", "y", "a", "n"]);
     if (!hard)
@@ -106,7 +45,7 @@ export const actExamNumbers: ExamSpec[] = [
       `系数取该次幂，指数相乘。`,
     );
   }),
-  powTips("Simplifying Negative Exponents", "化简负指数", ["negative-exponents"], (rng, hard) => {
+  spec("Simplifying Negative Exponents", "化简负指数", ["negative-exponents"], (rng, hard) => {
     const [a, n, b, c] = [rng.int(2, 9), rng.int(1, 3), rng.int(1, 9), rng.int(1, 9)];
     if (!hard)
       return ask(
@@ -128,7 +67,7 @@ export const actExamNumbers: ExamSpec[] = [
       `指数相减得 $x^{-${c}}$，再取倒数。`,
     );
   }),
-  powTips("Applying Scientific Notation", "应用科学记数法", ["scientific-notation"], (rng, hard) => {
+  spec("Applying Scientific Notation", "应用科学记数法", ["scientific-notation"], (rng, hard) => {
     const [a, b, m, n] = [rng.int(2, 4), rng.int(1, 2), rng.int(3, 12), rng.int(2, 9)];
     if (!hard)
       return ask(
@@ -158,10 +97,9 @@ export const actExamNumbers: ExamSpec[] = [
       `前面的数相除，指数相减。`,
     );
   }),
-  powTips("Simplifying Rational Exponents", "化简有理指数", ["writing-radicals-using-fractional-exponents"], (rng, hard) => {
+  spec("Simplifying Rational Exponents", "化简有理指数", ["writing-radicals-using-fractional-exponents"], (rng, hard) => {
     const [b, q] = [rng.int(2, 9), rng.pick([2, 3, 4, 5])];
-    const p0 = rng.int(2, 9);
-    const p = p0 === q ? p0 + 1 : p0;
+    const p = lowest(rng.int(2, 19), q);
     if (!hard)
       return ask(
         rng,
@@ -185,7 +123,7 @@ export const actExamNumbers: ExamSpec[] = [
       `因为 $${b ** e} = ${b}^{${e}}$，所以值为 $${b}^{${top}}$。`,
     );
   }),
-  powTips("Evaluating Powers", "幂的求值", ["powers-of-integers", "exponents-with-rational-bases"], (rng, hard) => {
+  spec("Evaluating Powers", "幂的求值", ["powers-of-integers", "exponents-with-rational-bases"], (rng, hard) => {
     const [a, n, b, c] = [rng.int(2, 9), rng.int(2, 4), rng.int(2, 9), rng.int(2, 9)];
     if (!hard)
       return ask(
@@ -207,7 +145,7 @@ export const actExamNumbers: ExamSpec[] = [
       `分子、分母分别平方。`,
     );
   }),
-  rootTips("Reducing Radical Expressions", "化简根式", ["simplifying-square-roots"], (rng, hard) => {
+  spec("Reducing Radical Expressions", "化简根式", ["simplifying-square-roots"], (rng, hard) => {
     const [k, r, m] = [rng.int(2, 12), rng.pick([2, 3, 5, 6, 7, 10]), rng.int(2, 9)];
     if (!hard)
       return ask(
@@ -229,7 +167,7 @@ export const actExamNumbers: ExamSpec[] = [
       `提出 $${k}x$，再乘前面的 $${m}$。`,
     );
   }),
-  rootTips("Rewriting Radical Sums and Binomials", "改写根式的和与二项式", ["adding-and-subtracting-radical-expressions"], (rng, hard) => {
+  spec("Rewriting Radical Sums and Binomials", "改写根式的和与二项式", ["adding-and-subtracting-radical-expressions"], (rng, hard) => {
     const [a, b, r, c] = [rng.int(2, 7), rng.int(2, 7), rng.pick([2, 3, 5, 6, 7]), rng.int(2, 9)];
     if (!hard)
       return ask(
@@ -251,7 +189,7 @@ export const actExamNumbers: ExamSpec[] = [
       `展开：$${c}^2 + 2(${c})\\sqrt{${r}} + ${r}$。`,
     );
   }),
-  rootTips("Estimating Roots", "估计根", ["approximating-square-roots-and-cube-roots"], (rng, hard) => {
+  spec("Estimating Roots", "估计根", ["approximating-square-roots-and-cube-roots"], (rng, hard) => {
     const n = rng.int(3, 15);
     const v = n * n + rng.int(1, 2 * n);
     const m = rng.int(2, 9);
@@ -276,7 +214,7 @@ export const actExamNumbers: ExamSpec[] = [
       `$${m}^3 = ${m ** 3}$，$${m + 1}^3 = ${(m + 1) ** 3}$。`,
     );
   }),
-  powTips("Identifying Characteristics of Powers", "判断幂的特征", ["powers-of-integers"], (rng, hard) => {
+  spec("Identifying Characteristics of Powers", "判断幂的特征", ["powers-of-integers"], (rng, hard) => {
     const [a, b, n] = [rng.int(2, 9), rng.int(2, 9), rng.int(1, 6)];
     if (!hard)
       return words(
@@ -299,7 +237,7 @@ export const actExamNumbers: ExamSpec[] = [
       `$2^{x + ${b}} = 2^{x} \\cdot 2^{${b}} = ${a}(${2 ** b})$。`,
     );
   }),
-  powTips(
+  spec(
     "Solving Exponential Equations",
     "解指数方程",
     ["solving-exponential-equations-using-logarithms", "negative-exponents"],
@@ -327,7 +265,7 @@ export const actExamNumbers: ExamSpec[] = [
       );
     },
   ),
-  numTips("Finding a Greatest Common Factor", "求最大公因数", ["greatest-common-factor"], (rng, hard) => {
+  spec("Finding a Greatest Common Factor", "求最大公因数", ["greatest-common-factor"], (rng, hard) => {
     const [g, p, q] = [rng.int(2, 15), rng.pick([2, 3, 5, 7]), rng.pick([4, 9, 11, 13, 25])];
     const [a, b] = [g * p, g * q];
     const f = gcd(a, b);
@@ -351,7 +289,7 @@ export const actExamNumbers: ExamSpec[] = [
       `包数必须整除两个数量，所以取最大公因数。`,
     );
   }),
-  numTips("Applying Divisibility Conditions", "应用整除条件", ["divisibility-rules"], (rng, hard) => {
+  spec("Applying Divisibility Conditions", "应用整除条件", ["divisibility-rules"], (rng, hard) => {
     const [k, m] = [rng.int(5, 90), rng.pick([3, 4, 6, 9])];
     const n = m * k;
     // Four consecutive numbers around n, and for 3 never both n and a neighbor three away.
@@ -381,7 +319,7 @@ export const actExamNumbers: ExamSpec[] = [
       `各位数字之和能被 $3$ 整除时该数能被 $3$ 整除，$${s} + ${d}$ 是第一个这样的和。`,
     );
   }),
-  numTips("Finding a Least Common Multiple", "求最小公倍数", ["least-common-multiple"], (rng, hard) => {
+  spec("Finding a Least Common Multiple", "求最小公倍数", ["least-common-multiple"], (rng, hard) => {
     const [g, p, q] = [rng.int(2, 8), rng.pick([2, 3, 5]), rng.pick([3, 4, 7, 9, 11])];
     const [a, b] = [g * p, g * q];
     const l = (a * b) / gcd(a, b);
@@ -405,7 +343,7 @@ export const actExamNumbers: ExamSpec[] = [
       `它们在 $${a}$ 和 $${b}$ 的最小公倍数时重合。`,
     );
   }),
-  numTips("Using Remainders", "运用余数", ["finding-remainders"], (rng, hard) => {
+  spec("Using Remainders", "运用余数", ["finding-remainders"], (rng, hard) => {
     const [d, q] = [rng.int(3, 12), rng.int(3, 30)];
     const r = rng.int(1, d - 1);
     const n = d * q + r;
@@ -430,7 +368,7 @@ export const actExamNumbers: ExamSpec[] = [
       `加上 $${d}$ 的倍数不改变余数。`,
     );
   }),
-  numTips(
+  spec(
     "Finding a Digit in a Repeating Decimal",
     "求循环小数的某一位",
     ["rational-numbers-as-finite-or-repeating-decimals"],
@@ -462,8 +400,8 @@ export const actExamNumbers: ExamSpec[] = [
       );
     },
   ),
-  numTips("Comparing Repeating Decimals", "比较循环小数", ["writing-repeating-decimals-as-fractions"], (rng, hard) => {
-    const [a, b, w] = [rng.int(1, 8), rng.int(10, 98), rng.int(1, 5)];
+  spec("Comparing Repeating Decimals", "比较循环小数", ["writing-repeating-decimals-as-fractions"], (rng, hard) => {
+    const [a, b, w] = [rng.int(1, 8), rng.int(12, 98), rng.int(1, 5)];
     const c = b % 11 === 0 ? b + 1 : b;
     if (!hard)
       return ask(
@@ -477,15 +415,15 @@ export const actExamNumbers: ExamSpec[] = [
       );
     return ask(
       rng,
-      `Which fraction equals $0.\\overline{${c}}$?`,
-      `哪个分数等于 $0.\\overline{${c}}$？`,
-      Q.of(c, 99),
-      [Q.of(c, 100), Q.of(c, 90), Q.of(c, 999), Q.of(c + 1, 99)],
-      `A two-digit cycle is those digits over $99$.`,
-      `两位循环节等于这两个数字除以 $99$。`,
+      `Which of these numbers is the greatest?`,
+      `这些数中哪个最大？`,
+      `0.\\overline{${c}}`,
+      [`0.${c}`, `0.${c}1`, `0.\\overline{${c - 1}}`],
+      `Write out the digits and compare place by place: $0.\\overline{${c}} = 0.${c}${c}\\ldots$ agrees with $0.${c}$ and then keeps going, and it passes $0.${c}1$ within the next digits.`,
+      `写出各位数字并逐位比较：$0.\\overline{${c}} = 0.${c}${c}\\ldots$ 与 $0.${c}$ 开头相同，但还在继续，并在接下来的数位超过 $0.${c}1$。`,
     );
   }),
-  numTips("Using Prime Factorizations", "运用质因数分解", ["prime-factorization"], (rng, hard) => {
+  spec("Using Prime Factorizations", "运用质因数分解", ["prime-factorization"], (rng, hard) => {
     const [a, b, c] = [rng.int(1, 5), rng.int(1, 4), rng.int(1, 3)];
     const n = 2 ** a * 3 ** b * 5 ** c;
     if (!hard)
@@ -512,7 +450,7 @@ export const actExamNumbers: ExamSpec[] = [
       `每个指数加一后相乘。`,
     );
   }),
-  numTips("Identifying Prime Numbers", "识别质数", ["prime-and-composite-numbers"], (rng, hard) => {
+  spec("Identifying Prime Numbers", "识别质数", ["prime-and-composite-numbers"], (rng, hard) => {
     const p = rng.pick([23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]);
     const w = rng.shuffle(composites).slice(0, 3);
     const listed = rng.shuffle([p, ...w]).join(", ");
@@ -541,7 +479,7 @@ export const actExamNumbers: ExamSpec[] = [
       `对每个数检验不超过其平方根的小因数。`,
     );
   }),
-  numTips("Determining Parity", "判断奇偶性", ["parity"], (rng, hard) => {
+  spec("Determining Parity", "判断奇偶性", ["parity"], (rng, hard) => {
     const [a, b] = [rng.int(2, 9), rng.int(2, 9)];
     const c = 2 * a + 1;
     if (!hard)
@@ -564,7 +502,7 @@ export const actExamNumbers: ExamSpec[] = [
       `只有 $m + ${c}n^{${b}}$ 是偶数加奇数。`,
     );
   }),
-  rootTips(
+  spec(
     "Identifying Irrational Numbers",
     "识别无理数",
     ["classifying-square-roots-and-cube-roots-as-rational-or-irrational"],
@@ -591,7 +529,7 @@ export const actExamNumbers: ExamSpec[] = [
       );
     },
   ),
-  numTips("Using Properties of Consecutive Integers", "运用连续整数的性质", ["consecutive-integer-problems"], (rng, hard) => {
+  spec("Using Properties of Consecutive Integers", "运用连续整数的性质", ["consecutive-integer-problems"], (rng, hard) => {
     const n = rng.int(5, 60);
     if (!hard)
       return ask(
@@ -613,7 +551,7 @@ export const actExamNumbers: ExamSpec[] = [
       `设最小的数为 $x$：$4x + 12 = ${8 * n + 12}$。`,
     );
   }),
-  numTips("Identifying True Statements About Integers", "判断关于整数的命题", ["comparing-quantities-under-constraints"], (rng, hard) => {
+  spec("Identifying True Statements About Integers", "判断关于整数的命题", ["comparing-quantities-under-constraints"], (rng, hard) => {
     const [_a, _b] = [rng.int(2, 9), rng.int(2, 9)];
     const c = rng.int(10, 40);
     if (!hard)
@@ -659,7 +597,7 @@ export const actExamNumbers: ExamSpec[] = [
       ),
     );
   }),
-  complexTips(
+  spec(
     "Simplifying Expressions With the Imaginary Unit",
     "化简含虚数单位的式子",
     ["cyclic-property-of-the-imaginary-unit"],
@@ -688,7 +626,7 @@ export const actExamNumbers: ExamSpec[] = [
       );
     },
   ),
-  complexTips("Computing With Complex Numbers", "复数运算", ["cyclic-property-of-the-imaginary-unit"], (rng, hard) => {
+  spec("Computing With Complex Numbers", "复数运算", ["cyclic-property-of-the-imaginary-unit"], (rng, hard) => {
     const [a, b, c, d] = four(rng, 1, 9);
     const k = rng.int(2, 5);
     if (!hard)
@@ -711,7 +649,7 @@ export const actExamNumbers: ExamSpec[] = [
       `分配 $${k}$，减去 $-${d}i$ 就是加 $${d}i$。`,
     );
   }),
-  complexTips("Multiplying Complex Numbers", "复数乘法", ["multiplying-binomials"], (rng, hard) => {
+  spec("Multiplying Complex Numbers", "复数乘法", ["multiplying-binomials"], (rng, hard) => {
     const [a, b, c, d] = four(rng, 1, 9);
     if (!hard)
       return ask(
@@ -733,7 +671,7 @@ export const actExamNumbers: ExamSpec[] = [
       `展开后，对 $${b * d}i^2$ 项用 $i^2 = -1$。`,
     );
   }),
-  complexTips("Using Complex Conjugates", "运用共轭复数", ["the-complex-conjugate"], (rng, hard) => {
+  spec("Using Complex Conjugates", "运用共轭复数", ["the-complex-conjugate"], (rng, hard) => {
     const [a, b] = [rng.int(1, 12), rng.int(1, 12)];
     if (!hard)
       return ask(
@@ -755,7 +693,7 @@ export const actExamNumbers: ExamSpec[] = [
       `积为 $a^2 + b^2 = ${a * a} + ${b * b}$。`,
     );
   }),
-  complexTips("Dividing Complex Numbers", "复数除法", ["the-complex-conjugate"], (rng, hard) => {
+  spec("Dividing Complex Numbers", "复数除法", ["the-complex-conjugate"], (rng, hard) => {
     const [a, b, n] = [rng.int(1, 9), rng.int(1, 9), rng.int(2, 9)];
     const [p, q] = [rng.int(1, 6), rng.int(1, 6)];
     const num = [a * p - b * q, a * q + b * p] as const;
@@ -779,7 +717,7 @@ export const actExamNumbers: ExamSpec[] = [
       `分子分母同乘 $${p} - ${q}i$，分母变为 $${p * p + q * q}$。`,
     );
   }),
-  matTips("Combining Matrices", "矩阵加减", ["adding-and-subtracting-matrices"], (rng, hard) => {
+  spec("Combining Matrices", "矩阵加减", ["adding-and-subtracting-matrices"], (rng, hard) => {
     const [a, b, c, d] = four(rng, 1, 9);
     const [e, f, g, h] = four(rng, 1, 9);
     if (!hard)
@@ -812,7 +750,7 @@ export const actExamNumbers: ExamSpec[] = [
       `对应位置的项相减。`,
     );
   }),
-  matTips("Multiplying a Matrix by a Scalar", "矩阵的数乘", ["scalar-multiplication-of-matrices"], (rng, hard) => {
+  spec("Multiplying a Matrix by a Scalar", "矩阵的数乘", ["scalar-multiplication-of-matrices"], (rng, hard) => {
     const [a, b, c, d] = four(rng, 1, 9);
     const [k, m] = [rng.int(2, 6), rng.int(2, 5)];
     if (!hard)
@@ -835,7 +773,7 @@ export const actExamNumbers: ExamSpec[] = [
       `每一项都除以 $${k}$。`,
     );
   }),
-  matTips("Multiplying Matrices", "矩阵乘法", ["multiplying-matrices"], (rng, hard) => {
+  spec("Multiplying Matrices", "矩阵乘法", ["multiplying-matrices"], (rng, hard) => {
     const [a, b, c, d] = four(rng, 1, 6);
     const [e, f, g, h] = four(rng, 1, 6);
     if (!hard)
@@ -864,7 +802,7 @@ export const actExamNumbers: ExamSpec[] = [
       `每一项由第一个矩阵的一行与第二个矩阵的一列组合。`,
     );
   }),
-  matTips("Finding Determinants", "求行列式", ["the-determinant-of-a-2x2-matrix"], (rng, hard) => {
+  spec("Finding Determinants", "求行列式", ["the-determinant-of-a-2x2-matrix"], (rng, hard) => {
     const [a, b, c, d] = four(rng, 1, 9);
     const x = rng.int(1, 9);
     if (!hard)
@@ -893,7 +831,7 @@ export const actExamNumbers: ExamSpec[] = [
       `$${a}x - ${b * c} = ${det}$，所以 $${a}x = ${det + b * c}$。`,
     );
   }),
-  vecTips("Finding Components of a Vector", "求向量的分量", ["two-dimensional-vectors-expressed-in-component-form"], (rng, hard) => {
+  spec("Finding Components of a Vector", "求向量的分量", ["two-dimensional-vectors-expressed-in-component-form"], (rng, hard) => {
     const [a, b, c, d] = four(rng, -9, 9);
     const [p, q] = rng.pick([
       [3, 4],
@@ -929,7 +867,7 @@ export const actExamNumbers: ExamSpec[] = [
       `分量是 $${p}$ 和 $${q}$，所以模是 $\\sqrt{${p * p + q * q}}$。`,
     );
   }),
-  vecTips("Combining Vectors", "向量的合成", ["addition-and-scalar-multiplication-of-cartesian-vectors-in-2d"], (rng, hard) => {
+  spec("Combining Vectors", "向量的合成", ["addition-and-scalar-multiplication-of-cartesian-vectors-in-2d"], (rng, hard) => {
     const [a, b, c, d] = four(rng, -9, 9);
     const k = rng.int(2, 5);
     if (!hard)

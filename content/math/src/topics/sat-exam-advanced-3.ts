@@ -1,74 +1,13 @@
 import { t } from "@ga/content";
 
 import type { ExamSpec } from "../exam.ts";
-import { curveFigure, mc, mcExact, mod, sg, spr, words } from "../exam.ts";
+import { curveFigure, mc, mcExact, sg, spec, spr, words } from "../exam.ts";
 
 // SAT Math Prep, Advanced Math: exponential functions and models, nonlinear equations, multivariable equations, graphs and nonlinear systems.
 
-const expTips = mod(
-  t(
-    "In $f(x) = ab^x$, $a$ is the value at $x = 0$ and $b$ is the factor for each unit of $x$. Equal steps in $x$ multiply the output by the same factor.",
-    "在 $f(x) = ab^x$ 中，$a$ 是 $x = 0$ 时的值，$b$ 是 $x$ 每增加一个单位的倍数。$x$ 等距增加时，输出乘以相同的倍数。",
-  ),
-  t(
-    "Rewrite with a power law when the time unit changes: $b^{x}$ with $x$ in years equals $(b^{1/12})^{m}$ with $m$ in months.",
-    "时间单位变化时用幂的法则改写：以年为单位 $x$ 的 $b^{x}$ 等于以月为单位 $m$ 的 $(b^{1/12})^{m}$。",
-  ),
-);
-const modelTips = mod(
-  t(
-    "A growth of $r$ percent multiplies by $1 + \\frac{r}{100}$ and a decay of $r$ percent multiplies by $1 - \\frac{r}{100}$. Check what one time step means in the model.",
-    "增长 $r\\%$ 相当于乘以 $1 + \\frac{r}{100}$，减少 $r\\%$ 相当于乘以 $1 - \\frac{r}{100}$。注意模型中一个时间步长的含义。",
-  ),
-  t(
-    "To find an unknown, substitute a known pair of input and output into the model and solve. Start with the initial value, because it fixes $a$.",
-    "求未知量时，把一组已知的输入和输出代入模型再求解。先用初始值，因为它确定了 $a$。",
-  ),
-);
-const nlTips = mod(
-  t(
-    "Isolate the absolute value, radical or fraction first, then remove it. Absolute value equations split into two cases.",
-    "先把绝对值、根式或分式单独放在一边，再去掉它。绝对值方程分成两种情况。",
-  ),
-  t(
-    "Squaring both sides or multiplying by a variable expression can create false solutions, so check every candidate in the original equation.",
-    "两边平方或乘以含变量的式子可能产生增根，所以要把每个候选解代回原方程检验。",
-  ),
-);
-const mvTips = mod(
-  t(
-    "Treat the other letters as numbers and undo operations until the requested variable stands alone.",
-    "把其他字母当作数，逐步逆运算，直到所求变量单独在一边。",
-  ),
-  t(
-    "If the variable appears in a denominator or a square root, clear that first. If it appears in two terms, collect those terms and factor it out.",
-    "如果变量在分母或根号中，先去掉它们。如果变量出现在两项中，把这两项合并并提出变量。",
-  ),
-);
-const graphTips = mod(
-  t(
-    "The $y$-intercept is where $x = 0$ and the $x$-intercepts are where $y = 0$. Read them from where the graph meets the axes.",
-    "$y$ 轴截距是 $x = 0$ 处，$x$ 轴截距是 $y = 0$ 处。从图象与坐标轴的交点读出。",
-  ),
-  t(
-    "In a context, an intercept or a peak has a meaning. Name the units of both axes before you decide what a point says.",
-    "在情境中，截距或峰值都有含义。判断一个点的意义之前，先说清两条轴的单位。",
-  ),
-);
-const sysTips = mod(
-  t(
-    "Substitute the linear equation into the quadratic to get one equation in one variable, then solve it. Each solution gives one intersection point.",
-    "把一次方程代入二次方程，得到一元方程再求解。每个解对应一个交点。",
-  ),
-  t(
-    "The number of intersections is the number of solutions of the combined quadratic, so its discriminant decides: positive for two, zero for one and negative for none.",
-    "交点个数就是合并后二次方程的解的个数，由判别式决定：正则两个，零则一个，负则没有。",
-  ),
-);
-
 /** satExamAdvanced3 are the exam-style questions on exponential functions, nonlinear equations, multivariable equations, graphs and nonlinear systems. */
 export const satExamAdvanced3: ExamSpec[] = [
-  expTips("Exponential Functions", "指数函数", ["exponential-functions"], (rng, hard) => {
+  spec("Exponential Functions", "指数函数", ["exponential-functions"], (rng, hard) => {
     const [a, b, n] = [rng.int(2, 9), rng.int(2, 4), rng.int(2, 4)];
     if (!hard)
       return mc(
@@ -91,7 +30,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       t(`Divide by $${a}$: $${b}^k = ${b ** n}$, so $k = ${n}$.`, `除以 $${a}$：$${b}^k = ${b ** n}$，所以 $k = ${n}$。`),
     );
   }),
-  expTips("Maxima and Minima of Exponential Functions", "指数函数的最大值和最小值", ["extrema-of-exponential-functions"], (rng, hard) => {
+  spec("Maxima and Minima of Exponential Functions", "指数函数的最大值和最小值", ["extrema-of-exponential-functions"], (rng, hard) => {
     const [a, b, lo, hi] = [rng.int(2, 6), rng.int(2, 3), 0, rng.int(2, 4)];
     if (!hard)
       return mc(
@@ -120,7 +59,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
     );
   }),
-  expTips(
+  spec(
     "Exponential Functions Containing Unknown Parameters",
     "含未知参数的指数函数",
     ["determining-unknown-parameters-in-exponential-functions"],
@@ -150,7 +89,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       );
     },
   ),
-  expTips(
+  spec(
     "Constructing Exponential Functions From Descriptions",
     "根据描述构造指数函数",
     ["modeling-exponential-growth-with-functions"],
@@ -183,7 +122,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       );
     },
   ),
-  expTips("Exponential Functions Expressed in Equivalent Forms", "指数函数的等价形式", ["sat-exponential-model-rewriting"], (rng, hard) => {
+  spec("Exponential Functions Expressed in Equivalent Forms", "指数函数的等价形式", ["sat-exponential-model-rewriting"], (rng, hard) => {
     const [a, b, k] = [rng.int(2, 9), rng.int(2, 5), rng.int(2, 4)];
     if (!hard)
       return mc(
@@ -216,7 +155,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
     );
   }),
-  modelTips("Constructing Exponential Growth Models", "构造指数增长模型", ["modeling-exponential-growth-with-functions"], (rng, hard) => {
+  spec("Constructing Exponential Growth Models", "构造指数增长模型", ["modeling-exponential-growth-with-functions"], (rng, hard) => {
     const a = rng.pick([200, 500, 800, 1000, 1500]);
     const r = rng.pick([2, 3, 4, 5, 6, 8, 10, 12, 15]);
     const f = (100 + r) / 100;
@@ -249,7 +188,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
     );
   }),
-  modelTips("Constructing Exponential Decay Models", "构造指数衰减模型", ["modeling-exponential-decay-with-functions"], (rng, hard) => {
+  spec("Constructing Exponential Decay Models", "构造指数衰减模型", ["modeling-exponential-decay-with-functions"], (rng, hard) => {
     const a = rng.pick([400, 800, 1600, 2400, 3200]);
     const r = rng.pick([5, 10, 15, 20, 25, 30]);
     const f = (100 - r) / 100;
@@ -285,7 +224,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
     );
   }),
-  modelTips(
+  spec(
     "Determining Unknown Parameters in Exponential Models",
     "确定指数模型中的未知参数",
     ["solving-exponential-growth-problems"],
@@ -315,7 +254,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       );
     },
   ),
-  modelTips("Interpreting Exponential Models", "解释指数模型", ["interpreting-exponential-growth"], (rng, hard) => {
+  spec("Interpreting Exponential Models", "解释指数模型", ["interpreting-exponential-growth"], (rng, hard) => {
     const a = rng.pick([120, 180, 240, 300, 450, 600, 700, 900]);
     const r = rng.pick([4, 6, 8, 12, 20]);
     const f = (100 + r) / 100;
@@ -352,7 +291,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
     );
   }),
-  nlTips("Absolute Value Equations", "绝对值方程", ["absolute-value-equations"], (rng, hard) => {
+  spec("Absolute Value Equations", "绝对值方程", ["absolute-value-equations"], (rng, hard) => {
     const [b, k, a] = [rng.int(1, 9), rng.int(2, 12), rng.int(2, 5)];
     if (!hard)
       return mc(
@@ -375,7 +314,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
     );
   }),
-  nlTips("Rational Equations", "分式方程", ["rational-equations-using-cross-multiplication"], (rng, hard) => {
+  spec("Rational Equations", "分式方程", ["rational-equations-using-cross-multiplication"], (rng, hard) => {
     const [x, a, b] = [rng.int(2, 9), rng.int(2, 6), rng.int(1, 6)];
     if (!hard)
       return spr(
@@ -398,7 +337,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
     );
   }),
-  nlTips("Radical Equations", "根式方程", ["solving-radical-equations"], (rng, hard) => {
+  spec("Radical Equations", "根式方程", ["solving-radical-equations"], (rng, hard) => {
     const [k, b, a] = [rng.int(2, 9), rng.int(1, 9), rng.int(2, 5)];
     if (!hard)
       return mc(
@@ -421,7 +360,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
     );
   }),
-  nlTips("Equations Containing Multiple Radicals", "含多个根式的方程", ["solving-advanced-radical-equations"], (rng, hard) => {
+  spec("Equations Containing Multiple Radicals", "含多个根式的方程", ["solving-advanced-radical-equations"], (rng, hard) => {
     const x = rng.int(2, 12);
     const c = rng.int(1, x - 1);
     const a = rng.int(2, 5);
@@ -453,7 +392,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
     );
   }),
-  nlTips("Absolute Value Functions", "绝对值函数", ["absolute-value-graphs"], (rng, hard) => {
+  spec("Absolute Value Functions", "绝对值函数", ["absolute-value-graphs"], (rng, hard) => {
     const [h, k, n] = [rng.nonZero(-4, 4), rng.nonZero(-5, 5), rng.int(1, 4)];
     const fig = curveFigure(
       (x) => Math.abs(x - h) + k,
@@ -490,7 +429,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
     );
   }),
-  nlTips("Rational Functions", "有理函数", ["roots-of-rational-functions"], (rng, hard) => {
+  spec("Rational Functions", "有理函数", ["roots-of-rational-functions"], (rng, hard) => {
     const [r, s] = [rng.int(1, 8), rng.int(1, 8)];
     if (!hard)
       return mc(
@@ -516,7 +455,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       t(`The function is not defined where the denominator is zero: $c = ${s}$.`, `分母为零处函数无定义：$c = ${s}$。`),
     );
   }),
-  mvTips("Solving Multivariable Equations", "解多元方程", ["many-variable-equations"], (rng, hard) => {
+  spec("Solving Multivariable Equations", "解多元方程", ["many-variable-equations"], (rng, hard) => {
     const [a, c] = [rng.int(2, 9), rng.int(2, 9)];
     if (!hard)
       return mc(
@@ -540,7 +479,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       t(`Divide by $${c}h$ first, then subtract $d$.`, `先除以 $${c}h$，再减去 $d$。`),
     );
   }),
-  mvTips("Further Multivariable Equations", "进一步的多元方程", ["rearranging-formulas"], (rng, hard) => {
+  spec("Further Multivariable Equations", "进一步的多元方程", ["rearranging-formulas"], (rng, hard) => {
     const [a, b, d] = [rng.int(2, 7), rng.int(2, 7), rng.int(2, 7)];
     if (!hard)
       return mc(
@@ -567,7 +506,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
     );
   }),
-  mvTips("Solving Multivariable Rational Equations", "解多元分式方程", ["solving-many-variable-rational-equations"], (rng, hard) => {
+  spec("Solving Multivariable Rational Equations", "解多元分式方程", ["solving-many-variable-rational-equations"], (rng, hard) => {
     const a = rng.int(2, 9);
     let d = rng.int(2, 9);
     if (d === a) d = a === 9 ? 2 : a + 1;
@@ -596,7 +535,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
     );
   }),
-  mvTips("Solving Multivariable Nonlinear Equations", "解多元非线性方程", ["solving-many-variable-nonlinear-equations"], (rng, hard) => {
+  spec("Solving Multivariable Nonlinear Equations", "解多元非线性方程", ["solving-many-variable-nonlinear-equations"], (rng, hard) => {
     const [a, d] = [rng.int(2, 9), rng.int(2, 7)];
     if (!hard)
       return mc(
@@ -636,7 +575,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       ),
     );
   }),
-  graphTips(
+  spec(
     "Identifying Intercepts of Functions From Graphs",
     "从图象识别函数的截距",
     ["interpreting-descriptions-of-physical-phenomena"],
@@ -670,7 +609,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       );
     },
   ),
-  graphTips(
+  spec(
     "Interpreting Graph Properties in Modeling Contexts",
     "在建模情境中解释图象性质",
     ["interpreting-rates-of-change-of-physical-phenomena"],
@@ -718,7 +657,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       );
     },
   ),
-  sysTips(
+  spec(
     "Solving Linear-Quadratic Systems of Equations",
     "解一次-二次方程组",
     ["finding-intersections-of-lines-and-quadratic-functions"],
@@ -753,7 +692,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       );
     },
   ),
-  sysTips(
+  spec(
     "Solving Challenging Linear-Quadratic Systems of Equations",
     "解较难的一次-二次方程组",
     ["intersections-of-parabolas-with-lines"],
@@ -790,7 +729,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       );
     },
   ),
-  sysTips(
+  spec(
     "Exploiting Structure to Solve Nonlinear Systems of Equations",
     "利用结构解非线性方程组",
     ["solving-systems-of-nonlinear-equations-by-identifying-structure"],
@@ -821,7 +760,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       );
     },
   ),
-  sysTips(
+  spec(
     "Linear-Quadratic Systems With One Solution",
     "恰有一个解的一次-二次方程组",
     ["determining-unknown-parameters-in-quadratic-systems-with-one-intersection-point"],
@@ -856,7 +795,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       );
     },
   ),
-  sysTips(
+  spec(
     "Linear-Quadratic Systems With Zero or Two Solutions",
     "有零个或两个解的一次-二次方程组",
     ["determining-unknown-parameters-in-quadratic-systems-with-zero-or-two-intersection-points"],
@@ -908,7 +847,7 @@ export const satExamAdvanced3: ExamSpec[] = [
       );
     },
   ),
-  sysTips("Other Systems of Nonlinear Equations", "其他非线性方程组", ["solving-systems-of-nonlinear-equations"], (rng, hard) => {
+  spec("Other Systems of Nonlinear Equations", "其他非线性方程组", ["solving-systems-of-nonlinear-equations"], (rng, hard) => {
     const x = rng.int(2, 8);
     const y = x + rng.pick([1, 2, 3, 4]) * (x > 5 ? -1 : 1);
     if (!hard)

@@ -1,71 +1,10 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import type { ExamSpec } from "../exam.ts";
-import { ask, curveFigure, mod, ordinal, sg, words } from "../exam.ts";
+import { ask, curveFigure, ordinal, sg, spec, words } from "../exam.ts";
 import { curvePlot, polyFigure, sasPts } from "../exam-figures.ts";
 
 // ACT Math Prep, Functions: notation, logarithms, graphs and their features, sequences and trigonometric functions.
-
-const fnTips = mod(
-  t(
-    "Function notation means substitution: replace every copy of the input variable with the value inside the parentheses, then follow the order of operations.",
-    "函数记号就是代入：把输入变量的每一处都换成括号里的值，再按运算顺序计算。",
-  ),
-  t(
-    "In a composition, work from the inside out. To find an inverse, swap the roles of input and output, then solve for the new output.",
-    "复合函数要从内向外计算。求反函数时交换输入和输出的角色，再解出新的输出。",
-  ),
-);
-const logTips = mod(
-  t(
-    "The logarithm $\\log_b a$ is the exponent that turns $b$ into $a$, so ask which power of the base gives the number inside the logarithm.",
-    "对数 $\\log_b a$ 是把 $b$ 变成 $a$ 的指数，所以要问底数的几次方等于对数里的数。",
-  ),
-  t(
-    "A sum of logarithms is the logarithm of a product, a difference is the logarithm of a quotient, and an exponent inside comes out as a coefficient. The input of a logarithm must be positive.",
-    "对数之和是积的对数，对数之差是商的对数，里面的指数可以提到前面作系数。对数的输入必须为正。",
-  ),
-);
-const graphTips = mod(
-  t(
-    "The domain is the set of inputs a function allows: exclude values that make a denominator zero or an even root negative. The range is the set of outputs it produces.",
-    "定义域是函数允许的输入：排除使分母为零或使偶次根号内为负的值。值域是函数产生的输出。",
-  ),
-  t(
-    "Adding a constant outside the function moves its graph vertically. Replacing $x$ with $x - h$ moves the graph $h$ units to the right, and a negative sign outside reflects it across the $x$-axis.",
-    "在函数外加常数使图像上下平移。把 $x$ 换成 $x - h$ 使图像向右平移 $h$ 个单位，函数外的负号使图像关于 $x$ 轴翻折。",
-  ),
-);
-const seqTips = mod(
-  t(
-    "An arithmetic sequence adds a common difference, so its $n$th term is $a_1 + (n - 1)d$. A geometric sequence multiplies by a common ratio, so its $n$th term is $a_1r^{n - 1}$.",
-    "等差数列每次加公差，第 $n$ 项是 $a_1 + (n - 1)d$。等比数列每次乘公比，第 $n$ 项是 $a_1r^{n - 1}$。",
-  ),
-  t(
-    "The sum of an arithmetic series is the number of terms times the mean of the first and last terms. A recursive rule gives each term from the one before, so compute the terms in order.",
-    "等差数列的和等于项数乘首末两项的平均数。递推规则由前一项给出后一项，所以要按顺序计算。",
-  ),
-);
-const trigTips = mod(
-  t(
-    "Multiply degrees by $\\frac{\\pi}{180}$ to get radians. On the unit circle a point is $(\\cos\\theta, \\sin\\theta)$, and the identity $\\sin^2\\theta + \\cos^2\\theta = 1$ always holds.",
-    "度数乘 $\\frac{\\pi}{180}$ 得弧度。单位圆上的点是 $(\\cos\\theta, \\sin\\theta)$，且恒有 $\\sin^2\\theta + \\cos^2\\theta = 1$。",
-  ),
-  t(
-    "Check the quadrant to fix the sign of each ratio. For $y = a\\sin(bx) + d$, the amplitude is $|a|$, the period is $\\frac{2\\pi}{|b|}$, and the graph is centered on the line $y = d$.",
-    "查看象限以确定各三角比的符号。对 $y = a\\sin(bx) + d$，振幅是 $|a|$，周期是 $\\frac{2\\pi}{|b|}$，图像以直线 $y = d$ 为中心。",
-  ),
-);
-const lawTips = mod(
-  t(
-    "The area of a triangle is $\\frac{1}{2}ab\\sin C$ for two sides and the angle between them. The law of sines relates each side to the sine of the opposite angle.",
-    "两边及其夹角已知时，三角形的面积是 $\\frac{1}{2}ab\\sin C$。正弦定理把每条边与其对角的正弦联系起来。",
-  ),
-  t(
-    "Use the law of cosines, $c^2 = a^2 + b^2 - 2ab\\cos C$, when you know two sides and the angle between them. To solve a trigonometric equation, list every solution in the interval the question gives.",
-    "已知两边及其夹角时用余弦定理 $c^2 = a^2 + b^2 - 2ab\\cos C$。解三角方程时，要列出题目给定区间内的所有解。",
-  ),
-);
 
 const triples = [
   [3, 4, 5],
@@ -95,7 +34,7 @@ const degRad = [
 
 /** actExamFunctions are the exam-style questions of the ACT Functions unit that have no SAT counterpart. */
 export const actExamFunctions: ExamSpec[] = [
-  fnTips(
+  spec(
     "Evaluating a Function in Context",
     "在情境中求函数值",
     ["interpreting-rate-of-change-and-initial-value-in-context"],
@@ -122,7 +61,7 @@ export const actExamFunctions: ExamSpec[] = [
       );
     },
   ),
-  fnTips("Evaluating a Multivariable Function", "多元函数求值", ["many-variable-equations"], (rng, hard) => {
+  spec("Evaluating a Multivariable Function", "多元函数求值", ["many-variable-equations"], (rng, hard) => {
     const [a, b, x, y] = [rng.int(2, 9), rng.int(2, 9), rng.int(-6, 9), rng.int(-6, 9)];
     if (!hard)
       return ask(
@@ -144,7 +83,7 @@ export const actExamFunctions: ExamSpec[] = [
       `$(${x})^2 - ${a}(${x})(${y}) + (${y})^2$。`,
     );
   }),
-  fnTips("Performing Operations on Functions", "函数的运算", ["arithmetic-of-functions"], (rng, hard) => {
+  spec("Performing Operations on Functions", "函数的运算", ["arithmetic-of-functions"], (rng, hard) => {
     const [a, b, c, d, x] = [rng.int(2, 9), rng.nonZero(-9, 9), rng.int(2, 9), rng.nonZero(-9, 9), rng.int(1, 6)];
     const dd = b + d === 0 ? b : d;
     const sum = b + dd;
@@ -174,7 +113,7 @@ export const actExamFunctions: ExamSpec[] = [
       `$f(${x}) = ${a * x + b}$，$g(${x}) = ${x + d}$，二者相乘。`,
     );
   }),
-  fnTips("Composing Functions Algebraically", "用代数方法复合函数", ["function-composition"], (rng, hard) => {
+  spec("Composing Functions Algebraically", "用代数方法复合函数", ["function-composition"], (rng, hard) => {
     const [a, b, c] = [rng.int(2, 9), rng.nonZero(-9, 9), rng.nonZero(-9, 9)];
     if (!hard)
       return ask(
@@ -201,7 +140,7 @@ export const actExamFunctions: ExamSpec[] = [
       `$${a}(x^2 ${sg(c)}) ${sg(b)}$，再分配。`,
     );
   }),
-  fnTips("Finding an Inverse Function", "求反函数", ["introduction-to-inverse-functions"], (rng, hard) => {
+  spec("Finding an Inverse Function", "求反函数", ["introduction-to-inverse-functions"], (rng, hard) => {
     const [a, b, x] = [rng.int(2, 9), rng.nonZero(-12, 12), rng.int(1, 12)];
     if (!hard)
       return ask(
@@ -223,7 +162,7 @@ export const actExamFunctions: ExamSpec[] = [
       `从 $y = ${a}x ${sg(b)}$ 解出 $x$，再交换变量名。`,
     );
   }),
-  fnTips("Identifying Characteristics of Functions", "判断函数的特征", ["representations-of-functions"], (rng, hard) => {
+  spec("Identifying Characteristics of Functions", "判断函数的特征", ["representations-of-functions"], (rng, hard) => {
     const [a, b, c, d] = [rng.int(1, 9), rng.int(10, 19), rng.int(20, 29), rng.int(30, 39)];
     if (!hard)
       return words(
@@ -261,7 +200,7 @@ export const actExamFunctions: ExamSpec[] = [
       ),
     );
   }),
-  fnTips(
+  spec(
     "Determining Function Outputs",
     "确定函数的输出",
     ["finding-a-function-input-for-a-given-output", "linear-functions-in-tabular-form"],
@@ -289,7 +228,7 @@ export const actExamFunctions: ExamSpec[] = [
       );
     },
   ),
-  logTips(
+  spec(
     "Finding Inputs of Exponential Functions",
     "求指数函数的输入值",
     ["solving-exponential-equations-using-logarithms", "negative-exponents"],
@@ -320,7 +259,7 @@ export const actExamFunctions: ExamSpec[] = [
       );
     },
   ),
-  logTips("Evaluating Logarithms", "对数求值", ["converting-between-exponential-and-logarithmic-form"], (rng, hard) => {
+  spec("Evaluating Logarithms", "对数求值", ["converting-between-exponential-and-logarithmic-form"], (rng, hard) => {
     const [b, n, m] = [rng.int(2, 7), rng.int(2, 4), rng.int(1, 3)];
     if (!hard)
       return ask(
@@ -342,7 +281,7 @@ export const actExamFunctions: ExamSpec[] = [
       `第一个对数是 $${-n}$，第二个是 $${m}$。`,
     );
   }),
-  logTips("Applying Logarithm Properties", "应用对数性质", ["combining-laws-of-logarithms"], (rng, hard) => {
+  spec("Applying Logarithm Properties", "应用对数性质", ["combining-laws-of-logarithms"], (rng, hard) => {
     const [b, p, q, k] = [rng.int(2, 5), rng.int(1, 4), rng.int(1, 4), rng.int(2, 7)];
     if (!hard)
       return ask(
@@ -364,7 +303,7 @@ export const actExamFunctions: ExamSpec[] = [
       `把 $${k}$ 提到前面再相加：$${k}(${p}) + ${q}$。`,
     );
   }),
-  logTips(
+  spec(
     "Relating Exponential and Logarithmic Forms",
     "指数形式与对数形式的关系",
     ["converting-between-exponential-and-logarithmic-form"],
@@ -391,7 +330,7 @@ export const actExamFunctions: ExamSpec[] = [
       );
     },
   ),
-  logTips("Solving Logarithmic Equations", "解对数方程", ["solving-exponential-equations-using-logarithms"], (rng, hard) => {
+  spec("Solving Logarithmic Equations", "解对数方程", ["solving-exponential-equations-using-logarithms"], (rng, hard) => {
     const [b, n, c, a] = [rng.int(2, 5), rng.int(2, 4), rng.int(1, 20), rng.int(2, 5)];
     if (!hard)
       return ask(
@@ -413,7 +352,7 @@ export const actExamFunctions: ExamSpec[] = [
       `合并得 $${a}x = ${b ** n}$。`,
     );
   }),
-  logTips("Identifying Features of Logarithmic Functions", "判断对数函数的特征", ["graphing-logarithmic-functions"], (rng, hard) => {
+  spec("Identifying Features of Logarithmic Functions", "判断对数函数的特征", ["graphing-logarithmic-functions"], (rng, hard) => {
     const [b, c, d] = [rng.int(2, 9), rng.int(1, 12), rng.nonZero(-9, 9)];
     if (!hard)
       return ask(
@@ -435,7 +374,7 @@ export const actExamFunctions: ExamSpec[] = [
       `$x = ${-c}$ 时输入为零，外面的常数只使图像上下平移。`,
     );
   }),
-  graphTips("Determining Domain From an Equation", "由方程确定定义域", ["domain-of-a-function"], (rng, hard) => {
+  spec("Determining Domain From an Equation", "由方程确定定义域", ["domain-of-a-function"], (rng, hard) => {
     const [a, c, k] = [rng.int(2, 9), rng.int(1, 15), rng.int(2, 7)];
     if (!hard)
       return ask(
@@ -457,7 +396,7 @@ export const actExamFunctions: ExamSpec[] = [
       `$${k}x - ${k * c} \\ge 0$ 得 $x \\ge ${c}$。`,
     );
   }),
-  graphTips("Reading Domain From a Graph", "由图像读定义域", ["domain-of-a-function"], (rng, hard) => {
+  spec("Reading Domain From a Graph", "由图像读定义域", ["domain-of-a-function"], (rng, hard) => {
     const [lo, w, m] = [rng.int(-8, -1), rng.int(4, 10), rng.pick([1, 2])];
     const hi = lo + w;
     const f = (x: number) => (x < lo || x > hi ? Number.NaN : m * (x - lo) - 4);
@@ -488,34 +427,29 @@ export const actExamFunctions: ExamSpec[] = [
       fig,
     );
   }),
-  graphTips(
-    "Finding Asymptotes of a Rational Function",
-    "求有理函数的渐近线",
-    ["vertical-asymptotes-of-rational-functions"],
-    (rng, hard) => {
-      const [a, c, d] = [rng.int(2, 9), rng.int(1, 12), rng.nonZero(-9, 9)];
-      if (!hard)
-        return ask(
-          rng,
-          `What is the vertical asymptote of the graph of $y = \\frac{${a}}{x - ${c}}$?`,
-          `$y = \\frac{${a}}{x - ${c}}$ 的图像的竖直渐近线是什么？`,
-          `x = ${c}`,
-          [`x = ${-c}`, `y = ${c}`, `x = ${a}`, `y = ${a}`, `x = ${c + 1}`],
-          `The denominator is zero at $x = ${c}$.`,
-          `$x = ${c}$ 时分母为零。`,
-        );
+  spec("Finding Asymptotes of a Rational Function", "求有理函数的渐近线", ["vertical-asymptotes-of-rational-functions"], (rng, hard) => {
+    const [a, c, d] = [rng.int(2, 9), rng.int(1, 12), rng.nonZero(-9, 9)];
+    if (!hard)
       return ask(
         rng,
-        `What is the horizontal asymptote of the graph of $y = \\frac{${a}x}{x - ${c}} ${sg(d)}$?`,
-        `$y = \\frac{${a}x}{x - ${c}} ${sg(d)}$ 的图像的水平渐近线是什么？`,
-        `y = ${a + d}`,
-        [`y = ${a}`, `y = ${d}`, `x = ${c}`, `y = ${a + d + 1}`],
-        `For large $x$, the fraction approaches $${a}$, and then add the $${d}$.`,
-        `$x$ 很大时分式趋近 $${a}$，再加 $${d}$。`,
+        `What is the vertical asymptote of the graph of $y = \\frac{${a}}{x - ${c}}$?`,
+        `$y = \\frac{${a}}{x - ${c}}$ 的图像的竖直渐近线是什么？`,
+        `x = ${c}`,
+        [`x = ${-c}`, `y = ${c}`, `x = ${a}`, `y = ${a}`, `x = ${c + 1}`],
+        `The denominator is zero at $x = ${c}$.`,
+        `$x = ${c}$ 时分母为零。`,
       );
-    },
-  ),
-  graphTips("Describing Behavior of a Function Graph", "描述函数图像的行为", ["end-behavior"], (rng, hard) => {
+    return ask(
+      rng,
+      `What is the horizontal asymptote of the graph of $y = \\frac{${a}x}{x - ${c}} ${sg(d)}$?`,
+      `$y = \\frac{${a}x}{x - ${c}} ${sg(d)}$ 的图像的水平渐近线是什么？`,
+      `y = ${a + d}`,
+      [`y = ${a}`, `y = ${d}`, `x = ${c}`, `y = ${a + d + 1}`],
+      `For large $x$, the fraction approaches $${a}$, and then add the $${d}$.`,
+      `$x$ 很大时分式趋近 $${a}$，再加 $${d}$。`,
+    );
+  }),
+  spec("Describing Behavior of a Function Graph", "描述函数图像的行为", ["end-behavior"], (rng, hard) => {
     const [a, n] = [rng.int(1, 30), rng.pick([2, 4, 6])];
     const m = rng.pick([3, 5, 7]);
     if (!hard)
@@ -548,7 +482,7 @@ export const actExamFunctions: ExamSpec[] = [
       t(`The even-degree term with a positive coefficient controls both ends.`, `正系数的偶次项决定两端。`),
     );
   }),
-  graphTips("Determining the Range of a Function", "确定函数的值域", ["range-of-a-function"], (rng, hard) => {
+  spec("Determining the Range of a Function", "确定函数的值域", ["range-of-a-function"], (rng, hard) => {
     const [a, c, h] = [rng.int(2, 9), rng.int(-9, 12), rng.nonZero(-6, 6)];
     if (!hard)
       return ask(
@@ -570,7 +504,7 @@ export const actExamFunctions: ExamSpec[] = [
       `绝对值至少为 $0$，其相反数至多为 $0$。`,
     );
   }),
-  graphTips("Translating Function Graphs Vertically", "函数图像的上下平移", ["vertical-translations-of-functions"], (rng, hard) => {
+  spec("Translating Function Graphs Vertically", "函数图像的上下平移", ["vertical-translations-of-functions"], (rng, hard) => {
     const [a, b, k] = [rng.int(2, 9), rng.nonZero(-9, 9), rng.int(1, 12)];
     const nb = b + k === 0 ? b + k + 1 : b + k;
     const kk = nb - b;
@@ -606,7 +540,7 @@ export const actExamFunctions: ExamSpec[] = [
       curvePlot((x) => (x - k) ** 2, [k - 6, k + 6], [-4, 36]),
     );
   }),
-  graphTips(
+  spec(
     "Translating Horizontally and Reflecting Graphs",
     "函数图像的左右平移和翻折",
     ["horizontal-translations-of-functions"],
@@ -635,7 +569,7 @@ export const actExamFunctions: ExamSpec[] = [
       );
     },
   ),
-  graphTips("Matching a Graph to an Equation", "匹配图像与方程", ["graphs-of-general-quadratic-functions"], (rng, hard) => {
+  spec("Matching a Graph to an Equation", "匹配图像与方程", ["graphs-of-general-quadratic-functions"], (rng, hard) => {
     const [r, s, h, k] = [rng.int(1, 6), rng.int(1, 6), rng.int(-5, 5), rng.int(1, 12)];
     const up = (x: number) => (x + r) * (x - s);
     const figA = curveFigure(
@@ -676,7 +610,7 @@ export const actExamFunctions: ExamSpec[] = [
       figB,
     );
   }),
-  graphTips("Interpreting Piecewise Graphs", "解释分段函数图像", ["piecewise-functions"], (rng, hard) => {
+  spec("Interpreting Piecewise Graphs", "解释分段函数图像", ["piecewise-functions"], (rng, hard) => {
     const [c, p, q] = [rng.int(-2, 3), rng.int(-3, 4), rng.int(-4, 6)];
     const x0 = c - rng.int(1, 4);
     const fig = curveFigure(
@@ -706,7 +640,7 @@ export const actExamFunctions: ExamSpec[] = [
       fig,
     );
   }),
-  seqTips("Working With Arithmetic Sequences", "等差数列", ["arithmetic-sequences"], (rng, hard) => {
+  spec("Working With Arithmetic Sequences", "等差数列", ["arithmetic-sequences"], (rng, hard) => {
     const [a, d, n, k] = [rng.int(-9, 20), rng.int(2, 12), rng.int(3, 9), rng.int(2, 6)];
     if (!hard)
       return ask(
@@ -728,7 +662,7 @@ export const actExamFunctions: ExamSpec[] = [
       `两项相隔 $${k}$ 个位置，相差 $${k * d}$。`,
     );
   }),
-  seqTips("Finding a Term of a Geometric Sequence", "求等比数列的项", ["nth-term-of-a-geometric-sequence"], (rng, hard) => {
+  spec("Finding a Term of a Geometric Sequence", "求等比数列的项", ["nth-term-of-a-geometric-sequence"], (rng, hard) => {
     const [a, r, n] = [rng.int(1, 9), rng.int(2, 5), rng.int(4, 6)];
     if (!hard)
       return ask(
@@ -750,7 +684,7 @@ export const actExamFunctions: ExamSpec[] = [
       `$${a}(${r})^{${n - 1}} = ${a * r ** (n - 1)}$。`,
     );
   }),
-  seqTips("Writing an Explicit Formula for a Sequence", "写数列的通项公式", ["nth-term-of-an-arithmetic-sequence"], (rng, hard) => {
+  spec("Writing an Explicit Formula for a Sequence", "写数列的通项公式", ["nth-term-of-an-arithmetic-sequence"], (rng, hard) => {
     const [a, d, r] = [rng.int(1, 20), rng.int(2, 12), rng.int(2, 5)];
     if (!hard)
       return ask(
@@ -772,7 +706,7 @@ export const actExamFunctions: ExamSpec[] = [
       `从 $${a}$ 开始，乘 $${r}$ 共 $n - 1$ 次。`,
     );
   }),
-  seqTips("Computing Terms of a Recursive Sequence", "计算递推数列的项", ["recursive-sequences"], (rng, hard) => {
+  spec("Computing Terms of a Recursive Sequence", "计算递推数列的项", ["recursive-sequences"], (rng, hard) => {
     const [a, b, c] = [rng.int(1, 9), rng.int(2, 4), rng.nonZero(-6, 9)];
     const t2 = b * a + c;
     const t3 = b * t2 + c;
@@ -797,7 +731,7 @@ export const actExamFunctions: ExamSpec[] = [
       `依次得 $a_3 = ${2 * a + b}$，$a_4 = ${3 * a + 2 * b}$，$a_5 = ${5 * a + 3 * b}$。`,
     );
   }),
-  seqTips("Summing an Arithmetic Series", "求等差数列的和", ["finding-the-sum-of-an-arithmetic-series"], (rng, hard) => {
+  spec("Summing an Arithmetic Series", "求等差数列的和", ["finding-the-sum-of-an-arithmetic-series"], (rng, hard) => {
     const [a, d, n] = [rng.int(1, 15), rng.int(2, 9), rng.int(4, 20)];
     const last = a + (n - 1) * d;
     const sum = (n * (a + last)) / 2;
@@ -821,7 +755,7 @@ export const actExamFunctions: ExamSpec[] = [
       `末项是 $${last}$，所以和为 $\\frac{${n}(${a} + ${last})}{2}$。`,
     );
   }),
-  seqTips("Summing Geometric and Other Series", "求等比数列及其他数列的和", ["the-sum-of-a-finite-geometric-series"], (rng, hard) => {
+  spec("Summing Geometric and Other Series", "求等比数列及其他数列的和", ["the-sum-of-a-finite-geometric-series"], (rng, hard) => {
     const [a, r, n] = [rng.int(1, 9), rng.int(2, 3), rng.int(3, 6)];
     const sum = (a * (r ** n - 1)) / (r - 1);
     const m = rng.int(3, 12);
@@ -845,7 +779,7 @@ export const actExamFunctions: ExamSpec[] = [
       `$${r}\\left(\\frac{${m}(${m + 1})}{2}\\right) + ${a}(${m})$。`,
     );
   }),
-  trigTips("Converting Angle Measures", "换算角度", ["introduction-to-radians"], (rng, hard) => {
+  spec("Converting Angle Measures", "换算角度", ["introduction-to-radians"], (rng, hard) => {
     const [d, r] = rng.pick(degRad);
     const k = rng.int(1, 3);
     const others = degRad.filter(([x]) => x !== d).map(([, y]) => y);
@@ -869,65 +803,55 @@ export const actExamFunctions: ExamSpec[] = [
       `$${r}$ 弧度是 $${d}^\\circ$，再加 $${k * 360}^\\circ$。`,
     );
   }),
-  trigTips(
-    "Finding Points in Standard Position",
-    "求标准位置上的点",
-    ["extending-the-pythagorean-identity-to-all-quadrants"],
-    (rng, hard) => {
-      const [p, q, c] = rng.pick(triples);
-      const [sx, sy, k] = [rng.pick([-1, 1]), rng.pick([-1, 1]), rng.int(1, 3)];
-      const x = sx * p * k;
-      const y = sy * q * k;
-      if (!hard)
-        return ask(
-          rng,
-          `The terminal side of an angle $\\theta$ in standard position passes through $(${x}, ${y})$. What is $\\cos\\theta$?`,
-          `标准位置上的角 $\\theta$ 的终边经过 $(${x}, ${y})$。$\\cos\\theta$ 是多少？`,
-          Q.of(sx * p, c),
-          [Q.of(-sx * p, c), Q.of(sy * q, c), Q.of(sy * q, sx * p), Q.of(sx * c, p)],
-          `The distance from the origin is $${c * k}$, and $\\cos\\theta = \\frac{x}{r}$.`,
-          `到原点的距离是 $${c * k}$，$\\cos\\theta = \\frac{x}{r}$。`,
-        );
+  spec("Finding Points in Standard Position", "求标准位置上的点", ["extending-the-pythagorean-identity-to-all-quadrants"], (rng, hard) => {
+    const [p, q, c] = rng.pick(triples);
+    const [sx, sy, k] = [rng.pick([-1, 1]), rng.pick([-1, 1]), rng.int(1, 3)];
+    const x = sx * p * k;
+    const y = sy * q * k;
+    if (!hard)
       return ask(
         rng,
-        `The terminal side of an angle $\\theta$ in standard position passes through $(${x}, ${y})$. What is $\\tan\\theta$?`,
-        `标准位置上的角 $\\theta$ 的终边经过 $(${x}, ${y})$。$\\tan\\theta$ 是多少？`,
-        Q.of(sy * q, sx * p),
-        [Q.of(sx * p, sy * q), Q.of(-sy * q, sx * p), Q.of(sy * q, c), Q.of(sx * p, c)],
-        `$\\tan\\theta = \\frac{y}{x}$.`,
-        `$\\tan\\theta = \\frac{y}{x}$。`,
+        `The terminal side of an angle $\\theta$ in standard position passes through $(${x}, ${y})$. What is $\\cos\\theta$?`,
+        `标准位置上的角 $\\theta$ 的终边经过 $(${x}, ${y})$。$\\cos\\theta$ 是多少？`,
+        Q.of(sx * p, c),
+        [Q.of(-sx * p, c), Q.of(sy * q, c), Q.of(sy * q, sx * p), Q.of(sx * c, p)],
+        `The distance from the origin is $${c * k}$, and $\\cos\\theta = \\frac{x}{r}$.`,
+        `到原点的距离是 $${c * k}$，$\\cos\\theta = \\frac{x}{r}$。`,
       );
-    },
-  ),
-  trigTips(
-    "Using the Pythagorean Identity",
-    "运用毕达哥拉斯恒等式",
-    ["using-the-pythagorean-identity-in-the-first-quadrant"],
-    (rng, hard) => {
-      const [p, q, c] = rng.pick(triples);
-      const [a, b] = [rng.int(2, 9), rng.int(2, 9)];
-      if (!hard)
-        return ask(
-          rng,
-          `What is the value of $${a}\\sin^2\\theta + ${a}\\cos^2\\theta + ${b}$?`,
-          `$${a}\\sin^2\\theta + ${a}\\cos^2\\theta + ${b}$ 的值是多少？`,
-          a + b,
-          [b, a, 2 * a + b, a * b],
-          `Factor out $${a}$, and use $\\sin^2\\theta + \\cos^2\\theta = 1$.`,
-          `提出 $${a}$，并用 $\\sin^2\\theta + \\cos^2\\theta = 1$。`,
-        );
+    return ask(
+      rng,
+      `The terminal side of an angle $\\theta$ in standard position passes through $(${x}, ${y})$. What is $\\tan\\theta$?`,
+      `标准位置上的角 $\\theta$ 的终边经过 $(${x}, ${y})$。$\\tan\\theta$ 是多少？`,
+      Q.of(sy * q, sx * p),
+      [Q.of(sx * p, sy * q), Q.of(-sy * q, sx * p), Q.of(sy * q, c), Q.of(sx * p, c)],
+      `$\\tan\\theta = \\frac{y}{x}$.`,
+      `$\\tan\\theta = \\frac{y}{x}$。`,
+    );
+  }),
+  spec("Using the Pythagorean Identity", "运用毕达哥拉斯恒等式", ["using-the-pythagorean-identity-in-the-first-quadrant"], (rng, hard) => {
+    const [p, q, c] = rng.pick(triples);
+    const [a, b] = [rng.int(2, 9), rng.int(2, 9)];
+    if (!hard)
       return ask(
         rng,
-        `If $\\sin^2\\theta = \\frac{${p * p}}{${c * c}}$ and $${a}\\cos^2\\theta = x$, what is the value of $x$?`,
-        `若 $\\sin^2\\theta = \\frac{${p * p}}{${c * c}}$，且 $${a}\\cos^2\\theta = x$，$x$ 的值是多少？`,
-        Q.of(a * q * q, c * c),
-        [Q.of(a * p * p, c * c), Q.of(q * q, c * c), Q.of(a * q, c), a],
-        `$\\cos^2\\theta = 1 - \\frac{${p * p}}{${c * c}} = \\frac{${q * q}}{${c * c}}$.`,
-        `$\\cos^2\\theta = 1 - \\frac{${p * p}}{${c * c}} = \\frac{${q * q}}{${c * c}}$。`,
+        `What is the value of $${a}\\sin^2\\theta + ${a}\\cos^2\\theta + ${b}$?`,
+        `$${a}\\sin^2\\theta + ${a}\\cos^2\\theta + ${b}$ 的值是多少？`,
+        a + b,
+        [b, a, 2 * a + b, a * b],
+        `Factor out $${a}$, and use $\\sin^2\\theta + \\cos^2\\theta = 1$.`,
+        `提出 $${a}$，并用 $\\sin^2\\theta + \\cos^2\\theta = 1$。`,
       );
-    },
-  ),
-  trigTips("Finding Cosine From Sine", "由正弦求余弦", ["extending-the-pythagorean-identity-to-all-quadrants"], (rng, hard) => {
+    return ask(
+      rng,
+      `If $\\sin^2\\theta = \\frac{${p * p}}{${c * c}}$ and $${a}\\cos^2\\theta = x$, what is the value of $x$?`,
+      `若 $\\sin^2\\theta = \\frac{${p * p}}{${c * c}}$，且 $${a}\\cos^2\\theta = x$，$x$ 的值是多少？`,
+      Q.of(a * q * q, c * c),
+      [Q.of(a * p * p, c * c), Q.of(q * q, c * c), Q.of(a * q, c), a],
+      `$\\cos^2\\theta = 1 - \\frac{${p * p}}{${c * c}} = \\frac{${q * q}}{${c * c}}$.`,
+      `$\\cos^2\\theta = 1 - \\frac{${p * p}}{${c * c}} = \\frac{${q * q}}{${c * c}}$。`,
+    );
+  }),
+  spec("Finding Cosine From Sine", "由正弦求余弦", ["extending-the-pythagorean-identity-to-all-quadrants"], (rng, hard) => {
     const [p, q, c] = rng.pick(triples);
     const k = rng.int(1, 5);
     if (!hard)
@@ -950,13 +874,13 @@ export const actExamFunctions: ExamSpec[] = [
       `大小为 $\\frac{${q}}{${c}}$，第二象限余弦为负。`,
     );
   }),
-  trigTips(
+  spec(
     "Applying Quotient and Angle Identities",
     "应用商数恒等式和角恒等式",
     ["simplifying-expressions-using-basic-trigonometric-identities"],
     (rng, hard) => {
       const [p, q, c] = rng.pick(triples);
-      const k = rng.int(1, 5);
+      const k = rng.int(2, 5);
       if (!hard)
         return ask(
           rng,
@@ -978,7 +902,7 @@ export const actExamFunctions: ExamSpec[] = [
       );
     },
   ),
-  trigTips(
+  spec(
     "Identifying Equivalent Trig Representations",
     "判断等价的三角表示",
     ["simplifying-trigonometric-expressions-using-cofunction-identities"],
@@ -1008,7 +932,7 @@ export const actExamFunctions: ExamSpec[] = [
       );
     },
   ),
-  trigTips(
+  spec(
     "Finding Amplitude, Period, and Range",
     "求振幅、周期和值域",
     ["properties-of-transformed-sine-and-cosine-functions"],
@@ -1040,7 +964,7 @@ export const actExamFunctions: ExamSpec[] = [
       );
     },
   ),
-  trigTips(
+  spec(
     "Matching and Transforming Trig Graphs",
     "匹配和变换三角函数图像",
     ["combining-graph-transformations-of-sine-and-cosine"],
@@ -1081,7 +1005,7 @@ export const actExamFunctions: ExamSpec[] = [
       );
     },
   ),
-  lawTips("Finding Triangle Area Using Sine", "用正弦求三角形面积", ["the-area-of-a-general-triangle"], (rng, hard) => {
+  spec("Finding Triangle Area Using Sine", "用正弦求三角形面积", ["the-area-of-a-general-triangle"], (rng, hard) => {
     const [a, b, n] = [rng.int(1, 8) * 4, rng.int(2, 15), rng.int(1, 9)];
     if (!hard)
       return ask(
@@ -1105,7 +1029,7 @@ export const actExamFunctions: ExamSpec[] = [
       polyFigure(sasPts(a, b, 55), { a: ["θ", null, null], s: [`${a}`, null, `${b}`] }),
     );
   }),
-  lawTips("Using the Law of Sines", "运用正弦定理", ["the-law-of-sines"], (rng, hard) => {
+  spec("Using the Law of Sines", "运用正弦定理", ["the-law-of-sines"], (rng, hard) => {
     const [a, A, C, u] = [rng.int(5, 30), rng.int(20, 70), rng.int(20, 70), rng.int(1, 8)];
     const C2 = A === C ? C + 5 : C;
     if (!hard)
@@ -1133,7 +1057,7 @@ export const actExamFunctions: ExamSpec[] = [
       `$b = a\\cdot\\frac{\\sin B}{\\sin A} = ${a * u}\\cdot\\frac{${u + 1}}{${u}}$。`,
     );
   }),
-  lawTips("Using the Law of Cosines", "运用余弦定理", ["the-law-of-cosines"], (rng, hard) => {
+  spec("Using the Law of Cosines", "运用余弦定理", ["the-law-of-cosines"], (rng, hard) => {
     const [a, b, C] = [rng.int(3, 15), rng.int(3, 15), rng.pick([40, 50, 70, 80, 100, 110])];
     if (!hard)
       return ask(
@@ -1160,7 +1084,7 @@ export const actExamFunctions: ExamSpec[] = [
       `$${a * a} + ${b * b} - 2(${a})(${b})\\left(\\frac{1}{2}\\right)$。`,
     );
   }),
-  lawTips(
+  spec(
     "Solving Trig Equations and Inequalities",
     "解三角方程和不等式",
     ["elementary-trigonometric-equations-containing-sine"],

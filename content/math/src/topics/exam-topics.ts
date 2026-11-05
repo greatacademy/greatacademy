@@ -8,6 +8,8 @@ import { actExamGeometry } from "./act-exam-geometry.ts";
 import { actExamNumbers } from "./act-exam-numbers.ts";
 import { actExamShared } from "./act-exam-shared.ts";
 import { actExamStatistics } from "./act-exam-statistics.ts";
+import { actExamLessons } from "./exam-lessons-act.ts";
+import { satExamLessons } from "./exam-lessons-sat.ts";
 import { satExamAdvanced1 } from "./sat-exam-advanced-1.ts";
 import { satExamAdvanced2 } from "./sat-exam-advanced-2.ts";
 import { satExamAdvanced3 } from "./sat-exam-advanced-3.ts";
@@ -34,7 +36,7 @@ export const examTopics: TopicDef[] = [
     ...satExamData2,
     ...satExamGeometry1,
     ...satExamGeometry2,
-  ].map((spec) => examTopic("sat", spec)),
+  ].map((spec) => examTopic("sat", spec, satExamLessons)),
   ...[
     ...actExamAlgebra,
     ...actExamFoundations,
@@ -43,5 +45,5 @@ export const examTopics: TopicDef[] = [
     ...actExamNumbers,
     ...actExamShared,
     ...actExamStatistics,
-  ].map((spec) => examTopic("act", spec)),
+  ].map((spec) => examTopic("act", spec, actExamLessons)),
 ];

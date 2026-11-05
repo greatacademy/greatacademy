@@ -1,71 +1,10 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import type { ExamSpec } from "../exam.ts";
-import { ask, mod, sketchFigure } from "../exam.ts";
+import { ask, lowest, sketchFigure, spec } from "../exam.ts";
 import { pieFigure } from "../exam-figures.ts";
 
 // ACT Math Prep, Statistics and Probability: means, tables and graphs, probability, expected value, counting and estimation.
-
-const meanTips = mod(
-  t(
-    "A weighted mean multiplies each value by how often it occurs or by its weight, adds the products, and divides by the total of the weights rather than by the number of values.",
-    "加权平均数把每个值乘它的次数或权重，把积相加，再除以权重之和，而不是除以数值的个数。",
-  ),
-  t(
-    "Work with totals when groups are combined: the total of a group is its mean times its size, and the combined mean is the sum of the totals divided by the sum of the sizes.",
-    "合并各组时要用总和：一组的总和等于平均数乘人数，合并后的平均数等于总和之和除以人数之和。",
-  ),
-);
-const graphTips = mod(
-  t(
-    "Read the labels and the row and column first. In a two-way table, each row and column has a total, and the question tells you which total is the denominator of a fraction.",
-    "先读标签以及行和列。在双向表中，每行每列都有总数，题目会告诉你哪个总数是分母。",
-  ),
-  t(
-    "A circle graph shows parts of a whole, so multiply the total by the percent to get a count. For a bar graph, read each height from the scale, then compare or combine them.",
-    "扇形图表示部分与整体，用总数乘百分比得到数量。条形图要按刻度读出每个高度，再比较或合并。",
-  ),
-);
-const probTips = mod(
-  t(
-    "A probability is the number of favorable outcomes divided by the number of equally likely outcomes. List or count both before dividing, and check that the total is correct.",
-    "概率等于有利结果数除以等可能结果总数。相除之前先列出或数清两者，并检查总数是否正确。",
-  ),
-  t(
-    "For events in sequence, multiply the probabilities, and change the counts if the items are not replaced. For a union, add the two probabilities and subtract the overlap.",
-    "依次发生的事件要把概率相乘，不放回时要改变数量。求并集时把两个概率相加，再减去重叠部分。",
-  ),
-);
-const expectTips = mod(
-  t(
-    "The expected value is the sum of each outcome times its probability. It is a long-run average, so it does not have to be one of the possible outcomes.",
-    "期望值是每个结果乘其概率之和。它是长期平均，所以不一定是可能出现的结果之一。",
-  ),
-  t(
-    "Include every outcome, even those with a loss or a value of zero, and check that the probabilities add to $1$. Then compare the expected gain with any cost to play.",
-    "要包括每个结果，包括亏损或为零的结果，并检查概率之和为 $1$。再把期望收益与参与成本比较。",
-  ),
-);
-const countTips = mod(
-  t(
-    "When choices are independent, multiply the number of options at each step. When order matters and items cannot repeat, the count of options falls by one at each step.",
-    "各步选择互相独立时，把每一步的选项数相乘。顺序重要且不能重复时，选项数每步减一。",
-  ),
-  t(
-    "When order does not matter, divide the ordered count by the number of ways to arrange the chosen items. For overlapping sets, add the sizes and subtract the overlap.",
-    "顺序不重要时，用有序计数除以所选对象的排列数。对重叠的集合，把大小相加再减去重叠。",
-  ),
-);
-const sampleTips = mod(
-  t(
-    "A random sample's rate or mean estimates the whole population's, so scale it up by the size of the population. Larger random samples give smaller margins of error.",
-    "随机样本的比率或平均数可以估计总体，所以按总体大小放大。随机样本越大，误差范围越小。",
-  ),
-  t(
-    "In a normal distribution, about $68\\%$ of values lie within one standard deviation of the mean, $95\\%$ within two and $99.7\\%$ within three, and the curve is symmetric.",
-    "在正态分布中，约 $68\\%$ 的值在平均数一个标准差以内，$95\\%$ 在两个以内，$99.7\\%$ 在三个以内，且曲线对称。",
-  ),
-);
 
 function barFigure(labels: readonly string[], values: readonly number[], top: number, alt: ReturnType<typeof t>) {
   const x0 = 50;
@@ -106,7 +45,7 @@ function tableText(rowA: string, rowB: string, colA: string, colB: string, total
 
 /** actExamStatistics are the exam-style questions of the ACT Statistics and Probability unit that have no SAT counterpart. */
 export const actExamStatistics: ExamSpec[] = [
-  meanTips("Finding a Weighted Mean", "求加权平均数", ["calculating-means-from-frequency-tables"], (rng, hard) => {
+  spec("Finding a Weighted Mean", "求加权平均数", ["calculating-means-from-frequency-tables"], (rng, hard) => {
     const [a, b, n, m] = [rng.int(60, 80), rng.int(81, 99), rng.int(2, 8), rng.int(2, 8)];
     const [w1, w2] = [rng.int(1, 4) * 10, rng.int(1, 4) * 10];
     if (!hard)
@@ -134,7 +73,7 @@ export const actExamStatistics: ExamSpec[] = [
       `$\\frac{${w1}(${a}) + ${w2}(${b})}{${w1 + w2}}$。`,
     );
   }),
-  graphTips("Reading Two-Way Tables", "读双向表", ["two-way-frequency-tables", "joint-frequency-tables"], (rng, hard) => {
+  spec("Reading Two-Way Tables", "读双向表", ["two-way-frequency-tables", "joint-frequency-tables"], (rng, hard) => {
     const [a, b, c, d] = [rng.int(8, 40), rng.int(8, 40), rng.int(8, 40), rng.int(8, 40)];
     const table = `$$${tableText("Grade 9", "Grade 10", "Band", "Choir", "Total", a, b, c, d)}$$`;
     const tableZh = `$$${tableText("9 年级", "10 年级", "乐队", "合唱", "合计", a, b, c, d)}$$`;
@@ -158,7 +97,7 @@ export const actExamStatistics: ExamSpec[] = [
       `分母是合唱的总数 $${b + d}$。`,
     );
   }),
-  graphTips("Reading Bar Graphs", "读条形图", ["bar-graphs"], (rng, hard) => {
+  spec("Reading Bar Graphs", "读条形图", ["bar-graphs"], (rng, hard) => {
     const v = [rng.int(2, 18) * 5, rng.int(2, 18) * 5, rng.int(2, 18) * 5, rng.int(2, 18) * 5] as const;
     const [a, b, c, d] = v;
     const fig = barFigure(
@@ -197,7 +136,7 @@ export const actExamStatistics: ExamSpec[] = [
       fig,
     );
   }),
-  graphTips("Working With Circle Graphs", "扇形图", ["circle-graphs"], (rng, hard) => {
+  spec("Working With Circle Graphs", "扇形图", ["circle-graphs"], (rng, hard) => {
     const [p, q, n] = [rng.int(2, 8) * 5, rng.int(2, 8) * 5, rng.int(2, 20) * 20];
     if (!hard)
       return ask(
@@ -221,7 +160,7 @@ export const actExamStatistics: ExamSpec[] = [
       pieFigure(p + q),
     );
   }),
-  probTips("Solving for a Count Given a Probability", "由概率求数量", ["adjusting-outcomes-to-a-target-probability"], (rng, hard) => {
+  spec("Solving for a Count Given a Probability", "由概率求数量", ["adjusting-outcomes-to-a-target-probability"], (rng, hard) => {
     const [r, k, b] = [rng.int(2, 15), rng.int(2, 6), rng.int(2, 9)];
     if (!hard)
       return ask(
@@ -243,7 +182,7 @@ export const actExamStatistics: ExamSpec[] = [
       `应剩 $${r * (k - 1)}$ 颗蓝弹珠。`,
     );
   }),
-  probTips("Working With Event Relationships", "事件之间的关系", ["venn-diagrams-in-probability"], (rng, hard) => {
+  spec("Working With Event Relationships", "事件之间的关系", ["venn-diagrams-in-probability"], (rng, hard) => {
     const [p, q] = [rng.int(5, 45), rng.int(5, 45)];
     if (!hard)
       return ask(
@@ -265,7 +204,7 @@ export const actExamStatistics: ExamSpec[] = [
       `$A$ 或 $B$ 发生的概率是 $${p + q}\\%$，其余就是都不发生。`,
     );
   }),
-  probTips("Finding a Union With Overlap", "求有重叠的并集", ["the-inclusion-exclusion-principle"], (rng, hard) => {
+  spec("Finding a Union With Overlap", "求有重叠的并集", ["the-inclusion-exclusion-principle"], (rng, hard) => {
     const [a, b, o, n] = [rng.int(10, 30), rng.int(10, 30), rng.int(2, 9), rng.int(70, 100)];
     if (!hard)
       return ask(
@@ -287,8 +226,8 @@ export const actExamStatistics: ExamSpec[] = [
       `$${a + b - o}$ 人至少养一种，剩下 $${n - a - b + o}$ 人。`,
     );
   }),
-  probTips("Applying a Conditional Probability", "应用条件概率", ["the-multiplication-law-for-conditional-probability"], (rng, hard) => {
-    const [a, b, c, n] = [rng.int(2, 9), rng.int(10, 30), rng.int(2, 9), rng.int(2, 9)];
+  spec("Applying a Conditional Probability", "应用条件概率", ["the-multiplication-law-for-conditional-probability"], (rng, hard) => {
+    const [a, b, c, n] = [rng.int(2, 9), rng.int(10, 30), rng.int(2, 9), lowest(rng.int(1, 9), 10)];
     if (!hard)
       return ask(
         rng,
@@ -309,8 +248,9 @@ export const actExamStatistics: ExamSpec[] = [
       `$P(A \\text{ 且 } B) = P(A)P(B \\mid A)$。`,
     );
   }),
-  probTips("Multiplying Independent Probabilities", "独立事件的概率相乘", ["independent-events"], (rng, hard) => {
-    const [a, b, k] = [rng.int(1, 8), rng.int(1, 8), rng.int(2, 5)];
+  spec("Multiplying Independent Probabilities", "独立事件的概率相乘", ["independent-events"], (rng, hard) => {
+    const [a0, b0, k] = [rng.int(1, 8), rng.int(1, 8), rng.int(2, 5)];
+    const [a, b] = [lowest(a0, 9), lowest(b0, 9)];
     const p = Q.of(a, 9);
     const q = Q.of(b, 9);
     if (!hard)
@@ -333,7 +273,7 @@ export const actExamStatistics: ExamSpec[] = [
       `$\\left(\\frac{1}{2}\\right)^{${k + 2}} \\cdot \\frac{${a}}{9}$。`,
     );
   }),
-  probTips("Finding a Without-Replacement Probability", "求不放回的概率", ["tree-diagrams-for-dependent-events"], (rng, hard) => {
+  spec("Finding a Without-Replacement Probability", "求不放回的概率", ["tree-diagrams-for-dependent-events"], (rng, hard) => {
     const [r, b] = [rng.int(3, 12), rng.int(3, 12)];
     const n = r + b;
     if (!hard)
@@ -356,7 +296,7 @@ export const actExamStatistics: ExamSpec[] = [
       `$\\frac{${r}}{${n}} \\cdot \\frac{${b}}{${n - 1}}$。`,
     );
   }),
-  probTips(
+  spec(
     "Problem-Solving With Dependent Selections",
     "解决相关选择问题",
     ["tree-diagrams-for-dependent-events-applications"],
@@ -384,7 +324,7 @@ export const actExamStatistics: ExamSpec[] = [
       );
     },
   ),
-  probTips("Finding a Probability of an Arrangement", "求排列的概率", ["computing-probabilities-using-combinatorics"], (rng, hard) => {
+  spec("Finding a Probability of an Arrangement", "求排列的概率", ["computing-probabilities-using-combinatorics"], (rng, hard) => {
     const n = rng.int(3, 12);
     const place = rng.int(1, n);
     const [en, zh] = rng.pick([
@@ -423,7 +363,7 @@ export const actExamStatistics: ExamSpec[] = [
       `把两者看成一块：$${n}!$ 种排法中有 $${n - 1}!$ 种符合。`,
     );
   }),
-  probTips(
+  spec(
     "Finding a Probability From a Sample Space",
     "由样本空间求概率",
     ["sample-spaces-and-events-in-probability", "tree-diagrams-for-independent-events"],
@@ -453,7 +393,7 @@ export const actExamStatistics: ExamSpec[] = [
       );
     },
   ),
-  probTips("Finding a Geometric Probability", "求几何概率", ["geometric-probability"], (rng, hard) => {
+  spec("Finding a Geometric Probability", "求几何概率", ["geometric-probability"], (rng, hard) => {
     const [s, r, l, w] = [rng.int(2, 15), rng.int(1, 5), rng.int(4, 20), rng.int(1, 3)];
     if (!hard)
       return ask(
@@ -475,7 +415,7 @@ export const actExamStatistics: ExamSpec[] = [
       `有利部分的长度是 $${2 * w}$。`,
     );
   }),
-  expectTips("Computing an Expected Value", "计算期望值", ["expected-values-of-discrete-random-variables"], (rng, hard) => {
+  spec("Computing an Expected Value", "计算期望值", ["expected-values-of-discrete-random-variables"], (rng, hard) => {
     const [a, b, c] = [rng.int(1, 20), rng.int(1, 20), rng.int(21, 40)];
     const [p, q] = [rng.int(1, 4) * 10, rng.int(1, 3) * 10];
     const r = 100 - p - q;
@@ -499,7 +439,7 @@ export const actExamStatistics: ExamSpec[] = [
       `每个值乘它的概率再相加。`,
     );
   }),
-  expectTips("Problem-Solving With Expected Value", "解决期望值问题", ["expected-values-of-discrete-random-variables"], (rng, hard) => {
+  spec("Problem-Solving With Expected Value", "解决期望值问题", ["expected-values-of-discrete-random-variables"], (rng, hard) => {
     const [n, prize, cost, w] = [rng.int(2, 10) * 10, rng.int(5, 40) * 5, rng.int(2, 9), rng.int(1, 5)];
     if (!hard)
       return ask(
@@ -521,7 +461,7 @@ export const actExamStatistics: ExamSpec[] = [
       `从期望支付 $\\frac{${prize * w}}{${n}}$ 中减去成本。`,
     );
   }),
-  countTips("Counting Independent Choices", "计算独立选择数", ["counting-trees"], (rng, hard) => {
+  spec("Counting Independent Choices", "计算独立选择数", ["counting-trees"], (rng, hard) => {
     const [a, b, c, d] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 9), rng.int(2, 5)];
     const out = Math.min(d, a - 1);
     if (!hard)
@@ -540,11 +480,11 @@ export const actExamStatistics: ExamSpec[] = [
       `菜单有 $${a}$ 种汤、$${b}$ 种主菜、$${c}$ 种甜点，其中 $${out}$ 种汤今天没有。各选一种的搭配有多少种？`,
       (a - out) * b * c,
       [a * b * c, (a - out) * b, a - out + b + c, a * b * c - out],
-      `Only $${a - out}$ soups remain.`,
-      `只剩 $${a - out}$ 种汤。`,
+      `Only $${a - out}$ of the soups are available: $${a - out} \\cdot ${b} \\cdot ${c} = ${(a - out) * b * c}$.`,
+      `只有 $${a - out}$ 种汤可选：$${a - out} \\cdot ${b} \\cdot ${c} = ${(a - out) * b * c}$。`,
     );
   }),
-  countTips("Counting Character Codes", "计算字符编码数", ["permutations-with-repetition"], (rng, hard) => {
+  spec("Counting Character Codes", "计算字符编码数", ["permutations-with-repetition"], (rng, hard) => {
     const [l, d, a, b] = [rng.int(1, 3), rng.int(1, 4), rng.int(3, 9), rng.int(3, 9)];
     if (!hard)
       return ask(
@@ -566,7 +506,7 @@ export const actExamStatistics: ExamSpec[] = [
       `第二个数字少一个选择。`,
     );
   }),
-  countTips("Counting Permutations", "计算排列数", ["permutations"], (rng, hard) => {
+  spec("Counting Permutations", "计算排列数", ["permutations"], (rng, hard) => {
     const [n, k, m] = [rng.int(5, 20), rng.int(2, 3), rng.int(3, 6)];
     const nPk = k === 2 ? n * (n - 1) : n * (n - 1) * (n - 2);
     if (!hard)
@@ -596,7 +536,7 @@ export const actExamStatistics: ExamSpec[] = [
       `两类物品各自在自己的区域内排列：$${m}! \\cdot ${k}!$。`,
     );
   }),
-  countTips("Counting Combinations", "计算组合数", ["combinations"], (rng, hard) => {
+  spec("Counting Combinations", "计算组合数", ["combinations"], (rng, hard) => {
     const [n, m, all] = [rng.int(5, 14), rng.int(4, 10), rng.int(6, 35)];
     const c2 = (x: number) => (x * (x - 1)) / 2;
     if (!hard)
@@ -619,7 +559,7 @@ export const actExamStatistics: ExamSpec[] = [
       `$\\binom{${n}}{2}\\binom{${m}}{2} = ${c2(n)} \\cdot ${c2(m)}$。`,
     );
   }),
-  countTips("Counting Overlapping Sets", "计算重叠的集合", ["the-union-of-sets", "the-inclusion-exclusion-principle"], (rng, hard) => {
+  spec("Counting Overlapping Sets", "计算重叠的集合", ["the-union-of-sets", "the-inclusion-exclusion-principle"], (rng, hard) => {
     const [a, b, o, n] = [rng.int(12, 30), rng.int(12, 30), rng.int(2, 10), rng.int(5, 20)];
     if (!hard)
       return ask(
@@ -642,7 +582,7 @@ export const actExamStatistics: ExamSpec[] = [
       `$${a} + ${b} - x + ${n} = ${total}$。`,
     );
   }),
-  countTips("Identifying Possible Set Sizes", "判断可能的集合大小", ["the-union-of-sets"], (rng, hard) => {
+  spec("Identifying Possible Set Sizes", "判断可能的集合大小", ["the-union-of-sets"], (rng, hard) => {
     const [a, b] = [rng.int(5, 15), rng.int(16, 30)];
     if (!hard)
       return ask(
@@ -664,7 +604,7 @@ export const actExamStatistics: ExamSpec[] = [
       `当 $A$ 在 $B$ 内时并集最小。`,
     );
   }),
-  sampleTips("Estimating a Population Mean", "估计总体平均数", ["estimation-from-samples"], (rng, hard) => {
+  spec("Estimating a Population Mean", "估计总体平均数", ["estimation-from-samples"], (rng, hard) => {
     const [n, k, m, e] = [rng.int(2, 10) * 50, rng.int(1, 9), rng.int(2, 12), rng.int(1, 5)];
     if (!hard)
       return ask(
@@ -691,7 +631,7 @@ export const actExamStatistics: ExamSpec[] = [
       `在平均数两侧各加减一个误差范围。`,
     );
   }),
-  sampleTips("Applying the Empirical Rule", "应用经验法则", ["the-empirical-rule-for-the-normal-distribution"], (rng, hard) => {
+  spec("Applying the Empirical Rule", "应用经验法则", ["the-empirical-rule-for-the-normal-distribution"], (rng, hard) => {
     const [mu, s, n] = [rng.int(5, 20) * 5, rng.int(2, 10), rng.int(1, 10) * 400];
     if (!hard)
       return ask(

@@ -424,7 +424,7 @@ export const actOwnGeometry: Record<string, ExamSpec["make"]> = {
   },
   "Finding Trigonometric Ratios": (rng, hard) => {
     const [p, q, c] = rng.pick(triples);
-    const k = rng.int(1, 4);
+    const k = rng.int(2, 5);
     const [opp, adj] = rng.int(0, 1) === 1 ? [p, q] : [q, p];
     if (!hard)
       return ask(
@@ -860,6 +860,16 @@ export const actOwnGeometry: Record<string, ExamSpec["make"]> = {
         [pi(r * r * h), pi((4 * r * r * h) / 3), pi((2 * r * r * h) / 3)],
         `A cone is one third of the cylinder with the same base and height: $\\frac{1}{3}\\pi(${r})^2(${h}) = ${pi((r * r * h) / 3)}$.`,
         `圆锥是同底同高圆柱的三分之一：$\\frac{1}{3}\\pi(${r})^2(${h}) = ${pi((r * r * h) / 3)}$。`,
+      );
+    if (s % 2 === 0)
+      return ask(
+        rng,
+        `A sphere has radius $${r}$. What is its volume?`,
+        `一个球的半径为 $${r}$。它的体积是多少？`,
+        `\\frac{${4 * r ** 3}\\pi}{3}`,
+        [`\\frac{${r ** 3}\\pi}{3}`, pi(4 * r * r), pi(4 * r ** 3)],
+        `$V = \\frac{4}{3}\\pi r^3 = \\frac{4}{3}\\pi(${r})^3 = \\frac{${4 * r ** 3}\\pi}{3}$.`,
+        `$V = \\frac{4}{3}\\pi r^3 = \\frac{4}{3}\\pi(${r})^3 = \\frac{${4 * r ** 3}\\pi}{3}$。`,
       );
     return ask(
       rng,

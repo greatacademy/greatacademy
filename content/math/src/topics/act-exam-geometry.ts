@@ -1,7 +1,7 @@
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 import type { ExamSpec } from "../exam.ts";
-import { ask, askExact, mod, sg, sketchFigure, words } from "../exam.ts";
+import { ask, askExact, sg, sketchFigure, spec, words } from "../exam.ts";
 import {
   diameterFigure,
   diameterTriangleFigure,
@@ -22,109 +22,9 @@ import {
   twoCirclesFigure,
   twoSquaresFigure,
 } from "../exam-figures.ts";
+import { article } from "../problems.ts";
 
 // ACT Math Prep, Geometry: lines and angles, polygons, transformations, right triangles, area, circles, the coordinate plane, solids and conics.
-
-const lineTips = mod(
-  t(
-    "Lengths along a line add, and a midpoint or a bisector splits a length or an angle into two equal parts. Angles on a line add to $180^\\circ$, and vertical angles are equal.",
-    "直线上的长度可以相加，中点或平分线把长度或角分成相等的两部分。直线上的角和为 $180^\\circ$，对顶角相等。",
-  ),
-  t(
-    "Name the unknown part, write one equation from the fact the figure gives you, and then find what the question asks for, which is often not the variable itself.",
-    "设未知的部分，用图中给出的事实列一个方程，再求题目要的量，它往往不是变量本身。",
-  ),
-);
-const triangleTips = mod(
-  t(
-    "The longest side lies opposite the largest angle. Any two sides of a triangle must add to more than the third side, and the three angles add to $180^\\circ$.",
-    "最长边对着最大角。三角形任意两边之和大于第三边，三个角的和为 $180^\\circ$。",
-  ),
-  t(
-    "Sort the three angles or sides before you compare them. To find the possible third side, it must lie strictly between the difference and the sum of the other two sides.",
-    "比较前先把三个角或三条边排好序。第三边必须严格介于另两边之差与之和之间。",
-  ),
-);
-const polygonTips = mod(
-  t(
-    "The interior angles of an $n$-sided polygon add to $(n - 2)180^\\circ$, and a regular polygon has equal sides and equal angles. Opposite angles of a parallelogram are equal.",
-    "$n$ 边形内角和为 $(n - 2)180^\\circ$，正多边形各边相等、各角相等。平行四边形对角相等。",
-  ),
-  t(
-    "The exterior angles of any polygon add to $360^\\circ$. Consecutive angles of a parallelogram add to $180^\\circ$, and its opposite sides are equal in length.",
-    "任何多边形的外角和为 $360^\\circ$。平行四边形相邻两角和为 $180^\\circ$，对边相等。",
-  ),
-);
-const moveTips = mod(
-  t(
-    "A translation adds the same amounts to every point. Reflecting across the $x$-axis negates $y$, and reflecting across the $y$-axis negates $x$. Rigid motions keep lengths and angles.",
-    "平移给每个点加相同的量。关于 $x$ 轴翻折使 $y$ 变号，关于 $y$ 轴翻折使 $x$ 变号。刚体变换保持长度和角度。",
-  ),
-  t(
-    "A dilation with scale factor $k$ multiplies lengths by $k$ and areas by $k^2$. Lines parallel to a side of a triangle cut the other two sides in the same ratio.",
-    "比例因子为 $k$ 的位似把长度乘 $k$，面积乘 $k^2$。平行于三角形一边的直线按相同比例截另外两边。",
-  ),
-);
-const pythTips = mod(
-  t(
-    "Find the right triangle in the figure, then use $a^2 + b^2 = c^2$ with $c$ opposite the right angle. A diagonal of a rectangle is the hypotenuse of a right triangle.",
-    "在图中找出直角三角形，再用 $a^2 + b^2 = c^2$，$c$ 对着直角。长方形的对角线是直角三角形的斜边。",
-  ),
-  t(
-    "An altitude of an isosceles triangle splits its base in half and creates two right triangles. In a right triangle $\\sin = \\frac{\\text{opposite}}{\\text{hypotenuse}}$, and an inverse ratio gives the angle.",
-    "等腰三角形的高平分底边，分出两个直角三角形。直角三角形中 $\\sin = \\frac{\\text{对边}}{\\text{斜边}}$，反三角比给出角度。",
-  ),
-);
-const areaTips = mod(
-  t(
-    "Split a complicated figure into rectangles and triangles, or subtract a missing piece from a larger shape. Area uses perpendicular lengths and is given in square units.",
-    "把复杂图形分成长方形和三角形，或从大图形中减去缺少的部分。面积用互相垂直的长度计算，单位是平方单位。",
-  ),
-  t(
-    "If you are given a perimeter or an area, write the formula as an equation and solve for the unknown length. A trapezoid has area $\\frac{1}{2}(b_1 + b_2)h$.",
-    "已知周长或面积时，把公式写成方程，解出未知长度。梯形的面积是 $\\frac{1}{2}(b_1 + b_2)h$。",
-  ),
-);
-const circleTips = mod(
-  t(
-    "Circumference is $2\\pi r$ and area is $\\pi r^2$. Doubling a radius doubles the circumference but multiplies the area by four, because area depends on the square of the radius.",
-    "周长是 $2\\pi r$，面积是 $\\pi r^2$。半径加倍时周长加倍，而面积变为四倍，因为面积取决于半径的平方。",
-  ),
-  t(
-    "An arc is the fraction $\\frac{\\theta}{360^\\circ}$ of the whole circle. An inscribed angle is half of the central angle on the same arc, and a diameter subtends a right angle.",
-    "弧占整圆的比例是 $\\frac{\\theta}{360^\\circ}$。圆周角是同弧所对圆心角的一半，直径所对的圆周角是直角。",
-  ),
-);
-const coordTips = mod(
-  t(
-    "The midpoint averages the coordinates. The distance formula is the Pythagorean theorem applied to the horizontal and vertical differences, and slope is the rise divided by the run.",
-    "中点是坐标的平均数。距离公式就是对水平差和竖直差用毕达哥拉斯定理，斜率是竖直变化除以水平变化。",
-  ),
-  t(
-    "To find a point partway along a segment, add that fraction of each coordinate difference to the start. Put an equation into the form $y = mx + b$ to read the slope.",
-    "求线段上按比例分布的点时，给起点加上该比例的坐标差。把方程写成 $y = mx + b$ 就能读出斜率。",
-  ),
-);
-const solidTips = mod(
-  t(
-    "The volume of a prism or a cylinder is its base area times its height. If you know the volume, divide by the known dimensions to find the missing one.",
-    "棱柱或圆柱的体积是底面积乘高。已知体积时，除以已知的尺寸求缺少的尺寸。",
-  ),
-  t(
-    "To convert a volume, cube the length conversion: one cubic foot is $12^3$ cubic inches. When packing, count how many whole solids fit along each edge, and then multiply.",
-    "换算体积时要把长度换算立方：$1$ 立方英尺等于 $12^3$ 立方英寸。装箱时，数每条棱上能放多少个完整物体，再相乘。",
-  ),
-);
-const conicTips = mod(
-  t(
-    "An ellipse $\\frac{(x - h)^2}{a^2} + \\frac{(y - k)^2}{b^2} = 1$ has center $(h, k)$ and extends $a$ horizontally and $b$ vertically from the center. A sum of two squares defines it.",
-    "椭圆 $\\frac{(x - h)^2}{a^2} + \\frac{(y - k)^2}{b^2} = 1$ 的中心是 $(h, k)$，从中心水平伸展 $a$，竖直伸展 $b$。它由两个平方之和定义。",
-  ),
-  t(
-    "A hyperbola has a minus sign between its squares, and its vertices lie along the axis of the positive term. To intersect a conic with a line, substitute the line into the conic.",
-    "双曲线的两个平方之间是减号，顶点在正项所对应的轴上。求圆锥曲线与直线的交点时，把直线方程代入圆锥曲线方程。",
-  ),
-);
 
 const triples = [
   [3, 4, 5],
@@ -189,7 +89,7 @@ function roomFig(a: number, b: number, c: number, d: number) {
 
 /** actExamGeometry are the exam-style questions of the ACT Geometry unit that have no SAT counterpart. */
 export const actExamGeometry: ExamSpec[] = [
-  lineTips("Finding Lengths on a Line", "求直线上的长度", ["the-segment-addition-postulate"], (rng, hard) => {
+  spec("Finding Lengths on a Line", "求直线上的长度", ["the-segment-addition-postulate"], (rng, hard) => {
     const [ab, bc, k] = [rng.int(3, 30), rng.int(3, 30), rng.int(2, 5)];
     const fig = linePoints("A", "B", "C", t(`Points $A$, $B$ and $C$ lie on a line in that order.`, `点 $A$、$B$、$C$ 依次在一条直线上。`));
     if (!hard)
@@ -214,7 +114,7 @@ export const actExamGeometry: ExamSpec[] = [
       fig,
     );
   }),
-  lineTips(
+  spec(
     "Finding Reflex and Divided Angles",
     "求优角和被分割的角",
     ["acute-obtuse-and-reflex-angles", "solving-problems-with-angles"],
@@ -241,7 +141,7 @@ export const actExamGeometry: ExamSpec[] = [
       );
     },
   ),
-  lineTips("Problem-Solving With Intersecting Lines", "解决相交直线问题", ["vertical-angles"], (rng, hard) => {
+  spec("Problem-Solving With Intersecting Lines", "解决相交直线问题", ["vertical-angles"], (rng, hard) => {
     const [a0, x, k] = [rng.int(25, 155), rng.int(10, 40), rng.int(2, 4)];
     const a = a0 === 90 ? 91 : a0;
     const d = rng.int(1, 9);
@@ -270,7 +170,7 @@ export const actExamGeometry: ExamSpec[] = [
       `对顶角相等，所以 $${k + 1}x - ${d} = ${k}x + ${x - d}$。`,
     );
   }),
-  lineTips("Solving Angle Bisector Problems", "解决角平分线问题", ["angle-bisectors"], (rng, hard) => {
+  spec("Solving Angle Bisector Problems", "解决角平分线问题", ["angle-bisectors"], (rng, hard) => {
     const [a, x, k, c] = [rng.int(10, 80), rng.int(5, 15), rng.int(2, 5), rng.nonZero(1, 9)];
     if (!hard)
       return ask(
@@ -292,7 +192,7 @@ export const actExamGeometry: ExamSpec[] = [
       `令两部分相等得 $x = ${x}$，每部分是 $${k * x + c}^\\circ$。`,
     );
   }),
-  triangleTips("Relating Sides to Opposite Angles", "边与对角的关系", ["side-angle-relationships-in-triangles"], (rng, hard) => {
+  spec("Relating Sides to Opposite Angles", "边与对角的关系", ["side-angle-relationships-in-triangles"], (rng, hard) => {
     const [a0, b] = [rng.int(25, 55), rng.int(56, 80)];
     const a = 180 - a0 - b === b ? a0 + 1 : a0;
     const c = 180 - a - b;
@@ -334,7 +234,7 @@ export const actExamGeometry: ExamSpec[] = [
       ),
     );
   }),
-  triangleTips("Applying the Triangle Inequality", "运用三角形不等式", ["the-triangle-inequality"], (rng, hard) => {
+  spec("Applying the Triangle Inequality", "运用三角形不等式", ["the-triangle-inequality"], (rng, hard) => {
     const [a, b] = [rng.int(3, 12), rng.int(13, 25)];
     if (!hard)
       return askExact(
@@ -372,7 +272,7 @@ export const actExamGeometry: ExamSpec[] = [
       ),
     );
   }),
-  triangleTips(
+  spec(
     "Classifying Triangles",
     "三角形分类",
     ["the-converse-of-the-pythagorean-theorem", "side-angle-relationships-in-triangles"],
@@ -417,7 +317,7 @@ export const actExamGeometry: ExamSpec[] = [
       );
     },
   ),
-  polygonTips(
+  spec(
     "Identifying Angle and Shape Properties",
     "判断角和图形的性质",
     ["properties-of-rectangles-and-squares", "properties-of-parallelograms"],
@@ -450,7 +350,7 @@ export const actExamGeometry: ExamSpec[] = [
       );
     },
   ),
-  polygonTips("Finding Interior Angles of Polygons", "求多边形的内角", ["angles-of-polygons"], (rng, hard) => {
+  spec("Finding Interior Angles of Polygons", "求多边形的内角", ["angles-of-polygons"], (rng, hard) => {
     const n = rng.int(5, 40);
     const [a, b] = [rng.int(90, 130), rng.int(90, 130)];
     const known = rng.int(1, 3) * 2;
@@ -475,7 +375,7 @@ export const actExamGeometry: ExamSpec[] = [
       polyFigure(regularPts(5), { a: [`${a}°`, `${b}°`, `${90 + known}°`, `${100 + known}°`, "?"] }),
     );
   }),
-  polygonTips("Finding Angles in Parallelograms", "求平行四边形的角", ["properties-of-parallelograms"], (rng, hard) => {
+  spec("Finding Angles in Parallelograms", "求平行四边形的角", ["properties-of-parallelograms"], (rng, hard) => {
     const [a0, x, k] = [rng.int(35, 145), rng.int(10, 20), rng.int(2, 5)];
     // A right angle would make the parallelogram a rectangle and every angle equal.
     const a = a0 === 90 ? 100 : a0;
@@ -500,7 +400,7 @@ export const actExamGeometry: ExamSpec[] = [
       `对角相等，所以 $x = ${x}$，$m\\angle A = ${k * x + c}^\\circ$。`,
     );
   }),
-  polygonTips(
+  spec(
     "Finding Lengths With Parallel Sides",
     "利用平行边求长度",
     ["properties-of-trapezoids", "properties-of-parallelograms"],
@@ -528,7 +428,7 @@ export const actExamGeometry: ExamSpec[] = [
       );
     },
   ),
-  polygonTips("Finding Lengths in Regular Polygons", "求正多边形的长度", ["regular-polygons"], (rng, hard) => {
+  spec("Finding Lengths in Regular Polygons", "求正多边形的长度", ["regular-polygons"], (rng, hard) => {
     const [n, s, k] = [rng.pick([5, 6, 8, 9, 10, 12]), rng.int(2, 15), rng.int(2, 6)];
     if (!hard)
       return ask(
@@ -552,7 +452,7 @@ export const actExamGeometry: ExamSpec[] = [
       hexagonSpokesFigure(),
     );
   }),
-  moveTips("Translating and Reflecting a Point", "平移和翻折点", ["reflections-of-points-in-the-coordinate-plane"], (rng, hard) => {
+  spec("Translating and Reflecting a Point", "平移和翻折点", ["reflections-of-points-in-the-coordinate-plane"], (rng, hard) => {
     const [x, y, a, b] = [rng.nonZero(-9, 9), rng.nonZero(-9, 9), rng.int(1, 9), rng.int(1, 9)];
     if (!hard)
       return ask(
@@ -581,7 +481,7 @@ export const actExamGeometry: ExamSpec[] = [
       `平移得 $(${x + a}, ${y - b})$，翻折使 $x$ 变号。`,
     );
   }),
-  moveTips("Applying a Rigid Motion", "应用刚体变换", ["applying-sequences-of-rigid-motions"], (rng, hard) => {
+  spec("Applying a Rigid Motion", "应用刚体变换", ["applying-sequences-of-rigid-motions"], (rng, hard) => {
     const [x, y, l, a] = [rng.nonZero(-9, 9), rng.nonZero(-9, 9), rng.int(3, 20), rng.int(20, 90)];
     if (!hard)
       return ask(
@@ -603,7 +503,7 @@ export const actExamGeometry: ExamSpec[] = [
       `逆时针旋转 $90^\\circ$ 把 $(x, y)$ 变成 $(-y, x)$。`,
     );
   }),
-  moveTips("Dilating a Figure", "位似变换", ["dilations-of-figures-in-the-coordinate-plane"], (rng, hard) => {
+  spec("Dilating a Figure", "位似变换", ["dilations-of-figures-in-the-coordinate-plane"], (rng, hard) => {
     const [x, y, k, l, w] = [rng.nonZero(-9, 9), rng.nonZero(-9, 9), rng.int(2, 5), rng.int(2, 12), rng.int(2, 12)];
     if (!hard)
       return ask(
@@ -627,7 +527,7 @@ export const actExamGeometry: ExamSpec[] = [
       rectFigure(l, w, `${l}`, `${w}`),
     );
   }),
-  moveTips("Finding Lengths Using Parallel Lines", "利用平行线求长度", ["the-triangle-proportionality-theorem"], (rng, hard) => {
+  spec("Finding Lengths Using Parallel Lines", "利用平行线求长度", ["the-triangle-proportionality-theorem"], (rng, hard) => {
     const [p, q, u, v] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 6), rng.int(2, 6)];
     const fig = sketchFigure(
       {
@@ -672,7 +572,7 @@ export const actExamGeometry: ExamSpec[] = [
       fig,
     );
   }),
-  pythTips(
+  spec(
     "Finding Diagonals and Perimeters With the Pythagorean Theorem",
     "用毕达哥拉斯定理求对角线和周长",
     ["diagonals-of-squares"],
@@ -700,7 +600,7 @@ export const actExamGeometry: ExamSpec[] = [
       );
     },
   ),
-  pythTips(
+  spec(
     "Finding Lengths in Figures With the Pythagorean Theorem",
     "在图形中用毕达哥拉斯定理求长度",
     ["solving-problems-with-embedded-right-triangles", "solving-real-world-problems-using-the-pythagorean-theorem"],
@@ -730,7 +630,7 @@ export const actExamGeometry: ExamSpec[] = [
       );
     },
   ),
-  pythTips(
+  spec(
     "Finding Altitudes and Areas With the Pythagorean Theorem",
     "用毕达哥拉斯定理求高和面积",
     ["finding-altitudes-using-the-pythagorean-theorem"],
@@ -758,7 +658,7 @@ export const actExamGeometry: ExamSpec[] = [
       );
     },
   ),
-  pythTips(
+  spec(
     "Checking and Applying Pythagorean Relationships",
     "检验和应用毕达哥拉斯关系",
     ["the-converse-of-the-pythagorean-theorem"],
@@ -795,7 +695,7 @@ export const actExamGeometry: ExamSpec[] = [
       );
     },
   ),
-  pythTips(
+  spec(
     "Finding a Length From an Angle Measure",
     "由角度求长度",
     ["calculating-side-lengths-of-right-triangles-using-trigonometry"],
@@ -827,7 +727,7 @@ export const actExamGeometry: ExamSpec[] = [
       );
     },
   ),
-  pythTips(
+  spec(
     "Writing an Inverse-Trigonometric Expression",
     "写反三角表达式",
     ["calculating-angles-in-right-triangles-using-trigonometry"],
@@ -864,7 +764,7 @@ export const actExamGeometry: ExamSpec[] = [
       );
     },
   ),
-  areaTips("Finding Areas of Composite Rectilinear Figures", "求组合直线图形的面积", ["composite-shapes"], (rng, hard) => {
+  spec("Finding Areas of Composite Rectilinear Figures", "求组合直线图形的面积", ["composite-shapes"], (rng, hard) => {
     const [c, b, d, e] = [rng.int(3, 8), rng.int(2, 6), rng.int(2, 6), rng.int(3, 8)];
     const a = c + e;
     const fig = roomFig(a, b, c, d);
@@ -890,7 +790,7 @@ export const actExamGeometry: ExamSpec[] = [
       fig,
     );
   }),
-  areaTips("Finding Areas of Divided Rectangles", "求被分割长方形的面积", ["areas-of-rectangles"], (rng, hard) => {
+  spec("Finding Areas of Divided Rectangles", "求被分割长方形的面积", ["areas-of-rectangles"], (rng, hard) => {
     const [a, b, h, k] = [rng.int(2, 12), rng.int(2, 12), rng.int(2, 12), rng.int(2, 9)];
     if (!hard)
       return ask(
@@ -912,7 +812,7 @@ export const actExamGeometry: ExamSpec[] = [
       `新的一块面积是 $${h * k}$。`,
     );
   }),
-  areaTips("Using a Given Perimeter", "利用已知周长", ["perimeters-of-shapes", "modeling-with-rectangles"], (rng, hard) => {
+  spec("Using a Given Perimeter", "利用已知周长", ["perimeters-of-shapes", "modeling-with-rectangles"], (rng, hard) => {
     const [w, l, k] = [rng.int(3, 15), rng.int(16, 30), rng.int(2, 4)];
     if (!hard)
       return ask(
@@ -934,7 +834,7 @@ export const actExamGeometry: ExamSpec[] = [
       `$2(${k}w + w) = ${2 * (k + 1) * w}$，得 $w = ${w}$。`,
     );
   }),
-  areaTips("Finding Areas of Quadrilaterals", "求四边形的面积", ["area-of-trapezoids"], (rng, hard) => {
+  spec("Finding Areas of Quadrilaterals", "求四边形的面积", ["area-of-trapezoids"], (rng, hard) => {
     const [b1, h, d] = [rng.int(3, 15), rng.int(2, 12), rng.int(1, 6) * 2];
     const b2 = b1 + d;
     if (!hard)
@@ -957,7 +857,7 @@ export const actExamGeometry: ExamSpec[] = [
       `$\\frac{1}{2}(${b1} + ${b2})(${h})$。`,
     );
   }),
-  areaTips("Finding Areas of Triangles", "求三角形的面积", ["areas-of-triangles"], (rng, hard) => {
+  spec("Finding Areas of Triangles", "求三角形的面积", ["areas-of-triangles"], (rng, hard) => {
     const [b, h, k] = [rng.int(1, 12) * 2, rng.int(3, 15), rng.int(2, 4)];
     if (!hard)
       return ask(
@@ -980,7 +880,7 @@ export const actExamGeometry: ExamSpec[] = [
       `面积与高成正比，所以乘 $${k}$。`,
     );
   }),
-  areaTips("Finding Shaded Areas With Circles", "求含圆的阴影面积", ["composite-shapes-with-circles"], (rng, hard) => {
+  spec("Finding Shaded Areas With Circles", "求含圆的阴影面积", ["composite-shapes-with-circles"], (rng, hard) => {
     const [r, k, d] = [rng.int(2, 30), rng.int(1, 6), rng.int(1, 9)];
     if (!hard)
       return ask(
@@ -1004,7 +904,7 @@ export const actExamGeometry: ExamSpec[] = [
       ringFigure(r, r + k + d),
     );
   }),
-  areaTips("Comparing Areas of Figures", "比较图形的面积", ["calculating-perimeters-and-areas-of-scaled-shapes"], (rng, hard) => {
+  spec("Comparing Areas of Figures", "比较图形的面积", ["calculating-perimeters-and-areas-of-scaled-shapes"], (rng, hard) => {
     const [a, k, b, h] = [rng.int(2, 15), rng.int(2, 6), rng.int(1, 8) * 2, rng.int(2, 15)];
     if (!hard)
       return ask(
@@ -1028,7 +928,7 @@ export const actExamGeometry: ExamSpec[] = [
       triangleInRectFigure(`${b}`, `${h}`),
     );
   }),
-  areaTips("Finding Areas of Nested Regions", "求嵌套区域的面积", ["finding-areas-between-shapes"], (rng, hard) => {
+  spec("Finding Areas of Nested Regions", "求嵌套区域的面积", ["finding-areas-between-shapes"], (rng, hard) => {
     const [l, w, m, s] = [rng.int(12, 30), rng.int(10, 20), rng.int(1, 4), rng.int(2, 7)];
     if (!hard)
       return ask(
@@ -1050,7 +950,7 @@ export const actExamGeometry: ExamSpec[] = [
       `外面的长方形长 $${l + 2 * m}$、宽 $${w + 2 * m}$。`,
     );
   }),
-  areaTips("Finding a Length From Area", "由面积求长度", ["finding-side-lengths-of-squares-and-cubes-from-area-or-volume"], (rng, hard) => {
+  spec("Finding a Length From Area", "由面积求长度", ["finding-side-lengths-of-squares-and-cubes-from-area-or-volume"], (rng, hard) => {
     const [s, l, b] = [rng.int(3, 30), rng.int(3, 20), rng.int(2, 15)];
     if (!hard)
       return ask(
@@ -1072,7 +972,7 @@ export const actExamGeometry: ExamSpec[] = [
       `$\\frac{1}{2}(${2 * b})h = ${l * b}$。`,
     );
   }),
-  circleTips("Finding the Circumference of a Circle", "求圆的周长", ["the-circumference-of-a-circle"], (rng, hard) => {
+  spec("Finding the Circumference of a Circle", "求圆的周长", ["the-circumference-of-a-circle"], (rng, hard) => {
     const [r, k] = [rng.int(2, 30), rng.int(2, 9)];
     if (!hard)
       return ask(
@@ -1095,7 +995,7 @@ export const actExamGeometry: ExamSpec[] = [
       `第一个半径是 $${r}$，第二个是 $${k * r}$。`,
     );
   }),
-  circleTips("Finding Distance Along a Circle", "求沿圆的距离", ["calculating-arc-lengths-of-circular-sectors"], (rng, hard) => {
+  spec("Finding Distance Along a Circle", "求沿圆的距离", ["calculating-arc-lengths-of-circular-sectors"], (rng, hard) => {
     const [r, n] = [rng.int(1, 8) * 6, rng.int(2, 15)];
     const a = rng.pick([30, 60, 90, 120, 150]);
     if (!hard)
@@ -1119,7 +1019,7 @@ export const actExamGeometry: ExamSpec[] = [
       sectorFigure(a, `${a}°`, `${r}`),
     );
   }),
-  circleTips("Comparing Areas of Circles", "比较圆的面积", ["relating-the-circumference-and-area-of-a-circle"], (rng, hard) => {
+  spec("Comparing Areas of Circles", "比较圆的面积", ["relating-the-circumference-and-area-of-a-circle"], (rng, hard) => {
     const [r, k] = [rng.int(2, 15), rng.int(2, 6)];
     if (!hard)
       return ask(
@@ -1142,7 +1042,7 @@ export const actExamGeometry: ExamSpec[] = [
       `半径是 $${r}$ 和 $${k * r}$。`,
     );
   }),
-  circleTips("Finding Arc Measure", "求弧的度数", ["central-angles-and-arcs"], (rng, hard) => {
+  spec("Finding Arc Measure", "求弧的度数", ["central-angles-and-arcs"], (rng, hard) => {
     const [a, b] = [rng.int(20, 170), rng.int(20, 80)];
     const fig = circleFig(
       [[160, 138, "O"]],
@@ -1174,7 +1074,7 @@ export const actExamGeometry: ExamSpec[] = [
       fig,
     );
   }),
-  circleTips("Finding Angles in Circles", "求圆中的角", ["inscribed-angles"], (rng, hard) => {
+  spec("Finding Angles in Circles", "求圆中的角", ["inscribed-angles"], (rng, hard) => {
     const [a, b] = [rng.int(15, 85), rng.int(15, 75)];
     if (!hard)
       return ask(
@@ -1198,35 +1098,30 @@ export const actExamGeometry: ExamSpec[] = [
       diameterTriangleFigure(b),
     );
   }),
-  circleTips(
-    "Problem-Solving With Circle Lengths",
-    "解决圆的长度问题",
-    ["relating-the-circumference-and-area-of-a-circle"],
-    (rng, hard) => {
-      const [r, k, p] = [rng.int(2, 30), rng.int(2, 6), rng.int(2, 9)];
-      if (!hard)
-        return ask(
-          rng,
-          `A circle has an area of $${r * r}\\pi$. What is its diameter?`,
-          `圆的面积是 $${r * r}\\pi$。直径是多少？`,
-          2 * r,
-          [r, r * r, 4 * r, 2 * r * r],
-          `The radius is $${r}$.`,
-          `半径是 $${r}$。`,
-        );
+  spec("Problem-Solving With Circle Lengths", "解决圆的长度问题", ["relating-the-circumference-and-area-of-a-circle"], (rng, hard) => {
+    const [r, k, p] = [rng.int(2, 30), rng.int(2, 6), rng.int(2, 9)];
+    if (!hard)
       return ask(
         rng,
-        `A square is inscribed in a circle of radius $${p * k}$. What is the area of the square?`,
-        `正方形内接于半径为 $${p * k}$ 的圆。正方形的面积是多少？`,
-        2 * (p * k) ** 2,
-        [(p * k) ** 2, 4 * (p * k) ** 2, 2 * p * k, 8 * p * k],
-        `The diagonal is a diameter, $${2 * p * k}$. A square's diagonal is $\\sqrt{2}$ times its side, so the side squared is $\\frac{${2 * p * k}^2}{2} = ${2 * (p * k) ** 2}$, and that is the area.`,
-        `对角线是直径，长 $${2 * p * k}$。正方形的对角线是边长的 $\\sqrt{2}$ 倍，所以边长的平方是 $\\frac{${2 * p * k}^2}{2} = ${2 * (p * k) ** 2}$，这就是面积。`,
-        squareInCircleFigure(`${p * k}`),
+        `A circle has an area of $${r * r}\\pi$. What is its diameter?`,
+        `圆的面积是 $${r * r}\\pi$。直径是多少？`,
+        2 * r,
+        [r, r * r, 4 * r, 2 * r * r],
+        `The radius is $${r}$.`,
+        `半径是 $${r}$。`,
       );
-    },
-  ),
-  coordTips("Finding the Midpoint of a Segment", "求线段的中点", ["midpoints-in-the-coordinate-plane"], (rng, hard) => {
+    return ask(
+      rng,
+      `A square is inscribed in a circle of radius $${p * k}$. What is the area of the square?`,
+      `正方形内接于半径为 $${p * k}$ 的圆。正方形的面积是多少？`,
+      2 * (p * k) ** 2,
+      [(p * k) ** 2, 4 * (p * k) ** 2, 2 * p * k, 8 * p * k],
+      `The diagonal is a diameter, $${2 * p * k}$. A square's diagonal is $\\sqrt{2}$ times its side, so the side squared is $\\frac{${2 * p * k}^2}{2} = ${2 * (p * k) ** 2}$, and that is the area.`,
+      `对角线是直径，长 $${2 * p * k}$。正方形的对角线是边长的 $\\sqrt{2}$ 倍，所以边长的平方是 $\\frac{${2 * p * k}^2}{2} = ${2 * (p * k) ** 2}$，这就是面积。`,
+      squareInCircleFigure(`${p * k}`),
+    );
+  }),
+  spec("Finding the Midpoint of a Segment", "求线段的中点", ["midpoints-in-the-coordinate-plane"], (rng, hard) => {
     const [x, y, dx, dy] = [rng.int(-9, 9), rng.int(-9, 9), rng.int(1, 8) * 2, rng.int(1, 8) * 2];
     if (!hard)
       return ask(
@@ -1254,7 +1149,7 @@ export const actExamGeometry: ExamSpec[] = [
       `这个端点到中点的距离与起点到中点相同。`,
     );
   }),
-  coordTips("Finding a Point Dividing a Segment", "求分割线段的点", ["partitioning-line-segments"], (rng, hard) => {
+  spec("Finding a Point Dividing a Segment", "求分割线段的点", ["partitioning-line-segments"], (rng, hard) => {
     const [x, y, dx, dy, p] = [rng.int(-9, 9), rng.int(-9, 9), rng.int(1, 6) * 4, rng.int(1, 6) * 4, rng.int(1, 3)];
     if (!hard)
       return ask(
@@ -1282,7 +1177,7 @@ export const actExamGeometry: ExamSpec[] = [
       `$P$ 在从 $A$ 到 $B$ 的 $\\frac{${p}}{4}$ 处。`,
     );
   }),
-  coordTips("Finding the Distance Between Points", "求两点间的距离", ["the-distance-formula"], (rng, hard) => {
+  spec("Finding the Distance Between Points", "求两点间的距离", ["the-distance-formula"], (rng, hard) => {
     const [p, q, c] = rng.pick(triples);
     const [x, y, k] = [rng.int(-9, 9), rng.int(-9, 9), rng.int(1, 3)];
     if (!hard)
@@ -1305,7 +1200,7 @@ export const actExamGeometry: ExamSpec[] = [
       `竖直差必须是 $${q * k}$。`,
     );
   }),
-  coordTips("Finding Slope From Two Points", "由两点求斜率", ["slope-of-a-line"], (rng, hard) => {
+  spec("Finding Slope From Two Points", "由两点求斜率", ["slope-of-a-line"], (rng, hard) => {
     const [x, y, dx, dy] = [rng.int(-9, 9), rng.int(-9, 9), rng.int(1, 9), rng.nonZero(-9, 9)];
     if (!hard)
       return ask(
@@ -1327,7 +1222,7 @@ export const actExamGeometry: ExamSpec[] = [
       `$c - (${y}) = (${dy})(${dx})$。`,
     );
   }),
-  coordTips("Finding Slope From an Equation", "由方程求斜率", ["slope-intercept-form"], (rng, hard) => {
+  spec("Finding Slope From an Equation", "由方程求斜率", ["slope-intercept-form"], (rng, hard) => {
     const [a, b, c] = [rng.int(2, 9), rng.int(2, 9), rng.int(1, 20)];
     if (!hard)
       return ask(
@@ -1349,7 +1244,7 @@ export const actExamGeometry: ExamSpec[] = [
       `解出 $y$：$y = -\\frac{${a}}{${b}}x + \\frac{${c}}{${b}}$。`,
     );
   }),
-  coordTips("Comparing and Reading Slopes", "比较和读斜率", ["properties-of-lines-in-slope-intercept-form"], (rng, hard) => {
+  spec("Comparing and Reading Slopes", "比较和读斜率", ["properties-of-lines-in-slope-intercept-form"], (rng, hard) => {
     const [m1, m2, b] = [rng.int(2, 5), rng.int(6, 9), rng.int(1, 12)];
     if (!hard)
       return words(
@@ -1379,7 +1274,7 @@ export const actExamGeometry: ExamSpec[] = [
       `斜率分别是 $-\\frac{1}{${m1}}$ 和 $${m1}$。`,
     );
   }),
-  coordTips("Finding a Point on a Line", "求直线上的点", ["identifying-solutions-to-linear-equations"], (rng, hard) => {
+  spec("Finding a Point on a Line", "求直线上的点", ["identifying-solutions-to-linear-equations"], (rng, hard) => {
     const [m, b, x, k] = [rng.int(2, 9), rng.nonZero(-9, 9), rng.nonZero(-9, 9), rng.int(1, 5)];
     if (!hard)
       return ask(
@@ -1401,7 +1296,7 @@ export const actExamGeometry: ExamSpec[] = [
       `向左移 $${k}$，$y$ 减少 $${m * k}$。`,
     );
   }),
-  coordTips(
+  spec(
     "Placing Figures in the Coordinate Plane",
     "在坐标平面中放置图形",
     ["finding-areas-and-perimeters-in-the-coordinate-plane", "calculating-areas-of-rectangles-in-the-plane"],
@@ -1430,7 +1325,7 @@ export const actExamGeometry: ExamSpec[] = [
       );
     },
   ),
-  coordTips("Locating Points in the Coordinate Plane", "在坐标平面中确定点的位置", ["the-coordinate-plane"], (rng, hard) => {
+  spec("Locating Points in the Coordinate Plane", "在坐标平面中确定点的位置", ["the-coordinate-plane"], (rng, hard) => {
     const [x, y, a, b] = [rng.int(1, 12), rng.int(1, 12), rng.int(1, 9), rng.int(1, 9)];
     const quadrant = rng.int(1, 4);
     const sx = quadrant === 1 || quadrant === 4 ? x : -x;
@@ -1454,34 +1349,29 @@ export const actExamGeometry: ExamSpec[] = [
       `向左使 $x$ 减小，向上使 $y$ 增大。`,
     );
   }),
-  solidTips(
-    "Finding a Dimension From Volume",
-    "由体积求尺寸",
-    ["volumes-of-cylinders", "volumes-of-right-rectangular-prisms"],
-    (rng, hard) => {
-      const [l, w, h, r] = [rng.int(2, 12), rng.int(2, 12), rng.int(2, 12), rng.int(2, 9)];
-      if (!hard)
-        return ask(
-          rng,
-          `A rectangular box has a volume of $${l * w * h}$, a length of $${l}$ and a width of $${w}$. What is its height?`,
-          `长方体盒子体积 $${l * w * h}$，长 $${l}$，宽 $${w}$。高是多少？`,
-          h,
-          [l * w, h + 1, l * w * h - l - w, 2 * h],
-          `Divide the volume by $${l * w}$.`,
-          `体积除以 $${l * w}$。`,
-        );
+  spec("Finding a Dimension From Volume", "由体积求尺寸", ["volumes-of-cylinders", "volumes-of-right-rectangular-prisms"], (rng, hard) => {
+    const [l, w, h, r] = [rng.int(2, 12), rng.int(2, 12), rng.int(2, 12), rng.int(2, 9)];
+    if (!hard)
       return ask(
         rng,
-        `A cylinder has a volume of $${r * r * h}\\pi$ and a radius of $${r}$. What is its height?`,
-        `圆柱体积 $${r * r * h}\\pi$，半径 $${r}$。高是多少？`,
+        `A rectangular box has a volume of $${l * w * h}$, a length of $${l}$ and a width of $${w}$. What is its height?`,
+        `长方体盒子体积 $${l * w * h}$，长 $${l}$，宽 $${w}$。高是多少？`,
         h,
-        [r * h, 2 * h, h + r, r * r * h],
-        `$\\pi(${r})^2h = ${r * r * h}\\pi$.`,
-        `$\\pi(${r})^2h = ${r * r * h}\\pi$。`,
+        [l * w, h + 1, l * w * h - l - w, 2 * h],
+        `Divide the volume by $${l * w}$.`,
+        `体积除以 $${l * w}$。`,
       );
-    },
-  ),
-  solidTips("Converting Volume in Context", "在情境中换算体积", ["converting-units-of-volume-to-smaller-units"], (rng, hard) => {
+    return ask(
+      rng,
+      `A cylinder has a volume of $${r * r * h}\\pi$ and a radius of $${r}$. What is its height?`,
+      `圆柱体积 $${r * r * h}\\pi$，半径 $${r}$。高是多少？`,
+      h,
+      [r * h, 2 * h, h + r, r * r * h],
+      `$\\pi(${r})^2h = ${r * r * h}\\pi$.`,
+      `$\\pi(${r})^2h = ${r * r * h}\\pi$。`,
+    );
+  }),
+  spec("Converting Volume in Context", "在情境中换算体积", ["converting-units-of-volume-to-smaller-units"], (rng, hard) => {
     const [a, b, c, rate] = [rng.int(2, 9), rng.int(2, 9), rng.int(2, 9), rng.int(2, 8)];
     if (!hard)
       return ask(
@@ -1503,7 +1393,7 @@ export const actExamGeometry: ExamSpec[] = [
       `每立方码有 $27$ 立方英尺。`,
     );
   }),
-  solidTips("Packing Congruent Solids", "装填全等的立体", ["packing-rectangular-boxes"], (rng, hard) => {
+  spec("Packing Congruent Solids", "装填全等的立体", ["packing-rectangular-boxes"], (rng, hard) => {
     const [a, b, c, s] = [rng.int(2, 6), rng.int(2, 6), rng.int(2, 6), rng.int(2, 4)];
     if (!hard)
       return ask(
@@ -1532,8 +1422,7 @@ export const actExamGeometry: ExamSpec[] = [
       `短于棱长的多余空间用不上，所以三条棱上放 $${a}$、$${b}$、$${c}$ 个。`,
     );
   }),
-  solidTips("Identifying Features of a Solid", "判断立体的特征", ["composite-solids"], (rng, hard) => {
-    const [l, w, h, k] = [rng.int(3, 15), rng.int(2, 15), rng.int(2, 15), rng.int(2, 4)];
+  spec("Identifying Features of a Solid", "判断立体的特征", ["composite-solids"], (rng, hard) => {
     const n = rng.int(3, 30);
     if (!hard)
       return ask(
@@ -1552,15 +1441,20 @@ export const actExamGeometry: ExamSpec[] = [
       );
     return ask(
       rng,
-      `A box measures $${l}$ by $${w}$ by $${h}$. If each dimension is multiplied by $${k}$, what is the new surface area?`,
-      `盒子长宽高为 $${l}$、$${w}$、$${h}$。若每个尺寸乘 $${k}$，新表面积是多少？`,
-      2 * k * k * (l * w + l * h + w * h),
-      [2 * k * (l * w + l * h + w * h), 2 * (l * w + l * h + w * h), k ** 3 * l * w * h, k * k * (l * w + l * h + w * h)],
-      `Surface area scales by $${k * k}$.`,
-      `表面积乘 $${k * k}$。`,
+      `How many faces, edges and vertices does a pyramid have if its base is ${article(n)} $${n}$-sided polygon?`,
+      `底面是 $${n}$ 边形的棱锥有多少个面、棱和顶点？`,
+      `${n + 1} \\text{ faces}, ${2 * n} \\text{ edges}, ${n + 1} \\text{ vertices}`,
+      [
+        `${n} \\text{ faces}, ${2 * n} \\text{ edges}, ${n + 1} \\text{ vertices}`,
+        `${n + 1} \\text{ faces}, ${3 * n} \\text{ edges}, ${n + 1} \\text{ vertices}`,
+        `${n + 2} \\text{ faces}, ${3 * n} \\text{ edges}, ${2 * n} \\text{ vertices}`,
+        `${n + 1} \\text{ faces}, ${2 * n} \\text{ edges}, ${n} \\text{ vertices}`,
+      ],
+      `The base and $${n}$ triangles make the faces, $${n}$ base edges and $${n}$ edges up to the apex make the edges, and the $${n}$ base corners and the apex make the vertices.`,
+      `底面加 $${n}$ 个三角形是面；底面 $${n}$ 条棱加通向顶点的 $${n}$ 条棱是棱；底面 $${n}$ 个角加上顶点是顶点。`,
     );
   }),
-  conicTips("Writing Ellipse Equations", "写椭圆方程", ["equations-of-ellipses-centered-at-a-general-point"], (rng, hard) => {
+  spec("Writing Ellipse Equations", "写椭圆方程", ["equations-of-ellipses-centered-at-a-general-point"], (rng, hard) => {
     const [h, k, a] = [rng.nonZero(-9, 9), rng.nonZero(-9, 9), rng.int(3, 9)];
     const b = a + rng.int(1, 5);
     const X = `(x ${h < 0 ? "+" : "-"} ${Math.abs(h)})^2`;
@@ -1597,7 +1491,7 @@ export const actExamGeometry: ExamSpec[] = [
       `中心是两顶点的中点 $(${h}, ${k})$。`,
     );
   }),
-  conicTips("Finding Features of an Ellipse", "求椭圆的特征", ["vertices-and-eccentricity-of-ellipses"], (rng, hard) => {
+  spec("Finding Features of an Ellipse", "求椭圆的特征", ["vertices-and-eccentricity-of-ellipses"], (rng, hard) => {
     const [p, q, c] = rng.pick(triples);
     const [h, k, m] = [rng.int(-9, 9), rng.int(-9, 9), rng.int(1, 3)];
     const X = h === 0 ? "x^2" : `(x ${h < 0 ? "+" : "-"} ${Math.abs(h)})^2`;
@@ -1622,7 +1516,7 @@ export const actExamGeometry: ExamSpec[] = [
       `焦点到中心的距离是 $\\sqrt{${(c * m) ** 2} - ${(q * m) ** 2}} = ${p * m}$。`,
     );
   }),
-  conicTips("Working With Hyperbolas", "双曲线", ["equations-of-hyperbolas-centered-at-the-origin"], (rng, hard) => {
+  spec("Working With Hyperbolas", "双曲线", ["equations-of-hyperbolas-centered-at-the-origin"], (rng, hard) => {
     const [a, b, s] = [rng.int(2, 12), rng.int(2, 12), rng.int(0, 1)];
     if (!hard)
       return ask(
@@ -1656,7 +1550,7 @@ export const actExamGeometry: ExamSpec[] = [
       `渐近线是 $y = \\pm\\frac{${b}}{${a}}x$。`,
     );
   }),
-  conicTips("Analyzing Intersections of Conics", "分析圆锥曲线的交点", ["intersections-of-circles-with-lines"], (rng, hard) => {
+  spec("Analyzing Intersections of Conics", "分析圆锥曲线的交点", ["intersections-of-circles-with-lines"], (rng, hard) => {
     const [r, d, p] = [rng.int(2, 20), rng.int(1, 9), rng.pick(triples)];
     const k = rng.int(1, 7);
     const [u, v, c] = p;

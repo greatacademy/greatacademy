@@ -3,80 +3,9 @@ import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
 import type { ExamSpec } from "../exam.ts";
-import { curveFigure, dotsFigure, mc, mod, sketchFigure, spr, table, words } from "../exam.ts";
+import { curveFigure, dotsFigure, mc, sketchFigure, spec, spr, table, words } from "../exam.ts";
 
 // SAT Math Prep, Problem-Solving and Data Analysis: sampling, statistics, data displays, probability, regression and data models.
-
-const sampleTips = mod(
-  t(
-    "A sample supports a conclusion about a population only if it was chosen at random from that population. Scale a sample proportion up to the population to estimate a total.",
-    "只有从总体中随机抽取的样本才能支持关于总体的结论。把样本比例放大到总体，就能估计总数。",
-  ),
-  t(
-    "A margin of error gives a range of plausible values for the population: estimate plus or minus the margin. It says nothing about individuals, and a larger sample tends to make it smaller.",
-    "误差范围给出总体可能取值的区间：估计值加减误差范围。它不涉及个体，样本越大误差范围往往越小。",
-  ),
-);
-const centerTips = mod(
-  t(
-    "The mean is the sum divided by the count. The median is the middle value of the sorted data, or the mean of the two middle values when the count is even.",
-    "平均数是总和除以个数。中位数是排序后的中间值，个数为偶数时是中间两个值的平均数。",
-  ),
-  t(
-    "Use sum = mean times count to work backward to a missing value. An outlier pulls the mean toward it but barely moves the median.",
-    "用“总和 = 平均数 × 个数”反推缺失的值。离群值把平均数拉向自己，却几乎不影响中位数。",
-  ),
-);
-const showTips = mod(
-  t(
-    "Read the labels on a table or graph first. In a frequency table, each row's count says how many times its value occurs, so the count of data values is the sum of the frequencies.",
-    "先看表格或图的标签。频数表中，每行的频数表示该值出现的次数，所以数据个数是频数之和。",
-  ),
-  t(
-    "A box plot shows the minimum, first quartile, median, third quartile and maximum. In grouped data you cannot know exact values, so a statistic can only be bounded.",
-    "箱线图显示最小值、第一四分位数、中位数、第三四分位数和最大值。分组数据无法确定确切值，所以统计量只能给出范围。",
-  ),
-);
-const compareTips = mod(
-  t(
-    "Compare one measure at a time. Standard deviation and range measure spread: data closer to the center has a smaller standard deviation.",
-    "每次比较一个量。标准差和极差衡量离散程度：数据越靠近中心，标准差越小。",
-  ),
-  t(
-    "Adding a constant to every value shifts the mean and median but not the spread. Removing a large outlier lowers the mean more than the median. In a symmetric data set, the mean equals the median.",
-    "每个值加上同一常数，平均数和中位数平移，离散程度不变。去掉一个大的离群值，平均数比中位数下降更多。对称数据的平均数等于中位数。",
-  ),
-);
-const probTips = mod(
-  t(
-    "Probability is favorable outcomes over total outcomes. In a two-way table, read the favorable count from its cell and the total from the grand total.",
-    "概率是有利结果数除以总结果数。在双向表中，有利结果数看对应单元格，总数看总计。",
-  ),
-  t(
-    '"Given" restricts the denominator. For a conditional probability, the total is only the row or column named after the word "given".',
-    "“已知”限制了分母。条件概率的总数只是“已知”后面所说的那一行或一列。",
-  ),
-);
-const fitTips = mod(
-  t(
-    "A best-fit line predicts a value by substitution. Its slope is the predicted change in $y$ per unit of $x$, and its intercept is the predicted value at $x = 0$.",
-    "最佳拟合线通过代入来预测。斜率是 $x$ 每增加一个单位 $y$ 的预测变化量，截距是 $x = 0$ 时的预测值。",
-  ),
-  t(
-    "A residual is the actual value minus the predicted value. A point above the line has a positive residual, and a point below has a negative one.",
-    "残差是实际值减去预测值。在直线上方的点残差为正，在下方的点残差为负。",
-  ),
-);
-const modelTips = mod(
-  t(
-    "Read the axes before the shape. The average rate of change between two points is the change in $y$ over the change in $x$.",
-    "先读坐标轴再看形状。两点之间的平均变化率是 $y$ 的变化量除以 $x$ 的变化量。",
-  ),
-  t(
-    "Linear data changes by equal differences, while exponential data changes by equal ratios. Check successive differences and ratios from a table.",
-    "线性数据的差相等，指数数据的比相等。从表格中检查相邻的差和比。",
-  ),
-);
 
 const pickData = (rng: Rng, n: number, lo: number, hi: number): number[] => Array.from({ length: n }, () => rng.int(lo, hi));
 const sorted = (xs: readonly number[]): number[] => [...xs].sort((a, b) => a - b);
@@ -152,7 +81,7 @@ const boxFig = (min: number, q1: number, med: number, q3: number, max: number, l
 
 /** satExamData1 are the exam-style questions on sampling, statistics, data displays, probability, regression and data models. */
 export const satExamData1: ExamSpec[] = [
-  sampleTips("Sampling Bias and Validity", "抽样偏差和有效性", ["biased-and-unbiased-samples"], (rng, hard) => {
+  spec("Sampling Bias and Validity", "抽样偏差和有效性", ["biased-and-unbiased-samples"], (rng, hard) => {
     const [pop, bias, popZh, biasZh, opinion, opinionZh] = rng.pick(contexts);
     const n = rng.int(4, 40) * 5;
     if (!hard)
@@ -191,7 +120,7 @@ export const satExamData1: ExamSpec[] = [
       t(`A larger sample does not repair a sample that was not random.`, `样本更大也无法弥补非随机抽样。`),
     );
   }),
-  sampleTips("Estimation From Proportions and Samples", "由比例和样本估计", ["estimation-from-samples"], (rng, hard) => {
+  spec("Estimation From Proportions and Samples", "由比例和样本估计", ["estimation-from-samples"], (rng, hard) => {
     const [n, y, N] = [rng.pick([40, 50, 80, 100, 200]), rng.int(1, 9), rng.pick([500, 1000, 1500, 2000, 4000, 6000])];
     const part = (n * y * 10) / 100;
     if (!hard)
@@ -221,7 +150,7 @@ export const satExamData1: ExamSpec[] = [
       ),
     );
   }),
-  sampleTips("Interpreting Survey Data", "解释调查数据", ["interpreting-survey-results"], (rng, hard) => {
+  spec("Interpreting Survey Data", "解释调查数据", ["interpreting-survey-results"], (rng, hard) => {
     const [pop, , popZh, , opinion, opinionZh] = rng.pick(contexts);
     const [n, p] = [rng.int(2, 12) * 100, rng.int(2, 18) * 5];
     if (!hard)
@@ -252,7 +181,7 @@ export const satExamData1: ExamSpec[] = [
       t(`$${p}\\%$ of $${n}$ is $${(n * p) / 100}$.`, `$${n}$ 的 $${p}\\%$ 是 $${(n * p) / 100}$。`),
     );
   }),
-  sampleTips("Margin of Error", "误差范围", ["sampling"], (rng, hard) => {
+  spec("Margin of Error", "误差范围", ["sampling"], (rng, hard) => {
     const [p, m, N] = [rng.int(25, 75), rng.int(2, 6), rng.pick([2000, 4000, 5000, 10000, 20000])];
     if (!hard)
       return mc(
@@ -283,7 +212,7 @@ export const satExamData1: ExamSpec[] = [
       ),
     );
   }),
-  centerTips("The Mean of a Dataset", "数据集的平均数", ["mean-of-a-data-set"], (rng, hard) => {
+  spec("The Mean of a Dataset", "数据集的平均数", ["mean-of-a-data-set"], (rng, hard) => {
     const xs = pickData(rng, 4, 3, 30);
     const m = rng.int(6, 25);
     xs.push(5 * m - sum(xs));
@@ -306,7 +235,7 @@ export const satExamData1: ExamSpec[] = [
       t(`Adding the same amount to every value adds that amount to the mean.`, `每个值加上相同的数，平均数也加上这个数。`),
     );
   }),
-  centerTips("The Median of a Dataset", "数据集的中位数", ["median-and-mode"], (rng, hard) => {
+  spec("The Median of a Dataset", "数据集的中位数", ["median-and-mode"], (rng, hard) => {
     const odd = pickData(rng, 7, 1, 40);
     const even = pickData(rng, 6, 1, 40);
     if (!hard)
@@ -334,7 +263,7 @@ export const satExamData1: ExamSpec[] = [
       ),
     );
   }),
-  centerTips("Comparing Measures of Center", "比较中心度量", ["mean-of-a-data-set", "median-and-mode"], (rng, hard) => {
+  spec("Comparing Measures of Center", "比较中心度量", ["mean-of-a-data-set", "median-and-mode"], (rng, hard) => {
     const a = rng.int(10, 30);
     const big = a * rng.int(5, 12);
     const xs = [a - 2, a - 1, a, a + 1, big];
@@ -372,7 +301,7 @@ export const satExamData1: ExamSpec[] = [
       ),
     );
   }),
-  centerTips("The Relationship Between Means and Sums", "平均数与总和的关系", ["combining-means"], (rng, hard) => {
+  spec("The Relationship Between Means and Sums", "平均数与总和的关系", ["combining-means"], (rng, hard) => {
     const [n, m, k, q] = [rng.int(5, 30), rng.int(60, 95), rng.int(5, 30), rng.int(60, 95)];
     if (!hard)
       return mc(
@@ -398,7 +327,7 @@ export const satExamData1: ExamSpec[] = [
       ),
     );
   }),
-  centerTips("Finding Unknown Observations From Centrality Measures", "由中心度量求未知观测值", ["combining-means"], (rng, hard) => {
+  spec("Finding Unknown Observations From Centrality Measures", "由中心度量求未知观测值", ["combining-means"], (rng, hard) => {
     const xs = pickData(rng, 4, 60, 95);
     const miss = rng.int(60, 100);
     xs[0] = xs[0]! + ((5 - ((sum(xs) + miss) % 5)) % 5);
@@ -436,7 +365,7 @@ export const satExamData1: ExamSpec[] = [
       ),
     );
   }),
-  showTips("Tabular Datasets", "表格数据", ["frequency-tables"], (rng, hard) => {
+  spec("Tabular Datasets", "表格数据", ["frequency-tables"], (rng, hard) => {
     const ys = pickData(rng, 4, 10, 90);
     const labels = ["2021", "2022", "2023", "2024"];
     const tb = table("\\text{Year}", "\\text{Sales}", labels, ys);
@@ -461,7 +390,7 @@ export const satExamData1: ExamSpec[] = [
       t(`$${ys[3]!} - ${ys[0]!} = ${ys[3]! - ys[0]!}$.`, `$${ys[3]!} - ${ys[0]!} = ${ys[3]! - ys[0]!}$。`),
     );
   }),
-  showTips("Frequency Tables", "频数表", ["frequency-tables"], (rng, hard) => {
+  spec("Frequency Tables", "频数表", ["frequency-tables"], (rng, hard) => {
     const vals = [1, 2, 3, 4, 5];
     const fr = pickData(rng, 5, 1, 12);
     const tb = table("\\text{Value}", "\\text{Frequency}", vals, fr);
@@ -490,7 +419,7 @@ export const satExamData1: ExamSpec[] = [
       ),
     );
   }),
-  showTips("Box Plots", "箱线图", ["box-plots"], (rng, hard) => {
+  spec("Box Plots", "箱线图", ["box-plots"], (rng, hard) => {
     const step = 5;
     const min = rng.int(1, 6) * step;
     const q1 = min + rng.int(1, 3) * step;
@@ -518,7 +447,7 @@ export const satExamData1: ExamSpec[] = [
       fig,
     );
   }),
-  showTips(
+  spec(
     "Measuring Centrality From Frequency Tables",
     "由频数表求中心度量",
     ["calculating-means-from-frequency-tables", "calculating-medians-from-frequency-tables"],
@@ -550,7 +479,7 @@ export const satExamData1: ExamSpec[] = [
       );
     },
   ),
-  showTips("Bounding Statistical Metrics", "估计统计量的范围", ["bounding-statistics-for-grouped-data"], (rng, hard) => {
+  spec("Bounding Statistical Metrics", "估计统计量的范围", ["bounding-statistics-for-grouped-data"], (rng, hard) => {
     const fr = pickData(rng, 3, 2, 12);
     const w = rng.pick([5, 10, 20, 25]);
     const lo = rng.int(1, 4) * 10;
@@ -585,7 +514,7 @@ export const satExamData1: ExamSpec[] = [
       ),
     );
   }),
-  compareTips("Comparing Data Sets", "比较数据集", ["comparing-effects-of-data-change-on-measures-of-centrality"], (rng, hard) => {
+  spec("Comparing Data Sets", "比较数据集", ["comparing-effects-of-data-change-on-measures-of-centrality"], (rng, hard) => {
     const a = rng.int(10, 40);
     const d = rng.int(1, 3);
     const e = d + rng.int(3, 8);
@@ -622,7 +551,7 @@ export const satExamData1: ExamSpec[] = [
       ),
     );
   }),
-  compareTips(
+  spec(
     "Comparing Data Sets Presented Visually",
     "比较以图形呈现的数据集",
     ["comparing-effects-of-data-change-on-measures-of-centrality", "box-plots"],
@@ -657,7 +586,7 @@ export const satExamData1: ExamSpec[] = [
       );
     },
   ),
-  compareTips(
+  spec(
     "Comparing Centrality Measures From Frequency Tables",
     "由频数表比较中心度量",
     ["calculating-means-from-frequency-tables"],
@@ -678,8 +607,8 @@ export const satExamData1: ExamSpec[] = [
             t("The median is greater than $3$.", "中位数大于 $3$。"),
           ],
           t(
-            `The median is $2$, and the few values of $20$ raise the mean to $\\frac{${tot}}{${n}}$.`,
-            `中位数是 $2$，少数 $20$ 把平均数抬高到 $\\frac{${tot}}{${n}}$。`,
+            `The median is $2$, and the largest value, $20$, pulls the mean up to $\\frac{${tot}}{${n}}$.`,
+            `中位数是 $2$，最大的数 $20$ 把平均数抬高到 $\\frac{${tot}}{${n}}$。`,
           ),
         );
       return spr(
@@ -696,7 +625,7 @@ export const satExamData1: ExamSpec[] = [
       );
     },
   ),
-  compareTips(
+  spec(
     "Comparing Centrality Measures With Symmetric Datasets",
     "比较对称数据集的中心度量",
     ["mean-of-a-data-set", "median-and-mode"],
@@ -730,7 +659,7 @@ export const satExamData1: ExamSpec[] = [
       );
     },
   ),
-  compareTips(
+  spec(
     "Comparing Statistical Effects of Data Change",
     "比较数据变化的统计效果",
     ["statistical-effects-of-data-transformations"],
@@ -769,7 +698,7 @@ export const satExamData1: ExamSpec[] = [
       );
     },
   ),
-  compareTips(
+  spec(
     "Effects of Additional Data on Centrality Measures",
     "新增数据对中心度量的影响",
     ["comparing-effects-of-data-change-on-measures-of-centrality"],
@@ -800,7 +729,7 @@ export const satExamData1: ExamSpec[] = [
       );
     },
   ),
-  probTips("Simple Probabilities in Real-World Contexts", "现实情境中的简单概率", ["single-events-in-probability"], (rng, hard) => {
+  spec("Simple Probabilities in Real-World Contexts", "现实情境中的简单概率", ["single-events-in-probability"], (rng, hard) => {
     const [r, b, g] = [rng.int(2, 9), rng.int(5, 15), rng.int(5, 15)];
     const n = r + b + g;
     if (!hard)
@@ -827,7 +756,7 @@ export const satExamData1: ExamSpec[] = [
       ),
     );
   }),
-  probTips("Calculating Probabilities From Datasets", "由数据集计算概率", ["experimental-probability"], (rng, hard) => {
+  spec("Calculating Probabilities From Datasets", "由数据集计算概率", ["experimental-probability"], (rng, hard) => {
     const xs = pickData(rng, 10, 1, 20);
     const cut = rng.int(6, 15);
     const above = xs.filter((v) => v > cut).length;
@@ -852,7 +781,7 @@ export const satExamData1: ExamSpec[] = [
       t(`$${even}$ of the $10$ numbers are even.`, `$10$ 个数中有 $${even}$ 个是偶数。`),
     );
   }),
-  probTips(
+  spec(
     "Simple Probabilities From Two-Way Frequency Tables",
     "由双向频数表求简单概率",
     ["calculating-relative-frequencies-from-two-way-tables"],
@@ -882,7 +811,7 @@ export const satExamData1: ExamSpec[] = [
       );
     },
   ),
-  probTips(
+  spec(
     "Conditional Probabilities From Two-Way Frequency Tables",
     "由双向频数表求条件概率",
     ["conditional-probabilities-from-tables"],
@@ -915,7 +844,7 @@ export const satExamData1: ExamSpec[] = [
       );
     },
   ),
-  probTips("Calculating Conditional Probabilities", "计算条件概率", ["the-multiplication-law-for-conditional-probability"], (rng, hard) => {
+  spec("Calculating Conditional Probabilities", "计算条件概率", ["the-multiplication-law-for-conditional-probability"], (rng, hard) => {
     const [n, p, q] = [rng.int(1, 8) * 100, rng.int(2, 8) * 10, rng.int(1, 9) * 10];
     const A = (n * p) / 100;
     const both = (A * q) / 100;
@@ -945,7 +874,7 @@ export const satExamData1: ExamSpec[] = [
       ),
     );
   }),
-  fitTips("Making Predictions Using Best-Fit Lines", "用最佳拟合线预测", ["scatter-plots"], (rng, hard) => {
+  spec("Making Predictions Using Best-Fit Lines", "用最佳拟合线预测", ["scatter-plots"], (rng, hard) => {
     const [m, b, x] = [rng.int(2, 9), rng.int(1, 30), rng.int(2, 20)];
     if (!hard)
       return mc(
@@ -968,7 +897,7 @@ export const satExamData1: ExamSpec[] = [
       t(`$${m}x + ${b} = ${m * x + b}$, so $x = ${x}$.`, `$${m}x + ${b} = ${m * x + b}$，所以 $x = ${x}$。`),
     );
   }),
-  fitTips("The Slope of a Best-Fit Line", "最佳拟合线的斜率", ["comparing-data-points-to-lines-of-best-fit"], (rng, hard) => {
+  spec("The Slope of a Best-Fit Line", "最佳拟合线的斜率", ["comparing-data-points-to-lines-of-best-fit"], (rng, hard) => {
     const [m, b] = [rng.int(2, 9), rng.int(5, 40)];
     if (!hard)
       return words(
@@ -999,7 +928,7 @@ export const satExamData1: ExamSpec[] = [
       ),
     );
   }),
-  fitTips("Identifying Best-Fit Lines", "识别最佳拟合线", ["scatter-plots"], (rng, hard) => {
+  spec("Identifying Best-Fit Lines", "识别最佳拟合线", ["scatter-plots"], (rng, hard) => {
     const m = rng.pick([1, 2, 3]);
     const b = rng.int(1, 6);
     const xs = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -1028,7 +957,7 @@ export const satExamData1: ExamSpec[] = [
       fig,
     );
   }),
-  fitTips("Analyzing Residuals of Best-Fit Lines", "分析最佳拟合线的残差", ["comparing-data-points-to-lines-of-best-fit"], (rng, hard) => {
+  spec("Analyzing Residuals of Best-Fit Lines", "分析最佳拟合线的残差", ["comparing-data-points-to-lines-of-best-fit"], (rng, hard) => {
     const [m, b, x, r] = [rng.int(2, 9), rng.int(1, 20), rng.int(2, 15), rng.nonZero(-6, 6)];
     const pred = m * x + b;
     if (!hard)
@@ -1067,7 +996,7 @@ export const satExamData1: ExamSpec[] = [
       ),
     );
   }),
-  modelTips("Interpreting Data Plots", "解释数据图", ["scatter-plots"], (rng, hard) => {
+  spec("Interpreting Data Plots", "解释数据图", ["scatter-plots"], (rng, hard) => {
     const ys = pickData(rng, 7, 2, 20);
     const pts = ys.map((y, i) => [i + 1, y] as const);
     const fig = dotsFigure(pts, { x: [0, 8], y: [0, 22], dx: 1, dy: 2 }, t("A plot of seven points.", "七个点的图。"));
@@ -1089,7 +1018,7 @@ export const satExamData1: ExamSpec[] = [
       fig,
     );
   }),
-  modelTips("Interpreting Time-Series Graphs", "解释时间序列图", ["the-average-rate-of-change-of-a-function"], (rng, hard) => {
+  spec("Interpreting Time-Series Graphs", "解释时间序列图", ["the-average-rate-of-change-of-a-function"], (rng, hard) => {
     const peak = rng.int(3, 7);
     const top = rng.int(3, 8) * 4;
     const a = top / (peak * peak);
@@ -1120,7 +1049,7 @@ export const satExamData1: ExamSpec[] = [
       fig,
     );
   }),
-  modelTips("Average Rate of Change From Data Plots", "由数据图求平均变化率", ["the-average-rate-of-change-of-a-function"], (rng, hard) => {
+  spec("Average Rate of Change From Data Plots", "由数据图求平均变化率", ["the-average-rate-of-change-of-a-function"], (rng, hard) => {
     const [a, d, m] = [rng.int(1, 3), rng.int(2, 5), rng.int(2, 5)];
     const y1 = rng.int(1, 8);
     const pts = [
@@ -1159,7 +1088,7 @@ export const satExamData1: ExamSpec[] = [
       ),
     );
   }),
-  modelTips("Linear vs. Exponential Models", "线性模型与指数模型", ["linear-vs-exponential-models"], (rng, hard) => {
+  spec("Linear vs. Exponential Models", "线性模型与指数模型", ["linear-vs-exponential-models"], (rng, hard) => {
     const [a, d, r] = [rng.int(2, 30), rng.int(2, 15), rng.int(2, 4)];
     const lin = [0, 1, 2, 3].map((x) => a + d * x);
     const exp = [0, 1, 2, 3].map((x) => a * r ** x);

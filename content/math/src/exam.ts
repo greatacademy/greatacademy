@@ -17,11 +17,15 @@ export interface ExamSpec {
   readonly title: Text;
   /** base are the Fundamentals topics the question practices, which become prerequisites. */
   readonly base: readonly string[];
-  /** tip is what to look for on the exam, shown when a learner comes back to a lesson they failed. */
-  readonly tip: Text;
-  /** hardTip is what makes the harder questions harder. */
-  readonly hardTip: Text;
   readonly make: (rng: Rng, hard: boolean) => Problem;
+}
+
+/** ExamLesson is what a learner who failed an exam topic reads: the method of its questions, in two steps. */
+export interface ExamLesson {
+  /** tip teaches the method of the easier questions. */
+  readonly tip: Text;
+  /** hardTip teaches what the harder questions add. */
+  readonly hardTip: Text;
 }
 
 /** examSlug derives a kebab-case id part from an outline title. */
@@ -78,9 +82,11 @@ export const unpracticedBases: Readonly<Record<string, readonly string[]>> = {
 };
 
 /** examTopic builds the topic of a spec: two knowledge points and an encompassing of each Fundamentals topic it practices. */
-export function examTopic(exam: Exam, spec: ExamSpec): TopicDef {
+export function examTopic(exam: Exam, spec: ExamSpec, lessons: Readonly<Record<string, ExamLesson>>): TopicDef {
   const name = exam.toUpperCase();
   const id = `${exam}-exam-${examSlug(spec.title.en)}`;
+  const lesson = lessons[id];
+  if (!lesson) throw new Error(`exam topic ${id} has no lesson`);
   const unpracticed = unpracticedBases[id] ?? [];
   return {
     id,
@@ -97,27 +103,22 @@ export function examTopic(exam: Exam, spec: ExamSpec): TopicDef {
       {
         id: "exam-question",
         title: t("Exam-Style Question", "考试风格题"),
-        explanation: spec.tip,
+        explanation: lesson.tip,
         generate: (rng) => spec.make(rng, false),
       },
       {
         id: "harder-exam-question",
         title: t("Harder Exam-Style Question", "较难的考试风格题"),
-        explanation: spec.hardTip,
+        explanation: lesson.hardTip,
         generate: (rng) => spec.make(rng, true),
       },
     ],
   };
 }
 
-/** x is a shorthand for writing an ExamSpec on few lines. */
-export function x(en: string, zh: string, base: readonly string[], tip: Text, hardTip: Text, make: ExamSpec["make"]): ExamSpec {
-  return { title: t(en, zh), base, tip, hardTip, make };
-}
-
-/** mod fixes the exam tips of a module, so its specs need only a title, Fundamentals topics and a generator. */
-export function mod(tip: Text, hardTip: Text): (en: string, zh: string, base: readonly string[], make: ExamSpec["make"]) => ExamSpec {
-  return (en, zh, base, make) => x(en, zh, base, tip, hardTip, make);
+/** spec builds the specification of an exam topic. */
+export function spec(en: string, zh: string, base: readonly string[], make: ExamSpec["make"]): ExamSpec {
+  return { title: t(en, zh), base, make };
 }
 
 /** Option is a numeric or LaTeX answer choice. */
@@ -163,9 +164,21 @@ function orderedOptions(rng: Rng, correct: Q, wrong: readonly Q[]): Q[] {
 
 /** concluded ends a solution by stating the answer, unless it already explains itself and names it. */
 function concluded(solution: Text, answer: Text): Text {
-  if (solution.en.length >= 25 && solution.en.includes(answer.en.replace(/\.$/, ""))) return solution;
+  const named = answer.en.replace(/\.$/, "");
+  if (solution.en.includes(`= ${named.replace(/^\$/, "")}`)) return solution;
+  if (solution.en.length >= 25 && solution.en.includes(named)) return solution;
+  const bare = /^\$([^$=]+)\$[.。]?$/;
+  const result = /^\$([^$]+)\$[.。]?$/;
+  const [work, workZh, value, valueZh] = [
+    solution.en.match(bare),
+    solution["zh-CN"].match(bare),
+    answer.en.match(result),
+    answer["zh-CN"].match(result),
+  ];
+  // A solution that is only an expression becomes the equation it stands for.
+  if (work && workZh && value && valueZh) return t(`$${work[1]} = ${value[1]}$.`, `$${workZh[1]} = ${valueZh[1]}$。`);
   return t(
-    `${solution.en} The answer: ${answer.en.replace(/\.$/, "")}.`,
+    `${solution.en} So the answer is ${answer.en.replace(/\.$/, "")}.`,
     `${solution["zh-CN"]} 所以答案是 ${answer["zh-CN"].replace(/。$/, "")}。`,
   );
 }
@@ -257,6 +270,12 @@ export function ordinal(n: number): string {
 
 /** sg writes a signed term after an expression: sg(3) is "+ 3", sg(-3) is "- 3" and sg(0) is empty. */
 export const sg = (n: number, suffix = ""): string => (n === 0 ? "" : `${n < 0 ? "-" : "+"} ${Math.abs(n)}${suffix}`);
+
+/** lowest gives the first numerator from n on that is in lowest terms over d, so that a question does not show a fraction such as $\frac{4}{8}$. */
+export function lowest(n: number, d: number): number {
+  const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+  return gcd(n, d) === 1 ? n : lowest(n + 1, d);
+}
 
 /** par writes a number to subtract or multiply by: par(3) is "3" and par(-3) is "(-3)". */
 export const par = (n: number): string => (n < 0 ? `(${n})` : `${n}`);
