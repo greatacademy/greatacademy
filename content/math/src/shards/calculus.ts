@@ -82,6 +82,7 @@ import { precalculusTrigonometricIdentityTopics } from "../topics/precalculus-tr
 import { precalculusVector2DTopics } from "../topics/precalculus-vectors-2d.ts";
 import { precalculusVector3DTopics } from "../topics/precalculus-vectors-3d.ts";
 import { realAnalysisTopics } from "../topics/real-analysis.ts";
+import { realAnalysisExtraTopics } from "../topics/real-analysis-extra.ts";
 import { realAnalysisMoreTopics } from "../topics/real-analysis-more.ts";
 
 /** calculusShardTopics are the finished topics of the `calculus` shard. */
@@ -137,6 +138,7 @@ export const calculusShardTopics: readonly TopicDef[] = finishTopics(
     ...complexAnalysisMoreTopics,
     ...realAnalysisTopics,
     ...realAnalysisMoreTopics,
+    ...realAnalysisExtraTopics,
     ...multivariableCalculusVectorFunctionTopics,
     ...multivariableCalculusMultivariableFunctionTopics,
     ...multivariableCalculusMultipleIntegralTopics,
