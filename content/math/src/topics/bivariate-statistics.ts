@@ -859,7 +859,7 @@ export const predictionsWithTrendLines: TopicDef = {
       title: t("Residuals", "残差"),
       explanation: t(
         "The **residual** of a data point is how far it lies above or below the trend line:\n\n$$\\text{residual} = \\text{actual } y - \\text{predicted } y.$$\n\nA positive residual means the point lies above the line (the line underestimates it); a negative one, below the line.\n\nWith $y = 2.5x + 40$, the data point $(6, 58)$ has predicted value $2.5 \\cdot 6 + 40 = 55$, so its residual is $58 - 55 = 3$.",
-        "数据点的**残差**表示它在趋势线上方或下方多远：\n\n$$\\text{残差} = \\text{实际的 } y - \\text{预测的 } y。$$\n\n残差为正表示点在直线上方（直线低估了它）；残差为负表示点在直线下方。\n\n对 $y = 2.5x + 40$，数据点 $(6, 58)$ 的预测值是 $2.5 \\cdot 6 + 40 = 55$，所以残差是 $58 - 55 = 3$。",
+        "数据点的**残差**表示它在趋势线上方或下方多远：\n\n$$\\text{残差} = \\text{实际的 } y - \\text{预测的 } y$$\n\n残差为正表示点在直线上方（直线低估了它）；残差为负表示点在直线下方。\n\n对 $y = 2.5x + 40$，数据点 $(6, 58)$ 的预测值是 $2.5 \\cdot 6 + 40 = 55$，所以残差是 $58 - 55 = 3$。",
       ),
       generate(rng) {
         const md = drawModel(rng);

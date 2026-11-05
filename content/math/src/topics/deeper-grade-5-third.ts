@@ -5,7 +5,7 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
-import { earlyNames } from "../early-grades-kit.ts";
+import { earlyNames, lowestNumerator } from "../early-grades-kit.ts";
 import { numberProblem } from "../problems.ts";
 import { choose, chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 
@@ -400,7 +400,7 @@ export const deeperGrade5ThirdPoints: Readonly<Record<string, readonly Knowledge
       (rng) => {
         const d = rng.int(2, 12);
         const a = rng.int(1, 9);
-        const n = rng.int(1, d - 1);
+        const n = lowestNumerator(rng, d);
         const who = rng.pick(earlyNames);
         return whole(
           [
@@ -979,7 +979,7 @@ export const deeperGrade5ThirdPoints: Readonly<Record<string, readonly Knowledge
       (rng) => {
         const d = rng.int(2, 12);
         const a = rng.int(1, 6);
-        const n = rng.int(1, d - 1);
+        const n = lowestNumerator(rng, d);
         const top = a * d + n;
         return fraction(
           [`What fraction times $${a}${frac(n, d)}$ equals 1?`, `什么分数乘 $${a}${frac(n, d)}$ 等于 1？`],
@@ -1005,8 +1005,8 @@ export const deeperGrade5ThirdPoints: Readonly<Record<string, readonly Knowledge
         const a = rng.int(2, 15);
         const b = rng.int(2, 15);
         const [d, e] = rng.sample([2, 3, 4, 5, 6, 8], 2) as [number, number];
-        const n = rng.int(1, d - 1);
-        const m = rng.int(1, e - 1);
+        const n = lowestNumerator(rng, d);
+        const m = lowestNumerator(rng, e);
         const up = rng.bool();
         return whole(
           up
@@ -1041,7 +1041,7 @@ export const deeperGrade5ThirdPoints: Readonly<Record<string, readonly Knowledge
       (rng) => {
         const d = rng.pick([2, 3, 4, 5, 6, 8]);
         const a = rng.int(1, 6);
-        const n = rng.int(1, d - 1);
+        const n = lowestNumerator(rng, d);
         const k = rng.int(2, 6);
         const amount = Q.of(a * d + n, d);
         const extra = amount.mul(Q.of(1, 2));

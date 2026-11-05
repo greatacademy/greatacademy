@@ -151,7 +151,7 @@ export const secondDegreeTaylorPolynomials: TopicDef = {
       title: t("Building $P_2$ from derivative values", "由导数值构造 $P_2$"),
       explanation: t(
         "The linearization matches $f$ and $f'$ at $a$. Adding a quadratic term also matches $f''$:\n\n$$P_2(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2}(x - a)^{2}.$$\n\nThe $\\frac{1}{2}$ is needed because the second derivative of $(x - a)^{2}$ is $2$. If $f(1) = 3$, $f'(1) = -2$ and $f''(1) = 4$, then $P_2(x) = 3 - 2(x - 1) + 2(x - 1)^{2}$.",
-        "线性化在 $a$ 处与 $f$、$f'$ 相等。再加一个二次项，就能让 $f''$ 也相等：\n\n$$P_2(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2}(x - a)^{2}。$$\n\n之所以要乘 $\\frac{1}{2}$，是因为 $(x - a)^{2}$ 的二阶导数是 $2$。若 $f(1) = 3$，$f'(1) = -2$，$f''(1) = 4$，则 $P_2(x) = 3 - 2(x - 1) + 2(x - 1)^{2}$。",
+        "线性化在 $a$ 处与 $f$、$f'$ 相等。再加一个二次项，就能让 $f''$ 也相等：\n\n$$P_2(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2}(x - a)^{2}$$\n\n之所以要乘 $\\frac{1}{2}$，是因为 $(x - a)^{2}$ 的二阶导数是 $2$。若 $f(1) = 3$，$f'(1) = -2$，$f''(1) = 4$，则 $P_2(x) = 3 - 2(x - 1) + 2(x - 1)^{2}$。",
       ),
       generate: (rng) => fromValuesProblem(rng, 2),
     },
@@ -317,7 +317,7 @@ export const thirdDegreeTaylorPolynomials: TopicDef = {
       title: t("Building $P_3$ from derivative values", "由导数值构造 $P_3$"),
       explanation: t(
         "Each new term uses the next derivative at the center, divided by the factorial of its order, multiplied by the matching power of the distance from the center. The third derivative of $(x - a)^{3}$ is $3! = 6$, so the cubic coefficient is $\\frac{f'''(a)}{3!}$:\n\n$$P_3(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2!}(x - a)^{2} + \\frac{f'''(a)}{3!}(x - a)^{3}.$$\n\nIf $f(0) = 2$, $f'(0) = 1$, $f''(0) = -4$ and $f'''(0) = 12$, then $P_3(x) = 2 + x - 2x^{2} + 2x^{3}$.",
-        "每增加一项就用中心处的下一阶导数，除以其阶数的阶乘，再乘以到中心距离的相应次幂。$(x - a)^{3}$ 的三阶导数是 $3! = 6$，所以三次项系数为 $\\frac{f'''(a)}{3!}$：\n\n$$P_3(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2!}(x - a)^{2} + \\frac{f'''(a)}{3!}(x - a)^{3}。$$\n\n若 $f(0) = 2$，$f'(0) = 1$，$f''(0) = -4$，$f'''(0) = 12$，则 $P_3(x) = 2 + x - 2x^{2} + 2x^{3}$。",
+        "每增加一项就用中心处的下一阶导数，除以其阶数的阶乘，再乘以到中心距离的相应次幂。$(x - a)^{3}$ 的三阶导数是 $3! = 6$，所以三次项系数为 $\\frac{f'''(a)}{3!}$：\n\n$$P_3(x) = f(a) + f'(a)(x - a) + \\frac{f''(a)}{2!}(x - a)^{2} + \\frac{f'''(a)}{3!}(x - a)^{3}$$\n\n若 $f(0) = 2$，$f'(0) = 1$，$f''(0) = -4$，$f'''(0) = 12$，则 $P_3(x) = 2 + x - 2x^{2} + 2x^{3}$。",
       ),
       generate: (rng) => fromValuesProblem(rng, 3),
     },
@@ -351,7 +351,7 @@ export const higherDegreeTaylorPolynomials: TopicDef = {
       title: t("Coefficients of Taylor polynomials", "泰勒多项式的系数"),
       explanation: t(
         "The Taylor polynomial of degree $n$ centered at $a$ is\n\n$$P_n(x) = \\sum_{k=0}^{n} \\frac{f^{(k)}(a)}{k!}(x - a)^{k}.$$\n\nTo find one coefficient, look for the pattern in the derivatives. For $f(x) = e^{2x}$, $f^{(k)}(0) = 2^{k}$, so the coefficient of $x^{5}$ is $\\frac{2^{5}}{5!} = \\frac{32}{120} = \\frac{4}{15}$.",
-        "以 $a$ 为中心的 $n$ 次泰勒多项式为\n\n$$P_n(x) = \\sum_{k=0}^{n} \\frac{f^{(k)}(a)}{k!}(x - a)^{k}。$$\n\n要求某一个系数，就找出各阶导数的规律。对 $f(x) = e^{2x}$，$f^{(k)}(0) = 2^{k}$，所以 $x^{5}$ 的系数是 $\\frac{2^{5}}{5!} = \\frac{32}{120} = \\frac{4}{15}$。",
+        "以 $a$ 为中心的 $n$ 次泰勒多项式为\n\n$$P_n(x) = \\sum_{k=0}^{n} \\frac{f^{(k)}(a)}{k!}(x - a)^{k}$$\n\n要求某一个系数，就找出各阶导数的规律。对 $f(x) = e^{2x}$，$f^{(k)}(0) = 2^{k}$，所以 $x^{5}$ 的系数是 $\\frac{2^{5}}{5!} = \\frac{32}{120} = \\frac{4}{15}$。",
       ),
       generate(rng) {
         const f = family(rng);
@@ -422,7 +422,7 @@ export const theLagrangeErrorBound: TopicDef = {
       title: t("Applying the Lagrange error bound", "应用拉格朗日误差界"),
       explanation: t(
         "The error depends on the next derivative somewhere between the center and the point, so a bound on that derivative bounds the error. The error $R_n(x) = f(x) - P_n(x)$ equals $\\frac{f^{(n+1)}(z)}{(n + 1)!}(x - a)^{n+1}$ for some $z$ between $a$ and $x$. So if $|f^{(n+1)}| \\le M$ there,\n\n$$|R_n(x)| \\le \\frac{M \\, |x - a|^{n+1}}{(n + 1)!}.$$\n\nWith $n = 3$, $M = 6$ and $|x - a| = \\frac{1}{2}$: $|R_3| \\le \\frac{6 \\cdot (1/2)^{4}}{4!} = \\frac{1}{64}$.",
-        "误差取决于中心与该点之间某处的下一阶导数，所以给这个导数一个上界，就能给出误差的上界。误差 $R_n(x) = f(x) - P_n(x)$ 等于 $\\frac{f^{(n+1)}(z)}{(n + 1)!}(x - a)^{n+1}$，其中 $z$ 介于 $a$ 与 $x$ 之间。所以若在该区间上 $|f^{(n+1)}| \\le M$，则\n\n$$|R_n(x)| \\le \\frac{M \\, |x - a|^{n+1}}{(n + 1)!}。$$\n\n当 $n = 3$，$M = 6$，$|x - a| = \\frac{1}{2}$ 时：$|R_3| \\le \\frac{6 \\cdot (1/2)^{4}}{4!} = \\frac{1}{64}$。",
+        "误差取决于中心与该点之间某处的下一阶导数，所以给这个导数一个上界，就能给出误差的上界。误差 $R_n(x) = f(x) - P_n(x)$ 等于 $\\frac{f^{(n+1)}(z)}{(n + 1)!}(x - a)^{n+1}$，其中 $z$ 介于 $a$ 与 $x$ 之间。所以若在该区间上 $|f^{(n+1)}| \\le M$，则\n\n$$|R_n(x)| \\le \\frac{M \\, |x - a|^{n+1}}{(n + 1)!}$$\n\n当 $n = 3$，$M = 6$，$|x - a| = \\frac{1}{2}$ 时：$|R_3| \\le \\frac{6 \\cdot (1/2)^{4}}{4!} = \\frac{1}{64}$。",
       ),
       generate(rng) {
         const n = rng.int(1, 4);
@@ -728,7 +728,7 @@ export const maclaurinSeries: TopicDef = {
       title: t("Coefficients from a derivative formula", "由导数公式求系数"),
       explanation: t(
         "The **Maclaurin series** of $f$ is\n\n$$\\sum_{n=0}^{\\infty} \\frac{f^{(n)}(0)}{n!} x^{n} = f(0) + f'(0)x + \\frac{f''(0)}{2!}x^{2} + \\cdots.$$\n\nWhen a formula gives $f^{(n)}(0)$, divide by $n!$. If $f^{(n)}(0) = \\frac{(n + 1)!}{2^{n}}$, the coefficient of $x^{n}$ is $\\frac{n + 1}{2^{n}}$; for $x^{3}$ it is $\\frac{4}{8} = \\frac{1}{2}$.",
-        "$f$ 的**麦克劳林级数**为\n\n$$\\sum_{n=0}^{\\infty} \\frac{f^{(n)}(0)}{n!} x^{n} = f(0) + f'(0)x + \\frac{f''(0)}{2!}x^{2} + \\cdots。$$\n\n若给出 $f^{(n)}(0)$ 的公式，就除以 $n!$。若 $f^{(n)}(0) = \\frac{(n + 1)!}{2^{n}}$，则 $x^{n}$ 的系数为 $\\frac{n + 1}{2^{n}}$；$x^{3}$ 的系数是 $\\frac{4}{8} = \\frac{1}{2}$。",
+        "$f$ 的**麦克劳林级数**为\n\n$$\\sum_{n=0}^{\\infty} \\frac{f^{(n)}(0)}{n!} x^{n} = f(0) + f'(0)x + \\frac{f''(0)}{2!}x^{2} + \\cdots$$\n\n若给出 $f^{(n)}(0)$ 的公式，就除以 $n!$。若 $f^{(n)}(0) = \\frac{(n + 1)!}{2^{n}}$，则 $x^{n}$ 的系数为 $\\frac{n + 1}{2^{n}}$；$x^{3}$ 的系数是 $\\frac{4}{8} = \\frac{1}{2}$。",
       ),
       generate(rng) {
         const k = rng.int(2, 5);
@@ -1003,7 +1003,7 @@ export const recognizingStandardMaclaurinSeries: TopicDef = {
       title: t("Naming the function", "说出对应的函数"),
       explanation: t(
         "A few series appear so often that it pays to recognize them on sight from the pattern of their coefficients and signs. Three series to know:\n\n$$e^{x} = \\sum_{n=0}^{\\infty} \\frac{x^{n}}{n!}, \\qquad \\frac{1}{1 - x} = \\sum_{n=0}^{\\infty} x^{n}, \\qquad \\ln(1 + x) = \\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1} x^{n}}{n}.$$\n\nReplacing $x$ with $kx$ turns $x^{n}$ into $k^{n}x^{n}$, so $\\sum \\frac{3^{n} x^{n}}{n!} = e^{3x}$.",
-        "有几个级数出现得非常频繁，值得根据系数和符号的规律一眼认出它们。需要熟记三个级数：\n\n$$e^{x} = \\sum_{n=0}^{\\infty} \\frac{x^{n}}{n!}, \\qquad \\frac{1}{1 - x} = \\sum_{n=0}^{\\infty} x^{n}, \\qquad \\ln(1 + x) = \\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1} x^{n}}{n}。$$\n\n把 $x$ 换成 $kx$，$x^{n}$ 就变成 $k^{n}x^{n}$，所以 $\\sum \\frac{3^{n} x^{n}}{n!} = e^{3x}$。",
+        "有几个级数出现得非常频繁，值得根据系数和符号的规律一眼认出它们。需要熟记三个级数：\n\n$$e^{x} = \\sum_{n=0}^{\\infty} \\frac{x^{n}}{n!}, \\qquad \\frac{1}{1 - x} = \\sum_{n=0}^{\\infty} x^{n}, \\qquad \\ln(1 + x) = \\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1} x^{n}}{n}$$\n\n把 $x$ 换成 $kx$，$x^{n}$ 就变成 $k^{n}x^{n}$，所以 $\\sum \\frac{3^{n} x^{n}}{n!} = e^{3x}$。",
       ),
       generate(rng) {
         const kind = rng.int(0, 2);
@@ -1118,7 +1118,7 @@ export const recognizingStandardMaclaurinSeriesForTrigonometricFunctions: TopicD
       title: t("Naming the function", "说出对应的函数"),
       explanation: t(
         "$$\\sin x = \\sum_{n=0}^{\\infty} \\frac{(-1)^{n} x^{2n+1}}{(2n + 1)!}, \\quad \\cos x = \\sum_{n=0}^{\\infty} \\frac{(-1)^{n} x^{2n}}{(2n)!}, \\quad \\arctan x = \\sum_{n=0}^{\\infty} \\frac{(-1)^{n} x^{2n+1}}{2n + 1}.$$\n\nOdd powers with factorials mean sine, even powers with factorials mean cosine, and odd powers over $2n + 1$ without a factorial mean arctangent. So $\\sum \\frac{(-1)^{n} 2^{2n} x^{2n}}{(2n)!} = \\cos(2x)$.",
-        "$$\\sin x = \\sum_{n=0}^{\\infty} \\frac{(-1)^{n} x^{2n+1}}{(2n + 1)!}, \\quad \\cos x = \\sum_{n=0}^{\\infty} \\frac{(-1)^{n} x^{2n}}{(2n)!}, \\quad \\arctan x = \\sum_{n=0}^{\\infty} \\frac{(-1)^{n} x^{2n+1}}{2n + 1}。$$\n\n奇次幂配阶乘是正弦，偶次幂配阶乘是余弦，奇次幂除以 $2n + 1$（没有阶乘）是反正切。所以 $\\sum \\frac{(-1)^{n} 2^{2n} x^{2n}}{(2n)!} = \\cos(2x)$。",
+        "$$\\sin x = \\sum_{n=0}^{\\infty} \\frac{(-1)^{n} x^{2n+1}}{(2n + 1)!}, \\quad \\cos x = \\sum_{n=0}^{\\infty} \\frac{(-1)^{n} x^{2n}}{(2n)!}, \\quad \\arctan x = \\sum_{n=0}^{\\infty} \\frac{(-1)^{n} x^{2n+1}}{2n + 1}$$\n\n奇次幂配阶乘是正弦，偶次幂配阶乘是余弦，奇次幂除以 $2n + 1$（没有阶乘）是反正切。所以 $\\sum \\frac{(-1)^{n} 2^{2n} x^{2n}}{(2n)!} = \\cos(2x)$。",
       ),
       generate(rng) {
         const kind = rng.int(0, 2);
@@ -1311,7 +1311,7 @@ export const approximatingIntegralsUsingTaylorSeries: TopicDef = {
       title: t("A series for an integral", "积分的级数"),
       explanation: t(
         "A power series can be integrated term by term inside its interval of convergence. $e^{-t^{2}}$ has no elementary antiderivative, but $e^{-t^{2}} = 1 - t^{2} + \\frac{t^{4}}{2} - \\cdots$, so\n\n$$\\int_{0}^{x} e^{-t^{2}} \\, dt = x - \\frac{x^{3}}{3} + \\frac{x^{5}}{10} - \\cdots.$$",
-        "在收敛区间内部，幂级数可以逐项积分。$e^{-t^{2}}$ 没有初等原函数，但 $e^{-t^{2}} = 1 - t^{2} + \\frac{t^{4}}{2} - \\cdots$，所以\n\n$$\\int_{0}^{x} e^{-t^{2}} \\, dt = x - \\frac{x^{3}}{3} + \\frac{x^{5}}{10} - \\cdots。$$",
+        "在收敛区间内部，幂级数可以逐项积分。$e^{-t^{2}}$ 没有初等原函数，但 $e^{-t^{2}} = 1 - t^{2} + \\frac{t^{4}}{2} - \\cdots$，所以\n\n$$\\int_{0}^{x} e^{-t^{2}} \\, dt = x - \\frac{x^{3}}{3} + \\frac{x^{5}}{10} - \\cdots$$",
       ),
       generate(rng) {
         const s = integralSeries(rng);

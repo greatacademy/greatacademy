@@ -987,7 +987,7 @@ export const combiningGraphTransformationsThreeOrMoreOperations: TopicDef = {
       title: t("Following a point", "追踪一个点"),
       explanation: t(
         "Changes inside the function act on $x$ and are undone in reverse, while changes outside act on $y$ directly. Track a single point through each transformation.\n\nFor $y = a f(b(x - h)) + k$, the point $(x, y)$ of $f$ moves to\n\n$$\\left(\\frac{x}{b} + h,\\ ay + k\\right).$$\n\nFor $y = 3f(2(x + 1)) - 4$, the point $(6, 2)$ moves to $\\left(\\frac{6}{2} - 1,\\ 3 \\cdot 2 - 4\\right) = (2, 2)$.",
-        "函数内部的变化作用于 $x$，要反过来理解；函数外部的变化直接作用于 $y$。跟踪一个点经过每一次变换的位置。\n\n对于 $y = a f(b(x - h)) + k$，$f$ 上的点 $(x, y)$ 移到\n\n$$\\left(\\frac{x}{b} + h,\\ ay + k\\right)。$$\n\n对于 $y = 3f(2(x + 1)) - 4$，点 $(6, 2)$ 移到 $\\left(\\frac{6}{2} - 1,\\ 3 \\cdot 2 - 4\\right) = (2, 2)$。",
+        "函数内部的变化作用于 $x$，要反过来理解；函数外部的变化直接作用于 $y$。跟踪一个点经过每一次变换的位置。\n\n对于 $y = a f(b(x - h)) + k$，$f$ 上的点 $(x, y)$ 移到\n\n$$\\left(\\frac{x}{b} + h,\\ ay + k\\right)$$\n\n对于 $y = 3f(2(x + 1)) - 4$，点 $(6, 2)$ 移到 $\\left(\\frac{6}{2} - 1,\\ 3 \\cdot 2 - 4\\right) = (2, 2)$。",
       ),
       generate(rng) {
         const g = threeTf(rng);
@@ -1152,7 +1152,7 @@ export const constructingFunctionsUsingTransformations: TopicDef = {
       title: t("Transforming a given function", "变换给定的函数"),
       explanation: t(
         "To transform a function given by a formula, write the transformation in function notation first, then substitute. Let $f(x) = x^2 - 2x$. Stretching vertically by $2$, then shifting right $1$ and down $3$ gives\n\n$$g(x) = 2f(x - 1) - 3 = 2\\left((x - 1)^2 - 2(x - 1)\\right) - 3 = 2x^2 - 8x + 3.$$",
-        "要变换由解析式给出的函数，先用函数记号写出变换，再代入。设 $f(x) = x^2 - 2x$。竖直伸长为原来的 $2$ 倍，再向右平移 $1$、向下平移 $3$ 得到\n\n$$g(x) = 2f(x - 1) - 3 = 2\\left((x - 1)^2 - 2(x - 1)\\right) - 3 = 2x^2 - 8x + 3。$$",
+        "要变换由解析式给出的函数，先用函数记号写出变换，再代入。设 $f(x) = x^2 - 2x$。竖直伸长为原来的 $2$ 倍，再向右平移 $1$、向下平移 $3$ 得到\n\n$$g(x) = 2f(x - 1) - 3 = 2\\left((x - 1)^2 - 2(x - 1)\\right) - 3 = 2x^2 - 8x + 3$$",
       ),
       generate(rng) {
         const f = randomQuadratic(rng);
@@ -1272,7 +1272,7 @@ export const verticalReflectionsOfFunctions: TopicDef = {
       title: t("Writing the reflected function", "写出翻折后的函数"),
       explanation: t(
         "To reflect the graph of $f$ in the $x$-axis, take the opposite of the **whole** function: every term changes sign. For $f(x) = x^2 - 3x + 2$,\n\n$$-f(x) = -(x^2 - 3x + 2) = -x^2 + 3x - 2.$$",
-        "要把 $f$ 的图象关于 $x$ 轴翻折，就取**整个**函数的相反数：每一项都变号。对于 $f(x) = x^2 - 3x + 2$，\n\n$$-f(x) = -(x^2 - 3x + 2) = -x^2 + 3x - 2。$$",
+        "要把 $f$ 的图象关于 $x$ 轴翻折，就取**整个**函数的相反数：每一项都变号。对于 $f(x) = x^2 - 3x + 2$，\n\n$$-f(x) = -(x^2 - 3x + 2) = -x^2 + 3x - 2$$",
       ),
       generate(rng) {
         const f = randomQuadratic(rng);
@@ -1363,7 +1363,7 @@ export const horizontalReflectionsOfFunctions: TopicDef = {
       title: t("Writing the reflected function", "写出翻折后的函数"),
       explanation: t(
         "To reflect the graph of $f$ in the $y$-axis, replace every $x$ with $-x$. Even powers of $-x$ equal those of $x$, while odd powers change sign. For $f(x) = 2x^2 + 5x - 1$,\n\n$$f(-x) = 2(-x)^2 + 5(-x) - 1 = 2x^2 - 5x - 1.$$",
-        "要把 $f$ 的图象关于 $y$ 轴翻折，就把每个 $x$ 换成 $-x$。$-x$ 的偶次幂等于 $x$ 的偶次幂，奇次幂则变号。对于 $f(x) = 2x^2 + 5x - 1$，\n\n$$f(-x) = 2(-x)^2 + 5(-x) - 1 = 2x^2 - 5x - 1。$$",
+        "要把 $f$ 的图象关于 $y$ 轴翻折，就把每个 $x$ 换成 $-x$。$-x$ 的偶次幂等于 $x$ 的偶次幂，奇次幂则变号。对于 $f(x) = 2x^2 + 5x - 1$，\n\n$$f(-x) = 2(-x)^2 + 5(-x) - 1 = 2x^2 - 5x - 1$$",
       ),
       generate(rng) {
         const cubic = rng.bool(0.4);
@@ -1589,7 +1589,7 @@ export const findingPointsOnTransformedCurves: TopicDef = {
       title: t("From f to the transformed curve", "从 f 到变换后的曲线"),
       explanation: t(
         "To move the point $(p, q)$ of $f$ onto $y = a f(bx + c) + d$, solve for the $x$ that makes the input equal $p$, then compute the output:\n\n$$bx + c = p, \\qquad y = a q + d.$$\n\nFor $(4, 3)$ and $y = -2f(2x - 6) + 1$: $2x - 6 = 4$ gives $x = 5$, and $y = -2 \\cdot 3 + 1 = -5$, so the point is $(5, -5)$.",
-        "要把 $f$ 上的点 $(p, q)$ 移到 $y = a f(bx + c) + d$ 上，先求使输入等于 $p$ 的 $x$，再计算输出：\n\n$$bx + c = p, \\qquad y = a q + d。$$\n\n对于 $(4, 3)$ 和 $y = -2f(2x - 6) + 1$：由 $2x - 6 = 4$ 得 $x = 5$，$y = -2 \\cdot 3 + 1 = -5$，所以这个点是 $(5, -5)$。",
+        "要把 $f$ 上的点 $(p, q)$ 移到 $y = a f(bx + c) + d$ 上，先求使输入等于 $p$ 的 $x$，再计算输出：\n\n$$bx + c = p, \\qquad y = a q + d$$\n\n对于 $(4, 3)$ 和 $y = -2f(2x - 6) + 1$：由 $2x - 6 = 4$ 得 $x = 5$，$y = -2 \\cdot 3 + 1 = -5$，所以这个点是 $(5, -5)$。",
       ),
       generate(rng) {
         const l = randomLin(rng);
@@ -1644,7 +1644,7 @@ export const findingPointsOnTransformedCurves: TopicDef = {
       title: t("Values from a table", "由表格求值"),
       explanation: t(
         "To evaluate a transformed function at a number, work from the inside out: compute the input of $f$, look up $f$ there, then apply the outer operations. If $f(1) = 7$ and $g(x) = 3f(2x - 5) - 4$, then\n\n$$g(3) = 3f(2 \\cdot 3 - 5) - 4 = 3f(1) - 4 = 3 \\cdot 7 - 4 = 17.$$",
-        "要求变换后的函数在某个数处的值，从内向外计算：先算 $f$ 的输入，查出 $f$ 在该处的值，再进行外层的运算。若 $f(1) = 7$，$g(x) = 3f(2x - 5) - 4$，则\n\n$$g(3) = 3f(2 \\cdot 3 - 5) - 4 = 3f(1) - 4 = 3 \\cdot 7 - 4 = 17。$$",
+        "要求变换后的函数在某个数处的值，从内向外计算：先算 $f$ 的输入，查出 $f$ 在该处的值，再进行外层的运算。若 $f(1) = 7$，$g(x) = 3f(2x - 5) - 4$，则\n\n$$g(3) = 3f(2 \\cdot 3 - 5) - 4 = 3f(1) - 4 = 3 \\cdot 7 - 4 = 17$$",
       ),
       generate(rng) {
         const xs = range(-3, 3);

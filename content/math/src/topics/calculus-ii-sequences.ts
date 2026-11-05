@@ -59,7 +59,7 @@ export const limitsOfSequences: TopicDef = {
       title: t("Sequences with leading terms of equal degree", "首项次数相同的数列"),
       explanation: t(
         "A sequence $a_n$ **converges** to $L$, written $\\lim_{n \\to \\infty} a_n = L$, when $a_n$ gets as close to $L$ as we like for all large enough $n$. If $a_n = f(n)$ and $\\lim_{x \\to \\infty} f(x) = L$, then $\\lim_{n \\to \\infty} a_n = L$. When the numerator and denominator have the same degree, the limit is the ratio of the leading coefficients:\n\n$$\\lim_{n \\to \\infty} \\frac{3n^{2} - n}{2n^{2} + 5} = \\lim_{n \\to \\infty} \\frac{3 - \\frac{1}{n}}{2 + \\frac{5}{n^{2}}} = \\frac{3}{2}.$$",
-        "当 $n$ 足够大时，若 $a_n$ 能任意接近 $L$，就说数列 $a_n$ **收敛**于 $L$，记作 $\\lim_{n \\to \\infty} a_n = L$。若 $a_n = f(n)$ 且 $\\lim_{x \\to \\infty} f(x) = L$，则 $\\lim_{n \\to \\infty} a_n = L$。分子分母次数相同时，极限是首项系数之比：\n\n$$\\lim_{n \\to \\infty} \\frac{3n^{2} - n}{2n^{2} + 5} = \\lim_{n \\to \\infty} \\frac{3 - \\frac{1}{n}}{2 + \\frac{5}{n^{2}}} = \\frac{3}{2}。$$",
+        "当 $n$ 足够大时，若 $a_n$ 能任意接近 $L$，就说数列 $a_n$ **收敛**于 $L$，记作 $\\lim_{n \\to \\infty} a_n = L$。若 $a_n = f(n)$ 且 $\\lim_{x \\to \\infty} f(x) = L$，则 $\\lim_{n \\to \\infty} a_n = L$。分子分母次数相同时，极限是首项系数之比：\n\n$$\\lim_{n \\to \\infty} \\frac{3n^{2} - n}{2n^{2} + 5} = \\lim_{n \\to \\infty} \\frac{3 - \\frac{1}{n}}{2 + \\frac{5}{n^{2}}} = \\frac{3}{2}$$",
       ),
       generate(rng) {
         const d = rng.int(1, 2);
@@ -229,7 +229,7 @@ export const furtherConvergenceOfGeometricSequences: TopicDef = {
       title: t("Quotients of exponentials", "指数式之商"),
       explanation: t(
         "Divide every term by the fastest-growing exponential. Each other term becomes a geometric sequence with ratio between $0$ and $1$, which tends to $0$:\n\n$$\\frac{2 \\cdot 5^{n} + 3^{n}}{5^{n} - 4^{n}} = \\frac{2 + \\left(\\frac{3}{5}\\right)^{n}}{1 - \\left(\\frac{4}{5}\\right)^{n}} \\to \\frac{2 + 0}{1 - 0} = 2.$$",
-        "把每一项都除以增长最快的指数项。其余各项都变成公比在 $0$ 与 $1$ 之间的等比数列，趋于 $0$：\n\n$$\\frac{2 \\cdot 5^{n} + 3^{n}}{5^{n} - 4^{n}} = \\frac{2 + \\left(\\frac{3}{5}\\right)^{n}}{1 - \\left(\\frac{4}{5}\\right)^{n}} \\to \\frac{2 + 0}{1 - 0} = 2。$$",
+        "把每一项都除以增长最快的指数项。其余各项都变成公比在 $0$ 与 $1$ 之间的等比数列，趋于 $0$：\n\n$$\\frac{2 \\cdot 5^{n} + 3^{n}}{5^{n} - 4^{n}} = \\frac{2 + \\left(\\frac{3}{5}\\right)^{n}}{1 - \\left(\\frac{4}{5}\\right)^{n}} \\to \\frac{2 + 0}{1 - 0} = 2$$",
       ),
       generate(rng) {
         const b = rng.int(3, 7);
@@ -259,7 +259,7 @@ export const furtherConvergenceOfGeometricSequences: TopicDef = {
       title: t("Values of x for which a geometric sequence converges", "使等比数列收敛的 x"),
       explanation: t(
         "A geometric sequence $r^{n}$ converges exactly when $-1 < r \\le 1$: to $0$ inside, and to $1$ at $r = 1$. When the ratio depends on $x$, solve this compound inequality. For $\\left(\\frac{x - 1}{3}\\right)^{n}$:\n\n$$-1 < \\frac{x - 1}{3} \\le 1 \\iff -3 < x - 1 \\le 3 \\iff -2 < x \\le 4,$$\n\nso the sequence converges for $x$ in $(-2, 4]$.",
-        "等比数列 $r^{n}$ 收敛当且仅当 $-1 < r \\le 1$：区间内部收敛于 $0$，$r = 1$ 时收敛于 $1$。公比含 $x$ 时，解这个连不等式。对 $\\left(\\frac{x - 1}{3}\\right)^{n}$：\n\n$$-1 < \\frac{x - 1}{3} \\le 1 \\iff -3 < x - 1 \\le 3 \\iff -2 < x \\le 4，$$\n\n所以当 $x$ 属于 $(-2, 4]$ 时数列收敛。",
+        "等比数列 $r^{n}$ 收敛当且仅当 $-1 < r \\le 1$：区间内部收敛于 $0$，$r = 1$ 时收敛于 $1$。公比含 $x$ 时，解这个连不等式。对 $\\left(\\frac{x - 1}{3}\\right)^{n}$：\n\n$$-1 < \\frac{x - 1}{3} \\le 1 \\iff -3 < x - 1 \\le 3 \\iff -2 < x \\le 4$$\n\n所以当 $x$ 属于 $(-2, 4]$ 时数列收敛。",
       ),
       generate(rng) {
         const a = rng.int(1, 4);
@@ -307,7 +307,7 @@ export const limitsOfSequencesWithFactorials: TopicDef = {
       title: t("Cancelling factorials", "阶乘的约分"),
       explanation: t(
         "A larger factorial contains every factor of a smaller one, so write the larger one as a product ending in the smaller factorial and cancel. Since $(n + 1)! = (n + 1) \\cdot n!$ and $(n + 2)! = (n + 2)(n + 1) \\cdot n!$, a quotient of factorials that differ by a fixed amount is a polynomial:\n\n$$\\frac{(n + 2)!}{n! \\, (3n^{2} + 1)} = \\frac{(n + 2)(n + 1)}{3n^{2} + 1} \\to \\frac{1}{3}.$$",
-        "较大的阶乘包含较小阶乘的所有因子，所以把较大的阶乘写成以较小阶乘结尾的乘积，再约分。由于 $(n + 1)! = (n + 1) \\cdot n!$，$(n + 2)! = (n + 2)(n + 1) \\cdot n!$，相差固定量的两个阶乘之商是多项式：\n\n$$\\frac{(n + 2)!}{n! \\, (3n^{2} + 1)} = \\frac{(n + 2)(n + 1)}{3n^{2} + 1} \\to \\frac{1}{3}。$$",
+        "较大的阶乘包含较小阶乘的所有因子，所以把较大的阶乘写成以较小阶乘结尾的乘积，再约分。由于 $(n + 1)! = (n + 1) \\cdot n!$，$(n + 2)! = (n + 2)(n + 1) \\cdot n!$，相差固定量的两个阶乘之商是多项式：\n\n$$\\frac{(n + 2)!}{n! \\, (3n^{2} + 1)} = \\frac{(n + 2)(n + 1)}{3n^{2} + 1} \\to \\frac{1}{3}$$",
       ),
       generate(rng) {
         if (rng.bool()) {
@@ -412,7 +412,7 @@ export const determiningLimitsOfSequencesUsingRelativeMagnitudes: TopicDef = {
       title: t("Dividing by the dominant term", "除以主导项"),
       explanation: t(
         `For large $n$ the common kinds of terms are ordered by growth (with $k > 0$ and $b > 1$):\n\n$$${hierarchy}.$$\n\nEach is eventually negligible next to the next, so the quotient of any lower term by a higher one tends to $0$. When the numerator and the denominator share the same dominant term $D$, divide by $D$:\n\n$$\\frac{4 \\cdot 3^{n} + n^{5}}{2 \\cdot 3^{n} - \\ln n} = \\frac{4 + \\frac{n^{5}}{3^{n}}}{2 - \\frac{\\ln n}{3^{n}}} \\to 2.$$`,
-        `$n$ 很大时，常见的项按增长快慢排列（$k > 0$，$b > 1$）：\n\n$$${hierarchy}。$$\n\n每一项最终都远小于后一项，所以较低的项除以较高的项趋于 $0$。分子分母的主导项 $D$ 相同时，同除以 $D$：\n\n$$\\frac{4 \\cdot 3^{n} + n^{5}}{2 \\cdot 3^{n} - \\ln n} = \\frac{4 + \\frac{n^{5}}{3^{n}}}{2 - \\frac{\\ln n}{3^{n}}} \\to 2。$$`,
+        `$n$ 很大时，常见的项按增长快慢排列（$k > 0$，$b > 1$）：\n\n$$${hierarchy}$$\n\n每一项最终都远小于后一项，所以较低的项除以较高的项趋于 $0$。分子分母的主导项 $D$ 相同时，同除以 $D$：\n\n$$\\frac{4 \\cdot 3^{n} + n^{5}}{2 \\cdot 3^{n} - \\ln n} = \\frac{4 + \\frac{n^{5}}{3^{n}}}{2 - \\frac{\\ln n}{3^{n}}} \\to 2$$`,
       ),
       generate(rng) {
         const D = growth(rng, rng.int(1, 4));
@@ -581,7 +581,7 @@ export const monotonicSequences: TopicDef = {
       title: t("The difference of consecutive terms", "相邻两项之差"),
       explanation: t(
         "To decide whether $a_n$ is monotonic, simplify $a_{n+1} - a_n$. For $a_n = \\frac{2n + 1}{n + 3}$:\n\n$$a_{n+1} - a_n = \\frac{2n + 3}{n + 4} - \\frac{2n + 1}{n + 3} = \\frac{(2n + 3)(n + 3) - (2n + 1)(n + 4)}{(n + 3)(n + 4)} = \\frac{5}{(n + 3)(n + 4)}.$$\n\nThe difference is positive for every $n \\ge 1$, so the sequence is increasing.",
-        "判断 $a_n$ 是否单调，就化简 $a_{n+1} - a_n$。对 $a_n = \\frac{2n + 1}{n + 3}$：\n\n$$a_{n+1} - a_n = \\frac{2n + 3}{n + 4} - \\frac{2n + 1}{n + 3} = \\frac{(2n + 3)(n + 3) - (2n + 1)(n + 4)}{(n + 3)(n + 4)} = \\frac{5}{(n + 3)(n + 4)}。$$\n\n对每个 $n \\ge 1$ 差都为正，所以数列单调递增。",
+        "判断 $a_n$ 是否单调，就化简 $a_{n+1} - a_n$。对 $a_n = \\frac{2n + 1}{n + 3}$：\n\n$$a_{n+1} - a_n = \\frac{2n + 3}{n + 4} - \\frac{2n + 1}{n + 3} = \\frac{(2n + 3)(n + 3) - (2n + 1)(n + 4)}{(n + 3)(n + 4)} = \\frac{5}{(n + 3)(n + 4)}$$\n\n对每个 $n \\ge 1$ 差都为正，所以数列单调递增。",
       ),
       generate(rng) {
         for (;;) {
@@ -778,7 +778,7 @@ export const identifyingMonotonicSequencesUsingRatios: TopicDef = {
       title: t("The ratio of consecutive terms", "相邻两项之比"),
       explanation: t(
         "Dividing a term by the one before it cancels most factors when the terms are products of powers and factorials, leaving a simple expression in the index. When the terms are products, their ratio simplifies well. For $a_n = \\frac{3^{n}}{n!}$:\n\n$$\\frac{a_{n+1}}{a_n} = \\frac{3^{n+1}}{(n + 1)!} \\cdot \\frac{n!}{3^{n}} = \\frac{3}{n + 1}.$$",
-        "当各项是幂与阶乘的积时，用一项除以前一项会约去大部分因子，只剩下关于下标的简单式子。各项是乘积时，比值很容易化简。对 $a_n = \\frac{3^{n}}{n!}$：\n\n$$\\frac{a_{n+1}}{a_n} = \\frac{3^{n+1}}{(n + 1)!} \\cdot \\frac{n!}{3^{n}} = \\frac{3}{n + 1}。$$",
+        "当各项是幂与阶乘的积时，用一项除以前一项会约去大部分因子，只剩下关于下标的简单式子。各项是乘积时，比值很容易化简。对 $a_n = \\frac{3^{n}}{n!}$：\n\n$$\\frac{a_{n+1}}{a_n} = \\frac{3^{n+1}}{(n + 1)!} \\cdot \\frac{n!}{3^{n}} = \\frac{3}{n + 1}$$",
       ),
       generate(rng) {
         const k = rng.int(2, 9);
@@ -1050,7 +1050,7 @@ export const propertiesOfInfiniteSeries: TopicDef = {
       title: t("Linear combinations of convergent series", "收敛级数的线性组合"),
       explanation: t(
         "If $\\sum a_n = A$ and $\\sum b_n = B$ both converge, then for any constants $c$ and $d$,\n\n$$\\sum_{n=1}^{\\infty} (c \\, a_n + d \\, b_n) = cA + dB,$$\n\nbecause the partial sums satisfy the same rule and limits respect it. For $A = 3$ and $B = -2$: $\\sum (2a_n - 5b_n) = 6 + 10 = 16$.",
-        "若 $\\sum a_n = A$ 与 $\\sum b_n = B$ 都收敛，则对任意常数 $c$、$d$，\n\n$$\\sum_{n=1}^{\\infty} (c \\, a_n + d \\, b_n) = cA + dB，$$\n\n因为部分和满足同样的法则，而极限保持这一法则。若 $A = 3$，$B = -2$：$\\sum (2a_n - 5b_n) = 6 + 10 = 16$。",
+        "若 $\\sum a_n = A$ 与 $\\sum b_n = B$ 都收敛，则对任意常数 $c$、$d$，\n\n$$\\sum_{n=1}^{\\infty} (c \\, a_n + d \\, b_n) = cA + dB$$\n\n因为部分和满足同样的法则，而极限保持这一法则。若 $A = 3$，$B = -2$：$\\sum (2a_n - 5b_n) = 6 + 10 = 16$。",
       ),
       generate(rng) {
         const A = Q.of(rng.nonZero(-12, 12), rng.pick([1, 1, 2, 3]));
@@ -1127,7 +1127,7 @@ export const furtherPropertiesOfInfiniteSeries: TopicDef = {
       title: t("Removing initial terms", "去掉开头的项"),
       explanation: t(
         "Starting the sum at a later index leaves out finitely many terms, which does not affect whether it converges but does change its value. Starting a series later subtracts the terms left out:\n\n$$\\sum_{n=k}^{\\infty} a_n = \\sum_{n=1}^{\\infty} a_n - (a_1 + \\cdots + a_{k-1}).$$\n\nIf $\\sum_{n=1}^{\\infty} \\frac{1}{n(n + 1)} = 1$, then $\\sum_{n=3}^{\\infty} \\frac{1}{n(n + 1)} = 1 - \\frac{1}{2} - \\frac{1}{6} = \\frac{1}{3}$.",
-        "从较后的下标开始求和会去掉有限个项，这不影响是否收敛，但会改变和的值。从后面的项开始求和，就减去被省略的项：\n\n$$\\sum_{n=k}^{\\infty} a_n = \\sum_{n=1}^{\\infty} a_n - (a_1 + \\cdots + a_{k-1})。$$\n\n若 $\\sum_{n=1}^{\\infty} \\frac{1}{n(n + 1)} = 1$，则 $\\sum_{n=3}^{\\infty} \\frac{1}{n(n + 1)} = 1 - \\frac{1}{2} - \\frac{1}{6} = \\frac{1}{3}$。",
+        "从较后的下标开始求和会去掉有限个项，这不影响是否收敛，但会改变和的值。从后面的项开始求和，就减去被省略的项：\n\n$$\\sum_{n=k}^{\\infty} a_n = \\sum_{n=1}^{\\infty} a_n - (a_1 + \\cdots + a_{k-1})$$\n\n若 $\\sum_{n=1}^{\\infty} \\frac{1}{n(n + 1)} = 1$，则 $\\sum_{n=3}^{\\infty} \\frac{1}{n(n + 1)} = 1 - \\frac{1}{2} - \\frac{1}{6} = \\frac{1}{3}$。",
       ),
       generate(rng) {
         const p = rng.int(1, 12);
@@ -1231,7 +1231,7 @@ export const telescopingSeries: TopicDef = {
       title: t("Partial sums of telescoping series", "裂项级数的部分和"),
       explanation: t(
         "In a telescoping sum each term cancels part of the next one, so only the first and last pieces survive, and the limit is easy to find. When each term is a difference $b_n - b_{n+1}$, the middle terms cancel in pairs:\n\n$$S_N = (b_1 - b_2) + (b_2 - b_3) + \\cdots + (b_N - b_{N+1}) = b_1 - b_{N+1}.$$\n\nFor $\\frac{1}{n(n + 1)} = \\frac{1}{n} - \\frac{1}{n + 1}$: $S_N = 1 - \\frac{1}{N + 1}$, so $S_4 = \\frac{4}{5}$.",
-        "在裂项相消的和中，每一项都抵消下一项的一部分，只剩下首尾两部分，极限就很容易求了。当每一项都是差 $b_n - b_{n+1}$ 时，中间的项两两相消：\n\n$$S_N = (b_1 - b_2) + (b_2 - b_3) + \\cdots + (b_N - b_{N+1}) = b_1 - b_{N+1}。$$\n\n对 $\\frac{1}{n(n + 1)} = \\frac{1}{n} - \\frac{1}{n + 1}$：$S_N = 1 - \\frac{1}{N + 1}$，所以 $S_4 = \\frac{4}{5}$。",
+        "在裂项相消的和中，每一项都抵消下一项的一部分，只剩下首尾两部分，极限就很容易求了。当每一项都是差 $b_n - b_{n+1}$ 时，中间的项两两相消：\n\n$$S_N = (b_1 - b_2) + (b_2 - b_3) + \\cdots + (b_N - b_{N+1}) = b_1 - b_{N+1}$$\n\n对 $\\frac{1}{n(n + 1)} = \\frac{1}{n} - \\frac{1}{n + 1}$：$S_N = 1 - \\frac{1}{N + 1}$，所以 $S_4 = \\frac{4}{5}$。",
       ),
       generate(rng) {
         const c = rng.int(1, 9);
@@ -1258,7 +1258,7 @@ export const telescopingSeries: TopicDef = {
       title: t("Sums of telescoping series", "裂项级数的和"),
       explanation: t(
         "When the two pieces are $k$ places apart, $k$ terms survive at the start:\n\n$$\\frac{2}{n(n + 2)} = \\frac{1}{n} - \\frac{1}{n + 2}, \\qquad S_N = 1 + \\frac{1}{2} - \\frac{1}{N + 1} - \\frac{1}{N + 2} \\to \\frac{3}{2}.$$\n\nThe terms at the end tend to $0$, so the sum is the sum of the surviving terms at the start.",
-        "当两部分相隔 $k$ 个位置时，开头会留下 $k$ 项：\n\n$$\\frac{2}{n(n + 2)} = \\frac{1}{n} - \\frac{1}{n + 2}，\\qquad S_N = 1 + \\frac{1}{2} - \\frac{1}{N + 1} - \\frac{1}{N + 2} \\to \\frac{3}{2}。$$\n\n末尾的项趋于 $0$，所以级数的和就是开头留下的各项之和。",
+        "当两部分相隔 $k$ 个位置时，开头会留下 $k$ 项：\n\n$$\\frac{2}{n(n + 2)} = \\frac{1}{n} - \\frac{1}{n + 2}, \\qquad S_N = 1 + \\frac{1}{2} - \\frac{1}{N + 1} - \\frac{1}{N + 2} \\to \\frac{3}{2}$$\n\n末尾的项趋于 $0$，所以级数的和就是开头留下的各项之和。",
       ),
       generate(rng) {
         const a = rng.int(0, 4);
@@ -1330,7 +1330,7 @@ export const findingTheSumOfAnInfiniteGeometricSeries: TopicDef = {
       title: t("Sums of written-out geometric series", "写出各项的等比级数之和"),
       explanation: t(
         `To sum a written-out geometric series, find its first term and the common ratio by dividing a term by the one before it, and check that the ratio is small enough. The partial sums of $a + ar + ar^{2} + \\cdots$ are $S_n = \\frac{a(1 - r^{n})}{1 - r}$. When $|r| < 1$, $r^{n} \\to 0$, so the series converges to\n\n$$${geometricSum}.$$\n\nFor $12 - 6 + 3 - \\frac{3}{2} + \\cdots$: $a = 12$, $r = -\\frac{1}{2}$, and $S = \\frac{12}{3/2} = 8$.`,
-        `求写出各项的等比级数之和时，先找出首项，并用某一项除以前一项求出公比，再检查公比的绝对值是否小于 1。$a + ar + ar^{2} + \\cdots$ 的部分和为 $S_n = \\frac{a(1 - r^{n})}{1 - r}$。当 $|r| < 1$ 时 $r^{n} \\to 0$，所以级数收敛于\n\n$$${geometricSum}。$$\n\n对 $12 - 6 + 3 - \\frac{3}{2} + \\cdots$：$a = 12$，$r = -\\frac{1}{2}$，$S = \\frac{12}{3/2} = 8$。`,
+        `求写出各项的等比级数之和时，先找出首项，并用某一项除以前一项求出公比，再检查公比的绝对值是否小于 1。$a + ar + ar^{2} + \\cdots$ 的部分和为 $S_n = \\frac{a(1 - r^{n})}{1 - r}$。当 $|r| < 1$ 时 $r^{n} \\to 0$，所以级数收敛于\n\n$$${geometricSum}$$\n\n对 $12 - 6 + 3 - \\frac{3}{2} + \\cdots$：$a = 12$，$r = -\\frac{1}{2}$，$S = \\frac{12}{3/2} = 8$。`,
       ),
       generate(rng) {
         const g = geometricSeries(rng);
@@ -1486,7 +1486,7 @@ export const sumsOfInfiniteGeometricSeriesGivenInSigmaNotation: TopicDef = {
       title: t("The first term from the starting index", "由起始下标求首项"),
       explanation: t(
         "The formula for a geometric series uses its first term, so substitute the starting index to find that term before using the formula. In $\\sum_{n=k}^{\\infty} c \\, r^{n}$ the first term is $c \\, r^{k}$, not $c$. With $|r| < 1$:\n\n$$\\sum_{n=k}^{\\infty} c \\, r^{n} = \\frac{c \\, r^{k}}{1 - r}.$$\n\nFor example, $\\sum_{n=2}^{\\infty} 4\\left(\\frac{1}{3}\\right)^{n} = \\frac{4/9}{2/3} = \\frac{2}{3}$.",
-        "等比级数的求和公式用到首项，所以使用公式前要先代入起始下标求出首项。在 $\\sum_{n=k}^{\\infty} c \\, r^{n}$ 中，首项是 $c \\, r^{k}$ 而不是 $c$。当 $|r| < 1$ 时：\n\n$$\\sum_{n=k}^{\\infty} c \\, r^{n} = \\frac{c \\, r^{k}}{1 - r}。$$\n\n例如 $\\sum_{n=2}^{\\infty} 4\\left(\\frac{1}{3}\\right)^{n} = \\frac{4/9}{2/3} = \\frac{2}{3}$。",
+        "等比级数的求和公式用到首项，所以使用公式前要先代入起始下标求出首项。在 $\\sum_{n=k}^{\\infty} c \\, r^{n}$ 中，首项是 $c \\, r^{k}$ 而不是 $c$。当 $|r| < 1$ 时：\n\n$$\\sum_{n=k}^{\\infty} c \\, r^{n} = \\frac{c \\, r^{k}}{1 - r}$$\n\n例如 $\\sum_{n=2}^{\\infty} 4\\left(\\frac{1}{3}\\right)^{n} = \\frac{4/9}{2/3} = \\frac{2}{3}$。",
       ),
       generate(rng) {
         const { r } = geometricSeries(rng);
@@ -1512,7 +1512,7 @@ export const sumsOfInfiniteGeometricSeriesGivenInSigmaNotation: TopicDef = {
       title: t("Splitting into two geometric series", "拆成两个等比级数"),
       explanation: t(
         "A quotient such as $\\frac{2^{n} + 3^{n}}{6^{n}}$ splits into two geometric terms, $\\left(\\frac{1}{3}\\right)^{n} + \\left(\\frac{1}{2}\\right)^{n}$. Each series converges, so the sum is the sum of the two sums:\n\n$$\\sum_{n=0}^{\\infty} \\frac{2^{n} + 3^{n}}{6^{n}} = \\frac{1}{1 - \\frac{1}{3}} + \\frac{1}{1 - \\frac{1}{2}} = \\frac{3}{2} + 2 = \\frac{7}{2}.$$",
-        "像 $\\frac{2^{n} + 3^{n}}{6^{n}}$ 这样的商可以拆成两个等比项 $\\left(\\frac{1}{3}\\right)^{n} + \\left(\\frac{1}{2}\\right)^{n}$。两个级数都收敛，所以总和等于两个和相加：\n\n$$\\sum_{n=0}^{\\infty} \\frac{2^{n} + 3^{n}}{6^{n}} = \\frac{1}{1 - \\frac{1}{3}} + \\frac{1}{1 - \\frac{1}{2}} = \\frac{3}{2} + 2 = \\frac{7}{2}。$$",
+        "像 $\\frac{2^{n} + 3^{n}}{6^{n}}$ 这样的商可以拆成两个等比项 $\\left(\\frac{1}{3}\\right)^{n} + \\left(\\frac{1}{2}\\right)^{n}$。两个级数都收敛，所以总和等于两个和相加：\n\n$$\\sum_{n=0}^{\\infty} \\frac{2^{n} + 3^{n}}{6^{n}} = \\frac{1}{1 - \\frac{1}{3}} + \\frac{1}{1 - \\frac{1}{2}} = \\frac{3}{2} + 2 = \\frac{7}{2}$$",
       ),
       generate(rng) {
         const e = rng.int(3, 9);
@@ -1587,7 +1587,7 @@ export const convergenceOfGeometricSeries: TopicDef = {
       title: t("The sum as a function of x", "和作为 x 的函数"),
       explanation: t(
         "For each value of the variable where the ratio is between minus one and one, the series converges, and its sum is given by the same formula in terms of the variable. Where it converges, a geometric series in $x$ has a sum given by $\\frac{a}{1 - r}$, which is a function of $x$:\n\n$$\\sum_{n=1}^{\\infty} 2\\left(\\frac{x}{3}\\right)^{n} = \\frac{2 \\cdot \\frac{x}{3}}{1 - \\frac{x}{3}} = \\frac{2x}{3 - x} \\quad \\text{for } -3 < x < 3.$$",
-        "对每个使公比介于 −1 和 1 之间的变量值，级数都收敛，它的和由同一个含变量的公式给出。在收敛的范围内，含 $x$ 的等比级数之和由 $\\frac{a}{1 - r}$ 给出，是 $x$ 的函数：\n\n$$\\sum_{n=1}^{\\infty} 2\\left(\\frac{x}{3}\\right)^{n} = \\frac{2 \\cdot \\frac{x}{3}}{1 - \\frac{x}{3}} = \\frac{2x}{3 - x}，\\quad -3 < x < 3。$$",
+        "对每个使公比介于 −1 和 1 之间的变量值，级数都收敛，它的和由同一个含变量的公式给出。在收敛的范围内，含 $x$ 的等比级数之和由 $\\frac{a}{1 - r}$ 给出，是 $x$ 的函数：\n\n$$\\sum_{n=1}^{\\infty} 2\\left(\\frac{x}{3}\\right)^{n} = \\frac{2 \\cdot \\frac{x}{3}}{1 - \\frac{x}{3}} = \\frac{2x}{3 - x}, \\quad -3 < x < 3$$",
       ),
       generate(rng) {
         const c = rng.nonZero(-6, 6);
@@ -1634,7 +1634,7 @@ export const repeatingDecimalsAsInfiniteGeometricSeries: TopicDef = {
       title: t("Purely repeating decimals", "纯循环小数"),
       explanation: t(
         "A repeating decimal is a geometric series whose first term is the repeating block and whose ratio is a power of one tenth. $0.\\overline{27} = 0.27 + 0.0027 + 0.000027 + \\cdots$ is geometric with $a = \\frac{27}{100}$ and $r = \\frac{1}{100}$, so\n\n$$0.\\overline{27} = \\frac{27/100}{1 - 1/100} = \\frac{27}{99} = \\frac{3}{11}.$$\n\nIn general, a block of $k$ repeating digits $B$ gives $\\frac{B}{10^{k} - 1}$.",
-        "循环小数是一个等比级数，首项是循环节，公比是十分之一的幂。$0.\\overline{27} = 0.27 + 0.0027 + 0.000027 + \\cdots$ 是 $a = \\frac{27}{100}$、$r = \\frac{1}{100}$ 的等比级数，所以\n\n$$0.\\overline{27} = \\frac{27/100}{1 - 1/100} = \\frac{27}{99} = \\frac{3}{11}。$$\n\n一般地，$k$ 位循环节 $B$ 给出 $\\frac{B}{10^{k} - 1}$。",
+        "循环小数是一个等比级数，首项是循环节，公比是十分之一的幂。$0.\\overline{27} = 0.27 + 0.0027 + 0.000027 + \\cdots$ 是 $a = \\frac{27}{100}$、$r = \\frac{1}{100}$ 的等比级数，所以\n\n$$0.\\overline{27} = \\frac{27/100}{1 - 1/100} = \\frac{27}{99} = \\frac{3}{11}$$\n\n一般地，$k$ 位循环节 $B$ 给出 $\\frac{B}{10^{k} - 1}$。",
       ),
       generate(rng) {
         const k = rng.int(2, 3);
@@ -1658,7 +1658,7 @@ export const repeatingDecimalsAsInfiniteGeometricSeries: TopicDef = {
       title: t("Decimals whose repeat starts later", "循环节不从第一位开始的小数"),
       explanation: t(
         "Separate the digits that do not repeat, write the repeating part as a geometric series, and add the two fractions. Split off the digits before the repeat: $0.4\\overline{36} = \\frac{4}{10} + 0.0\\overline{36}$, and $0.0\\overline{36}$ is geometric with $a = \\frac{36}{1000}$ and $r = \\frac{1}{100}$:\n\n$$0.4\\overline{36} = \\frac{4}{10} + \\frac{36}{990} = \\frac{396 + 36}{990} = \\frac{24}{55}.$$",
-        "把不循环的数字分出来，把循环部分写成等比级数，再把两个分数相加。先把循环节之前的数字拆出来：$0.4\\overline{36} = \\frac{4}{10} + 0.0\\overline{36}$，而 $0.0\\overline{36}$ 是 $a = \\frac{36}{1000}$、$r = \\frac{1}{100}$ 的等比级数：\n\n$$0.4\\overline{36} = \\frac{4}{10} + \\frac{36}{990} = \\frac{396 + 36}{990} = \\frac{24}{55}。$$",
+        "把不循环的数字分出来，把循环部分写成等比级数，再把两个分数相加。先把循环节之前的数字拆出来：$0.4\\overline{36} = \\frac{4}{10} + 0.0\\overline{36}$，而 $0.0\\overline{36}$ 是 $a = \\frac{36}{1000}$、$r = \\frac{1}{100}$ 的等比级数：\n\n$$0.4\\overline{36} = \\frac{4}{10} + \\frac{36}{990} = \\frac{396 + 36}{990} = \\frac{24}{55}$$",
       ),
       generate(rng) {
         const m = rng.int(1, 9);

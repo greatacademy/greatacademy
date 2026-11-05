@@ -34,28 +34,71 @@ const bareNegative = /(?<![\w$)\]}.\-−])-(\d+(?:\.\d+)?)(?![\w%])/;
 const spanOrNegative = new RegExp(`${mathSpan.source}|${bareNegative.source}`, "g");
 
 /** verbatimTex matches TeX whose characters are names, not products: "\mathrm{1E0}" or "x_{1i}". */
-const verbatimTex = /(\\(?:text|mathrm|operatorname|mathbf|mathbb|mathcal)\{[^{}]*\}|_\{[^{}]*\})/;
+const verbatimTex = /(\\(?:text|mathrm|operatorname|mathbf|mathbb|mathcal|overline)\{[^{}]*\}|_\{[^{}]*\})/;
 
 /** unitCoefficient matches a coefficient of 1 before a variable or a function: "1x", "-1a_{n}", "1\sin x". */
 const unitCoefficient = /(^|[\s(=+\-,{[|])1(?=[a-zA-Z](?![a-zA-Z0-9{])|\\(?:sin|cos|tan|cot|sec|csc|ln|log|sqrt|pi|theta)\b)/g;
 
-/** simplifyMath drops the coefficients of 1 of a math expression, and a value that a chain of equalities repeats. */
-function simplifyMath(tex: string): string {
+/** binaryStringTopics lists the topics whose digits 0 and 1 write strings of symbols, not quantities. */
+const binaryStringTopics: ReadonlySet<string> = new Set([
+  "adding-and-subtracting-binary-integers",
+  "cantors-diagonal-argument",
+  "deterministic-finite-automata",
+  "introduction-to-turing-machines",
+  "logic-gates-and-combinational-circuits",
+  "mealy-machines",
+  "moore-machines",
+  "nondeterministic-finite-automata",
+  "processing-strings-using-deterministic-finite-automata",
+  "processing-strings-using-turing-machines",
+  "regular-expressions",
+  "the-cardinality-of-the-power-set-of-natural-numbers",
+  "the-language-of-automata",
+]);
+
+/** digitBlockTopics lists the topics whose long runs of digits are blocks of digits, not quantities. */
+const digitBlockTopics: ReadonlySet<string> = new Set(["periods-of-repeating-decimals"]);
+
+/** texOrInteger matches TeX that keeps its digits as they are, or else a whole number of four or more digits, outside a decimal part and a subscript base. */
+const texOrInteger = new RegExp(`${verbatimTex.source}|(?<![\\d.])\\d{4,}(?![\\d_])`, "g");
+
+/** isDigitString reports whether the digits of a topic name symbols rather than a quantity. */
+function isDigitString(digits: string, topicId: string): boolean {
+  return digits.startsWith("0") || digitBlockTopics.has(topicId) || (binaryStringTopics.has(topicId) && /^[01]+$/.test(digits));
+}
+
+/**
+ * separateThousands writes a whole number of five or more digits, and the
+ * four-digit numbers beside it in the same span, as the content writes numbers
+ * by hand: "12{,}345".
+ */
+function separateThousands(tex: string, topicId: string): string {
+  const isLong = (digits: string) => digits.length > 4 && !isDigitString(digits, topicId);
+  const integers = [...tex.matchAll(texOrInteger)].map((match) => (match[1] === undefined ? match[0] : ""));
+  if (!integers.some(isLong)) return tex;
+  return tex.replace(texOrInteger, (match, verbatim?: string) =>
+    verbatim !== undefined || isDigitString(match, topicId) ? match : match.replace(/\B(?=(\d{3})+$)/g, "{,}"),
+  );
+}
+
+/** simplifyMath drops the coefficients of 1 of a math expression and a value that a chain of equalities repeats, and separates the thousands of long numbers. */
+function simplifyMath(tex: string, topicId: string): string {
   const dropped = tex
     .split(verbatimTex)
     .map((part, i) => (i % 2 ? part : part.replace(unitCoefficient, "$1")))
     .join("");
   const chain = dropped.split(" = ");
-  return chain.length < 3 ? dropped : chain.filter((value, i) => i === 0 || value.trim() !== chain[i - 1]?.trim()).join(" = ");
+  const simplified = chain.length < 3 ? dropped : chain.filter((value, i) => i === 0 || value.trim() !== chain[i - 1]?.trim()).join(" = ");
+  return separateThousands(simplified, topicId);
 }
 
 /** polishSpans applies simplifyMath to every span of math of a text, and puts the negative numbers outside math into math. */
-function polishSpans(text: string): string {
+function polishSpans(text: string, topicId: string): string {
   return text.replace(spanOrNegative, (span, negative?: string) => {
     if (negative !== undefined) return `$-${negative}$`;
     if (span === "\\$") return span;
     const delimiter = span.startsWith("$$") ? "$$" : "$";
-    return delimiter + simplifyMath(span.slice(delimiter.length, -delimiter.length)) + delimiter;
+    return delimiter + simplifyMath(span.slice(delimiter.length, -delimiter.length), topicId) + delimiter;
   });
 }
 
@@ -72,18 +115,21 @@ function polishEnglish(text: string): string {
  * 1: templates are written for the general case, so the same fix would
  * otherwise be needed at every "${n}x" and "${n} hours" of the content.
  */
-export function polishText(text: Text): Text {
-  return { en: polishEnglish(polishSpans(text.en)), "zh-CN": polishSpans(text["zh-CN"]) };
+export function polishText(text: Text, topicId = ""): Text {
+  return { en: polishEnglish(polishSpans(text.en, topicId)), "zh-CN": polishSpans(text["zh-CN"], topicId) };
 }
 
 /** polishProblem applies polishText to what a learner reads of a problem; the answer is left to the checker. */
-export function polishProblem(problem: Problem): Problem {
+export function polishProblem(problem: Problem, topicId = ""): Problem {
   const { input } = problem.answer;
   return {
     ...problem,
-    prompt: polishText(problem.prompt),
-    solution: polishText(problem.solution),
-    answer: input.kind === "choice" ? { ...problem.answer, input: { ...input, options: input.options.map(polishText) } } : problem.answer,
+    prompt: polishText(problem.prompt, topicId),
+    solution: polishText(problem.solution, topicId),
+    answer:
+      input.kind === "choice"
+        ? { ...problem.answer, input: { ...input, options: input.options.map((option) => polishText(option, topicId)) } }
+        : problem.answer,
   };
 }
 
@@ -91,6 +137,6 @@ export function polishProblem(problem: Problem): Problem {
 export function polishTopic(topic: TopicDef): TopicDef {
   return {
     ...topic,
-    knowledgePoints: topic.knowledgePoints.map((kp) => ({ ...kp, generate: (rng) => polishProblem(kp.generate(rng)) })),
+    knowledgePoints: topic.knowledgePoints.map((kp) => ({ ...kp, generate: (rng) => polishProblem(kp.generate(rng), topic.id) })),
   };
 }

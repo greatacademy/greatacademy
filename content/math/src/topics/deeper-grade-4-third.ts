@@ -5,6 +5,7 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
+import { lowestNumerator } from "../early-grades-kit.ts";
 import { numberProblem } from "../problems.ts";
 import { choose, chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 
@@ -1079,7 +1080,7 @@ export const deeperGrade4ThirdPoints: Readonly<Record<string, readonly Knowledge
       (rng) => {
         const a = rng.int(1, 12);
         const d = rng.int(2, 9);
-        const n = rng.int(1, d - 1);
+        const n = lowestNumerator(rng, d);
         return whole(
           [
             `How many bars are needed to shade $${a}\\frac{${n}}{${d}}$, where each bar is one whole?`,
@@ -1106,7 +1107,7 @@ export const deeperGrade4ThirdPoints: Readonly<Record<string, readonly Knowledge
       (rng) => {
         const a = rng.int(1, 20);
         const d = rng.int(2, 9);
-        const n = rng.int(1, d - 1);
+        const n = lowestNumerator(rng, d);
         const upper = rng.bool();
         return whole(
           upper

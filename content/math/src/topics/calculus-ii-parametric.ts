@@ -128,7 +128,7 @@ export const differentiatingParametricCurves: TopicDef = {
       title: t("The slope at a point", "某点处的斜率"),
       explanation: t(
         "On a parametric curve $x = f(t)$, $y = g(t)$, the chain rule gives $\\frac{dy}{dt} = \\frac{dy}{dx} \\cdot \\frac{dx}{dt}$, so\n\n$$\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}, \\quad \\frac{dx}{dt} \\ne 0.$$\n\nFor $x = t^{2}$, $y = t^{3} - t$ at $t = 2$: $\\frac{dx}{dt} = 4$ and $\\frac{dy}{dt} = 11$, so the slope is $\\frac{11}{4}$.",
-        "对参数曲线 $x = f(t)$、$y = g(t)$，由链式法则 $\\frac{dy}{dt} = \\frac{dy}{dx} \\cdot \\frac{dx}{dt}$，所以\n\n$$\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}，\\quad \\frac{dx}{dt} \\ne 0。$$\n\n对 $x = t^{2}$、$y = t^{3} - t$，在 $t = 2$ 处 $\\frac{dx}{dt} = 4$，$\\frac{dy}{dt} = 11$，斜率为 $\\frac{11}{4}$。",
+        "对参数曲线 $x = f(t)$、$y = g(t)$，由链式法则 $\\frac{dy}{dt} = \\frac{dy}{dx} \\cdot \\frac{dx}{dt}$，所以\n\n$$\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}, \\quad \\frac{dx}{dt} \\ne 0$$\n\n对 $x = t^{2}$、$y = t^{3} - t$，在 $t = 2$ 处 $\\frac{dx}{dt} = 4$，$\\frac{dy}{dt} = 11$，斜率为 $\\frac{11}{4}$。",
       ),
       generate: slopeAtAPoint,
     },
@@ -314,7 +314,7 @@ export const secondDerivativesOfParametricEquations: TopicDef = {
       title: t("Second derivatives of polynomial curves", "多项式参数曲线的二阶导数"),
       explanation: t(
         "$\\frac{dy}{dx}$ is a function of $t$, so apply the parametric rule to it again:\n\n$$\\frac{d^{2}y}{dx^{2}} = \\frac{\\frac{d}{dt}\\left(\\frac{dy}{dx}\\right)}{dx/dt}.$$\n\nIt is not $\\frac{d^{2}y/dt^{2}}{d^{2}x/dt^{2}}$. For $x = t^{2}$, $y = t^{3}$: $\\frac{dy}{dx} = \\frac{3t}{2}$, so $\\frac{d^{2}y}{dx^{2}} = \\frac{3/2}{2t} = \\frac{3}{4t}$.",
-        "$\\frac{dy}{dx}$ 是 $t$ 的函数，所以对它再用一次参数求导法则：\n\n$$\\frac{d^{2}y}{dx^{2}} = \\frac{\\frac{d}{dt}\\left(\\frac{dy}{dx}\\right)}{dx/dt}。$$\n\n它不等于 $\\frac{d^{2}y/dt^{2}}{d^{2}x/dt^{2}}$。对 $x = t^{2}$、$y = t^{3}$：$\\frac{dy}{dx} = \\frac{3t}{2}$，所以 $\\frac{d^{2}y}{dx^{2}} = \\frac{3/2}{2t} = \\frac{3}{4t}$。",
+        "$\\frac{dy}{dx}$ 是 $t$ 的函数，所以对它再用一次参数求导法则：\n\n$$\\frac{d^{2}y}{dx^{2}} = \\frac{\\frac{d}{dt}\\left(\\frac{dy}{dx}\\right)}{dx/dt}$$\n\n它不等于 $\\frac{d^{2}y/dt^{2}}{d^{2}x/dt^{2}}$。对 $x = t^{2}$、$y = t^{3}$：$\\frac{dy}{dx} = \\frac{3t}{2}$，所以 $\\frac{d^{2}y}{dx^{2}} = \\frac{3/2}{2t} = \\frac{3}{4t}$。",
       ),
       generate: secondDerivativePolynomial,
     },
@@ -323,7 +323,7 @@ export const secondDerivativesOfParametricEquations: TopicDef = {
       title: t("Second derivatives of trigonometric curves", "三角参数曲线的二阶导数"),
       explanation: t(
         "For the ellipse $x = a\\cos t$, $y = b\\sin t$: $\\frac{dy}{dx} = -\\frac{b}{a}\\cot t$, its $t$-derivative is $\\frac{b}{a}\\csc^{2} t$, and dividing by $-a\\sin t$ gives\n\n$$\\frac{d^{2}y}{dx^{2}} = -\\frac{b}{a^{2}\\sin^{3} t}.$$\n\nIt is negative on the upper half, where $\\sin t > 0$ and the ellipse is concave down.",
-        "对椭圆 $x = a\\cos t$、$y = b\\sin t$：$\\frac{dy}{dx} = -\\frac{b}{a}\\cot t$，它对 $t$ 的导数为 $\\frac{b}{a}\\csc^{2} t$，再除以 $-a\\sin t$ 得\n\n$$\\frac{d^{2}y}{dx^{2}} = -\\frac{b}{a^{2}\\sin^{3} t}。$$\n\n在上半部分 $\\sin t > 0$，二阶导数为负，椭圆向下凹。",
+        "对椭圆 $x = a\\cos t$、$y = b\\sin t$：$\\frac{dy}{dx} = -\\frac{b}{a}\\cot t$，它对 $t$ 的导数为 $\\frac{b}{a}\\csc^{2} t$，再除以 $-a\\sin t$ 得\n\n$$\\frac{d^{2}y}{dx^{2}} = -\\frac{b}{a^{2}\\sin^{3} t}$$\n\n在上半部分 $\\sin t > 0$，二阶导数为负，椭圆向下凹。",
       ),
       generate: secondDerivativeEllipse,
     },
@@ -418,7 +418,7 @@ export const theArcLengthOfAParametricCurve: TopicDef = {
       title: t("Arc length with a perfect-square speed", "速率为完全平方时的弧长"),
       explanation: t(
         "In a short time $dt$ the point moves $dx = x'(t) \\, dt$ across and $dy = y'(t) \\, dt$ up, a distance $\\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt$. So\n\n$$L = \\int_{a}^{b} \\sqrt{\\left(\\frac{dx}{dt}\\right)^{2} + \\left(\\frac{dy}{dt}\\right)^{2}} \\, dt,$$\n\nassuming the curve is traced once. For $x = \\frac{1}{3}t^{3} - t$, $y = t^{2}$, the sum under the root is $(t^{2} + 1)^{2}$, so $L = \\int_{0}^{3} (t^{2} + 1) \\, dt = 12$.",
-        "在很短的时间 $dt$ 内，点横向移动 $dx = x'(t) \\, dt$，纵向移动 $dy = y'(t) \\, dt$，距离为 $\\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt$。所以\n\n$$L = \\int_{a}^{b} \\sqrt{\\left(\\frac{dx}{dt}\\right)^{2} + \\left(\\frac{dy}{dt}\\right)^{2}} \\, dt，$$\n\n前提是曲线只被描绘一次。对 $x = \\frac{1}{3}t^{3} - t$、$y = t^{2}$，根号内为 $(t^{2} + 1)^{2}$，所以 $L = \\int_{0}^{3} (t^{2} + 1) \\, dt = 12$。",
+        "在很短的时间 $dt$ 内，点横向移动 $dx = x'(t) \\, dt$，纵向移动 $dy = y'(t) \\, dt$，距离为 $\\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt$。所以\n\n$$L = \\int_{a}^{b} \\sqrt{\\left(\\frac{dx}{dt}\\right)^{2} + \\left(\\frac{dy}{dt}\\right)^{2}} \\, dt$$\n\n前提是曲线只被描绘一次。对 $x = \\frac{1}{3}t^{3} - t$、$y = t^{2}$，根号内为 $(t^{2} + 1)^{2}$，所以 $L = \\int_{0}^{3} (t^{2} + 1) \\, dt = 12$。",
       ),
       generate: polynomialArcLength,
     },
@@ -503,7 +503,7 @@ export const calculatingAreasBoundedByParametricFunctions: TopicDef = {
       title: t("Areas under polynomial parametric curves", "多项式参数曲线下方的面积"),
       explanation: t(
         "The area under a curve is $\\int y \\, dx$. With $x = x(t)$ and $y = y(t)$, substitute $dx = x'(t) \\, dt$:\n\n$$A = \\int_{a}^{b} y(t) \\, x'(t) \\, dt,$$\n\nwhen $y \\ge 0$ and the curve moves right ($x' > 0$) as $t$ goes from $a$ to $b$. For $x = t^{2}$, $y = t$, $0 \\le t \\le 2$: $A = \\int_{0}^{2} t \\cdot 2t \\, dt = \\frac{16}{3}$.",
-        "曲线下方的面积为 $\\int y \\, dx$。设 $x = x(t)$、$y = y(t)$，代入 $dx = x'(t) \\, dt$：\n\n$$A = \\int_{a}^{b} y(t) \\, x'(t) \\, dt，$$\n\n前提是 $y \\ge 0$，且 $t$ 从 $a$ 到 $b$ 时曲线向右运动（$x' > 0$）。对 $x = t^{2}$、$y = t$、$0 \\le t \\le 2$：$A = \\int_{0}^{2} t \\cdot 2t \\, dt = \\frac{16}{3}$。",
+        "曲线下方的面积为 $\\int y \\, dx$。设 $x = x(t)$、$y = y(t)$，代入 $dx = x'(t) \\, dt$：\n\n$$A = \\int_{a}^{b} y(t) \\, x'(t) \\, dt$$\n\n前提是 $y \\ge 0$，且 $t$ 从 $a$ 到 $b$ 时曲线向右运动（$x' > 0$）。对 $x = t^{2}$、$y = t$、$0 \\le t \\le 2$：$A = \\int_{0}^{2} t \\cdot 2t \\, dt = \\frac{16}{3}$。",
       ),
       generate: polynomialParametricArea,
     },
@@ -581,7 +581,7 @@ export const surfaceAreasOfRevolutionForParametricCurves: TopicDef = {
       title: t("Surfaces from polynomial parametric curves", "多项式参数曲线旋转所得的曲面"),
       explanation: t(
         "The surface area of a rotated curve adds up thin bands whose width is the arc length element and whose radius is the distance from the axis. Replace $ds = \\sqrt{1 + f'(x)^{2}} \\, dx$ by the parametric arc length element $ds = \\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt$. Rotating about the $x$-axis, the radius is $y(t)$:\n\n$$S = 2\\pi\\int_{a}^{b} y(t)\\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt.$$",
-        "旋转曲线的表面积是把许多窄带加起来，窄带的宽是弧长微元，半径是到轴的距离。把 $ds = \\sqrt{1 + f'(x)^{2}} \\, dx$ 换成参数形式的弧长元素 $ds = \\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt$。绕 $x$ 轴旋转时半径为 $y(t)$：\n\n$$S = 2\\pi\\int_{a}^{b} y(t)\\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt。$$",
+        "旋转曲线的表面积是把许多窄带加起来，窄带的宽是弧长微元，半径是到轴的距离。把 $ds = \\sqrt{1 + f'(x)^{2}} \\, dx$ 换成参数形式的弧长元素 $ds = \\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt$。绕 $x$ 轴旋转时半径为 $y(t)$：\n\n$$S = 2\\pi\\int_{a}^{b} y(t)\\sqrt{x'(t)^{2} + y'(t)^{2}} \\, dt$$",
       ),
       generate: polynomialParametricSurface,
     },

@@ -1890,7 +1890,7 @@ export const graphingLogarithmicFunctions: TopicDef = {
       title: t("Points on the graph", "图象上的点"),
       explanation: t(
         "A point $(x, y)$ lies on the graph of $y = \\log_{b} x$ exactly when $b^{y} = x$. So the graph of $y = \\log_{2} x$ passes through\n\n$$\\left(\\frac{1}{4}, -2\\right), \\quad \\left(\\frac{1}{2}, -1\\right), \\quad (1, 0), \\quad (2, 1), \\quad (4, 2), \\quad (8, 3).$$\n\nIt is only defined for $x > 0$, rises slowly, and approaches the $y$-axis, its vertical asymptote, as $x$ approaches $0$.",
-        "点 $(x, y)$ 在 $y = \\log_{b} x$ 的图象上，当且仅当 $b^{y} = x$。所以 $y = \\log_{2} x$ 的图象经过\n\n$$\\left(\\frac{1}{4}, -2\\right), \\quad \\left(\\frac{1}{2}, -1\\right), \\quad (1, 0), \\quad (2, 1), \\quad (4, 2), \\quad (8, 3)。$$\n\n它只在 $x > 0$ 时有定义，缓慢上升，$x$ 趋近 $0$ 时图象靠近 $y$ 轴，$y$ 轴是它的竖直渐近线。",
+        "点 $(x, y)$ 在 $y = \\log_{b} x$ 的图象上，当且仅当 $b^{y} = x$。所以 $y = \\log_{2} x$ 的图象经过\n\n$$\\left(\\frac{1}{4}, -2\\right), \\quad \\left(\\frac{1}{2}, -1\\right), \\quad (1, 0), \\quad (2, 1), \\quad (4, 2), \\quad (8, 3)$$\n\n它只在 $x > 0$ 时有定义，缓慢上升，$x$ 趋近 $0$ 时图象靠近 $y$ 轴，$y$ 轴是它的竖直渐近线。",
       ),
       figure: logGraph(1, 2, 0, 0, [
         { at: [1, 0], dir: "nw" },

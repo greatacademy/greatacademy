@@ -241,7 +241,7 @@ export const theIntegralTest: TopicDef = {
       title: t("Evaluating the integral", "计算对应的积分"),
       explanation: t(
         "Let $a_n = f(n)$, where $f$ is positive, continuous and decreasing on $[1, \\infty)$. The terms are the heights of rectangles of width $1$ that lie under the graph from $n - 1$ to $n$ and over it from $n$ to $n + 1$, so\n\n$$\\int_{1}^{\\infty} f(x) \\, dx \\le \\sum_{n=1}^{\\infty} a_n \\le a_1 + \\int_{1}^{\\infty} f(x) \\, dx.$$\n\nHence the series and the integral **both converge or both diverge**. The integral is not the sum. For $\\sum \\frac{3}{(n + 1)^{2}}$: $\\int_{1}^{\\infty} \\frac{3}{(x + 1)^{2}} \\, dx = \\left[-\\frac{3}{x + 1}\\right]_{1}^{\\infty} = \\frac{3}{2}$, so the series converges.",
-        "设 $a_n = f(n)$，$f$ 在 $[1, \\infty)$ 上为正、连续且递减。各项是宽为 $1$ 的矩形的高，这些矩形从 $n - 1$ 到 $n$ 位于图像下方，从 $n$ 到 $n + 1$ 位于图像上方，所以\n\n$$\\int_{1}^{\\infty} f(x) \\, dx \\le \\sum_{n=1}^{\\infty} a_n \\le a_1 + \\int_{1}^{\\infty} f(x) \\, dx。$$\n\n因此级数与积分**同时收敛或同时发散**。积分值并不等于级数的和。对 $\\sum \\frac{3}{(n + 1)^{2}}$：$\\int_{1}^{\\infty} \\frac{3}{(x + 1)^{2}} \\, dx = \\left[-\\frac{3}{x + 1}\\right]_{1}^{\\infty} = \\frac{3}{2}$，所以级数收敛。",
+        "设 $a_n = f(n)$，$f$ 在 $[1, \\infty)$ 上为正、连续且递减。各项是宽为 $1$ 的矩形的高，这些矩形从 $n - 1$ 到 $n$ 位于图像下方，从 $n$ 到 $n + 1$ 位于图像上方，所以\n\n$$\\int_{1}^{\\infty} f(x) \\, dx \\le \\sum_{n=1}^{\\infty} a_n \\le a_1 + \\int_{1}^{\\infty} f(x) \\, dx$$\n\n因此级数与积分**同时收敛或同时发散**。积分值并不等于级数的和。对 $\\sum \\frac{3}{(n + 1)^{2}}$：$\\int_{1}^{\\infty} \\frac{3}{(x + 1)^{2}} \\, dx = \\left[-\\frac{3}{x + 1}\\right]_{1}^{\\infty} = \\frac{3}{2}$，所以级数收敛。",
       ),
       generate(rng) {
         const c = rng.int(1, 12);
@@ -312,7 +312,7 @@ export const theRemainderEstimateForTheIntegralTest: TopicDef = {
       title: t("Bounding the remainder", "估计余项的上界"),
       explanation: t(
         "The remainder $R_N = S - S_N = a_{N+1} + a_{N+2} + \\cdots$ is a sum of rectangles lying under the graph of $f$ from $N$ on, so\n\n$$R_N \\le \\int_{N}^{\\infty} f(x) \\, dx.$$\n\nFor $\\sum \\frac{1}{n^{2}}$ and $N = 10$: $R_{10} \\le \\int_{10}^{\\infty} \\frac{dx}{x^{2}} = \\frac{1}{10}$.",
-        "余项 $R_N = S - S_N = a_{N+1} + a_{N+2} + \\cdots$ 是从 $N$ 起位于 $f$ 图像下方的矩形面积之和，所以\n\n$$R_N \\le \\int_{N}^{\\infty} f(x) \\, dx。$$\n\n对 $\\sum \\frac{1}{n^{2}}$ 且 $N = 10$：$R_{10} \\le \\int_{10}^{\\infty} \\frac{dx}{x^{2}} = \\frac{1}{10}$。",
+        "余项 $R_N = S - S_N = a_{N+1} + a_{N+2} + \\cdots$ 是从 $N$ 起位于 $f$ 图像下方的矩形面积之和，所以\n\n$$R_N \\le \\int_{N}^{\\infty} f(x) \\, dx$$\n\n对 $\\sum \\frac{1}{n^{2}}$ 且 $N = 10$：$R_{10} \\le \\int_{10}^{\\infty} \\frac{dx}{x^{2}} = \\frac{1}{10}$。",
       ),
       generate(rng) {
         const p = rng.int(2, 4);
@@ -1173,7 +1173,7 @@ export const theAlternatingSeriesErrorBound: TopicDef = {
       title: t("Bounding the error", "误差的上界"),
       explanation: t(
         "The sum $S$ of an alternating series that passes the test always lies between consecutive partial sums, so stopping after $N$ terms errs by at most the next term:\n\n$$|S - S_N| \\le b_{N+1}.$$\n\nFor $\\sum \\frac{(-1)^{n+1}}{n^{2}}$ and $N = 4$: $|S - S_4| \\le \\frac{1}{25}$.",
-        "满足判别法条件的交错级数，其和 $S$ 总位于相邻两个部分和之间，所以取前 $N$ 项时误差不超过下一项：\n\n$$|S - S_N| \\le b_{N+1}。$$\n\n对 $\\sum \\frac{(-1)^{n+1}}{n^{2}}$ 且 $N = 4$：$|S - S_4| \\le \\frac{1}{25}$。",
+        "满足判别法条件的交错级数，其和 $S$ 总位于相邻两个部分和之间，所以取前 $N$ 项时误差不超过下一项：\n\n$$|S - S_N| \\le b_{N+1}$$\n\n对 $\\sum \\frac{(-1)^{n+1}}{n^{2}}$ 且 $N = 4$：$|S - S_4| \\le \\frac{1}{25}$。",
       ),
       generate(rng) {
         const b = errorTerm(rng);

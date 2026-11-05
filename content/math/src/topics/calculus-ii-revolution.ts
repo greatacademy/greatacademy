@@ -120,7 +120,7 @@ export const volumesOfRevolutionUsingTheDiscMethodRotationAboutTheCoordinateAxes
       title: t("Discs about the x-axis", "绕 x 轴旋转的圆盘"),
       explanation: t(
         "When the region between $y = f(x)$ and the $x$-axis, for $a \\le x \\le b$, is rotated about the $x$-axis, each cross section perpendicular to the axis is a disc of radius $f(x)$ and area $\\pi f(x)^{2}$. Adding the discs,\n\n$$V = \\pi\\int_{a}^{b} f(x)^{2} \\, dx.$$\n\nFor example, rotating the region under $y = \\sqrt{x}$ for $0 \\le x \\le 4$ gives $V = \\pi\\int_{0}^{4} x \\, dx = 8\\pi$.",
-        "把 $y = f(x)$ 与 $x$ 轴之间（$a \\le x \\le b$）的区域绕 $x$ 轴旋转，垂直于旋转轴的每个截面都是半径为 $f(x)$、面积为 $\\pi f(x)^{2}$ 的圆盘。把圆盘累加，\n\n$$V = \\pi\\int_{a}^{b} f(x)^{2} \\, dx。$$\n\n例如 $y = \\sqrt{x}$ 下方 $0 \\le x \\le 4$ 的区域旋转所得体积为 $V = \\pi\\int_{0}^{4} x \\, dx = 8\\pi$。",
+        "把 $y = f(x)$ 与 $x$ 轴之间（$a \\le x \\le b$）的区域绕 $x$ 轴旋转，垂直于旋转轴的每个截面都是半径为 $f(x)$、面积为 $\\pi f(x)^{2}$ 的圆盘。把圆盘累加，\n\n$$V = \\pi\\int_{a}^{b} f(x)^{2} \\, dx$$\n\n例如 $y = \\sqrt{x}$ 下方 $0 \\le x \\le 4$ 的区域旋转所得体积为 $V = \\pi\\int_{0}^{4} x \\, dx = 8\\pi$。",
       ),
       generate: (rng) => discProblem(rng, "x"),
     },
@@ -129,7 +129,7 @@ export const volumesOfRevolutionUsingTheDiscMethodRotationAboutTheCoordinateAxes
       title: t("Discs about the y-axis", "绕 y 轴旋转的圆盘"),
       explanation: t(
         "When a region is rotated about the $y$-axis, the discs are horizontal, so integrate with respect to $y$: write the curve as $x = g(y)$, and\n\n$$V = \\pi\\int_{c}^{d} g(y)^{2} \\, dy.$$\n\nFor the region between $y = x^{2}$, the $y$-axis and $y = 4$, solve for $x^{2} = y$; then $V = \\pi\\int_{0}^{4} y \\, dy = 8\\pi$.",
-        "区域绕 $y$ 轴旋转时圆盘是水平的，所以对 $y$ 积分：把曲线写成 $x = g(y)$，则\n\n$$V = \\pi\\int_{c}^{d} g(y)^{2} \\, dy。$$\n\n对 $y = x^{2}$、$y$ 轴与 $y = 4$ 围成的区域，解出 $x^{2} = y$，于是 $V = \\pi\\int_{0}^{4} y \\, dy = 8\\pi$。",
+        "区域绕 $y$ 轴旋转时圆盘是水平的，所以对 $y$ 积分：把曲线写成 $x = g(y)$，则\n\n$$V = \\pi\\int_{c}^{d} g(y)^{2} \\, dy$$\n\n对 $y = x^{2}$、$y$ 轴与 $y = 4$ 围成的区域，解出 $x^{2} = y$，于是 $V = \\pi\\int_{0}^{4} y \\, dy = 8\\pi$。",
       ),
       generate: (rng) => (rng.int(0, 2) === 0 ? parabolaAboutYAxis(rng) : discProblem(rng, "y")),
     },
@@ -205,7 +205,7 @@ export const volumesOfRevolutionUsingTheDiscMethodRotationAboutOtherAxes: TopicD
       title: t("Discs about a horizontal line", "绕水平直线旋转的圆盘"),
       explanation: t(
         "Rotating the region between $y = f(x)$ and the line $y = k$ about that line gives discs of radius $|f(x) - k|$:\n\n$$V = \\pi\\int_{a}^{b} \\left(f(x) - k\\right)^{2} \\, dx.$$\n\nFor the region between $y = x^{2} + 1$ and $y = 1$, $0 \\le x \\le 1$, rotated about $y = 1$: the radius is $x^{2}$, so $V = \\pi\\int_{0}^{1} x^{4} \\, dx = \\frac{\\pi}{5}$.",
-        "把 $y = f(x)$ 与直线 $y = k$ 之间的区域绕该直线旋转，得到半径为 $|f(x) - k|$ 的圆盘：\n\n$$V = \\pi\\int_{a}^{b} \\left(f(x) - k\\right)^{2} \\, dx。$$\n\n例如 $y = x^{2} + 1$ 与 $y = 1$ 之间 $0 \\le x \\le 1$ 的区域绕 $y = 1$ 旋转：半径为 $x^{2}$，所以 $V = \\pi\\int_{0}^{1} x^{4} \\, dx = \\frac{\\pi}{5}$。",
+        "把 $y = f(x)$ 与直线 $y = k$ 之间的区域绕该直线旋转，得到半径为 $|f(x) - k|$ 的圆盘：\n\n$$V = \\pi\\int_{a}^{b} \\left(f(x) - k\\right)^{2} \\, dx$$\n\n例如 $y = x^{2} + 1$ 与 $y = 1$ 之间 $0 \\le x \\le 1$ 的区域绕 $y = 1$ 旋转：半径为 $x^{2}$，所以 $V = \\pi\\int_{0}^{1} x^{4} \\, dx = \\frac{\\pi}{5}$。",
       ),
       generate: (rng) => (rng.int(0, 3) === 0 ? parabolaAboutItsChord(rng) : discAboutLine(rng, "x")),
     },
@@ -214,7 +214,7 @@ export const volumesOfRevolutionUsingTheDiscMethodRotationAboutOtherAxes: TopicD
       title: t("Discs about a vertical line", "绕竖直直线旋转的圆盘"),
       explanation: t(
         "For a vertical axis $x = h$, the discs are horizontal: write the boundary as $x = g(y)$, and the radius is $|g(y) - h|$:\n\n$$V = \\pi\\int_{c}^{d} \\left(g(y) - h\\right)^{2} \\, dy.$$\n\nIf the boundary is given as $y = f(x)$, first solve for $x$; for $y = x^{2}$ with $x \\ge 0$, $x = \\sqrt{y}$.",
-        "旋转轴为竖直直线 $x = h$ 时圆盘是水平的：把边界写成 $x = g(y)$，半径为 $|g(y) - h|$：\n\n$$V = \\pi\\int_{c}^{d} \\left(g(y) - h\\right)^{2} \\, dy。$$\n\n若边界以 $y = f(x)$ 给出，先解出 $x$；例如 $y = x^{2}$（$x \\ge 0$）可写成 $x = \\sqrt{y}$。",
+        "旋转轴为竖直直线 $x = h$ 时圆盘是水平的：把边界写成 $x = g(y)$，半径为 $|g(y) - h|$：\n\n$$V = \\pi\\int_{c}^{d} \\left(g(y) - h\\right)^{2} \\, dy$$\n\n若边界以 $y = f(x)$ 给出，先解出 $x$；例如 $y = x^{2}$（$x \\ge 0$）可写成 $x = \\sqrt{y}$。",
       ),
       generate: (rng) => (rng.int(0, 3) === 0 ? parabolaAboutAVerticalLine(rng) : discAboutLine(rng, "y")),
     },
@@ -353,7 +353,7 @@ export const volumesOfRevolutionUsingTheWasherMethodRotationAboutTheCoordinateAx
       title: t("Washers about the x-axis", "绕 x 轴旋转的垫圈"),
       explanation: t(
         "If $f(x) \\ge g(x) \\ge 0$ on $[a, b]$, rotating the region between them about the $x$-axis gives cross sections that are washers: a disc of outer radius $R = f(x)$ with a hole of inner radius $r = g(x)$. Its area is $\\pi(R^{2} - r^{2})$, so\n\n$$V = \\pi\\int_{a}^{b} \\left(f(x)^{2} - g(x)^{2}\\right) dx.$$\n\nNote that $R^{2} - r^{2}$ is not $(R - r)^{2}$. For $y = x$ and $y = x^{2}$, which meet at $x = 0$ and $x = 1$: $V = \\pi\\int_{0}^{1} (x^{2} - x^{4}) \\, dx = \\frac{2\\pi}{15}$.",
-        "若在 $[a, b]$ 上 $f(x) \\ge g(x) \\ge 0$，把两者之间的区域绕 $x$ 轴旋转，截面是垫圈：外半径为 $R = f(x)$ 的圆盘中挖去内半径为 $r = g(x)$ 的孔。其面积为 $\\pi(R^{2} - r^{2})$，所以\n\n$$V = \\pi\\int_{a}^{b} \\left(f(x)^{2} - g(x)^{2}\\right) dx。$$\n\n注意 $R^{2} - r^{2}$ 不等于 $(R - r)^{2}$。对交于 $x = 0$ 和 $x = 1$ 的 $y = x$ 与 $y = x^{2}$：$V = \\pi\\int_{0}^{1} (x^{2} - x^{4}) \\, dx = \\frac{2\\pi}{15}$。",
+        "若在 $[a, b]$ 上 $f(x) \\ge g(x) \\ge 0$，把两者之间的区域绕 $x$ 轴旋转，截面是垫圈：外半径为 $R = f(x)$ 的圆盘中挖去内半径为 $r = g(x)$ 的孔。其面积为 $\\pi(R^{2} - r^{2})$，所以\n\n$$V = \\pi\\int_{a}^{b} \\left(f(x)^{2} - g(x)^{2}\\right) dx$$\n\n注意 $R^{2} - r^{2}$ 不等于 $(R - r)^{2}$。对交于 $x = 0$ 和 $x = 1$ 的 $y = x$ 与 $y = x^{2}$：$V = \\pi\\int_{0}^{1} (x^{2} - x^{4}) \\, dx = \\frac{2\\pi}{15}$。",
       ),
       generate: (rng) => (rng.bool() ? meetingCurvesProblem(rng) : washerProblem(rng, "x")),
     },
@@ -362,7 +362,7 @@ export const volumesOfRevolutionUsingTheWasherMethodRotationAboutTheCoordinateAx
       title: t("Washers about the y-axis", "绕 y 轴旋转的垫圈"),
       explanation: t(
         "About the $y$-axis the washers are horizontal. Write both boundaries as functions of $y$; the outer radius $R(y)$ is the one farther from the axis:\n\n$$V = \\pi\\int_{c}^{d} \\left(R(y)^{2} - r(y)^{2}\\right) dy.$$\n\nFor $y = x$ and $y = x^{2}$, at height $y$ the parabola gives $x = \\sqrt{y}$ and the line gives $x = y$, so $V = \\pi\\int_{0}^{1} (y - y^{2}) \\, dy = \\frac{\\pi}{6}$.",
-        "绕 $y$ 轴旋转时垫圈是水平的。把两条边界都写成 $y$ 的函数，离旋转轴较远的给出外半径 $R(y)$：\n\n$$V = \\pi\\int_{c}^{d} \\left(R(y)^{2} - r(y)^{2}\\right) dy。$$\n\n对 $y = x$ 与 $y = x^{2}$，在高度 $y$ 处抛物线给出 $x = \\sqrt{y}$，直线给出 $x = y$，所以 $V = \\pi\\int_{0}^{1} (y - y^{2}) \\, dy = \\frac{\\pi}{6}$。",
+        "绕 $y$ 轴旋转时垫圈是水平的。把两条边界都写成 $y$ 的函数，离旋转轴较远的给出外半径 $R(y)$：\n\n$$V = \\pi\\int_{c}^{d} \\left(R(y)^{2} - r(y)^{2}\\right) dy$$\n\n对 $y = x$ 与 $y = x^{2}$，在高度 $y$ 处抛物线给出 $x = \\sqrt{y}$，直线给出 $x = y$，所以 $V = \\pi\\int_{0}^{1} (y - y^{2}) \\, dy = \\frac{\\pi}{6}$。",
       ),
       generate: (rng) => (rng.int(0, 2) === 0 ? lineAndParabolaAboutYAxis(rng) : washerProblem(rng, "y")),
     },
@@ -515,7 +515,7 @@ export const theShellMethodRotatingARegionAboutTheXAxis: TopicDef = {
       title: t("Shells for a curve given as x in terms of y", "曲线以 x 关于 y 的形式给出时的柱壳"),
       explanation: t(
         "Cut the region into thin horizontal strips. The strip at height $y$, of length $L(y)$ and thickness $dy$, sweeps out a cylindrical shell about the $x$-axis. Unrolled, the shell is a thin slab of size $2\\pi y \\times L(y) \\times dy$, so\n\n$$V = 2\\pi\\int_{c}^{d} y\\,L(y) \\, dy.$$\n\nFor the region between $x = y^{2}$, the $y$-axis and $y = 2$: $V = 2\\pi\\int_{0}^{2} y \\cdot y^{2} \\, dy = 8\\pi$.",
-        "把区域切成水平窄条。高度 $y$ 处长为 $L(y)$、厚为 $dy$ 的窄条绕 $x$ 轴旋转形成圆柱壳。把柱壳展开，近似是一块 $2\\pi y \\times L(y) \\times dy$ 的薄板，所以\n\n$$V = 2\\pi\\int_{c}^{d} y\\,L(y) \\, dy。$$\n\n对 $x = y^{2}$、$y$ 轴与 $y = 2$ 围成的区域：$V = 2\\pi\\int_{0}^{2} y \\cdot y^{2} \\, dy = 8\\pi$。",
+        "把区域切成水平窄条。高度 $y$ 处长为 $L(y)$、厚为 $dy$ 的窄条绕 $x$ 轴旋转形成圆柱壳。把柱壳展开，近似是一块 $2\\pi y \\times L(y) \\times dy$ 的薄板，所以\n\n$$V = 2\\pi\\int_{c}^{d} y\\,L(y) \\, dy$$\n\n对 $x = y^{2}$、$y$ 轴与 $y = 2$ 围成的区域：$V = 2\\pi\\int_{0}^{2} y \\cdot y^{2} \\, dy = 8\\pi$。",
       ),
       generate: (rng) => shellsAboutXAxis(rng),
     },
@@ -524,7 +524,7 @@ export const theShellMethodRotatingARegionAboutTheXAxis: TopicDef = {
       title: t("Shells for a curve given as y in terms of x", "曲线以 y 关于 x 的形式给出时的柱壳"),
       explanation: t(
         "If the curve is given as $y = f(x)$, solve for $x$ to find where each horizontal strip starts and ends. For the region under $y = \\sqrt{x}$ from $x = 0$ to $x = 4$: $x = y^{2}$, and for $0 \\le y \\le 2$ the strip runs from $x = y^{2}$ to $x = 4$, so\n\n$$V = 2\\pi\\int_{0}^{2} y(4 - y^{2}) \\, dy = 8\\pi.$$",
-        "若曲线以 $y = f(x)$ 给出，先解出 $x$，确定每个水平窄条的起点和终点。对 $y = \\sqrt{x}$ 下方从 $x = 0$ 到 $x = 4$ 的区域：$x = y^{2}$，当 $0 \\le y \\le 2$ 时窄条从 $x = y^{2}$ 延伸到 $x = 4$，所以\n\n$$V = 2\\pi\\int_{0}^{2} y(4 - y^{2}) \\, dy = 8\\pi。$$",
+        "若曲线以 $y = f(x)$ 给出，先解出 $x$，确定每个水平窄条的起点和终点。对 $y = \\sqrt{x}$ 下方从 $x = 0$ 到 $x = 4$ 的区域：$x = y^{2}$，当 $0 \\le y \\le 2$ 时窄条从 $x = y^{2}$ 延伸到 $x = 4$，所以\n\n$$V = 2\\pi\\int_{0}^{2} y(4 - y^{2}) \\, dy = 8\\pi$$",
       ),
       generate: (rng) => (rng.bool() ? rootCurveShells(rng) : parabolaShells(rng)),
     },
@@ -675,7 +675,7 @@ export const theShellMethodRotatingARegionBetweenTwoCurvesAboutTheXAxis: TopicDe
       title: t("Shells between curves on an interval", "区间上两曲线之间的柱壳"),
       explanation: t(
         "If $f(y) \\ge g(y)$ for $c \\le y \\le d$, the horizontal strip at height $y$ runs from $x = g(y)$ to $x = f(y)$, so its length is $f(y) - g(y)$:\n\n$$V = 2\\pi\\int_{c}^{d} y\\left(f(y) - g(y)\\right) dy.$$\n\nOnly the difference of the curves matters, not their position along the $x$-axis.",
-        "若当 $c \\le y \\le d$ 时 $f(y) \\ge g(y)$，高度 $y$ 处的水平窄条从 $x = g(y)$ 延伸到 $x = f(y)$，长为 $f(y) - g(y)$：\n\n$$V = 2\\pi\\int_{c}^{d} y\\left(f(y) - g(y)\\right) dy。$$\n\n只有两曲线之差起作用，与它们沿 $x$ 轴的位置无关。",
+        "若当 $c \\le y \\le d$ 时 $f(y) \\ge g(y)$，高度 $y$ 处的水平窄条从 $x = g(y)$ 延伸到 $x = f(y)$，长为 $f(y) - g(y)$：\n\n$$V = 2\\pi\\int_{c}^{d} y\\left(f(y) - g(y)\\right) dy$$\n\n只有两曲线之差起作用，与它们沿 $x$ 轴的位置无关。",
       ),
       generate: (rng) => shellsBetweenCurves(rng, "y"),
     },
@@ -684,7 +684,7 @@ export const theShellMethodRotatingARegionBetweenTwoCurvesAboutTheXAxis: TopicDe
       title: t("Shells between intersecting curves", "相交曲线之间的柱壳"),
       explanation: t(
         "When the curves enclose a region by themselves, find the limits by solving for where they meet, then decide which is farther right. For $x = y^{2}$ and $x = 2y$: $y^{2} = 2y$ gives $y = 0$ and $y = 2$, and $2y \\ge y^{2}$ between them, so\n\n$$V = 2\\pi\\int_{0}^{2} y(2y - y^{2}) \\, dy = \\frac{8\\pi}{3}.$$",
-        "当两条曲线自己围成区域时，先解出交点得到积分限，再判断哪条在右边。对 $x = y^{2}$ 与 $x = 2y$：由 $y^{2} = 2y$ 得 $y = 0$ 和 $y = 2$，两者之间 $2y \\ge y^{2}$，所以\n\n$$V = 2\\pi\\int_{0}^{2} y(2y - y^{2}) \\, dy = \\frac{8\\pi}{3}。$$",
+        "当两条曲线自己围成区域时，先解出交点得到积分限，再判断哪条在右边。对 $x = y^{2}$ 与 $x = 2y$：由 $y^{2} = 2y$ 得 $y = 0$ 和 $y = 2$，两者之间 $2y \\ge y^{2}$，所以\n\n$$V = 2\\pi\\int_{0}^{2} y(2y - y^{2}) \\, dy = \\frac{8\\pi}{3}$$",
       ),
       generate: (rng) => meetingShellsProblem(rng, "y"),
     },
@@ -725,7 +725,7 @@ export const theShellMethodRotationAboutTheYAxis: TopicDef = {
       title: t("Shells under a curve", "曲线下方区域的柱壳"),
       explanation: t(
         "Rotating the region under $y = f(x)$, for $0 \\le a \\le x \\le b$, about the $y$-axis: the vertical strip at $x$ has height $f(x)$ and sweeps out a shell of radius $x$, so\n\n$$V = 2\\pi\\int_{a}^{b} x f(x) \\, dx.$$\n\nThis avoids solving $y = f(x)$ for $x$. For $y = x^{2}$ on $[0, 2]$: $V = 2\\pi\\int_{0}^{2} x^{3} \\, dx = 8\\pi$.",
-        "把 $y = f(x)$ 下方（$0 \\le a \\le x \\le b$）的区域绕 $y$ 轴旋转：$x$ 处的竖直窄条高为 $f(x)$，形成半径为 $x$ 的柱壳，所以\n\n$$V = 2\\pi\\int_{a}^{b} x f(x) \\, dx。$$\n\n这样无需从 $y = f(x)$ 解出 $x$。对 $[0, 2]$ 上的 $y = x^{2}$：$V = 2\\pi\\int_{0}^{2} x^{3} \\, dx = 8\\pi$。",
+        "把 $y = f(x)$ 下方（$0 \\le a \\le x \\le b$）的区域绕 $y$ 轴旋转：$x$ 处的竖直窄条高为 $f(x)$，形成半径为 $x$ 的柱壳，所以\n\n$$V = 2\\pi\\int_{a}^{b} x f(x) \\, dx$$\n\n这样无需从 $y = f(x)$ 解出 $x$。对 $[0, 2]$ 上的 $y = x^{2}$：$V = 2\\pi\\int_{0}^{2} x^{3} \\, dx = 8\\pi$。",
       ),
       generate: (rng) => shellsUnderCurve(rng),
     },
@@ -734,7 +734,7 @@ export const theShellMethodRotationAboutTheYAxis: TopicDef = {
       title: t("Shells between two curves", "两曲线之间的柱壳"),
       explanation: t(
         "For the region between $y = f(x)$ and $y = g(x)$ with $f \\ge g$, the strip height is $f(x) - g(x)$:\n\n$$V = 2\\pi\\int_{a}^{b} x\\left(f(x) - g(x)\\right) dx.$$\n\nFor $y = x$ and $y = x^{2}$, which meet at $x = 0$ and $x = 1$: $V = 2\\pi\\int_{0}^{1} x(x - x^{2}) \\, dx = \\frac{\\pi}{6}$.",
-        "对 $y = f(x)$ 与 $y = g(x)$（$f \\ge g$）之间的区域，窄条高为 $f(x) - g(x)$：\n\n$$V = 2\\pi\\int_{a}^{b} x\\left(f(x) - g(x)\\right) dx。$$\n\n对交于 $x = 0$ 和 $x = 1$ 的 $y = x$ 与 $y = x^{2}$：$V = 2\\pi\\int_{0}^{1} x(x - x^{2}) \\, dx = \\frac{\\pi}{6}$。",
+        "对 $y = f(x)$ 与 $y = g(x)$（$f \\ge g$）之间的区域，窄条高为 $f(x) - g(x)$：\n\n$$V = 2\\pi\\int_{a}^{b} x\\left(f(x) - g(x)\\right) dx$$\n\n对交于 $x = 0$ 和 $x = 1$ 的 $y = x$ 与 $y = x^{2}$：$V = 2\\pi\\int_{0}^{1} x(x - x^{2}) \\, dx = \\frac{\\pi}{6}$。",
       ),
       generate: (rng) => (rng.bool() ? meetingShellsProblem(rng, "x") : shellsBetweenCurves(rng, "x")),
     },
@@ -866,7 +866,7 @@ export const surfaceAreasOfRevolutionRotationAboutTheXAxis: TopicDef = {
       title: t("Surfaces from line segments", "由线段旋转得到的曲面"),
       explanation: t(
         "A short piece of the curve with arc length $ds = \\sqrt{1 + f'(x)^{2}} \\, dx$, at distance $f(x)$ from the axis, sweeps out a thin band of area $2\\pi f(x) \\, ds$. So rotating $y = f(x) \\ge 0$, $a \\le x \\le b$, about the $x$-axis gives\n\n$$S = 2\\pi\\int_{a}^{b} f(x)\\sqrt{1 + f'(x)^{2}} \\, dx.$$\n\nFor a line the square root is a constant. Rotating $y = x$, $0 \\le x \\le 1$, gives $S = 2\\pi\\sqrt{2}\\int_{0}^{1} x \\, dx = \\sqrt{2}\\pi$, the lateral area of a cone with radius $1$ and slant height $\\sqrt{2}$.",
-        "曲线上弧长为 $ds = \\sqrt{1 + f'(x)^{2}} \\, dx$、到旋转轴距离为 $f(x)$ 的一小段，旋转后形成面积为 $2\\pi f(x) \\, ds$ 的窄带。所以 $y = f(x) \\ge 0$（$a \\le x \\le b$）绕 $x$ 轴旋转所得曲面的面积为\n\n$$S = 2\\pi\\int_{a}^{b} f(x)\\sqrt{1 + f'(x)^{2}} \\, dx。$$\n\n对直线，根号部分是常数。$y = x$（$0 \\le x \\le 1$）旋转得 $S = 2\\pi\\sqrt{2}\\int_{0}^{1} x \\, dx = \\sqrt{2}\\pi$，正是半径为 $1$、母线长为 $\\sqrt{2}$ 的圆锥的侧面积。",
+        "曲线上弧长为 $ds = \\sqrt{1 + f'(x)^{2}} \\, dx$、到旋转轴距离为 $f(x)$ 的一小段，旋转后形成面积为 $2\\pi f(x) \\, ds$ 的窄带。所以 $y = f(x) \\ge 0$（$a \\le x \\le b$）绕 $x$ 轴旋转所得曲面的面积为\n\n$$S = 2\\pi\\int_{a}^{b} f(x)\\sqrt{1 + f'(x)^{2}} \\, dx$$\n\n对直线，根号部分是常数。$y = x$（$0 \\le x \\le 1$）旋转得 $S = 2\\pi\\sqrt{2}\\int_{0}^{1} x \\, dx = \\sqrt{2}\\pi$，正是半径为 $1$、母线长为 $\\sqrt{2}$ 的圆锥的侧面积。",
       ),
       generate: (rng) => surfaceLine(rng, "x", true),
     },
@@ -917,7 +917,7 @@ export const surfaceAreasOfRevolutionRotationAboutTheYAxis: TopicDef = {
       title: t("Rotating y = f(x) about the y-axis", "y = f(x) 绕 y 轴旋转"),
       explanation: t(
         "When $y = f(x)$, $0 \\le a \\le x \\le b$, is rotated about the $y$-axis, a piece of the curve at $x$ is at distance $x$ from the axis, so\n\n$$S = 2\\pi\\int_{a}^{b} x\\sqrt{1 + f'(x)^{2}} \\, dx.$$\n\nFor $y = x^{2}$, $0 \\le x \\le 1$: $S = 2\\pi\\int_{0}^{1} x\\sqrt{1 + 4x^{2}} \\, dx$; substituting $w = 1 + 4x^{2}$ gives $\\frac{\\pi}{6}\\left(5\\sqrt{5} - 1\\right)$.",
-        "把 $y = f(x)$（$0 \\le a \\le x \\le b$）绕 $y$ 轴旋转时，曲线在 $x$ 处的一小段到旋转轴的距离为 $x$，所以\n\n$$S = 2\\pi\\int_{a}^{b} x\\sqrt{1 + f'(x)^{2}} \\, dx。$$\n\n对 $y = x^{2}$（$0 \\le x \\le 1$）：$S = 2\\pi\\int_{0}^{1} x\\sqrt{1 + 4x^{2}} \\, dx$，令 $w = 1 + 4x^{2}$ 得 $\\frac{\\pi}{6}\\left(5\\sqrt{5} - 1\\right)$。",
+        "把 $y = f(x)$（$0 \\le a \\le x \\le b$）绕 $y$ 轴旋转时，曲线在 $x$ 处的一小段到旋转轴的距离为 $x$，所以\n\n$$S = 2\\pi\\int_{a}^{b} x\\sqrt{1 + f'(x)^{2}} \\, dx$$\n\n对 $y = x^{2}$（$0 \\le x \\le 1$）：$S = 2\\pi\\int_{0}^{1} x\\sqrt{1 + 4x^{2}} \\, dx$，令 $w = 1 + 4x^{2}$ 得 $\\frac{\\pi}{6}\\left(5\\sqrt{5} - 1\\right)$。",
       ),
       generate: (rng) => (rng.int(0, 2) === 0 ? surfaceParabola(rng) : surfaceLine(rng, "x", false)),
     },
@@ -926,7 +926,7 @@ export const surfaceAreasOfRevolutionRotationAboutTheYAxis: TopicDef = {
       title: t("Rotating x = g(y) about the y-axis", "x = g(y) 绕 y 轴旋转"),
       explanation: t(
         "If the curve is $x = g(y) \\ge 0$, $c \\le y \\le d$, swap the roles of $x$ and $y$ in the formula for rotation about the $x$-axis:\n\n$$S = 2\\pi\\int_{c}^{d} g(y)\\sqrt{1 + g'(y)^{2}} \\, dy.$$\n\nFor example, $x = \\sqrt{r^{2} - y^{2}}$ gives $g\\sqrt{1 + (g')^{2}} = r$, just as for the circle rotated about the $x$-axis.",
-        "若曲线为 $x = g(y) \\ge 0$（$c \\le y \\le d$），把绕 $x$ 轴旋转公式中的 $x$ 和 $y$ 互换：\n\n$$S = 2\\pi\\int_{c}^{d} g(y)\\sqrt{1 + g'(y)^{2}} \\, dy。$$\n\n例如 $x = \\sqrt{r^{2} - y^{2}}$ 给出 $g\\sqrt{1 + (g')^{2}} = r$，与圆绕 $x$ 轴旋转时一样。",
+        "若曲线为 $x = g(y) \\ge 0$（$c \\le y \\le d$），把绕 $x$ 轴旋转公式中的 $x$ 和 $y$ 互换：\n\n$$S = 2\\pi\\int_{c}^{d} g(y)\\sqrt{1 + g'(y)^{2}} \\, dy$$\n\n例如 $x = \\sqrt{r^{2} - y^{2}}$ 给出 $g\\sqrt{1 + (g')^{2}} = r$，与圆绕 $x$ 轴旋转时一样。",
       ),
       generate: (rng) => {
         const kind = rng.int(0, 2);

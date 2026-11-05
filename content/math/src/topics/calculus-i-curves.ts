@@ -614,7 +614,7 @@ export const approximatingFunctionsUsingLocalLinearityAndLinearization: TopicDef
       title: t("Finding a linearization", "求线性化"),
       explanation: t(
         "Near $x = a$ the graph of a differentiable function looks like its tangent line. The linearization of $f$ at $a$ is that line:\n\n$$L(x) = f(a) + f'(a)(x - a).$$",
-        "在 $x = a$ 附近，可导函数的图像看起来就像它的切线。$f$ 在 $a$ 处的线性化就是这条切线：\n\n$$L(x) = f(a) + f'(a)(x - a)。$$",
+        "在 $x = a$ 附近，可导函数的图像看起来就像它的切线。$f$ 在 $a$ 处的线性化就是这条切线：\n\n$$L(x) = f(a) + f'(a)(x - a)$$",
       ),
       generate(rng) {
         const L = linearizable(rng);

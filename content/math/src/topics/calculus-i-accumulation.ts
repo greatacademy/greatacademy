@@ -174,7 +174,7 @@ export const evaluatingDefiniteIntegralsUsingSymmetry: TopicDef = {
       title: t("Odd and even integrands", "奇被积函数与偶被积函数"),
       explanation: t(
         "On $[-a, a]$ the areas of an odd function cancel, and those of an even function match:\n\n$$f \\text{ odd} \\Rightarrow \\int_{-a}^{a} f(x) \\, dx = 0, \\qquad f \\text{ even} \\Rightarrow \\int_{-a}^{a} f(x) \\, dx = 2\\int_{0}^{a} f(x) \\, dx.$$\n\nThis evaluates the odd part of an integrand even when it has no antiderivative you can find.",
-        "在 $[-a, a]$ 上，奇函数的面积相互抵消，偶函数的面积左右相等：\n\n$$f \\text{ 为奇函数} \\Rightarrow \\int_{-a}^{a} f(x) \\, dx = 0, \\qquad f \\text{ 为偶函数} \\Rightarrow \\int_{-a}^{a} f(x) \\, dx = 2\\int_{0}^{a} f(x) \\, dx。$$\n\n即使被积函数的奇部分没有能求出的原函数，也可以这样计算。",
+        "在 $[-a, a]$ 上，奇函数的面积相互抵消，偶函数的面积左右相等：\n\n$$f \\text{ 为奇函数} \\Rightarrow \\int_{-a}^{a} f(x) \\, dx = 0, \\qquad f \\text{ 为偶函数} \\Rightarrow \\int_{-a}^{a} f(x) \\, dx = 2\\int_{0}^{a} f(x) \\, dx$$\n\n即使被积函数的奇部分没有能求出的原函数，也可以这样计算。",
       ),
       generate(rng) {
         const odd = rng.pick(oddParts);
@@ -454,7 +454,7 @@ export const calculatingTheDefiniteIntegralOfAFunctionGivenItsGraph: TopicDef = 
       title: t("Integrals of combinations from a graph", "由图像求组合函数的积分"),
       explanation: t(
         "The integral is linear: constants factor out, and the integral of a constant $k$ over $[a, b]$ is the area of a rectangle, $k(b - a)$. So\n\n$$\\int_{a}^{b} \\big(c f(x) + k\\big) \\, dx = c \\int_{a}^{b} f(x) \\, dx + k(b - a).$$\n\nRead $\\int_{a}^{b} f(x) \\, dx$ off the graph as a signed area, then scale and add. If $\\int_{0}^{4} f(x) \\, dx = 6$, then $\\int_{0}^{4} \\big(3f(x) - 2\\big) \\, dx = 18 - 8 = 10$.",
-        "积分是线性的：常数因子可以提出，常数 $k$ 在 $[a, b]$ 上的积分是矩形面积 $k(b - a)$。所以\n\n$$\\int_{a}^{b} \\big(c f(x) + k\\big) \\, dx = c \\int_{a}^{b} f(x) \\, dx + k(b - a)。$$\n\n先从图像读出有向面积 $\\int_{a}^{b} f(x) \\, dx$，再乘以系数并相加。若 $\\int_{0}^{4} f(x) \\, dx = 6$，则 $\\int_{0}^{4} \\big(3f(x) - 2\\big) \\, dx = 18 - 8 = 10$。",
+        "积分是线性的：常数因子可以提出，常数 $k$ 在 $[a, b]$ 上的积分是矩形面积 $k(b - a)$。所以\n\n$$\\int_{a}^{b} \\big(c f(x) + k\\big) \\, dx = c \\int_{a}^{b} f(x) \\, dx + k(b - a)$$\n\n先从图像读出有向面积 $\\int_{a}^{b} f(x) \\, dx$，再乘以系数并相加。若 $\\int_{0}^{4} f(x) \\, dx = 6$，则 $\\int_{0}^{4} \\big(3f(x) - 2\\big) \\, dx = 18 - 8 = 10$。",
       ),
       generate(rng) {
         const ys = zigzag(rng);
@@ -502,7 +502,7 @@ export const calculatingTheDefiniteIntegralOfAFunctionsDerivativeGivenItsGraph: 
       title: t("Net change from a graph", "由图像求净变化"),
       explanation: t(
         "$f$ is an antiderivative of $f'$, so by the fundamental theorem\n\n$$\\int_{a}^{b} f'(x) \\, dx = f(b) - f(a).$$\n\nRead the two values of $f$ off its graph; no area is needed.",
-        "$f$ 是 $f'$ 的一个原函数，所以由基本定理\n\n$$\\int_{a}^{b} f'(x) \\, dx = f(b) - f(a)。$$\n\n从图像读出 $f$ 的两个值即可，不需要求面积。",
+        "$f$ 是 $f'$ 的一个原函数，所以由基本定理\n\n$$\\int_{a}^{b} f'(x) \\, dx = f(b) - f(a)$$\n\n从图像读出 $f$ 的两个值即可，不需要求面积。",
       ),
       generate(rng) {
         const ys = zigzag(rng);
@@ -747,7 +747,7 @@ export const theSecondFundamentalTheoremOfCalculus: TopicDef = {
       title: t("Differentiating an accumulation function", "对累积函数求导"),
       explanation: t(
         "**The second fundamental theorem of calculus:** if $f$ is continuous, then\n\n$$\\frac{d}{dx}\\int_{a}^{x} f(t) \\, dt = f(x).$$\n\nThe lower limit $a$ does not matter. If $x$ is the lower limit, reverse first: $\\frac{d}{dx}\\int_{x}^{a} f(t) \\, dt = -f(x)$.",
-        "**微积分第二基本定理：**若 $f$ 连续，则\n\n$$\\frac{d}{dx}\\int_{a}^{x} f(t) \\, dt = f(x)。$$\n\n下限 $a$ 不影响结果。若 $x$ 是下限，先交换上下限：$\\frac{d}{dx}\\int_{x}^{a} f(t) \\, dt = -f(x)$。",
+        "**微积分第二基本定理：**若 $f$ 连续，则\n\n$$\\frac{d}{dx}\\int_{a}^{x} f(t) \\, dt = f(x)$$\n\n下限 $a$ 不影响结果。若 $x$ 是下限，先交换上下限：$\\frac{d}{dx}\\int_{x}^{a} f(t) \\, dt = -f(x)$。",
       ),
       generate(rng) {
         const h = rng.pick(integrands);
@@ -773,7 +773,7 @@ export const theSecondFundamentalTheoremOfCalculus: TopicDef = {
       title: t("Variable limits and the chain rule", "变限与链式法则"),
       explanation: t(
         "By the fundamental theorem, differentiating an integral with a variable upper limit returns the integrand there, and the chain rule multiplies by the derivative of the limit. If the upper limit is a function $u(x)$, the chain rule gives\n\n$$\\frac{d}{dx}\\int_{a}^{u(x)} f(t) \\, dt = f(u(x)) \\cdot u'(x).$$\n\nFor example, $\\frac{d}{dx}\\int_{0}^{x^{2}} \\sin t \\, dt = 2x\\sin(x^{2})$.",
-        "根据微积分基本定理，对变上限积分求导会得到上限处的被积函数，链式法则再乘以上限的导数。若上限是函数 $u(x)$，由链式法则\n\n$$\\frac{d}{dx}\\int_{a}^{u(x)} f(t) \\, dt = f(u(x)) \\cdot u'(x)。$$\n\n例如 $\\frac{d}{dx}\\int_{0}^{x^{2}} \\sin t \\, dt = 2x\\sin(x^{2})$。",
+        "根据微积分基本定理，对变上限积分求导会得到上限处的被积函数，链式法则再乘以上限的导数。若上限是函数 $u(x)$，由链式法则\n\n$$\\frac{d}{dx}\\int_{a}^{u(x)} f(t) \\, dt = f(u(x)) \\cdot u'(x)$$\n\n例如 $\\frac{d}{dx}\\int_{0}^{x^{2}} \\sin t \\, dt = 2x\\sin(x^{2})$。",
       ),
       generate(rng) {
         const h = rng.pick(integrands);

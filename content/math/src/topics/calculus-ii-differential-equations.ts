@@ -624,7 +624,7 @@ export const furtherModelingWithFirstOrderOdes: TopicDef = {
       title: t("Rates in a mixing tank", "混合问题中的变化率"),
       explanation: t(
         "A tank holds $V$ liters of well-mixed salt water containing $S$ kg of salt. Brine with $c$ kg of salt per liter flows in at $r$ liters per minute, and the mixture flows out at the same rate. Salt enters at $rc$ kg/min and leaves at $r \\cdot \\frac{S}{V}$ kg/min, so\n\n$$\\frac{dS}{dt} = rc - \\frac{rS}{V}.$$\n\nWith $V = 100$, $r = 5$, $c = \\frac{1}{2}$ and $S = 20$: $\\frac{dS}{dt} = \\frac{5}{2} - 1 = \\frac{3}{2}$.",
-        "水箱中有 $V$ 升充分混合的盐水，含盐 $S$ 千克。每升含盐 $c$ 千克的盐水以每分钟 $r$ 升流入，混合液以相同速率流出。盐以每分钟 $rc$ 千克流入，以每分钟 $r \\cdot \\frac{S}{V}$ 千克流出，所以\n\n$$\\frac{dS}{dt} = rc - \\frac{rS}{V}。$$\n\n当 $V = 100$，$r = 5$，$c = \\frac{1}{2}$，$S = 20$ 时：$\\frac{dS}{dt} = \\frac{5}{2} - 1 = \\frac{3}{2}$。",
+        "水箱中有 $V$ 升充分混合的盐水，含盐 $S$ 千克。每升含盐 $c$ 千克的盐水以每分钟 $r$ 升流入，混合液以相同速率流出。盐以每分钟 $rc$ 千克流入，以每分钟 $r \\cdot \\frac{S}{V}$ 千克流出，所以\n\n$$\\frac{dS}{dt} = rc - \\frac{rS}{V}$$\n\n当 $V = 100$，$r = 5$，$c = \\frac{1}{2}$，$S = 20$ 时：$\\frac{dS}{dt} = \\frac{5}{2} - 1 = \\frac{3}{2}$。",
       ),
       generate(rng) {
         const V = rng.pick([100, 200, 400, 500, 1000]);
@@ -1266,7 +1266,7 @@ export const solvingTheLogisticGrowthEquation: TopicDef = {
       title: t("The constant A", "常数 A"),
       explanation: t(
         "The constant in the logistic solution is fixed by the starting population, measuring how far below the carrying capacity the population begins. Separating gives $\\int \\frac{K}{P(K - P)} \\, dP = \\int k \\, dt$, and partial fractions give $\\ln\\left|\\frac{P}{K - P}\\right| = kt + C$. Solving for $P$:\n\n$$P(t) = \\frac{K}{1 + Ae^{-kt}}, \\qquad A = \\frac{K - P_0}{P_0}.$$\n\nWith $K = 1000$ and $P_0 = 200$: $A = \\frac{800}{200} = 4$.",
-        "逻辑斯谛解中的常数由初始种群数量确定，它衡量种群开始时比环境容量低多少。分离变量得 $\\int \\frac{K}{P(K - P)} \\, dP = \\int k \\, dt$，用部分分式得 $\\ln\\left|\\frac{P}{K - P}\\right| = kt + C$。解出 $P$：\n\n$$P(t) = \\frac{K}{1 + Ae^{-kt}}, \\qquad A = \\frac{K - P_0}{P_0}。$$\n\n当 $K = 1000$，$P_0 = 200$ 时：$A = \\frac{800}{200} = 4$。",
+        "逻辑斯谛解中的常数由初始种群数量确定，它衡量种群开始时比环境容量低多少。分离变量得 $\\int \\frac{K}{P(K - P)} \\, dP = \\int k \\, dt$，用部分分式得 $\\ln\\left|\\frac{P}{K - P}\\right| = kt + C$。解出 $P$：\n\n$$P(t) = \\frac{K}{1 + Ae^{-kt}}, \\qquad A = \\frac{K - P_0}{P_0}$$\n\n当 $K = 1000$，$P_0 = 200$ 时：$A = \\frac{800}{200} = 4$。",
       ),
       generate(rng) {
         const L = logistic(rng);
@@ -1872,7 +1872,7 @@ export const eulersMethodCalculatingOneStep: TopicDef = {
       title: t("One step", "一步"),
       explanation: t(
         "Starting from the known point $(x_0, y_0)$, the solution's slope there is $f(x_0, y_0)$. Moving a small step $h$ along that tangent line gives\n\n$$y(x_0 + h) \\approx y_1 = y_0 + h f(x_0, y_0).$$\n\nFor $\\frac{dy}{dx} = x + 2y$ with $y(1) = 3$ and $h = \\frac{1}{2}$: the slope is $1 + 6 = 7$, so $y\\left(\\frac{3}{2}\\right) \\approx 3 + \\frac{1}{2} \\cdot 7 = \\frac{13}{2}$.",
-        "从已知点 $(x_0, y_0)$ 出发，解在该处的斜率为 $f(x_0, y_0)$。沿这条切线前进一小步 $h$ 得\n\n$$y(x_0 + h) \\approx y_1 = y_0 + h f(x_0, y_0)。$$\n\n对 $\\frac{dy}{dx} = x + 2y$，$y(1) = 3$，$h = \\frac{1}{2}$：斜率为 $1 + 6 = 7$，所以 $y\\left(\\frac{3}{2}\\right) \\approx 3 + \\frac{1}{2} \\cdot 7 = \\frac{13}{2}$。",
+        "从已知点 $(x_0, y_0)$ 出发，解在该处的斜率为 $f(x_0, y_0)$。沿这条切线前进一小步 $h$ 得\n\n$$y(x_0 + h) \\approx y_1 = y_0 + h f(x_0, y_0)$$\n\n对 $\\frac{dy}{dx} = x + 2y$，$y(1) = 3$，$h = \\frac{1}{2}$：斜率为 $1 + 6 = 7$，所以 $y\\left(\\frac{3}{2}\\right) \\approx 3 + \\frac{1}{2} \\cdot 7 = \\frac{13}{2}$。",
       ),
       generate: (rng) => eulerProblem(rng, linearEuler(rng.nonZero(-3, 3), rng.nonZero(-3, 3), rng.int(-4, 4)), 1),
     },

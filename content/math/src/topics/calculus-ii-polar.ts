@@ -116,7 +116,7 @@ export const differentiatingCurvesGivenInPolarForm: TopicDef = {
       title: t("Rates of change of x and y", "x 与 y 的变化率"),
       explanation: t(
         "A polar curve $r = f(\\theta)$ is the parametric curve $x = f(\\theta)\\cos\\theta$, $y = f(\\theta)\\sin\\theta$ with parameter $\\theta$. By the product rule,\n\n$$\\frac{dx}{d\\theta} = r'\\cos\\theta - r\\sin\\theta, \\qquad \\frac{dy}{d\\theta} = r'\\sin\\theta + r\\cos\\theta,$$\n\nwhere $r' = f'(\\theta)$. For $r = 2 + \\cos\\theta$ at $\\theta = \\frac{\\pi}{2}$: $r = 2$, $r' = -1$, so $\\frac{dx}{d\\theta} = -2$ and $\\frac{dy}{d\\theta} = -1$.",
-        "极坐标曲线 $r = f(\\theta)$ 就是以 $\\theta$ 为参数的参数曲线 $x = f(\\theta)\\cos\\theta$、$y = f(\\theta)\\sin\\theta$。由乘积法则，\n\n$$\\frac{dx}{d\\theta} = r'\\cos\\theta - r\\sin\\theta，\\qquad \\frac{dy}{d\\theta} = r'\\sin\\theta + r\\cos\\theta，$$\n\n其中 $r' = f'(\\theta)$。对 $r = 2 + \\cos\\theta$，在 $\\theta = \\frac{\\pi}{2}$ 处 $r = 2$，$r' = -1$，所以 $\\frac{dx}{d\\theta} = -2$，$\\frac{dy}{d\\theta} = -1$。",
+        "极坐标曲线 $r = f(\\theta)$ 就是以 $\\theta$ 为参数的参数曲线 $x = f(\\theta)\\cos\\theta$、$y = f(\\theta)\\sin\\theta$。由乘积法则，\n\n$$\\frac{dx}{d\\theta} = r'\\cos\\theta - r\\sin\\theta, \\qquad \\frac{dy}{d\\theta} = r'\\sin\\theta + r\\cos\\theta$$\n\n其中 $r' = f'(\\theta)$。对 $r = 2 + \\cos\\theta$，在 $\\theta = \\frac{\\pi}{2}$ 处 $r = 2$，$r' = -1$，所以 $\\frac{dx}{d\\theta} = -2$，$\\frac{dy}{d\\theta} = -1$。",
       ),
       generate: coordinateRate,
     },
@@ -125,7 +125,7 @@ export const differentiatingCurvesGivenInPolarForm: TopicDef = {
       title: t("Slopes of polar curves", "极坐标曲线的斜率"),
       explanation: t(
         `A polar curve is a parametric curve with the angle as the parameter, so its slope is the derivative of the vertical coordinate over that of the horizontal one. As for any parametric curve,\n\n$$${polarSlopeFormula}.$$\n\nIt is not $\\frac{dr}{d\\theta}$. For $r = 2 + \\cos\\theta$ at $\\theta = \\frac{\\pi}{2}$: $\\frac{dy}{dx} = \\frac{-1}{-2} = \\frac{1}{2}$.`,
-        `极坐标曲线是以角为参数的参数曲线，所以它的斜率是竖直坐标的导数除以水平坐标的导数。与任何参数曲线一样，\n\n$$${polarSlopeFormula}。$$\n\n它不等于 $\\frac{dr}{d\\theta}$。对 $r = 2 + \\cos\\theta$，在 $\\theta = \\frac{\\pi}{2}$ 处 $\\frac{dy}{dx} = \\frac{-1}{-2} = \\frac{1}{2}$。`,
+        `极坐标曲线是以角为参数的参数曲线，所以它的斜率是竖直坐标的导数除以水平坐标的导数。与任何参数曲线一样，\n\n$$${polarSlopeFormula}$$\n\n它不等于 $\\frac{dr}{d\\theta}$。对 $r = 2 + \\cos\\theta$，在 $\\theta = \\frac{\\pi}{2}$ 处 $\\frac{dy}{dx} = \\frac{-1}{-2} = \\frac{1}{2}$。`,
       ),
       generate: quadrantalSlope,
     },
@@ -683,7 +683,7 @@ export const findingTheAreaOfAPolarRegion: TopicDef = {
       title: t("Areas of sectors and spirals", "扇形与螺线的面积"),
       explanation: t(
         "A thin sector of radius $r$ and angle $d\\theta$ has area $\\frac{1}{2}r^{2} \\, d\\theta$. Adding them up, the region between $r = f(\\theta)$ and the rays $\\theta = \\alpha$, $\\theta = \\beta$ has area\n\n$$A = \\frac{1}{2}\\int_{\\alpha}^{\\beta} r^{2} \\, d\\theta.$$\n\nFor $r = 3$ from $0$ to $\\frac{\\pi}{2}$: $A = \\frac{9}{2} \\cdot \\frac{\\pi}{2} = \\frac{9\\pi}{4}$. For the spiral $r = \\theta$ from $0$ to $\\pi$: $A = \\frac{1}{2}\\int_{0}^{\\pi} \\theta^{2} \\, d\\theta = \\frac{\\pi^{3}}{6}$.",
-        "半径为 $r$、圆心角为 $d\\theta$ 的细扇形面积为 $\\frac{1}{2}r^{2} \\, d\\theta$。把它们加起来，$r = f(\\theta)$ 与射线 $\\theta = \\alpha$、$\\theta = \\beta$ 之间区域的面积为\n\n$$A = \\frac{1}{2}\\int_{\\alpha}^{\\beta} r^{2} \\, d\\theta。$$\n\n对 $r = 3$，从 $0$ 到 $\\frac{\\pi}{2}$：$A = \\frac{9}{2} \\cdot \\frac{\\pi}{2} = \\frac{9\\pi}{4}$。对螺线 $r = \\theta$，从 $0$ 到 $\\pi$：$A = \\frac{1}{2}\\int_{0}^{\\pi} \\theta^{2} \\, d\\theta = \\frac{\\pi^{3}}{6}$。",
+        "半径为 $r$、圆心角为 $d\\theta$ 的细扇形面积为 $\\frac{1}{2}r^{2} \\, d\\theta$。把它们加起来，$r = f(\\theta)$ 与射线 $\\theta = \\alpha$、$\\theta = \\beta$ 之间区域的面积为\n\n$$A = \\frac{1}{2}\\int_{\\alpha}^{\\beta} r^{2} \\, d\\theta$$\n\n对 $r = 3$，从 $0$ 到 $\\frac{\\pi}{2}$：$A = \\frac{9}{2} \\cdot \\frac{\\pi}{2} = \\frac{9\\pi}{4}$。对螺线 $r = \\theta$，从 $0$ 到 $\\pi$：$A = \\frac{1}{2}\\int_{0}^{\\pi} \\theta^{2} \\, d\\theta = \\frac{\\pi^{3}}{6}$。",
       ),
       generate: sectorOrSpiralArea,
     },
@@ -692,7 +692,7 @@ export const findingTheAreaOfAPolarRegion: TopicDef = {
       title: t("Areas bounded by limaçons", "蜗线围成的面积"),
       explanation: t(
         "Polar area adds up thin sectors, each with area half the square of the radius times the angle, so expand the square and lower the powers of cosine. Expand $r^{2}$ and use $\\cos^{2}\\theta = \\frac{1 + \\cos 2\\theta}{2}$ (or the same for $\\sin^{2}\\theta$). For $r = 2 + \\cos\\theta$ from $0$ to $\\frac{\\pi}{2}$:\n\n$$A = \\frac{1}{2}\\int_{0}^{\\pi/2} (4 + 4\\cos\\theta + \\cos^{2}\\theta) \\, d\\theta = \\frac{1}{2}\\left(2\\pi + 4 + \\frac{\\pi}{4}\\right) = \\frac{9\\pi}{8} + 2.$$",
-        "极坐标面积是把许多细扇形加起来，每个扇形的面积是半径平方的一半乘以角度，所以要展开平方并给余弦降幂。展开 $r^{2}$，并用 $\\cos^{2}\\theta = \\frac{1 + \\cos 2\\theta}{2}$（$\\sin^{2}\\theta$ 类似）。对 $r = 2 + \\cos\\theta$，从 $0$ 到 $\\frac{\\pi}{2}$：\n\n$$A = \\frac{1}{2}\\int_{0}^{\\pi/2} (4 + 4\\cos\\theta + \\cos^{2}\\theta) \\, d\\theta = \\frac{1}{2}\\left(2\\pi + 4 + \\frac{\\pi}{4}\\right) = \\frac{9\\pi}{8} + 2。$$",
+        "极坐标面积是把许多细扇形加起来，每个扇形的面积是半径平方的一半乘以角度，所以要展开平方并给余弦降幂。展开 $r^{2}$，并用 $\\cos^{2}\\theta = \\frac{1 + \\cos 2\\theta}{2}$（$\\sin^{2}\\theta$ 类似）。对 $r = 2 + \\cos\\theta$，从 $0$ 到 $\\frac{\\pi}{2}$：\n\n$$A = \\frac{1}{2}\\int_{0}^{\\pi/2} (4 + 4\\cos\\theta + \\cos^{2}\\theta) \\, d\\theta = \\frac{1}{2}\\left(2\\pi + 4 + \\frac{\\pi}{4}\\right) = \\frac{9\\pi}{8} + 2$$",
       ),
       generate: limaconArea,
     },
@@ -946,7 +946,7 @@ export const theAreaBoundedByTwoPolarCurves: TopicDef = {
       title: t("Areas between two circles", "两圆之间的面积"),
       explanation: t(
         "Find the angles where the curves meet, then subtract the inner region from the outer:\n\n$$A = \\frac{1}{2}\\int_{\\alpha}^{\\beta} \\left(r_{\\text{outer}}^{2} - r_{\\text{inner}}^{2}\\right) d\\theta.$$\n\nIt is not $\\frac{1}{2}\\int (r_{\\text{outer}} - r_{\\text{inner}})^{2} \\, d\\theta$. Inside $r = 2\\cos\\theta$ and outside $r = 1$: the circles meet at $\\theta = \\pm\\frac{\\pi}{3}$, and $A = \\frac{1}{2}\\int_{-\\pi/3}^{\\pi/3} (4\\cos^{2}\\theta - 1) \\, d\\theta = \\frac{\\pi}{3} + \\frac{\\sqrt{3}}{2}$.",
-        "先求两曲线相交处的角，再用外区域减去内区域：\n\n$$A = \\frac{1}{2}\\int_{\\alpha}^{\\beta} \\left(r_{\\text{外}}^{2} - r_{\\text{内}}^{2}\\right) d\\theta。$$\n\n它不等于 $\\frac{1}{2}\\int (r_{\\text{外}} - r_{\\text{内}})^{2} \\, d\\theta$。在 $r = 2\\cos\\theta$ 内、$r = 1$ 外：两圆在 $\\theta = \\pm\\frac{\\pi}{3}$ 处相交，$A = \\frac{1}{2}\\int_{-\\pi/3}^{\\pi/3} (4\\cos^{2}\\theta - 1) \\, d\\theta = \\frac{\\pi}{3} + \\frac{\\sqrt{3}}{2}$。",
+        "先求两曲线相交处的角，再用外区域减去内区域：\n\n$$A = \\frac{1}{2}\\int_{\\alpha}^{\\beta} \\left(r_{\\text{外}}^{2} - r_{\\text{内}}^{2}\\right) d\\theta$$\n\n它不等于 $\\frac{1}{2}\\int (r_{\\text{外}} - r_{\\text{内}})^{2} \\, d\\theta$。在 $r = 2\\cos\\theta$ 内、$r = 1$ 外：两圆在 $\\theta = \\pm\\frac{\\pi}{3}$ 处相交，$A = \\frac{1}{2}\\int_{-\\pi/3}^{\\pi/3} (4\\cos^{2}\\theta - 1) \\, d\\theta = \\frac{\\pi}{3} + \\frac{\\sqrt{3}}{2}$。",
       ),
       generate: circleLensArea,
     },
@@ -1043,7 +1043,7 @@ export const theArcLengthOfAPolarCurve: TopicDef = {
       title: t("Arc lengths of cardioids", "心形线的弧长"),
       explanation: t(
         "With $x = r\\cos\\theta$ and $y = r\\sin\\theta$, $\\left(\\frac{dx}{d\\theta}\\right)^{2} + \\left(\\frac{dy}{d\\theta}\\right)^{2} = r^{2} + (r')^{2}$, so\n\n$$L = \\int_{\\alpha}^{\\beta} \\sqrt{r^{2} + \\left(\\frac{dr}{d\\theta}\\right)^{2}} \\, d\\theta.$$\n\nFor the cardioid $r = 1 + \\cos\\theta$ the integrand is $\\sqrt{2 + 2\\cos\\theta} = 2\\left|\\cos\\frac{\\theta}{2}\\right|$, and the whole cardioid has length $2\\int_{0}^{\\pi} 2\\cos\\frac{\\theta}{2} \\, d\\theta = 8$.",
-        "由 $x = r\\cos\\theta$、$y = r\\sin\\theta$，$\\left(\\frac{dx}{d\\theta}\\right)^{2} + \\left(\\frac{dy}{d\\theta}\\right)^{2} = r^{2} + (r')^{2}$，所以\n\n$$L = \\int_{\\alpha}^{\\beta} \\sqrt{r^{2} + \\left(\\frac{dr}{d\\theta}\\right)^{2}} \\, d\\theta。$$\n\n对心形线 $r = 1 + \\cos\\theta$，被积函数为 $\\sqrt{2 + 2\\cos\\theta} = 2\\left|\\cos\\frac{\\theta}{2}\\right|$，整条心形线的长度为 $2\\int_{0}^{\\pi} 2\\cos\\frac{\\theta}{2} \\, d\\theta = 8$。",
+        "由 $x = r\\cos\\theta$、$y = r\\sin\\theta$，$\\left(\\frac{dx}{d\\theta}\\right)^{2} + \\left(\\frac{dy}{d\\theta}\\right)^{2} = r^{2} + (r')^{2}$，所以\n\n$$L = \\int_{\\alpha}^{\\beta} \\sqrt{r^{2} + \\left(\\frac{dr}{d\\theta}\\right)^{2}} \\, d\\theta$$\n\n对心形线 $r = 1 + \\cos\\theta$，被积函数为 $\\sqrt{2 + 2\\cos\\theta} = 2\\left|\\cos\\frac{\\theta}{2}\\right|$，整条心形线的长度为 $2\\int_{0}^{\\pi} 2\\cos\\frac{\\theta}{2} \\, d\\theta = 8$。",
       ),
       generate: cardioidLength,
     },

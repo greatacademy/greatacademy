@@ -164,7 +164,7 @@ export const lineIntegralsOfScalarFunctions: TopicDef = {
       title: t("Evaluating scalar line integrals using arc length", "利用弧长微元计算标量曲线积分"),
       explanation: t(
         "A scalar line integral adds up the function's values along the curve weighted by small lengths, so the integrand includes the speed of the parametrization. For a curve parameterized by $\\mathbf{r}(t)$ on $[a, b]$, the line integral is:\n\n$$\\int_C f(x, y)\\,ds = \\int_a^b f(\\mathbf{r}(t))\\,\\|\\mathbf{r}'(t)\\|\\,dt.$$",
-        "数量值曲线积分把函数沿曲线的值按小段长度加权相加，所以被积函数中包含参数化的速率。对于由 $\\mathbf{r}(t)$（$t \\in [a, b]$）参数化的曲线，第一类曲线积分为：\n\n$$\\int_C f(x, y)\\,ds = \\int_a^b f(\\mathbf{r}(t))\\,\\|\\mathbf{r}'(t)\\|\\,dt。$$",
+        "数量值曲线积分把函数沿曲线的值按小段长度加权相加，所以被积函数中包含参数化的速率。对于由 $\\mathbf{r}(t)$（$t \\in [a, b]$）参数化的曲线，第一类曲线积分为：\n\n$$\\int_C f(x, y)\\,ds = \\int_a^b f(\\mathbf{r}(t))\\,\\|\\mathbf{r}'(t)\\|\\,dt$$",
       ),
       generate(rng: Rng): Problem {
         const [x1_0, y1_0, L0] = rng.pick(pythagoreanTriples);
@@ -209,7 +209,7 @@ export const lineIntegralsOfScalarFunctions: TopicDef = {
       title: t("A scalar line integral of $cxy$ along a segment", "沿线段计算 $cxy$ 的标量线积分"),
       explanation: t(
         "A scalar line integral adds up the values of $f$ weighted by arc length, so the first step is always to express both $f$ and $ds$ in terms of one parameter. Parametrize the segment from $(0, 0)$ to $(x_1, y_1)$ by $\\mathbf{r}(t) = (x_1t, y_1t)$ for $0 \\le t \\le 1$. Then $ds = \\|\\mathbf{r}'(t)\\|\\,dt = L\\,dt$ with $L = \\sqrt{x_1^2 + y_1^2}$, and\n\n$$\\int_C c\\,xy\\,ds = \\int_0^1 c\\,x_1y_1t^2 \\cdot L\\,dt = \\frac{c\\,x_1y_1L}{3}.$$",
-        "标量线积分按弧长加权累加 $f$ 的值，所以第一步总是把 $f$ 和 $ds$ 都用同一个参数表示。把从 $(0, 0)$ 到 $(x_1, y_1)$ 的线段参数化为 $\\mathbf{r}(t) = (x_1t, y_1t)$，$0 \\le t \\le 1$。则 $ds = \\|\\mathbf{r}'(t)\\|\\,dt = L\\,dt$，$L = \\sqrt{x_1^2 + y_1^2}$，且\n\n$$\\int_C c\\,xy\\,ds = \\int_0^1 c\\,x_1y_1t^2 \\cdot L\\,dt = \\frac{c\\,x_1y_1L}{3}。$$",
+        "标量线积分按弧长加权累加 $f$ 的值，所以第一步总是把 $f$ 和 $ds$ 都用同一个参数表示。把从 $(0, 0)$ 到 $(x_1, y_1)$ 的线段参数化为 $\\mathbf{r}(t) = (x_1t, y_1t)$，$0 \\le t \\le 1$。则 $ds = \\|\\mathbf{r}'(t)\\|\\,dt = L\\,dt$，$L = \\sqrt{x_1^2 + y_1^2}$，且\n\n$$\\int_C c\\,xy\\,ds = \\int_0^1 c\\,x_1y_1t^2 \\cdot L\\,dt = \\frac{c\\,x_1y_1L}{3}$$",
       ),
       generate(rng: Rng): Problem {
         const [p, q, L] = rng.pick(pythagoreanTriples.slice(0, 5));
@@ -250,7 +250,7 @@ export const propertiesOfLineIntegralsOfScalarFunctions: TopicDef = {
       title: t("Invariance under orientation reversal", "标量曲线积分对定向反转的对称性"),
       explanation: t(
         "Because arc length $ds = \\|\\mathbf{r}'(t)\\|\\,dt$ is always non-negative, reversing the direction of traversal does not change the sign of a scalar line integral:\n\n$$\\int_{-C} f\\,ds = \\int_C f\\,ds.$$",
-        "因为弧长微元 $ds = \\|\\mathbf{r}'(t)\\|\\,dt$ 始终非负，颠倒曲线的遍历方向不会改变第一类标量曲线积分的符号：\n\n$$\\int_{-C} f\\,ds = \\int_C f\\,ds。$$",
+        "因为弧长微元 $ds = \\|\\mathbf{r}'(t)\\|\\,dt$ 始终非负，颠倒曲线的遍历方向不会改变第一类标量曲线积分的符号：\n\n$$\\int_{-C} f\\,ds = \\int_C f\\,ds$$",
       ),
       generate(rng: Rng): Problem {
         const val = rng.int(10, 50);
@@ -327,7 +327,7 @@ export const lineIntegralsOfScalarFunctionsOverPathsExpressedAsFunctionsOfX: Top
       title: t("Line integrals along explicit curves y = g(x)", "计算沿显式曲线 y = g(x) 的标量曲线积分"),
       explanation: t(
         "When the curve is a graph, use the horizontal variable as the parameter, and the arc length element includes the square root of one plus the square of the slope. For $y = mx$ with $0 \\le x \\le a$, the arc length differential is $ds = \\sqrt{1 + m^2}\\,dx$. Integrating $kx$ yields:\n\n$$\\int_C kx\\,ds = k\\sqrt{1 + m^2} \\int_0^a x\\,dx = k\\sqrt{1 + m^2}\\frac{a^2}{2}.$$",
-        "当曲线是函数图像时，用水平变量作为参数，弧长微元中含有 1 加斜率平方的平方根。对于 $0 \\le x \\le a$ 上的线段 $y = mx$，弧长微元为 $ds = \\sqrt{1 + m^2}\\,dx$。对 $kx$ 积分得到：\n\n$$\\int_C kx\\,ds = k\\sqrt{1 + m^2} \\int_0^a x\\,dx = k\\sqrt{1 + m^2}\\frac{a^2}{2}。$$",
+        "当曲线是函数图像时，用水平变量作为参数，弧长微元中含有 1 加斜率平方的平方根。对于 $0 \\le x \\le a$ 上的线段 $y = mx$，弧长微元为 $ds = \\sqrt{1 + m^2}\\,dx$。对 $kx$ 积分得到：\n\n$$\\int_C kx\\,ds = k\\sqrt{1 + m^2} \\int_0^a x\\,dx = k\\sqrt{1 + m^2}\\frac{a^2}{2}$$",
       ),
       generate(rng: Rng): Problem {
         // Pythagorean triple for clean sqrt(1 + m^2): m = b/a => sqrt(1 + m^2) = c/a
@@ -371,7 +371,7 @@ export const lineIntegralsOfScalarFunctionsOverPathsExpressedAsFunctionsOfX: Top
       title: t("Integrating $kx^2$ along a line $y = mx$", "沿直线 $y = mx$ 积分 $kx^2$"),
       explanation: t(
         "For a path $y = g(x)$, $a \\le x \\le b$, the arc length element is $ds = \\sqrt{1 + g'(x)^2}\\,dx$. On the line $y = \\frac{q}{p}x$ this is the constant $\\frac{L}{p}\\,dx$ with $L = \\sqrt{p^2 + q^2}$. So\n\n$$\\int_C k\\,x^2\\,ds = \\frac{kL}{p}\\int_0^p x^2\\,dx = \\frac{k\\,p^2L}{3}.$$",
-        "对路径 $y = g(x)$，$a \\le x \\le b$，弧长元素为 $ds = \\sqrt{1 + g'(x)^2}\\,dx$。在直线 $y = \\frac{q}{p}x$ 上它是常数 $\\frac{L}{p}\\,dx$，$L = \\sqrt{p^2 + q^2}$。所以\n\n$$\\int_C k\\,x^2\\,ds = \\frac{kL}{p}\\int_0^p x^2\\,dx = \\frac{k\\,p^2L}{3}。$$",
+        "对路径 $y = g(x)$，$a \\le x \\le b$，弧长元素为 $ds = \\sqrt{1 + g'(x)^2}\\,dx$。在直线 $y = \\frac{q}{p}x$ 上它是常数 $\\frac{L}{p}\\,dx$，$L = \\sqrt{p^2 + q^2}$。所以\n\n$$\\int_C k\\,x^2\\,ds = \\frac{kL}{p}\\int_0^p x^2\\,dx = \\frac{k\\,p^2L}{3}$$",
       ),
       generate(rng: Rng): Problem {
         const [m, n, L] = rng.pick(pythagoreanTriples.slice(0, 5));
@@ -458,7 +458,7 @@ export const lineIntegralsOfScalarFunctionsOverPathsExpressedAsFunctionsOfY: Top
       title: t("Integrating $ky^2$ along a line $x = my$", "沿直线 $x = my$ 积分 $ky^2$"),
       explanation: t(
         "For a path $x = h(y)$, $c \\le y \\le d$, the arc length element is $ds = \\sqrt{1 + h'(y)^2}\\,dy$, and the integral is taken in $y$. On the line $x = \\frac{p}{q}y$ this is $\\frac{L}{q}\\,dy$ with $L = \\sqrt{p^2 + q^2}$, so\n\n$$\\int_C k\\,y^2\\,ds = \\frac{kL}{q}\\int_0^q y^2\\,dy = \\frac{k\\,q^2L}{3}.$$",
-        "对路径 $x = h(y)$，$c \\le y \\le d$，弧长元素为 $ds = \\sqrt{1 + h'(y)^2}\\,dy$，积分对 $y$ 进行。在直线 $x = \\frac{p}{q}y$ 上它是 $\\frac{L}{q}\\,dy$，$L = \\sqrt{p^2 + q^2}$，所以\n\n$$\\int_C k\\,y^2\\,ds = \\frac{kL}{q}\\int_0^q y^2\\,dy = \\frac{k\\,q^2L}{3}。$$",
+        "对路径 $x = h(y)$，$c \\le y \\le d$，弧长元素为 $ds = \\sqrt{1 + h'(y)^2}\\,dy$，积分对 $y$ 进行。在直线 $x = \\frac{p}{q}y$ 上它是 $\\frac{L}{q}\\,dy$，$L = \\sqrt{p^2 + q^2}$，所以\n\n$$\\int_C k\\,y^2\\,ds = \\frac{kL}{q}\\int_0^q y^2\\,dy = \\frac{k\\,q^2L}{3}$$",
       ),
       generate(rng: Rng): Problem {
         const [m, n, L] = rng.pick(pythagoreanTriples.slice(0, 5));
@@ -607,7 +607,7 @@ export const lineIntegralsOfScalarFunctionsOverCircles: TopicDef = {
       title: t("Integrating constant density over circular wire", "在圆形细丝上计算恒定线密度的质量积分"),
       explanation: t(
         "For a full circle $C$ of radius $R$ centered at the origin, the line integral of a constant density $\\rho_0$ divided by $\\pi$ is:\n\n$$\\frac{1}{\\pi}\\int_C \\rho_0\\,ds = \\frac{\\rho_0}{\\pi}(2\\pi R) = 2\\rho_0 R.$$",
-        "对于以原点为中心、半径为 $R$ 的完整圆周 $C$，恒定密度 $\\rho_0$ 的曲线积分除以 $\\pi$ 为：\n\n$$\\frac{1}{\\pi}\\int_C \\rho_0\\,ds = \\frac{\\rho_0}{\\pi}(2\\pi R) = 2\\rho_0 R。$$",
+        "对于以原点为中心、半径为 $R$ 的完整圆周 $C$，恒定密度 $\\rho_0$ 的曲线积分除以 $\\pi$ 为：\n\n$$\\frac{1}{\\pi}\\int_C \\rho_0\\,ds = \\frac{\\rho_0}{\\pi}(2\\pi R) = 2\\rho_0 R$$",
       ),
       figure: circularWireFigure,
       generate(rng: Rng): Problem {
@@ -644,7 +644,7 @@ export const lineIntegralsOfScalarFunctionsOverCircles: TopicDef = {
       title: t("Integrating $a + bx^2$ around a circle", "绕圆积分 $a + bx^2$"),
       explanation: t(
         "On a circle the arc length element is especially simple, because the speed of the standard parametrization is constant and equal to the radius. Parametrize the circle of radius $R$ by $(R\\cos t, R\\sin t)$, so $ds = R\\,dt$. A constant $a$ gives $a \\cdot 2\\pi R$. For $x^2$ use $\\int_0^{2\\pi} \\cos^2 t\\,dt = \\pi$:\n\n$$\\int_C x^2\\,ds = \\int_0^{2\\pi} R^2\\cos^2 t \\cdot R\\,dt = \\pi R^3.$$\n\nSo $\\int_C (a + bx^2)\\,ds = \\pi(2aR + bR^3)$.",
-        "在圆上弧长元素特别简单，因为标准参数化的速率是常数，等于半径。把半径为 $R$ 的圆参数化为 $(R\\cos t, R\\sin t)$，则 $ds = R\\,dt$。常数 $a$ 贡献 $a \\cdot 2\\pi R$。对 $x^2$，利用 $\\int_0^{2\\pi} \\cos^2 t\\,dt = \\pi$：\n\n$$\\int_C x^2\\,ds = \\int_0^{2\\pi} R^2\\cos^2 t \\cdot R\\,dt = \\pi R^3。$$\n\n所以 $\\int_C (a + bx^2)\\,ds = \\pi(2aR + bR^3)$。",
+        "在圆上弧长元素特别简单，因为标准参数化的速率是常数，等于半径。把半径为 $R$ 的圆参数化为 $(R\\cos t, R\\sin t)$，则 $ds = R\\,dt$。常数 $a$ 贡献 $a \\cdot 2\\pi R$。对 $x^2$，利用 $\\int_0^{2\\pi} \\cos^2 t\\,dt = \\pi$：\n\n$$\\int_C x^2\\,ds = \\int_0^{2\\pi} R^2\\cos^2 t \\cdot R\\,dt = \\pi R^3$$\n\n所以 $\\int_C (a + bx^2)\\,ds = \\pi(2aR + bR^3)$。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(1, 4);
@@ -702,7 +702,7 @@ export const lineIntegralsOfScalarFunctionsOverEllipses: TopicDef = {
       title: t("Integrating over symmetric quadrants of ellipses", "利用椭圆对称性计算曲线积分"),
       explanation: t(
         "When both the curve and the function are symmetric, the integral over the whole curve is a multiple of the integral over one quarter. By symmetry across the coordinate axes, for the ellipse $C: \\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$:\n\n$$\\oint_C (cx + k)\\,ds = \\oint_C cx\\,ds + k\\oint_C 1\\,ds = 0 + k\\,\\text{Length}(C).$$",
-        "当曲线和函数都对称时，整条曲线上的积分是四分之一曲线上积分的倍数。由关于坐标轴的对称性，对于椭圆 $C: \\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$：\n\n$$\\oint_C (cx + k)\\,ds = \\oint_C cx\\,ds + k\\oint_C 1\\,ds = 0 + k\\,\\text{Length}(C)。$$",
+        "当曲线和函数都对称时，整条曲线上的积分是四分之一曲线上积分的倍数。由关于坐标轴的对称性，对于椭圆 $C: \\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$：\n\n$$\\oint_C (cx + k)\\,ds = \\oint_C cx\\,ds + k\\oint_C 1\\,ds = 0 + k\\,\\text{Length}(C)$$",
       ),
       figure: ellipseSymmetryFigure,
       generate(rng: Rng): Problem {
@@ -785,7 +785,7 @@ export const furtherPropertiesOfLineIntegralsOfScalarFunctions: TopicDef = {
       title: t("Additivity over piecewise-smooth paths", "分段光滑路径上的可加性"),
       explanation: t(
         "A path made of several smooth pieces is handled one piece at a time, with a convenient parametrization for each, and the results are added. If a path $C$ consists of $k$ smooth components $C_1, C_2, \\dots, C_k$ joined end-to-end:\n\n$$\\int_C f\\,ds = \\sum_{i=1}^k \\int_{C_i} f\\,ds.$$",
-        "由几段光滑曲线组成的路径要逐段处理，每段用方便的参数化，再把结果相加。若路径 $C$ 由首尾相接的 $k$ 个光滑子段 $C_1, C_2, \\dots, C_k$ 构成：\n\n$$\\int_C f\\,ds = \\sum_{i=1}^k \\int_{C_i} f\\,ds。$$",
+        "由几段光滑曲线组成的路径要逐段处理，每段用方便的参数化，再把结果相加。若路径 $C$ 由首尾相接的 $k$ 个光滑子段 $C_1, C_2, \\dots, C_k$ 构成：\n\n$$\\int_C f\\,ds = \\sum_{i=1}^k \\int_{C_i} f\\,ds$$",
       ),
       generate(rng: Rng): Problem {
         const i1 = rng.int(5, 30);
@@ -864,7 +864,7 @@ export const lineIntegralsOfScalarFunctionsOverPolarCurves: TopicDef = {
       title: t("Arc length element in polar coordinates", "极坐标下的弧长微元计算"),
       explanation: t(
         "For a polar curve the arc length element combines the change in radius with the sideways motion, which is the radius times the change in angle. For a curve given by $r = g(\\theta)$ on $[\\alpha, \\beta]$, the line integral is:\n\n$$\\int_C f(r, \\theta)\\,ds = \\int_\\alpha^\\beta f(g(\\theta), \\theta)\\sqrt{[g(\\theta)]^2 + [g'(\\theta)]^2}\\,d\\theta.$$",
-        "对于极坐标曲线，弧长微元结合了半径的变化和侧向的运动，后者等于半径乘以角度的变化。对于由 $r = g(\\theta)$（$\\theta \\in [\\alpha, \\beta]$）给出的曲线，第一类曲线积分为：\n\n$$\\int_C f(r, \\theta)\\,ds = \\int_\\alpha^\\beta f(g(\\theta), \\theta)\\sqrt{[g(\\theta)]^2 + [g'(\\theta)]^2}\\,d\\theta。$$",
+        "对于极坐标曲线，弧长微元结合了半径的变化和侧向的运动，后者等于半径乘以角度的变化。对于由 $r = g(\\theta)$（$\\theta \\in [\\alpha, \\beta]$）给出的曲线，第一类曲线积分为：\n\n$$\\int_C f(r, \\theta)\\,ds = \\int_\\alpha^\\beta f(g(\\theta), \\theta)\\sqrt{[g(\\theta)]^2 + [g'(\\theta)]^2}\\,d\\theta$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 10);
@@ -949,7 +949,7 @@ export const lineIntegralsWithRespectToXAndY: TopicDef = {
       title: t("Differential line integrals along curves", "计算沿曲线的坐标微分积分"),
       explanation: t(
         "Integrating with respect to one coordinate measures the function against changes in that coordinate only, so replace the differential by the derivative of that coordinate times the parameter's differential. For a curve parameterized by $\\mathbf{r}(t) = (x(t), y(t))$ on $[a, b]$:\n\n$$\\int_C P(x, y)\\,dx = \\int_a^b P(x(t), y(t))\\,x'(t)\\,dt, \\quad \\int_C Q(x, y)\\,dy = \\int_a^b Q(x(t), y(t))\\,y'(t)\\,dt.$$",
-        "对一个坐标积分只衡量函数相对于该坐标变化的累积，所以把微分换成该坐标的导数乘以参数的微分。对于由 $\\mathbf{r}(t) = (x(t), y(t))$（$t \\in [a, b]$）参数化的曲线：\n\n$$\\int_C P(x, y)\\,dx = \\int_a^b P(x(t), y(t))\\,x'(t)\\,dt, \\quad \\int_C Q(x, y)\\,dy = \\int_a^b Q(x(t), y(t))\\,y'(t)\\,dt。$$",
+        "对一个坐标积分只衡量函数相对于该坐标变化的累积，所以把微分换成该坐标的导数乘以参数的微分。对于由 $\\mathbf{r}(t) = (x(t), y(t))$（$t \\in [a, b]$）参数化的曲线：\n\n$$\\int_C P(x, y)\\,dx = \\int_a^b P(x(t), y(t))\\,x'(t)\\,dt, \\quad \\int_C Q(x, y)\\,dy = \\int_a^b Q(x(t), y(t))\\,y'(t)\\,dt$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -971,7 +971,7 @@ export const lineIntegralsWithRespectToXAndY: TopicDef = {
           ),
           steps(
             `以 $x = t$ 参数化：$x(t) = t, y(t) = t^2$（$0 \\le t \\le ${b}$）。`,
-            `因 $dx = dt$，代入积分式：\n\n$$\\int_0^{${b}} ${a}(t^2)\\,dt = ${a} \\left[\\frac{t^3}{3}\\right]_0^{${b}} = \\frac{${num}}{3} = ${ans.toLatex()}。$$ `,
+            `因 $dx = dt$，代入积分式：\n\n$$\\int_0^{${b}} ${a}(t^2)\\,dt = ${a} \\left[\\frac{t^3}{3}\\right]_0^{${b}} = \\frac{${num}}{3} = ${ans.toLatex()}$$ `,
           ),
         );
         return numberProblem({
@@ -987,7 +987,7 @@ export const lineIntegralsWithRespectToXAndY: TopicDef = {
       title: t("$\\int x\\,dy$ versus $\\int y\\,dx$ on a parabola", "抛物线上的 $\\int x\\,dy$ 与 $\\int y\\,dx$"),
       explanation: t(
         "On a parametric curve $x = x(t)$, $y = y(t)$, replace $dx$ by $x'(t)\\,dt$ and $dy$ by $y'(t)\\,dt$. For $x = pt$, $y = qt^2$, $0 \\le t \\le 1$:\n\n$$\\int_C y\\,dx = \\int_0^1 qt^2 \\cdot p\\,dt = \\frac{pq}{3}, \\qquad \\int_C x\\,dy = \\int_0^1 pt \\cdot 2qt\\,dt = \\frac{2pq}{3}.$$\n\nThe two are different integrals; which differential appears matters.",
-        "在参数曲线 $x = x(t)$，$y = y(t)$ 上，把 $dx$ 换成 $x'(t)\\,dt$，把 $dy$ 换成 $y'(t)\\,dt$。对 $x = pt$，$y = qt^2$，$0 \\le t \\le 1$：\n\n$$\\int_C y\\,dx = \\int_0^1 qt^2 \\cdot p\\,dt = \\frac{pq}{3}, \\qquad \\int_C x\\,dy = \\int_0^1 pt \\cdot 2qt\\,dt = \\frac{2pq}{3}。$$\n\n二者是不同的积分，出现的是哪个微分很重要。",
+        "在参数曲线 $x = x(t)$，$y = y(t)$ 上，把 $dx$ 换成 $x'(t)\\,dt$，把 $dy$ 换成 $y'(t)\\,dt$。对 $x = pt$，$y = qt^2$，$0 \\le t \\le 1$：\n\n$$\\int_C y\\,dx = \\int_0^1 qt^2 \\cdot p\\,dt = \\frac{pq}{3}, \\qquad \\int_C x\\,dy = \\int_0^1 pt \\cdot 2qt\\,dt = \\frac{2pq}{3}$$\n\n二者是不同的积分，出现的是哪个微分很重要。",
       ),
       generate(rng: Rng): Problem {
         const p = rng.nonZero(-5, 5);
@@ -1035,7 +1035,7 @@ export const propertiesOfLineIntegralsWithRespectToXAndY: TopicDef = {
       title: t("Orientation reversal for differential integrals", "坐标微分积分在定向反转下的变号法则"),
       explanation: t(
         "Unlike integrals with respect to arc length, these integrals depend on direction, so travelling the curve backwards changes the sign of the result. Reversing the curve's direction negates coordinate differentials $dx \\to -dx$ and $dy \\to -dy$, so:\n\n$$\\int_{-C} (P\\,dx + Q\\,dy) = -\\int_C (P\\,dx + Q\\,dy).$$",
-        "与对弧长的积分不同，这些积分依赖于方向，所以沿曲线反向走会改变结果的符号。反转曲线遍历方向会导致坐标微分变号 $dx \\to -dx$ 与 $dy \\to -dy$，因此：\n\n$$\\int_{-C} (P\\,dx + Q\\,dy) = -\\int_C (P\\,dx + Q\\,dy)。$$",
+        "与对弧长的积分不同，这些积分依赖于方向，所以沿曲线反向走会改变结果的符号。反转曲线遍历方向会导致坐标微分变号 $dx \\to -dx$ 与 $dy \\to -dy$，因此：\n\n$$\\int_{-C} (P\\,dx + Q\\,dy) = -\\int_C (P\\,dx + Q\\,dy)$$",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 5);
@@ -1117,7 +1117,7 @@ export const sumsOfLineIntegralsWithRespectToXAndYOverParametricCurves: TopicDef
       title: t("Evaluating P dx + Q dy along parametric paths", "在参数路径上计算 P dx + Q dy 的曲线积分"),
       explanation: t(
         "Substitute the parametrization into both component functions and both differentials, which turns the line integral into an ordinary integral in the parameter. Substitute $x = x(t), dx = x'(t)dt$ and $y = y(t), dy = y'(t)dt$:\n\n$$\\int_C (P\\,dx + Q\\,dy) = \\int_a^b \\left[P(x(t), y(t))x'(t) + Q(x(t), y(t))y'(t)\\right]dt.$$",
-        "把参数化代入两个分量函数和两个微分，就把曲线积分变成关于参数的普通积分。代入 $x = x(t), dx = x'(t)dt$ 与 $y = y(t), dy = y'(t)dt$：\n\n$$\\int_C (P\\,dx + Q\\,dy) = \\int_a^b \\left[P(x(t), y(t))x'(t) + Q(x(t), y(t))y'(t)\\right]dt。$$",
+        "把参数化代入两个分量函数和两个微分，就把曲线积分变成关于参数的普通积分。代入 $x = x(t), dx = x'(t)dt$ 与 $y = y(t), dy = y'(t)dt$：\n\n$$\\int_C (P\\,dx + Q\\,dy) = \\int_a^b \\left[P(x(t), y(t))x'(t) + Q(x(t), y(t))y'(t)\\right]dt$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -1146,7 +1146,7 @@ export const sumsOfLineIntegralsWithRespectToXAndYOverParametricCurves: TopicDef
           steps(
             `参数化线段：$x(t) = ${poly([xEnd, "t"])}, y(t) = ${poly([yEnd, "t"])}$（$0 \\le t \\le 1$）。`,
             `微分元为 $dx = ${xEnd}\\,dt$ 与 $dy = ${yEnd}\\,dt$。`,
-            `代入被积式：\n\n$$\\int_0^1 \\left[(${a})(${poly([yEnd, "t"])})(${xEnd}) + (${b})(${poly([xEnd, "t"])})(${yEnd})\\right]dt = ${(a + b) * xEnd * yEnd} \\int_0^1 t\\,dt = \\frac{${num}}{2} = ${ans.toLatex()}。$$ `,
+            `代入被积式：\n\n$$\\int_0^1 \\left[(${a})(${poly([yEnd, "t"])})(${xEnd}) + (${b})(${poly([xEnd, "t"])})(${yEnd})\\right]dt = ${(a + b) * xEnd * yEnd} \\int_0^1 t\\,dt = \\frac{${num}}{2} = ${ans.toLatex()}$$ `,
           ),
         );
         return numberProblem({
@@ -1162,7 +1162,7 @@ export const sumsOfLineIntegralsWithRespectToXAndYOverParametricCurves: TopicDef
       title: t("$P\\,dx + Q\\,dy$ along $x = t^2$, $y = t$", "沿 $x = t^2$，$y = t$ 计算 $P\\,dx + Q\\,dy$"),
       explanation: t(
         "Substitute the parametrization into both terms and add before integrating. For $x = t^2$, $y = t$ we have $dx = 2t\\,dt$ and $dy = dt$, so\n\n$$\\int_C a\\,y^2\\,dx + b\\,x\\,dy = \\int_0^c (2a t^3 + b t^2)\\,dt = \\frac{ac^4}{2} + \\frac{bc^3}{3}.$$",
-        "把参数化代入两项，相加后再积分。对 $x = t^2$，$y = t$，有 $dx = 2t\\,dt$，$dy = dt$，所以\n\n$$\\int_C a\\,y^2\\,dx + b\\,x\\,dy = \\int_0^c (2a t^3 + b t^2)\\,dt = \\frac{ac^4}{2} + \\frac{bc^3}{3}。$$",
+        "把参数化代入两项，相加后再积分。对 $x = t^2$，$y = t$，有 $dx = 2t\\,dt$，$dy = dt$，所以\n\n$$\\int_C a\\,y^2\\,dx + b\\,x\\,dy = \\int_0^c (2a t^3 + b t^2)\\,dt = \\frac{ac^4}{2} + \\frac{bc^3}{3}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
@@ -1314,7 +1314,7 @@ export const lineIntegralsOfVectorValuedFunctionsOverParametricCurves: TopicDef 
       title: t("Vector line integral as dot product with velocity", "向量场与速度向量的点积线积分"),
       explanation: t(
         "The integral adds up how much the field pushes along the direction of motion, which is its dot product with the velocity of the curve. To evaluate $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$, compute the velocity $\\mathbf{r}'(t)$, evaluate $\\mathbf{F}(\\mathbf{r}(t))$, and integrate the scalar product:\n\n$$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_a^b \\left[\\mathbf{F}(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)\\right]dt.$$",
-        "这个积分累加向量场沿运动方向推动的程度，也就是它与曲线速度的点积。计算 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 时，先求速度向量 $\\mathbf{r}'(t)$，代入 $\\mathbf{F}(\\mathbf{r}(t))$ 并对两者的点积求定积分：\n\n$$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_a^b \\left[\\mathbf{F}(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)\\right]dt。$$",
+        "这个积分累加向量场沿运动方向推动的程度，也就是它与曲线速度的点积。计算 $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ 时，先求速度向量 $\\mathbf{r}'(t)$，代入 $\\mathbf{F}(\\mathbf{r}(t))$ 并对两者的点积求定积分：\n\n$$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_a^b \\left[\\mathbf{F}(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)\\right]dt$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -1416,7 +1416,7 @@ export const lineIntegralsOfVectorValuedFunctionsOverGeneralCurves: TopicDef = {
       title: t("Evaluating vector line integrals over parabolic paths", "在抛物线路径上计算向量线积分"),
       explanation: t(
         "Use the horizontal variable as the parameter, write the vertical coordinate and its differential in terms of it, and integrate the resulting single variable function. Along $y = cx^2$ from $x = 0$ to $x = a$, with $\\mathbf{F} = \\langle y, x \\rangle$:\n\n$$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^a \\left[cx^2(1) + x(2cx)\\right]dx = \\int_0^a 3cx^2\\,dx = ca^3.$$",
-        "用水平变量作为参数，把竖直坐标及其微分用它表示，再积分所得的一元函数。沿抛物线 $y = cx^2$ 从 $x = 0$ 到 $x = a$，对于 $\\mathbf{F} = \\langle y, x \\rangle$：\n\n$$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^a \\left[cx^2(1) + x(2cx)\\right]dx = \\int_0^a 3cx^2\\,dx = ca^3。$$",
+        "用水平变量作为参数，把竖直坐标及其微分用它表示，再积分所得的一元函数。沿抛物线 $y = cx^2$ 从 $x = 0$ 到 $x = a$，对于 $\\mathbf{F} = \\langle y, x \\rangle$：\n\n$$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^a \\left[cx^2(1) + x(2cx)\\right]dx = \\int_0^a 3cx^2\\,dx = ca^3$$",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 6);
@@ -1452,7 +1452,7 @@ export const lineIntegralsOfVectorValuedFunctionsOverGeneralCurves: TopicDef = {
       title: t("A vector line integral along $y = x^2$", "沿 $y = x^2$ 的向量线积分"),
       explanation: t(
         "A curve given as a graph needs no new parameter, and the whole integral becomes an ordinary integral in $x$. A graph $y = g(x)$ is parametrized by $x$ itself: $\\mathbf{r}(x) = (x, g(x))$, so $dx = dx$ and $dy = g'(x)\\,dx$. For $\\mathbf{F} = \\langle a\\,xy, b \\rangle$ along $y = x^2$ from $x = 0$ to $x = c$:\n\n$$\\int_C a\\,xy\\,dx + b\\,dy = \\int_0^c (a x^3 + 2b x)\\,dx = \\frac{ac^4}{4} + bc^2.$$",
-        "以图像给出的曲线不需要新参数，整个积分化为关于 $x$ 的普通积分。图像 $y = g(x)$ 以 $x$ 本身为参数：$\\mathbf{r}(x) = (x, g(x))$，于是 $dy = g'(x)\\,dx$。对 $\\mathbf{F} = \\langle a\\,xy, b \\rangle$ 沿 $y = x^2$ 从 $x = 0$ 到 $x = c$：\n\n$$\\int_C a\\,xy\\,dx + b\\,dy = \\int_0^c (a x^3 + 2b x)\\,dx = \\frac{ac^4}{4} + bc^2。$$",
+        "以图像给出的曲线不需要新参数，整个积分化为关于 $x$ 的普通积分。图像 $y = g(x)$ 以 $x$ 本身为参数：$\\mathbf{r}(x) = (x, g(x))$，于是 $dy = g'(x)\\,dx$。对 $\\mathbf{F} = \\langle a\\,xy, b \\rangle$ 沿 $y = x^2$ 从 $x = 0$ 到 $x = c$：\n\n$$\\int_C a\\,xy\\,dx + b\\,dy = \\int_0^c (a x^3 + 2b x)\\,dx = \\frac{ac^4}{4} + bc^2$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -1503,7 +1503,7 @@ export const interpretingLineIntegralsOfVectorValuedFunctions: TopicDef = {
       title: t("Circulation and tangential component interpretation", "切向分量与环量的几何解释"),
       explanation: t(
         "Because $d\\mathbf{r} = \\mathbf{T}\\,ds$, the vector line integral equates to the scalar line integral of the tangential component:\n\n$$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_C (\\mathbf{F} \\cdot \\mathbf{T})\\,ds.$$",
-        "因为 $d\\mathbf{r} = \\mathbf{T}\\,ds$，向量线积分等同于切向分量对弧长的标量积分：\n\n$$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_C (\\mathbf{F} \\cdot \\mathbf{T})\\,ds。$$",
+        "因为 $d\\mathbf{r} = \\mathbf{T}\\,ds$，向量线积分等同于切向分量对弧长的标量积分：\n\n$$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_C (\\mathbf{F} \\cdot \\mathbf{T})\\,ds$$",
       ),
       generate(rng: Rng): Problem {
         const val = rng.int(2, 8);
@@ -1633,7 +1633,7 @@ export const propertiesOfLineIntegralsOfVectorValuedFunctions: TopicDef = {
       title: t("Orientation reversal of vector line integrals", "向量线积分在反向遍历下的变号法则"),
       explanation: t(
         "Going the other way along the curve reverses the direction of every small displacement, so the work done by the field changes sign. Reversing the direction of traversal negates the tangent displacement vector $d\\mathbf{r}$, hence:\n\n$$\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = -\\int_C \\mathbf{F} \\cdot d\\mathbf{r}.$$",
-        "沿曲线反方向走会使每一小段位移反向，所以向量场做的功改变符号。反转遍历方向会导致切向微元向量变号 $d\\mathbf{r} \\to -d\\mathbf{r}$，因此：\n\n$$\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = -\\int_C \\mathbf{F} \\cdot d\\mathbf{r}。$$",
+        "沿曲线反方向走会使每一小段位移反向，所以向量场做的功改变符号。反转遍历方向会导致切向微元向量变号 $d\\mathbf{r} \\to -d\\mathbf{r}$，因此：\n\n$$\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = -\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$$",
       ),
       generate(rng: Rng): Problem {
         const p = rng.nonZero(-15, 15);
@@ -1669,7 +1669,7 @@ export const propertiesOfLineIntegralsOfVectorValuedFunctions: TopicDef = {
       title: t("Combining reversal, additivity and linearity", "综合运用反向、可加性与线性"),
       explanation: t(
         "Three rules handle vector line integrals over combined paths: reversing a path changes the sign, $\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = -\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$; joining paths adds the integrals; and constants come out, $\\int_C \\alpha\\mathbf{F} \\cdot d\\mathbf{r} = \\alpha\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$. So\n\n$$\\int_{C_1 \\cup (-C_2)} \\alpha\\mathbf{F} \\cdot d\\mathbf{r} = \\alpha\\left(\\int_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\int_{C_2} \\mathbf{F} \\cdot d\\mathbf{r}\\right).$$",
-        "三条规则处理组合路径上的向量线积分：路径反向则变号，$\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = -\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$；路径相接则积分相加；常数可以提出，$\\int_C \\alpha\\mathbf{F} \\cdot d\\mathbf{r} = \\alpha\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。所以\n\n$$\\int_{C_1 \\cup (-C_2)} \\alpha\\mathbf{F} \\cdot d\\mathbf{r} = \\alpha\\left(\\int_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\int_{C_2} \\mathbf{F} \\cdot d\\mathbf{r}\\right)。$$",
+        "三条规则处理组合路径上的向量线积分：路径反向则变号，$\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = -\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$；路径相接则积分相加；常数可以提出，$\\int_C \\alpha\\mathbf{F} \\cdot d\\mathbf{r} = \\alpha\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。所以\n\n$$\\int_{C_1 \\cup (-C_2)} \\alpha\\mathbf{F} \\cdot d\\mathbf{r} = \\alpha\\left(\\int_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\int_{C_2} \\mathbf{F} \\cdot d\\mathbf{r}\\right)$$",
       ),
       generate(rng: Rng): Problem {
         const A = rng.nonZero(-9, 9);
@@ -1754,7 +1754,7 @@ export const workDoneByAForceField: TopicDef = {
       title: t("Work by the force $\\langle ay, 0 \\rangle$ along a segment", "力 $\\langle ay, 0 \\rangle$ 沿线段做的功"),
       explanation: t(
         "Work is $W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r}$. For $\\mathbf{F} = \\langle ay, 0 \\rangle$ only the $dx$ term counts: $W = \\int_C a\\,y\\,dx$. On the segment $\\mathbf{r}(t) = (x_0 + t\\Delta x, y_0 + t\\Delta y)$, $0 \\le t \\le 1$,\n\n$$W = \\int_0^1 a(y_0 + t\\Delta y)\\,\\Delta x\\,dt = a\\,\\Delta x\\,\\frac{y_0 + y_1}{2}.$$\n\nThis field is not conservative, so another path between the same points can do different work.",
-        "功为 $W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。对 $\\mathbf{F} = \\langle ay, 0 \\rangle$，只有 $dx$ 项起作用：$W = \\int_C a\\,y\\,dx$。在线段 $\\mathbf{r}(t) = (x_0 + t\\Delta x, y_0 + t\\Delta y)$，$0 \\le t \\le 1$ 上，\n\n$$W = \\int_0^1 a(y_0 + t\\Delta y)\\,\\Delta x\\,dt = a\\,\\Delta x\\,\\frac{y_0 + y_1}{2}。$$\n\n这个场不是保守的，同样两点之间的另一条路径做的功可能不同。",
+        "功为 $W = \\int_C \\mathbf{F} \\cdot d\\mathbf{r}$。对 $\\mathbf{F} = \\langle ay, 0 \\rangle$，只有 $dx$ 项起作用：$W = \\int_C a\\,y\\,dx$。在线段 $\\mathbf{r}(t) = (x_0 + t\\Delta x, y_0 + t\\Delta y)$，$0 \\le t \\le 1$ 上，\n\n$$W = \\int_0^1 a(y_0 + t\\Delta y)\\,\\Delta x\\,dt = a\\,\\Delta x\\,\\frac{y_0 + y_1}{2}$$\n\n这个场不是保守的，同样两点之间的另一条路径做的功可能不同。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -1802,7 +1802,7 @@ export const theFundamentalTheoremOfLineIntegrals: TopicDef = {
       title: t("Evaluating gradient line integrals by potential endpoints", "通过势函数端点差计算梯度线积分"),
       explanation: t(
         "By the Fundamental Theorem of Line Integrals, if $\\mathbf{F} = \\nabla f$, then:\n\n$$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A),$$ where $A$ and $B$ are the initial and terminal points of $C$.",
-        "由曲线积分基本定理，若 $\\mathbf{F} = \\nabla f$，则：\n\n$$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)，$$ 其中 $A$ 与 $B$ 为曲线 $C$ 的起点与终点。",
+        "由曲线积分基本定理，若 $\\mathbf{F} = \\nabla f$，则：\n\n$$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A),$$ 其中 $A$ 与 $B$ 为曲线 $C$ 的起点与终点。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -1986,7 +1986,7 @@ export const conservativeVectorFieldsAndClosedPaths: TopicDef = {
       title: t("Vanishing of circulation in conservative fields", "保守场沿闭路径环量的消失性"),
       explanation: t(
         "For any closed path $C$, the starting point $A$ and ending point $B$ coincide ($B = A$). By the Fundamental Theorem:\n\n$$\\oint_C \\nabla f \\cdot d\\mathbf{r} = f(A) - f(A) = 0.$$",
-        "对于任意闭路径 $C$，起点 $A$ 与终点 $B$ 重合（$B = A$）。由基本定理：\n\n$$\\oint_C \\nabla f \\cdot d\\mathbf{r} = f(A) - f(A) = 0。$$",
+        "对于任意闭路径 $C$，起点 $A$ 与终点 $B$ 重合（$B = A$）。由基本定理：\n\n$$\\oint_C \\nabla f \\cdot d\\mathbf{r} = f(A) - f(A) = 0$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
@@ -2021,7 +2021,7 @@ export const conservativeVectorFieldsAndClosedPaths: TopicDef = {
       title: t("A nonzero circulation rules out a potential", "非零环量说明不存在势函数"),
       explanation: t(
         "If $\\mathbf{F}$ is conservative, its circulation around every closed curve is $0$. So a single closed curve with nonzero circulation proves that $\\mathbf{F}$ has no potential. For $\\mathbf{F} = \\langle -ay, bx \\rangle$ around the counterclockwise circle of radius $R$, with $\\mathbf{r}(t) = (R\\cos t, R\\sin t)$,\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi} (aR^2\\sin^2 t + bR^2\\cos^2 t)\\,dt = (a + b)\\pi R^2.$$\n\nThis is nonzero unless $b = -a$, and $\\langle -ay, -ax \\rangle = \\nabla(-axy)$ is indeed conservative.",
-        "若 $\\mathbf{F}$ 是保守的，它沿每条闭曲线的环量都是 $0$。所以只要有一条闭曲线的环量不为零，就证明了 $\\mathbf{F}$ 没有势函数。对 $\\mathbf{F} = \\langle -ay, bx \\rangle$ 沿半径为 $R$ 的逆时针圆，$\\mathbf{r}(t) = (R\\cos t, R\\sin t)$，\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi} (aR^2\\sin^2 t + bR^2\\cos^2 t)\\,dt = (a + b)\\pi R^2。$$\n\n除非 $b = -a$，这都不为零；而 $\\langle -ay, -ax \\rangle = \\nabla(-axy)$ 确实是保守的。",
+        "若 $\\mathbf{F}$ 是保守的，它沿每条闭曲线的环量都是 $0$。所以只要有一条闭曲线的环量不为零，就证明了 $\\mathbf{F}$ 没有势函数。对 $\\mathbf{F} = \\langle -ay, bx \\rangle$ 沿半径为 $R$ 的逆时针圆，$\\mathbf{r}(t) = (R\\cos t, R\\sin t)$，\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi} (aR^2\\sin^2 t + bR^2\\cos^2 t)\\,dt = (a + b)\\pi R^2$$\n\n除非 $b = -a$，这都不为零；而 $\\langle -ay, -ax \\rangle = \\nabla(-axy)$ 确实是保守的。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -2299,7 +2299,7 @@ export const conservationOfMechanicalEnergy: TopicDef = {
       title: t("Kinetic energy after moving through a conservative field", "在保守场中运动后的动能"),
       explanation: t(
         "If the only force is $\\mathbf{F} = -\\nabla U$, its work from $A$ to $B$ is $U(A) - U(B)$, and by the work–energy theorem this equals the change in kinetic energy. So $K + U$ stays constant:\n\n$$K_B = K_A + U(A) - U(B), \\qquad K_A = \\tfrac12 m v_A^2.$$\n\nMoving to lower potential energy speeds the particle up.",
-        "若唯一的力是 $\\mathbf{F} = -\\nabla U$，它从 $A$ 到 $B$ 做的功为 $U(A) - U(B)$，由动能定理这等于动能的变化。所以 $K + U$ 保持不变：\n\n$$K_B = K_A + U(A) - U(B), \\qquad K_A = \\tfrac12 m v_A^2。$$\n\n移向较低势能时质点加速。",
+        "若唯一的力是 $\\mathbf{F} = -\\nabla U$，它从 $A$ 到 $B$ 做的功为 $U(A) - U(B)$，由动能定理这等于动能的变化。所以 $K + U$ 保持不变：\n\n$$K_B = K_A + U(A) - U(B), \\qquad K_A = \\tfrac12 m v_A^2$$\n\n移向较低势能时质点加速。",
       ),
       generate(rng: Rng): Problem {
         const m = rng.pick([2, 4, 6]);
@@ -2482,7 +2482,7 @@ export const circulation: TopicDef = {
       title: t("Circulation around a circle", "沿圆的环量"),
       explanation: t(
         "For a rotating field $\\mathbf{F} = \\langle -ky, kx \\rangle$ on the circle of radius $R$, the field is tangent to the circle with constant length $kR$, so $\\mathbf{F} \\cdot \\mathbf{T} = kR$ everywhere. The circulation is that constant times the length of the circle:\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = kR \\cdot 2\\pi R = 2\\pi k R^2.$$",
-        "对于旋转场 $\\mathbf{F} = \\langle -ky, kx \\rangle$，在半径为 $R$ 的圆上，场与圆相切且长度恒为 $kR$，所以处处有 $\\mathbf{F} \\cdot \\mathbf{T} = kR$。环量就是这个常数乘以圆周长：\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = kR \\cdot 2\\pi R = 2\\pi k R^2。$$",
+        "对于旋转场 $\\mathbf{F} = \\langle -ky, kx \\rangle$，在半径为 $R$ 的圆上，场与圆相切且长度恒为 $kR$，所以处处有 $\\mathbf{F} \\cdot \\mathbf{T} = kR$。环量就是这个常数乘以圆周长：\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = kR \\cdot 2\\pi R = 2\\pi k R^2$$",
       ),
       generate(rng: Rng): Problem {
         const k = rng.nonZero(-5, 5);
@@ -2927,7 +2927,7 @@ export const greensTheoremInCirculationCurlForm: TopicDef = {
       title: t("Applying Green's theorem for circulation", "应用格林公式计算环量积分"),
       explanation: t(
         "Green's theorem trades the circulation around a closed curve for a double integral of the curl over the region inside it, which is often easier. By Green's theorem:\n\n$$\\oint_C (P\\,dx + Q\\,dy) = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA.$$ For $P = 0, Q = kx$ over a rectangle of area $A$, $\\oint_C kx\\,dy = kA$.",
-        "格林公式把沿闭曲线的环量换成在其内部区域上旋度的二重积分，后者往往更容易计算。由格林公式：\n\n$$\\oint_C (P\\,dx + Q\\,dy) = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA。$$ 当 $P = 0, Q = kx$ 且区域为面积为 $A$ 的矩形时，$\\oint_C kx\\,dy = kA$。",
+        "格林公式把沿闭曲线的环量换成在其内部区域上旋度的二重积分，后者往往更容易计算。由格林公式：\n\n$$\\oint_C (P\\,dx + Q\\,dy) = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA$$ 当 $P = 0, Q = kx$ 且区域为面积为 $A$ 的矩形时，$\\oint_C kx\\,dy = kA$。",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(2, 6);
@@ -2965,7 +2965,7 @@ export const greensTheoremInCirculationCurlForm: TopicDef = {
       title: t("Circulation around a circle by Green's theorem", "用格林定理求绕圆的环量"),
       explanation: t(
         "Green's theorem turns a counterclockwise circulation into a double integral of the scalar curl:\n\n$$\\oint_C P\\,dx + Q\\,dy = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA.$$\n\nTerms such as $x^2$ in $P$ or $y^3$ in $Q$ drop out of the curl. For $P = -ay + x^2$, $Q = bx + y^3$ the curl is the constant $a + b$, so the circulation around a circle of radius $R$ is $(a + b)\\pi R^2$.",
-        "格林定理把逆时针环量化为标量旋度的二重积分：\n\n$$\\oint_C P\\,dx + Q\\,dy = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA。$$\n\n$P$ 中的 $x^2$ 或 $Q$ 中的 $y^3$ 这类项在旋度中消失。对 $P = -ay + x^2$，$Q = bx + y^3$，旋度为常数 $a + b$，所以绕半径 $R$ 的圆的环量为 $(a + b)\\pi R^2$。",
+        "格林定理把逆时针环量化为标量旋度的二重积分：\n\n$$\\oint_C P\\,dx + Q\\,dy = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA$$\n\n$P$ 中的 $x^2$ 或 $Q$ 中的 $y^3$ 这类项在旋度中消失。对 $P = -ay + x^2$，$Q = bx + y^3$，旋度为常数 $a + b$，所以绕半径 $R$ 的圆的环量为 $(a + b)\\pi R^2$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -3009,7 +3009,7 @@ export const greensTheoremInPolarCoordinates: TopicDef = {
       title: t("Circulation around a circle", "沿圆周的环量"),
       explanation: t(
         "Once Green's theorem turns the circulation into a double integral, polar coordinates make the integral over the disk straightforward. For $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$ the curl integrand is $Q_x - P_y = 3a x^2 + 3a y^2 = 3a r^2$. Over the disk of radius $R$, remember the factor $r$ in $dA = r\\,dr\\,d\\theta$:\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_0^R 3a r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{3a R^4}{4} = \\frac{3a\\pi R^4}{2}.$$",
-        "格林公式把环量化为二重积分后，用极坐标计算圆盘上的积分就很直接。对 $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$，旋度被积函数为 $Q_x - P_y = 3a x^2 + 3a y^2 = 3a r^2$。在半径为 $R$ 的圆盘上积分时，别忘了 $dA = r\\,dr\\,d\\theta$ 中的因子 $r$：\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_0^R 3a r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{3a R^4}{4} = \\frac{3a\\pi R^4}{2}。$$",
+        "格林公式把环量化为二重积分后，用极坐标计算圆盘上的积分就很直接。对 $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$，旋度被积函数为 $Q_x - P_y = 3a x^2 + 3a y^2 = 3a r^2$。在半径为 $R$ 的圆盘上积分时，别忘了 $dA = r\\,dr\\,d\\theta$ 中的因子 $r$：\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_0^R 3a r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{3a R^4}{4} = \\frac{3a\\pi R^4}{2}$$",
       ),
       generate(rng: Rng): Problem {
         const a = 2 * rng.int(1, 3);
@@ -3044,7 +3044,7 @@ export const greensTheoremInPolarCoordinates: TopicDef = {
       title: t("Circulation around the boundary of an annulus", "沿圆环边界的环量"),
       explanation: t(
         "The positively oriented boundary of the annulus $r_1 \\le r \\le r_2$ is the outer circle counterclockwise together with the inner circle clockwise. Green's theorem still applies, with $r$ running from $r_1$ to $r_2$:\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_{r_1}^{r_2} (Q_x - P_y)\\,r\\,dr\\,d\\theta.$$ For $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$ this is $\\frac{3a\\pi}{2}(r_2^4 - r_1^4)$.",
-        "圆环 $r_1 \\le r \\le r_2$ 的正向边界由逆时针方向的外圆和顺时针方向的内圆组成。格林公式依然成立，只是 $r$ 从 $r_1$ 积到 $r_2$：\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_{r_1}^{r_2} (Q_x - P_y)\\,r\\,dr\\,d\\theta。$$ 对 $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$，结果为 $\\frac{3a\\pi}{2}(r_2^4 - r_1^4)$。",
+        "圆环 $r_1 \\le r \\le r_2$ 的正向边界由逆时针方向的外圆和顺时针方向的内圆组成。格林公式依然成立，只是 $r$ 从 $r_1$ 积到 $r_2$：\n\n$$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_0^{2\\pi}\\int_{r_1}^{r_2} (Q_x - P_y)\\,r\\,dr\\,d\\theta$$ 对 $\\mathbf{F} = \\langle -a y^3, a x^3 \\rangle$，结果为 $\\frac{3a\\pi}{2}(r_2^4 - r_1^4)$。",
       ),
       generate(rng: Rng): Problem {
         const a = 2 * rng.int(1, 2);
@@ -3097,7 +3097,7 @@ export const calculatingAreasUsingGreensTheorem: TopicDef = {
       title: t("Area formulas from boundary integrals", "由边界曲线积分求解平面区域面积"),
       explanation: t(
         "Choosing a field whose curl is one makes the double integral equal to the area, so the area can be computed from a line integral around the boundary. Setting $P = -\\frac{y}{2}$ and $Q = \\frac{x}{2}$ yields $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = 1$, giving the area formula:\n\n$$\\text{Area}(D) = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx).$$",
-        "选择旋度为 1 的向量场，使二重积分等于面积，这样就能由沿边界的曲线积分算出面积。取 $P = -\\frac{y}{2}$ 与 $Q = \\frac{x}{2}$ 可得 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = 1$，从而得到面积公式：\n\n$$\\text{Area}(D) = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx)。$$",
+        "选择旋度为 1 的向量场，使二重积分等于面积，这样就能由沿边界的曲线积分算出面积。取 $P = -\\frac{y}{2}$ 与 $Q = \\frac{x}{2}$ 可得 $\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} = 1$，从而得到面积公式：\n\n$$\\text{Area}(D) = \\frac{1}{2}\\oint_C (x\\,dy - y\\,dx)$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 8);
@@ -3135,7 +3135,7 @@ export const calculatingAreasUsingGreensTheorem: TopicDef = {
       title: t("The area of a triangle from a boundary integral", "用边界积分求三角形面积"),
       explanation: t(
         "Green's theorem gives the area of a region as $A = \\frac12\\oint_C x\\,dy - y\\,dx$ around its counterclockwise boundary. Along a segment through the origin, $x\\,dy - y\\,dx = 0$, because the point moves straight away from or toward the origin. For the triangle with vertices $(0, 0)$, $(a, b)$, $(c, d)$ only the edge from $(a, b)$ to $(c, d)$ contributes, and it gives $ad - bc$. So\n\n$$A = \\tfrac12(ad - bc)$$\n\nwhen the vertices are in counterclockwise order.",
-        "格林定理给出区域面积 $A = \\frac12\\oint_C x\\,dy - y\\,dx$，沿逆时针边界积分。沿过原点的线段，$x\\,dy - y\\,dx = 0$，因为点径直远离或接近原点。对顶点为 $(0, 0)$、$(a, b)$、$(c, d)$ 的三角形，只有从 $(a, b)$ 到 $(c, d)$ 的边有贡献，其值为 $ad - bc$。所以当顶点为逆时针顺序时\n\n$$A = \\tfrac12(ad - bc)。$$",
+        "格林定理给出区域面积 $A = \\frac12\\oint_C x\\,dy - y\\,dx$，沿逆时针边界积分。沿过原点的线段，$x\\,dy - y\\,dx = 0$，因为点径直远离或接近原点。对顶点为 $(0, 0)$、$(a, b)$、$(c, d)$ 的三角形，只有从 $(a, b)$ 到 $(c, d)$ 的边有贡献，其值为 $ad - bc$。所以当顶点为逆时针顺序时\n\n$$A = \\tfrac12(ad - bc)$$",
       ),
       generate(rng: Rng): Problem {
         let a = rng.int(1, 6);
@@ -3182,7 +3182,7 @@ export const greensTheoremInFluxDivergenceForm: TopicDef = {
       title: t("Two-dimensional divergence theorem", "应用二维散度定理计算通量"),
       explanation: t(
         "The flux form of Green's theorem says that the net flow out through the boundary equals the total divergence inside the region. Green's theorem in flux form states:\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\oint_C (P\\,dy - Q\\,dx) = \\iint_D \\text{div}\\,\\mathbf{F}\\,dA = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right)dA.$$",
-        "格林公式的通量形式说明，穿过边界向外的净流量等于区域内散度的总和。通量形式的格林公式（平面散度定理）表明：\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\oint_C (P\\,dy - Q\\,dx) = \\iint_D \\text{div}\\,\\mathbf{F}\\,dA = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right)dA。$$",
+        "格林公式的通量形式说明，穿过边界向外的净流量等于区域内散度的总和。通量形式的格林公式（平面散度定理）表明：\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\oint_C (P\\,dy - Q\\,dx) = \\iint_D \\text{div}\\,\\mathbf{F}\\,dA = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right)dA$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -3226,7 +3226,7 @@ export const greensTheoremInFluxDivergenceForm: TopicDef = {
       title: t("Outward flux with a variable divergence", "散度不为常数时的向外通量"),
       explanation: t(
         "In flux form, Green's theorem says the outward flux across a closed curve equals the integral of the divergence over the enclosed region:\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right) dA.$$\n\nWhen the divergence is not constant, evaluate the double integral as an iterated integral. For $\\mathbf{F} = \\langle x^2, ky \\rangle$ on $[0, w] \\times [0, h]$ the divergence is $2x + k$, and\n\n$$\\int_0^h \\int_0^w (2x + k)\\,dx\\,dy = w^2h + kwh.$$",
-        "通量形式的格林定理说，穿过闭曲线的向外通量等于散度在所围区域上的积分：\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right) dA。$$\n\n散度不是常数时，把二重积分化为累次积分。对 $\\mathbf{F} = \\langle x^2, ky \\rangle$ 在 $[0, w] \\times [0, h]$ 上，散度为 $2x + k$，\n\n$$\\int_0^h \\int_0^w (2x + k)\\,dx\\,dy = w^2h + kwh。$$",
+        "通量形式的格林定理说，穿过闭曲线的向外通量等于散度在所围区域上的积分：\n\n$$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right) dA$$\n\n散度不是常数时，把二重积分化为累次积分。对 $\\mathbf{F} = \\langle x^2, ky \\rangle$ 在 $[0, w] \\times [0, h]$ 上，散度为 $2x + k$，\n\n$$\\int_0^h \\int_0^w (2x + k)\\,dx\\,dy = w^2h + kwh$$",
       ),
       generate(rng: Rng): Problem {
         const k = rng.nonZero(-4, 5);
@@ -3267,7 +3267,7 @@ export const greensTheoremOnRegionsWithHoles: TopicDef = {
       title: t("Green's theorem on multiply-connected domains", "复连通区域上格林公式的环量关系"),
       explanation: t(
         "For a region with a hole, the boundary has two parts, and the inner one is traversed in the opposite direction so that the region stays on the left. For an annular region $D$ between outer boundary $C_1$ and inner boundary $C_2$ (both oriented counterclockwise):\n\n$$\\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA.$$",
-        "对于有洞的区域，边界有两部分，内边界要反向绕行，使区域始终在左侧。对于由外边界 $C_1$ 与内边界 $C_2$（均按逆时针定向）围成的环形区域 $D$：\n\n$$\\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA。$$",
+        "对于有洞的区域，边界有两部分，内边界要反向绕行，使区域始终在左侧。对于由外边界 $C_1$ 与内边界 $C_2$（均按逆时针定向）围成的环形区域 $D$：\n\n$$\\oint_{C_1} \\mathbf{F} \\cdot d\\mathbf{r} - \\oint_{C_2} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right)dA$$",
       ),
       generate(rng: Rng): Problem {
         const R1 = rng.int(3, 8);

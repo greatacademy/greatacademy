@@ -45,7 +45,7 @@ export const doubleSummations: TopicDef = {
       title: t("Evaluating separable double summations", "计算可分离的二重求和"),
       explanation: t(
         "When the summand is a sum of a term depending on one index and a term depending on the other, each part can be summed on its own. For a linear summand $\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj)$, sum each term independently using $\\sum_{k=1}^N k = \\frac{N(N+1)}{2}$:\n\n$$\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj) = a n \\frac{m(m+1)}{2} + b m \\frac{n(n+1)}{2}.$$",
-        "当被加项是只依赖于一个下标的项与只依赖于另一个下标的项之和时，每一部分可以分别求和。对于线性求和项 $\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj)$，利用 $\\sum_{k=1}^N k = \\frac{N(N+1)}{2}$ 独立求和：\n\n$$\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj) = a n \\frac{m(m+1)}{2} + b m \\frac{n(n+1)}{2}。$$",
+        "当被加项是只依赖于一个下标的项与只依赖于另一个下标的项之和时，每一部分可以分别求和。对于线性求和项 $\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj)$，利用 $\\sum_{k=1}^N k = \\frac{N(N+1)}{2}$ 独立求和：\n\n$$\\sum_{i=1}^m \\sum_{j=1}^n (ai + bj) = a n \\frac{m(m+1)}{2} + b m \\frac{n(n+1)}{2}$$",
       ),
       generate(rng: Rng): Problem {
         const m = rng.int(2, 6);
@@ -86,7 +86,7 @@ export const doubleSummations: TopicDef = {
       title: t("Separable double sums of products", "可分离的乘积型二重求和"),
       explanation: t(
         "When the summand is a product of a factor depending only on $i$ and a factor depending only on $j$, the double sum splits into a product of two single sums:\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} c\\,ij = c\\left(\\sum_{i=1}^{m} i\\right)\\left(\\sum_{j=1}^{n} j\\right) = c \\cdot \\frac{m(m+1)}{2} \\cdot \\frac{n(n+1)}{2}.$$\n\nThis works because the inner sum treats $i$ as a constant that can be pulled out.",
-        "当被加项是只依赖 $i$ 的因子与只依赖 $j$ 的因子之积时，二重求和可拆成两个单重求和之积：\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} c\\,ij = c\\left(\\sum_{i=1}^{m} i\\right)\\left(\\sum_{j=1}^{n} j\\right) = c \\cdot \\frac{m(m+1)}{2} \\cdot \\frac{n(n+1)}{2}。$$\n\n这是因为内层求和把 $i$ 当作常数，可以提出。",
+        "当被加项是只依赖 $i$ 的因子与只依赖 $j$ 的因子之积时，二重求和可拆成两个单重求和之积：\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} c\\,ij = c\\left(\\sum_{i=1}^{m} i\\right)\\left(\\sum_{j=1}^{n} j\\right) = c \\cdot \\frac{m(m+1)}{2} \\cdot \\frac{n(n+1)}{2}$$\n\n这是因为内层求和把 $i$ 当作常数，可以提出。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 5);
@@ -210,7 +210,7 @@ export const calculatingDoubleSummationsOverPartitions: TopicDef = {
       title: t("Area of subrectangles in grid partitions", "网格分割中子矩形的面积"),
       explanation: t(
         "Each small rectangle has the width of one horizontal piece and the height of one vertical piece, so its area is their product. For $R = [a, b] \\times [c, d]$ partitioned by $m$ divisions in $x$ and $n$ divisions in $y$, each subrectangle has area:\n\n$$\\Delta A = \\Delta x \\Delta y = \\left(\\frac{b - a}{m}\\right)\\left(\\frac{d - c}{n}\\right).$$",
-        "每个小矩形的宽是一个水平小段的宽度，高是一个竖直小段的长度，所以面积是两者的乘积。对于被 $x$ 方向 $m$ 等分、$y$ 方向 $n$ 等分的矩形 $R = [a, b] \\times [c, d]$，每个子矩形的面积为：\n\n$$\\Delta A = \\Delta x \\Delta y = \\left(\\frac{b - a}{m}\\right)\\left(\\frac{d - c}{n}\\right)。$$",
+        "每个小矩形的宽是一个水平小段的宽度，高是一个竖直小段的长度，所以面积是两者的乘积。对于被 $x$ 方向 $m$ 等分、$y$ 方向 $n$ 等分的矩形 $R = [a, b] \\times [c, d]$，每个子矩形的面积为：\n\n$$\\Delta A = \\Delta x \\Delta y = \\left(\\frac{b - a}{m}\\right)\\left(\\frac{d - c}{n}\\right)$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(0, 4);
@@ -251,7 +251,7 @@ export const calculatingDoubleSummationsOverPartitions: TopicDef = {
       title: t("A double Riemann sum with upper-right corners", "取右上角的二重黎曼和"),
       explanation: t(
         "A double Riemann sum adds $f(x_i^*, y_j^*)\\,\\Delta A$ over every subrectangle. On $[0, m] \\times [0, n]$ with unit squares, the upper-right corner of square $(i, j)$ is $(i, j)$ and $\\Delta A = 1$, so for $f(x, y) = x + y$\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} (i + j) = n\\sum_{i=1}^{m} i + m\\sum_{j=1}^{n} j.$$\n\nEach single sum is counted once for every value of the other index.",
-        "二重黎曼和对每个子矩形累加 $f(x_i^*, y_j^*)\\,\\Delta A$。在 $[0, m] \\times [0, n]$ 上用单位正方形划分时，第 $(i, j)$ 个正方形的右上角为 $(i, j)$，且 $\\Delta A = 1$，所以对 $f(x, y) = x + y$ 有\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} (i + j) = n\\sum_{i=1}^{m} i + m\\sum_{j=1}^{n} j。$$\n\n每个单重求和都对另一个指标的每个取值计算一次。",
+        "二重黎曼和对每个子矩形累加 $f(x_i^*, y_j^*)\\,\\Delta A$。在 $[0, m] \\times [0, n]$ 上用单位正方形划分时，第 $(i, j)$ 个正方形的右上角为 $(i, j)$，且 $\\Delta A = 1$，所以对 $f(x, y) = x + y$ 有\n\n$$\\sum_{i=1}^{m}\\sum_{j=1}^{n} (i + j) = n\\sum_{i=1}^{m} i + m\\sum_{j=1}^{n} j$$\n\n每个单重求和都对另一个指标的每个取值计算一次。",
       ),
       generate(rng: Rng): Problem {
         const m = rng.int(2, 6);
@@ -295,7 +295,7 @@ export const approximatingVolumesUsingLowerRiemannSums: TopicDef = {
       title: t("Computing lower Riemann sums for monotone surfaces", "计算单调曲面的下黎曼和"),
       explanation: t(
         "For an increasing function $f(x, y) = ax + by + c$ ($a, b > 0$) on $[0, 2] \\times [0, 2]$ with $2 \\times 2$ grid (sub-squares of width 1), the minimum on each square $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ is at the bottom-left corner $(x_{i-1}, y_{j-1})$:\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta A.$$",
-        "对于在 $[0, 2] \\times [0, 2]$ 上划分为 $2 \\times 2$ 网格（边长为 1 的小正方形）的递增函数 $f(x, y) = ax + by + c$（$a, b > 0$），每个小正方形 $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ 上的最小值取在左下角 $(x_{i-1}, y_{j-1})$：\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta A。$$",
+        "对于在 $[0, 2] \\times [0, 2]$ 上划分为 $2 \\times 2$ 网格（边长为 1 的小正方形）的递增函数 $f(x, y) = ax + by + c$（$a, b > 0$），每个小正方形 $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ 上的最小值取在左下角 $(x_{i-1}, y_{j-1})$：\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta A$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -339,7 +339,7 @@ export const approximatingVolumesUsingLowerRiemannSums: TopicDef = {
       title: t("A lower sum for $cxy$", "函数 $cxy$ 的下和"),
       explanation: t(
         "For $f(x, y) = cxy$ with $c > 0$ on the first quadrant, $f$ increases in both variables, so its minimum on each subsquare is at the lower-left corner. With an $m \\times m$ regular partition of $[0, mh]^2$, the corners are $(ih, jh)$ for $i, j = 0, \\dots, m - 1$, and\n\n$$L = \\sum_{i=0}^{m-1}\\sum_{j=0}^{m-1} c(ih)(jh)\\,h^2 = ch^4\\left(\\frac{m(m-1)}{2}\\right)^2.$$",
-        "对第一象限上的 $f(x, y) = cxy$（$c > 0$），$f$ 关于两个变量都递增，所以在每个小正方形上的最小值在左下角取得。对 $[0, mh]^2$ 作 $m \\times m$ 等分，各角点为 $(ih, jh)$，$i, j = 0, \\dots, m - 1$，于是\n\n$$L = \\sum_{i=0}^{m-1}\\sum_{j=0}^{m-1} c(ih)(jh)\\,h^2 = ch^4\\left(\\frac{m(m-1)}{2}\\right)^2。$$",
+        "对第一象限上的 $f(x, y) = cxy$（$c > 0$），$f$ 关于两个变量都递增，所以在每个小正方形上的最小值在左下角取得。对 $[0, mh]^2$ 作 $m \\times m$ 等分，各角点为 $(ih, jh)$，$i, j = 0, \\dots, m - 1$，于是\n\n$$L = \\sum_{i=0}^{m-1}\\sum_{j=0}^{m-1} c(ih)(jh)\\,h^2 = ch^4\\left(\\frac{m(m-1)}{2}\\right)^2$$",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 5);
@@ -382,7 +382,7 @@ export const approximatingVolumesUsingUpperRiemannSums: TopicDef = {
       title: t("Computing upper Riemann sums for monotone surfaces", "计算单调曲面的上黎曼和"),
       explanation: t(
         "For an increasing function $f(x, y) = ax + by + c$ ($a, b > 0$) on $[0, 2] \\times [0, 2]$ with $2 \\times 2$ grid, the maximum on each square $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ is at the top-right corner $(x_i, y_j)$:\n\n$$U(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_i, y_j) \\Delta A.$$",
-        "对于在 $[0, 2] \\times [0, 2]$ 上划分为 $2 \\times 2$ 网格的递增函数 $f(x, y) = ax + by + c$（$a, b > 0$），每个子方块上的最大值取在右上角 $(x_i, y_j)$：\n\n$$U(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_i, y_j) \\Delta A。$$",
+        "对于在 $[0, 2] \\times [0, 2]$ 上划分为 $2 \\times 2$ 网格的递增函数 $f(x, y) = ax + by + c$（$a, b > 0$），每个子方块上的最大值取在右上角 $(x_i, y_j)$：\n\n$$U(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_i, y_j) \\Delta A$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -425,7 +425,7 @@ export const approximatingVolumesUsingUpperRiemannSums: TopicDef = {
       title: t("An upper sum for $c(x^2 + y^2)$", "函数 $c(x^2 + y^2)$ 的上和"),
       explanation: t(
         "For $f(x, y) = c(x^2 + y^2)$ with $c > 0$ on the first quadrant, the maximum on each subsquare is at the upper-right corner. With an $m \\times m$ regular partition of $[0, mh]^2$ the corners are $(ih, jh)$ for $i, j = 1, \\dots, m$, and\n\n$$U = \\sum_{i=1}^{m}\\sum_{j=1}^{m} c(i^2 + j^2)h^2 \\cdot h^2 = ch^4 \\cdot 2m\\sum_{i=1}^{m} i^2.$$\n\nThe factor $2m$ appears because each square $i^2$ is counted once for every $j$, and symmetrically for $j^2$.",
-        "对第一象限上的 $f(x, y) = c(x^2 + y^2)$（$c > 0$），每个小正方形上的最大值在右上角。对 $[0, mh]^2$ 作 $m \\times m$ 等分，角点为 $(ih, jh)$，$i, j = 1, \\dots, m$，于是\n\n$$U = \\sum_{i=1}^{m}\\sum_{j=1}^{m} c(i^2 + j^2)h^2 \\cdot h^2 = ch^4 \\cdot 2m\\sum_{i=1}^{m} i^2。$$\n\n出现因子 $2m$ 是因为每个 $i^2$ 对每个 $j$ 都计算一次，$j^2$ 同理。",
+        "对第一象限上的 $f(x, y) = c(x^2 + y^2)$（$c > 0$），每个小正方形上的最大值在右上角。对 $[0, mh]^2$ 作 $m \\times m$ 等分，角点为 $(ih, jh)$，$i, j = 1, \\dots, m$，于是\n\n$$U = \\sum_{i=1}^{m}\\sum_{j=1}^{m} c(i^2 + j^2)h^2 \\cdot h^2 = ch^4 \\cdot 2m\\sum_{i=1}^{m} i^2$$\n\n出现因子 $2m$ 是因为每个 $i^2$ 对每个 $j$ 都计算一次，$j^2$ 同理。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 4);
@@ -468,7 +468,7 @@ export const lowerRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
       title: t("Lower sum with unequal subinterval widths", "非等距子区间下的下黎曼和"),
       explanation: t(
         "A lower sum uses the smallest value of the function on each small rectangle, which for an increasing function is at the corner nearest the origin. For a partition with cut points $x = [0, x_1, x_2]$ and $y = [0, y_1, y_2]$, the lower sum of an increasing function $f(x, y) = ax + by$ is:\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta x_i \\Delta y_j.$$",
-        "下和在每个小矩形上取函数的最小值，对于增函数，最小值在离原点最近的角上。对于分割节点为 $x = [0, x_1, x_2]$ 与 $y = [0, y_1, y_2]$ 的非等距分割，单调递增函数 $f(x, y) = ax + by$ 的下黎曼和为：\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta x_i \\Delta y_j。$$",
+        "下和在每个小矩形上取函数的最小值，对于增函数，最小值在离原点最近的角上。对于分割节点为 $x = [0, x_1, x_2]$ 与 $y = [0, y_1, y_2]$ 的非等距分割，单调递增函数 $f(x, y) = ax + by$ 的下黎曼和为：\n\n$$L(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_{i-1}, y_{j-1}) \\Delta x_i \\Delta y_j$$",
       ),
       generate(rng: Rng): Problem {
         const x1 = rng.int(1, 3);
@@ -531,7 +531,7 @@ export const lowerRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
       title: t("A lower sum for $cxy$ over an irregular grid", "不规则网格上 $cxy$ 的下和"),
       explanation: t(
         "On a general partition each subrectangle $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ has its own area $\\Delta x_i\\,\\Delta y_j$. For $f(x, y) = cxy$ with $c > 0$ on $[0, x_2] \\times [0, y_2]$, the minimum on each piece is at its lower-left corner $(x_{i-1}, y_{j-1})$. Every piece touching an axis has minimum $0$, so only the piece $[x_1, x_2] \\times [y_1, y_2]$ contributes:\n\n$$L = c\\,x_1y_1(x_2 - x_1)(y_2 - y_1).$$",
-        "在一般划分中，每个子矩形 $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ 的面积为 $\\Delta x_i\\,\\Delta y_j$。对 $[0, x_2] \\times [0, y_2]$ 上的 $f(x, y) = cxy$（$c > 0$），每块上的最小值在左下角 $(x_{i-1}, y_{j-1})$。贴着坐标轴的块最小值为 $0$，所以只有 $[x_1, x_2] \\times [y_1, y_2]$ 有贡献：\n\n$$L = c\\,x_1y_1(x_2 - x_1)(y_2 - y_1)。$$",
+        "在一般划分中，每个子矩形 $[x_{i-1}, x_i] \\times [y_{j-1}, y_j]$ 的面积为 $\\Delta x_i\\,\\Delta y_j$。对 $[0, x_2] \\times [0, y_2]$ 上的 $f(x, y) = cxy$（$c > 0$），每块上的最小值在左下角 $(x_{i-1}, y_{j-1})$。贴着坐标轴的块最小值为 $0$，所以只有 $[x_1, x_2] \\times [y_1, y_2]$ 有贡献：\n\n$$L = c\\,x_1y_1(x_2 - x_1)(y_2 - y_1)$$",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 3);
@@ -575,7 +575,7 @@ export const upperRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
       title: t("Upper sum with unequal subinterval widths", "非等距子区间下的上黎曼和"),
       explanation: t(
         "For cut points $x = [0, x_1, x_2]$ and $y = [0, y_1, y_2]$, the upper sum of an increasing function $f(x, y) = ax + by$ evaluates the supremum at top-right corners:\n\n$$U(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_i, y_j) \\Delta x_i \\Delta y_j.$$",
-        "对于分割节点 $x = [0, x_1, x_2]$ 与 $y = [0, y_1, y_2]$，单调递增函数 $f(x, y) = ax + by$ 的上黎曼和在右上角计算上确界：\n\n$$U(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_i, y_j) \\Delta x_i \\Delta y_j。$$",
+        "对于分割节点 $x = [0, x_1, x_2]$ 与 $y = [0, y_1, y_2]$，单调递增函数 $f(x, y) = ax + by$ 的上黎曼和在右上角计算上确界：\n\n$$U(f, P) = \\sum_{i=1}^2 \\sum_{j=1}^2 f(x_i, y_j) \\Delta x_i \\Delta y_j$$",
       ),
       generate(rng: Rng): Problem {
         const x1 = rng.int(1, 3);
@@ -637,7 +637,7 @@ export const upperRiemannSumsOverGeneralRectangularPartitions: TopicDef = {
       title: t("An upper sum for $cxy$ over an irregular grid", "不规则网格上 $cxy$ 的上和"),
       explanation: t(
         "For $f(x, y) = cxy$ with $c > 0$ the maximum on each subrectangle is at its upper-right corner $(x_i, y_j)$. Because $f$ is a product, the upper sum factors into one sum for $x$ and one for $y$:\n\n$$U = c\\left(\\sum_i x_i\\,\\Delta x_i\\right)\\left(\\sum_j y_j\\,\\Delta y_j\\right).$$\n\nThis saves computing every subrectangle separately.",
-        "对 $f(x, y) = cxy$（$c > 0$），每个子矩形上的最大值在右上角 $(x_i, y_j)$。由于 $f$ 是乘积，上和可分解为 $x$ 的和与 $y$ 的和之积：\n\n$$U = c\\left(\\sum_i x_i\\,\\Delta x_i\\right)\\left(\\sum_j y_j\\,\\Delta y_j\\right)。$$\n\n这样无需逐个计算每个子矩形。",
+        "对 $f(x, y) = cxy$（$c > 0$），每个子矩形上的最大值在右上角 $(x_i, y_j)$。由于 $f$ 是乘积，上和可分解为 $x$ 的和与 $y$ 的和之积：\n\n$$U = c\\left(\\sum_i x_i\\,\\Delta x_i\\right)\\left(\\sum_j y_j\\,\\Delta y_j\\right)$$\n\n这样无需逐个计算每个子矩形。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 3);
@@ -685,7 +685,7 @@ export const definingDoubleIntegralsUsingLowerAndUpperRiemannSums: TopicDef = {
       title: t("Riemann integrability criterion for double integrals", "二重积分的黎曼可积性准则"),
       explanation: t(
         "A function $f$ is Riemann integrable over $R$ if and only if for every $\\varepsilon > 0$, there exists a partition $P$ such that $U(f, P) - L(f, P) < \\varepsilon$. For $f(x, y) = ax + by$ on $[0, W] \\times [0, H]$ with regular $n \\times n$ subdivisions:\n\n$$U(f, P_n) - L(f, P_n) = (aW + bH)\\frac{WH}{n}.$$",
-        "函数 $f$ 在矩形 $R$ 上黎曼可积，当且仅当对任意 $\\varepsilon > 0$，存在分割 $P$ 使得 $U(f, P) - L(f, P) < \\varepsilon$。对于在 $[0, W] \\times [0, H]$ 上采用 $n \\times n$ 等距分割的函数 $f(x, y) = ax + by$：\n\n$$U(f, P_n) - L(f, P_n) = (aW + bH)\\frac{WH}{n}。$$",
+        "函数 $f$ 在矩形 $R$ 上黎曼可积，当且仅当对任意 $\\varepsilon > 0$，存在分割 $P$ 使得 $U(f, P) - L(f, P) < \\varepsilon$。对于在 $[0, W] \\times [0, H]$ 上采用 $n \\times n$ 等距分割的函数 $f(x, y) = ax + by$：\n\n$$U(f, P_n) - L(f, P_n) = (aW + bH)\\frac{WH}{n}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
@@ -710,7 +710,7 @@ export const definingDoubleIntegralsUsingLowerAndUpperRiemannSums: TopicDef = {
           steps(
             `在边长分别为 $\\frac{${W}}{${n}}$ 与 $\\frac{${H}}{${n}}$ 的每个子矩形上，$f$ 的振幅为 $M_{ij} - m_{ij} = ${a}\\left(\\frac{${W}}{${n}}\\right) + ${b}\\left(\\frac{${H}}{${n}}\\right) = \\frac{${a * W + b * H}}{${n}}$。`,
             `对全部 $n^2$ 个面积为 $\\Delta A = \\frac{${W}\\cdot${H}}{n^2}$ 的子矩形累加得到：`,
-            `$$U(f, P_n) - L(f, P_n) = n^2 \\left(\\frac{${a * W + b * H}}{${n}}\\right)\\left(\\frac{${W * H}}{n^2}\\right) = \\frac{${num}}{${n}} = ${ans.toLatex()}。$$ `,
+            `$$U(f, P_n) - L(f, P_n) = n^2 \\left(\\frac{${a * W + b * H}}{${n}}\\right)\\left(\\frac{${W * H}}{n^2}\\right) = \\frac{${num}}{${n}} = ${ans.toLatex()}$$ `,
           ),
         );
         return numberProblem({
@@ -772,7 +772,7 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
       title: t("Evaluating iterated integrals over rectangles", "计算矩形区域上的二次积分"),
       explanation: t(
         "Integrate with respect to one variable while treating the other as a constant, then integrate the result with respect to the remaining variable. For $R = [a, b] \\times [c, d]$, evaluate by integrating with respect to $y$ then $x$:\n\n$$\\iint_R (px + qy)\\,dA = \\int_a^b \\left[\\int_c^d (px + qy)\\,dy\\right]dx = p\\frac{b^2 - a^2}{2}(d - c) + q(b - a)\\frac{d^2 - c^2}{2}.$$",
-        "先对一个变量积分，把另一个变量当作常数，再对所得结果关于剩下的变量积分。对于 $R = [a, b] \\times [c, d]$，先对 $y$ 积分再对 $x$ 积分：\n\n$$\\iint_R (px + qy)\\,dA = \\int_a^b \\left[\\int_c^d (px + qy)\\,dy\\right]dx = p\\frac{b^2 - a^2}{2}(d - c) + q(b - a)\\frac{d^2 - c^2}{2}。$$",
+        "先对一个变量积分，把另一个变量当作常数，再对所得结果关于剩下的变量积分。对于 $R = [a, b] \\times [c, d]$，先对 $y$ 积分再对 $x$ 积分：\n\n$$\\iint_R (px + qy)\\,dA = \\int_a^b \\left[\\int_c^d (px + qy)\\,dy\\right]dx = p\\frac{b^2 - a^2}{2}(d - c) + q(b - a)\\frac{d^2 - c^2}{2}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(0, 3);
@@ -799,8 +799,8 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
           ),
           steps(
             `由富比尼定理建立二次积分：\n\n$$\\int_{${a}}^{${b}} \\int_{${c}}^{${d}} (${poly([p, "x"], [q, "y"])})\\,dy\\,dx$$`,
-            `先对 $y$ 积分：\n\n$$\\left[${poly([p, "xy"], [q, "\\frac{y^2}{2}"])}\\right]_{${c}}^{${d}} = ${p}(${d - c})x + ${paren(q)} \\cdot \\frac{${d * d - c * c}}{2} = ${poly([p * (d - c), "x"], [Q.of(q * (d * d - c * c), 2), ""])}。$$ `,
-            `再对 $x$ 从 $${a}$ 积到 $${b}$：\n\n$$\\int_{${a}}^{${b}} \\left(${poly([p * (d - c), "x"], [Q.of(q * (d * d - c * c), 2), ""])}\\right) dx = ${ans.toLatex()}。$$ `,
+            `先对 $y$ 积分：\n\n$$\\left[${poly([p, "xy"], [q, "\\frac{y^2}{2}"])}\\right]_{${c}}^{${d}} = ${p}(${d - c})x + ${paren(q)} \\cdot \\frac{${d * d - c * c}}{2} = ${poly([p * (d - c), "x"], [Q.of(q * (d * d - c * c), 2), ""])}$$ `,
+            `再对 $x$ 从 $${a}$ 积到 $${b}$：\n\n$$\\int_{${a}}^{${b}} \\left(${poly([p * (d - c), "x"], [Q.of(q * (d * d - c * c), 2), ""])}\\right) dx = ${ans.toLatex()}$$ `,
           ),
         );
         return numberProblem({
@@ -816,7 +816,7 @@ export const doubleIntegralsOverRectangularDomains: TopicDef = {
       title: t("Separable double integrals of monomials", "单项式的可分离二重积分"),
       explanation: t(
         "When the integrand is a product $g(x)h(y)$ and the region is a rectangle, Fubini's theorem lets the double integral split into a product of single integrals:\n\n$$\\iint_{[0, a] \\times [0, b]} c\\,x^py^q\\,dA = c\\cdot\\frac{a^{p+1}}{p+1}\\cdot\\frac{b^{q+1}}{q+1}.$$\n\nThis only works on rectangles, where the limits of one variable do not depend on the other.",
-        "当被积函数是乘积 $g(x)h(y)$ 且区域为矩形时，由富比尼定理，二重积分可拆成单重积分之积：\n\n$$\\iint_{[0, a] \\times [0, b]} c\\,x^py^q\\,dA = c\\cdot\\frac{a^{p+1}}{p+1}\\cdot\\frac{b^{q+1}}{q+1}。$$\n\n这只适用于矩形区域，因为此时一个变量的积分限不依赖另一个变量。",
+        "当被积函数是乘积 $g(x)h(y)$ 且区域为矩形时，由富比尼定理，二重积分可拆成单重积分之积：\n\n$$\\iint_{[0, a] \\times [0, b]} c\\,x^py^q\\,dA = c\\cdot\\frac{a^{p+1}}{p+1}\\cdot\\frac{b^{q+1}}{q+1}$$\n\n这只适用于矩形区域，因为此时一个变量的积分限不依赖另一个变量。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 4);
@@ -863,7 +863,7 @@ export const doubleIntegralsOverNonRectangularDomains: TopicDef = {
       title: t("Integrating over triangular domains", "在三角形区域上求二重积分"),
       explanation: t(
         "Over a triangle the inner limits depend on the outer variable, because the height of the region changes as you move across it. For a triangular region $T$ bounded by $x = 0$, $y = 0$, and $x + y = c$ ($c > 0$):\n\n$$\\iint_T ax\\,dA = \\int_0^c \\int_0^{c - x} ax\\,dy\\,dx = \\int_0^c ax(c - x)\\,dx = a\\frac{c^3}{6}.$$",
-        "在三角形区域上，内层积分限依赖于外层变量，因为区域的高度随位置而变化。对于由 $x = 0$、$y = 0$ 与 $x + y = c$（$c > 0$）所围成的三角形区域 $T$：\n\n$$\\iint_T ax\\,dA = \\int_0^c \\int_0^{c - x} ax\\,dy\\,dx = \\int_0^c ax(c - x)\\,dx = a\\frac{c^3}{6}。$$",
+        "在三角形区域上，内层积分限依赖于外层变量，因为区域的高度随位置而变化。对于由 $x = 0$、$y = 0$ 与 $x + y = c$（$c > 0$）所围成的三角形区域 $T$：\n\n$$\\iint_T ax\\,dA = \\int_0^c \\int_0^{c - x} ax\\,dy\\,dx = \\int_0^c ax(c - x)\\,dx = a\\frac{c^3}{6}$$",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(2, 10);
@@ -884,9 +884,9 @@ export const doubleIntegralsOverNonRectangularDomains: TopicDef = {
           ),
           steps(
             `将区域 $T$ 表示为 $0 \\le x \\le ${c}$ 与 $0 \\le y \\le ${c} - x$。`,
-            `建立二次积分：\n\n$$\\int_0^{${c}} \\int_0^{${c} - x} ${a}x\\,dy\\,dx = \\int_0^{${c}} ${a}x(${c} - x)\\,dx = ${a} \\int_0^{${c}} (${c}x - x^2)\\,dx。$$`,
-            `求原函数值：\n\n$$\\left[\\frac{${c}x^2}{2} - \\frac{x^3}{3}\\right]_0^{${c}} = \\frac{${c}^3}{2} - \\frac{${c}^3}{3} = \\frac{${c}^3}{6} = \\frac{${c * c * c}}{6}。$$`,
-            `乘以常数系数 $${a}$：\n\n$$${a} \\cdot \\frac{${c * c * c}}{6} = ${k}(${c * c * c}) = ${ans}。$$ `,
+            `建立二次积分：\n\n$$\\int_0^{${c}} \\int_0^{${c} - x} ${a}x\\,dy\\,dx = \\int_0^{${c}} ${a}x(${c} - x)\\,dx = ${a} \\int_0^{${c}} (${c}x - x^2)\\,dx$$`,
+            `求原函数值：\n\n$$\\left[\\frac{${c}x^2}{2} - \\frac{x^3}{3}\\right]_0^{${c}} = \\frac{${c}^3}{2} - \\frac{${c}^3}{3} = \\frac{${c}^3}{6} = \\frac{${c * c * c}}{6}$$`,
+            `乘以常数系数 $${a}$：\n\n$$${a} \\cdot \\frac{${c * c * c}}{6} = ${k}(${c * c * c}) = ${ans}$$ `,
           ),
         );
         return numberProblem({
@@ -902,7 +902,7 @@ export const doubleIntegralsOverNonRectangularDomains: TopicDef = {
       title: t("Integrating between a line and a parabola", "在直线与抛物线之间积分"),
       explanation: t(
         "To integrate over the region between $y = x^2$ and $y = kx$, first find where the curves meet: $x^2 = kx$ gives $x = 0$ and $x = k$. For $0 \\le x \\le k$ the line lies above the parabola, so\n\n$$\\iint_D c\\,dA = \\int_0^k \\int_{x^2}^{kx} c\\,dy\\,dx = c\\int_0^k (kx - x^2)\\,dx = \\frac{ck^3}{6}.$$",
-        "要在 $y = x^2$ 与 $y = kx$ 之间的区域上积分，先求交点：$x^2 = kx$ 得 $x = 0$ 和 $x = k$。在 $0 \\le x \\le k$ 上直线在抛物线上方，所以\n\n$$\\iint_D c\\,dA = \\int_0^k \\int_{x^2}^{kx} c\\,dy\\,dx = c\\int_0^k (kx - x^2)\\,dx = \\frac{ck^3}{6}。$$",
+        "要在 $y = x^2$ 与 $y = kx$ 之间的区域上积分，先求交点：$x^2 = kx$ 得 $x = 0$ 和 $x = k$。在 $0 \\le x \\le k$ 上直线在抛物线上方，所以\n\n$$\\iint_D c\\,dA = \\int_0^k \\int_{x^2}^{kx} c\\,dy\\,dx = c\\int_0^k (kx - x^2)\\,dx = \\frac{ck^3}{6}$$",
       ),
       generate(rng: Rng): Problem {
         const k = rng.int(1, 6);
@@ -942,7 +942,7 @@ export const propertiesOfDoubleIntegrals: TopicDef = {
       title: t("Linearity and decomposition of double integrals", "二重积分的线性性与区域分解性"),
       explanation: t(
         "Double integrals are linear just like single integrals, so known integrals of separate functions combine with the same coefficients. By linearity of the double integral:\n\n$$\\iint_R (\\alpha f(x, y) + \\beta g(x, y))\\,dA = \\alpha \\iint_R f(x, y)\\,dA + \\beta \\iint_R g(x, y)\\,dA.$$",
-        "二重积分和单积分一样是线性的，所以各个函数的已知积分可以按相同的系数组合。由二重积分的线性性质：\n\n$$\\iint_R (\\alpha f(x, y) + \\beta g(x, y))\\,dA = \\alpha \\iint_R f(x, y)\\,dA + \\beta \\iint_R g(x, y)\\,dA。$$",
+        "二重积分和单积分一样是线性的，所以各个函数的已知积分可以按相同的系数组合。由二重积分的线性性质：\n\n$$\\iint_R (\\alpha f(x, y) + \\beta g(x, y))\\,dA = \\alpha \\iint_R f(x, y)\\,dA + \\beta \\iint_R g(x, y)\\,dA$$",
       ),
       generate(rng: Rng): Problem {
         const I1 = rng.nonZero(-8, 8);
@@ -962,7 +962,7 @@ export const propertiesOfDoubleIntegrals: TopicDef = {
           ),
           steps(
             `应用线性性质：$\\iint_R (${poly([alpha, "f"], [beta, "g"])})\\,dA = ${poly([alpha, "\\iint_R f\\,dA"], [beta, "\\iint_R g\\,dA"])}$。`,
-            `代入已知积分值：\n\n$$${alpha}(${I1}) + ${paren(beta)}(${I2}) = ${alpha * I1} + (${beta * I2}) = ${ans}。$$ `,
+            `代入已知积分值：\n\n$$${alpha}(${I1}) + ${paren(beta)}(${I2}) = ${alpha * I1} + (${beta * I2}) = ${ans}$$ `,
           ),
         );
         return numberProblem({
@@ -1121,7 +1121,7 @@ export const doubleIntegralsOverTypeIRegions: TopicDef = {
       title: t("Evaluating double integrals over parabolic regions", "在抛物线区域上计算二重积分"),
       explanation: t(
         "Integrate first in the direction whose limits are functions, then integrate the resulting function of the outer variable over its constant limits. For $D = \\{(x, y) : 0 \\le x \\le a, 0 \\le y \\le bx\\}$:\n\n$$\\iint_D kx\\,dA = \\int_0^a \\left[\\int_0^{bx} kx\\,dy\\right]dx = \\int_0^a bkx^2\\,dx = bk\\frac{a^3}{3}.$$",
-        "先沿积分限为函数的方向积分，再把所得关于外层变量的函数在常数限上积分。对于区域 $D = \\{(x, y) : 0 \\le x \\le a, 0 \\le y \\le bx\\}$：\n\n$$\\iint_D kx\\,dA = \\int_0^a \\left[\\int_0^{bx} kx\\,dy\\right]dx = \\int_0^a bkx^2\\,dx = bk\\frac{a^3}{3}。$$",
+        "先沿积分限为函数的方向积分，再把所得关于外层变量的函数在常数限上积分。对于区域 $D = \\{(x, y) : 0 \\le x \\le a, 0 \\le y \\le bx\\}$：\n\n$$\\iint_D kx\\,dA = \\int_0^a \\left[\\int_0^{bx} kx\\,dy\\right]dx = \\int_0^a bkx^2\\,dx = bk\\frac{a^3}{3}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
@@ -1142,8 +1142,8 @@ export const doubleIntegralsOverTypeIRegions: TopicDef = {
           ),
           steps(
             `针对 X-型区域建立二次积分：\n\n$$\\int_0^{${a}} \\int_0^{${b}x} ${k}x\\,dy\\,dx$$`,
-            `先对 $y$ 积分：\n\n$$\\int_0^{${b}x} ${k}x\\,dy = ${k}x[y]_0^{${b}x} = ${k * b}x^2。$$`,
-            `再对 $x$ 积分：\n\n$$\\int_0^{${a}} ${k * b}x^2\\,dx = ${k * b} \\left[\\frac{x^3}{3}\\right]_0^{${a}} = ${b * m}(${a}^3) = ${ans}。$$ `,
+            `先对 $y$ 积分：\n\n$$\\int_0^{${b}x} ${k}x\\,dy = ${k}x[y]_0^{${b}x} = ${k * b}x^2$$`,
+            `再对 $x$ 积分：\n\n$$\\int_0^{${a}} ${k * b}x^2\\,dx = ${k * b} \\left[\\frac{x^3}{3}\\right]_0^{${a}} = ${b * m}(${a}^3) = ${ans}$$ `,
           ),
         );
         return numberProblem({
@@ -1159,7 +1159,7 @@ export const doubleIntegralsOverTypeIRegions: TopicDef = {
       title: t("Integrating $cxy$ over a Type I triangle", "在 Type I 三角形上积分 $cxy$"),
       explanation: t(
         "For a Type I region the inner integral runs in $y$ between two functions of $x$, and the outer integral runs in $x$ between constants. Over the triangle $0 \\le x \\le a$, $0 \\le y \\le x$:\n\n$$\\int_0^a \\int_0^x c\\,xy\\,dy\\,dx = \\int_0^a c\\,x \\cdot \\frac{x^2}{2}\\,dx = \\frac{ca^4}{8}.$$\n\nThe inner result is a function of $x$ alone, which the outer integral then finishes.",
-        "对 Type I 型区域，内层对 $y$ 积分，上下限是 $x$ 的函数；外层对 $x$ 在常数之间积分。在三角形 $0 \\le x \\le a$，$0 \\le y \\le x$ 上：\n\n$$\\int_0^a \\int_0^x c\\,xy\\,dy\\,dx = \\int_0^a c\\,x \\cdot \\frac{x^2}{2}\\,dx = \\frac{ca^4}{8}。$$\n\n内层结果只依赖 $x$，再由外层积分完成。",
+        "对 Type I 型区域，内层对 $y$ 积分，上下限是 $x$ 的函数；外层对 $x$ 在常数之间积分。在三角形 $0 \\le x \\le a$，$0 \\le y \\le x$ 上：\n\n$$\\int_0^a \\int_0^x c\\,xy\\,dy\\,dx = \\int_0^a c\\,x \\cdot \\frac{x^2}{2}\\,dx = \\frac{ca^4}{8}$$\n\n内层结果只依赖 $x$，再由外层积分完成。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
@@ -1199,7 +1199,7 @@ export const doubleIntegralsOverTypeIiRegions: TopicDef = {
       title: t("Evaluating double integrals with horizontal strips", "利用水平微元条计算 Y-型二重积分"),
       explanation: t(
         "When the region is bounded on the left and right by functions of the vertical variable, integrate with respect to the horizontal variable first. For $D = \\{(x, y) : 0 \\le y \\le b, 0 \\le x \\le ay\\}$:\n\n$$\\iint_D ky\\,dA = \\int_0^b \\left[\\int_0^{ay} ky\\,dx\\right]dy = \\int_0^b aky^2\\,dy = ak\\frac{b^3}{3}.$$",
-        "当区域的左右边界是竖直变量的函数时，先对水平变量积分。对于区域 $D = \\{(x, y) : 0 \\le y \\le b, 0 \\le x \\le ay\\}$：\n\n$$\\iint_D ky\\,dA = \\int_0^b \\left[\\int_0^{ay} ky\\,dx\\right]dy = \\int_0^b aky^2\\,dy = ak\\frac{b^3}{3}。$$",
+        "当区域的左右边界是竖直变量的函数时，先对水平变量积分。对于区域 $D = \\{(x, y) : 0 \\le y \\le b, 0 \\le x \\le ay\\}$：\n\n$$\\iint_D ky\\,dA = \\int_0^b \\left[\\int_0^{ay} ky\\,dx\\right]dy = \\int_0^b aky^2\\,dy = ak\\frac{b^3}{3}$$",
       ),
       generate(rng: Rng): Problem {
         const b = rng.int(1, 6);
@@ -1220,8 +1220,8 @@ export const doubleIntegralsOverTypeIiRegions: TopicDef = {
           ),
           steps(
             `利用水平分割建立二次积分：\n\n$$\\int_0^{${b}} \\int_0^{${a}y} ${k}y\\,dx\\,dy$$`,
-            `先对 $x$ 积分：\n\n$$\\int_0^{${a}y} ${k}y\\,dx = ${k}y[x]_0^{${a}y} = ${k * a}y^2。$$`,
-            `再对 $y$ 积分：\n\n$$\\int_0^{${b}} ${k * a}y^2\\,dy = ${k * a} \\left[\\frac{y^3}{3}\\right]_0^{${b}} = ${a * m}(${b}^3) = ${ans}。$$ `,
+            `先对 $x$ 积分：\n\n$$\\int_0^{${a}y} ${k}y\\,dx = ${k}y[x]_0^{${a}y} = ${k * a}y^2$$`,
+            `再对 $y$ 积分：\n\n$$\\int_0^{${b}} ${k * a}y^2\\,dy = ${k * a} \\left[\\frac{y^3}{3}\\right]_0^{${b}} = ${a * m}(${b}^3) = ${ans}$$ `,
           ),
         );
         return numberProblem({
@@ -1237,7 +1237,7 @@ export const doubleIntegralsOverTypeIiRegions: TopicDef = {
       title: t("Integrating $cx$ over a Type II parabolic region", "在 Type II 抛物线区域上积分 $cx$"),
       explanation: t(
         "For a Type II region the inner integral runs in $x$ between two functions of $y$. Over $0 \\le y \\le b$, $0 \\le x \\le y^2$:\n\n$$\\int_0^b \\int_0^{y^2} c\\,x\\,dx\\,dy = \\int_0^b \\frac{c\\,y^4}{2}\\,dy = \\frac{cb^5}{10}.$$\n\nIntegrating in $x$ first avoids splitting the region, because its left and right boundaries are single curves in $y$.",
-        "对 Type II 型区域，内层对 $x$ 积分，上下限是 $y$ 的函数。在 $0 \\le y \\le b$，$0 \\le x \\le y^2$ 上：\n\n$$\\int_0^b \\int_0^{y^2} c\\,x\\,dx\\,dy = \\int_0^b \\frac{c\\,y^4}{2}\\,dy = \\frac{cb^5}{10}。$$\n\n先对 $x$ 积分无需拆分区域，因为左右边界都是关于 $y$ 的单一曲线。",
+        "对 Type II 型区域，内层对 $x$ 积分，上下限是 $y$ 的函数。在 $0 \\le y \\le b$，$0 \\le x \\le y^2$ 上：\n\n$$\\int_0^b \\int_0^{y^2} c\\,x\\,dx\\,dy = \\int_0^b \\frac{c\\,y^4}{2}\\,dy = \\frac{cb^5}{10}$$\n\n先对 $x$ 积分无需拆分区域，因为左右边界都是关于 $y$ 的单一曲线。",
       ),
       generate(rng: Rng): Problem {
         const b = rng.int(1, 5);
@@ -1277,7 +1277,7 @@ export const doubleIntegralsOverPartitionedRegions: TopicDef = {
       title: t("Evaluating double integrals by domain decomposition", "通过区域分割计算二重积分"),
       explanation: t(
         "Splitting a region into simpler pieces lets you use convenient limits on each, and the integral over the whole is the sum of the pieces. If $R = R_1 \\cup R_2$ with disjoint interiors, then $\\iint_R f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$. For two adjacent rectangles $R_1 = [0, c] \\times [0, h_1]$ and $R_2 = [c, d] \\times [0, h_2]$:\n\n$$\\iint_R k\\,dA = k\\left(c h_1 + (d - c)h_2\\right).$$",
-        "把区域分成更简单的几部分，每部分都可以用方便的积分限，整体上的积分就是各部分积分的和。若 $R = R_1 \\cup R_2$ 且内部不相交，则 $\\iint_R f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$。对于两个相邻矩形 $R_1 = [0, c] \\times [0, h_1]$ 与 $R_2 = [c, d] \\times [0, h_2]$：\n\n$$\\iint_R k\\,dA = k\\left(c h_1 + (d - c)h_2\\right)。$$",
+        "把区域分成更简单的几部分，每部分都可以用方便的积分限，整体上的积分就是各部分积分的和。若 $R = R_1 \\cup R_2$ 且内部不相交，则 $\\iint_R f\\,dA = \\iint_{R_1} f\\,dA + \\iint_{R_2} f\\,dA$。对于两个相邻矩形 $R_1 = [0, c] \\times [0, h_1]$ 与 $R_2 = [c, d] \\times [0, h_2]$：\n\n$$\\iint_R k\\,dA = k\\left(c h_1 + (d - c)h_2\\right)$$",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 5);
@@ -1302,9 +1302,9 @@ export const doubleIntegralsOverPartitionedRegions: TopicDef = {
             `Multiply by the integrand $k = ${k}$:\n\n$$\\iint_R ${k}\\,dA = ${k}(${area1 + area2}) = ${ans}.$$ `,
           ),
           steps(
-            `分别计算每个子矩形的面积：\n\n$$\\text{Area}(R_1) = ${c} \\times ${h1} = ${area1}，\\quad \\text{Area}(R_2) = (${d} - ${c}) \\times ${h2} = ${w2} \\times ${h2} = ${area2}。$$`,
+            `分别计算每个子矩形的面积：\n\n$$\\text{Area}(R_1) = ${c} \\times ${h1} = ${area1}, \\quad \\text{Area}(R_2) = (${d} - ${c}) \\times ${h2} = ${w2} \\times ${h2} = ${area2}$$`,
             `总面积为 $\\text{Area}(R) = ${area1} + ${area2} = ${area1 + area2}$。`,
-            `乘以被积常数 $k = ${k}$：\n\n$$\\iint_R ${k}\\,dA = ${k}(${area1 + area2}) = ${ans}。$$ `,
+            `乘以被积常数 $k = ${k}$：\n\n$$\\iint_R ${k}\\,dA = ${k}(${area1 + area2}) = ${ans}$$ `,
           ),
         );
         return numberProblem({
@@ -1365,7 +1365,7 @@ export const changingTheOrderOfIntegrationInDoubleIntegrals: TopicDef = {
       title: t("Reversing order to enable integration", "交换积分次序以求值"),
       explanation: t(
         "Sketch the region and describe it the other way around; the new order of integration can make an impossible inner integral easy. The integral $\\int_0^a \\int_y^a x^2\\,dx\\,dy$ is evaluated by reversing the order:\n\n$$\\int_0^a \\left[\\int_0^x x^2\\,dy\\right]dx = \\int_0^a x^3\\,dx = \\frac{a^4}{4}.$$",
-        "画出区域并换一种方式描述它；新的积分次序可以使原来无法计算的内层积分变得容易。积分 $\\int_0^a \\int_y^a x^2\\,dx\\,dy$ 可通过交换积分次序计算：\n\n$$\\int_0^a \\left[\\int_0^x x^2\\,dy\\right]dx = \\int_0^a x^3\\,dx = \\frac{a^4}{4}。$$",
+        "画出区域并换一种方式描述它；新的积分次序可以使原来无法计算的内层积分变得容易。积分 $\\int_0^a \\int_y^a x^2\\,dx\\,dy$ 可通过交换积分次序计算：\n\n$$\\int_0^a \\left[\\int_0^x x^2\\,dy\\right]dx = \\int_0^a x^3\\,dx = \\frac{a^4}{4}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 35);
@@ -1387,8 +1387,8 @@ export const changingTheOrderOfIntegrationInDoubleIntegrals: TopicDef = {
             `根据原积分限确定积分区域：$0 \\le y \\le ${a}$ 且 $y \\le x \\le ${a}$。`,
             `该区域是由 $y = 0$、$x = ${a}$ 与 $y = x$ 围成的三角形。`,
             `交换积分次序：当 $0 \\le x \\le ${a}$ 时，$y$ 从 $0$ 变到 $x$：\n\n$$\\int_0^{${a}} \\int_0^x x^2\\,dy\\,dx$$`,
-            `先对 $y$ 积分：\n\n$$\\int_0^x x^2\\,dy = x^2[y]_0^x = x^3。$$`,
-            `再对 $x$ 积分：\n\n$$\\int_0^{${a}} x^3\\,dx = \\left[\\frac{x^4}{4}\\right]_0^{${a}} = \\frac{${a}^4}{4} = ${ans.toLatex()}。$$ `,
+            `先对 $y$ 积分：\n\n$$\\int_0^x x^2\\,dy = x^2[y]_0^x = x^3$$`,
+            `再对 $x$ 积分：\n\n$$\\int_0^{${a}} x^3\\,dx = \\left[\\frac{x^4}{4}\\right]_0^{${a}} = \\frac{${a}^4}{4} = ${ans.toLatex()}$$ `,
           ),
         );
         return numberProblem({
@@ -1404,7 +1404,7 @@ export const changingTheOrderOfIntegrationInDoubleIntegrals: TopicDef = {
       title: t("Reversing an integral with a square-root limit", "交换含平方根积分限的积分次序"),
       explanation: t(
         "The integral $\\int_0^{a^2} \\int_{\\sqrt{y}}^{a} f\\,dx\\,dy$ covers the region $\\sqrt{y} \\le x \\le a$, $0 \\le y \\le a^2$. Squaring $x = \\sqrt{y}$ gives $y = x^2$, so the same region is $0 \\le x \\le a$, $0 \\le y \\le x^2$. Sketching the region before changing the limits is the safest way to get them right. Reversing the order gives\n\n$$\\int_0^a \\int_0^{x^2} f\\,dy\\,dx.$$",
-        "积分 $\\int_0^{a^2} \\int_{\\sqrt{y}}^{a} f\\,dx\\,dy$ 覆盖区域 $\\sqrt{y} \\le x \\le a$，$0 \\le y \\le a^2$。把 $x = \\sqrt{y}$ 两边平方得 $y = x^2$，所以同一区域是 $0 \\le x \\le a$，$0 \\le y \\le x^2$。换限之前先画出区域是最稳妥的做法。交换次序得\n\n$$\\int_0^a \\int_0^{x^2} f\\,dy\\,dx。$$",
+        "积分 $\\int_0^{a^2} \\int_{\\sqrt{y}}^{a} f\\,dx\\,dy$ 覆盖区域 $\\sqrt{y} \\le x \\le a$，$0 \\le y \\le a^2$。把 $x = \\sqrt{y}$ 两边平方得 $y = x^2$，所以同一区域是 $0 \\le x \\le a$，$0 \\le y \\le x^2$。换限之前先画出区域是最稳妥的做法。交换次序得\n\n$$\\int_0^a \\int_0^{x^2} f\\,dy\\,dx$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -1448,7 +1448,7 @@ export const repeatedIntegralsInThreeDimensions: TopicDef = {
       title: t("Evaluating iterated triple integrals", "计算三次积分"),
       explanation: t(
         "A triple integral is evaluated from the inside out, one variable at a time, treating the variables not yet integrated as constants. Evaluate $\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx$ successively from $z$, to $y$, to $x$:\n\n$$\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx = abc\\frac{a + b + c}{2}.$$",
-        "三重积分由内向外逐个变量计算，把还没有积分的变量当作常数。按 $z$、$y$、$x$ 的顺序依次计算三次积分 $\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx$：\n\n$$\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx = abc\\frac{a + b + c}{2}。$$",
+        "三重积分由内向外逐个变量计算，把还没有积分的变量当作常数。按 $z$、$y$、$x$ 的顺序依次计算三次积分 $\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx$：\n\n$$\\int_0^a \\int_0^b \\int_0^c (x + y + z)\\,dz\\,dy\\,dx = abc\\frac{a + b + c}{2}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -1465,13 +1465,13 @@ export const repeatedIntegralsInThreeDimensions: TopicDef = {
         const solution = t(
           steps(
             `Integrate with respect to $z$:\n\n$$\\int_0^{${c}} (x + y + z)\\,dz = \\left[(x + y)z + \\frac{z^2}{2}\\right]_0^{${c}} = ${c}(x + y) + \\frac{${c * c}}{2}.$$`,
-            `Integrate with respect to $y$ from $0$ to $${b}$:\n\n$$\\int_0^{${b}} \\left(${poly([c, "x"])} + ${poly([c, "y"])} + \\frac{${c * c}}{2}\\right)dy = ${poly([b * c, "x"])} + ${c}\\frac{${b * b}}{2} + \\frac{${b * c * c}}{2} = ${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}.$$`,
-            `Integrate with respect to $x$ from $0$ to $${a}$:\n\n$$\\int_0^{${a}} \\left(${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}\\right)dx = ${b * c}\\frac{${a * a}}{2} + ${a}\\frac{${b * c}(${b + c})}{2} = \\frac{${num}}{2} = ${ans.toLatex()}.$$ `,
+            `Integrate with respect to $y$ from $0$ to $${b}$:\n\n$$\\int_0^{${b}} \\left(${poly([c, "x"])} + ${poly([c, "y"])} + \\frac{${c * c}}{2}\\right)dy = ${poly([b * c, "x"])} + ${c} \\cdot \\frac{${b * b}}{2} + \\frac{${b * c * c}}{2} = ${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}.$$`,
+            `Integrate with respect to $x$ from $0$ to $${a}$:\n\n$$\\int_0^{${a}} \\left(${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}\\right)dx = ${b * c} \\cdot \\frac{${a * a}}{2} + ${a} \\cdot \\frac{${b * c}(${b + c})}{2} = \\frac{${num}}{2} = ${ans.toLatex()}.$$ `,
           ),
           steps(
-            `先对 $z$ 积分：\n\n$$\\int_0^{${c}} (x + y + z)\\,dz = \\left[(x + y)z + \\frac{z^2}{2}\\right]_0^{${c}} = ${c}(x + y) + \\frac{${c * c}}{2}。$$`,
-            `再对 $y$ 从 $0$ 积到 $${b}$：\n\n$$\\int_0^{${b}} \\left(${poly([c, "x"])} + ${poly([c, "y"])} + \\frac{${c * c}}{2}\\right)dy = ${poly([b * c, "x"])} + ${c}\\frac{${b * b}}{2} + \\frac{${b * c * c}}{2} = ${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}。$$`,
-            `最后对 $x$ 从 $0$ 积到 $${a}$：\n\n$$\\int_0^{${a}} \\left(${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}\\right)dx = ${b * c}\\frac{${a * a}}{2} + ${a}\\frac{${b * c}(${b + c})}{2} = \\frac{${num}}{2} = ${ans.toLatex()}。$$ `,
+            `先对 $z$ 积分：\n\n$$\\int_0^{${c}} (x + y + z)\\,dz = \\left[(x + y)z + \\frac{z^2}{2}\\right]_0^{${c}} = ${c}(x + y) + \\frac{${c * c}}{2}$$`,
+            `再对 $y$ 从 $0$ 积到 $${b}$：\n\n$$\\int_0^{${b}} \\left(${poly([c, "x"])} + ${poly([c, "y"])} + \\frac{${c * c}}{2}\\right)dy = ${poly([b * c, "x"])} + ${c} \\cdot \\frac{${b * b}}{2} + \\frac{${b * c * c}}{2} = ${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}$$`,
+            `最后对 $x$ 从 $0$ 积到 $${a}$：\n\n$$\\int_0^{${a}} \\left(${poly([b * c, "x"])} + \\frac{${b * c}(${b + c})}{2}\\right)dx = ${b * c} \\cdot \\frac{${a * a}}{2} + ${a} \\cdot \\frac{${b * c}(${b + c})}{2} = \\frac{${num}}{2} = ${ans.toLatex()}$$ `,
           ),
         );
         return numberProblem({
@@ -1527,7 +1527,7 @@ export const tripleIntegralsOverRectangularDomains: TopicDef = {
       title: t("Product property of separable triple integrals", "可分离三重积分的乘积性质"),
       explanation: t(
         "For a product of single-variable functions $f(x)g(y)h(z)$ over a box $[0, a] \\times [0, b] \\times [0, c]$, the triple integral factors into single integrals:\n\n$$\\iiint_B xyz\\,dV = \\left(\\int_0^a x\\,dx\\right)\\left(\\int_0^b y\\,dy\\right)\\left(\\int_0^c z\\,dz\\right) = \\frac{(abc)^2}{8}.$$",
-        "在长方体 $[0, a] \\times [0, b] \\times [0, c]$ 上，单变量乘积函数 $f(x)g(y)h(z)$ 的三重积分可因式分解为三个单积分的乘积：\n\n$$\\iiint_B xyz\\,dV = \\left(\\int_0^a x\\,dx\\right)\\left(\\int_0^b y\\,dy\\right)\\left(\\int_0^c z\\,dz\\right) = \\frac{(abc)^2}{8}。$$",
+        "在长方体 $[0, a] \\times [0, b] \\times [0, c]$ 上，单变量乘积函数 $f(x)g(y)h(z)$ 的三重积分可因式分解为三个单积分的乘积：\n\n$$\\iiint_B xyz\\,dV = \\left(\\int_0^a x\\,dx\\right)\\left(\\int_0^b y\\,dy\\right)\\left(\\int_0^c z\\,dz\\right) = \\frac{(abc)^2}{8}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
@@ -1566,7 +1566,7 @@ export const tripleIntegralsOverRectangularDomains: TopicDef = {
       title: t("Integrating $cx^2$ over a box", "在长方体上积分 $cx^2$"),
       explanation: t(
         "If the integrand depends on only one variable, integrating the other two over a box simply multiplies by the lengths of their intervals:\n\n$$\\iiint_{[0, a] \\times [0, b] \\times [0, d]} c\\,x^2\\,dV = c\\cdot\\frac{a^3}{3}\\cdot b \\cdot d.$$\n\nThe factor $bd$ is the area of the cross-section perpendicular to the $x$-axis.",
-        "若被积函数只依赖一个变量，在长方体上对另外两个变量积分就相当于乘以它们区间的长度：\n\n$$\\iiint_{[0, a] \\times [0, b] \\times [0, d]} c\\,x^2\\,dV = c\\cdot\\frac{a^3}{3}\\cdot b \\cdot d。$$\n\n因子 $bd$ 是垂直于 $x$ 轴的截面面积。",
+        "若被积函数只依赖一个变量，在长方体上对另外两个变量积分就相当于乘以它们区间的长度：\n\n$$\\iiint_{[0, a] \\times [0, b] \\times [0, d]} c\\,x^2\\,dV = c\\cdot\\frac{a^3}{3}\\cdot b \\cdot d$$\n\n因子 $bd$ 是垂直于 $x$ 轴的截面面积。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
@@ -1724,7 +1724,7 @@ export const tripleIntegralsOverTypeIRegions: TopicDef = {
       title: t("Integrating under a surface over a rectangle", "在矩形投影上计算曲顶柱体的体积积分"),
       explanation: t(
         "Integrating the constant one over a solid gives its volume, and the inner integral in the vertical direction gives the height of the solid above each point. For $E$ bounded by $0 \\le x \\le a$, $0 \\le y \\le b$, and $0 \\le z \\le cxy$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxy} 1\\,dz\\,dy\\,dx = c\\frac{a^2 b^2}{4}.$$",
-        "在立体上积分常数 1 得到它的体积，竖直方向的内层积分给出立体在每一点上方的高度。对于由 $0 \\le x \\le a$、$0 \\le y \\le b$ 与 $0 \\le z \\le cxy$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxy} 1\\,dz\\,dy\\,dx = c\\frac{a^2 b^2}{4}。$$",
+        "在立体上积分常数 1 得到它的体积，竖直方向的内层积分给出立体在每一点上方的高度。对于由 $0 \\le x \\le a$、$0 \\le y \\le b$ 与 $0 \\le z \\le cxy$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxy} 1\\,dz\\,dy\\,dx = c\\frac{a^2 b^2}{4}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -1744,7 +1744,7 @@ export const tripleIntegralsOverTypeIRegions: TopicDef = {
             `Separate the integrals: $${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} y\\,dy\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = \\frac{${num}}{4} = ${ans.toLatex()}$.`,
           ),
           steps(
-            `建立三重积分，内层 $z$ 从 $0$ 变到 $${c}xy$：\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}xy} 1\\,dz\\,dy\\,dx = \\int_0^{${a}} \\int_0^{${b}} ${c}xy\\,dy\\,dx。$$`,
+            `建立三重积分，内层 $z$ 从 $0$ 变到 $${c}xy$：\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}xy} 1\\,dz\\,dy\\,dx = \\int_0^{${a}} \\int_0^{${b}} ${c}xy\\,dy\\,dx$$`,
             `分离单积分计算：$${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} y\\,dy\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = \\frac{${num}}{4} = ${ans.toLatex()}$。`,
           ),
         );
@@ -1761,7 +1761,7 @@ export const tripleIntegralsOverTypeIRegions: TopicDef = {
       title: t("Integrating a constant under a slanted plane", "在斜平面下积分常数"),
       explanation: t(
         "For a Type I solid $E = \\{(x, y) \\in D,\\ 0 \\le z \\le u(x, y)\\}$, integrating $k$ in $z$ first gives $k\\,u(x, y)$, which is then integrated over $D$. Under the plane $z = x + y$ above $[0, a] \\times [0, b]$:\n\n$$\\iiint_E k\\,dV = k\\iint_D (x + y)\\,dA = k\\left(\\frac{a^2b}{2} + \\frac{ab^2}{2}\\right).$$",
-        "对 Type I 型立体 $E = \\{(x, y) \\in D,\\ 0 \\le z \\le u(x, y)\\}$，先对 $z$ 积分常数 $k$ 得 $k\\,u(x, y)$，再在 $D$ 上积分。在 $[0, a] \\times [0, b]$ 上方、平面 $z = x + y$ 下方：\n\n$$\\iiint_E k\\,dV = k\\iint_D (x + y)\\,dA = k\\left(\\frac{a^2b}{2} + \\frac{ab^2}{2}\\right)。$$",
+        "对 Type I 型立体 $E = \\{(x, y) \\in D,\\ 0 \\le z \\le u(x, y)\\}$，先对 $z$ 积分常数 $k$ 得 $k\\,u(x, y)$，再在 $D$ 上积分。在 $[0, a] \\times [0, b]$ 上方、平面 $z = x + y$ 下方：\n\n$$\\iiint_E k\\,dV = k\\iint_D (x + y)\\,dA = k\\left(\\frac{a^2b}{2} + \\frac{ab^2}{2}\\right)$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
@@ -1802,7 +1802,7 @@ export const tripleIntegralsOverTypeIiRegions: TopicDef = {
       title: t("Integrating with respect to y first", "先对 y 积分的三重积分计算"),
       explanation: t(
         "When the solid is bounded by surfaces given as functions for that variable, integrate in that direction first to get the thickness of the solid. For $E$ bounded by $0 \\le x \\le a$, $0 \\le z \\le b$, and $0 \\le y \\le cxz$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxz} 1\\,dy\\,dz\\,dx = c\\frac{a^2 b^2}{4}.$$",
-        "当立体由以该变量表示的曲面围成时，先沿那个方向积分，得到立体的厚度。对于由 $0 \\le x \\le a$、$0 \\le z \\le b$ 与 $0 \\le y \\le cxz$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxz} 1\\,dy\\,dz\\,dx = c\\frac{a^2 b^2}{4}。$$",
+        "当立体由以该变量表示的曲面围成时，先沿那个方向积分，得到立体的厚度。对于由 $0 \\le x \\le a$、$0 \\le z \\le b$ 与 $0 \\le y \\le cxz$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cxz} 1\\,dy\\,dz\\,dx = c\\frac{a^2 b^2}{4}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -1822,7 +1822,7 @@ export const tripleIntegralsOverTypeIiRegions: TopicDef = {
             `Factor into single integrals: $${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}$.`,
           ),
           steps(
-            `建立以 $y$ 为最内层变量的二次积分：\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}xz} 1\\,dy\\,dz\\,dx = \\int_0^{${a}} \\int_0^{${b}} ${c}xz\\,dz\\,dx。$$`,
+            `建立以 $y$ 为最内层变量的二次积分：\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}xz} 1\\,dy\\,dz\\,dx = \\int_0^{${a}} \\int_0^{${b}} ${c}xz\\,dz\\,dx$$`,
             `因式分解为单积分求积：$${c}\\left(\\int_0^{${a}} x\\,dx\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}$。`,
           ),
         );
@@ -1839,7 +1839,7 @@ export const tripleIntegralsOverTypeIiRegions: TopicDef = {
       title: t("Integrating $cy$ over a Type II solid", "在 Type II 型立体上积分 $cy$"),
       explanation: t(
         "For a Type II solid the inner integral runs in $y$, between two surfaces that depend on $x$ and $z$, and the outer double integral runs over the projection $D$ in the $xz$-plane. For $0 \\le y \\le kx$ over $D = [0, a] \\times [0, b]$ in $x$ and $z$:\n\n$$\\iint_D \\int_0^{kx} c\\,y\\,dy\\,dA = \\iint_D \\frac{c\\,k^2x^2}{2}\\,dA = \\frac{c\\,k^2a^3b}{6}.$$",
-        "对 Type II 型立体，内层对 $y$ 积分，上下限是依赖 $x$ 和 $z$ 的曲面；外层在 $xz$ 平面的投影 $D$ 上作二重积分。对 $0 \\le y \\le kx$，$D$ 为 $x$、$z$ 的 $[0, a] \\times [0, b]$：\n\n$$\\iint_D \\int_0^{kx} c\\,y\\,dy\\,dA = \\iint_D \\frac{c\\,k^2x^2}{2}\\,dA = \\frac{c\\,k^2a^3b}{6}。$$",
+        "对 Type II 型立体，内层对 $y$ 积分，上下限是依赖 $x$ 和 $z$ 的曲面；外层在 $xz$ 平面的投影 $D$ 上作二重积分。对 $0 \\le y \\le kx$，$D$ 为 $x$、$z$ 的 $[0, a] \\times [0, b]$：\n\n$$\\iint_D \\int_0^{kx} c\\,y\\,dy\\,dA = \\iint_D \\frac{c\\,k^2x^2}{2}\\,dA = \\frac{c\\,k^2a^3b}{6}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 3);
@@ -1886,7 +1886,7 @@ export const tripleIntegralsOverTypeIiiRegions: TopicDef = {
       title: t("Integrating with respect to x first", "先对 x 积分的三重积分计算"),
       explanation: t(
         "Choose the innermost variable to be the one whose bounds are given as functions of the other two, so the limits are easy to write. For $E$ bounded by $0 \\le y \\le a$, $0 \\le z \\le b$, and $0 \\le x \\le cyz$:\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cyz} 1\\,dx\\,dz\\,dy = c\\frac{a^2 b^2}{4}.$$",
-        "选择边界由另外两个变量的函数给出的那个变量作为最内层变量，这样积分限容易写出。对于由 $0 \\le y \\le a$、$0 \\le z \\le b$ 与 $0 \\le x \\le cyz$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cyz} 1\\,dx\\,dz\\,dy = c\\frac{a^2 b^2}{4}。$$",
+        "选择边界由另外两个变量的函数给出的那个变量作为最内层变量，这样积分限容易写出。对于由 $0 \\le y \\le a$、$0 \\le z \\le b$ 与 $0 \\le x \\le cyz$ 所围成的区域 $E$：\n\n$$\\iiint_E 1\\,dV = \\int_0^a \\int_0^b \\int_0^{cyz} 1\\,dx\\,dz\\,dy = c\\frac{a^2 b^2}{4}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -1906,7 +1906,7 @@ export const tripleIntegralsOverTypeIiiRegions: TopicDef = {
             `Factor into single integrals: $${c}\\left(\\int_0^{${a}} y\\,dy\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}$.`,
           ),
           steps(
-            `建立以 $x$ 为最内层变量的二次积分：\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}yz} 1\\,dx\\,dz\\,dy = \\int_0^{${a}} \\int_0^{${b}} ${c}yz\\,dz\\,dy。$$`,
+            `建立以 $x$ 为最内层变量的二次积分：\n\n$$\\int_0^{${a}} \\int_0^{${b}} \\int_0^{${c}yz} 1\\,dx\\,dz\\,dy = \\int_0^{${a}} \\int_0^{${b}} ${c}yz\\,dz\\,dy$$`,
             `因式分解为单积分求积：$${c}\\left(\\int_0^{${a}} y\\,dy\\right)\\left(\\int_0^{${b}} z\\,dz\\right) = ${c}\\left(\\frac{${a * a}}{2}\\right)\\left(\\frac{${b * b}}{2}\\right) = ${ans.toLatex()}$。`,
           ),
         );
@@ -1923,7 +1923,7 @@ export const tripleIntegralsOverTypeIiiRegions: TopicDef = {
       title: t("Integrating $x$ over a Type III solid", "在 Type III 型立体上积分 $x$"),
       explanation: t(
         "For a Type III solid the inner integral runs in $x$, between surfaces that depend on $y$ and $z$, and the outer double integral runs over the projection $D$ in the $yz$-plane. For $0 \\le x \\le ky$ over $D = [0, a] \\times [0, b]$ in $y$ and $z$:\n\n$$\\iint_D \\int_0^{ky} x\\,dx\\,dA = \\iint_D \\frac{k^2y^2}{2}\\,dA = \\frac{k^2a^3b}{6}.$$\n\nIt is the Type II computation with the roles of $x$ and $y$ exchanged.",
-        "对 Type III 型立体，内层对 $x$ 积分，上下限是依赖 $y$ 和 $z$ 的曲面；外层在 $yz$ 平面的投影 $D$ 上作二重积分。对 $0 \\le x \\le ky$，$D$ 为 $y$、$z$ 的 $[0, a] \\times [0, b]$：\n\n$$\\iint_D \\int_0^{ky} x\\,dx\\,dA = \\iint_D \\frac{k^2y^2}{2}\\,dA = \\frac{k^2a^3b}{6}。$$\n\n这就是把 Type II 计算中 $x$ 与 $y$ 的角色互换。",
+        "对 Type III 型立体，内层对 $x$ 积分，上下限是依赖 $y$ 和 $z$ 的曲面；外层在 $yz$ 平面的投影 $D$ 上作二重积分。对 $0 \\le x \\le ky$，$D$ 为 $y$、$z$ 的 $[0, a] \\times [0, b]$：\n\n$$\\iint_D \\int_0^{ky} x\\,dx\\,dA = \\iint_D \\frac{k^2y^2}{2}\\,dA = \\frac{k^2a^3b}{6}$$\n\n这就是把 Type II 计算中 $x$ 与 $y$ 的角色互换。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
@@ -1961,7 +1961,7 @@ export const calculatingVolumesOfSolidsUsingTripleIntegrals: TopicDef = {
       title: t("Volume of a standard simplex", "标准四面体的体积"),
       explanation: t(
         "A tetrahedron cut off by a plane from the corner of the first octant has one sixth of the volume of the box with the same intercepts. The tetrahedron bounded by the coordinate planes and $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$ ($a, b, c > 0$) has volume:\n\n$$\\text{Vol}(E) = \\iiint_E 1\\,dV = \\frac{abc}{6}.$$",
-        "被平面从第一卦限的角上截下的四面体，体积是具有相同截距的长方体体积的六分之一。由坐标平面与平面 $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$（$a, b, c > 0$）围成的四面体的体积为：\n\n$$\\text{Vol}(E) = \\iiint_E 1\\,dV = \\frac{abc}{6}。$$",
+        "被平面从第一卦限的角上截下的四面体，体积是具有相同截距的长方体体积的六分之一。由坐标平面与平面 $\\frac{x}{a} + \\frac{y}{b} + \\frac{z}{c} = 1$（$a, b, c > 0$）围成的四面体的体积为：\n\n$$\\text{Vol}(E) = \\iiint_E 1\\,dV = \\frac{abc}{6}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 7);
@@ -2000,7 +2000,7 @@ export const calculatingVolumesOfSolidsUsingTripleIntegrals: TopicDef = {
       title: t("The volume under a paraboloid over a rectangle", "矩形上方抛物面下的体积"),
       explanation: t(
         "The volume of a solid $E$ is $\\iiint_E 1\\,dV$. For the solid above $[0, a] \\times [0, b]$ and below $z = x^2 + y^2$, the $z$-integral gives the height of the surface, leaving\n\n$$V = \\int_0^a \\int_0^b (x^2 + y^2)\\,dy\\,dx = \\frac{a^3b}{3} + \\frac{ab^3}{3}.$$\n\nEach term comes from one square in the integrand, multiplied by the length of the other side.",
-        "立体 $E$ 的体积为 $\\iiint_E 1\\,dV$。对 $[0, a] \\times [0, b]$ 上方、$z = x^2 + y^2$ 下方的立体，对 $z$ 积分得到曲面高度，于是\n\n$$V = \\int_0^a \\int_0^b (x^2 + y^2)\\,dy\\,dx = \\frac{a^3b}{3} + \\frac{ab^3}{3}。$$\n\n每一项来自被积函数中的一个平方项，再乘以另一边的长度。",
+        "立体 $E$ 的体积为 $\\iiint_E 1\\,dV$。对 $[0, a] \\times [0, b]$ 上方、$z = x^2 + y^2$ 下方的立体，对 $z$ 积分得到曲面高度，于是\n\n$$V = \\int_0^a \\int_0^b (x^2 + y^2)\\,dy\\,dx = \\frac{a^3b}{3} + \\frac{ab^3}{3}$$\n\n每一项来自被积函数中的一个平方项，再乘以另一边的长度。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -2126,7 +2126,7 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingRegion: Topic
       title: t("Permuting limits of integration in iterated integrals", "置换三次积分中的积分限"),
       explanation: t(
         "To change the order, describe the same region with the variables nested differently, reading the new limits from the inequalities that define the region. To evaluate $\\int_0^a \\int_0^b \\int_z^a x\\,dx\\,dy\\,dz$, swap the $x$ and $z$ integrations: $0 \\le z \\le x \\le a \\iff 0 \\le x \\le a, 0 \\le z \\le x$:\n\n$$\\int_0^b \\int_0^a \\int_0^x x\\,dz\\,dx\\,dy = \\int_0^b \\int_0^a x^2\\,dx\\,dy = b\\frac{a^3}{3}.$$",
-        "要交换次序，就用不同的嵌套方式描述同一个区域，从定义区域的不等式中读出新的积分限。计算 $\\int_0^a \\int_0^b \\int_z^a x\\,dx\\,dy\\,dz$ 时，对调 $x$ 与 $z$ 的积分次序：$0 \\le z \\le x \\le a \\iff 0 \\le x \\le a, 0 \\le z \\le x$：\n\n$$\\int_0^b \\int_0^a \\int_0^x x\\,dz\\,dx\\,dy = \\int_0^b \\int_0^a x^2\\,dx\\,dy = b\\frac{a^3}{3}。$$",
+        "要交换次序，就用不同的嵌套方式描述同一个区域，从定义区域的不等式中读出新的积分限。计算 $\\int_0^a \\int_0^b \\int_z^a x\\,dx\\,dy\\,dz$ 时，对调 $x$ 与 $z$ 的积分次序：$0 \\le z \\le x \\le a \\iff 0 \\le x \\le a, 0 \\le z \\le x$：\n\n$$\\int_0^b \\int_0^a \\int_0^x x\\,dz\\,dx\\,dy = \\int_0^b \\int_0^a x^2\\,dx\\,dy = b\\frac{a^3}{3}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -2168,7 +2168,7 @@ export const changingTheOrderOfIntegrationInTripleIntegralsChangingRegion: Topic
       title: t("Reordering the limits of a nested triple integral", "重排嵌套三重积分的积分限"),
       explanation: t(
         "The integral $\\int_0^a \\int_0^x \\int_0^y f\\,dz\\,dy\\,dx$ covers the solid $0 \\le z \\le y \\le x \\le a$. Writing the chain of inequalities makes any other order easy to read off. For the order $dx\\,dy\\,dz$, the outermost variable $z$ runs from $0$ to $a$, then $y$ runs from $z$ to $a$, and finally $x$ runs from $y$ to $a$:\n\n$$\\int_0^a \\int_z^a \\int_y^a f\\,dx\\,dy\\,dz.$$",
-        "积分 $\\int_0^a \\int_0^x \\int_0^y f\\,dz\\,dy\\,dx$ 覆盖立体 $0 \\le z \\le y \\le x \\le a$。写出这串不等式后，任何其他次序都容易读出。对次序 $dx\\,dy\\,dz$，最外层 $z$ 从 $0$ 到 $a$，然后 $y$ 从 $z$ 到 $a$，最后 $x$ 从 $y$ 到 $a$：\n\n$$\\int_0^a \\int_z^a \\int_y^a f\\,dx\\,dy\\,dz。$$",
+        "积分 $\\int_0^a \\int_0^x \\int_0^y f\\,dz\\,dy\\,dx$ 覆盖立体 $0 \\le z \\le y \\le x \\le a$。写出这串不等式后，任何其他次序都容易读出。对次序 $dx\\,dy\\,dz$，最外层 $z$ 从 $0$ 到 $a$，然后 $y$ 从 $z$ 到 $a$，最后 $x$ 从 $y$ 到 $a$：\n\n$$\\int_0^a \\int_z^a \\int_y^a f\\,dx\\,dy\\,dz$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 9);
@@ -2217,7 +2217,7 @@ export const doubleIntegralsInPlanePolarCoordinates: TopicDef = {
       title: t("Integrating radial functions over disks", "在圆盘上积分径向函数"),
       explanation: t(
         "In polar coordinates a disk has constant limits and the area element carries an extra factor of the radius, so radial functions become simple to integrate. For a disk $D$ of radius $R$ centered at the origin, the integral of $x^2 + y^2 = r^2$ is:\n\n$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^R r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^R = \\frac{\\pi R^4}{2}.$$",
-        "在极坐标中，圆盘的积分限是常数，面积微元多一个半径因子，所以径向函数变得容易积分。对于以原点为中心、半径为 $R$ 的圆盘 $D$，$x^2 + y^2 = r^2$ 的二重积分为：\n\n$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^R r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^R = \\frac{\\pi R^4}{2}。$$",
+        "在极坐标中，圆盘的积分限是常数，面积微元多一个半径因子，所以径向函数变得容易积分。对于以原点为中心、半径为 $R$ 的圆盘 $D$，$x^2 + y^2 = r^2$ 的二重积分为：\n\n$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^R r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^R = \\frac{\\pi R^4}{2}$$",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 35);
@@ -2237,7 +2237,7 @@ export const doubleIntegralsInPlanePolarCoordinates: TopicDef = {
           steps(
             `转化为极坐标：$x^2 + y^2 = r^2$ 且 $dA = r\\,dr\\,d\\theta$。`,
             `圆盘 $D$ 的积分限为 $0 \\le r \\le ${R}$ 与 $0 \\le \\theta \\le 2\\pi$：`,
-            `$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^{${R}} r^3\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^{${R}} = 2\\pi \\cdot \\frac{${R * R * R * R}}{4} = \\pi \\cdot ${ans.toLatex()}。$$ `,
+            `$$\\iint_D (x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^{${R}} r^3\\,dr\\,d\\theta = 2\\pi \\left[\\frac{r^4}{4}\\right]_0^{${R}} = 2\\pi \\cdot \\frac{${R * R * R * R}}{4} = \\pi \\cdot ${ans.toLatex()}$$ `,
             `除以 $\\pi$ 得到 $${ans.toLatex()}$。`,
           ),
         );
@@ -2254,7 +2254,7 @@ export const doubleIntegralsInPlanePolarCoordinates: TopicDef = {
       title: t("Integrating distance from the origin over a disk", "在圆盘上积分到原点的距离"),
       explanation: t(
         "In polar coordinates $\\sqrt{x^2 + y^2} = r$ and $dA = r\\,dr\\,d\\theta$, so the extra factor $r$ from the area element must not be forgotten. Over the disk of radius $R$:\n\n$$\\iint_D c\\sqrt{x^2 + y^2}\\,dA = \\int_0^{2\\pi} \\int_0^R c\\,r \\cdot r\\,dr\\,d\\theta = \\frac{2\\pi cR^3}{3}.$$",
-        "在极坐标中 $\\sqrt{x^2 + y^2} = r$，$dA = r\\,dr\\,d\\theta$，面积元中多出的因子 $r$ 不能忘记。在半径为 $R$ 的圆盘上：\n\n$$\\iint_D c\\sqrt{x^2 + y^2}\\,dA = \\int_0^{2\\pi} \\int_0^R c\\,r \\cdot r\\,dr\\,d\\theta = \\frac{2\\pi cR^3}{3}。$$",
+        "在极坐标中 $\\sqrt{x^2 + y^2} = r$，$dA = r\\,dr\\,d\\theta$，面积元中多出的因子 $r$ 不能忘记。在半径为 $R$ 的圆盘上：\n\n$$\\iint_D c\\sqrt{x^2 + y^2}\\,dA = \\int_0^{2\\pi} \\int_0^R c\\,r \\cdot r\\,dr\\,d\\theta = \\frac{2\\pi cR^3}{3}$$",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(1, 6);
@@ -2294,7 +2294,7 @@ export const doubleIntegralsBetweenPolarCurves: TopicDef = {
       title: t("Integrating over annular polar regions", "在圆环扇形区域上的极坐标二重积分"),
       explanation: t(
         "An annular sector is a rectangle in polar coordinates, with the radius between two values and the angle between two values. For an annular sector $r_1 \\le r \\le r_2$ and $0 \\le \\theta \\le \\frac{\\pi}{k}$, the area divided by $\\pi$ is:\n\n$$\\frac{1}{\\pi}\\iint_R 1\\,dA = \\frac{1}{\\pi}\\int_0^{\\pi/k} \\int_{r_1}^{r_2} r\\,dr\\,d\\theta = \\frac{r_2^2 - r_1^2}{2k}.$$",
-        "环形扇区在极坐标中是一个矩形，半径和角度都介于两个值之间。对于圆环扇形区域 $r_1 \\le r \\le r_2$ 且 $0 \\le \\theta \\le \\frac{\\pi}{k}$，其面积除以 $\\pi$ 为：\n\n$$\\frac{1}{\\pi}\\iint_R 1\\,dA = \\frac{1}{\\pi}\\int_0^{\\pi/k} \\int_{r_1}^{r_2} r\\,dr\\,d\\theta = \\frac{r_2^2 - r_1^2}{2k}。$$",
+        "环形扇区在极坐标中是一个矩形，半径和角度都介于两个值之间。对于圆环扇形区域 $r_1 \\le r \\le r_2$ 且 $0 \\le \\theta \\le \\frac{\\pi}{k}$，其面积除以 $\\pi$ 为：\n\n$$\\frac{1}{\\pi}\\iint_R 1\\,dA = \\frac{1}{\\pi}\\int_0^{\\pi/k} \\int_{r_1}^{r_2} r\\,dr\\,d\\theta = \\frac{r_2^2 - r_1^2}{2k}$$",
       ),
       generate(rng: Rng): Problem {
         const r1 = rng.int(1, 5);
@@ -2318,8 +2318,8 @@ export const doubleIntegralsBetweenPolarCurves: TopicDef = {
           ),
           steps(
             `建立极坐标积分：$\\iint_R 1\\,dA = \\int_0^{\\pi/${k}} \\int_{${r1}}^{${r2}} r\\,dr\\,d\\theta$。`,
-            `对 $r$ 积分：\n\n$$\\int_{${r1}}^{${r2}} r\\,dr = \\left[\\frac{r^2}{2}\\right]_{${r1}}^{${r2}} = \\frac{${r2 * r2} - ${r1 * r1}}{2} = \\frac{${diffSq}}{2}。$$`,
-            `对 $\\theta$ 积分：\n\n$$\\int_0^{\\pi/${k}} \\frac{${diffSq}}{2}\\,d\\theta = \\frac{\\pi}{${k}} \\cdot \\frac{${diffSq}}{2} = \\pi \\cdot \\frac{${diffSq}}{${2 * k}} = \\pi \\cdot ${ans.toLatex()}。$$ `,
+            `对 $r$ 积分：\n\n$$\\int_{${r1}}^{${r2}} r\\,dr = \\left[\\frac{r^2}{2}\\right]_{${r1}}^{${r2}} = \\frac{${r2 * r2} - ${r1 * r1}}{2} = \\frac{${diffSq}}{2}$$`,
+            `对 $\\theta$ 积分：\n\n$$\\int_0^{\\pi/${k}} \\frac{${diffSq}}{2}\\,d\\theta = \\frac{\\pi}{${k}} \\cdot \\frac{${diffSq}}{2} = \\pi \\cdot \\frac{${diffSq}}{${2 * k}} = \\pi \\cdot ${ans.toLatex()}$$ `,
             `除以 $\\pi$ 得到 $${ans.toLatex()}$。`,
           ),
         );
@@ -2420,7 +2420,7 @@ export const computingAreasUsingAChangeOfVariables: TopicDef = {
           ),
           steps(
             `作代换 $x = ${a}u$ 与 $y = ${b}v$，椭圆边界转化为单位圆盘 $S: u^2 + v^2 \\le 1$。`,
-            `计算雅可比行列式：\n\n$$J = \\begin{vmatrix} ${a} & 0 \\\\ 0 & ${b} \\end{vmatrix} = ${a} \\times ${b} = ${ans}。$$`,
+            `计算雅可比行列式：\n\n$$J = \\begin{vmatrix} ${a} & 0 \\\\ 0 & ${b} \\end{vmatrix} = ${a} \\times ${b} = ${ans}$$`,
             `根据代换公式，椭圆面积为 $\\text{Area}(E) = \\iint_S |J|\\,du\\,dv = ${ans} \\iint_S 1\\,du\\,dv = ${ans}(\\pi \\cdot 1^2) = ${ans}\\pi$。`,
             `除以 $\\pi$ 得到 $${ans}$。`,
           ),
@@ -2438,7 +2438,7 @@ export const computingAreasUsingAChangeOfVariables: TopicDef = {
       title: t("The area of a parallelogram by a change of variables", "用变量替换求平行四边形面积"),
       explanation: t(
         "A region $\\{0 \\le px + qy \\le U,\\ 0 \\le rx + sy \\le V\\}$ is a parallelogram. Substituting $u = px + qy$ and $v = rx + sy$ turns it into the rectangle $[0, U] \\times [0, V]$. Since $\\frac{\\partial(u, v)}{\\partial(x, y)} = ps - qr$, the Jacobian of the inverse map is $\\frac{1}{|ps - qr|}$, and\n\n$$\\operatorname{Area} = \\iint 1\\,dx\\,dy = \\frac{UV}{|ps - qr|}.$$",
-        "区域 $\\{0 \\le px + qy \\le U,\\ 0 \\le rx + sy \\le V\\}$ 是平行四边形。令 $u = px + qy$，$v = rx + sy$，它变为矩形 $[0, U] \\times [0, V]$。由于 $\\frac{\\partial(u, v)}{\\partial(x, y)} = ps - qr$，逆变换的雅可比行列式为 $\\frac{1}{|ps - qr|}$，于是\n\n$$\\operatorname{Area} = \\iint 1\\,dx\\,dy = \\frac{UV}{|ps - qr|}。$$",
+        "区域 $\\{0 \\le px + qy \\le U,\\ 0 \\le rx + sy \\le V\\}$ 是平行四边形。令 $u = px + qy$，$v = rx + sy$，它变为矩形 $[0, U] \\times [0, V]$。由于 $\\frac{\\partial(u, v)}{\\partial(x, y)} = ps - qr$，逆变换的雅可比行列式为 $\\frac{1}{|ps - qr|}$，于是\n\n$$\\operatorname{Area} = \\iint 1\\,dx\\,dy = \\frac{UV}{|ps - qr|}$$",
       ),
       generate(rng: Rng): Problem {
         let p = 1;
@@ -2508,8 +2508,8 @@ export const computingDoubleIntegralsUsingAChangeOfVariables: TopicDef = {
           ),
           steps(
             `在 $uv$ 平面内，新积分区域 $G$ 为矩形 $[0, ${U}] \\times [0, ${V}]$。`,
-            `计算雅可比行列式：\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\begin{vmatrix} 1 & 1 \\\\ 1 & -1 \\end{vmatrix} = -1 - 1 = -2 \\implies \\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{|-2|} = \\frac{1}{2}。$$`,
-            `应用二重积分变量代换公式：\n\n$$\\iint_R 1\\,dA = \\iint_G \\frac{1}{2}\\,du\\,dv = \\frac{1}{2}\\text{Area}(G) = \\frac{${U} \\times ${V}}{2} = ${ans.toLatex()}。$$ `,
+            `计算雅可比行列式：\n\n$$\\frac{\\partial(u, v)}{\\partial(x, y)} = \\begin{vmatrix} 1 & 1 \\\\ 1 & -1 \\end{vmatrix} = -1 - 1 = -2 \\implies \\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{|-2|} = \\frac{1}{2}$$`,
+            `应用二重积分变量代换公式：\n\n$$\\iint_R 1\\,dA = \\iint_G \\frac{1}{2}\\,du\\,dv = \\frac{1}{2}\\text{Area}(G) = \\frac{${U} \\times ${V}}{2} = ${ans.toLatex()}$$ `,
           ),
         );
         return numberProblem({
@@ -2525,7 +2525,7 @@ export const computingDoubleIntegralsUsingAChangeOfVariables: TopicDef = {
       title: t("Integrating $x + y$ with $u = x + y$, $v = x - y$", "用 $u = x + y$，$v = x - y$ 积分 $x + y$"),
       explanation: t(
         "With $u = x + y$ and $v = x - y$, we have $x = \\frac{u + v}{2}$ and $y = \\frac{u - v}{2}$, so $\\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{2}$ and $dA = \\frac{1}{2}\\,du\\,dv$. The region $0 \\le x + y \\le U$, $0 \\le x - y \\le V$ becomes the rectangle $[0, U] \\times [0, V]$, and the integrand $x + y$ becomes $u$:\n\n$$\\iint_R (x + y)\\,dA = \\frac{1}{2}\\int_0^V \\int_0^U u\\,du\\,dv = \\frac{U^2V}{4}.$$",
-        "令 $u = x + y$，$v = x - y$，则 $x = \\frac{u + v}{2}$，$y = \\frac{u - v}{2}$，所以 $\\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{2}$，$dA = \\frac{1}{2}\\,du\\,dv$。区域 $0 \\le x + y \\le U$，$0 \\le x - y \\le V$ 变为矩形 $[0, U] \\times [0, V]$，被积函数 $x + y$ 变为 $u$：\n\n$$\\iint_R (x + y)\\,dA = \\frac{1}{2}\\int_0^V \\int_0^U u\\,du\\,dv = \\frac{U^2V}{4}。$$",
+        "令 $u = x + y$，$v = x - y$，则 $x = \\frac{u + v}{2}$，$y = \\frac{u - v}{2}$，所以 $\\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{2}$，$dA = \\frac{1}{2}\\,du\\,dv$。区域 $0 \\le x + y \\le U$，$0 \\le x - y \\le V$ 变为矩形 $[0, U] \\times [0, V]$，被积函数 $x + y$ 变为 $u$：\n\n$$\\iint_R (x + y)\\,dA = \\frac{1}{2}\\int_0^V \\int_0^U u\\,du\\,dv = \\frac{U^2V}{4}$$",
       ),
       generate(rng: Rng): Problem {
         const U = rng.int(1, 6);
@@ -2592,7 +2592,7 @@ export const cylindricalPolarCoordinates: TopicDef = {
           ),
           steps(
             `柱坐标系中的径向坐标公式为 $r = \\sqrt{x^2 + y^2}$。`,
-            `代入 $x = ${x}$ 与 $y = ${y}$：\n\n$$r = \\sqrt{(${x})^2 + (${y})^2} = \\sqrt{${x * x} + ${y * y}} = \\sqrt{${r * r}} = ${ans}。$$`,
+            `代入 $x = ${x}$ 与 $y = ${y}$：\n\n$$r = \\sqrt{(${x})^2 + (${y})^2} = \\sqrt{${x * x} + ${y * y}} = \\sqrt{${r * r}} = ${ans}$$`,
           ),
         );
         return numberProblem({
@@ -2793,7 +2793,7 @@ export const sphericalPolarCoordinates: TopicDef = {
           ),
           steps(
             `球面径向距离公式为 $\\rho = \\sqrt{x^2 + y^2 + z^2}$。`,
-            `代入 $x = ${x}$、$y = ${y}$、$z = ${z}$：\n\n$$\\rho = \\sqrt{(${x})^2 + (${y})^2 + (${z})^2} = \\sqrt{${x * x} + ${y * y} + ${z * z}} = \\sqrt{${ans * ans}} = ${ans}。$$`,
+            `代入 $x = ${x}$、$y = ${y}$、$z = ${z}$：\n\n$$\\rho = \\sqrt{(${x})^2 + (${y})^2 + (${z})^2} = \\sqrt{${x * x} + ${y * y} + ${z * z}} = \\sqrt{${ans * ans}} = ${ans}$$`,
           ),
         );
         return numberProblem({
@@ -2952,7 +2952,7 @@ export const tripleIntegralsInCylindricalPolarCoordinates: TopicDef = {
       title: t("Volume of cylindrical solid via triple integral", "利用柱坐标三重积分计算圆柱体体积"),
       explanation: t(
         "In cylindrical coordinates a cylinder has constant limits for all three variables, and the extra factor of the radius gives the familiar volume formula. For a cylinder bounded by $r \\le R$ and $0 \\le z \\le H$, the volume divided by $\\pi$ is:\n\n$$\\frac{\\text{Vol}(E)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^R \\int_0^H r\\,dz\\,dr\\,d\\theta = R^2 H.$$",
-        "在柱坐标中，圆柱体三个变量的积分限都是常数，多出的半径因子给出熟悉的体积公式。对于由 $r \\le R$ 与 $0 \\le z \\le H$ 所界定的圆柱体，其体积除以 $\\pi$ 为：\n\n$$\\frac{\\text{Vol}(E)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^R \\int_0^H r\\,dz\\,dr\\,d\\theta = R^2 H。$$",
+        "在柱坐标中，圆柱体三个变量的积分限都是常数，多出的半径因子给出熟悉的体积公式。对于由 $r \\le R$ 与 $0 \\le z \\le H$ 所界定的圆柱体，其体积除以 $\\pi$ 为：\n\n$$\\frac{\\text{Vol}(E)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^R \\int_0^H r\\,dz\\,dr\\,d\\theta = R^2 H$$",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 10);
@@ -2990,7 +2990,7 @@ export const tripleIntegralsInCylindricalPolarCoordinates: TopicDef = {
       title: t("Integrating $x^2 + y^2$ over a cylinder", "在圆柱体上积分 $x^2 + y^2$"),
       explanation: t(
         "In cylindrical coordinates $x^2 + y^2 = r^2$ and $dV = r\\,dz\\,dr\\,d\\theta$. Over the solid cylinder $r \\le R$, $0 \\le z \\le H$:\n\n$$\\iiint_E (x^2 + y^2)\\,dV = \\int_0^{2\\pi} \\int_0^R \\int_0^H r^2 \\cdot r\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{R^4}{4} \\cdot H = \\frac{\\pi R^4H}{2}.$$\n\nThis is the moment of inertia of the cylinder about its axis.",
-        "在柱坐标中 $x^2 + y^2 = r^2$，$dV = r\\,dz\\,dr\\,d\\theta$。在实心圆柱 $r \\le R$，$0 \\le z \\le H$ 上：\n\n$$\\iiint_E (x^2 + y^2)\\,dV = \\int_0^{2\\pi} \\int_0^R \\int_0^H r^2 \\cdot r\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{R^4}{4} \\cdot H = \\frac{\\pi R^4H}{2}。$$\n\n这就是圆柱体绕其轴的转动惯量。",
+        "在柱坐标中 $x^2 + y^2 = r^2$，$dV = r\\,dz\\,dr\\,d\\theta$。在实心圆柱 $r \\le R$，$0 \\le z \\le H$ 上：\n\n$$\\iiint_E (x^2 + y^2)\\,dV = \\int_0^{2\\pi} \\int_0^R \\int_0^H r^2 \\cdot r\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{R^4}{4} \\cdot H = \\frac{\\pi R^4H}{2}$$\n\n这就是圆柱体绕其轴的转动惯量。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(1, 4);
@@ -3035,7 +3035,7 @@ export const tripleIntegralsInSphericalPolarCoordinates: TopicDef = {
       title: t("Volume of spherical ball via triple integral", "利用球面坐标三重积分计算球体体积"),
       explanation: t(
         "In spherical coordinates a ball has constant limits, and the volume element includes the square of the distance times the sine of the polar angle. For a sphere of radius $R$ ($\\rho \\le R$):\n\n$$\\frac{\\text{Vol}(B)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^\\pi \\int_0^R \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta = \\frac{4}{3}R^3.$$",
-        "在球坐标中，球体的积分限都是常数，体积微元包含距离的平方乘以极角的正弦。对于半径为 $R$ 的球体（$\\rho \\le R$）：\n\n$$\\frac{\\text{Vol}(B)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^\\pi \\int_0^R \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta = \\frac{4}{3}R^3。$$",
+        "在球坐标中，球体的积分限都是常数，体积微元包含距离的平方乘以极角的正弦。对于半径为 $R$ 的球体（$\\rho \\le R$）：\n\n$$\\frac{\\text{Vol}(B)}{\\pi} = \\frac{1}{\\pi}\\int_0^{2\\pi} \\int_0^\\pi \\int_0^R \\rho^2\\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta = \\frac{4}{3}R^3$$",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 35);
@@ -3055,7 +3055,7 @@ export const tripleIntegralsInSphericalPolarCoordinates: TopicDef = {
           steps(
             `在球面坐标下，整球的积分限为 $0 \\le \\rho \\le ${R}$、$0 \\le \\phi \\le \\pi$ 与 $0 \\le \\theta \\le 2\\pi$。`,
             `体积微元为 $dV = \\rho^2 \\sin\\phi\\,d\\rho\\,d\\phi\\,d\\theta$。`,
-            `计算三重积分：\n\n$$\\iiint_B 1\\,dV = \\left(\\int_0^{2\\pi} d\\theta\\right)\\left(\\int_0^\\pi \\sin\\phi\\,d\\phi\\right)\\left(\\int_0^{${R}} \\rho^2\\,d\\rho\\right) = 2\\pi \\times 2 \\times \\frac{${R}^3}{3} = \\frac{4\\pi}{3}(${R * R * R}) = \\pi \\cdot ${ans.toLatex()}。$$ `,
+            `计算三重积分：\n\n$$\\iiint_B 1\\,dV = \\left(\\int_0^{2\\pi} d\\theta\\right)\\left(\\int_0^\\pi \\sin\\phi\\,d\\phi\\right)\\left(\\int_0^{${R}} \\rho^2\\,d\\rho\\right) = 2\\pi \\times 2 \\times \\frac{${R}^3}{3} = \\frac{4\\pi}{3}(${R * R * R}) = \\pi \\cdot ${ans.toLatex()}$$ `,
             `除以 $\\pi$ 得到 $${ans.toLatex()}$。`,
           ),
         );
@@ -3072,7 +3072,7 @@ export const tripleIntegralsInSphericalPolarCoordinates: TopicDef = {
       title: t("Integrating the squared distance over a ball", "在球体上积分距离的平方"),
       explanation: t(
         "In spherical coordinates $x^2 + y^2 + z^2 = \\rho^2$ and $dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$. Over the ball $\\rho \\le R$ the angular integrals give $\\int_0^{2\\pi}\\int_0^{\\pi} \\sin\\varphi\\,d\\varphi\\,d\\theta = 4\\pi$, so\n\n$$\\iiint_B c(x^2 + y^2 + z^2)\\,dV = 4\\pi c\\int_0^R \\rho^4\\,d\\rho = \\frac{4\\pi cR^5}{5}.$$\n\nThe factor $4\\pi$ is the total solid angle around the origin, and the extra $\\rho^2$ from the volume element raises the power of $\\rho$ from $2$ to $4$.",
-        "在球坐标中 $x^2 + y^2 + z^2 = \\rho^2$，$dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$。在球体 $\\rho \\le R$ 上，角度积分为 $\\int_0^{2\\pi}\\int_0^{\\pi} \\sin\\varphi\\,d\\varphi\\,d\\theta = 4\\pi$，所以\n\n$$\\iiint_B c(x^2 + y^2 + z^2)\\,dV = 4\\pi c\\int_0^R \\rho^4\\,d\\rho = \\frac{4\\pi cR^5}{5}。$$\n\n因子 $4\\pi$ 是绕原点的全部立体角，体积元中额外的 $\\rho^2$ 把 $\\rho$ 的次数从 $2$ 提高到 $4$。",
+        "在球坐标中 $x^2 + y^2 + z^2 = \\rho^2$，$dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$。在球体 $\\rho \\le R$ 上，角度积分为 $\\int_0^{2\\pi}\\int_0^{\\pi} \\sin\\varphi\\,d\\varphi\\,d\\theta = 4\\pi$，所以\n\n$$\\iiint_B c(x^2 + y^2 + z^2)\\,dV = 4\\pi c\\int_0^R \\rho^4\\,d\\rho = \\frac{4\\pi cR^5}{5}$$\n\n因子 $4\\pi$ 是绕原点的全部立体角，体积元中额外的 $\\rho^2$ 把 $\\rho$ 的次数从 $2$ 提高到 $4$。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(1, 5);

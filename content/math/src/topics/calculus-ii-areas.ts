@@ -86,7 +86,7 @@ export const integratingRatesOfChange: TopicDef = {
       title: t("Finding an amount from its rate", "由变化率求总量"),
       explanation: t(
         "If $Q'(t) = r(t)$, the fundamental theorem gives the net change theorem:\n\n$$Q(T) = Q(0) + \\int_{0}^{T} r(t) \\, dt.$$\n\nFor example, if water flows in at $r(t) = 2t + 3$ liters per minute and the tank starts with $10$ liters, after $4$ minutes it holds $10 + \\int_{0}^{4} (2t + 3) \\, dt = 10 + 28 = 38$ liters.",
-        "若 $Q'(t) = r(t)$，由微积分基本定理得净变化定理：\n\n$$Q(T) = Q(0) + \\int_{0}^{T} r(t) \\, dt。$$\n\n例如水以 $r(t) = 2t + 3$ 升/分钟流入，水箱原有 $10$ 升，$4$ 分钟后水箱中有 $10 + \\int_{0}^{4} (2t + 3) \\, dt = 10 + 28 = 38$ 升。",
+        "若 $Q'(t) = r(t)$，由微积分基本定理得净变化定理：\n\n$$Q(T) = Q(0) + \\int_{0}^{T} r(t) \\, dt$$\n\n例如水以 $r(t) = 2t + 3$ 升/分钟流入，水箱原有 $10$ 升，$4$ 分钟后水箱中有 $10 + \\int_{0}^{4} (2t + 3) \\, dt = 10 + 28 = 38$ 升。",
       ),
       generate(rng) {
         const p = positivePoly(rng);
@@ -112,7 +112,7 @@ export const integratingRatesOfChange: TopicDef = {
       title: t("Net change with inflow and outflow", "有流入与流出时的净变化"),
       explanation: t(
         "When a quantity has an inflow rate $R(t)$ and an outflow rate $L(t)$, its rate of change is $R(t) - L(t)$, so the change from $t = a$ to $t = b$ is\n\n$$\\int_{a}^{b} \\left(R(t) - L(t)\\right) dt.$$\n\nA negative answer means the quantity decreased.",
-        "若某量的流入速率为 $R(t)$、流出速率为 $L(t)$，则它的变化率为 $R(t) - L(t)$，从 $t = a$ 到 $t = b$ 的变化量为\n\n$$\\int_{a}^{b} \\left(R(t) - L(t)\\right) dt。$$\n\n结果为负说明该量减少了。",
+        "若某量的流入速率为 $R(t)$、流出速率为 $L(t)$，则它的变化率为 $R(t) - L(t)$，从 $t = a$ 到 $t = b$ 的变化量为\n\n$$\\int_{a}^{b} \\left(R(t) - L(t)\\right) dt$$\n\n结果为负说明该量减少了。",
       ),
       generate(rng) {
         const R: Poly = [rng.int(1, 8), rng.int(0, 4), rng.int(0, 2)];
@@ -157,7 +157,7 @@ export const integratingDensityFunctions: TopicDef = {
       title: t("Linear density", "线密度"),
       explanation: t(
         "If a rod lying along $[0, L]$ has density $\\rho(x)$ kilograms per meter, a short piece of length $\\Delta x$ has mass about $\\rho(x)\\Delta x$. Adding the pieces gives the total mass\n\n$$m = \\int_{0}^{L} \\rho(x) \\, dx.$$",
-        "若位于 $[0, L]$ 上的细杆密度为 $\\rho(x)$ 千克/米，长为 $\\Delta x$ 的一小段质量约为 $\\rho(x)\\Delta x$。把各段相加，得总质量\n\n$$m = \\int_{0}^{L} \\rho(x) \\, dx。$$",
+        "若位于 $[0, L]$ 上的细杆密度为 $\\rho(x)$ 千克/米，长为 $\\Delta x$ 的一小段质量约为 $\\rho(x)\\Delta x$。把各段相加，得总质量\n\n$$m = \\int_{0}^{L} \\rho(x) \\, dx$$",
       ),
       generate(rng) {
         const p = positivePoly(rng);
@@ -188,7 +188,7 @@ export const integratingDensityFunctions: TopicDef = {
       title: t("Radial density", "径向密度"),
       explanation: t(
         "If the density of a circular region depends only on the distance $r$ from the center, cut it into thin rings. A ring of radius $r$ and width $\\Delta r$ has area about $2\\pi r\\Delta r$, so the total is\n\n$$\\int_{0}^{R} 2\\pi r\\rho(r) \\, dr.$$\n\nFor example, with $\\rho(r) = 3 - r$ thousand people per square kilometer within $3$ km of the center, the population is $2\\pi\\int_{0}^{3} (3r - r^{2}) \\, dr = 9\\pi$ thousand.",
-        "若圆形区域的密度只与到中心的距离 $r$ 有关，就把它切成细圆环。半径为 $r$、宽为 $\\Delta r$ 的圆环面积约为 $2\\pi r\\Delta r$，所以总量为\n\n$$\\int_{0}^{R} 2\\pi r\\rho(r) \\, dr。$$\n\n例如在距中心 $3$ 千米内 $\\rho(r) = 3 - r$ 千人/平方千米，则人口为 $2\\pi\\int_{0}^{3} (3r - r^{2}) \\, dr = 9\\pi$ 千人。",
+        "若圆形区域的密度只与到中心的距离 $r$ 有关，就把它切成细圆环。半径为 $r$、宽为 $\\Delta r$ 的圆环面积约为 $2\\pi r\\Delta r$，所以总量为\n\n$$\\int_{0}^{R} 2\\pi r\\rho(r) \\, dr$$\n\n例如在距中心 $3$ 千米内 $\\rho(r) = 3 - r$ 千人/平方千米，则人口为 $2\\pi\\int_{0}^{3} (3r - r^{2}) \\, dr = 9\\pi$ 千人。",
       ),
       generate(rng) {
         const R = rng.int(1, 5);
@@ -237,7 +237,7 @@ export const theAverageValueOfAFunction: TopicDef = {
       title: t("Average values of polynomials", "多项式的平均值"),
       explanation: t(
         "The average value of $f$ on $[a, b]$ is\n\n$$f_{\\text{avg}} = \\frac{1}{b - a}\\int_{a}^{b} f(x) \\, dx.$$\n\nIt is the height of the rectangle on $[a, b]$ with the same area as the region under $f$. For example, the average of $x^{2}$ on $[0, 3]$ is $\\frac{1}{3} \\cdot 9 = 3$.",
-        "$f$ 在 $[a, b]$ 上的平均值为\n\n$$f_{\\text{avg}} = \\frac{1}{b - a}\\int_{a}^{b} f(x) \\, dx。$$\n\n它是 $[a, b]$ 上与 $f$ 下方区域面积相等的矩形的高。例如 $x^{2}$ 在 $[0, 3]$ 上的平均值为 $\\frac{1}{3} \\cdot 9 = 3$。",
+        "$f$ 在 $[a, b]$ 上的平均值为\n\n$$f_{\\text{avg}} = \\frac{1}{b - a}\\int_{a}^{b} f(x) \\, dx$$\n\n它是 $[a, b]$ 上与 $f$ 下方区域面积相等的矩形的高。例如 $x^{2}$ 在 $[0, 3]$ 上的平均值为 $\\frac{1}{3} \\cdot 9 = 3$。",
       ),
       generate(rng) {
         const deg = rng.int(1, 3);
@@ -348,7 +348,7 @@ export const theAreaBetweenCurvesExpressedAsFunctionsOfX: TopicDef = {
       title: t("Areas enclosed by two curves", "两条曲线围成的面积"),
       explanation: t(
         "If $f(x) \\ge g(x)$ on $[a, b]$, the area between the curves is\n\n$$\\int_{a}^{b} \\left(f(x) - g(x)\\right) dx.$$\n\nFor a region enclosed by two curves, the limits are the $x$-coordinates of the intersection points, found by solving $f(x) = g(x)$. For example, $y = x$ and $y = x^{2}$ meet at $x = 0$ and $x = 1$, with $x \\ge x^{2}$ between, so the area is $\\int_{0}^{1} (x - x^{2}) \\, dx = \\frac{1}{6}$.",
-        "若在 $[a, b]$ 上 $f(x) \\ge g(x)$，两曲线之间的面积为\n\n$$\\int_{a}^{b} \\left(f(x) - g(x)\\right) dx。$$\n\n对两曲线围成的区域，积分限是交点的 $x$ 坐标，由 $f(x) = g(x)$ 解出。例如 $y = x$ 与 $y = x^{2}$ 交于 $x = 0$ 和 $x = 1$，其间 $x \\ge x^{2}$，所以面积为 $\\int_{0}^{1} (x - x^{2}) \\, dx = \\frac{1}{6}$。",
+        "若在 $[a, b]$ 上 $f(x) \\ge g(x)$，两曲线之间的面积为\n\n$$\\int_{a}^{b} \\left(f(x) - g(x)\\right) dx$$\n\n对两曲线围成的区域，积分限是交点的 $x$ 坐标，由 $f(x) = g(x)$ 解出。例如 $y = x$ 与 $y = x^{2}$ 交于 $x = 0$ 和 $x = 1$，其间 $x \\ge x^{2}$，所以面积为 $\\int_{0}^{1} (x - x^{2}) \\, dx = \\frac{1}{6}$。",
       ),
       generate(rng) {
         const r1 = rng.int(-4, 2);
@@ -428,7 +428,7 @@ export const theAreaBetweenCurvesExpressedAsFunctionsOfY: TopicDef = {
       title: t("Areas between curves of the form x = f(y)", "形如 x = f(y) 的曲线之间的面积"),
       explanation: t(
         "When curves are given as $x = f(y)$ and $x = g(y)$ with $f(y) \\ge g(y)$ for $c \\le y \\le d$, slice horizontally:\n\n$$\\text{Area} = \\int_{c}^{d} \\left(f(y) - g(y)\\right) dy,$$\n\nthe right curve minus the left curve. For example, $x = y^{2}$ and $x = y + 2$ meet at $y = -1$ and $y = 2$, so the area is $\\int_{-1}^{2} (y + 2 - y^{2}) \\, dy = \\frac{9}{2}$.",
-        "当曲线写成 $x = f(y)$ 与 $x = g(y)$，且在 $c \\le y \\le d$ 上 $f(y) \\ge g(y)$ 时，横向切片：\n\n$$\\text{面积} = \\int_{c}^{d} \\left(f(y) - g(y)\\right) dy，$$\n\n即右侧曲线减左侧曲线。例如 $x = y^{2}$ 与 $x = y + 2$ 交于 $y = -1$ 和 $y = 2$，所以面积为 $\\int_{-1}^{2} (y + 2 - y^{2}) \\, dy = \\frac{9}{2}$。",
+        "当曲线写成 $x = f(y)$ 与 $x = g(y)$，且在 $c \\le y \\le d$ 上 $f(y) \\ge g(y)$ 时，横向切片：\n\n$$\\text{面积} = \\int_{c}^{d} \\left(f(y) - g(y)\\right) dy$$\n\n即右侧曲线减左侧曲线。例如 $x = y^{2}$ 与 $x = y + 2$ 交于 $y = -1$ 和 $y = 2$，所以面积为 $\\int_{-1}^{2} (y + 2 - y^{2}) \\, dy = \\frac{9}{2}$。",
       ),
       generate(rng) {
         const r1 = rng.int(-4, 2);
@@ -455,7 +455,7 @@ export const theAreaBetweenCurvesExpressedAsFunctionsOfY: TopicDef = {
       title: t("Choosing to integrate with respect to y", "选择对 y 积分"),
       explanation: t(
         "Some regions are much simpler to slice horizontally. The region bounded by the parabola $x = y^{2}$ and the line $x = 4$ would need two square-root curves $y = \\pm\\sqrt{x}$ in terms of $x$, but in terms of $y$ it runs from $y = -2$ to $y = 2$ between $x = y^{2}$ and $x = 4$:\n\n$$\\int_{-2}^{2} (4 - y^{2}) \\, dy = \\frac{32}{3}.$$",
-        "有些区域横向切片要简单得多。由抛物线 $x = y^{2}$ 与直线 $x = 4$ 围成的区域，若对 $x$ 积分需要两条曲线 $y = \\pm\\sqrt{x}$，而对 $y$ 积分时，它从 $y = -2$ 到 $y = 2$，位于 $x = y^{2}$ 与 $x = 4$ 之间：\n\n$$\\int_{-2}^{2} (4 - y^{2}) \\, dy = \\frac{32}{3}。$$",
+        "有些区域横向切片要简单得多。由抛物线 $x = y^{2}$ 与直线 $x = 4$ 围成的区域，若对 $x$ 积分需要两条曲线 $y = \\pm\\sqrt{x}$，而对 $y$ 积分时，它从 $y = -2$ 到 $y = 2$，位于 $x = y^{2}$ 与 $x = 4$ 之间：\n\n$$\\int_{-2}^{2} (4 - y^{2}) \\, dy = \\frac{32}{3}$$",
       ),
       generate(rng) {
         const c = rng.int(1, 4);
@@ -508,7 +508,7 @@ export const findingAreasBetweenCurvesThatIntersectAtMoreThanTwoPoints: TopicDef
       title: t("Areas between a cubic and a line", "三次曲线与直线之间的面积"),
       explanation: t(
         "When the curves cross more than twice, which curve is on top changes at each crossing. Integrate $|f(x) - g(x)|$ by splitting at the intersections:\n\n$$\\text{Area} = \\left|\\int_{r_{1}}^{r_{2}} (f - g) \\, dx\\right| + \\left|\\int_{r_{2}}^{r_{3}} (f - g) \\, dx\\right|.$$\n\nIntegrating $f - g$ straight from $r_{1}$ to $r_{3}$ lets the pieces cancel.",
-        "当曲线相交两次以上时，在每个交点处上下位置都会改变。在交点处拆开，对 $|f(x) - g(x)|$ 积分：\n\n$$\\text{面积} = \\left|\\int_{r_{1}}^{r_{2}} (f - g) \\, dx\\right| + \\left|\\int_{r_{2}}^{r_{3}} (f - g) \\, dx\\right|。$$\n\n若直接从 $r_{1}$ 到 $r_{3}$ 对 $f - g$ 积分，各部分会相互抵消。",
+        "当曲线相交两次以上时，在每个交点处上下位置都会改变。在交点处拆开，对 $|f(x) - g(x)|$ 积分：\n\n$$\\text{面积} = \\left|\\int_{r_{1}}^{r_{2}} (f - g) \\, dx\\right| + \\left|\\int_{r_{2}}^{r_{3}} (f - g) \\, dx\\right|$$\n\n若直接从 $r_{1}$ 到 $r_{3}$ 对 $f - g$ 积分，各部分会相互抵消。",
       ),
       generate(rng) {
         const [r1, r2, r3] = threeRoots(rng);
@@ -538,7 +538,7 @@ export const findingAreasBetweenCurvesThatIntersectAtMoreThanTwoPoints: TopicDef
       title: t("Using symmetry for areas between curves", "利用对称性求曲线之间的面积"),
       explanation: t(
         "Look for symmetry to save work. $y = x^{3}$ and $y = 4x$ meet at $x = -2, 0, 2$; the two regions are mirror images through the origin, so the area is\n\n$$2\\int_{0}^{2} (4x - x^{3}) \\, dx = 2 \\cdot 4 = 8.$$\n\nLikewise $y = x^{4}$ and $y = m^{2}x^{2}$ enclose two regions that mirror each other across the $y$-axis.",
-        "利用对称性可以减少计算。$y = x^{3}$ 与 $y = 4x$ 交于 $x = -2, 0, 2$；两块区域关于原点对称，所以面积为\n\n$$2\\int_{0}^{2} (4x - x^{3}) \\, dx = 2 \\cdot 4 = 8。$$\n\n同样，$y = x^{4}$ 与 $y = m^{2}x^{2}$ 围成的两块区域关于 $y$ 轴对称。",
+        "利用对称性可以减少计算。$y = x^{3}$ 与 $y = 4x$ 交于 $x = -2, 0, 2$；两块区域关于原点对称，所以面积为\n\n$$2\\int_{0}^{2} (4x - x^{3}) \\, dx = 2 \\cdot 4 = 8$$\n\n同样，$y = x^{4}$ 与 $y = m^{2}x^{2}$ 围成的两块区域关于 $y$ 轴对称。",
       ),
       generate(rng) {
         const c = rng.int(1, 4);
@@ -627,7 +627,7 @@ export const theArcLengthOfAPlanarCurve: TopicDef = {
       title: t("Arc length with a substitution", "用换元法求弧长"),
       explanation: t(
         "A short piece of the curve is nearly a straight segment of length $\\sqrt{(\\Delta x)^{2} + (\\Delta y)^{2}} = \\sqrt{1 + \\left(\\frac{\\Delta y}{\\Delta x}\\right)^{2}}\\Delta x$. Adding the pieces,\n\n$$L = \\int_{a}^{b} \\sqrt{1 + \\left(f'(x)\\right)^{2}} \\, dx.$$\n\nFor $y = \\frac{2}{3}x^{3/2}$, $f'(x) = x^{1/2}$, so $L = \\int_{0}^{3} \\sqrt{1 + x} \\, dx = \\frac{2}{3}\\left[(1 + x)^{3/2}\\right]_{0}^{3} = \\frac{14}{3}$.",
-        "曲线上的一小段近似为长 $\\sqrt{(\\Delta x)^{2} + (\\Delta y)^{2}} = \\sqrt{1 + \\left(\\frac{\\Delta y}{\\Delta x}\\right)^{2}}\\Delta x$ 的线段。把各段相加，\n\n$$L = \\int_{a}^{b} \\sqrt{1 + \\left(f'(x)\\right)^{2}} \\, dx。$$\n\n对 $y = \\frac{2}{3}x^{3/2}$，$f'(x) = x^{1/2}$，所以 $L = \\int_{0}^{3} \\sqrt{1 + x} \\, dx = \\frac{2}{3}\\left[(1 + x)^{3/2}\\right]_{0}^{3} = \\frac{14}{3}$。",
+        "曲线上的一小段近似为长 $\\sqrt{(\\Delta x)^{2} + (\\Delta y)^{2}} = \\sqrt{1 + \\left(\\frac{\\Delta y}{\\Delta x}\\right)^{2}}\\Delta x$ 的线段。把各段相加，\n\n$$L = \\int_{a}^{b} \\sqrt{1 + \\left(f'(x)\\right)^{2}} \\, dx$$\n\n对 $y = \\frac{2}{3}x^{3/2}$，$f'(x) = x^{1/2}$，所以 $L = \\int_{0}^{3} \\sqrt{1 + x} \\, dx = \\frac{2}{3}\\left[(1 + x)^{3/2}\\right]_{0}^{3} = \\frac{14}{3}$。",
       ),
       generate(rng) {
         const pc = rng.pick(powerCurves);
@@ -654,7 +654,7 @@ export const theArcLengthOfAPlanarCurve: TopicDef = {
       title: t("Arc length with a perfect square", "利用完全平方求弧长"),
       explanation: t(
         "These curves are chosen so that one plus the square of the derivative is a perfect square, which removes the root and leaves a simple integral. Some curves are designed so that $1 + (f')^{2}$ is a perfect square. For $y = \\frac{x^{3}}{6} + \\frac{1}{2x}$, $f'(x) = \\frac{x^{2}}{2} - \\frac{1}{2x^{2}}$ and\n\n$$1 + (f')^{2} = \\frac{x^{4}}{4} + \\frac{1}{2} + \\frac{1}{4x^{4}} = \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right)^{2},$$\n\nso $L = \\int_{a}^{b} \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right) dx = \\left[\\frac{x^{3}}{6} - \\frac{1}{2x}\\right]_{a}^{b}$.",
-        "这些曲线经过特别选择，使 1 加导数的平方是一个完全平方，从而去掉根号，只剩一个简单的积分。有些曲线经过设计，使 $1 + (f')^{2}$ 恰为完全平方。对 $y = \\frac{x^{3}}{6} + \\frac{1}{2x}$，$f'(x) = \\frac{x^{2}}{2} - \\frac{1}{2x^{2}}$，且\n\n$$1 + (f')^{2} = \\frac{x^{4}}{4} + \\frac{1}{2} + \\frac{1}{4x^{4}} = \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right)^{2}，$$\n\n所以 $L = \\int_{a}^{b} \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right) dx = \\left[\\frac{x^{3}}{6} - \\frac{1}{2x}\\right]_{a}^{b}$。",
+        "这些曲线经过特别选择，使 1 加导数的平方是一个完全平方，从而去掉根号，只剩一个简单的积分。有些曲线经过设计，使 $1 + (f')^{2}$ 恰为完全平方。对 $y = \\frac{x^{3}}{6} + \\frac{1}{2x}$，$f'(x) = \\frac{x^{2}}{2} - \\frac{1}{2x^{2}}$，且\n\n$$1 + (f')^{2} = \\frac{x^{4}}{4} + \\frac{1}{2} + \\frac{1}{4x^{4}} = \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right)^{2}$$\n\n所以 $L = \\int_{a}^{b} \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right) dx = \\left[\\frac{x^{3}}{6} - \\frac{1}{2x}\\right]_{a}^{b}$。",
       ),
       generate(rng) {
         const a = rng.int(1, 4);

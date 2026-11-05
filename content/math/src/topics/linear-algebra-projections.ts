@@ -217,7 +217,7 @@ export const dotProductInNDimensionalEuclideanSpace: TopicDef = {
       title: t("Expanding dot products of linear combinations", "展开线性组合的点积"),
       explanation: t(
         "The dot product is symmetric and distributes over sums and scalar multiples, so a product of two combinations expands like ordinary algebra:\n\n$$(au + bv) \\cdot (cu + dv) = ac\\,(u \\cdot u) + (ad + bc)\\,(u \\cdot v) + bd\\,(v \\cdot v).$$\n\nOnly three numbers are needed, $u \\cdot u$, $u \\cdot v$ and $v \\cdot v$, whatever the dimension of the space.",
-        "点积是对称的，并对加法和数乘满足分配律，所以两个组合的点积可以像普通代数那样展开：\n\n$$(au + bv) \\cdot (cu + dv) = ac\\,(u \\cdot u) + (ad + bc)\\,(u \\cdot v) + bd\\,(v \\cdot v)。$$\n\n无论空间维数多少，只需要三个数：$u \\cdot u$、$u \\cdot v$ 与 $v \\cdot v$。",
+        "点积是对称的，并对加法和数乘满足分配律，所以两个组合的点积可以像普通代数那样展开：\n\n$$(au + bv) \\cdot (cu + dv) = ac\\,(u \\cdot u) + (ad + bc)\\,(u \\cdot v) + bd\\,(v \\cdot v)$$\n\n无论空间维数多少，只需要三个数：$u \\cdot u$、$u \\cdot v$ 与 $v \\cdot v$。",
       ),
       generate: (rng: Rng): Problem => {
         const A = rng.int(2, 9);
@@ -597,7 +597,7 @@ export const normOfAVectorInInnerProductSpaces: TopicDef = {
       title: t("The norm of a polynomial under an integral inner product", "积分内积下多项式的范数"),
       explanation: t(
         "With $\\langle p, q \\rangle = \\int_0^1 p(x) q(x)\\,dx$, the induced norm is $\\|p\\| = \\sqrt{\\int_0^1 p(x)^2\\,dx}$. For a linear polynomial,\n\n$$\\|a + bx\\|^2 = \\int_0^1 (a^2 + 2abx + b^2x^2)\\,dx = a^2 + ab + \\frac{b^2}{3}.$$\n\nSquare the polynomial first and integrate the result; integrating first and squaring afterwards gives a different, wrong number.",
-        "在 $\\langle p, q \\rangle = \\int_0^1 p(x) q(x)\\,dx$ 下，导出的范数为 $\\|p\\| = \\sqrt{\\int_0^1 p(x)^2\\,dx}$。对一次多项式，\n\n$$\\|a + bx\\|^2 = \\int_0^1 (a^2 + 2abx + b^2x^2)\\,dx = a^2 + ab + \\frac{b^2}{3}。$$\n\n要先把多项式平方再积分；先积分再平方会得到另一个错误的数。",
+        "在 $\\langle p, q \\rangle = \\int_0^1 p(x) q(x)\\,dx$ 下，导出的范数为 $\\|p\\| = \\sqrt{\\int_0^1 p(x)^2\\,dx}$。对一次多项式，\n\n$$\\|a + bx\\|^2 = \\int_0^1 (a^2 + 2abx + b^2x^2)\\,dx = a^2 + ab + \\frac{b^2}{3}$$\n\n要先把多项式平方再积分；先积分再平方会得到另一个错误的数。",
       ),
       generate: (rng: Rng): Problem => {
         const a = rng.nonZero(-4, 4);
@@ -971,7 +971,7 @@ export const pythagoreanTheoremAndTriangleInequalityInInnerProductSpaces: TopicD
       title: t("The parallelogram law", "平行四边形定律"),
       explanation: t(
         "Expanding $\\|u + v\\|^2$ and $\\|u - v\\|^2$ with the inner product and adding them cancels the cross terms $\\pm 2\\langle u, v \\rangle$:\n\n$$\\|u + v\\|^2 + \\|u - v\\|^2 = 2\\|u\\|^2 + 2\\|v\\|^2.$$\n\nGeometrically, the squares of the two diagonals of a parallelogram add up to the squares of its four sides. Knowing three of the lengths determines the fourth.",
-        "用内积展开 $\\|u + v\\|^2$ 与 $\\|u - v\\|^2$ 再相加，交叉项 $\\pm 2\\langle u, v \\rangle$ 抵消：\n\n$$\\|u + v\\|^2 + \\|u - v\\|^2 = 2\\|u\\|^2 + 2\\|v\\|^2。$$\n\n几何上，平行四边形两条对角线的平方和等于四条边的平方和。知道其中三个长度就能确定第四个。",
+        "用内积展开 $\\|u + v\\|^2$ 与 $\\|u - v\\|^2$ 再相加，交叉项 $\\pm 2\\langle u, v \\rangle$ 抵消：\n\n$$\\|u + v\\|^2 + \\|u - v\\|^2 = 2\\|u\\|^2 + 2\\|v\\|^2$$\n\n几何上，平行四边形两条对角线的平方和等于四条边的平方和。知道其中三个长度就能确定第四个。",
       ),
       generate: (rng: Rng): Problem => {
         const A = rng.int(2, 7);
@@ -1140,7 +1140,7 @@ export const orthogonalSetsInEuclideanSpaces: TopicDef = {
       title: t("The norm of a combination of an orthogonal set", "正交组线性组合的范数"),
       explanation: t(
         "For an orthogonal set $\\{u_1, u_2, u_3\\}$ all the cross terms $u_i \\cdot u_j$ with $i \\ne j$ vanish, so the Pythagorean theorem extends to any number of vectors:\n\n$$\\|c_1u_1 + c_2u_2 + c_3u_3\\|^2 = c_1^2\\|u_1\\|^2 + c_2^2\\|u_2\\|^2 + c_3^2\\|u_3\\|^2.$$\n\nThis avoids forming the combination entry by entry.",
-        "对正交组 $\\{u_1, u_2, u_3\\}$，所有 $i \\ne j$ 的交叉项 $u_i \\cdot u_j$ 都为零，所以勾股定理推广到任意多个向量：\n\n$$\\|c_1u_1 + c_2u_2 + c_3u_3\\|^2 = c_1^2\\|u_1\\|^2 + c_2^2\\|u_2\\|^2 + c_3^2\\|u_3\\|^2。$$\n\n这样不必逐个分量算出组合。",
+        "对正交组 $\\{u_1, u_2, u_3\\}$，所有 $i \\ne j$ 的交叉项 $u_i \\cdot u_j$ 都为零，所以勾股定理推广到任意多个向量：\n\n$$\\|c_1u_1 + c_2u_2 + c_3u_3\\|^2 = c_1^2\\|u_1\\|^2 + c_2^2\\|u_2\\|^2 + c_3^2\\|u_3\\|^2$$\n\n这样不必逐个分量算出组合。",
       ),
       generate: (rng: Rng): Problem => {
         const sets = [
@@ -1496,7 +1496,7 @@ export const orthogonalLinearTransformations: TopicDef = {
       title: t("Distances under an orthogonal transformation", "正交变换下的距离"),
       explanation: t(
         "An orthogonal transformation preserves inner products, $\\langle T u, T v \\rangle = \\langle u, v \\rangle$, and therefore lengths, distances and angles. To find $\\|Tu - Tv\\|^2$, use linearity to write it as $\\|T(u - v)\\|^2 = \\|u - v\\|^2$ and expand:\n\n$$\\|u - v\\|^2 = \\|u\\|^2 - 2\\langle u, v \\rangle + \\|v\\|^2.$$",
-        "正交变换保持内积，$\\langle T u, T v \\rangle = \\langle u, v \\rangle$，因此保持长度、距离与角度。求 $\\|Tu - Tv\\|^2$ 时，用线性把它写成 $\\|T(u - v)\\|^2 = \\|u - v\\|^2$ 再展开：\n\n$$\\|u - v\\|^2 = \\|u\\|^2 - 2\\langle u, v \\rangle + \\|v\\|^2。$$",
+        "正交变换保持内积，$\\langle T u, T v \\rangle = \\langle u, v \\rangle$，因此保持长度、距离与角度。求 $\\|Tu - Tv\\|^2$ 时，用线性把它写成 $\\|T(u - v)\\|^2 = \\|u - v\\|^2$ 再展开：\n\n$$\\|u - v\\|^2 = \\|u\\|^2 - 2\\langle u, v \\rangle + \\|v\\|^2$$",
       ),
       generate: (rng: Rng): Problem => {
         const A = rng.int(2, 6);
@@ -1578,7 +1578,7 @@ export const fourFundamentalSubspacesOfAMatrix: TopicDef = {
       title: t("Dimensions of the four fundamental subspaces", "四个基本子空间的维数"),
       explanation: t(
         "For an $m \\times n$ matrix $A$ of rank $r$, the four fundamental subspaces have dimensions fixed by $m$, $n$ and $r$ alone:\n\n$$\\dim \\operatorname{Col}(A) = \\dim \\operatorname{Row}(A) = r, \\quad \\dim \\operatorname{Nul}(A) = n - r, \\quad \\dim \\operatorname{Nul}(A^T) = m - r.$$\n\nThe row space and null space live in $\\mathbb{R}^n$ and are orthogonal complements, so their dimensions add to $n$; the column space and left null space live in $\\mathbb{R}^m$ and add to $m$.",
-        "对秩为 $r$ 的 $m \\times n$ 矩阵 $A$，四个基本子空间的维数只由 $m$、$n$、$r$ 决定：\n\n$$\\dim \\operatorname{Col}(A) = \\dim \\operatorname{Row}(A) = r, \\quad \\dim \\operatorname{Nul}(A) = n - r, \\quad \\dim \\operatorname{Nul}(A^T) = m - r。$$\n\n行空间与零空间位于 $\\mathbb{R}^n$ 中且互为正交补，维数之和为 $n$；列空间与左零空间位于 $\\mathbb{R}^m$ 中，维数之和为 $m$。",
+        "对秩为 $r$ 的 $m \\times n$ 矩阵 $A$，四个基本子空间的维数只由 $m$、$n$、$r$ 决定：\n\n$$\\dim \\operatorname{Col}(A) = \\dim \\operatorname{Row}(A) = r, \\quad \\dim \\operatorname{Nul}(A) = n - r, \\quad \\dim \\operatorname{Nul}(A^T) = m - r$$\n\n行空间与零空间位于 $\\mathbb{R}^n$ 中且互为正交补，维数之和为 $n$；列空间与左零空间位于 $\\mathbb{R}^m$ 中，维数之和为 $m$。",
       ),
       generate: (rng: Rng): Problem => {
         const m = rng.int(3, 8);
@@ -1752,7 +1752,7 @@ export const componentsOfAVectorWithRespectToAnOrthogonalOrOrthonormalBasis: Top
       title: t("Length from orthonormal coordinates", "由标准正交坐标求长度"),
       explanation: t(
         "If $\\{u_1, \\dots, u_n\\}$ is an orthonormal basis and $x = c_1u_1 + \\dots + c_nu_n$, then all cross terms vanish and every $\\|u_i\\| = 1$, so\n\n$$\\|x\\|^2 = c_1^2 + \\dots + c_n^2.$$\n\nLengths can be read straight from the coordinates, exactly as with the standard basis. This fails for a basis that is only orthogonal: there each $c_i^2$ must be weighted by $\\|u_i\\|^2$.",
-        "若 $\\{u_1, \\dots, u_n\\}$ 是标准正交基且 $x = c_1u_1 + \\dots + c_nu_n$，则所有交叉项为零且每个 $\\|u_i\\| = 1$，所以\n\n$$\\|x\\|^2 = c_1^2 + \\dots + c_n^2。$$\n\n长度可以直接从坐标读出，与标准基完全一样。对只是正交的基这不成立：那时每个 $c_i^2$ 都要乘以 $\\|u_i\\|^2$。",
+        "若 $\\{u_1, \\dots, u_n\\}$ 是标准正交基且 $x = c_1u_1 + \\dots + c_nu_n$，则所有交叉项为零且每个 $\\|u_i\\| = 1$，所以\n\n$$\\|x\\|^2 = c_1^2 + \\dots + c_n^2$$\n\n长度可以直接从坐标读出，与标准基完全一样。对只是正交的基这不成立：那时每个 $c_i^2$ 都要乘以 $\\|u_i\\|^2$。",
       ),
       generate: (rng: Rng): Problem => {
         const quads: [number[], number][] = [
@@ -2047,7 +2047,7 @@ export const projectingVectorsOntoSubspacesInEuclideanSpacesArbitraryBasesApplic
       title: t("The least-squares line through the origin", "过原点的最小二乘直线"),
       explanation: t(
         "Fitting $y = mx$ to data points $(x_i, y_i)$ asks for the least-squares solution of the overdetermined system $x_i m = y_i$. Its matrix has the single column $x = (x_1, \\dots, x_n)$, so the normal equation is $(x \\cdot x)\\,m = x \\cdot y$ and\n\n$$m = \\frac{\\sum x_i y_i}{\\sum x_i^2}.$$\n\nThis is the projection coefficient of the data vector $y$ onto the line spanned by $x$.",
-        "用 $y = mx$ 拟合数据点 $(x_i, y_i)$，就是求超定方程组 $x_i m = y_i$ 的最小二乘解。它的矩阵只有一列 $x = (x_1, \\dots, x_n)$，所以法方程为 $(x \\cdot x)\\,m = x \\cdot y$，\n\n$$m = \\frac{\\sum x_i y_i}{\\sum x_i^2}。$$\n\n这正是数据向量 $y$ 在 $x$ 张成的直线上的投影系数。",
+        "用 $y = mx$ 拟合数据点 $(x_i, y_i)$，就是求超定方程组 $x_i m = y_i$ 的最小二乘解。它的矩阵只有一列 $x = (x_1, \\dots, x_n)$，所以法方程为 $(x \\cdot x)\\,m = x \\cdot y$，\n\n$$m = \\frac{\\sum x_i y_i}{\\sum x_i^2}$$\n\n这正是数据向量 $y$ 在 $x$ 张成的直线上的投影系数。",
       ),
       generate: (rng: Rng): Problem => {
         const xs = rng.shuffle([1, 2, 3, 4, -1, -2]).slice(0, 3);
@@ -2387,7 +2387,7 @@ export const gramSchmidtProcessInTheGeneralCase: TopicDef = {
       title: t("The third Gram–Schmidt vector", "第三个格拉姆–施密特向量"),
       explanation: t(
         "In the general case each new vector has its projections onto all earlier ones removed:\n\n$$w_3 = v_3 - \\frac{v_3 \\cdot w_1}{w_1 \\cdot w_1}w_1 - \\frac{v_3 \\cdot w_2}{w_2 \\cdot w_2}w_2.$$\n\nWhen $v_1$ and $v_2$ are already orthogonal, $w_1 = v_1$ and $w_2 = v_2$, and only this last step is needed. Subtracting both projections is essential; removing only one leaves a vector that is not orthogonal to the other.",
-        "一般情形下，每个新向量都要去掉它在之前所有向量上的投影：\n\n$$w_3 = v_3 - \\frac{v_3 \\cdot w_1}{w_1 \\cdot w_1}w_1 - \\frac{v_3 \\cdot w_2}{w_2 \\cdot w_2}w_2。$$\n\n当 $v_1$ 与 $v_2$ 已经正交时，$w_1 = v_1$，$w_2 = v_2$，只需这最后一步。两个投影都要减去；只去掉一个会留下与另一个不正交的向量。",
+        "一般情形下，每个新向量都要去掉它在之前所有向量上的投影：\n\n$$w_3 = v_3 - \\frac{v_3 \\cdot w_1}{w_1 \\cdot w_1}w_1 - \\frac{v_3 \\cdot w_2}{w_2 \\cdot w_2}w_2$$\n\n当 $v_1$ 与 $v_2$ 已经正交时，$w_1 = v_1$，$w_2 = v_2$，只需这最后一步。两个投影都要减去；只去掉一个会留下与另一个不正交的向量。",
       ),
       generate: (rng: Rng): Problem => {
         const frames = [

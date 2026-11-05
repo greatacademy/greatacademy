@@ -145,7 +145,7 @@ export const calculatingVelocityUsingIntegration: TopicDef = {
       title: t("Velocity at a given time", "求某一时刻的速度"),
       explanation: t(
         "Acceleration is the rate of change of velocity, $a(t) = v'(t)$, so by the net change theorem\n\n$$v(T) = v(0) + \\int_{0}^{T} a(t) \\, dt.$$\n\nFor example, if $a(t) = 6t$ and $v(0) = 2$, then $v(3) = 2 + \\int_{0}^{3} 6t \\, dt = 2 + 27 = 29$ m/s.",
-        "加速度是速度的变化率，$a(t) = v'(t)$，由净变化定理\n\n$$v(T) = v(0) + \\int_{0}^{T} a(t) \\, dt。$$\n\n例如 $a(t) = 6t$，$v(0) = 2$，则 $v(3) = 2 + \\int_{0}^{3} 6t \\, dt = 2 + 27 = 29$ 米/秒。",
+        "加速度是速度的变化率，$a(t) = v'(t)$，由净变化定理\n\n$$v(T) = v(0) + \\int_{0}^{T} a(t) \\, dt$$\n\n例如 $a(t) = 6t$，$v(0) = 2$，则 $v(3) = 2 + \\int_{0}^{3} 6t \\, dt = 2 + 27 = 29$ 米/秒。",
       ),
       generate: velocityAtATime,
     },
@@ -452,7 +452,7 @@ export const calculatingTheDisplacementOfAParticleUsingIntegration: TopicDef = {
       title: t("Displacement with a polynomial velocity", "速度为多项式时的位移"),
       explanation: t(
         "Displacement is the change in position, $s(b) - s(a)$. Since $s' = v$,\n\n$$s(b) - s(a) = \\int_{a}^{b} v(t) \\, dt.$$\n\nA negative displacement means the particle ends to the left of where it started. For $v(t) = 2t - 4$ on $[0, 3]$: $\\int_{0}^{3} (2t - 4) \\, dt = 9 - 12 = -3$ m.",
-        "位移是位置的变化量 $s(b) - s(a)$。因为 $s' = v$，\n\n$$s(b) - s(a) = \\int_{a}^{b} v(t) \\, dt。$$\n\n位移为负说明质点最终位于起点左侧。对 $[0, 3]$ 上的 $v(t) = 2t - 4$：$\\int_{0}^{3} (2t - 4) \\, dt = 9 - 12 = -3$ 米。",
+        "位移是位置的变化量 $s(b) - s(a)$。因为 $s' = v$，\n\n$$s(b) - s(a) = \\int_{a}^{b} v(t) \\, dt$$\n\n位移为负说明质点最终位于起点左侧。对 $[0, 3]$ 上的 $v(t) = 2t - 4$：$\\int_{0}^{3} (2t - 4) \\, dt = 9 - 12 = -3$ 米。",
       ),
       generate: polynomialDisplacement,
     },
@@ -461,7 +461,7 @@ export const calculatingTheDisplacementOfAParticleUsingIntegration: TopicDef = {
       title: t("Displacement with other velocities", "其他速度函数的位移"),
       explanation: t(
         "Displacement is the integral of velocity over the time interval, whatever kind of function the velocity is. The same integral works for any velocity. For $v(t) = 3\\cos t + 2$ from $t = 0$ to $t = \\frac{\\pi}{2}$:\n\n$$\\int_{0}^{\\frac{\\pi}{2}} (3\\cos t + 2) \\, dt = \\Big[3\\sin t + 2t\\Big]_{0}^{\\frac{\\pi}{2}} = 3 + \\pi.$$",
-        "无论速度是哪种函数，位移都是速度在时间区间上的积分。对任何速度函数都用同样的积分。对 $v(t) = 3\\cos t + 2$，从 $t = 0$ 到 $t = \\frac{\\pi}{2}$：\n\n$$\\int_{0}^{\\frac{\\pi}{2}} (3\\cos t + 2) \\, dt = \\Big[3\\sin t + 2t\\Big]_{0}^{\\frac{\\pi}{2}} = 3 + \\pi。$$",
+        "无论速度是哪种函数，位移都是速度在时间区间上的积分。对任何速度函数都用同样的积分。对 $v(t) = 3\\cos t + 2$，从 $t = 0$ 到 $t = \\frac{\\pi}{2}$：\n\n$$\\int_{0}^{\\frac{\\pi}{2}} (3\\cos t + 2) \\, dt = \\Big[3\\sin t + 2t\\Big]_{0}^{\\frac{\\pi}{2}} = 3 + \\pi$$",
       ),
       generate: exactDisplacement,
     },
@@ -652,7 +652,7 @@ export const averagePositionVelocityAndAcceleration: TopicDef = {
       title: t("Average velocity", "平均速度"),
       explanation: t(
         "The average value of $v$ on $[a, b]$ is\n\n$$\\frac{1}{b - a}\\int_{a}^{b} v(t) \\, dt = \\frac{s(b) - s(a)}{b - a},$$\n\nthe displacement divided by the elapsed time. It is generally not the average of $v(a)$ and $v(b)$.",
-        "$v$ 在 $[a, b]$ 上的平均值为\n\n$$\\frac{1}{b - a}\\int_{a}^{b} v(t) \\, dt = \\frac{s(b) - s(a)}{b - a}，$$\n\n即位移除以经过的时间。它一般不等于 $v(a)$ 与 $v(b)$ 的平均。",
+        "$v$ 在 $[a, b]$ 上的平均值为\n\n$$\\frac{1}{b - a}\\int_{a}^{b} v(t) \\, dt = \\frac{s(b) - s(a)}{b - a}$$\n\n即位移除以经过的时间。它一般不等于 $v(a)$ 与 $v(b)$ 的平均。",
       ),
       generate: averageVelocity,
     },

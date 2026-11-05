@@ -707,7 +707,7 @@ export const dilationsOfFiguresInTheCoordinatePlane: TopicDef = {
       title: t("Dilating about the origin", "以原点为中心的位似"),
       explanation: t(
         "A dilation with center at the origin and scale factor $k$ multiplies **both** coordinates by $k$:\n\n$$(x, y) \\to (kx, ky).$$\n\nEach image lies on the ray from the origin through the point, $k$ times as far away. With $k = \\frac{3}{2}$, the point $P(4, -6)$ goes to $P'\\left(\\frac{3}{2} \\cdot 4, \\frac{3}{2} \\cdot (-6)\\right) = P'(6, -9)$.",
-        "以原点为中心、比例因子为 $k$ 的位似把**两个**坐标都乘以 $k$：\n\n$$(x, y) \\to (kx, ky)。$$\n\n每个像都在从原点经过该点的射线上，到原点的距离是原来的 $k$ 倍。当 $k = \\frac{3}{2}$ 时，点 $P(4, -6)$ 映到 $P'\\left(\\frac{3}{2} \\cdot 4, \\frac{3}{2} \\cdot (-6)\\right) = P'(6, -9)$。",
+        "以原点为中心、比例因子为 $k$ 的位似把**两个**坐标都乘以 $k$：\n\n$$(x, y) \\to (kx, ky)$$\n\n每个像都在从原点经过该点的射线上，到原点的距离是原来的 $k$ 倍。当 $k = \\frac{3}{2}$ 时，点 $P(4, -6)$ 映到 $P'\\left(\\frac{3}{2} \\cdot 4, \\frac{3}{2} \\cdot (-6)\\right) = P'(6, -9)$。",
       ),
       generate(rng) {
         const k = rng.pick(niceScales);
@@ -771,7 +771,7 @@ export const dilationsOfFiguresInTheCoordinatePlane: TopicDef = {
       title: t("Scale factors from coordinates", "由坐标求比例因子"),
       explanation: t(
         "If a dilation about the origin maps $P(x, y)$ to $P'(x', y')$, then $x' = kx$ and $y' = ky$, so\n\n$$k = \\frac{x'}{x} = \\frac{y'}{y}.$$\n\nIf $P(6, -4)$ maps to $P'(9, -6)$, then $k = \\frac{9}{6} = \\frac{3}{2}$; the $y$-coordinates agree: $\\frac{-6}{-4} = \\frac{3}{2}$. Image over preimage, not the other way round.",
-        "若以原点为中心的位似把 $P(x, y)$ 映到 $P'(x', y')$，则 $x' = kx$，$y' = ky$，所以\n\n$$k = \\frac{x'}{x} = \\frac{y'}{y}。$$\n\n若 $P(6, -4)$ 映到 $P'(9, -6)$，则 $k = \\frac{9}{6} = \\frac{3}{2}$；用 $y$ 坐标验证：$\\frac{-6}{-4} = \\frac{3}{2}$。是像比原像，不能颠倒。",
+        "若以原点为中心的位似把 $P(x, y)$ 映到 $P'(x', y')$，则 $x' = kx$，$y' = ky$，所以\n\n$$k = \\frac{x'}{x} = \\frac{y'}{y}$$\n\n若 $P(6, -4)$ 映到 $P'(9, -6)$，则 $k = \\frac{9}{6} = \\frac{3}{2}$；用 $y$ 坐标验证：$\\frac{-6}{-4} = \\frac{3}{2}$。是像比原像，不能颠倒。",
       ),
       generate(rng) {
         const k = rng.pick(niceScales);
@@ -1027,7 +1027,7 @@ export const combiningStretchesOfGeometricFigures: TopicDef = {
       title: t("Stretching in both directions", "两个方向的伸缩"),
       explanation: t(
         "A horizontal stretch by $a$ followed by a vertical stretch by $b$ multiplies $x$ by $a$ and $y$ by $b$:\n\n$$(x, y) \\to (ax, by).$$\n\nThe order does not matter, since each stretch changes only its own coordinate. When $a = b$, the result is a dilation about the origin.\n\nStretching $P(2, -6)$ horizontally by $3$ and vertically by $\\frac{1}{2}$ gives $P'(6, -3)$.",
-        "以因子 $a$ 水平伸缩、再以因子 $b$ 竖直伸缩，把 $x$ 乘以 $a$，$y$ 乘以 $b$：\n\n$$(x, y) \\to (ax, by)。$$\n\n顺序无关紧要，因为每次伸缩只改变自己的那个坐标。当 $a = b$ 时，结果就是以原点为中心的位似。\n\n把 $P(2, -6)$ 以因子 $3$ 水平伸缩、以因子 $\\frac{1}{2}$ 竖直伸缩，得到 $P'(6, -3)$。",
+        "以因子 $a$ 水平伸缩、再以因子 $b$ 竖直伸缩，把 $x$ 乘以 $a$，$y$ 乘以 $b$：\n\n$$(x, y) \\to (ax, by)$$\n\n顺序无关紧要，因为每次伸缩只改变自己的那个坐标。当 $a = b$ 时，结果就是以原点为中心的位似。\n\n把 $P(2, -6)$ 以因子 $3$ 水平伸缩、以因子 $\\frac{1}{2}$ 竖直伸缩，得到 $P'(6, -3)$。",
       ),
       figure: bothStretchesFigure,
       generate(rng) {
@@ -1092,7 +1092,7 @@ export const combiningStretchesOfGeometricFigures: TopicDef = {
       title: t("Finding the stretch factors", "求伸缩因子"),
       explanation: t(
         "If $(x, y) \\to (ax, by)$ maps $P$ to $P'$, divide coordinate by coordinate:\n\n$$a = \\frac{x_{P'}}{x_P}, \\quad b = \\frac{y_{P'}}{y_P}.$$\n\nIf $P(4, -3)$ maps to $P'(2, -12)$, then $a = \\frac{2}{4} = \\frac{1}{2}$ and $b = \\frac{-12}{-3} = 4$: a horizontal stretch by $\\frac{1}{2}$ and a vertical stretch by $4$.",
-        "若 $(x, y) \\to (ax, by)$ 把 $P$ 映到 $P'$，就把坐标逐个相除：\n\n$$a = \\frac{x_{P'}}{x_P}, \\quad b = \\frac{y_{P'}}{y_P}。$$\n\n若 $P(4, -3)$ 映到 $P'(2, -12)$，则 $a = \\frac{2}{4} = \\frac{1}{2}$，$b = \\frac{-12}{-3} = 4$：水平伸缩因子为 $\\frac{1}{2}$，竖直伸缩因子为 $4$。",
+        "若 $(x, y) \\to (ax, by)$ 把 $P$ 映到 $P'$，就把坐标逐个相除：\n\n$$a = \\frac{x_{P'}}{x_P}, \\quad b = \\frac{y_{P'}}{y_P}$$\n\n若 $P(4, -3)$ 映到 $P'(2, -12)$，则 $a = \\frac{2}{4} = \\frac{1}{2}$，$b = \\frac{-12}{-3} = 4$：水平伸缩因子为 $\\frac{1}{2}$，竖直伸缩因子为 $4$。",
       ),
       generate(rng) {
         const a = rng.pick(niceScales);
@@ -1401,7 +1401,7 @@ export const combiningGeometricTransformations: TopicDef = {
       title: t("A single rule for two transformations", "用一条规则表示两个变换"),
       explanation: t(
         "Two reflections or rotations about the origin combine into a single one. To find its rule, apply the first rule to $(x, y)$, then apply the second rule to the result.\n\nReflect across the $x$-axis, then across the line $y = x$:\n\n$$(x, y) \\to (x, -y) \\to (-y, x).$$\n\nThe second rule swaps the coordinates of $(x, -y)$. The result, $(x, y) \\to (-y, x)$, is the rotation of $90^\\circ$ counterclockwise about the origin.",
-        "两个关于原点的轴对称或旋转可以合成一个。要求它的规则，先对 $(x, y)$ 应用第一条规则，再对结果应用第二条规则。\n\n先关于 $x$ 轴、再关于直线 $y = x$ 作轴对称：\n\n$$(x, y) \\to (x, -y) \\to (-y, x)。$$\n\n第二条规则交换 $(x, -y)$ 的两个坐标。结果 $(x, y) \\to (-y, x)$ 就是绕原点逆时针旋转 $90^\\circ$。",
+        "两个关于原点的轴对称或旋转可以合成一个。要求它的规则，先对 $(x, y)$ 应用第一条规则，再对结果应用第二条规则。\n\n先关于 $x$ 轴、再关于直线 $y = x$ 作轴对称：\n\n$$(x, y) \\to (x, -y) \\to (-y, x)$$\n\n第二条规则交换 $(x, -y)$ 的两个坐标。结果 $(x, y) \\to (-y, x)$ 就是绕原点逆时针旋转 $90^\\circ$。",
       ),
       generate(rng) {
         const [first, second] = rng.sample(linearMoves.slice(0, 7), 2) as [(typeof linearMoves)[number], (typeof linearMoves)[number]];

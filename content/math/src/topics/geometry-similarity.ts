@@ -786,7 +786,7 @@ export const workingWithAreasOfSimilarPolygons: TopicDef = {
       title: t("Scale factor from areas", "由面积求相似比"),
       explanation: t(
         "The ratio of areas of similar polygons is $k^{2}$, so the scale factor is its square root:\n\n$$k = \\sqrt{\\frac{\\text{area of the second}}{\\text{area of the first}}}.$$\n\nIf the areas are $18$ and $50$, then $\\frac{50}{18} = \\frac{25}{9}$ and $k = \\sqrt{\\frac{25}{9}} = \\frac{5}{3}$. Simplify the ratio before taking the root.",
-        "相似多边形的面积比是 $k^{2}$，所以相似比是它的平方根：\n\n$$k = \\sqrt{\\frac{\\text{第二个的面积}}{\\text{第一个的面积}}}。$$\n\n若面积为 $18$ 和 $50$，则 $\\frac{50}{18} = \\frac{25}{9}$，$k = \\sqrt{\\frac{25}{9}} = \\frac{5}{3}$。先约分，再开平方。",
+        "相似多边形的面积比是 $k^{2}$，所以相似比是它的平方根：\n\n$$k = \\sqrt{\\frac{\\text{第二个的面积}}{\\text{第一个的面积}}}$$\n\n若面积为 $18$ 和 $50$，则 $\\frac{50}{18} = \\frac{25}{9}$，$k = \\sqrt{\\frac{25}{9}} = \\frac{5}{3}$。先约分，再开平方。",
       ),
       keyPrerequisites: ["square-roots-and-cube-roots"],
       figure: similarSquaresFigure,
@@ -930,7 +930,7 @@ export const similarityTransformations: TopicDef = {
       title: t("Dilations centered at the origin", "以原点为中心的位似"),
       explanation: t(
         "A dilation centered at the origin with scale factor $k$ multiplies both coordinates by $k$:\n\n$$(x, y) \\to (kx, ky).$$\n\nWith $k = \\frac{1}{2}$, the point $(6, -4)$ goes to $(3, -2)$; with $k = 3$, it goes to $(18, -12)$.",
-        "以原点为中心、比例因子为 $k$ 的位似把两个坐标都乘以 $k$：\n\n$$(x, y) \\to (kx, ky)。$$\n\n当 $k = \\frac{1}{2}$ 时，点 $(6, -4)$ 变为 $(3, -2)$；当 $k = 3$ 时，变为 $(18, -12)$。",
+        "以原点为中心、比例因子为 $k$ 的位似把两个坐标都乘以 $k$：\n\n$$(x, y) \\to (kx, ky)$$\n\n当 $k = \\frac{1}{2}$ 时，点 $(6, -4)$ 变为 $(3, -2)$；当 $k = 3$ 时，变为 $(18, -12)$。",
       ),
       keyPrerequisites: ["dilations-of-geometric-figures"],
       generate(rng) {
@@ -2946,7 +2946,7 @@ export const theTriangleProportionalityTheorem: TopicDef = {
       title: t("Dividing sides proportionally", "按比例分两边"),
       explanation: t(
         "**Triangle proportionality theorem:** if a line parallel to one side of a triangle meets the other two sides at $D$ and $E$, it divides them proportionally:\n\n$$\\frac{AD}{DB} = \\frac{AE}{EC}.$$\n\nIf $AD = 6$, $DB = 4$ and $AE = 9$, then $\\frac{6}{4} = \\frac{9}{EC}$, so $EC = 6$. (The midpoint theorem is the case $AD = DB$.)",
-        "**三角形比例定理**：如果平行于三角形一边的直线与另两边交于 $D$、$E$，那么它把这两边分成比例线段：\n\n$$\\frac{AD}{DB} = \\frac{AE}{EC}。$$\n\n若 $AD = 6$，$DB = 4$，$AE = 9$，则 $\\frac{6}{4} = \\frac{9}{EC}$，所以 $EC = 6$。（中位线定理是 $AD = DB$ 的情形。）",
+        "**三角形比例定理**：如果平行于三角形一边的直线与另两边交于 $D$、$E$，那么它把这两边分成比例线段：\n\n$$\\frac{AD}{DB} = \\frac{AE}{EC}$$\n\n若 $AD = 6$，$DB = 4$，$AE = 9$，则 $\\frac{6}{4} = \\frac{9}{EC}$，所以 $EC = 6$。（中位线定理是 $AD = DB$ 的情形。）",
       ),
       generate(rng) {
         const { AD, DB, AE, EC } = propParts(rng);

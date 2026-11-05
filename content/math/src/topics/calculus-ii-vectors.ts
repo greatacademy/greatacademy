@@ -165,7 +165,7 @@ export const definingVectorValuedFunctions: TopicDef = {
       title: t("Limits of vector-valued functions", "向量值函数的极限"),
       explanation: t(
         "The limit of a vector-valued function is the vector of the limits of its components:\n\n$$\\lim_{t \\to a} \\mathbf{r}(t) = \\left\\langle \\lim_{t \\to a} x(t), \\lim_{t \\to a} y(t) \\right\\rangle.$$\n\nFor example, $\\lim\\limits_{t \\to 2} \\left\\langle \\frac{t^{2} - 4}{t - 2}, t^{2} \\right\\rangle = \\langle 4, 4 \\rangle$, since $\\frac{t^{2} - 4}{t - 2} = t + 2$ for $t \\ne 2$.",
-        "向量值函数的极限是各分量极限组成的向量：\n\n$$\\lim_{t \\to a} \\mathbf{r}(t) = \\left\\langle \\lim_{t \\to a} x(t), \\lim_{t \\to a} y(t) \\right\\rangle。$$\n\n例如 $\\lim\\limits_{t \\to 2} \\left\\langle \\frac{t^{2} - 4}{t - 2}, t^{2} \\right\\rangle = \\langle 4, 4 \\rangle$，因为 $t \\ne 2$ 时 $\\frac{t^{2} - 4}{t - 2} = t + 2$。",
+        "向量值函数的极限是各分量极限组成的向量：\n\n$$\\lim_{t \\to a} \\mathbf{r}(t) = \\left\\langle \\lim_{t \\to a} x(t), \\lim_{t \\to a} y(t) \\right\\rangle$$\n\n例如 $\\lim\\limits_{t \\to 2} \\left\\langle \\frac{t^{2} - 4}{t - 2}, t^{2} \\right\\rangle = \\langle 4, 4 \\rangle$，因为 $t \\ne 2$ 时 $\\frac{t^{2} - 4}{t - 2} = t + 2$。",
       ),
       generate: vectorLimit,
     },
@@ -261,7 +261,7 @@ export const differentiatingVectorValuedFunctions: TopicDef = {
       title: t("Derivatives of polynomial vector functions", "多项式向量函数的导数"),
       explanation: t(
         "The derivative is defined by the same limit as for ordinary functions, and it works out component by component:\n\n$$\\mathbf{r}'(t) = \\lim_{h \\to 0} \\frac{\\mathbf{r}(t + h) - \\mathbf{r}(t)}{h} = \\langle x'(t), y'(t) \\rangle.$$\n\nWhen it is not zero, $\\mathbf{r}'(t)$ is tangent to the curve and points in the direction of motion. For $\\mathbf{r}(t) = \\langle t^{3}, 2t \\rangle$, $\\mathbf{r}'(t) = \\langle 3t^{2}, 2 \\rangle$ and $\\mathbf{r}'(1) = \\langle 3, 2 \\rangle$.",
-        "导数的定义与普通函数相同，并且按分量计算：\n\n$$\\mathbf{r}'(t) = \\lim_{h \\to 0} \\frac{\\mathbf{r}(t + h) - \\mathbf{r}(t)}{h} = \\langle x'(t), y'(t) \\rangle。$$\n\n当 $\\mathbf{r}'(t)$ 不为零时，它与曲线相切并指向运动方向。对 $\\mathbf{r}(t) = \\langle t^{3}, 2t \\rangle$，$\\mathbf{r}'(t) = \\langle 3t^{2}, 2 \\rangle$，$\\mathbf{r}'(1) = \\langle 3, 2 \\rangle$。",
+        "导数的定义与普通函数相同，并且按分量计算：\n\n$$\\mathbf{r}'(t) = \\lim_{h \\to 0} \\frac{\\mathbf{r}(t + h) - \\mathbf{r}(t)}{h} = \\langle x'(t), y'(t) \\rangle$$\n\n当 $\\mathbf{r}'(t)$ 不为零时，它与曲线相切并指向运动方向。对 $\\mathbf{r}(t) = \\langle t^{3}, 2t \\rangle$，$\\mathbf{r}'(t) = \\langle 3t^{2}, 2 \\rangle$，$\\mathbf{r}'(1) = \\langle 3, 2 \\rangle$。",
       ),
       generate: derivativeAtPoint,
     },
@@ -348,7 +348,7 @@ export const integratingVectorValuedFunctions: TopicDef = {
       title: t("Definite integrals of vector functions", "向量函数的定积分"),
       explanation: t(
         "A vector function is integrated one component at a time, and the result is a vector whose components are ordinary definite integrals. $$\\int_{a}^{b} \\mathbf{r}(t) \\, dt = \\left\\langle \\int_{a}^{b} x(t) \\, dt, \\int_{a}^{b} y(t) \\, dt \\right\\rangle.$$\n\nFor example, $\\int_{0}^{2} \\langle 2t, 3 \\rangle \\, dt = \\langle 4, 6 \\rangle$.",
-        "向量函数逐个分量积分，结果是一个向量，它的各个分量都是普通的定积分。$$\\int_{a}^{b} \\mathbf{r}(t) \\, dt = \\left\\langle \\int_{a}^{b} x(t) \\, dt, \\int_{a}^{b} y(t) \\, dt \\right\\rangle。$$\n\n例如 $\\int_{0}^{2} \\langle 2t, 3 \\rangle \\, dt = \\langle 4, 6 \\rangle$。",
+        "向量函数逐个分量积分，结果是一个向量，它的各个分量都是普通的定积分。$$\\int_{a}^{b} \\mathbf{r}(t) \\, dt = \\left\\langle \\int_{a}^{b} x(t) \\, dt, \\int_{a}^{b} y(t) \\, dt \\right\\rangle$$\n\n例如 $\\int_{0}^{2} \\langle 2t, 3 \\rangle \\, dt = \\langle 4, 6 \\rangle$。",
       ),
       generate: definiteVectorIntegral,
     },
@@ -357,7 +357,7 @@ export const integratingVectorValuedFunctions: TopicDef = {
       title: t("Vector initial value problems", "向量初值问题"),
       explanation: t(
         "An antiderivative of $\\mathbf{r}'(t)$ is determined up to a constant vector $\\mathbf{C}$, which an initial value fixes. Equivalently,\n\n$$\\mathbf{r}(t_{1}) = \\mathbf{r}(0) + \\int_{0}^{t_{1}} \\mathbf{r}'(t) \\, dt.$$\n\nFor $\\mathbf{r}'(t) = \\langle 2t, 1 \\rangle$ and $\\mathbf{r}(0) = \\langle 1, -1 \\rangle$: $\\mathbf{r}(t) = \\langle t^{2} + 1, t - 1 \\rangle$.",
-        "$\\mathbf{r}'(t)$ 的原函数只确定到相差一个常向量 $\\mathbf{C}$，由初值确定。等价地，\n\n$$\\mathbf{r}(t_{1}) = \\mathbf{r}(0) + \\int_{0}^{t_{1}} \\mathbf{r}'(t) \\, dt。$$\n\n对 $\\mathbf{r}'(t) = \\langle 2t, 1 \\rangle$、$\\mathbf{r}(0) = \\langle 1, -1 \\rangle$：$\\mathbf{r}(t) = \\langle t^{2} + 1, t - 1 \\rangle$。",
+        "$\\mathbf{r}'(t)$ 的原函数只确定到相差一个常向量 $\\mathbf{C}$，由初值确定。等价地，\n\n$$\\mathbf{r}(t_{1}) = \\mathbf{r}(0) + \\int_{0}^{t_{1}} \\mathbf{r}'(t) \\, dt$$\n\n对 $\\mathbf{r}'(t) = \\langle 2t, 1 \\rangle$、$\\mathbf{r}(0) = \\langle 1, -1 \\rangle$：$\\mathbf{r}(t) = \\langle t^{2} + 1, t - 1 \\rangle$。",
       ),
       generate: vectorInitialValue,
     },
@@ -450,7 +450,7 @@ export const calculatingVelocityForPlaneMotionUsingDifferentiation: TopicDef = {
       title: t("Velocity vectors from position", "由位置求速度向量"),
       explanation: t(
         "For a particle with position vector $\\mathbf{r}(t) = \\langle x(t), y(t) \\rangle$, the **velocity** is\n\n$$\\mathbf{v}(t) = \\mathbf{r}'(t) = \\langle x'(t), y'(t) \\rangle,$$\n\ntangent to the path in the direction of motion. For $\\mathbf{r}(t) = \\langle t^{2}, 4t \\rangle$, $\\mathbf{v}(3) = \\langle 6, 4 \\rangle$.",
-        "对位置向量为 $\\mathbf{r}(t) = \\langle x(t), y(t) \\rangle$ 的质点，**速度**为\n\n$$\\mathbf{v}(t) = \\mathbf{r}'(t) = \\langle x'(t), y'(t) \\rangle，$$\n\n它与路径相切，指向运动方向。对 $\\mathbf{r}(t) = \\langle t^{2}, 4t \\rangle$，$\\mathbf{v}(3) = \\langle 6, 4 \\rangle$。",
+        "对位置向量为 $\\mathbf{r}(t) = \\langle x(t), y(t) \\rangle$ 的质点，**速度**为\n\n$$\\mathbf{v}(t) = \\mathbf{r}'(t) = \\langle x'(t), y'(t) \\rangle$$\n\n它与路径相切，指向运动方向。对 $\\mathbf{r}(t) = \\langle t^{2}, 4t \\rangle$，$\\mathbf{v}(3) = \\langle 6, 4 \\rangle$。",
       ),
       generate: planeVelocity,
     },
@@ -630,7 +630,7 @@ export const findingVelocityVectorsInTwoDimensionsUsingIntegration: TopicDef = {
       title: t("Velocity from acceleration in the plane", "由加速度求平面速度"),
       explanation: t(
         "Integrating acceleration over a time interval gives the change in velocity, which is then added to the starting velocity. Velocity is an antiderivative of acceleration, so\n\n$$\\mathbf{v}(t_{1}) = \\mathbf{v}(0) + \\int_{0}^{t_{1}} \\mathbf{a}(t) \\, dt.$$\n\nFor $\\mathbf{a}(t) = \\langle 2t, -1 \\rangle$ and $\\mathbf{v}(0) = \\langle 1, 3 \\rangle$: $\\mathbf{v}(t) = \\langle t^{2} + 1, 3 - t \\rangle$.",
-        "把加速度在时间区间上积分得到速度的变化量，再加到初始速度上。速度是加速度的原函数，所以\n\n$$\\mathbf{v}(t_{1}) = \\mathbf{v}(0) + \\int_{0}^{t_{1}} \\mathbf{a}(t) \\, dt。$$\n\n对 $\\mathbf{a}(t) = \\langle 2t, -1 \\rangle$、$\\mathbf{v}(0) = \\langle 1, 3 \\rangle$：$\\mathbf{v}(t) = \\langle t^{2} + 1, 3 - t \\rangle$。",
+        "把加速度在时间区间上积分得到速度的变化量，再加到初始速度上。速度是加速度的原函数，所以\n\n$$\\mathbf{v}(t_{1}) = \\mathbf{v}(0) + \\int_{0}^{t_{1}} \\mathbf{a}(t) \\, dt$$\n\n对 $\\mathbf{a}(t) = \\langle 2t, -1 \\rangle$、$\\mathbf{v}(0) = \\langle 1, 3 \\rangle$：$\\mathbf{v}(t) = \\langle t^{2} + 1, 3 - t \\rangle$。",
       ),
       generate: velocityFromAcceleration,
     },
@@ -711,7 +711,7 @@ export const findingDisplacementVectorsInTwoDimensionsUsingIntegration: TopicDef
       title: t("Displacement vectors from velocity", "由速度求位移向量"),
       explanation: t(
         "The displacement vector points from where the object started to where it ended, regardless of the path it followed in between. The **displacement** from $t = a$ to $t = b$ is the change in position,\n\n$$\\mathbf{r}(b) - \\mathbf{r}(a) = \\int_{a}^{b} \\mathbf{v}(t) \\, dt.$$\n\nFor $\\mathbf{v}(t) = \\langle 2t, 3 \\rangle$ from $t = 1$ to $t = 3$: $\\left\\langle \\int_{1}^{3} 2t \\, dt, \\int_{1}^{3} 3 \\, dt \\right\\rangle = \\langle 8, 6 \\rangle$.",
-        "位移向量从物体的起点指向终点，与中间经过的路径无关。从 $t = a$ 到 $t = b$ 的**位移**是位置的变化量：\n\n$$\\mathbf{r}(b) - \\mathbf{r}(a) = \\int_{a}^{b} \\mathbf{v}(t) \\, dt。$$\n\n对 $\\mathbf{v}(t) = \\langle 2t, 3 \\rangle$，从 $t = 1$ 到 $t = 3$：$\\left\\langle \\int_{1}^{3} 2t \\, dt, \\int_{1}^{3} 3 \\, dt \\right\\rangle = \\langle 8, 6 \\rangle$。",
+        "位移向量从物体的起点指向终点，与中间经过的路径无关。从 $t = a$ 到 $t = b$ 的**位移**是位置的变化量：\n\n$$\\mathbf{r}(b) - \\mathbf{r}(a) = \\int_{a}^{b} \\mathbf{v}(t) \\, dt$$\n\n对 $\\mathbf{v}(t) = \\langle 2t, 3 \\rangle$，从 $t = 1$ 到 $t = 3$：$\\left\\langle \\int_{1}^{3} 2t \\, dt, \\int_{1}^{3} 3 \\, dt \\right\\rangle = \\langle 8, 6 \\rangle$。",
       ),
       generate: planeDisplacement,
     },

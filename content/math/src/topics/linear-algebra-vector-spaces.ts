@@ -1896,7 +1896,7 @@ export const theRankOfAMatrix: TopicDef = {
         const columnList = pivotCols.map((c) => c + 1).join(", ");
         const prompt = t(
           `An echelon form of the matrix $A$ is $$${matLatex(echelon)}.$$ What is $\\text{rank}(A)$?`,
-          `矩阵 $A$ 的一个阶梯形为 $$${matLatex(echelon)}。$$ $\\text{rank}(A)$ 是多少？`,
+          `矩阵 $A$ 的一个阶梯形为 $$${matLatex(echelon)}$$ $\\text{rank}(A)$ 是多少？`,
         );
         const solution = t(
           `By definition, $\\text{rank}(A) = \\dim(\\text{Col}(A))$, which equals the number of pivot columns in echelon form. The pivots are in columns $${columnList}$, so there are $${r}$ of them and $\\text{rank}(A) = ${r}$.`,

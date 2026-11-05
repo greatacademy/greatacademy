@@ -1614,7 +1614,7 @@ export const translationsOfGeometricFigures: TopicDef = {
       title: t("Translation rules", "平移的规则"),
       explanation: t(
         "A translation can be written as a **rule** that tells what happens to any point $(x, y)$. The translation $4$ units left and $2$ units up is\n\n$$(x, y) \\to (x - 4, y + 2).$$\n\nA translation moves a whole figure: each vertex moves by the rule, and the image figure has the same size and shape. Under this rule, the vertex $B(1, -3)$ of a triangle goes to $B'(1 - 4, -3 + 2) = B'(-3, -1)$.",
-        "平移可以写成一条**规则**，说明任意点 $(x, y)$ 怎样变化。向左平移 $4$ 个单位、向上平移 $2$ 个单位的平移是\n\n$$(x, y) \\to (x - 4, y + 2)。$$\n\n平移会移动整个图形：每个顶点都按规则移动，像与原图形大小、形状都相同。按这条规则，三角形的顶点 $B(1, -3)$ 移到 $B'(1 - 4, -3 + 2) = B'(-3, -1)$。",
+        "平移可以写成一条**规则**，说明任意点 $(x, y)$ 怎样变化。向左平移 $4$ 个单位、向上平移 $2$ 个单位的平移是\n\n$$(x, y) \\to (x - 4, y + 2)$$\n\n平移会移动整个图形：每个顶点都按规则移动，像与原图形大小、形状都相同。按这条规则，三角形的顶点 $B(1, -3)$ 移到 $B'(1 - 4, -3 + 2) = B'(-3, -1)$。",
       ),
       generate(rng) {
         for (;;) {
@@ -1651,7 +1651,7 @@ export const translationsOfGeometricFigures: TopicDef = {
       title: t("Finding the translation", "求平移"),
       explanation: t(
         "To find the translation that maps $P$ to $P'$, subtract the coordinates of the preimage from those of the image: the rule is $(x, y) \\to (x + a, y + b)$ with\n\n$$a = x_{P'} - x_P, \\quad b = y_{P'} - y_P.$$\n\nIf $P(3, -2)$ maps to $P'(-1, 4)$, then $a = -1 - 3 = -4$ and $b = 4 - (-2) = 6$: the translation moves $4$ units left and $6$ units up.",
-        "要求把 $P$ 映到 $P'$ 的平移，用像的坐标减去原像的坐标：规则是 $(x, y) \\to (x + a, y + b)$，其中\n\n$$a = x_{P'} - x_P, \\quad b = y_{P'} - y_P。$$\n\n若 $P(3, -2)$ 映到 $P'(-1, 4)$，则 $a = -1 - 3 = -4$，$b = 4 - (-2) = 6$：平移是向左 $4$ 个单位、向上 $6$ 个单位。",
+        "要求把 $P$ 映到 $P'$ 的平移，用像的坐标减去原像的坐标：规则是 $(x, y) \\to (x + a, y + b)$，其中\n\n$$a = x_{P'} - x_P, \\quad b = y_{P'} - y_P$$\n\n若 $P(3, -2)$ 映到 $P'(-1, 4)$，则 $a = -1 - 3 = -4$，$b = 4 - (-2) = 6$：平移是向左 $4$ 个单位、向上 $6$ 个单位。",
       ),
       generate(rng) {
         for (;;) {
@@ -1693,7 +1693,7 @@ export const translationsOfGeometricFigures: TopicDef = {
       title: t("Finding the preimage", "求原像"),
       explanation: t(
         "To undo a translation, apply the opposite translation. If $(x, y) \\to (x + 3, y - 5)$ maps $P$ to $P'(1, 2)$, then $P$ is found by subtracting $3$ and adding $5$:\n\n$$P = (1 - 3, 2 + 5) = (-2, 7).$$\n\nCheck: $(-2 + 3, 7 - 5) = (1, 2)$.",
-        "要还原一次平移，就做相反的平移。若 $(x, y) \\to (x + 3, y - 5)$ 把 $P$ 映到 $P'(1, 2)$，则把坐标减去 $3$、加上 $5$ 得到 $P$：\n\n$$P = (1 - 3, 2 + 5) = (-2, 7)。$$\n\n检验：$(-2 + 3, 7 - 5) = (1, 2)$。",
+        "要还原一次平移，就做相反的平移。若 $(x, y) \\to (x + 3, y - 5)$ 把 $P$ 映到 $P'(1, 2)$，则把坐标减去 $3$、加上 $5$ 得到 $P$：\n\n$$P = (1 - 3, 2 + 5) = (-2, 7)$$\n\n检验：$(-2 + 3, 7 - 5) = (1, 2)$。",
       ),
       generate(rng) {
         const [x, y] = [rng.int(-6, 6), rng.int(-6, 6)];
@@ -2214,7 +2214,7 @@ export const reflectionsAcrossArbitraryLines: TopicDef = {
       title: t("Reflecting across y = x + c and y = −x + c", "关于 y = x + c 与 y = −x + c 的对称"),
       explanation: t(
         "To reflect across $y = x + c$, shift everything down by $c$ so the line becomes $y = x$, reflect, and shift back up:\n\n$$(x, y) \\to (y - c, \\; x + c).$$\n\nSimilarly, across $y = -x + c$: $(x, y) \\to (c - y, \\; c - x)$.\n\nAcross $y = x + 2$, the point $(5, 1)$ goes to $(1 - 2, 5 + 2) = (-1, 7)$. Check: the midpoint $(2, 4)$ lies on $y = x + 2$.",
-        "要作关于 $y = x + c$ 的对称，先把所有点向下平移 $c$，直线变成 $y = x$；作对称后再向上平移回去：\n\n$$(x, y) \\to (y - c, \\; x + c)。$$\n\n同理，关于 $y = -x + c$：$(x, y) \\to (c - y, \\; c - x)$。\n\n关于 $y = x + 2$，点 $(5, 1)$ 的对称点是 $(1 - 2, 5 + 2) = (-1, 7)$。检验：中点 $(2, 4)$ 在 $y = x + 2$ 上。",
+        "要作关于 $y = x + c$ 的对称，先把所有点向下平移 $c$，直线变成 $y = x$；作对称后再向上平移回去：\n\n$$(x, y) \\to (y - c, \\; x + c)$$\n\n同理，关于 $y = -x + c$：$(x, y) \\to (c - y, \\; c - x)$。\n\n关于 $y = x + 2$，点 $(5, 1)$ 的对称点是 $(1 - 2, 5 + 2) = (-1, 7)$。检验：中点 $(2, 4)$ 在 $y = x + 2$ 上。",
       ),
       generate(rng) {
         for (;;) {
@@ -2394,7 +2394,7 @@ export const dilationsOfGeometricFigures: TopicDef = {
       title: t("Finding the scale factor", "求比例因子"),
       explanation: t(
         "The scale factor is the ratio of an image length to the matching preimage length:\n\n$$k = \\frac{A'B'}{AB}.$$\n\nIf $AB = 8$ and $A'B' = 20$, then $k = \\frac{20}{8} = \\frac{5}{2}$. Image over preimage, not the other way round.",
-        "比例因子是像的长度与对应原像长度之比：\n\n$$k = \\frac{A'B'}{AB}。$$\n\n若 $AB = 8$，$A'B' = 20$，则 $k = \\frac{20}{8} = \\frac{5}{2}$。是像比原像，不能颠倒。",
+        "比例因子是像的长度与对应原像长度之比：\n\n$$k = \\frac{A'B'}{AB}$$\n\n若 $AB = 8$，$A'B' = 20$，则 $k = \\frac{20}{8} = \\frac{5}{2}$。是像比原像，不能颠倒。",
       ),
       generate(rng) {
         const k = rng.pick(niceScales);

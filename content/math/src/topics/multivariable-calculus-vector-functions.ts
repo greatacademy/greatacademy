@@ -73,7 +73,7 @@ export const theDomainOfAVectorValuedFunction: TopicDef = {
       title: t("Finding the domain of a vector-valued function", "求向量值函数的定义域"),
       explanation: t(
         "For a vector-valued function $\\mathbf{r}(t) = \\langle f(t), g(t), h(t) \\rangle$, a value of $t$ is in the domain if and only if each component function $f(t)$, $g(t)$, and $h(t)$ is defined at $t$. Thus, the domain is the intersection:\n\n$$\\operatorname{Dom}(\\mathbf{r}) = \\operatorname{Dom}(f) \\cap \\operatorname{Dom}(g) \\cap \\operatorname{Dom}(h).$$",
-        "对于向量值函数 $\\mathbf{r}(t) = \\langle f(t), g(t), h(t) \\rangle$，$t$ 属于定义域当且仅当每个分量函数 $f(t)$、$g(t)$ 和 $h(t)$ 在 $t$ 处均有定义。因此其定义域为各分量定义域的交集：\n\n$$\\operatorname{Dom}(\\mathbf{r}) = \\operatorname{Dom}(f) \\cap \\operatorname{Dom}(g) \\cap \\operatorname{Dom}(h)。$$",
+        "对于向量值函数 $\\mathbf{r}(t) = \\langle f(t), g(t), h(t) \\rangle$，$t$ 属于定义域当且仅当每个分量函数 $f(t)$、$g(t)$ 和 $h(t)$ 在 $t$ 处均有定义。因此其定义域为各分量定义域的交集：\n\n$$\\operatorname{Dom}(\\mathbf{r}) = \\operatorname{Dom}(f) \\cap \\operatorname{Dom}(g) \\cap \\operatorname{Dom}(h)$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(-8, -1);
@@ -175,7 +175,7 @@ export const limitsOfVectorValuedFunctions: TopicDef = {
       title: t("Limits component by component", "逐个分量求极限"),
       explanation: t(
         "A vector $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$ approaches a vector $\\mathbf{L}$ exactly when each component approaches the matching component of $\\mathbf{L}$, so the limit is taken one component at a time, each with the techniques for ordinary limits:\n\n$$\\lim_{t \\to a} \\mathbf{r}(t) = \\left\\langle \\lim_{t \\to a} x(t), \\lim_{t \\to a} y(t), \\lim_{t \\to a} z(t) \\right\\rangle.$$\n\nFor $\\mathbf{r}(t) = \\left\\langle \\frac{t^{2} - 9}{t - 3}, 2t^{2}, \\sqrt{t + 1} \\right\\rangle$ at $t = 3$, the first component is $\\frac{0}{0}$, but it equals $t + 3$ for $t \\ne 3$, so its limit is $6$; the others are continuous and give $18$ and $2$. The limit is $\\langle 6, 18, 2 \\rangle$.",
-        "向量 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$ 趋于向量 $\\mathbf{L}$，恰好是每个分量都趋于 $\\mathbf{L}$ 的对应分量，所以极限要逐个分量求，每个分量都用普通极限的方法：\n\n$$\\lim_{t \\to a} \\mathbf{r}(t) = \\left\\langle \\lim_{t \\to a} x(t), \\lim_{t \\to a} y(t), \\lim_{t \\to a} z(t) \\right\\rangle。$$\n\n对 $\\mathbf{r}(t) = \\left\\langle \\frac{t^{2} - 9}{t - 3}, 2t^{2}, \\sqrt{t + 1} \\right\\rangle$ 在 $t = 3$ 处，第一个分量是 $\\frac{0}{0}$ 型，但当 $t \\ne 3$ 时它等于 $t + 3$，所以极限是 $6$；其余分量连续，分别给出 $18$ 和 $2$。极限是 $\\langle 6, 18, 2 \\rangle$。",
+        "向量 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$ 趋于向量 $\\mathbf{L}$，恰好是每个分量都趋于 $\\mathbf{L}$ 的对应分量，所以极限要逐个分量求，每个分量都用普通极限的方法：\n\n$$\\lim_{t \\to a} \\mathbf{r}(t) = \\left\\langle \\lim_{t \\to a} x(t), \\lim_{t \\to a} y(t), \\lim_{t \\to a} z(t) \\right\\rangle$$\n\n对 $\\mathbf{r}(t) = \\left\\langle \\frac{t^{2} - 9}{t - 3}, 2t^{2}, \\sqrt{t + 1} \\right\\rangle$ 在 $t = 3$ 处，第一个分量是 $\\frac{0}{0}$ 型，但当 $t \\ne 3$ 时它等于 $t + 3$，所以极限是 $6$；其余分量连续，分别给出 $18$ 和 $2$。极限是 $\\langle 6, 18, 2 \\rangle$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -227,7 +227,7 @@ export const limitsOfVectorValuedFunctions: TopicDef = {
       title: t("Components with special limits", "含特殊极限的分量"),
       explanation: t(
         "A component that is $\\frac{0}{0}$ at the point may need a special limit rather than factoring. At $t = 0$, $\\frac{\\sin kt}{t} = k \\cdot \\frac{\\sin kt}{kt} \\to k$ and $\\frac{1 - \\cos t}{t} \\to 0$. So\n\n$$\\lim_{t \\to 0} \\left\\langle \\frac{\\sin 3t}{t}, \\frac{1 - \\cos t}{t}, 5\\cos t \\right\\rangle = \\langle 3, 0, 5 \\rangle.$$",
-        "在该点为 $\\frac{0}{0}$ 型的分量，可能需要用特殊极限而不是因式分解。在 $t = 0$ 处，$\\frac{\\sin kt}{t} = k \\cdot \\frac{\\sin kt}{kt} \\to k$，$\\frac{1 - \\cos t}{t} \\to 0$。所以\n\n$$\\lim_{t \\to 0} \\left\\langle \\frac{\\sin 3t}{t}, \\frac{1 - \\cos t}{t}, 5\\cos t \\right\\rangle = \\langle 3, 0, 5 \\rangle。$$",
+        "在该点为 $\\frac{0}{0}$ 型的分量，可能需要用特殊极限而不是因式分解。在 $t = 0$ 处，$\\frac{\\sin kt}{t} = k \\cdot \\frac{\\sin kt}{kt} \\to k$，$\\frac{1 - \\cos t}{t} \\to 0$。所以\n\n$$\\lim_{t \\to 0} \\left\\langle \\frac{\\sin 3t}{t}, \\frac{1 - \\cos t}{t}, 5\\cos t \\right\\rangle = \\langle 3, 0, 5 \\rangle$$",
       ),
       generate(rng: Rng): Problem {
         const k = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5]);
@@ -440,7 +440,7 @@ export const differentiationRulesForVectorValuedFunctions: TopicDef = {
       title: t("Derivative of dot and cross products", "点积与叉积的导数"),
       explanation: t(
         "For differentiable vector-valued functions $\\mathbf{u}(t)$ and $\\mathbf{v}(t)$:\n\n1. Product Rule for Dot Product:\n$$\\frac{d}{dt}[\\mathbf{u}(t) \\cdot \\mathbf{v}(t)] = \\mathbf{u}'(t) \\cdot \\mathbf{v}(t) + \\mathbf{u}(t) \\cdot \\mathbf{v}'(t).$$\n\n2. Product Rule for Cross Product:\n$$\\frac{d}{dt}[\\mathbf{u}(t) \\times \\mathbf{v}(t)] = \\mathbf{u}'(t) \\times \\mathbf{v}(t) + \\mathbf{u}(t) \\times \\mathbf{v}'(t).$$",
-        "对于可微向量值函数 $\\mathbf{u}(t)$ 和 $\\mathbf{v}(t)$：\n\n1. 点积乘积法则：\n$$\\frac{d}{dt}[\\mathbf{u}(t) \\cdot \\mathbf{v}(t)] = \\mathbf{u}'(t) \\cdot \\mathbf{v}(t) + \\mathbf{u}(t) \\cdot \\mathbf{v}'(t)。$$\n\n2. 叉积乘积法则：\n$$\\frac{d}{dt}[\\mathbf{u}(t) \\times \\mathbf{v}(t)] = \\mathbf{u}'(t) \\times \\mathbf{v}(t) + \\mathbf{u}(t) \\times \\mathbf{v}'(t)。$$",
+        "对于可微向量值函数 $\\mathbf{u}(t)$ 和 $\\mathbf{v}(t)$：\n\n1. 点积乘积法则：\n$$\\frac{d}{dt}[\\mathbf{u}(t) \\cdot \\mathbf{v}(t)] = \\mathbf{u}'(t) \\cdot \\mathbf{v}(t) + \\mathbf{u}(t) \\cdot \\mathbf{v}'(t)$$\n\n2. 叉积乘积法则：\n$$\\frac{d}{dt}[\\mathbf{u}(t) \\times \\mathbf{v}(t)] = \\mathbf{u}'(t) \\times \\mathbf{v}(t) + \\mathbf{u}(t) \\times \\mathbf{v}'(t)$$",
       ),
       generate(rng: Rng): Problem {
         const u: Vec3 = [rng.int(-3, 3), rng.int(-3, 3), rng.int(-3, 3)];
@@ -481,7 +481,7 @@ export const differentiationRulesForVectorValuedFunctions: TopicDef = {
       title: t("The product rule for $f(t)\\mathbf{u}(t)$", "$f(t)\\mathbf{u}(t)$ 的乘积法则"),
       explanation: t(
         "A scalar function times a vector function is differentiated with the ordinary product rule, applied componentwise:\n\n$$\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right] = f'(t)\\mathbf{u}(t) + f(t)\\mathbf{u}'(t).$$\n\nSo at a single instant only four pieces of data are needed: $f$, $f'$, $\\mathbf{u}$ and $\\mathbf{u}'$ at that instant.",
-        "标量函数乘以向量函数按普通乘积法则逐分量求导：\n\n$$\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right] = f'(t)\\mathbf{u}(t) + f(t)\\mathbf{u}'(t)。$$\n\n所以在某一时刻只需四个数据：该时刻的 $f$、$f'$、$\\mathbf{u}$ 与 $\\mathbf{u}'$。",
+        "标量函数乘以向量函数按普通乘积法则逐分量求导：\n\n$$\\frac{d}{dt}\\left[f(t)\\mathbf{u}(t)\\right] = f'(t)\\mathbf{u}(t) + f(t)\\mathbf{u}'(t)$$\n\n所以在某一时刻只需四个数据：该时刻的 $f$、$f'$、$\\mathbf{u}$ 与 $\\mathbf{u}'$。",
       ),
       generate(rng: Rng): Problem {
         const t0 = rng.int(0, 3);
@@ -526,7 +526,7 @@ export const integrationRulesForVectorValuedFunctions: TopicDef = {
       title: t("Evaluating definite integrals of vector functions", "计算向量值函数的定积分"),
       explanation: t(
         "Each component is an ordinary function of the parameter, so integrate each one over the interval and collect the results as a vector. The definite integral of a vector-valued function is evaluated component by component:\n\n$$\\int_a^b \\mathbf{r}(t)\\,dt = \\left\\langle \\int_a^b x(t)\\,dt, \\int_a^b y(t)\\,dt, \\int_a^b z(t)\\,dt \\right\\rangle.$$",
-        "每个分量都是参数的普通函数，所以把每个分量在区间上积分，再把结果组成一个向量。向量值函数的定积分逐个分量分别进行积分计算：\n\n$$\\int_a^b \\mathbf{r}(t)\\,dt = \\left\\langle \\int_a^b x(t)\\,dt, \\int_a^b y(t)\\,dt, \\int_a^b z(t)\\,dt \\right\\rangle。$$",
+        "每个分量都是参数的普通函数，所以把每个分量在区间上积分，再把结果组成一个向量。向量值函数的定积分逐个分量分别进行积分计算：\n\n$$\\int_a^b \\mathbf{r}(t)\\,dt = \\left\\langle \\int_a^b x(t)\\,dt, \\int_a^b y(t)\\,dt, \\int_a^b z(t)\\,dt \\right\\rangle$$",
       ),
       generate(rng: Rng): Problem {
         const aCoeff = rng.pick([2, 4, 6, 8, 10]);
@@ -630,7 +630,7 @@ export const theArcLengthOfAVectorValuedFunction: TopicDef = {
       title: t("Computing the arc length of a space curve", "计算空间曲线的弧长"),
       explanation: t(
         "The speed is the length of the velocity vector, and integrating the speed over the time interval adds up the distance travelled along the curve. For a smooth space curve $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$, the arc length from $t = a$ to $t = b$ is given by:\n\n$$L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt = \\int_a^b \\sqrt{[x'(t)]^2 + [y'(t)]^2 + [z'(t)]^2}\\,dt.$$",
-        "速率是速度向量的长度，把速率在时间区间上积分，就把沿曲线走过的路程加了起来。对于光滑空间曲线 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$，从 $t = a$ 到 $t = b$ 的弧长为：\n\n$$L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt = \\int_a^b \\sqrt{[x'(t)]^2 + [y'(t)]^2 + [z'(t)]^2}\\,dt。$$",
+        "速率是速度向量的长度，把速率在时间区间上积分，就把沿曲线走过的路程加了起来。对于光滑空间曲线 $\\mathbf{r}(t) = \\langle x(t), y(t), z(t) \\rangle$，从 $t = a$ 到 $t = b$ 的弧长为：\n\n$$L = \\int_a^b \\|\\mathbf{r}'(t)\\|\\,dt = \\int_a^b \\sqrt{[x'(t)]^2 + [y'(t)]^2 + [z'(t)]^2}\\,dt$$",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
@@ -798,7 +798,7 @@ export const unitTangentVectors: TopicDef = {
       title: t("Calculating unit tangent vectors", "计算单位切向量"),
       explanation: t(
         "Dividing the velocity by its length keeps only its direction, giving a vector of length one that points along the curve in the direction of motion. The unit tangent vector $\\mathbf{T}(t)$ is obtained by normalizing the velocity vector:\n\n$$\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}.$$",
-        "把速度除以它的长度只保留方向，得到一个长度为 1、沿曲线指向运动方向的向量。单位切向量 $\\mathbf{T}(t)$ 通过对速度向量进行单位化得到：\n\n$$\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}。$$",
+        "把速度除以它的长度只保留方向，得到一个长度为 1、沿曲线指向运动方向的向量。单位切向量 $\\mathbf{T}(t)$ 通过对速度向量进行单位化得到：\n\n$$\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}$$",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
@@ -848,7 +848,7 @@ export const unitTangentVectors: TopicDef = {
       title: t("A unit tangent vector with rational entries", "分量为有理数的单位切向量"),
       explanation: t(
         "The unit tangent vector is $\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}$. For $\\mathbf{r}(t) = \\langle 2at, \\pm at^2, \\frac{a}{3}t^3 \\rangle$ with $a > 0$, $\\mathbf{r}'(t) = a\\langle 2, \\pm 2t, t^2 \\rangle$ and $\\|\\mathbf{r}'(t)\\| = a(t^2 + 2)$. The factor $a$ cancels, leaving\n\n$$\\mathbf{T}(t) = \\frac{\\langle 2, \\pm 2t, t^2 \\rangle}{t^2 + 2}.$$\n\nRescaling a curve's speed never changes its unit tangent.",
-        "单位切向量为 $\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}$。对 $\\mathbf{r}(t) = \\langle 2at, \\pm at^2, \\frac{a}{3}t^3 \\rangle$（$a > 0$），$\\mathbf{r}'(t) = a\\langle 2, \\pm 2t, t^2 \\rangle$，$\\|\\mathbf{r}'(t)\\| = a(t^2 + 2)$。因子 $a$ 约去，得\n\n$$\\mathbf{T}(t) = \\frac{\\langle 2, \\pm 2t, t^2 \\rangle}{t^2 + 2}。$$\n\n改变曲线速率的倍数从不改变其单位切向量。",
+        "单位切向量为 $\\mathbf{T}(t) = \\frac{\\mathbf{r}'(t)}{\\|\\mathbf{r}'(t)\\|}$。对 $\\mathbf{r}(t) = \\langle 2at, \\pm at^2, \\frac{a}{3}t^3 \\rangle$（$a > 0$），$\\mathbf{r}'(t) = a\\langle 2, \\pm 2t, t^2 \\rangle$，$\\|\\mathbf{r}'(t)\\| = a(t^2 + 2)$。因子 $a$ 约去，得\n\n$$\\mathbf{T}(t) = \\frac{\\langle 2, \\pm 2t, t^2 \\rangle}{t^2 + 2}$$\n\n改变曲线速率的倍数从不改变其单位切向量。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
@@ -896,7 +896,7 @@ export const principalNormalVectors: TopicDef = {
       title: t("Calculating principal normal vectors", "计算主法向量"),
       explanation: t(
         "Since $\\mathbf{T}(t)$ has constant unit length, $\\mathbf{T}'(t)$ is orthogonal to $\\mathbf{T}(t)$. The principal unit normal vector $\\mathbf{N}(t)$ is defined by:\n\n$$\\mathbf{N}(t) = \\frac{\\mathbf{T}'(t)}{\\|\\mathbf{T}'(t)\\|}.$$",
-        "由于 $\\mathbf{T}(t)$ 具有恒定单位长度，因此 $\\mathbf{T}'(t)$ 与 $\\mathbf{T}(t)$ 正交。主单位法向量 $\\mathbf{N}(t)$ 定义为：\n\n$$\\mathbf{N}(t) = \\frac{\\mathbf{T}'(t)}{\\|\\mathbf{T}'(t)\\|}。$$",
+        "由于 $\\mathbf{T}(t)$ 具有恒定单位长度，因此 $\\mathbf{T}'(t)$ 与 $\\mathbf{T}(t)$ 正交。主单位法向量 $\\mathbf{N}(t)$ 定义为：\n\n$$\\mathbf{N}(t) = \\frac{\\mathbf{T}'(t)}{\\|\\mathbf{T}'(t)\\|}$$",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
@@ -921,7 +921,7 @@ export const principalNormalVectors: TopicDef = {
             `Evaluating at $t = ${tText}$ gives $\\mathbf{N}\\left(${tText}\\right) = ${v3L(ans)}$.`,
           ),
           steps(
-            `由单位切向量 $\\mathbf{T}(t) = \\left\\langle -\\frac{${a}}{${c}}\\sin t, \\frac{${a}}{${c}}\\cos t, \\frac{${b}}{${c}} \\right\\rangle$ 求导得：\n\n$$\\mathbf{T}'(t) = \\left\\langle -\\frac{${a}}{${c}}\\cos t, -\\frac{${a}}{${c}}\\sin t, 0 \\right\\rangle。$$`,
+            `由单位切向量 $\\mathbf{T}(t) = \\left\\langle -\\frac{${a}}{${c}}\\sin t, \\frac{${a}}{${c}}\\cos t, \\frac{${b}}{${c}} \\right\\rangle$ 求导得：\n\n$$\\mathbf{T}'(t) = \\left\\langle -\\frac{${a}}{${c}}\\cos t, -\\frac{${a}}{${c}}\\sin t, 0 \\right\\rangle$$`,
             `其模长为 $\\|\\mathbf{T}'(t)\\| = \\frac{${a}}{${c}}$。`,
             `除以模长得到 $\\mathbf{N}(t) = \\langle -\\cos t, -\\sin t, 0 \\rangle$。`,
             `代入 $t = ${tText}$ 得 $\\mathbf{N}\\left(${tText}\\right) = ${v3L(ans)}$。`,
@@ -1006,7 +1006,7 @@ export const binormalVectors: TopicDef = {
       title: t("Computing binormal vectors", "计算次法向量"),
       explanation: t(
         "The binormal vector $\\mathbf{B}(t)$ is defined by the cross product of the unit tangent and principal normal vectors:\n\n$$\\mathbf{B}(t) = \\mathbf{T}(t) \\times \\mathbf{N}(t).$$",
-        "次法向量 $\\mathbf{B}(t)$ 定义为单位切向量与主法向量的叉积：\n\n$$\\mathbf{B}(t) = \\mathbf{T}(t) \\times \\mathbf{N}(t)。$$",
+        "次法向量 $\\mathbf{B}(t)$ 定义为单位切向量与主法向量的叉积：\n\n$$\\mathbf{B}(t) = \\mathbf{T}(t) \\times \\mathbf{N}(t)$$",
       ),
       generate(rng: Rng): Problem {
         const [a, b, c] = rng.pick(pythagoreanTriples);
@@ -1122,7 +1122,7 @@ export const theOsculatingPlane: TopicDef = {
       title: t("Finding the equation of the osculating plane", "求密切平面的方程"),
       explanation: t(
         "The osculating plane to a curve at $\\mathbf{r}(t_0) = (x_0, y_0, z_0)$ is the plane spanned by $\\mathbf{T}(t_0)$ and $\\mathbf{N}(t_0)$. Its normal vector is the binormal vector $\\mathbf{B}(t_0)$, so its Cartesian equation is:\n\n$$B_x (x - x_0) + B_y (y - y_0) + B_z (z - z_0) = 0.$$",
-        "曲线在 $\\mathbf{r}(t_0) = (x_0, y_0, z_0)$ 处的密切平面是由 $\\mathbf{T}(t_0)$ 和 $\\mathbf{N}(t_0)$ 张成的平面。其法向量为次法向量 $\\mathbf{B}(t_0)$，故其笛卡尔方程为：\n\n$$B_x (x - x_0) + B_y (y - y_0) + B_z (z - z_0) = 0。$$",
+        "曲线在 $\\mathbf{r}(t_0) = (x_0, y_0, z_0)$ 处的密切平面是由 $\\mathbf{T}(t_0)$ 和 $\\mathbf{N}(t_0)$ 张成的平面。其法向量为次法向量 $\\mathbf{B}(t_0)$，故其笛卡尔方程为：\n\n$$B_x (x - x_0) + B_y (y - y_0) + B_z (z - z_0) = 0$$",
       ),
       generate(rng: Rng): Problem {
         const [a, b] = rng.pick(pythagoreanTriples);
@@ -1306,7 +1306,7 @@ export const introductionToCurvature: TopicDef = {
       title: t("Defining and calculating curvature", "曲率的定义与计算"),
       explanation: t(
         "Curvature $\\kappa$ measures how quickly a curve changes direction. In terms of parameter $t$:\n\n$$\\kappa = \\frac{\\|\\mathbf{T}'(t)\\|}{\\|\\mathbf{r}'(t)\\|}.$$ For a circular helix $\\mathbf{r}(t) = \\langle a\\cos t, a\\sin t, bt \\rangle$, the curvature is constant: $\\kappa = \\frac{a}{a^2 + b^2}$.",
-        "曲率 $\\kappa$ 度量曲线改变方向的快慢。用参数 $t$ 表示为：\n\n$$\\kappa = \\frac{\\|\\mathbf{T}'(t)\\|}{\\|\\mathbf{r}'(t)\\|}。$$ 对于圆柱螺旋线 $\\mathbf{r}(t) = \\langle a\\cos t, a\\sin t, bt \\rangle$，其曲率为常数：$\\kappa = \\frac{a}{a^2 + b^2}$。",
+        "曲率 $\\kappa$ 度量曲线改变方向的快慢。用参数 $t$ 表示为：\n\n$$\\kappa = \\frac{\\|\\mathbf{T}'(t)\\|}{\\|\\mathbf{r}'(t)\\|}$$ 对于圆柱螺旋线 $\\mathbf{r}(t) = \\langle a\\cos t, a\\sin t, bt \\rangle$，其曲率为常数：$\\kappa = \\frac{a}{a^2 + b^2}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 10);
@@ -1345,7 +1345,7 @@ export const introductionToCurvature: TopicDef = {
       title: t("The curvature of a circle", "圆的曲率"),
       explanation: t(
         "Curvature $\\kappa = \\left\\|\\frac{d\\mathbf{T}}{ds}\\right\\|$ measures how fast the direction turns per unit of distance travelled. Around a circle of radius $R$ the tangent turns through $2\\pi$ while the point travels $2\\pi R$, at a steady rate, so\n\n$$\\kappa = \\frac{2\\pi}{2\\pi R} = \\frac{1}{R}.$$\n\nThe parametrization's speed and the circle's center do not affect $\\kappa$, because curvature is measured per unit arc length.",
-        "曲率 $\\kappa = \\left\\|\\frac{d\\mathbf{T}}{ds}\\right\\|$ 衡量每走过单位距离方向转动多快。绕半径为 $R$ 的圆一周，切向转过 $2\\pi$，而点走过 $2\\pi R$，且速率均匀，所以\n\n$$\\kappa = \\frac{2\\pi}{2\\pi R} = \\frac{1}{R}。$$\n\n参数化的速率和圆心位置都不影响 $\\kappa$，因为曲率是按单位弧长度量的。",
+        "曲率 $\\kappa = \\left\\|\\frac{d\\mathbf{T}}{ds}\\right\\|$ 衡量每走过单位距离方向转动多快。绕半径为 $R$ 的圆一周，切向转过 $2\\pi$，而点走过 $2\\pi R$，且速率均匀，所以\n\n$$\\kappa = \\frac{2\\pi}{2\\pi R} = \\frac{1}{R}$$\n\n参数化的速率和圆心位置都不影响 $\\kappa$，因为曲率是按单位弧长度量的。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 9);
@@ -1386,7 +1386,7 @@ export const findingCurvatureUsingTheCrossProduct: TopicDef = {
       title: t("Computing curvature via cross product", "通过叉积计算曲率"),
       explanation: t(
         "Curvature measures how quickly the direction of the curve turns, and the cross product of velocity and acceleration captures that turning without normalizing first. For any smooth three-dimensional curve $\\mathbf{r}(t)$, the curvature can be computed directly without finding $\\mathbf{T}(t)$:\n\n$$\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}.$$",
-        "曲率衡量曲线方向转动的快慢，速度与加速度的叉积不必先单位化就能反映这种转动。对于任意光滑三维空间曲线 $\\mathbf{r}(t)$，无需先求出 $\\mathbf{T}(t)$，可直接利用叉积公式计算曲率：\n\n$$\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}。$$",
+        "曲率衡量曲线方向转动的快慢，速度与加速度的叉积不必先单位化就能反映这种转动。对于任意光滑三维空间曲线 $\\mathbf{r}(t)$，无需先求出 $\\mathbf{T}(t)$，可直接利用叉积公式计算曲率：\n\n$$\\kappa(t) = \\frac{\\|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)\\|}{\\|\\mathbf{r}'(t)\\|^3}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 8);
@@ -1433,7 +1433,7 @@ export const findingCurvatureUsingTheCrossProduct: TopicDef = {
       title: t("Curvature of a cubic space curve", "三次空间曲线的曲率"),
       explanation: t(
         "The cross product formula $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ works for any parametrization, so there is no need to reparametrize by arc length first. Compute the first two derivatives, take their cross product, and divide its length by the cube of the speed. For $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$, $\\mathbf{r}' = a\\langle 2, 2t, t^2 \\rangle$ and $\\mathbf{r}'' = a\\langle 0, 2, 2t \\rangle$, so\n\n$$\\mathbf{r}' \\times \\mathbf{r}'' = a^2\\langle 2t^2, -4t, 4 \\rangle, \\qquad \\|\\mathbf{r}' \\times \\mathbf{r}''\\| = 2a^2(t^2 + 2).$$\n\nWith $\\|\\mathbf{r}'\\| = a(t^2 + 2)$ this gives $\\kappa(t) = \\frac{2}{a(t^2 + 2)^2}$.",
-        "叉积公式 $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ 对任意参数化都成立，因此不必先改用弧长参数。求出前两阶导数，取叉积，再用其长度除以速率的立方。对 $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$，$\\mathbf{r}' = a\\langle 2, 2t, t^2 \\rangle$，$\\mathbf{r}'' = a\\langle 0, 2, 2t \\rangle$，所以\n\n$$\\mathbf{r}' \\times \\mathbf{r}'' = a^2\\langle 2t^2, -4t, 4 \\rangle, \\qquad \\|\\mathbf{r}' \\times \\mathbf{r}''\\| = 2a^2(t^2 + 2)。$$\n\n由 $\\|\\mathbf{r}'\\| = a(t^2 + 2)$ 得 $\\kappa(t) = \\frac{2}{a(t^2 + 2)^2}$。",
+        "叉积公式 $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ 对任意参数化都成立，因此不必先改用弧长参数。求出前两阶导数，取叉积，再用其长度除以速率的立方。对 $\\mathbf{r}(t) = \\langle 2at, at^2, \\frac{a}{3}t^3 \\rangle$，$\\mathbf{r}' = a\\langle 2, 2t, t^2 \\rangle$，$\\mathbf{r}'' = a\\langle 0, 2, 2t \\rangle$，所以\n\n$$\\mathbf{r}' \\times \\mathbf{r}'' = a^2\\langle 2t^2, -4t, 4 \\rangle, \\qquad \\|\\mathbf{r}' \\times \\mathbf{r}''\\| = 2a^2(t^2 + 2)$$\n\n由 $\\|\\mathbf{r}'\\| = a(t^2 + 2)$ 得 $\\kappa(t) = \\frac{2}{a(t^2 + 2)^2}$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 4);
@@ -1474,7 +1474,7 @@ export const radiusOfCurvature: TopicDef = {
       title: t("Calculating the radius of curvature", "计算曲率半径"),
       explanation: t(
         "The radius of curvature $\\rho$ at a point on a curve is the reciprocal of its curvature:\n\n$$\\rho = \\frac{1}{\\kappa}.$$ It represents the radius of the osculating circle (circle of curvature) at that point. With $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ this reads $\\rho = \\frac{\\|\\mathbf{r}'\\|^3}{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}$.",
-        "曲线在某点处的曲率半径 $\\rho$ 为该点曲率的倒数：\n\n$$\\rho = \\frac{1}{\\kappa}。$$ 它表示在该点处的密切圆（曲率圆）的半径。由 $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ 可写成 $\\rho = \\frac{\\|\\mathbf{r}'\\|^3}{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}$。",
+        "曲线在某点处的曲率半径 $\\rho$ 为该点曲率的倒数：\n\n$$\\rho = \\frac{1}{\\kappa}$$ 它表示在该点处的密切圆（曲率圆）的半径。由 $\\kappa = \\frac{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}{\\|\\mathbf{r}'\\|^3}$ 可写成 $\\rho = \\frac{\\|\\mathbf{r}'\\|^3}{\\|\\mathbf{r}' \\times \\mathbf{r}''\\|}$。",
       ),
       generate(rng: Rng): Problem {
         const speed = rng.int(2, 6);
@@ -1509,7 +1509,7 @@ export const radiusOfCurvature: TopicDef = {
       title: t("The radius of curvature at a vertex of an ellipse", "椭圆顶点处的曲率半径"),
       explanation: t(
         "For the ellipse $\\mathbf{r}(t) = \\langle A\\cos t, B\\sin t \\rangle$, the cross product formula gives\n\n$$\\kappa(t) = \\frac{AB}{(A^2\\sin^2 t + B^2\\cos^2 t)^{3/2}}.$$\n\nAt the vertex $(A, 0)$, where $t = 0$, this is $\\kappa = \\frac{A}{B^2}$, so the radius of curvature is $\\rho = \\frac{1}{\\kappa} = \\frac{B^2}{A}$. At $(0, B)$ the roles swap and $\\rho = \\frac{A^2}{B}$.",
-        "对椭圆 $\\mathbf{r}(t) = \\langle A\\cos t, B\\sin t \\rangle$，叉积公式给出\n\n$$\\kappa(t) = \\frac{AB}{(A^2\\sin^2 t + B^2\\cos^2 t)^{3/2}}。$$\n\n在顶点 $(A, 0)$（$t = 0$）处，$\\kappa = \\frac{A}{B^2}$，所以曲率半径 $\\rho = \\frac{1}{\\kappa} = \\frac{B^2}{A}$。在 $(0, B)$ 处角色互换，$\\rho = \\frac{A^2}{B}$。",
+        "对椭圆 $\\mathbf{r}(t) = \\langle A\\cos t, B\\sin t \\rangle$，叉积公式给出\n\n$$\\kappa(t) = \\frac{AB}{(A^2\\sin^2 t + B^2\\cos^2 t)^{3/2}}$$\n\n在顶点 $(A, 0)$（$t = 0$）处，$\\kappa = \\frac{A}{B^2}$，所以曲率半径 $\\rho = \\frac{1}{\\kappa} = \\frac{B^2}{A}$。在 $(0, B)$ 处角色互换，$\\rho = \\frac{A^2}{B}$。",
       ),
       generate(rng: Rng): Problem {
         const A = rng.int(2, 9);
@@ -1551,7 +1551,7 @@ export const theCurvatureOfAPlaneCurve: TopicDef = {
       title: t("Computing curvature of function graphs", "计算显式函数图像的曲率"),
       explanation: t(
         "For a graph the second derivative measures bending, and dividing by a power of one plus the square of the slope corrects for how steep the graph is. For a plane curve given as the graph of a function $y = f(x)$, the curvature formula reduces to:\n\n$$\\kappa(x) = \\frac{|f''(x)|}{\\left[1 + (f'(x))^2\\right]^{3/2}}.$$",
-        "对于函数图像，二阶导数衡量弯曲程度，再除以 1 加斜率平方的某次幂，以修正图像陡峭程度的影响。对于由显式函数图像 $y = f(x)$ 给出的平面曲线，曲率公式简化为：\n\n$$\\kappa(x) = \\frac{|f''(x)|}{\\left[1 + (f'(x))^2\\right]^{3/2}}。$$",
+        "对于函数图像，二阶导数衡量弯曲程度，再除以 1 加斜率平方的某次幂，以修正图像陡峭程度的影响。对于由显式函数图像 $y = f(x)$ 给出的平面曲线，曲率公式简化为：\n\n$$\\kappa(x) = \\frac{|f''(x)|}{\\left[1 + (f'(x))^2\\right]^{3/2}}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 40);
@@ -1570,7 +1570,7 @@ export const theCurvatureOfAPlaneCurve: TopicDef = {
           steps(
             `求导数：$f'(x) = ${2 * a}x \\implies f'(0) = 0$。`,
             `二阶导数为 $f''(x) = ${2 * a} \\implies f''(0) = ${2 * a}$。`,
-            `代入平面曲线曲率公式：\n\n$$\\kappa(0) = \\frac{|f''(0)|}{\\left[1 + (f'(0))^2\\right]^{3/2}} = \\frac{${2 * a}}{\\left[1 + 0^2\\right]^{3/2}} = ${ans}。$$`,
+            `代入平面曲线曲率公式：\n\n$$\\kappa(0) = \\frac{|f''(0)|}{\\left[1 + (f'(0))^2\\right]^{3/2}} = \\frac{${2 * a}}{\\left[1 + 0^2\\right]^{3/2}} = ${ans}$$`,
           ),
         );
         return numberProblem({
@@ -1586,7 +1586,7 @@ export const theCurvatureOfAPlaneCurve: TopicDef = {
       title: t("Curvature of a graph from $f'$ and $f''$", "由 $f'$ 与 $f''$ 求图像的曲率"),
       explanation: t(
         "For the graph $y = f(x)$ the curvature is\n\n$$\\kappa = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}.$$\n\nIt grows with the concavity $|f''|$ but is damped where the graph is steep. When the slope is a ratio from a Pythagorean triple, such as $\\frac34$, the denominator is rational: $1 + \\frac{9}{16} = \\frac{25}{16}$, whose $\\frac32$ power is $\\frac{125}{64}$.",
-        "对图像 $y = f(x)$，曲率为\n\n$$\\kappa = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}。$$\n\n它随凹凸程度 $|f''|$ 增大，但在图像陡峭处被削弱。当斜率是勾股数之比如 $\\frac34$ 时分母为有理数：$1 + \\frac{9}{16} = \\frac{25}{16}$，其 $\\frac32$ 次幂为 $\\frac{125}{64}$。",
+        "对图像 $y = f(x)$，曲率为\n\n$$\\kappa = \\frac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}$$\n\n它随凹凸程度 $|f''|$ 增大，但在图像陡峭处被削弱。当斜率是勾股数之比如 $\\frac34$ 时分母为有理数：$1 + \\frac{9}{16} = \\frac{25}{16}$，其 $\\frac32$ 次幂为 $\\frac{125}{64}$。",
       ),
       generate(rng: Rng): Problem {
         const [p, q, r] = rng.pick([
@@ -1645,7 +1645,7 @@ export const vectorFields: TopicDef = {
       title: t("Evaluating vector fields at points", "在各点处求向量场的值"),
       explanation: t(
         "To evaluate a vector field, substitute the coordinates of the point into each component formula to get the vector attached to that point. A vector field in $\\mathbb{R}^3$ is a function $\\mathbf{F}$ that assigns to each point $(x, y, z)$ a three-dimensional vector:\n\n$$\\mathbf{F}(x, y, z) = P(x, y, z)\\mathbf{i} + Q(x, y, z)\\mathbf{j} + R(x, y, z)\\mathbf{k} = \\langle P, Q, R \\rangle.$$",
-        "求向量场的值时，把点的坐标代入每个分量公式，就得到附着在该点的向量。$\\mathbb{R}^3$ 中的向量场是一个函数 $\\mathbf{F}$，它为空间中的每个点 $(x, y, z)$ 赋予一个三维向量：\n\n$$\\mathbf{F}(x, y, z) = P(x, y, z)\\mathbf{i} + Q(x, y, z)\\mathbf{j} + R(x, y, z)\\mathbf{k} = \\langle P, Q, R \\rangle。$$",
+        "求向量场的值时，把点的坐标代入每个分量公式，就得到附着在该点的向量。$\\mathbb{R}^3$ 中的向量场是一个函数 $\\mathbf{F}$，它为空间中的每个点 $(x, y, z)$ 赋予一个三维向量：\n\n$$\\mathbf{F}(x, y, z) = P(x, y, z)\\mathbf{i} + Q(x, y, z)\\mathbf{j} + R(x, y, z)\\mathbf{k} = \\langle P, Q, R \\rangle$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -1884,7 +1884,7 @@ export const gradientVectorFields: TopicDef = {
       title: t("Computing gradient fields", "计算梯度向量场"),
       explanation: t(
         "The gradient collects the partial derivatives into a vector, which at each point points in the direction in which the function increases fastest. If $f(x, y, z)$ is a scalar function, its gradient vector field $\\nabla f$ is defined by:\n\n$$\\nabla f = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y}, \\frac{\\partial f}{\\partial z} \\right\\rangle.$$",
-        "梯度把各个偏导数组成一个向量，它在每一点都指向函数增长最快的方向。若 $f(x, y, z)$ 为标量函数，其梯度向量场 $\\nabla f$ 定义为：\n\n$$\\nabla f = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y}, \\frac{\\partial f}{\\partial z} \\right\\rangle。$$",
+        "梯度把各个偏导数组成一个向量，它在每一点都指向函数增长最快的方向。若 $f(x, y, z)$ 为标量函数，其梯度向量场 $\\nabla f$ 定义为：\n\n$$\\nabla f = \\left\\langle \\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y}, \\frac{\\partial f}{\\partial z} \\right\\rangle$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -1930,7 +1930,7 @@ export const gradientVectorFields: TopicDef = {
       title: t("The gradient of a sum of products", "乘积之和的梯度"),
       explanation: t(
         "The gradient field $\\nabla f = \\langle f_x, f_y, f_z \\rangle$ is found one partial derivative at a time, treating the other variables as constants. For $f = axy + byz + cxz$, each product contributes to the two variables it contains:\n\n$$\\nabla f = \\langle ay + cz,\\ ax + bz,\\ by + cx \\rangle.$$",
-        "梯度场 $\\nabla f = \\langle f_x, f_y, f_z \\rangle$ 逐个偏导求出，把其他变量视为常数。对 $f = axy + byz + cxz$，每个乘积对它所含的两个变量都有贡献：\n\n$$\\nabla f = \\langle ay + cz,\\ ax + bz,\\ by + cx \\rangle。$$",
+        "梯度场 $\\nabla f = \\langle f_x, f_y, f_z \\rangle$ 逐个偏导求出，把其他变量视为常数。对 $f = axy + byz + cxz$，每个乘积对它所含的两个变量都有贡献：\n\n$$\\nabla f = \\langle ay + cz,\\ ax + bz,\\ by + cx \\rangle$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -1978,7 +1978,7 @@ export const conservativeVectorFieldsInTheCartesianPlane: TopicDef = {
       title: t("Testing for conservative vector fields", "判别保守向量场"),
       explanation: t(
         "Let $\\mathbf{F}(x, y) = P(x, y)\\mathbf{i} + Q(x, y)\\mathbf{j}$ have continuous first partial derivatives on an open simply connected region $D$. Then $\\mathbf{F}$ is conservative if and only if:\n\n$$\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}.$$",
-        "设 $\\mathbf{F}(x, y) = P(x, y)\\mathbf{i} + Q(x, y)\\mathbf{j}$ 在开单连通区域 $D$ 上具有连续一阶偏导数。则 $\\mathbf{F}$ 为保守场当且仅当：\n\n$$\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}。$$",
+        "设 $\\mathbf{F}(x, y) = P(x, y)\\mathbf{i} + Q(x, y)\\mathbf{j}$ 在开单连通区域 $D$ 上具有连续一阶偏导数。则 $\\mathbf{F}$ 为保守场当且仅当：\n\n$$\\frac{\\partial P}{\\partial y} = \\frac{\\partial Q}{\\partial x}$$",
       ),
       generate(rng: Rng): Problem {
         const cleanA = rng.nonZero(-25, 25);
@@ -2079,7 +2079,7 @@ export const calculatingPotentialFunctions: TopicDef = {
             `Using $f(0, 0) = 0$ gives $C = 0$, so $f(x, y) = ${ans}$.`,
           ),
           steps(
-            `将第一分量 $P = ${poly([2 * a, "x"], [b, "y"])}$ 对 $x$ 积分：\n\n` + `$$f(x, y) = ${poly([a, "x^2"], [b, "xy"])} + g(y)。$$`,
+            `将第一分量 $P = ${poly([2 * a, "x"], [b, "y"])}$ 对 $x$ 积分：\n\n` + `$$f(x, y) = ${poly([a, "x^2"], [b, "xy"])} + g(y)$$`,
             `对 $y$ 求偏导：$\\frac{\\partial f}{\\partial y} = ${poly([b, "x"])} + g'(y)$。`,
             `与第二分量 $Q = ${poly([b, "x"], [2 * c, "y"])}$ 对比：$g'(y) = ${poly([2 * c, "y"])} \\implies g(y) = ${poly([c, "y^2"])} + C$。`,
             `由 $f(0, 0) = 0$ 得 $C = 0$，故 $f(x, y) = ${ans}$。`,
@@ -2289,7 +2289,7 @@ export const streamFunctions: TopicDef = {
       title: t("Finding stream functions for incompressible flows", "求不可压缩流场的流函数"),
       explanation: t(
         "For a two-dimensional incompressible vector field $\\mathbf{F} = \\langle P, Q \\rangle$ with $\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} = 0$, there exists a scalar stream function $\\psi(x, y)$ such that:\n\n$$P = \\frac{\\partial \\psi}{\\partial y}, \\quad Q = -\\frac{\\partial \\psi}{\\partial x}.$$ Level curves $\\psi(x, y) = C$ are the streamlines of the velocity field.",
-        "对于满足 $\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} = 0$ 的二维不可压缩向量场 $\\mathbf{F} = \\langle P, Q \\rangle$，存在标量流函数 $\\psi(x, y)$ 使得：\n\n$$P = \\frac{\\partial \\psi}{\\partial y}, \\quad Q = -\\frac{\\partial \\psi}{\\partial x}。$$ 等值线 $\\psi(x, y) = C$ 即为该速度场的流线。",
+        "对于满足 $\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} = 0$ 的二维不可压缩向量场 $\\mathbf{F} = \\langle P, Q \\rangle$，存在标量流函数 $\\psi(x, y)$ 使得：\n\n$$P = \\frac{\\partial \\psi}{\\partial y}, \\quad Q = -\\frac{\\partial \\psi}{\\partial x}$$ 等值线 $\\psi(x, y) = C$ 即为该速度场的流线。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -2385,7 +2385,7 @@ export const theDivergenceOfAVectorField: TopicDef = {
       title: t("Computing the divergence of a vector field", "计算向量场的散度"),
       explanation: t(
         "Divergence adds the rate of change of each component in its own direction, measuring how much the field spreads out from a point. For a three-dimensional vector field $\\mathbf{F} = \\langle P, Q, R \\rangle$, the divergence is the scalar field:\n\n$$\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = \\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}.$$",
-        "散度把每个分量沿自身方向的变化率加起来，衡量向量场从一点向外发散的程度。对于三维向量场 $\\mathbf{F} = \\langle P, Q, R \\rangle$，散度是由下式给出的标量场：\n\n$$\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = \\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}。$$",
+        "散度把每个分量沿自身方向的变化率加起来，衡量向量场从一点向外发散的程度。对于三维向量场 $\\mathbf{F} = \\langle P, Q, R \\rangle$，散度是由下式给出的标量场：\n\n$$\\operatorname{div}\\mathbf{F} = \\nabla \\cdot \\mathbf{F} = \\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y} + \\frac{\\partial R}{\\partial z}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -2511,7 +2511,7 @@ export const propertiesOfTheDivergenceOperator: TopicDef = {
       title: t("The product rule for divergence", "散度的乘积法则"),
       explanation: t(
         "The divergence of a scalar function times a field follows a product rule:\n\n$$\\nabla \\cdot (f\\mathbf{F}) = \\nabla f \\cdot \\mathbf{F} + f\\,(\\nabla \\cdot \\mathbf{F}).$$\n\nFor $f = x$ the gradient is $\\langle 1, 0, 0 \\rangle$, so the first term is just the first component of $\\mathbf{F}$. The rule saves expanding $f\\mathbf{F}$ before differentiating.",
-        "标量函数乘以场的散度满足乘积法则：\n\n$$\\nabla \\cdot (f\\mathbf{F}) = \\nabla f \\cdot \\mathbf{F} + f\\,(\\nabla \\cdot \\mathbf{F})。$$\n\n对 $f = x$，梯度为 $\\langle 1, 0, 0 \\rangle$，所以第一项就是 $\\mathbf{F}$ 的第一个分量。这一法则省去了先展开 $f\\mathbf{F}$ 再求导。",
+        "标量函数乘以场的散度满足乘积法则：\n\n$$\\nabla \\cdot (f\\mathbf{F}) = \\nabla f \\cdot \\mathbf{F} + f\\,(\\nabla \\cdot \\mathbf{F})$$\n\n对 $f = x$，梯度为 $\\langle 1, 0, 0 \\rangle$，所以第一项就是 $\\mathbf{F}$ 的第一个分量。这一法则省去了先展开 $f\\mathbf{F}$ 再求导。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-4, 4);
@@ -2553,7 +2553,7 @@ export const theCurlOfAVectorField: TopicDef = {
       title: t("Computing the curl of a vector field", "计算向量场的旋度"),
       explanation: t(
         "Curl measures how much a field rotates around each point, and the determinant pattern is a convenient way to remember its three components. For a vector field $\\mathbf{F} = \\langle P, Q, R \\rangle$ in $\\mathbb{R}^3$, the curl is defined by the formal determinant:\n\n$$\\operatorname{curl}\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ \\frac{\\partial}{\\partial x} & \\frac{\\partial}{\\partial y} & \\frac{\\partial}{\\partial z} \\\\ P & Q & R \\end{vmatrix} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle.$$",
-        "旋度衡量向量场绕每一点旋转的程度，行列式的形式是记住它三个分量的方便方法。对于 $\\mathbb{R}^3$ 中的向量场 $\\mathbf{F} = \\langle P, Q, R \\rangle$，旋度通过形式行列式定义：\n\n$$\\operatorname{curl}\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ \\frac{\\partial}{\\partial x} & \\frac{\\partial}{\\partial y} & \\frac{\\partial}{\\partial z} \\\\ P & Q & R \\end{vmatrix} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle。$$",
+        "旋度衡量向量场绕每一点旋转的程度，行列式的形式是记住它三个分量的方便方法。对于 $\\mathbb{R}^3$ 中的向量场 $\\mathbf{F} = \\langle P, Q, R \\rangle$，旋度通过形式行列式定义：\n\n$$\\operatorname{curl}\\mathbf{F} = \\nabla \\times \\mathbf{F} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ \\frac{\\partial}{\\partial x} & \\frac{\\partial}{\\partial y} & \\frac{\\partial}{\\partial z} \\\\ P & Q & R \\end{vmatrix} = \\left\\langle \\frac{\\partial R}{\\partial y} - \\frac{\\partial Q}{\\partial z}, \\frac{\\partial P}{\\partial z} - \\frac{\\partial R}{\\partial x}, \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right\\rangle$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);
@@ -2609,7 +2609,7 @@ export const theCurlOfAVectorField: TopicDef = {
       title: t("The scalar curl of a plane field at a point", "平面场在某点的标量旋度"),
       explanation: t(
         "For a plane field $\\mathbf{F} = \\langle P, Q \\rangle$, viewed as $\\langle P, Q, 0 \\rangle$ in space, the curl points along $\\mathbf{k}$ with size\n\n$$\\operatorname{curl}\\mathbf{F} \\cdot \\mathbf{k} = \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}.$$\n\nThis scalar curl measures the local rotation: positive means a tiny paddle wheel would spin counterclockwise, negative means clockwise.",
-        "对平面场 $\\mathbf{F} = \\langle P, Q \\rangle$，视为空间中的 $\\langle P, Q, 0 \\rangle$，旋度沿 $\\mathbf{k}$ 方向，大小为\n\n$$\\operatorname{curl}\\mathbf{F} \\cdot \\mathbf{k} = \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}。$$\n\n这个标量旋度衡量局部转动：为正表示小桨轮逆时针转，为负表示顺时针转。",
+        "对平面场 $\\mathbf{F} = \\langle P, Q \\rangle$，视为空间中的 $\\langle P, Q, 0 \\rangle$，旋度沿 $\\mathbf{k}$ 方向，大小为\n\n$$\\operatorname{curl}\\mathbf{F} \\cdot \\mathbf{k} = \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}$$\n\n这个标量旋度衡量局部转动：为正表示小桨轮逆时针转，为负表示顺时针转。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-3, 3);

@@ -729,7 +729,7 @@ export const newtonsMethod: TopicDef = {
       title: t("One step of Newton's method", "牛顿法的一步"),
       explanation: t(
         "Each step replaces the curve by its tangent line and finds where that line crosses the axis, which is usually much closer to the true root. To solve $f(x) = 0$ from a guess $x_{0}$, follow the tangent line at $x_{0}$ to the $x$-axis:\n\n$$x_{1} = x_{0} - \\frac{f(x_{0})}{f'(x_{0})}.$$",
-        "每一步都用切线代替曲线，并求出切线与坐标轴的交点，这个点通常离真正的根近得多。从初始猜测 $x_{0}$ 出发解 $f(x) = 0$ 时，沿 $x_{0}$ 处的切线走到 $x$ 轴：\n\n$$x_{1} = x_{0} - \\frac{f(x_{0})}{f'(x_{0})}。$$",
+        "每一步都用切线代替曲线，并求出切线与坐标轴的交点，这个点通常离真正的根近得多。从初始猜测 $x_{0}$ 出发解 $f(x) = 0$ 时，沿 $x_{0}$ 处的切线走到 $x$ 轴：\n\n$$x_{1} = x_{0} - \\frac{f(x_{0})}{f'(x_{0})}$$",
       ),
       generate(rng) {
         for (;;) {
@@ -810,7 +810,7 @@ export const newtonsMethodForOptimizingSingleVariableFunctions: TopicDef = {
       title: t("Newton steps toward critical points", "向临界点迭代的牛顿步"),
       explanation: t(
         "Critical points solve $f'(x) = 0$, so apply Newton's method to $f'$:\n\n$$x_{1} = x_{0} - \\frac{f'(x_{0})}{f''(x_{0})}.$$\n\nThis needs the second derivative, not $f$ itself.",
-        "临界点满足 $f'(x) = 0$，所以对 $f'$ 应用牛顿法：\n\n$$x_{1} = x_{0} - \\frac{f'(x_{0})}{f''(x_{0})}。$$\n\n这里需要的是二阶导数，而不是 $f$ 本身。",
+        "临界点满足 $f'(x) = 0$，所以对 $f'$ 应用牛顿法：\n\n$$x_{1} = x_{0} - \\frac{f'(x_{0})}{f''(x_{0})}$$\n\n这里需要的是二阶导数，而不是 $f$ 本身。",
       ),
       generate(rng) {
         for (;;) {

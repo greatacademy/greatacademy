@@ -377,7 +377,7 @@ export const evaluatingWholeNumberExpressionsWithParentheses = topic(
       title: t("One pair of parentheses", "一对小括号"),
       explanation: t(
         "Parentheses mark the part to work out first, even when it is an addition and the rest is a multiplication. Find the value inside the parentheses, then finish the expression:\n\n$$(17 + 8) \\times 4 = 25 \\times 4 = 100.$$\n\nWithout the parentheses the multiplication would come first: $17 + 8 \\times 4 = 17 + 32 = 49$, a different answer.",
-        "小括号表示要先算的部分，即使括号里是加法、括号外是乘法，也要先算括号里面。先求出括号里的值，再算完整个算式：\n\n$$(17 + 8) \\times 4 = 25 \\times 4 = 100。$$\n\n如果没有括号，就要先算乘法：$17 + 8 \\times 4 = 17 + 32 = 49$，结果不一样。",
+        "小括号表示要先算的部分，即使括号里是加法、括号外是乘法，也要先算括号里面。先求出括号里的值，再算完整个算式：\n\n$$(17 + 8) \\times 4 = 25 \\times 4 = 100$$\n\n如果没有括号，就要先算乘法：$17 + 8 \\times 4 = 17 + 32 = 49$，结果不一样。",
       ),
       generate: (rng) => bracketedProblem(oneParenthesis(rng)),
     },
@@ -386,7 +386,7 @@ export const evaluatingWholeNumberExpressionsWithParentheses = topic(
       title: t("Brackets and parentheses", "中括号和小括号"),
       explanation: t(
         "When parentheses sit inside brackets, work from the inside out: first the parentheses, then the rest of the brackets, then everything outside. Inside each grouping, multiplication and division still come before addition and subtraction.\n\n$$3 \\times [20 - (4 + 9)] = 3 \\times [20 - 13] = 3 \\times 7 = 21.$$",
-        "中括号里套着小括号时，要从里往外算：先算小括号，再算中括号里剩下的部分，最后算括号外面。在每一层括号里，仍然先乘除、后加减。\n\n$$3 \\times [20 - (4 + 9)] = 3 \\times [20 - 13] = 3 \\times 7 = 21。$$",
+        "中括号里套着小括号时，要从里往外算：先算小括号，再算中括号里剩下的部分，最后算括号外面。在每一层括号里，仍然先乘除、后加减。\n\n$$3 \\times [20 - (4 + 9)] = 3 \\times [20 - 13] = 3 \\times 7 = 21$$",
       ),
       generate: (rng) => bracketedProblem(nestedGroups(rng)),
     },
@@ -660,7 +660,7 @@ export const creatingWholeNumberExpressionsFromTerminology = topic(
       title: t("Evaluating a description", "按描述计算"),
       explanation: t(
         'Turn the words into an expression first, then evaluate it. "Sum" means add, "difference" means subtract, "product" means multiply and "quotient" means divide. When a description says "twice the difference", the difference must be found first, so it goes in parentheses:\n\n$$2 \\times (20 - 6) = 2 \\times 14 = 28.$$',
-        '先把文字改写成算式，再计算。"和"表示加，"差"表示减，"积"表示乘，"商"表示除。像"差的 2 倍"这样的说法，要先求差，所以差要放在括号里：\n\n$$2 \\times (20 - 6) = 2 \\times 14 = 28。$$',
+        '先把文字改写成算式，再计算。"和"表示加，"差"表示减，"积"表示乘，"商"表示除。像"差的 2 倍"这样的说法，要先求差，所以差要放在括号里：\n\n$$2 \\times (20 - 6) = 2 \\times 14 = 28$$',
       ),
       generate(rng) {
         const p = termPhrase(rng);

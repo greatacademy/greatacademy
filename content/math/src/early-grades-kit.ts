@@ -70,6 +70,12 @@ export const earlyThings: readonly { readonly en: string; readonly zh: string; r
   { en: "blocks", zh: "积木", unit: "块" },
 ];
 
+/** lowestNumerator picks a numerator of a proper fraction in lowest terms over the denominator d. */
+export function lowestNumerator(rng: Rng, d: number): number {
+  const coprime = (a: number, b: number): boolean => (b === 0 ? a === 1 : coprime(b, a % b));
+  return rng.pick(Array.from({ length: d - 1 }, (_, i) => i + 1).filter((n) => coprime(d, n)));
+}
+
 /** nearbyWrong lists whole numbers near the answer, leaving out negative ones and the answer itself. */
 export function nearbyWrong(answer: number, ...others: readonly number[]): number[] {
   return [...others, answer + 1, answer - 1, answer + 2, answer - 2, answer + 10].filter((v) => v >= 0 && v !== answer);

@@ -4,6 +4,7 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
+import { lowestNumerator } from "../early-grades-kit.ts";
 import { numberProblem } from "../problems.ts";
 import { chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 import { dotPlotFigure } from "./grade-6-statistics.ts";
@@ -181,7 +182,7 @@ export const deeperGrade6Third2Points: Readonly<Record<string, readonly Knowledg
       ],
       (rng) => {
         const d = rng.pick([2, 3, 4, 5, 8]);
-        const n = rng.int(1, d - 1);
+        const n = lowestNumerator(rng, d);
         const a = rng.int(1, 9);
         const v = Q.of(a * d + n, d);
         const edges = rng.int(1, 3);

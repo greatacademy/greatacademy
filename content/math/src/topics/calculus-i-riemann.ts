@@ -150,7 +150,7 @@ export const approximatingAreasWithTheLeftRiemannSum: TopicDef = {
       title: t("Left sums from a formula", "由公式求左黎曼和"),
       explanation: t(
         "To approximate the area under $y = f(x)$ on $[a, b]$, split the interval into $n$ subintervals of width $\\Delta x = \\frac{b - a}{n}$ with endpoints $x_{0} = a, x_{1}, \\ldots, x_{n} = b$. The **left Riemann sum** uses the height at the left end of each subinterval:\n\n$$L_{n} = \\Delta x\\left[f(x_{0}) + f(x_{1}) + \\cdots + f(x_{n - 1})\\right].$$",
-        "要近似 $y = f(x)$ 在 $[a, b]$ 上的图像下方面积，把区间分成 $n$ 个宽为 $\\Delta x = \\frac{b - a}{n}$ 的子区间，端点为 $x_{0} = a, x_{1}, \\ldots, x_{n} = b$。**左黎曼和**取每个子区间左端点处的高：\n\n$$L_{n} = \\Delta x\\left[f(x_{0}) + f(x_{1}) + \\cdots + f(x_{n - 1})\\right]。$$",
+        "要近似 $y = f(x)$ 在 $[a, b]$ 上的图像下方面积，把区间分成 $n$ 个宽为 $\\Delta x = \\frac{b - a}{n}$ 的子区间，端点为 $x_{0} = a, x_{1}, \\ldots, x_{n} = b$。**左黎曼和**取每个子区间左端点处的高：\n\n$$L_{n} = \\Delta x\\left[f(x_{0}) + f(x_{1}) + \\cdots + f(x_{n - 1})\\right]$$",
       ),
       generate: (rng) => formulaProblem(rng, "left"),
     },
@@ -184,7 +184,7 @@ export const approximatingAreasWithTheRightRiemannSum: TopicDef = {
       title: t("Right sums", "右黎曼和"),
       explanation: t(
         "The **right Riemann sum** uses the height at the right end of each subinterval:\n\n$$R_{n} = \\Delta x\\left[f(x_{1}) + f(x_{2}) + \\cdots + f(x_{n})\\right].$$\n\nIt differs from the left sum only in its first and last terms: $R_{n} - L_{n} = \\Delta x\\left[f(x_{n}) - f(x_{0})\\right]$.",
-        "**右黎曼和**取每个子区间右端点处的高：\n\n$$R_{n} = \\Delta x\\left[f(x_{1}) + f(x_{2}) + \\cdots + f(x_{n})\\right]。$$\n\n它与左黎曼和只差首尾两项：$R_{n} - L_{n} = \\Delta x\\left[f(x_{n}) - f(x_{0})\\right]$。",
+        "**右黎曼和**取每个子区间右端点处的高：\n\n$$R_{n} = \\Delta x\\left[f(x_{1}) + f(x_{2}) + \\cdots + f(x_{n})\\right]$$\n\n它与左黎曼和只差首尾两项：$R_{n} - L_{n} = \\Delta x\\left[f(x_{n}) - f(x_{0})\\right]$。",
       ),
       generate: (rng) => (rng.bool() ? formulaProblem(rng, "right") : tableProblem(rng, "right")),
     },
@@ -250,7 +250,7 @@ export const approximatingAreasWithTheMidpointRiemannSum: TopicDef = {
       title: t("Midpoint sums from a formula", "由公式求中点黎曼和"),
       explanation: t(
         "The **midpoint Riemann sum** uses the height at the middle of each subinterval, $m_{i} = \\frac{x_{i - 1} + x_{i}}{2}$:\n\n$$M_{n} = \\Delta x\\left[f(m_{1}) + f(m_{2}) + \\cdots + f(m_{n})\\right].$$\n\nIt is usually much more accurate than the left or right sum with the same $n$.",
-        "**中点黎曼和**取每个子区间中点 $m_{i} = \\frac{x_{i - 1} + x_{i}}{2}$ 处的高：\n\n$$M_{n} = \\Delta x\\left[f(m_{1}) + f(m_{2}) + \\cdots + f(m_{n})\\right]。$$\n\n在 $n$ 相同时，它通常比左、右黎曼和精确得多。",
+        "**中点黎曼和**取每个子区间中点 $m_{i} = \\frac{x_{i - 1} + x_{i}}{2}$ 处的高：\n\n$$M_{n} = \\Delta x\\left[f(m_{1}) + f(m_{2}) + \\cdots + f(m_{n})\\right]$$\n\n在 $n$ 相同时，它通常比左、右黎曼和精确得多。",
       ),
       generate: (rng) => formulaProblem(rng, "midpoint"),
     },
@@ -281,7 +281,7 @@ export const approximatingAreasWithTheTrapezoidalRule: TopicDef = {
       title: t("The trapezoidal rule from a formula", "由公式用梯形法则"),
       explanation: t(
         "Joining the points of the graph above consecutive endpoints gives trapezoids of area $\\frac{\\Delta x}{2}\\left[f(x_{i - 1}) + f(x_{i})\\right]$. Adding them, the inner heights count twice:\n\n$$T_{n} = \\frac{\\Delta x}{2}\\left[f(x_{0}) + 2f(x_{1}) + \\cdots + 2f(x_{n - 1}) + f(x_{n})\\right] = \\frac{L_{n} + R_{n}}{2}.$$",
-        "把相邻端点上方的图像点连起来，得到面积为 $\\frac{\\Delta x}{2}\\left[f(x_{i - 1}) + f(x_{i})\\right]$ 的梯形。相加时，内部的高各算两次：\n\n$$T_{n} = \\frac{\\Delta x}{2}\\left[f(x_{0}) + 2f(x_{1}) + \\cdots + 2f(x_{n - 1}) + f(x_{n})\\right] = \\frac{L_{n} + R_{n}}{2}。$$",
+        "把相邻端点上方的图像点连起来，得到面积为 $\\frac{\\Delta x}{2}\\left[f(x_{i - 1}) + f(x_{i})\\right]$ 的梯形。相加时，内部的高各算两次：\n\n$$T_{n} = \\frac{\\Delta x}{2}\\left[f(x_{0}) + 2f(x_{1}) + \\cdots + 2f(x_{n - 1}) + f(x_{n})\\right] = \\frac{L_{n} + R_{n}}{2}$$",
       ),
       generate: (rng) => formulaProblem(rng, "trapezoidal"),
     },
@@ -343,7 +343,7 @@ export const leftAndRightRiemannSumsInSigmaNotation: TopicDef = {
       title: t("Writing left and right sums", "写出左、右黎曼和"),
       explanation: t(
         "Divide the interval into equal widths, then add up the areas of rectangles whose heights are taken at the left or right end of each piece. The endpoints are $x_{i} = a + i\\Delta x$. The left sum uses $i = 0$ to $n - 1$ and the right sum $i = 1$ to $n$:\n\n$$L_{n} = \\sum_{i = 0}^{n - 1} f(a + i\\Delta x)\\Delta x, \\qquad R_{n} = \\sum_{i = 1}^{n} f(a + i\\Delta x)\\Delta x.$$",
-        "把区间分成等宽的小段，再把高度取在每段左端或右端的矩形面积加起来。端点为 $x_{i} = a + i\\Delta x$。左黎曼和取 $i = 0$ 到 $n - 1$，右黎曼和取 $i = 1$ 到 $n$：\n\n$$L_{n} = \\sum_{i = 0}^{n - 1} f(a + i\\Delta x)\\Delta x, \\qquad R_{n} = \\sum_{i = 1}^{n} f(a + i\\Delta x)\\Delta x。$$",
+        "把区间分成等宽的小段，再把高度取在每段左端或右端的矩形面积加起来。端点为 $x_{i} = a + i\\Delta x$。左黎曼和取 $i = 0$ 到 $n - 1$，右黎曼和取 $i = 1$ 到 $n$：\n\n$$L_{n} = \\sum_{i = 0}^{n - 1} f(a + i\\Delta x)\\Delta x, \\qquad R_{n} = \\sum_{i = 1}^{n} f(a + i\\Delta x)\\Delta x$$",
       ),
       generate(rng) {
         const g = { ...grid(rng, 4, 10) };
@@ -427,7 +427,7 @@ export const midpointAndTrapezoidalRulesInSigmaNotation: TopicDef = {
       title: t("The midpoint rule in sigma notation", "用求和符号表示中点法则"),
       explanation: t(
         "The midpoint of the $i$th subinterval is $a + \\left(i - \\frac{1}{2}\\right)\\Delta x$ for $i = 1, \\ldots, n$, so\n\n$$M_{n} = \\sum_{i = 1}^{n} f\\left(a + \\left(i - \\tfrac{1}{2}\\right)\\Delta x\\right)\\Delta x.$$\n\nSimplify the argument to the form $c + di$.",
-        "第 $i$ 个子区间的中点为 $a + \\left(i - \\frac{1}{2}\\right)\\Delta x$，$i = 1, \\ldots, n$，所以\n\n$$M_{n} = \\sum_{i = 1}^{n} f\\left(a + \\left(i - \\tfrac{1}{2}\\right)\\Delta x\\right)\\Delta x。$$\n\n把自变量化简成 $c + di$ 的形式。",
+        "第 $i$ 个子区间的中点为 $a + \\left(i - \\frac{1}{2}\\right)\\Delta x$，$i = 1, \\ldots, n$，所以\n\n$$M_{n} = \\sum_{i = 1}^{n} f\\left(a + \\left(i - \\tfrac{1}{2}\\right)\\Delta x\\right)\\Delta x$$\n\n把自变量化简成 $c + di$ 的形式。",
       ),
       generate(rng) {
         const g = grid(rng, 4, 10);
@@ -457,7 +457,7 @@ export const midpointAndTrapezoidalRulesInSigmaNotation: TopicDef = {
       title: t("The trapezoidal rule in sigma notation", "用求和符号表示梯形法则"),
       explanation: t(
         "Each trapezoid averages the heights at its two ends, so every inner point is shared by two trapezoids and counted twice. The inner endpoints $x_{1}, \\ldots, x_{n - 1}$ count twice and the ends once:\n\n$$T_{n} = \\frac{\\Delta x}{2}\\left[f(a) + 2\\sum_{i = 1}^{n - 1} f(a + i\\Delta x) + f(b)\\right].$$",
-        "每个梯形取两端高度的平均值，所以每个内部点被两个梯形共用，要算两次。内部端点 $x_{1}, \\ldots, x_{n - 1}$ 各算两次，两端各算一次：\n\n$$T_{n} = \\frac{\\Delta x}{2}\\left[f(a) + 2\\sum_{i = 1}^{n - 1} f(a + i\\Delta x) + f(b)\\right]。$$",
+        "每个梯形取两端高度的平均值，所以每个内部点被两个梯形共用，要算两次。内部端点 $x_{1}, \\ldots, x_{n - 1}$ 各算两次，两端各算一次：\n\n$$T_{n} = \\frac{\\Delta x}{2}\\left[f(a) + 2\\sum_{i = 1}^{n - 1} f(a + i\\Delta x) + f(b)\\right]$$",
       ),
       generate(rng) {
         const g = grid(rng, 4, 10);
@@ -664,7 +664,7 @@ export const definingDefiniteIntegralsUsingLeftAndRightRiemannSums: TopicDef = {
       title: t("Limits of sums as integrals", "把和的极限写成积分"),
       explanation: t(
         "As $n \\to \\infty$ the Riemann sums of a continuous $f$ approach one number, the **definite integral**:\n\n$$\\int_{a}^{b} f(x) \\, dx = \\lim_{n \\to \\infty} \\sum_{i = 1}^{n} f\\left(a + \\frac{(b - a)i}{n}\\right)\\frac{b - a}{n}.$$\n\nTo read an integral off such a limit, match $\\Delta x = \\frac{b - a}{n}$ and the argument $a + i\\Delta x$: the constant term is $a$, and $b = a + (b - a)$.",
-        "当 $n \\to \\infty$ 时，连续函数 $f$ 的黎曼和趋于同一个数，即**定积分**：\n\n$$\\int_{a}^{b} f(x) \\, dx = \\lim_{n \\to \\infty} \\sum_{i = 1}^{n} f\\left(a + \\frac{(b - a)i}{n}\\right)\\frac{b - a}{n}。$$\n\n要从这样的极限读出积分，对照 $\\Delta x = \\frac{b - a}{n}$ 和自变量 $a + i\\Delta x$：常数项是 $a$，且 $b = a + (b - a)$。",
+        "当 $n \\to \\infty$ 时，连续函数 $f$ 的黎曼和趋于同一个数，即**定积分**：\n\n$$\\int_{a}^{b} f(x) \\, dx = \\lim_{n \\to \\infty} \\sum_{i = 1}^{n} f\\left(a + \\frac{(b - a)i}{n}\\right)\\frac{b - a}{n}$$\n\n要从这样的极限读出积分，对照 $\\Delta x = \\frac{b - a}{n}$ 和自变量 $a + i\\Delta x$：常数项是 $a$，且 $b = a + (b - a)$。",
       ),
       generate(rng) {
         const [f, at] = rng.pick(shapes);
@@ -694,7 +694,7 @@ export const definingDefiniteIntegralsUsingLeftAndRightRiemannSums: TopicDef = {
       title: t("Evaluating integrals from the definition", "由定义计算定积分"),
       explanation: t(
         "Write the right sum with the sum formulas for powers of the index, simplify it in terms of the number of pieces, and let that number grow without bound. For polynomials the limit can be computed with\n\n$$\\sum_{i = 1}^{n} 1 = n, \\qquad \\sum_{i = 1}^{n} i = \\frac{n(n + 1)}{2}, \\qquad \\sum_{i = 1}^{n} i^{2} = \\frac{n(n + 1)(2n + 1)}{6}.$$\n\nFor example, $\\int_{0}^{b} x^{2} \\, dx = \\lim_{n \\to \\infty} \\sum_{i = 1}^{n} \\frac{b^{2}i^{2}}{n^{2}} \\cdot \\frac{b}{n} = \\lim_{n \\to \\infty} \\frac{b^{3}}{n^{3}} \\cdot \\frac{n(n + 1)(2n + 1)}{6} = \\frac{b^{3}}{3}$.",
-        "用下标幂的求和公式写出右和，把它化简为小段数的式子，再让小段数无限增大。对多项式，可以用下列公式求极限：\n\n$$\\sum_{i = 1}^{n} 1 = n, \\qquad \\sum_{i = 1}^{n} i = \\frac{n(n + 1)}{2}, \\qquad \\sum_{i = 1}^{n} i^{2} = \\frac{n(n + 1)(2n + 1)}{6}。$$\n\n例如 $\\int_{0}^{b} x^{2} \\, dx = \\lim_{n \\to \\infty} \\sum_{i = 1}^{n} \\frac{b^{2}i^{2}}{n^{2}} \\cdot \\frac{b}{n} = \\lim_{n \\to \\infty} \\frac{b^{3}}{n^{3}} \\cdot \\frac{n(n + 1)(2n + 1)}{6} = \\frac{b^{3}}{3}$。",
+        "用下标幂的求和公式写出右和，把它化简为小段数的式子，再让小段数无限增大。对多项式，可以用下列公式求极限：\n\n$$\\sum_{i = 1}^{n} 1 = n, \\qquad \\sum_{i = 1}^{n} i = \\frac{n(n + 1)}{2}, \\qquad \\sum_{i = 1}^{n} i^{2} = \\frac{n(n + 1)(2n + 1)}{6}$$\n\n例如 $\\int_{0}^{b} x^{2} \\, dx = \\lim_{n \\to \\infty} \\sum_{i = 1}^{n} \\frac{b^{2}i^{2}}{n^{2}} \\cdot \\frac{b}{n} = \\lim_{n \\to \\infty} \\frac{b^{3}}{n^{3}} \\cdot \\frac{n(n + 1)(2n + 1)}{6} = \\frac{b^{3}}{3}$。",
       ),
       generate(rng) {
         const b = rng.int(1, 6);
@@ -746,7 +746,7 @@ export const theFundamentalTheoremOfCalculus: TopicDef = {
       title: t("Definite integrals of polynomials", "多项式的定积分"),
       explanation: t(
         "**The fundamental theorem of calculus:** if $f$ is continuous on $[a, b]$ and $F$ is any antiderivative of $f$, then\n\n$$\\int_{a}^{b} f(x) \\, dx = \\Big[F(x)\\Big]_{a}^{b} = F(b) - F(a).$$\n\nThe constant $C$ cancels, so leave it out.",
-        "**微积分基本定理：**若 $f$ 在 $[a, b]$ 上连续，$F$ 是 $f$ 的任一原函数，则\n\n$$\\int_{a}^{b} f(x) \\, dx = \\Big[F(x)\\Big]_{a}^{b} = F(b) - F(a)。$$\n\n常数 $C$ 会抵消，所以不必写。",
+        "**微积分基本定理：**若 $f$ 在 $[a, b]$ 上连续，$F$ 是 $f$ 的任一原函数，则\n\n$$\\int_{a}^{b} f(x) \\, dx = \\Big[F(x)\\Big]_{a}^{b} = F(b) - F(a)$$\n\n常数 $C$ 会抵消，所以不必写。",
       ),
       generate(rng) {
         const deg = rng.int(1, 3);
@@ -972,7 +972,7 @@ export const theSumAndConstantMultipleRulesForDefiniteIntegrals: TopicDef = {
       title: t("Combining known integrals", "组合已知的积分"),
       explanation: t(
         "Definite integrals are linear, so when the integrals of the separate functions are known, any combination of them can be found without integrating again. Definite integrals split over sums and constant multiples:\n\n$$\\int_{a}^{b} \\left[pf(x) + qg(x)\\right] dx = p\\int_{a}^{b} f(x) \\, dx + q\\int_{a}^{b} g(x) \\, dx.$$",
-        "定积分是线性的，所以当各个函数的积分已知时，不必重新积分就能求出它们的任意组合。定积分对和与常数倍可以拆开：\n\n$$\\int_{a}^{b} \\left[pf(x) + qg(x)\\right] dx = p\\int_{a}^{b} f(x) \\, dx + q\\int_{a}^{b} g(x) \\, dx。$$",
+        "定积分是线性的，所以当各个函数的积分已知时，不必重新积分就能求出它们的任意组合。定积分对和与常数倍可以拆开：\n\n$$\\int_{a}^{b} \\left[pf(x) + qg(x)\\right] dx = p\\int_{a}^{b} f(x) \\, dx + q\\int_{a}^{b} g(x) \\, dx$$",
       ),
       generate(rng) {
         const a = rng.int(-3, 3);
@@ -1045,7 +1045,7 @@ export const propertiesOfDefiniteIntegralsInvolvingTheLimitsOfIntegration: Topic
       title: t("Reversing the limits", "交换上下限"),
       explanation: t(
         "Integrating from right to left counts every piece of area with the opposite sign, so swapping the limits flips the sign of the integral. Swapping the limits changes the sign, and an interval of length zero gives zero:\n\n$$\\int_{b}^{a} f(x) \\, dx = -\\int_{a}^{b} f(x) \\, dx, \\qquad \\int_{a}^{a} f(x) \\, dx = 0.$$",
-        "从右往左积分时每一块面积都取相反的符号，所以交换上下限会改变积分的符号。交换上下限会改变符号，长度为零的区间给出零：\n\n$$\\int_{b}^{a} f(x) \\, dx = -\\int_{a}^{b} f(x) \\, dx, \\qquad \\int_{a}^{a} f(x) \\, dx = 0。$$",
+        "从右往左积分时每一块面积都取相反的符号，所以交换上下限会改变积分的符号。交换上下限会改变符号，长度为零的区间给出零：\n\n$$\\int_{b}^{a} f(x) \\, dx = -\\int_{a}^{b} f(x) \\, dx, \\qquad \\int_{a}^{a} f(x) \\, dx = 0$$",
       ),
       generate(rng) {
         const a = rng.int(-4, 3);
@@ -1085,7 +1085,7 @@ export const propertiesOfDefiniteIntegralsInvolvingTheLimitsOfIntegration: Topic
       title: t("Splitting the interval", "拆分积分区间"),
       explanation: t(
         "Area over a whole interval is the sum of the areas over its pieces, so a known total and one known piece give the other piece. For any $a$, $b$ and $c$,\n\n$$\\int_{a}^{b} f(x) \\, dx + \\int_{b}^{c} f(x) \\, dx = \\int_{a}^{c} f(x) \\, dx.$$\n\nTo find a piece, subtract, reversing limits where needed.",
-        "整个区间上的面积等于各个小区间上面积的和，所以已知总和与其中一块，就能求出另一块。对任意 $a$、$b$、$c$，\n\n$$\\int_{a}^{b} f(x) \\, dx + \\int_{b}^{c} f(x) \\, dx = \\int_{a}^{c} f(x) \\, dx。$$\n\n要求其中一段，就做减法，必要时交换上下限。",
+        "整个区间上的面积等于各个小区间上面积的和，所以已知总和与其中一块，就能求出另一块。对任意 $a$、$b$、$c$，\n\n$$\\int_{a}^{b} f(x) \\, dx + \\int_{b}^{c} f(x) \\, dx = \\int_{a}^{c} f(x) \\, dx$$\n\n要求其中一段，就做减法，必要时交换上下限。",
       ),
       generate(rng) {
         const a = rng.int(-5, 2);

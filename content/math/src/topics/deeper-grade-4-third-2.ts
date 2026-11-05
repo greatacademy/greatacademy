@@ -5,7 +5,7 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
-import { earlyNames } from "../early-grades-kit.ts";
+import { earlyNames, lowestNumerator } from "../early-grades-kit.ts";
 import { numberProblem } from "../problems.ts";
 import { choose, chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 
@@ -544,7 +544,7 @@ export const deeperGrade4Third2Points: Readonly<Record<string, readonly Knowledg
       (rng) => {
         const d = rng.pick([3, 4, 5, 6, 7, 8, 9, 10, 12]);
         const a = rng.int(1, 30);
-        const n = rng.int(1, d - 1);
+        const n = lowestNumerator(rng, d);
         const gap = Q.of(d - n, d);
         return fraction(
           [`What must be added to $${a}${frac(n, d)}$ to reach ${a + 1}?`, `$${a}${frac(n, d)}$ 加上多少等于 ${a + 1}？`],

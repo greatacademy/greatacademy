@@ -173,7 +173,7 @@ $$\\begin{cases} ${eq1} \\\\ ${eq2} \\end{cases}$$`,
       title: t("Solving for $y$ with Cramer's rule", "用克拉默法则求 $y$"),
       explanation: t(
         "For the system $ax + by = e$, $cx + dy = f$ with $D = ad - bc \\ne 0$, Cramer's rule gives $y = \\frac{D_y}{D}$, where $D_y$ is the determinant of the coefficient matrix with its second column replaced by the constants:\n\n$$D_y = \\begin{vmatrix} a & e \\\\ c & f \\end{vmatrix} = af - ce.$$\n\nThe answer may be a fraction even when every coefficient is an integer.",
-        "对方程组 $ax + by = e$，$cx + dy = f$，若 $D = ad - bc \\ne 0$，克拉默法则给出 $y = \\frac{D_y}{D}$，其中 $D_y$ 是把系数矩阵第二列换成常数项后的行列式：\n\n$$D_y = \\begin{vmatrix} a & e \\\\ c & f \\end{vmatrix} = af - ce。$$\n\n即使所有系数都是整数，答案也可能是分数。",
+        "对方程组 $ax + by = e$，$cx + dy = f$，若 $D = ad - bc \\ne 0$，克拉默法则给出 $y = \\frac{D_y}{D}$，其中 $D_y$ 是把系数矩阵第二列换成常数项后的行列式：\n\n$$D_y = \\begin{vmatrix} a & e \\\\ c & f \\end{vmatrix} = af - ce$$\n\n即使所有系数都是整数，答案也可能是分数。",
       ),
       generate(rng: Rng): Problem {
         let a = 0;
@@ -590,7 +590,7 @@ export const basicPropertiesOfDeterminants: TopicDef = {
       title: t("The determinant of a product with an inverse", "含逆矩阵乘积的行列式"),
       explanation: t(
         "The determinant is multiplicative, $\\det(AB) = \\det A \\det B$, and $\\det(B^{-1}) = \\frac{1}{\\det B}$. Together these give\n\n$$\\det(A^2B^{-1}) = \\frac{(\\det A)^2}{\\det B}.$$\n\nThe order of the factors does not matter for the determinant, even though $AB \\ne BA$ in general.",
-        "行列式具有乘性，$\\det(AB) = \\det A \\det B$，且 $\\det(B^{-1}) = \\frac{1}{\\det B}$。合起来得\n\n$$\\det(A^2B^{-1}) = \\frac{(\\det A)^2}{\\det B}。$$\n\n虽然一般 $AB \\ne BA$，但因子的次序不影响行列式。",
+        "行列式具有乘性，$\\det(AB) = \\det A \\det B$，且 $\\det(B^{-1}) = \\frac{1}{\\det B}$。合起来得\n\n$$\\det(A^2B^{-1}) = \\frac{(\\det A)^2}{\\det B}$$\n\n虽然一般 $AB \\ne BA$，但因子的次序不影响行列式。",
       ),
       generate(rng: Rng): Problem {
         const dA = rng.nonZero(-5, 5);
@@ -687,7 +687,7 @@ export const furtherPropertiesOfDeterminants: TopicDef = {
       title: t("The determinant of the adjugate", "伴随矩阵的行列式"),
       explanation: t(
         "The adjugate satisfies $A\\operatorname{adj}(A) = (\\det A)I_n$. Taking determinants of both sides gives $\\det A \\cdot \\det(\\operatorname{adj} A) = (\\det A)^n$, so for invertible $A$\n\n$$\\det(\\operatorname{adj} A) = (\\det A)^{n-1}.$$\n\nThe exponent is $n - 1$, not $n$, because one factor of $\\det A$ cancels.",
-        "伴随矩阵满足 $A\\operatorname{adj}(A) = (\\det A)I_n$。两边取行列式得 $\\det A \\cdot \\det(\\operatorname{adj} A) = (\\det A)^n$，所以对可逆的 $A$\n\n$$\\det(\\operatorname{adj} A) = (\\det A)^{n-1}。$$\n\n指数是 $n - 1$ 而不是 $n$，因为约去了一个 $\\det A$。",
+        "伴随矩阵满足 $A\\operatorname{adj}(A) = (\\det A)I_n$。两边取行列式得 $\\det A \\cdot \\det(\\operatorname{adj} A) = (\\det A)^n$，所以对可逆的 $A$\n\n$$\\det(\\operatorname{adj} A) = (\\det A)^{n-1}$$\n\n指数是 $n - 1$ 而不是 $n$，因为约去了一个 $\\det A$。",
       ),
       generate(rng: Rng): Problem {
         const n = rng.int(2, 5);
@@ -1078,7 +1078,7 @@ $$M = ${matLatex(M)}$$`,
       title: t("Inverting a block unit upper triangular matrix", "求分块单位上三角矩阵的逆"),
       explanation: t(
         "Block matrices multiply like ordinary matrices, with blocks in place of entries. For $M = \\begin{pmatrix} I & B \\\\ 0 & I \\end{pmatrix}$ the product $\\begin{pmatrix} I & B \\\\ 0 & I \\end{pmatrix}\\begin{pmatrix} I & -B \\\\ 0 & I \\end{pmatrix} = \\begin{pmatrix} I & -B + B \\\\ 0 & I \\end{pmatrix} = I$, so\n\n$$M^{-1} = \\begin{pmatrix} I & -B \\\\ 0 & I \\end{pmatrix}.$$\n\nOnly the sign of the off-diagonal block changes.",
-        "分块矩阵的乘法与普通矩阵相同，只是以块代替元素。对 $M = \\begin{pmatrix} I & B \\\\ 0 & I \\end{pmatrix}$，乘积 $\\begin{pmatrix} I & B \\\\ 0 & I \\end{pmatrix}\\begin{pmatrix} I & -B \\\\ 0 & I \\end{pmatrix} = \\begin{pmatrix} I & -B + B \\\\ 0 & I \\end{pmatrix} = I$，所以\n\n$$M^{-1} = \\begin{pmatrix} I & -B \\\\ 0 & I \\end{pmatrix}。$$\n\n只有非对角块的符号改变。",
+        "分块矩阵的乘法与普通矩阵相同，只是以块代替元素。对 $M = \\begin{pmatrix} I & B \\\\ 0 & I \\end{pmatrix}$，乘积 $\\begin{pmatrix} I & B \\\\ 0 & I \\end{pmatrix}\\begin{pmatrix} I & -B \\\\ 0 & I \\end{pmatrix} = \\begin{pmatrix} I & -B + B \\\\ 0 & I \\end{pmatrix} = I$，所以\n\n$$M^{-1} = \\begin{pmatrix} I & -B \\\\ 0 & I \\end{pmatrix}$$\n\n只有非对角块的符号改变。",
       ),
       generate(rng: Rng): Problem {
         const B = [
@@ -1425,7 +1425,7 @@ Thus $(x, y, z) = (${x}, ${y}, ${z})$.`,
       title: t("Forward substitution in a lower triangular system", "下三角方程组的前代法"),
       explanation: t(
         "A lower triangular system is solved from the top down. The first equation involves only $x_1$, the second only $x_1$ and $x_2$, and so on. Substituting each value as soon as it is found, the last unknown is\n\n$$x_3 = \\frac{b_3 - l_{31}x_1 - l_{32}x_2}{l_{33}}.$$",
-        "下三角方程组自上而下求解。第一个方程只含 $x_1$，第二个只含 $x_1$ 与 $x_2$，依此类推。每求出一个值就立刻代入，最后一个未知数为\n\n$$x_3 = \\frac{b_3 - l_{31}x_1 - l_{32}x_2}{l_{33}}。$$",
+        "下三角方程组自上而下求解。第一个方程只含 $x_1$，第二个只含 $x_1$ 与 $x_2$，依此类推。每求出一个值就立刻代入，最后一个未知数为\n\n$$x_3 = \\frac{b_3 - l_{31}x_1 - l_{32}x_2}{l_{33}}$$",
       ),
       generate(rng: Rng): Problem {
         const x = [rng.int(-4, 4), rng.int(-4, 4), rng.int(-4, 4)];
@@ -1744,7 +1744,7 @@ $$\\left[\\begin{array}{cc|c} 1 & ${a12} & ${b1} \\\\ 0 & ${u22} & ${u22 * y} \\
       title: t("The second pivot after eliminating a 2×2 system", "2×2 方程组消元后的第二个主元"),
       explanation: t(
         "Eliminating below the first pivot of $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ uses $R_2 - \\frac{c}{a}R_1 \\to R_2$. The second pivot is then\n\n$$d - \\frac{c}{a}\\,b = \\frac{ad - bc}{a}.$$\n\nThis shows the product of the pivots, $a \\cdot \\frac{ad - bc}{a}$, is the determinant, and the system has a unique solution exactly when the second pivot is nonzero.",
-        "对 $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 消去第一个主元下方的元素，用 $R_2 - \\frac{c}{a}R_1 \\to R_2$。第二个主元为\n\n$$d - \\frac{c}{a}\\,b = \\frac{ad - bc}{a}。$$\n\n由此可见两主元之积 $a \\cdot \\frac{ad - bc}{a}$ 就是行列式，且方程组有唯一解当且仅当第二个主元非零。",
+        "对 $\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 消去第一个主元下方的元素，用 $R_2 - \\frac{c}{a}R_1 \\to R_2$。第二个主元为\n\n$$d - \\frac{c}{a}\\,b = \\frac{ad - bc}{a}$$\n\n由此可见两主元之积 $a \\cdot \\frac{ad - bc}{a}$ 就是行列式，且方程组有唯一解当且仅当第二个主元非零。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.pick([-3, -2, 2, 3, 4]);
@@ -2689,7 +2689,7 @@ Row 2 becomes $[${a21} - (${k})(${a11}), ${a22} - (${k})(${a12})] = [${a21 - k *
       title: t("The product of two elementary 2×2 matrices", "两个 2×2 初等矩阵的乘积"),
       explanation: t(
         "Performing two row operations in turn multiplies by their elementary matrices from the left, the first one closest to $A$: the operation $E_1$ followed by $E_2$ is $E_2E_1A$. The product $E_2E_1$ is the single matrix doing both. For $E_1 = \\begin{pmatrix} 1 & 0 \\\\ a & 1 \\end{pmatrix}$ and $E_2 = \\begin{pmatrix} 1 & b \\\\ 0 & 1 \\end{pmatrix}$,\n\n$$E_2E_1 = \\begin{pmatrix} 1 + ab & b \\\\ a & 1 \\end{pmatrix}.$$",
-        "依次进行两个行变换就是从左边依次乘以它们的初等矩阵，第一个最靠近 $A$：先 $E_1$ 后 $E_2$ 即 $E_2E_1A$。乘积 $E_2E_1$ 是同时完成两步的单个矩阵。对 $E_1 = \\begin{pmatrix} 1 & 0 \\\\ a & 1 \\end{pmatrix}$，$E_2 = \\begin{pmatrix} 1 & b \\\\ 0 & 1 \\end{pmatrix}$，\n\n$$E_2E_1 = \\begin{pmatrix} 1 + ab & b \\\\ a & 1 \\end{pmatrix}。$$",
+        "依次进行两个行变换就是从左边依次乘以它们的初等矩阵，第一个最靠近 $A$：先 $E_1$ 后 $E_2$ 即 $E_2E_1A$。乘积 $E_2E_1$ 是同时完成两步的单个矩阵。对 $E_1 = \\begin{pmatrix} 1 & 0 \\\\ a & 1 \\end{pmatrix}$，$E_2 = \\begin{pmatrix} 1 & b \\\\ 0 & 1 \\end{pmatrix}$，\n\n$$E_2E_1 = \\begin{pmatrix} 1 + ab & b \\\\ a & 1 \\end{pmatrix}$$",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
@@ -2945,7 +2945,7 @@ export const rowOperationsOn3x3MatricesAsProductsOfElementaryMatrices: TopicDef 
       title: t("Inverting a product of elimination matrices", "求消元矩阵乘积的逆"),
       explanation: t(
         "Clearing column $1$ with $R_2 - aR_1 \\to R_2$ and $R_3 - bR_1 \\to R_3$ is multiplication by $E = \\begin{pmatrix} 1 & 0 & 0 \\\\ -a & 1 & 0 \\\\ -b & 0 & 1 \\end{pmatrix}$. Its inverse undoes both operations by adding the multiples back:\n\n$$E^{-1} = \\begin{pmatrix} 1 & 0 & 0 \\\\ a & 1 & 0 \\\\ b & 0 & 1 \\end{pmatrix}.$$\n\nThe multipliers appear with their signs flipped, which is exactly how $L$ is built in an $LU$ factorization.",
-        "用 $R_2 - aR_1 \\to R_2$ 和 $R_3 - bR_1 \\to R_3$ 消去第 $1$ 列，相当于乘以 $E = \\begin{pmatrix} 1 & 0 & 0 \\\\ -a & 1 & 0 \\\\ -b & 0 & 1 \\end{pmatrix}$。其逆通过把倍数加回来撤销这两步：\n\n$$E^{-1} = \\begin{pmatrix} 1 & 0 & 0 \\\\ a & 1 & 0 \\\\ b & 0 & 1 \\end{pmatrix}。$$\n\n乘数以相反的符号出现，这正是 $LU$ 分解中构造 $L$ 的方式。",
+        "用 $R_2 - aR_1 \\to R_2$ 和 $R_3 - bR_1 \\to R_3$ 消去第 $1$ 列，相当于乘以 $E = \\begin{pmatrix} 1 & 0 & 0 \\\\ -a & 1 & 0 \\\\ -b & 0 & 1 \\end{pmatrix}$。其逆通过把倍数加回来撤销这两步：\n\n$$E^{-1} = \\begin{pmatrix} 1 & 0 & 0 \\\\ a & 1 & 0 \\\\ b & 0 & 1 \\end{pmatrix}$$\n\n乘数以相反的符号出现，这正是 $LU$ 分解中构造 $L$ 的方式。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-6, 6);
@@ -3179,7 +3179,7 @@ $$A = ${matLatex(A)}$$`,
       title: t("An off-diagonal entry of a 2×2 inverse", "2×2 逆矩阵的非对角元素"),
       explanation: t(
         "Row reducing $[A \\mid I]$ for $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ always ends with\n\n$$A^{-1} = \\frac{1}{ad - bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}.$$\n\nThe diagonal entries swap places, the off-diagonal entries change sign, and everything is divided by the determinant. Knowing the result lets you check each row reduction.",
-        "对 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 把 $[A \\mid I]$ 作行化简，结果总是\n\n$$A^{-1} = \\frac{1}{ad - bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}。$$\n\n对角元素互换位置，非对角元素变号，全部除以行列式。知道结果可以检验每一步行化简。",
+        "对 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ 把 $[A \\mid I]$ 作行化简，结果总是\n\n$$A^{-1} = \\frac{1}{ad - bc}\\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$$\n\n对角元素互换位置，非对角元素变号，全部除以行列式。知道结果可以检验每一步行化简。",
       ),
       generate(rng: Rng): Problem {
         let a = 0;
@@ -3317,7 +3317,7 @@ This transforms the right block into $A^{-1} = ${matLatex(invA)}$.`,
       title: t("The corner entry of a unit upper triangular inverse", "单位上三角矩阵逆的角元素"),
       explanation: t(
         "For $U = \\begin{pmatrix} 1 & a & b \\\\ 0 & 1 & c \\\\ 0 & 0 & 1 \\end{pmatrix}$, row reducing $[U \\mid I]$ from the bottom up clears column $3$ with $R_2 - cR_3$ and $R_1 - bR_3$, then column $2$ with $R_1 - aR_2$. The result is\n\n$$U^{-1} = \\begin{pmatrix} 1 & -a & ac - b \\\\ 0 & 1 & -c \\\\ 0 & 0 & 1 \\end{pmatrix}.$$\n\nThe corner entry is not simply $-b$, because clearing column $2$ also changes column $3$ of the right block.",
-        "对 $U = \\begin{pmatrix} 1 & a & b \\\\ 0 & 1 & c \\\\ 0 & 0 & 1 \\end{pmatrix}$，自下而上化简 $[U \\mid I]$：先用 $R_2 - cR_3$ 和 $R_1 - bR_3$ 消去第 $3$ 列，再用 $R_1 - aR_2$ 消去第 $2$ 列。结果为\n\n$$U^{-1} = \\begin{pmatrix} 1 & -a & ac - b \\\\ 0 & 1 & -c \\\\ 0 & 0 & 1 \\end{pmatrix}。$$\n\n角元素并不只是 $-b$，因为消去第 $2$ 列时右侧块的第 $3$ 列也随之改变。",
+        "对 $U = \\begin{pmatrix} 1 & a & b \\\\ 0 & 1 & c \\\\ 0 & 0 & 1 \\end{pmatrix}$，自下而上化简 $[U \\mid I]$：先用 $R_2 - cR_3$ 和 $R_1 - bR_3$ 消去第 $3$ 列，再用 $R_1 - aR_2$ 消去第 $2$ 列。结果为\n\n$$U^{-1} = \\begin{pmatrix} 1 & -a & ac - b \\\\ 0 & 1 & -c \\\\ 0 & 0 & 1 \\end{pmatrix}$$\n\n角元素并不只是 $-b$，因为消去第 $2$ 列时右侧块的第 $3$ 列也随之改变。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.nonZero(-5, 5);
@@ -3408,7 +3408,7 @@ export const findingTheInverseOfAnNxnSquareMatrixUsingRowOperations: TopicDef = 
       title: t("The inverse of a bidiagonal matrix", "双对角矩阵的逆"),
       explanation: t(
         "Let $B$ be the $n \\times n$ matrix with $1$ on the diagonal and $-a$ directly above it, so $B = I - aN$ where $N$ shifts entries one place. Since $N^n = 0$, the geometric series stops:\n\n$$B^{-1} = I + aN + a^2N^2 + \\dots + a^{n-1}N^{n-1}.$$\n\nSo the $(i, j)$ entry of $B^{-1}$ for $j \\ge i$ is $a^{j-i}$, and in particular the top-right entry is $a^{n-1}$. Gauss-Jordan elimination on $[B \\mid I]$ gives the same result row by row.",
-        "设 $B$ 是对角线为 $1$、紧邻上方为 $-a$ 的 $n \\times n$ 矩阵，即 $B = I - aN$，其中 $N$ 把元素平移一位。由于 $N^n = 0$，几何级数终止：\n\n$$B^{-1} = I + aN + a^2N^2 + \\dots + a^{n-1}N^{n-1}。$$\n\n所以当 $j \\ge i$ 时 $B^{-1}$ 的 $(i, j)$ 元素为 $a^{j-i}$，特别地右上角元素为 $a^{n-1}$。对 $[B \\mid I]$ 作高斯-若尔当消元逐行得到同样结果。",
+        "设 $B$ 是对角线为 $1$、紧邻上方为 $-a$ 的 $n \\times n$ 矩阵，即 $B = I - aN$，其中 $N$ 把元素平移一位。由于 $N^n = 0$，几何级数终止：\n\n$$B^{-1} = I + aN + a^2N^2 + \\dots + a^{n-1}N^{n-1}$$\n\n所以当 $j \\ge i$ 时 $B^{-1}$ 的 $(i, j)$ 元素为 $a^{j-i}$，特别地右上角元素为 $a^{n-1}$。对 $[B \\mid I]$ 作高斯-若尔当消元逐行得到同样结果。",
       ),
       generate(rng: Rng): Problem {
         const n = rng.int(3, 5);
@@ -3707,7 +3707,7 @@ $$A = ${matLatex(A)}$$`,
       title: t("The second pivot in a 2×2 $LU$ factorization", "2×2 $LU$ 分解中的第二个主元"),
       explanation: t(
         "For $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$ with $a \\ne 0$, the factorization $A = LU$ with $L$ unit lower triangular is\n\n$$L = \\begin{pmatrix} 1 & 0 \\\\ \\frac{c}{a} & 1 \\end{pmatrix}, \\quad U = \\begin{pmatrix} a & b \\\\ 0 & d - \\frac{c}{a}b \\end{pmatrix}.$$\n\nThe multiplier $\\ell_{21} = \\frac{c}{a}$ goes into $L$ and the second pivot $u_{22} = d - \\ell_{21}b$ goes into $U$. Their product with $a$ recovers $\\det A$.",
-        "对 $a \\ne 0$ 的 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，$L$ 为单位下三角矩阵的分解 $A = LU$ 为\n\n$$L = \\begin{pmatrix} 1 & 0 \\\\ \\frac{c}{a} & 1 \\end{pmatrix}, \\quad U = \\begin{pmatrix} a & b \\\\ 0 & d - \\frac{c}{a}b \\end{pmatrix}。$$\n\n乘数 $\\ell_{21} = \\frac{c}{a}$ 放入 $L$，第二个主元 $u_{22} = d - \\ell_{21}b$ 放入 $U$。它与 $a$ 之积就是 $\\det A$。",
+        "对 $a \\ne 0$ 的 $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$，$L$ 为单位下三角矩阵的分解 $A = LU$ 为\n\n$$L = \\begin{pmatrix} 1 & 0 \\\\ \\frac{c}{a} & 1 \\end{pmatrix}, \\quad U = \\begin{pmatrix} a & b \\\\ 0 & d - \\frac{c}{a}b \\end{pmatrix}$$\n\n乘数 $\\ell_{21} = \\frac{c}{a}$ 放入 $L$，第二个主元 $u_{22} = d - \\ell_{21}b$ 放入 $U$。它与 $a$ 之积就是 $\\det A$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.pick([-4, -3, -2, 2, 3, 4, 5]);
@@ -3949,7 +3949,7 @@ $$A = ${matLatex(A)}$$
       title: t("A determinant from $PA = LU$", "由 $PA = LU$ 求行列式"),
       explanation: t(
         "Taking determinants of $PA = LU$ gives $\\det P \\det A = \\det L \\det U$. Here $\\det L = 1$, $\\det U$ is the product of its diagonal entries, and $\\det P = (-1)^s$ where $s$ is the number of row swaps recorded in $P$. So\n\n$$\\det A = (-1)^s\\,u_{11}u_{22}\\cdots u_{nn}.$$",
-        "对 $PA = LU$ 取行列式得 $\\det P \\det A = \\det L \\det U$。其中 $\\det L = 1$，$\\det U$ 是其对角元素之积，$\\det P = (-1)^s$，$s$ 为 $P$ 记录的换行次数。所以\n\n$$\\det A = (-1)^s\\,u_{11}u_{22}\\cdots u_{nn}。$$",
+        "对 $PA = LU$ 取行列式得 $\\det P \\det A = \\det L \\det U$。其中 $\\det L = 1$，$\\det U$ 是其对角元素之积，$\\det P = (-1)^s$，$s$ 为 $P$ 记录的换行次数。所以\n\n$$\\det A = (-1)^s\\,u_{11}u_{22}\\cdots u_{nn}$$",
       ),
       generate(rng: Rng): Problem {
         const n = rng.int(3, 4);

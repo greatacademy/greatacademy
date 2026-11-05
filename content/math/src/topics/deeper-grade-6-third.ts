@@ -5,7 +5,7 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
-import { earlyNames } from "../early-grades-kit.ts";
+import { earlyNames, lowestNumerator } from "../early-grades-kit.ts";
 import { numberProblem } from "../problems.ts";
 import { chooseMath, type Pair, whole } from "./early-grades-more-kit.ts";
 
@@ -411,7 +411,7 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
       (rng) => {
         const d = rng.int(3, 12);
         const a = rng.int(1, 6);
-        const n = rng.int(1, d - 1);
+        const n = lowestNumerator(rng, d);
         const k = rng.int(2, 9);
         return fraction(
           [`Fill in the box: $$\\square \\div ${k} = ${a}${frac(n, d)}$$`, `填方框：$$\\square \\div ${k} = ${a}${frac(n, d)}$$`],
@@ -490,7 +490,7 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
       ],
       (rng) => {
         const d = rng.int(2, 9);
-        const n = rng.int(1, d - 1);
+        const n = lowestNumerator(rng, d);
         const x = rng.int(1, 6);
         const b = rng.int(2, 9);
         const a = rng.int(1, b - 1);
@@ -520,10 +520,10 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
       (rng) => {
         const who = rng.pick(earlyNames);
         const d = rng.pick([2, 3, 4, 5]);
-        const n = rng.int(1, d - 1);
+        const n = lowestNumerator(rng, d);
         const a = rng.int(1, 5);
         const e = rng.pick([2, 3, 4, 6]);
-        const m = rng.int(1, e - 1);
+        const m = lowestNumerator(rng, e);
         const b = rng.int(1, 4);
         const dist = Q.of(a * d + n, d);
         const time = Q.of(b * e + m, e);
@@ -679,7 +679,7 @@ export const deeperGrade6ThirdPoints: Readonly<Record<string, readonly Knowledge
         const lo = rng.int(2, 30);
         const hi = lo + 1;
         const d = rng.pick([2, 4, 5]);
-        const n = rng.int(1, d - 1);
+        const n = lowestNumerator(rng, d);
         return chooseMath(
           rng,
           [`Which number lies between $-${hi}$ and $-${lo}$?`, `哪个数在 $-${hi}$ 和 $-${lo}$ 之间？`],

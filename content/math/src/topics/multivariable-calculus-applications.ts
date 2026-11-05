@@ -62,7 +62,7 @@ export const velocityAndAccelerationAsFunctionsOfDisplacement: TopicDef = {
       title: t("Acceleration from the square of the speed", "由速度平方求加速度"),
       explanation: t(
         "Since $\\frac{d}{dx}(v^2) = 2v\\frac{dv}{dx}$, the relation $a = v\\frac{dv}{dx}$ can be written as\n\n$$a = \\frac{1}{2}\\frac{d}{dx}\\left(v^2\\right).$$\n\nThis form is convenient when $v^2$ is given as a function of position, as it is in energy calculations: differentiate $v^2$, halve the result, and there is no square root to deal with.",
-        "由于 $\\frac{d}{dx}(v^2) = 2v\\frac{dv}{dx}$，关系 $a = v\\frac{dv}{dx}$ 可写成\n\n$$a = \\frac{1}{2}\\frac{d}{dx}\\left(v^2\\right)。$$\n\n当 $v^2$ 以位置的函数给出时（如能量计算中），这种形式很方便：对 $v^2$ 求导再取一半，无需处理平方根。",
+        "由于 $\\frac{d}{dx}(v^2) = 2v\\frac{dv}{dx}$，关系 $a = v\\frac{dv}{dx}$ 可写成\n\n$$a = \\frac{1}{2}\\frac{d}{dx}\\left(v^2\\right)$$\n\n当 $v^2$ 以位置的函数给出时（如能量计算中），这种形式很方便：对 $v^2$ 求导再取一半，无需处理平方根。",
       ),
       generate(rng: Rng): Problem {
         const p = rng.nonZero(-4, 4);
@@ -148,7 +148,7 @@ export const determiningPropertiesOfObjectsDescribedAsFunctionsOfDisplacement: T
       title: t("The amplitude of motion under a restoring acceleration", "回复加速度下运动的振幅"),
       explanation: t(
         "For $a(x) = -\\omega^2 x$, separating $v\\,dv = -\\omega^2 x\\,dx$ and integrating from $x = 0$, where the speed is $v_0$, gives\n\n$$v^2 = v_0^2 - \\omega^2 x^2.$$\n\nThe particle stops and turns back where $v = 0$, at $x = \\pm\\frac{v_0}{\\omega}$. So the amplitude of the oscillation is $A = \\frac{v_0}{\\omega}$.",
-        "对 $a(x) = -\\omega^2 x$，分离 $v\\,dv = -\\omega^2 x\\,dx$ 并从速率为 $v_0$ 的 $x = 0$ 处积分，得\n\n$$v^2 = v_0^2 - \\omega^2 x^2。$$\n\n质点在 $v = 0$ 处停下并折返，即 $x = \\pm\\frac{v_0}{\\omega}$。所以振动的振幅为 $A = \\frac{v_0}{\\omega}$。",
+        "对 $a(x) = -\\omega^2 x$，分离 $v\\,dv = -\\omega^2 x\\,dx$ 并从速率为 $v_0$ 的 $x = 0$ 处积分，得\n\n$$v^2 = v_0^2 - \\omega^2 x^2$$\n\n质点在 $v = 0$ 处停下并折返，即 $x = \\pm\\frac{v_0}{\\omega}$。所以振动的振幅为 $A = \\frac{v_0}{\\omega}$。",
       ),
       generate(rng: Rng): Problem {
         const w = rng.int(2, 6);
@@ -323,7 +323,7 @@ export const theWorkEnergyPrinciple: TopicDef = {
       title: t("Final speed from the work done", "由所做的功求末速率"),
       explanation: t(
         "The work–energy principle $W = \\frac{1}{2}mv_2^2 - \\frac{1}{2}mv_1^2$ can be run backwards: if the net work done on the object is known, then\n\n$$v_2 = \\sqrt{v_1^2 + \\frac{2W}{m}}.$$\n\nPositive work raises the speed and negative work lowers it. Only the total work matters, not the shape of the path or how the force varied along it.",
-        "功能原理 $W = \\frac{1}{2}mv_2^2 - \\frac{1}{2}mv_1^2$ 可以反过来用：若已知对物体所做的净功，则\n\n$$v_2 = \\sqrt{v_1^2 + \\frac{2W}{m}}。$$\n\n正功使速率增大，负功使速率减小。只有总功有关，与路径形状或力沿路径如何变化无关。",
+        "功能原理 $W = \\frac{1}{2}mv_2^2 - \\frac{1}{2}mv_1^2$ 可以反过来用：若已知对物体所做的净功，则\n\n$$v_2 = \\sqrt{v_1^2 + \\frac{2W}{m}}$$\n\n正功使速率增大，负功使速率减小。只有总功有关，与路径形状或力沿路径如何变化无关。",
       ),
       generate(rng: Rng): Problem {
         const m = 2 * rng.int(1, 5);
@@ -402,7 +402,7 @@ export const circularMotionAboutTheOrigin: TopicDef = {
       title: t("Centripetal acceleration from the period", "由周期求向心加速度"),
       explanation: t(
         "For uniform motion $\\mathbf{r}(t) = R\\langle \\cos \\omega t, \\sin \\omega t \\rangle$, differentiating twice gives $\\mathbf{a} = -\\omega^2\\mathbf{r}$, which points to the center with size $\\omega^2R$. One revolution takes the period $T = \\frac{2\\pi}{\\omega}$, so\n\n$$\\|\\mathbf{a}\\| = \\omega^2 R = \\frac{4\\pi^2 R}{T^2}.$$\n\nHalving the period quadruples the acceleration, while doubling the radius only doubles it.",
-        "对匀速圆周运动 $\\mathbf{r}(t) = R\\langle \\cos \\omega t, \\sin \\omega t \\rangle$，求两次导数得 $\\mathbf{a} = -\\omega^2\\mathbf{r}$，它指向圆心，大小为 $\\omega^2R$。转一圈用时为周期 $T = \\frac{2\\pi}{\\omega}$，所以\n\n$$\\|\\mathbf{a}\\| = \\omega^2 R = \\frac{4\\pi^2 R}{T^2}。$$\n\n周期减半使加速度变为四倍，而半径加倍只使它加倍。",
+        "对匀速圆周运动 $\\mathbf{r}(t) = R\\langle \\cos \\omega t, \\sin \\omega t \\rangle$，求两次导数得 $\\mathbf{a} = -\\omega^2\\mathbf{r}$，它指向圆心，大小为 $\\omega^2R$。转一圈用时为周期 $T = \\frac{2\\pi}{\\omega}$，所以\n\n$$\\|\\mathbf{a}\\| = \\omega^2 R = \\frac{4\\pi^2 R}{T^2}$$\n\n周期减半使加速度变为四倍，而半径加倍只使它加倍。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(1, 12);
@@ -568,7 +568,7 @@ export const densityMassAndChargeOfPlaneLaminas: TopicDef = {
       title: t("Charge on a triangular plate", "三角形板上的电荷"),
       explanation: t(
         "Total charge is the double integral of the charge density, $Q = \\iint_D \\sigma(x, y)\\,dA$, just as mass is the integral of mass density. For the triangle $0 \\le y \\le x \\le L$, integrate $y$ first from $0$ to $x$:\n\n$$\\iint_D \\sigma\\,dA = \\int_0^L \\int_0^x \\sigma(x, y)\\,dy\\,dx.$$\n\nWith $\\sigma = cx$ the inner integral is $cx^2$, and the total is $\\frac{cL^3}{3}$.",
-        "总电荷是电荷密度的二重积分 $Q = \\iint_D \\sigma(x, y)\\,dA$，正如质量是质量密度的积分。对三角形 $0 \\le y \\le x \\le L$，先对 $y$ 从 $0$ 积到 $x$：\n\n$$\\iint_D \\sigma\\,dA = \\int_0^L \\int_0^x \\sigma(x, y)\\,dy\\,dx。$$\n\n若 $\\sigma = cx$，内层积分为 $cx^2$，总量为 $\\frac{cL^3}{3}$。",
+        "总电荷是电荷密度的二重积分 $Q = \\iint_D \\sigma(x, y)\\,dA$，正如质量是质量密度的积分。对三角形 $0 \\le y \\le x \\le L$，先对 $y$ 从 $0$ 积到 $x$：\n\n$$\\iint_D \\sigma\\,dA = \\int_0^L \\int_0^x \\sigma(x, y)\\,dy\\,dx$$\n\n若 $\\sigma = cx$，内层积分为 $cx^2$，总量为 $\\frac{cL^3}{3}$。",
       ),
       generate(rng: Rng): Problem {
         const L = rng.int(1, 6);
@@ -653,7 +653,7 @@ export const momentsAndCenterOfMass: TopicDef = {
       title: t("The center of mass of point masses", "质点组的质心"),
       explanation: t(
         "For point masses $m_i$ at $(x_i, y_i)$, the moments about the axes are $M_y = \\sum m_i x_i$ and $M_x = \\sum m_i y_i$, and the center of mass is\n\n$$\\bar{x} = \\frac{M_y}{m}, \\qquad \\bar{y} = \\frac{M_x}{m}, \\qquad m = \\sum m_i.$$\n\nNote the crossed labels: the moment about the $y$-axis uses the $x$-coordinates, because $x$ is the distance from that axis.",
-        "对位于 $(x_i, y_i)$ 的质点 $m_i$，关于两轴的矩为 $M_y = \\sum m_i x_i$ 与 $M_x = \\sum m_i y_i$，质心为\n\n$$\\bar{x} = \\frac{M_y}{m}, \\qquad \\bar{y} = \\frac{M_x}{m}, \\qquad m = \\sum m_i。$$\n\n注意下标是交叉的：关于 $y$ 轴的矩用 $x$ 坐标，因为 $x$ 是到该轴的距离。",
+        "对位于 $(x_i, y_i)$ 的质点 $m_i$，关于两轴的矩为 $M_y = \\sum m_i x_i$ 与 $M_x = \\sum m_i y_i$，质心为\n\n$$\\bar{x} = \\frac{M_y}{m}, \\qquad \\bar{y} = \\frac{M_x}{m}, \\qquad m = \\sum m_i$$\n\n注意下标是交叉的：关于 $y$ 轴的矩用 $x$ 坐标，因为 $x$ 是到该轴的距离。",
       ),
       generate(rng: Rng): Problem {
         const ms = [rng.int(1, 5), rng.int(1, 5), rng.int(1, 5)];
@@ -826,7 +826,7 @@ export const momentsAndCentersOfMassOfPlaneLaminas: TopicDef = {
       title: t("The centroid of the region under a parabola", "抛物线下区域的形心"),
       explanation: t(
         "For a uniform lamina under $y = f(x)$ on $[0, a]$, the area is $A = \\int_0^a f\\,dx$ and the moments come from integrating thin vertical strips:\n\n$$M_y = \\int_0^a x f(x)\\,dx, \\qquad M_x = \\int_0^a \\frac{f(x)^2}{2}\\,dx.$$\n\nThe factor $\\frac{1}{2}$ appears because each strip's own center sits at height $\\frac{f(x)}{2}$. Then $\\bar{x} = \\frac{M_y}{A}$ and $\\bar{y} = \\frac{M_x}{A}$.",
-        "对 $[0, a]$ 上 $y = f(x)$ 下方的均匀薄板，面积为 $A = \\int_0^a f\\,dx$，矩由竖直细条积分得到：\n\n$$M_y = \\int_0^a x f(x)\\,dx, \\qquad M_x = \\int_0^a \\frac{f(x)^2}{2}\\,dx。$$\n\n出现因子 $\\frac{1}{2}$ 是因为每个细条自身的中心在高度 $\\frac{f(x)}{2}$ 处。于是 $\\bar{x} = \\frac{M_y}{A}$，$\\bar{y} = \\frac{M_x}{A}$。",
+        "对 $[0, a]$ 上 $y = f(x)$ 下方的均匀薄板，面积为 $A = \\int_0^a f\\,dx$，矩由竖直细条积分得到：\n\n$$M_y = \\int_0^a x f(x)\\,dx, \\qquad M_x = \\int_0^a \\frac{f(x)^2}{2}\\,dx$$\n\n出现因子 $\\frac{1}{2}$ 是因为每个细条自身的中心在高度 $\\frac{f(x)}{2}$ 处。于是 $\\bar{x} = \\frac{M_y}{A}$，$\\bar{y} = \\frac{M_x}{A}$。",
       ),
       generate(rng: Rng): Problem {
         const c = rng.int(1, 5);
@@ -915,7 +915,7 @@ export const momentsOfInertiaOfLaminasAboutTheCoordinateAxes: TopicDef = {
       title: t("The polar moment of inertia", "极转动惯量"),
       explanation: t(
         "The moment of inertia about the origin, for rotation in the plane of the lamina, is $I_0 = \\iint_D (x^2 + y^2)\\rho\\,dA$. Since $x^2 + y^2$ splits into two pieces, it is the sum of the moments about the two axes:\n\n$$I_0 = I_x + I_y.$$\n\nFor a uniform rectangle $[0, W] \\times [0, H]$ of density $\\rho$, $I_x = \\frac{\\rho WH^3}{3}$ and $I_y = \\frac{\\rho W^3H}{3}$.",
-        "关于原点、在薄板所在平面内转动的转动惯量为 $I_0 = \\iint_D (x^2 + y^2)\\rho\\,dA$。由于 $x^2 + y^2$ 分成两部分，它是关于两轴转动惯量之和：\n\n$$I_0 = I_x + I_y。$$\n\n对密度为 $\\rho$ 的均匀矩形 $[0, W] \\times [0, H]$，$I_x = \\frac{\\rho WH^3}{3}$，$I_y = \\frac{\\rho W^3H}{3}$。",
+        "关于原点、在薄板所在平面内转动的转动惯量为 $I_0 = \\iint_D (x^2 + y^2)\\rho\\,dA$。由于 $x^2 + y^2$ 分成两部分，它是关于两轴转动惯量之和：\n\n$$I_0 = I_x + I_y$$\n\n对密度为 $\\rho$ 的均匀矩形 $[0, W] \\times [0, H]$，$I_x = \\frac{\\rho WH^3}{3}$，$I_y = \\frac{\\rho W^3H}{3}$。",
       ),
       generate(rng: Rng): Problem {
         const W = rng.int(1, 5);
@@ -1001,7 +1001,7 @@ export const momentsOfInertiaOfLaminasAboutOtherAxes: TopicDef = {
       title: t("Moment of inertia about a line outside the lamina", "关于薄板外直线的转动惯量"),
       explanation: t(
         "The moment of inertia about any line integrates the squared distance to that line. For the horizontal line $y = -d$, a point at height $y$ is at distance $y + d$, so for a uniform rectangle $[0, W] \\times [0, H]$\n\n$$I = \\int_0^W \\int_0^H (y + d)^2\\,dy\\,dx = \\frac{W\\left[(H + d)^3 - d^3\\right]}{3}.$$\n\nThe substitution $u = y + d$ makes the inner integral immediate.",
-        "关于任意直线的转动惯量是对到该直线距离的平方积分。对水平线 $y = -d$，高度为 $y$ 的点到它的距离为 $y + d$，所以对均匀矩形 $[0, W] \\times [0, H]$\n\n$$I = \\int_0^W \\int_0^H (y + d)^2\\,dy\\,dx = \\frac{W\\left[(H + d)^3 - d^3\\right]}{3}。$$\n\n代换 $u = y + d$ 使内层积分一步可得。",
+        "关于任意直线的转动惯量是对到该直线距离的平方积分。对水平线 $y = -d$，高度为 $y$ 的点到它的距离为 $y + d$，所以对均匀矩形 $[0, W] \\times [0, H]$\n\n$$I = \\int_0^W \\int_0^H (y + d)^2\\,dy\\,dx = \\frac{W\\left[(H + d)^3 - d^3\\right]}{3}$$\n\n代换 $u = y + d$ 使内层积分一步可得。",
       ),
       generate(rng: Rng): Problem {
         const W = rng.int(1, 5);
@@ -1084,7 +1084,7 @@ export const calculatingTheRadiusOfGyrationOfAPlaneLamina: TopicDef = {
       title: t("Radius of gyration with a power-law density", "幂律密度下的回转半径"),
       explanation: t(
         "The radius of gyration $k$ is the distance at which the whole mass, concentrated at one point, would give the same moment of inertia: $k^2 = \\frac{I}{m}$. For a rod on $[0, L]$ with density $\\lambda = cx^n$, about the end at the origin,\n\n$$m = \\frac{cL^{n+1}}{n+1}, \\qquad I = \\frac{cL^{n+3}}{n+3}, \\qquad k^2 = \\frac{n+1}{n+3}L^2.$$\n\nThe constant $c$ cancels, and more mass toward the far end makes $k$ closer to $L$.",
-        "回转半径 $k$ 是把全部质量集中在一点时、给出相同转动惯量的距离：$k^2 = \\frac{I}{m}$。对 $[0, L]$ 上密度 $\\lambda = cx^n$ 的细杆，关于原点处的端点，\n\n$$m = \\frac{cL^{n+1}}{n+1}, \\qquad I = \\frac{cL^{n+3}}{n+3}, \\qquad k^2 = \\frac{n+1}{n+3}L^2。$$\n\n常数 $c$ 约去，质量越集中在远端，$k$ 越接近 $L$。",
+        "回转半径 $k$ 是把全部质量集中在一点时、给出相同转动惯量的距离：$k^2 = \\frac{I}{m}$。对 $[0, L]$ 上密度 $\\lambda = cx^n$ 的细杆，关于原点处的端点，\n\n$$m = \\frac{cL^{n+1}}{n+1}, \\qquad I = \\frac{cL^{n+3}}{n+3}, \\qquad k^2 = \\frac{n+1}{n+3}L^2$$\n\n常数 $c$ 约去，质量越集中在远端，$k$ 越接近 $L$。",
       ),
       generate(rng: Rng): Problem {
         const n = rng.int(0, 4);
@@ -1168,7 +1168,7 @@ export const theParallelAxisTheorem: TopicDef = {
       title: t("Moving between two axes that miss the center of mass", "在两条不过质心的平行轴之间换算"),
       explanation: t(
         "The parallel axis theorem $I = I_{\\text{cm}} + Md^2$ always goes through the center of mass. To move from one off-center axis at distance $d_1$ to another at distance $d_2$, first go back to the center of mass and then out again:\n\n$$I_2 = I_1 - Md_1^2 + Md_2^2.$$\n\nAdding $M(d_2 - d_1)^2$ directly is a common mistake; it is only right when $d_1 = 0$.",
-        "平行轴定理 $I = I_{\\text{cm}} + Md^2$ 总是经过质心。从距质心 $d_1$ 的一条轴换到距质心 $d_2$ 的另一条轴，要先回到质心再移出去：\n\n$$I_2 = I_1 - Md_1^2 + Md_2^2。$$\n\n直接加上 $M(d_2 - d_1)^2$ 是常见错误，只有当 $d_1 = 0$ 时才对。",
+        "平行轴定理 $I = I_{\\text{cm}} + Md^2$ 总是经过质心。从距质心 $d_1$ 的一条轴换到距质心 $d_2$ 的另一条轴，要先回到质心再移出去：\n\n$$I_2 = I_1 - Md_1^2 + Md_2^2$$\n\n直接加上 $M(d_2 - d_1)^2$ 是常见错误，只有当 $d_1 = 0$ 时才对。",
       ),
       generate(rng: Rng): Problem {
         const M = rng.int(1, 6);
@@ -1339,7 +1339,7 @@ export const calculatingProbabilitiesWithContinuousRandomVariables: TopicDef = {
       title: t("The probability that $X + Y$ is small", "$X + Y$ 较小的概率"),
       explanation: t(
         "For a uniform distribution on a region, a probability is the area of the event divided by the total area. If $(X, Y)$ is uniform on the square $[0, L]^2$ and $0 \\le s \\le L$, the event $X + Y \\le s$ is the triangle with legs $s$, so\n\n$$P(X + Y \\le s) = \\frac{s^2/2}{L^2} = \\frac{s^2}{2L^2}.$$\n\nDrawing the line $x + y = s$ first shows which shape the event has; for $s > L$ the region is no longer a triangle.",
-        "对区域上的均匀分布，概率是事件的面积除以总面积。若 $(X, Y)$ 在正方形 $[0, L]^2$ 上均匀分布且 $0 \\le s \\le L$，事件 $X + Y \\le s$ 是两直角边为 $s$ 的三角形，所以\n\n$$P(X + Y \\le s) = \\frac{s^2/2}{L^2} = \\frac{s^2}{2L^2}。$$\n\n先画出直线 $x + y = s$ 就能看出事件的形状；当 $s > L$ 时区域不再是三角形。",
+        "对区域上的均匀分布，概率是事件的面积除以总面积。若 $(X, Y)$ 在正方形 $[0, L]^2$ 上均匀分布且 $0 \\le s \\le L$，事件 $X + Y \\le s$ 是两直角边为 $s$ 的三角形，所以\n\n$$P(X + Y \\le s) = \\frac{s^2/2}{L^2} = \\frac{s^2}{2L^2}$$\n\n先画出直线 $x + y = s$ 就能看出事件的形状；当 $s > L$ 时区域不再是三角形。",
       ),
       generate(rng: Rng): Problem {
         const L = rng.int(2, 8);
@@ -1424,7 +1424,7 @@ export const continuousRandomVariablesOverInfiniteDomains: TopicDef = {
       title: t("The probability that one exponential variable comes first", "一个指数变量先发生的概率"),
       explanation: t(
         "For $f(x, y) = ab\\,e^{-ax - by}$ on $x, y \\ge 0$, the event $X < Y$ is the unbounded region above the line $y = x$. Integrate $y$ from $x$ to $\\infty$ first, which gives $a e^{-(a + b)x}$, and then $x$ from $0$ to $\\infty$:\n\n$$P(X < Y) = \\int_0^\\infty a e^{-(a+b)x}\\,dx = \\frac{a}{a + b}.$$\n\nThe variable with the larger rate tends to happen first.",
-        "对 $x, y \\ge 0$ 上的 $f(x, y) = ab\\,e^{-ax - by}$，事件 $X < Y$ 是直线 $y = x$ 上方的无界区域。先把 $y$ 从 $x$ 积到 $\\infty$，得 $a e^{-(a + b)x}$，再把 $x$ 从 $0$ 积到 $\\infty$：\n\n$$P(X < Y) = \\int_0^\\infty a e^{-(a+b)x}\\,dx = \\frac{a}{a + b}。$$\n\n速率较大的变量往往先发生。",
+        "对 $x, y \\ge 0$ 上的 $f(x, y) = ab\\,e^{-ax - by}$，事件 $X < Y$ 是直线 $y = x$ 上方的无界区域。先把 $y$ 从 $x$ 积到 $\\infty$，得 $a e^{-(a + b)x}$，再把 $x$ 从 $0$ 积到 $\\infty$：\n\n$$P(X < Y) = \\int_0^\\infty a e^{-(a+b)x}\\,dx = \\frac{a}{a + b}$$\n\n速率较大的变量往往先发生。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 6);
@@ -1502,7 +1502,7 @@ export const jointDistributionsForDiscreteRandomVariables: TopicDef = {
       title: t("Conditional probability from a joint table", "由联合分布表求条件概率"),
       explanation: t(
         "A conditional probability restricts attention to one row or column of the joint table and rescales it to total $1$:\n\n$$P(X = x \\mid Y = y) = \\frac{P(X = x, Y = y)}{P(Y = y)}.$$\n\nThe denominator is the marginal $P(Y = y)$, found by adding the column for $Y = y$. Dividing by the total of all the entries instead gives the joint probability, not the conditional one.",
-        "条件概率只看联合分布表的一行或一列，并把它重新缩放使总和为 $1$：\n\n$$P(X = x \\mid Y = y) = \\frac{P(X = x, Y = y)}{P(Y = y)}。$$\n\n分母是边缘概率 $P(Y = y)$，由 $Y = y$ 那一列相加得到。若除以所有元素之和，得到的是联合概率而不是条件概率。",
+        "条件概率只看联合分布表的一行或一列，并把它重新缩放使总和为 $1$：\n\n$$P(X = x \\mid Y = y) = \\frac{P(X = x, Y = y)}{P(Y = y)}$$\n\n分母是边缘概率 $P(Y = y)$，由 $Y = y$ 那一列相加得到。若除以所有元素之和，得到的是联合概率而不是条件概率。",
       ),
       generate(rng: Rng): Problem {
         const p11 = rng.int(1, 4) * 5;

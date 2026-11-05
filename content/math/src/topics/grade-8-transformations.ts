@@ -331,7 +331,7 @@ const verifyingPropertiesOfRigidMotions = topic(
       title: t("Keeping lengths on the grid", "在网格上保持长度"),
       explanation: t(
         "The length of a horizontal segment is the difference of the $x$-coordinates of its endpoints; the length of a vertical segment is the difference of the $y$-coordinates.\n\nA rigid motion maps $A(2, 1)$ and $B(2, 6)$ to $A'(-3, 4)$ and $B'$, where $B'$ is directly to the right of $A'$. The segment $\\overline{AB}$ is vertical with $AB = 6 - 1 = 5$. Its image has the same length, so $B'$ is $5$ units right of $A'$:\n\n$$B' = (-3 + 5, 4) = (2, 4).$$\n\nThe image need not point the same way as the preimage: only the length is kept.",
-        "水平线段的长度等于两个端点的 $x$ 坐标之差；竖直线段的长度等于两个端点的 $y$ 坐标之差。\n\n一次刚体运动把 $A(2, 1)$ 和 $B(2, 6)$ 映到 $A'(-3, 4)$ 和 $B'$，其中 $B'$ 在 $A'$ 的正右方。$\\overline{AB}$ 是竖直线段，$AB = 6 - 1 = 5$。它的像长度相同，所以 $B'$ 在 $A'$ 右边 $5$ 个单位：\n\n$$B' = (-3 + 5, 4) = (2, 4)。$$\n\n像的方向不一定与原像相同：保持不变的只是长度。",
+        "水平线段的长度等于两个端点的 $x$ 坐标之差；竖直线段的长度等于两个端点的 $y$ 坐标之差。\n\n一次刚体运动把 $A(2, 1)$ 和 $B(2, 6)$ 映到 $A'(-3, 4)$ 和 $B'$，其中 $B'$ 在 $A'$ 的正右方。$\\overline{AB}$ 是竖直线段，$AB = 6 - 1 = 5$。它的像长度相同，所以 $B'$ 在 $A'$ 右边 $5$ 个单位：\n\n$$B' = (-3 + 5, 4) = (2, 4)$$\n\n像的方向不一定与原像相同：保持不变的只是长度。",
       ),
       generate(rng) {
         for (;;) {
@@ -654,7 +654,7 @@ const congruenceThroughRigidMotions = topic(
       title: t("Using a congruence statement", "运用全等式"),
       explanation: t(
         "In a congruence statement such as $\\triangle ABC \\cong \\triangle QRP$, letters in the same position correspond: $A \\leftrightarrow Q$, $B \\leftrightarrow R$, $C \\leftrightarrow P$. So $\\overline{AB}$ corresponds to $\\overline{QR}$, $\\overline{BC}$ to $\\overline{RP}$, and $\\angle C$ to $\\angle P$.\n\nIf $AB = 2x + 3$ and the sides of $\\triangle QRP$ are $PQ = 9$, $QR = 15$ and $RP = 11$, then $AB = QR$:\n\n$$2x + 3 = 15, \\quad 2x = 12, \\quad x = 6.$$",
-        "在 $\\triangle ABC \\cong \\triangle QRP$ 这样的全等式中，位置相同的字母相对应：$A \\leftrightarrow Q$，$B \\leftrightarrow R$，$C \\leftrightarrow P$。所以 $\\overline{AB}$ 对应 $\\overline{QR}$，$\\overline{BC}$ 对应 $\\overline{RP}$，$\\angle C$ 对应 $\\angle P$。\n\n若 $AB = 2x + 3$，$\\triangle QRP$ 的三边是 $PQ = 9$，$QR = 15$，$RP = 11$，则 $AB = QR$：\n\n$$2x + 3 = 15, \\quad 2x = 12, \\quad x = 6。$$",
+        "在 $\\triangle ABC \\cong \\triangle QRP$ 这样的全等式中，位置相同的字母相对应：$A \\leftrightarrow Q$，$B \\leftrightarrow R$，$C \\leftrightarrow P$。所以 $\\overline{AB}$ 对应 $\\overline{QR}$，$\\overline{BC}$ 对应 $\\overline{RP}$，$\\angle C$ 对应 $\\angle P$。\n\n若 $AB = 2x + 3$，$\\triangle QRP$ 的三边是 $PQ = 9$，$QR = 15$，$RP = 11$，则 $AB = QR$：\n\n$$2x + 3 = 15, \\quad 2x = 12, \\quad x = 6$$",
       ),
       generate(rng) {
         const letters = rng.pick(imageLetters);

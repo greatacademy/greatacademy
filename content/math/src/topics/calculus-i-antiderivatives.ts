@@ -108,7 +108,7 @@ export const theAntiderivative: TopicDef = {
       title: t("The power rule for integration", "积分的幂法则"),
       explanation: t(
         "Reversing the power rule for derivatives: for $n \\ne -1$,\n\n$$\\int x^{n} \\, dx = \\frac{x^{n + 1}}{n + 1} + C.$$\n\nRaise the exponent by one, then divide by the new exponent. Rewrite roots and reciprocals as powers first: $\\frac{1}{x^{3}} = x^{-3}$, $\\sqrt{x} = x^{\\frac{1}{2}}$.",
-        "把求导的幂法则反过来：当 $n \\ne -1$ 时，\n\n$$\\int x^{n} \\, dx = \\frac{x^{n + 1}}{n + 1} + C。$$\n\n指数加一，再除以新的指数。先把根式和倒数写成幂：$\\frac{1}{x^{3}} = x^{-3}$，$\\sqrt{x} = x^{\\frac{1}{2}}$。",
+        "把求导的幂法则反过来：当 $n \\ne -1$ 时，\n\n$$\\int x^{n} \\, dx = \\frac{x^{n + 1}}{n + 1} + C$$\n\n指数加一，再除以新的指数。先把根式和倒数写成幂：$\\frac{1}{x^{3}} = x^{-3}$，$\\sqrt{x} = x^{\\frac{1}{2}}$。",
       ),
       generate(rng) {
         const { n, antiderivative } = powerTerm(rng);
@@ -360,7 +360,7 @@ export const integratingTheReciprocalFunction: TopicDef = {
       title: t("Integrating 1/x", "1/x 的积分"),
       explanation: t(
         "The power rule fails for $n = -1$. Instead, since $\\frac{d}{dx}\\ln|x| = \\frac{1}{x}$ for $x \\ne 0$,\n\n$$\\int \\frac{1}{x} \\, dx = \\ln|x| + C.$$\n\nThe absolute value makes the antiderivative valid for negative $x$ too.",
-        "幂法则在 $n = -1$ 时失效。由于当 $x \\ne 0$ 时 $\\frac{d}{dx}\\ln|x| = \\frac{1}{x}$，\n\n$$\\int \\frac{1}{x} \\, dx = \\ln|x| + C。$$\n\n绝对值使原函数对负的 $x$ 也成立。",
+        "幂法则在 $n = -1$ 时失效。由于当 $x \\ne 0$ 时 $\\frac{d}{dx}\\ln|x| = \\frac{1}{x}$，\n\n$$\\int \\frac{1}{x} \\, dx = \\ln|x| + C$$\n\n绝对值使原函数对负的 $x$ 也成立。",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -625,7 +625,7 @@ export const integrationUsingInverseTrigonometricFunctions: TopicDef = {
       title: t("Integrating to arcsine", "积分为反正弦"),
       explanation: t(
         "A square root of a constant minus a square in the denominator signals the arcsine, with the constant under the root fixing the scale. From $\\frac{d}{dx}\\arcsin \\frac{x}{a} = \\frac{1}{\\sqrt{a^{2} - x^{2}}}$ for $a > 0$:\n\n$$\\int \\frac{1}{\\sqrt{a^{2} - x^{2}}} \\, dx = \\arcsin \\frac{x}{a} + C.$$",
-        "分母中出现常数减平方的平方根时，就是反正弦的信号，根号下的常数决定了缩放比例。由 $a > 0$ 时 $\\frac{d}{dx}\\arcsin \\frac{x}{a} = \\frac{1}{\\sqrt{a^{2} - x^{2}}}$：\n\n$$\\int \\frac{1}{\\sqrt{a^{2} - x^{2}}} \\, dx = \\arcsin \\frac{x}{a} + C。$$",
+        "分母中出现常数减平方的平方根时，就是反正弦的信号，根号下的常数决定了缩放比例。由 $a > 0$ 时 $\\frac{d}{dx}\\arcsin \\frac{x}{a} = \\frac{1}{\\sqrt{a^{2} - x^{2}}}$：\n\n$$\\int \\frac{1}{\\sqrt{a^{2} - x^{2}}} \\, dx = \\arcsin \\frac{x}{a} + C$$",
       ),
       generate(rng) {
         const a = rng.int(4, 9);
@@ -655,7 +655,7 @@ export const integrationUsingInverseTrigonometricFunctions: TopicDef = {
       title: t("Integrating to arctangent and arcsecant", "积分为反正切与反正割"),
       explanation: t(
         "A constant plus a square in the denominator signals the arctangent, and the extra factor of the variable outside a root signals the arcsecant. $$\\int \\frac{1}{a^{2} + x^{2}} \\, dx = \\frac{1}{a}\\arctan \\frac{x}{a} + C, \\qquad \\int \\frac{1}{x\\sqrt{x^{2} - 1}} \\, dx = \\operatorname{arcsec} x + C \\ (x > 1).$$\n\nNote the factor $\\frac{1}{a}$ for arctangent, which arcsine does not have.",
-        "分母中出现常数加平方时是反正切的信号，根号外多一个变量因子时则是反正割的信号。$$\\int \\frac{1}{a^{2} + x^{2}} \\, dx = \\frac{1}{a}\\arctan \\frac{x}{a} + C, \\qquad \\int \\frac{1}{x\\sqrt{x^{2} - 1}} \\, dx = \\operatorname{arcsec} x + C \\ (x > 1)。$$\n\n注意反正切有因子 $\\frac{1}{a}$，而反正弦没有。",
+        "分母中出现常数加平方时是反正切的信号，根号外多一个变量因子时则是反正割的信号。$$\\int \\frac{1}{a^{2} + x^{2}} \\, dx = \\frac{1}{a}\\arctan \\frac{x}{a} + C, \\qquad \\int \\frac{1}{x\\sqrt{x^{2} - 1}} \\, dx = \\operatorname{arcsec} x + C \\ (x > 1)$$\n\n注意反正切有因子 $\\frac{1}{a}$，而反正弦没有。",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -798,7 +798,7 @@ export const integrationUsingInverseHyperbolicFunctions: TopicDef = {
       title: t("Integrating to arsinh", "积分为 arsinh"),
       explanation: t(
         "A square root of a square plus a constant gives the inverse hyperbolic sine, while a constant minus a square under the root gives the arcsine instead. $$\\int \\frac{1}{\\sqrt{x^{2} + a^{2}}} \\, dx = \\operatorname{arsinh} \\frac{x}{a} + C.$$\n\nCompare $\\int \\frac{1}{\\sqrt{a^{2} - x^{2}}} \\, dx = \\arcsin \\frac{x}{a} + C$: the sign under the root decides between the hyperbolic and the circular function.",
-        "根号下是平方加常数时得到反双曲正弦，而根号下是常数减平方时得到的是反正弦。$$\\int \\frac{1}{\\sqrt{x^{2} + a^{2}}} \\, dx = \\operatorname{arsinh} \\frac{x}{a} + C。$$\n\n与 $\\int \\frac{1}{\\sqrt{a^{2} - x^{2}}} \\, dx = \\arcsin \\frac{x}{a} + C$ 对比：根号下的符号决定是双曲函数还是三角函数。",
+        "根号下是平方加常数时得到反双曲正弦，而根号下是常数减平方时得到的是反正弦。$$\\int \\frac{1}{\\sqrt{x^{2} + a^{2}}} \\, dx = \\operatorname{arsinh} \\frac{x}{a} + C$$\n\n与 $\\int \\frac{1}{\\sqrt{a^{2} - x^{2}}} \\, dx = \\arcsin \\frac{x}{a} + C$ 对比：根号下的符号决定是双曲函数还是三角函数。",
       ),
       generate(rng) {
         const a = rng.int(1, 9);
@@ -829,7 +829,7 @@ export const integrationUsingInverseHyperbolicFunctions: TopicDef = {
       title: t("Integrating to arcosh and artanh", "积分为 arcosh 与 artanh"),
       explanation: t(
         "A square minus a constant under a root gives the inverse hyperbolic cosine, and a constant minus a square with no root gives the inverse hyperbolic tangent. $$\\int \\frac{1}{\\sqrt{x^{2} - a^{2}}} \\, dx = \\operatorname{arcosh} \\frac{x}{a} + C \\ (x > a), \\qquad \\int \\frac{1}{a^{2} - x^{2}} \\, dx = \\frac{1}{a}\\operatorname{artanh} \\frac{x}{a} + C \\ (|x| < a).$$",
-        "根号下是平方减常数时得到反双曲余弦，没有根号的常数减平方则得到反双曲正切。$$\\int \\frac{1}{\\sqrt{x^{2} - a^{2}}} \\, dx = \\operatorname{arcosh} \\frac{x}{a} + C \\ (x > a), \\qquad \\int \\frac{1}{a^{2} - x^{2}} \\, dx = \\frac{1}{a}\\operatorname{artanh} \\frac{x}{a} + C \\ (|x| < a)。$$",
+        "根号下是平方减常数时得到反双曲余弦，没有根号的常数减平方则得到反双曲正切。$$\\int \\frac{1}{\\sqrt{x^{2} - a^{2}}} \\, dx = \\operatorname{arcosh} \\frac{x}{a} + C \\ (x > a), \\qquad \\int \\frac{1}{a^{2} - x^{2}} \\, dx = \\frac{1}{a}\\operatorname{artanh} \\frac{x}{a} + C \\ (|x| < a)$$",
       ),
       generate(rng) {
         const k = rng.nonZero(-12, 12);
@@ -897,7 +897,7 @@ export const integrationUsingInverseReciprocalHyperbolicFunctions: TopicDef = {
       title: t("Integrating to arsech", "积分为 arsech"),
       explanation: t(
         "When the variable multiplies a root of a constant minus its square, the integral reverses the derivative of the inverse hyperbolic secant. For $0 < x < a$,\n\n$$\\int \\frac{1}{x\\sqrt{a^{2} - x^{2}}} \\, dx = -\\frac{1}{a}\\operatorname{arsech} \\frac{x}{a} + C.$$\n\nThe minus sign comes from $\\frac{d}{dx}\\operatorname{arsech} x = -\\frac{1}{x\\sqrt{1 - x^{2}}}$.",
-        "当变量乘以常数减其平方的平方根时，这个积分是反双曲正割求导的逆过程。当 $0 < x < a$ 时，\n\n$$\\int \\frac{1}{x\\sqrt{a^{2} - x^{2}}} \\, dx = -\\frac{1}{a}\\operatorname{arsech} \\frac{x}{a} + C。$$\n\n负号来自 $\\frac{d}{dx}\\operatorname{arsech} x = -\\frac{1}{x\\sqrt{1 - x^{2}}}$。",
+        "当变量乘以常数减其平方的平方根时，这个积分是反双曲正割求导的逆过程。当 $0 < x < a$ 时，\n\n$$\\int \\frac{1}{x\\sqrt{a^{2} - x^{2}}} \\, dx = -\\frac{1}{a}\\operatorname{arsech} \\frac{x}{a} + C$$\n\n负号来自 $\\frac{d}{dx}\\operatorname{arsech} x = -\\frac{1}{x\\sqrt{1 - x^{2}}}$。",
       ),
       generate(rng) {
         const a = rng.int(4, 9);
@@ -929,7 +929,7 @@ export const integrationUsingInverseReciprocalHyperbolicFunctions: TopicDef = {
       title: t("Integrating to arcsch", "积分为 arcsch"),
       explanation: t(
         "When the variable multiplies a root of a constant plus its square, the integral reverses the derivative of the inverse hyperbolic cosecant, which also carries a minus sign. For $x > 0$,\n\n$$\\int \\frac{1}{x\\sqrt{a^{2} + x^{2}}} \\, dx = -\\frac{1}{a}\\operatorname{arcsch} \\frac{x}{a} + C.$$",
-        "当变量乘以常数加其平方的平方根时，这个积分是反双曲余割求导的逆过程，同样带有负号。当 $x > 0$ 时，\n\n$$\\int \\frac{1}{x\\sqrt{a^{2} + x^{2}}} \\, dx = -\\frac{1}{a}\\operatorname{arcsch} \\frac{x}{a} + C。$$",
+        "当变量乘以常数加其平方的平方根时，这个积分是反双曲余割求导的逆过程，同样带有负号。当 $x > 0$ 时，\n\n$$\\int \\frac{1}{x\\sqrt{a^{2} + x^{2}}} \\, dx = -\\frac{1}{a}\\operatorname{arcsch} \\frac{x}{a} + C$$",
       ),
       generate(rng) {
         const a = rng.int(1, 9);

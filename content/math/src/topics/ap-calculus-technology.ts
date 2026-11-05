@@ -189,7 +189,7 @@ export const findingRootsOfFunctionsUsingAGraphingCalculator: TopicDef = {
         return numberProblem({
           prompt: t(
             `To solve $e^x + x = ${c}$, you graph the difference function $Y_1 = e^x + x - ${c}$ and inspect a zoomed calculator table with step $\\Delta\\text{Tbl} = 0.001$:\n\n$$Y_1(${dec(rMinus)}) = ${yMinus}, \\quad Y_1(${dec(r)}) = ${yZero}, \\quad Y_1(${dec(rPlus)}) = ${yPlus}.$$\n\nWhat is the root of $e^x + x = ${c}$ rounded to three decimal places?`,
-            `为解方程 $e^x + x = ${c}$，绘制差函数 $Y_1 = e^x + x - ${c}$ 并查看步长为 $\\Delta\\text{Tbl} = 0.001$ 的局部放大计算器数值表：\n\n$$Y_1(${dec(rMinus)}) = ${yMinus}，\\quad Y_1(${dec(r)}) = ${yZero}，\\quad Y_1(${dec(rPlus)}) = ${yPlus}。$$\n\n求方程 $e^x + x = ${c}$ 精确到小数点后三位的根。`,
+            `为解方程 $e^x + x = ${c}$，绘制差函数 $Y_1 = e^x + x - ${c}$ 并查看步长为 $\\Delta\\text{Tbl} = 0.001$ 的局部放大计算器数值表：\n\n$$Y_1(${dec(rMinus)}) = ${yMinus}, \\quad Y_1(${dec(r)}) = ${yZero}, \\quad Y_1(${dec(rPlus)}) = ${yPlus}$$\n\n求方程 $e^x + x = ${c}$ 精确到小数点后三位的根。`,
           ),
           answer: r,
           form: "decimal",

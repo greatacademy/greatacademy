@@ -14,7 +14,7 @@ const latexCommand = /\\(frac|sqrt|langle|mathbb|le|ge|cdot|pi|infty|left|right|
  * mathTextIssue reports how a generated text breaks the math writing rules, if
  * it does: unbalanced $ delimiters, prose between delimiters that were swapped
  * by a missing $, LaTeX outside math, a spacing command that lost its backslash,
- * a doubled sign such as "x - -3", or a run of English in a Chinese text.
+ * a doubled sign such as "x - -3", Chinese punctuation inside math, or a run of English in a Chinese text.
  */
 export function mathTextIssue(text: string, locale: Locale): string | undefined {
   const plain = text.replace(/\\\$/g, "");
@@ -26,6 +26,7 @@ export function mathTextIssue(text: string, locale: Locale): string | undefined 
   if (latexCommand.test(outside)) return "LaTeX outside math";
   if (outside.includes("{,}")) return "a TeX thousands separator outside math";
   for (const [span] of plain.matchAll(mathSpans)) {
+    if (/[，。；：、]/.test(span.replace(/\\text\{[^}]*\}/g, ""))) return "Chinese punctuation inside math";
     if (/(^|[^\\a-z])[-+]\s*-\s*\d/.test(span) && !span.includes("\\pm")) return "doubled sign";
     if (/(^|[^\\]);\s*\\(Rightarrow|implies)\b/.test(span)) return "spacing command without a backslash";
   }

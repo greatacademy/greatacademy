@@ -180,7 +180,7 @@ export const convertingBetweenExponentialAndLogarithmicForm: TopicDef = {
       title: t("From exponential to logarithmic form", "指数式化为对数式"),
       explanation: t(
         'A **logarithm** is an exponent. For a base $b > 0$ with $b \\ne 1$ and a number $x > 0$,\n\n$$\\log_{b} x = c \\quad \\text{means} \\quad b^{c} = x.$$\n\nRead $\\log_{b} x$ as "the exponent that $b$ must be raised to in order to give $x$". The base stays the base, the exponent becomes the value of the logarithm, and the result of the power becomes the **argument**:\n\n$$2^{5} = 32 \\iff \\log_{2} 32 = 5$$',
-        '**对数**就是指数。对于底数 $b > 0$、$b \\ne 1$ 和正数 $x$，\n\n$$\\log_{b} x = c \\quad \\text{的意思是} \\quad b^{c} = x。$$\n\n$\\log_{b} x$ 读作"$b$ 要乘方多少次才得到 $x$"的那个指数。底数仍是底数，指数变成对数的值，乘方的结果变成**真数**：\n\n$$2^{5} = 32 \\iff \\log_{2} 32 = 5$$',
+        '**对数**就是指数。对于底数 $b > 0$、$b \\ne 1$ 和正数 $x$，\n\n$$\\log_{b} x = c \\quad \\text{的意思是} \\quad b^{c} = x$$\n\n$\\log_{b} x$ 读作"$b$ 要乘方多少次才得到 $x$"的那个指数。底数仍是底数，指数变成对数的值，乘方的结果变成**真数**：\n\n$$2^{5} = 32 \\iff \\log_{2} 32 = 5$$',
       ),
       generate(rng) {
         for (;;) {
@@ -504,7 +504,7 @@ export const commonLogarithm: TopicDef = {
       title: t("Estimating common logarithms", "估计常用对数"),
       explanation: t(
         "Between powers of ten, $\\log x$ lies between their exponents, because $\\log$ increases. Since $100 < 350 < 1000$,\n\n$$2 < \\log 350 < 3.$$\n\nFor a number between $0$ and $1$ the exponents are negative: $0.01 < 0.04 < 0.1$, so $-2 < \\log 0.04 < -1$.",
-        "$\\log$ 是增函数，所以当 $x$ 在两个 $10$ 的幂之间时，$\\log x$ 在它们的指数之间。因为 $100 < 350 < 1000$，\n\n$$2 < \\log 350 < 3。$$\n\n对于 $0$ 和 $1$ 之间的数，指数是负数：$0.01 < 0.04 < 0.1$，所以 $-2 < \\log 0.04 < -1$。",
+        "$\\log$ 是增函数，所以当 $x$ 在两个 $10$ 的幂之间时，$\\log x$ 在它们的指数之间。因为 $100 < 350 < 1000$，\n\n$$2 < \\log 350 < 3$$\n\n对于 $0$ 和 $1$ 之间的数，指数是负数：$0.01 < 0.04 < 0.1$，所以 $-2 < \\log 0.04 < -1$。",
       ),
       generate(rng) {
         const n = rng.int(-3, 4);
@@ -549,7 +549,7 @@ export const naturalLogarithm: TopicDef = {
       title: t("Natural logarithms of powers of $e$", "$e$ 的幂的自然对数"),
       explanation: t(
         "The number $e \\approx 2.71828$ is the value that $\\left(1 + \\frac{1}{n}\\right)^{n}$ approaches as $n$ grows. Like $\\pi$, it is irrational. The **natural logarithm** is the logarithm with base $e$, written $\\ln$: $\\ln x = \\log_{e} x$. So\n\n$$\\ln e^{4} = 4, \\qquad \\ln \\frac{1}{e^{2}} = -2, \\qquad \\ln \\sqrt{e} = \\frac{1}{2}, \\qquad \\ln 1 = 0.$$",
-        "数 $e \\approx 2.71828$ 是 $n$ 越来越大时 $\\left(1 + \\frac{1}{n}\\right)^{n}$ 趋近的值。它和 $\\pi$ 一样是无理数。以 $e$ 为底的对数叫做**自然对数**，记作 $\\ln$：$\\ln x = \\log_{e} x$。所以\n\n$$\\ln e^{4} = 4, \\qquad \\ln \\frac{1}{e^{2}} = -2, \\qquad \\ln \\sqrt{e} = \\frac{1}{2}, \\qquad \\ln 1 = 0。$$",
+        "数 $e \\approx 2.71828$ 是 $n$ 越来越大时 $\\left(1 + \\frac{1}{n}\\right)^{n}$ 趋近的值。它和 $\\pi$ 一样是无理数。以 $e$ 为底的对数叫做**自然对数**，记作 $\\ln$：$\\ln x = \\log_{e} x$。所以\n\n$$\\ln e^{4} = 4, \\qquad \\ln \\frac{1}{e^{2}} = -2, \\qquad \\ln \\sqrt{e} = \\frac{1}{2}, \\qquad \\ln 1 = 0$$",
       ),
       generate(rng) {
         const kind = rng.int(0, 3);
@@ -614,7 +614,7 @@ export const naturalLogarithm: TopicDef = {
       title: t("$e$ and $\\ln$ undo each other", "$e$ 与 $\\ln$ 互相抵消"),
       explanation: t(
         "The natural logarithm is the logarithm with base $e$, so it is the inverse of the function $e^{x}$, and applying one after the other returns the original input.\n\nRaising $e$ to a power and taking $\\ln$ undo each other:\n\n$$\\ln e^{u} = u \\quad \\text{for every } u, \\qquad e^{\\ln x} = x \\quad \\text{for } x > 0.$$\n\nSo $e^{\\ln 7} = 7$ and $\\ln e^{2x - 5} = 2x - 5$.",
-        "自然对数是以 $e$ 为底的对数，所以它是函数 $e^{x}$ 的反函数，先后作用这两个函数就回到原来的输入。\n\n求 $e$ 的幂与取 $\\ln$ 互相抵消：\n\n$$\\ln e^{u} = u \\quad \\text{（对任意 } u\\text{）}, \\qquad e^{\\ln x} = x \\quad \\text{（} x > 0\\text{）}。$$\n\n所以 $e^{\\ln 7} = 7$，$\\ln e^{2x - 5} = 2x - 5$。",
+        "自然对数是以 $e$ 为底的对数，所以它是函数 $e^{x}$ 的反函数，先后作用这两个函数就回到原来的输入。\n\n求 $e$ 的幂与取 $\\ln$ 互相抵消：\n\n$$\\ln e^{u} = u \\quad \\text{（对任意 } u\\text{）}, \\qquad e^{\\ln x} = x \\quad \\text{（} x > 0\\text{）}$$\n\n所以 $e^{\\ln 7} = 7$，$\\ln e^{2x - 5} = 2x - 5$。",
       ),
       generate(rng) {
         if (rng.bool()) {

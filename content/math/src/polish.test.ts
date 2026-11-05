@@ -13,6 +13,35 @@ describe("polishText", () => {
     expect(zh("$e^{1t} - 1i$")).toBe("$e^{t} - i$");
   });
 
+  it("separates the thousands of long numbers in math", () => {
+    expect(en("$12345 + 678 = 13023$ and $1234567$")).toBe("$12{,}345 + 678 = 13{,}023$ and $1{,}234{,}567$");
+    expect(en("$1764 + 20736 = 22500$")).toBe("$1{,}764 + 20{,}736 = 22{,}500$");
+    expect(zh("$27(1{,}000) = 27000$")).toBe("$27(1{,}000) = 27{,}000$");
+  });
+
+  it("keeps digits that are not long whole numbers", () => {
+    for (const text of [
+      "$2024$",
+      "$3.14159$",
+      "$10.00001$",
+      "$69517_{14}$",
+      "$0.\\overline{769230}$",
+      "$00110$",
+      "$x_{12345}$",
+      "$\\text{12345}$",
+      "12345",
+    ])
+      expect(en(text)).toBe(text);
+  });
+
+  it("keeps the strings of symbols of a topic", () => {
+    const of = (text: string, topic: string) => polishText(t(text, "中"), topic).en;
+    expect(of("$101001$", "regular-expressions")).toBe("$101001$");
+    expect(of("$101001$ and $21870$", "regular-expressions")).toBe("$101001$ and $21{,}870$");
+    expect(of("$11000r$", "calculating-simple-interest")).toBe("$11{,}000r$");
+    expect(of("$761904$", "periods-of-repeating-decimals")).toBe("$761904$");
+  });
+
   it("keeps a 1 that is not a coefficient", () => {
     for (const text of [
       "$\\mathrm{1E0}_{16}$",

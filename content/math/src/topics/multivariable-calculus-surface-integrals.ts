@@ -144,7 +144,7 @@ export const tangentPlanesToParametricSurfaces: TopicDef = {
       title: t("Where a tangent plane meets the $z$-axis", "切平面与 $z$ 轴的交点"),
       explanation: t(
         "The tangent plane at $\\mathbf{r}(u_0, v_0)$ has normal $\\mathbf{n} = \\mathbf{r}_u \\times \\mathbf{r}_v$ and equation $\\mathbf{n} \\cdot (\\langle x, y, z \\rangle - \\mathbf{r}(u_0, v_0)) = 0$. For $\\mathbf{r}(u, v) = \\langle u + v, u - v, uv \\rangle$, $\\mathbf{r}_u = \\langle 1, 1, v \\rangle$ and $\\mathbf{r}_v = \\langle 1, -1, u \\rangle$, so\n\n$$\\mathbf{n} = \\langle u + v,\\ v - u,\\ -2 \\rangle.$$\n\nSetting $x = y = 0$ in the plane's equation gives the height at which it crosses the $z$-axis.",
-        "在 $\\mathbf{r}(u_0, v_0)$ 处的切平面法向量为 $\\mathbf{n} = \\mathbf{r}_u \\times \\mathbf{r}_v$，方程为 $\\mathbf{n} \\cdot (\\langle x, y, z \\rangle - \\mathbf{r}(u_0, v_0)) = 0$。对 $\\mathbf{r}(u, v) = \\langle u + v, u - v, uv \\rangle$，$\\mathbf{r}_u = \\langle 1, 1, v \\rangle$，$\\mathbf{r}_v = \\langle 1, -1, u \\rangle$，所以\n\n$$\\mathbf{n} = \\langle u + v,\\ v - u,\\ -2 \\rangle。$$\n\n在平面方程中令 $x = y = 0$，就得到它与 $z$ 轴相交的高度。",
+        "在 $\\mathbf{r}(u_0, v_0)$ 处的切平面法向量为 $\\mathbf{n} = \\mathbf{r}_u \\times \\mathbf{r}_v$，方程为 $\\mathbf{n} \\cdot (\\langle x, y, z \\rangle - \\mathbf{r}(u_0, v_0)) = 0$。对 $\\mathbf{r}(u, v) = \\langle u + v, u - v, uv \\rangle$，$\\mathbf{r}_u = \\langle 1, 1, v \\rangle$，$\\mathbf{r}_v = \\langle 1, -1, u \\rangle$，所以\n\n$$\\mathbf{n} = \\langle u + v,\\ v - u,\\ -2 \\rangle$$\n\n在平面方程中令 $x = y = 0$，就得到它与 $z$ 轴相交的高度。",
       ),
       generate(rng: Rng): Problem {
         const u0 = rng.nonZero(-4, 4);
@@ -235,7 +235,7 @@ export const parametrizationsOfEllipsoidsAndCones: TopicDef = {
       title: t("A point on a parametrized ellipsoid", "参数化椭球面上的点"),
       explanation: t(
         "The ellipsoid $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$ is parametrized by stretching spherical coordinates:\n\n$$\\mathbf{r}(\\phi, \\theta) = \\langle a\\sin\\phi\\cos\\theta,\\ b\\sin\\phi\\sin\\theta,\\ c\\cos\\phi \\rangle, \\quad 0 \\le \\phi \\le \\pi,\\ 0 \\le \\theta \\le 2\\pi.$$\n\nHere $\\phi$ is measured down from the positive $z$-axis, so $\\phi = 0$ is the top, $\\phi = \\frac{\\pi}{2}$ the equator and $\\phi = \\pi$ the bottom.",
-        "椭球面 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$ 由拉伸球坐标来参数化：\n\n$$\\mathbf{r}(\\phi, \\theta) = \\langle a\\sin\\phi\\cos\\theta,\\ b\\sin\\phi\\sin\\theta,\\ c\\cos\\phi \\rangle, \\quad 0 \\le \\phi \\le \\pi,\\ 0 \\le \\theta \\le 2\\pi。$$\n\n这里 $\\phi$ 从正 $z$ 轴向下量起，所以 $\\phi = 0$ 是顶点，$\\phi = \\frac{\\pi}{2}$ 是赤道，$\\phi = \\pi$ 是底点。",
+        "椭球面 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$ 由拉伸球坐标来参数化：\n\n$$\\mathbf{r}(\\phi, \\theta) = \\langle a\\sin\\phi\\cos\\theta,\\ b\\sin\\phi\\sin\\theta,\\ c\\cos\\phi \\rangle, \\quad 0 \\le \\phi \\le \\pi,\\ 0 \\le \\theta \\le 2\\pi$$\n\n这里 $\\phi$ 从正 $z$ 轴向下量起，所以 $\\phi = 0$ 是顶点，$\\phi = \\frac{\\pi}{2}$ 是赤道，$\\phi = \\pi$ 是底点。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(2, 6);
@@ -326,7 +326,7 @@ export const parametrizationsOfParaboloidsAndHyperboloids: TopicDef = {
       title: t("Cross-sections of a hyperboloid of one sheet", "单叶双曲面的截面"),
       explanation: t(
         "The hyperboloid of one sheet $\\frac{x^2 + y^2}{a^2} - \\frac{z^2}{c^2} = 1$ is parametrized by\n\n$$\\mathbf{r}(u, v) = \\left\\langle a\\sqrt{1 + u^2}\\cos v,\\ a\\sqrt{1 + u^2}\\sin v,\\ cu \\right\\rangle.$$\n\nFixing $u$ fixes the height $z = cu$, and the cross-section there is a circle of radius $a\\sqrt{1 + u^2}$. The narrowest circle, of radius $a$, is the waist at $z = 0$, and the circles widen in both directions.",
-        "单叶双曲面 $\\frac{x^2 + y^2}{a^2} - \\frac{z^2}{c^2} = 1$ 的参数化为\n\n$$\\mathbf{r}(u, v) = \\left\\langle a\\sqrt{1 + u^2}\\cos v,\\ a\\sqrt{1 + u^2}\\sin v,\\ cu \\right\\rangle。$$\n\n固定 $u$ 就固定了高度 $z = cu$，那里的截面是半径为 $a\\sqrt{1 + u^2}$ 的圆。最窄的圆半径为 $a$，是 $z = 0$ 处的腰部，圆向上下两个方向逐渐变宽。",
+        "单叶双曲面 $\\frac{x^2 + y^2}{a^2} - \\frac{z^2}{c^2} = 1$ 的参数化为\n\n$$\\mathbf{r}(u, v) = \\left\\langle a\\sqrt{1 + u^2}\\cos v,\\ a\\sqrt{1 + u^2}\\sin v,\\ cu \\right\\rangle$$\n\n固定 $u$ 就固定了高度 $z = cu$，那里的截面是半径为 $a\\sqrt{1 + u^2}$ 的圆。最窄的圆半径为 $a$，是 $z = 0$ 处的腰部，圆向上下两个方向逐渐变宽。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 5);
@@ -404,7 +404,7 @@ export const parametrizationsOfCylinders: TopicDef = {
       title: t("The area element of an elliptic cylinder", "椭圆柱面的面积元"),
       explanation: t(
         "The elliptic cylinder $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$ is parametrized by $\\mathbf{r}(u, v) = \\langle a\\cos u, b\\sin u, v \\rangle$. Then $\\mathbf{r}_u = \\langle -a\\sin u, b\\cos u, 0 \\rangle$ and $\\mathbf{r}_v = \\langle 0, 0, 1 \\rangle$, so\n\n$$\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = \\sqrt{a^2\\sin^2 u + b^2\\cos^2 u}.$$\n\nUnlike a circular cylinder, the area element changes around the cylinder: it equals $b$ where $u = 0$ and $a$ where $u = \\frac{\\pi}{2}$.",
-        "椭圆柱面 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$ 的参数化为 $\\mathbf{r}(u, v) = \\langle a\\cos u, b\\sin u, v \\rangle$。于是 $\\mathbf{r}_u = \\langle -a\\sin u, b\\cos u, 0 \\rangle$，$\\mathbf{r}_v = \\langle 0, 0, 1 \\rangle$，所以\n\n$$\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = \\sqrt{a^2\\sin^2 u + b^2\\cos^2 u}。$$\n\n与圆柱面不同，面积元沿柱面变化：在 $u = 0$ 处等于 $b$，在 $u = \\frac{\\pi}{2}$ 处等于 $a$。",
+        "椭圆柱面 $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$ 的参数化为 $\\mathbf{r}(u, v) = \\langle a\\cos u, b\\sin u, v \\rangle$。于是 $\\mathbf{r}_u = \\langle -a\\sin u, b\\cos u, 0 \\rangle$，$\\mathbf{r}_v = \\langle 0, 0, 1 \\rangle$，所以\n\n$$\\|\\mathbf{r}_u \\times \\mathbf{r}_v\\| = \\sqrt{a^2\\sin^2 u + b^2\\cos^2 u}$$\n\n与圆柱面不同，面积元沿柱面变化：在 $u = 0$ 处等于 $b$，在 $u = \\frac{\\pi}{2}$ 处等于 $a$。",
       ),
       generate(rng: Rng): Problem {
         const a = rng.int(1, 7);
@@ -579,7 +579,7 @@ export const surfacesOfRevolution: TopicDef = {
       title: t("The area of a spherical zone", "球带的面积"),
       explanation: t(
         "Revolving $y = \\sqrt{R^2 - x^2}$ for $a \\le x \\le b$ about the $x$-axis gives a zone of a sphere. Here $y\\sqrt{1 + y'^2} = \\sqrt{R^2 - x^2} \\cdot \\frac{R}{\\sqrt{R^2 - x^2}} = R$, so\n\n$$S = 2\\pi\\int_a^b R\\,dx = 2\\pi R(b - a).$$\n\nRemarkably, the area depends only on the width $b - a$ of the slab, not on where the slab sits along the sphere.",
-        "把 $y = \\sqrt{R^2 - x^2}$（$a \\le x \\le b$）绕 $x$ 轴旋转得到一个球带。这里 $y\\sqrt{1 + y'^2} = \\sqrt{R^2 - x^2} \\cdot \\frac{R}{\\sqrt{R^2 - x^2}} = R$，所以\n\n$$S = 2\\pi\\int_a^b R\\,dx = 2\\pi R(b - a)。$$\n\n值得注意的是，面积只取决于夹层的宽度 $b - a$，与夹层在球上的位置无关。",
+        "把 $y = \\sqrt{R^2 - x^2}$（$a \\le x \\le b$）绕 $x$ 轴旋转得到一个球带。这里 $y\\sqrt{1 + y'^2} = \\sqrt{R^2 - x^2} \\cdot \\frac{R}{\\sqrt{R^2 - x^2}} = R$，所以\n\n$$S = 2\\pi\\int_a^b R\\,dx = 2\\pi R(b - a)$$\n\n值得注意的是，面积只取决于夹层的宽度 $b - a$，与夹层在球上的位置无关。",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(2, 9);
@@ -667,7 +667,7 @@ export const areasOfSurfaces: TopicDef = {
       title: t("The area of a curved graph over a rectangle", "矩形上方曲面图形的面积"),
       explanation: t(
         "The area of the graph $z = f(x, y)$ over $D$ is $\\iint_D \\sqrt{1 + f_x^2 + f_y^2}\\,dA$. For $f = \\frac{2}{3}x^{3/2}$, $f_x = x^{1/2}$ and $f_y = 0$, so the integrand is $\\sqrt{1 + x}$ and over $[0, a] \\times [0, b]$\n\n$$A = b\\int_0^a \\sqrt{1 + x}\\,dx = \\frac{2b}{3}\\left[(1 + a)^{3/2} - 1\\right].$$",
-        "图形 $z = f(x, y)$ 在 $D$ 上方的面积为 $\\iint_D \\sqrt{1 + f_x^2 + f_y^2}\\,dA$。对 $f = \\frac{2}{3}x^{3/2}$，$f_x = x^{1/2}$，$f_y = 0$，所以被积函数为 $\\sqrt{1 + x}$，在 $[0, a] \\times [0, b]$ 上\n\n$$A = b\\int_0^a \\sqrt{1 + x}\\,dx = \\frac{2b}{3}\\left[(1 + a)^{3/2} - 1\\right]。$$",
+        "图形 $z = f(x, y)$ 在 $D$ 上方的面积为 $\\iint_D \\sqrt{1 + f_x^2 + f_y^2}\\,dA$。对 $f = \\frac{2}{3}x^{3/2}$，$f_x = x^{1/2}$，$f_y = 0$，所以被积函数为 $\\sqrt{1 + x}$，在 $[0, a] \\times [0, b]$ 上\n\n$$A = b\\int_0^a \\sqrt{1 + x}\\,dx = \\frac{2b}{3}\\left[(1 + a)^{3/2} - 1\\right]$$",
       ),
       generate(rng: Rng): Problem {
         const n = rng.int(2, 5);
@@ -751,7 +751,7 @@ export const surfaceIntegralsOverParametricSurfaces: TopicDef = {
       title: t("A surface integral over a cylinder", "圆柱面上的曲面积分"),
       explanation: t(
         "On the cylinder $\\mathbf{r}(u, v) = \\langle R\\cos u, R\\sin u, v \\rangle$, $0 \\le u \\le 2\\pi$, $0 \\le v \\le H$, the area element is $dS = R\\,du\\,dv$. Write the integrand in terms of $u$ and $v$ and integrate over the parameter rectangle:\n\n$$\\iint_S (x^2 + y^2)\\,dS = \\int_0^H\\int_0^{2\\pi} R^2 \\cdot R\\,du\\,dv = 2\\pi R^3H, \\qquad \\iint_S z\\,dS = \\int_0^H\\int_0^{2\\pi} vR\\,du\\,dv = \\pi RH^2.$$",
-        "在圆柱面 $\\mathbf{r}(u, v) = \\langle R\\cos u, R\\sin u, v \\rangle$（$0 \\le u \\le 2\\pi$，$0 \\le v \\le H$）上，面积元为 $dS = R\\,du\\,dv$。把被积函数用 $u$、$v$ 表示，再在参数矩形上积分：\n\n$$\\iint_S (x^2 + y^2)\\,dS = \\int_0^H\\int_0^{2\\pi} R^2 \\cdot R\\,du\\,dv = 2\\pi R^3H, \\qquad \\iint_S z\\,dS = \\int_0^H\\int_0^{2\\pi} vR\\,du\\,dv = \\pi RH^2。$$",
+        "在圆柱面 $\\mathbf{r}(u, v) = \\langle R\\cos u, R\\sin u, v \\rangle$（$0 \\le u \\le 2\\pi$，$0 \\le v \\le H$）上，面积元为 $dS = R\\,du\\,dv$。把被积函数用 $u$、$v$ 表示，再在参数矩形上积分：\n\n$$\\iint_S (x^2 + y^2)\\,dS = \\int_0^H\\int_0^{2\\pi} R^2 \\cdot R\\,du\\,dv = 2\\pi R^3H, \\qquad \\iint_S z\\,dS = \\int_0^H\\int_0^{2\\pi} vR\\,du\\,dv = \\pi RH^2$$",
       ),
       generate(rng: Rng): Problem {
         const R = rng.int(1, 5);
@@ -838,7 +838,7 @@ export const surfaceIntegralsOverCartesianSurfaces: TopicDef = {
       title: t("Integrating a nonconstant function over a tilted plane", "在倾斜平面上积分非常数函数"),
       explanation: t(
         "For $S$ the graph of $z = px + qy$ over $D$, $dS = \\sqrt{1 + p^2 + q^2}\\,dA$ is a constant multiple of $dA$. So\n\n$$\\iint_S f\\,dS = \\sqrt{1 + p^2 + q^2}\\iint_D f(x, y, px + qy)\\,dA.$$\n\nFor $f = x$ over $[0, W] \\times [0, H]$ the remaining double integral is $\\frac{W^2H}{2}$.",
-        "若 $S$ 是 $z = px + qy$ 在 $D$ 上方的图形，则 $dS = \\sqrt{1 + p^2 + q^2}\\,dA$ 是 $dA$ 的常数倍。所以\n\n$$\\iint_S f\\,dS = \\sqrt{1 + p^2 + q^2}\\iint_D f(x, y, px + qy)\\,dA。$$\n\n对 $[0, W] \\times [0, H]$ 上的 $f = x$，剩下的二重积分为 $\\frac{W^2H}{2}$。",
+        "若 $S$ 是 $z = px + qy$ 在 $D$ 上方的图形，则 $dS = \\sqrt{1 + p^2 + q^2}\\,dA$ 是 $dA$ 的常数倍。所以\n\n$$\\iint_S f\\,dS = \\sqrt{1 + p^2 + q^2}\\iint_D f(x, y, px + qy)\\,dA$$\n\n对 $[0, W] \\times [0, H]$ 上的 $f = x$，剩下的二重积分为 $\\frac{W^2H}{2}$。",
       ),
       generate(rng: Rng): Problem {
         const [p, q, k] = rng.pick([
@@ -1268,7 +1268,7 @@ export const calculatingFluxThroughClosedSurfaces: TopicDef = {
       title: t("Face-by-face flux of a quadratic field", "逐面计算二次场的通量"),
       explanation: t(
         "To find the flux out of a box face by face, note that on each face only one component of $\\mathbf{F}$ is normal. For $\\mathbf{F} = \\langle px^2, qy^2, rz^2 \\rangle$ on $[0, A] \\times [0, B] \\times [0, C]$, the faces through the origin contribute nothing, because there the normal component is $0$. On the face $x = A$ the normal component is $pA^2$ over area $BC$, and similarly for the other two, so the total is\n\n$$pA^2BC + qB^2AC + rC^2AB.$$",
-        "逐面计算长方体的通量时，注意每个面上只有 $\\mathbf{F}$ 的一个分量是法向的。对 $[0, A] \\times [0, B] \\times [0, C]$ 上的 $\\mathbf{F} = \\langle px^2, qy^2, rz^2 \\rangle$，过原点的三个面没有贡献，因为那里法向分量为 $0$。在面 $x = A$ 上法向分量为 $pA^2$，面积为 $BC$，另两个面同理，所以总量为\n\n$$pA^2BC + qB^2AC + rC^2AB。$$",
+        "逐面计算长方体的通量时，注意每个面上只有 $\\mathbf{F}$ 的一个分量是法向的。对 $[0, A] \\times [0, B] \\times [0, C]$ 上的 $\\mathbf{F} = \\langle px^2, qy^2, rz^2 \\rangle$，过原点的三个面没有贡献，因为那里法向分量为 $0$。在面 $x = A$ 上法向分量为 $pA^2$，面积为 $BC$，另两个面同理，所以总量为\n\n$$pA^2BC + qB^2AC + rC^2AB$$",
       ),
       generate(rng: Rng): Problem {
         const p = rng.nonZero(-3, 3);
